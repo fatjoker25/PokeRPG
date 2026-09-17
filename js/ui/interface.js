@@ -56,6 +56,7 @@ const UI = {
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalRota()">Rota</button>
+        <button class="btn mini" onclick="Jogo.abrirGinasios('cena')">Ginásios${Estado.dados.insignias.length ? ' '+Estado.dados.insignias.length+'/8' : ''}</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
     </div>`;
@@ -243,9 +244,13 @@ const UI = {
   /* ========================================================
      COMBATE
      ======================================================== */
-  telaBatalha(){
+  telaBatalha(introLinhas){
     this.limpar();
     this.add(this.topo());
+    if (introLinhas && introLinhas.length){
+      this.add(`<div class="painel"><div class="narrativa">${
+        introLinhas.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div></div>`);
+    }
     this.add(`<div class="painel">
       <div class="arena" id="arena"></div>
       <div class="log-combate" id="log"></div>
@@ -388,6 +393,7 @@ const UI = {
       <div style="margin-top:22px">
         <button class="btn destaque" id="btn-seguir" onclick="Jogo.avancarCapitulo()">Continuar a jornada</button>
         <button class="btn" onclick="UI.telaHub()">Parar em uma cidade antes</button>
+        <button class="btn" onclick="Jogo.abrirGinasios('fimCapitulo')">Ginásios (${Estado.dados.insignias.length}/8)</button>
       </div>
     </div>`);
     if (avisosMundo && avisosMundo.length) this.avisos(avisosMundo.map(t => ({tipo:'mundo', texto:t})));
@@ -418,12 +424,83 @@ const UI = {
       <div class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
+        <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
         <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota — encontro selvagem aleatório</button>
         <button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>
         <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
       </div>
       <div id="avisos" class="avisos"></div>
     </div>`);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     GINÁSIOS
+     ======================================================== */
+  telaGinasios(){
+    this.limpar();
+    this.add(this.topo());
+    const d = Estado.dados;
+    const n = d.insignias.length;
+
+    const cartao = g => {
+      const st = statusGinasio(g);
+      const cor = {conquistado:'var(--bom)', disponivel:'var(--destaque)',
+                   recusado:'var(--ruim)', trancado:'var(--texto-fraco)', distante:'var(--texto-fraco)'}[st.estado];
+      const time = g.time.map(x=>`${DEX[x.dex].nome} Nv${x.nivel}`).join(' · ');
+      const rotulo = st.estado === 'conquistado' ? '✓ conquistada' : st.texto;
+      return `<div class="carta ginasio" style="border-color:${st.estado==='conquistado'?'var(--bom)':'var(--borda)'}">
+        <div class="t"><span>${g.num}. ${this.esc(g.lider)} <span class="cidade">· ${this.esc(g.cidade)}</span></span>
+          ${this.tipoTag(g.tipo)}</div>
+        <div class="fraco" style="margin-bottom:6px">${this.esc(g.insignia)} · níveis ${g.faixa}</div>
+        <div class="fraco" style="margin-bottom:8px;line-height:1.5">${this.esc(time)}</div>
+        ${st.fala ? `<div class="aviso dano" style="margin-bottom:8px">${this.esc(st.fala)}</div>` : ''}
+        ${st.estado!=='disponivel' && st.estado!=='conquistado' && g.comoDestravar
+          ? `<div class="sussurro" style="margin:0 0 8px">${this.esc(g.comoDestravar)}</div>` : ''}
+        ${st.estado==='conquistado' && g.efeito ? `<div class="fraco" style="color:var(--bom)">${this.esc(g.efeito)}</div>` : ''}
+        <div class="rodape">
+          <span style="color:${cor};font-size:12.5px">${this.esc(rotulo)}</span>
+          ${st.estado === 'disponivel'
+            ? `<button class="btn destaque mini" onclick="Jogo.desafiarGinasio('${g.id}')">Desafiar</button>` : ''}
+        </div>
+      </div>`;
+    };
+
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">Liga Pokémon</div>
+        <div class="tit">Os Oito Ginásios</div>
+        <div class="loc">${n} de 8 insígnias</div>
+      </div>
+      <p class="sussurro">Os líderes lembram do que você fez na cidade deles. Alguns se recusam a lutar — e a recusa tem conserto.</p>
+      <div class="grade" style="margin-top:14px">${GINASIOS.map(cartao).join('')}</div>
+      <div style="margin-top:20px">
+        <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
+        <button class="btn" onclick="Jogo.hubCentro()">Curar o time</button>
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaResultadoGinasio(g, venceu, avisos){
+    this.limpar();
+    this.add(this.topo());
+    const falas = (venceu ? g.vitoria : g.derrota)(Estado.dados).filter(Boolean);
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">Ginásio de ${this.esc(g.cidade)}</div>
+        <div class="tit">${venceu ? this.esc(g.insignia) : 'Derrota'}</div>
+        <div class="loc">Líder ${this.esc(g.lider)} · tipo ${this.esc(g.tipo)}</div>
+      </div>
+      <div class="narrativa">${falas.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div id="avisos" class="avisos"></div>
+      <div class="escolhas" style="margin-top:20px">
+        ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
+        <button class="escolha" onclick="Jogo.abrirGinasios('${this.esc(Jogo.voltarDeGinasio)}')">Voltar aos ginásios</button>
+        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
     this.rolarTopo();
   },
 
@@ -552,7 +629,8 @@ const UI = {
       <div class="linha"><span class="k">Objetivo</span><span class="v">${this.esc(j.objetivo)}</span></div>
       <div class="linha"><span class="k">Personalidade</span><span class="v">${this.esc(j.personalidade)}</span></div>
       <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
-      <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.length ? d.insignias.map(i=>this.esc(i)).join(', ') : 'nenhuma'}</span></div>
+      <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.length}/8</span></div>
+      ${d.insignias.length ? d.insignias.map(i=>`<div class="linha"><span class="k" style="padding-left:12px">${this.esc(i)}</span><span class="v">✓</span></div>`).join('') : ''}
       <h3>Reputação — ${this.esc(nivel.nome)} (${eixo}, nível ${val}/8)</h3>
       <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
       <p class="sussurro">${this.esc(nivel.ef)}</p>

@@ -60,7 +60,9 @@ const Batalha = {
     const nat = NATUREZAS[p.natureza] || {};
     const g = GOLPES[golpeNome];
     const moral = souAliado ? (p.moral !== undefined ? p.moral : 70) : 50;
-    const desobedienciaBase = souAliado ? Math.max(0, (60 - moral) / 2) : 0;
+    // cada insígnia conquistada faz o time confiar mais nas suas ordens
+    const insignias = (Estado.dados && Estado.dados.insignias) ? Estado.dados.insignias.length : 0;
+    const desobedienciaBase = souAliado ? Math.max(0, (60 - moral) / 2 - insignias * 3) : 0;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
       return {recusa:true, texto:`${nomeExib(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};

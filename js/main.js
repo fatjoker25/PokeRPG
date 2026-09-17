@@ -4,6 +4,8 @@
 const Jogo = {
   subidosNoCap: [],
   cenaBatalha: null,
+  ginasioAtual: null,
+  voltarDeGinasio: 'hub',
 
   /* ---------- início ---------- */
   iniciar(){
@@ -143,6 +145,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
+    if (this.ginasioAtual) return this.resultadoGinasio(fim);
     const b = this.cenaBatalha || {};
     const rotaFuga = b.fuga2 || (typeof b.fuga === 'string' ? b.fuga : null);
     let destino, aviso;
@@ -274,6 +277,82 @@ const Jogo = {
     Estado.salvar('auto');
     UI.telaHub();
     UI.avisos(eventos.map(e => ({tipo:e.tipo, texto:e.texto})));
+  },
+
+  /* ---------- GINÁSIOS ---------- */
+  abrirGinasios(de){
+    this.voltarDeGinasio = de || 'hub';
+    UI.telaGinasios();
+  },
+
+  voltarDosGinasios(){
+    if (this.voltarDeGinasio === 'cena' && Historia.cenaAtual){
+      UI.telaCena(Historia.ir(Estado.dados.cena));
+    } else if (this.voltarDeGinasio === 'fimCapitulo'){
+      UI.telaFimCapitulo();
+    } else {
+      UI.telaHub();
+    }
+  },
+
+  desafiarGinasio(id){
+    const g = ginasioPorId(id);
+    if (!g) return;
+    const st = statusGinasio(g);
+    if (st.estado !== 'disponivel') return UI.telaGinasios();
+
+    const meu = Estado.primeiroApto();
+    if (!meu) return UI.modal('Ginásio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de desafiar um líder.</p>');
+
+    const time = g.time.map(x => criarPokemon(x.dex, x.nivel, {}));
+    this.ginasioAtual = g;
+    this.cenaBatalha = null;
+    Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
+    UI.limparDados();
+    Batalha.iniciar(meu, time[0], {
+      tipo:'treinador', fuga:false, treinador:`Líder ${g.lider}`,
+      timeInimigo: time.slice(1),
+      introducao: `${g.lider} enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+    });
+    UI.telaBatalha(g.intro ? g.intro(Estado.dados).filter(Boolean) : null);
+  },
+
+  resultadoGinasio(fim){
+    const g = this.ginasioAtual;
+    this.ginasioAtual = null;
+    if (fim.resultado === 'gameover'){
+      return UI.telaGameOver('Você caiu num ginásio. Não devia ser possível, e foi.');
+    }
+    const venceu = fim.resultado === 'vitoria';
+    const avisos = [];
+
+    if (venceu){
+      Estado.dados.insignias.push(g.insignia);
+      avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${g.insignia} (${Estado.dados.insignias.length}/8)`});
+      const p = g.premio || {};
+      if (p.dinheiro){ Estado.j.dinheiro += p.dinheiro; avisos.push({tipo:'item', texto:`+${p.dinheiro} ₽`}); }
+      if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
+      if (p.rep){
+        const r = Estado.mudarRep('bom', p.rep, `Venceu o Ginásio de ${g.cidade}`);
+        if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+      }
+      if (p.status && Estado.subirStatus(p.status)){
+        avisos.push({tipo:'rep', texto:`${p.status.toUpperCase()} +1 — ${g.efeito}`});
+      } else if (g.efeito){
+        avisos.push({tipo:'info', texto:g.efeito});
+      }
+      Estado.registrar(`Venceu ${g.lider} e conquistou a ${g.insignia}.`);
+      if (Estado.dados.insignias.length === 8){
+        avisos.push({tipo:'rep', texto:'Oito insígnias. Kanto inteira está aberta para você.'});
+        Estado.marcar('oito_insignias');
+        const r = Estado.mudarRep('bom', 2, 'Conquistou as oito insígnias de Kanto');
+        if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+      }
+    } else {
+      Estado.registrar(`Perdeu para ${g.lider} no Ginásio de ${g.cidade}.`);
+    }
+    Estado.salvar('auto');
+    UI.telaResultadoGinasio(g, venceu, avisos);
   },
 
   /* ---------- trocas e vendas com NPC ---------- */

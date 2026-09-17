@@ -233,6 +233,11 @@ button{font-family:inherit;font-size:14px;cursor:pointer;transition:.15s}
 .gameover .tit{font-size:36px;color:var(--perigo);letter-spacing:.2em;margin-bottom:18px;font-weight:300}
 
 .sussurro{color:var(--texto-fraco);font-size:13px;font-style:italic;margin-top:10px}
+.fraco{color:var(--texto-fraco);font-size:12.5px}
+.carta.ginasio{display:flex;flex-direction:column}
+.carta.ginasio .t{align-items:center}
+.carta.ginasio .rodape{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.carta.ginasio .cidade{color:var(--texto-fraco);font-weight:400;font-size:13px}
 .centro{text-align:center}
 .mono{font-family:var(--mono)}
 .nada{color:var(--texto-fraco);font-style:italic;font-size:13.5px}

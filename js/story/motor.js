@@ -119,9 +119,9 @@ const Historia = {
       avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
     if (ef.npc) Estado.lembrarNPC(ef.npc.nome, ef.npc);
-    if (ef.insignia){
+    if (ef.insignia && !Estado.dados.insignias.includes(ef.insignia)){
       Estado.dados.insignias.push(ef.insignia);
-      avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${ef.insignia}`});
+      avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${ef.insignia} (${Estado.dados.insignias.length}/8)`});
     }
     if (ef.curaTime){ Estado.dados.time.forEach(curarTotal); avisos.push({tipo:'cura', texto:'Seu time foi curado por completo.'}); }
     if (ef.instabilidade){ Estado.dados.mundo.instabilidade += ef.instabilidade; }

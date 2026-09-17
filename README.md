@@ -14,7 +14,7 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**20 capítulos · 488 cenas · 769 escolhas · 17 finais.**
+**20 capítulos · 488 cenas · 769 escolhas · 17 finais · 8 ginásios.**
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -38,6 +38,27 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 | 18 | O Que Te Oferecem | muito sombrio |
 | 19 | O Vale | muito sombrio |
 | 20 | Eu Perguntei Primeiro | final |
+
+### Os oito ginásios
+
+Acessíveis a qualquer momento pelo botão **Ginásios** na barra do topo, entre capítulos ou no encerramento de cada um. Cada líder tem time completo, fala diferente conforme o que você fez **na cidade dele**, e uma insígnia com efeito mecânico.
+
+| # | Líder | Cidade | Tipo | Insígnia | Efeito |
+|---|---|---|---|---|---|
+| 1 | Brock | Pewter | Pedra | Pedra | Pokémon que não escolheram você hesitam menos |
+| 2 | Misty | Cerulean | Água | Cascata | Lojas vendem o estoque de trás do balcão |
+| 3 | Lt. Surge | Vermilion | Elétrico | Trovão | +1 Percepção |
+| 4 | Erika | Celadon | Grama | Arco-Íris | +1 Intelecto |
+| 5 | Koga | Fuchsia | Venenoso | Alma | +1 Resistência |
+| 6 | Sabrina | Saffron | Psíquico | Pântano | +1 Carisma |
+| 7 | Blaine | Cinnabar | Fogo | Vulcão | +1 Sorte |
+| 8 | Giovanni | Viridian | Terrestre | Terra | A Liga passa a te tratar como quem terminou o que começou |
+
+Cada insígnia também reduz a desobediência do time em 3 pontos — com as oito, até um Pokémon comprado numa banca de rua obedece.
+
+**Viridian só abre com sete insígnias**, e quem está lá dentro é Giovanni. Dois anos depois de Red desmontar a Rocket, ele voltou para a única coisa que sempre foi legalmente dele: a licença do ginásio, em nome próprio, com certificado de vistoria na parede. É o pagamento da linhagem que o capítulo 9 abre ("Giovanni era o primeiro. O segundo durou nove meses. Eu sou a terceira.").
+
+**Líderes recusam luta.** Erika não enfrenta quem lucra com o tráfico de Celadon; Sabrina não fica na mesma sala de quem destruiu o andar 11; Misty lembra de quem passou reto pela Marta na Rota 25. Toda recusa tem saída — pela reputação, que lava o eixo contrário, exatamente como as regras do sistema definem.
 
 ### Rotas narrativas
 
@@ -128,6 +149,7 @@ js/engine/captura.js     captura e consequências em cascata dos lendários
 js/story/motor.js        cenas, efeitos, rotas divergentes e progressão
 js/story/capitulos.js    registro da campanha
 js/story/cap-*.js        os 20 capítulos
+js/story/ginasios.js     os 8 líderes, times, falas e travas
 js/ui/interface.js       telas
 js/main.js               fluxo do jogo
 ```
