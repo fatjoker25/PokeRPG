@@ -77,6 +77,9 @@ const Estado = {
       liga: {avisos:0, ordemDevolucao:false, detencao:false},
       mundo: {clima:'normal', instabilidade:0, eventos:[]},
       config: {danoMult:1, ritmo:'fiel'},   // 'fiel' = 1d10×(poder÷10) puro
+      via: 'neutro',          // heroi | mercenario | foragido | pesquisador
+      viaAnterior: null,
+      finaisVistos: [],
       log: [],
       relogio: {dia:1, periodo:'manhã'}
     };
@@ -253,5 +256,22 @@ const Estado = {
   },
   apagarSave(slot='auto'){
     try { localStorage.removeItem('pokerpg_save_' + slot); } catch(e){}
+  },
+
+  /* ---------- CÓDICE DE FINAIS (sobrevive entre partidas) ---------- */
+  registrarFinal(id, titulo){
+    try {
+      const raw = localStorage.getItem('pokerpg_finais');
+      const lista = raw ? JSON.parse(raw) : [];
+      if (!lista.find(f => f.id === id)){
+        lista.push({id, titulo, quando: Date.now()});
+        localStorage.setItem('pokerpg_finais', JSON.stringify(lista));
+      }
+      return lista;
+    } catch(e){ return []; }
+  },
+  finaisDescobertos(){
+    try { const raw = localStorage.getItem('pokerpg_finais'); return raw ? JSON.parse(raw) : []; }
+    catch(e){ return []; }
   }
 };

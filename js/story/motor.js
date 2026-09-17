@@ -1,6 +1,14 @@
 /* ============================================================
    MOTOR NARRATIVO — resolve cenas, efeitos e progressão
    ============================================================ */
+const NOME_VIA = {
+  neutro:'mais um treinador na estrada',
+  heroi:'alguém que aparece quando as coisas dão errado',
+  mercenario:'alguém que se resolve com dinheiro',
+  foragido:'um problema com nome e sobrenome',
+  pesquisador:'alguém que faz perguntas demais'
+};
+
 const Historia = {
   capAtual: null,
   cenaAtual: null,
@@ -40,6 +48,7 @@ const Historia = {
     if (presos.length) linhas.push(`Lendários em cativeiro: ${presos.map(l => DEX[l.dex].nome).join(', ')}.`);
     const caçando = Object.values(d.lendarios).filter(l => l.caçandoVoce);
     if (caçando.length) linhas.push(`Te caçando: ${caçando.map(l => DEX[l.dex].nome).join(', ')}.`);
+    if (d.via && d.via !== 'neutro') linhas.push(`Kanto te trata como: ${NOME_VIA[d.via] || d.via}.`);
     if (d.liga.detencao) linhas.push('A Liga Pokémon tem uma ordem de detenção com o seu nome.');
     else if (d.liga.ordemDevolucao) linhas.push('A Liga exigiu formalmente a devolução do que você pegou.');
     if (d.mundo.clima !== 'normal') linhas.push(`O clima de Kanto está ${d.mundo.clima}.`);
@@ -136,10 +145,46 @@ const Historia = {
     return avisos;
   },
 
+  /* Próximo capítulo — respeita desvios de rota e capítulos condicionais.
+     Um capítulo pode definir:
+       proximo: d => numero   (desvio explícito, decidido pelas escolhas)
+       requer:  d => bool     (capítulo só existe em certas rotas) */
   proximoCapitulo(){
-    const prox = Estado.dados.capitulo + 1;
-    return this.capitulo(prox) ? prox : null;
-  }
+    const atual = this.capitulo(Estado.dados.capitulo);
+    if (atual && typeof atual.proximo === 'function'){
+      let alvo = null;
+      try { alvo = atual.proximo(Estado.dados); } catch(e){ alvo = null; }
+      if (alvo && this.capitulo(alvo)) return alvo;
+    }
+    let n = Estado.dados.capitulo + 1;
+    while (this.capitulo(n)){
+      const c = this.capitulo(n);
+      if (!c.requer || this.testaRequisito(c)) return n;
+      Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
+      n++;
+    }
+    return null;
+  },
+
+  testaRequisito(cap){
+    try { return !!cap.requer(Estado.dados); } catch(e){ return true; }
+  },
+
+  /* Quais capítulos ficaram de fora — usado no epílogo */
+  capitulosPulados(){
+    return CAPITULOS.filter(c => c.requer && !this.testaRequisito(c)).map(c => c.titulo);
+  },
+
+  /* A "via" é o jeito que o mundo passou a te enxergar. Ela abre e fecha caminhos. */
+  definirVia(via, motivo){
+    const d = Estado.dados;
+    if (d.via === via) return;
+    d.viaAnterior = d.via;
+    d.via = via;
+    Estado.registrar(`Rota narrativa: ${via}${motivo ? ' — ' + motivo : ''}`);
+  },
+
+  via(){ return Estado.dados.via || 'neutro'; }
 };
 
 /* Resolve texto que pode ser função do estado */

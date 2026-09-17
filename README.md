@@ -12,6 +12,53 @@ O universo é Kanto **dois anos depois** de Red desmontar a Equipe Rocket. Nele:
 
 A campanha começa leve e vai escurecendo capítulo a capítulo — a própria paleta da interface acompanha o tom.
 
+## A campanha
+
+**20 capítulos · 488 cenas · 769 escolhas · 17 finais.**
+
+| # | Capítulo | Tom |
+|---|---|---|
+| 1 | A Última Manhã | leve |
+| 2 | Gente Boa e Gente Comum | leve |
+| 3 | O Que Tem Debaixo das Folhas | inquieto |
+| 4 | Pedra Sobre Pedra | inquieto |
+| 5 | O Que Sobrou da Rocket | sombrio |
+| 6 | O Preço de Uma Coisa Viva | sombrio |
+| 7 | A Torre | muito sombrio |
+| 8 | Todo Mundo Paga Passagem | sombrio |
+| 9 | A Cidade que Compra | muito sombrio |
+| 10 | O Zumbido | sombrio |
+| 11 | A Torre de Vidro | muito sombrio |
+| 12 | Nove Mil Hectares | muito sombrio |
+| 13 | Congelou | muito sombrio |
+| 14 | O Caderno de Cinnabar | muito sombrio |
+| 15 | Os Três que Correm | muito sombrio |
+| 16 | A Ilha Sem Nome | muito sombrio |
+| 17 | O Jardim | muito sombrio |
+| 18 | O Que Te Oferecem | muito sombrio |
+| 19 | O Vale | muito sombrio |
+| 20 | Eu Perguntei Primeiro | final |
+
+### Rotas narrativas
+
+O capítulo 9, em Celadon, é o ponto de virada: o que você responde ali define como Kanto passa a te enxergar pelo resto da campanha.
+
+| Rota | Como se entra | O que muda |
+|---|---|---|
+| **Herói** | recusa a rede e vai atrás do depósito | NPCs te procuram quando algo dá errado; cenas exclusivas de resgate |
+| **Mercenário** | aceita trabalhar para a Terceira | acesso por docas e portões de serviço; opções de venda e coleta |
+| **Foragido** | anuncia que quer a rede para si | você herda clientes e problemas; a Liga abre ficha |
+| **Pesquisador** | escolhe entender antes de agir | descobre o andar 11, a matriz e o que ninguém mais vê |
+| **Neutro** | sai no meio da conversa | nenhuma porta se abre; nenhuma se fecha |
+
+A rota altera texto, escolhas disponíveis e cenas inteiras em oito capítulos diferentes — e alguns finais só existem dentro de uma rota.
+
+### Os 17 finais
+
+Todos são alcançados no capítulo 20, e o que abre cada um é o que você fez nos dezenove anteriores: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
+
+O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 17 você já encontrou pela tela inicial.
+
 ## Como jogar
 
 ```
@@ -78,8 +125,9 @@ js/engine/pokemon.js     instâncias, stats por nível, exp, evolução, encontr
 js/engine/estado.js      reputação, memória de NPCs, lendários, save/load
 js/engine/batalha.js     combate completo
 js/engine/captura.js     captura e consequências em cascata dos lendários
-js/story/motor.js        resolução de cenas, efeitos e progressão
-js/story/capitulos.js    a campanha
+js/story/motor.js        cenas, efeitos, rotas divergentes e progressão
+js/story/capitulos.js    registro da campanha
+js/story/cap-*.js        os 20 capítulos
 js/ui/interface.js       telas
 js/main.js               fluxo do jogo
 ```
@@ -87,3 +135,14 @@ js/main.js               fluxo do jogo
 ## Encontros aleatórios
 
 Espécie e nível são **totalmente aleatórios**. O ambiente apenas enviesa a probabilidade — um Pokémon de nível 30 pode aparecer na Rota 1 (`1d20 = 20` na rolagem de nível). Lendários nunca aparecem em encontro aleatório: só em evento narrativo.
+
+
+## Continuidade
+
+O mundo lembra de tudo, e isso é mecânico, não decorativo:
+
+- **NPCs têm memória individual** — cada um guarda uma opinião numérica e as cenas em que você apareceu. Téo, a Dra. Ivone, o Caçador Vasco, o Capitão do S.S. Anne, a Terceira, Sabrina, Seu Bento e outros reagem ao que você fez com eles muitos capítulos antes.
+- **O cemitério é permanente.** Quem morre por escolha sua aparece na ficha até o fim, com a causa escrita, e é citado na Torre de Lavender e na entrevista da Liga.
+- **A instabilidade de Kanto** é um número que sobe quando você captura lendários ou quebra equilíbrios, e ela muda o clima descrito nas rotas, o que a Liga fala com você e o que você vê no capítulo 19.
+- **A Liga escala em três estágios** e emite ordem de detenção por conta própria se você insistir.
+- **A reputação nunca zera.** Ações contrárias lavam o eixo oposto antes de subir o seu — e os NPCs continuam citando as duas metades da frase.

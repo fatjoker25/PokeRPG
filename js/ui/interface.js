@@ -55,6 +55,7 @@ const UI = {
         <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
+        <button class="btn mini" onclick="UI.modalRota()">Rota</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
     </div>`;
@@ -80,6 +81,7 @@ const UI = {
         ${temSave ? '<button class="btn destaque" onclick="Jogo.continuar()">Continuar</button>' : ''}
         <button class="btn ${temSave?'':'destaque'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>
         <button class="btn" onclick="UI.modalRegras()">Regras do sistema</button>
+        <button class="btn" onclick="UI.modalFinais()">Códice de finais</button>
       </div>
       ${temSave ? '<div class="sussurro" style="margin-top:18px">Começar uma nova jornada apaga a atual.</div>' : ''}
     </div>`);
@@ -431,6 +433,9 @@ const UI = {
   telaFinal(final){
     this.tom('final'); this.limpar();
     const d = Estado.dados;
+    const codice = Estado.registrarFinal(final.id || 'fim', final.titulo);
+    const totalFinais = (typeof CAPITULOS !== 'undefined')
+      ? CAPITULOS.reduce((n,c) => n + Object.values(c.cenas).filter(x=>x.final).length, 0) : 0;
     const mortos = d.cemiterio.length
       ? `<h3>Quem não voltou</h3><p class="sussurro">${d.cemiterio.map(p=>this.esc(nomeExib(p))+' — '+this.esc(p.causaMorte)).join('<br>')}</p>` : '';
     const presos = Estado.lendariosCapturados();
@@ -449,9 +454,15 @@ const UI = {
         <div class="linha"><span class="k">Dias de jornada</span><span class="v">${d.relogio.dia}</span></div>
         ${mortos}
       </div>
+      <div style="text-align:left;max-width:610px;margin:26px auto 0">
+        <h3>Finais descobertos — ${codice.length} de ${totalFinais}</h3>
+        ${codice.map(f=>`<div class="linha"><span class="k">${this.esc(f.titulo)}</span><span class="v">${f.titulo===final.titulo?'agora':'✓'}</span></div>`).join('')}
+        <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
+      </div>
       <div style="margin-top:34px">
         <button class="btn destaque" onclick="Jogo.novo()">Nova jornada</button>
         <button class="btn" onclick="UI.modalDiario()">Ler o diário completo</button>
+        <button class="btn" onclick="UI.modalRota()">Ver a rota que você percorreu</button>
       </div>
     </div>`);
     this.rolarTopo();
@@ -567,6 +578,31 @@ const UI = {
       <h3>O que aconteceu</h3>
       ${log.length ? log.map(l=>`<div class="linha"><span class="k">Cap ${l.cap} · dia ${l.dia}</span><span style="text-align:right;flex:1">${this.esc(l.texto)}</span></div>`).join('')
                    : '<p class="nada">Nada registrado ainda.</p>'}`);
+  },
+
+  modalRota(){
+    const d = Estado.dados;
+    const percorridos = CAPITULOS.filter(c => c.num <= d.capitulo);
+    const pulados = Historia.capitulosPulados();
+    this.modal('A sua rota', `
+      <div class="linha"><span class="k">Rota narrativa</span><span class="v">${this.esc(NOME_VIA[d.via]||d.via||'neutro')}</span></div>
+      <h3>Capítulos vividos</h3>
+      ${percorridos.map(c=>`<div class="linha"><span class="k">${c.num}. ${this.esc(c.titulo)}</span><span class="v">${this.esc(c.tom)}</span></div>`).join('')}
+      ${pulados.length ? '<h3>O que não aconteceu nesta jornada</h3>' + pulados.map(t=>`<div class="linha"><span class="k">${this.esc(t)}</span><span class="v">—</span></div>`).join('') : ''}
+      <h3>Decisões que o mundo registrou</h3>
+      ${d.reputacao.historico.length
+        ? d.reputacao.historico.slice(-25).map(h=>`<div class="linha"><span class="k">Cap ${h.cap} · ${this.esc(h.motivo)}</span><span class="v" style="color:${h.eixo==='bom'?'var(--bom)':'var(--ruim)'}">${h.eixo} +${h.delta}</span></div>`).join('')
+        : '<p class="nada">Nada ainda.</p>'}
+    `);
+  },
+
+  modalFinais(){
+    const codice = Estado.finaisDescobertos();
+    const total = CAPITULOS.reduce((n,c)=>n+Object.values(c.cenas).filter(x=>x.final).length,0);
+    this.modal('Códice de finais', codice.length
+      ? `<p class="sussurro">${codice.length} de ${total} descobertos.</p>` +
+        codice.map(f=>`<div class="linha"><span class="k">${this.esc(f.titulo)}</span><span class="v">✓</span></div>`).join('')
+      : `<p class="nada">Nenhum final descoberto ainda. A campanha tem ${total}.</p>`);
   },
 
   modalRegras(){
