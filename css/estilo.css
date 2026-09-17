@@ -1,0 +1,238 @@
+/* ============================================================
+   POKÉMON RPG — JORNADA DO CAMPEÃO
+   A paleta escurece conforme a história escurece.
+   ============================================================ */
+:root{
+  --bg:#12161d;
+  --bg-2:#1a2029;
+  --painel:#1e252f;
+  --borda:#2e3743;
+  --texto:#dfe4ea;
+  --texto-fraco:#8b97a6;
+  --destaque:#e8b84b;
+  --destaque-2:#6fa8dc;
+  --bom:#5fb85f;
+  --ruim:#c0563c;
+  --perigo:#e04f3d;
+  --hp:#5fb85f;
+  --hp-medio:#e8c23c;
+  --hp-baixo:#e04f3d;
+  --sombra:0 8px 28px rgba(0,0,0,.45);
+  --raio:10px;
+  --fonte:'Segoe UI',system-ui,-apple-system,Roboto,'Helvetica Neue',sans-serif;
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+}
+/* tons por capítulo */
+body[data-tom="leve"]        { --bg:#182029; --bg-2:#1f2732; --painel:#232c38; --destaque:#f0c860; }
+body[data-tom="inquieto"]    { --bg:#141a21; --bg-2:#1a2028; --painel:#1e252e; --destaque:#e8b84b; }
+body[data-tom="sombrio"]     { --bg:#0f1319; --bg-2:#141920; --painel:#171d25; --destaque:#d9a13f; }
+body[data-tom="muito sombrio"]{ --bg:#0a0d11; --bg-2:#0e1217; --painel:#11161c; --destaque:#c08a35; --texto:#c9d0d8; }
+body[data-tom="final"]       { --bg:#07090c; --bg-2:#0a0d10; --painel:#0d1116; --destaque:#b07f7f; --texto:#c4c9d0; }
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--texto); font-family:var(--fonte);
+  line-height:1.65; font-size:16px; min-height:100vh;
+  transition:background .8s ease,color .8s ease;
+  -webkit-font-smoothing:antialiased;
+}
+#app{max-width:980px;margin:0 auto;padding:16px 16px 72px}
+
+/* ---------- topo ---------- */
+.topo{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;
+  padding:12px 14px;background:var(--painel);border:1px solid var(--borda);
+  border-radius:var(--raio);margin-bottom:14px;position:sticky;top:8px;z-index:20;
+  box-shadow:var(--sombra)
+}
+.topo h1{font-size:15px;margin:0;letter-spacing:.04em;font-weight:600}
+.topo .sub{font-size:12px;color:var(--texto-fraco);margin-top:2px}
+.topo-acoes{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---------- botões ---------- */
+button{font-family:inherit;font-size:14px;cursor:pointer;transition:.15s}
+.btn{
+  background:var(--bg-2);color:var(--texto);border:1px solid var(--borda);
+  padding:8px 14px;border-radius:8px
+}
+.btn:hover:not(:disabled){border-color:var(--destaque);color:var(--destaque)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.mini{padding:5px 10px;font-size:12.5px}
+.btn.destaque{background:var(--destaque);color:#15181d;border-color:var(--destaque);font-weight:600}
+.btn.destaque:hover{filter:brightness(1.12);color:#15181d}
+.btn.perigo{border-color:var(--perigo);color:var(--perigo)}
+.btn.perigo:hover:not(:disabled){background:var(--perigo);color:#fff}
+
+/* ---------- painéis ---------- */
+.painel{
+  background:var(--painel);border:1px solid var(--borda);border-radius:var(--raio);
+  padding:18px 20px;margin-bottom:14px;box-shadow:var(--sombra)
+}
+.painel h2{margin:0 0 12px;font-size:16px;letter-spacing:.05em;color:var(--destaque);font-weight:600}
+.painel h3{margin:16px 0 8px;font-size:13.5px;color:var(--texto-fraco);
+  text-transform:uppercase;letter-spacing:.09em;font-weight:600}
+
+/* ---------- narrativa ---------- */
+.cap-cabecalho{border-left:3px solid var(--destaque);padding-left:14px;margin-bottom:18px}
+.cap-cabecalho .num{font-size:11.5px;letter-spacing:.18em;color:var(--texto-fraco);text-transform:uppercase}
+.cap-cabecalho .tit{font-size:22px;font-weight:600;margin:3px 0}
+.cap-cabecalho .loc{font-size:13px;color:var(--texto-fraco);font-style:italic}
+
+.narrativa p{margin:0 0 15px;animation:aparece .5s ease both}
+.narrativa p:nth-child(1){animation-delay:.02s}
+.narrativa p:nth-child(2){animation-delay:.16s}
+.narrativa p:nth-child(3){animation-delay:.3s}
+.narrativa p:nth-child(4){animation-delay:.44s}
+.narrativa p:nth-child(5){animation-delay:.58s}
+.narrativa p:nth-child(6){animation-delay:.72s}
+.narrativa p:nth-child(n+7){animation-delay:.86s}
+@keyframes aparece{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:22px}
+.escolha{
+  text-align:left;background:var(--bg-2);border:1px solid var(--borda);color:var(--texto);
+  padding:13px 16px;border-radius:8px;line-height:1.5;position:relative;padding-left:38px
+}
+.escolha::before{
+  content:'›';position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  color:var(--texto-fraco);font-size:19px;line-height:1
+}
+.escolha:hover{border-color:var(--destaque);background:var(--painel)}
+.escolha:hover::before{color:var(--destaque)}
+
+/* ---------- avisos / consequências ---------- */
+.avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
+.aviso{
+  font-size:13.5px;padding:9px 13px;border-radius:7px;border-left:3px solid var(--borda);
+  background:var(--bg-2);animation:aparece .35s ease both
+}
+.aviso.rep{border-left-color:var(--destaque);color:var(--destaque)}
+.aviso.item,.aviso.pokemon,.aviso.cura,.aviso.insignia{border-left-color:var(--bom);color:var(--bom)}
+.aviso.dano,.aviso.morte,.aviso.gameover{border-left-color:var(--perigo);color:var(--perigo)}
+.aviso.mundo{border-left-color:var(--destaque-2);color:var(--destaque-2);font-style:italic}
+.aviso.liga{border-left-color:#b07fd0;color:#b07fd0}
+.aviso.perigo{border-left-color:var(--perigo);color:var(--perigo);font-weight:600}
+
+/* ---------- dados ---------- */
+.dado-caixa{
+  display:inline-flex;align-items:center;gap:7px;background:var(--bg-2);
+  border:1px solid var(--borda);border-radius:7px;padding:5px 11px;
+  font-family:var(--mono);font-size:12.5px;margin:3px 5px 3px 0
+}
+.dado-caixa .val{color:var(--destaque);font-weight:700;font-size:15px}
+.dado-caixa .mot{color:var(--texto-fraco)}
+.dado-caixa.max .val{color:var(--bom)}
+.dado-caixa.min .val{color:var(--perigo)}
+
+/* ---------- combate ---------- */
+.arena{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:620px){.arena{grid-template-columns:1fr}}
+.lutador{background:var(--bg-2);border:1px solid var(--borda);border-radius:9px;padding:13px 15px}
+.lutador.inimigo{border-color:#4a2f2f}
+.lutador .nome{font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.lutador .nv{font-size:12px;color:var(--texto-fraco);font-family:var(--mono)}
+.lutador .meta{font-size:12px;color:var(--texto-fraco);margin-top:3px}
+.barra{height:9px;background:#0a0d11;border-radius:5px;overflow:hidden;margin:9px 0 5px;border:1px solid var(--borda)}
+.barra i{display:block;height:100%;background:var(--hp);transition:width .45s ease;border-radius:4px}
+.barra.medio i{background:var(--hp-medio)} .barra.baixo i{background:var(--hp-baixo)}
+.hp-num{font-family:var(--mono);font-size:12px;color:var(--texto-fraco)}
+
+.tipo-tag{
+  display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:20px;
+  color:#0e1116;font-weight:700;margin-right:4px;letter-spacing:.03em
+}
+.status-tag{
+  display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:20px;
+  background:#3a2a2a;color:#e8a05c;margin-left:5px;text-transform:uppercase;letter-spacing:.05em
+}
+
+.log-combate{
+  background:#0a0d11;border:1px solid var(--borda);border-radius:8px;padding:12px 14px;
+  max-height:290px;overflow-y:auto;font-size:13.5px;margin-bottom:14px;scroll-behavior:smooth
+}
+.log-combate .l{padding:3px 0;animation:aparece .3s ease both}
+.log-combate .l.golpe{color:var(--destaque)}
+.log-combate .l.dano{color:#e89a8a}
+.log-combate .l.danoJogador{color:var(--perigo);font-weight:600}
+.log-combate .l.cura,.log-combate .l.exp{color:var(--bom)}
+.log-combate .l.status,.log-combate .l.natureza{color:var(--destaque-2);font-style:italic}
+.log-combate .l.erro{color:var(--texto-fraco)}
+.log-combate .l.perigo,.log-combate .l.gameover{color:var(--perigo);font-weight:700}
+.log-combate .l.vitoria,.log-combate .l.nivel,.log-combate .l.evolucao,.log-combate .l.captura{color:var(--bom);font-weight:600}
+.log-combate .l.turno{color:var(--texto-fraco);border-top:1px solid var(--borda);margin-top:7px;padding-top:7px;font-family:var(--mono);font-size:12px}
+.log-combate .l.inicio{color:var(--destaque);font-weight:600;font-size:14.5px}
+
+.acoes-combate{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(max-width:620px){.acoes-combate{grid-template-columns:1fr}}
+.golpe-btn{
+  text-align:left;background:var(--bg-2);border:1px solid var(--borda);color:var(--texto);
+  padding:10px 13px;border-radius:8px;display:flex;justify-content:space-between;
+  align-items:center;gap:9px
+}
+.golpe-btn:hover:not(:disabled){border-color:var(--destaque)}
+.golpe-btn .pp{font-family:var(--mono);font-size:11.5px;color:var(--texto-fraco)}
+.golpe-btn .pd{font-size:11px;color:var(--texto-fraco)}
+
+/* ---------- ficha / listas ---------- */
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.carta{background:var(--bg-2);border:1px solid var(--borda);border-radius:8px;padding:12px 14px;font-size:13.5px}
+.carta.morto{opacity:.55;border-style:dashed;border-color:var(--perigo)}
+.carta .t{font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between;gap:6px}
+.linha{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--borda);font-size:13.5px}
+.linha:last-child{border-bottom:none}
+.linha .k{color:var(--texto-fraco)}
+.linha .v{font-family:var(--mono)}
+
+.status-linha{display:flex;align-items:center;gap:10px;padding:7px 0}
+.status-linha .nome{width:112px;font-size:13.5px}
+.status-pontos{display:flex;gap:4px;flex:1}
+.status-pontos i{width:13px;height:13px;border-radius:3px;background:var(--bg);border:1px solid var(--borda)}
+.status-pontos i.on{background:var(--destaque);border-color:var(--destaque)}
+
+.rep-barra{height:7px;background:var(--bg);border:1px solid var(--borda);border-radius:4px;overflow:hidden;margin-top:7px}
+.rep-barra i{display:block;height:100%;transition:width .5s}
+.rep-barra.bom i{background:var(--bom)} .rep-barra.ruim i{background:var(--ruim)}
+
+/* ---------- criação ---------- */
+.campo{margin-bottom:15px}
+.campo label{display:block;font-size:12.5px;color:var(--texto-fraco);margin-bottom:5px;
+  text-transform:uppercase;letter-spacing:.07em}
+.campo input,.campo select,.campo textarea{
+  width:100%;background:var(--bg);border:1px solid var(--borda);color:var(--texto);
+  padding:10px 13px;border-radius:7px;font-family:inherit;font-size:15px
+}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--destaque)}
+.campo textarea{resize:vertical;min-height:62px}
+.dois{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:620px){.dois{grid-template-columns:1fr}}
+.opcoes-radio{display:flex;flex-wrap:wrap;gap:8px}
+.opcoes-radio button{
+  background:var(--bg);border:1px solid var(--borda);color:var(--texto);
+  padding:9px 15px;border-radius:7px
+}
+.opcoes-radio button.sel{border-color:var(--destaque);color:var(--destaque);background:var(--bg-2)}
+
+/* ---------- modal ---------- */
+.modal-fundo{
+  position:fixed;inset:0;background:rgba(4,6,9,.82);display:flex;align-items:center;
+  justify-content:center;padding:18px;z-index:100;animation:aparece .2s ease both
+}
+.modal{
+  background:var(--painel);border:1px solid var(--borda);border-radius:12px;padding:22px;
+  max-width:620px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:var(--sombra)
+}
+.modal h2{margin-top:0}
+
+/* ---------- final ---------- */
+.final{text-align:center;padding:42px 26px}
+.final .tit{font-size:30px;letter-spacing:.14em;color:var(--destaque);margin-bottom:26px;font-weight:300}
+.final p{max-width:610px;margin:0 auto 17px;text-align:left}
+
+.gameover{text-align:center;padding:56px 24px}
+.gameover .tit{font-size:36px;color:var(--perigo);letter-spacing:.2em;margin-bottom:18px;font-weight:300}
+
+.sussurro{color:var(--texto-fraco);font-size:13px;font-style:italic;margin-top:10px}
+.centro{text-align:center}
+.mono{font-family:var(--mono)}
+.nada{color:var(--texto-fraco);font-style:italic;font-size:13.5px}
