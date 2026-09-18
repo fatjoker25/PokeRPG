@@ -14,7 +14,7 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**23 capítulos · 574 cenas · 906 escolhas · 20 finais · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos.**
+**23 capítulos · 1.190 cenas · 3.043 escolhas · 29 finais · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 10 lojas e 9 trocas, uma por cidade.**
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -140,11 +140,44 @@ O capítulo 9, em Celadon, é o ponto de virada: o que você responde ali define
 
 A rota altera texto, escolhas disponíveis e cenas inteiras em oito capítulos diferentes — e alguns finais só existem dentro de uma rota.
 
-### Os 17 finais
+### Os finais
 
 Todos são alcançados no capítulo 20, e o que abre cada um é o que você fez nos dezenove anteriores: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
 
-O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 17 você já encontrou pela tela inicial.
+O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 29 você já encontrou pela tela inicial.
+
+## Mercado, itens e trocas
+
+A mochila começa **vazia**. Licença, Pokédex, cartão de treinador e as primeiras
+bolas se recebem no Centro Pokémon, e todo o resto se compra, se acha ou alguém dá.
+
+**Cada cidade tem a sua loja**, com estoque e preço que dizem o que a cidade é:
+
+| Cidade | O que vende | Preço |
+|---|---|---|
+| Pallet | mercado de bairro: bola, Potion, anzol, pilha | tabela |
+| Viridian | o kit que um treinador de três dias esqueceu | tabela |
+| Pewter | ferragem de pedreira: corda, lanterna, máscara de pó | +15% |
+| Cerulean | bebida, isca e uma Pedra da Água na vitrine há anos | +5% |
+| Vermilion | armazém do cais, metade importada sem imposto | −10% |
+| Lavender | incenso, vela e Potion no mesmo balcão | +10% |
+| Celadon | shopping de sete andares, o mais barato de Kanto, com quatro pedras | −15% |
+| Fuchsia | posto da Zona Safári: mais repelente que bola | tabela |
+| Saffron | conveniência de prédio comercial, tudo com nota | +30% |
+| Cinnabar | uma casa com vitrine; às vezes falta tudo | +25% |
+
+São **33 itens**, incluindo as cinco pedras evolutivas (usáveis pela mochila),
+Éter, Elixir, Boneco, Repelente e o ferramental de cada região — máscara de pó,
+bota de borracha, cobertor térmico, câmera descartável, caderno de campo.
+Algumas provas da campanha se tiram com a câmera descartável.
+
+**Nove trocas, uma por cidade.** Cada uma tem quem, onde, por que, e o que
+acontece depois — e as quatro evoluções por troca de Gen 1 funcionam: o Graveler
+que você dá vira Golem do outro lado, e o Haunter do sétimo andar da Torre de
+Lavender vira Gengar no segundo em que a bola encosta na sua mão.
+
+As rotas têm **38 achados diferentes**, filtrados pelo ambiente: o que se
+encontra numa caverna não é o que se encontra na beira de um rio.
 
 ## Como jogar
 
