@@ -41,7 +41,11 @@ const ITENS_INFO = {
   'Antidote':    {tipo:'status', cura:'veneno', desc:'Frasco pequeno, gosto horrível, funciona.'},
   'Full Heal':   {tipo:'status', cura:'todos', desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
   'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Pra você, não pra eles. Você também se machuca.'},
-  'Ração':       {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'}
+  'Ração':       {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'},
+  'Moon Stone':  {tipo:'lembranca', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
+                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.'}},
+  'Corda':       {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
+  'Lanterna':    {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'}
 };
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
@@ -83,7 +87,7 @@ const Estado = {
       time: [],
       pc: [],                 // Pokémon depositados
       cemiterio: [],          // mortes permanentes — nunca some
-      itens: {'Poké Ball':5, 'Potion':3, 'Bandagem':2},
+      itens: {},              // a mochila começa vazia: tudo se recebe ou se compra
       insignias: [],
       capitulo: 0,
       cena: null,
