@@ -11,7 +11,7 @@ const ANCORAS = {
   5:  {local:'monte_lua', chamada:'O cabo elétrico no chão da caverna leva a algum lugar.'},
   6:  {local:'cerulean',  chamada:'Na ponte norte tem gente reunida em volta de uma mesa com toalha.'},
   7:  {local:'lavender',  chamada:'Um som de osso batendo em pedra, três vezes, pausa, três vezes.'},
-  8:  {local:'vermilion', chamada:'O S.S. Anne está atracado no cais três.'},
+  8:  {local:'vermilion', chamada:'No cais três tem uma parede branca de nove andares com as janelas acesas.'},
   9:  {local:'celadon',   chamada:'Três caminhões de Vermilion descarregaram aqui hoje de manhã.'},
   10: {local:'usina',     chamada:'O zumbido vem da subestação, e a usina está desligada há onze anos.'},
   11: {local:'saffron',   chamada:'A Silph Co. ocupa um quarteirão inteiro. O ginásio da cidade está fechado.'},
