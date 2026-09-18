@@ -474,7 +474,7 @@ const UI = {
         <div class="tit">Os Oito Ginásios</div>
         <div class="loc">${n} de 8 insígnias</div>
       </div>
-      <p class="sussurro">Ordem livre: comece por onde quiser. Cada líder escala o time para o número de insígnias que você já tem — então nenhum ginásio vira passeio nem muro. Blue só recebe quem tem sete.</p>
+      <p class="sussurro">Ordem livre: comece por onde quiser. Cada líder adapta o <b>time inteiro</b> ao seu progresso — com poucas insígnias ele traz Pokémon não evoluídos e um time curto; com muitas, a linha completa e o ace. Nenhum ginásio vira passeio nem muro, seja qual for a ordem. Blue só recebe quem tem sete.</p>
       <div class="grade" style="margin-top:14px">${GINASIOS.map(cartao).join('')}</div>
       <div style="margin-top:20px">
         <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
