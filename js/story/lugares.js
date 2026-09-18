@@ -10,7 +10,7 @@ const ANCORAS = {
   4:  {local:'pewter',    chamada:'Uma detonação a cada vinte minutos, e ninguém na rua levanta a cabeça.'},
   5:  {local:'monte_lua', chamada:'O cabo elétrico no chão da caverna leva a algum lugar.'},
   6:  {local:'cerulean',  chamada:'Na ponte norte tem gente reunida em volta de uma mesa com toalha.'},
-  7:  {local:'lavender',  chamada:'A torre de sete andares no fim da rua sem música.'},
+  7:  {local:'lavender',  chamada:'Um som de osso batendo em pedra, três vezes, pausa, três vezes.'},
   8:  {local:'vermilion', chamada:'O S.S. Anne está atracado no cais três.'},
   9:  {local:'celadon',   chamada:'Três caminhões de Vermilion descarregaram aqui hoje de manhã.'},
   10: {local:'usina',     chamada:'O zumbido vem da subestação, e a usina está desligada há onze anos.'},
