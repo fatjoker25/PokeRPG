@@ -72,7 +72,24 @@ Acessíveis pelo botão **Liga** na barra do topo.
 
 ### Os oito ginásios
 
-Acessíveis a qualquer momento pelo botão **Ginásios** na barra do topo, entre capítulos ou no encerramento de cada um. Cada líder tem time completo, fala diferente conforme o que você fez **na cidade dele**, e uma insígnia com efeito mecânico.
+Acessíveis a qualquer momento pelo botão **Ginásios** na barra do topo. **A ordem é livre**: o ginásio da sua cidade natal está aberto desde o primeiro dia e os demais a partir do capítulo 2. A numeração abaixo é só de referência — não é uma ordem obrigatória.
+
+Cada líder **adapta o time inteiro ao seu progresso**, e não é só nível: é a composição. Com poucas insígnias ele traz Pokémon não evoluídos e um time curto; com muitas, a linha evolutiva completa e o ace.
+
+Exemplo — você nasceu em Saffron e a Sabrina é o seu primeiro ginásio:
+
+| Suas insígnias | Time da Sabrina |
+|---|---|
+| 0 | Abra Nv13, Mr. Mime Nv16 |
+| 2 | Abra Nv21, Drowzee Nv22, Mr. Mime Nv25 |
+| 4 | Kadabra Nv31, Hypno Nv32, Mr. Mime Nv33, Slowpoke Nv36 |
+| 7 | Kadabra Nv46, Hypno Nv47, Mr. Mime Nv48, Slowbro Nv49, Starmie Nv50, Alakazam Nv53 |
+
+O Alakazam dela só aparece se você deixar Saffron para o fim. O mesmo vale para os oito: Brock começa com Geodude e Onix e termina com Golem, Rhydon, Onix, Kabutops e Aerodactyl; Erika começa com Oddish e Bellsprout e termina com Venusaur.
+
+São quatro escalões por ginásio (0–1, 2–3, 4–5 e 6–7 insígnias), cada um com lista de espécies e faixa de nível próprias, mais um grau de dificuldade fixo por líder — então Brock continua sendo o mais leve e Blaine o mais pesado em qualquer ponto da escala.
+
+Cada líder também fala diferente conforme o que você fez **na cidade dele**, e cada insígnia tem efeito mecânico.
 
 | # | Líder | Cidade | Tipo | Insígnia | Efeito |
 |---|---|---|---|---|---|
