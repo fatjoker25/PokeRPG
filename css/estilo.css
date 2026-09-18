@@ -574,3 +574,188 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .item-linha.compravel:hover:not(:disabled) .qtd{background:var(--destaque);color:#171a20;border-color:var(--destaque)}
 .item-linha.caro{opacity:.4;cursor:not-allowed}
 .item-linha.caro .qtd{color:var(--perigo)}
+
+/* ---------- etiquetas e ficha técnica ---------- */
+.tipo-tag.desconhecido{
+  background:repeating-linear-gradient(45deg,#3a424c,#3a424c 5px,#333b45 5px,#333b45 10px);
+  color:#9aa4b0;box-shadow:none
+}
+.segurado-tag{
+  display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;
+  background:color-mix(in srgb, var(--destaque) 16%, transparent);
+  border:1px solid color-mix(in srgb, var(--destaque) 42%, var(--borda));
+  color:var(--destaque);letter-spacing:.02em
+}
+.lutador .segurado-tag{margin-top:7px}
+.segurado-linha{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:9px;padding-top:9px;border-top:1px dashed var(--borda)
+}
+.segurado-linha .fraco{flex:1;min-width:120px}
+
+h3.cat-item{
+  margin:16px 0 6px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texto-tenue);font-weight:700;
+  border-bottom:1px solid var(--borda);padding-bottom:5px
+}
+.item-linha .ficha{
+  display:block;font-family:var(--mono);font-size:11.5px;color:var(--destaque-3);
+  margin-top:3px;letter-spacing:.01em;line-height:1.45
+}
+.ficha-bloco{
+  font-family:var(--mono);font-size:12.5px;color:var(--destaque-3);
+  background:var(--bg);border:1px solid var(--borda);border-left:3px solid var(--destaque-3);
+  border-radius:8px;padding:9px 12px;margin:10px 0
+}
+
+/* ---------- pokédex: lista e ficha ---------- */
+.dex-barra{
+  height:6px;border-radius:4px;background:#0b0e13;border:1px solid var(--borda);
+  overflow:hidden;margin:0 0 14px
+}
+.dex-barra i{display:block;height:100%;background:linear-gradient(90deg,#8a3a3a,#d95757);transition:width .6s var(--suave)}
+
+.dex-grade{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:6px;
+  max-height:52vh;overflow-y:auto;padding-right:4px
+}
+.dex-cela{
+  display:flex;align-items:baseline;gap:7px;width:100%;text-align:left;
+  font:inherit;font-size:12.5px;color:inherit;
+  padding:7px 9px;border-radius:8px;border:1px solid var(--borda);
+  background:var(--bg);position:relative
+}
+.dex-cela .n{font-family:var(--mono);font-size:11px;color:var(--texto-tenue);flex:0 0 auto}
+.dex-cela .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dex-cela .marca{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-tenue)
+}
+.dex-cela.vazia{color:var(--texto-tenue);opacity:.55;cursor:default}
+.dex-cela.vazia .nm{font-family:var(--mono);letter-spacing:.14em}
+.dex-cela.vis{border-style:dashed;color:var(--texto-fraco);cursor:pointer}
+.dex-cela.vis:hover{border-color:var(--borda-forte)}
+.dex-cela.cat{
+  cursor:pointer;color:var(--texto);
+  border-color:color-mix(in srgb, #d95757 32%, var(--borda));
+  background:linear-gradient(180deg, color-mix(in srgb,#d95757 8%, var(--bg)), var(--bg))
+}
+.dex-cela.cat .n{color:#e08a8a}
+.dex-cela.cat:hover{border-color:#d95757;transform:translateY(-1px);box-shadow:0 6px 16px -10px rgba(217,87,87,.7)}
+
+.dex-ficha{
+  border:1px solid var(--borda);border-radius:12px;padding:14px 16px;
+  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
+  animation:varreDex .4s var(--suave) both
+}
+.dex-ficha .cab{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.dex-ficha .num{font-family:var(--mono);font-size:12px;color:#e08a8a}
+.dex-ficha .nomeg{font-size:19px;font-weight:650;letter-spacing:.01em}
+.dex-ficha .nota{font-size:12.5px;color:var(--texto-fraco);margin-top:6px;font-style:italic}
+.dex-ficha .nota.mono{font-family:var(--mono);font-style:normal;letter-spacing:.02em}
+
+.base-linha{display:flex;align-items:center;gap:10px;padding:3px 0;font-size:12.5px}
+.base-linha .k{flex:0 0 88px;color:var(--texto-fraco)}
+.base-linha .v{flex:0 0 36px;text-align:right;color:var(--texto)}
+.barrinha{
+  flex:1;height:7px;border-radius:4px;background:#0b0e13;
+  border:1px solid var(--borda);overflow:hidden
+}
+.barrinha i{
+  display:block;height:100%;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--destaque-3) 55%, #000), var(--destaque-3));
+  transition:width .6s var(--suave)
+}
+
+/* ============================================================
+   DADOS — eles giram e dá pra girar de novo
+   ============================================================ */
+.dados-area{margin-top:14px}
+.dados-linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dado{
+  position:relative;width:52px;height:52px;flex:0 0 auto;
+  background:linear-gradient(155deg, var(--painel-2), var(--bg));
+  border:1px solid var(--borda-forte);color:var(--texto);
+  font-family:var(--mono);cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  animation:dadoEntra .45s var(--mola) both;
+  transition:transform .18s var(--mola), border-color .2s var(--suave), box-shadow .25s var(--suave);
+}
+@keyframes dadoEntra{
+  0%{opacity:0;transform:translateY(-14px) rotate(-30deg) scale(.7)}
+  70%{transform:translateY(0) rotate(8deg) scale(1.06)}
+  100%{opacity:1;transform:none}
+}
+.dado .face{font-size:19px;font-weight:700;line-height:1;pointer-events:none}
+.dado .rot{
+  position:absolute;bottom:3px;left:0;right:0;text-align:center;
+  font-size:8.5px;letter-spacing:.1em;color:var(--texto-tenue);pointer-events:none
+}
+.dado:hover{transform:translateY(-2px) rotate(-3deg);border-color:var(--destaque);box-shadow:0 8px 20px -10px var(--destaque-sombra)}
+.dado:active{transform:translateY(0) scale(.94)}
+
+/* formatos */
+.dado.d20{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.dado.d10{clip-path:polygon(50% 0,100% 38%,50% 100%,0 38%)}
+.dado.d6 {border-radius:11px}
+.dado.d4 {clip-path:polygon(50% 4%,98% 96%,2% 96%)}
+.dado.d4 .face{transform:translateY(7px);font-size:16px}
+.dado.d4 .rot{bottom:1px;font-size:7.5px}
+
+/* girando */
+.dado.girando{animation:tumbar .28s linear infinite;border-color:var(--destaque)}
+@keyframes tumbar{
+  0%  {transform:rotate(0deg)   scale(1)}
+  25% {transform:rotate(90deg)  scale(1.07)}
+  50% {transform:rotate(180deg) scale(.96)}
+  75% {transform:rotate(270deg) scale(1.07)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+.dado.girando .face{opacity:.85}
+.dado.parou{animation:assentar .5s var(--mola) both}
+@keyframes assentar{
+  0%{transform:scale(1.22) rotate(-6deg)}
+  60%{transform:scale(.97) rotate(2deg)}
+  100%{transform:none}
+}
+
+/* resultados extremos */
+.dado.max{border-color:var(--bom);box-shadow:0 0 20px -6px rgba(99,181,115,.75)}
+.dado.max .face{color:var(--bom)}
+.dado.min{border-color:var(--perigo);box-shadow:0 0 20px -6px rgba(221,84,66,.7)}
+.dado.min .face{color:var(--perigo)}
+
+.dados-legendas{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px}
+.dado-legenda{font-size:11.5px;color:var(--texto-fraco);font-family:var(--mono)}
+.dado-legenda b{color:var(--texto-tenue);font-weight:600}
+.dado-legenda b.v{color:var(--destaque)}
+
+/* bandeja livre */
+.bandeja{
+  margin-top:14px;padding:11px 13px;border:1px dashed var(--borda);border-radius:var(--raio-sm);
+  background:color-mix(in srgb, var(--bg-2) 60%, transparent);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap
+}
+.bandeja-rot{
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--texto-tenue);
+  writing-mode:horizontal-tb
+}
+.bandeja .dado{width:42px;height:42px;opacity:.75}
+.bandeja .dado .face{font-size:15px}
+.bandeja .dado:hover{opacity:1}
+
+/* ajustes finos dos dados */
+.dados-linha{gap:12px}
+.dado.d10 .rot{bottom:9px}
+.dado.d4 .face{transform:translateY(9px);font-size:15px}
+.dado.d4 .rot{bottom:4px;font-size:7px;opacity:.75}
+.dado.d20 .rot{bottom:6px}
+.bandeja .dados-linha{gap:14px}
+.bandeja .dado{width:44px;height:44px}
+.bandeja .dado.d4 .face{transform:translateY(7px);font-size:13px}
+.bandeja .dado .rot{font-size:7.5px}
+@media(max-width:620px){
+  .dado{width:46px;height:46px}
+  .dado .face{font-size:17px}
+  .dados-legendas{font-size:11px}
+}

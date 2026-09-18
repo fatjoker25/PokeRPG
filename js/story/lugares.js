@@ -206,7 +206,19 @@ const ACHADOS_ROTA = [
   {amb:['cemiterio'], texto:['Uma flor amarela nascida sozinha entre duas pedras, longe de onde essa flor devia nascer.']},
   {amb:['cidade','especial'], texto:['Numa lixeira de rua, uma Câmera descartável com dezoito poses ainda. Ninguém joga isso fora à toa.'],
    ef:{itens:{'Câmera descartável':1}}},
-  {amb:['especial','cidade'], texto:['Um papel timbrado amassado no chão, com brasão no alto. Você desamassa. É um aviso de cobrança de água.']}
+  {amb:['especial','cidade'], texto:['Um papel timbrado amassado no chão, com brasão no alto. Você desamassa. É um aviso de cobrança de água.']},
+
+  /* ─── itens segurados: coisa de gente, largada por gente ─── */
+  {texto:['Amarrado num galho, na altura do peito, um saquinho de pano com ração boa dentro e um nó que alguém deu com muito cuidado.',
+          'O nó é de quem amarrou pra não perder e perdeu assim mesmo.'], ef:{itens:{'Resto de Ração':1}}},
+  {texto:['Uma faixa de algodão grossa, suja de terra, no meio da trilha. Tem marca de nó nas duas pontas.'], ef:{itens:{'Faixa Firme':1}}},
+  {amb:['montanha','caverna'], texto:['Um peso de chumbo costurado numa tira de couro, encostado numa pedra. Pesa muito mais do que parece.'], ef:{itens:{'Punho de Ferro':1}}},
+  {amb:['cidade','especial'], texto:['Numa mureta, um par de óculos de lente grossa com a armação torta, esperando um dono que não voltou.'], ef:{itens:{'Óculos Grossos':1}}},
+  {amb:['campo','floresta'], texto:['Um colete de couro rachado pendurado numa cerca, com remendo nas costas e a fivela ainda boa.'], ef:{itens:{'Colete de Couro':1}}},
+  {texto:['Um sino de latão do tamanho de uma unha, no chão, com o barbante arrebentado.',
+          'Você balança sem querer e o som é ridículo e você balança de novo de propósito.'], ef:{itens:{'Sino Calmante':1}}},
+  {amb:['agua','cidade'], texto:['Uma moeda antiga furada no meio, pendurada num barbante, presa numa fresta de calçada.'], ef:{itens:{'Amuleto de Moeda':1}}},
+  {amb:['campo','rota','floresta'], texto:['Uma botina de sola fina, quase gasta, do pé esquerdo — e o do direito três metros adiante.'], ef:{itens:{'Botina Leve':1}}}
 ];
 
 const Descobertas = {

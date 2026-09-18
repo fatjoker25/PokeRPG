@@ -584,6 +584,191 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .item-linha.caro{opacity:.4;cursor:not-allowed}
 .item-linha.caro .qtd{color:var(--perigo)}
 
+/* ---------- etiquetas e ficha técnica ---------- */
+.tipo-tag.desconhecido{
+  background:repeating-linear-gradient(45deg,#3a424c,#3a424c 5px,#333b45 5px,#333b45 10px);
+  color:#9aa4b0;box-shadow:none
+}
+.segurado-tag{
+  display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;
+  background:color-mix(in srgb, var(--destaque) 16%, transparent);
+  border:1px solid color-mix(in srgb, var(--destaque) 42%, var(--borda));
+  color:var(--destaque);letter-spacing:.02em
+}
+.lutador .segurado-tag{margin-top:7px}
+.segurado-linha{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:9px;padding-top:9px;border-top:1px dashed var(--borda)
+}
+.segurado-linha .fraco{flex:1;min-width:120px}
+
+h3.cat-item{
+  margin:16px 0 6px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texto-tenue);font-weight:700;
+  border-bottom:1px solid var(--borda);padding-bottom:5px
+}
+.item-linha .ficha{
+  display:block;font-family:var(--mono);font-size:11.5px;color:var(--destaque-3);
+  margin-top:3px;letter-spacing:.01em;line-height:1.45
+}
+.ficha-bloco{
+  font-family:var(--mono);font-size:12.5px;color:var(--destaque-3);
+  background:var(--bg);border:1px solid var(--borda);border-left:3px solid var(--destaque-3);
+  border-radius:8px;padding:9px 12px;margin:10px 0
+}
+
+/* ---------- pokédex: lista e ficha ---------- */
+.dex-barra{
+  height:6px;border-radius:4px;background:#0b0e13;border:1px solid var(--borda);
+  overflow:hidden;margin:0 0 14px
+}
+.dex-barra i{display:block;height:100%;background:linear-gradient(90deg,#8a3a3a,#d95757);transition:width .6s var(--suave)}
+
+.dex-grade{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:6px;
+  max-height:52vh;overflow-y:auto;padding-right:4px
+}
+.dex-cela{
+  display:flex;align-items:baseline;gap:7px;width:100%;text-align:left;
+  font:inherit;font-size:12.5px;color:inherit;
+  padding:7px 9px;border-radius:8px;border:1px solid var(--borda);
+  background:var(--bg);position:relative
+}
+.dex-cela .n{font-family:var(--mono);font-size:11px;color:var(--texto-tenue);flex:0 0 auto}
+.dex-cela .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dex-cela .marca{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-tenue)
+}
+.dex-cela.vazia{color:var(--texto-tenue);opacity:.55;cursor:default}
+.dex-cela.vazia .nm{font-family:var(--mono);letter-spacing:.14em}
+.dex-cela.vis{border-style:dashed;color:var(--texto-fraco);cursor:pointer}
+.dex-cela.vis:hover{border-color:var(--borda-forte)}
+.dex-cela.cat{
+  cursor:pointer;color:var(--texto);
+  border-color:color-mix(in srgb, #d95757 32%, var(--borda));
+  background:linear-gradient(180deg, color-mix(in srgb,#d95757 8%, var(--bg)), var(--bg))
+}
+.dex-cela.cat .n{color:#e08a8a}
+.dex-cela.cat:hover{border-color:#d95757;transform:translateY(-1px);box-shadow:0 6px 16px -10px rgba(217,87,87,.7)}
+
+.dex-ficha{
+  border:1px solid var(--borda);border-radius:12px;padding:14px 16px;
+  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
+  animation:varreDex .4s var(--suave) both
+}
+.dex-ficha .cab{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.dex-ficha .num{font-family:var(--mono);font-size:12px;color:#e08a8a}
+.dex-ficha .nomeg{font-size:19px;font-weight:650;letter-spacing:.01em}
+.dex-ficha .nota{font-size:12.5px;color:var(--texto-fraco);margin-top:6px;font-style:italic}
+.dex-ficha .nota.mono{font-family:var(--mono);font-style:normal;letter-spacing:.02em}
+
+.base-linha{display:flex;align-items:center;gap:10px;padding:3px 0;font-size:12.5px}
+.base-linha .k{flex:0 0 88px;color:var(--texto-fraco)}
+.base-linha .v{flex:0 0 36px;text-align:right;color:var(--texto)}
+.barrinha{
+  flex:1;height:7px;border-radius:4px;background:#0b0e13;
+  border:1px solid var(--borda);overflow:hidden
+}
+.barrinha i{
+  display:block;height:100%;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--destaque-3) 55%, #000), var(--destaque-3));
+  transition:width .6s var(--suave)
+}
+
+/* ============================================================
+   DADOS — eles giram e dá pra girar de novo
+   ============================================================ */
+.dados-area{margin-top:14px}
+.dados-linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dado{
+  position:relative;width:52px;height:52px;flex:0 0 auto;
+  background:linear-gradient(155deg, var(--painel-2), var(--bg));
+  border:1px solid var(--borda-forte);color:var(--texto);
+  font-family:var(--mono);cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  animation:dadoEntra .45s var(--mola) both;
+  transition:transform .18s var(--mola), border-color .2s var(--suave), box-shadow .25s var(--suave);
+}
+@keyframes dadoEntra{
+  0%{opacity:0;transform:translateY(-14px) rotate(-30deg) scale(.7)}
+  70%{transform:translateY(0) rotate(8deg) scale(1.06)}
+  100%{opacity:1;transform:none}
+}
+.dado .face{font-size:19px;font-weight:700;line-height:1;pointer-events:none}
+.dado .rot{
+  position:absolute;bottom:3px;left:0;right:0;text-align:center;
+  font-size:8.5px;letter-spacing:.1em;color:var(--texto-tenue);pointer-events:none
+}
+.dado:hover{transform:translateY(-2px) rotate(-3deg);border-color:var(--destaque);box-shadow:0 8px 20px -10px var(--destaque-sombra)}
+.dado:active{transform:translateY(0) scale(.94)}
+
+/* formatos */
+.dado.d20{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.dado.d10{clip-path:polygon(50% 0,100% 38%,50% 100%,0 38%)}
+.dado.d6 {border-radius:11px}
+.dado.d4 {clip-path:polygon(50% 4%,98% 96%,2% 96%)}
+.dado.d4 .face{transform:translateY(7px);font-size:16px}
+.dado.d4 .rot{bottom:1px;font-size:7.5px}
+
+/* girando */
+.dado.girando{animation:tumbar .28s linear infinite;border-color:var(--destaque)}
+@keyframes tumbar{
+  0%  {transform:rotate(0deg)   scale(1)}
+  25% {transform:rotate(90deg)  scale(1.07)}
+  50% {transform:rotate(180deg) scale(.96)}
+  75% {transform:rotate(270deg) scale(1.07)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+.dado.girando .face{opacity:.85}
+.dado.parou{animation:assentar .5s var(--mola) both}
+@keyframes assentar{
+  0%{transform:scale(1.22) rotate(-6deg)}
+  60%{transform:scale(.97) rotate(2deg)}
+  100%{transform:none}
+}
+
+/* resultados extremos */
+.dado.max{border-color:var(--bom);box-shadow:0 0 20px -6px rgba(99,181,115,.75)}
+.dado.max .face{color:var(--bom)}
+.dado.min{border-color:var(--perigo);box-shadow:0 0 20px -6px rgba(221,84,66,.7)}
+.dado.min .face{color:var(--perigo)}
+
+.dados-legendas{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px}
+.dado-legenda{font-size:11.5px;color:var(--texto-fraco);font-family:var(--mono)}
+.dado-legenda b{color:var(--texto-tenue);font-weight:600}
+.dado-legenda b.v{color:var(--destaque)}
+
+/* bandeja livre */
+.bandeja{
+  margin-top:14px;padding:11px 13px;border:1px dashed var(--borda);border-radius:var(--raio-sm);
+  background:color-mix(in srgb, var(--bg-2) 60%, transparent);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap
+}
+.bandeja-rot{
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--texto-tenue);
+  writing-mode:horizontal-tb
+}
+.bandeja .dado{width:42px;height:42px;opacity:.75}
+.bandeja .dado .face{font-size:15px}
+.bandeja .dado:hover{opacity:1}
+
+/* ajustes finos dos dados */
+.dados-linha{gap:12px}
+.dado.d10 .rot{bottom:9px}
+.dado.d4 .face{transform:translateY(9px);font-size:15px}
+.dado.d4 .rot{bottom:4px;font-size:7px;opacity:.75}
+.dado.d20 .rot{bottom:6px}
+.bandeja .dados-linha{gap:14px}
+.bandeja .dado{width:44px;height:44px}
+.bandeja .dado.d4 .face{transform:translateY(7px);font-size:13px}
+.bandeja .dado .rot{font-size:7.5px}
+@media(max-width:620px){
+  .dado{width:46px;height:46px}
+  .dado .face{font-size:17px}
+  .dados-legendas{font-size:11px}
+}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -1858,11 +2043,38 @@ function criarPokemon(dexId, nivel, opcoes={}){
     selvagem: !!opcoes.selvagem,
     morto: false,
     historia: opcoes.historia || null,
-    capturadoEm: opcoes.capturadoEm || null
+    capturadoEm: opcoes.capturadoEm || null,
+    segurando: opcoes.segurando || null,   // item segurado
+    faixaUsada: false,                     // Faixa Firme já salvou nesta batalha?
+    convivencia: 0,                        // combates junto — leva à leitura da natureza
+    naturezaVista: !!opcoes.naturezaVista  // você sabe qual é o jeito dele?
   };
 }
 
+/* Nome completo: o que você usa quando conhece a espécie */
 function nomeExib(p){ return p.apelido ? p.apelido + ' (' + p.nome + ')' : p.nome; }
+
+/* Nome que aparece na tela: o que VOCÊ pode saber neste momento.
+   Seu → nome completo. De treinador com apelido → só o apelido, até catalogar.
+   Selvagem não catalogado → ???. */
+function nomeVisivel(p){
+  if (!p) return '';
+  if (typeof Estado === 'undefined' || !Estado.dados) return nomeExib(p);
+  const d = Estado.dados;
+  const meu = (d.time || []).some(x => x.uid === p.uid)
+           || (d.pc || []).some(x => x.uid === p.uid)
+           || (d.cemiterio || []).some(x => x.uid === p.uid);
+  if (meu) return nomeExib(p);
+  if (Estado.conheceu(p.dex)) return nomeExib(p);
+  if (p.apelido) return p.apelido;
+  return '???';
+}
+
+/* A natureza dele é conhecida? A sua, por convivência; a dos outros, pela Pokédex. */
+function naturezaVisivel(p){
+  if (!p) return '???';
+  return p.naturezaVista ? p.natureza : '???';
+}
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
@@ -1991,52 +2203,141 @@ const NIVEIS_RUIM = [
 const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
 
 const ITENS_INFO = {
-  'Poké Ball':   {tipo:'bola', mult:1,   desc:'A bola comum. É o que a Liga entrega e o que todo mundo usa.',
+  /* ─────────── bolas ─────────── */
+  'Poké Ball':   {tipo:'bola', mult:1, cat:'Captura',
+                  ficha:'Modificador de captura ×1,0 · consumida no arremesso',
+                  desc:'A bola comum. É o que a Liga entrega e o que todo mundo usa.',
                   sabido:{bola_fraca_em_lendario:'Você já viu uma dessas ricochetear numa coisa grande demais. Não insista.'}},
-  'Great Ball':  {tipo:'bola', mult:1.5, desc:'Mais firme que a comum. Custa o triplo e a diferença aparece.',
+  'Great Ball':  {tipo:'bola', mult:1.5, cat:'Captura',
+                  ficha:'Modificador de captura ×1,5 · consumida no arremesso',
+                  desc:'Mais firme que a comum. Custa o triplo e a diferença aparece.',
                   sabido:{bola_fraca_em_lendario:'Firme, mas não o bastante para o que você viu.'}},
-  'Ultra Ball':  {tipo:'bola', mult:2,   desc:'Cara. Quem vende fala dela em voz baixa, como se fosse favor.',
+  'Ultra Ball':  {tipo:'bola', mult:2, cat:'Captura',
+                  ficha:'Modificador de captura ×2,0 · consumida no arremesso',
+                  desc:'Cara. Quem vende fala dela em voz baixa, como se fosse favor.',
                   sabido:{ultra_prende_lendario:'É a única comprável que já prendeu uma coisa daquelas — e mesmo assim, quase nunca.'}},
-  'Master Ball': {tipo:'bola', mult:255, desc:'Você não devia ter uma dessas. Quase ninguém devia.',
+  'Master Ball': {tipo:'bola', mult:255, cat:'Captura',
+                  ficha:'Modificador de captura ×255 · consumida no arremesso',
+                  desc:'Você não devia ter uma dessas. Quase ninguém devia.',
                   sabido:{master_quase_sempre:'Ela não falha. Você já viu.'}},
-  'Potion':      {tipo:'cura', valor:20, desc:'Fecha corte e tira dor. Não faz milagre.'},
-  'Super Potion':{tipo:'cura', valor:50, desc:'A mesma coisa, mais forte e mais cara.'},
-  'Hyper Potion':{tipo:'cura', valor:120,desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
-  'Revive':      {tipo:'revive', desc:'Traz de volta quem desmaiou, na metade das forças. Não faz mais que isso.',
+
+  /* ─────────── cura ─────────── */
+  'Potion':      {tipo:'cura', valor:20, cat:'Recuperação',
+                  ficha:'+20 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+                  desc:'Fecha corte e tira dor. Não faz milagre.'},
+  'Super Potion':{tipo:'cura', valor:50, cat:'Recuperação',
+                  ficha:'+50 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+                  desc:'A mesma coisa, mais forte e mais cara.'},
+  'Hyper Potion':{tipo:'cura', valor:120, cat:'Recuperação',
+                  ficha:'+120 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+                  desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
+  'Água Fresca': {tipo:'cura', valor:35, cat:'Recuperação',
+                  ficha:'+35 HP em um Pokémon · em combate gasta o turno',
+                  desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
+  'Revive':      {tipo:'revive', cat:'Recuperação',
+                  ficha:'Levanta um Pokémon desmaiado com HP máximo ÷ 2 · não age em morto',
+                  desc:'Traz de volta quem desmaiou, na metade das forças. Não faz mais que isso.',
                   sabido:{revive_nao_ressuscita:'Quem morreu de verdade não volta com isso. Você aprendeu do jeito ruim.'}},
-  'Antidote':    {tipo:'status', cura:'veneno', desc:'Frasco pequeno, gosto horrível, funciona.'},
-  'Full Heal':   {tipo:'status', cura:'todos', desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
-  'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Pra você, não pra eles. Você também se machuca.'},
-  'Moon Stone':  {tipo:'pedra', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
-                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.',
-                          usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra do Fogo':   {tipo:'pedra', desc:'Alaranjada, com um ponto de luz no meio que não vem de lugar nenhum.',
+  'Antidote':    {tipo:'status', cura:'veneno', cat:'Recuperação',
+                  ficha:'Remove veneno · 1 alvo',
+                  desc:'Frasco pequeno, gosto horrível, funciona.'},
+  'Full Heal':   {tipo:'status', cura:'todos', cat:'Recuperação',
+                  ficha:'Remove qualquer condição (veneno, queimadura, paralisia, sono, confusão) · 1 alvo',
+                  desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
+  'Éter':        {tipo:'pp', valor:10, cat:'Recuperação',
+                  ficha:'+10 PP no primeiro golpe incompleto do alvo',
+                  desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
+  'Elixir':      {tipo:'ppTodos', valor:10, cat:'Recuperação',
+                  ficha:'+10 PP em todos os golpes do alvo',
+                  desc:'Repõe um pouco de tudo. Caro pelo que é.'},
+  'Bandagem':    {tipo:'curaJogador', valor:10, cat:'Treinador',
+                  ficha:'+10 HP no treinador · o HP do treinador não regenera sozinho',
+                  desc:'Pra você, não pra eles. Você também se machuca.'},
+  'Cantil':      {tipo:'curaJogador', valor:16, cat:'Treinador',
+                  ficha:'+16 HP no treinador · uso único',
+                  desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
+  'Ração':       {tipo:'moral', valor:10, cat:'Vínculo',
+                  ficha:'+10 de moral em um Pokémon (escala 0–100) · moral baixa causa desobediência',
+                  desc:'Comida boa de verdade. Muda o humor de quem come.'},
+
+  /* ─────────── campo ─────────── */
+  'Boneco':      {tipo:'fuga', cat:'Campo',
+                  ficha:'Fuga garantida de encontro selvagem · não funciona contra treinador',
+                  desc:'Um boneco de pano com cara de Substitute. Serve pra jogar e sair andando.'},
+  'Repelente':   {tipo:'repelente', valor:3, cat:'Campo',
+                  ficha:'Nenhum encontro ao procurar por 3 períodos',
+                  desc:'Cheiro forte, dura uns três períodos. O mato fica mais quieto em volta.'},
+
+  /* ─────────── pedras ─────────── */
+  'Moon Stone':      {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Nidorina, Nidorino, Clefairy e Jigglypuff · consumida no uso',
+                      desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
+                      sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.',
+                              usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Fogo':   {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Vulpix, Growlithe e Eevee (→ Flareon) · consumida no uso',
+                      desc:'Alaranjada, com um ponto de luz no meio que não vem de lugar nenhum.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra da Água':   {tipo:'pedra', desc:'Azul-escura. Fria mesmo depois de horas no bolso.',
+  'Pedra da Água':   {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Poliwhirl, Shellder, Staryu e Eevee (→ Vaporeon) · consumida no uso',
+                      desc:'Azul-escura. Fria mesmo depois de horas no bolso.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra do Trovão': {tipo:'pedra', desc:'Amarela, com estática. Ela levanta o pelo do seu braço de dez centímetros.',
+  'Pedra do Trovão': {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Pikachu e Eevee (→ Jolteon) · consumida no uso',
+                      desc:'Amarela, com estática. Ela levanta o pelo do seu braço de dez centímetros.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra da Folha':  {tipo:'pedra', desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
+  'Pedra da Folha':  {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Gloom, Weepinbell e Exeggcute · consumida no uso',
+                      desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
-  'Éter':        {tipo:'pp', valor:10, desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
-  'Elixir':      {tipo:'ppTodos', valor:10, desc:'Repõe um pouco de tudo. Caro pelo que é.'},
-  'Água Fresca': {tipo:'cura', valor:35, desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
-  'Cantil':      {tipo:'curaJogador', valor:16, desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
-  'Boneco':      {tipo:'fuga', desc:'Um boneco de pano com cara de Substitute. Serve pra jogar e sair andando.'},
-  'Repelente':   {tipo:'repelente', valor:3, desc:'Cheiro forte, dura uns três períodos. O mato fica mais quieto em volta.'},
+  /* ─────────── segurados ─────────── */
+  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:0.07},
+                      ficha:'SEGURADO · recupera 7% do HP máximo no fim de cada turno',
+                      desc:'Um saquinho amarrado no cinto com o que sobra da ração boa. Some devagar.'},
+  'Faixa Firme':     {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
+                      ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
+                      desc:'Faixa de algodão grossa amarrada no punho ou na pata. Não protege de nada. Aperta.'},
+  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1.15},
+                      ficha:'SEGURADO · +15% de dano em golpes físicos',
+                      desc:'Um peso de chumbo costurado numa tira de couro. Pesa e cansa e funciona.'},
+  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1.15},
+                      ficha:'SEGURADO · +15% de dano em golpes especiais',
+                      desc:'Lente de vidro grosso numa armação torta. Foi de alguém.'},
+  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:0.88},
+                      ficha:'SEGURADO · −12% de dano recebido',
+                      desc:'Couro rachado, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
+  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:1.12},
+                      ficha:'SEGURADO · +12% de Velocidade para a ordem dos turnos',
+                      desc:'Sola fina, quase gasta. Quem usa isso não planeja apanhar.'},
+  'Sino Calmante':   {tipo:'equipar', cat:'Segurado', efeito:{moral:3},
+                      ficha:'SEGURADO · +3 de moral ao fim de cada combate',
+                      desc:'Um sino de latão do tamanho de uma unha. O som é ridículo e acalma.'},
+  'Amuleto de Moeda':{tipo:'equipar', cat:'Segurado', efeito:{dinheiro:1.5},
+                      ficha:'SEGURADO · +50% de dinheiro em vitórias contra treinador',
+                      desc:'Moeda antiga furada e pendurada num barbante. Não vale nada como moeda.'},
 
-  'Corda':          {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
-  'Lanterna':       {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'},
-  'Pilha':          {tipo:'ferramenta', desc:'Duas, embaladas. Você vai lembrar delas exatamente quando não tiver.'},
-  'Máscara de pó':  {tipo:'ferramenta', desc:'De pedreira. Não é bonita e é a diferença entre tossir uma semana ou não.'},
-  'Bota de borracha':{tipo:'ferramenta', desc:'Cano alto, solado grosso. Quem trabalha com cabo não pisa em chão molhado sem isso.'},
-  'Cobertor térmico':{tipo:'ferramenta', desc:'Dobra do tamanho de um livro. Prateado dos dois lados, e mais quente do que parece possível.'},
-  'Câmera descartável':{tipo:'ferramenta', desc:'Vinte e quatro poses. Revelar custa mais que a câmera.'},
-  'Caderno de campo':{tipo:'ferramenta', desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
-  'Isca':           {tipo:'ferramenta', desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
-  'Mapa de Kanto':  {tipo:'ferramenta', desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'},
-  'Ração':          {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'}
+  /* ─────────── ferramenta ─────────── */
+  'Corda':          {tipo:'ferramenta', cat:'Ferramenta', ficha:'12 m · usada em cenas de escalada, descida e resgate',
+                     desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
+  'Lanterna':       {tipo:'ferramenta', cat:'Ferramenta', ficha:'Pilha média · usada em caverna, porão e área sem luz',
+                     desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'},
+  'Pilha':          {tipo:'ferramenta', cat:'Ferramenta', ficha:'Par · repõe a carga da Lanterna',
+                     desc:'Duas, embaladas. Você vai lembrar delas exatamente quando não tiver.'},
+  'Máscara de pó':  {tipo:'ferramenta', cat:'Ferramenta', ficha:'Evita dano de poeira em pedreira e caverna seca',
+                     desc:'De pedreira. Não é bonita e é a diferença entre tossir uma semana ou não.'},
+  'Bota de borracha':{tipo:'ferramenta', cat:'Ferramenta', ficha:'Isola choque em área com cabo energizado',
+                     desc:'Cano alto, solado grosso. Quem trabalha com cabo não pisa em chão molhado sem isso.'},
+  'Cobertor térmico':{tipo:'ferramenta', cat:'Ferramenta', ficha:'Evita dano de frio em área congelada e acampamento noturno',
+                     desc:'Dobra do tamanho de um livro. Prateado dos dois lados, e mais quente do que parece possível.'},
+  'Câmera descartável':{tipo:'ferramenta', cat:'Ferramenta', ficha:'24 poses · registra prova em cenas de documentação · consumida no uso',
+                     desc:'Vinte e quatro poses. Revelar custa mais que a câmera.'},
+  'Caderno de campo':{tipo:'ferramenta', cat:'Ferramenta', ficha:'Permite copiar documento e anotar número de processo em cena',
+                     desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
+  'Isca':           {tipo:'ferramenta', cat:'Ferramenta', ficha:'+20 pontos percentuais de chance ao pescar · consumida no uso',
+                     desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
+  'Mapa de Kanto':  {tipo:'ferramenta', cat:'Ferramenta', ficha:'Mostra o destino do próximo arco na bússola da tela de mundo',
+                     desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'}
 };
 
 /* Pedra → pares de evolução (só espécies de nivelEvo 0) */
@@ -2052,6 +2353,20 @@ const PEDRAS = {
 const EVO_TROCA = {64:65, 67:68, 75:76, 93:94};
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
+function fichaItem(nome){
+  const i = ITENS_INFO[nome];
+  return i && i.ficha ? i.ficha : '';
+}
+function categoriaItem(nome){
+  const i = ITENS_INFO[nome];
+  return i && i.cat ? i.cat : 'Outro';
+}
+function efeitoSegurado(p){
+  if (!p || !p.segurando) return null;
+  const i = ITENS_INFO[p.segurando];
+  return (i && i.tipo === 'equipar') ? (i.efeito || {}) : null;
+}
+
 function descricaoItem(nome){
   const i = ITENS_INFO[nome];
   if (!i) return '';
@@ -2201,6 +2516,54 @@ const Estado = {
     return true;
   },
   contaItem(nome){ return this.dados.itens[nome] || 0; },
+
+  /* ---------- ITEM SEGURADO ---------- */
+  equipar(uid, nome){
+    const p = this.dados.time.find(x => x.uid === uid);
+    if (!p || !this.contaItem(nome)) return null;
+    const info = ITENS_INFO[nome];
+    if (!info || info.tipo !== 'equipar') return null;
+    if (p.segurando) this.darItem(p.segurando, 1);   // devolve o anterior à mochila
+    this.usarItem(nome);
+    p.segurando = nome;
+    p.faixaUsada = false;
+    this.registrar(`${nomeExib(p)} passou a segurar ${nome}.`);
+    return p;
+  },
+  desequipar(uid){
+    const p = this.dados.time.find(x => x.uid === uid);
+    if (!p || !p.segurando) return null;
+    const nome = p.segurando;
+    this.darItem(nome, 1);
+    p.segurando = null;
+    p.faixaUsada = false;
+    this.registrar(`${nomeExib(p)} devolveu ${nome} à mochila.`);
+    return p;
+  },
+
+  /* ---------- NATUREZA: só se sabe com convivência ---------- */
+  revelarNatureza(p, motivo){
+    if (!p || p.naturezaVista) return false;
+    p.naturezaVista = true;
+    this.registrar(`Você entendeu o jeito de ${nomeExib(p)}: ${p.natureza}.${motivo ? ' ('+motivo+')' : ''}`);
+    return true;
+  },
+  /* chamada no fim de cada combate: convivência + Percepção */
+  tickNatureza(){
+    const avisos = [];
+    (this.dados.time || []).forEach(p => {
+      if (p.naturezaVista || p.morto) return;
+      p.convivencia = (p.convivencia || 0) + 1;
+      if (p.convivencia < 3) return;
+      const t = Dados.teste(this.j.status.percepcao + Math.floor(p.convivencia / 3), 7, 'Percepção');
+      if (t.grau === 'sucesso' || t.grau === 'critico'){
+        p.naturezaVista = true;
+        this.registrar(`Natureza de ${nomeExib(p)} percebida: ${p.natureza}.`);
+        avisos.push({tipo:'natureza', texto:`Você finalmente entende o jeito de ${nomeExib(p)}. É ${p.natureza}: ${(NATUREZAS[p.natureza]||{}).traco || 'difícil de descrever.'}`});
+      }
+    });
+    return avisos;
+  },
 
   /* ---------- JOGADOR ---------- */
   hpMaxJogador(){ return 30 + (this.j.status.resistencia - 1) * 2; },
@@ -2632,6 +2995,10 @@ const Batalha = {
     this.turno = 0;
     this.fim = null;
     this.fase = 'normal';
+    this.bonusDinheiro = 1;
+    this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
+    if (this.revelaNatureza && inimigo) inimigo.naturezaVista = true;
+    if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
     this.eventos = [];
     this.aoTerminar = opts.aoTerminar || null;
     this.contexto = opts.contexto || null;
@@ -2650,9 +3017,16 @@ const Batalha = {
   },
 
   introPadrao(){
-    if (this.tipo === 'selvagem') return `Um ${this.inimigo.nome} selvagem (Nv ${this.inimigo.nivel}, ${this.inimigo.natureza}) aparece!`;
-    if (this.tipo === 'lendario') return `${this.inimigo.nome} encara você. O ar fica pesado.`;
-    return `${this.treinador || 'Um treinador'} enviou ${this.inimigo.nome} (Nv ${this.inimigo.nivel})!`;
+    const i = this.inimigo;
+    const conhece = Estado.conheceu(i.dex);
+    const nat = i.naturezaVista ? `, ${i.natureza}` : '';
+    if (this.tipo === 'selvagem'){
+      return conhece
+        ? `Um ${i.nome} selvagem (Nv ${i.nivel}${nat}) aparece!`
+        : `Alguma coisa sai do mato e para na sua frente (Nv ${i.nivel}). Você não sabe o nome disso.`;
+    }
+    if (this.tipo === 'lendario') return `${nomeVisivel(i)} encara você. O ar fica pesado.`;
+    return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
   },
 
   ev(tipo, texto, extra){ this.eventos.push(Object.assign({tipo, texto}, extra||{})); },
@@ -2664,6 +3038,8 @@ const Batalha = {
     let v = p.stats[chave] * this.mult(est, chave);
     if (chave === 'spe' && p.status === 'paralisia') v *= 0.5;
     if (chave === 'atk' && p.status === 'queimadura') v *= 0.75;
+    const seg = efeitoSegurado(p);
+    if (seg && chave === 'spe' && seg.vel) v *= seg.vel;
     return Math.max(1, Math.floor(v));
   },
 
@@ -2677,15 +3053,15 @@ const Batalha = {
     const desobedienciaBase = souAliado ? Math.max(0, (60 - moral) / 2 - insignias * 3) : 0;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
-      return {recusa:true, texto:`${nomeExib(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
+      return {recusa:true, texto:`${nomeVisivel(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
     if (p.natureza === 'Timid' && g.c === 'fis' && Dados.chance(30))
-      return {recusa:true, texto:`${nomeExib(p)} é Timid — hesita em chegar perto e não ataca.`};
+      return {recusa:true, texto:`${nomeVisivel(p)} é Timid — hesita em chegar perto e não ataca.`};
     if (p.natureza === 'Naughty' && Dados.chance(18))
-      return {trocaAlvo:true, texto:`${nomeExib(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
+      return {trocaAlvo:true, texto:`${nomeVisivel(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
-      return {outroGolpe:true, texto:`${nomeExib(p)} não espera o comando e ataca por conta própria.`};
+      return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
     if (desobedienciaBase > 0 && Dados.chance(desobedienciaBase))
-      return {recusa:true, texto:`${nomeExib(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
+      return {recusa:true, texto:`${nomeVisivel(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
     return null;
   },
 
@@ -2693,30 +3069,30 @@ const Batalha = {
   podeAgir(p, est, souAliado){
     if (p.status === 'sono'){
       p.statusTurnos--;
-      if (p.statusTurnos <= 0){ p.status = null; this.ev('status', `${nomeExib(p)} acordou!`); }
-      else { this.ev('status', `${nomeExib(p)} está dormindo profundamente.`); return false; }
+      if (p.statusTurnos <= 0){ p.status = null; this.ev('status', `${nomeVisivel(p)} acordou!`); }
+      else { this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`); return false; }
     }
     if (p.status === 'congelamento'){
-      if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeExib(p)} descongelou!`); }
-      else { this.ev('status', `${nomeExib(p)} está congelado e não consegue se mover.`); return false; }
+      if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
+      else { this.ev('status', `${nomeVisivel(p)} está congelado e não consegue se mover.`); return false; }
     }
     if (p.status === 'paralisia' && Dados.chance(25)){
-      this.ev('status', `${nomeExib(p)} está paralisado! Não conseguiu se mover.`); return false;
+      this.ev('status', `${nomeVisivel(p)} está paralisado! Não conseguiu se mover.`); return false;
     }
     if (est.recarregando){
       est.recarregando = false;
-      this.ev('status', `${nomeExib(p)} precisa se recuperar do golpe anterior.`); return false;
+      this.ev('status', `${nomeVisivel(p)} precisa se recuperar do golpe anterior.`); return false;
     }
     if (est.confuso > 0){
       est.confuso--;
-      if (est.confuso === 0) this.ev('status', `${nomeExib(p)} saiu da confusão.`);
+      if (est.confuso === 0) this.ev('status', `${nomeVisivel(p)} saiu da confusão.`);
       else if (Dados.chance(33)){
         const d = Math.max(1, Math.round(Dados.d10('Dano de confusão') * 4 * (p.stats.atk / Math.max(1,p.stats.def))));
         p.hp = Math.max(0, p.hp - d);
-        this.ev('dano', `${nomeExib(p)} está confuso e se machucou sozinho! (${d} de dano)`);
+        this.ev('dano', `${nomeVisivel(p)} está confuso e se machucou sozinho! (${d} de dano)`);
         return false;
       } else {
-        this.ev('status', `${nomeExib(p)} está confuso...`);
+        this.ev('status', `${nomeVisivel(p)} está confuso...`);
       }
     }
     return true;
@@ -2729,7 +3105,7 @@ const Batalha = {
 
     res.efic = eficacia(g.t, def.tipos);
     if (res.efic === 0){
-      res.msgs.push(`Não afeta ${nomeExib(def)}...`);
+      res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
       return res;
     }
 
@@ -2769,6 +3145,14 @@ const Batalha = {
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
 
+    const segA = efeitoSegurado(atk);
+    if (segA){
+      if (fisico && segA.fis) total = Math.round(total * segA.fis);
+      if (!fisico && segA.esp) total = Math.round(total * segA.esp);
+    }
+    const segD = efeitoSegurado(def);
+    if (segD && segD.defesa) total = Math.round(total * segD.defesa);
+
     const cfg = (Estado.dados && Estado.dados.config) ? Estado.dados.config.danoMult : 1;
     res.dano = Math.max(1, Math.round(total * (cfg || 1)));
     return res;
@@ -2800,13 +3184,13 @@ const Batalha = {
   /* ---------- um golpe ---------- */
   usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado){
     const slot = atacante.golpes[indiceGolpe];
-    if (!slot){ this.ev('info', `${nomeExib(atacante)} não tem esse golpe.`); return; }
+    if (!slot){ this.ev('info', `${nomeVisivel(atacante)} não tem esse golpe.`); return; }
     if (slot.pp <= 0){
-      this.ev('info', `${nomeExib(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
+      this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
       const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
       defensor.hp = Math.max(0, defensor.hp - d);
       atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
-      this.ev('dano', `${nomeExib(defensor)} sofreu ${d}. ${nomeExib(atacante)} se machucou no contragolpe.`);
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
       return;
     }
 
@@ -2827,15 +3211,15 @@ const Batalha = {
     // golpes de carga (Dig, Fly, Solar Beam, Sky Attack)
     if (g.ef && g.ef.carga && estAtk.carregando !== nome){
       estAtk.carregando = nome;
-      this.ev('info', `${nomeExib(atacante)} se prepara para ${nome}!`);
+      this.ev('info', `${nomeVisivel(atacante)} se prepara para ${nome}!`);
       return;
     }
     estAtk.carregando = null;
 
-    this.ev('golpe', `${nomeExib(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t});
+    this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t});
 
     if (!this.acertou(nome, estAtk, estDef)){
-      this.ev('erro', `${nomeExib(atacante)} errou o golpe!`);
+      this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
       return;
     }
 
@@ -2853,38 +3237,44 @@ const Batalha = {
     r.msgs.forEach(m => this.ev('info', m));
     if (r.efic === 0) return;
 
-    defensor.hp = Math.max(0, defensor.hp - r.dano);
-    this.ev('dano', `${nomeExib(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+    if (this.aguentou(defensor, r.dano)){
+      defensor.hp = 1;
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+      this.ev('cura', `A Faixa Firme segurou. ${nomeVisivel(defensor)} fica de pé com 1 de HP.`);
+    } else {
+      defensor.hp = Math.max(0, defensor.hp - r.dano);
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+    }
 
     if (g.ef && g.ef.drena){
       const cura = Math.max(1, Math.round(r.dano * g.ef.drena));
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + cura);
-      this.ev('cura', `${nomeExib(atacante)} drenou ${cura} de HP.`);
+      this.ev('cura', `${nomeVisivel(atacante)} drenou ${cura} de HP.`);
     }
     if (g.ef && g.ef.recuo){
       const rec = Math.max(1, Math.round(r.dano * g.ef.recuo));
       atacante.hp = Math.max(0, atacante.hp - rec);
-      this.ev('dano', `${nomeExib(atacante)} sofreu ${rec} de recuo.`);
+      this.ev('dano', `${nomeVisivel(atacante)} sofreu ${rec} de recuo.`);
     }
     if (g.ef && g.ef.recarga) estAtk.recarregando = true;
     if (g.ef && g.ef.confundeSe && Dados.chance(50)){
       estAtk.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeExib(atacante)} ficou confuso pela própria fúria!`);
+      this.ev('status', `${nomeVisivel(atacante)} ficou confuso pela própria fúria!`);
     }
     if (g.ef && g.ef.tipo && g.ef.chance && defensor.hp > 0 && Dados.chance(g.ef.chance)){
       if (g.ef.tipo === 'confusao'){
         estDef.confuso = Dados.entre(2,4);
-        this.ev('status', `${nomeExib(defensor)} ficou confuso!`);
+        this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
       } else if (g.ef.tipo === 'recuo'){
         estDef.recuou = true;
-        this.ev('status', `${nomeExib(defensor)} se encolheu de medo!`);
+        this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
       } else if (this.aplicarStatus(defensor, g.ef.tipo, g.ef.grave)){
-        this.ev('status', `${nomeExib(defensor)} está com ${g.ef.tipo}!`);
+        this.ev('status', `${nomeVisivel(defensor)} está com ${g.ef.tipo}!`);
       }
     }
     if (g.ef && g.ef.baixa && defensor.hp > 0){
       estDef[g.ef.baixa] = Math.max(-6, (estDef[g.ef.baixa]||0) - 1);
-      this.ev('status', `${g.ef.baixa.toUpperCase()} de ${nomeExib(defensor)} caiu!`);
+      this.ev('status', `${g.ef.baixa.toUpperCase()} de ${nomeVisivel(defensor)} caiu!`);
     }
   },
 
@@ -2894,31 +3284,31 @@ const Batalha = {
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
       if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }
-      this.ev('cura', `${nomeExib(atacante)} recuperou ${atacante.hp - antes} de HP.`);
+      this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
       return;
     }
     if (e.sobe){
       const q = e.forte ? 2 : 1;
       estAtk[e.sobe] = Math.min(6, (estAtk[e.sobe]||0) + q);
-      this.ev('status', `${e.sobe.toUpperCase()} de ${nomeExib(atacante)} ${e.forte?'subiu MUITO':'subiu'}!`);
+      this.ev('status', `${e.sobe.toUpperCase()} de ${nomeVisivel(atacante)} ${e.forte?'subiu MUITO':'subiu'}!`);
       return;
     }
     if (e.baixa){
       const q = e.forte ? 2 : 1;
       estDef[e.baixa] = Math.max(-6, (estDef[e.baixa]||0) - q);
-      this.ev('status', `${e.baixa.toUpperCase()} de ${nomeExib(defensor)} ${e.forte?'despencou':'caiu'}!`);
+      this.ev('status', `${e.baixa.toUpperCase()} de ${nomeVisivel(defensor)} ${e.forte?'despencou':'caiu'}!`);
       return;
     }
     if (e.tipo === 'confusao'){
       estDef.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeExib(defensor)} ficou confuso!`);
+      this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
       return;
     }
     if (e.tipo){
       if (this.aplicarStatus(defensor, e.tipo, e.grave))
-        this.ev('status', `${nomeExib(defensor)} está com ${e.tipo}${e.grave?' GRAVE':''}!`);
+        this.ev('status', `${nomeVisivel(defensor)} está com ${e.tipo}${e.grave?' GRAVE':''}!`);
       else
-        this.ev('erro', `Não teve efeito em ${nomeExib(defensor)}.`);
+        this.ev('erro', `Não teve efeito em ${nomeVisivel(defensor)}.`);
     }
   },
 
@@ -2929,13 +3319,32 @@ const Batalha = {
       const frac = p.statusGrave ? 6 : 8;
       const d = Math.max(1, Math.floor(p.hpMax / frac));
       p.hp = Math.max(0, p.hp - d);
-      this.ev('dano', `${nomeExib(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`);
+      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`);
     }
     if (p.status === 'queimadura'){
       const d = Math.max(1, Math.floor(p.hpMax / 16));
       p.hp = Math.max(0, p.hp - d);
-      this.ev('dano', `${nomeExib(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`);
+      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`);
     }
+    /* item segurado: regeneração lenta */
+    const seg = efeitoSegurado(p);
+    if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
+      const c = Math.max(1, Math.round(p.hpMax * seg.regen));
+      const antes = p.hp;
+      p.hp = Math.min(p.hpMax, p.hp + c);
+      this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
+    }
+  },
+
+  /* Faixa Firme: uma vez por combate, não deixa cair de um golpe só */
+  aguentou(p, danoPrevisto){
+    const seg = efeitoSegurado(p);
+    if (!seg || !seg.aguenta) return false;
+    if (p.faixaUsada) return false;
+    if (p.hp - danoPrevisto > 0) return false;
+    if (p.hp <= 1) return false;
+    p.faixaUsada = true;
+    return true;
   },
 
   /* ---------- IA ---------- */
@@ -2997,13 +3406,13 @@ const Batalha = {
 
     const agirJogador = () => {
       if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
-      if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeExib(this.aliado)} está encolhido e não ataca.`); return; }
+      if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeVisivel(this.aliado)} está encolhido e não ataca.`); return; }
       if (!this.podeAgir(this.aliado, this.estAliado, true)) return;
       this.usarGolpe(this.aliado, this.inimigo, this.estAliado, this.estInimigo, acao.indice, true);
     };
     const agirInimigo = () => {
       if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
-      if (this.estInimigo.recuou){ this.estInimigo.recuou = false; this.ev('status', `${nomeExib(this.inimigo)} está encolhido e não ataca.`); return; }
+      if (this.estInimigo.recuou){ this.estInimigo.recuou = false; this.ev('status', `${nomeVisivel(this.inimigo)} está encolhido e não ataca.`); return; }
       if (!this.podeAgir(this.inimigo, this.estInimigo, false)) return;
       this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, iIA, false);
     };
@@ -3034,6 +3443,7 @@ const Batalha = {
     const p = this.inimigo;
     const esp = DEX[p.dex];
     const novo = Estado.catalogou(p.dex);
+    p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
     this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
     this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
@@ -3062,44 +3472,44 @@ const Batalha = {
     if (!info || !Estado.contaItem(nome)){ this.ev('erro', 'Você não tem esse item.'); return; }
     const alvo = Estado.dados.time.find(p => p.uid === alvoUid) || this.aliado;
     if (info.tipo === 'cura'){
-      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeExib(alvo)} está desmaiado — Potion não resolve.`); return; }
+      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeVisivel(alvo)} está desmaiado — Potion não resolve.`); return; }
       Estado.usarItem(nome);
       const antes = alvo.hp;
       alvo.hp = Math.min(alvo.hpMax, alvo.hp + info.valor);
-      this.ev('cura', `Você usou ${nome}. ${nomeExib(alvo)} recuperou ${alvo.hp - antes} de HP.`);
+      this.ev('cura', `Você usou ${nome}. ${nomeVisivel(alvo)} recuperou ${alvo.hp - antes} de HP.`);
     } else if (info.tipo === 'revive'){
       if (alvo.morto){
-        this.ev('erro', `Você aplica o Revive em ${nomeExib(alvo)} e não acontece nada. Nem uma reação.`);
+        this.ev('erro', `Você aplica o Revive em ${nomeVisivel(alvo)} e não acontece nada. Nem uma reação.`);
         this.ev('info', 'Tem uma diferença entre desmaiar e morrer, e você acabou de aprender qual é.');
         Estado.marcar('revive_nao_ressuscita');
         return;
       }
-      if (alvo.hp > 0){ this.ev('erro', `${nomeExib(alvo)} não está desmaiado.`); return; }
+      if (alvo.hp > 0){ this.ev('erro', `${nomeVisivel(alvo)} não está desmaiado.`); return; }
       Estado.usarItem(nome);
       alvo.hp = Math.floor(alvo.hpMax / 2);
-      this.ev('cura', `${nomeExib(alvo)} voltou a si com ${alvo.hp} de HP.`);
+      this.ev('cura', `${nomeVisivel(alvo)} voltou a si com ${alvo.hp} de HP.`);
     } else if (info.tipo === 'status'){
       Estado.usarItem(nome);
       alvo.status = null; alvo.statusTurnos = 0;
-      this.ev('cura', `${nomeExib(alvo)} teve as condições curadas.`);
+      this.ev('cura', `${nomeVisivel(alvo)} teve as condições curadas.`);
     } else if (info.tipo === 'curaJogador'){
       Estado.usarItem(nome);
       Estado.curarJogador(info.valor);
       this.ev('cura', `Você se enfaixou. HP: ${Estado.j.hp}/${Estado.hpMaxJogador()}`);
     } else if (info.tipo === 'pp'){
       const g = alvo.golpes.find(x => x.pp < x.ppMax);
-      if (!g){ this.ev('erro', `Os golpes de ${nomeExib(alvo)} estão cheios.`); return; }
+      if (!g){ this.ev('erro', `Os golpes de ${nomeVisivel(alvo)} estão cheios.`); return; }
       Estado.usarItem(nome);
       g.pp = Math.min(g.ppMax, g.pp + info.valor);
       this.ev('cura', `${g.nome} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`);
     } else if (info.tipo === 'ppTodos'){
       Estado.usarItem(nome);
       alvo.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
-      this.ev('cura', `Todos os golpes de ${nomeExib(alvo)} recuperaram um pouco.`);
+      this.ev('cura', `Todos os golpes de ${nomeVisivel(alvo)} recuperaram um pouco.`);
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome);
       alvo.moral = Math.min(100, alvo.moral + info.valor);
-      this.ev('natureza', `${nomeExib(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
+      this.ev('natureza', `${nomeVisivel(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
     } else if (info.tipo === 'fuga'){
       if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
       Estado.usarItem(nome);
@@ -3115,7 +3525,7 @@ const Batalha = {
   trocarPokemon(uid){
     const novo = Estado.dados.time.find(p => p.uid === uid);
     if (!novo || !estaVivo(novo)){ this.ev('erro', 'Esse Pokémon não pode lutar.'); return; }
-    this.ev('info', `${nomeExib(this.aliado)} volta. Vai, ${nomeExib(novo)}!`);
+    this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
     this.aliado = novo;
     this.estAliado = this.novoEstado();
   },
@@ -3140,7 +3550,7 @@ const Batalha = {
     r.eventos.forEach(e => this.eventos.push(e));
     if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:nomeBola});
     if (r.enfurecido){
-      this.ev('perigo', `${this.inimigo.nome} está FURIOSO. Isso não vai acabar bem.`);
+      this.ev('perigo', `${nomeVisivel(this.inimigo)} está FURIOSO. Isso não vai acabar bem.`);
       return this.turnoInimigoSozinho();
     }
     return this.turnoInimigoSozinho();
@@ -3150,20 +3560,22 @@ const Batalha = {
   verificarFim(){
     if (this.inimigo.hp <= 0){
       this.ev('vitoria', this.tipo === 'selvagem'
-        ? `${this.inimigo.nome} desmaiou e fugiu para o mato. Ele vai voltar.`
-        : `${this.inimigo.nome} desmaiou!`);
+        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. Ele vai voltar.`
+        : `${nomeVisivel(this.inimigo)} desmaiou!`);
       const ganho = expGanha(this.inimigo, this.aliado);
       const evs = ganharExp(this.aliado, ganho);
-      this.ev('exp', `${nomeExib(this.aliado)} ganhou ${ganho} de experiência.`);
+      this.ev('exp', `${nomeVisivel(this.aliado)} ganhou ${ganho} de experiência.`);
       evs.forEach(e => {
-        if (e.tipo === 'nivel') this.ev('nivel', `${nomeExib(this.aliado)} subiu para o nível ${e.nivel}!`);
-        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeExib(this.aliado)} aprendeu ${e.golpe}!` + (e.esqueceu ? ` (esqueceu ${e.esqueceu})` : ''));
+        if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(this.aliado)} subiu para o nível ${e.nivel}!`);
+        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(this.aliado)} aprendeu ${e.golpe}!` + (e.esqueceu ? ` (esqueceu ${e.esqueceu})` : ''));
         if (e.tipo === 'evolucao') this.ev('evolucao', `${e.de} evoluiu para ${e.para}!`);
       });
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
         const prox = this.timeInimigo.shift();
-        this.ev('info', `${this.treinador} envia ${prox.nome} (Nv ${prox.nivel})!`);
+        if (this.revelaNatureza) prox.naturezaVista = true;
+        this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
+          prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
         return {eventos:this.eventos, fim:null};
@@ -3172,7 +3584,7 @@ const Batalha = {
     }
 
     if (this.aliado.hp <= 0){
-      this.ev('derrota', `${nomeExib(this.aliado)} desmaiou.`);
+      this.ev('derrota', `${nomeVisivel(this.aliado)} desmaiou.`);
       const reservas = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== this.aliado.uid);
       if (reservas.length){
         return {eventos:this.eventos, fim:null, precisaTrocar:true, reservas:reservas.map(p=>p.uid)};
@@ -3191,17 +3603,17 @@ const Batalha = {
   avaliarAmeaca(){
     const nat = NATUREZAS[this.inimigo.natureza] || {};
     if (!nat.agressiva){
-      this.ev('info', `${this.inimigo.nome} rosna, hostil, mas não avança sobre você. Some no mato.`);
+      this.ev('info', `${nomeVisivel(this.inimigo)} rosna, hostil, mas não avança sobre você. Some no mato.`);
       return this.encerrar('derrota');
     }
     const d = Dados.d20('O selvagem ataca você?');
     this.ev('perigo', `Natureza ${this.inimigo.natureza} (agressiva). 1d20 = ${d} — ataca com 10+`);
     if (d < 10){
-      this.ev('info', `${this.inimigo.nome} te encara por um segundo longo demais... e vai embora.`);
+      this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais... e vai embora.`);
       return this.encerrar('derrota');
     }
     this.fase = 'ameaca';
-    this.ev('perigo', `${this.inimigo.nome} avança em VOCÊ. Não tem mais Pokémon entre vocês dois.`);
+    this.ev('perigo', `${nomeVisivel(this.inimigo)} avança em VOCÊ. Não tem mais Pokémon entre vocês dois.`);
     return {eventos:this.eventos, fim:null, ameaca:true};
   },
 
@@ -3227,7 +3639,7 @@ const Batalha = {
       this.usarItemEmCombate(acao.nome, acao.alvoUid);
       const revivido = Estado.dados.time.find(p => estaVivo(p));
       if (revivido){
-        this.ev('info', `${nomeExib(revivido)} se põe de pé entre você e ${this.inimigo.nome}.`);
+        this.ev('info', `${nomeVisivel(revivido)} se põe de pé entre você e ${nomeVisivel(this.inimigo)}.`);
         this.aliado = revivido;
         this.estAliado = this.novoEstado();
         this.fase = 'normal';
@@ -3239,7 +3651,7 @@ const Batalha = {
       const t = Dados.teste(Estado.j.status.carisma, 8, 'Carisma');
       this.ev('info', `Encarar: 1d10(${t.dado}) + Carisma(${t.bonus}) = ${t.total} — ${t.texto}`);
       if (t.grau === 'sucesso' || t.grau === 'critico'){
-        this.ev('info', `Você não desvia o olhar. ${this.inimigo.nome} hesita — e recua para o mato.`);
+        this.ev('info', `Você não desvia o olhar. ${nomeVisivel(this.inimigo)} hesita — e recua para o mato.`);
         return this.encerrar('encarou');
       }
       this.ev('erro', 'Encarar um animal assustado nunca foi um bom plano.');
@@ -3250,8 +3662,8 @@ const Batalha = {
 
   golpeNoJogador(){
     const dano = Math.max(1, Math.round((this.inimigo.stats.atk / 10) * Dados.d10('Dano no treinador')));
-    const morreu = Estado.ferir(dano, `Ataque de ${this.inimigo.nome} selvagem`);
-    this.ev('danoJogador', `${this.inimigo.nome} te acerta. Você perde ${dano} de HP. (${Estado.j.hp}/${Estado.hpMaxJogador()})`, {dano});
+    const morreu = Estado.ferir(dano, `Ataque de ${nomeVisivel(this.inimigo)} selvagem`);
+    this.ev('danoJogador', `${nomeVisivel(this.inimigo)} te acerta. Você perde ${dano} de HP. (${Estado.j.hp}/${Estado.hpMaxJogador()})`, {dano});
     if (morreu){
       this.ev('gameover', 'Seu corpo cede. O mato fica quieto. Você não levanta mais.');
       return this.encerrar('gameover');
@@ -3262,7 +3674,27 @@ const Batalha = {
   encerrar(resultado, extra){
     this.ativo = false;
     this.fase = 'normal';
-    this.fim = Object.assign({resultado}, extra||{});
+    /* efeitos de item segurado que só valem no fim */
+    if (resultado === 'vitoria' && Estado.dados){
+      (Estado.dados.time || []).forEach(p => {
+        p.faixaUsada = false;
+        const seg = efeitoSegurado(p);
+        if (seg && seg.moral && p.hp > 0){
+          p.moral = Math.min(100, (p.moral || 70) + seg.moral);
+        }
+      });
+      const seg = efeitoSegurado(this.aliado);
+      if (seg && seg.dinheiro && this.tipo === 'treinador'){
+        this.bonusDinheiro = seg.dinheiro;
+        this.ev('info', `O Amuleto de Moeda vale alguma coisa depois de uma vitória dessas.`);
+      }
+      /* convivência e leitura de natureza */
+      if (Estado.tickNatureza) Estado.tickNatureza().forEach(a => this.ev('natureza', a.texto));
+    } else if (Estado.dados){
+      (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
+    }
+    this.fim = Object.assign({resultado, bonusDinheiro:this.bonusDinheiro || 1}, extra||{});
+    this.bonusDinheiro = 1;
     return {eventos:this.eventos, fim:this.fim};
   }
 };
@@ -4604,7 +5036,11 @@ const PRECO_BASE = {
   'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
   'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600,
   'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
-  'Pedra da Folha':4000, 'Moon Stone':6000
+  'Pedra da Folha':4000, 'Moon Stone':6000,
+  /* segurados */
+  'Resto de Ração':2800, 'Faixa Firme':3200, 'Punho de Ferro':2600,
+  'Óculos Grossos':2600, 'Colete de Couro':2400, 'Botina Leve':2200,
+  'Sino Calmante':1800, 'Amuleto de Moeda':3600
 };
 
 /* O que a loja de cada cidade tem, e por quanto (multiplicador local).
@@ -4621,56 +5057,57 @@ const LOJAS = {
     nome:'Loja de Viridian',
     ar:'Fachada sem graça, prateleira organizada, e a atendente sabe exatamente o que um treinador de três dias esqueceu de comprar.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto']
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto','Sino Calmante']
   },
   pewter: {
     nome:'Casa de Ferragens Bacelar',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo']
+    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
     ar:'Atende pela janela, sem ninguém entrar. Tem geladeira de bebida e uma vitrine pequena com uma pedra azul que fica ali há anos.',
     mult:1.05,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água']
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água','Botina Leve']
   },
   vermilion: {
     nome:'Armazém do Cais',
     ar:'Abre às cinco da manhã e vende comida, corda e Poké Ball no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
     mult:0.9,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil']
+    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil','Faixa Firme','Resto de Ração']
   },
   lavender: {
     nome:'Casa Boa Memória',
     ar:'Vende incenso, vela e Potion no mesmo balcão, o que faz um sentido triste. Ninguém aqui vende repelente: ninguém daqui vai pro mato.',
     mult:1.1,
-    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração']
+    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração','Sino Calmante']
   },
   celadon: {
     nome:'Shopping de Celadon — 4º andar',
     ar:'Sete andares, e o quarto inteiro é item de treinador. Você fica quinze minutos parado só olhando prateleira. É o lugar mais barato de Kanto e o que menos te olha na cara.',
     mult:0.85,
     itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
-           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha']
+           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
+           'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda']
   },
   fuchsia: {
     nome:'Posto da Zona Safári',
     ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Água Fresca','Mapa de Kanto','Antidote','Full Heal']
+    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Água Fresca','Mapa de Kanto','Antidote','Full Heal','Resto de Ração']
   },
   saffron: {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável']
+    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda']
   },
   cinnabar: {
     nome:'Vitrine da Dona Zuca',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
-    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo']
+    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
   }
 };
 
@@ -5063,7 +5500,19 @@ const ACHADOS_ROTA = [
   {amb:['cemiterio'], texto:['Uma flor amarela nascida sozinha entre duas pedras, longe de onde essa flor devia nascer.']},
   {amb:['cidade','especial'], texto:['Numa lixeira de rua, uma Câmera descartável com dezoito poses ainda. Ninguém joga isso fora à toa.'],
    ef:{itens:{'Câmera descartável':1}}},
-  {amb:['especial','cidade'], texto:['Um papel timbrado amassado no chão, com brasão no alto. Você desamassa. É um aviso de cobrança de água.']}
+  {amb:['especial','cidade'], texto:['Um papel timbrado amassado no chão, com brasão no alto. Você desamassa. É um aviso de cobrança de água.']},
+
+  /* ─── itens segurados: coisa de gente, largada por gente ─── */
+  {texto:['Amarrado num galho, na altura do peito, um saquinho de pano com ração boa dentro e um nó que alguém deu com muito cuidado.',
+          'O nó é de quem amarrou pra não perder e perdeu assim mesmo.'], ef:{itens:{'Resto de Ração':1}}},
+  {texto:['Uma faixa de algodão grossa, suja de terra, no meio da trilha. Tem marca de nó nas duas pontas.'], ef:{itens:{'Faixa Firme':1}}},
+  {amb:['montanha','caverna'], texto:['Um peso de chumbo costurado numa tira de couro, encostado numa pedra. Pesa muito mais do que parece.'], ef:{itens:{'Punho de Ferro':1}}},
+  {amb:['cidade','especial'], texto:['Numa mureta, um par de óculos de lente grossa com a armação torta, esperando um dono que não voltou.'], ef:{itens:{'Óculos Grossos':1}}},
+  {amb:['campo','floresta'], texto:['Um colete de couro rachado pendurado numa cerca, com remendo nas costas e a fivela ainda boa.'], ef:{itens:{'Colete de Couro':1}}},
+  {texto:['Um sino de latão do tamanho de uma unha, no chão, com o barbante arrebentado.',
+          'Você balança sem querer e o som é ridículo e você balança de novo de propósito.'], ef:{itens:{'Sino Calmante':1}}},
+  {amb:['agua','cidade'], texto:['Uma moeda antiga furada no meio, pendurada num barbante, presa numa fresta de calçada.'], ef:{itens:{'Amuleto de Moeda':1}}},
+  {amb:['campo','rota','floresta'], texto:['Uma botina de sola fina, quase gasta, do pé esquerdo — e o do direito três metros adiante.'], ef:{itens:{'Botina Leve':1}}}
 ];
 
 const Descobertas = {
@@ -26481,13 +26930,74 @@ const UI = {
     if (this.dadosRecentes.length > 8) this.dadosRecentes.shift();
   },
   limparDados(){ this.dadosRecentes = []; },
+  /* ---------- DADOS: eles giram na tela e você pode girar de novo ---------- */
   htmlDados(){
-    if (!this.dadosRecentes.length) return '';
-    return '<div style="margin-top:12px">' + this.dadosRecentes.map(d => {
+    if (!this.dadosRecentes.length) return this.htmlBandeja();
+    const dados = this.dadosRecentes.map((d,k) => {
       const cls = d.valor === d.faces ? ' max' : (d.valor === 1 ? ' min' : '');
-      return `<span class="dado-caixa${cls}"><span class="mot">${this.esc(d.motivo||d.dado)}</span>
-              <span class="mono">${d.dado}</span><span class="val">${d.valor}</span></span>`;
-    }).join('') + '</div>';
+      return `<button class="dado d${d.faces}${cls}" data-v="${d.valor}" data-faces="${d.faces}"
+        title="${this.esc(d.motivo||d.dado)} — clique para girar de novo"
+        onclick="UI.girarDado(this)" style="animation-delay:${k*70}ms">
+        <span class="face">${d.valor}</span>
+        <span class="rot">d${d.faces}</span>
+      </button>`;
+    }).join('');
+    const motivos = this.dadosRecentes.map(d =>
+      `<span class="dado-legenda"><b>d${d.faces}</b> ${this.esc(d.motivo||'')} <b class="v">${d.valor}</b></span>`).join('');
+    return `<div class="dados-area">
+      <div class="dados-linha">${dados}</div>
+      <div class="dados-legendas">${motivos}</div>
+    </div>` + this.htmlBandeja();
+  },
+
+  /* bandeja livre: rolar por rolar, sem efeito nenhum no jogo */
+  htmlBandeja(){
+    const d = [20,10,6,4].map(f =>
+      `<button class="dado d${f} livre" data-faces="${f}" data-v="?"
+        title="Girar um d${f}" onclick="UI.girarLivre(this)">
+        <span class="face">?</span><span class="rot">d${f}</span>
+      </button>`).join('');
+    return `<div class="bandeja">
+      <span class="bandeja-rot">bandeja</span>
+      <div class="dados-linha">${d}</div>
+    </div>`;
+  },
+
+  girarDado(el){
+    const faces = parseInt(el.dataset.faces, 10) || 20;
+    const alvo  = parseInt(el.dataset.v, 10);
+    this._tumbar(el, faces, alvo);
+  },
+  girarLivre(el){
+    const faces = parseInt(el.dataset.faces, 10) || 20;
+    const v = Math.floor(Math.random() * faces) + 1;
+    el.dataset.v = v;
+    el.classList.toggle('max', v === faces);
+    el.classList.toggle('min', v === 1);
+    this._tumbar(el, faces, v);
+  },
+  _tumbar(el, faces, alvo){
+    if (el._girando) return;
+    el._girando = true;
+    const face = el.querySelector('.face');
+    el.classList.remove('parou');
+    el.classList.add('girando');
+    const t0 = Date.now(), dur = 620;
+    const it = setInterval(() => {
+      face.textContent = Math.floor(Math.random() * faces) + 1;
+      if (Date.now() - t0 >= dur){
+        clearInterval(it);
+        face.textContent = alvo;
+        el.classList.remove('girando');
+        el.classList.add('parou');
+        el._girando = false;
+        setTimeout(() => el.classList.remove('parou'), 700);
+      }
+    }, 55);
+  },
+  /* faz girar tudo o que acabou de entrar na tela */
+  girarNovos(){
+    document.querySelectorAll('.dados-linha .dado:not(.livre)').forEach(el => this.girarDado(el));
   },
 
   tipoTag(t){ return `<span class="tipo-tag" style="background:${COR_TIPO[t]||'#888'}">${t}</span>`; },
@@ -26763,15 +27273,21 @@ const UI = {
       const conhecido = meu || Estado.conheceu(p.dex);
       const tipos = conhecido
         ? p.tipos.map(t=>this.tipoTag(t)).join('')
-        : '<span class="tipo-tag" style="background:#3a424c;color:#9aa4b0">tipo ?</span>';
-      const meta = conhecido
-        ? `${this.esc(p.natureza)} · Vel ${p.stats.spe}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
-        : 'você nunca catalogou essa espécie';
+        : '<span class="tipo-tag desconhecido">tipo ?</span>';
+      const nat = p.naturezaVista
+        ? `${this.esc(p.natureza)}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
+        : 'natureza ?';
+      const ficha = conhecido
+        ? `<span class="mono">ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</span>`
+        : '<span class="mono">ficha não catalogada</span>';
+      const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
       return `<div class="lutador ${cls}">
-        <div class="nome"><span>${this.esc(nomeExib(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
+        <div class="nome"><span>${this.esc(nomeVisivel(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
         <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
         ${this.barraHP(p)}
-        <div class="meta">${meta}</div>
+        <div class="meta">${nat}</div>
+        <div class="meta">${ficha}</div>
+        ${seg}
       </div>`;
     };
     document.getElementById('arena').innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
@@ -26783,7 +27299,7 @@ const UI = {
     (eventos||[]).forEach(e => log.appendChild(this.el(`<div class="l ${this.esc(e.tipo)}">${this.esc(e.texto)}</div>`)));
     log.scrollTop = log.scrollHeight;
     const dd = document.getElementById('dados');
-    if (dd) dd.innerHTML = this.htmlDados();
+    if (dd){ dd.innerHTML = this.htmlDados(); this.girarNovos(); }
   },
 
   acoesCombate(extra){
@@ -27268,8 +27784,18 @@ const UI = {
       <div class="t"><span>${this.esc(nomeExib(p))}</span><span class="mono">Nv ${p.nivel}</span></div>
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
-      <div class="sussurro" style="margin-top:7px">${this.esc(p.natureza)} — ${this.esc((NATUREZAS[p.natureza]||{}).traco||'')}</div>
+      <div class="sussurro" style="margin-top:7px">${p.naturezaVista
+        ? this.esc(p.natureza) + ' — ' + this.esc((NATUREZAS[p.natureza]||{}).traco||'')
+        : 'Natureza <b>???</b> — você ainda não entendeu o jeito dele. Convivência e Percepção resolvem isso.'}</div>
       <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
+      ${p.morto ? '' : `<div class="segurado-linha">
+        ${p.segurando
+          ? `<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
+             <span class="fraco">${this.esc(fichaItem(p.segurando))}</span>
+             <button class="btn mini" onclick="UI.tirarItem('${p.uid}')">tirar</button>`
+          : `<span class="fraco">mão livre</span>
+             <button class="btn mini" onclick="UI.menuEquipar('${p.uid}')">equipar</button>`}
+      </div>`}
       <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
         ${p.golpes.map(g=>`${this.esc(g.nome)} <span class="mono">${g.pp}/${g.ppMax}</span>`).join(' · ')}</div>
       <div class="sussurro" style="margin-top:6px">
@@ -27288,26 +27814,78 @@ const UI = {
     const total = itens.reduce((a,[,q]) => a + q, 0);
     const topo = `<div class="mochila-topo">
       <span class="grana">${d.jogador.dinheiro} ₽</span>
-      <span class="peso">${total} ${total === 1 ? 'coisa' : 'coisas'} na mochila</span>
+      <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
     </div>`;
-    const corpo = itens.length
-      ? itens.map(([n,q]) => {
-          const desc = descricaoItem(n);
-          const info = ITENS_INFO[n] || {};
-          const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
-                         && Estado.dados.modo !== 'batalha';
-          return `<div class="item-linha">
-            <span class="qtd">×${q}</span>
-            <span class="corpo">
-              <span class="nome">${this.esc(n)}</span>
-              ${desc ? `<span class="desc">${this.esc(desc)}</span>` : ''}
-            </span>
-            ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
-              onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
-          </div>`;
-        }).join('')
-      : '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>';
+
+    if (!itens.length)
+      return this.modal('Mochila', topo +
+        '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
+        false, 'mochila');
+
+    const ORDEM = ['Captura','Recuperação','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Outro'];
+    const grupos = {};
+    itens.forEach(([n,q]) => {
+      const c = categoriaItem(n);
+      (grupos[c] = grupos[c] || []).push([n,q]);
+    });
+
+    const corpo = ORDEM.filter(c => grupos[c]).map(c => {
+      const linhas = grupos[c].map(([n,q]) => {
+        const info = ITENS_INFO[n] || {};
+        const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
+                       && Estado.dados.modo !== 'batalha';
+        const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
+        return `<div class="item-linha">
+          <span class="qtd">×${q}</span>
+          <span class="corpo">
+            <span class="nome">${this.esc(n)}</span>
+            <span class="ficha">${this.esc(fichaItem(n))}</span>
+            ${info.desc ? `<span class="desc">${this.esc(descricaoItem(n))}</span>` : ''}
+          </span>
+          ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+            onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
+          ${equipavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+            onclick="UI.menuEquiparItem('${n.replace(/'/g,"\\'")}')">equipar</button>` : ''}
+        </div>`;
+      }).join('');
+      return `<h3 class="cat-item">${this.esc(c)}</h3>${linhas}`;
+    }).join('');
+
     this.modal('Mochila', topo + corpo, false, 'mochila');
+  },
+
+  /* ---------- EQUIPAR ---------- */
+  menuEquipar(uid){
+    const d = Estado.dados;
+    const disp = Object.entries(d.itens).filter(([n,q]) => q > 0 && (ITENS_INFO[n]||{}).tipo === 'equipar');
+    if (!disp.length)
+      return this.modal('Equipar', '<p class="nada">Você não tem nenhum item que se segura. Eles aparecem em loja de cidade grande e em rota.</p>', false, 'mochila');
+    this.modal('Equipar em quem?', disp.map(([n,q]) =>
+      `<button class="escolha" onclick="UI.equipar('${uid}','${n.replace(/'/g,"\\'")}')">
+        ${this.esc(n)} <span class="pd">${this.esc(fichaItem(n))} · você tem ${q}</span></button>`).join(''),
+      false, 'mochila');
+  },
+  menuEquiparItem(nome){
+    const vivos = Estado.dados.time.filter(p => !p.morto);
+    if (!vivos.length) return this.modal('Equipar', '<p class="nada">Não tem em quem.</p>', false, 'mochila');
+    this.modal('Quem segura?', vivos.map(p =>
+      `<button class="escolha" onclick="UI.equipar('${p.uid}','${nome.replace(/'/g,"\\'")}')">
+        ${this.esc(nomeExib(p))} <span class="pd">${p.segurando ? 'já segura '+this.esc(p.segurando)+' — volta pra mochila' : 'mão livre'}</span></button>`).join(''),
+      false, 'mochila');
+  },
+  equipar(uid, nome){
+    const p = Estado.equipar(uid, nome);
+    Estado.salvar('auto');
+    if (!p) return this.modal('', '<p class="nada">Não deu.</p>', false, 'mochila');
+    this.modal('', `<p>${this.esc(nomeExib(p))} passa a segurar <b>${this.esc(nome)}</b>.</p>
+      <p class="ficha-bloco">${this.esc(fichaItem(nome))}</p>
+      <p class="sussurro">${this.esc(descricaoItem(nome))}</p>`, false, 'mochila');
+  },
+  tirarItem(uid){
+    const p = Estado.desequipar(uid);
+    Estado.salvar('auto');
+    if (!p) return;
+    this.modalTime();
   },
 
   /* usar item fora de combate: pedra evolutiva, cura, PP, repelente */
@@ -27440,38 +28018,96 @@ const UI = {
 
   modalPokedex(){
     const c = Estado.contagemDex();
-    const p = Estado.pdex();
-    const ids = Object.keys(p.vistos).map(Number).sort((a,b)=>a-b);
+    const pd = Estado.pdex();
+    const ids = Object.keys(DEX).map(Number).sort((a,b)=>a-b);
+    const pct = Math.round((c.catalogados / ids.length) * 100);
+
     const cabeca = `<div class="pokedex-topo">
       <span class="pokedex-lente"></span>
       <span class="pokedex-luzes"><i></i><i></i><i></i></span>
-      <span class="pokedex-contagem"><b>${c.catalogados}</b> / ${c.vistos} vistos</span>
-    </div>`;
+      <span class="pokedex-contagem"><b>${c.catalogados}</b> / ${ids.length} catalogados · ${c.vistos} vistos · ${pct}%</span>
+    </div>
+    <div class="dex-barra"><i style="width:${pct}%"></i></div>`;
 
-    if (!ids.length)
-      return this.modal('', cabeca +
-        '<p class="nada">Nenhum registro ainda. A Pokédex só guarda o que você encontrar — e só descreve o que você apontar para ela durante uma batalha.</p>',
-        false, 'pokedex');
-
-    const linhas = ids.map(dex => {
+    const celas = ids.map(dex => {
       const esp = DEX[dex];
-      const cat = p.catalogados[dex];
       const num = String(dex).padStart(3,'0');
-      if (!cat) return `<div class="dex-item sem-registro">
-        <div class="cab"><span class="num">#${num}</span><span>${this.esc(esp.nome)}</span></div>
-        <div class="nota">Visto. Sem registro — você não apontou a Pokédex nele.</div>
-      </div>`;
-      return `<div class="dex-item">
-        <div class="cab"><span class="num">#${num}</span><span>${this.esc(esp.nome)}</span>
-          <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
-        <div class="base">HP ${esp.base.hp} · ATK ${esp.base.atk} · DEF ${esp.base.def} · SPA ${esp.base.spa} · SPD ${esp.base.spd} · VEL ${esp.base.spe}</div>
-        ${esp.evo ? `<div class="nota">Evolui para ${this.esc(DEX[esp.evo].nome)}${esp.nivelEvo?` no nível ${esp.nivelEvo}`:''}.</div>` : ''}
-      </div>`;
+      const cat = pd.catalogados[dex];
+      const vis = pd.vistos[dex];
+      if (cat) return `<button class="dex-cela cat" onclick="UI.dexEntrada(${dex})">
+        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span></button>`;
+      if (vis) return `<button class="dex-cela vis" onclick="UI.dexEntrada(${dex})">
+        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>
+        <span class="marca">sem registro</span></button>`;
+      return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
 
     this.modal('', cabeca +
-      `<p class="sussurro" style="margin-top:0">Ver um bicho registra o nome. Apontar a Pokédex nele durante uma batalha registra o resto.</p>` +
-      linhas, false, 'pokedex');
+      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.</p>
+       <div class="dex-grade">${celas}</div>`, false, 'pokedex');
+  },
+
+  /* ficha técnica de um registro */
+  dexEntrada(dex){
+    const esp = DEX[dex];
+    const pd = Estado.pdex();
+    const num = String(dex).padStart(3,'0');
+    if (!pd.catalogados[dex]){
+      return this.modal('', `<div class="pokedex-topo">
+          <span class="pokedex-lente"></span>
+          <span class="pokedex-luzes"><i></i><i></i><i></i></span>
+          <span class="pokedex-contagem">#${num}</span>
+        </div>
+        <div class="dex-ficha">
+          <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span></div>
+          <div class="nota">Avistado. A Pokédex guardou o número e o nome e mais nada.</div>
+          <div class="nota">Para abrir a ficha: aponte a Pokédex nele durante um combate. Custa nada — não gasta o turno.</div>
+        </div>
+        <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
+        true, 'pokedex');
+    }
+    const b = esp.base;
+    const linha = (k, v, max) => `<div class="base-linha">
+      <span class="k">${k}</span>
+      <span class="barrinha"><i style="width:${Math.min(100, Math.round(v/max*100))}%"></i></span>
+      <span class="v mono">${v}</span></div>`;
+    this.modal('', `<div class="pokedex-topo">
+        <span class="pokedex-lente"></span>
+        <span class="pokedex-luzes"><i></i><i></i><i></i></span>
+        <span class="pokedex-contagem">#${num}</span>
+      </div>
+      <div class="dex-ficha">
+        <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span>
+          <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
+
+        <h3 class="cat-item">Base</h3>
+        ${linha('HP', b.hp, 255)}
+        ${linha('Ataque', b.atk, 190)}
+        ${linha('Defesa', b.def, 230)}
+        ${linha('Sp. Atk', b.spa, 194)}
+        ${linha('Sp. Def', b.spd, 230)}
+        ${linha('Velocidade', b.spe, 150)}
+        <div class="nota mono">Soma de base: ${esp.total}</div>
+
+        <h3 class="cat-item">Ficha</h3>
+        <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
+        <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
+        <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
+          ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
+          : 'forma final'}</span></div>
+        <div class="linha"><span class="k">Classificação</span><span class="v">${esp.lendario ? 'lendário' : 'comum'}</span></div>
+        <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
+        <div class="linha"><span class="k">Resiste a</span><span class="v">${this.esc(this.resistencias(esp.tipos).join(', ') || '—')}</span></div>
+      </div>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
+      true, 'pokedex');
+  },
+
+  fraquezas(tipos){
+    return TIPOS.filter(t => eficacia(t, tipos) > 1).map(t => t + ' ×' + eficacia(t, tipos));
+  },
+  resistencias(tipos){
+    return TIPOS.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
 
   modalDiario(){
@@ -27532,7 +28168,22 @@ const UI = {
       <h3>Perícias</h3>
       <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico.</p>
       <h3>Reputação</h3>
-      <p class="sussurro">Dois eixos de 8 níveis. Ações contrárias lavam o eixo oposto antes de subir o seu, e nada te devolve a "Desconhecido" — o mundo lembra.</p>`);
+      <p class="sussurro">Dois eixos de 8 níveis. Ações contrárias lavam o eixo oposto antes de subir o seu, e nada te devolve a "Desconhecido" — o mundo lembra.</p>
+
+      <h3>O que você sabe</h3>
+      <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
+      <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
+      <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
+      <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">1× por batalha · não gasta o turno</span></div>
+      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>
+
+      <h3>Item segurado</h3>
+      <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">aba Time → equipar · ou Mochila → equipar</span></div>
+      <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
+
+      <h3>Dados</h3>
+      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`);
   }
 };
 
@@ -27826,12 +28477,12 @@ const Jogo = {
       const FOSSEIS = [138,139,140,141,142];
       const base = POOL_SELVAGEM.filter(d => !evoluidos.has(d) && !FOSSEIS.includes(d) && ![132,151,150].includes(d));
       inicial = criarPokemon(Dados.escolher(base), 5, {
-        moral:100,
+        moral:100, naturezaVista:true,
         historia:'Cresceu com você desde pequeno. Vínculo máximo.'
       });
     } else {
       inicial = criarPokemon(parseInt(f.inicial,10), 5, {
-        moral:80,
+        moral:80, naturezaVista:true,
         historia:'Entregue a você no dia em que a jornada começou.'
       });
     }
@@ -28091,26 +28742,8 @@ const Jogo = {
     UI.avisos([{tipo:'cura', texto:'Time curado. Você dormiu em cama de verdade e recuperou 8 de HP.'}]);
   },
 
-  hubLoja(){
-    const catalogo = [
-      ['Poké Ball',200],['Great Ball',600],['Ultra Ball',1200],
-      ['Potion',300],['Super Potion',700],['Hyper Potion',1500],
-      ['Revive',1500],['Antidote',250],['Full Heal',600],
-      ['Bandagem',400],['Ração',350]
-    ];
-    UI.modal('Loja — ' + Estado.j.dinheiro + ' ₽', catalogo.map(([n,p]) =>
-      `<button class="escolha" ${Estado.j.dinheiro < p ? 'disabled style="opacity:.4"':''}
-        onclick="Jogo.comprar('${n}',${p})">${n} — ${p} ₽
-        <span class="pd">${descricaoItem(n)}</span></button>`).join(''));
-  },
-
-  comprar(nome, preco){
-    if (Estado.j.dinheiro < preco) return;
-    Estado.j.dinheiro -= preco;
-    Estado.darItem(nome, 1);
-    Estado.salvar('auto');
-    this.hubLoja();
-  },
+  hubLoja(){ return Cidade.loja(); },
+  comprar(nome, preco){ return Cidade.comprar(nome, preco); },
 
   hubTreinar(){
     const meu = Estado.primeiroApto();
@@ -28178,7 +28811,8 @@ const Jogo = {
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:`Líder ${g.lider}`,
       timeInimigo: time.slice(1),
-      introducao: `${g.lider} enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+      revelarNatureza: true,   // líder e nome grande falam do próprio time
+      introducao: `${g.lider} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha(g.intro ? g.intro(Estado.dados).filter(Boolean) : null);
   },
@@ -28196,7 +28830,12 @@ const Jogo = {
       Estado.dados.insignias.push(g.insignia);
       avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${g.insignia} (${Estado.dados.insignias.length}/8)`});
       const p = g.premio || {};
-      if (p.dinheiro){ Estado.j.dinheiro += p.dinheiro; avisos.push({tipo:'item', texto:`+${p.dinheiro} ₽`}); }
+      if (p.dinheiro){
+        const mult = (fim && fim.bonusDinheiro) || 1;
+        const val = Math.round(p.dinheiro * mult);
+        Estado.j.dinheiro += val;
+        avisos.push({tipo:'item', texto:`+${val} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
+      }
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
       if (p.rep){
         const r = Estado.mudarRep('bom', p.rep, `Venceu o Ginásio de ${g.cidade}`);
@@ -28232,7 +28871,7 @@ const Jogo = {
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:'Téo',
       timeInimigo: time.slice(1),
-      introducao: `Téo enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+      introducao: `Téo enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha(falaRival());
   },
@@ -28320,7 +28959,8 @@ const Jogo = {
       tipo:'treinador', fuga:false,
       treinador: e.campeao ? 'Red' : alvo.nome,
       timeInimigo: time.slice(1),
-      introducao: `${alvo.nome} enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+      revelarNatureza: true,   // líder e nome grande falam do próprio time
+      introducao: `${alvo.nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha(alvo.intro(Estado.dados).filter(Boolean));
   },
@@ -28419,7 +29059,8 @@ const Jogo = {
     Batalha.iniciar(meu, adv.time[0], {
       tipo:'treinador', fuga:false, treinador: adv.nome,
       timeInimigo: adv.time.slice(1),
-      introducao: `${adv.nome} enviou ${adv.time[0].nome} (Nv ${adv.time[0].nivel})!`
+      revelarNatureza: true,   // líder e nome grande falam do próprio time
+      introducao: `${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`
     });
     UI.telaBatalha([`${PREMIO_TORNEIO[t.rodada].rodada} — ${adv.nome}`, adv.fala]);
   },

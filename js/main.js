@@ -60,12 +60,12 @@ const Jogo = {
       const FOSSEIS = [138,139,140,141,142];
       const base = POOL_SELVAGEM.filter(d => !evoluidos.has(d) && !FOSSEIS.includes(d) && ![132,151,150].includes(d));
       inicial = criarPokemon(Dados.escolher(base), 5, {
-        moral:100,
+        moral:100, naturezaVista:true,
         historia:'Cresceu com você desde pequeno. Vínculo máximo.'
       });
     } else {
       inicial = criarPokemon(parseInt(f.inicial,10), 5, {
-        moral:80,
+        moral:80, naturezaVista:true,
         historia:'Entregue a você no dia em que a jornada começou.'
       });
     }
@@ -325,26 +325,8 @@ const Jogo = {
     UI.avisos([{tipo:'cura', texto:'Time curado. Você dormiu em cama de verdade e recuperou 8 de HP.'}]);
   },
 
-  hubLoja(){
-    const catalogo = [
-      ['Poké Ball',200],['Great Ball',600],['Ultra Ball',1200],
-      ['Potion',300],['Super Potion',700],['Hyper Potion',1500],
-      ['Revive',1500],['Antidote',250],['Full Heal',600],
-      ['Bandagem',400],['Ração',350]
-    ];
-    UI.modal('Loja — ' + Estado.j.dinheiro + ' ₽', catalogo.map(([n,p]) =>
-      `<button class="escolha" ${Estado.j.dinheiro < p ? 'disabled style="opacity:.4"':''}
-        onclick="Jogo.comprar('${n}',${p})">${n} — ${p} ₽
-        <span class="pd">${descricaoItem(n)}</span></button>`).join(''));
-  },
-
-  comprar(nome, preco){
-    if (Estado.j.dinheiro < preco) return;
-    Estado.j.dinheiro -= preco;
-    Estado.darItem(nome, 1);
-    Estado.salvar('auto');
-    this.hubLoja();
-  },
+  hubLoja(){ return Cidade.loja(); },
+  comprar(nome, preco){ return Cidade.comprar(nome, preco); },
 
   hubTreinar(){
     const meu = Estado.primeiroApto();
@@ -412,7 +394,8 @@ const Jogo = {
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:`Líder ${g.lider}`,
       timeInimigo: time.slice(1),
-      introducao: `${g.lider} enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+      revelarNatureza: true,   // líder e nome grande falam do próprio time
+      introducao: `${g.lider} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha(g.intro ? g.intro(Estado.dados).filter(Boolean) : null);
   },
@@ -430,7 +413,12 @@ const Jogo = {
       Estado.dados.insignias.push(g.insignia);
       avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${g.insignia} (${Estado.dados.insignias.length}/8)`});
       const p = g.premio || {};
-      if (p.dinheiro){ Estado.j.dinheiro += p.dinheiro; avisos.push({tipo:'item', texto:`+${p.dinheiro} ₽`}); }
+      if (p.dinheiro){
+        const mult = (fim && fim.bonusDinheiro) || 1;
+        const val = Math.round(p.dinheiro * mult);
+        Estado.j.dinheiro += val;
+        avisos.push({tipo:'item', texto:`+${val} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
+      }
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
       if (p.rep){
         const r = Estado.mudarRep('bom', p.rep, `Venceu o Ginásio de ${g.cidade}`);
@@ -466,7 +454,7 @@ const Jogo = {
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:'Téo',
       timeInimigo: time.slice(1),
-      introducao: `Téo enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+      introducao: `Téo enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha(falaRival());
   },
@@ -554,7 +542,8 @@ const Jogo = {
       tipo:'treinador', fuga:false,
       treinador: e.campeao ? 'Red' : alvo.nome,
       timeInimigo: time.slice(1),
-      introducao: `${alvo.nome} enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+      revelarNatureza: true,   // líder e nome grande falam do próprio time
+      introducao: `${alvo.nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha(alvo.intro(Estado.dados).filter(Boolean));
   },
@@ -653,7 +642,8 @@ const Jogo = {
     Batalha.iniciar(meu, adv.time[0], {
       tipo:'treinador', fuga:false, treinador: adv.nome,
       timeInimigo: adv.time.slice(1),
-      introducao: `${adv.nome} enviou ${adv.time[0].nome} (Nv ${adv.time[0].nivel})!`
+      revelarNatureza: true,   // líder e nome grande falam do próprio time
+      introducao: `${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`
     });
     UI.telaBatalha([`${PREMIO_TORNEIO[t.rodada].rodada} — ${adv.nome}`, adv.fala]);
   },

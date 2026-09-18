@@ -22,6 +22,10 @@ const Batalha = {
     this.turno = 0;
     this.fim = null;
     this.fase = 'normal';
+    this.bonusDinheiro = 1;
+    this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
+    if (this.revelaNatureza && inimigo) inimigo.naturezaVista = true;
+    if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
     this.eventos = [];
     this.aoTerminar = opts.aoTerminar || null;
     this.contexto = opts.contexto || null;
@@ -40,9 +44,16 @@ const Batalha = {
   },
 
   introPadrao(){
-    if (this.tipo === 'selvagem') return `Um ${this.inimigo.nome} selvagem (Nv ${this.inimigo.nivel}, ${this.inimigo.natureza}) aparece!`;
-    if (this.tipo === 'lendario') return `${this.inimigo.nome} encara você. O ar fica pesado.`;
-    return `${this.treinador || 'Um treinador'} enviou ${this.inimigo.nome} (Nv ${this.inimigo.nivel})!`;
+    const i = this.inimigo;
+    const conhece = Estado.conheceu(i.dex);
+    const nat = i.naturezaVista ? `, ${i.natureza}` : '';
+    if (this.tipo === 'selvagem'){
+      return conhece
+        ? `Um ${i.nome} selvagem (Nv ${i.nivel}${nat}) aparece!`
+        : `Alguma coisa sai do mato e para na sua frente (Nv ${i.nivel}). Você não sabe o nome disso.`;
+    }
+    if (this.tipo === 'lendario') return `${nomeVisivel(i)} encara você. O ar fica pesado.`;
+    return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
   },
 
   ev(tipo, texto, extra){ this.eventos.push(Object.assign({tipo, texto}, extra||{})); },
@@ -54,6 +65,8 @@ const Batalha = {
     let v = p.stats[chave] * this.mult(est, chave);
     if (chave === 'spe' && p.status === 'paralisia') v *= 0.5;
     if (chave === 'atk' && p.status === 'queimadura') v *= 0.75;
+    const seg = efeitoSegurado(p);
+    if (seg && chave === 'spe' && seg.vel) v *= seg.vel;
     return Math.max(1, Math.floor(v));
   },
 
@@ -67,15 +80,15 @@ const Batalha = {
     const desobedienciaBase = souAliado ? Math.max(0, (60 - moral) / 2 - insignias * 3) : 0;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
-      return {recusa:true, texto:`${nomeExib(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
+      return {recusa:true, texto:`${nomeVisivel(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
     if (p.natureza === 'Timid' && g.c === 'fis' && Dados.chance(30))
-      return {recusa:true, texto:`${nomeExib(p)} é Timid — hesita em chegar perto e não ataca.`};
+      return {recusa:true, texto:`${nomeVisivel(p)} é Timid — hesita em chegar perto e não ataca.`};
     if (p.natureza === 'Naughty' && Dados.chance(18))
-      return {trocaAlvo:true, texto:`${nomeExib(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
+      return {trocaAlvo:true, texto:`${nomeVisivel(p)} é Naughty — usa o golpe do jeito errado, de propósito.`};
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
-      return {outroGolpe:true, texto:`${nomeExib(p)} não espera o comando e ataca por conta própria.`};
+      return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
     if (desobedienciaBase > 0 && Dados.chance(desobedienciaBase))
-      return {recusa:true, texto:`${nomeExib(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
+      return {recusa:true, texto:`${nomeVisivel(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
     return null;
   },
 
@@ -83,30 +96,30 @@ const Batalha = {
   podeAgir(p, est, souAliado){
     if (p.status === 'sono'){
       p.statusTurnos--;
-      if (p.statusTurnos <= 0){ p.status = null; this.ev('status', `${nomeExib(p)} acordou!`); }
-      else { this.ev('status', `${nomeExib(p)} está dormindo profundamente.`); return false; }
+      if (p.statusTurnos <= 0){ p.status = null; this.ev('status', `${nomeVisivel(p)} acordou!`); }
+      else { this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`); return false; }
     }
     if (p.status === 'congelamento'){
-      if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeExib(p)} descongelou!`); }
-      else { this.ev('status', `${nomeExib(p)} está congelado e não consegue se mover.`); return false; }
+      if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
+      else { this.ev('status', `${nomeVisivel(p)} está congelado e não consegue se mover.`); return false; }
     }
     if (p.status === 'paralisia' && Dados.chance(25)){
-      this.ev('status', `${nomeExib(p)} está paralisado! Não conseguiu se mover.`); return false;
+      this.ev('status', `${nomeVisivel(p)} está paralisado! Não conseguiu se mover.`); return false;
     }
     if (est.recarregando){
       est.recarregando = false;
-      this.ev('status', `${nomeExib(p)} precisa se recuperar do golpe anterior.`); return false;
+      this.ev('status', `${nomeVisivel(p)} precisa se recuperar do golpe anterior.`); return false;
     }
     if (est.confuso > 0){
       est.confuso--;
-      if (est.confuso === 0) this.ev('status', `${nomeExib(p)} saiu da confusão.`);
+      if (est.confuso === 0) this.ev('status', `${nomeVisivel(p)} saiu da confusão.`);
       else if (Dados.chance(33)){
         const d = Math.max(1, Math.round(Dados.d10('Dano de confusão') * 4 * (p.stats.atk / Math.max(1,p.stats.def))));
         p.hp = Math.max(0, p.hp - d);
-        this.ev('dano', `${nomeExib(p)} está confuso e se machucou sozinho! (${d} de dano)`);
+        this.ev('dano', `${nomeVisivel(p)} está confuso e se machucou sozinho! (${d} de dano)`);
         return false;
       } else {
-        this.ev('status', `${nomeExib(p)} está confuso...`);
+        this.ev('status', `${nomeVisivel(p)} está confuso...`);
       }
     }
     return true;
@@ -119,7 +132,7 @@ const Batalha = {
 
     res.efic = eficacia(g.t, def.tipos);
     if (res.efic === 0){
-      res.msgs.push(`Não afeta ${nomeExib(def)}...`);
+      res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
       return res;
     }
 
@@ -159,6 +172,14 @@ const Batalha = {
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
 
+    const segA = efeitoSegurado(atk);
+    if (segA){
+      if (fisico && segA.fis) total = Math.round(total * segA.fis);
+      if (!fisico && segA.esp) total = Math.round(total * segA.esp);
+    }
+    const segD = efeitoSegurado(def);
+    if (segD && segD.defesa) total = Math.round(total * segD.defesa);
+
     const cfg = (Estado.dados && Estado.dados.config) ? Estado.dados.config.danoMult : 1;
     res.dano = Math.max(1, Math.round(total * (cfg || 1)));
     return res;
@@ -190,13 +211,13 @@ const Batalha = {
   /* ---------- um golpe ---------- */
   usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado){
     const slot = atacante.golpes[indiceGolpe];
-    if (!slot){ this.ev('info', `${nomeExib(atacante)} não tem esse golpe.`); return; }
+    if (!slot){ this.ev('info', `${nomeVisivel(atacante)} não tem esse golpe.`); return; }
     if (slot.pp <= 0){
-      this.ev('info', `${nomeExib(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
+      this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
       const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
       defensor.hp = Math.max(0, defensor.hp - d);
       atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
-      this.ev('dano', `${nomeExib(defensor)} sofreu ${d}. ${nomeExib(atacante)} se machucou no contragolpe.`);
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
       return;
     }
 
@@ -217,15 +238,15 @@ const Batalha = {
     // golpes de carga (Dig, Fly, Solar Beam, Sky Attack)
     if (g.ef && g.ef.carga && estAtk.carregando !== nome){
       estAtk.carregando = nome;
-      this.ev('info', `${nomeExib(atacante)} se prepara para ${nome}!`);
+      this.ev('info', `${nomeVisivel(atacante)} se prepara para ${nome}!`);
       return;
     }
     estAtk.carregando = null;
 
-    this.ev('golpe', `${nomeExib(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t});
+    this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t});
 
     if (!this.acertou(nome, estAtk, estDef)){
-      this.ev('erro', `${nomeExib(atacante)} errou o golpe!`);
+      this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
       return;
     }
 
@@ -243,38 +264,44 @@ const Batalha = {
     r.msgs.forEach(m => this.ev('info', m));
     if (r.efic === 0) return;
 
-    defensor.hp = Math.max(0, defensor.hp - r.dano);
-    this.ev('dano', `${nomeExib(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+    if (this.aguentou(defensor, r.dano)){
+      defensor.hp = 1;
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+      this.ev('cura', `A Faixa Firme segurou. ${nomeVisivel(defensor)} fica de pé com 1 de HP.`);
+    } else {
+      defensor.hp = Math.max(0, defensor.hp - r.dano);
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+    }
 
     if (g.ef && g.ef.drena){
       const cura = Math.max(1, Math.round(r.dano * g.ef.drena));
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + cura);
-      this.ev('cura', `${nomeExib(atacante)} drenou ${cura} de HP.`);
+      this.ev('cura', `${nomeVisivel(atacante)} drenou ${cura} de HP.`);
     }
     if (g.ef && g.ef.recuo){
       const rec = Math.max(1, Math.round(r.dano * g.ef.recuo));
       atacante.hp = Math.max(0, atacante.hp - rec);
-      this.ev('dano', `${nomeExib(atacante)} sofreu ${rec} de recuo.`);
+      this.ev('dano', `${nomeVisivel(atacante)} sofreu ${rec} de recuo.`);
     }
     if (g.ef && g.ef.recarga) estAtk.recarregando = true;
     if (g.ef && g.ef.confundeSe && Dados.chance(50)){
       estAtk.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeExib(atacante)} ficou confuso pela própria fúria!`);
+      this.ev('status', `${nomeVisivel(atacante)} ficou confuso pela própria fúria!`);
     }
     if (g.ef && g.ef.tipo && g.ef.chance && defensor.hp > 0 && Dados.chance(g.ef.chance)){
       if (g.ef.tipo === 'confusao'){
         estDef.confuso = Dados.entre(2,4);
-        this.ev('status', `${nomeExib(defensor)} ficou confuso!`);
+        this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
       } else if (g.ef.tipo === 'recuo'){
         estDef.recuou = true;
-        this.ev('status', `${nomeExib(defensor)} se encolheu de medo!`);
+        this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
       } else if (this.aplicarStatus(defensor, g.ef.tipo, g.ef.grave)){
-        this.ev('status', `${nomeExib(defensor)} está com ${g.ef.tipo}!`);
+        this.ev('status', `${nomeVisivel(defensor)} está com ${g.ef.tipo}!`);
       }
     }
     if (g.ef && g.ef.baixa && defensor.hp > 0){
       estDef[g.ef.baixa] = Math.max(-6, (estDef[g.ef.baixa]||0) - 1);
-      this.ev('status', `${g.ef.baixa.toUpperCase()} de ${nomeExib(defensor)} caiu!`);
+      this.ev('status', `${g.ef.baixa.toUpperCase()} de ${nomeVisivel(defensor)} caiu!`);
     }
   },
 
@@ -284,31 +311,31 @@ const Batalha = {
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
       if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }
-      this.ev('cura', `${nomeExib(atacante)} recuperou ${atacante.hp - antes} de HP.`);
+      this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
       return;
     }
     if (e.sobe){
       const q = e.forte ? 2 : 1;
       estAtk[e.sobe] = Math.min(6, (estAtk[e.sobe]||0) + q);
-      this.ev('status', `${e.sobe.toUpperCase()} de ${nomeExib(atacante)} ${e.forte?'subiu MUITO':'subiu'}!`);
+      this.ev('status', `${e.sobe.toUpperCase()} de ${nomeVisivel(atacante)} ${e.forte?'subiu MUITO':'subiu'}!`);
       return;
     }
     if (e.baixa){
       const q = e.forte ? 2 : 1;
       estDef[e.baixa] = Math.max(-6, (estDef[e.baixa]||0) - q);
-      this.ev('status', `${e.baixa.toUpperCase()} de ${nomeExib(defensor)} ${e.forte?'despencou':'caiu'}!`);
+      this.ev('status', `${e.baixa.toUpperCase()} de ${nomeVisivel(defensor)} ${e.forte?'despencou':'caiu'}!`);
       return;
     }
     if (e.tipo === 'confusao'){
       estDef.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeExib(defensor)} ficou confuso!`);
+      this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
       return;
     }
     if (e.tipo){
       if (this.aplicarStatus(defensor, e.tipo, e.grave))
-        this.ev('status', `${nomeExib(defensor)} está com ${e.tipo}${e.grave?' GRAVE':''}!`);
+        this.ev('status', `${nomeVisivel(defensor)} está com ${e.tipo}${e.grave?' GRAVE':''}!`);
       else
-        this.ev('erro', `Não teve efeito em ${nomeExib(defensor)}.`);
+        this.ev('erro', `Não teve efeito em ${nomeVisivel(defensor)}.`);
     }
   },
 
@@ -319,13 +346,32 @@ const Batalha = {
       const frac = p.statusGrave ? 6 : 8;
       const d = Math.max(1, Math.floor(p.hpMax / frac));
       p.hp = Math.max(0, p.hp - d);
-      this.ev('dano', `${nomeExib(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`);
+      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`);
     }
     if (p.status === 'queimadura'){
       const d = Math.max(1, Math.floor(p.hpMax / 16));
       p.hp = Math.max(0, p.hp - d);
-      this.ev('dano', `${nomeExib(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`);
+      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`);
     }
+    /* item segurado: regeneração lenta */
+    const seg = efeitoSegurado(p);
+    if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
+      const c = Math.max(1, Math.round(p.hpMax * seg.regen));
+      const antes = p.hp;
+      p.hp = Math.min(p.hpMax, p.hp + c);
+      this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
+    }
+  },
+
+  /* Faixa Firme: uma vez por combate, não deixa cair de um golpe só */
+  aguentou(p, danoPrevisto){
+    const seg = efeitoSegurado(p);
+    if (!seg || !seg.aguenta) return false;
+    if (p.faixaUsada) return false;
+    if (p.hp - danoPrevisto > 0) return false;
+    if (p.hp <= 1) return false;
+    p.faixaUsada = true;
+    return true;
   },
 
   /* ---------- IA ---------- */
@@ -387,13 +433,13 @@ const Batalha = {
 
     const agirJogador = () => {
       if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
-      if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeExib(this.aliado)} está encolhido e não ataca.`); return; }
+      if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeVisivel(this.aliado)} está encolhido e não ataca.`); return; }
       if (!this.podeAgir(this.aliado, this.estAliado, true)) return;
       this.usarGolpe(this.aliado, this.inimigo, this.estAliado, this.estInimigo, acao.indice, true);
     };
     const agirInimigo = () => {
       if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
-      if (this.estInimigo.recuou){ this.estInimigo.recuou = false; this.ev('status', `${nomeExib(this.inimigo)} está encolhido e não ataca.`); return; }
+      if (this.estInimigo.recuou){ this.estInimigo.recuou = false; this.ev('status', `${nomeVisivel(this.inimigo)} está encolhido e não ataca.`); return; }
       if (!this.podeAgir(this.inimigo, this.estInimigo, false)) return;
       this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, iIA, false);
     };
@@ -424,6 +470,7 @@ const Batalha = {
     const p = this.inimigo;
     const esp = DEX[p.dex];
     const novo = Estado.catalogou(p.dex);
+    p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
     this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
     this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
@@ -452,44 +499,44 @@ const Batalha = {
     if (!info || !Estado.contaItem(nome)){ this.ev('erro', 'Você não tem esse item.'); return; }
     const alvo = Estado.dados.time.find(p => p.uid === alvoUid) || this.aliado;
     if (info.tipo === 'cura'){
-      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeExib(alvo)} está desmaiado — Potion não resolve.`); return; }
+      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeVisivel(alvo)} está desmaiado — Potion não resolve.`); return; }
       Estado.usarItem(nome);
       const antes = alvo.hp;
       alvo.hp = Math.min(alvo.hpMax, alvo.hp + info.valor);
-      this.ev('cura', `Você usou ${nome}. ${nomeExib(alvo)} recuperou ${alvo.hp - antes} de HP.`);
+      this.ev('cura', `Você usou ${nome}. ${nomeVisivel(alvo)} recuperou ${alvo.hp - antes} de HP.`);
     } else if (info.tipo === 'revive'){
       if (alvo.morto){
-        this.ev('erro', `Você aplica o Revive em ${nomeExib(alvo)} e não acontece nada. Nem uma reação.`);
+        this.ev('erro', `Você aplica o Revive em ${nomeVisivel(alvo)} e não acontece nada. Nem uma reação.`);
         this.ev('info', 'Tem uma diferença entre desmaiar e morrer, e você acabou de aprender qual é.');
         Estado.marcar('revive_nao_ressuscita');
         return;
       }
-      if (alvo.hp > 0){ this.ev('erro', `${nomeExib(alvo)} não está desmaiado.`); return; }
+      if (alvo.hp > 0){ this.ev('erro', `${nomeVisivel(alvo)} não está desmaiado.`); return; }
       Estado.usarItem(nome);
       alvo.hp = Math.floor(alvo.hpMax / 2);
-      this.ev('cura', `${nomeExib(alvo)} voltou a si com ${alvo.hp} de HP.`);
+      this.ev('cura', `${nomeVisivel(alvo)} voltou a si com ${alvo.hp} de HP.`);
     } else if (info.tipo === 'status'){
       Estado.usarItem(nome);
       alvo.status = null; alvo.statusTurnos = 0;
-      this.ev('cura', `${nomeExib(alvo)} teve as condições curadas.`);
+      this.ev('cura', `${nomeVisivel(alvo)} teve as condições curadas.`);
     } else if (info.tipo === 'curaJogador'){
       Estado.usarItem(nome);
       Estado.curarJogador(info.valor);
       this.ev('cura', `Você se enfaixou. HP: ${Estado.j.hp}/${Estado.hpMaxJogador()}`);
     } else if (info.tipo === 'pp'){
       const g = alvo.golpes.find(x => x.pp < x.ppMax);
-      if (!g){ this.ev('erro', `Os golpes de ${nomeExib(alvo)} estão cheios.`); return; }
+      if (!g){ this.ev('erro', `Os golpes de ${nomeVisivel(alvo)} estão cheios.`); return; }
       Estado.usarItem(nome);
       g.pp = Math.min(g.ppMax, g.pp + info.valor);
       this.ev('cura', `${g.nome} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`);
     } else if (info.tipo === 'ppTodos'){
       Estado.usarItem(nome);
       alvo.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
-      this.ev('cura', `Todos os golpes de ${nomeExib(alvo)} recuperaram um pouco.`);
+      this.ev('cura', `Todos os golpes de ${nomeVisivel(alvo)} recuperaram um pouco.`);
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome);
       alvo.moral = Math.min(100, alvo.moral + info.valor);
-      this.ev('natureza', `${nomeExib(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
+      this.ev('natureza', `${nomeVisivel(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
     } else if (info.tipo === 'fuga'){
       if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
       Estado.usarItem(nome);
@@ -505,7 +552,7 @@ const Batalha = {
   trocarPokemon(uid){
     const novo = Estado.dados.time.find(p => p.uid === uid);
     if (!novo || !estaVivo(novo)){ this.ev('erro', 'Esse Pokémon não pode lutar.'); return; }
-    this.ev('info', `${nomeExib(this.aliado)} volta. Vai, ${nomeExib(novo)}!`);
+    this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
     this.aliado = novo;
     this.estAliado = this.novoEstado();
   },
@@ -530,7 +577,7 @@ const Batalha = {
     r.eventos.forEach(e => this.eventos.push(e));
     if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:nomeBola});
     if (r.enfurecido){
-      this.ev('perigo', `${this.inimigo.nome} está FURIOSO. Isso não vai acabar bem.`);
+      this.ev('perigo', `${nomeVisivel(this.inimigo)} está FURIOSO. Isso não vai acabar bem.`);
       return this.turnoInimigoSozinho();
     }
     return this.turnoInimigoSozinho();
@@ -540,20 +587,22 @@ const Batalha = {
   verificarFim(){
     if (this.inimigo.hp <= 0){
       this.ev('vitoria', this.tipo === 'selvagem'
-        ? `${this.inimigo.nome} desmaiou e fugiu para o mato. Ele vai voltar.`
-        : `${this.inimigo.nome} desmaiou!`);
+        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. Ele vai voltar.`
+        : `${nomeVisivel(this.inimigo)} desmaiou!`);
       const ganho = expGanha(this.inimigo, this.aliado);
       const evs = ganharExp(this.aliado, ganho);
-      this.ev('exp', `${nomeExib(this.aliado)} ganhou ${ganho} de experiência.`);
+      this.ev('exp', `${nomeVisivel(this.aliado)} ganhou ${ganho} de experiência.`);
       evs.forEach(e => {
-        if (e.tipo === 'nivel') this.ev('nivel', `${nomeExib(this.aliado)} subiu para o nível ${e.nivel}!`);
-        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeExib(this.aliado)} aprendeu ${e.golpe}!` + (e.esqueceu ? ` (esqueceu ${e.esqueceu})` : ''));
+        if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(this.aliado)} subiu para o nível ${e.nivel}!`);
+        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(this.aliado)} aprendeu ${e.golpe}!` + (e.esqueceu ? ` (esqueceu ${e.esqueceu})` : ''));
         if (e.tipo === 'evolucao') this.ev('evolucao', `${e.de} evoluiu para ${e.para}!`);
       });
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
         const prox = this.timeInimigo.shift();
-        this.ev('info', `${this.treinador} envia ${prox.nome} (Nv ${prox.nivel})!`);
+        if (this.revelaNatureza) prox.naturezaVista = true;
+        this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
+          prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
         return {eventos:this.eventos, fim:null};
@@ -562,7 +611,7 @@ const Batalha = {
     }
 
     if (this.aliado.hp <= 0){
-      this.ev('derrota', `${nomeExib(this.aliado)} desmaiou.`);
+      this.ev('derrota', `${nomeVisivel(this.aliado)} desmaiou.`);
       const reservas = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== this.aliado.uid);
       if (reservas.length){
         return {eventos:this.eventos, fim:null, precisaTrocar:true, reservas:reservas.map(p=>p.uid)};
@@ -581,17 +630,17 @@ const Batalha = {
   avaliarAmeaca(){
     const nat = NATUREZAS[this.inimigo.natureza] || {};
     if (!nat.agressiva){
-      this.ev('info', `${this.inimigo.nome} rosna, hostil, mas não avança sobre você. Some no mato.`);
+      this.ev('info', `${nomeVisivel(this.inimigo)} rosna, hostil, mas não avança sobre você. Some no mato.`);
       return this.encerrar('derrota');
     }
     const d = Dados.d20('O selvagem ataca você?');
     this.ev('perigo', `Natureza ${this.inimigo.natureza} (agressiva). 1d20 = ${d} — ataca com 10+`);
     if (d < 10){
-      this.ev('info', `${this.inimigo.nome} te encara por um segundo longo demais... e vai embora.`);
+      this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais... e vai embora.`);
       return this.encerrar('derrota');
     }
     this.fase = 'ameaca';
-    this.ev('perigo', `${this.inimigo.nome} avança em VOCÊ. Não tem mais Pokémon entre vocês dois.`);
+    this.ev('perigo', `${nomeVisivel(this.inimigo)} avança em VOCÊ. Não tem mais Pokémon entre vocês dois.`);
     return {eventos:this.eventos, fim:null, ameaca:true};
   },
 
@@ -617,7 +666,7 @@ const Batalha = {
       this.usarItemEmCombate(acao.nome, acao.alvoUid);
       const revivido = Estado.dados.time.find(p => estaVivo(p));
       if (revivido){
-        this.ev('info', `${nomeExib(revivido)} se põe de pé entre você e ${this.inimigo.nome}.`);
+        this.ev('info', `${nomeVisivel(revivido)} se põe de pé entre você e ${nomeVisivel(this.inimigo)}.`);
         this.aliado = revivido;
         this.estAliado = this.novoEstado();
         this.fase = 'normal';
@@ -629,7 +678,7 @@ const Batalha = {
       const t = Dados.teste(Estado.j.status.carisma, 8, 'Carisma');
       this.ev('info', `Encarar: 1d10(${t.dado}) + Carisma(${t.bonus}) = ${t.total} — ${t.texto}`);
       if (t.grau === 'sucesso' || t.grau === 'critico'){
-        this.ev('info', `Você não desvia o olhar. ${this.inimigo.nome} hesita — e recua para o mato.`);
+        this.ev('info', `Você não desvia o olhar. ${nomeVisivel(this.inimigo)} hesita — e recua para o mato.`);
         return this.encerrar('encarou');
       }
       this.ev('erro', 'Encarar um animal assustado nunca foi um bom plano.');
@@ -640,8 +689,8 @@ const Batalha = {
 
   golpeNoJogador(){
     const dano = Math.max(1, Math.round((this.inimigo.stats.atk / 10) * Dados.d10('Dano no treinador')));
-    const morreu = Estado.ferir(dano, `Ataque de ${this.inimigo.nome} selvagem`);
-    this.ev('danoJogador', `${this.inimigo.nome} te acerta. Você perde ${dano} de HP. (${Estado.j.hp}/${Estado.hpMaxJogador()})`, {dano});
+    const morreu = Estado.ferir(dano, `Ataque de ${nomeVisivel(this.inimigo)} selvagem`);
+    this.ev('danoJogador', `${nomeVisivel(this.inimigo)} te acerta. Você perde ${dano} de HP. (${Estado.j.hp}/${Estado.hpMaxJogador()})`, {dano});
     if (morreu){
       this.ev('gameover', 'Seu corpo cede. O mato fica quieto. Você não levanta mais.');
       return this.encerrar('gameover');
@@ -652,7 +701,27 @@ const Batalha = {
   encerrar(resultado, extra){
     this.ativo = false;
     this.fase = 'normal';
-    this.fim = Object.assign({resultado}, extra||{});
+    /* efeitos de item segurado que só valem no fim */
+    if (resultado === 'vitoria' && Estado.dados){
+      (Estado.dados.time || []).forEach(p => {
+        p.faixaUsada = false;
+        const seg = efeitoSegurado(p);
+        if (seg && seg.moral && p.hp > 0){
+          p.moral = Math.min(100, (p.moral || 70) + seg.moral);
+        }
+      });
+      const seg = efeitoSegurado(this.aliado);
+      if (seg && seg.dinheiro && this.tipo === 'treinador'){
+        this.bonusDinheiro = seg.dinheiro;
+        this.ev('info', `O Amuleto de Moeda vale alguma coisa depois de uma vitória dessas.`);
+      }
+      /* convivência e leitura de natureza */
+      if (Estado.tickNatureza) Estado.tickNatureza().forEach(a => this.ev('natureza', a.texto));
+    } else if (Estado.dados){
+      (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
+    }
+    this.fim = Object.assign({resultado, bonusDinheiro:this.bonusDinheiro || 1}, extra||{});
+    this.bonusDinheiro = 1;
     return {eventos:this.eventos, fim:this.fim};
   }
 };

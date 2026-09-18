@@ -52,11 +52,38 @@ function criarPokemon(dexId, nivel, opcoes={}){
     selvagem: !!opcoes.selvagem,
     morto: false,
     historia: opcoes.historia || null,
-    capturadoEm: opcoes.capturadoEm || null
+    capturadoEm: opcoes.capturadoEm || null,
+    segurando: opcoes.segurando || null,   // item segurado
+    faixaUsada: false,                     // Faixa Firme já salvou nesta batalha?
+    convivencia: 0,                        // combates junto — leva à leitura da natureza
+    naturezaVista: !!opcoes.naturezaVista  // você sabe qual é o jeito dele?
   };
 }
 
+/* Nome completo: o que você usa quando conhece a espécie */
 function nomeExib(p){ return p.apelido ? p.apelido + ' (' + p.nome + ')' : p.nome; }
+
+/* Nome que aparece na tela: o que VOCÊ pode saber neste momento.
+   Seu → nome completo. De treinador com apelido → só o apelido, até catalogar.
+   Selvagem não catalogado → ???. */
+function nomeVisivel(p){
+  if (!p) return '';
+  if (typeof Estado === 'undefined' || !Estado.dados) return nomeExib(p);
+  const d = Estado.dados;
+  const meu = (d.time || []).some(x => x.uid === p.uid)
+           || (d.pc || []).some(x => x.uid === p.uid)
+           || (d.cemiterio || []).some(x => x.uid === p.uid);
+  if (meu) return nomeExib(p);
+  if (Estado.conheceu(p.dex)) return nomeExib(p);
+  if (p.apelido) return p.apelido;
+  return '???';
+}
+
+/* A natureza dele é conhecida? A sua, por convivência; a dos outros, pela Pokédex. */
+function naturezaVisivel(p){
+  if (!p) return '???';
+  return p.naturezaVista ? p.natureza : '???';
+}
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 

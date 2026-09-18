@@ -19,13 +19,74 @@ const UI = {
     if (this.dadosRecentes.length > 8) this.dadosRecentes.shift();
   },
   limparDados(){ this.dadosRecentes = []; },
+  /* ---------- DADOS: eles giram na tela e você pode girar de novo ---------- */
   htmlDados(){
-    if (!this.dadosRecentes.length) return '';
-    return '<div style="margin-top:12px">' + this.dadosRecentes.map(d => {
+    if (!this.dadosRecentes.length) return this.htmlBandeja();
+    const dados = this.dadosRecentes.map((d,k) => {
       const cls = d.valor === d.faces ? ' max' : (d.valor === 1 ? ' min' : '');
-      return `<span class="dado-caixa${cls}"><span class="mot">${this.esc(d.motivo||d.dado)}</span>
-              <span class="mono">${d.dado}</span><span class="val">${d.valor}</span></span>`;
-    }).join('') + '</div>';
+      return `<button class="dado d${d.faces}${cls}" data-v="${d.valor}" data-faces="${d.faces}"
+        title="${this.esc(d.motivo||d.dado)} — clique para girar de novo"
+        onclick="UI.girarDado(this)" style="animation-delay:${k*70}ms">
+        <span class="face">${d.valor}</span>
+        <span class="rot">d${d.faces}</span>
+      </button>`;
+    }).join('');
+    const motivos = this.dadosRecentes.map(d =>
+      `<span class="dado-legenda"><b>d${d.faces}</b> ${this.esc(d.motivo||'')} <b class="v">${d.valor}</b></span>`).join('');
+    return `<div class="dados-area">
+      <div class="dados-linha">${dados}</div>
+      <div class="dados-legendas">${motivos}</div>
+    </div>` + this.htmlBandeja();
+  },
+
+  /* bandeja livre: rolar por rolar, sem efeito nenhum no jogo */
+  htmlBandeja(){
+    const d = [20,10,6,4].map(f =>
+      `<button class="dado d${f} livre" data-faces="${f}" data-v="?"
+        title="Girar um d${f}" onclick="UI.girarLivre(this)">
+        <span class="face">?</span><span class="rot">d${f}</span>
+      </button>`).join('');
+    return `<div class="bandeja">
+      <span class="bandeja-rot">bandeja</span>
+      <div class="dados-linha">${d}</div>
+    </div>`;
+  },
+
+  girarDado(el){
+    const faces = parseInt(el.dataset.faces, 10) || 20;
+    const alvo  = parseInt(el.dataset.v, 10);
+    this._tumbar(el, faces, alvo);
+  },
+  girarLivre(el){
+    const faces = parseInt(el.dataset.faces, 10) || 20;
+    const v = Math.floor(Math.random() * faces) + 1;
+    el.dataset.v = v;
+    el.classList.toggle('max', v === faces);
+    el.classList.toggle('min', v === 1);
+    this._tumbar(el, faces, v);
+  },
+  _tumbar(el, faces, alvo){
+    if (el._girando) return;
+    el._girando = true;
+    const face = el.querySelector('.face');
+    el.classList.remove('parou');
+    el.classList.add('girando');
+    const t0 = Date.now(), dur = 620;
+    const it = setInterval(() => {
+      face.textContent = Math.floor(Math.random() * faces) + 1;
+      if (Date.now() - t0 >= dur){
+        clearInterval(it);
+        face.textContent = alvo;
+        el.classList.remove('girando');
+        el.classList.add('parou');
+        el._girando = false;
+        setTimeout(() => el.classList.remove('parou'), 700);
+      }
+    }, 55);
+  },
+  /* faz girar tudo o que acabou de entrar na tela */
+  girarNovos(){
+    document.querySelectorAll('.dados-linha .dado:not(.livre)').forEach(el => this.girarDado(el));
   },
 
   tipoTag(t){ return `<span class="tipo-tag" style="background:${COR_TIPO[t]||'#888'}">${t}</span>`; },
@@ -301,15 +362,21 @@ const UI = {
       const conhecido = meu || Estado.conheceu(p.dex);
       const tipos = conhecido
         ? p.tipos.map(t=>this.tipoTag(t)).join('')
-        : '<span class="tipo-tag" style="background:#3a424c;color:#9aa4b0">tipo ?</span>';
-      const meta = conhecido
-        ? `${this.esc(p.natureza)} · Vel ${p.stats.spe}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
-        : 'você nunca catalogou essa espécie';
+        : '<span class="tipo-tag desconhecido">tipo ?</span>';
+      const nat = p.naturezaVista
+        ? `${this.esc(p.natureza)}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
+        : 'natureza ?';
+      const ficha = conhecido
+        ? `<span class="mono">ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</span>`
+        : '<span class="mono">ficha não catalogada</span>';
+      const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
       return `<div class="lutador ${cls}">
-        <div class="nome"><span>${this.esc(nomeExib(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
+        <div class="nome"><span>${this.esc(nomeVisivel(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
         <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
         ${this.barraHP(p)}
-        <div class="meta">${meta}</div>
+        <div class="meta">${nat}</div>
+        <div class="meta">${ficha}</div>
+        ${seg}
       </div>`;
     };
     document.getElementById('arena').innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
@@ -321,7 +388,7 @@ const UI = {
     (eventos||[]).forEach(e => log.appendChild(this.el(`<div class="l ${this.esc(e.tipo)}">${this.esc(e.texto)}</div>`)));
     log.scrollTop = log.scrollHeight;
     const dd = document.getElementById('dados');
-    if (dd) dd.innerHTML = this.htmlDados();
+    if (dd){ dd.innerHTML = this.htmlDados(); this.girarNovos(); }
   },
 
   acoesCombate(extra){
@@ -806,8 +873,18 @@ const UI = {
       <div class="t"><span>${this.esc(nomeExib(p))}</span><span class="mono">Nv ${p.nivel}</span></div>
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
-      <div class="sussurro" style="margin-top:7px">${this.esc(p.natureza)} — ${this.esc((NATUREZAS[p.natureza]||{}).traco||'')}</div>
+      <div class="sussurro" style="margin-top:7px">${p.naturezaVista
+        ? this.esc(p.natureza) + ' — ' + this.esc((NATUREZAS[p.natureza]||{}).traco||'')
+        : 'Natureza <b>???</b> — você ainda não entendeu o jeito dele. Convivência e Percepção resolvem isso.'}</div>
       <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
+      ${p.morto ? '' : `<div class="segurado-linha">
+        ${p.segurando
+          ? `<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
+             <span class="fraco">${this.esc(fichaItem(p.segurando))}</span>
+             <button class="btn mini" onclick="UI.tirarItem('${p.uid}')">tirar</button>`
+          : `<span class="fraco">mão livre</span>
+             <button class="btn mini" onclick="UI.menuEquipar('${p.uid}')">equipar</button>`}
+      </div>`}
       <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
         ${p.golpes.map(g=>`${this.esc(g.nome)} <span class="mono">${g.pp}/${g.ppMax}</span>`).join(' · ')}</div>
       <div class="sussurro" style="margin-top:6px">
@@ -826,26 +903,78 @@ const UI = {
     const total = itens.reduce((a,[,q]) => a + q, 0);
     const topo = `<div class="mochila-topo">
       <span class="grana">${d.jogador.dinheiro} ₽</span>
-      <span class="peso">${total} ${total === 1 ? 'coisa' : 'coisas'} na mochila</span>
+      <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
     </div>`;
-    const corpo = itens.length
-      ? itens.map(([n,q]) => {
-          const desc = descricaoItem(n);
-          const info = ITENS_INFO[n] || {};
-          const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
-                         && Estado.dados.modo !== 'batalha';
-          return `<div class="item-linha">
-            <span class="qtd">×${q}</span>
-            <span class="corpo">
-              <span class="nome">${this.esc(n)}</span>
-              ${desc ? `<span class="desc">${this.esc(desc)}</span>` : ''}
-            </span>
-            ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
-              onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
-          </div>`;
-        }).join('')
-      : '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>';
+
+    if (!itens.length)
+      return this.modal('Mochila', topo +
+        '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
+        false, 'mochila');
+
+    const ORDEM = ['Captura','Recuperação','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Outro'];
+    const grupos = {};
+    itens.forEach(([n,q]) => {
+      const c = categoriaItem(n);
+      (grupos[c] = grupos[c] || []).push([n,q]);
+    });
+
+    const corpo = ORDEM.filter(c => grupos[c]).map(c => {
+      const linhas = grupos[c].map(([n,q]) => {
+        const info = ITENS_INFO[n] || {};
+        const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
+                       && Estado.dados.modo !== 'batalha';
+        const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
+        return `<div class="item-linha">
+          <span class="qtd">×${q}</span>
+          <span class="corpo">
+            <span class="nome">${this.esc(n)}</span>
+            <span class="ficha">${this.esc(fichaItem(n))}</span>
+            ${info.desc ? `<span class="desc">${this.esc(descricaoItem(n))}</span>` : ''}
+          </span>
+          ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+            onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
+          ${equipavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+            onclick="UI.menuEquiparItem('${n.replace(/'/g,"\\'")}')">equipar</button>` : ''}
+        </div>`;
+      }).join('');
+      return `<h3 class="cat-item">${this.esc(c)}</h3>${linhas}`;
+    }).join('');
+
     this.modal('Mochila', topo + corpo, false, 'mochila');
+  },
+
+  /* ---------- EQUIPAR ---------- */
+  menuEquipar(uid){
+    const d = Estado.dados;
+    const disp = Object.entries(d.itens).filter(([n,q]) => q > 0 && (ITENS_INFO[n]||{}).tipo === 'equipar');
+    if (!disp.length)
+      return this.modal('Equipar', '<p class="nada">Você não tem nenhum item que se segura. Eles aparecem em loja de cidade grande e em rota.</p>', false, 'mochila');
+    this.modal('Equipar em quem?', disp.map(([n,q]) =>
+      `<button class="escolha" onclick="UI.equipar('${uid}','${n.replace(/'/g,"\\'")}')">
+        ${this.esc(n)} <span class="pd">${this.esc(fichaItem(n))} · você tem ${q}</span></button>`).join(''),
+      false, 'mochila');
+  },
+  menuEquiparItem(nome){
+    const vivos = Estado.dados.time.filter(p => !p.morto);
+    if (!vivos.length) return this.modal('Equipar', '<p class="nada">Não tem em quem.</p>', false, 'mochila');
+    this.modal('Quem segura?', vivos.map(p =>
+      `<button class="escolha" onclick="UI.equipar('${p.uid}','${nome.replace(/'/g,"\\'")}')">
+        ${this.esc(nomeExib(p))} <span class="pd">${p.segurando ? 'já segura '+this.esc(p.segurando)+' — volta pra mochila' : 'mão livre'}</span></button>`).join(''),
+      false, 'mochila');
+  },
+  equipar(uid, nome){
+    const p = Estado.equipar(uid, nome);
+    Estado.salvar('auto');
+    if (!p) return this.modal('', '<p class="nada">Não deu.</p>', false, 'mochila');
+    this.modal('', `<p>${this.esc(nomeExib(p))} passa a segurar <b>${this.esc(nome)}</b>.</p>
+      <p class="ficha-bloco">${this.esc(fichaItem(nome))}</p>
+      <p class="sussurro">${this.esc(descricaoItem(nome))}</p>`, false, 'mochila');
+  },
+  tirarItem(uid){
+    const p = Estado.desequipar(uid);
+    Estado.salvar('auto');
+    if (!p) return;
+    this.modalTime();
   },
 
   /* usar item fora de combate: pedra evolutiva, cura, PP, repelente */
@@ -978,38 +1107,96 @@ const UI = {
 
   modalPokedex(){
     const c = Estado.contagemDex();
-    const p = Estado.pdex();
-    const ids = Object.keys(p.vistos).map(Number).sort((a,b)=>a-b);
+    const pd = Estado.pdex();
+    const ids = Object.keys(DEX).map(Number).sort((a,b)=>a-b);
+    const pct = Math.round((c.catalogados / ids.length) * 100);
+
     const cabeca = `<div class="pokedex-topo">
       <span class="pokedex-lente"></span>
       <span class="pokedex-luzes"><i></i><i></i><i></i></span>
-      <span class="pokedex-contagem"><b>${c.catalogados}</b> / ${c.vistos} vistos</span>
-    </div>`;
+      <span class="pokedex-contagem"><b>${c.catalogados}</b> / ${ids.length} catalogados · ${c.vistos} vistos · ${pct}%</span>
+    </div>
+    <div class="dex-barra"><i style="width:${pct}%"></i></div>`;
 
-    if (!ids.length)
-      return this.modal('', cabeca +
-        '<p class="nada">Nenhum registro ainda. A Pokédex só guarda o que você encontrar — e só descreve o que você apontar para ela durante uma batalha.</p>',
-        false, 'pokedex');
-
-    const linhas = ids.map(dex => {
+    const celas = ids.map(dex => {
       const esp = DEX[dex];
-      const cat = p.catalogados[dex];
       const num = String(dex).padStart(3,'0');
-      if (!cat) return `<div class="dex-item sem-registro">
-        <div class="cab"><span class="num">#${num}</span><span>${this.esc(esp.nome)}</span></div>
-        <div class="nota">Visto. Sem registro — você não apontou a Pokédex nele.</div>
-      </div>`;
-      return `<div class="dex-item">
-        <div class="cab"><span class="num">#${num}</span><span>${this.esc(esp.nome)}</span>
-          <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
-        <div class="base">HP ${esp.base.hp} · ATK ${esp.base.atk} · DEF ${esp.base.def} · SPA ${esp.base.spa} · SPD ${esp.base.spd} · VEL ${esp.base.spe}</div>
-        ${esp.evo ? `<div class="nota">Evolui para ${this.esc(DEX[esp.evo].nome)}${esp.nivelEvo?` no nível ${esp.nivelEvo}`:''}.</div>` : ''}
-      </div>`;
+      const cat = pd.catalogados[dex];
+      const vis = pd.vistos[dex];
+      if (cat) return `<button class="dex-cela cat" onclick="UI.dexEntrada(${dex})">
+        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span></button>`;
+      if (vis) return `<button class="dex-cela vis" onclick="UI.dexEntrada(${dex})">
+        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>
+        <span class="marca">sem registro</span></button>`;
+      return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
 
     this.modal('', cabeca +
-      `<p class="sussurro" style="margin-top:0">Ver um bicho registra o nome. Apontar a Pokédex nele durante uma batalha registra o resto.</p>` +
-      linhas, false, 'pokedex');
+      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.</p>
+       <div class="dex-grade">${celas}</div>`, false, 'pokedex');
+  },
+
+  /* ficha técnica de um registro */
+  dexEntrada(dex){
+    const esp = DEX[dex];
+    const pd = Estado.pdex();
+    const num = String(dex).padStart(3,'0');
+    if (!pd.catalogados[dex]){
+      return this.modal('', `<div class="pokedex-topo">
+          <span class="pokedex-lente"></span>
+          <span class="pokedex-luzes"><i></i><i></i><i></i></span>
+          <span class="pokedex-contagem">#${num}</span>
+        </div>
+        <div class="dex-ficha">
+          <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span></div>
+          <div class="nota">Avistado. A Pokédex guardou o número e o nome e mais nada.</div>
+          <div class="nota">Para abrir a ficha: aponte a Pokédex nele durante um combate. Custa nada — não gasta o turno.</div>
+        </div>
+        <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
+        true, 'pokedex');
+    }
+    const b = esp.base;
+    const linha = (k, v, max) => `<div class="base-linha">
+      <span class="k">${k}</span>
+      <span class="barrinha"><i style="width:${Math.min(100, Math.round(v/max*100))}%"></i></span>
+      <span class="v mono">${v}</span></div>`;
+    this.modal('', `<div class="pokedex-topo">
+        <span class="pokedex-lente"></span>
+        <span class="pokedex-luzes"><i></i><i></i><i></i></span>
+        <span class="pokedex-contagem">#${num}</span>
+      </div>
+      <div class="dex-ficha">
+        <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span>
+          <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
+
+        <h3 class="cat-item">Base</h3>
+        ${linha('HP', b.hp, 255)}
+        ${linha('Ataque', b.atk, 190)}
+        ${linha('Defesa', b.def, 230)}
+        ${linha('Sp. Atk', b.spa, 194)}
+        ${linha('Sp. Def', b.spd, 230)}
+        ${linha('Velocidade', b.spe, 150)}
+        <div class="nota mono">Soma de base: ${esp.total}</div>
+
+        <h3 class="cat-item">Ficha</h3>
+        <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
+        <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
+        <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
+          ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
+          : 'forma final'}</span></div>
+        <div class="linha"><span class="k">Classificação</span><span class="v">${esp.lendario ? 'lendário' : 'comum'}</span></div>
+        <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
+        <div class="linha"><span class="k">Resiste a</span><span class="v">${this.esc(this.resistencias(esp.tipos).join(', ') || '—')}</span></div>
+      </div>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
+      true, 'pokedex');
+  },
+
+  fraquezas(tipos){
+    return TIPOS.filter(t => eficacia(t, tipos) > 1).map(t => t + ' ×' + eficacia(t, tipos));
+  },
+  resistencias(tipos){
+    return TIPOS.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
 
   modalDiario(){
@@ -1070,6 +1257,21 @@ const UI = {
       <h3>Perícias</h3>
       <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico.</p>
       <h3>Reputação</h3>
-      <p class="sussurro">Dois eixos de 8 níveis. Ações contrárias lavam o eixo oposto antes de subir o seu, e nada te devolve a "Desconhecido" — o mundo lembra.</p>`);
+      <p class="sussurro">Dois eixos de 8 níveis. Ações contrárias lavam o eixo oposto antes de subir o seu, e nada te devolve a "Desconhecido" — o mundo lembra.</p>
+
+      <h3>O que você sabe</h3>
+      <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
+      <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
+      <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
+      <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">1× por batalha · não gasta o turno</span></div>
+      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>
+
+      <h3>Item segurado</h3>
+      <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">aba Time → equipar · ou Mochila → equipar</span></div>
+      <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
+
+      <h3>Dados</h3>
+      <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`);
   }
 };

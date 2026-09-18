@@ -13,7 +13,11 @@ const PRECO_BASE = {
   'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
   'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600,
   'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
-  'Pedra da Folha':4000, 'Moon Stone':6000
+  'Pedra da Folha':4000, 'Moon Stone':6000,
+  /* segurados */
+  'Resto de Ração':2800, 'Faixa Firme':3200, 'Punho de Ferro':2600,
+  'Óculos Grossos':2600, 'Colete de Couro':2400, 'Botina Leve':2200,
+  'Sino Calmante':1800, 'Amuleto de Moeda':3600
 };
 
 /* O que a loja de cada cidade tem, e por quanto (multiplicador local).
@@ -30,56 +34,57 @@ const LOJAS = {
     nome:'Loja de Viridian',
     ar:'Fachada sem graça, prateleira organizada, e a atendente sabe exatamente o que um treinador de três dias esqueceu de comprar.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto']
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto','Sino Calmante']
   },
   pewter: {
     nome:'Casa de Ferragens Bacelar',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo']
+    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
     ar:'Atende pela janela, sem ninguém entrar. Tem geladeira de bebida e uma vitrine pequena com uma pedra azul que fica ali há anos.',
     mult:1.05,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água']
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água','Botina Leve']
   },
   vermilion: {
     nome:'Armazém do Cais',
     ar:'Abre às cinco da manhã e vende comida, corda e Poké Ball no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
     mult:0.9,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil']
+    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil','Faixa Firme','Resto de Ração']
   },
   lavender: {
     nome:'Casa Boa Memória',
     ar:'Vende incenso, vela e Potion no mesmo balcão, o que faz um sentido triste. Ninguém aqui vende repelente: ninguém daqui vai pro mato.',
     mult:1.1,
-    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração']
+    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração','Sino Calmante']
   },
   celadon: {
     nome:'Shopping de Celadon — 4º andar',
     ar:'Sete andares, e o quarto inteiro é item de treinador. Você fica quinze minutos parado só olhando prateleira. É o lugar mais barato de Kanto e o que menos te olha na cara.',
     mult:0.85,
     itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
-           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha']
+           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
+           'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda']
   },
   fuchsia: {
     nome:'Posto da Zona Safári',
     ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Água Fresca','Mapa de Kanto','Antidote','Full Heal']
+    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Água Fresca','Mapa de Kanto','Antidote','Full Heal','Resto de Ração']
   },
   saffron: {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável']
+    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda']
   },
   cinnabar: {
     nome:'Vitrine da Dona Zuca',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
-    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo']
+    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
   }
 };
 

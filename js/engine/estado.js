@@ -25,52 +25,141 @@ const NIVEIS_RUIM = [
 const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
 
 const ITENS_INFO = {
-  'Poké Ball':   {tipo:'bola', mult:1,   desc:'A bola comum. É o que a Liga entrega e o que todo mundo usa.',
+  /* ─────────── bolas ─────────── */
+  'Poké Ball':   {tipo:'bola', mult:1, cat:'Captura',
+                  ficha:'Modificador de captura ×1,0 · consumida no arremesso',
+                  desc:'A bola comum. É o que a Liga entrega e o que todo mundo usa.',
                   sabido:{bola_fraca_em_lendario:'Você já viu uma dessas ricochetear numa coisa grande demais. Não insista.'}},
-  'Great Ball':  {tipo:'bola', mult:1.5, desc:'Mais firme que a comum. Custa o triplo e a diferença aparece.',
+  'Great Ball':  {tipo:'bola', mult:1.5, cat:'Captura',
+                  ficha:'Modificador de captura ×1,5 · consumida no arremesso',
+                  desc:'Mais firme que a comum. Custa o triplo e a diferença aparece.',
                   sabido:{bola_fraca_em_lendario:'Firme, mas não o bastante para o que você viu.'}},
-  'Ultra Ball':  {tipo:'bola', mult:2,   desc:'Cara. Quem vende fala dela em voz baixa, como se fosse favor.',
+  'Ultra Ball':  {tipo:'bola', mult:2, cat:'Captura',
+                  ficha:'Modificador de captura ×2,0 · consumida no arremesso',
+                  desc:'Cara. Quem vende fala dela em voz baixa, como se fosse favor.',
                   sabido:{ultra_prende_lendario:'É a única comprável que já prendeu uma coisa daquelas — e mesmo assim, quase nunca.'}},
-  'Master Ball': {tipo:'bola', mult:255, desc:'Você não devia ter uma dessas. Quase ninguém devia.',
+  'Master Ball': {tipo:'bola', mult:255, cat:'Captura',
+                  ficha:'Modificador de captura ×255 · consumida no arremesso',
+                  desc:'Você não devia ter uma dessas. Quase ninguém devia.',
                   sabido:{master_quase_sempre:'Ela não falha. Você já viu.'}},
-  'Potion':      {tipo:'cura', valor:20, desc:'Fecha corte e tira dor. Não faz milagre.'},
-  'Super Potion':{tipo:'cura', valor:50, desc:'A mesma coisa, mais forte e mais cara.'},
-  'Hyper Potion':{tipo:'cura', valor:120,desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
-  'Revive':      {tipo:'revive', desc:'Traz de volta quem desmaiou, na metade das forças. Não faz mais que isso.',
+
+  /* ─────────── cura ─────────── */
+  'Potion':      {tipo:'cura', valor:20, cat:'Recuperação',
+                  ficha:'+20 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+                  desc:'Fecha corte e tira dor. Não faz milagre.'},
+  'Super Potion':{tipo:'cura', valor:50, cat:'Recuperação',
+                  ficha:'+50 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+                  desc:'A mesma coisa, mais forte e mais cara.'},
+  'Hyper Potion':{tipo:'cura', valor:120, cat:'Recuperação',
+                  ficha:'+120 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+                  desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
+  'Água Fresca': {tipo:'cura', valor:35, cat:'Recuperação',
+                  ficha:'+35 HP em um Pokémon · em combate gasta o turno',
+                  desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
+  'Revive':      {tipo:'revive', cat:'Recuperação',
+                  ficha:'Levanta um Pokémon desmaiado com HP máximo ÷ 2 · não age em morto',
+                  desc:'Traz de volta quem desmaiou, na metade das forças. Não faz mais que isso.',
                   sabido:{revive_nao_ressuscita:'Quem morreu de verdade não volta com isso. Você aprendeu do jeito ruim.'}},
-  'Antidote':    {tipo:'status', cura:'veneno', desc:'Frasco pequeno, gosto horrível, funciona.'},
-  'Full Heal':   {tipo:'status', cura:'todos', desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
-  'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Pra você, não pra eles. Você também se machuca.'},
-  'Moon Stone':  {tipo:'pedra', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
-                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.',
-                          usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra do Fogo':   {tipo:'pedra', desc:'Alaranjada, com um ponto de luz no meio que não vem de lugar nenhum.',
+  'Antidote':    {tipo:'status', cura:'veneno', cat:'Recuperação',
+                  ficha:'Remove veneno · 1 alvo',
+                  desc:'Frasco pequeno, gosto horrível, funciona.'},
+  'Full Heal':   {tipo:'status', cura:'todos', cat:'Recuperação',
+                  ficha:'Remove qualquer condição (veneno, queimadura, paralisia, sono, confusão) · 1 alvo',
+                  desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
+  'Éter':        {tipo:'pp', valor:10, cat:'Recuperação',
+                  ficha:'+10 PP no primeiro golpe incompleto do alvo',
+                  desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
+  'Elixir':      {tipo:'ppTodos', valor:10, cat:'Recuperação',
+                  ficha:'+10 PP em todos os golpes do alvo',
+                  desc:'Repõe um pouco de tudo. Caro pelo que é.'},
+  'Bandagem':    {tipo:'curaJogador', valor:10, cat:'Treinador',
+                  ficha:'+10 HP no treinador · o HP do treinador não regenera sozinho',
+                  desc:'Pra você, não pra eles. Você também se machuca.'},
+  'Cantil':      {tipo:'curaJogador', valor:16, cat:'Treinador',
+                  ficha:'+16 HP no treinador · uso único',
+                  desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
+  'Ração':       {tipo:'moral', valor:10, cat:'Vínculo',
+                  ficha:'+10 de moral em um Pokémon (escala 0–100) · moral baixa causa desobediência',
+                  desc:'Comida boa de verdade. Muda o humor de quem come.'},
+
+  /* ─────────── campo ─────────── */
+  'Boneco':      {tipo:'fuga', cat:'Campo',
+                  ficha:'Fuga garantida de encontro selvagem · não funciona contra treinador',
+                  desc:'Um boneco de pano com cara de Substitute. Serve pra jogar e sair andando.'},
+  'Repelente':   {tipo:'repelente', valor:3, cat:'Campo',
+                  ficha:'Nenhum encontro ao procurar por 3 períodos',
+                  desc:'Cheiro forte, dura uns três períodos. O mato fica mais quieto em volta.'},
+
+  /* ─────────── pedras ─────────── */
+  'Moon Stone':      {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Nidorina, Nidorino, Clefairy e Jigglypuff · consumida no uso',
+                      desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
+                      sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.',
+                              usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Fogo':   {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Vulpix, Growlithe e Eevee (→ Flareon) · consumida no uso',
+                      desc:'Alaranjada, com um ponto de luz no meio que não vem de lugar nenhum.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra da Água':   {tipo:'pedra', desc:'Azul-escura. Fria mesmo depois de horas no bolso.',
+  'Pedra da Água':   {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Poliwhirl, Shellder, Staryu e Eevee (→ Vaporeon) · consumida no uso',
+                      desc:'Azul-escura. Fria mesmo depois de horas no bolso.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra do Trovão': {tipo:'pedra', desc:'Amarela, com estática. Ela levanta o pelo do seu braço de dez centímetros.',
+  'Pedra do Trovão': {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Pikachu e Eevee (→ Jolteon) · consumida no uso',
+                      desc:'Amarela, com estática. Ela levanta o pelo do seu braço de dez centímetros.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
-  'Pedra da Folha':  {tipo:'pedra', desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
+  'Pedra da Folha':  {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Gloom, Weepinbell e Exeggcute · consumida no uso',
+                      desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
-  'Éter':        {tipo:'pp', valor:10, desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
-  'Elixir':      {tipo:'ppTodos', valor:10, desc:'Repõe um pouco de tudo. Caro pelo que é.'},
-  'Água Fresca': {tipo:'cura', valor:35, desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
-  'Cantil':      {tipo:'curaJogador', valor:16, desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
-  'Boneco':      {tipo:'fuga', desc:'Um boneco de pano com cara de Substitute. Serve pra jogar e sair andando.'},
-  'Repelente':   {tipo:'repelente', valor:3, desc:'Cheiro forte, dura uns três períodos. O mato fica mais quieto em volta.'},
+  /* ─────────── segurados ─────────── */
+  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:0.07},
+                      ficha:'SEGURADO · recupera 7% do HP máximo no fim de cada turno',
+                      desc:'Um saquinho amarrado no cinto com o que sobra da ração boa. Some devagar.'},
+  'Faixa Firme':     {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
+                      ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
+                      desc:'Faixa de algodão grossa amarrada no punho ou na pata. Não protege de nada. Aperta.'},
+  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1.15},
+                      ficha:'SEGURADO · +15% de dano em golpes físicos',
+                      desc:'Um peso de chumbo costurado numa tira de couro. Pesa e cansa e funciona.'},
+  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1.15},
+                      ficha:'SEGURADO · +15% de dano em golpes especiais',
+                      desc:'Lente de vidro grosso numa armação torta. Foi de alguém.'},
+  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:0.88},
+                      ficha:'SEGURADO · −12% de dano recebido',
+                      desc:'Couro rachado, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
+  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:1.12},
+                      ficha:'SEGURADO · +12% de Velocidade para a ordem dos turnos',
+                      desc:'Sola fina, quase gasta. Quem usa isso não planeja apanhar.'},
+  'Sino Calmante':   {tipo:'equipar', cat:'Segurado', efeito:{moral:3},
+                      ficha:'SEGURADO · +3 de moral ao fim de cada combate',
+                      desc:'Um sino de latão do tamanho de uma unha. O som é ridículo e acalma.'},
+  'Amuleto de Moeda':{tipo:'equipar', cat:'Segurado', efeito:{dinheiro:1.5},
+                      ficha:'SEGURADO · +50% de dinheiro em vitórias contra treinador',
+                      desc:'Moeda antiga furada e pendurada num barbante. Não vale nada como moeda.'},
 
-  'Corda':          {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
-  'Lanterna':       {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'},
-  'Pilha':          {tipo:'ferramenta', desc:'Duas, embaladas. Você vai lembrar delas exatamente quando não tiver.'},
-  'Máscara de pó':  {tipo:'ferramenta', desc:'De pedreira. Não é bonita e é a diferença entre tossir uma semana ou não.'},
-  'Bota de borracha':{tipo:'ferramenta', desc:'Cano alto, solado grosso. Quem trabalha com cabo não pisa em chão molhado sem isso.'},
-  'Cobertor térmico':{tipo:'ferramenta', desc:'Dobra do tamanho de um livro. Prateado dos dois lados, e mais quente do que parece possível.'},
-  'Câmera descartável':{tipo:'ferramenta', desc:'Vinte e quatro poses. Revelar custa mais que a câmera.'},
-  'Caderno de campo':{tipo:'ferramenta', desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
-  'Isca':           {tipo:'ferramenta', desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
-  'Mapa de Kanto':  {tipo:'ferramenta', desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'},
-  'Ração':          {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'}
+  /* ─────────── ferramenta ─────────── */
+  'Corda':          {tipo:'ferramenta', cat:'Ferramenta', ficha:'12 m · usada em cenas de escalada, descida e resgate',
+                     desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
+  'Lanterna':       {tipo:'ferramenta', cat:'Ferramenta', ficha:'Pilha média · usada em caverna, porão e área sem luz',
+                     desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'},
+  'Pilha':          {tipo:'ferramenta', cat:'Ferramenta', ficha:'Par · repõe a carga da Lanterna',
+                     desc:'Duas, embaladas. Você vai lembrar delas exatamente quando não tiver.'},
+  'Máscara de pó':  {tipo:'ferramenta', cat:'Ferramenta', ficha:'Evita dano de poeira em pedreira e caverna seca',
+                     desc:'De pedreira. Não é bonita e é a diferença entre tossir uma semana ou não.'},
+  'Bota de borracha':{tipo:'ferramenta', cat:'Ferramenta', ficha:'Isola choque em área com cabo energizado',
+                     desc:'Cano alto, solado grosso. Quem trabalha com cabo não pisa em chão molhado sem isso.'},
+  'Cobertor térmico':{tipo:'ferramenta', cat:'Ferramenta', ficha:'Evita dano de frio em área congelada e acampamento noturno',
+                     desc:'Dobra do tamanho de um livro. Prateado dos dois lados, e mais quente do que parece possível.'},
+  'Câmera descartável':{tipo:'ferramenta', cat:'Ferramenta', ficha:'24 poses · registra prova em cenas de documentação · consumida no uso',
+                     desc:'Vinte e quatro poses. Revelar custa mais que a câmera.'},
+  'Caderno de campo':{tipo:'ferramenta', cat:'Ferramenta', ficha:'Permite copiar documento e anotar número de processo em cena',
+                     desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
+  'Isca':           {tipo:'ferramenta', cat:'Ferramenta', ficha:'+20 pontos percentuais de chance ao pescar · consumida no uso',
+                     desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
+  'Mapa de Kanto':  {tipo:'ferramenta', cat:'Ferramenta', ficha:'Mostra o destino do próximo arco na bússola da tela de mundo',
+                     desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'}
 };
 
 /* Pedra → pares de evolução (só espécies de nivelEvo 0) */
@@ -86,6 +175,20 @@ const PEDRAS = {
 const EVO_TROCA = {64:65, 67:68, 75:76, 93:94};
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
+function fichaItem(nome){
+  const i = ITENS_INFO[nome];
+  return i && i.ficha ? i.ficha : '';
+}
+function categoriaItem(nome){
+  const i = ITENS_INFO[nome];
+  return i && i.cat ? i.cat : 'Outro';
+}
+function efeitoSegurado(p){
+  if (!p || !p.segurando) return null;
+  const i = ITENS_INFO[p.segurando];
+  return (i && i.tipo === 'equipar') ? (i.efeito || {}) : null;
+}
+
 function descricaoItem(nome){
   const i = ITENS_INFO[nome];
   if (!i) return '';
@@ -235,6 +338,54 @@ const Estado = {
     return true;
   },
   contaItem(nome){ return this.dados.itens[nome] || 0; },
+
+  /* ---------- ITEM SEGURADO ---------- */
+  equipar(uid, nome){
+    const p = this.dados.time.find(x => x.uid === uid);
+    if (!p || !this.contaItem(nome)) return null;
+    const info = ITENS_INFO[nome];
+    if (!info || info.tipo !== 'equipar') return null;
+    if (p.segurando) this.darItem(p.segurando, 1);   // devolve o anterior à mochila
+    this.usarItem(nome);
+    p.segurando = nome;
+    p.faixaUsada = false;
+    this.registrar(`${nomeExib(p)} passou a segurar ${nome}.`);
+    return p;
+  },
+  desequipar(uid){
+    const p = this.dados.time.find(x => x.uid === uid);
+    if (!p || !p.segurando) return null;
+    const nome = p.segurando;
+    this.darItem(nome, 1);
+    p.segurando = null;
+    p.faixaUsada = false;
+    this.registrar(`${nomeExib(p)} devolveu ${nome} à mochila.`);
+    return p;
+  },
+
+  /* ---------- NATUREZA: só se sabe com convivência ---------- */
+  revelarNatureza(p, motivo){
+    if (!p || p.naturezaVista) return false;
+    p.naturezaVista = true;
+    this.registrar(`Você entendeu o jeito de ${nomeExib(p)}: ${p.natureza}.${motivo ? ' ('+motivo+')' : ''}`);
+    return true;
+  },
+  /* chamada no fim de cada combate: convivência + Percepção */
+  tickNatureza(){
+    const avisos = [];
+    (this.dados.time || []).forEach(p => {
+      if (p.naturezaVista || p.morto) return;
+      p.convivencia = (p.convivencia || 0) + 1;
+      if (p.convivencia < 3) return;
+      const t = Dados.teste(this.j.status.percepcao + Math.floor(p.convivencia / 3), 7, 'Percepção');
+      if (t.grau === 'sucesso' || t.grau === 'critico'){
+        p.naturezaVista = true;
+        this.registrar(`Natureza de ${nomeExib(p)} percebida: ${p.natureza}.`);
+        avisos.push({tipo:'natureza', texto:`Você finalmente entende o jeito de ${nomeExib(p)}. É ${p.natureza}: ${(NATUREZAS[p.natureza]||{}).traco || 'difícil de descrever.'}`});
+      }
+    });
+    return avisos;
+  },
 
   /* ---------- JOGADOR ---------- */
   hpMaxJogador(){ return 30 + (this.j.status.resistencia - 1) * 2; },
