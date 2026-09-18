@@ -153,7 +153,23 @@ c23_escolha_final:{
      cond:d=>!!d.jogador.cargo},
     {texto:'Entregar a pena de Ho-Oh.', vai:'c23_pena', cond:d=>!!d.flags.carrega_a_pena},
     {texto:'"Quanto você vale?"', vai:'c23_inventario',
-     cond:d=>Historia.via()==='mercenario'||!!d.flags.vendeu_mew}
+     cond:d=>Historia.via()==='mercenario'||!!d.flags.vendeu_mew},
+    {texto:'Mostrar a carta do Denis.', vai:'c23_carta',
+     cond:d=>!!(d.flags.copiou_a_carta||d.flags.a_carta_do_denis||d.flags.o_denis_esta_no_40)},
+    {texto:'Contar da cratera e dos trinta e dois.', vai:'c23_trinta_e_dois',
+     cond:d=>!!d.flags.viu_o_circulo},
+    {texto:'Contar da porta que o zelador nunca abriu.', vai:'c23_a_porta_de_novo',
+     cond:d=>!!d.flags.a_porta_do_zelador},
+    {texto:'Pôr a papelada no chão entre vocês dois.', vai:'c23_a_papelada',
+     cond:d=>!!(d.flags.levou_a_pasta||d.flags.copiou_o_controle||d.flags.guardou_a_folha||d.flags.pasta_na_reserva||d.flags.leu_o_estatuto)},
+    {texto:'Dizer o nome dos que morreram no caminho.', vai:'c23_os_nomes',
+     cond:d=>d.cemiterio.length>0||!!d.flags.vaporeon_morreu||!!d.flags.copiou_os_onze_nomes},
+    {texto:'"Eu prometi voltar pra uma menina com um caderno."', vai:'c23_a_pagina',
+     cond:d=>!!d.flags.prometeu_voltar_pewter},
+    {texto:'"Você quer trocar?"', vai:'c23_a_troca',
+     cond:d=>!!d.flags.ja_trocou},
+    {texto:'Não dizer nada. Sentar no chão e esperar ele falar.', vai:'c23_sentou'},
+    {texto:'Virar as costas e subir. Você veio até aqui e chega.', vai:'c23_ir_embora'}
   ]
 },
 
@@ -771,6 +787,374 @@ c23_final_porta:{
     'Mewtwo não é visto de novo em Kanto. Não há incidentes, não há ataques, não há nada. Só a ausência.',
     'Você conta essa história poucas vezes, porque toda vez que conta percebe a mesma coisa: ele te venceu, curou o seu time e foi embora. Nenhuma dessas três coisas é o que uma arma faz.',
     'Você teve a resposta na mão o tempo todo e respondeu com uma bola.'
+  ]}
+},
+
+/* ---------------- RAMOS FINAIS NOVOS ---------------- */
+
+c23_carta:{
+  texto:[
+    'Você tira a carta — ou a cópia da carta — e estende no escuro.',
+    'Ele não pega com a mão. O papel sai da sua mão sozinho, para no ar a meio metro, e vira.',
+    '"Eles contaram a gente duas vezes."',
+    'Ele lê a frase do verso em voz alta, e é a única vez em toda a conversa que a voz dele muda.',
+    '"Isso é conferência."',
+    '"É."',
+    '"Eu fui conferido." Ele devolve o papel ao ar, na sua direção, com muito cuidado. "Duas vezes por dia, durante duzentos e quarenta e um dias. Eles chamavam de verificação de integridade do espécime."',
+    'Uma pausa.',
+    '"Esse menino é meu."'
+  ],
+  ef:{flag:'mostrou_a_carta', rep:{eixo:'bom',delta:2,motivo:'Levou o nome de um desaparecido até o fim'}},
+  escolhas:[
+    {texto:'"Então vamos procurar ele."', vai:'c23_final_a_carta'},
+    {texto:'"Ele pode estar vivo."', vai:'c23_final_a_carta'},
+    {texto:'"Eu não sei o que fazer com isso."', vai:'c23_final_a_carta'}
+  ]
+},
+
+c23_final_a_carta:{
+  texto:[
+    'Ele fica muito tempo em silêncio.',
+    '"Eu sei onde tem gente sendo conferida", ele diz finalmente. "Eu sinto. Eu sempre soube e eu achei que era comigo."',
+    'Ele levanta.',
+    '"Eu achei que o mundo inteiro era uma sala."'
+  ],
+  final:{id:'a_carta', titulo:'CONFERIDOS', texto:[
+    'Nos oito meses seguintes, quatro instalações em Kanto são abertas por dentro.',
+    'Nenhuma delas por autoridade nenhuma. Nenhuma delas com violência contra pessoa.',
+    'As portas simplesmente ficam abertas, de madrugada, e de manhã tem gente sentada na calçada que não deveria existir em lugar nenhum: adolescentes sem nome em lista de passageiro, contratados por passagem, com contrato verbal e sem registro.',
+    'Denis tem dezessete anos quando sai. Ele pesa quarenta e um quilos e não sabe que dia é.',
+    'A imprensa chama de "caso das vagas de trabalho". Dura onze dias de cobertura.',
+    'A Comissão emite uma nota lamentando profundamente as irregularidades e se colocando à disposição para colaborar com as investigações.',
+    'Ninguém de terno é indiciado. Dois motoristas e um contramestre são.',
+    'Mas quatro portas ficaram abertas, e num porto de Vermilion tem uma fritura com um nome pregado na parede entre as contas a pagar, e a dona conta essa história pra todo mundo que senta no banquinho.'
+  ]}
+},
+
+c23_trinta_e_dois:{
+  texto:[
+    'Você conta da cratera. Da areia cinza. Da pedra morna do tamanho de uma cabeça.',
+    'Dos trinta e dois em círculo, parados, em silêncio, por quarenta minutos, olhando uma pedra ficar azul.',
+    'E de você atrás de uma rocha, sem entender nada, sem poder perguntar nada, achando aquilo a coisa mais bonita do mundo.',
+    'Mewtwo escuta inteiro.',
+    '"Eles sabiam que você estava lá."',
+    '"Sabiam?"',
+    '"Claro que sabiam. Você é um garoto atrás de uma pedra." Ele quase — quase — acha graça. "Eles deixaram."'
+  ],
+  ef:{flag:'contou_da_cratera'},
+  escolhas:[
+    {texto:'"Por que eles deixaram?"', vai:'c23_final_trinta_e_dois'},
+    {texto:'"O que eles estavam fazendo?"', vai:'c23_final_trinta_e_dois'},
+    {texto:'Ficar calado.', vai:'c23_final_trinta_e_dois'}
+  ]
+},
+
+c23_final_trinta_e_dois:{
+  texto:[
+    '"Eu não sei o que eles estavam fazendo", ele diz. "Eu leio pessoas. Eu não leio isso."',
+    'Ele olha pro teto da câmara, onde não tem nada.',
+    '"Existe uma coisa acontecendo em Kanto há muito mais tempo do que existe gente pra medir, e ela não precisa de mim, e não precisa de você, e não precisa da Comissão."',
+    '"E isso te deixa melhor ou pior?"',
+    'Ele demora.',
+    '"Melhor."'
+  ],
+  final:{id:'trinta_e_dois', titulo:'ELES DEIXARAM', texto:[
+    'Mewtwo não sai da caverna do norte.',
+    'Não por prisão, não por acordo, não por medo: ele passa a subir uma vez por mês até uma cratera rasa no alto de uma montanha e ficar na borda, sentado, longe o bastante pra não atrapalhar.',
+    'Trinta e dois viram trinta e três. Depois trinta e cinco. Depois ninguém contou mais.',
+    'Você nunca escreveu onde é. Nunca marcou em mapa nenhum, nunca falou em telefone de Centro Pokémon, e quando um pesquisador de Celadon te ofereceu dinheiro pela coordenada, você disse que não lembrava.',
+    'A Comissão manteve o item "Risco 01" em pauta por mais quatro anos e depois arquivou por inatividade do objeto.',
+    'A Dra. Ivone morreu aos sessenta e oito sem nunca ter subido naquela cratera, e sabendo que existia, e escolhendo não subir.',
+    'Essa foi a última coisa que ela te ensinou.'
+  ]}
+},
+
+c23_a_porta_de_novo:{
+  texto:[
+    'Você conta do zelador. Dos vinte e três anos repondo vela. Do irmão. Da porta fechada que os Gastly mostravam todo dia por dois anos.',
+    'E da frase: "se eu abrir e não tiver nada, aí eu perco a porta também".',
+    'Mewtwo escuta sem se mexer.',
+    '"Eu tenho uma porta."',
+    'Ele aponta com o queixo o corredor por onde você entrou.',
+    '"Ela está aberta há dois anos."'
+  ],
+  ef:{flag:'contou_do_zelador'},
+  escolhas:[
+    {texto:'"E por que você não sai?"', vai:'c23_final_a_porta'},
+    {texto:'"Talvez você também perca a porta."', vai:'c23_final_a_porta'},
+    {texto:'Não responder.', vai:'c23_final_a_porta'}
+  ]
+},
+
+c23_final_a_porta:{
+  texto:[
+    '"Porque enquanto eu não saio, o mundo lá fora continua sendo o que eu imagino."',
+    'Ele diz isso com uma clareza que dói.',
+    '"E o que eu imagino é pior do que ele é, ou melhor do que ele é, e nos dois casos é meu."',
+    'Ele olha pra você.',
+    '"Você tem quinze anos e você atravessou Kanto inteiro e você ainda não entendeu que ninguém sai de casa por coragem. Sai porque um dia a casa fica insuportável."'
+  ],
+  final:{id:'a_porta', titulo:'VINTE E TRÊS ANOS', texto:[
+    'Você desce a montanha sem nada.',
+    'Nenhuma captura, nenhum acordo, nenhuma revelação. Uma conversa de três horas numa câmara embaixo de pedra, com alguém que não saiu.',
+    'Dois meses depois você volta a Lavender.',
+    'Você sobe os sete andares da Torre e para na frente da porta do quinto andar, e ela está lá, do jeito que sempre esteve, fechada.',
+    'Você abre.',
+    'Não tem nada. É uma parede.',
+    'Você desce e conta pro zelador, que escuta em pé, com a caixa de fósforo na mão, e não diz nada por um tempo muito longo.',
+    'Depois ele senta no banco de concreto do saguão e chora um choro de homem de sessenta e um anos que perdeu uma coisa que tinha há vinte e três.',
+    'Ele agradece. Três vezes.',
+    'Na terceira você entende que ele está agradecendo de verdade, e é a coisa mais difícil que você já teve que aceitar.'
+  ]}
+},
+
+c23_a_papelada:{
+  texto:[
+    'Você tira tudo o que tem e põe no chão de pedra entre vocês dois.',
+    'A guia com o brasão. A folha de controle do portão cinco. O estatuto grampeado com capa dura. A tampa de caixa com o número.',
+    'Mewtwo olha o monte de papel no chão de uma caverna.',
+    '"O que é isso?"',
+    '"É o que eles são."',
+    'Ele não toca em nada. As folhas se abrem sozinhas, uma por vez, e ficam abertas.',
+    'Ele lê tudo em dois minutos e vinte segundos.'
+  ],
+  ef:{flag:'mostrou_a_papelada'},
+  escolhas:[
+    {texto:'Esperar.', vai:'c23_final_papelada'},
+    {texto:'"Art. 19. Não há prazo."', vai:'c23_final_papelada'},
+    {texto:'"Eu não sei ler isso direito."', vai:'c23_final_papelada'}
+  ]
+},
+
+c23_final_papelada:{
+  texto:[
+    'Quando acaba, ele fica muito quieto.',
+    '"Isso é pior que caçada."',
+    '"Por quê?"',
+    '"Porque caçada acaba." Ele deixa as folhas caírem no chão, todas ao mesmo tempo. "Isso não tem prazo. Está escrito que não tem prazo. Alguém sentou numa mesa e escreveu que não tem prazo, e outra pessoa leu e aprovou, e uma terceira imprimiu."',
+    'Ele levanta.',
+    '"Quantas pessoas precisaram concordar pra essa frase existir?"',
+    'Você não sabe.',
+    '"Eu sei", ele diz. "Onze. Está no cabeçalho."'
+  ],
+  final:{id:'papelada', titulo:'NUMERAÇÃO SEQUENCIAL', texto:[
+    'O que Mewtwo faz nos meses seguintes não é ataque e não é fuga.',
+    'É leitura.',
+    'Em quatro meses, cópias autenticadas de mil cento e oitenta e quatro guias de remessa chegam, por via postal, a onze endereços residenciais.',
+    'Cada envelope contém apenas os documentos assinados por aquela pessoa. Nada mais. Sem bilhete, sem ameaça, sem exigência.',
+    'Sete dos onze pedem exoneração em seis semanas. Dois adoecem. Um processa a Comissão e ganha.',
+    'O décimo primeiro, a Presidente Hélia Rennó, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
+    'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
+    'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
+    'Você ensinou isso a Kanto inteiro sem nunca ter subido num palco.'
+  ]}
+},
+
+c23_os_nomes:{
+  texto:[
+    'Você diz os nomes.',
+    d=>d.cemiterio.length ? `Os seus primeiro: ${d.cemiterio.map(p=>nomeExib(p)).join(', ')}.` : 'Não são todos seus.',
+    d=>d.flags.vaporeon_morreu ? 'Depois o Duque, que era de rua e era da Marta, as duas coisas.' : '',
+    d=>d.flags.copiou_os_onze_nomes ? 'Depois os onze, do canto de baixo de um mural de doze metros numa cidade sem música, copiados ajoelhado no chão porque uma moça de Fuchsia escreveu ajoelhada no chão.' : '',
+    'Leva quatro minutos. Você não erra nenhum.',
+    'Mewtwo escuta até o fim sem interromper, o que quase ninguém faz.'
+  ],
+  ef:{flag:'disse_os_nomes', rep:{eixo:'bom',delta:3,motivo:'Disse em voz alta os nomes que ninguém mais ia dizer'}},
+  escolhas:[
+    {texto:'Ficar em silêncio depois do último.', vai:'c23_final_os_nomes'},
+    {texto:'"Eu não sei por que eu decorei isso."', vai:'c23_final_os_nomes'},
+    {texto:'"Alguém tinha que continuar sabendo."', vai:'c23_final_os_nomes'}
+  ]
+},
+
+c23_final_os_nomes:{
+  texto:[
+    '"Eu não tenho nome", ele diz.',
+    '"Você tem. Mewtwo."',
+    '"Isso é um número com uma palavra na frente." Ele não está reclamando. É constatação. "Tinha um Mew. Eu sou o dois."',
+    'Ele olha pra você por muito tempo.',
+    '"Me dá um."',
+    'E é isso: no fim de tudo, numa caverna embaixo de uma montanha, a coisa mais poderosa de Kanto pede um nome pra um garoto de quinze anos.'
+  ],
+  final:{id:'os_nomes', titulo:'ALGUÉM TINHA QUE CONTINUAR SABENDO', texto:[
+    'Você dá o nome. Qual foi não importa — importa que levou onze segundos e que você não pensou muito, porque pensar muito teria estragado.',
+    'Ele repete uma vez, baixo, testando.',
+    'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e as duas Aves na boca da caverna não se mexem porque tem uma pessoa do lado dele.',
+    'Vocês descem a montanha juntos, e ele não fala mais nada o caminho inteiro.',
+    'Na estrada, ele vira pro sul e você vira pro sul também, e é assim, e ninguém combinou.',
+    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com um treinador, sem coleira, sem bola, sem nada.',
+    'Ninguém vai acreditar em ninguém.',
+    'E na Torre Pokémon de Lavender, num mural preto de doze metros, uma linha nova aparece num dia qualquer, escrita com giz, com uma letra que ninguém reconhece:',
+    'os onze, e embaixo, menor: "eu sei os nomes".'
+  ]}
+},
+
+c23_a_pagina:{
+  texto:[
+    '"Eu prometi voltar pra uma menina com um caderno."',
+    '"Explica."',
+    'Você explica. Zuleica, dez anos, meio-fio de Pewter, duas colunas. PASSOU: oitenta e três. VOLTOU: trinta e um.',
+    'E uma página nova, escrita com régua, com o título PROMETEU, e o seu nome no topo.',
+    '"E se você não voltar?"',
+    '"Ela risca. Com caneta vermelha."',
+    'Mewtwo processa isso com uma seriedade completamente desproporcional.',
+    '"Então você não pode ficar aqui."'
+  ],
+  ef:{flag:'falou_da_zuleica'},
+  escolhas:[
+    {texto:'"Eu não vim pra ficar."', vai:'c23_final_a_pagina'},
+    {texto:'"Vem comigo. Ela ia gostar de te anotar."', vai:'c23_final_a_pagina'},
+    {texto:'"Eu podia não voltar. Seria mais fácil."', vai:'c23_final_a_pagina'}
+  ]
+},
+
+c23_final_a_pagina:{
+  texto:[
+    '"Eu nunca prometi nada pra ninguém", ele diz.',
+    '"Ninguém nunca te pediu nada."',
+    '"Ninguém nunca me pediu nada", ele concorda. "É diferente de ninguém nunca ter me dado nada. Eu não tinha reparado na diferença."',
+    'Ele senta de novo no chão da câmara.',
+    '"Vai. Antes que ela risque."'
+  ],
+  final:{id:'a_pagina', titulo:'PROMETEU', texto:[
+    'Você desce a montanha e atravessa Kanto inteiro de volta, o que leva onze dias.',
+    'Em Pewter, na rua principal, tem uma menina de onze anos sentada no meio-fio com um caderno de colunas.',
+    'Ela te vê. Não sorri. Abre na página PROMETEU, procura o seu nome, e escreve do lado, com régua: VOLTOU.',
+    'Depois fecha o caderno.',
+    '"Você é o primeiro."',
+    '"Da página?"',
+    '"Da página."',
+    'Ela olha a rua.',
+    '"Eu botei quatro nome nessa página nesses meses. Você é o primeiro que volta."',
+    'Você senta no meio-fio ao lado dela e vocês dois ficam ali olhando uma rua de cidade de pedra.',
+    'Muito longe, ao norte, numa caverna, alguém decidiu continuar existindo porque uma criança tinha um caderno.',
+    'Ninguém em Kanto jamais vai saber disso, e as duas colunas continuam sendo atualizadas até hoje.'
+  ]}
+},
+
+c23_a_troca:{
+  texto:[
+    '"Você quer trocar?"',
+    'É a pergunta mais idiota que já foi feita nessa caverna e você ouve ela sair da sua boca com horror.',
+    'Mewtwo para.',
+    '"Trocar."',
+    '"É o que treinador faz. Você dá um e recebe um e os dois mudam de lugar." Você está falando rápido demais. "É a única coisa que eu sei fazer que envolve escolher."',
+    'Silêncio comprido.',
+    '"E o que você ia dar?"'
+  ],
+  ef:{flag:'ofereceu_troca'},
+  escolhas:[
+    {texto:'Oferecer o primeiro do seu time. O que saiu de casa com você.', vai:'c23_final_a_troca',
+     ef:{flag:'ofereceu_o_primeiro'}},
+    {texto:'"Nada. Não tem troca justa aqui e eu sei."', vai:'c23_final_a_troca'},
+    {texto:'"Eu. Eu fico e você vai."', vai:'c23_final_a_troca', ef:{flag:'ofereceu_a_si'}}
+  ]
+},
+
+c23_final_a_troca:{
+  texto:[
+    d=>d.flags.ofereceu_a_si
+      ? '"Você." Ele repete. "Você fica numa caverna embaixo de uma montanha e eu saio andando com a sua vida."'
+      : d.flags.ofereceu_o_primeiro
+        ? 'Você diz o nome do primeiro. O que dormia aos pés da sua cama antes de tudo isso começar.'
+        : '"Nada." Ele repete. "É a primeira resposta honesta que eu ouço numa negociação."',
+    'Ele demora muito.',
+    '"A troca não é o que você acha que é", ele diz enfim. "Eu li isso na cabeça de quatro pessoas que passaram por essa caverna."',
+    '"O que é, então?"',
+    '"É duas pessoas concordando que uma coisa viva pode mudar de dono."',
+    'Uma pausa exata.',
+    '"Eu não vou ser o segundo lado disso. Mas obrigado por perguntar em vez de sacar a bola."'
+  ],
+  final:{id:'a_troca', titulo:'MUDAR DE DONO', texto:[
+    'Você sobe a escada da câmara sem nada.',
+    'E, nos anos seguintes, você para de trocar.',
+    'Não vira militância, não vira discurso, não vira nada que dê pra escrever num cartaz. Você só para, e quando alguém oferece você diz que não, e quando perguntam por quê você dá de ombros e muda de assunto, porque a explicação envolve uma caverna e você não vai contar da caverna.',
+    'Em Cerulean tem uma professora de natação que até hoje não entende por que você recusou um Seel.',
+    'Em Pewter tem um homem da pedreira que conta pra todo mundo que já ofereceu um Machoke pra você e que você falou que não.',
+    'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por um garoto de quinze anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
+    'Foi a coisa mais barata que você fez na vida. Não custou nada.',
+    'Isso não desconta.'
+  ]}
+},
+
+c23_sentou:{
+  texto:[
+    'Você não fala nada.',
+    'Senta no chão de pedra da câmara, de pernas cruzadas, com as mãos no colo, e espera.',
+    'Ele espera também.',
+    'Doze minutos.',
+    'É a coisa mais difícil que você fez nessa jornada inteira e você tem consciência disso enquanto está fazendo.',
+    'No décimo terceiro minuto, ele fala:',
+    '"Ninguém nunca ficou calado perto de mim."',
+    'E depois, mais baixo:',
+    '"Eu leio o que as pessoas pensam. Todas. Sempre. Eu nunca tinha ouvido silêncio de verdade porque cabeça não faz silêncio."',
+    'Uma pausa.',
+    '"A sua está quieta."'
+  ],
+  ef:{flag:'ficou_em_silencio', rep:{eixo:'bom',delta:2,motivo:'Ficou treze minutos em silêncio quando podia falar'}},
+  escolhas:[
+    {texto:'Continuar em silêncio.', vai:'c23_final_silencio'},
+    {texto:'"Eu não tô conseguindo pensar em nada."', vai:'c23_final_silencio'},
+    {texto:'"É porque eu não sei o que dizer."', vai:'c23_final_silencio'}
+  ]
+},
+
+c23_final_silencio:{
+  texto:[
+    'Vocês ficam ali por mais quarenta minutos.',
+    'Não acontece nada. Não tem revelação, não tem acordo, não tem batalha.',
+    'Quando você levanta pra ir, os seus joelhos estalam e o som ecoa na câmara inteira e vocês dois quase riem.',
+    'Ele não te pede pra ficar. Você não promete voltar.',
+    'Na boca da caverna, as duas Aves Lendárias estão paradas onde estavam, e uma delas vira a cabeça quando você passa, e isso é tudo.'
+  ],
+  final:{id:'silencio', titulo:'CABEÇA NÃO FAZ SILÊNCIO', texto:[
+    'Você não conta pra ninguém.',
+    'Não porque é segredo. Porque não tem o que contar: você entrou numa caverna, sentou no chão e ficou quieto por quase uma hora com uma criatura de dois anos de idade que sabe tudo.',
+    'A Liga pergunta. Você diz que não achou nada.',
+    'A Dra. Ivone pergunta. Você diz que não achou nada, e ela olha na sua cara e sabe que você está mentindo, e não insiste, porque ela é ela.',
+    'E toda vez, pelo resto da sua vida, que você estiver num lugar barulhento demais — num salão de navio, num pátio de porto, numa sala com mesa comprida e gente educada demais —, você vai conseguir fazer uma coisa que quase ninguém consegue.',
+    'Você vai conseguir ficar quieto por dentro.',
+    'Foi a única coisa que ele te deu, e ele não deu de propósito, e é a mais valiosa.'
+  ]}
+},
+
+c23_ir_embora:{
+  texto:[
+    'Você vira as costas antes de ele terminar a frase.',
+    'Não é medo e não é desprezo. É uma coisa muito mais simples: você entendeu, no meio da conversa, que não tem nada aqui pra você resolver.',
+    'Ele não te impede.',
+    '"Você vai embora."',
+    '"Vou."',
+    '"Por quê?"',
+    'E você para na escada e responde de costas, o que é covarde e é verdade:',
+    '"Porque eu tenho quinze anos."'
+  ],
+  ef:{flag:'foi_embora_da_caverna'},
+  escolhas:[
+    {texto:'Subir.', vai:'c23_final_ir_embora'},
+    {texto:'Voltar. Você não consegue ir embora assim.', vai:'c23_escolha_final'},
+    {texto:'"E porque eu quero chegar em casa."', vai:'c23_final_ir_embora',
+     ef:{flag:'quer_chegar_em_casa'}}
+  ]
+},
+
+c23_final_ir_embora:{
+  texto:[
+    'Você sobe a escada da câmara e atravessa o corredor e sai pela boca da caverna, e o ar de fora é frio e limpo e violento de tão bom.',
+    'As duas Aves Lendárias estão paradas na entrada. Nenhuma das duas olha pra você.',
+    'Você desce a montanha.'
+  ],
+  final:{id:'ir_embora', titulo:'PORQUE EU TENHO QUINZE ANOS', texto:[
+    'Você volta pra estrada e a jornada continua, e ela é boa.',
+    'Você ganha as insígnias que faltavam. Perde duas vezes pro mesmo líder e ganha na terceira. Chega ao Planalto Indigo num dia de chuva com um time que te obedece por afeto e não por medo.',
+    'Você não vira campeão. Ou vira — isso depende de coisas que ainda não aconteceram quando essa história acaba.',
+    'A Comissão continua existindo e continua mandando ofício, e você continua sem ter poder nenhum sobre isso.',
+    'E uma vez por ano, mais ou menos, você pensa numa caverna no norte e numa conversa que você interrompeu no meio pra ir embora.',
+    'E toda vez você chega na mesma conclusão, que é a conclusão certa e que não conforta nada:',
+    'você tinha quinze anos, e ninguém devia ter deixado aquilo na sua mão, e o fato de você ter ido embora é a coisa mais saudável que aconteceu nessa história inteira.',
+    'Quem devia ter resolvido isso eram os adultos.',
+    'Eles sabiam. Eles tinham o endereço, o número do processo e a data da reunião.',
+    'Eles só não tinham quinze anos.'
   ]}
 },
 
