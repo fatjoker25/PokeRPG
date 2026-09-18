@@ -72,10 +72,10 @@ c4_senhora_filho:{
     '"Ele desistiu?"',
     '"Ele voltou." Ela corrige com firmeza, sem levantar a voz. "Não é a mesma coisa. Muita gente fala que é."'
   ],
-  ef:{flag:'ouviu_a_senhora', npc:{nome:'Dona Ercília', opiniao:2, memoria:'Dividiu um pastel com você na praça de Pewter e falou do filho que voltou.'}},
+  ef:{flag:'ouviu_a_senhora', npc:{nome:'Sra. Ercília', opiniao:2, memoria:'Dividiu um pastel com você na praça de Pewter e falou do filho que voltou.'}},
   escolhas:[
     {texto:'"Não é a mesma coisa mesmo."', vai:'c4_senhora_concordou',
-     ef:{npc:{nome:'Dona Ercília', opiniao:2, memoria:'Você concordou com ela sobre o filho, e ela reparou.'}}},
+     ef:{npc:{nome:'Sra. Ercília', opiniao:2, memoria:'Você concordou com ela sobre o filho, e ela reparou.'}}},
     {texto:'"Como é o nome dele? Se eu passar na pedreira."', vai:'c4_senhora_nome'},
     {texto:'Não dizer nada. Só ficar.', vai:'c4_senhora_silencio'},
     {texto:'Agradecer e ir andar.', vai:'c4_rua'}
@@ -105,7 +105,7 @@ c4_senhora_nome:{
     '"Não fala nada." Rápido demais. Depois, mais devagar: "Não fala nada. A gente se vê no domingo."',
     'Ela guarda o papel do pastel no bolso em vez de jogar fora, porque é uma dessas pessoas.'
   ],
-  ef:{flag:'sabe_do_nilo', registrar:'Dona Ercília falou do filho Nilo, que trabalha na pedreira.'},
+  ef:{flag:'sabe_do_nilo', registrar:'Sra. Ercília falou do filho Nilo, que trabalha na pedreira.'},
   escolhas:[
     {texto:'Ir pra pedreira agora.', vai:'c4_pedreira_caminho'},
     {texto:'"O que tem pra fazer nessa cidade?"', vai:'c4_senhora_cidade'},
@@ -119,7 +119,7 @@ c4_senhora_silencio:{
     'Dá pra ficar quinze minutos sentado num banco ao lado de uma desconhecida sem dizer uma palavra, e não ser estranho. Você não sabia disso.',
     'Quando ela levanta, põe a mão no seu ombro de leve, do jeito rápido de quem não quer que vire cena, e vai embora pela rua da igreja.'
   ],
-  ef:{hp:2, npc:{nome:'Dona Ercília', opiniao:3, memoria:'Ficou sentada em silêncio com você na praça e gostou disso.'}},
+  ef:{hp:2, npc:{nome:'Sra. Ercília', opiniao:3, memoria:'Ficou sentada em silêncio com você na praça e gostou disso.'}},
   escolhas:[
     {texto:'Ir andar pela cidade.', vai:'c4_rua'},
     {texto:'Ir atrás do som das detonações.', vai:'c4_pedreira_caminho'},
@@ -136,7 +136,7 @@ c4_senhora_contou:{
     '"Pouco."',
     '"Pois é." Ela faz que sim. "Guarda isso. O dia em que você dormir bem depois de uma coisa dessas, você olha pra si mesmo com atenção."'
   ],
-  ef:{flag:'conselho_do_sono', npc:{nome:'Dona Ercília', opiniao:4, memoria:'Você contou da floresta pra ela. Ela te disse pra reparar no dia em que você dormisse bem depois.'},
+  ef:{flag:'conselho_do_sono', npc:{nome:'Sra. Ercília', opiniao:4, memoria:'Você contou da floresta pra ela. Ela te disse pra reparar no dia em que você dormisse bem depois.'},
       presagio:'Alguma noite dessa jornada você vai dormir muito bem, e vai lembrar disso e ficar acordado de novo.'},
   escolhas:[
     {texto:'"E se eu dormir bem?"', vai:'c4_senhora_dormir'},
@@ -1827,7 +1827,7 @@ c4_nilo:{
     '"Qual Nilo? Tem três."',
     '"O do rádio."',
     '"Ah, o Nilo do rádio." O guarda fala no rádio dele mesmo, duas frases em código, e espera.',
-    'Cinco minutos depois aparece um homem de uns vinte e cinco anos com um capacete debaixo do braço e uma cara que é a cara da Dona Ercília com vinte anos a menos e muito mais cansaço.',
+    'Cinco minutos depois aparece um homem de uns vinte e cinco anos com um capacete debaixo do braço e uma cara que é a cara da Sra. Ercília com vinte anos a menos e muito mais cansaço.',
     '"Pois não?"'
   ],
   ef:{npc:{nome:'Nilo', opiniao:0, memoria:'Você o chamou no portão da pedreira de Pewter.'}},

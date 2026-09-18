@@ -69,7 +69,7 @@ c6_pescador:{
     'Ele fica calado um tempo e depois diz, do nada:',
     '"O rio mudou de cor duas vezes esse mês."'
   ],
-  ef:{npc:{nome:'Seu Bilac', opiniao:1, memoria:'O pescador da margem de Cerulean. Falou do rio mudando de cor.'}},
+  ef:{npc:{nome:'Sr. Bilac', opiniao:1, memoria:'O pescador da margem de Cerulean. Falou do rio mudando de cor.'}},
   escolhas:[
     {texto:'"Mudou de cor como?"', vai:'c6_rio_cor'},
     {texto:'"E ninguém fez nada?"', vai:'c6_rio_ninguem'},
@@ -99,7 +99,7 @@ c6_rio_cor:{
 c6_contou_bilac:{
   texto:[
     'Você conta. Não tudo — a parte da caverna, das gaiolas, do gerador.',
-    'Seu Bilac escuta pescando, sem reagir.',
+    'Sr. Bilac escuta pescando, sem reagir.',
     'No fim ele diz: "Gerador a diesel."',
     '"É."',
     '"Diesel é o que faz a água ficar daquele marrom." Ele puxa a linha e a isca está intacta. "Eu trabalhei em barco trinta anos. Eu conheço esse marrom."',
@@ -107,8 +107,8 @@ c6_contou_bilac:{
     '"Vem cá. Você fala isso pra uma pessoa comigo."'
   ],
   ef:{flag:'bilac_sabe_do_diesel',
-      npc:{nome:'Seu Bilac', opiniao:4, memoria:'Você contou do gerador a diesel e ele reconheceu a cor do rio.'},
-      registrar:'Seu Bilac identificou o marrom do rio como diesel.'},
+      npc:{nome:'Sr. Bilac', opiniao:4, memoria:'Você contou do gerador a diesel e ele reconheceu a cor do rio.'},
+      registrar:'Sr. Bilac identificou o marrom do rio como diesel.'},
   escolhas:[
     {texto:'Ir com ele.', vai:'c6_bilac_leva'},
     {texto:'"Agora não." E ir pra ponte norte.', vai:'c6_ponte_norte'},
@@ -122,7 +122,7 @@ c6_quem_e_a_pessoa:{
     '"A Misty."',
     'Ele fala o nome do jeito que se fala o nome de quem se conhece desde criança.',
     '"Ela é o quê, da prefeitura?"',
-    'Seu Bilac ri com a garganta.',
+    'Sr. Bilac ri com a garganta.',
     '"Ela é a do ginásio, moço." Ele põe a vara no ombro. "E ela é a única pessoa nessa cidade que já processou uma empresa por causa de peixe morto. Duas vezes."'
   ],
   ef:{flag:'sabe_da_misty',
@@ -154,7 +154,7 @@ c6_misty_processos:{
 
 c6_bilac_leva:{
   texto:[
-    'Seu Bilac te leva por três ruas até um prédio baixo e comprido com telhado de chapa e cheiro de cloro saindo pelas frestas.',
+    'Sr. Bilac te leva por três ruas até um prédio baixo e comprido com telhado de chapa e cheiro de cloro saindo pelas frestas.',
     'Lá dentro é uma piscina coberta, olímpica, com eco.',
     'Tem uma mulher de uns vinte e poucos anos sentada na borda com os pés na água e uma pasta de plástico no colo, discutindo com alguém no telefone sobre uma coisa chamada "outorga".',
     'Ela levanta a mão pedindo um minuto sem olhar pra vocês. Esse minuto dura onze.',
@@ -367,7 +367,7 @@ c6_misty_volto:{
 c6_rio_ninguem:{
   texto:[
     '"E ninguém fez nada?"',
-    'Seu Bilac ri. É uma risada sem graça nenhuma e ele para no meio dela.',
+    'Sr. Bilac ri. É uma risada sem graça nenhuma e ele para no meio dela.',
     '"Fizeram. Reclamaram na prefeitura. A prefeitura mandou ofício pra empresa de saneamento, a de saneamento mandou ofício pro estado, e o estado mandou de volta pra prefeitura."',
     'Ele puxa a linha.',
     '"Isso levou cinco meses. Eu sei porque eu acompanhei. Eu não tenho mais nada pra fazer."'
@@ -390,7 +390,7 @@ c6_bilac_tempo:{
     'Ele joga a linha de novo.',
     '"Então eu venho aqui. Não pego nada. Mas eu venho, entende? Eu venho todo dia."'
   ],
-  ef:{npc:{nome:'Seu Bilac', opiniao:2, memoria:'Pesca há quatro anos e não pega nada. Vem todo dia.'}},
+  ef:{npc:{nome:'Sr. Bilac', opiniao:2, memoria:'Pesca há quatro anos e não pega nada. Vem todo dia.'}},
   escolhas:[
     {texto:'"Mudou de cor como, o rio?"', vai:'c6_rio_cor'},
     {texto:'Ficar pescando com ele um tempo.', vai:'c6_bilac_calado'},
@@ -406,7 +406,7 @@ c6_bilac_calado:{
     'Quando você levanta pra ir, ele diz, sem olhar: "Passa aqui de novo."',
     'E é a coisa mais simples do mundo e você vai lembrar disso em lugares muito piores.'
   ],
-  ef:{hp:3, npc:{nome:'Seu Bilac', opiniao:3, memoria:'Passaram uma hora em silêncio na margem. Ele pediu pra você passar de novo.'},
+  ef:{hp:3, npc:{nome:'Sr. Bilac', opiniao:3, memoria:'Passaram uma hora em silêncio na margem. Ele pediu pra você passar de novo.'},
       presagio:'"Passa aqui de novo." Tenta passar.'},
   escolhas:[
     {texto:'Ir pra ponte norte.', vai:'c6_ponte_norte'},

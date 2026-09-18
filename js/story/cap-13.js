@@ -1,9 +1,9 @@
 /* ============================================================
-   CAPÍTULO 13 — CONGELOU  (Ilhas Espuma)
+   CAPÍTULO 13 — CONGELOU  (Ilhas Seafoam)
    ============================================================ */
 CAPITULOS.push(
 {
-num:13, titulo:'Congelou', local:'Ilhas Espuma', ambiente:'agua', nivelArea:42,
+num:13, titulo:'Congelou', local:'Ilhas Seafoam', ambiente:'agua', nivelArea:42,
 tom:'muito sombrio', inicio:'c13_cais',
 cenas:{
 
@@ -64,7 +64,7 @@ c13_quatro_de_junho:{
     'Não é silêncio dramático. É silêncio de gente que estava conversando e parou porque a conversa mudou de assunto e o assunto novo é ruim.',
     'O magro de boné olha pros outros. Os outros olham pro chão.',
     'Depois de uns dez segundos, uma mulher de uns cinquenta anos, sentada na beirada do cais com os pés pra fora, responde sem virar:',
-    '"No dia três de junho o Estrela do Sul saiu pra arrasto de fundo na quebra das Espuma."',
+    '"No dia três de junho o Estrela do Sul saiu pra arrasto de fundo na quebra das Seafoam."',
     '"E?"',
     '"E voltou no dia quatro de manhã com a rede rasgada e sem contar pra ninguém o que tinha rasgado."',
     'Ela cospe na água.',
@@ -72,12 +72,12 @@ c13_quatro_de_junho:{
   ],
   ef:{flag:['sabe_do_estrela_do_sul','sabe_do_dorival'],
       rep:{eixo:'bom',delta:3,motivo:'Fez a pergunta que calou o cais'},
-      registrar:'O barco Estrela do Sul pescou na quebra das Espuma em 3 de junho e voltou com a rede rasgada.',
+      registrar:'O barco Estrela do Sul pescou na quebra das Seafoam em 3 de junho e voltou com a rede rasgada.',
       presagio:'Ele nunca mais saiu pra pescar. Guarde o nome: Dorival.'},
   escolhas:[
     {texto:'"Onde mora o Dorival?"', vai:'c13_dorival'},
     {texto:'Ir à colônia ver os registros.', vai:'c13_colonia'},
-    {texto:'Procurar quem te leve às Espuma.', vai:'c13_procurar_barco'},
+    {texto:'Procurar quem te leve às Seafoam.', vai:'c13_procurar_barco'},
     {texto:'Não ir atrás dele. Ir direto pras ilhas.', vai:'c13_procurar_barco'}
   ]
 },
@@ -100,7 +100,7 @@ c13_domino:{
   escolhas:[
     {texto:'"Quem foi o primeiro a dizer isso das três vezes?"', vai:'c13_quem_disse'},
     {texto:'Ir à colônia.', vai:'c13_colonia'},
-    {texto:'Procurar quem te leve às Espuma.', vai:'c13_procurar_barco'},
+    {texto:'Procurar quem te leve às Seafoam.', vai:'c13_procurar_barco'},
     {texto:'Perguntar quando começou.', vai:'c13_quando_comecou'}
   ]
 },
@@ -110,7 +110,7 @@ c13_quem_disse:{
     '"Quem foi o primeiro a dizer isso das três vezes?"',
     'Os três da mesa apontam, ao mesmo tempo e sem combinar, para o mesmo lugar: a ponta do molhe, onde tem um barco pequeno, azul, amarrado sozinho longe dos outros.',
     'E um homem muito velho sentado num caixote ao lado dele, sem fazer nada.',
-    '"Seu Bento."',
+    '"Sr. Furtado."',
     '"E por que ele fica lá sozinho?"',
     'O da direita joga uma pedra na mesa.',
     '"Porque ele é o único que tá dizendo que vai."'
@@ -141,7 +141,7 @@ c13_colonia:{
       registrar:'A Colônia Z-14 tem 52 anos de registros de saída de embarcação, abertos a consulta.',
       presagio:'Documento público que ninguém consulta nunca. É a terceira vez nesse jogo.'},
   escolhas:[
-    {texto:'Procurar as saídas para as Espuma.', vai:'c13_saidas_espuma'},
+    {texto:'Procurar as saídas para as Seafoam.', vai:'c13_saidas_espuma'},
     {texto:'Procurar o Estrela do Sul.', vai:'c13_estrela_do_sul', cond:d=>!!d.flags.sabe_do_estrela_do_sul},
     {texto:'Procurar quem sai mais.', vai:'c13_quem_sai_mais'},
     {texto:'Agradecer e ir pro cais.', vai:'c13_procurar_barco'}
@@ -151,9 +151,9 @@ c13_colonia:{
 c13_saidas_espuma:{
   texto:[
     'Você passa três horas no livro deste ano e no do ano passado.',
-    '"Quebra das Espuma" aparece como área declarada trinta e sete vezes em dois anos.',
+    '"Quebra das Seafoam" aparece como área declarada trinta e sete vezes em dois anos.',
     'E aí você percebe uma coisa lendo as colunas de horário:',
-    'as saídas para a quebra das Espuma são sempre entre vinte e duas e duas da manhã, e os retornos sempre entre nove e onze.',
+    'as saídas para a quebra das Seafoam são sempre entre vinte e duas e duas da manhã, e os retornos sempre entre nove e onze.',
     'Todas as outras áreas declaradas têm saída entre três e cinco da manhã, que é o horário normal de pesca.',
     'Você pergunta pra secretária e ela responde de cara, com o naturalidade de quem nunca precisou esconder:',
     '"Ah, arrasto de fundo na quebra é de noite porque o peixe da quebra sobe de noite."',
@@ -164,7 +164,7 @@ c13_saidas_espuma:{
   ],
   ef:{flag:['sabe_do_arrasto','provas_espuma'],
       rep:{eixo:'bom',delta:4,motivo:'Leu a coluna de horário e entendeu o que ela contava'},
-      registrar:'Arrasto de fundo é proibido a seis milhas das Espuma. As saídas para lá são sempre de madrugada.',
+      registrar:'Arrasto de fundo é proibido a seis milhas das Seafoam. As saídas para lá são sempre de madrugada.',
       presagio:'Fiscal não trabalha de madrugada. A informação estava na coluna de horário.'},
   escolhas:[
     {texto:'Procurar o Estrela do Sul.', vai:'c13_estrela_do_sul'},
@@ -177,7 +177,7 @@ c13_saidas_espuma:{
 c13_estrela_do_sul:{
   texto:[
     'Você acha a linha.',
-    '**ESTRELA DO SUL — mestre: D. Nogueira — saída 03/06, 23h10 — área declarada: quebra das Espuma — retorno 04/06, 05h40**',
+    '**ESTRELA DO SUL — mestre: D. Nogueira — saída 03/06, 23h10 — área declarada: quebra das Seafoam — retorno 04/06, 05h40**',
     'Cinco e quarenta.',
     'Todas as outras saídas pra quebra voltam entre nove e onze.',
     'Essa voltou às cinco e quarenta, no escuro, três a cinco horas antes do normal, no dia em que a água baixou três graus.',
@@ -196,7 +196,7 @@ c13_estrela_do_sul:{
     {texto:'Copiar a linha.', vai:'c13_copiou_as_linhas'},
     {texto:'"Onde mora o Nogueira?"', vai:'c13_dorival'},
     {texto:'Ir pro cais achar um barco.', vai:'c13_procurar_barco'},
-    {texto:'Ver as outras saídas para as Espuma.', vai:'c13_saidas_espuma'}
+    {texto:'Ver as outras saídas para as Seafoam.', vai:'c13_saidas_espuma'}
   ]
 },
 
@@ -219,7 +219,7 @@ c13_copiou_as_linhas:{
       itens:{'Cópia das trinta e sete saídas':1},
       npc:{nome:'Secretária da Colônia Z-14', opiniao:5, memoria:'Ditou as trinta e sete linhas para você e apontou os sete mestres contratados.'},
       rep:{eixo:'bom',delta:4,motivo:'Copiou trinta e sete linhas e encontrou uma pergunta melhor'},
-      registrar:'Das 22 embarcações que pescam na quebra das Espuma, sete são operadas por mestres contratados.',
+      registrar:'Das 22 embarcações que pescam na quebra das Seafoam, sete são operadas por mestres contratados.',
       presagio:'"Isso aí é outro livro." Sempre tem outro livro.'},
   escolhas:[
     {texto:'"Abre o outro livro."', vai:'c13_outro_livro'},
@@ -249,7 +249,7 @@ c13_outro_livro:{
   ef:{flag:['sabe_da_linha_verde_pesca','provas_espuma','sabe_da_linha_verde'],
       rep:{eixo:'bom',delta:5,motivo:'Puxou o cadastro de embarcações e achou o nome'},
       instabilidade:1,
-      registrar:'A Pesca e Armazenagem Linha Verde é dona de três barcos da quebra das Espuma e da fábrica de gelo do cais.',
+      registrar:'A Pesca e Armazenagem Linha Verde é dona de três barcos da quebra das Seafoam e da fábrica de gelo do cais.',
       presagio:'Dona da fábrica de gelo. Repare no que uma frota parada faz com quem vende gelo.'},
   escolhas:[
     {texto:'"Quem vende gelo com a frota parada?"', vai:'c13_fabrica_de_gelo'},
@@ -445,12 +445,12 @@ c13_dorival:{
     'Ele senta na poltrona sem oferecer nada e começa a falar antes de você perguntar, porque ele está esperando alguém perguntar desde quatro de junho.',
     '"Eu tava com dívida de motor."',
     'É essa a primeira frase.',
-    '"Eu tava com dívida de motor de quarenta e dois mil e a quebra das Espuma é o único lugar que dá pra tirar isso numa noite."'
+    '"Eu tava com dívida de motor de quarenta e dois mil e a quebra das Seafoam é o único lugar que dá pra tirar isso numa noite."'
   ],
   ef:{flag:['conheceu_o_dorival','sabe_da_divida'],
       npc:{nome:'Dorival', opiniao:2, memoria:'Te deixou entrar e a primeira coisa que disse foi a dívida do motor.'},
       rep:{eixo:'bom',delta:2,motivo:'Bateu na porta em vez de falar do lado de fora'},
-      registrar:'Dorival pescou na quebra das Espuma por causa de uma dívida de motor de 42 mil.',
+      registrar:'Dorival pescou na quebra das Seafoam por causa de uma dívida de motor de 42 mil.',
       presagio:'Ele começou pela dívida. Guarde: ele já ensaiou essa conversa.'},
   escolhas:[
     {texto:'"Conta o que aconteceu."', vai:'c13_dorival_conta'},
@@ -497,8 +497,8 @@ c13_a_parte_dificil:{
     '"Devolver."',
     'Ele levanta e vai até a janela.',
     '"Ela não pode voar. A asa quebrou em dois lugares e o veterinário do Bento disse que ossifica mal e que sem voar ela não sobrevive um dia lá."',
-    '"E se eu devolver, eu tenho que devolver onde eu peguei, que é a quebra das Espuma, que é seis milhas de área proibida pra arrasto e que eu declarei que eu tava pescando."',
-    '"Eu declarei no livro da colônia, moço. Tá escrito. Eu escrevi de próprio punho “quebra das Espuma” às vinte e três e dez do dia três de junho."',
+    '"E se eu devolver, eu tenho que devolver onde eu peguei, que é a quebra das Seafoam, que é seis milhas de área proibida pra arrasto e que eu declarei que eu tava pescando."',
+    '"Eu declarei no livro da colônia, moço. Tá escrito. Eu escrevi de próprio punho “quebra das Seafoam” às vinte e três e dez do dia três de junho."',
     '"E se eu chegar lá com ela, eu tô confessando arrasto em área proibida com dano a espécime protegido, que é três a cinco anos e perda da embarcação."',
     'Ele volta pra poltrona.',
     '"E eu tenho dívida de motor de quarenta e dois mil, e a embarcação é a garantia."',
@@ -601,7 +601,7 @@ c13_dorival_leva:{
     {texto:'"Vamos devolver hoje."', vai:'c13_eu_devolvo'},
     {texto:'"A gente vai junto e eu falo com a Liga."', vai:'c13_juntos'},
     {texto:'"Ele aguenta a travessia?"', vai:'c13_aguenta'},
-    {texto:'Ir falar com o Seu Bento antes.', vai:'c13_bento'}
+    {texto:'Ir falar com o Sr. Furtado antes.', vai:'c13_bento'}
   ]
 },
 
@@ -620,7 +620,7 @@ c13_procurar_barco:{
   ef:{flag:'procurou_barco',
       presagio:'A coisa óbvia e terrível. Esse é o tom com que falam do Bento.'},
   escolhas:[
-    {texto:'Ir falar com o Seu Bento.', vai:'c13_bento'},
+    {texto:'Ir falar com o Sr. Furtado.', vai:'c13_bento'},
     {texto:'"Por que vocês riem?"', vai:'c13_porque_riem'},
     {texto:'Ir à colônia antes.', vai:'c13_colonia'},
     {texto:'Perguntar quando começou.', vai:'c13_quando_comecou'}
@@ -648,12 +648,12 @@ c13_porque_riem:{
   ef:{flag:['sabe_do_bento','sabe_do_filho_do_bento'],
       rep:{eixo:'bom',delta:2,motivo:'Perguntou por que estavam rindo'},
       moral:-5,
-      registrar:'Seu Bento parou de pescar em 1997, quando o filho morreu no mar, e sai sozinho toda quarta desde então.',
+      registrar:'Sr. Furtado parou de pescar em 1997, quando o filho morreu no mar, e sai sozinho toda quarta desde então.',
       presagio:'Toda quarta, sem rede, sem linha, sem nada. Ele vai a algum lugar.'},
   escolhas:[
-    {texto:'Ir falar com o Seu Bento.', vai:'c13_bento'},
+    {texto:'Ir falar com o Sr. Furtado.', vai:'c13_bento'},
     {texto:'Ir à colônia procurar o registro de 1997.', vai:'c13_registro_97'},
-    {texto:'Ir à colônia ver as saídas para as Espuma.', vai:'c13_colonia'},
+    {texto:'Ir à colônia ver as saídas para as Seafoam.', vai:'c13_colonia'},
     {texto:'Perguntar do dia quatro de junho.', vai:'c13_quatro_de_junho'}
   ]
 },
@@ -676,11 +676,11 @@ c13_registro_97:{
       npc:{nome:'Secretária da Colônia Z-14', opiniao:4, memoria:'Abriu o livro de 1997 sem precisar procurar a data.'},
       rep:{eixo:'bom',delta:2,motivo:'Foi ver o registro em vez de perguntar de novo'},
       moral:-8,
-      registrar:'O filho do Seu Bento, 26 anos, não voltou de uma saída em 12/11/1997.',
+      registrar:'O filho do Sr. Furtado, 26 anos, não voltou de uma saída em 12/11/1997.',
       presagio:'Ela não precisou procurar a data. Todo mundo nessa cidade sabe essa data.'},
   escolhas:[
-    {texto:'Ir falar com o Seu Bento.', vai:'c13_bento'},
-    {texto:'Ver as saídas para as Espuma.', vai:'c13_saidas_espuma'},
+    {texto:'Ir falar com o Sr. Furtado.', vai:'c13_bento'},
+    {texto:'Ver as saídas para as Seafoam.', vai:'c13_saidas_espuma'},
     {texto:'Ver o Estrela do Sul.', vai:'c13_estrela_do_sul', cond:d=>!!d.flags.sabe_do_estrela_do_sul},
     {texto:'Ir pro cais.', vai:'c13_procurar_barco'}
   ]
@@ -691,6 +691,7 @@ c13_bento:{
     'Ele está sentado num caixote ao lado de um barco azul de doze pés com o nome pintado à mão na proa: **ESTRELA-DO-MAR**.',
     'A tinta do nome foi retocada muitas vezes, e as camadas se veem na borda das letras.',
     'Ele tem setenta e quatro anos, um boné sem logotipo nenhum, e está consertando um cabo de amarração que não precisa de conserto.',
+    'No cais o chamam de Bento. Na colônia, no livro de saída de embarcação e na única placa de rua que esta cidade tem com nome de pescador, ele é Furtado.',
     'Ele te vê chegando de longe e espera você chegar, e a primeira coisa que ele fala é:',
     '"Eu levo."',
     '"Eu nem falei nada."',
@@ -701,9 +702,9 @@ c13_bento:{
     'Ele olha pra você como se a pergunta fosse esquisita.',
     '"Eu vou porque eu quero ver antes de morrer."'
   ],
-  ef:{npc:{nome:'Seu Bento', opiniao:3, memoria:'Aceitou te levar às Espuma antes de você pedir, e não quis dinheiro.'},
+  ef:{npc:{nome:'Sr. Furtado', opiniao:3, memoria:'Aceitou te levar às Seafoam antes de você pedir, e não quis dinheiro.'},
       flag:'conheceu_bento',
-      registrar:'Seu Bento aceitou levar você às Ilhas Espuma no barco do pai dele.',
+      registrar:'Sr. Furtado aceitou levar você às Ilhas Seafoam no barco do pai dele.',
       presagio:'"Antes de morrer." Ele tem setenta e quatro anos e sai toda quarta pro canal sul.'},
   escolhas:[
     {texto:'"Ver o quê?"', vai:'c13_ver_o_que'},
@@ -728,10 +729,10 @@ c13_ver_o_que:{
     '"Essa aqui eu tenho chance."'
   ],
   ef:{flag:'bento_falou',
-      npc:{nome:'Seu Bento', opiniao:5, memoria:'Disse que não vai salvar ninguém — quer entender uma coisa antes de acabar.'},
+      npc:{nome:'Sr. Furtado', opiniao:5, memoria:'Disse que não vai salvar ninguém — quer entender uma coisa antes de acabar.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou ver o quê'},
       moral:8,
-      registrar:'Seu Bento quer entender uma coisa antes de morrer.',
+      registrar:'Sr. Furtado quer entender uma coisa antes de morrer.',
       presagio:'"Essa aqui eu tenho chance." Guarde a frase inteira.'},
   escolhas:[
     {texto:'"Por que você sai toda quarta?"', vai:'c13_toda_quarta', cond:d=>!!d.flags.sabe_do_filho_do_bento},
@@ -759,10 +760,10 @@ c13_toda_quarta:{
     'Ele não perdeu a conta.'
   ],
   ef:{flag:['bento_contou_do_filho'],
-      npc:{nome:'Seu Bento', opiniao:7, memoria:'Contou que sai toda quarta até o ponto onde o filho não voltou. Duzentas e trinta e nove vezes.'},
+      npc:{nome:'Sr. Furtado', opiniao:7, memoria:'Contou que sai toda quarta até o ponto onde o filho não voltou. Duzentas e trinta e nove vezes.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou e ele respondeu na primeira vez em quatro anos'},
       moral:10,
-      registrar:'Seu Bento vai ao ponto onde o filho morreu toda quarta. Duzentas e trinta e nove vezes.',
+      registrar:'Sr. Furtado vai ao ponto onde o filho morreu toda quarta. Duzentas e trinta e nove vezes.',
       presagio:'Ele disse que perdeu a conta e deu o número. Guarde os dois.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c13_travessia'},
@@ -785,7 +786,7 @@ c13_silencio_com_bento:{
     'E não fala mais nada, e não explica, e não precisa.'
   ],
   ef:{flag:'silencio_com_bento',
-      npc:{nome:'Seu Bento', opiniao:6, memoria:'Dividiu uma laranja com você em silêncio e mandou você ligar para casa.'},
+      npc:{nome:'Sr. Furtado', opiniao:6, memoria:'Dividiu uma laranja com você em silêncio e mandou você ligar para casa.'},
       moral:12, hp:2,
       rep:{eixo:'bom',delta:1,motivo:'Ficou em silêncio com quem precisava de companhia'},
       presagio:'"Liga pra ele hoje." Você vai lembrar disso em outro capítulo.'},
@@ -818,7 +819,7 @@ c13_contou_pro_bento:{
     '"O homem foi me perguntar se eu ia sair de barco e não conseguiu falar o resto. Quatro meses."'
   ],
   ef:{flag:['bento_sabe','bento_e_dorival'],
-      npc:{nome:'Seu Bento', opiniao:8, memoria:'Descobriu que o Dorival foi à porta dele em julho e não conseguiu falar.'},
+      npc:{nome:'Sr. Furtado', opiniao:8, memoria:'Descobriu que o Dorival foi à porta dele em julho e não conseguiu falar.'},
       rep:{eixo:'bom',delta:4,motivo:'Juntou as duas pessoas que estavam esperando uma pela outra'},
       moral:10,
       registrar:'O Dorival foi à casa do Bento em julho e não conseguiu contar.',
@@ -839,16 +840,16 @@ c13_bento_vai_falar:{
     'Você fica no cais e espera, e demora duas horas e quarenta.',
     'Quando ele volta, ele volta com o Dorival andando três passos atrás, do jeito que anda quem está sendo trazido.',
     'Os dois chegam no barco e nenhum dos dois fala nada por um tempo.',
-    'Depois o Seu Bento abre a caixa de ferramenta, tira um cabo de amarração novo, e entrega pro Dorival.',
+    'Depois o Sr. Furtado abre a caixa de ferramenta, tira um cabo de amarração novo, e entrega pro Dorival.',
     '"Segura a ponta."',
     'E é isso. É essa a conversa inteira.',
     'Os dois passam a hora seguinte amarrando uma coisa que não precisa ser amarrada, e no fim da hora estão indo juntos.'
   ],
   ef:{flag:['bento_e_dorival_juntos','dorival_vai'],
-      npc:{nome:'Dorival', opiniao:7, memoria:'Foi trazido pelo Seu Bento ao cais e a conversa inteira foi "segura a ponta".'},
+      npc:{nome:'Dorival', opiniao:7, memoria:'Foi trazido pelo Sr. Furtado ao cais e a conversa inteira foi "segura a ponta".'},
       rep:{eixo:'bom',delta:5,motivo:'Mandou um velho falar com o outro'},
       moral:15,
-      registrar:'Seu Bento foi buscar o Dorival. Os dois vão às Espuma juntos.',
+      registrar:'Sr. Furtado foi buscar o Dorival. Os dois vão às Seafoam juntos.',
       presagio:'"Segura a ponta." Foi a conversa inteira e foi o suficiente.'},
   escolhas:[
     {texto:'Buscar o Articuno na câmara fria e embarcar.', vai:'c13_os_tres'},
@@ -880,7 +881,7 @@ c13_avisou_a_colonia:{
       presagio:'Ninguém foi atrás dele. Guarde isso sobre cidade pequena: ela sabe a hora.'},
   escolhas:[
     {texto:'Ir com os onze botes.', vai:'c13_comboio'},
-    {texto:'Ir só com o Seu Bento.', vai:'c13_travessia'},
+    {texto:'Ir só com o Sr. Furtado.', vai:'c13_travessia'},
     {texto:'Ir buscar o Dorival também.', vai:'c13_os_tres'},
     {texto:'Chamar a Dra. Ivone.', vai:'c13_chamou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
@@ -918,24 +919,24 @@ c13_travessia:{
   texto:[
     'Vocês saem às cinco da manhã.',
     'O barco tem doze pés, motor de popa de quinze cavalos e um banco de madeira que o pai dele lixou em mil novecentos e cinquenta e três.',
-    'A primeira hora é normal. Mar de dois pés, vento de través, e o Seu Bento cantarolando alguma coisa antiga sem letra.',
+    'A primeira hora é normal. Mar de dois pés, vento de través, e o Sr. Furtado cantarolando alguma coisa antiga sem letra.',
     'Na segunda hora a temperatura cai.',
     'Não gradualmente. Tem uma linha na água — dá pra ver, é uma faixa mais escura de uns cem metros de largura — e quando o barco cruza essa linha, o ar muda de uma vez.',
     'Você põe a mão na água antes e depois. Antes: fria. Depois: doer.',
-    'Na terceira hora aparece o primeiro gelo à deriva, do tamanho de uma mesa, e o Seu Bento desvia sem comentar.',
+    'Na terceira hora aparece o primeiro gelo à deriva, do tamanho de uma mesa, e o Sr. Furtado desvia sem comentar.',
     'Depois aparece outro. E outro.',
     'E a duzentos metros das ilhas, o mar acaba.',
     'Não tem transição. Tem água e tem chão branco, e a linha entre os dois é reta.',
-    'Seu Bento desliga o motor e fica olhando por um tempo muito longo.',
+    'Sr. Furtado desliga o motor e fica olhando por um tempo muito longo.',
     '"Pronto", ele diz baixinho, pra ele mesmo. "Agora eu vi."'
   ],
   ef:{flag:'atravessou',
-      npc:{nome:'Seu Bento', opiniao:5, memoria:'Atravessou com você até a borda do gelo e disse "agora eu vi".'},
-      registrar:'Atravessou até as Ilhas Espuma. O mar vira chão a 200 metros da ilha.',
+      npc:{nome:'Sr. Furtado', opiniao:5, memoria:'Atravessou com você até a borda do gelo e disse "agora eu vi".'},
+      registrar:'Atravessou até as Ilhas Seafoam. O mar vira chão a 200 metros da ilha.',
       presagio:'"Agora eu vi." Ele conseguiu o que queria antes de você conseguir o que você quer.'},
   escolhas:[
     {texto:'Desembarcar no gelo.', vai:'c13_ilha'},
-    {texto:'"Seu Bento, volta. Isso não é lugar."', vai:'c13_voltou'},
+    {texto:'"Sr. Furtado, volta. Isso não é lugar."', vai:'c13_voltou'},
     {texto:'Andar até a caverna pelo gelo.', vai:'c13_ilha'},
     {texto:'Perguntar o que ele viu.', vai:'c13_o_que_ele_viu'}
   ]
@@ -957,14 +958,14 @@ c13_o_que_ele_viu:{
     '"E quem segura na mão, larga."'
   ],
   ef:{flag:['sabe_da_linha_reta','bento_entendeu'],
-      npc:{nome:'Seu Bento', opiniao:6, memoria:'Reparou que a borda do gelo é uma linha reta, e que isso quer dizer que alguém segura.'},
+      npc:{nome:'Sr. Furtado', opiniao:6, memoria:'Reparou que a borda do gelo é uma linha reta, e que isso quer dizer que alguém segura.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou a um homem de setenta e quatro anos o que ele viu'},
       registrar:'A borda do gelo é uma linha reta de cem metros — não é gelo natural.',
       presagio:'"E quem segura na mão, larga." Ele disse isso como se fosse boa notícia.'},
   escolhas:[
     {texto:'Desembarcar no gelo.', vai:'c13_ilha'},
     {texto:'"E se soltar de uma vez?"', vai:'c13_se_soltar'},
-    {texto:'"Seu Bento, volta."', vai:'c13_voltou'},
+    {texto:'"Sr. Furtado, volta."', vai:'c13_voltou'},
     {texto:'Andar até a caverna.', vai:'c13_ilha'}
   ]
 },
@@ -992,7 +993,7 @@ c13_se_soltar:{
   escolhas:[
     {texto:'Desembarcar no gelo.', vai:'c13_ilha'},
     {texto:'"Então volta pra Fuchsia e avisa o cais."', vai:'c13_mandou_avisar'},
-    {texto:'"Seu Bento, volta. Isso não é lugar."', vai:'c13_voltou'},
+    {texto:'"Sr. Furtado, volta. Isso não é lugar."', vai:'c13_voltou'},
     {texto:'Andar até a caverna.', vai:'c13_ilha'}
   ]
 },
@@ -1016,7 +1017,7 @@ c13_mandou_avisar:{
   ],
   ef:{flag:['avisou_o_cais','bento_avisou'],
       itens:{'Cobertor de lã':1},
-      npc:{nome:'Seu Bento', opiniao:9, memoria:'Te deixou na borda do gelo com um cobertor e voltou para tirar a frota de Fuchsia da água.'},
+      npc:{nome:'Sr. Furtado', opiniao:9, memoria:'Te deixou na borda do gelo com um cobertor e voltou para tirar a frota de Fuchsia da água.'},
       rep:{eixo:'bom',delta:6,motivo:'Mandou avisar a cidade antes de tentar qualquer coisa'},
       moral:15, instabilidade:-1,
       registrar:'A frota de Fuchsia foi puxada para terra antes de você entrar na caverna.',
@@ -1026,7 +1027,7 @@ c13_mandou_avisar:{
 
 c13_voltou:{
   texto:[
-    '"Seu Bento, volta. Isso não é lugar."',
+    '"Sr. Furtado, volta. Isso não é lugar."',
     'Ele te olha muito tempo.',
     'Depois vira o barco sem discutir, e é isso que dói: ele não discute.',
     'No caminho de volta ele diz uma coisa só, umas duas horas depois, já perto da costa:',
@@ -1035,12 +1036,12 @@ c13_voltou:{
     '"Essa foi a segunda."',
     'Duas semanas depois, o gelo alcança a costa de Fuchsia.',
     'A cidade perde a safra do trimestre inteiro e mais quatro famílias vão embora pra Vermilion.',
-    'O Seu Bento continua saindo toda quarta, só que agora ele não consegue chegar no ponto, porque o ponto está debaixo de gelo.'
+    'O Sr. Furtado continua saindo toda quarta, só que agora ele não consegue chegar no ponto, porque o ponto está debaixo de gelo.'
   ],
   ef:{flag:'nao_foi_seafoam', instabilidade:2, moral:-15,
-      rep:{eixo:'ruim',delta:2,motivo:'Recuou das Espuma e o gelo chegou à costa'},
-      npc:{nome:'Seu Bento', opiniao:2, memoria:'Voltou sem discutir quando você pediu. Não consegue mais chegar ao ponto do filho.'},
-      registrar:'Não desembarcou nas Espuma. O gelo avançou até a costa.',
+      rep:{eixo:'ruim',delta:2,motivo:'Recuou das Seafoam e o gelo chegou à costa'},
+      npc:{nome:'Sr. Furtado', opiniao:2, memoria:'Voltou sem discutir quando você pediu. Não consegue mais chegar ao ponto do filho.'},
+      registrar:'Não desembarcou nas Seafoam. O gelo avançou até a costa.',
       presagio:'O ponto dele está debaixo de gelo. Você fez isso.'},
   escolhas:[
     {texto:'Voltar. Contratar de novo e ir.', vai:'c13_bento'},
@@ -1054,7 +1055,7 @@ c13_voltou:{
 
 c13_ilha:{
   texto:[
-    'As Ilhas Espuma são duas formações de rocha branca furadas por dentro: a água entra por baixo e sai pelo outro lado, e o barulho que isso faz deu o nome delas.',
+    'As Ilhas Seafoam são duas formações de rocha branca furadas por dentro: a água entra por baixo e sai pelo outro lado, e o barulho que isso faz deu o nome delas.',
     'Hoje não faz barulho nenhum.',
     'Você desembarca andando, no gelo, por onde barco entrava.',
     'O gelo aguenta o seu peso e faz um som de coisa maciça, não de coisa fina, e isso é mais assustador do que se rachasse.',
@@ -1066,7 +1067,7 @@ c13_ilha:{
     'E a três metros da parede, de olhos abertos, na horizontal, um Dewgong inteiro.'
   ],
   ef:{flag:'entrou_nas_espuma', instabilidade:1, moral:-8,
-      registrar:'Entrou nas cavernas congeladas das Espuma. A maré parou na metade do ciclo.',
+      registrar:'Entrou nas cavernas congeladas das Seafoam. A maré parou na metade do ciclo.',
       presagio:'Todos virados pro mesmo lado. O congelamento pegou todo mundo no mesmo segundo.'},
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
@@ -1090,12 +1091,12 @@ c13_camadas:{
   ],
   ef:{flag:['contou_as_camadas','sabe_da_manutencao'],
       rep:{eixo:'bom',delta:4,motivo:'Contou as camadas e entendeu o que elas contavam'},
-      registrar:'O gelo das Espuma tem 19 camadas — uma por semana, desde 4 de junho.',
+      registrar:'O gelo das Seafoam tem 19 camadas — uma por semana, desde 4 de junho.',
       presagio:'Como quem passa pano. Dezenove semanas. Ele está cansado.'},
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
     {texto:'Tentar tirar o Dewgong.', vai:'c13_dewgong'},
-    {texto:'Voltar e contar isso pro Seu Bento.', vai:'c13_voltou_da_caverna'},
+    {texto:'Voltar e contar isso pro Sr. Furtado.', vai:'c13_voltou_da_caverna'},
     {texto:'Ir mais fundo com cuidado, contando camadas.', vai:'c13_fundo'}
   ]
 },
@@ -1112,7 +1113,7 @@ c13_dewgong:{
   ef:{flag:'achou_o_dewgong',
       presagio:'Quatro batidas por minuto. O gelo não está matando ele. O gelo está segurando ele.'},
   escolhas:[
-    {texto:'Carregar até o barco. Seu Bento tem tanque de vivo.', vai:'c13_salvou_dewgong', cond:d=>!!d.flags.conheceu_bento},
+    {texto:'Carregar até o barco. Sr. Furtado tem tanque de vivo.', vai:'c13_salvou_dewgong', cond:d=>!!d.flags.conheceu_bento},
     {texto:'Colocar de volta no gelo. O torpor era o que estava salvando ele.', vai:'c13_deixou_dewgong'},
     {texto:'Deixar como está e ir mais fundo.', vai:'c13_fundo'},
     {texto:'Fechar o buraco com os pedaços e ir mais fundo.', vai:'c13_deixou_dewgong'}
@@ -1124,17 +1125,17 @@ c13_salvou_dewgong:{
     'Você carrega um Dewgong de cento e vinte quilos por cento e setenta metros de caverna congelada.',
     'Não dá. Fisicamente não dá, e você sabe disso aos vinte metros.',
     'Você faz mesmo assim, arrastando os últimos setenta pelo gelo, com ele deitado no cobertor de lã usado como trenó.',
-    'Seu Bento vê você chegar de longe e não faz uma pergunta. Só abre a tampa do tanque de vivo, que é um tanque de peixe de duzentos litros e não de Dewgong, e que não vai caber.',
-    'Ele cabe até a metade. A outra metade fica pra fora, coberta com o cobertor molhado, e o Seu Bento vira a proa pra Fuchsia com o motor no talo.',
+    'Sr. Furtado vê você chegar de longe e não faz uma pergunta. Só abre a tampa do tanque de vivo, que é um tanque de peixe de duzentos litros e não de Dewgong, e que não vai caber.',
+    'Ele cabe até a metade. A outra metade fica pra fora, coberta com o cobertor molhado, e o Sr. Furtado vira a proa pra Fuchsia com o motor no talo.',
     'O Dewgong acorda três dias depois num aquário municipal e vive.',
     'E dezenove semanas de gelo continuam exatamente iguais atrás de vocês.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Arrastou um Dewgong por cento e setenta metros de gelo'},
-      hp:-6, causa:'Esforço extremo nas Espuma',
+      hp:-6, causa:'Esforço extremo nas Seafoam',
       flag:'salvou_dewgong',
       moral:10,
-      npc:{nome:'Seu Bento', opiniao:7, memoria:'Te viu arrastar um Dewgong de 120 kg por 170 metros de gelo e não perguntou nada.'},
-      registrar:'Tirou um Dewgong do gelo das Espuma. Ele vive.',
+      npc:{nome:'Sr. Furtado', opiniao:7, memoria:'Te viu arrastar um Dewgong de 120 kg por 170 metros de gelo e não perguntou nada.'},
+      registrar:'Tirou um Dewgong do gelo das Seafoam. Ele vive.',
       presagio:'Um. De uma caverna inteira.'},
   escolhas:[
     {texto:'Voltar à caverna.', vai:'c13_fundo'},
@@ -1167,7 +1168,7 @@ c13_deixou_dewgong:{
 c13_voltou_da_caverna:{
   texto:[
     'Você sai.',
-    'Seu Bento não pergunta nada e a viagem de volta é silenciosa, e o silêncio de três horas num barco de doze pés é uma coisa muito comprida.',
+    'Sr. Furtado não pergunta nada e a viagem de volta é silenciosa, e o silêncio de três horas num barco de doze pés é uma coisa muito comprida.',
     'A três quilômetros da ilha ele desliga o motor e fica olhando pra trás por um tempo.',
     '"Eu vi", ele diz, finalmente.',
     'Pausa longa.',
@@ -1200,7 +1201,7 @@ c13_fundo:{
   ef:{executar:d=>{ Estado.lend(144).encontros++; return []; },
       flag:'achou_articuno',
       instabilidade:1,
-      registrar:'Encontrou Articuno no fundo das Espuma, parado há dezenove semanas.',
+      registrar:'Encontrou Articuno no fundo das Seafoam, parado há dezenove semanas.',
       presagio:'Nenhuma coluna quebrou. Ele teve cuidado com um lugar que ele está destruindo.'},
   escolhas:[
     {texto:'Ficar parado e observar.', vai:'c13_observar_articuno'},
@@ -1305,7 +1306,7 @@ c13_perguntou_articuno:{
   ef:{flag:['entendeu_articuno','sabe_do_barco','sabe_do_segundo'], instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Perguntou a um lendário o que tinha acontecido — e ele respondeu'},
       moral:-10,
-      registrar:'Articuno congelou as Espuma para segurar tudo no lugar enquanto não sabe o que fazer.',
+      registrar:'Articuno congelou as Seafoam para segurar tudo no lugar enquanto não sabe o que fazer.',
       presagio:'Parar tudo foi a única coisa que ele conseguiu pensar. Você já fez isso.'},
   escolhas:[
     {texto:'"Eu sei onde ele está."', vai:'c13_eu_sei_onde', cond:d=>!!d.flags.achou_o_filhote || !!d.flags.sabe_do_dorival},
@@ -1398,7 +1399,7 @@ c13_eu_sei_onde:{
 
 c13_voltar_buscar:{
   texto:[
-    'Você refaz os cento e setenta metros de caverna e os duzentos de gelo e o Seu Bento está exatamente onde disse que estaria, e ele te vê chegando correndo e já está ligando o motor antes de você gritar qualquer coisa.',
+    'Você refaz os cento e setenta metros de caverna e os duzentos de gelo e o Sr. Furtado está exatamente onde disse que estaria, e ele te vê chegando correndo e já está ligando o motor antes de você gritar qualquer coisa.',
     'Três horas de volta.',
     'Você não dorme.',
     'Ele não pergunta nada por duas horas e quarenta e na última meia hora ele pergunta uma coisa só:',
@@ -1408,7 +1409,7 @@ c13_voltar_buscar:{
     'E aumenta o motor, que já estava no máximo, e não adianta nada, e ele aumenta mesmo assim.'
   ],
   ef:{flag:'voltou_buscar',
-      npc:{nome:'Seu Bento', opiniao:6, memoria:'Voltou correndo com você e aumentou o motor que já estava no máximo.'},
+      npc:{nome:'Sr. Furtado', opiniao:6, memoria:'Voltou correndo com você e aumentou o motor que já estava no máximo.'},
       presagio:'Ele aumentou o motor que já estava no máximo. Todo mundo faz isso.'},
   escolhas:[
     {texto:'Ir direto na fábrica de gelo.', vai:'c13_camara_fria', cond:d=>!!d.flags.sabe_da_fabrica || !!d.flags.entrou_na_fabrica},
@@ -1424,7 +1425,7 @@ c13_os_tres:{
   texto:[
     'Vocês vão os três. Quatro, contando quem está na caixa.',
     'O Articuno pequeno viaja num caixote de peixe forrado com a rede dobrada que era a cama dele, com gelo picado por baixo, porque o Dorival descobriu em julho que ele fica mais calmo com frio.',
-    'O barco tem doze pés e agora tem quatro ocupantes e a borda livre é de vinte centímetros, e o Seu Bento vai a meia força as três horas inteiras, e nenhum dos dois velhos reclama de nada.',
+    'O barco tem doze pés e agora tem quatro ocupantes e a borda livre é de vinte centímetros, e o Sr. Furtado vai a meia força as três horas inteiras, e nenhum dos dois velhos reclama de nada.',
     'O Dorival não fala nas três horas.',
     'Na última meia hora, quando a linha reta do gelo aparece no horizonte, ele fala uma frase só, pra ninguém:',
     '"Eu trouxe."',
@@ -1435,7 +1436,7 @@ c13_os_tres:{
       npc:{nome:'Dorival', opiniao:8, memoria:'Foi de barco devolver o Articuno e ensaiou "eu trouxe" a viagem inteira.'},
       rep:{eixo:'bom',delta:5,motivo:'Levou junto quem precisava estar lá'},
       moral:15,
-      registrar:'Foram os três às Espuma com o Articuno pequeno num caixote de peixe.',
+      registrar:'Foram os três às Seafoam com o Articuno pequeno num caixote de peixe.',
       presagio:'Ele está ensaiando. Dezenove semanas ensaiando.'},
   escolhas:[
     {texto:'Entrar na caverna com ele.', vai:'c13_devolveu'},
@@ -1451,13 +1452,13 @@ c13_dorival_sozinho:{
     'Ele olha pra você.',
     '"Sozinho?"',
     '"Sozinho."',
-    'Ele fica um tempo parado com o caixote nos braços, na borda do gelo, com setenta e quatro anos de Seu Bento atrás dele no barco e você do lado.',
+    'Ele fica um tempo parado com o caixote nos braços, na borda do gelo, com setenta e quatro anos de Sr. Furtado atrás dele no barco e você do lado.',
     'E vai.',
     'Você vê ele andando os duzentos metros de gelo com um caixote de peixe nos braços, sozinho, sem lanterna, e ele anda devagar porque ele não quer sacudir.',
     'Some na boca da caverna.',
     'Demora quarenta e três minutos.',
     'E aí a ilha inteira range.',
-    'Não estala: range. Um som baixo e comprido de coisa grande cedendo, e o gelo debaixo dos seus pés vibra, e o Seu Bento engata a ré sem falar nada e afasta o barco quarenta metros.',
+    'Não estala: range. Um som baixo e comprido de coisa grande cedendo, e o gelo debaixo dos seus pés vibra, e o Sr. Furtado engata a ré sem falar nada e afasta o barco quarenta metros.',
     'E o Dorival sai andando da boca da caverna com o caixote vazio nos braços, e ele está chorando de um jeito que gente de cinquenta e oito anos não chora em público, e ele não está tentando esconder.'
   ],
   ef:{flag:['dorival_devolveu','devolveu_o_filhote'],
@@ -1495,7 +1496,7 @@ c13_devolveu:{
       rep:{eixo:'bom',delta:8,motivo:'Devolveu o que tinha sido tirado'},
       moral:30, instabilidade:-2,
       executar:d=>{ const L=Estado.lend(144); L.disposicao='passivo'; L.aliado=true; if(Estado.dados.mundo) Estado.dados.mundo.clima='normal';
-        return [{tipo:'mundo', texto:'O gelo das Espuma começou a ceder. Dezenove semanas de mar vão voltar de uma vez.'}]; },
+        return [{tipo:'mundo', texto:'O gelo das Seafoam começou a ceder. Dezenove semanas de mar vão voltar de uma vez.'}]; },
       registrar:'Devolveu o Articuno pequeno. A caverna começou a ceder.',
       presagio:'"A coisa que filhote faz quando acha que talvez não reconheçam ele." Guarde.'},
   escolhas:[
@@ -1517,13 +1518,13 @@ c13_rocha_alta:{
     'Não tem onda de cinema. Tem uma coisa pior e mais silenciosa: o mar inteiro sobe uns três metros de uma vez, todo ele, ao mesmo tempo, sem quebrar.',
     'Sobe, fica dois segundos, e desce.',
     'E quando desce, a água volta a circular, e o barulho que duzentos quilômetros de mar fazem ao voltar a circular é a coisa mais absurda que você vai ouvir na vida.',
-    'O barco do Seu Bento, que estava a quarenta metros, sobe três metros e desce três metros e continua inteiro, porque ele estava de proa pro mar.',
+    'O barco do Sr. Furtado, que estava a quarenta metros, sobe três metros e desce três metros e continua inteiro, porque ele estava de proa pro mar.',
     'Porque ele sabia.'
   ],
   ef:{flag:['sobreviveu_a_onda','devolveu_o_filhote'],
       rep:{eixo:'bom',delta:6,motivo:'Lembrou do que o velho falou'},
       moral:20, hp:-4, causa:'Escalada de doze metros em quatro minutos',
-      npc:{nome:'Seu Bento', opiniao:10, memoria:'Ficou de proa para o mar a quarenta metros e o barco do pai dele aguentou.'},
+      npc:{nome:'Sr. Furtado', opiniao:10, memoria:'Ficou de proa para o mar a quarenta metros e o barco do pai dele aguentou.'},
       registrar:'O mar subiu três metros de uma vez e desceu. Todos sobreviveram.',
       presagio:'Porque ele sabia. Setenta e quatro anos de saber.'},
   escolhas:[{texto:'Descer da rocha.', vai:'c13_depois_salvou'}]
@@ -1550,7 +1551,7 @@ c13_ficou_e_viu:{
     {texto:'Sair como der.', vai:'c13_depois_salvou'},
     {texto:'Subir pela rocha.', vai:'c13_rocha_alta'},
     {texto:'Nadar até o barco.', vai:'c13_depois_salvou'},
-    {texto:'Gritar pelo Seu Bento.', vai:'c13_depois_salvou'}
+    {texto:'Gritar pelo Sr. Furtado.', vai:'c13_depois_salvou'}
   ]
 },
 
@@ -1563,7 +1564,7 @@ c13_levou_pra_cerulean:{
     'E nas quatro semanas, todo dia, o gelo em Fuchsia avança meio grau por semana, porque ninguém contou nada pra quem está segurando.',
     'Na quinta semana ele abre a asa.',
     'Não voa direito. Abre.',
-    'E aí você faz as doze horas de volta e as três horas de barco, e quando você entra na câmara do fundo das Espuma com ele, você entrega uma coisa melhor do que você tirou — e cinco semanas mais tarde do que dava.'
+    'E aí você faz as doze horas de volta e as três horas de barco, e quando você entra na câmara do fundo das Seafoam com ele, você entrega uma coisa melhor do que você tirou — e cinco semanas mais tarde do que dava.'
   ],
   ef:{flag:['operou_o_filhote','devolveu_o_filhote'],
       rep:{eixo:'bom',delta:6,motivo:'Escolheu a asa em vez da pressa'},
@@ -1574,7 +1575,7 @@ c13_levou_pra_cerulean:{
       presagio:'Cinco semanas de gelo a mais, e uma asa que abre. Não existe resposta certa.'},
   escolhas:[
     {texto:'Ver o gelo ceder.', vai:'c13_depois_salvou'},
-    {texto:'Voltar a Fuchsia com o Seu Bento.', vai:'c13_depois_salvou'},
+    {texto:'Voltar a Fuchsia com o Sr. Furtado.', vai:'c13_depois_salvou'},
     {texto:'Subir na rocha antes.', vai:'c13_rocha_alta', cond:d=>!!d.flags.sabe_da_onda},
     {texto:'Sair rápido.', vai:'c13_depois_salvou'}
   ]
@@ -1582,20 +1583,20 @@ c13_levou_pra_cerulean:{
 
 c13_comboio:{
   texto:[
-    'Onze botes e o barco do Seu Bento saem do cais de Fuchsia às quatro e quarenta da manhã.',
+    'Onze botes e o barco do Sr. Furtado saem do cais de Fuchsia às quatro e quarenta da manhã.',
     'Ninguém combinou de sair junto. Todo mundo saiu junto.',
     'A travessia leva quatro horas em vez de três porque comboio anda na velocidade do mais lento, e ninguém reclama disso uma vez.',
     'Na borda do gelo, doze embarcações param em linha, e dá pra ver de longe que isso não é uma operação — é um cais inteiro que resolveu ir junto porque ninguém queria ser o que ficou.',
     d=>d.flags.dorival_vai || d.flags.bento_e_dorival_juntos ? 'O Dorival vai no bote do meio, com o caixote nos joelhos, e ninguém olha pra ele com raiva, e ninguém olha pra ele com pena, e ele aguenta as duas coisas não acontecerem.' :
        'Você vai no barco da frente com o caixote nos joelhos.',
-    'Quatro homens sobem na rocha alta pra vigiar o mar, porque o Seu Bento mandou.',
-    'Sete ficam nos botes, de proa pro mar, porque o Seu Bento mandou.',
+    'Quatro homens sobem na rocha alta pra vigiar o mar, porque o Sr. Furtado mandou.',
+    'Sete ficam nos botes, de proa pro mar, porque o Sr. Furtado mandou.',
     'E você atravessa os duzentos metros de gelo com doze embarcações olhando as suas costas.'
   ],
   ef:{flag:['foi_de_comboio','mobilizou_gente'],
       rep:{eixo:'bom',delta:6,motivo:'Levou a cidade inteira'},
       moral:20,
-      registrar:'Onze botes e o barco do Seu Bento foram juntos às Espuma.',
+      registrar:'Onze botes e o barco do Sr. Furtado foram juntos às Seafoam.',
       presagio:'Ninguém queria ser o que ficou. É assim que cidade pequena funciona nos dois sentidos.'},
   escolhas:[
     {texto:'Entrar e devolver.', vai:'c13_devolveu'},
@@ -1623,7 +1624,7 @@ c13_levou_o_filhote:{
       presagio:'Ele vai abrir a porta e não vai ter ninguém. Dezenove semanas.'},
   escolhas:[
     {texto:'Voltar e avisar antes de embarcar.', vai:'c13_dorival'},
-    {texto:'Embarcar com o Seu Bento.', vai:'c13_travessia'},
+    {texto:'Embarcar com o Sr. Furtado.', vai:'c13_travessia'},
     {texto:'Deixar um bilhete na porta da câmara.', vai:'c13_bilhete'},
     {texto:'Chamar a Dra. Ivone antes.', vai:'c13_chamou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
@@ -1644,7 +1645,7 @@ c13_bilhete:{
       registrar:'Deixou um bilhete na porta da câmara fria para o Dorival.',
       presagio:'"Não foi culpa sua a asa." Você não sabia se era verdade e escreveu mesmo assim.'},
   escolhas:[
-    {texto:'Embarcar com o Seu Bento.', vai:'c13_travessia'},
+    {texto:'Embarcar com o Sr. Furtado.', vai:'c13_travessia'},
     {texto:'Voltar e falar com ele em pessoa mesmo assim.', vai:'c13_dorival'},
     {texto:'Chamar a Dra. Ivone.', vai:'c13_chamou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Contar no cais antes de sair.', vai:'c13_avisou_a_colonia'}
@@ -1672,7 +1673,7 @@ c13_eu_devolvo:{
   escolhas:[
     {texto:'"Então a gente vai junto."', vai:'c13_juntos'},
     {texto:'"Hoje. Agora."', vai:'c13_juntos'},
-    {texto:'Ir buscar o Seu Bento.', vai:'c13_bento'},
+    {texto:'Ir buscar o Sr. Furtado.', vai:'c13_bento'},
     {texto:'Chamar a Dra. Ivone antes.', vai:'c13_chamou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
@@ -1700,7 +1701,7 @@ c13_juntos:{
       registrar:'Dorival vai devolver o Articuno pessoalmente.',
       presagio:'"Já tá ruim demais pra piorar." É por isso que as pessoas finalmente agem.'},
   escolhas:[
-    {texto:'Buscar o Seu Bento e ir os três.', vai:'c13_os_tres'},
+    {texto:'Buscar o Sr. Furtado e ir os três.', vai:'c13_os_tres'},
     {texto:'Contar no cais antes.', vai:'c13_avisou_a_colonia'},
     {texto:'Chamar a Dra. Ivone antes.', vai:'c13_chamou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir só vocês dois, num bote.', vai:'c13_travessia'}
@@ -1759,7 +1760,7 @@ c13_voce_fez_certo:{
       registrar:'Dorival decidiu ir junto devolver.',
       presagio:'"Você foi as duas coisas." Essa é a frase mais verdadeira que você aprendeu em treze capítulos.'},
   escolhas:[
-    {texto:'Buscar o Seu Bento e ir os três.', vai:'c13_os_tres'},
+    {texto:'Buscar o Sr. Furtado e ir os três.', vai:'c13_os_tres'},
     {texto:'Ir hoje, os dois.', vai:'c13_juntos'},
     {texto:'Chamar a Dra. Ivone antes.', vai:'c13_chamou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Contar no cais antes.', vai:'c13_avisou_a_colonia'}
@@ -1772,19 +1773,19 @@ c13_buscar_ajuda:{
     d=>{
       if (d.flags.cartao_ivone) return 'A Dra. Ivone chega em dois dias com uma equipe de resgate de fauna marinha e equipamento de corte térmico emprestado de uma usina.';
       if (Estado.rep.eixo==='bom' && Estado.rep.bom>=5) return 'Você pede ajuda no cais e — pela primeira vez na jornada — a sua reputação faz o trabalho sozinha: onze pessoas aparecem. Onze, num cais onde ninguém te devia nada.';
-      return 'Você pede ajuda em Fuchsia e duas pessoas aparecem: o Seu Bento e um veterinário aposentado que mora na rua do cais e que foi por curiosidade.';
+      return 'Você pede ajuda em Fuchsia e duas pessoas aparecem: o Sr. Furtado e um veterinário aposentado que mora na rua do cais e que foi por curiosidade.';
     },
     'A operação leva um dia e meio.',
     d=>d.flags.achou_o_filhote || d.flags.sabe_do_dorival
        ? 'E a parte mais difícil não é técnica: é convencer um homem de cinquenta e oito anos a abrir a porta de uma câmara fria na frente de sete pessoas de Fuchsia.'
        : 'E a parte mais difícil é técnica: achar, num galpão da cidade, onde alguém escondeu uma coisa que ninguém sabia que existia.',
-    'Quando acaba, tem gente chorando no gelo e ninguém se envergonha disso, e o Seu Bento é o único que não chora e o único que não tira o olho do horizonte.'
+    'Quando acaba, tem gente chorando no gelo e ninguém se envergonha disso, e o Sr. Furtado é o único que não chora e o único que não tira o olho do horizonte.'
   ],
   ef:{rep:{eixo:'bom',delta:5,motivo:'Mobilizou gente em vez de tentar sozinho'},
       flag:['devolveu_o_filhote','mobilizou_gente'], instabilidade:-2, moral:20,
       executar:d=>{ const L=Estado.lend(144); L.disposicao='passivo'; L.aliado=true; if(Estado.dados.mundo) Estado.dados.mundo.clima='normal'; return []; },
-      npc:{nome:'Seu Bento', opiniao:8, memoria:'Participou do resgate e foi o único que não tirou o olho do horizonte.'},
-      registrar:'Uma equipe devolveu o segundo Articuno. As Espuma começaram a descongelar.',
+      npc:{nome:'Sr. Furtado', opiniao:8, memoria:'Participou do resgate e foi o único que não tirou o olho do horizonte.'},
+      registrar:'Uma equipe devolveu o segundo Articuno. As Seafoam começaram a descongelar.',
       presagio:'Ele não tirou o olho do horizonte. Ele sabia o que ia vir.'},
   escolhas:[
     {texto:'Ver o gelo ceder.', vai:'c13_depois_salvou'},
@@ -1836,7 +1837,7 @@ c13_pos_articuno:{
         if (L.ataquesSofridos>=2){ L.disposicao='hostil'; return [{tipo:'perigo', texto:'Articuno te marcou. O frio vai te seguir.'}]; }
         return [];
       },
-      rep:{eixo:'ruim',delta:1,motivo:'Atacou Articuno nas Espuma'}, instabilidade:1,
+      rep:{eixo:'ruim',delta:1,motivo:'Atacou Articuno nas Seafoam'}, instabilidade:1,
       presagio:'O que sobrou pra você foi o troco. Pensa no que seria o resto.'},
   escolhas:[
     {texto:'Tentar de novo.', vai:'c13_luta_articuno'},
@@ -1904,17 +1905,17 @@ c13_mergulhou:{
     'Dois graus tira o seu ar em quatro segundos — não pelo frio, pelo reflexo: o corpo inspira sozinho quando bate água muito fria no peito, e você tem que lutar contra o próprio corpo pra não respirar embaixo d’água.',
     'Você não acha nada.',
     'Você quase não volta.',
-    'Seu Bento te tira da água na entrada da caverna, sozinho, com setenta e quatro anos, puxando pela alça da mochila e xingando.',
+    'Sr. Furtado te tira da água na entrada da caverna, sozinho, com setenta e quatro anos, puxando pela alça da mochila e xingando.',
     '"Burrice", ele diz, enrolando você no cobertor de lã. "Burrice bonita, mas burrice."',
     'E depois, mais baixo, com você tremendo no fundo do barco:',
     '"Meu filho também fez uma burrice bonita."'
   ],
-  ef:{hp:-14, causa:'Mergulho em água de dois graus nas Espuma',
+  ef:{hp:-14, causa:'Mergulho em água de dois graus nas Seafoam',
       rep:{eixo:'bom',delta:1,motivo:'Arriscou a própria vida tentando consertar o próprio erro'},
       flag:'mergulhou_nas_espuma',
       moral:-10,
-      npc:{nome:'Seu Bento', opiniao:5, memoria:'Te tirou da água gelada sozinho, aos setenta e quatro anos, e falou do filho.'},
-      registrar:'Mergulhou na água de dois graus. Seu Bento te tirou.',
+      npc:{nome:'Sr. Furtado', opiniao:5, memoria:'Te tirou da água gelada sozinho, aos setenta e quatro anos, e falou do filho.'},
+      registrar:'Mergulhou na água de dois graus. Sr. Furtado te tirou.',
       presagio:'"Meu filho também fez uma burrice bonita." Ele nunca tinha dito isso pra ninguém.'},
   escolhas:[
     {texto:'Voltar para Fuchsia.', vai:'c13_fim'},
@@ -1928,24 +1929,24 @@ c13_correu_da_agua:{
   texto:[
     'Você corre.',
     'Cento e setenta metros de caverna desabando com uma bola no bolso e água subindo dez centímetros por minuto.',
-    'Você chega no barco. Seu Bento arranca antes de você sentar direito.',
+    'Você chega no barco. Sr. Furtado arranca antes de você sentar direito.',
     'De cinquenta metros vocês veem a entrada da caverna sumir — não desabar: sumir, porque o mar sobe e tampa.',
     'E aí o mar sobe.',
     'Três metros, todo ele, ao mesmo tempo, sem quebrar.',
-    'O barco de doze pés sobe três metros e desce três metros e continua inteiro porque o Seu Bento virou a proa sem você mandar.',
+    'O barco de doze pés sobe três metros e desce três metros e continua inteiro porque o Sr. Furtado virou a proa sem você mandar.',
     'Ele não pergunta o que tem no seu bolso.',
     'Ele vê o seu rosto e decide não perguntar, e esse é um tipo específico de gentileza que você não merece hoje.'
   ],
   ef:{flag:'saiu_com_articuno',
       hp:-4, causa:'Fuga da caverna desabando',
-      npc:{nome:'Seu Bento', opiniao:2, memoria:'Não perguntou o que você tinha no bolso.'},
+      npc:{nome:'Sr. Furtado', opiniao:2, memoria:'Não perguntou o que você tinha no bolso.'},
       moral:-15,
-      registrar:'Saiu das Espuma com Articuno na bola. O mar subiu três metros.',
+      registrar:'Saiu das Seafoam com Articuno na bola. O mar subiu três metros.',
       presagio:'Ele decidiu não perguntar. Isso não é o mesmo que não saber.'},
   escolhas:[
     {texto:'Soltar ali mesmo, do barco.', vai:'c13_soltou_do_barco'},
     {texto:'Voltar a Fuchsia com ele.', vai:'c13_fim'},
-    {texto:'Contar pro Seu Bento o que você fez.', vai:'c13_contou_pro_bento_o_que_fez'},
+    {texto:'Contar pro Sr. Furtado o que você fez.', vai:'c13_contou_pro_bento_o_que_fez'},
     {texto:'Não dizer nada a viagem inteira.', vai:'c13_fim'}
   ]
 },
@@ -1958,7 +1959,7 @@ c13_soltou_do_barco:{
     'Não voa embora: sobe reto, uns quarenta metros, e fica pairando em cima do ponto.',
     'E o mar em volta de vocês começa a esfriar de novo.',
     'Ele vai recomeçar. Sozinho. Do zero. Com o vazio da parede agora debaixo de duzentos metros de rocha e água.',
-    'Seu Bento olha pra cima e depois olha pra você.',
+    'Sr. Furtado olha pra cima e depois olha pra você.',
     '"Ele vai fazer tudo de novo?"',
     '"Vai."',
     'O velho liga o motor.',
@@ -1970,7 +1971,7 @@ c13_soltou_do_barco:{
         return p ? Captura.soltar(p).map(e=>({tipo:e.tipo,texto:e.texto})) : [];
       },
       rep:{eixo:'bom',delta:3,motivo:'Soltou antes de chegar em terra'},
-      npc:{nome:'Seu Bento', opiniao:6, memoria:'Disse "então a gente tem trabalho" depois que você soltou Articuno de volta no mar.'},
+      npc:{nome:'Sr. Furtado', opiniao:6, memoria:'Disse "então a gente tem trabalho" depois que você soltou Articuno de volta no mar.'},
       moral:10,
       registrar:'Soltou Articuno do barco. Ele voltou a esfriar o mar.',
       presagio:'"Então a gente tem trabalho." Ele falou no plural.'},
@@ -1998,7 +1999,7 @@ c13_contou_pro_bento_o_que_fez:{
     '"Eu não tenho o que devolver. Você tem."'
   ],
   ef:{flag:['bento_te_disse'],
-      npc:{nome:'Seu Bento', opiniao:8, memoria:'Te disse que pensar não adianta nada e devolver adianta, e que ele não tem o que devolver.'},
+      npc:{nome:'Sr. Furtado', opiniao:8, memoria:'Te disse que pensar não adianta nada e devolver adianta, e que ele não tem o que devolver.'},
       rep:{eixo:'bom',delta:3,motivo:'Contou o que fez a quem ia responder com a verdade'},
       moral:10,
       registrar:'"Pensar não adianta nada. Devolver adianta. Eu não tenho o que devolver. Você tem."',
@@ -2018,7 +2019,7 @@ c13_saiu_articuno:{
     d=>d.flags.viu_a_cama || d.flags.sabe_do_segundo
        ? 'Você sabe o que tem lá dentro. Você sabe exatamente o que tem lá dentro — uma cama de algas nunca usada e uma marca de garra gasta na beirada — e está indo embora.'
        : 'Você não sabe o que viu. Sabe que viu, e que era grande, e que estava esperando alguma coisa.',
-    'Seu Bento não pergunta nada.',
+    'Sr. Furtado não pergunta nada.',
     'Ele te vê chegando, olha a sua cara, e começa a soltar a amarra sem falar.'
   ],
   ef:{flag:'saiu_das_espuma', moral:-10},
@@ -2038,7 +2039,7 @@ c13_depois_salvou:{
     'O grande primeiro, devagar, e ele dá duas voltas em cima da ilha antes de subir.',
     'O pequeno depois, carregado, porque ele ainda não voa.',
     d=>d.flags.foram_os_tres || d.flags.dorival_devolveu ? 'O Dorival está sentado no gelo que está virando água, com a bunda molhada, olhando pra cima, e não se mexe até eles sumirem.' : '',
-    'Seu Bento está no barco, de pé, com uma mão na borda, olhando pra cima.',
+    'Sr. Furtado está no barco, de pé, com uma mão na borda, olhando pra cima.',
     'Ele não diz nada por muito tempo.',
     'Depois: "Eu queria ver antes de morrer."',
     'Ele senta.',
@@ -2047,8 +2048,8 @@ c13_depois_salvou:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Devolveu o inverno ao lugar dele'},
       moral:15,
       flag:'viu_os_dois_saindo',
-      npc:{nome:'Seu Bento', opiniao:8, memoria:'Viu os dois Articuno saírem pelo furo do teto. "Agora eu não sei mais o que fazer com o resto."'},
-      registrar:'Os dois Articuno saíram pelo alto. As Espuma descongelaram.',
+      npc:{nome:'Sr. Furtado', opiniao:8, memoria:'Viu os dois Articuno saírem pelo furo do teto. "Agora eu não sei mais o que fazer com o resto."'},
+      registrar:'Os dois Articuno saíram pelo alto. As Seafoam descongelaram.',
       presagio:'"Agora eu não sei mais o que fazer com o resto." Pensa no que responder.'},
   escolhas:[
     {texto:'"Então a gente arruma outra coisa pro senhor ver."', vai:'c13_outra_coisa'},
@@ -2076,10 +2077,10 @@ c13_outra_coisa:{
     '"A gente para em Fuchsia, enche o tanque, e a gente vê."'
   ],
   ef:{flag:['bento_vai_a_cinnabar','tem_barco_pra_cinnabar'],
-      npc:{nome:'Seu Bento', opiniao:10, memoria:'Topou levar você a Cinnabar depois de ver os dois Articuno saírem.'},
+      npc:{nome:'Sr. Furtado', opiniao:10, memoria:'Topou levar você a Cinnabar depois de ver os dois Articuno saírem.'},
       rep:{eixo:'bom',delta:3,motivo:'Deu a um velho uma próxima coisa'},
       moral:20,
-      registrar:'Seu Bento vai te levar a Cinnabar.',
+      registrar:'Sr. Furtado vai te levar a Cinnabar.',
       presagio:'"A gente vê." Ele falou no plural de novo.'},
   escolhas:[{texto:'Voltar a Fuchsia.', vai:'c13_fim'}]
 },
@@ -2094,7 +2095,7 @@ c13_fim:{
     },
     d=>{
       if (d.flags.devolveu_o_filhote && d.flags.avisou_a_colonia) return 'Na terça seguinte, trinta e nove barcos saem do cais de Fuchsia ao mesmo tempo, às quatro da manhã, e o barulho de trinta e nove motores de popa ligando junto é uma coisa que a cidade não ouvia desde junho.';
-      if (d.flags.devolveu_o_filhote) return 'Na semana seguinte a pesca volta. Ninguém liga uma coisa à outra — ninguém sabe. Só você, o Seu Bento, o Dorival e dois Articuno.';
+      if (d.flags.devolveu_o_filhote) return 'Na semana seguinte a pesca volta. Ninguém liga uma coisa à outra — ninguém sabe. Só você, o Sr. Furtado, o Dorival e dois Articuno.';
       if (d.flags.capturou_articuno) return 'A colônia contrata outro oceanógrafo pra explicar o descongelamento súbito. Ele cobra doze mil e escreve "origem indeterminada".';
       return 'Trezentas e onze famílias continuam sem renda, e o seguro-defeso continua não cobrindo, porque isso não é defeso.';
     },

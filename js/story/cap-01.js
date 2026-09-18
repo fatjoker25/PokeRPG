@@ -192,7 +192,7 @@ c1_rua:{
     'Um velho varre a calçada da própria casa, como faz há vinte anos. Ele para quando você passa.',
     '"Ei. Você." Ele aponta a vassoura, sem hostilidade nenhuma. "Você me deve uma."'
   ],
-  ef:{npc:{nome:'Seu Rufino', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
+  ef:{npc:{nome:'Sr. Rufino', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
   escolhas:[
     {texto:'"Eu sei. A janela." Encarar o assunto.', vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
     {texto:'"Deve nada, seu Rufino." Fingir que esqueceu.', vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
@@ -211,7 +211,7 @@ c1_divida_assume:{
   ],
   ef:{itens:{'Great Ball':2,'Super Potion':1},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida antiga no dia em que podia simplesmente ir embora'},
-      npc:{nome:'Seu Rufino', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
+      npc:{nome:'Sr. Rufino', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
   escolhas:[{texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'}]
 },
 
@@ -222,7 +222,7 @@ c1_divida_nega:{
     'Ele não vai esquecer. Gente que varre a mesma calçada há vinte anos não esquece nada — e essa cidade é pequena, e você vai voltar um dia.'
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
-      npc:{nome:'Seu Rufino', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
+      npc:{nome:'Sr. Rufino', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
   escolhas:[{texto:'Seguir em frente.', vai:'c1_saida_pro_centro'}]
 },
 
@@ -233,7 +233,7 @@ c1_divida_paga:{
     'Ele pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.',
     'Você resolveu um problema e criou um assunto.'
   ],
-  ef:{dinheiro:-800, npc:{nome:'Seu Rufino', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
+  ef:{dinheiro:-800, npc:{nome:'Sr. Rufino', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
   escolhas:[{texto:'Seguir.', vai:'c1_saida_pro_centro'}]
 },
 
@@ -245,7 +245,7 @@ c1_divida_adiada:{
     '"Tá anotado." Ele bate duas vezes na testa. "Aqui."'
   ],
   ef:{flag:'divida_pendente',
-      npc:{nome:'Seu Rufino', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
+      npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
   escolhas:[{texto:'Seguir.', vai:'c1_saida_pro_centro'}]
 },

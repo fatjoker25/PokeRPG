@@ -89,7 +89,7 @@ c12_manejo_padaria:{
 
 c12_marido:{
   texto:[
-    'O marido dela se chama Seu Vandir e está na sala dos fundos da padaria assistindo televisão às três da tarde, porque se aposentou da reserva faz quatro anos e não sabe o que fazer com o dia.',
+    'O marido dela se chama Vandir Peixoto — Sr. Peixoto, como a cidade inteira o trata — e está na sala dos fundos da padaria assistindo televisão às três da tarde, porque se aposentou da reserva faz quatro anos e não sabe o que fazer com o dia.',
     'Ele desliga a televisão sozinho quando você pergunta, o que já é resposta.',
     '"Dezesseis anos. Eu era da equipe de captura."',
     '"Captura de quê?"',
@@ -103,7 +103,7 @@ c12_marido:{
     '"Só que a planilha é de mil novecentos e setenta e um."'
   ],
   ef:{flag:['sabe_do_censo','sabe_da_planilha_71'],
-      npc:{nome:'Seu Vandir', opiniao:3, memoria:'Dezesseis anos na equipe de captura da Zona. Desligou a televisão sozinho quando você perguntou.'},
+      npc:{nome:'Sr. Peixoto', opiniao:3, memoria:'Dezesseis anos na equipe de captura da Zona. Desligou a televisão sozinho quando você perguntou.'},
       rep:{eixo:'bom',delta:3,motivo:'Achou quem fazia a captura e perguntou como a conta era feita'},
       registrar:'A capacidade de suporte da Zona Safári é calculada por uma planilha de 1971.',
       presagio:'Uma planilha de mil novecentos e setenta e um. Ninguém refez a conta em trinta anos.'},
@@ -129,13 +129,13 @@ c12_planilha_errada:{
     '"Não." Você fala devagar, porque você mesmo está entendendo enquanto fala. "A conta tá dizendo que cabe menos. Se a planilha é de uma área maior e a área encolheu, a densidade real ficou maior que a planilha prevê. Aí todo ano a planilha acusa excedente."',
     '"Todo ano."',
     '"Todo ano."',
-    'Seu Vandir fica muito quieto.',
+    'Sr. Peixoto fica muito quieto.',
     '"Dezesseis anos, moço."'
   ],
   ef:{flag:['entendeu_a_conta','sabe_da_planilha_71'],
       rep:{eixo:'bom',delta:5,motivo:'Desmontou trinta anos de política pública num fundo de padaria'},
       moral:-10, instabilidade:1,
-      npc:{nome:'Seu Vandir', opiniao:5, memoria:'Descobriu com você que a planilha que justificou dezesseis anos de captura estava errada desde 1985.'},
+      npc:{nome:'Sr. Peixoto', opiniao:5, memoria:'Descobriu com você que a planilha que justificou dezesseis anos de captura estava errada desde 1985.'},
       registrar:'A cerca recuou em 1985 e a planilha de 1971 nunca foi refeita: o "excedente" é um erro de cálculo.',
       presagio:'Todo ano acusa excedente. Todo ano. Não tem vilão nessa conta.'},
   escolhas:[
@@ -235,10 +235,10 @@ c12_vandir_soltura:{
     '"E eu tô com a hérnia, e eu dirijo."'
   ],
   ef:{flag:['vandir_dirige','tem_quem_leve'],
-      npc:{nome:'Seu Vandir', opiniao:8, memoria:'Se ofereceu para dirigir o caminhão de soltura, com hérnia e sessenta e sete anos.'},
+      npc:{nome:'Sr. Peixoto', opiniao:8, memoria:'Se ofereceu para dirigir o caminhão de soltura, com hérnia e sessenta e sete anos.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a coisa certa ao homem certo'},
       moral:15,
-      registrar:'Seu Vandir dirige o caminhão de soltura se você conseguir abrir o setor 7.',
+      registrar:'Sr. Peixoto dirige o caminhão de soltura se você conseguir abrir o setor 7.',
       presagio:'Ele tem o mapa na cabeça. Guarde — isso muda o final desse capítulo.'},
   escolhas:[
     {texto:'"Então me ajuda a abrir."', vai:'c12_vandir_setor7'},
@@ -1351,7 +1351,7 @@ c12_suspende:{
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'"E se eu abrir o curral hoje?"', vai:'c12_se_eu_abrir'},
     {texto:'Ir falar com o Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Ir falar com o Seu Vandir sobre a soltura.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
+    {texto:'Ir falar com o Sr. Peixoto sobre a soltura.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
   ]
 },
 
@@ -1366,7 +1366,7 @@ c12_se_eu_abrir:{
     'Pausa.',
     '"E eu comunico o receptor por ofício postado, que leva de três a cinco dias úteis, porque comunicação a terceiro credenciado é por ofício postado, conforme o regulamento interno que eu mesmo escrevi em noventa e quatro."',
     'Ele olha a janela.',
-    '"E a segurança patrimonial é uma empresa contratada que atende das dezoito às seis, e hoje é terça, e na terça a escala é de um vigia só, e o vigia da terça é o Seu Jorge que tem setenta e um anos e uma catarata."',
+    '"E a segurança patrimonial é uma empresa contratada que atende das dezoito às seis, e hoje é terça, e na terça a escala é de um vigia só, e o vigia da terça é o Sr. Tavares que tem setenta e um anos e uma catarata."',
     'Ele volta a olhar pra você.',
     '"Eu não te disse nada disso."'
   ],
@@ -1378,7 +1378,7 @@ c12_se_eu_abrir:{
       presagio:'"Eu não te disse nada disso." Ele passou trinta e um anos aprendendo esses prazos.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Chamar o Seu Vandir para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
+    {texto:'Chamar o Sr. Peixoto para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Chamar o Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Chamar a Dra. Yara.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
   ]
@@ -1667,7 +1667,7 @@ c12_ja_abriram:{
     {texto:'"Então eu preciso de caminhão."', vai:'c12_precisa_de_caminhao'},
     {texto:'"Algum de vocês me leva lá?"', vai:'c12_guarda_leva'},
     {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'},
-    {texto:'Ir procurar o Seu Vandir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
+    {texto:'Ir procurar o Sr. Peixoto.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
   ]
 },
 
@@ -1691,7 +1691,7 @@ c12_precisa_de_caminhao:{
       registrar:'A reserva tem dois caminhões de soltura parados desde 2000, no galpão de máquinas.',
       presagio:'"Meu cunhado tem oficina." É assim que as coisas acontecem de verdade.'},
   escolhas:[
-    {texto:'Chamar o Seu Vandir para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
+    {texto:'Chamar o Sr. Peixoto para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Ir ao setor 7 hoje à noite com eles.', vai:'c12_guarda_leva'},
     {texto:'Falar com o diretor sobre os caminhões.', vai:'c12_diretor'},
     {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'}
@@ -1867,7 +1867,7 @@ c12_setor7:{
 c12_plantao:{
   texto:[
     'O plantão é um homem só, de setenta e um anos, numa cadeira de plástico encostada no contêiner de ferramentas, com um rádio ligado numa estação de Fuchsia e um copo de café.',
-    'Seu Jorge.',
+    'Sr. Tavares.',
     'Ele tem catarata num olho e uma lanterna que ele não usa porque ele conhece o terreno melhor com o pé do que com a luz.',
     'Ele te vê a uns quinze metros — porque ele te ouve antes de ver — e não levanta.',
     '"Boa noite."',
@@ -1877,7 +1877,7 @@ c12_plantao:{
     '"Senta aí que a cadeira tem duas."'
   ],
   ef:{flag:'conheceu_seu_jorge',
-      npc:{nome:'Seu Jorge', opiniao:1, memoria:'Vigia do setor 7, setenta e um anos, catarata, te convidou para sentar.'},
+      npc:{nome:'Sr. Tavares', opiniao:1, memoria:'Vigia do setor 7, setenta e um anos, catarata, te convidou para sentar.'},
       presagio:'"A cadeira tem duas." Ele deixou a segunda cadeira ali de propósito.'},
   escolhas:[
     {texto:'Sentar.', vai:'c12_conversa_plantao'},
@@ -1907,10 +1907,10 @@ c12_duas_cadeiras:{
     '"Metade não voltou."'
   ],
   ef:{flag:['sabe_do_beto','jorge_conversou'],
-      npc:{nome:'Seu Jorge', opiniao:5, memoria:'Te ofereceu café e contou que metade dos que o Beto soltou em 1999 não voltou.'},
+      npc:{nome:'Sr. Tavares', opiniao:5, memoria:'Te ofereceu café e contou que metade dos que o Beto soltou em 1999 não voltou.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou em vez de agir'},
       moral:8,
-      registrar:'Seu Jorge: em 1999 metade dos soltos não voltou. Metade conseguiu.',
+      registrar:'Sr. Tavares: em 1999 metade dos soltos não voltou. Metade conseguiu.',
       presagio:'Metade não voltou. Ele guardou essa metade por onze anos numa cadeira de plástico.'},
   escolhas:[
     {texto:'"Me ajuda a abrir."', vai:'c12_jorge_ajuda'},
@@ -1937,10 +1937,10 @@ c12_conversa_plantao:{
     '"Eles." Ele aponta o curral com o queixo. "Sair e voltar em três dias com fome é uma coisa que quebra bicho por dentro, moço. Eu já vi. O bicho que saiu e voltou não é o mesmo."'
   ],
   ef:{flag:['jorge_conversou','sabe_que_precisa_levar'],
-      npc:{nome:'Seu Jorge', opiniao:4, memoria:'Passou quarenta minutos conversando com você sobre time e preço de gás antes de falar do curral.'},
+      npc:{nome:'Sr. Tavares', opiniao:4, memoria:'Passou quarenta minutos conversando com você sobre time e preço de gás antes de falar do curral.'},
       rep:{eixo:'bom',delta:3,motivo:'Sentou e ouviu antes de agir'},
       moral:5,
-      registrar:'Seu Jorge: abrir sem ter para onde levar quebra os bichos por dentro.',
+      registrar:'Sr. Tavares: abrir sem ter para onde levar quebra os bichos por dentro.',
       presagio:'"O bicho que saiu e voltou não é o mesmo." Ele viu isso em noventa e nove.'},
   escolhas:[
     {texto:'"Então me ajuda a arrumar pra onde levar."', vai:'c12_jorge_ajuda'},
@@ -1967,14 +1967,14 @@ c12_jorge_ajuda:{
   ],
   ef:{flag:['jorge_ajuda','tem_a_chave_dos_caminhoes'],
       itens:{'Chave do galpão de máquinas':1},
-      npc:{nome:'Seu Jorge', opiniao:9, memoria:'Assinou a retirada da chave do galpão de máquinas para você, em nome dele.'},
+      npc:{nome:'Sr. Tavares', opiniao:9, memoria:'Assinou a retirada da chave do galpão de máquinas para você, em nome dele.'},
       rep:{eixo:'bom',delta:6,motivo:'Um vigia de setenta e um anos assinou o próprio nome por você'},
       moral:15,
-      registrar:'Seu Jorge retirou, em nome dele, a chave do galpão dos caminhões de soltura.',
+      registrar:'Sr. Tavares retirou, em nome dele, a chave do galpão dos caminhões de soltura.',
       presagio:'Ele assinou o próprio nome. Onze anos naquela cadeira e ele assinou o próprio nome.'},
   escolhas:[
     {texto:'Buscar os caminhões e organizar a soltura.', vai:'c12_soltura_organizada'},
-    {texto:'Chamar o Seu Vandir para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
+    {texto:'Chamar o Sr. Peixoto para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Chamar os guardas do bar.', vai:'c12_bar'},
     {texto:'Abrir agora e resolver o transporte depois.', vai:'c12_abriu_curral'}
   ]
@@ -1982,7 +1982,7 @@ c12_jorge_ajuda:{
 
 c12_amarrou:{
   texto:[
-    'Você amarra o Seu Jorge na cadeira de plástico com a corda do contêiner de ferramentas.',
+    'Você amarra o Sr. Tavares na cadeira de plástico com a corda do contêiner de ferramentas.',
     'Ele não resiste. Ele tem setenta e um anos e uma perna ruim e ele te avisou disso quinze metros atrás.',
     'Enquanto você amarra, ele fala, com a voz normal:',
     '"Aperta mais o pulso, moço."',
@@ -1993,7 +1993,7 @@ c12_amarrou:{
     'E essa é a coisa mais difícil que aconteceu com você em Fuchsia.'
   ],
   ef:{flag:'amarrou_o_jorge',
-      npc:{nome:'Seu Jorge', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
+      npc:{nome:'Sr. Tavares', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
       rep:{eixo:'ruim',delta:1,motivo:'Amarrou um velho numa cadeira'},
       moral:-10,
       registrar:'Amarrou o vigia — que pediu para apertar mais, para não ser demitido.',
@@ -2012,10 +2012,10 @@ c12_soltura_organizada:{
   texto:[
     'Leva quatro horas.',
     'Não é uma cena de ação. É uma operação logística feita por gente cansada de madrugada, e é a coisa mais bonita desse capítulo exatamente por isso.',
-    'O galpão de máquinas abre com a chave que o Seu Jorge assinou. Os dois caminhões de soltura estão lá, com pneu vazio e bateria morta e poeira de dois anos.',
+    'O galpão de máquinas abre com a chave que o Sr. Tavares assinou. Os dois caminhões de soltura estão lá, com pneu vazio e bateria morta e poeira de dois anos.',
     d=>d.flags.plano_de_soltura ? 'O cunhado do guarda mais novo chega às duas e vinte da manhã com uma caminhonete, duas baterias e um compressor, e não pergunta nada, e a única coisa que ele diz a noite inteira é "cabe mais dois de cada lado se você virar o de cima".' :
        'Você e quem estiver com você trocam a bateria de um deles com a bateria do gerador da obra, que é a única bateria de doze volts num raio de dez quilômetros.',
-    d=>d.flags.vandir_dirige ? 'O Seu Vandir chega às três com uma camisa social e um mapa na cabeça, e ele dirige o primeiro caminhão, com hérnia e sessenta e sete anos, e ele não erra uma curva.' :
+    d=>d.flags.vandir_dirige ? 'O Sr. Peixoto chega às três com uma camisa social e um mapa na cabeça, e ele dirige o primeiro caminhão, com hérnia e sessenta e sete anos, e ele não erra uma curva.' :
        'Você dirige devagar e mal, e a estrada de serviço ajuda.',
     d=>d.flags.tem_os_vinculos ? 'E você tem doze folhas de caderno escritas por um peão que não escreve bem, e por causa dessas doze folhas o embarque é feito por grupo familiar, e o de orelha rasgada vai no mesmo caminhão que a que manca da pata de trás.' :
        'E o embarque é feito por espécie, porque é o único critério que vocês têm.',
@@ -2031,7 +2031,7 @@ c12_soltura_organizada:{
       registrar:'Esvaziou o setor 7: 87 soltos a 42 km, por grupo familiar, em caminhão de soltura da própria reserva.',
       presagio:'Ninguém volta por fome a quarenta e dois quilômetros. Foi isso que faltou em noventa e nove.'},
   escolhas:[
-    {texto:'Voltar e devolver as chaves ao Seu Jorge.', vai:'c12_devolveu_a_chave'},
+    {texto:'Voltar e devolver as chaves ao Sr. Tavares.', vai:'c12_devolveu_a_chave'},
     {texto:'Ir direto ao diretor, de manhã, sem dormir.', vai:'c12_diretor'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Sair de Fuchsia antes de amanhecer de vez.', vai:'c12_fim'}
@@ -2040,7 +2040,7 @@ c12_soltura_organizada:{
 
 c12_devolveu_a_chave:{
   texto:[
-    'Você volta ao posto de vigilância às sete e dez da manhã, quando o turno do Seu Jorge já acabou, e ele ainda está lá porque ele não foi embora.',
+    'Você volta ao posto de vigilância às sete e dez da manhã, quando o turno do Sr. Tavares já acabou, e ele ainda está lá porque ele não foi embora.',
     'Você devolve a chave.',
     'Ele assina a devolução no livro, com data e hora, em letra de quem assina livro há onze anos.',
     'Depois ele fecha o livro e olha o curral vazio por um tempo longo.',
@@ -2054,10 +2054,10 @@ c12_devolveu_a_chave:{
     '"Agora eu sei."'
   ],
   ef:{flag:'jorge_demitido',
-      npc:{nome:'Seu Jorge', opiniao:10, memoria:'Assinou a devolução da chave às 7h10 e disse que agora sabe o que fazer com o dia.'},
+      npc:{nome:'Sr. Tavares', opiniao:10, memoria:'Assinou a devolução da chave às 7h10 e disse que agora sabe o que fazer com o dia.'},
       rep:{eixo:'bom',delta:4,motivo:'Voltou para devolver a chave e encarar quem pagou a conta'},
       moral:20,
-      registrar:'Seu Jorge devolveu a chave no livro e sabe que vai ser demitido.',
+      registrar:'Sr. Tavares devolveu a chave no livro e sabe que vai ser demitido.',
       presagio:'"Agora eu sei." Ele esperou onze anos numa cadeira de plástico por essa frase.'},
   escolhas:[
     {texto:'Ir ao diretor.', vai:'c12_diretor'},
@@ -2076,7 +2076,7 @@ c12_abriu_curral:{
     'Oitenta e sete atravessam três hectares de clareira iluminada por refletor de obra e somem no mato em menos de quatro minutos.',
     'E o silêncio depois é absurdo.',
     d=>d.flags.sabe_que_voltam || d.flags.jorge_conversou
-      ? 'E você fica parado no meio do curral vazio sabendo o que o Seu Jorge te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
+      ? 'E você fica parado no meio do curral vazio sabendo o que o Sr. Tavares te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
       : 'Você fica parado no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
     d=>d.flags.sabe_do_beto ? 'Em noventa e nove um guarda chamado Beto fez exatamente isso, sozinho, às três da manhã. Metade voltou.' : ''
   ],
@@ -2096,10 +2096,10 @@ c12_abriu_curral:{
 c12_tres_dias:{
   texto:[
     'Você tem três dias e usa os três.',
-    'Dia um: você acorda a cidade. Literalmente — você bate na porta do Seu Vandir às seis da manhã, na da Dra. Yara às sete, na do bar dos guardas ao meio-dia quando abre.',
+    'Dia um: você acorda a cidade. Literalmente — você bate na porta do Sr. Peixoto às seis da manhã, na da Dra. Yara às sete, na do bar dos guardas ao meio-dia quando abre.',
     'Dia dois: os dois caminhões de soltura saem do galpão de máquinas com bateria nova e pneu calibrado, e o cunhado do guarda mais novo cobra o conserto e depois não aceita o dinheiro.',
     'Dia três: vocês voltam ao setor 7 e o curral tem trinta e um dentro.',
-    'Trinta e um voltaram por fome, em três dias, exatamente como o Seu Jorge disse.',
+    'Trinta e um voltaram por fome, em três dias, exatamente como o Sr. Tavares disse.',
     'E vocês embarcam os trinta e um e levam a quarenta e dois quilômetros, e não é uma vitória, é uma correção.',
     'Os outros cinquenta e seis ninguém sabe.',
     d=>d.flags.tem_os_vinculos ? 'E nas doze folhas de caderno do peão você confere: dos trinta e um que voltaram, dezenove eram filhotes.' : ''
@@ -2258,7 +2258,7 @@ c12_ficou_pra_reuniao:{
       presagio:'Quatro a três. Uma pessoa saiu da sala e voltou, e essa pessoa decidiu.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c12_fim'},
-    {texto:'Ir agradecer ao Seu Jorge.', vai:'c12_devolveu_a_chave'},
+    {texto:'Ir agradecer ao Sr. Tavares.', vai:'c12_devolveu_a_chave'},
     {texto:'Ir agradecer à Dra. Yara.', vai:'c12_yara'},
     {texto:'Desafiar o ginásio antes de ir.', vai:'c12_desafio_koga'}
   ]
@@ -2350,7 +2350,7 @@ c12_barreira:{
     {texto:'Seguir viagem.', vai:'c12_fim'},
     {texto:'Ficar para a reunião do conselho.', vai:'c12_ficou_pra_reuniao', cond:d=>!!d.flags.koga_convoca || !!d.flags.koga_descredencia},
     {texto:'Contar pro Nico.', vai:'c12_nico', cond:d=>!!d.flags.nico_falou},
-    {texto:'Contar pro Seu Jorge.', vai:'c12_devolveu_a_chave', cond:d=>!!d.flags.conheceu_seu_jorge}
+    {texto:'Contar pro Sr. Tavares.', vai:'c12_devolveu_a_chave', cond:d=>!!d.flags.conheceu_seu_jorge}
   ]
 },
 
@@ -2501,7 +2501,7 @@ c12_fim:{
     'É lindo.',
     'Isso é o que ninguém te prepara pra sentir: é lindo, é bem cuidado, é a maior área protegida de Kanto, e nada disso é mentira.',
     'A próxima coisa no seu mapa é o mar.',
-    'Ao sul de Fuchsia tem um arquipélago de quatro ilhas de rocha vulcânica que os pescadores chamam de Ilhas Espuma, e onde, segundo eles, a água de dentro da caverna está três graus mais fria do que deveria — e está ficando mais fria todo ano.'
+    'Ao sul de Fuchsia tem um arquipélago de quatro ilhas de rocha vulcânica que os pescadores chamam de Ilhas Seafoam, e onde, segundo eles, a água de dentro da caverna está três graus mais fria do que deveria — e está ficando mais fria todo ano.'
   ],
   fim:true, resumo:'Capítulo 12 concluído — a Zona Safári te ensinou que a conta errada mata mais que o crime.'
 

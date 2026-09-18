@@ -617,7 +617,7 @@ c11_terceirizado:{
     '"O subsolo quatro a gente não limpa."'
   ],
   ef:{flag:['achou_as_terceirizadas','sabe_do_cracha_verde'],
-      npc:{nome:'Dona Cida (Limptotal)', opiniao:1, memoria:'Faxineira terceirizada da Silph; te disse que o subsolo 4 não é limpo por elas.'},
+      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:1, memoria:'Faxineira terceirizada da Silph; te disse que o subsolo 4 não é limpo por elas.'},
       rep:{eixo:'bom',delta:3,motivo:'Procurou quem tem acesso em vez de quem tem cargo'},
       registrar:'As terceirizadas da limpeza têm crachá verde que abre tudo — menos o subsolo 4.',
       presagio:'O crachá verde abre tudo. E o subsolo 4 é o único lugar que elas não limpam.'},
@@ -645,7 +645,7 @@ c11_quem_limpa:{
   ef:{flag:['sabe_do_saco_branco','sabe_do_residuo'],
       moral:-8,
       rep:{eixo:'bom',delta:2,motivo:'Continuou perguntando pra quem sabia'},
-      npc:{nome:'Dona Cida (Limptotal)', opiniao:4, memoria:'Te explicou o que é saco branco de resíduo infectante e o que ele quer dizer.'},
+      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:4, memoria:'Te explicou o que é saco branco de resíduo infectante e o que ele quer dizer.'},
       registrar:'No subsolo 4 os próprios cientistas limpam, com desinfetante de hospital e saco de resíduo infectante.',
       presagio:'Resíduo infectante, toda sexta de manhã. Alguma coisa produz resíduo lá embaixo, semanalmente.'},
   escolhas:[
@@ -703,9 +703,9 @@ c11_cida_topou:{
   ],
   ef:{flag:['tem_cracha_verde','dentro_da_silph'],
       itens:{'Crachá verde (Limptotal)':1},
-      npc:{nome:'Dona Cida (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
+      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém arriscou a aposentadoria por você'},
-      registrar:'Dona Cida te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
+      registrar:'Sra. Lemos te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
       presagio:'"De alguém abrindo por dentro." Anota — essa é a solução do capítulo.'},
   escolhas:[
     {texto:'Entrar pela recepção com o crachá verde.', vai:'c11_recepcao'},
@@ -725,7 +725,7 @@ c11_cida_meio:{
     'Ela vai embora sem olhar pra trás, e no fim da rua levanta a mão, sem virar, como quem se despede de alguém que não está olhando.'
   ],
   ef:{flag:['sabe_da_porta_encostada','dentro_da_silph'],
-      npc:{nome:'Dona Cida (Limptotal)', opiniao:3, memoria:'Não emprestou o crachá, mas te contou da porta de serviço encostada na sexta de manhã.'},
+      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:3, memoria:'Não emprestou o crachá, mas te contou da porta de serviço encostada na sexta de manhã.'},
       registrar:'A porta de serviço da Silph fica encostada das 6h10 às 6h50 nas sextas.',
       presagio:'Ela não falou nada. E levantou a mão sem virar.'},
   escolhas:[
@@ -744,7 +744,7 @@ c11_cida_nao:{
     'E vai embora, e você fica na esquina às seis e vinte da manhã com absolutamente nenhum direito de achar isso injusto.'
   ],
   ef:{flag:'cida_recusou',
-      npc:{nome:'Dona Cida (Limptotal)', opiniao:0, memoria:'Recusou emprestar o crachá. Faltavam quatorze meses para a aposentadoria dela.'},
+      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:0, memoria:'Recusou emprestar o crachá. Faltavam quatorze meses para a aposentadoria dela.'},
       presagio:'Ela criou três filhos com aquele crachá. Você ia trocar isso por uma noite.'},
   escolhas:[
     {texto:'Ir pra doca de carga.', vai:'c11_doca'},
@@ -1081,7 +1081,7 @@ c11_recepcao:{
       if (d.flags.entrou_com_marina) return 'Marina já te passou. Você está do lado de dentro, com um crachá de visitante e uns quinze minutos de plausibilidade antes de alguém perguntar com quem você tem reunião.';
       if (d.flags.tem_credencial_de_verificacao) return 'Você tem uma credencial de técnico auxiliar de verificação física de lote, emitida pelo nono andar, válida, no sistema. A catraca abre sem hesitar e o segurança do fundo nem levanta a cabeça.';
       if (d.flags.tem_cracha_visitante) return 'O crachá que veio no envelope tem o chip gravado e a catraca não sabe a diferença entre um crachá gravado por um funcionário e um crachá gravado pela recepção.';
-      if (d.flags.tem_cracha_verde) return 'O crachá verde da Dona Cida abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
+      if (d.flags.tem_cracha_verde) return 'O crachá verde da Sra. Lemos abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
       if (d.flags.crachas_sabrina) return 'O crachá do zelador é vencido faz três anos, mas a catraca da Silph lê o chip, não a data. Ela abre.';
       if (d.flags.cracha_roubado) return 'O crachá reserva da Marina abre a catraca no primeiro toque.';
       return 'Você não tem crachá. A recepcionista sorri com o sorriso cronometrado e pergunta com quem você tem hora marcada.';
@@ -1197,7 +1197,7 @@ c11_expulso:{
 c11_porta_de_servico:{
   texto:[
     'Sexta-feira, seis e dez da manhã.',
-    'A porta de serviço está encostada, do jeito que a Dona Cida disse, calçada com um pedaço de papelão dobrado porque o trinco é duro e ninguém quer ficar destrancando.',
+    'A porta de serviço está encostada, do jeito que a Sra. Lemos disse, calçada com um pedaço de papelão dobrado porque o trinco é duro e ninguém quer ficar destrancando.',
     'Do lado de dentro é um corredor de piso sem acabamento, com carrinho de limpeza encostado, cheiro de desinfetante de pinho, e uma escala de turno colada na parede com fita crepe.',
     'Ninguém olha pra você. Ninguém olha pra ninguém às seis e dez da manhã.',
     'Você atravessa o corredor inteiro e sai numa área de serviço com três portas: elevador de carga, escada de incêndio e uma porta com placa de **CENTRAL TÉCNICA**.'

@@ -69,12 +69,12 @@ c14_barco_fretado:{
     '"Isso é tinta de casco de fretado de Vermilion. Aqui a gente usa tinta cinza, que é mais barata e aguenta mais enxofre."',
     '"E tem registro de atracação?"',
     'Ele ri.',
-    '"Registro? Moço, aqui não tem capitania. Tem o Zé do guincho, que anota quem usa o guincho porque ele cobra por uso."',
+    '"Registro? Moço, aqui não tem capitania. Tem o Sr. Nagai, que anota quem usa o guincho porque ele cobra por uso."',
     'Ele aponta um caderno pendurado num prego na parede do barracão do guincho.',
     'Um caderno espiral, pendurado num prego, com um lápis amarrado num barbante.',
     'Você folheia até sábado passado.',
     '**"sáb 14 — fretado azul — 2 pessoas — 40 min — pagou"**',
-    'E embaixo, na mesma linha, na letra do Zé do guincho:',
+    'E embaixo, na mesma linha, na letra do Sr. Nagai:',
     '**"levaram 4 caixa de papelão"**'
   ],
   ef:{flag:['sabe_das_quatro_caixas','provas_cinnabar'],
@@ -95,7 +95,7 @@ c14_quantas_ficaram:{
     'O homem do bar franze a testa.',
     '"Como assim ficaram? Eles levaram quatro."',
     '"Eu sei. Quantas tinha no total?"',
-    'E aí o Zé do guincho, que estava ouvindo encostado no barracão sem participar, fala pela primeira vez.',
+    'E aí o Sr. Nagai, que estava ouvindo encostado no barracão sem participar, fala pela primeira vez.',
     '"Nove."',
     'Os dois olham pra ele.',
     '"Nove", ele repete. "Eu sei porque em noventa e seis eu carreguei as nove no guincho. Quatro foram pro fretado e cinco voltaram pro prédio."',
@@ -105,7 +105,7 @@ c14_quantas_ficaram:{
     '"E agora voltaram pra buscar as cinco e não acharam, e aí botaram fogo."'
   ],
   ef:{flag:['sabe_das_nove_caixas','sabe_das_cinco'],
-      npc:{nome:'Zé do guincho', opiniao:3, memoria:'Carregou as nove caixas em 1996. Quatro foram embora, cinco voltaram para o prédio.'},
+      npc:{nome:'Sr. Nagai', opiniao:3, memoria:'Carregou as nove caixas em 1996. Quatro foram embora, cinco voltaram para o prédio.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou quantas eram no total'},
       instabilidade:1,
       registrar:'Em 1996 saíram quatro das nove caixas. As cinco restantes não foram achadas no sábado, e o prédio foi incendiado.',
@@ -122,7 +122,7 @@ c14_quem_escondeu:{
   texto:[
     '"Quem escondeu as cinco?"',
     'Os dois ficam quietos.',
-    'E aí o Zé do guincho fala uma coisa e você percebe que ele já tinha decidido falar isso antes de você chegar na ilha, e que ele está esperando alguém perguntar faz quatro anos:',
+    'E aí o Sr. Nagai fala uma coisa e você percebe que ele já tinha decidido falar isso antes de você chegar na ilha, e que ele está esperando alguém perguntar faz quatro anos:',
     '"Em noventa e seis, quando as cinco voltaram do guincho pro prédio, eu levei elas num carrinho até a porta do subsolo."',
     '"E?"',
     '"E o que abriu a porta pra mim não era da Silph."',
@@ -144,7 +144,7 @@ c14_quem_escondeu:{
 
 c14_selma:{
   texto:[
-    'Ela se chama Dona Selma, tem setenta e um anos, e trabalhou na limpeza do laboratório de mil novecentos e setenta e nove a mil novecentos e noventa e sete.',
+    'Ela se chama Sra. Maeda, tem setenta e um anos, e trabalhou na limpeza do laboratório de mil novecentos e setenta e nove a mil novecentos e noventa e sete.',
     'Dezoito anos.',
     'Ela te recebe no portão e não abre o portão, e você conversa com ela por cima de um muro de meio metro, e ela aceita o café que você compra na padaria da esquina e bebe em pé.',
     'E fala, depois de aceitar o café e antes de se arrepender:',
@@ -158,7 +158,7 @@ c14_selma:{
     '"E aí um dia não tinha mais tanque, não tinha mais teto, e não tinha mais o Doutor Fuji."'
   ],
   ef:{flag:'ouviu_historia_lab',
-      npc:{nome:'Dona Selma', opiniao:2, memoria:'Limpou o laboratório de Cinnabar por dezoito anos, até a linha de fita amarela no chão.'},
+      npc:{nome:'Sra. Maeda', opiniao:2, memoria:'Limpou o laboratório de Cinnabar por dezoito anos, até a linha de fita amarela no chão.'},
       registrar:'Havia um tanque no subsolo do laboratório. O que estava dentro cresceu demais para ele.',
       presagio:'Ela limpava até a fita e parava. Dezoito anos parando na fita.'},
   escolhas:[
@@ -186,7 +186,7 @@ c14_fuji_morreu:{
   ],
   ef:{flag:['sabe_do_iptu','fuji_sem_enterro'],
       rep:{eixo:'bom',delta:4,motivo:'Perguntou pelo enterro'},
-      npc:{nome:'Dona Selma', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o IPTU da casa dele.'},
+      npc:{nome:'Sra. Maeda', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o IPTU da casa dele.'},
       registrar:'O Dr. Fuji não teve enterro. Alguém paga o IPTU da casa dele até hoje.',
       presagio:'Numa ilha de setecentas pessoas todo mundo vai em todo enterro. Menos nesse.'},
   escolhas:[
@@ -216,7 +216,7 @@ c14_quem_paga:{
     {texto:'Ir ao ginásio.', vai:'c14_ginasio'},
     {texto:'Ir à casa do Fuji.', vai:'c14_casa_do_fuji'},
     {texto:'Ir ao laboratório.', vai:'c14_lab'},
-    {texto:'Voltar e perguntar mais pra Dona Selma.', vai:'c14_selma'}
+    {texto:'Voltar e perguntar mais pra Sra. Maeda.', vai:'c14_selma'}
   ]
 },
 
@@ -1292,7 +1292,7 @@ c14_subsolo:{
   texto:[
     'O subsolo não queimou, porque concreto não queima.',
     'A escada desce nove metros e no fim tem um corredor com uma linha de fita amarela no chão, desbotada, com a borda descolando.',
-    'A fita que a Dona Selma nunca passou em dezoito anos.',
+    'A fita que a Sra. Maeda nunca passou em dezoito anos.',
     'Você passa.',
     'A sala do tanque tem trinta metros por quinze e nove de pé-direito, e não tem tanque.',
     'Tem o buraco onde ele estava: um poço de concreto de quatro metros de diâmetro e três de profundidade, com a estrutura de fixação arrancada e o aço torcido pra fora.',
@@ -1890,10 +1890,10 @@ c14_viu_o_tanque:{
     '"E eu peguei o carrinho e saí, e eu nunca mais entrei naquele corredor, e faz cinco anos que eu acordo com isso umas duas vezes por mês."'
   ],
   ef:{flag:['selma_acenou','ouviu_historia_lab'],
-      npc:{nome:'Dona Selma', opiniao:6, memoria:'Acenou para Mewtwo por um vidro em 1995 e ele acenou de volta. Acorda com isso duas vezes por mês.'},
+      npc:{nome:'Sra. Maeda', opiniao:6, memoria:'Acenou para Mewtwo por um vidro em 1995 e ele acenou de volta. Acorda com isso duas vezes por mês.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou se ela tinha visto'},
       moral:-15,
-      registrar:'Dona Selma acenou para o que estava no tanque em 1995, e ele acenou de volta.',
+      registrar:'Sra. Maeda acenou para o que estava no tanque em 1995, e ele acenou de volta.',
       presagio:'Ela acenou antes de pensar. Foi a única pessoa naquele prédio que fez isso.'},
   escolhas:[
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
@@ -1923,10 +1923,10 @@ c14_selma_contou:{
     '"E depois ele disse: “então ele conhecia mais gente do que a gente achava”."'
   ],
   ef:{flag:['selma_e_blaine','sabe_do_blaine'],
-      npc:{nome:'Dona Selma', opiniao:8, memoria:'Contou ao Blaine em 1997 sobre o aceno, e ele chorou no degrau dela.'},
+      npc:{nome:'Sra. Maeda', opiniao:8, memoria:'Contou ao Blaine em 1997 sobre o aceno, e ele chorou no degrau dela.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou se ela tinha contado'},
       moral:-8,
-      registrar:'Blaine ouviu de Dona Selma em 1997 sobre o aceno. "Então ele conhecia mais gente do que a gente achava."',
+      registrar:'Blaine ouviu de Sra. Maeda em 1997 sobre o aceno. "Então ele conhecia mais gente do que a gente achava."',
       presagio:'Ele conhecia mais gente do que a gente achava. Some as pessoas desse capítulo.'},
   escolhas:[
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
@@ -1953,9 +1953,9 @@ c14_incendio_da_semana:{
     '"Eles não queriam queimar o prédio, meu bem. Eles queriam queimar uma sala."'
   ],
   ef:{flag:['selma_viu_o_incendio','sabe_que_foi_forjado'],
-      npc:{nome:'Dona Selma', opiniao:5, memoria:'Viu os dois homens e o carro alugado às 3h de sábado, e chamou o João da brigada.'},
+      npc:{nome:'Sra. Maeda', opiniao:5, memoria:'Viu os dois homens e o carro alugado às 3h de sábado, e chamou o João da brigada.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a quem mora do lado'},
-      registrar:'Dona Selma viu dois homens e um carro alugado às 3h de sábado. O fogo foi contido em 40 minutos.',
+      registrar:'Sra. Maeda viu dois homens e um carro alugado às 3h de sábado. O fogo foi contido em 40 minutos.',
       presagio:'Eles queriam queimar uma sala. E a sala não tinha o que eles procuravam.'},
   escolhas:[
     {texto:'"A senhora sabe o nome deles?"', vai:'c14_barco_fretado'},

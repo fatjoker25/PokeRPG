@@ -25,7 +25,7 @@ const PRECO_BASE = {
    vende repelente, porque ninguém em Lavender vai pro mato. */
 const LOJAS = {
   pallet: {
-    nome:'Mercado do Seu Elpídio',
+    nome:'Mercado do Sr. Elpídio',
     ar:'Um mercado de bairro que vende Poké Ball atrás do balcão, junto com pilha e anzol. Ele te conhece desde pequeno e cobra o mesmo de todo mundo.',
     mult:1.0,
     itens:['Poké Ball','Potion','Antidote','Isca','Ração','Pilha','Cantil']
@@ -81,7 +81,7 @@ const LOJAS = {
     itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda']
   },
   cinnabar: {
-    nome:'Vitrine da Dona Zuca',
+    nome:'Vitrine da Sra. Zuca',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
     itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']

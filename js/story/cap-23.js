@@ -675,7 +675,7 @@ c23_final_pena:{
     'Mewtwo sai da caverna três dias depois de você.',
     'Ele não vai pra cidade nenhuma. Vai pro mar, pro sudoeste, pra uma ilha que não entra em mapa nenhum porque não tem nada nela.',
     'Pescadores de Fuchsia começam a relatar duas luzes sobre a ilha sem nome, não uma. Ninguém acredita neles, como sempre.',
-    'Seu Zé Antônio morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
+    'O Sr. Ferraz morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
     'Você vai ao enterro. É o único que vai de fora de Fuchsia.',
     'No caixão, na mão dele, tem uma pena que não é de galinha e que ninguém da família soube explicar de onde veio.'
   ]}

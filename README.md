@@ -320,7 +320,7 @@ Espécie e nível são **totalmente aleatórios**. O ambiente apenas enviesa a p
 
 O mundo lembra de tudo, e isso é mecânico, não decorativo:
 
-- **NPCs têm memória individual** — cada um guarda uma opinião numérica e as cenas em que você apareceu. Téo, a Dra. Ivone, o Caçador Vasco, o Capitão do S.S. Anne, a Terceira, Sabrina, Seu Bento e outros reagem ao que você fez com eles muitos capítulos antes.
+- **NPCs têm memória individual** — cada um guarda uma opinião numérica e as cenas em que você apareceu. Téo, a Dra. Ivone, o Caçador Vasco, o Capitão do S.S. Anne, a Terceira, Sabrina, Sr. Furtado e outros reagem ao que você fez com eles muitos capítulos antes.
 - **O cemitério é permanente.** Quem morre por escolha sua aparece na ficha até o fim, com a causa escrita, e é citado na Torre de Lavender e na entrevista da Liga.
 - **A instabilidade de Kanto** é um número que sobe quando você captura lendários ou quebra equilíbrios, e ela muda o clima descrito nas rotas, o que a Liga fala com você e o que você vê no capítulo 19.
 - **A Liga escala em três estágios** e emite ordem de detenção por conta própria se você insistir.
