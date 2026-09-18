@@ -179,6 +179,61 @@ Lavender vira Gengar no segundo em que a bola encosta na sua mão.
 As rotas têm **38 achados diferentes**, filtrados pelo ambiente: o que se
 encontra numa caverna não é o que se encontra na beira de um rio.
 
+## O que você sabe, e o que você não sabe
+
+O jogo distingue o que existe do que o **jogador** pode saber.
+
+| Situação | Como aparece |
+|---|---|
+| Espécie nunca catalogada | `???` — inclusive na linha de encontro |
+| Pokémon de treinador, com apelido | só o apelido |
+| Depois de apontar a Pokédex nele | `Apelido (Espécie)` |
+| Ficha de combate do adversário | `tipo ?`, `ficha não catalogada` |
+| Natureza de qualquer um | `???` até ser descoberta |
+
+A **Pokédex** lista as 155 entradas numeradas desde a primeira tela: `001 ???`,
+`002 ???`. O número acende quando você vê um exemplar e a ficha abre quando
+você aponta a Pokédex nele durante um combate — de graça, sem gastar o turno,
+uma vez por batalha. A ficha traz base com barra por atributo, soma, taxa de
+captura, rota de evolução, fraquezas e resistências calculadas.
+
+A **natureza é do indivíduo, não da espécie**. Nos seus, ela aparece sozinha
+depois de alguns combates juntos, por teste de Percepção — quanto mais tempo
+com você, mais fácil. Nos dos outros, só pela Pokédex, ou quando o treinador
+fala do próprio time. Líder de ginásio sempre fala.
+
+## Item segurado
+
+Cada Pokémon segura um item, equipado pela aba Time ou pela Mochila. Trocar
+devolve o anterior à mochila.
+
+| Item | Efeito |
+|---|---|
+| Resto de Ração | recupera 7% do HP máximo no fim de cada turno |
+| Faixa Firme | uma vez por combate, sobrevive a um golpe fatal com 1 HP |
+| Punho de Ferro | +15% de dano em golpes físicos |
+| Óculos Grossos | +15% de dano em golpes especiais |
+| Colete de Couro | −12% de dano recebido |
+| Botina Leve | +12% de Velocidade para a ordem dos turnos |
+| Sino Calmante | +3 de moral ao fim de cada combate |
+| Amuleto de Moeda | +50% de dinheiro em vitórias contra treinador |
+
+Todo item da mochila tem uma **linha de ficha técnica** em letra de máquina,
+separada da descrição em prosa: valor exato, alvo, se gasta o turno, se é
+consumido.
+
+## Dados
+
+Toda rolagem do combate vira um dado na tela, com o formato certo — d20, d10,
+d6, d4 — tombando ao entrar, com os números girando antes de assentar no valor.
+Embaixo de cada um, o motivo da rolagem. **Clicar num dado gira ele de novo**
+(o resultado não muda: já está registrado).
+
+20 natural acende verde. 1 acende vermelho.
+
+E tem uma **bandeja** com d20, d10, d6 e d4 pra girar por girar, que não afeta
+nada e existe só porque isso é um RPG de mesa.
+
 ## Como jogar
 
 ```
