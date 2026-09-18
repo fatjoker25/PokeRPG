@@ -8,6 +8,8 @@ const Jogo = {
   voltarDeGinasio: 'hub',
   eliteAtual: null,
   torneioAtual: null,
+  rivalAtual: null,
+  proxCapPendente: null,
 
   /* ---------- início ---------- */
   iniciar(){
@@ -60,6 +62,7 @@ const Jogo = {
     }
     Estado.adicionar(inicial);
     Estado.j.inicialDex = inicial.dex;          // Blue escolhe o contra do seu inicial
+    iniciarRival();                             // e o rival escolhe o contra do seu também
     Estado.registrar(`${Estado.j.nome} saiu de ${Estado.j.cidade} com ${inicial.nome}.`);
     Estado.salvar('auto');
 
@@ -157,6 +160,7 @@ const Jogo = {
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
     if (this.eliteAtual)    return this.resultadoElite(fim);
     if (this.torneioAtual)  return this.resultadoTorneio(fim);
+    if (this.rivalAtual)    return this.resultadoRival(fim);
     const b = this.cenaBatalha || {};
     const rotaFuga = b.fuga2 || (typeof b.fuga === 'string' ? b.fuga : null);
     let destino, aviso;
@@ -214,6 +218,11 @@ const Jogo = {
         'Você chegou ao fim do que está escrito. O resto é estrada.',
         'Kanto continua exatamente do jeito que você deixou — e essa é a parte que importa.'
       ]});
+    }
+    // o rival aparece na estrada entre um capítulo e outro
+    if (rivalDeveAparecer(prox)){
+      this.proxCapPendente = prox;
+      return UI.telaRival();
     }
     const cena = Historia.iniciarCapitulo(prox);
     Estado.salvar('auto');
@@ -364,6 +373,72 @@ const Jogo = {
     }
     Estado.salvar('auto');
     UI.telaResultadoGinasio(g, venceu, avisos);
+  },
+
+  /* ---------- O RIVAL ---------- */
+  lutarRival(){
+    const meu = Estado.primeiroApto();
+    if (!meu) return UI.modal('Téo', '<p class="nada">Nenhum Pokémon em pé. Ele espera — mas cure o time antes.</p>');
+    const time = timeRival();
+    this.rivalAtual = {arco: arcoRival()};
+    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
+    UI.limparDados();
+    Batalha.iniciar(meu, time[0], {
+      tipo:'treinador', fuga:false, treinador:'Téo',
+      timeInimigo: time.slice(1),
+      introducao: `Téo enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+    });
+    UI.telaBatalha(falaRival());
+  },
+
+  resultadoRival(fim){
+    const arco = this.rivalAtual ? this.rivalAtual.arco : arcoRival();
+    this.rivalAtual = null;
+    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa batalha contra alguém que te conhece desde a Rota 1.');
+
+    const venceu = fim.resultado === 'vitoria';
+    registrarResultadoRival(venceu);
+    const avisos = [];
+    const npc = Estado.dados.npcs['Téo'];
+
+    if (venceu){
+      if (arco === 'parceiro'){ Estado.j.dinheiro += 3000; avisos.push({tipo:'item', texto:'+3.000 ₽ — ele dividiu o que tinha no bolso.'}); }
+      if (arco === 'perseguidor'){
+        Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
+        avisos.push({tipo:'dano', texto:'Ele pediu para você parar. Você venceu a batalha.'});
+      } else {
+        Estado.lembrarNPC('Téo', {memoria:`Perdeu para você de novo. Placar ${rival().derrotas}×${rival().vitorias}.`});
+      }
+      const evs = ganharExp(Estado.primeiroApto() || Estado.dados.time[0], 400);
+    } else {
+      if (arco === 'perseguidor'){
+        Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)+1, memoria:'Te venceu e mandou você voltar para casa.'});
+        avisos.push({tipo:'info', texto:'Ele ficou entre você e o caminho.'});
+      }
+      Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - 800);
+      avisos.push({tipo:'item', texto:'−800 ₽'});
+    }
+    Estado.salvar('auto');
+    UI.telaResultadoRival(venceu, avisos);
+  },
+
+  seguirDepoisDoRival(){
+    const prox = this.proxCapPendente;
+    this.proxCapPendente = null;
+    if (!prox) return UI.telaHub();
+    const cena = Historia.iniciarCapitulo(prox);
+    Estado.salvar('auto');
+    UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
+  },
+
+  evitarRival(){
+    const r = rival();
+    r.ultimoCap = this.proxCapPendente;
+    const npc = Estado.dados.npcs['Téo'];
+    Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
+    Estado.registrar('Evitou o encontro com Téo.');
+    Estado.salvar('auto');
+    this.seguirDepoisDoRival();
   },
 
   /* ---------- LIGA: ELITE 4, CAMPEÃO E TORNEIO ---------- */

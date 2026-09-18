@@ -14,7 +14,7 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**23 capítulos · 574 cenas · 906 escolhas · 20 finais · 8 ginásios · Elite 4 · Torneio Aberto.**
+**23 capítulos · 574 cenas · 906 escolhas · 20 finais · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos.**
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -108,6 +108,24 @@ Cada insígnia também reduz a desobediência do time em 3 pontos — com as oit
 
 **Líderes recusam luta.** Erika não enfrenta quem lucra com o tráfico de Celadon; Sabrina não fica na mesma sala de quem destruiu o andar 11; Misty lembra de quem passou reto pela Marta na Rota 25. Toda recusa tem saída — pela reputação, que lava o eixo contrário, exatamente como as regras do sistema definem.
 
+### O rival
+
+Téo, o garoto da pedra na Rota 1. O inicial dele é **o que vence o seu** — e ele não é um obstáculo fixo: o time, o tom e o arco mudam conforme o que você faz.
+
+Ele aparece na estrada entre os capítulos 5, 9, 13, 17 e 21, e entra no chaveamento do Torneio Aberto com o time real dele.
+
+| Arco | Como se chega lá | O que muda |
+|---|---|---|
+| **Parceiro** | você foi gente boa com ele (opinião ≥ 5) | Pidgeotto, Raticate, Growlithe. Divide o dinheiro do bolso quando perde |
+| **Rival** | o padrão | Pidgeotto, Raticate, Kadabra, Primeape. Rivalidade saudável |
+| **Ressentido** | você o humilhou ou ignorou (opinião ≤ −2) | Haunter, Weezing, Hypno, Golbat. Treina demais e não sorri mais |
+| **Perseguidor** | você virou uma coisa que precisa ser parada | time montado **para vencer o seu**, por tipo |
+| **Quebrado** | perdeu 4+ vezes e foi tratado mal | Pidgey, Rattata, Spearow. Nada evoluiu. Ele parou de tentar |
+
+O **Perseguidor** é o arco que dói: ele deixa de querer te vencer e passa a querer te parar. Dispara se a sua reputação Ruim chegar a 5, se você tiver duas ou mais mortes permanentes no cemitério, se assumir a rede de Celadon ou se entrar para a Comissão. Aí ele olha o seu time, treina os tipos que batem nele, e te espera no meio do caminho — e cita, de memória, as coisas que você fez.
+
+O time dele escala pelo nível médio do seu, com ajuste por arco: o Perseguidor vem 5 níveis acima, o Quebrado vem 3 abaixo.
+
 ### Rotas narrativas
 
 O capítulo 9, em Celadon, é o ponto de virada: o que você responde ali define como Kanto passa a te enxergar pelo resto da campanha.
@@ -200,6 +218,7 @@ js/story/cap-*.js        os 23 capítulos
 js/story/ginasios.js     os 8 líderes, escala de time, falas e travas
 js/story/liga.js         Elite 4, o Campeão e o Torneio Aberto
 js/story/comissao.js     a CGRB: estatuto, doutrina, gente e unidades
+js/story/rival.js        Téo: arcos, time adaptativo e falas
 js/ui/interface.js       telas
 js/main.js               fluxo do jogo
 ```

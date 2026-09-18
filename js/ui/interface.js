@@ -422,7 +422,7 @@ const UI = {
     this.add(`<div class="painel">
       <h2>Parada</h2>
       <p class="sussurro">Antes de seguir, você pode resolver algumas coisas. Cada atividade gasta tempo — e o tempo também conta.</p>
-      <div class="escolhas">
+      <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
         <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
@@ -496,10 +496,64 @@ const UI = {
       </div>
       <div class="narrativa">${falas.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
       <div id="avisos" class="avisos"></div>
-      <div class="escolhas" style="margin-top:20px">
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
         <button class="escolha" onclick="Jogo.abrirGinasios('${this.esc(Jogo.voltarDeGinasio)}')">Voltar aos ginásios</button>
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     O RIVAL
+     ======================================================== */
+  telaRival(){
+    this.limpar();
+    this.add(this.topo());
+    const r = rival();
+    const arco = arcoRival();
+    const A = ARCOS_RIVAL[arco];
+    const time = timeRival();
+    const cor = {parceiro:'var(--bom)', rival:'var(--destaque)', ressentido:'var(--ruim)',
+                 perseguidor:'var(--perigo)', quebrado:'var(--texto-fraco)'}[arco];
+
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho" style="border-left-color:${cor}">
+        <div class="num">Na estrada</div>
+        <div class="tit">${this.esc(r.nome)}</div>
+        <div class="loc" style="color:${cor}">${this.esc(A.nome)} — ${this.esc(A.resumo)}</div>
+      </div>
+      <div class="narrativa">${falaRival().map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
+        <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
+      <div class="linha"><span class="k">Time dele agora</span>
+        <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
+        <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
+        <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
+        <button class="escolha" onclick="Jogo.hubCentro()">Curar o time antes.</button>
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaResultadoRival(venceu, avisos){
+    this.limpar();
+    this.add(this.topo());
+    const r = rival();
+    const falas = venceu ? falaVitoriaRival() : falaDerrotaRival();
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${venceu ? 'Você venceu' : 'Ele venceu'}</div>
+        <div class="tit">${this.esc(r.nome)}</div>
+        <div class="loc">Placar: você ${r.derrotas} × ${r.vitorias} ele</div>
+      </div>
+      <div class="narrativa">${falas.filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
+        <button class="escolha" onclick="Jogo.seguirDepoisDoRival()">Seguir viagem.</button>
       </div>
     </div>`);
     if (avisos && avisos.length) this.avisos(avisos);
@@ -580,7 +634,7 @@ const UI = {
         <div class="loc">Arena do Planalto Indigo</div>
       </div>
       ${chave}
-      <div class="escolhas" style="margin-top:20px">
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.lutarRodadaTorneio()">Entrar na arena — ${this.esc(t.adversarios[t.rodada].nome)}</button>
         <button class="escolha" onclick="Jogo.curarNoTorneio()">Usar os vinte minutos para curar o time</button>
         <button class="escolha" onclick="Jogo.desistirTorneio()">Desistir do torneio</button>
@@ -600,7 +654,7 @@ const UI = {
       </div>
       <div class="narrativa">${(o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
       <div id="avisos" class="avisos"></div>
-      <div class="escolhas" style="margin-top:20px">
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
         ${!o.venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time</button>` : ''}
@@ -743,6 +797,10 @@ const UI = {
       <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
       <p class="sussurro">${this.esc(nivel.ef)}</p>
       <h3>Status</h3>${st}
+      ${d.rival && d.npcs['Téo'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
+        <p class="sussurro">${this.esc(ARCOS_RIVAL[arcoRival()].resumo)}</p>
+        <div class="linha"><span class="k">${this.esc(d.rival.nome)}</span><span class="v">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span></div>
+        <div class="linha"><span class="k">Inicial dele</span><span class="v">${this.esc(DEX[d.rival.inicialDex].nome)}</span></div>` : ''}
       ${npcs.length ? '<h3>Quem lembra de você</h3>' + npcs.map(n =>
         `<div class="linha"><span class="k">${this.esc(n.nome)} <span class="sussurro">${this.esc((n.memorias||[]).slice(-1)[0]?.texto||'')}</span></span>
          <span class="v" style="color:${n.opiniao>0?'var(--bom)':n.opiniao<0?'var(--ruim)':'var(--texto-fraco)'}">${n.opiniao>0?'+':''}${n.opiniao}</span></div>`).join('') : ''}

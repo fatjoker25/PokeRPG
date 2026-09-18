@@ -129,6 +129,10 @@ const RIVAIS_TORNEIO = [
 
 /* Monta um adversário de torneio com time escalado ao jogador */
 function adversarioTorneio(rival, nivelAlvo){
+  // Téo entra com o time de verdade dele, no arco em que estiver
+  if (rival.nome === 'Téo' && Estado.dados.rival){
+    return {nome:'Téo', fala: rival.fala, time: timeRival()};
+  }
   const pool = POOL_SELVAGEM.filter(d => {
     const p = DEX[d];
     return p.tipos.some(t => rival.tipos.includes(t)) && p.total >= 380 && !p.evo;
