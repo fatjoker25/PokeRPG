@@ -476,6 +476,27 @@ const Batalha = {
       Estado.usarItem(nome);
       Estado.curarJogador(info.valor);
       this.ev('cura', `Você se enfaixou. HP: ${Estado.j.hp}/${Estado.hpMaxJogador()}`);
+    } else if (info.tipo === 'pp'){
+      const g = alvo.golpes.find(x => x.pp < x.ppMax);
+      if (!g){ this.ev('erro', `Os golpes de ${nomeExib(alvo)} estão cheios.`); return; }
+      Estado.usarItem(nome);
+      g.pp = Math.min(g.ppMax, g.pp + info.valor);
+      this.ev('cura', `${g.nome} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`);
+    } else if (info.tipo === 'ppTodos'){
+      Estado.usarItem(nome);
+      alvo.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
+      this.ev('cura', `Todos os golpes de ${nomeExib(alvo)} recuperaram um pouco.`);
+    } else if (info.tipo === 'moral'){
+      Estado.usarItem(nome);
+      alvo.moral = Math.min(100, alvo.moral + info.valor);
+      this.ev('natureza', `${nomeExib(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
+    } else if (info.tipo === 'fuga'){
+      if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
+      Estado.usarItem(nome);
+      this.ev('vitoria', 'Você joga o boneco pro lado. O bicho vai atrás dele. Você sai andando sem correr, que é o jeito certo.');
+      this.fugiuComBoneco = true;
+      this.encerrar('fuga');
+      return;
     } else {
       this.ev('erro', 'Esse item não serve aqui.');
     }

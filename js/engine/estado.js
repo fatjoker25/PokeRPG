@@ -41,12 +41,49 @@ const ITENS_INFO = {
   'Antidote':    {tipo:'status', cura:'veneno', desc:'Frasco pequeno, gosto horrível, funciona.'},
   'Full Heal':   {tipo:'status', cura:'todos', desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
   'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Pra você, não pra eles. Você também se machuca.'},
-  'Ração':       {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'},
-  'Moon Stone':  {tipo:'lembranca', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
-                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.'}},
-  'Corda':       {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
-  'Lanterna':    {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'}
+  'Moon Stone':  {tipo:'pedra', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
+                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.',
+                          usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Fogo':   {tipo:'pedra', desc:'Alaranjada, com um ponto de luz no meio que não vem de lugar nenhum.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra da Água':   {tipo:'pedra', desc:'Azul-escura. Fria mesmo depois de horas no bolso.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Trovão': {tipo:'pedra', desc:'Amarela, com estática. Ela levanta o pelo do seu braço de dez centímetros.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra da Folha':  {tipo:'pedra', desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+
+  'Éter':        {tipo:'pp', valor:10, desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
+  'Elixir':      {tipo:'ppTodos', valor:10, desc:'Repõe um pouco de tudo. Caro pelo que é.'},
+  'Água Fresca': {tipo:'cura', valor:35, desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
+  'Cantil':      {tipo:'curaJogador', valor:16, desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
+  'Boneco':      {tipo:'fuga', desc:'Um boneco de pano com cara de Substitute. Serve pra jogar e sair andando.'},
+  'Repelente':   {tipo:'repelente', valor:3, desc:'Cheiro forte, dura uns três períodos. O mato fica mais quieto em volta.'},
+
+  'Corda':          {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
+  'Lanterna':       {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'},
+  'Pilha':          {tipo:'ferramenta', desc:'Duas, embaladas. Você vai lembrar delas exatamente quando não tiver.'},
+  'Máscara de pó':  {tipo:'ferramenta', desc:'De pedreira. Não é bonita e é a diferença entre tossir uma semana ou não.'},
+  'Bota de borracha':{tipo:'ferramenta', desc:'Cano alto, solado grosso. Quem trabalha com cabo não pisa em chão molhado sem isso.'},
+  'Cobertor térmico':{tipo:'ferramenta', desc:'Dobra do tamanho de um livro. Prateado dos dois lados, e mais quente do que parece possível.'},
+  'Câmera descartável':{tipo:'ferramenta', desc:'Vinte e quatro poses. Revelar custa mais que a câmera.'},
+  'Caderno de campo':{tipo:'ferramenta', desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
+  'Isca':           {tipo:'ferramenta', desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
+  'Mapa de Kanto':  {tipo:'ferramenta', desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'},
+  'Ração':          {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'}
 };
+
+/* Pedra → pares de evolução (só espécies de nivelEvo 0) */
+const PEDRAS = {
+  'Pedra do Fogo':   {37:38, 58:59, 133:136},
+  'Pedra da Água':   {61:62, 90:91, 120:121, 133:134},
+  'Pedra do Trovão': {25:26, 133:135},
+  'Pedra da Folha':  {44:45, 70:71, 102:103},
+  'Moon Stone':      {30:31, 33:34, 35:36, 39:40}
+};
+
+/* Evoluções que só acontecem numa troca */
+const EVO_TROCA = {64:65, 67:68, 75:76, 93:94};
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
 function descricaoItem(nome){

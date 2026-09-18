@@ -570,6 +570,20 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   }
 }
 
+/* ---------- loja ---------- */
+.item-linha.compravel{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:none;border:1px solid transparent;
+}
+.item-linha.compravel:hover:not(:disabled){
+  background:var(--bg-2);border-color:var(--destaque);transform:translateX(3px);
+}
+.item-linha.compravel:active:not(:disabled){transform:translateX(1px) scale(.995)}
+.item-linha.compravel .qtd{color:var(--destaque);min-width:56px}
+.item-linha.compravel:hover:not(:disabled) .qtd{background:var(--destaque);color:#171a20;border-color:var(--destaque)}
+.item-linha.caro{opacity:.4;cursor:not-allowed}
+.item-linha.caro .qtd{color:var(--perigo)}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -1558,6 +1572,9 @@ function afazeresDoLocal(){
       sub:'Comprar o que der pra pagar.'});
     if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
       sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
+    if (tem('troca_'+id) && typeof TROCAS !== 'undefined' && TROCAS[id])
+      lista.push({id:'troca', titulo:'Quem estava querendo trocar',
+        sub: Trocas.jaFez(id) ? 'Já está feito. Dá pra passar e cumprimentar.' : TROCAS[id].onde});
   }
 
   if (id === 'planalto'){
@@ -1990,12 +2007,49 @@ const ITENS_INFO = {
   'Antidote':    {tipo:'status', cura:'veneno', desc:'Frasco pequeno, gosto horrível, funciona.'},
   'Full Heal':   {tipo:'status', cura:'todos', desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
   'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Pra você, não pra eles. Você também se machuca.'},
-  'Ração':       {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'},
-  'Moon Stone':  {tipo:'lembranca', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
-                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.'}},
-  'Corda':       {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
-  'Lanterna':    {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'}
+  'Moon Stone':  {tipo:'pedra', desc:'Morna ao toque, pesada demais para o tamanho, com superfície de vidro fosco.',
+                  sabido:{viu_o_circulo:'Trinta e dois ficaram em círculo olhando uma dessas por quarenta minutos.',
+                          usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Fogo':   {tipo:'pedra', desc:'Alaranjada, com um ponto de luz no meio que não vem de lugar nenhum.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra da Água':   {tipo:'pedra', desc:'Azul-escura. Fria mesmo depois de horas no bolso.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Trovão': {tipo:'pedra', desc:'Amarela, com estática. Ela levanta o pelo do seu braço de dez centímetros.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra da Folha':  {tipo:'pedra', desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+
+  'Éter':        {tipo:'pp', valor:10, desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
+  'Elixir':      {tipo:'ppTodos', valor:10, desc:'Repõe um pouco de tudo. Caro pelo que é.'},
+  'Água Fresca': {tipo:'cura', valor:35, desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
+  'Cantil':      {tipo:'curaJogador', valor:16, desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
+  'Boneco':      {tipo:'fuga', desc:'Um boneco de pano com cara de Substitute. Serve pra jogar e sair andando.'},
+  'Repelente':   {tipo:'repelente', valor:3, desc:'Cheiro forte, dura uns três períodos. O mato fica mais quieto em volta.'},
+
+  'Corda':          {tipo:'ferramenta', desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
+  'Lanterna':       {tipo:'ferramenta', desc:'Pilha média. A luz amarela antes de acabar, e esse é o único aviso que você tem.'},
+  'Pilha':          {tipo:'ferramenta', desc:'Duas, embaladas. Você vai lembrar delas exatamente quando não tiver.'},
+  'Máscara de pó':  {tipo:'ferramenta', desc:'De pedreira. Não é bonita e é a diferença entre tossir uma semana ou não.'},
+  'Bota de borracha':{tipo:'ferramenta', desc:'Cano alto, solado grosso. Quem trabalha com cabo não pisa em chão molhado sem isso.'},
+  'Cobertor térmico':{tipo:'ferramenta', desc:'Dobra do tamanho de um livro. Prateado dos dois lados, e mais quente do que parece possível.'},
+  'Câmera descartável':{tipo:'ferramenta', desc:'Vinte e quatro poses. Revelar custa mais que a câmera.'},
+  'Caderno de campo':{tipo:'ferramenta', desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
+  'Isca':           {tipo:'ferramenta', desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
+  'Mapa de Kanto':  {tipo:'ferramenta', desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'},
+  'Ração':          {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'}
 };
+
+/* Pedra → pares de evolução (só espécies de nivelEvo 0) */
+const PEDRAS = {
+  'Pedra do Fogo':   {37:38, 58:59, 133:136},
+  'Pedra da Água':   {61:62, 90:91, 120:121, 133:134},
+  'Pedra do Trovão': {25:26, 133:135},
+  'Pedra da Folha':  {44:45, 70:71, 102:103},
+  'Moon Stone':      {30:31, 33:34, 35:36, 39:40}
+};
+
+/* Evoluções que só acontecem numa troca */
+const EVO_TROCA = {64:65, 67:68, 75:76, 93:94};
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
 function descricaoItem(nome){
@@ -3032,6 +3086,27 @@ const Batalha = {
       Estado.usarItem(nome);
       Estado.curarJogador(info.valor);
       this.ev('cura', `Você se enfaixou. HP: ${Estado.j.hp}/${Estado.hpMaxJogador()}`);
+    } else if (info.tipo === 'pp'){
+      const g = alvo.golpes.find(x => x.pp < x.ppMax);
+      if (!g){ this.ev('erro', `Os golpes de ${nomeExib(alvo)} estão cheios.`); return; }
+      Estado.usarItem(nome);
+      g.pp = Math.min(g.ppMax, g.pp + info.valor);
+      this.ev('cura', `${g.nome} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`);
+    } else if (info.tipo === 'ppTodos'){
+      Estado.usarItem(nome);
+      alvo.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
+      this.ev('cura', `Todos os golpes de ${nomeExib(alvo)} recuperaram um pouco.`);
+    } else if (info.tipo === 'moral'){
+      Estado.usarItem(nome);
+      alvo.moral = Math.min(100, alvo.moral + info.valor);
+      this.ev('natureza', `${nomeExib(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
+    } else if (info.tipo === 'fuga'){
+      if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
+      Estado.usarItem(nome);
+      this.ev('vitoria', 'Você joga o boneco pro lado. O bicho vai atrás dele. Você sai andando sem correr, que é o jeito certo.');
+      this.fugiuComBoneco = true;
+      this.encerrar('fuga');
+      return;
     } else {
       this.ev('erro', 'Esse item não serve aqui.');
     }
@@ -4513,6 +4588,272 @@ function statusTorneio(){
 }
 
 
+/* ===== js/story/mercado.js ===== */
+/* ============================================================
+   MERCADO E TROCAS — cada cidade vende o que cada cidade é
+   ============================================================ */
+
+/* Preço de referência. A cidade mexe nisso pra cima ou pra baixo. */
+const PRECO_BASE = {
+  'Poké Ball':200, 'Great Ball':600, 'Ultra Ball':1200,
+  'Potion':300, 'Super Potion':700, 'Hyper Potion':1500,
+  'Revive':1500, 'Antidote':250, 'Full Heal':600,
+  'Bandagem':400, 'Ração':350, 'Água Fresca':250, 'Cantil':500,
+  'Éter':900, 'Elixir':2000, 'Boneco':700, 'Repelente':400,
+  'Corda':450, 'Lanterna':600, 'Pilha':180, 'Isca':150,
+  'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
+  'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600,
+  'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
+  'Pedra da Folha':4000, 'Moon Stone':6000
+};
+
+/* O que a loja de cada cidade tem, e por quanto (multiplicador local).
+   A ideia: ninguém em Pewter vende bola barata, e ninguém em Lavender
+   vende repelente, porque ninguém em Lavender vai pro mato. */
+const LOJAS = {
+  pallet: {
+    nome:'Mercado do Seu Elpídio',
+    ar:'Um mercado de bairro que vende Poké Ball atrás do balcão, junto com pilha e anzol. Ele te conhece desde pequeno e cobra o mesmo de todo mundo.',
+    mult:1.0,
+    itens:['Poké Ball','Potion','Antidote','Isca','Ração','Pilha','Cantil']
+  },
+  viridian: {
+    nome:'Loja de Viridian',
+    ar:'Fachada sem graça, prateleira organizada, e a atendente sabe exatamente o que um treinador de três dias esqueceu de comprar.',
+    mult:1.0,
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto']
+  },
+  pewter: {
+    nome:'Casa de Ferragens Bacelar',
+    ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
+    mult:1.15,
+    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo']
+  },
+  cerulean: {
+    nome:'Balcão da Ponte Sul',
+    ar:'Atende pela janela, sem ninguém entrar. Tem geladeira de bebida e uma vitrine pequena com uma pedra azul que fica ali há anos.',
+    mult:1.05,
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água']
+  },
+  vermilion: {
+    nome:'Armazém do Cais',
+    ar:'Abre às cinco da manhã e vende comida, corda e Poké Ball no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
+    mult:0.9,
+    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil']
+  },
+  lavender: {
+    nome:'Casa Boa Memória',
+    ar:'Vende incenso, vela e Potion no mesmo balcão, o que faz um sentido triste. Ninguém aqui vende repelente: ninguém daqui vai pro mato.',
+    mult:1.1,
+    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração']
+  },
+  celadon: {
+    nome:'Shopping de Celadon — 4º andar',
+    ar:'Sete andares, e o quarto inteiro é item de treinador. Você fica quinze minutos parado só olhando prateleira. É o lugar mais barato de Kanto e o que menos te olha na cara.',
+    mult:0.85,
+    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
+           'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha']
+  },
+  fuchsia: {
+    nome:'Posto da Zona Safári',
+    ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
+    mult:1.0,
+    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Água Fresca','Mapa de Kanto','Antidote','Full Heal']
+  },
+  saffron: {
+    nome:'Conveniência Silph — térreo',
+    ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
+    mult:1.3,
+    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável']
+  },
+  cinnabar: {
+    nome:'Vitrine da Dona Zuca',
+    ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
+    mult:1.25,
+    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo']
+  }
+};
+
+function precoNaCidade(nome, idCidade){
+  const L = LOJAS[idCidade];
+  const base = PRECO_BASE[nome] || 500;
+  const m = L ? L.mult : 1;
+  return Math.round(base * m / 10) * 10;
+}
+
+function catalogoDaCidade(idCidade){
+  const L = LOJAS[idCidade];
+  if (!L) return [];
+  return L.itens.map(n => [n, precoNaCidade(n, idCidade)]);
+}
+
+/* ============================================================
+   TROCAS — uma por cidade, e cada uma tem gente dentro
+   ============================================================ */
+const TROCAS = {
+  viridian: {
+    quem:'Ademir, o do posto',
+    onde:'atrás do posto de gasolina, com um rádio ligado no jogo',
+    pede:19, da:{dex:52, nivel:[14,18], apelido:'Bigode', natureza:'Jolly'},
+    fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia de gato e eu tenho um Meowth."',
+    depois:'Ele solta o Rattata no quintal e o Rattata some no muro em quatro segundos. Ele não parece incomodado. "Era só pra ele sair de casa mesmo."',
+    memoria:'Trocou o Meowth dele por um Rattata seu, por causa do sogro.'
+  },
+  pewter: {
+    quem:'Nilton da pedreira',
+    onde:'no portão de funcionários, no fim do turno da tarde',
+    pede:75, da:{dex:67, nivel:[26,30], apelido:'Bloco', natureza:'Adamant'},
+    trocaEvolui:true,
+    fala:'"Eu tenho um Machoke e nenhuma pedra pra ele quebrar. Você tem Graveler? Aqui ele ia ser feliz."',
+    depois:'Duas semanas depois chega um bilhete pelo Centro Pokémon: "O seu virou Golem no dia seguinte. Eu chorei um pouco. Nilton."',
+    memoria:'Trocou um Machoke pelo seu Graveler no portão da pedreira.'
+  },
+  cerulean: {
+    quem:'Lígia, da escola de natação',
+    onde:'na borda rasa, depois da aula das crianças',
+    pede:61, da:{dex:86, nivel:[24,28], apelido:'Bolha', natureza:'Calm'},
+    fala:'"Meu Seel não gosta de água parada. Ele nasceu aqui e ele odeia piscina, dá pra acreditar?"',
+    depois:'Ela leva o Poliwhirl pra piscina rasa e as crianças gritam de alegria, e é o som mais alto que essa cidade produziu o mês inteiro.',
+    memoria:'Trocou o Seel dela pelo seu Poliwhirl, na escola de natação.'
+  },
+  vermilion: {
+    quem:'Tunico ou outro menino do cais',
+    onde:'na pedra do quebra-mar, no fim da tarde',
+    pede:98, da:{dex:90, nivel:[22,26], apelido:'Tampa', natureza:'Impish'},
+    fala:'"Eu acho Shellder demais e Krabby quase nunca. Você troca? É troca de igual, eu não tô querendo levar vantagem."',
+    depois:'Ele guarda o Krabby na caixa de isopor com o pano molhado por cima, do jeito certo, e você entende que ele nunca ia vender aquele.',
+    memoria:'Trocou um Shellder pelo seu Krabby, na pedra do quebra-mar.'
+  },
+  lavender: {
+    quem:'o zelador da torre',
+    onde:'no primeiro andar, entre as velas',
+    pede:104, da:{dex:93, nivel:[30,34], apelido:'Sete', natureza:'Quiet'},
+    trocaEvolui:true,
+    fala:'"Tem um Haunter que mora no sétimo andar e que quer ir embora daqui. Eu não sei explicar como eu sei. Eu sei."\n"E ele quer o quê?"\n"Ele quer um Cubone. Não me pergunta por quê."',
+    depois:'O zelador leva o Cubone pra dentro do terceiro andar e volta sem ele, e não explica, e você decide não perguntar.',
+    memoria:'Trocou um Cubone pelo Haunter do sétimo andar da Torre.'
+  },
+  celadon: {
+    quem:'a florista do térreo',
+    onde:'na banca de flor da entrada de serviço do shopping',
+    pede:29, da:{dex:32, nivel:[20,24], apelido:'Espeto', natureza:'Naughty'},
+    fala:'"Eu tenho macho, você tem fêmea. Eu não vou explicar melhor que isso, moço, eu tenho quarenta e três anos e eu trabalho com planta."',
+    depois:'Ela põe o Nidoran♀ numa caixa de papelão com furo e um pratinho de água e sai carregando pelo corredor de serviço, falando com ela o caminho inteiro.',
+    memoria:'Trocou o Nidoran♂ dela pelo seu Nidoran♀, na banca de flor.'
+  },
+  fuchsia: {
+    quem:'um guarda-parque de folga',
+    onde:'no bar da esquina da reserva, na terceira dose',
+    pede:102, da:{dex:113, nivel:[26,30], apelido:'Dona Chansey', natureza:'Gentle'},
+    fala:'"Você acha que eu tô bêbado e eu tô, mas escuta: eu troco essa Chansey por um Exeggcute e eu não tô te enganando. Ela é boa demais pra mim. Eu durmo em alojamento."',
+    depois:'No dia seguinte, sóbrio, ele te procura no Centro Pokémon. Você acha que ele vai voltar atrás. Ele só quer saber se ela comeu.',
+    memoria:'Trocou a Chansey dele pelo seu Exeggcute. No dia seguinte ele foi perguntar se ela tinha comido.'
+  },
+  saffron: {
+    quem:'uma mulher de crachá azul',
+    onde:'na praça de alimentação, na hora do almoço, sozinha',
+    pede:122, da:{dex:64, nivel:[30,34], apelido:'Sete e meia', natureza:'Modest'},
+    trocaEvolui:true,
+    fala:'"Eu tenho um Kadabra e eu não consigo mais ficar com ele."\n"Por quê?"\n"Porque ele sabe o que eu penso e eu trabalho onde eu trabalho."',
+    depois:'Ela pega o Mr. Mime e vai embora sem terminar o almoço, e você repara que a bandeja dela estava intacta desde o começo.',
+    memoria:'Trocou o Kadabra dela pelo seu Mr. Mime, na praça de alimentação. Ela não queria mais alguém lendo o que ela pensa.'
+  },
+  cinnabar: {
+    quem:'o dono da pousada',
+    onde:'na varanda, de frente pro vulcão',
+    pede:77, da:{dex:126, nivel:[30,34], apelido:'Brasa', natureza:'Brave'},
+    fala:'"Esse Magmar apareceu na cratera há dois anos e não foi mais embora. Ele dorme na minha lavanderia. Eu não posso mais pagar a conta de luz do ventilador."',
+    depois:'Ele solta o Ponyta na encosta e o Ponyta fica parado olhando o mar por muito tempo, do jeito de quem nunca viu tanta água junta.',
+    memoria:'Trocou o Magmar da lavanderia dele pelo seu Ponyta.'
+  }
+};
+
+const Trocas = {
+  daCidade(id){ return TROCAS[id] || null; },
+  jaFez(id){ return !!Estado.dados.trocasFeitas && !!Estado.dados.trocasFeitas[id]; },
+  candidatos(id){
+    const t = TROCAS[id];
+    if (!t) return [];
+    return Estado.dados.time.filter(p => p.dex === t.pede && !p.morto);
+  },
+
+  /* tela: quem é, o que quer, e o que você tem pra dar */
+  tela(){
+    const id = Mundo.id();
+    const t = this.daCidade(id);
+    if (!t) return Exploracao.tela([{tipo:'info', texto:'Ninguém aqui está querendo trocar nada hoje.'}]);
+    if (this.jaFez(id))
+      return Exploracao.tela([{tipo:'info', texto:`${t.quem} te vê de longe e levanta a mão. A troca já foi feita, e ela foi boa para os dois.`}]);
+
+    const esp = DEX[t.da.dex], pedido = DEX[t.pede];
+    const meus = this.candidatos(id);
+    const lista = meus.length
+      ? meus.map(p => `<button class="escolha" onclick="Trocas.fazer('${p.uid}')">
+          Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel}, ${UI.esc(p.natureza)})
+          <br><span class="pd">Isso não tem desfazer.</span></button>`).join('')
+      : `<p class="nada">Você não tem nenhum ${UI.esc(pedido.nome)}. ${UI.esc(t.quem)} diz que espera.</p>`;
+
+    UI.limpar();
+    UI.add(UI.topo());
+    UI.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">troca</div>
+        <div class="tit">${UI.esc(t.quem)}</div>
+        <div class="loc">${UI.esc(t.onde)}</div>
+      </div>
+      <div class="narrativa">
+        ${t.fala.split('\n').map(l=>`<p>${UI.esc(l)}</p>`).join('')}
+        <p class="sussurro">Ele quer um ${UI.esc(pedido.nome)}. Ele oferece um ${UI.esc(esp.nome)}${t.da.apelido?` chamado ${UI.esc(t.da.apelido)}`:''}.</p>
+      </div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas">
+        ${lista}
+        <button class="escolha" onclick="Exploracao.tela()">Deixar pra depois.</button>
+      </div>
+    </div>`);
+  },
+
+  fazer(uid){
+    const id = Mundo.id();
+    const t = this.daCidade(id);
+    const d = Estado.dados;
+    const meu = d.time.find(p => p.uid === uid);
+    if (!t || !meu) return;
+
+    /* sai o seu */
+    d.time = d.time.filter(p => p.uid !== uid);
+    d.trocasFeitas = d.trocasFeitas || {};
+    d.trocasFeitas[id] = {deu:meu.dex, recebeu:t.da.dex, dia:d.relogio.dia};
+
+    /* entra o dele */
+    const nivel = Dados.entre(t.da.nivel[0], t.da.nivel[1]);
+    let dexNovo = t.da.dex;
+    let virou = null;
+    if (t.trocaEvolui && EVO_TROCA[dexNovo]){ virou = DEX[dexNovo].nome; dexNovo = EVO_TROCA[dexNovo]; }
+    const novo = criarPokemon(dexNovo, nivel, {
+      natureza: t.da.natureza,
+      apelido: t.da.apelido,
+      moral: 45,
+      historia: `Veio de uma troca em ${LOCAIS[id].nome}, com ${t.quem}.`
+    });
+    novo.trocado = true;
+    Estado.adicionar(novo);
+    Estado.lembrarNPC(t.quem, {nome:t.quem, opiniao:3, memoria:t.memoria});
+    Estado.registrar(`Trocou ${meu.nome} por ${novo.nome} em ${LOCAIS[id].nome}.`);
+    Estado.marcar('ja_trocou');
+    Estado.salvar('auto');
+
+    const avisos = [
+      {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}, ${novo.natureza}) entrou para o seu time.`},
+      {tipo:'eco', texto:t.depois}
+    ];
+    if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a bola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
+    avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. Ele não te escolheu e ainda não sabe o seu nome.`});
+    Exploracao.tela(avisos);
+  }
+};
+
+
 /* ===== js/story/lugares.js ===== */
 /* ============================================================
    LUGARES — o que se descobre e o que se ouve em cada lugar
@@ -4552,6 +4893,10 @@ const DESCOBERTAS = {
 
 /* ─── cidades ─── */
 viridian:[
+  {chave:'troca_viridian', texto:[
+    'Atrás do posto de gasolina tem um homem sentado num caixote com um rádio ligado no jogo.',
+    'Ele te vê passar, olha o seu cinto, e faz um gesto de quem quer falar mas não quer levantar.'], descobre:'troca_viridian'},
+  {chave:'v_ferro', texto:['Na calçada da praça, alguém desenhou com giz um mapa da Floresta de Viridian. Está errado em dois pontos, e um deles é perigoso.']},
   {chave:'loja_viridian', texto:['Você encontra a loja da cidade escondida atrás da praça, com a fachada tão sem graça que você passou por ela duas vezes.'], descobre:'loja_viridian'},
   {chave:'ginasio_viridian', texto:[
     'Na saída oeste de Viridian tem um prédio grande, repintado, com uma placa de acrílico nova na porta.',
@@ -4561,6 +4906,10 @@ viridian:[
   {chave:'v_velho', texto:['Um homem de uns setenta anos ensina uma criança a jogar uma Poké Ball num poste. A criança erra oito vezes. Ele não perde a paciência uma vez.']}
 ],
 pewter:[
+  {chave:'troca_pewter', texto:[
+    'No portão de funcionários da pedreira, no fim do turno da tarde, um homem de capacete pergunta se você é treinador.',
+    '"Você tem Graveler?" Ele fala isso antes de dizer bom dia.'], descobre:'troca_pewter'},
+  {chave:'p_placa', texto:['Uma placa na entrada da cidade: DIAS SEM ACIDENTE — 12. O 12 foi repintado por cima de um número maior.']},
   {chave:'ginasio_pewter', texto:[
     'O ginásio fica no fim da rua principal: porta de metal, sem placa bonita, sem vidro.',
     'Dá pra ouvir alguma coisa pesada caindo lá dentro, em intervalos regulares.'], descobre:'ginasio_pewter'},
@@ -4570,6 +4919,10 @@ pewter:[
     'A placa diz: "Extinto há aproximadamente 300 milhões de anos."'], ef:{flag:'viu_o_museu'}}
 ],
 cerulean:[
+  {chave:'troca_cerulean', texto:[
+    'A escola de natação funciona num galpão colado no rio. Depois da aula das crianças, a professora fica sentada na borda rasa com um Seel.',
+    'O Seel odeia a piscina. Dá pra ver de longe.'], descobre:'troca_cerulean'},
+  {chave:'c_cartaz', texto:['Um cartaz colado num poste da ponte sul: "ÁGUA COM COR ESTRANHA? ANOTE DIA E HORA E ME PROCURE — Ginásio."']},
   {chave:'ginasio_cerulean', texto:[
     'O ginásio de Cerulean é uma piscina olímpica coberta, e dá pra ouvir o eco de fora.',
     'Tem um cartaz meio velho na porta: "DESAFIOS: MANHÃ E TARDE. NÃO ENTRE MOLHADO."'], descobre:'ginasio_cerulean'},
@@ -4577,6 +4930,10 @@ cerulean:[
   {chave:'c_ponte', texto:['Na ponte norte, alguém montou uma banca de veludo com seis Poké Balls e preço em plaquinha. Você olha por tempo demais e a pessoa te olha de volta.']}
 ],
 vermilion:[
+  {chave:'troca_vermilion', texto:[
+    'Na pedra do quebra-mar, no fim da tarde, tem sempre um menino com uma caixa de isopor.',
+    'Hoje ele está com um Shellder e uma cara de quem não queria estar com um Shellder.'], descobre:'troca_vermilion'},
+  {chave:'vm_portao', texto:['O portão cinco, no fim do muro do porto, tem uma guarita vazia e uma balança com faixa de manutenção desbotada de sol.']},
   {chave:'ginasio_vermilion', texto:[
     'O ginásio de Vermilion é um galpão de manutenção portuária adaptado, com cabo grosso saindo por baixo da porta.',
     'De fora dá pra sentir cheiro de ozônio.'], descobre:'ginasio_vermilion'},
@@ -4584,6 +4941,10 @@ vermilion:[
   {chave:'vm_cais', texto:['No cais três, um navio do tamanho de um prédio deitado. Tem fila pra entrar e a passagem custa oito mil.']}
 ],
 lavender:[
+  {chave:'troca_lavender', texto:[
+    'O zelador da torre te para entre as velas do primeiro andar.',
+    '"Tem uma coisa no sétimo que quer ir embora daqui", ele diz, sem nenhum drama. "E ela quer trocar."'], descobre:'troca_lavender'},
+  {chave:'l_urnas', texto:['A marcenaria tem uma vitrine com urnas de todos os tamanhos. As menores são muito pequenas.']},
   {chave:'l_mural', texto:[
     'Na base da torre tem um mural com nomes. Muitos nomes.',
     'Alguns têm data de um Pokémon e data de um treinador na mesma linha.']},
@@ -4591,6 +4952,10 @@ lavender:[
   {chave:'l_silencio', texto:['Você percebe, depois de meia hora, que a cidade inteira não tem música em lugar nenhum. Nenhum rádio, nenhuma loja com alto-falante.']}
 ],
 celadon:[
+  {chave:'troca_celadon', texto:[
+    'Na entrada de serviço do shopping tem uma banca de flor que não aparece em planta nenhuma.',
+    'A florista tem uma caixa de papelão com furo ao lado do pé e não esconde.'], descobre:'troca_celadon'},
+  {chave:'cl_deposito', texto:['Atrás do cassino tem um depósito com doca coberta e portão automático. Chega caminhão de madrugada.']},
   {chave:'ginasio_celadon', texto:[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. Do térreo dá pra ver o verde lá em cima.',
     'O elevador de serviço tem um botão sem número.'], descobre:'ginasio_celadon'},
@@ -4598,6 +4963,10 @@ celadon:[
   {chave:'cl_cassino', texto:['O cassino mudou de nome duas vezes desde que a Rocket caiu. Agora se chama "Celadon Palace" e tem a mesma carpete.']}
 ],
 fuchsia:[
+  {chave:'troca_fuchsia', texto:[
+    'No bar da esquina da reserva, um guarda-parque de folga na terceira dose olha pra você e fala, alto demais:',
+    '"VOCÊ TEM EXEGGCUTE?"'], descobre:'troca_fuchsia'},
+  {chave:'f_portao_azul', texto:['Na estrada da Zona Safári, do lado esquerdo, tem um sítio com portão azul e nada à venda na frente.']},
   {chave:'ginasio_fuchsia', texto:[
     'O ginásio de Fuchsia não tem fachada. Você passa duas vezes na frente antes de entender que aquilo é a entrada.',
     'Não tem placa, não tem janela, e a porta abre pra dentro de um jeito estranho.'], descobre:'ginasio_fuchsia'},
@@ -4605,6 +4974,10 @@ fuchsia:[
   {chave:'f_cartaz', texto:['Um cartaz desbotado na recepção da reserva: "AJUDE-NOS — Pokémon avistados fora da cerca devem ser reportados."']}
 ],
 saffron:[
+  {chave:'troca_saffron', texto:[
+    'Na praça de alimentação, na hora do almoço, tem uma mulher de crachá azul sentada sozinha com uma bandeja intacta.',
+    'Ela olha pra você como quem já decidiu falar.'], descobre:'troca_saffron'},
+  {chave:'s_cartorio', texto:['O cartório da rua Dez abre até as 17h, cobra oito reais a cópia e não faz pergunta nenhuma.']},
   {chave:'ginasio_saffron', texto:[
     'O ginásio de Saffron é um prédio baixo e sem janela, espremido entre dois arranha-céus.',
     'A porta está trancada e tem um papel colado: "SUSPENSO POR TEMPO INDETERMINADO — S."',
@@ -4613,6 +4986,10 @@ saffron:[
   {chave:'s_silph', texto:['A Silph Co. ocupa um quarteirão inteiro. Recepção com catraca, crachá, câmera, e uma mulher no balcão com um sorriso impecável.']}
 ],
 cinnabar:[
+  {chave:'troca_cinnabar', texto:[
+    'O dono da pousada te chama na varanda com um gesto de queixo.',
+    '"Você tem Ponyta? Eu tenho um problema de conta de luz e o problema dorme na minha lavanderia."'], descobre:'troca_cinnabar'},
+  {chave:'cn_conta', texto:['Alguém colou no mural do Centro Pokémon uma conta de energia impressa, com um trecho circulado a caneta. Ninguém tirou.']},
   {chave:'ginasio_cinnabar', texto:[
     'O ginásio de Cinnabar fica do outro lado da ilha e sobreviveu ao incêndio por isso.',
     'Pela janela dá pra ver uma lousa cheia de conta de física.'], descobre:'ginasio_cinnabar'},
@@ -4620,14 +4997,16 @@ cinnabar:[
   {chave:'cn_lab', texto:['O prédio do laboratório queimou parcialmente na semana passada. A fita de isolamento é nova. O buraco na cerca, também.']}
 ],
 pallet:[
+  {chave:'pl_troca', texto:['Um menino de sete anos te para na rua e pergunta, muito sério, se você tem um Caterpie. Ele não explica pra quê.']},
   {chave:'pl_praia', texto:['Do alto do morro dá pra ver o mar. Do outro lado dele, num dia limpo, uma mancha escura que é uma ilha.']},
   {chave:'loja_pallet', texto:['O mercado de Pallet abre tarde e vende Poké Ball atrás do balcão, junto com pilha e anzol.'], descobre:'loja_pallet'},
   {chave:'pl_rufino', texto:['Seu Rufino varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
 ]
 };
 
-/* Rotas: achados genéricos, temperados pelo ambiente */
+/* Rotas: o que se acha andando devagar. `amb` limita ao ambiente. */
 const ACHADOS_ROTA = [
+  /* ─── genéricos ─── */
   {texto:['No meio do mato você acha uma mochila velha, molhada de sereno, com uma Poké Ball dentro e mais nada.'], ef:{itens:{'Poké Ball':1}}},
   {texto:['Embaixo de uma pedra, um vidro de Potion fechado, dentro da validade por pouco.'], ef:{itens:{'Potion':1}}},
   {texto:['Um treinador acampado te oferece café e conversa por vinte minutos sobre absolutamente nada. Você sai dali melhor do que entrou.'], ef:{hp:3}},
@@ -4635,7 +5014,56 @@ const ACHADOS_ROTA = [
   {texto:['Um ninho abandonado, ainda inteiro, com casca de ovo quebrada por dentro — do jeito certo, de quem nasceu e foi embora.']},
   {texto:['Marca de pneu onde não devia ter pneu. Larga, funda, indo pra dentro do mato.']},
   {texto:['Você acha uma placa caída, apagada pelo sol. Dá pra ler "CUIDADO" e mais nada.']},
-  {texto:['Uma trilha estreita que não está em mapa nenhum. Ela dá em nada — mas alguém andou por ela o suficiente pra abrir o mato.']}
+  {texto:['Uma trilha estreita que não está em mapa nenhum. Ela dá em nada — mas alguém andou por ela o suficiente pra abrir o mato.']},
+  {texto:['Um carretel de linha de pesca preso num galho a dois metros do chão. Alguém jogou muito mal ou muito longe.'], ef:{itens:{'Isca':1}}},
+  {texto:['Uma bota. Uma só, do pé direito, no meio do caminho, em bom estado.',
+          'Você olha em volta por mais tempo do que gostaria de admitir.']},
+  {texto:['Alguém pregou um saco plástico num tronco com dois pregos. Dentro tem Antídoto e um bilhete: "PEGA SE PRECISAR. DEVOLVE QUANDO DER."'],
+   ef:{itens:{'Antidote':1}}},
+  {texto:['Uma fogueira apagada há poucas horas, com pedra em círculo e a lata de comida enterrada de propósito.',
+          'Quem acampou aqui sabia o que estava fazendo e não queria ser encontrado.']},
+  {texto:['Um par de pegadas pequenas indo, e o mesmo par voltando, e entre eles um lugar onde alguém sentou por muito tempo.']},
+  {texto:['Um pedaço de corda boa, doze metros, enrolado direito e deixado num galho. Isso não se perde: isso se deixa.'], ef:{itens:{'Corda':1}}},
+  {texto:['Uma cerca velha que separa duas coisas exatamente iguais.']},
+  {texto:['Um Pidgey morto na beira da trilha, sem marca nenhuma. Você enterra porque não custa nada e porque custa alguma coisa não enterrar.'],
+   ef:{rep:{eixo:'bom',delta:1,motivo:'Enterrou um bicho que ninguém ia enterrar'}}},
+  {texto:['Um vidro de Super Potion caído do bolso de alguém, ainda lacrado, na beira de uma pedra onde é óbvio que gente senta.'],
+   ef:{itens:{'Super Potion':1}}},
+  {texto:['Uma bicicleta enferrujada, encostada numa árvore, com as duas rodas murchas e o cadeado ainda trancado.']},
+  {texto:['Alguém escreveu num tronco com canivete: "EU PASSEI POR AQUI E EU VOLTEI". Está escrito duas vezes, com letras diferentes e anos de diferença.']},
+  {texto:['Um Repelente pela metade, jogado no acostamento. Ninguém joga fora Repelente pela metade sem um motivo.'], ef:{itens:{'Repelente':1}}},
+  {texto:['Você acha uma carteira sem documento nenhum, com dinheiro dentro e uma foto de duas pessoas na praia.',
+          'Você guarda o dinheiro e deixa a carteira no lugar, com a foto pra cima, o que não faz sentido nenhum e é o que dá pra fazer.'],
+   ef:{dinheiro:1400}},
+  {texto:['Um caderno de campo largado, com chuva por cima. As dez primeiras páginas são anotação de treinador. Da décima primeira em diante é só data e a palavra "nada".'],
+   ef:{itens:{'Caderno de campo':1}}},
+
+  /* ─── mata e campo ─── */
+  {amb:['floresta','campo'], texto:['Um tronco oco com fungo amarelo por dentro. Dentro do fungo, um vidro que alguém escondeu ali: Full Heal.'], ef:{itens:{'Full Heal':1}}},
+  {amb:['floresta'], texto:['Fita laranja amarrada em cinco árvores em linha. Não é marcação de trilha — é marcação de outra coisa.']},
+  {amb:['floresta'], texto:['Você acha uma clareira que não devia existir: dez metros de círculo sem uma única árvore, com o capim mais alto no meio.']},
+  {amb:['campo'], texto:['Um espantalho de roupa boa. Ninguém veste espantalho com roupa boa.']},
+  {amb:['campo','floresta'], texto:['Uma colmeia caída, vazia, e o cheiro de mel ainda no ar. Você não é o primeiro a chegar aqui hoje.'], ef:{itens:{'Ração':1}}},
+
+  /* ─── água ─── */
+  {amb:['agua'], texto:['Na beira, uma garrafa fechada com um papel dentro. O papel está em branco dos dois lados.']},
+  {amb:['agua'], texto:['Uma rede de pesca rasgada enrolada numa pedra, com dois anzóis bons ainda presos.'], ef:{itens:{'Isca':2}}},
+  {amb:['agua'], texto:['Alguém deixou um cantil cheio em cima de uma pedra, tampado, com o sol batendo.'], ef:{itens:{'Cantil':1}}},
+  {amb:['agua'], texto:['A água mudou de cor num trecho de uns vinte metros. Não é sombra. Você anota o ponto de cabeça.']},
+
+  /* ─── caverna e montanha ─── */
+  {amb:['caverna','montanha'], texto:['Numa fresta da rocha, um par de pilhas embalado e ainda bom.'], ef:{itens:{'Pilha':2}}},
+  {amb:['caverna'], texto:['Uma lanterna caída, com a luz amarelada ainda acesa, apontada pra parede.',
+                            'Ela está acesa. Isso quer dizer que caiu hoje.'], ef:{itens:{'Lanterna':1}}},
+  {amb:['caverna'], texto:['Um retângulo liso na parede da caverna, do tamanho de uma porta, cortado com serra.']},
+  {amb:['montanha','caverna'], texto:['Uma máscara de pó de pedreira pendurada num prego batido na rocha, limpa, esperando alguém.'], ef:{itens:{'Máscara de pó':1}}},
+  {amb:['montanha'], texto:['Do alto dá pra ver quatro cidades ao mesmo tempo. Você fica parado mais tempo do que planejou.'], ef:{hp:3}},
+
+  /* ─── cemitério, cidade e ruína ─── */
+  {amb:['cemiterio'], texto:['Uma flor amarela nascida sozinha entre duas pedras, longe de onde essa flor devia nascer.']},
+  {amb:['cidade','especial'], texto:['Numa lixeira de rua, uma Câmera descartável com dezoito poses ainda. Ninguém joga isso fora à toa.'],
+   ef:{itens:{'Câmera descartável':1}}},
+  {amb:['especial','cidade'], texto:['Um papel timbrado amassado no chão, com brasão no alto. Você desamassa. É um aviso de cobrança de água.']}
 ];
 
 const Descobertas = {
@@ -4648,7 +5076,11 @@ const Descobertas = {
       Estado.registrar(`Descobriu em ${local.nome}: ${a.texto[0].slice(0,60)}…`);
       return a;
     }
-    if (!soCidade && Dados.chance(45)) return Dados.escolher(ACHADOS_ROTA);
+    if (!soCidade && Dados.chance(52)){
+      const amb = local.ambiente || 'campo';
+      const pool = ACHADOS_ROTA.filter(a => !a.amb || a.amb.includes(amb));
+      return Dados.escolher(pool.length ? pool : ACHADOS_ROTA);
+    }
     return null;
   }
 };
@@ -4749,16 +5181,33 @@ const Cidade = {
   },
 
   loja(){
-    const catalogo = [
-      ['Poké Ball',200],['Great Ball',600],['Ultra Ball',1200],
-      ['Potion',300],['Super Potion',700],['Hyper Potion',1500],
-      ['Revive',1500],['Antidote',250],['Full Heal',600],
-      ['Bandagem',400],['Ração',350]
-    ];
-    UI.modal('Loja — ' + Estado.j.dinheiro + ' ₽', catalogo.map(([n,p]) =>
-      `<button class="escolha" ${Estado.j.dinheiro < p ? 'disabled style="opacity:.4"':''}
-        onclick="Cidade.comprar('${n}',${p})">${n} — ${p} ₽
-        <span class="pd">${descricaoItem(n)}</span></button>`).join(''));
+    const id = Mundo.id();
+    const L = LOJAS[id];
+    const catalogo = catalogoDaCidade(id);
+    if (!catalogo.length)
+      return UI.modal('Loja', '<p class="nada">Não tem loja aqui. Tem quem venda, mas não tem loja.</p>', false, 'mochila');
+
+    const topo = `<div class="mochila-topo">
+      <span class="grana">${Estado.j.dinheiro} ₽</span>
+      <span class="peso">${UI.esc(L.nome)}</span>
+    </div>
+    <p class="sussurro" style="margin:0 0 12px">${UI.esc(L.ar)}</p>`;
+
+    const linhas = catalogo.map(([n,p]) => {
+      const caro = Estado.j.dinheiro < p;
+      const desc = descricaoItem(n);
+      const tenho = Estado.contaItem(n);
+      return `<button class="item-linha compravel${caro ? ' caro' : ''}" ${caro ? 'disabled' : ''}
+        onclick="Cidade.comprar('${n.replace(/'/g,"\\'")}',${p})">
+        <span class="qtd">${p}</span>
+        <span class="corpo">
+          <span class="nome">${UI.esc(n)}${tenho ? ` <span class="fraco">(você tem ${tenho})</span>` : ''}</span>
+          ${desc ? `<span class="desc">${UI.esc(desc)}</span>` : ''}
+        </span>
+      </button>`;
+    }).join('');
+
+    UI.modal('', topo + linhas, false, 'mochila');
   },
   comprar(nome, preco){
     if (Estado.j.dinheiro < preco) return;
@@ -23156,16 +23605,108 @@ const UI = {
     const corpo = itens.length
       ? itens.map(([n,q]) => {
           const desc = descricaoItem(n);
+          const info = ITENS_INFO[n] || {};
+          const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
+                         && Estado.dados.modo !== 'batalha';
           return `<div class="item-linha">
             <span class="qtd">×${q}</span>
             <span class="corpo">
               <span class="nome">${this.esc(n)}</span>
               ${desc ? `<span class="desc">${this.esc(desc)}</span>` : ''}
             </span>
+            ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+              onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
           </div>`;
         }).join('')
       : '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>';
     this.modal('Mochila', topo + corpo, false, 'mochila');
+  },
+
+  /* usar item fora de combate: pedra evolutiva, cura, PP, repelente */
+  usarDaMochila(nome){
+    const info = ITENS_INFO[nome] || {};
+    const d = Estado.dados;
+    if (!Estado.contaItem(nome)) return;
+
+    if (info.tipo === 'curaJogador'){
+      Estado.usarItem(nome); Estado.curarJogador(info.valor); Estado.salvar('auto');
+      this.modal('', `<p>Você se cuida sozinho, sentado em algum lugar que não é confortável.</p>
+        <p class="sussurro">HP ${Estado.j.hp}/${Estado.hpMaxJogador()}.</p>`, false, 'mochila');
+      return;
+    }
+    if (info.tipo === 'repelente'){
+      Estado.usarItem(nome);
+      d.repelenteAte = (d.relogio.dia * 4) + info.valor;
+      Estado.salvar('auto');
+      this.modal('', '<p>O cheiro é horrível e funciona. Por uns períodos, o mato em volta fica mais quieto do que devia.</p>', false, 'mochila');
+      return;
+    }
+    if (info.tipo === 'pedra'){
+      const tabela = PEDRAS[nome] || {};
+      const alvos = d.time.filter(p => !p.morto && tabela[p.dex]);
+      if (!alvos.length)
+        return this.modal('', `<p class="nada">Você segura a pedra perto de cada um deles, um por um, e não acontece nada.
+          Ou nenhum deles é do tipo, ou nenhum deles está pronto. Não dá pra saber qual das duas.</p>`, false, 'mochila');
+      return this.modal('Em quem?', alvos.map(p =>
+        `<button class="escolha" onclick="UI.aplicarPedra('${nome.replace(/'/g,"\\'")}','${p.uid}')">
+          ${this.esc(nomeExib(p))} <span class="pd">vira ${this.esc(DEX[tabela[p.dex]].nome)} — e não volta</span></button>`).join(''),
+        false, 'mochila');
+    }
+    /* cura, revive, status, moral, pp: escolher alvo */
+    const alvos = d.time.filter(p => !p.morto);
+    if (!alvos.length) return this.modal('', '<p class="nada">Não tem em quem usar.</p>', false, 'mochila');
+    this.modal('Em quem?', alvos.map(p =>
+      `<button class="escolha" onclick="UI.aplicarItemFora('${nome.replace(/'/g,"\\'")}','${p.uid}')">
+        ${this.esc(nomeExib(p))} <span class="pd">${p.hp}/${p.hpMax} HP${p.status?` · ${this.esc(p.status)}`:''}</span></button>`).join(''),
+      false, 'mochila');
+  },
+
+  aplicarPedra(nome, uid){
+    const d = Estado.dados;
+    const p = d.time.find(x => x.uid === uid);
+    const destino = (PEDRAS[nome]||{})[p && p.dex];
+    if (!p || !destino) return;
+    Estado.usarItem(nome);
+    const antigo = nomeExib(p);
+    evoluir(p, destino);
+    Estado.marcar('usou_pedra');
+    Estado.registrar(`${antigo} virou ${p.nome} com ${nome}.`);
+    Estado.salvar('auto');
+    this.modal('', `<p>Leva uns quatro segundos e não tem som nenhum.</p>
+      <p>${this.esc(antigo)} muda de tamanho, de cor e de peso na sua mão, e quando acaba você está segurando ${this.esc(nomeExib(p))} e a pedra virou pó entre os seus dedos.</p>
+      <p class="sussurro">Ele te olha exatamente do mesmo jeito. Isso é a parte que ninguém conta.</p>`, false, 'mochila');
+  },
+
+  aplicarItemFora(nome, uid){
+    const info = ITENS_INFO[nome] || {};
+    const p = Estado.dados.time.find(x => x.uid === uid);
+    if (!p) return;
+    let msg = '';
+    if (info.tipo === 'cura'){
+      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiado. Potion não resolve isso.`;
+      else { Estado.usarItem(nome); const a = p.hp; p.hp = Math.min(p.hpMax, p.hp + info.valor);
+             msg = `${nomeExib(p)} recuperou ${p.hp - a} de HP.`; }
+    } else if (info.tipo === 'revive'){
+      if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiado.`;
+      else { Estado.usarItem(nome); p.hp = Math.floor(p.hpMax/2); msg = `${nomeExib(p)} voltou a si com ${p.hp} de HP.`; }
+    } else if (info.tipo === 'status'){
+      Estado.usarItem(nome); p.status = null; p.statusTurnos = 0;
+      msg = `${nomeExib(p)} teve as condições curadas.`;
+    } else if (info.tipo === 'moral'){
+      Estado.usarItem(nome); p.moral = Math.min(100, p.moral + info.valor);
+      msg = `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
+    } else if (info.tipo === 'pp'){
+      const g = p.golpes.find(x => x.pp < x.ppMax);
+      if (!g) msg = `Os golpes de ${nomeExib(p)} estão cheios.`;
+      else { Estado.usarItem(nome); g.pp = Math.min(g.ppMax, g.pp + info.valor);
+             msg = `${this.esc(g.nome)} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`; }
+    } else if (info.tipo === 'ppTodos'){
+      Estado.usarItem(nome);
+      p.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
+      msg = `Todos os golpes de ${nomeExib(p)} recuperaram um pouco.`;
+    }
+    Estado.salvar('auto');
+    this.modal('', `<p>${this.esc(msg)}</p>`, false, 'mochila');
   },
 
   modalFicha(){
@@ -23386,12 +23927,28 @@ const Exploracao = {
   },
 
   /* ---------- ações ---------- */
+  repelenteAtivo(){
+    const d = Estado.dados;
+    if (!d.repelenteAte) return false;
+    const agora = d.relogio.dia * 4;
+    if (agora >= d.repelenteAte){ d.repelenteAte = 0; return false; }
+    return true;
+  },
+
   fazer(acao){
     const L = Mundo.atual();
     const d = Estado.dados;
 
+    if (acao === 'troca'){ return Trocas.tela(); }
+
     if (acao === 'procurar'){
       Mundo.passar(1);
+      if (Exploracao.repelenteAtivo()){
+        return this.tela([
+          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e o mato se afasta antes de você chegar.'},
+          {tipo:'eco', texto:'Funciona. É esse o problema de funcionar.'}
+        ]);
+      }
       if (Dados.chance(78)){
         const p = sortearSelvagem(L.ambiente, L.nivel);
         return this.encontro(p, [

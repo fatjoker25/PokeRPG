@@ -560,3 +560,17 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
     transition-duration:.001ms !important;scroll-behavior:auto !important;
   }
 }
+
+/* ---------- loja ---------- */
+.item-linha.compravel{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:none;border:1px solid transparent;
+}
+.item-linha.compravel:hover:not(:disabled){
+  background:var(--bg-2);border-color:var(--destaque);transform:translateX(3px);
+}
+.item-linha.compravel:active:not(:disabled){transform:translateX(1px) scale(.995)}
+.item-linha.compravel .qtd{color:var(--destaque);min-width:56px}
+.item-linha.compravel:hover:not(:disabled) .qtd{background:var(--destaque);color:#171a20;border-color:var(--destaque)}
+.item-linha.caro{opacity:.4;cursor:not-allowed}
+.item-linha.caro .qtd{color:var(--perigo)}

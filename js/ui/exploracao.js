@@ -75,12 +75,28 @@ const Exploracao = {
   },
 
   /* ---------- ações ---------- */
+  repelenteAtivo(){
+    const d = Estado.dados;
+    if (!d.repelenteAte) return false;
+    const agora = d.relogio.dia * 4;
+    if (agora >= d.repelenteAte){ d.repelenteAte = 0; return false; }
+    return true;
+  },
+
   fazer(acao){
     const L = Mundo.atual();
     const d = Estado.dados;
 
+    if (acao === 'troca'){ return Trocas.tela(); }
+
     if (acao === 'procurar'){
       Mundo.passar(1);
+      if (Exploracao.repelenteAtivo()){
+        return this.tela([
+          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e o mato se afasta antes de você chegar.'},
+          {tipo:'eco', texto:'Funciona. É esse o problema de funcionar.'}
+        ]);
+      }
       if (Dados.chance(78)){
         const p = sortearSelvagem(L.ambiente, L.nivel);
         return this.encontro(p, [

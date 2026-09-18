@@ -831,16 +831,108 @@ const UI = {
     const corpo = itens.length
       ? itens.map(([n,q]) => {
           const desc = descricaoItem(n);
+          const info = ITENS_INFO[n] || {};
+          const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
+                         && Estado.dados.modo !== 'batalha';
           return `<div class="item-linha">
             <span class="qtd">×${q}</span>
             <span class="corpo">
               <span class="nome">${this.esc(n)}</span>
               ${desc ? `<span class="desc">${this.esc(desc)}</span>` : ''}
             </span>
+            ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+              onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
           </div>`;
         }).join('')
       : '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>';
     this.modal('Mochila', topo + corpo, false, 'mochila');
+  },
+
+  /* usar item fora de combate: pedra evolutiva, cura, PP, repelente */
+  usarDaMochila(nome){
+    const info = ITENS_INFO[nome] || {};
+    const d = Estado.dados;
+    if (!Estado.contaItem(nome)) return;
+
+    if (info.tipo === 'curaJogador'){
+      Estado.usarItem(nome); Estado.curarJogador(info.valor); Estado.salvar('auto');
+      this.modal('', `<p>Você se cuida sozinho, sentado em algum lugar que não é confortável.</p>
+        <p class="sussurro">HP ${Estado.j.hp}/${Estado.hpMaxJogador()}.</p>`, false, 'mochila');
+      return;
+    }
+    if (info.tipo === 'repelente'){
+      Estado.usarItem(nome);
+      d.repelenteAte = (d.relogio.dia * 4) + info.valor;
+      Estado.salvar('auto');
+      this.modal('', '<p>O cheiro é horrível e funciona. Por uns períodos, o mato em volta fica mais quieto do que devia.</p>', false, 'mochila');
+      return;
+    }
+    if (info.tipo === 'pedra'){
+      const tabela = PEDRAS[nome] || {};
+      const alvos = d.time.filter(p => !p.morto && tabela[p.dex]);
+      if (!alvos.length)
+        return this.modal('', `<p class="nada">Você segura a pedra perto de cada um deles, um por um, e não acontece nada.
+          Ou nenhum deles é do tipo, ou nenhum deles está pronto. Não dá pra saber qual das duas.</p>`, false, 'mochila');
+      return this.modal('Em quem?', alvos.map(p =>
+        `<button class="escolha" onclick="UI.aplicarPedra('${nome.replace(/'/g,"\\'")}','${p.uid}')">
+          ${this.esc(nomeExib(p))} <span class="pd">vira ${this.esc(DEX[tabela[p.dex]].nome)} — e não volta</span></button>`).join(''),
+        false, 'mochila');
+    }
+    /* cura, revive, status, moral, pp: escolher alvo */
+    const alvos = d.time.filter(p => !p.morto);
+    if (!alvos.length) return this.modal('', '<p class="nada">Não tem em quem usar.</p>', false, 'mochila');
+    this.modal('Em quem?', alvos.map(p =>
+      `<button class="escolha" onclick="UI.aplicarItemFora('${nome.replace(/'/g,"\\'")}','${p.uid}')">
+        ${this.esc(nomeExib(p))} <span class="pd">${p.hp}/${p.hpMax} HP${p.status?` · ${this.esc(p.status)}`:''}</span></button>`).join(''),
+      false, 'mochila');
+  },
+
+  aplicarPedra(nome, uid){
+    const d = Estado.dados;
+    const p = d.time.find(x => x.uid === uid);
+    const destino = (PEDRAS[nome]||{})[p && p.dex];
+    if (!p || !destino) return;
+    Estado.usarItem(nome);
+    const antigo = nomeExib(p);
+    evoluir(p, destino);
+    Estado.marcar('usou_pedra');
+    Estado.registrar(`${antigo} virou ${p.nome} com ${nome}.`);
+    Estado.salvar('auto');
+    this.modal('', `<p>Leva uns quatro segundos e não tem som nenhum.</p>
+      <p>${this.esc(antigo)} muda de tamanho, de cor e de peso na sua mão, e quando acaba você está segurando ${this.esc(nomeExib(p))} e a pedra virou pó entre os seus dedos.</p>
+      <p class="sussurro">Ele te olha exatamente do mesmo jeito. Isso é a parte que ninguém conta.</p>`, false, 'mochila');
+  },
+
+  aplicarItemFora(nome, uid){
+    const info = ITENS_INFO[nome] || {};
+    const p = Estado.dados.time.find(x => x.uid === uid);
+    if (!p) return;
+    let msg = '';
+    if (info.tipo === 'cura'){
+      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiado. Potion não resolve isso.`;
+      else { Estado.usarItem(nome); const a = p.hp; p.hp = Math.min(p.hpMax, p.hp + info.valor);
+             msg = `${nomeExib(p)} recuperou ${p.hp - a} de HP.`; }
+    } else if (info.tipo === 'revive'){
+      if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiado.`;
+      else { Estado.usarItem(nome); p.hp = Math.floor(p.hpMax/2); msg = `${nomeExib(p)} voltou a si com ${p.hp} de HP.`; }
+    } else if (info.tipo === 'status'){
+      Estado.usarItem(nome); p.status = null; p.statusTurnos = 0;
+      msg = `${nomeExib(p)} teve as condições curadas.`;
+    } else if (info.tipo === 'moral'){
+      Estado.usarItem(nome); p.moral = Math.min(100, p.moral + info.valor);
+      msg = `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
+    } else if (info.tipo === 'pp'){
+      const g = p.golpes.find(x => x.pp < x.ppMax);
+      if (!g) msg = `Os golpes de ${nomeExib(p)} estão cheios.`;
+      else { Estado.usarItem(nome); g.pp = Math.min(g.ppMax, g.pp + info.valor);
+             msg = `${this.esc(g.nome)} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`; }
+    } else if (info.tipo === 'ppTodos'){
+      Estado.usarItem(nome);
+      p.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
+      msg = `Todos os golpes de ${nomeExib(p)} recuperaram um pouco.`;
+    }
+    Estado.salvar('auto');
+    this.modal('', `<p>${this.esc(msg)}</p>`, false, 'mochila');
   },
 
   modalFicha(){

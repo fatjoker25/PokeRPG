@@ -384,6 +384,9 @@ function afazeresDoLocal(){
       sub:'Comprar o que der pra pagar.'});
     if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
       sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
+    if (tem('troca_'+id) && typeof TROCAS !== 'undefined' && TROCAS[id])
+      lista.push({id:'troca', titulo:'Quem estava querendo trocar',
+        sub: Trocas.jaFez(id) ? 'Já está feito. Dá pra passar e cumprimentar.' : TROCAS[id].onde});
   }
 
   if (id === 'planalto'){
