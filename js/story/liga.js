@@ -5,69 +5,77 @@
 
 const ELITE4 = [
 {
-  id:'lorelei', ordem:1, nome:'Lorelei', tipo:'Gelo', nivelBase:60,
-  especies:[87, 91, 124, 131, 144],       // Dewgong, Cloyster, Jynx, Lapras, Articuno
+  id:'giselle', ordem:1, nome:'Giselle', tipo:'técnica', nivelBase:60,
+  especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
-    'A sala de Lorelei é mantida a quatro graus. Você vê a própria respiração antes de ver a adversária.',
-    '"Eu vou explicar a regra uma vez, porque ninguém lê o regulamento." Ela nem olha pra cima. "Você não sai desta ala até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
+    'A primeira sala não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
+    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro.',
+    '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',
+    '"Eu vou explicar a regra da ala uma vez, porque ninguém lê o regulamento: você não sai daqui até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
     '"O que estiver na sua mochila é tudo o que você tem pelas próximas quatro batalhas."',
-    d.flags.salvou_o_filhote
-      ? '"Ah." Ela finalmente levanta os olhos. "Você é o das Seafoam." Uma pausa longa. "Eu fui lá em março. Eu não consegui quebrar o gelo e voltei. Você quebrou."'
-      : ''
+    d=>d.insignias.length >= 8 ? '"Oito insígnias." Ela anota alguma coisa. "Eu tenho dados de quatrocentos e onze desafiantes com oito insígnias. Cento e nove passaram desta sala."' : ''
   ],
   vitoria:d=>[
-    'O último dela cede e a temperatura da sala sobe dois graus em algum lugar de um sistema automático.',
-    '"Bom." Lorelei já está anotando alguma coisa numa prancheta. "Próxima sala. Não descansa. Isso é de propósito."'
+    'O último dela cai e Giselle fecha o caderno com as duas mãos, sem pressa.',
+    '"Cento e dez." Ela anota. "Eu odiei isso e eu vou registrar direito mesmo assim, porque dado torto não serve pra nada."',
+    '"Próxima sala. Não descansa. Isso é de propósito."'
   ]
 },
 {
-  id:'bruno', ordem:2, nome:'Bruno', tipo:'Lutador', nivelBase:62,
-  especies:[95, 107, 106, 68, 76],        // Onix, Hitmonchan, Hitmonlee, Machamp, Golem
+  id:'aj', ordem:2, nome:'A.J.', tipo:'Terrestre', nivelBase:62,
+  especies:[28, 51, 105, 112, 76],   // Sandslash, Dugtrio, Marowak, Rhydon, Golem
   intro:d=>[
-    'A sala de Bruno não tem mobília. Nenhuma. Só piso de pedra e ele, em pé, no centro.',
-    '"Você venceu a Lorelei." Ele se alonga sem pressa. "Isso significa que o seu time está gasto e você está com pressa. As duas coisas jogam a meu favor."',
-    '"Eu não vou pegar leve por causa disso. Isso é parte do teste."'
+    'A segunda sala é de terra batida e não tem mobília nenhuma. Nem cadeira, nem bancada, nem água.',
+    'O homem no centro tem chicote pendurado no cinto e não usa o chicote há anos — ele carrega porque a história dele carrega.',
+    '"A.J." Ele nem estende a mão. "Noventa e oito vitórias seguidas antes de eu fazer dezesseis anos. Depois disso eu parei de contar, porque contar vira vaidade."',
+    '"Eu treinei do jeito errado quando era moleque. Muita gente me disse isso e todas elas tinham razão." Ele se alonga sem pressa.',
+    '"Eu mudei o método. Não mudei o resultado."',
+    d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : ''
   ],
   vitoria:d=>[
-    'O Machamp cai de joelhos e a sala vazia devolve o som três vezes.',
-    'Bruno assente uma única vez.',
-    '"Você aguentou cansado. Tem gente que só sabe vencer descansada." Ele abre a porta com o ombro. "Vai. A Agatha está esperando e ela detesta esperar."'
+    'O Sandslash cai de lado e a sala vazia devolve o som três vezes.',
+    'A.J. assente uma única vez e não fala nada por um tempo desconfortável.',
+    '"Você aguentou cansado." Ele abre a porta com o ombro. "Tem gente que só sabe vencer descansada. Vai. O Mandi detesta esperar e faz questão de avisar."'
   ]
 },
 {
-  id:'agatha', ordem:3, nome:'Agatha', tipo:'Fantasma', nivelBase:64,
-  especies:[94, 93, 42, 89, 24],          // Gengar, Haunter, Golbat, Muk, Arbok
+  id:'mandi', ordem:3, nome:'Mandi', tipo:'variado', nivelBase:64,
+  especies:[103, 117, 42, 49, 94],   // Exeggutor, Seadra, Golbat, Venomoth, Gengar
   intro:d=>[
-    'A sala de Agatha é a única com carpete. É quente, tem cheiro de incenso e tem uma poltrona.',
-    'Ela tem oitenta e poucos anos e está sentada na poltrona.',
-    '"Você é novo." A voz é agradável. "Eu treino há sessenta anos. Você existe há quinze."',
-    d.flags.escreveu_mural || d.cemiterio.length
-      ? '"E você já enterrou alguém." Ela sorri sem nenhuma maldade. "Isso muda a sua batalha. Quem já enterrou não tem medo de fantasma — tem outra coisa, pior, e eu vou usar."'
-      : '"Fantasma assusta quem nunca perdeu nada. Vamos descobrir qual é o seu caso."'
+    'A terceira sala tem iluminação de palco. Refletor, fumaça de máquina, e uma música que começa quando você entra.',
+    '"MANDI!" Ele abre os braços para uma plateia que não existe. "O ESPANTOSO!"',
+    'Depois baixa os braços e fala em tom normal, o que é muito mais assustador:',
+    '"Todo mundo acha que eu sou palhaço. Eu fui vice-campeão da Conferência Indigo, e eu virei palhaço de propósito, porque desafiante nervoso erra mais do que desafiante assustado."',
+    '"Agora você sabe. E vai errar mesmo assim."'
   ],
   vitoria:d=>[
-    'O Gengar se dissolve no ar e o carpete fica com um vinco onde ele estava.',
-    'Agatha aplaude três vezes, devagar, sentada.',
-    '"Sessenta anos e um moleque." Ela parece genuinamente satisfeita. "Isso é a melhor coisa que pode acontecer com uma velha. O Lance está na última porta. Ele vai ser mais difícil e mais chato."'
+    'O Gengar se dissolve no ar e a música do palco para no meio de um compasso.',
+    'Mandi acende a luz normal da sala, e sem o refletor ele parece dez anos mais velho.',
+    '"Bom." Ele guarda as bolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
+    '"Última porta. O Ritchie é a pessoa mais gentil desta ala e é por isso que ele é o último."'
   ]
 },
 {
-  id:'lance', ordem:4, nome:'Lance', tipo:'Dragão', nivelBase:66,
-  especies:[130, 148, 148, 142, 149],     // Gyarados, Dragonair, Dragonair, Aerodactyl, Dragonite
+  id:'ritchie', ordem:4, nome:'Ritchie', tipo:'variado', nivelBase:66,
+  especies:[12, 18, 143, 6, 25],     // Happy, Rose, Snorlax, Zippo, Sparky
+  apelidos:{12:'Happy', 18:'Rose', 6:'Zippo', 25:'Sparky'},
   intro:d=>[
-    'A última sala da ala é um poço. Você desce por uma escada e a arena fica quinze metros abaixo do nível do corredor.',
-    'Lance está no centro, de capa, com o maior Dragonite que você já viu na vida parado atrás dele.',
-    '"Eu sou o último." Ele fala alto por causa do eco. "E, tecnicamente, há dois anos eu também sou o primeiro."',
-    '"A cadeira de Campeão está vaga desde que o Red desapareceu. Eu assino os documentos. Eu não uso o título."',
-    d.flags.liga_aliada
-      ? '"E eu sei que te mandaram pro norte." Ele ajusta a capa. "Então vamos ser rápidos, porque o que está lá em cima é mais importante do que isto aqui."'
-      : '"Se você me vencer, alguma coisa vai acontecer. Eu não sei o quê. Ninguém me venceu desde que a cadeira vagou."'
+    'A última sala da ala é a menor das quatro e tem uma janela — a única janela do corredor inteiro.',
+    'O rapaz ali dentro tem uns dezenove anos, boné virado e um Pikachu no ombro que está claramente acostumado a ficar no ombro.',
+    '"Ritchie." Ele estende a mão e espera de verdade que você aperte. "Esse é o Sparky."',
+    '"Eu perdi uma Conferência Indigo faz uns anos. Perdi bem, com todo mundo vendo." Ele coça a cabeça do Pikachu. "Demorei pra entender que isso foi a melhor coisa que me aconteceu."',
+    d=>d.flags.liga_aliada ? '"E eu sei que te mandaram pro norte." Ele fica sério de um jeito que não combina com o resto dele. "Então vamos ser rápidos. O que tá lá em cima é mais importante que isto aqui, e eu tenho consciência disso."'
+      : '"Eu dou nome pra todos eles. As pessoas acham engraçado." Ele dá de ombros. "Pra mim é o contrário de engraçado."',
+    '"Vem. Sem medo. Eu não mordo e o Sparky também não — ele só é muito rápido."'
   ],
   vitoria:d=>[
-    'O Dragonite cai de lado e o poço inteiro treme.',
-    'Lance fica olhando pra cima, pro corredor de onde você desceu, por um tempo estranho.',
-    '"Dois anos." Ele fala baixo. "Dois anos e ninguém tinha passado por essa porta."',
-    'Ele aperta um botão numa parede que você não tinha visto, e ao fundo do poço uma porta que você achou que fosse parede começa a abrir.'
+    'O Sparky cai, e Ritchie está de joelhos ao lado dele antes de o corpo encostar no chão.',
+    'Ele passa quase um minuto inteiro cuidando do Pikachu e ignorando você completamente, e isso é a coisa mais respeitável que acontece nessa ala.',
+    'Depois levanta e sorri de verdade.',
+    '"Cara." Ele ri. "CARA."',
+    '"Você sabe que não tem mais ninguém, né? Depois de mim não tem Elite. Tem a porta."',
+    'Ele aperta um botão numa parede que você não tinha visto, e ao fundo da sala uma coisa que você achou que fosse parede começa a abrir.',
+    '"A cadeira tá vaga faz dois anos. Boa sorte com quem for que esteja lá dentro — porque não sou eu que assino."'
   ]
 }
 ];
@@ -76,6 +84,7 @@ const ELITE4 = [
 const CAMPEAO = {
   id:'red', nome:'Red', nivelBase:72,
   especies:[25, 143, 131, 3, 6, 9],       // Pikachu, Snorlax, Lapras, Venusaur, Charizard, Blastoise
+  apelidos:{25:'Pika'},
   intro:d=>[
     'A sala atrás da última porta não é uma arena. É um salão vazio, sem iluminação de arena, com uma claraboia.',
     'Tem uma pessoa em pé no centro. Boné, jaqueta, mochila. Aparenta uns dezoito anos.',

@@ -24,10 +24,10 @@ const GINASIOS = [
   id:'pewter', cidade:'Pewter', lider:'Brock', tipo:'Pedra',
   insignia:'Insígnia Pedra', dificuldade:0,
   escaloes:[
-    {min:0, especies:[74, 95]},                  // Geodude, Onix
-    {min:2, especies:[74, 95, 75]},              // + Graveler
-    {min:4, especies:[75, 111, 95, 138]},        // Graveler, Rhyhorn, Onix, Omanyte
-    {min:6, especies:[76, 112, 95, 141, 142]}    // Golem, Rhydon, Onix, Kabutops, Aerodactyl
+    {min:0, especies:[74, 95], variacoes:[27,50,74]},                  // Geodude, Onix
+    {min:2, especies:[74, 95, 75], variacoes:[27,50,95,74]},              // + Graveler
+    {min:4, especies:[75, 111, 95, 138], variacoes:[28,105,74,95]},        // Graveler, Rhyhorn, Onix, Omanyte
+    {min:6, especies:[76, 112, 95, 141, 142], variacoes:[28,105,76,112]}    // Golem, Rhydon, Onix, Kabutops, Aerodactyl
   ],
   efeito:'Pokémon que não escolheram você passam a hesitar menos.',
   premio:{dinheiro:1200, itens:{'Super Potion':2}, rep:1},
@@ -57,10 +57,10 @@ const GINASIOS = [
   id:'cerulean', cidade:'Cerulean', lider:'Misty', tipo:'Água',
   insignia:'Insígnia Cascata', dificuldade:1,
   escaloes:[
-    {min:0, especies:[116, 120]},                     // Horsea, Staryu
-    {min:2, especies:[116, 120, 60]},                 // + Poliwag
-    {min:4, especies:[117, 61, 121, 119]},            // Seadra, Poliwhirl, Starmie, Seaking
-    {min:6, especies:[117, 62, 87, 131, 121, 130]}    // Seadra, Poliwrath, Dewgong, Lapras, Starmie, Gyarados
+    {min:0, especies:[116, 120], variacoes:[54,118,98]},                     // Horsea, Staryu
+    {min:2, especies:[116, 120, 60], variacoes:[54,118,98,86]},                 // + Poliwag
+    {min:4, especies:[117, 61, 121, 119], variacoes:[55,119,99,87]},            // Seadra, Poliwhirl, Starmie, Seaking
+    {min:6, especies:[117, 62, 87, 131, 121, 130], variacoes:[55,119,99,80]}    // Seadra, Poliwrath, Dewgong, Lapras, Starmie, Gyarados
   ],
   efeito:'Lojas de Kanto passam a te vender o estoque de trás do balcão.',
   premio:{dinheiro:2400, itens:{'Super Potion':2,'Great Ball':3}, rep:1},
@@ -102,10 +102,10 @@ const GINASIOS = [
   id:'vermilion', cidade:'Vermilion', lider:'Lt. Surge', tipo:'Elétrico',
   insignia:'Insígnia Trovão', dificuldade:1,
   escaloes:[
-    {min:0, especies:[100, 25]},                      // Voltorb, Pikachu
-    {min:2, especies:[100, 81, 25]},                  // + Magnemite
-    {min:4, especies:[101, 82, 26, 125]},             // Electrode, Magneton, Raichu, Electabuzz
-    {min:6, especies:[101, 82, 125, 135, 26]}         // + Jolteon, Raichu de ace
+    {min:0, especies:[100, 25], variacoes:[81,25,100]},                      // Voltorb, Pikachu
+    {min:2, especies:[100, 81, 25], variacoes:[81,25,100]},                  // + Magnemite
+    {min:4, especies:[101, 82, 26, 125], variacoes:[26,82,101,125]},             // Electrode, Magneton, Raichu, Electabuzz
+    {min:6, especies:[101, 82, 125, 135, 26], variacoes:[26,82,101,135]}         // + Jolteon, Raichu de ace
   ],
   efeito:'Você aprende a ler uma sala antes de entrar nela. (+1 Percepção)',
   premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3}, rep:1, status:'percepcao'},
@@ -138,10 +138,10 @@ const GINASIOS = [
   id:'celadon', cidade:'Celadon', lider:'Erika', tipo:'Grama',
   insignia:'Insígnia Arco-Íris', dificuldade:2,
   escaloes:[
-    {min:0, especies:[43, 69]},                       // Oddish, Bellsprout
-    {min:2, especies:[44, 70, 102]},                  // Gloom, Weepinbell, Exeggcute
-    {min:4, especies:[45, 70, 114, 102]},             // Vileplume, Weepinbell, Tangela, Exeggcute
-    {min:6, especies:[45, 71, 114, 103, 3]}           // Vileplume, Victreebel, Tangela, Exeggutor, Venusaur
+    {min:0, especies:[43, 69], variacoes:[46,102,43]},                       // Oddish, Bellsprout
+    {min:2, especies:[44, 70, 102], variacoes:[46,102,44,70]},                  // Gloom, Weepinbell, Exeggcute
+    {min:4, especies:[45, 70, 114, 102], variacoes:[47,103,45,71]},             // Vileplume, Weepinbell, Tangela, Exeggcute
+    {min:6, especies:[45, 71, 114, 103, 3], variacoes:[47,103,114,45]}           // Vileplume, Victreebel, Tangela, Exeggutor, Venusaur
   ],
   efeito:'Você passa a reconhecer veneno, remédio e o que há entre os dois. (+1 Intelecto)',
   premio:{dinheiro:4200, itens:{'Full Heal':3,'Hyper Potion':1}, rep:1, status:'intelecto'},
@@ -185,10 +185,10 @@ const GINASIOS = [
   id:'fuchsia', cidade:'Fuchsia', lider:'Koga', tipo:'Venenoso',
   insignia:'Insígnia Alma', dificuldade:3,
   escaloes:[
-    {min:0, especies:[41, 109]},                      // Zubat, Koffing
-    {min:2, especies:[41, 109, 88]},                  // + Grimer
-    {min:4, especies:[42, 110, 89, 48]},              // Golbat, Weezing, Muk, Venonat
-    {min:6, especies:[42, 110, 89, 49, 73, 94]}       // + Venomoth, Tentacruel, Gengar
+    {min:0, especies:[41, 109], variacoes:[48,88,41]},                      // Zubat, Koffing
+    {min:2, especies:[41, 109, 88], variacoes:[48,88,109,41]},                  // + Grimer
+    {min:4, especies:[42, 110, 89, 48], variacoes:[49,89,72,110]},              // Golbat, Weezing, Muk, Venonat
+    {min:6, especies:[42, 110, 89, 49, 73, 94], variacoes:[49,89,73,94]}       // + Venomoth, Tentacruel, Gengar
   ],
   efeito:'Seu corpo aprende a aguentar o que devia derrubar. (+1 Resistência)',
   premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1}, rep:1, status:'resistencia'},
@@ -221,10 +221,10 @@ const GINASIOS = [
   id:'saffron', cidade:'Saffron', lider:'Sabrina', tipo:'Psíquico',
   insignia:'Insígnia Pântano', dificuldade:3,
   escaloes:[
-    {min:0, especies:[63, 122]},                      // Abra, Mr. Mime
-    {min:2, especies:[63, 96, 122]},                  // + Drowzee
-    {min:4, especies:[64, 97, 122, 79]},              // Kadabra, Hypno, Mr. Mime, Slowpoke
-    {min:6, especies:[64, 97, 122, 80, 121, 65]}      // + Slowbro, Starmie, Alakazam
+    {min:0, especies:[63, 122], variacoes:[96,63,122]},                      // Abra, Mr. Mime
+    {min:2, especies:[63, 96, 122], variacoes:[96,63,79,122]},                  // + Drowzee
+    {min:4, especies:[64, 97, 122, 79], variacoes:[80,97,64,102]},              // Kadabra, Hypno, Mr. Mime, Slowpoke
+    {min:6, especies:[64, 97, 122, 80, 121, 65], variacoes:[80,97,121,65]}      // + Slowbro, Starmie, Alakazam
   ],
   efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 Carisma)',
   premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2}, rep:1, status:'carisma'},
@@ -269,10 +269,10 @@ const GINASIOS = [
   id:'cinnabar', cidade:'Cinnabar', lider:'Blaine', tipo:'Fogo',
   insignia:'Insígnia Vulcão', dificuldade:4,
   escaloes:[
-    {min:0, especies:[37, 58]},                       // Vulpix, Growlithe
-    {min:2, especies:[37, 58, 77]},                   // + Ponyta
-    {min:4, especies:[38, 78, 126, 58]},              // Ninetales, Rapidash, Magmar, Growlithe
-    {min:6, especies:[38, 78, 126, 136, 59, 6]}       // + Flareon, Arcanine, Charizard
+    {min:0, especies:[37, 58], variacoes:[37,58,77]},                       // Vulpix, Growlithe
+    {min:2, especies:[37, 58, 77], variacoes:[37,58,77]},                   // + Ponyta
+    {min:4, especies:[38, 78, 126, 58], variacoes:[38,78,126,59]},              // Ninetales, Rapidash, Magmar, Growlithe
+    {min:6, especies:[38, 78, 126, 136, 59, 6], variacoes:[38,78,126,136]}       // + Flareon, Arcanine, Charizard
   ],
   efeito:'Você passa a improvisar quando o plano falha. (+1 Sorte)',
   premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2}, rep:1, status:'sorte'},
@@ -305,7 +305,7 @@ const GINASIOS = [
   id:'viridian', cidade:'Viridian', lider:'Blue', tipo:'variado',
   insignia:'Insígnia Terra', dificuldade:8, requerInsignias:7,
   escaloes:[
-    {min:0, especies:[18, 65, 112, 130, 59, 0]}       // só existe um escalão: ele só recebe quem tem sete
+    {min:0, especies:[18, 65, 112, 130, 59, 0], variacoes:[53,85,49,80,113]}       // só existe um escalão: ele só recebe quem tem sete
   ],
   aceContraInicial:true,
   efeito:'A Liga passa a te tratar como alguém que terminou o que começou.',
@@ -373,8 +373,17 @@ function timeGinasio(g, nForcado){
   for (const f of ESCALOES_NIVEL) if (n >= f.min) faixa = f;
   const base = faixa.base + (g.dificuldade || 0) + (n - faixa.min) * 3;
 
-  const lista = esc.especies.map((dex, i) => ({dex, nivel: base + i}));
-  if (lista.length) lista[lista.length-1].nivel += 2;   // ace
+  // o líder não repete o mesmo time: parte dos slots varia a cada desafio
+  const especies = esc.especies.slice();
+  const pool = (esc.variacoes || []).filter(x => !especies.includes(x));
+  for (let i = 0; i < especies.length - 1 && pool.length; i++){
+    if (Dados.chance(45)){
+      const j = Dados.entre(0, pool.length - 1);
+      especies[i] = pool.splice(j, 1)[0];
+    }
+  }
+  const lista = especies.map((dex, i) => ({dex, nivel: base + i}));
+  if (lista.length) lista[lista.length-1].nivel += 2;   // ace, sempre o mesmo
 
   // Blue fecha com o inicial que vence o seu
   if (g.aceContraInicial){

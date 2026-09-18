@@ -71,6 +71,10 @@ const Estado = {
       insignias: [],
       capitulo: 0,
       cena: null,
+      modo: 'cena',
+      local: 'pallet',
+      visitados: {},
+      descobertas: {},
       flags: {},
       npcs: {},               // memória: {nome:{conhece:true, opiniao:n, viuVoce:'...'}}
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}

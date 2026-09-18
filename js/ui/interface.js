@@ -46,18 +46,15 @@ const UI = {
     return `<div class="topo">
       <div>
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
-        <div class="sub">${cap ? 'Cap. '+cap.num+' · '+this.esc(cap.titulo) : 'Kanto'} ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${d.jogador.dinheiro} ₽ ·
-          Dia ${d.relogio.dia}</div>
+        <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
+          ${this.esc(d.relogio.periodo || 'manhã')} do dia ${d.relogio.dia} ·
+          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${d.jogador.dinheiro} ₽</div>
       </div>
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
         <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
-        <button class="btn mini" onclick="UI.modalRota()">Rota</button>
-        <button class="btn mini" onclick="Jogo.abrirGinasios('cena')">Ginásios${Estado.dados.insignias.filter(i=>i!=='Título de Campeão').length ? ' '+Estado.dados.insignias.filter(i=>i!=='Título de Campeão').length+'/8' : ''}</button>
-        <button class="btn mini" onclick="Jogo.abrirLiga('cena')">Liga</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
     </div>`;
@@ -178,6 +175,7 @@ const UI = {
      CENA NARRATIVA
      ======================================================== */
   telaCena(cena, avisos){
+    Estado.dados.modo = 'cena';
     const cap = Historia.capAtual;
     this.tom(cap.tom); this.limpar(); this.limparDados();
     this.add(this.topo());
@@ -206,6 +204,10 @@ const UI = {
     const c = document.getElementById('avisos');
     if (!c) return;
     lista.forEach(a => {
+      if (a.tipo === 'eco'){
+        c.appendChild(this.el(`<div class="eco">— "${this.esc(a.texto)}"</div>`));
+        return;
+      }
       c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}">${this.esc(a.texto)}</div>`));
     });
   },
@@ -236,10 +238,38 @@ const UI = {
     if (cena.final){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.mostrarFinal()">…</button>`)); return; }
     if (cena.fim){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.fecharCapitulo()">Encerrar o capítulo.</button>`)); return; }
 
+    const visiveis = [];
     (cena.escolhas||[]).forEach((e, i) => {
       if (!Historia.disponivel(e)) return;
+      visiveis.push(i);
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
     });
+
+    // cena curta ganha uma quarta via que sempre cabe: parar e olhar
+    if (visiveis.length && visiveis.length < 4){
+      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.observarCena()">
+        Parar e olhar mais um pouco antes de decidir.</button>`));
+    }
+
+    if (visiveis.length) c.appendChild(this.campoLivre());
+  },
+
+  /* O campo onde o jogador escreve o que faz */
+  campoLivre(){
+    const caixa = this.el(`<div class="acao-livre">
+      <label for="acao-livre">Ou faça outra coisa — escreva:</label>
+      <div class="linha-acao">
+        <input id="acao-livre" type="text" maxlength="160" autocomplete="off"
+               placeholder="ex.: chego devagar e estendo a mão">
+        <button class="btn destaque" onclick="Jogo.acaoLivre()">Fazer</button>
+      </div>
+      <div class="sussurro">O jogo lê o que você escreveu. Se encaixar numa saída que já existe, ele segue por ela. Se não, ele improvisa — e isso conta igual.</div>
+    </div>`);
+    setTimeout(() => {
+      const i = document.getElementById('acao-livre');
+      if (i) i.addEventListener('keydown', ev => { if (ev.key === 'Enter') Jogo.acaoLivre(); });
+    }, 0);
+    return caixa;
   },
 
   /* ========================================================
@@ -392,9 +422,7 @@ const UI = {
       <p class="sussurro">Você tem <b id="pts">${j.pontos}</b> ponto(s). Máximo de +1 por status neste capítulo.</p>
       <div id="status-lista">${linhas}</div>
       <div style="margin-top:22px">
-        <button class="btn destaque" id="btn-seguir" onclick="Jogo.avancarCapitulo()">Continuar a jornada</button>
-        <button class="btn" onclick="UI.telaHub()">Parar em uma cidade antes</button>
-        <button class="btn" onclick="Jogo.abrirGinasios('fimCapitulo')">Ginásios (${Estado.dados.insignias.length}/8)</button>
+        <button class="btn destaque" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
       </div>
     </div>`);
     if (avisosMundo && avisosMundo.length) this.avisos(avisosMundo.map(t => ({tipo:'mundo', texto:t})));

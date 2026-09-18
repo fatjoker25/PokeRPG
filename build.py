@@ -16,3 +16,15 @@ saida = saida.replace('</body>', '<script>\n' + '\n\n'.join(scripts) + '\n</scri
 open('jornada-do-campeao.html', 'w', encoding='utf-8').write(saida)
 print(f'jornada-do-campeao.html — {os.path.getsize("jornada-do-campeao.html")/1024:.0f} KB '
       f'({len(css)} css, {len(js)} scripts)')
+
+# variante para publicação como Artifact: sem doctype/html/body (o host envolve)
+titulo = '<title>Jornada do Campeao</title>'.replace('Campeao', 'Campe\u00e3o')
+estilo = re.search(r'<style>.*?</style>', saida, re.S).group(0)
+corpo  = re.search(r'<body[^>]*>(.*?)</body>', saida, re.S).group(1)
+estilo = estilo.replace('html,body{margin:0;padding:0}', 'body{margin:0}')
+estilo = estilo.replace('body[data-tom=', 'html[data-tom=')
+corpo  = corpo.replace('<div id="app"></div>', '<div id="app" data-tom="leve"></div>')
+corpo  = corpo.replace("tom(t){ document.body.setAttribute('data-tom', t || 'leve'); }",
+                       "tom(t){ document.documentElement.setAttribute('data-tom', t || 'leve'); }")
+open('artefato.html', 'w', encoding='utf-8').write(titulo + '\n' + estilo + '\n' + corpo.strip() + '\n')
+print(f'artefato.html — {os.path.getsize("artefato.html")/1024:.0f} KB (para publicar)')

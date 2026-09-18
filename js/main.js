@@ -26,10 +26,13 @@ const Jogo = {
 
   continuar(){
     if (!Estado.carregar('auto')) return UI.telaInicial();
+    if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){
+      return Exploracao.tela([{tipo:'info', texto:'Você retoma o caminho de onde parou.'}]);
+    }
     Historia.capAtual = Historia.capitulo(Estado.dados.capitulo);
-    if (!Historia.capAtual) return UI.telaInicial();
-    const cena = Historia.ir(Estado.dados.cena);
-    UI.telaCena(cena, [{tipo:'info', texto:'Jornada retomada.'}]);
+    if (!Historia.capAtual) return Exploracao.tela();
+    const cena = Historia.ir(Estado.dados.cena, false);
+    UI.telaCena(cena, [{tipo:'info', texto:'Você retoma o caminho de onde parou.'}]);
   },
 
   criar(){
@@ -45,11 +48,17 @@ const Jogo = {
     Estado.dados.config.danoMult = f.ritmo === 'longo' ? 0.6 : 1;
     Estado.dados.config.ritmo = f.ritmo;
 
+    Mundo.iniciar(f.cidade);
+    Estado.dados.itens = {};                     // a mochila começa vazia
+
     let inicial;
     if (f.inicial === 'rand'){
-      // 1ª Geração, estágio 1 (não é evolução de ninguém)
+      // 1ª Geração, estágio 1 (não é evolução de ninguém).
+      // Fósseis estão extintos: só existem revividos em laboratório, então
+      // ninguém cresce com um. Lendários e Ditto também ficam de fora.
       const evoluidos = new Set(Object.values(DEX).map(p => p.evo).filter(Boolean));
-      const base = POOL_SELVAGEM.filter(d => !evoluidos.has(d));
+      const FOSSEIS = [138,139,140,141,142];
+      const base = POOL_SELVAGEM.filter(d => !evoluidos.has(d) && !FOSSEIS.includes(d) && ![132,151,150].includes(d));
       inicial = criarPokemon(Dados.escolher(base), 5, {
         moral:100,
         historia:'Cresceu com você desde pequeno. Vínculo máximo.'
@@ -72,9 +81,14 @@ const Jogo = {
 
   /* ---------- navegação ---------- */
   irPara(id, avisos){
-    const cena = Historia.ir(id);
+    const cena = Historia.ir(id, true);
+    avisos = (avisos||[]).concat(Historia.avisosCena||[]);
     Estado.salvar('auto');
     if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou os ferimentos.');
+    if (this.ecoLivre){
+      avisos = [{tipo:'eco', texto:this.ecoLivre}].concat(avisos||[]);
+      this.ecoLivre = null;
+    }
     UI.telaCena(cena, avisos);
   },
 
@@ -89,6 +103,60 @@ const Jogo = {
     const avisos = Historia.aplicar(e.ef);
     if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou os ferimentos.');
     this.irPara(e.vai, avisos);
+  },
+
+  /* ---------- AÇÃO LIVRE: o jogador escreve o que faz ---------- */
+  acaoLivre(){
+    const campo = document.getElementById('acao-livre');
+    if (!campo) return;
+    const texto = campo.value.trim();
+    if (!texto) return;
+    campo.value = '';
+
+    const cena = Historia.cenaAtual;
+    const disponiveis = (cena.escolhas||[])
+      .map((e,i)=>({e,i}))
+      .filter(x => Historia.disponivel(x.e));
+
+    const r = Entrada.interpretar(texto, disponiveis.map(x => x.e));
+    if (!r) return;
+
+    if (r.tipo === 'trilha'){
+      const alvo = disponiveis[r.indice];
+      this.ecoLivre = texto;
+      return this.escolher(alvo.i);
+    }
+
+    // o jogo improvisa
+    const imp = Entrada.improviso(r.intencao, cena);
+    const avisos = [{tipo:'eco', texto:texto}];
+    imp.texto.forEach(t => avisos.push({tipo:'info', texto:t}));
+    if (imp.rep) Historia.aplicar({rep:imp.rep}).forEach(a => avisos.push(a));
+    Estado.registrar(`Ação livre: "${texto}"`);
+    Estado.salvar('auto');
+    if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou.');
+    UI.telaCena(Historia.ir(Estado.dados.cena, false), avisos);
+  },
+
+  observarCena(){
+    const t = Dados.teste(Estado.j.status.percepcao, 5, 'Percepção');
+    const cap = Historia.capAtual;
+    const bons = [
+      'Você para. Repara numa coisa que estava ali desde o começo e que você não tinha visto — e ela muda um pouco o peso do resto.',
+      'Um detalhe que não muda o que dá pra fazer, mas muda o que significa fazer.',
+      'Você olha as mãos das pessoas em vez do rosto. Mão mente menos.'
+    ];
+    const meios = [
+      'Você olha mais um pouco e o que aparece é só o tempo passando.',
+      'Nada novo. Mas você deixa de ter pressa, e isso vale alguma coisa.'
+    ];
+    const ruins = [
+      'Você fica parado tempo demais e perde o fio.',
+      'Olhar sem saber o que procurar é só demorar.'
+    ];
+    const linha = (t.grau==='critico'||t.grau==='sucesso') ? Dados.escolher(bons)
+                : t.grau==='parcial' ? Dados.escolher(meios) : Dados.escolher(ruins);
+    UI.telaCena(Historia.ir(Estado.dados.cena, false), [{tipo:'info', texto:linha}]);
   },
 
   /* ---------- teste de perícia ---------- */
@@ -181,12 +249,12 @@ const Jogo = {
         destino = b.vitoria || b.derrota;
     }
 
-    // batalha avulsa do hub
+    // batalha que não pertence a nenhuma cena: veio da exploração
     if (!destino){
       const avisos = [aviso].filter(Boolean);
-      UI.telaHub();
-      UI.avisos(avisos);
       Estado.salvar('auto');
+      this.batalhaLivre = false;
+      Exploracao.tela(avisos);
       return;
     }
     this.irPara(destino, [aviso].filter(Boolean));
@@ -208,6 +276,17 @@ const Jogo = {
     Estado.salvar('auto');
     UI.telaFimCapitulo();
     // repinta mantendo o estado de travas
+  },
+
+  voltarAoMundo(){
+    if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
+    const prox = Estado.dados.capitulo + 1;
+    if (rivalDeveAparecer(prox)){
+      this.proxCapPendente = null;
+      return UI.telaRival();
+    }
+    Estado.salvar('auto');
+    Exploracao.tela();
   },
 
   avancarCapitulo(){
@@ -306,6 +385,7 @@ const Jogo = {
   },
 
   voltarDosGinasios(){
+    if (this.voltarDeGinasio === 'exploracao') return Exploracao.tela();
     if (this.voltarDeGinasio === 'cena' && Historia.cenaAtual){
       UI.telaCena(Historia.ir(Estado.dados.cena));
     } else if (this.voltarDeGinasio === 'fimCapitulo'){
@@ -425,7 +505,7 @@ const Jogo = {
   seguirDepoisDoRival(){
     const prox = this.proxCapPendente;
     this.proxCapPendente = null;
-    if (!prox) return UI.telaHub();
+    if (!prox) return Exploracao.tela();
     const cena = Historia.iniciarCapitulo(prox);
     Estado.salvar('auto');
     UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
@@ -464,7 +544,8 @@ const Jogo = {
 
     const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
     const nivel = alvo.nivelBase;
-    const time = alvo.especies.map((dex,i) => criarPokemon(dex, nivel + i, {}));
+    const time = alvo.especies.map((dex,i) =>
+      criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
     if (time.length) time[time.length-1].nivel += 2;
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null;

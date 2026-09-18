@@ -22,17 +22,23 @@ const Historia = {
     Estado.dados.cena = cap.inicio;
     this.capAtual = cap;
     Estado.registrar(`=== Capítulo ${n}: ${cap.titulo} ===`);
-    return this.ir(cap.inicio);
+    return this.ir(cap.inicio, true);
   },
 
-  ir(idCena){
+  /* aplicarEfeitos: só na PRIMEIRA vez que se entra na cena.
+     Re-renderizações (ação livre, observar) passam false e não repetem nada. */
+  ir(idCena, aplicarEfeitos){
     const cap = this.capAtual || this.capitulo(Estado.dados.capitulo);
     this.capAtual = cap;
     const cena = cap.cenas[idCena];
     if (!cena){ console.error('Cena inexistente:', idCena); return null; }
     Estado.dados.cena = idCena;
     this.cenaAtual = Object.assign({id:idCena}, cena);
-    if (cena.aoEntrar) this.aplicar(cena.aoEntrar);
+    this.avisosCena = [];
+    if (aplicarEfeitos){
+      if (cena.aoEntrar) this.avisosCena = this.avisosCena.concat(this.aplicar(cena.aoEntrar));
+      if (cena.ef)       this.avisosCena = this.avisosCena.concat(this.aplicar(cena.ef));
+    }
     return this.cenaAtual;
   },
 
@@ -57,6 +63,31 @@ const Historia = {
     return linhas;
   },
 
+  /* O que o mundo deixa escapar em vez de anunciar o que você ganhou.
+     O número exato fica no Diário; aqui fica o que vem por aí. */
+  presagio(tipo, ef){
+    const bom = [
+      'Alguém viu isso. Gente lembra desse tipo de coisa por muito mais tempo do que parece.',
+      'Isso vai voltar pra você. Do jeito bom, e provavelmente quando você não estiver esperando.',
+      'Uma pessoa que você nem reparou vai contar isso pra outra pessoa hoje à noite.',
+      'Não muda nada agora. Muda uma coisa depois, num lugar que você ainda não conhece.'
+    ];
+    const ruim = [
+      'Isso vai voltar. Coisa assim sempre volta, e nunca no mesmo formato.',
+      'Ninguém falou nada. Todo mundo viu.',
+      'Alguém vai lembrar disso numa hora em que você precisar que ninguém lembre.',
+      'Você vai reencontrar essa escolha. Ela não tem pressa.'
+    ];
+    const item = [
+      'Você guarda na mochila sem pensar muito.',
+      'Entra na mochila junto com o resto.'
+    ];
+    if (tipo === 'bom')  return {tipo:'rep', texto: Dados.escolher(bom)};
+    if (tipo === 'ruim') return {tipo:'dano', texto: Dados.escolher(ruim)};
+    if (tipo === 'item') return {tipo:'info', texto: Dados.escolher(item)};
+    return null;
+  },
+
   /* ---------- EFEITOS ---------- */
   aplicar(ef){
     if (!ef) return [];
@@ -65,14 +96,12 @@ const Historia = {
     if (ef.limpaFlag){ (Array.isArray(ef.limpaFlag)?ef.limpaFlag:[ef.limpaFlag]).forEach(f => Estado.marcar(f,false)); }
     if (ef.rep){
       const r = Estado.mudarRep(ef.rep.eixo, ef.rep.delta, ef.rep.motivo);
-      if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
-      else if (r) avisos.push({tipo:'rep', texto:`Reputação registrada: ${ef.rep.motivo}`});
+      if (r) { const p = this.presagio(ef.rep.eixo, ef); if (p) avisos.push(p); }
     }
     if (ef.itens){
-      for (const [nome,q] of Object.entries(ef.itens)){
-        Estado.darItem(nome,q);
-        avisos.push({tipo:'item', texto:`Recebeu ${q}× ${nome}.`});
-      }
+      let algum = false;
+      for (const [nome,q] of Object.entries(ef.itens)){ Estado.darItem(nome,q); algum = true; }
+      if (algum){ const p = this.presagio('item', ef); if (p) avisos.push(p); }
     }
     if (ef.perdeItens){
       for (const [nome,q] of Object.entries(ef.perdeItens)){
@@ -82,16 +111,19 @@ const Historia = {
     }
     if (ef.dinheiro){
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro + ef.dinheiro);
-      avisos.push({tipo:'item', texto:`${ef.dinheiro>0?'+':''}${ef.dinheiro} ₽ (total: ${Estado.j.dinheiro} ₽)`});
+      Estado.registrar(`${ef.dinheiro>0?'+':''}${ef.dinheiro} ₽ (total: ${Estado.j.dinheiro} ₽)`);
     }
     if (ef.hp){
       if (ef.hp < 0){
         const morreu = Estado.ferir(-ef.hp, ef.causa || 'ferimento');
-        avisos.push({tipo:'dano', texto:`Você perdeu ${-ef.hp} de HP. (${Estado.j.hp}/${Estado.hpMaxJogador()})`});
+        const prop = Estado.j.hp / Estado.hpMaxJogador();
+        avisos.push({tipo:'dano', texto: prop > 0.66 ? 'Dói, e vai doer mais amanhã.'
+          : prop > 0.33 ? 'Você sente isso de um jeito que não passa rápido. Precisa parar em algum lugar.'
+          : 'Você está mal. Mal de precisar de ajuda, não de precisar descansar.'});
         if (morreu) avisos.push({tipo:'gameover', texto:'Você não aguentou.'});
       } else {
         Estado.curarJogador(ef.hp);
-        avisos.push({tipo:'cura', texto:`Você recuperou ${ef.hp} de HP.`});
+        avisos.push({tipo:'cura', texto:'Alguma coisa em você assenta de volta no lugar.'});
       }
     }
     if (ef.pokemon){
@@ -121,7 +153,7 @@ const Historia = {
     if (ef.npc) Estado.lembrarNPC(ef.npc.nome, ef.npc);
     if (ef.insignia && !Estado.dados.insignias.includes(ef.insignia)){
       Estado.dados.insignias.push(ef.insignia);
-      avisos.push({tipo:'insignia', texto:`Insígnia conquistada: ${ef.insignia} (${Estado.dados.insignias.length}/8)`});
+      avisos.push({tipo:'insignia', texto:`Você sai com a ${ef.insignia} no bolso. Ela pesa menos do que devia.`});
     }
     if (ef.curaTime){ Estado.dados.time.forEach(curarTotal); avisos.push({tipo:'cura', texto:'Seu time foi curado por completo.'}); }
     if (ef.instabilidade){ Estado.dados.mundo.instabilidade += ef.instabilidade; }
@@ -134,6 +166,34 @@ const Historia = {
   disponivel(escolha){
     if (!escolha.cond) return true;
     try { return !!escolha.cond(Estado.dados); } catch(e){ return false; }
+  },
+
+  /* Qual arco da história espera por você NESTE lugar, agora */
+  arcoAqui(){
+    const d = Estado.dados;
+    let n = d.capitulo + 1;
+    while (this.capitulo(n)){
+      const cap = this.capitulo(n);
+      if (cap.requer && !this.testaRequisito(cap)){ n++; continue; }
+      const a = ANCORAS[n];
+      if (!a) return null;
+      if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
+      return null;
+    }
+    return null;
+  },
+
+  /* Onde o próximo arco espera — para a bússola da interface */
+  proximoDestino(){
+    const d = Estado.dados;
+    let n = d.capitulo + 1;
+    while (this.capitulo(n)){
+      const cap = this.capitulo(n);
+      if (cap.requer && !this.testaRequisito(cap)){ n++; continue; }
+      const a = ANCORAS[n];
+      return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
+    }
+    return null;
   },
 
   /* Fim de capítulo: 2 pontos e consequências acumuladas do mundo */

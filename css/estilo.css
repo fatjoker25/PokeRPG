@@ -241,3 +241,24 @@ button{font-family:inherit;font-size:14px;cursor:pointer;transition:.15s}
 .centro{text-align:center}
 .mono{font-family:var(--mono)}
 .nada{color:var(--texto-fraco);font-style:italic;font-size:13.5px}
+
+/* ---------- ação livre ---------- */
+.acao-livre{
+  margin-top:16px;padding:14px 16px;border:1px dashed var(--borda);
+  border-radius:9px;background:var(--bg-2)
+}
+.acao-livre label{
+  display:block;font-size:12px;color:var(--texto-fraco);margin-bottom:8px;
+  text-transform:uppercase;letter-spacing:.08em
+}
+.linha-acao{display:flex;gap:8px}
+.linha-acao input{
+  flex:1;min-width:0;background:var(--bg);border:1px solid var(--borda);color:var(--texto);
+  padding:10px 13px;border-radius:7px;font-family:inherit;font-size:15px
+}
+.linha-acao input:focus{outline:none;border-color:var(--destaque)}
+.acao-livre .sussurro{margin-top:9px;font-size:12px}
+.eco{
+  border-left:3px solid var(--destaque-2);padding:6px 0 6px 13px;margin:0 0 14px;
+  color:var(--destaque-2);font-style:italic
+}
