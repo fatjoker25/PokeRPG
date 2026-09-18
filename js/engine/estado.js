@@ -162,6 +162,31 @@ const ITENS_INFO = {
                      desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'}
 };
 
+/* ─────────── bolsas: o que você carrega, e de que cor ───────────
+   A cor lida no nome é a cor que a interface usa quando você abre. */
+const BOLSAS_VENDIDAS = {
+  'Mochila Preta':    'Lona grossa encerada, alça reforçada, sem marca nenhuma. Quem anda de noite prefere não devolver luz.',
+  'Mochila Vermelha': 'Vermelha de sinalização, do tipo que se acha num barranco de longe. Feita pra quem trabalha em altura.',
+  'Mochila Azul':     'Azul de uniforme, costura dupla no fundo. Sobra de um lote encomendado por uma escola que fechou.',
+  'Mochila Verde':    'Verde de mato, com bolso lateral pra cantil. Cheira a barraca guardada úmida e ninguém consegue tirar.',
+  'Mochila Amarela':  'Amarela de estrada, com faixa refletiva na aba. Quem acampa perto de rodovia compra essa e nenhuma outra.',
+  'Mochila Marrom':   'Couro curtido, fivela de latão, e pesa vazia. Dura trinta anos e os trinta aparecem nela.',
+  'Mochila Laranja':  'Laranja de resgate, costurada pra abrir com uma mão só. Veio de um lote de brigada de incêndio.',
+  'Bolsa Roxa':       'Roxa escura, de tecido acetinado que marca o dedo. Vendida como bolsa de cidade e usada como mochila mesmo assim.',
+  'Bolsa Branca':     'Branca de algodão cru, que suja no primeiro dia e não desbota nunca mais.',
+  'Bolsa Cinza':      'Cinza chumbo, discreta, com forro removível. É a que some mais rápido da prateleira.',
+  'Bolsa Rosa':       'Rosa desbotada de sol de vitrine. Está mais barata por isso e a costura é a melhor do balcão.',
+  'Bolsa Prateada':   'Tecido metalizado sobre espuma fina. Reflete calor e faz um barulho seco quando você mexe.',
+  'Bolsa Dourada':    'Dourada de festa, com ferragem pesada. Ninguém que trabalha usa isso, e ela aguenta mais que parece.'
+};
+for (const [nome, desc] of Object.entries(BOLSAS_VENDIDAS)){
+  ITENS_INFO[nome] = {
+    tipo:'bolsa', cat:'Vestuário',
+    ficha:'Vestuário · passa a ser a bolsa que você carrega · não ocupa espaço de item',
+    desc: desc
+  };
+}
+
 /* Pedra → pares de evolução (só espécies de nivelEvo 0) */
 const PEDRAS = {
   'Pedra do Fogo':   {37:38, 58:59, 133:136},
@@ -197,6 +222,106 @@ function descricaoItem(nome){
     if (Estado.dados && Estado.dados.flags && Estado.dados.flags[flag]) d += ' ' + extra;
   }
   return d;
+}
+
+
+/* ============================================================
+   COR DA MOCHILA
+   A bolsa padrão é bege, igual à de fábrica da Liga. Se o jogador
+   estiver carregando uma bolsa com cor no nome — "Mochila Preta",
+   "Bolsa Roxa" —, a cor lida ali é a cor que a interface usa.
+   ============================================================ */
+const COR_MOCHILA_PADRAO = '#c8ab74';
+const CORES_MOCHILA = {
+  bege:'#c8ab74', creme:'#e0d3b4', caqui:'#9d9268', areia:'#d2bd90',
+  preta:'#26262d', preto:'#26262d',
+  branca:'#e9e5db', branco:'#e9e5db',
+  vermelha:'#bf3a2f', vermelho:'#bf3a2f',
+  azul:'#2f6fb5', 'azul marinho':'#22406e', 'azul clara':'#7fb0e0', 'azul claro':'#7fb0e0',
+  verde:'#3d8b56', 'verde musgo':'#5d6b3a', 'verde escura':'#255c3a', 'verde escuro':'#255c3a',
+  amarela:'#d9b53a', amarelo:'#d9b53a',
+  roxa:'#7a4fa3', roxo:'#7a4fa3',
+  rosa:'#d1688f',
+  laranja:'#d2762b',
+  cinza:'#878d96',
+  marrom:'#6e4b2f', castanha:'#6e4b2f', castanho:'#6e4b2f',
+  dourada:'#c39b28', dourado:'#c39b28',
+  prateada:'#b4bac3', prateado:'#b4bac3',
+  vinho:'#6d2233',
+  turquesa:'#2ea39a',
+  bordo:'#5c1f27'
+};
+
+function _semAcento(s){
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+}
+/* "Mochila Preta" -> '#26262d'. Nome que não é bolsa -> null. */
+function corDaMochila(nome){
+  const m = _semAcento(nome).match(/^(?:mochila|bolsa|sacola|mala|bornal|cartucheira)\s+(.+)$/);
+  if (!m) return null;
+  const resto = m[1].replace(/\s+/g, ' ').trim();
+  if (CORES_MOCHILA[resto]) return CORES_MOCHILA[resto];
+  const primeira = resto.split(' ')[0];
+  return CORES_MOCHILA[primeira] || null;
+}
+/* A bolsa que o jogador está carregando agora — a última que ele arranjou. */
+function mochilaAtual(){
+  const d = Estado.dados;
+  let cor = COR_MOCHILA_PADRAO, nome = 'Mochila da Liga';
+  if (!d || !d.itens) return {cor, nome};
+  const escolhida = d.jogador && d.jogador.bolsa;
+  if (escolhida && d.itens[escolhida] > 0){
+    const c = corDaMochila(escolhida);
+    if (c) return {cor:c, nome:escolhida};
+  }
+  for (const [n, q] of Object.entries(d.itens)){
+    if (q <= 0) continue;
+    const c = corDaMochila(n);
+    if (c){ cor = c; nome = n; }
+  }
+  return {cor, nome};
+}
+
+/* --- mistura de cor, para tirar as sombras e o forro da cor lida --- */
+function _rgb(hex){
+  const h = hex.replace('#','');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function _hex(r,g,b){
+  return '#' + [r,g,b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0')).join('');
+}
+function misturaCor(hex, alvo, p){
+  const a = _rgb(hex), b = _rgb(alvo);
+  return _hex(a[0]+(b[0]-a[0])*p, a[1]+(b[1]-a[1])*p, a[2]+(b[2]-a[2])*p);
+}
+function luminancia(hex){
+  const [r,g,b] = _rgb(hex);
+  return (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+}
+/* Todas as variáveis de estilo que uma cor de bolsa gera.
+   O forro é sempre mais escuro que o lado de fora — dentro de bolsa
+   é sombra —, então o texto de dentro é sempre claro. */
+function paletaMochila(cor){
+  const clara  = luminancia(cor) > .5;
+  const escuro = misturaCor(cor, '#000000', clara ? .58 : .44);
+  const forro  = misturaCor(cor, '#191a1e', .64);
+  const txt    = '#f4f1ea';
+  const realce = clara ? misturaCor(cor, '#000000', .66) : misturaCor(cor, '#ffffff', .58);
+  return {
+    '--moch':        cor,
+    '--moch-esc':    escuro,
+    '--moch-claro':  misturaCor(cor, '#ffffff', .24),
+    '--moch-forro':  forro,
+    '--moch-forro-2':misturaCor(forro, '#ffffff', .08),
+    '--moch-linha':  misturaCor(forro, '#ffffff', .24),
+    '--moch-txt':    txt,
+    '--moch-txt-2':  misturaCor(txt, forro, .34),
+    '--moch-txt-3':  misturaCor(txt, forro, .52),
+    '--moch-realce': realce,
+    '--moch-titulo': luminancia(misturaCor(cor, '#ffffff', .24)) > .52
+                       ? misturaCor(cor, '#000000', .74) : '#f6f3ec',
+    '--moch-btn-txt':luminancia(escuro) > .5 ? '#1b1c20' : '#f4f1ea'
+  };
 }
 
 const Estado = {
@@ -330,7 +455,11 @@ const Estado = {
   primeiroApto(){ return this.dados.time.find(p => estaVivo(p)) || null; },
 
   /* ---------- ITENS ---------- */
-  darItem(nome, qtd=1){ this.dados.itens[nome] = (this.dados.itens[nome]||0) + qtd; },
+  darItem(nome, qtd=1){
+    this.dados.itens[nome] = (this.dados.itens[nome]||0) + qtd;
+    /* bolsa nova passa a ser a bolsa usada */
+    if (corDaMochila(nome)) this.dados.jogador.bolsa = nome;
+  },
   usarItem(nome){
     if (!this.dados.itens[nome]) return false;
     this.dados.itens[nome]--;

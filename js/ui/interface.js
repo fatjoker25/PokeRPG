@@ -841,15 +841,22 @@ const UI = {
   /* ========================================================
      MODAIS
      ======================================================== */
-  /* classe: 'mochila' | 'pokedex' | '' — muda o jeito que a caixa abre */
-  modal(titulo, html, semFechar, classe){
+  /* classe: 'mochila' | 'pokedex' | '' — muda o jeito que a caixa abre
+     vars:   { '--alguma-cor': '#hex' } — aplicado na caixa, para o tema da aba */
+  modal(titulo, html, semFechar, classe, vars){
     this.fecharModal(true);
-    const m = this.el(`<div class="modal-fundo" id="modal">
+    const m = this.el(`<div class="modal-fundo ${classe ? 'fundo-' + classe : ''}" id="modal">
       <div class="modal ${classe || ''}">
         ${titulo ? `<h2>${this.esc(titulo)}</h2>` : ''}
-        <div>${html}</div>
-        ${semFechar ? '' : '<div style="margin-top:18px"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>'}
+        <div class="modal-corpo">${html}</div>
+        ${semFechar ? '' : '<div class="modal-pe"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>'}
       </div></div>`);
+    if (!vars && classe === 'mochila' && typeof paletaMochila === 'function')
+      vars = paletaMochila(mochilaAtual().cor);
+    if (vars){
+      const caixa = m.querySelector('.modal');
+      for (const [k, v] of Object.entries(vars)) caixa.style.setProperty(k, v);
+    }
     document.body.appendChild(m);
     if (!semFechar){
       m.onclick = e => { if (e.target === m) this.fecharModal(); };
@@ -901,9 +908,11 @@ const UI = {
     const d = Estado.dados;
     const itens = Object.entries(d.itens).filter(([,q]) => q > 0);
     const total = itens.reduce((a,[,q]) => a + q, 0);
+    const bolsa = mochilaAtual();
     const topo = `<div class="mochila-topo">
+      <span class="fecho"></span>
       <span class="grana">${d.jogador.dinheiro} ₽</span>
-      <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
+      <span class="peso">${this.esc(bolsa.nome)} · ${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
     </div>`;
 
     if (!itens.length)
@@ -911,7 +920,7 @@ const UI = {
         '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
         false, 'mochila');
 
-    const ORDEM = ['Captura','Recuperação','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Outro'];
+    const ORDEM = ['Captura','Recuperação','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
     const grupos = {};
     itens.forEach(([n,q]) => {
       const c = categoriaItem(n);
@@ -924,6 +933,8 @@ const UI = {
         const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
                        && Estado.dados.modo !== 'batalha';
         const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
+        const ebolsa = info.tipo === 'bolsa';
+        const emUso = ebolsa && bolsa.nome === n;
         return `<div class="item-linha">
           <span class="qtd">×${q}</span>
           <span class="corpo">
@@ -935,12 +946,22 @@ const UI = {
             onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
           ${equipavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
             onclick="UI.menuEquiparItem('${n.replace(/'/g,"\\'")}')">equipar</button>` : ''}
+          ${ebolsa && !emUso ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
+            onclick="UI.usarBolsa('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
+          ${emUso ? '<span class="qtd" style="align-self:center">em uso</span>' : ''}
         </div>`;
       }).join('');
       return `<h3 class="cat-item">${this.esc(c)}</h3>${linhas}`;
     }).join('');
 
     this.modal('Mochila', topo + corpo, false, 'mochila');
+  },
+
+  usarBolsa(nome){
+    if (!Estado.contaItem(nome)) return;
+    Estado.dados.jogador.bolsa = nome;
+    Estado.salvar('auto');
+    this.modalItens();
   },
 
   /* ---------- EQUIPAR ---------- */
@@ -1127,7 +1148,7 @@ const UI = {
         <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span></button>`;
       if (vis) return `<button class="dex-cela vis" onclick="UI.dexEntrada(${dex})">
         <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>
-        <span class="marca">sem registro</span></button>`;
+        <span class="marca">visto</span></button>`;
       return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
 
