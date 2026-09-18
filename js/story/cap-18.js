@@ -2239,11 +2239,8 @@ c18_luta_auditora:{
     'Ela não se assusta e não grita. Ela solta um Machoke que estava do lado de fora da porta.',
     '"Isso vai constar", ela diz, e parece cansada.'
   ],
-  batalha:{inimigos:[{dex:67, nivel:50, apelido:'Fiscal'},{dex:57, nivel:48}], fugaPermitida:false},
-  escolhas:[
-    {texto:'Se venceu.', vai:'c18_venceu_auditora'},
-    {texto:'Se perdeu.', vai:'c18_perdeu_auditora'}
-  ]
+  batalha:{comissao:'auditora', nivel:50, tipo:'treinador', treinador:'Auditora Prado', fuga:true,
+           vitoria:'c18_venceu_auditora', derrota:'c18_perdeu_auditora', fuga2:'c18_adnan', gameover:'gameover'}
 },
 
 c18_venceu_auditora:{
