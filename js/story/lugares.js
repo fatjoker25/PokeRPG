@@ -7,7 +7,7 @@
 const ANCORAS = {
   2:  {local:'viridian',  chamada:'Tem um mural de recados na entrada do Centro Pokémon.'},
   3:  {local:'floresta',  chamada:'Um som fino, repetido, vindo de dentro do mato fechado.'},
-  4:  {local:'pewter',    chamada:'A porta de metal no fim da rua, sem placa bonita.'},
+  4:  {local:'pewter',    chamada:'Uma detonação a cada vinte minutos, e ninguém na rua levanta a cabeça.'},
   5:  {local:'monte_lua', chamada:'O cabo elétrico no chão da caverna leva a algum lugar.'},
   6:  {local:'cerulean',  chamada:'Uma banca montada na ponte norte, com preço em plaquinha.'},
   7:  {local:'lavender',  chamada:'A torre de sete andares no fim da rua sem música.'},
@@ -242,7 +242,7 @@ const Cidade = {
     UI.modal('Loja — ' + Estado.j.dinheiro + ' ₽', catalogo.map(([n,p]) =>
       `<button class="escolha" ${Estado.j.dinheiro < p ? 'disabled style="opacity:.4"':''}
         onclick="Cidade.comprar('${n}',${p})">${n} — ${p} ₽
-        <span class="pd">${(ITENS_INFO[n]||{}).desc||''}</span></button>`).join(''));
+        <span class="pd">${descricaoItem(n)}</span></button>`).join(''));
   },
   comprar(nome, preco){
     if (Estado.j.dinheiro < preco) return;

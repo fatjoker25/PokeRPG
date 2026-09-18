@@ -29,6 +29,8 @@ const Batalha = {
     this.timeInimigo = opts.timeInimigo || null;
     this.estAliado = this.novoEstado();
     this.estInimigo = this.novoEstado();
+    this.pdexUsada = false;
+    if (Estado.viu(inimigo.dex)) this.ev('pokedex', 'A Pokédex vibra no bolso: espécie nova, ainda não catalogada.');
     this.ev('inicio', opts.introducao || this.introPadrao());
     return this.eventos;
   },
@@ -362,6 +364,7 @@ const Batalha = {
     if (this.fase === 'ameaca') return this.acaoAmeaca(acao);
 
     // ações que não gastam o turno de golpe
+    if (acao.tipo === 'pokedex') return this.escanear();
     if (acao.tipo === 'fugir')  return this.tentarFugir();
     if (acao.tipo === 'bola')   return this.tentarCaptura(acao.nome);
     if (acao.tipo === 'item')   { this.usarItemEmCombate(acao.nome, acao.alvoUid); return this.turnoInimigoSozinho(); }
@@ -405,6 +408,32 @@ const Batalha = {
     return this.verificarFim();
   },
 
+  /* Escanear não gasta o turno — mas só dá uma vez por batalha */
+  escanear(){
+    this.eventos = [];
+    this.turno--;
+    if (!Estado.dados.flags.tem_pokedex){
+      this.ev('erro', 'Você não tem Pokédex.');
+      return {eventos:this.eventos, fim:null};
+    }
+    if (this.pdexUsada){
+      this.ev('erro', 'A Pokédex já leu tudo o que conseguia ler daqui.');
+      return {eventos:this.eventos, fim:null};
+    }
+    this.pdexUsada = true;
+    const p = this.inimigo;
+    const esp = DEX[p.dex];
+    const novo = Estado.catalogou(p.dex);
+    this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
+    this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
+    this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
+    this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
+    if ((NATUREZAS[p.natureza]||{}).agressiva)
+      this.ev('perigo', 'Marcação da Pokédex: temperamento agressivo. Se o seu time cair, ele não recua.');
+    if (novo) this.ev('pokedex', `Registro novo: ${esp.nome} catalogado.`);
+    return {eventos:this.eventos, fim:null};
+  },
+
   turnoInimigoSozinho(){
     if (this.inimigo.hp > 0 && this.aliado.hp > 0){
       if (this.podeAgir(this.inimigo, this.estInimigo, false)){
@@ -429,7 +458,12 @@ const Batalha = {
       alvo.hp = Math.min(alvo.hpMax, alvo.hp + info.valor);
       this.ev('cura', `Você usou ${nome}. ${nomeExib(alvo)} recuperou ${alvo.hp - antes} de HP.`);
     } else if (info.tipo === 'revive'){
-      if (alvo.morto){ this.ev('erro', `${nomeExib(alvo)} está morto. Revive não traz os mortos de volta.`); return; }
+      if (alvo.morto){
+        this.ev('erro', `Você aplica o Revive em ${nomeExib(alvo)} e não acontece nada. Nem uma reação.`);
+        this.ev('info', 'Tem uma diferença entre desmaiar e morrer, e você acabou de aprender qual é.');
+        Estado.marcar('revive_nao_ressuscita');
+        return;
+      }
       if (alvo.hp > 0){ this.ev('erro', `${nomeExib(alvo)} não está desmaiado.`); return; }
       Estado.usarItem(nome);
       alvo.hp = Math.floor(alvo.hpMax / 2);

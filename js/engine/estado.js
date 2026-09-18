@@ -25,19 +25,35 @@ const NIVEIS_RUIM = [
 const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
 
 const ITENS_INFO = {
-  'Poké Ball':   {tipo:'bola', mult:1,   desc:'Bola comum. Não funciona em lendários.'},
-  'Great Ball':  {tipo:'bola', mult:1.5, desc:'Melhor que a comum. Não funciona em lendários.'},
-  'Ultra Ball':  {tipo:'bola', mult:2,   desc:'A única bola comprável que prende lendários.'},
-  'Master Ball': {tipo:'bola', mult:255, desc:'Captura garantida — exceto contra quem quebra bolas.'},
-  'Potion':      {tipo:'cura', valor:20, desc:'Recupera 20 HP de um Pokémon.'},
-  'Super Potion':{tipo:'cura', valor:50, desc:'Recupera 50 HP.'},
-  'Hyper Potion':{tipo:'cura', valor:120,desc:'Recupera 120 HP.'},
-  'Revive':      {tipo:'revive', desc:'Reanima um Pokémon desmaiado com metade do HP. Não traz os mortos.'},
-  'Antidote':    {tipo:'status', cura:'veneno', desc:'Cura envenenamento.'},
-  'Full Heal':   {tipo:'status', cura:'todos', desc:'Cura qualquer condição.'},
-  'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Recupera 10 HP do TREINADOR.'},
-  'Ração':       {tipo:'moral', valor:10, desc:'Comida boa. +10 de moral em um Pokémon.'}
+  'Poké Ball':   {tipo:'bola', mult:1,   desc:'A bola comum. É o que a Liga entrega e o que todo mundo usa.',
+                  sabido:{bola_fraca_em_lendario:'Você já viu uma dessas ricochetear numa coisa grande demais. Não insista.'}},
+  'Great Ball':  {tipo:'bola', mult:1.5, desc:'Mais firme que a comum. Custa o triplo e a diferença aparece.',
+                  sabido:{bola_fraca_em_lendario:'Firme, mas não o bastante para o que você viu.'}},
+  'Ultra Ball':  {tipo:'bola', mult:2,   desc:'Cara. Quem vende fala dela em voz baixa, como se fosse favor.',
+                  sabido:{ultra_prende_lendario:'É a única comprável que já prendeu uma coisa daquelas — e mesmo assim, quase nunca.'}},
+  'Master Ball': {tipo:'bola', mult:255, desc:'Você não devia ter uma dessas. Quase ninguém devia.',
+                  sabido:{master_quase_sempre:'Ela não falha. Você já viu.'}},
+  'Potion':      {tipo:'cura', valor:20, desc:'Fecha corte e tira dor. Não faz milagre.'},
+  'Super Potion':{tipo:'cura', valor:50, desc:'A mesma coisa, mais forte e mais cara.'},
+  'Hyper Potion':{tipo:'cura', valor:120,desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
+  'Revive':      {tipo:'revive', desc:'Traz de volta quem desmaiou, na metade das forças. Não faz mais que isso.',
+                  sabido:{revive_nao_ressuscita:'Quem morreu de verdade não volta com isso. Você aprendeu do jeito ruim.'}},
+  'Antidote':    {tipo:'status', cura:'veneno', desc:'Frasco pequeno, gosto horrível, funciona.'},
+  'Full Heal':   {tipo:'status', cura:'todos', desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
+  'Bandagem':    {tipo:'curaJogador', valor:10, desc:'Pra você, não pra eles. Você também se machuca.'},
+  'Ração':       {tipo:'moral', valor:10, desc:'Comida boa de verdade. Muda o humor de quem come.'}
 };
+
+/* O que o jogador já aprendeu na prática ou porque alguém contou */
+function descricaoItem(nome){
+  const i = ITENS_INFO[nome];
+  if (!i) return '';
+  let d = i.desc;
+  for (const [flag, extra] of Object.entries(i.sabido || {})){
+    if (Estado.dados && Estado.dados.flags && Estado.dados.flags[flag]) d += ' ' + extra;
+  }
+  return d;
+}
 
 const Estado = {
   dados: null,
@@ -75,6 +91,7 @@ const Estado = {
       local: 'pallet',
       visitados: {},
       descobertas: {},
+      pokedex: {vistos:{}, catalogados:{}},
       flags: {},
       npcs: {},               // memória: {nome:{conhece:true, opiniao:n, viuVoce:'...'}}
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}
@@ -195,6 +212,34 @@ const Estado = {
     st[chave]++;
     if (chave === 'resistencia') this.j.hp += 2;
     return true;
+  },
+
+  /* ---------- POKÉDEX ---------- */
+  pdex(){
+    const d = this.dados;
+    if (!d.pokedex) d.pokedex = {vistos:{}, catalogados:{}};
+    return d.pokedex;
+  },
+  viu(dex){
+    if (!this.dados.flags.tem_pokedex) return false;
+    const p = this.pdex();
+    if (p.vistos[dex]) return false;
+    p.vistos[dex] = true;
+    return true;
+  },
+  catalogou(dex){
+    if (!this.dados.flags.tem_pokedex) return false;
+    const p = this.pdex();
+    p.vistos[dex] = true;
+    if (p.catalogados[dex]) return false;
+    p.catalogados[dex] = true;
+    this.registrar(`Pokédex: ${DEX[dex].nome} catalogado.`);
+    return true;
+  },
+  conheceu(dex){ return !!this.pdex().catalogados[dex]; },
+  contagemDex(){
+    const p = this.pdex();
+    return {vistos:Object.keys(p.vistos).length, catalogados:Object.keys(p.catalogados).length};
   },
 
   /* ---------- LENDÁRIOS ---------- */

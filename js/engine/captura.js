@@ -19,7 +19,8 @@ const Captura = {
     if (esp.lendario && (nomeBola === 'Poké Ball' || nomeBola === 'Great Ball')){
       Estado.usarItem(nomeBola);
       ev('erro', `A ${nomeBola} bate em ${esp.nome} e cai no chão, aberta. Ela nem chega a tentar.`);
-      ev('info', 'Só Ultra Ball e Master Ball prendem um lendário.');
+      ev('info', 'Agora você sabe uma coisa que não estava escrita em lugar nenhum.');
+      Estado.marcar('bola_fraca_em_lendario');
       const L = Estado.lend(alvo.dex);
       L.ataquesSofridos++;
       return {eventos, capturou:false};
@@ -47,6 +48,7 @@ const Captura = {
     // ---- Master Ball
     if (nomeBola === 'Master Ball'){
       ev('captura', 'A Master Ball se fecha. Um clique. Só isso.');
+      Estado.marcar('master_quase_sempre');
       return this.concluir(alvo, nomeBola, eventos);
     }
 
@@ -56,9 +58,11 @@ const Captura = {
       ev('info', `Ultra Ball em um lendário: 1d20 = ${d} — só 1 ou 2 prendem.`);
       if (d <= 2){
         ev('captura', `Contra tudo que é provável, a bola para de tremer.`);
+        Estado.marcar('ultra_prende_lendario');
         return this.concluir(alvo, nomeBola, eventos);
       }
       ev('erro', `${esp.nome} rompe a bola sem esforço aparente.`);
+      Estado.marcar('ultra_prende_lendario');
       const L = Estado.lend(alvo.dex);
       L.ataquesSofridos++;
       if (L.ataquesSofridos >= 3 && L.disposicao === 'neutro'){

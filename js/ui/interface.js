@@ -54,6 +54,7 @@ const UI = {
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
         <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
+        ${d.flags.tem_pokedex ? `<button class="btn mini" onclick="UI.modalPokedex()">Pokédex ${Estado.contagemDex().catalogados}</button>` : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
@@ -296,13 +297,22 @@ const UI = {
 
   atualizarArena(){
     const a = Batalha.aliado, i = Batalha.inimigo;
-    const card = (p, cls) => `<div class="lutador ${cls}">
-      <div class="nome"><span>${this.esc(nomeExib(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
-      <div style="margin-top:5px">${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
-      ${this.barraHP(p)}
-      <div class="meta">${this.esc(p.natureza)} · Vel ${p.stats.spe}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}</div>
-    </div>`;
-    document.getElementById('arena').innerHTML = card(a,'aliado') + card(i,'inimigo');
+    const card = (p, cls, meu) => {
+      const conhecido = meu || Estado.conheceu(p.dex);
+      const tipos = conhecido
+        ? p.tipos.map(t=>this.tipoTag(t)).join('')
+        : '<span class="tipo-tag" style="background:#3a424c;color:#9aa4b0">tipo ?</span>';
+      const meta = conhecido
+        ? `${this.esc(p.natureza)} · Vel ${p.stats.spe}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
+        : 'você nunca catalogou essa espécie';
+      return `<div class="lutador ${cls}">
+        <div class="nome"><span>${this.esc(nomeExib(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
+        <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
+        ${this.barraHP(p)}
+        <div class="meta">${meta}</div>
+      </div>`;
+    };
+    document.getElementById('arena').innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
   },
 
   escreverLog(eventos){
@@ -333,14 +343,19 @@ const UI = {
     }
 
     const a = Batalha.aliado;
+    const conhecido = Estado.conheceu(Batalha.inimigo.dex);
     a.golpes.forEach((g, i) => {
       const G = GOLPES[g.nome];
-      const ef = eficacia(G.t, Batalha.inimigo.tipos);
-      const marca = ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
+      // a dica de eficácia só existe se você souber contra o que está lutando
+      const ef = conhecido ? eficacia(G.t, Batalha.inimigo.tipos) : 1;
+      const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
       c.appendChild(this.el(`<button class="golpe-btn" ${g.pp<=0?'disabled':''} onclick="Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
         <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status':(G.p||'—')} · ${G.a>=999?'∞':G.a+'%'}</span></span>
         <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
     });
+    if (Estado.dados.flags.tem_pokedex)
+      c.appendChild(this.el(`<button class="golpe-btn" ${Batalha.pdexUsada?'disabled':''} onclick="Jogo.acaoBatalha({tipo:'pokedex'})">
+        <span>Pokédex</span><span class="pd">${Batalha.pdexUsada ? 'já usada nesta luta' : 'ler o adversário · não gasta o turno'}</span></button>`));
     c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()"><span>Bola</span><span class="pd">capturar</span></button>`));
     c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuItens()"><span>Item</span><span class="pd">mochila</span></button>`));
     c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuTroca()"><span>Trocar</span><span class="pd">outro Pokémon</span></button>`));
@@ -352,7 +367,7 @@ const UI = {
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma bola.</p>');
     this.modal('Qual bola?', bolas.map(n =>
       `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(ITENS_INFO[n].desc)}</span></button>`).join(''));
+        ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join(''));
   },
 
   menuItens(){
@@ -797,7 +812,7 @@ const UI = {
     const itens = Object.entries(d.itens);
     this.modal('Mochila', itens.length
       ? `<div style="margin-bottom:12px" class="linha"><span class="k">Dinheiro</span><span class="v">${d.jogador.dinheiro} ₽</span></div>` +
-        itens.map(([n,q]) => `<div class="linha"><span class="k">${this.esc(n)} <span class="sussurro">${this.esc((ITENS_INFO[n]||{}).desc||'')}</span></span><span class="v">×${q}</span></div>`).join('')
+        itens.map(([n,q]) => `<div class="linha"><span class="k">${this.esc(n)} <span class="sussurro">${this.esc(descricaoItem(n))}</span></span><span class="v">×${q}</span></div>`).join('')
       : '<p class="nada">Mochila vazia.</p>');
   },
 
@@ -840,6 +855,31 @@ const UI = {
       <div class="linha"><span class="k">Instabilidade</span><span class="v">${d.mundo.instabilidade}</span></div>
       <div class="linha"><span class="k">Avisos da Liga</span><span class="v">${d.liga.avisos}${d.liga.detencao?' · DETENÇÃO ATIVA':d.liga.ordemDevolucao?' · ordem de devolução':''}</span></div>
     `);
+  },
+
+  modalPokedex(){
+    const c = Estado.contagemDex();
+    const p = Estado.pdex();
+    const ids = Object.keys(p.vistos).map(Number).sort((a,b)=>a-b);
+    if (!ids.length)
+      return this.modal('Pokédex', '<p class="nada">Nenhum registro ainda. A Pokédex só guarda o que você encontrar — e só descreve o que você apontar para ela numa batalha.</p>');
+
+    const linhas = ids.map(dex => {
+      const esp = DEX[dex];
+      const cat = p.catalogados[dex];
+      if (!cat) return `<div class="linha"><span class="k">${this.esc(esp.nome)}</span>
+        <span class="v" style="color:var(--texto-fraco)">visto · sem registro</span></div>`;
+      return `<div class="carta" style="margin-bottom:8px">
+        <div class="t"><span>${this.esc(esp.nome)}</span>${esp.tipos.map(t=>this.tipoTag(t)).join('')}</div>
+        <div class="fraco">HP ${esp.base.hp} · ATK ${esp.base.atk} · DEF ${esp.base.def} · SPA ${esp.base.spa} · SPD ${esp.base.spd} · VEL ${esp.base.spe}</div>
+        ${esp.evo ? `<div class="fraco">Evolui para ${this.esc(DEX[esp.evo].nome)}${esp.nivelEvo?` no nível ${esp.nivelEvo}`:''}.</div>` : ''}
+      </div>`;
+    }).join('');
+
+    this.modal('Pokédex', `
+      <p class="sussurro">${c.catalogados} catalogados · ${c.vistos} vistos.
+      Ver um bicho registra o nome. Apontar a Pokédex nele durante uma batalha registra o resto.</p>
+      ${linhas}`);
   },
 
   modalDiario(){
@@ -891,9 +931,12 @@ const UI = {
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador.</p>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `
       <h3>Captura de lendários</h3>
-      <p class="sussurro">Poké Ball e Great Ball não funcionam. Ultra Ball: 1d20, só 1–2 capturam. Master Ball normalmente captura.
-      <b>Mewtwo e Ho-Oh</b> rolam 1d20 antes: em 1–5 a bola quebra e ele fica furioso, te reconhece e te caça para sempre.</p>
+      <p class="sussurro">${Estado.dados.flags.bola_fraca_em_lendario ? 'Poké Ball e Great Ball não funcionam — você viu.' : 'Bola comum parece não bastar, mas você ainda não testou.'}
+      ${Estado.dados.flags.ultra_prende_lendario ? 'Ultra Ball: 1d20, só 1–2 prendem.' : ''}
+      ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a bola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico.</p>
       <h3>Reputação</h3>

@@ -157,6 +157,7 @@ const Historia = {
     }
     if (ef.curaTime){ Estado.dados.time.forEach(curarTotal); avisos.push({tipo:'cura', texto:'Seu time foi curado por completo.'}); }
     if (ef.instabilidade){ Estado.dados.mundo.instabilidade += ef.instabilidade; }
+    if (ef.presagio){ (Array.isArray(ef.presagio)?ef.presagio:[ef.presagio]).forEach(t => avisos.push({tipo:'eco', texto:t})); }
     if (ef.registrar) Estado.registrar(ef.registrar);
     if (ef.executar) { const extra = ef.executar(Estado.dados); if (Array.isArray(extra)) extra.forEach(a => avisos.push(a)); }
     return avisos;

@@ -335,7 +335,7 @@ const Jogo = {
     UI.modal('Loja — ' + Estado.j.dinheiro + ' ₽', catalogo.map(([n,p]) =>
       `<button class="escolha" ${Estado.j.dinheiro < p ? 'disabled style="opacity:.4"':''}
         onclick="Jogo.comprar('${n}',${p})">${n} — ${p} ₽
-        <span class="pd">${(ITENS_INFO[n]||{}).desc||''}</span></button>`).join(''));
+        <span class="pd">${descricaoItem(n)}</span></button>`).join(''));
   },
 
   comprar(nome, preco){
