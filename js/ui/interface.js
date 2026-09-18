@@ -774,18 +774,31 @@ const UI = {
   /* ========================================================
      MODAIS
      ======================================================== */
-  modal(titulo, html, semFechar){
-    this.fecharModal();
+  /* classe: 'mochila' | 'pokedex' | '' — muda o jeito que a caixa abre */
+  modal(titulo, html, semFechar, classe){
+    this.fecharModal(true);
     const m = this.el(`<div class="modal-fundo" id="modal">
-      <div class="modal">
-        <h2>${this.esc(titulo)}</h2>
+      <div class="modal ${classe || ''}">
+        ${titulo ? `<h2>${this.esc(titulo)}</h2>` : ''}
         <div>${html}</div>
         ${semFechar ? '' : '<div style="margin-top:18px"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>'}
       </div></div>`);
     document.body.appendChild(m);
-    if (!semFechar) m.onclick = e => { if (e.target === m) this.fecharModal(); };
+    if (!semFechar){
+      m.onclick = e => { if (e.target === m) this.fecharModal(); };
+      this._escModal = ev => { if (ev.key === 'Escape') this.fecharModal(); };
+      document.addEventListener('keydown', this._escModal);
+    }
   },
-  fecharModal(){ const m = document.getElementById('modal'); if (m) m.remove(); },
+  fecharModal(imediato){
+    const m = document.getElementById('modal');
+    if (this._escModal){ document.removeEventListener('keydown', this._escModal); this._escModal = null; }
+    if (!m) return;
+    m.id = '';
+    if (imediato) return m.remove();
+    m.classList.add('saindo');
+    setTimeout(() => m.remove(), 200);
+  },
 
   modalTime(){
     const d = Estado.dados;
@@ -809,11 +822,25 @@ const UI = {
 
   modalItens(){
     const d = Estado.dados;
-    const itens = Object.entries(d.itens);
-    this.modal('Mochila', itens.length
-      ? `<div style="margin-bottom:12px" class="linha"><span class="k">Dinheiro</span><span class="v">${d.jogador.dinheiro} ₽</span></div>` +
-        itens.map(([n,q]) => `<div class="linha"><span class="k">${this.esc(n)} <span class="sussurro">${this.esc(descricaoItem(n))}</span></span><span class="v">×${q}</span></div>`).join('')
-      : '<p class="nada">Mochila vazia.</p>');
+    const itens = Object.entries(d.itens).filter(([,q]) => q > 0);
+    const total = itens.reduce((a,[,q]) => a + q, 0);
+    const topo = `<div class="mochila-topo">
+      <span class="grana">${d.jogador.dinheiro} ₽</span>
+      <span class="peso">${total} ${total === 1 ? 'coisa' : 'coisas'} na mochila</span>
+    </div>`;
+    const corpo = itens.length
+      ? itens.map(([n,q]) => {
+          const desc = descricaoItem(n);
+          return `<div class="item-linha">
+            <span class="qtd">×${q}</span>
+            <span class="corpo">
+              <span class="nome">${this.esc(n)}</span>
+              ${desc ? `<span class="desc">${this.esc(desc)}</span>` : ''}
+            </span>
+          </div>`;
+        }).join('')
+      : '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>';
+    this.modal('Mochila', topo + corpo, false, 'mochila');
   },
 
   modalFicha(){
@@ -861,25 +888,36 @@ const UI = {
     const c = Estado.contagemDex();
     const p = Estado.pdex();
     const ids = Object.keys(p.vistos).map(Number).sort((a,b)=>a-b);
+    const cabeca = `<div class="pokedex-topo">
+      <span class="pokedex-lente"></span>
+      <span class="pokedex-luzes"><i></i><i></i><i></i></span>
+      <span class="pokedex-contagem"><b>${c.catalogados}</b> / ${c.vistos} vistos</span>
+    </div>`;
+
     if (!ids.length)
-      return this.modal('Pokédex', '<p class="nada">Nenhum registro ainda. A Pokédex só guarda o que você encontrar — e só descreve o que você apontar para ela numa batalha.</p>');
+      return this.modal('', cabeca +
+        '<p class="nada">Nenhum registro ainda. A Pokédex só guarda o que você encontrar — e só descreve o que você apontar para ela durante uma batalha.</p>',
+        false, 'pokedex');
 
     const linhas = ids.map(dex => {
       const esp = DEX[dex];
       const cat = p.catalogados[dex];
-      if (!cat) return `<div class="linha"><span class="k">${this.esc(esp.nome)}</span>
-        <span class="v" style="color:var(--texto-fraco)">visto · sem registro</span></div>`;
-      return `<div class="carta" style="margin-bottom:8px">
-        <div class="t"><span>${this.esc(esp.nome)}</span>${esp.tipos.map(t=>this.tipoTag(t)).join('')}</div>
-        <div class="fraco">HP ${esp.base.hp} · ATK ${esp.base.atk} · DEF ${esp.base.def} · SPA ${esp.base.spa} · SPD ${esp.base.spd} · VEL ${esp.base.spe}</div>
-        ${esp.evo ? `<div class="fraco">Evolui para ${this.esc(DEX[esp.evo].nome)}${esp.nivelEvo?` no nível ${esp.nivelEvo}`:''}.</div>` : ''}
+      const num = String(dex).padStart(3,'0');
+      if (!cat) return `<div class="dex-item sem-registro">
+        <div class="cab"><span class="num">#${num}</span><span>${this.esc(esp.nome)}</span></div>
+        <div class="nota">Visto. Sem registro — você não apontou a Pokédex nele.</div>
+      </div>`;
+      return `<div class="dex-item">
+        <div class="cab"><span class="num">#${num}</span><span>${this.esc(esp.nome)}</span>
+          <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
+        <div class="base">HP ${esp.base.hp} · ATK ${esp.base.atk} · DEF ${esp.base.def} · SPA ${esp.base.spa} · SPD ${esp.base.spd} · VEL ${esp.base.spe}</div>
+        ${esp.evo ? `<div class="nota">Evolui para ${this.esc(DEX[esp.evo].nome)}${esp.nivelEvo?` no nível ${esp.nivelEvo}`:''}.</div>` : ''}
       </div>`;
     }).join('');
 
-    this.modal('Pokédex', `
-      <p class="sussurro">${c.catalogados} catalogados · ${c.vistos} vistos.
-      Ver um bicho registra o nome. Apontar a Pokédex nele durante uma batalha registra o resto.</p>
-      ${linhas}`);
+    this.modal('', cabeca +
+      `<p class="sussurro" style="margin-top:0">Ver um bicho registra o nome. Apontar a Pokédex nele durante uma batalha registra o resto.</p>` +
+      linhas, false, 'pokedex');
   },
 
   modalDiario(){

@@ -3,11 +3,13 @@
    ============================================================ */
 const TIPOS = ['Normal','Fogo','Água','Elétrico','Grama','Gelo','Lutador','Venenoso','Terrestre','Voador','Psíquico','Inseto','Pedra','Fantasma','Dragão'];
 
+/* Tons claros o bastante para o texto escuro das etiquetas, e dessaturados
+   o bastante para conviverem uns com os outros numa mesma linha. */
 const COR_TIPO = {
-  'Normal':'#9aa0a6','Fogo':'#e8603c','Água':'#4a90d9','Elétrico':'#e8c23c',
-  'Grama':'#5fb85f','Gelo':'#7fd4e0','Lutador':'#c0392b','Venenoso':'#9b59b6',
-  'Terrestre':'#c9a227','Voador':'#8fa8dd','Psíquico':'#e0568a','Inseto':'#8fb020',
-  'Pedra':'#a89060','Fantasma':'#6a5acd','Dragão':'#5a4fcf'
+  'Normal':'#a8aeb8','Fogo':'#f08152','Água':'#6ba8e0','Elétrico':'#e9c951',
+  'Grama':'#79c47c','Gelo':'#95dbe6','Lutador':'#e07d66','Venenoso':'#bc88d4',
+  'Terrestre':'#d7b45f','Voador':'#a9bde8','Psíquico':'#ef83a8','Inseto':'#abc456',
+  'Pedra':'#c1aa7e','Fantasma':'#9b90e0','Dragão':'#8d86e8'
 };
 
 /* Multiplicadores: TABELA[atacante][defensor] — ausente = 1x */
