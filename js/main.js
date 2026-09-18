@@ -118,11 +118,17 @@ const Jogo = {
         [{tipo:'dano', texto:'Você não tem nenhum Pokémon em pé. Não dá para lutar.'}]);
     }
 
-    let inimigo;
-    if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Historia.capAtual.ambiente, b.nivelBase || Historia.capAtual.nivelArea);
-    else inimigo = criarPokemon(b.dex, b.nivel, {selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'});
-
-    const timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex, x.nivel, {}));
+    let inimigo, timeInimigo;
+    if (b.comissao){
+      // time de unidades fabricadas da Comissão
+      const unidades = timeComissao(b.comissao, b.nivel || Historia.capAtual.nivelArea);
+      inimigo = unidades[0];
+      timeInimigo = unidades.slice(1);
+    } else {
+      if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Historia.capAtual.ambiente, b.nivelBase || Historia.capAtual.nivelArea);
+      else inimigo = criarPokemon(b.dex, b.nivel, {selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'});
+      timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex, x.nivel, {}));
+    }
     const permiteFuga = (typeof b.fuga === 'boolean') ? b.fuga : true;
 
     UI.limparDados();

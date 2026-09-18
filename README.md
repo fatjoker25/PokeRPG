@@ -14,7 +14,7 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**20 capítulos · 488 cenas · 769 escolhas · 17 finais · 8 ginásios.**
+**23 capítulos · 574 cenas · 906 escolhas · 20 finais · 8 ginásios · Elite 4 · Torneio Aberto.**
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -35,9 +35,40 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 | 15 | Os Três que Correm | muito sombrio |
 | 16 | A Ilha Sem Nome | muito sombrio |
 | 17 | O Jardim | muito sombrio |
-| 18 | O Que Te Oferecem | muito sombrio |
-| 19 | O Vale | muito sombrio |
-| 20 | Eu Perguntei Primeiro | final |
+| 18 | Atas | muito sombrio |
+| 19 | O Viveiro | muito sombrio |
+| 20 | A Presidente | muito sombrio |
+| 21 | O Que Te Oferecem | muito sombrio |
+| 22 | O Vale | muito sombrio |
+| 23 | Eu Perguntei Primeiro | final |
+
+### A Comissão
+
+O antagonista da segunda metade da campanha não é uma gangue. É a **Comissão de Gestão de Risco Biológico de Kanto — CGRB**: uma associação civil registrada em cartório, com estatuto público, atas públicas e linha orçamentária. As atas custam oito reais.
+
+Ela foi fundada quatro meses depois da queda da Equipe Rocket, por uma ex-diretora de fiscalização da Liga que assinou setenta e um relatórios sobre risco populacional e viu nenhum virar política pública.
+
+O argumento deles é bom, e é esse o problema:
+
+> *"Em dois anos, Kanto quase acabou duas vezes. Na primeira, quem resolveu foi uma criança de onze anos, sozinha, por acaso. Na segunda, um indivíduo fabricado em laboratório saiu andando de Cinnabar e ninguém sabe onde ele está. A resposta institucional a essas duas coisas foi emitir notas de esclarecimento."*
+
+O projeto deles é substituir populações silvestres por **unidades de viveiro**: dóceis por seleção e não por treino, sem instinto territorial, sem reprodução, prontas em quatorze semanas. Elas não têm nome — têm código de lote.
+
+E o Art. 19 do estatuto autoriza o descarte das que não atingem viabiliade. São 31%.
+
+A Comissão é a cliente por trás de tudo o que o jogador já tinha visto sem entender: a sigla SPH-11 no livro de Celadon, o "manejo" de dezenove anos na Zona Safári, a expedição com equipamento da Silph na ilha sem nome, e os caçadores atrás de Mew. E nas atas dela, Mewtwo é um item de pauta chamado **Risco 01 — não localizado**.
+
+Dá para derrubá-la publicando a planilha do galpão 4, derrubá-la por votação dentro da própria sala (o Art. 27 permite que qualquer interessado peça a palavra, e em um ano e oito meses nenhum apareceu), enfrentá-la, ou aceitar a cadeira vaga no conselho.
+
+### Elite 4, Campeão e Torneio
+
+Acessíveis pelo botão **Liga** na barra do topo.
+
+**Elite 4** — Lorelei, Bruno, Agatha e Lance, em quatro salas seguidas, **sem Centro Pokémon entre elas**. O que estiver na mochila é tudo o que você tem. Exige as 8 insígnias.
+
+**O Campeão** — a cadeira está vaga há dois anos, desde que Red desapareceu. Lance assina os documentos e não usa o título. Quem vence Lance encontra Red no salão do fundo, com Pikachu no nível 81. Red não fala em nenhum momento, porque Red nunca falou.
+
+**Torneio Aberto** — chaveamento de oito, três rodadas, repetível o ano inteiro, inscrição de 2.000 ₽. Os adversários saem da sua própria campanha: Téo, o Caçador Vasco, a Marina da Silph e o guia Nico entram no chaveamento se existirem na sua história — e o Téo tem falas diferentes conforme a opinião dele sobre você.
 
 ### Os oito ginásios
 
@@ -52,11 +83,11 @@ Acessíveis a qualquer momento pelo botão **Ginásios** na barra do topo, entre
 | 5 | Koga | Fuchsia | Venenoso | Alma | +1 Resistência |
 | 6 | Sabrina | Saffron | Psíquico | Pântano | +1 Carisma |
 | 7 | Blaine | Cinnabar | Fogo | Vulcão | +1 Sorte |
-| 8 | Giovanni | Viridian | Terrestre | Terra | A Liga passa a te tratar como quem terminou o que começou |
+| 8 | Blue | Viridian | variado | Terra | A Liga passa a te tratar como quem terminou o que começou |
 
 Cada insígnia também reduz a desobediência do time em 3 pontos — com as oito, até um Pokémon comprado numa banca de rua obedece.
 
-**Viridian só abre com sete insígnias**, e quem está lá dentro é Giovanni. Dois anos depois de Red desmontar a Rocket, ele voltou para a única coisa que sempre foi legalmente dele: a licença do ginásio, em nome próprio, com certificado de vistoria na parede. É o pagamento da linhagem que o capítulo 9 abre ("Giovanni era o primeiro. O segundo durou nove meses. Eu sou a terceira.").
+**Viridian só abre com sete insígnias**, e quem está lá é **Blue**. O ginásio ficou lacrado dois anos depois que a Rocket foi desmontada e Giovanni, preso — ninguém queria o lugar. Blue reabriu, repintou e colocou uma placa na porta que diz só "SETE INSÍGNIAS". O ace dele é o inicial que vence o seu, e ele foi campeão por catorze minutos antes de Red entrar pela porta.
 
 **Líderes recusam luta.** Erika não enfrenta quem lucra com o tráfico de Celadon; Sabrina não fica na mesma sala de quem destruiu o andar 11; Misty lembra de quem passou reto pela Marta na Rota 25. Toda recusa tem saída — pela reputação, que lava o eixo contrário, exatamente como as regras do sistema definem.
 
@@ -148,8 +179,10 @@ js/engine/batalha.js     combate completo
 js/engine/captura.js     captura e consequências em cascata dos lendários
 js/story/motor.js        cenas, efeitos, rotas divergentes e progressão
 js/story/capitulos.js    registro da campanha
-js/story/cap-*.js        os 20 capítulos
-js/story/ginasios.js     os 8 líderes, times, falas e travas
+js/story/cap-*.js        os 23 capítulos
+js/story/ginasios.js     os 8 líderes, escala de time, falas e travas
+js/story/liga.js         Elite 4, o Campeão e o Torneio Aberto
+js/story/comissao.js     a CGRB: estatuto, doutrina, gente e unidades
 js/ui/interface.js       telas
 js/main.js               fluxo do jogo
 ```

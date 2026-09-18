@@ -1,14 +1,14 @@
 /* ============================================================
-   CAPÍTULO 19 — O VALE
+   CAPÍTULO 22 — O vale
    ============================================================ */
 CAPITULOS.push(
 
 {
-num:19, titulo:'O Vale', local:'Norte de Kanto, acima da Rota 10', ambiente:'montanha', nivelArea:58,
-tom:'muito sombrio', inicio:'c19_subida',
+num:22, titulo:'O Vale', local:'Norte de Kanto, acima da Rota 10', ambiente:'montanha', nivelArea:58,
+tom:'muito sombrio', inicio:'c22_subida',
 cenas:{
 
-c19_subida:{
+c22_subida:{
   texto:[
     'O norte de Kanto, acima da Rota 10, é uma região que os mapas resolvem com a palavra "acidentado".',
     'Você anda dois dias.',
@@ -27,12 +27,12 @@ c19_subida:{
   ],
   ef:{registrar:'Subiu ao norte de Kanto.'},
   escolhas:[
-    {texto:'Continuar.', vai:'c19_terceira_equipe'},
-    {texto:'Acampar e observar antes.', vai:'c19_acampou'}
+    {texto:'Continuar.', vai:'c22_terceira_equipe'},
+    {texto:'Acampar e observar antes.', vai:'c22_acampou'}
   ]
 },
 
-c19_acampou:{
+c22_acampou:{
   texto:[
     'Você acampa num ponto alto e passa a noite acordado olhando o vale a dois quilômetros.',
     'Às 2h da manhã, uma luz azul acende no fundo do vale e apaga. Uma vez só.',
@@ -41,10 +41,10 @@ c19_acampou:{
   ],
   ef:{flag:'observou_o_vale', rep:{eixo:'bom',delta:0,motivo:''},
       hp:-2, causa:'Noite em claro no norte'},
-  escolhas:[{texto:'Descer.', vai:'c19_terceira_equipe'}]
+  escolhas:[{texto:'Descer.', vai:'c22_terceira_equipe'}]
 },
 
-c19_terceira_equipe:{
+c22_terceira_equipe:{
   texto:[
     'A cerca de um quilômetro do vale você acha o acampamento da terceira equipe.',
     'Está montado. Barracas de pé, fogareiro, equipamento. Nada revirado, nada quebrado, nada saqueado.',
@@ -56,13 +56,13 @@ c19_terceira_equipe:{
   ef:{flag:'achou_o_acampamento',
       registrar:'Encontrou o acampamento intacto da terceira equipe. Ninguém.'},
   escolhas:[
-    {texto:'Pegar o caderno.', vai:'c19_pegou_caderno_equipe', ef:{flag:'caderno_da_equipe'}},
-    {texto:'Procurar a equipe.', vai:'c19_procurou_equipe'},
-    {texto:'Ir direto ao vale.', vai:'c19_encontro'}
+    {texto:'Pegar o caderno.', vai:'c22_pegou_caderno_equipe', ef:{flag:'caderno_da_equipe'}},
+    {texto:'Procurar a equipe.', vai:'c22_procurou_equipe'},
+    {texto:'Ir direto ao vale.', vai:'c22_encontro'}
   ]
 },
 
-c19_pegou_caderno_equipe:{
+c22_pegou_caderno_equipe:{
   texto:[
     'Você folheia pra trás.',
     '"Dia 1. Chegamos. O vale tem dois guardas. Não são hostis. Não nos impedem."',
@@ -74,18 +74,18 @@ c19_pegou_caderno_equipe:{
   ef:{flag:'leu_caderno_equipe',
       registrar:'A terceira equipe foi convidada a entrar. Ninguém voltou.'},
   escolhas:[
-    {texto:'Procurar eles.', vai:'c19_procurou_equipe'},
-    {texto:'Ir ao vale.', vai:'c19_encontro'}
+    {texto:'Procurar eles.', vai:'c22_procurou_equipe'},
+    {texto:'Ir ao vale.', vai:'c22_encontro'}
   ]
 },
 
-c19_procurou_equipe:{
+c22_procurou_equipe:{
   texto:['Você procura em volta do acampamento por três horas.'],
   teste:{status:'percepcao', dificuldade:8, nomeStatus:'Percepção',
-         critico:'c19_achou_equipe', sucesso:'c19_achou_equipe', parcial:'c19_achou_pegadas', falha:'c19_nao_achou'}
+         critico:'c22_achou_equipe', sucesso:'c22_achou_equipe', parcial:'c22_achou_pegadas', falha:'c22_nao_achou'}
 },
 
-c19_achou_equipe:{
+c22_achou_equipe:{
   texto:[
     'Você acha os três. Vivos.',
     'Estão sentados numa depressão de pedra a quatrocentos metros do acampamento, os três, virados pro vale.',
@@ -99,13 +99,13 @@ c19_achou_equipe:{
       rep:{eixo:'bom',delta:2,motivo:'Encontrou a terceira equipe viva'},
       registrar:'Encontrou os três da terceira equipe, vivos, sentados olhando o vale há uma semana.'},
   escolhas:[
-    {texto:'Tirar eles dali à força.', vai:'c19_tirou_equipe'},
-    {texto:'Perguntar o que eles ouviram.', vai:'c19_o_que_ouviram'},
-    {texto:'Deixar eles e ir ao vale.', vai:'c19_encontro'}
+    {texto:'Tirar eles dali à força.', vai:'c22_tirou_equipe'},
+    {texto:'Perguntar o que eles ouviram.', vai:'c22_o_que_ouviram'},
+    {texto:'Deixar eles e ir ao vale.', vai:'c22_encontro'}
   ]
 },
 
-c19_o_que_ouviram:{
+c22_o_que_ouviram:{
   texto:[
     'Os três respondem ao mesmo tempo e dizem a mesma coisa com palavras diferentes:',
     '"Ele perguntou o que a gente queria."',
@@ -119,13 +119,13 @@ c19_o_que_ouviram:{
   ef:{flag:'sabe_da_pergunta',
       registrar:'Mewtwo perguntou à equipe o que eles queriam. Eles responderam com o formulário.'},
   escolhas:[
-    {texto:'Tirar eles dali à força.', vai:'c19_tirou_equipe'},
-    {texto:'"Eu vou responder por vocês."', vai:'c19_encontro',
+    {texto:'Tirar eles dali à força.', vai:'c22_tirou_equipe'},
+    {texto:'"Eu vou responder por vocês."', vai:'c22_encontro',
      ef:{flag:'vai_responder', rep:{eixo:'bom',delta:1,motivo:'Assumiu responder o que três adultos não conseguiram'}}}
   ]
 },
 
-c19_tirou_equipe:{
+c22_tirou_equipe:{
   texto:[
     'Você levanta os três pelo braço, um por um. Eles não resistem — vão, com a mesma docilidade com que estavam sentados.',
     'A duzentos metros do acampamento, um deles para de repente e olha pra trás.',
@@ -137,28 +137,28 @@ c19_tirou_equipe:{
       rep:{eixo:'bom',delta:3,motivo:'Tirou três pessoas do vale antes que fosse tarde'},
       hp:-3, causa:'Descida forçada carregando gente',
       registrar:'Tirou a terceira equipe do vale. Eles acordaram a 200 metros.'},
-  escolhas:[{texto:'Voltar sozinho ao vale.', vai:'c19_encontro'}]
+  escolhas:[{texto:'Voltar sozinho ao vale.', vai:'c22_encontro'}]
 },
 
-c19_achou_pegadas:{
+c22_achou_pegadas:{
   texto:[
     'Você acha pegadas. Três pares, indo na direção do vale, sem nenhum par voltando.',
     'As pegadas são regulares, com passada normal. Ninguém correu, ninguém foi arrastado.',
     'Eles foram andando.'
   ],
   ef:{flag:'achou_pegadas'},
-  escolhas:[{texto:'Seguir as pegadas.', vai:'c19_encontro'}]
+  escolhas:[{texto:'Seguir as pegadas.', vai:'c22_encontro'}]
 },
 
-c19_nao_achou:{
+c22_nao_achou:{
   texto:[
     'Três horas e nada.',
     'Você volta ao acampamento e a térmica de café esfriou. Isso, por algum motivo, é a coisa mais triste do dia.'
   ],
-  escolhas:[{texto:'Ir ao vale.', vai:'c19_encontro'}]
+  escolhas:[{texto:'Ir ao vale.', vai:'c22_encontro'}]
 },
 
-c19_encontro:{
+c22_encontro:{
   texto:[
     'O vale fica entre duas paredes de pedra e não tem saída no fundo.',
     'E tem coisa demais aqui.',
@@ -178,18 +178,18 @@ c19_encontro:{
         return [{tipo:'mundo', texto:'Articuno e Zapdos, juntos, guardando a entrada de uma caverna.'}]; },
       flag:'viu_guarda_aves', registrar:'As duas aves guardam a entrada da caverna do norte.'},
   escolhas:[
-    {texto:'Passar entre eles, devagar, sem tocar em bola nenhuma.', vai:'c19_passou'},
-    {texto:'Soltar as aves que você tem, aqui, nos postos delas.', vai:'c19_recolocou',
+    {texto:'Passar entre eles, devagar, sem tocar em bola nenhuma.', vai:'c22_passou'},
+    {texto:'Soltar as aves que você tem, aqui, nos postos delas.', vai:'c22_recolocou',
      cond:d=>Estado.lendariosCapturados().some(l=>GRUPO_AVES.includes(l.dex))},
-    {texto:'Tentar capturar Zapdos.', vai:'c19_luta_zapdos',
+    {texto:'Tentar capturar Zapdos.', vai:'c22_luta_zapdos',
      cond:d=>!(Estado.dados.lendarios[145]&&Estado.dados.lendarios[145].estado==='capturado')},
-    {texto:'Tentar capturar Articuno.', vai:'c19_luta_articuno',
+    {texto:'Tentar capturar Articuno.', vai:'c22_luta_articuno',
      cond:d=>!(Estado.dados.lendarios[144]&&Estado.dados.lendarios[144].estado==='capturado')},
-    {texto:'Voltar. Isso é maior do que você.', vai:'c19_voltou'}
+    {texto:'Voltar. Isso é maior do que você.', vai:'c22_voltou'}
   ]
 },
 
-c19_passou:{
+c22_passou:{
   texto:[
     'Você anda pelo meio do vale.',
     'Os dois te acompanham com a cabeça, sem sair do lugar. Você passa a doze metros do Articuno e o frio atravessa o casaco como se o casaco não existisse.',
@@ -204,10 +204,10 @@ c19_passou:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Passou entre dois lendários sem tentar capturá-los'},
       flag:'passou_pelas_aves',
       executar:d=>{ [144,145].forEach(x=>{const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo';}); return []; }},
-  escolhas:[{texto:'Entrar na caverna.', vai:'c19_fim'}]
+  escolhas:[{texto:'Entrar na caverna.', vai:'c22_fim'}]
 },
 
-c19_recolocou:{
+c22_recolocou:{
   texto:[
     'Você abre a bola — ou as bolas — apontando pras pedras onde eles deviam estar.',
     'Eles saem e não hesitam nem um segundo: voam direto pro posto, assumem a posição e voltam a olhar a caverna.',
@@ -224,24 +224,24 @@ c19_recolocou:{
       },
       rep:{eixo:'bom',delta:3,motivo:'Recolocou os guardas no posto antes de descer'},
       flag:'recolocou_guarda'},
-  escolhas:[{texto:'Entrar na caverna.', vai:'c19_fim'}]
+  escolhas:[{texto:'Entrar na caverna.', vai:'c22_fim'}]
 },
 
-c19_luta_zapdos:{
+c22_luta_zapdos:{
   texto:['Você tira a bola do cinto e o vale inteiro fica com cheiro de metal quente antes de você jogar.'],
   ef:{executar:d=>{ Estado.lend(145).ataquesSofridos++; return []; }},
   batalha:{dex:145, nivel:56, tipo:'lendario', fuga:true, ambiente:'montanha',
-           vitoria:'c19_pos_ave', derrota:'c19_pos_ave', fuga2:'c19_pos_ave', captura:'c19_capturou_ave', gameover:'gameover'}
+           vitoria:'c22_pos_ave', derrota:'c22_pos_ave', fuga2:'c22_pos_ave', captura:'c22_capturou_ave', gameover:'gameover'}
 },
 
-c19_luta_articuno:{
+c22_luta_articuno:{
   texto:['O ar em volta dele é vinte graus mais frio. Você joga a bola e vê ela congelar no meio do arco.'],
   ef:{executar:d=>{ Estado.lend(144).ataquesSofridos++; return []; }},
   batalha:{dex:144, nivel:56, tipo:'lendario', fuga:true, ambiente:'montanha',
-           vitoria:'c19_pos_ave', derrota:'c19_pos_ave', fuga2:'c19_pos_ave', captura:'c19_capturou_ave', gameover:'gameover'}
+           vitoria:'c22_pos_ave', derrota:'c22_pos_ave', fuga2:'c22_pos_ave', captura:'c22_capturou_ave', gameover:'gameover'}
 },
 
-c19_pos_ave:{
+c22_pos_ave:{
   texto:[
     'Quando acaba, os dois estão olhando pra você em vez da caverna.',
     'Pela primeira vez desde que você chegou, eles pararam de montar guarda.',
@@ -250,12 +250,12 @@ c19_pos_ave:{
   ],
   ef:{rep:{eixo:'ruim',delta:2,motivo:'Atacou os guardiões que protegiam a entrada'}, instabilidade:1},
   escolhas:[
-    {texto:'Tentar de novo.', vai:'c19_luta_zapdos'},
-    {texto:'Parar. Entrar na caverna.', vai:'c19_fim'}
+    {texto:'Tentar de novo.', vai:'c22_luta_zapdos'},
+    {texto:'Parar. Entrar na caverna.', vai:'c22_fim'}
   ]
 },
 
-c19_capturou_ave:{
+c22_capturou_ave:{
   texto:[
     'A bola fecha.',
     'E o outro — o que sobrou — solta um som que não é de ataque. É de alarme.',
@@ -265,12 +265,12 @@ c19_capturou_ave:{
   ef:{instabilidade:3, flag:'quebrou_a_guarda',
       registrar:'Capturou uma das aves da guarda. A porta ficou com um guarda só.'},
   escolhas:[
-    {texto:'Soltar imediatamente. Recolocar o guarda no posto.', vai:'c19_recolocou'},
-    {texto:'Ficar com ele e entrar na caverna.', vai:'c19_fim', ef:{flag:'entrou_com_ave'}}
+    {texto:'Soltar imediatamente. Recolocar o guarda no posto.', vai:'c22_recolocou'},
+    {texto:'Ficar com ele e entrar na caverna.', vai:'c22_fim', ef:{flag:'entrou_com_ave'}}
   ]
 },
 
-c19_voltou:{
+c22_voltou:{
   texto:[
     'Você volta. Dois dias de caminhada no sentido contrário, com o vale nas costas o tempo todo.',
     'Em Saffron, você tenta explicar pra alguém da Liga o que viu. Eles anotam. Agradecem.',
@@ -279,10 +279,10 @@ c19_voltou:{
   ],
   ef:{instabilidade:2, flag:'adiou_o_norte',
       rep:{eixo:'ruim',delta:1,motivo:'Recuou quando era a única pessoa no lugar certo'}},
-  escolhas:[{texto:'Voltar ao vale. Dessa vez até o fim.', vai:'c19_fim'}]
+  escolhas:[{texto:'Voltar ao vale. Dessa vez até o fim.', vai:'c22_fim'}]
 },
 
-c19_fim:{
+c22_fim:{
   texto:[
     'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno, o que está errado pra essa altitude e pra esse frio.',
     'Lá dentro, a passagem desce. Muito.',
@@ -295,7 +295,7 @@ c19_fim:{
     },
     'Você não precisa de mais nenhuma pista pra saber o que tem no fim dessa descida.'
   ],
-  fim:true, resumo:'Capítulo 19 concluído — você chegou onde só cabe ir sozinho.'
+  fim:true, resumo:'Capítulo 22 concluído — você chegou onde só cabe ir sozinho.'
 }
 }}
 

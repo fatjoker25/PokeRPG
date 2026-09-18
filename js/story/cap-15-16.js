@@ -430,7 +430,7 @@ c16_botas:{
   texto:[
     'As marcas levam a um acampamento montado do outro lado do topo: três barracas técnicas, gerador, e equipamento que você reconhece do andar 11 da Silph.',
     'Quatro pessoas. Uma delas está com um caderno e uma câmera térmica apontada pro alicerce.',
-    '"...o padrão é bianual, a gente perdeu duas janelas esperando autorização..." Ela para de falar quando te vê.',
+    '"...o padrão é bianual, a gente perdeu duas janelas esperando o conselho aprovar a verba..." Ela para de falar quando te vê.',
     'Um silêncio muito longo.',
     '"Você é o de Saffron", diz outro. E não é pergunta.'
   ],
@@ -450,6 +450,8 @@ c16_pergunta_equipe:{
     '"Material genético. Uma pena basta. Nós nem precisamos capturar."',
     '"Pra quê?"',
     '"Pra um projeto que já custou onze anos e quatro rodadas de investimento." Ela fecha o caderno. "E que fracassou doze vezes seguidas porque a gente estava usando a matriz errada."',
+    '"Quem paga?"',
+    '"Uma comissão." Ela guarda a câmera térmica. "É o nome que eles usam. Comissão. Nunca perguntei de quê."',
     'Você entende, com um frio que não é da altitude: eles não vão parar no Mewtwo. Ho-Oh é o próximo molde.'
   ],
   ef:{flag:'entendeu_o_proximo_projeto', instabilidade:1,
