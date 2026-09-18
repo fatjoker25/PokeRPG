@@ -14,7 +14,7 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**23 capítulos · 1.190 cenas · 3.043 escolhas · 29 finais · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 10 lojas e 9 trocas, uma por cidade.**
+**23 capítulos · 2.173 cenas · 6.797 escolhas · 36 finais · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 10 lojas e 9 trocas, uma por cidade.**
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -142,9 +142,9 @@ A rota altera texto, escolhas disponíveis e cenas inteiras em oito capítulos d
 
 ### Os finais
 
-Todos são alcançados no capítulo 20, e o que abre cada um é o que você fez nos dezenove anteriores: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
+Todos são alcançados no capítulo 23, e o que abre cada um é o que você fez nos vinte e dois anteriores: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
 
-O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 29 você já encontrou pela tela inicial.
+O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 36 você já encontrou pela tela inicial.
 
 ## Mercado, itens e trocas
 

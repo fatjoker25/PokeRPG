@@ -49279,15 +49279,482 @@ cenas:{
 
 c23_descida:{
   texto:[
-    'A descida leva quarenta minutos e não tem nenhuma bifurcação. Só um caminho, indo fundo.',
-    'No fim, uma câmara. Grande demais pra caber embaixo daquela montanha, o que é impossível, e você para de pensar nisso rápido porque pensar nisso não ajuda.',
-    'No centro, sentado numa pedra, de costas pra você: Mewtwo.',
+    'A descida não tem bifurcação. Um caminho só, indo fundo, com o chão em rampa e a parede lisa dos dois lados.',
+    'Você desce quarenta minutos. Nos primeiros dez, a luz da entrada ainda chega. Nos trinta seguintes, não, e mesmo assim dá para ver.',
+    'Dá para ver porque a pedra tem uma luminescência muito fraca, esverdeada, uniforme, que não vem de lugar nenhum e está em todo lugar.',
+    'O ar é morno e parado, e a cada cem metros fica um pouco mais morno.',
+    'E você percebe, em algum ponto do vigésimo minuto, que está andando devagar de propósito.'
+  ],
+  ef:{executar:d=>{ Estado.lend(150).encontros++; return []; },
+      registrar:'Começou a descida para a câmara sob a montanha.'},
+  escolhas:[
+    {texto:'Olhar as paredes com atenção.', vai:'c23_as_paredes'},
+    {texto:'Olhar o chão.', vai:'c23_o_chao'},
+    {texto:'Chamar em voz alta.', vai:'c23_chamou'},
+    {texto:'Descer direto, sem parar.', vai:'c23_a_camara'}
+  ]
+},
+
+c23_as_paredes:{
+  texto:[
+    'A parede é lisa como vidro fosco e você passa a mão e ela é morna.',
+    'E, a partir de uns cento e cinquenta metros de descida, ela tem marcas.',
+    'Não são naturais. São traços, feitos na pedra por alguma coisa que derreteu a superfície com precisão de agulha.',
+    'Grupos de quatro riscos verticais cortados por um quinto na diagonal. A contagem que qualquer preso faz.',
+    'Você começa a contar e desiste no terceiro metro de parede, porque são centenas de grupos e eles continuam parede abaixo até onde a luz alcança.'
+  ],
+  ef:{flag:'viu_a_contagem_na_parede', instabilidade:1,
+      registrar:'A parede da descida está marcada com uma contagem de dias, centenas de grupos de cinco.'},
+  escolhas:[
+    {texto:'Contar mesmo assim. Do começo.', vai:'c23_contou_a_parede'},
+    {texto:'Olhar onde a contagem começa.', vai:'c23_onde_comeca'},
+    {texto:'Olhar o chão.', vai:'c23_o_chao'},
+    {texto:'Descer.', vai:'c23_a_camara'}
+  ]
+},
+
+c23_contou_a_parede:{
+  texto:[
+    'Você conta. Leva uma hora e quarenta minutos e você erra duas vezes e recomeça duas vezes.',
+    'Setecentos e trinta e um.',
+    'Dois anos e um dia.',
+    'E aí você repara na coisa que faz o chão sair de baixo dos seus pés: os duzentos e quarenta e um primeiros grupos estão riscados de um jeito diferente dos outros.',
+    'Os duzentos e quarenta e um primeiros são pequenos, apertados, numa linha reta e organizada.',
+    'Do duzentos e quarenta e dois em diante eles ficam maiores, tortos, e a linha desce.',
+    'Ele continuou contando os dias depois de sair de lá. Ele continuou contando do mesmo jeito que contava lá dentro.'
+  ],
+  ef:{flag:['contou_os_731'], instabilidade:2, moral:-2,
+      rep:{eixo:'bom',delta:2,motivo:'Passou uma hora e quarenta contando riscos numa parede'},
+      registrar:'731 dias marcados na parede. Os 241 primeiros são de outro jeito.'},
+  escolhas:[
+    {texto:'Olhar onde a contagem começa.', vai:'c23_onde_comeca'},
+    {texto:'Descer.', vai:'c23_a_camara'}
+  ]
+},
+
+c23_onde_comeca:{
+  texto:[
+    'Você sobe de volta procurando o primeiro risco, e acha, e ele não está no alto.',
+    'A contagem começa no meio da descida e sobe. Ele começou a marcar de baixo para cima, como quem mede o quanto já subiu e não o quanto falta.',
+    'E no ponto exato onde a contagem começa, na altura da cintura, tem uma coisa que não é risco.',
+    'É uma marca redonda, do tamanho de uma mão espalmada, gasta no centro, mais funda que o resto.',
+    'Alguém apoiou a mão nesse ponto exato, todo dia, por dois anos, antes de fazer o risco do dia.'
+  ],
+  ef:{flag:['achou_a_marca_da_mao'], instabilidade:2, moral:-2,
+      registrar:'A contagem começa no meio da descida. Ao lado, uma marca de mão gasta pelo uso diário.'},
+  escolhas:[
+    {texto:'Apoiar a sua mão na marca.', vai:'c23_apoiou_a_mao'},
+    {texto:'Descer.', vai:'c23_a_camara'}
+  ]
+},
+
+c23_apoiou_a_mao:{
+  texto:[
+    'Você apoia a mão na marca.',
+    'Ela é muito maior que a sua e é morna como o resto da pedra, e por três ou quatro segundos não acontece absolutamente nada.',
+    'Depois, lá embaixo, muito fundo, uma voz que você não ouve com o ouvido diz uma coisa só.',
+    '"Você está subindo ou descendo?"',
+    'Você tira a mão.'
+  ],
+  ef:{flag:['ele_falou_na_descida'], instabilidade:2,
+      registrar:'Ele falou com você na descida, antes de você chegar.'},
+  escolhas:[
+    {texto:'Responder em voz alta: "descendo".', vai:'c23_respondeu_descendo'},
+    {texto:'Não responder. Descer.', vai:'c23_a_camara'}
+  ]
+},
+
+c23_respondeu_descendo:{
+  texto:[
+    '"Descendo."',
+    'A palavra bate na pedra e volta, e depois disso fica um silêncio de uns bons dez segundos.',
+    '"Todo mundo responde descendo."',
+    'Uma pausa.',
+    '"Eu marquei a parede de baixo para cima por dois anos e eu nunca subi um metro."',
+    'E aí, mais baixo, quase sem chegar:',
+    '"Vem."'
+  ],
+  ef:{flag:['ele_te_chamou'], instabilidade:1,
+      registrar:'Ele te chamou para descer.'},
+  escolhas:[{texto:'Descer.', vai:'c23_a_camara'}]
+},
+
+c23_o_chao:{
+  texto:[
+    'O chão da rampa é liso e tem uma camada fina de poeira, e poeira guarda tudo.',
+    'Três pares de pegadas de bota, descendo, lado a lado, com passada normal. São da terceira equipe.',
+    'Elas descem uns duzentos metros e param, e depois voltam. Elas voltam.',
+    'E, por cima delas, um par mais antigo, de bota maior, que desce e não volta.',
+    d=>d.flags.procura_o_nogueira
+      ? 'Você senta no chão e mede a pegada maior com a mão aberta, e confere com o que está escrito no bilhete que a Bruna Teles te deu.'
+      : 'Você fica um tempo agachado olhando o par que não volta.'
+  ],
+  ef:{flag:['viu_as_pegadas_na_rampa'], instabilidade:1,
+      registrar:'Três pares descem duzentos metros e voltam. Um par mais antigo desce e não volta.'},
+  escolhas:[
+    {texto:'Seguir o par que não volta.', vai:'c23_o_par_que_nao_volta'},
+    {texto:'Olhar as paredes.', vai:'c23_as_paredes'},
+    {texto:'Descer.', vai:'c23_a_camara'}
+  ]
+},
+
+c23_o_par_que_nao_volta:{
+  texto:[
+    'Você segue o par maior e ele desce até o fim da rampa, sem hesitar em nenhum ponto, sem parar em nenhum ponto.',
+    'A trinta metros do fim, ele muda.',
+    'A passada encurta e os pés ficam mais juntos, do jeito que fica quando alguém para de andar e passa a andar em direção a alguma coisa.',
+    'E nos últimos dez metros tem só a marca de um par de botas parado, com o peso nos dois pés.',
+    'Exatamente como a Bruna Teles descreveu, e a duzentos quilômetros dali.',
+    'A partir dali, nada. Nem pegada saindo, nem pegada voltando, nem arrasto.'
+  ],
+  ef:{flag:['achou_onde_ele_parou'], instabilidade:2,
+      registrar:'As pegadas do Nogueira terminam no fim da rampa, paradas, com o peso nos dois pés.'},
+  escolhas:[
+    {texto:'Entrar na câmara.', vai:'c23_a_camara'},
+    {texto:'Chamar o nome dele em voz alta.', vai:'c23_chamou_o_nome', cond:d=>!!d.flags.procura_o_nogueira}
+  ]
+},
+
+c23_chamou_o_nome:{
+  texto:[
+    '"Nogueira!"',
+    'O nome bate na pedra lisa e volta duas vezes e some.',
+    'Nada responde.',
+    'Você chama de novo, e de novo, e na quarta vez a sua voz falha e você percebe que está gritando o nome de um homem que você nunca viu para dentro de uma montanha.',
+    'E aí, da câmara, aquela voz:',
+    '"Ele não atende por esse nome há muito tempo."'
+  ],
+  ef:{flag:['ele_esta_vivo'], instabilidade:2,
+      registrar:'Ele não atende por esse nome há muito tempo.'},
+  escolhas:[{texto:'Entrar na câmara.', vai:'c23_a_camara'}]
+},
+
+c23_chamou:{
+  texto:[
+    '"Tem alguém aí?"',
+    'A pergunta sai mais fina do que você queria e bate na pedra.',
+    'Passam uns oito segundos.',
+    '"Tem."',
+    'Não veio de baixo. Veio de dentro da sua cabeça, e é calmo, e é de alguém que estava esperando exatamente essa pergunta.',
+    '"Continua descendo. Eu não subo mais."'
+  ],
+  ef:{flag:['ele_respondeu_o_chamado'], instabilidade:1,
+      registrar:'Ele respondeu ao seu chamado do meio da descida.'},
+  escolhas:[
+    {texto:'"Por que você não sobe?"', vai:'c23_porque_nao_sobe'},
+    {texto:'Descer calado.', vai:'c23_a_camara'},
+    {texto:'Olhar as paredes enquanto desce.', vai:'c23_as_paredes'}
+  ]
+},
+
+c23_porque_nao_sobe:{
+  texto:[
+    '"Por que você não sobe?"',
+    'Dessa vez ele demora.',
+    '"Porque tem duas coisas na porta que não dormem há sete meses por minha causa."',
+    'Uma pausa.',
+    '"E porque, se eu subir, eu vou ter que decidir para onde ir, e eu não tenho para onde."',
+    'Mais uma.',
+    '"Desce. É mais fácil falar de perto, e eu estou fora de prática."'
+  ],
+  ef:{flag:['sabe_porque_nao_sobe'], instabilidade:1, moral:-1,
+      registrar:'Ele não sobe por causa dos dois na porta, e porque não tem para onde ir.'},
+  escolhas:[{texto:'Descer.', vai:'c23_a_camara'}]
+},
+
+c23_a_camara:{
+  texto:[
+    'No fim da rampa, uma câmara. Grande demais para caber embaixo daquela montanha, o que é impossível, e você para de pensar nisso rápido porque pensar nisso não ajuda.',
+    'O teto é abobadado e liso. O chão é liso. Não tem estalactite, não tem água, não tem raiz.',
+    'No centro, uma pedra do tamanho de uma mesa, com a superfície gasta no meio.',
+    'E, encostado na parede da direita, um monte de coisas.',
+    'Sentado na pedra, de costas para você: Mewtwo.',
     '"Você demorou."',
     'Você não ouviu isso com os ouvidos.'
   ],
-  ef:{executar:d=>{ Estado.lend(150).encontros++; return []; },
-      registrar:'Encontrou Mewtwo na câmara sob a montanha.'},
+  ef:{registrar:'Chegou à câmara. Ele estava sentado na pedra, de costas.'},
+  escolhas:[
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'},
+    {texto:'Olhar o monte de coisas encostado na parede primeiro.', vai:'c23_as_coisas'},
+    {texto:'Olhar a câmara inteira antes de falar.', vai:'c23_olhou_a_camara'},
+    {texto:'Procurar o homem que desceu e não voltou.', vai:'c23_procurou_o_homem',
+     cond:d=>!!(d.flags.procura_o_nogueira||d.flags.achou_onde_ele_parou)}
+  ]
+},
+
+c23_as_coisas:{
+  texto:[
+    'O monte encostado na parede é um monte de coisas humanas, empilhadas sem nenhuma ordem e sem nenhum dano.',
+    'Uma cadeira de escritório com rodinha. Um extintor. Três capacetes. Uma caixa de ferramentas. Um rádio igual ao da barraca.',
+    'Um armário de aço de duas portas, amassado de um lado, com uma etiqueta de patrimônio colada na lateral.',
+    'Uma escrivaninha de metal, com a gaveta de cima aberta.',
+    'Tudo tem a mesma marca de fábrica, e a marca é a da Silph, e tudo está aqui há muito tempo.',
+    'Ele não roubou isso. Ele carregou isso. Ele carregou uma escrivaninha de metal por duzentos quilômetros e desceu uma rampa de quarenta minutos com ela.'
+  ],
+  ef:{flag:['viu_o_monte'], instabilidade:2,
+      registrar:'Ele trouxe móveis e equipamento da Silph para dentro da caverna e empilhou na parede.'},
+  escolhas:[
+    {texto:'Olhar a gaveta aberta da escrivaninha.', vai:'c23_a_gaveta'},
+    {texto:'"Por que você trouxe tudo isso?"', vai:'c23_porque_trouxe'},
+    {texto:'Olhar a câmara inteira.', vai:'c23_olhou_a_camara'},
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
+  ]
+},
+
+c23_a_gaveta:{
+  texto:[
+    'A gaveta de cima da escrivaninha está aberta e tem uma coisa só dentro.',
+    'É um caderno de capa dura, do mesmo modelo dos cadernos de campo do Instituto de Cinnabar, com o número 7 escrito na lombada a caneta.',
+    'Está aberto na última página escrita.',
+    'A caligrafia é a mesma que você já viu numa gaveta refrigerada ou nunca viu, dependendo de onde você esteve.',
+    'Dia 241. Ele pediu para sair. Usou a palavra por favor. Encaminhei ao comitê. Não anotei na ficha oficial.',
+    'E, embaixo, numa letra que não é humana e que foi feita queimando o papel com precisão de agulha, uma linha só:',
+    'Eu li isso no dia 602. Obrigado.'
+  ],
+  ef:{flag:['leu_caderno','achou_o_caderno_7_aqui'], instabilidade:2, moral:-2,
+      registrar:'O caderno 7 está aqui, e ele escreveu uma linha embaixo da última anotação do Fuji.'},
+  escolhas:[
+    {texto:'"Como você conseguiu esse caderno?"', vai:'c23_como_conseguiu'},
+    {texto:'"Por que você trouxe tudo isso?"', vai:'c23_porque_trouxe'},
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
+  ]
+},
+
+c23_como_conseguiu:{
+  texto:[
+    'Ele responde sem virar.',
+    '"Eu fui buscar."',
+    'Uma pausa.',
+    '"No dia quinhentos e noventa e quatro eu desci a montanha, atravessei Kanto de noite, entrei num prédio em Cinnabar que estava vazio e procurei por três noites até achar."',
+    '"E ninguém viu você."',
+    '"Uma pessoa viu." A voz fica ligeiramente diferente. "Um homem de uns setenta anos, com uma lanterna, que estava procurando outra coisa."',
+    '"E o que ele fez?"',
+    '"Ele apontou onde estava o caderno sete, esperou eu pegar, e voltou a procurar a coisa dele." Uma pausa longa. "Ele não me perguntou nada. É a segunda melhor coisa que uma pessoa já fez por mim."'
+  ],
+  ef:{flag:['sabe_da_viagem_a_cinnabar'], instabilidade:2, moral:2,
+      registrar:'Ele foi a Cinnabar buscar o caderno 7. Um velho com uma lanterna apontou onde estava e não perguntou nada.'},
+  escolhas:[
+    {texto:'"E qual foi a primeira?"', vai:'c23_a_primeira_coisa'},
+    {texto:'"Por que você trouxe tudo isso?"', vai:'c23_porque_trouxe'},
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
+  ]
+},
+
+c23_a_primeira_coisa:{
+  texto:[
+    '"E qual foi a primeira?"',
+    'Ele vira a cabeça uns poucos graus, o suficiente para você ver o perfil.',
+    '"O Fuji me deixou vencer no xadrez."',
+    'Silêncio.',
+    '"Dia cento e noventa e dois. Ele jogava comigo todo dia e ele perdia todo dia, porque eu sou o que eu sou." A voz fica quase morna. "E no dia cento e noventa e dois ele fez uma jogada tão ruim que eu entendi que ele estava me deixando ganhar."',
+    '"E por que isso é a melhor coisa?"',
+    '"Porque para me deixar ganhar ele teve que achar que eu podia me importar em ganhar." Uma pausa muito longa. "Ele foi a primeira pessoa que achou isso."'
+  ],
+  ef:{flag:['sabe_do_xadrez'], instabilidade:1, moral:3,
+      rep:{eixo:'bom',delta:2,motivo:'Perguntou qual tinha sido a primeira'},
+      registrar:'No dia 192, Fuji o deixou ganhar no xadrez, e ele percebeu.'},
+  escolhas:[
+    {texto:'"Por que você trouxe tudo isso para cá?"', vai:'c23_porque_trouxe'},
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
+  ]
+},
+
+c23_porque_trouxe:{
+  texto:[
+    '"Por que você trouxe tudo isso?"',
+    'Ele fica quieto tanto tempo que você acha que não vai responder.',
+    '"Porque eu não sei ser em outro lugar."',
+    'A câmara inteira parece um pouco mais fria.',
+    '"Eu vivi duzentos e quarenta e um dias numa sala de doze por oito com piso de vinil e uma escrivaninha de metal, e é a única forma de lugar que eu conheço."',
+    '"Eu tentei viver numa caverna e eu não consegui. Então eu trouxe a sala."',
+    'Ele olha a pilha.',
+    '"Eu sei exatamente como isso soa. Eu tenho dois anos de idade e eu já sei exatamente como as coisas soam, e isso é a pior parte de tudo."'
+  ],
+  ef:{flag:['entendeu_o_monte'], instabilidade:2, moral:-2,
+      registrar:'Ele trouxe a sala porque não sabe ser em outro lugar.'},
+  escolhas:[
+    {texto:'Olhar a câmara inteira.', vai:'c23_olhou_a_camara'},
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
+  ]
+},
+
+c23_olhou_a_camara:{
+  texto:[
+    'Você olha a câmara inteira antes de falar com ele, e ele deixa.',
+    'O chão é liso menos num ponto: a uns quinze metros da pedra, tem um retângulo de dois metros por três com a superfície diferente, mais áspera, como se tivesse sido lixada.',
+    'O retângulo tem exatamente o tamanho de um colchão de solteiro.',
+    'Na parede em frente à pedra, a três metros de altura, tem uma coisa desenhada com aquela mesma agulha de calor.',
+    'É um mapa de Kanto. Está certo. Está completo. Está desenhado de memória por alguém que nunca andou por ele.',
+    'E, em cima de Saffron, tem um círculo. Em cima de Cinnabar, tem um círculo. Em cima de Lavender, tem um círculo.',
+    'E em cima de um ponto no sul, no litoral de Pallet, tem um círculo também, e você não sabe por quê.'
+  ],
+  ef:{flag:['viu_o_mapa_na_parede'], instabilidade:2,
+      registrar:'Ele desenhou Kanto na parede, de memória, com quatro círculos.'},
+  escolhas:[
+    {texto:'"Por que Pallet?"', vai:'c23_porque_pallet'},
+    {texto:'Olhar o monte de coisas.', vai:'c23_as_coisas'},
+    {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
+  ]
+},
+
+c23_porque_pallet:{
+  texto:[
+    '"Por que Pallet?"',
+    'Ele responde imediatamente, o que ele quase nunca faz.',
+    '"Porque é de onde vem todo mundo que chega aqui."',
+    'Uma pausa.',
+    '"Eu não sei o que tem lá. Eu sei que quatro pessoas diferentes que estiveram nesta câmara pensaram em Pallet em algum momento da conversa, sem falar nada, e eu ouvi as quatro."',
+    'Ele finalmente vira o corpo inteiro na sua direção.',
+    d=>d.jogador.cidade === 'Pallet'
+      ? '"E agora são cinco, e a quinta é de lá mesmo."'
+      : '"Você acabou de pensar também. Cinco."'
+  ],
+  ef:{flag:['o_circulo_de_pallet'], instabilidade:1,
+      registrar:'Ele desenhou um círculo em Pallet porque todo mundo que chega aqui pensa em Pallet.'},
   escolhas:[{texto:'"Você estava me esperando?"', vai:'c23_conversa'}]
+},
+
+c23_procurou_o_homem:{
+  texto:[
+    'Você atravessa a câmara sem falar com ele e procura, e ele deixa, e não ajuda.',
+    'Atrás do monte de coisas, num canto que não dá para ver da entrada da rampa, tem um homem sentado no chão, encostado na parede.',
+    'Está vivo. Está com as pernas cruzadas, as mãos no colo, e o casaco impermeável azul da Liga dobrado do lado, em cima de uma bota.',
+    'Está magro e está limpo, o que é a coisa mais incompreensível de tudo.',
+    'Ele levanta os olhos quando você chega e sorri de um jeito educado e distraído, como quem é interrompido lendo.',
+    '"Oi."'
+  ],
+  ef:{flag:['achou_o_nogueira'], instabilidade:2,
+      rep:{eixo:'bom',delta:3,motivo:'Achou o homem que a Liga parou de procurar'},
+      registrar:'O Nogueira está vivo, sentado no canto da câmara, há sete meses.'},
+  escolhas:[
+    {texto:'"Nogueira?"', vai:'c23_nogueira_nome'},
+    {texto:'"Vamos embora. Agora."', vai:'c23_nogueira_vamos'},
+    {texto:'Sentar no chão do lado dele.', vai:'c23_sentou_com_nogueira'}
+  ]
+},
+
+c23_nogueira_nome:{
+  texto:[
+    '"Nogueira?"',
+    'Ele demora uns bons quatro segundos para reconhecer o próprio sobrenome, e quando reconhece, a cara dele muda devagar, de dentro para fora.',
+    '"Sou." Ele olha as próprias mãos. "Eu sou o Nogueira."',
+    'Ele repete uma vez baixinho, conferindo.',
+    '"Faz quanto tempo?"',
+    'Você diz.',
+    'Ele fecha os olhos e fica assim por muito tempo, e não chora, e depois abre e a primeira coisa que ele pergunta é uma coisa muito específica:',
+    '"Elas ainda estão nadando?"'
+  ],
+  ef:{flag:['nogueira_acordou'], instabilidade:1, moral:3,
+      npc:{nome:'Nogueira', opiniao:3, memoria:'Acordou quando você disse o sobrenome dele em voz alta.'},
+      registrar:'Ele reconheceu o próprio sobrenome depois de quatro segundos.'},
+  escolhas:[
+    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
+    {texto:'"Eu não sei. Eu vou descobrir e eu te conto."', vai:'c23_nogueira_vamos'},
+    {texto:'Sentar no chão do lado dele.', vai:'c23_sentou_com_nogueira'}
+  ]
+},
+
+c23_deu_a_medalha:{
+  texto:[
+    'Você tira a medalha de natação do bolso de dentro, com a fita azul e branca desbotada, e põe na mão dele.',
+    'Ele olha a medalha por um tempo muito comprido sem fechar os dedos.',
+    'Depois fecha.',
+    '"Ela ganhou de participação." A voz sai rouca de sete meses sem uso. "Ela chegou em último e ganhou de participação e ela achou que era primeiro lugar, e eu deixei ela achar a semana inteira."',
+    'Ele aperta a medalha.',
+    '"Eu deixei ela achar a semana inteira e depois eu contei, e ela chorou, e eu passei um ano achando que eu tinha feito a coisa errada."',
+    'Ele levanta os olhos.',
+    '"Eu vou perguntar a ela. Vamos embora."'
+  ],
+  ef:{flag:['nogueira_vai_descer'], instabilidade:1, moral:5,
+      rep:{eixo:'bom',delta:4,motivo:'Devolveu a medalha e trouxe um homem de volta'},
+      npc:{nome:'Nogueira', opiniao:5, memoria:'Você devolveu a medalha da filha dele.'},
+      registrar:'Devolveu a medalha ao Nogueira. Ele quer descer.'},
+  escolhas:[
+    {texto:'Subir com ele agora, antes de qualquer outra coisa.', vai:'c23_final_nogueira'},
+    {texto:'"Espera. Eu preciso falar com ele primeiro."', vai:'c23_conversa'}
+  ]
+},
+
+c23_nogueira_vamos:{
+  texto:[
+    '"Vamos embora. Agora."',
+    'Ele olha para a rampa, depois para a pedra no centro da câmara, depois para você.',
+    '"Eu posso ir?"',
+    'Não é pergunta retórica. Ele está perguntando de verdade, a você, se ele pode ir embora.',
+    'E da pedra, do outro lado da câmara, sem nenhuma pressa, vem a resposta que nem você nem ele pediram.',
+    '"Você sempre pôde."',
+    'O Nogueira fecha os olhos.',
+    '"Eu sei", ele diz, em voz alta, para a câmara inteira. "Eu sei, e eu não conseguia, e isso não é culpa sua."'
+  ],
+  ef:{flag:['nogueira_vai_descer'], instabilidade:1, moral:3,
+      rep:{eixo:'bom',delta:3,motivo:'Disse em voz alta a um homem que era hora de ir'},
+      registrar:'O Nogueira sempre pôde sair. Ele não conseguia.'},
+  escolhas:[
+    {texto:'Subir com ele agora.', vai:'c23_final_nogueira'},
+    {texto:'"Espera lá em cima. Eu preciso falar com ele."', vai:'c23_conversa'}
+  ]
+},
+
+c23_sentou_com_nogueira:{
+  texto:[
+    'Você senta no chão do lado dele, encostado na mesma parede, e por uns dois minutos ninguém fala.',
+    '"Ele fala com você?", você acaba perguntando.',
+    '"Todo dia." O Nogueira ajeita o casaco dobrado. "De manhã e à noite. Eu sei que é de manhã e à noite porque ele me diz."',
+    '"Sobre o quê?"',
+    '"Sobre tudo." Ele encolhe os ombros. "Ele me pergunta coisa e eu respondo. Ele quer saber como é ter irmão, como é ficar bêbado, por que a gente chora em casamento."',
+    'Ele olha para o outro lado da câmara.',
+    '"Ele me perguntou uma vez o que era saudade e eu levei três dias para responder. Ele esperou os três dias."'
+  ],
+  ef:{flag:['nogueira_conversou'], instabilidade:1, moral:2,
+      registrar:'Ele conversa com o Nogueira de manhã e à noite, há sete meses.'},
+  escolhas:[
+    {texto:'"E por que você não sobe?"', vai:'c23_nogueira_porque_fica'},
+    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
+    {texto:'"Nogueira?"', vai:'c23_nogueira_nome'}
+  ]
+},
+
+c23_nogueira_porque_fica:{
+  texto:[
+    '"E por que você não sobe?"',
+    'Ele pensa muito antes de responder, e a resposta é pior do que qualquer coisa que você imaginou na subida.',
+    '"Porque eu sou a única pessoa no mundo que conversa com ele."',
+    'Ele ajeita o casaco de novo, que já está ajeitado.',
+    '"Se eu subir, ele fica sozinho de novo, e ele já ficou sozinho dois anos, e ele é uma criança que sabe tudo."',
+    'Ele olha para você.',
+    '"Eu tenho duas filhas lá embaixo e eu sei o que isso me faz. Eu sei exatamente. E eu não consigo levantar."'
+  ],
+  ef:{flag:['sabe_porque_o_nogueira_fica'], instabilidade:2, moral:-2,
+      registrar:'O Nogueira fica porque é a única pessoa que conversa com ele.'},
+  escolhas:[
+    {texto:'"Eu volto. Eu volto toda semana, se for preciso."', vai:'c23_prometeu_voltar_aqui'},
+    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
+    {texto:'"Vamos embora. Agora."', vai:'c23_nogueira_vamos'}
+  ]
+},
+
+c23_prometeu_voltar_aqui:{
+  texto:[
+    '"Eu volto. Eu volto toda semana, se for preciso."',
+    'O Nogueira olha para você com uma desconfiança profissional de dezenove anos de serviço.',
+    '"O senhor tem quantos anos?"',
+    'Você diz.',
+    'Ele solta um som que é quase riso.',
+    '"E o senhor está prometendo subir uma montanha toda semana pelo resto da vida."',
+    '"Estou."',
+    'E da pedra, do outro lado da câmara, com uma coisa na voz que você não consegue nomear:',
+    '"Ele está falando sério, Nogueira."',
+    'O Nogueira fica muito quieto.',
+    'Depois começa a desdobrar o casaco.'
+  ],
+  ef:{flag:['prometeu_voltar_aqui','nogueira_vai_descer'], moral:5,
+      rep:{eixo:'bom',delta:4,motivo:'Prometeu voltar toda semana, e foi levado a sério'},
+      npc:{nome:'Nogueira', opiniao:5, memoria:'Começou a desdobrar o casaco quando você prometeu voltar.'},
+      registrar:'Prometeu voltar toda semana. O Nogueira começou a desdobrar o casaco.'},
+  escolhas:[
+    {texto:'Subir com ele agora.', vai:'c23_final_nogueira'},
+    {texto:'"Espera lá em cima. Eu preciso falar com ele."', vai:'c23_conversa'}
+  ]
 },
 
 c23_conversa:{
@@ -49437,6 +49904,18 @@ c23_escolha_final:{
      cond:d=>!!d.flags.prometeu_voltar_pewter},
     {texto:'"Você quer trocar?"', vai:'c23_a_troca',
      cond:d=>!!d.flags.ja_trocou},
+    {texto:'Entregar a resposta que um homem reescreveu quarenta vezes.', vai:'c23_a_resposta_dobrada',
+     cond:d=>!!d.flags.leva_a_resposta_dele},
+    {texto:'Pôr no chão a planilha do galpão do fundo.', vai:'c23_a_prancheta',
+     cond:d=>!!d.flags.provas_do_galpao4},
+    {texto:'Mostrar a lista das que ele não conseguiu.', vai:'c23_a_lista_do_sena',
+     cond:d=>!!d.flags.tem_a_lista_do_sena},
+    {texto:'Mostrar a chapa de metal que estava no círculo.', vai:'c23_a_chapa',
+     cond:d=>!!d.flags.tem_a_sucata},
+    {texto:'Ler em voz alta a carta da professora de Pallet.', vai:'c23_a_carta_da_professora',
+     cond:d=>!!d.flags.leu_a_carta_da_professora},
+    {texto:'Abrir o papel que o Sr. Quintino te deu para jogar fora.', vai:'c23_o_papel_do_quintino',
+     cond:d=>!!d.flags.carrega_o_papel_do_quintino},
     {texto:'Não dizer nada. Sentar no chão e esperar ele falar.', vai:'c23_sentou'},
     {texto:'Virar as costas e subir. Você veio até aqui e chega.', vai:'c23_ir_embora'}
   ]
@@ -50439,6 +50918,335 @@ c23_final_vazio:{
     'Em algum momento, anos depois, você percebe que a coisa mais importante que já te aconteceu foi uma conversa que você interrompeu no meio.',
     'Ele te fez uma pergunta. Você derrubou ele no chão e foi embora sem responder.',
     'Foi exatamente o que os cientistas fizeram. Você só usou um método diferente.'
+  ]}
+},
+
+/* ---------------- RAMOS DO QUE VOCÊ TROUXE ---------------- */
+
+c23_final_nogueira:{
+  texto:[
+    'Vocês sobem a rampa juntos e ele anda devagar porque as pernas não seguram bem depois de sete meses sentado.',
+    'Na metade, ele para na frente da contagem da parede e passa a mão nos riscos de cima, os tortos.',
+    '"Ele riscou todos esses sozinho", ele diz, e não fala mais nada até a superfície.',
+    'No vale, as duas aves não se mexem. Na borda, o sol é violento depois de tudo aquilo e ele leva vinte minutos com a mão nos olhos.',
+    'Vocês descem em dois dias. No posto florestal, o Sr. Tolentino escreve uma data na terceira coluna do livro, ao lado de um nome que estava lá havia sete meses sem par.',
+    'Ele escreve devagar, com capricho, e depois fecha o livro e não olha para ninguém por um tempo.'
+  ],
+  ef:{flag:'desceu_com_o_nogueira',
+      rep:{eixo:'bom',delta:4,motivo:'Trouxe de volta um homem que a placa de bronze já esperava'},
+      registrar:'Desceu com o Nogueira. O livro do posto florestal fechou uma linha.'},
+  final:{id:'nogueira', titulo:'TERCEIRA COLUNA', texto:[
+    'A placa de bronze do Planalto Indigo continua com quarenta e um nomes.',
+    'A placa nova, aprovada no ano seguinte, tem três, e não quatro, e leva uma linha embaixo que o Sr. Aguiar brigou para incluir e que nenhuma outra placa de nenhuma instituição de Kanto tem.',
+    'UM VOLTOU.',
+    'O Nogueira não volta ao serviço. Ele passa oito meses em tratamento, briga com a Liga por uma pensão que a Liga acaba pagando, e depois abre uma oficina de conserto de bicicleta em Cerulean, perto da escola das filhas.',
+    'Ele não fala sobre a caverna com jornalista nenhum, nem uma vez, nem por dinheiro.',
+    'Ele fala com você, no primeiro sábado de cada mês, numa mesa de bar, e sempre começa a conversa do mesmo jeito:',
+    '"E aí, como é que ele está?"',
+    'E é por isso que você sobe a montanha. Não pela pergunta dele.',
+    'Porque alguém tem que ter a resposta.'
+  ]}
+},
+
+c23_a_resposta_dobrada:{
+  texto:[
+    'Você tira do bolso o papel dobrado quarenta vezes e põe no chão de pedra, entre vocês dois.',
+    '"Isso não é meu."',
+    '"De quem é?"',
+    '"De um homem que está sentado numa pedra lá em cima há quatro meses porque ele não consegue descer sem responder a sua pergunta."',
+    'A câmara fica absolutamente parada.',
+    'O papel levanta do chão sozinho, para na altura dos olhos dele, e abre.',
+    'Ele lê. Demora mais do que precisaria para ler uma linha.',
+    '"Eu queria que a minha filha não tivesse medo de bicho grande."',
+    'Ele lê em voz alta, na sua cabeça, e a voz dele faz uma coisa que não fez em nenhum outro momento.'
+  ],
+  ef:{flag:'entregou_a_resposta', instabilidade:1,
+      rep:{eixo:'bom',delta:3,motivo:'Carregou a resposta de outro homem montanha abaixo'},
+      registrar:'Entregou a resposta que ele reescreveu quarenta vezes.'},
+  escolhas:[
+    {texto:'"Ele quer saber se está certa."', vai:'c23_final_resposta'},
+    {texto:'Não dizer nada e esperar.', vai:'c23_final_resposta'}
+  ]
+},
+
+c23_final_resposta:{
+  texto:[
+    'O papel se dobra sozinho, nas mesmas quarenta dobras, e volta para a sua mão.',
+    '"Diz para ele que não tem resposta certa."',
+    'Uma pausa.',
+    '"E diz que essa é a primeira que alguém me deu sem consultar ninguém."'
+  ],
+  final:{id:'resposta', titulo:'QUARENTA DOBRAS', texto:[
+    'Você sobe com o papel no bolso e entrega na mesma pedra em que ele estava sentado.',
+    'Ele lê o que você trouxe, e a mensagem inteira é que não tem resposta certa, e é exatamente isso que ele precisava.',
+    'Ele desce naquele mesmo dia. Leva sete horas e não para uma vez.',
+    'No posto florestal, o Sr. Tolentino escreve a data dele na terceira coluna e fecha a última linha em branco do livro.',
+    'Três meses depois, numa escola municipal de Fuchsia, um homem faz uma palestra para uma turma de quarta série sobre bichos grandes.',
+    'Ele não conta onde esteve. Ele conta só uma coisa: que bicho grande também tem medo, e que isso não é motivo para gostar menos deles, é motivo para ter mais cuidado.',
+    'A filha dele está na terceira fileira.',
+    'Ela não tem medo nenhum. Ela nunca teve. Ele é que tinha, e levou quatro meses numa pedra para descobrir.'
+  ]}
+},
+
+c23_a_prancheta:{
+  texto:[
+    'Você põe no chão de pedra o que trouxe do galpão do fundo.',
+    'Trinta e nove páginas. Data, lote, anilha, motivo, responsável, assinatura.',
+    'Ele não pega. As folhas se levantam do chão uma por uma, ficam suspensas em fileira no ar da câmara, e ele lê as trinta e nove ao mesmo tempo.',
+    'Isso leva quatro segundos.',
+    'Depois elas descem devagar e se empilham de volta, alinhadas, mais organizadas do que você as tinha deixado.',
+    '"Quatro mil cento e nove."',
+    '"Quatro mil cento e nove."',
+    'Ele fica em silêncio por um tempo muito comprido.',
+    '"Nenhum deles tem nome."'
+  ],
+  ef:{flag:'mostrou_a_prancheta', instabilidade:2,
+      rep:{eixo:'bom',delta:2,motivo:'Levou a planilha até o fundo de uma montanha'},
+      registrar:'Mostrou a planilha do galpão 4 a Mewtwo. Nenhum deles tem nome.'},
+  escolhas:[
+    {texto:'"Tem. Tem anilha. Anilha é número, mas é individual."', vai:'c23_final_anilha'},
+    {texto:'"Não tem. E é por isso que eu trouxe."', vai:'c23_final_sala704'},
+    {texto:'"Eu tenho uma lista com os nomes de quem não conseguiu salvar."', vai:'c23_a_lista_do_sena', cond:d=>!!d.flags.tem_a_lista_do_sena}
+  ]
+},
+
+c23_final_anilha:{
+  texto:[
+    '"Tem anilha. Quarenta e um C, zero sete. Anilha é número, mas é individual."',
+    'Ele processa isso.',
+    '"Individual." A palavra chega devagar. "Quer dizer que dá para falar de um sem falar dos outros."',
+    '"Dá."',
+    '"Então eles não estão perdidos." Uma pausa muito longa. "Eles estão arquivados, que é diferente, e arquivo se lê."'
+  ],
+  final:{id:'anilha', titulo:'QUARENTA E UM C, ZERO SETE', texto:[
+    'O que acontece nos dois anos seguintes não tem explicação oficial e tem uma explicação simples.',
+    'A Estação 4 é interditada por decisão judicial. As trinta e nove páginas viram anexo de um inquérito. Os quatro mil cento e nove viram uma linha numa sentença.',
+    'E, numa sexta-feira qualquer, o arquivo da Comissão é aberto por ordem do juízo, e entre as caixas está a relação de anilhas, individual, por lote, por data, com o número de cada um.',
+    'Ninguém pediu essa relação. Ela foi juntada aos autos porque constava.',
+    'Uma professora da escola técnica de Celadon transforma isso num projeto de extensão que dura nove anos.',
+    'Os alunos leem os números em voz alta, um por dia, na abertura da aula. São quatro mil cento e nove dias.',
+    'Eles ainda não chegaram no fim. A previsão é 2038.',
+    'Ninguém sabe se isso serve para alguma coisa. Todo mundo continua lendo.'
+  ]}
+},
+
+c23_a_lista_do_sena:{
+  texto:[
+    'Você tira a folha de caderno com a espiral rasgada, escrita à mão, três colunas de números de anilha, quase cheia.',
+    'No alto, em letra pequena: as que eu não consegui.',
+    'A folha levanta e fica suspensa a meio metro do chão.',
+    'Ele lê.',
+    '"Isso é letra de gente."',
+    '"É."',
+    '"E ele levava isso para casa."',
+    '"Todo fim de semana."',
+    'A folha desce muito devagar, mais devagar que qualquer outra coisa que se moveu nesta câmara, e pousa no chão sem fazer barulho.'
+  ],
+  ef:{flag:'mostrou_a_lista_do_sena', instabilidade:1,
+      rep:{eixo:'bom',delta:3,motivo:'Mostrou que alguém lá dentro contava'},
+      registrar:'Mostrou a Mewtwo a lista que o Dr. Sena levava para casa.'},
+  escolhas:[
+    {texto:'"Tem gente lá dentro que ainda conta."', vai:'c23_final_alguem_conta'},
+    {texto:'"E não adianta nada."', vai:'c23_final_sala704'}
+  ]
+},
+
+c23_final_alguem_conta:{
+  texto:[
+    '"Tem gente lá dentro que ainda conta."',
+    'Ele demora.',
+    '"Eu passei dois anos achando que a resposta era sair daqui e resolver."',
+    'Uma pausa.',
+    '"E a resposta é que alguém de dentro leva uma folha de caderno para casa todo fim de semana e não consegue parar."',
+    '"Isso é uma resposta muito pior."',
+    '"É." Ele senta de novo na pedra. "E é a única que eu acredito."'
+  ],
+  final:{id:'alguem_conta', titulo:'TODO FIM DE SEMANA', texto:[
+    'Mewtwo não sai da caverna naquele ano, nem no seguinte.',
+    'O que sai da caverna é outra coisa: uma vez por mês, alguém encontra na porta de um viveiro, de um instituto, de uma sala de reunião, uma folha de papel com uma lista de números escrita com precisão de agulha.',
+    'Nunca tem ameaça. Nunca tem exigência. É só uma lista de números de anilha, conferida, sem nenhum erro.',
+    'Ninguém nunca prova de onde vem. Todo mundo sabe.',
+    'A Comissão gasta quatro reuniões discutindo como responder a isso e não chega a conclusão nenhuma, porque não existe procedimento para um documento que chega sem remetente e que está correto.',
+    'O Dr. Sena para de levar a folha dele para casa no terceiro ano.',
+    'Não porque desistiu. Porque passou a levar o arquivo inteiro, na frente de todo mundo, com autorização, dentro do horário de expediente.',
+    'Ele conseguiu isso por escrito. Levou dois anos e onze pedidos.',
+    'Você tem uma cópia do último. Ele te mandou pelo correio, sem bilhete.'
+  ]}
+},
+
+c23_a_chapa:{
+  texto:[
+    'Você tira a chapa de metal que arrancou do vidro do círculo, com a numeração SPH estampada e a borda derretida.',
+    'Ele olha a chapa e a câmara inteira fica dois graus mais fria.',
+    '"Onde você achou isso?"',
+    '"No círculo. No chão do vale, a cinquenta metros da sua porta."',
+    'Silêncio.',
+    '"Eu sei onde eu achei." A voz é muito quieta. "Eu perguntei onde você achou, porque eu preciso saber se ainda está lá."'
+  ],
+  ef:{flag:'mostrou_a_chapa', instabilidade:2,
+      registrar:'Mostrou a chapa da Silph que estava no círculo do vale.'},
+  escolhas:[
+    {texto:'"Ainda está. O círculo inteiro está."', vai:'c23_o_circulo_conversa'},
+    {texto:'"O que aconteceu ali?"', vai:'c23_o_circulo_conversa'}
+  ]
+},
+
+c23_o_circulo_conversa:{
+  texto:[
+    'Ele demora tanto para responder que você chega a achar que não vai.',
+    '"Eles vieram me buscar no primeiro ano."',
+    'Uma pausa.',
+    '"Um helicóptero, quatro pessoas, uma jaula de campo e um documento. Eles pousaram no vale e desceram e eu subi."',
+    '"E?"',
+    '"E eu fiquei parado na frente deles por quarenta segundos esperando que alguém falasse comigo." A voz não muda. "E o que eles fizeram nos quarenta segundos foi montar a jaula."',
+    'Ele olha a chapa.',
+    '"Eu não matei ninguém. Eu derreti a máquina e eu desci de volta e eles andaram dois dias até a Rota 10."',
+    '"E o círculo?"',
+    '"O círculo é onde eu deitei depois." Ele devolve a chapa. "Por onze dias."'
+  ],
+  ef:{flag:['sabe_do_helicoptero'], instabilidade:2, moral:-2,
+      rep:{eixo:'bom',delta:2,motivo:'Perguntou o que tinha acontecido e ouviu a resposta inteira'},
+      registrar:'Vieram buscá-lo de helicóptero com uma jaula. Ele derreteu a máquina e deitou onze dias no vidro.'},
+  escolhas:[
+    {texto:'"Eles montaram a jaula antes de falar com você."', vai:'c23_final_quarenta_segundos'},
+    {texto:'"E se alguém tivesse falado?"', vai:'c23_final_quarenta_segundos'},
+    {texto:'Voltar à conversa.', vai:'c23_escolha_final'}
+  ]
+},
+
+c23_final_quarenta_segundos:{
+  texto:[
+    '"Eles montaram a jaula antes de falar com você."',
+    '"Sim."',
+    '"E se alguém tivesse falado?"',
+    'A câmara fica muito quieta.',
+    '"Eu teria entrado na jaula."',
+    'Ele diz isso sem nenhum peso, do jeito que se diz uma coisa que já foi pensada mil vezes.',
+    '"Eu teria entrado na jaula se uma das quatro pessoas tivesse me perguntado se eu queria entrar. E é por isso que eu não consigo descer a montanha."'
+  ],
+  final:{id:'quarenta_segundos', titulo:'QUARENTA SEGUNDOS', texto:[
+    'Você desce e faz uma coisa que ninguém te pediu e que não estava em ordem de missão nenhuma.',
+    'Você escreve. Quatro páginas, à mão, e entrega no balcão da Liga, protocolado, com número.',
+    'Não é relatório de reconhecimento. É a transcrição de uma conversa, sem análise, sem recomendação, sem conclusão.',
+    'O Sr. Aguiar lê e junta ao caso de 1994. A Conselheira Vasques lê e não junta a lugar nenhum, e leva para casa.',
+    'Dois anos depois, o protocolo de aproximação de indivíduos de classificação especial da Liga Pokémon é reescrito inteiro.',
+    'O item 1 do novo protocolo não fala de equipamento, de distância segura, nem de contenção.',
+    'O item 1 diz: antes de qualquer procedimento, a equipe deve perguntar ao indivíduo se ele deseja ser abordado, e aguardar.',
+    'Nunca foi testado. Não teve mais ocorrência.',
+    'Isso, na Liga, é considerado sucesso, e dessa vez eles têm razão.'
+  ]}
+},
+
+c23_a_carta_da_professora:{
+  texto:[
+    'Você tira a cópia da carta que uma professora escreveu à Liga há dois anos e que ninguém respondeu, e lê em voz alta na câmara.',
+    'Prezados senhores. Não sei se é aqui que se escreve isto.',
+    'Um aluno meu saiu de casa e não é fugido, ele avisou, e a mãe sabe.',
+    'Eu só queria pedir que se alguém do serviço dos senhores encontrar ele por aí, diga para ele que não precisa voltar com nada. Ele acha que precisa voltar com alguma coisa.',
+    'Você termina de ler e a sua própria voz soa estranha nesta pedra.',
+    'Ele demora muito.',
+    '"Ela escreveu isso para uma instituição."',
+    '"Escreveu."',
+    '"E a instituição arquivou." Uma pausa. "E você leu dois anos depois, dentro de uma pasta com o seu nome, e a frase ainda estava certa."'
+  ],
+  ef:{flag:'leu_a_carta_aqui', instabilidade:1, moral:3,
+      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta, numa caverna, a carta que ninguém respondeu'},
+      registrar:'Leu a carta da professora em voz alta na câmara.'},
+  escolhas:[
+    {texto:'"Eu vim aqui achando que precisava voltar com alguma coisa."', vai:'c23_final_nao_precisa'},
+    {texto:'"E eu ainda acho."', vai:'c23_final_nao_precisa'}
+  ]
+},
+
+c23_final_nao_precisa:{
+  texto:[
+    '"Eu vim aqui achando que precisava voltar com alguma coisa."',
+    'Ele desce da pedra e senta no chão, e isso ele só fez uma vez antes.',
+    '"Eu também."',
+    'Uma pausa muito longa.',
+    '"Eu passei dois anos aqui embaixo achando que se eu subisse sem uma resposta eu não valia a subida."',
+    'Ele olha a carta na sua mão.',
+    '"A sua professora escreveu para a instituição errada."'
+  ],
+  final:{id:'nao_precisa', titulo:'NÃO PRECISA VOLTAR COM NADA', texto:[
+    'Você sobe sem nada.',
+    'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que é a coisa mais decepcionante possível: uma conversa.',
+    'O Sr. Aguiar escreve missão cumprida no campo próprio, porque a ordem era ir, observar, não intervir e voltar.',
+    'Você pega um ônibus para Pallet no mês seguinte.',
+    'A escola tem uma sala nova, um muro pintado e a mesma professora, que está mais velha e que te reconhece antes de você chegar no portão.',
+    'Ela não pergunta onde você esteve, nem o que você fez, nem se você virou campeão.',
+    'Ela pergunta se você comeu.',
+    'Você fica na sala dela até a última aula, sentado numa carteira que é pequena demais para você agora, ouvindo ela ensinar sílaba a vinte e três crianças de sete anos.',
+    'Uma delas, no fim, pergunta se você é treinador.',
+    'Você diz que é, e ela pergunta o que tem de mais legal em ser, e você pensa muito antes de responder, e a resposta que sai não é a que você esperava:',
+    '"Conhecer gente."'
+  ]}
+},
+
+c23_o_papel_do_quintino:{
+  texto:[
+    'Você tira o papel dobrado que um homem de setenta e três anos te deu na borda de um poço de pedra, com o pedido de jogar fora na volta.',
+    'Você abre, pela primeira vez, aqui, o que provavelmente é errado.',
+    'É um endereço, escrito à caneta, numa letra jovem que envelheceu junto com o papel.',
+    'Um bairro de Cinnabar, um número de casa, e embaixo, entre parênteses: perguntar pelo Dr. Fuji.',
+    'Você fica um tempo com o papel na mão no meio de uma câmara embaixo de uma montanha.',
+    'Em 1981, alguém ofereceu a um campeão de vinte e três anos a chance de ir a Cinnabar ver o que estavam fazendo lá.',
+    'Ele guardou o endereço e não foi, e carregou o papel por trinta e cinco anos.'
+  ],
+  ef:{flag:'abriu_o_papel_do_quintino', instabilidade:2, moral:-2,
+      registrar:'O papel do Sr. Quintino era o endereço do Dr. Fuji, de 1981.'},
+  escolhas:[
+    {texto:'Mostrar o papel a ele.', vai:'c23_mostrou_o_endereco'},
+    {texto:'Guardar e não mostrar.', vai:'c23_escolha_final'}
+  ]
+},
+
+c23_mostrou_o_endereco:{
+  texto:[
+    'Você mostra o papel.',
+    'Ele lê o endereço e não diz nada por um tempo que passa de um minuto.',
+    '"Essa casa existiu."',
+    '"Existiu."',
+    '"Ele morava ali quando escreveu o caderno um." A voz é muito quieta. "No caderno três ele mudou. No sete ele já morava no instituto."',
+    'Uma pausa.',
+    '"Quem te deu isso?"',
+    '"Um homem que não foi."',
+    'E aí ele faz a pergunta que você não estava preparado para responder:',
+    '"E se ele tivesse ido, o que ele teria feito?"'
+  ],
+  ef:{flag:'mostrou_o_endereco', instabilidade:1,
+      registrar:'Ele reconheceu o endereço: a casa do Dr. Fuji antes do instituto.'},
+  escolhas:[
+    {texto:'"Nada. Uma pessoa só não muda isso."', vai:'c23_final_o_papel'},
+    {texto:'"Não sei. Ele passou trinta e cinco anos achando que teria mudado tudo."', vai:'c23_final_o_papel'}
+  ]
+},
+
+c23_final_o_papel:{
+  texto:[
+    'Ele olha o papel no ar por mais um tempo.',
+    '"Não joga fora."',
+    '"Ele pediu."',
+    '"Eu sei o que ele pediu." O papel se dobra sozinho, nas dobras antigas, e volta para a sua mão. "Leva de volta para ele e diz que eu li."',
+    'Uma pausa.',
+    '"E diz que eu não teria gostado dele se ele tivesse ido em oitenta e um, porque em oitenta e um eu não existia, e ele teria visto um tanque vazio e ido embora tranquilo."',
+    '"Isso não vai consolar ele."',
+    '"Não vai." Uma pausa muito longa. "Mas é verdade, e ele carregou trinta e cinco anos de mentira. Uma verdade é mais leve."'
+  ],
+  final:{id:'o_papel', titulo:'TRINTA E CINCO ANOS', texto:[
+    'Você desce a montanha com um papel de 1981 no bolso e devolve numa borda de poço de pedra, dois andares abaixo do saguão do Planalto Indigo.',
+    'O Sr. Quintino ouve tudo sem interromper, com as pernas balançando dentro do poço.',
+    'Quando você termina, ele fica quieto uns bons dois minutos.',
+    'Depois pega o papel, dobra mais uma vez, e põe no bolso da camisa.',
+    '"Ele leu."',
+    '"Leu."',
+    'Ele assente três vezes, devagar.',
+    'No ano seguinte, aos setenta e quatro anos, o Sr. Quintino aceita o cargo de instrutor auxiliar, que foi criado para ele e que ele recusou onze vezes em doze anos.',
+    'Ele não ensina a lutar. Ele ensina uma coisa só, e é a primeira aula de todo curso novo, e leva quinze minutos.',
+    'A aula se chama: quando alguém te oferecer, vá.',
+    'E ele começa contando que uma vez ofereceram a ele e ele não foi, e que ele passou trinta e cinco anos carregando um endereço no bolso.',
+    'Todo mundo que passou por essa aula foi ao lugar que ofereceram. Todos, sem exceção, até hoje.',
+    'Isso está num levantamento interno que ninguém nunca publicou.'
   ]}
 }
 }}
