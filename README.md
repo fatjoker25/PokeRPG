@@ -237,3 +237,15 @@ O mundo lembra de tudo, e isso é mecânico, não decorativo:
 - **A instabilidade de Kanto** é um número que sobe quando você captura lendários ou quebra equilíbrios, e ela muda o clima descrito nas rotas, o que a Liga fala com você e o que você vê no capítulo 19.
 - **A Liga escala em três estágios** e emite ordem de detenção por conta própria se você insistir.
 - **A reputação nunca zera.** Ações contrárias lavam o eixo oposto antes de subir o seu — e os NPCs continuam citando as duas metades da frase.
+
+## Jogar
+
+**Arquivo único:** baixe `jornada-do-campeao.html` e abra em qualquer navegador. Tudo está embutido — sem instalação, sem servidor, funciona offline. O progresso fica salvo no `localStorage` daquele navegador.
+
+**Do repositório:** abra `index.html`. Idêntico, só que com os arquivos separados, que é como o projeto é mantido.
+
+Para regerar o arquivo único depois de alterar qualquer fonte:
+
+```bash
+python3 build.py
+```
