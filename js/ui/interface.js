@@ -56,7 +56,8 @@ const UI = {
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalRota()">Rota</button>
-        <button class="btn mini" onclick="Jogo.abrirGinasios('cena')">Ginásios${Estado.dados.insignias.length ? ' '+Estado.dados.insignias.length+'/8' : ''}</button>
+        <button class="btn mini" onclick="Jogo.abrirGinasios('cena')">Ginásios${Estado.dados.insignias.filter(i=>i!=='Título de Campeão').length ? ' '+Estado.dados.insignias.filter(i=>i!=='Título de Campeão').length+'/8' : ''}</button>
+        <button class="btn mini" onclick="Jogo.abrirLiga('cena')">Liga</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
     </div>`;
@@ -425,6 +426,7 @@ const UI = {
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
         <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
+        <button class="escolha" onclick="Jogo.abrirLiga('hub')">Liga Pokémon — Elite 4 e Torneio Aberto</button>
         <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota — encontro selvagem aleatório</button>
         <button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>
         <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
@@ -447,12 +449,12 @@ const UI = {
       const st = statusGinasio(g);
       const cor = {conquistado:'var(--bom)', disponivel:'var(--destaque)',
                    recusado:'var(--ruim)', trancado:'var(--texto-fraco)', distante:'var(--texto-fraco)'}[st.estado];
-      const time = g.time.map(x=>`${DEX[x.dex].nome} Nv${x.nivel}`).join(' · ');
+      const time = timeGinasio(g).map(x=>`${DEX[x.dex].nome} Nv${x.nivel}`).join(' · ');
       const rotulo = st.estado === 'conquistado' ? '✓ conquistada' : st.texto;
       return `<div class="carta ginasio" style="border-color:${st.estado==='conquistado'?'var(--bom)':'var(--borda)'}">
-        <div class="t"><span>${g.num}. ${this.esc(g.lider)} <span class="cidade">· ${this.esc(g.cidade)}</span></span>
-          ${this.tipoTag(g.tipo)}</div>
-        <div class="fraco" style="margin-bottom:6px">${this.esc(g.insignia)} · níveis ${g.faixa}</div>
+        <div class="t"><span>${this.esc(g.lider)} <span class="cidade">· ${this.esc(g.cidade)}</span></span>
+          ${g.tipo === 'variado' ? '<span class="tipo-tag" style="background:#8a8f98">Variado</span>' : this.tipoTag(g.tipo)}</div>
+        <div class="fraco" style="margin-bottom:6px">${this.esc(g.insignia)} · níveis ${faixaGinasio(g)}</div>
         <div class="fraco" style="margin-bottom:8px;line-height:1.5">${this.esc(time)}</div>
         ${st.fala ? `<div class="aviso dano" style="margin-bottom:8px">${this.esc(st.fala)}</div>` : ''}
         ${st.estado!=='disponivel' && st.estado!=='conquistado' && g.comoDestravar
@@ -472,7 +474,7 @@ const UI = {
         <div class="tit">Os Oito Ginásios</div>
         <div class="loc">${n} de 8 insígnias</div>
       </div>
-      <p class="sussurro">Os líderes lembram do que você fez na cidade deles. Alguns se recusam a lutar — e a recusa tem conserto.</p>
+      <p class="sussurro">Ordem livre: comece por onde quiser. Cada líder escala o time para o número de insígnias que você já tem — então nenhum ginásio vira passeio nem muro. Blue só recebe quem tem sete.</p>
       <div class="grade" style="margin-top:14px">${GINASIOS.map(cartao).join('')}</div>
       <div style="margin-top:20px">
         <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
@@ -501,6 +503,112 @@ const UI = {
       </div>
     </div>`);
     if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     LIGA — Elite 4, Campeão e Torneio
+     ======================================================== */
+  telaLiga(){
+    this.limpar();
+    this.add(this.topo());
+    const d = Estado.dados;
+    const e4 = statusElite4(), tor = statusTorneio();
+    const membros = ELITE4.map(m =>
+      `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)} <span class="fraco">· ${this.esc(m.tipo)}</span></span>
+       <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`).join('');
+
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">Planalto Indigo</div>
+        <div class="tit">Liga Pokémon</div>
+        <div class="loc">${d.insignias.filter(i=>i!=='Título de Campeão').length} de 8 insígnias${d.flags.campeao_de_kanto ? ' · Campeão de Kanto' : ''}</div>
+      </div>
+
+      <div class="grade">
+        <div class="carta ginasio">
+          <div class="t"><span>Elite 4</span><span class="fraco">${e4.estado==='concluido'?'✓':''}</span></div>
+          <div class="fraco" style="margin-bottom:8px">Quatro salas seguidas, sem Centro Pokémon entre elas. O que estiver na sua mochila é tudo o que você tem.</div>
+          ${membros}
+          <div class="linha"><span class="k">Campeão</span><span class="v">${d.flags.campeao_de_kanto ? 'você' : 'cadeira vaga há 2 anos'}</span></div>
+          <div class="rodape">
+            <span class="fraco">${this.esc(e4.texto)}</span>
+            ${e4.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Jogo.iniciarElite4()">Entrar na ala</button>` : ''}
+          </div>
+        </div>
+
+        <div class="carta ginasio">
+          <div class="t"><span>Torneio Aberto</span><span class="fraco">${d.torneiosVencidos ? d.torneiosVencidos+'× campeão' : ''}</span></div>
+          <div class="fraco" style="margin-bottom:8px">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra — e os adversários saem da sua própria história.</div>
+          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_TORNEIO[0].dinheiro} ₽</span></div>
+          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_TORNEIO[1].dinheiro} ₽</span></div>
+          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_TORNEIO[2].dinheiro} ₽</span></div>
+          <div class="linha"><span class="k">Nível dos adversários</span><span class="v">~${nivelDoJogador()}</span></div>
+          <div class="rodape">
+            <span class="fraco">${this.esc(tor.texto)}</span>
+            ${tor.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Jogo.iniciarTorneio()">Inscrever-se</button>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px">
+        <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
+        <button class="btn" onclick="Jogo.abrirGinasios('${this.esc(Jogo.voltarDeGinasio)}')">Ginásios</button>
+        <button class="btn" onclick="Jogo.hubCentro()">Curar o time</button>
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaTorneio(){
+    this.limpar();
+    this.add(this.topo());
+    const t = Jogo.torneioAtual;
+    if (!t) return this.telaLiga();
+    const chave = t.adversarios.map((a,i) => {
+      const est = i < t.rodada ? '✓ vencido' : (i === t.rodada ? 'agora' : 'aguardando');
+      const cor = i < t.rodada ? 'var(--bom)' : (i === t.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
+      return `<div class="linha"><span class="k">${PREMIO_TORNEIO[i].rodada} · ${this.esc(a.nome)}
+        <span class="fraco">${a.time.map(p=>p.nome+' Nv'+p.nivel).join(', ')}</span></span>
+        <span class="v" style="color:${cor}">${est}</span></div>`;
+    }).join('');
+
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">Torneio Aberto</div>
+        <div class="tit">${this.esc(PREMIO_TORNEIO[t.rodada].rodada)}</div>
+        <div class="loc">Arena do Planalto Indigo</div>
+      </div>
+      ${chave}
+      <div class="escolhas" style="margin-top:20px">
+        <button class="escolha" onclick="Jogo.lutarRodadaTorneio()">Entrar na arena — ${this.esc(t.adversarios[t.rodada].nome)}</button>
+        <button class="escolha" onclick="Jogo.curarNoTorneio()">Usar os vinte minutos para curar o time</button>
+        <button class="escolha" onclick="Jogo.desistirTorneio()">Desistir do torneio</button>
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaResultadoLiga(o){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${this.esc(o.sub||'Liga Pokémon')}</div>
+        <div class="tit">${this.esc(o.titulo)}</div>
+        <div class="loc">Planalto Indigo</div>
+      </div>
+      <div class="narrativa">${(o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div id="avisos" class="avisos"></div>
+      <div class="escolhas" style="margin-top:20px">
+        ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
+        ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
+        ${!o.venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time</button>` : ''}
+        <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
+        <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
+      </div>
+    </div>`);
+    if (o.avisos && o.avisos.length) this.avisos(o.avisos);
     this.rolarTopo();
   },
 
@@ -629,7 +737,7 @@ const UI = {
       <div class="linha"><span class="k">Objetivo</span><span class="v">${this.esc(j.objetivo)}</span></div>
       <div class="linha"><span class="k">Personalidade</span><span class="v">${this.esc(j.personalidade)}</span></div>
       <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
-      <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.length}/8</span></div>
+      <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.filter(i=>i!=='Título de Campeão').length}/8</span></div>
       ${d.insignias.length ? d.insignias.map(i=>`<div class="linha"><span class="k" style="padding-left:12px">${this.esc(i)}</span><span class="v">✓</span></div>`).join('') : ''}
       <h3>Reputação — ${this.esc(nivel.nome)} (${eixo}, nível ${val}/8)</h3>
       <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>

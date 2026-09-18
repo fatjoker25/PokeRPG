@@ -1,27 +1,40 @@
 /* ============================================================
    OS OITO GINÁSIOS DE KANTO
-   Cada líder reage à sua reputação, à sua rota e ao que você fez
-   na cidade dele. Viridian só abre com sete insígnias.
+   Ordem livre: você escolhe por onde começar, e o time de cada
+   líder escala com quantas insígnias você já tem.
+   Viridian é a exceção — Blue só recebe quem já tem sete.
    ============================================================ */
+
+/* Cidade natal -> ginásio que já é "o seu" desde o primeiro dia */
+const GINASIO_DE_CASA = {
+  'Pallet':'pewter', 'Viridian':'viridian', 'Pewter':'pewter', 'Cerulean':'cerulean',
+  'Vermilion':'vermilion', 'Lavender':'saffron', 'Celadon':'celadon', 'Fuchsia':'fuchsia',
+  'Saffron':'saffron', 'Cinnabar':'cinnabar', 'Indigo':'viridian'
+};
+
+/* O título de Campeão fica na mesma lista, mas não é insígnia */
+function numInsignias(){
+  return Estado.dados.insignias.filter(i => i !== 'Título de Campeão').length;
+}
 
 const GINASIOS = [
 
-/* ── 1 ─────────────────────────────────────────────────── */
+/* ── PEWTER ─────────────────────────────────────────────── */
 {
-  id:'pewter', num:1, cidade:'Pewter', lider:'Brock', tipo:'Pedra',
-  insignia:'Insígnia Pedra', capMin:4, faixa:'14–17',
+  id:'pewter', cidade:'Pewter', lider:'Brock', tipo:'Pedra',
+  insignia:'Insígnia Pedra', nivelBase:12,
+  especies:[74, 95, 112, 76, 141, 142],   // Geodude, Onix, Rhydon, Golem, Kabutops, Aerodactyl
   efeito:'Pokémon que não escolheram você passam a hesitar menos.',
-  time:[{dex:74,nivel:14},{dex:95,nivel:17}],
   premio:{dinheiro:1200, itens:{'Super Potion':2}, rep:1},
 
   intro:d=>[
     'O chão do ginásio é de terra batida sobre pedra. Não tem arquibancada — tem uma linha pintada e um homem parado do outro lado dela.',
-    d.insignias.includes('Insígnia Pedra')
-      ? '"De novo?" Brock cruza os braços. "Tudo bem. Treinar contra pedra nunca fez mal a ninguém."'
-      : '"Primeira insígnia?" Ele nem espera resposta. "Então escuta: eu não pego leve. Se eu pegar leve, você morre na segunda cidade achando que era bom."'
+    numInsignias() === 0
+      ? '"Primeira?" Brock nem espera resposta. "Então escuta: eu não pego leve. Se eu pegar leve, você morre na segunda cidade achando que era bom."'
+      : `"${numInsignias()} insígnias." Ele olha o seu cinto e ajusta alguma coisa na cabeça. "Então eu subo o meu time. Ginásio que não acompanha o desafiante é museu."`
   ],
   vitoria:d=>[
-    'O Onix cai de lado e o chão inteiro sente. A poeira leva um tempo pra assentar.',
+    'O último cai de lado e o chão inteiro sente. A poeira leva um tempo pra assentar.',
     'Brock atravessa a linha pintada e te entrega a insígnia na mão, não no ar.',
     d.cemiterio.length
       ? `"Eu soube do que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele não suaviza. "Isso não some. Você vai treinar com isso do lado pelo resto da vida, e é assim mesmo."`
@@ -29,25 +42,27 @@ const GINASIOS = [
   ],
   derrota:d=>[
     'Você perde. Não por pouco.',
-    'Brock não comemora. Recolhe o Onix e vem até você com uma Super Potion na mão.',
+    'Brock não comemora. Recolhe o time e vem até você com uma Super Potion na mão.',
     '"Volta." Ele diz isso como ordem, não como consolo. "Amanhã, semana que vem, quando for. Mas volta."'
   ]
 },
 
-/* ── 2 ─────────────────────────────────────────────────── */
+/* ── CERULEAN ───────────────────────────────────────────── */
 {
-  id:'cerulean', num:2, cidade:'Cerulean', lider:'Misty', tipo:'Água',
-  insignia:'Insígnia Cascata', capMin:6, faixa:'20–23',
+  id:'cerulean', cidade:'Cerulean', lider:'Misty', tipo:'Água',
+  insignia:'Insígnia Cascata', nivelBase:13,
+  especies:[120, 61, 121, 87, 131, 130],  // Staryu, Poliwhirl, Starmie, Dewgong, Lapras, Gyarados
   efeito:'Lojas de Kanto passam a te vender o estoque de trás do balcão.',
-  time:[{dex:120,nivel:20},{dex:61,nivel:22},{dex:121,nivel:23}],
   premio:{dinheiro:2400, itens:{'Super Potion':2,'Great Ball':3}, rep:1},
 
   recusa:d=>{
+    const lavou = Estado.rep.eixo==='bom' && Estado.rep.bom >= 4;
+    if (lavou) return null;
     if (d.flags.ignorou_marta) return '"Eu conheço a Marta." Misty não se levanta da beira da piscina. "Ela me contou de um treinador que passou reto. Não descreveu, mas eu não preciso de descrição."';
     if (d.flags.agrediu_envenenador) return '"Três pessoas estavam pescando a duzentos metros." Ela olha a água. "Elas vieram aqui contar. Eu não luto com quem resolve as coisas assim."';
     return null;
   },
-  comoDestravar:'Faça algo em Cerulean que valha a pena ser contado — ou lave a reputação e volte.',
+  comoDestravar:'Misty ouviu o que aconteceu na Rota 25. Faça o bastante do outro lado (reputação Boa nível 4) e ela abre a piscina.',
 
   intro:d=>[
     'O ginásio de Cerulean é uma piscina olímpica com uma passarela no meio. A acústica faz tudo ecoar duas vezes.',
@@ -55,10 +70,11 @@ const GINASIOS = [
       ? '"Você é o da Rota 25." Misty já está de pé quando você entra. "A Marta chorou aqui na minha porta contando. Eu ia te procurar."'
       : d.flags.destruiu_tigelas || d.flags.entregou_envenenador
       ? '"As tigelas." Ela assente devagar. "Foi você. Meus irmãos acham que foi a prefeitura."'
-      : '"Regra da casa: o chão é escorregadio e eu não aviso duas vezes."'
+      : '"Regra da casa: o chão é escorregadio e eu não aviso duas vezes."',
+    numInsignias() >= 4 ? '"E você já tem estrada. Eu não vou usar o time de iniciante com você."' : ''
   ],
   vitoria:d=>[
-    'A Starmie afunda e o núcleo dela apaga debaixo d\'água — uma luz vermelha descendo devagar até o fundo azul.',
+    'O último afunda e o núcleo dele apaga debaixo d\'água — uma luz descendo devagar até o fundo azul.',
     'Misty pesca a insígnia do bolso do roupão e te entrega molhada.',
     d.flags.salvou_vaporeon
       ? '"Eu ia te dar mesmo que você perdesse." Ela ri do próprio absurdo. "Mas não fala isso pra ninguém, porque aí vira precedente."'
@@ -71,12 +87,12 @@ const GINASIOS = [
   ]
 },
 
-/* ── 3 ─────────────────────────────────────────────────── */
+/* ── VERMILION ──────────────────────────────────────────── */
 {
-  id:'vermilion', num:3, cidade:'Vermilion', lider:'Lt. Surge', tipo:'Elétrico',
-  insignia:'Insígnia Trovão', capMin:8, faixa:'24–28',
-  efeito:'Você aprende a ler uma sala antes de entrar nela. (+1 em testes de Percepção)',
-  time:[{dex:100,nivel:24},{dex:81,nivel:25},{dex:26,nivel:28}],
+  id:'vermilion', cidade:'Vermilion', lider:'Lt. Surge', tipo:'Elétrico',
+  insignia:'Insígnia Trovão', nivelBase:14,
+  especies:[100, 81, 26, 82, 101, 125],   // Voltorb, Magnemite, Raichu, Magneton, Electrode, Electabuzz
+  efeito:'Você aprende a ler uma sala antes de entrar nela. (+1 Percepção)',
   premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3}, rep:1, status:'percepcao'},
 
   intro:d=>[
@@ -89,7 +105,7 @@ const GINASIOS = [
       : '"Porto é assim: chega coisa, sai coisa, e ninguém pergunta." Ele acende o painel com o pé. "Eu parei de perguntar faz doze anos. Vamos ver o que você faz com isso."'
   ],
   vitoria:d=>[
-    'O Raichu cai e o galpão inteiro apaga — disjuntor geral, escuro total por quatro segundos.',
+    'O último cai e o galpão inteiro apaga — disjuntor geral, escuro total por quatro segundos.',
     'Quando a luz de emergência liga, Surge está rindo alto.',
     '"HA! Faz uns dois anos que ninguém queima meu disjuntor."',
     d.flags.provas_navio || d.flags.caderno_do_trafico
@@ -102,16 +118,15 @@ const GINASIOS = [
   ]
 },
 
-/* ── 4 ─────────────────────────────────────────────────── */
+/* ── CELADON ────────────────────────────────────────────── */
 {
-  id:'celadon', num:4, cidade:'Celadon', lider:'Erika', tipo:'Grama',
-  insignia:'Insígnia Arco-Íris', capMin:9, faixa:'30–33',
-  efeito:'Você passa a reconhecer veneno, remédio e o que há entre os dois. (+1 em Intelecto)',
-  time:[{dex:71,nivel:30},{dex:114,nivel:30},{dex:45,nivel:33}],
+  id:'celadon', cidade:'Celadon', lider:'Erika', tipo:'Grama',
+  insignia:'Insígnia Arco-Íris', nivelBase:15,
+  especies:[71, 114, 45, 103, 3, 44],     // Victreebel, Tangela, Vileplume, Exeggutor, Venusaur, Gloom
+  efeito:'Você passa a reconhecer veneno, remédio e o que há entre os dois. (+1 Intelecto)',
   premio:{dinheiro:4200, itens:{'Full Heal':3,'Hyper Potion':1}, rep:1, status:'intelecto'},
 
   recusa:d=>{
-    // reputação boa alta lava a recusa: o mundo registrou o que você fez depois
     const lavou = Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5;
     if (lavou) return null;
     if (Historia.via()==='mercenario' || Historia.via()==='foragido')
@@ -120,7 +135,7 @@ const GINASIOS = [
       return '"Havia seres vivos naquele prédio quando você ateou fogo." Ela finalmente olha. "Eu passei a vida cuidando de coisa que não fala. Você queimou seis. Não."';
     return null;
   },
-  comoDestravar:'Erika não luta com quem lucra com aquilo. Faça o bastante do outro lado para o mundo registrar (reputação Boa nível 5) e ela abre a estufa.',
+  comoDestravar:'Erika não luta com quem lucra com aquilo. Faça o bastante do outro lado (reputação Boa nível 5) e ela abre a estufa.',
 
   intro:d=>[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. É úmido, quente e absurdamente silencioso pro andar de baixo.',
@@ -132,7 +147,7 @@ const GINASIOS = [
       : '"Todo mundo acha que grama é o tipo mais gentil." Ela fecha a mangueira. "Grama é o tipo mais paciente. É diferente."'
   ],
   vitoria:d=>[
-    'A Vileplume tomba entre os vasos e o pó dela levanta e desce devagar no ar quente da estufa.',
+    'A última tomba entre os vasos e o pó dela levanta e desce devagar no ar quente da estufa.',
     'Erika te entrega a insígnia e segura a sua mão fechada em volta dela por um segundo.',
     '"Você ganhou aqui dentro. Isso é fácil."',
     '"Lá fora, nessa cidade, tem um depósito com portão azul e tem uma mulher que fuma dentro de um cassino. Isso é difícil."',
@@ -145,12 +160,12 @@ const GINASIOS = [
   ]
 },
 
-/* ── 5 ─────────────────────────────────────────────────── */
+/* ── FUCHSIA ────────────────────────────────────────────── */
 {
-  id:'fuchsia', num:5, cidade:'Fuchsia', lider:'Koga', tipo:'Venenoso',
-  insignia:'Insígnia Alma', capMin:12, faixa:'36–39',
-  efeito:'Seu corpo aprende a aguentar o que devia derrubar. (+1 em Resistência)',
-  time:[{dex:109,nivel:36},{dex:49,nivel:36},{dex:89,nivel:37},{dex:110,nivel:39}],
+  id:'fuchsia', cidade:'Fuchsia', lider:'Koga', tipo:'Venenoso',
+  insignia:'Insígnia Alma', nivelBase:16,
+  especies:[109, 49, 89, 110, 73, 94],    // Koffing, Venomoth, Muk, Weezing, Tentacruel, Gengar
+  efeito:'Seu corpo aprende a aguentar o que devia derrubar. (+1 Resistência)',
   premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1}, rep:1, status:'resistencia'},
 
   intro:d=>[
@@ -163,7 +178,7 @@ const GINASIOS = [
       : '"Veneno é o único tipo honesto." Ele se levanta. "Ele avisa o que vai fazer e faz devagar, na sua frente, e você não consegue impedir."'
   ],
   vitoria:d=>[
-    'O Weezing se desfaz no ar em duas nuvens que descem e ficam rentes ao chão.',
+    'O último se desfaz no ar em duas nuvens que descem e ficam rentes ao chão.',
     'Koga te entrega a insígnia com as duas mãos e uma reverência curta que te deixa sem reação.',
     d.flags.provas_zona || d.flags.abriu_o_curral
       ? '"Eu tenho uma pasta." Ele diz isso baixo. "Dezenove anos de relatório que ninguém leu. Ela é sua se você quiser. Eu já não sirvo pra isso."'
@@ -176,40 +191,38 @@ const GINASIOS = [
   ]
 },
 
-/* ── 6 ─────────────────────────────────────────────────── */
+/* ── SAFFRON ────────────────────────────────────────────── */
 {
-  id:'saffron', num:6, cidade:'Saffron', lider:'Sabrina', tipo:'Psíquico',
-  insignia:'Insígnia Pântano', capMin:11, faixa:'40–44',
-  efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 em Carisma)',
-  time:[{dex:64,nivel:40},{dex:122,nivel:40},{dex:49,nivel:41},{dex:65,nivel:44}],
+  id:'saffron', cidade:'Saffron', lider:'Sabrina', tipo:'Psíquico',
+  insignia:'Insígnia Pântano', nivelBase:17,
+  especies:[64, 122, 49, 65, 121, 97],    // Kadabra, Mr. Mime, Venomoth, Alakazam, Starmie, Hypno
+  efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 Carisma)',
   premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2}, rep:1, status:'carisma'},
 
   recusa:d=>{
     if (d.flags.destruiu_o_11){
-      // ela ouviu onze coisas pararem. Só o que você fez depois, e por muito tempo, muda isso.
-      const redimido = Estado.rep.eixo === 'bom' && Estado.rep.bom >= 6 && d.capitulo >= 16;
+      const redimido = Estado.rep.eixo === 'bom' && Estado.rep.bom >= 6;
       if (!redimido)
         return '"Eu senti onze coisas pararem de existir ao mesmo tempo." Sabrina não abre a porta do ginásio. "Você estava lá. Eu não consigo estar na mesma sala que você sem ouvir aquilo de novo."';
     }
-    // até o capítulo 12 o ginásio está fechado por causa do barulho do andar 11
     if (d.capitulo < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
       return 'O ginásio está trancado. Um papel na porta: "SUSPENSO POR TEMPO INDETERMINADO — S." A luz interna está acesa.';
     return null;
   },
-  comoDestravar:'Sabrina fechou o ginásio por causa do que ela ouve embaixo da Silph. Vá até lá — ou espere o mundo seguir em frente sem você.',
+  comoDestravar:'Sabrina fechou o ginásio por causa do que ela ouve embaixo da Silph. Vá até lá — ou espere o mundo seguir sem você.',
 
   intro:d=>[
     'A arena de Saffron não tem iluminação de teto. A luz vem do chão, e o efeito é que ninguém tem sombra.',
     d.flags.sabrina_aliada
       ? '"Eu reabri por sua causa." Sabrina está de pé, o que já é novidade. "Não porque melhorou. Porque agora tem duas pessoas sabendo, e duas pessoas dividem melhor do que uma carrega."'
-      : d.flags.ivone_tem_o_11 || d.flags.liga_lacrou_o_11
-      ? '"O barulho parou na quinta-feira." Ela te olha com uma intensidade desconfortável. "Você é o motivo. Senta."'
       : d.flags.destruiu_o_11
       ? '"Eu ainda ouço." Sabrina abre a porta sem tocar nela. "Mas eu ouvi o que você fez depois, por muito tempo, em muitos lugares. Isso não apaga aquilo. Só me deixa ficar na mesma sala."'
+      : d.flags.ivone_tem_o_11 || d.flags.liga_lacrou_o_11
+      ? '"O barulho parou na quinta-feira." Ela te olha com uma intensidade desconfortável. "Você é o motivo. Senta."'
       : '"Você pensa alto demais." Ela toca a têmpora. "Eu vou ouvir cada ordem antes de você dar. Isso não é trapaça — é o meu tipo."'
   ],
   vitoria:d=>[
-    'O Alakazam cai sentado, de olhos abertos, e as colheres tilintam no chão de pedra por um tempo longo demais.',
+    'O último cai sentado, de olhos abertos, e alguma coisa de metal tilinta no chão de pedra por um tempo longo demais.',
     'Sabrina te entrega a insígnia sem levantar da cadeira e sem estender a mão — a insígnia simplesmente está na sua palma.',
     d.flags.prometeu_aos_doze
       ? '"Você prometeu voltar lá." Ela fecha os olhos. "Eles anotaram. Eu ouço eles anotando, todo dia, desde que você falou."'
@@ -221,12 +234,12 @@ const GINASIOS = [
   ]
 },
 
-/* ── 7 ─────────────────────────────────────────────────── */
+/* ── CINNABAR ───────────────────────────────────────────── */
 {
-  id:'cinnabar', num:7, cidade:'Cinnabar', lider:'Blaine', tipo:'Fogo',
-  insignia:'Insígnia Vulcão', capMin:14, faixa:'44–49',
-  efeito:'Você passa a improvisar quando o plano falha. (+1 em Sorte)',
-  time:[{dex:58,nivel:44},{dex:77,nivel:44},{dex:78,nivel:46},{dex:59,nivel:49}],
+  id:'cinnabar', cidade:'Cinnabar', lider:'Blaine', tipo:'Fogo',
+  insignia:'Insígnia Vulcão', nivelBase:18,
+  especies:[58, 77, 78, 59, 126, 6],      // Growlithe, Ponyta, Rapidash, Arcanine, Magmar, Charizard
+  efeito:'Você passa a improvisar quando o plano falha. (+1 Sorte)',
   premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2}, rep:1, status:'sorte'},
 
   intro:d=>[
@@ -239,7 +252,7 @@ const GINASIOS = [
       : '"Todo mundo acha que fogo é sobre raiva." Ele volta pra lousa. "Fogo é sobre o que sobra depois. Eu sou professor de física. Eu sei o que sobra."'
   ],
   vitoria:d=>[
-    'O Arcanine cai e o calor do ginásio inteiro cai junto, de uma vez, como se alguém tivesse fechado um forno.',
+    'O último cai e o calor do ginásio inteiro cai junto, de uma vez, como se alguém tivesse fechado um forno.',
     'Blaine te entrega a insígnia sem cerimônia nenhuma.',
     d.flags.leu_caderno || d.flags.viu_os_doze
       ? '"Você vai pro norte." Não é pergunta. "Quando você encontrar ele, não peça desculpa pelo Fuji. Ele não quer isso." Uma pausa longa. "Só responde o que ele perguntar. Foi só isso que a gente não fez."'
@@ -252,48 +265,76 @@ const GINASIOS = [
   ]
 },
 
-/* ── 8 ─────────────────────────────────────────────────── */
+/* ── VIRIDIAN — BLUE ────────────────────────────────────── */
 {
-  id:'viridian', num:8, cidade:'Viridian', lider:'Giovanni', tipo:'Terrestre',
-  insignia:'Insígnia Terra', capMin:2, requerInsignias:7, faixa:'48–55',
+  id:'viridian', cidade:'Viridian', lider:'Blue', tipo:'variado',
+  insignia:'Insígnia Terra', nivelBase:30, requerInsignias:7,
+  especies:[18, 65, 112, 130, 59, 0],     // Pidgeot, Alakazam, Rhydon, Gyarados, Arcanine, [ace dinâmico]
+  aceContraInicial:true,
   efeito:'A Liga passa a te tratar como alguém que terminou o que começou.',
-  time:[{dex:111,nivel:48},{dex:51,nivel:50},{dex:31,nivel:51},{dex:34,nivel:52},{dex:112,nivel:55}],
   premio:{dinheiro:12000, itens:{'Ultra Ball':3,'Full Heal':3,'Hyper Potion':2}, rep:2},
-
-  comoDestravar:'O ginásio de Viridian está fechado desde que a Equipe Rocket caiu. Dizem que reabre quando alguém junta sete insígnias — ninguém sabe por quê.',
+  comoDestravar:'O ginásio de Viridian ficou fechado dois anos depois que a Equipe Rocket caiu. Blue reabriu com uma regra: sete insígnias, ou nada.',
 
   intro:d=>[
-    'O ginásio de Viridian está fechado há dois anos. Você passou por ele no segundo dia da sua jornada e a porta estava lacrada.',
-    'Hoje está aberta.',
-    'Lá dentro é o oposto de tudo que você esperava: limpo, iluminado, organizado, com licença emoldurada na parede e certificado de vistoria de agosto.',
-    'O homem no centro da arena tem cinquenta e poucos anos, terno bom, e cumprimenta você pelo nome completo.',
-    '"Eu sou o líder deste ginásio. O registro está na parede, se quiser conferir."',
-    'Você confere. Está.',
-    '"Giovanni."',
-    '"Esse mesmo." Ele não nega nada, não se explica e não pede nada. "A Liga não pôde me tirar a licença porque a licença nunca esteve em nome de nenhuma organização. Estava em meu nome. Sempre esteve."',
+    'O ginásio de Viridian ficou lacrado por dois anos depois que a Equipe Rocket foi desmontada. Ninguém quis o lugar. Ele tinha cheiro do que tinha sido.',
+    'Hoje está aberto, repintado, e tem uma placa nova na porta que diz só: "SETE INSÍGNIAS."',
+    'O líder tem a sua idade mais três ou quatro anos, jaqueta cara e uma segurança que não é totalmente falsa.',
+    '"Blue." Ele não estende a mão. "Antes que você pergunte: sim, aquele Blue. E não, eu não sei onde o Red está."',
     d.flags.sabe_da_terceira
-      ? '"E você conheceu a terceira." Ele diz isso sem nenhuma inflexão. "Ela é boa. Melhor que o segundo. Pior que eu — mas isso é vaidade minha, e eu já tive tempo pra reconhecer as minhas vaidades."'
-      : '"Duas coisas sobreviveram àquilo tudo: esta licença e o meu nome. Eu uso as duas, legalmente, todos os dias. É a coisa mais eficiente que eu já fiz."'
+      ? '"E você andou em Celadon." Ele senta na borda da arena. "Aquela mulher do cassino. Sabe por que ela usa o número três? Porque o primeiro era o Giovanni, e o Giovanni foi preso, e a Rocket acabou de verdade." Uma pausa. "O que sobrou não é Rocket. É gente com planilha. É pior."'
+      : '"Todo mundo que entra aqui espera encontrar outra pessoa." Ele senta na borda da arena. "A Rocket acabou. O Giovanni foi preso. Eu peguei um ginásio vazio porque ninguém queria, e agora ele é meu."',
+    numInsignias() >= 7
+      ? '"Sete insígnias." Ele finalmente levanta. "Então você é sério. Vamos ver o quanto."'
+      : ''
   ],
   vitoria:d=>[
-    'O Rhydon cai sobre o próprio joelho e o piso de concreto racha embaixo dele.',
-    'Giovanni olha a rachadura antes de olhar você. Depois anda até a parede, tira a insígnia de uma caixa, e te entrega com as duas mãos.',
-    '"Oito." Ele diz o número devagar. "Você tem oito."',
-    d.via==='foragido' || d.via==='mercenario'
-      ? '"E eu sei o que mais você tem." Um sorriso muito curto. "Não se preocupe. Eu não sou nenhum tipo de autoridade moral, e você não é nenhum tipo de novidade. Você é uma etapa. Eu fui uma etapa também."'
-      : Estado.rep.eixo==='bom' && Estado.rep.bom>=6
-      ? '"As pessoas vão te oferecer coisas agora." Ele guarda a caixa. "Vão te oferecer cargo, vão te oferecer nome, vão te oferecer a chance de consertar alguma coisa grande. Aceite exatamente uma delas. Eu aceitei todas, e é por isso que eu dou aula de batalha num galpão em Viridian."'
-      : '"Não me agradeça e não me odeie. As duas coisas são trabalho demais para o que eu sou hoje."',
-    'Na saída, ele fala mais uma vez, e é a única frase em que a voz dele muda:',
-    '"O que está no norte não é um Pokémon. Quando você chegar lá, lembre que a culpa é minha também. Eu financiei os primeiros quatro anos."'
+    'O último cai e Blue fica olhando a arena por um tempo antes de olhar você.',
+    '"Ok." Ele diz só isso por uns cinco segundos. "Ok."',
+    'Ele pega a insígnia de uma caixa na parede e te entrega.',
+    '"Eu fui campeão por quatorze minutos." Ele guarda a caixa. "Catorze. Aí o Red entrou pela porta e eu voltei a ser o cara que perdeu."',
+    Estado.rep.eixo==='bom' && Estado.rep.bom>=6
+      ? '"Você é melhor do que eu era. Isso não me incomoda mais, o que é a coisa mais adulta que eu consegui aprender em dois anos."'
+      : d.via==='foragido' || d.via==='mercenario'
+      ? '"Eu sei o que falam de você." Ele cruza os braços. "Eu não sou juiz. Mas se você virar o próximo Giovanni, eu vou ser a pessoa que te para, e eu vou odiar isso."'
+      : '"Guarda essa insígnia. Ela vale exatamente o que você fez pra conseguir e nada além."',
+    'Na porta, ele fala mais uma vez:',
+    '"Se você for pro norte — e você vai, todo mundo vai — lembra de uma coisa que o Red me disse uma única vez. Ele disse que não capturou aquilo porque aquilo perguntou uma coisa pra ele e ele não soube responder."',
+    '"O Red nunca falava nada. Essa foi a frase mais longa que eu ouvi dele na vida."'
   ],
   derrota:d=>[
-    'Você perde para cinco Pokémon de terra num piso de concreto.',
-    'Giovanni não comemora. Ele chama alguém para levar seu time ao Centro e espera com você até chegarem.',
-    '"Você tem sete insígnias e perdeu para mim." Ele checa o relógio. "Isso é normal. Eu tive vinte anos de vantagem e uma organização inteira pra treinar contra. Volte."'
+    'Você perde para seis Pokémon completamente destreinados de fraqueza.',
+    'Blue não comemora. Ele parece quase irritado.',
+    '"Você chegou aqui com sete insígnias e perdeu." Ele chama alguém pra levar seu time ao Centro. "Isso significa que uma delas foi de graça. Descobre qual e volta."'
   ]
 }
 ];
+
+/* ============================================================
+   ESCALA: o time do líder acompanha quantas insígnias você tem
+   ============================================================ */
+function timeGinasio(g){
+  const n = numInsignias();                             // 0..7
+  const qtd = Math.max(2, Math.min(g.especies.length, 2 + Math.round(n * 0.6)));
+  const nivel = g.nivelBase + n * 4;
+  const lista = g.especies.slice(0, qtd).map((dex, i) => ({dex, nivel: nivel + i}));
+  // o último é o ace: dois níveis acima do resto
+  if (lista.length) lista[lista.length-1].nivel += 2;
+
+  // Blue fecha com o inicial que vence o seu
+  if (g.aceContraInicial){
+    const contra = {1:6, 4:9, 7:3};                     // Bulbasaur->Charizard, Charmander->Blastoise, Squirtle->Venusaur
+    const meu = Estado.j.inicialDex;
+    const ace = contra[meu] || Dados.escolher([3,6,9]);
+    lista[lista.length-1] = {dex:ace, nivel: nivel + lista.length + 3};
+  }
+  return lista;
+}
+
+function faixaGinasio(g){
+  const t = timeGinasio(g);
+  if (!t.length) return '—';
+  return `${t[0].nivel}–${t[t.length-1].nivel}`;
+}
 
 function ginasioPorId(id){ return GINASIOS.find(g => g.id === id) || null; }
 
@@ -301,15 +342,17 @@ function ginasioPorId(id){ return GINASIOS.find(g => g.id === id) || null; }
 function statusGinasio(g){
   const d = Estado.dados;
   if (d.insignias.includes(g.insignia)) return {estado:'conquistado', texto:'Insígnia conquistada'};
-  if (g.requerInsignias && d.insignias.length < g.requerInsignias)
-    return {estado:'trancado', texto:`Abre com ${g.requerInsignias} insígnias (você tem ${d.insignias.length})`};
-  if (d.capitulo < g.capMin)
-    return {estado:'distante', texto:`Você ainda não chegou em ${g.cidade}`};
+  if (g.requerInsignias && numInsignias() < g.requerInsignias)
+    return {estado:'trancado', texto:`Abre com ${g.requerInsignias} insígnias (você tem ${numInsignias()})`};
+  // o ginásio da sua cidade natal está aberto desde o primeiro dia; os outros, a partir do capítulo 2
+  const deCasa = GINASIO_DE_CASA[d.jogador.cidade] === g.id;
+  if (!deCasa && d.capitulo < 2)
+    return {estado:'distante', texto:'Você mal saiu de casa'};
   if (g.recusa){
     const r = g.recusa(d);
     if (r) return {estado:'recusado', texto:'O líder se recusa a lutar com você', fala:r};
   }
-  return {estado:'disponivel', texto:'Disponível'};
+  return {estado:'disponivel', texto: deCasa && !numInsignias() ? 'O ginásio da sua cidade' : 'Disponível'};
 }
 
 function insigniasConquistadas(){

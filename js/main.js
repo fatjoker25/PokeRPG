@@ -6,6 +6,8 @@ const Jogo = {
   cenaBatalha: null,
   ginasioAtual: null,
   voltarDeGinasio: 'hub',
+  eliteAtual: null,
+  torneioAtual: null,
 
   /* ---------- início ---------- */
   iniciar(){
@@ -57,6 +59,7 @@ const Jogo = {
       });
     }
     Estado.adicionar(inicial);
+    Estado.j.inicialDex = inicial.dex;          // Blue escolhe o contra do seu inicial
     Estado.registrar(`${Estado.j.nome} saiu de ${Estado.j.cidade} com ${inicial.nome}.`);
     Estado.salvar('auto');
 
@@ -145,7 +148,9 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
-    if (this.ginasioAtual) return this.resultadoGinasio(fim);
+    if (this.ginasioAtual)  return this.resultadoGinasio(fim);
+    if (this.eliteAtual)    return this.resultadoElite(fim);
+    if (this.torneioAtual)  return this.resultadoTorneio(fim);
     const b = this.cenaBatalha || {};
     const rotaFuga = b.fuga2 || (typeof b.fuga === 'string' ? b.fuga : null);
     let destino, aviso;
@@ -304,7 +309,7 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Ginásio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de desafiar um líder.</p>');
 
-    const time = g.time.map(x => criarPokemon(x.dex, x.nivel, {}));
+    const time = timeGinasio(g).map(x => criarPokemon(x.dex, x.nivel, {}));
     this.ginasioAtual = g;
     this.cenaBatalha = null;
     Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
@@ -353,6 +358,222 @@ const Jogo = {
     }
     Estado.salvar('auto');
     UI.telaResultadoGinasio(g, venceu, avisos);
+  },
+
+  /* ---------- LIGA: ELITE 4, CAMPEÃO E TORNEIO ---------- */
+  abrirLiga(de){
+    this.voltarDeGinasio = de || 'hub';
+    UI.telaLiga();
+  },
+
+  /* ── Elite 4 ── */
+  iniciarElite4(){
+    if (statusElite4().estado !== 'disponivel') return UI.telaLiga();
+    const meu = Estado.primeiroApto();
+    if (!meu) return UI.modal('Elite 4', '<p class="nada">Nenhum Pokémon em pé. A ala não tem Centro Pokémon — cure antes de entrar.</p>');
+    this.eliteAtual = {indice:0, campeao:false};
+    Estado.registrar('Entrou na ala da Elite 4.');
+    this.batalhaElite();
+  },
+
+  batalhaElite(){
+    const e = this.eliteAtual;
+    const meu = Estado.primeiroApto();
+    if (!meu) return this.resultadoElite({resultado:'derrota'});
+
+    const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+    const nivel = alvo.nivelBase;
+    const time = alvo.especies.map((dex,i) => criarPokemon(dex, nivel + i, {}));
+    if (time.length) time[time.length-1].nivel += 2;
+
+    this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null;
+    UI.limparDados();
+    Batalha.iniciar(meu, time[0], {
+      tipo:'treinador', fuga:false,
+      treinador: e.campeao ? 'Red' : alvo.nome,
+      timeInimigo: time.slice(1),
+      introducao: `${alvo.nome} enviou ${time[0].nome} (Nv ${time[0].nivel})!`
+    });
+    UI.telaBatalha(alvo.intro(Estado.dados).filter(Boolean));
+  },
+
+  resultadoElite(fim){
+    const e = this.eliteAtual;
+    if (fim.resultado === 'gameover'){ this.eliteAtual = null; return UI.telaGameOver('Você caiu dentro do Planalto Indigo.'); }
+
+    const venceu = fim.resultado === 'vitoria';
+    const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+
+    if (!venceu){
+      this.eliteAtual = null;
+      Estado.registrar(`Perdeu para ${alvo.nome} na Elite 4.`);
+      Estado.salvar('auto');
+      return UI.telaResultadoLiga({
+        titulo: e.campeao ? 'O Campeão' : `${alvo.nome} venceu`,
+        sub: e.campeao ? 'Salão do Campeão' : `Elite 4 · ${alvo.ordem} de 4`,
+        falas: e.campeao ? CAMPEAO.derrota(Estado.dados) : [
+          `Você perde para ${alvo.nome}.`,
+          'A ala da Elite 4 tem uma regra só e a regra é essa: perdeu, sai. Do começo.',
+          'Alguém do staff te acompanha até o corredor principal com uma educação que dói mais que deboche.'
+        ],
+        avisos: [], venceu:false
+      });
+    }
+
+    const avisos = [];
+    if (e.campeao){
+      // CAMPEÃO DE KANTO
+      this.eliteAtual = null;
+      Estado.marcar('campeao_de_kanto');
+      Estado.j.cargo = 'Campeão de Kanto';
+      Estado.dados.insignias.push('Título de Campeão');
+      Estado.j.dinheiro += 80000;
+      Estado.darItem('Master Ball', 1);
+      Estado.darItem('Hyper Potion', 5);
+      Estado.darItem('Full Heal', 5);
+      const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto');
+      avisos.push({tipo:'insignia', texto:'Você é o Campeão de Kanto. A cadeira estava vaga há dois anos.'});
+      avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
+      if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+      Estado.registrar('Venceu Red. Tornou-se Campeão de Kanto.');
+      Estado.salvar('auto');
+      return UI.telaResultadoLiga({
+        titulo:'CAMPEÃO DE KANTO', sub:'Salão do Campeão',
+        falas: CAMPEAO.vitoria(Estado.dados), avisos, venceu:true, campeao:true
+      });
+    }
+
+    // próximo membro da Elite 4
+    e.indice++;
+    Estado.registrar(`Venceu ${alvo.nome} na Elite 4.`);
+    const acabou = e.indice >= ELITE4.length;
+    if (acabou) e.campeao = true;
+    Estado.salvar('auto');
+    UI.telaResultadoLiga({
+      titulo: `${alvo.nome} derrotado`,
+      sub: acabou ? 'A porta do fundo está aberta' : `Elite 4 · ${alvo.ordem} de 4`,
+      falas: alvo.vitoria(Estado.dados),
+      avisos: [{tipo:'info', texto:'Seu time NÃO é curado entre as salas. Use itens se precisar.'}],
+      venceu:true, continuar:true
+    });
+  },
+
+  continuarElite(){
+    if (!this.eliteAtual) return UI.telaLiga();
+    this.batalhaElite();
+  },
+
+  sairDaElite(){
+    this.eliteAtual = null;
+    UI.telaLiga();
+  },
+
+  /* ── Torneio ── */
+  iniciarTorneio(){
+    const st = statusTorneio();
+    if (st.estado !== 'disponivel') return UI.telaLiga();
+    const meu = Estado.primeiroApto();
+    if (!meu) return UI.modal('Torneio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
+    Estado.j.dinheiro -= INSCRICAO_TORNEIO;
+    this.torneioAtual = {rodada:0, adversarios: montarChaveamento()};
+    Estado.registrar('Inscreveu-se no Torneio Aberto da Liga.');
+    UI.telaTorneio();
+  },
+
+  lutarRodadaTorneio(){
+    const t = this.torneioAtual;
+    if (!t) return UI.telaLiga();
+    const meu = Estado.primeiroApto();
+    if (!meu) return this.resultadoTorneio({resultado:'derrota'});
+    const adv = t.adversarios[t.rodada];
+    this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null;
+    UI.limparDados();
+    Batalha.iniciar(meu, adv.time[0], {
+      tipo:'treinador', fuga:false, treinador: adv.nome,
+      timeInimigo: adv.time.slice(1),
+      introducao: `${adv.nome} enviou ${adv.time[0].nome} (Nv ${adv.time[0].nivel})!`
+    });
+    UI.telaBatalha([`${PREMIO_TORNEIO[t.rodada].rodada} — ${adv.nome}`, adv.fala]);
+  },
+
+  resultadoTorneio(fim){
+    const t = this.torneioAtual;
+    if (fim.resultado === 'gameover'){ this.torneioAtual = null; return UI.telaGameOver('Você caiu numa arena de torneio, na frente de todo mundo.'); }
+
+    const adv = t.adversarios[t.rodada];
+    const premio = PREMIO_TORNEIO[t.rodada];
+    const venceu = fim.resultado === 'vitoria';
+    const avisos = [];
+
+    if (!venceu){
+      this.torneioAtual = null;
+      const consolo = Math.round(premio.dinheiro * 0.3);
+      Estado.j.dinheiro += consolo;
+      avisos.push({tipo:'item', texto:`Premiação por participação: +${consolo} ₽`});
+      Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
+      Estado.salvar('auto');
+      return UI.telaResultadoLiga({
+        titulo:'Eliminado', sub:`${premio.rodada} · ${adv.nome}`,
+        falas:[
+          `${adv.nome} vence e a arena bate palma pelo nome dele, não pelo seu.`,
+          'Torneio é assim: o chaveamento não tem memória. Amanhã tem outro.',
+          'Você recebe a premiação por participação num envelope com o logotipo da Liga e o seu nome escrito errado.'
+        ],
+        avisos, venceu:false
+      });
+    }
+
+    Estado.j.dinheiro += premio.dinheiro;
+    avisos.push({tipo:'item', texto:`+${premio.dinheiro} ₽`});
+    for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
+    if (premio.rep){
+      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`);
+      if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    }
+
+    t.rodada++;
+    const campeao = t.rodada >= t.adversarios.length;
+    if (campeao){
+      this.torneioAtual = null;
+      Estado.dados.torneiosVencidos = (Estado.dados.torneiosVencidos||0) + 1;
+      Estado.marcar('venceu_torneio');
+      Estado.registrar(`Venceu o Torneio Aberto da Liga (${Estado.dados.torneiosVencidos}ª vez).`);
+      Estado.salvar('auto');
+      return UI.telaResultadoLiga({
+        titulo:'CAMPEÃO DO TORNEIO', sub:`${Estado.dados.torneiosVencidos}º título`,
+        falas:[
+          `${adv.nome} aperta a sua mão antes do juiz anunciar, o que é o maior elogio possível.`,
+          'A arena do Planalto tem quatrocentos lugares e hoje tinha umas oitenta pessoas. Torneio aberto é assim.',
+          'Mesmo assim, quando anunciam o seu nome, oitenta pessoas fazem barulho de quatrocentas.',
+          Estado.rep.eixo==='bom' && Estado.rep.bom>=5
+            ? 'Três delas te esperam na saída pra pedir foto. Você não sabe o que fazer com as mãos.'
+            : 'Você sai pela porta lateral antes da premiação terminar.'
+        ],
+        avisos, venceu:true
+      });
+    }
+
+    Estado.salvar('auto');
+    UI.telaResultadoLiga({
+      titulo:`${adv.nome} derrotado`, sub:`${premio.rodada} vencida`,
+      falas:[
+        `${adv.nome} sai da arena sem drama. Torneio tem essa elegância que rota não tem.`,
+        `Próxima: ${PREMIO_TORNEIO[t.rodada].rodada}, contra ${t.adversarios[t.rodada].nome}.`,
+        'Você tem vinte minutos entre as lutas. Dá pra curar o time.'
+      ],
+      avisos, venceu:true, torneio:true
+    });
+  },
+
+  curarNoTorneio(){
+    Estado.dados.time.forEach(curarTotal);
+    Estado.salvar('auto');
+    UI.telaTorneio();
+  },
+
+  desistirTorneio(){
+    this.torneioAtual = null;
+    UI.telaLiga();
   },
 
   /* ---------- trocas e vendas com NPC ---------- */
