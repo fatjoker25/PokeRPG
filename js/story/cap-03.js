@@ -412,7 +412,7 @@ c3_ficar:{
     'Depois some no mato.',
     'E volta em dez minutos. E te segue.'
   ],
-  ef:{pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você o soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando ele conseguir andar.'}},
+  ef:{umaVez:'c03_p1', pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você o soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando ele conseguir andar.'}},
       rep:{eixo:'bom',delta:2,motivo:'Esperou o Pokémon ferido se recuperar'},
       flag:'pikachu_aliado', registrar:'O Pikachu libertado passou a te seguir.'},
   escolhas:[{texto:'Seguir com ele.', vai:'c3_caçadores'}]

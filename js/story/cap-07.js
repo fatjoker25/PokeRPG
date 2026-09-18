@@ -1951,7 +1951,7 @@ c7_cubone:{
       : 'Ninguém autoriza nada. Você só leva.',
     'Vai levar semanas pra perna sarar. Vai levar mais tempo pro resto.'
   ],
-  ef:{pokemon:{dex:104, nivel:24, opcoes:{natureza:'Lonely', moral:25, historia:'Resgatado do sexto andar da Torre Pokémon de Lavender.'}},
+  ef:{umaVez:'c07_p1', pokemon:{dex:104, nivel:24, opcoes:{natureza:'Lonely', moral:25, historia:'Resgatado do sexto andar da Torre Pokémon de Lavender.'}},
       rep:{eixo:'bom',delta:2,motivo:'Resgatou um Pokémon órfão na Torre'},
       flag:'salvou_cubone',
       presagio:'Ele não tem mais preferência nenhuma. Isso muda, e muda devagar, e depende quase inteiramente de você.'},

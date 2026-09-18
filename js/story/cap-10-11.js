@@ -628,7 +628,7 @@ c11_roubou_caixa_silph:{
   ],
   ef:{flag:'roubou_caixa_silph', hp:-3, causa:'Fuga com vinte e dois quilos',
       rep:{eixo:'bom',delta:1,motivo:'Interceptou uma entrega da Silph'},
-      pokemon:{dex:132, nivel:30, opcoes:{moral:30, historia:'Estava numa caixa branca com monitor colado no dorso, a caminho do andar 11 da Silph.'}},
+      umaVez:'c10-11_p1', pokemon:{dex:132, nivel:30, opcoes:{moral:30, historia:'Estava numa caixa branca com monitor colado no dorso, a caminho do andar 11 da Silph.'}},
       registrar:'Roubou a caixa de Dittos da doca da Silph.'},
   escolhas:[
     {texto:'Voltar ao prédio mesmo assim.', vai:'c11_escada'},
@@ -801,7 +801,7 @@ c11_levou_copia:{
     'Você tem que puxar de novo.'
   ],
   ef:{flag:['levou_uma_copia','tem_uma_copia'],
-      pokemon:{dex:150, nivel:25, opcoes:{apelido:'Décimo Segundo', natureza:'Bashful', moral:40,
+      umaVez:'c10-11_p2', pokemon:{dex:150, nivel:25, opcoes:{apelido:'Décimo Segundo', natureza:'Bashful', moral:40,
         historia:'Cópia incompleta feita no andar 11 da Silph. Ficou de pé quando você abriu o tanque. Não é Mewtwo — é uma tentativa de Mewtwo.'}},
       rep:{eixo:'bom',delta:2,motivo:'Tirou uma cópia viva do andar 11'},
       registrar:'Tirou o Décimo Segundo do andar 11 da Silph.'},

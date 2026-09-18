@@ -91,6 +91,13 @@ const Historia = {
   /* ---------- EFEITOS ---------- */
   aplicar(ef){
     if (!ef) return [];
+    /* Efeito de uma vez só: cenas podem ser revisitadas, presentes não se repetem. */
+    if (ef.umaVez){
+      const d = Estado.dados;
+      d.umaVez = d.umaVez || {};
+      if (d.umaVez[ef.umaVez]) return [];
+      d.umaVez[ef.umaVez] = true;
+    }
     const avisos = [];
     if (ef.flag) { (Array.isArray(ef.flag)?ef.flag:[ef.flag]).forEach(f => Estado.marcar(f)); }
     if (ef.limpaFlag){ (Array.isArray(ef.limpaFlag)?ef.limpaFlag:[ef.limpaFlag]).forEach(f => Estado.marcar(f,false)); }

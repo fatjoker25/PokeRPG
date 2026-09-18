@@ -43,11 +43,11 @@ c8_porto_fica:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:2,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08-09_p1', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu e explicou por quê.'}}},
     {texto:'Pagar os 400 que ele pediu.', vai:'c8_krabby_barato', cond:d=>d.jogador.dinheiro>=400,
      ef:{dinheiro:-400, rep:{eixo:'ruim',delta:1,motivo:'Levou vantagem sobre uma criança no cais'},
-         pokemon:{dex:98, nivel:22, opcoes:{moral:40, historia:'Comprado de uma criança por um sexto do que valia.'}},
+         umaVez:'c08-09_p2', pokemon:{dex:98, nivel:22, opcoes:{moral:40, historia:'Comprado de uma criança por um sexto do que valia.'}},
          npc:{nome:'Menino do cais', opiniao:0, memoria:'Você comprou o Krabby dele por 400. Ele ficou feliz na hora.'}}},
     {texto:'Explicar o valor e não comprar.', vai:'c8_krabby_licao',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ensinou em vez de aproveitar'},
@@ -591,7 +591,7 @@ c8_soltou_camarote:{
     'Ele não sabe fazer mais nada. Passou tempo demais na caixa.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Libertou seis Pokémon de um traficante'},
-      pokemon:{dex:137, nivel:26, opcoes:{moral:10, natureza:'Bashful', historia:'Não soube o que fazer quando você abriu a bola de frente pro mar.'}},
+      umaVez:'c08-09_p3', pokemon:{dex:137, nivel:26, opcoes:{moral:10, natureza:'Bashful', historia:'Não soube o que fazer quando você abriu a bola de frente pro mar.'}},
       flag:'soltou_camarote',
       npc:{nome:'Homem de terno claro', opiniao:-6, memoria:'Você soltou a mercadoria dele no mar.'},
       registrar:'Soltou os seis do camarote 40 no mar aberto.'},
@@ -1074,7 +1074,7 @@ c9_carregou_seis:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou até o fim, carregando quem não podia andar'},
       hp:-5, causa:'Exaustão em Celadon',
       flag:'carregou_os_seis',
-      pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você o carregou numa manta, sozinho, às duas da manhã em Celadon.'}},
+      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você o carregou numa manta, sozinho, às duas da manhã em Celadon.'}},
       registrar:'Carregou os seis que não andavam. A polícia te encontrou no meio-fio.'},
   escolhas:[{texto:'Ir embora quando deixarem.', vai:'c9_fim'}]
 },

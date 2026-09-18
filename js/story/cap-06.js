@@ -1097,7 +1097,7 @@ c6_growlithe_centro:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Correu uma hora com uma caixa nos braços'},
       hp:-3, causa:'Corrida com a caixa até Cerulean',
       flag:'growlithe_salvo',
-      pokemon:{dex:58, nivel:18, opcoes:{moral:30, historia:'Tirado de uma caixa numerada num descampado, na estrada velha de Cerulean.'}},
+      umaVez:'c06_p1', pokemon:{dex:58, nivel:18, opcoes:{moral:30, historia:'Tirado de uma caixa numerada num descampado, na estrada velha de Cerulean.'}},
       registrar:'O Growlithe da caixa sobreviveu.',
       presagio:'"Quem sedou sabia fazer." Tem profissional de saúde nisso.'},
   escolhas:[
