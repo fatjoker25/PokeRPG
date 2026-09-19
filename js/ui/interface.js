@@ -912,8 +912,8 @@ const UI = {
     const bolsa = mochilaAtual();
     const topo = `<div class="mochila-topo">
       <span class="fecho"></span>
-      <span class="grana">${d.jogador.dinheiro} ₽</span>
-      <span class="peso">${this.esc(bolsa.nome)} · ${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
+      <span class="bolsa-nome">${this.esc(bolsa.nome)}</span>
+      <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
     </div>`;
 
     if (!itens.length)
@@ -1169,7 +1169,7 @@ const UI = {
           <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? 'Campeão de Kanto' : 'Treinador registrado'))}</div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
-          <div class="cartao-linha"><span class="k">Dinheiro</span><span class="v mono">${j.dinheiro} ₽</span></div>
+          <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${j.dinheiro} ₽</span></div>
           <div class="cartao-linha"><span class="k">Pokédex</span><span class="v mono">${c.catalogados} catalogados · ${c.vistos} vistos</span></div>
           <div class="cartao-linha"><span class="k">Time</span><span class="v">${d.time.length} em mãos${d.pc.length ? ' · ' + d.pc.length + ' no PC' : ''}</span></div>
           ${d.cemiterio.length ? `<div class="cartao-linha"><span class="k">Não voltaram</span><span class="v perdas">${d.cemiterio.length}</span></div>` : ''}

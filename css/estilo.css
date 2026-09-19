@@ -464,6 +464,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   border:1px solid color-mix(in srgb, var(--destaque) 26%, var(--borda));
 }
 .mochila-topo .grana{font-family:var(--mono);color:var(--destaque);font-weight:700;font-size:15px}
+.mochila-topo .bolsa-nome{font-weight:650;font-size:14px;letter-spacing:.02em}
 .mochila-topo .peso{font-size:12px;color:var(--texto-fraco);margin-left:auto;text-align:right}
 .mochila-topo .fecho{
   width:16px;height:16px;flex:0 0 auto;border-radius:4px;
@@ -474,7 +475,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg, var(--moch-claro), var(--moch));
   border-color:var(--moch-esc);
 }
-.modal.mochila .mochila-topo .grana{color:var(--moch-titulo)}
+.modal.mochila .mochila-topo .grana,
+.modal.mochila .mochila-topo .bolsa-nome{color:var(--moch-titulo)}
 .modal.mochila .mochila-topo .peso{color:var(--moch-titulo);opacity:.8}
 
 .item-linha{
@@ -711,6 +713,13 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .cartao-linha .v{flex:1;text-align:right;color:var(--cart-txt);min-width:0;overflow-wrap:anywhere}
 .cartao-linha .v.perdas{color:#9c3a32;font-weight:650}
 .cartao-linha .v.mono{font-family:var(--mono)}
+.cartao-linha.grana{
+  margin:4px 0;padding:7px 9px;border-radius:7px;border-bottom:none;
+  background:linear-gradient(180deg, rgba(217,181,58,.18), rgba(217,181,58,.07));
+  border:1px solid #cdbb84;
+}
+.cartao-linha.grana .k{color:#6b5a26}
+.cartao-linha.grana .v{font-size:17px;font-weight:700;color:#4c3f16;letter-spacing:.01em}
 
 .cartao-rep{padding:6px 15px 10px}
 .cartao-rep .rep-barra{margin-top:5px}
