@@ -114,6 +114,7 @@ const UI = {
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
         <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
+        <button class="btn mini" onclick="UI.modalCartao()">Cartão</button>
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         ${d.flags.tem_pokedex ? `<button class="btn mini" onclick="UI.modalPokedex()">Pokédex ${Estado.contagemDex().catalogados}</button>` : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
@@ -1126,6 +1127,72 @@ const UI = {
     `);
   },
 
+  /* ========================================================
+     CARTÃO DE TREINADOR
+     ======================================================== */
+  modalCartao(){
+    const d = Estado.dados;
+    const j = d.jogador;
+    const c = Estado.contagemDex();
+    const nivel = Estado.nivelRep();
+    const eixo = d.reputacao.eixo;
+    const val = eixo === 'bom' ? d.reputacao.bom : d.reputacao.ruim;
+    const id = String((d.criadoEm || 0) % 100000).padStart(5, '0');
+    const campeao = d.insignias.includes('Campeão de Kanto') || d.flags.campeao_de_kanto;
+
+    const insignias = GINASIOS.map(g => {
+      const tem = d.insignias.includes(g.insignia);
+      const cor = g.tipo === 'variado' ? '#d9b53a' : (COR_TIPO[g.tipo] || '#a8aeb8');
+      const nome = g.insignia.replace(/^Insígnia\s+/, '');
+      return `<div class="insignia-slot ${tem ? 'tem' : ''}" title="${this.esc(g.cidade)} · ${this.esc(g.lider)}">
+        <span class="forma ins-${g.id}" style="--ins-cor:${cor}"></span>
+        <span class="rot">${tem ? this.esc(nome) : '—'}</span>
+        <span class="cid">${this.esc(g.cidade)}</span>
+      </div>`;
+    }).join('');
+
+    const nInsig = d.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
+
+    this.modal('', `
+      <div class="cartao-topo">
+        <span class="cartao-sigla">LIGA POKÉMON DE KANTO</span>
+        <span class="cartao-id">Nº ${id}</span>
+      </div>
+
+      <div class="cartao-corpo">
+        <div class="cartao-retrato" aria-hidden="true">
+          <span class="silhueta"></span>
+          <span class="rodape-retrato">${this.esc(j.genero)}, ${j.idade}</span>
+        </div>
+        <div class="cartao-dados">
+          <div class="cartao-nome">${this.esc(j.nome)}</div>
+          <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? 'Campeão de Kanto' : 'Treinador registrado'))}</div>
+          <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
+          <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
+          <div class="cartao-linha"><span class="k">Dinheiro</span><span class="v mono">${j.dinheiro} ₽</span></div>
+          <div class="cartao-linha"><span class="k">Pokédex</span><span class="v mono">${c.catalogados} catalogados · ${c.vistos} vistos</span></div>
+          <div class="cartao-linha"><span class="k">Time</span><span class="v">${d.time.length} em mãos${d.pc.length ? ' · ' + d.pc.length + ' no PC' : ''}</span></div>
+          ${d.cemiterio.length ? `<div class="cartao-linha"><span class="k">Não voltaram</span><span class="v perdas">${d.cemiterio.length}</span></div>` : ''}
+          ${j.vestimenta ? `<div class="cartao-linha"><span class="k">Vestindo</span><span class="v">${this.esc(j.vestimenta)}</span></div>` : ''}
+        </div>
+      </div>
+
+      <div class="cartao-rep">
+        <div class="cartao-linha"><span class="k">Reputação</span><span class="v">${this.esc(nivel.nome)} · ${eixo} ${val}/8</span></div>
+        <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
+      </div>
+
+      <div class="cartao-insignias">
+        <div class="cartao-sub">Insígnias — ${nInsig} de 8${campeao ? ' · Campeão de Kanto' : ''}</div>
+        <div class="grade-insignias">${insignias}</div>
+      </div>
+
+      <div class="cartao-pe">
+        <button class="btn mini" onclick="UI.modalFicha()">Ficha completa</button>
+      </div>
+    `, false, 'cartao');
+  },
+
   modalPokedex(){
     const c = Estado.contagemDex();
     const pd = Estado.pdex();
@@ -1135,7 +1202,12 @@ const UI = {
     const cabeca = `<div class="pokedex-topo">
       <span class="pokedex-lente"></span>
       <span class="pokedex-luzes"><i></i><i></i><i></i></span>
-      <span class="pokedex-contagem"><b>${c.catalogados}</b> / ${ids.length} catalogados · ${c.vistos} vistos · ${pct}%</span>
+    </div>
+    <div class="dex-leitura">
+      <span class="campo"><b>${c.catalogados}</b><small>catalogados</small></span>
+      <span class="campo"><b>${c.vistos}</b><small>vistos</small></span>
+      <span class="campo"><b>${ids.length}</b><small>registros</small></span>
+      <span class="pct">${pct}%</span>
     </div>
     <div class="dex-barra"><i style="width:${pct}%"></i></div>`;
 
@@ -1166,7 +1238,6 @@ const UI = {
       return this.modal('', `<div class="pokedex-topo">
           <span class="pokedex-lente"></span>
           <span class="pokedex-luzes"><i></i><i></i><i></i></span>
-          <span class="pokedex-contagem">#${num}</span>
         </div>
         <div class="dex-ficha">
           <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span></div>
@@ -1184,7 +1255,6 @@ const UI = {
     this.modal('', `<div class="pokedex-topo">
         <span class="pokedex-lente"></span>
         <span class="pokedex-luzes"><i></i><i></i><i></i></span>
-        <span class="pokedex-contagem">#${num}</span>
       </div>
       <div class="dex-ficha">
         <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span>

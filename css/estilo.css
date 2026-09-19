@@ -616,6 +616,164 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .dex-item .base{font-family:var(--mono);font-size:11.5px;color:var(--dex-txt-2);margin-top:5px;letter-spacing:.02em}
 .dex-item .nota{font-size:12.5px;color:var(--dex-txt-2);margin-top:4px;font-style:italic}
 
+/* ---------- leitura da Pokédex: fica na tela, não na carcaça ---------- */
+.dex-leitura{
+  display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;
+  padding:10px 13px;margin:0 0 10px;border-radius:8px;
+  background:rgba(255,255,255,.62);
+  border:1px solid var(--dex-tela-3, var(--borda));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+}
+.dex-leitura .campo{display:block;line-height:1.1}
+.dex-leitura .campo b{
+  display:block;font-family:var(--mono);font-size:21px;font-weight:700;
+  color:var(--dex-txt, var(--texto));letter-spacing:.02em
+}
+.dex-leitura .campo small{
+  display:block;margin-top:2px;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dex-txt-3, var(--texto-tenue))
+}
+.dex-leitura .pct{
+  margin-left:auto;font-family:var(--mono);font-size:24px;font-weight:700;
+  color:var(--dex-verm-esc, var(--destaque));line-height:1
+}
+
+/* ---------- cartão de treinador ---------- */
+.modal.cartao{
+  --cart:#2f6fb5; --cart-esc:#1d4373; --cart-clara:#5b96d6;
+  --cart-papel:#f3efe4; --cart-papel-2:#e7e1d1; --cart-linha:#c9c1ac; --cart-txt:#26241e;
+  transform-origin:center 60%;
+  background:linear-gradient(180deg, var(--cart-clara) 0, var(--cart) 70px, var(--cart) calc(100% - 60px), var(--cart-esc) 100%);
+  border:1px solid var(--cart-esc);
+  border-top:4px solid var(--cart-clara);
+  box-shadow:var(--sombra-alta), inset 0 1px 0 rgba(255,255,255,.3);
+  max-width:660px;
+}
+.modal.cartao .modal-corpo{
+  background:linear-gradient(180deg, #fbf8f0, var(--cart-papel) 30%, var(--cart-papel-2));
+  border:1px solid var(--cart-esc);border-radius:10px;padding:0;
+  color:var(--cart-txt);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 6px 18px -12px rgba(0,0,0,.7);
+  overflow:hidden;
+}
+.modal.cartao .modal-pe{padding:0 2px}
+.cartao-pe{padding:0 15px 15px;border-top:1px solid var(--cart-linha);padding-top:12px}
+.modal.cartao .modal-pe .btn{
+  background:var(--cart-esc);border-color:var(--cart-clara);color:#eaf2fb
+}
+.modal.cartao .modal-pe .btn:hover:not(:disabled){background:var(--cart);color:#fff}
+.modal.cartao .btn.mini{
+  background:var(--cart-esc);border-color:var(--cart-clara);color:#eaf2fb
+}
+.modal.cartao .btn.mini:hover:not(:disabled){background:var(--cart);color:#fff}
+
+.cartao-topo{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:9px 14px;
+  background:linear-gradient(180deg, var(--cart-clara), var(--cart) 60%, var(--cart-esc));
+  border-bottom:2px solid var(--cart-esc);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+}
+.cartao-sigla{
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#eaf2fb
+}
+.cartao-id{font-family:var(--mono);font-size:12.5px;color:#cfe2f7}
+
+.cartao-corpo{display:flex;gap:14px;padding:14px 15px 4px}
+.cartao-retrato{
+  flex:0 0 96px;height:120px;border-radius:8px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#dfe8f2,#c3d2e2);
+  border:1px solid var(--cart-linha);
+  box-shadow:inset 0 2px 8px -4px rgba(0,0,0,.4);
+}
+.cartao-retrato .silhueta{
+  position:absolute;left:50%;top:22px;transform:translateX(-50%);
+  width:38px;height:38px;border-radius:50%;background:#8fa6bd;
+  box-shadow:0 34px 0 -4px #8fa6bd, 0 30px 0 6px #8fa6bd;
+}
+.cartao-retrato .rodape-retrato{
+  position:absolute;left:0;right:0;bottom:0;padding:3px 6px;
+  font-size:10px;text-align:center;color:#2c3a49;
+  background:rgba(255,255,255,.7);border-top:1px solid var(--cart-linha)
+}
+.cartao-dados{flex:1;min-width:0}
+.cartao-nome{font-size:22px;font-weight:650;letter-spacing:.01em;line-height:1.15}
+.cartao-titulo{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6b6453;
+  margin:2px 0 9px;font-weight:700
+}
+.cartao-linha{
+  display:flex;align-items:baseline;gap:10px;padding:4px 0;font-size:13px;
+  border-bottom:1px dotted var(--cart-linha)
+}
+.cartao-linha:last-child{border-bottom:none}
+.cartao-linha .k{flex:0 0 116px;color:#6b6453;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+.cartao-linha .v{flex:1;text-align:right;color:var(--cart-txt);min-width:0;overflow-wrap:anywhere}
+.cartao-linha .v.perdas{color:#9c3a32;font-weight:650}
+.cartao-linha .v.mono{font-family:var(--mono)}
+
+.cartao-rep{padding:6px 15px 10px}
+.cartao-rep .rep-barra{margin-top:5px}
+
+.cartao-insignias{
+  padding:12px 15px 15px;border-top:1px solid var(--cart-linha);
+  background:linear-gradient(180deg, rgba(255,255,255,.45), transparent)
+}
+.cartao-sub{
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
+  color:#6b6453;margin-bottom:10px
+}
+.grade-insignias{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.insignia-slot{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:9px 4px 7px;border-radius:9px;
+  background:rgba(0,0,0,.05);border:1px solid var(--cart-linha);
+}
+.insignia-slot .forma{
+  display:block;width:44px;height:44px;flex:0 0 auto;
+  background:#b9b1a0;
+  box-shadow:none;
+  transition:transform .25s var(--mola), filter .25s var(--suave);
+}
+.insignia-slot.tem{
+  background:rgba(255,255,255,.62);
+  border-color:#a99f88;
+  box-shadow:0 2px 8px -5px rgba(0,0,0,.6)
+}
+.insignia-slot.tem .forma{
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.85), rgba(255,255,255,0) 52%),
+    linear-gradient(150deg, color-mix(in srgb, var(--ins-cor) 82%, #fff), var(--ins-cor) 45%, color-mix(in srgb, var(--ins-cor) 62%, #000));
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));
+}
+.insignia-slot.tem:hover .forma{transform:rotate(-6deg) scale(1.08)}
+.insignia-slot .rot{
+  font-size:11px;font-weight:650;text-align:center;line-height:1.15;color:var(--cart-txt)
+}
+.insignia-slot:not(.tem) .rot{color:#8d8470}
+.insignia-slot .cid{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#8d8470}
+
+/* as oito formas */
+.ins-pewter   {clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.ins-cerulean {clip-path:polygon(50% 0,88% 36%,100% 70%,76% 100%,24% 100%,0 70%,12% 36%)}
+.ins-vermilion{clip-path:polygon(22% 0,100% 0,58% 42%,94% 42%,14% 100%,42% 55%,4% 55%)}
+.ins-celadon  {clip-path:polygon(50% 0,63% 24%,90% 14%,82% 44%,100% 60%,72% 72%,76% 100%,50% 85%,24% 100%,28% 72%,0 60%,18% 44%,10% 14%,37% 24%)}
+.ins-fuchsia  {clip-path:polygon(50% 100%,0 45%,8% 12%,30% 3%,50% 22%,70% 3%,92% 12%,100% 45%)}
+.ins-saffron  {clip-path:polygon(50% 0,80% 10%,100% 40%,92% 76%,60% 100%,25% 94%,2% 66%,8% 24%)}
+.ins-cinnabar {clip-path:polygon(50% 0,68% 28%,88% 16%,82% 50%,100% 74%,62% 100%,22% 96%,6% 66%,22% 40%,32% 18%)}
+.ins-viridian {clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 92%,50% 70%,21% 92%,32% 57%,2% 35%,39% 35%)}
+
+@media (max-width:560px){
+  .cartao-corpo{flex-direction:column;align-items:center}
+  .cartao-retrato{flex:0 0 auto;width:96px;height:120px}
+  .cartao-dados{width:100%}
+  .cartao-linha{font-size:12.5px}
+  .cartao-linha .k{flex:0 0 92px;font-size:10.5px}
+  .cartao-nome{text-align:center}
+  .cartao-titulo{text-align:center}
+  .grade-insignias{grid-template-columns:repeat(2,1fr)}
+}
+
 /* ---------- final ---------- */
 .final{text-align:center;padding:42px 26px;animation:aparece .9s var(--suave) both}
 .final .tit{font-size:30px;letter-spacing:.14em;color:var(--destaque);margin-bottom:26px;font-weight:300;text-wrap:balance}
