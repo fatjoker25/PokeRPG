@@ -893,7 +893,14 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .fraco{color:var(--texto-fraco);font-size:12.5px}
 .carta.ginasio{display:flex;flex-direction:column}
 .carta.ginasio .t{align-items:center}
-.carta.ginasio .rodape{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+/* o rótulo pode ser longo ("O ginásio da sua cidade") e o botão não
+   pode sair pela borda: quebra em duas linhas quando não couber */
+.carta.ginasio .rodape{
+  margin-top:auto;padding-top:10px;display:flex;flex-wrap:wrap;
+  justify-content:space-between;align-items:center;gap:8px
+}
+.carta.ginasio .rodape > span{flex:1 1 auto;min-width:0}
+.carta.ginasio .rodape > .btn{flex:0 0 auto}
 .carta.ginasio .cidade{color:var(--texto-fraco);font-weight:400;font-size:13px}
 .centro{text-align:center}
 .mono{font-family:var(--mono)}

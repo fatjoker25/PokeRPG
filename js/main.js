@@ -409,6 +409,8 @@ const Jogo = {
     const time = timeGinasio(g).map(x => criarPokemon(x.dex, x.nivel, {}));
     this.ginasioAtual = g;
     this.cenaBatalha = null;
+    /* entrou uma vez, viu o time: a ficha do ginásio abre daqui pra frente */
+    Estado.marcar('enfrentou_' + g.id);
     Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {

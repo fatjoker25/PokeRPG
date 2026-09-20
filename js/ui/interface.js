@@ -708,17 +708,47 @@ const UI = {
   telaHub(){
     this.limpar();
     this.add(this.topo());
-    const cap = Historia.capitulo(Estado.dados.capitulo) || Historia.capitulo(1);
+    const d = Estado.dados;
+    const L = (typeof Mundo !== 'undefined') ? Mundo.atual() : null;
+    const onde = L ? L.nome : d.jogador.cidade;
+    const per = d.relogio.periodo;
+    const nInsig = d.insignias.filter(i => i !== 'Título de Campeão').length;
+    const feridos = d.time.filter(p => !p.morto && p.hp < p.hpMax).length;
+    const caidos  = d.time.filter(p => !p.morto && p.hp <= 0).length;
+
+    /* Onde você está e por que dá pra parar aqui — em vez de um
+       aviso de menu sobre o tempo passar. */
+    const abertura = {
+      'manhã':    `Você chega em ${onde} de manhã, com o dia inteiro pela frente e nenhuma pressa que não seja sua.`,
+      'tarde':    `${onde}, meio da tarde. A cidade está no horário em que tudo está aberto e ninguém tem paciência.`,
+      'noite':    `${onde} à noite. O Centro Pokémon fica aberto — é a única coisa em Kanto que fica.`,
+      'madrugada':`${onde}, madrugada. Quase tudo fechado, e o Centro Pokémon com a luz branca de sempre.`
+    }[per] || `Você para em ${onde}.`;
+
+    const estado = caidos
+      ? `Tem ${caidos} ${caidos === 1 ? 'desmaiado' : 'desmaiados'} no seu cinto. Isso resolve num balcão.`
+      : feridos
+        ? `${feridos} do seu time ${feridos === 1 ? 'está machucado' : 'estão machucados'} e ninguém reclama disso em voz alta.`
+        : 'O time está inteiro.';
+
+    /* A Liga só entra na lista quando ela já quer dizer alguma coisa */
+    const sabeDaLiga = nInsig > 0 || !!d.flags.sabe_da_elite || !!d.flags.campeao_de_kanto;
+
     this.add(`<div class="painel">
-      <h2>Parada</h2>
-      <p class="sussurro">Antes de seguir, você pode resolver algumas coisas. Cada atividade gasta tempo — e o tempo também conta.</p>
+      <div class="cap-cabecalho">
+        <div class="num">Parada</div>
+        <div class="tit">${this.esc(onde)}</div>
+        <div class="loc">${this.esc(per)} do dia ${d.relogio.dia} · ${nInsig} de 8 insígnias</div>
+      </div>
+      <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p></div>
+      <p class="sussurro">Cada coisa que você faz aqui gasta um período do dia, e o dia acaba.</p>
       <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
         <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
-        <button class="escolha" onclick="Jogo.abrirLiga('hub')">Liga Pokémon — Elite 4 e Torneio Aberto</button>
+        ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon — Elite 4 e Torneio Aberto</button>' : ''}
         <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota — encontro selvagem aleatório</button>
-        <button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>
+        ${d.time.length > 1 ? '<button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>' : ''}
         <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
       </div>
       <div id="avisos" class="avisos"></div>
@@ -735,21 +765,43 @@ const UI = {
     const d = Estado.dados;
     const n = d.insignias.length;
 
+    /* O que a ficha de um ginásio mostra depende do que você já sabe.
+       Nome, cidade, tipo e insígnia são conhecimento público em Kanto:
+       está no pôster do Centro Pokémon. O time de dentro, não — isso
+       você descobre pisando na cidade e entrando lá. */
     const cartao = g => {
       const st = statusGinasio(g);
       const cor = {conquistado:'var(--bom)', disponivel:'var(--destaque)',
                    recusado:'var(--ruim)', trancado:'var(--texto-fraco)', distante:'var(--texto-fraco)'}[st.estado];
-      const time = timeGinasio(g).map(x=>`${DEX[x.dex].nome} Nv${x.nivel}`).join(' · ');
       const rotulo = st.estado === 'conquistado' ? '✓ conquistada' : st.texto;
-      return `<div class="carta ginasio" style="border-color:${st.estado==='conquistado'?'var(--bom)':'var(--borda)'}">
+
+      const conquistado = st.estado === 'conquistado';
+      const esteve = conquistado || (typeof Mundo !== 'undefined' && Mundo.visitado(g.id));
+      const enfrentou = conquistado || !!d.flags['enfrentou_' + g.id];
+
+      /* faixa de nível: quem esteve na cidade ouve falar; quem lutou sabe */
+      const linhaNivel = enfrentou
+        ? `${this.esc(g.insignia)} · níveis ${faixaGinasio(g)}`
+        : esteve
+          ? `${this.esc(g.insignia)} · dizem que o time anda pelo nível ${Math.round(nivelGinasio(g))}`
+          : `${this.esc(g.insignia)}`;
+
+      /* o time só depois de ver o time */
+      const linhaTime = enfrentou
+        ? `<div class="fraco" style="margin-bottom:8px;line-height:1.5">${this.esc(timeGinasio(g).map(x=>`${DEX[x.dex].nome} Nv${x.nivel}`).join(' · '))}</div>`
+        : esteve
+          ? `<div class="sussurro" style="margin-bottom:8px">Você passou na porta. Não viu quem está lá dentro.</div>`
+          : `<div class="sussurro" style="margin-bottom:8px">Você nunca esteve em ${this.esc(g.cidade)}.</div>`;
+
+      return `<div class="carta ginasio" style="border-color:${conquistado?'var(--bom)':'var(--borda)'}">
         <div class="t"><span>${this.esc(g.lider)} <span class="cidade">· ${this.esc(g.cidade)}</span></span>
           ${g.tipo === 'variado' ? '<span class="tipo-tag" style="background:#8a8f98">Variado</span>' : this.tipoTag(g.tipo)}</div>
-        <div class="fraco" style="margin-bottom:6px">${this.esc(g.insignia)} · níveis ${faixaGinasio(g)}</div>
-        <div class="fraco" style="margin-bottom:8px;line-height:1.5">${this.esc(time)}</div>
+        <div class="fraco" style="margin-bottom:6px">${linhaNivel}</div>
+        ${linhaTime}
         ${st.fala ? `<div class="aviso dano" style="margin-bottom:8px">${this.esc(st.fala)}</div>` : ''}
-        ${st.estado!=='disponivel' && st.estado!=='conquistado' && g.comoDestravar
+        ${st.estado==='recusado' && g.comoDestravar
           ? `<div class="sussurro" style="margin:0 0 8px">${this.esc(g.comoDestravar)}</div>` : ''}
-        ${st.estado==='conquistado' && g.efeito ? `<div class="fraco" style="color:var(--bom)">${this.esc(g.efeito)}</div>` : ''}
+        ${conquistado && g.efeito ? `<div class="fraco" style="color:var(--bom)">${this.esc(g.efeito)}</div>` : ''}
         <div class="rodape">
           <span style="color:${cor};font-size:12.5px">${this.esc(rotulo)}</span>
           ${st.estado === 'disponivel'
@@ -765,6 +817,7 @@ const UI = {
         <div class="loc">${n} de 8 insígnias</div>
       </div>
       <p class="sussurro">Ordem livre: comece por onde quiser. Cada líder adapta o <b>time inteiro</b> ao seu progresso — com poucas insígnias ele traz Pokémon não evoluídos e um time curto; com muitas, a linha completa e o ace. Nenhum ginásio vira passeio nem muro, seja qual for a ordem. Blue só recebe quem tem sete.</p>
+      <p class="sussurro">O que está escrito em cada ficha é o que você sabe hoje. Quem nunca pisou na cidade sabe o nome do líder e o tipo dele, porque isso é cartaz de Centro Pokémon. O time de dentro se descobre entrando.</p>
       <div class="grade" style="margin-top:14px">${GINASIOS.map(cartao).join('')}</div>
       <div style="margin-top:20px">
         <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
@@ -894,12 +947,22 @@ const UI = {
     this.add(this.topo());
     const d = Estado.dados;
     const e4 = statusElite4(), tor = statusTorneio();
-    const membros = ELITE4.map(m => {
-      const substituto = m.titular && m.titular !== m.nome;
-      return `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)}
-        <span class="fraco">· ${this.esc(m.tipo)}${substituto ? ' · na cadeira de ' + this.esc(m.titular) : ''}</span></span>
-       <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`;
-    }).join('');
+    /* Quem são os quatro é coisa que você descobre chegando lá, ou
+       ouvindo da Conselheira no capítulo 21. Com o cinto vazio, o
+       Planalto Indigo é só um nome e quatro portas. */
+    const nInsig = d.insignias.filter(i => i !== 'Título de Campeão').length;
+    const sabeQuemSao = !!d.flags.sabe_da_elite || nInsig >= 8 || !!d.flags.campeao_de_kanto;
+
+    const membros = sabeQuemSao
+      ? ELITE4.map(m => {
+          const substituto = m.titular && m.titular !== m.nome;
+          return `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)}
+            <span class="fraco">· ${this.esc(m.tipo)}${substituto ? ' · na cadeira de ' + this.esc(m.titular) : ''}</span></span>
+           <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`;
+        }).join('')
+      : ELITE4.map(m => `<div class="linha"><span class="k">${m.ordem}. <span class="fraco">${this.esc(m.titular)}</span></span>
+           <span class="v fraco">—</span></div>`).join('') +
+        `<p class="sussurro" style="margin:8px 0 0">Os quatro nomes estão nas portas desde sempre. Quem senta atrás de cada uma hoje é outra conversa, e não é conversa que se tenha daqui.</p>`;
 
     this.add(`<div class="painel">
       <div class="cap-cabecalho">

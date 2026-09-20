@@ -400,6 +400,13 @@ function faixaGinasio(g){
   return `${t[0].nivel}–${t[t.length-1].nivel}`;
 }
 
+/* Nível aproximado do ginásio — o que se ouve na cidade, sem detalhe */
+function nivelGinasio(g){
+  const t = timeGinasio(g);
+  if (!t.length) return 10;
+  return Math.round(t.reduce((s,x)=>s+x.nivel,0) / t.length / 5) * 5;
+}
+
 function ginasioPorId(id){ return GINASIOS.find(g => g.id === id) || null; }
 
 /* Estado de cada ginásio para o jogador atual */

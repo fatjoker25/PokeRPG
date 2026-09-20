@@ -247,52 +247,122 @@ const CONVERSAS = {
   pallet:[
     ['"Você é filho de quem mesmo?" A senhora pergunta sabendo a resposta. É o jeito dela de puxar assunto.'],
     ['Um pescador conserta rede na varanda. "Ninguém sai daqui, sabia? Você é o terceiro em dez anos."'],
-    ['"O Professor não recebe mais ninguém", diz o padeiro. "Desde que aquele menino voltou de Cinnabar, ele não recebe."']
+    ['"O Professor não recebe mais ninguém", diz o padeiro. "Desde que aquele menino voltou de Cinnabar, ele não recebe."'],
+    ['Duas crianças jogam bola contra o muro do laboratório. Uma delas te explica, muito séria, que aquele muro é o melhor muro de Pallet porque devolve reto.'],
+    ['"Pallet não tem Centro Pokémon", diz o homem do armazém, sem que você tenha perguntado. "Tem eu, que vendo band-aid, e tem Viridian, que fica a um dia."'],
+    ['Uma mulher estende roupa no varal e conversa com um Rattata que mora embaixo da casa dela há seis anos. Ela chama ele de Senhor.'],
+    ['"Todo ano sai um", diz o pescador. "Todo ano volta um. Quase nunca é o mesmo."'],
+    ['O armazém tem um telefone de parede com uma lista de números escrita a lápis direto na tinta. O último número foi riscado.'],
+    {cond:d=>d.insignias.length>0, texto:['"Eu vi a sua mãe no armazém", diz a senhora. "Ela não falou de você. Ela falou de comida a viagem inteira, que é como ela fala de você."']},
+    {cond:d=>d.relogio.periodo==='madrugada', texto:['Pallet de madrugada é quatro postes e o mar. Um dos postes está queimado desde que você se entende por gente.']}
   ],
   viridian:[
     ['"Tem gente perguntando por gente", diz o atendente do Centro. "Sempre teve. Mas esse ano tá demais."'],
     ['Um treinador mais velho: "Floresta de Viridian tem dois caminhos. O marcado e o curto. Nenhum dos dois é bom à noite."'],
-    ['"Aquele ginásio ali?" O homem ri sem alegria. "Ficou fechado dois anos. Reabriu faz pouco. Boa sorte em entrar."']
+    ['"Aquele ginásio ali?" O homem ri sem alegria. "Ficou fechado dois anos. Reabriu faz pouco. Boa sorte em entrar."'],
+    ['A recepcionista do Centro atende três pessoas ao mesmo tempo sem levantar a voz uma vez. Você fica olhando mais do que devia.'],
+    ['"Viridian é cidade de passagem", diz a moça da banca de fruta. "Ninguém compra pra casa. Todo mundo compra pra estrada."'],
+    ['Um guarda florestal de folga, com o uniforme ainda meio vestido: "A Floresta não é perigosa. A Floresta é grande. As pessoas confundem."'],
+    ['Um casal discute na fila do Centro se vale a pena atravessar hoje ou esperar amanhã. Eles estão discutindo isso há claramente mais de uma hora.'],
+    ['"O menino de Pallet passou por aqui há dois anos", diz o velho do banco da praça. "Não falou com ninguém. Nem naquela época."'],
+    {cond:d=>d.flags.leu_aviso_floresta, texto:['Você pergunta do bilhete do mural. A atendente não sorri. "Foi eu que escrevi. E eu escreveria de novo."']},
+    {cond:d=>d.insignias.length>=4, texto:['Um garoto de uns doze anos te segue meio quarteirão antes de criar coragem de perguntar quantas insígnias você tem. Quando você responde, ele só fala "ah" e vai embora feliz.']}
   ],
   pewter:[
     ['"Aqui todo mundo trabalhou na pedreira ou é filho de quem trabalhou", diz a mulher da banca. "Inclusive o líder do ginásio."'],
     ['Uma menina de uns dez anos: "Você vai lutar no ginásio? Leva alguma coisa de Água. Todo mundo esquece."'],
-    ['"O museu tá pedindo doação de novo", reclama um senhor. "Eles têm um bicho de trezentos milhões de anos e não têm telhado."']
+    ['"O museu tá pedindo doação de novo", reclama um senhor. "Eles têm um bicho de trezentos milhões de anos e não têm telhado."'],
+    ['Um homem de capacete atravessa a rua com um Machop carregando viga. Nenhum dos dois parece achar aquilo digno de nota.'],
+    ['"Pedra de Pewter foi pro mundo inteiro", diz o dono da lanchonete. "Tem prédio em Saffron feito da minha cidade. Eles não sabem."'],
+    ['Uma senhora varre a calçada e a calçada é de pedra irregular e ela varre mesmo assim, todo dia, porque é a calçada dela.'],
+    ['O museu tem uma sala fechada com um aviso escrito à mão: "FÓSSEIS — REFORMA". A reforma está escrita numa folha que já amarelou.'],
+    ['"O líder daqui não pega leve com criança", diz o rapaz da pedreira. "Tem gente que acha ruim. Eu acho que é a única coisa honesta nessa cidade."'],
+    {cond:d=>d.insignias.includes('Insígnia Pedra'), texto:['A mulher da banca vê a sua insígnia e não comenta. Só põe uma fruta a mais no saco e não deixa você pagar por ela.']},
+    {cond:d=>d.relogio.periodo==='manhã', texto:['Às seis e meia a sirene da pedreira toca e a cidade inteira muda de ritmo em quinze segundos, como se alguém tivesse trocado a marcha.']}
   ],
   cerulean:[
     ['"Cuidado com quem vende na ponte", diz a moça do Centro. "É legal. É legalizado. Não é bom."'],
     ['Um pescador: "O rio mudou de cor duas vezes esse mês. Ninguém explica. Ninguém pergunta."'],
-    ['"A líder daqui é braba", diz um garoto. "Ela não perde em casa faz uns três anos."']
+    ['"A líder daqui é braba", diz um garoto. "Ela não perde em casa faz uns três anos."'],
+    ['Duas irmãs discutem na porta do ginásio sobre de quem é a vez de limpar a piscina. Pelo tom, essa discussão é mais velha que você.'],
+    ['"Tem um cara na Rota 25 que estuda bicho o dia inteiro sozinho", diz o rapaz da loja. "Ele é legal. Só não vai de tarde, que ele dorme de tarde."'],
+    ['Uma mulher lava um Poliwag numa bacia na calçada. O Poliwag está claramente adorando e a mulher está claramente atrasada pro trabalho.'],
+    ['"Cerulean é a cidade mais bonita de Kanto", diz o velho, e depois olha pra você. "Isso é o que a gente fala. Não repete em Celadon."'],
+    ['A ponte norte tem seis garotos que desafiam quem passa, em fila, um atrás do outro. É uma tradição e é também um pequeno negócio.'],
+    {cond:d=>d.flags.salvou_vaporeon, texto:['Uma senhora te para na rua e segura a sua mão com as duas dela. Ela não explica e não precisa: metade da cidade já sabe o que aconteceu na Rota 25.']},
+    {cond:d=>d.reputacao.eixo==='ruim'&&d.reputacao.ruim>=3, texto:['A moça do Centro atende você com toda educação e não olha na sua cara uma vez. Isso é pior do que se ela gritasse.']}
   ],
   vermilion:[
     ['"Porto é assim", diz o estivador, sem parar de trabalhar. "Chega coisa, sai coisa, e ninguém pergunta."'],
     ['Uma vendedora de peixe frito: "Navio grande atraca quinta. Aí a cidade enche de gente que nunca dormiu no chão."'],
-    ['"O líder daqui foi soldado", diz o garoto do cais. "De verdade. Antes disso."']
+    ['"O líder daqui foi soldado", diz o garoto do cais. "De verdade. Antes disso."'],
+    ['Um marinheiro aposentado descreve a Rota 21 pra um grupo de turistas com uma precisão que ninguém pediu e todo mundo agradece.'],
+    ['"Tem um buraco ali perto que vai dar em Pewter", diz o rapaz do posto. "Leva o dia todo, é escuro e tem Diglett até no teto. Mas vai."'],
+    ['Duas mulheres carregam uma caixa de gelo entre as duas e param a cada dez metros pra trocar de mão. Elas fazem isso todo dia e não aceitam ajuda.'],
+    ['"Vermilion tem o melhor pôr do sol de Kanto e ninguém olha", diz o homem da guarita. "Eu olho. Sou pago pra ficar olhando pra algum lugar."'],
+    ['Um menino vende concha na calçada, arrumada por tamanho numa toalha. As grandes custam mais e ele explica por quê com uma lógica impecável.'],
+    {cond:d=>d.insignias.includes('Insígnia Trovão'), texto:['O estivador aponta a sua insígnia com o queixo. "Ele te deu aquela?" Pausa. "Então ele não tá tão velho quanto eu achava."']},
+    {cond:d=>d.relogio.periodo==='noite', texto:['À noite o porto não para, só fica mais devagar. Os guindastes continuam trabalhando com luz amarela e é bonito de um jeito que ninguém do turno reconhece.']}
   ],
   lavender:[
     ['A senhora de luto não fala nada por um tempo. Depois: "O primeiro é o pior. Depois você aprende a escrever mais rápido."'],
     ['"Ninguém sobe na torre à noite", diz o zelador. "Não é proibido. É que ninguém sobe."'],
-    ['Um homem mais novo que você aparenta: "Eu trabalho aqui há um ano e não acostumei. Dizem que ninguém acostuma."']
+    ['Um homem mais novo que você aparenta: "Eu trabalho aqui há um ano e não acostumei. Dizem que ninguém acostuma."'],
+    ['O Sr. Fuji atende a porta do abrigo com um Cubone no colo e pede desculpa por não poder conversar agora. Ele parece pedir desculpa a muita gente.'],
+    ['"A gente é a cidade pra onde as coisas vão", diz a dona da marcenaria. "Alguém tem que ser."'],
+    ['Um casal jovem sai da torre em silêncio. Ela está segurando uma bola vazia. Ele está segurando ela.'],
+    ['O abrigo do Sr. Fuji tem onze Pokémon que não são de ninguém e um caderno na porta onde as pessoas escrevem o nome de quem deixaram.'],
+    ['"Tem gente que vem de Saffron só pra subir a torre", diz o zelador. "De carro. Sobem, descem, voltam. Eu não julgo. Muito."'],
+    {cond:d=>d.cemiterio.length>0, texto:['A senhora de luto olha o seu cinto e conta. Ela não pergunta nada. Ela só diz: "Tem um lugar lá em cima com vista pro leste. É onde eu vou."']},
+    ['A cidade inteira não tem música em lugar nenhum. Você percebe isso depois de meia hora e não consegue mais desperceber.']
   ],
   celadon:[
     ['"Você tem cara de quem tá procurando alguma coisa", diz o segurança do shopping. "Todo mundo aqui tem."'],
     ['Um entregador de gás, sem você perguntar: "Chega caminhão de madrugada no depósito atrás do cassino. Todo mês. Ninguém pergunta porque paga bem não perguntar."'],
-    ['"A dona do ginásio é a pessoa mais educada dessa cidade", diz a florista. "E a mais difícil de agradar."']
+    ['"A dona do ginásio é a pessoa mais educada dessa cidade", diz a florista. "E a mais difícil de agradar."'],
+    ['O quarto andar do shopping tem um vendedor que sabe de cabeça o preço de tudo e se recusa a usar a etiqueta. Ele erra para menos, às vezes, de propósito.'],
+    ['"Celadon tem sete andares de loja e nenhum lugar pra sentar de graça", reclama um senhor sentado no chão do corredor.'],
+    ['Um grupo de meninas de uniforme de escola atravessa o saguão do cassino sem olhar pros lados, como quem já foi avisado de tudo.'],
+    ['A estufa do ginásio dá pra ver da rua. Tem mais gente olhando de fora do que você esperava, e ninguém entra.'],
+    ['"Eu trabalhei no cassino antes", diz a moça do café. "Não quero falar disso. Mas se você for, não joga na máquina do canto."'],
+    {cond:d=>d.insignias.length>=5, texto:['O segurança do shopping te reconhece e te chama de "moço" de um jeito diferente do que chamava antes. Você repara e fica meio sem graça.']},
+    {cond:d=>d.flags.sabe_da_comissao, texto:['A florista baixa a voz sem motivo aparente. "Tem uns moços de camisa social perguntando de galpão nessa cidade. Não são da prefeitura."']}
   ],
   fuchsia:[
     ['"Metade dessa cidade trabalha na Zona", diz o dono do bar. "A outra metade vive de quem trabalha na Zona."'],
     ['Um guarda-parque de folga, já bêbado: "Setor 7 é onde a gente aprende que não existe emprego limpo." O colega manda ele calar a boca.'],
-    ['"O ginásio daqui você não acha", ri a mulher da banca. "Tem gente que procura três dias."']
+    ['"O ginásio daqui você não acha", ri a mulher da banca. "Tem gente que procura três dias."'],
+    ['Uma criança explica pra outra, com total autoridade, que a Zona Safári tem um bicho que ninguém nunca pegou. Ela não sabe qual. Isso não atrapalha a história.'],
+    ['"Poké Ball não funciona lá dentro", diz o atendente do posto. "Só as de lá. Não é golpe, é regra. Eu explico isso quarenta vezes por dia."'],
+    ['Um veterinário sai da reserva com a manga da camisa rasgada e conversa normalmente com você sobre o clima.'],
+    ['"Aqui a gente chama a cerca de cerca", diz o dono do bar. "Em Saffron eles chamam de área de manejo. É a mesma cerca."'],
+    ['Uma placa na entrada da reserva lista os horários. Alguém corrigiu o horário de domingo com caneta, e a correção também já está velha.'],
+    {cond:d=>d.flags.sabe_do_setor7, texto:['O guarda-parque bêbado te reconhece e fica sóbrio na hora. Ele não fala nada. Ele sai do bar.']},
+    {cond:d=>d.relogio.periodo==='tarde', texto:['Às quatro da tarde o ônibus da Zona descarrega quarenta pessoas de chapéu novo e a cidade inteira aumenta de volume por vinte minutos.']}
   ],
   saffron:[
     ['"Crachá branco vai até o oitavo andar", diz um funcionário na fila da lanchonete. "Azul vai até o décimo."'],
     ['"O ginásio fechou faz três semanas", diz a moça do Centro, e baixa a voz sem motivo. "A líder não explicou."'],
-    ['Um segurança de prédio comercial: "Quinta-feira à noite sobe uma entrega pela doca que ninguém do administrativo registra."']
+    ['Um segurança de prédio comercial: "Quinta-feira à noite sobe uma entrega pela doca que ninguém do administrativo registra."'],
+    ['A Silph tem onze andares e um saguão onde cabe a praça de Pallet inteira. Tem também quatro pessoas sentadas num sofá esperando desde antes de você chegar.'],
+    ['"Saffron é a cidade onde o Kanto decide as coisas", diz o rapaz da banca de jornal. "E é a cidade onde ninguém vota em nada."'],
+    ['Um grupo de estagiários almoça na escada do prédio comercial, todos com o mesmo crachá branco, todos com a mesma marmita do mesmo lugar.'],
+    ['Uma mulher de terno atende o Pokégear na calçada e diz "não" catorze vezes seguidas com entonações completamente diferentes.'],
+    ['"Tem um dojo do outro lado da cidade", diz o segurança. "Eles brigaram com o ginásio há uns anos e perderam. Continuam lá. Continuam brigados."'],
+    {cond:d=>d.flags.sabe_da_silph, texto:['O rapaz da banca de jornal dobra o jornal quando você chega e destrava assunto sozinho: "O senhor também tá atrás do andar oito, né."']},
+    {cond:d=>d.reputacao.eixo==='bom'&&d.reputacao.bom>=5, texto:['Uma mulher de crachá azul para você na calçada, diz que leu o seu nome em algum lugar, e some antes de você perguntar onde.']}
   ],
   cinnabar:[
-    ['"Fechou há anos", diz a aposentada sobre o laboratório. Depois, mais baixo: "Fechou no papel."'],
-    ['"Tinha um tanque lá dentro", diz ela, aceitando o café. "Grande, do tamanho de um carro. E o que tava dentro cresceu rápido demais pro tanque."'],
-    ['O dono da pousada: "O vulcão tá soltando fumaça vermelha. Fumaça não é vermelha."']
+    ['"A ilha inteira é o vulcão", diz o barqueiro. "As casas são o que sobrou de espaço."'],
+    ['"O laboratório aceita fóssil", diz a moça da vitrine. "Aceita mesmo. Já vi sair bicho de lá que não devia estar andando."'],
+    ['Um velho aponta a mansão queimada do alto do morro e não fala nada sobre ela. Ele só aponta e continua o caminho.'],
+    ['"O líder daqui faz pergunta antes de lutar", diz o rapaz do píer. "Se você não souber responder, ele luta mesmo assim. Mas você sabe que ele sabe."'],
+    ['A dona da vitrine leva tudo o que vende de barco, o que quer dizer que às vezes falta tudo e ela avisa com humor.'],
+    ['Uma família de turistas tira foto com o vulcão ao fundo e o guia local espera com a paciência de quem faz isso quarenta vezes por semana.'],
+    ['"Ninguém da ilha entra na mansão", diz o barqueiro. "Gente de fora entra. A gente vê entrar e vê sair, e é só isso que a gente faz."'],
+    ['O laboratório tem uma janela onde dá pra ver uma bancada com luz acesa a qualquer hora do dia ou da noite. Ninguém nunca está sentado nela.'],
+    {cond:d=>d.insignias.length>=6, texto:['O rapaz do píer olha o seu cinto. "Seis." Ele assobia. "Então o senhor vai pra Viridian depois daqui, e aí a gente vai ver notícia sua."']},
+    {cond:d=>d.mundo&&d.mundo.instabilidade>=6, texto:['"O mar tá diferente", diz o barqueiro, e não diz mais nada por um tempo. "Não é maré. Eu sei o que é maré."']}
   ]
 };
 
@@ -301,15 +371,44 @@ const CONVERSAS_ROTA = [
   ['Uma mulher com três Pokémon no pé pergunta se você viu um Growlithe. Ela procura há dois dias.'],
   ['"Não anda de noite", diz um homem com mochila grande. "Não porque tem bicho. Porque tem gente."'],
   ['Dois irmãos discutindo qual caminho é mais curto. Nenhum dos dois está certo, e você resolve não falar nada.'],
-  ['Um senhor sentado numa pedra há tanto tempo que os Pidgey pousam perto dele sem se importar.']
+  ['Um senhor sentado numa pedra há tanto tempo que os Pidgey pousam perto dele sem se importar.'],
+  ['Um ciclista passa, freia vinte metros à frente, volta de marcha a ré pedalando, e pergunta se você tem água. Você tem. Ele agradece demais.'],
+  ['Uma família inteira almoça numa toalha na beira da estrada. A mãe te oferece comida com a naturalidade de quem oferece a todo mundo que passa.'],
+  ['Um homem conta Pidgey. Ele explica que faz isso há onze anos e que o número vem caindo, e que ninguém quer o caderno dele.'],
+  ['"Você tem Repelente sobrando?" Dois treinadores jovens dividem o último de um frasco entre os dois, o que não é como Repelente funciona.'],
+  ['Um entregador com uma caixa amarrada nas costas anda mais rápido que você sem parecer estar com pressa.'],
+  ['Uma senhora com um Meowth no ombro pergunta as horas e depois fica conversando por dez minutos sem olhar o relógio nenhuma vez.'],
+  ['Dois guardas da Liga passam a cavalo de Rapidash e cumprimentam com a cabeça. Nenhum dos dois diminui o passo.']
 ];
 
+/* Uma conversa pode vir condicionada ao estado: {cond, texto}.
+   E a última não se repete — nada mata mais uma cidade do que
+   falar com três pessoas e ouvir a mesma frase duas vezes. */
 const Conversas = {
+  ultima: {},
+
+  disponiveis(banco){
+    const d = Estado.dados;
+    return (banco || []).filter(c => {
+      if (Array.isArray(c)) return true;
+      try { return !c.cond || c.cond(d); } catch(e){ return false; }
+    });
+  },
+
   sortear(id){
-    const L = LOCAIS[id];
-    const banco = CONVERSAS[id];
-    if (banco && banco.length) return Dados.escolher(banco);
-    return Dados.escolher(CONVERSAS_ROTA);
+    const banco = this.disponiveis(CONVERSAS[id]);
+    const fonte = banco.length ? banco : this.disponiveis(CONVERSAS_ROTA);
+    if (!fonte.length) return ['Não tem ninguém por perto pra falar coisa nenhuma.'];
+    const texto = c => Array.isArray(c) ? c : c.texto;
+    let pool = fonte;
+    if (fonte.length > 1){
+      const antes = this.ultima[id];
+      const semRepetir = fonte.filter(c => texto(c)[0] !== antes);
+      if (semRepetir.length) pool = semRepetir;
+    }
+    const escolhida = Dados.escolher(pool);
+    this.ultima[id] = texto(escolhida)[0];
+    return texto(escolhida);
   }
 };
 
