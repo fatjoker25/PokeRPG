@@ -137,10 +137,19 @@ function ganharExp(p, qtd){
     p.expProx = expNecessaria(p.nivel);
     eventos.push({tipo:'nivel', nivel:p.nivel});
 
-    // aprender golpe novo
-    const ideal = montarGolpes(p.dex, p.nivel);
+    /* aprender golpe novo: primeiro o que a espécie aprende NESTE
+       nível, que é o que os jogos anunciam; se não houver, o que
+       falta do conjunto que ela já deveria ter. */
     const atuais = p.golpes.map(g => g.nome);
-    const novo = ideal.find(g => !atuais.includes(g.nome));
+    let novo = null;
+    if (typeof golpesDoNivel === 'function'){
+      const doNivel = golpesDoNivel(p.dex, p.nivel).filter(n => !atuais.includes(n));
+      if (doNivel.length) novo = {nome:doNivel[0], pp:GOLPES[doNivel[0]].pp, ppMax:GOLPES[doNivel[0]].pp};
+    }
+    if (!novo){
+      const ideal = montarGolpes(p.dex, p.nivel);
+      novo = ideal.find(g => !atuais.includes(g.nome)) || null;
+    }
     if (novo){
       if (p.golpes.length < 4){
         p.golpes.push({...novo});

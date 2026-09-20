@@ -54,12 +54,23 @@ const Jogo = {
 
     let inicial;
     if (f.inicial === 'rand'){
-      // 1ª Geração, estágio 1 (não é evolução de ninguém).
-      // Fósseis estão extintos: só existem revividos em laboratório, então
-      // ninguém cresce com um. Lendários e Ditto também ficam de fora.
-      const evoluidos = new Set(Object.values(DEX).map(p => p.evo).filter(Boolean));
+      /* Quem cresceu com você é filhote de alguma coisa que ainda vai
+         virar outra: primeiro estágio de uma linha que tem evolução
+         pela frente. Bicho de estágio único em Kanto — Electabuzz,
+         Magmar, Tauros, Lapras, Onix — não nasce no quintal de
+         ninguém em Pallet. Fóssil está extinto e só existe revivido
+         em laboratório. Lendário e Ditto ficam de fora por motivo
+         óbvio. */
       const FOSSEIS = [138,139,140,141,142];
-      const base = POOL_SELVAGEM.filter(d => !evoluidos.has(d) && !FOSSEIS.includes(d) && ![132,151,150].includes(d));
+      /* O Eevee guarda três destinos e por isso o campo evo dele está
+         vazio: quem evolui por pedra entra pela tabela das pedras. */
+      const porPedra = new Set();
+      Object.values(PEDRAS).forEach(t => Object.keys(t).forEach(k => porPedra.add(+k)));
+      const temFuturo = p => !!p.evo || porPedra.has(p.dex);
+      const base = POOL_KANTO.filter(d => {
+        const p = DEX[d];
+        return temFuturo(p) && !p.preEvo && !FOSSEIS.includes(d) && ![132,151,150].includes(d);
+      });
       inicial = criarPokemon(Dados.escolher(base), 5, {
         moral:100, naturezaVista:true,
         historia:'Cresceu com você desde pequeno. Vínculo máximo.'

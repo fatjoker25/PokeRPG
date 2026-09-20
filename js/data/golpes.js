@@ -161,7 +161,116 @@ const GOLPES = {
   'Zap Cannon':    {t:'Elétrico',c:'esp',p:100,a:50,pp:5,nv:44,ef:{tipo:'paralisia',chance:100},raro:true},
   'Megahorn':      {t:'Inseto',c:'fis',p:120,a:85,pp:10,nv:46,raro:true},
   'Sacred Fire':   {t:'Fogo',c:'fis',p:100,a:95,pp:5,nv:40,ef:{tipo:'queimadura',chance:50},soPara:[250]},
-  'Aeroblast':     {t:'Voador',c:'esp',p:100,a:95,pp:5,nv:40,ef:{critico:true},soPara:[249]}
+  'Aeroblast':     {t:'Voador',c:'esp',p:100,a:95,pp:5,nv:40,ef:{critico:true},soPara:[249]},
+
+  /* ============================================================
+     O RESTO DA TABELA DE APRENDIZADO
+     Os golpes que as espécies aprendem por nível e que ainda não
+     existiam aqui. Poder, precisão, PP e tipo são os da 1ª e 2ª
+     Geração. O efeito é o mais próximo que este motor sabe fazer:
+     onde a mecânica original não cabe, está anotado na linha.
+     ============================================================ */
+
+  /* --- NORMAL --- */
+  'Comet Punch':   {t:'Normal',c:'fis',p:18,a:85,pp:15,nv:1,ef:{golpes:3}},
+  'Double Slap':   {t:'Normal',c:'fis',p:15,a:85,pp:10,nv:1,ef:{golpes:3}},
+  'Fury Attack':   {t:'Normal',c:'fis',p:15,a:85,pp:20,nv:1,ef:{golpes:3}},
+  'Fury Swipes':   {t:'Normal',c:'fis',p:18,a:80,pp:15,nv:1,ef:{golpes:3}},
+  'Barrage':       {t:'Normal',c:'fis',p:15,a:85,pp:20,nv:1,ef:{golpes:3}},
+  'Spike Cannon':  {t:'Normal',c:'fis',p:20,a:100,pp:15,nv:1,ef:{golpes:3}},
+  'Constrict':     {t:'Normal',c:'fis',p:10,a:100,pp:35,nv:1,ef:{baixa:'spe',chance:10}},
+  'Vice Grip':     {t:'Normal',c:'fis',p:55,a:100,pp:30,nv:1},
+  'Horn Attack':   {t:'Normal',c:'fis',p:65,a:100,pp:25,nv:1},
+  'Stomp':         {t:'Normal',c:'fis',p:65,a:100,pp:20,nv:1,ef:{tipo:'recuo',chance:30}},
+  'Rage':          {t:'Normal',c:'fis',p:20,a:100,pp:20,nv:1},
+  'Pay Day':       {t:'Normal',c:'fis',p:40,a:100,pp:20,nv:1},
+  'Dizzy Punch':   {t:'Normal',c:'fis',p:70,a:100,pp:10,nv:1},
+  'Slash':         {t:'Normal',c:'fis',p:70,a:100,pp:20,nv:1,ef:{critico:true}},
+  'Thrash':        {t:'Normal',c:'fis',p:90,a:100,pp:20,nv:1,ef:{confundeSe:true}},
+  'Skull Bash':    {t:'Normal',c:'fis',p:100,a:100,pp:15,nv:1,ef:{carga:true}},
+  'Tri Attack':    {t:'Normal',c:'esp',p:80,a:100,pp:10,nv:1},
+  'Wrap':          {t:'Normal',c:'fis',p:15,a:90,pp:20,nv:1,ef:{preso:true}},
+  'Bind':          {t:'Normal',c:'fis',p:15,a:75,pp:20,nv:1,ef:{preso:true}},
+  'Self-Destruct': {t:'Normal',c:'fis',p:200,a:100,pp:5,nv:1,ef:{recuo:1}},
+  'Explosion':     {t:'Normal',c:'fis',p:250,a:100,pp:5,nv:1,ef:{recuo:1}},
+  /* fulminantes: aqui viram um número alto e uma precisão péssima */
+  'Horn Drill':    {t:'Normal',c:'fis',p:0,a:30,pp:5,nv:1,ef:{fixo:200}},
+  'Guillotine':    {t:'Normal',c:'fis',p:0,a:30,pp:5,nv:1,ef:{fixo:200}},
+  /* Super Fang tira metade; sem essa conta, vai por nível */
+  'Super Fang':    {t:'Normal',c:'fis',p:0,a:90,pp:10,nv:1,ef:{nivel:true}},
+  'Sonic Boom':    {t:'Normal',c:'esp',p:0,a:90,pp:20,nv:1,ef:{fixo:20}},
+  'Growth':        {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'spa'}},
+  'Sharpen':       {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'atk'}},
+  'Meditate':      {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'atk'}},
+  'Focus Energy':  {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'atk'}},
+  'Defense Curl':  {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
+  'Withdraw':      {t:'Água',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
+  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def'}},
+  'Substitute':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{sobe:'def'}},
+  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{sobe:'spe'}},
+  'Conversion':    {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'def'}},
+  'Light Screen':  {t:'Psíquico',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'spd'}},
+  'Reflect':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def'}},
+  'Mist':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'spd'}},
+  'Acid Armor':    {t:'Venenoso',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def',forte:true}},
+  /* Haze zera as alterações dos dois lados; aqui derruba o ataque de quem está na frente */
+  'Haze':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{baixa:'atk'}},
+  'Smokescreen':   {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'precisao'}},
+  /* Whirlwind e Roar tiram o adversário do lugar; sem troca forçada, tiram o ritmo */
+  'Whirlwind':     {t:'Normal',c:'status',p:0,a:85,pp:20,nv:1,ef:{baixa:'spe'}},
+  'Roar':          {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'spe'}},
+  /* Disable trava um golpe; o mais perto que este motor faz é a confusão */
+  'Disable':       {t:'Normal',c:'status',p:0,a:55,pp:20,nv:1,ef:{tipo:'confusao',chance:100}},
+  'Lovely Kiss':   {t:'Normal',c:'status',p:0,a:75,pp:10,nv:1,ef:{tipo:'sono',chance:100}},
+  /* Metronome sorteia um golpe; aqui ele sai sempre, e sai médio */
+  'Metronome':     {t:'Normal',c:'esp',p:70,a:999,pp:10,nv:1},
+  /* Transform copia o adversário; sem cópia, é a postura de quem imita */
+  'Transform':     {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{sobe:'atk'}},
+  'Teleport':      {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'spe'}},
+  'Mirror Move':   {t:'Voador',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'atk'}},
+  'Splash':        {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1},
+
+  /* --- LUTADOR --- */
+  'Rolling Kick':  {t:'Lutador',c:'fis',p:60,a:85,pp:15,nv:1,ef:{tipo:'recuo',chance:30}},
+  'Jump Kick':     {t:'Lutador',c:'fis',p:70,a:95,pp:25,nv:1},
+  'High Jump Kick':{t:'Lutador',c:'fis',p:85,a:90,pp:20,nv:1},
+  'Counter':       {t:'Lutador',c:'fis',p:60,a:100,pp:20,nv:1},
+
+  /* --- GRAMA --- */
+  'Leech Seed':    {t:'Grama',c:'status',p:0,a:90,pp:10,nv:1,ef:{tipo:'veneno',chance:100}},
+  'Spore':         {t:'Grama',c:'status',p:0,a:999,pp:15,nv:1,ef:{tipo:'sono',chance:100}},
+
+  /* --- VENENOSO --- */
+  'Poison Gas':    {t:'Venenoso',c:'status',p:0,a:55,pp:40,nv:1,ef:{tipo:'veneno',chance:100}},
+  'Glare':         {t:'Normal',c:'status',p:0,a:75,pp:30,nv:1,ef:{tipo:'paralisia',chance:100}},
+
+  /* --- ÁGUA --- */
+  'Clamp':         {t:'Água',c:'fis',p:35,a:75,pp:10,nv:1,ef:{preso:true}},
+  'Crabhammer':    {t:'Água',c:'fis',p:90,a:85,pp:10,nv:1,ef:{critico:true}},
+
+  /* --- os que Johto trouxe para a tabela de aprendizado --- */
+  'Flame Wheel':   {t:'Fogo',c:'fis',p:60,a:100,pp:25,nv:1,ef:{tipo:'queimadura',chance:10}},
+  'Spark':         {t:'Elétrico',c:'fis',p:65,a:100,pp:20,nv:1,ef:{tipo:'paralisia',chance:30}},
+  'Rollout':       {t:'Pedra',c:'fis',p:30,a:90,pp:20,nv:1,ef:{golpes:2}},
+  'Rapid Spin':    {t:'Normal',c:'fis',p:20,a:100,pp:40,nv:1},
+  'Present':       {t:'Normal',c:'fis',p:40,a:90,pp:15,nv:1},
+  'Psywave':       {t:'Psíquico',c:'esp',p:0,a:80,pp:15,nv:1,ef:{nivel:true}},
+  'Hidden Power':  {t:'Normal',c:'esp',p:60,a:100,pp:15,nv:1},
+  /* Flail bate mais quanto menos HP sobra; aqui é só um golpe curto e forte */
+  'Flail':         {t:'Normal',c:'fis',p:70,a:100,pp:15,nv:1},
+  'Scary Face':    {t:'Normal',c:'status',p:0,a:90,pp:10,nv:1,ef:{baixa:'spe',forte:true}},
+  'Foresight':     {t:'Normal',c:'status',p:0,a:100,pp:40,nv:1,ef:{baixa:'precisao'}},
+  'Charm':         {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'atk',forte:true}},
+  'Swagger':       {t:'Normal',c:'status',p:0,a:90,pp:15,nv:1,ef:{tipo:'confusao',chance:100}},
+  'Spider Web':    {t:'Inseto',c:'status',p:0,a:999,pp:10,nv:1,ef:{baixa:'spe'}},
+  'Cotton Spore':  {t:'Grama',c:'status',p:0,a:85,pp:40,nv:1,ef:{baixa:'spe',forte:true}},
+  'Synthesis':     {t:'Grama',c:'status',p:0,a:999,pp:5,nv:1,ef:{cura:0.5}},
+  'Softboiled':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{cura:0.5}},
+  'Safeguard':     {t:'Normal',c:'status',p:0,a:999,pp:25,nv:1,ef:{sobe:'spd'}},
+  'Mirror Coat':   {t:'Psíquico',c:'esp',p:60,a:100,pp:20,nv:1},
+  /* Sandstorm e Rain Dance mudam o tempo; sem clima, o que sobra é o estorvo */
+  'Sandstorm':     {t:'Pedra',c:'status',p:0,a:999,pp:10,nv:1,ef:{baixa:'precisao'}},
+  'Rain Dance':    {t:'Água',c:'status',p:0,a:999,pp:5,nv:1,ef:{sobe:'spa'}}
 };
 
 /* Golpes por tipo, prontos para montar learnsets */
@@ -195,6 +304,17 @@ function utilidadeStatus(g){
 }
 
 function montarGolpes(dexId, nivel){
+  /* A tabela de aprendizado manda: se a espécie tem learnset, os
+     golpes são os dela, no nível dela. O gerador abaixo só existe
+     para espécie sem tabela — hoje, nenhuma. */
+  if (typeof golpesPorNivel === 'function'){
+    const daTabela = golpesPorNivel(dexId, nivel);
+    if (daTabela){
+      const assin = assinaturaDe(dexId, nivel);
+      const nomes = assin.concat(daTabela.filter(n => !assin.includes(n))).slice(0, 4);
+      return nomes.map(n => ({nome:n, pp:GOLPES[n].pp, ppMax:GOLPES[n].pp}));
+    }
+  }
   const esp = DEX[dexId];
   const fisico = esp.base.atk >= esp.base.spa;
 
