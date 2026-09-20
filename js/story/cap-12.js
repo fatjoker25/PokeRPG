@@ -43,7 +43,7 @@ c12_cidade:{
     'A pousada se chama Pousada do Safári. A padaria vende pão de queijo em saquinho com a silhueta de um Kangaskhan. O posto de gasolina tem um outdoor da reserva. A escola municipal se chama Escola Municipal Reserva Fuchsia.',
     'E tem um detalhe que você leva quarenta minutos pra notar e depois não consegue desnotar:',
     'não tem nenhum Pokémon selvagem na cidade.',
-    'Nenhum. Nem Pidgey, nem Rattata, nem Caterpie. Em Pewter tinha. Em Cerulean tinha. Em Lavender tinha muito.',
+    'Nenhum. Nem Pidgey, nem Rattata, nem inseto. Em Pewter tinha. Em Cerulean tinha. Em Lavender tinha muito.',
     'Aqui, do lado de nove mil hectares de reserva, dentro de uma cidade de quatro mil pessoas, não tem um.',
     'Você pergunta pra dona da padaria e ela responde com orgulho genuíno:',
     '"Ah, aqui é limpo. A gente tem manejo."'

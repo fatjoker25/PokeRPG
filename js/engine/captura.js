@@ -113,6 +113,10 @@ const Captura = {
     const destino = Estado.adicionar(alvo);
     ev('captura', `${esp.nome} (Nv ${alvo.nivel}, ${alvo.natureza}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
     Estado.registrar(`Capturou ${esp.nome} Nv${alvo.nivel} com ${nomeBola}.`);
+    if (alvo.shiny){
+      Estado.pegouBrilhante(alvo.dex);
+      ev('brilhante', 'E ele é brilhante. Você vai contar essa história mal, porque ninguém conta essa história bem.');
+    }
 
     if (esp.lendario) this.consequenciasLendario(alvo, eventos);
     return {eventos, capturou:true};
@@ -136,10 +140,10 @@ const Captura = {
       ev('mundo', 'Alguém viu. Sempre tem alguém vendo.');
       // como a comunidade reage depende de quem você era antes disso
       if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4){
-        Estado.mudarRep('bom', 2, `Capturou ${DEX[dex].nome} — e te chamaram de herói por isso`);
+        Estado.mudarRep('bom', 2, `Capturou ${DEX[dex].nome} — e te chamaram de herói por isso`, {rep:{notorio:true, peso:5}});
         ev('mundo', 'Por enquanto, chamam de feito. Enquanto ele continuar na sua bola, vão mudar de ideia.');
       } else {
-        Estado.mudarRep('ruim', 2, `Capturou ${DEX[dex].nome} diante de testemunhas`);
+        Estado.mudarRep('ruim', 2, `Capturou ${DEX[dex].nome} diante de testemunhas`, {rep:{notorio:true, peso:5}});
       }
     } else {
       // ninguém viu: nenhuma reputação ainda — mas o segredo tem prazo de validade
@@ -230,7 +234,7 @@ const Captura = {
       liga.detencao = true;
       ev('liga', 'Terceira vez. Ordem de detenção emitida. Treinadores da Liga estão autorizados a te capturar.');
       Estado.marcar('liga_detencao');
-      Estado.mudarRep('ruim', 1, 'Ordem de detenção da Liga');
+      Estado.mudarRep('ruim', 1, 'Ordem de detenção da Liga', {rep:{notorio:true, peso:4}});
     }
   },
 

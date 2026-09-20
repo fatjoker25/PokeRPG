@@ -305,7 +305,7 @@ c19_entrou_pelo_buraco:{
   texto:[
     'Você levanta a tela e entra de lado, e do lado de dentro o mato é o mato estranho: todos os arbustos na mesma distância, na mesma altura.',
     'Você atravessa cento e vinte metros sem que nada aconteça, o que é estranho, porque cento e vinte metros de mato deveriam ter alguma coisa.',
-    'Não tem bicho. É isso. Não tem Caterpie, não tem Pidgey, não tem barulho nenhum a não ser o vento e o mar.',
+    'Não tem bicho. É isso. Não tem inseto, não tem Pidgey, não tem barulho nenhum a não ser o vento e o mar.',
     'Eles plantaram o mato e esqueceram de plantar o resto.'
   ],
   ef:{flag:['entrou_pelo_buraco'], instabilidade:1,

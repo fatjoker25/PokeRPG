@@ -1066,26 +1066,26 @@ c20_resultado_votacao:{
             Estado.marcar('art19_revogado');
             if (v >= 6) Estado.marcar('fase2_suspensa');
             Estado.dados.mundo.instabilidade = Math.max(0, Estado.dados.mundo.instabilidade - (v>=6?2:1));
-            Estado.mudarRep('bom', v>=6?4:2, 'Revogou o Art. 19 pelo voto, dentro da sala');
+            Estado.mudarRep('bom', v>=6?4:2, 'Revogou o Art. 19 pelo voto, dentro da sala', {rep:{notorio:true, peso:3}});
             avisos.push({tipo:'rep', texto: v>=6
               ? 'O Art. 19 foi revogado e a Fase II, suspensa. Você fez isso com uma votação.'
               : 'O Art. 19 caiu. A Fase II continua no cronograma.'});
           } else if (mat === 'livro'){
             Estado.marcar('viu_o_livro_fechado'); Estado.marcar('provas_do_11');
-            Estado.mudarRep('bom', 3, 'Fez o conselho abrir o próprio livro fechado');
+            Estado.mudarRep('bom', 3, 'Fez o conselho abrir o próprio livro fechado', {rep:{notorio:true, peso:3}});
             avisos.push({tipo:'rep', texto:'O conselho votou a exibição do livro de reuniões fechadas.'});
           } else if (mat === 'visita'){
             Estado.marcar('visita_obrigatoria_aprovada');
-            Estado.mudarRep('bom', 3, 'Obrigou onze pessoas a olhar uma vez por mês');
+            Estado.mudarRep('bom', 3, 'Obrigou onze pessoas a olhar uma vez por mês', {rep:{notorio:true, peso:3}});
             avisos.push({tipo:'rep', texto:'Todo conselheiro passa a entrar no galpão 4 uma vez por mês, com presença em ata.'});
           } else {
             Estado.marcar('edital_aprovado');
-            Estado.mudarRep('bom', 4, 'Abriu a associação para qualquer pessoa de Kanto');
+            Estado.mudarRep('bom', 4, 'Abriu a associação para qualquer pessoa de Kanto', {rep:{notorio:true, peso:3}});
             avisos.push({tipo:'rep', texto:'O edital de associados foi aprovado. A assembleia que elege o conselho deixa de ter catorze pessoas.'});
           }
         } else {
           Estado.marcar('votacao_perdida');
-          Estado.mudarRep('bom', 1, 'Perdeu a votação e ficou até o fim da sessão');
+          Estado.mudarRep('bom', 1, 'Perdeu a votação e ficou até o fim da sessão', {rep:{notorio:true, peso:3}});
           avisos.push({tipo:'info', texto:'Você perdeu. E ficou sentado até o fim da sessão, que durou mais uma hora e quarenta.'});
         }
         return avisos;
@@ -1239,18 +1239,18 @@ c20_resultado_publicacao:{
         if (d.flags.provas_do_galpao4 && d.flags.provas_do_viveiro){
           Estado.marcar('comissao_derrubada'); Estado.marcar('fase2_suspensa');
           Estado.dados.mundo.instabilidade = Math.max(0, Estado.dados.mundo.instabilidade-3);
-          Estado.mudarRep('bom', 4, 'Derrubou a Comissão com a planilha do galpão 4');
+          Estado.mudarRep('bom', 4, 'Derrubou a Comissão com a planilha do galpão 4', {rep:{notorio:true, peso:3}});
           avisos.push({tipo:'rep', texto:'A Estação 4 foi interditada. Três conselheiros indiciados.'});
         } else if (d.flags.provas_do_galpao4){
           Estado.marcar('descarte_suspenso');
-          Estado.mudarRep('bom', 3, 'Suspendeu o descarte com a planilha');
+          Estado.mudarRep('bom', 3, 'Suspendeu o descarte com a planilha', {rep:{notorio:true, peso:3}});
           avisos.push({tipo:'rep', texto:'O descarte foi suspenso para revisão de protocolo.'});
         } else if (d.flags.provas_do_11 || d.flags.leu_o_livro_fechado){
           Estado.marcar('descarte_suspenso');
-          Estado.mudarRep('bom', 3, 'Publicou a existência do livro fechado');
+          Estado.mudarRep('bom', 3, 'Publicou a existência do livro fechado', {rep:{notorio:true, peso:3}});
           avisos.push({tipo:'rep', texto:'A existência do livro de reuniões fechadas virou o assunto.'});
         } else {
-          Estado.mudarRep('bom', 1, 'Publicou o que tinha, que não era o bastante');
+          Estado.mudarRep('bom', 1, 'Publicou o que tinha, que não era o bastante', {rep:{notorio:true, peso:3}});
           avisos.push({tipo:'info', texto:'Sem prova material, durou três semanas.'});
         }
         return avisos;

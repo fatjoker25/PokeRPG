@@ -22,6 +22,20 @@ function ivsAleatorios(){
   return o;
 }
 
+/* ============================================================
+   BRILHANTES
+   A mesma espécie com a cor errada. Não muda um único status —
+   muda o que você sente quando aquilo aparece no mato.
+   A Sorte do treinador pesa: quem tem sorte encontra mais.
+   ============================================================ */
+function chanceShiny(){
+  let sorte = 0;
+  try { sorte = (Estado.dados && Estado.j && Estado.j.status.sorte) || 0; } catch(e){}
+  return Math.max(300, 1000 - sorte * 70);      /* 1 em 1000, até 1 em 300 */
+}
+function rolarShiny(){ return Dados.entre(1, chanceShiny()) === 1; }
+function ehShiny(p){ return !!(p && p.shiny); }
+
 let _uidPokemon = 1;
 
 function criarPokemon(dexId, nivel, opcoes={}){
@@ -33,6 +47,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
   const piso = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(dexId) : (esp.nivelMin || 1);
   if (nivel < piso) nivel = piso;
   const natureza = opcoes.natureza || Dados.escolher(NOMES_NATUREZAS);
+  const shiny = (opcoes.shiny !== undefined) ? !!opcoes.shiny : rolarShiny();
   const ivs = opcoes.ivs || ivsAleatorios();
   const stats = calcularStats(esp.base, nivel, ivs, natureza);
   return {
@@ -54,6 +69,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
     expProx: expNecessaria(nivel),
     moral: opcoes.moral !== undefined ? opcoes.moral : 70,  // vínculo com o treinador
     lendario: esp.lendario,
+    shiny,
     selvagem: !!opcoes.selvagem,
     morto: false,
     historia: opcoes.historia || null,
@@ -154,6 +170,39 @@ function evoluir(p, novoDex){
   p.hpMax = p.stats.hp;
   p.hp = Math.max(1, Math.round(p.hpMax * prop));
   p.moral = Math.min(100, p.moral + 5);
+  /* Brilhante continua brilhante do outro lado — e abre o registro da nova forma. */
+  if (p.shiny && typeof Estado !== 'undefined' && Estado.dados) Estado.pegouBrilhante(novoDex);
+}
+
+/* A forma que essa linha evolutiva tem NESTE nível.
+   Serve para montar time de treinador sem cair no piso de evolução:
+   em vez de um Krabby que virou Kingler Nv28 à força, um Krabby. */
+function formaNoNivel(dexId, nivel){
+  let atual = dexId, guarda = 0;
+  while (guarda++ < 5){
+    const esp = DEX[atual];
+    if (!esp || !esp.evo) break;
+    const destino = DEX[esp.evo];
+    if (!destino) break;
+    const piso = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(esp.evo) : (destino.nivelMin || 1);
+    if (nivel < piso) break;
+    atual = esp.evo;
+  }
+  return atual;
+}
+
+/* O caminho de volta: a forma mais alta da linha que cabe no nível,
+   partindo da forma final que o roteiro pediu. */
+function formaAteONivel(dexFinal, nivel){
+  const linha = [];
+  let d = dexFinal, guarda = 0;
+  while (d && guarda++ < 5){ linha.unshift(d); d = DEX[d] ? DEX[d].preEvo : 0; }
+  let escolhido = linha[0];
+  for (const x of linha){
+    const piso = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(x) : (DEX[x].nivelMin || 1);
+    if (piso <= nivel) escolhido = x;
+  }
+  return escolhido;
 }
 
 function curarTotal(p){

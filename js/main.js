@@ -9,6 +9,7 @@ const Jogo = {
   eliteAtual: null,
   torneioAtual: null,
   rivalAtual: null,
+  encontroRival: null,
   proxCapPendente: null,
 
   /* ---------- início ---------- */
@@ -214,6 +215,8 @@ const Jogo = {
   },
 
   acaoBatalha(acao){
+    /* A leitura da Pokédex tem tela própria: varredura animada e ficha. */
+    if (acao.tipo === 'pokedex') return UI.escaneamento();
     const r = Batalha.acao(acao);
     UI.escreverLog(r.eventos);
     UI.atualizarArena();
@@ -264,7 +267,9 @@ const Jogo = {
   fecharCapitulo(){
     this.subidosNoCap = [];
     const avisos = Historia.fecharCapitulo();
-    UI.telaFimCapitulo(avisos);
+    /* o que você fez neste capítulo pode ter rendido um rival */
+    const novos = (typeof conquistarRivais === 'function') ? conquistarRivais() : [];
+    UI.telaFimCapitulo(avisos.concat(novos.map(a => a.texto)));
   },
 
   gastarPonto(chave){
@@ -281,7 +286,9 @@ const Jogo = {
   voltarAoMundo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
     const prox = Estado.dados.capitulo + 1;
-    if (rivalDeveAparecer(prox)){
+    const enc = rivalDeveAparecer(prox);
+    if (enc){
+      this.encontroRival = enc;
       this.proxCapPendente = null;
       return UI.telaRival();
     }
@@ -298,8 +305,10 @@ const Jogo = {
         'Kanto continua exatamente do jeito que você deixou — e essa é a parte que importa.'
       ]});
     }
-    // o rival aparece na estrada entre um capítulo e outro
-    if (rivalDeveAparecer(prox)){
+    // um rival aparece na estrada entre um capítulo e outro
+    const enc = rivalDeveAparecer(prox);
+    if (enc){
+      this.encontroRival = enc;
       this.proxCapPendente = prox;
       return UI.telaRival();
     }
@@ -421,7 +430,7 @@ const Jogo = {
       }
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
       if (p.rep){
-        const r = Estado.mudarRep('bom', p.rep, `Venceu o Ginásio de ${g.cidade}`);
+        const r = Estado.mudarRep('bom', p.rep, `Venceu o Ginásio de ${g.cidade}`, {rep:{notorio:true, peso:10}});
         if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
       }
       if (p.status && Estado.subirStatus(p.status)){
@@ -433,7 +442,7 @@ const Jogo = {
       if (Estado.dados.insignias.length === 8){
         avisos.push({tipo:'rep', texto:'Oito insígnias. Kanto inteira está aberta para você.'});
         Estado.marcar('oito_insignias');
-        const r = Estado.mudarRep('bom', 2, 'Conquistou as oito insígnias de Kanto');
+        const r = Estado.mudarRep('bom', 2, 'Conquistou as oito insígnias de Kanto', {rep:{notorio:true, peso:4}});
         if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
       }
     } else {
@@ -445,21 +454,26 @@ const Jogo = {
 
   /* ---------- O RIVAL ---------- */
   lutarRival(){
+    const enc = this.encontroRival || {tipo:'teo'};
+    const R = enc.tipo === 'extra' ? defRival(enc.id) : null;
+    const nome = R ? R.nome : 'Téo';
     const meu = Estado.primeiroApto();
-    if (!meu) return UI.modal('Téo', '<p class="nada">Nenhum Pokémon em pé. Ele espera — mas cure o time antes.</p>');
-    const time = timeRival();
-    this.rivalAtual = {arco: arcoRival()};
+    if (!meu) return UI.modal(nome, '<p class="nada">Nenhum Pokémon em pé. Ele espera — mas cure o time antes.</p>');
+    const time = R ? timeRivalExtra(R) : timeRival();
+    this.rivalAtual = R ? {extra:R.id} : {arco: arcoRival()};
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
-      tipo:'treinador', fuga:false, treinador:'Téo',
+      tipo:'treinador', fuga:false, treinador:nome,
       timeInimigo: time.slice(1),
-      introducao: `Téo enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
+      introducao: `${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
-    UI.telaBatalha(falaRival());
+    UI.telaBatalha(R ? falaRivalExtra(R) : falaRival());
   },
 
   resultadoRival(fim){
+    /* rival conquistado tem caminho próprio */
+    if (this.rivalAtual && this.rivalAtual.extra) return this.resultadoRivalExtra(fim, this.rivalAtual.extra);
     const arco = this.rivalAtual ? this.rivalAtual.arco : arcoRival();
     this.rivalAtual = null;
     if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa batalha contra alguém que te conhece desde a Rota 1.');
@@ -490,7 +504,37 @@ const Jogo = {
     UI.telaResultadoRival(venceu, avisos);
   },
 
+  resultadoRivalExtra(fim, id){
+    this.rivalAtual = null;
+    const R = defRival(id);
+    if (fim.resultado === 'gameover')
+      return UI.telaGameOver(`Você caiu numa batalha contra ${R.nome}, que virou seu rival por causa de uma escolha sua.`);
+
+    const venceu = fim.resultado === 'vitoria';
+    registrarResultadoRivalExtra(id, venceu);
+    const avisos = [];
+    const npc = Estado.dados.npcs[R.npc];
+    const op = npc ? npc.opiniao : 0;
+
+    if (venceu){
+      Estado.lembrarNPC(R.npc, {memoria:`Perdeu para você de novo. ${R.nome} continua vindo.`});
+      ganharExp(Estado.primeiroApto() || Estado.dados.time[0], 380);
+      if (id === 'vasco'){
+        Estado.lembrarNPC(R.npc, {opiniao: op - 1, memoria:'Perdeu de novo e não pareceu se importar com isso.'});
+        avisos.push({tipo:'dano', texto:'Ele vai voltar. Ele disse isso de um jeito que não é ameaça e é pior.'});
+      }
+    } else {
+      Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${registroRival(id).derrotas}×${registroRival(id).vitorias}.`});
+      const perda = id === 'vasco' ? 1200 : 700;
+      Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
+      avisos.push({tipo:'item', texto:`−${perda} ₽`});
+    }
+    Estado.salvar('auto');
+    UI.telaResultadoRival(venceu, avisos, id);
+  },
+
   seguirDepoisDoRival(){
+    this.encontroRival = null;
     const prox = this.proxCapPendente;
     this.proxCapPendente = null;
     if (!prox) return Exploracao.tela();
@@ -500,11 +544,22 @@ const Jogo = {
   },
 
   evitarRival(){
-    const r = rival();
-    r.ultimoCap = this.proxCapPendente;
-    const npc = Estado.dados.npcs['Téo'];
-    Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
-    Estado.registrar('Evitou o encontro com Téo.');
+    const enc = this.encontroRival || {tipo:'teo'};
+    const cap = this.proxCapPendente || Estado.dados.capitulo;
+    if (enc.tipo === 'extra'){
+      const R = defRival(enc.id);
+      const reg = registroRival(enc.id);
+      if (reg) reg.ultimoCap = cap;
+      const npc = Estado.dados.npcs[R.npc];
+      Estado.lembrarNPC(R.npc, {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
+      Estado.registrar(`Evitou o encontro com ${R.nome}.`);
+    } else {
+      const r = rival();
+      r.ultimoCap = cap;
+      const npc = Estado.dados.npcs['Téo'];
+      Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
+      Estado.registrar('Evitou o encontro com Téo.');
+    }
     Estado.salvar('auto');
     this.seguirDepoisDoRival();
   },
@@ -582,7 +637,7 @@ const Jogo = {
       Estado.darItem('Master Ball', 1);
       Estado.darItem('Hyper Potion', 5);
       Estado.darItem('Full Heal', 5);
-      const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto');
+      const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto', {rep:{notorio:true, peso:8}});
       avisos.push({tipo:'insignia', texto:'Você é o Campeão de Kanto. A cadeira estava vaga há dois anos.'});
       avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
@@ -679,7 +734,7 @@ const Jogo = {
     avisos.push({tipo:'item', texto:`+${premio.dinheiro} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     if (premio.rep){
-      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`);
+      const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`, {rep:{notorio:true, peso:3}});
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     }
 

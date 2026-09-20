@@ -217,7 +217,10 @@ const Exploracao = {
     Jogo.torneioAtual = null; Jogo.rivalAtual = null;
     Jogo.batalhaLivre = true;
     UI.limparDados();
+    /* Um brilhante muda a entrada da cena antes de mudar a batalha. */
+    const linhas = (intro || []).slice();
+    if (selvagem.shiny) linhas.push('E aí você para, porque tem alguma coisa errada com a cor.');
     Batalha.iniciar(meu, selvagem, {tipo:'selvagem', fuga:true});
-    UI.telaBatalha(intro);
+    UI.telaBatalha(linhas);
   }
 };

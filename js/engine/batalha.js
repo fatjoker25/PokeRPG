@@ -35,6 +35,12 @@ const Batalha = {
     this.estInimigo = this.novoEstado();
     this.pdexUsada = false;
     if (Estado.viu(inimigo.dex)) this.ev('pokedex', 'A Pokédex vibra no bolso: espécie nova, ainda não catalogada.');
+    if (inimigo.shiny){
+      Estado.viuBrilhante(inimigo.dex);
+      this.ev('brilhante', this.tipo === 'treinador'
+        ? 'A cor está errada. Não é doença e não é luz: é um brilhante, e está do lado de lá.'
+        : 'A cor está errada. Você olha duas vezes e ela continua errada — e aí você entende o que está na sua frente.');
+    }
     this.ev('inicio', opts.introducao || this.introPadrao());
     return this.eventos;
   },
@@ -485,6 +491,8 @@ const Batalha = {
     this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
     this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
     this.ev('pokedex', `Base da espécie: ${esp.base.hp}/${esp.base.atk}/${esp.base.def}/${esp.base.spa}/${esp.base.spd}/${esp.base.spe} — soma ${esp.total}.`);
+    if (p.shiny)
+      this.ev('brilhante', 'Anomalia cromática confirmada. A Pokédex abre um campo que você nunca tinha visto abrir.');
     if ((NATUREZAS[p.natureza]||{}).agressiva)
       this.ev('perigo', 'Marcação da Pokédex: temperamento agressivo. Se o seu time cair, ele não recua.');
     if (novo) this.ev('pokedex', `Registro novo: ${esp.nome} catalogado.`);

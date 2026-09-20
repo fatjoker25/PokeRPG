@@ -268,7 +268,7 @@ c22_primeiro_dia:{
     'Pedra, subida, vento, e a mesma vista virando devagar à sua esquerda.',
     'Às quatro da tarde você passa a lomba que o Sr. Tolentino apontou, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.',
     'Não tem bicho.',
-    'Nenhum. Nem Caterpie, nem Pidgey, nem barulho de coisa pequena fugindo do lado da trilha.',
+    'Nenhum. Nem inseto, nem Pidgey, nem barulho de coisa pequena fugindo do lado da trilha.',
     d=>{
       const inst = d.mundo.instabilidade;
       if (inst >= 7) return 'E o silêncio não é silêncio: é um zumbido baixo, contínuo, que você só percebe quando tapa um ouvido e ele continua.';

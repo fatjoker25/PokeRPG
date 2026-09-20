@@ -105,8 +105,9 @@ const Historia = {
     if (ef.flag) { (Array.isArray(ef.flag)?ef.flag:[ef.flag]).forEach(f => Estado.marcar(f)); }
     if (ef.limpaFlag){ (Array.isArray(ef.limpaFlag)?ef.limpaFlag:[ef.limpaFlag]).forEach(f => Estado.marcar(f,false)); }
     if (ef.rep){
-      const r = Estado.mudarRep(ef.rep.eixo, ef.rep.delta, ef.rep.motivo);
-      if (r) { const p = this.presagio(ef.rep.eixo, ef); if (p) avisos.push(p); }
+      /* o efeito inteiro vai junto: quem estava na cena pesa na conta */
+      const r = Estado.mudarRep(ef.rep.eixo, ef.rep.delta, ef.rep.motivo, ef);
+      if (r && r.mudou) { const p = this.presagio(ef.rep.eixo, ef); if (p) avisos.push(p); }
     }
     if (ef.itens){
       let algum = false;

@@ -9,6 +9,8 @@ const UI = {
   /* ---------- helpers ---------- */
   esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
   el(html){ const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; },
+  /* Marca de brilhante. Fica do lado do nome, nunca dentro dele. */
+  shi(p){ return (p && p.shiny) ? '<span class="shiny-marca" title="Brilhante">✦</span>' : ''; },
   limpar(){ this.app.innerHTML = ''; },
   add(html){ const e = this.el(html); if (e) this.app.appendChild(e); return e; },
   tom(t){ document.body.setAttribute('data-tom', t || 'leve'); },
@@ -114,7 +116,7 @@ const UI = {
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
         <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
-        ${(d.flags.tem_cartao || d.flags.tem_licenca) ? '<button class="btn mini" onclick="UI.modalCartao()">Cartão</button>' : ''}
+        ${(d.flags.tem_cartao && d.flags.tem_pokedex) ? '<button class="btn mini" onclick="UI.modalCartao()">Cartão</button>' : ''}
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         ${d.flags.tem_pokedex ? '<button class="btn mini" onclick="UI.modalPokedex()">Pokédex</button>' : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
@@ -133,8 +135,8 @@ const UI = {
       <div style="font-size:11.5px;letter-spacing:.24em;color:var(--texto-fraco);text-transform:uppercase">RPG de Mesa · Kanto</div>
       <h2 style="font-size:30px;margin:12px 0 6px;color:var(--destaque);font-weight:300;letter-spacing:.06em">JORNADA DO CAMPEÃO</h2>
       <p style="color:var(--texto-fraco);max-width:520px;margin:0 auto 8px">
-        Dois anos depois de Red desmontar a Equipe Rocket. As Aves Lendárias estão soltas.
-        Mewtwo nunca foi capturado. Você tem quinze anos e vai sair de casa hoje.
+        A cadeira de Campeão está vazia há dois anos e a Liga não explica direito por quê.
+        Você tem quinze anos e vai sair de casa hoje.
       </p>
       <p class="sussurro" style="max-width:520px;margin:0 auto 30px">
         Escolhas são permanentes. O mundo lembra. Se o seu HP chegar a zero, acabou de verdade.
@@ -339,6 +341,7 @@ const UI = {
      COMBATE
      ======================================================== */
   telaBatalha(introLinhas){
+    this.modoBatalha = 'menu';
     this.limpar();
     this.add(this.topo());
     if (introLinhas && introLinhas.length){
@@ -372,7 +375,7 @@ const UI = {
         : '<span class="mono">ficha não catalogada</span>';
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
       return `<div class="lutador ${cls}">
-        <div class="nome"><span>${this.esc(nomeVisivel(p))}</span><span class="nv">Nv ${p.nivel}</span></div>
+        <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
         <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
         ${this.barraHP(p)}
         <div class="meta">${nat}</div>
@@ -392,13 +395,20 @@ const UI = {
     if (dd){ dd.innerHTML = this.htmlDados(); this.girarNovos(); }
   },
 
+  /* O menu de combate tem dois andares: o principal (Lutar, Bag,
+     Time, Fugir, com a Pokédex sozinha embaixo) e a lista de golpes,
+     que só abre quando você escolhe Lutar. */
+  modoBatalha: 'menu',
+
   acoesCombate(extra){
     const c = document.getElementById('acoes');
     if (!c) return;
     c.innerHTML = '';
-    if (extra){ extra.forEach(h => c.appendChild(this.el(h))); return; }
+    c.className = 'acoes-combate';
+    if (extra){ c.classList.add('livre'); extra.forEach(h => c.appendChild(this.el(h))); return; }
 
     if (Batalha.fase === 'ameaca'){
+      c.classList.add('livre');
       c.appendChild(this.el(`<button class="golpe-btn perigo" onclick="Jogo.acaoBatalha({tipo:'fugirAmeaca'})">
         <span>Correr</span><span class="pd">1d10 + Força ≥ 7</span></button>`));
       c.appendChild(this.el(`<button class="golpe-btn" onclick="Jogo.acaoBatalha({tipo:'encarar'})">
@@ -410,24 +420,184 @@ const UI = {
       return;
     }
 
+    if (this.modoBatalha === 'golpes') this.painelGolpes(c);
+    else this.painelPrincipal(c);
+  },
+
+  abrirGolpes(){ this.modoBatalha = 'golpes'; this.acoesCombate(); },
+  voltarAoMenu(){ this.modoBatalha = 'menu'; this.acoesCombate(); },
+
+  painelPrincipal(c){
+    const d = Estado.dados;
+    const a = Batalha.aliado;
+    const vivos = d.time.filter(p => estaVivo(p) && p.uid !== a.uid).length;
+    const bolas = Object.keys(d.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola').length;
+    const itens = Object.keys(d.itens).length;
+
+    const bt = (cls, rot, nota, acao, off) =>
+      `<button class="mb-btn ${cls}" ${off ? 'disabled' : ''} ${off ? '' : 'onclick="' + acao + '"'}>
+        <span class="rot">${rot}</span><span class="nota">${nota}</span></button>`;
+
+    const dex = d.flags.tem_pokedex
+      ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
+          Batalha.pdexUsada ? 'já usada nesta luta' : 'lê o adversário · não gasta o turno',
+          "Jogo.acaoBatalha({tipo:'pokedex'})", Batalha.pdexUsada)}</div>`
+      : '';
+
+    c.appendChild(this.el(`<div class="menu-batalha">
+      <div class="mb-linha">
+        ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
+        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + ' tipo(s) de bola · ' : ''}${itens} item(ns)` : 'vazia', 'UI.menuBag()', !itens)}
+      </div>
+      <div class="mb-linha">
+        ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
+        ${bt('fugir', 'Fugir', Batalha.fuga ? '1d20 contra a velocidade dele' : 'daqui não se foge',
+             "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
+      </div>
+      ${dex}
+    </div>`));
+  },
+
+  painelGolpes(c){
     const a = Batalha.aliado;
     const conhecido = Estado.conheceu(Batalha.inimigo.dex);
+    const grade = this.el('<div class="grade-golpes"></div>');
     a.golpes.forEach((g, i) => {
       const G = GOLPES[g.nome];
       // a dica de eficácia só existe se você souber contra o que está lutando
       const ef = conhecido ? eficacia(G.t, Batalha.inimigo.tipos) : 1;
       const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
-      c.appendChild(this.el(`<button class="golpe-btn" ${g.pp<=0?'disabled':''} onclick="Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
+      grade.appendChild(this.el(`<button class="golpe-btn" ${g.pp<=0?'disabled':''} onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
         <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status':(G.p||'—')} · ${G.a>=999?'∞':G.a+'%'}</span></span>
         <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
     });
-    if (Estado.dados.flags.tem_pokedex)
-      c.appendChild(this.el(`<button class="golpe-btn" ${Batalha.pdexUsada?'disabled':''} onclick="Jogo.acaoBatalha({tipo:'pokedex'})">
-        <span>Pokédex</span><span class="pd">${Batalha.pdexUsada ? 'já usada nesta luta' : 'ler o adversário · não gasta o turno'}</span></button>`));
-    c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()"><span>Bola</span><span class="pd">capturar</span></button>`));
-    c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuItens()"><span>Item</span><span class="pd">mochila</span></button>`));
-    c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuTroca()"><span>Trocar</span><span class="pd">outro Pokémon</span></button>`));
-    if (Batalha.fuga) c.appendChild(this.el(`<button class="golpe-btn" onclick="Jogo.acaoBatalha({tipo:'fugir'})"><span>Fugir</span><span class="pd">1d20</span></button>`));
+    c.appendChild(grade);
+    c.appendChild(this.el(`<div class="mb-linha centro">
+      <button class="mb-btn voltar" onclick="UI.voltarAoMenu()">
+        <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
+  },
+
+  /* Uma bolsa só: bolas em cima, o resto embaixo — como na mochila de verdade */
+  menuBag(){
+    const d = Estado.dados;
+    const nomes = Object.keys(d.itens);
+    if (!nomes.length) return this.modal('Mochila', '<p class="nada">Mochila vazia.</p>');
+    const bolas = nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
+    const resto = nomes.filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
+    const linhasBolas = bolas.map(n =>
+      `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
+        ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join('');
+    const linhasItens = resto.map(n => {
+      const info = ITENS_INFO[n] || {};
+      if (info.tipo === 'curaJogador')
+        return `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
+      return d.time.filter(p=>!p.morto).map(p =>
+        `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
+          ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
+    }).join('');
+    this.modal('Mochila',
+      (linhasBolas ? '<h3>Bolas</h3>' + linhasBolas : '') +
+      (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') ||
+      '<p class="nada">Nada que sirva agora.</p>');
+  },
+
+  /* ========================================================
+     ESCANEAMENTO — a Pokédex leva três segundos e apita
+     ======================================================== */
+  escaneamento(){
+    const alvo = Batalha.inimigo;
+    const r = Batalha.acao({tipo:'pokedex'});
+    const erro = (r.eventos || []).find(e => e.tipo === 'erro');
+    if (erro){ this.escreverLog(r.eventos); this.acoesCombate(); return; }
+
+    const esp = DEX[alvo.dex];
+    const num = String(alvo.dex).padStart(3, '0');
+
+    this.modal('', `<div class="pokedex-topo">
+        <span class="pokedex-lente lendo"></span>
+        <span class="pokedex-luzes lendo"><i></i><i></i><i></i></span>
+      </div>
+      <div class="dex-scan" id="dex-scan">
+        <div class="alvo">
+          <span class="silhueta${alvo.shiny ? ' brilho' : ''}"></span>
+          <span class="varredura"></span>
+        </div>
+        <div class="linhas mono" id="dex-scan-linhas"></div>
+        <div class="dex-barra lendo"><i id="dex-scan-barra" style="width:0%"></i></div>
+      </div>`, true, 'pokedex');
+
+    const passos = [
+      'travando alvo…',
+      `silhueta #${num}`,
+      'lendo estrutura de tipo…',
+      'amostrando temperamento…',
+      alvo.shiny ? 'ANOMALIA CROMÁTICA' : 'comparando com a base da espécie…'
+    ];
+    const cxLinhas = document.getElementById('dex-scan-linhas');
+    const barra = document.getElementById('dex-scan-barra');
+    let i = 0;
+    this._scanTimer = setInterval(() => {
+      if (!cxLinhas || !document.getElementById('dex-scan')) return clearInterval(this._scanTimer);
+      if (i < passos.length){
+        const l = this.el(`<div class="lin${alvo.shiny && i === passos.length-1 ? ' alerta' : ''}">${this.esc(passos[i])}</div>`);
+        cxLinhas.appendChild(l);
+        if (barra) barra.style.width = Math.round(((i+1)/passos.length)*100) + '%';
+        i++;
+      } else {
+        clearInterval(this._scanTimer);
+        this.fichaEscaneada(alvo, esp, r.eventos);
+      }
+    }, 290);
+  },
+
+  fichaEscaneada(p, esp, eventos){
+    const b = esp.base;
+    const num = String(p.dex).padStart(3, '0');
+    const nat = NATUREZAS[p.natureza] || {};
+    const maxBase = {hp:255, atk:190, def:230, spa:194, spd:230, spe:150};
+    const par = (rot, chave, vInd) => `<div class="base-linha dupla">
+      <span class="k">${rot}</span>
+      <span class="barrinha"><i style="width:${Math.min(100, Math.round(b[chave]/maxBase[chave]*100))}%"></i></span>
+      <span class="v mono">${b[chave]}</span>
+      <span class="ind mono">${vInd}</span></div>`;
+
+    this.modal('', `<div class="pokedex-topo">
+        <span class="pokedex-lente"></span>
+        <span class="pokedex-luzes"><i></i><i></i><i></i></span>
+      </div>
+      <div class="dex-ficha">
+        <div class="cab"><span class="num">#${num}</span>
+          <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
+          <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
+        <div class="nota">Nível ${p.nivel} · ${this.esc(p.natureza)}${nat.traco ? ' — ' + this.esc(nat.traco) : ''}</div>
+        ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
+        ${nat.agressiva ? '<div class="nota alerta">Temperamento agressivo: se o seu time cair, ele não recua.</div>' : ''}
+
+        <h3 class="cat-item">Base da espécie <span class="fraco">· este exemplar</span></h3>
+        ${par('HP', 'hp', p.stats.hp)}
+        ${par('Ataque', 'atk', p.stats.atk)}
+        ${par('Defesa', 'def', p.stats.def)}
+        ${par('Sp. Atk', 'spa', p.stats.spa)}
+        ${par('Sp. Def', 'spd', p.stats.spd)}
+        ${par('Velocidade', 'spe', p.stats.spe)}
+        <div class="nota mono">Soma de base: ${esp.total}</div>
+
+        <h3 class="cat-item">Contra o seu time</h3>
+        <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
+        <div class="linha"><span class="k">Resiste a</span><span class="v">${this.esc(this.resistencias(esp.tipos).join(', ') || '—')}</span></div>
+        <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
+      </div>
+      <div style="margin-top:12px"><button class="btn destaque" onclick="UI.fecharEscaneamento()">Fechar a Pokédex</button></div>`,
+      true, 'pokedex');
+    this._eventosScan = eventos;
+  },
+
+  fecharEscaneamento(){
+    this.fecharModal(true);
+    if (this._eventosScan){ this.escreverLog(this._eventosScan); this._eventosScan = null; }
+    this.atualizarArena();
+    this.acoesCombate();
+    Estado.salvar('auto');
   },
 
   menuBolas(){
@@ -456,14 +626,14 @@ const UI = {
     if (!outros.length) return this.modal('Trocar', '<p class="nada">Não tem mais ninguém em pé.</p>');
     this.modal('Trocar por quem?', outros.map(p =>
       `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})">
-        ${this.esc(nomeExib(p))} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''));
+        ${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''));
   },
 
   trocaObrigatoria(uids){
     const ps = uids.map(u => Estado.dados.time.find(p => p.uid === u)).filter(Boolean);
     this.modal('Quem entra agora?', ps.map(p =>
       `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})">
-        ${this.esc(nomeExib(p))} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''), true);
+        ${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''), true);
   },
 
   /* ========================================================
@@ -621,6 +791,9 @@ const UI = {
      O RIVAL
      ======================================================== */
   telaRival(){
+    const enc = Jogo.encontroRival || {tipo:'teo'};
+    if (enc.tipo === 'extra') return this.telaRivalExtra(enc.id);
+
     this.limpar();
     this.add(this.topo());
     const r = rival();
@@ -650,16 +823,49 @@ const UI = {
     this.rolarTopo();
   },
 
-  telaResultadoRival(venceu, avisos){
+  /* Os rivais que você conquistou pelo caminho */
+  telaRivalExtra(id){
     this.limpar();
     this.add(this.topo());
-    const r = rival();
-    const falas = venceu ? falaVitoriaRival() : falaDerrotaRival();
+    const R = defRival(id);
+    const reg = registroRival(id) || {vitorias:0, derrotas:0, encontros:0};
+    const time = timeRivalExtra(R);
+    const cor = R.cor || 'var(--destaque)';
+
     this.add(`<div class="painel">
-      <div class="cap-cabecalho">
+      <div class="cap-cabecalho" style="border-left-color:${cor}">
+        <div class="num">Na estrada</div>
+        <div class="tit">${this.esc(R.nome)}</div>
+        <div class="loc" style="color:${cor}">${this.esc(R.desde)} — ${this.esc(R.origem)}</div>
+      </div>
+      <div class="narrativa">${falaRivalExtra(R).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
+        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Tunico' ? 'ele' : 'ele'}</span></div>
+      <div class="linha"><span class="k">Time dele agora</span>
+        <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
+      <div id="escolhas" class="escolhas" style="margin-top:20px">
+        <button class="escolha" onclick="Jogo.lutarRival()">Lutar.</button>
+        <button class="escolha" onclick="Jogo.evitarRival()">Passar por ele sem parar.</button>
+        <button class="escolha" onclick="Jogo.hubCentro()">Curar o time antes.</button>
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaResultadoRival(venceu, avisos, idExtra){
+    this.limpar();
+    this.add(this.topo());
+    const extra = idExtra ? defRival(idExtra) : null;
+    const reg = extra ? (registroRival(idExtra) || {vitorias:0, derrotas:0}) : rival();
+    const nome = extra ? extra.nome : rival().nome;
+    const falas = extra
+      ? (venceu ? falaVitoriaRivalExtra(extra) : falaDerrotaRivalExtra(extra))
+      : (venceu ? falaVitoriaRival() : falaDerrotaRival());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho"${extra ? ` style="border-left-color:${extra.cor || 'var(--destaque)'}"` : ''}>
         <div class="num">${venceu ? 'Você venceu' : 'Ele venceu'}</div>
-        <div class="tit">${this.esc(r.nome)}</div>
-        <div class="loc">Placar: você ${r.derrotas} × ${r.vitorias} ele</div>
+        <div class="tit">${this.esc(nome)}</div>
+        <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ele</div>
       </div>
       <div class="narrativa">${falas.filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
       <div id="avisos" class="avisos"></div>
@@ -881,7 +1087,7 @@ const UI = {
   modalTime(){
     const d = Estado.dados;
     const carta = p => `<div class="carta ${p.morto?'morto':''}">
-      <div class="t"><span>${this.esc(nomeExib(p))}</span><span class="mono">Nv ${p.nivel}</span></div>
+      <div class="t"><span>${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
@@ -1117,6 +1323,11 @@ const UI = {
         <p class="sussurro">${this.esc(ARCOS_RIVAL[arcoRival()].resumo)}</p>
         <div class="linha"><span class="k">${this.esc(d.rival.nome)}</span><span class="v">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span></div>
         <div class="linha"><span class="k">Inicial dele</span><span class="v">${this.esc(DEX[d.rival.inicialDex].nome)}</span></div>` : ''}
+      ${(typeof rivaisConquistados === 'function' && rivaisConquistados().length)
+        ? '<h3>Rivais que você arrumou</h3>' + rivaisConquistados().map(({def, reg}) =>
+            `<div class="linha"><span class="k">${this.esc(def.nome)} <span class="sussurro">${this.esc(def.desde)} · ${this.esc(def.origem)}</span></span>
+             <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>`).join('')
+        : ''}
       ${npcs.length ? '<h3>Quem lembra de você</h3>' + npcs.map(n =>
         `<div class="linha"><span class="k">${this.esc(n.nome)} <span class="sussurro">${this.esc((n.memorias||[]).slice(-1)[0]?.texto||'')}</span></span>
          <span class="v" style="color:${n.opiniao>0?'var(--bom)':n.opiniao<0?'var(--ruim)':'var(--texto-fraco)'}">${n.opiniao>0?'+':''}${n.opiniao}</span></div>`).join('') : ''}
@@ -1135,23 +1346,28 @@ const UI = {
      ======================================================== */
   modalCartao(){
     const d = Estado.dados;
-    if (!d.flags.tem_cartao && !d.flags.tem_licenca) return this.modalFicha();
+    if (!d.flags.tem_cartao || !d.flags.tem_pokedex) return this.modalFicha();
     const j = d.jogador;
     const c = Estado.contagemDex();
     const nivel = Estado.nivelRep();
     const eixo = d.reputacao.eixo;
     const val = eixo === 'bom' ? d.reputacao.bom : d.reputacao.ruim;
+    const prog = Estado.progressoRep();
     const id = String((d.criadoEm || 0) % 100000).padStart(5, '0');
     const campeao = d.insignias.includes('Campeão de Kanto') || d.flags.campeao_de_kanto;
 
+    /* O cartão só sabe o que você já sabe: enquanto a cidade não
+       for pisada, o slot é um recorte vazio sem nome e sem lugar. */
     const insignias = GINASIOS.map(g => {
       const tem = d.insignias.includes(g.insignia);
+      const sabe = tem || (typeof Mundo !== 'undefined' && Mundo.visitado(g.id));
       const cor = g.tipo === 'variado' ? '#d9b53a' : (COR_TIPO[g.tipo] || '#a8aeb8');
       const nome = g.insignia.replace(/^Insígnia\s+/, '');
-      return `<div class="insignia-slot ${tem ? 'tem' : ''}" title="${this.esc(g.cidade)} · ${this.esc(g.lider)}">
-        <span class="forma ins-${g.id}" style="--ins-cor:${cor}"></span>
+      const titulo = sabe ? `${this.esc(g.cidade)} · ${this.esc(g.lider)}` : 'Um ginásio que você ainda não encontrou';
+      return `<div class="insignia-slot ${tem ? 'tem' : ''} ${sabe ? '' : 'oculta'}" title="${titulo}">
+        <span class="forma ins-${g.id}" style="--ins-cor:${sabe ? cor : 'transparent'}"></span>
         <span class="rot">${tem ? this.esc(nome) : '—'}</span>
-        <span class="cid">${this.esc(g.cidade)}</span>
+        <span class="cid">${sabe ? this.esc(g.cidade) : '???'}</span>
       </div>`;
     }).join('');
 
@@ -1159,7 +1375,7 @@ const UI = {
 
     this.modal('', `
       <div class="cartao-topo">
-        <span class="cartao-sigla">LIGA POKÉMON DE KANTO</span>
+        <span class="cartao-sigla">REGISTRO DE TREINADOR</span>
         <span class="cartao-id">Nº ${id}</span>
       </div>
 
@@ -1182,7 +1398,10 @@ const UI = {
 
       <div class="cartao-rep">
         <div class="cartao-linha"><span class="k">Reputação</span><span class="v">${this.esc(nivel.nome)} · ${eixo} ${val}/8</span></div>
-        <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
+        <div class="rep-barra ${eixo}"><i style="width:${Math.round(prog.atual*100)}%"></i></div>
+        <div class="rep-nota">${prog.prox
+          ? `${prog.pontos} ponto${prog.pontos === 1 ? '' : 's'} · faltam ${prog.falta} para o próximo degrau`
+          : `${prog.pontos} pontos · não tem degrau acima deste`}</div>
       </div>
 
       <div class="cartao-insignias">
@@ -1210,6 +1429,7 @@ const UI = {
       <span class="campo"><b>${c.catalogados}</b><small>catalogados</small></span>
       <span class="campo"><b>${c.vistos}</b><small>vistos</small></span>
       <span class="campo"><b>${ids.length}</b><small>registros</small></span>
+      ${c.brilhantes ? `<span class="campo brilho"><b>✦ ${c.brilhantesPegos}/${c.brilhantes}</b><small>brilhantes</small></span>` : ''}
       <span class="pct">${pct}%</span>
     </div>
     <div class="dex-barra"><i style="width:${pct}%"></i></div>`;
@@ -1219,10 +1439,13 @@ const UI = {
       const num = String(dex).padStart(3,'0');
       const cat = pd.catalogados[dex];
       const vis = pd.vistos[dex];
-      if (cat) return `<button class="dex-cela cat" onclick="UI.dexEntrada(${dex})">
-        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span></button>`;
-      if (vis) return `<button class="dex-cela vis" onclick="UI.dexEntrada(${dex})">
-        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>
+      const bri = (pd.brilhantes || {})[dex];
+      const est = bri ? ` brilho${bri === 'capturado' ? ' pego' : ''}` : '';
+      const sel = bri ? '<span class="dex-brilho">✦</span>' : '';
+      if (cat) return `<button class="dex-cela cat${est}" onclick="UI.dexEntrada(${dex})">
+        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}</button>`;
+      if (vis) return `<button class="dex-cela vis${est}" onclick="UI.dexEntrada(${dex})">
+        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}
         <span class="marca">visto</span></button>`;
       return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
@@ -1279,6 +1502,7 @@ const UI = {
           ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
           : 'forma final'}</span></div>
         <div class="linha"><span class="k">Classificação</span><span class="v">${esp.lendario ? 'lendário' : 'comum'}</span></div>
+        ${Estado.brilhanteDe(dex) ? `<div class="linha"><span class="k">Anomalia cromática</span><span class="v brilho-v">✦ ${Estado.brilhanteDe(dex) === 'capturado' ? 'exemplar brilhante no seu registro' : 'um exemplar brilhante avistado'}</span></div>` : ''}
         <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
         <div class="linha"><span class="k">Resiste a</span><span class="v">${this.esc(this.resistencias(esp.tipos).join(', ') || '—')}</span></div>
       </div>
@@ -1351,7 +1575,11 @@ const UI = {
       <h3>Perícias</h3>
       <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico.</p>
       <h3>Reputação</h3>
-      <p class="sussurro">Dois eixos de 8 níveis. Ações contrárias lavam o eixo oposto antes de subir o seu, e nada te devolve a "Desconhecido" — o mundo lembra.</p>
+      <div class="linha"><span class="k">Como sobe</span><span class="v">por pontos, não por ato</span></div>
+      <div class="linha"><span class="k">Ato pequeno</span><span class="v">1 ponto — precisa de oito para o primeiro degrau</span></div>
+      <div class="linha"><span class="k">Diante de quem manda</span><span class="v">vale o dobro</span></div>
+      <div class="linha"><span class="k">Ginásio, Liga, conselho</span><span class="v">vale muito mais</span></div>
+      <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
@@ -1359,6 +1587,12 @@ const UI = {
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
       <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">1× por batalha · não gasta o turno</span></div>
       <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>
+
+      <h3>Brilhantes</h3>
+      <div class="linha"><span class="k">Frequência</span><span class="v">cerca de 1 em 1000</span></div>
+      <div class="linha"><span class="k">Sorte</span><span class="v">cada ponto aperta a conta — no máximo, 1 em 300</span></div>
+      <div class="linha"><span class="k">Status</span><span class="v">idênticos aos da espécie</span></div>
+      <p class="sussurro">A cor é a única diferença, e é a diferença inteira. Um brilhante avistado fica marcado na Pokédex mesmo que escape; capturado, a marca muda. Evoluir não tira a cor.</p>
 
       <h3>Item segurado</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>

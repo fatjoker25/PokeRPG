@@ -22,6 +22,34 @@ const NIVEIS_RUIM = [
   {n:8, nome:'Monstro Lendário', ef:'Seu nome é terror. A Elite 4 é mobilizada contra você.'}
 ];
 
+/* ============================================================
+   REPUTAÇÃO — pontos, não degraus
+   Consertar a calha da vizinha é uma coisa boa e não é notícia.
+   Um nível só muda quando o que você fez foi grande o bastante
+   para ser contado, ou aconteceu na frente de quem conta.
+   ============================================================ */
+const LIMIARES_REP = [0, 18, 55, 115, 210, 350, 560, 860];
+
+/* Gente que, quando está na cena, faz a história correr sozinha.
+   Fazer alguma coisa na frente de um deles vale o dobro. */
+const TITULOS_INFLUENTES = [
+  'líder','lider','conselheir','auditor','diretor','dr.','dra.','professor','professora',
+  'curador','chefe','presidente','delegad','capitão','capitao','comissári','comissari',
+  'secretári','secretari','juiz','juíza','juiza','prefeit','vereador','coronel','inspetor',
+  'repórter','reporter','jornalista'
+];
+const NOMES_INFLUENTES = [
+  'Brock','Misty','Tenente Surge','Erika','Koga','Sabrina','Blaine','Blue','Giovanni',
+  'Lance','Giselle','A.J.','Mandi','Red','Hélia Rennó','Bruna Teles','Dra. Ivone',
+  'Curador Adnan','Auditora Prado','Diretor Aloísio','Conselheira Vasques'
+];
+function ehInfluente(nome){
+  if (!nome) return false;
+  if (NOMES_INFLUENTES.includes(nome)) return true;
+  const n = String(nome).toLowerCase();
+  return TITULOS_INFLUENTES.some(t => n.startsWith(t) || n.includes(' ' + t));
+}
+
 const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
 
 const ITENS_INFO = {
@@ -349,7 +377,7 @@ const Estado = {
         cargo: null,
         ferimentos: []
       },
-      reputacao: {eixo:'bom', bom:1, ruim:1, historico:[]},
+      reputacao: {eixo:'bom', bom:1, ruim:1, pontosBom:0, pontosRuim:0, historico:[]},
       time: [],
       pc: [],                 // Pokémon depositados
       cemiterio: [],          // mortes permanentes — nunca some
@@ -361,9 +389,10 @@ const Estado = {
       local: 'pallet',
       visitados: {},
       descobertas: {},
-      pokedex: {vistos:{}, catalogados:{}},
+      pokedex: {vistos:{}, catalogados:{}, brilhantes:{}},
       flags: {},
       npcs: {},               // memória: {nome:{conhece:true, opiniao:n, viuVoce:'...'}}
+      rivais: {},             // rivais conquistados pelo caminho: {id:{vitorias,derrotas,...}}
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}
       liga: {avisos:0, ordemDevolucao:false, detencao:false},
       mundo: {clima:'normal', instabilidade:0, eventos:[]},
@@ -378,42 +407,83 @@ const Estado = {
   },
 
   get j(){ return this.dados.jogador; },
-  get rep(){ return this.dados.reputacao; },
+  get rep(){ return this.normalizarRep ? this.normalizarRep() : this.dados.reputacao; },
 
   /* ---------- REPUTAÇÃO ---------- */
-  nivelRep(){
+  /* Saves antigos guardavam só o degrau. Converte para pontos. */
+  normalizarRep(){
+    const r = this.dados.reputacao;          /* direto: o getter passa por aqui */
+    if (!r) return r;
+    if (r.pontosBom === undefined || r.pontosRuim === undefined){
+      r.pontosBom  = LIMIARES_REP[Math.max(0, (r.bom  || 1) - 1)] || 0;
+      r.pontosRuim = LIMIARES_REP[Math.max(0, (r.ruim || 1) - 1)] || 0;
+      if (r.eixo === 'ruim') r.pontosBom = 0; else r.pontosRuim = 0;
+    }
+    return r;
+  },
+  nivelDePontos(p){
+    let n = 1;
+    for (let i = 0; i < LIMIARES_REP.length; i++) if (p >= LIMIARES_REP[i]) n = i + 1;
+    return Math.max(1, Math.min(8, n));
+  },
+  recalcularRep(){
     const r = this.rep;
+    r.bom  = this.nivelDePontos(r.pontosBom);
+    r.ruim = this.nivelDePontos(r.pontosRuim);
+    r.eixo = r.pontosRuim > r.pontosBom ? 'ruim' : 'bom';
+  },
+  nivelRep(){
+    const r = this.normalizarRep();
     return r.eixo === 'bom' ? NIVEIS_BOM[r.bom-1] : NIVEIS_RUIM[r.ruim-1];
   },
   nomeRep(){ return this.nivelRep().nome; },
 
-  mudarRep(eixo, delta, motivo){
-    const r = this.rep;
-    if (delta === 0) return null;
-    const antes = this.nomeRep();
+  /* Quanto um ato vale de fato. O delta que a cena declara é o
+     tamanho do ato; quem estava olhando é o resto da conta. */
+  pesoRep(delta, ef){
+    const d = Math.max(1, Math.abs(delta));
+    let pontos = d * (d + 1) / 2;                    /* 1, 3, 6, 10, 15… ato pequeno quase não move */
+    const c = ef || {};
+    if (c.rep && c.rep.notorio) pontos *= 1.5;       /* a cena diz que virou notícia */
+    if (c.npc && ehInfluente(c.npc.nome)) pontos *= 2;
+    if (c.insignia) pontos *= 1.5;                   /* ginásio cheio de gente vendo */
+    if (c.rep && c.rep.peso) pontos *= c.rep.peso;   /* ajuste manual da cena */
+    return Math.max(1, Math.round(pontos));
+  },
 
+  /* Progresso dentro do degrau atual — para a barra do cartão */
+  progressoRep(){
+    const r = this.normalizarRep();
+    const p = r.eixo === 'bom' ? r.pontosBom : r.pontosRuim;
+    const n = r.eixo === 'bom' ? r.bom : r.ruim;
+    if (n >= 8) return {pontos:p, atual:1, falta:0, prox:null};
+    const piso = LIMIARES_REP[n-1], teto = LIMIARES_REP[n];
+    return {pontos:p, atual:(p - piso) / Math.max(1, teto - piso), falta:teto - p, prox:n+1};
+  },
+
+  mudarRep(eixo, delta, motivo, ef){
+    const r = this.normalizarRep();
+    if (!delta) return null;
+    const antes = this.nomeRep();
+    const pontos = this.pesoRep(delta, ef);
+
+    /* O eixo contrário é pago primeiro: você não vira santo enquanto
+       ainda deve. Só o que sobra é que começa a subir do outro lado. */
     if (eixo === 'bom'){
-      if (r.eixo === 'ruim' && r.ruim > 1){
-        // ações boas primeiro lavam o eixo ruim
-        r.ruim = Math.max(1, r.ruim - delta);
-        if (r.ruim === 1){ r.eixo = 'bom'; r.bom = Math.max(r.bom, 2); }
-      } else {
-        r.eixo = 'bom';
-        r.bom = Math.min(8, r.bom + delta);
-      }
+      const gasto = Math.min(r.pontosRuim, pontos);
+      r.pontosRuim -= gasto;
+      r.pontosBom  += (pontos - gasto);
     } else {
-      if (r.eixo === 'bom' && r.bom > 1){
-        r.bom = Math.max(1, r.bom - delta);
-        if (r.bom === 1){ r.eixo = 'ruim'; r.ruim = Math.max(r.ruim, 2); }
-      } else {
-        r.eixo = 'ruim';
-        r.ruim = Math.min(8, r.ruim + delta);
-      }
+      const gasto = Math.min(r.pontosBom, pontos);
+      r.pontosBom  -= gasto;
+      r.pontosRuim += (pontos - gasto);
     }
+    this.recalcularRep();
+
     const depois = this.nomeRep();
-    r.historico.push({motivo, eixo, delta, de:antes, para:depois, cap:this.dados.capitulo});
-    this.registrar(`Reputação: ${antes} → ${depois} (${motivo})`);
-    return {de:antes, para:depois, mudou:antes !== depois};
+    r.historico.push({motivo, eixo, delta, pontos, de:antes, para:depois, cap:this.dados.capitulo});
+    if (antes !== depois) this.registrar(`Reputação: ${antes} → ${depois} (${motivo})`);
+    return {de:antes, para:depois, mudou:antes !== depois, pontos};
   },
 
   /* ---------- MEMÓRIA ---------- */
@@ -539,7 +609,8 @@ const Estado = {
   /* ---------- POKÉDEX ---------- */
   pdex(){
     const d = this.dados;
-    if (!d.pokedex) d.pokedex = {vistos:{}, catalogados:{}};
+    if (!d.pokedex) d.pokedex = {vistos:{}, catalogados:{}, brilhantes:{}};
+    if (!d.pokedex.brilhantes) d.pokedex.brilhantes = {};   /* saves antigos */
     return d.pokedex;
   },
   viu(dex){
@@ -559,9 +630,29 @@ const Estado = {
     return true;
   },
   conheceu(dex){ return !!this.pdex().catalogados[dex]; },
+
+  /* Um brilhante visto fica registrado mesmo que escape. */
+  viuBrilhante(dex){
+    const p = this.pdex();
+    if (p.brilhantes[dex] === 'capturado') return false;
+    const novo = !p.brilhantes[dex];
+    if (novo){ p.brilhantes[dex] = 'visto'; this.registrar(`Pokédex: um ${DEX[dex].nome} brilhante.`); }
+    return novo;
+  },
+  pegouBrilhante(dex){
+    const p = this.pdex();
+    const novo = p.brilhantes[dex] !== 'capturado';
+    p.brilhantes[dex] = 'capturado';
+    if (novo) this.registrar(`Pokédex: ${DEX[dex].nome} brilhante registrado no time.`);
+    return novo;
+  },
+  brilhanteDe(dex){ return this.pdex().brilhantes[dex] || null; },
+
   contagemDex(){
     const p = this.pdex();
-    return {vistos:Object.keys(p.vistos).length, catalogados:Object.keys(p.catalogados).length};
+    const b = Object.values(p.brilhantes || {});
+    return {vistos:Object.keys(p.vistos).length, catalogados:Object.keys(p.catalogados).length,
+            brilhantes:b.length, brilhantesPegos:b.filter(v => v === 'capturado').length};
   },
 
   /* ---------- LENDÁRIOS ---------- */

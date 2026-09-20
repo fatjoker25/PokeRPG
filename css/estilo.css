@@ -356,9 +356,51 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .log-combate .l.vitoria,.log-combate .l.nivel,.log-combate .l.evolucao,.log-combate .l.captura{color:var(--bom);font-weight:600}
 .log-combate .l.turno{color:var(--texto-fraco);border-top:1px solid var(--borda);margin-top:7px;padding-top:7px;font-family:var(--mono);font-size:12px}
 .log-combate .l.inicio{color:var(--destaque);font-weight:600;font-size:14.5px}
+.log-combate .l.brilhante{
+  color:#f5c518;font-weight:600;
+  text-shadow:0 0 10px rgba(245,197,24,.35)
+}
 
-.acoes-combate{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-@media(max-width:620px){.acoes-combate{grid-template-columns:1fr}}
+/* O menu principal do combate empilha: duas linhas de dois e a
+   Pokédex sozinha embaixo, tudo centralizado. A lista de golpes
+   só aparece depois de Lutar. */
+.acoes-combate{display:flex;flex-direction:column;gap:9px}
+.acoes-combate.livre{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(max-width:620px){.acoes-combate.livre{grid-template-columns:1fr}}
+
+.menu-batalha{display:flex;flex-direction:column;gap:9px}
+.mb-linha{display:flex;gap:9px;justify-content:center;align-items:stretch}
+.mb-linha .mb-btn{flex:1 1 0;min-width:0;max-width:268px}
+.mb-linha.centro .mb-btn{flex:0 1 268px}
+.grade-golpes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:2px}
+@media(max-width:620px){
+  .grade-golpes{grid-template-columns:1fr}
+  .mb-linha .mb-btn,.mb-linha.centro .mb-btn{max-width:none}
+}
+
+.mb-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  text-align:center;padding:13px 12px;border-radius:var(--raio-sm);
+  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 82%, #000));
+  border:1px solid var(--borda);color:var(--texto);
+  animation:surge .3s var(--suave) both;
+}
+.mb-btn .rot{font-size:15.5px;font-weight:650;letter-spacing:.02em;line-height:1.1}
+.mb-btn .nota{
+  font-size:11px;color:var(--texto-fraco);line-height:1.25;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%
+}
+.mb-btn:hover:not(:disabled){
+  border-color:var(--destaque);transform:translateY(-2px);
+  box-shadow:0 8px 18px -10px var(--destaque-sombra);
+}
+.mb-btn:active:not(:disabled){transform:translateY(0) scale(.985)}
+.mb-btn:disabled{opacity:.45}
+.mb-btn.lutar .rot{color:var(--destaque-2)}
+.mb-btn.dex{border-color:color-mix(in srgb, var(--destaque-3) 55%, var(--borda))}
+.mb-btn.dex .rot{color:var(--destaque-3)}
+.mb-btn.fugir .rot{color:var(--texto-fraco)}
+.mb-btn.voltar{background:transparent}
 .golpe-btn{
   text-align:left;
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 85%, #000));
@@ -404,6 +446,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .rep-barra i{display:block;height:100%;transition:width .6s var(--suave);border-radius:4px}
 .rep-barra.bom i{background:linear-gradient(90deg, color-mix(in srgb, var(--bom) 70%, #000), var(--bom))}
 .rep-barra.ruim i{background:linear-gradient(90deg, color-mix(in srgb, var(--ruim) 70%, #000), var(--ruim))}
+.rep-nota{margin-top:5px;font-size:10.5px;letter-spacing:.04em;color:#8d8470;font-family:var(--mono)}
 
 /* ---------- criação ---------- */
 .campo{margin-bottom:15px}
@@ -806,6 +849,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 }
 .insignia-slot:not(.tem) .rot{color:#8d8470}
 .insignia-slot .cid{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#8d8470}
+/* cidade que você ainda não pisou: o recorte existe, o nome não */
+.insignia-slot.oculta{border-style:dashed;opacity:.6}
+.insignia-slot.oculta .forma{background:transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.insignia-slot.oculta .cid{font-family:var(--mono);letter-spacing:.14em}
 
 /* as oito formas */
 .ins-pewter   {clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
@@ -978,6 +1025,78 @@ h3.cat-item{
 .dex-ficha .nomeg{font-size:19px;font-weight:650;letter-spacing:.01em}
 .dex-ficha .nota{font-size:12.5px;color:var(--dex-txt-2, var(--texto-fraco));margin-top:6px;font-style:italic}
 .dex-ficha .nota.mono{font-family:var(--mono);font-style:normal;letter-spacing:.02em}
+
+/* ---- varredura da Pokédex: a espera faz parte da leitura ---- */
+.dex-scan{
+  border:1px solid var(--dex-tela-3, var(--borda));border-radius:12px;padding:16px;
+  background:linear-gradient(180deg,#ffffff,var(--dex-tela, var(--bg-2)));
+  color:var(--dex-txt, var(--texto))
+}
+.dex-scan .alvo{
+  position:relative;height:132px;border-radius:9px;overflow:hidden;
+  background:
+    repeating-linear-gradient(0deg, rgba(16,40,63,.07) 0 1px, transparent 1px 7px),
+    radial-gradient(circle at 50% 60%, #eaf2ff, #cfe0f5);
+  border:1px solid rgba(16,40,63,.18)
+}
+.dex-scan .silhueta{
+  position:absolute;left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%);
+  border-radius:50% 50% 46% 46%;
+  background:linear-gradient(180deg,#5d738f,#28405f);
+  box-shadow:inset 0 -6px 10px rgba(0,0,0,.28);
+  opacity:.82
+}
+.dex-scan .silhueta.brilho{
+  background:linear-gradient(180deg,#d9b44a,#8a6a12);
+  box-shadow:inset 0 -6px 10px rgba(0,0,0,.28), 0 0 26px -4px rgba(245,197,24,.85)
+}
+.dex-scan .varredura{
+  position:absolute;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#e8584a 18%,#ffd9d3 50%,#e8584a 82%,transparent);
+  box-shadow:0 0 16px 3px rgba(232,88,74,.55);
+  animation:varreLinha 1.15s linear infinite
+}
+@keyframes varreLinha{0%{top:-4px}100%{top:132px}}
+.dex-scan .linhas{
+  margin-top:12px;min-height:88px;font-size:12px;
+  color:var(--dex-txt-2, var(--texto-fraco))
+}
+.dex-scan .lin{
+  padding:2px 0;letter-spacing:.06em;
+  animation:entraLog .28s var(--suave) both
+}
+.dex-scan .lin::before{content:'> ';color:var(--dex-verm, #cf3a2e)}
+.dex-scan .lin.alerta{color:#b8860b;font-weight:700;text-shadow:0 0 8px rgba(245,197,24,.4)}
+.dex-barra.lendo{margin:12px 0 0}
+.dex-barra.lendo i{transition:width .25s linear}
+.pokedex-lente.lendo{animation:piscaLente .8s var(--suave) infinite}
+.pokedex-luzes.lendo i{animation-duration:.55s}
+@media(prefers-reduced-motion:reduce){
+  .dex-scan .varredura{animation:none;top:64px}
+  .pokedex-lente.lendo,.pokedex-luzes.lendo i{animation:none}
+}
+.base-linha.dupla .ind{
+  flex:0 0 44px;text-align:right;color:var(--dex-verm-esc, #8d1f18);font-weight:600
+}
+.dex-ficha .nota.alerta{color:var(--perigo, #ee1515);font-style:normal;font-weight:600}
+.dex-ficha .cat-item .fraco{font-weight:400;font-size:11.5px}
+
+/* ---- brilhantes: a mesma espécie com a cor errada ---- */
+.shiny-marca{
+  display:inline-block;margin-left:5px;font-size:.85em;line-height:1;
+  color:#f5c518;text-shadow:0 0 6px rgba(245,197,24,.85);
+  animation:cintila 2.4s ease-in-out infinite
+}
+@keyframes cintila{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.18)}}
+@media(prefers-reduced-motion:reduce){.shiny-marca{animation:none}}
+.dex-brilho{
+  flex:0 0 auto;color:#d39b00;font-size:11px;line-height:1;
+  text-shadow:0 0 5px rgba(245,197,24,.7)
+}
+.dex-cela.brilho{border-color:#e3b53c;background:linear-gradient(180deg,#fffdf3,#fdf0c8)}
+.dex-cela.brilho.pego{box-shadow:inset 0 0 0 1px rgba(227,181,60,.55)}
+.dex-leitura .campo.brilho b{color:#b8860b}
+.dex-ficha .brilho-v{color:#b8860b;font-weight:600}
 
 .base-linha{display:flex;align-items:center;gap:10px;padding:3px 0;font-size:12.5px}
 .base-linha .k{flex:0 0 88px;color:var(--dex-txt-2, var(--texto-fraco))}
