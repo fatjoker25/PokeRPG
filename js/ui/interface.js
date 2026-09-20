@@ -1619,8 +1619,10 @@ const UI = {
       <div class="linha"><span class="k">Como sobe</span><span class="v">por pontos, não por ato</span></div>
       <div class="linha"><span class="k">Ato pequeno</span><span class="v">1 ponto — precisa de oito para o primeiro degrau</span></div>
       <div class="linha"><span class="k">Diante de quem manda</span><span class="v">vale o dobro</span></div>
-      <div class="linha"><span class="k">Ginásio, Liga, conselho</span><span class="v">vale muito mais</span></div>
-      <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
+      <div class="linha"><span class="k">Ginásio, Liga, conselho</span><span class="v">vale muito mais e não tem teto</span></div>
+      <div class="linha"><span class="k">Teto por capítulo</span><span class="v">o que passa dele conta por 15%</span></div>
+      <div class="linha"><span class="k">O mesmo feito</span><span class="v">conta uma vez por capítulo</span></div>
+      <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Cada capítulo tem um teto: fazer tudo o que dá num capítulo rende mais que fazer metade, mas não rende o dobro, porque Kanto só fala de você na medida em que te viu. Ginásio e Liga passam por cima do teto — isso é notícia em qualquer altura. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>

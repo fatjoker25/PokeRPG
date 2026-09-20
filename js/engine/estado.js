@@ -28,7 +28,7 @@ const NIVEIS_RUIM = [
    Um nível só muda quando o que você fez foi grande o bastante
    para ser contado, ou aconteceu na frente de quem conta.
    ============================================================ */
-const LIMIARES_REP = [0, 18, 55, 115, 210, 350, 560, 860];
+const LIMIARES_REP = [0, 28, 88, 198, 352, 550, 792, 1100];
 
 /* Gente que, quando está na cena, faz a história correr sozinha.
    Fazer alguma coisa na frente de um deles vale o dobro. */
@@ -528,12 +528,40 @@ const Estado = {
     return (this.rep.historico || []).some(h => h.motivo === motivo && h.cap === cap);
   },
 
+  /* ---------- teto de fama por capítulo ----------
+     A campanha inteira oferece muito mais feito do que oito degraus
+     comportam, e os capítulos do meio oferecem dez vezes mais que os
+     do começo. Sem teto, varrer um capítulo valia mais que a Liga
+     inteira e todo mundo travava no topo antes da metade.
+     Cada capítulo tem um orçamento; o que passa dele ainda conta,
+     mas conta pouco — Kanto só fala de você na medida em que Kanto
+     te viu. Marcos ficam de fora: ginásio, Liga e cadeira de Campeão
+     são notícia por definição, em qualquer altura da história. */
+  orcamentoDoCapitulo(){
+    return 20 + 2 * (this.dados.capitulo || 1);
+  },
+  gastoNoCapitulo(eixo){
+    const cap = this.dados.capitulo;
+    return (this.rep.historico || [])
+      .filter(h => h.cap === cap && h.eixo === eixo && !h.marco)
+      .reduce((soma, h) => soma + (h.pontos || 0), 0);
+  },
+  dentroDoOrcamento(eixo, brutos){
+    const orc = this.orcamentoDoCapitulo();
+    const gasto = this.gastoNoCapitulo(eixo);
+    if (gasto + brutos <= orc) return brutos;
+    if (gasto >= orc) return Math.max(1, Math.round(brutos * 0.15));
+    return (orc - gasto) + Math.max(0, Math.round((gasto + brutos - orc) * 0.15));
+  },
+
   mudarRep(eixo, delta, motivo, ef){
     const r = this.normalizarRep();
     if (!delta) return null;
     if (this.jaContou(motivo)) return null;
     const antes = this.nomeRep();
-    const pontos = this.pesoRep(delta, ef);
+    const marco = !!(ef && ef.rep && ef.rep.notorio);
+    const pontos = marco ? this.pesoRep(delta, ef)
+                         : this.dentroDoOrcamento(eixo, this.pesoRep(delta, ef));
 
     /* O eixo contrário é pago primeiro: você não vira santo enquanto
        ainda deve. Só o que sobra é que começa a subir do outro lado. */
@@ -549,7 +577,7 @@ const Estado = {
     this.recalcularRep();
 
     const depois = this.nomeRep();
-    r.historico.push({motivo, eixo, delta, pontos, de:antes, para:depois, cap:this.dados.capitulo});
+    r.historico.push({motivo, eixo, delta, pontos, marco, de:antes, para:depois, cap:this.dados.capitulo});
     if (antes !== depois) this.registrar(`Reputação: ${antes} → ${depois} (${motivo})`);
     return {de:antes, para:depois, mudou:antes !== depois, pontos};
   },
