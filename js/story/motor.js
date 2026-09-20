@@ -274,5 +274,25 @@ const Historia = {
 /* Resolve texto que pode ser função do estado */
 function txt(t){
   if (typeof t === 'function'){ try { return t(Estado.dados); } catch(e){ return ''; } }
+  if (t && typeof t === 'object' && t.diz != null) return txt(t.diz);
   return t;
 }
+
+/* ============================================================
+   QUEM ESTÁ FALANDO
+   Uma linha de cena pode ser texto puro (narração) ou uma fala
+   com dono: {quem:'Sra. Odete', diz:'...'}. O terceiro campo,
+   tom, muda só a cor do balão — 'grita', 'baixo', 'riso',
+   'frio'. A função devolve null para narração.
+   ============================================================ */
+function falaDe(t){
+  if (typeof t === 'function'){ try { t = t(Estado.dados); } catch(e){ return null; } }
+  if (!t || typeof t !== 'object' || t.diz == null) return null;
+  const quem = txt(t.quem);
+  const diz = txt(t.diz);
+  if (!quem || !diz) return null;
+  return {quem, diz, tom: t.tom || null, nota: txt(t.nota) || null};
+}
+
+/* Açúcar para escrever cena: fala('Sra. Odete', 'Bom dia.', 'grita') */
+function fala(quem, diz, tom, nota){ return {quem, diz, tom, nota}; }

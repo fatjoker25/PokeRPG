@@ -211,6 +211,101 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .narrativa p:nth-child(n+7){animation-delay:.86s}
 @keyframes aparece{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
+/* ============================================================
+   FALA — quando alguém fala com você, dá pra ver quem é
+   O balão tem o nome em cima e um bico apontando pra ele, como
+   quadrinho. Narração continua sendo parágrafo solto.
+   ============================================================ */
+.narrativa .fala{
+  position:relative;
+  margin:0 0 12px 12px;
+  padding:9px 13px 10px;
+  max-width:70ch;
+  border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda));
+  border-left:3px solid var(--destaque);
+  border-radius:4px 10px 10px 4px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--destaque) 9%, var(--bg-2)),
+    color-mix(in srgb, var(--destaque) 4%, var(--bg-2)));
+  animation:fala-entra .42s var(--suave) both;
+}
+.narrativa .fala::before{
+  content:'';position:absolute;left:-9px;top:14px;
+  border:5px solid transparent;border-right-color:var(--destaque);
+}
+.narrativa .fala-quem{
+  font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--destaque);margin-bottom:3px;
+}
+.narrativa .fala-diz{margin:0;max-width:none;animation:none}
+.narrativa .fala-nota{
+  margin-top:5px;font-size:12px;font-style:italic;
+  color:var(--texto-fraco);
+}
+.narrativa .fala:nth-child(1){animation-delay:.02s}
+.narrativa .fala:nth-child(2){animation-delay:.16s}
+.narrativa .fala:nth-child(3){animation-delay:.3s}
+.narrativa .fala:nth-child(4){animation-delay:.44s}
+.narrativa .fala:nth-child(5){animation-delay:.58s}
+.narrativa .fala:nth-child(6){animation-delay:.72s}
+.narrativa .fala:nth-child(n+7){animation-delay:.86s}
+@keyframes fala-entra{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* tons: a mesma boca em volumes diferentes */
+.narrativa .fala.grita{
+  border-color:color-mix(in srgb, var(--perigo) 55%, var(--borda));
+  border-left-color:var(--perigo);
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--perigo) 12%, var(--bg-2)),
+    color-mix(in srgb, var(--perigo) 5%, var(--bg-2)));
+}
+.narrativa .fala.grita::before{border-right-color:var(--perigo)}
+.narrativa .fala.grita .fala-quem{color:var(--perigo)}
+.narrativa .fala.grita .fala-diz{font-weight:600}
+.narrativa .fala.baixo{
+  border-color:var(--borda);border-left-color:var(--texto-fraco);
+  background:color-mix(in srgb, var(--texto-fraco) 6%, var(--bg-2));
+}
+.narrativa .fala.baixo::before{border-right-color:var(--texto-fraco)}
+.narrativa .fala.baixo .fala-quem{color:var(--texto-fraco)}
+.narrativa .fala.baixo .fala-diz{font-style:italic;opacity:.9}
+.narrativa .fala.riso .fala-quem{color:var(--bom, #6ac26a)}
+.narrativa .fala.riso{
+  border-color:color-mix(in srgb, var(--bom, #6ac26a) 45%, var(--borda));
+  border-left-color:var(--bom, #6ac26a);
+  background:color-mix(in srgb, var(--bom, #6ac26a) 8%, var(--bg-2));
+}
+.narrativa .fala.riso::before{border-right-color:var(--bom, #6ac26a)}
+.narrativa .fala.frio{
+  border-color:var(--borda);border-left-color:#7f96b5;
+  background:color-mix(in srgb, #7f96b5 7%, var(--bg-2));
+}
+.narrativa .fala.frio::before{border-right-color:#7f96b5}
+.narrativa .fala.frio .fala-quem{color:#9fb4cf}
+.narrativa .fala.frio .fala-diz{letter-spacing:.01em}
+/* a sua fala encosta no outro lado e usa a cor do jogador */
+.narrativa .fala.voce{
+  margin:0 0 12px auto;
+  border-left:1px solid color-mix(in srgb, var(--bom, #6ac26a) 40%, var(--borda));
+  border-right:3px solid var(--bom, #6ac26a);
+  border-radius:10px 4px 4px 10px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--bom, #6ac26a) 10%, var(--bg-2)),
+    color-mix(in srgb, var(--bom, #6ac26a) 4%, var(--bg-2)));
+  text-align:right;
+}
+.narrativa .fala.voce::before{
+  left:auto;right:-9px;border-right-color:transparent;border-left-color:var(--bom, #6ac26a);
+}
+.narrativa .fala.voce .fala-quem{color:var(--bom, #6ac26a)}
+/* fala solta no meio dos avisos (conversa de cidade) */
+.aviso-fala{margin:0}
+.aviso-fala .fala{margin-bottom:8px}
+@media (max-width:520px){
+  .narrativa .fala{margin-left:9px;padding:8px 11px 9px}
+  .narrativa .fala.voce{margin-left:auto;margin-right:9px}
+}
+
 .escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
 .escolha{
   text-align:left;

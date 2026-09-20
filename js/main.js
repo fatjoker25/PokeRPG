@@ -358,7 +358,9 @@ const Jogo = {
   entrarNoCapitulo(prox){
     const cena = Historia.iniciarCapitulo(prox);
     Estado.salvar('auto');
-    UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
+    /* Nada de repetir nome, reputação e time na abertura de cada capítulo:
+       isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
+    UI.telaCena(cena);
   },
 
   mostrarFinal(){

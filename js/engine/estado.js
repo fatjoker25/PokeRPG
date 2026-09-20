@@ -52,6 +52,34 @@ function ehInfluente(nome){
 
 const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Fuchsia','Saffron','Cinnabar','Indigo'];
 
+/* ============================================================
+   QUEM FICA EM CASA
+   A pessoa que te acorda no primeiro capítulo e que vai ficar
+   esperando notícia. O jogador escolhe nome e parentesco; se
+   deixar em branco, a casa ganha alguém mesmo assim, porque
+   "alguém lá embaixo" não é personagem, é neblina.
+   ============================================================ */
+const NOMES_DE_CASA = ['Delina','Marisa','Neide','Odete','Rosa','Belmira','Zilda','Aparecida',
+                       'Joaquim','Aurélio','Teodoro','Benedito','Sebastião','Raimundo'];
+const PARENTESCOS   = ['mãe','pai','avó','avô','tia','tio','irmã mais velha','irmão mais velho'];
+function casaDaFicha(ficha){
+  const nome = (ficha && ficha.casaNome || '').trim() || Dados.escolher(NOMES_DE_CASA);
+  const quem = (ficha && ficha.casaQuem || '').trim() || Dados.escolher(PARENTESCOS);
+  return {nome, quem};
+}
+/* Usados na escrita das cenas: nomeCasa() é "Delina", casaQuem() é "mãe",
+   casaCompleto() é "Delina, sua mãe". Nunca devolvem vazio. */
+function casaDe(){
+  const c = (Estado.dados && Estado.dados.jogador && Estado.dados.jogador.casa) || null;
+  return c && c.nome ? c : {nome:'Delina', quem:'mãe'};
+}
+function nomeCasa(){ return casaDe().nome; }
+function casaQuem(){ return casaDe().quem; }
+function casaCompleto(){ const c = casaDe(); return `${c.nome}, ${artigoDe(c.quem)} ${c.quem}`; }
+function artigoDe(parentesco){
+  return /^(pai|avô|tio|irmão)/.test(parentesco) ? 'seu' : 'sua';
+}
+
 const ITENS_INFO = {
   /* ─────────── bolas ─────────── */
   'Poké Ball':   {tipo:'bola', mult:1, cat:'Captura',
@@ -409,6 +437,7 @@ const Estado = {
       criadoEm: Date.now(),
       jogador: {
         nome: ficha.nome,
+        casa: casaDaFicha(ficha),
         genero: ficha.genero,
         aparencia: ficha.aparencia,
         personalidade: ficha.personalidade,

@@ -179,6 +179,16 @@ const UI = {
           <input id="f-objetivo" maxlength="120" placeholder="O que você quer de verdade?"></div>
       </div>
 
+      <h3>Quem fica em casa</h3>
+      <div class="dois">
+        <div class="campo"><label>Nome</label>
+          <input id="f-casa-nome" maxlength="24" placeholder="Delina"></div>
+        <div class="campo"><label>É sua/seu</label>
+          <input id="f-casa-quem" maxlength="24" placeholder="mãe"></div>
+      </div>
+      <div class="sussurro">É essa pessoa que te acorda, te empurra pela porta e vai ficar
+        esperando notícia. Ela fala com você pelo nome dela — e você sabe de quem é a voz.</div>
+
       <h3>Pokémon inicial</h3>
       <div class="opcoes-radio" id="f-inicial" style="margin-bottom:10px">
         <button data-v="1" class="sel">Bulbasaur</button>
@@ -232,8 +242,34 @@ const UI = {
       nome:v('f-nome'), genero:sel('f-genero'), aparencia:v('f-aparencia'),
       personalidade:v('f-personalidade'), vestimenta:v('f-vestimenta'),
       cidade:document.getElementById('f-cidade').value, objetivo:v('f-objetivo'),
-      inicial:sel('f-inicial'), ritmo:sel('f-ritmo')
+      inicial:sel('f-inicial'), ritmo:sel('f-ritmo'),
+      casaNome: (v('f-casa-nome') || '').trim(),
+      casaQuem: (v('f-casa-quem') || '').trim()
     };
+  },
+
+  /* ========================================================
+     NARRAR — texto puro vira parágrafo; fala com dono vira balão
+     com o nome de quem falou em cima. Assim dá pra saber quem
+     está falando com você sem ter que deduzir pelo contexto.
+     ======================================================== */
+  narrar(linhas){
+    return (linhas||[]).map(bruto => {
+      const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
+      if (f){
+        const tom = f.tom ? ' ' + f.tom : '';
+        /* A sua própria fala encosta no outro lado, pra conversa ler como
+           conversa e não como uma pessoa só falando sete vezes. */
+        const meu = (Estado.dados && Estado.j && f.quem === Estado.j.nome) ? ' voce' : '';
+        return `<div class="fala${tom}${meu}">
+          <div class="fala-quem">${this.esc(f.quem)}</div>
+          <p class="fala-diz">${this.esc(f.diz)}</p>
+          ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
+        </div>`;
+      }
+      const t = txt(bruto);
+      return t ? `<p>${this.esc(t)}</p>` : '';
+    }).filter(Boolean).join('');
   },
 
   /* ========================================================
@@ -245,8 +281,7 @@ const UI = {
     this.tom(cap.tom); this.limpar(); this.limparDados();
     this.add(this.topo());
 
-    const paras = (cena.texto||[]).map(t => txt(t)).filter(Boolean)
-      .map(t => `<p>${this.esc(t)}</p>`).join('');
+    const paras = this.narrar(cena.texto);
 
     const html = `<div class="painel">
       <div class="cap-cabecalho">
@@ -269,11 +304,18 @@ const UI = {
     const c = document.getElementById('avisos');
     if (!c) return;
     lista.forEach(a => {
-      if (a.tipo === 'eco'){
-        c.appendChild(this.el(`<div class="eco">— "${this.esc(a.texto)}"</div>`));
+      /* Um aviso pode carregar uma fala com dono (conversa de cidade, por
+         exemplo). Nesse caso ele vira balão, não tarja. */
+      const f = (typeof falaDe === 'function') ? falaDe(a.texto) : null;
+      if (f){
+        c.appendChild(this.el(`<div class="narrativa aviso-fala">${this.narrar([a.texto])}</div>`));
         return;
       }
-      c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}">${this.esc(a.texto)}</div>`));
+      if (a.tipo === 'eco'){
+        c.appendChild(this.el(`<div class="eco">— "${this.esc(txt(a.texto))}"</div>`));
+        return;
+      }
+      c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}">${this.esc(txt(a.texto))}</div>`));
     });
   },
 
@@ -866,7 +908,7 @@ const UI = {
         <div class="tit">${this.esc(de.nome)} → ${this.esc(para.nome)}</div>
         <div class="loc">${dias === 1 ? 'um dia' : dias + ' dias'} de caminho</div>
       </div>
-      <div class="narrativa">${linhas.map(t=>`<p>${this.esc(t)}</p>`).join('')}</div>
+      <div class="narrativa">${this.narrar(linhas)}</div>
       <div id="escolhas" class="escolhas" style="margin-top:18px">
         <button class="escolha" onclick="${aoChegar}">Chegar.</button>
       </div>
@@ -955,7 +997,7 @@ const UI = {
         <div class="tit">${venceu ? this.esc(g.insignia) : 'Derrota'}</div>
         <div class="loc">Líder ${this.esc(g.lider)} · tipo ${this.esc(g.tipo)}</div>
       </div>
-      <div class="narrativa">${falas.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="narrativa">${this.narrar(falas)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
@@ -989,7 +1031,7 @@ const UI = {
         <div class="tit">${this.esc(r.nome)}</div>
         <div class="loc" style="color:${cor}">${this.esc(A.nome)} — ${this.esc(A.resumo)}</div>
       </div>
-      <div class="narrativa">${falaRival().map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="narrativa">${this.narrar(falaRival())}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -1018,7 +1060,7 @@ const UI = {
         <div class="tit">${this.esc(R.nome)}</div>
         <div class="loc" style="color:${cor}">${this.esc(R.desde)} — ${this.esc(R.origem)}</div>
       </div>
-      <div class="narrativa">${falaRivalExtra(R).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="narrativa">${this.narrar(falaRivalExtra(R))}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Tunico' ? 'ele' : 'ele'}</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -1047,7 +1089,7 @@ const UI = {
         <div class="tit">${this.esc(nome)}</div>
         <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ele</div>
       </div>
-      <div class="narrativa">${falas.filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="narrativa">${this.narrar(falas)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.seguirDepoisDoRival()">Seguir viagem.</button>

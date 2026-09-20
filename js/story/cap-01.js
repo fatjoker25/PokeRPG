@@ -19,14 +19,20 @@ cenas:{
 c1_acorda:{
   texto:[
     'Você acorda catorze minutos antes do despertador, que é o que acontece com quem dormiu mal por antecipação.',
-    d=>`O quarto é o mesmo de sempre e hoje parece menor. A mochila está no chão, arrumada desde ontem à noite, com a fivela de baixo que você nunca conseguiu consertar direito.`,
+    'O quarto é o mesmo de sempre e hoje parece menor. A mochila está no chão, arrumada desde ontem, com a fivela de baixo que você nunca conseguiu consertar direito.',
     d=>{
       const p = d.time[0];
       if (!p) return 'Você está sozinho no quarto, o que não era o plano.';
-      return `${nomeExib(p)} está aos pés da cama, acordado antes de você. Ele dorme aí desde a primeira noite em que apareceu nesta casa, e ninguém nunca sugeriu mudar isso.`;
+      return `${nomeExib(p)} está aos pés da cama, acordado antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },
-    'Lá embaixo, alguém já está na cozinha. Dá pra ouvir a panela e o rádio ligado num volume baixo demais pra entender.',
-    'Você tem quinze anos e hoje é o dia. Ficar deitado mais um pouco não muda isso, mas também não estraga.'
+    'Lá embaixo a panela bate na pia, o rádio toca baixo, e a voz que atravessa o assoalho é a mesma de todos os dias da sua vida.',
+    d=>fala(nomeCasa(), `${d.jogador.nome.toUpperCase()}! Se o café esfriar eu não esquento de novo, e dessa vez eu falo sério!`, 'grita'),
+    'Ela fala sério todo dia. Nunca foi sério nenhum dia. Hoje talvez seja.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'Você tem quinze anos e hoje é o dia.';
+      return `${nomeExib(p)} levanta de uma vez, vai até a porta, volta, vai de novo. Ele entendeu antes de você que hoje é o dia.`;
+    }
   ],
   escolhas:[
     {texto:'Ficar deitado mais cinco minutos. Você tem o resto da vida pra ter pressa.', vai:'c1_cinco_minutos'},
@@ -47,7 +53,9 @@ c1_chuva:{
       if (!p) return 'A mochila está no chão, arrumada desde ontem, encostada na parede que dá pro lado da chuva.';
       return `${nomeExib(p)} está sentado na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
     },
-    'Lá embaixo alguém abre e fecha a porta dos fundos duas vezes: é a pessoa da sua casa tentando decidir se tira a roupa do varal ou se já era.',
+    'Lá embaixo a porta dos fundos abre e fecha duas vezes seguidas, que é o barulho de alguém decidindo se ainda vale a pena salvar a roupa do varal.',
+    d=>fala(nomeCasa(), 'Chuva de março não dura! Isso aí limpa até as dez!', 'grita',
+            'Ela não faz ideia. Ninguém faz. Mas é o que se diz em março.'),
     'Ninguém vai falar em adiar. Você também não vai. Mas todo mundo nesta casa está pensando nisso.'
   ],
   ef:{flag:'comecou_na_chuva', registrar:'Saiu de casa num dia de chuva fina.'},
@@ -63,8 +71,9 @@ c1_calha:{
   texto:[
     'Você desce de chinelo, arrasta o banquinho, sobe e enfia a mão na calha.',
     'É folha. É sempre folha. Sai um punhado marrom e pesado e a água desce de uma vez, num jorro, e molha você da cabeça aos pés.',
-    'Da porta dos fundos, alguém ri. É a primeira vez em três dias que alguém ri nesta casa.',
-    '"Deixa que eu limpo o resto", a pessoa diz, e não é sobre a calha.',
+    'Da porta dos fundos vem uma gargalhada que começa e não consegue parar.',
+    d=>fala(nomeCasa(), 'Quinze anos esperando essa calha e você vai embora no dia que resolve mexer nela!', 'riso'),
+    d=>fala(nomeCasa(), 'Deixa. Deixa que o resto eu limpo.', null, 'E não é da calha que ela está falando.'),
     'Você desce do banquinho encharcado no dia em que ia sair de casa, e por algum motivo isso melhora tudo.'
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Consertou a calha antes de ir embora'},
@@ -103,7 +112,7 @@ c1_dormiu_demais:{
       if (!p) return 'A casa está silenciosa de um jeito que casa com gente dentro nunca fica.';
       return `${nomeExib(p)} está acordado há horas, sentado ao lado da mochila, com a paciência de quem não tem relógio e não precisa de um.`;
     },
-    'Lá embaixo não tem barulho de panela, nem rádio, nem ninguém.',
+    'Lá embaixo não tem barulho de panela, nem rádio, nem ninguém. A casa está do tamanho errado.',
     'Na mesa da cozinha, um prato com um pano por cima e um papel dobrado ao lado.'
   ],
   ef:{flag:'dormiu_demais', registrar:'Acordou às 9h40 do dia de sair de casa. A casa estava vazia.'},
@@ -118,10 +127,11 @@ c1_dormiu_demais:{
 c1_o_papel:{
   texto:[
     'É meia folha de caderno, escrita com a letra que você conhece desde que aprendeu a ler.',
-    'Eu não te acordei de propósito. Dormir é a única coisa que eu ainda podia te dar hoje.',
-    'O café está embaixo do pano. Tem mais no armário de cima.',
-    'Não volta por obrigação. Volta quando der vontade, que é diferente e é melhor.',
-    'Embaixo, sem assinatura, uma última linha em letra menor: eu fui trabalhar porque eu não ia aguentar a porta.'
+    d=>fala(nomeCasa(), 'Eu não te acordei de propósito. Dormir era a única coisa que eu ainda podia te dar hoje.'),
+    d=>fala(nomeCasa(), 'O café está embaixo do pano. Tem mais no armário de cima — o de cima mesmo, não o que você sempre abre.'),
+    d=>fala(nomeCasa(), 'E não volta por obrigação. Volta quando der vontade. É diferente, e é melhor.'),
+    'Embaixo, sem assinatura, numa letra menor e mais apertada, como se tivesse sido escrita depois de dobrar o papel uma vez:',
+    d=>fala(nomeCasa(), 'Eu fui trabalhar porque eu não ia aguentar a porta.', 'baixo')
   ],
   ef:{moral:4, flag:'leu_o_bilhete',
       rep:{eixo:'bom',delta:1,motivo:'Leu o bilhete antes de sair'},
@@ -209,8 +219,8 @@ c1_quarenta_minutos:{
   texto:[
     'Você deita de novo e dorme em quatro minutos, que é o que acontece quando a gente para de tentar.',
     'E aí você sonha com uma coisa que não faz sentido nenhum e que você vai esquecer em duas horas: uma estrada que sobe e não tem fim, e você não está cansado no sonho, e isso é a parte boa.',
-    'Alguém bate na porta do quarto às sete e meia, de leve, com dois dedos.',
-    '"Tá na hora."'
+    'Batem na porta do quarto às sete e meia, de leve, com dois dedos.',
+    d=>fala(nomeCasa(), 'Tá na hora.', 'baixo', 'Duas palavras. Ela ensaiou a noite inteira e escolheu duas palavras.')
   ],
   ef:{hp:2, moral:2},
   escolhas:[
@@ -223,10 +233,10 @@ c1_fez_o_cafe:{
   texto:[
     'Você desce às seis e vinte e faz o café, o que é uma coisa que nesta casa você nunca fez.',
     'Você erra a medida, faz forte demais, e não tem como consertar.',
-    'Quando a pessoa da sua casa desce, vinte minutos depois, ela para na porta da cozinha e não diz nada por uns bons cinco segundos.',
-    'Depois senta, toma o café forte demais sem reclamar de nada, e diz uma frase só:',
-    '"Tá bom."',
-    'Não estava. Mas estava.'
+    d=>`Quando ${casaCompleto()} desce, vinte minutos depois, ela para na porta da cozinha e não diz nada por uns bons cinco segundos.`,
+    'Depois senta. Toma o café forte demais até o fim, sem fazer careta, sem pôr água, sem falar da medida.',
+    d=>fala(nomeCasa(), 'Tá bom.'),
+    'Não estava. Estava horrível. Mas estava.'
   ],
   ef:{moral:5, rep:{eixo:'bom',delta:1,motivo:'Fez o café no último dia em casa'},
       flag:'fez_o_cafe',
@@ -254,11 +264,12 @@ c1_saiu_no_escuro:{
 
 c1_voltou_pra_dentro:{
   texto:[
-    'Você volta as quatro casas, abre a porta, e a pessoa da sua casa está em pé na cozinha, de costas, colocando água no fogo.',
+    d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()} está em pé na cozinha, de costas, colocando água no fogo.`,
     'Ela não se vira.',
-    '"Eu ouvi a porta."',
-    'Uma pausa.',
-    '"Eu ia deixar você ir assim, se fosse isso que você quisesse." Ela acende o fogo. "Senta."',
+    d=>fala(nomeCasa(), 'Eu ouvi a porta.', 'frio'),
+    'O fósforo risca. O fogo pega. Ela ajusta a chama como se aquilo fosse a coisa mais importante da manhã.',
+    d=>fala(nomeCasa(), 'Eu ia deixar você ir assim, se fosse isso que você quisesse. Eu ia ficar aqui e ia deixar.'),
+    d=>fala(nomeCasa(), 'Senta.'),
     'Você senta.'
   ],
   ef:{moral:5, limpaFlag:'tentou_sair_no_escuro',
@@ -350,9 +361,11 @@ c1_contou_as_casas:{
 
 c1_vizinha:{
   texto:[
-    'Você acorda com alguém batendo na porta da frente às seis e cinquenta, e ninguém bate na porta desta casa às seis e cinquenta.',
-    'É a Sra. Odete, do número dezoito, de camisola e casaco por cima, com uma caixa de papelão nos braços.',
-    '"Ele passou a noite embaixo do meu carro." Ela empurra a caixa pra você antes de qualquer bom dia. "E eu vou pra Cerulean hoje e eu não posso levar."',
+    'Socam a porta da frente às seis e cinquenta. Ninguém soca a porta desta casa às seis e cinquenta.',
+    'É a Sra. Odete, do número dezoito, de camisola e casaco por cima, com uma caixa de papelão nos braços e cara de quem não vai negociar.',
+    fala('Sra. Odete', 'Passou a noite inteira embaixo do meu carro. A NOITE INTEIRA.', 'grita',
+         'Ela te empurra a caixa antes de qualquer bom dia.'),
+    fala('Sra. Odete', 'E eu pego o ônibus das oito pra Cerulean. Eu não levo bicho no ônibus, menino, e nem a pau eu deixo ele aqui sozinho.'),
     'Dentro da caixa, em cima de um pano de prato, tem um Pokémon pequeno e molhado, acordado, olhando pra cima.',
     'Ele não está ferido. Está com fome, com frio, e com a expressão exata de quem já foi devolvido antes.'
   ],
@@ -363,19 +376,20 @@ c1_vizinha:{
     {texto:'"Eu fico com ele."', vai:'c1_ficou_com_ele'},
     {texto:'"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."', vai:'c1_leva_ao_centro'},
     {texto:'"Eu não posso, dona Odete. Eu saio hoje."', vai:'c1_recusou_a_caixa'},
-    {texto:'Chamar alguém de dentro de casa para decidir junto.', vai:'c1_chamou_de_dentro'}
+    {texto:d=>`Chamar ${nomeCasa()} pra decidir junto.`, vai:'c1_chamou_de_dentro'}
   ]
 },
 
 c1_ficou_com_ele:{
   texto:[
-    '"Eu fico com ele."',
-    'A Sra. Odete abre a boca para argumentar e não precisa, e fica parada com a boca aberta por um segundo.',
-    '"Você vai sair hoje."',
-    '"Vou."',
-    '"E vai levar ele."',
-    '"Vou."',
-    'Ela entrega o pano de prato junto, que não era pra entregar, e depois pede de volta, e depois deixa.'
+    d=>fala(d.jogador.nome, 'Eu fico com ele.'),
+    'A Sra. Odete tinha três argumentos prontos e acabou de perder todos de uma vez. Fica um segundo inteiro de boca aberta.',
+    fala('Sra. Odete', 'Você sai hoje.'),
+    d=>fala(d.jogador.nome, 'Saio.'),
+    fala('Sra. Odete', 'E vai levar ele.'),
+    d=>fala(d.jogador.nome, 'Vou.'),
+    fala('Sra. Odete', '...Tá.', 'baixo',
+         'Ela entrega o pano de prato junto, que não era pra entregar. Depois pede de volta. Depois deixa.')
   ],
   ef:{flag:'ficou_com_o_bicho', moral:4,
       rep:{eixo:'bom',delta:2,motivo:'Assumiu um bicho encontrado no dia em que saiu de casa'},
@@ -396,9 +410,10 @@ c1_ficou_com_ele:{
 
 c1_leva_ao_centro:{
   texto:[
-    '"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."',
-    'A Sra. Odete assente como quem fecha negócio e já está descendo o degrau antes de você terminar a frase.',
-    '"A caixa eu quero de volta", ela diz da calçada. "É a caixa do meu ventilador."',
+    d=>fala(d.jogador.nome, 'Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito.'),
+    'A Sra. Odete bate na caixa duas vezes, como quem fecha negócio, e já está descendo o degrau antes de você terminar a frase.',
+    fala('Sra. Odete', 'A caixa eu quero de volta, viu! É a caixa do meu ventilador!', 'grita',
+         'Ela grita isso da calçada, já de costas.'),
     'Você fica na porta de casa, de pijama, às seis e cinquenta e dois, segurando a caixa de um ventilador com um bicho dentro.',
     'A sua jornada começou tecnicamente agora, e não foi nada do que você imaginou nos últimos três anos.'
   ],
@@ -413,12 +428,12 @@ c1_leva_ao_centro:{
 
 c1_recusou_a_caixa:{
   texto:[
-    '"Eu não posso, dona Odete. Eu saio hoje."',
+    d=>fala(d.jogador.nome, 'Eu não posso, dona Odete. Eu saio hoje.'),
     'Ela olha pra você por um tempo que passa do confortável.',
-    '"Eu sei que você sai hoje. A rua inteira sabe que você sai hoje."',
-    'Ela ajeita a caixa nos braços, que agora pesa mais do que pesava.',
-    '"Tudo bem, filho. Eu deixo na porta do Centro antes de pegar o ônibus."',
-    'E vai embora, e é justamente o tudo bem que fica atravessado.'
+    fala('Sra. Odete', 'Eu sei que você sai hoje. A rua inteira sabe que você sai hoje.', 'frio'),
+    'Ela ajeita a caixa nos braços. A caixa não mudou de peso. Alguma coisa ali mudou de peso.',
+    fala('Sra. Odete', 'Tudo bem, filho. Eu deixo na porta do Centro antes de pegar o ônibus.'),
+    'E vai embora. E é justamente o tudo bem que fica atravessado.'
   ],
   ef:{flag:'recusou_a_caixa', moral:-3,
       registrar:'Recusou a caixa da Sra. Odete.'},
@@ -430,10 +445,12 @@ c1_recusou_a_caixa:{
 
 c1_chamou_de_volta:{
   texto:[
-    '"Dona Odete!"',
-    'Ela para no meio da rua e se vira, e não parece surpresa, e é isso que pega.',
-    '"Eu levo."',
-    'Ela volta os oito passos e entrega a caixa sem dizer nada, e no caminho de volta pra casa dela você ouve ela falando sozinha uma coisa que termina com "eu sabia".'
+    d=>fala(d.jogador.nome, 'DONA ODETE!', 'grita'),
+    'Ela para no meio da rua e se vira. Não parece nem um pouco surpresa, e é isso que pega.',
+    d=>fala(d.jogador.nome, 'Eu levo.'),
+    'Ela volta os oito passos e entrega a caixa sem dizer uma palavra.',
+    fala('Sra. Odete', '...eu sabia. Eu sabia, eu sabia, eu sabia.', 'baixo',
+         'Ela vai falando sozinha o caminho inteiro de volta.')
   ],
   ef:{limpaFlag:'recusou_a_caixa', flag:'leva_a_caixa', moral:3,
       itens:{'Caixa de ventilador com um bicho dentro':1},
@@ -444,13 +461,13 @@ c1_chamou_de_volta:{
 
 c1_chamou_de_dentro:{
   texto:[
-    'Você chama pra dentro de casa e a pessoa da sua casa vem até a porta secando a mão no pano.',
-    'As duas conversam por cima de você por uns quarenta segundos, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, com duas frases cada uma.',
-    '"E o menino sai hoje", diz a Sra. Odete.',
-    '"Sai."',
-    'Um silêncio.',
-    '"Então deixa aqui", diz a pessoa da sua casa, e pega a caixa. "Eu cuido até ele achar dono."',
-    'E olha pra você por cima da caixa, e não diz mais nada, porque não precisa.'
+    d=>`Você chama pra dentro e ${casaCompleto()} vem até a porta secando a mão no pano.`,
+    'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
+    fala('Sra. Odete', 'E o menino sai hoje.'),
+    d=>fala(nomeCasa(), 'Sai.'),
+    'Um silêncio de quatro segundos que decide tudo.',
+    d=>fala(nomeCasa(), 'Então deixa aqui. Eu cuido até ele achar dono.', null,
+            'Ela pega a caixa e olha pra você por cima dela. Não diz mais nada, porque não precisa.')
   ],
   ef:{flag:'a_caixa_ficou_em_casa', moral:2,
       registrar:'O bicho da caixa ficou em casa. Alguém vai cuidar até achar dono.'},
@@ -533,14 +550,14 @@ c1_mochila:{
 
 c1_cozinha:{
   texto:[
-    'A mesa tem comida demais para uma pessoa. É assim que se pede para alguém ficar sem pedir.',
-    d=>`"Senta." Não é ordem. É a palavra que a sua casa usa pra dizer várias outras coisas.`,
+    'A mesa tem comida para quatro e nesta casa mora gente que dá pra contar numa mão. É assim que se pede pra alguém ficar sem pedir.',
+    d=>fala(nomeCasa(), 'Senta.', null, 'Não é ordem. É a palavra que esta casa usa pra dizer umas dez outras coisas.'),
     'Você senta. Come mais do que queria e menos do que colocaram no prato.',
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.` : 'O rádio na bancada fala de chuva no norte.';
     },
-    '"Você já sabe pra onde vai?"'
+    d=>fala(nomeCasa(), 'E aí. Você já sabe pra onde vai?')
   ],
   escolhas:[
     {texto:'"Sei." (mesmo que não saiba)', vai:'c1_mentira_gentil'},
@@ -552,10 +569,11 @@ c1_cozinha:{
 
 c1_mentira_gentil:{
   texto:[
-    '"Sei."',
-    'Um silêncio de dois segundos que diz que ninguém acreditou e que ninguém vai discutir.',
-    '"Tá bom." A pessoa do outro lado da mesa mexe o café que já está mexido. "Então come."',
-    'É uma mentira gentil e todo mundo prefere ela hoje.'
+    d=>fala(d.jogador.nome, 'Sei.'),
+    'Dois segundos de silêncio que dizem, com todas as letras, que ninguém acreditou e que ninguém vai discutir.',
+    d=>fala(nomeCasa(), 'Tá bom. Então come.', null,
+            'Ela mexe o café que já está mexido há um minuto.'),
+    'É uma mentira gentil e hoje todo mundo nesta mesa prefere ela.'
   ],
   ef:{flag:'mentiu_no_cafe'},
   escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
@@ -563,11 +581,13 @@ c1_mentira_gentil:{
 
 c1_verdade:{
   texto:[
-    '"Não faço ideia."',
-    'Dessa vez o silêncio é diferente. Mais longo e mais fácil.',
-    '"Ótimo." A resposta te pega desprevenido. "Quem sai daqui sabendo exatamente pra onde vai, volta em três semanas."',
-    '"E quem não sabe?"',
-    '"Esse demora." Um gole de café. "Mas volta diferente, e aí a demora valeu."'
+    d=>fala(d.jogador.nome, 'Não faço a menor ideia.'),
+    'Dessa vez o silêncio é diferente. Mais longo e muito mais fácil.',
+    d=>fala(nomeCasa(), 'Ótimo.', null, 'A resposta te pega completamente desprevenido.'),
+    d=>fala(nomeCasa(), 'Quem sai daqui sabendo exatamente pra onde vai volta em três semanas. Eu já vi isso acontecer quatro vezes nesta rua.'),
+    d=>fala(d.jogador.nome, 'E quem não sabe?'),
+    d=>fala(nomeCasa(), 'Esse demora.', null, 'Um gole de café, sem pressa nenhuma.'),
+    d=>fala(nomeCasa(), 'Mas volta diferente. E aí a demora valeu.')
   ],
   ef:{flag:'foi_honesto_no_cafe', moral:5},
   escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
@@ -575,10 +595,11 @@ c1_verdade:{
 
 c1_objetivo:{
   texto:[
-    d=>`"${d.jogador.objetivo}"`,
-    'Você fala isso em voz alta na sua cozinha, de manhã, com a boca meio cheia, e soa muito mais sério do que soava na sua cabeça.',
-    'Do outro lado da mesa, alguém para de mexer o café.',
-    '"Então vai." Uma pausa. "E quando isso mudar — porque isso muda, sempre muda — não trata como derrota."'
+    d=>fala(d.jogador.nome, d.jogador.objetivo),
+    'Você fala isso em voz alta, na sua cozinha, de manhã, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
+    'Do outro lado da mesa, a colher para no meio do café.',
+    d=>fala(nomeCasa(), 'Então vai.'),
+    d=>fala(nomeCasa(), 'E quando isso mudar — porque isso muda, sempre muda — não trata como derrota.')
   ],
   ef:{flag:'disse_o_objetivo', moral:5},
   escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
@@ -595,10 +616,11 @@ c1_silencio_mesa:{
 
 c1_despedida:{
   texto:[
-    'Na porta, te entregam um embrulho pequeno e um envelope.',
-    '"O embrulho é comida pra estrada. O envelope é dinheiro e não é muito, então não gasta em besteira."',
-    'Você abre o envelope depois, na rua, e descobre que é mais do que essa casa podia dar.',
-    '"Uma coisa só." A mão no batente da porta. "Volta. Não precisa voltar campeão. Só volta."'
+    d=>`Na porta, ${casaCompleto()} te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
+    d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
+    'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
+    d=>fala(nomeCasa(), 'Uma coisa só.', null, 'A mão fecha no batente da porta.'),
+    d=>fala(nomeCasa(), 'Volta. Não precisa voltar campeão. Só volta.')
   ],
   ef:{dinheiro:3000, itens:{'Ração':1}},
   escolhas:[
@@ -616,8 +638,9 @@ c1_rua:{
   texto:[
     d=>`${d.jogador.cidade} de manhã cedo é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`,
     'O ar está frio de um jeito que não vai durar mais de uma hora.',
-    'Um velho varre a calçada da própria casa, como faz há vinte anos. Ele para quando você passa.',
-    '"Ei. Você." Ele aponta a vassoura, sem hostilidade nenhuma. "Você me deve uma."'
+    'Um velho varre a calçada da própria casa, como faz há vinte anos. A vassoura para no meio do movimento quando você passa.',
+    fala('Sr. Rufino', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
+    fala('Sr. Rufino', 'Você me deve uma.')
   ],
   ef:{npc:{nome:'Sr. Rufino', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
   escolhas:[
@@ -630,10 +653,11 @@ c1_rua:{
 
 c1_divida_assume:{
   texto:[
-    '"A janela", ele repete, e quase sorri. "Doze anos e você ainda lembra. Isso me diz mais de você do que qualquer insígnia vai dizer."',
-    'Ele apoia a vassoura na parede e entra em casa. Demora o suficiente pra você achar que ele esqueceu de você.',
+    fala('Sr. Rufino', 'A janela.', null, 'Ele repete a palavra e quase sorri. Quase.'),
+    fala('Sr. Rufino', 'Doze anos e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
+    'Ele apoia a vassoura na parede e entra em casa. Demora o suficiente pra você achar que ele esqueceu que você existe.',
     'Volta com uma caixa de metal amassada, do tipo que já foi de biscoito.',
-    '"Peguei isso de um treinador que passou aqui faz uns anos e não voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse."',
+    fala('Sr. Rufino', 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
     'Dentro tem duas Great Balls e um frasco de Super Potion, tudo dentro da validade por pouco.'
   ],
   ef:{itens:{'Great Ball':2,'Super Potion':1},
@@ -644,8 +668,8 @@ c1_divida_assume:{
 
 c1_divida_nega:{
   texto:[
-    'O velho te olha por tempo demais. Depois volta a varrer.',
-    '"Tá certo", ele diz, sem levantar a cabeça. "Vai com Deus."',
+    'O velho te olha por tempo demais. Depois abaixa a cabeça e volta a varrer.',
+    fala('Sr. Rufino', 'Tá certo. Vai com Deus.', 'frio', 'Ele não levanta a cabeça uma vez sequer.'),
     'Ele não vai esquecer. Gente que varre a mesma calçada há vinte anos não esquece nada — e essa cidade é pequena, e você vai voltar um dia.'
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
@@ -655,8 +679,8 @@ c1_divida_nega:{
 
 c1_divida_paga:{
   texto:[
-    'Você tira o dinheiro do bolso antes que ele termine a frase. Ele olha a nota. Olha você.',
-    '"Eu ia te dar uma coisa", ele diz. "Agora fica estranho."',
+    'Você tira o dinheiro do bolso antes que ele termine a frase. Ele olha a nota. Olha você. Olha a nota de novo.',
+    fala('Sr. Rufino', 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
     'Ele pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.',
     'Você resolveu um problema e criou um assunto.'
   ],
@@ -666,10 +690,11 @@ c1_divida_paga:{
 
 c1_divida_adiada:{
   texto:[
-    '"Hoje não dá. Mas eu volto e resolvo."',
-    'Ele para de varrer e te olha com atenção de verdade pela primeira vez.',
-    '"Todo mundo que sai daqui fala que volta." Ele apoia a vassoura. "Você é o primeiro que fala que volta pra pagar alguma coisa."',
-    '"Tá anotado." Ele bate duas vezes na testa. "Aqui."'
+    d=>fala(d.jogador.nome, 'Hoje não dá. Mas eu volto e resolvo.'),
+    'Ele para de varrer e te olha com atenção de verdade pela primeira vez na sua vida inteira.',
+    fala('Sr. Rufino', 'Todo mundo que sai daqui fala que volta.', null, 'A vassoura encosta na parede.'),
+    fala('Sr. Rufino', 'Você é o primeiro que fala que volta pra pagar alguma coisa.'),
+    fala('Sr. Rufino', 'Tá anotado. Aqui.', null, 'Ele bate duas vezes na própria testa.')
   ],
   ef:{flag:'divida_pendente',
       npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
@@ -697,10 +722,11 @@ c1_saida_pro_centro:{
 
 c1_fila_conversa:{
   texto:[
-    'Os três da fila são: uma menina que decorou o formulário inteiro e está recitando baixinho, um garoto que claramente não dormiu, e uma pessoa de uns dezesseis que já está no terceiro cadastro e não quer falar sobre isso.',
-    '"Terceiro?" pergunta o garoto que não dormiu.',
-    '"Terceiro." A pessoa não desenvolve. "Vocês vão ver."',
-    'Ninguém tem coragem de perguntar o que é que a gente vai ver.'
+    'Os três da fila são: uma menina que decorou o formulário inteiro e está recitando baixinho de olhos fechados, um garoto que claramente não dormiu, e uma pessoa de uns dezesseis que já está no terceiro cadastro e não quer falar sobre isso.',
+    fala('o garoto que não dormiu', 'Terceiro?! Como assim terceiro?'),
+    fala('a pessoa do terceiro cadastro', 'Terceiro.', 'frio', 'Ela não desenvolve.'),
+    fala('a pessoa do terceiro cadastro', 'Vocês vão ver.'),
+    'Ninguém ali tem coragem de perguntar o que é que a gente vai ver.'
   ],
   ef:{flag:'ouviu_o_terceiro_cadastro'},
   escolhas:[
@@ -711,11 +737,12 @@ c1_fila_conversa:{
 
 c1_terceiro_explica:{
   texto:[
-    '"O que a gente vai ver?"',
-    'A pessoa te olha, decide que você aguenta, e responde:',
-    '"Que a licença é anual. Que ela cai se você ficar seis meses sem registrar batalha. E que, quando cai, você tem que recomeçar do zero — inclusive devolver a Pokédex."',
-    '"Eu perdi duas vezes." Ela dá de ombros. "Voltei pra casa duas vezes. Tô aqui de novo."',
-    'Você não sabia de nada disso. Você acha que ninguém que você conhece sabia.'
+    d=>fala(d.jogador.nome, 'O que a gente vai ver?'),
+    'A pessoa te olha de cima a baixo, decide que você aguenta, e responde.',
+    fala('a pessoa do terceiro cadastro', 'Que a licença é anual. Que ela cai se você passar seis meses sem registrar batalha. E que, quando cai, você recomeça do zero — inclusive devolvendo a Pokédex.'),
+    fala('a pessoa do terceiro cadastro', 'Eu perdi duas vezes. Voltei pra casa duas vezes. Tô aqui de novo.', null,
+         'Ela dá de ombros como quem já chorou o que tinha que chorar.'),
+    'Você não sabia de nada disso. E, pensando bem, você acha que ninguém que você conhece sabia.'
   ],
   ef:{flag:'sabe_da_licenca_anual',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou o que os outros tiveram medo de perguntar'}},
@@ -724,10 +751,11 @@ c1_terceiro_explica:{
 
 c1_pergunta_recepcao:{
   texto:[
-    'A enfermeira do balcão tem uns trinta anos e a paciência de quem explica a mesma coisa quatro vezes por dia.',
-    '"Documento com foto, um Pokémon registrado em seu nome e a assinatura de um responsável se você tiver menos de dezesseis."',
-    '"E se eu não tiver responsável?"',
-    '"Aí tem um formulário." Ela já está pegando. "Tem sempre um formulário."'
+    'A enfermeira do balcão tem uns trinta anos e a paciência exata de quem explica a mesma coisa quatro vezes por dia desde 1993.',
+    fala('a enfermeira', 'Documento com foto, um Pokémon registrado no seu nome, e a assinatura de um responsável se você tiver menos de dezesseis.'),
+    d=>fala(d.jogador.nome, 'E se eu não tiver responsável?'),
+    fala('a enfermeira', 'Aí tem um formulário.', null, 'Ela já está puxando a gaveta antes de terminar a frase.'),
+    fala('a enfermeira', 'Tem sempre um formulário.')
   ],
   ef:{flag:'perguntou_antes'},
   escolhas:[{texto:'Entrar na fila.', vai:'c1_fila'}]
@@ -736,14 +764,15 @@ c1_pergunta_recepcao:{
 c1_fila:{
   texto:[
     'A fila leva quarenta minutos porque a máquina de foto quebrou e voltou a funcionar duas vezes.',
-    'Quando chega a sua vez, a enfermeira empurra uma prancheta pela bancada.',
-    '"Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor."',
+    'Quando chega a sua vez, a enfermeira empurra uma prancheta pela bancada com dois dedos.',
+    fala('a enfermeira', 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
     d=>{
       const p = d.time[0];
       return p ? `Você coloca ${nomeExib(p)} na bancada. Ele não gosta da bancada. Fica quieto assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
     },
-    'Ela passa um leitor por cima dele. A máquina apita uma vez.',
-    '"Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição." Ela levanta os olhos. "Ele é de casa mesmo, né?"'
+    'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
+    fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
+    fala('a enfermeira', 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
   ],
   escolhas:[
     {texto:'"É. Desde antes de eu lembrar."', vai:'c1_registro',
@@ -756,10 +785,10 @@ c1_fila:{
 
 c1_registro_anterior:{
   texto:[
-    '"O que acontece se ele tivesse registro anterior?"',
+    d=>fala(d.jogador.nome, 'O que acontece se ele tivesse registro anterior?'),
     'A enfermeira não levanta os olhos da prancheta.',
-    '"Aí eu teria que chamar o oficial de plantão, e o oficial ia perguntar como ele chegou em você, e você ia responder, e a partir da sua resposta a manhã ia ser muito diferente."',
-    'Ela carimba. "Boa sorte que não é o caso."'
+    fala('a enfermeira', 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta esta manhã ia ser muito, muito diferente.', 'frio'),
+    fala('a enfermeira', 'Boa sorte que não é o caso.', null, 'O carimbo desce com força.')
   ],
   ef:{flag:'sabe_do_registro_anterior'},
   escolhas:[{texto:'Assinar.', vai:'c1_registro'}]
@@ -767,11 +796,13 @@ c1_registro_anterior:{
 
 c1_porque_importa:{
   texto:[
-    '"Por que isso importa?"',
-    'Aí ela para e olha pra você de verdade.',
-    '"Porque tem gente vendendo Pokémon em banca de rua a duas cidades daqui, com nota fiscal e tudo." Ela volta ao carimbo. "E porque metade do que aparece nessa bancada não veio de casa nenhuma."',
-    '"E você registra mesmo assim?"',
-    '"Eu registro o que a máquina deixa registrar." Carimbo. "O resto não é o meu balcão."'
+    d=>fala(d.jogador.nome, 'Por que isso importa?'),
+    'Aí ela para. E olha pra você de verdade.',
+    fala('a enfermeira', 'Porque tem gente vendendo Pokémon em banca de rua a duas cidades daqui. Com nota fiscal e tudo.'),
+    fala('a enfermeira', 'E porque metade do que aparece nesta bancada não veio de casa nenhuma.', null, 'Ela volta ao carimbo.'),
+    d=>fala(d.jogador.nome, 'E a senhora registra mesmo assim?'),
+    fala('a enfermeira', 'Eu registro o que a máquina deixa registrar.', 'frio', 'Carimbo.'),
+    fala('a enfermeira', 'O resto não é o meu balcão.')
   ],
   ef:{flag:'ouviu_sobre_as_bancas',
       rep:{eixo:'bom',delta:1,motivo:'Fez a pergunta certa numa fila de balcão'}},
@@ -782,11 +813,11 @@ c1_registro:{
   texto:[
     'Você assina. A caneta é daquelas presas no balcão por um barbante.',
     'A impressora do fundo trabalha por quase um minuto inteiro e para.',
-    'A enfermeira separa as coisas na bancada, uma por uma, e diz o nome de cada uma como se fosse a primeira vez que ela fizesse isso na vida — e é, provavelmente, a quinta hoje:',
-    '"Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade."',
-    '"Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde."',
-    '"Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar. Se você devolver com menos de vinte registros, eles vão te ligar."',
-    '"Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra."'
+    'A enfermeira separa as coisas na bancada, uma por uma, e diz o nome de cada uma como se fosse a primeira vez na vida dela — e é, provavelmente, a quinta vez hoje.',
+    fala('a enfermeira', 'Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade.'),
+    fala('a enfermeira', 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.'),
+    fala('a enfermeira', 'Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar. Se você devolver com menos de vinte registros, eles vão te ligar.'),
+    fala('a enfermeira', 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.')
   ],
   ef:{flag:['tem_licenca','tem_pokedex','tem_cartao'],
       itens:{'Poké Ball':5,'Potion':2},
@@ -801,10 +832,12 @@ c1_registro:{
 
 c1_conselho:{
   texto:[
-    '"O que a senhora faria no meu lugar?"',
-    'Ela fecha a prancheta e pensa de verdade, o que é mais do que a pergunta merecia.',
-    '"Eu andaria devagar." Ela diz isso como quem já viu muita gente andar rápido. "Todo mundo que chega aqui quer chegar em algum lugar. Quase ninguém repara no caminho, e o caminho é onde tudo acontece."',
-    '"E outra coisa." Ela empurra a Pokédex pra você. "Fala com as pessoas. Não com treinador — com as pessoas. Quem mora nos lugares sabe de tudo e nunca ninguém pergunta."'
+    d=>fala(d.jogador.nome, 'O que a senhora faria no meu lugar?'),
+    'Ela fecha a prancheta e pensa de verdade — o que é bem mais do que a pergunta merecia.',
+    fala('a enfermeira', 'Eu andaria devagar.', null, 'Ela diz isso como quem já viu muita gente andar rápido.'),
+    fala('a enfermeira', 'Todo mundo que chega neste balcão quer chegar em algum lugar. Quase ninguém repara no caminho. E o caminho é onde tudo acontece.'),
+    fala('a enfermeira', 'E outra coisa.', null, 'Ela empurra a Pokédex na sua direção.'),
+    fala('a enfermeira', 'Fala com as pessoas. Não com treinador — com as pessoas. Quem mora nos lugares sabe de tudo, e nunca ninguém pergunta.')
   ],
   ef:{flag:'conselho_da_enfermeira',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou conselho a quem ninguém pergunta nada'}},
@@ -816,11 +849,13 @@ c1_conselho:{
 
 c1_ela_foi:{
   texto:[
-    '"A senhora também foi treinadora?"',
+    d=>fala(d.jogador.nome, 'A senhora também foi treinadora?'),
     'Pausa curta demais pra ser hesitação e longa demais pra ser nada.',
-    '"Fui." Ela ajeita a prancheta que já está ajeitada. "Cheguei em seis insígnias."',
-    '"E aí?"',
-    '"E aí meu Rapidash morreu numa rota de madrugada e eu não tinha Potion porque eu tinha gastado tudo em Poké Ball." Ela sorri, e o sorriso é normal, o que é o pior. "Compra Potion. Sempre mais Potion do que bola. Ninguém nunca escuta isso."'
+    fala('a enfermeira', 'Fui. Cheguei em seis insígnias.', null, 'Ela ajeita a prancheta que já estava ajeitada.'),
+    d=>fala(d.jogador.nome, 'E aí?'),
+    fala('a enfermeira', 'E aí o meu Rapidash morreu numa rota de madrugada, e eu não tinha Potion, porque eu tinha gastado tudo em Poké Ball.', 'baixo',
+         'Ela sorri. O sorriso é completamente normal, e é essa a parte ruim.'),
+    fala('a enfermeira', 'Compra Potion. Sempre mais Potion do que bola. Ninguém nunca escuta isso.')
   ],
   ef:{flag:'historia_da_enfermeira', itens:{'Potion':1},
       npc:{nome:'Enfermeira do Centro', opiniao:3, memoria:'Te contou por que parou de ser treinadora. Chegou em seis insígnias.'},
@@ -834,9 +869,11 @@ c1_ela_foi:{
 c1_pokedex:{
   texto:[
     'A Pokédex é menor e mais pesada do que parece nas fotos. A tela tem um risco na diagonal que já estava lá.',
-    '"Ela é de segunda mão", a enfermeira confirma sem você perguntar. "Todas são. A primeira leva de aparelho novo foi pro Professor e pros três que ele escolheu, faz uns anos."',
-    '"E funcionou?"',
-    '"Um deles derrubou a Equipe Rocket sozinho e sumiu." Ela dá de ombros. "Então sim, mais ou menos."',
+    fala('a enfermeira', 'É de segunda mão.', null, 'Ela confirma sem você ter perguntado nada.'),
+    fala('a enfermeira', 'Todas são. A primeira leva de aparelho novo foi pro Professor e pros três que ele escolheu, faz uns anos.'),
+    d=>fala(d.jogador.nome, 'E funcionou?'),
+    fala('a enfermeira', 'Um deles derrubou a Equipe Rocket sozinho e sumiu.', null, 'Ela dá de ombros.'),
+    fala('a enfermeira', 'Então sim. Mais ou menos.'),
     'Você segura na mão uma versão gasta do mesmo aparelho.'
   ],
   ef:{flag:'sabe_do_red'},
@@ -848,10 +885,12 @@ c1_pokedex:{
 
 c1_quem_sumiu:{
   texto:[
-    '"Quem sumiu?"',
-    '"O Red." Ela fala o nome do jeito que se fala nome de parente distante que deu certo. "Terminou o que tinha pra terminar e foi embora. Ninguém sabe pra onde."',
-    '"E a Liga?"',
-    '"A cadeira de Campeão tá vaga faz dois anos." Ela finalmente sorri de verdade. "Então, tecnicamente, tá aberta."',
+    d=>fala(d.jogador.nome, 'Quem sumiu?'),
+    fala('a enfermeira', 'O Red.', null, 'Ela fala o nome do jeito que se fala nome de parente distante que deu certo.'),
+    fala('a enfermeira', 'Terminou o que tinha pra terminar e foi embora. Ninguém sabe pra onde.'),
+    d=>fala(d.jogador.nome, 'E a Liga?'),
+    fala('a enfermeira', 'A cadeira de Campeão tá vaga faz dois anos.', null, 'E aí ela finalmente sorri de verdade.'),
+    fala('a enfermeira', 'Então, tecnicamente, tá aberta.'),
     'Ela diz isso pra você de um jeito muito específico, e você entende que ela diz isso pra todo mundo que passa por esse balcão, e que ela acerta uma vez a cada mil.'
   ],
   ef:{flag:'sabe_da_cadeira_vaga'},
