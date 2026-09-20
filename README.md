@@ -337,3 +337,22 @@ Para regerar o arquivo único depois de alterar qualquer fonte:
 ```bash
 python3 build.py
 ```
+
+### Sprites
+
+As artes são as de HeartGold/SoulSilver, para os 251 registros de Kanto e
+Johto, e ficam em `sprites_nds/` com esta convenção:
+
+```
+sprites_nds/party_icons/{id}.png          ícone de equipe e PC
+sprites_nds/battle/front/{id}.png         frente: batalha e Pokédex
+sprites_nds/battle/front_shiny/{id}.png   frente brilhante
+sprites_nds/battle/back/{id}.png          costas: o seu, em combate
+sprites_nds/battle/back_shiny/{id}.png    costas brilhante
+```
+
+`js/data/sprites.js` é o único lugar que conhece esses caminhos. No
+arquivo único o `build.py` embute as 1255 artes como data URI, então
+`jornada-do-campeao.html` continua funcionando sozinho, sem pasta do
+lado. Se a pasta sumir no modo repositório, cada imagem se apaga e a
+tela volta a ser a de texto — nada quebra.

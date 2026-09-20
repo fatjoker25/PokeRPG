@@ -994,7 +994,7 @@ h3.cat-item{
   max-height:52vh;overflow-y:auto;padding-right:4px
 }
 .dex-cela{
-  display:flex;align-items:baseline;gap:7px;width:100%;text-align:left;
+  display:flex;align-items:center;gap:7px;width:100%;text-align:left;
   font:inherit;font-size:12.5px;color:var(--dex-txt, inherit);
   padding:7px 9px;border-radius:8px;border:1px solid var(--dex-tela-3, var(--borda));
   background:rgba(255,255,255,.72);position:relative
@@ -1031,6 +1031,66 @@ h3.cat-item{
 .dex-ficha .nomeg{font-size:19px;font-weight:650;letter-spacing:.01em}
 .dex-ficha .nota{font-size:12.5px;color:var(--dex-txt-2, var(--texto-fraco));margin-top:6px;font-style:italic}
 .dex-ficha .nota.mono{font-family:var(--mono);font-style:normal;letter-spacing:.02em}
+
+/* ============================================================
+   SPRITES — HeartGold/SoulSilver
+   Arte de pixel: nada de suavizar na ampliação.
+   ============================================================ */
+.sprite{
+  image-rendering:pixelated;
+  image-rendering:-moz-crisp-edges;
+  image-rendering:crisp-edges;
+  display:block;
+}
+/* espécie não catalogada: você vê o contorno e mais nada */
+.sprite.silhueta{filter:brightness(0) saturate(0) opacity(.72)}
+:root:not([data-theme="light"]) .sprite.silhueta,
+html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
+.sprite-brilho{filter:drop-shadow(0 0 7px rgba(245,197,24,.75))}
+
+/* arena: o seu de costas, o outro de frente.
+   Sem a pasta de sprites a <img> se remove e o espaço fecha junto. */
+.lutador .arte{
+  height:104px;display:flex;align-items:flex-end;justify-content:center;
+  margin:-4px 0 2px
+}
+.lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
+.lutador .arte .sprite{
+  width:96px;height:96px;object-fit:contain;
+  animation:surgeSprite .45s var(--mola) both
+}
+.lutador.inimigo .arte .sprite{animation-delay:.08s}
+@keyframes surgeSprite{
+  from{opacity:0;transform:translateY(-10px) scale(.88)}
+  to{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){.lutador .arte .sprite{animation:none}}
+@media(max-width:620px){
+  .lutador .arte{height:80px}
+  .lutador .arte .sprite{width:74px;height:74px}
+}
+
+/* ícone de equipe: ao lado do nome, em lista e em carta */
+.sprite-icone{width:40px;height:30px;object-fit:contain;flex:0 0 auto}
+.com-icone{display:inline-flex;align-items:center;gap:4px}
+.escolha .sprite-icone{vertical-align:middle;display:inline-block;margin-right:5px}
+
+/* Pokédex: ícone na célula da grade e arte grande na ficha */
+.dex-cela .dex-icone{width:32px;height:24px;object-fit:contain;flex:0 0 auto;margin-right:-2px}
+.dex-cela.vazia .dex-icone{display:none}
+.dex-arte{
+  display:flex;justify-content:center;align-items:center;
+  height:104px;margin:2px 0 6px
+}
+.dex-arte .sprite{width:96px;height:96px;object-fit:contain}
+/* a varredura passa por cima da silhueta, não por baixo */
+.dex-scan .silhueta{
+  display:flex;align-items:center;justify-content:center;
+  width:96px;height:96px;border-radius:0;background:none;box-shadow:none
+}
+.dex-scan .silhueta .scan-arte{width:96px;height:96px;object-fit:contain}
+.dex-scan .silhueta.brilho{background:none;box-shadow:none}
+.dex-scan .silhueta.brilho .scan-arte{filter:brightness(0) opacity(.8) drop-shadow(0 0 12px rgba(245,197,24,.9))}
 
 /* ---- as duas faixas do registro nacional ---- */
 .dex-faixas{

@@ -378,7 +378,11 @@ const UI = {
         : (leuTipo ? '<span class="mono">tipo lido de olho · ficha não catalogada</span>'
                    : '<span class="mono">ficha não catalogada</span>');
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
+      /* O seu aparece de costas, como em qualquer combate; o do outro
+         lado, de frente. Espécie não catalogada sai em silhueta. */
+      const arte = imgSprite(p, meu ? 'costas' : 'frente', {oculto: !catalogado});
       return `<div class="lutador ${cls}">
+        <div class="arte">${arte}</div>
         <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
         <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
         ${this.barraHP(p)}
@@ -523,7 +527,7 @@ const UI = {
       </div>
       <div class="dex-scan" id="dex-scan">
         <div class="alvo">
-          <span class="silhueta${alvo.shiny ? ' brilho' : ''}"></span>
+          <span class="silhueta${alvo.shiny ? ' brilho' : ''}">${imgSprite(alvo, 'frente', {oculto:true, classe:'scan-arte'})}</span>
           <span class="varredura"></span>
         </div>
         <div class="linhas mono" id="dex-scan-linhas"></div>
@@ -573,6 +577,7 @@ const UI = {
         <div class="cab"><span class="num">#${num}</span>
           <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
+        <div class="dex-arte">${imgSprite(p, 'frente')}</div>
         <div class="nota">Nível ${p.nivel} · ${this.esc(p.natureza)}${nat.traco ? ' — ' + this.esc(nat.traco) : ''}</div>
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
         ${nat.agressiva ? '<div class="nota alerta">Temperamento agressivo: se o seu time cair, ele não recua.</div>' : ''}
@@ -630,14 +635,14 @@ const UI = {
     if (!outros.length) return this.modal('Trocar', '<p class="nada">Não tem mais ninguém em pé.</p>');
     this.modal('Trocar por quem?', outros.map(p =>
       `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})">
-        ${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''));
+        ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''));
   },
 
   trocaObrigatoria(uids){
     const ps = uids.map(u => Estado.dados.time.find(p => p.uid === u)).filter(Boolean);
     this.modal('Quem entra agora?', ps.map(p =>
       `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})">
-        ${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''), true);
+        ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''), true);
   },
 
   /* ========================================================
@@ -1091,7 +1096,7 @@ const UI = {
   modalTime(){
     const d = Estado.dados;
     const carta = p => `<div class="carta ${p.morto?'morto':''}">
-      <div class="t"><span>${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
+      <div class="t"><span class="com-icone">${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
@@ -1456,10 +1461,11 @@ const UI = {
       const bri = (pd.brilhantes || {})[dex];
       const est = bri ? ` brilho${bri === 'capturado' ? ' pego' : ''}` : '';
       const sel = bri ? '<span class="dex-brilho">✦</span>' : '';
+      const arte = d => imgSpriteDex(dex, 'icone', {oculto:!d, classe:'dex-icone'});
       if (cat) return `<button class="dex-cela cat${est}" onclick="UI.dexEntrada(${dex})">
-        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}</button>`;
+        ${arte(true)}<span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}</button>`;
       if (vis) return `<button class="dex-cela vis${est}" onclick="UI.dexEntrada(${dex})">
-        <span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}
+        ${arte(false)}<span class="n">${num}</span><span class="nm">${this.esc(esp.nome)}</span>${sel}
         <span class="marca">visto</span></button>`;
       return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
@@ -1489,6 +1495,7 @@ const UI = {
         </div>
         <div class="dex-ficha">
           <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span></div>
+          <div class="dex-arte">${imgSpriteDex(dex, 'frente', {oculto:true})}</div>
           <div class="nota">Avistado. A Pokédex guardou o número e o nome e mais nada.</div>
           <div class="nota">Para abrir a ficha: aponte a Pokédex nele durante um combate. Custa nada — não gasta o turno.</div>
         </div>
@@ -1507,6 +1514,7 @@ const UI = {
       <div class="dex-ficha">
         <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
+        <div class="dex-arte">${imgSprite({dex, nome:esp.nome, shiny: Estado.brilhanteDe(dex) === 'capturado'}, 'frente')}</div>
 
         <h3 class="cat-item">Base</h3>
         ${linha('HP', b.hp, 255)}

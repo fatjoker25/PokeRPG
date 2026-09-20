@@ -9,6 +9,26 @@ js  = re.findall(r'<script src="([^"]+)"></script>', html)
 estilos  = ['<style>\n' + open(c, encoding='utf-8').read() + '\n</style>' for c in css]
 scripts  = ['/* ===== ' + j + ' ===== */\n' + open(j, encoding='utf-8').read() for j in js]
 
+# ---- sprites: o arquivo único carrega as artes dentro dele ----
+# Sem isso, jornada-do-campeao.html deixaria de funcionar sozinho:
+# a promessa é abrir em qualquer lugar, sem pasta do lado.
+import base64, json
+SPRITES_DIR = 'sprites_nds'
+sprites = {}
+if os.path.isdir(SPRITES_DIR):
+    for raiz, _, arqs in os.walk(SPRITES_DIR):
+        for a in sorted(arqs):
+            if not a.endswith('.png'):
+                continue
+            caminho = os.path.join(raiz, a).replace(os.sep, '/')
+            dados = base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
+            sprites[caminho] = 'data:image/png;base64,' + dados
+    scripts.insert(0, '/* ===== sprites embutidos (' + str(len(sprites)) + ') ===== */\n'
+                      'const SPRITES_DATA = ' + json.dumps(sprites, separators=(',', ':')) + ';')
+    print(f'sprites embutidos: {len(sprites)} arquivos')
+else:
+    print('sprites_nds/ ausente — o arquivo único sai sem as artes')
+
 saida = re.sub(r'<link rel="stylesheet" href="[^"]+">', '\n'.join(estilos), html)
 saida = re.sub(r'<script src="[^"]+"></script>\s*', '', saida)
 saida = saida.replace('</body>', '<script>\n' + '\n\n'.join(scripts) + '\n</script>\n</body>')
