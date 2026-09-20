@@ -514,9 +514,24 @@ const Estado = {
     return {pontos:p, atual:(p - piso) / Math.max(1, teto - piso), falta:teto - p, prox:n+1};
   },
 
+  /* O mesmo feito não é contado duas vezes. Cenas se revisitam e
+     algumas escolhas voltam para onde começaram — sem isso, dava
+     para consertar a mesma calha a tarde inteira e virar Famoso.
+     A trava é por capítulo, porque laço de cena não atravessa
+     capítulo: prometer voltar para alguém em Pewter e prometer de
+     novo para outra pessoa em Celadon continuam sendo duas coisas.
+     E os motivos que se repetem de verdade já vêm parametrizados
+     (a cidade do ginásio, a rodada do torneio, a espécie). */
+  jaContou(motivo){
+    if (!motivo) return false;
+    const cap = this.dados.capitulo;
+    return (this.rep.historico || []).some(h => h.motivo === motivo && h.cap === cap);
+  },
+
   mudarRep(eixo, delta, motivo, ef){
     const r = this.normalizarRep();
     if (!delta) return null;
+    if (this.jaContou(motivo)) return null;
     const antes = this.nomeRep();
     const pontos = this.pesoRep(delta, ef);
 
