@@ -27,6 +27,11 @@ let _uidPokemon = 1;
 function criarPokemon(dexId, nivel, opcoes={}){
   const esp = DEX[dexId];
   if (!esp) throw new Error('Pokémon inexistente: ' + dexId);
+  /* Quem já evoluiu não existe abaixo do nível em que evoluiu.
+     Vale para selvagem, time de treinador e cena escrita à mão. */
+  nivel = Math.max(1, Math.min(100, Math.round(nivel)));
+  const piso = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(dexId) : (esp.nivelMin || 1);
+  if (nivel < piso) nivel = piso;
   const natureza = opcoes.natureza || Dados.escolher(NOMES_NATUREZAS);
   const ivs = opcoes.ivs || ivsAleatorios();
   const stats = calcularStats(esp.base, nivel, ivs, natureza);
@@ -164,14 +169,6 @@ function estaVivo(p){ return !p.morto && p.hp > 0; }
 /* Encontro selvagem: espécie e nível TOTALMENTE aleatórios,
    com o ambiente apenas enviesando a probabilidade. */
 function sortearSelvagem(ambiente='campo', nivelBase=8){
-  const tiposPref = VIES_AMBIENTE[ambiente] || [];
-  let dexId;
-  if (tiposPref.length && Dados.chance(65)){
-    const candidatos = POOL_SELVAGEM.filter(d => DEX[d].tipos.some(t => tiposPref.includes(t)));
-    dexId = Dados.escolher(candidatos.length ? candidatos : POOL_SELVAGEM);
-  } else {
-    dexId = Dados.escolher(POOL_SELVAGEM);   // qualquer um, em qualquer lugar
-  }
   // nível: normalmente perto da faixa da área, mas com cauda longa (Lv30 na Rota 1 acontece)
   let nivel;
   const r = Dados.d20('Nível do selvagem');
@@ -180,5 +177,21 @@ function sortearSelvagem(ambiente='campo', nivelBase=8){
   else if (r <= 2)   nivel = Math.max(2, Dados.entre(nivelBase - 6, nivelBase - 2));
   else               nivel = Math.max(2, Dados.entre(nivelBase - 3, nivelBase + 4));
   nivel = Math.min(70, nivel);
+
+  /* Só entram no sorteio as espécies que podem existir neste nível.
+     Numa rota de nível 6 não se encontra Dodrio: encontra-se Doduo. */
+  const cabe = d => nivelMinimoDe(d) <= nivel;
+  const possiveis = POOL_SELVAGEM.filter(cabe);
+  const pool = possiveis.length ? possiveis : POOL_SELVAGEM.filter(d => nivelMinimoDe(d) <= 1 + nivel);
+  const base = pool.length ? pool : POOL_SELVAGEM;
+
+  const tiposPref = VIES_AMBIENTE[ambiente] || [];
+  let dexId;
+  if (tiposPref.length && Dados.chance(65)){
+    const candidatos = base.filter(d => DEX[d].tipos.some(t => tiposPref.includes(t)));
+    dexId = Dados.escolher(candidatos.length ? candidatos : base);
+  } else {
+    dexId = Dados.escolher(base);   // qualquer um, em qualquer lugar
+  }
   return criarPokemon(dexId, nivel, {selvagem:true});
 }

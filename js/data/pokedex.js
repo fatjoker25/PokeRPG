@@ -182,6 +182,41 @@ DEX_RAW.forEach(r => {
   };
 });
 
+/* ── Nível mínimo de existência ───────────────────────────────
+   Um Dodrio não existe no nível 6: ele foi um Doduo até o 31.
+   Para cada espécie, o piso é o nível em que a forma anterior
+   evolui; em cadeia, o piso do estágio anterior sobe junto.
+   Evolução por pedra ou troca não tem nível: ali o piso é o da
+   forma anterior com uma folga, porque ninguém usa pedra em
+   filhote recém-nascido.                                        */
+/* O campo evo guarda um destino só. Eevee tem três, e as três
+   vêm de pedra, então entram aqui à mão. */
+const PRE_EVO_EXTRA = {134:133, 135:133, 136:133};
+
+Object.values(DEX).forEach(p => { p.preEvo = 0; p.nivelMin = 1; });
+Object.values(DEX).forEach(p => { if (p.evo) DEX[p.evo].preEvo = p.dex; });
+Object.entries(PRE_EVO_EXTRA).forEach(([dex, anterior]) => { DEX[dex].preEvo = anterior; });
+
+(function calcularPisos(){
+  const piso = dex => {
+    const e = DEX[dex];
+    if (!e || !e.preEvo) return 1;
+    const anterior = DEX[e.preEvo];
+    const pisoAnterior = piso(e.preEvo);
+    return anterior.nivelEvo > 0
+      ? Math.max(anterior.nivelEvo, pisoAnterior)     /* evolui por nível */
+      : Math.max(pisoAnterior + 5, 18);               /* pedra ou troca   */
+  };
+  Object.values(DEX).forEach(p => { p.nivelMin = piso(p.dex); });
+})();
+
+/* O piso de quem já evoluiu vale para qualquer lugar que gere um
+   Pokémon: selvagem, time de treinador ou cena escrita à mão. */
+function nivelMinimoDe(dexId){
+  const e = DEX[dexId];
+  return e ? (e.nivelMin || 1) : 1;
+}
+
 /* Taxa de captura derivada: lendários 3, fortões 45, médios 90, comuns 190 */
 Object.values(DEX).forEach(p => {
   if (p.lendario) p.captura = 3;

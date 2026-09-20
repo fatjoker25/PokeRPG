@@ -25,7 +25,7 @@ const GINASIOS = [
   insignia:'Insígnia Pedra', dificuldade:0,
   escaloes:[
     {min:0, especies:[74, 95], variacoes:[27,50,74]},                  // Geodude, Onix
-    {min:2, especies:[74, 95, 75], variacoes:[27,50,95,74]},              // + Graveler
+    {min:2, especies:[74, 95, 111], variacoes:[27,50,95,74]},             // + Rhyhorn
     {min:4, especies:[75, 111, 95, 138], variacoes:[28,105,74,95]},        // Graveler, Rhyhorn, Onix, Omanyte
     {min:6, especies:[76, 112, 95, 141, 142], variacoes:[28,105,76,112]}    // Golem, Rhydon, Onix, Kabutops, Aerodactyl
   ],

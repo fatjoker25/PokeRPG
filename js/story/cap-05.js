@@ -1447,7 +1447,7 @@ c5_ataque:{
     'Os outros quatro param de trabalhar e ficam vendo, sem nenhuma intenção de ajudar, do jeito que colega de trabalho assiste a briga de colega de trabalho.',
     'Ele solta a bola.'
   ],
-  batalha:{dex:89, nivel:22, tipo:'treinador', treinador:'Vasco', fuga:false,
+  batalha:{dex:88, nivel:22, tipo:'treinador', treinador:'Vasco', fuga:false,
            timeExtra:[{dex:42, nivel:24}],
            vitoria:'c5_venceu', derrota:'c5_perdeu', gameover:'gameover'}
 },

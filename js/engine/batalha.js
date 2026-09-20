@@ -150,7 +150,11 @@ const Batalha = {
     const fisico = g.c === 'fis';
     const a = this.statEfetivo(atk, estAtk, fisico ? 'atk' : 'spa');
     const d = this.statEfetivo(def, estDef, fisico ? 'def' : 'spd');
-    const razao = Math.max(0.45, Math.min(2.2, a / Math.max(1, d)));
+    /* A diferença entre um Machamp e um Chansey tem que aparecer.
+       A razão vem dos stats (que vêm da base da espécie) e a curva
+       abre um pouco a distância em vez de achatar tudo no meio. */
+    const bruta = a / Math.max(1, d);
+    const razao = Math.max(0.33, Math.min(3.2, Math.pow(bruta, 1.15)));
 
     const golpes = (g.ef && g.ef.golpes) ? g.ef.golpes : 1;
     let total = 0;
@@ -160,8 +164,13 @@ const Batalha = {
     }
     if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
 
+    /* Primeira geração: quem é rápido critica mais. A chance sai da
+       velocidade base da espécie, não de um d20 igual para todos. */
+    const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
+    let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
+    if (g.ef && g.ef.critico) limiteCrit -= 3;
     const dCrit = Dados.d20('Crítico');
-    if (dCrit === 20 || (g.ef && g.ef.critico && dCrit >= 18)){
+    if (dCrit >= limiteCrit){
       res.critico = true;
       total = Math.round(total * 1.5);
       res.msgs.push('ACERTO CRÍTICO!');
@@ -475,6 +484,7 @@ const Batalha = {
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
     this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
     this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
+    this.ev('pokedex', `Base da espécie: ${esp.base.hp}/${esp.base.atk}/${esp.base.def}/${esp.base.spa}/${esp.base.spd}/${esp.base.spe} — soma ${esp.total}.`);
     if ((NATUREZAS[p.natureza]||{}).agressiva)
       this.ev('perigo', 'Marcação da Pokédex: temperamento agressivo. Se o seu time cair, ele não recua.');
     if (novo) this.ev('pokedex', `Registro novo: ${esp.nome} catalogado.`);

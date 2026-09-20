@@ -19,10 +19,13 @@ const Historia = {
     const cap = this.capitulo(n);
     if (!cap) return null;
     Estado.dados.capitulo = n;
-    Estado.dados.cena = cap.inicio;
+    /* inicio pode ser uma função: capítulos que abrem de jeitos
+       diferentes escolhem a cena de entrada na hora de entrar. */
+    const entrada = (typeof cap.inicio === 'function') ? cap.inicio(Estado.dados) : cap.inicio;
+    Estado.dados.cena = entrada;
     this.capAtual = cap;
     Estado.registrar(`=== Capítulo ${n}: ${cap.titulo} ===`);
-    return this.ir(cap.inicio, true);
+    return this.ir(entrada, true);
   },
 
   /* aplicarEfeitos: só na PRIMEIRA vez que se entra na cena.

@@ -3,11 +3,17 @@
    A saída de casa, sem pressa. A mochila começa vazia: licença,
    Pokédex, cartão e bolas saem do Centro Pokémon, com papel.
    ============================================================ */
+/* A mesma manhã, começando de seis jeitos. O jogo sorteia um
+   por partida, então duas jornadas nunca abrem igual. */
+const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado','c1_vizinha'];
+
 CAPITULOS.push(
 
 {
 num:1, titulo:'A Última Manhã', local:d=>d.jogador.cidade, ambiente:'campo', nivelArea:4,
-tom:'leve', inicio:'c1_acorda',
+tom:'leve',
+entradas: ABERTURAS_C1,
+inicio: () => Dados.escolher(ABERTURAS_C1),
 cenas:{
 
 c1_acorda:{
@@ -27,6 +33,430 @@ c1_acorda:{
     {texto:'Levantar e olhar as coisas do quarto uma última vez.', vai:'c1_quarto'},
     {texto:'Conferir a mochila de novo, pela quarta vez.', vai:'c1_mochila'},
     {texto:'Descer direto. Enrolar só piora.', vai:'c1_cozinha'}
+  ]
+},
+
+/* ── outras maneiras de a mesma manhã começar ─────────────── */
+
+c1_chuva:{
+  texto:[
+    'Choveu a noite inteira e ainda está chovendo, daquele jeito fino que não molha de uma vez e molha tudo no fim.',
+    'Você acorda com o barulho da calha entupida batendo na lata do quintal, um pingo a cada dois segundos, e com a certeza incômoda de que era hoje que você ia sair de casa.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'A mochila está no chão, arrumada desde ontem, encostada na parede que dá pro lado da chuva.';
+      return `${nomeExib(p)} está sentado na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
+    },
+    'Lá embaixo alguém abre e fecha a porta dos fundos duas vezes: é a pessoa da sua casa tentando decidir se tira a roupa do varal ou se já era.',
+    'Ninguém vai falar em adiar. Você também não vai. Mas todo mundo nesta casa está pensando nisso.'
+  ],
+  ef:{flag:'comecou_na_chuva', registrar:'Saiu de casa num dia de chuva fina.'},
+  escolhas:[
+    {texto:'Descer e consertar a calha antes de qualquer coisa.', vai:'c1_calha'},
+    {texto:'Ficar na janela um tempo, junto com ele.', vai:'c1_janela_chuva'},
+    {texto:'Conferir a mochila: chuva estraga papel.', vai:'c1_mochila'},
+    {texto:'Descer. Chuva não é motivo.', vai:'c1_cozinha'}
+  ]
+},
+
+c1_calha:{
+  texto:[
+    'Você desce de chinelo, arrasta o banquinho, sobe e enfia a mão na calha.',
+    'É folha. É sempre folha. Sai um punhado marrom e pesado e a água desce de uma vez, num jorro, e molha você da cabeça aos pés.',
+    'Da porta dos fundos, alguém ri. É a primeira vez em três dias que alguém ri nesta casa.',
+    '"Deixa que eu limpo o resto", a pessoa diz, e não é sobre a calha.',
+    'Você desce do banquinho encharcado no dia em que ia sair de casa, e por algum motivo isso melhora tudo.'
+  ],
+  ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Consertou a calha antes de ir embora'},
+      registrar:'Desentupiu a calha da casa antes de sair.'},
+  escolhas:[
+    {texto:'Entrar e tomar café molhado mesmo.', vai:'c1_cozinha'},
+    {texto:'Trocar de roupa primeiro e conferir a mochila.', vai:'c1_mochila'}
+  ]
+},
+
+c1_janela_chuva:{
+  texto:[
+    'Você senta no chão do lado da janela e fica.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'A água desce no vidro em linhas que se encontram e viram uma linha só. Dá pra ficar olhando isso por muito tempo.';
+      return `${nomeExib(p)} não desgruda do vidro. De vez em quando ele encosta o focinho e o vidro embaça e ele tira, e o embaçado some, e ele encosta de novo.`;
+    },
+    'Duas gotas que descem separadas se encontram no meio do vidro e viram uma gota só, mais rápida, e chegam embaixo antes de todas as outras.',
+    'Você fica uns bons dez minutos nisso e depois percebe que está adiando.'
+  ],
+  ef:{moral:2},
+  escolhas:[
+    {texto:'Levantar e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
+    {texto:'Descer e consertar a calha.', vai:'c1_calha'}
+  ]
+},
+
+c1_dormiu_demais:{
+  texto:[
+    'Você acorda às nove e quarenta com a luz batendo toda errada no quarto e leva três segundos inteiros para entender o que isso significa.',
+    'O despertador está desligado. Não tocou, ou tocou e alguém desligou, e você sabe qual das duas foi.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'A casa está silenciosa de um jeito que casa com gente dentro nunca fica.';
+      return `${nomeExib(p)} está acordado há horas, sentado ao lado da mochila, com a paciência de quem não tem relógio e não precisa de um.`;
+    },
+    'Lá embaixo não tem barulho de panela, nem rádio, nem ninguém.',
+    'Na mesa da cozinha, um prato com um pano por cima e um papel dobrado ao lado.'
+  ],
+  ef:{flag:'dormiu_demais', registrar:'Acordou às 9h40 do dia de sair de casa. A casa estava vazia.'},
+  escolhas:[
+    {texto:'Ler o papel.', vai:'c1_o_papel'},
+    {texto:'Comer primeiro. O papel não vai embora.', vai:'c1_comeu_frio'},
+    {texto:'Conferir a mochila enquanto pensa.', vai:'c1_mochila'},
+    {texto:'Sair sem ler e sem comer.', vai:'c1_rua'}
+  ]
+},
+
+c1_o_papel:{
+  texto:[
+    'É meia folha de caderno, escrita com a letra que você conhece desde que aprendeu a ler.',
+    'Eu não te acordei de propósito. Dormir é a única coisa que eu ainda podia te dar hoje.',
+    'O café está embaixo do pano. Tem mais no armário de cima.',
+    'Não volta por obrigação. Volta quando der vontade, que é diferente e é melhor.',
+    'Embaixo, sem assinatura, uma última linha em letra menor: eu fui trabalhar porque eu não ia aguentar a porta.'
+  ],
+  ef:{moral:4, flag:'leu_o_bilhete',
+      rep:{eixo:'bom',delta:1,motivo:'Leu o bilhete antes de sair'},
+      registrar:'O bilhete: eu fui trabalhar porque eu não ia aguentar a porta.'},
+  escolhas:[
+    {texto:'Escrever uma resposta no verso e deixar na mesa.', vai:'c1_resposta_bilhete'},
+    {texto:'Dobrar o papel e guardar no bolso de dentro.', vai:'c1_guardou_bilhete'},
+    {texto:'Comer o que está embaixo do pano.', vai:'c1_comeu_frio'}
+  ]
+},
+
+c1_resposta_bilhete:{
+  texto:[
+    'Você vira a folha e escreve no verso, e leva muito mais tempo do que uma linha deveria levar.',
+    'Você escreve três versões na cabeça e escreve a quarta no papel, que é a mais curta.',
+    'Eu vou voltar. Não por obrigação.',
+    'Depois você encosta o papel embaixo do açucareiro, que é onde esta casa deixa recado desde sempre, e olha uma última vez para ter certeza de que está bem visível.',
+    'Está.'
+  ],
+  ef:{moral:4, flag:'respondeu_o_bilhete',
+      rep:{eixo:'bom',delta:1,motivo:'Deixou resposta escrita antes de sair'},
+      registrar:'Deixou uma resposta embaixo do açucareiro.'},
+  escolhas:[
+    {texto:'Comer e sair.', vai:'c1_comeu_frio'},
+    {texto:'Sair agora.', vai:'c1_rua'}
+  ]
+},
+
+c1_guardou_bilhete:{
+  texto:[
+    'Você dobra o papel em quatro e põe no bolso de dentro da jaqueta, contra o peito, onde não amassa e não molha.',
+    'Ele vai ficar aí por muito tempo. Vai amassar assim mesmo, nas dobras, de tanto você abrir e fechar.'
+  ],
+  ef:{itens:{'Bilhete dobrado em quatro':1}, moral:3,
+      registrar:'Guardou o bilhete no bolso de dentro.'},
+  escolhas:[
+    {texto:'Comer o que ficou embaixo do pano.', vai:'c1_comeu_frio'},
+    {texto:'Sair.', vai:'c1_rua'}
+  ]
+},
+
+c1_comeu_frio:{
+  texto:[
+    'Você levanta o pano e é ovo com arroz, frio, e tem mais comida do que uma pessoa come de manhã.',
+    'Você come tudo, em pé, na bancada, olhando a cozinha vazia.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} ganha o que sobra, por baixo da bancada, e dessa vez não precisa ser segredo de ninguém.`
+               : 'O relógio da parede está três minutos adiantado, como sempre esteve, e ninguém nunca acertou.';
+    },
+    'Depois você lava o prato, seca e guarda no lugar, o que é a coisa mais boba e mais necessária que você vai fazer hoje.'
+  ],
+  ef:{moral:2, registrar:'Comeu e lavou o prato numa cozinha vazia.'},
+  escolhas:[
+    {texto:'Olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila.', vai:'c1_mochila'},
+    {texto:'Sair.', vai:'c1_rua'}
+  ]
+},
+
+c1_nao_dormiu:{
+  texto:[
+    'Você não dormiu.',
+    'Não foi insônia, não foi medo e não foi ansiedade. Você deitou às onze, ficou olhando o teto, e em algum momento parou de tentar e passou a só esperar clarear.',
+    'Você viu a janela mudar de preto para azul e do azul para o cinza, e o cinza demora mais do que as pessoas imaginam.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'Às quatro e meia passou um caminhão na estrada, e depois não passou mais nada.';
+      return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordado também. Não fez nada. Só ficou.`;
+    },
+    'Às seis e dez o galo do vizinho, que é o pior galo de Kanto, erra a hora pela quarta vez na semana.',
+    'Você senta na cama. Está cansado de um jeito que não vai passar com sono.'
+  ],
+  ef:{flag:'nao_dormiu', hp:-2, causa:'Noite em claro antes de sair de casa',
+      registrar:'Passou a última noite em casa acordado.'},
+  escolhas:[
+    {texto:'Tentar dormir mais quarenta minutos.', vai:'c1_quarenta_minutos'},
+    {texto:'Levantar e olhar o quarto com calma, já que dá tempo.', vai:'c1_quarto'},
+    {texto:'Descer antes de todo mundo e fazer o café.', vai:'c1_fez_o_cafe'},
+    {texto:'Sair de casa agora, antes de alguém acordar.', vai:'c1_saiu_no_escuro'}
+  ]
+},
+
+c1_quarenta_minutos:{
+  texto:[
+    'Você deita de novo e dorme em quatro minutos, que é o que acontece quando a gente para de tentar.',
+    'E aí você sonha com uma coisa que não faz sentido nenhum e que você vai esquecer em duas horas: uma estrada que sobe e não tem fim, e você não está cansado no sonho, e isso é a parte boa.',
+    'Alguém bate na porta do quarto às sete e meia, de leve, com dois dedos.',
+    '"Tá na hora."'
+  ],
+  ef:{hp:2, moral:2},
+  escolhas:[
+    {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
+    {texto:'Conferir a mochila antes.', vai:'c1_mochila'}
+  ]
+},
+
+c1_fez_o_cafe:{
+  texto:[
+    'Você desce às seis e vinte e faz o café, o que é uma coisa que nesta casa você nunca fez.',
+    'Você erra a medida, faz forte demais, e não tem como consertar.',
+    'Quando a pessoa da sua casa desce, vinte minutos depois, ela para na porta da cozinha e não diz nada por uns bons cinco segundos.',
+    'Depois senta, toma o café forte demais sem reclamar de nada, e diz uma frase só:',
+    '"Tá bom."',
+    'Não estava. Mas estava.'
+  ],
+  ef:{moral:5, rep:{eixo:'bom',delta:1,motivo:'Fez o café no último dia em casa'},
+      flag:'fez_o_cafe',
+      registrar:'Fez o café da manhã pela primeira vez, no dia de sair.'},
+  escolhas:[
+    {texto:'Sentar e comer junto.', vai:'c1_cozinha'},
+    {texto:'Ir conferir a mochila enquanto ela toma.', vai:'c1_mochila'}
+  ]
+},
+
+c1_saiu_no_escuro:{
+  texto:[
+    'Você pega a mochila, desce a escada pisando nas beiradas dos degraus que rangem, e abre a porta às seis e vinte e dois.',
+    'A rua está vazia e fria e tem um cachorro dormindo na porta do mercado que abre tarde.',
+    'Você anda quatro casas.',
+    'E aí você para.',
+    'Você para porque sair assim é a única coisa que não dá pra desfazer depois, e porque você já sabe exatamente como vai ser o resto da sua vida lembrando disso.'
+  ],
+  ef:{flag:'tentou_sair_no_escuro'},
+  escolhas:[
+    {texto:'Voltar. Entrar de novo. Fazer direito.', vai:'c1_voltou_pra_dentro'},
+    {texto:'Continuar andando.', vai:'c1_foi_sem_despedir'}
+  ]
+},
+
+c1_voltou_pra_dentro:{
+  texto:[
+    'Você volta as quatro casas, abre a porta, e a pessoa da sua casa está em pé na cozinha, de costas, colocando água no fogo.',
+    'Ela não se vira.',
+    '"Eu ouvi a porta."',
+    'Uma pausa.',
+    '"Eu ia deixar você ir assim, se fosse isso que você quisesse." Ela acende o fogo. "Senta."',
+    'Você senta.'
+  ],
+  ef:{moral:5, limpaFlag:'tentou_sair_no_escuro',
+      rep:{eixo:'bom',delta:2,motivo:'Voltou para se despedir direito'},
+      registrar:'Saiu no escuro, andou quatro casas e voltou.'},
+  escolhas:[{texto:'Tomar o café.', vai:'c1_cozinha'}]
+},
+
+c1_foi_sem_despedir:{
+  texto:[
+    'Você continua andando.',
+    'Passa o mercado, passa a escola, passa a placa da saída da cidade, e não olha pra trás em nenhum dos três.',
+    'É mais fácil. É muito mais fácil, e é por isso que tanta gente faz assim.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ele pelo ombro sem falar nada.`
+               : 'Você olha pra trás uma vez, na placa, e depois não olha mais.';
+    },
+    'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.'
+  ],
+  ef:{flag:'foi_sem_despedir', moral:-6,
+      rep:{eixo:'ruim',delta:1,motivo:'Saiu de casa sem se despedir de ninguém'},
+      registrar:'Saiu de casa sem se despedir.'},
+  escolhas:[{texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'}]
+},
+
+c1_no_telhado:{
+  texto:[
+    'Você passou a noite no telhado, o que é uma coisa que se faz nesta casa desde que você tem doze anos e que ninguém nunca proibiu direito.',
+    'Sobe-se pela janela do corredor, pisa-se na caixa d’água, e dali dá pra ver a cidade inteira, que não é grande coisa e é tudo.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'A telha esquenta com o corpo da gente e depois esfria de novo quando a gente muda de posição, e a noite inteira é isso.';
+      return `${nomeExib(p)} subiu junto, do jeito desengonçado de sempre, e dormiu encaixado entre você e a chaminé que não funciona.`;
+    },
+    'Do telhado, às cinco e quarenta, dá pra ver a luz da cozinha acender antes de todas as outras da rua.',
+    'É a sua casa acordando, e você está em cima dela, e é a última vez que essas duas coisas vão ser verdade ao mesmo tempo por muito tempo.'
+  ],
+  ef:{flag:'noite_no_telhado', hp:-1, causa:'Noite no telhado', moral:3,
+      registrar:'Passou a última noite em cima do telhado de casa.'},
+  escolhas:[
+    {texto:'Ficar até o sol subir de verdade.', vai:'c1_sol_no_telhado'},
+    {texto:'Descer agora, antes de darem pela sua falta.', vai:'c1_cozinha'},
+    {texto:'Contar as casas da cidade, uma por uma.', vai:'c1_contou_as_casas'},
+    {texto:'Descer e conferir a mochila.', vai:'c1_mochila'}
+  ]
+},
+
+c1_sol_no_telhado:{
+  texto:[
+    'O sol sobe atrás do morro às seis e quarenta e nove e leva uns quatro minutos pra ficar inteiro.',
+    'Primeiro as telhas do outro lado da rua ficam laranja. Depois a placa do mercado. Depois o seu joelho.',
+    'Você fica olhando isso e pensa, sem querer pensar, que o sol vai fazer isso todo dia aqui, com ou sem você, e que essa é a coisa mais tranquila e mais insuportável que existe.',
+    'Lá embaixo, a porta da cozinha abre e alguém chama o seu nome sem levantar a voz, do jeito de quem já sabe onde você está.'
+  ],
+  ef:{moral:3},
+  escolhas:[
+    {texto:'Responder e descer.', vai:'c1_cozinha'},
+    {texto:'Ficar quieto mais um minuto.', vai:'c1_mais_um_minuto'}
+  ]
+},
+
+c1_mais_um_minuto:{
+  texto:[
+    'Você fica quieto.',
+    'Lá embaixo, a pessoa espera. Não chama de novo, não sobe, não vai embora.',
+    'Passa um minuto inteiro assim: você em cima sem responder, ela embaixo sem insistir.',
+    'Depois você ouve a porta da cozinha fechar, e o barulho da panela recomeçar, e entende que ela sabia que você ia descer e resolveu deixar o minuto ser seu.'
+  ],
+  ef:{moral:2, registrar:'Ficou mais um minuto no telhado. Deixaram o minuto ser seu.'},
+  escolhas:[{texto:'Descer.', vai:'c1_cozinha'}]
+},
+
+c1_contou_as_casas:{
+  texto:[
+    'Você conta as casas da cidade do telhado, o que já fez mil vezes e nunca terminou igual.',
+    'Dá quarenta e uma. Já deu trinta e nove e já deu quarenta e três, dependendo do que você resolve chamar de casa.',
+    'O galpão dos fundos do mercado conta? A casa que caiu e viraram duas contam como duas?',
+    'Você decide que sim para as duas coisas e chega em quarenta e quatro, e escreve o número na parte de dentro do braço com a caneta, porque não quer esquecer.',
+    'Você não vai esquecer.'
+  ],
+  ef:{flag:'contou_as_casas', moral:2,
+      registrar:'Quarenta e quatro casas, contadas do telhado na última manhã.'},
+  escolhas:[
+    {texto:'Ficar até o sol subir.', vai:'c1_sol_no_telhado'},
+    {texto:'Descer.', vai:'c1_cozinha'}
+  ]
+},
+
+c1_vizinha:{
+  texto:[
+    'Você acorda com alguém batendo na porta da frente às seis e cinquenta, e ninguém bate na porta desta casa às seis e cinquenta.',
+    'É a Sra. Odete, do número dezoito, de camisola e casaco por cima, com uma caixa de papelão nos braços.',
+    '"Ele passou a noite embaixo do meu carro." Ela empurra a caixa pra você antes de qualquer bom dia. "E eu vou pra Cerulean hoje e eu não posso levar."',
+    'Dentro da caixa, em cima de um pano de prato, tem um Pokémon pequeno e molhado, acordado, olhando pra cima.',
+    'Ele não está ferido. Está com fome, com frio, e com a expressão exata de quem já foi devolvido antes.'
+  ],
+  ef:{flag:'a_caixa_da_odete',
+      npc:{nome:'Sra. Odete', opiniao:1, memoria:'Bateu na sua porta às 6h50 do dia em que você ia sair de casa.'},
+      registrar:'A Sra. Odete apareceu com uma caixa e um bicho molhado dentro.'},
+  escolhas:[
+    {texto:'"Eu fico com ele."', vai:'c1_ficou_com_ele'},
+    {texto:'"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."', vai:'c1_leva_ao_centro'},
+    {texto:'"Eu não posso, dona Odete. Eu saio hoje."', vai:'c1_recusou_a_caixa'},
+    {texto:'Chamar alguém de dentro de casa para decidir junto.', vai:'c1_chamou_de_dentro'}
+  ]
+},
+
+c1_ficou_com_ele:{
+  texto:[
+    '"Eu fico com ele."',
+    'A Sra. Odete abre a boca para argumentar e não precisa, e fica parada com a boca aberta por um segundo.',
+    '"Você vai sair hoje."',
+    '"Vou."',
+    '"E vai levar ele."',
+    '"Vou."',
+    'Ela entrega o pano de prato junto, que não era pra entregar, e depois pede de volta, e depois deixa.'
+  ],
+  ef:{flag:'ficou_com_o_bicho', moral:4,
+      rep:{eixo:'bom',delta:2,motivo:'Assumiu um bicho encontrado no dia em que saiu de casa'},
+      executar:d=>{
+        const especies = [19, 16, 10, 13, 21, 41, 52];       // os que vivem debaixo de carro
+        const dex = Dados.escolher(especies);
+        const p = criarPokemon(dex, Dados.entre(3,5), {moral:40});
+        p.historia = 'Passou a noite embaixo do carro da Sra. Odete. Já tinha sido devolvido antes.';
+        Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.`}];
+      },
+      registrar:'Ficou com o Pokémon da caixa.'},
+  escolhas:[
+    {texto:'Levar ele para a cozinha e dar comida.', vai:'c1_cozinha'},
+    {texto:'Conferir a mochila: agora são dois.', vai:'c1_mochila'}
+  ]
+},
+
+c1_leva_ao_centro:{
+  texto:[
+    '"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."',
+    'A Sra. Odete assente como quem fecha negócio e já está descendo o degrau antes de você terminar a frase.',
+    '"A caixa eu quero de volta", ela diz da calçada. "É a caixa do meu ventilador."',
+    'Você fica na porta de casa, de pijama, às seis e cinquenta e dois, segurando a caixa de um ventilador com um bicho dentro.',
+    'A sua jornada começou tecnicamente agora, e não foi nada do que você imaginou nos últimos três anos.'
+  ],
+  ef:{flag:'leva_a_caixa', itens:{'Caixa de ventilador com um bicho dentro':1},
+      rep:{eixo:'bom',delta:1,motivo:'Aceitou levar o bicho ao Centro Pokémon'},
+      registrar:'Vai levar o bicho da Sra. Odete ao Centro Pokémon. A caixa tem que voltar.'},
+  escolhas:[
+    {texto:'Entrar e tomar café antes.', vai:'c1_cozinha'},
+    {texto:'Trocar de roupa e ir direto.', vai:'c1_saida_pro_centro'}
+  ]
+},
+
+c1_recusou_a_caixa:{
+  texto:[
+    '"Eu não posso, dona Odete. Eu saio hoje."',
+    'Ela olha pra você por um tempo que passa do confortável.',
+    '"Eu sei que você sai hoje. A rua inteira sabe que você sai hoje."',
+    'Ela ajeita a caixa nos braços, que agora pesa mais do que pesava.',
+    '"Tudo bem, filho. Eu deixo na porta do Centro antes de pegar o ônibus."',
+    'E vai embora, e é justamente o tudo bem que fica atravessado.'
+  ],
+  ef:{flag:'recusou_a_caixa', moral:-3,
+      registrar:'Recusou a caixa da Sra. Odete.'},
+  escolhas:[
+    {texto:'Chamar ela de volta.', vai:'c1_chamou_de_volta'},
+    {texto:'Fechar a porta e descer para a cozinha.', vai:'c1_cozinha'}
+  ]
+},
+
+c1_chamou_de_volta:{
+  texto:[
+    '"Dona Odete!"',
+    'Ela para no meio da rua e se vira, e não parece surpresa, e é isso que pega.',
+    '"Eu levo."',
+    'Ela volta os oito passos e entrega a caixa sem dizer nada, e no caminho de volta pra casa dela você ouve ela falando sozinha uma coisa que termina com "eu sabia".'
+  ],
+  ef:{limpaFlag:'recusou_a_caixa', flag:'leva_a_caixa', moral:3,
+      itens:{'Caixa de ventilador com um bicho dentro':1},
+      rep:{eixo:'bom',delta:1,motivo:'Chamou de volta e assumiu'},
+      registrar:'Chamou a Sra. Odete de volta e ficou com a caixa.'},
+  escolhas:[{texto:'Entrar e se arrumar.', vai:'c1_cozinha'}]
+},
+
+c1_chamou_de_dentro:{
+  texto:[
+    'Você chama pra dentro de casa e a pessoa da sua casa vem até a porta secando a mão no pano.',
+    'As duas conversam por cima de você por uns quarenta segundos, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, com duas frases cada uma.',
+    '"E o menino sai hoje", diz a Sra. Odete.',
+    '"Sai."',
+    'Um silêncio.',
+    '"Então deixa aqui", diz a pessoa da sua casa, e pega a caixa. "Eu cuido até ele achar dono."',
+    'E olha pra você por cima da caixa, e não diz mais nada, porque não precisa.'
+  ],
+  ef:{flag:'a_caixa_ficou_em_casa', moral:2,
+      registrar:'O bicho da caixa ficou em casa. Alguém vai cuidar até achar dono.'},
+  escolhas:[
+    {texto:'Entrar com ela.', vai:'c1_cozinha'},
+    {texto:'Ficar mais um pouco na porta, olhando a rua.', vai:'c1_rua'}
   ]
 },
 

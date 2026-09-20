@@ -1248,8 +1248,8 @@ c6_luta_van:{
     'O motorista suspira. Não é medo e não é raiva: é o suspiro de quem vai se atrasar.',
     '"Tá." Ele tira uma bola do bolso do casaco. "Rápido, então. Eu tenho horário."'
   ],
-  batalha:{dex:105, nivel:26, tipo:'treinador', treinador:'Motorista', fuga:false,
-           timeExtra:[{dex:57, nivel:27}],
+  batalha:{dex:104, nivel:26, tipo:'treinador', treinador:'Motorista', fuga:false,
+           timeExtra:[{dex:56, nivel:27}],
            vitoria:'c6_venceu_van', derrota:'c6_perdeu_van', gameover:'gameover'}
 },
 
@@ -2459,7 +2459,7 @@ c6_luta_veneno:{
     'Ele limpa a mão no jeans e tira uma bola do bolso do casaco, e a bola é velha e arranhada e claramente não é comprada.',
     '"Tá bom."'
   ],
-  batalha:{dex:110, nivel:26, tipo:'treinador', treinador:'Homem das tigelas', fuga:false,
+  batalha:{dex:109, nivel:26, tipo:'treinador', treinador:'Homem das tigelas', fuga:false,
            vitoria:'c6_venceu_veneno', derrota:'c6_perdeu_veneno', gameover:'gameover'}
 },
 

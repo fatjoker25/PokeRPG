@@ -114,9 +114,9 @@ const UI = {
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
         <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
-        <button class="btn mini" onclick="UI.modalCartao()">Cartão</button>
+        ${(d.flags.tem_cartao || d.flags.tem_licenca) ? '<button class="btn mini" onclick="UI.modalCartao()">Cartão</button>' : ''}
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
-        ${d.flags.tem_pokedex ? `<button class="btn mini" onclick="UI.modalPokedex()">Pokédex ${Estado.contagemDex().catalogados}</button>` : ''}
+        ${d.flags.tem_pokedex ? '<button class="btn mini" onclick="UI.modalPokedex()">Pokédex</button>' : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
@@ -1132,6 +1132,7 @@ const UI = {
      ======================================================== */
   modalCartao(){
     const d = Estado.dados;
+    if (!d.flags.tem_cartao && !d.flags.tem_licenca) return this.modalFicha();
     const j = d.jogador;
     const c = Estado.contagemDex();
     const nivel = Estado.nivelRep();
@@ -1173,7 +1174,6 @@ const UI = {
           <div class="cartao-linha"><span class="k">Pokédex</span><span class="v mono">${c.catalogados} catalogados · ${c.vistos} vistos</span></div>
           <div class="cartao-linha"><span class="k">Time</span><span class="v">${d.time.length} em mãos${d.pc.length ? ' · ' + d.pc.length + ' no PC' : ''}</span></div>
           ${d.cemiterio.length ? `<div class="cartao-linha"><span class="k">Não voltaram</span><span class="v perdas">${d.cemiterio.length}</span></div>` : ''}
-          ${j.vestimenta ? `<div class="cartao-linha"><span class="k">Vestindo</span><span class="v">${this.esc(j.vestimenta)}</span></div>` : ''}
         </div>
       </div>
 

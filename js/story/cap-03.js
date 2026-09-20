@@ -334,7 +334,7 @@ c3_surpresa:{
     '"Ô —" começa o mais velho, e não termina.'
   ],
   ef:{flag:'atacou_de_surpresa'},
-  batalha:{dex:24, nivel:16, tipo:'treinador', treinador:'Caçador Vasco', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Vasco', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
@@ -614,7 +614,7 @@ c3_luta_cacador:{
     'Ele solta a bola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
     '"Rápido", ele diz pro parceiro. "A gente tem que descer ainda hoje."'
   ],
-  batalha:{dex:24, nivel:16, tipo:'treinador', treinador:'Caçador Vasco', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Vasco', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 

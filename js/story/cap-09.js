@@ -2930,8 +2930,8 @@ c9_luta_deposito:{
     'Não tem mais conversa.',
     'O encarregado solta a bola com a mão esquerda enquanto com a direita aperta um botão vermelho na coluna, que provavelmente é alarme e provavelmente já era pra ter sido apertado.'
   ],
-  batalha:{dex:110, nivel:34, tipo:'treinador', treinador:'Encarregado do Armazém 7', fuga:true,
-           timeExtra:[{dex:89, nivel:35},{dex:24, nivel:33}],
+  batalha:{dex:110, nivel:36, tipo:'treinador', treinador:'Encarregado do Armazém 7', fuga:true,
+           timeExtra:[{dex:89, nivel:38},{dex:24, nivel:34}],
            vitoria:'c9_venceu_deposito', derrota:'c9_perdeu_deposito', fuga2:'c9_saiu_cedo', gameover:'gameover'}
 },
 
