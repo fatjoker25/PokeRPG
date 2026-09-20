@@ -131,7 +131,37 @@ const GOLPES = {
   /* --- DRAGÃO --- */
   'Dragon Rage':   {t:'Dragão',c:'esp',p:0,a:100,pp:10,nv:20,ef:{fixo:40}},
   'Dragon Claw':   {t:'Dragão',c:'fis',p:80,a:100,pp:15,nv:38},
-  'Outrage':       {t:'Dragão',c:'fis',p:120,a:100,pp:10,nv:50,ef:{confundeSe:true}}
+  'Outrage':       {t:'Dragão',c:'fis',p:120,a:100,pp:10,nv:50,ef:{confundeSe:true}},
+  'Dragon Breath': {t:'Dragão',c:'esp',p:60,a:100,pp:20,nv:26,ef:{tipo:'paralisia',chance:30}},
+
+  /* ============================================================
+     GOLPES QUE CHEGAM COM JOHTO
+     Os dois tipos novos e o punhado de golpes da 2ª Geração que
+     as espécies de lá precisam para não lutar de mãos vazias.
+     ============================================================ */
+
+  /* --- SOMBRIO --- */
+  'Pursuit':       {t:'Sombrio',c:'fis',p:40,a:100,pp:20,nv:8},
+  'Thief':         {t:'Sombrio',c:'fis',p:40,a:100,pp:10,nv:12},
+  'Faint Attack':  {t:'Sombrio',c:'fis',p:60,a:999,pp:20,nv:18},
+  'Beat Up':       {t:'Sombrio',c:'fis',p:70,a:100,pp:10,nv:28,raro:true},
+  'Crunch':        {t:'Sombrio',c:'fis',p:80,a:100,pp:15,nv:34,ef:{baixa:'spd',chance:20}},
+
+  /* --- METÁLICO --- */
+  'Metal Claw':    {t:'Metálico',c:'fis',p:50,a:95,pp:35,nv:8,ef:{sobe:'atk',chance:10}},
+  'Steel Wing':    {t:'Metálico',c:'fis',p:70,a:90,pp:25,nv:22,ef:{sobe:'def',chance:10}},
+  'Iron Tail':     {t:'Metálico',c:'fis',p:100,a:75,pp:15,nv:38,ef:{baixa:'def',chance:30}},
+
+  /* --- reforço de 2ª Geração nos tipos que já existiam --- */
+  'Giga Drain':    {t:'Grama',c:'esp',p:60,a:100,pp:5,nv:30,ef:{drena:0.5}},
+  'Icy Wind':      {t:'Gelo',c:'esp',p:55,a:95,pp:15,nv:20,ef:{baixa:'spe',chance:100}},
+  'Ancient Power': {t:'Pedra',c:'esp',p:60,a:100,pp:5,nv:26,raro:true},
+  'Shadow Ball':   {t:'Fantasma',c:'esp',p:80,a:100,pp:15,nv:34,ef:{baixa:'spd',chance:20}},
+  'Sludge Bomb':   {t:'Venenoso',c:'esp',p:90,a:100,pp:10,nv:36,ef:{tipo:'veneno',chance:30}},
+  'Zap Cannon':    {t:'Elétrico',c:'esp',p:100,a:50,pp:5,nv:44,ef:{tipo:'paralisia',chance:100},raro:true},
+  'Megahorn':      {t:'Inseto',c:'fis',p:120,a:85,pp:10,nv:46,raro:true},
+  'Sacred Fire':   {t:'Fogo',c:'fis',p:100,a:95,pp:5,nv:40,ef:{tipo:'queimadura',chance:50},soPara:[250]},
+  'Aeroblast':     {t:'Voador',c:'esp',p:100,a:95,pp:5,nv:40,ef:{critico:true},soPara:[249]}
 };
 
 /* Golpes por tipo, prontos para montar learnsets */
@@ -201,6 +231,10 @@ function montarGolpes(dexId, nivel){
   const escolhidos = [];
   const vistos = new Set();
   const por = (nome) => { if (nome && !vistos.has(nome) && escolhidos.length < 4){ vistos.add(nome); escolhidos.push(nome); } };
+
+  // 0) golpe de assinatura: quem tem um, sempre entra com ele
+  for (const [nome, g] of Object.entries(GOLPES))
+    if (g.soPara && g.soPara.includes(dexId) && g.nv <= nivel) por(nome);
 
   // 1) garante o melhor golpe de dano com STAB de CADA tipo da espécie
   for (const tipo of esp.tipos){

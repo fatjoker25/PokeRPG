@@ -1228,7 +1228,7 @@ const UI = {
       return;
     }
     if (info.tipo === 'pedra'){
-      const tabela = PEDRAS[nome] || {};
+      const tabela = pedrasDe(nome) || {};
       const alvos = d.time.filter(p => !p.morto && tabela[p.dex]);
       if (!alvos.length)
         return this.modal('', `<p class="nada">Você segura a pedra perto de cada um deles, um por um, e não acontece nada.
@@ -1250,7 +1250,7 @@ const UI = {
   aplicarPedra(nome, uid){
     const d = Estado.dados;
     const p = d.time.find(x => x.uid === uid);
-    const destino = (PEDRAS[nome]||{})[p && p.dex];
+    const destino = (pedrasDe(nome)||{})[p && p.dex];
     if (!p || !destino) return;
     Estado.usarItem(nome);
     const antigo = nomeExib(p);
@@ -1418,17 +1418,23 @@ const UI = {
   modalPokedex(){
     const c = Estado.contagemDex();
     const pd = Estado.pdex();
-    const ids = Object.keys(DEX).map(Number).sort((a,b)=>a-b);
-    const pct = Math.round((c.catalogados / ids.length) * 100);
+    /* Antes do upgrade, o aparelho mostra Kanto e os lendários que
+       a sua história atravessou. Depois, mostra os duzentos e
+       cinquenta e um e não pede desculpa pelo tamanho da lista. */
+    const nacional = dexNacional();
+    const ids = registroAtivo();
+    const cat = ids.filter(d => pd.catalogados[d]).length;
+    const vis = ids.filter(d => pd.vistos[d]).length;
+    const pct = Math.round((cat / ids.length) * 100);
 
     const cabeca = `<div class="pokedex-topo">
       <span class="pokedex-lente"></span>
       <span class="pokedex-luzes"><i></i><i></i><i></i></span>
     </div>
     <div class="dex-leitura">
-      <span class="campo"><b>${c.catalogados}</b><small>catalogados</small></span>
-      <span class="campo"><b>${c.vistos}</b><small>vistos</small></span>
-      <span class="campo"><b>${ids.length}</b><small>registros</small></span>
+      <span class="campo"><b>${cat}</b><small>catalogados</small></span>
+      <span class="campo"><b>${vis}</b><small>vistos</small></span>
+      <span class="campo"><b>${ids.length}</b><small>${nacional ? 'nacional' : 'registros'}</small></span>
       ${c.brilhantes ? `<span class="campo brilho"><b>✦ ${c.brilhantesPegos}/${c.brilhantes}</b><small>brilhantes</small></span>` : ''}
       <span class="pct">${pct}%</span>
     </div>
@@ -1450,8 +1456,16 @@ const UI = {
       return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
 
-    this.modal('', cabeca +
-      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.</p>
+    const faixas = nacional
+      ? `<div class="dex-faixas">
+           <span><b>Kanto</b> ${DEX_KANTO_IDS.filter(d => pd.catalogados[d]).length}/${DEX_KANTO_IDS.length}</span>
+           <span><b>Johto</b> ${DEX_NACIONAL_IDS.filter(d => d > 151 && pd.catalogados[d]).length}/${DEX_NACIONAL_IDS.filter(d => d > 151).length}</span>
+         </div>`
+      : '';
+
+    this.modal('', cabeca + faixas +
+      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.${
+        nacional ? ' A carta de atualização abriu os cem registros de Johto.' : ''}</p>
        <div class="dex-grade">${celas}</div>`, false, 'pokedex');
   },
 
@@ -1510,11 +1524,16 @@ const UI = {
       true, 'pokedex');
   },
 
+  /* A ficha só cita tipo que o aparelho conhece: Sombrio e
+     Metálico não existem para quem ainda está em Kanto. */
+  tiposConhecidos(){ return dexNacional() ? TIPOS : TIPOS_KANTO; },
   fraquezas(tipos){
-    return TIPOS.filter(t => eficacia(t, tipos) > 1).map(t => t + ' ×' + eficacia(t, tipos));
+    const T = this.tiposConhecidos();
+    return T.filter(t => eficacia(t, tipos) > 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
   resistencias(tipos){
-    return TIPOS.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
+    const T = this.tiposConhecidos();
+    return T.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
 
   modalDiario(){

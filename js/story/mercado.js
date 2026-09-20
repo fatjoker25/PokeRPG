@@ -13,7 +13,7 @@ const PRECO_BASE = {
   'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
   'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600,
   'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
-  'Pedra da Folha':4000, 'Moon Stone':6000,
+  'Pedra da Folha':4000, 'Moon Stone':6000, 'Pedra do Sol':6000,
   /* segurados */
   'Resto de Ração':2800, 'Faixa Firme':3200, 'Punho de Ferro':2600,
   'Óculos Grossos':2600, 'Colete de Couro':2400, 'Botina Leve':2200,
@@ -100,10 +100,21 @@ function precoNaCidade(nome, idCidade){
   return Math.round(base * m / 10) * 10;
 }
 
+/* O que a Pokédex Nacional destrava também aparece na prateleira.
+   Antes dela, a Pedra do Sol é uma pedra bonita sem uso conhecido
+   e ninguém importa pedra bonita sem uso conhecido. */
+const ESTOQUE_NACIONAL = {
+  celadon: ['Pedra do Sol'],
+  cinnabar: ['Pedra do Sol']
+};
+
 function catalogoDaCidade(idCidade){
   const L = LOJAS[idCidade];
   if (!L) return [];
-  return L.itens.map(n => [n, precoNaCidade(n, idCidade)]);
+  let itens = L.itens;
+  if (typeof dexNacional === 'function' && dexNacional() && ESTOQUE_NACIONAL[idCidade])
+    itens = itens.concat(ESTOQUE_NACIONAL[idCidade].filter(n => !itens.includes(n)));
+  return itens.map(n => [n, precoNaCidade(n, idCidade)]);
 }
 
 /* ============================================================
@@ -248,7 +259,7 @@ const Trocas = {
     const nivel = Dados.entre(t.da.nivel[0], t.da.nivel[1]);
     let dexNovo = t.da.dex;
     let virou = null;
-    if (t.trocaEvolui && EVO_TROCA[dexNovo]){ virou = DEX[dexNovo].nome; dexNovo = EVO_TROCA[dexNovo]; }
+    if (t.trocaEvolui && evoluiPorTroca(dexNovo)){ virou = DEX[dexNovo].nome; dexNovo = evoluiPorTroca(dexNovo); }
     const novo = criarPokemon(dexNovo, nivel, {
       natureza: t.da.natureza,
       apelido: t.da.apelido,

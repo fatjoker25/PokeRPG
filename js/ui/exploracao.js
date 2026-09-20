@@ -171,7 +171,7 @@ const Exploracao = {
     Mundo.passar(1);
     const L = Mundo.atual();
     if (Dados.chance(55)){
-      const aquaticos = POOL_SELVAGEM.filter(d => DEX[d].tipos.includes('Água'));
+      const aquaticos = poolSelvagem().filter(d => DEX[d].tipos.includes('Água'));
       const p = criarPokemon(Dados.escolher(aquaticos), Math.max(3, L.nivel + Dados.entre(-4,3)), {selvagem:true});
       return this.encontro(p, ['A linha fica parada por muito tempo. Depois não fica.']);
     }

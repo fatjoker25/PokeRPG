@@ -1035,6 +1035,20 @@ h3.cat-item{
 .dex-ficha .nota{font-size:12.5px;color:var(--dex-txt-2, var(--texto-fraco));margin-top:6px;font-style:italic}
 .dex-ficha .nota.mono{font-family:var(--mono);font-style:normal;letter-spacing:.02em}
 
+/* ---- as duas faixas do registro nacional ---- */
+.dex-faixas{
+  display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap
+}
+.dex-faixas span{
+  flex:1 1 130px;padding:7px 10px;border-radius:8px;
+  border:1px solid var(--dex-tela-3, var(--borda));
+  background:linear-gradient(180deg,#ffffff,var(--dex-tela, var(--bg-2)));
+  color:var(--dex-txt-2, var(--texto-fraco));
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;
+  display:flex;justify-content:space-between;gap:8px
+}
+.dex-faixas b{color:var(--dex-verm-esc, #8d1f18);font-family:var(--fonte, inherit);letter-spacing:0}
+
 /* ---- varredura da Pokédex: a espera faz parte da leitura ---- */
 .dex-scan{
   border:1px solid var(--dex-tela-3, var(--borda));border-radius:12px;padding:16px;
@@ -1221,9 +1235,14 @@ h3.cat-item{
 <script>
 /* ===== js/data/types.js ===== */
 /* ============================================================
-   TIPOS — Tabela de eficácia (1ª Geração, 15 tipos)
+   TIPOS — Tabela de eficácia
+   Os quinze de Kanto ficam exatamente como estavam: a campanha
+   inteira foi balanceada em cima deles. Sombrio e Metálico
+   chegam com Johto e só existem de verdade depois da Liga.
    ============================================================ */
-const TIPOS = ['Normal','Fogo','Água','Elétrico','Grama','Gelo','Lutador','Venenoso','Terrestre','Voador','Psíquico','Inseto','Pedra','Fantasma','Dragão'];
+const TIPOS_KANTO = ['Normal','Fogo','Água','Elétrico','Grama','Gelo','Lutador','Venenoso','Terrestre','Voador','Psíquico','Inseto','Pedra','Fantasma','Dragão'];
+const TIPOS_JOHTO = ['Sombrio','Metálico'];
+const TIPOS = TIPOS_KANTO.concat(TIPOS_JOHTO);
 
 /* Tons claros o bastante para o texto escuro das etiquetas, e dessaturados
    o bastante para conviverem uns com os outros numa mesma linha. */
@@ -1231,7 +1250,8 @@ const COR_TIPO = {
   'Normal':'#a8aeb8','Fogo':'#f08152','Água':'#6ba8e0','Elétrico':'#e9c951',
   'Grama':'#79c47c','Gelo':'#95dbe6','Lutador':'#e07d66','Venenoso':'#bc88d4',
   'Terrestre':'#d7b45f','Voador':'#a9bde8','Psíquico':'#ef83a8','Inseto':'#abc456',
-  'Pedra':'#c1aa7e','Fantasma':'#9b90e0','Dragão':'#8d86e8'
+  'Pedra':'#c1aa7e','Fantasma':'#9b90e0','Dragão':'#8d86e8',
+  'Sombrio':'#8f8275','Metálico':'#bcc2cc'
 };
 
 /* Multiplicadores: TABELA[atacante][defensor] — ausente = 1x */
@@ -1249,9 +1269,32 @@ const TABELA_TIPOS = {
   'Psíquico':  { 'Lutador':2, 'Venenoso':2, 'Psíquico':0.5 },
   'Inseto':    { 'Fogo':0.5, 'Grama':2, 'Lutador':0.5, 'Venenoso':2, 'Voador':0.5, 'Psíquico':2, 'Fantasma':0.5 },
   'Pedra':     { 'Fogo':2, 'Gelo':2, 'Lutador':0.5, 'Terrestre':0.5, 'Voador':2, 'Inseto':2 },
-  'Fantasma':  { 'Normal':0, 'Psíquico':2, 'Fantasma':2 },
-  'Dragão':    { 'Dragão':2 }
+  'Fantasma':  { 'Normal':0, 'Psíquico':2, 'Fantasma':2, 'Sombrio':0.5, 'Metálico':0.5 },
+  'Dragão':    { 'Dragão':2, 'Metálico':0.5 },
+  /* ── os dois de Johto ── */
+  'Sombrio':   { 'Lutador':0.5, 'Psíquico':2, 'Fantasma':2, 'Sombrio':0.5, 'Metálico':0.5 },
+  'Metálico':  { 'Fogo':0.5, 'Água':0.5, 'Elétrico':0.5, 'Gelo':2, 'Pedra':2, 'Metálico':0.5 }
 };
+
+/* Como os quinze de Kanto acertam os dois novos. Escrito aqui
+   embaixo para não mexer numa única linha da tabela original. */
+const CONTRA_TIPOS_JOHTO = {
+  'Normal':    { 'Metálico':0.5 },
+  'Fogo':      { 'Metálico':2 },
+  'Água':      {},
+  'Elétrico':  {},
+  'Grama':     { 'Metálico':0.5 },
+  'Gelo':      { 'Metálico':0.5 },
+  'Lutador':   { 'Sombrio':2, 'Metálico':2 },
+  'Venenoso':  { 'Metálico':0 },
+  'Terrestre': { 'Metálico':2 },
+  'Voador':    { 'Metálico':0.5 },
+  'Psíquico':  { 'Sombrio':0, 'Metálico':0.5 },
+  'Inseto':    { 'Sombrio':2, 'Metálico':0.5 },
+  'Pedra':     { 'Metálico':0.5 }
+};
+for (const [atacante, linha] of Object.entries(CONTRA_TIPOS_JOHTO))
+  Object.assign(TABELA_TIPOS[atacante], linha);
 
 function eficacia(tipoGolpe, tiposAlvo){
   let m = 1;
@@ -1435,10 +1478,121 @@ const DEX_RAW = [
 [250,'Ho-Oh',['Fogo','Voador'],106,130,90,110,154,90,0,0]
 ];
 
+/* ============================================================
+   JOHTO — registros 152 a 251
+   Entram na tabela desde o começo porque a Pokédex Nacional é
+   um upgrade de software, não um catálogo novo: o aparelho já
+   sabe ler tudo, só não te mostra antes da hora. Os três cães,
+   o Ho-Oh e, por tabela, o Lugia e o Celebi já tinham entrada
+   acima porque a história de Kanto passa por eles.
+
+   Sem tipo Fada: em 1999 ela não existia, e Cleffa, Igglybuff,
+   Togepi, Togetic, Snubbull e Granbull eram Normais.
+   ============================================================ */
+const DEX_RAW_JOHTO = [
+[152,'Chikorita',['Grama'],45,49,65,49,65,45,153,16],
+[153,'Bayleef',['Grama'],60,62,80,63,80,60,154,32],
+[154,'Meganium',['Grama'],80,82,100,83,100,80,0,0],
+[155,'Cyndaquil',['Fogo'],39,52,43,60,50,65,156,14],
+[156,'Quilava',['Fogo'],58,64,58,80,65,80,157,36],
+[157,'Typhlosion',['Fogo'],78,84,78,109,85,100,0,0],
+[158,'Totodile',['Água'],50,65,64,44,48,43,159,18],
+[159,'Croconaw',['Água'],65,80,80,59,63,58,160,30],
+[160,'Feraligatr',['Água'],85,105,100,79,83,78,0,0],
+[161,'Sentret',['Normal'],35,46,34,35,45,20,162,15],
+[162,'Furret',['Normal'],85,76,64,45,55,90,0,0],
+[163,'Hoothoot',['Normal','Voador'],60,30,30,36,56,50,164,20],
+[164,'Noctowl',['Normal','Voador'],100,50,50,86,96,70,0,0],
+[165,'Ledyba',['Inseto','Voador'],40,20,30,40,80,55,166,18],
+[166,'Ledian',['Inseto','Voador'],55,35,50,55,110,85,0,0],
+[167,'Spinarak',['Inseto','Venenoso'],40,60,40,40,40,30,168,22],
+[168,'Ariados',['Inseto','Venenoso'],70,90,70,60,60,40,0,0],
+[169,'Crobat',['Venenoso','Voador'],85,90,80,70,80,130,0,0],
+[170,'Chinchou',['Água','Elétrico'],75,38,38,56,56,67,171,27],
+[171,'Lanturn',['Água','Elétrico'],125,58,58,76,76,67,0,0],
+[172,'Pichu',['Elétrico'],20,40,15,35,35,60,0,0],
+[173,'Cleffa',['Normal'],50,25,28,45,55,15,0,0],
+[174,'Igglybuff',['Normal'],90,30,15,40,20,15,0,0],
+[175,'Togepi',['Normal'],35,20,65,40,65,20,176,0],
+[176,'Togetic',['Normal','Voador'],55,40,85,80,105,40,0,0],
+[177,'Natu',['Psíquico','Voador'],40,50,45,70,45,70,178,25],
+[178,'Xatu',['Psíquico','Voador'],65,75,70,95,70,95,0,0],
+[179,'Mareep',['Elétrico'],55,40,40,65,45,35,180,15],
+[180,'Flaaffy',['Elétrico'],70,55,55,80,60,45,181,30],
+[181,'Ampharos',['Elétrico'],90,75,85,115,90,55,0,0],
+[182,'Bellossom',['Grama'],75,80,95,90,100,50,0,0],
+[183,'Marill',['Água'],70,20,50,20,50,40,184,18],
+[184,'Azumarill',['Água'],100,50,80,60,80,50,0,0],
+[185,'Sudowoodo',['Pedra'],70,100,115,30,65,30,0,0],
+[186,'Politoed',['Água'],90,75,75,90,100,70,0,0],
+[187,'Hoppip',['Grama','Voador'],35,35,40,35,55,50,188,18],
+[188,'Skiploom',['Grama','Voador'],55,45,50,45,65,80,189,27],
+[189,'Jumpluff',['Grama','Voador'],75,55,70,55,95,110,0,0],
+[190,'Aipom',['Normal'],55,70,55,40,55,85,0,0],
+[191,'Sunkern',['Grama'],30,30,30,30,30,30,192,0],
+[192,'Sunflora',['Grama'],75,75,55,105,85,30,0,0],
+[193,'Yanma',['Inseto','Voador'],65,65,45,75,45,95,0,0],
+[194,'Wooper',['Água','Terrestre'],55,45,45,25,25,15,195,20],
+[195,'Quagsire',['Água','Terrestre'],95,85,85,65,65,35,0,0],
+[196,'Espeon',['Psíquico'],65,65,60,130,95,110,0,0],
+[197,'Umbreon',['Sombrio'],95,65,110,60,130,65,0,0],
+[198,'Murkrow',['Sombrio','Voador'],60,85,42,85,42,91,0,0],
+[199,'Slowking',['Água','Psíquico'],95,75,80,100,110,30,0,0],
+[200,'Misdreavus',['Fantasma'],60,60,60,85,85,85,0,0],
+[201,'Unown',['Psíquico'],48,72,48,72,48,48,0,0],
+[202,'Wobbuffet',['Psíquico'],190,33,58,33,58,33,0,0],
+[203,'Girafarig',['Normal','Psíquico'],70,80,65,90,65,85,0,0],
+[204,'Pineco',['Inseto'],50,65,90,35,35,15,205,31],
+[205,'Forretress',['Inseto','Metálico'],75,90,140,60,60,40,0,0],
+[206,'Dunsparce',['Normal'],100,70,70,65,65,45,0,0],
+[207,'Gligar',['Terrestre','Voador'],65,75,105,35,65,85,0,0],
+[208,'Steelix',['Metálico','Terrestre'],75,85,200,55,65,30,0,0],
+[209,'Snubbull',['Normal'],60,80,50,40,40,30,210,23],
+[210,'Granbull',['Normal'],90,120,75,60,60,45,0,0],
+[211,'Qwilfish',['Água','Venenoso'],65,95,75,55,55,85,0,0],
+[212,'Scizor',['Inseto','Metálico'],70,130,100,55,80,65,0,0],
+[213,'Shuckle',['Inseto','Pedra'],20,10,230,10,230,5,0,0],
+[214,'Heracross',['Inseto','Lutador'],80,125,75,40,95,85,0,0],
+[215,'Sneasel',['Sombrio','Gelo'],55,95,55,35,75,115,0,0],
+[216,'Teddiursa',['Normal'],60,80,50,50,50,40,217,30],
+[217,'Ursaring',['Normal'],90,130,75,75,75,55,0,0],
+[218,'Slugma',['Fogo'],40,40,40,70,40,20,219,38],
+[219,'Magcargo',['Fogo','Pedra'],50,50,120,80,80,30,0,0],
+[220,'Swinub',['Gelo','Terrestre'],50,50,40,30,30,50,221,33],
+[221,'Piloswine',['Gelo','Terrestre'],100,100,80,60,60,50,0,0],
+[222,'Corsola',['Água','Pedra'],55,55,85,65,85,35,0,0],
+[223,'Remoraid',['Água'],35,65,35,65,35,65,224,25],
+[224,'Octillery',['Água'],75,105,75,105,75,45,0,0],
+[225,'Delibird',['Gelo','Voador'],45,55,45,65,45,75,0,0],
+[226,'Mantine',['Água','Voador'],65,40,70,80,140,70,0,0],
+[227,'Skarmory',['Metálico','Voador'],65,80,140,40,70,70,0,0],
+[228,'Houndour',['Sombrio','Fogo'],45,60,30,80,50,65,229,24],
+[229,'Houndoom',['Sombrio','Fogo'],75,90,50,110,80,95,0,0],
+[230,'Kingdra',['Água','Dragão'],75,95,95,95,95,85,0,0],
+[231,'Phanpy',['Terrestre'],90,60,60,40,40,40,232,25],
+[232,'Donphan',['Terrestre'],90,120,120,60,60,50,0,0],
+[233,'Porygon2',['Normal'],85,80,90,105,95,60,0,0],
+[234,'Stantler',['Normal'],73,95,62,85,65,85,0,0],
+[235,'Smeargle',['Normal'],55,20,35,20,45,75,0,0],
+[236,'Tyrogue',['Lutador'],35,35,35,35,35,35,237,20],
+[237,'Hitmontop',['Lutador'],50,95,95,35,110,70,0,0],
+[238,'Smoochum',['Gelo','Psíquico'],45,30,15,85,65,65,0,0],
+[239,'Elekid',['Elétrico'],45,63,37,65,55,95,0,0],
+[240,'Magby',['Fogo'],45,75,37,70,55,83,0,0],
+[241,'Miltank',['Normal'],95,80,105,40,70,100,0,0],
+[242,'Blissey',['Normal'],255,10,10,75,135,55,0,0],
+[246,'Larvitar',['Pedra','Terrestre'],50,64,50,45,50,41,247,30],
+[247,'Pupitar',['Pedra','Terrestre'],70,84,70,65,70,51,248,55],
+[248,'Tyranitar',['Pedra','Sombrio'],100,134,110,95,100,61,0,0],
+[249,'Lugia',['Psíquico','Voador'],106,90,130,90,154,110,0,0],
+[251,'Celebi',['Psíquico','Grama'],100,100,100,100,100,100,0,0]
+];
+DEX_RAW_JOHTO.forEach(r => DEX_RAW.push(r));
+
 /* Lendários (lista fechada do universo) */
-const LENDARIOS = [144,145,146,150,151,243,244,245,250];
+const LENDARIOS = [144,145,146,150,151,243,244,245,249,250,251];
 /* Quebram Poké Balls: Mewtwo e Ho-Oh */
-const QUEBRA_BOLA = [150,250];
+const QUEBRA_BOLA = [150,249,250,251];
 /* Grupos para consequências em cascata */
 const GRUPO_AVES = [144,145,146];
 const GRUPO_CAES = [243,244,245];
@@ -1462,9 +1616,26 @@ DEX_RAW.forEach(r => {
    Evolução por pedra ou troca não tem nível: ali o piso é o da
    forma anterior com uma folga, porque ninguém usa pedra em
    filhote recém-nascido.                                        */
-/* O campo evo guarda um destino só. Eevee tem três, e as três
-   vêm de pedra, então entram aqui à mão. */
-const PRE_EVO_EXTRA = {134:133, 135:133, 136:133};
+/* O campo evo guarda um destino só. Eevee tem cinco depois de
+   Johto, então os outros quatro entram aqui à mão — junto com as
+   evoluções que a 2ª Geração pendurou em espécies de Kanto.
+
+   Só o lado de Johto é registrado. Pôr Pichu como forma anterior
+   do Pikachu daria ao Pikachu um piso de nível 18 e quebraria o
+   inicial de nível 5 da primeira cena; a evolução de bebê para
+   Kanto mora em EVO_JOHTO, que não mexe em piso nenhum. */
+const PRE_EVO_EXTRA = {
+  134:133, 135:133, 136:133, 196:133, 197:133,   /* Eevee */
+  169:42,                                         /* Golbat  -> Crobat    */
+  182:44,                                         /* Gloom   -> Bellossom */
+  186:61,                                         /* Poliwhirl -> Politoed */
+  199:79,                                         /* Slowpoke -> Slowking */
+  208:95,                                         /* Onix    -> Steelix   */
+  212:123,                                        /* Scyther -> Scizor    */
+  230:117,                                        /* Seadra  -> Kingdra   */
+  233:137,                                        /* Porygon -> Porygon2  */
+  242:113                                         /* Chansey -> Blissey   */
+};
 
 Object.values(DEX).forEach(p => { p.preEvo = 0; p.nivelMin = 1; });
 Object.values(DEX).forEach(p => { if (p.evo) DEX[p.evo].preEvo = p.dex; });
@@ -1499,22 +1670,67 @@ Object.values(DEX).forEach(p => {
   else p.captura = 220;
 });
 
-/* Pool de encontros selvagens: tudo menos lendários e Ditto/Porygon/Mew */
-const POOL_SELVAGEM = Object.values(DEX)
+/* ============================================================
+   O QUE APARECE NO MATO
+   Kanto é o pool de sempre. Johto fica guardado e só entra
+   depois que a Liga acaba e a região abre — os quatro lendários
+   de lá que a história usa nunca dependeram disso, porque
+   nenhum deles aparece por sorteio.
+   ============================================================ */
+/* Bebês não aparecem no mato: em Johto eles só saem de ovo. */
+const BEBES_JOHTO = [172,173,174,175,236,238,239,240];
+
+const POOL_KANTO = Object.values(DEX)
   .filter(p => !p.lendario && p.dex <= 151 && ![132,137].includes(p.dex))
   .map(p => p.dex);
+
+const POOL_JOHTO_SELVAGEM = Object.values(DEX)
+  .filter(p => !p.lendario && p.dex >= 152 && !BEBES_JOHTO.includes(p.dex) && p.dex !== 201)
+  .map(p => p.dex);
+
+/* Compatibilidade: quem lê POOL_SELVAGEM direto continua vendo Kanto. */
+const POOL_SELVAGEM = POOL_KANTO;
+
+function johtoLiberado(){
+  try { return !!(Estado.dados && Estado.dados.flags.johto_liberado); } catch(e){ return false; }
+}
+function poolSelvagem(){
+  return johtoLiberado() ? POOL_KANTO.concat(POOL_JOHTO_SELVAGEM) : POOL_KANTO;
+}
+
+/* ============================================================
+   EVOLUÇÕES QUE A 2ª GERAÇÃO TROUXE
+   Nada disso existe antes da Pokédex Nacional. Enquanto Kanto
+   é Kanto, um Golbat feliz continua sendo um Golbat.
+   ============================================================ */
+const EVO_JOHTO_AMIZADE = {42:169, 113:242, 133:196, 172:25, 173:35, 174:39, 175:176};
+const EVO_JOHTO_TROCA   = {95:208, 123:212, 117:230, 61:186, 79:199, 137:233};
+const EVO_JOHTO_PEDRA   = {44:182, 191:192};
+const EVO_JOHTO_NIVEL   = {238:124, 239:125, 240:126};
+
+function dexNacional(){
+  try { return !!(Estado.dados && Estado.dados.flags.dex_nacional); } catch(e){ return false; }
+}
+
+/* A lista que a Pokédex mostra agora. Os lendários de Johto que a
+   história de Kanto atravessa ficam visíveis desde sempre. */
+const DEX_KANTO_IDS = Object.values(DEX).filter(p => p.dex <= 151).map(p => p.dex)
+  .concat([243,244,245,250]).sort((a,b) => a-b);
+const DEX_NACIONAL_IDS = Object.values(DEX).map(p => p.dex).sort((a,b) => a-b);
+
+function registroAtivo(){ return dexNacional() ? DEX_NACIONAL_IDS : DEX_KANTO_IDS; }
 
 /* Viés de ambiente — aumenta a chance, mas QUALQUER um pode aparecer */
 const VIES_AMBIENTE = {
   'campo':     ['Normal','Grama','Inseto','Voador'],
   'floresta':  ['Inseto','Grama','Venenoso'],
-  'caverna':   ['Pedra','Terrestre','Venenoso','Voador'],
+  'caverna':   ['Pedra','Terrestre','Venenoso','Voador','Metálico'],
   'agua':      ['Água','Gelo'],
-  'montanha':  ['Pedra','Terrestre','Fogo','Lutador'],
+  'montanha':  ['Pedra','Terrestre','Fogo','Lutador','Metálico'],
   'cidade':    ['Normal','Venenoso','Elétrico'],
-  'cemiterio': ['Fantasma','Venenoso','Psíquico'],
+  'cemiterio': ['Fantasma','Venenoso','Psíquico','Sombrio'],
   'vulcao':    ['Fogo','Pedra'],
-  'ruina':     ['Psíquico','Fantasma','Venenoso','Elétrico']
+  'ruina':     ['Psíquico','Fantasma','Venenoso','Elétrico','Sombrio']
 };
 
 function dexPorNome(nome){
@@ -1656,7 +1872,37 @@ const GOLPES = {
   /* --- DRAGÃO --- */
   'Dragon Rage':   {t:'Dragão',c:'esp',p:0,a:100,pp:10,nv:20,ef:{fixo:40}},
   'Dragon Claw':   {t:'Dragão',c:'fis',p:80,a:100,pp:15,nv:38},
-  'Outrage':       {t:'Dragão',c:'fis',p:120,a:100,pp:10,nv:50,ef:{confundeSe:true}}
+  'Outrage':       {t:'Dragão',c:'fis',p:120,a:100,pp:10,nv:50,ef:{confundeSe:true}},
+  'Dragon Breath': {t:'Dragão',c:'esp',p:60,a:100,pp:20,nv:26,ef:{tipo:'paralisia',chance:30}},
+
+  /* ============================================================
+     GOLPES QUE CHEGAM COM JOHTO
+     Os dois tipos novos e o punhado de golpes da 2ª Geração que
+     as espécies de lá precisam para não lutar de mãos vazias.
+     ============================================================ */
+
+  /* --- SOMBRIO --- */
+  'Pursuit':       {t:'Sombrio',c:'fis',p:40,a:100,pp:20,nv:8},
+  'Thief':         {t:'Sombrio',c:'fis',p:40,a:100,pp:10,nv:12},
+  'Faint Attack':  {t:'Sombrio',c:'fis',p:60,a:999,pp:20,nv:18},
+  'Beat Up':       {t:'Sombrio',c:'fis',p:70,a:100,pp:10,nv:28,raro:true},
+  'Crunch':        {t:'Sombrio',c:'fis',p:80,a:100,pp:15,nv:34,ef:{baixa:'spd',chance:20}},
+
+  /* --- METÁLICO --- */
+  'Metal Claw':    {t:'Metálico',c:'fis',p:50,a:95,pp:35,nv:8,ef:{sobe:'atk',chance:10}},
+  'Steel Wing':    {t:'Metálico',c:'fis',p:70,a:90,pp:25,nv:22,ef:{sobe:'def',chance:10}},
+  'Iron Tail':     {t:'Metálico',c:'fis',p:100,a:75,pp:15,nv:38,ef:{baixa:'def',chance:30}},
+
+  /* --- reforço de 2ª Geração nos tipos que já existiam --- */
+  'Giga Drain':    {t:'Grama',c:'esp',p:60,a:100,pp:5,nv:30,ef:{drena:0.5}},
+  'Icy Wind':      {t:'Gelo',c:'esp',p:55,a:95,pp:15,nv:20,ef:{baixa:'spe',chance:100}},
+  'Ancient Power': {t:'Pedra',c:'esp',p:60,a:100,pp:5,nv:26,raro:true},
+  'Shadow Ball':   {t:'Fantasma',c:'esp',p:80,a:100,pp:15,nv:34,ef:{baixa:'spd',chance:20}},
+  'Sludge Bomb':   {t:'Venenoso',c:'esp',p:90,a:100,pp:10,nv:36,ef:{tipo:'veneno',chance:30}},
+  'Zap Cannon':    {t:'Elétrico',c:'esp',p:100,a:50,pp:5,nv:44,ef:{tipo:'paralisia',chance:100},raro:true},
+  'Megahorn':      {t:'Inseto',c:'fis',p:120,a:85,pp:10,nv:46,raro:true},
+  'Sacred Fire':   {t:'Fogo',c:'fis',p:100,a:95,pp:5,nv:40,ef:{tipo:'queimadura',chance:50},soPara:[250]},
+  'Aeroblast':     {t:'Voador',c:'esp',p:100,a:95,pp:5,nv:40,ef:{critico:true},soPara:[249]}
 };
 
 /* Golpes por tipo, prontos para montar learnsets */
@@ -1726,6 +1972,10 @@ function montarGolpes(dexId, nivel){
   const escolhidos = [];
   const vistos = new Set();
   const por = (nome) => { if (nome && !vistos.has(nome) && escolhidos.length < 4){ vistos.add(nome); escolhidos.push(nome); } };
+
+  // 0) golpe de assinatura: quem tem um, sempre entra com ele
+  for (const [nome, g] of Object.entries(GOLPES))
+    if (g.soPara && g.soPara.includes(dexId) && g.nv <= nivel) por(nome);
 
   // 1) garante o melhor golpe de dano com STAB de CADA tipo da espécie
   for (const tipo of esp.tipos){
@@ -2506,6 +2756,14 @@ function chanceShiny(){
 function rolarShiny(){ return Dados.entre(1, chanceShiny()) === 1; }
 function ehShiny(p){ return !!(p && p.shiny); }
 
+/* Manhã e tarde contam como dia; noite e madrugada, como noite. */
+function ehDeDia(){
+  try {
+    const per = Estado.dados.relogio.periodo;
+    return per === 'manhã' || per === 'tarde';
+  } catch(e){ return true; }
+}
+
 let _uidPokemon = 1;
 
 function criarPokemon(dexId, nivel, opcoes={}){
@@ -2627,6 +2885,26 @@ function ganharExp(p, qtd){
       evoluir(p, esp.evo);
       eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
     }
+
+    /* O que a 2ª Geração pendurou em espécies antigas. Nada disso
+       acontece antes da Pokédex Nacional: até lá, um Golbat que
+       gosta de você continua sendo só um Golbat que gosta de você. */
+    if (typeof dexNacional === 'function' && dexNacional()){
+      const porAmizade = EVO_JOHTO_AMIZADE[p.dex];
+      if (porAmizade && p.moral >= 90){
+        /* Eevee é o único que olha o relógio: Espeon de dia, Umbreon de noite */
+        const destino = (p.dex === 133) ? (ehDeDia() ? 196 : 197) : porAmizade;
+        const antigo = p.nome;
+        evoluir(p, destino);
+        eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
+      }
+      const porNivelJohto = EVO_JOHTO_NIVEL[p.dex];
+      if (porNivelJohto && p.nivel >= 30){
+        const antigo = p.nome;
+        evoluir(p, porNivelJohto);
+        eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
+      }
+    }
   }
   return eventos;
 }
@@ -2699,10 +2977,11 @@ function sortearSelvagem(ambiente='campo', nivelBase=8){
 
   /* Só entram no sorteio as espécies que podem existir neste nível.
      Numa rota de nível 6 não se encontra Dodrio: encontra-se Doduo. */
+  const disponivel = (typeof poolSelvagem === 'function') ? poolSelvagem() : POOL_SELVAGEM;
   const cabe = d => nivelMinimoDe(d) <= nivel;
-  const possiveis = POOL_SELVAGEM.filter(cabe);
-  const pool = possiveis.length ? possiveis : POOL_SELVAGEM.filter(d => nivelMinimoDe(d) <= 1 + nivel);
-  const base = pool.length ? pool : POOL_SELVAGEM;
+  const possiveis = disponivel.filter(cabe);
+  const pool = possiveis.length ? possiveis : disponivel.filter(d => nivelMinimoDe(d) <= 1 + nivel);
+  const base = pool.length ? pool : disponivel;
 
   const tiposPref = VIES_AMBIENTE[ambiente] || [];
   let dexId;
@@ -2859,6 +3138,10 @@ const ITENS_INFO = {
                       ficha:'Evolui Gloom, Weepinbell e Exeggcute · consumida no uso',
                       desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Sol':    {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Sunkern e Gloom (→ Bellossom) · consumida no uso',
+                      desc:'Laranja e morna por dentro, como seixo que passou o dia inteiro no sol. Não esfria.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
   /* ─────────── segurados ─────────── */
   'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:0.07},
@@ -2945,6 +3228,35 @@ const PEDRAS = {
 
 /* Evoluções que só acontecem numa troca */
 const EVO_TROCA = {64:65, 67:68, 75:76, 93:94};
+
+/* ============================================================
+   O QUE A POKÉDEX NACIONAL DESTRAVA
+   As pedras e as trocas de Johto existem no arquivo desde
+   sempre e não valem nada antes da hora: consultar por função
+   garante que um Onix trocado em Kanto volte Onix.
+   ============================================================ */
+const PEDRAS_JOHTO = {
+  'Pedra do Sol':    {44:182, 191:192}  /* Gloom -> Bellossom, Sunkern -> Sunflora */
+};
+
+function pedrasDe(nome){
+  const base = PEDRAS[nome] || null;
+  const extra = (typeof dexNacional === 'function' && dexNacional()) ? PEDRAS_JOHTO[nome] : null;
+  if (!base && !extra) return null;
+  return Object.assign({}, base || {}, extra || {});
+}
+function nomesDePedra(){
+  const n = Object.keys(PEDRAS);
+  if (typeof dexNacional === 'function' && dexNacional())
+    Object.keys(PEDRAS_JOHTO).forEach(k => { if (!n.includes(k)) n.push(k); });
+  return n;
+}
+function evoluiPorTroca(dexId){
+  if (EVO_TROCA[dexId]) return EVO_TROCA[dexId];
+  if (typeof dexNacional === 'function' && dexNacional() && typeof EVO_JOHTO_TROCA !== 'undefined')
+    return EVO_JOHTO_TROCA[dexId] || 0;
+  return 0;
+}
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
 function fichaItem(nome){
@@ -4978,7 +5290,7 @@ function contraSeuTime(){
   const escolhidos = [];
   for (const t of ordenados){
     // acha uma espécie cujo tipo bate forte contra t
-    const candidatos = POOL_SELVAGEM.filter(d => {
+    const candidatos = poolSelvagem().filter(d => {
       const p = DEX[d];
       if (p.evo || p.total < 400) return false;
       return p.tipos.some(tp => (TABELA_TIPOS[tp]||{})[t] === 2);
@@ -5978,7 +6290,17 @@ const CAMPEAO = {
     'Ele sobe a escada do poço e sai pela porta do corredor, e ninguém no Planalto Indigo o vê passar, porque ninguém no Planalto Indigo estava esperando que ele estivesse lá.',
     d.flags.sabe_do_norte || d.flags.liga_aliada
       ? 'Na porta, antes de sumir, ele para. Sem virar, ele levanta a mão e aponta para o norte.\nDepois vai embora.'
-      : 'Você fica sozinho num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.'
+      : 'Você fica sozinho num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.',
+
+    /* A entrega da Pokédex Nacional. Ela chega como papel, porque
+       tudo importante nesta campanha chega como papel. */
+    'Você fica ali um tempo que não dá pra medir. Depois a Pokédex apita no seu bolso, do jeito errado — dois apitos curtos, que ela nunca deu.',
+    'Na tela: ATUALIZAÇÃO REMOTA AUTORIZADA. REGISTRO REGIONAL CONCLUÍDO. AGUARDE.',
+    'Ela trava por quatro segundos, reinicia sozinha, e quando volta a barra de progresso embaixo não termina mais no cento e cinquenta e um.',
+    'Uma auxiliar da Liga entra no salão com uma pasta e não olha pro chão nem pro teto, só pra você.',
+    '"A Liga libera o registro nacional pra quem senta na cadeira." Ela entrega a pasta aberta na página certa. "São cem entradas novas. Todas vazias."',
+    '"E a fronteira do norte?" — porque é o que você pergunta, e ela já estava esperando.',
+    '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "O senhor é a Liga agora. Autoriza quando quiser."'
   ],
   derrota:d=>[
     'Você perde. Não tem vergonha nisso: você perdeu para a pessoa que derrubou a Equipe Rocket sozinha aos onze anos.',
@@ -6018,11 +6340,11 @@ function adversarioTorneio(rival, nivelAlvo){
   if (rival.nome === 'Téo' && Estado.dados.rival){
     return {nome:'Téo', fala: rival.fala, time: timeRival()};
   }
-  const pool = POOL_SELVAGEM.filter(d => {
+  const pool = poolSelvagem().filter(d => {
     const p = DEX[d];
     return p.tipos.some(t => rival.tipos.includes(t)) && p.total >= 380 && !p.evo;
   });
-  const fallback = POOL_SELVAGEM.filter(d => DEX[d].total >= 400 && !DEX[d].evo);
+  const fallback = poolSelvagem().filter(d => DEX[d].total >= 400 && !DEX[d].evo);
   const base = pool.length >= 3 ? pool : fallback;
   const qtd = 3;
   const time = [];
@@ -6102,7 +6424,7 @@ const PRECO_BASE = {
   'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
   'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600,
   'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
-  'Pedra da Folha':4000, 'Moon Stone':6000,
+  'Pedra da Folha':4000, 'Moon Stone':6000, 'Pedra do Sol':6000,
   /* segurados */
   'Resto de Ração':2800, 'Faixa Firme':3200, 'Punho de Ferro':2600,
   'Óculos Grossos':2600, 'Colete de Couro':2400, 'Botina Leve':2200,
@@ -6189,10 +6511,21 @@ function precoNaCidade(nome, idCidade){
   return Math.round(base * m / 10) * 10;
 }
 
+/* O que a Pokédex Nacional destrava também aparece na prateleira.
+   Antes dela, a Pedra do Sol é uma pedra bonita sem uso conhecido
+   e ninguém importa pedra bonita sem uso conhecido. */
+const ESTOQUE_NACIONAL = {
+  celadon: ['Pedra do Sol'],
+  cinnabar: ['Pedra do Sol']
+};
+
 function catalogoDaCidade(idCidade){
   const L = LOJAS[idCidade];
   if (!L) return [];
-  return L.itens.map(n => [n, precoNaCidade(n, idCidade)]);
+  let itens = L.itens;
+  if (typeof dexNacional === 'function' && dexNacional() && ESTOQUE_NACIONAL[idCidade])
+    itens = itens.concat(ESTOQUE_NACIONAL[idCidade].filter(n => !itens.includes(n)));
+  return itens.map(n => [n, precoNaCidade(n, idCidade)]);
 }
 
 /* ============================================================
@@ -6337,7 +6670,7 @@ const Trocas = {
     const nivel = Dados.entre(t.da.nivel[0], t.da.nivel[1]);
     let dexNovo = t.da.dex;
     let virou = null;
-    if (t.trocaEvolui && EVO_TROCA[dexNovo]){ virou = DEX[dexNovo].nome; dexNovo = EVO_TROCA[dexNovo]; }
+    if (t.trocaEvolui && evoluiPorTroca(dexNovo)){ virou = DEX[dexNovo].nome; dexNovo = evoluiPorTroca(dexNovo); }
     const novo = criarPokemon(dexNovo, nivel, {
       natureza: t.da.natureza,
       apelido: t.da.apelido,
@@ -53746,7 +54079,7 @@ const UI = {
       return;
     }
     if (info.tipo === 'pedra'){
-      const tabela = PEDRAS[nome] || {};
+      const tabela = pedrasDe(nome) || {};
       const alvos = d.time.filter(p => !p.morto && tabela[p.dex]);
       if (!alvos.length)
         return this.modal('', `<p class="nada">Você segura a pedra perto de cada um deles, um por um, e não acontece nada.
@@ -53768,7 +54101,7 @@ const UI = {
   aplicarPedra(nome, uid){
     const d = Estado.dados;
     const p = d.time.find(x => x.uid === uid);
-    const destino = (PEDRAS[nome]||{})[p && p.dex];
+    const destino = (pedrasDe(nome)||{})[p && p.dex];
     if (!p || !destino) return;
     Estado.usarItem(nome);
     const antigo = nomeExib(p);
@@ -53936,17 +54269,23 @@ const UI = {
   modalPokedex(){
     const c = Estado.contagemDex();
     const pd = Estado.pdex();
-    const ids = Object.keys(DEX).map(Number).sort((a,b)=>a-b);
-    const pct = Math.round((c.catalogados / ids.length) * 100);
+    /* Antes do upgrade, o aparelho mostra Kanto e os lendários que
+       a sua história atravessou. Depois, mostra os duzentos e
+       cinquenta e um e não pede desculpa pelo tamanho da lista. */
+    const nacional = dexNacional();
+    const ids = registroAtivo();
+    const cat = ids.filter(d => pd.catalogados[d]).length;
+    const vis = ids.filter(d => pd.vistos[d]).length;
+    const pct = Math.round((cat / ids.length) * 100);
 
     const cabeca = `<div class="pokedex-topo">
       <span class="pokedex-lente"></span>
       <span class="pokedex-luzes"><i></i><i></i><i></i></span>
     </div>
     <div class="dex-leitura">
-      <span class="campo"><b>${c.catalogados}</b><small>catalogados</small></span>
-      <span class="campo"><b>${c.vistos}</b><small>vistos</small></span>
-      <span class="campo"><b>${ids.length}</b><small>registros</small></span>
+      <span class="campo"><b>${cat}</b><small>catalogados</small></span>
+      <span class="campo"><b>${vis}</b><small>vistos</small></span>
+      <span class="campo"><b>${ids.length}</b><small>${nacional ? 'nacional' : 'registros'}</small></span>
       ${c.brilhantes ? `<span class="campo brilho"><b>✦ ${c.brilhantesPegos}/${c.brilhantes}</b><small>brilhantes</small></span>` : ''}
       <span class="pct">${pct}%</span>
     </div>
@@ -53968,8 +54307,16 @@ const UI = {
       return `<span class="dex-cela vazia"><span class="n">${num}</span><span class="nm">???</span></span>`;
     }).join('');
 
-    this.modal('', cabeca +
-      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.</p>
+    const faixas = nacional
+      ? `<div class="dex-faixas">
+           <span><b>Kanto</b> ${DEX_KANTO_IDS.filter(d => pd.catalogados[d]).length}/${DEX_KANTO_IDS.length}</span>
+           <span><b>Johto</b> ${DEX_NACIONAL_IDS.filter(d => d > 151 && pd.catalogados[d]).length}/${DEX_NACIONAL_IDS.filter(d => d > 151).length}</span>
+         </div>`
+      : '';
+
+    this.modal('', cabeca + faixas +
+      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.${
+        nacional ? ' A carta de atualização abriu os cem registros de Johto.' : ''}</p>
        <div class="dex-grade">${celas}</div>`, false, 'pokedex');
   },
 
@@ -54028,11 +54375,16 @@ const UI = {
       true, 'pokedex');
   },
 
+  /* A ficha só cita tipo que o aparelho conhece: Sombrio e
+     Metálico não existem para quem ainda está em Kanto. */
+  tiposConhecidos(){ return dexNacional() ? TIPOS : TIPOS_KANTO; },
   fraquezas(tipos){
-    return TIPOS.filter(t => eficacia(t, tipos) > 1).map(t => t + ' ×' + eficacia(t, tipos));
+    const T = this.tiposConhecidos();
+    return T.filter(t => eficacia(t, tipos) > 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
   resistencias(tipos){
-    return TIPOS.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
+    const T = this.tiposConhecidos();
+    return T.filter(t => eficacia(t, tipos) < 1).map(t => t + ' ×' + eficacia(t, tipos));
   },
 
   modalDiario(){
@@ -54297,7 +54649,7 @@ const Exploracao = {
     Mundo.passar(1);
     const L = Mundo.atual();
     if (Dados.chance(55)){
-      const aquaticos = POOL_SELVAGEM.filter(d => DEX[d].tipos.includes('Água'));
+      const aquaticos = poolSelvagem().filter(d => DEX[d].tipos.includes('Água'));
       const p = criarPokemon(Dados.escolher(aquaticos), Math.max(3, L.nivel + Dados.entre(-4,3)), {selvagem:true});
       return this.encontro(p, ['A linha fica parada por muito tempo. Depois não fica.']);
     }
@@ -54995,6 +55347,13 @@ const Jogo = {
       const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto', {rep:{notorio:true, peso:8}});
       avisos.push({tipo:'insignia', texto:'Você é o Campeão de Kanto. A cadeira estava vaga há dois anos.'});
       avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
+      /* A carta de atualização. Ela é a última coisa que a Liga faz
+         por você como desafiante e a primeira que faz como Campeão. */
+      Estado.marcar('dex_nacional');
+      Estado.marcar('johto_liberado');
+      avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
+      avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a fronteira do norte, que ninguém cruzava sem autorização da Liga, agora é sua para autorizar.'});
+      Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
       Estado.registrar('Venceu Red. Tornou-se Campeão de Kanto.');
       Estado.salvar('auto');
@@ -55150,7 +55509,7 @@ const Jogo = {
 
   efetuarTroca(uid, destino){
     const saiu = Estado.removerDoTime(uid);
-    const dex = Dados.escolher(POOL_SELVAGEM);
+    const dex = Dados.escolher(poolSelvagem());
     const nivel = Math.max(3, (saiu ? saiu.nivel : 8) + Dados.entre(-4, 7));
     const recebido = criarPokemon(dex, nivel, {
       moral:35,

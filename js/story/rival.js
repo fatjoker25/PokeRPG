@@ -111,7 +111,7 @@ function contraSeuTime(){
   const escolhidos = [];
   for (const t of ordenados){
     // acha uma espécie cujo tipo bate forte contra t
-    const candidatos = POOL_SELVAGEM.filter(d => {
+    const candidatos = poolSelvagem().filter(d => {
       const p = DEX[d];
       if (p.evo || p.total < 400) return false;
       return p.tipos.some(tp => (TABELA_TIPOS[tp]||{})[t] === 2);

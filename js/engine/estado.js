@@ -140,6 +140,10 @@ const ITENS_INFO = {
                       ficha:'Evolui Gloom, Weepinbell e Exeggcute · consumida no uso',
                       desc:'Verde e lascada como pedra de rio. Cheira a mato cortado.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
+  'Pedra do Sol':    {tipo:'pedra', cat:'Evolução',
+                      ficha:'Evolui Sunkern e Gloom (→ Bellossom) · consumida no uso',
+                      desc:'Laranja e morna por dentro, como seixo que passou o dia inteiro no sol. Não esfria.',
+                      sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
   /* ─────────── segurados ─────────── */
   'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:0.07},
@@ -226,6 +230,35 @@ const PEDRAS = {
 
 /* Evoluções que só acontecem numa troca */
 const EVO_TROCA = {64:65, 67:68, 75:76, 93:94};
+
+/* ============================================================
+   O QUE A POKÉDEX NACIONAL DESTRAVA
+   As pedras e as trocas de Johto existem no arquivo desde
+   sempre e não valem nada antes da hora: consultar por função
+   garante que um Onix trocado em Kanto volte Onix.
+   ============================================================ */
+const PEDRAS_JOHTO = {
+  'Pedra do Sol':    {44:182, 191:192}  /* Gloom -> Bellossom, Sunkern -> Sunflora */
+};
+
+function pedrasDe(nome){
+  const base = PEDRAS[nome] || null;
+  const extra = (typeof dexNacional === 'function' && dexNacional()) ? PEDRAS_JOHTO[nome] : null;
+  if (!base && !extra) return null;
+  return Object.assign({}, base || {}, extra || {});
+}
+function nomesDePedra(){
+  const n = Object.keys(PEDRAS);
+  if (typeof dexNacional === 'function' && dexNacional())
+    Object.keys(PEDRAS_JOHTO).forEach(k => { if (!n.includes(k)) n.push(k); });
+  return n;
+}
+function evoluiPorTroca(dexId){
+  if (EVO_TROCA[dexId]) return EVO_TROCA[dexId];
+  if (typeof dexNacional === 'function' && dexNacional() && typeof EVO_JOHTO_TROCA !== 'undefined')
+    return EVO_JOHTO_TROCA[dexId] || 0;
+  return 0;
+}
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
 function fichaItem(nome){

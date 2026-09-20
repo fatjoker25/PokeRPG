@@ -162,10 +162,121 @@ const DEX_RAW = [
 [250,'Ho-Oh',['Fogo','Voador'],106,130,90,110,154,90,0,0]
 ];
 
+/* ============================================================
+   JOHTO — registros 152 a 251
+   Entram na tabela desde o começo porque a Pokédex Nacional é
+   um upgrade de software, não um catálogo novo: o aparelho já
+   sabe ler tudo, só não te mostra antes da hora. Os três cães,
+   o Ho-Oh e, por tabela, o Lugia e o Celebi já tinham entrada
+   acima porque a história de Kanto passa por eles.
+
+   Sem tipo Fada: em 1999 ela não existia, e Cleffa, Igglybuff,
+   Togepi, Togetic, Snubbull e Granbull eram Normais.
+   ============================================================ */
+const DEX_RAW_JOHTO = [
+[152,'Chikorita',['Grama'],45,49,65,49,65,45,153,16],
+[153,'Bayleef',['Grama'],60,62,80,63,80,60,154,32],
+[154,'Meganium',['Grama'],80,82,100,83,100,80,0,0],
+[155,'Cyndaquil',['Fogo'],39,52,43,60,50,65,156,14],
+[156,'Quilava',['Fogo'],58,64,58,80,65,80,157,36],
+[157,'Typhlosion',['Fogo'],78,84,78,109,85,100,0,0],
+[158,'Totodile',['Água'],50,65,64,44,48,43,159,18],
+[159,'Croconaw',['Água'],65,80,80,59,63,58,160,30],
+[160,'Feraligatr',['Água'],85,105,100,79,83,78,0,0],
+[161,'Sentret',['Normal'],35,46,34,35,45,20,162,15],
+[162,'Furret',['Normal'],85,76,64,45,55,90,0,0],
+[163,'Hoothoot',['Normal','Voador'],60,30,30,36,56,50,164,20],
+[164,'Noctowl',['Normal','Voador'],100,50,50,86,96,70,0,0],
+[165,'Ledyba',['Inseto','Voador'],40,20,30,40,80,55,166,18],
+[166,'Ledian',['Inseto','Voador'],55,35,50,55,110,85,0,0],
+[167,'Spinarak',['Inseto','Venenoso'],40,60,40,40,40,30,168,22],
+[168,'Ariados',['Inseto','Venenoso'],70,90,70,60,60,40,0,0],
+[169,'Crobat',['Venenoso','Voador'],85,90,80,70,80,130,0,0],
+[170,'Chinchou',['Água','Elétrico'],75,38,38,56,56,67,171,27],
+[171,'Lanturn',['Água','Elétrico'],125,58,58,76,76,67,0,0],
+[172,'Pichu',['Elétrico'],20,40,15,35,35,60,0,0],
+[173,'Cleffa',['Normal'],50,25,28,45,55,15,0,0],
+[174,'Igglybuff',['Normal'],90,30,15,40,20,15,0,0],
+[175,'Togepi',['Normal'],35,20,65,40,65,20,176,0],
+[176,'Togetic',['Normal','Voador'],55,40,85,80,105,40,0,0],
+[177,'Natu',['Psíquico','Voador'],40,50,45,70,45,70,178,25],
+[178,'Xatu',['Psíquico','Voador'],65,75,70,95,70,95,0,0],
+[179,'Mareep',['Elétrico'],55,40,40,65,45,35,180,15],
+[180,'Flaaffy',['Elétrico'],70,55,55,80,60,45,181,30],
+[181,'Ampharos',['Elétrico'],90,75,85,115,90,55,0,0],
+[182,'Bellossom',['Grama'],75,80,95,90,100,50,0,0],
+[183,'Marill',['Água'],70,20,50,20,50,40,184,18],
+[184,'Azumarill',['Água'],100,50,80,60,80,50,0,0],
+[185,'Sudowoodo',['Pedra'],70,100,115,30,65,30,0,0],
+[186,'Politoed',['Água'],90,75,75,90,100,70,0,0],
+[187,'Hoppip',['Grama','Voador'],35,35,40,35,55,50,188,18],
+[188,'Skiploom',['Grama','Voador'],55,45,50,45,65,80,189,27],
+[189,'Jumpluff',['Grama','Voador'],75,55,70,55,95,110,0,0],
+[190,'Aipom',['Normal'],55,70,55,40,55,85,0,0],
+[191,'Sunkern',['Grama'],30,30,30,30,30,30,192,0],
+[192,'Sunflora',['Grama'],75,75,55,105,85,30,0,0],
+[193,'Yanma',['Inseto','Voador'],65,65,45,75,45,95,0,0],
+[194,'Wooper',['Água','Terrestre'],55,45,45,25,25,15,195,20],
+[195,'Quagsire',['Água','Terrestre'],95,85,85,65,65,35,0,0],
+[196,'Espeon',['Psíquico'],65,65,60,130,95,110,0,0],
+[197,'Umbreon',['Sombrio'],95,65,110,60,130,65,0,0],
+[198,'Murkrow',['Sombrio','Voador'],60,85,42,85,42,91,0,0],
+[199,'Slowking',['Água','Psíquico'],95,75,80,100,110,30,0,0],
+[200,'Misdreavus',['Fantasma'],60,60,60,85,85,85,0,0],
+[201,'Unown',['Psíquico'],48,72,48,72,48,48,0,0],
+[202,'Wobbuffet',['Psíquico'],190,33,58,33,58,33,0,0],
+[203,'Girafarig',['Normal','Psíquico'],70,80,65,90,65,85,0,0],
+[204,'Pineco',['Inseto'],50,65,90,35,35,15,205,31],
+[205,'Forretress',['Inseto','Metálico'],75,90,140,60,60,40,0,0],
+[206,'Dunsparce',['Normal'],100,70,70,65,65,45,0,0],
+[207,'Gligar',['Terrestre','Voador'],65,75,105,35,65,85,0,0],
+[208,'Steelix',['Metálico','Terrestre'],75,85,200,55,65,30,0,0],
+[209,'Snubbull',['Normal'],60,80,50,40,40,30,210,23],
+[210,'Granbull',['Normal'],90,120,75,60,60,45,0,0],
+[211,'Qwilfish',['Água','Venenoso'],65,95,75,55,55,85,0,0],
+[212,'Scizor',['Inseto','Metálico'],70,130,100,55,80,65,0,0],
+[213,'Shuckle',['Inseto','Pedra'],20,10,230,10,230,5,0,0],
+[214,'Heracross',['Inseto','Lutador'],80,125,75,40,95,85,0,0],
+[215,'Sneasel',['Sombrio','Gelo'],55,95,55,35,75,115,0,0],
+[216,'Teddiursa',['Normal'],60,80,50,50,50,40,217,30],
+[217,'Ursaring',['Normal'],90,130,75,75,75,55,0,0],
+[218,'Slugma',['Fogo'],40,40,40,70,40,20,219,38],
+[219,'Magcargo',['Fogo','Pedra'],50,50,120,80,80,30,0,0],
+[220,'Swinub',['Gelo','Terrestre'],50,50,40,30,30,50,221,33],
+[221,'Piloswine',['Gelo','Terrestre'],100,100,80,60,60,50,0,0],
+[222,'Corsola',['Água','Pedra'],55,55,85,65,85,35,0,0],
+[223,'Remoraid',['Água'],35,65,35,65,35,65,224,25],
+[224,'Octillery',['Água'],75,105,75,105,75,45,0,0],
+[225,'Delibird',['Gelo','Voador'],45,55,45,65,45,75,0,0],
+[226,'Mantine',['Água','Voador'],65,40,70,80,140,70,0,0],
+[227,'Skarmory',['Metálico','Voador'],65,80,140,40,70,70,0,0],
+[228,'Houndour',['Sombrio','Fogo'],45,60,30,80,50,65,229,24],
+[229,'Houndoom',['Sombrio','Fogo'],75,90,50,110,80,95,0,0],
+[230,'Kingdra',['Água','Dragão'],75,95,95,95,95,85,0,0],
+[231,'Phanpy',['Terrestre'],90,60,60,40,40,40,232,25],
+[232,'Donphan',['Terrestre'],90,120,120,60,60,50,0,0],
+[233,'Porygon2',['Normal'],85,80,90,105,95,60,0,0],
+[234,'Stantler',['Normal'],73,95,62,85,65,85,0,0],
+[235,'Smeargle',['Normal'],55,20,35,20,45,75,0,0],
+[236,'Tyrogue',['Lutador'],35,35,35,35,35,35,237,20],
+[237,'Hitmontop',['Lutador'],50,95,95,35,110,70,0,0],
+[238,'Smoochum',['Gelo','Psíquico'],45,30,15,85,65,65,0,0],
+[239,'Elekid',['Elétrico'],45,63,37,65,55,95,0,0],
+[240,'Magby',['Fogo'],45,75,37,70,55,83,0,0],
+[241,'Miltank',['Normal'],95,80,105,40,70,100,0,0],
+[242,'Blissey',['Normal'],255,10,10,75,135,55,0,0],
+[246,'Larvitar',['Pedra','Terrestre'],50,64,50,45,50,41,247,30],
+[247,'Pupitar',['Pedra','Terrestre'],70,84,70,65,70,51,248,55],
+[248,'Tyranitar',['Pedra','Sombrio'],100,134,110,95,100,61,0,0],
+[249,'Lugia',['Psíquico','Voador'],106,90,130,90,154,110,0,0],
+[251,'Celebi',['Psíquico','Grama'],100,100,100,100,100,100,0,0]
+];
+DEX_RAW_JOHTO.forEach(r => DEX_RAW.push(r));
+
 /* Lendários (lista fechada do universo) */
-const LENDARIOS = [144,145,146,150,151,243,244,245,250];
+const LENDARIOS = [144,145,146,150,151,243,244,245,249,250,251];
 /* Quebram Poké Balls: Mewtwo e Ho-Oh */
-const QUEBRA_BOLA = [150,250];
+const QUEBRA_BOLA = [150,249,250,251];
 /* Grupos para consequências em cascata */
 const GRUPO_AVES = [144,145,146];
 const GRUPO_CAES = [243,244,245];
@@ -189,9 +300,26 @@ DEX_RAW.forEach(r => {
    Evolução por pedra ou troca não tem nível: ali o piso é o da
    forma anterior com uma folga, porque ninguém usa pedra em
    filhote recém-nascido.                                        */
-/* O campo evo guarda um destino só. Eevee tem três, e as três
-   vêm de pedra, então entram aqui à mão. */
-const PRE_EVO_EXTRA = {134:133, 135:133, 136:133};
+/* O campo evo guarda um destino só. Eevee tem cinco depois de
+   Johto, então os outros quatro entram aqui à mão — junto com as
+   evoluções que a 2ª Geração pendurou em espécies de Kanto.
+
+   Só o lado de Johto é registrado. Pôr Pichu como forma anterior
+   do Pikachu daria ao Pikachu um piso de nível 18 e quebraria o
+   inicial de nível 5 da primeira cena; a evolução de bebê para
+   Kanto mora em EVO_JOHTO, que não mexe em piso nenhum. */
+const PRE_EVO_EXTRA = {
+  134:133, 135:133, 136:133, 196:133, 197:133,   /* Eevee */
+  169:42,                                         /* Golbat  -> Crobat    */
+  182:44,                                         /* Gloom   -> Bellossom */
+  186:61,                                         /* Poliwhirl -> Politoed */
+  199:79,                                         /* Slowpoke -> Slowking */
+  208:95,                                         /* Onix    -> Steelix   */
+  212:123,                                        /* Scyther -> Scizor    */
+  230:117,                                        /* Seadra  -> Kingdra   */
+  233:137,                                        /* Porygon -> Porygon2  */
+  242:113                                         /* Chansey -> Blissey   */
+};
 
 Object.values(DEX).forEach(p => { p.preEvo = 0; p.nivelMin = 1; });
 Object.values(DEX).forEach(p => { if (p.evo) DEX[p.evo].preEvo = p.dex; });
@@ -226,22 +354,67 @@ Object.values(DEX).forEach(p => {
   else p.captura = 220;
 });
 
-/* Pool de encontros selvagens: tudo menos lendários e Ditto/Porygon/Mew */
-const POOL_SELVAGEM = Object.values(DEX)
+/* ============================================================
+   O QUE APARECE NO MATO
+   Kanto é o pool de sempre. Johto fica guardado e só entra
+   depois que a Liga acaba e a região abre — os quatro lendários
+   de lá que a história usa nunca dependeram disso, porque
+   nenhum deles aparece por sorteio.
+   ============================================================ */
+/* Bebês não aparecem no mato: em Johto eles só saem de ovo. */
+const BEBES_JOHTO = [172,173,174,175,236,238,239,240];
+
+const POOL_KANTO = Object.values(DEX)
   .filter(p => !p.lendario && p.dex <= 151 && ![132,137].includes(p.dex))
   .map(p => p.dex);
+
+const POOL_JOHTO_SELVAGEM = Object.values(DEX)
+  .filter(p => !p.lendario && p.dex >= 152 && !BEBES_JOHTO.includes(p.dex) && p.dex !== 201)
+  .map(p => p.dex);
+
+/* Compatibilidade: quem lê POOL_SELVAGEM direto continua vendo Kanto. */
+const POOL_SELVAGEM = POOL_KANTO;
+
+function johtoLiberado(){
+  try { return !!(Estado.dados && Estado.dados.flags.johto_liberado); } catch(e){ return false; }
+}
+function poolSelvagem(){
+  return johtoLiberado() ? POOL_KANTO.concat(POOL_JOHTO_SELVAGEM) : POOL_KANTO;
+}
+
+/* ============================================================
+   EVOLUÇÕES QUE A 2ª GERAÇÃO TROUXE
+   Nada disso existe antes da Pokédex Nacional. Enquanto Kanto
+   é Kanto, um Golbat feliz continua sendo um Golbat.
+   ============================================================ */
+const EVO_JOHTO_AMIZADE = {42:169, 113:242, 133:196, 172:25, 173:35, 174:39, 175:176};
+const EVO_JOHTO_TROCA   = {95:208, 123:212, 117:230, 61:186, 79:199, 137:233};
+const EVO_JOHTO_PEDRA   = {44:182, 191:192};
+const EVO_JOHTO_NIVEL   = {238:124, 239:125, 240:126};
+
+function dexNacional(){
+  try { return !!(Estado.dados && Estado.dados.flags.dex_nacional); } catch(e){ return false; }
+}
+
+/* A lista que a Pokédex mostra agora. Os lendários de Johto que a
+   história de Kanto atravessa ficam visíveis desde sempre. */
+const DEX_KANTO_IDS = Object.values(DEX).filter(p => p.dex <= 151).map(p => p.dex)
+  .concat([243,244,245,250]).sort((a,b) => a-b);
+const DEX_NACIONAL_IDS = Object.values(DEX).map(p => p.dex).sort((a,b) => a-b);
+
+function registroAtivo(){ return dexNacional() ? DEX_NACIONAL_IDS : DEX_KANTO_IDS; }
 
 /* Viés de ambiente — aumenta a chance, mas QUALQUER um pode aparecer */
 const VIES_AMBIENTE = {
   'campo':     ['Normal','Grama','Inseto','Voador'],
   'floresta':  ['Inseto','Grama','Venenoso'],
-  'caverna':   ['Pedra','Terrestre','Venenoso','Voador'],
+  'caverna':   ['Pedra','Terrestre','Venenoso','Voador','Metálico'],
   'agua':      ['Água','Gelo'],
-  'montanha':  ['Pedra','Terrestre','Fogo','Lutador'],
+  'montanha':  ['Pedra','Terrestre','Fogo','Lutador','Metálico'],
   'cidade':    ['Normal','Venenoso','Elétrico'],
-  'cemiterio': ['Fantasma','Venenoso','Psíquico'],
+  'cemiterio': ['Fantasma','Venenoso','Psíquico','Sombrio'],
   'vulcao':    ['Fogo','Pedra'],
-  'ruina':     ['Psíquico','Fantasma','Venenoso','Elétrico']
+  'ruina':     ['Psíquico','Fantasma','Venenoso','Elétrico','Sombrio']
 };
 
 function dexPorNome(nome){

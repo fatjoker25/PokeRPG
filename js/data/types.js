@@ -1,7 +1,12 @@
 /* ============================================================
-   TIPOS — Tabela de eficácia (1ª Geração, 15 tipos)
+   TIPOS — Tabela de eficácia
+   Os quinze de Kanto ficam exatamente como estavam: a campanha
+   inteira foi balanceada em cima deles. Sombrio e Metálico
+   chegam com Johto e só existem de verdade depois da Liga.
    ============================================================ */
-const TIPOS = ['Normal','Fogo','Água','Elétrico','Grama','Gelo','Lutador','Venenoso','Terrestre','Voador','Psíquico','Inseto','Pedra','Fantasma','Dragão'];
+const TIPOS_KANTO = ['Normal','Fogo','Água','Elétrico','Grama','Gelo','Lutador','Venenoso','Terrestre','Voador','Psíquico','Inseto','Pedra','Fantasma','Dragão'];
+const TIPOS_JOHTO = ['Sombrio','Metálico'];
+const TIPOS = TIPOS_KANTO.concat(TIPOS_JOHTO);
 
 /* Tons claros o bastante para o texto escuro das etiquetas, e dessaturados
    o bastante para conviverem uns com os outros numa mesma linha. */
@@ -9,7 +14,8 @@ const COR_TIPO = {
   'Normal':'#a8aeb8','Fogo':'#f08152','Água':'#6ba8e0','Elétrico':'#e9c951',
   'Grama':'#79c47c','Gelo':'#95dbe6','Lutador':'#e07d66','Venenoso':'#bc88d4',
   'Terrestre':'#d7b45f','Voador':'#a9bde8','Psíquico':'#ef83a8','Inseto':'#abc456',
-  'Pedra':'#c1aa7e','Fantasma':'#9b90e0','Dragão':'#8d86e8'
+  'Pedra':'#c1aa7e','Fantasma':'#9b90e0','Dragão':'#8d86e8',
+  'Sombrio':'#8f8275','Metálico':'#bcc2cc'
 };
 
 /* Multiplicadores: TABELA[atacante][defensor] — ausente = 1x */
@@ -27,9 +33,32 @@ const TABELA_TIPOS = {
   'Psíquico':  { 'Lutador':2, 'Venenoso':2, 'Psíquico':0.5 },
   'Inseto':    { 'Fogo':0.5, 'Grama':2, 'Lutador':0.5, 'Venenoso':2, 'Voador':0.5, 'Psíquico':2, 'Fantasma':0.5 },
   'Pedra':     { 'Fogo':2, 'Gelo':2, 'Lutador':0.5, 'Terrestre':0.5, 'Voador':2, 'Inseto':2 },
-  'Fantasma':  { 'Normal':0, 'Psíquico':2, 'Fantasma':2 },
-  'Dragão':    { 'Dragão':2 }
+  'Fantasma':  { 'Normal':0, 'Psíquico':2, 'Fantasma':2, 'Sombrio':0.5, 'Metálico':0.5 },
+  'Dragão':    { 'Dragão':2, 'Metálico':0.5 },
+  /* ── os dois de Johto ── */
+  'Sombrio':   { 'Lutador':0.5, 'Psíquico':2, 'Fantasma':2, 'Sombrio':0.5, 'Metálico':0.5 },
+  'Metálico':  { 'Fogo':0.5, 'Água':0.5, 'Elétrico':0.5, 'Gelo':2, 'Pedra':2, 'Metálico':0.5 }
 };
+
+/* Como os quinze de Kanto acertam os dois novos. Escrito aqui
+   embaixo para não mexer numa única linha da tabela original. */
+const CONTRA_TIPOS_JOHTO = {
+  'Normal':    { 'Metálico':0.5 },
+  'Fogo':      { 'Metálico':2 },
+  'Água':      {},
+  'Elétrico':  {},
+  'Grama':     { 'Metálico':0.5 },
+  'Gelo':      { 'Metálico':0.5 },
+  'Lutador':   { 'Sombrio':2, 'Metálico':2 },
+  'Venenoso':  { 'Metálico':0 },
+  'Terrestre': { 'Metálico':2 },
+  'Voador':    { 'Metálico':0.5 },
+  'Psíquico':  { 'Sombrio':0, 'Metálico':0.5 },
+  'Inseto':    { 'Sombrio':2, 'Metálico':0.5 },
+  'Pedra':     { 'Metálico':0.5 }
+};
+for (const [atacante, linha] of Object.entries(CONTRA_TIPOS_JOHTO))
+  Object.assign(TABELA_TIPOS[atacante], linha);
 
 function eficacia(tipoGolpe, tiposAlvo){
   let m = 1;

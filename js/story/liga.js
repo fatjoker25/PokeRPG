@@ -114,7 +114,17 @@ const CAMPEAO = {
     'Ele sobe a escada do poço e sai pela porta do corredor, e ninguém no Planalto Indigo o vê passar, porque ninguém no Planalto Indigo estava esperando que ele estivesse lá.',
     d.flags.sabe_do_norte || d.flags.liga_aliada
       ? 'Na porta, antes de sumir, ele para. Sem virar, ele levanta a mão e aponta para o norte.\nDepois vai embora.'
-      : 'Você fica sozinho num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.'
+      : 'Você fica sozinho num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.',
+
+    /* A entrega da Pokédex Nacional. Ela chega como papel, porque
+       tudo importante nesta campanha chega como papel. */
+    'Você fica ali um tempo que não dá pra medir. Depois a Pokédex apita no seu bolso, do jeito errado — dois apitos curtos, que ela nunca deu.',
+    'Na tela: ATUALIZAÇÃO REMOTA AUTORIZADA. REGISTRO REGIONAL CONCLUÍDO. AGUARDE.',
+    'Ela trava por quatro segundos, reinicia sozinha, e quando volta a barra de progresso embaixo não termina mais no cento e cinquenta e um.',
+    'Uma auxiliar da Liga entra no salão com uma pasta e não olha pro chão nem pro teto, só pra você.',
+    '"A Liga libera o registro nacional pra quem senta na cadeira." Ela entrega a pasta aberta na página certa. "São cem entradas novas. Todas vazias."',
+    '"E a fronteira do norte?" — porque é o que você pergunta, e ela já estava esperando.',
+    '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "O senhor é a Liga agora. Autoriza quando quiser."'
   ],
   derrota:d=>[
     'Você perde. Não tem vergonha nisso: você perdeu para a pessoa que derrubou a Equipe Rocket sozinha aos onze anos.',
@@ -154,11 +164,11 @@ function adversarioTorneio(rival, nivelAlvo){
   if (rival.nome === 'Téo' && Estado.dados.rival){
     return {nome:'Téo', fala: rival.fala, time: timeRival()};
   }
-  const pool = POOL_SELVAGEM.filter(d => {
+  const pool = poolSelvagem().filter(d => {
     const p = DEX[d];
     return p.tipos.some(t => rival.tipos.includes(t)) && p.total >= 380 && !p.evo;
   });
-  const fallback = POOL_SELVAGEM.filter(d => DEX[d].total >= 400 && !DEX[d].evo);
+  const fallback = poolSelvagem().filter(d => DEX[d].total >= 400 && !DEX[d].evo);
   const base = pool.length >= 3 ? pool : fallback;
   const qtd = 3;
   const time = [];

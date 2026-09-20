@@ -640,6 +640,13 @@ const Jogo = {
       const r = Estado.mudarRep('bom', 3, 'Venceu Red e assumiu a cadeira de Campeão de Kanto', {rep:{notorio:true, peso:8}});
       avisos.push({tipo:'insignia', texto:'Você é o Campeão de Kanto. A cadeira estava vaga há dois anos.'});
       avisos.push({tipo:'item', texto:'+80.000 ₽ · Master Ball · 5× Hyper Potion · 5× Full Heal'});
+      /* A carta de atualização. Ela é a última coisa que a Liga faz
+         por você como desafiante e a primeira que faz como Campeão. */
+      Estado.marcar('dex_nacional');
+      Estado.marcar('johto_liberado');
+      avisos.push({tipo:'pokedex', texto:'A Pokédex trava por quatro segundos e reinicia sozinha. Quando volta, a lista não termina mais no 151.'});
+      avisos.push({tipo:'mundo', texto:'Cem registros novos, todos vazios. E a fronteira do norte, que ninguém cruzava sem autorização da Liga, agora é sua para autorizar.'});
+      Estado.registrar('Pokédex Nacional liberada: 251 registros. Johto aberto.');
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
       Estado.registrar('Venceu Red. Tornou-se Campeão de Kanto.');
       Estado.salvar('auto');
@@ -795,7 +802,7 @@ const Jogo = {
 
   efetuarTroca(uid, destino){
     const saiu = Estado.removerDoTime(uid);
-    const dex = Dados.escolher(POOL_SELVAGEM);
+    const dex = Dados.escolher(poolSelvagem());
     const nivel = Math.max(3, (saiu ? saiu.nivel : 8) + Dados.entre(-4, 7));
     const recebido = criarPokemon(dex, nivel, {
       moral:35,

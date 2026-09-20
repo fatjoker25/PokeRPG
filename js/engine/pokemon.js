@@ -36,6 +36,14 @@ function chanceShiny(){
 function rolarShiny(){ return Dados.entre(1, chanceShiny()) === 1; }
 function ehShiny(p){ return !!(p && p.shiny); }
 
+/* Manhã e tarde contam como dia; noite e madrugada, como noite. */
+function ehDeDia(){
+  try {
+    const per = Estado.dados.relogio.periodo;
+    return per === 'manhã' || per === 'tarde';
+  } catch(e){ return true; }
+}
+
 let _uidPokemon = 1;
 
 function criarPokemon(dexId, nivel, opcoes={}){
@@ -157,6 +165,26 @@ function ganharExp(p, qtd){
       evoluir(p, esp.evo);
       eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
     }
+
+    /* O que a 2ª Geração pendurou em espécies antigas. Nada disso
+       acontece antes da Pokédex Nacional: até lá, um Golbat que
+       gosta de você continua sendo só um Golbat que gosta de você. */
+    if (typeof dexNacional === 'function' && dexNacional()){
+      const porAmizade = EVO_JOHTO_AMIZADE[p.dex];
+      if (porAmizade && p.moral >= 90){
+        /* Eevee é o único que olha o relógio: Espeon de dia, Umbreon de noite */
+        const destino = (p.dex === 133) ? (ehDeDia() ? 196 : 197) : porAmizade;
+        const antigo = p.nome;
+        evoluir(p, destino);
+        eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
+      }
+      const porNivelJohto = EVO_JOHTO_NIVEL[p.dex];
+      if (porNivelJohto && p.nivel >= 30){
+        const antigo = p.nome;
+        evoluir(p, porNivelJohto);
+        eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
+      }
+    }
   }
   return eventos;
 }
@@ -229,10 +257,11 @@ function sortearSelvagem(ambiente='campo', nivelBase=8){
 
   /* Só entram no sorteio as espécies que podem existir neste nível.
      Numa rota de nível 6 não se encontra Dodrio: encontra-se Doduo. */
+  const disponivel = (typeof poolSelvagem === 'function') ? poolSelvagem() : POOL_SELVAGEM;
   const cabe = d => nivelMinimoDe(d) <= nivel;
-  const possiveis = POOL_SELVAGEM.filter(cabe);
-  const pool = possiveis.length ? possiveis : POOL_SELVAGEM.filter(d => nivelMinimoDe(d) <= 1 + nivel);
-  const base = pool.length ? pool : POOL_SELVAGEM;
+  const possiveis = disponivel.filter(cabe);
+  const pool = possiveis.length ? possiveis : disponivel.filter(d => nivelMinimoDe(d) <= 1 + nivel);
+  const base = pool.length ? pool : disponivel;
 
   const tiposPref = VIES_AMBIENTE[ambiente] || [];
   let dexId;
