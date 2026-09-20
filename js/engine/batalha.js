@@ -445,7 +445,15 @@ const Batalha = {
     // ações que não gastam o turno de golpe
     if (acao.tipo === 'pokedex') return this.escanear();
     if (acao.tipo === 'fugir')  return this.tentarFugir();
-    if (acao.tipo === 'bola')   return this.tentarCaptura(acao.nome);
+    if (acao.tipo === 'bola'){
+      if (this.tipo === 'treinador'){
+        this.eventos = [];
+        this.turno--;
+        this.ev('erro', `${this.treinador || 'O treinador'} chama de volta antes da bola chegar perto. Pokémon dos outros não se captura — e num ginásio isso encerra a sua vez.`);
+        return {eventos:this.eventos, fim:null};
+      }
+      return this.tentarCaptura(acao.nome);
+    }
     if (acao.tipo === 'item')   { this.usarItemEmCombate(acao.nome, acao.alvoUid); return this.turnoInimigoSozinho(); }
     if (acao.tipo === 'trocar') { this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho(); }
 
@@ -493,10 +501,6 @@ const Batalha = {
     this.turno--;
     if (!Estado.dados.flags.tem_pokedex){
       this.ev('erro', 'Você não tem Pokédex.');
-      return {eventos:this.eventos, fim:null};
-    }
-    if (this.pdexUsada){
-      this.ev('erro', 'A Pokédex já leu tudo o que conseguia ler daqui.');
       return {eventos:this.eventos, fim:null};
     }
     this.pdexUsada = true;
@@ -693,6 +697,10 @@ const Batalha = {
       return this.golpeNoJogador();
     }
     if (acao.tipo === 'bola'){
+      if (this.tipo === 'treinador'){
+        this.ev('erro', 'Não se joga bola no Pokémon de outro treinador.');
+        return {eventos:this.eventos, fim:null};
+      }
       const r = Captura.tentar(this.inimigo, acao.nome, this);
       r.eventos.forEach(e => this.eventos.push(e));
       if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:acao.nome});

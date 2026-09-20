@@ -5,78 +5,6 @@
    ============================================================ */
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
-/* A lembrança que sobrou do primeiro dia dele.
-   Nem todo inicial sai de um ovo que dá pra guardar num pote:
-   um Geodude não deixa casca, um Magnemite não nasceu no chão do
-   seu quarto de camisola, e um Gastly não deixa nada. O objeto
-   muda com a espécie, e é o mesmo objeto o capítulo inteiro. */
-function lembrancaDoInicial(p){
-  const t = p ? (DEX[p.dex] || {}).tipos || [] : [];
-  const tem = x => t.includes(x);
-  const dex = p ? p.dex : 0;
-
-  if ([81,82,100,101,137].includes(dex)) return {
-    objeto:'um parafuso pequeno numa caixinha de fósforo',
-    curto:'o parafuso',
-    conta:n => `O parafuso é dele. ${n} chegou nesta casa dentro de uma caixa de peça, sem nota e sem explicação, e o parafuso estava solto no fundo. Você tinha três anos e guardou, porque alguém te disse pra guardar, e você é o tipo de pessoa que guarda.`,
-    leva:'Você tira o parafuso da caixa de fósforo e põe no bolso de dentro da mochila, que é o bolso das coisas que não podem se perder.'
-  };
-  if (dex === 104) return {
-    objeto:'um dente de leite dentro de um pote de vidro',
-    curto:'o dente',
-    conta:n => `O dente é dele. Caiu numa manhã de julho, neste quarto, e ${n} ficou três dias sem deixar ninguém chegar perto da cara dele. Você tinha três anos e guardou o dente.`,
-    leva:'Você tira o dente do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila. É pequeno demais para o tamanho que isso tem.'
-  };
-  if (tem('Pedra')) return {
-    objeto:'uma lasca de pedra do tamanho de uma moeda, num pote de vidro',
-    curto:'a lasca',
-    conta:n => `A lasca é dele. Soltou de ${n} sozinha, numa manhã de julho, no chão deste quarto, e você tinha três anos e achou que ele estava quebrando. Sua mãe explicou que não. Você guardou assim mesmo.`,
-    leva:'Você tira a lasca do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar. A lasca não pode quebrar. Você guarda ali do mesmo jeito.'
-  };
-  if (tem('Fantasma') || dex === 88 || dex === 109) return {
-    objeto:'um pote de vidro vazio, com tampa, guardado como se tivesse alguma coisa dentro',
-    curto:'o pote',
-    conta:n => `O pote é dele. ${n} apareceu neste quarto numa manhã de julho e não deixou nada pra guardar — então você guardou o pote, fechado, e nunca conseguiu explicar isso pra ninguém.`,
-    leva:'Você põe o pote vazio no bolso de dentro da mochila, fechado, e não tenta explicar.'
-  };
-  if (tem('Inseto')) return {
-    objeto:'uma casca de muda inteira, seca, dentro de um pote de vidro',
-    curto:'a muda',
-    conta:n => `A muda é dele. ${n} trocou de casca neste quarto numa manhã de julho, e saiu inteira, e você tinha três anos e ficou com medo de ter dois.`,
-    leva:'Você tira a muda do pote com as duas mãos, porque ela desmancha, e enrola num pedaço de pano.'
-  };
-  if ([129,118,116,72,90,98].includes(dex)) return {
-    objeto:'uma escama do tamanho de uma unha, num pote de vidro',
-    curto:'a escama',
-    conta:n => `A escama é dele. ${n} soltou numa manhã de julho, no chão deste quarto, e ela pegou a luz da janela de um jeito que você lembra até hoje, aos quinze.`,
-    leva:'Você tira a escama do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar.'
-  };
-  if (tem('Água')) return {
-    objeto:'uma lasca de casco num pote de vidro',
-    curto:'a lasca',
-    conta:n => `A lasca é dele. ${n} bateu no batente da porta deste quarto numa manhã de julho e soltou esse pedaço, e chorou, e você chorou junto sem saber por quê.`,
-    leva:'Você tira a lasca do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar.'
-  };
-  if (tem('Grama')) return {
-    objeto:'uma folha seca prensada entre duas páginas de um caderno',
-    curto:'a folha',
-    conta:n => `A folha é dele. Foi a primeira que ${n} soltou, numa manhã de julho, e você tinha três anos e prensou no caderno porque alguém te disse que era assim que se guardava folha.`,
-    leva:'Você tira a folha de entre as páginas com cuidado e põe de volta em outra página, mais no meio do caderno, e guarda o caderno no bolso de dentro da mochila.'
-  };
-  if (tem('Fogo')) return {
-    objeto:'uma tábua do assoalho com uma marca de queimado do tamanho de uma mão',
-    curto:'a marca',
-    conta:n => `A marca é dele. ${n} fez isso numa manhã de julho sem querer, e sua mãe passou dois anos dizendo que ia trocar a tábua, e nunca trocou.`,
-    leva:'Você não leva a marca. Você se agacha e passa a mão nela uma vez, e é ridículo, e você faz mesmo assim.'
-  };
-  return {
-    objeto:'um pedaço de casca de ovo dentro de um pote de vidro',
-    curto:'a casca',
-    conta:n => `A casca é dele. ${n} nasceu neste quarto, no chão, numa manhã de julho, e você tinha três anos e não lembra de nada — mas guardou a casca, porque alguém te disse pra guardar, e você é o tipo de pessoa que guarda.`,
-    leva:'Você tira a casca do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar.'
-  };
-}
-
 const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado','c1_vizinha'];
 
 CAPITULOS.push(
@@ -95,7 +23,7 @@ c1_acorda:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Você está sozinho no quarto, o que não era o plano.';
-      return `${nomeExib(p)} está aos pés da cama, acordado antes de você. Ele dorme aí desde que era pequeno o suficiente pra caber na sua mão, e já não cabe há muito tempo, e ninguém nunca sugeriu mudar isso.`;
+      return `${nomeExib(p)} está aos pés da cama, acordado antes de você. Ele dorme aí desde a primeira noite em que apareceu nesta casa, e ninguém nunca sugeriu mudar isso.`;
     },
     'Lá embaixo, alguém já está na cozinha. Dá pra ouvir a panela e o rádio ligado num volume baixo demais pra entender.',
     'Você tem quinze anos e hoje é o dia. Ficar deitado mais um pouco não muda isso, mas também não estraga.'
@@ -538,7 +466,7 @@ c1_cinco_minutos:{
     d=>{
       const p = d.time[0];
       if (!p) return 'O teto do quarto tem uma rachadura que você conhece melhor que o próprio rosto.';
-      return `${nomeExib(p)} sobe na cama, o que ele não faz desde que ficou grande, e se encaixa do seu lado como se ainda coubesse. Não cabe. Ele fica assim mesmo.`;
+      return `${nomeExib(p)} sobe na cama, o que ele quase nunca faz, e se encaixa do seu lado num espaço que claramente não existe. Ele fica assim mesmo.`;
     },
     'O teto tem uma rachadura em forma de rio que você olha desde os seis anos e que hoje você vai olhar pela última vez de dentro desta cama.',
     'Você não chora. Chega bem perto.'
@@ -554,29 +482,25 @@ c1_quarto:{
   texto:[
     'O quarto tem doze anos de coisa acumulada e você não vai levar quase nada.',
     'Na parede, um mapa de Kanto que você ganhou aos oito e preencheu de caneta com lugares onde nunca foi. Alguns nomes estão escritos errado.',
-    d=>`Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola. ${
-      lembrancaDoInicial(d.time[0]).objeto.replace(/^./, c => c.toUpperCase())}.`,
-    d=>{
-      const p = d.time[0];
-      if (!p) return 'E um espaço vazio onde alguma coisa devia estar.';
-      return lembrancaDoInicial(p).conta(nomeExib(p));
-    }
+    'Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto da sua mãe muito mais nova, com o cabelo diferente, rindo de uma coisa que ninguém registrou.',
+    'Nada disso vai servir pra nada em Kanto. Você sabe disso e continua olhando.'
   ],
   escolhas:[
-    {texto:d=>`Levar ${lembrancaDoInicial(d.time[0]).curto}.`, vai:'c1_levou_casca',
-     ef:{flag:'levou_a_casca', moral:10}},
+    {texto:'Levar a foto.', vai:'c1_levou_foto',
+     ef:{flag:'levou_a_foto', moral:5}},
     {texto:'Levar o mapa da parede.', vai:'c1_levou_mapa', ef:{flag:'levou_o_mapa'}},
     {texto:'Não levar nada. Você não vai precisar.', vai:'c1_cozinha', ef:{flag:'nao_levou_nada'}},
     {texto:'Conferir a mochila de novo.', vai:'c1_mochila'}
   ]
 },
 
-c1_levou_casca:{
+c1_levou_foto:{
   texto:[
-    d=>lembrancaDoInicial(d.time[0]).leva,
+    'Você tira a foto da moldura sem quebrar a moldura, que é um cuidado que ninguém pediu, e enrola num pedaço de pano.',
+    'Guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem amassar.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} olha você fazer isso e não entende — e mesmo sem entender, encosta a cabeça na sua perna.` : 'Ninguém vê você fazer isso.';
+      return p ? `${nomeExib(p)} olha você fazer isso da porta do quarto e não entende nada, o que é justo, porque nem você entende direito.` : 'Ninguém vê você fazer isso.';
     },
     'É a coisa mais inútil que você vai carregar por Kanto inteira.'
   ],

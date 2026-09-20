@@ -120,6 +120,7 @@ const Exploracao = {
     if (acao === 'andar')      return this.andar();
     if (acao === 'conversar')  return this.conversar();
     if (acao === 'centro')     return Cidade.centro();
+    if (acao === 'pc')         return UI.modalPC();
     if (acao === 'loja')       return Cidade.loja();
     if (acao === 'ginasio')    return Cidade.ginasio();
     if (acao === 'liga'){ Jogo.voltarDeGinasio = 'exploracao'; return Jogo.abrirLiga('exploracao'); }

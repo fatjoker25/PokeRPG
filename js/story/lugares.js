@@ -430,6 +430,7 @@ const Cidade = {
     Estado.salvar('auto');
     Exploracao.tela([
       {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
+      {tipo:'info', texto:'No canto do saguão tem o terminal do sistema de armazenamento, ligado, com a tela de sempre esperando alguém.'},
       {tipo:'info', texto:'Amanhece.'}
     ]);
   },

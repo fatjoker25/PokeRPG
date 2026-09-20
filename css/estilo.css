@@ -98,11 +98,11 @@ body{
     var(--bg);
   background-attachment:fixed;
   color:var(--texto); font-family:var(--fonte);
-  line-height:1.65; font-size:16px; min-height:100vh;
+  line-height:1.52; font-size:15px; min-height:100vh;
   transition:background-color 1s var(--suave), color 1s var(--suave);
   -webkit-font-smoothing:antialiased;
 }
-#app{max-width:980px;margin:0 auto;padding:16px 16px 76px}
+#app{max-width:1080px;margin:0 auto;padding:10px 14px 48px}
 
 ::selection{background:var(--destaque-sombra);color:var(--texto)}
 
@@ -116,10 +116,10 @@ body{
 /* ---------- topo ---------- */
 .topo{
   display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;
-  padding:12px 14px;
+  padding:8px 12px;
   background:linear-gradient(180deg, var(--painel-2), var(--painel));
   border:1px solid var(--borda);
-  border-radius:var(--raio);margin-bottom:14px;position:sticky;top:8px;z-index:20;
+  border-radius:var(--raio);margin-bottom:9px;position:sticky;top:4px;z-index:20;
   box-shadow:var(--sombra);
   backdrop-filter:blur(8px);
 }
@@ -171,16 +171,16 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .painel{
   background:linear-gradient(180deg, var(--painel-2), var(--painel));
   border:1px solid var(--borda);border-radius:var(--raio);
-  padding:18px 20px;margin-bottom:14px;box-shadow:var(--sombra);
+  padding:13px 16px;margin-bottom:9px;box-shadow:var(--sombra);
   animation:surge .4s var(--suave) both;
 }
-.painel h2{margin:0 0 12px;font-size:16px;letter-spacing:.05em;color:var(--destaque);font-weight:600}
-.painel h3{margin:16px 0 8px;font-size:13.5px;color:var(--texto-fraco);
+.painel h2{margin:0 0 9px;font-size:15.5px;letter-spacing:.05em;color:var(--destaque);font-weight:600}
+.painel h3{margin:12px 0 6px;font-size:13px;color:var(--texto-fraco);
   text-transform:uppercase;letter-spacing:.09em;font-weight:600}
 
 /* ---------- narrativa ---------- */
 .cap-cabecalho{
-  position:relative;padding-left:30px;margin-bottom:20px;
+  position:relative;padding-left:26px;margin-bottom:12px;
   animation:surge .45s var(--suave) both;
 }
 /* o marcador é uma Poké Ball vista de lado: metade vermelha em cima,
@@ -198,10 +198,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 }
 .cap-cabecalho .num{color:var(--destaque)}
 .cap-cabecalho .num{font-size:11.5px;letter-spacing:.18em;color:var(--texto-fraco);text-transform:uppercase}
-.cap-cabecalho .tit{font-size:22px;font-weight:600;margin:3px 0;text-wrap:balance}
+.cap-cabecalho .tit{font-size:19px;font-weight:600;margin:1px 0;text-wrap:balance}
 .cap-cabecalho .loc{font-size:13px;color:var(--texto-fraco);font-style:italic}
 
-.narrativa p{margin:0 0 15px;animation:aparece .55s var(--suave) both;max-width:68ch}
+.narrativa p{margin:0 0 10px;animation:aparece .45s var(--suave) both;max-width:74ch}
 .narrativa p:nth-child(1){animation-delay:.02s}
 .narrativa p:nth-child(2){animation-delay:.16s}
 .narrativa p:nth-child(3){animation-delay:.3s}
@@ -211,12 +211,12 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .narrativa p:nth-child(n+7){animation-delay:.86s}
 @keyframes aparece{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:22px}
+.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
 .escolha{
   text-align:left;
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);color:var(--texto);
-  padding:13px 16px 13px 40px;border-radius:var(--raio-sm);line-height:1.5;
+  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
   position:relative;overflow:hidden;
   animation:surge .35s var(--suave) both;
 }
@@ -232,8 +232,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   transition:transform .25s var(--mola);
 }
 .escolha::before{
-  content:'';position:absolute;left:15px;top:50%;transform:translateY(-50%);
-  width:11px;height:11px;border-radius:50%;
+  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:10px;height:10px;border-radius:50%;
   background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
   box-shadow:0 0 0 1.2px var(--borda-forte);
   transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
@@ -256,7 +256,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
 .aviso{
-  font-size:13.5px;padding:9px 13px;border-radius:8px;border-left:3px solid var(--borda);
+  font-size:13px;padding:7px 11px;border-radius:8px;border-left:3px solid var(--borda);
   background:linear-gradient(90deg, var(--bg-2), transparent 82%);
   animation:aparece .4s var(--suave) both
 }
@@ -298,19 +298,19 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .dado-caixa.min{border-color:color-mix(in srgb, var(--perigo) 50%, var(--borda))}
 
 /* ---------- combate ---------- */
-.arena{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.arena{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:9px}
 @media(max-width:620px){.arena{grid-template-columns:1fr}}
 .lutador{
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 85%, #000));
-  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:13px 15px;
+  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
   animation:surge .4s var(--suave) both;
 }
 .lutador.inimigo{border-color:#4b3136;background:linear-gradient(180deg, #1d1a20, #16141a)}
 .lutador .nome{font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .lutador .nv{font-size:12px;color:var(--texto-fraco);font-family:var(--mono)}
-.lutador .meta{font-size:12px;color:var(--texto-fraco);margin-top:3px}
+.lutador .meta{font-size:11.5px;color:var(--texto-fraco);margin-top:1px;line-height:1.35}
 .barra{
-  height:10px;background:#090c11;border-radius:6px;overflow:hidden;margin:9px 0 5px;
+  height:9px;background:#090c11;border-radius:6px;overflow:hidden;margin:6px 0 3px;
   border:1px solid var(--borda);position:relative;
 }
 .barra i{
@@ -341,8 +341,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 }
 
 .log-combate{
-  background:#080b0f;border:1px solid var(--borda);border-radius:var(--raio-sm);padding:12px 14px;
-  max-height:290px;overflow-y:auto;font-size:13.5px;margin-bottom:14px;scroll-behavior:smooth
+  background:#080b0f;border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
+  max-height:168px;overflow-y:auto;font-size:13px;margin-bottom:8px;scroll-behavior:smooth
 }
 .log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
 @keyframes entraLog{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
@@ -368,8 +368,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .acoes-combate.livre{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 @media(max-width:620px){.acoes-combate.livre{grid-template-columns:1fr}}
 
-.menu-batalha{display:flex;flex-direction:column;gap:9px}
-.mb-linha{display:flex;gap:9px;justify-content:center;align-items:stretch}
+.menu-batalha{display:flex;flex-direction:column;gap:7px}
+.mb-linha{display:flex;gap:7px;justify-content:center;align-items:stretch}
 .mb-linha .mb-btn{flex:1 1 0;min-width:0;max-width:268px}
 .mb-linha.centro .mb-btn{flex:0 1 268px}
 .grade-golpes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:2px}
@@ -380,12 +380,12 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 
 .mb-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  text-align:center;padding:13px 12px;border-radius:var(--raio-sm);
+  text-align:center;padding:9px 12px;border-radius:var(--raio-sm);
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 82%, #000));
   border:1px solid var(--borda);color:var(--texto);
   animation:surge .3s var(--suave) both;
 }
-.mb-btn .rot{font-size:15.5px;font-weight:650;letter-spacing:.02em;line-height:1.1}
+.mb-btn .rot{font-size:14.5px;font-weight:650;letter-spacing:.02em;line-height:1.1}
 .mb-btn .nota{
   font-size:11px;color:var(--texto-fraco);line-height:1.25;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%
@@ -405,8 +405,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   text-align:left;
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 85%, #000));
   border:1px solid var(--borda);color:var(--texto);
-  padding:10px 13px;border-radius:var(--raio-sm);display:flex;justify-content:space-between;
-  align-items:center;gap:9px;animation:surge .3s var(--suave) both;
+  padding:8px 12px;border-radius:var(--raio-sm);display:flex;justify-content:space-between;
+  align-items:center;gap:8px;animation:surge .3s var(--suave) both;
 }
 .golpe-btn:hover:not(:disabled){
   border-color:var(--destaque);transform:translateY(-2px);
@@ -420,7 +420,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .carta{
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:12px 14px;font-size:13.5px;
+  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
   animation:surge .35s var(--suave) both;
 }
@@ -500,7 +500,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   to{opacity:1;transform:none}
 }
 .modal h2{margin-top:0}
-.modal-pe{margin-top:18px}
+.modal-pe{margin-top:13px}
 
 /* saindo */
 .modal-fundo.saindo{animation:fundoSai .18s var(--suave) both}
@@ -1058,12 +1058,12 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* arena: o seu de costas, o outro de frente.
    Sem a pasta de sprites a <img> se remove e o espaço fecha junto. */
 .lutador .arte{
-  height:104px;display:flex;align-items:flex-end;justify-content:center;
-  margin:-4px 0 2px
+  height:76px;display:flex;align-items:flex-end;justify-content:center;
+  margin:-2px 0 1px
 }
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
 .lutador .arte .sprite{
-  width:96px;height:96px;object-fit:contain;
+  width:74px;height:74px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
 }
 .lutador.inimigo .arte .sprite{animation-delay:.08s}
@@ -1098,6 +1098,16 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .dex-scan .silhueta .scan-arte{width:96px;height:96px;object-fit:contain}
 .dex-scan .silhueta.brilho{background:none;box-shadow:none}
 .dex-scan .silhueta.brilho .scan-arte{filter:brightness(0) opacity(.8) drop-shadow(0 0 12px rgba(245,197,24,.9))}
+
+/* ---- PC: uma linha por bicho, sem carta inteira ---- */
+.pc-linha{
+  display:flex;align-items:center;gap:9px;
+  padding:6px 0;border-bottom:1px solid var(--borda)
+}
+.pc-linha:last-of-type{border-bottom:0}
+.pc-quem{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0}
+.pc-quem > span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-dados{flex:0 0 auto;font-size:11.5px;color:var(--texto-fraco)}
 
 /* ---- as duas faixas do registro nacional ---- */
 .dex-faixas{
@@ -1201,10 +1211,10 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* ============================================================
    DADOS — eles giram e dá pra girar de novo
    ============================================================ */
-.dados-area{margin-top:14px}
-.dados-linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dados-area{margin-top:9px}
+.dados-linha{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .dado{
-  position:relative;width:52px;height:52px;flex:0 0 auto;
+  position:relative;width:42px;height:42px;flex:0 0 auto;
   background:linear-gradient(155deg, var(--painel-2), var(--bg));
   border:1px solid var(--borda-forte);color:var(--texto);
   font-family:var(--mono);cursor:pointer;padding:0;
@@ -1263,7 +1273,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 
 /* bandeja livre */
 .bandeja{
-  margin-top:14px;padding:11px 13px;border:1px dashed var(--borda);border-radius:var(--raio-sm);
+  margin-top:9px;padding:7px 11px;border:1px dashed var(--borda);border-radius:var(--raio-sm);
   background:color-mix(in srgb, var(--bg-2) 60%, transparent);
   display:flex;align-items:center;gap:12px;flex-wrap:wrap
 }
@@ -1282,11 +1292,11 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .dado.d4 .rot{bottom:4px;font-size:7px;opacity:.75}
 .dado.d20 .rot{bottom:6px}
 .bandeja .dados-linha{gap:14px}
-.bandeja .dado{width:44px;height:44px}
+.bandeja .dado{width:34px;height:34px}
 .bandeja .dado.d4 .face{transform:translateY(7px);font-size:13px}
 .bandeja .dado .rot{font-size:7.5px}
 @media(max-width:620px){
-  .dado{width:46px;height:46px}
+  .dado{width:38px;height:38px}
   .dado .face{font-size:17px}
   .dados-legendas{font-size:11px}
 }

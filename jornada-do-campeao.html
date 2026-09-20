@@ -107,11 +107,11 @@ body{
     var(--bg);
   background-attachment:fixed;
   color:var(--texto); font-family:var(--fonte);
-  line-height:1.65; font-size:16px; min-height:100vh;
+  line-height:1.52; font-size:15px; min-height:100vh;
   transition:background-color 1s var(--suave), color 1s var(--suave);
   -webkit-font-smoothing:antialiased;
 }
-#app{max-width:980px;margin:0 auto;padding:16px 16px 76px}
+#app{max-width:1080px;margin:0 auto;padding:10px 14px 48px}
 
 ::selection{background:var(--destaque-sombra);color:var(--texto)}
 
@@ -125,10 +125,10 @@ body{
 /* ---------- topo ---------- */
 .topo{
   display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;
-  padding:12px 14px;
+  padding:8px 12px;
   background:linear-gradient(180deg, var(--painel-2), var(--painel));
   border:1px solid var(--borda);
-  border-radius:var(--raio);margin-bottom:14px;position:sticky;top:8px;z-index:20;
+  border-radius:var(--raio);margin-bottom:9px;position:sticky;top:4px;z-index:20;
   box-shadow:var(--sombra);
   backdrop-filter:blur(8px);
 }
@@ -180,16 +180,16 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .painel{
   background:linear-gradient(180deg, var(--painel-2), var(--painel));
   border:1px solid var(--borda);border-radius:var(--raio);
-  padding:18px 20px;margin-bottom:14px;box-shadow:var(--sombra);
+  padding:13px 16px;margin-bottom:9px;box-shadow:var(--sombra);
   animation:surge .4s var(--suave) both;
 }
-.painel h2{margin:0 0 12px;font-size:16px;letter-spacing:.05em;color:var(--destaque);font-weight:600}
-.painel h3{margin:16px 0 8px;font-size:13.5px;color:var(--texto-fraco);
+.painel h2{margin:0 0 9px;font-size:15.5px;letter-spacing:.05em;color:var(--destaque);font-weight:600}
+.painel h3{margin:12px 0 6px;font-size:13px;color:var(--texto-fraco);
   text-transform:uppercase;letter-spacing:.09em;font-weight:600}
 
 /* ---------- narrativa ---------- */
 .cap-cabecalho{
-  position:relative;padding-left:30px;margin-bottom:20px;
+  position:relative;padding-left:26px;margin-bottom:12px;
   animation:surge .45s var(--suave) both;
 }
 /* o marcador é uma Poké Ball vista de lado: metade vermelha em cima,
@@ -207,10 +207,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 }
 .cap-cabecalho .num{color:var(--destaque)}
 .cap-cabecalho .num{font-size:11.5px;letter-spacing:.18em;color:var(--texto-fraco);text-transform:uppercase}
-.cap-cabecalho .tit{font-size:22px;font-weight:600;margin:3px 0;text-wrap:balance}
+.cap-cabecalho .tit{font-size:19px;font-weight:600;margin:1px 0;text-wrap:balance}
 .cap-cabecalho .loc{font-size:13px;color:var(--texto-fraco);font-style:italic}
 
-.narrativa p{margin:0 0 15px;animation:aparece .55s var(--suave) both;max-width:68ch}
+.narrativa p{margin:0 0 10px;animation:aparece .45s var(--suave) both;max-width:74ch}
 .narrativa p:nth-child(1){animation-delay:.02s}
 .narrativa p:nth-child(2){animation-delay:.16s}
 .narrativa p:nth-child(3){animation-delay:.3s}
@@ -220,12 +220,12 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .narrativa p:nth-child(n+7){animation-delay:.86s}
 @keyframes aparece{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-.escolhas{display:flex;flex-direction:column;gap:9px;margin-top:22px}
+.escolhas{display:flex;flex-direction:column;gap:6px;margin-top:14px}
 .escolha{
   text-align:left;
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
   border:1px solid var(--borda);color:var(--texto);
-  padding:13px 16px 13px 40px;border-radius:var(--raio-sm);line-height:1.5;
+  padding:9px 14px 9px 34px;border-radius:var(--raio-sm);line-height:1.42;
   position:relative;overflow:hidden;
   animation:surge .35s var(--suave) both;
 }
@@ -241,8 +241,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   transition:transform .25s var(--mola);
 }
 .escolha::before{
-  content:'';position:absolute;left:15px;top:50%;transform:translateY(-50%);
-  width:11px;height:11px;border-radius:50%;
+  content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:10px;height:10px;border-radius:50%;
   background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
   box-shadow:0 0 0 1.2px var(--borda-forte);
   transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
@@ -265,7 +265,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 /* ---------- avisos / consequências ---------- */
 .avisos{margin-top:18px;display:flex;flex-direction:column;gap:7px}
 .aviso{
-  font-size:13.5px;padding:9px 13px;border-radius:8px;border-left:3px solid var(--borda);
+  font-size:13px;padding:7px 11px;border-radius:8px;border-left:3px solid var(--borda);
   background:linear-gradient(90deg, var(--bg-2), transparent 82%);
   animation:aparece .4s var(--suave) both
 }
@@ -307,19 +307,19 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .dado-caixa.min{border-color:color-mix(in srgb, var(--perigo) 50%, var(--borda))}
 
 /* ---------- combate ---------- */
-.arena{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.arena{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:9px}
 @media(max-width:620px){.arena{grid-template-columns:1fr}}
 .lutador{
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 85%, #000));
-  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:13px 15px;
+  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
   animation:surge .4s var(--suave) both;
 }
 .lutador.inimigo{border-color:#4b3136;background:linear-gradient(180deg, #1d1a20, #16141a)}
 .lutador .nome{font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .lutador .nv{font-size:12px;color:var(--texto-fraco);font-family:var(--mono)}
-.lutador .meta{font-size:12px;color:var(--texto-fraco);margin-top:3px}
+.lutador .meta{font-size:11.5px;color:var(--texto-fraco);margin-top:1px;line-height:1.35}
 .barra{
-  height:10px;background:#090c11;border-radius:6px;overflow:hidden;margin:9px 0 5px;
+  height:9px;background:#090c11;border-radius:6px;overflow:hidden;margin:6px 0 3px;
   border:1px solid var(--borda);position:relative;
 }
 .barra i{
@@ -350,8 +350,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 }
 
 .log-combate{
-  background:#080b0f;border:1px solid var(--borda);border-radius:var(--raio-sm);padding:12px 14px;
-  max-height:290px;overflow-y:auto;font-size:13.5px;margin-bottom:14px;scroll-behavior:smooth
+  background:#080b0f;border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
+  max-height:168px;overflow-y:auto;font-size:13px;margin-bottom:8px;scroll-behavior:smooth
 }
 .log-combate .l{padding:3px 0;animation:entraLog .32s var(--suave) both}
 @keyframes entraLog{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
@@ -377,8 +377,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .acoes-combate.livre{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 @media(max-width:620px){.acoes-combate.livre{grid-template-columns:1fr}}
 
-.menu-batalha{display:flex;flex-direction:column;gap:9px}
-.mb-linha{display:flex;gap:9px;justify-content:center;align-items:stretch}
+.menu-batalha{display:flex;flex-direction:column;gap:7px}
+.mb-linha{display:flex;gap:7px;justify-content:center;align-items:stretch}
 .mb-linha .mb-btn{flex:1 1 0;min-width:0;max-width:268px}
 .mb-linha.centro .mb-btn{flex:0 1 268px}
 .grade-golpes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:2px}
@@ -389,12 +389,12 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 
 .mb-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  text-align:center;padding:13px 12px;border-radius:var(--raio-sm);
+  text-align:center;padding:9px 12px;border-radius:var(--raio-sm);
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 82%, #000));
   border:1px solid var(--borda);color:var(--texto);
   animation:surge .3s var(--suave) both;
 }
-.mb-btn .rot{font-size:15.5px;font-weight:650;letter-spacing:.02em;line-height:1.1}
+.mb-btn .rot{font-size:14.5px;font-weight:650;letter-spacing:.02em;line-height:1.1}
 .mb-btn .nota{
   font-size:11px;color:var(--texto-fraco);line-height:1.25;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%
@@ -414,8 +414,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   text-align:left;
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 85%, #000));
   border:1px solid var(--borda);color:var(--texto);
-  padding:10px 13px;border-radius:var(--raio-sm);display:flex;justify-content:space-between;
-  align-items:center;gap:9px;animation:surge .3s var(--suave) both;
+  padding:8px 12px;border-radius:var(--raio-sm);display:flex;justify-content:space-between;
+  align-items:center;gap:8px;animation:surge .3s var(--suave) both;
 }
 .golpe-btn:hover:not(:disabled){
   border-color:var(--destaque);transform:translateY(-2px);
@@ -429,7 +429,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .carta{
   background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 86%, #000));
-  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:12px 14px;font-size:13.5px;
+  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:10px 12px;font-size:13px;
   transition:transform .2s var(--mola), border-color .2s var(--suave), box-shadow .22s var(--suave);
   animation:surge .35s var(--suave) both;
 }
@@ -509,7 +509,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   to{opacity:1;transform:none}
 }
 .modal h2{margin-top:0}
-.modal-pe{margin-top:18px}
+.modal-pe{margin-top:13px}
 
 /* saindo */
 .modal-fundo.saindo{animation:fundoSai .18s var(--suave) both}
@@ -1067,12 +1067,12 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* arena: o seu de costas, o outro de frente.
    Sem a pasta de sprites a <img> se remove e o espaço fecha junto. */
 .lutador .arte{
-  height:104px;display:flex;align-items:flex-end;justify-content:center;
-  margin:-4px 0 2px
+  height:76px;display:flex;align-items:flex-end;justify-content:center;
+  margin:-2px 0 1px
 }
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
 .lutador .arte .sprite{
-  width:96px;height:96px;object-fit:contain;
+  width:74px;height:74px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
 }
 .lutador.inimigo .arte .sprite{animation-delay:.08s}
@@ -1107,6 +1107,16 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .dex-scan .silhueta .scan-arte{width:96px;height:96px;object-fit:contain}
 .dex-scan .silhueta.brilho{background:none;box-shadow:none}
 .dex-scan .silhueta.brilho .scan-arte{filter:brightness(0) opacity(.8) drop-shadow(0 0 12px rgba(245,197,24,.9))}
+
+/* ---- PC: uma linha por bicho, sem carta inteira ---- */
+.pc-linha{
+  display:flex;align-items:center;gap:9px;
+  padding:6px 0;border-bottom:1px solid var(--borda)
+}
+.pc-linha:last-of-type{border-bottom:0}
+.pc-quem{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0}
+.pc-quem > span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-dados{flex:0 0 auto;font-size:11.5px;color:var(--texto-fraco)}
 
 /* ---- as duas faixas do registro nacional ---- */
 .dex-faixas{
@@ -1210,10 +1220,10 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* ============================================================
    DADOS — eles giram e dá pra girar de novo
    ============================================================ */
-.dados-area{margin-top:14px}
-.dados-linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dados-area{margin-top:9px}
+.dados-linha{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .dado{
-  position:relative;width:52px;height:52px;flex:0 0 auto;
+  position:relative;width:42px;height:42px;flex:0 0 auto;
   background:linear-gradient(155deg, var(--painel-2), var(--bg));
   border:1px solid var(--borda-forte);color:var(--texto);
   font-family:var(--mono);cursor:pointer;padding:0;
@@ -1272,7 +1282,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 
 /* bandeja livre */
 .bandeja{
-  margin-top:14px;padding:11px 13px;border:1px dashed var(--borda);border-radius:var(--raio-sm);
+  margin-top:9px;padding:7px 11px;border:1px dashed var(--borda);border-radius:var(--raio-sm);
   background:color-mix(in srgb, var(--bg-2) 60%, transparent);
   display:flex;align-items:center;gap:12px;flex-wrap:wrap
 }
@@ -1291,11 +1301,11 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .dado.d4 .rot{bottom:4px;font-size:7px;opacity:.75}
 .dado.d20 .rot{bottom:6px}
 .bandeja .dados-linha{gap:14px}
-.bandeja .dado{width:44px;height:44px}
+.bandeja .dado{width:34px;height:34px}
 .bandeja .dado.d4 .face{transform:translateY(7px);font-size:13px}
 .bandeja .dado .rot{font-size:7.5px}
 @media(max-width:620px){
-  .dado{width:46px;height:46px}
+  .dado{width:38px;height:38px}
   .dado .face{font-size:17px}
   .dados-legendas{font-size:11px}
 }
@@ -3065,8 +3075,14 @@ function afazeresDoLocal(){
       sub:'Sem destino. É andando sem destino que se encontra o que não está no mapa.'});
     lista.push({id:'conversar', titulo:'Conversar com os moradores',
       sub:'Gente de cidade pequena fala demais. Gente de cidade grande fala pouco e diz mais.'});
-    if ((L.lugares||[]).includes('centro')) lista.push({id:'centro', titulo:'Centro Pokémon',
-      sub:'Curar o time, dormir, usar o terminal.'});
+    if ((L.lugares||[]).includes('centro')){
+      lista.push({id:'centro', titulo:'Centro Pokémon',
+        sub:'Curar o time, dormir, usar o terminal.'});
+      lista.push({id:'pc', titulo:'PC do Centro',
+        sub: d.pc.length
+          ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
+          : 'Guardar e tirar Pokémon. O cinto leva seis.'});
+    }
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
     if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
@@ -3088,6 +3104,53 @@ function afazeresDoLocal(){
 
 /* segunda metade: coisas que só existem depois que você descobre */
 function afazeresExtras(){ return []; }
+
+/* ============================================================
+   ONDE CADA CAPÍTULO ACONTECE
+   O capítulo tem um lugar. Se você está em outro quando ele
+   começa, a estrada entre os dois existe e tem que ser contada —
+   senão o jogo te teleporta de Vermilion para Viridian e o
+   cabeçalho muda de cidade sem ninguém sair do lugar.
+   ============================================================ */
+const LOCAL_DO_CAPITULO = {
+  1:null,              /* onde você mora */
+  2:'viridian',   3:'floresta',  4:'pewter',    5:'monte_lua',
+  6:'cerulean',   7:'lavender',  8:'vermilion', 9:'celadon',
+  10:'usina',    11:'saffron',  12:'fuchsia',  13:'cinnabar',
+  14:'rota21',   15:'rota16',   16:'seafoam',  17:'celadon',
+  18:'saffron',  19:'fuchsia',  20:'saffron',  21:'planalto',
+  22:'norte',    23:'pallet'
+};
+
+function localDoCapitulo(n){
+  const id = LOCAL_DO_CAPITULO[n];
+  if (id === null || id === undefined){
+    const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
+      'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
+      'Saffron':'saffron','Cinnabar':'cinnabar','Indigo':'planalto'};
+    return mapa[Estado.dados.jogador.cidade] || 'pallet';
+  }
+  return id;
+}
+
+/* Caminho mais curto pelo mapa de verdade, em número de trechos.
+   Serve para saber quantos dias a viagem come. */
+function distanciaEntre(de, para){
+  if (de === para) return 0;
+  const visto = new Set([de]);
+  let borda = [de], passos = 0;
+  while (borda.length && passos < 30){
+    passos++;
+    const prox = [];
+    for (const id of borda)
+      for (const v of ((LOCAIS[id] || {}).conexoes || [])){
+        if (v === para) return passos;
+        if (!visto.has(v)){ visto.add(v); prox.push(v); }
+      }
+    borda = prox;
+  }
+  return 4;   /* lugares sem estrada ligando: o trajeto é longo e é isso */
+}
 
 
 /* ===== js/engine/entrada.js ===== */
@@ -4192,6 +4255,31 @@ const Estado = {
   npc(nome){ return this.dados.npcs[nome] || null; },
 
   /* ---------- TIME ---------- */
+  /* ---------- PC: o time cabe seis, o resto fica guardado ---------- */
+  depositar(uid){
+    const d = this.dados;
+    const i = d.time.findIndex(p => p.uid === uid);
+    if (i < 0) return {ok:false, motivo:'Esse não está no seu time.'};
+    const vivosNoTime = d.time.filter(p => !p.morto).length;
+    const morto = d.time[i].morto;
+    if (!morto && vivosNoTime <= 1)
+      return {ok:false, motivo:'Esse é o único que você tem em pé. Ninguém anda por Kanto de cinto vazio.'};
+    const p = d.time.splice(i, 1)[0];
+    d.pc.push(p);
+    this.registrar(`${nomeExib(p)} ficou no PC.`);
+    return {ok:true, pokemon:p};
+  },
+  retirar(uid){
+    const d = this.dados;
+    if (d.time.length >= 6) return {ok:false, motivo:'O seu cinto já tem seis. Guarde um antes de tirar outro.'};
+    const i = d.pc.findIndex(p => p.uid === uid);
+    if (i < 0) return {ok:false, motivo:'Esse não está no PC.'};
+    const p = d.pc.splice(i, 1)[0];
+    d.time.push(p);
+    this.registrar(`${nomeExib(p)} voltou do PC para o time.`);
+    return {ok:true, pokemon:p};
+  },
+
   adicionar(p){
     if (this.dados.time.length < 6){ this.dados.time.push(p); return 'time'; }
     this.dados.pc.push(p); return 'pc';
@@ -5153,7 +5241,15 @@ const Batalha = {
     // ações que não gastam o turno de golpe
     if (acao.tipo === 'pokedex') return this.escanear();
     if (acao.tipo === 'fugir')  return this.tentarFugir();
-    if (acao.tipo === 'bola')   return this.tentarCaptura(acao.nome);
+    if (acao.tipo === 'bola'){
+      if (this.tipo === 'treinador'){
+        this.eventos = [];
+        this.turno--;
+        this.ev('erro', `${this.treinador || 'O treinador'} chama de volta antes da bola chegar perto. Pokémon dos outros não se captura — e num ginásio isso encerra a sua vez.`);
+        return {eventos:this.eventos, fim:null};
+      }
+      return this.tentarCaptura(acao.nome);
+    }
     if (acao.tipo === 'item')   { this.usarItemEmCombate(acao.nome, acao.alvoUid); return this.turnoInimigoSozinho(); }
     if (acao.tipo === 'trocar') { this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho(); }
 
@@ -5201,10 +5297,6 @@ const Batalha = {
     this.turno--;
     if (!Estado.dados.flags.tem_pokedex){
       this.ev('erro', 'Você não tem Pokédex.');
-      return {eventos:this.eventos, fim:null};
-    }
-    if (this.pdexUsada){
-      this.ev('erro', 'A Pokédex já leu tudo o que conseguia ler daqui.');
       return {eventos:this.eventos, fim:null};
     }
     this.pdexUsada = true;
@@ -5401,6 +5493,10 @@ const Batalha = {
       return this.golpeNoJogador();
     }
     if (acao.tipo === 'bola'){
+      if (this.tipo === 'treinador'){
+        this.ev('erro', 'Não se joga bola no Pokémon de outro treinador.');
+        return {eventos:this.eventos, fim:null};
+      }
       const r = Captura.tentar(this.inimigo, acao.nome, this);
       r.eventos.forEach(e => this.eventos.push(e));
       if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:acao.nome});
@@ -7817,6 +7913,7 @@ const Cidade = {
     Estado.salvar('auto');
     Exploracao.tela([
       {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
+      {tipo:'info', texto:'No canto do saguão tem o terminal do sistema de armazenamento, ligado, com a tela de sempre esperando alguém.'},
       {tipo:'info', texto:'Amanhece.'}
     ]);
   },
@@ -7891,78 +7988,6 @@ const CAPITULOS = [];
    ============================================================ */
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
-/* A lembrança que sobrou do primeiro dia dele.
-   Nem todo inicial sai de um ovo que dá pra guardar num pote:
-   um Geodude não deixa casca, um Magnemite não nasceu no chão do
-   seu quarto de camisola, e um Gastly não deixa nada. O objeto
-   muda com a espécie, e é o mesmo objeto o capítulo inteiro. */
-function lembrancaDoInicial(p){
-  const t = p ? (DEX[p.dex] || {}).tipos || [] : [];
-  const tem = x => t.includes(x);
-  const dex = p ? p.dex : 0;
-
-  if ([81,82,100,101,137].includes(dex)) return {
-    objeto:'um parafuso pequeno numa caixinha de fósforo',
-    curto:'o parafuso',
-    conta:n => `O parafuso é dele. ${n} chegou nesta casa dentro de uma caixa de peça, sem nota e sem explicação, e o parafuso estava solto no fundo. Você tinha três anos e guardou, porque alguém te disse pra guardar, e você é o tipo de pessoa que guarda.`,
-    leva:'Você tira o parafuso da caixa de fósforo e põe no bolso de dentro da mochila, que é o bolso das coisas que não podem se perder.'
-  };
-  if (dex === 104) return {
-    objeto:'um dente de leite dentro de um pote de vidro',
-    curto:'o dente',
-    conta:n => `O dente é dele. Caiu numa manhã de julho, neste quarto, e ${n} ficou três dias sem deixar ninguém chegar perto da cara dele. Você tinha três anos e guardou o dente.`,
-    leva:'Você tira o dente do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila. É pequeno demais para o tamanho que isso tem.'
-  };
-  if (tem('Pedra')) return {
-    objeto:'uma lasca de pedra do tamanho de uma moeda, num pote de vidro',
-    curto:'a lasca',
-    conta:n => `A lasca é dele. Soltou de ${n} sozinha, numa manhã de julho, no chão deste quarto, e você tinha três anos e achou que ele estava quebrando. Sua mãe explicou que não. Você guardou assim mesmo.`,
-    leva:'Você tira a lasca do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar. A lasca não pode quebrar. Você guarda ali do mesmo jeito.'
-  };
-  if (tem('Fantasma') || dex === 88 || dex === 109) return {
-    objeto:'um pote de vidro vazio, com tampa, guardado como se tivesse alguma coisa dentro',
-    curto:'o pote',
-    conta:n => `O pote é dele. ${n} apareceu neste quarto numa manhã de julho e não deixou nada pra guardar — então você guardou o pote, fechado, e nunca conseguiu explicar isso pra ninguém.`,
-    leva:'Você põe o pote vazio no bolso de dentro da mochila, fechado, e não tenta explicar.'
-  };
-  if (tem('Inseto')) return {
-    objeto:'uma casca de muda inteira, seca, dentro de um pote de vidro',
-    curto:'a muda',
-    conta:n => `A muda é dele. ${n} trocou de casca neste quarto numa manhã de julho, e saiu inteira, e você tinha três anos e ficou com medo de ter dois.`,
-    leva:'Você tira a muda do pote com as duas mãos, porque ela desmancha, e enrola num pedaço de pano.'
-  };
-  if ([129,118,116,72,90,98].includes(dex)) return {
-    objeto:'uma escama do tamanho de uma unha, num pote de vidro',
-    curto:'a escama',
-    conta:n => `A escama é dele. ${n} soltou numa manhã de julho, no chão deste quarto, e ela pegou a luz da janela de um jeito que você lembra até hoje, aos quinze.`,
-    leva:'Você tira a escama do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar.'
-  };
-  if (tem('Água')) return {
-    objeto:'uma lasca de casco num pote de vidro',
-    curto:'a lasca',
-    conta:n => `A lasca é dele. ${n} bateu no batente da porta deste quarto numa manhã de julho e soltou esse pedaço, e chorou, e você chorou junto sem saber por quê.`,
-    leva:'Você tira a lasca do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar.'
-  };
-  if (tem('Grama')) return {
-    objeto:'uma folha seca prensada entre duas páginas de um caderno',
-    curto:'a folha',
-    conta:n => `A folha é dele. Foi a primeira que ${n} soltou, numa manhã de julho, e você tinha três anos e prensou no caderno porque alguém te disse que era assim que se guardava folha.`,
-    leva:'Você tira a folha de entre as páginas com cuidado e põe de volta em outra página, mais no meio do caderno, e guarda o caderno no bolso de dentro da mochila.'
-  };
-  if (tem('Fogo')) return {
-    objeto:'uma tábua do assoalho com uma marca de queimado do tamanho de uma mão',
-    curto:'a marca',
-    conta:n => `A marca é dele. ${n} fez isso numa manhã de julho sem querer, e sua mãe passou dois anos dizendo que ia trocar a tábua, e nunca trocou.`,
-    leva:'Você não leva a marca. Você se agacha e passa a mão nela uma vez, e é ridículo, e você faz mesmo assim.'
-  };
-  return {
-    objeto:'um pedaço de casca de ovo dentro de um pote de vidro',
-    curto:'a casca',
-    conta:n => `A casca é dele. ${n} nasceu neste quarto, no chão, numa manhã de julho, e você tinha três anos e não lembra de nada — mas guardou a casca, porque alguém te disse pra guardar, e você é o tipo de pessoa que guarda.`,
-    leva:'Você tira a casca do pote e enrola num pedaço de pano, e guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem quebrar.'
-  };
-}
-
 const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado','c1_vizinha'];
 
 CAPITULOS.push(
@@ -7981,7 +8006,7 @@ c1_acorda:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Você está sozinho no quarto, o que não era o plano.';
-      return `${nomeExib(p)} está aos pés da cama, acordado antes de você. Ele dorme aí desde que era pequeno o suficiente pra caber na sua mão, e já não cabe há muito tempo, e ninguém nunca sugeriu mudar isso.`;
+      return `${nomeExib(p)} está aos pés da cama, acordado antes de você. Ele dorme aí desde a primeira noite em que apareceu nesta casa, e ninguém nunca sugeriu mudar isso.`;
     },
     'Lá embaixo, alguém já está na cozinha. Dá pra ouvir a panela e o rádio ligado num volume baixo demais pra entender.',
     'Você tem quinze anos e hoje é o dia. Ficar deitado mais um pouco não muda isso, mas também não estraga.'
@@ -8424,7 +8449,7 @@ c1_cinco_minutos:{
     d=>{
       const p = d.time[0];
       if (!p) return 'O teto do quarto tem uma rachadura que você conhece melhor que o próprio rosto.';
-      return `${nomeExib(p)} sobe na cama, o que ele não faz desde que ficou grande, e se encaixa do seu lado como se ainda coubesse. Não cabe. Ele fica assim mesmo.`;
+      return `${nomeExib(p)} sobe na cama, o que ele quase nunca faz, e se encaixa do seu lado num espaço que claramente não existe. Ele fica assim mesmo.`;
     },
     'O teto tem uma rachadura em forma de rio que você olha desde os seis anos e que hoje você vai olhar pela última vez de dentro desta cama.',
     'Você não chora. Chega bem perto.'
@@ -8440,29 +8465,25 @@ c1_quarto:{
   texto:[
     'O quarto tem doze anos de coisa acumulada e você não vai levar quase nada.',
     'Na parede, um mapa de Kanto que você ganhou aos oito e preencheu de caneta com lugares onde nunca foi. Alguns nomes estão escritos errado.',
-    d=>`Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola. ${
-      lembrancaDoInicial(d.time[0]).objeto.replace(/^./, c => c.toUpperCase())}.`,
-    d=>{
-      const p = d.time[0];
-      if (!p) return 'E um espaço vazio onde alguma coisa devia estar.';
-      return lembrancaDoInicial(p).conta(nomeExib(p));
-    }
+    'Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto da sua mãe muito mais nova, com o cabelo diferente, rindo de uma coisa que ninguém registrou.',
+    'Nada disso vai servir pra nada em Kanto. Você sabe disso e continua olhando.'
   ],
   escolhas:[
-    {texto:d=>`Levar ${lembrancaDoInicial(d.time[0]).curto}.`, vai:'c1_levou_casca',
-     ef:{flag:'levou_a_casca', moral:10}},
+    {texto:'Levar a foto.', vai:'c1_levou_foto',
+     ef:{flag:'levou_a_foto', moral:5}},
     {texto:'Levar o mapa da parede.', vai:'c1_levou_mapa', ef:{flag:'levou_o_mapa'}},
     {texto:'Não levar nada. Você não vai precisar.', vai:'c1_cozinha', ef:{flag:'nao_levou_nada'}},
     {texto:'Conferir a mochila de novo.', vai:'c1_mochila'}
   ]
 },
 
-c1_levou_casca:{
+c1_levou_foto:{
   texto:[
-    d=>lembrancaDoInicial(d.time[0]).leva,
+    'Você tira a foto da moldura sem quebrar a moldura, que é um cuidado que ninguém pediu, e enrola num pedaço de pano.',
+    'Guarda no bolso de dentro da mochila, que é o bolso das coisas que não podem amassar.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} olha você fazer isso e não entende — e mesmo sem entender, encosta a cabeça na sua perna.` : 'Ninguém vê você fazer isso.';
+      return p ? `${nomeExib(p)} olha você fazer isso da porta do quarto e não entende nada, o que é justo, porque nem você entende direito.` : 'Ninguém vê você fazer isso.';
     },
     'É a coisa mais inútil que você vai carregar por Kanto inteira.'
   ],
@@ -9859,7 +9880,7 @@ c3_ficar:{
   texto:[
     'Você fica. Uma hora, talvez mais — dá pra medir porque a luz muda de ângulo entre as árvores.',
     'Divide a água. Ele aceita na terceira tentativa.',
-    d=>`Em algum momento você começa a falar, sem motivo nenhum, porque o silêncio estava pesado. Fala do seu quarto, do pote de vidro na estante, da fivela quebrada da mochila. Coisa idiota.`,
+    'Em algum momento você começa a falar, sem motivo nenhum, porque o silêncio estava pesado. Fala do seu quarto, da rachadura no teto em forma de rio, da fivela quebrada da mochila. Coisa idiota.',
     'Ele não entende uma palavra e fica escutando mesmo assim, do jeito que bicho escuta: pela cadência.',
     'Quando ele finalmente apoia a pata no chão e dá dois passos, olha pra você de um jeito que não é gratidão — Pokémon selvagem não faz gratidão. É reconhecimento. Ele decorou você.',
     'Depois some no mato.',
@@ -53896,7 +53917,7 @@ const UI = {
         <button data-v="1" class="sel">Bulbasaur</button>
         <button data-v="4">Charmander</button>
         <button data-v="7">Squirtle</button>
-        <button data-v="rand">Aleatório (cresceu com você)</button>
+        <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
       <div class="sussurro" id="f-inicial-desc">Tradição: o Professor te entrega a bola na saída da cidade.</div>
 
@@ -53927,7 +53948,7 @@ const UI = {
     grupo('f-genero');
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
-        ? 'Aleatório: um Pokémon de 1ª Geração, estágio 1. Ele é seu desde pequeno — cresceu com você. Vínculo máximo.'
+        ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
         : 'Tradição: o Professor te entrega a bola na saída da cidade.';
     });
     grupo('f-ritmo', v => {
@@ -54135,8 +54156,9 @@ const UI = {
         <span>Encarar</span><span class="pd">1d10 + Carisma</span></button>`));
       c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuItens()">
         <span>Usar item</span><span class="pd">Potion, Revive…</span></button>`));
-      c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()">
-        <span>Jogar bola</span><span class="pd">Capturar agora</span></button>`));
+      if (Batalha.tipo !== 'treinador')
+        c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()">
+          <span>Jogar bola</span><span class="pd">Capturar agora</span></button>`));
       return;
     }
 
@@ -54160,8 +54182,8 @@ const UI = {
 
     const dex = d.flags.tem_pokedex
       ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
-          Batalha.pdexUsada ? 'já usada nesta luta' : 'lê o adversário · não gasta o turno',
-          "Jogo.acaoBatalha({tipo:'pokedex'})", Batalha.pdexUsada)}</div>`
+          'lê o adversário · não gasta o turno',
+          "Jogo.acaoBatalha({tipo:'pokedex'})")}</div>`
       : '';
 
     c.appendChild(this.el(`<div class="menu-batalha">
@@ -54202,7 +54224,9 @@ const UI = {
     const d = Estado.dados;
     const nomes = Object.keys(d.itens);
     if (!nomes.length) return this.modal('Mochila', '<p class="nada">Mochila vazia.</p>');
-    const bolas = nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
+    /* Pokémon de treinador não se captura: a bola nem aparece na bolsa. */
+    const contraTreinador = Batalha.ativo && Batalha.tipo === 'treinador';
+    const bolas = contraTreinador ? [] : nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
     const resto = nomes.filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
     const linhasBolas = bolas.map(n =>
       `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
@@ -54216,6 +54240,7 @@ const UI = {
           ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join('');
     this.modal('Mochila',
+      (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As bolas ficam no fundo da mochila: não se joga bola no Pokémon de outro treinador.</p>' : '') +
       (linhasBolas ? '<h3>Bolas</h3>' + linhasBolas : '') +
       (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') ||
       '<p class="nada">Nada que sirva agora.</p>');
@@ -54321,7 +54346,48 @@ const UI = {
     Estado.salvar('auto');
   },
 
+  /* ========================================================
+     PC — o cinto cabe seis, o resto fica no sistema
+     ======================================================== */
+  modalPC(){
+    const d = Estado.dados;
+    const linha = (p, acao, rotulo, desabilitado) => `<div class="pc-linha">
+      <span class="pc-quem">${imgSprite(p, 'icone')}<span>${this.esc(nomeExib(p))}${this.shi(p)}</span></span>
+      <span class="pc-dados mono">Nv ${p.nivel} · ${p.morto ? 'morto' : p.hp + '/' + p.hpMax}</span>
+      <button class="btn mini" ${desabilitado ? 'disabled' : `onclick="UI.${acao}('${p.uid}')"`}>${rotulo}</button>
+    </div>`;
+
+    const noTime = d.time.length
+      ? d.time.map(p => linha(p, 'pcGuardar', 'Guardar', d.time.filter(x=>!x.morto).length <= 1 && !p.morto)).join('')
+      : '<p class="nada">Seu cinto está vazio.</p>';
+    const noPC = d.pc.length
+      ? d.pc.map(p => linha(p, 'pcTirar', 'Tirar', d.time.length >= 6)).join('')
+      : '<p class="nada">O sistema não tem ninguém guardado.</p>';
+
+    this.modal('Sistema de armazenamento', `
+      <p class="sussurro">O cinto leva seis. O que passa disso fica aqui, e continua seu — só não anda com você.</p>
+      <h3>No cinto — ${d.time.length} de 6</h3>${noTime}
+      <h3>No sistema — ${d.pc.length}</h3>${noPC}
+      <div style="margin-top:14px"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>`);
+  },
+  pcGuardar(uid){
+    const r = Estado.depositar(uid);
+    if (!r.ok) return this.modal('', `<p class="nada">${this.esc(r.motivo)}</p>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPC()">Voltar ao sistema</button></div>`);
+    Estado.salvar('auto');
+    this.modalPC();
+  },
+  pcTirar(uid){
+    const r = Estado.retirar(uid);
+    if (!r.ok) return this.modal('', `<p class="nada">${this.esc(r.motivo)}</p>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPC()">Voltar ao sistema</button></div>`);
+    Estado.salvar('auto');
+    this.modalPC();
+  },
+
   menuBolas(){
+    if (Batalha.ativo && Batalha.tipo === 'treinador')
+      return this.modal('Bolas', '<p class="nada">Não se joga bola no Pokémon de outro treinador.</p>');
     const bolas = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma bola.</p>');
     this.modal('Qual bola?', bolas.map(n =>
@@ -54456,6 +54522,7 @@ const UI = {
       <p class="sussurro">Cada coisa que você faz aqui gasta um período do dia, e o dia acaba.</p>
       <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
+        <button class="escolha" onclick="UI.modalPC()">PC do Centro — guardar e tirar Pokémon${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
         <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
         ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon — Elite 4 e Torneio Aberto</button>' : ''}
@@ -54464,6 +54531,59 @@ const UI = {
         <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
       </div>
       <div id="avisos" class="avisos"></div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     VIAGEM — a estrada entre um capítulo e o outro
+     ======================================================== */
+  telaViagem(deId, paraId, dias, aoChegar){
+    this.limpar();
+    this.add(this.topo());
+    const de = LOCAIS[deId] || {nome:'onde você estava'};
+    const para = LOCAIS[paraId] || {nome:'o próximo lugar'};
+    const d = Estado.dados;
+
+    const trechos = [
+      'A estrada é estrada: pedra solta, mato dos dois lados, e horas em que não acontece absolutamente nada.',
+      'Você anda atrás de uma família com carrinho por meio dia e depois eles param pra almoçar e você segue sozinho.',
+      'Chove numa parte do caminho e não chove na outra, e dá pra ver a linha exata onde uma coisa vira a outra.',
+      'Um caminhão de carga te dá carona por doze quilômetros e o motorista não fala nada a viagem inteira, e é confortável.',
+      'Você dorme uma noite fora, num acostamento com outras quatro pessoas que também estão indo pra algum lugar.',
+      'Tem um trecho em que a estrada acompanha o rio e você anda mais devagar de propósito.',
+      'Você erra uma bifurcação e perde três horas, e a parte pior é que dá pra ver a estrada certa do outro lado do valo.',
+      'Um grupo de treinadores acampa na curva e te chama pra comer. Você come. Ninguém pergunta o seu nome e isso é uma gentileza.'
+    ];
+    const cansaço = [
+      'Chega com o pé doendo de um jeito específico que você vai passar a conhecer bem.',
+      'Chega com poeira até dentro da mochila.',
+      'Chega com fome e com aquela irritação de quem andou demais.',
+      'Chega inteiro, o que é mais do que muita gente consegue.'
+    ];
+
+    const linhas = [];
+    linhas.push(`De ${de.nome} até ${para.nome} são ${dias === 1 ? 'um dia' : dias + ' dias'} de caminho.`);
+    const usados = new Set();
+    for (let i = 0; i < Math.min(dias, 3); i++){
+      let t = Dados.escolher(trechos), guarda = 0;
+      while (usados.has(t) && guarda++ < 10) t = Dados.escolher(trechos);
+      usados.add(t); linhas.push(t);
+    }
+    if (d.time.length) linhas.push(
+      `${nomeExib(d.time[0])} anda do seu lado o tempo todo e em nenhum momento pergunta se falta muito.`);
+    linhas.push(Dados.escolher(cansaço));
+
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">A estrada</div>
+        <div class="tit">${this.esc(de.nome)} → ${this.esc(para.nome)}</div>
+        <div class="loc">${dias === 1 ? 'um dia' : dias + ' dias'} de caminho</div>
+      </div>
+      <div class="narrativa">${linhas.map(t=>`<p>${this.esc(t)}</p>`).join('')}</div>
+      <div id="escolhas" class="escolhas" style="margin-top:18px">
+        <button class="escolha" onclick="${aoChegar}">Chegar.</button>
+      </div>
     </div>`);
     this.rolarTopo();
   },
@@ -55546,6 +55666,7 @@ const Exploracao = {
     if (acao === 'andar')      return this.andar();
     if (acao === 'conversar')  return this.conversar();
     if (acao === 'centro')     return Cidade.centro();
+    if (acao === 'pc')         return UI.modalPC();
     if (acao === 'loja')       return Cidade.loja();
     if (acao === 'ginasio')    return Cidade.ginasio();
     if (acao === 'liga'){ Jogo.voltarDeGinasio = 'exploracao'; return Jogo.abrirLiga('exploracao'); }
@@ -55705,6 +55826,8 @@ const Jogo = {
   torneioAtual: null,
   rivalAtual: null,
   encontroRival: null,
+  capDepoisDaViagem: null,
+  destinoDaViagem: null,
   proxCapPendente: null,
 
   /* ---------- início ---------- */
@@ -55749,13 +55872,13 @@ const Jogo = {
 
     let inicial;
     if (f.inicial === 'rand'){
-      /* Quem cresceu com você é filhote de alguma coisa que ainda vai
-         virar outra: primeiro estágio de uma linha que tem evolução
-         pela frente. Bicho de estágio único em Kanto — Electabuzz,
-         Magmar, Tauros, Lapras, Onix — não nasce no quintal de
-         ninguém em Pallet. Fóssil está extinto e só existe revivido
-         em laboratório. Lendário e Ditto ficam de fora por motivo
-         óbvio. */
+      /* O que já estava na casa é bicho de primeiro estágio de uma
+         linha que tem evolução pela frente: o tipo de Pokémon que
+         circula por uma cidade pequena e acaba ficando. Espécie de
+         estágio único em Kanto — Electabuzz, Magmar, Tauros, Lapras,
+         Onix — não aparece no quintal de ninguém em Pallet. Fóssil
+         está extinto e só existe revivido em laboratório. Lendário e
+         Ditto ficam de fora por motivo óbvio. */
       const FOSSEIS = [138,139,140,141,142];
       /* O Eevee guarda três destinos e por isso o campo evo dele está
          vazio: quem evolui por pedra entra pela tabela das pedras. */
@@ -55768,7 +55891,7 @@ const Jogo = {
       });
       inicial = criarPokemon(Dados.escolher(base), 5, {
         moral:100, naturezaVista:true,
-        historia:'Cresceu com você desde pequeno. Vínculo máximo.'
+        historia:'Já morava na sua casa quando você decidiu sair. Vínculo máximo.'
       });
     } else {
       inicial = criarPokemon(parseInt(f.inicial,10), 5, {
@@ -56018,6 +56141,37 @@ const Jogo = {
       this.proxCapPendente = prox;
       return UI.telaRival();
     }
+    return this.viajarParaCapitulo(prox);
+  },
+
+  /* O capítulo seguinte acontece em algum lugar. Se você não está
+     nele, existe estrada no meio — e a estrada é contada. */
+  viajarParaCapitulo(prox){
+    const destino = localDoCapitulo(prox);
+    const aqui = Estado.dados.local;
+    if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);
+
+    const dias = Math.max(1, Math.min(6, distanciaEntre(aqui, destino)));
+    this.capDepoisDaViagem = prox;
+    this.destinoDaViagem = destino;
+    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()');
+  },
+
+  chegarDaViagem(){
+    const prox = this.capDepoisDaViagem;
+    const destino = this.destinoDaViagem;
+    this.capDepoisDaViagem = null; this.destinoDaViagem = null;
+    if (destino){
+      const dias = Math.max(1, Math.min(6, distanciaEntre(Estado.dados.local, destino)));
+      Mundo.passar(dias * 4);                  /* a viagem come os dias */
+      Estado.dados.local = destino;
+      Mundo.marcarVisitado(destino);
+      Estado.registrar(`Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
+    }
+    this.entrarNoCapitulo(prox);
+  },
+
+  entrarNoCapitulo(prox){
     const cena = Historia.iniciarCapitulo(prox);
     Estado.salvar('auto');
     UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
@@ -56246,9 +56400,7 @@ const Jogo = {
     const prox = this.proxCapPendente;
     this.proxCapPendente = null;
     if (!prox) return Exploracao.tela();
-    const cena = Historia.iniciarCapitulo(prox);
-    Estado.salvar('auto');
-    UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
+    this.viajarParaCapitulo(prox);
   },
 
   evitarRival(){

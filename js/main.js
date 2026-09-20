@@ -10,6 +10,8 @@ const Jogo = {
   torneioAtual: null,
   rivalAtual: null,
   encontroRival: null,
+  capDepoisDaViagem: null,
+  destinoDaViagem: null,
   proxCapPendente: null,
 
   /* ---------- início ---------- */
@@ -54,13 +56,13 @@ const Jogo = {
 
     let inicial;
     if (f.inicial === 'rand'){
-      /* Quem cresceu com você é filhote de alguma coisa que ainda vai
-         virar outra: primeiro estágio de uma linha que tem evolução
-         pela frente. Bicho de estágio único em Kanto — Electabuzz,
-         Magmar, Tauros, Lapras, Onix — não nasce no quintal de
-         ninguém em Pallet. Fóssil está extinto e só existe revivido
-         em laboratório. Lendário e Ditto ficam de fora por motivo
-         óbvio. */
+      /* O que já estava na casa é bicho de primeiro estágio de uma
+         linha que tem evolução pela frente: o tipo de Pokémon que
+         circula por uma cidade pequena e acaba ficando. Espécie de
+         estágio único em Kanto — Electabuzz, Magmar, Tauros, Lapras,
+         Onix — não aparece no quintal de ninguém em Pallet. Fóssil
+         está extinto e só existe revivido em laboratório. Lendário e
+         Ditto ficam de fora por motivo óbvio. */
       const FOSSEIS = [138,139,140,141,142];
       /* O Eevee guarda três destinos e por isso o campo evo dele está
          vazio: quem evolui por pedra entra pela tabela das pedras. */
@@ -73,7 +75,7 @@ const Jogo = {
       });
       inicial = criarPokemon(Dados.escolher(base), 5, {
         moral:100, naturezaVista:true,
-        historia:'Cresceu com você desde pequeno. Vínculo máximo.'
+        historia:'Já morava na sua casa quando você decidiu sair. Vínculo máximo.'
       });
     } else {
       inicial = criarPokemon(parseInt(f.inicial,10), 5, {
@@ -323,6 +325,37 @@ const Jogo = {
       this.proxCapPendente = prox;
       return UI.telaRival();
     }
+    return this.viajarParaCapitulo(prox);
+  },
+
+  /* O capítulo seguinte acontece em algum lugar. Se você não está
+     nele, existe estrada no meio — e a estrada é contada. */
+  viajarParaCapitulo(prox){
+    const destino = localDoCapitulo(prox);
+    const aqui = Estado.dados.local;
+    if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);
+
+    const dias = Math.max(1, Math.min(6, distanciaEntre(aqui, destino)));
+    this.capDepoisDaViagem = prox;
+    this.destinoDaViagem = destino;
+    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()');
+  },
+
+  chegarDaViagem(){
+    const prox = this.capDepoisDaViagem;
+    const destino = this.destinoDaViagem;
+    this.capDepoisDaViagem = null; this.destinoDaViagem = null;
+    if (destino){
+      const dias = Math.max(1, Math.min(6, distanciaEntre(Estado.dados.local, destino)));
+      Mundo.passar(dias * 4);                  /* a viagem come os dias */
+      Estado.dados.local = destino;
+      Mundo.marcarVisitado(destino);
+      Estado.registrar(`Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
+    }
+    this.entrarNoCapitulo(prox);
+  },
+
+  entrarNoCapitulo(prox){
     const cena = Historia.iniciarCapitulo(prox);
     Estado.salvar('auto');
     UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
@@ -551,9 +584,7 @@ const Jogo = {
     const prox = this.proxCapPendente;
     this.proxCapPendente = null;
     if (!prox) return Exploracao.tela();
-    const cena = Historia.iniciarCapitulo(prox);
-    Estado.salvar('auto');
-    UI.telaCena(cena, Historia.resumo().map(t => ({tipo:'info', texto:t})));
+    this.viajarParaCapitulo(prox);
   },
 
   evitarRival(){

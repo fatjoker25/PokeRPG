@@ -184,7 +184,7 @@ const UI = {
         <button data-v="1" class="sel">Bulbasaur</button>
         <button data-v="4">Charmander</button>
         <button data-v="7">Squirtle</button>
-        <button data-v="rand">Aleatório (cresceu com você)</button>
+        <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
       <div class="sussurro" id="f-inicial-desc">Tradição: o Professor te entrega a bola na saída da cidade.</div>
 
@@ -215,7 +215,7 @@ const UI = {
     grupo('f-genero');
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
-        ? 'Aleatório: um Pokémon de 1ª Geração, estágio 1. Ele é seu desde pequeno — cresceu com você. Vínculo máximo.'
+        ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
         : 'Tradição: o Professor te entrega a bola na saída da cidade.';
     });
     grupo('f-ritmo', v => {
@@ -423,8 +423,9 @@ const UI = {
         <span>Encarar</span><span class="pd">1d10 + Carisma</span></button>`));
       c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuItens()">
         <span>Usar item</span><span class="pd">Potion, Revive…</span></button>`));
-      c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()">
-        <span>Jogar bola</span><span class="pd">Capturar agora</span></button>`));
+      if (Batalha.tipo !== 'treinador')
+        c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()">
+          <span>Jogar bola</span><span class="pd">Capturar agora</span></button>`));
       return;
     }
 
@@ -448,8 +449,8 @@ const UI = {
 
     const dex = d.flags.tem_pokedex
       ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
-          Batalha.pdexUsada ? 'já usada nesta luta' : 'lê o adversário · não gasta o turno',
-          "Jogo.acaoBatalha({tipo:'pokedex'})", Batalha.pdexUsada)}</div>`
+          'lê o adversário · não gasta o turno',
+          "Jogo.acaoBatalha({tipo:'pokedex'})")}</div>`
       : '';
 
     c.appendChild(this.el(`<div class="menu-batalha">
@@ -490,7 +491,9 @@ const UI = {
     const d = Estado.dados;
     const nomes = Object.keys(d.itens);
     if (!nomes.length) return this.modal('Mochila', '<p class="nada">Mochila vazia.</p>');
-    const bolas = nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
+    /* Pokémon de treinador não se captura: a bola nem aparece na bolsa. */
+    const contraTreinador = Batalha.ativo && Batalha.tipo === 'treinador';
+    const bolas = contraTreinador ? [] : nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
     const resto = nomes.filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
     const linhasBolas = bolas.map(n =>
       `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
@@ -504,6 +507,7 @@ const UI = {
           ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join('');
     this.modal('Mochila',
+      (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As bolas ficam no fundo da mochila: não se joga bola no Pokémon de outro treinador.</p>' : '') +
       (linhasBolas ? '<h3>Bolas</h3>' + linhasBolas : '') +
       (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') ||
       '<p class="nada">Nada que sirva agora.</p>');
@@ -609,7 +613,48 @@ const UI = {
     Estado.salvar('auto');
   },
 
+  /* ========================================================
+     PC — o cinto cabe seis, o resto fica no sistema
+     ======================================================== */
+  modalPC(){
+    const d = Estado.dados;
+    const linha = (p, acao, rotulo, desabilitado) => `<div class="pc-linha">
+      <span class="pc-quem">${imgSprite(p, 'icone')}<span>${this.esc(nomeExib(p))}${this.shi(p)}</span></span>
+      <span class="pc-dados mono">Nv ${p.nivel} · ${p.morto ? 'morto' : p.hp + '/' + p.hpMax}</span>
+      <button class="btn mini" ${desabilitado ? 'disabled' : `onclick="UI.${acao}('${p.uid}')"`}>${rotulo}</button>
+    </div>`;
+
+    const noTime = d.time.length
+      ? d.time.map(p => linha(p, 'pcGuardar', 'Guardar', d.time.filter(x=>!x.morto).length <= 1 && !p.morto)).join('')
+      : '<p class="nada">Seu cinto está vazio.</p>';
+    const noPC = d.pc.length
+      ? d.pc.map(p => linha(p, 'pcTirar', 'Tirar', d.time.length >= 6)).join('')
+      : '<p class="nada">O sistema não tem ninguém guardado.</p>';
+
+    this.modal('Sistema de armazenamento', `
+      <p class="sussurro">O cinto leva seis. O que passa disso fica aqui, e continua seu — só não anda com você.</p>
+      <h3>No cinto — ${d.time.length} de 6</h3>${noTime}
+      <h3>No sistema — ${d.pc.length}</h3>${noPC}
+      <div style="margin-top:14px"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>`);
+  },
+  pcGuardar(uid){
+    const r = Estado.depositar(uid);
+    if (!r.ok) return this.modal('', `<p class="nada">${this.esc(r.motivo)}</p>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPC()">Voltar ao sistema</button></div>`);
+    Estado.salvar('auto');
+    this.modalPC();
+  },
+  pcTirar(uid){
+    const r = Estado.retirar(uid);
+    if (!r.ok) return this.modal('', `<p class="nada">${this.esc(r.motivo)}</p>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPC()">Voltar ao sistema</button></div>`);
+    Estado.salvar('auto');
+    this.modalPC();
+  },
+
   menuBolas(){
+    if (Batalha.ativo && Batalha.tipo === 'treinador')
+      return this.modal('Bolas', '<p class="nada">Não se joga bola no Pokémon de outro treinador.</p>');
     const bolas = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma bola.</p>');
     this.modal('Qual bola?', bolas.map(n =>
@@ -744,6 +789,7 @@ const UI = {
       <p class="sussurro">Cada coisa que você faz aqui gasta um período do dia, e o dia acaba.</p>
       <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
+        <button class="escolha" onclick="UI.modalPC()">PC do Centro — guardar e tirar Pokémon${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
         <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
         ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon — Elite 4 e Torneio Aberto</button>' : ''}
@@ -752,6 +798,59 @@ const UI = {
         <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
       </div>
       <div id="avisos" class="avisos"></div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     VIAGEM — a estrada entre um capítulo e o outro
+     ======================================================== */
+  telaViagem(deId, paraId, dias, aoChegar){
+    this.limpar();
+    this.add(this.topo());
+    const de = LOCAIS[deId] || {nome:'onde você estava'};
+    const para = LOCAIS[paraId] || {nome:'o próximo lugar'};
+    const d = Estado.dados;
+
+    const trechos = [
+      'A estrada é estrada: pedra solta, mato dos dois lados, e horas em que não acontece absolutamente nada.',
+      'Você anda atrás de uma família com carrinho por meio dia e depois eles param pra almoçar e você segue sozinho.',
+      'Chove numa parte do caminho e não chove na outra, e dá pra ver a linha exata onde uma coisa vira a outra.',
+      'Um caminhão de carga te dá carona por doze quilômetros e o motorista não fala nada a viagem inteira, e é confortável.',
+      'Você dorme uma noite fora, num acostamento com outras quatro pessoas que também estão indo pra algum lugar.',
+      'Tem um trecho em que a estrada acompanha o rio e você anda mais devagar de propósito.',
+      'Você erra uma bifurcação e perde três horas, e a parte pior é que dá pra ver a estrada certa do outro lado do valo.',
+      'Um grupo de treinadores acampa na curva e te chama pra comer. Você come. Ninguém pergunta o seu nome e isso é uma gentileza.'
+    ];
+    const cansaço = [
+      'Chega com o pé doendo de um jeito específico que você vai passar a conhecer bem.',
+      'Chega com poeira até dentro da mochila.',
+      'Chega com fome e com aquela irritação de quem andou demais.',
+      'Chega inteiro, o que é mais do que muita gente consegue.'
+    ];
+
+    const linhas = [];
+    linhas.push(`De ${de.nome} até ${para.nome} são ${dias === 1 ? 'um dia' : dias + ' dias'} de caminho.`);
+    const usados = new Set();
+    for (let i = 0; i < Math.min(dias, 3); i++){
+      let t = Dados.escolher(trechos), guarda = 0;
+      while (usados.has(t) && guarda++ < 10) t = Dados.escolher(trechos);
+      usados.add(t); linhas.push(t);
+    }
+    if (d.time.length) linhas.push(
+      `${nomeExib(d.time[0])} anda do seu lado o tempo todo e em nenhum momento pergunta se falta muito.`);
+    linhas.push(Dados.escolher(cansaço));
+
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">A estrada</div>
+        <div class="tit">${this.esc(de.nome)} → ${this.esc(para.nome)}</div>
+        <div class="loc">${dias === 1 ? 'um dia' : dias + ' dias'} de caminho</div>
+      </div>
+      <div class="narrativa">${linhas.map(t=>`<p>${this.esc(t)}</p>`).join('')}</div>
+      <div id="escolhas" class="escolhas" style="margin-top:18px">
+        <button class="escolha" onclick="${aoChegar}">Chegar.</button>
+      </div>
     </div>`);
     this.rolarTopo();
   },

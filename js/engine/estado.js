@@ -600,6 +600,31 @@ const Estado = {
   npc(nome){ return this.dados.npcs[nome] || null; },
 
   /* ---------- TIME ---------- */
+  /* ---------- PC: o time cabe seis, o resto fica guardado ---------- */
+  depositar(uid){
+    const d = this.dados;
+    const i = d.time.findIndex(p => p.uid === uid);
+    if (i < 0) return {ok:false, motivo:'Esse não está no seu time.'};
+    const vivosNoTime = d.time.filter(p => !p.morto).length;
+    const morto = d.time[i].morto;
+    if (!morto && vivosNoTime <= 1)
+      return {ok:false, motivo:'Esse é o único que você tem em pé. Ninguém anda por Kanto de cinto vazio.'};
+    const p = d.time.splice(i, 1)[0];
+    d.pc.push(p);
+    this.registrar(`${nomeExib(p)} ficou no PC.`);
+    return {ok:true, pokemon:p};
+  },
+  retirar(uid){
+    const d = this.dados;
+    if (d.time.length >= 6) return {ok:false, motivo:'O seu cinto já tem seis. Guarde um antes de tirar outro.'};
+    const i = d.pc.findIndex(p => p.uid === uid);
+    if (i < 0) return {ok:false, motivo:'Esse não está no PC.'};
+    const p = d.pc.splice(i, 1)[0];
+    d.time.push(p);
+    this.registrar(`${nomeExib(p)} voltou do PC para o time.`);
+    return {ok:true, pokemon:p};
+  },
+
   adicionar(p){
     if (this.dados.time.length < 6){ this.dados.time.push(p); return 'time'; }
     this.dados.pc.push(p); return 'pc';

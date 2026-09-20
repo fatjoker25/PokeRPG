@@ -378,8 +378,14 @@ function afazeresDoLocal(){
       sub:'Sem destino. É andando sem destino que se encontra o que não está no mapa.'});
     lista.push({id:'conversar', titulo:'Conversar com os moradores',
       sub:'Gente de cidade pequena fala demais. Gente de cidade grande fala pouco e diz mais.'});
-    if ((L.lugares||[]).includes('centro')) lista.push({id:'centro', titulo:'Centro Pokémon',
-      sub:'Curar o time, dormir, usar o terminal.'});
+    if ((L.lugares||[]).includes('centro')){
+      lista.push({id:'centro', titulo:'Centro Pokémon',
+        sub:'Curar o time, dormir, usar o terminal.'});
+      lista.push({id:'pc', titulo:'PC do Centro',
+        sub: d.pc.length
+          ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
+          : 'Guardar e tirar Pokémon. O cinto leva seis.'});
+    }
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
     if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
@@ -401,3 +407,50 @@ function afazeresDoLocal(){
 
 /* segunda metade: coisas que só existem depois que você descobre */
 function afazeresExtras(){ return []; }
+
+/* ============================================================
+   ONDE CADA CAPÍTULO ACONTECE
+   O capítulo tem um lugar. Se você está em outro quando ele
+   começa, a estrada entre os dois existe e tem que ser contada —
+   senão o jogo te teleporta de Vermilion para Viridian e o
+   cabeçalho muda de cidade sem ninguém sair do lugar.
+   ============================================================ */
+const LOCAL_DO_CAPITULO = {
+  1:null,              /* onde você mora */
+  2:'viridian',   3:'floresta',  4:'pewter',    5:'monte_lua',
+  6:'cerulean',   7:'lavender',  8:'vermilion', 9:'celadon',
+  10:'usina',    11:'saffron',  12:'fuchsia',  13:'cinnabar',
+  14:'rota21',   15:'rota16',   16:'seafoam',  17:'celadon',
+  18:'saffron',  19:'fuchsia',  20:'saffron',  21:'planalto',
+  22:'norte',    23:'pallet'
+};
+
+function localDoCapitulo(n){
+  const id = LOCAL_DO_CAPITULO[n];
+  if (id === null || id === undefined){
+    const mapa = {'Pallet':'pallet','Viridian':'viridian','Pewter':'pewter','Cerulean':'cerulean',
+      'Vermilion':'vermilion','Lavender':'lavender','Celadon':'celadon','Fuchsia':'fuchsia',
+      'Saffron':'saffron','Cinnabar':'cinnabar','Indigo':'planalto'};
+    return mapa[Estado.dados.jogador.cidade] || 'pallet';
+  }
+  return id;
+}
+
+/* Caminho mais curto pelo mapa de verdade, em número de trechos.
+   Serve para saber quantos dias a viagem come. */
+function distanciaEntre(de, para){
+  if (de === para) return 0;
+  const visto = new Set([de]);
+  let borda = [de], passos = 0;
+  while (borda.length && passos < 30){
+    passos++;
+    const prox = [];
+    for (const id of borda)
+      for (const v of ((LOCAIS[id] || {}).conexoes || [])){
+        if (v === para) return passos;
+        if (!visto.has(v)){ visto.add(v); prox.push(v); }
+      }
+    borda = prox;
+  }
+  return 4;   /* lugares sem estrada ligando: o trajeto é longo e é isso */
+}

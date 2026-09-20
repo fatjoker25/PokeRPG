@@ -406,7 +406,7 @@ c3_ficar:{
   texto:[
     'Você fica. Uma hora, talvez mais — dá pra medir porque a luz muda de ângulo entre as árvores.',
     'Divide a água. Ele aceita na terceira tentativa.',
-    d=>`Em algum momento você começa a falar, sem motivo nenhum, porque o silêncio estava pesado. Fala do seu quarto, do pote de vidro na estante, da fivela quebrada da mochila. Coisa idiota.`,
+    'Em algum momento você começa a falar, sem motivo nenhum, porque o silêncio estava pesado. Fala do seu quarto, da rachadura no teto em forma de rio, da fivela quebrada da mochila. Coisa idiota.',
     'Ele não entende uma palavra e fica escutando mesmo assim, do jeito que bicho escuta: pela cadência.',
     'Quando ele finalmente apoia a pata no chão e dá dois passos, olha pra você de um jeito que não é gratidão — Pokémon selvagem não faz gratidão. É reconhecimento. Ele decorou você.',
     'Depois some no mato.',
