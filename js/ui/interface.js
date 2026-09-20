@@ -680,6 +680,49 @@ const UI = {
   /* ========================================================
      PC — o cinto cabe seis, o resto fica no sistema
      ======================================================== */
+  /* ========================================================
+     EVENTO DE CIDADE — uma situação acontecendo enquanto você passa
+     ======================================================== */
+  telaEvento(ev){
+    this.limpar();
+    this.add(this.topo());
+    const opcoes = (ev.escolhas || []).map((o, i) => ({o, i}))
+      .filter(({o}) => { try { return !o.cond || o.cond(Estado.dados); } catch(e){ return false; } });
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${this.esc((LOCAIS[Mundo.id()]||{}).nome || 'Kanto')}</div>
+        <div class="tit">${this.esc(txt(ev.titulo))}</div>
+        <div class="loc">acontecendo agora</div>
+      </div>
+      <div class="narrativa">${this.narrar(ev.texto)}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas">
+        ${opcoes.map(({o, i}) => `<button class="escolha" onclick="Jogo.resolverEvento('${ev.id}',${i})">
+          ${this.esc(txt(o.texto))}</button>`).join('')}
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaResultadoEvento(r){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${this.esc((LOCAIS[Mundo.id()]||{}).nome || 'Kanto')}</div>
+        <div class="tit">${this.esc(txt(r.ev.titulo))}</div>
+        <div class="loc">${this.esc(txt(r.esc.texto)).slice(0, 80)}</div>
+      </div>
+      <div class="narrativa">${this.narrar(r.esc.resultado || [])}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas" style="margin-top:16px">
+        <button class="escolha" onclick="Exploracao.tela()">Seguir.</button>
+      </div>
+    </div>`);
+    if (r.avisos && r.avisos.length) this.avisos(r.avisos);
+    this.rolarTopo();
+  },
+
   /* Tela de uma ligação: a conversa acontece e você volta de onde veio. */
   telaLigacao(c, falas, avisos){
     this.limpar();

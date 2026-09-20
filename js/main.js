@@ -523,6 +523,12 @@ const Jogo = {
      Revanche cai em combate. Favor, missão e notícia caem numa
      tela de conversa, que é onde a fala com dono aparece.
      ============================================================ */
+  resolverEvento(eid, i){
+    const r = Eventos.resolver(eid, i);
+    if (!r) return Exploracao.tela();
+    UI.telaResultadoEvento(r);
+  },
+
   /* de onde a ligação saiu: cena, exploração ou hub */
   /* acrescenta aos avisos da tela quem passou o número agora */
   avisarNumeros(avisos){

@@ -228,6 +228,12 @@ const Exploracao = {
   andar(){
     Mundo.passar(1);
     const id = Mundo.id();
+    /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
+       procurar lugar, vê se tem situação acontecendo. */
+    if (typeof Eventos !== 'undefined' && Dados.chance(55)){
+      const ev = Eventos.sortear(id);
+      if (ev){ Estado.salvar('auto'); return UI.telaEvento(ev); }
+    }
     /* Andar por uma cidade sem destino só rende para quem lê o
        lugar: placa, horário de porta, que rua tem movimento. */
     const t = Dados.teste(Estado.j.status.intelecto, 5, 'Intelecto');

@@ -390,9 +390,12 @@ function afazeresDoLocal(){
       sub:'Comprar o que der pra pagar.'});
     if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
       sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
-    if (tem('troca_'+id) && typeof TROCAS !== 'undefined' && TROCAS[id])
-      lista.push({id:'troca', titulo:'Quem estava querendo trocar',
-        sub: Trocas.jaFez(id) ? 'Já está feito. Dá pra passar e cumprimentar.' : TROCAS[id].onde});
+    if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
+      const abertas = Trocas.disponiveis(id);
+      lista.push({id:'troca',
+        titulo: abertas.length > 1 ? `Quem está querendo trocar (${abertas.length})` : 'Quem estava querendo trocar',
+        sub: abertas.length ? abertas[0].onde : 'Já está feito. Dá pra passar e cumprimentar.'});
+    }
   }
 
   if (id === 'planalto'){
