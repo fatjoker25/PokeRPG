@@ -12,36 +12,38 @@
    A paleta escurece conforme a história escurece.
    ============================================================ */
 :root{
-  /* neutros com viés azul-violeta: cinza puro parece acidental */
-  --bg:#11141b;
-  --bg-2:#181c25;
-  --painel:#1c212c;
-  --painel-2:#212736;
-  --borda:#2b3242;
-  --borda-forte:#3a4459;
-  --texto:#e2e6ee;
-  --texto-fraco:#8d97ab;
-  --texto-tenue:#5f6879;
+  /* Azul-marinho de Pokémon: o azul do logo escurecido até virar noite.
+     Tem cor de verdade no neutro, em vez de cinza com vergonha. */
+  --bg:#0f1430;
+  --bg-2:#161d3f;
+  --painel:#1a2249;
+  --painel-2:#212a56;
+  --borda:#2e3a6d;
+  --borda-forte:#41508a;
+  --texto:#eef1fb;
+  --texto-fraco:#96a0c8;
+  --texto-tenue:#6b76a2;
 
-  /* âmbar de lampião: o calor da história leve */
-  --destaque:#e6b455;
-  --destaque-esc:#b4873a;
-  --destaque-sombra:rgba(230,180,85,.22);
-  /* azul frio: o mundo institucional */
-  --destaque-2:#6fa5d8;
-  --destaque-3:#63c6bf;
+  /* Amarelo de Pokémon: o do logo, puxado para o ouro de insígnia. */
+  --destaque:#f5c518;
+  --destaque-esc:#c29a10;
+  --destaque-sombra:rgba(245,197,24,.26);
+  /* Vermelho de Poké Ball, para o que é urgente. */
+  --destaque-2:#e0473a;
+  /* Ciano de tela de Pokédex, para o que é técnico. */
+  --destaque-3:#63d0e0;
 
-  --bom:#63b573;
-  --ruim:#c2604a;
-  --perigo:#dd5442;
+  --bom:#4cb96b;
+  --ruim:#d4553f;
+  --perigo:#ee1515;
   --liga:#a884d4;
 
-  --hp:#5fb87a;
-  --hp-medio:#e2bc45;
-  --hp-baixo:#dd5442;
+  --hp:#4cb96b;
+  --hp-medio:#f5c518;
+  --hp-baixo:#ee1515;
 
-  --sombra:0 10px 30px -8px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.35);
-  --sombra-alta:0 22px 60px -14px rgba(0,0,0,.72), 0 4px 12px rgba(0,0,0,.4);
+  --sombra:0 10px 30px -8px rgba(2,4,16,.7), 0 2px 6px rgba(2,4,16,.45);
+  --sombra-alta:0 22px 60px -14px rgba(2,4,16,.8), 0 4px 12px rgba(2,4,16,.5);
   --brilho:0 0 0 1px var(--destaque), 0 0 18px -4px var(--destaque-sombra);
   --raio:12px;
   --raio-sm:9px;
@@ -51,34 +53,57 @@
   --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
 }
 
-/* tons por capítulo — a mesma família, drenando cor e calor */
+/* Tons por capítulo — cada um é um lugar de Kanto, não um degrau de
+   cinza. A história escurece mudando de hora e de lugar, não
+   drenando a cor. */
+
+/* manhã em Pallet: céu claro, mato, telha */
 html[data-tom="leve"], body[data-tom="leve"]{
-  --bg:#171d27; --bg-2:#1e2532; --painel:#232b3a; --painel-2:#293245;
-  --borda:#333d51; --destaque:#f0c66a; --destaque-2:#7db2e2;
+  --bg:#122a3a; --bg-2:#183648; --painel:#1d4054; --painel-2:#245064;
+  --borda:#2f6076; --borda-forte:#3f7b93;
+  --texto:#f0f7fa; --texto-fraco:#9dc0ce; --texto-tenue:#719aab;
+  --destaque:#ffd429; --destaque-esc:#c9a412; --destaque-sombra:rgba(255,212,41,.28);
+  --destaque-2:#ff6b52; --destaque-3:#6fe0c4;
 }
+/* rota no fim da tarde: laranja de estrada e poeira */
 html[data-tom="inquieto"], body[data-tom="inquieto"]{
-  --bg:#12161f; --bg-2:#181d27; --painel:#1c222e; --painel-2:#222837;
-  --borda:#2c3342; --destaque:#e6b455;
+  --bg:#2a1a2c; --bg-2:#35213a; --painel:#3d2743; --painel-2:#492f50;
+  --borda:#5b3a63; --borda-forte:#764d80;
+  --texto:#f6eef7; --texto-fraco:#c2a4c6; --texto-tenue:#9a7ea0;
+  --destaque:#ffa63d; --destaque-esc:#cc7d24; --destaque-sombra:rgba(255,166,61,.28);
+  --destaque-2:#ff5f6d; --destaque-3:#7fd0d8;
 }
+/* caverna e noite: índigo fundo, luz de lanterna */
 html[data-tom="sombrio"], body[data-tom="sombrio"]{
-  --bg:#0e1117; --bg-2:#13171f; --painel:#161b24; --painel-2:#1b212c;
-  --borda:#262d3a; --destaque:#d4a049; --texto:#d5dae3;
+  --bg:#0d1230; --bg-2:#131a3d; --painel:#171f48; --painel-2:#1d2756;
+  --borda:#2a3568; --borda-forte:#3c4a86;
+  --texto:#e4e9fa; --texto-fraco:#8e99c9; --texto-tenue:#666fa0;
+  --destaque:#f5c518; --destaque-esc:#bd950f; --destaque-sombra:rgba(245,197,24,.24);
+  --destaque-2:#e0473a; --destaque-3:#63d0e0;
 }
+/* o que a Rocket deixou: preto com vermelho de sinalização */
 html[data-tom="muito sombrio"], body[data-tom="muito sombrio"]{
-  --bg:#090c11; --bg-2:#0d1016; --painel:#10141b; --painel-2:#151a22;
-  --borda:#1f2633; --destaque:#bd8c3e; --texto:#c6ccd6; --texto-fraco:#7a8395;
+  --bg:#0a0810; --bg-2:#110d18; --painel:#16101f; --painel-2:#1d1527;
+  --borda:#2e1f3a; --borda-forte:#452e56;
+  --texto:#ece5f0; --texto-fraco:#9b8aa8; --texto-tenue:#71627e;
+  --destaque:#e8402f; --destaque-esc:#a92a1e; --destaque-sombra:rgba(232,64,47,.26);
+  --destaque-2:#f5c518; --destaque-3:#8f7fd0;
 }
+/* Planalto Indigo: azul profundo e ouro de campeão */
 html[data-tom="final"], body[data-tom="final"]{
-  --bg:#07080c; --bg-2:#0a0c11; --painel:#0d1015; --painel-2:#11151b;
-  --borda:#1b2029; --destaque:#b5817f; --destaque-2:#7d8fae; --texto:#c2c7d1;
+  --bg:#0a0c24; --bg-2:#0f1230; --painel:#121738; --painel-2:#171d44;
+  --borda:#252e5e; --borda-forte:#374280;
+  --texto:#eceffb; --texto-fraco:#9aa3cf; --texto-tenue:#6f79a8;
+  --destaque:#ffd700; --destaque-esc:#c9a800; --destaque-sombra:rgba(255,215,0,.3);
+  --destaque-2:#e0473a; --destaque-3:#7fb2ff;
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
   background:
-    radial-gradient(1200px 620px at 50% -10%, rgba(111,165,216,.055), transparent 70%),
-    radial-gradient(900px 500px at 88% 110%, rgba(230,180,85,.045), transparent 72%),
+    radial-gradient(1200px 620px at 50% -10%, var(--destaque-sombra), transparent 70%),
+    radial-gradient(900px 500px at 88% 110%, rgba(224,71,58,.07), transparent 72%),
     var(--bg);
   background-attachment:fixed;
   color:var(--texto); font-family:var(--fonte);
@@ -164,9 +189,23 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 
 /* ---------- narrativa ---------- */
 .cap-cabecalho{
-  border-left:3px solid var(--destaque);padding-left:14px;margin-bottom:18px;
+  position:relative;padding-left:30px;margin-bottom:20px;
   animation:surge .45s var(--suave) both;
 }
+/* o marcador é uma Poké Ball vista de lado: metade vermelha em cima,
+   metade clara embaixo, faixa escura e botão no meio */
+.cap-cabecalho::before{
+  content:'';position:absolute;left:0;top:3px;
+  width:17px;height:17px;border-radius:50%;
+  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
+  box-shadow:0 0 0 1.5px #1a1a20, 0 2px 6px -2px rgba(0,0,0,.8);
+}
+.cap-cabecalho::after{
+  content:'';position:absolute;left:5.5px;top:8.5px;
+  width:6px;height:6px;border-radius:50%;
+  background:#f2f4f8;box-shadow:0 0 0 1.5px #1a1a20;
+}
+.cap-cabecalho .num{color:var(--destaque)}
 .cap-cabecalho .num{font-size:11.5px;letter-spacing:.18em;color:var(--texto-fraco);text-transform:uppercase}
 .cap-cabecalho .tit{font-size:22px;font-weight:600;margin:3px 0;text-wrap:balance}
 .cap-cabecalho .loc{font-size:13px;color:var(--texto-fraco);font-style:italic}
@@ -202,9 +241,11 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   transition:transform .25s var(--mola);
 }
 .escolha::before{
-  content:'›';position:absolute;left:17px;top:50%;transform:translateY(-50%);
-  color:var(--texto-tenue);font-size:19px;line-height:1;
-  transition:transform .25s var(--mola), color .2s var(--suave);
+  content:'';position:absolute;left:15px;top:50%;transform:translateY(-50%);
+  width:11px;height:11px;border-radius:50%;
+  background:linear-gradient(180deg, var(--borda-forte) 0 45%, var(--bg) 45% 55%, var(--texto-tenue) 55% 100%);
+  box-shadow:0 0 0 1.2px var(--borda-forte);
+  transition:transform .25s var(--mola), background .25s var(--suave), box-shadow .25s var(--suave);
 }
 .escolha:hover{
   border-color:var(--borda-forte);
@@ -212,7 +253,11 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   transform:translateX(3px);
   box-shadow:0 8px 20px -12px rgba(0,0,0,.7);
 }
-.escolha:hover::before{color:var(--destaque);transform:translateY(-50%) translateX(3px)}
+.escolha:hover::before{
+  background:linear-gradient(180deg, var(--perigo) 0 45%, #1a1a20 45% 55%, #f2f4f8 55% 100%);
+  box-shadow:0 0 0 1.2px #1a1a20, 0 0 10px -2px var(--destaque-sombra);
+  transform:translateY(-50%) translateX(2px) scale(1.15);
+}
 .escolha:hover::after{transform:scaleY(1)}
 .escolha:active{transform:translateX(1px) scale(.995)}
 .escolha:focus-visible{outline:none;border-color:var(--destaque);box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--destaque-sombra)}
