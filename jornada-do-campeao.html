@@ -1558,6 +1558,117 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   .pc-arte img{width:76px;height:76px}
 }
 
+/* ============================================================
+   POKÉNAV — aparelho azul de tampa, tela de cristal
+   ============================================================ */
+.btn.mini.pisca{border-color:var(--destaque);animation:navPisca 1.4s ease-in-out infinite}
+.btn.mini.pisca b{color:var(--destaque)}
+@keyframes navPisca{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px -2px var(--destaque)}}
+
+.modal.nav{
+  --nav-caixa:#2f4f7a; --nav-caixa-esc:#1a2f4c; --nav-caixa-clara:#5a83b8;
+  --nav-tela:#e7f3ff; --nav-tela-2:#cfe5fa; --nav-linha:#a6c8e8;
+  --nav-txt:#12293f; --nav-txt-2:#42688c; --nav-realce:#0f6fb8;
+  max-width:720px;
+  border:3px solid var(--nav-caixa-esc);
+  background:linear-gradient(180deg, var(--nav-caixa-clara), var(--nav-caixa) 32%, var(--nav-caixa-esc));
+  box-shadow:var(--sombra-alta), inset 0 1px 0 rgba(255,255,255,.35);
+  animation:abreNav .4s var(--mola) both;
+}
+@keyframes abreNav{
+  from{opacity:0;transform:perspective(900px) rotateX(-38deg) translateY(-12px)}
+  to{opacity:1;transform:none}
+}
+.modal.nav .modal-corpo{
+  background:linear-gradient(180deg, #f4faff, var(--nav-tela) 40%, var(--nav-tela-2));
+  border:2px solid var(--nav-caixa-esc);border-radius:8px;padding:0;
+  color:var(--nav-txt);overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8), inset 0 8px 18px -14px rgba(18,41,63,.8);
+}
+.modal.nav .modal-pe .btn{background:var(--nav-caixa-esc);border-color:var(--nav-caixa-clara);color:#dceaf8}
+.modal.nav .modal-pe .btn:hover:not(:disabled){background:var(--nav-caixa);color:#fff}
+
+.nav-topo{
+  display:flex;align-items:center;gap:9px;padding:7px 12px;
+  background:var(--nav-caixa-esc);color:#dceaf8;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+}
+.nav-marca{flex:1}
+.nav-sinal{color:#9fc4e6;letter-spacing:.05em}
+.nav-antena{
+  width:7px;height:7px;border-radius:50%;background:#7fd8ff;flex:0 0 auto;
+  box-shadow:0 0 6px #7fd8ff;animation:navSinal 2.4s ease-in-out infinite;
+}
+@keyframes navSinal{0%,100%{opacity:1}55%{opacity:.35}}
+
+.nav-novos{padding:9px 12px;background:rgba(15,111,184,.08);border-bottom:1px solid var(--nav-linha)}
+.nav-gravar{
+  display:flex;align-items:center;gap:9px;width:100%;margin-top:5px;
+  padding:6px 9px;border:1px dashed var(--nav-realce);border-radius:5px;
+  background:rgba(255,255,255,.7);color:var(--nav-txt);font:inherit;font-size:12.5px;
+  cursor:pointer;text-align:left;
+}
+.nav-gravar:hover{background:#fff;border-style:solid}
+.nav-gravar span:first-child{font-weight:600}
+.nav-gravar b{margin-left:auto;color:var(--nav-realce);font-size:11px;
+  text-transform:uppercase;letter-spacing:.09em}
+
+.nav-colunas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.nav-lista{padding:10px 11px;border-right:1px solid var(--nav-linha);min-width:0;
+  max-height:330px;overflow-y:auto}
+.nav-titulo{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--nav-txt-2);margin-bottom:7px;border-bottom:1px solid var(--nav-linha);padding-bottom:4px;
+}
+.nav-contato{
+  display:flex;align-items:center;gap:8px;width:100%;margin-bottom:4px;
+  padding:6px 8px;border:1px solid transparent;border-radius:5px;
+  background:rgba(255,255,255,.55);color:var(--nav-txt);font:inherit;
+  cursor:pointer;text-align:left;
+}
+.nav-contato:hover{background:#fff;border-color:var(--nav-linha)}
+.nav-contato.sel{background:#fff;border-color:var(--nav-realce);
+  box-shadow:0 0 0 1px var(--nav-realce) inset}
+.nav-inicial{
+  flex:0 0 auto;width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;color:#fff;background:var(--nav-txt-2);
+}
+.nav-inicial.treinador{background:#c0392b}
+.nav-inicial.figura{background:#2f7d5c}
+.nav-inicial.grande{width:40px;height:40px;font-size:19px}
+.nav-linha-txt{display:flex;flex-direction:column;min-width:0;flex:1}
+.nav-nome{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-papel{font-size:11px;color:var(--nav-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-cidade{font-family:var(--mono);font-size:10px;color:var(--nav-txt-2);flex:0 0 auto}
+
+.nav-ficha{padding:11px 13px;min-width:0}
+.nav-ficha-cab{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.nav-ficha-cab > span:last-child{display:flex;flex-direction:column;min-width:0}
+.nav-ficha-nome{font-size:16px;font-weight:650}
+.nav-ficha-papel{font-size:11.5px;color:var(--nav-txt-2)}
+.nav-desde{font-size:12px;font-style:italic;color:var(--nav-txt-2);line-height:1.45;
+  padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid var(--nav-linha)}
+.nav-servicos{display:flex;flex-direction:column;gap:9px}
+.nav-servico{display:flex;flex-direction:column;gap:3px}
+.nav-servico .btn{
+  background:var(--nav-realce);border-color:var(--nav-caixa-esc);color:#fff;
+  padding:6px 12px;font-size:12.5px;align-self:flex-start;
+}
+.nav-servico .btn:hover:not(:disabled){background:var(--nav-caixa-esc)}
+.nav-servico .btn:disabled{background:rgba(255,255,255,.6);color:var(--nav-txt-2);border-color:var(--nav-linha)}
+.nav-nota{font-size:11.5px;color:var(--nav-txt-2);line-height:1.4}
+.nav-hist{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;
+  padding-top:8px;border-top:1px dashed var(--nav-linha)}
+.nav-hist span{font-family:var(--mono);font-size:10px;color:var(--nav-txt-2);
+  padding:1px 6px;border:1px solid var(--nav-linha);border-radius:3px}
+.nav-vazio{color:var(--nav-txt-2);font-size:12.5px;text-align:center;padding:20px 8px;line-height:1.5}
+.nav-vazio span{font-size:11.5px;opacity:.75}
+@media (max-width:640px){
+  .nav-colunas{grid-template-columns:1fr}
+  .nav-lista{border-right:none;border-bottom:1px solid var(--nav-linha);max-height:200px}
+}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -4371,6 +4482,7 @@ const Estado = {
       visitados: {},
       descobertas: {},
       pokedex: {vistos:{}, catalogados:{}, brilhantes:{}},
+      pokenav: {tem:false, contatos:{}, ligacoes:[]},   // a agenda e o histórico de ligações
       flags: {},
       npcs: {},               // memória: {nome:{conhece:true, opiniao:n, viuVoce:'...'}}
       rivais: {},             // rivais conquistados pelo caminho: {id:{vitorias,derrotas,...}}
@@ -4537,6 +4649,92 @@ const Estado = {
   },
   marcar(flag, valor=true){ this.dados.flags[flag] = valor; },
   tem(flag){ return !!this.dados.flags[flag]; },
+
+  /* ============================================================
+     POKÉNAV — a agenda
+     Um número entra quando a pessoa te dá. Cada uso tem limite
+     e espera: ninguém atende a mesma pergunta três vezes no
+     mesmo dia, e favor pedido demais deixa de ser favor.
+     ============================================================ */
+  nav(){
+    const d = this.dados;
+    if (!d.pokenav) d.pokenav = {tem:false, contatos:{}, ligacoes:[]};
+    if (!d.pokenav.contatos) d.pokenav.contatos = {};
+    if (!d.pokenav.ligacoes) d.pokenav.ligacoes = [];
+    return d.pokenav;
+  },
+  temPokenav(){ return !!this.nav().tem; },
+  ganharPokenav(){
+    const nav = this.nav();
+    if (nav.tem) return false;
+    nav.tem = true;
+    this.registrarNumero('casa');
+    this.registrar('Ganhou um PokéNav de casa.');
+    return true;
+  },
+  temNumero(id){ return !!this.nav().contatos[id]; },
+  registrarNumero(id){
+    const nav = this.nav();
+    if (nav.contatos[id]) return false;
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (!c) return false;
+    nav.contatos[id] = {id, desdeCap: this.dados.capitulo, usos:{}};
+    this.registrar(`Registrou o número de ${textoContato(c, 'nome')} no PokéNav.`);
+    return true;
+  },
+  /* Avisa uma vez só que alguém te passou o número. Sem isso o jogador
+     tem que abrir o aparelho no chute pra descobrir que apareceu gente. */
+  numerosNovos(){
+    if (!this.temPokenav()) return [];
+    const nav = this.nav();
+    if (!nav.oferecidos) nav.oferecidos = [];
+    const novos = this.numerosDisponiveis().filter(c => !nav.oferecidos.includes(c.id));
+    novos.forEach(c => nav.oferecidos.push(c.id));
+    return novos;
+  },
+
+  /* números que a pessoa já te deu mas que você ainda não gravou */
+  numerosDisponiveis(){
+    if (!this.temPokenav()) return [];
+    const d = this.dados;
+    return (typeof todosContatos === 'function' ? todosContatos() : [])
+      .filter(c => !this.temNumero(c.id) && !c.automatico)
+      .filter(c => { try { return !c.requer || c.requer(d); } catch(e){ return false; } });
+  },
+  contatosNaAgenda(){
+    const nav = this.nav();
+    return Object.keys(nav.contatos)
+      .map(id => (typeof contatoPorId === 'function') ? contatoPorId(id) : null)
+      .filter(Boolean);
+  },
+  /* pode ligar pra esse contato pedindo esse serviço? */
+  podeLigar(id, servico){
+    const nav = this.nav();
+    const reg = nav.contatos[id];
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (!reg || !c) return {ok:false, motivo:'Esse número não está na agenda.'};
+    if (!(c.oferece||[]).includes(servico)) return {ok:false, motivo:'Não é pra isso que se liga pra essa pessoa.'};
+    const def = c[servico] || {};
+    const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
+    const limite = def.limite === undefined ? 99 : def.limite;
+    if (u.vezes >= limite)
+      return {ok:false, motivo:'Já deu o que tinha pra dar. Pedir de novo seria outra coisa.'};
+    const espera = def.esperaCap === undefined ? 1 : def.esperaCap;
+    const falta = (u.ultimoCap + espera) - this.dados.capitulo;
+    if (falta > 0)
+      return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${falta} capítulo${falta===1?'':'s'}.`};
+    return {ok:true};
+  },
+  marcarLigacao(id, servico){
+    const nav = this.nav();
+    const reg = nav.contatos[id];
+    if (!reg) return;
+    const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
+    u.vezes++; u.ultimoCap = this.dados.capitulo;
+    reg.usos[servico] = u;
+    nav.ligacoes.push({id, servico, cap:this.dados.capitulo, dia:this.dados.relogio.dia});
+    if (nav.ligacoes.length > 60) nav.ligacoes.shift();
+  },
 
   lembrarNPC(nome, dados){
     const n = this.dados.npcs[nome] || {nome, opiniao:0, memorias:[]};
@@ -6855,6 +7053,283 @@ function registrarResultadoRivalExtra(id, venceuJogador){
 }
 
 
+/* ===== js/data/pokenav.js ===== */
+/* ============================================================
+   POKÉNAV — a agenda de quem te atende o telefone
+   Presente de quem ficou em casa, no dia em que você saiu.
+   Guarda número de treinador e de gente importante. Cada número
+   serve pra uma coisa: revanche, favor, missão, ou só pra
+   ligar e provar que você chegou onde disse que ia chegar.
+   ============================================================ */
+
+/* O que um contato pode oferecer:
+   revanche — ele luta de novo, com o time subido
+   favor    — uma ajuda material, com limite
+   missao   — um pedido que vira cena
+   prova    — você liga pra mostrar o que conquistou */
+
+const CONTATOS = [
+
+/* ── casa e primeira rua ─────────────────────────────────── */
+{
+  id:'casa', tipo:'figura', cidade:d=>d.jogador.cidade,
+  nome:d=>nomeCasa(), papel:d=>`a sua ${casaQuem()}`.replace('a sua pai','o seu pai').replace(/^a sua (avô|tio|irmão)/, 'o seu $1'),
+  desde:'O primeiro número gravado no aparelho. Já estava lá quando ele chegou na sua mão.',
+  automatico:true,
+  oferece:['favor','prova'],
+  favor:{
+    rotulo:'Pedir um dinheiro emprestado',
+    limite:3,
+    texto:d=>[
+      fala(nomeCasa(), 'Quanto é que você precisa?', null, 'Sem "oi". Sem "como você está". Direto na pergunta que importa.'),
+      d.jogador.dinheiro < 500
+        ? fala(nomeCasa(), 'Não me responde. Eu já sei. Eu deposito hoje.', 'baixo')
+        : fala(nomeCasa(), 'Tá. Eu mando. E não é pra gastar em bola, que bola você compra com o que ganha.')
+    ],
+    efeito:d=>{ Estado.j.dinheiro += 2500; return [{tipo:'item', texto:'+2500 ₽ — veio de um lugar que não sobrava.'}]; }
+  },
+  prova:{
+    rotulo:'Contar onde você chegou',
+    texto:d=>{
+      const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
+      if (d.flags.campeao_de_kanto) return [
+        fala(nomeCasa(), 'Campeão.', 'baixo', 'Ela repete a palavra três vezes antes de conseguir dizer outra coisa.'),
+        fala(nomeCasa(), 'Eu vou ter que sentar. Espera. Espera um pouco.')
+      ];
+      if (n >= 6) return [
+        fala(nomeCasa(), `${n} insígnias. ${n}!`, 'grita'),
+        fala(nomeCasa(), 'A rua inteira já sabe. Eu contei pra rua inteira. Eu não me arrependo.', 'riso')
+      ];
+      if (n >= 1) return [
+        fala(nomeCasa(), `${n === 1 ? 'A primeira' : n + ' insígnias'}.`, null, 'Silêncio do outro lado por uns três segundos.'),
+        fala(nomeCasa(), 'Eu sabia. Eu não sabia nada, mas eu falei que sabia, e agora eu sabia mesmo.', 'riso')
+      ];
+      return [
+        fala(nomeCasa(), 'Nenhuma ainda? Tudo bem. Tá comendo?'),
+        fala(nomeCasa(), 'Responde a pergunta da comida, que a insígnia eu espero.')
+      ];
+    },
+    rep:{eixo:'bom', delta:1, motivo:'Ligou para casa para contar'}
+  }
+},
+{
+  id:'rufino', tipo:'figura', nome:'Sr. Rufino', papel:'o velho da vassoura', cidade:'Pallet',
+  desde:'Varre a mesma calçada há vinte anos e não esquece nada.',
+  requer:d=>!!(d.npcs['Sr. Rufino'] && d.npcs['Sr. Rufino'].opiniao >= 2),
+  oferece:['favor'],
+  favor:{
+    rotulo:'Perguntar o que ele ouviu falar',
+    limite:99, esperaCap:2,
+    texto:d=>[
+      fala('Sr. Rufino', 'Eu varro calçada, menino. Calçada é onde a cidade fala.'),
+      fala('Sr. Rufino', 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
+      fala('Sr. Rufino', 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
+    ],
+    efeito:d=>{ Estado.subirStatus('percepcao'); return [{tipo:'rep', texto:'PERCEPÇÃO +1 — você passou a contar as saídas das salas.'}]; }
+  }
+},
+{
+  id:'odete', tipo:'figura', nome:'Sra. Odete', papel:'a vizinha do dezoito', cidade:'Pallet',
+  desde:'Bateu na sua porta às seis e cinquenta com uma caixa nos braços.',
+  requer:d=>!!d.npcs['Sra. Odete'],
+  oferece:['favor'],
+  favor:{
+    rotulo:'Perguntar da caixa',
+    limite:99, esperaCap:3,
+    texto:d=>[
+      fala('Sra. Odete', 'A caixa? A caixa eu quero de volta, mas já desencanei.', 'riso'),
+      fala('Sra. Odete', 'Olha, eu separei umas coisas aqui que estavam no armário e que não servem pra mim. Passa um dia.')
+    ],
+    efeito:d=>{ Estado.darItem('Super Potion', 2); Estado.darItem('Great Ball', 1);
+      return [{tipo:'item', texto:'Recebeu 2× Super Potion e 1× Great Ball.'}]; }
+  }
+},
+{
+  id:'enfermeira', tipo:'figura', nome:'Enfermeira do Centro', papel:'seis insígnias, e parou', cidade:'Viridian',
+  desde:'Te entregou a licença e contou por que parou.',
+  requer:d=>!!d.flags.historia_da_enfermeira,
+  oferece:['favor'],
+  favor:{
+    rotulo:'Pedir o que ela mandaria comprar',
+    limite:99, esperaCap:2,
+    texto:d=>[
+      fala('a enfermeira', 'Potion. Eu falei. Eu SEMPRE falo.', 'riso'),
+      fala('a enfermeira', 'Vou mandar pelo malote do Centro daqui. Chega em qualquer cidade, é o mesmo sistema.')
+    ],
+    efeito:d=>{ Estado.darItem('Potion', 3); Estado.darItem('Revive', 1);
+      return [{tipo:'item', texto:'Recebeu 3× Potion e 1× Revive pelo malote.'}]; }
+  }
+},
+
+/* ── os oito líderes: número dado depois da insígnia ─────── */
+{
+  id:'brock', tipo:'treinador', nome:'Brock', papel:'líder de Pewter · Pedra', cidade:'Pewter',
+  desde:'Te deu a Insígnia Pedra e o número junto.',
+  requer:d=>d.insignias.includes('Insígnia Pedra'),
+  ginasio:'pewter',
+  oferece:['revanche','favor'],
+  favor:{
+    rotulo:'Perguntar de pedra',
+    limite:99, esperaCap:3,
+    texto:d=>[
+      fala('Brock', 'Pedra não é sobre aguentar. Todo mundo acha que é sobre aguentar.'),
+      fala('Brock', 'É sobre estar no lugar certo quando o outro cansa. Leva isso pro Planalto.')
+    ],
+    efeito:d=>{ Estado.darItem('Faixa Firme', 1); return [{tipo:'item', texto:'Recebeu 1× Faixa Firme.'}]; }
+  }
+},
+{
+  id:'misty', tipo:'treinador', nome:'Misty', papel:'líder de Cerulean · Água', cidade:'Cerulean',
+  desde:'Te deu a Insígnia Cascata e não gostou nem um pouco.',
+  requer:d=>d.insignias.includes('Insígnia Cascata'),
+  ginasio:'cerulean', oferece:['revanche','prova'],
+  prova:{
+    rotulo:'Contar quantas você tem agora',
+    texto:d=>{
+      const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
+      return n >= 7
+        ? [fala('Misty', 'Sete. Tá bom, tá bom.', null, 'Dá pra ouvir ela sorrindo contra a vontade.'),
+           fala('Misty', 'Quando você perder pro Blue, me liga. Eu quero ouvir isso da sua boca.')]
+        : [fala('Misty', `${n}? Eu tenho oito e mais um ginásio, mas parabéns.`, 'riso'),
+           fala('Misty', 'Liga de novo quando tiver mais. Eu atendo.')];
+    },
+    rep:{eixo:'bom', delta:1, motivo:'Ligou para uma líder de ginásio para dar notícia'}
+  }
+},
+{
+  id:'surge', tipo:'treinador', nome:'Tenente Surge', papel:'líder de Vermilion · Elétrico', cidade:'Vermilion',
+  desde:'Te deu a Insígnia Trovão e um aperto de mão que doeu.',
+  requer:d=>d.insignias.includes('Insígnia Trovão'),
+  ginasio:'vermilion', oferece:['revanche','favor'],
+  favor:{
+    rotulo:'Pedir o contato do porto',
+    limite:2, esperaCap:4,
+    texto:d=>[
+      fala('Tenente Surge', 'Você quer entrar em algum lugar. Eu conheço esse tom de voz.'),
+      fala('Tenente Surge', 'Fala o meu nome na guarita três. Ninguém vai te fazer pergunta.')
+    ],
+    efeito:d=>{ Estado.marcar('contato_do_porto'); Estado.darItem('Great Ball', 2);
+      return [{tipo:'item', texto:'Recebeu 2× Great Ball. O nome dele abre a guarita três.'}]; }
+  }
+},
+{
+  id:'erika', tipo:'treinador', nome:'Erika', papel:'líder de Celadon · Grama', cidade:'Celadon',
+  desde:'Te deu a Insígnia Arco-Íris com as duas mãos.',
+  requer:d=>d.insignias.includes('Insígnia Arco-Íris'),
+  ginasio:'celadon', oferece:['revanche','favor'],
+  favor:{
+    rotulo:'Pedir da estufa',
+    limite:99, esperaCap:3,
+    texto:d=>[
+      fala('Erika', 'Eu separo e deixo na portaria. Você não precisa subir.'),
+      fala('Erika', 'E descansa. Eu vi o seu time. Eles estão andando demais.', 'baixo')
+    ],
+    efeito:d=>{ Estado.darItem('Ração', 2); Estado.dados.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+6); });
+      return [{tipo:'item', texto:'Recebeu 2× Ração. O time inteiro subiu 6 de moral.'}]; }
+  }
+},
+{
+  id:'koga', tipo:'treinador', nome:'Koga', papel:'líder de Fuchsia · Venenoso', cidade:'Fuchsia',
+  desde:'Te deu a Insígnia Alma sem te dizer onde ficava a saída.',
+  requer:d=>d.insignias.includes('Insígnia Alma'),
+  ginasio:'fuchsia', oferece:['revanche','favor'],
+  favor:{
+    rotulo:'Perguntar do Setor 7',
+    limite:1, esperaCap:2,
+    texto:d=>[
+      fala('Koga', 'Eu assinei papel naquela reserva por onze anos.', 'frio'),
+      fala('Koga', 'Se você for perguntar lá dentro, não pergunta em voz alta. E leva Antidote.')
+    ],
+    efeito:d=>{ Estado.darItem('Antidote', 3); Estado.marcar('koga_avisou_do_setor7');
+      return [{tipo:'item', texto:'Recebeu 3× Antidote.'}]; }
+  }
+},
+{
+  id:'sabrina', tipo:'treinador', nome:'Sabrina', papel:'líder de Saffron · Psíquico', cidade:'Saffron',
+  desde:'Te deu a Insígnia Pântano antes de você pedir.',
+  requer:d=>d.insignias.includes('Insígnia Pântano'),
+  ginasio:'saffron', oferece:['revanche','favor'],
+  favor:{
+    rotulo:'Deixar ela falar primeiro',
+    limite:99, esperaCap:4,
+    texto:d=>[
+      fala('Sabrina', 'Eu sei por que você ligou.', 'frio', 'Ela atende antes do primeiro toque terminar.'),
+      fala('Sabrina', 'Vai dar certo. Não do jeito que você está imaginando. Mas vai.')
+    ],
+    efeito:d=>{ Estado.subirStatus('intelecto'); return [{tipo:'rep', texto:'INTELECTO +1.'}]; }
+  }
+},
+{
+  id:'blaine', tipo:'treinador', nome:'Blaine', papel:'líder de Cinnabar · Fogo', cidade:'Cinnabar',
+  desde:'Te deu a Insígnia Vulcão depois de uma pergunta.',
+  requer:d=>d.insignias.includes('Insígnia Vulcão'),
+  ginasio:'cinnabar', oferece:['revanche','favor'],
+  favor:{
+    rotulo:'Pedir outra pergunta',
+    limite:99, esperaCap:3,
+    texto:d=>[
+      fala('Blaine', 'Uma: o que um treinador leva que não cabe na mochila?', 'riso'),
+      fala('Blaine', 'Não me responde agora. Responde quando chegar no Planalto.')
+    ],
+    efeito:d=>{ Estado.darItem('Hyper Potion', 1); return [{tipo:'item', texto:'Recebeu 1× Hyper Potion pelo correio da ilha.'}]; }
+  }
+},
+{
+  id:'blue', tipo:'treinador', nome:'Blue', papel:'líder de Viridian · Terra', cidade:'Viridian',
+  desde:'Te deu a Insígnia Terra e o número no mesmo gesto.',
+  requer:d=>d.insignias.includes('Insígnia Terra'),
+  ginasio:'viridian', oferece:['revanche','prova'],
+  prova:{
+    rotulo:'Ligar só pra ligar',
+    texto:d=>d.flags.campeao_de_kanto
+      ? [fala('Blue', 'Eu soube. A cidade inteira soube.', null, 'Uma pausa longa demais pra ser casual.'),
+         fala('Blue', 'Aproveita. Eu falo por experiência: aproveita, porque é curto.')]
+      : [fala('Blue', 'Você ligou pra quê? Fala logo.', 'frio'),
+         fala('Blue', '...tá. Tá bom. Também é bom ouvir você.', 'baixo')],
+    rep:{eixo:'bom', delta:1, motivo:'Manteve contato com quem já sentou na cadeira'}
+  }
+},
+
+/* ── rivais ──────────────────────────────────────────────── */
+{
+  id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
+  desde:'Trocou número com você no meio de uma discussão.',
+  requer:d=>!!d.npcs['Téo'],
+  rival:'teo', oferece:['revanche','prova'],
+  prova:{
+    rotulo:'Contar o que você fez',
+    texto:d=>{
+      const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
+      const meu = d.npcs['Téo'] || {};
+      return (meu.opiniao||0) >= 2
+        ? [fala('Téo', `${n} já? Cara.`, null, 'Ele não esconde que ficou feliz, e detesta não ter escondido.'),
+           fala('Téo', 'Eu tô em quatro. Eu vou te alcançar. Tô avisando com antecedência.')]
+        : [fala('Téo', `${n}. Legal.`, 'frio'),
+           fala('Téo', 'Eu não liguei pra você. Você que ligou pra mim.')];
+    },
+    rep:{eixo:'bom', delta:1, motivo:'Manteve o rival por perto em vez de sumir'}
+  }
+}
+
+];
+
+/* rivais extras entram na agenda sozinhos, pelo arquivo deles */
+function contatosDeRivaisExtras(){
+  if (typeof RIVAIS_EXTRA === 'undefined') return [];
+  return RIVAIS_EXTRA.map(R => ({
+    id:'rival_' + R.id, tipo:'treinador', nome:R.nome, papel:'rival · desde ' + (R.desde || 'a estrada'),
+    cidade:R.cidade || 'estrada',
+    desde:R.origem || 'Virou seu rival por uma coisa que você escolheu fazer.',
+    requer:d=>(d.rivaisExtra||[]).includes(R.id),
+    rivalExtra:R.id, oferece:['revanche']
+  }));
+}
+
+function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras()); }
+function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
+function textoContato(c, campo){ const v = c[campo]; return typeof v === 'function' ? v(Estado.dados) : v; }
+
+
 /* ===== js/story/ginasios.js ===== */
 /* ============================================================
    OS OITO GINÁSIOS DE KANTO
@@ -8697,11 +9172,19 @@ c1_foi_sem_despedir:{
       return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ele pelo ombro sem falar nada.`
                : 'Você olha pra trás uma vez, na placa, e depois não olha mais.';
     },
-    'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.'
+    'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
+    'No bolso de fora da mochila, onde você não põe nada, tem uma coisa que você não pôs ali: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
+    'Um PokéNav. Foi guardado aí em algum momento da noite, por alguém que não te acordou pra dizer que tinha guardado.',
+    d=>fala(nomeCasa(), 'o número daqui já tá gravado', 'baixo',
+            'Escrito a lápis numa tira de papel enrolada na tampa, em letra apressada.')
   ],
   ef:{flag:'foi_sem_despedir', moral:-6,
       rep:{eixo:'ruim',delta:1,motivo:'Saiu de casa sem se despedir de ninguém'},
-      registrar:'Saiu de casa sem se despedir.'},
+      registrar:'Saiu de casa sem se despedir.',
+      executar:d=>{
+        Estado.ganharPokenav();
+        return [{tipo:'item', texto:'Ganhou um PokéNav. Estava no bolso de fora desde a noite passada.'}];
+      }},
   escolhas:[{texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'}]
 },
 
@@ -9028,10 +9511,19 @@ c1_despedida:{
     d=>`Na porta, ${casaCompleto()} te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
     d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
+    'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
+    d=>fala(nomeCasa(), 'Isso aqui é um PokéNav. Era do seu tio e ele não usava, e eu mandei consertar a tampa.'),
+    d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
+    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui. Não precisa usar todo dia.', 'baixo'),
+    d=>fala(nomeCasa(), 'Mas usa.'),
     d=>fala(nomeCasa(), 'Uma coisa só.', null, 'A mão fecha no batente da porta.'),
     d=>fala(nomeCasa(), 'Volta. Não precisa voltar campeão. Só volta.')
   ],
-  ef:{dinheiro:3000, itens:{'Ração':1}},
+  ef:{dinheiro:3000, itens:{'Ração':1},
+      executar:d=>{
+        Estado.ganharPokenav();
+        return [{tipo:'item', texto:'Ganhou um PokéNav. O número de casa já está gravado nele.'}];
+      }},
   escolhas:[
     {texto:'"Eu volto." Prometer.', vai:'c1_rua',
      ef:{flag:'promessa_voltar', moral:10, registrar:'Prometeu voltar para casa.'}},
@@ -54317,6 +54809,8 @@ const UI = {
         ${(d.flags.tem_cartao && d.flags.tem_pokedex) ? '<button class="btn mini" onclick="UI.modalCartao()">Cartão</button>' : ''}
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         ${d.flags.tem_pokedex ? '<button class="btn mini" onclick="UI.modalPokedex()">Pokédex</button>' : ''}
+        ${Estado.temPokenav() ? `<button class="btn mini${Estado.numerosDisponiveis().length ? ' pisca' : ''}" onclick="UI.modalNav()">PokéNav${
+          Estado.numerosDisponiveis().length ? ' <b>' + Estado.numerosDisponiveis().length + '</b>' : ''}</button>` : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
@@ -54876,6 +55370,132 @@ const UI = {
   /* ========================================================
      PC — o cinto cabe seis, o resto fica no sistema
      ======================================================== */
+  /* Tela de uma ligação: a conversa acontece e você volta de onde veio. */
+  telaLigacao(c, falas, avisos){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">PokéNav · chamada</div>
+        <div class="tit">${this.esc(c ? textoContato(c,'nome') : 'Chamada')}</div>
+        <div class="loc">${this.esc(c ? textoContato(c,'papel') : '')}</div>
+      </div>
+      <div class="narrativa">${this.narrar(falas)}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas" style="margin-top:18px">
+        <button class="escolha" onclick="Jogo.voltarDaLigacao()">Desligar.</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     POKÉNAV — a agenda de quem te atende
+     Aparelho azul de tampa, tela de cristal. Lista de contatos
+     à esquerda, ficha de quem você selecionou à direita, e um
+     botão por serviço: revanche, favor, missão, dar notícia.
+     ======================================================== */
+  navSel: null,
+
+  modalNav(sel){
+    const d = Estado.dados;
+    if (!Estado.temPokenav()) return;
+    if (sel !== undefined) this.navSel = sel;
+    const agenda = Estado.contatosNaAgenda();
+    const novos = Estado.numerosDisponiveis();
+    if (this.navSel && !agenda.some(c=>c.id===this.navSel)) this.navSel = null;
+    if (!this.navSel && agenda.length) this.navSel = agenda[0].id;
+
+    const linha = c => {
+      const reg = Estado.nav().contatos[c.id] || {};
+      return `<button class="nav-contato${c.id===this.navSel?' sel':''}" onclick="UI.modalNav('${c.id}')">
+        <span class="nav-inicial ${c.tipo === 'treinador' ? 'treinador' : 'figura'}">${this.esc(textoContato(c,'nome').slice(0,1))}</span>
+        <span class="nav-linha-txt">
+          <span class="nav-nome">${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
+        </span>
+        <span class="nav-cidade">${this.esc(textoContato(c,'cidade') || '')}</span>
+      </button>`;
+    };
+
+    const pendentes = novos.length ? `
+      <div class="nav-novos">
+        <div class="nav-titulo">Números que te deram e você não gravou</div>
+        ${novos.map(c => `<button class="nav-gravar" onclick="UI.navGravar('${c.id}')">
+          <span>${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
+          <b>gravar</b></button>`).join('')}
+      </div>` : '';
+
+    this.modal('', `
+      <div class="nav-topo">
+        <span class="nav-antena"></span>
+        <span class="nav-marca">POKÉNAV</span>
+        <span class="nav-sinal">${agenda.length} contato${agenda.length===1?'':'s'}</span>
+      </div>
+      ${pendentes}
+      <div class="nav-colunas">
+        <div class="nav-lista">
+          <div class="nav-titulo">Agenda</div>
+          ${agenda.length ? agenda.map(linha).join('') : '<div class="nav-vazio">Nenhum número ainda.</div>'}
+        </div>
+        <div class="nav-ficha" id="nav-ficha">${this.navFicha()}</div>
+      </div>`, false, 'nav');
+  },
+
+  navFicha(){
+    const c = this.navSel ? contatoPorId(this.navSel) : null;
+    if (!c) return `<div class="nav-vazio">Selecione um contato.<br><span>Números aparecem aqui quando alguém te dá o dele.</span></div>`;
+    const reg = Estado.nav().contatos[c.id] || {usos:{}};
+
+    const ROTULO = {
+      revanche:'Chamar para uma revanche',
+      favor:(c.favor && c.favor.rotulo) || 'Pedir um favor',
+      missao:(c.missao && c.missao.rotulo) || 'Perguntar se precisa de alguma coisa',
+      prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
+    };
+    const NOTA = {
+      revanche:'Ele sobe o time junto com você. Não é o mesmo combate de antes.',
+      favor:'Favor é crédito. Gasta.',
+      missao:'Pode virar história.',
+      prova:'Sem ganho material. Muda o que essa pessoa pensa de você.'
+    };
+
+    const botoes = (c.oferece||[]).map(serv => {
+      const r = Estado.podeLigar(c.id, serv);
+      return `<div class="nav-servico">
+        <button class="btn" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>${this.esc(ROTULO[serv]||serv)}</button>
+        <span class="nav-nota">${this.esc(r.ok ? (NOTA[serv]||'') : r.motivo)}</span>
+      </div>`;
+    }).join('');
+
+    const hist = (Estado.nav().ligacoes||[]).filter(l => l.id === c.id).slice(-3).reverse();
+
+    return `
+      <div class="nav-ficha-cab">
+        <span class="nav-inicial grande ${c.tipo === 'treinador' ? 'treinador' : 'figura'}">${this.esc(textoContato(c,'nome').slice(0,1))}</span>
+        <span>
+          <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-ficha-papel">${this.esc(textoContato(c,'papel'))}</span>
+        </span>
+      </div>
+      <div class="nav-desde">${this.esc(textoContato(c,'desde') || '')}</div>
+      <div class="nav-servicos">${botoes || '<span class="nav-nota">Esse número não atende pedido nenhum. Está aí porque importa.</span>'}</div>
+      ${hist.length ? `<div class="nav-hist">${hist.map(l =>
+        `<span>cap ${l.cap} · ${this.esc(l.servico)}</span>`).join('')}</div>` : ''}`;
+  },
+
+  navGravar(id){
+    Estado.registrarNumero(id);
+    Estado.salvar('auto');
+    this.modalNav(id);
+  },
+  navLigar(id, servico){
+    this.fecharModal();
+    Jogo.ligarPara(id, servico);
+  },
+
   /* ========================================================
      PC — o terminal do Centro Pokémon
      Carcaça bege, tela verde de fósforo. Cinto de seis à
@@ -56436,6 +57056,7 @@ const Jogo = {
   ginasioAtual: null,
   voltarDeGinasio: 'hub',
   eliteAtual: null,
+  revancheAtual: null,
   torneioAtual: null,
   rivalAtual: null,
   encontroRival: null,
@@ -56670,6 +57291,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
+    if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
     if (this.eliteAtual)    return this.resultadoElite(fim);
     if (this.torneioAtual)  return this.resultadoTorneio(fim);
@@ -56709,6 +57331,15 @@ const Jogo = {
   fecharCapitulo(){
     this.subidosNoCap = [];
     const avisos = Historia.fecharCapitulo();
+    /* Rede: nenhuma rota do primeiro capítulo termina sem o aparelho.
+       Quem saiu por uma porta que não passa por casa recebe do balcão. */
+    const pend = [];
+    this.avisarNumeros(pend);
+    pend.forEach(a => avisos.push(a.texto));
+    if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
+      Estado.ganharPokenav();
+      avisos.push('Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');
+    }
     /* o que você fez neste capítulo pode ter rendido um rival */
     const novos = (typeof conquistarRivais === 'function') ? conquistarRivais() : [];
     UI.telaFimCapitulo(avisos.concat(novos.map(a => a.texto)));
@@ -56918,6 +57549,7 @@ const Jogo = {
         avisos.push({tipo:'info', texto:g.efeito});
       }
       Estado.registrar(`Venceu ${g.lider} e conquistou a ${g.insignia}.`);
+      this.avisarNumeros(avisos);
       if (Estado.dados.insignias.length === 8){
         avisos.push({tipo:'rep', texto:'Oito insígnias. Kanto inteira está aberta para você.'});
         Estado.marcar('oito_insignias');
@@ -56929,6 +57561,110 @@ const Jogo = {
     }
     Estado.salvar('auto');
     UI.telaResultadoGinasio(g, venceu, avisos);
+  },
+
+  /* ============================================================
+     POKÉNAV — ligar para alguém
+     Revanche cai em combate. Favor, missão e notícia caem numa
+     tela de conversa, que é onde a fala com dono aparece.
+     ============================================================ */
+  /* de onde a ligação saiu: cena, exploração ou hub */
+  /* acrescenta aos avisos da tela quem passou o número agora */
+  avisarNumeros(avisos){
+    (Estado.numerosNovos() || []).forEach(c => avisos.push({tipo:'item',
+      texto:`${textoContato(c,'nome')} te passou o número. Está esperando no PokéNav.`}));
+    return avisos;
+  },
+
+  voltarDaLigacao(){
+    const d = Estado.dados;
+    if (d.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual);
+    return Exploracao.tela();
+  },
+
+  ligarPara(id, servico){
+    const c = contatoPorId(id);
+    if (!c) return;
+    const r = Estado.podeLigar(id, servico);
+    if (!r.ok) return UI.modal('PokéNav', `<p class="nada">${UI.esc(r.motivo)}</p>`);
+
+    if (servico === 'revanche') return this.revanche(c);
+
+    const def = c[servico] || {};
+    const falas = (typeof def.texto === 'function' ? def.texto(Estado.dados) : def.texto) || [];
+    let avisos = [];
+    if (typeof def.efeito === 'function'){
+      try { avisos = def.efeito(Estado.dados) || []; } catch(e){ avisos = []; }
+    }
+    if (def.rep){
+      const m = Estado.mudarRep(def.rep.eixo, def.rep.delta, def.rep.motivo, {rep:def.rep});
+      if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
+    }
+    if (def.marca) Estado.marcar(def.marca);
+    Estado.marcarLigacao(id, servico);
+    Estado.salvar('auto');
+    UI.telaLigacao(c, falas, avisos);
+  },
+
+  /* revanche: o mesmo adversário, com o time subido junto com você */
+  revanche(c){
+    const meu = Estado.primeiroApto();
+    if (!meu) return UI.modal('PokéNav', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de marcar revanche.</p>');
+
+    let time = null, nome = textoContato(c, 'nome');
+    if (c.ginasio){
+      const g = ginasioPorId(c.ginasio);
+      if (!g) return;
+      /* na revanche o líder vem com o escalão de quem já tem tudo */
+      time = timeGinasio(g, Math.min(8, numInsignias() + 2)).map(x => criarPokemon(x.dex, x.nivel + 2, {}));
+      nome = 'Líder ' + g.lider;
+    } else if (c.rivalExtra){
+      const R = defRival(c.rivalExtra);
+      if (!R) return;
+      time = timeRivalExtra(R).map(p => { p.nivel += 2; return p; });
+    } else if (c.rival === 'teo'){
+      time = timeRival().map(p => { p.nivel += 2; return p; });
+    }
+    if (!time || !time.length) return;
+    time.forEach(x => { x.nomeAnunciado = true; });
+
+    this.revancheAtual = {id:c.id, nome};
+    this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
+    this.rivalAtual = null; this.cenaBatalha = null;
+    Estado.marcarLigacao(c.id, 'revanche');
+    Estado.registrar(`Marcou revanche com ${nome}.`);
+    UI.limparDados();
+    Batalha.iniciar(meu, time[0], {
+      tipo:'treinador', fuga:false, treinador:nome,
+      timeInimigo: time.slice(1), revelarNatureza:true,
+      introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
+    });
+    UI.telaBatalha([
+      `<p>Revanche marcada pelo PokéNav. ${UI.esc(nome)} veio com o time subido — quem aceita revanche não vem pra repetir o resultado.</p>`
+    ].map(h => UI.el(h).outerHTML ? h : h));
+  },
+
+  resultadoRevanche(fim){
+    const rev = this.revancheAtual;
+    this.revancheAtual = null;
+    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa revanche que você mesmo marcou.');
+    const venceu = fim.resultado === 'vitoria';
+    const avisos = [];
+    if (venceu){
+      const premio = 900 + 420 * numInsignias();
+      Estado.j.dinheiro += premio;
+      avisos.push({tipo:'item', texto:`+${premio} ₽`});
+      const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
+      if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
+      Estado.registrar(`Venceu a revanche contra ${rev.nome}.`);
+    } else {
+      avisos.push({tipo:'dano', texto:'Você marcou, você perdeu. O número continua na agenda.'});
+      Estado.registrar(`Perdeu a revanche contra ${rev.nome}.`);
+    }
+    Estado.salvar('auto');
+    UI.telaLigacao(contatoPorId(rev.id), venceu
+      ? [{quem:rev.nome, diz:'Foi. Foi mesmo. Liga de novo quando estiver melhor ainda.'}]
+      : [{quem:rev.nome, diz:'Ainda não. Mas você marcou, e marcar já é alguma coisa.'}], avisos);
   },
 
   /* ---------- O RIVAL ---------- */

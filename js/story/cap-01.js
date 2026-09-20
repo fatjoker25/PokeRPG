@@ -288,11 +288,19 @@ c1_foi_sem_despedir:{
       return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ele pelo ombro sem falar nada.`
                : 'Você olha pra trás uma vez, na placa, e depois não olha mais.';
     },
-    'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.'
+    'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
+    'No bolso de fora da mochila, onde você não põe nada, tem uma coisa que você não pôs ali: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
+    'Um PokéNav. Foi guardado aí em algum momento da noite, por alguém que não te acordou pra dizer que tinha guardado.',
+    d=>fala(nomeCasa(), 'o número daqui já tá gravado', 'baixo',
+            'Escrito a lápis numa tira de papel enrolada na tampa, em letra apressada.')
   ],
   ef:{flag:'foi_sem_despedir', moral:-6,
       rep:{eixo:'ruim',delta:1,motivo:'Saiu de casa sem se despedir de ninguém'},
-      registrar:'Saiu de casa sem se despedir.'},
+      registrar:'Saiu de casa sem se despedir.',
+      executar:d=>{
+        Estado.ganharPokenav();
+        return [{tipo:'item', texto:'Ganhou um PokéNav. Estava no bolso de fora desde a noite passada.'}];
+      }},
   escolhas:[{texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'}]
 },
 
@@ -619,10 +627,19 @@ c1_despedida:{
     d=>`Na porta, ${casaCompleto()} te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
     d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
+    'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
+    d=>fala(nomeCasa(), 'Isso aqui é um PokéNav. Era do seu tio e ele não usava, e eu mandei consertar a tampa.'),
+    d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
+    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui. Não precisa usar todo dia.', 'baixo'),
+    d=>fala(nomeCasa(), 'Mas usa.'),
     d=>fala(nomeCasa(), 'Uma coisa só.', null, 'A mão fecha no batente da porta.'),
     d=>fala(nomeCasa(), 'Volta. Não precisa voltar campeão. Só volta.')
   ],
-  ef:{dinheiro:3000, itens:{'Ração':1}},
+  ef:{dinheiro:3000, itens:{'Ração':1},
+      executar:d=>{
+        Estado.ganharPokenav();
+        return [{tipo:'item', texto:'Ganhou um PokéNav. O número de casa já está gravado nele.'}];
+      }},
   escolhas:[
     {texto:'"Eu volto." Prometer.', vai:'c1_rua',
      ef:{flag:'promessa_voltar', moral:10, registrar:'Prometeu voltar para casa.'}},

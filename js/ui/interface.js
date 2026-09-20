@@ -119,6 +119,8 @@ const UI = {
         ${(d.flags.tem_cartao && d.flags.tem_pokedex) ? '<button class="btn mini" onclick="UI.modalCartao()">Cartão</button>' : ''}
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
         ${d.flags.tem_pokedex ? '<button class="btn mini" onclick="UI.modalPokedex()">Pokédex</button>' : ''}
+        ${Estado.temPokenav() ? `<button class="btn mini${Estado.numerosDisponiveis().length ? ' pisca' : ''}" onclick="UI.modalNav()">PokéNav${
+          Estado.numerosDisponiveis().length ? ' <b>' + Estado.numerosDisponiveis().length + '</b>' : ''}</button>` : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
@@ -678,6 +680,132 @@ const UI = {
   /* ========================================================
      PC — o cinto cabe seis, o resto fica no sistema
      ======================================================== */
+  /* Tela de uma ligação: a conversa acontece e você volta de onde veio. */
+  telaLigacao(c, falas, avisos){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">PokéNav · chamada</div>
+        <div class="tit">${this.esc(c ? textoContato(c,'nome') : 'Chamada')}</div>
+        <div class="loc">${this.esc(c ? textoContato(c,'papel') : '')}</div>
+      </div>
+      <div class="narrativa">${this.narrar(falas)}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas" style="margin-top:18px">
+        <button class="escolha" onclick="Jogo.voltarDaLigacao()">Desligar.</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     POKÉNAV — a agenda de quem te atende
+     Aparelho azul de tampa, tela de cristal. Lista de contatos
+     à esquerda, ficha de quem você selecionou à direita, e um
+     botão por serviço: revanche, favor, missão, dar notícia.
+     ======================================================== */
+  navSel: null,
+
+  modalNav(sel){
+    const d = Estado.dados;
+    if (!Estado.temPokenav()) return;
+    if (sel !== undefined) this.navSel = sel;
+    const agenda = Estado.contatosNaAgenda();
+    const novos = Estado.numerosDisponiveis();
+    if (this.navSel && !agenda.some(c=>c.id===this.navSel)) this.navSel = null;
+    if (!this.navSel && agenda.length) this.navSel = agenda[0].id;
+
+    const linha = c => {
+      const reg = Estado.nav().contatos[c.id] || {};
+      return `<button class="nav-contato${c.id===this.navSel?' sel':''}" onclick="UI.modalNav('${c.id}')">
+        <span class="nav-inicial ${c.tipo === 'treinador' ? 'treinador' : 'figura'}">${this.esc(textoContato(c,'nome').slice(0,1))}</span>
+        <span class="nav-linha-txt">
+          <span class="nav-nome">${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
+        </span>
+        <span class="nav-cidade">${this.esc(textoContato(c,'cidade') || '')}</span>
+      </button>`;
+    };
+
+    const pendentes = novos.length ? `
+      <div class="nav-novos">
+        <div class="nav-titulo">Números que te deram e você não gravou</div>
+        ${novos.map(c => `<button class="nav-gravar" onclick="UI.navGravar('${c.id}')">
+          <span>${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
+          <b>gravar</b></button>`).join('')}
+      </div>` : '';
+
+    this.modal('', `
+      <div class="nav-topo">
+        <span class="nav-antena"></span>
+        <span class="nav-marca">POKÉNAV</span>
+        <span class="nav-sinal">${agenda.length} contato${agenda.length===1?'':'s'}</span>
+      </div>
+      ${pendentes}
+      <div class="nav-colunas">
+        <div class="nav-lista">
+          <div class="nav-titulo">Agenda</div>
+          ${agenda.length ? agenda.map(linha).join('') : '<div class="nav-vazio">Nenhum número ainda.</div>'}
+        </div>
+        <div class="nav-ficha" id="nav-ficha">${this.navFicha()}</div>
+      </div>`, false, 'nav');
+  },
+
+  navFicha(){
+    const c = this.navSel ? contatoPorId(this.navSel) : null;
+    if (!c) return `<div class="nav-vazio">Selecione um contato.<br><span>Números aparecem aqui quando alguém te dá o dele.</span></div>`;
+    const reg = Estado.nav().contatos[c.id] || {usos:{}};
+
+    const ROTULO = {
+      revanche:'Chamar para uma revanche',
+      favor:(c.favor && c.favor.rotulo) || 'Pedir um favor',
+      missao:(c.missao && c.missao.rotulo) || 'Perguntar se precisa de alguma coisa',
+      prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
+    };
+    const NOTA = {
+      revanche:'Ele sobe o time junto com você. Não é o mesmo combate de antes.',
+      favor:'Favor é crédito. Gasta.',
+      missao:'Pode virar história.',
+      prova:'Sem ganho material. Muda o que essa pessoa pensa de você.'
+    };
+
+    const botoes = (c.oferece||[]).map(serv => {
+      const r = Estado.podeLigar(c.id, serv);
+      return `<div class="nav-servico">
+        <button class="btn" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>${this.esc(ROTULO[serv]||serv)}</button>
+        <span class="nav-nota">${this.esc(r.ok ? (NOTA[serv]||'') : r.motivo)}</span>
+      </div>`;
+    }).join('');
+
+    const hist = (Estado.nav().ligacoes||[]).filter(l => l.id === c.id).slice(-3).reverse();
+
+    return `
+      <div class="nav-ficha-cab">
+        <span class="nav-inicial grande ${c.tipo === 'treinador' ? 'treinador' : 'figura'}">${this.esc(textoContato(c,'nome').slice(0,1))}</span>
+        <span>
+          <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-ficha-papel">${this.esc(textoContato(c,'papel'))}</span>
+        </span>
+      </div>
+      <div class="nav-desde">${this.esc(textoContato(c,'desde') || '')}</div>
+      <div class="nav-servicos">${botoes || '<span class="nav-nota">Esse número não atende pedido nenhum. Está aí porque importa.</span>'}</div>
+      ${hist.length ? `<div class="nav-hist">${hist.map(l =>
+        `<span>cap ${l.cap} · ${this.esc(l.servico)}</span>`).join('')}</div>` : ''}`;
+  },
+
+  navGravar(id){
+    Estado.registrarNumero(id);
+    Estado.salvar('auto');
+    this.modalNav(id);
+  },
+  navLigar(id, servico){
+    this.fecharModal();
+    Jogo.ligarPara(id, servico);
+  },
+
   /* ========================================================
      PC — o terminal do Centro Pokémon
      Carcaça bege, tela verde de fósforo. Cinto de seis à

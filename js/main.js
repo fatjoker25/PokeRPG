@@ -7,6 +7,7 @@ const Jogo = {
   ginasioAtual: null,
   voltarDeGinasio: 'hub',
   eliteAtual: null,
+  revancheAtual: null,
   torneioAtual: null,
   rivalAtual: null,
   encontroRival: null,
@@ -241,6 +242,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
+    if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
     if (this.eliteAtual)    return this.resultadoElite(fim);
     if (this.torneioAtual)  return this.resultadoTorneio(fim);
@@ -280,6 +282,15 @@ const Jogo = {
   fecharCapitulo(){
     this.subidosNoCap = [];
     const avisos = Historia.fecharCapitulo();
+    /* Rede: nenhuma rota do primeiro capítulo termina sem o aparelho.
+       Quem saiu por uma porta que não passa por casa recebe do balcão. */
+    const pend = [];
+    this.avisarNumeros(pend);
+    pend.forEach(a => avisos.push(a.texto));
+    if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
+      Estado.ganharPokenav();
+      avisos.push('Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');
+    }
     /* o que você fez neste capítulo pode ter rendido um rival */
     const novos = (typeof conquistarRivais === 'function') ? conquistarRivais() : [];
     UI.telaFimCapitulo(avisos.concat(novos.map(a => a.texto)));
@@ -489,6 +500,7 @@ const Jogo = {
         avisos.push({tipo:'info', texto:g.efeito});
       }
       Estado.registrar(`Venceu ${g.lider} e conquistou a ${g.insignia}.`);
+      this.avisarNumeros(avisos);
       if (Estado.dados.insignias.length === 8){
         avisos.push({tipo:'rep', texto:'Oito insígnias. Kanto inteira está aberta para você.'});
         Estado.marcar('oito_insignias');
@@ -500,6 +512,110 @@ const Jogo = {
     }
     Estado.salvar('auto');
     UI.telaResultadoGinasio(g, venceu, avisos);
+  },
+
+  /* ============================================================
+     POKÉNAV — ligar para alguém
+     Revanche cai em combate. Favor, missão e notícia caem numa
+     tela de conversa, que é onde a fala com dono aparece.
+     ============================================================ */
+  /* de onde a ligação saiu: cena, exploração ou hub */
+  /* acrescenta aos avisos da tela quem passou o número agora */
+  avisarNumeros(avisos){
+    (Estado.numerosNovos() || []).forEach(c => avisos.push({tipo:'item',
+      texto:`${textoContato(c,'nome')} te passou o número. Está esperando no PokéNav.`}));
+    return avisos;
+  },
+
+  voltarDaLigacao(){
+    const d = Estado.dados;
+    if (d.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual);
+    return Exploracao.tela();
+  },
+
+  ligarPara(id, servico){
+    const c = contatoPorId(id);
+    if (!c) return;
+    const r = Estado.podeLigar(id, servico);
+    if (!r.ok) return UI.modal('PokéNav', `<p class="nada">${UI.esc(r.motivo)}</p>`);
+
+    if (servico === 'revanche') return this.revanche(c);
+
+    const def = c[servico] || {};
+    const falas = (typeof def.texto === 'function' ? def.texto(Estado.dados) : def.texto) || [];
+    let avisos = [];
+    if (typeof def.efeito === 'function'){
+      try { avisos = def.efeito(Estado.dados) || []; } catch(e){ avisos = []; }
+    }
+    if (def.rep){
+      const m = Estado.mudarRep(def.rep.eixo, def.rep.delta, def.rep.motivo, {rep:def.rep});
+      if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
+    }
+    if (def.marca) Estado.marcar(def.marca);
+    Estado.marcarLigacao(id, servico);
+    Estado.salvar('auto');
+    UI.telaLigacao(c, falas, avisos);
+  },
+
+  /* revanche: o mesmo adversário, com o time subido junto com você */
+  revanche(c){
+    const meu = Estado.primeiroApto();
+    if (!meu) return UI.modal('PokéNav', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de marcar revanche.</p>');
+
+    let time = null, nome = textoContato(c, 'nome');
+    if (c.ginasio){
+      const g = ginasioPorId(c.ginasio);
+      if (!g) return;
+      /* na revanche o líder vem com o escalão de quem já tem tudo */
+      time = timeGinasio(g, Math.min(8, numInsignias() + 2)).map(x => criarPokemon(x.dex, x.nivel + 2, {}));
+      nome = 'Líder ' + g.lider;
+    } else if (c.rivalExtra){
+      const R = defRival(c.rivalExtra);
+      if (!R) return;
+      time = timeRivalExtra(R).map(p => { p.nivel += 2; return p; });
+    } else if (c.rival === 'teo'){
+      time = timeRival().map(p => { p.nivel += 2; return p; });
+    }
+    if (!time || !time.length) return;
+    time.forEach(x => { x.nomeAnunciado = true; });
+
+    this.revancheAtual = {id:c.id, nome};
+    this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
+    this.rivalAtual = null; this.cenaBatalha = null;
+    Estado.marcarLigacao(c.id, 'revanche');
+    Estado.registrar(`Marcou revanche com ${nome}.`);
+    UI.limparDados();
+    Batalha.iniciar(meu, time[0], {
+      tipo:'treinador', fuga:false, treinador:nome,
+      timeInimigo: time.slice(1), revelarNatureza:true,
+      introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
+    });
+    UI.telaBatalha([
+      `<p>Revanche marcada pelo PokéNav. ${UI.esc(nome)} veio com o time subido — quem aceita revanche não vem pra repetir o resultado.</p>`
+    ].map(h => UI.el(h).outerHTML ? h : h));
+  },
+
+  resultadoRevanche(fim){
+    const rev = this.revancheAtual;
+    this.revancheAtual = null;
+    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa revanche que você mesmo marcou.');
+    const venceu = fim.resultado === 'vitoria';
+    const avisos = [];
+    if (venceu){
+      const premio = 900 + 420 * numInsignias();
+      Estado.j.dinheiro += premio;
+      avisos.push({tipo:'item', texto:`+${premio} ₽`});
+      const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
+      if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
+      Estado.registrar(`Venceu a revanche contra ${rev.nome}.`);
+    } else {
+      avisos.push({tipo:'dano', texto:'Você marcou, você perdeu. O número continua na agenda.'});
+      Estado.registrar(`Perdeu a revanche contra ${rev.nome}.`);
+    }
+    Estado.salvar('auto');
+    UI.telaLigacao(contatoPorId(rev.id), venceu
+      ? [{quem:rev.nome, diz:'Foi. Foi mesmo. Liga de novo quando estiver melhor ainda.'}]
+      : [{quem:rev.nome, diz:'Ainda não. Mas você marcou, e marcar já é alguma coisa.'}], avisos);
   },
 
   /* ---------- O RIVAL ---------- */

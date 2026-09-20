@@ -465,6 +465,7 @@ const Estado = {
       visitados: {},
       descobertas: {},
       pokedex: {vistos:{}, catalogados:{}, brilhantes:{}},
+      pokenav: {tem:false, contatos:{}, ligacoes:[]},   // a agenda e o histórico de ligações
       flags: {},
       npcs: {},               // memória: {nome:{conhece:true, opiniao:n, viuVoce:'...'}}
       rivais: {},             // rivais conquistados pelo caminho: {id:{vitorias,derrotas,...}}
@@ -631,6 +632,92 @@ const Estado = {
   },
   marcar(flag, valor=true){ this.dados.flags[flag] = valor; },
   tem(flag){ return !!this.dados.flags[flag]; },
+
+  /* ============================================================
+     POKÉNAV — a agenda
+     Um número entra quando a pessoa te dá. Cada uso tem limite
+     e espera: ninguém atende a mesma pergunta três vezes no
+     mesmo dia, e favor pedido demais deixa de ser favor.
+     ============================================================ */
+  nav(){
+    const d = this.dados;
+    if (!d.pokenav) d.pokenav = {tem:false, contatos:{}, ligacoes:[]};
+    if (!d.pokenav.contatos) d.pokenav.contatos = {};
+    if (!d.pokenav.ligacoes) d.pokenav.ligacoes = [];
+    return d.pokenav;
+  },
+  temPokenav(){ return !!this.nav().tem; },
+  ganharPokenav(){
+    const nav = this.nav();
+    if (nav.tem) return false;
+    nav.tem = true;
+    this.registrarNumero('casa');
+    this.registrar('Ganhou um PokéNav de casa.');
+    return true;
+  },
+  temNumero(id){ return !!this.nav().contatos[id]; },
+  registrarNumero(id){
+    const nav = this.nav();
+    if (nav.contatos[id]) return false;
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (!c) return false;
+    nav.contatos[id] = {id, desdeCap: this.dados.capitulo, usos:{}};
+    this.registrar(`Registrou o número de ${textoContato(c, 'nome')} no PokéNav.`);
+    return true;
+  },
+  /* Avisa uma vez só que alguém te passou o número. Sem isso o jogador
+     tem que abrir o aparelho no chute pra descobrir que apareceu gente. */
+  numerosNovos(){
+    if (!this.temPokenav()) return [];
+    const nav = this.nav();
+    if (!nav.oferecidos) nav.oferecidos = [];
+    const novos = this.numerosDisponiveis().filter(c => !nav.oferecidos.includes(c.id));
+    novos.forEach(c => nav.oferecidos.push(c.id));
+    return novos;
+  },
+
+  /* números que a pessoa já te deu mas que você ainda não gravou */
+  numerosDisponiveis(){
+    if (!this.temPokenav()) return [];
+    const d = this.dados;
+    return (typeof todosContatos === 'function' ? todosContatos() : [])
+      .filter(c => !this.temNumero(c.id) && !c.automatico)
+      .filter(c => { try { return !c.requer || c.requer(d); } catch(e){ return false; } });
+  },
+  contatosNaAgenda(){
+    const nav = this.nav();
+    return Object.keys(nav.contatos)
+      .map(id => (typeof contatoPorId === 'function') ? contatoPorId(id) : null)
+      .filter(Boolean);
+  },
+  /* pode ligar pra esse contato pedindo esse serviço? */
+  podeLigar(id, servico){
+    const nav = this.nav();
+    const reg = nav.contatos[id];
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (!reg || !c) return {ok:false, motivo:'Esse número não está na agenda.'};
+    if (!(c.oferece||[]).includes(servico)) return {ok:false, motivo:'Não é pra isso que se liga pra essa pessoa.'};
+    const def = c[servico] || {};
+    const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
+    const limite = def.limite === undefined ? 99 : def.limite;
+    if (u.vezes >= limite)
+      return {ok:false, motivo:'Já deu o que tinha pra dar. Pedir de novo seria outra coisa.'};
+    const espera = def.esperaCap === undefined ? 1 : def.esperaCap;
+    const falta = (u.ultimoCap + espera) - this.dados.capitulo;
+    if (falta > 0)
+      return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${falta} capítulo${falta===1?'':'s'}.`};
+    return {ok:true};
+  },
+  marcarLigacao(id, servico){
+    const nav = this.nav();
+    const reg = nav.contatos[id];
+    if (!reg) return;
+    const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
+    u.vezes++; u.ultimoCap = this.dados.capitulo;
+    reg.usos[servico] = u;
+    nav.ligacoes.push({id, servico, cap:this.dados.capitulo, dia:this.dados.relogio.dia});
+    if (nav.ligacoes.length > 60) nav.ligacoes.shift();
+  },
 
   lembrarNPC(nome, dados){
     const n = this.dados.npcs[nome] || {nome, opiniao:0, memorias:[]};
