@@ -71,8 +71,8 @@ c18_cartorio_tabela:{
     'Você anota a tabela num canto do caderno, porque tabela é a coisa mais honesta que existe: ela diz exatamente quanto custa cada coisa e não faz cara de que está te fazendo um favor.',
     'Busca por denominação: dez.',
     'Certidão de inteiro teor: quarenta.',
-    'Cópia reprográfica simples, por página: dez centavos.',
-    'Cento e quarenta páginas dá quatorze. Você ainda não sabe que vão ser cento e quarenta páginas.'
+    'Cópia reprográfica simples, por página: um.',
+    'Cento e quarenta páginas dá cento e quarenta. Você ainda não sabe que vão ser cento e quarenta páginas.'
   ],
   ef:{registrar:'Anotou a tabela de emolumentos do cartório.'},
   escolhas:[{texto:'Voltar para a fila.', vai:'c18_cartorio_fila'}]
@@ -258,7 +258,7 @@ c18_so_estatuto:{
     'Dezoito páginas te dizem o que eles são. Cento e vinte e duas páginas de ata te diriam o que eles fizeram.',
     'Você olha para o relógio. Dezessete e dois. A porta do cartório já fechou.'
   ],
-  ef:{flag:['tem_o_estatuto','sabe_da_comissao'], dinheiro:-40,
+  ef:{flag:['tem_o_estatuto','sabe_da_comissao'], dinheiro:-58,
       registrar:'Comprou só o estatuto: 18 páginas. As atas ficaram lá.'},
   escolhas:[
     {texto:'Voltar amanhã e comprar as atas.', vai:'c18_voltou_amanha'},
@@ -274,7 +274,7 @@ c18_voltou_amanha:{
     'Cento e vinte e duas páginas de ata saem da matricial em vinte e dois minutos de chiado.',
     'Ela grampeia em quatro blocos, porque um grampo só não pega.'
   ],
-  ef:{flag:'tem_as_atas', dinheiro:-60,
+  ef:{flag:'tem_as_atas', dinheiro:-122,
       registrar:'Comprou as 122 páginas de atas no dia seguinte.'},
   escolhas:[{texto:'Sair com o pacote debaixo do braço.', vai:'c18_leitura'}]
 },
@@ -282,13 +282,13 @@ c18_voltou_amanha:{
 c18_quintela_copia:{
   texto:[
     'Ela digita, confere, e anuncia o total como quem anuncia o preço do pão.',
-    '"Estatuto e trinta e quatro atas. Cento e quarenta páginas. Dez centavos a página, mais a certidão."',
+    '"Estatuto e trinta e quatro atas. Cento e quarenta páginas. Um pokedólar a página, mais a certidão."',
     'A matricial chia por vinte e dois minutos. Ninguém na sala parece achar aquilo demorado.',
     'Ela grampeia em quatro blocos, porque um grampo só não pega, e empurra o calhamaço pelo balcão.',
     '"Boa leitura", ela diz, sem ironia nenhuma.',
     'Você sai dali com cento e quarenta páginas de atas de reunião de uma organização que ninguém em Kanto sabe que existe, e com um recibo.'
   ],
-  ef:{flag:['tem_as_atas','tem_o_estatuto'], dinheiro:-100,
+  ef:{flag:['tem_as_atas','tem_o_estatuto'], dinheiro:-180,
       rep:{eixo:'bom',delta:1,motivo:'Comprou a verdade no balcão, por preço tabelado'},
       registrar:'Comprou o estatuto e as 34 atas da CGRB: 140 páginas, com recibo.'},
   escolhas:[
@@ -542,7 +542,7 @@ c18_704_porque_deixam:{
   texto:[
     '"Por que vocês estão me deixando?"',
     'A presidente termina de escrever uma palavra antes de responder.',
-    '"Porque isso é público, porque o senhor pagaria dez centavos a página por elas de qualquer jeito, e porque eu prefiro que o senhor leia o documento inteiro a que o senhor leia três linhas que alguém te vendeu."',
+    '"Porque isso é público, porque o senhor pagaria um pokedólar a página por elas de qualquer jeito, e porque eu prefiro que o senhor leia o documento inteiro a que o senhor leia três linhas que alguém te vendeu."',
     'Ela levanta os olhos.',
     '"E porque eu quero que o senhor volte aqui depois de ler. Aí a conversa presta."'
   ],
@@ -908,7 +908,7 @@ c18_terceira_preco:{
   texto:[
     '"Me vende o que você tem sobre eles."',
     'Ela ri pelo nariz.',
-    '"Eu não tenho o que te vender, porque o que eu tenho é público." Ela aponta o teto com o queixo. "É associação registrada, garoto. Estatuto no cartório. Ata no cartório. Eu descobri isso pagando oito reais e me senti uma idiota por um mês inteiro."',
+    '"Eu não tenho o que te vender, porque o que eu tenho é público." Ela aponta o teto com o queixo. "É associação registrada, garoto. Estatuto no cartório. Ata no cartório. Eu descobri isso pagando oito pokedólares e me senti uma idiota por um mês inteiro."',
     '"Você me diria isso de graça?"',
     '"Eu acabei de dizer." Ela volta para o cimento. "Vai no cartório da Rua Onze. Pede por denominação. Leva dinheiro trocado, que a máquina deles não funciona."'
   ],
@@ -1325,7 +1325,7 @@ c18_fechou_estatuto:{
   texto:[
     'Você fecha o calhamaço e apaga a luminária e fica deitado olhando o teto do quarto do Centro Pokémon.',
     'Lá fora tem uma cidade inteira dormindo e nenhuma dessas pessoas sabe que existe um documento de dezoito páginas que decide, com quatro critérios objetivos, o que é uma coisa que vale a pena continuar viva.',
-    'E o documento está num cartório, e custa dez centavos a página.',
+    'E o documento está num cartório, e custa um pokedólar a página.',
     'Você acende a luminária de novo.'
   ],
   ef:{instabilidade:1},

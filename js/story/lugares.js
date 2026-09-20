@@ -21,7 +21,7 @@ const ANCORAS = {
   15: {local:'rota16',    chamada:'O chão avisa antes do som: batida de pata em solo duro, muito rápida, vindo.'},
   16: {local:'ilha_sem_nome', chamada:'Um alicerce de torre no topo da ilha. Só o alicerce.'},
   17: {local:'rota23',    chamada:'Uma clareira redonda, fora da trilha, com grama mais alta e mais verde que a de fora.'},
-  18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito reais a cópia.'},
+  18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},
   20: {local:'saffron',   chamada:'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. Segunda, 10h.'},
   21: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
@@ -120,7 +120,7 @@ saffron:[
   {chave:'troca_saffron', texto:[
     'Na praça de alimentação, na hora do almoço, tem uma mulher de crachá azul sentada sozinha com uma bandeja intacta.',
     'Ela olha pra você como quem já decidiu falar.'], descobre:'troca_saffron'},
-  {chave:'s_cartorio', texto:['O cartório da rua Dez abre até as 17h, cobra oito reais a cópia e não faz pergunta nenhuma.']},
+  {chave:'s_cartorio', texto:['O cartório da rua Dez abre até as 17h, cobra oito pokedólares a cópia e não faz pergunta nenhuma.']},
   {chave:'ginasio_saffron', texto:[
     'O ginásio de Saffron é um prédio baixo e sem janela, espremido entre dois arranha-céus.',
     'A porta está trancada e tem um papel colado: "SUSPENSO POR TEMPO INDETERMINADO — S."',

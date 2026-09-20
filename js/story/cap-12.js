@@ -43,7 +43,7 @@ c12_cidade:{
     'A pousada se chama Pousada do Safári. A padaria vende pão de queijo em saquinho com a silhueta de um Kangaskhan. O posto de gasolina tem um outdoor da reserva. A escola municipal se chama Escola Municipal Reserva Fuchsia.',
     'E tem um detalhe que você leva quarenta minutos pra notar e depois não consegue desnotar:',
     'não tem nenhum Pokémon selvagem na cidade.',
-    'Nenhum. Nem pombo, nem rato, nem inseto grande. Em Pewter tinha. Em Cerulean tinha. Em Lavender tinha muito.',
+    'Nenhum. Nem Pidgey, nem Rattata, nem Caterpie. Em Pewter tinha. Em Cerulean tinha. Em Lavender tinha muito.',
     'Aqui, do lado de nove mil hectares de reserva, dentro de uma cidade de quatro mil pessoas, não tem um.',
     'Você pergunta pra dona da padaria e ela responde com orgulho genuíno:',
     '"Ah, aqui é limpo. A gente tem manejo."'
@@ -1050,7 +1050,7 @@ c12_nove_da_manha:{
   texto:[
     'Às nove da manhã você entende.',
     'Não tem crueldade. Isso é o que ninguém te prepara pra ver.',
-    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com cachorro. A Dra. Yara é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
+    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Yara é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
     'Ninguém grita com ninguém. Ninguém chuta nada.',
     'E às nove da manhã chega o lote da baia 3, e a baia 3 é a baia dos filhotes, e a triagem de filhote é por peso, porque filhote abaixo de um peso não é “apto para transporte”.',
     'E aí você vê o que acontece com os que não são aptos.',

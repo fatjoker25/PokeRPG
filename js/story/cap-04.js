@@ -784,7 +784,7 @@ c4_ivone_monte:{
     '"E pra onde vai?"',
     '"Celadon. Sempre Celadon." Ela fecha o caderno. "Fóssil não anda sozinho até um mercado. Tem caminhão, tem estrada, tem gente pagando e gente carregando."',
     'Ela olha o Kabutops atrás do vidro.',
-    '"Esse aqui é o único que ainda está inteiro em Kanto num lugar onde qualquer pessoa pode olhar de graça. Digo, por duzentos reais. E o teto dele vaza."'
+    '"Esse aqui é o único que ainda está inteiro em Kanto num lugar onde qualquer pessoa pode olhar de graça. Digo, por duzentos pokedólares. E o teto dele vaza."'
   ],
   ef:{flag:'sabe_do_trafico_fossil', registrar:'Dra. Ivone falou do saque de fósseis no Monte da Lua.'},
   escolhas:[
@@ -1269,7 +1269,7 @@ c4_pedreira_detonacao:{
 
 c4_pedreira_borda:{
   texto:[
-    'Você sai da estrada e contorna a borda do buraco por fora, por um caminho de cabra que claramente já foi usado por gente.',
+    'Você sai da estrada e contorna a borda do buraco por fora, por uma trilha de bicho que claramente já foi usada por gente.',
     'Depois de quinze minutos, você entende por quê: tem uma fenda na rocha, do lado de fora da cerca, e ela é funda.',
     'Do lado de dentro dela tem barulho. Muito barulho, de coisa pequena e de muitas.',
     'E tem marca de bota na terra, fresca, entrando e saindo. Alguém sabe dessa fenda.'
@@ -1561,7 +1561,7 @@ c4_comprou_zubat:{
     '"Tem um vivo. Trinta."',
     'Você paga. Ele te entrega a gaiola com uma delicadeza estranha, do jeito de quem entrega uma coisa que sabe que não devia ter.',
     'Você solta o Zubat lá mesmo. Ele sobe e some no teto.',
-    'O rapaz te olha soltar trinta reais no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
+    'O rapaz te olha soltar trinta pokedólares no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
   ],
   ef:{dinheiro:-30, flag:'comprou_pra_soltar',
       presagio:'Você acabou de criar um cliente. Pensa nisso antes de voltar na semana que vem.'},
@@ -1623,9 +1623,9 @@ c4_seguiu_rapaz:{
     'Você espera ele sair e segue de longe.',
     'Ele não vai pra lugar nenhum interessante: desce a estrada, entra pelo portão de funcionários da pedreira com o crachá, e vai trabalhar.',
     'Turno da tarde. Você fica na cerca vendo ele virar um ponto laranja de capacete no meio de outros trezentos pontos laranja de capacete.',
-    'A revelação é essa: não tem organização, não tem chefe, não tem conspiração. Tem um cara que precisa de trezentos reais e uma fenda que tem Zubat.'
+    'A revelação é essa: não tem organização, não tem chefe, não tem conspiração. Tem um cara que precisa de trezentos pokedólares e uma fenda que tem Zubat.'
   ],
-  ef:{flag:'entendeu_a_fenda', presagio:'As coisas grandes e podres de Kanto quase sempre começam assim, com alguém precisando de trezentos reais.'},
+  ef:{flag:'entendeu_a_fenda', presagio:'As coisas grandes e podres de Kanto quase sempre começam assim, com alguém precisando de trezentos pokedólares.'},
   escolhas:[
     {texto:'Entrar pelo portão e falar com alguém da empresa.', vai:'c4_pedreira_portao', ef:{flag:'vai_contar_da_fenda'}},
     {texto:'Voltar na fenda e destruir as armadilhas.', vai:'c4_destruiu_armadilhas'},

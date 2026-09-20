@@ -1151,10 +1151,11 @@ c21_desafio_elite:{
 c21_os_quatro_da_elite:{
   texto:[
     'A Conselheira Vasques lista sem consultar nada.',
-    'O primeiro é fantasma e tem cinquenta e um anos e é dentista em Lavender três dias por semana.',
-    'A segunda é gelo, tem vinte e nove, e é a mais nova a entrar na Elite em quarenta anos.',
-    'O terceiro é lutador e foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
-    'A quarta é dragão, tem trinta e sete, e nunca perdeu aqui dentro.',
+    '"Três das quatro cadeiras estão com substituto desde agosto." Ela diz isso sem baixar a voz e sem desculpa nenhuma. "Os titulares estão vivos, estão em casa, e não vêm. A Liga não tirou o nome das portas e eu fui voto vencido nisso também."',
+    'Na cadeira da Agatha senta um homem de cinquenta e um anos que entra na sala com refletor e música de palco, e que foi vice-campeão da Conferência Indigo antes de virar isso.',
+    'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
+    'Na cadeira do Bruno senta um homem que ganhou noventa e oito batalhas seguidas antes dos dezesseis anos, largou tudo aos trinta e três, foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
+    'E a quarta é o Lance, que é o dono da própria placa, tem trinta e sete anos e nunca perdeu aqui dentro.',
     '"E antes que o senhor pergunte: sim, os quatro sabem que o senhor vem. E sim, os quatro leram a sua pasta."'
   ],
   ef:{flag:['sabe_da_elite'],

@@ -192,7 +192,7 @@ c1_nao_dormiu:{
       if (!p) return 'Às quatro e meia passou um caminhão na estrada, e depois não passou mais nada.';
       return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordado também. Não fez nada. Só ficou.`;
     },
-    'Às seis e dez o galo do vizinho, que é o pior galo de Kanto, erra a hora pela quarta vez na semana.',
+    'Às seis e dez o Dodrio do vizinho grita as três cabeças ao mesmo tempo, como faz todo dia, e como todo dia ele erra a hora.',
     'Você senta na cama. Está cansado de um jeito que não vai passar com sono.'
   ],
   ef:{flag:'nao_dormiu', hp:-2, causa:'Noite em claro antes de sair de casa',
@@ -240,7 +240,7 @@ c1_fez_o_cafe:{
 c1_saiu_no_escuro:{
   texto:[
     'Você pega a mochila, desce a escada pisando nas beiradas dos degraus que rangem, e abre a porta às seis e vinte e dois.',
-    'A rua está vazia e fria e tem um cachorro dormindo na porta do mercado que abre tarde.',
+    'A rua está vazia e fria e tem um Growlithe dormindo na porta do mercado que abre tarde.',
     'Você anda quatro casas.',
     'E aí você para.',
     'Você para porque sair assim é a única coisa que não dá pra desfazer depois, e porque você já sabe exatamente como vai ser o resto da sua vida lembrando disso.'

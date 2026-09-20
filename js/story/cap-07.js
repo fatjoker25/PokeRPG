@@ -1812,7 +1812,7 @@ c7_sentou_no_circulo:{
     'Você senta na borda do círculo, de pernas cruzadas, numa sala vazia sem janela no alto de uma torre.',
     'Fica quarenta minutos.',
     'Não acontece nada de sobrenatural. Não tem voz, não tem frio, não tem aparição.',
-    'O que acontece é que você pensa. Por quarenta minutos seguidos, sem celular, sem gente, sem nada acontecendo, você pensa em tudo o que aconteceu desde que você saiu de casa.',
+    'O que acontece é que você pensa. Por quarenta minutos seguidos, sem Pokégear, sem gente, sem nada acontecendo, você pensa em tudo o que aconteceu desde que você saiu de casa.',
     'E em algum momento você percebe que está contando. Contando coisas que você fez, uma por uma, como quem confere.',
     'Talvez seja isso o sétimo andar. Talvez não tenha nada aqui e seja só o único lugar de Kanto onde ninguém te interrompe.'
   ],

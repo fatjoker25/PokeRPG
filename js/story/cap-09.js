@@ -40,7 +40,7 @@ c9_cidade:{
     'Aprende três coisas.',
     'A primeira: Celadon tem dinheiro. Dá pra ver na calçada — é cimento nivelado, com rampa de acessibilidade, e a rampa está inteira.',
     'A segunda: Celadon tem gente sem nada. Eles ficam nos mesmos quarteirões todo dia e ninguém os expulsa, o que é gentileza, e ninguém faz mais nada, o que não é.',
-    'A terceira: tem uma quantidade absurda de lugar que compra. Compra ouro, compra celular, compra bicicleta, compra carta, compra garrafa.',
+    'A terceira: tem uma quantidade absurda de lugar que compra. Compra ouro, compra Pokégear, compra bicicleta, compra carta, compra garrafa.',
     'E, em duas vitrines diferentes, na mesma avenida, com plaquinha impressa e tudo: COMPRA-SE POKÉMON — AVALIAÇÃO GRÁTIS.'
   ],
   ef:{flag:'viu_as_vitrines',
@@ -143,14 +143,14 @@ c9_proximo_leilao:{
     'Ele consulta uma agenda de papel, o que é uma coisa que você não esperava.',
     '"Quinta que vem. Mas você não entra."',
     '"E onde é?"',
-    '"Isso eu não digo." Ele fecha a agenda. "Não por sigilo. Porque endereço de leilão muda toda vez e eu recebo por e-mail dois dias antes."',
+    '"Isso eu não digo." Ele fecha a agenda. "Não por sigilo. Porque endereço de leilão muda toda vez e chega no terminal do Centro dois dias antes."',
     'Ele apoia as duas mãos no balcão de vidro.',
     '"Olha, eu vou ser honesto com você porque você tem quinze anos e eu tenho um filho dessa idade."',
     '"Se você acha que tem alguma coisa errada nisso, o lugar de reclamar não é aqui. Eu sou lojista. Eu compro com nota."'
   ],
   ef:{flag:['leilao_quinta','sabe_do_leilao'],
       npc:{nome:'Lojista de Celadon', opiniao:2, memoria:'Te explicou o ciclo do leilão e disse que o lugar de reclamar não era a loja dele.'},
-      registrar:'Existe leilão de custódia. Quinta que vem. Endereço sai por e-mail dois dias antes.',
+      registrar:'Existe leilão de custódia. Quinta que vem. O endereço sai no terminal dois dias antes.',
       presagio:'"O lugar de reclamar não é aqui." Nenhum lugar é aqui. Essa é a engenharia.'},
   escolhas:[
     {texto:'"E qual é o lugar de reclamar?"', vai:'c9_qual_e_o_lugar'},
@@ -646,7 +646,7 @@ c9_verdade_pra_filha:{
     '"Sofreu. Mas ela ficou com ele o tempo todo."',
     'Ela fecha os olhos.',
     '"O tempo todo?"',
-    '"O tempo todo. Ela falava com ele. Falava de coisa boba, tipo que tinha comprado o de sardinha e não o de frango."',
+    '"O tempo todo. Ela falava com ele. Falava de coisa boba, tipo que tinha comprado o de peixe e não o de carne."',
     'E aí ela chora num café de shopping às três da tarde, de crachá, e duas pessoas olham e desviam.',
     'Depois ela limpa a cara com guardanapo de papel e diz:',
     '"Ela sempre compra o de sardinha."',
@@ -707,12 +707,12 @@ c9_liga_pra_ela:{
     '"Tenho."',
     '"Então você não sabe como é sair de casa e não conseguir voltar."',
     'E você não diz nada, porque essa é a única frase dessa conversa em que ela está completamente errada e você não vai provar isso discutindo.',
-    'Ela pega o celular. Não liga.',
+    'Ela pega o Pokégear. Não liga.',
     'Mas guarda no bolso da frente, e não no de trás.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou uma ligação sem forçar'},
       flag:'a_filha_pensou_em_ligar',
-      npc:{nome:'Filha da Marta', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o celular no bolso da frente.'},
+      npc:{nome:'Filha da Marta', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o Pokégear no bolso da frente.'},
       presagio:'Bolso da frente, não o de trás. É pouco e é um movimento.'},
   escolhas:[
     {texto:'Se despedir.', vai:'c9_saiu_do_cafe'},
@@ -951,7 +951,7 @@ c9_copia_do_ricardo:{
     'Ele olha as folhas.',
     '"Cara, é manuscrito."',
     '"Tem copiadora no térreo. Eu vi."',
-    'E você desce, e copia as folhas numa máquina de hospital que custa dois reais a página, e sobe de volta, e ele assina as duas vias e põe a data.',
+    'E você desce, e copia as folhas numa máquina de hospital que custa dois pokedólares a página, e sobe de volta, e ele assina as duas vias e põe a data.',
     'Você sai do hospital de Celadon com um relato assinado de cinco páginas na mochila.',
     'É a primeira prova dessa história que não foi tirada de ninguém. Foi dada.'
   ],
@@ -996,11 +996,11 @@ c9_pergunta_pra_ela:{
     '"Perguntar o quê?"',
     '"Se ela ia querer saber."',
     'Ele abre a boca pra responder e fecha.',
-    'Depois de um tempo ele pega o celular da mesinha e fica olhando a tela apagada.',
+    'Depois de um tempo ele pega o Pokégear da mesinha e fica olhando a tela apagada.',
     '"Se eu perguntar, eu já contei."',
     '"Já."',
-    '"É." Ele gira o celular na mão. "É, esse é o truque, né."',
-    'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o celular no ouvido.'
+    '"É." Ele gira o Pokégear na mão. "É, esse é o truque, né."',
+    'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o Pokégear no ouvido.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma desculpa de três anos com uma pergunta'},
       flag:'ricardo_ligou',
@@ -1084,7 +1084,7 @@ c9_junta:{
     '"Pois não?"',
     '"Eu queria certidão simplificada de um CNPJ."',
     'Ela olha pra você. Você tem quinze anos e uma mochila de rota.',
-    '"Oito reais a página. Você tem o número?"'
+    '"Oito pokedólares a página. Você tem o número?"'
   ],
   ef:{flag:'achou_a_junta'},
   escolhas:[
@@ -1149,7 +1149,7 @@ c9_busca_renno:{
     'A mesma pessoa em todas as quatro.'
   ],
   ef:{flag:['as_quatro_empresas','sabe_do_deposito','papel_com_brasao'],
-      rep:{eixo:'bom',delta:3,motivo:'Puxou o fio inteiro numa repartição pública por oitenta reais'},
+      rep:{eixo:'bom',delta:3,motivo:'Puxou o fio inteiro numa repartição pública por oitenta pokedólares'},
       registrar:'H. Rennó figura em quatro empresas, incluindo uma de logística com depósito em Celadon.',
       presagio:'Associação, consultoria, holding, logística. Nove anos montando isso, uma camada por vez.'},
   escolhas:[
@@ -1194,12 +1194,12 @@ c9_busca_adnan:{
     'Ela rola a tela.',
     '"Conselho de onze."',
     'Ela vira a tela um pouco mais.',
-    'Os onze nomes estão ali, listados em ordem alfabética, num registro público de acesso livre, com taxa de oito reais a página.',
+    'Os onze nomes estão ali, listados em ordem alfabética, num registro público de acesso livre, com taxa de oito pokedólares a página.',
     'Onze nomes completos, com CPF parcialmente mascarado.'
   ],
   ef:{flag:['os_onze_nomes_da_comissao','papel_com_brasao','sabe_da_comissao'],
       rep:{eixo:'bom',delta:4,motivo:'Encontrou os onze nomes num registro público'},
-      registrar:'Os onze nomes do conselho da Comissão estão num registro público, por oito reais a página.',
+      registrar:'Os onze nomes do conselho da Comissão estão num registro público, por oito pokedólares a página.',
       presagio:'Os onze nomes. Numa tela de computador velho, num terceiro andar com elevador quebrado.'},
   escolhas:[
     {texto:'Pedir cópia da lista. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
@@ -1271,9 +1271,9 @@ c9_certidao:{
     'O endereço é uma rua de serviço em Celadon, sem número, atrás do quarteirão do cassino.'
   ],
   ef:{flag:['tem_a_certidao','sabe_do_deposito','papel_com_brasao'],
-      rep:{eixo:'bom',delta:2,motivo:'Pagou oitenta reais e saiu com um endereço'},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou oitenta pokedólares e saiu com um endereço'},
       registrar:'A certidão dá o endereço do depósito: rua de serviço atrás do cassino, sem número.',
-      presagio:'Oitenta reais. O endereço que ninguém te daria custou oitenta reais numa repartição com elevador quebrado.'},
+      presagio:'Oitenta pokedólares. O endereço que ninguém te daria custou oitenta pokedólares numa repartição com elevador quebrado.'},
   escolhas:[
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
     {texto:'Pedir mais certidões.', vai:'c9_certidao_quatro', cond:d=>d.jogador.dinheiro>=320, ef:{dinheiro:-320}},
@@ -1307,8 +1307,8 @@ c9_certidao_quatro:{
 
 c9_copia_das_certidoes:{
   texto:[
-    'Você desce, atravessa a rua, e tira cópia das trinta e duas páginas numa papelaria por dois reais a página.',
-    'Sessenta e quatro reais.',
+    'Você desce, atravessa a rua, e tira cópia das trinta e duas páginas numa papelaria por dois pokedólares a página.',
+    'Sessenta e quatro pokedólares.',
     'Depois volta no laboratório fotográfico da galeria e entrega o maço pro senhor da lupa.',
     '"O senhor guarda isso também?"',
     'Ele olha as trinta e duas páginas de picote.',
@@ -1643,8 +1643,8 @@ c9_responde_erika:{
     '"E aí?"',
     '"E aí alguém responde de volta."',
     'Ela abaixa a tesoura.',
-    'E pega o celular do bolso do avental, e digita por uns dois minutos, e manda.',
-    'O celular apita em quarenta segundos. E de novo. E de novo.',
+    'E pega o Pokégear do bolso do avental, e digita por uns dois minutos, e manda.',
+    'O Pokégear apita em quarenta segundos. E de novo. E de novo.',
     'Ela olha a tela com uma cara que você não sabe ler.',
     '"Quatro", ela diz. "Quatro responderam em um minuto."'
   ],
@@ -2356,7 +2356,7 @@ c9_arrematou_o_41:{
     'E aí ela diz a coisa que resolve: "Mas o senhor pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
     '"Quanto?"',
     '"Avaliação do 41: doze mil."',
-    'Doze mil por um cachorro que alguém perdeu porque não leu um jornal que ninguém lê.'
+    'Doze mil por um Growlithe que alguém perdeu porque não leu um jornal que ninguém lê.'
   ],
   ef:{presagio:'Doze mil. Reparou que ela te disse como fazer? Ela queria que alguém fizesse.'},
   escolhas:[

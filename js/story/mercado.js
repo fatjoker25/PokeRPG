@@ -114,7 +114,7 @@ const TROCAS = {
     quem:'Ademir, o do posto',
     onde:'atrás do posto de gasolina, com um rádio ligado no jogo',
     pede:19, da:{dex:52, nivel:[14,18], apelido:'Bigode', natureza:'Jolly'},
-    fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia de gato e eu tenho um Meowth."',
+    fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia a Meowth e eu tenho um Meowth."',
     depois:'Ele solta o Rattata no quintal e o Rattata some no muro em quatro segundos. Ele não parece incomodado. "Era só pra ele sair de casa mesmo."',
     memoria:'Trocou o Meowth dele por um Rattata seu, por causa do sogro.'
   },

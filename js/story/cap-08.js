@@ -1176,7 +1176,7 @@ c8_portao_cinco:{
 
 c8_anotou_lacre:{
   texto:[
-    'Você anota no caderno, com a lanterna do celular por baixo da jaqueta pra não vazar luz:',
+    'Você anota no caderno, com a lanterna do Pokégear por baixo da jaqueta pra não vazar luz:',
     'Contêiner: KTU 409 118-2. Lacre azul nº 77451. Caminhão: placa coberta com papelão e fita.',
     'Placa coberta com papelão e fita.',
     'Dentro de um porto. Passando por um portão. Com um lacre oficial e um número de contêiner válido.',
@@ -1362,13 +1362,13 @@ c8_como_descubro:{
     '"Como eu descubro de quem é esse CNPJ?"',
     '"Cartório." Ele fala sem pensar. "Ou junta comercial. Contrato social é público."',
     'Ele guarda o barbante da caneta.',
-    '"Você vai em cartório, pede certidão simplificada, paga uns oito reais a página e sai com o nome dos sócio."',
+    '"Você vai em cartório, pede certidão simplificada, paga uns oito pokedólares a página e sai com o nome dos sócio."',
     '"É legal?"',
     '"É legal, é barato e ninguém faz." Ele dá de ombros. "Todo mundo acha que segredo de empresa é segredo. Empresa é a coisa mais pública que existe, garoto. O que é secreto é gente."'
   ],
   ef:{flag:'sabe_do_cartorio',
       registrar:'Certidão simplificada em cartório revela os sócios de um CNPJ. É legal, barato e ninguém faz.',
-      presagio:'Cartório da rua Dez, em Saffron, abre até as cinco e cobra oito reais a cópia.'},
+      presagio:'Cartório da rua Dez, em Saffron, abre até as cinco e cobra oito pokedólares a cópia.'},
   escolhas:[
     {texto:'Ir embarcar.', vai:'c8_cais'},
     {texto:'Ir pro cais e entrar pelo torneio.', vai:'c8_noite_porto'}
@@ -1851,7 +1851,7 @@ c8_bordo:{
       if (d.flags.clandestino) return 'Você está com roupa de rota num salão de smoking. Todo mundo sabe que você não pertence aqui, e ninguém diz nada, que é pior do que se dissessem.';
       if (d.flags.trabalhou_no_navio) return 'Você entra pelo corredor de serviço e ninguém repara. Cansaço nos braços, passagem no bolso, e o direito de estar aqui que você pagou com o corpo.';
       if (d.flags.entrou_pelo_torneio) return 'Você entrou pela porta da frente com um crachá de participante e a moça do balcão te chamou de "atleta", o que é a coisa mais engraçada que já te falaram.';
-      return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil reais.';
+      return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil pokedólares.';
     },
     'Num canto do salão, uma arena montada com corda e piso emborrachado. O torneio começa em vinte minutos e tem gente já apostando no balcão.',
     'No corredor dos camarotes do convés três, o número 40 tem um homem sentado numa cadeira dobrável lendo um romance de banca.',
@@ -2165,8 +2165,8 @@ c8_ganhou_torneio:{
     'Três lutas. Você ganha as três.',
     'A terceira é contra a mulher de vinte e cinco anos, e ela aperta a sua mão no fim e diz "bom, hein" de um jeito que vale mais que o prêmio.',
     'O locutor fala o seu nome no microfone, errado, e o salão bate palma por uns oito segundos e volta a conversar.',
-    'Vinte mil reais. Em dinheiro, num envelope, numa bandeja.',
-    'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem quinze anos e nunca viu vinte mil reais —, um homem de terno para do seu lado e espera você terminar de contar.',
+    'Vinte mil pokedólares. Em dinheiro, num envelope, numa bandeja.',
+    'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem quinze anos e nunca viu vinte mil pokedólares —, um homem de terno para do seu lado e espera você terminar de contar.',
     '"Parabéns", ele diz. "Sério. Foi bonito de assistir."',
     'Ele espera.',
     '"Você tem dez minutos? Eu queria conversar."'
@@ -2397,7 +2397,7 @@ c8_o_nome_dele:{
     '"Curador de quê?"',
     '"De acervo."',
     'Ele vai embora pelo salão e a multidão abre e fecha atrás dele sem ninguém reparar.',
-    'Acervo. Você fica sentado naquela mesa com vinte mil reais no bolso pensando na palavra acervo.'
+    'Acervo. Você fica sentado naquela mesa com vinte mil pokedólares no bolso pensando na palavra acervo.'
   ],
   ef:{flag:['sabe_do_adnan','sabe_da_comissao'],
       registrar:'Curador Adnan, de acervo.',
@@ -2569,7 +2569,7 @@ c8_o_de_catorze:{
     '"Não é isso." Ele levanta a cabeça e está com os olhos vermelhos e com raiva de estar. "Eu tinha que ganhar. Eu tinha que ganhar porque o prêmio é vinte mil e a cirurgia do meu Rapidash é dezoito."',
     'Ele passa a mão na cara.',
     '"E eu treinei. Eu treinei seis meses."',
-    d=>d.flags.venceu_torneio_navio ? 'Você tem vinte mil reais num envelope no bolso interno da sua mochila.' : 'Você não tem vinte mil reais.'
+    d=>d.flags.venceu_torneio_navio ? 'Você tem vinte mil pokedólares num envelope no bolso interno da sua mochila.' : 'Você não tem vinte mil pokedólares.'
   ],
   ef:{flag:'o_garoto_de_fuchsia',
       npc:{nome:'Garoto de Fuchsia', opiniao:1, memoria:'Perdeu o torneio do Anne. Precisava de dezoito mil para a cirurgia do Rapidash dele.'},
@@ -2590,12 +2590,12 @@ c8_deu_o_premio:{
     '"NÃO."',
     '"É seu."',
     '"NÃO É MEU, EU PERDI."',
-    'E aí vocês dois têm uma discussão absurda num corredor de serviço de navio, com um envelope de vinte mil reais indo e voltando entre duas cadeiras de plástico, até você simplesmente levantar e ir embora deixando o envelope na cadeira.',
+    'E aí vocês dois têm uma discussão absurda num corredor de serviço de navio, com um envelope de vinte mil pokedólares indo e voltando entre duas cadeiras de plástico, até você simplesmente levantar e ir embora deixando o envelope na cadeira.',
     'Ele grita o seu nome no corredor. Você não volta.'
   ],
   ef:{dinheiro:-20000, rep:{eixo:'bom',delta:5,motivo:'Deu o prêmio inteiro do torneio a um garoto de catorze anos'},
       flag:'deu_o_premio', moral:15,
-      npc:{nome:'Garoto de Fuchsia', opiniao:10, memoria:'Você deixou vinte mil reais numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
+      npc:{nome:'Garoto de Fuchsia', opiniao:10, memoria:'Você deixou vinte mil pokedólares numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
       registrar:'Deu o prêmio do torneio para o garoto de Fuchsia.',
       presagio:'O Rapidash dele vai viver mais nove anos e você nunca vai ver isso.'},
   escolhas:[
@@ -2654,7 +2654,7 @@ c8_porao:{
     'A luz é de emergência: amarela, a cada oito metros.',
     d=>d.flags.uniforme_tripulacao ? 'De uniforme, você é só mais alguém conferindo carga. Ninguém pergunta nada.' : 'Se alguém te ver aqui, não tem explicação que funcione.',
     'No fundo do corredor, as três caixas.',
-    'Furo de ventilação. Doze furos em cada uma, feitos com broca, em fileira, na altura certa pra uma coisa do tamanho de um cachorro respirar.'
+    'Furo de ventilação. Doze furos em cada uma, feitos com broca, em fileira, na altura certa pra uma coisa do tamanho de um Growlithe respirar.'
   ],
   ef:{registrar:'Desceu ao porão do S.S. Anne.'},
   escolhas:[

@@ -1355,7 +1355,7 @@ c6_falou_na_rua:{
   ef:{flag:'conversou_com_o_carregador',
       npc:{nome:'Carregador da Rota 25', opiniao:1, memoria:'Você o encarou na rua de casa. Ele não negou nada.'},
       registrar:'O carregador da Rota 25: quatro caixas por semana, trezentos cada.',
-      presagio:'Oitenta e quatro reais. É sempre um número pequeno que segura a engrenagem inteira.'},
+      presagio:'Oitenta e quatro pokedólares. É sempre um número pequeno que segura a engrenagem inteira.'},
   escolhas:[
     {texto:'Dar dinheiro pra ele. (2.500 ₽)', vai:'c6_pagou_carregador', cond:d=>d.jogador.dinheiro>=2500,
      ef:{dinheiro:-2500, rep:{eixo:'bom',delta:2,motivo:'Pagou a bombinha de uma criança que não conhece'}, flag:'pagou_o_carregador'}},
@@ -1893,7 +1893,7 @@ c6_ficou:{
   texto:[
     'Você senta na grama. Não fala nada, porque não tem nada.',
     'Leva quarenta minutos.',
-    'Marta segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de sardinha e não o de frango.',
+    'Marta segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de peixe e não o de carne.',
     'No fim ela põe a mão nos olhos dele, que já estão fechados, e deixa lá.',
     'Depois ela olha pra você.',
     '"Obrigada por não ter ido embora."'

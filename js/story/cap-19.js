@@ -305,7 +305,7 @@ c19_entrou_pelo_buraco:{
   texto:[
     'Você levanta a tela e entra de lado, e do lado de dentro o mato é o mato estranho: todos os arbustos na mesma distância, na mesma altura.',
     'Você atravessa cento e vinte metros sem que nada aconteça, o que é estranho, porque cento e vinte metros de mato deveriam ter alguma coisa.',
-    'Não tem inseto. É isso. Não tem inseto, não tem passarinho, não tem barulho nenhum a não ser o vento e o mar.',
+    'Não tem bicho. É isso. Não tem Caterpie, não tem Pidgey, não tem barulho nenhum a não ser o vento e o mar.',
     'Eles plantaram o mato e esqueceram de plantar o resto.'
   ],
   ef:{flag:['entrou_pelo_buraco'], instabilidade:1,
@@ -686,7 +686,7 @@ c19_damiao_persian:{
   texto:[
     '"Todo dia." O Sr. Damião fala do Persian com um carinho que não esconde. "A gente já remendou três vezes e ele arrebenta de novo."',
     '"E ninguém faz nada?"',
-    '"Fazer o quê?" Ele ri. "É um gato grande e velho que vem sentar e olhar. Não come, não briga, não estraga."',
+    '"Fazer o quê?" Ele ri. "É um Persian velho que vem sentar e olhar. Não come, não briga, não estraga."',
     'Ele baixa a voz sem precisar.',
     '"Eu acho que ele vem ver os outros. Tem gente aqui que acha que é bobagem minha."'
   ],
@@ -1244,7 +1244,7 @@ c19_so_ouviu:{
   texto:[
     'Você fica quarenta minutos ouvindo nove pessoas almoçarem.',
     'Ninguém fala do trabalho. É isso que você leva do refeitório: em quarenta minutos, ninguém falou uma palavra sobre o que faz aqui.',
-    'Falaram de futebol, de reforma, de nenê, de um cachorro que sumiu na vila e apareceu, de preço de ovo.',
+    'Falaram de futebol, de reforma, de nenê, de um Growlithe que sumiu na vila e apareceu, de preço de ração.',
     'Em qualquer outro lugar, isso seria normal. Em qualquer outro lugar, gente não fala de trabalho no almoço.',
     'Mas você fica com a sensação de ter assistido a um acordo silencioso que ninguém precisou combinar.'
   ],

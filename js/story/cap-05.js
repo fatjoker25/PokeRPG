@@ -214,7 +214,7 @@ c5_cobrou:{
   ef:{dinheiro:300, flag:['carregou_a_caixa','viu_a_van'],
       rep:{eixo:'ruim',delta:2,motivo:'Carregou carga de quem tirou ovos do Monte da Lua'},
       registrar:'Carregou uma caixa de ovos até uma van branca sem placa na estrada velha.',
-      presagio:'Você estava dentro. Por trinta e cinco minutos você foi parte do transporte, e trezentos reais nunca vão pagar isso.'},
+      presagio:'Você estava dentro. Por trinta e cinco minutos você foi parte do transporte, e trezentos pokedólares nunca vão pagar isso.'},
   escolhas:[
     {texto:'Memorizar tudo da van e voltar pra caverna.', vai:'c5_memorizou_van'},
     {texto:'Perguntar se tem mais trabalho.', vai:'c5_mais_trabalho'},
@@ -266,7 +266,7 @@ c5_rasgou_numero:{
     'Você rasga o maço em quatro na frente dele e deixa cair.',
     'Ele olha os pedaços no chão. Depois olha você.',
     '"Pegou os trezentos, hein."',
-    'É o único golpe que ele precisava dar, e ele acerta em cheio, e você volta a subir a trilha com trezentos reais no bolso e nenhuma resposta.'
+    'É o único golpe que ele precisava dar, e ele acerta em cheio, e você volta a subir a trilha com trezentos pokedólares no bolso e nenhuma resposta.'
   ],
   ef:{flag:'rasgou_o_numero', presagio:'Você pegou os trezentos. Isso já aconteceu e não desacontece.'},
   escolhas:[
@@ -282,10 +282,10 @@ c5_devolveu_trezentos:{
     '"Cê carregou a caixa."',
     '"Eu não quero."',
     '"Eu também não quero. Eu quero que você carregue caixa e eu pago." Ele bate a porta da van. "O dinheiro é seu. Você fez o serviço. Joga fora se quiser, mas não põe na minha mão."',
-    'A van sai. Você fica na curva da estrada de terra com trezentos reais que não dá pra devolver e não dá pra gastar direito.'
+    'A van sai. Você fica na curva da estrada de terra com trezentos pokedólares que não dá pra devolver e não dá pra gastar direito.'
   ],
   ef:{flag:'dinheiro_sujo',
-      presagio:'Tem trezentos reais na sua mochila agora com um formato diferente do resto do dinheiro.'},
+      presagio:'Tem trezentos pokedólares na sua mochila agora com um formato diferente do resto do dinheiro.'},
   escolhas:[
     {texto:'Voltar pra caverna.', vai:'c5_entrada'},
     {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}

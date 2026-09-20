@@ -679,9 +679,12 @@ const UI = {
     this.add(this.topo());
     const d = Estado.dados;
     const e4 = statusElite4(), tor = statusTorneio();
-    const membros = ELITE4.map(m =>
-      `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)} <span class="fraco">· ${this.esc(m.tipo)}</span></span>
-       <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`).join('');
+    const membros = ELITE4.map(m => {
+      const substituto = m.titular && m.titular !== m.nome;
+      return `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)}
+        <span class="fraco">· ${this.esc(m.tipo)}${substituto ? ' · na cadeira de ' + this.esc(m.titular) : ''}</span></span>
+       <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`;
+    }).join('');
 
     this.add(`<div class="painel">
       <div class="cap-cabecalho">

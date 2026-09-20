@@ -5329,34 +5329,44 @@ function insigniasConquistadas(){
    A cadeira de Campeão está vaga há dois anos.
    ============================================================ */
 
+/* A Elite dos Quatro de Kanto é Lorelei, Bruno, Agatha e Lance.
+   Desde agosto, três deles não se apresentam. A Liga não tirou os
+   nomes das portas: pôs substitutos embaixo deles. */
 const ELITE4 = [
 {
-  id:'giselle', ordem:1, nome:'Giselle', tipo:'técnica', nivelBase:60,
+  id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
-    'A primeira sala não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
-    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro.',
+    'A primeira porta da ala tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
+    'A sala atrás dela não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
+    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei e sabe que você reparou.',
     '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',
-    '"Eu vou explicar a regra da ala uma vez, porque ninguém lê o regulamento: você não sai daqui até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
+    '"A placa da porta não é minha. Eu não vou tirar e eu não vou explicar, e a Liga também não."',
+    '"Regra da ala, uma vez só, porque ninguém lê o regulamento: você não sai daqui até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
     '"O que estiver na sua mochila é tudo o que você tem pelas próximas quatro batalhas."',
     d=>d.insignias.length >= 8 ? '"Oito insígnias." Ela anota alguma coisa. "Eu tenho dados de quatrocentos e onze desafiantes com oito insígnias. Cento e nove passaram desta sala."' : ''
   ],
   vitoria:d=>[
     'O último dela cai e Giselle fecha o caderno com as duas mãos, sem pressa.',
     '"Cento e dez." Ela anota. "Eu odiei isso e eu vou registrar direito mesmo assim, porque dado torto não serve pra nada."',
+    'Ela olha a placa da porta por um segundo antes de abrir a próxima.',
     '"Próxima sala. Não descansa. Isso é de propósito."'
   ]
 },
 {
-  id:'aj', ordem:2, nome:'A.J.', tipo:'Terrestre', nivelBase:62,
+  id:'aj', ordem:2, nome:'A.J.', titular:'Bruno', tipo:'Terrestre', nivelBase:62,
   especies:[28, 51, 105, 112, 76],   // Sandslash, Dugtrio, Marowak, Rhydon, Golem
   intro:d=>[
-    'A segunda sala é de terra batida e não tem mobília nenhuma. Nem cadeira, nem bancada, nem água.',
+    'A segunda porta diz BRUNO. A sala atrás é de terra batida e não tem mobília nenhuma. Nem cadeira, nem bancada, nem água.',
     'O homem no centro tem chicote pendurado no cinto e não usa o chicote há anos — ele carrega porque a história dele carrega.',
     '"A.J." Ele nem estende a mão. "Noventa e oito vitórias seguidas antes de eu fazer dezesseis anos. Depois disso eu parei de contar, porque contar vira vaidade."',
     '"Eu treinei do jeito errado quando era moleque. Muita gente me disse isso e todas elas tinham razão." Ele se alonga sem pressa.',
     '"Eu mudei o método. Não mudei o resultado."',
-    d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : ''
+    '"E antes que o senhor pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui há cinco meses. Eu varro o chão dele toda manhã e eu não me acho ele."',
+    d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : '',
+    d=>d.flags.sabe_da_pergunta
+      ? '"E o senhor já sabe do vale." Ele se alonga do mesmo jeito, sem mudar nada na voz. "Aqui dentro a gente não fala disso. Aqui dentro é chão de terra e é batalha, e por quarenta minutos eu consigo não pensar naquilo. Deixa eu ter os quarenta minutos."'
+      : (d.flags.conheceu_o_da_terceira ? '"A gente já se falou no vestiário." Ele assente uma vez. "Lá eu era um homem. Aqui eu sou a segunda porta. Não confunde as duas coisas."' : '')
   ],
   vitoria:d=>[
     'O Sandslash cai de lado e a sala vazia devolve o som três vezes.',
@@ -5365,43 +5375,45 @@ const ELITE4 = [
   ]
 },
 {
-  id:'mandi', ordem:3, nome:'Mandi', tipo:'variado', nivelBase:64,
+  id:'mandi', ordem:3, nome:'Mandi', titular:'Agatha', tipo:'Venenoso', nivelBase:64,
   especies:[103, 117, 42, 49, 94],   // Exeggutor, Seadra, Golbat, Venomoth, Gengar
   intro:d=>[
-    'A terceira sala tem iluminação de palco. Refletor, fumaça de máquina, e uma música que começa quando você entra.',
+    'A terceira porta diz AGATHA, e é a única das quatro que tem uma cadeira encostada do lado de fora, como se alguém costumasse esperar ali.',
+    'A sala tem iluminação de palco. Refletor, fumaça de máquina, e uma música que começa quando você entra.',
     '"MANDI!" Ele abre os braços para uma plateia que não existe. "O ESPANTOSO!"',
     'Depois baixa os braços e fala em tom normal, o que é muito mais assustador:',
     '"Todo mundo acha que eu sou palhaço. Eu fui vice-campeão da Conferência Indigo, e eu virei palhaço de propósito, porque desafiante nervoso erra mais do que desafiante assustado."',
-    '"Agora você sabe. E vai errar mesmo assim."'
+    '"A cadeira lá fora é da Agatha. Ela tem oitenta e poucos anos e sentava ali entre os desafiantes pra fumar." Ele dá de ombros. "Eu não sento na cadeira dela. Eu só não deixo tirarem."',
+    '"Agora você sabe de tudo. E vai errar mesmo assim."'
   ],
   vitoria:d=>[
     'O Gengar se dissolve no ar e a música do palco para no meio de um compasso.',
     'Mandi acende a luz normal da sala, e sem o refletor ele parece dez anos mais velho.',
     '"Bom." Ele guarda as bolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
-    '"Última porta. O Ritchie é a pessoa mais gentil desta ala e é por isso que ele é o último."'
+    '"Última porta." Ele perde o tom de palco de vez. "Essa aí não tem substituto. Essa aí é o dono da placa."'
   ]
 },
 {
-  id:'ritchie', ordem:4, nome:'Ritchie', tipo:'variado', nivelBase:66,
-  especies:[12, 18, 143, 6, 25],     // Happy, Rose, Snorlax, Zippo, Sparky
-  apelidos:{12:'Happy', 18:'Rose', 6:'Zippo', 25:'Sparky'},
+  id:'lance', ordem:4, nome:'Lance', titular:'Lance', tipo:'Dragão', nivelBase:66,
+  especies:[130, 148, 148, 142, 149],   // Gyarados, Dragonair, Dragonair, Aerodactyl, Dragonite
   intro:d=>[
-    'A última sala da ala é a menor das quatro e tem uma janela — a única janela do corredor inteiro.',
-    'O rapaz ali dentro tem uns dezenove anos, boné virado e um Pikachu no ombro que está claramente acostumado a ficar no ombro.',
-    '"Ritchie." Ele estende a mão e espera de verdade que você aperte. "Esse é o Sparky."',
-    '"Eu perdi uma Conferência Indigo faz uns anos. Perdi bem, com todo mundo vendo." Ele coça a cabeça do Pikachu. "Demorei pra entender que isso foi a melhor coisa que me aconteceu."',
-    d=>d.flags.liga_aliada ? '"E eu sei que te mandaram pro norte." Ele fica sério de um jeito que não combina com o resto dele. "Então vamos ser rápidos. O que tá lá em cima é mais importante que isto aqui, e eu tenho consciência disso."'
-      : '"Eu dou nome pra todos eles. As pessoas acham engraçado." Ele dá de ombros. "Pra mim é o contrário de engraçado."',
-    '"Vem. Sem medo. Eu não mordo e o Sparky também não — ele só é muito rápido."'
+    'A quarta porta diz LANCE, e é a única da ala que está aberta.',
+    'A sala é alta, de pedra escura, com fogo em quatro bacias de metal que alguém acende todo dia de manhã e apaga todo dia à noite.',
+    'O homem de capa está em pé no centro, e está em pé no centro desde as oito da manhã, como esteve ontem e anteontem.',
+    '"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. O que sobrou dela."',
+    '"Eu não vou falar dos outros três e eu peço que o senhor também não fale. Eles têm motivo, e motivo de gente cansada não é assunto de desafiante."',
+    d=>d.flags.liga_aliada || d.flags.sabe_do_norte
+      ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "Então vamos ser rápidos e vamos ser sérios, porque o que está lá em cima é maior que esta sala, e eu tenho consciência disso."'
+      : '"Eu venho todo dia. Não é disciplina, é que eu não saberia o que fazer com um dia em que eu não viesse."',
+    '"Eu treino dragão. Não é estilo, é família — o meu avô treinava, o meu primo treina." Ele solta a primeira bola sem cerimônia. "Vem."'
   ],
   vitoria:d=>[
-    'O Sparky cai, e Ritchie está de joelhos ao lado dele antes de o corpo encostar no chão.',
-    'Ele passa quase um minuto inteiro cuidando do Pikachu e ignorando você completamente, e isso é a coisa mais respeitável que acontece nessa ala.',
-    'Depois levanta e sorri de verdade.',
-    '"Cara." Ele ri. "CARA."',
-    '"Você sabe que não tem mais ninguém, né? Depois de mim não tem Elite. Tem a porta."',
-    'Ele aperta um botão numa parede que você não tinha visto, e ao fundo da sala uma coisa que você achou que fosse parede começa a abrir.',
-    '"A cadeira tá vaga faz dois anos. Boa sorte com quem for que esteja lá dentro — porque não sou eu que assino."'
+    'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
+    'Lance recolhe os cinco sem pressa nenhuma e fica um tempo comprido de costas para você.',
+    '"Em cinco meses o senhor é o primeiro que chega aqui." Ele finalmente se vira. "E o primeiro que passa."',
+    'Ele vai até a parede do fundo e aperta um botão que você não tinha visto, e o que você achou que fosse parede começa a abrir.',
+    '"A cadeira do Campeão está vaga no papel faz dois anos." Ele segura a porta. "No papel."',
+    '"Boa sorte. E, quando o senhor sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
   ]
 }
 ];
@@ -5653,7 +5665,7 @@ const TROCAS = {
     quem:'Ademir, o do posto',
     onde:'atrás do posto de gasolina, com um rádio ligado no jogo',
     pede:19, da:{dex:52, nivel:[14,18], apelido:'Bigode', natureza:'Jolly'},
-    fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia de gato e eu tenho um Meowth."',
+    fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia a Meowth e eu tenho um Meowth."',
     depois:'Ele solta o Rattata no quintal e o Rattata some no muro em quatro segundos. Ele não parece incomodado. "Era só pra ele sair de casa mesmo."',
     memoria:'Trocou o Meowth dele por um Rattata seu, por causa do sogro.'
   },
@@ -5836,7 +5848,7 @@ const ANCORAS = {
   15: {local:'rota16',    chamada:'O chão avisa antes do som: batida de pata em solo duro, muito rápida, vindo.'},
   16: {local:'ilha_sem_nome', chamada:'Um alicerce de torre no topo da ilha. Só o alicerce.'},
   17: {local:'rota23',    chamada:'Uma clareira redonda, fora da trilha, com grama mais alta e mais verde que a de fora.'},
-  18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito reais a cópia.'},
+  18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},
   20: {local:'saffron',   chamada:'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. Segunda, 10h.'},
   21: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
@@ -5935,7 +5947,7 @@ saffron:[
   {chave:'troca_saffron', texto:[
     'Na praça de alimentação, na hora do almoço, tem uma mulher de crachá azul sentada sozinha com uma bandeja intacta.',
     'Ela olha pra você como quem já decidiu falar.'], descobre:'troca_saffron'},
-  {chave:'s_cartorio', texto:['O cartório da rua Dez abre até as 17h, cobra oito reais a cópia e não faz pergunta nenhuma.']},
+  {chave:'s_cartorio', texto:['O cartório da rua Dez abre até as 17h, cobra oito pokedólares a cópia e não faz pergunta nenhuma.']},
   {chave:'ginasio_saffron', texto:[
     'O ginásio de Saffron é um prédio baixo e sem janela, espremido entre dois arranha-céus.',
     'A porta está trancada e tem um papel colado: "SUSPENSO POR TEMPO INDETERMINADO — S."',
@@ -6407,7 +6419,7 @@ c1_nao_dormiu:{
       if (!p) return 'Às quatro e meia passou um caminhão na estrada, e depois não passou mais nada.';
       return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordado também. Não fez nada. Só ficou.`;
     },
-    'Às seis e dez o galo do vizinho, que é o pior galo de Kanto, erra a hora pela quarta vez na semana.',
+    'Às seis e dez o Dodrio do vizinho grita as três cabeças ao mesmo tempo, como faz todo dia, e como todo dia ele erra a hora.',
     'Você senta na cama. Está cansado de um jeito que não vai passar com sono.'
   ],
   ef:{flag:'nao_dormiu', hp:-2, causa:'Noite em claro antes de sair de casa',
@@ -6455,7 +6467,7 @@ c1_fez_o_cafe:{
 c1_saiu_no_escuro:{
   texto:[
     'Você pega a mochila, desce a escada pisando nas beiradas dos degraus que rangem, e abre a porta às seis e vinte e dois.',
-    'A rua está vazia e fria e tem um cachorro dormindo na porta do mercado que abre tarde.',
+    'A rua está vazia e fria e tem um Growlithe dormindo na porta do mercado que abre tarde.',
     'Você anda quatro casas.',
     'E aí você para.',
     'Você para porque sair assim é a única coisa que não dá pra desfazer depois, e porque você já sabe exatamente como vai ser o resto da sua vida lembrando disso.'
@@ -9260,7 +9272,7 @@ c4_ivone_monte:{
     '"E pra onde vai?"',
     '"Celadon. Sempre Celadon." Ela fecha o caderno. "Fóssil não anda sozinho até um mercado. Tem caminhão, tem estrada, tem gente pagando e gente carregando."',
     'Ela olha o Kabutops atrás do vidro.',
-    '"Esse aqui é o único que ainda está inteiro em Kanto num lugar onde qualquer pessoa pode olhar de graça. Digo, por duzentos reais. E o teto dele vaza."'
+    '"Esse aqui é o único que ainda está inteiro em Kanto num lugar onde qualquer pessoa pode olhar de graça. Digo, por duzentos pokedólares. E o teto dele vaza."'
   ],
   ef:{flag:'sabe_do_trafico_fossil', registrar:'Dra. Ivone falou do saque de fósseis no Monte da Lua.'},
   escolhas:[
@@ -9745,7 +9757,7 @@ c4_pedreira_detonacao:{
 
 c4_pedreira_borda:{
   texto:[
-    'Você sai da estrada e contorna a borda do buraco por fora, por um caminho de cabra que claramente já foi usado por gente.',
+    'Você sai da estrada e contorna a borda do buraco por fora, por uma trilha de bicho que claramente já foi usada por gente.',
     'Depois de quinze minutos, você entende por quê: tem uma fenda na rocha, do lado de fora da cerca, e ela é funda.',
     'Do lado de dentro dela tem barulho. Muito barulho, de coisa pequena e de muitas.',
     'E tem marca de bota na terra, fresca, entrando e saindo. Alguém sabe dessa fenda.'
@@ -10037,7 +10049,7 @@ c4_comprou_zubat:{
     '"Tem um vivo. Trinta."',
     'Você paga. Ele te entrega a gaiola com uma delicadeza estranha, do jeito de quem entrega uma coisa que sabe que não devia ter.',
     'Você solta o Zubat lá mesmo. Ele sobe e some no teto.',
-    'O rapaz te olha soltar trinta reais no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
+    'O rapaz te olha soltar trinta pokedólares no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
   ],
   ef:{dinheiro:-30, flag:'comprou_pra_soltar',
       presagio:'Você acabou de criar um cliente. Pensa nisso antes de voltar na semana que vem.'},
@@ -10099,9 +10111,9 @@ c4_seguiu_rapaz:{
     'Você espera ele sair e segue de longe.',
     'Ele não vai pra lugar nenhum interessante: desce a estrada, entra pelo portão de funcionários da pedreira com o crachá, e vai trabalhar.',
     'Turno da tarde. Você fica na cerca vendo ele virar um ponto laranja de capacete no meio de outros trezentos pontos laranja de capacete.',
-    'A revelação é essa: não tem organização, não tem chefe, não tem conspiração. Tem um cara que precisa de trezentos reais e uma fenda que tem Zubat.'
+    'A revelação é essa: não tem organização, não tem chefe, não tem conspiração. Tem um cara que precisa de trezentos pokedólares e uma fenda que tem Zubat.'
   ],
-  ef:{flag:'entendeu_a_fenda', presagio:'As coisas grandes e podres de Kanto quase sempre começam assim, com alguém precisando de trezentos reais.'},
+  ef:{flag:'entendeu_a_fenda', presagio:'As coisas grandes e podres de Kanto quase sempre começam assim, com alguém precisando de trezentos pokedólares.'},
   escolhas:[
     {texto:'Entrar pelo portão e falar com alguém da empresa.', vai:'c4_pedreira_portao', ef:{flag:'vai_contar_da_fenda'}},
     {texto:'Voltar na fenda e destruir as armadilhas.', vai:'c4_destruiu_armadilhas'},
@@ -10675,7 +10687,7 @@ c5_cobrou:{
   ef:{dinheiro:300, flag:['carregou_a_caixa','viu_a_van'],
       rep:{eixo:'ruim',delta:2,motivo:'Carregou carga de quem tirou ovos do Monte da Lua'},
       registrar:'Carregou uma caixa de ovos até uma van branca sem placa na estrada velha.',
-      presagio:'Você estava dentro. Por trinta e cinco minutos você foi parte do transporte, e trezentos reais nunca vão pagar isso.'},
+      presagio:'Você estava dentro. Por trinta e cinco minutos você foi parte do transporte, e trezentos pokedólares nunca vão pagar isso.'},
   escolhas:[
     {texto:'Memorizar tudo da van e voltar pra caverna.', vai:'c5_memorizou_van'},
     {texto:'Perguntar se tem mais trabalho.', vai:'c5_mais_trabalho'},
@@ -10727,7 +10739,7 @@ c5_rasgou_numero:{
     'Você rasga o maço em quatro na frente dele e deixa cair.',
     'Ele olha os pedaços no chão. Depois olha você.',
     '"Pegou os trezentos, hein."',
-    'É o único golpe que ele precisava dar, e ele acerta em cheio, e você volta a subir a trilha com trezentos reais no bolso e nenhuma resposta.'
+    'É o único golpe que ele precisava dar, e ele acerta em cheio, e você volta a subir a trilha com trezentos pokedólares no bolso e nenhuma resposta.'
   ],
   ef:{flag:'rasgou_o_numero', presagio:'Você pegou os trezentos. Isso já aconteceu e não desacontece.'},
   escolhas:[
@@ -10743,10 +10755,10 @@ c5_devolveu_trezentos:{
     '"Cê carregou a caixa."',
     '"Eu não quero."',
     '"Eu também não quero. Eu quero que você carregue caixa e eu pago." Ele bate a porta da van. "O dinheiro é seu. Você fez o serviço. Joga fora se quiser, mas não põe na minha mão."',
-    'A van sai. Você fica na curva da estrada de terra com trezentos reais que não dá pra devolver e não dá pra gastar direito.'
+    'A van sai. Você fica na curva da estrada de terra com trezentos pokedólares que não dá pra devolver e não dá pra gastar direito.'
   ],
   ef:{flag:'dinheiro_sujo',
-      presagio:'Tem trezentos reais na sua mochila agora com um formato diferente do resto do dinheiro.'},
+      presagio:'Tem trezentos pokedólares na sua mochila agora com um formato diferente do resto do dinheiro.'},
   escolhas:[
     {texto:'Voltar pra caverna.', vai:'c5_entrada'},
     {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
@@ -13586,7 +13598,7 @@ c6_falou_na_rua:{
   ef:{flag:'conversou_com_o_carregador',
       npc:{nome:'Carregador da Rota 25', opiniao:1, memoria:'Você o encarou na rua de casa. Ele não negou nada.'},
       registrar:'O carregador da Rota 25: quatro caixas por semana, trezentos cada.',
-      presagio:'Oitenta e quatro reais. É sempre um número pequeno que segura a engrenagem inteira.'},
+      presagio:'Oitenta e quatro pokedólares. É sempre um número pequeno que segura a engrenagem inteira.'},
   escolhas:[
     {texto:'Dar dinheiro pra ele. (2.500 ₽)', vai:'c6_pagou_carregador', cond:d=>d.jogador.dinheiro>=2500,
      ef:{dinheiro:-2500, rep:{eixo:'bom',delta:2,motivo:'Pagou a bombinha de uma criança que não conhece'}, flag:'pagou_o_carregador'}},
@@ -14124,7 +14136,7 @@ c6_ficou:{
   texto:[
     'Você senta na grama. Não fala nada, porque não tem nada.',
     'Leva quarenta minutos.',
-    'Marta segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de sardinha e não o de frango.',
+    'Marta segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de peixe e não o de carne.',
     'No fim ela põe a mão nos olhos dele, que já estão fechados, e deixa lá.',
     'Depois ela olha pra você.',
     '"Obrigada por não ter ido embora."'
@@ -16687,7 +16699,7 @@ c7_sentou_no_circulo:{
     'Você senta na borda do círculo, de pernas cruzadas, numa sala vazia sem janela no alto de uma torre.',
     'Fica quarenta minutos.',
     'Não acontece nada de sobrenatural. Não tem voz, não tem frio, não tem aparição.',
-    'O que acontece é que você pensa. Por quarenta minutos seguidos, sem celular, sem gente, sem nada acontecendo, você pensa em tudo o que aconteceu desde que você saiu de casa.',
+    'O que acontece é que você pensa. Por quarenta minutos seguidos, sem Pokégear, sem gente, sem nada acontecendo, você pensa em tudo o que aconteceu desde que você saiu de casa.',
     'E em algum momento você percebe que está contando. Contando coisas que você fez, uma por uma, como quem confere.',
     'Talvez seja isso o sétimo andar. Talvez não tenha nada aqui e seja só o único lugar de Kanto onde ninguém te interrompe.'
   ],
@@ -18042,7 +18054,7 @@ c8_portao_cinco:{
 
 c8_anotou_lacre:{
   texto:[
-    'Você anota no caderno, com a lanterna do celular por baixo da jaqueta pra não vazar luz:',
+    'Você anota no caderno, com a lanterna do Pokégear por baixo da jaqueta pra não vazar luz:',
     'Contêiner: KTU 409 118-2. Lacre azul nº 77451. Caminhão: placa coberta com papelão e fita.',
     'Placa coberta com papelão e fita.',
     'Dentro de um porto. Passando por um portão. Com um lacre oficial e um número de contêiner válido.',
@@ -18228,13 +18240,13 @@ c8_como_descubro:{
     '"Como eu descubro de quem é esse CNPJ?"',
     '"Cartório." Ele fala sem pensar. "Ou junta comercial. Contrato social é público."',
     'Ele guarda o barbante da caneta.',
-    '"Você vai em cartório, pede certidão simplificada, paga uns oito reais a página e sai com o nome dos sócio."',
+    '"Você vai em cartório, pede certidão simplificada, paga uns oito pokedólares a página e sai com o nome dos sócio."',
     '"É legal?"',
     '"É legal, é barato e ninguém faz." Ele dá de ombros. "Todo mundo acha que segredo de empresa é segredo. Empresa é a coisa mais pública que existe, garoto. O que é secreto é gente."'
   ],
   ef:{flag:'sabe_do_cartorio',
       registrar:'Certidão simplificada em cartório revela os sócios de um CNPJ. É legal, barato e ninguém faz.',
-      presagio:'Cartório da rua Dez, em Saffron, abre até as cinco e cobra oito reais a cópia.'},
+      presagio:'Cartório da rua Dez, em Saffron, abre até as cinco e cobra oito pokedólares a cópia.'},
   escolhas:[
     {texto:'Ir embarcar.', vai:'c8_cais'},
     {texto:'Ir pro cais e entrar pelo torneio.', vai:'c8_noite_porto'}
@@ -18717,7 +18729,7 @@ c8_bordo:{
       if (d.flags.clandestino) return 'Você está com roupa de rota num salão de smoking. Todo mundo sabe que você não pertence aqui, e ninguém diz nada, que é pior do que se dissessem.';
       if (d.flags.trabalhou_no_navio) return 'Você entra pelo corredor de serviço e ninguém repara. Cansaço nos braços, passagem no bolso, e o direito de estar aqui que você pagou com o corpo.';
       if (d.flags.entrou_pelo_torneio) return 'Você entrou pela porta da frente com um crachá de participante e a moça do balcão te chamou de "atleta", o que é a coisa mais engraçada que já te falaram.';
-      return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil reais.';
+      return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil pokedólares.';
     },
     'Num canto do salão, uma arena montada com corda e piso emborrachado. O torneio começa em vinte minutos e tem gente já apostando no balcão.',
     'No corredor dos camarotes do convés três, o número 40 tem um homem sentado numa cadeira dobrável lendo um romance de banca.',
@@ -19031,8 +19043,8 @@ c8_ganhou_torneio:{
     'Três lutas. Você ganha as três.',
     'A terceira é contra a mulher de vinte e cinco anos, e ela aperta a sua mão no fim e diz "bom, hein" de um jeito que vale mais que o prêmio.',
     'O locutor fala o seu nome no microfone, errado, e o salão bate palma por uns oito segundos e volta a conversar.',
-    'Vinte mil reais. Em dinheiro, num envelope, numa bandeja.',
-    'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem quinze anos e nunca viu vinte mil reais —, um homem de terno para do seu lado e espera você terminar de contar.',
+    'Vinte mil pokedólares. Em dinheiro, num envelope, numa bandeja.',
+    'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem quinze anos e nunca viu vinte mil pokedólares —, um homem de terno para do seu lado e espera você terminar de contar.',
     '"Parabéns", ele diz. "Sério. Foi bonito de assistir."',
     'Ele espera.',
     '"Você tem dez minutos? Eu queria conversar."'
@@ -19263,7 +19275,7 @@ c8_o_nome_dele:{
     '"Curador de quê?"',
     '"De acervo."',
     'Ele vai embora pelo salão e a multidão abre e fecha atrás dele sem ninguém reparar.',
-    'Acervo. Você fica sentado naquela mesa com vinte mil reais no bolso pensando na palavra acervo.'
+    'Acervo. Você fica sentado naquela mesa com vinte mil pokedólares no bolso pensando na palavra acervo.'
   ],
   ef:{flag:['sabe_do_adnan','sabe_da_comissao'],
       registrar:'Curador Adnan, de acervo.',
@@ -19435,7 +19447,7 @@ c8_o_de_catorze:{
     '"Não é isso." Ele levanta a cabeça e está com os olhos vermelhos e com raiva de estar. "Eu tinha que ganhar. Eu tinha que ganhar porque o prêmio é vinte mil e a cirurgia do meu Rapidash é dezoito."',
     'Ele passa a mão na cara.',
     '"E eu treinei. Eu treinei seis meses."',
-    d=>d.flags.venceu_torneio_navio ? 'Você tem vinte mil reais num envelope no bolso interno da sua mochila.' : 'Você não tem vinte mil reais.'
+    d=>d.flags.venceu_torneio_navio ? 'Você tem vinte mil pokedólares num envelope no bolso interno da sua mochila.' : 'Você não tem vinte mil pokedólares.'
   ],
   ef:{flag:'o_garoto_de_fuchsia',
       npc:{nome:'Garoto de Fuchsia', opiniao:1, memoria:'Perdeu o torneio do Anne. Precisava de dezoito mil para a cirurgia do Rapidash dele.'},
@@ -19456,12 +19468,12 @@ c8_deu_o_premio:{
     '"NÃO."',
     '"É seu."',
     '"NÃO É MEU, EU PERDI."',
-    'E aí vocês dois têm uma discussão absurda num corredor de serviço de navio, com um envelope de vinte mil reais indo e voltando entre duas cadeiras de plástico, até você simplesmente levantar e ir embora deixando o envelope na cadeira.',
+    'E aí vocês dois têm uma discussão absurda num corredor de serviço de navio, com um envelope de vinte mil pokedólares indo e voltando entre duas cadeiras de plástico, até você simplesmente levantar e ir embora deixando o envelope na cadeira.',
     'Ele grita o seu nome no corredor. Você não volta.'
   ],
   ef:{dinheiro:-20000, rep:{eixo:'bom',delta:5,motivo:'Deu o prêmio inteiro do torneio a um garoto de catorze anos'},
       flag:'deu_o_premio', moral:15,
-      npc:{nome:'Garoto de Fuchsia', opiniao:10, memoria:'Você deixou vinte mil reais numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
+      npc:{nome:'Garoto de Fuchsia', opiniao:10, memoria:'Você deixou vinte mil pokedólares numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
       registrar:'Deu o prêmio do torneio para o garoto de Fuchsia.',
       presagio:'O Rapidash dele vai viver mais nove anos e você nunca vai ver isso.'},
   escolhas:[
@@ -19520,7 +19532,7 @@ c8_porao:{
     'A luz é de emergência: amarela, a cada oito metros.',
     d=>d.flags.uniforme_tripulacao ? 'De uniforme, você é só mais alguém conferindo carga. Ninguém pergunta nada.' : 'Se alguém te ver aqui, não tem explicação que funcione.',
     'No fundo do corredor, as três caixas.',
-    'Furo de ventilação. Doze furos em cada uma, feitos com broca, em fileira, na altura certa pra uma coisa do tamanho de um cachorro respirar.'
+    'Furo de ventilação. Doze furos em cada uma, feitos com broca, em fileira, na altura certa pra uma coisa do tamanho de um Growlithe respirar.'
   ],
   ef:{registrar:'Desceu ao porão do S.S. Anne.'},
   escolhas:[
@@ -20832,7 +20844,7 @@ c9_cidade:{
     'Aprende três coisas.',
     'A primeira: Celadon tem dinheiro. Dá pra ver na calçada — é cimento nivelado, com rampa de acessibilidade, e a rampa está inteira.',
     'A segunda: Celadon tem gente sem nada. Eles ficam nos mesmos quarteirões todo dia e ninguém os expulsa, o que é gentileza, e ninguém faz mais nada, o que não é.',
-    'A terceira: tem uma quantidade absurda de lugar que compra. Compra ouro, compra celular, compra bicicleta, compra carta, compra garrafa.',
+    'A terceira: tem uma quantidade absurda de lugar que compra. Compra ouro, compra Pokégear, compra bicicleta, compra carta, compra garrafa.',
     'E, em duas vitrines diferentes, na mesma avenida, com plaquinha impressa e tudo: COMPRA-SE POKÉMON — AVALIAÇÃO GRÁTIS.'
   ],
   ef:{flag:'viu_as_vitrines',
@@ -20935,14 +20947,14 @@ c9_proximo_leilao:{
     'Ele consulta uma agenda de papel, o que é uma coisa que você não esperava.',
     '"Quinta que vem. Mas você não entra."',
     '"E onde é?"',
-    '"Isso eu não digo." Ele fecha a agenda. "Não por sigilo. Porque endereço de leilão muda toda vez e eu recebo por e-mail dois dias antes."',
+    '"Isso eu não digo." Ele fecha a agenda. "Não por sigilo. Porque endereço de leilão muda toda vez e chega no terminal do Centro dois dias antes."',
     'Ele apoia as duas mãos no balcão de vidro.',
     '"Olha, eu vou ser honesto com você porque você tem quinze anos e eu tenho um filho dessa idade."',
     '"Se você acha que tem alguma coisa errada nisso, o lugar de reclamar não é aqui. Eu sou lojista. Eu compro com nota."'
   ],
   ef:{flag:['leilao_quinta','sabe_do_leilao'],
       npc:{nome:'Lojista de Celadon', opiniao:2, memoria:'Te explicou o ciclo do leilão e disse que o lugar de reclamar não era a loja dele.'},
-      registrar:'Existe leilão de custódia. Quinta que vem. Endereço sai por e-mail dois dias antes.',
+      registrar:'Existe leilão de custódia. Quinta que vem. O endereço sai no terminal dois dias antes.',
       presagio:'"O lugar de reclamar não é aqui." Nenhum lugar é aqui. Essa é a engenharia.'},
   escolhas:[
     {texto:'"E qual é o lugar de reclamar?"', vai:'c9_qual_e_o_lugar'},
@@ -21438,7 +21450,7 @@ c9_verdade_pra_filha:{
     '"Sofreu. Mas ela ficou com ele o tempo todo."',
     'Ela fecha os olhos.',
     '"O tempo todo?"',
-    '"O tempo todo. Ela falava com ele. Falava de coisa boba, tipo que tinha comprado o de sardinha e não o de frango."',
+    '"O tempo todo. Ela falava com ele. Falava de coisa boba, tipo que tinha comprado o de peixe e não o de carne."',
     'E aí ela chora num café de shopping às três da tarde, de crachá, e duas pessoas olham e desviam.',
     'Depois ela limpa a cara com guardanapo de papel e diz:',
     '"Ela sempre compra o de sardinha."',
@@ -21499,12 +21511,12 @@ c9_liga_pra_ela:{
     '"Tenho."',
     '"Então você não sabe como é sair de casa e não conseguir voltar."',
     'E você não diz nada, porque essa é a única frase dessa conversa em que ela está completamente errada e você não vai provar isso discutindo.',
-    'Ela pega o celular. Não liga.',
+    'Ela pega o Pokégear. Não liga.',
     'Mas guarda no bolso da frente, e não no de trás.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou uma ligação sem forçar'},
       flag:'a_filha_pensou_em_ligar',
-      npc:{nome:'Filha da Marta', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o celular no bolso da frente.'},
+      npc:{nome:'Filha da Marta', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o Pokégear no bolso da frente.'},
       presagio:'Bolso da frente, não o de trás. É pouco e é um movimento.'},
   escolhas:[
     {texto:'Se despedir.', vai:'c9_saiu_do_cafe'},
@@ -21743,7 +21755,7 @@ c9_copia_do_ricardo:{
     'Ele olha as folhas.',
     '"Cara, é manuscrito."',
     '"Tem copiadora no térreo. Eu vi."',
-    'E você desce, e copia as folhas numa máquina de hospital que custa dois reais a página, e sobe de volta, e ele assina as duas vias e põe a data.',
+    'E você desce, e copia as folhas numa máquina de hospital que custa dois pokedólares a página, e sobe de volta, e ele assina as duas vias e põe a data.',
     'Você sai do hospital de Celadon com um relato assinado de cinco páginas na mochila.',
     'É a primeira prova dessa história que não foi tirada de ninguém. Foi dada.'
   ],
@@ -21788,11 +21800,11 @@ c9_pergunta_pra_ela:{
     '"Perguntar o quê?"',
     '"Se ela ia querer saber."',
     'Ele abre a boca pra responder e fecha.',
-    'Depois de um tempo ele pega o celular da mesinha e fica olhando a tela apagada.',
+    'Depois de um tempo ele pega o Pokégear da mesinha e fica olhando a tela apagada.',
     '"Se eu perguntar, eu já contei."',
     '"Já."',
-    '"É." Ele gira o celular na mão. "É, esse é o truque, né."',
-    'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o celular no ouvido.'
+    '"É." Ele gira o Pokégear na mão. "É, esse é o truque, né."',
+    'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o Pokégear no ouvido.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma desculpa de três anos com uma pergunta'},
       flag:'ricardo_ligou',
@@ -21876,7 +21888,7 @@ c9_junta:{
     '"Pois não?"',
     '"Eu queria certidão simplificada de um CNPJ."',
     'Ela olha pra você. Você tem quinze anos e uma mochila de rota.',
-    '"Oito reais a página. Você tem o número?"'
+    '"Oito pokedólares a página. Você tem o número?"'
   ],
   ef:{flag:'achou_a_junta'},
   escolhas:[
@@ -21941,7 +21953,7 @@ c9_busca_renno:{
     'A mesma pessoa em todas as quatro.'
   ],
   ef:{flag:['as_quatro_empresas','sabe_do_deposito','papel_com_brasao'],
-      rep:{eixo:'bom',delta:3,motivo:'Puxou o fio inteiro numa repartição pública por oitenta reais'},
+      rep:{eixo:'bom',delta:3,motivo:'Puxou o fio inteiro numa repartição pública por oitenta pokedólares'},
       registrar:'H. Rennó figura em quatro empresas, incluindo uma de logística com depósito em Celadon.',
       presagio:'Associação, consultoria, holding, logística. Nove anos montando isso, uma camada por vez.'},
   escolhas:[
@@ -21986,12 +21998,12 @@ c9_busca_adnan:{
     'Ela rola a tela.',
     '"Conselho de onze."',
     'Ela vira a tela um pouco mais.',
-    'Os onze nomes estão ali, listados em ordem alfabética, num registro público de acesso livre, com taxa de oito reais a página.',
+    'Os onze nomes estão ali, listados em ordem alfabética, num registro público de acesso livre, com taxa de oito pokedólares a página.',
     'Onze nomes completos, com CPF parcialmente mascarado.'
   ],
   ef:{flag:['os_onze_nomes_da_comissao','papel_com_brasao','sabe_da_comissao'],
       rep:{eixo:'bom',delta:4,motivo:'Encontrou os onze nomes num registro público'},
-      registrar:'Os onze nomes do conselho da Comissão estão num registro público, por oito reais a página.',
+      registrar:'Os onze nomes do conselho da Comissão estão num registro público, por oito pokedólares a página.',
       presagio:'Os onze nomes. Numa tela de computador velho, num terceiro andar com elevador quebrado.'},
   escolhas:[
     {texto:'Pedir cópia da lista. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
@@ -22063,9 +22075,9 @@ c9_certidao:{
     'O endereço é uma rua de serviço em Celadon, sem número, atrás do quarteirão do cassino.'
   ],
   ef:{flag:['tem_a_certidao','sabe_do_deposito','papel_com_brasao'],
-      rep:{eixo:'bom',delta:2,motivo:'Pagou oitenta reais e saiu com um endereço'},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou oitenta pokedólares e saiu com um endereço'},
       registrar:'A certidão dá o endereço do depósito: rua de serviço atrás do cassino, sem número.',
-      presagio:'Oitenta reais. O endereço que ninguém te daria custou oitenta reais numa repartição com elevador quebrado.'},
+      presagio:'Oitenta pokedólares. O endereço que ninguém te daria custou oitenta pokedólares numa repartição com elevador quebrado.'},
   escolhas:[
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
     {texto:'Pedir mais certidões.', vai:'c9_certidao_quatro', cond:d=>d.jogador.dinheiro>=320, ef:{dinheiro:-320}},
@@ -22099,8 +22111,8 @@ c9_certidao_quatro:{
 
 c9_copia_das_certidoes:{
   texto:[
-    'Você desce, atravessa a rua, e tira cópia das trinta e duas páginas numa papelaria por dois reais a página.',
-    'Sessenta e quatro reais.',
+    'Você desce, atravessa a rua, e tira cópia das trinta e duas páginas numa papelaria por dois pokedólares a página.',
+    'Sessenta e quatro pokedólares.',
     'Depois volta no laboratório fotográfico da galeria e entrega o maço pro senhor da lupa.',
     '"O senhor guarda isso também?"',
     'Ele olha as trinta e duas páginas de picote.',
@@ -22435,8 +22447,8 @@ c9_responde_erika:{
     '"E aí?"',
     '"E aí alguém responde de volta."',
     'Ela abaixa a tesoura.',
-    'E pega o celular do bolso do avental, e digita por uns dois minutos, e manda.',
-    'O celular apita em quarenta segundos. E de novo. E de novo.',
+    'E pega o Pokégear do bolso do avental, e digita por uns dois minutos, e manda.',
+    'O Pokégear apita em quarenta segundos. E de novo. E de novo.',
     'Ela olha a tela com uma cara que você não sabe ler.',
     '"Quatro", ela diz. "Quatro responderam em um minuto."'
   ],
@@ -23148,7 +23160,7 @@ c9_arrematou_o_41:{
     'E aí ela diz a coisa que resolve: "Mas o senhor pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
     '"Quanto?"',
     '"Avaliação do 41: doze mil."',
-    'Doze mil por um cachorro que alguém perdeu porque não leu um jornal que ninguém lê.'
+    'Doze mil por um Growlithe que alguém perdeu porque não leu um jornal que ninguém lê.'
   ],
   ef:{presagio:'Doze mil. Reparou que ela te disse como fazer? Ela queria que alguém fizesse.'},
   escolhas:[
@@ -26369,7 +26381,7 @@ c11_funcionarios:{
     'O que não é normal é que ninguém fala do prédio.',
     'Gente de escritório reclama do prédio. Do ar-condicionado, do elevador, do café, da faxina, da cadeira. É o assunto universal de escritório do mundo inteiro.',
     'Quarenta pessoas em fila, quarenta e cinco minutos, zero reclamação predial.',
-    'Uma mulher de uns trinta anos, sozinha, come em pé olhando o celular, encostada na grade. Crachá azul.',
+    'Uma mulher de uns trinta anos, sozinha, come em pé olhando o Pokégear, encostada na grade. Crachá azul.',
     'Todos os outros são brancos.'
   ],
   ef:{flag:'viu_a_fila',
@@ -26636,7 +26648,7 @@ c11_cracha_azul:{
     'Ela te ouve sem olhar, do jeito que se ouve pedinte em semáforo.',
     'Quando você diz "andar onze", ela levanta a cabeça.',
     '"Quem te falou disso?"',
-    'Você responde. Ela ouve, fecha o celular, olha pros dois lados da rua, e fala muito baixo e muito rápido — do jeito de quem já ensaiou essa conversa sozinha no chuveiro.',
+    'Você responde. Ela ouve, fecha o Pokégear, olha pros dois lados da rua, e fala muito baixo e muito rápido — do jeito de quem já ensaiou essa conversa sozinha no chuveiro.',
     '"Eu trabalho no 9. Eu assino requisição de material biológico."',
     '"Eu assino há dois anos. Eu assinei quatrocentas e onze requisições e eu nunca vi o material."',
     '"Eu recebo uma planilha, eu confiro se o código bate com a nota, eu assino. Isso é o meu trabalho inteiro e eu ganho bem pra isso."',
@@ -26662,14 +26674,14 @@ c11_cracha_azul:{
 c11_o_que_ela_assina:{
   texto:[
     '"O que você assina, exatamente?"',
-    'Ela hesita, e depois tira o celular do bolso e abre a foto de uma tela de sistema — ela fotografa o sistema, o que quer dizer que ela já vinha juntando material sozinha faz tempo.',
+    'Ela hesita, e depois tira o Pokégear do bolso e abre a foto de uma tela de sistema — ela fotografa o sistema, o que quer dizer que ela já vinha juntando material sozinha faz tempo.',
     '"Código 4471-B. Descrição: “espécime metamórfico, lote semanal, sete unidades”."',
     '"Espécime metamórfico é Ditto. É a única coisa em Kanto que é classificada assim."',
     '"Sete por semana. Há dois anos."',
     'Você faz a conta em voz alta e a conta é setecentos e vinte e oito.',
     '"Setecentos e vinte e oito", ela repete. "Eu faço essa conta toda noite desde que eu percebi."',
     '"E onde eles estão?"',
-    '"Essa é a parte." Ela guarda o celular. "Não tem código de saída. Nenhum. Em dois anos, nem um único registro de saída, de baixa, de óbito, de transferência."',
+    '"Essa é a parte." Ela guarda o Pokégear. "Não tem código de saída. Nenhum. Em dois anos, nem um único registro de saída, de baixa, de óbito, de transferência."',
     '"Setecentos e vinte e oito entraram e a planilha nunca fechou nenhum."'
   ],
   ef:{flag:['sabe_dos_setecentos','sabe_dos_dittos'],
@@ -28783,7 +28795,7 @@ c12_cidade:{
     'A pousada se chama Pousada do Safári. A padaria vende pão de queijo em saquinho com a silhueta de um Kangaskhan. O posto de gasolina tem um outdoor da reserva. A escola municipal se chama Escola Municipal Reserva Fuchsia.',
     'E tem um detalhe que você leva quarenta minutos pra notar e depois não consegue desnotar:',
     'não tem nenhum Pokémon selvagem na cidade.',
-    'Nenhum. Nem pombo, nem rato, nem inseto grande. Em Pewter tinha. Em Cerulean tinha. Em Lavender tinha muito.',
+    'Nenhum. Nem Pidgey, nem Rattata, nem Caterpie. Em Pewter tinha. Em Cerulean tinha. Em Lavender tinha muito.',
     'Aqui, do lado de nove mil hectares de reserva, dentro de uma cidade de quatro mil pessoas, não tem um.',
     'Você pergunta pra dona da padaria e ela responde com orgulho genuíno:',
     '"Ah, aqui é limpo. A gente tem manejo."'
@@ -29790,7 +29802,7 @@ c12_nove_da_manha:{
   texto:[
     'Às nove da manhã você entende.',
     'Não tem crueldade. Isso é o que ninguém te prepara pra ver.',
-    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com cachorro. A Dra. Yara é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
+    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Yara é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
     'Ninguém grita com ninguém. Ninguém chuta nada.',
     'E às nove da manhã chega o lote da baia 3, e a baia 3 é a baia dos filhotes, e a triagem de filhote é por peso, porque filhote abaixo de um peso não é “apto para transporte”.',
     'E aí você vê o que acontece com os que não são aptos.',
@@ -31342,7 +31354,7 @@ c13_domino:{
     'Você senta no quarto lugar da mesa de dominó, que está vago, e ninguém reclama porque num cais parado a mesa aceita qualquer um.',
     'Você joga três partidas e perde três e ouve mais em uma hora do que conseguiria em uma semana de perguntas.',
     'Colhe isto:',
-    '— A colônia tem seiscentos e quatro associados e trezentos e onze deles não tiram um centavo há dezenove semanas.',
+    '— A colônia tem seiscentos e quatro associados e trezentos e onze deles não recebem nada há dezenove semanas.',
     '— O seguro-defeso não cobre isso, porque isso não é defeso: defeso é época de reprodução e tem data no calendário, e o que está acontecendo não tem data no calendário.',
     '— Quatro famílias já foram embora pra Vermilion.',
     '— E a frase que se repete, dita por quatro pessoas diferentes, com as mesmas palavras, o que quer dizer que alguém disse primeiro e a cidade adotou:',
@@ -31642,7 +31654,7 @@ c13_camara_fria:{
     'A trava de alavanca faz um estalo que ecoa no galpão inteiro.',
     'A câmara fria é um cubo de três por três com prateleira de aço nas paredes e uma lâmpada amarela no teto.',
     'E no chão, sobre uma cama improvisada de rede de pesca dobrada muitas vezes, tem um Articuno.',
-    'Pequeno. Menor do que devia. Com a asa esquerda enfaixada com atadura de cavalo e esparadrapo.',
+    'Pequeno. Menor do que devia. Com a asa esquerda enfaixada com atadura de bicho grande e esparadrapo.',
     'Ele está vivo. Ele levanta a cabeça quando a porta abre.',
     'E tem dois baldes ao lado dele, um com água e outro com peixe cortado, e uma cadeira de plástico encostada na parede, virada pra ele.',
     'Uma cadeira de plástico.',
@@ -36151,7 +36163,7 @@ c15_o_que_foi:{
     '"O senhor viu o que foi?"',
     '"Vi a terceira."',
     'Ele apoia a pá.',
-    '"Eu dormi no curral na terceira, com uma espingarda de chumbinho que não mata nem passarinho, porque eu tava com raiva."',
+    '"Eu dormi no cercado na terceira, com um cassetete de guarda-noturno que não machuca nem Pidgey, porque eu tava com raiva."',
     '"E?"',
     '"E às três e quarenta veio um que era azul e grande e não fez barulho nenhum, e ele arrancou o mourão com a boca."',
     '"Com a boca?"',
@@ -36447,7 +36459,7 @@ c15_vigiou_junto:{
   texto:[
     'Você acampa a cento e cinquenta metros e vigia junto. Sem fogo, sem barulho, sem lanterna.',
     'Passa o dia inteiro.',
-    'Eles não se mexem o dia inteiro — só um deles, Entei, levanta duas vezes, anda uns vinte metros e volta pro mesmo lugar, do jeito que cachorro faz quando o corpo não aguenta mais ficar parado.',
+    'Eles não se mexem o dia inteiro — só um deles, Entei, levanta duas vezes, anda uns vinte metros e volta pro mesmo lugar, do jeito que Arcanine faz quando o corpo não aguenta mais ficar parado.',
     'Às três e quarenta da madrugada, Raikou levanta a cabeça e olha exatamente na sua direção.',
     'Não na direção geral. Na sua.',
     'Ele sabia que você estava ali desde o começo. Ele deixou.',
@@ -36559,7 +36571,7 @@ c15_sentou_na_estrada:{
     'É a coisa mais idiota que dá pra fazer e você faz porque em pé você está tremendo e sentado não dá pra ver tremer.',
     'Eles não reagem por uns vinte segundos.',
     'E aí Entei anda até uns quatro metros de você e deita.',
-    'Não relaxado: deita com as patas dianteiras estendidas, a cabeça alta, do jeito que cachorro grande deita quando decide que vai ficar um tempo.',
+    'Não relaxado: deita com as patas dianteiras estendidas, a cabeça alta, do jeito que Arcanine deita quando decide que vai ficar um tempo.',
     'E depois Raikou faz o mesmo, do outro lado.',
     'E Suicune não deita. Suicune fica de pé e olha pro sul, e não muda de posição nenhuma vez.',
     'Os três te deram companhia e um deles continuou de guarda.',
@@ -36693,7 +36705,7 @@ c15_falou:{
     '"Vocês estão olhando pra Cinnabar."',
     'Você diz isso em voz alta, numa estrada vazia, às quatro da manhã, para três animais lendários.',
     'Raikou vira a cabeça de lado.',
-    'Um gesto tão de cachorro, tão comum, tão de bicho que não entendeu a frase mas entendeu que teve frase, que quebra alguma coisa na sua cabeça.',
+    'Um gesto tão de Growlithe de rua, tão comum, tão de bicho que não entendeu a frase mas entendeu que teve frase, que quebra alguma coisa na sua cabeça.',
     'Eles não entendem palavra.',
     'Mas entenderam que você falou, e entenderam que você falou olhando pro sul, porque direção do olhar é uma língua que todo bicho fala.',
     'Suicune anda até você — até muito perto, até você sentir o hálito frio — e depois vira e olha pro sul também.',
@@ -36718,9 +36730,9 @@ c15_nao_tem_mais_nada:{
     '"Não tem mais nada lá."',
     'Você diz isso e no segundo em que você termina a frase você percebe que é a coisa mais cruel que dá pra dizer, porque três coisas estão fazendo o mesmo circuito há quatro anos por causa do que tem lá.',
     'Raikou solta um som.',
-    'Não é rugido. É um som baixo, curto, na garganta, e é exatamente o som que cachorro grande faz quando alguém mexe na porta de casa.',
+    'Não é rugido. É um som baixo, curto, na garganta, e é exatamente o som que Arcanine faz quando alguém mexe na porta de casa.',
     'Suicune não reage.',
-    'Entei senta. Literalmente senta, no asfalto, como cachorro, e olha pro sul.',
+    'Entei senta. Literalmente senta, no asfalto, como Growlithe esperando o dono, e olha pro sul.',
     'E você fica com a sensação horrível de ter chegado num velório e dito "ele já morreu, gente" pra pessoas que estavam ali fazia quatro anos.'
   ],
   ef:{flag:'disse_que_nao_tem_nada',
@@ -37693,7 +37705,7 @@ c16_ficou_com_o_ze:{
   texto:[
     'Você volta ao barco e fica.',
     'Ele não fala nada por uns dez minutos e depois fala sem parar por uma hora, o que é a coisa mais normal do mundo com alguém que passou quarenta anos sem ser acreditado.',
-    'Ele conta do pai. Da mãe, que não deixava ele sair de noite. Do irmão que foi pra Vermilion em cinquenta e nove e nunca mais voltou. De um cachorro chamado Tampa.',
+    'Ele conta do pai. Da mãe, que não deixava ele sair de noite. Do irmão que foi pra Vermilion em cinquenta e nove e nunca mais voltou. De um Growlithe chamado Tampa.',
     'Às duas da manhã ele para de falar no meio de uma frase e olha a ilha.',
     '"Eu vou morrer em uns três anos."',
     '"O senhor não sabe disso."',
@@ -38963,14 +38975,14 @@ c17_pulou:{
     '"A Liga me chamou."',
     'Téo assente devagar.',
     '"Claro. Beleza."',
-    'Ele guarda o celular sem te mostrar a foto e enfia as duas mãos no bolso.',
+    'Ele guarda o Pokégear sem te mostrar a foto e enfia as duas mãos no bolso.',
     '"Boa sorte lá, hein."',
     'Ele vai embora, e o jeito que ele vai embora — sem pressa, sem drama, olhando o chão — diz que você acabou de perder uma coisa que não volta.',
     'A três quarteirões ele para na esquina e olha pra trás uma vez.',
     'E você já está de costas.'
   ],
   ef:{flag:'pulou_o_teo', moral:-10,
-      npc:{nome:'Téo', opiniao:-3, memoria:'Guardou o celular sem te mostrar a foto e foi embora olhando o chão.'},
+      npc:{nome:'Téo', opiniao:-3, memoria:'Guardou o Pokégear sem te mostrar a foto e foi embora olhando o chão.'},
       registrar:'Não quis ver o que Téo tinha para mostrar.',
       presagio:'Ele parou na esquina e olhou pra trás. Você estava de costas.'},
   escolhas:[
@@ -38988,12 +39000,12 @@ c17_voltou_no_teo:{
     'Ele não vira.',
     '"Agora você quer ver."',
     '"Agora eu quero ver."',
-    'Ele fica de costas mais uns cinco segundos, que são cinco segundos longos, e depois vira e tira o celular do bolso.',
+    'Ele fica de costas mais uns cinco segundos, que são cinco segundos longos, e depois vira e tira o Pokégear do bolso.',
     'E antes de ligar ele fala uma coisa:',
     '"Eu vim de ônibus. Quatro horas."',
     '"Eu sei."',
     '"Você não sabia."',
-    'Ele liga o celular.',
+    'Ele liga o Pokégear.',
     '"Agora você sabe."'
   ],
   ef:{flag:'voltou_no_teo', limpaFlag:'pulou_o_teo',
@@ -39006,7 +39018,7 @@ c17_voltou_no_teo:{
 
 c17_teo_mostra:{
   texto:[
-    'Ele mostra uma foto no celular. Está tremida e é de longe.',
+    'Ele mostra uma foto no Pokégear. Está tremida e é de longe.',
     'É uma clareira. No meio dela, pairando a um metro do chão, tem uma coisa pequena, rosa, com cauda comprida.',
     '"Isso é um borrão", você diz.',
     '"Eu sei."',
@@ -39014,19 +39026,19 @@ c17_teo_mostra:{
     'São nove.',
     'Na terceira, dá pra ver que tem forma. Na quinta, dá pra ver que tem cauda e que a cauda é mais comprida que o corpo.',
     'Na sétima, a coisa está olhando pra câmera.',
-    'Na nona, ela está muito mais perto — tão perto que ocupa metade do quadro, e a foto está desfocada porque o celular não consegue focar tão perto.',
+    'Na nona, ela está muito mais perto — tão perto que ocupa metade do quadro, e a foto está desfocada porque o Pokégear não consegue focar tão perto.',
     '"Eu tirei nove fotos em dois minutos e ela deixou."',
     'Ele fica olhando a nona.',
     '"Ela ficou, cara. Ela foi chegando."',
     '"E aí?"',
     '"E aí ela sumiu e eu fiquei sentado no chão daquela clareira por uma hora sem conseguir levantar."',
-    'Ele guarda o celular.',
+    'Ele guarda o Pokégear.',
     '"Isso foi na Rota 23. Terça."'
   ],
   ef:{flag:['viu_as_fotos','sabe_do_jardim'],
       npc:{nome:'Téo', opiniao:3, memoria:'Te mostrou nove fotos de Mew numa clareira da Rota 23.'},
       registrar:'Téo fotografou Mew numa clareira da Rota 23, na terça.',
-      presagio:'Ela foi chegando. Guarde: ela chegou perto de um garoto com celular.'},
+      presagio:'Ela foi chegando. Guarde: ela chegou perto de um garoto com Pokégear.'},
   escolhas:[
     {texto:'"Quem mais viu isso?"', vai:'c17_quem_viu'},
     {texto:'"O que você tava fazendo na Rota 23?"', vai:'c17_o_que_fazia'},
@@ -39162,7 +39174,7 @@ c17_as_tres_pessoas:{
     '"Falou que não sabia."',
     'Ele finalmente olha pra você.',
     '"E aí ele fechou a mercearia às onze da manhã, na quarta, coisa que ele não faz desde que a mulher dele morreu, e foi na casa da minha tia me avisar."',
-    'Ele mexe no celular sem ligar.',
+    'Ele mexe no Pokégear sem ligar.',
     '"E ele não me conhece direito, cara. Eu compro pão lá."'
   ],
   ef:{flag:['sabe_dos_tres_de_trilha','tem_gente_atras_do_mew'],
@@ -39182,13 +39194,13 @@ c17_as_tres_pessoas:{
 c17_apagar:{
   texto:[
     '"Apaga essas fotos."',
-    'Ele apaga as nove na sua frente, uma por uma, e o celular pergunta "apagar?" nove vezes e ele responde nove vezes.',
+    'Ele apaga as nove na sua frente, uma por uma, e o Pokégear pergunta "apagar?" nove vezes e ele responde nove vezes.',
     'Na sétima — a que ela está olhando pra câmera — ele para uns três segundos antes de confirmar.',
     'Na nona, a mão dele treme um pouco.',
     '"Isso era a coisa mais importante que já aconteceu comigo."',
     '"Eu sei."',
     '"Você tá certo. Eu sei que você tá certo."',
-    'Ele guarda o celular no bolso.',
+    'Ele guarda o Pokégear no bolso.',
     '"Mas isso era a coisa mais importante que já aconteceu comigo."',
     'E ele fala isso duas vezes porque ele precisa que fique claro que ele sabe as duas coisas ao mesmo tempo.'
   ],
@@ -39215,7 +39227,7 @@ c17_descreveu:{
     '"Ah."',
     'E aí ele descreve.',
     'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra outro garoto de quinze anos que está anotando num caderno.',
-    'O tamanho: menor que um gato, com a cauda mais comprida que o corpo. A cor: rosa, mas rosa de pele e não de pelo. O som: nenhum. Nenhum som nenhuma vez.',
+    'O tamanho: menor que um Meowth, com a cauda mais comprida que o corpo. A cor: rosa, mas rosa de pele e não de pelo. O som: nenhum. Nenhum som nenhuma vez.',
     'A grama embaixo dela não mexia.',
     'Ela pairava a um metro e dez do chão e ele sabe a altura porque ele é de um metro e setenta e ela batia no peito dele.',
     'E na sétima foto ela olhou pra câmera e ele conta que naquele momento ele parou de respirar e que ele lembra disso melhor do que lembra do rosto do avô dele.',
@@ -39999,7 +40011,7 @@ c17_esperou_mew:{
     'Duas horas de verdade: você tem formiga na perna aos quarenta minutos, e cãibra na panturrilha aos setenta, e aos cem você já está pensando em desistir e ficando só por teimosia.',
     'E aí, sem nenhum aviso e sem nenhum som, tem uma coisa pairando a um metro e dez do chão, a quatro metros de você.',
     'Mew é menor do que qualquer foto sugere.',
-    'É do tamanho de um gato. A cauda é mais comprida que o corpo inteiro e fica parada no ar, sem enrolar, sem balançar.',
+    'É do tamanho de um Meowth. A cauda é mais comprida que o corpo inteiro e fica parada no ar, sem enrolar, sem balançar.',
     'A grama embaixo dela não mexe.',
     'E ela não está te observando com cautela.',
     'Ela está te observando com curiosidade — que é uma coisa completamente diferente e muito mais perigosa, porque quer dizer que ela não tem medo, e não ter medo de uma pessoa é a coisa que mata mais bicho em Kanto.'
@@ -40107,7 +40119,7 @@ c17_nao_te_incomoda:{
     'Ela paira.',
     'E aí ela faz a única coisa em todo o encontro que parece resposta:',
     'ela desce até o chão, pousa na grama — pousa, com as quatro patas, o que ela não tinha feito nenhuma vez —, e cava.',
-    'Cava um buraquinho na terra com a pata dianteira, uns dez centímetros, do jeito que gato cava.',
+    'Cava um buraquinho na terra com a pata dianteira, uns dez centímetros, do jeito que Meowth cava.',
     'E olha pra você.',
     'E aí ela empurra terra de volta e tapa o buraquinho.',
     'E olha pra você de novo.',
@@ -40414,7 +40426,7 @@ c17_pergunta_de_novo:{
     '"Porque agora você já sabe a resposta, então perguntar de novo não é pra descobrir. É pra ficar registrado que você perguntou."',
     'Ele fica de pé ao lado da mesa por um tempo desconfortável pra um homem de cinquenta e dois anos num Centro Pokémon.',
     '"Registrado onde?"',
-    '"No e-mail deles. Por escrito."',
+    '"No sistema deles. Por escrito."',
     'Ele solta um ar pelo nariz que é quase riso.',
     '"Você tem quinze anos."',
     '"Eu tenho quinze anos e eu já vi uns quatro adultos descobrirem que a arma deles era um campo de formulário."',
@@ -40661,8 +40673,8 @@ c18_cartorio_tabela:{
     'Você anota a tabela num canto do caderno, porque tabela é a coisa mais honesta que existe: ela diz exatamente quanto custa cada coisa e não faz cara de que está te fazendo um favor.',
     'Busca por denominação: dez.',
     'Certidão de inteiro teor: quarenta.',
-    'Cópia reprográfica simples, por página: dez centavos.',
-    'Cento e quarenta páginas dá quatorze. Você ainda não sabe que vão ser cento e quarenta páginas.'
+    'Cópia reprográfica simples, por página: um.',
+    'Cento e quarenta páginas dá cento e quarenta. Você ainda não sabe que vão ser cento e quarenta páginas.'
   ],
   ef:{registrar:'Anotou a tabela de emolumentos do cartório.'},
   escolhas:[{texto:'Voltar para a fila.', vai:'c18_cartorio_fila'}]
@@ -40848,7 +40860,7 @@ c18_so_estatuto:{
     'Dezoito páginas te dizem o que eles são. Cento e vinte e duas páginas de ata te diriam o que eles fizeram.',
     'Você olha para o relógio. Dezessete e dois. A porta do cartório já fechou.'
   ],
-  ef:{flag:['tem_o_estatuto','sabe_da_comissao'], dinheiro:-40,
+  ef:{flag:['tem_o_estatuto','sabe_da_comissao'], dinheiro:-58,
       registrar:'Comprou só o estatuto: 18 páginas. As atas ficaram lá.'},
   escolhas:[
     {texto:'Voltar amanhã e comprar as atas.', vai:'c18_voltou_amanha'},
@@ -40864,7 +40876,7 @@ c18_voltou_amanha:{
     'Cento e vinte e duas páginas de ata saem da matricial em vinte e dois minutos de chiado.',
     'Ela grampeia em quatro blocos, porque um grampo só não pega.'
   ],
-  ef:{flag:'tem_as_atas', dinheiro:-60,
+  ef:{flag:'tem_as_atas', dinheiro:-122,
       registrar:'Comprou as 122 páginas de atas no dia seguinte.'},
   escolhas:[{texto:'Sair com o pacote debaixo do braço.', vai:'c18_leitura'}]
 },
@@ -40872,13 +40884,13 @@ c18_voltou_amanha:{
 c18_quintela_copia:{
   texto:[
     'Ela digita, confere, e anuncia o total como quem anuncia o preço do pão.',
-    '"Estatuto e trinta e quatro atas. Cento e quarenta páginas. Dez centavos a página, mais a certidão."',
+    '"Estatuto e trinta e quatro atas. Cento e quarenta páginas. Um pokedólar a página, mais a certidão."',
     'A matricial chia por vinte e dois minutos. Ninguém na sala parece achar aquilo demorado.',
     'Ela grampeia em quatro blocos, porque um grampo só não pega, e empurra o calhamaço pelo balcão.',
     '"Boa leitura", ela diz, sem ironia nenhuma.',
     'Você sai dali com cento e quarenta páginas de atas de reunião de uma organização que ninguém em Kanto sabe que existe, e com um recibo.'
   ],
-  ef:{flag:['tem_as_atas','tem_o_estatuto'], dinheiro:-100,
+  ef:{flag:['tem_as_atas','tem_o_estatuto'], dinheiro:-180,
       rep:{eixo:'bom',delta:1,motivo:'Comprou a verdade no balcão, por preço tabelado'},
       registrar:'Comprou o estatuto e as 34 atas da CGRB: 140 páginas, com recibo.'},
   escolhas:[
@@ -41132,7 +41144,7 @@ c18_704_porque_deixam:{
   texto:[
     '"Por que vocês estão me deixando?"',
     'A presidente termina de escrever uma palavra antes de responder.',
-    '"Porque isso é público, porque o senhor pagaria dez centavos a página por elas de qualquer jeito, e porque eu prefiro que o senhor leia o documento inteiro a que o senhor leia três linhas que alguém te vendeu."',
+    '"Porque isso é público, porque o senhor pagaria um pokedólar a página por elas de qualquer jeito, e porque eu prefiro que o senhor leia o documento inteiro a que o senhor leia três linhas que alguém te vendeu."',
     'Ela levanta os olhos.',
     '"E porque eu quero que o senhor volte aqui depois de ler. Aí a conversa presta."'
   ],
@@ -41498,7 +41510,7 @@ c18_terceira_preco:{
   texto:[
     '"Me vende o que você tem sobre eles."',
     'Ela ri pelo nariz.',
-    '"Eu não tenho o que te vender, porque o que eu tenho é público." Ela aponta o teto com o queixo. "É associação registrada, garoto. Estatuto no cartório. Ata no cartório. Eu descobri isso pagando oito reais e me senti uma idiota por um mês inteiro."',
+    '"Eu não tenho o que te vender, porque o que eu tenho é público." Ela aponta o teto com o queixo. "É associação registrada, garoto. Estatuto no cartório. Ata no cartório. Eu descobri isso pagando oito pokedólares e me senti uma idiota por um mês inteiro."',
     '"Você me diria isso de graça?"',
     '"Eu acabei de dizer." Ela volta para o cimento. "Vai no cartório da Rua Onze. Pede por denominação. Leva dinheiro trocado, que a máquina deles não funciona."'
   ],
@@ -41915,7 +41927,7 @@ c18_fechou_estatuto:{
   texto:[
     'Você fecha o calhamaço e apaga a luminária e fica deitado olhando o teto do quarto do Centro Pokémon.',
     'Lá fora tem uma cidade inteira dormindo e nenhuma dessas pessoas sabe que existe um documento de dezoito páginas que decide, com quatro critérios objetivos, o que é uma coisa que vale a pena continuar viva.',
-    'E o documento está num cartório, e custa dez centavos a página.',
+    'E o documento está num cartório, e custa um pokedólar a página.',
     'Você acende a luminária de novo.'
   ],
   ef:{instabilidade:1},
@@ -43750,7 +43762,7 @@ c19_entrou_pelo_buraco:{
   texto:[
     'Você levanta a tela e entra de lado, e do lado de dentro o mato é o mato estranho: todos os arbustos na mesma distância, na mesma altura.',
     'Você atravessa cento e vinte metros sem que nada aconteça, o que é estranho, porque cento e vinte metros de mato deveriam ter alguma coisa.',
-    'Não tem inseto. É isso. Não tem inseto, não tem passarinho, não tem barulho nenhum a não ser o vento e o mar.',
+    'Não tem bicho. É isso. Não tem Caterpie, não tem Pidgey, não tem barulho nenhum a não ser o vento e o mar.',
     'Eles plantaram o mato e esqueceram de plantar o resto.'
   ],
   ef:{flag:['entrou_pelo_buraco'], instabilidade:1,
@@ -44131,7 +44143,7 @@ c19_damiao_persian:{
   texto:[
     '"Todo dia." O Sr. Damião fala do Persian com um carinho que não esconde. "A gente já remendou três vezes e ele arrebenta de novo."',
     '"E ninguém faz nada?"',
-    '"Fazer o quê?" Ele ri. "É um gato grande e velho que vem sentar e olhar. Não come, não briga, não estraga."',
+    '"Fazer o quê?" Ele ri. "É um Persian velho que vem sentar e olhar. Não come, não briga, não estraga."',
     'Ele baixa a voz sem precisar.',
     '"Eu acho que ele vem ver os outros. Tem gente aqui que acha que é bobagem minha."'
   ],
@@ -44689,7 +44701,7 @@ c19_so_ouviu:{
   texto:[
     'Você fica quarenta minutos ouvindo nove pessoas almoçarem.',
     'Ninguém fala do trabalho. É isso que você leva do refeitório: em quarenta minutos, ninguém falou uma palavra sobre o que faz aqui.',
-    'Falaram de futebol, de reforma, de nenê, de um cachorro que sumiu na vila e apareceu, de preço de ovo.',
+    'Falaram de futebol, de reforma, de nenê, de um Growlithe que sumiu na vila e apareceu, de preço de ração.',
     'Em qualquer outro lugar, isso seria normal. Em qualquer outro lugar, gente não fala de trabalho no almoço.',
     'Mas você fica com a sensação de ter assistido a um acordo silencioso que ninguém precisou combinar.'
   ],
@@ -48282,10 +48294,11 @@ c21_desafio_elite:{
 c21_os_quatro_da_elite:{
   texto:[
     'A Conselheira Vasques lista sem consultar nada.',
-    'O primeiro é fantasma e tem cinquenta e um anos e é dentista em Lavender três dias por semana.',
-    'A segunda é gelo, tem vinte e nove, e é a mais nova a entrar na Elite em quarenta anos.',
-    'O terceiro é lutador e foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
-    'A quarta é dragão, tem trinta e sete, e nunca perdeu aqui dentro.',
+    '"Três das quatro cadeiras estão com substituto desde agosto." Ela diz isso sem baixar a voz e sem desculpa nenhuma. "Os titulares estão vivos, estão em casa, e não vêm. A Liga não tirou o nome das portas e eu fui voto vencido nisso também."',
+    'Na cadeira da Agatha senta um homem de cinquenta e um anos que entra na sala com refletor e música de palco, e que foi vice-campeão da Conferência Indigo antes de virar isso.',
+    'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
+    'Na cadeira do Bruno senta um homem que ganhou noventa e oito batalhas seguidas antes dos dezesseis anos, largou tudo aos trinta e três, foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
+    'E a quarta é o Lance, que é o dono da própria placa, tem trinta e sete anos e nunca perdeu aqui dentro.',
     '"E antes que o senhor pergunte: sim, os quatro sabem que o senhor vem. E sim, os quatro leram a sua pasta."'
   ],
   ef:{flag:['sabe_da_elite'],
@@ -49094,7 +49107,7 @@ c22_primeiro_dia:{
     'Pedra, subida, vento, e a mesma vista virando devagar à sua esquerda.',
     'Às quatro da tarde você passa a lomba que o Sr. Tolentino apontou, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.',
     'Não tem bicho.',
-    'Nenhum. Nem inseto, nem passarinho, nem barulho de coisa pequena fugindo do lado da trilha.',
+    'Nenhum. Nem Caterpie, nem Pidgey, nem barulho de coisa pequena fugindo do lado da trilha.',
     d=>{
       const inst = d.mundo.instabilidade;
       if (inst >= 7) return 'E o silêncio não é silêncio: é um zumbido baixo, contínuo, que você só percebe quando tapa um ouvido e ele continua.';
@@ -50890,7 +50903,7 @@ c23_final_risco01:{
     'Aparece em rota, de dia, na frente de gente. Deixa se fotografar. Aparece numa praça em Fuchsia e fica vinte minutos.',
     'Em seis semanas, Mewtwo deixa de ser um risco não localizado e passa a ser a criatura mais documentada da história de Kanto — e a Comissão descobre, do jeito mais humilhante possível, que não existe base legal para gerenciar um indivíduo que o público inteiro reconhece e que nunca fez nada.',
     'O item "Risco 01" some da pauta na 41ª reunião ordinária, por perda de objeto.',
-    'A ata é pública. Custa oito reais.',
+    'A ata é pública. Custa oito pokedólares.',
     'Você comprou a sua.'
   ]}
 },
@@ -51135,7 +51148,7 @@ c23_final_pena:{
     'Pescadores de Fuchsia começam a relatar duas luzes sobre a ilha sem nome, não uma. Ninguém acredita neles, como sempre.',
     'O Sr. Ferraz morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
     'Você vai ao enterro. É o único que vai de fora de Fuchsia.',
-    'No caixão, na mão dele, tem uma pena que não é de galinha e que ninguém da família soube explicar de onde veio.'
+    'No caixão, na mão dele, tem uma pena que não é de Pidgey e que ninguém da família soube explicar de onde veio.'
   ]}
 },
 
@@ -52646,9 +52659,12 @@ const UI = {
     this.add(this.topo());
     const d = Estado.dados;
     const e4 = statusElite4(), tor = statusTorneio();
-    const membros = ELITE4.map(m =>
-      `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)} <span class="fraco">· ${this.esc(m.tipo)}</span></span>
-       <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`).join('');
+    const membros = ELITE4.map(m => {
+      const substituto = m.titular && m.titular !== m.nome;
+      return `<div class="linha"><span class="k">${m.ordem}. ${this.esc(m.nome)}
+        <span class="fraco">· ${this.esc(m.tipo)}${substituto ? ' · na cadeira de ' + this.esc(m.titular) : ''}</span></span>
+       <span class="v">Nv ${m.nivelBase}–${m.nivelBase + m.especies.length + 1}</span></div>`;
+    }).join('');
 
     this.add(`<div class="painel">
       <div class="cap-cabecalho">

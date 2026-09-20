@@ -911,7 +911,7 @@ c23_final_risco01:{
     'Aparece em rota, de dia, na frente de gente. Deixa se fotografar. Aparece numa praça em Fuchsia e fica vinte minutos.',
     'Em seis semanas, Mewtwo deixa de ser um risco não localizado e passa a ser a criatura mais documentada da história de Kanto — e a Comissão descobre, do jeito mais humilhante possível, que não existe base legal para gerenciar um indivíduo que o público inteiro reconhece e que nunca fez nada.',
     'O item "Risco 01" some da pauta na 41ª reunião ordinária, por perda de objeto.',
-    'A ata é pública. Custa oito reais.',
+    'A ata é pública. Custa oito pokedólares.',
     'Você comprou a sua.'
   ]}
 },
@@ -1156,7 +1156,7 @@ c23_final_pena:{
     'Pescadores de Fuchsia começam a relatar duas luzes sobre a ilha sem nome, não uma. Ninguém acredita neles, como sempre.',
     'O Sr. Ferraz morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
     'Você vai ao enterro. É o único que vai de fora de Fuchsia.',
-    'No caixão, na mão dele, tem uma pena que não é de galinha e que ninguém da família soube explicar de onde veio.'
+    'No caixão, na mão dele, tem uma pena que não é de Pidgey e que ninguém da família soube explicar de onde veio.'
   ]}
 },
 

@@ -3,34 +3,44 @@
    A cadeira de Campeão está vaga há dois anos.
    ============================================================ */
 
+/* A Elite dos Quatro de Kanto é Lorelei, Bruno, Agatha e Lance.
+   Desde agosto, três deles não se apresentam. A Liga não tirou os
+   nomes das portas: pôs substitutos embaixo deles. */
 const ELITE4 = [
 {
-  id:'giselle', ordem:1, nome:'Giselle', tipo:'técnica', nivelBase:60,
+  id:'giselle', ordem:1, nome:'Giselle', titular:'Lorelei', tipo:'variado', nivelBase:60,
   especies:[105, 40, 53, 31, 112],   // Marowak, Wigglytuff, Persian, Nidoqueen, Rhydon
   intro:d=>[
-    'A primeira sala não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
-    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro.',
+    'A primeira porta da ala tem uma placa de bronze parafusada na altura dos olhos: LORELEI.',
+    'A sala atrás dela não parece sala de batalha. Parece sala de aula: quadro, carteira, projetor desligado.',
+    'A mulher na frente tem uns vinte e poucos anos e um caderno aberto com a sua ficha dentro. Ela não é a Lorelei e sabe que você reparou.',
     '"Giselle. Eu me formei em primeiro lugar na Escola Técnica Pokémon, no ano em que a escola ainda existia."',
-    '"Eu vou explicar a regra da ala uma vez, porque ninguém lê o regulamento: você não sai daqui até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
+    '"A placa da porta não é minha. Eu não vou tirar e eu não vou explicar, e a Liga também não."',
+    '"Regra da ala, uma vez só, porque ninguém lê o regulamento: você não sai daqui até vencer os quatro ou perder para um. Não tem Centro Pokémon aqui dentro."',
     '"O que estiver na sua mochila é tudo o que você tem pelas próximas quatro batalhas."',
     d=>d.insignias.length >= 8 ? '"Oito insígnias." Ela anota alguma coisa. "Eu tenho dados de quatrocentos e onze desafiantes com oito insígnias. Cento e nove passaram desta sala."' : ''
   ],
   vitoria:d=>[
     'O último dela cai e Giselle fecha o caderno com as duas mãos, sem pressa.',
     '"Cento e dez." Ela anota. "Eu odiei isso e eu vou registrar direito mesmo assim, porque dado torto não serve pra nada."',
+    'Ela olha a placa da porta por um segundo antes de abrir a próxima.',
     '"Próxima sala. Não descansa. Isso é de propósito."'
   ]
 },
 {
-  id:'aj', ordem:2, nome:'A.J.', tipo:'Terrestre', nivelBase:62,
+  id:'aj', ordem:2, nome:'A.J.', titular:'Bruno', tipo:'Terrestre', nivelBase:62,
   especies:[28, 51, 105, 112, 76],   // Sandslash, Dugtrio, Marowak, Rhydon, Golem
   intro:d=>[
-    'A segunda sala é de terra batida e não tem mobília nenhuma. Nem cadeira, nem bancada, nem água.',
+    'A segunda porta diz BRUNO. A sala atrás é de terra batida e não tem mobília nenhuma. Nem cadeira, nem bancada, nem água.',
     'O homem no centro tem chicote pendurado no cinto e não usa o chicote há anos — ele carrega porque a história dele carrega.',
     '"A.J." Ele nem estende a mão. "Noventa e oito vitórias seguidas antes de eu fazer dezesseis anos. Depois disso eu parei de contar, porque contar vira vaidade."',
     '"Eu treinei do jeito errado quando era moleque. Muita gente me disse isso e todas elas tinham razão." Ele se alonga sem pressa.',
     '"Eu mudei o método. Não mudei o resultado."',
-    d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : ''
+    '"E antes que o senhor pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui há cinco meses. Eu varro o chão dele toda manhã e eu não me acho ele."',
+    d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : '',
+    d=>d.flags.sabe_da_pergunta
+      ? '"E o senhor já sabe do vale." Ele se alonga do mesmo jeito, sem mudar nada na voz. "Aqui dentro a gente não fala disso. Aqui dentro é chão de terra e é batalha, e por quarenta minutos eu consigo não pensar naquilo. Deixa eu ter os quarenta minutos."'
+      : (d.flags.conheceu_o_da_terceira ? '"A gente já se falou no vestiário." Ele assente uma vez. "Lá eu era um homem. Aqui eu sou a segunda porta. Não confunde as duas coisas."' : '')
   ],
   vitoria:d=>[
     'O Sandslash cai de lado e a sala vazia devolve o som três vezes.',
@@ -39,43 +49,45 @@ const ELITE4 = [
   ]
 },
 {
-  id:'mandi', ordem:3, nome:'Mandi', tipo:'variado', nivelBase:64,
+  id:'mandi', ordem:3, nome:'Mandi', titular:'Agatha', tipo:'Venenoso', nivelBase:64,
   especies:[103, 117, 42, 49, 94],   // Exeggutor, Seadra, Golbat, Venomoth, Gengar
   intro:d=>[
-    'A terceira sala tem iluminação de palco. Refletor, fumaça de máquina, e uma música que começa quando você entra.',
+    'A terceira porta diz AGATHA, e é a única das quatro que tem uma cadeira encostada do lado de fora, como se alguém costumasse esperar ali.',
+    'A sala tem iluminação de palco. Refletor, fumaça de máquina, e uma música que começa quando você entra.',
     '"MANDI!" Ele abre os braços para uma plateia que não existe. "O ESPANTOSO!"',
     'Depois baixa os braços e fala em tom normal, o que é muito mais assustador:',
     '"Todo mundo acha que eu sou palhaço. Eu fui vice-campeão da Conferência Indigo, e eu virei palhaço de propósito, porque desafiante nervoso erra mais do que desafiante assustado."',
-    '"Agora você sabe. E vai errar mesmo assim."'
+    '"A cadeira lá fora é da Agatha. Ela tem oitenta e poucos anos e sentava ali entre os desafiantes pra fumar." Ele dá de ombros. "Eu não sento na cadeira dela. Eu só não deixo tirarem."',
+    '"Agora você sabe de tudo. E vai errar mesmo assim."'
   ],
   vitoria:d=>[
     'O Gengar se dissolve no ar e a música do palco para no meio de um compasso.',
     'Mandi acende a luz normal da sala, e sem o refletor ele parece dez anos mais velho.',
     '"Bom." Ele guarda as bolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
-    '"Última porta. O Ritchie é a pessoa mais gentil desta ala e é por isso que ele é o último."'
+    '"Última porta." Ele perde o tom de palco de vez. "Essa aí não tem substituto. Essa aí é o dono da placa."'
   ]
 },
 {
-  id:'ritchie', ordem:4, nome:'Ritchie', tipo:'variado', nivelBase:66,
-  especies:[12, 18, 143, 6, 25],     // Happy, Rose, Snorlax, Zippo, Sparky
-  apelidos:{12:'Happy', 18:'Rose', 6:'Zippo', 25:'Sparky'},
+  id:'lance', ordem:4, nome:'Lance', titular:'Lance', tipo:'Dragão', nivelBase:66,
+  especies:[130, 148, 148, 142, 149],   // Gyarados, Dragonair, Dragonair, Aerodactyl, Dragonite
   intro:d=>[
-    'A última sala da ala é a menor das quatro e tem uma janela — a única janela do corredor inteiro.',
-    'O rapaz ali dentro tem uns dezenove anos, boné virado e um Pikachu no ombro que está claramente acostumado a ficar no ombro.',
-    '"Ritchie." Ele estende a mão e espera de verdade que você aperte. "Esse é o Sparky."',
-    '"Eu perdi uma Conferência Indigo faz uns anos. Perdi bem, com todo mundo vendo." Ele coça a cabeça do Pikachu. "Demorei pra entender que isso foi a melhor coisa que me aconteceu."',
-    d=>d.flags.liga_aliada ? '"E eu sei que te mandaram pro norte." Ele fica sério de um jeito que não combina com o resto dele. "Então vamos ser rápidos. O que tá lá em cima é mais importante que isto aqui, e eu tenho consciência disso."'
-      : '"Eu dou nome pra todos eles. As pessoas acham engraçado." Ele dá de ombros. "Pra mim é o contrário de engraçado."',
-    '"Vem. Sem medo. Eu não mordo e o Sparky também não — ele só é muito rápido."'
+    'A quarta porta diz LANCE, e é a única da ala que está aberta.',
+    'A sala é alta, de pedra escura, com fogo em quatro bacias de metal que alguém acende todo dia de manhã e apaga todo dia à noite.',
+    'O homem de capa está em pé no centro, e está em pé no centro desde as oito da manhã, como esteve ontem e anteontem.',
+    '"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. O que sobrou dela."',
+    '"Eu não vou falar dos outros três e eu peço que o senhor também não fale. Eles têm motivo, e motivo de gente cansada não é assunto de desafiante."',
+    d=>d.flags.liga_aliada || d.flags.sabe_do_norte
+      ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "Então vamos ser rápidos e vamos ser sérios, porque o que está lá em cima é maior que esta sala, e eu tenho consciência disso."'
+      : '"Eu venho todo dia. Não é disciplina, é que eu não saberia o que fazer com um dia em que eu não viesse."',
+    '"Eu treino dragão. Não é estilo, é família — o meu avô treinava, o meu primo treina." Ele solta a primeira bola sem cerimônia. "Vem."'
   ],
   vitoria:d=>[
-    'O Sparky cai, e Ritchie está de joelhos ao lado dele antes de o corpo encostar no chão.',
-    'Ele passa quase um minuto inteiro cuidando do Pikachu e ignorando você completamente, e isso é a coisa mais respeitável que acontece nessa ala.',
-    'Depois levanta e sorri de verdade.',
-    '"Cara." Ele ri. "CARA."',
-    '"Você sabe que não tem mais ninguém, né? Depois de mim não tem Elite. Tem a porta."',
-    'Ele aperta um botão numa parede que você não tinha visto, e ao fundo da sala uma coisa que você achou que fosse parede começa a abrir.',
-    '"A cadeira tá vaga faz dois anos. Boa sorte com quem for que esteja lá dentro — porque não sou eu que assino."'
+    'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
+    'Lance recolhe os cinco sem pressa nenhuma e fica um tempo comprido de costas para você.',
+    '"Em cinco meses o senhor é o primeiro que chega aqui." Ele finalmente se vira. "E o primeiro que passa."',
+    'Ele vai até a parede do fundo e aperta um botão que você não tinha visto, e o que você achou que fosse parede começa a abrir.',
+    '"A cadeira do Campeão está vaga no papel faz dois anos." Ele segura a porta. "No papel."',
+    '"Boa sorte. E, quando o senhor sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
   ]
 }
 ];

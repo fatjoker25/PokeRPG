@@ -743,7 +743,7 @@ c16_ficou_com_o_ze:{
   texto:[
     'Você volta ao barco e fica.',
     'Ele não fala nada por uns dez minutos e depois fala sem parar por uma hora, o que é a coisa mais normal do mundo com alguém que passou quarenta anos sem ser acreditado.',
-    'Ele conta do pai. Da mãe, que não deixava ele sair de noite. Do irmão que foi pra Vermilion em cinquenta e nove e nunca mais voltou. De um cachorro chamado Tampa.',
+    'Ele conta do pai. Da mãe, que não deixava ele sair de noite. Do irmão que foi pra Vermilion em cinquenta e nove e nunca mais voltou. De um Growlithe chamado Tampa.',
     'Às duas da manhã ele para de falar no meio de uma frase e olha a ilha.',
     '"Eu vou morrer em uns três anos."',
     '"O senhor não sabe disso."',
