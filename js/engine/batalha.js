@@ -287,6 +287,9 @@ const Batalha = {
     }
 
     if (g.c === 'status'){
+      /* Splash e companhia não têm efeito nenhum — e é canônico que não
+         tenham. O que não pode é o turno passar em branco, sem uma linha. */
+      if (!g.ef){ this.ev('info', 'Mas nada aconteceu.'); return; }
       this.efeitoStatus(atacante, defensor, estAtk, estDef, g, nome);
       return;
     }

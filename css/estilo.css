@@ -430,8 +430,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .carta .t{font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between;gap:6px}
 .linha{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--borda);font-size:13.5px}
 .linha:last-child{border-bottom:none}
-.linha .k{color:var(--texto-fraco)}
-.linha .v{font-family:var(--mono)}
+/* O rótulo não quebra no meio ("Resiste / a"); quem quebra é o valor,
+   que é o lado que cresce — lista de tipos, lista de golpes. */
+.linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
+.linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
 
 .status-linha{display:flex;align-items:center;gap:10px;padding:7px 0}
 .status-linha .nome{width:112px;font-size:13.5px}

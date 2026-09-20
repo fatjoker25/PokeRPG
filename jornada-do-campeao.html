@@ -439,8 +439,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .carta .t{font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between;gap:6px}
 .linha{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--borda);font-size:13.5px}
 .linha:last-child{border-bottom:none}
-.linha .k{color:var(--texto-fraco)}
-.linha .v{font-family:var(--mono)}
+/* O rótulo não quebra no meio ("Resiste / a"); quem quebra é o valor,
+   que é o lado que cresce — lista de tipos, lista de golpes. */
+.linha .k{color:var(--texto-fraco);flex:0 0 auto;white-space:nowrap}
+.linha .v{font-family:var(--mono);text-align:right;min-width:0;overflow-wrap:anywhere}
 
 .status-linha{display:flex;align-items:center;gap:10px;padding:7px 0}
 .status-linha .nome{width:112px;font-size:13.5px}
@@ -5099,6 +5101,9 @@ const Batalha = {
     }
 
     if (g.c === 'status'){
+      /* Splash e companhia não têm efeito nenhum — e é canônico que não
+         tenham. O que não pode é o turno passar em branco, sem uma linha. */
+      if (!g.ef){ this.ev('info', 'Mas nada aconteceu.'); return; }
       this.efeitoStatus(atacante, defensor, estAtk, estDef, g, nome);
       return;
     }
@@ -5629,8 +5634,19 @@ const Historia = {
   ir(idCena, aplicarEfeitos){
     const cap = this.capAtual || this.capitulo(Estado.dados.capitulo);
     this.capAtual = cap;
-    const cena = cap.cenas[idCena];
-    if (!cena){ console.error('Cena inexistente:', idCena); return null; }
+    let cena = cap && cap.cenas[idCena];
+    /* Save antigo pode apontar para uma cena que mudou de nome numa versão
+       nova. Em vez de morrer numa tela em branco, o capítulo recomeça do
+       começo — perde-se a cena, não a jornada. */
+    if (!cena){
+      console.warn('Cena inexistente:', idCena, '— voltando ao começo do capítulo', Estado.dados.capitulo);
+      if (!cap) return null;
+      const entrada = (typeof cap.inicio === 'function') ? cap.inicio(Estado.dados) : cap.inicio;
+      cena = cap.cenas[entrada];
+      if (!cena) return null;
+      idCena = entrada;
+      aplicarEfeitos = false;
+    }
     Estado.dados.cena = idCena;
     this.cenaAtual = Object.assign({id:idCena}, cena);
     this.avisosCena = [];

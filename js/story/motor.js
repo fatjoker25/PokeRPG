@@ -33,8 +33,19 @@ const Historia = {
   ir(idCena, aplicarEfeitos){
     const cap = this.capAtual || this.capitulo(Estado.dados.capitulo);
     this.capAtual = cap;
-    const cena = cap.cenas[idCena];
-    if (!cena){ console.error('Cena inexistente:', idCena); return null; }
+    let cena = cap && cap.cenas[idCena];
+    /* Save antigo pode apontar para uma cena que mudou de nome numa versão
+       nova. Em vez de morrer numa tela em branco, o capítulo recomeça do
+       começo — perde-se a cena, não a jornada. */
+    if (!cena){
+      console.warn('Cena inexistente:', idCena, '— voltando ao começo do capítulo', Estado.dados.capitulo);
+      if (!cap) return null;
+      const entrada = (typeof cap.inicio === 'function') ? cap.inicio(Estado.dados) : cap.inicio;
+      cena = cap.cenas[entrada];
+      if (!cena) return null;
+      idCena = entrada;
+      aplicarEfeitos = false;
+    }
     Estado.dados.cena = idCena;
     this.cenaAtual = Object.assign({id:idCena}, cena);
     this.avisosCena = [];
