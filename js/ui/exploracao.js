@@ -66,10 +66,15 @@ const Exploracao = {
     const primeiraVez = !Estado.dados.visitados['__v_'+id];
     Estado.dados.visitados['__v_'+id] = true;
     const avisos = [];
-    // algo acontece no caminho, de vez em quando
-    if (Dados.chance(28) && novo.tipo !== 'cidade'){
-      const enc = sortearSelvagem(novo.ambiente, novo.nivel);
-      return this.encontro(enc, ['No meio do caminho, alguma coisa sai do mato e não desvia.']);
+    // algo acontece no caminho, de vez em quando — quem sabe ler a
+    // estrada escolhe melhor a hora de passar e topa com menos coisa
+    if (novo.tipo !== 'cidade'){
+      const t = Dados.teste(Estado.j.status.intelecto, 5, 'Rota');
+      const risco = {critico:10, sucesso:18, parcial:28, falha:40}[t.grau];
+      if (Dados.chance(risco)){
+        const enc = sortearSelvagem(novo.ambiente, novo.nivel);
+        return this.encontro(enc, ['No meio do caminho, alguma coisa sai do mato e não desvia.']);
+      }
     }
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
   },
@@ -130,7 +135,9 @@ const Exploracao = {
     let texto;
 
     if (t.grau === 'critico' || t.grau === 'sucesso'){
-      const achado = Descobertas.sortear(Mundo.id(), L);
+      /* Percepção acha o lugar certo; Sorte decide se tinha algo nele. */
+      const sorte = Dados.teste(Estado.j.status.sorte, 5, 'Sorte');
+      const achado = (sorte.grau === 'falha') ? null : Descobertas.sortear(Mundo.id(), L);
       if (achado){
         texto = achado.texto;
         if (achado.ef) Historia.aplicar(achado.ef);
@@ -154,10 +161,22 @@ const Exploracao = {
     Mundo.passar(2);
     const vivos = Estado.timeVivo();
     if (!vivos.length) return this.tela([{tipo:'dano', texto:'Não tem ninguém em pé pra treinar.'}]);
-    const ganho = 40 + L.nivel * 9;
+    /* Treinar é dar ordem o dia inteiro. Quem sabe mandar rende mais,
+       e o time inteiro sai do dia gostando mais ou menos de você. */
+    const t = Dados.teste(Estado.j.status.carisma, 6, 'Carisma');
+    const fator = {critico:1.6, sucesso:1.25, parcial:1, falha:0.6}[t.grau];
+    const ganho = Math.round((40 + L.nivel * 9) * fator);
     const eventos = [];
     vivos.forEach(p => ganharExp(p, ganho).forEach(e => { if (e.tipo!=='exp') eventos.push(e); }));
-    const avisos = [{tipo:'info', texto:'Vocês passam o resto do dia repetindo a mesma coisa até sair certo. É assim que fica bom, e é chato, e ninguém conta isso.'}];
+    const dMoral = {critico:4, sucesso:2, parcial:0, falha:-2}[t.grau];
+    if (dMoral) vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + dMoral)); });
+    const abertura = {
+      critico:'Sai tudo certo hoje. Você fala pouco e eles entendem na primeira, e num certo momento você percebe que está rindo sozinho no meio de um campo.',
+      sucesso:'Vocês passam o resto do dia repetindo a mesma coisa até sair certo. É assim que fica bom, e é chato, e ninguém conta isso.',
+      parcial:'Metade do dia rende e a outra metade é você explicando a mesma coisa de quatro jeitos diferentes.',
+      falha:'Não engata. Você manda, eles fazem quase, você manda de novo, e no fim do dia todo mundo está de mau humor por motivo nenhum.'
+    }[t.grau];
+    const avisos = [{tipo:'info', texto:abertura}];
     eventos.forEach(e => {
       if (e.tipo === 'nivel') avisos.push({tipo:'info', texto:'Alguma coisa no time endureceu hoje.'});
       if (e.tipo === 'evolucao') avisos.push({tipo:'pokemon', texto:`${e.de} virou ${e.para}.`});
@@ -170,10 +189,17 @@ const Exploracao = {
   pescar(){
     Mundo.passar(1);
     const L = Mundo.atual();
-    if (Dados.chance(55)){
+    /* Pescar é sorte com vara na mão. A Sorte decide se fisga e o
+       quanto vale o que veio. */
+    const t = Dados.teste(Estado.j.status.sorte, 5, 'Sorte');
+    const chance = {critico:85, sucesso:70, parcial:50, falha:25}[t.grau];
+    if (Dados.chance(chance)){
       const aquaticos = poolSelvagem().filter(d => DEX[d].tipos.includes('Água'));
-      const p = criarPokemon(Dados.escolher(aquaticos), Math.max(3, L.nivel + Dados.entre(-4,3)), {selvagem:true});
-      return this.encontro(p, ['A linha fica parada por muito tempo. Depois não fica.']);
+      const bonus = {critico:6, sucesso:2, parcial:0, falha:-2}[t.grau];
+      const p = criarPokemon(Dados.escolher(aquaticos), Math.max(3, L.nivel + bonus + Dados.entre(-4,3)), {selvagem:true});
+      return this.encontro(p, [t.grau === 'critico'
+        ? 'A linha estica de uma vez só e a vara verga de um jeito que você não esperava hoje.'
+        : 'A linha fica parada por muito tempo. Depois não fica.']);
     }
     Estado.salvar('auto');
     this.tela([{tipo:'info', texto:'Você pesca um período inteiro e não fisga nada. Pescador de verdade diz que isso também é pescar.'}]);
@@ -181,16 +207,30 @@ const Exploracao = {
 
   acampar(){
     Mundo.passar(1);
-    Estado.dados.time.forEach(p => { if (!p.morto) p.hp = Math.min(p.hpMax, p.hp + Math.ceil(p.hpMax*0.35)); });
-    Estado.curarJogador(4);
+    /* Dormir no chão é um teste de corpo. Resistência decide quanto
+       do dia seguinte você recupera de verdade. */
+    const t = Dados.teste(Estado.j.status.resistencia, 5, 'Resistência');
+    const prop = {critico:0.55, sucesso:0.42, parcial:0.30, falha:0.18}[t.grau];
+    const meu  = {critico:8, sucesso:6, parcial:4, falha:2}[t.grau];
+    Estado.dados.time.forEach(p => { if (!p.morto) p.hp = Math.min(p.hpMax, p.hp + Math.ceil(p.hpMax * prop)); });
+    Estado.curarJogador(meu);
     Estado.salvar('auto');
-    this.tela([{tipo:'cura', texto:'Vocês param. Fogo pequeno, comida ruim, chão duro. Ninguém dorme direito e todo mundo melhora um pouco.'}]);
+    const texto = {
+      critico:'Vocês param, e por algum motivo essa noite funciona: o fogo pega de primeira, o chão não incomoda, e você acorda antes do sol sem estar cansado.',
+      sucesso:'Vocês param. Fogo pequeno, comida ruim, chão duro. Ninguém dorme direito e todo mundo melhora um pouco.',
+      parcial:'Vocês param. Você acorda três vezes e uma delas é por nada.',
+      falha:'Vocês param, e a noite é ruim. Frio pelas costas, raiz nas costelas, e de manhã você está pior do que deitou.'
+    }[t.grau];
+    this.tela([{tipo:'cura', texto}]);
   },
 
   andar(){
     Mundo.passar(1);
     const id = Mundo.id();
-    const achado = Descobertas.sortear(id, Mundo.atual(), true);
+    /* Andar por uma cidade sem destino só rende para quem lê o
+       lugar: placa, horário de porta, que rua tem movimento. */
+    const t = Dados.teste(Estado.j.status.intelecto, 5, 'Intelecto');
+    const achado = (t.grau === 'falha') ? null : Descobertas.sortear(id, Mundo.atual(), true);
     Estado.salvar('auto');
     if (achado){
       if (achado.ef) Historia.aplicar(achado.ef);

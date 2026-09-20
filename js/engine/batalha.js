@@ -34,6 +34,7 @@ const Batalha = {
     this.estAliado = this.novoEstado();
     this.estInimigo = this.novoEstado();
     this.pdexUsada = false;
+    this.leituraIntelecto = false;
     if (Estado.viu(inimigo.dex)) this.ev('pokedex', 'A Pokédex vibra no bolso: espécie nova, ainda não catalogada.');
     if (inimigo.shiny){
       Estado.viuBrilhante(inimigo.dex);
@@ -42,6 +43,19 @@ const Batalha = {
         : 'A cor está errada. Você olha duas vezes e ela continua errada — e aí você entende o que está na sua frente.');
     }
     this.ev('inicio', opts.introducao || this.introPadrao());
+    /* Intelecto: você já viu um parecido, e isso vale meia Pokédex.
+       Vem depois da entrada, porque primeiro a coisa aparece. */
+    if (inimigo && !Estado.conheceu(inimigo.dex) && Estado.dados && Estado.j){
+      const t = Dados.teste(Estado.j.status.intelecto, 7, 'Intelecto');
+      if (t.grau === 'sucesso' || t.grau === 'critico'){
+        this.leituraIntelecto = true;
+        this.ev('natureza', `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
+        if (t.grau === 'critico'){
+          inimigo.naturezaVista = true;
+          this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
+        }
+      }
+    }
     return this.eventos;
   },
 
@@ -81,9 +95,13 @@ const Batalha = {
     const nat = NATUREZAS[p.natureza] || {};
     const g = GOLPES[golpeNome];
     const moral = souAliado ? (p.moral !== undefined ? p.moral : 70) : 50;
-    // cada insígnia conquistada faz o time confiar mais nas suas ordens
+    // cada insígnia conquistada faz o time confiar mais nas suas ordens,
+    // e quem sabe mandar precisa de menos insígnia para ser obedecido
     const insignias = (Estado.dados && Estado.dados.insignias) ? Estado.dados.insignias.length : 0;
-    const desobedienciaBase = souAliado ? Math.max(0, (60 - moral) / 2 - insignias * 3) : 0;
+    const carisma = (Estado.dados && Estado.j) ? (Estado.j.status.carisma || 0) : 0;
+    const desobedienciaBase = souAliado
+      ? Math.max(0, (60 - moral) / 2 - insignias * 3 - carisma * 1.5)
+      : 0;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
       return {recusa:true, texto:`${nomeVisivel(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
@@ -706,7 +724,14 @@ const Batalha = {
   },
 
   golpeNoJogador(){
-    const dano = Math.max(1, Math.round((this.inimigo.stats.atk / 10) * Dados.d10('Dano no treinador')));
+    let dano = Math.max(1, Math.round((this.inimigo.stats.atk / 10) * Dados.d10('Dano no treinador')));
+    /* Quando sobra para o treinador, o corpo é que segura. */
+    const t = Dados.teste(Estado.j.status.resistencia, 6, 'Resistência');
+    const corte = {critico:0.45, sucesso:0.7, parcial:0.9, falha:1.15}[t.grau];
+    dano = Math.max(1, Math.round(dano * corte));
+    this.ev('info', `Aguentar: 1d10(${t.dado}) + Resistência(${t.bonus}) = ${t.total} — ${t.texto}`);
+    if (t.grau === 'critico') this.ev('info', 'Você vira o corpo na hora certa e o pior passa de raspão.');
+    if (t.grau === 'falha')   this.ev('perigo', 'Você recebe inteiro, do jeito errado.');
     const morreu = Estado.ferir(dano, `Ataque de ${nomeVisivel(this.inimigo)} selvagem`);
     this.ev('danoJogador', `${nomeVisivel(this.inimigo)} te acerta. Você perde ${dano} de HP. (${Estado.j.hp}/${Estado.hpMaxJogador()})`, {dano});
     if (morreu){

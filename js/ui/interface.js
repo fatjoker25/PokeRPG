@@ -363,16 +363,20 @@ const UI = {
   atualizarArena(){
     const a = Batalha.aliado, i = Batalha.inimigo;
     const card = (p, cls, meu) => {
-      const conhecido = meu || Estado.conheceu(p.dex);
-      const tipos = conhecido
+      /* A Pokédex abre a ficha inteira. Um bom Intelecto abre só o
+         tipo: você já viu um parecido, não leu o registro dele. */
+      const catalogado = meu || Estado.conheceu(p.dex);
+      const leuTipo = catalogado || (!meu && !!Batalha.leituraIntelecto);
+      const tipos = leuTipo
         ? p.tipos.map(t=>this.tipoTag(t)).join('')
         : '<span class="tipo-tag desconhecido">tipo ?</span>';
       const nat = p.naturezaVista
         ? `${this.esc(p.natureza)}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
         : 'natureza ?';
-      const ficha = conhecido
+      const ficha = catalogado
         ? `<span class="mono">ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</span>`
-        : '<span class="mono">ficha não catalogada</span>';
+        : (leuTipo ? '<span class="mono">tipo lido de olho · ficha não catalogada</span>'
+                   : '<span class="mono">ficha não catalogada</span>');
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
       return `<div class="lutador ${cls}">
         <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
@@ -460,7 +464,7 @@ const UI = {
 
   painelGolpes(c){
     const a = Batalha.aliado;
-    const conhecido = Estado.conheceu(Batalha.inimigo.dex);
+    const conhecido = Estado.conheceu(Batalha.inimigo.dex) || !!Batalha.leituraIntelecto;
     const grade = this.el('<div class="grade-golpes"></div>');
     a.golpes.forEach((g, i) => {
       const G = GOLPES[g.nome];
@@ -1312,6 +1316,9 @@ const UI = {
       <div class="linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
       <div class="linha"><span class="k">Objetivo</span><span class="v">${this.esc(j.objetivo)}</span></div>
       <div class="linha"><span class="k">Personalidade</span><span class="v">${this.esc(j.personalidade)}</span></div>
+      <div class="linha"><span class="k">Aparência</span><span class="v">${this.esc(j.aparencia)}</span></div>
+      <div class="linha"><span class="k">Vestimenta</span><span class="v">${this.esc(j.vestimenta)}</span></div>
+      <p class="sussurro" style="margin:4px 0 12px">${this.esc(Estado.comoTeVeem())}</p>
       <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
       <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.filter(i=>i!=='Título de Campeão').length}/8</span></div>
       ${d.insignias.length ? d.insignias.map(i=>`<div class="linha"><span class="k" style="padding-left:12px">${this.esc(i)}</span><span class="v">✓</span></div>`).join('') : ''}
@@ -1380,13 +1387,14 @@ const UI = {
       </div>
 
       <div class="cartao-corpo">
-        <div class="cartao-retrato" aria-hidden="true">
-          <span class="silhueta"></span>
+        <div class="cartao-retrato" title="${this.esc(Estado.descricaoFisica())}">
+          <span class="silhueta" aria-hidden="true"></span>
           <span class="rodape-retrato">${this.esc(j.genero)}, ${j.idade}</span>
         </div>
         <div class="cartao-dados">
           <div class="cartao-nome">${this.esc(j.nome)}</div>
           <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? 'Campeão de Kanto' : 'Treinador registrado'))}</div>
+          <div class="cartao-sinais">${this.esc(Estado.descricaoFisica())}</div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
           <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${j.dinheiro} ₽</span></div>
@@ -1592,7 +1600,13 @@ const UI = {
       ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a bola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
-      <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico.</p>
+      <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
+      <div class="linha"><span class="k">Força</span><span class="v">fugir de um selvagem que te encurralou · testes de cena</span></div>
+      <div class="linha"><span class="k">Percepção</span><span class="v">vasculhar · ler a natureza do seu time · observar a cena · testes</span></div>
+      <div class="linha"><span class="k">Intelecto</span><span class="v">escolher a hora de pegar a estrada · andar pela cidade · ler o tipo de um desconhecido em combate</span></div>
+      <div class="linha"><span class="k">Carisma</span><span class="v">treinar · encarar um selvagem · o time obedecer quando a moral está baixa</span></div>
+      <div class="linha"><span class="k">Sorte</span><span class="v">o que o vasculho acha · pescaria · chance de brilhante</span></div>
+      <div class="linha"><span class="k">Resistência</span><span class="v">HP máximo · aguentar o golpe que sobra pra você · dormir no chão</span></div>
       <h3>Reputação</h3>
       <div class="linha"><span class="k">Como sobe</span><span class="v">por pontos, não por ato</span></div>
       <div class="linha"><span class="k">Ato pequeno</span><span class="v">1 ponto — precisa de oito para o primeiro degrau</span></div>

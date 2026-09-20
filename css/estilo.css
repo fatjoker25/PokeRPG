@@ -447,6 +447,12 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .rep-barra.bom i{background:linear-gradient(90deg, color-mix(in srgb, var(--bom) 70%, #000), var(--bom))}
 .rep-barra.ruim i{background:linear-gradient(90deg, color-mix(in srgb, var(--ruim) 70%, #000), var(--ruim))}
 .rep-nota{margin-top:5px;font-size:10.5px;letter-spacing:.04em;color:#8d8470;font-family:var(--mono)}
+/* sinais particulares: a descrição física que o cartão carrega */
+.cartao-sinais{
+  font-size:11px;line-height:1.35;color:#7d7461;font-style:italic;
+  margin:-2px 0 8px;padding-bottom:7px;
+  border-bottom:1px dashed var(--cart-linha)
+}
 
 /* ---------- criação ---------- */
 .campo{margin-bottom:15px}

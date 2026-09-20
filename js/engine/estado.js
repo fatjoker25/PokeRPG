@@ -440,6 +440,26 @@ const Estado = {
   },
 
   get j(){ return this.dados.jogador; },
+
+  /* Como as pessoas te descrevem quando precisam te descrever.
+     A aparência e a roupa da criação de personagem existem para
+     isto: aparecer na boca dos outros, não só na sua ficha. */
+  descricaoFisica(){
+    const j = this.j;
+    const partes = [];
+    if (j.aparencia)  partes.push(j.aparencia);
+    if (j.vestimenta) partes.push(j.vestimenta);
+    return partes.join(', ');
+  },
+  comoTeVeem(){
+    const j = this.j;
+    const fisico = this.descricaoFisica() || 'nada que chame atenção';
+    if (this.rep.eixo === 'ruim' && this.rep.ruim >= 3)
+      return `Perguntam por alguém de ${j.idade} anos, ${fisico}. Perguntam baixo.`;
+    if (this.rep.eixo === 'bom' && this.rep.bom >= 4)
+      return `A descrição que corre de você é curta e certeira: ${fisico}. E o nome vem junto agora.`;
+    return `Se alguém tivesse que te descrever, diria: ${fisico}.`;
+  },
   get rep(){ return this.normalizarRep ? this.normalizarRep() : this.dados.reputacao; },
 
   /* ---------- REPUTAÇÃO ---------- */
