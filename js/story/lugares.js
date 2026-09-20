@@ -420,9 +420,25 @@ const Cidade = {
     Mundo.passar(1);
     const d = Estado.dados;
     if (!d.flags.tem_licenca){
+      /* Sem licença você é cliente, não treinador: ela atende e cobra.
+         O que ela não faz é atender de graça — nem te mandar embora à toa. */
+      const feridos = d.time.filter(p => p.hp < p.hpMax || p.status).length;
+      const preco = 300 + 250 * feridos;
+      if (Estado.j.dinheiro < preco){
+        return Exploracao.tela([
+          {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
+          {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${preco} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
+        ]);
+      }
+      Estado.j.dinheiro -= preco;
+      d.time.forEach(curarTotal);
+      Estado.curarJogador(10);
+      Estado.salvar('auto');
       return Exploracao.tela([
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
-        {tipo:'dano', texto:'Você não tem número nenhum. Ela atende do mesmo jeito — mas cobra, e cobra caro, porque sem licença você é cliente e não treinador.'}
+        {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${preco} ₽, porque sem licença você é cliente e não treinador.`},
+        {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
+        {tipo:'info', texto:'Amanhece.'}
       ]);
     }
     Estado.dados.time.forEach(curarTotal);
