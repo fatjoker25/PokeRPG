@@ -234,6 +234,24 @@ const CONTATOS = [
   }
 },
 
+{
+  id:'nadia', tipo:'treinador', nome:'Nádia Bragança', papel:'segunda licença, aos quarenta e um', cidade:'Lavender',
+  desde:'Perdeu (ou ganhou) a final do aberto contra você e pediu o seu número na arena.',
+  requer:d=>!!d.flags.numero_da_nadia,
+  oferece:['revanche','prova'],
+  rivalExtra:null,
+  prova:{
+    rotulo:'Perguntar como vai a segunda',
+    esperaCap:2,
+    texto:d=>[
+      fala('Nádia', 'Duas! Eu tenho duas agora!', 'grita'),
+      fala('Nádia', 'A de Pewter eu levei três tentativas. Três. E na terceira eu chorei na frente do Brock.', 'riso'),
+      fala('Nádia', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Acompanhou a segunda licença de alguém'}
+  }
+},
+
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
@@ -258,6 +276,12 @@ const CONTATOS = [
 ];
 
 /* rivais extras entram na agenda sozinhos, pelo arquivo deles */
+/* A Nádia não é rival de arco: o time dela é montado na hora */
+function timeDaNadia(){
+  const n = Math.max(40, 34 + Estado.dados.insignias.length * 3);
+  return [59, 26, 94, 103].map((dex, i) => criarPokemon(dex, n + i, {}));
+}
+
 function contatosDeRivaisExtras(){
   if (typeof RIVAIS_EXTRA === 'undefined') return [];
   return RIVAIS_EXTRA.map(R => ({

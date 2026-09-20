@@ -3477,8 +3477,9 @@ const LOCAL_DO_CAPITULO = {
   6:'cerulean',   7:'lavender',  8:'vermilion', 9:'celadon',
   10:'usina',    11:'saffron',  12:'fuchsia',  13:'cinnabar',
   14:'rota21',   15:'rota16',   16:'seafoam',  17:'celadon',
-  18:'saffron',  19:'fuchsia',  20:'saffron',  21:'planalto',
-  22:'norte',    23:'pallet'
+  18:'saffron',  19:'fuchsia',  20:'saffron',
+  21:'pallet',   22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
+  26:'planalto', 27:'norte',    28:'pallet'
 };
 
 function localDoCapitulo(n){
@@ -7290,6 +7291,24 @@ const CONTATOS = [
   }
 },
 
+{
+  id:'nadia', tipo:'treinador', nome:'Nádia Bragança', papel:'segunda licença, aos quarenta e um', cidade:'Lavender',
+  desde:'Perdeu (ou ganhou) a final do aberto contra você e pediu o seu número na arena.',
+  requer:d=>!!d.flags.numero_da_nadia,
+  oferece:['revanche','prova'],
+  rivalExtra:null,
+  prova:{
+    rotulo:'Perguntar como vai a segunda',
+    esperaCap:2,
+    texto:d=>[
+      fala('Nádia', 'Duas! Eu tenho duas agora!', 'grita'),
+      fala('Nádia', 'A de Pewter eu levei três tentativas. Três. E na terceira eu chorei na frente do Brock.', 'riso'),
+      fala('Nádia', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Acompanhou a segunda licença de alguém'}
+  }
+},
+
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
@@ -7314,6 +7333,12 @@ const CONTATOS = [
 ];
 
 /* rivais extras entram na agenda sozinhos, pelo arquivo deles */
+/* A Nádia não é rival de arco: o time dela é montado na hora */
+function timeDaNadia(){
+  const n = Math.max(40, 34 + Estado.dados.insignias.length * 3);
+  return [59, 26, 94, 103].map((dex, i) => criarPokemon(dex, n + i, {}));
+}
+
 function contatosDeRivaisExtras(){
   if (typeof RIVAIS_EXTRA === 'undefined') return [];
   return RIVAIS_EXTRA.map(R => ({
@@ -8313,9 +8338,14 @@ const ANCORAS = {
   18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},
   20: {local:'saffron',   chamada:'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. Segunda, 10h.'},
-  21: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
-  22: {local:'norte',     chamada:'O vale entre duas paredes de pedra, sem saída no fundo.'},
-  23: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'}
+  21: {local:'pallet',    chamada:'Faz tempo demais que você não vê a sua rua, e alguém ligou três vezes.'},
+  22: {local:'planalto',  chamada:'A arena aberta tem chaveamento afixado e o seu nome está nele, e você não se inscreveu.'},
+  23: {local:'viridian',  chamada:'O segundo andar do ginásio está aberto pela primeira vez em dois anos.'},
+  24: {local:'rota23',    chamada:'Sete guaritas em fila, e a primeira já quer ver o seu cartão.'},
+  25: {local:'saffron',   chamada:'A convocação chegou por telegrama, e telegrama não se responde com "não".'},
+  26: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
+  27: {local:'norte',     chamada:'O vale entre duas paredes de pedra, sem saída no fundo.'},
+  28: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'}
 };
 
 /* ============================================================
@@ -8889,7 +8919,8 @@ const CAPITULOS = [];
    ============================================================ */
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
-const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado','c1_vizinha'];
+const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado',
+                      'c1_vizinha','c1_apagao','c1_mala_trocada','c1_festa','c1_ele_sumiu'];
 
 CAPITULOS.push(
 
@@ -9367,6 +9398,367 @@ c1_chamou_de_dentro:{
     {texto:'Entrar com ela.', vai:'c1_cozinha'},
     {texto:'Ficar mais um pouco na porta, olhando a rua.', vai:'c1_rua'}
   ]
+},
+
+/* ── abertura 7: a cidade sem luz ─────────────────────────── */
+c1_apagao:{
+  texto:[
+    'Acabou a luz da cidade inteira às cinco e quarenta da manhã, e a primeira coisa que você entende, antes mesmo de acordar direito, é que o ventilador parou.',
+    'A segunda coisa que você entende é que hoje é o dia, e que o seu despertador é elétrico.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'No escuro, a sua mochila está exatamente onde você deixou, o que é a única coisa confiável desta manhã.';
+      return `${nomeExib(p)} está em pé no meio do quarto, tenso, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
+    },
+    d=>fala(nomeCasa(), 'É a rua toda! Não mexe no disjuntor que não é o disjuntor!', 'grita',
+            'A voz vem lá de baixo, no escuro, com uma certeza que só quem já passou por isso tem.'),
+    'Pela janela dá pra ver a cidade sem um poste aceso, e o céu com mais estrela do que você lembrava que tinha.'
+  ],
+  ef:{flag:'comecou_no_apagao', registrar:'Saiu de casa no dia em que a cidade amanheceu sem luz.'},
+  escolhas:[
+    {texto:'Descer no escuro e ajudar a achar a vela.', vai:'c1_vela'},
+    {texto:'Ficar na janela olhando as estrelas enquanto dá.', vai:'c1_estrelas'},
+    {texto:'Conferir a mochila no escuro, pelo tato.', vai:'c1_mochila_escuro'},
+    {texto:'Descer direto. Luz volta ou não volta.', vai:'c1_cozinha'}
+  ]
+},
+c1_vela:{
+  texto:[
+    'A vela fica na terceira gaveta, atrás do barbante, e você acha ela de primeira porque você é quem sempre acha.',
+    d=>fala(nomeCasa(), 'Como é que você acha essas coisas no escuro, criatura.', 'riso'),
+    d=>fala(nomeCasa(), 'Vai fazer falta, isso. Isso aí vai fazer falta nesta casa.', 'baixo'),
+    'E aí ela fica quieta, porque falou uma coisa que não pretendia falar hoje.'
+  ],
+  ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Achou a vela no escuro, no último dia em casa'},
+      registrar:'Achou a vela no apagão.'},
+  escolhas:[
+    {texto:'Fazer o café na chama da vela.', vai:'c1_fez_o_cafe'},
+    {texto:'Sentar e esperar a luz voltar junto.', vai:'c1_cozinha'}
+  ]
+},
+c1_estrelas:{
+  texto:[
+    'Você abre a janela inteira e senta no parapeito, que é largo o suficiente e que sua casa nunca achou perigoso.',
+    'Sem poste nenhum aceso, o céu de Kanto é uma coisa completamente diferente. Tem faixa de estrela onde você jurava que era só escuro.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} sobe no parapeito com você, atrapalhando, e fica olhando pra cima porque você está olhando pra cima.`
+               : 'Passa um Hoothoot em algum lugar e você não vê, só ouve.';
+    },
+    'Você fica ali até o céu começar a clarear, e quando a luz volta — às seis e vinte, de uma vez, com a cidade inteira acendendo junto — é quase uma pena.'
+  ],
+  ef:{moral:4, flag:'viu_o_ceu_sem_poste',
+      registrar:'Viu o céu de Pallet sem um poste aceso.'},
+  escolhas:[
+    {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila.', vai:'c1_mochila'}
+  ]
+},
+c1_mochila_escuro:{
+  texto:[
+    'Você confere a mochila inteira no escuro, só pelo tato, e é a quarta vez que você confere e a primeira em que você acerta tudo de primeira.',
+    'Cantil. Casaco. A muda de roupa enrolada. O mapa que já estava velho quando te deram.',
+    'Você conhece cada coisa dessa mochila pelo formato, o que significa que você arrumou ela mais vezes do que admitiria em voz alta.'
+  ],
+  ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Conhece a própria mochila no escuro'},
+      registrar:'Conferiu a mochila no escuro, de cor.'},
+  escolhas:[
+    {texto:'Descer.', vai:'c1_cozinha'},
+    {texto:'Ficar na janela até clarear.', vai:'c1_estrelas'}
+  ]
+},
+
+/* ── abertura 8: a mochila errada ─────────────────────────── */
+c1_mala_trocada:{
+  texto:[
+    'Você acorda às sete com a casa já em movimento e desce achando que está tudo resolvido.',
+    'A mochila está na porta, arrumada, fechada, com a fivela de baixo consertada com arame — coisa que ninguém te avisou que ia fazer.',
+    'Você abre pra conferir e para.',
+    'Não é a sua mochila. É a mochila de quem saiu desta casa antes de você, guardada no armário de cima há tempo demais, e alguém passou a noite transferindo as suas coisas pra dentro dela.',
+    d=>fala(nomeCasa(), 'A sua não ia aguentar Viridian.', null, 'Dito da cozinha, sem se virar, no tom de quem decidiu sozinha e não vai discutir.'),
+    d=>fala(nomeCasa(), 'Essa aqui aguentou coisa pior.')
+  ],
+  ef:{flag:'mochila_herdada', moral:5,
+      registrar:'Saiu com a mochila de quem saiu desta casa antes.'},
+  escolhas:[
+    {texto:'Perguntar de quem era.', vai:'c1_de_quem_era'},
+    {texto:'Não perguntar. Fechar a fivela e agradecer.', vai:'c1_nao_perguntou'},
+    {texto:'Olhar os bolsos de dentro antes de qualquer coisa.', vai:'c1_bolso_de_dentro'},
+    {texto:'Descer e tomar café com ela na mesa.', vai:'c1_cozinha'}
+  ]
+},
+c1_de_quem_era:{
+  texto:[
+    d=>fala(d.jogador.nome, 'De quem era essa mochila?'),
+    'Silêncio de cozinha. Colher no fundo da xícara, duas vezes.',
+    d=>fala(nomeCasa(), 'De gente que saiu daqui e não voltou.', 'baixo'),
+    d=>fala(nomeCasa(), 'Não é maldição, menino. É mochila. Mochila boa não tem culpa de quem carregou.'),
+    d=>fala(nomeCasa(), 'Mas se você quiser trocar, tem a sua ali no canto, e eu não vou achar ruim.'),
+    'Você olha a sua, de lona fina, com a fivela quebrada. Olha a outra, de lona grossa, com arame novo.'
+  ],
+  ef:{flag:'sabe_da_mochila',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou o que era mais fácil não perguntar'},
+      registrar:'Perguntou de quem era a mochila.'},
+  escolhas:[
+    {texto:'Ficar com a mochila herdada.', vai:'c1_cozinha',
+     ef:{moral:4, flag:'ficou_com_a_mochila', registrar:'Ficou com a mochila herdada.'}},
+    {texto:'Trocar pela sua, mesmo ruim.', vai:'c1_cozinha',
+     ef:{flag:'recusou_a_mochila', rep:{eixo:'bom',delta:1,motivo:'Preferiu carregar o próprio peso'},
+         registrar:'Recusou a mochila herdada e ficou com a dele.'}}
+  ]
+},
+c1_nao_perguntou:{
+  texto:[
+    'Você fecha a fivela de arame, testa o peso no ombro, e não pergunta nada.',
+    'Tem perguntas que a gente não faz porque já sabe a resposta, e tem perguntas que a gente não faz porque hoje não é o dia.',
+    'Esta é das duas coisas ao mesmo tempo.',
+    d=>fala(nomeCasa(), 'Obrigada.', 'baixo', 'Por não ter perguntado. Ela agradece isso, e você entende que ela está agradecendo isso.')
+  ],
+  ef:{moral:4, flag:'ficou_com_a_mochila',
+      registrar:'Ficou com a mochila herdada sem perguntar de quem era.'},
+  escolhas:[
+    {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez.', vai:'c1_quarto'}
+  ]
+},
+c1_bolso_de_dentro:{
+  texto:[
+    'Você vira a mochila e abre o bolso de dentro, o que ninguém abre porque ninguém lembra que existe.',
+    'Tem um mapa de Kanto de nove anos atrás, dobrado errado, com quatro rotas marcadas a caneta e uma quinta rasurada.',
+    'Tem meio pacote de biscoito que virou pó.',
+    'E tem um bilhete de ônibus de Viridian para Pewter, sem data, nunca usado.',
+    'Alguém comprou uma passagem e não foi.'
+  ],
+  ef:{itens:{'Mapa de nove anos atrás':1}, flag:'achou_o_bilhete_de_onibus',
+      rep:{eixo:'bom',delta:1,motivo:'Olhou onde ninguém olha'},
+      registrar:'Achou um mapa antigo e uma passagem nunca usada no bolso de dentro.'},
+  escolhas:[
+    {texto:'Descer e perguntar sobre a passagem.', vai:'c1_de_quem_era'},
+    {texto:'Guardar tudo de volta e descer.', vai:'c1_cozinha'}
+  ]
+},
+
+/* ── abertura 9: a casa cheia ─────────────────────────────── */
+c1_festa:{
+  texto:[
+    'Tem gente demais na sua casa às sete da manhã e você não foi consultado sobre isso.',
+    'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Odete e alguém que você tem quase certeza de que mora na outra rua.',
+    'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
+    d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
+            'Ela fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
+    d=>fala('Sra. Odete', 'Deixa o menino comer! DEIXA O MENINO COMER!', 'grita'),
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} sumiu debaixo da mesa no primeiro minuto e não vai sair de lá nem por bolo.`
+               : 'Alguém trouxe um Growlithe e ele já está dormindo debaixo da mesa.';
+    }
+  ],
+  ef:{flag:'a_casa_estava_cheia', moral:4,
+      npc:{nome:'Sra. Odete', opiniao:2, memoria:'Apareceu na despedida às sete da manhã e mandou todo mundo deixar você comer.'},
+      registrar:'A casa amanheceu cheia de gente no dia da partida.'},
+  escolhas:[
+    {texto:'Fazer um discurso. Todo mundo está esperando um.', vai:'c1_discurso'},
+    {texto:'Comer o bolo e não falar nada.', vai:'c1_comeu_o_bolo'},
+    {texto:'Escapar pro quintal cinco minutos.', vai:'c1_quintal'},
+    {texto:'Ir embora no meio, sem alarde.', vai:'c1_saiu_da_festa'}
+  ]
+},
+c1_discurso:{
+  texto:[
+    'Você bate na xícara com a colher e a cozinha inteira cala de uma vez, o que é muito pior do que quando estava barulhento.',
+    'Você tem sete pessoas olhando pra você e nenhuma frase pronta.',
+    d=>fala(d.jogador.nome, d.jogador.objetivo, null, 'É o que sai. É a coisa mais sincera que você já disse em voz alta nesta casa.'),
+    'Ninguém aplaude na hora. Demora uns dois segundos.',
+    'E aí a Sra. Odete começa a chorar de um jeito absolutamente desproporcional, e a partir daí ninguém mais consegue levar a manhã a sério.'
+  ],
+  ef:{moral:6, flag:'fez_discurso',
+      rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', rep:{notorio:true}},
+      registrar:'Fez um discurso na própria cozinha, às sete da manhã.'},
+  escolhas:[{texto:'Terminar o café e ir.', vai:'c1_despedida'}]
+},
+c1_comeu_o_bolo:{
+  texto:[
+    'Você come duas fatias e meia de bolo às sete da manhã, o que é a coisa mais próxima de um discurso que você consegue fazer hoje.',
+    'As sete pessoas conversam por cima de você sobre rotas que nenhuma delas andou, perigos que nenhuma delas viu, e um primo distante que virou treinador em 1989 e de quem ninguém lembra o nome.',
+    'Você não precisa falar nada. Você precisa só estar ali, e estar ali é a parte que eles vieram ver.'
+  ],
+  ef:{moral:4, registrar:'Comeu bolo às sete da manhã com a cozinha cheia.'},
+  escolhas:[
+    {texto:'Terminar e se despedir.', vai:'c1_despedida'},
+    {texto:'Escapar pro quintal cinco minutos.', vai:'c1_quintal'}
+  ]
+},
+c1_quintal:{
+  texto:[
+    'Você sai pelos fundos e senta no degrau do quintal, e a cozinha continua barulhenta do outro lado da porta, sem sentir a sua falta ainda.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} aparece trinta segundos depois, porque ele sempre aparece trinta segundos depois, e senta encostado na sua perna.`
+               : 'O quintal tem uma corda de varal, um balde e um pé de alguma coisa que nunca deu fruta.';
+    },
+    'Dá pra ouvir a sua casa inteira rindo de uma coisa que você não ouviu.',
+    'Você vai lembrar deste degrau, e não da cozinha.'
+  ],
+  ef:{moral:3, flag:'o_degrau_do_quintal',
+      registrar:'Sentou no degrau do quintal no meio da própria despedida.'},
+  escolhas:[
+    {texto:'Voltar pra dentro.', vai:'c1_despedida'},
+    {texto:'Sair pelo portão dos fundos, sem voltar.', vai:'c1_saiu_da_festa'}
+  ]
+},
+c1_saiu_da_festa:{
+  texto:[
+    'Você pega a mochila encostada na porta dos fundos e sai pelo portão sem ninguém ver, com a casa rindo às suas costas.',
+    'Você anda meio quarteirão e a risada ainda dá pra ouvir, o que é pior do que se não desse.',
+    'Ninguém vai entender. Você mesmo não entende direito, e você é o que fez.'
+  ],
+  ef:{flag:'saiu_no_meio_da_festa', moral:-4,
+      rep:{eixo:'ruim',delta:1,motivo:'Sumiu no meio da própria despedida'},
+      registrar:'Saiu no meio da festa de despedida, sem avisar.'},
+  escolhas:[
+    {texto:'Voltar. Ainda dá tempo.', vai:'c1_voltou_pra_festa'},
+    {texto:'Continuar.', vai:'c1_rua'}
+  ]
+},
+c1_voltou_pra_festa:{
+  texto:[
+    'Você volta o meio quarteirão e entra pela porta da frente, o que é diferente de nunca ter saído, e todo mundo percebe.',
+    d=>fala('Sra. Odete', 'ELE VOLTOU! EU FALEI QUE ELE VOLTAVA!', 'grita'),
+    d=>fala(nomeCasa(), 'Você não falou nada disso, Odete.', 'riso'),
+    'E aí a cozinha volta a ser barulhenta, e ninguém cobra nada de você, e é assim que se perdoa em casa de rua pequena: fingindo que não houve o que houve.'
+  ],
+  ef:{moral:5, limpaFlag:'saiu_no_meio_da_festa',
+      rep:{eixo:'bom',delta:1,motivo:'Voltou pra própria despedida'},
+      registrar:'Saiu no meio da festa e voltou.'},
+  escolhas:[{texto:'Terminar direito dessa vez.', vai:'c1_despedida'}]
+},
+
+/* ── abertura 10: ele não está ────────────────────────────── */
+c1_ele_sumiu:{
+  texto:[
+    'Você acorda às seis e meia e a primeira coisa que você faz é a mesma de todo dia: olhar o pé da cama.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'E o pé da cama está vazio, o que faz sentido, porque você não tem ninguém.';
+      return `O pé da cama está vazio. ${nomeExib(p)} não está lá, e ${nomeExib(p)} está lá todo dia desde a primeira noite em que apareceu nesta casa.`;
+    },
+    'Você chama uma vez, baixo. Depois alto. Depois desce a escada de dois em dois degraus.',
+    'A porta dos fundos está encostada, não fechada.',
+    d=>fala(nomeCasa(), 'Ele saiu antes de eu acordar. Eu achei que tinha sido você que soltou.', null,
+            'Ela está com o pano na mão, parada no meio da cozinha, e não está calma.')
+  ],
+  ef:{flag:'ele_sumiu_no_ultimo_dia',
+      registrar:'No dia de sair de casa, o seu Pokémon não estava no pé da cama.'},
+  escolhas:[
+    {texto:'Sair procurando agora, de pijama.', vai:'c1_procura_pijama'},
+    {texto:'Pensar. Onde é que ele iria?', vai:'c1_onde_ele_iria'},
+    {texto:'Esperar. Ele volta.', vai:'c1_esperou_ele'},
+    {texto:'Pedir ajuda aos vizinhos.', vai:'c1_pediu_ajuda'}
+  ]
+},
+c1_procura_pijama:{
+  texto:[
+    'Você sai de pijama e de chinelo às seis e quarenta e cinco e percorre a rua inteira chamando, sem se importar com janela nenhuma.',
+    'Duas janelas abrem. Uma fecha de novo. A outra é a Sra. Odete, que olha você de cima a baixo e entra sem dizer nada — e volta um minuto depois, de casaco, pra procurar junto.',
+    'Vocês dois acham ele em onze minutos, na saída da cidade, sentado exatamente em cima da placa que diz PALLET, olhando a estrada.',
+    'Ele não fugiu. Ele foi esperar por você no lugar certo.'
+  ],
+  ef:{moral:8, flag:'ele_estava_na_placa',
+      npc:{nome:'Sra. Odete', opiniao:3, memoria:'Saiu de casaco por cima da camisola pra procurar um bicho que não era dela.'},
+      rep:{eixo:'bom',delta:2,motivo:'Saiu de pijama pela rua atrás de quem sumiu'},
+      registrar:'Ele estava sentado em cima da placa da saída da cidade.'},
+  escolhas:[
+    {texto:'Voltar pra casa com ele e fazer tudo direito.', vai:'c1_cozinha'},
+    {texto:'Sentar na placa junto e ficar um pouco.', vai:'c1_sentou_na_placa'}
+  ]
+},
+c1_onde_ele_iria:{
+  texto:[
+    'Você senta no degrau da escada e pensa, que é a coisa mais difícil de fazer quando o corpo inteiro quer correr.',
+    'Ele não gosta da praça. Ele tem medo do carro da Sra. Odete. Ele nunca foi pro mercado sozinho.',
+    'Mas ele te viu arrumando a mochila a noite inteira.'
+  ],
+  teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção',
+    critico:'c1_achou_na_placa', sucesso:'c1_achou_na_placa',
+    parcial:'c1_procura_pijama', falha:'c1_procura_pijama'},
+  ef:{registrar:'Parou pra pensar onde ele teria ido.'}
+},
+c1_achou_na_placa:{
+  texto:[
+    'Você sai andando direto, sem chamar, sem olhar pros lados, porque você já sabe.',
+    'Ele está sentado em cima da placa da saída da cidade, de costas pra Pallet, olhando a estrada que sobe.',
+    'Ele não se assusta quando você chega. Ele olha pra você, olha pra estrada, e olha pra você de novo.',
+    'A pergunta é tão clara que quase dá pra ouvir.'
+  ],
+  ef:{moral:10, flag:'ele_estava_na_placa',
+      rep:{eixo:'bom',delta:1,motivo:'Sabia exatamente onde ele estaria'},
+      registrar:'Sabia onde ele estava antes de sair procurando.'},
+  escolhas:[
+    {texto:'Sentar na placa junto e ficar um pouco.', vai:'c1_sentou_na_placa'},
+    {texto:'Voltar pra casa com ele. Tem café esperando.', vai:'c1_cozinha'}
+  ]
+},
+c1_sentou_na_placa:{
+  texto:[
+    'Você senta em cima da placa, de pijama, às sete da manhã, com a cidade inteira acordando atrás de vocês dois.',
+    'A estrada sobe e some numa curva a uns quinhentos metros. Depois da curva pode ter qualquer coisa. É isso que faz ela ser uma estrada e não um quintal.',
+    'Vocês ficam ali até dar sete e meia.',
+    'Depois vocês voltam pra casa, porque ainda tem café, ainda tem despedida, e ainda tem uma mochila no chão do quarto.',
+    'Mas agora vocês dois já sabem como é sentar naquela placa, e isso não vai embora.'
+  ],
+  ef:{moral:6, flag:'sentou_na_placa',
+      registrar:'Sentou na placa da saída da cidade antes de sair de verdade.'},
+  escolhas:[{texto:'Voltar e tomar o café.', vai:'c1_cozinha'}]
+},
+c1_esperou_ele:{
+  texto:[
+    'Você senta na porta dos fundos e espera, porque é o que faz sentido e porque é o que dói mais.',
+    'Quarenta minutos. Você conta os quarenta.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'Ninguém volta, porque não tinha ninguém pra voltar.';
+      return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquilo, como quem foi dar uma volta.`;
+    },
+    'Você não briga. Você não chega nem a levantar.',
+    d=>fala(nomeCasa(), 'Esperar é a parte que ninguém conta que é a mais difícil.', 'baixo',
+            'Ela estava na porta da cozinha o tempo todo, e você não tinha percebido.')
+  ],
+  ef:{moral:2, flag:'esperou_ele_voltar',
+      registrar:'Esperou quarenta e um minutos sentado na porta dos fundos.'},
+  escolhas:[
+    {texto:'Entrar e tomar café.', vai:'c1_cozinha'},
+    {texto:'Ir conferir a mochila, agora que dá.', vai:'c1_mochila'}
+  ]
+},
+c1_pediu_ajuda:{
+  texto:[
+    'Você bate em três portas antes das sete da manhã, o que numa rua desta não é pedir ajuda: é convocar.',
+    'Em oito minutos tem cinco pessoas na calçada, duas com lanterna que não precisa e uma com um Growlithe que claramente não sabe rastrear nada.',
+    d=>fala('Sr. Rufino', 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
+            'Ele organiza a rua inteira em quarenta segundos, de vassoura na mão, e ninguém questiona.'),
+    'Quem acha é uma criança de nove anos que nem foi chamada e que estava só olhando.',
+    'Estava sentado em cima da placa da saída da cidade, olhando a estrada.'
+  ],
+  ef:{moral:6, flag:'ele_estava_na_placa',
+      npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'},
+      rep:{eixo:'bom',delta:2,motivo:'Pediu ajuda em vez de resolver sozinho'},
+      registrar:'A rua inteira ajudou a procurar. Uma criança de nove anos achou.'},
+  escolhas:[
+    {texto:'Agradecer um por um antes de qualquer outra coisa.', vai:'c1_agradeceu_a_rua'},
+    {texto:'Pegar ele e voltar correndo pra casa.', vai:'c1_cozinha'}
+  ]
+},
+c1_agradeceu_a_rua:{
+  texto:[
+    'Você agradece um por um, inclusive a criança de nove anos, que fica absolutamente sem graça e sai correndo.',
+    'Leva vinte minutos. Você ia sair hoje de qualquer jeito, e agora vai sair vinte minutos mais tarde.',
+    'Ninguém nessa rua vai esquecer isso, e é exatamente por causa de vinte minutos que as pessoas lembram da gente.'
+  ],
+  ef:{moral:4,
+      rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', rep:{notorio:true}},
+      registrar:'Agradeceu cada pessoa da rua antes de ir embora.'},
+  escolhas:[{texto:'Ir pra casa tomar café.', vai:'c1_cozinha'}]
 },
 
 c1_cinco_minutos:{
@@ -49852,12 +50244,2212 @@ c20_fim:{
 
 /* ===== js/story/cap-21.js ===== */
 /* ============================================================
-   CAPÍTULO 21 — O QUE TE OFERECEM
+   CAPÍTULO 21 — A RUA DE ONDE VOCÊ SAIU
+   Pallet. Você tem oito insígnias, um telefone cheio de números
+   e uma rua que continuou existindo sem você o tempo todo.
+   ============================================================ */
+CAPITULOS.push(
+
+{
+num:21, titulo:'A Rua de Onde Você Saiu', local:d=>d.jogador.cidade, ambiente:'campo', nivelArea:52,
+tom:'sombrio', inicio:'c21_chegada_em_casa',
+cenas:{
+
+c21_chegada_em_casa:{
+  texto:[
+    d=>`Você desce do ônibus na entrada de ${d.jogador.cidade} às quatro e vinte da tarde e a primeira coisa que te ocorre é que a placa é menor do que você lembrava.`,
+    'Não é que ela tenha encolhido. É que você viu placa de cidade grande desde então, e a sua cabeça refez a escala sem te avisar.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'A rua tem três pessoas nela e duas delas param de andar quando te veem.';
+      return `${nomeExib(p)} desce atrás de você e para, e cheira o ar, e entende antes de você que isto aqui é casa.`;
+    },
+    d=>fala(nomeCasa(), 'Eu liguei TRÊS VEZES.', 'grita',
+            'A voz vem da terceira casa antes mesmo de você ver quem é.'),
+    d=>fala(nomeCasa(), 'Três! E o aparelho é meu, eu sei que ele toca!')
+  ],
+  ef:{flag:'voltou_pra_casa', registrar:'Voltou para a cidade de onde saiu, com oito insígnias.'},
+  escolhas:[
+    {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
+    {texto:'Passar na calçada do Sr. Rufino, que é onde se resolve coisa.', vai:'c21_rufino',
+     cond:d=>!!d.npcs['Sr. Rufino']},
+    {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
+    {texto:'Ligar pra casa do orelhão da esquina, mesmo estando a trinta metros.', vai:'c21_orelhao',
+     cond:d=>Estado.temPokenav()},
+    {texto:'Não entrar na sua rua. Comprar o que precisa e pegar a estrada.', vai:'c21_nao_foi_pra_casa'}
+  ]
+},
+
+/* ── a rua ─────────────────────────────────────────────────── */
+c21_a_rua:{
+  texto:[
+    'Você anda a rua inteira com a mochila no ombro, devagar, do jeito que só se anda numa rua que a gente conhece de cor.',
+    'O muro do laboratório continua devolvendo a bola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.',
+    'A casa do número oito pintou de azul. A do quatorze não pintou de nada há mais tempo ainda.',
+    'E tem uma coisa que você não esperava: tem um cartaz seu no poste.',
+    'É pequeno, é impresso em papel comum, tem uma foto ruim da sua licença e a palavra PARABÉNS escrita à mão embaixo.'
+  ],
+  ef:{moral:4, flag:'viu_o_cartaz',
+      registrar:'Alguém pregou um cartaz com a sua foto no poste da rua.'},
+  escolhas:[
+    {texto:'Descobrir quem pregou.', vai:'c21_quem_pregou'},
+    {texto:'Tirar o cartaz do poste. É constrangedor.', vai:'c21_tirou_o_cartaz'},
+    {texto:'Deixar. Ir pra casa.', vai:'c21_dentro_de_casa'}
+  ]
+},
+
+c21_quem_pregou:{
+  texto:[
+    'Você bate em duas portas e na terceira acha, porque na terceira a pessoa fica vermelha antes de você terminar a pergunta.',
+    fala('Sra. Odete', 'Foi eu. Foi eu e eu não peço desculpa.', 'grita'),
+    fala('Sra. Odete', 'Eu imprimi vinte. Tem em Viridian também. Eu fui de ônibus e pus em Viridian.'),
+    'Vinte cartazes. Ela pagou impressão de vinte cartazes com a sua cara de licença.',
+    fala('Sra. Odete', 'Você trouxe a caixa?', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
+  ],
+  ef:{moral:6,
+      npc:{nome:'Sra. Odete', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pôs até em Viridian.'},
+      rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', rep:{notorio:true}},
+      registrar:'A Sra. Odete imprimiu vinte cartazes. Levou alguns até Viridian.'},
+  escolhas:[
+    {texto:'"Eu trouxe a caixa." (mesmo que não tenha)', vai:'c21_a_caixa_de_volta'},
+    {texto:'Abraçar ela, que é o que ninguém faz com a dona Odete.', vai:'c21_abracou_odete'},
+    {texto:'Ir pra casa antes que fique pior.', vai:'c21_dentro_de_casa'}
+  ]
+},
+
+c21_a_caixa_de_volta:{
+  texto:[
+    'Você não tem a caixa. Você perdeu a caixa em algum lugar entre Pewter e Cerulean, e você sabe disso há meses.',
+    'Você compra uma caixa de ventilador no armazém por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.',
+    fala('Sra. Odete', 'Essa não é a minha caixa.', 'frio', 'Ela olha por dois segundos.'),
+    fala('Sra. Odete', '...mas é melhor que a minha. Obrigada, menino.', 'riso')
+  ],
+  ef:{dinheiro:-400, moral:3,
+      npc:{nome:'Sra. Odete', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
+      registrar:'Comprou uma caixa nova pra devolver à Sra. Odete. Ela percebeu.'},
+  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+},
+
+c21_abracou_odete:{
+  texto:[
+    'Você abraça a Sra. Odete no meio da calçada, o que é uma coisa que ninguém faz com a Sra. Odete.',
+    'Ela fica rígida por uns dois segundos inteiros, como quem não sabe onde põe os braços.',
+    'Depois ela sabe onde põe os braços.',
+    fala('Sra. Odete', 'Tá bom. Tá bom. Chega. CHEGA.', 'grita',
+         'Ela é quem solta por último, e por uma margem considerável.')
+  ],
+  ef:{moral:7,
+      npc:{nome:'Sra. Odete', opiniao:5, memoria:'Você abraçou ela na calçada. Ela soltou por último.'},
+      rep:{eixo:'bom',delta:1,motivo:'Abraçou quem ninguém abraça'},
+      registrar:'Abraçou a Sra. Odete na calçada.'},
+  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+},
+
+c21_tirou_o_cartaz:{
+  texto:[
+    'Você tira o cartaz do poste, dobra em quatro e põe no bolso, porque ver a própria cara num poste é uma coisa muito específica de constrangedora.',
+    'Três postes adiante tem outro.',
+    'Você conta onze na rua inteira. Onze cartazes com a sua cara de licença e a palavra PARABÉNS escrita à mão, onze vezes, com a mesma caneta.',
+    'Você para de tirar no quinto.'
+  ],
+  ef:{flag:'tirou_os_cartazes', moral:-2,
+      registrar:'Começou a tirar os cartazes com a sua cara e parou no quinto.'},
+  escolhas:[
+    {texto:'Repor os cinco que você tirou.', vai:'c21_repos_os_cartazes'},
+    {texto:'Ir pra casa com os cinco no bolso.', vai:'c21_dentro_de_casa'}
+  ]
+},
+
+c21_repos_os_cartazes:{
+  texto:[
+    'Você desdobra os cinco, alisa cada um na perna da calça, e prega de volta nos mesmos postes.',
+    'Fica torto. Fica pior do que estava.',
+    'Fica certo.'
+  ],
+  ef:{moral:4, limpaFlag:'tirou_os_cartazes',
+      rep:{eixo:'bom',delta:1,motivo:'Repôs o que tinha arrancado por vergonha'},
+      registrar:'Repôs os cartazes que tinha tirado.'},
+  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+},
+
+/* ── o Sr. Rufino ──────────────────────────────────────────── */
+c21_rufino:{
+  texto:[
+    'A calçada está varrida. Ela sempre está varrida.',
+    'O Sr. Rufino está sentado no degrau, e não em pé com a vassoura, e é a primeira vez na sua vida que você vê ele sentado no degrau.',
+    fala('Sr. Rufino', 'Demorou.', null, 'Ele não levanta.'),
+    fala('Sr. Rufino', 'Senta aqui. Eu não subo mais em banquinho e você já é alto o suficiente pra isso não ser um problema seu.'),
+    d=>d.flags.divida_pendente
+      ? 'Você senta, e tem uma janela entre vocês dois que ninguém mencionou ainda.'
+      : 'Você senta.'
+  ],
+  ef:{npc:{nome:'Sr. Rufino', opiniao:1, memoria:'Estava sentado no degrau quando você voltou.'},
+      registrar:'O Sr. Rufino estava sentado no degrau, e não em pé com a vassoura.'},
+  escolhas:[
+    {texto:'Pagar a janela agora, com juros de oito anos.', vai:'c21_pagou_a_janela',
+     cond:d=>!!d.flags.divida_pendente && d.jogador.dinheiro >= 2000},
+    {texto:'Perguntar por que ele está sentado.', vai:'c21_por_que_sentado'},
+    {texto:'Contar a viagem inteira, do começo.', vai:'c21_contou_tudo'},
+    {texto:'Ficar em silêncio junto. Ele não pediu conversa.', vai:'c21_silencio_no_degrau'}
+  ]
+},
+
+c21_pagou_a_janela:{
+  texto:[
+    'Você põe o dinheiro no degrau entre vocês dois, com o peso de uma pedrinha em cima pra não voar.',
+    d=>fala(d.jogador.nome, 'Isso é a janela. E oito anos de juros que eu calculei mal, mas pra cima.'),
+    'Ele olha o dinheiro. Não pega.',
+    fala('Sr. Rufino', 'A janela foi vinte pokedólares em 1989 e eu consertei no mesmo dia com um vidro que eu já tinha.'),
+    fala('Sr. Rufino', 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
+    fala('Sr. Rufino', 'Pega o dinheiro de volta e compra Potion, menino. Todo mundo compra bola demais.', 'riso')
+  ],
+  ef:{limpaFlag:'divida_pendente', moral:5,
+      npc:{nome:'Sr. Rufino', opiniao:5, memoria:'Você voltou pra pagar a janela. Ele nunca quis o dinheiro.'},
+      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de vinte pokedólares', rep:{notorio:true}},
+      registrar:'Voltou para pagar a janela. Ele não aceitou o dinheiro.'},
+  escolhas:[
+    {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_rufino'},
+    {texto:'Pegar de volta e ficar sentado ali.', vai:'c21_silencio_no_degrau'}
+  ]
+},
+
+c21_insistiu_rufino:{
+  texto:[
+    'Você deixa o dinheiro no degrau e levanta, e ele deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.',
+    fala('Sr. Rufino', 'Você é teimoso igual a quem te criou.', 'riso'),
+    fala('Sr. Rufino', 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
+  ],
+  ef:{dinheiro:-2000, moral:3,
+      npc:{nome:'Sr. Rufino', opiniao:4, memoria:'Insistiu até ele aceitar o dinheiro da janela.'},
+      registrar:'Insistiu e o Sr. Rufino aceitou o dinheiro.'},
+  escolhas:[{texto:'Ficar sentado no degrau um pouco.', vai:'c21_silencio_no_degrau'}]
+},
+
+c21_por_que_sentado:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Por que o senhor tá sentado?'),
+    'Ele demora pra responder de um jeito que já é a resposta.',
+    fala('Sr. Rufino', 'Porque o joelho. E porque a calçada já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer.'),
+    fala('Sr. Rufino', 'Aí eu parei de varrer de novo às onze. Foi ano passado.'),
+    fala('Sr. Rufino', 'Não faz essa cara. Todo mundo para de varrer às onze uma hora.', 'riso')
+  ],
+  ef:{flag:'sabe_do_joelho_do_rufino',
+      npc:{nome:'Sr. Rufino', opiniao:3, memoria:'Te contou por que parou de varrer duas vezes por dia.'},
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou uma coisa que ninguém pergunta a um velho'},
+      registrar:'O Sr. Rufino parou de varrer a calçada duas vezes por dia. Foi ano passado.'},
+  escolhas:[
+    {texto:'Pegar a vassoura e varrer a calçada dele.', vai:'c21_varreu_a_calcada'},
+    {texto:'Contar a viagem inteira, do começo.', vai:'c21_contou_tudo'},
+    {texto:'Ficar em silêncio junto.', vai:'c21_silencio_no_degrau'}
+  ]
+},
+
+c21_varreu_a_calcada:{
+  texto:[
+    'Você pega a vassoura antes que ele reclame e varre a calçada inteira, que já está varrida, e você sabe que está varrida.',
+    'Ele reclama assim mesmo. Ele reclama do jeito que você está segurando. Ele reclama do canto que você pulou.',
+    'Ele reclama de olho fechado, encostado na parede, no sol das quatro e meia.',
+    'Quando você termina, ele não fala nada sobre a calçada.',
+    fala('Sr. Rufino', 'Na terça que vem eu não vou conseguir. Se você ainda estiver na cidade.', 'baixo',
+         'É a coisa mais perto de um pedido que esse homem já fez a alguém.')
+  ],
+  ef:{moral:6, flag:'varreu_a_calcada_do_rufino',
+      npc:{nome:'Sr. Rufino', opiniao:6, memoria:'Varreu a calçada dele e ele pediu pra terça que vem.'},
+      rep:{eixo:'bom',delta:3,motivo:'Varreu a calçada de um velho com oito insígnias no bolso', rep:{notorio:true}},
+      registrar:'Varreu a calçada do Sr. Rufino. Ele pediu pra terça que vem.'},
+  escolhas:[
+    {texto:'"Eu estou." Prometer a terça.', vai:'c21_prometeu_a_terca',
+     ef:{flag:'prometeu_a_terca', moral:4}},
+    {texto:'"Não vou estar." Ser honesto.', vai:'c21_nao_vai_estar',
+     ef:{flag:'nao_prometeu_a_terca'}}
+  ]
+},
+
+c21_prometeu_a_terca:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu estou.'),
+    'Você não sabe se vai estar. Você tem uma convocação chegando, uma mesa comprida te esperando no Planalto e um vale no norte que ninguém desenhou.',
+    'Mas você fala que está, e você fala sério na hora de falar, e essas duas coisas nem sempre são a mesma.',
+    fala('Sr. Rufino', 'Então tá.', null, 'Ele anota na testa com dois dedos, como sempre.')
+  ],
+  ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu uma terça-feira comum a um velho'},
+      registrar:'Prometeu voltar na terça pra varrer a calçada.'},
+  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+},
+
+c21_nao_vai_estar:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Não vou estar. Me chamaram pro Planalto.'),
+    'Ele assente devagar, e não tem decepção na cara dele, o que é pior do que se tivesse.',
+    fala('Sr. Rufino', 'Eu sei. Eu perguntei mesmo assim.'),
+    fala('Sr. Rufino', 'Perguntar é de graça, menino. E de vez em quando a resposta é sim.')
+  ],
+  ef:{moral:2,
+      npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'},
+      rep:{eixo:'bom',delta:1,motivo:'Preferiu a verdade à promessa fácil'},
+      registrar:'Foi honesto com o Sr. Rufino sobre a terça.'},
+  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+},
+
+c21_contou_tudo:{
+  texto:[
+    'Você conta tudo. Do começo. A Floresta, o Monte Lua, o navio, o galpão de Celadon, a usina, a Silph, a Estação 4, a sala 704.',
+    'Leva quarenta minutos e ele não interrompe uma vez.',
+    'Quando você termina, ele fica quieto por um tempo comprido.',
+    fala('Sr. Rufino', 'Eu varri essa calçada todo dia durante esses meses todos.'),
+    fala('Sr. Rufino', 'E enquanto eu varria, tinha isso tudo acontecendo. A mesma quarta-feira pra mim e pra você.'),
+    fala('Sr. Rufino', 'É engraçado. Eu não sei se é bom ou ruim, mas é engraçado.', 'baixo')
+  ],
+  ef:{moral:4,
+      npc:{nome:'Sr. Rufino', opiniao:4, memoria:'Ouviu a sua viagem inteira sem interromper uma vez.'},
+      rep:{eixo:'bom',delta:1,motivo:'Contou tudo a quem só queria ouvir'},
+      registrar:'Contou a viagem inteira pro Sr. Rufino, do começo.'},
+  escolhas:[
+    {texto:'Pegar a vassoura e varrer a calçada dele.', vai:'c21_varreu_a_calcada'},
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}
+  ]
+},
+
+c21_silencio_no_degrau:{
+  texto:[
+    'Vocês dois ficam sentados no degrau e não falam nada por uns bons vinte minutos.',
+    'Passa um carro. Passa a mesma criança duas vezes, na mesma direção, sem explicação.',
+    'O sol desce o suficiente pra sair da calçada e subir na parede.',
+    'Não é constrangedor em momento nenhum, e você percebe que isso é uma coisa rara, e que você não tem isso com quase ninguém.'
+  ],
+  ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Ficou vinte minutos em silêncio com quem não pediu conversa'},
+      registrar:'Ficou vinte minutos sentado em silêncio no degrau do Sr. Rufino.'},
+  escolhas:[{texto:'Levantar e ir pra casa.', vai:'c21_dentro_de_casa'}]
+},
+
+/* ── o centro e o orelhão ──────────────────────────────────── */
+c21_centro_primeiro:{
+  texto:[
+    d=>`O posto do Centro Pokémon ${d.jogador.cidade === 'Pallet' ? 'continua funcionando numa sala dos fundos do mercado' : 'abriu um prédio novo de dois andares'}, e a enfermeira do balcão é outra.`,
+    'A de antes foi transferida. A nova tem vinte e poucos anos e uma prancheta igual.',
+    fala('a enfermeira nova', 'Cartão, por favor.'),
+    'Você entrega o cartão e ela passa o leitor, e o leitor apita, e ela para.',
+    fala('a enfermeira nova', 'Oito.', 'baixo'),
+    fala('a enfermeira nova', 'Desculpa. É que a gente vê muito cartão e quase nunca vê oito.')
+  ],
+  ef:{flag:'a_enfermeira_nova',
+      npc:{nome:'Enfermeira nova', opiniao:2, memoria:'Passou o seu cartão e viu oito insígnias pela primeira vez.'},
+      registrar:'A enfermeira do balcão é outra. A de antes foi transferida.'},
+  escolhas:[
+    {texto:'Perguntar pra onde a outra foi.', vai:'c21_pra_onde_ela_foi'},
+    {texto:'Curar o time e ir pra casa.', vai:'c21_dentro_de_casa',
+     ef:{executar:d=>{ d.time.forEach(curarTotal); Estado.curarJogador(20);
+       return [{tipo:'cura', texto:'O time voltou inteiro.'}]; }}}
+  ]
+},
+
+c21_pra_onde_ela_foi:{
+  texto:[
+    d=>fala(d.jogador.nome, 'A enfermeira que estava aqui antes. Pra onde ela foi?'),
+    fala('a enfermeira nova', 'Voltou pra estrada.', null, 'Ela diz isso como quem repete uma coisa que achou absurda.'),
+    fala('a enfermeira nova', 'Trinta e seis anos, pediu exoneração, tirou licença nova. Disse que faltavam duas.'),
+    'Faltavam duas insígnias. Ela parou em seis, e agora faltavam duas.',
+    'Você fica com o cartão na mão por um tempo a mais do que precisava.'
+  ],
+  ef:{flag:'a_enfermeira_voltou_pra_estrada', moral:5,
+      rep:{eixo:'bom',delta:1,motivo:'Alguém voltou pra estrada depois de conversar com você'},
+      registrar:'A enfermeira do Centro pediu exoneração e voltou pra estrada. Faltavam duas.'},
+  escolhas:[
+    {texto:'Pedir o número dela.', vai:'c21_numero_da_enfermeira',
+     cond:d=>Estado.temPokenav()},
+    {texto:'Curar o time e ir pra casa.', vai:'c21_dentro_de_casa',
+     ef:{executar:d=>{ d.time.forEach(curarTotal); Estado.curarJogador(20);
+       return [{tipo:'cura', texto:'O time voltou inteiro.'}]; }}}
+  ]
+},
+
+c21_numero_da_enfermeira:{
+  texto:[
+    'A enfermeira nova olha pros lados, o que é desnecessário porque não tem ninguém, e escreve num papel de receita.',
+    fala('a enfermeira nova', 'Ela deixou isso aqui pro caso de alguém perguntar.'),
+    fala('a enfermeira nova', 'Em seis meses você é a primeira pessoa que perguntou.', 'baixo')
+  ],
+  ef:{flag:'historia_da_enfermeira', moral:3,
+      npc:{nome:'Enfermeira do Centro', opiniao:2, memoria:'Deixou o número no balcão pro caso de alguém perguntar. Você perguntou.'},
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou por alguém que ninguém procurou'},
+      registrar:'Pegou o número da enfermeira que voltou pra estrada.'},
+  escolhas:[{texto:'Curar o time e ir pra casa.', vai:'c21_dentro_de_casa',
+     ef:{executar:d=>{ d.time.forEach(curarTotal); Estado.curarJogador(20);
+       return [{tipo:'cura', texto:'O time voltou inteiro.'}]; }}}]
+},
+
+c21_orelhao:{
+  texto:[
+    'Você está a trinta metros da sua própria porta e liga do orelhão da esquina, o que não faz sentido nenhum e faz todo sentido.',
+    'Dois toques.',
+    d=>fala(nomeCasa(), 'Alô?', null, 'A voz está sem fôlego. Ela correu pro telefone.'),
+    d=>fala(d.jogador.nome, 'Oi. Sou eu.'),
+    'Silêncio do outro lado.',
+    d=>fala(nomeCasa(), 'Você tá onde?', 'baixo'),
+    d=>fala(d.jogador.nome, 'Na esquina.'),
+    'Você ouve o telefone cair na mesa sem ser desligado, e ouve a porta, e ouve, de dentro do fone e de fora do fone ao mesmo tempo, a sua rua inteira.'
+  ],
+  ef:{moral:8, flag:'ligou_da_esquina',
+      rep:{eixo:'bom',delta:1,motivo:'Ligou da esquina em vez de chegar de surpresa'},
+      registrar:'Ligou pra casa do orelhão da esquina, a trinta metros da porta.'},
+  escolhas:[{texto:'Ficar parado e deixar ela vir.', vai:'c21_dentro_de_casa'}]
+},
+
+/* ── dentro de casa ────────────────────────────────────────── */
+c21_dentro_de_casa:{
+  texto:[
+    'A casa é menor. Não do jeito triste — do jeito real. Você cresceu quatro centímetros e viu prédio de onze andares, e a sua casa continuou a mesma, e a sua cabeça refez a escala.',
+    'O seu quarto está exatamente como você deixou, o que quer dizer que alguém tem entrado ali pra deixar exatamente como você deixou.',
+    d=>`${casaCompleto()} está na porta do quarto, com o pano na mão, e não entra.`,
+    d=>fala(nomeCasa(), 'Eu não mexi em nada.'),
+    d=>fala(nomeCasa(), 'Eu tirei o pó. Mas eu não mexi.', 'baixo')
+  ],
+  ef:{moral:6, flag:'entrou_no_quarto_de_novo',
+      registrar:'Entrou no próprio quarto depois de meses. Não tinham mexido em nada.'},
+  escolhas:[
+    {texto:'Mostrar as oito insígnias uma por uma.', vai:'c21_mostrou_as_oito'},
+    {texto:'Falar da convocação do Planalto agora, antes de esquentar.', vai:'c21_contou_da_convocacao'},
+    {texto:'Perguntar o que aconteceu aqui enquanto você não estava.', vai:'c21_o_que_aconteceu_aqui'},
+    {texto:'Não falar de nada. Dormir na sua cama, que é o que você veio fazer.', vai:'c21_dormiu_na_cama'}
+  ]
+},
+
+c21_mostrou_as_oito:{
+  texto:[
+    'Você abre o cartão em cima da mesa da cozinha e conta as oito, uma por uma, com cidade e nome de líder.',
+    d=>fala(nomeCasa(), 'Repete.'),
+    'Você repete.',
+    d=>fala(nomeCasa(), 'Repete de novo. Devagar. Eu quero decorar a ordem.', 'baixo'),
+    'Você repete três vezes ao todo, e na terceira ela fecha os olhos pra ouvir melhor, e mexe os lábios junto.',
+    'Ela vai contar essa lista pra rua inteira. Ela vai errar a ordem. Ninguém vai corrigir.'
+  ],
+  ef:{moral:8, flag:'mostrou_as_insignias_em_casa',
+      rep:{eixo:'bom',delta:2,motivo:'Contou as oito insígnias em casa, três vezes, devagar'},
+      registrar:'Mostrou as oito insígnias em casa. Repetiu três vezes.'},
+  escolhas:[
+    {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
+    {texto:'Deixar pra amanhã e dormir.', vai:'c21_dormiu_na_cama'}
+  ]
+},
+
+c21_o_que_aconteceu_aqui:{
+  texto:[
+    d=>fala(d.jogador.nome, 'E aqui? O que aconteceu aqui?'),
+    'A pergunta pega ela desprevenida, porque ninguém faz essa pergunta pra quem ficou.',
+    d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, menino.'),
+    'E aí ela conta, por quarenta minutos, tudo que não aconteceu:',
+    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Nogueira que casou. O cachorro do quatorze que morreu — aquele velho, você lembra dele.'),
+    d=>fala(nomeCasa(), 'A Odete imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
+    'Não aconteceu nada, e levou quarenta minutos pra contar.'
+  ],
+  ef:{moral:7, flag:'perguntou_o_que_aconteceu_em_casa',
+      rep:{eixo:'bom',delta:2,motivo:'Perguntou o que aconteceu com quem ficou'},
+      registrar:'Perguntou o que aconteceu em casa. Levou quarenta minutos de nada.'},
+  escolhas:[
+    {texto:'Subir no telhado dos fundos e olhar o que precisa.', vai:'c21_o_telhado'},
+    {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
+    {texto:'Dormir.', vai:'c21_dormiu_na_cama'}
+  ]
+},
+
+c21_o_telhado:{
+  texto:[
+    'Você sobe no telhado dos fundos às cinco e meia da tarde com uma chave de fenda e nenhuma competência.',
+    'São três telhas. Uma rachada, duas fora de posição. Você resolve as duas fora de posição em dez minutos e a rachada não tem como resolver sem telha nova.',
+    'Você desce, vai no armazém, compra três telhas por seiscentos, volta e sobe de novo.',
+    d=>fala(nomeCasa(), 'DESCE DAÍ!', 'grita', 'Ela grita do quintal, e continua gritando o tempo inteiro, e não sai de lá em nenhum momento.'),
+    'Você desce quando termina. O telhado não vai mais pingar neste inverno.'
+  ],
+  ef:{dinheiro:-600, moral:6, flag:'consertou_o_telhado',
+      rep:{eixo:'bom',delta:2,motivo:'Consertou o telhado da casa com oito insígnias no bolso'},
+      registrar:'Consertou as três telhas do telhado dos fundos.'},
+  escolhas:[
+    {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
+    {texto:'Tomar banho e dormir.', vai:'c21_dormiu_na_cama'}
+  ]
+},
+
+c21_contou_da_convocacao:{
+  texto:[
+    'Você põe o telegrama em cima da mesa e empurra.',
+    'É um papel amarelo com quatro linhas em maiúsculo, timbrado, e a palavra COMPARECIMENTO aparece duas vezes.',
+    d=>fala(nomeCasa(), 'Isso é ruim?'),
+    d=>fala(d.jogador.nome, 'Eu não sei.'),
+    d=>fala(nomeCasa(), 'Você sabe alguma coisa?'),
+    d=>fala(d.jogador.nome, 'Eu sei que eles não convocam quem não incomoda.'),
+    'Ela lê o papel amarelo mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
+    d=>fala(nomeCasa(), 'Come antes de ir. Só isso que eu tenho pra falar sobre isso.', 'baixo')
+  ],
+  ef:{flag:'contou_da_convocacao_em_casa', moral:3,
+      registrar:'Mostrou a convocação do Planalto em casa.'},
+  escolhas:[
+    {texto:'Dormir na sua cama.', vai:'c21_dormiu_na_cama'},
+    {texto:'Ficar acordado na cozinha com ela até tarde.', vai:'c21_acordados_ate_tarde'}
+  ]
+},
+
+c21_acordados_ate_tarde:{
+  texto:[
+    'Vocês ficam acordados até uma e meia da manhã na cozinha, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa depois das onze.',
+    'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do cachorro do quatorze.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ele sair.`
+               : 'O relógio da parede continua três minutos adiantado. Ninguém nunca acertou.';
+    },
+    'Você vai lembrar desta cozinha depois, em lugares muito piores do que esta cozinha.'
+  ],
+  ef:{moral:9, flag:'a_noite_na_cozinha', hp:4,
+      rep:{eixo:'bom',delta:1,motivo:'Ficou acordado até uma e meia por conversa de bobagem'},
+      registrar:'Ficou até uma e meia da manhã na cozinha, com a luz do fogão.'},
+  escolhas:[{texto:'Dormir.', vai:'c21_dormiu_na_cama'}]
+},
+
+c21_dormiu_na_cama:{
+  texto:[
+    'Você dorme na sua cama pela primeira vez em meses e é pior do que você esperava.',
+    'O colchão é mole demais. O travesseiro é alto demais. A casa faz barulhos que você desaprendeu.',
+    'Você acorda três vezes e na terceira desiste, pega o cobertor e deita no chão do quarto, do lado da mochila.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} deita colado em você e adormece em nove segundos, porque pra ele o chão é o chão em qualquer lugar do mundo.`
+               : 'Você adormece no chão em quatro minutos.';
+    },
+    'É essa a parte que ninguém te conta: que a estrada entra em você e não sai mais, e que a sua própria cama vira um lugar que você visita.'
+  ],
+  ef:{hp:8, flag:'dormiu_no_chao_de_casa',
+      registrar:'Não conseguiu dormir na própria cama. Dormiu no chão, do lado da mochila.'},
+  escolhas:[
+    {texto:'Acordar, tomar café e ir pro Planalto.', vai:'c21_saida_de_casa'},
+    {texto:'Ficar mais um dia. O Planalto espera.', vai:'c21_mais_um_dia'}
+  ]
+},
+
+c21_mais_um_dia:{
+  texto:[
+    'Você fica mais um dia. A convocação diz uma data e a data tem folga de três dias, e você usa um.',
+    'Não acontece nada de especial neste dia. Você conserta o que dá, come o que colocam no prato, anda a rua duas vezes.',
+    'É exatamente por não acontecer nada que você vai lembrar dele.'
+  ],
+  ef:{moral:5, hp:6, flag:'ficou_mais_um_dia',
+      rep:{eixo:'bom',delta:1,motivo:'Gastou um dia de folga da convocação em casa'},
+      registrar:'Gastou um dia da folga da convocação em casa, sem fazer nada.'},
+  escolhas:[{texto:'No dia seguinte, ir.', vai:'c21_saida_de_casa'}]
+},
+
+c21_saida_de_casa:{
+  texto:[
+    'A saída é curta, porque segunda saída sempre é curta. A primeira é que é comprida.',
+    d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". Ela já disse isso uma vez e não repete.'),
+    'Na porta, ela enfia alguma coisa no bolso de fora da sua mochila, do jeito que ela faz, sem avisar o que é.',
+    'Você só vai descobrir depois, na estrada, e é uma foto três por quatro da sua licença — daquelas vinte que a Sra. Odete imprimiu — com uma coisa escrita atrás.',
+    d=>fala(nomeCasa(), 'pra você lembrar da cara que você tinha quando saiu', 'baixo',
+            'Escrito a lápis, na letra que você conhece desde que aprendeu a ler.')
+  ],
+  ef:{itens:{'Foto três por quatro com um bilhete atrás':1}, moral:6,
+      flag:'saiu_de_casa_a_segunda_vez',
+      registrar:'Saiu de casa pela segunda vez. Levou uma foto com um bilhete atrás.'},
+  fim:true
+},
+
+/* ── quem pula tudo ────────────────────────────────────────── */
+c21_nao_foi_pra_casa:{
+  texto:[
+    'Você passa pela sua rua sem entrar na sua rua, o que exige um desvio de dois quarteirões e alguma determinação.',
+    'Você compra o que precisa no armazém, de cabeça baixa, e o homem do armazém te reconhece e não fala nada, porque ele entende de cabeça baixa.',
+    'E aí você pega a estrada de novo.',
+    'Não tem punição nenhuma nisso. Ninguém te cobra. É só que vai ficar.'
+  ],
+  ef:{flag:'nao_entrou_na_propria_rua', moral:-5,
+      rep:{eixo:'ruim',delta:1,motivo:'Passou pela própria rua sem entrar nela'},
+      registrar:'Passou por casa e não entrou.'},
+  fim:true
+}
+
+}
+}
+
+);
+
+
+/* ===== js/story/cap-22.js ===== */
+/* ============================================================
+   CAPÍTULO 22 — O CHAVEAMENTO
+   Planalto Indigo. Arena aberta. O seu nome está no quadro e
+   você não se inscreveu.
+   ============================================================ */
+CAPITULOS.push(
+
+{
+num:22, titulo:'O Chaveamento', local:'Planalto Indigo — arena aberta', ambiente:'montanha', nivelArea:54,
+tom:'sombrio', inicio:'c22_o_quadro',
+cenas:{
+
+c22_o_quadro:{
+  texto:[
+    'O quadro de chaveamento da arena aberta é uma folha de cortiça de dois metros com trinta e dois nomes escritos à mão, presos com percevejo.',
+    'Trinta e um deles se inscreveram.',
+    d=>`O seu está na chave quatro, escrito com a mesma caneta de todos os outros, com a sua cidade embaixo: ${d.jogador.cidade}.`,
+    'Você não preencheu ficha nenhuma. Você não pagou inscrição nenhuma. Você chegou aqui hoje.',
+    fala('o funcionário da mesa', 'Inscrição paga e confirmada, moço. Tá tudo certo aqui no meu papel.'),
+    fala('o funcionário da mesa', 'Paga por terceiro. Isso é normal, acontece direto, patrocínio de loja, de família, de ginásio.'),
+    fala('o funcionário da mesa', 'Campo do pagador...', null, 'Ele corre o dedo pela coluna e para.'),
+    fala('o funcionário da mesa', 'Em branco.', 'baixo')
+  ],
+  ef:{flag:'inscrito_por_terceiro',
+      registrar:'Alguém pagou a sua inscrição no torneio aberto e não assinou.'},
+  escolhas:[
+    {texto:'Exigir o nome de quem pagou. Tem que estar em algum lugar.', vai:'c22_exigiu_o_nome'},
+    {texto:'Recusar a vaga. Sair do chaveamento.', vai:'c22_recusou_a_vaga'},
+    {texto:'Aceitar e lutar. Quem pagou aparece ou não aparece.', vai:'c22_aceitou'},
+    {texto:'Ligar pra alguém que possa saber disso.', vai:'c22_ligou_perguntando',
+     cond:d=>Estado.temPokenav() && Estado.contatosNaAgenda().length > 1}
+  ]
+},
+
+c22_exigiu_o_nome:{
+  texto:[
+    'Você exige, e o funcionário da mesa te leva à supervisora, e a supervisora abre uma pasta e vira a pasta pra você ver.',
+    fala('a supervisora', 'Dinheiro vivo, no balcão, três dias atrás. Quem paga em dinheiro não deixa nome.'),
+    fala('a supervisora', 'Eu posso te dizer o que o rapaz do balcão lembrou: mulher, de terno, crachá azul pendurado no bolso.'),
+    'Crachá azul. Décimo andar da Silph.',
+    fala('a supervisora', 'Isso não é ilegal, moço. É esquisito, e eu concordo que é esquisito, mas não é ilegal.')
+  ],
+  ef:{flag:'pagou_uma_de_cracha_azul',
+      rep:{eixo:'bom',delta:1,motivo:'Exigiu saber quem estava pagando por você'},
+      registrar:'Quem pagou a inscrição era uma mulher de crachá azul da Silph.'},
+  escolhas:[
+    {texto:'Aceitar a vaga sabendo de onde veio.', vai:'c22_aceitou'},
+    {texto:'Recusar justamente por isso.', vai:'c22_recusou_a_vaga'},
+    {texto:'Pagar a inscrição do seu bolso e devolver o dinheiro à mesa.', vai:'c22_pagou_do_bolso',
+     cond:d=>d.jogador.dinheiro >= 2000}
+  ]
+},
+
+c22_ligou_perguntando:{
+  texto:[
+    'Você sai do galpão da arena, senta no muro de fora e abre o aparelho.',
+    'Você liga pra três números antes de conseguir uma resposta que presta, e a terceira é a que presta.',
+    fala('quem te atendeu', 'Torneio aberto, chave quatro, inscrição paga por terceiro.'),
+    fala('quem te atendeu', 'Escuta o que eu vou falar: isso não é presente. Isso é pra te colocar num lugar onde muita gente olha, num dia marcado.'),
+    fala('quem te atendeu', 'Quem quer você visível quer você visível por um motivo. Vai lá e luta, mas vai sabendo.', 'baixo')
+  ],
+  ef:{flag:'avisado_do_torneio', moral:2,
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou antes de entrar'},
+      registrar:'Ligou perguntando sobre a inscrição. Te disseram que era pra te deixar visível.'},
+  escolhas:[
+    {texto:'Ir lutar assim mesmo, agora sabendo.', vai:'c22_aceitou'},
+    {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
+    {texto:'Exigir o nome de quem pagou antes de decidir.', vai:'c22_exigiu_o_nome'}
+  ]
+},
+
+c22_pagou_do_bolso:{
+  texto:[
+    'Você põe dois mil na mesa e pede pra riscar o pagamento antigo e registrar o novo no seu nome.',
+    fala('a supervisora', 'Eu vou ter que refazer três papéis por causa disso.'),
+    fala('a supervisora', 'E eu vou refazer, porque em onze anos aqui você é a primeira pessoa que pediu pra pagar o que já estava pago.', 'riso'),
+    'Ela risca, escreve, carimba, e devolve o dinheiro do desconhecido pro envelope da mesa.',
+    'Sai de lá mais pobre e completamente seu.'
+  ],
+  ef:{dinheiro:-2000, flag:'pagou_a_propria_inscricao', moral:4,
+      rep:{eixo:'bom',delta:2,motivo:'Pagou do bolso o que já estava pago, pra não dever a ninguém', rep:{notorio:true}},
+      npc:{nome:'Supervisora da arena', opiniao:3, memoria:'Pagou a própria inscrição num torneio que já estava pago.'},
+      registrar:'Pagou a própria inscrição pra não dever nada a quem pagou antes.'},
+  escolhas:[{texto:'Entrar na arena.', vai:'c22_aceitou'}]
+},
+
+c22_recusou_a_vaga:{
+  texto:[
+    'Você pede pra tirar o seu nome do quadro e o funcionário da mesa demora a entender o pedido, porque ninguém faz esse pedido.',
+    'Ele tira o percevejo e o papel sai, e o buraquinho fica.',
+    'Trinta e um nomes. Uma chave com bye.',
+    'Você sai do galpão e do lado de fora tem umas quarenta pessoas olhando o quadro, e uma delas — uma menina de uns treze anos — vê o seu nome sendo tirado e não entende, e você não vai ficar pra explicar.'
+  ],
+  ef:{flag:'recusou_o_torneio',
+      rep:{eixo:'bom',delta:1,motivo:'Recusou uma vaga que alguém comprou pra você'},
+      registrar:'Tirou o próprio nome do chaveamento.'},
+  escolhas:[
+    {texto:'Ir embora do Planalto.', vai:'c22_foi_embora'},
+    {texto:'Ficar assistindo o torneio da arquibancada.', vai:'c22_da_arquibancada'},
+    {texto:'Voltar e pedir a vaga de volta. Você pensou melhor.', vai:'c22_voltou_pro_quadro'}
+  ]
+},
+
+c22_voltou_pro_quadro:{
+  texto:[
+    'Você volta ao galpão vinte minutos depois e o funcionário da mesa já está com o percevejo na mão, como quem esperava.',
+    fala('o funcionário da mesa', 'Eu não joguei fora.', null, 'Ele tira o seu papel do bolso da camisa, dobrado.'),
+    fala('o funcionário da mesa', 'Em onze anos aqui, sete pessoas tiraram o nome do quadro. Cinco voltaram.'),
+    fala('o funcionário da mesa', 'Das cinco, três ganharam. Faz o que você quiser com essa informação.', 'riso')
+  ],
+  ef:{limpaFlag:'recusou_o_torneio', moral:3,
+      registrar:'Voltou e pediu a vaga de volta. O funcionário tinha guardado o papel.'},
+  escolhas:[{texto:'Entrar na arena.', vai:'c22_aceitou'}]
+},
+
+c22_da_arquibancada:{
+  texto:[
+    'Você assiste o torneio inteiro da arquibancada, com um saco de pipoca de quinhentos pokedólares e uma sensação incômoda no peito que você não quer nomear.',
+    'A final é entre um garoto de Saffron e uma mulher de uns quarenta que ninguém conhecia até hoje de manhã.',
+    'Ela ganha. Ela chora. O garoto de Saffron aplaude ela antes de qualquer pessoa da arquibancada aplaudir.',
+    'É um torneio bonito. Você devia estar nele.'
+  ],
+  ef:{itens:{'Saco de pipoca':1}, moral:-3, flag:'assistiu_da_arquibancada',
+      registrar:'Assistiu da arquibancada o torneio em que o seu nome estava.'},
+  escolhas:[{texto:'Ir embora quando esvaziar.', vai:'c22_foi_embora'}]
+},
+
+/* ── o torneio ─────────────────────────────────────────────── */
+c22_aceitou:{
+  texto:[
+    'A arena aberta não tem teto. É um círculo de terra batida de vinte metros com arquibancada de concreto dos quatro lados e uma torre de som que chia.',
+    'Você luta três vezes em quatro horas.',
+    'A primeira é contra um garoto de Fuchsia que decorou o seu time pelo boletim da Liga e montou tudo pra te vencer, e quase consegue, e perde por uma escolha errada no quinto turno.',
+    'A segunda é contra uma mulher de Cinnabar que não decorou nada e luta pelo instinto, o que é muito pior de enfrentar.',
+    'A terceira você não lembra direito depois, porque foi rápida demais.',
+    fala('o locutor da arena', 'CHAVE QUATRO NA FINAL!', 'grita', 'A torre de som chia na palavra FINAL e a arquibancada acha graça.')
+  ],
+  ef:{flag:'chegou_na_final_do_aberto', moral:5,
+      rep:{eixo:'bom',delta:2,motivo:'Chegou à final do torneio aberto do Planalto', rep:{notorio:true}},
+      registrar:'Chegou à final do torneio aberto.'},
+  escolhas:[
+    {texto:'Ir pra final.', vai:'c22_a_final'},
+    {texto:'Olhar a arquibancada primeiro, procurando um crachá azul.', vai:'c22_procurou_na_arquibancada'}
+  ]
+},
+
+c22_procurou_na_arquibancada:{
+  texto:[
+    'Você para no meio da arena, antes da final, e olha a arquibancada inteira de propósito, setor por setor, com a torre de som chiando o seu nome.',
+    'Oitocentas pessoas, talvez novecentas.',
+    'Setor leste, fileira de cima, perto da saída: uma mulher de terno, sozinha numa fileira de doze lugares vazios, com um crachá azul pendurado no bolso do paletó.',
+    'Ela não está olhando a arena. Ela está olhando você olhar a arquibancada.',
+    'E quando você acha ela, ela levanta a mão e acena, devagar, como quem cumprimenta uma pessoa conhecida.'
+  ],
+  ef:{flag:'viu_a_mulher_do_cracha_azul',
+      rep:{eixo:'bom',delta:1,motivo:'Procurou quem estava te olhando'},
+      registrar:'Achou a mulher de crachá azul na arquibancada. Ela acenou de volta.'},
+  escolhas:[
+    {texto:'Acenar de volta.', vai:'c22_acenou_de_volta'},
+    {texto:'Não acenar. Virar e lutar.', vai:'c22_a_final'},
+    {texto:'Sair da arena e ir falar com ela agora.', vai:'c22_subiu_a_arquibancada'}
+  ]
+},
+
+c22_acenou_de_volta:{
+  texto:[
+    'Você acena de volta, no meio da arena, com oitocentas pessoas achando que você está acenando pra elas.',
+    'A arquibancada inteira acena de volta pra você, o que é hilário e o que você não vai conseguir explicar depois.',
+    'A mulher do crachá azul ri. Dá pra ver daqui que ela ri.',
+    'E aí ela senta, cruza as pernas, e fica esperando a final como quem comprou ingresso.'
+  ],
+  ef:{moral:4, flag:'acenou_pro_cracha_azul',
+      rep:{eixo:'bom',delta:1,motivo:'Acenou de volta para quem estava te observando'},
+      registrar:'Acenou pra mulher de crachá azul. A arquibancada inteira acenou de volta.'},
+  escolhas:[{texto:'Lutar a final.', vai:'c22_a_final'}]
+},
+
+c22_subiu_a_arquibancada:{
+  texto:[
+    'Você sai da arena no meio da chamada da final e sobe cinquenta e dois degraus de concreto com o time no cinto e o locutor chiando o seu nome três vezes.',
+    'Ela não levanta quando você chega. Ela tira a bolsa do lugar do lado pra você sentar.',
+    fala('a mulher de crachá azul', 'Senta. Você tem quatro minutos antes de perderem a paciência.'),
+    fala('a mulher de crachá azul', 'Eu paguei a sua inscrição. Eu não vou pedir desculpa e não vou explicar aqui.'),
+    fala('a mulher de crachá azul', 'Vai ter uma sala, uma mesa comprida e quatro cadeiras, e nessa sala eu explico. Eu só precisava que mais gente te visse antes.'),
+    fala('a mulher de crachá azul', 'Agora desce e ganha, porque se você perder tudo isso fica muito mais difícil.', 'frio')
+  ],
+  ef:{flag:'falou_com_o_cracha_azul',
+      rep:{eixo:'bom',delta:1,motivo:'Subiu cinquenta e dois degraus pra perguntar na cara'},
+      registrar:'Subiu a arquibancada no meio da final pra falar com a mulher de crachá azul.'},
+  escolhas:[{texto:'Descer e lutar.', vai:'c22_a_final'}]
+},
+
+c22_a_final:{
+  texto:[
+    'A final é contra a mulher de uns quarenta anos que ninguém conhecia até hoje de manhã.',
+    'Ela se chama Nádia. Ela se inscreveu sozinha, pagou a própria inscrição, e veio de ônibus de Lavender na madrugada.',
+    'Ela tem um Arcanine que já foi de outra pessoa e que obedece a ela de um jeito que não se ensina em seis meses.',
+    fala('Nádia', 'Eu tenho quarenta e um anos e essa é a minha segunda licença.'),
+    fala('Nádia', 'A primeira caiu em 1979, porque eu passei seis meses sem registrar batalha, porque eu estava criando gente.'),
+    fala('Nádia', 'Não pega leve comigo. Se você pegar leve eu vou saber, e aí não vale.', 'frio')
+  ],
+  batalha:{
+    tipo:'treinador', fuga:false, treinador:'Nádia',
+    dex:59, nivel:d=>Math.max(38, 34 + Estado.dados.insignias.length * 2),
+    timeExtra:[{dex:26, mais:-2},{dex:94, mais:-1}],
+    vitoria:'c22_venceu_a_final', derrota:'c22_perdeu_a_final'
+  }
+},
+
+c22_venceu_a_final:{
+  texto:[
+    'Você ganha. Não é fácil e não é bonito, e o Arcanine dela fica de pé quatro turnos depois de qualquer bicho razoável ter caído.',
+    'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
+    fala('Nádia', 'Você não pegou leve. Obrigada.'),
+    fala('Nádia', 'Me dá o seu número. Eu vou tirar a segunda insígnia em quatro meses e eu quero que você saiba o dia.'),
+    'A taça é de plástico pintado e tem o ano errado gravado na base. Ninguém liga.'
+  ],
+  ef:{dinheiro:18000, flag:'venceu_o_aberto', moral:6,
+      itens:{'Taça com o ano errado':1},
+      npc:{nome:'Nádia Bragança', opiniao:5, memoria:'Perdeu a final do aberto pra você e pediu o seu número.'},
+      rep:{eixo:'bom',delta:3,motivo:'Venceu o torneio aberto do Planalto', rep:{notorio:true, peso:2}},
+      registrar:'Venceu o torneio aberto do Planalto Indigo.'},
+  escolhas:[
+    {texto:'Dar o número e pegar o dela.', vai:'c22_trocou_numero',
+     cond:d=>Estado.temPokenav()},
+    {texto:'Agradecer e ir embora.', vai:'c22_foi_embora'}
+  ]
+},
+
+c22_perdeu_a_final:{
+  texto:[
+    'Você perde. O Arcanine dela não cai, e em algum ponto do combate você entende que não vai cair, e continua tentando mesmo assim, que é a única coisa decente a fazer.',
+    'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
+    fala('Nádia', 'Você é bom. Você vai ser muito melhor.'),
+    fala('Nádia', 'Eu levei vinte e dois anos pra voltar pra essa arena. Você chegou aqui em quanto tempo?'),
+    d=>fala(d.jogador.nome, 'Uns meses.'),
+    fala('Nádia', 'Então não faz essa cara.', 'riso')
+  ],
+  ef:{dinheiro:6000, flag:'perdeu_o_aberto', moral:3,
+      npc:{nome:'Nádia Bragança', opiniao:4, memoria:'Ganhou a final do aberto de você e te consolou na arena.'},
+      rep:{eixo:'bom',delta:1,motivo:'Chegou à final do aberto e perdeu direito'},
+      registrar:'Perdeu a final do torneio aberto para a Nádia Bragança.'},
+  escolhas:[
+    {texto:'Pedir o número dela.', vai:'c22_trocou_numero',
+     cond:d=>Estado.temPokenav()},
+    {texto:'Ir embora.', vai:'c22_foi_embora'}
+  ]
+},
+
+c22_trocou_numero:{
+  texto:[
+    'Vocês trocam número no meio da arena, com a arquibandada esvaziando, com o locutor já falando de outra coisa.',
+    fala('Nádia', 'Eu não sei usar isso direito. A minha filha que configurou.'),
+    fala('Nádia', 'Se eu ligar errado e desligar na sua cara, não leva a mal. Liga de volta.', 'riso')
+  ],
+  ef:{flag:'numero_da_nadia', moral:3,
+      rep:{eixo:'bom',delta:1,motivo:'Trocou número com quem te enfrentou de igual pra igual'},
+      registrar:'Trocou número com a Nádia Bragança.'},
+  escolhas:[{texto:'Ir embora do Planalto.', vai:'c22_foi_embora'}]
+},
+
+c22_foi_embora:{
+  texto:[
+    'Você desce a estrada do Planalto no fim da tarde com a arquibandada esvaziando atrás de você e o quadro de cortiça já sem nome nenhum.',
+    d=>d.flags.viu_a_mulher_do_cracha_azul || d.flags.pagou_uma_de_cracha_azul
+      ? 'A vaga que alguém comprou pra você já foi usada. Quem comprou vai cobrar, e você já sabe que vai, e já sabe mais ou menos quando.'
+      : 'Alguém pagou a sua inscrição e nunca apareceu, e isso vai ficar guardado num canto da sua cabeça pelo resto da estrada.',
+    'Na descida você passa por uma placa nova, de madeira, que não estava aqui na sua última subida.',
+    'ROTA 23 — CONTROLE DE ACESSO. SETE POSTOS. TENHA O CARTÃO EM MÃOS.'
+  ],
+  ef:{flag:'viu_a_placa_da_rota23',
+      registrar:'Viu a placa nova do controle de acesso da Rota 23.'},
+  fim:true
+}
+
+}
+}
+
+);
+
+
+/* ===== js/story/cap-23.js ===== */
+/* ============================================================
+   CAPÍTULO 23 — O SEGUNDO ANDAR
+   Viridian. O ginásio tem um andar que ninguém abre desde que
+   o dono anterior foi embora sem desocupar a sala.
+   ============================================================ */
+CAPITULOS.push(
+
+{
+num:23, titulo:'O Segundo Andar', local:'Viridian — ginásio', ambiente:'cidade', nivelArea:55,
+tom:'muito sombrio', inicio:'c23_a_escada',
+cenas:{
+
+c23_a_escada:{
+  texto:[
+    'O ginásio de Viridian tem uma escada no fundo à direita, atrás de um biombo, e em dois anos você nunca viu ninguém subir por ela.',
+    'Hoje o biombo está encostado na parede e a escada está à vista, com a fita de isolamento arrancada e enrolada num canto do degrau.',
+    fala('Blue', 'Eu abri hoje de manhã.', null, 'Ele está sentado na linha pintada do chão, de costas pra escada, que é uma posição muito específica de quem não quer olhar pra uma coisa.'),
+    fala('Blue', 'A Liga me deu esse ginásio com o segundo andar lacrado e um papel dizendo "arquivo do titular anterior, não mexer".'),
+    fala('Blue', 'Eu não mexi por dois anos. Aí chegou uma convocação pra você, e uma pra mim, e as duas com o mesmo número de protocolo.'),
+    fala('Blue', 'Então eu mexi.', 'frio')
+  ],
+  ef:{flag:'blue_abriu_o_segundo_andar',
+      npc:{nome:'Blue', opiniao:1, memoria:'Abriu o segundo andar do ginásio depois de dois anos, no dia da convocação.'},
+      registrar:'Blue abriu o segundo andar do ginásio de Viridian.'},
+  escolhas:[
+    {texto:'Subir junto com ele.', vai:'c23_subiu_com_blue'},
+    {texto:'Perguntar o que tem lá em cima antes de subir.', vai:'c23_perguntou_antes'},
+    {texto:'Perguntar por que ele esperou você.', vai:'c23_por_que_esperou'},
+    {texto:'Recusar. Isso não é da sua conta.', vai:'c23_recusou_subir'}
+  ]
+},
+
+c23_perguntou_antes:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que tem lá em cima?'),
+    fala('Blue', 'Uma sala de dez por seis com arquivo de aço do chão ao teto.'),
+    fala('Blue', 'Quatro corredores de pasta. Tudo etiquetado, tudo em ordem, tudo com a mesma letra.'),
+    fala('Blue', 'E uma mesa no meio com uma cadeira só, virada pra parede.'),
+    'Ele fala isso sem levantar a cabeça, na cadência de quem já subiu e desceu hoje.',
+    fala('Blue', 'Eu li três pastas e desci. Depois eu subi de novo e li mais duas. Depois eu sentei aqui e fiquei esperando alguém que aguentasse ler junto.')
+  ],
+  ef:{flag:'sabe_o_que_tem_em_cima',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou antes de subir'},
+      registrar:'Blue leu cinco pastas e desceu para esperar alguém.'},
+  escolhas:[
+    {texto:'Subir com ele.', vai:'c23_subiu_com_blue'},
+    {texto:'Perguntar por que ele esperou você.', vai:'c23_por_que_esperou'},
+    {texto:'Recusar mesmo assim.', vai:'c23_recusou_subir'}
+  ]
+},
+
+c23_por_que_esperou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Por que você esperou eu chegar?'),
+    'Ele demora. Ele demora tanto que você acha que não vai responder.',
+    fala('Blue', 'Porque tem duas pessoas vivas que podiam ler isso comigo.', 'baixo'),
+    fala('Blue', 'Uma sumiu faz dois anos e ninguém sabe pra onde.'),
+    fala('Blue', 'A outra é você.'),
+    'E aí ele levanta, sacode a calça, e vai pra escada sem olhar se você vem atrás.'
+  ],
+  ef:{flag:'blue_falou_do_red', moral:3,
+      npc:{nome:'Blue', opiniao:4, memoria:'Disse que só duas pessoas vivas podiam ler aquelas pastas com ele.'},
+      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que abriu o Blue'},
+      registrar:'Blue disse que só duas pessoas podiam ler aquilo com ele, e uma sumiu.'},
+  escolhas:[
+    {texto:'Ir atrás.', vai:'c23_subiu_com_blue'},
+    {texto:'Ficar. Deixar ele subir sozinho.', vai:'c23_deixou_subir_sozinho'}
+  ]
+},
+
+c23_recusou_subir:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Isso não é da minha conta.'),
+    'Ele assente devagar, sem discutir, o que não é do feitio dele.',
+    fala('Blue', 'Tá certo. É o seguinte: o número de protocolo é o mesmo.'),
+    fala('Blue', 'Se é a mesma pasta que te convocou e me convocou, então é da sua conta desde antes de você saber que existia.'),
+    fala('Blue', 'Mas você não precisa subir hoje. A escada vai continuar aberta.', 'frio')
+  ],
+  ef:{flag:'recusou_o_segundo_andar',
+      registrar:'Recusou subir ao segundo andar do ginásio.'},
+  escolhas:[
+    {texto:'Mudar de ideia e subir.', vai:'c23_subiu_com_blue'},
+    {texto:'Ir embora de Viridian.', vai:'c23_foi_embora_sem_ler'}
+  ]
+},
+
+c23_deixou_subir_sozinho:{
+  texto:[
+    'Você fica no ginásio vazio ouvindo os passos dele no assoalho de cima, indo e voltando, parando, indo de novo.',
+    'Quarenta minutos.',
+    'Quando ele desce, ele está com três pastas debaixo do braço e a cara de quem não vai falar sobre isso hoje.',
+    fala('Blue', 'Toma.', null, 'Ele te entrega a de cima, só a de cima, e leva as outras duas pra trás do balcão.'),
+    fala('Blue', 'Essa é a sua. Literalmente. Tem o seu nome na etiqueta.', 'frio')
+  ],
+  ef:{flag:'recebeu_a_pasta_com_seu_nome',
+      itens:{'Pasta com o seu nome na etiqueta':1},
+      registrar:'Blue desceu com três pastas e te entregou uma com o seu nome.'},
+  escolhas:[
+    {texto:'Abrir a pasta agora, na frente dele.', vai:'c23_abriu_a_pasta'},
+    {texto:'Não abrir. Subir e ver o resto você mesmo.', vai:'c23_a_sala'},
+    {texto:'Guardar e ir embora.', vai:'c23_foi_embora_sem_ler'}
+  ]
+},
+
+c23_subiu_com_blue:{
+  texto:[
+    'A escada tem dezenove degraus e range em sete deles.',
+    'A sala é do tamanho que ele disse: dez por seis, arquivo de aço do chão ao teto, quatro corredores de pasta.',
+    'A luz é de lâmpada fluorescente e demora quatro segundos pra estabilizar, e nesses quatro segundos a sala pisca e fica igual a si mesma três vezes.',
+    'A mesa do meio tem uma cadeira só, virada pra parede.',
+    fala('Blue', 'Corredor A é ginásio. Corredor B é Liga. Corredor C é pessoal dele.'),
+    fala('Blue', 'Corredor D...', null, 'Ele não termina. Ele aponta com o queixo.'),
+    'O corredor D tem pastas com nome de pessoa nas etiquetas. Centenas.'
+  ],
+  ef:{flag:'subiu_no_segundo_andar',
+      registrar:'Subiu ao segundo andar. O corredor D tem centenas de pastas com nome de pessoa.'},
+  escolhas:[
+    {texto:'Procurar o seu nome no corredor D.', vai:'c23_procurou_o_proprio_nome'},
+    {texto:'Ler o corredor C — o pessoal dele.', vai:'c23_corredor_c'},
+    {texto:'Ler o corredor B — a Liga.', vai:'c23_corredor_b'},
+    {texto:'Sentar na cadeira virada pra parede.', vai:'c23_a_cadeira'}
+  ]
+},
+
+c23_a_sala:{
+  texto:[
+    'Você sobe sozinho os dezenove degraus e a sala é exatamente como ele descreveu, o que de alguma forma é pior.',
+    'Quatro corredores de aço. Uma mesa. Uma cadeira virada pra parede.'
+  ],
+  escolhas:[
+    {texto:'Procurar o seu nome no corredor D.', vai:'c23_procurou_o_proprio_nome'},
+    {texto:'Ler o corredor C.', vai:'c23_corredor_c'},
+    {texto:'Ler o corredor B.', vai:'c23_corredor_b'},
+    {texto:'Sentar na cadeira virada pra parede.', vai:'c23_a_cadeira'}
+  ]
+},
+
+c23_a_cadeira:{
+  texto:[
+    'Você senta na cadeira. Ela está virada pra parede e a parede não tem nada.',
+    'Não tem janela, não tem quadro, não tem prego. É uma parede pintada de bege, a quarenta centímetros do seu rosto.',
+    'Alguém sentava aqui. Todo dia, provavelmente por anos, de frente pra uma parede vazia, com quatro corredores de arquivo nas costas.',
+    'Você fica ali por um tempo que você não consegue medir depois.',
+    fala('Blue', 'Levanta.', 'baixo', 'A voz vem da escada. Ele não subiu o último degrau.'),
+    fala('Blue', 'Levanta dessa cadeira. Por favor.')
+  ],
+  ef:{flag:'sentou_na_cadeira_dele', hp:-3,
+      rep:{eixo:'bom',delta:1,motivo:'Sentou onde ninguém quis sentar'},
+      registrar:'Sentou na cadeira virada pra parede.'},
+  escolhas:[
+    {texto:'Levantar.', vai:'c23_procurou_o_proprio_nome'},
+    {texto:'Ficar mais um pouco.', vai:'c23_ficou_na_cadeira'}
+  ]
+},
+
+c23_ficou_na_cadeira:{
+  texto:[
+    'Você fica mais dez minutos na cadeira, de frente pra parede bege, com o Blue parado no último degrau atrás de você.',
+    'Ele não sobe e não desce.',
+    'Em algum momento você entende uma coisa sobre a pessoa que sentava aqui, e não é uma coisa que dá pra explicar em voz alta, e não é perdão.',
+    'É só entender. Entender não é nada. Entender só torna tudo um pouco mais pesado e não muda nada.',
+    'Aí você levanta.'
+  ],
+  ef:{flag:'entendeu_a_cadeira', moral:-2, hp:-4,
+      rep:{eixo:'bom',delta:1,motivo:'Ficou tempo demais num lugar que ninguém queria ocupar'},
+      registrar:'Ficou dez minutos na cadeira virada pra parede.'},
+  escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
+},
+
+c23_corredor_b:{
+  texto:[
+    'Corredor B: Liga. Três prateleiras de convênio, ata e correspondência oficial, arquivado por ano.',
+    'Tem onze anos de correspondência entre o ginásio de Viridian e a Liga Pokémon, e a correspondência é absolutamente normal até 1994.',
+    'Em 1994 ela muda de tom. Vira mais curta. Vira só confirmação de recebimento, sem assunto.',
+    'Em 1995 tem uma pasta fina com quatro folhas e um título escrito à máquina: CONVÊNIO DE MANEJO — GRUPO DE RESGATE BIOLÓGICO.',
+    'É o mesmo convênio que você já viu antes, com a mesma assinatura ilegível no canto — mas esta cópia tem uma coisa que as outras não tinham.',
+    'Esta cópia tem a segunda página.'
+  ],
+  ef:{flag:'achou_a_segunda_pagina',
+      itens:{'Segunda página do convênio':1},
+      rep:{eixo:'bom',delta:2,motivo:'Achou a página que faltava no convênio'},
+      registrar:'Achou a segunda página do convênio Liga–CGRB no arquivo do ginásio.'},
+  escolhas:[
+    {texto:'Ler a segunda página em voz alta pro Blue.', vai:'c23_leu_em_voz_alta'},
+    {texto:'Guardar e ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'},
+    {texto:'Ler o corredor C antes.', vai:'c23_corredor_c'}
+  ]
+},
+
+c23_leu_em_voz_alta:{
+  texto:[
+    'Você lê a segunda página em voz alta, os quatro parágrafos, numa sala de arquivo com uma lâmpada fluorescente que zumbe.',
+    'O quarto parágrafo lista os signatários por cargo e não por nome, o que é normal.',
+    'Mas embaixo, no espaço da testemunha, tem um nome escrito à mão, e o nome é o do titular anterior deste ginásio.',
+    'Ele testemunhou. Ele estava na sala quando assinaram.',
+    fala('Blue', 'Continua.', 'frio'),
+    d=>fala(d.jogador.nome, 'Acabou. É só isso.'),
+    fala('Blue', 'Não. Vira a folha.'),
+    'Você vira. Atrás, a lápis, na mesma letra de todas as etiquetas: eu assinei porque eu achei que ia conseguir controlar. Não consegui.'
+  ],
+  ef:{flag:'leu_o_verso_da_segunda_pagina', moral:-3,
+      npc:{nome:'Blue', opiniao:3, memoria:'Ouviu você ler em voz alta o que o avô dele escreveu a lápis no verso.'},
+      rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calado', rep:{notorio:true}},
+      registrar:'No verso da segunda página: "eu assinei porque eu achei que ia conseguir controlar".'},
+  escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
+},
+
+c23_corredor_c:{
+  texto:[
+    'Corredor C: pessoal. É o corredor mais curto e o mais arrumado.',
+    'Tem recibo de médico. Tem seis cadernetas de anotação de treino, uma por ano, com o nome de cada Pokémon e uma coluna de peso.',
+    'Tem quarenta e uma fotos numa caixa, sem álbum, sem ordem.',
+    'Trinta e nove delas são de Pokémon. Duas são de gente.',
+    'Numa delas tem um menino de uns seis anos segurando uma Poké Ball vazia e rindo com falha nos dentes da frente.',
+    d=>fala('Blue', 'Sou eu.', 'baixo', 'Ele fala isso por cima do seu ombro, e você não ouviu ele chegar.')
+  ],
+  ef:{flag:'viu_a_foto_do_blue',
+      npc:{nome:'Blue', opiniao:2, memoria:'Te mostrou a foto dele aos seis anos, no arquivo do avô.'},
+      registrar:'No corredor C tem uma foto do Blue aos seis anos, segurando uma bola vazia.'},
+  escolhas:[
+    {texto:'Perguntar quem é a outra foto de gente.', vai:'c23_a_outra_foto'},
+    {texto:'Devolver a caixa e ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}
+  ]
+},
+
+c23_a_outra_foto:{
+  texto:[
+    d=>fala(d.jogador.nome, 'E a outra?'),
+    'Ele pega a caixa da sua mão e acha em quatro segundos, o que quer dizer que ele já achou antes hoje.',
+    'É uma foto de laboratório, de uns vinte anos atrás, com quatro pessoas de jaleco em frente a uma bancada.',
+    'Três delas você não conhece.',
+    'A quarta é o Dr. Fuji, muito mais novo, sem barba, com a mão no ombro do homem ao lado.',
+    'O homem ao lado é o titular anterior deste ginásio.',
+    fala('Blue', 'Eu não sabia que eles se conheciam.', 'frio'),
+    fala('Blue', 'Eu acho que ninguém sabia. Acho que era pra ninguém saber.')
+  ],
+  ef:{flag:'fuji_e_giovanni_se_conheciam',
+      itens:{'Foto de quatro pessoas de jaleco':1},
+      rep:{eixo:'bom',delta:2,motivo:'Puxou o fio que ligava as duas pontas'},
+      registrar:'Uma foto de vinte anos atrás: o Dr. Fuji e o titular anterior do ginásio, no mesmo laboratório.'},
+  escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
+},
+
+/* ── o corredor D ──────────────────────────────────────────── */
+c23_procurou_o_proprio_nome:{
+  texto:[
+    'Corredor D. As etiquetas são nomes de pessoas, em ordem alfabética, e a letra é sempre a mesma.',
+    'Você acha o seu em menos de um minuto, porque você sabia que ia achar.',
+    d=>`A etiqueta tem o seu nome completo, a sua cidade, e a data: a data é de três semanas depois de você sair de casa.`,
+    'A pasta tem dezenove folhas.',
+    'Folha 1: cópia da sua ficha de licença, com a foto ruim.',
+    'Folha 2 a 9: relatório de cada ginásio que você desafiou, com data, resultado e uma linha de observação escrita à mão.',
+    'Folha 10 em diante: você não leu ainda.'
+  ],
+  ef:{flag:'achou_a_propria_pasta',
+      registrar:'Achou a própria pasta no corredor D. Dezenove folhas, aberta três semanas depois de você sair de casa.'},
+  escolhas:[
+    {texto:'Ler as folhas 10 em diante.', vai:'c23_folha_dez'},
+    {texto:'Ler a linha de observação de cada ginásio.', vai:'c23_as_observacoes'},
+    {texto:'Procurar outros nomes que você conhece.', vai:'c23_outros_nomes'},
+    {texto:'Fechar a pasta e queimar o corredor inteiro.', vai:'c23_queimar'}
+  ]
+},
+
+c23_as_observacoes:{
+  texto:[
+    'Oito ginásios, oito linhas, escritas à mão por oito pessoas diferentes, e todas mandadas pro mesmo arquivo.',
+    fala('a observação de Pewter', 'Não desiste. Devia desistir, e não desiste. Anotado como resistência, não como talento.'),
+    fala('a observação de Cerulean', 'Lê o adversário. Erra a leitura e insiste no erro. Vai aprender ou vai morrer.'),
+    fala('a observação de Vermilion', 'Trata o time como gente. Isso é uma vantagem tática que ninguém sabe medir.'),
+    fala('a observação de Viridian', 'Recomendo observação continuada. — B.'),
+    'A última é do Blue. Ele escreveu isso sobre você e mandou pra este arquivo, e ele está em pé ao seu lado neste momento.'
+  ],
+  ef:{flag:'leu_as_observacoes',
+      registrar:'Leu as observações dos oito líderes sobre você. A última é do Blue.'},
+  escolhas:[
+    {texto:'"Você escreveu isso."', vai:'c23_cobrou_o_blue'},
+    {texto:'Não falar nada e ler as folhas 10 em diante.', vai:'c23_folha_dez'}
+  ]
+},
+
+c23_cobrou_o_blue:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Você escreveu isso.'),
+    'Ele não nega e não se desculpa.',
+    fala('Blue', 'Escrevi. Todo líder escreve. É uma linha por desafiante e vai pro arquivo da Liga.'),
+    fala('Blue', 'O que eu não sabia é que o arquivo da Liga tinha um arquivo em cima do meu ginásio, com uma pasta por pessoa e uma sala com uma cadeira virada pra parede.'),
+    fala('Blue', 'Eu escrevi "recomendo observação continuada" achando que ia pra uma gaveta.'),
+    fala('Blue', 'Eu não sei pra onde foi. Eu acho que foi pra sala 704.', 'baixo')
+  ],
+  ef:{flag:'blue_nao_sabia_do_arquivo', moral:2,
+      npc:{nome:'Blue', opiniao:3, memoria:'Admitiu que escreveu sobre você sem saber pra onde ia.'},
+      rep:{eixo:'bom',delta:1,motivo:'Cobrou na cara em vez de guardar'},
+      registrar:'Blue escreveu "recomendo observação continuada" sem saber para onde ia.'},
+  escolhas:[{texto:'Ler as folhas 10 em diante.', vai:'c23_folha_dez'}]
+},
+
+c23_folha_dez:{
+  texto:[
+    'Folha 10 em diante não é sobre ginásio.',
+    'Folha 10: a data em que você entrou na Silph. Folha 11: a data em que você entrou na Estação 4. Folha 12: a sala 704, com o horário de entrada e de saída.',
+    'Folha 13 a 18: nomes de pessoas com quem você falou, em ordem cronológica, com cidade e uma marca ao lado de alguns.',
+    d=>{
+      const n = Object.keys(d.npcs||{}).length;
+      return n ? `Você conta as marcas. São ${Math.min(n, 9)} pessoas marcadas, e você conhece todas elas pelo primeiro nome.`
+               : 'As marcas estão nos nomes de quem falou com você mais de uma vez.';
+    },
+    'Folha 19 é a última e tem uma frase só, datilografada, sem assinatura:',
+    fala('a folha 19', 'RECOMENDAÇÃO: CONVOCAR. ELE JÁ SABE DEMAIS PARA SER IGNORADO E AINDA POUCO PARA SER PERIGOSO.', 'frio')
+  ],
+  ef:{flag:'leu_a_folha_dezenove', moral:-4,
+      itens:{'Folha 19 — recomendação de convocação':1},
+      rep:{eixo:'bom',delta:2,motivo:'Leu a pasta que fizeram sobre você até a última folha', rep:{notorio:true}},
+      registrar:'Folha 19: "convocar. Já sabe demais para ser ignorado e ainda pouco para ser perigoso."'},
+  escolhas:[
+    {texto:'Levar a pasta inteira.', vai:'c23_levou_a_pasta'},
+    {texto:'Levar só a folha 19.', vai:'c23_levou_a_folha'},
+    {texto:'Deixar tudo onde estava.', vai:'c23_deixou_tudo'},
+    {texto:'Procurar outros nomes que você conhece.', vai:'c23_outros_nomes'}
+  ]
+},
+
+c23_outros_nomes:{
+  texto:[
+    'Você percorre o corredor D procurando nome conhecido e acha mais rápido do que gostaria.',
+    'Tem pasta da Nádia Bragança, de Lavender, com duas folhas: a licença de 1979 e a de agora.',
+    'Tem pasta do Dr. Fuji, com noventa e uma folhas, a mais grossa do corredor.',
+    'Tem pasta da enfermeira do Centro, com três folhas, a última datada de seis meses atrás — o pedido de exoneração dela.',
+    'Tem pasta com o nome do Blue, e ele tira do seu alcance antes de você tocar.',
+    fala('Blue', 'Essa não.', 'frio'),
+    'E, no fim do corredor, uma pasta com uma etiqueta de três letras e nada mais escrito nela.'
+  ],
+  ef:{flag:'viu_o_corredor_d_inteiro',
+      registrar:'O corredor D tem pasta de quase todo mundo que você conhece.'},
+  escolhas:[
+    {texto:'Abrir a pasta de três letras.', vai:'c23_a_pasta_de_tres_letras'},
+    {texto:'Não abrir. Sair daqui.', vai:'c23_deixou_tudo'}
+  ]
+},
+
+c23_a_pasta_de_tres_letras:{
+  texto:[
+    'A etiqueta diz RED.',
+    'A pasta tem uma folha.',
+    'A folha é um formulário de encerramento de acompanhamento, datado de dois anos atrás, e tem três campos preenchidos:',
+    fala('o formulário', 'MOTIVO DO ENCERRAMENTO: paradeiro desconhecido.'),
+    fala('o formulário', 'ÚLTIMA LOCALIZAÇÃO CONFIRMADA: acima da Rota 10. Altitude estimada 2.400 m.'),
+    fala('o formulário', 'OBSERVAÇÃO: não recomendamos continuar a busca. Ele não está perdido.', 'frio'),
+    'Blue lê por cima do seu ombro e não fala nada por um tempo muito longo.',
+    fala('Blue', 'Acima da Rota 10.', 'baixo'),
+    fala('Blue', 'Eu subi lá duas vezes. Eu subi lá DUAS VEZES e não tinha nada.', 'grita')
+  ],
+  ef:{flag:'sabe_onde_o_red_esta', moral:-2,
+      npc:{nome:'Blue', opiniao:4, memoria:'Descobriu com você que o Red está acima da Rota 10. Ele já tinha subido duas vezes.'},
+      rep:{eixo:'bom',delta:2,motivo:'Abriu a pasta que ninguém abriu', rep:{notorio:true}},
+      registrar:'A pasta RED: última localização acima da Rota 10. "Ele não está perdido."'},
+  escolhas:[
+    {texto:'"Então a gente sobe uma terceira vez."', vai:'c23_terceira_vez'},
+    {texto:'Guardar a folha e não dizer nada.', vai:'c23_levou_a_folha_do_red'},
+    {texto:'Deixar no lugar. Não é a sua busca.', vai:'c23_deixou_tudo'}
+  ]
+},
+
+c23_terceira_vez:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Então a gente sobe uma terceira vez.'),
+    'Ele olha pra você com uma cara que você nunca viu na cara dele.',
+    fala('Blue', 'Você nem conhece ele.'),
+    d=>fala(d.jogador.nome, 'Não. Mas eu conheço você, e você subiu duas.'),
+    'Silêncio de sala de arquivo, com a fluorescente zumbindo.',
+    fala('Blue', 'Depois da convocação.', 'baixo'),
+    fala('Blue', 'A gente vai. Depois da sala com a mesa comprida, a gente vai.')
+  ],
+  ef:{flag:'combinou_de_subir_com_blue', moral:6,
+      npc:{nome:'Blue', opiniao:6, memoria:'Combinou de subir a montanha com você depois da convocação.'},
+      rep:{eixo:'bom',delta:3,motivo:'Se ofereceu para subir uma montanha por uma busca que não era sua', rep:{notorio:true}},
+      registrar:'Combinou com Blue de subir acima da Rota 10 depois da convocação.'},
+  escolhas:[{texto:'Descer a escada.', vai:'c23_desceu'}]
+},
+
+c23_levou_a_folha_do_red:{
+  texto:[
+    'Você dobra a folha em quatro e põe no bolso de dentro, e o Blue vê você fazer isso e não impede.',
+    'Vocês dois entendem, ao mesmo tempo, que isso não é roubo e é um pouco roubo.',
+    fala('Blue', 'Se você achar ele, me avisa.', 'frio'),
+    fala('Blue', 'Não precisa me levar junto. Só me avisa.')
+  ],
+  ef:{itens:{'Folha única da pasta RED':1}, flag:'levou_a_folha_do_red',
+      npc:{nome:'Blue', opiniao:2, memoria:'Deixou você levar a folha do Red e pediu só pra ser avisado.'},
+      registrar:'Levou a folha única da pasta RED.'},
+  escolhas:[{texto:'Descer a escada.', vai:'c23_desceu'}]
+},
+
+c23_levou_a_pasta:{
+  texto:[
+    'Você tira as dezenove folhas do arquivo e põe na mochila, e o espaço no aço fica vazio e óbvio, com a etiqueta ainda lá.',
+    fala('Blue', 'Eles vão ver.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    fala('Blue', 'Você tá levando uma pasta que eles fizeram de você. Isso não é crime em lugar nenhum e eles vão tratar como crime.'),
+    fala('Blue', '...leva.', 'baixo')
+  ],
+  ef:{itens:{'Dezenove folhas com o seu nome':1}, flag:'levou_a_propria_pasta',
+      rep:{eixo:'bom',delta:1,motivo:'Levou embora a pasta que fizeram sobre você'},
+      registrar:'Levou a própria pasta do corredor D.'},
+  escolhas:[
+    {texto:'Procurar outros nomes antes de descer.', vai:'c23_outros_nomes'},
+    {texto:'Descer.', vai:'c23_desceu'}
+  ]
+},
+
+c23_levou_a_folha:{
+  texto:[
+    'Você tira só a folha 19 e devolve as outras dezoito pro lugar, na ordem, com a etiqueta virada certa.',
+    'Se alguém abrir a pasta sem contar as folhas, não vai notar nada.',
+    fala('Blue', 'Isso é mais esperto do que levar tudo.'),
+    fala('Blue', 'Eu odeio que seja mais esperto do que levar tudo.', 'riso')
+  ],
+  ef:{itens:{'Folha 19 — recomendação de convocação':1}, flag:'levou_so_a_folha_19',
+      rep:{eixo:'bom',delta:1,motivo:'Levou só a folha que provava alguma coisa'},
+      registrar:'Levou só a folha 19 e recolocou as outras dezoito.'},
+  escolhas:[
+    {texto:'Procurar outros nomes antes de descer.', vai:'c23_outros_nomes'},
+    {texto:'Descer.', vai:'c23_desceu'}
+  ]
+},
+
+c23_deixou_tudo:{
+  texto:[
+    'Você fecha a pasta, alinha a lombada com as outras, e deixa o corredor D exatamente como estava.',
+    'Ninguém vai saber que você esteve aqui, o que é uma vantagem e é também a coisa mais triste desta sala.',
+    fala('Blue', 'Você não levou nada.'),
+    d=>fala(d.jogador.nome, 'Eu li. Ler é levar.'),
+    'Ele pensa nisso por uns segundos e não discorda.'
+  ],
+  ef:{flag:'nao_levou_nada_do_arquivo',
+      rep:{eixo:'bom',delta:1,motivo:'Leu tudo e não levou nada'},
+      registrar:'Leu o corredor D inteiro e não levou nada.'},
+  escolhas:[{texto:'Descer.', vai:'c23_desceu'}]
+},
+
+c23_queimar:{
+  texto:[
+    'Você olha quatro corredores de aço com centenas de pastas e pensa em fogo por uns quinze segundos completos.',
+    'Você pensa em quanta gente está arquivada aqui sem nunca ter assinado nada. Você pensa na folha 19. Você pensa na cadeira virada pra parede.',
+    fala('Blue', 'Não.', 'frio', 'Ele fala isso antes de você dizer qualquer coisa, porque deu pra ver na sua cara.'),
+    fala('Blue', 'Aqui dentro tem a única prova de metade do que você viu nesses meses.'),
+    fala('Blue', 'Você queima isso e eles ficam limpos. Eles ficam LIMPOS.', 'grita'),
+    'Ele tem razão, e você odeia que ele tenha razão, e você desce a mão.'
+  ],
+  ef:{flag:'pensou_em_queimar_o_arquivo',
+      rep:{eixo:'ruim',delta:1,motivo:'Quis queimar a única prova que existia'},
+      registrar:'Pensou em queimar o arquivo. Blue impediu.'},
+  escolhas:[
+    {texto:'Ler as folhas 10 em diante.', vai:'c23_folha_dez'},
+    {texto:'Procurar outros nomes.', vai:'c23_outros_nomes'},
+    {texto:'Descer sem ler mais nada.', vai:'c23_desceu'}
+  ]
+},
+
+c23_abriu_a_pasta:{
+  texto:[
+    'Você abre a pasta em cima do balcão do ginásio, na frente dele, e lê as dezenove folhas em pé.',
+    'Leva vinte minutos. Ele não sai do lado.',
+    'A última folha tem uma frase datilografada, sem assinatura:',
+    fala('a folha 19', 'RECOMENDAÇÃO: CONVOCAR. ELE JÁ SABE DEMAIS PARA SER IGNORADO E AINDA POUCO PARA SER PERIGOSO.', 'frio'),
+    fala('Blue', 'A minha tem a mesma frase.', 'baixo'),
+    fala('Blue', 'Palavra por palavra. Eu conferi três vezes.')
+  ],
+  ef:{flag:'leu_a_folha_dezenove', moral:-3,
+      itens:{'Folha 19 — recomendação de convocação':1},
+      npc:{nome:'Blue', opiniao:3, memoria:'A pasta dele tem a mesma frase que a sua, palavra por palavra.'},
+      rep:{eixo:'bom',delta:2,motivo:'Leu a pasta inteira em pé, na frente de quem entregou'},
+      registrar:'A pasta do Blue tem a mesma frase que a sua, palavra por palavra.'},
+  escolhas:[
+    {texto:'Subir e ver o resto da sala.', vai:'c23_a_sala'},
+    {texto:'Ir embora com a pasta.', vai:'c23_desceu'}
+  ]
+},
+
+c23_desceu:{
+  texto:[
+    'Vocês descem os dezenove degraus e o sétimo range, e o décimo primeiro, e o décimo quarto.',
+    'No ginásio vazio, Blue apaga a luz da escada e recoloca o biombo na frente dela, o que é um gesto completamente inútil e que ele faz mesmo assim.',
+    fala('Blue', 'A convocação é na segunda.'),
+    fala('Blue', 'Sala com mesa comprida, quatro cadeiras. Uma é minha, uma é sua.'),
+    d=>fala(d.jogador.nome, 'E as outras duas?'),
+    fala('Blue', 'Pois é.', 'frio'),
+    'Antes da Rota 23 tem sete guaritas novas, e cada uma delas quer ver o seu cartão.'
+  ],
+  ef:{flag:'sabe_da_convocacao', registrar:'A convocação é na segunda. Mesa comprida, quatro cadeiras.'},
+  fim:true
+},
+
+c23_foi_embora_sem_ler:{
+  texto:[
+    'Você sai do ginásio de Viridian sem subir a escada e anda quatro quarteirões antes de parar.',
+    'Você não vai voltar hoje. Você sabe disso com a mesma clareza com que sabe que devia.',
+    'O que tem naquela sala vai continuar naquela sala, e um dia alguém vai ler, e provavelmente não vai ser você.',
+    'A convocação é na segunda de qualquer jeito.'
+  ],
+  ef:{flag:'nao_leu_o_arquivo', moral:-3,
+      registrar:'Foi embora de Viridian sem subir a escada.'},
+  fim:true
+}
+
+}
+}
+
+);
+
+
+/* ===== js/story/cap-24.js ===== */
+/* ============================================================
+   CAPÍTULO 24 — SETE GUARITAS
+   Rota 23. O caminho para o Planalto agora tem controle de
+   acesso, e controle de acesso é um lugar onde se decide quem
+   é gente e quem é processo.
+   ============================================================ */
+CAPITULOS.push(
+
+{
+num:24, titulo:'Sete Guaritas', local:'Rota 23 — controle de acesso', ambiente:'montanha', nivelArea:56,
+tom:'muito sombrio', inicio:'c24_a_primeira',
+cenas:{
+
+c24_a_primeira:{
+  texto:[
+    'A Rota 23 sempre teve as sete guaritas. Elas estavam lá antes de você nascer, de pedra, com telhado de duas águas e nenhuma porta.',
+    'A diferença é que agora elas têm gente dentro.',
+    'Sete guaritas, sete pessoas de uniforme cinza que não é uniforme da Liga, e uma cancela de madeira pintada de branco e vermelho em cada uma.',
+    fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
+    'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
+    fala('o guarda da primeira', 'Oito insígnias, licença válida, sem restrição.'),
+    fala('o guarda da primeira', 'Passa na segunda que eles conferem de novo.', 'frio')
+  ],
+  ef:{flag:'entrou_nas_guaritas',
+      registrar:'As sete guaritas da Rota 23 agora têm gente dentro. Uniforme cinza.'},
+  escolhas:[
+    {texto:'Passar. São sete e você tem o dia inteiro.', vai:'c24_a_terceira'},
+    {texto:'Perguntar por que conferem de novo se já conferiram.', vai:'c24_perguntou_por_que'},
+    {texto:'Perguntar de quem é o uniforme cinza.', vai:'c24_o_uniforme'},
+    {texto:'Contornar as guaritas pelo mato. Elas não têm porta e nem cerca.', vai:'c24_contornou'}
+  ]
+},
+
+c24_perguntou_por_que:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Se o senhor já conferiu, por que a segunda confere de novo?'),
+    'O guarda olha pra você com a paciência exausta de quem já respondeu isso doze vezes hoje.',
+    fala('o guarda da primeira', 'Porque a minha máquina lê o cartão e a máquina dele lê outra coisa.'),
+    fala('o guarda da primeira', 'A da terceira lê outra. A da quinta lê outra.'),
+    d=>fala(d.jogador.nome, 'Lê o quê?'),
+    fala('o guarda da primeira', 'Moço, eu ganho por turno.', 'baixo'),
+    fala('o guarda da primeira', 'Eu sei ligar a minha e sei desligar a minha. Passa.')
+  ],
+  ef:{flag:'as_maquinas_leem_coisas_diferentes',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou o que as máquinas liam'},
+      registrar:'Cada guarita tem uma máquina que lê uma coisa diferente.'},
+  escolhas:[
+    {texto:'Seguir e prestar atenção em cada máquina.', vai:'c24_a_terceira'},
+    {texto:'Perguntar de quem é o uniforme cinza.', vai:'c24_o_uniforme'}
+  ]
+},
+
+c24_o_uniforme:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Esse uniforme é de quem? Não é da Liga.'),
+    'Ele puxa a manga e mostra o bordado no ombro, que é uma coisa que ele claramente já fez hoje e que já cansou de fazer.',
+    'O bordado é um círculo com três linhas dentro e uma sigla embaixo em letra pequena.',
+    fala('o guarda da primeira', 'Empresa terceirizada. Eu sou de Celadon, eu fiz uma prova, eu passei, eu vim.'),
+    fala('o guarda da primeira', 'Quem paga eu não sei. O contracheque vem de um banco de Saffron e é o que eu sei.'),
+    'A sigla embaixo do círculo tem quatro letras e você já viu essas quatro letras em papel timbrado antes.'
+  ],
+  ef:{flag:'as_guaritas_sao_terceirizadas',
+      rep:{eixo:'bom',delta:1,motivo:'Identificou quem controla o acesso ao Planalto'},
+      registrar:'As guaritas são de empresa terceirizada, paga por um banco de Saffron.'},
+  escolhas:[
+    {texto:'Seguir.', vai:'c24_a_terceira'},
+    {texto:'Anotar a sigla e o número do bordado.', vai:'c24_anotou_a_sigla',
+     ef:{itens:{'Sigla e número do bordado, anotados':1}, flag:'anotou_a_sigla'}}
+  ]
+},
+
+c24_anotou_a_sigla:{
+  texto:[
+    'Você pede um papel emprestado, o guarda te dá o verso de um comprovante, e você copia a sigla e o número de série bordado embaixo dela.',
+    fala('o guarda da primeira', 'Isso não é proibido.', null, 'Ele fala mais pra si mesmo do que pra você.'),
+    fala('o guarda da primeira', 'Eu acho que não é proibido. Passa logo.')
+  ],
+  ef:{rep:{eixo:'bom',delta:1,motivo:'Anotou o que estava à vista de todo mundo'},
+      registrar:'Anotou a sigla e o número de série do bordado dos uniformes.'},
+  escolhas:[{texto:'Seguir para a terceira guarita.', vai:'c24_a_terceira'}]
+},
+
+c24_contornou:{
+  texto:[
+    'As guaritas não têm porta, não têm cerca e não têm nada dos lados. Elas são sete casinhas de pedra numa estrada de montanha.',
+    'Você sai da estrada, anda trinta metros de mato, e passa as sete em quarenta minutos sem falar com ninguém.',
+    'Do outro lado, esperando na pedra, sentado, tem um oitavo guarda que não tem guarita.',
+    fala('o oitavo guarda', 'Todo mundo tenta.', null, 'Ele nem levanta.'),
+    fala('o oitavo guarda', 'Eu fico aqui justamente porque todo mundo tenta, e porque sair da estrada não é crime, e porque eu não posso te prender.'),
+    fala('o oitavo guarda', 'Eu só anoto. Você quer me dizer o seu nome ou eu escrevo "desconhecido" e descrevo a sua cara?', 'frio')
+  ],
+  ef:{flag:'contornou_as_guaritas',
+      registrar:'Contornou as sete guaritas pelo mato. Tinha um oitavo guarda do outro lado.'},
+  escolhas:[
+    {texto:'Dar o nome.', vai:'c24_deu_o_nome',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Deu o próprio nome quando podia mentir'}}},
+    {texto:'Deixar ele escrever "desconhecido".', vai:'c24_desconhecido',
+     ef:{flag:'anotado_como_desconhecido', rep:{eixo:'ruim',delta:1,motivo:'Passou como desconhecido no controle de acesso'}}},
+    {texto:'Voltar e passar pelas sete, do jeito certo.', vai:'c24_voltou_pra_estrada'}
+  ]
+},
+
+c24_deu_o_nome:{
+  texto:[
+    d=>fala(d.jogador.nome, d.jogador.nome + '. De ' + d.jogador.cidade + '.'),
+    'Ele escreve devagar, com letra de forma, e mostra o papel pra você conferir a grafia, o que é uma cortesia estranha nas circunstâncias.',
+    fala('o oitavo guarda', 'Tá certo assim?'),
+    d=>fala(d.jogador.nome, 'Tá.'),
+    fala('o oitavo guarda', 'Passa. E olha: da próxima vez vai pela estrada. Não porque é regra.'),
+    fala('o oitavo guarda', 'É que quem vai pela estrada aparece em sete papéis, e quem vem pelo mato aparece só no meu.', 'baixo'),
+    fala('o oitavo guarda', 'Papel sozinho some. Sete papéis não somem.')
+  ],
+  ef:{flag:'conselho_do_oitavo_guarda', moral:2,
+      npc:{nome:'Oitavo guarda', opiniao:3, memoria:'Te ensinou que sete papéis não somem e um papel sozinho some.'},
+      rep:{eixo:'bom',delta:1,motivo:'Escutou um conselho que ninguém era obrigado a dar'},
+      registrar:'O oitavo guarda: "papel sozinho some, sete papéis não somem".'},
+  escolhas:[
+    {texto:'Voltar e passar pelas sete guaritas mesmo assim.', vai:'c24_voltou_pra_estrada'},
+    {texto:'Seguir pro Planalto.', vai:'c24_chegou_no_planalto'}
+  ]
+},
+
+c24_desconhecido:{
+  texto:[
+    'Ele escreve DESCONHECIDO em letra de forma e, embaixo, três linhas descrevendo a sua roupa, a sua altura e o Pokémon que estava do seu lado.',
+    'A descrição é boa. A descrição é boa demais. Qualquer pessoa que leia isso te identifica na rua.',
+    fala('o oitavo guarda', 'Pronto. Agora existe um papel com a sua descrição e sem o seu nome.'),
+    fala('o oitavo guarda', 'Você acha que isso te protege. Eu trabalho com papel há onze anos.', 'frio'),
+    fala('o oitavo guarda', 'Papel com descrição e sem nome é o papel mais perigoso que existe, porque ele serve pra qualquer um que caiba na descrição.')
+  ],
+  ef:{flag:'existe_um_papel_sem_seu_nome', moral:-3,
+      registrar:'Existe um papel no controle de acesso com a sua descrição e sem o seu nome.'},
+  escolhas:[
+    {texto:'Voltar atrás e dar o nome.', vai:'c24_deu_o_nome',
+     ef:{limpaFlag:'anotado_como_desconhecido'}},
+    {texto:'Seguir assim mesmo.', vai:'c24_chegou_no_planalto'}
+  ]
+},
+
+c24_voltou_pra_estrada:{
+  texto:[
+    'Você desce os trinta metros de mato de volta, entra na estrada antes da segunda guarita, e passa pelas seis que faltavam na ordem.',
+    'Leva uma hora e quarenta. Cada uma confere uma coisa diferente e nenhuma explica o quê.',
+    'Na sétima, a mulher de uniforme cinza olha o seu cartão e o histórico de passagem e franze a testa.',
+    fala('a guarda da sétima', 'O senhor entrou pela primeira e reapareceu na segunda quarenta minutos depois.'),
+    fala('a guarda da sétima', 'Isso é sete minutos de caminhada.'),
+    d=>fala(d.jogador.nome, 'Eu me perdi.'),
+    fala('a guarda da sétima', 'Aqui não tem onde se perder.', 'frio', 'Ela escreve alguma coisa. Ela escreve mais do que caberia em "se perdeu".')
+  ],
+  ef:{flag:'anotado_na_setima',
+      registrar:'A sétima guarita anotou os quarenta minutos que você sumiu.'},
+  escolhas:[{texto:'Seguir pro Planalto.', vai:'c24_chegou_no_planalto'}]
+},
+
+/* ── a via da estrada ──────────────────────────────────────── */
+c24_a_terceira:{
+  texto:[
+    'Segunda guarita: leitor de cartão, apita, passa.',
+    'Terceira guarita: a máquina é diferente. É maior, tem um visor verde, e o guarda digita alguma coisa antes de passar o cartão.',
+    'Ele lê o visor. Ele lê de novo. Ele olha pra você.',
+    fala('o guarda da terceira', 'O senhor tem registro de acompanhamento ativo.'),
+    d=>fala(d.jogador.nome, 'O que é isso?'),
+    fala('o guarda da terceira', 'Eu não sei o que é. Aparece no meu visor e eu sou obrigado a informar ao portador.'),
+    fala('o guarda da terceira', 'Tá informado. Passa.', 'frio')
+  ],
+  ef:{flag:'registro_de_acompanhamento_ativo',
+      registrar:'A terceira guarita informou: você tem registro de acompanhamento ativo.'},
+  escolhas:[
+    {texto:'Exigir ver o visor.', vai:'c24_exigiu_o_visor'},
+    {texto:'Perguntar desde quando.', vai:'c24_desde_quando'},
+    {texto:'Passar e seguir.', vai:'c24_a_quinta'}
+  ]
+},
+
+c24_exigiu_o_visor:{
+  texto:[
+    'Você pede pra ver, e ele diz que não pode, e você pede de novo, e ele olha pros lados e vira o visor dez graus.',
+    'Dez graus é o suficiente.',
+    fala('o visor', 'ACOMP. ATIVO — ORIGEM: 704 — NÍVEL: 2 — REVISÃO: TRIMESTRAL', 'frio'),
+    'Sala 704. Sétimo andar. Prédio comercial com farmácia no térreo.',
+    'Nível 2. Existe nível 1 e existem níveis acima de 2.',
+    fala('o guarda da terceira', 'O senhor não viu isso.', 'baixo'),
+    fala('o guarda da terceira', 'Eu tenho filho. Passa.')
+  ],
+  ef:{flag:'viu_o_visor', moral:-2,
+      itens:{'Anotação: ACOMP. ATIVO — 704 — NÍVEL 2':1},
+      npc:{nome:'Guarda da terceira', opiniao:2, memoria:'Virou o visor dez graus pra você ver. Tem filho.'},
+      rep:{eixo:'bom',delta:2,motivo:'Insistiu até ver o que estava escrito sobre você', rep:{notorio:true}},
+      registrar:'ACOMP. ATIVO — ORIGEM 704 — NÍVEL 2 — REVISÃO TRIMESTRAL.'},
+  escolhas:[
+    {texto:'Agradecer sem chamar atenção e seguir.', vai:'c24_a_quinta'},
+    {texto:'Perguntar quantos níveis existem.', vai:'c24_quantos_niveis'}
+  ]
+},
+
+c24_quantos_niveis:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quantos níveis existem?'),
+    'Ele fecha o visor com a mão, o que é tarde demais e ele sabe.',
+    fala('o guarda da terceira', 'Quatro.'),
+    fala('o guarda da terceira', 'No quatro a cancela não levanta. Eu nunca vi um quatro. O turno da noite viu um em março.'),
+    d=>fala(d.jogador.nome, 'E aí?'),
+    fala('o guarda da terceira', 'E aí a cancela não levantou.', 'frio')
+  ],
+  ef:{flag:'sabe_dos_quatro_niveis',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou o que estava no fim da escala'},
+      registrar:'Existem quatro níveis de acompanhamento. No quatro, a cancela não levanta.'},
+  escolhas:[{texto:'Seguir.', vai:'c24_a_quinta'}]
+},
+
+c24_desde_quando:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Desde quando eu tenho isso?'),
+    'Ele digita. Espera. Lê.',
+    fala('o guarda da terceira', 'Data de abertura...', null, 'Ele para e confere de novo, porque o número parece errado.'),
+    d=>fala('o guarda da terceira', `Três semanas depois da sua primeira licença. O senhor tinha... ${d.insignias.length ? 'nenhuma insígnia ainda' : 'nada ainda'}.`),
+    'Três semanas. Você ainda estava na Floresta de Viridian errando o caminho marcado.',
+    fala('o guarda da terceira', 'Passa, moço. Por favor.', 'baixo')
+  ],
+  ef:{flag:'sabe_desde_quando_te_seguem', moral:-3,
+      rep:{eixo:'bom',delta:1,motivo:'Descobriu há quanto tempo era observado'},
+      registrar:'O acompanhamento foi aberto três semanas depois da sua primeira licença.'},
+  escolhas:[
+    {texto:'Exigir ver o visor.', vai:'c24_exigiu_o_visor'},
+    {texto:'Seguir.', vai:'c24_a_quinta'}
+  ]
+},
+
+c24_a_quinta:{
+  texto:[
+    'Quarta guarita: leitor, apita, passa. A guarda não levanta a cabeça.',
+    'Quinta guarita: tem duas pessoas dentro em vez de uma, e a cancela está abaixada com um carro parado na frente.',
+    'É um carro preto de vidro escuro com placa de Saffron, e ele está parado ali há tempo suficiente pro motor estar frio.',
+    'Um dos dois guardas está do lado de fora da guarita, de costas pro carro, olhando a estrada de onde você vem.',
+    'Ele te vê chegar e faz uma coisa muito pequena com a cabeça: um movimento de dois centímetros, pra trás, na direção do carro.',
+    'É um aviso. Ele está te avisando.'
+  ],
+  ef:{flag:'o_carro_preto_na_quinta',
+      registrar:'Um carro preto de placa de Saffron parado na quinta guarita, com o motor frio.'},
+  escolhas:[
+    {texto:'Ir até o carro e bater no vidro.', vai:'c24_bateu_no_vidro'},
+    {texto:'Passar reto, sem olhar pro carro.', vai:'c24_passou_reto'},
+    {texto:'Esperar. Sentar na pedra e ver quanto tempo eles aguentam.', vai:'c24_esperou'},
+    {texto:'Agradecer o aviso do guarda antes de decidir.', vai:'c24_agradeceu_o_aviso'}
+  ]
+},
+
+c24_agradeceu_o_aviso:{
+  texto:[
+    'Você chega perto e fala baixo, olhando pra estrada e não pra ele, do jeito que se fala com alguém que arriscou alguma coisa por você.',
+    d=>fala(d.jogador.nome, 'Obrigado.'),
+    fala('o guarda da quinta', 'Eu não fiz nada.'),
+    fala('o guarda da quinta', 'Estão aí desde as sete da manhã. Não desceram, não falaram comigo, não mostraram documento.'),
+    fala('o guarda da quinta', 'E o meu visor apitou quando eles chegaram, e eu não apertei nada.', 'baixo')
+  ],
+  ef:{flag:'o_guarda_da_quinta_ajudou',
+      npc:{nome:'Guarda da quinta', opiniao:3, memoria:'Te avisou do carro preto com um movimento de dois centímetros.'},
+      rep:{eixo:'bom',delta:1,motivo:'Agradeceu quem se arriscou por você'},
+      registrar:'O carro preto estava na quinta guarita desde as sete da manhã.'},
+  escolhas:[
+    {texto:'Ir até o carro.', vai:'c24_bateu_no_vidro'},
+    {texto:'Passar reto.', vai:'c24_passou_reto'},
+    {texto:'Sentar na pedra e esperar.', vai:'c24_esperou'}
+  ]
+},
+
+c24_bateu_no_vidro:{
+  texto:[
+    'Você atravessa os quinze metros e bate no vidro do motorista com dois nós do dedo, duas vezes, como se fosse a coisa mais normal do mundo.',
+    'Silêncio de cinco segundos.',
+    'O vidro de trás desce vinte centímetros.',
+    fala('a mulher de crachá azul', 'Você é a primeira pessoa que bate no vidro.', null, 'Dá pra ver só os olhos dela e parte da boca.'),
+    fala('a mulher de crachá azul', 'Em três anos fazendo isso, ninguém nunca bateu no vidro. Todo mundo passa reto e olha pelo canto.'),
+    fala('a mulher de crachá azul', 'Segunda, dez horas, Planalto. Eu vou estar na sala.'),
+    fala('a mulher de crachá azul', 'Eu vim aqui só pra ter certeza de que você ia subir essa estrada. Agora eu tenho.', 'frio'),
+    'O vidro sobe. O carro liga. Eles vão embora na direção de Saffron e não olham pra trás.'
+  ],
+  ef:{flag:'bateu_no_vidro_do_carro', moral:3,
+      npc:{nome:'Mulher de crachá azul', opiniao:2, memoria:'Você bateu no vidro do carro dela. Ninguém nunca tinha batido.'},
+      rep:{eixo:'bom',delta:3,motivo:'Bateu no vidro do carro que estava te esperando', rep:{notorio:true}},
+      registrar:'Bateu no vidro do carro preto. Ela disse que ninguém nunca tinha batido.'},
+  escolhas:[{texto:'Seguir para a sexta e a sétima.', vai:'c24_chegou_no_planalto'}]
+},
+
+c24_passou_reto:{
+  texto:[
+    'Você passa reto, olha pra frente, não vira a cabeça um grau sequer, e sente o carro do lado direito do seu corpo por quinze metros inteiros.',
+    'Ninguém desce. O vidro não abre.',
+    'Trinta metros adiante você ouve o motor ligar atrás de você, e o carro passa devagar pelo seu lado, e continua subindo a estrada, e some na curva.',
+    'Eles estavam indo pro mesmo lugar que você o tempo todo. Só chegaram antes.'
+  ],
+  ef:{flag:'passou_reto_pelo_carro',
+      registrar:'O carro preto subiu a estrada na frente de você.'},
+  escolhas:[{texto:'Continuar subindo.', vai:'c24_chegou_no_planalto'}]
+},
+
+c24_esperou:{
+  texto:[
+    'Você senta na pedra do acostamento a dez metros do carro e espera.',
+    'Quinze minutos. Trinta. Quarenta e cinco.',
+    'Os dois guardas da quinta fingem muito mal que não estão prestando atenção. Um deles limpa o mesmo vidro três vezes.',
+    'Aos cinquenta e dois minutos, o vidro de trás desce vinte centímetros.',
+    fala('a mulher de crachá azul', 'Você venceu.', 'riso'),
+    fala('a mulher de crachá azul', 'Eu tenho uma reunião às três e você acabou de gastar cinquenta minutos meus, e eu não consigo nem ficar brava.'),
+    fala('a mulher de crachá azul', 'Segunda, dez horas, Planalto. Sobe a estrada.', 'frio')
+  ],
+  ef:{flag:'esperou_o_carro', moral:4,
+      npc:{nome:'Mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
+      rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', rep:{notorio:true}},
+      registrar:'Esperou cinquenta e dois minutos sentado numa pedra até o vidro descer.'},
+  escolhas:[{texto:'Subir a estrada.', vai:'c24_chegou_no_planalto'}]
+},
+
+c24_chegou_no_planalto:{
+  texto:[
+    'Sexta guarita: leitor, apita, passa. A guarda deseja boa sorte e parece estar falando sério.',
+    'Sétima guarita: a máquina não apita. Ela faz um som diferente, mais grave, uma nota só.',
+    'O guarda da sétima olha o visor, olha você, e levanta a cancela sem falar nada — e é a única das sete que levanta a cancela antes de devolver o cartão.',
+    'Do outro lado das sete guaritas a estrada sobe mais quatro quilômetros e vira à direita, e do alto da curva dá pra ver o Planalto Indigo inteiro.',
+    d=>d.flags.bateu_no_vidro_do_carro || d.flags.esperou_o_carro
+      ? 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Chegou primeiro.'
+      : 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Você não sabe há quanto tempo.',
+    'Segunda, dez horas. Sala com mesa comprida, quatro cadeiras.'
+  ],
+  ef:{flag:'chegou_pro_planalto',
+      registrar:'Passou as sete guaritas. A sétima levantou a cancela antes de devolver o cartão.'},
+  fim:true
+}
+
+}
+}
+
+);
+
+
+/* ===== js/story/cap-25.js ===== */
+/* ============================================================
+   CAPÍTULO 25 — SEGUNDA, DEZ HORAS
+   Saffron. A convocação chegou por telegrama, e o telegrama
+   não dizia quem convocava.
+   ============================================================ */
+CAPITULOS.push(
+
+{
+num:25, titulo:'Segunda, Dez Horas', local:'Saffron — sala de audiência', ambiente:'cidade', nivelArea:57,
+tom:'muito sombrio', inicio:'c25_a_antessala',
+cenas:{
+
+c25_a_antessala:{
+  texto:[
+    'A antessala tem seis cadeiras de plástico, uma planta que precisa de água e um relógio de parede que atrasa.',
+    'São nove e quarenta e quatro.',
+    'Tem mais três pessoas esperando, e você conhece uma delas.',
+    d=>d.npcs['Blue']
+      ? 'Blue está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.'
+      : 'Um rapaz da sua idade está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.',
+    'Os outros dois você não conhece: uma mulher de uns cinquenta com uma pasta de couro e um homem de terno com um crachá azul.',
+    fala('a recepcionista', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
+         'Ela fala isso às nove e quarenta e cinco e volta a olhar a tela.')
+  ],
+  ef:{flag:'chegou_na_audiencia',
+      registrar:'Chegou na antessala da audiência. Quatro pessoas, seis cadeiras.'},
+  escolhas:[
+    {texto:'Falar com o Blue.', vai:'c25_falou_com_blue', cond:d=>!!d.npcs['Blue']},
+    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Perguntar ao homem de crachá azul quem convocou.', vai:'c25_o_cracha_azul'},
+    {texto:'Ficar em silêncio e esperar dar dez.', vai:'c25_esperou_dar_dez'},
+    {texto:'Regar a planta, que precisa de água.', vai:'c25_regou_a_planta'}
+  ]
+},
+
+c25_regou_a_planta:{
+  texto:[
+    'Você pega o copo do bebedouro, enche, e rega a planta da antessala da audiência que vai decidir alguma coisa sobre a sua vida.',
+    'A terra absorve tudo em três segundos, o que quer dizer que ela está seca há semanas.',
+    'Você enche de novo. E de novo. Quatro copos.',
+    'A recepcionista olha por cima da tela na metade do terceiro copo e não fala nada.',
+    'No quarto copo, a mulher da pasta de couro solta uma risada curta pelo nariz.',
+    fala('a mulher da pasta', 'Onze meses. Onze meses que eu venho nessa sala e ninguém nunca regou essa planta.')
+  ],
+  ef:{moral:3, flag:'regou_a_planta',
+      npc:{nome:'Mulher da pasta de couro', opiniao:2, memoria:'Te viu regar a planta da antessala com quatro copos.'},
+      rep:{eixo:'bom',delta:1,motivo:'Regou a planta da antessala antes da própria audiência'},
+      registrar:'Regou a planta da antessala. Ninguém tinha regado em onze meses.'},
+  escolhas:[
+    {texto:'Perguntar o que ela faz aqui há onze meses.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Sentar e esperar dar dez.', vai:'c25_esperou_dar_dez'}
+  ]
+},
+
+c25_a_mulher_da_pasta:{
+  texto:[
+    d=>fala(d.jogador.nome, 'A senhora vem aqui há onze meses?'),
+    fala('a mulher da pasta', 'Onze meses e quatro dias. Eu sou advogada de ofício.'),
+    fala('a mulher da pasta', 'Eu represento pessoas que são convocadas por uma comissão que tecnicamente não existe, numa sala que tecnicamente é de audiência administrativa.'),
+    fala('a mulher da pasta', 'Você tem direito a mim. Ninguém te disse isso no telegrama porque o telegrama tem quatro linhas.'),
+    'Ela abre a pasta de couro e tira uma folha, e a folha é um formulário de constituição de defesa com o campo do nome em branco.',
+    fala('a mulher da pasta', 'Custa nada. Eu sou paga pelo Estado e eu sou paga mal, e nas duas coisas eu tenho certeza.', 'riso')
+  ],
+  ef:{flag:'conheceu_a_advogada',
+      npc:{nome:'Advogada de ofício', opiniao:2, memoria:'Ofereceu defesa de graça na antessala da sua audiência.'},
+      rep:{eixo:'bom',delta:1,motivo:'Descobriu que tinha direito a uma coisa que ninguém contou'},
+      registrar:'Existe advogada de ofício para as convocações. O telegrama não diz.'},
+  escolhas:[
+    {texto:'Assinar. Entrar com ela.', vai:'c25_com_advogada',
+     ef:{flag:'entrou_com_advogada'}},
+    {texto:'Não assinar. Entrar sozinho.', vai:'c25_sozinho_na_sala',
+     ef:{flag:'entrou_sozinho'}},
+    {texto:'Avisar o Blue de que ele também tem direito.', vai:'c25_avisou_o_blue',
+     cond:d=>!!d.npcs['Blue']}
+  ]
+},
+
+c25_avisou_o_blue:{
+  texto:[
+    'Você atravessa a antessala e conta pro Blue que existe advogada de ofício, que custa nada, e que o telegrama não diz porque o telegrama tem quatro linhas.',
+    'Ele olha pra você, olha pra mulher da pasta, e levanta na hora.',
+    fala('Blue', 'Eu ia entrar sozinho.', 'baixo'),
+    fala('Blue', 'Eu ia entrar sozinho porque eu achei que pedir ajuda ia parecer que eu tinha alguma coisa pra esconder.'),
+    fala('Blue', 'É exatamente assim que eles querem que a gente pense, né.', 'frio'),
+    'Ele assina. Você assina. A mulher da pasta de couro abre um sorriso que ela estava segurando há onze meses.'
+  ],
+  ef:{flag:'entrou_com_advogada', moral:4,
+      npc:{nome:'Blue', opiniao:4, memoria:'Você avisou ele do direito à defesa. Ele ia entrar sozinho.'},
+      rep:{eixo:'bom',delta:3,motivo:'Dividiu um direito que ninguém tinha contado', rep:{notorio:true}},
+      registrar:'Avisou o Blue do direito à defesa. Os dois entraram com advogada.'},
+  escolhas:[{texto:'Entrar na sala.', vai:'c25_com_advogada'}]
+},
+
+c25_o_cracha_azul:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem convocou?'),
+    'O homem de crachá azul levanta os olhos do jornal com a educação exata de quem foi treinado pra ser educado.',
+    fala('o homem de crachá azul', 'A comissão convocou.'),
+    d=>fala(d.jogador.nome, 'Que comissão?'),
+    fala('o homem de crachá azul', 'A que está no timbre do telegrama.'),
+    'O telegrama não tem timbre. O telegrama tem quatro linhas em maiúsculo e a palavra COMPARECIMENTO duas vezes.',
+    'Você diz isso. Ele volta pro jornal.',
+    fala('o homem de crachá azul', 'Então o senhor vai descobrir às dez horas, junto comigo.', 'frio')
+  ],
+  ef:{flag:'o_telegrama_nao_tem_timbre',
+      rep:{eixo:'bom',delta:1,motivo:'Reparou que o telegrama não tinha timbre'},
+      registrar:'O telegrama da convocação não tem timbre de comissão nenhuma.'},
+  escolhas:[
+    {texto:'Perguntar à mulher da pasta de couro.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Sentar e esperar.', vai:'c25_esperou_dar_dez'}
+  ]
+},
+
+c25_falou_com_blue:{
+  texto:[
+    'Você senta na cadeira ao lado dele. Ele não descruza os braços.',
+    fala('Blue', 'Você leu o arquivo.'),
+    d=>fala(d.jogador.nome, d.flags.leu_a_folha_dezenove ? 'Li.' : 'Parte.'),
+    fala('Blue', 'Então você sabe que a gente é as duas pessoas dessa antessala que não deviam estar aqui.'),
+    fala('Blue', 'Aqueles dois trabalham aqui. Um de terno e uma de pasta. Eles são móveis desta sala.'),
+    fala('Blue', 'A gente é o assunto.', 'frio')
+  ],
+  ef:{npc:{nome:'Blue', opiniao:2, memoria:'Sentou ao lado dele na antessala.'},
+      registrar:'Blue: "a gente é o assunto".'},
+  escolhas:[
+    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Combinar o que falar e o que não falar lá dentro.', vai:'c25_combinaram'},
+    {texto:'Esperar dar dez em silêncio.', vai:'c25_esperou_dar_dez'}
+  ]
+},
+
+c25_combinaram:{
+  texto:[
+    'Vocês dois combinam em voz baixa, com dez minutos e uma antessala com mais duas pessoas dentro.',
+    'O que falar: tudo que está em papel. O convênio, as atas, o galpão, a Estação 4, a sala 704.',
+    'O que não falar: nome de quem ajudou sem assinar nada.',
+    fala('Blue', 'A Marina. A Cida. O cara da requisição.'),
+    d=>fala(d.jogador.nome, 'O guarda da terceira guarita.'),
+    fala('Blue', 'Quem?'),
+    d=>fala(d.jogador.nome, 'Um cara que virou uma tela dez graus pra eu ler. Ele tem filho.'),
+    fala('Blue', 'Então ele não existe hoje.', null, 'Sem hesitar nem meio segundo.')
+  ],
+  ef:{flag:'combinou_com_o_blue', moral:3,
+      npc:{nome:'Blue', opiniao:4, memoria:'Combinou com você o que não falar na audiência.'},
+      rep:{eixo:'bom',delta:2,motivo:'Combinou proteger quem ajudou sem assinar nada'},
+      registrar:'Combinou com o Blue os nomes que não seriam ditos na audiência.'},
+  escolhas:[
+    {texto:'Entrar quando chamarem.', vai:'c25_esperou_dar_dez'},
+    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'}
+  ]
+},
+
+c25_esperou_dar_dez:{
+  texto:[
+    'O relógio da antessala atrasa quatro minutos, e você descobre isso porque a porta abre às dez em ponto no relógio de pulso da recepcionista e às nove e cinquenta e seis no da parede.',
+    'Quem abre a porta é a mulher de crachá azul do carro preto.',
+    fala('a mulher de crachá azul', 'Só os dois.', null, 'Ela olha você e olha o rapaz de braços cruzados.'),
+    fala('a mulher de crachá azul', 'Os outros dois já sabem o que tem aqui dentro.')
+  ],
+  escolhas:[
+    {texto:'Entrar.', vai:'c25_sozinho_na_sala', cond:d=>!d.flags.entrou_com_advogada},
+    {texto:'Entrar com a advogada.', vai:'c25_com_advogada', cond:d=>!!d.flags.entrou_com_advogada},
+    {texto:'Parar na porta e pedir a advogada agora.', vai:'c25_pediu_na_porta',
+     cond:d=>!d.flags.entrou_com_advogada && !!d.flags.conheceu_a_advogada}
+  ]
+},
+
+c25_pediu_na_porta:{
+  texto:[
+    'Você para na soleira, com a mão no batente, e pede a advogada de ofício em voz normal, na frente de todo mundo.',
+    'A mulher de crachá azul não muda de expressão nem um grau.',
+    fala('a mulher de crachá azul', 'É direito seu.'),
+    fala('a mulher de crachá azul', 'É direito seu e você é a terceira pessoa em onze meses a pedir, e as outras duas pediram depois de sentar.', 'frio'),
+    'A advogada de ofício levanta e pega a pasta de couro em quatro segundos, como quem esperava há onze meses.'
+  ],
+  ef:{flag:'entrou_com_advogada', moral:3,
+      rep:{eixo:'bom',delta:2,motivo:'Pediu na porta o que quase ninguém pede'},
+      registrar:'Pediu a advogada de ofício na soleira da porta.'},
+  escolhas:[{texto:'Entrar.', vai:'c25_com_advogada'}]
+},
+
+/* ── a sala ────────────────────────────────────────────────── */
+c25_com_advogada:{
+  texto:[
+    'A sala tem uma mesa comprida e não tem quatro cadeiras: tem nove.',
+    'Cinco do lado de lá, quatro do lado de cá.',
+    'Do lado de lá tem a mulher de crachá azul, dois homens de terno, uma mulher de uns sessenta com um broche da Liga no colarinho, e uma cadeira vazia.',
+    'Do lado de cá senta você, o Blue, a advogada de ofício e outra cadeira vazia.',
+    fala('a advogada de ofício', 'Antes de qualquer coisa: consta em ata que os convocados constituíram defesa.'),
+    fala('a mulher do broche da Liga', 'Consta.', null, 'Ela escreve à mão, o que ninguém mais nessa mesa está fazendo.'),
+    fala('a mulher de crachá azul', 'Bom. Então a gente pode começar pelo começo, que é a parte que ninguém gosta.'),
+    fala('a mulher de crachá azul', 'Nós três aqui desta mesa assinamos o convênio de 1995. Eu, ele, e a cadeira vazia.', 'frio')
+  ],
+  ef:{flag:'a_audiencia_comecou',
+      registrar:'A sala tem nove cadeiras. Três dos que assinaram o convênio estão nela.'},
+  escolhas:[
+    {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
+    {texto:'Pôr tudo que você tem em cima da mesa, agora.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'Deixar a advogada falar primeiro.', vai:'c25_a_advogada_fala'},
+    {texto:'Perguntar por que convocaram vocês dois e não a imprensa.', vai:'c25_por_que_nos'}
+  ]
+},
+
+c25_sozinho_na_sala:{
+  texto:[
+    'A sala tem uma mesa comprida e nove cadeiras.',
+    'Cinco do lado de lá, ocupadas. Quatro do lado de cá, e você ocupa uma.',
+    'Sem advogada, o lado de cá fica com três cadeiras vazias, e três cadeiras vazias numa mesa comprida são uma coisa que se sente no corpo.',
+    fala('a mulher de crachá azul', 'Nós três desta mesa assinamos o convênio de 1995. Eu, ele, e a cadeira vazia.'),
+    fala('a mulher de crachá azul', 'Nós convocamos vocês porque vocês dois juntaram, em alguns meses, mais papel sobre isso do que a Liga juntou em quatro anos.', 'frio')
+  ],
+  ef:{flag:'a_audiencia_comecou',
+      registrar:'Entrou sozinho na sala. Três cadeiras vazias do seu lado.'},
+  escolhas:[
+    {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
+    {texto:'Pôr tudo que você tem em cima da mesa, agora.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'Perguntar por que convocaram vocês dois e não a imprensa.', vai:'c25_por_que_nos'},
+    {texto:'Não falar nada. Deixar eles falarem primeiro.', vai:'c25_deixou_falarem'}
+  ]
+},
+
+c25_a_cadeira_vazia:{
+  texto:[
+    d=>fala(d.jogador.nome, 'De quem é a cadeira vazia?'),
+    'A pergunta cai na mesa e fica lá por uns bons três segundos.',
+    fala('a mulher do broche da Liga', 'Do terceiro signatário.'),
+    fala('a mulher do broche da Liga', 'Ele foi notificado e não compareceu. É a décima primeira vez que ele não comparece.'),
+    d=>fala(d.jogador.nome, 'Ele é o titular anterior do ginásio de Viridian.'),
+    'Ninguém confirma. Ninguém desmente. A mulher do broche escreve à mão e não levanta a cabeça.',
+    fala('a mulher de crachá azul', 'A cadeira fica na sala porque a ata exige que fique.', 'frio'),
+    fala('a mulher de crachá azul', 'Onze convocações, onze ausências, onze atas. É a coisa mais documentada deste processo inteiro.')
+  ],
+  ef:{flag:'onze_ausencias_do_terceiro',
+      rep:{eixo:'bom',delta:2,motivo:'Perguntou de quem era a cadeira vazia'},
+      registrar:'O terceiro signatário foi convocado onze vezes e faltou onze.'},
+  escolhas:[
+    {texto:'Pôr tudo que você tem em cima da mesa.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'Perguntar o que acontece na décima segunda.', vai:'c25_decima_segunda'},
+    {texto:'Perguntar por que convocaram vocês dois.', vai:'c25_por_que_nos'}
+  ]
+},
+
+c25_decima_segunda:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que acontece na décima segunda ausência?'),
+    'Silêncio.',
+    fala('a mulher do broche da Liga', 'Nada.'),
+    fala('a mulher do broche da Liga', 'Não existe décima segunda consequência. Não existe décima primeira. Não existe nenhuma.'),
+    fala('a mulher do broche da Liga', 'Eu estou nesta comissão há três anos e o meu trabalho é escrever à mão que ele não veio.', 'baixo'),
+    'Ela larga a caneta em cima da ata, o que é o gesto mais violento que aconteceu nesta sala até agora.'
+  ],
+  ef:{flag:'nao_existe_consequencia', moral:-3,
+      npc:{nome:'Conselheira do broche', opiniao:3, memoria:'Largou a caneta na ata ao admitir que não existe consequência nenhuma.'},
+      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que fez alguém largar a caneta', rep:{notorio:true}},
+      registrar:'Onze ausências e nenhuma consequência. A conselheira largou a caneta.'},
+  escolhas:[
+    {texto:'Pôr tudo que você tem em cima da mesa.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'"Então pra que eu vim?"', vai:'c25_pra_que_eu_vim'}
+  ]
+},
+
+c25_por_que_nos:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Por que a gente? Por que não a imprensa, a polícia, um juiz?'),
+    fala('a mulher de crachá azul', 'Porque imprensa publica, polícia indicia e juiz condena.'),
+    fala('a mulher de crachá azul', 'E as três coisas transformam isso num caso, e um caso tem um réu, e um réu é uma pessoa só.'),
+    fala('a mulher de crachá azul', 'Não tem uma pessoa só. Tem um convênio de quatro anos com onze órgãos envolvidos e trezentas assinaturas.'),
+    fala('a mulher de crachá azul', 'Vocês dois são as únicas pessoas vivas que juntaram isso sem serem pagas pra juntar.', 'frio'),
+    fala('a mulher de crachá azul', 'Eu não convoquei vocês pra depor. Eu convoquei vocês pra decidir o que fazer com o que vocês têm.')
+  ],
+  ef:{flag:'entendeu_a_convocacao',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou por que eram vocês na sala'},
+      registrar:'A convocação não era pra depor. Era pra decidir o que fazer com o que você juntou.'},
+  escolhas:[
+    {texto:'Pôr tudo em cima da mesa.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
+    {texto:'Recusar. Sair da sala com tudo que você tem.', vai:'c25_saiu_com_tudo'}
+  ]
+},
+
+c25_deixou_falarem:{
+  texto:[
+    'Você não fala nada.',
+    'Eles falam por quarenta minutos: o convênio, os anexos, o Setor 7, a Estação 4, o lote 41-C, as onze ausências do terceiro signatário.',
+    'Eles falam tudo que você descobriu, na ordem certa, com as datas certas, e sem você ter aberto a boca.',
+    'Eles sabiam de tudo. Sabiam desde antes de você.',
+    fala('a mulher de crachá azul', 'Agora o senhor entende por que a gente convocou.'),
+    fala('a mulher de crachá azul', 'A gente não precisa do que você sabe. A gente precisa que alguém de fora tenha sabido.', 'frio')
+  ],
+  ef:{flag:'eles_sabiam_de_tudo', moral:-4,
+      rep:{eixo:'bom',delta:1,motivo:'Ficou quarenta minutos calado e ouviu tudo'},
+      registrar:'Eles sabiam de tudo antes de você. Precisavam que alguém de fora soubesse.'},
+  escolhas:[
+    {texto:'Pôr tudo em cima da mesa mesmo assim.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'"Então pra que eu vim?"', vai:'c25_pra_que_eu_vim'},
+    {texto:'Sair da sala com tudo que você tem.', vai:'c25_saiu_com_tudo'}
+  ]
+},
+
+c25_a_advogada_fala:{
+  texto:[
+    'A advogada de ofício abre a pasta de couro e fala por doze minutos sem consultar uma anotação.',
+    'Ela lista: o que é obrigação de informar, o que é prazo prescricional, o que é dever de apuração de ofício, o que acontece quando um órgão convoca sem timbre.',
+    'Ela usa a palavra "nulidade" quatro vezes.',
+    'Do lado de lá da mesa, os dois homens de terno olham um pro outro na terceira.',
+    fala('a advogada de ofício', 'Então o que a gente tem aqui não é uma audiência. É uma conversa.'),
+    fala('a advogada de ofício', 'E numa conversa os meus constituídos podem levantar e ir embora a qualquer momento, e eu vou registrar que eu disse isso a eles nesta sala.', 'frio'),
+    fala('a mulher de crachá azul', 'Registra.', null, 'Sem irritação nenhuma. Quase com alívio.')
+  ],
+  ef:{flag:'a_advogada_falou', moral:3,
+      npc:{nome:'Advogada de ofício', opiniao:4, memoria:'Falou doze minutos sem consultar anotação e chamou a audiência de conversa.'},
+      rep:{eixo:'bom',delta:2,motivo:'Deixou falar quem sabia falar'},
+      registrar:'A advogada de ofício provou que a audiência era uma conversa.'},
+  escolhas:[
+    {texto:'Pôr tudo em cima da mesa, agora que dá pra sair quando quiser.', vai:'c25_pos_tudo_na_mesa'},
+    {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
+    {texto:'Levantar e ir embora, justamente porque dá.', vai:'c25_saiu_com_tudo'}
+  ]
+},
+
+c25_pra_que_eu_vim:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Então pra que eu vim?'),
+    fala('a mulher de crachá azul', 'Porque papel de comissão apodrece na gaveta e pessoa não apodrece.'),
+    fala('a mulher de crachá azul', 'Em quatro anos eu vi dezessete relatórios completos, bem escritos, com prova, sumirem por decurso de prazo.'),
+    fala('a mulher de crachá azul', 'Nenhum deles tinha uma pessoa de quinze anos com oito insígnias e uma cidade inteira sabendo o nome dela.'),
+    fala('a mulher de crachá azul', 'Eu não preciso do seu papel. Eu preciso que você exista e que você tenha visto.', 'baixo'),
+    'E aí ela empurra uma folha pela mesa comprida, e a folha para exatamente na sua frente.'
+  ],
+  ef:{flag:'entendeu_pra_que_veio',
+      rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta direta na mesa comprida'},
+      registrar:'"Eu preciso que você exista e que você tenha visto."'},
+  escolhas:[
+    {texto:'Ler a folha.', vai:'c25_a_folha_na_mesa'},
+    {texto:'Empurrar a folha de volta sem ler.', vai:'c25_empurrou_de_volta'}
+  ]
+},
+
+c25_pos_tudo_na_mesa:{
+  texto:[
+    'Você abre a mochila e põe tudo em cima da mesa comprida, um por um, com nome e data, do jeito que você aprendeu a fazer em nove meses de estrada.',
+    d=>{
+      const provas = ['Segunda página do convênio','Folha 19 — recomendação de convocação',
+                      'Dezenove folhas com o seu nome','Anotação: ACOMP. ATIVO — 704 — NÍVEL 2',
+                      'Foto de quatro pessoas de jaleco','Sigla e número do bordado, anotados'];
+      const tem = provas.filter(x => Estado.contaItem(x) > 0);
+      return tem.length
+        ? `Em cima da mesa: ${tem.join('; ')}. E o resto que você juntou desde Viridian.`
+        : 'Em cima da mesa: tudo que você juntou desde Viridian, e é mais do que cabe na mesa.';
+    },
+    'Leva onze minutos. Ninguém interrompe.',
+    'Quando você termina, a mulher do broche da Liga está escrevendo à mão numa velocidade completamente diferente da de antes.',
+    fala('a mulher de crachá azul', 'Tem coisa aí que eu não tinha.', 'baixo'),
+    fala('a mulher de crachá azul', 'Tem três coisas aí que eu não tinha.')
+  ],
+  ef:{flag:'pos_tudo_na_mesa', moral:5,
+      rep:{eixo:'bom',delta:4,motivo:'Pôs tudo que juntou em cima da mesa comprida', rep:{notorio:true, peso:2}},
+      registrar:'Pôs tudo em cima da mesa. Três coisas eles não tinham.'},
+  escolhas:[
+    {texto:'Exigir cópia carimbada de tudo antes de sair.', vai:'c25_exigiu_copia'},
+    {texto:'Perguntar o que eles vão fazer com isso.', vai:'c25_o_que_vao_fazer'},
+    {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'}
+  ]
+},
+
+c25_exigiu_copia:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu quero cópia carimbada de tudo. Antes de eu sair desta sala.'),
+    'A advogada de ofício, se ela estiver aí, fecha os olhos e assente uma vez só, como quem viu o aluno acertar.',
+    fala('a mulher de crachá azul', 'A copiadora é no quarto andar.'),
+    d=>fala(d.jogador.nome, 'Eu espero.'),
+    'Você espera. Uma hora e dez minutos, sentado na mesa comprida, com nove pessoas numa sala e ninguém falando nada.',
+    'A cópia volta carimbada, com protocolo e data, e a data é hoje.',
+    fala('a mulher de crachá azul', 'Agora existem duas.', 'frio'),
+    fala('a mulher de crachá azul', 'Uma comigo e uma com você. É assim que uma coisa deixa de sumir.')
+  ],
+  ef:{flag:'tem_copia_carimbada', moral:4,
+      itens:{'Cópia carimbada de tudo, com protocolo':1},
+      rep:{eixo:'bom',delta:3,motivo:'Esperou uma hora e dez pela cópia carimbada', rep:{notorio:true}},
+      registrar:'Saiu da audiência com cópia carimbada e protocolo de tudo.'},
+  escolhas:[{texto:'Perguntar o que eles vão fazer com isso.', vai:'c25_o_que_vao_fazer'}]
+},
+
+c25_o_que_vao_fazer:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que vocês vão fazer com isso?'),
+    fala('a mulher de crachá azul', 'Honestamente? Não sei.'),
+    fala('a mulher de crachá azul', 'A comissão tem poder de recomendar. Quem decide é a Liga, e a Liga é aquela senhora ali com o broche e mais catorze pessoas que não vieram.'),
+    fala('a mulher do broche da Liga', 'Eu vou levar.', null, 'Ela fala pela terceira vez em duas horas.'),
+    fala('a mulher do broche da Liga', 'Eu vou levar na reunião de quinta e vou ler em voz alta, do começo, inclusive a parte que fala de mim.'),
+    fala('a mulher do broche da Liga', 'Eu assinei o anexo técnico em 1996. Está na folha sete.', 'baixo'),
+    'Ninguém sabia disso. Dá pra ver na cara dos dois homens de terno que ninguém sabia disso.'
+  ],
+  ef:{flag:'a_conselheira_assinou', moral:3,
+      npc:{nome:'Conselheira do broche', opiniao:5, memoria:'Admitiu na mesa que assinou o anexo técnico em 1996.'},
+      rep:{eixo:'bom',delta:2,motivo:'Estava na sala quando alguém se entregou sozinha'},
+      registrar:'A conselheira da Liga assinou o anexo técnico em 1996 e admitiu na mesa.'},
+  escolhas:[{texto:'Sair da sala.', vai:'c25_saiu_da_sala'}]
+},
+
+c25_a_folha_na_mesa:{
+  texto:[
+    'A folha é curta. Tem um timbre de verdade, desta vez, e um número de protocolo.',
+    'É uma convocação para depor na reunião ordinária da Liga Pokémon, quinta-feira, com direito a voz e sem direito a voto.',
+    'Embaixo, no campo de qualificação do depoente, alguém já preencheu à máquina:',
+    fala('a folha', 'QUALIFICAÇÃO: TREINADOR LICENCIADO, OITO INSÍGNIAS, TESTEMUNHA PRESENCIAL.', 'frio'),
+    'Eles preencheram antes de você entrar na sala.'
+  ],
+  ef:{flag:'recebeu_a_convocacao_da_liga',
+      itens:{'Convocação para a reunião da Liga':1},
+      registrar:'Recebeu convocação para depor na reunião da Liga, com voz e sem voto.'},
+  escolhas:[
+    {texto:'Assinar o recebimento.', vai:'c25_assinou_o_recebimento'},
+    {texto:'Exigir direito a voto antes de assinar.', vai:'c25_exigiu_voto'},
+    {texto:'Não assinar.', vai:'c25_nao_assinou'}
+  ]
+},
+
+c25_exigiu_voto:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Com voz e sem voto?'),
+    fala('a mulher de crachá azul', 'Voto é de conselheiro. Você não é conselheiro.'),
+    d=>fala(d.jogador.nome, 'Então me faz conselheiro.'),
+    'A sala inteira para.',
+    'Um dos homens de terno começa a rir e para na metade, porque percebe que você não está brincando, e percebe que a mulher do broche não está rindo.',
+    fala('a mulher do broche da Liga', 'O estatuto prevê cadeira de conselheiro extraordinário para o Campeão de Kanto.'),
+    fala('a mulher do broche da Liga', 'A cadeira está vaga há dois anos, porque o Campeão está vago há dois anos.', 'baixo'),
+    'E aí ela olha pra você, e é a primeira vez que ela olha pra você, e o olhar dura mais do que devia.'
+  ],
+  ef:{flag:'a_cadeira_de_conselheiro', moral:5,
+      rep:{eixo:'bom',delta:3,motivo:'Exigiu voto numa sala onde ninguém exige nada', rep:{notorio:true}},
+      npc:{nome:'Conselheira do broche', opiniao:4, memoria:'Te contou que a cadeira de conselheiro extraordinário é do Campeão de Kanto.'},
+      registrar:'A cadeira de conselheiro extraordinário da Liga é do Campeão, e está vaga há dois anos.'},
+  escolhas:[
+    {texto:'Assinar o recebimento.', vai:'c25_assinou_o_recebimento'},
+    {texto:'Não assinar nada e sair.', vai:'c25_saiu_com_tudo'}
+  ]
+},
+
+c25_assinou_o_recebimento:{
+  texto:[
+    'Você assina no campo do depoente com a caneta que eles empurram pela mesa, que é uma caneta boa e pesada, e que eles não pedem de volta.',
+    'A cópia amarela fica com você.',
+    fala('a mulher de crachá azul', 'Quinta, nove horas. Não é aqui, é no Planalto.'),
+    fala('a mulher de crachá azul', 'E olha: leva a advogada.', null,
+         'Ela diz isso olhando pro lado de cá da mesa, e é a coisa mais parecida com bondade que saiu da boca dela hoje.')
+  ],
+  ef:{flag:'assinou_a_convocacao_da_liga', moral:3,
+      rep:{eixo:'bom',delta:2,motivo:'Assinou para depor na reunião da Liga'},
+      registrar:'Assinou o recebimento. Quinta, nove horas, no Planalto.'},
+  escolhas:[{texto:'Sair da sala.', vai:'c25_saiu_da_sala'}]
+},
+
+c25_nao_assinou:{
+  texto:[
+    'Você empurra a folha de volta pelo comprido da mesa e ela para exatamente na frente dela, o que exige uma pontaria que você não sabia que tinha.',
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('a mulher de crachá azul', 'Posso perguntar por quê?'),
+    d=>fala(d.jogador.nome, 'Porque vocês preencheram a minha qualificação antes de eu entrar.'),
+    'Ela olha a folha. Ela vê o campo preenchido à máquina. Ela fecha os olhos por um segundo.',
+    fala('a mulher de crachá azul', 'Isso foi burrice nossa.'),
+    fala('a mulher de crachá azul', 'Não foi má-fé, foi burrice, e as duas coisas produzem exatamente este resultado.', 'baixo')
+  ],
+  ef:{flag:'recusou_a_convocacao_da_liga',
+      rep:{eixo:'bom',delta:2,motivo:'Recusou uma convocação com o campo preenchido de antemão'},
+      registrar:'Recusou assinar a convocação da Liga. Tinham preenchido a sua qualificação antes.'},
+  escolhas:[{texto:'Sair da sala.', vai:'c25_saiu_da_sala'}]
+},
+
+c25_empurrou_de_volta:{
+  texto:[
+    'Você empurra a folha de volta sem ler uma linha, e ela desliza o comprido da mesa e para na frente dela.',
+    fala('a mulher de crachá azul', 'Você nem leu.'),
+    d=>fala(d.jogador.nome, 'Eu não preciso ler pra saber que é um papel que vocês escreveram sobre mim.'),
+    fala('a mulher de crachá azul', 'É. É exatamente isso.'),
+    fala('a mulher de crachá azul', 'É a nona vez esta semana que alguém desta comissão escreve um papel sobre uma pessoa sem perguntar nada pra ela.', 'frio'),
+    fala('a mulher de crachá azul', 'Então tá. Pergunta você. Pergunta você o que você quiser, e eu respondo, e aí a gente vê.')
+  ],
+  ef:{flag:'inverteu_a_mesa', moral:4,
+      rep:{eixo:'bom',delta:3,motivo:'Devolveu o papel sem ler e virou a mesa', rep:{notorio:true}},
+      registrar:'Empurrou a folha de volta sem ler. Ela ofereceu responder o que você perguntasse.'},
+  escolhas:[
+    {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
+    {texto:'Perguntar por que convocaram vocês dois.', vai:'c25_por_que_nos'},
+    {texto:'Pôr tudo em cima da mesa e perguntar depois.', vai:'c25_pos_tudo_na_mesa'}
+  ]
+},
+
+c25_saiu_com_tudo:{
+  texto:[
+    'Você levanta no meio da frase de alguém, põe a mochila no ombro, e sai da sala com tudo que você juntou em nove meses ainda dentro dela.',
+    'Ninguém te impede. É esse o detalhe que você vai pensar depois: ninguém te impede, porque ninguém nunca teve poder nenhum de te impedir.',
+    'A porta é pesada e fecha sozinha, devagar, com um amortecedor.',
+    'Na antessala, a planta continua precisando de água.'
+  ],
+  ef:{flag:'saiu_da_audiencia_com_tudo',
+      rep:{eixo:'bom',delta:1,motivo:'Saiu de uma sala que não tinha poder de te segurar'},
+      registrar:'Levantou e saiu da audiência com tudo.'},
+  escolhas:[{texto:'Descer as escadas.', vai:'c25_a_rua'}]
+},
+
+c25_saiu_da_sala:{
+  texto:[
+    'Você sai da sala às treze e vinte, com fome, com dor de cabeça, e com um envelope a mais do que quando entrou.',
+    d=>d.flags.entrou_com_advogada
+      ? 'A advogada de ofício aperta a sua mão no corredor e te dá o cartão dela, que é de papel comum e impresso em casa.'
+      : 'No corredor não tem ninguém. Os quatro do lado de lá ficaram na sala.',
+    d=>d.npcs['Blue']
+      ? fala('Blue', 'Eu fiquei três horas sentado numa sala e não bati em ninguém. Anota isso.', 'riso')
+      : 'Você desce sozinho.',
+    'Na antessala, a planta que você regou continua molhada e vai continuar molhada por uns quatro dias, e depois não.'
+  ],
+  ef:{flag:'saiu_da_audiencia',
+      registrar:'Saiu da audiência às treze e vinte.'},
+  escolhas:[{texto:'Sair do prédio.', vai:'c25_a_rua'}]
+},
+
+c25_a_rua:{
+  texto:[
+    'A rua de Saffron às treze e meia de uma segunda-feira é a coisa mais normal do mundo.',
+    'Tem fila na lanchonete. Tem gente de crachá branco almoçando na escada. Tem uma mulher de terno dizendo "não" no Pokégear com catorze entonações diferentes.',
+    'Nada disso sabe que existe uma sala com nove cadeiras e um convênio de 1995 onze andares acima.',
+    d=>d.flags.combinou_de_subir_com_blue
+      ? 'E tem uma montanha no norte que você prometeu subir, e uma pessoa que já subiu duas vezes e vai subir a terceira com você.'
+      : 'E tem uma montanha no norte onde o mapa só tem hachura, e você vai acabar indo pra lá, porque tudo nesta história aponta pra lá.',
+    'Você come alguma coisa em pé, que é como se come em Saffron, e pega a estrada.'
+  ],
+  ef:{flag:'terminou_a_audiencia',
+      registrar:'Saiu do prédio em Saffron. A estrada agora aponta pro norte.'},
+  fim:true
+}
+
+}
+}
+
+);
+
+
+/* ===== js/story/cap-26.js ===== */
+/* ============================================================
+   CAPÍTULO 26 — O QUE TE OFERECEM
    Planalto Indigo. Três folhas em cima de uma mesa comprida.
    ============================================================ */
 CAPITULOS.push(
 {
-num:21, titulo:'O Que Te Oferecem', local:'Planalto Indigo', ambiente:'montanha', nivelArea:56,
+num:26, titulo:'O Que Te Oferecem', local:'Planalto Indigo', ambiente:'montanha', nivelArea:56,
 tom:'muito sombrio', inicio:'c21_chegada',
 cenas:{
 
@@ -51546,14 +54138,14 @@ c21_fim:{
 );
 
 
-/* ===== js/story/cap-22.js ===== */
+/* ===== js/story/cap-27.js ===== */
 /* ============================================================
-   CAPÍTULO 22 — O VALE
+   CAPÍTULO 27 — O VALE
    Acima da Rota 10, onde o mapa só tem hachura.
    ============================================================ */
 CAPITULOS.push(
 {
-num:22, titulo:'O Vale', local:'Norte de Kanto, acima da Rota 10', ambiente:'montanha', nivelArea:58,
+num:27, titulo:'O Vale', local:'Norte de Kanto, acima da Rota 10', ambiente:'montanha', nivelArea:58,
 tom:'muito sombrio', inicio:'c22_subida',
 cenas:{
 
@@ -52699,14 +55291,14 @@ c22_fim:{
 );
 
 
-/* ===== js/story/cap-23.js ===== */
+/* ===== js/story/cap-28.js ===== */
 /* ============================================================
-   CAPÍTULO 23 — Eu perguntei primeiro (final)
+   CAPÍTULO 28 — Eu perguntei primeiro (final)
    ============================================================ */
 CAPITULOS.push(
 
 {
-num:23, titulo:'Eu Perguntei Primeiro', local:'A caverna do norte', ambiente:'ruina', nivelArea:70,
+num:28, titulo:'Eu Perguntei Primeiro', local:'A caverna do norte', ambiente:'ruina', nivelArea:70,
 tom:'final', inicio:'c23_descida',
 cenas:{
 
@@ -57260,9 +59852,13 @@ const Jogo = {
       inimigo = unidades[0];
       timeInimigo = unidades.slice(1);
     } else {
+      /* nível pode ser função: capítulo alcançável com progresso diferente
+         não pode ter adversário de nível fixo. */
+      const nvBase = txt(b.nivel) || Historia.capAtual.nivelArea;
       if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Historia.capAtual.ambiente, b.nivelBase || Historia.capAtual.nivelArea);
-      else inimigo = criarPokemon(b.dex, b.nivel, {selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'});
-      timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex, x.nivel, {}));
+      else inimigo = criarPokemon(b.dex, nvBase, {selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'});
+      timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex,
+        x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {}));
     }
     const permiteFuga = (typeof b.fuga === 'boolean') ? b.fuga : true;
 
@@ -57624,6 +60220,8 @@ const Jogo = {
       time = timeRivalExtra(R).map(p => { p.nivel += 2; return p; });
     } else if (c.rival === 'teo'){
       time = timeRival().map(p => { p.nivel += 2; return p; });
+    } else if (c.id === 'nadia' && typeof timeDaNadia === 'function'){
+      time = timeDaNadia();
     }
     if (!time || !time.length) return;
     time.forEach(x => { x.nomeAnunciado = true; });

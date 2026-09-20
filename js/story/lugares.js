@@ -24,9 +24,14 @@ const ANCORAS = {
   18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},
   20: {local:'saffron',   chamada:'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. Segunda, 10h.'},
-  21: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
-  22: {local:'norte',     chamada:'O vale entre duas paredes de pedra, sem saída no fundo.'},
-  23: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'}
+  21: {local:'pallet',    chamada:'Faz tempo demais que você não vê a sua rua, e alguém ligou três vezes.'},
+  22: {local:'planalto',  chamada:'A arena aberta tem chaveamento afixado e o seu nome está nele, e você não se inscreveu.'},
+  23: {local:'viridian',  chamada:'O segundo andar do ginásio está aberto pela primeira vez em dois anos.'},
+  24: {local:'rota23',    chamada:'Sete guaritas em fila, e a primeira já quer ver o seu cartão.'},
+  25: {local:'saffron',   chamada:'A convocação chegou por telegrama, e telegrama não se responde com "não".'},
+  26: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
+  27: {local:'norte',     chamada:'O vale entre duas paredes de pedra, sem saída no fundo.'},
+  28: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'}
 };
 
 /* ============================================================
