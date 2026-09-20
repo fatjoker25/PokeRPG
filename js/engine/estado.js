@@ -268,18 +268,19 @@ function corDaMochila(nome){
 function mochilaAtual(){
   const d = Estado.dados;
   let cor = COR_MOCHILA_PADRAO, nome = 'Mochila da Liga';
-  if (!d || !d.itens) return {cor, nome};
+  const saida = () => ({cor, nome, rotulo: nome.split(' ')[0]});
+  if (!d || !d.itens) return saida();
   const escolhida = d.jogador && d.jogador.bolsa;
   if (escolhida && d.itens[escolhida] > 0){
     const c = corDaMochila(escolhida);
-    if (c) return {cor:c, nome:escolhida};
+    if (c){ cor = c; nome = escolhida; return saida(); }
   }
   for (const [n, q] of Object.entries(d.itens)){
     if (q <= 0) continue;
     const c = corDaMochila(n);
     if (c){ cor = c; nome = n; }
   }
-  return {cor, nome};
+  return saida();
 }
 
 /* --- mistura de cor, para tirar as sombras e o forro da cor lida --- */

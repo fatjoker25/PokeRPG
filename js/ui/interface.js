@@ -912,7 +912,7 @@ const UI = {
     const bolsa = mochilaAtual();
     const topo = `<div class="mochila-topo">
       <span class="fecho"></span>
-      <span class="bolsa-nome">${this.esc(bolsa.nome)}</span>
+      <span class="bolsa-nome">${this.esc(bolsa.rotulo)}</span>
       <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
     </div>`;
 
