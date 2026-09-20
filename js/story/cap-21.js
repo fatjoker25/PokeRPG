@@ -83,7 +83,11 @@ c21_a_caixa_de_volta:{
   ef:{dinheiro:-400, moral:3,
       npc:{nome:'Sra. Odete', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
       registrar:'Comprou uma caixa nova pra devolver à Sra. Odete. Ela percebeu.'},
-  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 c21_abracou_odete:{
@@ -98,7 +102,11 @@ c21_abracou_odete:{
       npc:{nome:'Sra. Odete', opiniao:5, memoria:'Você abraçou ela na calçada. Ela soltou por último.'},
       rep:{eixo:'bom',delta:1,motivo:'Abraçou quem ninguém abraça'},
       registrar:'Abraçou a Sra. Odete na calçada.'},
-  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 c21_tirou_o_cartaz:{
@@ -125,7 +133,11 @@ c21_repos_os_cartazes:{
   ef:{moral:4, limpaFlag:'tirou_os_cartazes',
       rep:{eixo:'bom',delta:1,motivo:'Repôs o que tinha arrancado por vergonha'},
       registrar:'Repôs os cartazes que tinha tirado.'},
-  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 /* ── o Sr. Rufino ──────────────────────────────────────────── */
@@ -230,7 +242,11 @@ c21_prometeu_a_terca:{
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu uma terça-feira comum a um velho'},
       registrar:'Prometeu voltar na terça pra varrer a calçada.'},
-  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 c21_nao_vai_estar:{
@@ -244,7 +260,11 @@ c21_nao_vai_estar:{
       npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'},
       rep:{eixo:'bom',delta:1,motivo:'Preferiu a verdade à promessa fácil'},
       registrar:'Foi honesto com o Sr. Rufino sobre a terça.'},
-  escolhas:[{texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 c21_contou_tudo:{
@@ -275,7 +295,11 @@ c21_silencio_no_degrau:{
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Ficou vinte minutos em silêncio com quem não pediu conversa'},
       registrar:'Ficou vinte minutos sentado em silêncio no degrau do Sr. Rufino.'},
-  escolhas:[{texto:'Levantar e ir pra casa.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Levantar e ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 /* ── o centro e o orelhão ──────────────────────────────────── */
@@ -348,7 +372,11 @@ c21_orelhao:{
   ef:{moral:8, flag:'ligou_da_esquina',
       rep:{eixo:'bom',delta:1,motivo:'Ligou da esquina em vez de chegar de surpresa'},
       registrar:'Ligou pra casa do orelhão da esquina, a trinta metros da porta.'},
-  escolhas:[{texto:'Ficar parado e deixar ela vir.', vai:'c21_dentro_de_casa'}]
+  escolhas:[
+    {texto:'Ficar parado e deixar ela vir.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
+    {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
+  ]
 },
 
 /* ── dentro de casa ────────────────────────────────────────── */

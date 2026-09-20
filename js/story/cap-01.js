@@ -276,7 +276,11 @@ c1_voltou_pra_dentro:{
   ef:{moral:5, limpaFlag:'tentou_sair_no_escuro',
       rep:{eixo:'bom',delta:2,motivo:'Voltou para se despedir direito'},
       registrar:'Saiu no escuro, andou quatro casas e voltou.'},
-  escolhas:[{texto:'Tomar o café.', vai:'c1_cozinha'}]
+  escolhas:[
+    {texto:'Tomar o café.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez antes.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de descer.', vai:'c1_mochila'}
+  ]
 },
 
 c1_foi_sem_despedir:{
@@ -302,7 +306,10 @@ c1_foi_sem_despedir:{
         Estado.ganharPokenav();
         return [{tipo:'item', texto:'Ganhou um PokéNav. Estava no bolso de fora desde a noite passada.'}];
       }},
-  escolhas:[{texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'}]
+  escolhas:[
+    {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Rufino']}
+  ]
 },
 
 c1_no_telhado:{
@@ -349,7 +356,27 @@ c1_mais_um_minuto:{
     'Depois você ouve a porta da cozinha fechar, e o barulho da panela recomeçar, e entende que ela sabia que você ia descer e resolveu deixar o minuto ser seu.'
   ],
   ef:{moral:2, registrar:'Ficou mais um minuto no telhado. Deixaram o minuto ser seu.'},
-  escolhas:[{texto:'Descer.', vai:'c1_cozinha'}]
+  escolhas:[
+    {texto:'Descer.', vai:'c1_cozinha'},
+    {texto:'Gritar de cima que já vai, só pra ela parar de esperar em silêncio.', vai:'c1_gritou_de_cima'},
+    {texto:'Conferir a mochila mais uma vez antes.', vai:'c1_mochila'}
+  ]
+},
+
+c1_gritou_de_cima:{
+  texto:[
+    d=>fala(d.jogador.nome, 'JÁ VOU!', 'grita'),
+    'Lá embaixo, a resposta demora dois segundos.',
+    d=>fala(nomeCasa(), 'EU NÃO PERGUNTEI NADA!', 'grita'),
+    'Vocês dois estão gritando de andares diferentes de uma casa de dois andares, sobre uma coisa que ninguém perguntou, no último dia.',
+    'É exatamente assim que esta casa funciona, e você vai sentir falta disso de um jeito que não dá pra explicar pra ninguém.'
+  ],
+  ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Gritou de volta, que é como esta casa conversa'},
+      registrar:'Gritou de cima que já ia. Ela gritou de volta que não tinha perguntado.'},
+  escolhas:[
+    {texto:'Descer rindo.', vai:'c1_cozinha'},
+    {texto:'Conferir a mochila enquanto o riso passa.', vai:'c1_mochila'}
+  ]
 },
 
 c1_contou_as_casas:{
@@ -465,7 +492,11 @@ c1_chamou_de_volta:{
       itens:{'Caixa de ventilador com um bicho dentro':1},
       rep:{eixo:'bom',delta:1,motivo:'Chamou de volta e assumiu'},
       registrar:'Chamou a Sra. Odete de volta e ficou com a caixa.'},
-  escolhas:[{texto:'Entrar e se arrumar.', vai:'c1_cozinha'}]
+  escolhas:[
+    {texto:'Entrar e se arrumar.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez antes.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de descer.', vai:'c1_mochila'}
+  ]
 },
 
 c1_chamou_de_dentro:{
@@ -661,8 +692,33 @@ c1_discurso:{
   ef:{moral:6, flag:'fez_discurso',
       rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', rep:{notorio:true}},
       registrar:'Fez um discurso na própria cozinha, às sete da manhã.'},
-  escolhas:[{texto:'Terminar o café e ir.', vai:'c1_despedida'}]
+  escolhas:[
+    {texto:'Terminar o café e ir.', vai:'c1_despedida'},
+    {texto:'Pedir pra todo mundo falar uma coisa também. Não pode ser só você.', vai:'c1_todo_mundo_falou'}
+  ]
 },
+
+c1_todo_mundo_falou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Agora cada um fala uma.'),
+    'A cozinha reclama, a cozinha se recusa, a cozinha fala.',
+    fala('o primo que você vê uma vez por ano', 'Não empresta dinheiro pra treinador. Nunca. Nem pra você mesmo.'),
+    fala('o vizinho do quatorze', 'Leva meia mais grossa do que você acha que precisa.'),
+    fala('Sra. Odete', 'ESCREVE. Escreve, menino, que ninguém escreve e todo mundo devia escrever.', 'grita'),
+    d=>fala(nomeCasa(), 'Come sentado. Pelo menos uma vez por dia, come sentado.', 'baixo'),
+    'A criança que ninguém sabe de quem é fala por último e fala a melhor de todas:',
+    fala('a criança', 'Se você achar um shiny você TEM que voltar aqui pra mostrar.')
+  ],
+  ef:{moral:7, flag:'todo_mundo_falou_uma',
+      rep:{eixo:'bom',delta:2,motivo:'Fez a própria despedida virar a despedida de todo mundo'},
+      registrar:'Pediu que cada um falasse uma coisa. A criança pediu pra ver o shiny.'},
+  escolhas:[
+    {texto:'Terminar o café e ir.', vai:'c1_despedida'},
+    {texto:'Subir e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de ir.', vai:'c1_mochila'}
+  ]
+},
+
 c1_comeu_o_bolo:{
   texto:[
     'Você come duas fatias e meia de bolo às sete da manhã, o que é a coisa mais próxima de um discurso que você consegue fazer hoje.',
@@ -717,7 +773,11 @@ c1_voltou_pra_festa:{
   ef:{moral:5, limpaFlag:'saiu_no_meio_da_festa',
       rep:{eixo:'bom',delta:1,motivo:'Voltou pra própria despedida'},
       registrar:'Saiu no meio da festa e voltou.'},
-  escolhas:[{texto:'Terminar direito dessa vez.', vai:'c1_despedida'}]
+  escolhas:[
+    {texto:'Terminar direito dessa vez.', vai:'c1_despedida'},
+    {texto:'Subir e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de ir.', vai:'c1_mochila'}
+  ]
 },
 
 /* ── abertura 10: ele não está ────────────────────────────── */
@@ -795,8 +855,58 @@ c1_sentou_na_placa:{
   ],
   ef:{moral:6, flag:'sentou_na_placa',
       registrar:'Sentou na placa da saída da cidade antes de sair de verdade.'},
-  escolhas:[{texto:'Voltar e tomar o café.', vai:'c1_cozinha'}]
+  escolhas:[
+    {texto:'Voltar e tomar o café.', vai:'c1_cozinha'},
+    {texto:'Andar até a curva, os quinhentos metros, e voltar.', vai:'c1_foi_ate_a_curva'},
+    {texto:'Perguntar em voz alta se ele quer ir agora, sem despedida nenhuma.', vai:'c1_perguntou_se_ia_agora'}
+  ]
 },
+
+c1_foi_ate_a_curva:{
+  texto:[
+    'Você anda os quinhentos metros até a curva, de pijama, com ele do lado, e para exatamente no ponto onde a estrada vira.',
+    'Depois da curva tem mais estrada. Só isso. Mais estrada, subindo, com mato dos dois lados e um poste caído no acostamento.',
+    'Nenhum mistério. Nenhuma revelação. Mais estrada.',
+    'E é um alívio tão grande que você tem que sentar no acostamento por um minuto.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} senta junto e olha pra você com aquela cara de quem não entende por que a gente para de andar quando ninguém mandou parar.`
+               : 'Você fica um minuto sozinho no acostamento e depois volta.';
+    }
+  ],
+  ef:{moral:5, flag:'foi_ate_a_curva', hp:-1,
+      rep:{eixo:'bom',delta:1,motivo:'Foi olhar o que tinha depois da curva antes de sair'},
+      registrar:'Andou até a curva de pijama pra ver o que tinha depois. Tinha mais estrada.'},
+  escolhas:[
+    {texto:'Voltar pra casa e fazer tudo direito.', vai:'c1_cozinha'},
+    {texto:'Voltar correndo, que agora deu vontade de começar.', vai:'c1_mochila'}
+  ]
+},
+
+c1_perguntou_se_ia_agora:{
+  texto:[
+    d=>{
+      const p = d.time[0];
+      return p ? fala(d.jogador.nome, 'Você quer ir agora? Assim, sem voltar?')
+               : fala(d.jogador.nome, 'A gente podia ir agora. Assim, sem voltar.');
+    },
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'Você fala isso pra ninguém, o que é pior do que falar pra alguém.';
+      return `${nomeExib(p)} olha pra você. Olha pra estrada. Olha pra você de novo.`;
+    },
+    'E aí ele pula da placa e anda na direção de casa, e para, e olha pra trás pra ver se você vem.',
+    'A resposta foi bem clara.'
+  ],
+  ef:{moral:6, flag:'ele_escolheu_voltar',
+      registrar:'Perguntou se ele queria ir sem voltar. Ele andou na direção de casa.'},
+  escolhas:[
+    {texto:'Ir atrás dele.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez antes.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de descer.', vai:'c1_mochila'}
+  ]
+},
+
 c1_esperou_ele:{
   texto:[
     'Você senta na porta dos fundos e espera, porque é o que faz sentido e porque é o que dói mais.',
@@ -844,7 +954,30 @@ c1_agradeceu_a_rua:{
   ef:{moral:4,
       rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', rep:{notorio:true}},
       registrar:'Agradeceu cada pessoa da rua antes de ir embora.'},
-  escolhas:[{texto:'Ir pra casa tomar café.', vai:'c1_cozinha'}]
+  escolhas:[
+    {texto:'Ir pra casa tomar café.', vai:'c1_cozinha'},
+    {texto:'Procurar a criança de nove anos e agradecer de novo, direito.', vai:'c1_a_crianca_de_nove'}
+  ]
+},
+
+c1_a_crianca_de_nove:{
+  texto:[
+    'Você acha ela três casas adiante, escondida atrás de um portão, fingindo muito mal que está fazendo outra coisa.',
+    d=>fala(d.jogador.nome, 'Foi você que achou.'),
+    fala('a criança de nove anos', 'Eu só tava olhando.', 'baixo'),
+    d=>fala(d.jogador.nome, 'Foi você que achou.'),
+    'Ela pensa nisso por uns quatro segundos e você vê a coisa mudar de lugar na cabeça dela.',
+    fala('a criança de nove anos', 'Foi eu que achei.'),
+    'Ela vai contar essa história por anos. Ela vai contar errado, cada vez mais bonita, e ninguém vai corrigir.'
+  ],
+  ef:{moral:5, flag:'a_crianca_que_achou',
+      rep:{eixo:'bom',delta:2,motivo:'Devolveu o crédito a quem tinha achado', rep:{notorio:true}},
+      registrar:'Voltou pra dizer à criança de nove anos que foi ela que achou.'},
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez antes.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de descer.', vai:'c1_mochila'}
+  ]
 },
 
 c1_cinco_minutos:{
@@ -901,7 +1034,11 @@ c1_levou_mapa:{
     'Nas margens dele tem sua letra de criança escrevendo coisas como "AQUI TEM VULCÃO" e "PERIGO???" em lugares completamente aleatórios.'
   ],
   ef:{flag:'tem_mapa_de_crianca'},
-  escolhas:[{texto:'Descer.', vai:'c1_cozinha'}]
+  escolhas:[
+    {texto:'Descer.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez antes.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de descer.', vai:'c1_mochila'}
+  ]
 },
 
 c1_mochila:{
@@ -946,7 +1083,11 @@ c1_mentira_gentil:{
     'É uma mentira gentil e hoje todo mundo nesta mesa prefere ela.'
   ],
   ef:{flag:'mentiu_no_cafe'},
-  escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
+  escolhas:[
+    {texto:'Terminar o café.', vai:'c1_despedida'},
+    {texto:'Subir e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de ir.', vai:'c1_mochila'}
+  ]
 },
 
 c1_verdade:{
@@ -960,7 +1101,11 @@ c1_verdade:{
     d=>fala(nomeCasa(), 'Mas volta diferente. E aí a demora valeu.')
   ],
   ef:{flag:'foi_honesto_no_cafe', moral:5},
-  escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
+  escolhas:[
+    {texto:'Terminar o café.', vai:'c1_despedida'},
+    {texto:'Subir e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de ir.', vai:'c1_mochila'}
+  ]
 },
 
 c1_objetivo:{
@@ -972,7 +1117,11 @@ c1_objetivo:{
     d=>fala(nomeCasa(), 'E quando isso mudar — porque isso muda, sempre muda — não trata como derrota.')
   ],
   ef:{flag:'disse_o_objetivo', moral:5},
-  escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
+  escolhas:[
+    {texto:'Terminar o café.', vai:'c1_despedida'},
+    {texto:'Subir e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de ir.', vai:'c1_mochila'}
+  ]
 },
 
 c1_silencio_mesa:{
@@ -981,7 +1130,11 @@ c1_silencio_mesa:{
     'Ninguém insiste. A cozinha faz barulho de cozinha por mais uns quatro minutos e isso é suficiente pros dois.',
     'Tem conversa que é melhor não ter, e tem gente que sabe disso — e é uma sorte enorme morar com gente que sabe disso.'
   ],
-  escolhas:[{texto:'Terminar o café.', vai:'c1_despedida'}]
+  escolhas:[
+    {texto:'Terminar o café.', vai:'c1_despedida'},
+    {texto:'Subir e olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila antes de ir.', vai:'c1_mochila'}
+  ]
 },
 
 c1_despedida:{
@@ -1026,7 +1179,147 @@ c1_rua:{
     {texto:'"Eu sei. A janela." Encarar o assunto.', vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
     {texto:'"Deve nada, seu Rufino." Fingir que esqueceu.', vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
     {texto:'Perguntar quanto custa resolver isso hoje.', vai:'c1_divida_paga', cond:d=>d.jogador.dinheiro >= 800},
-    {texto:'"Hoje não dá. Mas eu volto e resolvo."', vai:'c1_divida_adiada', ef:{flag:'adiou_divida'}}
+    {texto:'"Hoje não dá. Mas eu volto e resolvo."', vai:'c1_divida_adiada', ef:{flag:'adiou_divida'}},
+    {texto:'"O senhor organizou a rua inteira hoje de manhã. A gente tá quites."',
+     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs['Sr. Rufino']},
+    {texto:'Oferecer a vassoura de volta: varrer a calçada agora, no lugar do dinheiro.',
+     vai:'c1_varreu_no_lugar', cond:d=>!d.flags.varreu_a_calcada_do_rufino}
+  ]
+},
+
+c1_divida_quites:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O senhor organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.'),
+    d=>fala(d.jogador.nome, 'Eu acho que a gente tá quites.'),
+    'Ele fica olhando pra você por um tempo que passa do confortável, e depois olha pra vassoura, e depois pro chão.',
+    fala('Sr. Rufino', 'Não é assim que funciona.'),
+    fala('Sr. Rufino', 'Eu ajudei porque eu quis. Você quebrou porque você chutou. São coisas diferentes e você sabe disso.'),
+    'Ele tem razão, e você odeia que ele tenha razão às sete e meia da manhã.',
+    fala('Sr. Rufino', 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
+  ],
+  ef:{moral:4, flag:'quitou_na_lábia',
+      npc:{nome:'Sr. Rufino', opiniao:3, memoria:'Tentou quitar a janela com o favor da manhã. Ele riu e perdoou.'},
+      registrar:'Tentou quitar a dívida da janela com o favor da manhã. Funcionou, meio sem querer.'},
+  escolhas:[
+    {texto:'Insistir que a dívida continua de pé.', vai:'c1_divida_adiada'},
+    {texto:'Aceitar e seguir.', vai:'c1_saida_pro_centro'}
+  ]
+},
+
+c1_varreu_no_lugar:{
+  texto:[
+    'Você tira a vassoura da mão dele sem pedir licença, o que é a única maneira de tirar uma vassoura da mão do Sr. Rufino.',
+    'Você varre a calçada inteira. Leva doze minutos. Ela já estava varrida.',
+    'Ele reclama do jeito que você segura o cabo. Reclama do canto perto do portão. Reclama que você levanta poeira em vez de juntar.',
+    'Quando você devolve a vassoura, ele não fala nada da calçada.',
+    fala('Sr. Rufino', 'A janela era vinte pokedólares em 1989.', 'baixo'),
+    fala('Sr. Rufino', 'E doze minutos de calçada hoje vale mais do que vinte pokedólares. Vai embora, menino, antes que eu fique bobo.')
+  ],
+  ef:{moral:6, flag:'varreu_a_calcada_do_rufino', limpaFlag:'divida_pendente',
+      npc:{nome:'Sr. Rufino', opiniao:5, memoria:'Pagou a janela varrendo a calçada no dia em que saiu de casa.'},
+      rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
+      registrar:'Pagou a janela varrendo a calçada do Sr. Rufino.'},
+  escolhas:[
+    {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Rufino']}
+  ]
+},
+
+c1_entregou_a_caixa:{
+  texto:[
+    'Você põe a caixa de ventilador no balcão antes de entrar na fila, e a enfermeira olha a caixa, olha você, e não pergunta nada.',
+    'Ela levanta o pano de prato com dois dedos.',
+    fala('a enfermeira', 'Ah.'),
+    fala('a enfermeira', 'Terceiro esse mês. Sempre em caixa, sempre com pano de prato por cima, sempre trazido por outra pessoa.'),
+    d=>fala(d.jogador.nome, 'E o que acontece com eles?'),
+    fala('a enfermeira', 'A gente cuida até alguém querer. Às vezes alguém quer.'),
+    fala('a enfermeira', 'Se você mudar de ideia nos próximos dez minutos, ele ainda tá aqui.', 'baixo')
+  ],
+  ef:{flag:'entregou_a_caixa_no_centro',
+      registrar:'Entregou a caixa da Sra. Odete no Centro. Era o terceiro do mês.'},
+  escolhas:[
+    {texto:'Mudar de ideia. Ficar com ele.', vai:'c1_mudou_de_ideia_no_balcao'},
+    {texto:'Não mudar. Entrar na fila.', vai:'c1_fila'},
+    {texto:'Perguntar quantos deles ninguém nunca quis.', vai:'c1_quantos_ninguem_quis'}
+  ]
+},
+
+c1_mudou_de_ideia_no_balcao:{
+  texto:[
+    'Você pega a caixa de volta do balcão antes dos dez minutos e a enfermeira nem finge surpresa.',
+    fala('a enfermeira', 'Quarenta segundos. É o recorde do mês.', 'riso'),
+    'Ela puxa uma ficha, preenche em trinta segundos e empurra pra você assinar.',
+    fala('a enfermeira', 'Vamos registrar ele no seu nome junto com a sua licença, que aí você só faz fila uma vez.')
+  ],
+  ef:{flag:'ficou_com_o_bicho', moral:5,
+      rep:{eixo:'bom',delta:2,motivo:'Voltou ao balcão em quarenta segundos para ficar com ele'},
+      executar:d=>{
+        Estado.usarItem('Caixa de ventilador com um bicho dentro');
+        const dex = Dados.escolher([19, 16, 10, 13, 21, 41, 52]);
+        const p = criarPokemon(dex, Dados.entre(3,5), {moral:45});
+        p.historia = 'Passou a noite embaixo do carro da Sra. Odete. Você deixou ele no balcão e voltou em quarenta segundos.';
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) é seu.${notaDestino(onde)}`}];
+      },
+      registrar:'Deixou o bicho no balcão e voltou em quarenta segundos.'},
+  escolhas:[
+    {texto:'Entrar na fila.', vai:'c1_fila'},
+    {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
+    {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'}
+  ]
+},
+
+c1_quantos_ninguem_quis:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quantos deles ninguém nunca quis?'),
+    'Ela para de mexer na prancheta.',
+    fala('a enfermeira', 'Essa é uma pergunta muito ruim pra sete e quarenta da manhã.'),
+    fala('a enfermeira', 'Dos que passaram por este balcão nos três anos que eu estou aqui: a maioria.'),
+    fala('a enfermeira', 'A maioria vai pro abrigo de Lavender, que tem onze e cabe dezoito.', 'baixo'),
+    'Lavender. Você vai acabar em Lavender uma hora, todo mundo acaba, e agora você vai chegar lá sabendo disso.'
+  ],
+  ef:{flag:'sabe_do_abrigo_de_lavender',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou o que acontece com os que ninguém quer'},
+      registrar:'A maioria dos bichos entregues vai pro abrigo de Lavender, que tem onze e cabe dezoito.'},
+  escolhas:[
+    {texto:'Mudar de ideia. Ficar com ele.', vai:'c1_mudou_de_ideia_no_balcao'},
+    {texto:'Entrar na fila.', vai:'c1_fila'}
+  ]
+},
+
+c1_carregou_o_nav:{
+  texto:[
+    'Você pergunta se dá pra carregar e a enfermeira aponta uma tomada atrás do balcão com quatro aparelhos já ligados nela.',
+    fala('a enfermeira', 'Todo Centro tem. É serviço obrigatório e ninguém sabe.'),
+    'Enquanto carrega, você mexe no aparelho pela primeira vez com calma.',
+    d=>fala(nomeCasa(), 'CASA', 'baixo', 'É o único número gravado. Está escrito em maiúsculo, o que quer dizer que foi ela que digitou.'),
+    'Tem também, na memória, três chamadas não atendidas de nove anos atrás, para um número que não existe mais.',
+    'Você não apaga.'
+  ],
+  ef:{flag:'viu_as_chamadas_antigas', moral:2,
+      rep:{eixo:'bom',delta:1,motivo:'Mexeu no aparelho com calma antes de precisar dele'},
+      registrar:'O PokéNav tem três chamadas não atendidas de nove anos atrás, para um número que não existe mais.'},
+  escolhas:[
+    {texto:'Perguntar à enfermeira se dá pra descobrir de quem era o número.', vai:'c1_de_quem_era_o_numero'},
+    {texto:'Entrar na fila.', vai:'c1_fila'}
+  ]
+},
+
+c1_de_quem_era_o_numero:{
+  texto:[
+    'Ela digita o número no terminal do balcão e espera, e o terminal responde em quatro segundos.',
+    fala('a enfermeira', 'Linha cancelada em 1989. Titular...', null, 'Ela para de ler em voz alta.'),
+    fala('a enfermeira', 'Titular com o mesmo sobrenome que o seu.', 'baixo'),
+    'Ela vira a tela pra você e não é uma tela que explique muita coisa: é um nome, uma data de cancelamento e um campo de motivo em branco.',
+    'Você fecha o aparelho e põe no bolso e entra na fila, e leva exatamente onze minutos pra conseguir prestar atenção em outra coisa.'
+  ],
+  ef:{flag:'o_numero_de_1989', moral:-2,
+      rep:{eixo:'bom',delta:1,motivo:'Puxou um fio de nove anos atrás numa fila de balcão'},
+      registrar:'O número das chamadas antigas foi cancelado em 1989. O titular tinha o seu sobrenome.'},
+  escolhas:[
+    {texto:'Entrar na fila.', vai:'c1_fila'},
+    {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
+    {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'}
   ]
 },
 
@@ -1042,7 +1335,10 @@ c1_divida_assume:{
   ef:{itens:{'Great Ball':2,'Super Potion':1},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida antiga no dia em que podia simplesmente ir embora'},
       npc:{nome:'Sr. Rufino', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
-  escolhas:[{texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'}]
+  escolhas:[
+    {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Rufino']}
+  ]
 },
 
 c1_divida_nega:{
@@ -1053,7 +1349,10 @@ c1_divida_nega:{
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
       npc:{nome:'Sr. Rufino', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
-  escolhas:[{texto:'Seguir em frente.', vai:'c1_saida_pro_centro'}]
+  escolhas:[
+    {texto:'Seguir em frente.', vai:'c1_saida_pro_centro'},
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Rufino']}
+  ]
 },
 
 c1_divida_paga:{
@@ -1064,7 +1363,10 @@ c1_divida_paga:{
     'Você resolveu um problema e criou um assunto.'
   ],
   ef:{dinheiro:-800, npc:{nome:'Sr. Rufino', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
-  escolhas:[{texto:'Seguir.', vai:'c1_saida_pro_centro'}]
+  escolhas:[
+    {texto:'Seguir.', vai:'c1_saida_pro_centro'},
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Rufino']}
+  ]
 },
 
 c1_divida_adiada:{
@@ -1078,7 +1380,10 @@ c1_divida_adiada:{
   ef:{flag:'divida_pendente',
       npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
-  escolhas:[{texto:'Seguir.', vai:'c1_saida_pro_centro'}]
+  escolhas:[
+    {texto:'Seguir.', vai:'c1_saida_pro_centro'},
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Rufino']}
+  ]
 },
 
 c1_saida_pro_centro:{
@@ -1095,7 +1400,11 @@ c1_saida_pro_centro:{
     {texto:'Entrar na fila.', vai:'c1_fila'},
     {texto:'Ir embora sem cadastro. Papel é problema de quem tem medo.', vai:'c1_sem_cadastro'},
     {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
-    {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'}
+    {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'},
+    {texto:'Entregar a caixa da Sra. Odete primeiro. É pra isso que você veio.',
+     vai:'c1_entregou_a_caixa', cond:d=>Estado.contaItem('Caixa de ventilador com um bicho dentro') > 0},
+    {texto:'Perguntar se dá pra recarregar o aparelho aqui. Ele veio sem carga.',
+     vai:'c1_carregou_o_nav', cond:d=>Estado.temPokenav()}
   ]
 },
 
@@ -1125,7 +1434,11 @@ c1_terceiro_explica:{
   ],
   ef:{flag:'sabe_da_licenca_anual',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou o que os outros tiveram medo de perguntar'}},
-  escolhas:[{texto:'Entrar na fila.', vai:'c1_fila'}]
+  escolhas:[
+    {texto:'Entrar na fila.', vai:'c1_fila'},
+    {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
+    {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'}
+  ]
 },
 
 c1_pergunta_recepcao:{
@@ -1137,7 +1450,10 @@ c1_pergunta_recepcao:{
     fala('a enfermeira', 'Tem sempre um formulário.')
   ],
   ef:{flag:'perguntou_antes'},
-  escolhas:[{texto:'Entrar na fila.', vai:'c1_fila'}]
+  escolhas:[
+    {texto:'Entrar na fila.', vai:'c1_fila'},
+    {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'}
+  ]
 },
 
 c1_fila:{
