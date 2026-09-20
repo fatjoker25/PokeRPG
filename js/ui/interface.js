@@ -678,39 +678,126 @@ const UI = {
   /* ========================================================
      PC — o cinto cabe seis, o resto fica no sistema
      ======================================================== */
-  modalPC(){
+  /* ========================================================
+     PC — o terminal do Centro Pokémon
+     Carcaça bege, tela verde de fósforo. Cinto de seis à
+     esquerda, caixa à direita, ficha do selecionado embaixo.
+     ======================================================== */
+  pcSel: null,
+
+  modalPC(sel){
     const d = Estado.dados;
-    const linha = (p, acao, rotulo, desabilitado) => `<div class="pc-linha">
-      <span class="pc-quem">${imgSprite(p, 'icone')}<span>${this.esc(nomeExib(p))}${this.shi(p)}</span></span>
-      <span class="pc-dados mono">Nv ${p.nivel} · ${p.morto ? 'morto' : p.hp + '/' + p.hpMax}</span>
-      <button class="btn mini" ${desabilitado ? 'disabled' : `onclick="UI.${acao}('${p.uid}')"`}>${rotulo}</button>
-    </div>`;
+    if (sel !== undefined) this.pcSel = sel;
+    /* o selecionado pode ter mudado de lado ou saído do jogo */
+    const existe = u => d.time.some(p=>p.uid===u) || d.pc.some(p=>p.uid===u);
+    if (this.pcSel && !existe(this.pcSel)) this.pcSel = null;
+    if (!this.pcSel) this.pcSel = (d.time[0] && d.time[0].uid) || (d.pc[0] && d.pc[0].uid) || null;
 
-    const noTime = d.time.length
-      ? d.time.map(p => linha(p, 'pcGuardar', 'Guardar', d.time.filter(x=>!x.morto).length <= 1 && !p.morto)).join('')
-      : '<p class="nada">Seu cinto está vazio.</p>';
-    const noPC = d.pc.length
-      ? d.pc.map(p => linha(p, 'pcTirar', 'Tirar', d.time.length >= 6)).join('')
-      : '<p class="nada">O sistema não tem ninguém guardado.</p>';
+    const slot = (p, onde) => {
+      if (!p) return `<div class="pc-slot vazio"><span class="pc-vazio">—</span></div>`;
+      const selecionado = p.uid === this.pcSel ? ' sel' : '';
+      const ruim = p.morto ? ' morto' : (p.hp <= 0 ? ' caido' : '');
+      const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
+      return `<button class="pc-slot${selecionado}${ruim}" onclick="UI.modalPC('${p.uid}')" title="${this.esc(nomeExib(p))}">
+        <span class="pc-icone">${imgSprite(p, 'icone')}</span>
+        <span class="pc-nome">${this.esc(nomeExib(p))}${this.shi(p)}</span>
+        <span class="pc-nv">Nv ${p.nivel}</span>
+        <span class="pc-barra"><i style="width:${pct}%"></i></span>
+      </button>`;
+    };
 
-    this.modal('Sistema de armazenamento', `
-      <p class="sussurro">O cinto leva seis. O que passa disso fica aqui, e continua seu — só não anda com você.</p>
-      <h3>No cinto — ${d.time.length} de 6</h3>${noTime}
-      <h3>No sistema — ${d.pc.length}</h3>${noPC}`);
+    const cinto = Array.from({length:6}, (_, i) => slot(d.time[i], 'time')).join('');
+    const caixa = d.pc.length
+      ? d.pc.map(p => slot(p, 'pc')).join('')
+      : `<div class="pc-caixa-vazia">A caixa está vazia.<br><span>Tudo o que passar de seis aparece aqui.</span></div>`;
+
+    this.modal('', `
+      <div class="pc-topo">
+        <span class="pc-led"></span>
+        <span class="pc-marca">SISTEMA DE ARMAZENAMENTO</span>
+        <span class="pc-versao">v3.1</span>
+      </div>
+      <div class="pc-colunas">
+        <div class="pc-lado">
+          <div class="pc-titulo">Cinto <span>${d.time.length}/6</span></div>
+          <div class="pc-grade cinto">${cinto}</div>
+        </div>
+        <div class="pc-lado">
+          <div class="pc-titulo">Caixa <span>${d.pc.length} guardado${d.pc.length===1?'':'s'}</span></div>
+          <div class="pc-grade caixa">${caixa}</div>
+        </div>
+      </div>
+      <div class="pc-ficha" id="pc-ficha">${this.pcFicha()}</div>
+    `, false, 'pc');
   },
+
+  pcFicha(){
+    const d = Estado.dados;
+    const p = d.time.find(x => x.uid === this.pcSel) || d.pc.find(x => x.uid === this.pcSel);
+    if (!p) return `<div class="pc-nada">Nenhum Pokémon no sistema. Nem no cinto, nem na caixa.</div>`;
+    const noTime = d.time.some(x => x.uid === p.uid);
+    const esp = DEX[p.dex] || {};
+    const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
+    const moral = Math.max(0, Math.min(100, p.moral == null ? 50 : p.moral));
+
+    /* o botão diz por que não dá, quando não dá */
+    let acao, rotulo, trava = null;
+    if (noTime){
+      acao = `UI.pcGuardar('${p.uid}')`; rotulo = 'Guardar na caixa';
+      if (!p.morto && d.time.filter(x=>!x.morto).length <= 1)
+        trava = 'É o único que você tem em pé. Ninguém anda por Kanto de cinto vazio.';
+    } else {
+      acao = `UI.pcTirar('${p.uid}')`; rotulo = 'Levar no cinto';
+      if (d.time.length >= 6) trava = 'O cinto já tem seis. Guarde um antes de tirar outro.';
+    }
+
+    const tipos = (esp.tipos||[]).map(t =>
+      `<span class="tipo-tag" style="background:${COR_TIPO[t]||'#555'}">${this.esc(t)}</span>`).join('');
+
+    return `
+      <div class="pc-arte">${imgSprite(p, 'frente')}</div>
+      <div class="pc-dados">
+        <div class="pc-cab">
+          <span class="pc-ficha-nome">${this.esc(nomeExib(p))}${this.shi(p)}</span>
+          <span class="pc-ficha-nv">Nv ${p.nivel}</span>
+          ${p.morto ? '<span class="pc-tag morto">morto</span>' :
+            p.hp <= 0 ? '<span class="pc-tag caido">desmaiado</span>' : ''}
+        </div>
+        <div class="pc-tipos">${tipos}${p.naturezaVista ? `<span class="pc-nat">${this.esc(p.natureza)}</span>` : '<span class="pc-nat fraca">temperamento ainda não lido</span>'}</div>
+        <div class="pc-medida"><span class="rot">HP</span>
+          <span class="pc-barra grossa"><i style="width:${pct}%"></i></span>
+          <span class="num mono">${p.hp}/${p.hpMax}</span></div>
+        <div class="pc-medida"><span class="rot">Moral</span>
+          <span class="pc-barra grossa moral"><i style="width:${moral}%"></i></span>
+          <span class="num mono">${moral}</span></div>
+        <div class="pc-golpes">${(p.golpes||[]).map(g =>
+          `<span class="pc-golpe">${this.esc(g.nome)} <b>${g.pp}/${g.ppMax}</b></span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
+        ${p.historia ? `<div class="pc-historia">${this.esc(p.historia)}</div>` : ''}
+        <div class="pc-acao">
+          <button class="btn" ${trava ? 'disabled' : `onclick="${acao}"`}>${rotulo}</button>
+          ${trava ? `<span class="pc-trava">${this.esc(trava)}</span>` : ''}
+        </div>
+      </div>`;
+  },
+
   pcGuardar(uid){
     const r = Estado.depositar(uid);
-    if (!r.ok) return this.modal('', `<p class="nada">${this.esc(r.motivo)}</p>
-      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPC()">Voltar ao sistema</button></div>`);
+    if (!r.ok) return this.pcAviso(r.motivo);
     Estado.salvar('auto');
-    this.modalPC();
+    this.modalPC(uid);
   },
   pcTirar(uid){
     const r = Estado.retirar(uid);
-    if (!r.ok) return this.modal('', `<p class="nada">${this.esc(r.motivo)}</p>
-      <div style="margin-top:12px"><button class="btn" onclick="UI.modalPC()">Voltar ao sistema</button></div>`);
+    if (!r.ok) return this.pcAviso(r.motivo);
     Estado.salvar('auto');
-    this.modalPC();
+    this.modalPC(uid);
+  },
+  pcAviso(motivo){
+    const f = document.getElementById('pc-ficha');
+    if (!f) return;
+    const velho = f.querySelector('.pc-erro');
+    if (velho) velho.remove();
+    f.appendChild(this.el(`<div class="pc-erro">${this.esc(motivo)}</div>`));
   },
 
   menuBolas(){

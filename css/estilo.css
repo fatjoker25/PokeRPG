@@ -1196,16 +1196,6 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .dex-scan .silhueta.brilho{background:none;box-shadow:none}
 .dex-scan .silhueta.brilho .scan-arte{filter:brightness(0) opacity(.8) drop-shadow(0 0 12px rgba(245,197,24,.9))}
 
-/* ---- PC: uma linha por bicho, sem carta inteira ---- */
-.pc-linha{
-  display:flex;align-items:center;gap:9px;
-  padding:6px 0;border-bottom:1px solid var(--borda)
-}
-.pc-linha:last-of-type{border-bottom:0}
-.pc-quem{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0}
-.pc-quem > span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pc-dados{flex:0 0 auto;font-size:11.5px;color:var(--texto-fraco)}
-
 /* ---- as duas faixas do registro nacional ---- */
 .dex-faixas{
   display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap
@@ -1396,4 +1386,165 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   .dado{width:38px;height:38px}
   .dado .face{font-size:17px}
   .dados-legendas{font-size:11px}
+}
+
+/* ============================================================
+   PC — o terminal do Centro Pokémon
+   Carcaça bege de plástico de 1996, tela verde de fósforo.
+   ============================================================ */
+.modal.pc{
+  --pc-caixa:#d9d2c0; --pc-caixa-esc:#8f887a; --pc-caixa-clara:#efe9da;
+  --pc-tela:#0e2417; --pc-tela-2:#132f1e; --pc-luz:#7dfca8;
+  --pc-txt:#c9f7d8; --pc-txt-2:#79b993; --pc-linha:#1d4a2f;
+  max-width:760px;
+  border:3px solid var(--pc-caixa-esc);
+  background:linear-gradient(180deg, var(--pc-caixa-clara), var(--pc-caixa) 30%, var(--pc-caixa-esc));
+  box-shadow:var(--sombra-alta), inset 0 1px 0 rgba(255,255,255,.5);
+  animation:ligaPC .42s var(--suave) both;
+}
+@keyframes ligaPC{
+  from{opacity:0;transform:scale(.97)}
+  40%{opacity:1}
+  to{opacity:1;transform:none}
+}
+.modal.pc .modal-corpo{
+  position:relative;
+  background:linear-gradient(180deg, var(--pc-tela-2), var(--pc-tela) 55%);
+  border:2px solid #05130c;border-radius:8px;padding:0;
+  color:var(--pc-txt);
+  box-shadow:inset 0 0 26px -6px rgba(0,0,0,.9), 0 0 20px -8px rgba(125,252,168,.35);
+  overflow:hidden;
+}
+.modal.pc .modal-corpo::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
+}
+.modal.pc .modal-pe{padding-top:10px}
+.modal.pc .modal-pe .btn{
+  background:#3d3830;border-color:var(--pc-caixa-esc);color:var(--pc-caixa-clara)
+}
+.modal.pc .modal-pe .btn:hover:not(:disabled){background:#57503f;color:#fff}
+
+/* barra de título da tela */
+.pc-topo{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 12px;border-bottom:1px solid var(--pc-linha);
+  background:rgba(125,252,168,.07);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+}
+.pc-marca{flex:1;color:var(--pc-luz)}
+.pc-versao{color:var(--pc-txt-2)}
+.pc-led{
+  width:8px;height:8px;border-radius:50%;background:var(--pc-luz);flex:0 0 auto;
+  box-shadow:0 0 7px var(--pc-luz);animation:pcPisca 1.9s steps(1,end) infinite;
+}
+@keyframes pcPisca{0%,72%{opacity:1}73%,100%{opacity:.22}}
+
+/* duas colunas: cinto e caixa */
+.pc-colunas{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pc-lado{padding:10px 12px;min-width:0}
+.pc-lado + .pc-lado{border-left:1px solid var(--pc-linha)}
+.pc-titulo{
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--pc-txt-2);margin-bottom:7px;
+  border-bottom:1px dashed var(--pc-linha);padding-bottom:5px;
+}
+.pc-titulo span{color:var(--pc-luz);letter-spacing:.06em}
+.pc-grade{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.pc-grade.caixa{max-height:198px;overflow-y:auto;padding-right:3px}
+.pc-grade.caixa::-webkit-scrollbar{width:7px}
+.pc-grade.caixa::-webkit-scrollbar-thumb{background:var(--pc-linha);border-radius:4px}
+
+.pc-slot{
+  display:grid;grid-template-columns:30px 1fr;grid-template-rows:auto auto auto;
+  grid-template-areas:'ic nome' 'ic nv' 'barra barra';
+  align-items:center;gap:1px 7px;
+  padding:5px 7px;text-align:left;cursor:pointer;
+  border:1px solid var(--pc-linha);border-radius:4px;
+  background:rgba(125,252,168,.04);color:var(--pc-txt);
+  font:inherit;transition:background .12s, border-color .12s;
+}
+.pc-slot:hover{background:rgba(125,252,168,.12);border-color:var(--pc-txt-2)}
+.pc-slot.sel{
+  border-color:var(--pc-luz);background:rgba(125,252,168,.18);
+  box-shadow:0 0 0 1px var(--pc-luz) inset, 0 0 12px -4px var(--pc-luz);
+}
+.pc-slot.caido{opacity:.62}
+.pc-slot.morto{opacity:.45;filter:grayscale(1)}
+.pc-slot.vazio{
+  display:flex;align-items:center;justify-content:center;
+  border-style:dashed;background:transparent;cursor:default;min-height:48px;
+}
+.pc-vazio{color:var(--pc-linha);font-size:16px}
+.pc-icone{grid-area:ic;display:flex;align-items:center;justify-content:center}
+.pc-icone img{width:30px;height:30px;image-rendering:pixelated}
+.pc-nome{grid-area:nome;font-size:12.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-nv{grid-area:nv;font-family:var(--mono);font-size:10.5px;color:var(--pc-txt-2)}
+.pc-barra{
+  grid-area:barra;display:block;height:3px;margin-top:3px;
+  background:var(--pc-linha);border-radius:2px;overflow:hidden;
+}
+.pc-barra i{display:block;height:100%;background:var(--pc-luz)}
+.pc-barra.grossa{height:7px;border-radius:3px;flex:1;margin:0}
+.pc-barra.moral i{background:#ffd166}
+.pc-caixa-vazia{
+  grid-column:1/-1;text-align:center;padding:26px 8px;color:var(--pc-txt-2);
+  font-size:12.5px;line-height:1.5;
+}
+.pc-caixa-vazia span{color:var(--pc-linha);font-size:11.5px}
+
+/* ficha do selecionado */
+.pc-ficha{
+  display:grid;grid-template-columns:104px 1fr;gap:12px;
+  padding:11px 13px;border-top:1px solid var(--pc-linha);
+  background:rgba(0,0,0,.22);
+}
+.pc-arte{display:flex;align-items:center;justify-content:center}
+.pc-arte img{width:96px;height:96px;image-rendering:pixelated;
+  filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
+.pc-dados{min-width:0}
+.pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.pc-ficha-nome{font-size:16px;font-weight:650;color:#e8fff0}
+.pc-ficha-nv{font-family:var(--mono);font-size:12px;color:var(--pc-txt-2)}
+.pc-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:1px 6px;border-radius:3px;border:1px solid currentColor;
+}
+.pc-tag.caido{color:#ffc46b}
+.pc-tag.morto{color:#ff7b6b}
+.pc-tipos{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
+.pc-nat{font-size:11.5px;color:var(--pc-txt-2);font-style:italic}
+.pc-nat.fraca{color:var(--pc-linha);font-size:11px}
+.pc-medida{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.pc-medida .rot{
+  flex:0 0 42px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--pc-txt-2);
+}
+.pc-medida .num{font-size:11.5px;color:var(--pc-txt);flex:0 0 auto;min-width:58px;text-align:right}
+.pc-golpes{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 6px}
+.pc-golpe{
+  font-size:11px;padding:2px 6px;border-radius:3px;
+  border:1px solid var(--pc-linha);background:rgba(125,252,168,.05);color:var(--pc-txt-2);
+}
+.pc-golpe b{color:var(--pc-txt);font-weight:600}
+.pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
+.pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pc-acao .btn{
+  background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
+  padding:6px 14px;font-size:13px;
+}
+.pc-acao .btn:hover:not(:disabled){background:var(--pc-luz);color:#08281a}
+.pc-acao .btn:disabled{border-color:var(--pc-linha);color:var(--pc-txt-2)}
+.pc-trava{font-size:11.5px;color:#ffc46b;flex:1;min-width:140px;line-height:1.35}
+.pc-nada{grid-column:1/-1;text-align:center;color:var(--pc-txt-2);padding:18px 6px}
+.pc-erro{
+  grid-column:1/-1;margin-top:8px;padding:6px 9px;border-radius:4px;
+  border:1px solid #ff7b6b;color:#ffb3a8;background:rgba(255,123,107,.1);font-size:12px;
+}
+@media (max-width:640px){
+  .pc-colunas{grid-template-columns:1fr}
+  .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
+  .pc-ficha{grid-template-columns:1fr}
+  .pc-arte img{width:76px;height:76px}
 }
