@@ -54367,8 +54367,7 @@ const UI = {
     this.modal('Sistema de armazenamento', `
       <p class="sussurro">O cinto leva seis. O que passa disso fica aqui, e continua seu — só não anda com você.</p>
       <h3>No cinto — ${d.time.length} de 6</h3>${noTime}
-      <h3>No sistema — ${d.pc.length}</h3>${noPC}
-      <div style="margin-top:14px"><button class="btn" onclick="UI.fecharModal()">Fechar</button></div>`);
+      <h3>No sistema — ${d.pc.length}</h3>${noPC}`);
   },
   pcGuardar(uid){
     const r = Estado.depositar(uid);
