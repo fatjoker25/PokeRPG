@@ -440,8 +440,10 @@ const UI = {
     const d = Estado.dados;
     const a = Batalha.aliado;
     const vivos = d.time.filter(p => estaVivo(p) && p.uid !== a.uid).length;
-    const bolas = Object.keys(d.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola').length;
-    const itens = Object.keys(d.itens).length;
+    const contraTreinador = Batalha.tipo === 'treinador';
+    const bolas = contraTreinador ? 0 : Object.keys(d.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola').length;
+    /* O contador da Bag mostra o que serve aqui, não o que está na mochila. */
+    const itens = Object.keys(d.itens).filter(n => usavelEmBatalha(n)).length + bolas;
 
     const bt = (cls, rot, nota, acao, off) =>
       `<button class="mb-btn ${cls}" ${off ? 'disabled' : ''} ${off ? '' : 'onclick="' + acao + '"'}>
@@ -456,7 +458,7 @@ const UI = {
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
         ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + ' tipo(s) de bola · ' : ''}${itens} item(ns)` : 'vazia', 'UI.menuBag()', !itens)}
+        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + ' tipo(s) de bola · ' : ''}${itens} item(ns)` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
@@ -471,6 +473,19 @@ const UI = {
     const a = Batalha.aliado;
     const conhecido = Estado.conheceu(Batalha.inimigo.dex) || !!Batalha.leituraIntelecto;
     const grade = this.el('<div class="grade-golpes"></div>');
+    /* Sem PP em nada, o que sobra é Forcejar — e ele tem que caber num botão,
+       senão o jogador fica sem ação nenhuma numa luta de onde não se foge. */
+    const semPP = a.golpes.every(g => g.pp <= 0);
+    if (semPP){
+      c.appendChild(this.el(`<div class="mb-linha centro">
+        <button class="mb-btn lutar" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:0})">
+          <span class="rot">Forcejar</span>
+          <span class="nota">1d10 × 3 de dano · ${this.esc(nomeExib(a))} se machuca no contragolpe</span></button></div>`));
+      c.appendChild(this.el(`<div class="mb-linha centro">
+        <button class="mb-btn voltar" onclick="UI.voltarAoMenu()">
+          <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
+      return;
+    }
     a.golpes.forEach((g, i) => {
       const G = GOLPES[g.nome];
       // a dica de eficácia só existe se você souber contra o que está lutando
@@ -494,7 +509,10 @@ const UI = {
     /* Pokémon de treinador não se captura: a bola nem aparece na bolsa. */
     const contraTreinador = Batalha.ativo && Batalha.tipo === 'treinador';
     const bolas = contraTreinador ? [] : nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
-    const resto = nomes.filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
+    /* Prova de processo, crachá e caderno continuam na mochila — mas não se
+       usa papel em cima de um Onix, e clicar neles custava o turno. */
+    const resto = nomes.filter(n => usavelEmBatalha(n));
+    const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
     const linhasBolas = bolas.map(n =>
       `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
         ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join('');
@@ -506,11 +524,13 @@ const UI = {
         `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
           ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join('');
-    this.modal('Mochila',
+    const corpo =
       (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As bolas ficam no fundo da mochila: não se joga bola no Pokémon de outro treinador.</p>' : '') +
       (linhasBolas ? '<h3>Bolas</h3>' + linhasBolas : '') +
-      (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') ||
-      '<p class="nada">Nada que sirva agora.</p>');
+      (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') +
+      (guardados > 0 ? `<p class="sussurro" style="margin:10px 0 0">${guardados} ${guardados === 1 ? 'objeto fica guardado' : 'objetos ficam guardados'} — papel, crachá e afins não servem de nada aqui.</p>` : '');
+    this.modal('Mochila', (linhasBolas || linhasItens) ? corpo
+      : corpo + '<p class="nada">Nada que sirva agora.</p>');
   },
 
   /* ========================================================
@@ -662,7 +682,7 @@ const UI = {
   },
 
   menuItens(){
-    const itens = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
+    const itens = Object.keys(Estado.dados.itens).filter(n => usavelEmBatalha(n));
     if (!itens.length) return this.modal('Mochila', '<p class="nada">Mochila vazia.</p>');
     this.modal('Usar em quem?', itens.map(n => {
       const info = ITENS_INFO[n];

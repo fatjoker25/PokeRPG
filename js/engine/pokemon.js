@@ -104,6 +104,9 @@ function nomeVisivel(p){
            || (d.cemiterio || []).some(x => x.uid === p.uid);
   if (meu) return nomeExib(p);
   if (Estado.conheceu(p.dex)) return nomeExib(p);
+  /* Líder de ginásio grita o nome do próprio Pokémon ao soltar a bola.
+     Ouvir o nome não preenche a Pokédex: para isso ainda é preciso escanear. */
+  if (p.nomeAnunciado) return nomeExib(p);
   if (p.apelido) return p.apelido;
   return '???';
 }

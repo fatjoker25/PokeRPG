@@ -1438,8 +1438,8 @@ c19_carregou_tres:{
       executar:d=>{
         const p = unidadeComissao(29, 24, '41-C-22');
         p.moral = 5;
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} ficou com você. As outras duas você levou ao Centro Pokémon de Fuchsia, que não soube o que registrar na ficha.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} ficou com você. As outras duas você levou ao Centro Pokémon de Fuchsia, que não soube o que registrar na ficha.${notaDestino(onde)}`}];
       },
       rep:{eixo:'bom',delta:2,motivo:'Assumiu a responsabilidade por três unidades que não sabem viver soltas'},
       registrar:'Tirou três unidades da Estação 4 e descobriu que elas não sobrevivem sozinhas.'},

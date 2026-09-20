@@ -1453,8 +1453,8 @@ c10_coleta:{
         for (let i=0;i<2;i++){
           const p = criarPokemon(Dados.escolher([100,81]), Dados.entre(28,34),
             {moral:10, historia:'Recolhido do chão da usina enquanto olhava para Zapdos.'});
-          Estado.adicionar(p);
-          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhido. Ele não resistiu, o que é pior.`});
+          const onde = Estado.adicionar(p);
+          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhido. Ele não resistiu, o que é pior.${notaDestino(onde)}`});
         }
         const L=Estado.lend(145); L.disposicao='hostil';
         avisos.push({tipo:'perigo', texto:'Zapdos parou de carregar. Ela te viu fazer isso.'});

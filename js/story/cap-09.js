@@ -2746,8 +2746,8 @@ c9_comprou_um:{
       executar:d=>{
         const p = criarPokemon(Dados.escolher([123,127,113,115,131,143,137,142]), Dados.entre(26,34),
           {moral:20, historia:'Comprado numa gaiola de armazém em Celadon, com nota fiscal. Tinha um número colado na bola.'});
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) saiu do armazém. Os outros quarenta não.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) saiu do armazém. Os outros quarenta não.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon de custódia — mesmo para salvá-lo'},
       registrar:'Comprou um do armazém, com nota fiscal.',

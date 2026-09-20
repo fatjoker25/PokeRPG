@@ -261,9 +261,22 @@ function evoluiPorTroca(dexId){
 }
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
+/* Quando o cinto já tem seis, o que chega vai para o PC — e o texto da cena
+   precisa dizer isso, senão promete um Pokémon que não está lá. */
+function notaDestino(onde){
+  return onde === 'pc' ? ' O seu cinto já tinha seis: ele foi direto para o PC do Centro Pokémon.' : '';
+}
 function fichaItem(nome){
   const i = ITENS_INFO[nome];
   return i && i.ficha ? i.ficha : '';
+}
+/* O que a mochila deixa usar no meio de uma briga. Papel, crachá e prova
+   de processo continuam na mochila — só não servem de nada com um Onix
+   na sua frente. */
+const TIPOS_USAVEIS_EM_BATALHA = ['cura','revive','status','curaJogador','pp','ppTodos','moral','fuga'];
+function usavelEmBatalha(nome){
+  const i = ITENS_INFO[nome];
+  return !!i && TIPOS_USAVEIS_EM_BATALHA.includes(i.tipo);
 }
 function categoriaItem(nome){
   const i = ITENS_INFO[nome];

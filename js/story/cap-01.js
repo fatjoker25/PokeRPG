@@ -384,8 +384,8 @@ c1_ficou_com_ele:{
         const dex = Dados.escolher(especies);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:40});
         p.historia = 'Passou a noite embaixo do carro da Sra. Odete. Já tinha sido devolvido antes.';
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.${notaDestino(onde)}`}];
       },
       registrar:'Ficou com o Pokémon da caixa.'},
   escolhas:[

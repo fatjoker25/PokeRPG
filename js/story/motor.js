@@ -139,8 +139,9 @@ const Historia = {
     }
     if (ef.pokemon){
       const p = criarPokemon(ef.pokemon.dex, ef.pokemon.nivel, ef.pokemon.opcoes||{});
-      Estado.adicionar(p);
-      avisos.push({tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) entrou para o seu time.`});
+      const onde = Estado.adicionar(p);
+      avisos.push({tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) ${
+        onde === 'pc' ? 'foi direto para o PC — o seu cinto já tem seis.' : 'entrou para o seu time.'}`});
       Estado.registrar(`Recebeu ${p.nome} Nv${p.nivel}.`);
     }
     if (ef.mataPrimeiro){

@@ -440,6 +440,8 @@ const Jogo = {
     if (!meu) return UI.modal('Ginásio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de desafiar um líder.</p>');
 
     const time = timeGinasio(g).map(x => criarPokemon(x.dex, x.nivel, {}));
+    /* o líder grita o nome ao soltar a bola — a entrada já sai com o nome certo */
+    time.forEach(x => { x.nomeAnunciado = true; });
     this.ginasioAtual = g;
     this.cenaBatalha = null;
     /* entrou uma vez, viu o time: a ficha do ginásio abre daqui pra frente */
@@ -634,6 +636,7 @@ const Jogo = {
     const time = alvo.especies.map((dex,i) =>
       criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
     if (time.length) time[time.length-1].nivel += 2;
+    time.forEach(x => { x.nomeAnunciado = true; });
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null;
     UI.limparDados();
@@ -743,6 +746,7 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return this.resultadoTorneio({resultado:'derrota'});
     const adv = t.adversarios[t.rodada];
+    adv.time.forEach(x => { x.nomeAnunciado = true; });
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {

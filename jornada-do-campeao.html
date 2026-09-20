@@ -3472,6 +3472,9 @@ function nomeVisivel(p){
            || (d.cemiterio || []).some(x => x.uid === p.uid);
   if (meu) return nomeExib(p);
   if (Estado.conheceu(p.dex)) return nomeExib(p);
+  /* Líder de ginásio grita o nome do próprio Pokémon ao soltar a bola.
+     Ouvir o nome não preenche a Pokédex: para isso ainda é preciso escanear. */
+  if (p.nomeAnunciado) return nomeExib(p);
   if (p.apelido) return p.apelido;
   return '???';
 }
@@ -3916,9 +3919,22 @@ function evoluiPorTroca(dexId){
 }
 
 /* O que o jogador já aprendeu na prática ou porque alguém contou */
+/* Quando o cinto já tem seis, o que chega vai para o PC — e o texto da cena
+   precisa dizer isso, senão promete um Pokémon que não está lá. */
+function notaDestino(onde){
+  return onde === 'pc' ? ' O seu cinto já tinha seis: ele foi direto para o PC do Centro Pokémon.' : '';
+}
 function fichaItem(nome){
   const i = ITENS_INFO[nome];
   return i && i.ficha ? i.ficha : '';
+}
+/* O que a mochila deixa usar no meio de uma briga. Papel, crachá e prova
+   de processo continuam na mochila — só não servem de nada com um Onix
+   na sua frente. */
+const TIPOS_USAVEIS_EM_BATALHA = ['cura','revive','status','curaJogador','pp','ppTodos','moral','fuga'];
+function usavelEmBatalha(nome){
+  const i = ITENS_INFO[nome];
+  return !!i && TIPOS_USAVEIS_EM_BATALHA.includes(i.tipo);
 }
 function categoriaItem(nome){
   const i = ITENS_INFO[nome];
@@ -4820,7 +4836,8 @@ const Batalha = {
     this.fase = 'normal';
     this.bonusDinheiro = 1;
     this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
-    if (this.revelaNatureza && inimigo) inimigo.naturezaVista = true;
+    if (this.revelaNatureza && inimigo){ inimigo.naturezaVista = true; inimigo.nomeAnunciado = true; }
+    if (this.revelaNatureza && opts.timeInimigo) opts.timeInimigo.forEach(p => { p.nomeAnunciado = true; });
     if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
     this.eventos = [];
     this.aoTerminar = opts.aoTerminar || null;
@@ -4845,7 +4862,9 @@ const Batalha = {
       const t = Dados.teste(Estado.j.status.intelecto, 7, 'Intelecto');
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         this.leituraIntelecto = true;
-        this.ev('natureza', `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
+        this.ev('natureza', inimigo.nomeAnunciado
+          ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
+          : `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
         if (t.grau === 'critico'){
           inimigo.naturezaVista = true;
           this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
@@ -5436,7 +5455,7 @@ const Batalha = {
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
         const prox = this.timeInimigo.shift();
-        if (this.revelaNatureza) prox.naturezaVista = true;
+        if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
         this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
           prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.inimigo = prox;
@@ -5716,8 +5735,9 @@ const Historia = {
     }
     if (ef.pokemon){
       const p = criarPokemon(ef.pokemon.dex, ef.pokemon.nivel, ef.pokemon.opcoes||{});
-      Estado.adicionar(p);
-      avisos.push({tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) entrou para o seu time.`});
+      const onde = Estado.adicionar(p);
+      avisos.push({tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) ${
+        onde === 'pc' ? 'foi direto para o PC — o seu cinto já tem seis.' : 'entrou para o seu time.'}`});
       Estado.registrar(`Recebeu ${p.nome} Nv${p.nivel}.`);
     }
     if (ef.mataPrimeiro){
@@ -8367,8 +8387,8 @@ c1_ficou_com_ele:{
         const dex = Dados.escolher(especies);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:40});
         p.historia = 'Passou a noite embaixo do carro da Sra. Odete. Já tinha sido devolvido antes.';
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.${notaDestino(onde)}`}];
       },
       registrar:'Ficou com o Pokémon da caixa.'},
   escolhas:[
@@ -9928,9 +9948,9 @@ c3_capturar:{
   ef:{executar:d=>{
         const p = criarPokemon(25, 12, {natureza:'Lonely', moral:15, historia:'Capturado enquanto estava preso e ferido. Não escolheu você.'});
         p.status = 'veneno'; p.hp = Math.max(1, Math.floor(p.hpMax*0.3));
-        Estado.adicionar(p);
+        const onde = Estado.adicionar(p);
         Estado.registrar('Capturou o Pikachu enquanto ele estava preso e indefeso.');
-        return [{tipo:'pokemon', texto:'Pikachu entrou no time. Ele está ferido, envenenado, e não olha para você.'}];
+        return [{tipo:'pokemon', texto:'Pikachu entrou no time. Ele está ferido, envenenado, e não olha para você.' + notaDestino(onde)}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Capturou um Pokémon indefeso numa armadilha'},
       flag:'pikachu_capturado_preso'},
@@ -14720,8 +14740,8 @@ c6_comprou:{
       executar:d=>{
         const dex = Dados.escolher([52,58,63,66,84,96,104,109,116,118]);
         const p = criarPokemon(dex, Dados.entre(16,22), {moral:20, historia:'Comprado numa banca em Cerulean. Teve outro treinador antes de você.'});
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. Ele não te escolheu.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. Ele não te escolheu.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon em banca de rua'},
       presagio:'Ele vai levar semanas pra te obedecer, e meses pra te olhar. Isso não está escrito no papel dobrado em três.'},
@@ -25303,8 +25323,8 @@ c9_comprou_um:{
       executar:d=>{
         const p = criarPokemon(Dados.escolher([123,127,113,115,131,143,137,142]), Dados.entre(26,34),
           {moral:20, historia:'Comprado numa gaiola de armazém em Celadon, com nota fiscal. Tinha um número colado na bola.'});
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) saiu do armazém. Os outros quarenta não.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) saiu do armazém. Os outros quarenta não.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon de custódia — mesmo para salvá-lo'},
       registrar:'Comprou um do armazém, com nota fiscal.',
@@ -27187,8 +27207,8 @@ c10_coleta:{
         for (let i=0;i<2;i++){
           const p = criarPokemon(Dados.escolher([100,81]), Dados.entre(28,34),
             {moral:10, historia:'Recolhido do chão da usina enquanto olhava para Zapdos.'});
-          Estado.adicionar(p);
-          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhido. Ele não resistiu, o que é pior.`});
+          const onde = Estado.adicionar(p);
+          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhido. Ele não resistiu, o que é pior.${notaDestino(onde)}`});
         }
         const L=Estado.lend(145); L.disposicao='hostil';
         avisos.push({tipo:'perigo', texto:'Zapdos parou de carregar. Ela te viu fazer isso.'});
@@ -46648,8 +46668,8 @@ c19_carregou_tres:{
       executar:d=>{
         const p = unidadeComissao(29, 24, '41-C-22');
         p.moral = 5;
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} ficou com você. As outras duas você levou ao Centro Pokémon de Fuchsia, que não soube o que registrar na ficha.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} ficou com você. As outras duas você levou ao Centro Pokémon de Fuchsia, que não soube o que registrar na ficha.${notaDestino(onde)}`}];
       },
       rep:{eixo:'bom',delta:2,motivo:'Assumiu a responsabilidade por três unidades que não sabem viver soltas'},
       registrar:'Tirou três unidades da Estação 4 e descobriu que elas não sobrevivem sozinhas.'},
@@ -48778,8 +48798,8 @@ c20_levou_unidade01:{
         const p = unidadeComissao(150, 63, '01');
         p.moral = 0;
         p.historia = 'Décima segunda tentativa. A primeira que vingou. Não fala, não pergunta, obedece.';
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time. Moral 0. Ela vai obedecer a tudo.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time. Moral 0. Ela vai obedecer a tudo.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Saiu com uma cópia de Mewtwo na mão'},
       registrar:'Levou a Unidade 01.'},
@@ -54173,8 +54193,10 @@ const UI = {
     const d = Estado.dados;
     const a = Batalha.aliado;
     const vivos = d.time.filter(p => estaVivo(p) && p.uid !== a.uid).length;
-    const bolas = Object.keys(d.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola').length;
-    const itens = Object.keys(d.itens).length;
+    const contraTreinador = Batalha.tipo === 'treinador';
+    const bolas = contraTreinador ? 0 : Object.keys(d.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola').length;
+    /* O contador da Bag mostra o que serve aqui, não o que está na mochila. */
+    const itens = Object.keys(d.itens).filter(n => usavelEmBatalha(n)).length + bolas;
 
     const bt = (cls, rot, nota, acao, off) =>
       `<button class="mb-btn ${cls}" ${off ? 'disabled' : ''} ${off ? '' : 'onclick="' + acao + '"'}>
@@ -54189,7 +54211,7 @@ const UI = {
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
         ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + ' tipo(s) de bola · ' : ''}${itens} item(ns)` : 'vazia', 'UI.menuBag()', !itens)}
+        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + ' tipo(s) de bola · ' : ''}${itens} item(ns)` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
@@ -54204,6 +54226,19 @@ const UI = {
     const a = Batalha.aliado;
     const conhecido = Estado.conheceu(Batalha.inimigo.dex) || !!Batalha.leituraIntelecto;
     const grade = this.el('<div class="grade-golpes"></div>');
+    /* Sem PP em nada, o que sobra é Forcejar — e ele tem que caber num botão,
+       senão o jogador fica sem ação nenhuma numa luta de onde não se foge. */
+    const semPP = a.golpes.every(g => g.pp <= 0);
+    if (semPP){
+      c.appendChild(this.el(`<div class="mb-linha centro">
+        <button class="mb-btn lutar" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:0})">
+          <span class="rot">Forcejar</span>
+          <span class="nota">1d10 × 3 de dano · ${this.esc(nomeExib(a))} se machuca no contragolpe</span></button></div>`));
+      c.appendChild(this.el(`<div class="mb-linha centro">
+        <button class="mb-btn voltar" onclick="UI.voltarAoMenu()">
+          <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
+      return;
+    }
     a.golpes.forEach((g, i) => {
       const G = GOLPES[g.nome];
       // a dica de eficácia só existe se você souber contra o que está lutando
@@ -54227,7 +54262,10 @@ const UI = {
     /* Pokémon de treinador não se captura: a bola nem aparece na bolsa. */
     const contraTreinador = Batalha.ativo && Batalha.tipo === 'treinador';
     const bolas = contraTreinador ? [] : nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
-    const resto = nomes.filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
+    /* Prova de processo, crachá e caderno continuam na mochila — mas não se
+       usa papel em cima de um Onix, e clicar neles custava o turno. */
+    const resto = nomes.filter(n => usavelEmBatalha(n));
+    const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
     const linhasBolas = bolas.map(n =>
       `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
         ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join('');
@@ -54239,11 +54277,13 @@ const UI = {
         `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
           ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join('');
-    this.modal('Mochila',
+    const corpo =
       (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As bolas ficam no fundo da mochila: não se joga bola no Pokémon de outro treinador.</p>' : '') +
       (linhasBolas ? '<h3>Bolas</h3>' + linhasBolas : '') +
-      (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') ||
-      '<p class="nada">Nada que sirva agora.</p>');
+      (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') +
+      (guardados > 0 ? `<p class="sussurro" style="margin:10px 0 0">${guardados} ${guardados === 1 ? 'objeto fica guardado' : 'objetos ficam guardados'} — papel, crachá e afins não servem de nada aqui.</p>` : '');
+    this.modal('Mochila', (linhasBolas || linhasItens) ? corpo
+      : corpo + '<p class="nada">Nada que sirva agora.</p>');
   },
 
   /* ========================================================
@@ -54395,7 +54435,7 @@ const UI = {
   },
 
   menuItens(){
-    const itens = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo !== 'bola');
+    const itens = Object.keys(Estado.dados.itens).filter(n => usavelEmBatalha(n));
     if (!itens.length) return this.modal('Mochila', '<p class="nada">Mochila vazia.</p>');
     this.modal('Usar em quem?', itens.map(n => {
       const info = ITENS_INFO[n];
@@ -56255,6 +56295,8 @@ const Jogo = {
     if (!meu) return UI.modal('Ginásio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de desafiar um líder.</p>');
 
     const time = timeGinasio(g).map(x => criarPokemon(x.dex, x.nivel, {}));
+    /* o líder grita o nome ao soltar a bola — a entrada já sai com o nome certo */
+    time.forEach(x => { x.nomeAnunciado = true; });
     this.ginasioAtual = g;
     this.cenaBatalha = null;
     /* entrou uma vez, viu o time: a ficha do ginásio abre daqui pra frente */
@@ -56449,6 +56491,7 @@ const Jogo = {
     const time = alvo.especies.map((dex,i) =>
       criarPokemon(dex, nivel + i, {apelido: (alvo.apelidos||{})[dex] || null}));
     if (time.length) time[time.length-1].nivel += 2;
+    time.forEach(x => { x.nomeAnunciado = true; });
 
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null;
     UI.limparDados();
@@ -56558,6 +56601,7 @@ const Jogo = {
     const meu = Estado.primeiroApto();
     if (!meu) return this.resultadoTorneio({resultado:'derrota'});
     const adv = t.adversarios[t.rodada];
+    adv.time.forEach(x => { x.nomeAnunciado = true; });
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {

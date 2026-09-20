@@ -724,8 +724,8 @@ c6_comprou:{
       executar:d=>{
         const dex = Dados.escolher([52,58,63,66,84,96,104,109,116,118]);
         const p = criarPokemon(dex, Dados.entre(16,22), {moral:20, historia:'Comprado numa banca em Cerulean. Teve outro treinador antes de você.'});
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. Ele não te escolheu.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. Ele não te escolheu.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon em banca de rua'},
       presagio:'Ele vai levar semanas pra te obedecer, e meses pra te olhar. Isso não está escrito no papel dobrado em três.'},

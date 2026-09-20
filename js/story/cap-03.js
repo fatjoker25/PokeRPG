@@ -454,9 +454,9 @@ c3_capturar:{
   ef:{executar:d=>{
         const p = criarPokemon(25, 12, {natureza:'Lonely', moral:15, historia:'Capturado enquanto estava preso e ferido. Não escolheu você.'});
         p.status = 'veneno'; p.hp = Math.max(1, Math.floor(p.hpMax*0.3));
-        Estado.adicionar(p);
+        const onde = Estado.adicionar(p);
         Estado.registrar('Capturou o Pikachu enquanto ele estava preso e indefeso.');
-        return [{tipo:'pokemon', texto:'Pikachu entrou no time. Ele está ferido, envenenado, e não olha para você.'}];
+        return [{tipo:'pokemon', texto:'Pikachu entrou no time. Ele está ferido, envenenado, e não olha para você.' + notaDestino(onde)}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Capturou um Pokémon indefeso numa armadilha'},
       flag:'pikachu_capturado_preso'},

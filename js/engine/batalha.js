@@ -24,7 +24,8 @@ const Batalha = {
     this.fase = 'normal';
     this.bonusDinheiro = 1;
     this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
-    if (this.revelaNatureza && inimigo) inimigo.naturezaVista = true;
+    if (this.revelaNatureza && inimigo){ inimigo.naturezaVista = true; inimigo.nomeAnunciado = true; }
+    if (this.revelaNatureza && opts.timeInimigo) opts.timeInimigo.forEach(p => { p.nomeAnunciado = true; });
     if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
     this.eventos = [];
     this.aoTerminar = opts.aoTerminar || null;
@@ -49,7 +50,9 @@ const Batalha = {
       const t = Dados.teste(Estado.j.status.intelecto, 7, 'Intelecto');
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         this.leituraIntelecto = true;
-        this.ev('natureza', `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
+        this.ev('natureza', inimigo.nomeAnunciado
+          ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
+          : `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
         if (t.grau === 'critico'){
           inimigo.naturezaVista = true;
           this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
@@ -640,7 +643,7 @@ const Batalha = {
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
         const prox = this.timeInimigo.shift();
-        if (this.revelaNatureza) prox.naturezaVista = true;
+        if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
         this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
           prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.inimigo = prox;

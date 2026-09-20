@@ -1350,8 +1350,8 @@ c20_levou_unidade01:{
         const p = unidadeComissao(150, 63, '01');
         p.moral = 0;
         p.historia = 'Décima segunda tentativa. A primeira que vingou. Não fala, não pergunta, obedece.';
-        Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time. Moral 0. Ela vai obedecer a tudo.`}];
+        const onde = Estado.adicionar(p);
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 63) entrou no seu time. Moral 0. Ela vai obedecer a tudo.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Saiu com uma cópia de Mewtwo na mão'},
       registrar:'Levou a Unidade 01.'},
