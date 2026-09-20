@@ -5,7 +5,8 @@
    ============================================================ */
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
-const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado','c1_vizinha'];
+const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado',
+                      'c1_vizinha','c1_apagao','c1_mala_trocada','c1_festa','c1_ele_sumiu'];
 
 CAPITULOS.push(
 
@@ -483,6 +484,367 @@ c1_chamou_de_dentro:{
     {texto:'Entrar com ela.', vai:'c1_cozinha'},
     {texto:'Ficar mais um pouco na porta, olhando a rua.', vai:'c1_rua'}
   ]
+},
+
+/* ── abertura 7: a cidade sem luz ─────────────────────────── */
+c1_apagao:{
+  texto:[
+    'Acabou a luz da cidade inteira às cinco e quarenta da manhã, e a primeira coisa que você entende, antes mesmo de acordar direito, é que o ventilador parou.',
+    'A segunda coisa que você entende é que hoje é o dia, e que o seu despertador é elétrico.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'No escuro, a sua mochila está exatamente onde você deixou, o que é a única coisa confiável desta manhã.';
+      return `${nomeExib(p)} está em pé no meio do quarto, tenso, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
+    },
+    d=>fala(nomeCasa(), 'É a rua toda! Não mexe no disjuntor que não é o disjuntor!', 'grita',
+            'A voz vem lá de baixo, no escuro, com uma certeza que só quem já passou por isso tem.'),
+    'Pela janela dá pra ver a cidade sem um poste aceso, e o céu com mais estrela do que você lembrava que tinha.'
+  ],
+  ef:{flag:'comecou_no_apagao', registrar:'Saiu de casa no dia em que a cidade amanheceu sem luz.'},
+  escolhas:[
+    {texto:'Descer no escuro e ajudar a achar a vela.', vai:'c1_vela'},
+    {texto:'Ficar na janela olhando as estrelas enquanto dá.', vai:'c1_estrelas'},
+    {texto:'Conferir a mochila no escuro, pelo tato.', vai:'c1_mochila_escuro'},
+    {texto:'Descer direto. Luz volta ou não volta.', vai:'c1_cozinha'}
+  ]
+},
+c1_vela:{
+  texto:[
+    'A vela fica na terceira gaveta, atrás do barbante, e você acha ela de primeira porque você é quem sempre acha.',
+    d=>fala(nomeCasa(), 'Como é que você acha essas coisas no escuro, criatura.', 'riso'),
+    d=>fala(nomeCasa(), 'Vai fazer falta, isso. Isso aí vai fazer falta nesta casa.', 'baixo'),
+    'E aí ela fica quieta, porque falou uma coisa que não pretendia falar hoje.'
+  ],
+  ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Achou a vela no escuro, no último dia em casa'},
+      registrar:'Achou a vela no apagão.'},
+  escolhas:[
+    {texto:'Fazer o café na chama da vela.', vai:'c1_fez_o_cafe'},
+    {texto:'Sentar e esperar a luz voltar junto.', vai:'c1_cozinha'}
+  ]
+},
+c1_estrelas:{
+  texto:[
+    'Você abre a janela inteira e senta no parapeito, que é largo o suficiente e que sua casa nunca achou perigoso.',
+    'Sem poste nenhum aceso, o céu de Kanto é uma coisa completamente diferente. Tem faixa de estrela onde você jurava que era só escuro.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} sobe no parapeito com você, atrapalhando, e fica olhando pra cima porque você está olhando pra cima.`
+               : 'Passa um Hoothoot em algum lugar e você não vê, só ouve.';
+    },
+    'Você fica ali até o céu começar a clarear, e quando a luz volta — às seis e vinte, de uma vez, com a cidade inteira acendendo junto — é quase uma pena.'
+  ],
+  ef:{moral:4, flag:'viu_o_ceu_sem_poste',
+      registrar:'Viu o céu de Pallet sem um poste aceso.'},
+  escolhas:[
+    {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez.', vai:'c1_quarto'},
+    {texto:'Conferir a mochila.', vai:'c1_mochila'}
+  ]
+},
+c1_mochila_escuro:{
+  texto:[
+    'Você confere a mochila inteira no escuro, só pelo tato, e é a quarta vez que você confere e a primeira em que você acerta tudo de primeira.',
+    'Cantil. Casaco. A muda de roupa enrolada. O mapa que já estava velho quando te deram.',
+    'Você conhece cada coisa dessa mochila pelo formato, o que significa que você arrumou ela mais vezes do que admitiria em voz alta.'
+  ],
+  ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Conhece a própria mochila no escuro'},
+      registrar:'Conferiu a mochila no escuro, de cor.'},
+  escolhas:[
+    {texto:'Descer.', vai:'c1_cozinha'},
+    {texto:'Ficar na janela até clarear.', vai:'c1_estrelas'}
+  ]
+},
+
+/* ── abertura 8: a mochila errada ─────────────────────────── */
+c1_mala_trocada:{
+  texto:[
+    'Você acorda às sete com a casa já em movimento e desce achando que está tudo resolvido.',
+    'A mochila está na porta, arrumada, fechada, com a fivela de baixo consertada com arame — coisa que ninguém te avisou que ia fazer.',
+    'Você abre pra conferir e para.',
+    'Não é a sua mochila. É a mochila de quem saiu desta casa antes de você, guardada no armário de cima há tempo demais, e alguém passou a noite transferindo as suas coisas pra dentro dela.',
+    d=>fala(nomeCasa(), 'A sua não ia aguentar Viridian.', null, 'Dito da cozinha, sem se virar, no tom de quem decidiu sozinha e não vai discutir.'),
+    d=>fala(nomeCasa(), 'Essa aqui aguentou coisa pior.')
+  ],
+  ef:{flag:'mochila_herdada', moral:5,
+      registrar:'Saiu com a mochila de quem saiu desta casa antes.'},
+  escolhas:[
+    {texto:'Perguntar de quem era.', vai:'c1_de_quem_era'},
+    {texto:'Não perguntar. Fechar a fivela e agradecer.', vai:'c1_nao_perguntou'},
+    {texto:'Olhar os bolsos de dentro antes de qualquer coisa.', vai:'c1_bolso_de_dentro'},
+    {texto:'Descer e tomar café com ela na mesa.', vai:'c1_cozinha'}
+  ]
+},
+c1_de_quem_era:{
+  texto:[
+    d=>fala(d.jogador.nome, 'De quem era essa mochila?'),
+    'Silêncio de cozinha. Colher no fundo da xícara, duas vezes.',
+    d=>fala(nomeCasa(), 'De gente que saiu daqui e não voltou.', 'baixo'),
+    d=>fala(nomeCasa(), 'Não é maldição, menino. É mochila. Mochila boa não tem culpa de quem carregou.'),
+    d=>fala(nomeCasa(), 'Mas se você quiser trocar, tem a sua ali no canto, e eu não vou achar ruim.'),
+    'Você olha a sua, de lona fina, com a fivela quebrada. Olha a outra, de lona grossa, com arame novo.'
+  ],
+  ef:{flag:'sabe_da_mochila',
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou o que era mais fácil não perguntar'},
+      registrar:'Perguntou de quem era a mochila.'},
+  escolhas:[
+    {texto:'Ficar com a mochila herdada.', vai:'c1_cozinha',
+     ef:{moral:4, flag:'ficou_com_a_mochila', registrar:'Ficou com a mochila herdada.'}},
+    {texto:'Trocar pela sua, mesmo ruim.', vai:'c1_cozinha',
+     ef:{flag:'recusou_a_mochila', rep:{eixo:'bom',delta:1,motivo:'Preferiu carregar o próprio peso'},
+         registrar:'Recusou a mochila herdada e ficou com a dele.'}}
+  ]
+},
+c1_nao_perguntou:{
+  texto:[
+    'Você fecha a fivela de arame, testa o peso no ombro, e não pergunta nada.',
+    'Tem perguntas que a gente não faz porque já sabe a resposta, e tem perguntas que a gente não faz porque hoje não é o dia.',
+    'Esta é das duas coisas ao mesmo tempo.',
+    d=>fala(nomeCasa(), 'Obrigada.', 'baixo', 'Por não ter perguntado. Ela agradece isso, e você entende que ela está agradecendo isso.')
+  ],
+  ef:{moral:4, flag:'ficou_com_a_mochila',
+      registrar:'Ficou com a mochila herdada sem perguntar de quem era.'},
+  escolhas:[
+    {texto:'Descer para a cozinha.', vai:'c1_cozinha'},
+    {texto:'Olhar o quarto uma última vez.', vai:'c1_quarto'}
+  ]
+},
+c1_bolso_de_dentro:{
+  texto:[
+    'Você vira a mochila e abre o bolso de dentro, o que ninguém abre porque ninguém lembra que existe.',
+    'Tem um mapa de Kanto de nove anos atrás, dobrado errado, com quatro rotas marcadas a caneta e uma quinta rasurada.',
+    'Tem meio pacote de biscoito que virou pó.',
+    'E tem um bilhete de ônibus de Viridian para Pewter, sem data, nunca usado.',
+    'Alguém comprou uma passagem e não foi.'
+  ],
+  ef:{itens:{'Mapa de nove anos atrás':1}, flag:'achou_o_bilhete_de_onibus',
+      rep:{eixo:'bom',delta:1,motivo:'Olhou onde ninguém olha'},
+      registrar:'Achou um mapa antigo e uma passagem nunca usada no bolso de dentro.'},
+  escolhas:[
+    {texto:'Descer e perguntar sobre a passagem.', vai:'c1_de_quem_era'},
+    {texto:'Guardar tudo de volta e descer.', vai:'c1_cozinha'}
+  ]
+},
+
+/* ── abertura 9: a casa cheia ─────────────────────────────── */
+c1_festa:{
+  texto:[
+    'Tem gente demais na sua casa às sete da manhã e você não foi consultado sobre isso.',
+    'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Odete e alguém que você tem quase certeza de que mora na outra rua.',
+    'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
+    d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
+            'Ela fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
+    d=>fala('Sra. Odete', 'Deixa o menino comer! DEIXA O MENINO COMER!', 'grita'),
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} sumiu debaixo da mesa no primeiro minuto e não vai sair de lá nem por bolo.`
+               : 'Alguém trouxe um Growlithe e ele já está dormindo debaixo da mesa.';
+    }
+  ],
+  ef:{flag:'a_casa_estava_cheia', moral:4,
+      npc:{nome:'Sra. Odete', opiniao:2, memoria:'Apareceu na despedida às sete da manhã e mandou todo mundo deixar você comer.'},
+      registrar:'A casa amanheceu cheia de gente no dia da partida.'},
+  escolhas:[
+    {texto:'Fazer um discurso. Todo mundo está esperando um.', vai:'c1_discurso'},
+    {texto:'Comer o bolo e não falar nada.', vai:'c1_comeu_o_bolo'},
+    {texto:'Escapar pro quintal cinco minutos.', vai:'c1_quintal'},
+    {texto:'Ir embora no meio, sem alarde.', vai:'c1_saiu_da_festa'}
+  ]
+},
+c1_discurso:{
+  texto:[
+    'Você bate na xícara com a colher e a cozinha inteira cala de uma vez, o que é muito pior do que quando estava barulhento.',
+    'Você tem sete pessoas olhando pra você e nenhuma frase pronta.',
+    d=>fala(d.jogador.nome, d.jogador.objetivo, null, 'É o que sai. É a coisa mais sincera que você já disse em voz alta nesta casa.'),
+    'Ninguém aplaude na hora. Demora uns dois segundos.',
+    'E aí a Sra. Odete começa a chorar de um jeito absolutamente desproporcional, e a partir daí ninguém mais consegue levar a manhã a sério.'
+  ],
+  ef:{moral:6, flag:'fez_discurso',
+      rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', rep:{notorio:true}},
+      registrar:'Fez um discurso na própria cozinha, às sete da manhã.'},
+  escolhas:[{texto:'Terminar o café e ir.', vai:'c1_despedida'}]
+},
+c1_comeu_o_bolo:{
+  texto:[
+    'Você come duas fatias e meia de bolo às sete da manhã, o que é a coisa mais próxima de um discurso que você consegue fazer hoje.',
+    'As sete pessoas conversam por cima de você sobre rotas que nenhuma delas andou, perigos que nenhuma delas viu, e um primo distante que virou treinador em 1989 e de quem ninguém lembra o nome.',
+    'Você não precisa falar nada. Você precisa só estar ali, e estar ali é a parte que eles vieram ver.'
+  ],
+  ef:{moral:4, registrar:'Comeu bolo às sete da manhã com a cozinha cheia.'},
+  escolhas:[
+    {texto:'Terminar e se despedir.', vai:'c1_despedida'},
+    {texto:'Escapar pro quintal cinco minutos.', vai:'c1_quintal'}
+  ]
+},
+c1_quintal:{
+  texto:[
+    'Você sai pelos fundos e senta no degrau do quintal, e a cozinha continua barulhenta do outro lado da porta, sem sentir a sua falta ainda.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} aparece trinta segundos depois, porque ele sempre aparece trinta segundos depois, e senta encostado na sua perna.`
+               : 'O quintal tem uma corda de varal, um balde e um pé de alguma coisa que nunca deu fruta.';
+    },
+    'Dá pra ouvir a sua casa inteira rindo de uma coisa que você não ouviu.',
+    'Você vai lembrar deste degrau, e não da cozinha.'
+  ],
+  ef:{moral:3, flag:'o_degrau_do_quintal',
+      registrar:'Sentou no degrau do quintal no meio da própria despedida.'},
+  escolhas:[
+    {texto:'Voltar pra dentro.', vai:'c1_despedida'},
+    {texto:'Sair pelo portão dos fundos, sem voltar.', vai:'c1_saiu_da_festa'}
+  ]
+},
+c1_saiu_da_festa:{
+  texto:[
+    'Você pega a mochila encostada na porta dos fundos e sai pelo portão sem ninguém ver, com a casa rindo às suas costas.',
+    'Você anda meio quarteirão e a risada ainda dá pra ouvir, o que é pior do que se não desse.',
+    'Ninguém vai entender. Você mesmo não entende direito, e você é o que fez.'
+  ],
+  ef:{flag:'saiu_no_meio_da_festa', moral:-4,
+      rep:{eixo:'ruim',delta:1,motivo:'Sumiu no meio da própria despedida'},
+      registrar:'Saiu no meio da festa de despedida, sem avisar.'},
+  escolhas:[
+    {texto:'Voltar. Ainda dá tempo.', vai:'c1_voltou_pra_festa'},
+    {texto:'Continuar.', vai:'c1_rua'}
+  ]
+},
+c1_voltou_pra_festa:{
+  texto:[
+    'Você volta o meio quarteirão e entra pela porta da frente, o que é diferente de nunca ter saído, e todo mundo percebe.',
+    d=>fala('Sra. Odete', 'ELE VOLTOU! EU FALEI QUE ELE VOLTAVA!', 'grita'),
+    d=>fala(nomeCasa(), 'Você não falou nada disso, Odete.', 'riso'),
+    'E aí a cozinha volta a ser barulhenta, e ninguém cobra nada de você, e é assim que se perdoa em casa de rua pequena: fingindo que não houve o que houve.'
+  ],
+  ef:{moral:5, limpaFlag:'saiu_no_meio_da_festa',
+      rep:{eixo:'bom',delta:1,motivo:'Voltou pra própria despedida'},
+      registrar:'Saiu no meio da festa e voltou.'},
+  escolhas:[{texto:'Terminar direito dessa vez.', vai:'c1_despedida'}]
+},
+
+/* ── abertura 10: ele não está ────────────────────────────── */
+c1_ele_sumiu:{
+  texto:[
+    'Você acorda às seis e meia e a primeira coisa que você faz é a mesma de todo dia: olhar o pé da cama.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'E o pé da cama está vazio, o que faz sentido, porque você não tem ninguém.';
+      return `O pé da cama está vazio. ${nomeExib(p)} não está lá, e ${nomeExib(p)} está lá todo dia desde a primeira noite em que apareceu nesta casa.`;
+    },
+    'Você chama uma vez, baixo. Depois alto. Depois desce a escada de dois em dois degraus.',
+    'A porta dos fundos está encostada, não fechada.',
+    d=>fala(nomeCasa(), 'Ele saiu antes de eu acordar. Eu achei que tinha sido você que soltou.', null,
+            'Ela está com o pano na mão, parada no meio da cozinha, e não está calma.')
+  ],
+  ef:{flag:'ele_sumiu_no_ultimo_dia',
+      registrar:'No dia de sair de casa, o seu Pokémon não estava no pé da cama.'},
+  escolhas:[
+    {texto:'Sair procurando agora, de pijama.', vai:'c1_procura_pijama'},
+    {texto:'Pensar. Onde é que ele iria?', vai:'c1_onde_ele_iria'},
+    {texto:'Esperar. Ele volta.', vai:'c1_esperou_ele'},
+    {texto:'Pedir ajuda aos vizinhos.', vai:'c1_pediu_ajuda'}
+  ]
+},
+c1_procura_pijama:{
+  texto:[
+    'Você sai de pijama e de chinelo às seis e quarenta e cinco e percorre a rua inteira chamando, sem se importar com janela nenhuma.',
+    'Duas janelas abrem. Uma fecha de novo. A outra é a Sra. Odete, que olha você de cima a baixo e entra sem dizer nada — e volta um minuto depois, de casaco, pra procurar junto.',
+    'Vocês dois acham ele em onze minutos, na saída da cidade, sentado exatamente em cima da placa que diz PALLET, olhando a estrada.',
+    'Ele não fugiu. Ele foi esperar por você no lugar certo.'
+  ],
+  ef:{moral:8, flag:'ele_estava_na_placa',
+      npc:{nome:'Sra. Odete', opiniao:3, memoria:'Saiu de casaco por cima da camisola pra procurar um bicho que não era dela.'},
+      rep:{eixo:'bom',delta:2,motivo:'Saiu de pijama pela rua atrás de quem sumiu'},
+      registrar:'Ele estava sentado em cima da placa da saída da cidade.'},
+  escolhas:[
+    {texto:'Voltar pra casa com ele e fazer tudo direito.', vai:'c1_cozinha'},
+    {texto:'Sentar na placa junto e ficar um pouco.', vai:'c1_sentou_na_placa'}
+  ]
+},
+c1_onde_ele_iria:{
+  texto:[
+    'Você senta no degrau da escada e pensa, que é a coisa mais difícil de fazer quando o corpo inteiro quer correr.',
+    'Ele não gosta da praça. Ele tem medo do carro da Sra. Odete. Ele nunca foi pro mercado sozinho.',
+    'Mas ele te viu arrumando a mochila a noite inteira.'
+  ],
+  teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção',
+    critico:'c1_achou_na_placa', sucesso:'c1_achou_na_placa',
+    parcial:'c1_procura_pijama', falha:'c1_procura_pijama'},
+  ef:{registrar:'Parou pra pensar onde ele teria ido.'}
+},
+c1_achou_na_placa:{
+  texto:[
+    'Você sai andando direto, sem chamar, sem olhar pros lados, porque você já sabe.',
+    'Ele está sentado em cima da placa da saída da cidade, de costas pra Pallet, olhando a estrada que sobe.',
+    'Ele não se assusta quando você chega. Ele olha pra você, olha pra estrada, e olha pra você de novo.',
+    'A pergunta é tão clara que quase dá pra ouvir.'
+  ],
+  ef:{moral:10, flag:'ele_estava_na_placa',
+      rep:{eixo:'bom',delta:1,motivo:'Sabia exatamente onde ele estaria'},
+      registrar:'Sabia onde ele estava antes de sair procurando.'},
+  escolhas:[
+    {texto:'Sentar na placa junto e ficar um pouco.', vai:'c1_sentou_na_placa'},
+    {texto:'Voltar pra casa com ele. Tem café esperando.', vai:'c1_cozinha'}
+  ]
+},
+c1_sentou_na_placa:{
+  texto:[
+    'Você senta em cima da placa, de pijama, às sete da manhã, com a cidade inteira acordando atrás de vocês dois.',
+    'A estrada sobe e some numa curva a uns quinhentos metros. Depois da curva pode ter qualquer coisa. É isso que faz ela ser uma estrada e não um quintal.',
+    'Vocês ficam ali até dar sete e meia.',
+    'Depois vocês voltam pra casa, porque ainda tem café, ainda tem despedida, e ainda tem uma mochila no chão do quarto.',
+    'Mas agora vocês dois já sabem como é sentar naquela placa, e isso não vai embora.'
+  ],
+  ef:{moral:6, flag:'sentou_na_placa',
+      registrar:'Sentou na placa da saída da cidade antes de sair de verdade.'},
+  escolhas:[{texto:'Voltar e tomar o café.', vai:'c1_cozinha'}]
+},
+c1_esperou_ele:{
+  texto:[
+    'Você senta na porta dos fundos e espera, porque é o que faz sentido e porque é o que dói mais.',
+    'Quarenta minutos. Você conta os quarenta.',
+    d=>{
+      const p = d.time[0];
+      if (!p) return 'Ninguém volta, porque não tinha ninguém pra voltar.';
+      return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquilo, como quem foi dar uma volta.`;
+    },
+    'Você não briga. Você não chega nem a levantar.',
+    d=>fala(nomeCasa(), 'Esperar é a parte que ninguém conta que é a mais difícil.', 'baixo',
+            'Ela estava na porta da cozinha o tempo todo, e você não tinha percebido.')
+  ],
+  ef:{moral:2, flag:'esperou_ele_voltar',
+      registrar:'Esperou quarenta e um minutos sentado na porta dos fundos.'},
+  escolhas:[
+    {texto:'Entrar e tomar café.', vai:'c1_cozinha'},
+    {texto:'Ir conferir a mochila, agora que dá.', vai:'c1_mochila'}
+  ]
+},
+c1_pediu_ajuda:{
+  texto:[
+    'Você bate em três portas antes das sete da manhã, o que numa rua desta não é pedir ajuda: é convocar.',
+    'Em oito minutos tem cinco pessoas na calçada, duas com lanterna que não precisa e uma com um Growlithe que claramente não sabe rastrear nada.',
+    d=>fala('Sr. Rufino', 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
+            'Ele organiza a rua inteira em quarenta segundos, de vassoura na mão, e ninguém questiona.'),
+    'Quem acha é uma criança de nove anos que nem foi chamada e que estava só olhando.',
+    'Estava sentado em cima da placa da saída da cidade, olhando a estrada.'
+  ],
+  ef:{moral:6, flag:'ele_estava_na_placa',
+      npc:{nome:'Sr. Rufino', opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'},
+      rep:{eixo:'bom',delta:2,motivo:'Pediu ajuda em vez de resolver sozinho'},
+      registrar:'A rua inteira ajudou a procurar. Uma criança de nove anos achou.'},
+  escolhas:[
+    {texto:'Agradecer um por um antes de qualquer outra coisa.', vai:'c1_agradeceu_a_rua'},
+    {texto:'Pegar ele e voltar correndo pra casa.', vai:'c1_cozinha'}
+  ]
+},
+c1_agradeceu_a_rua:{
+  texto:[
+    'Você agradece um por um, inclusive a criança de nove anos, que fica absolutamente sem graça e sai correndo.',
+    'Leva vinte minutos. Você ia sair hoje de qualquer jeito, e agora vai sair vinte minutos mais tarde.',
+    'Ninguém nessa rua vai esquecer isso, e é exatamente por causa de vinte minutos que as pessoas lembram da gente.'
+  ],
+  ef:{moral:4,
+      rep:{eixo:'bom',delta:2,motivo:'Agradeceu um por um, com a estrada esperando', rep:{notorio:true}},
+      registrar:'Agradeceu cada pessoa da rua antes de ir embora.'},
+  escolhas:[{texto:'Ir pra casa tomar café.', vai:'c1_cozinha'}]
 },
 
 c1_cinco_minutos:{
