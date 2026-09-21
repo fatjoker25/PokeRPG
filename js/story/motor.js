@@ -49,11 +49,35 @@ const Historia = {
     Estado.dados.cena = idCena;
     this.cenaAtual = Object.assign({id:idCena}, cena);
     this.avisosCena = [];
+    /* Efeito de cena acontece uma vez. Voltar pra mesma cena não dá
+       o item de novo, não sobe reputação de novo e não conta como
+       uma coisa nova ter acontecido. Cena que É pra repetir avisa
+       com `repetivel:true`. */
+    const chave = Estado.dados.capitulo + ':' + idCena;
+    const vistas = Estado.dados.cenasAplicadas || (Estado.dados.cenasAplicadas = {});
+    if (aplicarEfeitos && !cena.repetivel && vistas[chave]) aplicarEfeitos = false;
     if (aplicarEfeitos){
+      vistas[chave] = true;
       if (cena.aoEntrar) this.avisosCena = this.avisosCena.concat(this.aplicar(cena.aoEntrar));
       if (cena.ef)       this.avisosCena = this.avisosCena.concat(this.aplicar(cena.ef));
     }
     return this.cenaAtual;
+  },
+
+  /* Essa cena já aconteceu nesta jornada? */
+  jaAconteceu(idCena){
+    const v = Estado.dados.cenasAplicadas || {};
+    return !!v[Estado.dados.capitulo + ':' + idCena];
+  },
+
+  /* Essa opção já foi escolhida daqui? */
+  jaEscolheu(idCena, i){
+    const f = Estado.dados.escolhasFeitas || {};
+    return !!f[Estado.dados.capitulo + ':' + idCena + ':' + i];
+  },
+  marcarEscolha(idCena, i){
+    const f = Estado.dados.escolhasFeitas || (Estado.dados.escolhasFeitas = {});
+    f[Estado.dados.capitulo + ':' + idCena + ':' + i] = true;
   },
 
   /* Resumo interno do estado — o Mestre "lembra" antes de narrar */
@@ -187,9 +211,18 @@ const Historia = {
   },
 
   /* Uma escolha está disponível? */
-  disponivel(escolha){
-    if (!escolha.cond) return true;
-    try { return !!escolha.cond(Estado.dados); } catch(e){ return false; }
+  disponivel(escolha, idCena, i){
+    if (escolha.cond){
+      let ok = false;
+      try { ok = !!escolha.cond(Estado.dados); } catch(e){ ok = false; }
+      if (!ok) return false;
+    }
+    /* Opção já escolhida, que leva a uma cena que já aconteceu, não
+       tem mais nada pra dar. Some, em vez de ficar ali convidando o
+       jogador a clicar de novo esperando alguma coisa. */
+    if (idCena != null && !escolha.repetivel && escolha.vai
+        && this.jaEscolheu(idCena, i) && this.jaAconteceu(escolha.vai)) return false;
+    return true;
   },
 
   /* Qual arco da história espera por você NESTE lugar, agora */
@@ -281,7 +314,7 @@ function txt(t){
 /* ============================================================
    QUEM ESTÁ FALANDO
    Uma linha de cena pode ser texto puro (narração) ou uma fala
-   com dono: {quem:'Sra. Odete', diz:'...'}. O terceiro campo,
+   com dono: {quem:'Sra. Chiyo', diz:'...'}. O terceiro campo,
    tom, muda só a cor do balão — 'grita', 'baixo', 'riso',
    'frio'. A função devolve null para narração.
    ============================================================ */
@@ -294,5 +327,5 @@ function falaDe(t){
   return {quem, diz, tom: t.tom || null, nota: txt(t.nota) || null};
 }
 
-/* Açúcar para escrever cena: fala('Sra. Odete', 'Bom dia.', 'grita') */
+/* Açúcar para escrever cena: fala('Sra. Chiyo', 'Bom dia.', 'grita') */
 function fala(quem, diz, tom, nota){ return {quem, diz, tom, nota}; }

@@ -537,7 +537,7 @@ c14_pode_parar:{
   texto:[
     '"A gente pode parar isso."',
     '"Como?"',
-    'Você conta o que tem: as fotos, as planilhas, os nomes, o que a Dra. Reis disse, a data do encerramento, a Dra. Ivone.',
+    'Você conta o que tem: as fotos, as planilhas, os nomes, o que a Dra. Sonoda disse, a data do encerramento, a Dra. Sayo.',
     'Ele ouve inteiro.',
     '"Isso é bom."',
     '"Mas?"',
@@ -564,7 +564,7 @@ c14_pode_parar:{
     {texto:'"Então me mostra o acervo."', vai:'c14_ginasio_por_dentro'},
     {texto:'"Por que você não denunciou?"', vai:'c14_nunca_leu'},
     {texto:'"O que tem nas cinco caixas?"', vai:'c14_as_cinco_caixas'},
-    {texto:'"Vamos ligar pra Dra. Ivone agora."', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'"Vamos ligar pra Dra. Sayo agora."', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -955,7 +955,7 @@ c14_publicar:{
       registrar:'Blaine vai publicar os cadernos 1 a 6 do Dr. Fuji e guardar o 7.',
       presagio:'"Carta não se publica." Anota — é uma regra e é uma boa.'},
   escolhas:[
-    {texto:'Chamar a Dra. Ivone.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"E o acervo? A cláusula de devolução."', vai:'c14_devolver_acervo'},
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'}
@@ -987,16 +987,16 @@ c14_devolver_acervo:{
       registrar:'O acervo do Instituto de Cinnabar pertence à Comissão de Bem-Estar Pokémon desde 1996, com acesso público.',
       presagio:'Acesso público. Repare no que isso faz com tudo o que você viu em Celadon.'},
   escolhas:[
-    {texto:'"Então a gente entrega à Comissão. À Auditora Prado."', vai:'c14_entregar_prado', cond:d=>!!d.flags.conheceu_prado},
+    {texto:'"Então a gente entrega à Comissão. À Auditora Nishino."', vai:'c14_entregar_prado', cond:d=>!!d.flags.conheceu_prado},
     {texto:'"Então a gente entrega à Comissão."', vai:'c14_entregar_comissao'},
     {texto:'"E a gente publica antes."', vai:'c14_publicar'},
-    {texto:'Chamar a Dra. Ivone.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
 c14_entregar_prado:{
   texto:[
-    'Você conta pro Blaine da Auditora Prado: a prancheta, o pregão no cassino, o corredor de azulejo, a via amarela carbonada, as vinte e seis sessões por ano.',
+    'Você conta pro Blaine da Auditora Nishino: a prancheta, o pregão no cassino, o corredor de azulejo, a via amarela carbonada, as vinte e seis sessões por ano.',
     'Ele ouve e faz uma pergunta só:',
     '"Ela te deu o papel?"',
     '"Deu."',
@@ -1012,16 +1012,16 @@ c14_entregar_prado:{
     '"Eu prefiro entregar antes de prescrever. Prescrever é a Justiça dizendo que não importa mais. E importa."'
   ],
   ef:{flag:['vai_entregar_a_prado','blaine_aliado'],
-      npc:{nome:'Blaine', opiniao:10, memoria:'Vai entregar as cinco caixas à Auditora Prado antes de a retenção prescrever.'},
+      npc:{nome:'Blaine', opiniao:10, memoria:'Vai entregar as cinco caixas à Auditora Nishino antes de a retenção prescrever.'},
       rep:{eixo:'bom',delta:7,motivo:'Ligou o acervo de Cinnabar à auditoria que preside os pregões de Celadon'},
       moral:20, instabilidade:-1,
-      registrar:'Blaine vai entregar as cinco caixas à Auditora Prado, e a Comissão pode requisitar as quatro da Silph.',
+      registrar:'Blaine vai entregar as cinco caixas à Auditora Nishino, e a Comissão pode requisitar as quatro da Silph.',
       presagio:'"Prescrever é a Justiça dizendo que não importa mais. E importa."'},
   escolhas:[
     {texto:'Subir o vulcão antes de ir.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
-    {texto:'Chamar a Dra. Ivone também.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Sayo também.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1048,14 +1048,14 @@ c14_entregar_comissao:{
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
-    {texto:'Chamar a Dra. Ivone.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'}
   ]
 },
 
 c14_chamou_ivone_cinnabar:{
   texto:[
-    'A Dra. Ivone chega no ferry de sábado, porque não tem outro jeito de chegar em Cinnabar.',
+    'A Dra. Sayo chega no ferry de sábado, porque não tem outro jeito de chegar em Cinnabar.',
     'Ela passa dois dias na sala do ginásio lendo, com Blaine trazendo café e sem falar nada, e os dois velhos se dando bem de um jeito imediato e chato de assistir.',
     'No fim do segundo dia ela fecha a caixa nove e fala:',
     '"Eu não vou publicar isso."',
@@ -1073,10 +1073,10 @@ c14_chamou_ivone_cinnabar:{
     '"Eu sou muito pior que o senhor."'
   ],
   ef:{flag:['ivone_tem_cinnabar','plano_de_publicacao'],
-      npc:{nome:'Dra. Ivone', opiniao:10, memoria:'Passou dois dias em Cinnabar e montou o caminho para publicar os cadernos como documento público.'},
+      npc:{nome:'Dra. Sayo', opiniao:10, memoria:'Passou dois dias em Cinnabar e montou o caminho para publicar os cadernos como documento público.'},
       rep:{eixo:'bom',delta:7,motivo:'Juntou o arquivo, o decreto e quem sabe publicar'},
       moral:20, instabilidade:-1,
-      registrar:'A Dra. Ivone vai publicar primeiro o decreto, para tornar o acervo público antes de publicar os cadernos.',
+      registrar:'A Dra. Sayo vai publicar primeiro o decreto, para tornar o acervo público antes de publicar os cadernos.',
       presagio:'Documento público e não vazamento. É essa a diferença que decide tudo.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
@@ -1127,7 +1127,7 @@ c14_pegou_caderno:{
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine', cond:d=>!!d.flags.conheceu_blaine},
-    {texto:'Chamar a Dra. Ivone.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 

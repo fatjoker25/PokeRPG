@@ -125,12 +125,17 @@ const Jogo = {
     if (e.trocaNPC) return this.trocaComNPC(e);
     if (e.vendaTime) return this.venderDoTime(e);
 
+    /* a opção conta como feita, e o efeito dela também só vale uma vez */
+    const idCena = Estado.dados.cena;
+    const repetida = !e.repetivel && Historia.jaEscolheu(idCena, i);
+    Historia.marcarEscolha(idCena, i);
+
     /* se a opção escolhida era uma frase entre aspas, era a SUA boca:
        guarda a frase pra próxima cena saber de quem é aquele balão */
     const dito = /^[\u201C\"](.+)[\u201D\"]$/.exec(txt(e.texto).trim());
     UI.falaDoJogador = dito ? dito[1].trim() : null;
 
-    const avisos = Historia.aplicar(e.ef);
+    const avisos = repetida ? [] : Historia.aplicar(e.ef);
     if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou os ferimentos.');
     this.irPara(e.vai, avisos);
   },
@@ -146,7 +151,7 @@ const Jogo = {
     const cena = Historia.cenaAtual;
     const disponiveis = (cena.escolhas||[])
       .map((e,i)=>({e,i}))
-      .filter(x => Historia.disponivel(x.e));
+      .filter(x => Historia.disponivel(x.e, Estado.dados.cena, x.i));
 
     const r = Entrada.interpretar(texto, disponiveis.map(x => x.e));
     if (!r) return;
@@ -407,12 +412,30 @@ const Jogo = {
 
   entrarNoCapitulo(prox){
     const cena = Historia.iniciarCapitulo(prox);
+    /* o que os seus postos pagam (ou cobram) na virada do capítulo */
+    const daCredencial = (typeof Cargos !== 'undefined') ? Cargos.pagarCapitulo() : [];
     Estado.salvar('auto');
     /* telefone toca na hora errada, que é quando telefone toca */
     if (this.talvezToque()) { this.cenaDepoisDaChamada = cena; return; }
     /* Nada de repetir nome, reputação e time na abertura de cada capítulo:
        isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
-    UI.telaCena(cena);
+    UI.telaCena(cena, daCredencial);
+  },
+
+  /* ---------- BALCÃO DE CREDENCIAIS ---------- */
+  assumirCargo(id){
+    const r = Cargos.assumir(id);
+    if (!r.ok) return UI.modal('Credenciais', `<p class="nada">${UI.esc(r.motivo)}</p>`, false, 'nav');
+    Estado.salvar('auto');
+    UI.telaCargo(r.cargo, r.avisos);
+  },
+  largarCargo(id){
+    const c = Cargos.porId(id);
+    if (!c) return;
+    if (!confirm(`Largar ${c.nome}? Você perde o que ele te dá.`)) return;
+    Cargos.largar(id);
+    Estado.salvar('auto');
+    UI.modalCredenciais();
   },
 
   mostrarFinal(){
@@ -727,7 +750,7 @@ const Jogo = {
   lutarRival(){
     const enc = this.encontroRival || {tipo:'teo'};
     const R = enc.tipo === 'extra' ? defRival(enc.id) : null;
-    const nome = R ? R.nome : 'Téo';
+    const nome = R ? R.nome : 'Kenta';
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal(nome, '<p class="nada">Nenhum Pokémon em pé. Ele espera — mas cure o time antes.</p>');
     const time = R ? timeRivalExtra(R) : timeRival();
@@ -752,20 +775,20 @@ const Jogo = {
     const venceu = fim.resultado === 'vitoria';
     registrarResultadoRival(venceu);
     const avisos = [];
-    const npc = Estado.dados.npcs['Téo'];
+    const npc = Estado.dados.npcs['Kenta'];
 
     if (venceu){
       if (arco === 'parceiro'){ Estado.j.dinheiro += 3000; avisos.push({tipo:'item', texto:'+3.000 ₽ — ele dividiu o que tinha no bolso.'}); }
       if (arco === 'perseguidor'){
-        Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
+        Estado.lembrarNPC('Kenta', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
         avisos.push({tipo:'dano', texto:'Ele pediu para você parar. Você venceu a batalha.'});
       } else {
-        Estado.lembrarNPC('Téo', {memoria:`Perdeu para você de novo. Placar ${rival().derrotas}×${rival().vitorias}.`});
+        Estado.lembrarNPC('Kenta', {memoria:`Perdeu para você de novo. Placar ${rival().derrotas}×${rival().vitorias}.`});
       }
       const evs = ganharExp(Estado.primeiroApto() || Estado.dados.time[0], 400);
     } else {
       if (arco === 'perseguidor'){
-        Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)+1, memoria:'Te venceu e mandou você voltar para casa.'});
+        Estado.lembrarNPC('Kenta', {opiniao:(npc?npc.opiniao:0)+1, memoria:'Te venceu e mandou você voltar para casa.'});
         avisos.push({tipo:'info', texto:'Ele ficou entre você e o caminho.'});
       }
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - 800);
@@ -825,9 +848,9 @@ const Jogo = {
     } else {
       const r = rival();
       r.ultimoCap = cap;
-      const npc = Estado.dados.npcs['Téo'];
-      Estado.lembrarNPC('Téo', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
-      Estado.registrar('Evitou o encontro com Téo.');
+      const npc = Estado.dados.npcs['Kenta'];
+      Estado.lembrarNPC('Kenta', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
+      Estado.registrar('Evitou o encontro com Kenta.');
     }
     Estado.salvar('auto');
     this.seguirDepoisDoRival();

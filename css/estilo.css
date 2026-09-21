@@ -1711,3 +1711,57 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 @keyframes tocando{0%,100%{opacity:1}55%{opacity:.4}}
 .escolha.recusar{opacity:.72}
 .escolha.recusar:hover{opacity:1}
+
+
+/* ============================================================
+   TUTORIAL — a apostila, com abas
+   ============================================================ */
+.modal.tutorial .caixa{max-width:860px}
+.tut-abas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;padding-bottom:12px;
+  border-bottom:1px solid var(--borda)}
+.tut-aba{
+  padding:6px 12px;border:1px solid var(--borda);border-radius:999px;
+  background:transparent;color:var(--texto-fraco);cursor:pointer;
+  font-size:12.5px;letter-spacing:.03em;font-family:inherit;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.tut-aba:hover{color:var(--texto);border-color:var(--destaque)}
+.tut-aba.sel{background:var(--destaque);border-color:var(--destaque);color:var(--bg);font-weight:600}
+.tut-corpo h3:first-child{margin-top:0}
+.tut-nats{display:flex;flex-direction:column;gap:2px;margin:10px 0 14px}
+.tut-nat{
+  display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 12px;
+  padding:7px 10px;border-left:2px solid var(--borda);
+  background:color-mix(in srgb, var(--texto) 3%, transparent);
+}
+.tut-nat.agressiva{border-left-color:var(--perigo)}
+.tut-nat-nome{font-weight:700;font-size:13px;letter-spacing:.02em}
+.tut-nat.agressiva .tut-nat-nome{color:var(--perigo)}
+.tut-nat-stat{font-size:11.5px;color:var(--texto-fraco)}
+.tut-nat-traco{grid-column:2;font-size:12.5px;color:var(--texto-fraco)}
+@media (max-width:560px){
+  .tut-nat{grid-template-columns:1fr}
+  .tut-nat-traco{grid-column:1}
+}
+
+
+/* ============================================================
+   CARGOS — o balcão de credenciais
+   ============================================================ */
+.cargo{
+  border:1px solid var(--borda);border-left:3px solid var(--borda);
+  border-radius:4px;padding:10px 12px;margin:0 0 8px;
+  background:color-mix(in srgb, var(--texto) 3%, transparent);
+}
+.cargo.meu{border-left-color:var(--bom, #6ac26a)}
+.cargo.aberto{border-left-color:var(--destaque)}
+.cargo.fechado{opacity:.55}
+.cargo-topo{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
+.cargo-nome{font-weight:700;font-size:14px}
+.cargo-orgao{font-size:11.5px;color:var(--texto-fraco);letter-spacing:.04em}
+.cargo-peso{margin-left:auto;font-size:10px;color:var(--destaque);letter-spacing:.14em}
+.cargo-resumo{font-size:12.5px;color:var(--texto-fraco);margin-bottom:5px;line-height:1.45}
+.cargo-ben{font-size:11.5px;color:var(--texto);margin-bottom:7px}
+.cargo-aviso{font-size:11.5px;color:var(--perigo);margin-bottom:7px}
+.cargo-motivo{font-size:11.5px;color:var(--texto-fraco);font-style:italic}
+.loja-abas{margin-bottom:12px;padding-bottom:10px}

@@ -73,7 +73,7 @@ c5_pegou_caderno:{
   escolhas:[
     {texto:'Entrar.', vai:'c5_entrada'},
     {texto:'Esperar aqui em cima pra ver quem aparece.', vai:'c5_espera_posto'},
-    {texto:'Ligar pra Dra. Ivone agora, antes de entrar.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo agora, antes de entrar.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Dar a volta por fora antes de entrar.', vai:'c5_fora'}
   ]
 },
@@ -92,7 +92,7 @@ c5_espera_posto:{
   escolhas:[
     {texto:'Descer e seguir eles.', vai:'c5_seguiu_trio'},
     {texto:'Deixar eles irem e entrar na caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone agora.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo agora.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Gritar da saliência.', vai:'c5_gritou_trio'}
   ]
 },
@@ -161,7 +161,7 @@ c5_anotou_trio:{
   ef:{flag:'numero_da_caixa', registrar:'Caixa plástica azul, número 074. Três homens, um com tatuagem no antebraço.',
       presagio:'074. Você vai ver esse número impresso em outro lugar, e vai ser no dia em que tudo fizer sentido.'},
   escolhas:[
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
     {texto:'Seguir eles de longe.', vai:'c5_seguiu_trio'}
   ]
@@ -196,7 +196,7 @@ c5_de_graca:{
   ef:{flag:'errou_a_jogada'},
   escolhas:[
     {texto:'Seguir eles de longe mesmo assim.', vai:'c5_seguiu_trio'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Entrar na caverna.', vai:'c5_entrada'}
   ]
 },
@@ -237,7 +237,7 @@ c5_memorizou_van:{
       presagio:'Uma balança. Um símbolo de justiça num veículo sem placa.'},
   escolhas:[
     {texto:'Voltar pra caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone daqui.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo daqui.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Perguntar se tem mais trabalho.', vai:'c5_mais_trabalho'}
   ]
 },
@@ -271,7 +271,7 @@ c5_rasgou_numero:{
   ef:{flag:'rasgou_o_numero', presagio:'Você pegou os trezentos. Isso já aconteceu e não desacontece.'},
   escolhas:[
     {texto:'Voltar pra caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -288,7 +288,7 @@ c5_devolveu_trezentos:{
       presagio:'Tem trezentos pokedólares na sua mochila agora com um formato diferente do resto do dinheiro.'},
   escolhas:[
     {texto:'Voltar pra caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -317,7 +317,7 @@ c5_venceu_trio:{
   escolhas:[
     {texto:'Ficar na frente deles. Fisicamente.', vai:'c5_barrou'},
     {texto:'Pegar uma caixa e correr pra dentro da caverna.', vai:'c5_roubou_caixa'},
-    {texto:'Deixar ir e ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Deixar ir e ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Deixar ir e entrar na caverna.', vai:'c5_entrada', ef:{flag:'deixou_os_ovos_irem'}}
   ]
 },
@@ -336,7 +336,7 @@ c5_barrou:{
     {texto:'Ficar. Não importa quanto tempo.', vai:'c5_ficou_barrando'},
     {texto:'Pegar uma caixa e correr pra dentro da caverna.', vai:'c5_roubou_caixa'},
     {texto:'Sair da frente.', vai:'c5_saiu_da_frente'},
-    {texto:'Ligar pra Dra. Ivone daqui mesmo, de braços abertos.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo daqui mesmo, de braços abertos.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -361,7 +361,7 @@ c5_ficou_barrando:{
   escolhas:[
     {texto:'Levar a caixa de volta pra dentro da caverna.', vai:'c5_devolver_ovos'},
     {texto:'Levar a caixa pra Pewter, pro museu.', vai:'c5_ovos_pro_museu'},
-    {texto:'Ligar pra Dra. Ivone com a caixa na mão.', vai:'c5_ligou_com_caixa', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo com a caixa na mão.', vai:'c5_ligou_com_caixa', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Entrar na caverna com a caixa.', vai:'c5_entrada', ef:{flag:'carregando_ovos'}}
   ]
 },
@@ -386,14 +386,14 @@ c5_devolver_ovos:{
 c5_ovos_pro_museu:{
   texto:[
     'Três horas de descida com uma caixa de ovos nos braços.',
-    'Delmo abre a porta do museu fora do horário porque você bate insistindo, olha a caixa, e chama a Dra. Ivone pelo telefone da bilheteria sem perguntar nada.',
+    'Takeo abre a porta do museu fora do horário porque você bate insistindo, olha a caixa, e chama a Dra. Sayo pelo telefone da bilheteria sem perguntar nada.',
     'Ela chega em vinte minutos com um termômetro e uma caixa de isopor.',
     '"Quatro estão mortos." Ela fala isso rápido e sem drama, que é o jeito dela de ser gentil. "Dois não."',
     'Os dois ficam numa incubadora improvisada no museu de Pewter, entre uma vitrine de minerais e um balde.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Levou os ovos a quem sabia o que fazer'},
       flag:['ovos_no_museu','cartao_ivone'],
-      npc:{nome:'Dra. Ivone', opiniao:6, memoria:'Você desceu três horas com uma caixa de ovos de Clefairy. Dois sobreviveram.'},
+      npc:{nome:'Dra. Sayo', opiniao:6, memoria:'Você desceu três horas com uma caixa de ovos de Clefairy. Dois sobreviveram.'},
       registrar:'Dois ovos de Clefairy estão numa incubadora no museu de Pewter.',
       presagio:'Tem duas coisas vivas num museu que vaza, esperando por você.'},
   escolhas:[
@@ -404,7 +404,7 @@ c5_ovos_pro_museu:{
 c5_ligou_com_caixa:{
   texto:[
     'Você anda até pegar sinal com a caixa debaixo do braço.',
-    'A Dra. Ivone atende no segundo toque.',
+    'A Dra. Sayo atende no segundo toque.',
     'Você fala. Ela não interrompe uma vez. No fim ela faz duas perguntas: "Estão quentes?" e "Você abriu?"',
     '"Quentes. E eu abri."',
     '"Fecha. Fecha agora e não abre mais." Você ouve ela levantando de alguma cadeira. "Eu chego em duas horas. Fica na sombra. Não põe no sol, não põe no chão de pedra, põe em cima da sua mochila."',
@@ -412,7 +412,7 @@ c5_ligou_com_caixa:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou quem sabia, e esperou'},
       flag:'ovos_com_ivone',
-      npc:{nome:'Dra. Ivone', opiniao:7, memoria:'Você segurou uma caixa de ovos na sombra por duas horas esperando ela chegar.'},
+      npc:{nome:'Dra. Sayo', opiniao:7, memoria:'Você segurou uma caixa de ovos na sombra por duas horas esperando ela chegar.'},
       itens:{'Super Potion':2}},
   escolhas:[
     {texto:'Entrar na caverna depois que ela for embora.', vai:'c5_entrada'}
@@ -444,7 +444,7 @@ c5_saiu_da_frente:{
   ef:{flag:'deixou_os_ovos_irem', presagio:'"Valeu." Você vai ouvir isso na cabeça por um tempo.'},
   escolhas:[
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -459,7 +459,7 @@ c5_perdeu_trio:{
       presagio:'"Treina mais." Você vai treinar. Vai treinar muito. E vai lembrar de onde veio a vontade.'},
   escolhas:[
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Seguir eles de longe, mancando.', vai:'c5_seguiu_trio'}
   ]
 },
@@ -475,7 +475,7 @@ c5_seguiu_trio:{
   ef:{flag:['viu_a_van','brasao_na_van'], registrar:'A van branca sem placa do Monte da Lua tem um brasão de balança no para-brisa.',
       presagio:'Uma balança. Alguém desenhou uma balança e colou num veículo sem placa, e achou isso apropriado.'},
   escolhas:[
-    {texto:'Ligar pra Dra. Ivone com tudo isso.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo com tudo isso.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar e entrar na caverna.', vai:'c5_entrada'},
     {texto:'Seguir a van a pé enquanto der.', vai:'c5_seguiu_van'}
   ]
@@ -491,7 +491,7 @@ c5_seguiu_van:{
   ef:{flag:'van_foi_pra_cerulean', hp:-2, causa:'Corrida atrás da van',
       presagio:'Trinta e um quilômetros. Você vai chegar lá, e vai chegar tarde, e vai ser útil mesmo assim.'},
   escolhas:[
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar pra caverna.', vai:'c5_entrada'}
   ]
 },
@@ -544,22 +544,22 @@ c5_ficou_em_cima:{
   escolhas:[
     {texto:'Descer e seguir eles.', vai:'c5_seguiu_trio'},
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
 c5_ligou_antes:{
   texto:[
     'Você anda até pegar sinal — uns quatrocentos metros de subida, num lugar onde o vale abre.',
-    'A Dra. Ivone atende no segundo toque, como quem dorme com o telefone na mão.',
+    'A Dra. Sayo atende no segundo toque, como quem dorme com o telefone na mão.',
     'Você fala tudo. Ela não interrompe nenhuma vez.',
     'Quando você acaba, o silêncio dela dura quatro segundos e é um silêncio de quem está escrevendo.',
     '"Você tá do lado de fora?"',
     '"Tô."',
     '"Fica do lado de fora." Ela fala devagar, com muito cuidado de ser entendida. "Eu chego em seis horas. Eu levo gente com câmera. Se for pra Liga eles somem antes; com câmera eles não somem."'
   ],
-  ef:{flag:'ligou_pra_ivone', registrar:'Ligou para a Dra. Ivone da entrada do Monte da Lua.',
-      npc:{nome:'Dra. Ivone', opiniao:4, memoria:'Você ligou pra ela do Monte da Lua, como combinado.'}},
+  ef:{flag:'ligou_pra_ivone', registrar:'Ligou para a Dra. Sayo da entrada do Monte da Lua.',
+      npc:{nome:'Dra. Sayo', opiniao:4, memoria:'Você ligou pra ela do Monte da Lua, como combinado.'}},
   escolhas:[
     {texto:'Obedecer. Esperar seis horas na boca da caverna.', vai:'c5_esperou_ivone',
      ef:{rep:{eixo:'bom',delta:2,motivo:'Esperou seis horas fazendo o que era certo e chato'}}},
@@ -578,11 +578,11 @@ c5_esperou_ivone:{
     'Você come tudo o que tinha. Cochila duas vezes e acorda as duas assustado. Conta pedras. Conversa com o seu time em voz alta, o que é uma coisa que você começou a fazer essa semana sem perceber.',
     'Em algum momento, duas pessoas saem da caverna, olham a trilha, e voltam pra dentro.',
     d=>d.flags.esperou_do_posto ? 'Elas não te veem, porque você está deitado numa saliência quatro metros acima da boca. Isso foi inteligente.' : 'Elas te veem sentado na pedra. Uma delas acena. Você acena de volta, porque o que mais dá pra fazer.',
-    'A Dra. Ivone chega às sete e quarenta da noite com quatro pessoas, dois carros e uma câmera de ombro.',
+    'A Dra. Sayo chega às sete e quarenta da noite com quatro pessoas, dois carros e uma câmera de ombro.',
     'A primeira coisa que ela faz é olhar a sua cara e perguntar se você comeu.'
   ],
   ef:{flag:'ivone_chegou', hp:2,
-      npc:{nome:'Dra. Ivone', opiniao:6, memoria:'Você esperou seis horas na boca do Monte da Lua como ela pediu. Ela não esperava que você esperasse.'}},
+      npc:{nome:'Dra. Sayo', opiniao:6, memoria:'Você esperou seis horas na boca do Monte da Lua como ela pediu. Ela não esperava que você esperasse.'}},
   escolhas:[
     {texto:'Entrar com eles.', vai:'c5_entrou_com_imprensa'},
     {texto:'Ficar na boca da caverna, guardando a saída.', vai:'c5_guardou_saida'},
@@ -599,7 +599,7 @@ c5_entrou_com_imprensa:{
     'A câmara está lá. As mesas estão lá. As gaiolas estão lá.',
     'As pessoas, não. Tem café pela metade numa caneca e ainda está morno.'
   ],
-  ef:{flag:'expos_operacao', registrar:'A Dra. Ivone e a imprensa entraram na câmara. Os operadores tinham acabado de sair.'},
+  ef:{flag:'expos_operacao', registrar:'A Dra. Sayo e a imprensa entraram na câmara. Os operadores tinham acabado de sair.'},
   escolhas:[
     {texto:'Ajudar a abrir as gaiolas.', vai:'c5_gaiolas_imprensa'},
     {texto:'Procurar por onde eles saíram.', vai:'c5_saida_secreta'},
@@ -622,7 +622,7 @@ c5_papeis_mesa:{
       presagio:'Não é bandido. É pior: é alguém com um artigo pra citar.'},
   escolhas:[
     {texto:'Guardar uma folha na mochila.', vai:'c5_guardou_folha', ef:{flag:'guardou_a_folha'}},
-    {texto:'Mostrar pra Dra. Ivone.', vai:'c5_mostrou_folha'},
+    {texto:'Mostrar pra Dra. Sayo.', vai:'c5_mostrou_folha'},
     {texto:'Chamar a câmera pra filmar o cabeçalho.', vai:'c5_filmou_papel'},
     {texto:'Ajudar a abrir as gaiolas primeiro.', vai:'c5_gaiolas_imprensa'}
   ]
@@ -638,14 +638,14 @@ c5_guardou_folha:{
       presagio:'Um papel dobrado em quatro. Vai valer mais que uma insígnia.'},
   escolhas:[
     {texto:'Ajudar com as gaiolas.', vai:'c5_gaiolas_imprensa'},
-    {texto:'Mostrar pra Dra. Ivone assim mesmo.', vai:'c5_mostrou_folha'},
+    {texto:'Mostrar pra Dra. Sayo assim mesmo.', vai:'c5_mostrou_folha'},
     {texto:'Procurar por onde eles saíram.', vai:'c5_saida_secreta'}
   ]
 },
 
 c5_mostrou_folha:{
   texto:[
-    'Você chama a Dra. Ivone e entrega a folha.',
+    'Você chama a Dra. Sayo e entrega a folha.',
     'Ela lê. Lê de novo. Vira pro verso, que está em branco, e volta pra frente.',
     '"Isso não é contrabando", ela diz baixo, pra você e pra mais ninguém.',
     '"Como não? Tem gaiola ali."',
@@ -654,8 +654,8 @@ c5_mostrou_folha:{
     '"Eu passei dois anos achando que estava atrás de ladrão de fóssil."'
   ],
   ef:{flag:['papel_com_brasao','ivone_entendeu'],
-      npc:{nome:'Dra. Ivone', opiniao:5, memoria:'Você entregou a ela a guia de remessa que mudou o entendimento dela sobre tudo.'},
-      registrar:'Ivone concluiu que o Monte da Lua não era contrabando: era operação com contabilidade.',
+      npc:{nome:'Dra. Sayo', opiniao:5, memoria:'Você entregou a ela a guia de remessa que mudou o entendimento dela sobre tudo.'},
+      registrar:'Sayo concluiu que o Monte da Lua não era contrabando: era operação com contabilidade.',
       presagio:'Numeração sequencial. Alguém confere isso depois, numa sala, tomando café.'},
   escolhas:[
     {texto:'"E o que é, então?"', vai:'c5_o_que_e'},
@@ -694,7 +694,7 @@ c5_filmou_papel:{
       presagio:'A gaiola é imagem. O papel é chato. É por isso que o papel ganha.'},
   escolhas:[
     {texto:'Guardar uma folha mesmo assim.', vai:'c5_guardou_folha'},
-    {texto:'Mostrar pra Dra. Ivone.', vai:'c5_mostrou_folha'},
+    {texto:'Mostrar pra Dra. Sayo.', vai:'c5_mostrou_folha'},
     {texto:'Ajudar com as gaiolas.', vai:'c5_gaiolas_imprensa'}
   ]
 },
@@ -714,7 +714,7 @@ c5_gaiolas_imprensa:{
   escolhas:[
     {texto:'Carregar o Paras até o Centro Pokémon. São três horas.', vai:'c5_paras'},
     {texto:'Procurar por onde os operadores saíram.', vai:'c5_saida_secreta'},
-    {texto:'Ficar com a Dra. Ivone até o fim.', vai:'c5_imprensa'},
+    {texto:'Ficar com a Dra. Sayo até o fim.', vai:'c5_imprensa'},
     {texto:'Sair. Você já fez o que dava.', vai:'c5_imprensa'}
   ]
 },
@@ -748,14 +748,14 @@ c5_filmou_tunel:{
   ef:{flag:'tunel_filmado', presagio:'Alguém aprovou um orçamento. Alguém, numa sala, aprovou isso.'},
   escolhas:[
     {texto:'Voltar e ajudar com as gaiolas.', vai:'c5_gaiolas_imprensa'},
-    {texto:'Ficar com a Dra. Ivone até o fim.', vai:'c5_imprensa'}
+    {texto:'Ficar com a Dra. Sayo até o fim.', vai:'c5_imprensa'}
   ]
 },
 
 c5_a_camera:{
   texto:[
     'Você fica encostado na parede olhando a câmera trabalhar.',
-    'O rapaz filma as gaiolas de três ângulos. Filma uma etiqueta de perto. Pede pra Dra. Ivone repetir uma frase porque a primeira vez saiu com eco.',
+    'O rapaz filma as gaiolas de três ângulos. Filma uma etiqueta de perto. Pede pra Dra. Sayo repetir uma frase porque a primeira vez saiu com eco.',
     'Ela repete. A segunda vez sai pior, mais ensaiada.',
     'Você entende, ali encostado na parede fria, uma coisa que vai te acompanhar: existe a coisa que acontece, e existe a coisa que dá pra mostrar, e não são a mesma coisa, e a segunda é a que vira verdade.'
   ],
@@ -773,7 +773,7 @@ c5_guardou_saida:{
     'Você fica na boca da caverna enquanto eles entram.',
     'É a função mais chata e provavelmente a mais útil: se alguém sair correndo, você vê.',
     'Ninguém sai correndo. Passam duas horas e meia. Um Zubat sai e volta. O sol some.',
-    'Quando eles voltam, a Dra. Ivone está com a mandíbula travada e o rapaz da câmera está carregando um Paras nos braços, com o maior cuidado do mundo, do jeito que se carrega uma coisa que ainda não morreu.'
+    'Quando eles voltam, a Dra. Sayo está com a mandíbula travada e o rapaz da câmera está carregando um Paras nos braços, com o maior cuidado do mundo, do jeito que se carrega uma coisa que ainda não morreu.'
   ],
   ef:{flag:['expos_operacao','guardou_a_boca'],
       rep:{eixo:'bom',delta:2,motivo:'Guardou a saída enquanto outros faziam o trabalho'}},
@@ -808,7 +808,7 @@ c5_imprensa:{
     'Dezessete Clefairy foram para um centro de recuperação em Cerulean. Onze voltaram para o Monte da Lua três semanas depois. Os outros seis não.',
     'Prenderam duas pessoas: um motorista e um rapaz de vinte e dois anos que trabalhava lá havia cinco meses. As duas foram soltas em dois dias.',
     'Ninguém foi indiciado por nada com numeração sequencial.',
-    'A Dra. Ivone te manda uma mensagem três dias depois: "Foi o que deu pra fazer. Quase nunca é o que a gente queria."'
+    'A Dra. Sayo te manda uma mensagem três dias depois: "Foi o que deu pra fazer. Quase nunca é o que a gente queria."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Seu nome saiu no jornal pela primeira vez'},
       flag:['expos_operacao','vasco_solto'],
@@ -943,7 +943,7 @@ c5_esperou_cratera:{
       registrar:'Viu trinta e dois Clefairy em círculo na cratera do Monte da Lua.',
       presagio:'Você viu uma coisa que ninguém documentou. Vai ter que decidir se conta.'},
   escolhas:[
-    {texto:'Contar pra Dra. Ivone.', vai:'c5_contou_ivone_cratera', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Contar pra Dra. Sayo.', vai:'c5_contou_ivone_cratera', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Não contar pra ninguém, nunca.', vai:'c5_entrada',
      ef:{flag:'guardou_o_segredo_da_cratera', rep:{eixo:'bom',delta:1,motivo:'Guardou um lugar em segredo para protegê-lo'}}},
     {texto:'Descer pra dentro da caverna.', vai:'c5_entrada'},
@@ -954,7 +954,7 @@ c5_esperou_cratera:{
 c5_contou_ivone_cratera:{
   texto:[
     'Você liga e conta.',
-    'A Dra. Ivone fica calada tanto tempo que você acha que a ligação caiu.',
+    'A Dra. Sayo fica calada tanto tempo que você acha que a ligação caiu.',
     '"Trinta e dois."',
     '"Trinta e dois."',
     '"Eu subi lá quatro vezes", ela diz. "Quatro. Nunca vi nada."',
@@ -964,7 +964,7 @@ c5_contou_ivone_cratera:{
     '"Eu sou cientista há vinte e dois anos", ela diz. "Isso é tempo suficiente pra aprender que nem tudo que dá pra saber precisa ser sabido."'
   ],
   ef:{flag:'segredo_com_ivone',
-      npc:{nome:'Dra. Ivone', opiniao:6, memoria:'Você contou da cratera pra ela, e ela te pediu pra nunca escrever onde é.'},
+      npc:{nome:'Dra. Sayo', opiniao:6, memoria:'Você contou da cratera pra ela, e ela te pediu pra nunca escrever onde é.'},
       rep:{eixo:'bom',delta:2,motivo:'Confiou um segredo a quem sabia guardá-lo'},
       presagio:'Nem tudo que dá pra saber precisa ser sabido. Vai chegar o dia em que alguém vai discordar disso na sua frente, com muita elegância.'},
   escolhas:[
@@ -1054,7 +1054,7 @@ c5_saiu_correndo:{
   ef:{flag:'fugiu_da_caverna'},
   escolhas:[
     {texto:'Entrar de novo.', vai:'c5_entrada'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Contornar por fora e entrar por outro lugar.', vai:'c5_fora'},
     {texto:'Desistir. Ir embora pra Cerulean.', vai:'c5_desistiu'}
   ]
@@ -1162,7 +1162,7 @@ c5_escondeu_pasta:{
       registrar:'Escondeu a pasta numa fresta do Monte da Lua. Ainda está lá.',
       presagio:'Existe uma pasta com 1.184 números atrás de uma pedra solta numa passarela, e só você sabe.'},
   escolhas:[
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar depois. Agora, seguir pra Cerulean.', vai:'c5_fim'},
     {texto:'Entrar de novo hoje mesmo.', vai:'c5_entrada'}
   ]
@@ -1182,7 +1182,7 @@ c5_fuga_tunel:{
       registrar:'Fugiu do Monte da Lua com a pasta de 1.184 formulários.',
       presagio:'Você tem uma pasta. Eles sabem que alguém tem a pasta. As duas coisas vão andar juntas por muito tempo.'},
   escolhas:[
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_pasta_pra_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_pasta_pra_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Seguir pra Cerulean com a pasta.', vai:'c5_fim'},
     {texto:'Voltar pra Pewter e entregar no museu.', vai:'c5_pasta_pra_ivone'}
   ]
@@ -1190,8 +1190,8 @@ c5_fuga_tunel:{
 
 c5_pasta_pra_ivone:{
   texto:[
-    'A Dra. Ivone abre a pasta na mesa da bilheteria do museu e fica em pé, lendo, por quarenta minutos sem sentar.',
-    'Delmo traz café. Ela não toca.',
+    'A Dra. Sayo abre a pasta na mesa da bilheteria do museu e fica em pé, lendo, por quarenta minutos sem sentar.',
+    'Takeo traz café. Ela não toca.',
     'No fim ela fecha a pasta e põe as duas mãos em cima dela.',
     '"Isso aqui não pode ficar comigo."',
     '"Por quê?"',
@@ -1199,8 +1199,8 @@ c5_pasta_pra_ivone:{
     'Ela empurra a pasta de volta.',
     '"Isso tem que chegar em alguém com nome limpo e cargo. E eu não conheço ninguém assim."'
   ],
-  ef:{flag:'pasta_recusada', npc:{nome:'Dra. Ivone', opiniao:4, memoria:'Leu a pasta em pé por quarenta minutos e devolveu, porque na mão dela a história viraria ela.'},
-      registrar:'Ivone recusou ficar com a pasta. Precisa chegar em alguém com nome limpo e cargo.',
+  ef:{flag:'pasta_recusada', npc:{nome:'Dra. Sayo', opiniao:4, memoria:'Leu a pasta em pé por quarenta minutos e devolveu, porque na mão dela a história viraria ela.'},
+      registrar:'Sayo recusou ficar com a pasta. Precisa chegar em alguém com nome limpo e cargo.',
       presagio:'Alguém com nome limpo e cargo. Você vai conhecer um. E vai ter que decidir se ele é limpo.'},
   escolhas:[
     {texto:'Ficar com a pasta.', vai:'c5_fim'},
@@ -1212,7 +1212,7 @@ c5_pasta_pra_ivone:{
 c5_virar_alguem:{
   texto:[
     '"E se eu virar esse alguém?"',
-    'A Dra. Ivone te olha por um tempo desconfortável.',
+    'A Dra. Sayo te olha por um tempo desconfortável.',
     '"Com o quê? Com insígnia?"',
     '"Com insígnia."',
     'Ela ri. Depois para de rir, porque a ideia é menos idiota do que ela gostaria.',
@@ -1221,7 +1221,7 @@ c5_virar_alguem:{
     '"É o plano mais lento e mais burro que eu já ouvi. E é o único que eu ouvi."'
   ],
   ef:{flag:'plano_das_insignias',
-      npc:{nome:'Dra. Ivone', opiniao:5, memoria:'Você propôs ganhar as oito insígnias pra ter legitimidade de pedir vista do processo. Ela chamou de burro e não discordou.'},
+      npc:{nome:'Dra. Sayo', opiniao:5, memoria:'Você propôs ganhar as oito insígnias pra ter legitimidade de pedir vista do processo. Ela chamou de burro e não discordou.'},
       rep:{eixo:'bom',delta:1,motivo:'Encontrou um motivo maior para uma jornada comum'},
       registrar:'As oito insígnias deixaram de ser esporte: viraram credencial.',
       presagio:'A partir de hoje cada insígnia tem um segundo motivo, e o segundo motivo é o verdadeiro.'},
@@ -1235,16 +1235,16 @@ c5_virar_alguem:{
 c5_ivone_guarda:{
   texto:[
     '"Então guarda a pasta até lá."',
-    'Ela pensa. Olha pro Delmo, que está fingindo arrumar panfleto a quatro metros e escutando tudo.',
-    '"Delmo."',
+    'Ela pensa. Olha pro Takeo, que está fingindo arrumar panfleto a quatro metros e escutando tudo.',
+    '"Takeo."',
     '"Doutora."',
     '"O senhor tem um lugar aqui onde nunca ninguém olha?"',
-    'Delmo pensa com uma seriedade cômica.',
+    'Takeo pensa com uma seriedade cômica.',
     '"Tenho a reserva técnica." Ele coça a cabeça. "Tem caixa lá que não abre desde mil novecentos e oitenta e quatro."',
     'E é assim que a contabilidade de uma operação de tráfico de vida vai parar numa caixa de papelão da reserva técnica do museu de Pewter, entre um crânio de Rhyhorn e um mapa geológico desatualizado.'
   ],
   ef:{flag:'pasta_na_reserva', limpaFlag:'levou_a_pasta',
-      npc:{nome:'Delmo', opiniao:5, memoria:'Guardou a pasta na reserva técnica do museu, entre coisas que ninguém abre desde 1984.'},
+      npc:{nome:'Takeo', opiniao:5, memoria:'Guardou a pasta na reserva técnica do museu, entre coisas que ninguém abre desde 1984.'},
       registrar:'A pasta está na reserva técnica do museu de Pewter, esperando as oito insígnias.',
       presagio:'Tem uma caixa em Pewter esperando você ter oito insígnias.'},
   escolhas:[
@@ -1257,10 +1257,10 @@ c5_deixou_pasta:{
     'Você deixa a pasta em cima do balcão e sai antes que ela termine de discordar.',
     'Ela grita seu nome na porta do museu, na rua, o que é uma coisa que ela claramente nunca faz.',
     'Você não volta.',
-    'Três dias depois, a pasta está numa caixa de papelão na reserva técnica do museu, porque a Dra. Ivone é do tipo que reclama e resolve.'
+    'Três dias depois, a pasta está numa caixa de papelão na reserva técnica do museu, porque a Dra. Sayo é do tipo que reclama e resolve.'
   ],
   ef:{flag:'pasta_na_reserva', limpaFlag:'levou_a_pasta',
-      registrar:'Deixou a pasta com a Dra. Ivone à força.'},
+      registrar:'Deixou a pasta com a Dra. Sayo à força.'},
   escolhas:[
     {texto:'Seguir pra Cerulean.', vai:'c5_fim'}
   ]
@@ -1324,15 +1324,15 @@ c5_observou_camara:{
     'Aprende quatro coisas:',
     'Primeira: são cinco pessoas, não três. Duas estão sentadas fora do círculo de luz, fazendo pausa.',
     'Segunda: eles têm rotina. Alguém confere etiqueta, alguém empilha, alguém escreve numa prancheta.',
-    'Terceira: um deles é o Vasco. O da floresta.',
+    'Terceira: um deles é o Tetsu. O da floresta.',
     'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
   ],
   ef:{flag:'observou_a_camara',
-      npc:{nome:'Caçador Vasco', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'},
+      npc:{nome:'Caçador Tetsu', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'},
       presagio:'Ninguém ali está armado. Ninguém ali acha que vai precisar.'},
   escolhas:[
     {texto:'Chegar mais perto.', vai:'c5_camara'},
-    {texto:'Recuar e ligar pra Dra. Ivone.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Recuar e ligar pra Dra. Sayo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Recuar e sair da caverna.', vai:'c5_saiu_correndo'},
     {texto:'Contornar pela passarela de cima.', vai:'c5_desvio'}
   ]
@@ -1344,14 +1344,14 @@ c5_camara:{
     'Clefairy em quase todas — cinco, seis por gaiola, em gaiolas de dois palmos. Um Paras numa sozinha, que não se mexe. Dois Zubat.',
     'Nas mesas de cavalete, fósseis. Meio expostos ainda na rocha, com etiqueta numerada e preço a lápis no canto. Kabuto. Omanyte. Coisas de trezentos milhões de anos com adesivo de leilão.',
     'Cinco pessoas trabalhando. Nenhuma de uniforme, nenhuma escondendo o rosto. O uniforme acabou junto com a organização; o trabalho não.',
-    'Um deles é o Vasco. O da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
+    'Um deles é o Tetsu. O da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
     '"Ah, não."'
   ],
-  ef:{npc:{nome:'Caçador Vasco', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
-      registrar:'Encontrou a operação do Monte da Lua. Vasco está lá.'},
+  ef:{npc:{nome:'Caçador Tetsu', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
+      registrar:'Encontrou a operação do Monte da Lua. Tetsu está lá.'},
   escolhas:[
     {texto:'Atacar. Agora, antes que se organizem.', vai:'c5_ataque'},
-    {texto:'Recuar e ligar para a Dra. Ivone.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Recuar e ligar para a Dra. Sayo.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Descer e conversar. Eles precisam de gente.', vai:'c5_proposta'},
     {texto:'Perguntar, antes de qualquer coisa: "De quem é isso aqui?"', vai:'c5_de_quem_e'}
   ]
@@ -1361,7 +1361,7 @@ c5_de_quem_e:{
   texto:[
     '"De quem é isso aqui?"',
     'É a pergunta que ninguém nunca faz, e dá pra ver na cara dele.',
-    'Vasco limpa a mão no jeans e olha em volta — pras mesas, pros refletores, pras gaiolas — como se estivesse vendo tudo pela primeira vez.',
+    'Tetsu limpa a mão no jeans e olha em volta — pras mesas, pros refletores, pras gaiolas — como se estivesse vendo tudo pela primeira vez.',
     '"Não é meu."',
     '"Eu sei que não é seu."',
     '"Eu recebo por semana." Ele encosta na mesa. "Vem um cara de terno de dois em dois meses, olha a planilha, assina, e vai embora. Ele nunca desceu aqui. Ele fica lá em cima, na entrada, com sapato limpo."',
@@ -1374,7 +1374,7 @@ c5_de_quem_e:{
   escolhas:[
     {texto:'"E se eu acabar com isso aqui hoje?"', vai:'c5_acabar_hoje'},
     {texto:'Atacar.', vai:'c5_ataque'},
-    {texto:'Recuar e ligar pra Dra. Ivone.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Recuar e ligar pra Dra. Sayo.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"Me dá o nome do cara de terno."', vai:'c5_nome_do_terno'}
   ]
 },
@@ -1382,7 +1382,7 @@ c5_de_quem_e:{
 c5_nome_do_terno:{
   texto:[
     '"Me dá o nome do cara de terno."',
-    'Vasco ri sem nenhum humor.',
+    'Tetsu ri sem nenhum humor.',
     '"Eu não sei o nome dele, moleque. Ele não se apresenta."',
     'Ele pensa um pouco.',
     '"Ele usa um crachá. Não é crachá de Liga, é outro. Tem uma balança desenhada." Ele faz o gesto no ar. "E embaixo tem escrito uma coisa em latim ou sei lá o quê."',
@@ -1395,7 +1395,7 @@ c5_nome_do_terno:{
   escolhas:[
     {texto:'"E se eu acabar com isso aqui hoje?"', vai:'c5_acabar_hoje'},
     {texto:'Atacar.', vai:'c5_ataque'},
-    {texto:'Recuar e ligar pra Dra. Ivone.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Recuar e ligar pra Dra. Sayo.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Descer e conversar de verdade.', vai:'c5_proposta'}
   ]
 },
@@ -1403,7 +1403,7 @@ c5_nome_do_terno:{
 c5_acabar_hoje:{
   texto:[
     '"E se eu acabar com isso aqui hoje?"',
-    'Vasco olha pra você com uma paciência de professor cansado.',
+    'Tetsu olha pra você com uma paciência de professor cansado.',
     '"Aí amanhã abre outra."',
     'Ele aponta as gaiolas.',
     '"Isso aqui não é o negócio, garoto. Isso aqui é um ponto de coleta. Tem ponto de coleta na Rota 25, tem na Zona Safári, tem um que eu ouvi falar em Seafoam que é pesado."',
@@ -1416,7 +1416,7 @@ c5_acabar_hoje:{
   escolhas:[
     {texto:'"Então me diz onde ficam os outros."', vai:'c5_onde_ficam'},
     {texto:'Acabar com essa mesa de cavalete mesmo assim.', vai:'c5_ataque'},
-    {texto:'Recuar e ligar pra Dra. Ivone.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Recuar e ligar pra Dra. Sayo.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Descer e conversar de verdade.', vai:'c5_proposta'}
   ]
 },
@@ -1424,18 +1424,18 @@ c5_acabar_hoje:{
 c5_onde_ficam:{
   texto:[
     '"Então me diz onde ficam os outros."',
-    'Vasco olha pros colegas. Os colegas estão trabalhando e não estão prestando atenção, o que já diz muito sobre o quanto você os assusta.',
+    'Tetsu olha pros colegas. Os colegas estão trabalhando e não estão prestando atenção, o que já diz muito sobre o quanto você os assusta.',
     '"Por que eu diria?"',
     'Você não tem resposta boa. Fica calado.',
-    'E o silêncio faz o trabalho, porque Vasco continua:',
+    'E o silêncio faz o trabalho, porque Tetsu continua:',
     '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena bicho de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, moleque. Você não acredita, mas eu tenho."'
   ],
   ef:{flag:'sabe_do_envenenador', registrar:'Alguém envenena Pokémon de rua na Rota 25 e vende o que sobra.',
-      npc:{nome:'Caçador Vasco', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'},
+      npc:{nome:'Caçador Tetsu', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'},
       presagio:'Todo mundo tem um limite, e o limite de todo mundo é logo depois do que essa pessoa faz.'},
   escolhas:[
     {texto:'Atacar. Limite ou não.', vai:'c5_ataque'},
-    {texto:'Recuar e ligar pra Dra. Ivone.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Recuar e ligar pra Dra. Sayo.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Descer e conversar de verdade.', vai:'c5_proposta'},
     {texto:'Sair. Você conseguiu o que precisava.', vai:'c5_fugir'}
   ]
@@ -1443,11 +1443,11 @@ c5_onde_ficam:{
 
 c5_ataque:{
   texto:[
-    '"Sério?" Vasco nem parece bravo. Parece cansado. "Sério mesmo?"',
+    '"Sério?" Tetsu nem parece bravo. Parece cansado. "Sério mesmo?"',
     'Os outros quatro param de trabalhar e ficam vendo, sem nenhuma intenção de ajudar, do jeito que colega de trabalho assiste a briga de colega de trabalho.',
     'Ele solta a bola.'
   ],
-  batalha:{dex:88, nivel:22, tipo:'treinador', treinador:'Vasco', fuga:false,
+  batalha:{dex:88, nivel:22, tipo:'treinador', treinador:'Tetsu', fuga:false,
            timeExtra:[{dex:42, nivel:24}],
            vitoria:'c5_venceu', derrota:'c5_perdeu', gameover:'gameover'}
 },
@@ -1455,7 +1455,7 @@ c5_ataque:{
 c5_venceu:{
   texto:[
     'Os outros quatro pegam as mochilas e saem pelo túnel de serviço, sem correr, sem falar com você, do jeito de quem bate ponto.',
-    'Vasco fica, porque sair na frente de alguém que te venceu é pior do que apanhar.',
+    'Tetsu fica, porque sair na frente de alguém que te venceu é pior do que apanhar.',
     '"Você acha que salvou eles." Ele aponta as gaiolas com o queixo, sentado no chão, com o Weezing recolhido. "Abre. Vai, abre. Metade não sai. Tão aqui há semanas."',
     'Você abre. Ele tem razão sobre a metade.',
     'Onze gaiolas. Onze fechaduras baratas. Quinze minutos de trabalho e algumas mordidas.',
@@ -1463,7 +1463,7 @@ c5_venceu:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma operação de tráfico no Monte da Lua'},
       itens:{'Ultra Ball':1,'Hyper Potion':1}, dinheiro:900,
-      npc:{nome:'Caçador Vasco', opiniao:-8, memoria:'Você destruiu a operação dele no Monte da Lua. Ele não esquece.'},
+      npc:{nome:'Caçador Tetsu', opiniao:-8, memoria:'Você destruiu a operação dele no Monte da Lua. Ele não esquece.'},
       flag:'destruiu_operacao', registrar:'Libertou os Pokémon do Monte da Lua e fez um inimigo permanente.'},
   escolhas:[
     {texto:'Carregar o Paras até o Centro Pokémon. São três horas.', vai:'c5_paras'},
@@ -1480,7 +1480,7 @@ c5_ficou_ate_o_fim:{
     'No escuro, com a sua lanterna apontada pro chão, eles começam a se mexer.',
     'Leva quatro horas. Quatro horas sentado imóvel num chão de pedra, de madrugada, ouvindo pé pequeno em rocha.',
     'No fim ficam três: dois que não conseguem andar e o Paras.',
-    'Vasco foi embora em algum momento dessas quatro horas e você não percebeu quando.'
+    'Tetsu foi embora em algum momento dessas quatro horas e você não percebeu quando.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou quatro horas no escuro esperando os últimos saírem'},
       hp:-4, causa:'Noite inteira na câmara do Monte da Lua',
@@ -1543,12 +1543,12 @@ c5_perdeu:{
   ],
   ef:{hp:-9, causa:'Espancado no Monte da Lua', dinheiro:-1000,
       flag:['operacao_escapou','viu_o_retangulo'], instabilidade:1,
-      npc:{nome:'Caçador Vasco', opiniao:-4, memoria:'Te derrubou no Monte da Lua e levou tudo embora numa noite.'},
+      npc:{nome:'Caçador Tetsu', opiniao:-4, memoria:'Te derrubou no Monte da Lua e levou tudo embora numa noite.'},
       registrar:'Perdeu no Monte da Lua. A operação se mudou em uma noite e levou os Pokémon.',
       presagio:'Eles desmontaram em uma noite. Ninguém desmonta em uma noite na primeira vez.'},
   escolhas:[
     {texto:'Procurar por onde eles saíram.', vai:'c5_saida_secreta'},
-    {texto:'Ligar pra Dra. Ivone e contar tudo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo e contar tudo.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Subir. Tem uma parte da montanha que você não viu.', vai:'c5_subida'},
     {texto:'Seguir para Cerulean.', vai:'c5_fim'}
   ]
@@ -1558,15 +1558,15 @@ c5_ligar:{
   texto:[
     'Você recua. Devagar, de costas, até a curva, e depois rápido.',
     'Quatrocentos metros de caverna e mais quatrocentos de subida até o vale abrir e o telefone pegar.',
-    'A Dra. Ivone atende no segundo toque, como quem dorme com o telefone na mão.',
+    'A Dra. Sayo atende no segundo toque, como quem dorme com o telefone na mão.',
     'Você fala. Ela não interrompe uma vez.',
     '"Fica longe", ela diz. "Eu levo gente de imprensa. Com a Liga eles somem antes; com câmera eles não somem."',
     'Ela chega em seis horas com quatro pessoas, dois carros e uma câmera de ombro. Você fica na entrada da caverna esse tempo todo, porque alguém tem que ficar olhando a boca do buraco.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Expôs o tráfico do Monte da Lua à imprensa'},
-      npc:{nome:'Dra. Ivone', opiniao:6, memoria:'Você ligou pra ela do Monte da Lua. Ela nunca vai esquecer isso.'},
+      npc:{nome:'Dra. Sayo', opiniao:6, memoria:'Você ligou pra ela do Monte da Lua. Ela nunca vai esquecer isso.'},
       flag:'expos_operacao', dinheiro:500,
-      registrar:'Expôs a operação do Monte da Lua com a Dra. Ivone e a imprensa.'},
+      registrar:'Expôs a operação do Monte da Lua com a Dra. Sayo e a imprensa.'},
   escolhas:[
     {texto:'Entrar com eles.', vai:'c5_entrou_com_imprensa'},
     {texto:'Guardar a boca da caverna.', vai:'c5_guardou_saida'},
@@ -1577,14 +1577,14 @@ c5_ligar:{
 c5_proposta:{
   texto:[
     'Você desce fazendo barulho de propósito, com as mãos à mostra.',
-    'Vasco te reconhece e leva três segundos pra decidir o que você é. Depois ri.',
+    'Tetsu te reconhece e leva três segundos pra decidir o que você é. Depois ri.',
     '"Olha só quem cresceu." Ele limpa a mão no jeans e estende. "Eu preciso de gente que anda em rota e não chama atenção. Paga bem. Você nem precisa pegar em gaiola — só carrega e cala a boca."',
     'Os outros quatro voltaram a trabalhar. Isso é o mais perturbador: sua presença aqui já é normal.'
   ],
   escolhas:[
     {texto:'Apertar a mão.', vai:'c5_aceitou'},
     {texto:'Recusar e sair andando devagar.', vai:'c5_recusou_perto'},
-    {texto:'Apertar a mão — e avisar a Dra. Ivone depois.', vai:'c5_duplo', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Apertar a mão — e avisar a Dra. Sayo depois.', vai:'c5_duplo', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"Antes disso: de quem é isso aqui?"', vai:'c5_de_quem_e'}
   ]
 },
@@ -1598,7 +1598,7 @@ c5_aceitou:{
   ],
   ef:{dinheiro:4000, itens:{'Ultra Ball':2},
       rep:{eixo:'ruim',delta:3,motivo:'Trabalhou para traficantes de Pokémon'},
-      npc:{nome:'Caçador Vasco', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
+      npc:{nome:'Caçador Tetsu', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
       flag:'trabalhou_rocket', moral:-15,
       registrar:'Passou a trabalhar para os remanescentes da Rocket.',
       presagio:'Você fez a conta três vezes. Ninguém faz a conta três vezes de uma coisa que vai fazer só uma.'},
@@ -1612,7 +1612,7 @@ c5_aceitou:{
 c5_planilha:{
   texto:[
     '"Deixa eu ver a planilha."',
-    'Vasco hesita meio segundo e decide que você é funcionário.',
+    'Tetsu hesita meio segundo e decide que você é funcionário.',
     'A prancheta tem quatro folhas. Colunas: DATA, ESPÉCIE, QTD, DESTINO, GUIA Nº.',
     'A coluna DESTINO tem a mesma palavra em quase todas as linhas: CENTRAL.',
     'A coluna GUIA Nº chega a 1.184.',
@@ -1625,7 +1625,7 @@ c5_planilha:{
     {texto:'Memorizar tudo e continuar trabalhando.', vai:'c5_fim', ef:{flag:'infiltrado'}},
     {texto:'Roubar uma folha.', vai:'c5_levou_folhas'},
     {texto:'Voltar à noite e abrir as gaiolas.', vai:'c5_traicao'},
-    {texto:'Ligar pra Dra. Ivone hoje mesmo.', vai:'c5_duplo', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo hoje mesmo.', vai:'c5_duplo', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1640,7 +1640,7 @@ c5_traicao:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Voltou de madrugada e abriu as gaiolas que tinha ajudado a carregar'},
       flag:['destruiu_operacao','traiu_vasco'],
-      npc:{nome:'Caçador Vasco', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
+      npc:{nome:'Caçador Tetsu', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
       registrar:'Voltou de madrugada e libertou os Pokémon depois de ter trabalhado para eles.',
       presagio:'A pessoa da cadeira de praia te viu e não levantou. Você vai pensar nisso por anos.'},
   escolhas:[
@@ -1652,7 +1652,7 @@ c5_traicao:{
 c5_duplo:{
   texto:[
     'Você aperta a mão. Carrega as caixas. Pega o dinheiro.',
-    'E liga para a Dra. Ivone da beira da estrada, com o caminhão ainda visível na curva.',
+    'E liga para a Dra. Sayo da beira da estrada, com o caminhão ainda visível na curva.',
     'Ela ouve tudo em silêncio. Depois: "Você carregou as caixas."',
     '"Carreguei."',
     '"Tá." Ela desliga.',
@@ -1660,7 +1660,7 @@ c5_duplo:{
     'Ela não te agradece. Não te cumprimenta. Quando os dois se cruzam na trilha, ela desvia o olhar, e isso custa mais caro do que uma bronca.'
   ],
   ef:{dinheiro:4000, rep:{eixo:'ruim',delta:1,motivo:'Carregou carga de traficantes'},
-      npc:{nome:'Dra. Ivone', opiniao:-2, memoria:'Você entregou o esquema, mas só depois de receber por ele. Ela desviou o olhar na trilha.'},
+      npc:{nome:'Dra. Sayo', opiniao:-2, memoria:'Você entregou o esquema, mas só depois de receber por ele. Ela desviou o olhar na trilha.'},
       flag:['trabalhou_rocket','delatou_rocket','expos_operacao'],
       registrar:'Trabalhou para os traficantes e entregou a rota depois.',
       presagio:'Ela desviou o olhar. Você vai querer consertar isso e vai levar muito tempo.'},
@@ -1679,7 +1679,7 @@ c5_falou_com_ivone:{
     'Uma pausa.',
     '"E o pior é que ela pode até ser verdade." Ela liga o carro. "Nunca dá pra saber por dentro, moço. Só dá pra saber pelo que a gente faz depois."'
   ],
-  ef:{npc:{nome:'Dra. Ivone', opiniao:2, memoria:'Você foi atrás dela explicar. Ela disse que só dá pra saber pelo que se faz depois.'},
+  ef:{npc:{nome:'Dra. Sayo', opiniao:2, memoria:'Você foi atrás dela explicar. Ela disse que só dá pra saber pelo que se faz depois.'},
       flag:'so_pelo_que_vem_depois',
       presagio:'Só dá pra saber pelo que a gente faz depois. Essa é a regra do resto dessa história.'},
   escolhas:[
@@ -1692,15 +1692,15 @@ c5_recusou_perto:{
   texto:[
     '"Não."',
     'O silêncio na câmara dura tempo demais. Um dos outros quatro coloca a mão no cinto, não numa arma — numa bola.',
-    'Vasco levanta a palma. "Deixa."',
+    'Tetsu levanta a palma. "Deixa."',
     'Pra você: "Você entrou aqui e viu tudo. Agora sobe essa passarela devagar e esquece o caminho."',
     'Você sobe. Devagar. Ele te olha o percurso inteiro, sem piscar, e continua olhando quando você some na curva — dá pra sentir.'
   ],
-  ef:{flag:'recusou_rocket', npc:{nome:'Caçador Vasco', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},
+  ef:{flag:'recusou_rocket', npc:{nome:'Caçador Tetsu', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},
       registrar:'Recusou trabalhar para os traficantes.'},
   escolhas:[
     {texto:'Voltar depois com um plano — e atacar.', vai:'c5_ataque'},
-    {texto:'Ligar pra Dra. Ivone assim que pegar sinal.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo assim que pegar sinal.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Subir pela passagem de cima e ver o resto da montanha.', vai:'c5_subida'},
     {texto:'Ir embora de verdade.', vai:'c5_fim'}
   ]
@@ -1717,7 +1717,7 @@ c5_fugir:{
       presagio:'"Eu não fiz nada de errado" e "eu não fiz nada" são a mesma frase com uma palavra a menos.'},
   escolhas:[
     {texto:'Voltar. Você não consegue.', vai:'c5_camara'},
-    {texto:'Ligar pra Dra. Ivone.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Subir pra ver o resto da montanha.', vai:'c5_subida'},
     {texto:'Seguir para Cerulean.', vai:'c5_fim'}
   ]

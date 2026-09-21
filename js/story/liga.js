@@ -139,16 +139,16 @@ const CAMPEAO = {
    Chaveamento de oito. Acontece o ano inteiro, qualquer um entra.
    ============================================================ */
 const RIVAIS_TORNEIO = [
-  {nome:'Téo', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
-   cond:d=>!!d.npcs['Téo'] && d.npcs['Téo'].opiniao >= 0},
-  {nome:'Téo', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Téo não aperta a sua mão. "Eu treinei oito meses pra isso."',
-   cond:d=>!!d.npcs['Téo'] && d.npcs['Téo'].opiniao < 0},
-  {nome:'Caçador Vasco', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
-   cond:d=>!!d.npcs['Caçador Vasco']},
-  {nome:'Marina, da Silph', tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
-   cond:d=>!!d.npcs['Marina (crachá azul)']},
-  {nome:'Guia Nico', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Nico está diferente. "Eu testemunhei. Perdi o emprego. Tô aqui."',
-   cond:d=>!!d.npcs['Guia Nico']},
+  {nome:'Kenta', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
+   cond:d=>!!d.npcs['Kenta'] && d.npcs['Kenta'].opiniao >= 0},
+  {nome:'Kenta', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Kenta não aperta a sua mão. "Eu treinei oito meses pra isso."',
+   cond:d=>!!d.npcs['Kenta'] && d.npcs['Kenta'].opiniao < 0},
+  {nome:'Caçador Tetsu', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
+   cond:d=>!!d.npcs['Caçador Tetsu']},
+  {nome:'Hitomi, da Silph', tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
+   cond:d=>!!d.npcs['Hitomi (crachá azul)']},
+  {nome:'Guia Taki', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Taki está diferente. "Eu testemunhei. Perdi o emprego. Tô aqui."',
+   cond:d=>!!d.npcs['Guia Taki']},
   {nome:'Ás do Planalto', tipos:['Dragão','Voador'], fala:'"Eu treino aqui. Literalmente aqui. Boa sorte."'},
   {nome:'Veterana de Saffron', tipos:['Psíquico','Fantasma'], fala:'"Décimo quarto torneio. Eu não vim ganhar, eu vim continuar vindo."'},
   {nome:'Pescador de Fuchsia', tipos:['Água','Gelo'], fala:'"Eu não uso Poké Ball cara e ainda assim eu ganho de gente rica. É o meu hobby."'},
@@ -160,9 +160,9 @@ const RIVAIS_TORNEIO = [
 
 /* Monta um adversário de torneio com time escalado ao jogador */
 function adversarioTorneio(rival, nivelAlvo){
-  // Téo entra com o time de verdade dele, no arco em que estiver
-  if (rival.nome === 'Téo' && Estado.dados.rival){
-    return {nome:'Téo', fala: rival.fala, time: timeRival()};
+  // Kenta entra com o time de verdade dele, no arco em que estiver
+  if (rival.nome === 'Kenta' && Estado.dados.rival){
+    return {nome:'Kenta', fala: rival.fala, time: timeRival()};
   }
   const pool = poolSelvagem().filter(d => {
     const p = DEX[d];

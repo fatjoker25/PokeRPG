@@ -78,12 +78,12 @@ c2_recado_da_sua_cidade:{
     'Você procura papel da sua cidade no mural e leva quatro minutos pra achar, porque está na terceira camada.',
     d=>`É um cartaz de ${d.jogador.cidade}, impresso em papel comum, com a foto ruim de uma licença.`,
     'É o seu.',
-    d=>fala('Sra. Odete', 'PARABÉNS', 'baixo', 'Escrito à mão embaixo da foto, com a mesma caneta dos outros dezenove.'),
+    d=>fala('Sra. Chiyo', 'PARABÉNS', 'baixo', 'Escrito à mão embaixo da foto, com a mesma caneta dos outros dezenove.'),
     'Ela foi de ônibus. Ela foi de ônibus até Viridian, achou o Centro Pokémon, pediu um percevejo na recepção e pregou isso aqui.',
     'Você tem menos de vinte e quatro horas de estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
-      npc:{nome:'Sra. Odete', opiniao:3, memoria:'Pegou ônibus até Viridian pra pregar o seu cartaz no mural do Centro.'},
+      npc:{nome:'Sra. Chiyo', opiniao:3, memoria:'Pegou ônibus até Viridian pra pregar o seu cartaz no mural do Centro.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém pegou ônibus pra pregar o seu nome numa cidade que não é a sua', rep:{notorio:true}},
       registrar:'Achou o próprio cartaz na terceira camada do mural de Viridian.'},
   escolhas:[
@@ -292,19 +292,19 @@ c2_provocou:{
 c2_teo:{
   texto:[
     'Ele tem mais ou menos a sua idade e a roupa dele é nova demais, do jeito de quem comprou tudo de uma vez pra viagem.',
-    '"Téo." Ele estende a mão antes de você oferecer. "Eu tava numa pedra na Rota 1 desde as seis da manhã esperando alguém passar."',
+    '"Kenta." Ele estende a mão antes de você oferecer. "Eu tava numa pedra na Rota 1 desde as seis da manhã esperando alguém passar."',
     '"E ninguém passou?"',
     '"Passaram três. Duas eram adultas e uma me ignorou." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Aí eu vim pra cá, porque no Centro pelo menos tem gente."',
     'Ele já está com a mão no cinto. Não é ameaça — é ansiedade.',
     '"Você é treinador, né? Tipo, de verdade, com licença e tudo?"'
   ],
-  ef:{npc:{nome:'Téo', opiniao:1, memoria:'Esperou numa pedra na Rota 1 desde as seis da manhã. Você foi a primeira pessoa que falou com ele.'},
-      registrar:'Conheceu Téo no Centro Pokémon de Viridian.'},
+  ef:{npc:{nome:'Kenta', opiniao:1, memoria:'Esperou numa pedra na Rota 1 desde as seis da manhã. Você foi a primeira pessoa que falou com ele.'},
+      registrar:'Conheceu Kenta no Centro Pokémon de Viridian.'},
   escolhas:[
     {texto:'"Sou. Quer lutar?"', vai:'c2_batalha_teo'},
     {texto:'Sentar na escada com ele antes.', vai:'c2_conversa'},
     {texto:'"Tô com pressa." E sair.', vai:'c2_recusa',
-     ef:{npc:{nome:'Téo', opiniao:-1, memoria:'Você recusou a primeira batalha dele.'}}},
+     ef:{npc:{nome:'Kenta', opiniao:-1, memoria:'Você recusou a primeira batalha dele.'}}},
     {texto:'"Por que você tava esperando numa pedra?"', vai:'c2_pergunta_pedra'}
   ]
 },
@@ -319,18 +319,18 @@ c2_pergunta_pedra:{
     'Ele finalmente te olha. "Achei que ia ser mais fácil."'
   ],
   ef:{flag:'teo_abriu_o_jogo',
-      npc:{nome:'Téo', opiniao:3, memoria:'Te contou, no primeiro dia, que não sabia ir sozinho.'}},
+      npc:{nome:'Kenta', opiniao:3, memoria:'Te contou, no primeiro dia, que não sabia ir sozinho.'}},
   escolhas:[
     {texto:'"Ninguém sabe. A gente só vai."', vai:'c2_conversa',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a coisa certa para alguém com medo'},
-         npc:{nome:'Téo', opiniao:2, memoria:'Você disse que ninguém sabe ir sozinho.'}}},
+         npc:{nome:'Kenta', opiniao:2, memoria:'Você disse que ninguém sabe ir sozinho.'}}},
     {texto:'"Então volta pra casa."', vai:'c2_mandou_voltar',
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir no primeiro dia'},
-         npc:{nome:'Téo', opiniao:-3, memoria:'Você mandou ele voltar pra casa no primeiro dia.'}}},
+         npc:{nome:'Kenta', opiniao:-3, memoria:'Você mandou ele voltar pra casa no primeiro dia.'}}},
     {texto:'"Seu pai é um idiota."', vai:'c2_conversa',
-     ef:{npc:{nome:'Téo', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
+     ef:{npc:{nome:'Kenta', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
     {texto:'Não dizer nada e esperar ele continuar.', vai:'c2_conversa',
-     ef:{npc:{nome:'Téo', opiniao:1, memoria:'Você ficou calado e deixou ele falar. Foi o suficiente.'}}}
+     ef:{npc:{nome:'Kenta', opiniao:1, memoria:'Você ficou calado e deixou ele falar. Foi o suficiente.'}}}
   ]
 },
 
@@ -355,7 +355,7 @@ c2_desculpa:{
     '"Falou." Ele não facilita. "Mas todo mundo fala. Você foi só o primeiro hoje."',
     'Ele senta na escada de novo e bate no degrau do lado.'
   ],
-  ef:{npc:{nome:'Téo', opiniao:2, memoria:'Você falou merda e pediu desculpa em menos de dez segundos. Ele reparou nos dez segundos.'},
+  ef:{npc:{nome:'Kenta', opiniao:2, memoria:'Você falou merda e pediu desculpa em menos de dez segundos. Ele reparou nos dez segundos.'},
       rep:{eixo:'bom',delta:1,motivo:'Voltou atrás depressa'}},
   escolhas:[{texto:'Sentar.', vai:'c2_conversa'}]
 },
@@ -369,7 +369,7 @@ c2_conversa:{
     '"Agora a gente luta?" ele pergunta, e é impossível dizer não.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Sentou e ouviu um estranho por quarenta minutos'},
-      npc:{nome:'Téo', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no primeiro dia.'},
+      npc:{nome:'Kenta', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no primeiro dia.'},
       flag:'teo_amigo', moral:5},
   escolhas:[{texto:'Lutar.', vai:'c2_batalha_teo'}]
 },
@@ -389,30 +389,30 @@ c2_recusa:{
 c2_batalha_teo:{
   texto:[
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
-    'Téo joga a bola com mais força do que precisa. "VAI!"',
-    'O Pidgey sai e pousa no chão em vez de voar, o que é errado, e Téo corrige ele em voz alta, e o Pidgey ignora.',
+    'Kenta joga a bola com mais força do que precisa. "VAI!"',
+    'O Pidgey sai e pousa no chão em vez de voar, o que é errado, e Kenta corrige ele em voz alta, e o Pidgey ignora.',
     'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
   ],
-  batalha:{dex:16, nivel:8, tipo:'treinador', treinador:'Téo', fuga:false,
+  batalha:{dex:16, nivel:8, tipo:'treinador', treinador:'Kenta', fuga:false,
            vitoria:'c2_pos_batalha', derrota:'c2_pos_derrota', gameover:'gameover'}
 },
 
 c2_pos_derrota:{
   texto:[
     'O seu último Pokémon senta no chão de tinta descascada e não levanta.',
-    'Téo demora a entender que ganhou. Quando entende, não comemora — olha em volta primeiro, pra ver se teve gente vendo, e não teve.',
+    'Kenta demora a entender que ganhou. Quando entende, não comemora — olha em volta primeiro, pra ver se teve gente vendo, e não teve.',
     '"Ô." Ele se aproxima com a carteira já na mão, o que é exatamente o contrário do que se faz. "Regra é regra, mas eu não vou pegar dinheiro de quem saiu de casa hoje."',
     'Ele guarda a carteira de novo. Fica evidente que ele ensaiou essa frase durante o combate inteiro e que ela saiu errada.',
     'A atendente aparece na porta dos fundos com dois frascos e não pergunta nada. Já viu isso mil vezes.'
   ],
-  ef:{npc:{nome:'Téo', opiniao:1, memoria:'Ganhou de você no pátio do Centro de Viridian e se recusou a cobrar a aposta.'}},
+  ef:{npc:{nome:'Kenta', opiniao:1, memoria:'Ganhou de você no pátio do Centro de Viridian e se recusou a cobrar a aposta.'}},
   escolhas:[
     {texto:'"Pega o dinheiro. Você ganhou."', vai:'c2_derrota_insistiu',
      ef:{dinheiro:-200, rep:{eixo:'bom',delta:1,motivo:'Pagou uma aposta que o vencedor recusou'},
-         npc:{nome:'Téo', opiniao:3, memoria:'Você insistiu pra ele aceitar o dinheiro que ele não quis cobrar.'}}},
+         npc:{nome:'Kenta', opiniao:3, memoria:'Você insistiu pra ele aceitar o dinheiro que ele não quis cobrar.'}}},
     {texto:'Aceitar a piedade em silêncio e cuidar do seu time.', vai:'c2_derrota_silencio'},
     {texto:'"Foi sorte. Revanche."', vai:'c2_derrota_revanche',
-     ef:{npc:{nome:'Téo', opiniao:-1, memoria:'Você chamou a vitória dele de sorte.'}}},
+     ef:{npc:{nome:'Kenta', opiniao:-1, memoria:'Você chamou a vitória dele de sorte.'}}},
     {texto:'Perguntar o que ele fez que você não fez.', vai:'c2_derrota_aprendeu'}
   ]
 },
@@ -435,7 +435,7 @@ c2_derrota_insistiu:{
 c2_derrota_silencio:{
   texto:[
     'Você não diz nada. Pega seu time, agradece a atendente com a cabeça e senta no banco de concreto do pátio.',
-    'Téo fica de pé perto, mudando o peso de um pé pro outro, esperando uma deixa que você não dá.',
+    'Kenta fica de pé perto, mudando o peso de um pé pro outro, esperando uma deixa que você não dá.',
     '"Todo mundo perde a primeira", ele fala, pro muro.',
     'É mentira. Ele não sabe se é mentira. Ele acabou de inventar isso e vai acreditar nisso pelo resto da vida, porque é o tipo de mentira que serve.'
   ],
@@ -459,7 +459,7 @@ c2_derrota_revanche:{
   ef:{flag:'chamou_de_sorte'},
   escolhas:[
     {texto:'Voltar atrás. "Não foi sorte. Desculpa."', vai:'c2_derrota_desculpa',
-     ef:{npc:{nome:'Téo', opiniao:2, memoria:'Você voltou atrás depois de chamar a vitória dele de sorte.'}}},
+     ef:{npc:{nome:'Kenta', opiniao:2, memoria:'Você voltou atrás depois de chamar a vitória dele de sorte.'}}},
     {texto:'Deixar como está.', vai:'c2_encontro_pewter'},
     {texto:'Ir embora sem combinar nada.', vai:'c2_saida_centro'}
   ]
@@ -468,7 +468,7 @@ c2_derrota_revanche:{
 c2_derrota_desculpa:{
   texto:[
     '"Não foi sorte. Desculpa."',
-    'Téo levanta a cabeça devagar.',
+    'Kenta levanta a cabeça devagar.',
     '"Você me enrolou com o troço de campo aberto e eu fui atrás", você diz. "Isso não é sorte, isso é você ter pensado antes."',
     '"Eu pensei nisso ontem à noite", ele admite, e o orgulho volta ao rosto dele inteiro de uma vez só. "Eu pensei em oito coisas ontem à noite. Sete eram ruins."'
   ],
@@ -497,20 +497,20 @@ c2_derrota_aprendeu:{
 
 c2_pos_batalha:{
   texto:[
-    'Téo pega o Pidgey no colo antes mesmo de devolver pra bola. "Foi mal, foi mal, você foi bem."',
+    'Kenta pega o Pidgey no colo antes mesmo de devolver pra bola. "Foi mal, foi mal, você foi bem."',
     'Ele fala isso pro Pidgey, não pra você. Leva uns bons quinze segundos até lembrar que você existe.',
     'Depois tira dinheiro do bolso e te entrega sem você pedir. É pouco. É quase tudo o que ele tem — dá pra ver porque a carteira fica visivelmente diferente.'
   ],
-  ef:{dinheiro:400, npc:{nome:'Téo', opiniao:2, memoria:'Perdeu para você em Viridian e pagou com quase tudo que tinha.'}},
+  ef:{dinheiro:400, npc:{nome:'Kenta', opiniao:2, memoria:'Perdeu para você em Viridian e pagou com quase tudo que tinha.'}},
   escolhas:[
     {texto:'Devolver o dinheiro.', vai:'c2_devolveu',
      ef:{dinheiro:-400, rep:{eixo:'bom',delta:2,motivo:'Devolveu o prêmio a quem não tinha'},
-         npc:{nome:'Téo', opiniao:4, memoria:'Você devolveu o dinheiro da aposta. Ele nunca contou isso pra ninguém e nunca esqueceu.'}}},
+         npc:{nome:'Kenta', opiniao:4, memoria:'Você devolveu o dinheiro da aposta. Ele nunca contou isso pra ninguém e nunca esqueceu.'}}},
     {texto:'"Te encontro em Pewter, hein?"', vai:'c2_encontro_pewter',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Rivalidade sadia com Téo'},
-         npc:{nome:'Téo', opiniao:2, memoria:'Vocês combinaram de se encontrar em Pewter.'}}},
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Rivalidade sadia com Kenta'},
+         npc:{nome:'Kenta', opiniao:2, memoria:'Vocês combinaram de se encontrar em Pewter.'}}},
     {texto:'Pegar o dinheiro e ir embora sem responder.', vai:'c2_saida_centro',
-     ef:{npc:{nome:'Téo', opiniao:-2, memoria:'Você pegou o dinheiro dele e não disse nada.'}}},
+     ef:{npc:{nome:'Kenta', opiniao:-2, memoria:'Você pegou o dinheiro dele e não disse nada.'}}},
     {texto:'"Seu Pidgey não sabe voar direito."', vai:'c2_critica'}
   ]
 },
@@ -533,18 +533,18 @@ c2_devolveu:{
 c2_critica:{
   texto:[
     '"Seu Pidgey não sabe voar direito."',
-    'Téo olha pro Pidgey. O Pidgey olha pro Téo.',
+    'Kenta olha pro Pidgey. O Pidgey olha pro Kenta.',
     '"Eu sei." Ele coça a cabeça. "Ele nasceu numa gaiola. A gente comprou ele numa loja quando eu tinha nove anos."',
     '"Ele nunca voou?"',
-    '"Ele voa tipo... um metro." Téo mostra com a mão. "Aí ele desce e anda."',
+    '"Ele voa tipo... um metro." Kenta mostra com a mão. "Aí ele desce e anda."',
     'Vocês dois ficam olhando o Pidgey. O Pidgey anda até a cerca e volta.'
   ],
-  ef:{flag:'sabe_do_pidgey', npc:{nome:'Téo', opiniao:1, memoria:'Te contou que o Pidgey dele nasceu numa gaiola e nunca aprendeu a voar direito.'}},
+  ef:{flag:'sabe_do_pidgey', npc:{nome:'Kenta', opiniao:1, memoria:'Te contou que o Pidgey dele nasceu numa gaiola e nunca aprendeu a voar direito.'}},
   escolhas:[
     {texto:'"Dá pra ensinar."', vai:'c2_ensinar',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ofereceu esperança em vez de diagnóstico'}}},
     {texto:'"Então ele não serve pra rota."', vai:'c2_nao_serve',
-     ef:{npc:{nome:'Téo', opiniao:-2, memoria:'Você disse que o Pidgey dele não servia.'}}},
+     ef:{npc:{nome:'Kenta', opiniao:-2, memoria:'Você disse que o Pidgey dele não servia.'}}},
     {texto:'"Te encontro em Pewter."', vai:'c2_encontro_pewter'}
   ]
 },
@@ -554,12 +554,12 @@ c2_ensinar:{
     '"Dá pra ensinar."',
     '"Você acha?"',
     '"Sei lá. Acho." Você não faz a menor ideia. "Deve dar."',
-    'Téo passa o resto da tarde no pátio jogando comida em cima de um muro baixo pro Pidgey ter que subir.',
+    'Kenta passa o resto da tarde no pátio jogando comida em cima de um muro baixo pro Pidgey ter que subir.',
     'Na quinta tentativa o Pidgey sobe voando em vez de pular.',
-    'Téo grita tão alto que a atendente sai pra ver se aconteceu alguma coisa.'
+    'Kenta grita tão alto que a atendente sai pra ver se aconteceu alguma coisa.'
   ],
   ef:{flag:'ensinou_o_pidgey',
-      npc:{nome:'Téo', opiniao:5, memoria:'Você ficou uma tarde inteira ajudando o Pidgey dele a voar. Ele conta essa história até hoje.'},
+      npc:{nome:'Kenta', opiniao:5, memoria:'Você ficou uma tarde inteira ajudando o Pidgey dele a voar. Ele conta essa história até hoje.'},
       rep:{eixo:'bom',delta:2,motivo:'Passou uma tarde ensinando um Pidgey alheio a voar'}},
   escolhas:[{texto:'Ir embora quando escurecer.', vai:'c2_encontro_pewter'}]
 },
@@ -567,7 +567,7 @@ c2_ensinar:{
 c2_nao_serve:{
   texto:[
     '"Então ele não serve pra rota."',
-    'Téo não responde na hora. Guarda o Pidgey.',
+    'Kenta não responde na hora. Guarda o Pidgey.',
     '"Ele é o que eu tenho", ele diz, e é a frase mais adulta que sai da boca dele nesse dia.'
   ],
   escolhas:[{texto:'Ir embora.', vai:'c2_saida_centro'}]
@@ -600,7 +600,7 @@ c2_gritou:{
     'Ele não sabia. Ele sabe agora e vai mesmo assim, porque voltar pro Centro depois de sair seria pior.'
   ],
   ef:{flag:'avisou_o_teo',
-      npc:{nome:'Téo', opiniao:1, memoria:'Você gritou da porta do Centro pra avisar do horário. Ele foi mesmo assim.'}},
+      npc:{nome:'Kenta', opiniao:1, memoria:'Você gritou da porta do Centro pra avisar do horário. Ele foi mesmo assim.'}},
   escolhas:[
     {texto:'Ir atrás dele.', vai:'c2_atras_do_teo', ef:{flag:'foi_atras_do_teo'}},
     {texto:'Deixar.', vai:'c2_saida_centro'}
@@ -615,11 +615,11 @@ c2_atras_do_teo:{
     '"Tô."',
     '"Por quê?"',
     'Você não tem uma resposta boa. Diz alguma coisa sobre ser o mesmo caminho.',
-    'Téo aceita a resposta ruim sem discutir, que é uma coisa que amigo faz.',
+    'Kenta aceita a resposta ruim sem discutir, que é uma coisa que amigo faz.',
     'Vocês entram na Rota 2 juntos às quatro e dez da tarde.'
   ],
   ef:{flag:'entrou_com_teo',
-      npc:{nome:'Téo', opiniao:3, memoria:'Você saiu atrás dele e entrou na Rota 2 junto.'}},
+      npc:{nome:'Kenta', opiniao:3, memoria:'Você saiu atrás dele e entrou na Rota 2 junto.'}},
   escolhas:[{texto:'Seguir.', vai:'c2_fim'}]
 },
 

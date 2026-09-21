@@ -45,7 +45,7 @@ c15_cabine:{
     '"Você é o terceiro em dezenove dias. Em setembro passaram quarenta e um por dia."'
   ],
   ef:{flag:'conheceu_otavio',
-      npc:{nome:'Otávio', opiniao:1, memoria:'Anota tudo o que passa pela cabine de pedágio da ciclovia, com horário.'},
+      npc:{nome:'Tatsuya', opiniao:1, memoria:'Anota tudo o que passa pela cabine de pedágio da ciclovia, com horário.'},
       registrar:'O movimento na ciclovia caiu de 41 pessoas por dia para 3 em dezenove dias.',
       presagio:'Ele anota com horário. Numa cabine de pedágio que não cobra pedágio há nove anos.'},
   escolhas:[
@@ -74,9 +74,9 @@ c15_porque_anota:{
     '"Nove anos e ninguém nunca me ligou."'
   ],
   ef:{flag:['sabe_do_levantamento','otavio_confia'],
-      npc:{nome:'Otávio', opiniao:4, memoria:'Faz levantamento de fauna desde 1987 e provou em 1991 que ninguém lê.'},
+      npc:{nome:'Tatsuya', opiniao:4, memoria:'Faz levantamento de fauna desde 1987 e provou em 1991 que ninguém lê.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou por que ele anota'},
-      registrar:'Otávio e a mulher fazem levantamento de fauna das rotas 14–18 desde 1987.',
+      registrar:'Tatsuya e a mulher fazem levantamento de fauna das rotas 14–18 desde 1987.',
       presagio:'Treze anos de dado bom que ninguém leu. Você acabou de virar a primeira pessoa a ler.'},
   escolhas:[
     {texto:'"Me mostra os últimos meses."', vai:'c15_os_ultimos_meses'},
@@ -95,7 +95,7 @@ c15_o_que_aconteceu:{
     '"Não. Foram embora. Tem diferença e a diferença é a única coisa importante desse assunto."',
     'Ele bate no caderno.',
     '"Se morressem, a gente achava. Bicho morto fica. Tem urubu, tem cheiro, tem osso."',
-    '"A gente andou os vinte e dois quilômetros da ciclovia e mais os trechos de mato em oito dias, eu e a Nair, e a gente achou dois bichos mortos, que é o número normal, que é atropelamento."',
+    '"A gente andou os vinte e dois quilômetros da ciclovia e mais os trechos de mato em oito dias, eu e a Sumi, e a gente achou dois bichos mortos, que é o número normal, que é atropelamento."',
     '"Então eles andaram."',
     '"Eles andaram. E andaram todos pro mesmo lado, que é o que me tira o sono."',
     '"Pra que lado?"',
@@ -136,7 +136,7 @@ c15_os_ultimos_meses:{
       presagio:'Dois meses. Você já fez essa conta antes, numa encosta, e ela deu quarenta e um dias.'},
   escolhas:[
     {texto:'"E o que veio do sul?"', vai:'c15_o_que_veio_do_sul'},
-    {texto:'Mostrar a conta pro Otávio.', vai:'c15_mostrou_a_conta'},
+    {texto:'Mostrar a conta pro Tatsuya.', vai:'c15_mostrou_a_conta'},
     {texto:'"Onde está sua mulher?"', vai:'c15_a_nair'},
     {texto:'Ir pro capinzal ver rastro.', vai:'c15_capinzal'}
   ]
@@ -158,9 +158,9 @@ c15_mostrou_a_conta:{
     '"Eu mando formulário pra Comissão desde oitenta e sete, meu jovem."'
   ],
   ef:{flag:['otavio_avisou','sabe_dos_dois_meses'],
-      npc:{nome:'Otávio', opiniao:6, memoria:'Já tinha visto a frente em setembro e já tinha avisado a Liga e a Comissão.'},
+      npc:{nome:'Tatsuya', opiniao:6, memoria:'Já tinha visto a frente em setembro e já tinha avisado a Liga e a Comissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Mostrou a conta a quem já tinha feito ela'},
-      registrar:'Otávio avisou a Liga em setembro. Migração de fauna não é competência da Liga.',
+      registrar:'Tatsuya avisou a Liga em setembro. Migração de fauna não é competência da Liga.',
       presagio:'Ele já tinha avisado. Todo mundo nesse jogo já avisou alguém.'},
   escolhas:[
     {texto:'"E o que veio do sul?"', vai:'c15_o_que_veio_do_sul'},
@@ -173,7 +173,7 @@ c15_mostrou_a_conta:{
 c15_o_que_veio_do_sul:{
   texto:[
     '"E o que veio do sul?"',
-    'Otávio fecha o caderno com as duas mãos.',
+    'Tatsuya fecha o caderno com as duas mãos.',
     '"Essa é a pergunta."',
     '"E a resposta?"',
     '"Três."',
@@ -182,7 +182,7 @@ c15_o_que_veio_do_sul:{
     '"Você viu?"',
     '"Eu vi duas vezes, de longe, com binóculo, e nas duas vezes eu tava mijando de medo e não consegui segurar o binóculo firme."',
     'Ele passa a mão no rosto.',
-    '"A Nair viu quatro vezes. Ela tem a mão mais firme."',
+    '"A Sumi viu quatro vezes. Ela tem a mão mais firme."',
     '"E ela identificou?"',
     '"Ela desenhou."',
     'Ele abre o caderno na contracapa.',
@@ -190,7 +190,7 @@ c15_o_que_veio_do_sul:{
     'Você reconhece os três antes de ele falar os nomes.'
   ],
   ef:{flag:['sabe_dos_tres','otavio_viu'],
-      npc:{nome:'Otávio', opiniao:5, memoria:'Viu os três duas vezes com binóculo e a mão tremendo.'},
+      npc:{nome:'Tatsuya', opiniao:5, memoria:'Viu os três duas vezes com binóculo e a mão tremendo.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou o que veio, em vez do que foi'},
       instabilidade:1,
       registrar:'Três criaturas passam pelas rotas de madrugada, em fila, no mesmo trajeto.',
@@ -218,10 +218,10 @@ c15_a_nair:{
     '"Ela diz que o levantamento não é pra ninguém ler hoje. É pra alguém poder ler daqui a cinquenta anos."'
   ],
   ef:{flag:['sabe_da_nair','nair_no_dezesseis'],
-      npc:{nome:'Otávio', opiniao:5, memoria:'A mulher dele, Nair, conta o trecho 16 sozinha todas as manhãs.'},
+      npc:{nome:'Tatsuya', opiniao:5, memoria:'A mulher dele, Sumi, conta o trecho 16 sozinha todas as manhãs.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou onde ela estava'},
       moral:8,
-      registrar:'Nair conta o trecho 16 sozinha toda manhã, há 31 anos.',
+      registrar:'Sumi conta o trecho 16 sozinha toda manhã, há 31 anos.',
       presagio:'"É pra alguém poder ler daqui a cinquenta anos." Guarde essa definição de trabalho.'},
   escolhas:[
     {texto:'Ir andando até o trecho 16 encontrar ela.', vai:'c15_nair'},
@@ -247,7 +247,7 @@ c15_o_terceiro:{
   ],
   ef:{flag:['sabe_do_homem_de_terno','placa_do_terno'],
       itens:{'Placa anotada num canto de caderno':1},
-      npc:{nome:'Otávio', opiniao:4, memoria:'Anotou a placa de um carro da Comissão que ficou 40 minutos no mirante do trecho 18.'},
+      npc:{nome:'Tatsuya', opiniao:4, memoria:'Anotou a placa de um carro da Comissão que ficou 40 minutos no mirante do trecho 18.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou quem mais tinha passado'},
       registrar:'No dia 14, um carro com cadeado da Comissão ficou 40 minutos no mirante do trecho 18.',
       presagio:'O mirante do trecho 18 é de onde se vê Cinnabar. Ele foi olhar a mesma coisa que os três.'},
@@ -262,7 +262,7 @@ c15_o_terceiro:{
 c15_o_trajeto:{
   texto:[
     '"Qual é o trajeto deles?"',
-    'Otávio tira do bolso um mapa da ciclovia dobrado em oito — um mapa turístico, desses que a prefeitura de Fuchsia imprime, com desenho de Doduo no canto.',
+    'Tatsuya tira do bolso um mapa da ciclovia dobrado em oito — um mapa turístico, desses que a prefeitura de Fuchsia imprime, com desenho de Doduo no canto.',
     'E em cima do mapa turístico, a lápis, tem uma linha traçada à mão.',
     'A linha sai do mirante do trecho dezoito, sobe pelo capinzal paralelo à ciclovia até o trecho quinze, atravessa pro lado do mar, desce de volta pelo litoral até o trecho dezoito, e fecha.',
     'É um circuito.',
@@ -276,14 +276,14 @@ c15_o_trajeto:{
   ],
   ef:{flag:['sabe_do_circuito','caes_olham_cinnabar'],
       itens:{'Mapa da ciclovia com o circuito a lápis':1},
-      npc:{nome:'Otávio', opiniao:6, memoria:'Te deu o mapa com o circuito dos três traçado a lápis.'},
+      npc:{nome:'Tatsuya', opiniao:6, memoria:'Te deu o mapa com o circuito dos três traçado a lápis.'},
       rep:{eixo:'bom',delta:5,motivo:'Olhou o desenho até entender o que era'},
       instabilidade:1,
       registrar:'Os três percorrem um circuito fechado de 34 km, duas a três vezes por noite, ancorado no mirante do trecho 18.',
       presagio:'Perímetro. Eles não estão caçando nada aqui. Eles estão fechando.'},
   escolhas:[
     {texto:'Ir até o mirante do trecho 18.', vai:'c15_mirante'},
-    {texto:'Ir encontrar a Nair no trecho 16.', vai:'c15_nair'},
+    {texto:'Ir encontrar a Sumi no trecho 16.', vai:'c15_nair'},
     {texto:'Ir pro capinzal procurar rastro.', vai:'c15_capinzal'},
     {texto:'Acampar e esperar a madrugada.', vai:'c15_esperou_a_madrugada'}
   ]
@@ -338,7 +338,7 @@ c15_mirante:{
   escolhas:[
     {texto:'Acampar no mirante e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Procurar a quarta marca.', vai:'c15_quarta_marca'},
-    {texto:'Ir encontrar a Nair no trecho 16.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir encontrar a Sumi no trecho 16.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro capinzal procurar rastro.', vai:'c15_capinzal'}
   ]
 },
@@ -361,30 +361,30 @@ c15_quarta_marca:{
       presagio:'Uma pessoa senta aqui há anos olhando pro sul. Junto com eles.'},
   escolhas:[
     {texto:'Acampar e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Ir perguntar ao Otávio quem senta ali.', vai:'c15_quem_senta'},
-    {texto:'Ir encontrar a Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir perguntar ao Tatsuya quem senta ali.', vai:'c15_quem_senta'},
+    {texto:'Ir encontrar a Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro vilarejo da rota 17.', vai:'c15_vilarejo'}
   ]
 },
 
 c15_quem_senta:{
   texto:[
-    'Você volta à cabine e pergunta ao Otávio quem senta no banco do mirante.',
+    'Você volta à cabine e pergunta ao Tatsuya quem senta no banco do mirante.',
     'Ele não hesita.',
     '"O Red."',
     'Você fica um tempo sem falar nada.',
     '"O Red."',
     '"É. Ele aparece de vez em quando, sobe até o mirante, senta lá e fica. Às vezes uma noite. Às vezes três."',
     '"E ele fala com você?"',
-    '"Ele acena." Otávio dá de ombros. "Ele nunca falou uma palavra comigo em quatro anos e ele acena todas as vezes."',
+    '"Ele acena." Tatsuya dá de ombros. "Ele nunca falou uma palavra comigo em quatro anos e ele acena todas as vezes."',
     '"Ele vem fazer o quê?"',
-    'Otávio olha a estrada.',
+    'Tatsuya olha a estrada.',
     '"Eu acho que ele vem olhar Cinnabar, meu jovem. Mesma coisa que os três."',
     'Ele bebe o café.',
     '"E eu acho que os três vêm porque ele vem, ou que ele vem porque os três vêm, e eu não sei qual das duas e eu já pensei muito."'
   ],
   ef:{flag:['sabe_do_red_no_mirante','tem_mais_alguem'],
-      npc:{nome:'Otávio', opiniao:6, memoria:'Te contou que Red senta no mirante do trecho 18 há quatro anos, e nunca falou uma palavra.'},
+      npc:{nome:'Tatsuya', opiniao:6, memoria:'Te contou que Red senta no mirante do trecho 18 há quatro anos, e nunca falou uma palavra.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou quem sentava no banco'},
       instabilidade:1,
       registrar:'Red senta no mirante do trecho 18 há quatro anos, olhando Cinnabar.',
@@ -392,7 +392,7 @@ c15_quem_senta:{
   escolhas:[
     {texto:'Acampar no mirante e esperar.', vai:'c15_esperou_a_madrugada'},
     {texto:'"Quando ele vem?"', vai:'c15_quando_ele_vem'},
-    {texto:'Ir encontrar a Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir encontrar a Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro vilarejo da rota 17.', vai:'c15_vilarejo'}
   ]
 },
@@ -400,7 +400,7 @@ c15_quem_senta:{
 c15_quando_ele_vem:{
   texto:[
     '"Quando ele vem?"',
-    'Otávio abre o caderno e vai direto numa página, porque ele anota.',
+    'Tatsuya abre o caderno e vai direto numa página, porque ele anota.',
     '"Doze vezes em quatro anos. Sem padrão de mês."',
     'Ele passa o dedo pelas datas.',
     '"Mas tem uma coisa."',
@@ -412,7 +412,7 @@ c15_quando_ele_vem:{
     '"E a última vez que ele veio foi anteontem."'
   ],
   ef:{flag:['red_veio_anteontem','sabe_que_vem_hoje'],
-      npc:{nome:'Otávio', opiniao:6, memoria:'Red esteve no mirante anteontem, e em doze de doze vezes os três passaram na madrugada seguinte.'},
+      npc:{nome:'Tatsuya', opiniao:6, memoria:'Red esteve no mirante anteontem, e em doze de doze vezes os três passaram na madrugada seguinte.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou quando e a resposta tinha data'},
       instabilidade:1,
       registrar:'Red esteve no mirante anteontem. Os três passam sempre na madrugada seguinte.',
@@ -420,7 +420,7 @@ c15_quando_ele_vem:{
   escolhas:[
     {texto:'Acampar no mirante hoje mesmo.', vai:'c15_esperou_a_madrugada'},
     {texto:'Procurar o Red na ciclovia.', vai:'c15_procurou_o_red'},
-    {texto:'Ir encontrar a Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir encontrar a Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro capinzal procurar rastro.', vai:'c15_capinzal'}
   ]
 },
@@ -445,7 +445,7 @@ c15_procurou_o_red:{
   escolhas:[
     {texto:'Acampar no mirante e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Deixar um bilhete no lugar do saco.', vai:'c15_bilhete_pro_red'},
-    {texto:'Ir encontrar a Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir encontrar a Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro capinzal.', vai:'c15_capinzal'}
   ]
 },
@@ -473,7 +473,7 @@ c15_bilhete_pro_red:{
   escolhas:[
     {texto:'Acampar no mirante e esperar.', vai:'c15_esperou_a_madrugada'},
     {texto:'Escrever outro bilhete.', vai:'c15_segundo_bilhete'},
-    {texto:'Ir encontrar a Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir encontrar a Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro capinzal.', vai:'c15_capinzal'}
   ]
 },
@@ -495,7 +495,7 @@ c15_segundo_bilhete:{
       presagio:'Leu e não respondeu, ou não voltou. As duas são respostas.'},
   escolhas:[
     {texto:'Acampar e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Ir encontrar a Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Ir encontrar a Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Ir pro capinzal procurar rastro.', vai:'c15_capinzal'},
     {texto:'Ir pro vilarejo da rota 17.', vai:'c15_vilarejo'}
   ]
@@ -503,7 +503,7 @@ c15_segundo_bilhete:{
 
 c15_nair:{
   texto:[
-    'Você acha a Nair no trecho dezesseis, às dez e vinte da manhã, parada no acostamento com uma prancheta.',
+    'Você acha a Sumi no trecho dezesseis, às dez e vinte da manhã, parada no acostamento com uma prancheta.',
     'Ela tem sessenta e três anos, chapéu de aba larga, calça de caminhada e uma bota que já foi reformada duas vezes.',
     'Ela levanta a mão pra você esperar antes de você abrir a boca, e termina de contar.',
     'Depois anota, e só então olha.',
@@ -517,10 +517,10 @@ c15_nair:{
     '"Porque zero é dado, meu filho. Zero é o dado mais importante que existe e é o único que ninguém tem paciência de coletar."'
   ],
   ef:{flag:'conheceu_nair',
-      npc:{nome:'Nair', opiniao:3, memoria:'Anota zero trinta e uma vezes por dia, há dois meses, porque zero é dado.'},
+      npc:{nome:'Sumi', opiniao:3, memoria:'Anota zero trinta e uma vezes por dia, há dois meses, porque zero é dado.'},
       rep:{eixo:'bom',delta:3,motivo:'Esperou ela terminar de contar'},
       moral:8,
-      registrar:'Nair anota zero em 31 trechos por dia há dois meses.',
+      registrar:'Sumi anota zero em 31 trechos por dia há dois meses.',
       presagio:'"Zero é o dado mais importante e o único que ninguém tem paciência de coletar."'},
   escolhas:[
     {texto:'Andar o trecho com ela.', vai:'c15_andou_com_a_nair'},
@@ -545,7 +545,7 @@ c15_andou_com_a_nair:{
     '"Some bicho, some pé. Some pé, some bicho. A gente tá vendo o começo de uma coisa que leva vinte anos."'
   ],
   ef:{flag:['andou_com_a_nair','entendeu_o_ciclo'],
-      npc:{nome:'Nair', opiniao:7, memoria:'Andou onze quilômetros com você e te mostrou a goiabeira carregada e vazia.'},
+      npc:{nome:'Sumi', opiniao:7, memoria:'Andou onze quilômetros com você e te mostrou a goiabeira carregada e vazia.'},
       rep:{eixo:'bom',delta:4,motivo:'Andou onze quilômetros só para ver alguém anotar zero'},
       moral:10, hp:-2, causa:'Onze quilômetros de caminhada',
       registrar:'Sem os Spearow, a goiabeira não espalha semente. É o começo de uma coisa de vinte anos.',
@@ -580,9 +580,9 @@ c15_nair_viu:{
     '"Isso é dado, meu filho."'
   ],
   ef:{flag:['nair_viu','nair_fez_contato'],
-      npc:{nome:'Nair', opiniao:8, memoria:'Acendeu a lanterna para os três e anotou o contato visual de dez segundos como dado.'},
+      npc:{nome:'Sumi', opiniao:8, memoria:'Acendeu a lanterna para os três e anotou o contato visual de dez segundos como dado.'},
       rep:{eixo:'bom',delta:4,motivo:'Ouviu a única pessoa em Kanto que fez contato visual e anotou'},
-      registrar:'Nair fez contato visual com um dos três e registrou como dado de levantamento.',
+      registrar:'Sumi fez contato visual com um dos três e registrou como dado de levantamento.',
       presagio:'Ela acendeu a lanterna na quarta vez. Guarde a progressão.'},
   escolhas:[
     {texto:'"Vamos hoje à noite. Juntos."', vai:'c15_esperou_a_madrugada'},
@@ -605,7 +605,7 @@ c15_qual_parou:{
     'Ela olha o desenho.',
     '"Eu passei trinta e um anos aprendendo nome de cento e cinquenta e uma espécies e essa aí não tá em nenhum livro que eu tenho, e eu tenho quatro."',
     'Ela fecha a prancheta.',
-    '"E eu vou te dizer uma coisa que eu não falo nem pro Otávio: eu fiquei feliz."',
+    '"E eu vou te dizer uma coisa que eu não falo nem pro Tatsuya: eu fiquei feliz."',
     '"Feliz?"',
     '"Sessenta e três anos, meu filho. Trinta e um contando as mesmas espécies nas mesmas rotas."',
     '"E numa madrugada de agosto passou uma coisa que não tem no livro e ela parou e olhou pra mim."',
@@ -613,11 +613,11 @@ c15_qual_parou:{
     '"Eu voltei pra casa e chorei no banheiro pra ele não ver, e depois eu anotei direito."'
   ],
   ef:{flag:['sabe_que_e_suicune','nair_desenhou'],
-      npc:{nome:'Nair', opiniao:9, memoria:'Desenhou Suicune no acostamento às 4h30 e voltou para casa feliz e chorando.'},
+      npc:{nome:'Sumi', opiniao:9, memoria:'Desenhou Suicune no acostamento às 4h30 e voltou para casa feliz e chorando.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou qual deles, e a resposta era um desenho'},
       moral:15,
       executar:d=>{ Estado.lend(245).encontros++; return []; },
-      registrar:'Foi Suicune que parou e olhou para a Nair.',
+      registrar:'Foi Suicune que parou e olhou para a Sumi.',
       presagio:'Ela chorou de felicidade no banheiro. Depois anotou direito.'},
   escolhas:[
     {texto:'"Vamos hoje à noite. Juntos."', vai:'c15_esperou_a_madrugada'},
@@ -642,10 +642,10 @@ c15_contou_o_nome:{
     'E aí ela faz uma coisa que te desmonta: ela aperta a sua mão. Formalmente, com as duas mãos, como quem agradece num velório.'
   ],
   ef:{flag:['nair_sabe_o_nome','nair_aliada'],
-      npc:{nome:'Nair', opiniao:10, memoria:'Escreveu o nome de Suicune ao lado do desenho e apertou sua mão com as duas.'},
+      npc:{nome:'Sumi', opiniao:10, memoria:'Escreveu o nome de Suicune ao lado do desenho e apertou sua mão com as duas.'},
       rep:{eixo:'bom',delta:5,motivo:'Deu a alguém um nome que ela procurou por meses'},
       moral:20,
-      registrar:'Nair escreveu o nome de Suicune ao lado do desenho dela.',
+      registrar:'Sumi escreveu o nome de Suicune ao lado do desenho dela.',
       presagio:'Ela agradeceu como quem agradece num velório. Reparou?'},
   escolhas:[
     {texto:'"Vamos hoje à noite. Juntos."', vai:'c15_esperou_a_madrugada'},
@@ -670,7 +670,7 @@ c15_nair_medo:{
     '"Eu prefiro muito esse."'
   ],
   ef:{flag:'nair_falou_do_medo',
-      npc:{nome:'Nair', opiniao:8, memoria:'Explicou que prefere o medo que vem com uma coisa nova do outro lado.'},
+      npc:{nome:'Sumi', opiniao:8, memoria:'Explicou que prefere o medo que vem com uma coisa nova do outro lado.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou do medo'},
       moral:12,
       presagio:'"O único medo que vem com uma coisa nova do outro lado." Guarde, você vai precisar disso na Liga.'},
@@ -764,7 +764,7 @@ c15_estao_abrindo:{
     {texto:'Acampar e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Ir até o mirante do trecho 18.', vai:'c15_mirante'},
     {texto:'Ir pro capinzal procurar o rastro.', vai:'c15_capinzal'},
-    {texto:'Ir avisar o Otávio e a Nair.', vai:'c15_avisou_os_dois'}
+    {texto:'Ir avisar o Tatsuya e a Sumi.', vai:'c15_avisou_os_dois'}
   ]
 },
 
@@ -800,22 +800,22 @@ c15_o_que_foi:{
 
 c15_avisou_os_dois:{
   texto:[
-    'Você volta à cabine de pedágio às seis da tarde, quando Otávio e Nair trocam de turno, e conta tudo junto pros dois.',
+    'Você volta à cabine de pedágio às seis da tarde, quando Tatsuya e Sumi trocam de turno, e conta tudo junto pros dois.',
     'A frente de um trecho por mês. O circuito de trinta e quatro quilômetros. O mirante com as três marcas gastas. O curral aberto três vezes sem nada sair.',
-    'Eles ouvem sem interromper, e no fim Nair abre a prancheta e Otávio abre o caderno, e os dois começam a conferir datas em voz alta, um com o outro, como quem faz isso há trinta e um anos.',
+    'Eles ouvem sem interromper, e no fim Sumi abre a prancheta e Tatsuya abre o caderno, e os dois começam a conferir datas em voz alta, um com o outro, como quem faz isso há trinta e um anos.',
     '"Agosto, dia vinte e um, curral."',
     '"Agosto, dia vinte e dois, três indivíduos, sentido norte, quatro e vinte."',
     '"Setembro, dia dez, curral."',
     '"Setembro, dia onze, três indivíduos."',
     '"Outubro, dia dois, curral."',
     '"Outubro, dia três, três indivíduos."',
-    'Otávio fecha o caderno.',
+    'Tatsuya fecha o caderno.',
     '"Eles abrem o curral e no dia seguinte fazem o circuito inteiro."',
-    'Nair escreve na prancheta.',
+    'Sumi escreve na prancheta.',
     '"Isso é ensaio e revisão, meu filho. É o que professor faz."'
   ],
   ef:{flag:['juntou_os_dados','entendeu_o_treino'],
-      npc:{nome:'Nair', opiniao:9, memoria:'Cruzou as datas do curral com as passagens dos três e concluiu: ensaio e revisão.'},
+      npc:{nome:'Sumi', opiniao:9, memoria:'Cruzou as datas do curral com as passagens dos três e concluiu: ensaio e revisão.'},
       rep:{eixo:'bom',delta:6,motivo:'Juntou três fontes e deixou quem sabe cruzar'},
       instabilidade:1,
       registrar:'Os três abrem o curral e no dia seguinte refazem o circuito inteiro. É ensaio e revisão.',
@@ -851,7 +851,7 @@ c15_capinzal:{
     {texto:'Seguir a trilha até o fim.', vai:'c15_seguiu_a_trilha'},
     {texto:'Medir e desenhar a pegada de bota.', vai:'c15_desenhou_a_bota'},
     {texto:'Acampar ali e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Voltar pra ciclovia e contar pro Otávio.', vai:'c15_avisou_os_dois'}
+    {texto:'Voltar pra ciclovia e contar pro Tatsuya.', vai:'c15_avisou_os_dois'}
   ]
 },
 
@@ -875,7 +875,7 @@ c15_desenhou_a_bota:{
   escolhas:[
     {texto:'Seguir a trilha até o fim.', vai:'c15_seguiu_a_trilha'},
     {texto:'Acampar ali e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Voltar e perguntar ao Otávio quem usa bota 41.', vai:'c15_quem_senta'},
+    {texto:'Voltar e perguntar ao Tatsuya quem usa bota 41.', vai:'c15_quem_senta'},
     {texto:'Ir até o mirante comparar.', vai:'c15_mirante'}
   ]
 },
@@ -900,7 +900,7 @@ c15_seguiu_a_trilha:{
   escolhas:[
     {texto:'Sentar no quarto lugar.', vai:'c15_sentou_no_quarto'},
     {texto:'Acampar ali e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Voltar e contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'},
+    {texto:'Voltar e contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'},
     {texto:'Subir ao mirante e olhar de cima.', vai:'c15_mirante'}
   ]
 },
@@ -923,7 +923,7 @@ c15_sentou_no_quarto:{
       presagio:'A única coisa que dá pra fazer quando não dá pra fazer nada. Você vai fazer isso de novo.'},
   escolhas:[
     {texto:'Acampar ali e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Voltar e contar pra Nair.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
+    {texto:'Voltar e contar pra Sumi.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
     {texto:'Subir ao mirante.', vai:'c15_mirante'},
     {texto:'Ir embora dessas rotas.', vai:'c15_fim'}
   ]
@@ -934,7 +934,7 @@ c15_sentou_no_quarto:{
 c15_esperou_a_madrugada:{
   texto:[
     'Você espera.',
-    d=>d.flags.conheceu_nair && d.flags.conheceu_otavio ? 'A Nair e o Otávio esperam com você, sentados em cadeirinha de praia dobrável que eles levam há trinta e um anos, com garrafa térmica e a prancheta no colo.\n"Se passarem, eu conto e você olha", ela diz. "Não adianta os dois olharem e ninguém contar."' :
+    d=>d.flags.conheceu_nair && d.flags.conheceu_otavio ? 'A Sumi e o Tatsuya esperam com você, sentados em cadeirinha de praia dobrável que eles levam há trinta e um anos, com garrafa térmica e a prancheta no colo.\n"Se passarem, eu conto e você olha", ela diz. "Não adianta os dois olharem e ninguém contar."' :
        'Sozinho, com o cobertor, encostado numa pedra, sem fogo, porque fogo se vê de longe.',
     'Faz frio. Vento de sudeste. O mar bate embaixo.',
     'Às duas da manhã você já não sente os dedos do pé.',
@@ -950,14 +950,14 @@ c15_esperou_a_madrugada:{
   escolhas:[
     {texto:'Ficar parado onde está.', vai:'c15_ficou'},
     {texto:'Sair do caminho e se esconder.', vai:'c15_escondeu'},
-    {texto:'Acender a lanterna. Como a Nair fez.', vai:'c15_acendeu_a_lanterna'},
+    {texto:'Acender a lanterna. Como a Sumi fez.', vai:'c15_acendeu_a_lanterna'},
     {texto:'Correr.', vai:'c15_correu'}
   ]
 },
 
 c15_acendeu_a_lanterna:{
   texto:[
-    'Você acende a lanterna e aponta pro chão a três metros da sua frente, que é o que a Nair fez, porque apontar na cara é ameaça e apontar no chão é aviso.',
+    'Você acende a lanterna e aponta pro chão a três metros da sua frente, que é o que a Sumi fez, porque apontar na cara é ameaça e apontar no chão é aviso.',
     'Quarenta segundos.',
     'Trinta.',
     'A dez segundos, o som muda: de galope pra galope mais curto, que é como bicho grande desacelera.',
@@ -1034,7 +1034,7 @@ c15_deixou_passar:{
       presagio:'Toda vez você vai concluir que fez certo. E toda vez não vai ajudar.'},
   escolhas:[
     {texto:'Voltar e esperar outra madrugada.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Ir contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'},
+    {texto:'Ir contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'},
     {texto:'Seguir eles pelo rastro.', vai:'c15_seguiu_a_trilha'},
     {texto:'Seguir viagem.', vai:'c15_fim'}
   ]
@@ -1061,7 +1061,7 @@ c15_seguiu:{
     {texto:'Acampar e vigiar junto, a distância.', vai:'c15_vigiou_junto'},
     {texto:'Chegar perto.', vai:'c15_encontro'},
     {texto:'Sentar no quarto lugar.', vai:'c15_sentou_no_quarto'},
-    {texto:'Voltar e contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'}
+    {texto:'Voltar e contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'}
   ]
 },
 
@@ -1088,7 +1088,7 @@ c15_vigiou_junto:{
   escolhas:[
     {texto:'Ficar e vigiar mais uma noite.', vai:'c15_vigiou_junto'},
     {texto:'Chegar perto quando eles voltarem.', vai:'c15_encontro'},
-    {texto:'Ir contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'},
+    {texto:'Ir contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'},
     {texto:'Seguir viagem.', vai:'c15_fim'}
   ]
 },
@@ -1258,7 +1258,7 @@ c15_ja_fui_la:{
     {texto:'Ver eles irem.', vai:'c15_foram_embora'},
     {texto:'"Eu vou lá de novo. Se vocês quiserem."', vai:'c15_prometeu_caes'},
     {texto:'Ficar sentado no asfalto um tempo.', vai:'c15_foram_embora'},
-    {texto:'Ir contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'}
+    {texto:'Ir contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'}
   ]
 },
 
@@ -1319,7 +1319,7 @@ c15_falou:{
     'Eles não entendem palavra.',
     'Mas entenderam que você falou, e entenderam que você falou olhando pro sul, porque direção do olhar é uma língua que todo bicho fala.',
     'Suicune anda até você — até muito perto, até você sentir o hálito frio — e depois vira e olha pro sul também.',
-    'Vocês dois ficam ali, lado a lado, olhando a mesma ilha, por um tempo que você não consegue medir e que o Otávio, se estivesse aqui, mediria.'
+    'Vocês dois ficam ali, lado a lado, olhando a mesma ilha, por um tempo que você não consegue medir e que o Tatsuya, se estivesse aqui, mediria.'
   ],
   ef:{flag:['falou_com_os_caes','caes_vigiam_cinnabar'],
       executar:d=>{ GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo'; }); return []; },
@@ -1375,7 +1375,7 @@ c15_prometeu_caes:{
       presagio:'Eles estão conferindo. Isso é uma dívida com prazo e sem número.'},
   escolhas:[
     {texto:'Começar a andar.', vai:'c15_fim'},
-    {texto:'Ir contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'},
+    {texto:'Ir contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'},
     {texto:'Voltar ao mirante primeiro.', vai:'c15_mirante'},
     {texto:'Ir direto pro porto de Fuchsia.', vai:'c15_fim'}
   ]
@@ -1425,7 +1425,7 @@ c15_fugiu_dos_caes:{
   escolhas:[
     {texto:'Voltar.', vai:'c15_encontro'},
     {texto:'Continuar fugindo.', vai:'c15_fim'},
-    {texto:'Ir contar pro Otávio.', vai:'c15_avisou_os_dois'},
+    {texto:'Ir contar pro Tatsuya.', vai:'c15_avisou_os_dois'},
     {texto:'Acampar e tentar outra noite.', vai:'c15_esperou_a_madrugada'}
   ]
 },
@@ -1536,7 +1536,7 @@ c15_foram_embora:{
   ef:{flag:'caes_foram_embora', moral:5},
   escolhas:[
     {texto:'Seguir.', vai:'c15_fim'},
-    {texto:'Ir contar pro Otávio e pra Nair.', vai:'c15_avisou_os_dois'},
+    {texto:'Ir contar pro Tatsuya e pra Sumi.', vai:'c15_avisou_os_dois'},
     {texto:'Seguir eles pelo rastro.', vai:'c15_seguiu_a_trilha'},
     {texto:'Voltar amanhã à noite.', vai:'c15_esperou_a_madrugada'}
   ]

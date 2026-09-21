@@ -617,7 +617,7 @@ c11_terceirizado:{
     '"O subsolo quatro a gente não limpa."'
   ],
   ef:{flag:['achou_as_terceirizadas','sabe_do_cracha_verde'],
-      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:1, memoria:'Faxineira terceirizada da Silph; te disse que o subsolo 4 não é limpo por elas.'},
+      npc:{nome:'Sra. Kubo (Limptotal)', opiniao:1, memoria:'Faxineira terceirizada da Silph; te disse que o subsolo 4 não é limpo por elas.'},
       rep:{eixo:'bom',delta:3,motivo:'Procurou quem tem acesso em vez de quem tem cargo'},
       registrar:'As terceirizadas da limpeza têm crachá verde que abre tudo — menos o subsolo 4.',
       presagio:'O crachá verde abre tudo. E o subsolo 4 é o único lugar que elas não limpam.'},
@@ -645,7 +645,7 @@ c11_quem_limpa:{
   ef:{flag:['sabe_do_saco_branco','sabe_do_residuo'],
       moral:-8,
       rep:{eixo:'bom',delta:2,motivo:'Continuou perguntando pra quem sabia'},
-      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:4, memoria:'Te explicou o que é saco branco de resíduo infectante e o que ele quer dizer.'},
+      npc:{nome:'Sra. Kubo (Limptotal)', opiniao:4, memoria:'Te explicou o que é saco branco de resíduo infectante e o que ele quer dizer.'},
       registrar:'No subsolo 4 os próprios cientistas limpam, com desinfetante de hospital e saco de resíduo infectante.',
       presagio:'Resíduo infectante, toda sexta de manhã. Alguma coisa produz resíduo lá embaixo, semanalmente.'},
   escolhas:[
@@ -703,9 +703,9 @@ c11_cida_topou:{
   ],
   ef:{flag:['tem_cracha_verde','dentro_da_silph'],
       itens:{'Crachá verde (Limptotal)':1},
-      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
+      npc:{nome:'Sra. Kubo (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém arriscou a aposentadoria por você'},
-      registrar:'Sra. Lemos te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
+      registrar:'Sra. Kubo te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
       presagio:'"De alguém abrindo por dentro." Anota — essa é a solução do capítulo.'},
   escolhas:[
     {texto:'Entrar pela recepção com o crachá verde.', vai:'c11_recepcao'},
@@ -725,7 +725,7 @@ c11_cida_meio:{
     'Ela vai embora sem olhar pra trás, e no fim da rua levanta a mão, sem virar, como quem se despede de alguém que não está olhando.'
   ],
   ef:{flag:['sabe_da_porta_encostada','dentro_da_silph'],
-      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:3, memoria:'Não emprestou o crachá, mas te contou da porta de serviço encostada na sexta de manhã.'},
+      npc:{nome:'Sra. Kubo (Limptotal)', opiniao:3, memoria:'Não emprestou o crachá, mas te contou da porta de serviço encostada na sexta de manhã.'},
       registrar:'A porta de serviço da Silph fica encostada das 6h10 às 6h50 nas sextas.',
       presagio:'Ela não falou nada. E levantou a mão sem virar.'},
   escolhas:[
@@ -744,7 +744,7 @@ c11_cida_nao:{
     'E vai embora, e você fica na esquina às seis e vinte da manhã com absolutamente nenhum direito de achar isso injusto.'
   ],
   ef:{flag:'cida_recusou',
-      npc:{nome:'Sra. Lemos (Limptotal)', opiniao:0, memoria:'Recusou emprestar o crachá. Faltavam quatorze meses para a aposentadoria dela.'},
+      npc:{nome:'Sra. Kubo (Limptotal)', opiniao:0, memoria:'Recusou emprestar o crachá. Faltavam quatorze meses para a aposentadoria dela.'},
       presagio:'Ela criou três filhos com aquele crachá. Você ia trocar isso por uma noite.'},
   escolhas:[
     {texto:'Ir pra doca de carga.', vai:'c11_doca'},
@@ -820,7 +820,7 @@ c11_cracha_azul:{
     '"Fica embaixo do subsolo. Chamaram de 11 porque era o próximo número disponível na planilha de centro de custo."'
   ],
   ef:{flag:['sabe_onde_e_o_11','sabe_do_andar_11'],
-      npc:{nome:'Marina (crachá azul)', opiniao:2, memoria:'Te contou onde fica o andar 11 e pediu para nunca ter acontecido.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:2, memoria:'Te contou onde fica o andar 11 e pediu para nunca ter acontecido.'},
       rep:{eixo:'bom',delta:1,motivo:'Alguém decidiu falar com você'},
       registrar:'O "andar 11" da Silph fica abaixo do subsolo. O nome vem de um número de centro de custo.',
       presagio:'O nome mais assustador de Kanto é um número de planilha. É sempre assim.'},
@@ -848,7 +848,7 @@ c11_o_que_ela_assina:{
   ef:{flag:['sabe_dos_setecentos','sabe_dos_dittos'],
       moral:-12, instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Fez a conta junto com quem assinava'},
-      npc:{nome:'Marina (crachá azul)', opiniao:4, memoria:'Dividiu com você a conta que ela refazia toda noite: 728.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:4, memoria:'Dividiu com você a conta que ela refazia toda noite: 728.'},
       registrar:'728 Dittos entraram na Silph em dois anos. Nenhum registro de saída.',
       presagio:'Setecentos e vinte e oito. E no andar onze tem doze tanques.'},
   escolhas:[
@@ -874,9 +874,9 @@ c11_fotos_do_sistema:{
   ],
   ef:{flag:['tem_as_planilhas','provas_do_11'],
       itens:{'Planilhas do nono andar':1},
-      npc:{nome:'Marina (crachá azul)', opiniao:8, memoria:'Imprimiu dezenove folhas com a marca d’água da matrícula dela e te entregou na rua.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:8, memoria:'Imprimiu dezenove folhas com a marca d’água da matrícula dela e te entregou na rua.'},
       rep:{eixo:'bom',delta:4,motivo:'Alguém pôs o próprio nome em dezenove folhas por você'},
-      registrar:'Recebeu dezenove folhas do sistema da Silph, com a matrícula da Marina em cada uma.',
+      registrar:'Recebeu dezenove folhas do sistema da Silph, com a matrícula da Hitomi em cada uma.',
       presagio:'A matrícula dela em cada página. Isso não é prova contra a Silph — é prova contra ela.'},
   escolhas:[
     {texto:'"Me leva até a porta."', vai:'c11_marina_leva'},
@@ -905,10 +905,10 @@ c11_devolveu_as_folhas:{
   ],
   ef:{flag:['protegeu_marina','marina_aliada'],
       perdeItens:{'Planilhas do nono andar':1},
-      npc:{nome:'Marina (crachá azul)', opiniao:10, memoria:'Você devolveu as folhas para não queimá-la. Ela topou fazer de novo, do jeito certo.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:10, memoria:'Você devolveu as folhas para não queimá-la. Ela topou fazer de novo, do jeito certo.'},
       rep:{eixo:'bom',delta:5,motivo:'Devolveu a prova para proteger quem te deu'},
       moral:15,
-      registrar:'Devolveu as planilhas para não incriminar a Marina. Ela continua disposta.',
+      registrar:'Devolveu as planilhas para não incriminar a Hitomi. Ela continua disposta.',
       presagio:'"Me arruma um jeito que preste." Ela vai cumprir. Você é que vai ter que arrumar.'},
   escolhas:[
     {texto:'"Me leva até a porta."', vai:'c11_marina_leva'},
@@ -936,7 +936,7 @@ c11_requisicao:{
   ],
   ef:{flag:['tem_credencial_de_verificacao','dentro_da_silph'],
       itens:{'Crachá de verificação física':1},
-      npc:{nome:'Marina (crachá azul)', opiniao:9, memoria:'Te credenciou como técnico auxiliar de verificação física de lote.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:9, memoria:'Te credenciou como técnico auxiliar de verificação física de lote.'},
       rep:{eixo:'bom',delta:4,motivo:'Entrou pelo mesmo buraco que fazia o sistema funcionar'},
       registrar:'Foi credenciado no sistema da Silph como técnico auxiliar de verificação física de lote.',
       presagio:'É o mesmo buraco. Só que agora ele é nosso. Frase perigosa e correta.'},
@@ -961,9 +961,9 @@ c11_protegeu_marina:{
   ],
   ef:{flag:['protegeu_marina','marina_aliada','sabe_onde_e_o_11'],
       itens:{'Envelope sem remetente':1},
-      npc:{nome:'Marina (crachá azul)', opiniao:6, memoria:'Você mandou ela sumir antes de ela se queimar. Ela deixou um envelope na sua mochila.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:6, memoria:'Você mandou ela sumir antes de ela se queimar. Ela deixou um envelope na sua mochila.'},
       rep:{eixo:'bom',delta:3,motivo:'Protegeu a fonte antes de usar a fonte'},
-      registrar:'Marina sumiu da fila do almoço e deixou um envelope na sua mochila.',
+      registrar:'Hitomi sumiu da fila do almoço e deixou um envelope na sua mochila.',
       presagio:'Você não sabe quando o envelope entrou ali. Pensa nisso.'},
   escolhas:[
     {texto:'Abrir o envelope.', vai:'c11_envelope'},
@@ -987,7 +987,7 @@ c11_envelope:{
       itens:{'Crachá de visitante (gravado)':1},
       moral:-5,
       rep:{eixo:'bom',delta:2,motivo:'Recebeu ajuda de quem não devia nada'},
-      registrar:'Marina deixou um crachá gravado e o aviso: a porta de baixo fica aberta 11 segundos.',
+      registrar:'Hitomi deixou um crachá gravado e o aviso: a porta de baixo fica aberta 11 segundos.',
       presagio:'Onze segundos. Conta. Ela mediu isso pra você.'},
   escolhas:[
     {texto:'Ir pra recepção com o crachá.', vai:'c11_recepcao'},
@@ -1019,9 +1019,9 @@ c11_marina_topa:{
     '"Desce até acabar. Quando a placa parar de ter número, você chegou."'
   ],
   ef:{flag:['entrou_com_marina','dentro_da_silph'],
-      npc:{nome:'Marina (crachá azul)', opiniao:5, memoria:'Usou a própria matrícula para te passar pela catraca da Silph.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:5, memoria:'Usou a própria matrícula para te passar pela catraca da Silph.'},
       rep:{eixo:'bom',delta:2,motivo:'Convenceu alguém a arriscar o emprego pelo certo'},
-      registrar:'Marina te passou pela catraca com a matrícula dela.',
+      registrar:'Hitomi te passou pela catraca com a matrícula dela.',
       presagio:'Existe um log com o número dela. Ele vai existir pra sempre.'},
   escolhas:[
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
@@ -1042,8 +1042,8 @@ c11_marina_meio:{
   ],
   ef:{flag:['cracha_roubado','dentro_da_silph'],
       itens:{'Crachá azul reserva':1},
-      npc:{nome:'Marina (crachá azul)', opiniao:3, memoria:'Deixou o crachá reserva num casaco para você, sem admitir.'},
-      registrar:'Ficou com o crachá azul reserva da Marina.'},
+      npc:{nome:'Hitomi (crachá azul)', opiniao:3, memoria:'Deixou o crachá reserva num casaco para você, sem admitir.'},
+      registrar:'Ficou com o crachá azul reserva da Hitomi.'},
   escolhas:[
     {texto:'Entrar pela recepção.', vai:'c11_recepcao'},
     {texto:'Entrar pela porta de serviço.', vai:'c11_porta_de_servico'},
@@ -1078,12 +1078,12 @@ c11_recepcao:{
     'Atrás do balcão, uma parede inteira com o logotipo em aço escovado. Na frente do balcão, duas poltronas onde ninguém senta porque ninguém espera — quem vem aqui tem hora marcada.',
     'Dois seguranças. Um na porta giratória, um no fundo, perto do elevador.',
     d=>{
-      if (d.flags.entrou_com_marina) return 'Marina já te passou. Você está do lado de dentro, com um crachá de visitante e uns quinze minutos de plausibilidade antes de alguém perguntar com quem você tem reunião.';
+      if (d.flags.entrou_com_marina) return 'Hitomi já te passou. Você está do lado de dentro, com um crachá de visitante e uns quinze minutos de plausibilidade antes de alguém perguntar com quem você tem reunião.';
       if (d.flags.tem_credencial_de_verificacao) return 'Você tem uma credencial de técnico auxiliar de verificação física de lote, emitida pelo nono andar, válida, no sistema. A catraca abre sem hesitar e o segurança do fundo nem levanta a cabeça.';
       if (d.flags.tem_cracha_visitante) return 'O crachá que veio no envelope tem o chip gravado e a catraca não sabe a diferença entre um crachá gravado por um funcionário e um crachá gravado pela recepção.';
-      if (d.flags.tem_cracha_verde) return 'O crachá verde da Sra. Lemos abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
+      if (d.flags.tem_cracha_verde) return 'O crachá verde da Sra. Kubo abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
       if (d.flags.crachas_sabrina) return 'O crachá do zelador é vencido faz três anos, mas a catraca da Silph lê o chip, não a data. Ela abre.';
-      if (d.flags.cracha_roubado) return 'O crachá reserva da Marina abre a catraca no primeiro toque.';
+      if (d.flags.cracha_roubado) return 'O crachá reserva da Hitomi abre a catraca no primeiro toque.';
       return 'Você não tem crachá. A recepcionista sorri com o sorriso cronometrado e pergunta com quem você tem hora marcada.';
     }
   ],
@@ -1197,7 +1197,7 @@ c11_expulso:{
 c11_porta_de_servico:{
   texto:[
     'Sexta-feira, seis e dez da manhã.',
-    'A porta de serviço está encostada, do jeito que a Sra. Lemos disse, calçada com um pedaço de papelão dobrado porque o trinco é duro e ninguém quer ficar destrancando.',
+    'A porta de serviço está encostada, do jeito que a Sra. Kubo disse, calçada com um pedaço de papelão dobrado porque o trinco é duro e ninguém quer ficar destrancando.',
     'Do lado de dentro é um corredor de piso sem acabamento, com carrinho de limpeza encostado, cheiro de desinfetante de pinho, e uma escala de turno colada na parede com fita crepe.',
     'Ninguém olha pra você. Ninguém olha pra ninguém às seis e dez da manhã.',
     'Você atravessa o corredor inteiro e sai numa área de serviço com três portas: elevador de carga, escada de incêndio e uma porta com placa de **CENTRAL TÉCNICA**.'
@@ -1322,7 +1322,7 @@ c11_seguiu_a_cientista:{
   ef:{flag:['chegou_no_11','sabe_dos_onze_segundos'],
       rep:{eixo:'bom',delta:3,motivo:'Seguiu quem tinha o polegar certo'},
       registrar:'A porta do andar 11 abre com biometria e fica aberta onze segundos.',
-      presagio:'Onze segundos. Se a Marina te avisou, você já sabia. Se não, você acabou de aprender.'},
+      presagio:'Onze segundos. Se a Hitomi te avisou, você já sabia. Se não, você acabou de aprender.'},
   escolhas:[
     {texto:'Entrar nos onze segundos.', vai:'c11_onze'},
     {texto:'Esperar ela sair e entrar depois.', vai:'c11_esperou_11'},
@@ -1363,7 +1363,7 @@ c11_saiu_com_a_foto:{
       registrar:'Saiu da Silph só com a foto do controlador.',
       presagio:'Não parece vitória. Quase nada do que funciona parece.'},
   escolhas:[
-    {texto:'Levar à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
     {texto:'Voltar e descer assim mesmo.', vai:'c11_escada'}
@@ -1467,7 +1467,7 @@ c11_esperou_garagem:{
     '"Quantas páginas você leu?"'
   ],
   ef:{flag:'encontrou_a_cientista',
-      npc:{nome:'Dra. Reis', opiniao:0, memoria:'Te achou na garagem, do lado do carro dela, com o porta-malas aberto.'},
+      npc:{nome:'Dra. Sonoda', opiniao:0, memoria:'Te achou na garagem, do lado do carro dela, com o porta-malas aberto.'},
       presagio:'"Quantas páginas você leu?" Não é ameaça. É triagem.'},
   escolhas:[
     {texto:'"Trinta e uma."', vai:'c11_dra_reis'},
@@ -1490,9 +1490,9 @@ c11_mentiu_pra_reis:{
     'E vai embora.'
   ],
   ef:{flag:['sabe_dos_nove_dias','reis_te_contou'],
-      npc:{nome:'Dra. Reis', opiniao:2, memoria:'Você mentiu que não tinha lido e ela te contou a data mesmo assim.'},
+      npc:{nome:'Dra. Sonoda', opiniao:2, memoria:'Você mentiu que não tinha lido e ela te contou a data mesmo assim.'},
       rep:{eixo:'bom',delta:1,motivo:'Recebeu a data de quem tinha todo motivo para esconder'},
-      registrar:'A Dra. Reis te deu a data do encerramento: dia 19.',
+      registrar:'A Dra. Sonoda te deu a data do encerramento: dia 19.',
       presagio:'Ela te contou. Pensa muito bem no porquê.'},
   escolhas:[
     {texto:'Descer pela porta corta-fogo.', vai:'c11_escada'},
@@ -1504,7 +1504,7 @@ c11_mentiu_pra_reis:{
 
 c11_dra_reis:{
   texto:[
-    'Ela se apresenta como Reis, sem primeiro nome, do jeito que gente de laboratório se apresenta.',
+    'Ela se apresenta como Sonoda, sem primeiro nome, do jeito que gente de laboratório se apresenta.',
     'E faz uma coisa que desmonta completamente o que você esperava de um vilão de empresa: ela senta no capô do próprio carro e conversa com você por quarenta minutos.',
     '"Eu entrei nesse projeto em noventa e quatro. Eu tinha vinte e nove anos e achei que era a maior sorte da minha vida."',
     '"O material veio do arquivo morto de Cinnabar. Amostra congelada, degradada, de um projeto que já tinha dado certo uma vez."',
@@ -1516,10 +1516,10 @@ c11_dra_reis:{
     '"Que era perigoso deixar conversar."'
   ],
   ef:{flag:['conheceu_a_reis','sabe_de_cinnabar','sabe_dos_241'],
-      npc:{nome:'Dra. Reis', opiniao:3, memoria:'Te contou na garagem que o projeto veio de Cinnabar e qual foi a lição que a empresa tirou.'},
+      npc:{nome:'Dra. Sonoda', opiniao:3, memoria:'Te contou na garagem que o projeto veio de Cinnabar e qual foi a lição que a empresa tirou.'},
       rep:{eixo:'bom',delta:3,motivo:'Conversou com quem podia ter chamado a segurança'},
       moral:-10,
-      registrar:'A Dra. Reis: a empresa aprendeu que o perigo era deixar conversar.',
+      registrar:'A Dra. Sonoda: a empresa aprendeu que o perigo era deixar conversar.',
       presagio:'Duzentos e quarenta e um dias. Guarde o número; ele está escrito no quadro lá embaixo.'},
   escolhas:[
     {texto:'"Me deixa descer."', vai:'c11_reis_deixa'},
@@ -1541,7 +1541,7 @@ c11_porque_continua:{
     '"E eu assino o encerramento."'
   ],
   ef:{flag:'reis_e_a_parte_boa',
-      npc:{nome:'Dra. Reis', opiniao:4, memoria:'Admitiu que é a melhor pessoa do andar 11 e que é ela quem assina o encerramento.'},
+      npc:{nome:'Dra. Sonoda', opiniao:4, memoria:'Admitiu que é a melhor pessoa do andar 11 e que é ela quem assina o encerramento.'},
       moral:-10,
       registrar:'"Eu sou a parte boa. E eu assino o encerramento."',
       presagio:'A melhor pessoa do andar. Guarde — isso vai definir o que você pede a ela.'},
@@ -1570,7 +1570,7 @@ c11_dia_dezenove:{
   ef:{flag:['sabe_como_e_o_encerramento','reis_deu_nome'],
       moral:-18, instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Ouviu inteiro em vez de interromper'},
-      registrar:'A Dra. Reis esteve em 29 descontinuidades e deu nome a todos, sem escrever em lugar nenhum.',
+      registrar:'A Dra. Sonoda esteve em 29 descontinuidades e deu nome a todos, sem escrever em lugar nenhum.',
       presagio:'Ela deu nome aos vinte e nove. E não escreveu em lugar nenhum.'},
   escolhas:[
     {texto:'"Escreve os nomes. Eu levo."', vai:'c11_escreve_os_nomes'},
@@ -1595,10 +1595,10 @@ c11_escreve_os_nomes:{
   ],
   ef:{flag:['tem_os_nomes','reis_aliada'],
       itens:{'Lista de vinte e nove nomes':1},
-      npc:{nome:'Dra. Reis', opiniao:8, memoria:'Escreveu no seu caderno, no capô do carro, os vinte e nove nomes que ela deu e nunca registrou.'},
+      npc:{nome:'Dra. Sonoda', opiniao:8, memoria:'Escreveu no seu caderno, no capô do carro, os vinte e nove nomes que ela deu e nunca registrou.'},
       rep:{eixo:'bom',delta:5,motivo:'Fez vinte e nove existirem em algum lugar'},
       moral:15,
-      registrar:'A Dra. Reis escreveu no seu caderno os 29 nomes que ela deu.',
+      registrar:'A Dra. Sonoda escreveu no seu caderno os 29 nomes que ela deu.',
       presagio:'"Agora existe." Você não salvou ninguém e mudou tudo.'},
   escolhas:[
     {texto:'"Me deixa descer."', vai:'c11_reis_deixa'},
@@ -1625,10 +1625,10 @@ c11_reis_ja_perguntou:{
     '"Eu escrevi isso três vezes e apaguei três vezes e nunca perguntei nada."'
   ],
   ef:{flag:['sabe_do_rabisco','reis_quebrada'],
-      npc:{nome:'Dra. Reis', opiniao:6, memoria:'Percebeu, falando com você, que escreveu o rabisco três vezes e nunca perguntou nada.'},
+      npc:{nome:'Dra. Sonoda', opiniao:6, memoria:'Percebeu, falando com você, que escreveu o rabisco três vezes e nunca perguntou nada.'},
       rep:{eixo:'bom',delta:4,motivo:'Fez a pergunta que desmontou uma pessoa inteira'},
       moral:-8,
-      registrar:'O rabisco do quadro do andar 11 foi escrito e apagado três vezes pela própria Dra. Reis.',
+      registrar:'O rabisco do quadro do andar 11 foi escrito e apagado três vezes pela própria Dra. Sonoda.',
       presagio:'Ela escreveu e apagou três vezes. Alguma parte dela sabia.'},
   escolhas:[
     {texto:'"Então desce comigo e pergunta."', vai:'c11_reis_desce'},
@@ -1657,10 +1657,10 @@ c11_nao_assina:{
     '"Você me deu uma ideia horrível e ela é a primeira ideia que eu tenho em nove anos."'
   ],
   ef:{flag:['reis_nao_assina','reis_aliada'],
-      npc:{nome:'Dra. Reis', opiniao:9, memoria:'Decidiu não assinar o encerramento e se fazer demitir no meio, para gerar ata.'},
+      npc:{nome:'Dra. Sonoda', opiniao:9, memoria:'Decidiu não assinar o encerramento e se fazer demitir no meio, para gerar ata.'},
       rep:{eixo:'bom',delta:5,motivo:'Convenceu a única pessoa boa daquele andar a parar de assinar'},
       moral:15, instabilidade:1,
-      registrar:'A Dra. Reis vai se recusar a assinar no dia 19 para forçar uma ata.',
+      registrar:'A Dra. Sonoda vai se recusar a assinar no dia 19 para forçar uma ata.',
       presagio:'Ata é documento. Nove anos e a saída era administrativa.'},
   escolhas:[
     {texto:'"Me deixa descer agora."', vai:'c11_reis_deixa'},
@@ -1683,9 +1683,9 @@ c11_reis_deixa:{
     '"Eu penso nisso desde noventa e sete." Ela fecha o porta-malas. "Vamos."'
   ],
   ef:{flag:['reis_te_leva','chegou_no_11'],
-      npc:{nome:'Dra. Reis', opiniao:7, memoria:'Encostou o próprio polegar na biometria para você descer, sabendo que ia ter que explicar.'},
+      npc:{nome:'Dra. Sonoda', opiniao:7, memoria:'Encostou o próprio polegar na biometria para você descer, sabendo que ia ter que explicar.'},
       rep:{eixo:'bom',delta:4,motivo:'Alguém de dentro abriu a porta por dentro'},
-      registrar:'A Dra. Reis abriu a porta do andar 11 com a biometria dela.',
+      registrar:'A Dra. Sonoda abriu a porta do andar 11 com a biometria dela.',
       presagio:'"Eu penso nisso desde noventa e sete." Ela esperava alguém aparecer.'},
   escolhas:[{texto:'Entrar nos onze segundos.', vai:'c11_onze'}]
 },
@@ -1704,10 +1704,10 @@ c11_reis_desce:{
     '"Vem."'
   ],
   ef:{flag:['reis_desce_com_voce','chegou_no_11','reis_aliada'],
-      npc:{nome:'Dra. Reis', opiniao:10, memoria:'Desceu ao andar 11 com você para fazer a pergunta que evitou por nove anos.'},
+      npc:{nome:'Dra. Sonoda', opiniao:10, memoria:'Desceu ao andar 11 com você para fazer a pergunta que evitou por nove anos.'},
       rep:{eixo:'bom',delta:6,motivo:'Levou junto a pessoa que precisava estar lá'},
       moral:15,
-      registrar:'A Dra. Reis desceu ao andar 11 com você.',
+      registrar:'A Dra. Sonoda desceu ao andar 11 com você.',
       presagio:'"E se a resposta for que eles querem viver?" Ela fez a pergunta antes de descer.'},
   escolhas:[{texto:'Descer com ela.', vai:'c11_onze'}]
 },
@@ -1761,7 +1761,7 @@ c11_seguiu_o_caminhao:{
     {texto:'Levar uma caixa vazia como prova.', vai:'c11_levou_a_caixa'},
     {texto:'Voltar e entrar pela doca.', vai:'c11_doca'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_ginasio'},
-    {texto:'Levar isso à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Levar isso à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1779,7 +1779,7 @@ c11_levou_a_caixa:{
       registrar:'Levou uma caixa vazia carimbada do Instituto de Cinnabar.',
       presagio:'Alguém segurou a porta. Guarde essa piada; você vai precisar dela mais tarde.'},
   escolhas:[
-    {texto:'Levar à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
     {texto:'Voltar e descer no prédio assim mesmo.', vai:'c11_escada'}
@@ -1833,7 +1833,7 @@ c11_fotografou_a_caixa:{
       presagio:'As seis fotos vão durar mais do que os sete. Você fez a conta e ela está certa.'},
   escolhas:[
     {texto:'Entrar junto com a caixa mesmo assim.', vai:'c11_com_a_caixa'},
-    {texto:'Levar à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Descer pela escada.', vai:'c11_escada'}
   ]
@@ -1924,7 +1924,7 @@ c11_roubou_caixa_silph:{
   escolhas:[
     {texto:'Voltar ao prédio mesmo assim.', vai:'c11_escada'},
     {texto:'Ir embora de Saffron com os sete.', vai:'c11_fim'},
-    {texto:'Levar a caixa à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar a caixa à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou}
   ]
 },
@@ -2096,7 +2096,7 @@ c11_nono_andar:{
   escolhas:[
     {texto:'Pegar a requisição de cima.', vai:'c11_pegou_requisicao'},
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
-    {texto:'Procurar a Marina na baia dela.', vai:'c11_cracha_azul'},
+    {texto:'Procurar a Hitomi na baia dela.', vai:'c11_cracha_azul'},
     {texto:'Sair. Isso aqui não é o que você veio ver.', vai:'c11_escada'}
   ]
 },
@@ -2162,7 +2162,7 @@ c11_bateu_na_porta:{
     'E depois: "Entra logo, que aqui não pode ficar aberto."'
   ],
   ef:{flag:['bateu_na_porta_do_11','conheceu_a_reis'],
-      npc:{nome:'Dra. Reis', opiniao:1, memoria:'Abriu a porta do andar 11 porque você bateu. Disse "ah" e mandou entrar.'},
+      npc:{nome:'Dra. Sonoda', opiniao:1, memoria:'Abriu a porta do andar 11 porque você bateu. Disse "ah" e mandou entrar.'},
       rep:{eixo:'bom',delta:3,motivo:'Bateu na porta em vez de arrombar'},
       registrar:'Bateu na porta do andar 11 e alguém abriu.',
       presagio:'"Ah." Como quem esperava. Como quem esperava faz anos.'},
@@ -2237,8 +2237,8 @@ c11_onze:{
     'Na parede do fundo tem um quadro branco de três metros, com anotação em caneta preta de várias letras diferentes e várias épocas.',
     'A frase mais nova, no canto direito, está em letra grande e quase raivosa:',
     '"O original respondeu. Nenhuma cópia responde. Conclusão provisória: não é o material. É o tempo de fala."',
-    d=>d.flags.reis_desce_com_voce ? 'A Dra. Reis entra atrás de você e para na porta, e não passa do tapete de descontaminação, e você entende que ela nunca fica aqui de pé sem ter o que fazer.' :
-       d.flags.bateu_na_porta_do_11 ? 'A Dra. Reis fecha a porta atrás de vocês dois e vai encostar na pia, de braços cruzados, e te deixa olhar.' : ''
+    d=>d.flags.reis_desce_com_voce ? 'A Dra. Sonoda entra atrás de você e para na porta, e não passa do tapete de descontaminação, e você entende que ela nunca fica aqui de pé sem ter o que fazer.' :
+       d.flags.bateu_na_porta_do_11 ? 'A Dra. Sonoda fecha a porta atrás de vocês dois e vai encostar na pia, de braços cruzados, e te deixa olhar.' : ''
   ],
   ef:{flag:['viu_os_doze','entendeu_o_projeto'], instabilidade:2, moral:-15,
       registrar:'Viu os doze tanques do andar 11 da Silph. Onze ocupados, um vago marcado como MATRIZ.',
@@ -2292,7 +2292,7 @@ c11_perguntou:{
     'Onze pressões. Uma depois da outra, em ordem, do primeiro tanque ao décimo primeiro, com um intervalo igual entre elas, como quem confere presença.',
     d=>d.flags.ancora_mental ? 'E aí alguma coisa começa a puxar você pra dentro daquilo, e você lembra — de um jeito absurdo e nítido e completamente inútil — do cheiro da cozinha da sua casa numa manhã de capítulo um. A âncora da Sabrina. Você volta.' :
        'E aí alguma coisa começa a puxar você pra dentro daquilo e você não tem absolutamente nada pra se segurar.',
-    d=>d.flags.reis_desce_com_voce ? 'A Dra. Reis está com as duas mãos na boca e não está respirando direito, e ela trabalha aqui há nove anos e é a primeira vez que ela vê isso, porque é a primeira vez que alguém perguntou.' : ''
+    d=>d.flags.reis_desce_com_voce ? 'A Dra. Sonoda está com as duas mãos na boca e não está respirando direito, e ela trabalha aqui há nove anos e é a primeira vez que ela vê isso, porque é a primeira vez que alguém perguntou.' : ''
   ],
   ef:{flag:'falou_com_os_doze',
       executar:d=>{
@@ -2349,7 +2349,7 @@ c11_abriu_os_seis:{
     'Um fica de pé.',
     'E aí você olha pros cinco tanques que continuam cheios, e os cinco continuam mandando a mesma coisa pesada e longa, e você entendeu ela da primeira vez e continua entendendo, e não vai fazer nada a respeito.',
     'Você fez a coisa certa e ela não parece nem um pouco.',
-    d=>d.flags.reis_desce_com_voce ? 'A Dra. Reis está ajoelhada do lado de um dos dois que não conseguem levantar, com a mão nas costas dele, e não está fazendo nada de médico. Está só com a mão nas costas dele.' : ''
+    d=>d.flags.reis_desce_com_voce ? 'A Dra. Sonoda está ajoelhada do lado de um dos dois que não conseguem levantar, com a mão nas costas dele, e não está fazendo nada de médico. Está só com a mão nas costas dele.' : ''
   ],
   ef:{flag:['abriu_os_seis','abriu_os_tanques'], instabilidade:2, moral:-10,
       rep:{eixo:'bom',delta:4,motivo:'Abriu só os tanques de quem pediu'},
@@ -2368,7 +2368,7 @@ c11_tirou_os_seis:{
     'Você fica.',
     'Leva duas horas e quarenta minutos e é a coisa mais difícil que você já fez fisicamente.',
     'Quatro lances de escada, seis vezes, com um corpo de mais ou menos o seu tamanho e o seu peso, molhado, que não sabe ajudar porque nunca usou o próprio corpo.',
-    d=>d.flags.reis_desce_com_voce ? 'A Dra. Reis carrega três. Ela tem cinquenta e um anos e carrega três, e na terceira ela senta no degrau e chora com raiva de estar chorando, e depois levanta e faz mais uma.' :
+    d=>d.flags.reis_desce_com_voce ? 'A Dra. Sonoda carrega três. Ela tem cinquenta e um anos e carrega três, e na terceira ela senta no degrau e chora com raiva de estar chorando, e depois levanta e faz mais uma.' :
        'Você faz as seis viagens sozinho e na quarta você já não sente o braço esquerdo.',
     'Na garagem, no nível 3, entre dois carros, você senta no chão com seis criaturas que nunca viram uma parede que não fosse branca.',
     'E a mais adiantada delas — a que ficou de pé no tanque — olha o teto de concreto da garagem por muito tempo e depois olha pra você e faz a primeira coisa que ela faz por vontade própria na vida:',
@@ -2385,7 +2385,7 @@ c11_tirou_os_seis:{
   escolhas:[
     {texto:'Sumir de Saffron com eles.', vai:'c11_fim'},
     {texto:'Levar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Chamar a Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Chamar a Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar pelos cinco que ficaram.', vai:'c11_voltou_pelos_cinco'}
   ]
 },
@@ -2401,7 +2401,7 @@ c11_voltou_pelos_cinco:{
     'É uma coisa lisa e cansada que qualquer pessoa que já teve uma noite muito ruim reconhece na hora.',
     'Você fica ali uns quinze minutos.',
     'Depois você faz a única coisa que resta, que é falar em voz alta os nomes deles, um por um, se você tiver os nomes.',
-    d=>d.flags.tem_os_nomes ? 'Você tem. A Dra. Reis escreveu vinte e nove no seu caderno em cima do capô de um carro, e cinco deles estão nesses tanques, e você lê os cinco em voz alta numa sala de oito graus.' :
+    d=>d.flags.tem_os_nomes ? 'Você tem. A Dra. Sonoda escreveu vinte e nove no seu caderno em cima do capô de um carro, e cinco deles estão nesses tanques, e você lê os cinco em voz alta numa sala de oito graus.' :
        'Você não tem nenhum nome. Então você fala "eu ouvi vocês", cinco vezes, uma pra cada tanque, e é péssimo e é tudo.'
   ],
   ef:{flag:['voltou_pelos_cinco','divida_com_os_doze'],
@@ -2412,7 +2412,7 @@ c11_voltou_pelos_cinco:{
   escolhas:[
     {texto:'Sair. Levar os seis pra longe.', vai:'c11_fim'},
     {texto:'Fotografar os cinco antes de sair.', vai:'c11_fotografou_11'},
-    {texto:'Levar tudo à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou}
   ]
 },
@@ -2485,7 +2485,7 @@ c11_levou_copia:{
     {texto:'Sumir de Saffron.', vai:'c11_fim'},
     {texto:'Levar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Voltar pelos outros três que se mexem.', vai:'c11_tirou_os_seis'},
-    {texto:'Chamar a Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2510,7 +2510,7 @@ c11_deixou_escolher:{
     {texto:'Sair.', vai:'c11_fim'},
     {texto:'Voltar e insistir.', vai:'c11_levou_copia'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir contar pra Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir contar pra Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2551,7 +2551,7 @@ c11_fotografou_11:{
       registrar:'Fotografou o andar 11: 23 fotos.',
       presagio:'A facilidade de fazer a conta. Anota isso sobre você.'},
   escolhas:[
-    {texto:'Levar à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
     {texto:'Guardar. Você decide depois.', vai:'c11_fim', ef:{flag:'guardou_provas_11'}}
@@ -2560,7 +2560,7 @@ c11_fotografou_11:{
 
 c11_entregou_ivone:{
   texto:[
-    'A Dra. Ivone olha as fotos em silêncio absoluto, sentada numa lanchonete de rodoviária que já virou o escritório de vocês dois.',
+    'A Dra. Sayo olha as fotos em silêncio absoluto, sentada numa lanchonete de rodoviária que já virou o escritório de vocês dois.',
     'Na foto do quadro branco — a do "241 dias" — ela tira os óculos e esfrega os olhos por muito tempo.',
     '"Eu conheci o Fuji."',
     'Ela diz isso do nada, com os óculos na mão.',
@@ -2573,15 +2573,15 @@ c11_entregou_ivone:{
     d=>d.flags.tem_os_nomes ? 'E quando você mostra a lista dos vinte e nove nomes, ela lê os vinte e nove em voz alta, um por um, ali na mesa da lanchonete, porque ela diz que nome que não é falado em voz alta não vira registro.' : ''
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Entregou o andar 11 a quem sabia o que fazer com aquilo'},
-      npc:{nome:'Dra. Ivone', opiniao:10, memoria:'Recebeu as provas do andar 11. Conhecia o Dr. Fuji da faculdade.'},
+      npc:{nome:'Dra. Sayo', opiniao:10, memoria:'Recebeu as provas do andar 11. Conhecia o Dr. Fuji da faculdade.'},
       flag:'ivone_tem_o_11', instabilidade:-1, moral:10,
-      registrar:'Dra. Ivone recebeu as provas do andar 11.',
+      registrar:'Dra. Sayo recebeu as provas do andar 11.',
       presagio:'"Má a gente processa." O problema é que ninguém ali é mau.'},
   escolhas:[
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Voltar ao prédio antes do dia dezenove.', vai:'c11_escada', cond:d=>!!d.flags.sabe_dos_nove_dias},
     {texto:'Ir avisar a Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir avisar a Dra. Reis.', vai:'c11_dra_reis', cond:d=>!!d.flags.conheceu_a_reis}
+    {texto:'Ir avisar a Dra. Sonoda.', vai:'c11_dra_reis', cond:d=>!!d.flags.conheceu_a_reis}
   ]
 },
 
@@ -2606,7 +2606,7 @@ c11_entregou_liga:{
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Perguntar uma quarta vez.', vai:'c11_quarta_vez'},
     {texto:'Ir avisar a Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir avisar a Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir avisar a Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2631,7 +2631,7 @@ c11_quarta_vez:{
       registrar:'Os onze foram encaminhados para outra unidade da própria Silph, com fiscalização semestral.',
       presagio:'Fiscalização semestral. Eles voltaram pra mesma empresa, com menos gente olhando.'},
   escolhas:[
-    {texto:'Levar isso à Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar isso à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar isso à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Procurar o despacho e copiar.', vai:'c11_fim', ef:{flag:'copiou_o_despacho', rep:{eixo:'bom',delta:2,motivo:'Foi atrás do despacho que ninguém procura'}}}
@@ -2659,7 +2659,7 @@ c11_entregou_sabrina:{
   escolhas:[
     {texto:'Desafiar o ginásio agora.', vai:'c11_desafio_sabrina', cond:d=>!!d.flags.sabrina_promete_insignia},
     {texto:'Sair de Saffron.', vai:'c11_fim'},
-    {texto:'Levar tudo à Dra. Ivone também.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Sayo também.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar ao prédio antes do dia dezenove.', vai:'c11_escada', cond:d=>!!d.flags.sabe_dos_nove_dias}
   ]
 },
@@ -2731,7 +2731,7 @@ c11_hoje_nao:{
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Mudar de ideia e lutar.', vai:'c11_luta_sabrina'},
     {texto:'Abrir o ginásio pros sete da calçada.', vai:'c11_abriu_pra_eles'},
-    {texto:'Ir se despedir da Dra. Reis.', vai:'c11_dra_reis', cond:d=>!!d.flags.conheceu_a_reis}
+    {texto:'Ir se despedir da Dra. Sonoda.', vai:'c11_dra_reis', cond:d=>!!d.flags.conheceu_a_reis}
   ]
 },
 
@@ -2818,7 +2818,7 @@ c11_destruir:{
 c11_esperou_chegarem:{
   texto:[
     'Você senta no chão molhado do andar 11, entre acrílico quebrado, e espera.',
-    'Chegam em dezoito minutos: dois seguranças e a Dra. Reis.',
+    'Chegam em dezoito minutos: dois seguranças e a Dra. Sonoda.',
     'Os seguranças param na porta. Ela passa.',
     'Ela anda entre os tanques quebrados devagar, olhando cada um, e não chora e não grita e não pergunta nada.',
     'No fim ela senta no chão molhado do lado de você, de jaleco, aos cinquenta e um anos.',
@@ -2829,10 +2829,10 @@ c11_esperou_chegarem:{
     '"E eu não consigo te dizer qual dos dois é pior, e eu vou passar o resto da minha vida tentando."'
   ],
   ef:{flag:['reis_te_viu','encarou_o_que_fez'],
-      npc:{nome:'Dra. Reis', opiniao:-2, memoria:'Te achou sentado no meio dos onze tanques quebrados e sentou do seu lado.'},
+      npc:{nome:'Dra. Sonoda', opiniao:-2, memoria:'Te achou sentado no meio dos onze tanques quebrados e sentou do seu lado.'},
       rep:{eixo:'bom',delta:2,motivo:'Ficou para encarar o que fez'},
       moral:-10,
-      registrar:'A Dra. Reis sentou no chão molhado ao seu lado, entre os tanques quebrados.',
+      registrar:'A Dra. Sonoda sentou no chão molhado ao seu lado, entre os tanques quebrados.',
       presagio:'"Qual dos dois é pior." Nenhum dos dois vai ter resposta.'},
   escolhas:[
     {texto:'Sair.', vai:'c11_fim'},
@@ -2856,7 +2856,7 @@ c11_saiu_11:{
     {texto:'Seguir.', vai:'c11_fim'},
     {texto:'Voltar e perguntar alguma coisa a eles.', vai:'c11_perguntou'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir contar pra Dra. Ivone.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir contar pra Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 

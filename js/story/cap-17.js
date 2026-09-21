@@ -15,20 +15,20 @@ c17_envelope:{
     'Sem data. Sem prazo. Sem assinatura — só um carimbo.',
     'Você lê três vezes e guarda pra depois, porque tem um garoto encostado no poste do lado de fora do Centro que está te esperando há pelo menos uma hora.',
     d=>{
-      const t=d.npcs['Téo'];
+      const t=d.npcs['Kenta'];
       if (!t) return 'Ou tinha. Quando você sai, o poste está vazio e tem uma bituca de cigarro no chão que você não sabe de quem é. Você segue sozinho para a Rota 23.';
-      if (t.opiniao>=3) return '"Eu sabia que você ia passar por aqui." Téo fala rápido demais, do jeito dele. "Cara, eu preciso te mostrar uma coisa e você vai achar que eu tô louco."';
-      if (t.opiniao<=-2) return '"Não vim te cumprimentar." Téo não estende a mão. "Vim porque não tem mais ninguém pra quem contar isso, e isso me irrita muito."';
-      return '"Ô." Téo enfia as mãos no bolso. "Eu preciso mostrar uma coisa pra alguém que não vai rir."';
+      if (t.opiniao>=3) return '"Eu sabia que você ia passar por aqui." Kenta fala rápido demais, do jeito dele. "Cara, eu preciso te mostrar uma coisa e você vai achar que eu tô louco."';
+      if (t.opiniao<=-2) return '"Não vim te cumprimentar." Kenta não estende a mão. "Vim porque não tem mais ninguém pra quem contar isso, e isso me irrita muito."';
+      return '"Ô." Kenta enfia as mãos no bolso. "Eu preciso mostrar uma coisa pra alguém que não vai rir."';
     }
   ],
   ef:{registrar:'Recebeu a convocação da Liga.',
       presagio:'Sem data e sem prazo. Convocação sem prazo é convocação de quem não sabe se vai estar lá.'},
   escolhas:[
-    {texto:'"Mostra."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Téo']},
+    {texto:'"Mostra."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Kenta']},
     {texto:'Ler o envelope inteiro primeiro.', vai:'c17_leu_o_envelope'},
-    {texto:'Ir direto para o Planalto. A Liga te chamou.', vai:'c17_pulou', cond:d=>!!d.npcs['Téo']},
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Téo']}
+    {texto:'Ir direto para o Planalto. A Liga te chamou.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']}
   ]
 },
 
@@ -41,16 +41,16 @@ c17_leu_o_envelope:{
     'Você lê essa frase quatro vezes.',
     'Os postos de controle da Rota 23 — a última antes do Caminho da Vitória, a rota de acesso ao Planalto — estão desguarnecidos.',
     'A Liga Pokémon convocou desafiantes e avisou, em corpo oito, que tirou a segurança do caminho.',
-    d=>d.npcs['Téo'] ? 'Você levanta a cabeça e o Téo está te olhando com as mãos no bolso, esperando você terminar de ler pra poder falar.' : 'E não tem ninguém pra mostrar isso.'
+    d=>d.npcs['Kenta'] ? 'Você levanta a cabeça e o Kenta está te olhando com as mãos no bolso, esperando você terminar de ler pra poder falar.' : 'E não tem ninguém pra mostrar isso.'
   ],
   ef:{flag:['leu_o_anexo','sabe_dos_postos_vazios'],
       rep:{eixo:'bom',delta:2,motivo:'Leu a segunda folha'},
       registrar:'Os postos de controle das rotas 22 e 23 estão desguarnecidos por "reestruturação administrativa".',
       presagio:'Reestruturação administrativa. Guarde — o próximo capítulo é sobre isso.'},
   escolhas:[
-    {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Téo']},
+    {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Kenta']},
     {texto:'Ir pra Rota 23.', vai:'c17_rota23'},
-    {texto:'Ir direto pro Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Téo']},
+    {texto:'Ir direto pro Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
     {texto:'Perguntar na recepção do Centro o que é reestruturação.', vai:'c17_perguntou_no_centro'}
   ]
 },
@@ -76,9 +76,9 @@ c17_perguntou_no_centro:{
       registrar:'Servidores dos postos 22 e 23 foram realocados para Viridian, cujo ginásio está fechado há oito meses.',
       presagio:'Viridian. O ginásio fechado há oito meses. Guarde os dois.'},
   escolhas:[
-    {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Téo']},
+    {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Kenta']},
     {texto:'Ir pra Rota 23.', vai:'c17_rota23'},
-    {texto:'Ir direto pro Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Téo']},
+    {texto:'Ir direto pro Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
     {texto:'Anotar tudo e seguir.', vai:'c17_rota23', ef:{flag:'anotou_viridian'}}
   ]
 },
@@ -86,7 +86,7 @@ c17_perguntou_no_centro:{
 c17_pulou:{
   texto:[
     '"A Liga me chamou."',
-    'Téo assente devagar.',
+    'Kenta assente devagar.',
     '"Claro. Beleza."',
     'Ele guarda o Pokégear sem te mostrar a foto e enfia as duas mãos no bolso.',
     '"Boa sorte lá, hein."',
@@ -95,8 +95,8 @@ c17_pulou:{
     'E você já está de costas.'
   ],
   ef:{flag:'pulou_o_teo', moral:-10,
-      npc:{nome:'Téo', opiniao:-3, memoria:'Guardou o Pokégear sem te mostrar a foto e foi embora olhando o chão.'},
-      registrar:'Não quis ver o que Téo tinha para mostrar.',
+      npc:{nome:'Kenta', opiniao:-3, memoria:'Guardou o Pokégear sem te mostrar a foto e foi embora olhando o chão.'},
+      registrar:'Não quis ver o que Kenta tinha para mostrar.',
       presagio:'Ele parou na esquina e olhou pra trás. Você estava de costas.'},
   escolhas:[
     {texto:'Voltar e chamar ele.', vai:'c17_voltou_no_teo'},
@@ -122,7 +122,7 @@ c17_voltou_no_teo:{
     '"Agora você sabe."'
   ],
   ef:{flag:'voltou_no_teo', limpaFlag:'pulou_o_teo',
-      npc:{nome:'Téo', opiniao:2, memoria:'Você voltou correndo três quarteirões. Ele veio de ônibus, quatro horas.'},
+      npc:{nome:'Kenta', opiniao:2, memoria:'Você voltou correndo três quarteirões. Ele veio de ônibus, quatro horas.'},
       rep:{eixo:'bom',delta:3,motivo:'Voltou correndo'},
       moral:10,
       presagio:'Quatro horas de ônibus. Ele não falou isso pra te cobrar. Ele falou porque era verdade.'},
@@ -149,8 +149,8 @@ c17_teo_mostra:{
     '"Isso foi na Rota 23. Terça."'
   ],
   ef:{flag:['viu_as_fotos','sabe_do_jardim'],
-      npc:{nome:'Téo', opiniao:3, memoria:'Te mostrou nove fotos de Mew numa clareira da Rota 23.'},
-      registrar:'Téo fotografou Mew numa clareira da Rota 23, na terça.',
+      npc:{nome:'Kenta', opiniao:3, memoria:'Te mostrou nove fotos de Mew numa clareira da Rota 23.'},
+      registrar:'Kenta fotografou Mew numa clareira da Rota 23, na terça.',
       presagio:'Ela foi chegando. Guarde: ela chegou perto de um garoto com Pokégear.'},
   escolhas:[
     {texto:'"Quem mais viu isso?"', vai:'c17_quem_viu'},
@@ -179,10 +179,10 @@ c17_o_que_fazia:{
     '"A coisa mais importante que já aconteceu comigo aconteceu porque eu me perdi indo olhar uma porta que eu não podia atravessar."'
   ],
   ef:{flag:'sabe_do_teo',
-      npc:{nome:'Téo', opiniao:5, memoria:'Ia à Rota 23 só para olhar a entrada do Caminho da Vitória, com quatro insígnias, e se perdeu.'},
+      npc:{nome:'Kenta', opiniao:5, memoria:'Ia à Rota 23 só para olhar a entrada do Caminho da Vitória, com quatro insígnias, e se perdeu.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou o que ele estava fazendo lá'},
       moral:8,
-      registrar:'Téo tem quatro insígnias e ia à Rota 23 só para olhar a entrada.',
+      registrar:'Kenta tem quatro insígnias e ia à Rota 23 só para olhar a entrada.',
       presagio:'Ele se perdeu indo olhar uma porta que não podia atravessar. Repara.'},
   escolhas:[
     {texto:'"Quem mais viu isso?"', vai:'c17_quem_viu'},
@@ -207,10 +207,10 @@ c17_convidou_teo:{
     'E é só isso que ele consegue falar por uns quinze segundos.'
   ],
   ef:{flag:['teo_vai_junto','teo_acompanhante'],
-      npc:{nome:'Téo', opiniao:8, memoria:'Foi convidado a ir ao Planalto Indigo como acompanhante, com quatro insígnias.'},
+      npc:{nome:'Kenta', opiniao:8, memoria:'Foi convidado a ir ao Planalto Indigo como acompanhante, com quatro insígnias.'},
       rep:{eixo:'bom',delta:4,motivo:'Convidou quem não podia entrar'},
       moral:15,
-      registrar:'Téo vai ao Planalto Indigo com você, como acompanhante.',
+      registrar:'Kenta vai ao Planalto Indigo com você, como acompanhante.',
       presagio:'"Não tá escrito que eu me apresento sozinho." Você está aprendendo a ler regulamento.'},
   escolhas:[
     {texto:'"Agora me leva na clareira."', vai:'c17_rota23', ef:{flag:'teo_leva'}},
@@ -223,7 +223,7 @@ c17_convidou_teo:{
 c17_quem_viu:{
   texto:[
     '"Quem mais viu isso?"',
-    'Téo fica branco.',
+    'Kenta fica branco.',
     'Não é figura de linguagem: a cor sai do rosto dele em tempo real e você vê acontecer.',
     '"Eu postei uma."',
     'Ele fala muito baixo.',
@@ -236,8 +236,8 @@ c17_quem_viu:{
     '"Eu acho que eu fiz merda."'
   ],
   ef:{flag:['foto_vazou','tem_gente_atras_do_mew'], instabilidade:1,
-      npc:{nome:'Téo', opiniao:3, memoria:'Postou uma das fotos num grupo e na manhã seguinte tinha gente perguntando onde ele morava.'},
-      registrar:'Téo postou uma foto de Mew num grupo. Três pessoas foram procurá-lo no dia seguinte.',
+      npc:{nome:'Kenta', opiniao:3, memoria:'Postou uma das fotos num grupo e na manhã seguinte tinha gente perguntando onde ele morava.'},
+      registrar:'Kenta postou uma foto de Mew num grupo. Três pessoas foram procurá-lo no dia seguinte.',
       presagio:'Onze da noite de terça e nove horas depois tinha gente na cidade dele. Nove horas.'},
   escolhas:[
     {texto:'"Apaga tudo e some da sua cidade por uma semana."', vai:'c17_apagar'},
@@ -264,7 +264,7 @@ c17_nao_foi_merda:{
     '"Eu tive aula com umas pessoas."'
   ],
   ef:{flag:'consolou_o_teo',
-      npc:{nome:'Téo', opiniao:6, memoria:'Você separou o erro dele do erro do grupo, e ele reparou que você melhorou de falar.'},
+      npc:{nome:'Kenta', opiniao:6, memoria:'Você separou o erro dele do erro do grupo, e ele reparou que você melhorou de falar.'},
       rep:{eixo:'bom',delta:3,motivo:'Não deixou alguém carregar culpa alheia'},
       moral:10,
       presagio:'"Eu tive aula com umas pessoas." Você teve. Conte quantas.'},
@@ -291,10 +291,10 @@ c17_as_tres_pessoas:{
     '"E ele não me conhece direito, cara. Eu compro pão lá."'
   ],
   ef:{flag:['sabe_dos_tres_de_trilha','tem_gente_atras_do_mew'],
-      npc:{nome:'Téo', opiniao:5, memoria:'O dono da mercearia fechou a loja às 11h da manhã para ir avisá-lo.'},
+      npc:{nome:'Kenta', opiniao:5, memoria:'O dono da mercearia fechou a loja às 11h da manhã para ir avisá-lo.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou como eram'},
       moral:8,
-      registrar:'Três pessoas com roupa de trilha nova procuraram Téo. O dono da mercearia fechou a loja para avisá-lo.',
+      registrar:'Três pessoas com roupa de trilha nova procuraram Kenta. O dono da mercearia fechou a loja para avisá-lo.',
       presagio:'Ele compra pão lá. Foi o suficiente.'},
   escolhas:[
     {texto:'"Apaga as fotos."', vai:'c17_apagar'},
@@ -319,9 +319,9 @@ c17_apagar:{
   ],
   ef:{flag:'fotos_apagadas', limpaFlag:'foto_vazou',
       rep:{eixo:'bom',delta:3,motivo:'Protegeu um lendário apagando a única prova dele'},
-      npc:{nome:'Téo', opiniao:4, memoria:'Apagou as nove fotos de Mew, uma por uma, porque você pediu.'},
+      npc:{nome:'Kenta', opiniao:4, memoria:'Apagou as nove fotos de Mew, uma por uma, porque você pediu.'},
       moral:-5,
-      registrar:'Téo apagou as nove fotos.',
+      registrar:'Kenta apagou as nove fotos.',
       presagio:'Ele falou duas vezes. Ele precisava que ficasse claro.'},
   escolhas:[
     {texto:'"Agora me leva lá. Só nós dois."', vai:'c17_rota23', ef:{flag:'teo_leva'}},
@@ -349,10 +349,10 @@ c17_descreveu:{
   ],
   ef:{flag:['descreveu_mew','registro_do_teo'],
       itens:{'Doze páginas de descrição':1},
-      npc:{nome:'Téo', opiniao:7, memoria:'Ditou por quarenta minutos a descrição do que viu, para você anotar, depois de apagar as fotos.'},
+      npc:{nome:'Kenta', opiniao:7, memoria:'Ditou por quarenta minutos a descrição do que viu, para você anotar, depois de apagar as fotos.'},
       rep:{eixo:'bom',delta:5,motivo:'Transformou uma foto apagada em registro escrito'},
       moral:15,
-      registrar:'Téo ditou doze páginas de descrição de Mew, depois de apagar as fotos.',
+      registrar:'Kenta ditou doze páginas de descrição de Mew, depois de apagar as fotos.',
       presagio:'Doze páginas. Isso não é prova. É melhor que prova: é testemunho anotado na hora.'},
   escolhas:[
     {texto:'"Agora me leva lá."', vai:'c17_rota23', ef:{flag:'teo_leva'}},
@@ -378,10 +378,10 @@ c17_assinou:{
     'E ele fala isso do jeito de quem acabou de descobrir que assinar é uma coisa que existe e que ele pode fazer.'
   ],
   ef:{flag:['teo_assinou','registro_do_teo'],
-      npc:{nome:'Téo', opiniao:9, memoria:'Assinou as doze páginas com data e hora. Foi a primeira coisa que ele assinou na vida.'},
+      npc:{nome:'Kenta', opiniao:9, memoria:'Assinou as doze páginas com data e hora. Foi a primeira coisa que ele assinou na vida.'},
       rep:{eixo:'bom',delta:5,motivo:'Fez um depoimento virar documento'},
       moral:15,
-      registrar:'Téo assinou o depoimento com data e hora.',
+      registrar:'Kenta assinou o depoimento com data e hora.',
       presagio:'"Eu nunca assinei nada na vida." Agora ele sabe que pode.'},
   escolhas:[
     {texto:'"Agora me leva lá."', vai:'c17_rota23', ef:{flag:'teo_leva'}},
@@ -394,7 +394,7 @@ c17_assinou:{
 c17_esqueceu:{
   texto:[
     'Vocês não vão à clareira.',
-    'Téo volta pra cidade dele de ônibus, quatro horas, no mesmo dia.',
+    'Kenta volta pra cidade dele de ônibus, quatro horas, no mesmo dia.',
     'Você segue pro Planalto.',
     'Nenhum dos dois toca no assunto de novo — não naquele mês, não naquele ano.',
     'E é exatamente por isso que funciona.',
@@ -406,13 +406,13 @@ c17_esqueceu:{
       rep:{eixo:'bom',delta:4,motivo:'Protegeu Mew da melhor forma possível: não indo'},
       moral:10,
       executar:d=>{ const L=Estado.lend(151); if(L) L.disposicao='passivo'; return []; },
-      npc:{nome:'Téo', opiniao:6, memoria:'Voltou para casa de ônibus sem ir à clareira. Vocês nunca mais tocaram no assunto.'},
+      npc:{nome:'Kenta', opiniao:6, memoria:'Voltou para casa de ônibus sem ir à clareira. Vocês nunca mais tocaram no assunto.'},
       registrar:'Escolheu nunca procurar Mew. É a proteção mais eficaz que existe.',
       presagio:'Decisão madura nunca tem recompensa. É por isso que quase ninguém toma.'},
   escolhas:[
     {texto:'Seguir para o Planalto.', vai:'c17_fim'},
     {texto:'Mudar de ideia e ir.', vai:'c17_rota23'},
-    {texto:'Convidar o Téo pro Planalto antes.', vai:'c17_convidou_teo'},
+    {texto:'Convidar o Kenta pro Planalto antes.', vai:'c17_convidou_teo'},
     {texto:'Ir com ele até a rodoviária.', vai:'c17_rodoviaria'}
   ]
 },
@@ -432,7 +432,7 @@ c17_rodoviaria:{
     '"E isso já é bom."'
   ],
   ef:{flag:'levou_o_teo_na_rodoviaria',
-      npc:{nome:'Téo', opiniao:7, memoria:'Vocês andaram seis quarteirões falando de coisa nenhuma até a rodoviária.'},
+      npc:{nome:'Kenta', opiniao:7, memoria:'Vocês andaram seis quarteirões falando de coisa nenhuma até a rodoviária.'},
       rep:{eixo:'bom',delta:2,motivo:'Andou seis quarteirões com alguém até a rodoviária'},
       moral:12,
       presagio:'"Ela vai fingir que acredita, porque ela é minha mãe. E isso já é bom." Guarde.'},
@@ -456,7 +456,7 @@ c17_rota23:{
     'Tem café dentro. Frio, mas ainda líquido, ainda com cheiro.',
     'Isso não está vazio há semanas.',
     'Isso está vazio há dias.',
-    d=>d.flags.teo_leva ? 'Téo vai na frente. Ele fez esse caminho três vezes desde terça e ele não acha nenhum dos postos estranho, porque ele nunca viu eles ocupados.' :
+    d=>d.flags.teo_leva ? 'Kenta vai na frente. Ele fez esse caminho três vezes desde terça e ele não acha nenhum dos postos estranho, porque ele nunca viu eles ocupados.' :
        'Você encontra o desvio por acaso, o que é impossível, e você sabe que é impossível.'
   ],
   ef:{flag:['entrou_na_rota_23','postos_vazios_ha_dias'],
@@ -570,7 +570,7 @@ c17_o_nome_dele:{
     '"Por quê?"',
     '"Porque eu tô anotando tudo num caderno desde o primeiro capítulo e eu aprendi que nome importa."',
     'Uma risada curta no rádio, distorcida pelo chiado.',
-    '"Anselmo. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
+    '"Saburo. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
     'Ele diz a matrícula sem você pedir.',
     '"Anota a matrícula também, garoto."',
     '"Por quê?"',
@@ -581,9 +581,9 @@ c17_o_nome_dele:{
   ],
   ef:{flag:['sabe_do_anselmo','provas_do_planalto'],
       itens:{'Matrícula 4.109 anotada':1},
-      npc:{nome:'Anselmo (central do Planalto)', opiniao:5, memoria:'Te deu o nome e a matrícula dele por rádio, para que houvesse resposta se alguém perguntasse.'},
+      npc:{nome:'Saburo (central do Planalto)', opiniao:5, memoria:'Te deu o nome e a matrícula dele por rádio, para que houvesse resposta se alguém perguntasse.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou o nome e recebeu a matrícula junto'},
-      registrar:'Anselmo, matrícula 4.109, central do Planalto Indigo.',
+      registrar:'Saburo, matrícula 4.109, central do Planalto Indigo.',
       presagio:'Ele deu a matrícula. Ele quer que tenha resposta.'},
   escolhas:[
     {texto:'Ir pra clareira.', vai:'c17_a_clareira'},
@@ -603,7 +603,7 @@ c17_boca_do_caminho:{
     'Não tem ninguém pra apresentar nada.',
     'Não tem catraca, não tem corrente, não tem cadeado.',
     'Só uma placa e uma fenda na rocha e quatro quilômetros de escuro lá dentro.',
-    d=>d.flags.teo_leva ? 'Téo para do seu lado e olha a placa.\nE depois olha a fenda.\nE depois a placa de novo.\n"Cara."\nEle não fala mais nada por um tempo bem longo.\n"Eu podia entrar."' :
+    d=>d.flags.teo_leva ? 'Kenta para do seu lado e olha a placa.\nE depois olha a fenda.\nE depois a placa de novo.\n"Cara."\nEle não fala mais nada por um tempo bem longo.\n"Eu podia entrar."' :
        'Você fica parado na frente da fenda uns dois minutos.'
   ],
   ef:{flag:['viu_a_boca_do_caminho'],
@@ -637,10 +637,10 @@ c17_nao_vai:{
     'E ele fala isso do jeito de quem acabou de decidir uma coisa grande numa frente de rocha, aos quinze anos, sem ninguém vendo além de você.'
   ],
   ef:{flag:['teo_vai_pegar_as_quatro'],
-      npc:{nome:'Téo', opiniao:9, memoria:'Ficou na frente da entrada aberta do Caminho da Vitória e decidiu voltar para pegar as outras quatro insígnias.'},
+      npc:{nome:'Kenta', opiniao:9, memoria:'Ficou na frente da entrada aberta do Caminho da Vitória e decidiu voltar para pegar as outras quatro insígnias.'},
       rep:{eixo:'bom',delta:5,motivo:'Convenceu alguém a não atravessar uma porta aberta'},
       moral:20,
-      registrar:'Téo decidiu buscar as outras quatro insígnias em vez de atravessar a entrada desguarnecida.',
+      registrar:'Kenta decidiu buscar as outras quatro insígnias em vez de atravessar a entrada desguarnecida.',
       presagio:'"Aí a placa não vale mais nada pra mais ninguém." É essa a tese de dezessete capítulos.'},
   escolhas:[
     {texto:'Ir pra clareira com ele.', vai:'c17_a_clareira'},
@@ -749,7 +749,7 @@ c17_contou_as_especies:{
 
 c17_levou_a_muda:{
   texto:[
-    'Você tira a muda com um pouco de terra em volta e enrola num saco plástico, do jeito que a Dra. Yara ensinou sem saber que estava ensinando.',
+    'Você tira a muda com um pouco de terra em volta e enrola num saco plástico, do jeito que a Dra. Rin ensinou sem saber que estava ensinando.',
     'E fica com ela na mão.',
     'Uma planta extinta, viva, numa mão de quinze anos, no meio de um mato da Rota 23.',
     'E aí você pensa, e é um pensamento ruim:',
@@ -774,7 +774,7 @@ c17_replantou:{
     'Cava o buraco com as mãos, põe a muda, aperta a terra em volta, e rega com a água da sua garrafa.',
     'Leva dez minutos e é a coisa mais idiota que dá pra fazer com uma descoberta científica de primeira grandeza.',
     'Você senta ao lado dela depois, com as mãos sujas.',
-    d=>d.flags.teo_leva ? 'Téo senta do seu lado.\n"O que era aquilo?"\n"Uma planta que não existe mais."\n"E você replantou."\n"Eu replantei."\nEle assente devagar.\n"Beleza."' :
+    d=>d.flags.teo_leva ? 'Kenta senta do seu lado.\n"O que era aquilo?"\n"Uma planta que não existe mais."\n"E você replantou."\n"Eu replantei."\nEle assente devagar.\n"Beleza."' :
        'E fica ali, sozinho, no meio de vinte metros de grama alta, com as mãos sujas de terra.'
   ],
   ef:{flag:['replantou_a_muda'], perdeItens:{'Muda de flor branca':1},
@@ -944,7 +944,7 @@ c17_testemunhas:{
 c17_anotou_os_nomes:{
   texto:[
     'Você anota os quatro nomes, os quatro endereços, os quatro telefones, e o nome e a data do jornal.',
-    'E depois você faz uma coisa que a Dra. Ivone fez na sua frente e que ficou:',
+    'E depois você faz uma coisa que a Dra. Sayo fez na sua frente e que ficou:',
     'você lê tudo em voz alta pra eles conferirem, e eles corrigem duas coisas, e você anota as correções.',
     'E no fim você pergunta se pode escrever, ao lado de cada nome, se a pessoa autoriza ser citada.',
     'Três autorizam.',
@@ -1071,12 +1071,12 @@ c17_sabotou_van:{
 c17_denunciou_van:{
   texto:[
     'Você volta ao posto vazio e denuncia pelo rádio.',
-    d=>d.flags.sabe_do_anselmo ? 'O Anselmo atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, garoto, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
+    d=>d.flags.sabe_do_anselmo ? 'O Saburo atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, garoto, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
        'A Liga responde em quatro horas, porque a Rota 23 é área de acesso controlado ao Planalto e ali eles têm jurisdição imediata, mesmo com os postos vazios.',
     'Os quatro são detidos por acampamento irregular em área restrita — não por caça, porque não dá pra provar caça.',
     'Multa e liberação em dois dias.',
     'Mas a van fica apreendida por três semanas, e três semanas é uma coisa real.',
-    d=>d.flags.sabe_do_anselmo ? 'E no fim, pelo rádio, o Anselmo fala uma coisa:\n"Anota no seu caderno que a gente veio."\n"Por quê?"\n"Porque quando escreverem sobre isso depois, vão escrever que ninguém veio."' : ''
+    d=>d.flags.sabe_do_anselmo ? 'E no fim, pelo rádio, o Saburo fala uma coisa:\n"Anota no seu caderno que a gente veio."\n"Por quê?"\n"Porque quando escreverem sobre isso depois, vão escrever que ninguém veio."' : ''
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Usou o sistema onde o sistema ainda funcionava'},
       flag:'liga_pegou_a_van',
@@ -1093,7 +1093,7 @@ c17_denunciou_van:{
 c17_foi_embora_clareira:{
   texto:[
     'Você chega na borda da clareira, olha o meio dela, e não entra.',
-    d=>d.flags.teo_leva ? 'Téo te olha sem entender.\n"Você não vai nem..."\n"Não."\nEle demora uns dez segundos, e acompanha você de volta, e não pergunta mais nada no caminho inteiro.\nE na metade do caminho ele fala uma coisa só: "Tá certo."' :
+    d=>d.flags.teo_leva ? 'Kenta te olha sem entender.\n"Você não vai nem..."\n"Não."\nEle demora uns dez segundos, e acompanha você de volta, e não pergunta mais nada no caminho inteiro.\nE na metade do caminho ele fala uma coisa só: "Tá certo."' :
        'Você fica na borda uns dois minutos e vira as costas.',
     'Você nunca vai saber se ela estava lá naquele dia.',
     'E é essa a parte do custo: não é que você abriu mão de ver.',
@@ -1118,7 +1118,7 @@ c17_foi_embora_clareira:{
 c17_esperou_mew:{
   texto:[
     'Você senta no meio da clareira.',
-    d=>d.flags.teo_leva ? 'Téo senta a três metros e fica quieto, o que pra ele é um esforço físico visível. Ele mexe no cadarço quatro vezes na primeira meia hora e depois para.' :
+    d=>d.flags.teo_leva ? 'Kenta senta a três metros e fica quieto, o que pra ele é um esforço físico visível. Ele mexe no cadarço quatro vezes na primeira meia hora e depois para.' :
        'Você fica sozinho no meio de vinte metros de grama alta.',
     'Duas horas.',
     'Duas horas de verdade: você tem formiga na perna aos quarenta minutos, e cãibra na panturrilha aos setenta, e aos cem você já está pensando em desistir e ficando só por teimosia.',
@@ -1152,7 +1152,7 @@ c17_mew_brinca:{
     'E ela imita o riso, sem som nenhum, só a cara.',
     'Ela levanta a sua mochila do chão sem tocar nela, olha por baixo, e coloca de volta no lugar exato — no lugar exato, com o vinco da grama batendo.',
     'Ela tira a sua boné da sua cabeça e põe na dela e a boné cai porque a cabeça dela é pequena demais, e ela olha a boné no chão com uma cara de quem foi enganada.',
-    d=>d.flags.teo_leva ? 'Téo está chorando a três metros e nem percebeu que está.' :
+    d=>d.flags.teo_leva ? 'Kenta está chorando a três metros e nem percebeu que está.' :
        'Você percebe, em algum momento, que está sorrindo de um jeito que você não sorri desde o capítulo dois.',
     'Ela não está te avaliando. Ela nunca esteve.',
     'Ela só achou você interessante por vinte minutos, do jeito que criança acha uma poça interessante.'
@@ -1313,7 +1313,7 @@ c17_deixou_mew:{
     'Num instante está a quatro metros. No seguinte, a clareira tem vinte metros de grama alta e mais nada.',
     'Não tem deslocamento. Não tem borrão. Não tem ar mexendo.',
     'Ela estava e não está.',
-    d=>d.flags.teo_leva ? 'Téo fica sentado mais uns dez minutos, sem falar nada.\nDepois:\n"Ninguém vai acreditar."\n"Não."\n"Ótimo."\nEle se levanta e bate a terra da calça.\n"Ótimo mesmo."' :
+    d=>d.flags.teo_leva ? 'Kenta fica sentado mais uns dez minutos, sem falar nada.\nDepois:\n"Ninguém vai acreditar."\n"Não."\n"Ótimo."\nEle se levanta e bate a terra da calça.\n"Ótimo mesmo."' :
        'Você fica sentado mais uns dez minutos, sozinho, no lugar mais comum do mundo: vinte metros de grama alta numa rota de Kanto.'
   ],
   ef:{flag:'deixou_mew_ir',
@@ -1374,11 +1374,11 @@ c17_pos_mew:{
     'Você fica de pé ali por um tempo com uma bola na mão.',
     d=>d.flags.brincou_com_mew||d.flags.tocou_mew ? 'E pensando nos vinte minutos anteriores, que agora significam uma coisa completamente diferente, e que vão continuar significando essa coisa diferente pro resto da sua vida, porque não tem como desfazer os vinte minutos e não tem como desfazer o que veio depois.' :
        'A grama alta volta ao normal em alguns minutos, levantando devagar onde vocês pisaram.',
-    d=>d.flags.teo_leva ? 'Téo não fala nada.\nEle não fala nada o caminho inteiro de volta, que são quarenta minutos de mato fechado.' : ''
+    d=>d.flags.teo_leva ? 'Kenta não fala nada.\nEle não fala nada o caminho inteiro de volta, que são quarenta minutos de mato fechado.' : ''
   ],
   ef:{executar:d=>{ const L=Estado.lend(151); L.ataquesSofridos++; L.disposicao='desconfiado'; return []; },
       rep:{eixo:'ruim',delta:2,motivo:'Atacou Mew'},
-      npc:{nome:'Téo', opiniao:-4, memoria:'Viu você jogar a bola em Mew e não falou nada nos quarenta minutos de volta.'},
+      npc:{nome:'Kenta', opiniao:-4, memoria:'Viu você jogar a bola em Mew e não falou nada nos quarenta minutos de volta.'},
       moral:-15},
   escolhas:[
     {texto:'Esperar ela voltar.', vai:'c17_esperou_mew'},
@@ -1395,7 +1395,7 @@ c17_pediu_desculpa:{
     'Não acontece nada.',
     'Não tem resposta, não tem sinal, não tem vento mexendo a grama.',
     'Você fica ali uns quinze minutos falando sozinho — e não é bonito, e você não fala nada de bonito: você fala coisa embolada, repetida, com frase começada e não terminada, do jeito que gente fala quando está pedindo desculpa de verdade e não em discurso.',
-    d=>d.flags.teo_leva ? 'E o Téo fica a três metros o tempo inteiro e não sai e não fala nada, e ficar é a única coisa que ele pode fazer, e ele faz.' : '',
+    d=>d.flags.teo_leva ? 'E o Kenta fica a três metros o tempo inteiro e não sai e não fala nada, e ficar é a única coisa que ele pode fazer, e ele faz.' : '',
     'E no fim você levanta e vai embora.',
     'E o pedido de desculpa não serviu pra ela.',
     'Serviu pra você conseguir levantar.'
@@ -1420,13 +1420,13 @@ c17_capturou_mew:{
     'Não tem tremor no céu, não tem clima mudando, não tem lendário nenhum vindo caçar você, não tem luz, não tem som.',
     'Isso é o assustador de Mew: capturar ela não quebra nada.',
     'O mundo não reage.',
-    d=>d.flags.teo_leva ? 'Téo olha a bola no chão. Depois olha você.\nEle não fala nada.\nE não falar nada é a coisa mais alta que ele já fez na vida.' :
+    d=>d.flags.teo_leva ? 'Kenta olha a bola no chão. Depois olha você.\nEle não fala nada.\nE não falar nada é a coisa mais alta que ele já fez na vida.' :
        'A clareira fica exatamente igual. A grama, as quarenta e uma espécies, a goiabeira com fruta caída.',
     'Mas em algum lugar, alguém vai descobrir.',
     'E a partir daí você deixa de ser uma pessoa e vira um endereço.'
   ],
   ef:{flag:'capturou_mew', moral:-20, instabilidade:2,
-      npc:{nome:'Téo', opiniao:-5, memoria:'Viu você capturar Mew e não disse uma palavra.'},
+      npc:{nome:'Kenta', opiniao:-5, memoria:'Viu você capturar Mew e não disse uma palavra.'},
       registrar:'Capturou Mew. O mundo não reagiu, o que é pior.',
       presagio:'Você deixa de ser uma pessoa e vira um endereço.'},
   escolhas:[
@@ -1616,7 +1616,7 @@ c17_vendeu_mew:{
     {texto:'Ir para o Planalto com o dinheiro.', vai:'c17_fim'},
     {texto:'Ir atrás do carro.', vai:'c17_foi_atras'},
     {texto:'Ficar no estacionamento.', vai:'c17_fim'},
-    {texto:'Ligar pra Dra. Ivone e contar.', vai:'c17_contou_pra_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Sayo e contar.', vai:'c17_contou_pra_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1642,7 +1642,7 @@ c17_foi_atras:{
       registrar:'Tentou desfazer a venda. A operação já estava no sistema.',
       presagio:'Quatro minutos entre o pagamento e o sistema. Foi essa a sua janela.'},
   escolhas:[
-    {texto:'Ligar pra Dra. Ivone.', vai:'c17_contou_pra_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Sayo.', vai:'c17_contou_pra_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir pro Planalto.', vai:'c17_fim'},
     {texto:'Ficar no estacionamento.', vai:'c17_fim'},
     {texto:'Anotar a placa do carro.', vai:'c17_fim', ef:{flag:'placa_do_comprador', rep:{eixo:'bom',delta:2,motivo:'Anotou a placa quando não dava pra fazer mais nada'}}}
@@ -1651,7 +1651,7 @@ c17_foi_atras:{
 
 c17_contou_pra_ivone:{
   texto:[
-    'Você liga pra Dra. Ivone de um orelhão, às sete e dez da manhã, e conta.',
+    'Você liga pra Dra. Sayo de um orelhão, às sete e dez da manhã, e conta.',
     'Tudo: a clareira, os vinte minutos, a bola, o guardanapo, o estacionamento, a maleta com controle de temperatura, os duzentos mil.',
     'Ela ouve inteiro sem interromper.',
     'E no fim ela não te repreende, e não te consola, e não fala nada sobre o que você fez.',
@@ -1668,7 +1668,7 @@ c17_contou_pra_ivone:{
   ],
   ef:{flag:['documentou_a_venda','ivone_sabe_da_venda'],
       itens:{'Declaração assinada da venda':1},
-      npc:{nome:'Dra. Ivone', opiniao:4, memoria:'Te fez documentar e assinar a venda de Mew, para que ela fosse rastreável.'},
+      npc:{nome:'Dra. Sayo', opiniao:4, memoria:'Te fez documentar e assinar a venda de Mew, para que ela fosse rastreável.'},
       rep:{eixo:'bom',delta:4,motivo:'Virou testemunha do próprio crime, de propósito'},
       moral:10,
       registrar:'Documentou e assinou a venda de Mew, com data, hora, placa e descrição da maleta.',
@@ -1697,7 +1697,7 @@ c17_fim:{
       if (d.flags.entendeu_o_jardim) return 'Você sobe pensando num jardim de vinte metros com quarenta e uma espécies de planta e nenhuma de bicho, construído de propósito por uma coisa que está sozinha há mais tempo do que Kanto tem nome.';
       return 'Você sobe.';
     },
-    d=>d.flags.teo_vai_junto ? 'E o Téo sobe do seu lado, com quatro insígnias e um crachá de acompanhante que ninguém conferiu, falando sem parar nos primeiros oitocentos metros e calado no resto.' :
+    d=>d.flags.teo_vai_junto ? 'E o Kenta sobe do seu lado, com quatro insígnias e um crachá de acompanhante que ninguém conferiu, falando sem parar nos primeiros oitocentos metros e calado no resto.' :
        d.flags.teo_vai_pegar_as_quatro ? 'E lá embaixo, na base da rocha, tem um garoto de quinze anos voltando pela Rota 23 pra pegar quatro insígnias que ele podia ter pulado hoje de manhã.' : '',
     'A subida leva o dia inteiro.',
     'E nos quatro quilômetros de escuro por dentro da montanha você não encontra ninguém, o que é a informação mais importante do capítulo:',

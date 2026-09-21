@@ -393,6 +393,14 @@ function afazeresDoLocal(){
         sub: d.pc.length
           ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
           : 'Guardar e tirar Pokémon. O cinto leva seis.'});
+      if (typeof Cargos !== 'undefined'){
+        const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
+        const meus = Cargos.lista().length;
+        lista.push({id:'credenciais', titulo:'Balcão de credenciais',
+          sub: abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.`
+             : meus ? 'Renovar carimbo e conferir o que o seu crachá dá.'
+                    : 'Formulário, carimbo e fila. É assim que se vira alguma coisa em Kanto.'});
+      }
     }
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});

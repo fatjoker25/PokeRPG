@@ -26,7 +26,7 @@ c18_fio:{
   ef:{registrar:'Decidiu procurar o nome da organização em vez de procurar o esconderijo dela.'},
   escolhas:[
     {texto:'Ir ao cartório de registro de pessoas jurídicas de Saffron.', vai:'c18_cartorio'},
-    {texto:'Procurar a Dra. Ivone. Ela é advogada e advogada sabe onde se procura nome.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Procurar a Dra. Sayo. Ela é advogada e advogada sabe onde se procura nome.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Procurar a Terceira. Quem vende sabe para quem vendeu.', vai:'c18_terceira', cond:d=>!!d.flags.conheceu_terceira},
     {texto:'Ir à hemeroteca. Um ano e meio de jornal velho e paciência.', vai:'c18_hemeroteca'},
     {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
@@ -80,7 +80,7 @@ c18_cartorio_tabela:{
 
 c18_cartorio_padaria:{
   texto:[
-    'O homem que está abrindo a padaria se chama Sr. Belchior e está no quinto dia de burocracia.',
+    'O homem que está abrindo a padaria se chama Sr. Beniya e está no quinto dia de burocracia.',
     '"Quinto." Ele levanta cinco dedos. "Eu já vim aqui cinco vezes por causa de uma palavra no objeto social. Uma palavra."',
     '"Qual?"',
     '"Fabricação. Eu pus fabricação e comercialização. Aí é indústria e comércio, e aí muda tudo." Ele ri sem alegria nenhuma. "Eu vou pôr só comércio e vou fabricar do mesmo jeito, porque ninguém vem conferir."',
@@ -88,7 +88,7 @@ c18_cartorio_padaria:{
     'Você guarda a frase. Ninguém vem conferir. Deve ser a coisa mais importante que você vai ouvir hoje e você ainda não sabe.'
   ],
   ef:{flag:'ninguem_vem_conferir',
-      registrar:'O Sr. Belchior, da padaria: o que está escrito no papel e o que se faz são coisas diferentes, porque ninguém vem conferir.'},
+      registrar:'O Sr. Beniya, da padaria: o que está escrito no papel e o que se faz são coisas diferentes, porque ninguém vem conferir.'},
   escolhas:[
     {texto:'Perguntar se ele já ouviu falar em associação sem fins lucrativos.', vai:'c18_belchior_associacao'},
     {texto:'Desejar sorte e voltar para a fila.', vai:'c18_cartorio_fila'}
@@ -126,12 +126,12 @@ c18_cartorio_furou:{
 c18_cartorio_fila:{
   texto:[
     'Dezesseis e cinquenta e um. A padaria termina e sai com quatro pessoas e uma pasta.',
-    'A escrevente se chama Sra. Quintela, e isso está numa plaquinha de acrílico que ela mesma deve ter mandado fazer, porque é mais bonita que o resto do balcão.',
+    'A escrevente se chama Sra. Kitano, e isso está numa plaquinha de acrílico que ela mesma deve ter mandado fazer, porque é mais bonita que o resto do balcão.',
     '"Pois não."',
     'Você explica o que quer sem saber direito o que quer: uma comissão, um conselho, alguma coisa registrada em Kanto há mais ou menos dois anos, relacionada a risco, a fauna, a controle.',
     'Ela não faz cara de nada. Ela digita.'
   ],
-  ef:{npc:{nome:'Sra. Quintela', opiniao:0, memoria:'Escrevente do cartório de pessoas jurídicas de Saffron.'}},
+  ef:{npc:{nome:'Sra. Kitano', opiniao:0, memoria:'Escrevente do cartório de pessoas jurídicas de Saffron.'}},
   escolhas:[
     {texto:'Esperar em silêncio.', vai:'c18_quintela_achou'},
     {texto:'"A senhora já ouviu falar dessa organização?"', vai:'c18_quintela_ja_ouviu'},
@@ -171,7 +171,7 @@ c18_quintela_achou:{
     'Associação civil sem fins lucrativos. Registro nº 11.402. Constituída há um ano e oito meses.',
     'Sede: Saffron, Rua do Comércio, 118, sala 704.',
     'Estatuto arquivado. Atas depositadas: 34.',
-    '"Trinta e quatro atas em um ano e oito meses." A Sra. Quintela fala isso quase com admiração. "Essa gente se reúne toda quinzena. Isso é raro, moço. Associação normal esquece de fazer assembleia."'
+    '"Trinta e quatro atas em um ano e oito meses." A Sra. Kitano fala isso quase com admiração. "Essa gente se reúne toda quinzena. Isso é raro, moço. Associação normal esquece de fazer assembleia."'
   ],
   ef:{flag:['sabe_da_comissao','sabe_do_endereco_704'],
       rep:{eixo:'bom',delta:1,motivo:'Encontrou a Comissão num cartório, com um número de registro'},
@@ -187,14 +187,14 @@ c18_quintela_achou:{
 c18_quem_assina:{
   texto:[
     'Ela rola a tela.',
-    '"Presidente do conselho: Hélia Rennó. Endereço na própria sede."',
+    '"Presidente do conselho: Reika Ando. Endereço na própria sede."',
     '"Conselho fiscal: três nomes. Um deles é escritório de contabilidade."',
     '"E tem uma lista de fundadores com onze assinaturas."',
     'Onze.',
     'Você já ouviu esse número em outro lugar, e não gostou dele lá.'
   ],
   ef:{flag:['sabe_o_nome_da_presidente','onze_fundadores'],
-      registrar:'Presidente do conselho: Hélia Rennó. Onze fundadores assinaram a ata de constituição.'},
+      registrar:'Presidente do conselho: Reika Ando. Onze fundadores assinaram a ata de constituição.'},
   escolhas:[
     {texto:'"Os onze nomes, por favor."', vai:'c18_os_onze_nomes'},
     {texto:'"Quero cópia de tudo."', vai:'c18_quintela_copia'},
@@ -221,7 +221,7 @@ c18_os_onze_nomes:{
 
 c18_algum_da_liga:{
   texto:[
-    '"Eu não sei o que é a Liga para efeito de registro." A Sra. Quintela é literal do jeito que só quem trabalha com papel é. "Aqui diz ex-diretora de fiscalização. Não diz de onde."',
+    '"Eu não sei o que é a Liga para efeito de registro." A Sra. Kitano é literal do jeito que só quem trabalha com papel é. "Aqui diz ex-diretora de fiscalização. Não diz de onde."',
     '"E a senhora acha que é de onde?"',
     '"Eu acho que quando é da Liga eles escrevem da Liga, porque dá orgulho." Ela ajeita os óculos. "Quando não escrevem, é porque saíram brigados."',
     'Você anota isso também.'
@@ -241,7 +241,7 @@ c18_pedido_discreto:{
     '"Se o senhor quer uma coisa que não deixa rastro, o senhor veio no lugar errado. Aqui é só rastro."'
   ],
   ef:{flag:'pedido_fica_no_livro',
-      npc:{nome:'Sra. Quintela', opiniao:1, memoria:'Te explicou que cartório é feito de rastro e que isso é o valor dele.'},
+      npc:{nome:'Sra. Kitano', opiniao:1, memoria:'Te explicou que cartório é feito de rastro e que isso é o valor dele.'},
       registrar:'O pedido de certidão fica registrado com data e hora. A Comissão pode descobrir que foi você.'},
   escolhas:[
     {texto:'"Tudo bem. Registra."', vai:'c18_quintela_copia'},
@@ -270,7 +270,7 @@ c18_so_estatuto:{
 c18_voltou_amanha:{
   texto:[
     'Você volta no dia seguinte, às nove e dez, e é a primeira pessoa da fila, o que não te dá vantagem nenhuma porque o sistema só entra no ar às nove e meia.',
-    'A Sra. Quintela reconhece você e não comenta.',
+    'A Sra. Kitano reconhece você e não comenta.',
     'Cento e vinte e duas páginas de ata saem da matricial em vinte e dois minutos de chiado.',
     'Ela grampeia em quatro blocos, porque um grampo só não pega.'
   ],
@@ -299,7 +299,7 @@ c18_quintela_copia:{
 
 c18_saiu_sem_nada:{
   texto:[
-    'Você agradece e sai sem pedir nada, o que a Sra. Quintela recebe com um aceno de cabeça e nenhuma curiosidade.',
+    'Você agradece e sai sem pedir nada, o que a Sra. Kitano recebe com um aceno de cabeça e nenhuma curiosidade.',
     'Na rua, você fica parado tempo demais no mesmo lugar.',
     'Você sabe o nome. Sabe o número do registro. Sabe o endereço.',
     'E não tem uma linha escrita para provar que sabe.'
@@ -308,7 +308,7 @@ c18_saiu_sem_nada:{
   escolhas:[
     {texto:'Voltar e pedir tudo.', vai:'c18_quintela_copia'},
     {texto:'Ir direto à sala 704.', vai:'c18_direto_na_704'},
-    {texto:'Procurar a Dra. Ivone.', vai:'c18_ivone'}
+    {texto:'Procurar a Dra. Sayo.', vai:'c18_ivone'}
   ]
 },
 
@@ -406,7 +406,7 @@ c18_entrou_cedo_demais:{
     'E você percebe que não trouxe pergunta nenhuma. Você trouxe raiva, e raiva não é pergunta.'
   ],
   ef:{flag:'entrou_na_704_cedo',
-      npc:{nome:'Hélia Rennó', opiniao:0, memoria:'Você entrou na sala de reunião sem saber o que perguntar.'},
+      npc:{nome:'Reika Ando', opiniao:0, memoria:'Você entrou na sala de reunião sem saber o que perguntar.'},
       registrar:'Entrou na sala 704 no meio de uma reunião.'},
   escolhas:[
     {texto:'"Eu sei o que vocês fazem."', vai:'c18_704_sei_o_que_fazem'},
@@ -463,7 +463,7 @@ c18_704_o_que_e_descarte:{
     '"Eu preenchi quatrocentos e dezenove formulários."'
   ],
   ef:{flag:['sabe_do_art19','sabe_dos_419'], instabilidade:2,
-      npc:{nome:'Curador Adnan', opiniao:1, memoria:'Te disse quantos formulários já preencheu.'},
+      npc:{nome:'Curador Ren', opiniao:1, memoria:'Te disse quantos formulários já preencheu.'},
       registrar:'419 formulários de descarte preenchidos até hoje.'},
   escolhas:[
     {texto:'"Qual o seu nome?"', vai:'c18_704_nome_do_adnan'},
@@ -474,16 +474,16 @@ c18_704_o_que_e_descarte:{
 
 c18_704_nome_do_adnan:{
   texto:[
-    '"Adnan." Ele estende a mão por cima da mesa e você aperta sem querer apertar. "Curador."',
+    '"Ren." Ele estende a mão por cima da mesa e você aperta sem querer apertar. "Curador."',
     '"Curador de quê?"',
     '"De acervo vivo." Ele ouve a própria frase e faz uma careta. "É o nome do cargo. Eu sei como soa."',
     'A presidente fecha a pasta.',
-    '"Curador Adnan vai te acompanhar até o elevador e responder o que o senhor quiser no caminho. Nós temos mais dois itens."',
+    '"Curador Ren vai te acompanhar até o elevador e responder o que o senhor quiser no caminho. Nós temos mais dois itens."',
     'Não é ameaça. É agenda.'
   ],
   ef:{flag:['conheceu_adnan','sabe_da_comissao'],
-      npc:{nome:'Curador Adnan', opiniao:1, memoria:'Se apresentou no meio de uma reunião.'},
-      registrar:'Conheceu o Curador Adnan, curador de acervo vivo da CGRB.'},
+      npc:{nome:'Curador Ren', opiniao:1, memoria:'Se apresentou no meio de uma reunião.'},
+      registrar:'Conheceu o Curador Ren, curador de acervo vivo da CGRB.'},
   escolhas:[{texto:'Ir até o elevador com ele.', vai:'c18_adnan'}]
 },
 
@@ -547,7 +547,7 @@ c18_704_porque_deixam:{
     '"E porque eu quero que o senhor volte aqui depois de ler. Aí a conversa presta."'
   ],
   ef:{flag:'convite_da_presidente',
-      npc:{nome:'Hélia Rennó', opiniao:1, memoria:'Te entregou as atas e pediu que você voltasse depois de ler.'},
+      npc:{nome:'Reika Ando', opiniao:1, memoria:'Te entregou as atas e pediu que você voltasse depois de ler.'},
       registrar:'A presidente quer conversar depois que você ler tudo.'},
   escolhas:[{texto:'Sair com o calhamaço.', vai:'c18_leitura'}]
 },
@@ -555,14 +555,14 @@ c18_704_porque_deixam:{
 c18_704_quem_e:{
   texto:[
     '"Quem é a senhora?"',
-    '"Hélia Rennó. Presidente do conselho." Ela responde como quem responde no telefone. "E o senhor?"',
+    '"Reika Ando. Presidente do conselho." Ela responde como quem responde no telefone. "E o senhor?"',
     'Você diz seu nome. Ela repete uma vez, baixo, guardando.',
     '"Eu sei quem é o senhor." Ela não diz isso de um jeito ameaçador. Diz de um jeito administrativo. "Consta em três atas."',
     'Três atas.',
     'Você entrou nessa sala achando que ia descobrir quem eles são e descobre que você já é um item de pauta.'
   ],
   ef:{flag:['sabe_o_nome_da_presidente','voce_esta_nas_atas'], instabilidade:1,
-      npc:{nome:'Hélia Rennó', opiniao:0, memoria:'Te informou que você consta em três atas.'},
+      npc:{nome:'Reika Ando', opiniao:0, memoria:'Te informou que você consta em três atas.'},
       registrar:'Você aparece em três atas da CGRB.'},
   escolhas:[
     {texto:'"Em quais?"', vai:'c18_704_em_quais'},
@@ -581,7 +581,7 @@ c18_704_em_quais:{
     '"Porque risco reputacional é o nome que a gente dá quando tem medo de gente honesta." Ela fecha a caneta. "E eu não tenho."'
   ],
   ef:{flag:'presidente_te_defende', instabilidade:1,
-      npc:{nome:'Hélia Rennó', opiniao:2, memoria:'Vota contra te classificarem como risco reputacional.'},
+      npc:{nome:'Reika Ando', opiniao:2, memoria:'Vota contra te classificarem como risco reputacional.'},
       registrar:'A presidente vota contra te tratarem como risco reputacional.'},
   escolhas:[
     {texto:'"Eu quero as atas."', vai:'c18_704_pediu_atas'},
@@ -622,18 +622,18 @@ c18_704_saiu:{
   ]
 },
 
-/* ── Dra. Ivone ─────────────────────────────────────────── */
+/* ── Dra. Sayo ─────────────────────────────────────────── */
 c18_ivone:{
   texto:[
-    'O escritório da Dra. Ivone Sarmento fica sobre uma loja de tecidos e tem duas salas, uma secretária e uma pilha de processos que chega na altura da janela.',
+    'O escritório da Dra. Sayo Serizawa fica sobre uma loja de tecidos e tem duas salas, uma secretária e uma pilha de processos que chega na altura da janela.',
     'Ela ouve você por quatro minutos sem interromper, o que é a coisa mais rara que um advogado faz.',
     '"CGRB." Ela diz a sigla antes de você terminar. "Eu sei o que é."',
     '"A senhora sabe e não me falou?"',
     '"Eu não te falei porque eu não tinha prova, e falar sem prova é exatamente como eu perco processo." Ela puxa uma pasta da terceira pilha, sem procurar. "Comissão de Gestão de Risco Biológico de Kanto. Associação civil. Registrada. Legal."'
   ],
   ef:{flag:['sabe_da_comissao','ivone_sabia'],
-      npc:{nome:'Dra. Ivone', opiniao:1, memoria:'Já conhecia a CGRB e esperou você chegar sozinho até lá.'},
-      registrar:'A Dra. Sarmento já conhecia a CGRB e tinha as atas havia seis meses.'},
+      npc:{nome:'Dra. Sayo', opiniao:1, memoria:'Já conhecia a CGRB e esperou você chegar sozinho até lá.'},
+      registrar:'A Dra. Serizawa já conhecia a CGRB e tinha as atas havia seis meses.'},
   escolhas:[
     {texto:'"Por que a senhora esperou eu chegar sozinho?"', vai:'c18_ivone_esperou'},
     {texto:'"O que tem na pasta?"', vai:'c18_ivone_pasta'},
@@ -650,7 +650,7 @@ c18_ivone_esperou:{
     '"E eu?"',
     '"Você andou de Celadon a Cinnabar atrás disso. Você não vai desmontar." Ela põe os óculos de volta. "Agora senta, porque a parte ruim é longa."'
   ],
-  ef:{npc:{nome:'Dra. Ivone', opiniao:2, memoria:'Explicou por que não te entregou a resposta de bandeja.'},
+  ef:{npc:{nome:'Dra. Sayo', opiniao:2, memoria:'Explicou por que não te entregou a resposta de bandeja.'},
       registrar:'Informação que a gente acha vale mais que informação que a gente recebe.'},
   escolhas:[
     {texto:'Sentar e ouvir a parte ruim.', vai:'c18_ivone_pasta'},
@@ -668,7 +668,7 @@ c18_ivone_pasta:{
     '"De coisa de gente." Ela fecha a pasta. "Infarto, câncer, um acidente de carro e uma queda. Eu conferi todos. É isso que me deixa acordada."'
   ],
   ef:{flag:['viu_a_pasta_da_ivone','sabe_do_art19'], instabilidade:1,
-      registrar:'A Dra. Sarmento tem um parecer não protocolado e uma lista de doze nomes, quatro deles mortos de causas comuns.'},
+      registrar:'A Dra. Serizawa tem um parecer não protocolado e uma lista de doze nomes, quatro deles mortos de causas comuns.'},
   escolhas:[
     {texto:'"Nenhum deles foi morto por eles?"', vai:'c18_ivone_nenhum_morto'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'},
@@ -685,7 +685,7 @@ c18_ivone_nenhum_morto:{
     '"Eu passei seis meses tentando achar o nome. Eu não achei."'
   ],
   ef:{flag:'nao_tem_nome_no_codigo', instabilidade:1,
-      registrar:'O que a CGRB faz não tem tipo penal. A Dra. Sarmento procurou seis meses e não achou.'},
+      registrar:'O que a CGRB faz não tem tipo penal. A Dra. Serizawa procurou seis meses e não achou.'},
   escolhas:[
     {texto:'"E se a gente não usar tribunal?"', vai:'c18_ivone_sem_tribunal'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'},
@@ -714,13 +714,13 @@ c18_ivone_tem_estomago:{
   texto:[
     '"Tenho."',
     'Ela anota alguma coisa num papel e empurra para você. É um nome e um telefone.',
-    '"Isaura Pontes. Editora de cidades do jornal de Celadon. É a única pessoa naquela redação que lê documento inteiro antes de escrever."',
+    '"Izumi Hashi. Editora de cidades do jornal de Celadon. É a única pessoa naquela redação que lê documento inteiro antes de escrever."',
     '"E o resto?"',
     '"O resto pergunta se tem foto." Ela guarda a caneta. "Leva o calhamaço inteiro para ela. Não leva resumo. Resumo é o que a gente faz quando quer que acreditem em nós; documento é o que a gente faz quando quer que acreditem no documento."'
   ],
   ef:{flag:['contato_isaura','plano_publicar'],
-      npc:{nome:'Dra. Ivone', opiniao:2, memoria:'Te deu o contato da editora Isaura Pontes.'},
-      registrar:'Isaura Pontes, editora de cidades do jornal de Celadon.'},
+      npc:{nome:'Dra. Sayo', opiniao:2, memoria:'Te deu o contato da editora Izumi Hashi.'},
+      registrar:'Izumi Hashi, editora de cidades do jornal de Celadon.'},
   escolhas:[{texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'}]
 },
 
@@ -729,11 +729,11 @@ c18_ivone_nao_sei_estomago:{
     '"Não sei."',
     '"Boa resposta." Ela fala sério. "Quem diz tenho na hora costuma sumir no terceiro mês."',
     'Ela escreve um nome e um telefone e dobra o papel antes de entregar.',
-    '"Guarda e não usa até saber. Isaura Pontes, jornal de Celadon. Quando o senhor souber, ela vai estar lá, porque ela está lá há vinte e dois anos."'
+    '"Guarda e não usa até saber. Izumi Hashi, jornal de Celadon. Quando o senhor souber, ela vai estar lá, porque ela está lá há vinte e dois anos."'
   ],
   ef:{flag:'contato_isaura',
-      npc:{nome:'Dra. Ivone', opiniao:2, memoria:'Preferiu sua dúvida à sua certeza.'},
-      registrar:'Guardou o contato de Isaura Pontes sem prometer nada.'},
+      npc:{nome:'Dra. Sayo', opiniao:2, memoria:'Preferiu sua dúvida à sua certeza.'},
+      registrar:'Guardou o contato de Izumi Hashi sem prometer nada.'},
   escolhas:[{texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'}]
 },
 
@@ -745,7 +745,7 @@ c18_ivone_desanimo:{
     '"O que tem na quarenta?"',
     '"O Art. 19." Ela se recosta. "E eu quero ver a sua cara."'
   ],
-  ef:{registrar:'A Dra. Sarmento te proibiu de desanimar antes da página quarenta.'},
+  ef:{registrar:'A Dra. Serizawa te proibiu de desanimar antes da página quarenta.'},
   escolhas:[{texto:'Pegar o calhamaço.', vai:'c18_ivone_da_as_atas'}]
 },
 
@@ -759,7 +759,7 @@ c18_ivone_processo:{
     '"Eu tentei os três. Eu não protocolei nenhum, porque perder abre precedente, e precedente perdido vale mais para eles que a vitória valeria para nós."'
   ],
   ef:{flag:'sabe_que_nao_da_processo', instabilidade:1,
-      registrar:'Maus-tratos, crime ambiental e associação criminosa: nenhum encaixa. A Dra. Sarmento não protocolou para não criar precedente.'},
+      registrar:'Maus-tratos, crime ambiental e associação criminosa: nenhum encaixa. A Dra. Serizawa não protocolou para não criar precedente.'},
   escolhas:[
     {texto:'"E se a gente não usar tribunal?"', vai:'c18_ivone_sem_tribunal'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'},
@@ -776,8 +776,8 @@ c18_ivone_da_as_atas:{
     'Ela solta.'
   ],
   ef:{flag:['tem_as_atas','tem_o_estatuto'],
-      npc:{nome:'Dra. Ivone', opiniao:1, memoria:'Te emprestou a cópia anotada dela.'},
-      registrar:'A Dra. Sarmento te emprestou a cópia anotada das atas.'},
+      npc:{nome:'Dra. Sayo', opiniao:1, memoria:'Te emprestou a cópia anotada dela.'},
+      registrar:'A Dra. Serizawa te emprestou a cópia anotada das atas.'},
   escolhas:[{texto:'Ler.', vai:'c18_leitura'}]
 },
 
@@ -873,13 +873,13 @@ c18_terceira_entrega:{
 c18_terceira_quem_assina:{
   texto:[
     'Ela vai até um arquivo de aço, abre a segunda gaveta e tira uma pasta sanfonada cheia de segundas vias.',
-    '"Ordem de compra assinada por Adnan, curador. Sempre ele. Letra pequena, assinatura de quem assina muito."',
+    '"Ordem de compra assinada por Ren, curador. Sempre ele. Letra pequena, assinatura de quem assina muito."',
     '"E o pagamento?"',
     '"Transferência do centro de custo 11." Ela vira a folha para você. "Todo mês. Sempre o 11."',
     'Onze de novo.'
   ],
   ef:{flag:['conhece_o_nome_adnan','centro_de_custo_11'],
-      registrar:'As ordens de compra são assinadas pelo Curador Adnan e pagas pelo centro de custo 11.'},
+      registrar:'As ordens de compra são assinadas pelo Curador Ren e pagas pelo centro de custo 11.'},
   escolhas:[
     {texto:'"Me vende o que você tem."', vai:'c18_terceira_preco'},
     {texto:'"Me dá uma segunda via."', vai:'c18_terceira_segunda_via'}
@@ -924,12 +924,12 @@ c18_terceira_preco:{
 c18_hemeroteca:{
   texto:[
     'A hemeroteca fica no subsolo da biblioteca municipal de Saffron e cheira a papel e a desumidificador.',
-    'O atendente tem uns setenta anos, se chama Sr. Abrantes, e fica visivelmente feliz por alguém ter descido.',
+    'O atendente tem uns setenta anos, se chama Sr. Abe, e fica visivelmente feliz por alguém ter descido.',
     '"Um ano e meio de jornal?" Ele bate as mãos uma na outra. "O senhor tem a tarde inteira?"',
     '"Tenho."',
     '"Então o senhor vai achar." Ele já está puxando as caixas. "Todo mundo que desce aqui acha. O problema é que quase ninguém desce."'
   ],
-  ef:{npc:{nome:'Sr. Abrantes', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
+  ef:{npc:{nome:'Sr. Abe', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
       registrar:'Começou a varrer um ano e meio de jornal na hemeroteca de Saffron.'},
   escolhas:[
     {texto:'Procurar por notícia sobre fauna e controle.', vai:'c18_hemero_fauna'},
@@ -959,33 +959,33 @@ c18_hemero_legais:{
 
 c18_hemero_copia:{
   texto:[
-    'O Sr. Abrantes tira a cópia numa máquina antiga que esquenta a folha.',
+    'O Sr. Abe tira a cópia numa máquina antiga que esquenta a folha.',
     '"O senhor é o segundo a pedir essa página."',
     'Você congela.',
     '"Quem foi o primeiro?"',
     '"Uma advogada, faz uns seis meses. Baixinha, óculos, brava." Ele dá de ombros. "Pediu essa e mais quatro. Voltou três vezes."'
   ],
   ef:{flag:['tem_recorte_constituicao','ivone_esteve_aqui'], itens:{'Recorte da constituição da CGRB':1},
-      registrar:'A Dra. Sarmento pediu a mesma página seis meses antes de você.'},
+      registrar:'A Dra. Serizawa pediu a mesma página seis meses antes de você.'},
   escolhas:[
     {texto:'"Ela pediu mais o quê?"', vai:'c18_hemero_o_que_ela_pediu'},
     {texto:'Continuar procurando sozinho.', vai:'c18_hemero_classificados'},
-    {texto:'Ir falar com a Dra. Ivone.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ir falar com a Dra. Sayo.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir ao cartório.', vai:'c18_cartorio'}
   ]
 },
 
 c18_hemero_o_que_ela_pediu:{
   texto:[
-    'O Sr. Abrantes tem um caderno de pedidos, porque é de uma geração que anota.',
+    'O Sr. Abe tem um caderno de pedidos, porque é de uma geração que anota.',
     'Ele acha a página e vira para você.',
-    'Quatro recortes: a constituição da CGRB; uma nota de falecimento; um anúncio de vaga para técnico de viveiro; e uma reportagem de meia página sobre a reintrodução de Rattata em área urbana de Celadon, assinada por Isaura Pontes.',
+    'Quatro recortes: a constituição da CGRB; uma nota de falecimento; um anúncio de vaga para técnico de viveiro; e uma reportagem de meia página sobre a reintrodução de Rattata em área urbana de Celadon, assinada por Izumi Hashi.',
     '"A nota de falecimento é de quem?"',
-    'Ele confere. "Hélio Rennó. Cinquenta e nove anos. Faz dois anos e dois meses."',
-    'Rennó.'
+    'Ele confere. "Hélio Ando. Cinquenta e nove anos. Faz dois anos e dois meses."',
+    'Ando.'
   ],
   ef:{flag:['sabe_do_helio','contato_isaura'], instabilidade:1,
-      registrar:'Hélio Rennó morreu quatro meses antes da fundação da CGRB. A presidente se chama Hélia Rennó.'},
+      registrar:'Hélio Ando morreu quatro meses antes da fundação da CGRB. A presidente se chama Reika Ando.'},
   escolhas:[
     {texto:'Pedir a nota de falecimento.', vai:'c18_hemero_falecimento'},
     {texto:'Pedir o anúncio de vaga.', vai:'c18_hemero_classificados'},
@@ -1046,10 +1046,10 @@ c18_respondeu_anuncio:{
     'Você escreve uma carta de próprio punho e manda para a Caixa Postal 11, sem mentir em nada: seu nome, o que você faz, quantos anos de estrada.',
     'A resposta chega em quatro dias, num envelope comum, com timbre discreto.',
     'Prezado(a): agradecemos o interesse. Sua candidatura não se enquadra na vaga anunciada. Entretanto, gostaríamos de conversar.',
-    'Embaixo, à mão, numa letra pequena de quem assina muito: Curador Adnan. E um telefone.'
+    'Embaixo, à mão, numa letra pequena de quem assina muito: Curador Ren. E um telefone.'
   ],
   ef:{flag:['conhece_o_nome_adnan','adnan_quer_conversar'],
-      registrar:'Respondeu ao anúncio e recebeu um convite manuscrito do Curador Adnan.'},
+      registrar:'Respondeu ao anúncio e recebeu um convite manuscrito do Curador Ren.'},
   escolhas:[
     {texto:'Ligar.', vai:'c18_adnan'},
     {texto:'Não ligar. Ir ao cartório primeiro.', vai:'c18_cartorio'}
@@ -1372,13 +1372,13 @@ c18_31a:{
 c18_voto_vencido:{
   texto:[
     'Está logo abaixo da deliberação, em corpo menor, porque voto vencido se registra mas não se destaca.',
-    'Voto em separado do Curador Adnan: manifesta preocupação com a irreversibilidade da liberação em ambiente aberto, uma vez que o Art. 11 fundamenta o método na reversibilidade e a liberação em campo não é reversível. Requer que conste em ata. Voto vencido, 10 a 1.',
+    'Voto em separado do Curador Ren: manifesta preocupação com a irreversibilidade da liberação em ambiente aberto, uma vez que o Art. 11 fundamenta o método na reversibilidade e a liberação em campo não é reversível. Requer que conste em ata. Voto vencido, 10 a 1.',
     'Dez a um.',
     'Tem uma pessoa lá dentro que leu o próprio estatuto com atenção e perdeu.',
     'Você marca a página com o dedo e fica um tempo assim, com o dedo na página.'
   ],
   ef:{flag:['conhece_o_nome_adnan','sabe_do_voto_vencido'],
-      registrar:'O Curador Adnan votou contra a Fase II e perdeu por 10 a 1.'},
+      registrar:'O Curador Ren votou contra a Fase II e perdeu por 10 a 1.'},
   escolhas:[
     {texto:'Procurar outros votos dele.', vai:'c18_outros_votos_adnan'},
     {texto:'Procurar Risco 01.', vai:'c18_34a'},
@@ -1395,7 +1395,7 @@ c18_outros_votos_adnan:{
     'Você fecha o bloco. Existe um homem que pediu três vezes e perdeu três vezes e continuou indo às reuniões.'
   ],
   ef:{flag:'entende_o_adnan',
-      registrar:'Adnan pediu três vezes a revisão dos critérios do Art. 19 e perdeu as três.'},
+      registrar:'Ren pediu três vezes a revisão dos critérios do Art. 19 e perdeu as três.'},
   escolhas:[
     {texto:'Procurar Risco 01.', vai:'c18_34a'},
     {texto:'Procurar o endereço dele.', vai:'c18_anexo_pessoal'},
@@ -1632,12 +1632,12 @@ c18_anexo_pessoal:{
   texto:[
     'Quarenta e sete pessoas. Nome, cargo, carga horária, data de admissão.',
     'Nove veterinários. Quatro biólogos. Dezenove técnicos de viveiro. Seis motoristas. Um secretário. Um contador. Uma auditora de campo. Um curador. Cinco em vigilância, terceirizados.',
-    'Auditora de Campo: M. Prado.',
-    'Curador: J. Adnan. Admitido no segundo mês de existência da Comissão. O primeiro contratado depois do contador.',
+    'Auditora de Campo: M. Nishino.',
+    'Curador: J. Ren. Admitido no segundo mês de existência da Comissão. O primeiro contratado depois do contador.',
     'Você fica com essa informação: antes de qualquer veterinário, antes de qualquer técnico, eles contrataram um curador.'
   ],
   ef:{flag:['conhece_o_nome_adnan','conhece_o_nome_prado'],
-      registrar:'47 funcionários. Adnan foi o primeiro contratado depois do contador.'},
+      registrar:'47 funcionários. Ren foi o primeiro contratado depois do contador.'},
   escolhas:[
     {texto:'Ver o anexo de campo.', vai:'c18_anexo_campo'},
     {texto:'Ver o orçamento.', vai:'c18_anexo_orcamento'},
@@ -1785,17 +1785,17 @@ c18_a_manha:{
   escolhas:[{texto:'Levantar.', vai:'c18_auditora'}]
 },
 
-/* ── A Auditora Prado ───────────────────────────────────── */
+/* ── A Auditora Nishino ───────────────────────────────────── */
 c18_auditora:{
   texto:[
     'Tem alguém sentada na cadeira do outro lado do quarto.',
     'Não arrombou nada. A porta está intacta e trancada por dentro.',
     'Ela tem uma chave, porque a Comissão tem contrato de manutenção com a rede de Centros Pokémon, porque é uma associação civil registrada, e contrato de manutenção dá chave.',
-    '"Auditora Prado." Ela mostra um crachá que é real, com foto, validade e número. "O senhor comprou material público. Eu não vim te acusar de nada."',
+    '"Auditora Nishino." Ela mostra um crachá que é real, com foto, validade e número. "O senhor comprou material público. Eu não vim te acusar de nada."',
     'Ela cruza as mãos no colo.',
     '"Eu vim fazer uma pergunta e vou aceitar qualquer resposta, inclusive a que eu não quero. O que o senhor pretende fazer com isso?"'
   ],
-  ef:{npc:{nome:'Auditora Prado', opiniao:0, memoria:'Apareceu no seu quarto de Centro Pokémon com um crachá de verdade.'},
+  ef:{npc:{nome:'Auditora Nishino', opiniao:0, memoria:'Apareceu no seu quarto de Centro Pokémon com um crachá de verdade.'},
       flag:'conheceu_auditora'},
   escolhas:[
     {texto:'"Publicar. Tudo."', vai:'c18_publicar'},
@@ -1818,8 +1818,8 @@ c18_pergunta_de_volta:{
     '"Aí o relatório fica errado e o erro é meu." Ela dá de ombros. "Já aconteceu."'
   ],
   ef:{flag:'entendeu_a_prado',
-      npc:{nome:'Auditora Prado', opiniao:1, memoria:'Te explicou exatamente o que ela faz e o que acontece depois.'},
-      registrar:'A Auditora Prado faz relatório. É isso que ela faz.'},
+      npc:{nome:'Auditora Nishino', opiniao:1, memoria:'Te explicou exatamente o que ela faz e o que acontece depois.'},
+      registrar:'A Auditora Nishino faz relatório. É isso que ela faz.'},
   escolhas:[
     {texto:'"Publicar. Tudo."', vai:'c18_publicar'},
     {texto:'"Ainda não sei."', vai:'c18_nao_sei'},
@@ -1838,11 +1838,11 @@ c18_publicar:{
     '"A terceira é que nada vai acontecer." Ela se levanta e ajeita a bainha do casaco. "Vai sair na página sete do caderno de cidades e no dia seguinte vai ter outra coisa na página sete. Eu não estou te desanimando, eu estou te informando, porque eu já vi acontecer duas vezes."'
   ],
   ef:{flag:['quer_publicar'],
-      npc:{nome:'Auditora Prado', opiniao:1, memoria:'Você disse que ia publicar e ela anotou a palavra tudo.'},
-      registrar:'Disse à Auditora Prado que vai publicar tudo.'},
+      npc:{nome:'Auditora Nishino', opiniao:1, memoria:'Você disse que ia publicar e ela anotou a palavra tudo.'},
+      registrar:'Disse à Auditora Nishino que vai publicar tudo.'},
   escolhas:[
     {texto:'"Duas vezes? Quem foram os outros?"', vai:'c18_os_outros_dois'},
-    {texto:'"Veremos." E ir atrás da Isaura Pontes.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'"Veremos." E ir atrás da Izumi Hashi.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'"Veremos." E procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura},
     {texto:'"Antes disso, eu quero falar com quem manda."', vai:'c18_conversar'}
   ]
@@ -1860,23 +1860,23 @@ c18_os_outros_dois:{
       registrar:'Duas pessoas já publicaram sobre a CGRB. Uma em revista científica, outra numa rádio de Fuchsia.'},
   escolhas:[
     {texto:'"Quem é a mulher da rádio?"', vai:'c18_mulher_da_radio'},
-    {texto:'Ir atrás da Isaura Pontes.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'Ir atrás da Izumi Hashi.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura}
   ]
 },
 
 c18_mulher_da_radio:{
   texto:[
-    '"Nádia Bragança." A Auditora Prado escreve o nome num pedaço do próprio bloco e destaca. "Rádio comunitária de Fuchsia, programa das seis da manhã."',
+    '"Nozomi Arata." A Auditora Nishino escreve o nome num pedaço do próprio bloco e destaca. "Rádio comunitária de Fuchsia, programa das seis da manhã."',
     '"A senhora está me dando uma testemunha."',
     '"Eu estou te dando um nome público de uma pessoa que fala na rádio toda manhã." Ela entrega o papel. "Se isso é te dar uma testemunha, o problema não é meu."',
     'Ela fecha a porta com cuidado ao sair, do jeito que a gente fecha porta de quarto de gente que dormiu mal.'
   ],
-  ef:{flag:'contato_nadia', itens:{'Papel com o nome de Nádia Bragança':1},
-      npc:{nome:'Auditora Prado', opiniao:2, memoria:'Te deu o nome da mulher da rádio de Fuchsia.'},
-      registrar:'Nádia Bragança, rádio comunitária de Fuchsia, programa das 6h.'},
+  ef:{flag:'contato_nadia', itens:{'Papel com o nome de Nozomi Arata':1},
+      npc:{nome:'Auditora Nishino', opiniao:2, memoria:'Te deu o nome da mulher da rádio de Fuchsia.'},
+      registrar:'Nozomi Arata, rádio comunitária de Fuchsia, programa das 6h.'},
   escolhas:[
-    {texto:'Ir atrás da Isaura Pontes.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'Ir atrás da Izumi Hashi.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura},
     {texto:'Ir para a Rota 21 e ver com os próprios olhos.', vai:'c18_fim'}
   ]
@@ -1902,7 +1902,7 @@ c18_procura_jornal:{
 
 c18_isaura:{
   texto:[
-    'Isaura Pontes tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.',
+    'Izumi Hashi tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.',
     'Ela lê por quarenta minutos sem falar com você, o que é a coisa mais educada que alguém fez por você em meses.',
     'Depois fecha o bloco e faz três perguntas seguidas.',
     '"Isso é público?" É. "Você pagou?" Paguei, tenho o recibo. "Você entende que eles vão dizer que é tudo público e que isso vai fazer a matéria parecer boba?"',
@@ -1910,8 +1910,8 @@ c18_isaura:{
     '"Então eu publico."'
   ],
   ef:{flag:['isaura_vai_publicar'],
-      npc:{nome:'Isaura Pontes', opiniao:2, memoria:'Leu 140 páginas antes de decidir.'},
-      registrar:'Isaura Pontes vai publicar.'},
+      npc:{nome:'Izumi Hashi', opiniao:2, memoria:'Leu 140 páginas antes de decidir.'},
+      registrar:'Izumi Hashi vai publicar.'},
   escolhas:[
     {texto:'"Publica o Art. 19 na primeira linha."', vai:'c18_publica_art19'},
     {texto:'"Publica a lista dos nove riscos."', vai:'c18_publica_lista', cond:d=>!!d.flags.viu_a_lista_de_riscos},
@@ -1938,7 +1938,7 @@ c18_publica_lista:{
   texto:[
     'Sai na quinta, no caderno de cidades, com a tabela reproduzida inteira, as duas colunas.',
     'A da esquerda diz Risco 01, Risco 02, Risco 03.',
-    'A da direita, porque a Isaura fez questão, diz os nomes.',
+    'A da direita, porque a Izumi fez questão, diz os nomes.',
     'É a primeira vez em toda a história de Kanto que um jornal imprime, lado a lado, o número que uma instituição deu a um bicho e o nome que as pessoas dão a ele.',
     'Três leitores escrevem cartas na semana seguinte. Duas são elogios. Uma é de um veterinário dizendo que a tabela está tecnicamente correta e perguntando qual é o problema.'
   ],
@@ -1951,7 +1951,7 @@ c18_publica_lista:{
 c18_publica_419:{
   texto:[
     'O título é um número: 419.',
-    'Foi ideia da Isaura e ela brigou com o chefe de redação por causa disso durante quarenta minutos.',
+    'Foi ideia da Izumi e ela brigou com o chefe de redação por causa disso durante quarenta minutos.',
     '"Título com número ninguém lê", ele disse.',
     '"Título com esse número, lê", ela disse.',
     'A matéria explica, em linguagem simples, o que é um formulário de descarte, quem assina, e quantos foram emitidos no ano.',
@@ -2071,7 +2071,7 @@ c18_desistiu_do_jornal:{
       registrar:'O jornal quer uma foto. Sem foto, não há matéria.'},
   escolhas:[
     {texto:'Ir para a Rota 21 tirar a foto.', vai:'c18_fim'},
-    {texto:'Procurar o Curador Adnan.', vai:'c18_adnan'}
+    {texto:'Procurar o Curador Ren.', vai:'c18_adnan'}
   ]
 },
 
@@ -2086,8 +2086,8 @@ c18_nao_sei:{
     '"Eu vou voltar."'
   ],
   ef:{flag:'prado_vai_voltar',
-      npc:{nome:'Auditora Prado', opiniao:2, memoria:'Você disse que não sabia e ela respeitou isso.'},
-      registrar:'Disse à Auditora Prado que ainda não sabe. Ela vai voltar.'},
+      npc:{nome:'Auditora Nishino', opiniao:2, memoria:'Você disse que não sabia e ela respeitou isso.'},
+      registrar:'Disse à Auditora Nishino que ainda não sabe. Ela vai voltar.'},
   escolhas:[
     {texto:'"Espera. Por que a senhora faz isso?"', vai:'c18_prado_porque'},
     {texto:'"Me apresenta a quem manda."', vai:'c18_conversar'},
@@ -2105,8 +2105,8 @@ c18_prado_porque:{
     '"O senhor acha que eu trabalho para monstros. Eu trabalho para o único lugar onde o meu trabalho serve para alguma coisa. Foi assim que eles me pegaram e eu sei que foi assim."'
   ],
   ef:{flag:'entendeu_a_prado', instabilidade:1,
-      npc:{nome:'Auditora Prado', opiniao:2, memoria:'Te contou como foi pega.'},
-      registrar:'A Auditora Prado sabe exatamente como a Comissão a conquistou.'},
+      npc:{nome:'Auditora Nishino', opiniao:2, memoria:'Te contou como foi pega.'},
+      registrar:'A Auditora Nishino sabe exatamente como a Comissão a conquistou.'},
   escolhas:[
     {texto:'"Me apresenta a quem manda."', vai:'c18_conversar'},
     {texto:'Deixá-la ir.', vai:'c18_adnan'}
@@ -2124,7 +2124,7 @@ c18_nada:{
     'A porta fecha.'
   ],
   ef:{flag:'disse_que_nao_faz_nada', instabilidade:1, moral:-4,
-      npc:{nome:'Auditora Prado', opiniao:0, memoria:'Você disse que não ia fazer nada. Ela anotou e foi embora.'},
+      npc:{nome:'Auditora Nishino', opiniao:0, memoria:'Você disse que não ia fazer nada. Ela anotou e foi embora.'},
       registrar:'Disse à Comissão que não ia fazer nada.'},
   escolhas:[
     {texto:'Ficar sentado na cama com as quatro pilhas.', vai:'c18_ficou_sentado'},
@@ -2137,22 +2137,22 @@ c18_ficou_sentado:{
   texto:[
     'Você fica sentado na cama por uma hora e quinze minutos, com cento e quarenta páginas ao redor.',
     'Em algum momento você começa a empilhar. Em algum momento você para de empilhar.',
-    'Você pensa em cada pessoa que te contou alguma coisa nos últimos meses sabendo o risco: o Sr. Furtado, a mulher da rádio que você ainda não conhece, o velho da ilha, o rapaz do arquivo.',
+    'Você pensa em cada pessoa que te contou alguma coisa nos últimos meses sabendo o risco: o Sr. Hoshino, a mulher da rádio que você ainda não conhece, o velho da ilha, o rapaz do arquivo.',
     'Nenhum deles ganhou nada com isso.',
     'Você levanta.'
   ],
   ef:{limpaFlag:'disse_que_nao_faz_nada', flag:'mentiu_pra_prado', moral:4,
-      registrar:'Mentiu para a Auditora Prado e decidiu continuar.'},
+      registrar:'Mentiu para a Auditora Nishino e decidiu continuar.'},
   escolhas:[
     {texto:'Ir atrás de um jornal.', vai:'c18_procura_jornal'},
-    {texto:'Ir atrás do Curador Adnan.', vai:'c18_adnan'},
+    {texto:'Ir atrás do Curador Ren.', vai:'c18_adnan'},
     {texto:'Ir direto para a Rota 21.', vai:'c18_fim'}
   ]
 },
 
 c18_correu_atras:{
   texto:[
-    'Você alcança a Auditora Prado na calçada.',
+    'Você alcança a Auditora Nishino na calçada.',
     '"Eu menti."',
     'Ela para. Tira o bloco de novo. Abre na mesma página.',
     '"Eu sei." Ela risca uma linha e escreve outra. "O senhor demorou quatro minutos. A média é dois dias."',
@@ -2160,12 +2160,12 @@ c18_correu_atras:{
     '"Eu sou auditora, moço. O meu trabalho inteiro é saber quando a resposta é boa demais." Ela fecha o bloco. "Agora está certo. Boa sorte, e eu digo isso sério, e isso também vai no relatório."'
   ],
   ef:{limpaFlag:'disse_que_nao_faz_nada', flag:'prado_respeita',
-      npc:{nome:'Auditora Prado', opiniao:3, memoria:'Você voltou em quatro minutos para desmentir a si mesmo.'},
+      npc:{nome:'Auditora Nishino', opiniao:3, memoria:'Você voltou em quatro minutos para desmentir a si mesmo.'},
       rep:{eixo:'bom',delta:1,motivo:'Voltou para corrigir a própria mentira'},
       registrar:'Corrigiu a mentira na calçada. A auditora anotou.'},
   escolhas:[
     {texto:'"Me apresenta a quem manda."', vai:'c18_conversar'},
-    {texto:'Ir atrás do Curador Adnan.', vai:'c18_adnan'},
+    {texto:'Ir atrás do Curador Ren.', vai:'c18_adnan'},
     {texto:'Ir para a Rota 21.', vai:'c18_fim'}
   ]
 },
@@ -2191,18 +2191,18 @@ c18_voltou:{
     'Você volta no ônibus das seis, com a mesma mochila e uma decisão que não precisou de argumento.',
     'Saffron está igual. As pessoas estão indo trabalhar.',
     'Você atravessa a cidade a pé até a Rua do Comércio, 118, e desta vez não sobe.',
-    'Você senta no café da esquina, pede um pingado, e espera o Curador Adnan sair para o almoço, porque você leu o quadro de pessoal e sabe que ele almoça.'
+    'Você senta no café da esquina, pede um pingado, e espera o Curador Ren sair para o almoço, porque você leu o quadro de pessoal e sabe que ele almoça.'
   ],
   ef:{limpaFlag:'ignorou_a_comissao', flag:'voltou_pra_saffron', moral:5,
       rep:{eixo:'bom',delta:1,motivo:'Voltou'},
       registrar:'Voltou a Saffron.'},
-  escolhas:[{texto:'Esperar o Adnan.', vai:'c18_adnan'}]
+  escolhas:[{texto:'Esperar o Ren.', vai:'c18_adnan'}]
 },
 
 c18_conversar:{
   texto:[
     '"Eu quero conversar com quem manda."',
-    'A Auditora Prado fecha o bloco.',
+    'A Auditora Nishino fecha o bloco.',
     '"A Presidente atende terça e quinta, das quatorze às dezesseis, com hora marcada."',
     'Você acha que é ironia. Não é.',
     '"O senhor marca comigo agora ou marca lá embaixo com a secretária, e lá embaixo demora mais porque ela é meticulosa."',
@@ -2224,11 +2224,11 @@ c18_espera_a_quinta:{
     'Você passa três deles conferindo o que leu contra o que viu, e os outros três num estado que não é medo e não é ansiedade e para o qual você não tem palavra.',
     'Na quarta à noite, alguém bate na porta do seu quarto.',
     'É um homem de uns cinquenta anos, camisa polo, com uma sacola de padaria na mão e cara de quem não dorme bem há tempo.',
-    '"Curador Adnan." Ele levanta a sacola. "Eu trouxe pão de queijo porque eu não sabia como começar."'
+    '"Curador Ren." Ele levanta a sacola. "Eu trouxe pão de queijo porque eu não sabia como começar."'
   ],
   ef:{flag:'conheceu_adnan',
-      npc:{nome:'Curador Adnan', opiniao:1, memoria:'Apareceu no seu quarto com uma sacola de pão de queijo.'},
-      registrar:'O Curador Adnan te procurou antes da reunião com a Presidente.'},
+      npc:{nome:'Curador Ren', opiniao:1, memoria:'Apareceu no seu quarto com uma sacola de pão de queijo.'},
+      registrar:'O Curador Ren te procurou antes da reunião com a Presidente.'},
   escolhas:[{texto:'Deixar ele entrar.', vai:'c18_adnan'}]
 },
 
@@ -2239,7 +2239,7 @@ c18_luta_auditora:{
     'Ela não se assusta e não grita. Ela solta um Machoke que estava do lado de fora da porta.',
     '"Isso vai constar", ela diz, e parece cansada.'
   ],
-  batalha:{comissao:'auditora', nivel:50, tipo:'treinador', treinador:'Auditora Prado', fuga:true,
+  batalha:{comissao:'auditora', nivel:50, tipo:'treinador', treinador:'Auditora Nishino', fuga:true,
            vitoria:'c18_venceu_auditora', derrota:'c18_perdeu_auditora', fuga2:'c18_adnan', gameover:'gameover'}
 },
 
@@ -2254,10 +2254,10 @@ c18_venceu_auditora:{
   ],
   ef:{flag:['bateu_na_auditora'], instabilidade:2, moral:-4,
       rep:{eixo:'ruim',delta:2,motivo:'Agrediu uma auditora que tinha entrado para conversar'},
-      npc:{nome:'Auditora Prado', opiniao:-2, memoria:'Você atacou primeiro.'},
-      registrar:'Atacou a Auditora Prado. Vai constar no relatório dela.'},
+      npc:{nome:'Auditora Nishino', opiniao:-2, memoria:'Você atacou primeiro.'},
+      registrar:'Atacou a Auditora Nishino. Vai constar no relatório dela.'},
   escolhas:[
-    {texto:'Ir atrás do Curador Adnan.', vai:'c18_adnan'},
+    {texto:'Ir atrás do Curador Ren.', vai:'c18_adnan'},
     {texto:'Ir direto para a Rota 21.', vai:'c18_fim'},
     {texto:'Correr atrás dela e pedir desculpa.', vai:'c18_pediu_desculpa'}
   ]
@@ -2273,10 +2273,10 @@ c18_pediu_desculpa:{
     '"E porque das duas coisas que o senhor fez hoje, a segunda é a mais difícil."'
   ],
   ef:{flag:'pediu_desculpa_prado', moral:3,
-      npc:{nome:'Auditora Prado', opiniao:1, memoria:'Você desceu correndo para pedir desculpa.'},
-      registrar:'Pediu desculpa à Auditora Prado. Vai constar.'},
+      npc:{nome:'Auditora Nishino', opiniao:1, memoria:'Você desceu correndo para pedir desculpa.'},
+      registrar:'Pediu desculpa à Auditora Nishino. Vai constar.'},
   escolhas:[
-    {texto:'Ir atrás do Curador Adnan.', vai:'c18_adnan'},
+    {texto:'Ir atrás do Curador Ren.', vai:'c18_adnan'},
     {texto:'Ir para a Rota 21.', vai:'c18_fim'}
   ]
 },
@@ -2286,32 +2286,32 @@ c18_perdeu_auditora:{
     'Você acorda na enfermaria do Centro, com seus Pokémon já atendidos e uma ficha preenchida.',
     'Na mesinha do lado tem um envelope.',
     'Dentro, a conta do atendimento — paga — e um bilhete em letra pequena.',
-    'Eu não denuncio porque denúncia gera boletim e boletim gera imprensa. Recupere-se. A conversa continua valendo. M. Prado.',
+    'Eu não denuncio porque denúncia gera boletim e boletim gera imprensa. Recupere-se. A conversa continua valendo. M. Nishino.',
     'Embaixo, um cartão com o endereço da sala 704 e um horário: quinta, quatorze e trinta.'
   ],
   ef:{flag:['perdeu_pra_auditora','marcou_com_a_presidente'], moral:-3,
-      npc:{nome:'Auditora Prado', opiniao:1, memoria:'Pagou o seu atendimento e não registrou boletim.'},
-      registrar:'Perdeu para a Auditora Prado. Ela pagou a conta e deixou um horário.'},
+      npc:{nome:'Auditora Nishino', opiniao:1, memoria:'Pagou o seu atendimento e não registrou boletim.'},
+      registrar:'Perdeu para a Auditora Nishino. Ela pagou a conta e deixou um horário.'},
   escolhas:[
-    {texto:'Ir atrás do Curador Adnan.', vai:'c18_adnan'},
+    {texto:'Ir atrás do Curador Ren.', vai:'c18_adnan'},
     {texto:'Esperar a quinta.', vai:'c18_espera_a_quinta'},
     {texto:'Ir para a Rota 21 sem esperar ninguém.', vai:'c18_fim'}
   ]
 },
 
-/* ── O Curador Adnan ────────────────────────────────────── */
+/* ── O Curador Ren ────────────────────────────────────── */
 c18_adnan:{
   texto:[
     'A lanchonete fica na esquina da Rua do Comércio e tem seis banquetas e um balcão de fórmica.',
-    'O Curador Adnan tem uns cinquenta anos, camisa polo, tênis de caminhada e mãos de quem mexe com bicho: unha curta, um arranhão velho no antebraço.',
+    'O Curador Ren tem uns cinquenta anos, camisa polo, tênis de caminhada e mãos de quem mexe com bicho: unha curta, um arranhão velho no antebraço.',
     'Ele pede um misto e um café e paga os dois antes de perguntar o que você quer.',
     '"Eu vou te falar tudo o que o senhor perguntar", ele diz. "Isso não é generosidade. Está no meu contrato: transparência ativa. Eu sou obrigado."',
     'Ele morde o misto.',
     '"E é ruim, porque quando eu falo tudo as pessoas param de acreditar que é ruim."'
   ],
   ef:{flag:'conheceu_adnan',
-      npc:{nome:'Curador Adnan', opiniao:1, memoria:'Pagou o seu café e disse que é obrigado a falar tudo.'},
-      registrar:'Conversa com o Curador Adnan numa lanchonete de Saffron.'},
+      npc:{nome:'Curador Ren', opiniao:1, memoria:'Pagou o seu café e disse que é obrigado a falar tudo.'},
+      registrar:'Conversa com o Curador Ren numa lanchonete de Saffron.'},
   escolhas:[
     {texto:'"Por que você votou contra a Fase II?"', vai:'c18_adnan_voto', cond:d=>!!d.flags.sabe_do_voto_vencido},
     {texto:'"Quantos você matou?"', vai:'c18_adnan_quantos'},
@@ -2332,8 +2332,8 @@ c18_adnan_voto:{
     '"Que reversível, no estatuto, é conceito jurídico e não ecológico." Ele amassa o guardanapo. "E eles estão certos. Está escrito assim mesmo. Eu perdi por dez a um porque eu estava errado sobre o que a palavra queria dizer."'
   ],
   ef:{flag:'entende_o_adnan', instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Te explicou por que perdeu por dez a um.'},
-      registrar:'Adnan perdeu a discussão porque reversível, no estatuto deles, é conceito jurídico.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Te explicou por que perdeu por dez a um.'},
+      registrar:'Ren perdeu a discussão porque reversível, no estatuto deles, é conceito jurídico.'},
   escolhas:[
     {texto:'"Quantos você matou?"', vai:'c18_adnan_quantos'},
     {texto:'"E por que você continua?"', vai:'c18_adnan_porque_continua'},
@@ -2351,8 +2351,8 @@ c18_adnan_quantos:{
     '"Porque se for sempre minha, alguém está contando." Ele gira a xícara. "Se rodar entre quatro pessoas, ninguém sabe quantos foram, e no dia em que ninguém souber quantos foram, o número pode ser qualquer um."'
   ],
   ef:{flag:'sabe_dos_419', instabilidade:2,
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Assina todos os formulários de propósito, para alguém estar contando.'},
-      registrar:'Adnan assina todos os 419 para que sempre haja alguém contando.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Assina todos os formulários de propósito, para alguém estar contando.'},
+      registrar:'Ren assina todos os 419 para que sempre haja alguém contando.'},
   escolhas:[
     {texto:'"Isso não te absolve."', vai:'c18_adnan_nao_absolve'},
     {texto:'"E por que você continua?"', vai:'c18_adnan_porque_continua'},
@@ -2369,7 +2369,7 @@ c18_adnan_nao_absolve:{
     '"É." Ele olha para você sem raiva nenhuma. "E é o argumento mais velho do mundo porque às vezes é verdade, e o problema é exatamente esse: não dá para saber de dentro."'
   ],
   ef:{instabilidade:1, moral:-2,
-      registrar:'Adnan sabe que o argumento dele é o argumento mais velho do mundo.'},
+      registrar:'Ren sabe que o argumento dele é o argumento mais velho do mundo.'},
   escolhas:[
     {texto:'"Então sai e conta tudo."', vai:'c18_adnan_sai_e_conta'},
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'},
@@ -2388,8 +2388,8 @@ c18_adnan_sai_e_conta:{
     '"Se o senhor me der um motivo melhor que o que eu tenho, eu assino hoje. Eu falo sério."'
   ],
   ef:{flag:['adnan_tem_a_carta'], instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:3, memoria:'Te mostrou a carta de demissão que carrega na carteira.'},
-      registrar:'Adnan carrega uma carta de demissão sem data na carteira desde o oitavo mês.'},
+      npc:{nome:'Curador Ren', opiniao:3, memoria:'Te mostrou a carta de demissão que carrega na carteira.'},
+      registrar:'Ren carrega uma carta de demissão sem data na carteira desde o oitavo mês.'},
   escolhas:[
     {texto:'"O motivo é que eu vou publicar, e você vai ser fonte com nome."', vai:'c18_adnan_fonte', cond:d=>!!d.flags.quer_publicar || !!d.flags.publicou},
     {texto:'"O motivo é a Fase II. Ela solta em quatro meses."', vai:'c18_adnan_fase2'},
@@ -2408,9 +2408,9 @@ c18_adnan_fonte:{
     'Ele preenche a data com a caneta do balcão.'
   ],
   ef:{flag:['adnan_assinou','adnan_e_fonte'], instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:4, memoria:'Assinou a carta de demissão na sua frente, num balcão de lanchonete.'},
+      npc:{nome:'Curador Ren', opiniao:4, memoria:'Assinou a carta de demissão na sua frente, num balcão de lanchonete.'},
       rep:{eixo:'bom',delta:2,motivo:'Convenceu um curador a sair com nome e cara'},
-      registrar:'Adnan assinou a demissão e aceitou ser fonte com nome.'},
+      registrar:'Ren assinou a demissão e aceitou ser fonte com nome.'},
   escolhas:[
     {texto:'"Então me leva no viveiro antes de entregar."', vai:'c18_pedido_viveiro'},
     {texto:'"Traz tudo o que você tiver."', vai:'c18_adnan_traz_tudo'}
@@ -2426,11 +2426,11 @@ c18_adnan_traz_tudo:{
     '"Essa aí", ele diz, "é o motivo pelo qual eu escrevi a carta a primeira vez."'
   ],
   ef:{flag:['tem_as_atas_fechadas','tem_a_foto_do_g'],
-      itens:{'Sacola do Adnan':1}, instabilidade:2,
-      registrar:'Adnan entregou 61 formulários, 3 atas fechadas e fotos do galpão G.'},
+      itens:{'Sacola do Ren':1}, instabilidade:2,
+      registrar:'Ren entregou 61 formulários, 3 atas fechadas e fotos do galpão G.'},
   escolhas:[
     {texto:'Olhar a nona foto.', vai:'c18_nona_foto'},
-    {texto:'Não olhar. Levar tudo para a Isaura.', vai:'c18_fim'},
+    {texto:'Não olhar. Levar tudo para a Izumi.', vai:'c18_fim'},
     {texto:'"Me leva lá."', vai:'c18_pedido_viveiro'}
   ]
 },
@@ -2447,7 +2447,7 @@ c18_nona_foto:{
       registrar:'A foto do galpão G: uma sala limpa, com ralo, mangueira e um quadro de lote, motivo e data.'},
   escolhas:[
     {texto:'"Me leva lá."', vai:'c18_pedido_viveiro'},
-    {texto:'Levar tudo para a Isaura.', vai:'c18_fim'}
+    {texto:'Levar tudo para a Izumi.', vai:'c18_fim'}
   ]
 },
 
@@ -2462,9 +2462,9 @@ c18_adnan_fase2:{
     'Ele preenche a data.'
   ],
   ef:{flag:['adnan_assinou','adnan_e_fonte'], instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:4, memoria:'Assinou por causa do prazo da Fase II.'},
+      npc:{nome:'Curador Ren', opiniao:4, memoria:'Assinou por causa do prazo da Fase II.'},
       rep:{eixo:'bom',delta:2,motivo:'Usou o argumento dele contra ele, e ele aceitou'},
-      registrar:'Adnan assinou a demissão por causa do prazo de quatro meses da Fase II.'},
+      registrar:'Ren assinou a demissão por causa do prazo de quatro meses da Fase II.'},
   escolhas:[
     {texto:'"Traz tudo o que você tiver."', vai:'c18_adnan_traz_tudo'},
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'}
@@ -2482,8 +2482,8 @@ c18_adnan_sem_motivo:{
     '"Eu vou continuar lá dentro contando. Quando eu tiver motivo, eu assino. E se o senhor arrumar o motivo, me procura."'
   ],
   ef:{flag:'adnan_espera_motivo',
-      npc:{nome:'Curador Adnan', opiniao:3, memoria:'Você não inventou uma frase bonita para convencê-lo.'},
-      registrar:'Adnan continua na Comissão, contando, esperando um motivo.'},
+      npc:{nome:'Curador Ren', opiniao:3, memoria:'Você não inventou uma frase bonita para convencê-lo.'},
+      registrar:'Ren continua na Comissão, contando, esperando um motivo.'},
   escolhas:[
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'},
     {texto:'"Me arruma um crachá."', vai:'c18_pedir_cracha'}
@@ -2502,8 +2502,8 @@ c18_adnan_fica_dentro:{
     '"Nunca ligue antes das oito da noite. Depois das oito eu estou em casa e a casa é minha."'
   ],
   ef:{flag:['adnan_e_infiltrado','telefone_do_adnan'],
-      npc:{nome:'Curador Adnan', opiniao:3, memoria:'Aceitou continuar dentro e te passar informação.'},
-      registrar:'Adnan fica dentro da Comissão e passa informação. Ligar só depois das 20h.'},
+      npc:{nome:'Curador Ren', opiniao:3, memoria:'Aceitou continuar dentro e te passar informação.'},
+      registrar:'Ren fica dentro da Comissão e passa informação. Ligar só depois das 20h.'},
   escolhas:[
     {texto:'"Me arruma um crachá."', vai:'c18_pedir_cracha'},
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'}
@@ -2520,8 +2520,8 @@ c18_adnan_porque_entrou:{
     'Ele sorri sem alegria.',
     '"Eu decidi uma vez e perdi por dez a um."'
   ],
-  ef:{npc:{nome:'Curador Adnan', opiniao:2, memoria:'Te contou do zoológico de Celadon que fechou.'},
-      registrar:'Adnan trabalhou 18 anos no zoológico de Celadon antes de o zoológico fechar.'},
+  ef:{npc:{nome:'Curador Ren', opiniao:2, memoria:'Te contou do zoológico de Celadon que fechou.'},
+      registrar:'Ren trabalhou 18 anos no zoológico de Celadon antes de o zoológico fechar.'},
   escolhas:[
     {texto:'"Quantos você matou?"', vai:'c18_adnan_quantos'},
     {texto:'"Me convence. Tenta."', vai:'c18_adnan_doutrina'},
@@ -2540,8 +2540,8 @@ c18_adnan_porque_continua:{
     '"Mancando. Viva. Num galpão." Ele pousa as duas mãos no balcão. "É por isso que eu continuo. Por uma. E eu sei exatamente o que isso soa e eu não tenho resposta melhor."'
   ],
   ef:{instabilidade:1, moral:-1,
-      npc:{nome:'Curador Adnan', opiniao:3, memoria:'Ganhou uma votação, uma vez, e é por isso que continua.'},
-      registrar:'Adnan continua porque ganhou uma votação, uma vez, por uma Nidorina.'},
+      npc:{nome:'Curador Ren', opiniao:3, memoria:'Ganhou uma votação, uma vez, e é por isso que continua.'},
+      registrar:'Ren continua porque ganhou uma votação, uma vez, por uma Nidorina.'},
   escolhas:[
     {texto:'"Então sai e conta tudo."', vai:'c18_adnan_sai_e_conta'},
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'},
@@ -2583,7 +2583,7 @@ c18_resposta_quem_decide:{
     'Você não diz mais nada. Ele também não. O misto esfria.'
   ],
   ef:{flag:'acertou_a_pergunta', instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:3, memoria:'Você fez a pergunta que ele não sabia responder.'},
+      npc:{nome:'Curador Ren', opiniao:3, memoria:'Você fez a pergunta que ele não sabia responder.'},
       rep:{eixo:'bom',delta:1,motivo:'Fez a pergunta certa e esperou em silêncio'},
       registrar:'Onze pessoas elegem o conselho que elege as onze pessoas.'},
   escolhas:[
@@ -2603,7 +2603,7 @@ c18_resposta_pessoa:{
     '"E estatuto também não muda de ideia quando vê uma coisa bonita. É isso que o senhor está tentando dizer e o senhor está certo."'
   ],
   ef:{instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Admitiu que estatuto não muda de ideia quando vê uma coisa bonita.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Admitiu que estatuto não muda de ideia quando vê uma coisa bonita.'},
       registrar:'Estatuto não morre no meio. E também não muda de ideia.'},
   escolhas:[
     {texto:'"Então sai e conta tudo."', vai:'c18_adnan_sai_e_conta'},
@@ -2623,9 +2623,9 @@ c18_resposta_numero:{
     '"Eu nunca vi nenhum dos nove", ele diz. "Essa é a coisa mais desonesta do meu trabalho."'
   ],
   ef:{instabilidade:2, moral:2,
-      npc:{nome:'Curador Adnan', opiniao:4, memoria:'Admitiu que nunca viu nenhum dos nove que classifica.'},
+      npc:{nome:'Curador Ren', opiniao:4, memoria:'Admitiu que nunca viu nenhum dos nove que classifica.'},
       rep:{eixo:'bom',delta:1,motivo:'Contou a um burocrata como um deles vira a cabeça'},
-      registrar:'Adnan nunca viu nenhum dos nove riscos que ajuda a classificar.'},
+      registrar:'Ren nunca viu nenhum dos nove riscos que ajuda a classificar.'},
   escolhas:[
     {texto:'"Então vem ver comigo."', vai:'c18_adnan_vem_ver'},
     {texto:'"Então sai e conta tudo."', vai:'c18_adnan_sai_e_conta'},
@@ -2645,8 +2645,8 @@ c18_adnan_vem_ver:{
     '"Depois da Rota 21. Se o senhor voltar de lá, eu vou com o senhor onde o senhor quiser, e aí eu não assino mais nada."'
   ],
   ef:{flag:['adnan_promete_ir'], instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:4, memoria:'Prometeu ir a campo com você depois da Rota 21.'},
-      registrar:'Adnan prometeu ir ver com os próprios olhos, depois da Rota 21.'},
+      npc:{nome:'Curador Ren', opiniao:4, memoria:'Prometeu ir a campo com você depois da Rota 21.'},
+      registrar:'Ren prometeu ir ver com os próprios olhos, depois da Rota 21.'},
   escolhas:[
     {texto:'"Me leva no viveiro, então."', vai:'c18_pedido_viveiro'},
     {texto:'"Me arruma um crachá."', vai:'c18_pedir_cracha'}
@@ -2664,8 +2664,8 @@ c18_sem_resposta:{
     '"Pensa numa. Pensa numa e me procura. Eu estou falando sério e eu não deveria."'
   ],
   ef:{instabilidade:1, moral:-3,
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Queria que você tivesse resposta e você não tinha.'},
-      registrar:'Adnan já venceu doze vezes esse debate e piora a cada vitória.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Queria que você tivesse resposta e você não tinha.'},
+      registrar:'Ren já venceu doze vezes esse debate e piora a cada vitória.'},
   escolhas:[
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'},
     {texto:'"Espera. Quem decide quem é risco?"', vai:'c18_resposta_quem_decide'},
@@ -2751,7 +2751,7 @@ c18_recusou_a_oferta:{
   ],
   ef:{flag:'recusou_comissao',
       rep:{eixo:'bom',delta:1,motivo:'Recusou a vaga na Comissão'},
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Você recusou por convicção e ele fez questão de escrever isso.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Você recusou por convicção e ele fez questão de escrever isso.'},
       registrar:'Recusou a vaga na CGRB.'},
   escolhas:[
     {texto:'"Me leva no viveiro, então."', vai:'c18_pedido_viveiro'},
@@ -2764,7 +2764,7 @@ c18_rasgou:{
   texto:[
     'Você rasga o envelope no meio, em cima do balcão de fórmica, e as duas metades ficam ali.',
     'O moço da lanchonete olha e não fala nada, porque em lanchonete de esquina já se viu de tudo.',
-    'O Curador Adnan junta os pedaços, alinha, e guarda no bolso.',
+    'O Curador Ren junta os pedaços, alinha, e guarda no bolso.',
     '"Eu vou ter que anexar."',
     'Ele não está sendo irônico. Ele vai anexar mesmo. Vai grampear os pedaços num formulário e alguém vai arquivar por dez anos.'
   ],
@@ -2788,7 +2788,7 @@ c18_pedir_cracha:{
     '"Quarenta e oito horas. Se não voltar em quarenta e oito horas, eu comunico o extravio e a culpa é minha, não dela. Isso não é negociável."'
   ],
   ef:{flag:['cracha_adnan','prazo_48h'], itens:{'Crachá da Sandra (CGRB)':1},
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Te emprestou o crachá de uma colega em licença, assumindo a culpa.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Te emprestou o crachá de uma colega em licença, assumindo a culpa.'},
       registrar:'Crachá emprestado da CGRB. 48 horas.'},
   escolhas:[
     {texto:'"Combinado. Quarenta e oito horas."', vai:'c18_pedido_viveiro'},
@@ -2806,7 +2806,7 @@ c18_pedido_viveiro:{
     '"Uma coisa só." Ele para. "Quando o senhor entrar, não olhe as incubadoras primeiro. Olhe o galpão do fundo. As incubadoras são o que a gente mostra para a imprensa."'
   ],
   ef:{flag:['sabe_da_rota21','sabe_do_galpao_do_fundo','vai_pro_viveiro','sabe_da_estacao4'],
-      npc:{nome:'Curador Adnan', opiniao:3, memoria:'Te disse onde é a Estação 4 e o que olhar primeiro.'},
+      npc:{nome:'Curador Ren', opiniao:3, memoria:'Te disse onde é a Estação 4 e o que olhar primeiro.'},
       registrar:'Estação 4, Rota 21. Olhar o galpão do fundo, não as incubadoras.'},
   escolhas:[
     {texto:'"Por que você está me ajudando?"', vai:'c18_porque_ajuda'},
@@ -2824,8 +2824,8 @@ c18_porque_ajuda:{
     '"O senhor ainda vê bicho. Vai lá e olha enquanto o senhor ainda vê."'
   ],
   ef:{flag:'entende_o_adnan', moral:3, instabilidade:1,
-      npc:{nome:'Curador Adnan', opiniao:4, memoria:'Te mandou olhar enquanto você ainda vê bicho.'},
-      registrar:'Adnan já não vê bicho. Vê lote, motivo e data.'},
+      npc:{nome:'Curador Ren', opiniao:4, memoria:'Te mandou olhar enquanto você ainda vê bicho.'},
+      registrar:'Ren já não vê bicho. Vê lote, motivo e data.'},
   escolhas:[{texto:'Ir para a Rota 21.', vai:'c18_fim'}]
 },
 

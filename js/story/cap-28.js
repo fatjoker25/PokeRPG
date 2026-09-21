@@ -117,7 +117,7 @@ c23_o_chao:{
     'Elas descem uns duzentos metros e param, e depois voltam. Elas voltam.',
     'E, por cima delas, um par mais antigo, de bota maior, que desce e não volta.',
     d=>d.flags.procura_o_nogueira
-      ? 'Você senta no chão e mede a pegada maior com a mão aberta, e confere com o que está escrito no bilhete que a Bruna Teles te deu.'
+      ? 'Você senta no chão e mede a pegada maior com a mão aberta, e confere com o que está escrito no bilhete que a Saya Kurata te deu.'
       : 'Você fica um tempo agachado olhando o par que não volta.'
   ],
   ef:{flag:['viu_as_pegadas_na_rampa'], instabilidade:1,
@@ -135,11 +135,11 @@ c23_o_par_que_nao_volta:{
     'A trinta metros do fim, ele muda.',
     'A passada encurta e os pés ficam mais juntos, do jeito que fica quando alguém para de andar e passa a andar em direção a alguma coisa.',
     'E nos últimos dez metros tem só a marca de um par de botas parado, com o peso nos dois pés.',
-    'Exatamente como a Bruna Teles descreveu, e a duzentos quilômetros dali.',
+    'Exatamente como a Saya Kurata descreveu, e a duzentos quilômetros dali.',
     'A partir dali, nada. Nem pegada saindo, nem pegada voltando, nem arrasto.'
   ],
   ef:{flag:['achou_onde_ele_parou'], instabilidade:2,
-      registrar:'As pegadas do Nogueira terminam no fim da rampa, paradas, com o peso nos dois pés.'},
+      registrar:'As pegadas do Kuroda terminam no fim da rampa, paradas, com o peso nos dois pés.'},
   escolhas:[
     {texto:'Entrar na câmara.', vai:'c23_a_camara'},
     {texto:'Chamar o nome dele em voz alta.', vai:'c23_chamou_o_nome', cond:d=>!!d.flags.procura_o_nogueira}
@@ -148,7 +148,7 @@ c23_o_par_que_nao_volta:{
 
 c23_chamou_o_nome:{
   texto:[
-    '"Nogueira!"',
+    '"Kuroda!"',
     'O nome bate na pedra lisa e volta duas vezes e some.',
     'Nada responde.',
     'Você chama de novo, e de novo, e na quarta vez a sua voz falha e você percebe que está gritando o nome de um homem que você nunca viu para dentro de uma montanha.',
@@ -356,9 +356,9 @@ c23_procurou_o_homem:{
   ],
   ef:{flag:['achou_o_nogueira'], instabilidade:2,
       rep:{eixo:'bom',delta:3,motivo:'Achou o homem que a Liga parou de procurar'},
-      registrar:'O Nogueira está vivo, sentado no canto da câmara, há sete meses.'},
+      registrar:'O Kuroda está vivo, sentado no canto da câmara, há sete meses.'},
   escolhas:[
-    {texto:'"Nogueira?"', vai:'c23_nogueira_nome'},
+    {texto:'"Kuroda?"', vai:'c23_nogueira_nome'},
     {texto:'"Vamos embora. Agora."', vai:'c23_nogueira_vamos'},
     {texto:'Sentar no chão do lado dele.', vai:'c23_sentou_com_nogueira'}
   ]
@@ -366,9 +366,9 @@ c23_procurou_o_homem:{
 
 c23_nogueira_nome:{
   texto:[
-    '"Nogueira?"',
+    '"Kuroda?"',
     'Ele demora uns bons quatro segundos para reconhecer o próprio sobrenome, e quando reconhece, a cara dele muda devagar, de dentro para fora.',
-    '"Sou." Ele olha as próprias mãos. "Eu sou o Nogueira."',
+    '"Sou." Ele olha as próprias mãos. "Eu sou o Kuroda."',
     'Ele repete uma vez baixinho, conferindo.',
     '"Faz quanto tempo?"',
     'Você diz.',
@@ -376,7 +376,7 @@ c23_nogueira_nome:{
     '"Elas ainda estão nadando?"'
   ],
   ef:{flag:['nogueira_acordou'], instabilidade:1, moral:3,
-      npc:{nome:'Nogueira', opiniao:3, memoria:'Acordou quando você disse o sobrenome dele em voz alta.'},
+      npc:{nome:'Kuroda', opiniao:3, memoria:'Acordou quando você disse o sobrenome dele em voz alta.'},
       registrar:'Ele reconheceu o próprio sobrenome depois de quatro segundos.'},
   escolhas:[
     {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
@@ -398,8 +398,8 @@ c23_deu_a_medalha:{
   ],
   ef:{flag:['nogueira_vai_descer'], instabilidade:1, moral:5,
       rep:{eixo:'bom',delta:4,motivo:'Devolveu a medalha e trouxe um homem de volta'},
-      npc:{nome:'Nogueira', opiniao:5, memoria:'Você devolveu a medalha da filha dele.'},
-      registrar:'Devolveu a medalha ao Nogueira. Ele quer descer.'},
+      npc:{nome:'Kuroda', opiniao:5, memoria:'Você devolveu a medalha da filha dele.'},
+      registrar:'Devolveu a medalha ao Kuroda. Ele quer descer.'},
   escolhas:[
     {texto:'Subir com ele agora, antes de qualquer outra coisa.', vai:'c23_final_nogueira'},
     {texto:'"Espera. Eu preciso falar com ele primeiro."', vai:'c23_conversa'}
@@ -414,12 +414,12 @@ c23_nogueira_vamos:{
     'Não é pergunta retórica. Ele está perguntando de verdade, a você, se ele pode ir embora.',
     'E da pedra, do outro lado da câmara, sem nenhuma pressa, vem a resposta que nem você nem ele pediram.',
     '"Você sempre pôde."',
-    'O Nogueira fecha os olhos.',
+    'O Kuroda fecha os olhos.',
     '"Eu sei", ele diz, em voz alta, para a câmara inteira. "Eu sei, e eu não conseguia, e isso não é culpa sua."'
   ],
   ef:{flag:['nogueira_vai_descer'], instabilidade:1, moral:3,
       rep:{eixo:'bom',delta:3,motivo:'Disse em voz alta a um homem que era hora de ir'},
-      registrar:'O Nogueira sempre pôde sair. Ele não conseguia.'},
+      registrar:'O Kuroda sempre pôde sair. Ele não conseguia.'},
   escolhas:[
     {texto:'Subir com ele agora.', vai:'c23_final_nogueira'},
     {texto:'"Espera lá em cima. Eu preciso falar com ele."', vai:'c23_conversa'}
@@ -430,18 +430,18 @@ c23_sentou_com_nogueira:{
   texto:[
     'Você senta no chão do lado dele, encostado na mesma parede, e por uns dois minutos ninguém fala.',
     '"Ele fala com você?", você acaba perguntando.',
-    '"Todo dia." O Nogueira ajeita o casaco dobrado. "De manhã e à noite. Eu sei que é de manhã e à noite porque ele me diz."',
+    '"Todo dia." O Kuroda ajeita o casaco dobrado. "De manhã e à noite. Eu sei que é de manhã e à noite porque ele me diz."',
     '"Sobre o quê?"',
     '"Sobre tudo." Ele encolhe os ombros. "Ele me pergunta coisa e eu respondo. Ele quer saber como é ter irmão, como é ficar bêbado, por que a gente chora em casamento."',
     'Ele olha para o outro lado da câmara.',
     '"Ele me perguntou uma vez o que era saudade e eu levei três dias para responder. Ele esperou os três dias."'
   ],
   ef:{flag:['nogueira_conversou'], instabilidade:1, moral:2,
-      registrar:'Ele conversa com o Nogueira de manhã e à noite, há sete meses.'},
+      registrar:'Ele conversa com o Kuroda de manhã e à noite, há sete meses.'},
   escolhas:[
     {texto:'"E por que você não sobe?"', vai:'c23_nogueira_porque_fica'},
     {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
-    {texto:'"Nogueira?"', vai:'c23_nogueira_nome'}
+    {texto:'"Kuroda?"', vai:'c23_nogueira_nome'}
   ]
 },
 
@@ -456,7 +456,7 @@ c23_nogueira_porque_fica:{
     '"Eu tenho duas filhas lá embaixo e eu sei o que isso me faz. Eu sei exatamente. E eu não consigo levantar."'
   ],
   ef:{flag:['sabe_porque_o_nogueira_fica'], instabilidade:2, moral:-2,
-      registrar:'O Nogueira fica porque é a única pessoa que conversa com ele.'},
+      registrar:'O Kuroda fica porque é a única pessoa que conversa com ele.'},
   escolhas:[
     {texto:'"Eu volto. Eu volto toda semana, se for preciso."', vai:'c23_prometeu_voltar_aqui'},
     {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
@@ -467,21 +467,21 @@ c23_nogueira_porque_fica:{
 c23_prometeu_voltar_aqui:{
   texto:[
     '"Eu volto. Eu volto toda semana, se for preciso."',
-    'O Nogueira olha para você com uma desconfiança profissional de dezenove anos de serviço.',
+    'O Kuroda olha para você com uma desconfiança profissional de dezenove anos de serviço.',
     '"O senhor tem quantos anos?"',
     'Você diz.',
     'Ele solta um som que é quase riso.',
     '"E o senhor está prometendo subir uma montanha toda semana pelo resto da vida."',
     '"Estou."',
     'E da pedra, do outro lado da câmara, com uma coisa na voz que você não consegue nomear:',
-    '"Ele está falando sério, Nogueira."',
-    'O Nogueira fica muito quieto.',
+    '"Ele está falando sério, Kuroda."',
+    'O Kuroda fica muito quieto.',
     'Depois começa a desdobrar o casaco.'
   ],
   ef:{flag:['prometeu_voltar_aqui','nogueira_vai_descer'], moral:5,
       rep:{eixo:'bom',delta:4,motivo:'Prometeu voltar toda semana, e foi levado a sério'},
-      npc:{nome:'Nogueira', opiniao:5, memoria:'Começou a desdobrar o casaco quando você prometeu voltar.'},
-      registrar:'Prometeu voltar toda semana. O Nogueira começou a desdobrar o casaco.'},
+      npc:{nome:'Kuroda', opiniao:5, memoria:'Começou a desdobrar o casaco quando você prometeu voltar.'},
+      registrar:'Prometeu voltar toda semana. O Kuroda começou a desdobrar o casaco.'},
   escolhas:[
     {texto:'Subir com ele agora.', vai:'c23_final_nogueira'},
     {texto:'"Espera lá em cima. Eu preciso falar com ele."', vai:'c23_conversa'}
@@ -645,7 +645,7 @@ c23_escolha_final:{
      cond:d=>!!d.flags.tem_a_sucata},
     {texto:'Ler em voz alta a carta da professora de Pallet.', vai:'c23_a_carta_da_professora',
      cond:d=>!!d.flags.leu_a_carta_da_professora},
-    {texto:'Abrir o papel que o Sr. Quintino te deu para jogar fora.', vai:'c23_o_papel_do_quintino',
+    {texto:'Abrir o papel que o Sr. Nakada te deu para jogar fora.', vai:'c23_o_papel_do_quintino',
      cond:d=>!!d.flags.carrega_o_papel_do_quintino},
     {texto:'Não dizer nada. Sentar no chão e esperar ele falar.', vai:'c23_sentou'},
     {texto:'Virar as costas e subir. Você veio até aqui e chega.', vai:'c23_ir_embora'}
@@ -1008,7 +1008,7 @@ c23_final_compreensao:{
   ],
   final:{id:'compreensao', titulo:'VOLTA?', texto:[
     'Você volta. Não uma vez — muitas.',
-    'Leva comida quente na primeira. Leva um livro na terceira. Na sétima, leva o Téo, que passa a viagem inteira em pânico e depois não cala a boca sobre isso pelo resto da vida.',
+    'Leva comida quente na primeira. Leva um livro na terceira. Na sétima, leva o Kenta, que passa a viagem inteira em pânico e depois não cala a boca sobre isso pelo resto da vida.',
     'Mewtwo nunca sai da caverna. Ele escolhe não sair, o que é diferente de não poder, e a diferença é tudo.',
     'A Liga nunca descobre a localização exata. Você é a única pessoa que sabe, e você leva isso com um cuidado que ninguém entende.',
     'Anos depois, quando te oferecem um lugar na Elite 4, você recusa. Alguém pergunta por quê.',
@@ -1154,7 +1154,7 @@ c23_final_pena:{
     'Mewtwo sai da caverna três dias depois de você.',
     'Ele não vai pra cidade nenhuma. Vai pro mar, pro sudoeste, pra uma ilha que não entra em mapa nenhum porque não tem nada nela.',
     'Pescadores de Fuchsia começam a relatar duas luzes sobre a ilha sem nome, não uma. Ninguém acredita neles, como sempre.',
-    'O Sr. Ferraz morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
+    'O Sr. Tanabe morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
     'Você vai ao enterro. É o único que vai de fora de Fuchsia.',
     'No caixão, na mão dele, tem uma pena que não é de Pidgey e que ninguém da família soube explicar de onde veio.'
   ]}
@@ -1343,7 +1343,7 @@ c23_final_trinta_e_dois:{
     'Trinta e dois viram trinta e três. Depois trinta e cinco. Depois ninguém contou mais.',
     'Você nunca escreveu onde é. Nunca marcou em mapa nenhum, nunca falou em telefone de Centro Pokémon, e quando um pesquisador de Celadon te ofereceu dinheiro pela coordenada, você disse que não lembrava.',
     'A Comissão manteve o item "Risco 01" em pauta por mais quatro anos e depois arquivou por inatividade do objeto.',
-    'A Dra. Ivone morreu aos sessenta e oito sem nunca ter subido naquela cratera, e sabendo que existia, e escolhendo não subir.',
+    'A Dra. Sayo morreu aos sessenta e oito sem nunca ter subido naquela cratera, e sabendo que existia, e escolhendo não subir.',
     'Essa foi a última coisa que ela te ensinou.'
   ]}
 },
@@ -1422,7 +1422,7 @@ c23_final_papelada:{
     'Em quatro meses, cópias autenticadas de mil cento e oitenta e quatro guias de remessa chegam, por via postal, a onze endereços residenciais.',
     'Cada envelope contém apenas os documentos assinados por aquela pessoa. Nada mais. Sem bilhete, sem ameaça, sem exigência.',
     'Sete dos onze pedem exoneração em seis semanas. Dois adoecem. Um processa a Comissão e ganha.',
-    'O décimo primeiro, a Presidente Hélia Rennó, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
+    'O décimo primeiro, a Presidente Reika Ando, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
     'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
     'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
     'Você ensinou isso a Kanto inteiro sem nunca ter subido num palco.'
@@ -1433,7 +1433,7 @@ c23_os_nomes:{
   texto:[
     'Você diz os nomes.',
     d=>d.cemiterio.length ? `Os seus primeiro: ${d.cemiterio.map(p=>nomeExib(p)).join(', ')}.` : 'Não são todos seus.',
-    d=>d.flags.vaporeon_morreu ? 'Depois o Duque, que era de rua e era da Marta, as duas coisas.' : '',
+    d=>d.flags.vaporeon_morreu ? 'Depois o Duque, que era de rua e era da Haruko, as duas coisas.' : '',
     d=>d.flags.copiou_os_onze_nomes ? 'Depois os onze, do canto de baixo de um mural de doze metros numa cidade sem música, copiados ajoelhado no chão porque uma moça de Fuchsia escreveu ajoelhada no chão.' : '',
     'Leva quatro minutos. Você não erra nenhum.',
     'Mewtwo escuta até o fim sem interromper, o que quase ninguém faz.'
@@ -1472,7 +1472,7 @@ c23_a_pagina:{
   texto:[
     '"Eu prometi voltar pra uma menina com um caderno."',
     '"Explica."',
-    'Você explica. Zuleica, dez anos, meio-fio de Pewter, duas colunas. PASSOU: oitenta e três. VOLTOU: trinta e um.',
+    'Você explica. Setsu, dez anos, meio-fio de Pewter, duas colunas. PASSOU: oitenta e três. VOLTOU: trinta e um.',
     'E uma página nova, escrita com régua, com o título PROMETEU, e o seu nome no topo.',
     '"E se você não voltar?"',
     '"Ela risca. Com caneta vermelha."',
@@ -1590,7 +1590,7 @@ c23_final_silencio:{
     'Você não conta pra ninguém.',
     'Não porque é segredo. Porque não tem o que contar: você entrou numa caverna, sentou no chão e ficou quieto por quase uma hora com uma criatura de dois anos de idade que sabe tudo.',
     'A Liga pergunta. Você diz que não achou nada.',
-    'A Dra. Ivone pergunta. Você diz que não achou nada, e ela olha na sua cara e sabe que você está mentindo, e não insiste, porque ela é ela.',
+    'A Dra. Sayo pergunta. Você diz que não achou nada, e ela olha na sua cara e sabe que você está mentindo, e não insiste, porque ela é ela.',
     'E toda vez, pelo resto da sua vida, que você estiver num lugar barulhento demais — num salão de navio, num pátio de porto, numa sala com mesa comprida e gente educada demais —, você vai conseguir fazer uma coisa que quase ninguém consegue.',
     'Você vai conseguir ficar quieto por dentro.',
     'Foi a única coisa que ele te deu, e ele não deu de propósito, e é a mais valiosa.'
@@ -1660,17 +1660,17 @@ c23_final_nogueira:{
     'Na metade, ele para na frente da contagem da parede e passa a mão nos riscos de cima, os tortos.',
     '"Ele riscou todos esses sozinho", ele diz, e não fala mais nada até a superfície.',
     'No vale, as duas aves não se mexem. Na borda, o sol é violento depois de tudo aquilo e ele leva vinte minutos com a mão nos olhos.',
-    'Vocês descem em dois dias. No posto florestal, o Sr. Tolentino escreve uma data na terceira coluna do livro, ao lado de um nome que estava lá havia sete meses sem par.',
+    'Vocês descem em dois dias. No posto florestal, o Sr. Iketani escreve uma data na terceira coluna do livro, ao lado de um nome que estava lá havia sete meses sem par.',
     'Ele escreve devagar, com capricho, e depois fecha o livro e não olha para ninguém por um tempo.'
   ],
   ef:{flag:'desceu_com_o_nogueira',
       rep:{eixo:'bom',delta:4,motivo:'Trouxe de volta um homem que a placa de bronze já esperava'},
-      registrar:'Desceu com o Nogueira. O livro do posto florestal fechou uma linha.'},
+      registrar:'Desceu com o Kuroda. O livro do posto florestal fechou uma linha.'},
   final:{id:'nogueira', titulo:'TERCEIRA COLUNA', texto:[
     'A placa de bronze do Planalto Indigo continua com quarenta e um nomes.',
-    'A placa nova, aprovada no ano seguinte, tem três, e não quatro, e leva uma linha embaixo que o Sr. Aguiar brigou para incluir e que nenhuma outra placa de nenhuma instituição de Kanto tem.',
+    'A placa nova, aprovada no ano seguinte, tem três, e não quatro, e leva uma linha embaixo que o Sr. Kawabe brigou para incluir e que nenhuma outra placa de nenhuma instituição de Kanto tem.',
     'UM VOLTOU.',
-    'O Nogueira não volta ao serviço. Ele passa oito meses em tratamento, briga com a Liga por uma pensão que a Liga acaba pagando, e depois abre uma oficina de conserto de bicicleta em Cerulean, perto da escola das filhas.',
+    'O Kuroda não volta ao serviço. Ele passa oito meses em tratamento, briga com a Liga por uma pensão que a Liga acaba pagando, e depois abre uma oficina de conserto de bicicleta em Cerulean, perto da escola das filhas.',
     'Ele não fala sobre a caverna com jornalista nenhum, nem uma vez, nem por dinheiro.',
     'Ele fala com você, no primeiro sábado de cada mês, numa mesa de bar, e sempre começa a conversa do mesmo jeito:',
     '"E aí, como é que ele está?"',
@@ -1711,7 +1711,7 @@ c23_final_resposta:{
     'Você sobe com o papel no bolso e entrega na mesma pedra em que ele estava sentado.',
     'Ele lê o que você trouxe, e a mensagem inteira é que não tem resposta certa, e é exatamente isso que ele precisava.',
     'Ele desce naquele mesmo dia. Leva sete horas e não para uma vez.',
-    'No posto florestal, o Sr. Tolentino escreve a data dele na terceira coluna e fecha a última linha em branco do livro.',
+    'No posto florestal, o Sr. Iketani escreve a data dele na terceira coluna e fecha a última linha em branco do livro.',
     'Três meses depois, numa escola municipal de Fuchsia, um homem faz uma palestra para uma turma de quarta série sobre bichos grandes.',
     'Ele não conta onde esteve. Ele conta só uma coisa: que bicho grande também tem medo, e que isso não é motivo para gostar menos deles, é motivo para ter mais cuidado.',
     'A filha dele está na terceira fileira.',
@@ -1775,7 +1775,7 @@ c23_a_lista_do_sena:{
   ],
   ef:{flag:'mostrou_a_lista_do_sena', instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Mostrou que alguém lá dentro contava'},
-      registrar:'Mostrou a Mewtwo a lista que o Dr. Sena levava para casa.'},
+      registrar:'Mostrou a Mewtwo a lista que o Dr. Amano levava para casa.'},
   escolhas:[
     {texto:'"Tem gente lá dentro que ainda conta."', vai:'c23_final_alguem_conta'},
     {texto:'"E não adianta nada."', vai:'c23_final_sala704'}
@@ -1798,7 +1798,7 @@ c23_final_alguem_conta:{
     'Nunca tem ameaça. Nunca tem exigência. É só uma lista de números de anilha, conferida, sem nenhum erro.',
     'Ninguém nunca prova de onde vem. Todo mundo sabe.',
     'A Comissão gasta quatro reuniões discutindo como responder a isso e não chega a conclusão nenhuma, porque não existe procedimento para um documento que chega sem remetente e que está correto.',
-    'O Dr. Sena para de levar a folha dele para casa no terceiro ano.',
+    'O Dr. Amano para de levar a folha dele para casa no terceiro ano.',
     'Não porque desistiu. Porque passou a levar o arquivo inteiro, na frente de todo mundo, com autorização, dentro do horário de expediente.',
     'Ele conseguiu isso por escrito. Levou dois anos e onze pedidos.',
     'Você tem uma cópia do último. Ele te mandou pelo correio, sem bilhete.'
@@ -1859,7 +1859,7 @@ c23_final_quarenta_segundos:{
     'Você desce e faz uma coisa que ninguém te pediu e que não estava em ordem de missão nenhuma.',
     'Você escreve. Quatro páginas, à mão, e entrega no balcão da Liga, protocolado, com número.',
     'Não é relatório de reconhecimento. É a transcrição de uma conversa, sem análise, sem recomendação, sem conclusão.',
-    'O Sr. Aguiar lê e junta ao caso de 1994. A Conselheira Vasques lê e não junta a lugar nenhum, e leva para casa.',
+    'O Sr. Kawabe lê e junta ao caso de 1994. A Conselheira Sakuma lê e não junta a lugar nenhum, e leva para casa.',
     'Dois anos depois, o protocolo de aproximação de indivíduos de classificação especial da Liga Pokémon é reescrito inteiro.',
     'O item 1 do novo protocolo não fala de equipamento, de distância segura, nem de contenção.',
     'O item 1 diz: antes de qualquer procedimento, a equipe deve perguntar ao indivíduo se ele deseja ser abordado, e aguardar.',
@@ -1902,7 +1902,7 @@ c23_final_nao_precisa:{
   final:{id:'nao_precisa', titulo:'NÃO PRECISA VOLTAR COM NADA', texto:[
     'Você sobe sem nada.',
     'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que é a coisa mais decepcionante possível: uma conversa.',
-    'O Sr. Aguiar escreve missão cumprida no campo próprio, porque a ordem era ir, observar, não intervir e voltar.',
+    'O Sr. Kawabe escreve missão cumprida no campo próprio, porque a ordem era ir, observar, não intervir e voltar.',
     'Você pega um ônibus para Pallet no mês seguinte.',
     'A escola tem uma sala nova, um muro pintado e a mesma professora, que está mais velha e que te reconhece antes de você chegar no portão.',
     'Ela não pergunta onde você esteve, nem o que você fez, nem se você virou campeão.',
@@ -1925,7 +1925,7 @@ c23_o_papel_do_quintino:{
     'Ele guardou o endereço e não foi, e carregou o papel por trinta e cinco anos.'
   ],
   ef:{flag:'abriu_o_papel_do_quintino', instabilidade:2, moral:-2,
-      registrar:'O papel do Sr. Quintino era o endereço do Dr. Fuji, de 1981.'},
+      registrar:'O papel do Sr. Nakada era o endereço do Dr. Fuji, de 1981.'},
   escolhas:[
     {texto:'Mostrar o papel a ele.', vai:'c23_mostrou_o_endereco'},
     {texto:'Guardar e não mostrar.', vai:'c23_escolha_final'}
@@ -1966,13 +1966,13 @@ c23_final_o_papel:{
   ],
   final:{id:'o_papel', titulo:'TRINTA E CINCO ANOS', texto:[
     'Você desce a montanha com um papel de 1981 no bolso e devolve numa borda de poço de pedra, dois andares abaixo do saguão do Planalto Indigo.',
-    'O Sr. Quintino ouve tudo sem interromper, com as pernas balançando dentro do poço.',
+    'O Sr. Nakada ouve tudo sem interromper, com as pernas balançando dentro do poço.',
     'Quando você termina, ele fica quieto uns bons dois minutos.',
     'Depois pega o papel, dobra mais uma vez, e põe no bolso da camisa.',
     '"Ele leu."',
     '"Leu."',
     'Ele assente três vezes, devagar.',
-    'No ano seguinte, aos setenta e quatro anos, o Sr. Quintino aceita o cargo de instrutor auxiliar, que foi criado para ele e que ele recusou onze vezes em doze anos.',
+    'No ano seguinte, aos setenta e quatro anos, o Sr. Nakada aceita o cargo de instrutor auxiliar, que foi criado para ele e que ele recusou onze vezes em doze anos.',
     'Ele não ensina a lutar. Ele ensina uma coisa só, e é a primeira aula de todo curso novo, e leva quinze minutos.',
     'A aula se chama: quando alguém te oferecer, vá.',
     'E ele começa contando que uma vez ofereceram a ele e ele não foi, e que ele passou trinta e cinco anos carregando um endereço no bolso.',

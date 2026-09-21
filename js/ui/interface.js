@@ -122,6 +122,7 @@ const UI = {
         ${Estado.temPokenav() ? `<button class="btn mini${Estado.numerosDisponiveis().length ? ' pisca' : ''}" onclick="UI.modalNav()">PokéNav${
           Estado.numerosDisponiveis().length ? ' <b>' + Estado.numerosDisponiveis().length + '</b>' : ''}</button>` : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
+        <button class="btn mini" onclick="UI.modalTutorial()">Tutorial</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
       </div>
     </div>`;
@@ -146,6 +147,7 @@ const UI = {
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         ${temSave ? '<button class="btn destaque" onclick="Jogo.continuar()">Continuar</button>' : ''}
         <button class="btn ${temSave?'':'destaque'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>
+        <button class="btn" onclick="UI.modalTutorial()">Tutorial</button>
         <button class="btn" onclick="UI.modalRegras()">Regras do sistema</button>
         <button class="btn" onclick="UI.modalFinais()">Códice de finais</button>
       </div>
@@ -355,8 +357,8 @@ const UI = {
     if (typeof ELITE4  !== 'undefined') por(ELITE4);
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
-    ['Téo','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Adnan','Nádia','Nogueira'].forEach(x => n.add(x));
+    ['Kenta','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
+     'Blue','Red','Ren','Nozomi','Kuroda'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)
@@ -387,7 +389,7 @@ const UI = {
       if (narracao.indexOf(nome) !== -1) achados.add(nome);
     }
     /* 'Blue' dentro de 'Bluezinho' não vale, mas 'Brock' dentro de
-       'Brock e Téo' vale pros dois — e aí são dois, e some o nome. */
+       'Brock e Kenta' vale pros dois — e aí são dois, e some o nome. */
     if (achados.size !== 1) return null;
     return achados.values().next().value;
   },
@@ -439,8 +441,8 @@ const UI = {
     const todos = [];
     const re = /(^|[^a-zà-ÿ])(ele|ela|eles|elas|você|voce)([^a-zà-ÿ]|$)/gi;
     let m; while ((m = re.exec(n))) todos.push({i:m.index, lado: /^(você|voce)$/i.test(m[2]) ? 'voce' : 'npc'});
-    /* o nome da pessoa vale tanto quanto o pronome dela: "Téo olha
-       pro Pidgey e depois pra você" é fala do Téo, não sua */
+    /* o nome da pessoa vale tanto quanto o pronome dela: "Kenta olha
+       pro Pidgey e depois pra você" é fala do Kenta, não sua */
     if (npc){
       const curto = npc.split(' ').filter(x => x.length > 2).pop() || npc;
       let i = n.indexOf(curto);
@@ -638,10 +640,14 @@ const UI = {
     if (cena.final){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.mostrarFinal()">…</button>`)); return; }
     if (cena.fim){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.fecharCapitulo()">Encerrar o capítulo.</button>`)); return; }
 
-    const visiveis = [];
-    (cena.escolhas||[]).forEach((e, i) => {
-      if (!Historia.disponivel(e)) return;
-      visiveis.push(i);
+    /* Primeiro com o filtro de "já fiz isso e não deu nada"; se isso
+       apagar a cena inteira, mostra tudo — ninguém fica preso. */
+    const id = cena.id || Estado.dados.cena;
+    let visiveis = (cena.escolhas||[]).map((e,i)=>({e,i}))
+      .filter(x => Historia.disponivel(x.e, id, x.i));
+    if (!visiveis.length)
+      visiveis = (cena.escolhas||[]).map((e,i)=>({e,i})).filter(x => Historia.disponivel(x.e));
+    visiveis.forEach(({e, i}) => {
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
     });
 
@@ -663,7 +669,7 @@ const UI = {
                placeholder="ex.: chego devagar e estendo a mão">
         <button class="btn destaque" onclick="Jogo.acaoLivre()">Fazer</button>
       </div>
-      <div class="sussurro">O jogo lê o que você escreveu. Se encaixar numa saída que já existe, ele segue por ela. Se não, ele improvisa — e isso conta igual.</div>
+
     </div>`);
     setTimeout(() => {
       const i = document.getElementById('acao-livre');
@@ -1454,7 +1460,7 @@ const UI = {
         <div class="loc">${this.esc(per)} do dia ${d.relogio.dia} · ${nInsig} de 8 insígnias</div>
       </div>
       <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p></div>
-      <p class="sussurro">Cada coisa que você faz aqui gasta um período do dia, e o dia acaba.</p>
+
       <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
         <button class="escolha" onclick="UI.modalPC()">PC do Centro — guardar e tirar Pokémon${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
@@ -1587,7 +1593,7 @@ const UI = {
         <div class="loc">${n} de 8 insígnias</div>
       </div>
       <p class="sussurro">Ordem livre: comece por onde quiser. Cada líder adapta o <b>time inteiro</b> ao seu progresso — com poucas insígnias ele traz Pokémon não evoluídos e um time curto; com muitas, a linha completa e o ace. Nenhum ginásio vira passeio nem muro, seja qual for a ordem. Blue só recebe quem tem sete.</p>
-      <p class="sussurro">O que está escrito em cada ficha é o que você sabe hoje. Quem nunca pisou na cidade sabe o nome do líder e o tipo dele, porque isso é cartaz de Centro Pokémon. O time de dentro se descobre entrando.</p>
+
       <div class="grade" style="margin-top:14px">${GINASIOS.map(cartao).join('')}</div>
       <div style="margin-top:20px">
         <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
@@ -1672,7 +1678,7 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrar(falaRivalExtra(R))}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
-        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Tunico' ? 'ele' : 'ele'}</span></div>
+        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Toshi' ? 'ele' : 'ele'}</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
         <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
@@ -2159,6 +2165,8 @@ const UI = {
       <div class="linha"><span class="k">Aparência</span><span class="v">${this.esc(j.aparencia)}</span></div>
       <div class="linha"><span class="k">Vestimenta</span><span class="v">${this.esc(j.vestimenta)}</span></div>
       <p class="sussurro" style="margin:4px 0 12px">${this.esc(Estado.comoTeVeem())}</p>
+      <div style="margin:0 0 14px"><button class="btn mini" onclick="UI.modalCredenciais()">Credenciais${
+        (typeof Cargos !== 'undefined' && Cargos.lista().length) ? ' (' + Cargos.lista().length + ')' : ''}</button></div>
       <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
       <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.filter(i=>i!=='Título de Campeão').length}/8</span></div>
       ${d.insignias.length ? d.insignias.map(i=>`<div class="linha"><span class="k" style="padding-left:12px">${this.esc(i)}</span><span class="v">✓</span></div>`).join('') : ''}
@@ -2166,7 +2174,7 @@ const UI = {
       <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
       <p class="sussurro">${this.esc(nivel.ef)}</p>
       <h3>Status</h3>${st}
-      ${d.rival && d.npcs['Téo'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
+      ${d.rival && d.npcs['Kenta'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
         <p class="sussurro">${this.esc(ARCOS_RIVAL[arcoRival()].resumo)}</p>
         <div class="linha"><span class="k">${this.esc(d.rival.nome)}</span><span class="v">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span></div>
         <div class="linha"><span class="k">Inicial dele</span><span class="v">${this.esc(DEX[d.rival.inicialDex].nome)}</span></div>` : ''}
@@ -2422,6 +2430,261 @@ const UI = {
       : `<p class="nada">Nenhum final descoberto ainda. A campanha tem ${total}.</p>`);
   },
 
+  /* ========================================================
+     CREDENCIAIS — o balcão onde se assume posto
+     ======================================================== */
+  modalCredenciais(){
+    const quadro = Cargos.quadro();
+    const meus = quadro.filter(x => x.tem);
+    const abertos = quadro.filter(x => !x.tem && x.ok);
+    const fechados = quadro.filter(x => !x.tem && !x.ok);
+
+    const ben = b => {
+      const L = [];
+      if (b.renda) L.push(`${b.renda} ₽ por capítulo`);
+      if (b.loja) L.push(`${Math.round((1 - b.loja) * 100)}% de desconto nas lojas`);
+      if (b.centro) L.push('Centro Pokémon sem custo');
+      if (b.status) L.push(b.status.charAt(0).toUpperCase() + b.status.slice(1) + ' +1');
+      if (b.moral) L.push(`+${b.moral} de moral no time por capítulo`);
+      if (b.guarita) L.push('passa em guarita e cerca');
+      if (b.fila) L.push('entra onde tem fila');
+      if (b.semEspera) L.push('revanche sem espera de capítulo');
+      if (b.lei) L.push('voz onde a regra é escrita');
+      if (b.repRuim) L.push(`reputação piora ${b.repRuim} por capítulo`);
+      return L.join(' · ') || '—';
+    };
+
+    const cartao = (x, acao) => `<div class="cargo ${x.tem ? 'meu' : (x.ok ? 'aberto' : 'fechado')}">
+      <div class="cargo-topo">
+        <span class="cargo-nome">${this.esc(x.cargo.nome)}</span>
+        <span class="cargo-orgao">${this.esc(x.cargo.orgao)}</span>
+        <span class="cargo-peso">${'●'.repeat(x.cargo.peso)}${'○'.repeat(5 - x.cargo.peso)}</span>
+      </div>
+      <div class="cargo-resumo">${this.esc(x.cargo.resumo)}</div>
+      <div class="cargo-ben mono">${this.esc(ben(x.cargo.beneficios || {}))}</div>
+      ${x.cargo.aviso ? `<div class="cargo-aviso">${this.esc(x.cargo.aviso)}</div>` : ''}
+      ${acao}
+    </div>`;
+
+    const corpo =
+      (meus.length ? `<h3>No seu bolso</h3>` + meus.map(x => cartao(x,
+        `<button class="btn mini" onclick="Jogo.largarCargo('${x.cargo.id}')">largar</button>`)).join('') : '') +
+      `<h3>Aberto pra você</h3>` +
+      (abertos.length ? abertos.map(x => cartao(x,
+        `<button class="btn destaque" onclick="Jogo.assumirCargo('${x.cargo.id}')">Assumir</button>`)).join('')
+        : '<p class="nada">Nada hoje. Volte quando tiver mais estrada.</p>') +
+      `<h3>Fora do seu alcance</h3>` +
+      fechados.map(x => cartao(x, `<div class="cargo-motivo">${this.esc(x.cedo ? 'Cedo demais.' : x.motivo)}</div>`)).join('');
+
+    this.modal('Credenciais', corpo, false, 'nav');
+  },
+
+  telaCargo(c, avisos){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${this.esc(c.orgao)}</div>
+        <div class="tit">${this.esc(c.nome)}</div>
+        <div class="loc">${this.esc(c.resumo)}</div>
+      </div>
+      <div class="narrativa">${this.narrar(c.fala || [])}</div>
+      <div id="avisos" class="avisos"></div>
+      <div class="escolhas" style="margin-top:16px">
+        <button class="escolha" onclick="Exploracao.tela()">Guardar o crachá e seguir.</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
+  /* ========================================================
+     TUTORIAL — a apostila. Fica fora da partida, aberta por
+     quem quiser estudar, pra que nada precise ser explicado
+     no meio da cena.
+     ======================================================== */
+  modalTutorial(aba){
+    const atual = aba || this._abaTutorial || 'comeco';
+    this._abaTutorial = atual;
+    const ABAS = [
+      ['comeco',   'Começo'],
+      ['ficha',    'A ficha'],
+      ['combate',  'Combate'],
+      ['natureza', 'Naturezas'],
+      ['vinculo',  'Vínculo'],
+      ['mundo',    'Mundo'],
+      ['pokenav',  'PokéNav'],
+      ['risco',    'Risco']
+    ];
+    const barra = `<div class="tut-abas">${ABAS.map(([k, r]) =>
+      `<button class="tut-aba${k === atual ? ' sel' : ''}" onclick="UI.modalTutorial('${k}')">${r}</button>`
+    ).join('')}</div>`;
+
+    this.modal('Tutorial', barra + `<div class="tut-corpo">${this.tutorialAba(atual)}</div>`, false, 'tutorial');
+  },
+
+  tutorialAba(k){
+    const L = (a, b) => `<div class="linha"><span class="k">${a}</span><span class="v">${b}</span></div>`;
+
+    if (k === 'comeco') return `
+      <h3>O que é isto</h3>
+      <p class="sussurro">Um RPG de mesa de Kanto jogado por texto. Você lê uma cena, escolhe o que faz, e o dado decide o que não é só sua vontade. Não existe caminho certo e não existe desfazer: o mundo guarda o que você fez e devolve depois.</p>
+      ${L('Escolhas', 'permanentes — o jogo salva sozinho')}
+      ${L('Opção que some', 'você já fez aquilo e não tem mais nada ali')}
+      ${L('Escrever em vez de escolher', 'o campo embaixo das opções aceita qualquer coisa')}
+      <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
+      <h3>Criar o personagem</h3>
+      ${L('Personalidade', 'texto livre — e ela vale como regra, veja Vínculo')}
+      ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav')}
+      ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega · fora de Pallet: a perua do laboratório, uma vez por mês')}
+      ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia')}
+      ${L('Ritmo do combate', 'fiel (rápido e letal) ou prolongado (dano em 60%)')}`;
+
+    if (k === 'ficha') return `
+      <h3>Os seis status</h3>
+      ${L('Força', 'escapar de quem te encurralou · testes de cena')}
+      ${L('Percepção', 'vasculhar · ler a natureza do seu time · observar')}
+      ${L('Intelecto', 'a hora de pegar a estrada · andar pela cidade · ler o tipo de um desconhecido em combate')}
+      ${L('Carisma', 'treinar · encarar um selvagem · ser obedecido com a moral baixa')}
+      ${L('Sorte', 'o que o vasculho acha · pescaria · chance de brilhante')}
+      ${L('Resistência', 'HP máximo · aguentar o golpe que sobra pra você')}
+      <p class="sussurro">Sobem por ponto ganho no fim do capítulo, no máximo +1 por status por capítulo. Alguns cargos e algumas cenas dão um ponto fora disso.</p>
+      <h3>Perícia</h3>
+      ${L('A rolagem', '1d10 + status + o cinto, contra a dificuldade')}
+      ${L('1 a 3', 'fracasso')} ${L('4 a 6', 'parcial')} ${L('7 a 9', 'sucesso')} ${L('10+', 'crítico')}
+      <p class="sussurro">Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho. O que o cinto soma está na aba Vínculo.</p>
+      <h3>Reputação</h3>
+      ${L('Como sobe', 'por pontos, não por ato — oito pontos pro primeiro degrau')}
+      ${L('Diante de quem manda', 'vale o dobro')}
+      ${L('Ginásio, Liga, conselho', 'passa por cima do teto do capítulo')}
+      ${L('O mesmo feito', 'conta uma vez por capítulo')}
+      <p class="sussurro">Os dois eixos se pagam: enquanto você deve de um lado, o que faz do outro serve primeiro pra quitar.</p>`;
+
+    if (k === 'combate') return `
+      <h3>A conta</h3>
+      ${L('Dano', '1d10 × (poder ÷ 10) × (Atk ÷ Def)^1,15')}
+      ${L('Limite da razão', 'entre 0,33× e 3,2×')}
+      ${L('STAB', '×1,5 quando o tipo do golpe é o tipo dele')}
+      ${L('Eficácia', '0× / 0,5× / 2×')}
+      ${L('Crítico', '1d20 ≥ 20 − (Vel. base ÷ 40, até 3) → ×1,5')}
+      ${L('Precisão', '1d20 > (100 − precisão) ÷ 5')}
+      ${L('Ordem', 'por Velocidade · Quick Attack e afins têm prioridade')}
+      ${L('Fuga', '1d20 ≥ (Vel. do selvagem − a sua + 10)')}
+      ${L('Sem PP', 'Forcejar: 1d10 × 3, e 25% volta em você')}
+      <h3>Na sua vez</h3>
+      ${L('Golpe', 'gasta PP · sem PP sobra Forcejar')}
+      ${L('Bola', 'só em selvagem — não se joga bola no Pokémon de treinador')}
+      ${L('Mochila', 'só o que serve em combate aparece')}
+      ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
+      ${L('Trocar', 'gasta o turno')}
+      <h3>Status</h3>
+      ${L('Sono', 'perde turnos até acordar')} ${L('Paralisia', 'Vel. pela metade · 25% de perder a vez')}
+      ${L('Queimadura', 'Atk em 75% · dano por turno')} ${L('Veneno', 'dano por turno')}
+      ${L('Congelamento', '20% de descongelar por turno')} ${L('Confusão', '33% de se machucar sozinho')}`;
+
+    if (k === 'natureza') {
+      const NOMES = {atk:'Ataque', def:'Defesa', spa:'At. Esp.', spd:'Def. Esp.', spe:'Velocidade'};
+      const linhas = Object.keys(NATUREZAS).map(n => {
+        const x = NATUREZAS[n];
+        const stats = x.mais ? `+10% ${NOMES[x.mais]} · −10% ${NOMES[x.menos]}` : 'sem alteração de status';
+        return `<div class="tut-nat${x.agressiva ? ' agressiva' : ''}">
+          <span class="tut-nat-nome">${n}</span>
+          <span class="tut-nat-stat mono">${stats}</span>
+          <span class="tut-nat-traco">${this.esc(x.traco)}</span>
+        </div>`;
+      }).join('');
+      return `
+        <h3>As vinte e cinco naturezas</h3>
+        <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela mexe em dois status e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
+        <div class="tut-nats">${linhas}</div>
+        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>`;
+    }
+
+    if (k === 'vinculo') {
+      const nomes = {discricao:'discrição', paciencia:'paciência', coragem:'coragem', simpatia:'simpatia', cuidado:'cuidado'};
+      const linhas = Object.keys(TEMPERAMENTO).map(n => {
+        const t = TEMPERAMENTO[n];
+        const eixos = Object.keys(t).filter(e => t[e] !== 0)
+          .map(e => `${t[e] > 0 ? '+' : '−'}${Math.abs(t[e])} ${nomes[e]}`).join(' · ') || 'neutro em tudo';
+        return `<div class="tut-nat"><span class="tut-nat-nome">${n}</span><span class="tut-nat-traco mono">${eixos}</span></div>`;
+      }).join('');
+      return `
+        <h3>Moral e obediência</h3>
+        ${L('Chance de desobedecer', '(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5')}
+        ${L('Afinidade', 'soma ou desconta dessa conta')}
+        <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua teimosia própria: tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem erre o alvo de propósito.</p>
+        <h3>Os cinco eixos</h3>
+        <p class="sussurro">A personalidade que você escreve na ficha e a natureza de cada Pokémon são lidas nos mesmos cinco eixos. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
+        ${L('+5 ou mais', 'obedece muito mais fácil · crítico um ponto mais perto · +1 nas perícias')}
+        ${L('+2 a +4', 'obedece mais fácil')}
+        ${L('−2 a −4', 'obedece pior · −1 nas perícias')}
+        ${L('−5 ou menos', 'obedece muito pior · −1 nas perícias')}
+        <h3>Como cada natureza pesa fora do combate</h3>
+        <p class="sussurro">Numa perícia, o melhor do time naquele eixo soma, o pior desconta metade, e a afinidade de quem vai na frente entra por cima. Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência.</p>
+        <div class="tut-nats">${linhas}</div>`;
+    }
+
+    if (k === 'mundo') return `
+      <h3>Cidade</h3>
+      ${L('Centro Pokémon', 'com licença é de graça · sem licença, 300 ₽ + 250 por ferido')}
+      ${L('PC', 'no saguão do Centro — guarda e retira do cinto de seis')}
+      ${L('Loja', 'dez cidades · cada uma vende o que a cidade é')}
+      ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
+      ${L('Situações', 'cidade e rota têm coisa acontecendo por conta própria')}
+      <h3>Preço por cidade</h3>
+      ${L('Celadon', '0,85× — o mais barato de Kanto, sete andares')}
+      ${L('Cais de Vermilion', '0,9× — metade do estoque entra sem imposto')}
+      ${L('Pallet, Viridian, Fuchsia', '1×')}
+      ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
+      ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Cargos</h3>
+      <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
+      <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">balcão de credenciais, no Centro Pokémon</span></div>
+      <p class="sussurro">Catorze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
+
+      <h3>Estrada e tempo</h3>
+      ${L('Viagem', 'um dia por trecho do caminho real — não existe teleporte')}
+      ${L('O que passa', 'quatro horas por trecho · cada lugar do trajeto fica visitado')}
+      ${L('Na cidade', 'cada ação gasta um período do dia, e o dia acaba')}
+      <h3>Pokédex e captura</h3>
+      ${L('Espécie não catalogada', 'aparece como ???')}
+      ${L('O que entra pro time', 'catalogado na hora — captura, troca, presente')}
+      ${L('Brilhante', 'cerca de 1 em 1000 · Sorte aperta até 1 em 300')}
+      ${L('Troca', 'quem só evolui trocando chega já evoluído na sua mão')}`;
+
+    if (k === 'pokenav') return `
+      <h3>A agenda</h3>
+      <p class="sussurro">Só entra número que te deram. Quando alguém te dá o dele, aparece pra gravar — e número não gravado não some, fica esperando.</p>
+      ${L('Revanche', 'o mesmo adversário, com o time subido junto com você')}
+      ${L('Favor', 'tem limite de vezes e espera de capítulos')}
+      ${L('Missão', 'pedir · cumprir no mundo · ligar de volta pra entregar')}
+      ${L('Notícia', 'não rende nada material — muda o que a pessoa pensa de você')}
+      <p class="sussurro">Missão entregue não se pede de novo e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro: atender custa tempo e não atender custa outra coisa.</p>
+      <h3>Cargos</h3>
+      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo e onde você entra. O balcão de credenciais fica no Centro Pokémon, e o Cartão de Treinador tem um atalho.</p>
+      ${L('Peso 1 · cedo', 'Treinador licenciado · Auxiliar de campo')}
+      ${L('Peso 2 · meio', 'Guarda de rota · Criador registrado · Repórter credenciado')}
+      ${L('Peso 3 · tarde', 'Informante · Investigador de campo · Pesquisador associado')}
+      ${L('Peso 4 · muito tarde', 'Perito da Comissão · Instrutor do Planalto')}
+      ${L('Peso 5 · fim', 'Líder de ginásio · Elite dos Quatro · Professor · Conselheiro')}
+      ${L('Salário', 'quem tem dois postos recebe o maior, não a soma')}
+      ${L('Incompatível', 'crachá da Liga e envelope sem timbre não cabem no mesmo bolso')}`;
+
+    return `
+      <h3>Morte</h3>
+      <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. O cemitério não esvazia.</p>
+      ${L('Treinador com 0 HP', 'fim de jogo permanente')}
+      ${L('Pokémon desmaiado', 'volta no Centro')}
+      ${L('Pokémon morto', 'não volta nunca')}
+      <h3>Quando o seu cai contra um selvagem</h3>
+      <p class="sussurro">Se o selvagem tem natureza agressiva, rola-se 1d20: com 10 ou mais ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. As naturezas agressivas estão marcadas na aba Naturezas.</p>
+      <h3>O que não dá pra desfazer</h3>
+      ${L('Salvar', 'automático — não existe voltar atrás')}
+      ${L('Nova jornada', 'apaga a atual')}
+      ${L('Insígnia, morte, reputação', 'ficam')}`;
+  },
+
   modalRegras(){
     this.modal('Regras do sistema', `
       <h3>Combate</h3>
@@ -2507,6 +2770,12 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Cargos</h3>
+      <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
+      <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">balcão de credenciais, no Centro Pokémon</span></div>
+      <p class="sussurro">Catorze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>

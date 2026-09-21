@@ -193,14 +193,14 @@ c22_subiu_a_arquibancada:{
 c22_a_final:{
   texto:[
     'A final é contra a mulher de uns quarenta anos que ninguém conhecia até hoje de manhã.',
-    'Ela se chama Nádia. Ela se inscreveu sozinha, pagou a própria inscrição, e veio de ônibus de Lavender na madrugada.',
+    'Ela se chama Nozomi. Ela se inscreveu sozinha, pagou a própria inscrição, e veio de ônibus de Lavender na madrugada.',
     'Ela tem um Arcanine que já foi de outra pessoa e que obedece a ela de um jeito que não se ensina em seis meses.',
-    fala('Nádia', 'Eu tenho quarenta e um anos e essa é a minha segunda licença.'),
-    fala('Nádia', 'A primeira caiu em 1979, porque eu passei seis meses sem registrar batalha, porque eu estava criando gente.'),
-    fala('Nádia', 'Não pega leve comigo. Se você pegar leve eu vou saber, e aí não vale.', 'frio')
+    fala('Nozomi', 'Eu tenho quarenta e um anos e essa é a minha segunda licença.'),
+    fala('Nozomi', 'A primeira caiu em 1979, porque eu passei seis meses sem registrar batalha, porque eu estava criando gente.'),
+    fala('Nozomi', 'Não pega leve comigo. Se você pegar leve eu vou saber, e aí não vale.', 'frio')
   ],
   batalha:{
-    tipo:'treinador', fuga:false, treinador:'Nádia',
+    tipo:'treinador', fuga:false, treinador:'Nozomi',
     dex:59, nivel:d=>Math.max(38, 34 + Estado.dados.insignias.length * 2),
     timeExtra:[{dex:26, mais:-2},{dex:94, mais:-1}],
     vitoria:'c22_venceu_a_final', derrota:'c22_perdeu_a_final'
@@ -211,13 +211,13 @@ c22_venceu_a_final:{
   texto:[
     'Você ganha. Não é fácil e não é bonito, e o Arcanine dela fica de pé quatro turnos depois de qualquer bicho razoável ter caído.',
     'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
-    fala('Nádia', 'Você não pegou leve. Obrigada.'),
-    fala('Nádia', 'Me dá o seu número. Eu vou tirar a segunda insígnia em quatro meses e eu quero que você saiba o dia.'),
+    fala('Nozomi', 'Você não pegou leve. Obrigada.'),
+    fala('Nozomi', 'Me dá o seu número. Eu vou tirar a segunda insígnia em quatro meses e eu quero que você saiba o dia.'),
     'A taça é de plástico pintado e tem o ano errado gravado na base. Ninguém liga.'
   ],
   ef:{dinheiro:18000, flag:'venceu_o_aberto', moral:6,
       itens:{'Taça com o ano errado':1},
-      npc:{nome:'Nádia Bragança', opiniao:5, memoria:'Perdeu a final do aberto pra você e pediu o seu número.'},
+      npc:{nome:'Nozomi Arata', opiniao:5, memoria:'Perdeu a final do aberto pra você e pediu o seu número.'},
       rep:{eixo:'bom',delta:3,motivo:'Venceu o torneio aberto do Planalto', rep:{notorio:true, peso:2}},
       registrar:'Venceu o torneio aberto do Planalto Indigo.'},
   escolhas:[
@@ -231,15 +231,15 @@ c22_perdeu_a_final:{
   texto:[
     'Você perde. O Arcanine dela não cai, e em algum ponto do combate você entende que não vai cair, e continua tentando mesmo assim, que é a única coisa decente a fazer.',
     'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
-    fala('Nádia', 'Você é bom. Você vai ser muito melhor.'),
-    fala('Nádia', 'Eu levei vinte e dois anos pra voltar pra essa arena. Você chegou aqui em quanto tempo?'),
+    fala('Nozomi', 'Você é bom. Você vai ser muito melhor.'),
+    fala('Nozomi', 'Eu levei vinte e dois anos pra voltar pra essa arena. Você chegou aqui em quanto tempo?'),
     d=>fala(d.jogador.nome, 'Uns meses.'),
-    fala('Nádia', 'Então não faz essa cara.', 'riso')
+    fala('Nozomi', 'Então não faz essa cara.', 'riso')
   ],
   ef:{dinheiro:6000, flag:'perdeu_o_aberto', moral:3,
-      npc:{nome:'Nádia Bragança', opiniao:4, memoria:'Ganhou a final do aberto de você e te consolou na arena.'},
+      npc:{nome:'Nozomi Arata', opiniao:4, memoria:'Ganhou a final do aberto de você e te consolou na arena.'},
       rep:{eixo:'bom',delta:1,motivo:'Chegou à final do aberto e perdeu direito'},
-      registrar:'Perdeu a final do torneio aberto para a Nádia Bragança.'},
+      registrar:'Perdeu a final do torneio aberto para a Nozomi Arata.'},
   escolhas:[
     {texto:'Pedir o número dela.', vai:'c22_trocou_numero',
      cond:d=>Estado.temPokenav()},
@@ -250,12 +250,12 @@ c22_perdeu_a_final:{
 c22_trocou_numero:{
   texto:[
     'Vocês trocam número no meio da arena, com a arquibandada esvaziando, com o locutor já falando de outra coisa.',
-    fala('Nádia', 'Eu não sei usar isso direito. A minha filha que configurou.'),
-    fala('Nádia', 'Se eu ligar errado e desligar na sua cara, não leva a mal. Liga de volta.', 'riso')
+    fala('Nozomi', 'Eu não sei usar isso direito. A minha filha que configurou.'),
+    fala('Nozomi', 'Se eu ligar errado e desligar na sua cara, não leva a mal. Liga de volta.', 'riso')
   ],
   ef:{flag:'numero_da_nadia', moral:3,
       rep:{eixo:'bom',delta:1,motivo:'Trocou número com quem te enfrentou de igual pra igual'},
-      registrar:'Trocou número com a Nádia Bragança.'},
+      registrar:'Trocou número com a Nozomi Arata.'},
   escolhas:[{texto:'Ir embora do Planalto.', vai:'c22_foi_embora'}]
 },
 

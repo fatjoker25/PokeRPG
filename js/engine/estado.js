@@ -40,8 +40,8 @@ const TITULOS_INFLUENTES = [
 ];
 const NOMES_INFLUENTES = [
   'Brock','Misty','Tenente Surge','Erika','Koga','Sabrina','Blaine','Blue','Giovanni',
-  'Lance','Giselle','A.J.','Mandi','Red','Hélia Rennó','Bruna Teles','Dra. Ivone',
-  'Curador Adnan','Auditora Prado','Diretor Aloísio','Conselheira Vasques'
+  'Lance','Giselle','A.J.','Mandi','Red','Reika Ando','Saya Kurata','Dra. Sayo',
+  'Curador Ren','Auditora Nishino','Diretor Kusanagi','Conselheira Sakuma'
 ];
 function ehInfluente(nome){
   if (!nome) return false;
@@ -59,7 +59,7 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    deixar em branco, a casa ganha alguém mesmo assim, porque
    "alguém lá embaixo" não é personagem, é neblina.
    ============================================================ */
-const NOMES_DE_CASA = ['Delina','Marisa','Neide','Odete','Rosa','Belmira','Zilda','Aparecida',
+const NOMES_DE_CASA = ['Delina','Marisa','Neide','Chiyo','Rosa','Belmira','Zilda','Aparecida',
                        'Joaquim','Aurélio','Teodoro','Benedito','Sebastião','Raimundo'];
 const PARENTESCOS   = ['mãe','pai','avó','avô','tia','tio','irmã mais velha','irmão mais velho'];
 function casaDaFicha(ficha){
@@ -463,6 +463,9 @@ const Estado = {
       modo: 'cena',
       local: 'pallet',
       visitados: {},
+      cargos: [],             // postos assumidos — cada um muda alguma coisa
+      cenasAplicadas: {},     // cena cujo efeito já aconteceu — não repete
+      escolhasFeitas: {},     // opção já escolhida — some se não tiver mais nada
       descobertas: {},
       pokedex: {vistos:{}, catalogados:{}, brilhantes:{}},
       pokenav: {tem:false, contatos:{}, ligacoes:[]},   // a agenda e o histórico de ligações

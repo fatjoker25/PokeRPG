@@ -817,15 +817,15 @@ c8_atras_do_menino:{
     'Você vai atrás e não acha. Menino de porto some em porto melhor do que qualquer um.',
     'Duas quadras depois você desiste e volta pro banquinho.',
     'A dona da fritura está olhando pra você com uma expressão que você não sabe ler.',
-    '"Você deu oito mil pro Tunico."',
+    '"Você deu oito mil pro Toshi."',
     '"É o nome dele?"',
     '"É." Ela vira o peixe. "Ele vende Krabby na minha porta faz três ano."',
     'Ela serve outra porção e empurra pra você sem cobrar.',
     '"A mãe dele embarcou nesse navio há quatro ano. Pra trabalhar. Ela mandou uma carta de Cinnabar."'
   ],
   ef:{flag:['o_nome_do_menino','a_mae_do_tunico'],
-      registrar:'O menino se chama Tunico. A mãe dele embarcou no S.S. Anne há quatro anos e mandou uma carta.',
-      npc:{nome:'Menino do cais', opiniao:2, memoria:'Nome: Tunico. A mãe embarcou no Anne há quatro anos.'},
+      registrar:'O menino se chama Toshi. A mãe dele embarcou no S.S. Anne há quatro anos e mandou uma carta.',
+      npc:{nome:'Menino do cais', opiniao:2, memoria:'Nome: Toshi. A mãe embarcou no Anne há quatro anos.'},
       presagio:'Uma carta de Cinnabar. De novo. Sempre uma carta de Cinnabar.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
@@ -861,7 +861,7 @@ c8_pode_estar_viva:{
     'Ela limpa as mãos.',
     '"Eu não digo que morreu. Eu digo que não escreveu de novo, e que são coisas diferentes, e que uma delas eu consigo viver."',
     'Ela serve outro cliente.',
-    '"O Tunico não consegue viver com nenhuma das duas. Por isso ele junta."'
+    '"O Toshi não consegue viver com nenhuma das duas. Por isso ele junta."'
   ],
   ef:{flag:'nao_escreveu_de_novo',
       presagio:'Não morreu: não escreveu de novo. Você vai conhecer muita gente que vive na diferença entre essas duas coisas.'},
@@ -2060,13 +2060,13 @@ c8_os_quatro_nomes:{
     'Ele põe a taça na mesa.',
     '"E eu vou te falar porque eu tô com três taça e porque eu vou descer em Cinnabar amanhã e provavelmente nunca mais te ver."',
     'Ele diz um nome. É um sobrenome curto, comum, do tipo que tem em qualquer lista telefônica.',
-    '"Sena. Doutor alguma coisa Sena. Ele era da parte técnica e ele é o único que eu vi de perto, porque ele descia pro nosso andar pra pegar café, o que nenhum crachá preto fazia."',
+    '"Amano. Doutor alguma coisa Amano. Ele era da parte técnica e ele é o único que eu vi de perto, porque ele descia pro nosso andar pra pegar café, o que nenhum crachá preto fazia."',
     'Ele volta pra taça.',
     '"Ele era simpático. Isso é o que me tira o sono."'
   ],
   ef:{flag:['sabe_de_sena','sabe_do_tanque'],
-      registrar:'Dr. Sena, da parte técnica do laboratório de Cinnabar, foi promovido e transferido para Saffron.',
-      npc:{nome:'Ex-Silph', opiniao:3, memoria:'Te deu o nome do Dr. Sena com três taças na frente.'},
+      registrar:'Dr. Amano, da parte técnica do laboratório de Cinnabar, foi promovido e transferido para Saffron.',
+      npc:{nome:'Ex-Silph', opiniao:3, memoria:'Te deu o nome do Dr. Amano com três taças na frente.'},
       presagio:'"Ele era simpático. Isso é o que me tira o sono." Você vai apertar a mão dele.'},
   escolhas:[
     {texto:'"O senhor devia contar isso pra alguém."', vai:'c8_falou_com_alguem'},
@@ -2376,7 +2376,7 @@ c8_continua_trabalhando:{
     '"Nos outros dias eu não acho. Mas nesses dias eu também vou trabalhar."'
   ],
   ef:{flag:'a_maior_parte_dos_dias',
-      npc:{nome:'Curador Adnan', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'},
+      npc:{nome:'Curador Ren', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'},
       presagio:'Nos outros dias ele também vai trabalhar. É isso que faz a máquina girar, e não é maldade.'},
   escolhas:[
     {texto:'Apertar a mão.', vai:'c8_levou_a_ficha'},
@@ -2390,18 +2390,18 @@ c8_o_nome_dele:{
   texto:[
     '"Como é o seu nome?"',
     'Ele para de ajeitar o paletó.',
-    '"Adnan."',
-    '"Adnan de quê?"',
+    '"Ren."',
+    '"Ren de quê?"',
     'Uma pausa mínima.',
-    '"Adnan é suficiente." Ele sorri. "Curador Adnan, se você for escrever."',
+    '"Ren é suficiente." Ele sorri. "Curador Ren, se você for escrever."',
     '"Curador de quê?"',
     '"De acervo."',
     'Ele vai embora pelo salão e a multidão abre e fecha atrás dele sem ninguém reparar.',
     'Acervo. Você fica sentado naquela mesa com vinte mil pokedólares no bolso pensando na palavra acervo.'
   ],
   ef:{flag:['sabe_do_adnan','sabe_da_comissao'],
-      registrar:'Curador Adnan, de acervo.',
-      npc:{nome:'Curador Adnan', opiniao:1, memoria:'Você perguntou o nome dele. Ele deu o primeiro e o cargo.'},
+      registrar:'Curador Ren, de acervo.',
+      npc:{nome:'Curador Ren', opiniao:1, memoria:'Você perguntou o nome dele. Ele deu o primeiro e o cargo.'},
       presagio:'Curador de acervo. Acervo é onde as coisas ficam quando param de ser de alguém.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
@@ -2424,7 +2424,7 @@ c8_assinou:{
   ef:{flag:['assinou_com_a_comissao','sabe_da_comissao'],
       dinheiro:5000,
       rep:{eixo:'ruim',delta:2,motivo:'Assinou um acompanhamento de espécimes sem ler o estatuto'},
-      npc:{nome:'Curador Adnan', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
+      npc:{nome:'Curador Ren', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
       registrar:'Assinou o termo de acompanhamento da Comissão.',
       presagio:'A sexta você preenche em quatro minutos. Repara em quando parar de doer.'},
   escolhas:[
@@ -2470,7 +2470,7 @@ c8_recusa_venda:{
   ],
   ef:{flag:['recusou_a_comissao','sabe_da_comissao'],
       rep:{eixo:'bom',delta:2,motivo:'Recusou a bolsa e a ficha'},
-      npc:{nome:'Curador Adnan', opiniao:1, memoria:'Você recusou a proposta dele no S.S. Anne. Ele não insistiu.'},
+      npc:{nome:'Curador Ren', opiniao:1, memoria:'Você recusou a proposta dele no S.S. Anne. Ele não insistiu.'},
       registrar:'A Comissão tem quatro mil e duzentas fichas.',
       presagio:'Quatro mil e duzentas. Você recusar não muda nada, e é exatamente por isso que ele te contou.'},
   escolhas:[
@@ -2914,12 +2914,12 @@ c8_esperou_acordar:{
     'Ele fecha os olhos.',
     '"Que vergonha."',
     'E é isso que ele diz. Não "que fome", não "que injustiça", não "eu ia ganhar". Que vergonha.',
-    'Vocês conversam por uns vinte minutos. Ele se chama Wilton, é de Saffron, e ele não vai voltar pra casa porque em casa ele teria que explicar.'
+    'Vocês conversam por uns vinte minutos. Ele se chama Seiji, é de Saffron, e ele não vai voltar pra casa porque em casa ele teria que explicar.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Esperou um desconhecido acordar'},
       flag:'conhece_o_wilton',
-      npc:{nome:'Wilton', opiniao:5, memoria:'Desmaiou no torneio do Anne. Você esperou ele acordar. Ele é de Saffron e não vai voltar pra casa.'},
-      registrar:'Wilton, 16 anos, de Saffron. Não vai voltar pra casa porque teria que explicar.',
+      npc:{nome:'Seiji', opiniao:5, memoria:'Desmaiou no torneio do Anne. Você esperou ele acordar. Ele é de Saffron e não vai voltar pra casa.'},
+      registrar:'Seiji, 16 anos, de Saffron. Não vai voltar pra casa porque teria que explicar.',
       presagio:'Ele não vai voltar pra casa porque teria que explicar. Kanto está cheia de gente que não volta por isso.'},
   escolhas:[
     {texto:'Deixar dinheiro com a enfermeira pra ele. (5.000 ₽)', vai:'c8_deixou_pro_garoto',
@@ -3427,15 +3427,15 @@ c8_amigo_do_cais:{
   texto:[
     '"Um amigo do menino do cais."',
     'Silêncio comprido do outro lado.',
-    '"Do Tunico?"',
-    '"Do Tunico."',
+    '"Do Toshi?"',
+    '"Do Toshi."',
     'E aí você ouve, através de trinta centímetros de duto de ventilação de aço galvanizado, um menino de dezessete anos chorando o mais baixo que ele consegue.',
     'Você fica com o rosto encostado no duto até ele parar.',
     'Leva seis minutos.'
   ],
   ef:{flag:['achou_o_denis','o_denis_chorou'],
       rep:{eixo:'bom',delta:3,motivo:'Levou um nome conhecido através de uma parede'},
-      registrar:'Denis está vivo, no camarote 40, e sabe o nome do Tunico.',
+      registrar:'Denis está vivo, no camarote 40, e sabe o nome do Toshi.',
       presagio:'Seis minutos com o rosto num duto de ventilação. Isso vai ficar.'},
   escolhas:[
     {texto:'"Eu vou tirar vocês daí."', vai:'c8_vai_tirar'},

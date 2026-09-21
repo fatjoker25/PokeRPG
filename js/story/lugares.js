@@ -148,7 +148,7 @@ pallet:[
   {chave:'pl_troca', texto:['Um menino de sete anos te para na rua e pergunta, muito sério, se você tem um Caterpie. Ele não explica pra quê.']},
   {chave:'pl_praia', texto:['Do alto do morro dá pra ver o mar. Do outro lado dele, num dia limpo, uma mancha escura que é uma ilha.']},
   {chave:'loja_pallet', texto:['O mercado de Pallet abre tarde e vende Poké Ball atrás do balcão, junto com pilha e anzol.'], descobre:'loja_pallet'},
-  {chave:'pl_rufino', texto:['Sr. Rufino varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
+  {chave:'pl_rufino', texto:['Sr. Ushio varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
 ]
 };
 
@@ -520,7 +520,9 @@ const Cidade = {
   centro(){
     Mundo.passar(1);
     const d = Estado.dados;
-    if (!d.flags.tem_licenca){
+    const credenciado = !!d.flags.tem_licenca
+      || (typeof Cargos !== 'undefined' && Cargos.centroGratis());
+    if (!credenciado){
       /* Sem licença você é cliente, não treinador: ela atende e cobra.
          O que ela não faz é atender de graça — nem te mandar embora à toa. */
       const feridos = d.time.filter(p => p.hp < p.hpMax || p.status).length;
@@ -552,20 +554,37 @@ const Cidade = {
     ]);
   },
 
-  loja(){
+  loja(andar){
     const id = Mundo.id();
     const L = LOJAS[id];
     const catalogo = catalogoDaCidade(id);
     if (!catalogo.length)
       return UI.modal('Loja', '<p class="nada">Não tem loja aqui. Tem quem venda, mas não tem loja.</p>', false, 'mochila');
 
+    /* Loja de vários andares: a escada rolante é uma aba. */
+    let abas = '', ar = L.ar, sub = '';
+    let lista = catalogo;
+    if (L.andares && L.andares.length){
+      const n = andar || this._andar || L.andares[0].n;
+      this._andar = n;
+      const A = L.andares.find(x => x.n === n) || L.andares[0];
+      abas = `<div class="tut-abas loja-abas">${L.andares.map(x =>
+        `<button class="tut-aba${x.n === A.n ? ' sel' : ''}" onclick="Cidade.loja(${x.n})">${x.n}º</button>`
+      ).join('')}</div>`;
+      sub = UI.esc(A.nome);
+      ar = A.ar;
+      const so = new Set(A.itens);
+      lista = catalogo.filter(([nome]) => so.has(nome));
+    }
+
     const topo = `<div class="mochila-topo">
       <span class="grana">${Estado.j.dinheiro} ₽</span>
-      <span class="peso">${UI.esc(L.nome)}</span>
+      <span class="peso">${UI.esc(L.nome)}${sub ? ' · ' + sub : ''}</span>
     </div>
-    <p class="sussurro" style="margin:0 0 12px">${UI.esc(L.ar)}</p>`;
+    ${abas}
+    <p class="sussurro" style="margin:0 0 12px">${UI.esc(ar)}</p>`;
 
-    const linhas = catalogo.map(([n,p]) => {
+    const linhas = lista.map(([n,p]) => {
       const caro = Estado.j.dinheiro < p;
       const desc = descricaoItem(n);
       const tenho = Estado.contaItem(n);
@@ -586,7 +605,7 @@ const Cidade = {
     Estado.j.dinheiro -= preco;
     Estado.darItem(nome, 1);
     Estado.salvar('auto');
-    this.loja();
+    this.loja(this._andar);
   },
 
   ginasio(){

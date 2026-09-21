@@ -30,7 +30,7 @@ const PRECO_BASE = {
    vende repelente, porque ninguém em Lavender vai pro mato. */
 const LOJAS = {
   pallet: {
-    nome:'Mercado do Sr. Elpídio',
+    nome:'Mercado do Sr. Eguchi',
     ar:'Um mercado de bairro que vende Poké Ball atrás do balcão, junto com pilha e anzol. Ele te conhece desde pequeno e cobra o mesmo de todo mundo.',
     mult:1.0,
     itens:['Poké Ball','Potion','Antidote','Isca','Ração','Pilha','Cantil']
@@ -42,7 +42,7 @@ const LOJAS = {
     itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto','Sino Calmante','Mochila Verde','Bolsa Cinza']
   },
   pewter: {
-    nome:'Casa de Ferragens Bacelar',
+    nome:'Casa de Ferragens Bandō',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
     itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro','Mochila Marrom']
@@ -66,9 +66,32 @@ const LOJAS = {
     itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração','Sino Calmante']
   },
   celadon: {
-    nome:'Shopping de Celadon — 4º andar',
-    ar:'Sete andares, e o quarto inteiro é item de treinador. Você fica quinze minutos parado só olhando prateleira. É o lugar mais barato de Kanto e o que menos te olha na cara.',
+    nome:'Grande Loja de Celadon',
+    ar:'Sete andares, escada rolante nos dois sentidos e uma voz gravada que anuncia o andar em duas línguas. É o lugar mais barato de Kanto e o que menos te olha na cara.',
     mult:0.85,
+    andares:[
+      {n:1, nome:'Térreo · Atendimento',
+       ar:'Balcão de informações, guarda-volumes e um mapa dos andares em acrílico com uma seta que diz VOCÊ ESTÁ AQUI e está no andar errado.',
+       itens:['Mapa de Kanto','Caderno de campo','Pilha','Câmera descartável']},
+      {n:2, nome:'2º · Artigos de treinador',
+       ar:'Prateleira de bola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende.',
+       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca']},
+      {n:3, nome:'3º · Cuidados',
+       ar:'Cheiro de farmácia. Tem uma funcionária de jaleco que explica a diferença entre Potion e Super Potion umas quarenta vezes por dia e não perdeu a paciência ainda.',
+       itens:['Potion','Super Potion','Hyper Potion','Antidote','Full Heal','Revive','Bandagem','Éter','Elixir']},
+      {n:4, nome:'4º · Pedras e evolução',
+       ar:'Vitrine trancada, luz de cima, e um cartaz explicando que a loja não se responsabiliza por evolução feita por impulso.',
+       itens:['Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha']},
+      {n:5, nome:'5º · Equipamento',
+       ar:'Item segurado, um por Pokémon, cada um numa caixinha com a ficha técnica impressa em letra de máquina.',
+       itens:['Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda']},
+      {n:6, nome:'6º · Lanchonete',
+       ar:'Mesa de fórmica, máquina de refrigerante e a melhor vista de Celadon, que não é grande coisa mas é de graça.',
+       itens:['Água Fresca','Ração','Cantil','Cobertor térmico']},
+      {n:7, nome:'7º · Terraço',
+       ar:'Duas máquinas automáticas, um bebedouro quebrado e três pessoas dando comida para um bando de Pidgey que claramente mora aqui.',
+       itens:['Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']}
+    ],
     itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
            'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']
@@ -86,7 +109,7 @@ const LOJAS = {
     itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
   },
   cinnabar: {
-    nome:'Vitrine da Sra. Zuca',
+    nome:'Vitrine da Sra. Suzu',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
     itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
@@ -97,7 +120,9 @@ function precoNaCidade(nome, idCidade){
   const L = LOJAS[idCidade];
   const base = PRECO_BASE[nome] || 500;
   const m = L ? L.mult : 1;
-  return Math.round(base * m / 10) * 10;
+  /* crachá tem convênio: quem tem posto paga menos */
+  const c = (typeof Cargos !== 'undefined') ? Cargos.desconto() : 1;
+  return Math.round(base * m * c / 10) * 10;
 }
 
 /* O que a Pokédex Nacional destrava também aparece na prateleira.
@@ -206,7 +231,7 @@ const TROCAS = {
   }],
   rota11: [{
     id:'rota11_1',
-    quem:'Tunico ou outro menino do cais',
+    quem:'Toshi ou outro menino do cais',
     onde:'sentado no barranco da Rota 11, com um balde e uma vara curta',
     pede:98, da:{dex:90, nivel:[22,26], apelido:'Tampa', natureza:'Impish'},
     fala:'"Eu acho Shellder demais e Krabby quase nunca. Você troca? É troca de igual, eu não tô querendo levar vantagem."',

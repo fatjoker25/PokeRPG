@@ -134,7 +134,7 @@ c25_combinaram:{
     'Vocês dois combinam em voz baixa, com dez minutos e uma antessala com mais duas pessoas dentro.',
     'O que falar: tudo que está em papel. O convênio, as atas, o galpão, a Estação 4, a sala 704.',
     'O que não falar: nome de quem ajudou sem assinar nada.',
-    fala('Blue', 'A Marina. A Cida. O cara da requisição.'),
+    fala('Blue', 'A Hitomi. A Cida. O cara da requisição.'),
     d=>fala(d.jogador.nome, 'O guarda da terceira guarita.'),
     fala('Blue', 'Quem?'),
     d=>fala(d.jogador.nome, 'Um cara que virou uma tela dez graus pra eu ler. Ele tem filho.'),

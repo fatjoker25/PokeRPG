@@ -43,7 +43,7 @@ c10_quem_sabe:{
     'Ele está de costas pro açude. De frente pra usina.',
     '"Você vai entrar", ele diz, antes de você abrir a boca. "Todo mundo que para aqui vai entrar. Senta cinco minutos antes."'
   ],
-  ef:{npc:{nome:'Sr. Barreto', opiniao:1, memoria:'Pescador que não pesca, na Rota 10, sentado de frente para a usina.'},
+  ef:{npc:{nome:'Sr. Inoue', opiniao:1, memoria:'Pescador que não pesca, na Rota 10, sentado de frente para a usina.'},
       flag:'conheceu_eloi',
       presagio:'De costas pro açude. De frente pra usina. Ele não veio pescar.'},
   escolhas:[
@@ -57,7 +57,7 @@ c10_quem_sabe:{
 c10_eloi:{
   texto:[
     'Você senta na brita do lado da cadeira de praia dele.',
-    '"Barreto. Elói Barreto." Ele estende a mão sem levantar da cadeira. "Trabalhei ali dezenove anos, na sala de controle. Saí quando fecharam."',
+    '"Inoue. Elói Inoue." Ele estende a mão sem levantar da cadeira. "Trabalhei ali dezenove anos, na sala de controle. Saí quando fecharam."',
     '"Por que fechou?"',
     'Ele demora pra responder, e quando responde é com uma frase que ele claramente já disse muitas vezes e que continua não resolvendo nada:',
     '"Oficialmente? Inviabilidade econômica."',
@@ -81,7 +81,7 @@ c10_morreu_alguem:{
   texto:[
     '"Morreu."',
     'Ele arruma a vara que não está pescando nada.',
-    '"Um. Operador de painel, turno da madrugada. Vinte e seis anos. Chamava Nivaldo."',
+    '"Um. Operador de painel, turno da madrugada. Vinte e seis anos. Chamava Naoki."',
     '"Ele estava na sala de controle e não devia ter acontecido nada com ele, porque sala de controle é isolada, é o lugar mais seguro da usina inteira."',
     '"Mas ele saiu da sala. O registro de porta mostra: ele abriu a porta da sala de controle às cinco e trinta e oito e foi pro galpão."',
     '"Dois minutos antes."',
@@ -91,7 +91,7 @@ c10_morreu_alguem:{
   ],
   ef:{flag:['sabe_do_nivaldo','sabe_da_sala_de_controle'],
       moral:-5,
-      registrar:'Nivaldo, operador de painel, saiu da sala de controle dois minutos antes da sobrecarga e morreu no galpão.',
+      registrar:'Naoki, operador de painel, saiu da sala de controle dois minutos antes da sobrecarga e morreu no galpão.',
       presagio:'Ele foi ver. Você está prestes a fazer exatamente a mesma coisa.'},
   escolhas:[
     {texto:'"E o corpo?"', vai:'c10_o_corpo'},
@@ -109,11 +109,11 @@ c10_o_corpo:{
     '"Ele não tinha queimadura de entrada e saída. Choque elétrico tem marca de entrada e marca de saída, sempre, porque a corrente entra e sai."',
     '"O dele tinha só entrada. Doze pontos de entrada, distribuídos pelo tórax e pelos braços, e nenhuma saída em lugar nenhum."',
     '"O laudo escreveu “achado atípico” e assinou parada cardiorrespiratória."',
-    '"“Achado atípico.” Dezenove anos naquela sala e foi essa a frase que sobrou do Nivaldo."'
+    '"“Achado atípico.” Dezenove anos naquela sala e foi essa a frase que sobrou do Naoki."'
   ],
   ef:{flag:'sabe_do_laudo', moral:-5,
       rep:{eixo:'bom',delta:1,motivo:'Ouviu a história inteira sem fazer a cara'},
-      registrar:'O laudo do Nivaldo: doze pontos de entrada, nenhuma saída. "Achado atípico."',
+      registrar:'O laudo do Naoki: doze pontos de entrada, nenhuma saída. "Achado atípico."',
       presagio:'Doze pontos de entrada e nenhuma saída. A corrente entrou e ficou.'},
   escolhas:[
     {texto:'"Por que nunca desmontaram?"', vai:'c10_porque_nao_desmontaram'},
@@ -174,10 +174,10 @@ c10_porque_ele_vem:{
     '"A verdade é que se um dia acontecer alguma coisa ali de novo, eu quero ser a pessoa que estava olhando."',
     '"Na primeira vez ninguém estava olhando. Tinha um menino de vinte e seis anos e mais ninguém."'
   ],
-  ef:{npc:{nome:'Sr. Barreto', opiniao:4, memoria:'Vem uma vez por mês, no primeiro sábado, para ser alguém que está olhando.'},
+  ef:{npc:{nome:'Sr. Inoue', opiniao:4, memoria:'Vem uma vez por mês, no primeiro sábado, para ser alguém que está olhando.'},
       flag:'eloi_confia', moral:5,
       rep:{eixo:'bom',delta:1,motivo:'Ouviu um velho dizer por que ele volta ao lugar onde alguém morreu'},
-      registrar:'Sr. Barreto volta todo primeiro sábado para ser alguém que está olhando.',
+      registrar:'Sr. Inoue volta todo primeiro sábado para ser alguém que está olhando.',
       presagio:'Ele quer ser a pessoa que estava olhando. Repare no que isso vai custar.'},
   escolhas:[
     {texto:'"Me dá a planta do lugar."', vai:'c10_planta'},
@@ -199,7 +199,7 @@ c10_ja_entrou:{
     '"Acho que é porque eu entendi que eles estavam esperando. E eu sei o que é esperar num lugar desses."'
   ],
   ef:{flag:'sabe_dos_voltorb', moral:-5,
-      registrar:'Há quatro anos Sr. Barreto viu quarenta Voltorb parados no galpão, todos virados para o mesmo canto.',
+      registrar:'Há quatro anos Sr. Inoue viu quarenta Voltorb parados no galpão, todos virados para o mesmo canto.',
       presagio:'Esperando. Ele reconheceu porque ele faz a mesma coisa todo primeiro sábado.'},
   escolhas:[
     {texto:'"Me dá a planta do lugar."', vai:'c10_planta'},
@@ -242,7 +242,7 @@ c10_discordou_do_eloi:{
     '"Isso é pior. Você entendeu que isso é pior?"'
   ],
   ef:{flag:'entendeu_que_eles_querem',
-      npc:{nome:'Sr. Barreto', opiniao:3, memoria:'Você desmontou a teoria dele em duas frases e ele agradeceu.'},
+      npc:{nome:'Sr. Inoue', opiniao:3, memoria:'Você desmontou a teoria dele em duas frases e ele agradeceu.'},
       rep:{eixo:'bom',delta:2,motivo:'Pensou melhor que o especialista e falou'},
       registrar:'Os Voltorb não estão sendo levados. Eles estão indo por vontade própria.',
       presagio:'Eles querem. É por isso que você não vai conseguir simplesmente salvar ninguém aqui.'},
@@ -269,9 +269,9 @@ c10_planta:{
   ],
   ef:{flag:['tem_o_croqui','sabe_da_sala_de_controle'],
       itens:{'Croqui da usina':1},
-      npc:{nome:'Sr. Barreto', opiniao:5, memoria:'Te emprestou o croqui que ele desenhou à mão em 1989.'},
+      npc:{nome:'Sr. Inoue', opiniao:5, memoria:'Te emprestou o croqui que ele desenhou à mão em 1989.'},
       rep:{eixo:'bom',delta:1,motivo:'Ganhou a confiança de quem não confia em ninguém sobre aquele lugar'},
-      registrar:'Recebeu o croqui da usina desenhado à mão pelo Sr. Barreto.',
+      registrar:'Recebeu o croqui da usina desenhado à mão pelo Sr. Inoue.',
       presagio:'"Se você sair." Ele não estava sendo dramático. Ele estava sendo exato.'},
   escolhas:[
     {texto:'Ir pro portão principal.', vai:'c10_portao'},
@@ -293,10 +293,10 @@ c10_convidou_eloi:{
     '"É o máximo que um velho com marca-passo consegue oferecer e eu odeio que seja."'
   ],
   ef:{flag:['eloi_no_portao','tem_quem_espera'],
-      npc:{nome:'Sr. Barreto', opiniao:6, memoria:'Ficou no portão da usina esperando você sair, com hora marcada para chamar socorro.'},
+      npc:{nome:'Sr. Inoue', opiniao:6, memoria:'Ficou no portão da usina esperando você sair, com hora marcada para chamar socorro.'},
       rep:{eixo:'bom',delta:1,motivo:'Pediu ajuda em vez de fingir que não precisava'},
       moral:8,
-      registrar:'Sr. Barreto vai esperar no portão até as seis da manhã.',
+      registrar:'Sr. Inoue vai esperar no portão até as seis da manhã.',
       presagio:'Alguém está olhando dessa vez. Foi só isso que faltou em oitenta e nove.'},
   escolhas:[
     {texto:'Ir pro portão com ele.', vai:'c10_portao'},
@@ -346,7 +346,7 @@ c10_alguem_entrou:{
     {texto:'Voltar e esperar a janela.', vai:'c10_observar'},
     {texto:'Ir pro portão agora.', vai:'c10_portao'},
     {texto:'Contornar a cerca.', vai:'c10_perimetro'},
-    {texto:'Ir falar com o Sr. Barreto sobre isso.', vai:'c10_quem_sabe'}
+    {texto:'Ir falar com o Sr. Inoue sobre isso.', vai:'c10_quem_sabe'}
   ]
 },
 
@@ -431,7 +431,7 @@ c10_anotou_ciclo:{
       presagio:'Quarenta dias. Esse número vai reaparecer e você vai desejar ter agido antes.'},
   escolhas:[
     {texto:'Descer e entrar agora.', vai:'c10_portao'},
-    {texto:'Mostrar a conta pro Sr. Barreto.', vai:'c10_mostrou_a_conta'},
+    {texto:'Mostrar a conta pro Sr. Inoue.', vai:'c10_mostrou_a_conta'},
     {texto:'Avisar o pessoal do Túnel de Rocha.', vai:'c10_avisou_o_tunel'},
     {texto:'Entrar pela subestação.', vai:'c10_subestacao'}
   ]
@@ -439,7 +439,7 @@ c10_anotou_ciclo:{
 
 c10_mostrou_a_conta:{
   texto:[
-    'Sr. Barreto lê a página três vezes sem dizer nada.',
+    'Sr. Inoue lê a página três vezes sem dizer nada.',
     'Depois pega o lápis da sua mão e refaz a conta na margem, do jeito dele, com casas decimais.',
     'Chega no mesmo número.',
     '"Quarenta e um", ele diz. "A sua conta deu quarenta porque você arredondou o dia três."',
@@ -450,9 +450,9 @@ c10_mostrou_a_conta:{
     '"É a única coisa que um velho consegue fazer: deixar registrado que avisou."'
   ],
   ef:{flag:['eloi_vai_ligar','sabe_dos_quarenta_dias'],
-      npc:{nome:'Sr. Barreto', opiniao:6, memoria:'Refez sua conta, achou 41 dias, e ligou para a companhia para deixar registrado.'},
+      npc:{nome:'Sr. Inoue', opiniao:6, memoria:'Refez sua conta, achou 41 dias, e ligou para a companhia para deixar registrado.'},
       rep:{eixo:'bom',delta:2,motivo:'Levou o que descobriu a quem podia registrar'},
-      registrar:'Sr. Barreto registrou um aviso à companhia elétrica. Prazo: 41 dias.',
+      registrar:'Sr. Inoue registrou um aviso à companhia elétrica. Prazo: 41 dias.',
       presagio:'Deixar registrado que avisou. Às vezes é só isso que dá pra fazer, e às vezes isso basta.'},
   escolhas:[
     {texto:'Entrar na usina agora.', vai:'c10_portao'},
@@ -500,7 +500,7 @@ c10_foi_embora:{
   escolhas:[
     {texto:'Voltar. Ainda dá tempo.', vai:'c10_portao'},
     {texto:'Seguir para Saffron.', vai:'c10_fim'},
-    {texto:'Voltar e avisar o Sr. Barreto.', vai:'c10_quem_sabe'},
+    {texto:'Voltar e avisar o Sr. Inoue.', vai:'c10_quem_sabe'},
     {texto:'Voltar e avisar o pessoal do túnel.', vai:'c10_avisou_o_tunel'}
   ]
 },
@@ -542,7 +542,7 @@ c10_sala_controle:{
       presagio:'Mil horas de vida útil. Onze anos acesas. Alguma coisa alimenta aquelas lâmpadas.'},
   escolhas:[
     {texto:'Ler a agenda de mesa.', vai:'c10_agenda'},
-    {texto:'Olhar o registro de porta — a hora em que o Nivaldo saiu.', vai:'c10_registro_porta'},
+    {texto:'Olhar o registro de porta — a hora em que o Naoki saiu.', vai:'c10_registro_porta'},
     {texto:'Ir pra subestação ver os quatro transformadores.', vai:'c10_subestacao'},
     {texto:'Ir pro galpão.', vai:'c10_galpao'}
   ]
@@ -559,7 +559,7 @@ c10_agenda:{
     '**06/03** — "os bicho do pátio tão tudo parado virado pra T3. mandei o rapaz espantar. voltaram."',
     '**07/03** — "espantei de novo. voltaram em vinte minutos. não vou espantar mais, dá dó."',
     '**08/03** — a linha está começada e não terminada. Tem três palavras e a caneta arrasta pro canto da página:',
-    '"o Nivaldo foi"'
+    '"o Naoki foi"'
   ],
   ef:{flag:['leu_a_agenda','sabe_que_voltavam'], moral:-8,
       rep:{eixo:'bom',delta:1,motivo:'Leu a agenda inteira em vez de só o último dia'},
@@ -590,13 +590,13 @@ c10_levou_a_agenda:{
     {texto:'Olhar o registro de porta.', vai:'c10_registro_porta'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
-    {texto:'Sair e levar a agenda pro Sr. Barreto.', vai:'c10_agenda_pro_eloi'}
+    {texto:'Sair e levar a agenda pro Sr. Inoue.', vai:'c10_agenda_pro_eloi'}
   ]
 },
 
 c10_agenda_pro_eloi:{
   texto:[
-    'Você atravessa o pátio de volta e sai pelo portão, e o Sr. Barreto está exatamente onde disse que ficaria.',
+    'Você atravessa o pátio de volta e sai pelo portão, e o Sr. Inoue está exatamente onde disse que ficaria.',
     'Você entrega a agenda.',
     'Ele reconhece a capa antes de abrir. Segura ela fechada no colo por uns quinze segundos.',
     'Depois abre em março e lê, com o dedo, linha por linha, e nas anotações dos dias cinco, seis e sete ele começa a balançar a cabeça devagar.',
@@ -608,10 +608,10 @@ c10_agenda_pro_eloi:{
     '"Eu escrevi numa agenda de mesa. Eu não avisei ninguém. Eu escrevi numa agenda."'
   ],
   ef:{flag:['eloi_leu_a_agenda','eloi_e_a_letra'],
-      npc:{nome:'Sr. Barreto', opiniao:7, memoria:'Descobriu, com você na frente, que a letra dos dias 5, 6 e 7 de março é a dele.'},
+      npc:{nome:'Sr. Inoue', opiniao:7, memoria:'Descobriu, com você na frente, que a letra dos dias 5, 6 e 7 de março é a dele.'},
       moral:-10,
       rep:{eixo:'bom',delta:2,motivo:'Devolveu a um homem a verdade sobre o que ele fez e não fez'},
-      registrar:'A letra da agenda nos dias 5, 6 e 7 de março é do Sr. Barreto.',
+      registrar:'A letra da agenda nos dias 5, 6 e 7 de março é do Sr. Inoue.',
       presagio:'Ele escreveu numa agenda. Pensa em quantas vezes você fez exatamente isso.'},
   escolhas:[
     {texto:'"Você avisou. Só não teve quem lesse."', vai:'c10_consolou_eloi'},
@@ -634,7 +634,7 @@ c10_consolou_eloi:{
     '"Vai lá dentro e seja o exagerado. É de graça e ninguém morre disso."'
   ],
   ef:{flag:'licao_do_eloi', moral:10,
-      npc:{nome:'Sr. Barreto', opiniao:8, memoria:'Te disse, com a agenda no colo, para ser o exagerado.'},
+      npc:{nome:'Sr. Inoue', opiniao:8, memoria:'Te disse, com a agenda no colo, para ser o exagerado.'},
       rep:{eixo:'bom',delta:2,motivo:'Ficou para ouvir a parte difícil'},
       registrar:'"Vai lá dentro e seja o exagerado."',
       presagio:'Seja o exagerado. Anota. Isso vale pro resto do jogo.'},
@@ -657,7 +657,7 @@ c10_foi_duro_com_eloi:{
     '"Todo mundo faz a cara. A cara é pior que a frase."'
   ],
   ef:{flag:'foi_duro_com_eloi', moral:-5,
-      npc:{nome:'Sr. Barreto', opiniao:5, memoria:'Você disse na cara dele que ele não avisou. Ele agradeceu por você não ter feito a cara.'},
+      npc:{nome:'Sr. Inoue', opiniao:5, memoria:'Você disse na cara dele que ele não avisou. Ele agradeceu por você não ter feito a cara.'},
       rep:{eixo:'bom',delta:1,motivo:'Disse a verdade a um velho em vez de confortar'},
       presagio:'A cara é pior que a frase. Guarde isso para quando for você do outro lado.'},
   escolhas:[
@@ -679,7 +679,7 @@ c10_sentou_com_eloi:{
     'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitos capítulos.'
   ],
   ef:{flag:'noite_com_eloi', moral:12, hp:3,
-      npc:{nome:'Sr. Barreto', opiniao:7, memoria:'Passaram quarenta minutos em silêncio na brita, tomando café com açúcar demais.'},
+      npc:{nome:'Sr. Inoue', opiniao:7, memoria:'Passaram quarenta minutos em silêncio na brita, tomando café com açúcar demais.'},
       rep:{eixo:'bom',delta:1,motivo:'Sentou em silêncio com alguém que precisava de companhia'},
       presagio:'Três gerações olhando pro mesmo prédio. Você é a quarta pessoa a olhar.'},
   escolhas:[
@@ -697,9 +697,9 @@ c10_registro_porta:{
     '**05:31 — P2 ABERTA (EXTERNA)**',
     '**05:33 — P2 FECHADA**',
     '**05:38 — P1 ABERTA (CONTROLE→GALPÃO)**',
-    'E aí a parte que ninguém te contou, porque o Sr. Barreto só sabe do 05:38:',
+    'E aí a parte que ninguém te contou, porque o Sr. Inoue só sabe do 05:38:',
     '**05:31 — P2 ABERTA (EXTERNA)** quer dizer que alguém entrou na usina pela porta externa sete minutos antes.',
-    'Alguém que não era o Nivaldo, porque o Nivaldo já estava dentro desde as vinte e três.',
+    'Alguém que não era o Naoki, porque o Naoki já estava dentro desde as vinte e três.',
     'Tinha mais alguém na usina naquela madrugada.'
   ],
   ef:{flag:['sabe_da_segunda_pessoa','tem_o_registro'],
@@ -709,7 +709,7 @@ c10_registro_porta:{
       presagio:'Tinha mais alguém. Onze anos e ninguém desenrolou o rolo de papel.'},
   escolhas:[
     {texto:'Arrancar o trecho e guardar.', vai:'c10_guardou_registro'},
-    {texto:'Ir mostrar isso pro Sr. Barreto agora.', vai:'c10_registro_pro_eloi'},
+    {texto:'Ir mostrar isso pro Sr. Inoue agora.', vai:'c10_registro_pro_eloi'},
     {texto:'Ir pro galpão. Perguntas depois.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'}
   ]
@@ -726,7 +726,7 @@ c10_guardou_registro:{
       registrar:'Guardou a fita do registro de porta de 08/03/89.',
       presagio:'Papel térmico apaga. Você tem um prazo que não sabe qual é.'},
   escolhas:[
-    {texto:'Mostrar pro Sr. Barreto.', vai:'c10_registro_pro_eloi'},
+    {texto:'Mostrar pro Sr. Inoue.', vai:'c10_registro_pro_eloi'},
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
     {texto:'Ir pro vestiário.', vai:'c10_vestiario'}
@@ -747,7 +747,7 @@ c10_registro_pro_eloi:{
     '"Os buracos da cerca", ele diz. "Os buracos da cerca são do tamanho de quê, você reparou?"'
   ],
   ef:{flag:['p2_nao_foi_pessoa','sabe_da_segunda_pessoa'],
-      npc:{nome:'Sr. Barreto', opiniao:6, memoria:'Leu com você a fita do registro de porta e entendeu o que ela quer dizer.'},
+      npc:{nome:'Sr. Inoue', opiniao:6, memoria:'Leu com você a fita do registro de porta e entendeu o que ela quer dizer.'},
       rep:{eixo:'bom',delta:2,motivo:'Levou a descoberta pra quem podia interpretar'},
       instabilidade:1,
       registrar:'A porta externa foi aberta às 05:31 sem ninguém para abri-la.',
@@ -790,7 +790,7 @@ c10_vestiario:{
     'No 14 tem uma etiqueta de fita crepe com um nome escrito a caneta, já quase apagado: **NIVALDO R.**'
   ],
   ef:{flag:'achou_o_armario',
-      registrar:'No vestiário da usina, o armário 14 ainda está trancado com o nome do Nivaldo.',
+      registrar:'No vestiário da usina, o armário 14 ainda está trancado com o nome do Naoki.',
       presagio:'Ninguém teve coragem de esvaziar aquele armário. Por onze anos.'},
   escolhas:[
     {texto:'Arrombar o armário 14.', vai:'c10_armario_14'},
@@ -815,7 +815,7 @@ c10_armario_14:{
       itens:{'Rádio da companhia':1},
       moral:-10,
       rep:{eixo:'ruim',delta:1,motivo:'Arrombou o armário de um morto'},
-      registrar:'Abriu o armário do Nivaldo. O rádio da companhia ainda tem carga.',
+      registrar:'Abriu o armário do Naoki. O rádio da companhia ainda tem carga.',
       presagio:'Ele chia. Guarde o rádio.'},
   escolhas:[
     {texto:'Levar o rádio.', vai:'c10_almoxarifado'},
@@ -838,21 +838,21 @@ c10_pegou_a_foto:{
       itens:{'Foto três por quatro':1},
       moral:5,
       rep:{eixo:'bom',delta:2,motivo:'Guardou uma coisa para devolver a quem nunca soube dela'},
-      registrar:'Pegou a foto da mãe do Nivaldo para devolver.',
+      registrar:'Pegou a foto da mãe do Naoki para devolver.',
       presagio:'Mãe — 71. Em Lavender tem um cemitério e um prédio cheio de gente que atende famílias.'},
   escolhas:[
     {texto:'Ir pro almoxarifado.', vai:'c10_almoxarifado'},
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
-    {texto:'Sair e mostrar pro Sr. Barreto.', vai:'c10_foto_pro_eloi'}
+    {texto:'Sair e mostrar pro Sr. Inoue.', vai:'c10_foto_pro_eloi'}
   ]
 },
 
 c10_foto_pro_eloi:{
   texto:[
-    'Você mostra a foto pro Sr. Barreto no portão.',
+    'Você mostra a foto pro Sr. Inoue no portão.',
     'Ele olha por três segundos e diz o nome inteiro sem hesitar:',
-    '"Sra. Rocha. Mora em Lavender, rua de trás do cemitério, casa com portão verde."',
+    '"Sra. Roka. Mora em Lavender, rua de trás do cemitério, casa com portão verde."',
     '"Ela ainda tá viva?"',
     '"Tava em maio. Eu levo panetone todo Natal e ela não abre a porta, mas o panetone some do degrau, então ela tá."',
     'Ele devolve a foto com as duas mãos.',
@@ -861,9 +861,9 @@ c10_foto_pro_eloi:{
     '"E ela tem razão."'
   ],
   ef:{flag:['sabe_da_almerinda','endereco_almerinda'],
-      npc:{nome:'Sr. Barreto', opiniao:5, memoria:'Te deu o endereço da mãe do Nivaldo em Lavender e não quis entregar a foto ele mesmo.'},
+      npc:{nome:'Sr. Inoue', opiniao:5, memoria:'Te deu o endereço da mãe do Naoki em Lavender e não quis entregar a foto ele mesmo.'},
       moral:5,
-      registrar:'Sra. Rocha, mãe do Nivaldo, mora em Lavender, na rua de trás do cemitério.',
+      registrar:'Sra. Roka, mãe do Naoki, mora em Lavender, na rua de trás do cemitério.',
       presagio:'O panetone some do degrau. Ela está viva e não abre a porta.'},
   escolhas:[
     {texto:'Voltar e entrar no galpão.', vai:'c10_galpao'},
@@ -879,7 +879,7 @@ c10_nao_abriu_armario:{
     'Fica olhando a etiqueta de fita crepe com o nome quase apagado por um tempo que não dá pra medir, e depois vira as costas.',
     'Tem uma coisa que você não sabe explicar e que é verdadeira: aquele armário é a única coisa naquela usina inteira que ainda pertence a alguém.',
     'Tudo mais é da companhia, e a companhia foi embora.',
-    'Aquilo ali é do Nivaldo.'
+    'Aquilo ali é do Naoki.'
   ],
   ef:{flag:'respeitou_o_armario',
       rep:{eixo:'bom',delta:2,motivo:'Não abriu o armário de um morto'},
@@ -957,7 +957,7 @@ c10_caderno_da_mochila:{
     {texto:'Levar o caderno e a mochila.', vai:'c10_levou_a_mochila'},
     {texto:'Ir pro galpão perguntar a mesma coisa.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
-    {texto:'Mostrar pro Sr. Barreto.', vai:'c10_quem_sabe'}
+    {texto:'Mostrar pro Sr. Inoue.', vai:'c10_quem_sabe'}
   ]
 },
 
@@ -980,7 +980,7 @@ c10_levou_a_mochila:{
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
     {texto:'Ir pra sala de controle.', vai:'c10_sala_controle'},
-    {texto:'Sair e falar com o Sr. Barreto.', vai:'c10_quem_sabe'}
+    {texto:'Sair e falar com o Sr. Inoue.', vai:'c10_quem_sabe'}
   ]
 
 },
@@ -1052,7 +1052,7 @@ c10_mediu_todos:{
     {texto:'Seguir as marcas no chão até o galpão.', vai:'c10_marcas'},
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
     {texto:'Desligar os transformadores.', vai:'c10_desligou'},
-    {texto:'Sair e contar isso pro Sr. Barreto.', vai:'c10_quem_sabe'}
+    {texto:'Sair e contar isso pro Sr. Inoue.', vai:'c10_quem_sabe'}
   ]
 },
 
@@ -1227,7 +1227,7 @@ c10_correu_do_portao:{
   texto:[
     'Você corre os duzentos metros do pátio até o portão com o cabelo em pé e gosto de metal na boca.',
     'Não vem atrás.',
-    d=>d.flags.eloi_no_portao ? 'O Sr. Barreto está no portão, de pé, com a mão no peito em cima do marca-passo, branco. "Eu senti", ele diz. "Eu senti no peito, garoto. Não faz isso de novo."' :
+    d=>d.flags.eloi_no_portao ? 'O Sr. Inoue está no portão, de pé, com a mão no peito em cima do marca-passo, branco. "Eu senti", ele diz. "Eu senti no peito, garoto. Não faz isso de novo."' :
        'No portão você para, com as mãos no joelho, e olha pra trás. O zumbido continua exatamente igual.',
     'Ave lendária não persegue. Ave lendária lembra.'
   ],
@@ -1405,7 +1405,7 @@ c10_conversa_longa:{
       presagio:'Um ficou. Ninguém te deu ele — ele ficou.'},
   escolhas:[
     {texto:'Sair da usina.', vai:'c10_saiu'},
-    {texto:'Ir devolver o croqui pro Sr. Barreto.', vai:'c10_depois'},
+    {texto:'Ir devolver o croqui pro Sr. Inoue.', vai:'c10_depois'},
     {texto:'Voltar à subestação medir de novo.', vai:'c10_mediu_todos', cond:d=>Estado.contaItem('Multímetro')>0},
     {texto:'Voltar amanhã à noite.', vai:'c10_galpao'}
   ]
@@ -1673,10 +1673,10 @@ c10_depois:{
   texto:[
     'No portão da usina tem alguém esperando.',
     d=>{
-      if (d.flags.eloi_no_portao) return 'O Sr. Barreto está exatamente onde disse que ficaria, na cadeira de praia, com a garrafa térmica vazia e o boné da companhia no colo. Ele levanta quando te vê e a primeira coisa que ele faz é olhar as suas mãos, pra ver se estão inteiras.';
+      if (d.flags.eloi_no_portao) return 'O Sr. Inoue está exatamente onde disse que ficaria, na cadeira de praia, com a garrafa térmica vazia e o boné da companhia no colo. Ele levanta quando te vê e a primeira coisa que ele faz é olhar as suas mãos, pra ver se estão inteiras.';
       const via = Historia.via();
       if (via==='mercenario' || via==='foragido') return 'Dois homens com uma van. "A Terceira mandou perguntar se deu certo." Eles olham a sua mochila com muita atenção. Eles sabem contar bolas.';
-      if (via==='pesquisador') return 'A Dra. Ivone, encostada num carro emprestado, com uma garrafa térmica. "Eu vi o relâmpago da estrada. Sobe aí, você tá com cara de quem precisa sentar."';
+      if (via==='pesquisador') return 'A Dra. Sayo, encostada num carro emprestado, com uma garrafa térmica. "Eu vi o relâmpago da estrada. Sobe aí, você tá com cara de quem precisa sentar."';
       if (via==='heroi') return 'Três pessoas de Cerulean, que vieram a pé, porque alguém falou que tinha um treinador na usina. Eles não sabem o que perguntar. Só queriam saber se era verdade.';
       return 'Um técnico da companhia elétrica, aposentado, que vem aqui uma vez por mês por conta própria. "Você viu?" Ele não precisa dizer o quê.';
     }
@@ -1694,7 +1694,7 @@ c10_contou:{
     'Você conta. Sem enfeitar, sem arredondar, inclusive as partes em que você fica mal na fita.',
     'Quem está ouvindo reage de um jeito que você não esperava: ninguém duvida. Nem por um segundo.',
     '"A gente sabia", diz um deles. "A gente só não tinha quem falasse."',
-    d=>d.flags.eloi_no_portao ? 'O Sr. Barreto ouve tudo de pé, sem sentar de novo, e quando você termina ele diz uma frase só: "Então não foi castigo. Onze anos e eu achando que aquilo lá era castigo."' :
+    d=>d.flags.eloi_no_portao ? 'O Sr. Inoue ouve tudo de pé, sem sentar de novo, e quando você termina ele diz uma frase só: "Então não foi castigo. Onze anos e eu achando que aquilo lá era castigo."' :
        'E é isso: a informação não vale nada até alguém dizer em voz alta na frente de outra pessoa.',
     d=>d.flags.tem_o_croqui ? 'Você devolve o croqui dobrado em quatro. Ele guarda no bolso do colete, no mesmo lugar, e bate duas vezes em cima com a mão.' : ''
   ],
@@ -1734,7 +1734,7 @@ c10_mentiu:{
   texto:[
     '"Não tinha nada lá."',
     'Eles aceitam. Ou fingem aceitar, o que num contexto desses dá exatamente no mesmo.',
-    d=>d.flags.eloi_no_portao ? 'O Sr. Barreto olha pra você por três segundos a mais do que o normal, e depois assente e senta de novo na cadeira de praia, de frente pra usina, como faz todo primeiro sábado.' :
+    d=>d.flags.eloi_no_portao ? 'O Sr. Inoue olha pra você por três segundos a mais do que o normal, e depois assente e senta de novo na cadeira de praia, de frente pra usina, como faz todo primeiro sábado.' :
        'Um deles olha a usina por cima do seu ombro enquanto você fala, e não interrompe.',
     'Você segue estrada com a sensação estranha de ter roubado uma coisa que não era sua:',
     'a certeza deles.'
@@ -1755,7 +1755,7 @@ c10_mentiu:{
 c10_interditou:{
   texto:[
     'Você fica mais um dia.',
-    'Não acontece nada heroico: você ajuda a carregar quatro cavaletes de madeira e um rolo de fita zebrada da casa do Sr. Barreto até a curva da Rota 10, e vocês fecham os dois acessos ao vale.',
+    'Não acontece nada heroico: você ajuda a carregar quatro cavaletes de madeira e um rolo de fita zebrada da casa do Sr. Inoue até a curva da Rota 10, e vocês fecham os dois acessos ao vale.',
     'Depois ele prega uma placa de compensado, escrita a tinta, com a letra de um homem que passou dezenove anos preenchendo formulário:',
     '**ÁREA COM RISCO ELÉTRICO — NÃO ENTRE — AVISO REGISTRADO NA COMPANHIA, PROTOCOLO 88.412**',
     'O protocolo existe. Ele ligou de manhã e deixou registrado.',
@@ -1765,7 +1765,7 @@ c10_interditou:{
   ef:{flag:['interditou_a_rota','eloi_vai_ligar'],
       rep:{eixo:'bom',delta:3,motivo:'Ficou mais um dia para fechar a estrada'},
       moral:10,
-      npc:{nome:'Sr. Barreto', opiniao:4, memoria:'Interditou a Rota 10 com você, com protocolo registrado.'},
+      npc:{nome:'Sr. Inoue', opiniao:4, memoria:'Interditou a Rota 10 com você, com protocolo registrado.'},
       registrar:'A Rota 10 foi interditada por vocês dois, com protocolo 88.412.',
       presagio:'Agora quem entrar entra sabendo. É o máximo que dá pra fazer e não é pouco.'},
   escolhas:[
@@ -1795,12 +1795,12 @@ c10_lavender:{
       perdeItens:{'Foto três por quatro':1},
       rep:{eixo:'bom',delta:4,motivo:'Andou seis horas para devolver uma foto três por quatro'},
       moral:20,
-      npc:{nome:'Sra. Rocha', opiniao:5, memoria:'Você deixou no degrau dela a foto que o filho guardava no armário da usina.'},
-      registrar:'Devolveu à Sra. Rocha a foto que o Nivaldo guardava no armário.',
+      npc:{nome:'Sra. Roka', opiniao:5, memoria:'Você deixou no degrau dela a foto que o filho guardava no armário da usina.'},
+      registrar:'Devolveu à Sra. Roka a foto que o Naoki guardava no armário.',
       presagio:'Nenhum dos dois disse obrigado. Algumas coisas não precisam.'},
   escolhas:[
     {texto:'Seguir para Saffron.', vai:'c10_fim'},
-    {texto:'Ir contar pro Sr. Barreto que ela pegou.', vai:'c10_contou_pro_eloi_da_foto'},
+    {texto:'Ir contar pro Sr. Inoue que ela pegou.', vai:'c10_contou_pro_eloi_da_foto'},
     {texto:'Voltar pra usina.', vai:'c10_galpao'},
     {texto:'Sentar na calçada um tempo antes de ir.', vai:'c10_fim'}
   ]
@@ -1820,10 +1820,10 @@ c10_contou_pro_eloi_da_foto:{
     '"Vai pra Saffron, garoto. Você tá indo bem e eu não sou de dizer isso."'
   ],
   ef:{flag:'eloi_se_despediu',
-      npc:{nome:'Sr. Barreto', opiniao:8, memoria:'Soube que a Sra. Rocha desceu no degrau. Foi o melhor dia dele em onze anos.'},
+      npc:{nome:'Sr. Inoue', opiniao:8, memoria:'Soube que a Sra. Roka desceu no degrau. Foi o melhor dia dele em onze anos.'},
       moral:15,
       rep:{eixo:'bom',delta:2,motivo:'Voltou seis horas de estrada só para contar uma coisa boa'},
-      registrar:'Contou ao Sr. Barreto que a Sra. Rocha desceu no degrau.',
+      registrar:'Contou ao Sr. Inoue que a Sra. Roka desceu no degrau.',
       presagio:'"Você tá indo bem e eu não sou de dizer isso." Guarde. Vai fazer falta.'},
   escolhas:[{texto:'Seguir para Saffron.', vai:'c10_fim'}]
 },
