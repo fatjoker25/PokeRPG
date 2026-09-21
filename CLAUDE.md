@@ -11,6 +11,20 @@ regras moram, aberta de propósito por quem quer ler. O que não pode é o jogo
 explicar a regra durante a partida — nada de "pra essa missão pokémons calmos
 ajudam", nada de descrição de quem é quem no PokéNav. O jogador repara jogando.
 
+## Capítulo não sabe do futuro
+Um capítulo pode **citar o nome** de um lugar aonde o jogador ainda não foi —
+a carta da Liga fala do Planalto Indigo no capítulo 17, o navio vai pra
+Cinnabar no capítulo 8. Isso é como o jogador descobre pra onde ir.
+
+O que ele não pode é usar um **fato** que só se descobre depois. Se uma cena
+do capítulo 32 diz "trezentas e onze, o mesmo número de baias da Estação 4",
+ela está contando pro jogador uma coisa que ele só vai ver no capítulo 19 —
+e pior, os capítulos condicionais (29 a 32) rodam no meio da jornada, não
+no fim. Presságio insinua; não entrega.
+
+Isso não dá pra conferir com script: nome de lugar citado antes é normal e
+fato citado antes não é detectável. Confere na leitura.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.

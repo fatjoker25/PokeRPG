@@ -302,7 +302,7 @@ c29_quem_paga:{
   ],
   ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
       registrar:'Os malotes do portão verde vêm da Rua do Comércio, 118, sala 704.',
-      presagio:'Sétimo andar, prédio comercial, farmácia no térreo. Guarde o endereço.'},
+      presagio:'Um endereço de rua comercial com número de sala. Guarde: ele é o primeiro endereço desta jornada que não é de uma cidade, é de uma porta.'},
   escolhas:[
     {texto:'Pedir o envelope.', vai:'c29_pediu_o_envelope'},
     {texto:'Copiar a tabela antes de sair.', vai:'c29_copiou_a_tabela'},

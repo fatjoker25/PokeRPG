@@ -258,7 +258,7 @@ c32_a_brecha:{
       rep:{eixo:'bom', delta:2, motivo:'Achou, com um ferramenteiro, a brecha no próprio contrato de sigilo dele.'},
       npc:{nome:'o fumante', opiniao:4, viuVoce:'Você achou a brecha do contrato dele e ele usou.'},
       registrar:'Um ferramenteiro faz manutenção de 311 unidades de equipamento no galpão. O número está na ordem de serviço dele.',
-      presagio:'Trezentas e onze. O mesmo número de baias de uma estação de manejo na Rota 21.'},
+      presagio:'Trezentas e onze unidades de um equipamento que precisa de manutenção e de climatização contínua. Guarde o número.'},
   escolhas:[
     {texto:'Perguntar se ele guarda cópia das ordens de serviço.', vai:'c32_as_ordens_de_servico'},
     {texto:'"Você quer sair de lá?"', vai:'c32_quer_sair'},
