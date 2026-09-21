@@ -1604,6 +1604,8 @@ const Eventos = {
     const ramo = rolagem ? (rolagem.passou ? esc.bom : esc.ruim) || {} : null;
 
     let avisos = [];
+    if (rolagem && rolagem.afinidade && rolagem.afinidade.linha)
+      avisos.push({tipo:'natureza', texto:rolagem.afinidade.linha});
     if (rolagem && rolagem.linhaTime) avisos.push({tipo:'natureza', texto:rolagem.linhaTime});
     if (esc.ef)        avisos = avisos.concat(Historia.aplicar(esc.ef) || []);
     if (ramo && ramo.ef) avisos = avisos.concat(Historia.aplicar(ramo.ef) || []);

@@ -238,6 +238,20 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   color:var(--destaque);margin-bottom:3px;
 }
 .narrativa .fala-diz{margin:0;max-width:none;animation:none}
+/* fala sem nome: a gente sabe que é fala, só não sabe de quem */
+.narrativa .fala.anonima{
+  border-color:color-mix(in srgb, var(--destaque) 24%, var(--borda));
+  border-left-color:color-mix(in srgb, var(--destaque) 55%, var(--borda));
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--destaque) 5%, var(--bg-2)),
+    color-mix(in srgb, var(--destaque) 2%, var(--bg-2)));
+}
+.narrativa .fala.anonima::before{border-right-color:color-mix(in srgb, var(--destaque) 55%, var(--borda))}
+/* narração curta no meio de uma troca de falas */
+.narrativa p.entre-falas{
+  margin:-4px 0 10px 14px;max-width:62ch;
+  font-size:13px;font-style:italic;color:var(--texto-fraco);
+}
 .narrativa .fala-nota{
   margin-top:5px;font-size:12px;font-style:italic;
   color:var(--texto-fraco);
@@ -1529,6 +1543,8 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 }
 .pc-golpe b{color:var(--pc-txt);font-weight:600}
 .pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
+.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.sussurro.afinidade{color:var(--texto);opacity:.85}
 .pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pc-acao .btn{
   background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);

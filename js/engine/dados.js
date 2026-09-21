@@ -38,7 +38,7 @@ const Dados = {
       grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
-    return {dado:d, bonus:valorStatus, total, dificuldade, grau, texto};
+    return {dado:d, bonus:valorStatus, nomeStatus, total, dificuldade, grau, texto};
   },
 
   /* ============================================================
@@ -51,8 +51,13 @@ const Dados = {
   testeComTime(valorStatus, dificuldade, nomeStatus, eixo){
     const t = (typeof modificadorDeTemperamento === 'function')
       ? modificadorDeTemperamento(eixo) : {mod:0, linha:null};
+    /* quem vai na frente é quem você manda primeiro: se ele não te
+       entende, a tarefa inteira fica mais difícil */
+    const lider = (typeof Estado !== 'undefined' && Estado.primeiroApto) ? Estado.primeiroApto() : null;
+    const af = (lider && typeof efeitosDeAfinidade === 'function')
+      ? efeitosDeAfinidade(lider) : {teste:0, grau:'neutro'};
     const d = this.d10('Teste de ' + (nomeStatus || 'perícia'));
-    const total = d + valorStatus + t.mod;
+    const total = d + valorStatus + t.mod + af.teste;
     let grau, texto;
     if (total <= 3)      { grau = 'falha';    texto = 'Fracasso total'; }
     else if (total <= 6) { grau = 'parcial';  texto = 'Sucesso parcial'; }
@@ -62,7 +67,8 @@ const Dados = {
       grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
-    return {dado:d, bonus:valorStatus, temperamento:t.mod, linhaTime:t.linha,
-            melhor:t.melhor, pior:t.pior, eixo, total, dificuldade, grau, texto};
+    return {dado:d, bonus:valorStatus, temperamento:t.mod + af.teste, linhaTime:t.linha,
+            melhor:t.melhor, pior:t.pior, afinidade:af, eixo, nomeStatus,
+            total, dificuldade, grau, texto};
   }
 };

@@ -123,18 +123,16 @@ function modificadorDeTemperamento(eixo, time){
 }
 
 function linhaDeTemperamento(eixo, m, p, mod){
-  const nome = NOME_EIXO[eixo] || eixo;
   if (!m.pokemon) return null;
-  const cab = nome.charAt(0).toUpperCase() + nome.slice(1);
-  const fim = ` — ${mod >= 0 ? '+' : ''}${mod} no dado.`;
-  /* time inteiro contra a tarefa: ninguém ajuda, e isso precisa ser dito */
+  /* Só o que dá pra ver acontecendo. Sem nome de eixo, sem regra
+     explicada: se o jogador quiser entender por que deu certo,
+     ele olha pro cinto. */
+  const como = x => x.naturezaVista ? `${nomeExib(x)} (${x.natureza})` : nomeExib(x);
   if (m.valor <= 0 && p.valor < 0)
-    return `${cab}: o cinto inteiro trabalha contra. ${nomeExib(p.pokemon)} (${p.pokemon.natureza}) é o pior deles${fim}`;
+    return `Ninguém no cinto serve pra isso, e ${como(p.pokemon)} é o pior deles.`;
   const partes = [];
-  if (m.valor > 0)
-    partes.push(`${nomeExib(m.pokemon)} (${m.pokemon.natureza}) ajuda: ${NATUREZAS[m.pokemon.natureza].traco.split('.')[0].toLowerCase()}`);
-  if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid)
-    partes.push(`${nomeExib(p.pokemon)} (${p.pokemon.natureza}) atrapalha`);
-  if (!partes.length) return `${cab}: ninguém no cinto muda muito isso${fim}`;
-  return `${cab}: ${partes.join(' · ')}${fim}`;
+  if (m.valor > 0) partes.push(`${como(m.pokemon)} acompanha bem`);
+  if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid) partes.push(`${como(p.pokemon)} atrapalha`);
+  if (!partes.length) return null;
+  return partes.join(' · ') + '.';
 }

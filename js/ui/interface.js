@@ -255,7 +255,69 @@ const UI = {
      com o nome de quem falou em cima. Assim dá pra saber quem
      está falando com você sem ter que deduzir pelo contexto.
      ======================================================== */
+  /* Todo nome próprio que o jogo conhece. Serve pra descobrir quem
+     está falando quando a linha é só uma frase entre aspas. */
+  registroDeNomes(){
+    if (this._nomes) return this._nomes;
+    const n = new Set();
+    const por = arr => (arr||[]).forEach(x => { const v = x && (x.nome || x.lider); if (v) n.add(v); });
+    if (typeof CONTATOS !== 'undefined') por(CONTATOS);
+    if (typeof GINASIOS !== 'undefined') por(GINASIOS);
+    if (typeof ELITE4  !== 'undefined') por(ELITE4);
+    if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
+    if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
+    ['Téo','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
+     'Blue','Red','Adnan','Nádia','Nogueira'].forEach(x => n.add(x));
+    this._nomes = n;
+    return n;
+  },
+
+  /* Uma linha que é só uma frase entre aspas é fala de alguém. Quem,
+     a gente tenta descobrir pela linha de narração logo antes: se ela
+     cita um nome só, é dele. Se cita dois, ou nenhum, o balão fica sem
+     nome — melhor sem nome do que com o nome errado. */
+  quemFalouAntes(narracao){
+    if (!narracao) return null;
+    const achados = new Set();
+    const nomes = this.registroDeNomes();
+    if (Estado.dados && Estado.j){
+      if (Estado.j.nome) nomes.add(Estado.j.nome);
+      if (typeof nomeCasa === 'function'){ const c = nomeCasa(); if (c) nomes.add(c); }
+    }
+    for (const nome of nomes){
+      if (!nome) continue;
+      if (narracao.indexOf(nome) !== -1) achados.add(nome);
+    }
+    /* 'Blue' dentro de 'Bluezinho' não vale, mas 'Brock' dentro de
+       'Brock e Téo' vale pros dois — e aí são dois, e some o nome. */
+    if (achados.size !== 1) return null;
+    return achados.values().next().value;
+  },
+
+
+  /* Quebra uma linha em pedaços de narração e de fala. Devolve null
+     quando não há fala nenhuma, pra linha seguir sendo parágrafo. */
+  partirFalas(texto){
+    const re = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g;
+    const pedacos = []; let fim = 0, m, achouFala = false;
+    while ((m = re.exec(texto))){
+      const dentro = m[1].trim();
+      /* fala de verdade termina em pontuação; o resto é aspas de ironia */
+      if (dentro.length < 2 || !/[.?!\u2026\u2014,:;)]$/.test(dentro)) continue;
+      const antes = texto.slice(fim, m.index).trim();
+      if (antes) pedacos.push({tipo:'narracao', texto:antes});
+      pedacos.push({tipo:'fala', texto:dentro});
+      fim = m.index + m[0].length;
+      achouFala = true;
+    }
+    if (!achouFala) return null;
+    const resto = texto.slice(fim).trim();
+    if (resto) pedacos.push({tipo:'narracao', texto:resto});
+    return pedacos;
+  },
+
   narrar(linhas){
+    let ultimaNarracao = null, jaAtribuiu = false;
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
       if (f){
@@ -270,7 +332,33 @@ const UI = {
         </div>`;
       }
       const t = txt(bruto);
-      return t ? `<p>${this.esc(t)}</p>` : '';
+      if (!t) return '';
+
+      /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
+         são aspas de ironia ("análise jurídica") e ficam na narração. */
+      const pedacos = this.partirFalas(t);
+      if (!pedacos) { ultimaNarracao = t; jaAtribuiu = false; return `<p>${this.esc(t)}</p>`; }
+
+      let html = '';
+      for (const pe of pedacos){
+        if (pe.tipo === 'narracao'){
+          html += html ? `<p class="entre-falas">${this.esc(pe.texto)}</p>`
+                       : `<p>${this.esc(pe.texto)}</p>`;
+          ultimaNarracao = pe.texto; jaAtribuiu = false;
+          continue;
+        }
+        /* a frase que você acabou de escolher é sua, e o balão vai
+           pro seu lado com o seu nome */
+        const souEu = this.falaDoJogador && pe.texto === this.falaDoJogador;
+        const quem = souEu ? (Estado.j ? Estado.j.nome : null)
+                           : (jaAtribuiu ? null : this.quemFalouAntes(ultimaNarracao));
+        jaAtribuiu = true;
+        const meu = (quem && Estado.dados && Estado.j && quem === Estado.j.nome) ? ' voce' : '';
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}">`
+              + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+              + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
+      }
+      return html;
     }).filter(Boolean).join('');
   },
 
@@ -714,7 +802,7 @@ const UI = {
         <div class="loc">${this.esc(txt(r.esc.texto)).slice(0, 80)}</div>
       </div>
       ${r.rolagem ? `<div class="teste-linha">
-        <span class="k">${this.esc((r.rolagem.eixo && NOME_EIXO[r.rolagem.eixo]) || 'teste')}</span>
+        <span class="k">${this.esc(r.rolagem.nomeStatus || 'teste')}</span>
         <span class="v mono">1d10(${r.rolagem.dado}) + ${r.rolagem.bonus}${
           r.rolagem.temperamento ? (r.rolagem.temperamento > 0 ? ' + ' : ' − ') + Math.abs(r.rolagem.temperamento) : ''
         } = ${r.rolagem.total} · dif ${r.rolagem.dificuldade}</span>
@@ -857,7 +945,7 @@ const UI = {
 
   navFicha(){
     const c = this.navSel ? contatoPorId(this.navSel) : null;
-    if (!c) return `<div class="nav-vazio">Selecione um contato.<br><span>Números aparecem aqui quando alguém te dá o dele.</span></div>`;
+    if (!c) return `<div class="nav-vazio">Selecione um contato.</div>`;
     const reg = Estado.nav().contatos[c.id] || {usos:{}};
 
     const ROTULO = {
@@ -872,22 +960,11 @@ const UI = {
       })(),
       prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
     };
-    const NOTA = {
-      revanche:'Ele sobe o time junto com você. Não é o mesmo combate de antes.',
-      favor:'Favor é crédito. Gasta.',
-      missao:(() => {
-        const f = Estado.faseDaMissao(c.id);
-        if (f === 'entregar') return 'Está cumprido. Ele ainda não sabe.';
-        return 'Vira um pedido que você carrega até resolver.';
-      })(),
-      prova:'Sem ganho material. Muda o que essa pessoa pensa de você.'
-    };
-
     const botoes = (c.oferece||[]).map(serv => {
       const r = Estado.podeLigar(c.id, serv);
       return `<div class="nav-servico">
         <button class="btn" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>${this.esc(ROTULO[serv]||serv)}</button>
-        <span class="nav-nota">${this.esc(r.ok ? (NOTA[serv]||'') : r.motivo)}</span>
+        ${r.ok ? '' : `<span class="nav-nota">${this.esc(r.motivo)}</span>`}
       </div>`;
     }).join('');
 
@@ -901,8 +978,7 @@ const UI = {
           <span class="nav-ficha-papel">${this.esc(textoContato(c,'papel'))}</span>
         </span>
       </div>
-      <div class="nav-desde">${this.esc(textoContato(c,'desde') || '')}</div>
-      <div class="nav-servicos">${botoes || '<span class="nav-nota">Esse número não atende pedido nenhum. Está aí porque importa.</span>'}</div>
+      <div class="nav-servicos">${botoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
       ${hist.length ? `<div class="nav-hist">${hist.map(l =>
         `<span>cap ${l.cap} · ${this.esc(l.servico)}</span>`).join('')}</div>` : ''}`;
   },
@@ -1011,6 +1087,8 @@ const UI = {
           <span class="num mono">${moral}</span></div>
         <div class="pc-golpes">${(p.golpes||[]).map(g =>
           `<span class="pc-golpe">${this.esc(g.nome)} <b>${g.pp}/${g.ppMax}</b></span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
+        ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
+            return l ? `<div class="pc-afinidade">${this.esc(l)}</div>` : ''; })()}
         ${p.historia ? `<div class="pc-historia">${this.esc(p.historia)}</div>` : ''}
         <div class="pc-acao">
           <button class="btn" ${trava ? 'disabled' : `onclick="${acao}"`}>${rotulo}</button>
@@ -1655,6 +1733,8 @@ const UI = {
         ? this.esc(p.natureza) + ' — ' + this.esc((NATUREZAS[p.natureza]||{}).traco||'')
         : 'Natureza <b>???</b> — você ainda não entendeu o jeito dele. Convivência e Percepção resolvem isso.'}</div>
       <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
+      ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
+          return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
       ${p.morto ? '' : `<div class="segurado-linha">
         ${p.segurando
           ? `<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
@@ -2151,6 +2231,8 @@ const UI = {
       <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo (limitada entre 0,45× e 2,2×), senão os stats dos jogos não teriam efeito nenhum. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador.</p>
+      <h3>Vocês dois</h3>
+      <p class="sussurro">A personalidade que você escreveu na ficha e a natureza de cada Pokémon são lidas no mesmo idioma. Quando batem, ele obedece com menos esforço e acerta melhor. Quando não batem, ele demora pra entender a ordem — em combate e fora dele. O jogo não avisa qual é qual: repare em quem vai na frente.</p>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `

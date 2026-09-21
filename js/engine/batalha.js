@@ -102,8 +102,12 @@ const Batalha = {
     // e quem sabe mandar precisa de menos insígnia para ser obedecido
     const insignias = (Estado.dados && Estado.dados.insignias) ? Estado.dados.insignias.length : 0;
     const carisma = (Estado.dados && Estado.j) ? (Estado.j.status.carisma || 0) : 0;
+    /* e o jeito dele contra o seu: quem te entende obedece mais fácil,
+       quem não te entende faz você repetir a ordem */
+    const af = souAliado && typeof efeitosDeAfinidade === 'function'
+      ? efeitosDeAfinidade(p) : {obediencia:0, grau:'neutro'};
     const desobedienciaBase = souAliado
-      ? Math.max(0, (60 - moral) / 2 - insignias * 3 - carisma * 1.5)
+      ? Math.max(0, (60 - moral) / 2 - insignias * 3 - carisma * 1.5 + af.obediencia)
       : 0;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
@@ -115,7 +119,9 @@ const Batalha = {
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
       return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
     if (desobedienciaBase > 0 && Dados.chance(desobedienciaBase))
-      return {recusa:true, texto:`${nomeVisivel(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
+      return {recusa:true, texto: (af.grau === 'atrito' || af.grau === 'desencontro')
+        ? `${nomeVisivel(p)} olha pra você, demora, e faz outra coisa.`
+        : `${nomeVisivel(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
     return null;
   },
 
@@ -196,6 +202,9 @@ const Batalha = {
     const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
     let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
     if (g.ef && g.ef.critico) limiteCrit -= 3;
+    /* quem te entende acerta onde dói sem você apontar */
+    if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk))
+      limiteCrit -= efeitosDeAfinidade(atk).crit;
     const dCrit = Dados.d20('Crítico');
     if (dCrit >= limiteCrit){
       res.critico = true;

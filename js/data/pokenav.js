@@ -18,13 +18,12 @@ const CONTATOS = [
 {
   id:'casa', tipo:'figura', cidade:d=>d.jogador.cidade,
   nome:d=>nomeCasa(), papel:d=>`a sua ${casaQuem()}`.replace('a sua pai','o seu pai').replace(/^a sua (avô|tio|irmão)/, 'o seu $1'),
-  desde:'O primeiro número gravado no aparelho. Já estava lá quando ele chegou na sua mão.',
   automatico:true,
   oferece:['favor','prova','missao'],
   missao:{
     rotulo:'Perguntar se ela precisa de alguma coisa',
     rotuloEntrega:'Ligar e dizer que está consertado',
-    dica:'Voltar em casa e consertar o telhado dos fundos. Três telhas.',
+    dica:'Ela está esperando você em casa.',
     pedido:[
       d=>fala(nomeCasa(), 'Eu não preciso de nada.'),
       'Pausa de quatro segundos, que nesta casa quer dizer o contrário.',
@@ -82,13 +81,12 @@ const CONTATOS = [
 },
 {
   id:'rufino', tipo:'figura', nome:'Sr. Rufino', papel:'o velho da vassoura', cidade:'Pallet',
-  desde:'Varre a mesma calçada há vinte anos e não esquece nada.',
   requer:d=>!!(d.npcs['Sr. Rufino'] && d.npcs['Sr. Rufino'].opiniao >= 2),
   oferece:['favor','missao'],
   missao:{
     rotulo:'Perguntar se ele precisa de alguma coisa',
     rotuloEntrega:'Ligar e contar da medalha',
-    dica:'Achar a medalha de natação da filha do Nogueira. Ela foi vendida, e quem vende vende pra quem compra.',
+    dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
       fala('Sr. Rufino', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
       fala('Sr. Rufino', 'A filha do Nogueira ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
@@ -124,9 +122,34 @@ const CONTATOS = [
 },
 {
   id:'odete', tipo:'figura', nome:'Sra. Odete', papel:'a vizinha do dezoito', cidade:'Pallet',
-  desde:'Bateu na sua porta às seis e cinquenta com uma caixa nos braços.',
   requer:d=>!!d.npcs['Sra. Odete'],
-  oferece:['favor'],
+  oferece:['favor','missao'],
+  missao:{
+    rotulo:'Perguntar por que ela ligou duas vezes',
+    rotuloEntrega:'Contar o que tem no cais',
+    dica:'Ela quer saber do cais de Vermilion.',
+    pedido:[
+      fala('Sra. Odete', 'Eu liguei duas vezes ontem e desliguei nas duas. Você deve ter visto no aparelho.'),
+      fala('Sra. Odete', 'Você vai passar por Vermilion uma hora. Todo mundo passa.'),
+      fala('Sra. Odete', 'Quando passar, vai no cais, o de carga, não o de turista. Fica um tempo lá.', 'baixo'),
+      fala('Sra. Odete', 'Depois me liga e me conta o que tem lá. Só isso. Não precisa perguntar nada pra ninguém.'),
+      fala('Sra. Odete', 'E não precisa me perguntar por quê.', 'frio')
+    ],
+    objetivo:d=>!!d.visitados.vermilion,
+    entregue:[
+      fala('Sra. Odete', 'Fala.', null, 'Ela atendeu no primeiro toque. Estava sentada perto do telefone.'),
+      'Você conta: guindaste velho, três galpões, o de número dois fechado com chapa, e um quadro de avisos com nome de gente que embarcou.',
+      fala('Sra. Odete', 'Tinha nome no quadro?'),
+      'Você diz que tinha. Ela fica quieta o tempo de quatro respirações.',
+      fala('Sra. Odete', 'Tá bom. Obrigada, meu filho.', 'baixo'),
+      fala('Sra. Odete', 'Passa aqui quando voltar que eu separo uma coisa pra você.'),
+      'Ela desliga antes de você responder.'
+    ],
+    recompensa:d=>{ Estado.darItem('Super Potion', 3); Estado.darItem('Revive', 1);
+      return [{tipo:'item', texto:'Recebeu 3× Super Potion e 1× Revive.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Foi até o cais de Vermilion olhar uma coisa que não era sua'},
+    marca:'odete_soube_do_cais'
+  },
   favor:{
     rotulo:'Perguntar da caixa',
     limite:99, esperaCap:3,
@@ -140,13 +163,12 @@ const CONTATOS = [
 },
 {
   id:'enfermeira', tipo:'figura', nome:'Enfermeira do Centro', papel:'seis insígnias, e parou', cidade:'Viridian',
-  desde:'Te entregou a licença e contou por que parou.',
   requer:d=>!!d.flags.historia_da_enfermeira,
   oferece:['favor','missao'],
   missao:{
     rotulo:'Perguntar o que ela não conseguiu fazer',
     rotuloEntrega:'Ligar e contar das seis',
-    dica:'Chegar a seis insígnias. Ela parou em seis e quer ver alguém passar disso.',
+    dica:'Ela quer ver o que você prometeu.',
     pedido:[
       fala('a enfermeira', 'Eu parei em seis. Eu já te contei isso.'),
       fala('a enfermeira', 'O que eu não te contei é que eu fiquei quatro anos achando que seis era o meu teto. Que era o máximo que uma pessoa como eu chegava.'),
@@ -185,10 +207,33 @@ const CONTATOS = [
 /* ── os oito líderes: número dado depois da insígnia ─────── */
 {
   id:'brock', tipo:'treinador', nome:'Brock', papel:'líder de Pewter · Pedra', cidade:'Pewter',
-  desde:'Te deu a Insígnia Pedra e o número junto.',
   requer:d=>d.insignias.includes('Insígnia Pedra'),
   ginasio:'pewter',
-  oferece:['revanche','favor'],
+  oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ele quer ver',
+    rotuloEntrega:'Dizer que já dá pra ver',
+    dica:'Ele quer ver um bicho de pedra criado, não comprado.',
+    pedido:[
+      fala('Brock', 'Quer fazer uma coisa por mim? Não é favor. É uma coisa que eu quero ver.'),
+      fala('Brock', 'Todo mundo que me enfrenta chega com alguma coisa de pedra pega na semana passada, já grande, já forte.'),
+      fala('Brock', 'Eu quero ver um que você tenha levantado do chão. Do começo.', 'baixo'),
+      fala('Brock', 'Me liga quando tiver. Eu sei diferenciar, então não tenta me enrolar.')
+    ],
+    objetivo:d=>(d.time||[]).some(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terra') && p.nivel >= 25),
+    entregue:[
+      fala('Brock', 'Fala o nome e o nível.'),
+      'Você fala. Do outro lado dá pra ouvir ele largando alguma coisa pesada em cima de uma bancada.',
+      fala('Brock', 'Vinte e cinco. E tá com você desde quando?'),
+      'Você responde. Ele não comenta.',
+      fala('Brock', 'Eu criei nove irmãos. Você aprende a ver quando uma coisa foi feita com tempo ou comprada pronta.', 'baixo'),
+      fala('Brock', 'Essa foi feita com tempo. Tá anotado aqui do meu lado.')
+    ],
+    recompensa:d=>{ Estado.darItem('Punho de Ferro', 1); Estado.darItem('Hyper Potion', 1);
+      return [{tipo:'item', texto:'Recebeu 1× Punho de Ferro e 1× Hyper Potion.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Criou do começo um Pokémon que o líder de Pewter quis ver', notorio:true},
+    marca:'brock_viu_a_pedra'
+  },
   favor:{
     rotulo:'Perguntar de pedra',
     limite:99, esperaCap:3,
@@ -201,9 +246,32 @@ const CONTATOS = [
 },
 {
   id:'misty', tipo:'treinador', nome:'Misty', papel:'líder de Cerulean · Água', cidade:'Cerulean',
-  desde:'Te deu a Insígnia Cascata e não gostou nem um pouco.',
   requer:d=>d.insignias.includes('Insígnia Cascata'),
-  ginasio:'cerulean', oferece:['revanche','prova'],
+  ginasio:'cerulean', oferece:['revanche','prova','missao'],
+  missao:{
+    rotulo:'Perguntar da ponte',
+    rotuloEntrega:'Contar como está a ponte',
+    dica:'A ponte ao norte. Ela quer saber quem está lá.',
+    pedido:[
+      fala('Misty', 'Você conhece a ponte? A estreita, ao norte daqui.'),
+      fala('Misty', 'Tem cinco que ficam lá cobrando pedágio de menino de doze anos. Cinco. Eu já fui lá duas vezes.'),
+      fala('Misty', 'Na segunda vez eles me chamaram de senhora e fugiram, o que é pior, porque quer dizer que eles só somem enquanto eu estou olhando.', 'riso'),
+      fala('Misty', 'Passa na ponte. Não precisa bater em ninguém. Passa e olha.', 'baixo'),
+      fala('Misty', 'Depois me diz se eles ainda estão lá.')
+    ],
+    objetivo:d=>!!d.visitados.rota24,
+    entregue:[
+      fala('Misty', 'E aí? Cinco?'),
+      'Você conta o que viu na ponte.',
+      fala('Misty', '...tá. Então eu vou ter que ir uma terceira vez.'),
+      fala('Misty', 'Obrigada por ter olhado. Sério. Ninguém olha.', 'baixo'),
+      fala('Misty', 'Toma isso aqui e some, antes que eu te peça pra ir junto.')
+    ],
+    recompensa:d=>{ Estado.darItem('Great Ball', 3); Estado.j.dinheiro += 2000;
+      return [{tipo:'item', texto:'Recebeu 3× Great Ball e 2000 ₽.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Foi olhar a ponte por uma líder que já foi lá duas vezes'},
+    marca:'misty_soube_da_ponte'
+  },
   prova:{
     rotulo:'Contar quantas você tem agora',
     texto:d=>{
@@ -219,9 +287,41 @@ const CONTATOS = [
 },
 {
   id:'surge', tipo:'treinador', nome:'Tenente Surge', papel:'líder de Vermilion · Elétrico', cidade:'Vermilion',
-  desde:'Te deu a Insígnia Trovão e um aperto de mão que doeu.',
   requer:d=>d.insignias.includes('Insígnia Trovão'),
-  ginasio:'vermilion', oferece:['revanche','favor'],
+  ginasio:'vermilion', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ele quer contar',
+    rotuloEntrega:'Dizer que ninguém ficou pra trás',
+    dica:'Ele conta cabeça, não insígnia.',
+    aoAceitar:d=>{ d.flags.surge_contou = (d.cemiterio||[]).length; },
+    pedido:[
+      fala('Tenente Surge', 'Vou te falar uma coisa e você vai achar que é frescura de veterano.'),
+      fala('Tenente Surge', 'Eu não conto insígnia. Eu conto cabeça. Quantos saíram comigo e quantos voltaram.'),
+      fala('Tenente Surge', 'Chega em cinco insígnias sem perder ninguém no caminho. Ninguém. Desmaiar não conta, desmaiar é parte.', 'baixo'),
+      fala('Tenente Surge', 'Aí você me liga. Se perder alguém antes disso, me liga do mesmo jeito. Eu atendo as duas ligações.')
+    ],
+    objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 5
+               && (d.cemiterio||[]).length <= (d.flags.surge_contou || 0),
+    entregue:[
+      fala('Tenente Surge', 'Cinco. E o número?'),
+      'Você diz o número. É o mesmo de quando ele pediu.',
+      'Do outro lado tem um silêncio que dura mais do que devia.',
+      fala('Tenente Surge', 'Bom.', 'baixo'),
+      fala('Tenente Surge', 'Eu saí com seis, uma vez, e voltei com quatro. Faz dezenove anos e eu ainda conto de novo às vezes, de noite, pra ver se dá outro número.'),
+      fala('Tenente Surge', 'Tem um aqui comigo que eu não uso mais. Ele é barulhento e explode quando se assusta, e eu não tenho paciência pra isso hoje em dia.'),
+      fala('Tenente Surge', 'Vai com você. Não deixa ele virar número.', 'baixo')
+    ],
+    recompensa:d=>{
+      const p = criarPokemon(100, Math.max(20, 16 + d.insignias.length * 2), {
+        moral: 60, historia: 'Era do Tenente Surge. Ele parou de usar e não explicou por quê.'
+      });
+      const onde = Estado.adicionar(p);
+      Estado.marcar('ganhou_o_voltorb_do_surge');
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`}];
+    },
+    rep:{eixo:'bom', delta:2, motivo:'Chegou a cinco insígnias sem enterrar ninguém', notorio:true},
+    marca:'surge_contou_a_cabeca'
+  },
   favor:{
     rotulo:'Pedir o contato do porto',
     limite:2, esperaCap:4,
@@ -235,13 +335,12 @@ const CONTATOS = [
 },
 {
   id:'erika', tipo:'treinador', nome:'Erika', papel:'líder de Celadon · Grama', cidade:'Celadon',
-  desde:'Te deu a Insígnia Arco-Íris com as duas mãos.',
   requer:d=>d.insignias.includes('Insígnia Arco-Íris'),
   ginasio:'celadon', oferece:['revanche','favor','missao'],
   missao:{
     rotulo:'Perguntar o que a estufa precisa',
     rotuloEntrega:'Ligar e falar do time',
-    dica:'Levar o time inteiro com moral alta (acima de 70). Ela quer ver, não ouvir.',
+    dica:'Ela quer ver, não ouvir.',
     pedido:[
       fala('Erika', 'A estufa não precisa de nada. Eu preciso.'),
       fala('Erika', 'Eu recebo desafiante todo dia e eu vejo time cansado todo dia. Time que obedece por hábito.'),
@@ -275,13 +374,12 @@ const CONTATOS = [
 },
 {
   id:'koga', tipo:'treinador', nome:'Koga', papel:'líder de Fuchsia · Venenoso', cidade:'Fuchsia',
-  desde:'Te deu a Insígnia Alma sem te dizer onde ficava a saída.',
   requer:d=>d.insignias.includes('Insígnia Alma'),
   ginasio:'fuchsia', oferece:['revanche','favor','missao'],
   missao:{
     rotulo:'Perguntar o que ele não pôde fazer',
     rotuloEntrega:'Ligar e dizer que está no papel',
-    dica:'Conseguir por escrito alguma coisa da reserva de Fuchsia. Papel, não conversa.',
+    dica:'Papel, não conversa.',
     pedido:[
       fala('Koga', 'Eu assinei papel naquela reserva por onze anos. Eu já te disse isso.', 'frio'),
       fala('Koga', 'O que eu não disse é que eu nunca consegui tirar um papel de lá. Nenhum. Em onze anos.'),
@@ -321,9 +419,33 @@ const CONTATOS = [
 },
 {
   id:'sabrina', tipo:'treinador', nome:'Sabrina', papel:'líder de Saffron · Psíquico', cidade:'Saffron',
-  desde:'Te deu a Insígnia Pântano antes de você pedir.',
   requer:d=>d.insignias.includes('Insígnia Pântano'),
-  ginasio:'saffron', oferece:['revanche','favor'],
+  ginasio:'saffron', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ela viu',
+    rotuloEntrega:'Ligar da torre',
+    dica:'Ela falou de Lavender.',
+    pedido:[
+      fala('Sabrina', 'Você não ligou pra perguntar isso, mas eu vou responder assim mesmo.', 'frio'),
+      fala('Sabrina', 'Tem um andar da torre de Lavender onde as pessoas param de falar sozinhas. O último.'),
+      fala('Sabrina', 'Sobe lá. Não leva ninguém pra fora da bola, não acende lanterna, não fala.', 'baixo'),
+      fala('Sabrina', 'Fica o tempo que você aguentar. Depois me liga de lá mesmo.'),
+      fala('Sabrina', 'Eu não vou te dizer o que você vai ouvir. Se eu disser, você ouve o que eu falei.')
+    ],
+    objetivo:d=>!!d.visitados.lavender,
+    entregue:[
+      fala('Sabrina', 'Está ligando de lá.', 'frio', 'Não é pergunta.'),
+      'Você fica quieto. Ela também. O telefone sustenta os dois silêncios sem reclamar.',
+      fala('Sabrina', 'Então você ouviu.'),
+      fala('Sabrina', 'Todo mundo ouve uma coisa diferente e todo mundo tem certeza de que é a mesma coisa. Isso me interessa mais do que fantasma.', 'baixo'),
+      fala('Sabrina', 'Obrigada. Eu não podia subir de novo.'),
+      'Ela desliga. Você percebe, com atraso, que ela disse obrigada.'
+    ],
+    recompensa:d=>{ Estado.subirStatus('percepcao'); Estado.darItem('Sino Calmante', 1);
+      return [{tipo:'rep', texto:'PERCEPÇÃO +1.'}, {tipo:'item', texto:'Recebeu 1× Sino Calmante.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Subiu a torre de Lavender calado, porque pediram'},
+    marca:'sabrina_ouviu_a_torre'
+  },
   favor:{
     rotulo:'Deixar ela falar primeiro',
     limite:99, esperaCap:4,
@@ -336,9 +458,31 @@ const CONTATOS = [
 },
 {
   id:'blaine', tipo:'treinador', nome:'Blaine', papel:'líder de Cinnabar · Fogo', cidade:'Cinnabar',
-  desde:'Te deu a Insígnia Vulcão depois de uma pergunta.',
   requer:d=>d.insignias.includes('Insígnia Vulcão'),
-  ginasio:'cinnabar', oferece:['revanche','favor'],
+  ginasio:'cinnabar', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Aceitar a pergunta difícil',
+    rotuloEntrega:'Dar a resposta',
+    dica:'Ele quer o número da Pokédex, não a resposta bonita.',
+    pedido:[
+      fala('Blaine', 'Essa aqui não é charada. Essa é serviço.', 'riso'),
+      fala('Blaine', 'A ilha tinha um laboratório e o laboratório tinha uma lista de espécies. A lista queimou junto com o resto.'),
+      fala('Blaine', 'Eu não quero a lista de volta. Eu quero saber se dá pra refazer uma sozinho, andando.', 'baixo'),
+      fala('Blaine', 'Cataloga oitenta e me liga. Oitenta é o número que eu nunca passei.')
+    ],
+    objetivo:d=>Estado.contagemDex().catalogados >= 80,
+    entregue:[
+      fala('Blaine', 'Oitenta?'),
+      'Você confirma. Ele pede pra você ler cinco de cabeça, sem olhar. Você lê.',
+      fala('Blaine', 'Não é decoreba, é convivência. Dá pra ouvir a diferença.'),
+      fala('Blaine', 'Eu parei em setenta e nove porque eu quis provar uma coisa e queimei uma ilha inteira provando.', 'baixo'),
+      fala('Blaine', 'Você fez andando. Isso responde a pergunta que eu te fiz no ginásio, aliás.')
+    ],
+    recompensa:d=>{ Estado.darItem('Pedra do Fogo', 1); Estado.darItem('Ultra Ball', 2);
+      return [{tipo:'item', texto:'Recebeu 1× Pedra do Fogo e 2× Ultra Ball.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Passou de oitenta espécies catalogadas a pé', notorio:true},
+    marca:'blaine_ouviu_os_oitenta'
+  },
   favor:{
     rotulo:'Pedir outra pergunta',
     limite:99, esperaCap:3,
@@ -351,7 +495,6 @@ const CONTATOS = [
 },
 {
   id:'blue', tipo:'treinador', nome:'Blue', papel:'líder de Viridian · Terra', cidade:'Viridian',
-  desde:'Te deu a Insígnia Terra e o número no mesmo gesto.',
   requer:d=>d.insignias.includes('Insígnia Terra'),
   ginasio:'viridian', oferece:['revanche','prova'],
   prova:{
@@ -367,10 +510,36 @@ const CONTATOS = [
 
 {
   id:'nadia', tipo:'treinador', nome:'Nádia Bragança', papel:'segunda licença, aos quarenta e um', cidade:'Lavender',
-  desde:'Perdeu (ou ganhou) a final do aberto contra você e pediu o seu número na arena.',
   requer:d=>!!d.flags.numero_da_nadia,
-  oferece:['revanche','prova'],
+  oferece:['revanche','prova','missao'],
   rivalExtra:null,
+  missao:{
+    rotulo:'Perguntar onde ela parou da primeira vez',
+    rotuloEntrega:'Contar de Saffron',
+    dica:'Saffron. Foi onde ela parou aos dezenove.',
+    pedido:[
+      fala('Nádia', 'Da primeira vez eu parei em Saffron. Você já sabia disso?'),
+      fala('Nádia', 'Eu tinha dezenove anos, quatro insígnias e um Raticate que era a melhor coisa que já aconteceu comigo.'),
+      fala('Nádia', 'Eu entrei naquele ginásio e ela olhou pra mim e eu entendi, no meio do primeiro turno, que eu não ia conseguir. E eu fui embora e demorei vinte e dois anos pra voltar.', 'baixo'),
+      fala('Nádia', 'Não é revanche. Eu não quero que você bata nela por mim, isso seria ridículo.'),
+      fala('Nádia', 'Eu só quero que alguém que eu conheço ganhe aquela insígnia e me ligue contando como foi lá dentro. Eu nunca vi o final.', 'baixo')
+    ],
+    objetivo:d=>d.insignias.includes('Insígnia Pântano'),
+    entregue:[
+      fala('Nádia', 'Conta. Conta tudo, do começo, e não pula a parte do chão.'),
+      'Você conta: o chão que engana, as portas, o silêncio dela antes de cada ordem.',
+      fala('Nádia', 'O chão. Eu lembro do chão.'),
+      'Ela fica um tempo sem falar nada e você não interrompe.',
+      fala('Nádia', 'Vinte e dois anos e eu tinha guardado o chão errado na cabeça. Era do outro lado.', 'riso'),
+      fala('Nádia', 'Obrigada. Agora eu sei como termina.', 'baixo'),
+      fala('Nádia', 'Eu vou chegar lá. Mais devagar que você, mas eu chego.')
+    ],
+    recompensa:d=>{ Estado.j.dinheiro += 4000; Estado.darItem('Hyper Potion', 2);
+      Estado.dados.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+5); });
+      return [{tipo:'item', texto:'Recebeu 4000 ₽ e 2× Hyper Potion. O time inteiro subiu 5 de moral.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Terminou por alguém uma história parada há vinte e dois anos', notorio:true},
+    marca:'nadia_soube_do_final'
+  },
   prova:{
     rotulo:'Perguntar como vai a segunda',
     esperaCap:2,
@@ -390,13 +559,12 @@ const CONTATOS = [
      fala em Pokémon, nem na pergunta, nem na entrega.
      ============================================================ */
   id:'curador', tipo:'figura', nome:'Adnan', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
-  desde:'Te fez uma pergunta e anotou a resposta num caderno de capa dura.',
   requer:d=>!!d.flags.a_pergunta_do_curador,
   oferece:['missao'],
   missao:{
     rotulo:'Perguntar por que ele anotou aquilo',
     rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
-    dica:'Ele pediu pra você aparecer em Lavender quando tiver quatro insígnias. Ele não disse pra quê.',
+    dica:'Ele espera você em Lavender.',
     pedido:[
       fala('Adnan', 'Eu não anotei pra nada. Eu anoto tudo.'),
       fala('Adnan', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
@@ -449,13 +617,12 @@ const CONTATOS = [
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
-  desde:'Trocou número com você no meio de uma discussão.',
   requer:d=>!!d.npcs['Téo'],
   rival:'teo', oferece:['revanche','prova','missao'],
   missao:{
     rotulo:'Perguntar por que ele anda estranho',
     rotuloEntrega:'Ligar e contar quantas espécies você registrou',
-    dica:'Catalogar 60 espécies na Pokédex. Ele quer perder nisso pra alguém.',
+    dica:'Ele quer ver o seu número passar o dele.',
     pedido:[
       fala('Téo', 'Eu não ando estranho.'),
       fala('Téo', '...tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
@@ -506,7 +673,6 @@ function contatosDeRivaisExtras(){
   return RIVAIS_EXTRA.map(R => ({
     id:'rival_' + R.id, tipo:'treinador', nome:R.nome, papel:'rival · desde ' + (R.desde || 'a estrada'),
     cidade:R.cidade || 'estrada',
-    desde:R.origem || 'Virou seu rival por uma coisa que você escolheu fazer.',
     requer:d=>(d.rivaisExtra||[]).includes(R.id),
     rivalExtra:R.id, oferece:['revanche']
   }));

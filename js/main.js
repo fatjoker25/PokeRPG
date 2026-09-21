@@ -115,6 +115,11 @@ const Jogo = {
     if (e.trocaNPC) return this.trocaComNPC(e);
     if (e.vendaTime) return this.venderDoTime(e);
 
+    /* se a opção escolhida era uma frase entre aspas, era a SUA boca:
+       guarda a frase pra próxima cena saber de quem é aquele balão */
+    const dito = /^[\u201C\"](.+)[\u201D\"]$/.exec(txt(e.texto).trim());
+    UI.falaDoJogador = dito ? dito[1].trim() : null;
+
     const avisos = Historia.aplicar(e.ef);
     if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou os ferimentos.');
     this.irPara(e.vai, avisos);
@@ -614,10 +619,10 @@ const Jogo = {
     const m = c.missao || {};
     if (fase === 'pedir'){
       Estado.aceitarMissao(c.id);
+      if (typeof m.aoAceitar === 'function'){ try { m.aoAceitar(Estado.dados); } catch(e){} }
       Estado.marcarLigacao(c.id, 'missao');
       Estado.salvar('auto');
-      return UI.telaLigacao(c, txt(m.pedido) || [],
-        [{tipo:'info', texto:`Pedido anotado: ${txt(m.dica) || 'ver o PokéNav'}`}]);
+      return UI.telaLigacao(c, txt(m.pedido) || [], []);
     }
     if (fase === 'entregar'){
       let avisos = [];

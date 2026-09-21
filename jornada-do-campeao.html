@@ -247,6 +247,20 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   color:var(--destaque);margin-bottom:3px;
 }
 .narrativa .fala-diz{margin:0;max-width:none;animation:none}
+/* fala sem nome: a gente sabe que é fala, só não sabe de quem */
+.narrativa .fala.anonima{
+  border-color:color-mix(in srgb, var(--destaque) 24%, var(--borda));
+  border-left-color:color-mix(in srgb, var(--destaque) 55%, var(--borda));
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--destaque) 5%, var(--bg-2)),
+    color-mix(in srgb, var(--destaque) 2%, var(--bg-2)));
+}
+.narrativa .fala.anonima::before{border-right-color:color-mix(in srgb, var(--destaque) 55%, var(--borda))}
+/* narração curta no meio de uma troca de falas */
+.narrativa p.entre-falas{
+  margin:-4px 0 10px 14px;max-width:62ch;
+  font-size:13px;font-style:italic;color:var(--texto-fraco);
+}
 .narrativa .fala-nota{
   margin-top:5px;font-size:12px;font-style:italic;
   color:var(--texto-fraco);
@@ -1538,6 +1552,8 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 }
 .pc-golpe b{color:var(--pc-txt);font-weight:600}
 .pc-historia{font-size:11.5px;font-style:italic;color:var(--pc-txt-2);line-height:1.45;margin-bottom:8px}
+.pc-afinidade{font-size:11.5px;color:var(--pc-txt);letter-spacing:.2px;margin-bottom:6px}
+.sussurro.afinidade{color:var(--texto);opacity:.85}
 .pc-acao{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pc-acao .btn{
   background:var(--pc-linha);border-color:var(--pc-luz);color:var(--pc-txt);
@@ -3124,20 +3140,264 @@ function modificadorDeTemperamento(eixo, time){
 }
 
 function linhaDeTemperamento(eixo, m, p, mod){
-  const nome = NOME_EIXO[eixo] || eixo;
   if (!m.pokemon) return null;
-  const cab = nome.charAt(0).toUpperCase() + nome.slice(1);
-  const fim = ` — ${mod >= 0 ? '+' : ''}${mod} no dado.`;
-  /* time inteiro contra a tarefa: ninguém ajuda, e isso precisa ser dito */
+  /* Só o que dá pra ver acontecendo. Sem nome de eixo, sem regra
+     explicada: se o jogador quiser entender por que deu certo,
+     ele olha pro cinto. */
+  const como = x => x.naturezaVista ? `${nomeExib(x)} (${x.natureza})` : nomeExib(x);
   if (m.valor <= 0 && p.valor < 0)
-    return `${cab}: o cinto inteiro trabalha contra. ${nomeExib(p.pokemon)} (${p.pokemon.natureza}) é o pior deles${fim}`;
+    return `Ninguém no cinto serve pra isso, e ${como(p.pokemon)} é o pior deles.`;
   const partes = [];
-  if (m.valor > 0)
-    partes.push(`${nomeExib(m.pokemon)} (${m.pokemon.natureza}) ajuda: ${NATUREZAS[m.pokemon.natureza].traco.split('.')[0].toLowerCase()}`);
-  if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid)
-    partes.push(`${nomeExib(p.pokemon)} (${p.pokemon.natureza}) atrapalha`);
-  if (!partes.length) return `${cab}: ninguém no cinto muda muito isso${fim}`;
-  return `${cab}: ${partes.join(' · ')}${fim}`;
+  if (m.valor > 0) partes.push(`${como(m.pokemon)} acompanha bem`);
+  if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid) partes.push(`${como(p.pokemon)} atrapalha`);
+  if (!partes.length) return null;
+  return partes.join(' · ') + '.';
+}
+
+
+/* ===== js/data/afinidade.js ===== */
+/* ============================================================
+   AFINIDADE — o seu jeito contra o jeito dele
+
+   Quem você é está escrito na ficha, em palavras suas. Cada
+   palavra puxa os mesmos cinco eixos que a natureza de um
+   Pokémon puxa (discrição, paciência, coragem, simpatia,
+   cuidado). Quando os dois puxam pro mesmo lado, vocês se
+   entendem sem falar. Quando puxam pra lados opostos, cada
+   ordem custa mais.
+
+   Nada disso é explicado ao jogador em texto de regra. Ele lê
+   o que acontece e tira as conclusões dele.
+   ============================================================ */
+
+/* Radicais em português. Bate por prefixo, então "teimoso",
+   "teimosa" e "teimosia" caem todos no mesmo lugar. */
+const TRACOS_JOGADOR = {
+  teimos:      {paciencia:-1, coragem: 2, cuidado:-1},
+  cabeça:      {paciencia:-1, coragem: 2},
+  leal:        {simpatia: 2, cuidado: 1},
+  fiel:        {simpatia: 2, cuidado: 1},
+  impulsiv:    {discricao:-2, paciencia:-2, coragem: 2},
+  explosiv:    {discricao:-2, paciencia:-2, coragem: 1},
+  calm:        {discricao: 1, paciencia: 2, cuidado: 1},
+  pacient:     {paciencia: 2, cuidado: 1},
+  reservad:    {discricao: 2, paciencia: 1, simpatia:-1},
+  discret:     {discricao: 2, cuidado: 1},
+  quiet:       {discricao: 2, paciencia: 1},
+  calad:       {discricao: 2, simpatia:-1},
+  silencios:   {discricao: 2},
+  introvertid: {discricao: 2, simpatia:-1},
+  solitári:    {discricao: 1, simpatia:-2},
+  solitari:    {discricao: 1, simpatia:-2},
+  tímid:       {discricao: 2, coragem:-2, simpatia:-1},
+  timid:       {discricao: 2, coragem:-2, simpatia:-1},
+  acanhad:     {discricao: 2, coragem:-1, simpatia:-1},
+  medros:      {coragem:-2, cuidado: 1},
+  covarde:     {coragem:-2, cuidado: 1},
+  corajos:     {coragem: 2},
+  valent:      {coragem: 2},
+  destemid:    {coragem: 2, cuidado:-1},
+  ousad:       {coragem: 2, cuidado:-1},
+  determinad:  {coragem: 2, paciencia: 1},
+  persistent:  {paciencia: 2, coragem: 1},
+  esforçad:    {paciencia: 2, coragem: 1},
+  esforcad:    {paciencia: 2, coragem: 1},
+  trabalhador: {paciencia: 2, cuidado: 1},
+  disciplinad: {paciencia: 2, cuidado: 2},
+  metódic:     {paciencia: 2, cuidado: 2},
+  metodic:     {paciencia: 2, cuidado: 2},
+  organizad:   {cuidado: 2, paciencia: 1},
+  cuidados:    {cuidado: 2},
+  atent:       {cuidado: 2, discricao: 1},
+  observador:  {cuidado: 2, paciencia: 2, discricao: 1},
+  cautelos:    {cuidado: 2, discricao: 1, coragem:-1},
+  prudent:     {cuidado: 2, paciencia: 1},
+  desconfiad:  {cuidado: 2, discricao: 1, simpatia:-1},
+  protetor:    {cuidado: 2, coragem: 1, simpatia: 1},
+  imprudent:   {cuidado:-2, coragem: 2},
+  descuidad:   {cuidado:-2},
+  desleix:     {cuidado:-2, paciencia: 1},
+  distraíd:    {cuidado:-2, discricao:-1},
+  distraid:    {cuidado:-2, discricao:-1},
+  esquecid:    {cuidado:-2},
+  atrapalhad:  {cuidado:-2, discricao:-1},
+  bagunceir:   {cuidado:-2, discricao:-1},
+  ingênu:      {cuidado:-2, simpatia: 1},
+  ingenu:      {cuidado:-2, simpatia: 1},
+  sonhador:    {cuidado:-1, coragem: 1, paciencia:-1},
+  curios:      {cuidado:-1, paciencia:-1, coragem: 1},
+  ansios:      {paciencia:-2, cuidado:-1},
+  nervos:      {paciencia:-2, cuidado:-1},
+  apress:      {paciencia:-2, discricao:-1},
+  agitad:      {paciencia:-2, discricao:-2},
+  inquiet:     {paciencia:-2, discricao:-1},
+  barulhent:   {discricao:-2, simpatia: 1},
+  falante:     {discricao:-2, simpatia: 1},
+  extrovertid: {discricao:-2, simpatia: 2},
+  sociáv:      {discricao:-1, simpatia: 2},
+  sociav:      {discricao:-1, simpatia: 2},
+  chamativ:    {discricao:-2},
+  dramátic:    {discricao:-2, simpatia:-1},
+  dramatic:    {discricao:-2, simpatia:-1},
+  brincalhã:   {discricao:-2, paciencia:-1, simpatia: 2},
+  brincalha:   {discricao:-2, paciencia:-1, simpatia: 2},
+  alegre:      {discricao:-1, simpatia: 2},
+  otimista:    {simpatia: 1, coragem: 1},
+  pessimista:  {coragem:-1, cuidado: 1},
+  gentil:      {simpatia: 2},
+  generos:     {simpatia: 2},
+  bondos:      {simpatia: 2},
+  carinhos:    {simpatia: 2},
+  amig:        {simpatia: 2},
+  educad:      {simpatia: 1, cuidado: 1},
+  honest:      {simpatia: 1, discricao:-1},
+  sincer:      {simpatia: 1, discricao:-1},
+  humilde:     {simpatia: 1, cuidado: 1},
+  just:        {simpatia: 1, cuidado: 1},
+  sensív:      {simpatia: 2, coragem:-1},
+  sensiv:      {simpatia: 2, coragem:-1},
+  pacífic:     {simpatia: 1, paciencia: 2, coragem:-1},
+  pacific:     {simpatia: 1, paciencia: 2, coragem:-1},
+  orgulhos:    {simpatia:-1, coragem: 1},
+  arrogante:   {simpatia:-2, coragem: 1},
+  vaidos:      {simpatia:-1, discricao:-1},
+  ríspid:      {simpatia:-2},
+  rispid:      {simpatia:-2},
+  grosseir:    {simpatia:-2},
+  rancoros:    {simpatia:-2, paciencia:-1},
+  gananc:      {simpatia:-2, cuidado:-1},
+  fri:         {simpatia:-2, discricao: 1},
+  duron:       {simpatia:-1, coragem: 2},
+  durão:       {simpatia:-1, coragem: 2},
+  durao:       {simpatia:-1, coragem: 2},
+  sério:       {simpatia:-1, paciencia: 1, cuidado: 1},
+  serio:       {simpatia:-1, paciencia: 1, cuidado: 1},
+  mentiros:    {discricao: 2, simpatia:-2},
+  astut:       {discricao: 2, cuidado: 1},
+  espert:      {discricao: 1, cuidado: 1},
+  rebelde:     {paciencia:-1, coragem: 2, cuidado:-1},
+  obedient:    {paciencia: 1, cuidado: 1, coragem:-1},
+  competitiv:  {coragem: 2, paciencia:-1, simpatia:-1},
+  brigã:       {coragem: 2, paciencia:-2, simpatia:-1},
+  briga:       {coragem: 2, paciencia:-2, simpatia:-1},
+  briguent:    {coragem: 2, paciencia:-2, simpatia:-1},
+  preguiçoso:  {paciencia: 2, cuidado:-1},
+  preguic:     {paciencia: 2, cuidado:-1},
+  lent:        {paciencia: 2, discricao: 1},
+  prátic:      {cuidado: 1, paciencia:-1},
+  pratic:      {cuidado: 1, paciencia:-1},
+  inteligente: {cuidado: 1, paciencia: 1},
+  melancól:    {paciencia: 1, simpatia:-1},
+  melancol:    {paciencia: 1, simpatia:-1}
+};
+
+const EIXOS = ['discricao', 'paciencia', 'coragem', 'simpatia', 'cuidado'];
+
+function _textoDaFicha(){
+  const j = (Estado.dados && Estado.j) ? Estado.j : null;
+  if (!j) return '';
+  return [j.personalidade, j.objetivo].filter(Boolean).join(' ');
+}
+
+let _perfilCache = {chave:null, perfil:null};
+
+/* O seu jeito como vetor. Sai do que você escreveu na criação. */
+function perfilDoJogador(texto){
+  const bruto = (texto !== undefined ? texto : _textoDaFicha()) || '';
+  if (texto === undefined && _perfilCache.chave === bruto) return _perfilCache.perfil;
+
+  const limpo = bruto.toLowerCase();
+  const perfil = {discricao:0, paciencia:0, coragem:0, simpatia:0, cuidado:0};
+  let achou = 0;
+  for (const raiz in TRACOS_JOGADOR){
+    if (limpo.indexOf(raiz) === -1) continue;
+    achou++;
+    const t = TRACOS_JOGADOR[raiz];
+    for (const e in t) perfil[e] += t[e];
+  }
+  for (const e of EIXOS) perfil[e] = Math.max(-2, Math.min(2, perfil[e]));
+  perfil.palavras = achou;
+
+  if (texto === undefined) _perfilCache = {chave:bruto, perfil};
+  return perfil;
+}
+
+/* Quanto o jeito de um Pokémon combina com o seu: −10 a +10. */
+function afinidadeCom(p){
+  const vazio = {valor:0, grau:'neutro', conhecido:false, pokemon:p};
+  if (!p || !p.natureza) return vazio;
+  const t = (typeof tempDe === 'function') ? tempDe(p) : null;
+  if (!t) return vazio;
+  const perfil = perfilDoJogador();
+  if (!perfil.palavras) return vazio;
+
+  let soma = 0;
+  for (const e of EIXOS) soma += (perfil[e] || 0) * (t[e] || 0);
+  /* convivência amacia: com o tempo vocês se acertam um pouco */
+  const conv = Math.max(0, Math.min(100, p.convivencia || 0));
+  const amaciado = soma < 0 ? soma + (conv / 100) * 3 : soma + (conv / 100) * 1.5;
+  const valor = Math.max(-10, Math.min(10, Math.round(amaciado / 2)));
+
+  let grau = 'neutro';
+  if (valor >= 5)       grau = 'sintonia';
+  else if (valor >= 2)  grau = 'entrosado';
+  else if (valor <= -5) grau = 'atrito';
+  else if (valor <= -2) grau = 'desencontro';
+
+  return {valor, grau, conhecido: !!p.naturezaVista, pokemon:p};
+}
+
+/* O que a afinidade faz nas contas. Sem tabela na tela. */
+function efeitosDeAfinidade(p){
+  const a = afinidadeCom(p);
+  const E = {
+    sintonia:   {obediencia:-10, crit: 1, teste: 1},
+    entrosado:  {obediencia: -5, crit: 0, teste: 0},
+    neutro:     {obediencia:  0, crit: 0, teste: 0},
+    desencontro:{obediencia:  6, crit: 0, teste:-1},
+    atrito:     {obediencia: 12, crit: 0, teste:-1}
+  };
+  const e = E[a.grau] || E.neutro;
+  const nome = (typeof nomeExib === 'function' && p) ? nomeExib(p) : '';
+  let linha = null;
+  if (e.teste > 0) linha = `${nome} entra na frente e não precisa de ordem.`;
+  if (e.teste < 0) linha = `${nome} vai na frente sem entender direito o que você quer.`;
+  return {grau:a.grau, valor:a.valor, obediencia:e.obediencia, crit:e.crit, teste:e.teste,
+          nome, linha};
+}
+
+/* Ele é seu? A afinidade só vale pro seu lado do campo. */
+function _meuPokemon(p){
+  if (!p || !Estado.dados) return false;
+  const meu = (Estado.dados.time || []).concat(Estado.dados.pc || []);
+  return meu.some(x => x === p || (x.uid && p.uid && x.uid === p.uid));
+}
+
+/* O que aparece na ficha. Nunca diz "eixo", nunca diz "+1 no dado". */
+const FRASE_AFINIDADE = {
+  sintonia:   'Entende o que você quer antes de você falar.',
+  entrosado:  'Trabalha bem com você.',
+  neutro:     'Faz o que você manda e nada além disso.',
+  desencontro:'Sempre demora um instante a mais pra entender você.',
+  atrito:     'Vocês dois não se entendem.'
+};
+
+function linhaDeAfinidade(p){
+  const a = afinidadeCom(p);
+  if (!a.conhecido || a.grau === 'neutro') return null;
+  return FRASE_AFINIDADE[a.grau];
+}
+
+/* O melhor e o pior do cinto, pra quando a cena precisar apontar. */
+function afinidadeDoTime(time){
+  const lista = (time || (Estado.dados ? Estado.dados.time : []) || []).filter(p => !p.morto);
+  let melhor = null, pior = null;
+  for (const p of lista){
+    const a = afinidadeCom(p);
+    if (!melhor || a.valor > melhor.valor) melhor = a;
+    if (!pior   || a.valor < pior.valor)   pior = a;
+  }
+  return {melhor, pior};
 }
 
 
@@ -3182,7 +3442,7 @@ const Dados = {
       grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
-    return {dado:d, bonus:valorStatus, total, dificuldade, grau, texto};
+    return {dado:d, bonus:valorStatus, nomeStatus, total, dificuldade, grau, texto};
   },
 
   /* ============================================================
@@ -3195,8 +3455,13 @@ const Dados = {
   testeComTime(valorStatus, dificuldade, nomeStatus, eixo){
     const t = (typeof modificadorDeTemperamento === 'function')
       ? modificadorDeTemperamento(eixo) : {mod:0, linha:null};
+    /* quem vai na frente é quem você manda primeiro: se ele não te
+       entende, a tarefa inteira fica mais difícil */
+    const lider = (typeof Estado !== 'undefined' && Estado.primeiroApto) ? Estado.primeiroApto() : null;
+    const af = (lider && typeof efeitosDeAfinidade === 'function')
+      ? efeitosDeAfinidade(lider) : {teste:0, grau:'neutro'};
     const d = this.d10('Teste de ' + (nomeStatus || 'perícia'));
-    const total = d + valorStatus + t.mod;
+    const total = d + valorStatus + t.mod + af.teste;
     let grau, texto;
     if (total <= 3)      { grau = 'falha';    texto = 'Fracasso total'; }
     else if (total <= 6) { grau = 'parcial';  texto = 'Sucesso parcial'; }
@@ -3206,8 +3471,9 @@ const Dados = {
       grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
-    return {dado:d, bonus:valorStatus, temperamento:t.mod, linhaTime:t.linha,
-            melhor:t.melhor, pior:t.pior, eixo, total, dificuldade, grau, texto};
+    return {dado:d, bonus:valorStatus, temperamento:t.mod + af.teste, linhaTime:t.linha,
+            melhor:t.melhor, pior:t.pior, afinidade:af, eixo, nomeStatus,
+            total, dificuldade, grau, texto};
   }
 };
 
@@ -3666,6 +3932,31 @@ function localDoCapitulo(n){
 
 /* Caminho mais curto pelo mapa de verdade, em número de trechos.
    Serve para saber quantos dias a viagem come. */
+/* O caminho inteiro, e não só quantos passos ele tem. Sem isso a
+   viagem é um número; com isso o jogador atravessa os lugares. */
+function caminhoEntre(de, para){
+  if (de === para) return [de];
+  const veioDe = {[de]:null};
+  let borda = [de];
+  while (borda.length){
+    const prox = [];
+    for (const id of borda)
+      for (const v of ((LOCAIS[id] || {}).conexoes || [])){
+        if (veioDe[v] !== undefined) continue;
+        veioDe[v] = id;
+        if (v === para){
+          const rota = [v];
+          let cur = id;
+          while (cur){ rota.unshift(cur); cur = veioDe[cur]; }
+          return rota;
+        }
+        prox.push(v);
+      }
+    borda = prox;
+  }
+  return null;   /* lugar sem estrada ligando: quem chega lá chega pela história */
+}
+
 function distanciaEntre(de, para){
   if (de === para) return 0;
   const visto = new Set([de]);
@@ -5612,8 +5903,12 @@ const Batalha = {
     // e quem sabe mandar precisa de menos insígnia para ser obedecido
     const insignias = (Estado.dados && Estado.dados.insignias) ? Estado.dados.insignias.length : 0;
     const carisma = (Estado.dados && Estado.j) ? (Estado.j.status.carisma || 0) : 0;
+    /* e o jeito dele contra o seu: quem te entende obedece mais fácil,
+       quem não te entende faz você repetir a ordem */
+    const af = souAliado && typeof efeitosDeAfinidade === 'function'
+      ? efeitosDeAfinidade(p) : {obediencia:0, grau:'neutro'};
     const desobedienciaBase = souAliado
-      ? Math.max(0, (60 - moral) / 2 - insignias * 3 - carisma * 1.5)
+      ? Math.max(0, (60 - moral) / 2 - insignias * 3 - carisma * 1.5 + af.obediencia)
       : 0;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
@@ -5625,7 +5920,9 @@ const Batalha = {
     if ((p.natureza === 'Hasty' || p.natureza === 'Lonely') && Dados.chance(15))
       return {outroGolpe:true, texto:`${nomeVisivel(p)} não espera o comando e ataca por conta própria.`};
     if (desobedienciaBase > 0 && Dados.chance(desobedienciaBase))
-      return {recusa:true, texto:`${nomeVisivel(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
+      return {recusa:true, texto: (af.grau === 'atrito' || af.grau === 'desencontro')
+        ? `${nomeVisivel(p)} olha pra você, demora, e faz outra coisa.`
+        : `${nomeVisivel(p)} ignora sua ordem. O vínculo entre vocês está fraco.`};
     return null;
   },
 
@@ -5706,6 +6003,9 @@ const Batalha = {
     const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
     let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
     if (g.ef && g.ef.critico) limiteCrit -= 3;
+    /* quem te entende acerta onde dói sem você apontar */
+    if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk))
+      limiteCrit -= efeitosDeAfinidade(atk).crit;
     const dCrit = Dados.d20('Crítico');
     if (dCrit >= limiteCrit){
       res.critico = true;
@@ -7297,13 +7597,12 @@ const CONTATOS = [
 {
   id:'casa', tipo:'figura', cidade:d=>d.jogador.cidade,
   nome:d=>nomeCasa(), papel:d=>`a sua ${casaQuem()}`.replace('a sua pai','o seu pai').replace(/^a sua (avô|tio|irmão)/, 'o seu $1'),
-  desde:'O primeiro número gravado no aparelho. Já estava lá quando ele chegou na sua mão.',
   automatico:true,
   oferece:['favor','prova','missao'],
   missao:{
     rotulo:'Perguntar se ela precisa de alguma coisa',
     rotuloEntrega:'Ligar e dizer que está consertado',
-    dica:'Voltar em casa e consertar o telhado dos fundos. Três telhas.',
+    dica:'Ela está esperando você em casa.',
     pedido:[
       d=>fala(nomeCasa(), 'Eu não preciso de nada.'),
       'Pausa de quatro segundos, que nesta casa quer dizer o contrário.',
@@ -7361,13 +7660,12 @@ const CONTATOS = [
 },
 {
   id:'rufino', tipo:'figura', nome:'Sr. Rufino', papel:'o velho da vassoura', cidade:'Pallet',
-  desde:'Varre a mesma calçada há vinte anos e não esquece nada.',
   requer:d=>!!(d.npcs['Sr. Rufino'] && d.npcs['Sr. Rufino'].opiniao >= 2),
   oferece:['favor','missao'],
   missao:{
     rotulo:'Perguntar se ele precisa de alguma coisa',
     rotuloEntrega:'Ligar e contar da medalha',
-    dica:'Achar a medalha de natação da filha do Nogueira. Ela foi vendida, e quem vende vende pra quem compra.',
+    dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
       fala('Sr. Rufino', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
       fala('Sr. Rufino', 'A filha do Nogueira ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
@@ -7403,9 +7701,34 @@ const CONTATOS = [
 },
 {
   id:'odete', tipo:'figura', nome:'Sra. Odete', papel:'a vizinha do dezoito', cidade:'Pallet',
-  desde:'Bateu na sua porta às seis e cinquenta com uma caixa nos braços.',
   requer:d=>!!d.npcs['Sra. Odete'],
-  oferece:['favor'],
+  oferece:['favor','missao'],
+  missao:{
+    rotulo:'Perguntar por que ela ligou duas vezes',
+    rotuloEntrega:'Contar o que tem no cais',
+    dica:'Ela quer saber do cais de Vermilion.',
+    pedido:[
+      fala('Sra. Odete', 'Eu liguei duas vezes ontem e desliguei nas duas. Você deve ter visto no aparelho.'),
+      fala('Sra. Odete', 'Você vai passar por Vermilion uma hora. Todo mundo passa.'),
+      fala('Sra. Odete', 'Quando passar, vai no cais, o de carga, não o de turista. Fica um tempo lá.', 'baixo'),
+      fala('Sra. Odete', 'Depois me liga e me conta o que tem lá. Só isso. Não precisa perguntar nada pra ninguém.'),
+      fala('Sra. Odete', 'E não precisa me perguntar por quê.', 'frio')
+    ],
+    objetivo:d=>!!d.visitados.vermilion,
+    entregue:[
+      fala('Sra. Odete', 'Fala.', null, 'Ela atendeu no primeiro toque. Estava sentada perto do telefone.'),
+      'Você conta: guindaste velho, três galpões, o de número dois fechado com chapa, e um quadro de avisos com nome de gente que embarcou.',
+      fala('Sra. Odete', 'Tinha nome no quadro?'),
+      'Você diz que tinha. Ela fica quieta o tempo de quatro respirações.',
+      fala('Sra. Odete', 'Tá bom. Obrigada, meu filho.', 'baixo'),
+      fala('Sra. Odete', 'Passa aqui quando voltar que eu separo uma coisa pra você.'),
+      'Ela desliga antes de você responder.'
+    ],
+    recompensa:d=>{ Estado.darItem('Super Potion', 3); Estado.darItem('Revive', 1);
+      return [{tipo:'item', texto:'Recebeu 3× Super Potion e 1× Revive.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Foi até o cais de Vermilion olhar uma coisa que não era sua'},
+    marca:'odete_soube_do_cais'
+  },
   favor:{
     rotulo:'Perguntar da caixa',
     limite:99, esperaCap:3,
@@ -7419,13 +7742,12 @@ const CONTATOS = [
 },
 {
   id:'enfermeira', tipo:'figura', nome:'Enfermeira do Centro', papel:'seis insígnias, e parou', cidade:'Viridian',
-  desde:'Te entregou a licença e contou por que parou.',
   requer:d=>!!d.flags.historia_da_enfermeira,
   oferece:['favor','missao'],
   missao:{
     rotulo:'Perguntar o que ela não conseguiu fazer',
     rotuloEntrega:'Ligar e contar das seis',
-    dica:'Chegar a seis insígnias. Ela parou em seis e quer ver alguém passar disso.',
+    dica:'Ela quer ver o que você prometeu.',
     pedido:[
       fala('a enfermeira', 'Eu parei em seis. Eu já te contei isso.'),
       fala('a enfermeira', 'O que eu não te contei é que eu fiquei quatro anos achando que seis era o meu teto. Que era o máximo que uma pessoa como eu chegava.'),
@@ -7464,10 +7786,33 @@ const CONTATOS = [
 /* ── os oito líderes: número dado depois da insígnia ─────── */
 {
   id:'brock', tipo:'treinador', nome:'Brock', papel:'líder de Pewter · Pedra', cidade:'Pewter',
-  desde:'Te deu a Insígnia Pedra e o número junto.',
   requer:d=>d.insignias.includes('Insígnia Pedra'),
   ginasio:'pewter',
-  oferece:['revanche','favor'],
+  oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ele quer ver',
+    rotuloEntrega:'Dizer que já dá pra ver',
+    dica:'Ele quer ver um bicho de pedra criado, não comprado.',
+    pedido:[
+      fala('Brock', 'Quer fazer uma coisa por mim? Não é favor. É uma coisa que eu quero ver.'),
+      fala('Brock', 'Todo mundo que me enfrenta chega com alguma coisa de pedra pega na semana passada, já grande, já forte.'),
+      fala('Brock', 'Eu quero ver um que você tenha levantado do chão. Do começo.', 'baixo'),
+      fala('Brock', 'Me liga quando tiver. Eu sei diferenciar, então não tenta me enrolar.')
+    ],
+    objetivo:d=>(d.time||[]).some(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terra') && p.nivel >= 25),
+    entregue:[
+      fala('Brock', 'Fala o nome e o nível.'),
+      'Você fala. Do outro lado dá pra ouvir ele largando alguma coisa pesada em cima de uma bancada.',
+      fala('Brock', 'Vinte e cinco. E tá com você desde quando?'),
+      'Você responde. Ele não comenta.',
+      fala('Brock', 'Eu criei nove irmãos. Você aprende a ver quando uma coisa foi feita com tempo ou comprada pronta.', 'baixo'),
+      fala('Brock', 'Essa foi feita com tempo. Tá anotado aqui do meu lado.')
+    ],
+    recompensa:d=>{ Estado.darItem('Punho de Ferro', 1); Estado.darItem('Hyper Potion', 1);
+      return [{tipo:'item', texto:'Recebeu 1× Punho de Ferro e 1× Hyper Potion.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Criou do começo um Pokémon que o líder de Pewter quis ver', notorio:true},
+    marca:'brock_viu_a_pedra'
+  },
   favor:{
     rotulo:'Perguntar de pedra',
     limite:99, esperaCap:3,
@@ -7480,9 +7825,32 @@ const CONTATOS = [
 },
 {
   id:'misty', tipo:'treinador', nome:'Misty', papel:'líder de Cerulean · Água', cidade:'Cerulean',
-  desde:'Te deu a Insígnia Cascata e não gostou nem um pouco.',
   requer:d=>d.insignias.includes('Insígnia Cascata'),
-  ginasio:'cerulean', oferece:['revanche','prova'],
+  ginasio:'cerulean', oferece:['revanche','prova','missao'],
+  missao:{
+    rotulo:'Perguntar da ponte',
+    rotuloEntrega:'Contar como está a ponte',
+    dica:'A ponte ao norte. Ela quer saber quem está lá.',
+    pedido:[
+      fala('Misty', 'Você conhece a ponte? A estreita, ao norte daqui.'),
+      fala('Misty', 'Tem cinco que ficam lá cobrando pedágio de menino de doze anos. Cinco. Eu já fui lá duas vezes.'),
+      fala('Misty', 'Na segunda vez eles me chamaram de senhora e fugiram, o que é pior, porque quer dizer que eles só somem enquanto eu estou olhando.', 'riso'),
+      fala('Misty', 'Passa na ponte. Não precisa bater em ninguém. Passa e olha.', 'baixo'),
+      fala('Misty', 'Depois me diz se eles ainda estão lá.')
+    ],
+    objetivo:d=>!!d.visitados.rota24,
+    entregue:[
+      fala('Misty', 'E aí? Cinco?'),
+      'Você conta o que viu na ponte.',
+      fala('Misty', '...tá. Então eu vou ter que ir uma terceira vez.'),
+      fala('Misty', 'Obrigada por ter olhado. Sério. Ninguém olha.', 'baixo'),
+      fala('Misty', 'Toma isso aqui e some, antes que eu te peça pra ir junto.')
+    ],
+    recompensa:d=>{ Estado.darItem('Great Ball', 3); Estado.j.dinheiro += 2000;
+      return [{tipo:'item', texto:'Recebeu 3× Great Ball e 2000 ₽.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Foi olhar a ponte por uma líder que já foi lá duas vezes'},
+    marca:'misty_soube_da_ponte'
+  },
   prova:{
     rotulo:'Contar quantas você tem agora',
     texto:d=>{
@@ -7498,9 +7866,41 @@ const CONTATOS = [
 },
 {
   id:'surge', tipo:'treinador', nome:'Tenente Surge', papel:'líder de Vermilion · Elétrico', cidade:'Vermilion',
-  desde:'Te deu a Insígnia Trovão e um aperto de mão que doeu.',
   requer:d=>d.insignias.includes('Insígnia Trovão'),
-  ginasio:'vermilion', oferece:['revanche','favor'],
+  ginasio:'vermilion', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ele quer contar',
+    rotuloEntrega:'Dizer que ninguém ficou pra trás',
+    dica:'Ele conta cabeça, não insígnia.',
+    aoAceitar:d=>{ d.flags.surge_contou = (d.cemiterio||[]).length; },
+    pedido:[
+      fala('Tenente Surge', 'Vou te falar uma coisa e você vai achar que é frescura de veterano.'),
+      fala('Tenente Surge', 'Eu não conto insígnia. Eu conto cabeça. Quantos saíram comigo e quantos voltaram.'),
+      fala('Tenente Surge', 'Chega em cinco insígnias sem perder ninguém no caminho. Ninguém. Desmaiar não conta, desmaiar é parte.', 'baixo'),
+      fala('Tenente Surge', 'Aí você me liga. Se perder alguém antes disso, me liga do mesmo jeito. Eu atendo as duas ligações.')
+    ],
+    objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 5
+               && (d.cemiterio||[]).length <= (d.flags.surge_contou || 0),
+    entregue:[
+      fala('Tenente Surge', 'Cinco. E o número?'),
+      'Você diz o número. É o mesmo de quando ele pediu.',
+      'Do outro lado tem um silêncio que dura mais do que devia.',
+      fala('Tenente Surge', 'Bom.', 'baixo'),
+      fala('Tenente Surge', 'Eu saí com seis, uma vez, e voltei com quatro. Faz dezenove anos e eu ainda conto de novo às vezes, de noite, pra ver se dá outro número.'),
+      fala('Tenente Surge', 'Tem um aqui comigo que eu não uso mais. Ele é barulhento e explode quando se assusta, e eu não tenho paciência pra isso hoje em dia.'),
+      fala('Tenente Surge', 'Vai com você. Não deixa ele virar número.', 'baixo')
+    ],
+    recompensa:d=>{
+      const p = criarPokemon(100, Math.max(20, 16 + d.insignias.length * 2), {
+        moral: 60, historia: 'Era do Tenente Surge. Ele parou de usar e não explicou por quê.'
+      });
+      const onde = Estado.adicionar(p);
+      Estado.marcar('ganhou_o_voltorb_do_surge');
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`}];
+    },
+    rep:{eixo:'bom', delta:2, motivo:'Chegou a cinco insígnias sem enterrar ninguém', notorio:true},
+    marca:'surge_contou_a_cabeca'
+  },
   favor:{
     rotulo:'Pedir o contato do porto',
     limite:2, esperaCap:4,
@@ -7514,13 +7914,12 @@ const CONTATOS = [
 },
 {
   id:'erika', tipo:'treinador', nome:'Erika', papel:'líder de Celadon · Grama', cidade:'Celadon',
-  desde:'Te deu a Insígnia Arco-Íris com as duas mãos.',
   requer:d=>d.insignias.includes('Insígnia Arco-Íris'),
   ginasio:'celadon', oferece:['revanche','favor','missao'],
   missao:{
     rotulo:'Perguntar o que a estufa precisa',
     rotuloEntrega:'Ligar e falar do time',
-    dica:'Levar o time inteiro com moral alta (acima de 70). Ela quer ver, não ouvir.',
+    dica:'Ela quer ver, não ouvir.',
     pedido:[
       fala('Erika', 'A estufa não precisa de nada. Eu preciso.'),
       fala('Erika', 'Eu recebo desafiante todo dia e eu vejo time cansado todo dia. Time que obedece por hábito.'),
@@ -7554,13 +7953,12 @@ const CONTATOS = [
 },
 {
   id:'koga', tipo:'treinador', nome:'Koga', papel:'líder de Fuchsia · Venenoso', cidade:'Fuchsia',
-  desde:'Te deu a Insígnia Alma sem te dizer onde ficava a saída.',
   requer:d=>d.insignias.includes('Insígnia Alma'),
   ginasio:'fuchsia', oferece:['revanche','favor','missao'],
   missao:{
     rotulo:'Perguntar o que ele não pôde fazer',
     rotuloEntrega:'Ligar e dizer que está no papel',
-    dica:'Conseguir por escrito alguma coisa da reserva de Fuchsia. Papel, não conversa.',
+    dica:'Papel, não conversa.',
     pedido:[
       fala('Koga', 'Eu assinei papel naquela reserva por onze anos. Eu já te disse isso.', 'frio'),
       fala('Koga', 'O que eu não disse é que eu nunca consegui tirar um papel de lá. Nenhum. Em onze anos.'),
@@ -7600,9 +7998,33 @@ const CONTATOS = [
 },
 {
   id:'sabrina', tipo:'treinador', nome:'Sabrina', papel:'líder de Saffron · Psíquico', cidade:'Saffron',
-  desde:'Te deu a Insígnia Pântano antes de você pedir.',
   requer:d=>d.insignias.includes('Insígnia Pântano'),
-  ginasio:'saffron', oferece:['revanche','favor'],
+  ginasio:'saffron', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ela viu',
+    rotuloEntrega:'Ligar da torre',
+    dica:'Ela falou de Lavender.',
+    pedido:[
+      fala('Sabrina', 'Você não ligou pra perguntar isso, mas eu vou responder assim mesmo.', 'frio'),
+      fala('Sabrina', 'Tem um andar da torre de Lavender onde as pessoas param de falar sozinhas. O último.'),
+      fala('Sabrina', 'Sobe lá. Não leva ninguém pra fora da bola, não acende lanterna, não fala.', 'baixo'),
+      fala('Sabrina', 'Fica o tempo que você aguentar. Depois me liga de lá mesmo.'),
+      fala('Sabrina', 'Eu não vou te dizer o que você vai ouvir. Se eu disser, você ouve o que eu falei.')
+    ],
+    objetivo:d=>!!d.visitados.lavender,
+    entregue:[
+      fala('Sabrina', 'Está ligando de lá.', 'frio', 'Não é pergunta.'),
+      'Você fica quieto. Ela também. O telefone sustenta os dois silêncios sem reclamar.',
+      fala('Sabrina', 'Então você ouviu.'),
+      fala('Sabrina', 'Todo mundo ouve uma coisa diferente e todo mundo tem certeza de que é a mesma coisa. Isso me interessa mais do que fantasma.', 'baixo'),
+      fala('Sabrina', 'Obrigada. Eu não podia subir de novo.'),
+      'Ela desliga. Você percebe, com atraso, que ela disse obrigada.'
+    ],
+    recompensa:d=>{ Estado.subirStatus('percepcao'); Estado.darItem('Sino Calmante', 1);
+      return [{tipo:'rep', texto:'PERCEPÇÃO +1.'}, {tipo:'item', texto:'Recebeu 1× Sino Calmante.'}]; },
+    rep:{eixo:'bom', delta:1, motivo:'Subiu a torre de Lavender calado, porque pediram'},
+    marca:'sabrina_ouviu_a_torre'
+  },
   favor:{
     rotulo:'Deixar ela falar primeiro',
     limite:99, esperaCap:4,
@@ -7615,9 +8037,31 @@ const CONTATOS = [
 },
 {
   id:'blaine', tipo:'treinador', nome:'Blaine', papel:'líder de Cinnabar · Fogo', cidade:'Cinnabar',
-  desde:'Te deu a Insígnia Vulcão depois de uma pergunta.',
   requer:d=>d.insignias.includes('Insígnia Vulcão'),
-  ginasio:'cinnabar', oferece:['revanche','favor'],
+  ginasio:'cinnabar', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Aceitar a pergunta difícil',
+    rotuloEntrega:'Dar a resposta',
+    dica:'Ele quer o número da Pokédex, não a resposta bonita.',
+    pedido:[
+      fala('Blaine', 'Essa aqui não é charada. Essa é serviço.', 'riso'),
+      fala('Blaine', 'A ilha tinha um laboratório e o laboratório tinha uma lista de espécies. A lista queimou junto com o resto.'),
+      fala('Blaine', 'Eu não quero a lista de volta. Eu quero saber se dá pra refazer uma sozinho, andando.', 'baixo'),
+      fala('Blaine', 'Cataloga oitenta e me liga. Oitenta é o número que eu nunca passei.')
+    ],
+    objetivo:d=>Estado.contagemDex().catalogados >= 80,
+    entregue:[
+      fala('Blaine', 'Oitenta?'),
+      'Você confirma. Ele pede pra você ler cinco de cabeça, sem olhar. Você lê.',
+      fala('Blaine', 'Não é decoreba, é convivência. Dá pra ouvir a diferença.'),
+      fala('Blaine', 'Eu parei em setenta e nove porque eu quis provar uma coisa e queimei uma ilha inteira provando.', 'baixo'),
+      fala('Blaine', 'Você fez andando. Isso responde a pergunta que eu te fiz no ginásio, aliás.')
+    ],
+    recompensa:d=>{ Estado.darItem('Pedra do Fogo', 1); Estado.darItem('Ultra Ball', 2);
+      return [{tipo:'item', texto:'Recebeu 1× Pedra do Fogo e 2× Ultra Ball.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Passou de oitenta espécies catalogadas a pé', notorio:true},
+    marca:'blaine_ouviu_os_oitenta'
+  },
   favor:{
     rotulo:'Pedir outra pergunta',
     limite:99, esperaCap:3,
@@ -7630,7 +8074,6 @@ const CONTATOS = [
 },
 {
   id:'blue', tipo:'treinador', nome:'Blue', papel:'líder de Viridian · Terra', cidade:'Viridian',
-  desde:'Te deu a Insígnia Terra e o número no mesmo gesto.',
   requer:d=>d.insignias.includes('Insígnia Terra'),
   ginasio:'viridian', oferece:['revanche','prova'],
   prova:{
@@ -7646,10 +8089,36 @@ const CONTATOS = [
 
 {
   id:'nadia', tipo:'treinador', nome:'Nádia Bragança', papel:'segunda licença, aos quarenta e um', cidade:'Lavender',
-  desde:'Perdeu (ou ganhou) a final do aberto contra você e pediu o seu número na arena.',
   requer:d=>!!d.flags.numero_da_nadia,
-  oferece:['revanche','prova'],
+  oferece:['revanche','prova','missao'],
   rivalExtra:null,
+  missao:{
+    rotulo:'Perguntar onde ela parou da primeira vez',
+    rotuloEntrega:'Contar de Saffron',
+    dica:'Saffron. Foi onde ela parou aos dezenove.',
+    pedido:[
+      fala('Nádia', 'Da primeira vez eu parei em Saffron. Você já sabia disso?'),
+      fala('Nádia', 'Eu tinha dezenove anos, quatro insígnias e um Raticate que era a melhor coisa que já aconteceu comigo.'),
+      fala('Nádia', 'Eu entrei naquele ginásio e ela olhou pra mim e eu entendi, no meio do primeiro turno, que eu não ia conseguir. E eu fui embora e demorei vinte e dois anos pra voltar.', 'baixo'),
+      fala('Nádia', 'Não é revanche. Eu não quero que você bata nela por mim, isso seria ridículo.'),
+      fala('Nádia', 'Eu só quero que alguém que eu conheço ganhe aquela insígnia e me ligue contando como foi lá dentro. Eu nunca vi o final.', 'baixo')
+    ],
+    objetivo:d=>d.insignias.includes('Insígnia Pântano'),
+    entregue:[
+      fala('Nádia', 'Conta. Conta tudo, do começo, e não pula a parte do chão.'),
+      'Você conta: o chão que engana, as portas, o silêncio dela antes de cada ordem.',
+      fala('Nádia', 'O chão. Eu lembro do chão.'),
+      'Ela fica um tempo sem falar nada e você não interrompe.',
+      fala('Nádia', 'Vinte e dois anos e eu tinha guardado o chão errado na cabeça. Era do outro lado.', 'riso'),
+      fala('Nádia', 'Obrigada. Agora eu sei como termina.', 'baixo'),
+      fala('Nádia', 'Eu vou chegar lá. Mais devagar que você, mas eu chego.')
+    ],
+    recompensa:d=>{ Estado.j.dinheiro += 4000; Estado.darItem('Hyper Potion', 2);
+      Estado.dados.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+5); });
+      return [{tipo:'item', texto:'Recebeu 4000 ₽ e 2× Hyper Potion. O time inteiro subiu 5 de moral.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Terminou por alguém uma história parada há vinte e dois anos', notorio:true},
+    marca:'nadia_soube_do_final'
+  },
   prova:{
     rotulo:'Perguntar como vai a segunda',
     esperaCap:2,
@@ -7669,13 +8138,12 @@ const CONTATOS = [
      fala em Pokémon, nem na pergunta, nem na entrega.
      ============================================================ */
   id:'curador', tipo:'figura', nome:'Adnan', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
-  desde:'Te fez uma pergunta e anotou a resposta num caderno de capa dura.',
   requer:d=>!!d.flags.a_pergunta_do_curador,
   oferece:['missao'],
   missao:{
     rotulo:'Perguntar por que ele anotou aquilo',
     rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
-    dica:'Ele pediu pra você aparecer em Lavender quando tiver quatro insígnias. Ele não disse pra quê.',
+    dica:'Ele espera você em Lavender.',
     pedido:[
       fala('Adnan', 'Eu não anotei pra nada. Eu anoto tudo.'),
       fala('Adnan', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
@@ -7728,13 +8196,12 @@ const CONTATOS = [
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
-  desde:'Trocou número com você no meio de uma discussão.',
   requer:d=>!!d.npcs['Téo'],
   rival:'teo', oferece:['revanche','prova','missao'],
   missao:{
     rotulo:'Perguntar por que ele anda estranho',
     rotuloEntrega:'Ligar e contar quantas espécies você registrou',
-    dica:'Catalogar 60 espécies na Pokédex. Ele quer perder nisso pra alguém.',
+    dica:'Ele quer ver o seu número passar o dele.',
     pedido:[
       fala('Téo', 'Eu não ando estranho.'),
       fala('Téo', '...tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
@@ -7785,7 +8252,6 @@ function contatosDeRivaisExtras(){
   return RIVAIS_EXTRA.map(R => ({
     id:'rival_' + R.id, tipo:'treinador', nome:R.nome, papel:'rival · desde ' + (R.desde || 'a estrada'),
     cidade:R.cidade || 'estrada',
-    desde:R.origem || 'Virou seu rival por uma coisa que você escolheu fazer.',
     requer:d=>(d.rivaisExtra||[]).includes(R.id),
     rivalExtra:R.id, oferece:['revanche']
   }));
@@ -11364,6 +11830,8 @@ const Eventos = {
     const ramo = rolagem ? (rolagem.passou ? esc.bom : esc.ruim) || {} : null;
 
     let avisos = [];
+    if (rolagem && rolagem.afinidade && rolagem.afinidade.linha)
+      avisos.push({tipo:'natureza', texto:rolagem.afinidade.linha});
     if (rolagem && rolagem.linhaTime) avisos.push({tipo:'natureza', texto:rolagem.linhaTime});
     if (esc.ef)        avisos = avisos.concat(Historia.aplicar(esc.ef) || []);
     if (ramo && ramo.ef) avisos = avisos.concat(Historia.aplicar(ramo.ef) || []);
@@ -60456,7 +60924,69 @@ const UI = {
      com o nome de quem falou em cima. Assim dá pra saber quem
      está falando com você sem ter que deduzir pelo contexto.
      ======================================================== */
+  /* Todo nome próprio que o jogo conhece. Serve pra descobrir quem
+     está falando quando a linha é só uma frase entre aspas. */
+  registroDeNomes(){
+    if (this._nomes) return this._nomes;
+    const n = new Set();
+    const por = arr => (arr||[]).forEach(x => { const v = x && (x.nome || x.lider); if (v) n.add(v); });
+    if (typeof CONTATOS !== 'undefined') por(CONTATOS);
+    if (typeof GINASIOS !== 'undefined') por(GINASIOS);
+    if (typeof ELITE4  !== 'undefined') por(ELITE4);
+    if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
+    if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
+    ['Téo','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
+     'Blue','Red','Adnan','Nádia','Nogueira'].forEach(x => n.add(x));
+    this._nomes = n;
+    return n;
+  },
+
+  /* Uma linha que é só uma frase entre aspas é fala de alguém. Quem,
+     a gente tenta descobrir pela linha de narração logo antes: se ela
+     cita um nome só, é dele. Se cita dois, ou nenhum, o balão fica sem
+     nome — melhor sem nome do que com o nome errado. */
+  quemFalouAntes(narracao){
+    if (!narracao) return null;
+    const achados = new Set();
+    const nomes = this.registroDeNomes();
+    if (Estado.dados && Estado.j){
+      if (Estado.j.nome) nomes.add(Estado.j.nome);
+      if (typeof nomeCasa === 'function'){ const c = nomeCasa(); if (c) nomes.add(c); }
+    }
+    for (const nome of nomes){
+      if (!nome) continue;
+      if (narracao.indexOf(nome) !== -1) achados.add(nome);
+    }
+    /* 'Blue' dentro de 'Bluezinho' não vale, mas 'Brock' dentro de
+       'Brock e Téo' vale pros dois — e aí são dois, e some o nome. */
+    if (achados.size !== 1) return null;
+    return achados.values().next().value;
+  },
+
+
+  /* Quebra uma linha em pedaços de narração e de fala. Devolve null
+     quando não há fala nenhuma, pra linha seguir sendo parágrafo. */
+  partirFalas(texto){
+    const re = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g;
+    const pedacos = []; let fim = 0, m, achouFala = false;
+    while ((m = re.exec(texto))){
+      const dentro = m[1].trim();
+      /* fala de verdade termina em pontuação; o resto é aspas de ironia */
+      if (dentro.length < 2 || !/[.?!\u2026\u2014,:;)]$/.test(dentro)) continue;
+      const antes = texto.slice(fim, m.index).trim();
+      if (antes) pedacos.push({tipo:'narracao', texto:antes});
+      pedacos.push({tipo:'fala', texto:dentro});
+      fim = m.index + m[0].length;
+      achouFala = true;
+    }
+    if (!achouFala) return null;
+    const resto = texto.slice(fim).trim();
+    if (resto) pedacos.push({tipo:'narracao', texto:resto});
+    return pedacos;
+  },
+
   narrar(linhas){
+    let ultimaNarracao = null, jaAtribuiu = false;
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
       if (f){
@@ -60471,7 +61001,33 @@ const UI = {
         </div>`;
       }
       const t = txt(bruto);
-      return t ? `<p>${this.esc(t)}</p>` : '';
+      if (!t) return '';
+
+      /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
+         são aspas de ironia ("análise jurídica") e ficam na narração. */
+      const pedacos = this.partirFalas(t);
+      if (!pedacos) { ultimaNarracao = t; jaAtribuiu = false; return `<p>${this.esc(t)}</p>`; }
+
+      let html = '';
+      for (const pe of pedacos){
+        if (pe.tipo === 'narracao'){
+          html += html ? `<p class="entre-falas">${this.esc(pe.texto)}</p>`
+                       : `<p>${this.esc(pe.texto)}</p>`;
+          ultimaNarracao = pe.texto; jaAtribuiu = false;
+          continue;
+        }
+        /* a frase que você acabou de escolher é sua, e o balão vai
+           pro seu lado com o seu nome */
+        const souEu = this.falaDoJogador && pe.texto === this.falaDoJogador;
+        const quem = souEu ? (Estado.j ? Estado.j.nome : null)
+                           : (jaAtribuiu ? null : this.quemFalouAntes(ultimaNarracao));
+        jaAtribuiu = true;
+        const meu = (quem && Estado.dados && Estado.j && quem === Estado.j.nome) ? ' voce' : '';
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}">`
+              + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+              + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
+      }
+      return html;
     }).filter(Boolean).join('');
   },
 
@@ -60915,7 +61471,7 @@ const UI = {
         <div class="loc">${this.esc(txt(r.esc.texto)).slice(0, 80)}</div>
       </div>
       ${r.rolagem ? `<div class="teste-linha">
-        <span class="k">${this.esc((r.rolagem.eixo && NOME_EIXO[r.rolagem.eixo]) || 'teste')}</span>
+        <span class="k">${this.esc(r.rolagem.nomeStatus || 'teste')}</span>
         <span class="v mono">1d10(${r.rolagem.dado}) + ${r.rolagem.bonus}${
           r.rolagem.temperamento ? (r.rolagem.temperamento > 0 ? ' + ' : ' − ') + Math.abs(r.rolagem.temperamento) : ''
         } = ${r.rolagem.total} · dif ${r.rolagem.dificuldade}</span>
@@ -61058,7 +61614,7 @@ const UI = {
 
   navFicha(){
     const c = this.navSel ? contatoPorId(this.navSel) : null;
-    if (!c) return `<div class="nav-vazio">Selecione um contato.<br><span>Números aparecem aqui quando alguém te dá o dele.</span></div>`;
+    if (!c) return `<div class="nav-vazio">Selecione um contato.</div>`;
     const reg = Estado.nav().contatos[c.id] || {usos:{}};
 
     const ROTULO = {
@@ -61073,22 +61629,11 @@ const UI = {
       })(),
       prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
     };
-    const NOTA = {
-      revanche:'Ele sobe o time junto com você. Não é o mesmo combate de antes.',
-      favor:'Favor é crédito. Gasta.',
-      missao:(() => {
-        const f = Estado.faseDaMissao(c.id);
-        if (f === 'entregar') return 'Está cumprido. Ele ainda não sabe.';
-        return 'Vira um pedido que você carrega até resolver.';
-      })(),
-      prova:'Sem ganho material. Muda o que essa pessoa pensa de você.'
-    };
-
     const botoes = (c.oferece||[]).map(serv => {
       const r = Estado.podeLigar(c.id, serv);
       return `<div class="nav-servico">
         <button class="btn" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>${this.esc(ROTULO[serv]||serv)}</button>
-        <span class="nav-nota">${this.esc(r.ok ? (NOTA[serv]||'') : r.motivo)}</span>
+        ${r.ok ? '' : `<span class="nav-nota">${this.esc(r.motivo)}</span>`}
       </div>`;
     }).join('');
 
@@ -61102,8 +61647,7 @@ const UI = {
           <span class="nav-ficha-papel">${this.esc(textoContato(c,'papel'))}</span>
         </span>
       </div>
-      <div class="nav-desde">${this.esc(textoContato(c,'desde') || '')}</div>
-      <div class="nav-servicos">${botoes || '<span class="nav-nota">Esse número não atende pedido nenhum. Está aí porque importa.</span>'}</div>
+      <div class="nav-servicos">${botoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
       ${hist.length ? `<div class="nav-hist">${hist.map(l =>
         `<span>cap ${l.cap} · ${this.esc(l.servico)}</span>`).join('')}</div>` : ''}`;
   },
@@ -61212,6 +61756,8 @@ const UI = {
           <span class="num mono">${moral}</span></div>
         <div class="pc-golpes">${(p.golpes||[]).map(g =>
           `<span class="pc-golpe">${this.esc(g.nome)} <b>${g.pp}/${g.ppMax}</b></span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
+        ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
+            return l ? `<div class="pc-afinidade">${this.esc(l)}</div>` : ''; })()}
         ${p.historia ? `<div class="pc-historia">${this.esc(p.historia)}</div>` : ''}
         <div class="pc-acao">
           <button class="btn" ${trava ? 'disabled' : `onclick="${acao}"`}>${rotulo}</button>
@@ -61393,7 +61939,7 @@ const UI = {
   /* ========================================================
      VIAGEM — a estrada entre um capítulo e o outro
      ======================================================== */
-  telaViagem(deId, paraId, dias, aoChegar){
+  telaViagem(deId, paraId, dias, aoChegar, rota){
     this.limpar();
     this.add(this.topo());
     const de = LOCAIS[deId] || {nome:'onde você estava'};
@@ -61419,6 +61965,9 @@ const UI = {
 
     const linhas = [];
     linhas.push(`De ${de.nome} até ${para.nome} são ${dias === 1 ? 'um dia' : dias + ' dias'} de caminho.`);
+    /* o trajeto de verdade, nomeado: você não é teleportado */
+    if (rota && rota.length > 2)
+      linhas.push('Você passa por ' + rota.slice(1, -1).map(x => (LOCAIS[x]||{}).nome || x).join(', ') + '.');
     const usados = new Set();
     for (let i = 0; i < Math.min(dias, 3); i++){
       let t = Dados.escolher(trechos), guarda = 0;
@@ -61853,6 +62402,8 @@ const UI = {
         ? this.esc(p.natureza) + ' — ' + this.esc((NATUREZAS[p.natureza]||{}).traco||'')
         : 'Natureza <b>???</b> — você ainda não entendeu o jeito dele. Convivência e Percepção resolvem isso.'}</div>
       <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
+      ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
+          return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
       ${p.morto ? '' : `<div class="segurado-linha">
         ${p.segurando
           ? `<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
@@ -62349,6 +62900,8 @@ const UI = {
       <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo (limitada entre 0,45× e 2,2×), senão os stats dos jogos não teriam efeito nenhum. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador.</p>
+      <h3>Vocês dois</h3>
+      <p class="sussurro">A personalidade que você escreveu na ficha e a natureza de cada Pokémon são lidas no mesmo idioma. Quando batem, ele obedece com menos esforço e acerta melhor. Quando não batem, ele demora pra entender a ordem — em combate e fora dele. O jogo não avisa qual é qual: repare em quem vai na frente.</p>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `
@@ -62800,6 +63353,11 @@ const Jogo = {
     if (e.trocaNPC) return this.trocaComNPC(e);
     if (e.vendaTime) return this.venderDoTime(e);
 
+    /* se a opção escolhida era uma frase entre aspas, era a SUA boca:
+       guarda a frase pra próxima cena saber de quem é aquele balão */
+    const dito = /^[\u201C\"](.+)[\u201D\"]$/.exec(txt(e.texto).trim());
+    UI.falaDoJogador = dito ? dito[1].trim() : null;
+
     const avisos = Historia.aplicar(e.ef);
     if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou os ferimentos.');
     this.irPara(e.vai, avisos);
@@ -63035,22 +63593,34 @@ const Jogo = {
     const aqui = Estado.dados.local;
     if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);
 
-    const dias = Math.max(1, Math.min(6, distanciaEntre(aqui, destino)));
+    /* o caminho de verdade: você passa por cada lugar do trajeto, e o
+       tempo é o tempo do trajeto e não um número arredondado */
+    const rota = caminhoEntre(aqui, destino) || [aqui, destino];
+    const dias = Math.max(1, rota.length - 1);
     this.capDepoisDaViagem = prox;
     this.destinoDaViagem = destino;
-    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()');
+    this.rotaDaViagem = rota;
+    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()', rota);
   },
 
   chegarDaViagem(){
     const prox = this.capDepoisDaViagem;
     const destino = this.destinoDaViagem;
-    this.capDepoisDaViagem = null; this.destinoDaViagem = null;
+    const rota = this.rotaDaViagem;
+    this.capDepoisDaViagem = null; this.destinoDaViagem = null; this.rotaDaViagem = null;
     if (destino){
-      const dias = Math.max(1, Math.min(6, distanciaEntre(Estado.dados.local, destino)));
-      Mundo.passar(dias * 4);                  /* a viagem come os dias */
+      const caminho = rota || caminhoEntre(Estado.dados.local, destino) || [Estado.dados.local, destino];
+      /* cada trecho andado custa um dia e fica marcado como visitado:
+         você passou por ali, então aquilo passa a existir no seu mapa */
+      for (const id of caminho){
+        Mundo.marcarVisitado(id);
+        Mundo.descobrir('passou_' + id);
+      }
+      Mundo.passar(Math.max(1, caminho.length - 1) * 4);
       Estado.dados.local = destino;
-      Mundo.marcarVisitado(destino);
-      Estado.registrar(`Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
+      Estado.registrar(caminho.length > 2
+        ? `Viajou até ${(LOCAIS[destino]||{}).nome || destino}, passando por ${caminho.slice(1,-1).map(x=>(LOCAIS[x]||{}).nome||x).join(', ')}.`
+        : `Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
     }
     this.entrarNoCapitulo(prox);
   },
@@ -63287,10 +63857,10 @@ const Jogo = {
     const m = c.missao || {};
     if (fase === 'pedir'){
       Estado.aceitarMissao(c.id);
+      if (typeof m.aoAceitar === 'function'){ try { m.aoAceitar(Estado.dados); } catch(e){} }
       Estado.marcarLigacao(c.id, 'missao');
       Estado.salvar('auto');
-      return UI.telaLigacao(c, txt(m.pedido) || [],
-        [{tipo:'info', texto:`Pedido anotado: ${txt(m.dica) || 'ver o PokéNav'}`}]);
+      return UI.telaLigacao(c, txt(m.pedido) || [], []);
     }
     if (fase === 'entregar'){
       let avisos = [];
