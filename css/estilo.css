@@ -1749,6 +1749,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
    CARGOS — o balcão de credenciais
    ============================================================ */
 .cargo{
+  position:relative;
   border:1px solid var(--borda);border-left:3px solid var(--borda);
   border-radius:4px;padding:10px 12px;margin:0 0 8px;
   background:color-mix(in srgb, var(--texto) 3%, transparent);
@@ -1776,7 +1777,8 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
    ============================================================ */
-.portas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-bottom:6px}
+/* dois por linha, igual à barra de ação do combate */
+.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
 .porta{
   display:flex;flex-direction:column;gap:2px;text-align:left;
   padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
@@ -1788,4 +1790,4 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .porta:active{transform:translateY(1px)}
 .porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
 .porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:520px){ .portas{grid-template-columns:1fr} }
+@media (max-width:620px){ .portas{grid-template-columns:1fr} }

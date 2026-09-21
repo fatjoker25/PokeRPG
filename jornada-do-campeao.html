@@ -1758,6 +1758,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
    CARGOS — o balcão de credenciais
    ============================================================ */
 .cargo{
+  position:relative;
   border:1px solid var(--borda);border-left:3px solid var(--borda);
   border-radius:4px;padding:10px 12px;margin:0 0 8px;
   background:color-mix(in srgb, var(--texto) 3%, transparent);
@@ -1785,7 +1786,8 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* ============================================================
    PORTAS — os lugares da cidade, que não são "o que fazer"
    ============================================================ */
-.portas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-bottom:6px}
+/* dois por linha, igual à barra de ação do combate */
+.portas{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:6px}
 .porta{
   display:flex;flex-direction:column;gap:2px;text-align:left;
   padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
@@ -1797,7 +1799,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .porta:active{transform:translateY(1px)}
 .porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
 .porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
-@media (max-width:520px){ .portas{grid-template-columns:1fr} }
+@media (max-width:620px){ .portas{grid-template-columns:1fr} }
 
 </style>
 </head>
@@ -3638,7 +3640,11 @@ const CARGOS = [
    O MOTOR
    ============================================================ */
 const Cargos = {
-  lista(){ return Estado.dados.cargos || (Estado.dados.cargos = []); },
+  /* antes de existir jogo, não existe cargo — e ninguém pode explodir por isso */
+  lista(){
+    if (typeof Estado === 'undefined' || !Estado.dados) return [];
+    return Estado.dados.cargos || (Estado.dados.cargos = []);
+  },
   tem(id){ return this.lista().indexOf(id) !== -1; },
   porId(id){ return CARGOS.find(c => c.id === id) || null; },
 
@@ -3665,8 +3671,9 @@ const Cargos = {
 
   estado(id){
     const c = this.porId(id);
-    const d = Estado.dados;
+    const d = (typeof Estado !== 'undefined') ? Estado.dados : null;
     if (!c) return {ok:false, motivo:'Esse posto não existe.'};
+    if (!d) return {ok:false, motivo:'Ainda não começou.'};
     if (this.tem(id)) return {ok:false, tem:true, motivo:'Você já tem.'};
     const v = this.vetadoPor(id);
     if (v) return {ok:false, motivo:'Não com ' + v.nome + ' no bolso.'};
@@ -65314,6 +65321,7 @@ const UI = {
   },
 
   telaDoacao(c, avisos){
+    this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -65333,6 +65341,7 @@ const UI = {
   },
 
   telaCargo(c, avisos){
+    this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">

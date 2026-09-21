@@ -2498,6 +2498,7 @@ const UI = {
   },
 
   telaDoacao(c, avisos){
+    this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -2517,6 +2518,7 @@ const UI = {
   },
 
   telaCargo(c, avisos){
+    this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">

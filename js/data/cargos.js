@@ -155,7 +155,11 @@ const CARGOS = [
    O MOTOR
    ============================================================ */
 const Cargos = {
-  lista(){ return Estado.dados.cargos || (Estado.dados.cargos = []); },
+  /* antes de existir jogo, não existe cargo — e ninguém pode explodir por isso */
+  lista(){
+    if (typeof Estado === 'undefined' || !Estado.dados) return [];
+    return Estado.dados.cargos || (Estado.dados.cargos = []);
+  },
   tem(id){ return this.lista().indexOf(id) !== -1; },
   porId(id){ return CARGOS.find(c => c.id === id) || null; },
 
@@ -182,8 +186,9 @@ const Cargos = {
 
   estado(id){
     const c = this.porId(id);
-    const d = Estado.dados;
+    const d = (typeof Estado !== 'undefined') ? Estado.dados : null;
     if (!c) return {ok:false, motivo:'Esse posto não existe.'};
+    if (!d) return {ok:false, motivo:'Ainda não começou.'};
     if (this.tem(id)) return {ok:false, tem:true, motivo:'Você já tem.'};
     const v = this.vetadoPor(id);
     if (v) return {ok:false, motivo:'Não com ' + v.nome + ' no bolso.'};
