@@ -12,6 +12,9 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `chk-estrutura.js` | quantos capítulos abrem sempre na mesma cena, onde estão os finais, quantas ramificações |
 | `chk-gramatica.js` | palavra repetida, espaço duplo, vírgula solta |
 | `chk-canon.js` | tipo, ginásio, líder, golpe ou nível que briga com o cânone de Kanto |
+| `chk-flags.js` | gancho morto: flag que alguma cena lê e nenhuma escreve, então a cena condicional nunca aparece |
+| `chk-finais.js` | todo final do jogo, onde mora, id repetido e final que nenhuma escolha alcança |
+| `chk-caminho.js` | menor caminho da entrada até o fim de cada capítulo, e quanto do capítulo dá pra alcançar de uma entrada só |
 
 Rodar todos:
 
