@@ -131,6 +131,12 @@ const Exploracao = {
   vasculhar(){
     const L = Mundo.atual();
     Mundo.passar(1);
+    /* estrada também tem situação acontecendo, e nela o temperamento
+       do seu time pesa mais do que em cidade */
+    if (typeof Eventos !== 'undefined' && Dados.chance(40)){
+      const ev = Eventos.sortear(Mundo.id());
+      if (ev){ Estado.salvar('auto'); return UI.telaEvento(ev); }
+    }
     const t = Dados.teste(Estado.j.status.percepcao, 5, 'Percepção');
     const avisos = [];
     let texto;
@@ -228,6 +234,7 @@ const Exploracao = {
   andar(){
     Mundo.passar(1);
     const id = Mundo.id();
+    if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30) && Jogo.talvezToque()) return;
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */
     if (typeof Eventos !== 'undefined' && Dados.chance(55)){

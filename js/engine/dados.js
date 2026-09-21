@@ -39,5 +39,30 @@ const Dados = {
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
     return {dado:d, bonus:valorStatus, total, dificuldade, grau, texto};
+  },
+
+  /* ============================================================
+     TESTE COM O TIME JUNTO
+     O mesmo teste, mas quem está no seu cinto conta. Uma tarefa
+     que pede silêncio vai melhor com um Quiet do que com um
+     Jolly, e a linha de explicação sempre aparece — o jogador
+     tem que ver por que o dado mudou.
+     ============================================================ */
+  testeComTime(valorStatus, dificuldade, nomeStatus, eixo){
+    const t = (typeof modificadorDeTemperamento === 'function')
+      ? modificadorDeTemperamento(eixo) : {mod:0, linha:null};
+    const d = this.d10('Teste de ' + (nomeStatus || 'perícia'));
+    const total = d + valorStatus + t.mod;
+    let grau, texto;
+    if (total <= 3)      { grau = 'falha';    texto = 'Fracasso total'; }
+    else if (total <= 6) { grau = 'parcial';  texto = 'Sucesso parcial'; }
+    else if (total <= 9) { grau = 'sucesso';  texto = 'Sucesso'; }
+    else                 { grau = 'critico';  texto = 'Sucesso crítico'; }
+    if (total < dificuldade){
+      grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
+      texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
+    }
+    return {dado:d, bonus:valorStatus, temperamento:t.mod, linhaTime:t.linha,
+            melhor:t.melhor, pior:t.pior, eixo, total, dificuldade, grau, texto};
   }
 };

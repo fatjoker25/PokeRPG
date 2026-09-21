@@ -508,6 +508,72 @@ lavender:[
   ]
 },
 {
+  /* Aqui nasce a escolha que decide Haunter ou Kadabra, meses depois.
+     O curador não fala em Pokémon uma vez sequer, nem aqui nem na
+     entrega — se ele falasse, o jogador escolheria o prêmio e não a
+     resposta, e a coisa inteira perderia a graça. */
+  id:'lav_a_pergunta_do_curador', umaVez:true, peso:4,
+  titulo:'A pergunta',
+  texto:[
+    'Tem um homem sentado num banco de pedra na entrada do abrigo, com um caderno de capa dura aberto no colo e uma caneta atravessada na página.',
+    'Ele não está escrevendo. Ele está esperando.',
+    fala('Adnan', 'Desculpa. Posso te fazer uma pergunta? Uma só, e não é sobre nada.'),
+    fala('Adnan', 'Eu faço essa pergunta pra quem passa aqui desde 1978. Tenho oitenta e três cadernos.'),
+    fala('Adnan', 'A pergunta é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
+    'Ele não explica que coisa. Ele não explica por quê. Ele espera, com a caneta atravessada na página, do jeito de quem já esperou muito.'
+  ],
+  escolhas:[
+    {texto:'"Eu guardo."',
+     ef:{flag:['a_pergunta_do_curador','respondeu_guardar'],
+         npc:{nome:'Curador Adnan', opiniao:2, memoria:'Você respondeu "guardar" à pergunta dele, no caderno setenta e um, página quatro.'},
+         rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
+         registrar:'Respondeu "guardar" à pergunta do curador de Lavender.'},
+     resultado:[
+       'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
+       fala('Adnan', 'Caderno setenta e um, página quatro.'),
+       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
+       fala('Adnan', 'Pra nada. Eu anoto.'),
+       'Ele fecha o caderno e prende a caneta na espiral, e você entende que a conversa acabou.',
+       fala('Adnan', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       'Ele te dá o número antes de você perguntar se ele tem número.'
+     ]},
+    {texto:'"Eu passo adiante."',
+     ef:{flag:'a_pergunta_do_curador', limpaFlag:'respondeu_guardar',
+         npc:{nome:'Curador Adnan', opiniao:2, memoria:'Você respondeu "passar adiante" à pergunta dele, no caderno setenta e um, página quatro.'},
+         rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
+         registrar:'Respondeu "passar adiante" à pergunta do curador de Lavender.'},
+     resultado:[
+       'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
+       fala('Adnan', 'Caderno setenta e um, página quatro.'),
+       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
+       fala('Adnan', 'Pra nada. Eu anoto.'),
+       'Ele fecha o caderno e prende a caneta na espiral, e você entende que a conversa acabou.',
+       fala('Adnan', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       'Ele te dá o número antes de você perguntar se ele tem número.'
+     ]},
+    {texto:'Perguntar o que as outras pessoas responderam antes de responder.',
+     ef:{flag:'perguntou_as_respostas_antes',
+         rep:{eixo:'bom',delta:1,motivo:'Quis saber o que os outros responderam antes de responder'},
+         registrar:'Perguntou ao curador o que as outras pessoas tinham respondido.'},
+     resultado:[
+       fala('Adnan', 'Em dezenove anos: mil e setecentas pessoas.'),
+       fala('Adnan', 'Novecentas e quarenta e uma disseram guardar. Setecentas e cinquenta e nove disseram passar adiante.'),
+       d=>fala(d.jogador.nome, 'E qual é a certa?'),
+       fala('Adnan', 'Não tem certa. Tem a sua.', null, 'Ele abre o caderno de novo e atravessa a caneta na página.'),
+       fala('Adnan', 'Agora responde.')
+     ],
+     continua:true},
+    {texto:'Não responder e ir embora.',
+     ef:{registrar:'Não respondeu à pergunta do curador de Lavender.'},
+     resultado:[
+       'Você não responde. Ele não insiste — ele claramente não insiste desde 1978.',
+       fala('Adnan', 'Tudo bem. Eu anoto isso também.'),
+       'Ele escreve alguma coisa curta e fecha o caderno.',
+       'Você vai lembrar dessa pergunta em lugares onde ela não tem nada a ver, pelos próximos meses.'
+     ]}
+  ]
+},
+{
   id:'lav_a_cidade_sem_musica', peso:2,
   titulo:'A cidade sem música',
   texto:[
@@ -1098,6 +1164,366 @@ const EVENTOS_GERAIS = [
 ];
 
 /* ============================================================
+   EVENTOS DE ROTA — por ambiente, não por rota
+   Estrada tem menos gente e mais bicho, e é onde o temperamento
+   do seu time decide as coisas: quem você leva no cinto muda o
+   dado, e a tela sempre diz por quê.
+   ============================================================ */
+const EVENTOS_ROTA = {
+
+campo:[
+{
+  id:'rot_ninho_no_chao', peso:3,
+  titulo:'Um ninho no chão da trilha',
+  texto:[
+    'Tem um ninho no chão, a meio metro da trilha, com três ovos e nenhum adulto por perto.',
+    'Não é ninho caído — é ninho de espécie que faz ninho no chão mesmo, e você está em cima dele antes de ver.',
+    'A trilha passa exatamente por ali. Quem vier depois de você não vai ver também.'
+  ],
+  escolhas:[
+    {texto:'Marcar a trilha com pedra e galho, pra quem vier desviar.',
+     teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'cuidado'},
+     bom:{ef:{rep:{eixo:'bom',delta:2,motivo:'Desviou uma trilha inteira por causa de três ovos'},
+              flag:'marcou_o_ninho', registrar:'Marcou a trilha com pedra e galho pra desviar de um ninho no chão.'},
+          resultado:[
+            'Você leva quarenta minutos montando um desvio de pedra e galho que qualquer um entende sem placa.',
+            'Fica bom. Fica óbvio. Uma pessoa distraída desvia sem nem perceber que desviou.',
+            'Três semanas depois, numa conversa de Centro Pokémon a duas cidades daqui, alguém vai reclamar de um desvio idiota na trilha e você não vai falar nada.'
+          ]},
+     ruim:{ef:{registrar:'Tentou marcar o desvio do ninho e não ficou claro.'},
+           resultado:[
+             'Você empilha pedra e atravessa galho e o resultado é uma coisa que parece lixo de acampamento.',
+             'Você olha aquilo e entende que a primeira pessoa que passar vai chutar tudo pro lado.',
+             'Você tenta de novo. Fica pior.'
+           ]}},
+    {texto:'Ficar de longe e esperar o adulto voltar, pra ter certeza de que tem adulto.',
+     teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'paciencia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Esperou uma hora pra ter certeza antes de agir'},
+              flag:'esperou_o_adulto_do_ninho', registrar:'Esperou o adulto do ninho voltar antes de fazer qualquer coisa.'},
+          resultado:[
+            'Cinquenta e cinco minutos.',
+            'E aí ela volta — pousa a quatro metros, anda o resto, e senta nos ovos sem olhar uma vez pra onde você está.',
+            'Ela sabia que você estava aí o tempo todo. Ela só estava esperando você provar que ia ficar quieto.'
+          ]},
+     ruim:{ef:{registrar:'Não teve paciência de esperar o adulto do ninho.'},
+           resultado:[
+             'Você aguenta uns dezoito minutos.',
+             d=>{
+               const pior = piorNoEixo('paciencia');
+               return pior.pokemon && pior.valor < 0
+                 ? `${nomeExib(pior.pokemon)} não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ele que espanta o que ia voltar.`
+                 : 'Você mexe o pé, estala um galho, e o que quer que estivesse chegando muda de ideia a uns trinta metros.';
+             },
+             'Você vai embora sem saber se aqueles ovos têm mãe.'
+           ]}},
+    {texto:'Levar os ovos. Ninguém vai cuidar.',
+     ef:{rep:{eixo:'ruim',delta:2,motivo:'Levou três ovos de um ninho que talvez tivesse dono'},
+         flag:'levou_os_ovos', registrar:'Levou os três ovos do ninho da trilha.'},
+     resultado:[
+       'Você põe os três na mochila com pano em volta e anda mais quarenta minutos.',
+       'Aos quarenta e um, tem uma coisa voando em círculo baixo atrás de você, e ela não está indo embora.',
+       'Ela te acompanha por três quilômetros, no mesmo círculo, na mesma altura, sem atacar uma vez.',
+       'Você volta. Você volta os três quilômetros e põe os três ovos de volta e ela pousa antes de você terminar de sair.',
+       'Você não vai contar essa história pra ninguém.'
+     ]},
+    {texto:'Desviar em silêncio e não mexer em nada.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Desviou de um ninho sem mexer em nada'}},
+     resultado:['Você dá a volta por fora, a uns seis metros, e não olha pra trás.','Foi a coisa mais certa e a menos interessante, e as duas coisas costumam andar juntas.']}
+  ]
+},
+{
+  id:'rot_o_acampamento_vazio', peso:2,
+  titulo:'Um acampamento sem ninguém',
+  texto:[
+    'Tem uma barraca armada a trinta metros da trilha, fechada, com uma panela apoiada em duas pedras e cinza fria embaixo.',
+    'A cinza está fria de umas boas horas. A barraca está fechada por dentro ou por fora, não dá pra saber daqui.',
+    'Não tem ninguém.'
+  ],
+  escolhas:[
+    {texto:'Chamar de longe, alto, antes de chegar perto.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Chamou antes de chegar perto de acampamento alheio'},
+              flag:'achou_o_dono_da_barraca', registrar:'Chamou de longe num acampamento vazio e alguém respondeu do mato.'},
+          resultado:[
+            'Você chama três vezes e na terceira responde uma voz do mato, uns quarenta metros adiante, muito mais calma do que você esperava.',
+            fala('a dona da barraca', 'Tô aqui! Tô no riacho! Não mexe na panela que ela tá quente!'),
+            'A panela está fria há horas. Ela volta em quatro minutos, com um balde, e explica que a panela nunca está quente e que ela fala isso por hábito desde 1991.'
+          ]},
+     ruim:{ef:{registrar:'Chamou num acampamento vazio e ninguém respondeu.'},
+           resultado:[
+             'Você chama três vezes e o mato devolve o seu som e nada mais.',
+             'Você chama uma quarta, mais alto, e aí sim alguma coisa se mexe — longe, rápido, indo embora.',
+             'Não era gente.'
+           ]}},
+    {texto:'Abrir a barraca. Pode ter alguém passando mal.',
+     teste:{status:'coragem', dificuldade:6, nomeStatus:'Resistência', eixo:'coragem'},
+     bom:{ef:{rep:{eixo:'bom',delta:1,motivo:'Abriu a barraca porque podia ter alguém dentro'},
+              registrar:'Abriu a barraca do acampamento vazio. Estava vazia e arrumada.'},
+          resultado:[
+            'Você abre o zíper devagar, falando alto o tempo inteiro, avisando que está abrindo.',
+            'Está vazia. Saco de dormir enrolado, mochila fechada, um livro com marcador na página cento e nove.',
+            'Ninguém passando mal. Só alguém que saiu e vai voltar.',
+            'Você fecha o zíper exatamente como estava e põe uma pedra em cima da aba, pro vento não abrir.'
+          ]},
+     ruim:{ef:{rep:{eixo:'ruim',delta:1,motivo:'Abriu a barraca de um estranho e foi visto'},
+               registrar:'Foi visto abrindo a barraca de outra pessoa.'},
+           resultado:[
+             'Você abre o zíper e ouve, atrás de você, uma pessoa dizendo o seu nome — não o seu, o dela, alto, do jeito que se diz um nome pra avisar que chegou.',
+             fala('a dona da barraca', 'Ô.', 'frio'),
+             'Ela não grita. Ela não acusa. Ela só fica ali parada com um balde de água na mão esperando você explicar.',
+             'Você explica. Ela aceita a explicação. Ela continua esperando você ir embora.'
+           ]}},
+    {texto:'Deixar um bilhete avisando que passou por aqui, e seguir.',
+     ef:{moral:1, rep:{eixo:'bom',delta:1,motivo:'Deixou bilhete em acampamento alheio em vez de só passar'},
+         registrar:'Deixou um bilhete num acampamento vazio na estrada.'},
+     resultado:[
+       'Você escreve num papel qualquer: a hora, a data, "passei aqui, não mexi em nada", e o seu nome.',
+       'Prende embaixo da panela.',
+       'É o tipo de coisa que quem mora na estrada faz e quem mora em cidade acha esquisito.'
+     ]},
+    {texto:'Seguir sem chegar perto.', ef:{},
+     resultado:['Você segue. A trinta metros, a barraca continua fechada e a cinza continua fria.']}
+  ]
+}
+],
+
+floresta:[
+{
+  id:'rot_a_coisa_no_mato', peso:3,
+  titulo:'Alguma coisa grande no mato fechado',
+  texto:[
+    'O mato mexe a uns quinze metros da trilha e não é vento.',
+    'É grande. Dá pra ouvir pelo galho: é uma coisa que empurra galho em vez de passar por baixo dele.',
+    'E está parada agora, porque parou quando você parou.'
+  ],
+  escolhas:[
+    {texto:'Passar devagar, sem olhar diretamente, torcendo pra não ser notado.',
+     teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'discricao'},
+     bom:{ef:{flag:'passou_sem_ser_notado', rep:{eixo:'bom',delta:1,motivo:'Atravessou o mato fechado sem chamar atenção'},
+              registrar:'Passou devagar pelo que estava no mato e não foi notado.'},
+          resultado:[
+            d=>{
+              const m = melhorNoEixo('discricao');
+              return m.pokemon && m.valor > 0
+                ? `${nomeExib(m.pokemon)} entende antes de você e para de andar. Vocês dois param juntos, no mesmo segundo, sem combinar.`
+                : 'Você anda no passo mais lento que o seu corpo aguenta sem cair.';
+            },
+            'Quarenta metros assim. O mato não mexe mais.',
+            'Quando você já está longe o bastante pra olhar pra trás, dá pra ver o mato se fechando de novo devagar, no lugar exato onde ela estava.'
+          ]},
+     ruim:{ef:{hp:-2, flag:'foi_notado_no_mato',
+               registrar:'Foi notado pelo que estava no mato fechado.'},
+           resultado:[
+             d=>{
+               const pior = piorNoEixo('discricao');
+               return pior.pokemon && pior.valor < 0
+                 ? `${nomeExib(pior.pokemon)} não tem um grama de discrição no corpo: pula, esbarra em três galhos e solta um som que dá pra ouvir de Pewter.`
+                 : 'Você pisa num galho. Um galho só. É sempre um galho só.';
+             },
+             'O mato explode pra frente e você tem meio segundo pra decidir o que fazer com a sua vida.',
+             'O que sai é grande e passa a um metro de você, correndo pro outro lado, com muito mais medo do que você.',
+             'Você senta no chão da trilha por uns bons cinco minutos.'
+           ]}},
+    {texto:'Parar completamente e deixar ela decidir.',
+     teste:{status:'resistencia', dificuldade:6, nomeStatus:'Resistência', eixo:'paciencia'},
+     bom:{ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou parado até o bicho decidir'},
+              flag:'deixou_ela_decidir', registrar:'Ficou parado no mato fechado até o bicho decidir o que fazer.'},
+          resultado:[
+            'Você para. Completamente. Você para de um jeito que dói nas pernas depois de três minutos.',
+            'Seis minutos.',
+            'E aí ela sai — devagar, pela frente, atravessando a trilha a seis metros de você, sem pressa nenhuma.',
+            'Ela olha pra você no meio da travessia. Não é ameaça e não é curiosidade. É outra coisa, pra qual não tem palavra.',
+            'E some do outro lado.'
+          ]},
+     ruim:{ef:{hp:-1, registrar:'Não aguentou ficar parado no mato fechado.'},
+           resultado:[
+             'Você aguenta noventa segundos.',
+             'No nonagésimo primeiro você muda o peso de pé, e o mato explode pro lado contrário, e acabou.',
+             'Você nunca vai saber o que era.'
+           ]}},
+    {texto:'Chamar. Alto. Ver o que acontece.',
+     ef:{hp:-3, flag:'chamou_no_mato',
+         rep:{eixo:'bom',delta:1,motivo:'Chamou alto uma coisa grande no mato, o que é burrice e é coragem'},
+         registrar:'Chamou alto a coisa que estava no mato fechado.'},
+     resultado:[
+       'Você grita.',
+       'O que acontece é que sai um Pidgeot de uma árvore que você nem sabia que tinha Pidgeot, a três metros da sua cabeça, e você cai sentado.',
+       'A coisa grande do mato, seja lá o que fosse, foi embora no mesmo segundo pelo barulho.',
+       'Você fica com um galho enfiado na panturrilha e com a certeza de que isso foi a coisa mais idiota da semana.'
+     ]},
+    {texto:'Voltar e contornar por fora, mesmo que leve o dobro do tempo.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Contornou em vez de testar a sorte'},
+         registrar:'Contornou o mato fechado por fora. Levou o dobro do tempo.'},
+     resultado:['Leva o dobro do tempo e é chato e você chega com barro até o joelho.','E você chega.']}
+  ]
+}
+],
+
+montanha:[
+{
+  id:'rot_a_pedra_solta', peso:3,
+  titulo:'A pedra que não devia estar ali',
+  texto:[
+    'Tem uma pedra do tamanho de uma mesa no meio da trilha de montanha, e ela não rolou: ela foi posta.',
+    'Dá pra ver pela base — tem calço de pedra menor embaixo, feito à mão, pra ela não sair do lugar.',
+    'Alguém bloqueou essa trilha de propósito. Do outro lado, a trilha continua normal.'
+  ],
+  escolhas:[
+    {texto:'Olhar em volta antes de decidir qualquer coisa.',
+     teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'cuidado'},
+     bom:{ef:{flag:'entendeu_a_pedra', rep:{eixo:'bom',delta:2,motivo:'Entendeu por que a trilha estava bloqueada antes de desbloquear'},
+              registrar:'A pedra na trilha de montanha bloqueava o acesso a um trecho que desabou.'},
+          resultado:[
+            'Você sobe uns quinze metros pelo lado e olha o trecho de cima.',
+            'Quarenta metros depois da pedra, a trilha simplesmente não existe mais. Desabou. É um corte limpo de uns oito metros e uma queda que você não quer medir.',
+            'A pedra não está bloqueando o caminho. A pedra está salvando a vida de quem vier.',
+            'E quem a pôs ali carregou pedra de calço morro acima pra ela não sair do lugar.'
+          ]},
+     ruim:{ef:{registrar:'Olhou em volta da pedra da trilha e não entendeu nada.'},
+           resultado:[
+             'Você olha em volta e vê montanha, que é o que tem em volta de tudo aqui.',
+             'Não dá pra ver o que tem quarenta metros adiante porque a trilha vira.',
+             'Você continua sem saber por que a pedra está ali.'
+           ]}},
+    {texto:'Empurrar a pedra e seguir.',
+     ef:{hp:-4, flag:'empurrou_a_pedra',
+         rep:{eixo:'ruim',delta:1,motivo:'Desbloqueou uma trilha que alguém bloqueou de propósito'},
+         registrar:'Empurrou a pedra que bloqueava a trilha de montanha.'},
+     resultado:[
+       'Leva vinte minutos e a sua lombar vai lembrar disso amanhã.',
+       'Você anda quarenta metros e a trilha acaba. Acaba mesmo — corte limpo, oito metros de vão, queda longa.',
+       'Você volta. Você empurra a pedra de volta, que leva outros vinte minutos e dói muito mais.',
+       'E você fica um tempo sentado ao lado dela pensando na pessoa que carregou calço morro acima pra impedir exatamente o que você acabou de fazer.'
+     ]},
+    {texto:'Escrever um aviso na pedra com o que você tiver.',
+     cond:d=>!!d.flags.entendeu_a_pedra,
+     ef:{rep:{eixo:'bom',delta:3,motivo:'Escreveu na pedra o aviso que faltava, pra quem vier depois', notorio:true},
+         flag:'escreveu_na_pedra', registrar:'Escreveu na pedra da trilha: TRILHA CAIU 40M ADIANTE.'},
+     resultado:[
+       'Você acha uma pedra de calcário no acostamento e escreve na cara da pedra grande, em letra de forma, do tamanho que dá:',
+       fala('a pedra', 'TRILHA CAIU 40M ADIANTE. NÃO EMPURRE.', 'frio'),
+       'Quem carregou o calço morro acima resolveu o problema e não resolveu o aviso.',
+       'Agora tem aviso.'
+     ]},
+    {texto:'Contornar pelo alto e seguir por fora.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{hp:-2, rep:{eixo:'bom',delta:1,motivo:'Contornou a pedra por cima'},
+              registrar:'Contornou a pedra da trilha subindo por cima.'},
+          resultado:['Você sobe, atravessa por cima e desce do outro lado em doze minutos, com a mão ralada.',
+                     'Quarenta metros adiante você descobre por que a pedra estava lá e volta pelo mesmo caminho, mais devagar e muito mais humilde.']},
+     ruim:{ef:{hp:-6, registrar:'Escorregou tentando contornar a pedra por cima.'},
+           resultado:['Você escorrega no terço final e desce três metros de barriga na pedra.',
+                      'Nada quebrado. Tudo ralado.','Você contorna por baixo, que era o óbvio, e que você não fez porque parecia menos esperto.']}}
+  ]
+}
+],
+
+caverna:[
+{
+  id:'rot_a_luz_no_fundo', peso:3,
+  titulo:'Luz no fundo da galeria',
+  texto:[
+    'Tem uma luz fraca no fundo de uma galeria lateral, daquelas que a trilha marcada não usa.',
+    'É luz de lampião, amarela, parada. Não é reflexo.',
+    'Daqui dá pra ouvir alguém falando sozinho, muito baixo, num ritmo que parece contagem.'
+  ],
+  escolhas:[
+    {texto:'Ir até lá sem anunciar, pra ver antes de ser visto.',
+     teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'discricao'},
+     bom:{ef:{flag:'viu_o_do_lampiao', rep:{eixo:'bom',delta:1,motivo:'Chegou perto sem ser notado'},
+              registrar:'Na galeria lateral tinha um geólogo contando camadas de parede em voz alta.'},
+          resultado:[
+            'Você chega a uns oito metros e para atrás de uma dobra.',
+            'É uma mulher de uns sessenta anos, de capacete, com um lampião no chão e a mão espalmada na parede.',
+            fala('a geóloga', 'Quarenta e um. Quarenta e dois. Quarenta e três.', 'baixo'),
+            'Ela está contando camadas. Camada de rocha, uma por uma, com a mão.',
+            'Quarenta e três camadas é muito tempo. É mais tempo do que qualquer coisa que você já pensou.'
+          ]},
+     ruim:{ef:{registrar:'Tentou chegar perto do lampião sem ser notado e foi notado.'},
+           resultado:[
+             d=>{
+               const pior = piorNoEixo('discricao');
+               return pior.pokemon && pior.valor < 0
+                 ? `${nomeExib(pior.pokemon)} chuta uma pedra do tamanho de um punho num piso de caverna, que é o lugar mais barulhento do mundo pra chutar uma pedra.`
+                 : 'Você chuta uma pedra do tamanho de um punho num piso de caverna, que é o lugar mais barulhento do mundo pra chutar uma pedra.';
+             },
+             'A contagem para.',
+             fala('a geóloga', 'Eu tô aqui há onze horas e você é a quarta pessoa que faz isso.', 'frio'),
+             fala('a geóloga', 'Vem. Vem logo, já que veio.')
+           ]}},
+    {texto:'Chamar de longe e esperar ser convidado.',
+     ef:{moral:1, flag:'chamou_na_galeria',
+         rep:{eixo:'bom',delta:1,motivo:'Anunciou antes de entrar numa galeria com gente dentro'},
+         registrar:'Chamou de longe na galeria lateral e foi convidado a entrar.'},
+     resultado:[
+       'Você chama e a contagem para na hora.',
+       fala('a geóloga', 'Vem! Vem e pisa onde eu pisei, que o resto do chão é falso!'),
+       'Você olha o chão. O chão parece chão inteiro.',
+       'Você pisa exatamente onde ela pisou.'
+     ]},
+    {texto:'Não é da sua conta. Voltar pra trilha marcada.',
+     ef:{registrar:'Deixou a luz da galeria lateral pra trás.'},
+     resultado:['Você volta pra trilha marcada.','A contagem continua atrás de você por mais uns cem metros, até o som morrer na pedra.','Quarenta e quatro. Quarenta e cinco.']}
+  ]
+}
+],
+
+agua:[
+{
+  id:'rot_a_boia_com_nome', peso:3,
+  titulo:'Uma boia com nome escrito',
+  texto:[
+    'Tem uma boia de plástico laranja encalhada na pedra, dessas de marcar rede, com uma corda cortada de uns dois metros.',
+    'Tem um nome escrito nela com tinta, em letra de forma, meio gasto.',
+    'Corda cortada não é corda arrebentada. Alguém cortou.'
+  ],
+  escolhas:[
+    {texto:'Procurar o dono do nome no próximo lugar com gente.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom',delta:2,motivo:'Devolveu uma boia com nome ao dono do nome'},
+              flag:'devolveu_a_boia', registrar:'Devolveu a boia de rede ao dono. A corda tinha sido cortada.'},
+          resultado:[
+            'Leva duas tardes e quatro perguntas erradas até alguém reconhecer o nome.',
+            'É um pescador de uns quarenta anos e ele fica olhando a boia por um tempo desconfortável.',
+            fala('o dono da boia', 'Cortaram.'),
+            fala('o dono da boia', 'A minha rede tava marcada com quatro dessas. Faz três semanas que eu procuro a rede e não a boia.', 'baixo'),
+            fala('o dono da boia', 'Agora eu sei que não foi maré.')
+          ]},
+     ruim:{ef:{registrar:'Não achou o dono do nome escrito na boia.'},
+           resultado:[
+             'Você pergunta em quatro lugares e o nome não diz nada pra ninguém.',
+             'Uma pessoa acha que já ouviu. Outra tem certeza de que é de outra cidade. As duas estão sendo educadas.',
+             'Você fica com a boia.'
+           ]}},
+    {texto:'Mergulhar pra ver se a rede está aqui embaixo.',
+     teste:{status:'resistencia', dificuldade:7, nomeStatus:'Resistência', eixo:'coragem'},
+     bom:{ef:{hp:-3, itens:{'Pedaço de rede com a marca cortada':1},
+              flag:'achou_a_rede', rep:{eixo:'bom',delta:2,motivo:'Mergulhou pra procurar o que tinha sido cortado'},
+              registrar:'Mergulhou e achou a rede cortada, a seis metros, com corte limpo de faca.'},
+          resultado:[
+            'A água é mais fria do que parece e mais funda do que parece, que é o padrão de toda água.',
+            'A seis metros, presa numa pedra, tem um pedaço de rede de uns três metros.',
+            'O corte é limpo. Faca, não pedra. E é recente o bastante pra fibra ainda estar clara na ponta.',
+            'Você sobe com o pedaço e passa um tempo bom só respirando.'
+          ]},
+     ruim:{ef:{hp:-5, registrar:'Mergulhou atrás da rede e quase se enrolou nela.'},
+           resultado:[
+             'Você desce, acha a rede em quinze segundos, e se enrola nela em dois.',
+             'Você sai. Você sai porque tem sorte e não porque soube sair, e você sabe a diferença.',
+             'Você fica sentado na pedra por vinte minutos e não conta isso pra ninguém nunca.'
+           ]}},
+    {texto:'Deixar a boia na pedra, virada pra cima, pra quem procurar achar.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Deixou a boia à vista em vez de levar'},
+         registrar:'Deixou a boia com nome bem à vista na pedra.'},
+     resultado:['Você apoia a boia na pedra mais alta, com o nome pra cima e pra fora.','É o que se faz. Quem procura olha pedra alta.']},
+    {texto:'Seguir.', ef:{}, resultado:['Você segue. A boia continua encalhada com o nome de alguém virado pra baixo.']}
+  ]
+}
+]
+
+};
+
+/* ============================================================
    O MOTOR DOS EVENTOS
    ============================================================ */
 const Eventos = {
@@ -1109,10 +1535,17 @@ const Eventos = {
   jaViu(id){ return !!this.vistos()[id]; },
   marcar(id){ this.vistos()[id] = (this.vistos()[id] || 0) + 1; },
 
-  /* todos os que podem acontecer aqui e agora */
+  /* todos os que podem acontecer aqui e agora.
+     Cidade puxa o banco da cidade; rota puxa o banco do ambiente. */
+  banco(id){
+    const L = LOCAIS[id] || {};
+    if (L.tipo === 'cidade') return (EVENTOS_CIDADE[id] || []).concat(EVENTOS_GERAIS);
+    return (EVENTOS_ROTA[L.ambiente] || []).concat(EVENTOS_ROTA.campo || []);
+  },
+
   disponiveis(id){
     const d = Estado.dados;
-    const banco = (EVENTOS_CIDADE[id] || []).concat(EVENTOS_GERAIS);
+    const banco = this.banco(id);
     return banco.filter(ev => {
       if (ev.umaVez && this.jaViu(ev.id)) return false;
       /* mesmo os repetíveis não voltam no mesmo capítulo */
@@ -1134,20 +1567,48 @@ const Eventos = {
   porId(eid){
     for (const lista of Object.values(EVENTOS_CIDADE))
       for (const ev of lista) if (ev.id === eid) return ev;
+    for (const lista of Object.values(EVENTOS_ROTA))
+      for (const ev of lista) if (ev.id === eid) return ev;
     return EVENTOS_GERAIS.find(ev => ev.id === eid) || null;
   },
 
-  /* o jogador escolheu: aplica e devolve as linhas do resultado */
+  /* Uma escolha pode rolar dado, e o dado pode contar com quem está
+     no seu cinto: {teste:{status:'percepcao', dificuldade:7, eixo:'discricao'},
+     bom:{...}, ruim:{...}}. O resultado muda, os efeitos mudam, e a
+     linha que explica o temperamento sempre aparece. */
+  rolar(esc){
+    const t = esc.teste;
+    if (!t) return null;
+    const valor = Estado.j.status[t.status] || 0;
+    const r = t.eixo
+      ? Dados.testeComTime(valor, t.dificuldade, t.nomeStatus || t.status, t.eixo)
+      : Dados.teste(valor, t.dificuldade, t.nomeStatus || t.status);
+    r.passou = (r.grau === 'sucesso' || r.grau === 'critico');
+    return r;
+  },
+
+  /* o jogador escolheu: aplica e devolve as linhas do resultado.
+     Uma escolha com continua:true não encerra o evento — ela responde
+     e devolve o jogador à mesma cena, pra quem quer perguntar antes
+     de decidir. */
   resolver(eid, indice){
     const ev = this.porId(eid);
     if (!ev) return null;
     const esc = (ev.escolhas || [])[indice];
     if (!esc) return null;
-    this.marcar(ev.id);
-    this.vistos()['cap_' + ev.id] = Estado.dados.capitulo;
+    if (!esc.continua){
+      this.marcar(ev.id);
+      this.vistos()['cap_' + ev.id] = Estado.dados.capitulo;
+    }
+    const rolagem = this.rolar(esc);
+    const ramo = rolagem ? (rolagem.passou ? esc.bom : esc.ruim) || {} : null;
+
     let avisos = [];
-    if (esc.ef) avisos = Historia.aplicar(esc.ef) || [];
+    if (rolagem && rolagem.linhaTime) avisos.push({tipo:'natureza', texto:rolagem.linhaTime});
+    if (esc.ef)        avisos = avisos.concat(Historia.aplicar(esc.ef) || []);
+    if (ramo && ramo.ef) avisos = avisos.concat(Historia.aplicar(ramo.ef) || []);
     Estado.salvar('auto');
-    return {ev, esc, avisos};
+    return {ev, esc, avisos, rolagem, ramo, continua: !!esc.continua,
+            resultado: (ramo && ramo.resultado) || esc.resultado || []};
   }
 };

@@ -31,3 +31,110 @@ const NATUREZAS = {
 };
 
 const NOMES_NATUREZAS = Object.keys(NATUREZAS);
+
+/* ============================================================
+   TEMPERAMENTO — o que a natureza serve FORA do combate
+   Uma tarefa que pede silêncio não é a mesma coisa com um
+   Jolly no cinto e com um Quiet. Cada natureza tem peso em
+   cinco eixos, de -2 a +2:
+
+     discricao  — passar sem ser notado
+     paciencia  — esperar sem estragar a espera
+     coragem    — entrar onde não se quer entrar
+     simpatia   — fazer estranho baixar a guarda
+     cuidado    — mexer em coisa frágil sem quebrar
+   ============================================================ */
+const TEMPERAMENTO = {
+  'Hardy':   {discricao: 0, paciencia: 0, coragem: 0, simpatia: 0, cuidado: 0},
+  'Lonely':  {discricao: 1, paciencia:-1, coragem: 1, simpatia:-2, cuidado: 0},
+  'Brave':   {discricao:-1, paciencia: 0, coragem: 2, simpatia: 0, cuidado:-1},
+  'Adamant': {discricao:-1, paciencia:-1, coragem: 2, simpatia:-1, cuidado:-1},
+  'Naughty': {discricao:-2, paciencia:-1, coragem: 1, simpatia: 0, cuidado:-2},
+  'Bold':    {discricao: 0, paciencia: 1, coragem: 1, simpatia: 0, cuidado: 1},
+  'Docile':  {discricao: 1, paciencia: 1, coragem:-1, simpatia: 1, cuidado: 1},
+  'Relaxed': {discricao: 2, paciencia: 2, coragem: 0, simpatia: 1, cuidado: 1},
+  'Impish':  {discricao:-2, paciencia:-1, coragem: 1, simpatia:-1, cuidado:-1},
+  'Lax':     {discricao: 0, paciencia: 1, coragem: 0, simpatia: 1, cuidado:-1},
+  'Timid':   {discricao: 2, paciencia: 1, coragem:-2, simpatia:-1, cuidado: 1},
+  'Hasty':   {discricao:-2, paciencia:-2, coragem: 1, simpatia: 0, cuidado:-2},
+  'Serious': {discricao: 1, paciencia: 1, coragem: 0, simpatia:-1, cuidado: 2},
+  'Jolly':   {discricao:-2, paciencia:-2, coragem: 1, simpatia: 2, cuidado:-1},
+  'Naive':   {discricao:-1, paciencia:-2, coragem: 2, simpatia: 1, cuidado:-2},
+  'Modest':  {discricao: 1, paciencia: 1, coragem:-1, simpatia: 1, cuidado: 1},
+  'Mild':    {discricao: 1, paciencia: 0, coragem:-1, simpatia: 1, cuidado: 1},
+  'Quiet':   {discricao: 2, paciencia: 2, coragem: 0, simpatia:-1, cuidado: 2},
+  'Bashful': {discricao: 2, paciencia: 0, coragem:-2, simpatia:-1, cuidado: 1},
+  'Rash':    {discricao:-2, paciencia:-2, coragem: 1, simpatia: 0, cuidado:-2},
+  'Calm':    {discricao: 2, paciencia: 2, coragem:-1, simpatia: 2, cuidado: 1},
+  'Gentle':  {discricao: 1, paciencia: 1, coragem:-1, simpatia: 2, cuidado: 2},
+  'Sassy':   {discricao:-1, paciencia: 1, coragem: 0, simpatia:-1, cuidado: 1},
+  'Careful': {discricao: 1, paciencia: 2, coragem:-1, simpatia: 0, cuidado: 2},
+  'Quirky':  {discricao: 0, paciencia: 0, coragem: 0, simpatia: 0, cuidado: 0}
+};
+
+const NOME_EIXO = {
+  discricao:'discrição', paciencia:'paciência', coragem:'coragem',
+  simpatia:'simpatia',  cuidado:'cuidado'
+};
+
+function tempDe(p){
+  if (!p || !p.natureza) return null;
+  return TEMPERAMENTO[p.natureza] || null;
+}
+
+/* O melhor do time num eixo, e quem é. Time vazio devolve zero. */
+function melhorNoEixo(eixo, time){
+  const lista = (time || (Estado.dados ? Estado.dados.time : []) || []).filter(p => !p.morto);
+  let melhor = null, valor = 0;
+  for (const p of lista){
+    const t = tempDe(p);
+    if (!t) continue;
+    const v = t[eixo] || 0;
+    if (melhor === null || v > valor){ melhor = p; valor = v; }
+  }
+  return {pokemon:melhor, valor};
+}
+
+/* O pior do time num eixo — quem atrapalha, que é o outro lado da moeda */
+function piorNoEixo(eixo, time){
+  const lista = (time || (Estado.dados ? Estado.dados.time : []) || []).filter(p => !p.morto);
+  let pior = null, valor = 0;
+  for (const p of lista){
+    const t = tempDe(p);
+    if (!t) continue;
+    const v = t[eixo] || 0;
+    if (pior === null || v < valor){ pior = p; valor = v; }
+  }
+  return {pokemon:pior, valor};
+}
+
+/* ============================================================
+   O MODIFICADOR QUE VAI PRO DADO
+   Quem você leva conta. O melhor do time puxa pra cima e o pior
+   puxa pra baixo, com o melhor pesando mais — você escolhe quem
+   solta, mas não escolhe quem está no cinto.
+   ============================================================ */
+function modificadorDeTemperamento(eixo, time){
+  const m = melhorNoEixo(eixo, time);
+  const p = piorNoEixo(eixo, time);
+  if (!m.pokemon) return {mod:0, melhor:null, pior:null, linha:null};
+  const mod = Math.round(m.valor + (p.valor < 0 ? p.valor * 0.5 : 0));
+  return {mod, melhor:m, pior:p, linha: linhaDeTemperamento(eixo, m, p, mod)};
+}
+
+function linhaDeTemperamento(eixo, m, p, mod){
+  const nome = NOME_EIXO[eixo] || eixo;
+  if (!m.pokemon) return null;
+  const cab = nome.charAt(0).toUpperCase() + nome.slice(1);
+  const fim = ` — ${mod >= 0 ? '+' : ''}${mod} no dado.`;
+  /* time inteiro contra a tarefa: ninguém ajuda, e isso precisa ser dito */
+  if (m.valor <= 0 && p.valor < 0)
+    return `${cab}: o cinto inteiro trabalha contra. ${nomeExib(p.pokemon)} (${p.pokemon.natureza}) é o pior deles${fim}`;
+  const partes = [];
+  if (m.valor > 0)
+    partes.push(`${nomeExib(m.pokemon)} (${m.pokemon.natureza}) ajuda: ${NATUREZAS[m.pokemon.natureza].traco.split('.')[0].toLowerCase()}`);
+  if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid)
+    partes.push(`${nomeExib(p.pokemon)} (${p.pokemon.natureza}) atrapalha`);
+  if (!partes.length) return `${cab}: ninguém no cinto muda muito isso${fim}`;
+  return `${cab}: ${partes.join(' · ')}${fim}`;
+}

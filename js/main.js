@@ -373,6 +373,8 @@ const Jogo = {
   entrarNoCapitulo(prox){
     const cena = Historia.iniciarCapitulo(prox);
     Estado.salvar('auto');
+    /* telefone toca na hora errada, que é quando telefone toca */
+    if (this.talvezToque()) { this.cenaDepoisDaChamada = cena; return; }
     /* Nada de repetir nome, reputação e time na abertura de cada capítulo:
        isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
     UI.telaCena(cena);
@@ -523,6 +525,27 @@ const Jogo = {
      Revanche cai em combate. Favor, missão e notícia caem numa
      tela de conversa, que é onde a fala com dono aparece.
      ============================================================ */
+  responderChamada(id, i){
+    const r = Chamadas.atender(id, i);
+    if (!r) return this.voltarDaLigacao();
+    UI.telaResultadoChamada(r);
+  },
+  recusarChamada(id){
+    const r = Chamadas.recusar(id);
+    if (!r) return this.voltarDaLigacao();
+    UI.telaResultadoChamada(r);
+  },
+
+  /* o telefone toca na virada de capítulo e ao chegar num lugar novo */
+  talvezToque(){
+    if (typeof Chamadas === 'undefined' || !Estado.temPokenav()) return false;
+    if (!Dados.chance(38)) return false;
+    const c = Chamadas.sortear();
+    if (!c) return false;
+    UI.telaChamada(c);
+    return true;
+  },
+
   resolverEvento(eid, i){
     const r = Eventos.resolver(eid, i);
     if (!r) return Exploracao.tela();
@@ -539,6 +562,11 @@ const Jogo = {
 
   voltarDaLigacao(){
     const d = Estado.dados;
+    if (this.cenaDepoisDaChamada){
+      const cena = this.cenaDepoisDaChamada;
+      this.cenaDepoisDaChamada = null;
+      return UI.telaCena(cena);
+    }
     if (d.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual);
     return Exploracao.tela();
   },

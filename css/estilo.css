@@ -1659,3 +1659,30 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   .nav-colunas{grid-template-columns:1fr}
   .nav-lista{border-right:none;border-bottom:1px solid var(--nav-linha);max-height:200px}
 }
+
+/* linha de resultado de teste num evento */
+.teste-linha{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin:0 0 12px;padding:7px 11px;border-radius:5px;
+  border:1px solid var(--borda);background:rgba(0,0,0,.14);font-size:12.5px;
+}
+.teste-linha .k{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--texto-fraco);
+}
+.teste-linha .v{color:var(--texto);flex:1;min-width:160px}
+.teste-linha .grau{font-weight:600}
+.teste-linha .grau.critico{color:var(--bom, #6ac26a)}
+.teste-linha .grau.sucesso{color:var(--bom, #6ac26a)}
+.teste-linha .grau.parcial{color:#ffc46b}
+.teste-linha .grau.falha{color:var(--perigo, #ee1515)}
+
+/* cabeçalho de chamada recebida: o aparelho tocando */
+.cap-cabecalho.chamando .num{
+  color:var(--destaque);display:flex;align-items:center;gap:7px;
+  animation:tocando 1.1s ease-in-out infinite;
+}
+.cap-cabecalho.chamando .num .nav-antena{background:var(--destaque);box-shadow:0 0 7px var(--destaque)}
+@keyframes tocando{0%,100%{opacity:1}55%{opacity:.4}}
+.escolha.recusar{opacity:.72}
+.escolha.recusar:hover{opacity:1}

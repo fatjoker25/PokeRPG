@@ -383,6 +383,69 @@ const CONTATOS = [
   }
 },
 
+{
+  /* ============================================================
+     O CURADOR — ele pergunta uma coisa sobre você e some
+     A resposta decide o que ele te manda meses depois. Ele nunca
+     fala em Pokémon, nem na pergunta, nem na entrega.
+     ============================================================ */
+  id:'curador', tipo:'figura', nome:'Adnan', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
+  desde:'Te fez uma pergunta e anotou a resposta num caderno de capa dura.',
+  requer:d=>!!d.flags.a_pergunta_do_curador,
+  oferece:['missao'],
+  missao:{
+    rotulo:'Perguntar por que ele anotou aquilo',
+    rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
+    dica:'Ele pediu pra você aparecer em Lavender quando tiver quatro insígnias. Ele não disse pra quê.',
+    pedido:[
+      fala('Adnan', 'Eu não anotei pra nada. Eu anoto tudo.'),
+      fala('Adnan', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
+      fala('Adnan', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
+      d=>fala(d.jogador.nome, 'Pra quê?'),
+      fala('Adnan', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
+      fala('Adnan', 'Não pergunta o que é. Se eu falar, estraga.')
+    ],
+    objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
+    entregue:d=>{
+      /* a resposta que você deu meses atrás decide o que chega */
+      const guarda = d.flags.respondeu_guardar;
+      return [
+        'O abrigo do Sr. Fuji tem uma sala nos fundos que você nunca tinha visto, com oitenta e três cadernos de capa dura numa estante feita à mão.',
+        fala('Adnan', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
+        d=>fala('Adnan', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
+        fala('Adnan', 'Eu não escolho o que dar. A resposta escolhe.'),
+        guarda
+          ? 'Ele volta com uma bola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
+          : 'Ele volta com uma bola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
+        guarda
+          ? fala('Adnan', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
+          : fala('Adnan', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
+        fala('Adnan', 'Não abre aqui. Abre na estrada.')
+      ];
+    },
+    recompensa:d=>{
+      const guarda = !!d.flags.respondeu_guardar;
+      /* guardar → Haunter (fica com você, e não vira Gengar sem troca)
+         passar adiante → Kadabra (a linha dele só se completa passando por outra mão) */
+      const dex = guarda ? 93 : 64;
+      const p = criarPokemon(dex, Math.max(22, 18 + Estado.dados.insignias.length * 2), {
+        moral: 55,
+        historia: guarda
+          ? 'Veio do abrigo de Lavender, numa bola lacrada desde 1989. Ninguém foi buscar.'
+          : 'Veio do abrigo de Lavender. Passou por quatro pessoas antes de você, e nenhuma delas ficou.'
+      });
+      const onde = Estado.adicionar(p);
+      Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`},
+              {tipo:'eco', texto: guarda
+                ? 'Ele não vai mudar de forma sozinho. Coisa que fica, fica como está.'
+                : 'A linha dele só se completa passando por outra mão. Você vai ter que decidir isso um dia.'}];
+    },
+    rep:{eixo:'bom', delta:2, motivo:'Voltou em Lavender porque tinha prometido, sem saber pra quê'},
+    marca:'o_curador_entregou'
+  }
+},
+
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
@@ -452,3 +515,234 @@ function contatosDeRivaisExtras(){
 function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras()); }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 function textoContato(c, campo){ const v = c[campo]; return typeof v === 'function' ? v(Estado.dados) : v; }
+
+/* ============================================================
+   CHAMADAS RECEBIDAS — o telefone toca sozinho
+   Até aqui o PokéNav só ligava pra fora. Quem tem o seu número
+   também liga, e liga na hora errada, que é quando telefone
+   toca. Cada chamada tem condição, e uma vez atendida não volta.
+   ============================================================ */
+const CHAMADAS = [
+{
+  id:'cha_casa_primeira',
+  de:'casa',
+  cond:d=>Estado.temNumero('casa') && d.capitulo >= 3 && !d.flags.voltou_pra_casa,
+  peso:3,
+  falas:d=>[
+    d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesmo?', 'grita'),
+    d=>fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Odete que me ensinou.'),
+    d=>fala(nomeCasa(), 'Não é nada. Não aconteceu nada aqui, tá tudo bem, eu só queria ouvir.', 'baixo'),
+    d=>fala(nomeCasa(), 'Tá comendo?')
+  ],
+  escolhas:[
+    {texto:'"Tô comendo."',
+     ef:{moral:4, rep:{eixo:'bom',delta:1,motivo:'Atendeu e respondeu a pergunta da comida'}},
+     resultado:[d=>fala(nomeCasa(), 'Mentiroso.', 'riso'),
+                d=>fala(nomeCasa(), 'Tá bom. Vai lá. Eu desligo primeiro, que eu sempre desligo primeiro.')]},
+    {texto:'Contar onde você está e o que aconteceu até agora.',
+     ef:{moral:6, rep:{eixo:'bom',delta:2,motivo:'Parou o que estava fazendo pra contar a viagem por telefone'}},
+     resultado:['Você fala por onze minutos e ela não interrompe uma vez.',
+                d=>fala(nomeCasa(), 'Onze minutos. Eu cronometrei no relógio do fogão.', 'baixo'),
+                d=>fala(nomeCasa(), 'Onze minutos é mais do que a gente falava na mesma casa.')]},
+    {texto:'"Agora não dá." E desligar.',
+     ef:{moral:-4, rep:{eixo:'ruim',delta:1,motivo:'Desligou na cara de casa'}},
+     resultado:['Você desliga.', d=>fala(nomeCasa(), 'Tá bo—', 'baixo', 'A ligação cai no meio.'),
+                'Ela não liga de novo hoje. Nem amanhã.']}
+  ]
+},
+{
+  id:'cha_rufino_cobra',
+  de:'rufino',
+  cond:d=>Estado.temNumero('rufino') && !!d.flags.divida_pendente && d.capitulo >= 5,
+  peso:2,
+  falas:d=>[
+    fala('Sr. Rufino', 'Não é cobrança.'),
+    fala('Sr. Rufino', 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
+    fala('Sr. Rufino', 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
+  ],
+  escolhas:[
+    {texto:'"Eu volto. Eu prometi e eu volto."',
+     ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Repetiu a promessa no telefone quando podia ter mudado de assunto'}},
+     resultado:[fala('Sr. Rufino', 'Eu sei.'), fala('Sr. Rufino', 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
+    {texto:'Perguntar como vai o joelho dele.',
+     ef:{moral:4, rep:{eixo:'bom',delta:2,motivo:'Perguntou do joelho em vez de falar da dívida'},
+         npc:{nome:'Sr. Rufino', opiniao:3, memoria:'Você perguntou do joelho dele numa ligação em que ele ia falar de dívida.'}},
+     resultado:[
+       'Silêncio de uns quatro segundos.',
+       fala('Sr. Rufino', 'Como é que você sabe do joelho?'),
+       fala('Sr. Rufino', 'Eu não falei do joelho pra ninguém.', 'baixo'),
+       fala('Sr. Rufino', 'Tá ruim. Tá ruim mesmo. Obrigado por perguntar.')
+     ]},
+    {texto:'"Vende a caixa, seu Rufino. Eu não mereço."',
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou o velho vender o que ele guardava pra você'}},
+     resultado:[fala('Sr. Rufino', 'Não é sobre merecer.', 'frio'), fala('Sr. Rufino', 'Boa viagem, menino.')]}
+  ]
+},
+{
+  id:'cha_teo_perdeu',
+  de:'teo',
+  cond:d=>Estado.temNumero('teo') && d.insignias.filter(i=>i!=='Título de Campeão').length >= 3,
+  peso:2,
+  falas:d=>[
+    fala('Téo', 'Não é nada. Eu só liguei.'),
+    'Silêncio de três segundos, que no Téo é muita coisa.',
+    fala('Téo', 'Eu perdi hoje. Pro ginásio. Terceira vez no mesmo.', 'baixo'),
+    fala('Téo', 'Eu não sei por que eu tô te contando isso justo pra você.')
+  ],
+  escolhas:[
+    {texto:'Perguntar qual foi o time dele e onde travou.',
+     ef:{moral:2, rep:{eixo:'bom',delta:2,motivo:'Tratou a derrota do rival como problema e não como vitória sua'},
+         npc:{nome:'Téo', opiniao:4, memoria:'Ligou pra você depois de perder três vezes e você quis saber onde ele travou.'}},
+     resultado:[
+       'Vocês passam vinte minutos no telefone falando de ordem de troca e de um golpe que ele insiste em manter.',
+       fala('Téo', 'Você acha que eu devia tirar o Leer?'),
+       d=>fala(d.jogador.nome, 'Eu acho que você devia tirar o Leer desde Pewter.'),
+       fala('Téo', 'Você é um péssimo amigo e você tem razão.', 'riso')
+     ]},
+    {texto:'"Três vezes é teimosia. Muda o time."',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Foi direto com o rival em vez de consolar'},
+         npc:{nome:'Téo', opiniao:1, memoria:'Você chamou a teimosia dele de teimosia por telefone.'}},
+     resultado:[fala('Téo', 'Valeu. Muito obrigado. Que apoio.', 'frio'),
+                'Ele desliga.','Duas semanas depois ele ganha, com o time trocado, e não te liga pra contar. Você fica sabendo por outra pessoa.']},
+    {texto:'Não falar nada e deixar ele falar.',
+     ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou calado no telefone enquanto o outro precisava falar'}},
+     resultado:['Ele fala por catorze minutos.',
+                'Você diz "é" quatro vezes e "hum" duas, e não diz mais nada.',
+                fala('Téo', 'Valeu.', 'baixo'), fala('Téo', 'Sério.')]}
+  ]
+},
+{
+  id:'cha_enfermeira_estrada',
+  de:'enfermeira',
+  cond:d=>Estado.temNumero('enfermeira') && d.cemiterio.length > 0,
+  peso:3,
+  falas:d=>[
+    fala('a enfermeira', 'Eu soube.'),
+    fala('a enfermeira', 'A gente fica sabendo. Centro Pokémon fala com Centro Pokémon.', 'baixo'),
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length-1];
+      return fala('a enfermeira', `Eu não vou falar que eu sinto muito, porque todo mundo já falou. Eu vou perguntar o nome dele.`);
+    }
+  ],
+  escolhas:[
+    {texto:'Dizer o nome.',
+     ef:{moral:4, rep:{eixo:'bom',delta:2,motivo:'Disse em voz alta o nome de quem morreu'}},
+     resultado:[
+       d=>{ const m = d.cemiterio[d.cemiterio.length-1]; return fala(d.jogador.nome, nomeExib(m) + '.'); },
+       'Você ouve ela escrevendo.',
+       fala('a enfermeira', 'Anotado. Eu tenho um caderno.'),
+       fala('a enfermeira', 'Não é o caderno de Lavender, é o meu. Eu tenho quarenta e um nomes nele desde 1989 e agora tenho quarenta e dois.', 'baixo')
+     ]},
+    {texto:'"Eu não quero falar disso."',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Foi honesto sobre não querer falar'}},
+     resultado:[fala('a enfermeira', 'Então não fala.'),
+                fala('a enfermeira', 'Eu ligo de novo em duas semanas e a gente fala de outra coisa. Pode ser?')]}
+  ]
+},
+{
+  id:'cha_curador_lembra',
+  de:'curador',
+  /* vale tanto pra lembrar quanto pra cutucar quem já podia ter ido */
+  cond:d=>Estado.temNumero('curador')
+          && ['fazendo','entregar'].includes(Estado.faseDaMissao('curador'))
+          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
+  peso:2,
+  falas:d=>[
+    fala('Adnan', 'Não desliga, é rápido.'),
+    fala('Adnan', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
+    fala('Adnan', 'A sua resposta continua lá e continua a mesma, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
+    fala('Adnan', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
+  ],
+  escolhas:[
+    {texto:'Perguntar se alguém já mudou de resposta.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou ao curador se alguém já tinha mudado de resposta'},
+         flag:'sabe_dos_que_mudaram'},
+     resultado:[
+       fala('Adnan', 'Onze pessoas voltaram pra mudar.'),
+       fala('Adnan', 'Em dezenove anos, onze. Todas as onze mudaram de "guardar" pra "passar adiante".'),
+       fala('Adnan', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
+       fala('Adnan', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
+     ]},
+    {texto:'"Eu vou aparecer."',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou ao curador que ia aparecer'}},
+     resultado:[fala('Adnan', 'Todo mundo fala isso.'), fala('Adnan', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
+  ]
+},
+{
+  id:'cha_nadia_segunda',
+  de:'nadia',
+  cond:d=>Estado.temNumero('nadia'),
+  peso:2,
+  falas:d=>[
+    fala('Nádia', 'É a Nádia! Da arena! Eu consegui ligar!', 'grita'),
+    fala('Nádia', 'Minha filha configurou tudo de novo. Ela ficou com pena de mim.', 'riso'),
+    fala('Nádia', 'Eu queria te contar uma coisa e agora eu esqueci o que era.'),
+    'Pausa.',
+    fala('Nádia', 'Ah! Eu voltei pro ginásio de Pewter. Terceira vez.')
+  ],
+  escolhas:[
+    {texto:'"E aí?"',
+     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Quis saber como tinha sido'}},
+     resultado:[
+       fala('Nádia', 'Eu ganhei.', 'baixo'),
+       fala('Nádia', 'Eu chorei na frente do Brock. Eu tenho quarenta e um anos e eu chorei na frente do Brock.'),
+       fala('Nádia', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
+     ]},
+    {texto:'Contar quantas você tem, antes de ela perguntar.',
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Falou das próprias insígnias na ligação de outra pessoa'}},
+     resultado:[fala('Nádia', 'Ah. Que bom!'),
+                'Ela fala "que bom" de um jeito que é verdade e que também é o fim da conversa.',
+                'Ela ia contar que ganhou. Você não perguntou.']}
+  ]
+}
+];
+
+const Chamadas = {
+  atendidas(){
+    const nav = Estado.nav();
+    if (!nav.chamadas) nav.chamadas = {};
+    return nav.chamadas;
+  },
+  jaAtendeu(id){ return !!this.atendidas()[id]; },
+  porId(id){ return CHAMADAS.find(c => c.id === id) || null; },
+
+  disponiveis(){
+    if (!Estado.temPokenav()) return [];
+    const d = Estado.dados;
+    return CHAMADAS.filter(c => {
+      if (this.jaAtendeu(c.id)) return false;
+      try { return !c.cond || c.cond(d); } catch(e){ return false; }
+    });
+  },
+
+  /* toca ou não toca — chamado nas transições, não em toda tela */
+  sortear(){
+    const pool = this.disponiveis();
+    if (!pool.length) return null;
+    const sacola = [];
+    pool.forEach(c => { for (let i = 0; i < (c.peso || 1); i++) sacola.push(c); });
+    return Dados.escolher(sacola);
+  },
+
+  atender(id, indice){
+    const c = this.porId(id);
+    if (!c) return null;
+    const esc = (c.escolhas || [])[indice];
+    if (!esc) return null;
+    this.atendidas()[id] = {cap:Estado.dados.capitulo, escolha:indice};
+    let avisos = [];
+    if (esc.ef) avisos = Historia.aplicar(esc.ef) || [];
+    Estado.salvar('auto');
+    return {chamada:c, esc, avisos};
+  },
+  /* não atender também é uma escolha, e custa */
+  recusar(id){
+    const c = this.porId(id);
+    if (!c) return null;
+    this.atendidas()[id] = {cap:Estado.dados.capitulo, escolha:null, recusada:true};
+    const contato = contatoPorId(c.de);
+    Estado.registrar(`Não atendeu ${contato ? textoContato(contato,'nome') : 'uma chamada'}.`);
+    Estado.salvar('auto');
+    return {chamada:c, recusou:true};
+  }
+};

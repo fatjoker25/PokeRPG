@@ -713,10 +713,68 @@ const UI = {
         <div class="tit">${this.esc(txt(r.ev.titulo))}</div>
         <div class="loc">${this.esc(txt(r.esc.texto)).slice(0, 80)}</div>
       </div>
-      <div class="narrativa">${this.narrar(r.esc.resultado || [])}</div>
+      ${r.rolagem ? `<div class="teste-linha">
+        <span class="k">${this.esc((r.rolagem.eixo && NOME_EIXO[r.rolagem.eixo]) || 'teste')}</span>
+        <span class="v mono">1d10(${r.rolagem.dado}) + ${r.rolagem.bonus}${
+          r.rolagem.temperamento ? (r.rolagem.temperamento > 0 ? ' + ' : ' − ') + Math.abs(r.rolagem.temperamento) : ''
+        } = ${r.rolagem.total} · dif ${r.rolagem.dificuldade}</span>
+        <span class="grau ${this.esc(r.rolagem.grau)}">${this.esc(r.rolagem.texto)}</span>
+      </div>` : ''}
+      <div class="narrativa">${this.narrar(r.resultado || r.esc.resultado || [])}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:16px">
-        <button class="escolha" onclick="Exploracao.tela()">Seguir.</button>
+        ${r.continua
+          ? `<button class="escolha" onclick="UI.telaEvento(Eventos.porId('${r.ev.id}'))">Voltar à pergunta.</button>`
+          : '<button class="escolha" onclick="Exploracao.tela()">Seguir.</button>'}
+      </div>
+    </div>`);
+    if (r.avisos && r.avisos.length) this.avisos(r.avisos);
+    this.rolarTopo();
+  },
+
+  /* O telefone tocando: você atende ou não, e não atender custa. */
+  telaChamada(c){
+    const contato = contatoPorId(c.de);
+    const falas = (typeof c.falas === 'function' ? c.falas(Estado.dados) : c.falas) || [];
+    const opcoes = (c.escolhas || []).map((o, i) => ({o, i}))
+      .filter(({o}) => { try { return !o.cond || o.cond(Estado.dados); } catch(e){ return false; } });
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho chamando">
+        <div class="num"><span class="nav-antena"></span> POKÉNAV · CHAMADA RECEBIDA</div>
+        <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : 'Número desconhecido')}</div>
+        <div class="loc">${this.esc(contato ? textoContato(contato,'papel') : '')}</div>
+      </div>
+      <div class="narrativa">${this.narrar(falas)}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas">
+        ${opcoes.map(({o, i}) => `<button class="escolha" onclick="Jogo.responderChamada('${c.id}',${i})">
+          ${this.esc(txt(o.texto))}</button>`).join('')}
+        <button class="escolha recusar" onclick="Jogo.recusarChamada('${c.id}')">Não atender.</button>
+      </div>
+    </div>`);
+    this.rolarTopo();
+  },
+
+  telaResultadoChamada(r){
+    const contato = contatoPorId(r.chamada.de);
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">POKÉNAV · CHAMADA</div>
+        <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : '')}</div>
+        <div class="loc">${r.recusou ? 'não atendida' : this.esc(txt(r.esc.texto)).slice(0, 70)}</div>
+      </div>
+      <div class="narrativa">${r.recusou
+        ? this.narrar(['O aparelho toca oito vezes e para.',
+            'Você olha o nome na tela o tempo inteiro e não atende, o que é diferente de não ouvir.',
+            'Ele não vai ligar de novo hoje.'])
+        : this.narrar(r.esc.resultado || [])}</div>
+      <div id="avisos" class="avisos"></div>
+      <div id="escolhas" class="escolhas" style="margin-top:16px">
+        <button class="escolha" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho.</button>
       </div>
     </div>`);
     if (r.avisos && r.avisos.length) this.avisos(r.avisos);
