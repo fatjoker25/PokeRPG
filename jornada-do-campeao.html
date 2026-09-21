@@ -1424,9 +1424,10 @@ h3.cat-item{
   filter:var(--fx-sprite, opacity(1));
 }
 /* espécie não catalogada: você vê o contorno e mais nada */
-.sprite.silhueta{--fx-sprite:brightness(0) saturate(0) opacity(.72)}
-:root:not([data-theme="light"]) .sprite.silhueta,
-html[data-tom] .sprite.silhueta{--fx-sprite:brightness(0) saturate(0) opacity(.55)}
+/* Preta cheia, sem transparência: o vulto tem que ser um vulto, não
+   um fantasma que deixa o cenário passar por dentro. Sai quando a
+   espécie é catalogada — apontar a Pokédex nela num combate. */
+.sprite.silhueta{--fx-sprite:brightness(0) saturate(0)}
 .sprite-brilho{--fx-sprite:drop-shadow(0 0 7px rgba(245,197,24,.75))}
 
 /* arena: o seu de costas, o outro de frente.
@@ -1524,13 +1525,17 @@ html[data-tom] .sprite.silhueta{--fx-sprite:brightness(0) saturate(0) opacity(.5
 }
 .dex-arte .sprite{width:114px;height:114px;object-fit:contain}
 /* a varredura passa por cima da silhueta, não por baixo */
-.dex-scan .silhueta{
+/* Cuidado com o escopo aqui: a própria <img> também recebe a classe
+   `silhueta`, então regra solta em `.dex-scan .silhueta` pinta a arte
+   junto com a moldura — foi assim que o borrão cinza apareceu
+   desenhado por cima do sprite. Filho direto do alvo é a moldura. */
+.dex-scan .alvo > .silhueta{
   display:flex;align-items:center;justify-content:center;
   width:114px;height:114px;border-radius:0;background:none;box-shadow:none
 }
-.dex-scan .silhueta .scan-arte{width:114px;height:114px;object-fit:contain}
-.dex-scan .silhueta.brilho{background:none;box-shadow:none}
-.dex-scan .silhueta.brilho .scan-arte{filter:brightness(0) opacity(.8) drop-shadow(0 0 12px rgba(245,197,24,.9))}
+.dex-scan .alvo > .silhueta .scan-arte{width:114px;height:114px;object-fit:contain}
+.dex-scan .alvo > .silhueta.brilho{background:none;box-shadow:none}
+.dex-scan .alvo > .silhueta.brilho .scan-arte{filter:brightness(0) drop-shadow(0 0 12px rgba(245,197,24,.9))}
 
 /* ---- as duas faixas do registro nacional ---- */
 .dex-faixas{
@@ -1559,16 +1564,26 @@ html[data-tom] .sprite.silhueta{--fx-sprite:brightness(0) saturate(0) opacity(.5
     radial-gradient(circle at 50% 60%, #eaf2ff, #cfe0f5);
   border:1px solid rgba(16,40,63,.18)
 }
-.dex-scan .silhueta{
+/* o borrão de espera: filho direto do alvo, nunca a arte */
+.dex-scan .alvo > .silhueta{
   position:absolute;left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%);
   border-radius:50% 50% 46% 46%;
   background:linear-gradient(180deg,#5d738f,#28405f);
   box-shadow:inset 0 -6px 10px rgba(0,0,0,.28);
   opacity:.82
 }
-.dex-scan .silhueta.brilho{
+.dex-scan .alvo > .silhueta.brilho{
   background:linear-gradient(180deg,#d9b44a,#8a6a12);
   box-shadow:inset 0 -6px 10px rgba(0,0,0,.28), 0 0 26px -4px rgba(245,197,24,.85)
+}
+/* Com a arte dentro, o borrão sai da frente: ele é o desenho de
+   espera pra quando não existe pasta de sprites. O `:has` acompanha a
+   <img>, que se remove sozinha no erro de carga — se ela sumir, o
+   borrão volta sozinho. E a opacidade tem que morrer aqui, senão a
+   moldura desbota a silhueta, que é pra ser preta cheia. */
+.dex-scan .alvo > .silhueta:has(.scan-arte){
+  width:114px;height:114px;border-radius:0;
+  background:none;box-shadow:none;opacity:1
 }
 .dex-scan .varredura{
   position:absolute;left:0;right:0;height:3px;
