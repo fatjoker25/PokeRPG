@@ -72,6 +72,14 @@ const TEMPERAMENTO = {
   'Quirky':  {discricao: 0, paciencia: 0, coragem: 0, simpatia: 0, cuidado: 0}
 };
 
+/* Qual eixo do cinto pesa em cada perícia do treinador. Um teste de
+   Percepção vai melhor com bicho cuidadoso; um de Carisma, com bicho
+   que gosta de gente. Serve pros testes de cena, que não declaram eixo. */
+const EIXO_DO_STATUS = {
+  percepcao:'cuidado', carisma:'simpatia', forca:'coragem',
+  intelecto:'paciencia', resistencia:'coragem', sorte:null
+};
+
 const NOME_EIXO = {
   discricao:'discrição', paciencia:'paciência', coragem:'coragem',
   simpatia:'simpatia',  cuidado:'cuidado'

@@ -159,7 +159,7 @@ const Jogo = {
   },
 
   observarCena(){
-    const t = Dados.teste(Estado.j.status.percepcao, 5, 'Percepção');
+    const t = Dados.testeComTime(Estado.j.status.percepcao, 5, 'Percepção', 'cuidado');
     const cap = Historia.capAtual;
     const bons = [
       'Você para. Repara numa coisa que estava ali desde o começo e que você não tinha visto — e ela muda um pouco o peso do resto.',
@@ -183,10 +183,18 @@ const Jogo = {
   rolarTeste(){
     const t = Historia.cenaAtual.teste;
     UI.limparDados();
-    const r = Dados.teste(Estado.j.status[t.status], t.dificuldade, t.nomeStatus);
+    /* o cinto conta: quem está com você pesa no teste, e quem te
+       entende pesa mais ainda */
+    const eixo = t.eixo || (typeof EIXO_DO_STATUS !== 'undefined' ? EIXO_DO_STATUS[t.status] : null);
+    const r = eixo ? Dados.testeComTime(Estado.j.status[t.status], t.dificuldade, t.nomeStatus, eixo)
+                   : Dados.teste(Estado.j.status[t.status], t.dificuldade, t.nomeStatus);
     const destino = t[r.grau] || t.falha || t.parcial;
+    const soma = `1d10(${r.dado}) + ${t.nomeStatus||t.status}(${r.bonus})`
+               + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '');
     const aviso = [{tipo: (r.grau==='falha'?'dano':r.grau==='critico'?'rep':'info'),
-      texto:`1d10(${r.dado}) + ${t.nomeStatus||t.status}(${r.bonus}) = ${r.total} contra ${t.dificuldade} — ${r.texto}.`}];
+      texto:`${soma} = ${r.total} contra ${t.dificuldade} — ${r.texto}.`}];
+    if (r.afinidade && r.afinidade.linha) aviso.push({tipo:'natureza', texto:r.afinidade.linha});
+    if (r.linhaTime) aviso.push({tipo:'natureza', texto:r.linhaTime});
     this.irPara(destino, aviso);
   },
 
