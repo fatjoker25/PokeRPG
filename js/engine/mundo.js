@@ -451,6 +451,31 @@ function localDoCapitulo(n){
 
 /* Caminho mais curto pelo mapa de verdade, em número de trechos.
    Serve para saber quantos dias a viagem come. */
+/* O caminho inteiro, e não só quantos passos ele tem. Sem isso a
+   viagem é um número; com isso o jogador atravessa os lugares. */
+function caminhoEntre(de, para){
+  if (de === para) return [de];
+  const veioDe = {[de]:null};
+  let borda = [de];
+  while (borda.length){
+    const prox = [];
+    for (const id of borda)
+      for (const v of ((LOCAIS[id] || {}).conexoes || [])){
+        if (veioDe[v] !== undefined) continue;
+        veioDe[v] = id;
+        if (v === para){
+          const rota = [v];
+          let cur = id;
+          while (cur){ rota.unshift(cur); cur = veioDe[cur]; }
+          return rota;
+        }
+        prox.push(v);
+      }
+    borda = prox;
+  }
+  return null;   /* lugar sem estrada ligando: quem chega lá chega pela história */
+}
+
 function distanciaEntre(de, para){
   if (de === para) return 0;
   const visto = new Set([de]);

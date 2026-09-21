@@ -350,22 +350,34 @@ const Jogo = {
     const aqui = Estado.dados.local;
     if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);
 
-    const dias = Math.max(1, Math.min(6, distanciaEntre(aqui, destino)));
+    /* o caminho de verdade: você passa por cada lugar do trajeto, e o
+       tempo é o tempo do trajeto e não um número arredondado */
+    const rota = caminhoEntre(aqui, destino) || [aqui, destino];
+    const dias = Math.max(1, rota.length - 1);
     this.capDepoisDaViagem = prox;
     this.destinoDaViagem = destino;
-    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()');
+    this.rotaDaViagem = rota;
+    UI.telaViagem(aqui, destino, dias, 'Jogo.chegarDaViagem()', rota);
   },
 
   chegarDaViagem(){
     const prox = this.capDepoisDaViagem;
     const destino = this.destinoDaViagem;
-    this.capDepoisDaViagem = null; this.destinoDaViagem = null;
+    const rota = this.rotaDaViagem;
+    this.capDepoisDaViagem = null; this.destinoDaViagem = null; this.rotaDaViagem = null;
     if (destino){
-      const dias = Math.max(1, Math.min(6, distanciaEntre(Estado.dados.local, destino)));
-      Mundo.passar(dias * 4);                  /* a viagem come os dias */
+      const caminho = rota || caminhoEntre(Estado.dados.local, destino) || [Estado.dados.local, destino];
+      /* cada trecho andado custa um dia e fica marcado como visitado:
+         você passou por ali, então aquilo passa a existir no seu mapa */
+      for (const id of caminho){
+        Mundo.marcarVisitado(id);
+        Mundo.descobrir('passou_' + id);
+      }
+      Mundo.passar(Math.max(1, caminho.length - 1) * 4);
       Estado.dados.local = destino;
-      Mundo.marcarVisitado(destino);
-      Estado.registrar(`Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
+      Estado.registrar(caminho.length > 2
+        ? `Viajou até ${(LOCAIS[destino]||{}).nome || destino}, passando por ${caminho.slice(1,-1).map(x=>(LOCAIS[x]||{}).nome||x).join(', ')}.`
+        : `Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
     }
     this.entrarNoCapitulo(prox);
   },

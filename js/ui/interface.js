@@ -1192,7 +1192,7 @@ const UI = {
   /* ========================================================
      VIAGEM — a estrada entre um capítulo e o outro
      ======================================================== */
-  telaViagem(deId, paraId, dias, aoChegar){
+  telaViagem(deId, paraId, dias, aoChegar, rota){
     this.limpar();
     this.add(this.topo());
     const de = LOCAIS[deId] || {nome:'onde você estava'};
@@ -1218,6 +1218,9 @@ const UI = {
 
     const linhas = [];
     linhas.push(`De ${de.nome} até ${para.nome} são ${dias === 1 ? 'um dia' : dias + ' dias'} de caminho.`);
+    /* o trajeto de verdade, nomeado: você não é teleportado */
+    if (rota && rota.length > 2)
+      linhas.push('Você passa por ' + rota.slice(1, -1).map(x => (LOCAIS[x]||{}).nome || x).join(', ') + '.');
     const usados = new Set();
     for (let i = 0; i < Math.min(dias, 3); i++){
       let t = Dados.escolher(trechos), guarda = 0;
