@@ -592,6 +592,54 @@ celadon:[
   ]
 },
 {
+  id:'cel_a_vitrine_de_usados', peso:2,
+  cond:d=>numInsignias() >= 3,
+  titulo:'A vitrine de usados',
+  texto:[
+    'O quarto andar do shopping tem uma vitrine de usados no fim do corredor, dessas que ninguém para pra olhar.',
+    'Relógio sem pulseira. Três câmeras. Uma caixa de medalha escolar, dessas de estante de sala, com sete medalhas dentro e nenhuma etiqueta.',
+    fala('o vendedor do quarto andar', 'Isso aí vem de desocupação de casa. Chega de caminhão, a gente separa o que vende.'),
+    fala('o vendedor do quarto andar', 'Medalha não vende. Medalha fica aí porque é bonito e porque eu não tenho coragem de jogar fora.')
+  ],
+  escolhas:[
+    {texto:'Pedir pra ver as sete, uma por uma.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Olhou uma por uma o que ninguém para pra olhar'},
+         flag:'viu_as_sete_medalhas',
+         registrar:'Olhou as sete medalhas da vitrine de usados de Celadon. Uma é de natação, estadual, 1994.'},
+     resultado:[
+       'Ele abre a caixa e põe as sete no balcão, e você lê as sete.',
+       'Quatro são de escola, de participação, sem nome.',
+       'Duas são de ginástica, do mesmo clube, do mesmo ano, e claramente da mesma pessoa.',
+       'A sétima é de natação. Estadual. 1994.',
+       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Nogueira.'
+     ]},
+    {texto:'Comprar a de natação.',
+     cond:d=>!!d.flags.viu_as_sete_medalhas && d.jogador.dinheiro >= 1200,
+     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Nogueira':1},
+         flag:'comprou_a_medalha',
+         rep:{eixo:'bom',delta:2,motivo:'Comprou de volta uma medalha que tinha sido vendida junto com uma casa'},
+         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Nogueira.'},
+     resultado:[
+       fala('o vendedor do quarto andar', 'Mil e duzentos. E eu tô cobrando caro de propósito.'),
+       d=>fala(d.jogador.nome, 'Por quê?'),
+       fala('o vendedor do quarto andar', 'Porque em quatro anos você é a primeira pessoa que pediu pra ver uma medalha dessa caixa.'),
+       fala('o vendedor do quarto andar', 'Se é caro você desiste e eu fico com ela. Se você paga, é porque você sabe pra onde ela vai.', 'baixo'),
+       'Você paga. Ele embrulha em papel de seda, que ele claramente não usa pra mais nada nessa loja.'
+     ]},
+    {texto:'Perguntar de onde veio a caixa.',
+     ef:{flag:'a_caixa_veio_de_pallet',
+         registrar:'A caixa de medalhas da vitrine de Celadon veio de uma desocupação em Pallet, em 1995.'},
+     resultado:[
+       'Ele puxa um caderno de trás do balcão, corre o dedo e acha em quinze segundos, o que quer dizer que esse caderno é bem feito.',
+       fala('o vendedor do quarto andar', 'Lote 331. Desocupação residencial, 1995.'),
+       fala('o vendedor do quarto andar', 'Cidade de origem: Pallet.'),
+       'Pallet.'
+     ]},
+    {texto:'Seguir pro que você veio fazer.', ef:{},
+     resultado:['Você segue. A caixa de sete medalhas continua na vitrine, onde está há quatro anos.']}
+  ]
+},
+{
   id:'cel_maquina_do_canto', peso:2,
   cond:d=>numInsignias() >= 4,
   titulo:'A máquina do canto',

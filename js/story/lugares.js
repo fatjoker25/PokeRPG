@@ -227,9 +227,26 @@ const ACHADOS_ROTA = [
 ];
 
 const Descobertas = {
+  /* Gente de estrada que troca não precisa de entrada duplicada na
+     tabela: a descoberta sai da própria troca. Assim, mexer numa
+     troca nunca deixa a descoberta dela desatualizada. */
+  deTroca(id){
+    if (typeof TROCAS === 'undefined' || !TROCAS[id]) return [];
+    if (Estado.dados.descobertas['troca_' + id]) return [];
+    const t = (Trocas.lista(id) || [])[0];
+    if (!t) return [];
+    return [{chave:'troca_' + id, descobre:'troca_' + id, texto:[
+      `Tem gente ${t.onde}.`,
+      `É ${t.quem}. ${Dados.chance(50)
+        ? 'Levanta a cabeça quando você passa e olha o seu cinto antes de olhar a sua cara.'
+        : 'Te vê chegar de longe e já vai falando, do jeito de quem estava esperando qualquer um.'}`
+    ]}];
+  },
+
   sortear(id, local, soCidade){
     const d = Estado.dados;
-    const lista = (DESCOBERTAS[id] || []).filter(x => !Mundo.descobriu('achou_' + x.chave));
+    const lista = (DESCOBERTAS[id] || []).concat(this.deTroca(id))
+      .filter(x => !Mundo.descobriu('achou_' + x.chave));
     if (lista.length && Dados.chance(soCidade ? 75 : 55)){
       const a = Dados.escolher(lista);
       Mundo.descobrir('achou_' + a.chave);

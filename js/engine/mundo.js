@@ -371,6 +371,14 @@ function afazeresDoLocal(){
       sub:'Sentar na beira e esperar. Demora, e às vezes vem coisa grande.'});
     lista.push({id:'acampar', titulo:'Acampar',
       sub:'Parar por um período. O time recupera um pouco e você também.'});
+    /* gente de estrada também troca — quem está de passagem, esperando
+       balsa, de folga, no fim do turno. */
+    if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
+      const abertas = Trocas.disponiveis(id);
+      lista.push({id:'troca',
+        titulo: abertas.length ? 'Tem alguém aqui querendo trocar' : 'Quem estava querendo trocar',
+        sub: abertas.length ? abertas[0].onde : 'Já está feito.'});
+    }
   }
 
   if (L.tipo === 'cidade'){
@@ -390,6 +398,7 @@ function afazeresDoLocal(){
       sub:'Comprar o que der pra pagar.'});
     if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
       sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
+    /* (a troca de cidade é montada aqui; a de rota, no bloco de rota) */
     if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
       const abertas = Trocas.disponiveis(id);
       lista.push({id:'troca',

@@ -20,7 +20,31 @@ const CONTATOS = [
   nome:d=>nomeCasa(), papel:d=>`a sua ${casaQuem()}`.replace('a sua pai','o seu pai').replace(/^a sua (avô|tio|irmão)/, 'o seu $1'),
   desde:'O primeiro número gravado no aparelho. Já estava lá quando ele chegou na sua mão.',
   automatico:true,
-  oferece:['favor','prova'],
+  oferece:['favor','prova','missao'],
+  missao:{
+    rotulo:'Perguntar se ela precisa de alguma coisa',
+    rotuloEntrega:'Ligar e dizer que está consertado',
+    dica:'Voltar em casa e consertar o telhado dos fundos. Três telhas.',
+    pedido:[
+      d=>fala(nomeCasa(), 'Eu não preciso de nada.'),
+      'Pausa de quatro segundos, que nesta casa quer dizer o contrário.',
+      d=>fala(nomeCasa(), 'O telhado dos fundos pinga. São três telhas, duas fora do lugar e uma rachada.'),
+      d=>fala(nomeCasa(), 'Eu não subo mais em telhado e o rapaz que subia mudou pra Cerulean.'),
+      d=>fala(nomeCasa(), 'E não vem correndo. Eu ponho balde. Eu ponho balde há dois invernos.', 'baixo')
+    ],
+    objetivo:d=>!!d.flags.consertou_o_telhado,
+    entregue:[
+      d=>fala(d.jogador.nome, 'Tá consertado.'),
+      d=>fala(nomeCasa(), 'Eu sei que tá. Eu tava no quintal gritando pra você descer, lembra.', 'riso'),
+      d=>fala(nomeCasa(), 'Eu tirei os baldes ontem. Todos. Guardei no armário de cima.'),
+      d=>fala(nomeCasa(), 'Dois invernos com balde no chão da sala e ontem eu guardei os baldes.', 'baixo')
+    ],
+    recompensa:d=>{ Estado.curarJogador(20); Estado.j.dinheiro += 3000;
+      return [{tipo:'item', texto:'+3000 ₽ — "é o que eu ia gastar com o pedreiro."'},
+              {tipo:'cura', texto:'Alguma coisa em você assenta de volta no lugar.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Consertou o telhado da própria casa'},
+    marca:'o_telhado_ficou_pronto'
+  },
   favor:{
     rotulo:'Pedir um dinheiro emprestado',
     limite:3,
@@ -60,7 +84,33 @@ const CONTATOS = [
   id:'rufino', tipo:'figura', nome:'Sr. Rufino', papel:'o velho da vassoura', cidade:'Pallet',
   desde:'Varre a mesma calçada há vinte anos e não esquece nada.',
   requer:d=>!!(d.npcs['Sr. Rufino'] && d.npcs['Sr. Rufino'].opiniao >= 2),
-  oferece:['favor'],
+  oferece:['favor','missao'],
+  missao:{
+    rotulo:'Perguntar se ele precisa de alguma coisa',
+    rotuloEntrega:'Ligar e contar da medalha',
+    dica:'Achar a medalha de natação da filha do Nogueira. Ela foi vendida, e quem vende vende pra quem compra.',
+    pedido:[
+      fala('Sr. Rufino', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
+      fala('Sr. Rufino', 'A filha do Nogueira ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      fala('Sr. Rufino', 'Ela morreu em 95 e o Nogueira vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      fala('Sr. Rufino', 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
+      fala('Sr. Rufino', 'Você anda por aí. Se aparecer, você vai saber que é.')
+    ],
+    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Nogueira') > 0,
+    entregue:[
+      d=>fala(d.jogador.nome, 'Eu achei.'),
+      'Silêncio do outro lado por uns quatro segundos.',
+      fala('Sr. Rufino', 'Não me diz onde.'),
+      fala('Sr. Rufino', 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
+      fala('Sr. Rufino', 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
+      fala('Sr. Rufino', 'Ele vai querer conversar. Não fica.')
+    ],
+    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Nogueira');
+      Estado.subirStatus('carisma');
+      return [{tipo:'rep', texto:'CARISMA +1 — você aprendeu a entregar uma coisa e ir embora.'}]; },
+    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Nogueira', notorio:true},
+    marca:'devolveu_a_medalha'
+  },
   favor:{
     rotulo:'Perguntar o que ele ouviu falar',
     limite:99, esperaCap:2,
@@ -92,7 +142,34 @@ const CONTATOS = [
   id:'enfermeira', tipo:'figura', nome:'Enfermeira do Centro', papel:'seis insígnias, e parou', cidade:'Viridian',
   desde:'Te entregou a licença e contou por que parou.',
   requer:d=>!!d.flags.historia_da_enfermeira,
-  oferece:['favor'],
+  oferece:['favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ela não conseguiu fazer',
+    rotuloEntrega:'Ligar e contar das seis',
+    dica:'Chegar a seis insígnias. Ela parou em seis e quer ver alguém passar disso.',
+    pedido:[
+      fala('a enfermeira', 'Eu parei em seis. Eu já te contei isso.'),
+      fala('a enfermeira', 'O que eu não te contei é que eu fiquei quatro anos achando que seis era o meu teto. Que era o máximo que uma pessoa como eu chegava.'),
+      fala('a enfermeira', 'Aí eu vi você entrar naquele balcão com uma cara de quem não sabe nada.', 'baixo'),
+      fala('a enfermeira', 'Chega em seis. Só isso. Chega em seis e me liga, que eu preciso saber se o número tem alguma coisa de especial ou se era só eu.')
+    ],
+    objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6,
+    entregue:[
+      d=>{
+        const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
+        return fala(d.jogador.nome, n > 6 ? `${n}. Eu passei de seis faz um tempo.` : 'Seis.');
+      },
+      'Ela não fala nada por um tempo tão longo que você acha que a ligação caiu.',
+      fala('a enfermeira', 'E aí? Tem alguma coisa de especial no seis?'),
+      d=>fala(d.jogador.nome, 'Não. É só um número.'),
+      fala('a enfermeira', 'É só um número.', 'baixo'),
+      fala('a enfermeira', 'Trinta e seis anos, e é só um número. Obrigada. Eu falo sério: obrigada.')
+    ],
+    recompensa:d=>{ Estado.darItem('Hyper Potion', 2); Estado.darItem('Revive', 2);
+      return [{tipo:'item', texto:'Chegou pelo malote: 2× Hyper Potion e 2× Revive.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Provou a alguém que o teto dela não era teto', notorio:true},
+    marca:'a_enfermeira_soube_das_seis'
+  },
   favor:{
     rotulo:'Pedir o que ela mandaria comprar',
     limite:99, esperaCap:2,
@@ -160,7 +237,31 @@ const CONTATOS = [
   id:'erika', tipo:'treinador', nome:'Erika', papel:'líder de Celadon · Grama', cidade:'Celadon',
   desde:'Te deu a Insígnia Arco-Íris com as duas mãos.',
   requer:d=>d.insignias.includes('Insígnia Arco-Íris'),
-  ginasio:'celadon', oferece:['revanche','favor'],
+  ginasio:'celadon', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que a estufa precisa',
+    rotuloEntrega:'Ligar e falar do time',
+    dica:'Levar o time inteiro com moral alta (acima de 70). Ela quer ver, não ouvir.',
+    pedido:[
+      fala('Erika', 'A estufa não precisa de nada. Eu preciso.'),
+      fala('Erika', 'Eu recebo desafiante todo dia e eu vejo time cansado todo dia. Time que obedece por hábito.'),
+      fala('Erika', 'Traz o seu time aqui quando ele estiver inteiro. Não curado — inteiro. É diferente e você sabe que é.', 'baixo'),
+      fala('Erika', 'Eu quero ver um time que quer estar com a pessoa. Faz uns dois anos que eu não vejo.')
+    ],
+    objetivo:d=>d.time.length >= 3 && d.time.filter(p=>!p.morto).every(p => (p.moral||0) >= 70),
+    entregue:[
+      'Você não liga. Você vai até lá, que é a única forma de entregar isso.',
+      'Ela olha o seu time solto na estufa por uns dez minutos sem falar nada.',
+      fala('Erika', 'Aquele ali dorme colado em você.'),
+      fala('Erika', 'E aquele outro ficou entre você e a porta quando eu me mexi rápido. Ele nem percebeu que fez isso.'),
+      fala('Erika', 'Obrigada. Eu precisava lembrar que isso existe.', 'baixo')
+    ],
+    recompensa:d=>{ d.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+8); });
+      Estado.darItem('Sino Calmante', 1);
+      return [{tipo:'item', texto:'Recebeu 1× Sino Calmante. O time inteiro subiu 8 de moral.'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Mostrou à líder de Celadon um time que quer estar ali', notorio:true},
+    marca:'erika_viu_o_time'
+  },
   favor:{
     rotulo:'Pedir da estufa',
     limite:99, esperaCap:3,
@@ -176,7 +277,37 @@ const CONTATOS = [
   id:'koga', tipo:'treinador', nome:'Koga', papel:'líder de Fuchsia · Venenoso', cidade:'Fuchsia',
   desde:'Te deu a Insígnia Alma sem te dizer onde ficava a saída.',
   requer:d=>d.insignias.includes('Insígnia Alma'),
-  ginasio:'fuchsia', oferece:['revanche','favor'],
+  ginasio:'fuchsia', oferece:['revanche','favor','missao'],
+  missao:{
+    rotulo:'Perguntar o que ele não pôde fazer',
+    rotuloEntrega:'Ligar e dizer que está no papel',
+    dica:'Conseguir por escrito alguma coisa da reserva de Fuchsia. Papel, não conversa.',
+    pedido:[
+      fala('Koga', 'Eu assinei papel naquela reserva por onze anos. Eu já te disse isso.', 'frio'),
+      fala('Koga', 'O que eu não disse é que eu nunca consegui tirar um papel de lá. Nenhum. Em onze anos.'),
+      fala('Koga', 'Eu sou líder de ginásio. Eu pedi por ofício três vezes e as três vezes me responderam com protocolo.'),
+      fala('Koga', 'Você não é ninguém, e ninguém passa por onde autoridade não passa.', 'baixo'),
+      fala('Koga', 'Traz um papel. Qualquer papel de lá dentro, com carimbo.')
+    ],
+    objetivo:d=>['Ficha técnica de triagem','Relatório de manejo (cópia do Koga)','Ficha do lote 41-C',
+                 'Lista do que depende do diretor de área','Anexo técnico do relatório','Ata da 41ª reunião']
+                .some(x => Estado.contaItem(x) > 0),
+    entregue:[
+      d=>fala(d.jogador.nome, 'Eu tenho um papel de lá. Com carimbo.'),
+      'Longuíssimo silêncio.',
+      fala('Koga', 'Lê o cabeçalho.'),
+      'Você lê o cabeçalho.',
+      fala('Koga', 'De novo.'),
+      'Você lê de novo.',
+      fala('Koga', 'Onze anos.', 'baixo'),
+      fala('Koga', 'Onze anos e um moleque com uma licença de um ano conseguiu em quantos meses? Não responde. Eu não quero saber.')
+    ],
+    recompensa:d=>{ Estado.darItem('Ultra Ball', 3); Estado.subirStatus('percepcao');
+      return [{tipo:'item', texto:'Recebeu 3× Ultra Ball.'},
+              {tipo:'rep', texto:'PERCEPÇÃO +1 — ele te ensinou o que procurar num cabeçalho.'}]; },
+    rep:{eixo:'bom', delta:3, motivo:'Tirou da reserva um papel que nem líder de ginásio conseguiu', notorio:true},
+    marca:'koga_tem_o_papel'
+  },
   favor:{
     rotulo:'Perguntar do Setor 7',
     limite:1, esperaCap:2,
@@ -257,7 +388,32 @@ const CONTATOS = [
   id:'teo', tipo:'treinador', nome:'Téo', papel:'o seu rival', cidade:'estrada',
   desde:'Trocou número com você no meio de uma discussão.',
   requer:d=>!!d.npcs['Téo'],
-  rival:'teo', oferece:['revanche','prova'],
+  rival:'teo', oferece:['revanche','prova','missao'],
+  missao:{
+    rotulo:'Perguntar por que ele anda estranho',
+    rotuloEntrega:'Ligar e contar quantas espécies você registrou',
+    dica:'Catalogar 60 espécies na Pokédex. Ele quer perder nisso pra alguém.',
+    pedido:[
+      fala('Téo', 'Eu não ando estranho.'),
+      fala('Téo', '...tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
+      fala('Téo', 'Eu passo o dia catalogando e não sobe. E aí eu olho e todo mundo que eu conheço tá em vinte e poucas e acha que eu sou doente.', 'baixo'),
+      fala('Téo', 'Chega em sessenta. Chega em sessenta pra eu ter com quem perder, porque perder pra ninguém não vale nada.')
+    ],
+    objetivo:d=>Estado.contagemDex().catalogados >= 60,
+    entregue:[
+      d=>fala(d.jogador.nome, `Sessenta e ${Math.max(0, Estado.contagemDex().catalogados - 60)}.`),
+      fala('Téo', 'Mentira.'),
+      d=>fala(d.jogador.nome, 'Confere no seu aparelho. A Liga sincroniza.'),
+      'Você ouve ele digitando. Você ouve ele parando de digitar.',
+      fala('Téo', 'Você tá em sessenta e eu tô em quarenta e três.'),
+      fala('Téo', 'Isso é a melhor coisa que aconteceu comigo esse mês e eu odeio isso.', 'riso'),
+      fala('Téo', 'Agora eu tenho de quem correr atrás. Você não faz ideia do que isso vale.')
+    ],
+    recompensa:d=>{ Estado.darItem('Great Ball', 5); Estado.darItem('Ultra Ball', 2);
+      return [{tipo:'item', texto:'Ele manda 5× Great Ball e 2× Ultra Ball pelo Centro. "Pra você não parar."'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Deu ao rival alguém de quem correr atrás'},
+    marca:'teo_tem_de_quem_correr'
+  },
   prova:{
     rotulo:'Contar o que você fez',
     texto:d=>{

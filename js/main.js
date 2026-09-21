@@ -550,6 +550,7 @@ const Jogo = {
     if (!r.ok) return UI.modal('PokéNav', `<p class="nada">${UI.esc(r.motivo)}</p>`);
 
     if (servico === 'revanche') return this.revanche(c);
+    if (servico === 'missao')   return this.missao(c);
 
     const def = c[servico] || {};
     const falas = (typeof def.texto === 'function' ? def.texto(Estado.dados) : def.texto) || [];
@@ -565,6 +566,35 @@ const Jogo = {
     Estado.marcarLigacao(id, servico);
     Estado.salvar('auto');
     UI.telaLigacao(c, falas, avisos);
+  },
+
+  /* missão: pedir numa ligação, cumprir no mundo, voltar pra entregar */
+  missao(c){
+    const fase = Estado.faseDaMissao(c.id);
+    const m = c.missao || {};
+    if (fase === 'pedir'){
+      Estado.aceitarMissao(c.id);
+      Estado.marcarLigacao(c.id, 'missao');
+      Estado.salvar('auto');
+      return UI.telaLigacao(c, txt(m.pedido) || [],
+        [{tipo:'info', texto:`Pedido anotado: ${txt(m.dica) || 'ver o PokéNav'}`}]);
+    }
+    if (fase === 'entregar'){
+      let avisos = [];
+      if (typeof m.recompensa === 'function'){
+        try { avisos = m.recompensa(Estado.dados) || []; } catch(e){ avisos = []; }
+      }
+      if (m.rep){
+        const r = Estado.mudarRep(m.rep.eixo, m.rep.delta, m.rep.motivo, {rep:m.rep});
+        if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+      }
+      if (m.marca) Estado.marcar(m.marca);
+      Estado.fecharMissao(c.id);
+      Estado.marcarLigacao(c.id, 'missao');
+      Estado.salvar('auto');
+      return UI.telaLigacao(c, txt(m.entregue) || [], avisos);
+    }
+    return UI.modal('PokéNav', `<p class="nada">${UI.esc(txt(m.dica) || 'Ainda não.')}</p>`);
   },
 
   /* revanche: o mesmo adversário, com o time subido junto com você */

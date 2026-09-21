@@ -805,13 +805,23 @@ const UI = {
     const ROTULO = {
       revanche:'Chamar para uma revanche',
       favor:(c.favor && c.favor.rotulo) || 'Pedir um favor',
-      missao:(c.missao && c.missao.rotulo) || 'Perguntar se precisa de alguma coisa',
+      missao:(() => {
+        const f = Estado.faseDaMissao(c.id);
+        if (f === 'entregar') return (c.missao && c.missao.rotuloEntrega) || 'Ligar e dizer que está feito';
+        if (f === 'fazendo')  return (c.missao && c.missao.rotulo) || 'Perguntar se precisa de alguma coisa';
+        if (f === 'feita')    return 'Já resolvido';
+        return (c.missao && c.missao.rotulo) || 'Perguntar se precisa de alguma coisa';
+      })(),
       prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
     };
     const NOTA = {
       revanche:'Ele sobe o time junto com você. Não é o mesmo combate de antes.',
       favor:'Favor é crédito. Gasta.',
-      missao:'Pode virar história.',
+      missao:(() => {
+        const f = Estado.faseDaMissao(c.id);
+        if (f === 'entregar') return 'Está cumprido. Ele ainda não sabe.';
+        return 'Vira um pedido que você carrega até resolver.';
+      })(),
       prova:'Sem ganho material. Muda o que essa pessoa pensa de você.'
     };
 
@@ -2109,7 +2119,8 @@ const UI = {
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
-      <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">1× por batalha · não gasta o turno</span></div>
+      <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">quantas vezes quiser · não gasta o turno</span></div>
+      <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
       <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>
 
       <h3>Brilhantes</h3>

@@ -690,6 +690,47 @@ const Estado = {
       .map(id => (typeof contatoPorId === 'function') ? contatoPorId(id) : null)
       .filter(Boolean);
   },
+  /* ---------- MISSÕES ----------
+     Uma missão tem três tempos: pedir, cumprir, voltar. O objetivo é
+     lido do estado, então não tem como "entregar" sem ter feito. */
+  missoes(){
+    const nav = this.nav();
+    if (!nav.missoes) nav.missoes = {};
+    return nav.missoes;
+  },
+  missaoDe(id){ return this.missoes()[id] || null; },
+  aceitarMissao(id){
+    const m = this.missoes();
+    if (m[id]) return false;
+    m[id] = {estado:'aberta', desdeCap:this.dados.capitulo};
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (c) this.registrar(`Aceitou o pedido de ${textoContato(c,'nome')}.`);
+    return true;
+  },
+  missaoCumprida(id){
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (!c || !c.missao || typeof c.missao.objetivo !== 'function') return false;
+    try { return !!c.missao.objetivo(this.dados); } catch(e){ return false; }
+  },
+  fecharMissao(id){
+    const m = this.missoes();
+    if (!m[id] || m[id].estado === 'feita') return false;
+    m[id].estado = 'feita';
+    m[id].fechadaCap = this.dados.capitulo;
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (c) this.registrar(`Cumpriu o pedido de ${textoContato(c,'nome')}.`);
+    return true;
+  },
+  /* em que ponto está: null (não oferecida), 'pedir', 'fazendo', 'entregar', 'feita' */
+  faseDaMissao(id){
+    const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
+    if (!c || !c.missao) return null;
+    const m = this.missaoDe(id);
+    if (!m) return 'pedir';
+    if (m.estado === 'feita') return 'feita';
+    return this.missaoCumprida(id) ? 'entregar' : 'fazendo';
+  },
+
   /* pode ligar pra esse contato pedindo esse serviço? */
   podeLigar(id, servico){
     const nav = this.nav();
@@ -697,6 +738,12 @@ const Estado = {
     const c = (typeof contatoPorId === 'function') ? contatoPorId(id) : null;
     if (!reg || !c) return {ok:false, motivo:'Esse número não está na agenda.'};
     if (!(c.oferece||[]).includes(servico)) return {ok:false, motivo:'Não é pra isso que se liga pra essa pessoa.'};
+    if (servico === 'missao'){
+      const fase = this.faseDaMissao(id);
+      if (fase === 'feita')   return {ok:false, motivo:'Já está resolvido. Ele não vai pedir de novo.'};
+      if (fase === 'fazendo') return {ok:false, motivo: (c.missao && c.missao.dica) || 'Ainda não. Você sabe o que falta.'};
+      return {ok:true, fase};
+    }
     const def = c[servico] || {};
     const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
     const limite = def.limite === undefined ? 99 : def.limite;
@@ -755,6 +802,10 @@ const Estado = {
   },
 
   adicionar(p){
+    /* Bicho que entra pro seu time entra pra Pokédex. Você convive com
+       ele: não faz sentido o aparelho não saber o que ele é só porque
+       você não apontou a lente. Vale pra captura, troca e presente. */
+    if (p && p.dex != null) this.catalogou(p.dex);
     if (this.dados.time.length < 6){ this.dados.time.push(p); return 'time'; }
     this.dados.pc.push(p); return 'pc';
   },
