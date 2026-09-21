@@ -1,11 +1,357 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Fuchsia vive de uma cerca. Quem chega pagando,
+   quem chega sem os quinhentos, quem chega de excursão e quem
+   chega com crachá veem lados diferentes dela.
+   ------------------------------------------------------------ */
+const C12_ABERTURAS = ['c12_fuchsia', 'c12_ab_ciclovia', 'c12_ab_excursao', 'c12_ab_sem_os_quinhentos', 'c12_ab_de_cracha'];
+function c12_cabe(id, d){
+  if (id === 'c12_ab_sem_os_quinhentos') return d.jogador.dinheiro < 500;
+  if (id === 'c12_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c12_abertura(d){
+  const cand = C12_ABERTURAS.filter(id => c12_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 12 — NOVE MIL HECTARES  (Fuchsia / Zona Safári)
    ============================================================ */
 CAPITULOS.push(
 {
 num:12, titulo:'Nove Mil Hectares', local:'Fuchsia / Zona Safári', ambiente:'campo', nivelArea:38,
-tom:'muito sombrio', inicio:'c12_fuchsia',
+tom:'muito sombrio', entradas:C12_ABERTURAS,
+inicio: d => c12_abertura(d),
 cenas:{
+
+c12_ab_ciclovia:{
+  texto:[
+    'A ciclovia da Rota 17 é a obra pública mais bonita de Kanto e a mais inútil: dezenove quilômetros de asfalto liso descendo um morro, com guarda-corpo dos dois lados, e nenhuma cidade no fim que precise dela.',
+    'Você desce a pé porque não tem bicicleta, e descer dezenove quilômetros a pé num asfalto feito pra bicicleta é uma humilhação lenta.',
+    'Passam por você catorze ciclistas. Onze são turistas de capacete colorido. Três não são.',
+    'Os três não usam capacete, vão em fila, e o terceiro leva uma caixa térmica amarrada no bagageiro com aranha elástica.',
+    'Caixa térmica branca, sem identificação, do tamanho de uma caixa de feira.',
+    'Eles não desaceleram pra te ultrapassar. Um dos três olha pra você de cima a baixo sem virar a cabeça.',
+    'No fim da descida, Fuchsia aparece de uma vez, e a cerca da Zona Safári aparece junto: alambrado de três metros que sai da cidade e some na curva do horizonte.'
+  ],
+  ef:{flag:'os_tres_da_caixa_termica',
+      registrar:'Três ciclistas sem capacete desceram a Rota 17 com uma caixa térmica branca no bagageiro.',
+      presagio:'Caixa térmica na descida da 17 vai pra algum lugar em Fuchsia que aceita caixa térmica.'},
+  escolhas:[
+    {texto:'Tentar ver onde os três pararam.', vai:'c12_ab_onde_pararam'},
+    {texto:'Ir direto à recepção da Zona Safári.', vai:'c12_fuchsia'},
+    {texto:'Andar pela cidade primeiro.', vai:'c12_cidade'},
+    {texto:'Ir ao bar. É onde se sabe das coisas.', vai:'c12_bar'}
+  ]
+},
+
+c12_ab_onde_pararam:{
+  texto:[
+    'Você apressa o passo nos últimos dois quilômetros, o que não adianta nada contra bicicleta, e chega na cidade quinze minutos depois deles.',
+    'As três bicicletas estão encostadas numa parede na lateral de um prédio baixo da avenida principal.',
+    'O prédio é uma padaria. Tem cheiro de pão saindo e tem uma placa de "ABERTO" virada pro certo.',
+    'Três homens de bicicleta com uma caixa térmica entraram numa padaria e as bicicletas estão do lado de fora e a caixa térmica não está.',
+    'Você fica olhando a padaria por uns quatro minutos e uma senhora sai de lá com um pão francês e um cumprimento pro balconista, e é a coisa mais normal que existe.'
+  ],
+  ef:{flag:'a_padaria_da_avenida',
+      registrar:'Os três da caixa térmica entraram numa padaria da avenida principal de Fuchsia. Saíram sem a caixa.'},
+  escolhas:[
+    {texto:'Entrar na padaria.', vai:'c12_manejo_padaria'},
+    {texto:'Não entrar ainda. Ir à recepção da Zona Safári.', vai:'c12_fuchsia'},
+    {texto:'Ir ao bar perguntar sobre a padaria.', vai:'c12_bar'}
+  ]
+},
+
+c12_ab_excursao:{
+  texto:[
+    'Você chega na recepção da Zona Safári exatamente junto com um ônibus escolar, o que é a pior sorte possível e a melhor cobertura possível.',
+    'Quarenta e dois alunos de uns onze anos, quatro professores e um guia com colete verde e um megafone que ele não precisa usar e usa.',
+    fala('o guia do colete verde', 'Turma! Turma! Regra número um da Zona Safári!'),
+    'Quarenta e duas vozes, sem entusiasmo nenhum, decoradas de alguma aula anterior:',
+    fala('a turma', 'Não passar da faixa amarela.'),
+    fala('o guia do colete verde', 'Regra número dois!'),
+    fala('a turma', 'Não alimentar.'),
+    fala('o guia do colete verde', 'Regra número três!'),
+    'Silêncio. Ninguém sabe a três.',
+    fala('o guia do colete verde', 'Não fotografar os setores fechados.'),
+    'Ele fala a três no tom exato das outras duas, o que é como se esconde uma regra no meio de duas normais.',
+    'Um aluno do fundo pergunta o que é setor fechado e o guia já está falando de outra coisa.'
+  ],
+  ef:{flag:'a_terceira_regra',
+      registrar:'A terceira regra da Zona Safári é não fotografar os setores fechados.',
+      presagio:'Uma reserva que proíbe foto de parte de si mesma tem parte de si mesma que não é reserva.'},
+  escolhas:[
+    {texto:'Entrar junto com a excursão.', vai:'c12_ab_com_a_turma'},
+    {texto:'Perguntar ao guia o que é setor fechado.', vai:'c12_ab_perguntou_o_setor'},
+    {texto:'Deixar a turma entrar e fazer do seu jeito.', vai:'c12_fuchsia'}
+  ]
+},
+
+c12_ab_perguntou_o_setor:{
+  texto:[
+    'Você espera a turma passar pela catraca e pergunta pro guia quando ele está sozinho, enrolando o fio do megafone.',
+    d=>fala(d.jogador.nome, 'O que é setor fechado?'),
+    'Ele responde sem hesitar, porque a resposta é oficial e ele a decorou:',
+    fala('o guia do colete verde', 'Áreas em recuperação ambiental. Reflorestamento, ninhal, coisas assim. Fecha por temporada.'),
+    d=>fala(d.jogador.nome, 'E por que não pode fotografar área em recuperação?'),
+    'Aí ele hesita, e a hesitação dura um segundo e meio.',
+    fala('o guia do colete verde', 'Porque flash estressa.'),
+    d=>fala(d.jogador.nome, 'Eu não falei em flash.'),
+    'Ele enrola o resto do fio do megafone e olha pra catraca, onde a turma dele está indo embora sem ele.',
+    fala('o guia do colete verde', 'Olha, eu trabalho aqui há dois anos e essa regra veio num comunicado.', 'baixo'),
+    fala('o guia do colete verde', 'Eu não escrevi ela. Eu só falo ela.')
+  ],
+  ef:{flag:'a_regra_veio_num_comunicado',
+      npc:{nome:'o guia do colete verde', opiniao:0, viuVoce:'Você pegou ele numa resposta decorada.'},
+      registrar:'A proibição de fotografar setores fechados chegou por comunicado. O guia não sabe de quem.'},
+  escolhas:[
+    {texto:'Entrar junto com a excursão.', vai:'c12_ab_com_a_turma'},
+    {texto:'Procurar o diretor da reserva.', vai:'c12_diretor'},
+    {texto:'Ir andar pela cerca por fora.', vai:'c12_cerca'}
+  ]
+},
+
+c12_ab_com_a_turma:{
+  texto:[
+    'Você paga a entrada e entra colado na excursão, e ninguém pergunta nada, porque uma pessoa a mais em quarenta e sete é invisível.',
+    'O passeio guiado dura meia hora e é honestamente bom. Tem um Nidoran fêmea a doze metros da trilha que não liga pra quarenta e sete pessoas, e quarenta e sete pessoas ficam em silêncio ao mesmo tempo, o que é bonito.',
+    'Na volta, a trilha passa por uma bifurcação com uma corrente de ferro atravessada e uma placa de madeira: SETOR 7 — ACESSO TÉCNICO.',
+    'A trilha do setor 7 é de terra batida e tem marca de pneu. Pneu largo, de veículo pesado, fresco.',
+    'Uma reserva em recuperação ambiental não recebe caminhão.',
+    'Você olha pro guia. O guia está olhando pro lado oposto com muita atenção pra uma árvore que não tem nada de especial.'
+  ],
+  ef:{dinheiro:-500, flag:['viu_o_setor_sete','sabe_do_lote_unico'],
+      registrar:'A trilha do Setor 7 da Zona Safári tem marca fresca de pneu de veículo pesado.',
+      presagio:'O guia olhou pro outro lado na hora exata. Ele sabe onde não olhar.'},
+  escolhas:[
+    {texto:'Perguntar ao guia na frente da turma.', vai:'c12_ab_na_frente_da_turma'},
+    {texto:'Não falar nada e voltar sozinho depois.', vai:'c12_cerca'},
+    {texto:'Procurar o diretor da reserva.', vai:'c12_diretor'}
+  ]
+},
+
+c12_ab_na_frente_da_turma:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Por que tem marca de caminhão numa área em recuperação?'),
+    'Você fala alto. Quarenta e dois alunos de onze anos viram ao mesmo tempo, o que é o som de quarenta e duas mochilas.',
+    'O guia sorri com a boca.',
+    fala('o guia do colete verde', 'Manutenção, meu amigo. Tem que levar muda, tem que levar cerca.'),
+    'Uma menina do meio da turma, sem levantar a mão:',
+    fala('a aluna', 'Mas a marca tá pra dentro e não tem marca voltando.'),
+    'Silêncio geral.',
+    'Ela tem onze anos e acabou de ver uma coisa que o guia passou dois anos sem ver, ou vendo.',
+    fala('o guia do colete verde', 'Vamos, turma. Ônibus às quatro.', 'frio')
+  ],
+  ef:{flag:'a_menina_da_excursao', moral:1,
+      registrar:'Uma aluna de onze anos reparou que a marca de pneu entra no Setor 7 e não volta.',
+      presagio:'A marca entra e não sai. Ou o caminhão está lá dentro, ou tem outra saída.'},
+  escolhas:[
+    {texto:'Procurar o diretor da reserva.', vai:'c12_diretor'},
+    {texto:'Andar a cerca por fora e achar a outra saída.', vai:'c12_cerca'},
+    {texto:'Ir ao bar da cidade.', vai:'c12_bar'}
+  ]
+},
+
+c12_ab_sem_os_quinhentos:{
+  texto:[
+    'A recepção da Zona Safári tem uma catraca, uma bilheteria e um painel de preço em letra grande, e o preço é quinhentos.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽.`,
+    'Você fica na frente do painel o tempo suficiente pra a moça da bilheteria entender, e ela entende, e faz uma coisa gentil: olha pro lado e finge conferir uma papelada.',
+    'Do lado de fora tem um banco de concreto de frente pra cerca, e nesse banco tem um homem de uns quarenta anos com um binóculo velho pendurado no pescoço.',
+    fala('o homem do binóculo', 'Também não vai pagar?'),
+    d=>fala(d.jogador.nome, 'Também não vou pagar.'),
+    fala('o homem do binóculo', 'Senta. Daqui dá pra ver quase a mesma coisa.'),
+    'Ele empresta o binóculo sem você pedir, o que é o gesto mais direto que alguém fez com você hoje.'
+  ],
+  ef:{flag:'o_banco_da_cerca',
+      npc:{nome:'o homem do binóculo', opiniao:1, viuVoce:'Te emprestou o binóculo no banco em frente à cerca.'},
+      registrar:'Não pagou a entrada da Zona Safári. Ficou no banco de fora, com um binóculo emprestado.'},
+  escolhas:[
+    {texto:'Olhar a reserva pelo binóculo.', vai:'c12_ab_pelo_binoculo'},
+    {texto:'Perguntar há quanto tempo ele senta aqui.', vai:'c12_ab_quanto_tempo_ele_senta'},
+    {texto:'Agradecer e ir andar a cerca por fora.', vai:'c12_cerca'}
+  ]
+},
+
+c12_ab_pelo_binoculo:{
+  texto:[
+    'O binóculo é russo, pesado, com a pintura descascada, e a lente é absurdamente boa.',
+    'Você vê, a uns oitocentos metros: capim alto, três Nidorino parados, uma árvore caída que virou passagem.',
+    'E, mais à direita, uma estrutura que não é natureza: um galpão comprido de telha metálica com quatro veículos estacionados do lado.',
+    'Quatro veículos num dia de semana, numa área em recuperação ambiental.',
+    fala('o homem do binóculo', 'Achou o galpão.'),
+    'Ele não pergunta. Constata.',
+    fala('o homem do binóculo', 'Todo mundo que pega esse binóculo acha o galpão em menos de dois minutos.'),
+    fala('o homem do binóculo', 'Eu sento aqui há quatro anos. Sabe quanta gente perguntou pra recepção o que é aquilo?'),
+    d=>fala(d.jogador.nome, 'Quanta?'),
+    fala('o homem do binóculo', 'Eu.')
+  ],
+  ef:{flag:['o_galpao_do_setor_sete','sabe_do_lote_unico'],
+      registrar:'Do banco de fora dá pra ver um galpão de telha metálica com quatro veículos dentro da reserva.'},
+  escolhas:[
+    {texto:'Perguntar o que a recepção respondeu pra ele.', vai:'c12_ab_o_que_responderam'},
+    {texto:'Ir andar a cerca por fora até chegar perto do galpão.', vai:'c12_cerca'},
+    {texto:'Ir procurar o diretor da reserva.', vai:'c12_diretor'}
+  ]
+},
+
+c12_ab_o_que_responderam:{
+  texto:[
+    fala('o homem do binóculo', 'Que era depósito de ração.'),
+    'Ele pega o binóculo de volta, ajusta e olha ele mesmo, sem pressa.',
+    fala('o homem do binóculo', 'Nove mil hectares de reserva com bicho selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
+    fala('o homem do binóculo', 'Eu perguntei isso também. Aí eles pararam de responder.'),
+    d=>fala(d.jogador.nome, 'Por que você não desiste?'),
+    'Ele abaixa o binóculo.',
+    fala('o homem do binóculo', 'Eu trabalhei lá dentro. Onze anos, manejo.'),
+    fala('o homem do binóculo', 'Me mandaram embora no dia em que o galpão ficou pronto.', 'baixo')
+  ],
+  ef:{flag:'o_homem_do_binoculo_trabalhou_la',
+      npc:{nome:'o homem do binóculo', opiniao:2, viuVoce:'Te contou que foi demitido no dia em que o galpão ficou pronto.'},
+      registrar:'O homem do binóculo trabalhou onze anos no manejo da reserva. Foi demitido quando o galpão ficou pronto.'},
+  escolhas:[
+    {texto:'Ir andar a cerca por fora.', vai:'c12_cerca'},
+    {texto:'Ir procurar o diretor da reserva.', vai:'c12_diretor'},
+    {texto:'Ir ao bar da cidade com esse nome na cabeça.', vai:'c12_bar'}
+  ]
+},
+
+c12_ab_quanto_tempo_ele_senta:{
+  texto:[
+    fala('o homem do binóculo', 'Quatro anos. Quase todo dia.'),
+    d=>fala(d.jogador.nome, 'Fazendo o quê?'),
+    fala('o homem do binóculo', 'Contando.'),
+    'Ele tira do bolso de trás uma caderneta de capa dura, dessas de armazém, gasta nas quinas.',
+    'Cada página tem uma data e uma coluna de traços.',
+    fala('o homem do binóculo', 'Caminhão que entra pelo portão técnico. Eu conto desde noventa e seis.'),
+    fala('o homem do binóculo', 'Noventa e seis: dezenove no ano. Noventa e sete: vinte e quatro.'),
+    'Ele vira pra última página preenchida.',
+    fala('o homem do binóculo', 'Esse ano, até agora: cento e quarenta e um.')
+  ],
+  ef:{flag:['a_caderneta_do_binoculo','sabe_do_lote_unico'],
+      registrar:'Uma caderneta conta os caminhões que entram no portão técnico da reserva: 19 em 1996, 141 este ano.',
+      presagio:'Dezenove pra cento e quarenta e um em quatro anos. Isso não cresceu: isso virou outra coisa.'},
+  escolhas:[
+    {texto:'Pedir a caderneta emprestada.', vai:'c12_ab_a_caderneta'},
+    {texto:'Olhar a reserva pelo binóculo.', vai:'c12_ab_pelo_binoculo'},
+    {texto:'Ir procurar o diretor da reserva.', vai:'c12_diretor'}
+  ]
+},
+
+c12_ab_a_caderneta:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Me empresta isso.'),
+    'Ele segura a caderneta com as duas mãos e não entrega na hora.',
+    fala('o homem do binóculo', 'Isso aqui é quatro anos da minha vida.'),
+    d=>fala(d.jogador.nome, 'Eu sei. Por isso eu quero.'),
+    'Ele entrega.',
+    fala('o homem do binóculo', 'Se você perder, eu não tenho cópia.'),
+    fala('o homem do binóculo', 'E se você mostrar pra pessoa errada, eu também não tenho cópia.'),
+    'Você guarda a caderneta na parte de dentro da mochila, que é onde vai o que não pode molhar.'
+  ],
+  ef:{flag:'tem_a_caderneta_do_binoculo',
+      npc:{nome:'o homem do binóculo', opiniao:3, viuVoce:'Te entregou quatro anos de contagem sem ter cópia.'},
+      registrar:'Está com a caderneta de contagem de caminhões. Não existe cópia.',
+      presagio:'Ele não tem cópia. O que você fizer com esse caderno é definitivo.'},
+  escolhas:[
+    {texto:'Procurar o diretor da reserva.', vai:'c12_diretor'},
+    {texto:'Andar a cerca por fora.', vai:'c12_cerca'},
+    {texto:'Ir ao bar da cidade.', vai:'c12_bar'}
+  ]
+},
+
+c12_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `A recepção da Zona Safári tem uma catraca pra visitante e uma porta lateral com interfone pra quem não é visitante, e o seu crachá de ${c ? c.nome : 'serviço'} te põe na porta lateral.`;
+    },
+    'Do lado de dentro não é a reserva. É um escritório: quatro mesas, dois computadores, um mapa mural de nove mil hectares com alfinete colorido.',
+    'Uma mulher de uns cinquenta anos levanta de uma das mesas e vem te receber com a mão estendida e o nome já pronto.',
+    fala('Auditora Nishino', 'Nishino. Auditoria de manejo.'),
+    d=>fala(d.jogador.nome, 'Auditoria?'),
+    fala('Auditora Nishino', 'Eu chego antes de vocês e saio depois. É o serviço.'),
+    'Ela olha o seu crachá, depois a sua cara, e faz a conta da sua idade em silêncio.',
+    fala('Auditora Nishino', 'Você é novo. Quanto tempo de casa?'),
+    'A resposta honesta é constrangedora e você dá ela mesmo assim.'
+  ],
+  ef:{flag:'conheceu_a_nishino',
+      npc:{nome:'Auditora Nishino', opiniao:1, viuVoce:'Te recebeu pela porta lateral da Zona Safári.'},
+      registrar:'Conheceu a Auditora Nishino, da auditoria de manejo, no escritório da Zona Safári.'},
+  escolhas:[
+    {texto:'Perguntar o que ela está auditando.', vai:'c12_ab_o_que_ela_audita'},
+    {texto:'Perguntar pelo Setor 7 direto.', vai:'c12_ab_perguntou_o_sete'},
+    {texto:'Pedir pra falar com o diretor.', vai:'c12_diretor'}
+  ]
+},
+
+c12_ab_o_que_ela_audita:{
+  texto:[
+    'Ela volta pra mesa dela e vira uma pasta na sua direção sem entregar.',
+    fala('Auditora Nishino', 'Balanço de espécimes. Entrou, nasceu, morreu, saiu.'),
+    fala('Auditora Nishino', 'É a conta mais simples que existe. E é a única conta que essa reserva não fecha.'),
+    d=>fala(d.jogador.nome, 'Não fecha por quanto?'),
+    fala('Auditora Nishino', 'Por quatrocentos e doze.'),
+    'Ela diz o número devagar, como quem já disse esse número pra muita gente que não reagiu.',
+    fala('Auditora Nishino', 'Quatrocentos e doze animais que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
+    fala('Auditora Nishino', 'Eu escrevi isso em três relatórios. Os três foram arquivados como "divergência metodológica".')
+  ],
+  ef:{flag:['quatrocentos_e_doze','sabe_do_lote_unico'],
+      registrar:'A auditoria aponta 412 espécimes que entraram na Zona Safári e não saíram por nenhuma das três portas.',
+      presagio:'Quatrocentos e doze. Guarde esse número: ele vai reaparecer com outro nome.'},
+  escolhas:[
+    {texto:'Perguntar pelo Setor 7.', vai:'c12_ab_perguntou_o_sete'},
+    {texto:'Pedir cópia de um dos relatórios.', vai:'c12_ab_a_copia_do_relatorio'},
+    {texto:'Pedir pra falar com o diretor.', vai:'c12_diretor'}
+  ]
+},
+
+c12_ab_perguntou_o_sete:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que é o Setor 7?'),
+    'Ela não se assusta. Ela fica satisfeita, que é pior.',
+    fala('Auditora Nishino', 'Em que documento você viu isso escrito?'),
+    d=>fala(d.jogador.nome, 'Numa placa de madeira numa bifurcação.'),
+    fala('Auditora Nishino', 'Então você viu num lugar onde eu não posso citar.'),
+    'Ela puxa o mapa mural com o dedo, sem virar o corpo, e aponta uma área a nordeste.',
+    fala('Auditora Nishino', 'No mapa oficial o Setor 7 não existe. Tem setor 1 a 6 e setor 8.'),
+    d=>fala(d.jogador.nome, 'E o oito fica onde?'),
+    fala('Auditora Nishino', 'Do outro lado do sete.')
+  ],
+  ef:{flag:['o_setor_sete_nao_existe_no_mapa','sabotou_o_setor7'],
+      registrar:'O mapa oficial da Zona Safári vai do setor 1 ao 6 e pula direto pro 8.',
+      presagio:'Numerar de 1 a 8 e pular o 7 é mais trabalho do que não numerar. Alguém quis que o 7 sumisse depois.'},
+  escolhas:[
+    {texto:'Pedir cópia de um relatório da auditoria.', vai:'c12_ab_a_copia_do_relatorio'},
+    {texto:'Pedir pra falar com o diretor.', vai:'c12_diretor'},
+    {texto:'Sair e andar a cerca por fora, a nordeste.', vai:'c12_cerca'}
+  ]
+},
+
+c12_ab_a_copia_do_relatorio:{
+  texto:[
+    fala('Auditora Nishino', 'Você sabe o que acontece se eu te der cópia?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('Auditora Nishino', 'Nada. Absolutamente nada.'),
+    'Ela abre a gaveta e tira três pastas já separadas, com elástico, prontas.',
+    fala('Auditora Nishino', 'Relatório de auditoria é documento público. Qualquer pessoa pode pedir.'),
+    fala('Auditora Nishino', 'Em quatro anos, você é a segunda pessoa a pedir.'),
+    d=>fala(d.jogador.nome, 'E a primeira?'),
+    fala('Auditora Nishino', 'Uma repórter de Saffron. Ano passado.'),
+    'Ela empurra as três pastas.',
+    fala('Auditora Nishino', 'Ela pediu, eu dei, e não saiu nada. Eu não sei por quê e parei de perguntar.')
+  ],
+  ef:{flag:['tem_os_relatorios_da_nishino','reika_precisa_de_papel'],
+      npc:{nome:'Auditora Nishino', opiniao:3, viuVoce:'Te entregou três relatórios de auditoria arquivados.'},
+      registrar:'Está com três relatórios de auditoria da Zona Safári, arquivados como "divergência metodológica".',
+      presagio:'Documento público que ninguém pede é o esconderijo mais seguro que existe.'},
+  escolhas:[
+    {texto:'Pedir pra falar com o diretor.', vai:'c12_diretor'},
+    {texto:'Sair e andar a cerca por fora.', vai:'c12_cerca'},
+    {texto:'Sair e ir ao bar da cidade.', vai:'c12_bar'}
+  ]
+},
+
 
 c12_fuchsia:{
   texto:[

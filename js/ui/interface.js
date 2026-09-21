@@ -186,7 +186,7 @@ const UI = {
       <h3>Quem fica em casa</h3>
       <div class="dois">
         <div class="campo"><label>Nome</label>
-          <input id="f-casa-nome" maxlength="24" placeholder="Delina"></div>
+          <input id="f-casa-nome" maxlength="24" placeholder="Chiyo"></div>
         <div class="campo"><label>É sua/seu</label>
           <input id="f-casa-quem" maxlength="24" placeholder="mãe"></div>
       </div>

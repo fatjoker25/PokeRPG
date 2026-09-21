@@ -1,11 +1,308 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a usina zumbe pra todo mundo, mas nem todo mundo
+   chega na Rota 10 pelo mesmo motivo nem no mesmo estado.
+   ------------------------------------------------------------ */
+const C10_ABERTURAS = ['c10_rota', 'c10_ab_apagao', 'c10_ab_o_operador', 'c10_ab_o_aparelho', 'c10_ab_de_cracha'];
+function c10_cabe(id, d){
+  if (id === 'c10_ab_o_aparelho') return !!(d.pokenav && d.pokenav.tem);
+  if (id === 'c10_ab_de_cracha')  return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c10_abertura(d){
+  const cand = C10_ABERTURAS.filter(id => c10_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 10 — O ZUMBIDO  (Usina Abandonada / Rota 10)
    ============================================================ */
 CAPITULOS.push(
 {
 num:10, titulo:'O Zumbido', local:'Usina Abandonada — Rota 10', ambiente:'ruina', nivelArea:34,
-tom:'sombrio', inicio:'c10_rota',
+tom:'sombrio', entradas:C10_ABERTURAS,
+inicio: d => c10_abertura(d),
 cenas:{
+
+c10_ab_apagao:{
+  texto:[
+    'Tem um povoado na Rota 10 que não tem nome em mapa nenhum. Onze casas, um armazém e um poste de luz com três lâmpadas.',
+    'Você chega às sete da noite e as três lâmpadas estão apagadas, e as onze casas também, e não tem lua.',
+    'O armazém está aberto à luz de dois lampiões e tem sete pessoas lá dentro que não estão comprando nada. Estão esperando voltar.',
+    fala('a dona do armazém', 'Quarta vez essa semana.'),
+    d=>fala(d.jogador.nome, 'Quatro vezes em uma semana?'),
+    fala('a dona do armazém', 'Quatro. E olha que a semana não acabou.'),
+    'Um homem no fundo, que está bebendo alguma coisa em copo de vidro grosso, fala sem levantar a cabeça:',
+    fala('o homem do copo', 'A companhia fala que é a linha velha.'),
+    fala('a dona do armazém', 'A companhia fala isso há onze anos.'),
+    'Ela acende o terceiro lampião com um fósforo e a luz sobe na cara dela.',
+    fala('a dona do armazém', 'Só que quando apaga aqui, apaga em todo o vale ao mesmo tempo. E quando volta, volta em todo o vale ao mesmo tempo.'),
+    fala('a dona do armazém', 'Linha velha não faz isso. Linha velha queima num ponto só.')
+  ],
+  ef:{flag:'quatro_apagoes_na_semana',
+      registrar:'O vale da Rota 10 teve quatro apagões em uma semana, todos simultâneos no vale inteiro.',
+      presagio:'Falha de linha queima num ponto. Isso é o vale inteiro desligando junto.'},
+  escolhas:[
+    {texto:'Perguntar quando a luz volta.', vai:'c10_ab_quando_volta'},
+    {texto:'Perguntar se alguém entra na usina.', vai:'c10_quem_sabe'},
+    {texto:'Sair e ir pra usina agora, no escuro.', vai:'c10_rota'},
+    {texto:'Dormir aqui e ir pela manhã.', vai:'c10_ab_dormiu'}
+  ]
+},
+
+c10_ab_quando_volta:{
+  texto:[
+    fala('a dona do armazém', 'Umas quatro da manhã.'),
+    d=>fala(d.jogador.nome, 'Sempre?'),
+    'Ela para de mexer no lampião.',
+    fala('a dona do armazém', 'Nas quatro vezes foi quatro e pouco.'),
+    'O homem do copo levanta a cabeça pela primeira vez.',
+    fala('o homem do copo', 'Três e cinquenta e dois, quatro e onze, três e quarenta e sete, quatro e dois.'),
+    'A dona do armazém olha pra ele.',
+    fala('a dona do armazém', 'Você anotou?'),
+    fala('o homem do copo', 'Eu não durmo, Hisa. Eu só olho o relógio.', 'baixo')
+  ],
+  ef:{flag:'a_luz_volta_as_quatro',
+      npc:{nome:'o homem do copo', opiniao:0, viuVoce:'Te contou os quatro horários de cabeça.'},
+      registrar:'A luz volta sempre entre 3h47 e 4h11. O homem do copo anotou os quatro horários.',
+      presagio:'Alguma coisa naquela usina termina de fazer o que faz por volta das quatro da manhã.'},
+  escolhas:[
+    {texto:'Ir pra usina agora, no escuro.', vai:'c10_rota'},
+    {texto:'Dormir aqui e ir pela manhã.', vai:'c10_ab_dormiu'},
+    {texto:'Perguntar quem conhece a usina por dentro.', vai:'c10_quem_sabe'}
+  ]
+},
+
+c10_ab_dormiu:{
+  texto:[
+    'A dona do armazém tem um quarto de depósito com um colchão encostado na parede, e ela desencosta o colchão sem te cobrar nada e sem te perguntar nada.',
+    'Você acorda às quatro e onze da manhã porque a lâmpada do corredor acende sozinha na sua cara.',
+    'O vale inteiro volta junto. Dá pra ouvir: onze geladeiras religando ao mesmo tempo, um rádio que ficou ligado, o zumbido do poste.',
+    'E, atrás de tudo isso, de muito longe, uma coisa grande desacelerando.',
+    'É o som de um motor enorme reduzindo. Dura uns quarenta segundos e some.',
+    'Você fica deitado no escuro com os olhos abertos até clarear.'
+  ],
+  ef:{flag:'ouviu_o_motor_desacelerar',
+      registrar:'Às 4h11, quando a luz voltou, algo grande desacelerou no fundo do vale por quarenta segundos.'},
+  escolhas:[
+    {texto:'Ir pra usina de manhã.', vai:'c10_rota'}
+  ]
+},
+
+c10_ab_o_operador:{
+  texto:[
+    'Na curva antes do vale tem uma casa de alvenaria sem reboco com um quintal de terra batida e um homem de uns setenta anos sentado numa cadeira de praça — dessas de ferro fundido, que alguém claramente levou de uma praça.',
+    'Ele te vê subir e fala antes de você chegar:',
+    fala('o velho da cadeira', 'Você vai pra usina.'),
+    d=>fala(d.jogador.nome, 'Como é que você sabe?'),
+    fala('o velho da cadeira', 'Porque essa estrada não vai pra mais lugar nenhum.'),
+    'Ele aponta a cadeira vazia do lado, que também é de praça, e que também claramente foi levada de uma praça.',
+    'Você senta porque não sentar seria pior.',
+    fala('o velho da cadeira', 'Eu trabalhei lá dentro por vinte e seis anos. Operador de sala de controle.'),
+    fala('o velho da cadeira', 'Fecharam em oitenta e sete. Pagaram todo mundo direitinho, com carta e tudo.'),
+    fala('o velho da cadeira', 'Só que ninguém desmontou nada.', 'baixo')
+  ],
+  ef:{flag:'conheceu_o_operador',
+      npc:{nome:'o velho da cadeira', opiniao:1, viuVoce:'Trabalhou 26 anos na usina e te chamou pra sentar.'},
+      registrar:'Um ex-operador da usina mora na curva antes do vale.'},
+  escolhas:[
+    {texto:'Perguntar por que não desmontaram.', vai:'c10_ab_por_que_nao'},
+    {texto:'Perguntar o que tem na sala de controle.', vai:'c10_ab_a_sala'},
+    {texto:'Perguntar do arame inclinado pra dentro.', vai:'c10_ab_o_arame'},
+    {texto:'Agradecer e seguir pra usina.', vai:'c10_rota'}
+  ]
+},
+
+c10_ab_por_que_nao:{
+  texto:[
+    fala('o velho da cadeira', 'Porque desmontar custa mais que deixar.'),
+    'Ele diz isso como quem já explicou pra muita gente.',
+    fala('o velho da cadeira', 'Pra desmontar, você tem que drenar o óleo dos transformadores, tirar o cobre, levar a turbina de caminhão.'),
+    fala('o velho da cadeira', 'Pra deixar, você tranca o portão.'),
+    d=>fala(d.jogador.nome, 'E o zumbido?'),
+    'Ele não responde na hora. Mexe na cadeira, que range.',
+    fala('o velho da cadeira', 'Uma usina desligada não zumbe, menino.'),
+    fala('o velho da cadeira', 'Eu escuto esse zumbido da minha varanda faz sete anos. Não escutava nos quatro primeiros.')
+  ],
+  ef:{flag:'zumbido_ha_sete_anos',
+      registrar:'A usina está desligada há onze anos, mas zumbe há sete.',
+      presagio:'Quatro anos de silêncio e depois sete de zumbido. Alguma coisa começou no meio.'},
+  escolhas:[
+    {texto:'Perguntar o que tem na sala de controle.', vai:'c10_ab_a_sala'},
+    {texto:'Perguntar do arame inclinado pra dentro.', vai:'c10_ab_o_arame'},
+    {texto:'Seguir pra usina.', vai:'c10_rota'}
+  ]
+},
+
+c10_ab_a_sala:{
+  texto:[
+    fala('o velho da cadeira', 'Painel sinótico do vale inteiro. Uma parede de doze metros com lampadinha pra cada subestação.'),
+    'Ele desenha no ar com o dedo, e o desenho é preciso, e ele não pensa antes de desenhar.',
+    fala('o velho da cadeira', 'Se acender a lampadinha, tem carga. Se apagar, não tem.'),
+    fala('o velho da cadeira', 'A gente ficava oito horas olhando pra parede. Oito horas, doze metros de lâmpada.'),
+    d=>fala(d.jogador.nome, 'E hoje?'),
+    'Ele fica quieto uns cinco segundos.',
+    fala('o velho da cadeira', 'Eu fui lá em noventa e quatro. Pulei a cerca, que naquela época dava pra pular.'),
+    fala('o velho da cadeira', 'A parede tava acesa.'),
+    fala('o velho da cadeira', 'Toda acesa. Doze metros. Numa usina sem energia há sete anos.', 'baixo')
+  ],
+  ef:{flag:'o_painel_aceso',
+      registrar:'Em 1994 o painel sinótico da sala de controle estava todo aceso, numa usina sem energia.',
+      presagio:'Painel aceso quer dizer que as subestações do vale estão recebendo carga de algum lugar.'},
+  escolhas:[
+    {texto:'Perguntar do arame inclinado pra dentro.', vai:'c10_ab_o_arame'},
+    {texto:'Seguir pra usina.', vai:'c10_rota'}
+  ]
+},
+
+c10_ab_o_arame:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O arame farpado da cerca é inclinado pra dentro.'),
+    'Ele para de balançar a cadeira.',
+    fala('o velho da cadeira', 'Você já foi lá?'),
+    d=>fala(d.jogador.nome, 'Ainda não. Me falaram.'),
+    'Mentira boba e ele deixa passar.',
+    fala('o velho da cadeira', 'Foi assim desde o começo. Setenta e seis, quando construíram.'),
+    fala('o velho da cadeira', 'A gente perguntou. O engenheiro falou que era "norma de instalação de alta tensão".'),
+    fala('o velho da cadeira', 'Eu trabalhei em mais duas usinas depois. Em nenhuma das duas o arame era pra dentro.'),
+    'Ele volta a balançar a cadeira, e o rangido volta, e o rangido agora incomoda.',
+    fala('o velho da cadeira', 'Então ou era norma e as outras duas tavam erradas, ou não era norma.')
+  ],
+  ef:{flag:'o_arame_desde_setenta_e_seis',
+      registrar:'O arame inclinado pra dentro está lá desde a construção, em 1976. Não é norma.',
+      presagio:'Se a cerca foi feita assim em 1976, o que ela segura já estava previsto em 1976.'},
+  escolhas:[
+    {texto:'Seguir pra usina.', vai:'c10_rota'},
+    {texto:'Perguntar o que tem na sala de controle.', vai:'c10_ab_a_sala'}
+  ]
+},
+
+c10_ab_o_aparelho:{
+  texto:[
+    'O PokéNav começa a fazer uma coisa nova a dois quilômetros do vale.',
+    'A tela não apaga: ela fica branca e volta, fica branca e volta, num intervalo que você começa a contar sem querer.',
+    'Três segundos. Três segundos. Três segundos.',
+    'Você para no meio da estrada e conta trinta e um ciclos seguidos sem nenhuma variação, e trinta e um ciclos idênticos não é defeito — defeito é irregular.',
+    'A agenda de contatos abre sozinha e fecha sozinha. Uma ligação disca sem número e cai.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} está com as orelhas pra trás desde a curva e não olha pra frente: olha pro lado, pro fundo do vale, e você segue o olhar e não tem nada no fundo do vale além da usina.`
+               : 'Os pelos do seu braço estão em pé e não tem vento nenhum.';
+    },
+    'A trezentos metros, o aparelho desliga. Não descarrega: desliga, com a bateria em setenta e um por cento.'
+  ],
+  ef:{flag:'o_pokenav_desligou',
+      registrar:'O PokéNav piscou em ciclos de três segundos por dois quilômetros e desligou com 71% de bateria.',
+      presagio:'Três segundos exatos, trinta e uma vezes. Isso é um pulso, e pulso tem fonte.'},
+  escolhas:[
+    {texto:'Seguir assim mesmo, sem aparelho.', vai:'c10_rota'},
+    {texto:'Voltar até onde ele funciona e marcar o ponto.', vai:'c10_ab_marcou_o_ponto'},
+    {texto:'Procurar quem more por aqui e saiba disso.', vai:'c10_quem_sabe'}
+  ]
+},
+
+c10_ab_marcou_o_ponto:{
+  texto:[
+    'Você anda de volta contando passo e o aparelho religa sozinho no passo mil e oitocentos e alguma coisa.',
+    'Você marca o ponto com uma pedra em cima de um toco, que é a tecnologia de que você dispõe.',
+    'Depois anda pra frente de novo e ele desliga no mesmo lugar. Anda de volta, religa no mesmo lugar.',
+    'Três vezes. Sempre o mesmo ponto, com uma margem de uns dez metros.',
+    'Isso é um raio. Você está na borda de um círculo e o centro do círculo é a usina, e você acabou de medir o raio dele com o pé.'
+  ],
+  ef:{flag:'mediu_o_raio',
+      registrar:'Mediu a borda: o PokéNav desliga sempre no mesmo ponto, a cerca de 1,8 km da usina.'},
+  escolhas:[
+    {texto:'Atravessar a borda e ir pra usina.', vai:'c10_rota'}
+  ]
+},
+
+c10_ab_de_cracha:{
+  texto:[
+    'Tem um portão de serviço na entrada do vale com uma placa esmaltada que a chuva comeu pela metade:',
+    'COMPANHIA ENERGÉTICA DE KANTO — UNIDADE 4 — ACESSO RESTRITO',
+    'E tem uma caminhonete branca parada do lado de dentro, com dois homens de macacão azul tomando café numa garrafa térmica.',
+    'Eles te veem e não fazem nada, porque você está do lado de fora de um portão e isso é problema de ninguém.',
+    d=>{
+      const c = Cargos.principal();
+      return `Aí você mostra o crachá de ${c ? c.nome : 'serviço'} pelo alambrado, e os dois se olham, e um deles põe a garrafa térmica no capô.`;
+    },
+    fala('o homem do macacão', 'Vocês mandaram alguém?'),
+    'Ele fala "vocês". Você não sabe quem é "vocês" e essa é a informação.',
+    d=>fala(d.jogador.nome, 'Mandaram alguém pra quê?'),
+    'O outro homem, o que ficou perto da caminhonete, responde por cima:',
+    fala('o segundo homem', 'Pro chamado. A gente abriu chamado três vezes.')
+  ],
+  ef:{flag:'a_equipe_do_chamado',
+      registrar:'Uma equipe da companhia energética está no portão de serviço da usina, esperando resposta de três chamados.'},
+  escolhas:[
+    {texto:'Fingir que é pelo chamado e perguntar o que foi.', vai:'c10_ab_o_chamado'},
+    {texto:'Dizer a verdade: você não é do chamado.', vai:'c10_ab_a_verdade'},
+    {texto:'Deixar pra lá e dar a volta pela cerca.', vai:'c10_perimetro'}
+  ]
+},
+
+c10_ab_o_chamado:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Me passa de novo o que vocês reportaram.'),
+    'O homem do macacão abre a porta da caminhonete e tira uma prancheta, e a prancheta tem três vias de papel carbono.',
+    fala('o homem do macacão', 'Consumo. A unidade 4 tá puxando carga.'),
+    d=>fala(d.jogador.nome, 'Puxando? Ela não gera?'),
+    fala('o homem do macacão', 'Gerava. Desde oitenta e sete ela não gera nada.'),
+    'Ele vira a via de cima da prancheta.',
+    fala('o homem do macacão', 'Agora ela consome. Quarenta megawatt-hora por mês, faturado pra ninguém, num CNPJ que foi baixado em oitenta e nove.'),
+    fala('o homem do macacão', 'A gente abriu chamado em maio, em julho e em setembro.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('o segundo homem', 'E todo mês alguém fecha o chamado como "improcedente" e a gente não sabe quem é esse alguém.', 'baixo')
+  ],
+  ef:{flag:['usina_consome','sabe_do_armazem'],
+      registrar:'A usina consome 40 MWh por mês, faturados para um CNPJ baixado em 1989. Três chamados fechados como improcedentes.',
+      presagio:'Alguém com acesso ao sistema da companhia fecha esses chamados todo mês.'},
+  escolhas:[
+    {texto:'Pedir uma via do chamado.', vai:'c10_ab_a_via'},
+    {texto:'Pedir pra eles abrirem o portão.', vai:'c10_portao'},
+    {texto:'Agradecer e dar a volta pela cerca.', vai:'c10_perimetro'}
+  ]
+},
+
+c10_ab_a_via:{
+  texto:[
+    'Ele destaca a terceira via, a rosa, que é a via que fica com o cliente e que nesse caso não tem cliente.',
+    fala('o homem do macacão', 'Leva. Se der merda eu falo que perdi.'),
+    'Você dobra o papel em quatro e guarda, e a partir daqui você está carregando um documento, o que é diferente de carregar uma suspeita.',
+    fala('o segundo homem', 'Ó, moço.'),
+    'Ele fala pela primeira vez sem ser por cima do ombro do colega.',
+    fala('o segundo homem', 'Se você entrar aí, não entra sozinho.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o segundo homem', 'Porque quarenta megawatt-hora é energia de bairro. E não tem bairro lá dentro.')
+  ],
+  ef:{flag:'tem_a_via_rosa', itens:{'Poção':1},
+      registrar:'Tem a via rosa do chamado da companhia energética, com o consumo da unidade 4.'},
+  escolhas:[
+    {texto:'Pedir pra eles abrirem o portão.', vai:'c10_portao'},
+    {texto:'Dar a volta pela cerca sozinho.', vai:'c10_perimetro'}
+  ]
+},
+
+c10_ab_a_verdade:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu não sou do chamado. Eu vim por conta própria.'),
+    'Os dois ficam quietos. O da garrafa térmica pega a garrafa de volta do capô, que é uma forma de encerrar assunto.',
+    fala('o homem do macacão', 'Então não pode entrar.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    'Ele te olha por um tempo. Depois olha pro colega. Depois pro portão.',
+    fala('o homem do macacão', 'A gente vai almoçar às onze e meia. Leva quarenta minutos.'),
+    'Ele não diz mais nada. Não precisa.',
+    'São dez e cinquenta.'
+  ],
+  ef:{flag:'quarenta_minutos_de_almoco', moral:1,
+      rep:{eixo:'bom', delta:1, motivo:'Disse a verdade pra uma equipe que podia te barrar.'},
+      registrar:'A equipe da companhia almoça às 11h30 e leva quarenta minutos. Eles te disseram isso de propósito.'},
+  escolhas:[
+    {texto:'Esperar as onze e meia.', vai:'c10_portao'},
+    {texto:'Não esperar. Dar a volta pela cerca agora.', vai:'c10_perimetro'},
+    {texto:'Sentar e observar a usina enquanto espera.', vai:'c10_observar'}
+  ]
+},
+
 
 c10_rota:{
   texto:[

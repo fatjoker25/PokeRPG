@@ -1,11 +1,332 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Saffron tem quatro entradas asfaltadas e nenhuma
+   delas te recebe igual. Quem chega famoso, quem chega fichado
+   e quem chega pelo subterrâneo veem três cidades.
+   ------------------------------------------------------------ */
+const C11_ABERTURAS = ['c11_saffron', 'c11_ab_o_acampamento', 'c11_ab_subterraneo', 'c11_ab_entrevista', 'c11_ab_batida'];
+function c11_cabe(id, d){
+  if (id === 'c11_ab_entrevista') return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4;
+  if (id === 'c11_ab_batida')     return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3 || d.via === 'foragido';
+  return true;
+}
+function c11_abertura(d){
+  const cand = C11_ABERTURAS.filter(id => c11_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 11 — A TORRE DE VIDRO  (Saffron / Silph Co.)
    ============================================================ */
 CAPITULOS.push(
 {
 num:11, titulo:'A Torre de Vidro', local:'Saffron / Silph Co.', ambiente:'cidade', nivelArea:38,
-tom:'muito sombrio', inicio:'c11_saffron',
+tom:'muito sombrio', entradas:C11_ABERTURAS,
+inicio: d => c11_abertura(d),
 cenas:{
+
+c11_ab_o_acampamento:{
+  texto:[
+    'Você não chega na Silph. Você chega no acampamento.',
+    'Sete barracas na calçada em frente ao ginásio de Saffron, alinhadas contra a parede pra deixar passagem, com um fogareiro coletivo, uma lona esticada entre dois postes e um balde que alguém enche na torneira da praça.',
+    'É organizado. Isso é a parte que impressiona: é organizado de um jeito que só fica organizado depois de muito tempo.',
+    'No portão de aço abaixado, o papel A4 plastificado: **SUSPENSO POR TEMPO INDETERMINADO — S.**',
+    'Um rapaz de uns dezoito anos está sentado num banquinho dobrável com um caderno no colo, e o caderno tem uma lista.',
+    fala('o rapaz do caderno', 'Chegou agora?'),
+    d=>fala(d.jogador.nome, 'Agora.'),
+    fala('o rapaz do caderno', 'Nome, data de chegada e insígnias que você já tem.'),
+    'Ele diz isso do jeito de quem faz isso há semanas.',
+    fala('o rapaz do caderno', 'Quando abrir, a ordem é essa. A gente combinou.')
+  ],
+  ef:{flag:'o_caderno_da_fila',
+      registrar:'Sete treinadores acampam em frente ao ginásio de Saffron, com lista de ordem de chegada.'},
+  escolhas:[
+    {texto:'Se inscrever na lista.', vai:'c11_ab_se_inscreveu'},
+    {texto:'Perguntar há quanto tempo o ginásio está fechado.', vai:'c11_ab_ha_quanto_tempo'},
+    {texto:'Perguntar quem é o "S." do papel.', vai:'c11_ab_quem_e_s'},
+    {texto:'Não se inscrever e ir ver a Silph.', vai:'c11_recepcao'}
+  ]
+},
+
+c11_ab_se_inscreveu:{
+  texto:[
+    d=>{
+      const ins = (d.insignias || []).length;
+      return `Você dita o nome e a data, e quando fala o número de insígnias — ${ins} — o rapaz para de escrever por meio segundo.`;
+    },
+    'Ele escreve mesmo assim, porque a lista é por ordem de chegada e não por mérito, e isso foi combinado.',
+    fala('o rapaz do caderno', 'Você é o vinte e três.'),
+    d=>fala(d.jogador.nome, 'Tem vinte e dois na frente? Eu só vejo sete barracas.'),
+    fala('o rapaz do caderno', 'Quinze desistiram.'),
+    'Ele fecha o caderno com o dedo no meio, marcando a página.',
+    fala('o rapaz do caderno', 'Eu não risco os que desistem. Eles continuam na lista.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o rapaz do caderno', 'Pra quando alguém perguntar quantos desistiram eu ter o número.', 'baixo')
+  ],
+  ef:{flag:'na_lista_do_ginasio',
+      npc:{nome:'o rapaz do caderno', opiniao:1, viuVoce:'Te pôs como vigésimo terceiro na lista do ginásio.'},
+      registrar:'Você é o 23º na lista do ginásio de Saffron. Quinze já desistiram e ele não risca ninguém.'},
+  escolhas:[
+    {texto:'Perguntar quem é o "S." do papel.', vai:'c11_ab_quem_e_s'},
+    {texto:'Ir ver a Silph.', vai:'c11_recepcao'},
+    {texto:'Andar pelo quarteirão e olhar o prédio de fora.', vai:'c11_quarteirao'}
+  ]
+},
+
+c11_ab_ha_quanto_tempo:{
+  texto:[
+    fala('o rapaz do caderno', 'O papel é de onze de março.'),
+    'Ele aponta com o queixo, sem olhar, porque olhou muitas vezes.',
+    fala('o rapaz do caderno', 'Só que o papel foi trocado. O primeiro era escrito à mão.'),
+    d=>fala(d.jogador.nome, 'Trocado quando?'),
+    fala('o rapaz do caderno', 'Em junho. Eu vi. Quatro da tarde, um cara de terno, plastificado e tudo.'),
+    fala('o rapaz do caderno', 'Eu perguntei se ia reabrir. Ele falou "não é comigo".'),
+    'O rapaz dá de ombros, e o dar de ombros já virou repertório dele.',
+    fala('o rapaz do caderno', 'Mas quem troca um aviso é alguém que quer que o aviso continue lá.')
+  ],
+  ef:{flag:'o_aviso_foi_trocado',
+      registrar:'O aviso do ginásio de Saffron foi trocado em junho por um homem de terno. O original era à mão.',
+      presagio:'Ninguém plastifica um aviso temporário.'},
+  escolhas:[
+    {texto:'Se inscrever na lista.', vai:'c11_ab_se_inscreveu'},
+    {texto:'Perguntar quem é o "S." do papel.', vai:'c11_ab_quem_e_s'},
+    {texto:'Ir ver a Silph.', vai:'c11_recepcao'}
+  ]
+},
+
+c11_ab_quem_e_s:{
+  texto:[
+    'O acampamento inteiro ouve a pergunta, o que quer dizer que o acampamento inteiro estava ouvindo.',
+    'Uma mulher de uns trinta anos, que estava mexendo no fogareiro e não tinha falado nada até agora, responde antes do rapaz:',
+    fala('a mulher do fogareiro', 'Sabrina. É a líder.'),
+    d=>fala(d.jogador.nome, 'E ela assinou com inicial?'),
+    fala('a mulher do fogareiro', 'Ela assina tudo com inicial. Há anos.'),
+    'Ela mexe o que está na panela, que é arroz, e que cheira bem.',
+    fala('a mulher do fogareiro', 'Eu enfrentei ela em noventa e um. Ganhei, inclusive.'),
+    fala('a mulher do fogareiro', 'Ela não falou uma palavra a batalha inteira. Nem no começo, nem no fim.'),
+    fala('a mulher do fogareiro', 'E quando acabou ela me deu a insígnia e falou uma frase só.'),
+    d=>fala(d.jogador.nome, 'Qual?'),
+    fala('a mulher do fogareiro', '"Você vai voltar aqui em nove anos."', 'baixo'),
+    'Ela mexe o arroz.',
+    fala('a mulher do fogareiro', 'Faz nove anos.')
+  ],
+  ef:{flag:'a_frase_da_sabrina',
+      npc:{nome:'a mulher do fogareiro', opiniao:1, viuVoce:'Te contou o que Sabrina disse a ela em 1991.'},
+      registrar:'Sabrina disse a uma treinadora, em 1991, que ela voltaria em nove anos. Faz nove anos.'},
+  escolhas:[
+    {texto:'Se inscrever na lista.', vai:'c11_ab_se_inscreveu'},
+    {texto:'Ir ver a Silph.', vai:'c11_recepcao'},
+    {texto:'Andar pelo quarteirão.', vai:'c11_quarteirao'}
+  ]
+},
+
+c11_ab_subterraneo:{
+  texto:[
+    'Existe uma passagem subterrânea ligando Saffron às cidades vizinhas e ela é a coisa mais estranha de Kanto: um túnel reto, iluminado, de piso liso, que não cobra nada e que quase ninguém usa.',
+    'São quatrocentos metros de corredor com luz fria e o seu próprio passo voltando.',
+    'No meio do caminho tem uma escadinha lateral que não vai pra lugar nenhum: sobe seis degraus e dá numa porta de aço sem maçaneta.',
+    'Na porta, na altura do olho, tem um adesivo com um logotipo que você já viu hoje em três lugares diferentes. Silph Co.',
+    'Uma passagem pública com uma porta particular no meio.',
+    'Você sai no lado de Saffron por uma escada de concreto que dá exatamente atrás do prédio da Silph, e não na praça, e não na avenida. Atrás.'
+  ],
+  ef:{flag:'a_porta_do_tunel',
+      registrar:'A passagem subterrânea de Saffron tem uma porta de aço da Silph Co. no meio e sai atrás do prédio.',
+      presagio:'Uma empresa com porta numa passagem pública não usa a passagem pública. Usa a porta.'},
+  escolhas:[
+    {texto:'Voltar e tentar a porta de aço.', vai:'c11_ab_a_porta_de_aco'},
+    {texto:'Sair e ir pela recepção, como todo mundo.', vai:'c11_recepcao'},
+    {texto:'Sair e dar a volta no quarteirão por fora.', vai:'c11_quarteirao'},
+    {texto:'Sair e ir ver o ginásio fechado.', vai:'c11_ginasio'}
+  ]
+},
+
+c11_ab_a_porta_de_aco:{
+  texto:[
+    'Você sobe os seis degraus e a porta é como todas as portas sem maçaneta: um retângulo de aço pintado de cinza com uma dobradiça escondida e uma fresta de três milímetros embaixo.',
+    'Pela fresta sai ar. Ar frio, com cheiro de papel e de carpete novo.',
+    'Você encosta a orelha. Do outro lado tem alguém andando, e o passo é de sapato de sola dura, e o passo passa e volta e passa de novo.',
+    'Não é corredor. Corredor tem passo que vai embora. Isso é uma pessoa andando de um lado pro outro numa sala.',
+    'Você fica ali mais tempo do que devia e no sexto ou sétimo trajeto o passo para exatamente do outro lado da porta.',
+    'Para. Não anda mais.',
+    'Você desce os seis degraus sem correr, porque correr faz barulho, e os quatrocentos metros seguintes você faz olhando pra frente.'
+  ],
+  ef:{flag:'o_passo_parou_atras_da_porta', hp:-1,
+      registrar:'Alguém do outro lado da porta de aço parou de andar quando você encostou a orelha.',
+      presagio:'Ele parou quando você parou. Ele sabia que você estava ali.'},
+  escolhas:[
+    {texto:'Sair e ir pela recepção.', vai:'c11_recepcao'},
+    {texto:'Sair e procurar a doca de carga.', vai:'c11_doca'},
+    {texto:'Sair e ir ver o ginásio fechado.', vai:'c11_ginasio'}
+  ]
+},
+
+c11_ab_entrevista:{
+  texto:[
+    'Tem uma mulher esperando você na entrada sul de Saffron com um gravador de fita na mão e um crachá de imprensa pendurado no pescoço, e ela não finge que estava de passagem.',
+    fala('a repórter', 'Reika Ando, Correio de Kanto. Você tem dez minutos?'),
+    d=>fala(d.jogador.nome, 'Pra quê?'),
+    fala('a repórter', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
+    'Ela aperta o botão do gravador sem esperar resposta, que é um jeito de já ter começado.',
+    fala('a repórter', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
+    'A pergunta é específica demais pra ser a primeira pergunta de uma entrevista.',
+    'Ela não está te entrevistando. Ela está conferindo uma coisa que já escreveu.'
+  ],
+  ef:{flag:'reika_te_abordou',
+      npc:{nome:'Reika Ando', opiniao:0, viuVoce:'Te abordou na entrada sul de Saffron com um gravador ligado.'},
+      registrar:'Reika Ando, do Correio de Kanto, te esperava na entrada de Saffron.'},
+  escolhas:[
+    {texto:'Responder a verdade.', vai:'c11_ab_respondeu'},
+    {texto:'Perguntar o que ela já tem escrito.', vai:'c11_ab_o_que_ela_tem'},
+    {texto:'Mandar ela desligar o gravador.', vai:'c11_ab_desliga'}
+  ]
+},
+
+c11_ab_respondeu:{
+  texto:[
+    'Você conta o que viu, cidade por cidade, e ela não interrompe nenhuma vez, e o gravador roda.',
+    'Quando você termina ela desliga a fita, tira do gravador, e guarda no bolso interno do casaco, não na bolsa.',
+    fala('a repórter', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
+    d=>fala(d.jogador.nome, 'Devia pedir?'),
+    fala('a repórter', 'Provavelmente.'),
+    'Ela tira um cartão e escreve um número atrás, à caneta, e o número não é o número impresso na frente.',
+    fala('a repórter', 'Esse aqui é meu, não da redação.'),
+    fala('a repórter', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
+  ],
+  ef:{flag:'falou_com_a_imprensa',
+      rep:{eixo:'bom', delta:2, motivo:'Falou com a imprensa sobre o transporte em gaiola, com nome e sobrenome.', notorio:true},
+      npc:{nome:'Reika Ando', opiniao:2, viuVoce:'Você deu o depoimento inteiro com o gravador ligado.'},
+      registrar:'Deu um depoimento gravado a Reika Ando sobre o transporte em gaiola.',
+      presagio:'Depoimento com nome é coragem e é endereço.'},
+  escolhas:[
+    {texto:'Perguntar o que ela já tem escrito.', vai:'c11_ab_o_que_ela_tem'},
+    {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
+    {texto:'Seguir pro ginásio fechado.', vai:'c11_ginasio'}
+  ]
+},
+
+c11_ab_o_que_ela_tem:{
+  texto:[
+    'Ela pensa se responde. Dá pra ver ela pensando.',
+    fala('a repórter', 'Quarenta e uma páginas e nenhum documento.'),
+    d=>fala(d.jogador.nome, 'E isso é pouco?'),
+    fala('a repórter', 'Isso é zero. Depoimento sem papel não publica.'),
+    'Ela guarda o gravador na bolsa.',
+    fala('a repórter', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
+    fala('a repórter', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
+    fala('a repórter', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
+  ],
+  ef:{flag:'reika_precisa_de_papel',
+      registrar:'Reika Ando tem 41 páginas de depoimento e nenhum documento. Ela precisa de papel com carimbo.'},
+  escolhas:[
+    {texto:'Responder a pergunta dela com o gravador ligado.', vai:'c11_ab_respondeu'},
+    {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
+    {texto:'Seguir pro ginásio fechado.', vai:'c11_ginasio'}
+  ]
+},
+
+c11_ab_desliga:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Desliga isso.'),
+    'Ela desliga na hora, sem discutir, o que te desarma mais do que se ela tivesse discutido.',
+    fala('a repórter', 'Desligado.'),
+    'Ela põe o gravador na bolsa e fecha a bolsa.',
+    fala('a repórter', 'Agora é conversa. Conversa eu não publico.'),
+    d=>fala(d.jogador.nome, 'E eu tenho que acreditar nisso por quê?'),
+    fala('a repórter', 'Por nada. Você não tem.'),
+    'Ela dá o cartão mesmo assim, com o número da redação, sem o número escrito atrás.',
+    fala('a repórter', 'Quando você mudar de ideia, o gravador continua na bolsa.')
+  ],
+  ef:{flag:'recusou_a_imprensa',
+      npc:{nome:'Reika Ando', opiniao:-1, viuVoce:'Você mandou ela desligar o gravador.'},
+      registrar:'Recusou dar depoimento a Reika Ando.'},
+  escolhas:[
+    {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
+    {texto:'Seguir pro ginásio fechado.', vai:'c11_ginasio'},
+    {texto:'Dar a volta no quarteirão.', vai:'c11_quarteirao'}
+  ]
+},
+
+c11_ab_batida:{
+  texto:[
+    'As quatro entradas de Saffron são asfaltadas e as quatro têm um posto, e hoje três dos quatro postos estão com viatura parada atravessada.',
+    'Não é bloqueio total. É triagem: param um a cada cinco, pedem documento, olham a cara, liberam.',
+    'Você fica atrás de um poste a sessenta metros contando quanto tempo leva cada abordagem. Noventa segundos. Noventa segundos. Quatro minutos.',
+    'Os quatro minutos foram com um rapaz mais ou menos da sua idade e ele saiu de lá sem a mochila.',
+    d=>{
+      if (d.via === 'foragido') return 'Você não tem a menor dúvida do que acontece se te pararem. Isso simplifica a decisão e não melhora ela.';
+      const r = Estado.nomeRep();
+      return `Você não sabe se o seu nome está na prancheta deles. Sabe que "${r}" já foi dito por gente com rádio duas cidades atrás.`;
+    },
+    'A quarta entrada, a do norte, não tem viatura. A quarta entrada é a que dá na zona industrial e leva quarenta minutos a mais a pé.'
+  ],
+  ef:{flag:'triagem_nas_entradas',
+      registrar:'Três das quatro entradas de Saffron estão com triagem policial.'},
+  escolhas:[
+    {texto:'Entrar pela do norte, quarenta minutos a mais.', vai:'c11_ab_pelo_norte'},
+    {texto:'Entrar pelo túnel subterrâneo.', vai:'c11_ab_subterraneo'},
+    {texto:'Passar pela triagem e encarar.', vai:'c11_ab_encarou'}
+  ]
+},
+
+c11_ab_pelo_norte:{
+  texto:[
+    'A entrada norte de Saffron é uma rua de galpão: oficina mecânica, depósito de material de construção, uma fábrica de embalagem com dois turnos.',
+    'Não tem viatura porque não tem pedestre. Quem anda aqui anda de caminhão.',
+    'Você atravessa a zona industrial em quarenta e cinco minutos e nos quarenta e cinco minutos passa por você exatamente um caminhão-gaiola.',
+    'Branco, sem identificação, com lona por cima da gaiola e os vãos da lona amarrados com corda de nylon amarela.',
+    'Ele entra num galpão sem placa e o portão do galpão desce antes do caminhão parar.',
+    'Você anota a rua e o número do galpão na palma da mão, com caneta, porque é o que você tem.'
+  ],
+  ef:{flag:['o_galpao_do_norte','sabe_do_armazem'],
+      registrar:'Um caminhão-gaiola entrou num galpão sem placa na zona industrial norte de Saffron.'},
+  escolhas:[
+    {texto:'Ficar e vigiar o galpão.', vai:'c11_ab_vigiou'},
+    {texto:'Seguir pro centro e ir à Silph.', vai:'c11_recepcao'},
+    {texto:'Seguir pro centro e ver o ginásio.', vai:'c11_ginasio'}
+  ]
+},
+
+c11_ab_vigiou:{
+  texto:[
+    'Você fica uma hora e quarenta encostado num muro do outro lado da rua, e em uma hora e quarenta acontecem quatro coisas.',
+    'O portão do galpão sobe uma vez, por noventa segundos, e não entra nem sai veículo nenhum. Só ar.',
+    'Um homem sai pela porta social, fuma um cigarro inteiro olhando pro chão e volta.',
+    'Um carro de passeio preto encosta, alguém desce, entra pela porta social sem bater, e o carro vai embora sem ele.',
+    'E, na última meia hora, começa a sair som de dentro do galpão. Não é máquina.',
+    'É um som de muita coisa viva no mesmo lugar, abafado por parede de alvenaria, que é um som que você já ouviu num canil e que aqui está errado em escala.'
+  ],
+  ef:{flag:'o_som_do_galpao', hp:-1,
+      registrar:'Do galpão sem placa da zona norte de Saffron sai som de muita coisa viva no mesmo lugar.',
+      presagio:'Você já sabe o que tem ali dentro. O resto do capítulo é sobre o que fazer com isso.'},
+  escolhas:[
+    {texto:'Seguir pro centro e ir à Silph.', vai:'c11_recepcao'},
+    {texto:'Seguir pro centro e ver o ginásio.', vai:'c11_ginasio'},
+    {texto:'Procurar a doca de carga da Silph com isso na cabeça.', vai:'c11_doca'}
+  ]
+},
+
+c11_ab_encarou:{
+  texto:[
+    'Você anda até a triagem no passo de quem não tem nada a esconder, que é um passo que só funciona se você treinar antes e que você não treinou.',
+    'Eles param você. Claro que param.',
+    fala('o policial da triagem', 'Documento.'),
+    'Ele lê. Compara com uma folha presa na prancheta, com uma lista de uns quarenta nomes impressos.',
+    'Você vê a folha de cabeça pra baixo e é só uma lista. Sem foto, sem acusação, sem nada: quarenta nomes e uma coluna vazia ao lado.',
+    'Ele passa o dedo pela lista de cima pra baixo. Duas vezes.',
+    'E marca um tracinho na coluna vazia, na altura de uma linha que você não consegue ler.',
+    fala('o policial da triagem', 'Pode ir.'),
+    d=>fala(d.jogador.nome, 'O que é essa lista?'),
+    fala('o policial da triagem', 'Pode ir.', 'frio')
+  ],
+  ef:{flag:'seu_nome_na_lista_de_quarenta',
+      registrar:'A triagem de Saffron tem uma lista de quarenta nomes com uma coluna de marcação ao lado. Você recebeu um tracinho.',
+      presagio:'Esse tracinho quer dizer "avistado em Saffron, nesta data". Alguém vai ler.'},
+  escolhas:[
+    {texto:'Ir à Silph.', vai:'c11_recepcao'},
+    {texto:'Ir ver o ginásio fechado.', vai:'c11_ginasio'},
+    {texto:'Dar a volta no quarteirão antes.', vai:'c11_quarteirao'}
+  ]
+},
+
 
 c11_saffron:{
   texto:[

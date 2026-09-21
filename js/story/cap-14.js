@@ -1,11 +1,308 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Cinnabar é ilha: só se chega de barco, e o barco
+   em que você chega decide o que você vê primeiro.
+   ------------------------------------------------------------ */
+const C14_ABERTURAS = ['c14_ilha', 'c14_ab_a_travessia', 'c14_ab_a_cinza', 'c14_ab_sem_passagem', 'c14_ab_de_cracha'];
+function c14_cabe(id, d){
+  if (id === 'c14_ab_sem_passagem') return d.jogador.dinheiro < 600 && !d.flags.ryuzo_vai_a_cinnabar;
+  if (id === 'c14_ab_de_cracha')    return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c14_ab_a_travessia')  return !d.flags.ryuzo_vai_a_cinnabar;
+  return true;
+}
+function c14_abertura(d){
+  const cand = C14_ABERTURAS.filter(id => c14_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 14 — O CADERNO DE CINNABAR  (Ilha Cinnabar)
    ============================================================ */
 CAPITULOS.push(
 {
 num:14, titulo:'O Caderno de Cinnabar', local:'Ilha Cinnabar', ambiente:'vulcao', nivelArea:36,
-tom:'muito sombrio', inicio:'c14_ilha',
+tom:'muito sombrio', entradas:C14_ABERTURAS,
+inicio: d => c14_abertura(d),
 cenas:{
+
+c14_ab_a_travessia:{
+  texto:[
+    'O ferry de Cinnabar sai de Fuchsia às sete, leva duas horas e quarenta, e tem quatorze passageiros contando você.',
+    'Dos treze restantes, onze moram na ilha. Dá pra saber porque eles não olham pro mar.',
+    'Os outros dois são um casal de uns sessenta anos com uma mala só e uma cara que você reconhece de Lavender: cara de quem vai visitar alguém que não vai visitar de volta.',
+    'Na terceira hora de travessia, um homem da tripulação passa recolhendo o canhoto das passagens e para do seu lado.',
+    fala('o tripulante', 'Primeira vez na ilha?'),
+    d=>fala(d.jogador.nome, 'Primeira.'),
+    fala('o tripulante', 'Duas coisas, então.'),
+    'Ele destaca o seu canhoto com a unha do polegar, sem olhar.',
+    fala('o tripulante', 'Uma: o cheiro de enxofre passa em três dias. Não é você que acostuma, é o nariz que desiste.'),
+    fala('o tripulante', 'Duas: o próximo ferry é sábado.'),
+    'E vai embora, porque as duas coisas eram só duas.'
+  ],
+  ef:{dinheiro:-600, flag:'veio_no_ferry',
+      registrar:'Atravessou pro Cinnabar no ferry das sete, com treze outros passageiros.'},
+  escolhas:[
+    {texto:'Ir falar com o casal da mala.', vai:'c14_ab_o_casal'},
+    {texto:'Ficar olhando a ilha crescer no horizonte.', vai:'c14_ab_a_ilha_crescendo'},
+    {texto:'Desembarcar e andar pela cidade.', vai:'c14_cidade'}
+  ]
+},
+
+c14_ab_o_casal:{
+  texto:[
+    'Você senta no banco de trás deles, que é o único jeito de puxar conversa num ferry sem parecer que você puxou conversa.',
+    'A mulher fala primeiro, porque ela estava esperando alguém pra falar.',
+    fala('a mulher do ferry', 'A gente vai ver o prédio.'),
+    d=>fala(d.jogador.nome, 'Que prédio?'),
+    fala('o homem do ferry', 'O laboratório.'),
+    'Ele fala isso sem tirar os olhos da água.',
+    fala('a mulher do ferry', 'Nosso filho trabalhava lá. Faz doze anos.'),
+    fala('a mulher do ferry', 'Ele morreu em oitenta e oito, num acidente que eles chamaram de acidente.'),
+    'Ela alisa a alça da mala com as duas mãos, pra frente e pra trás.',
+    fala('a mulher do ferry', 'A gente vinha todo ano, no aniversário. Doze anos.'),
+    fala('o homem do ferry', 'Esse ano a gente veio porque queimou.', 'baixo'),
+    fala('o homem do ferry', 'A gente quer ver com os nossos olhos o que sobrou.')
+  ],
+  ef:{flag:'o_casal_do_filho',
+      npc:{nome:'o casal do ferry', opiniao:1, viuVoce:'Vocês conversaram na travessia para Cinnabar.'},
+      registrar:'Um casal atravessa há doze anos pro aniversário da morte do filho, que trabalhava no laboratório.',
+      presagio:'Morreu em oitenta e oito, num acidente que "eles chamaram de acidente".'},
+  escolhas:[
+    {texto:'Perguntar o nome do filho.', vai:'c14_ab_o_nome_do_filho'},
+    {texto:'Desembarcar junto com eles e ir ao laboratório.', vai:'c14_lab'},
+    {texto:'Desembarcar e andar pela cidade.', vai:'c14_cidade'}
+  ]
+},
+
+c14_ab_o_nome_do_filho:{
+  texto:[
+    fala('a mulher do ferry', 'Kaoru. Kaoru Ishida.'),
+    'Ela fala o nome inteiro, com sobrenome, do jeito que se fala um nome que ninguém mais fala.',
+    fala('a mulher do ferry', 'Ele era bioquímico. Vinte e nove anos.'),
+    d=>fala(d.jogador.nome, 'E o que foi o acidente?'),
+    'O homem responde dessa vez, e responde rápido demais, o que quer dizer que ele já respondeu muitas vezes.',
+    fala('o homem do ferry', 'Exposição a reagente. Foi o que a carta disse.'),
+    fala('o homem do ferry', 'Caixão lacrado. Também foi o que a carta disse.'),
+    'A mulher olha pra fora da janela e não fala nada.',
+    fala('o homem do ferry', 'A gente assinou tudo que mandaram assinar. Na época a gente não tinha cabeça.'),
+    fala('o homem do ferry', 'Hoje eu tenho cabeça e não tenho mais nada pra assinar.')
+  ],
+  ef:{flag:'kaoru_ishida',
+      registrar:'Kaoru Ishida, bioquímico, 29 anos, morreu no laboratório de Cinnabar em 1988. Caixão lacrado.',
+      presagio:'Caixão lacrado por exposição a reagente é decisão de quem não quer que se veja o corpo.'},
+  escolhas:[
+    {texto:'Desembarcar e ir direto ao laboratório.', vai:'c14_lab'},
+    {texto:'Desembarcar e andar pela cidade.', vai:'c14_cidade'}
+  ]
+},
+
+c14_ab_a_ilha_crescendo:{
+  texto:[
+    'Cinnabar aparece como uma mancha e vira uma ilha ao longo de quarenta minutos, e nos quarenta minutos você não faz mais nada.',
+    'Primeiro o vulcão, que é a única coisa alta. Depois a linha da costa. Depois as casas, que são poucas e baixas e coloridas.',
+    'E, na ponta leste, uma mancha preta na costa que não é rocha vulcânica.',
+    'Rocha vulcânica é preta e fosca. Essa mancha tem brilho e tem forma retangular.',
+    'Você fica vinte minutos sem entender o que está olhando até o ferry virar o suficiente pra você entender.',
+    'É um prédio queimado. De longe, um prédio queimado parece exatamente uma mancha.'
+  ],
+  ef:{flag:'viu_o_lab_do_mar',
+      registrar:'Viu o laboratório queimado da ponta leste ainda do ferry, a quarenta minutos da costa.'},
+  escolhas:[
+    {texto:'Desembarcar e ir direto ao laboratório.', vai:'c14_lab'},
+    {texto:'Desembarcar e andar pela cidade primeiro.', vai:'c14_cidade'},
+    {texto:'Ir falar com o casal da mala.', vai:'c14_ab_o_casal'}
+  ]
+},
+
+c14_ab_sem_passagem:{
+  texto:[
+    'A passagem do ferry pra Cinnabar custa seiscentos e é a única linha regular, e a bilheteria é uma janelinha de madeira num galpão do porto de Fuchsia.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽, e o homem da janelinha olha a sua mão aberta com o dinheiro e não diz nada, porque não é ele que faz o preço.`,
+    'Você fica no galpão. Sai o ferry das sete. O galpão esvazia.',
+    'Às oito e pouco entra um homem de setenta e quatro anos com um boné de pano desbotado e uma lata de óleo na mão, e ele vai até a janelinha e não compra passagem: ele reclama de alguma coisa sobre taxa de atracação, e reclama com intimidade.',
+    d=>d.flags.sabe_do_ryuzo
+      ? 'Você já ouviu falar dele numa mesa de dominó. Ryuzo, setenta e quatro anos, barco de doze pés que o pai construiu em cinquenta e três, sai toda quarta de manhã sem rede e sem linha e ninguém pergunta o que ele vai fazer.'
+      : 'O homem da janelinha o chama de Ryuzo e o trata como quem trata alguém há quarenta anos.',
+    'Quando ele sai, você sai junto.',
+    d=>fala(d.jogador.nome, 'O senhor tem barco?'),
+    fala('Ryuzo', 'Tenho doze pés e setenta e quatro anos. Que é o que eu tenho.'),
+    d=>fala(d.jogador.nome, 'O senhor vai pra Cinnabar?'),
+    'Ele para de andar.',
+    fala('Ryuzo', 'Por que é que você quer ir pra Cinnabar?')
+  ],
+  ef:{flag:'conheceu_o_ryuzo',
+      npc:{nome:'Ryuzo', opiniao:0, viuVoce:'Você o abordou no porto de Fuchsia pedindo travessia.'},
+      registrar:'Não tinha os 600 ₽ do ferry. Abordou Ryuzo, dono de um barco de doze pés.'},
+  escolhas:[
+    {texto:'Contar a verdade inteira.', vai:'c14_ab_a_verdade_pro_velho'},
+    {texto:'Dizer que é a trabalho.', vai:'c14_ab_mentiu_pro_velho'},
+    {texto:'Oferecer tudo que você tem.', vai:'c14_ab_ofereceu_tudo'}
+  ]
+},
+
+c14_ab_a_verdade_pro_velho:{
+  texto:[
+    'Você conta. Conta o laboratório, conta o que te trouxe até aqui, conta a parte que faz você parecer ingênuo e conta a parte que faz você parecer perigoso.',
+    'Leva uns seis minutos. Ele não interrompe e não olha pra você: olha pro mar, com a lata de óleo na mão.',
+    'Quando você termina, ele mexe no boné.',
+    fala('Ryuzo', 'Cinco horas de combustível.'),
+    d=>fala(d.jogador.nome, 'Eu não tenho como pagar cinco horas de combustível.'),
+    fala('Ryuzo', 'Eu sei. Eu falei quanto custa, não falei que você vai pagar.'),
+    'Ele desce a rampa na direção de um barco azul de doze pés com o motor de popa levantado.',
+    fala('Ryuzo', 'Meu filho morreu no mar em noventa e sete e desde noventa e sete eu saio toda quarta e não pesco nada.'),
+    d=>fala(d.jogador.nome, 'Pra fazer o quê?'),
+    fala('Ryuzo', 'Pra ninguém perguntar.'),
+    'Ele destrava o motor de popa e baixa.',
+    fala('Ryuzo', 'Você falou seis minutos direto comigo. Isso não acontecia desde noventa e sete.', 'baixo')
+  ],
+  ef:{flag:'ryuzo_vai_a_cinnabar', moral:2,
+      rep:{eixo:'bom', delta:1, motivo:'Contou a verdade inteira pra um desconhecido que podia recusar.'},
+      npc:{nome:'Ryuzo', opiniao:4, viuVoce:'Te levou a Cinnabar sem cobrar, por seis minutos de conversa.'},
+      registrar:'Ryuzo te levou a Cinnabar num barco de doze pés, sem cobrar.'},
+  escolhas:[
+    {texto:'Embarcar.', vai:'c14_ilha'}
+  ]
+},
+
+c14_ab_mentiu_pro_velho:{
+  texto:[
+    d=>fala(d.jogador.nome, 'É a trabalho.'),
+    'Ele te olha por dois segundos inteiros.',
+    fala('Ryuzo', 'A trabalho de quem?'),
+    'Você não tem a segunda frase. Mentira boa precisa de segunda frase e você só preparou a primeira.',
+    fala('Ryuzo', 'Pois é.'),
+    'Ele desce a rampa. Na metade do caminho ele para, sem virar:',
+    fala('Ryuzo', 'Eu levo você assim mesmo. Só não fala mais nada até a gente chegar.'),
+    'A travessia leva cinco horas e vocês não trocam uma palavra, e as cinco horas são muito compridas.'
+  ],
+  ef:{flag:'ryuzo_vai_a_cinnabar',
+      npc:{nome:'Ryuzo', opiniao:0, viuVoce:'Te levou a Cinnabar depois de te pegar numa mentira.'},
+      registrar:'Mentiu pro Ryuzo e ele te levou a Cinnabar em silêncio.'},
+  escolhas:[
+    {texto:'Embarcar.', vai:'c14_ilha'}
+  ]
+},
+
+c14_ab_ofereceu_tudo:{
+  texto:[
+    d=>fala(d.jogador.nome, `Eu tenho ${d.jogador.dinheiro}. É tudo. Leva tudo.`),
+    'Você estende a mão aberta com as notas e as moedas, e esse gesto é humilhante de um jeito muito específico.',
+    'Ele olha a mão. Não pega.',
+    fala('Ryuzo', 'Guarda isso.'),
+    d=>fala(d.jogador.nome, 'É sério. Pode levar tudo.'),
+    fala('Ryuzo', 'Menino, se eu levar tudo o que você tem, você chega numa ilha sem ferry até sábado e sem um tostão.'),
+    'Ele empurra a sua mão de volta com as costas da dele.',
+    fala('Ryuzo', 'Aí eu não te levei. Eu te abandonei mais longe.'),
+    'Ele desce a rampa.',
+    fala('Ryuzo', 'Vem. E guarda o dinheiro no bolso de dentro, que lá o vento leva.')
+  ],
+  ef:{flag:'ryuzo_vai_a_cinnabar', moral:1,
+      npc:{nome:'Ryuzo', opiniao:3, viuVoce:'Recusou o seu dinheiro e te levou a Cinnabar mesmo assim.'},
+      registrar:'Ofereceu tudo que tinha pela travessia. O velho recusou e levou mesmo assim.'},
+  escolhas:[
+    {texto:'Embarcar.', vai:'c14_ilha'}
+  ]
+},
+
+c14_ab_a_cinza:{
+  texto:[
+    'Está caindo cinza em Cinnabar.',
+    'Não é muita: é uma poeira clara, fina, que assenta na calçada preta e deixa ela cinzenta, e que as pessoas da ilha varrem da frente de casa do jeito que se varre folha.',
+    'Você desembarca e em quatro minutos tem cinza no ombro da sua roupa.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} espirra duas vezes seguidas e sacode a cabeça, e você limpa a cinza dele com a manga.`
+               : 'Você espirra duas vezes seguidas e ninguém repara, porque todo mundo aqui espirra.';
+    },
+    'Na rua principal, um homem de uns quarenta anos está varrendo a calçada da loja dele e cumprimenta você com a cabeça.',
+    d=>fala(d.jogador.nome, 'Isso é normal?'),
+    fala('o homem da vassoura', 'É vulcão, meu amigo. Vulcão solta cinza.'),
+    d=>fala(d.jogador.nome, 'Mas ele não tá inativo?'),
+    'Ele para de varrer.',
+    fala('o homem da vassoura', 'Tá.'),
+    'E volta a varrer, e não fala mais nada, e continua varrendo depois que você vai embora.'
+  ],
+  ef:{flag:'esta_caindo_cinza',
+      registrar:'Está caindo cinza em Cinnabar. O vulcão consta como inativo.',
+      presagio:'Vulcão inativo não solta cinza. Ele parou de varrer quando você perguntou.'},
+  escolhas:[
+    {texto:'Subir até o vulcão ver de onde vem.', vai:'c14_vulcao'},
+    {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
+    {texto:'Andar pela cidade e perguntar por aí.', vai:'c14_cidade'},
+    {texto:'Ir ao ginásio.', vai:'c14_ginasio'}
+  ]
+},
+
+c14_ab_de_cracha:{
+  texto:[
+    'O porto de Cinnabar tem uma rampa só e um posto de capitania com um homem de camisa branca e um livro de bordo aberto.',
+    'Ele registra quem entra e quem sai da ilha desde que existe capitania, que é desde mil novecentos e cinquenta e um.',
+    d=>{
+      const c = Cargos.principal();
+      return `Você mostra o crachá de ${c ? c.nome : 'serviço'} porque parece a coisa certa a fazer, e ele vira o livro na sua direção sem você pedir.`;
+    },
+    fala('o capitão do porto', 'Já que o senhor é do serviço: olha a página de doze dias atrás.'),
+    'Doze dias atrás, na coluna de entrada: um barco fretado, quatro pessoas, sem nome de passageiro.',
+    'Na coluna de saída, no mesmo dia: o mesmo barco, três pessoas.',
+    fala('o capitão do porto', 'Eu anotei quatro na entrada. Eu conto. É o meu trabalho contar.'),
+    d=>fala(d.jogador.nome, 'E os três não falaram nada?'),
+    fala('o capitão do porto', 'Falaram que eu tinha contado errado.'),
+    'Ele fecha o livro com as duas mãos.',
+    fala('o capitão do porto', 'Eu faço isso há vinte e dois anos. Eu não conto errado.')
+  ],
+  ef:{flag:['quatro_entraram_tres_sairam','fugiu_da_visao'],
+      npc:{nome:'o capitão do porto', opiniao:2, viuVoce:'Te mostrou o livro de bordo por causa do crachá.'},
+      registrar:'Há doze dias um barco fretado entrou em Cinnabar com quatro pessoas e saiu com três.',
+      presagio:'Tem uma quarta pessoa nessa ilha que não consta em lugar nenhum. E o laboratório queimou há sete dias.'},
+  escolhas:[
+    {texto:'Perguntar como era o barco.', vai:'c14_ab_como_era_o_barco'},
+    {texto:'Pedir cópia da página.', vai:'c14_ab_a_pagina'},
+    {texto:'Ir direto ao laboratório queimado.', vai:'c14_lab'}
+  ]
+},
+
+c14_ab_como_era_o_barco:{
+  texto:[
+    fala('o capitão do porto', 'Fretado de Vermilion. Casco branco, quarenta e dois pés, motor de dentro.'),
+    'Ele fala isso de cabeça, sem consultar nada, porque barco é o assunto dele.',
+    fala('o capitão do porto', 'Barco de empresa. Não é de pescador e não é de turista.'),
+    d=>fala(d.jogador.nome, 'Como é que o senhor sabe?'),
+    fala('o capitão do porto', 'Pelo jeito que atracaram.'),
+    'Ele faz um gesto com a mão, de encostar de lado.',
+    fala('o capitão do porto', 'Pescador atraca com a proa. Turista atraca torto e xinga.'),
+    fala('o capitão do porto', 'Esses aí atracaram de ré, no primeiro movimento, com alguém de luva na amarra.'),
+    fala('o capitão do porto', 'Isso é tripulação paga.')
+  ],
+  ef:{flag:'barco_fretado_de_vermilion',
+      registrar:'O barco que trouxe os quatro era fretado de Vermilion, com tripulação paga.'},
+  escolhas:[
+    {texto:'Pedir cópia da página do livro.', vai:'c14_ab_a_pagina'},
+    {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
+    {texto:'Procurar o barco fretado na ilha.', vai:'c14_barco_fretado'}
+  ]
+},
+
+c14_ab_a_pagina:{
+  texto:[
+    fala('o capitão do porto', 'Cópia eu não tiro. O livro não sai daqui e não tem máquina.'),
+    'Ele empurra uma folha em branco e uma caneta na sua direção.',
+    fala('o capitão do porto', 'Mas você pode copiar à mão, e eu assino embaixo como conferido.'),
+    'Você copia a página inteira: data, hora, embarcação, entrada quatro, saída três.',
+    'Ele lê o que você escreveu, corrige um horário com a própria caneta, e assina com o nome inteiro e a matrícula.',
+    fala('o capitão do porto', 'Pronto. Agora isso não é boato.'),
+    d=>fala(d.jogador.nome, 'Por que o senhor tá fazendo isso?'),
+    'Ele guarda a caneta no bolso da camisa branca.',
+    fala('o capitão do porto', 'Porque eles falaram que eu contei errado.', 'frio')
+  ],
+  ef:{flag:'copia_do_livro_de_bordo',
+      npc:{nome:'o capitão do porto', opiniao:3, viuVoce:'Assinou como conferida a sua cópia manuscrita do livro de bordo.'},
+      registrar:'Tem cópia manuscrita e assinada da página do livro de bordo: entraram 4, saíram 3.'},
+  escolhas:[
+    {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
+    {texto:'Procurar o barco fretado na ilha.', vai:'c14_barco_fretado'},
+    {texto:'Andar pela cidade.', vai:'c14_cidade'}
+  ]
+},
+
 
 c14_ilha:{
   texto:[
@@ -13,7 +310,7 @@ c14_ilha:{
     'Os dois estão inativos. Os dois estão mentindo.',
     'Setecentos e quarenta habitantes, uma rua principal com calçada de pedra vulcânica preta, um porto de uma única rampa, e um cheiro constante de enxofre que as pessoas daqui não sentem mais e que os visitantes sentem por três dias e depois também não.',
     'O ferry vem duas vezes por semana, terça e sábado.',
-    d=>d.flags.bento_vai_a_cinnabar ? 'Você não veio de ferry. Você veio num barco azul de doze pés com um velho de setenta e quatro anos que gastou cinco horas de combustível e não aceitou dinheiro.' :
+    d=>d.flags.ryuzo_vai_a_cinnabar ? 'Você não veio de ferry. Você veio num barco azul de doze pés com um velho de setenta e quatro anos que gastou cinco horas de combustível e não aceitou dinheiro.' :
        'Você veio de ferry, na terça, com quatorze passageiros e uma carga de botijão de gás.',
     d=>{
       if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=5) return 'A recepcionista da pousada olha o seu rosto duas vezes, depois olha uma tela, depois sorri de um jeito que não chega aos olhos. "Quarto 12." Você não deu o seu nome.';

@@ -27,7 +27,7 @@ function entregarInicial(d){
   Estado.j.inicialDex = p.dex;
   if (typeof iniciarRival === 'function') iniciarRival();
   d.flags.espera_o_assistente = false;
-  Estado.marcar('recebeu_do_dorival');
+  Estado.marcar('recebeu_do_goro');
   Estado.registrar(`${Estado.j.nome} recebeu ${p.nome} das mãos de Goro Sampaio, em ${d.jogador.cidade}.`);
   return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
 }
@@ -233,7 +233,7 @@ c1e_da_tempo:{
   escolhas:[
     {texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'},
     {texto:'"Obrigado por esperar."', vai:'c1e_o_caderno',
-     ef:{flag:'agradeceu_o_dorival', rep:{eixo:'bom', delta:1, motivo:'Agradeceu a quem não precisava ter esperado'}}}
+     ef:{flag:'agradeceu_o_goro', rep:{eixo:'bom', delta:1, motivo:'Agradeceu a quem não precisava ter esperado'}}}
   ]
 },
 
@@ -269,7 +269,7 @@ c1e_a_volta:{
     fala('Goro', 'Volto pra Pallet dia vinte e dois, descarrego, lavo o carro, durmo uma semana e começo de novo.'),
     fala('Goro', 'Dezenove anos. Duzentas e vinte e oito voltas.', 'baixo')
   ],
-  ef:{flag:'sabe_da_volta_do_dorival', npc:{nome:'Goro', opiniao:3, memoria:'Te mostrou o caderno com a volta inteira de Kanto anotada a régua.'},
+  ef:{flag:'sabe_da_volta_do_goro', npc:{nome:'Goro', opiniao:3, memoria:'Te mostrou o caderno com a volta inteira de Kanto anotada a régua.'},
       registrar:'Goro faz a volta de Kanto uma vez por mês: onze cidades, vinte e dois dias.'},
   escolhas:[
     {texto:'"E se alguém não estiver na cidade no dia?"', vai:'c1e_nao_retirado'},
@@ -452,7 +452,7 @@ c1e_abre_a_caixa:{
     fala('Goro', 'Se em dois meses você decidir que não era isso, você devolve num Centro Pokémon e ninguém vai te chamar de nada. Eu levo de volta e escrevo o que tiver que escrever.'),
     fala('Goro', 'Mas se você for ficar, fica de verdade.', 'baixo')
   ],
-  ef:{flag:'aviso_do_dorival'},
+  ef:{flag:'aviso_do_goro'},
   escolhas:[
     {texto:'"Eu vou ficar." Estender a mão.', vai:'c1e_recebeu',
      ef:{flag:'prometeu_ficar', moral:8}},
@@ -522,7 +522,7 @@ c1e_primeiro_olhar:{
   ],
   ef:{moral:4, flag:'olhou_a_praca_primeiro'},
   escolhas:[
-    {texto:'Agradecer e ir.', vai:'c1e_despedida_dorival',
+    {texto:'Agradecer e ir.', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Agradeceu a quem entregou'}}},
     {texto:'"Tem mais alguma coisa que eu preciso saber?"', vai:'c1e_mais_alguma_coisa'}
   ]
@@ -541,7 +541,7 @@ c1e_agachou:{
   ],
   ef:{moral:8, flag:'agachou_na_praca'},
   escolhas:[
-    {texto:'Agradecer e ir.', vai:'c1e_despedida_dorival',
+    {texto:'Agradecer e ir.', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Agradeceu a quem entregou'}}},
     {texto:'"Tem mais alguma coisa que eu preciso saber?"', vai:'c1e_mais_alguma_coisa'}
   ]
@@ -563,7 +563,7 @@ c1e_chamou_alto:{
   ef:{moral:10, flag:'gritou_na_praca',
       presagio:'Você vai gritar esse nome de novo em situações muito piores que essa.'},
   escolhas:[
-    {texto:'Agradecer e ir.', vai:'c1e_despedida_dorival',
+    {texto:'Agradecer e ir.', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Agradeceu a quem entregou'}}},
     {texto:'"Tem mais alguma coisa que eu preciso saber?"', vai:'c1e_mais_alguma_coisa'}
   ]
@@ -580,11 +580,11 @@ c1e_mais_alguma_coisa:{
     fala('Goro', 'Terceira: ele não sabe que você é novo nisso. Pra ele você já é a pessoa dele desde agorinha, com currículo e tudo.', 'baixo'),
     fala('Goro', 'Isso é bom e é um peso, e é melhor você saber do peso hoje do que descobrir em Pewter.')
   ],
-  ef:{flag:'conselho_do_dorival', moral:5,
+  ef:{flag:'conselho_do_goro', moral:5,
       npc:{nome:'Goro', opiniao:5, memoria:'Te deu três conselhos e nenhum deles era sobre batalha.'},
       registrar:'Goro: licença hoje, comida de três em três horas, e ele já acha que você sabe o que está fazendo.'},
   escolhas:[
-    {texto:'"Obrigado." De verdade.', vai:'c1e_despedida_dorival',
+    {texto:'"Obrigado." De verdade.', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Ouviu até o fim quem não precisava ter falado'}, moral:4}},
     {texto:'"Por que o senhor tá me falando isso?"', vai:'c1e_por_que_fala'}
   ]
@@ -604,12 +604,12 @@ c1e_por_que_fala:{
       npc:{nome:'Goro', opiniao:6, memoria:'Te contou por que ele fala com todo mundo desde 1991.'},
       presagio:'Você vai conhecer esse menino de Cerulean. Ele tem quarenta e poucos anos agora.'},
   escolhas:[
-    {texto:'"Obrigado."', vai:'c1e_despedida_dorival',
+    {texto:'"Obrigado."', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Agradeceu os dois minutos de quem não devia nada'}}}
   ]
 },
 
-c1e_despedida_dorival:{
+c1e_despedida_goro:{
   texto:[
     'Ele guarda o caderno numa sacola de pano, dobra o banquinho, fecha o portamalas e bate duas vezes na lataria, que deve ser mania.',
     d=>{

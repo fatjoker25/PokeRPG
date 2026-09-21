@@ -681,7 +681,7 @@ c9_pendencias:{
   escolhas:[
     {texto:'Revelar o filme da câmera.', vai:'c9_revelar', cond:d=>!!d.flags.fotografou_o_porao || !!d.flags.fotografou_o_certificado},
     {texto:'Procurar a filha da Haruko.', vai:'c9_filha_marta', cond:d=>!!d.flags.a_filha_da_marta},
-    {texto:'Ir ao hospital ver o Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_ricardo || !!d.flags.salvou_treinador_torre},
+    {texto:'Ir ao hospital ver o Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo || !!d.flags.salvou_treinador_torre},
     {texto:'Tirar certidão do CNPJ na junta comercial.', vai:'c9_junta', cond:d=>!!d.flags.cnpj_de_saffron || !!d.flags.sabe_do_cartorio}
   ]
 },
@@ -1094,7 +1094,7 @@ c9_hospital:{
   texto:[
     'O hospital de Celadon atende metade de Kanto e parece.',
     'Corredor cheio, cadeira de plástico ocupada, gente dormindo em pé.',
-    d=>d.flags.conhece_o_ricardo
+    d=>d.flags.conhece_o_hideo
       ? 'Hideo está na ala D, leito 12, e já está sentado, o que é notícia boa.'
       : 'O rapaz que você tirou da Torre de Lavender está na ala D, leito 12. Ele se chama Hideo e você só descobriu o nome pela pulseira.',
     'Ele te vê chegando e demora dois segundos pra te reconhecer, e nos dois segundos você vê ele decidir alguma coisa.',
@@ -1105,7 +1105,7 @@ c9_hospital:{
     {texto:'"Como você tá?"', vai:'c9_como_voce_ta'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
     {texto:'Ficar sentado sem falar muito.', vai:'c9_sentou_no_hospital'},
-    {texto:'"Eu não sabia o seu nome até agora."', vai:'c9_o_nome_do_ricardo'}
+    {texto:'"Eu não sabia o seu nome até agora."', vai:'c9_o_nome_do_hideo'}
   ]
 },
 
@@ -1120,9 +1120,9 @@ c9_como_voce_ta:{
     'Ele olha a janela.',
     '"E eu vou ter que contar pra minha mãe da epilepsia, que eu escondi por três anos."'
   ],
-  ef:{flag:'ricardo_vai_contar'},
+  ef:{flag:'hideo_vai_contar'},
   escolhas:[
-    {texto:'"Conta."', vai:'c9_conta_ricardo'},
+    {texto:'"Conta."', vai:'c9_conta_hideo'},
     {texto:'"Por que você escondeu?"', vai:'c9_porque_escondeu'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
     {texto:'Ficar em silêncio.', vai:'c9_sentou_no_hospital'}
@@ -1140,12 +1140,12 @@ c9_porque_escondeu:{
     'Ele olha o soro.',
     '"Eu marquei não na pergunta. Levou quatro segundos."'
   ],
-  ef:{flag:'o_laudo_do_ricardo',
+  ef:{flag:'o_laudo_do_hideo',
       registrar:'Hideo escondeu a epilepsia no formulário da licença. Levou quatro segundos.',
       presagio:'Quatro segundos numa pergunta de sim ou não, e quatro dias num sexto andar. A distância entre as duas coisas é a história inteira de Kanto.'},
   escolhas:[
     {texto:'"E se a pergunta não existisse?"', vai:'c9_se_a_pergunta'},
-    {texto:'"Conta pra sua mãe."', vai:'c9_conta_ricardo'},
+    {texto:'"Conta pra sua mãe."', vai:'c9_conta_hideo'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
     {texto:'Ficar em silêncio.', vai:'c9_sentou_no_hospital'}
   ]
@@ -1170,7 +1170,7 @@ c9_se_a_pergunta:{
       presagio:'Uma regra escrita pra proteger que só produz mentira. Você vai reencontrar exatamente isso, com apostas muito maiores.'},
   escolhas:[
     {texto:'"Escreve isso."', vai:'c9_escreve_isso'},
-    {texto:'"Conta pra sua mãe."', vai:'c9_conta_ricardo'},
+    {texto:'"Conta pra sua mãe."', vai:'c9_conta_hideo'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
     {texto:'Ficar em silêncio.', vai:'c9_sentou_no_hospital'}
   ]
@@ -1189,19 +1189,19 @@ c9_escreve_isso:{
     'Você traz papel. Ele escreve por quarenta minutos e a letra dele é horrível e ele não para uma vez.'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez alguém escrever o próprio caso em vez de engolir'},
-      flag:['a_carta_do_ricardo','papel_com_brasao'],
+      flag:['hideo_escreveu','papel_com_brasao'],
       npc:{nome:'Hideo', opiniao:9, memoria:'Escreveu quarenta minutos de relato por sua causa, num leito de hospital.'},
       registrar:'Hideo escreveu um relato sobre a pergunta da licença e a Torre de Lavender.',
       presagio:'Uma folha assinada por quem quase morreu. Isso é o começo de um processo, e você ainda não sabe disso.'},
   escolhas:[
-    {texto:'Pedir uma cópia.', vai:'c9_copia_do_ricardo'},
+    {texto:'Pedir uma cópia.', vai:'c9_copia_do_hideo'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
     {texto:'Ficar em silêncio com ele.', vai:'c9_sentou_no_hospital'},
     {texto:'Se despedir e ir ao cassino.', vai:'c9_cassino'}
   ]
 },
 
-c9_copia_do_ricardo:{
+c9_copia_do_hideo:{
   texto:[
     '"Me dá uma cópia."',
     'Ele olha as folhas.',
@@ -1211,7 +1211,7 @@ c9_copia_do_ricardo:{
     'Você sai do hospital de Celadon com um relato assinado de cinco páginas na mochila.',
     'É a primeira prova dessa história que não foi tirada de ninguém. Foi dada.'
   ],
-  ef:{flag:['tem_o_relato_do_ricardo','papel_com_brasao'],
+  ef:{flag:['copia_do_hideo','papel_com_brasao'],
       dinheiro:-100,
       rep:{eixo:'bom',delta:2,motivo:'Guardou cópia de um relato voluntário'},
       registrar:'Tem cópia assinada do relato do Hideo, cinco páginas.',
@@ -1223,7 +1223,7 @@ c9_copia_do_ricardo:{
   ]
 },
 
-c9_conta_ricardo:{
+c9_conta_hideo:{
   texto:[
     '"Conta pra sua mãe."',
     '"Eu vou."',
@@ -1236,7 +1236,7 @@ c9_conta_ricardo:{
     'Fica olhando o soro por um tempo comprido.',
     '"Não sei. Eu passei três anos decidindo que era ruim e eu nunca perguntei pra ela."'
   ],
-  ef:{flag:'ricardo_nunca_perguntou',
+  ef:{flag:'hideo_nunca_perguntou',
       presagio:'Ele decidiu sozinho, por ela, por três anos. Todo mundo faz isso com alguém.'},
   escolhas:[
     {texto:'"Pergunta."', vai:'c9_pergunta_pra_ela'},
@@ -1259,7 +1259,7 @@ c9_pergunta_pra_ela:{
     'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o Pokégear no ouvido.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma desculpa de três anos com uma pergunta'},
-      flag:'ricardo_ligou',
+      flag:'hideo_ligou',
       npc:{nome:'Hideo', opiniao:8, memoria:'Ligou pra mãe por sua causa, três anos depois do diagnóstico.'},
       registrar:'Hideo ligou para a mãe.',
       presagio:'Ele ligou. Você não vai saber como foi.'},
@@ -1293,7 +1293,7 @@ c9_o_marowak_depois:{
   ]
 },
 
-c9_o_nome_do_ricardo:{
+c9_o_nome_do_hideo:{
   texto:[
     '"Eu não sabia o seu nome até agora."',
     'Ele ri.',
@@ -1328,7 +1328,7 @@ c9_sentou_no_hospital:{
     {texto:'"Escreve o que aconteceu com você."', vai:'c9_escreve_isso'},
     {texto:'Ir embora quando ele dormir.', vai:'c9_cidade2'},
     {texto:'Perguntar do Marowak quando ele acordar.', vai:'c9_o_marowak_depois'},
-    {texto:'"Conta pra sua mãe."', vai:'c9_conta_ricardo'}
+    {texto:'"Conta pra sua mãe."', vai:'c9_conta_hideo'}
   ]
 },
 
@@ -2534,7 +2534,7 @@ c9_o_lote_41:{
       registrar:'Lote 41: processo 44.207, recolhido em Lavender, tutor notificado só por edital.',
       presagio:'Notificado por edital. Quer dizer: publicaram num jornal que ele não lê e chamaram isso de avisar.'},
   escolhas:[
-    {texto:'"O tutor está internado. Ele não viu edital nenhum."', vai:'c9_prado_conversa', cond:d=>!!d.flags.conhece_o_ricardo || !!d.flags.tem_o_relato_do_ricardo},
+    {texto:'"O tutor está internado. Ele não viu edital nenhum."', vai:'c9_prado_conversa', cond:d=>!!d.flags.conhece_o_hideo || !!d.flags.copia_do_hideo},
     {texto:'"Eu quero dar lance no 41."', vai:'c9_arrematou_o_41'},
     {texto:'"Quem assinou esse recolhimento?"', vai:'c9_prado_conversa'},
     {texto:'Gritar pra sala inteira.', vai:'c9_gritou_no_pregao'}
@@ -2561,7 +2561,7 @@ c9_prado_conversa:{
       registrar:'A Auditora Nishino suspende a alienação se houver declaração escrita do tutor, com processo e data.',
       presagio:'Ela te disse o que precisa. Isso é raro e é a coisa mais útil que aconteceu nessa cidade.'},
   escolhas:[
-    {texto:'Entregar a declaração do Hideo agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_ricardo || !!d.flags.ricardo_escreveu},
+    {texto:'Entregar a declaração do Hideo agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
     {texto:'"Eu volto com isso escrito." E ir ao hospital.', vai:'c9_hospital'},
     {texto:'"E os outros mil e duzentos?"', vai:'c9_prado_te_da_o_processo'},
     {texto:'"E se eu simplesmente arrematar o 41?"', vai:'c9_arrematou_o_41'}
@@ -2570,15 +2570,15 @@ c9_prado_conversa:{
 
 c9_prado_te_da_o_processo:{
   texto:[
-    d=>d.flags.copia_do_ricardo || d.flags.ricardo_escreveu
+    d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? 'Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, do jeito de quem confere número.'
       : '"E os outros mil e duzentos?" Ela fica calada tempo demais pra ser uma pausa.',
-    d=>d.flags.copia_do_ricardo || d.flags.ricardo_escreveu
+    d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? '"Letra de pessoa com a mão ruim, escrita devagar, com o número certo do processo e a data de hoje." Ela dobra a folha. "Isso é documento."'
       : '"Os outros mil e duzentos estão dentro da lei", ela diz. "E é exatamente por isso que eu durmo mal."',
     'Ela abre a bolsa de couro gasta e tira um bloco de formulários carbonados.',
     'Preenche um na sua frente, apoiada na parede de azulejo, em letra de servidora — pequena, reta, sem enfeite.',
-    d=>d.flags.copia_do_ricardo || d.flags.ricardo_escreveu
+    d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? '**SUSPENSÃO DE ALIENAÇÃO — LOTE 41 — PROC. 44.207 — MOTIVO: MANIFESTAÇÃO SUPERVENIENTE DO TUTOR**'
       : '**REQUISIÇÃO DE CÓPIA INTEGRAL — PROC. 44.207 — SOLICITANTE: A AUDITORIA**',
     'Ela destaca a via amarela e te entrega.',
@@ -2588,7 +2588,7 @@ c9_prado_te_da_o_processo:{
   ef:{flag:'papel_da_prado',
       itens:{'Via amarela da Auditoria':1},
       executar:d=>{
-        if (d.flags.copia_do_ricardo || d.flags.ricardo_escreveu){
+        if (d.flags.copia_do_hideo || d.flags.hideo_escreveu){
           Estado.marcar('lote_41_suspenso');
           return [{tipo:'mundo', texto:'A alienação do lote 41 está suspensa. Ele não vai a leilão.'}];
         }
@@ -2599,7 +2599,7 @@ c9_prado_te_da_o_processo:{
       presagio:'Papel carbonado desbota. Ela te avisou disso e isso vai importar.'},
   escolhas:[
     {texto:'Ir ao armazém buscar o lote 41 em pessoa.', vai:'c9_dentro_limpo'},
-    {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_ricardo},
+    {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
     {texto:'Levar tudo à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir à junta comercial com o nome que ela te deu.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}}
   ]
@@ -2641,7 +2641,7 @@ c9_consignou:{
   escolhas:[
     {texto:'Ir ao armazém buscar os outros quarenta.', vai:'c9_dentro_limpo'},
     {texto:'Perguntar à Auditora quem assina os recolhimentos.', vai:'c9_prado_conversa'},
-    {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_ricardo},
+    {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
     {texto:'Sair dali. Você precisa de ar.', vai:'c9_cidade2'}
   ]
 },
@@ -2819,7 +2819,7 @@ c9_gaiola_41:{
     'Quando você chega perto ele levanta a cabeça, olha pra você, e faz uma coisa que arrebenta você por dentro: ele balança o rabo duas vezes e para.',
     'Duas vezes. Como quem já fez isso muitas vezes por muita gente que passou e não era quem ele esperava.',
     d=>d.flags.lote_41_suspenso ? 'Na plaqueta, colado por cima, tem um adesivo amarelo novo: SUSPENSO — AUDITORIA.' :
-       d.flags.conhece_o_ricardo ? 'O tutor dele se chama Hideo. Está num hospital em Lavender com a mão ruim, e você sabe disso, e ele não sabe que você sabe.' :
+       d.flags.conhece_o_hideo ? 'O tutor dele se chama Hideo. Está num hospital em Lavender com a mão ruim, e você sabe disso, e ele não sabe que você sabe.' :
        'A data de entrada é doze de dezembro. Faz nove meses.'
   ],
   ef:{flag:['achou_o_growlithe','viu_o_44207'],
@@ -3320,7 +3320,7 @@ c9_ivone_44207:{
       presagio:'Escolha de veículo de publicação. Alguém escolheu onde publicar para não ser lido.'},
   escolhas:[
     {texto:'"Eu vou buscar essa declaração." — hospital.', vai:'c9_hospital'},
-    {texto:'"Eu já tenho." — entregar a do Hideo.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_ricardo || !!d.flags.ricardo_escreveu},
+    {texto:'"Eu já tenho." — entregar a do Hideo.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
     {texto:'"Quem é o fiscal que assinou?"', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}},
     {texto:'"Então a gente vai pra Saffron."', vai:'c9_fim', ef:{flag:'vai_para_saffron'}}
   ]

@@ -59,19 +59,19 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    deixar em branco, a casa ganha alguém mesmo assim, porque
    "alguém lá embaixo" não é personagem, é neblina.
    ============================================================ */
-const NOMES_DE_CASA = ['Delina','Marisa','Neide','Chiyo','Rosa','Belmira','Zilda','Aparecida',
-                       'Joaquim','Aurélio','Teodoro','Benedito','Sebastião','Raimundo'];
+const NOMES_DE_CASA = ['Chiyo','Yuki','Sumire','Kaede','Michiko','Harue','Noriko','Tamae',
+                       'Jiro','Katsu','Masaru','Shouhei','Tadao','Genji'];
 const PARENTESCOS   = ['mãe','pai','avó','avô','tia','tio','irmã mais velha','irmão mais velho'];
 function casaDaFicha(ficha){
   const nome = (ficha && ficha.casaNome || '').trim() || Dados.escolher(NOMES_DE_CASA);
   const quem = (ficha && ficha.casaQuem || '').trim() || Dados.escolher(PARENTESCOS);
   return {nome, quem};
 }
-/* Usados na escrita das cenas: nomeCasa() é "Delina", casaQuem() é "mãe",
-   casaCompleto() é "Delina, sua mãe". Nunca devolvem vazio. */
+/* Usados na escrita das cenas: nomeCasa() é "Chiyo", casaQuem() é "mãe",
+   casaCompleto() é "Chiyo, sua mãe". Nunca devolvem vazio. */
 function casaDe(){
   const c = (Estado.dados && Estado.dados.jogador && Estado.dados.jogador.casa) || null;
-  return c && c.nome ? c : {nome:'Delina', quem:'mãe'};
+  return c && c.nome ? c : {nome:'Chiyo', quem:'mãe'};
 }
 function nomeCasa(){ return casaDe().nome; }
 function casaQuem(){ return casaDe().quem; }

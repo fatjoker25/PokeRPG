@@ -148,7 +148,7 @@ viridian:[
     'Atrás do posto de gasolina tem quatro homens em volta de um carro com o capô aberto e ninguém mexendo em nada.',
     'Tem um Magnemite pairando sobre o motor, parado, com as duas hastes viradas pra bateria.',
     fala('o dono do carro', 'Ele acha o problema. Ele SEMPRE acha o problema. O que ele não faz é explicar.'),
-    fala('Ademir, o do posto', 'Ele tá parado em cima da bateria faz vinte minutos, Zé. Ele já explicou.')
+    fala('Shiro, o do posto', 'Ele tá parado em cima da bateria faz vinte minutos, Yuu. Ele já explicou.')
   ],
   escolhas:[
     {texto:'Escanear o Magnemite com a Pokédex pra ver o que ele está medindo.',
@@ -159,17 +159,17 @@ viridian:[
      resultado:[
        'A leitura mostra campo magnético concentrado num ponto só, e o ponto é o terminal negativo.',
        'Terminal solto. Um parafuso.',
-       fala('Ademir, o do posto', 'EU FALEI!', 'grita'),
-       fala('o dono do carro', 'Você falou "ele já explicou", Ademir, isso não é falar.'),
+       fala('Shiro, o do posto', 'EU FALEI!', 'grita'),
+       fala('o dono do carro', 'Você falou "ele já explicou", Shiro, isso não é falar.'),
        'Eles brigam sobre isso por mais quinze minutos. O carro liga na primeira.'
      ]},
     {texto:'Perguntar de onde veio o Magnemite.',
      ef:{flag:'sabe_do_magnemite_do_posto',
          registrar:'O Magnemite do posto veio da usina abandonada e apareceu sozinho.'},
      resultado:[
-       fala('Ademir, o do posto', 'Ele apareceu. Há uns seis anos.'),
-       fala('Ademir, o do posto', 'Veio andando pela estrada da usina, de dia, no meio do sol, parou em cima da bomba dois e ficou.'),
-       fala('Ademir, o do posto', 'Nunca mais saiu. E não deixa ninguém encostar em bomba com defeito.', 'baixo'),
+       fala('Shiro, o do posto', 'Ele apareceu. Há uns seis anos.'),
+       fala('Shiro, o do posto', 'Veio andando pela estrada da usina, de dia, no meio do sol, parou em cima da bomba dois e ficou.'),
+       fala('Shiro, o do posto', 'Nunca mais saiu. E não deixa ninguém encostar em bomba com defeito.', 'baixo'),
        'A usina abandonada fica a quatro cidades daqui.'
      ]},
     {texto:'Pôr a mão no motor e achar você mesmo.',

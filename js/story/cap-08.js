@@ -1937,7 +1937,7 @@ c8_quantos_como_eu:{
     '"O que acontece dois convés abaixo do meu não é meu departamento, e eu já perguntei duas vez, e das duas vez me disseram que não é meu departamento."'
   ],
   ef:{flag:'nao_e_meu_departamento',
-      npc:{nome:'Contramestre Bruno', opiniao:2, memoria:'Já perguntou duas vezes sobre o que acontece dois conveses abaixo. Disseram que não é o departamento dele.'},
+      npc:{nome:'Contramestre Arai', opiniao:2, memoria:'Já perguntou duas vezes sobre o que acontece dois conveses abaixo. Disseram que não é o departamento dele.'},
       presagio:'Ele perguntou duas vezes. Duas é mais do que quase todo mundo.'},
   escolhas:[
     {texto:'Carga.', vai:'c8_carga'},
@@ -1962,7 +1962,7 @@ c8_terceira_vez:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou alguém pra uma terceira pergunta'},
       flag:'a_terceira_pergunta',
-      npc:{nome:'Contramestre Bruno', opiniao:4, memoria:'Você o convenceu a perguntar uma terceira vez, depois do contrato assinado.'},
+      npc:{nome:'Contramestre Arai', opiniao:4, memoria:'Você o convenceu a perguntar uma terceira vez, depois do contrato assinado.'},
       presagio:'Ele vai perguntar depois de assinar o contrato. É covardia e é muito mais do que ontem.'},
   escolhas:[
     {texto:'Carga.', vai:'c8_carga'},
@@ -2009,7 +2009,7 @@ c8_carga_ok:{
     'Caixa de carga não tem furo de ventilação.'
   ],
   ef:{flag:['trabalhou_no_navio','viu_caixas_furadas'], dinheiro:600,
-      npc:{nome:'Contramestre Bruno', opiniao:4, memoria:'Você aguentou seis horas de carga sem reclamar.'},
+      npc:{nome:'Contramestre Arai', opiniao:4, memoria:'Você aguentou seis horas de carga sem reclamar.'},
       rep:{eixo:'bom',delta:1,motivo:'Trabalhou honestamente pela passagem'}},
   escolhas:[
     {texto:'Subir para o salão — e pensar nas caixas.', vai:'c8_bordo'},
@@ -2032,7 +2032,7 @@ c8_contou_ao_contramestre:{
     '"Eu vou perguntar. Não hoje."'
   ],
   ef:{flag:'bruno_vai_perguntar',
-      npc:{nome:'Contramestre Bruno', opiniao:3, memoria:'Você mostrou as caixas com furo pra ele. Ele disse que vai perguntar, não hoje.'},
+      npc:{nome:'Contramestre Arai', opiniao:3, memoria:'Você mostrou as caixas com furo pra ele. Ele disse que vai perguntar, não hoje.'},
       presagio:'"Não hoje." Você vai ouvir isso de muita gente boa.'},
   escolhas:[
     {texto:'Abrir uma caixa você mesmo.', vai:'c8_porao'},

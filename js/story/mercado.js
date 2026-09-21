@@ -155,7 +155,7 @@ const TROCAS = {
 /* ─── nas cidades (quatro, e só) ─── */
   viridian: [{
     id:'viridian_1',
-    quem:'Ademir, o do posto',
+    quem:'Shiro, o do posto',
     onde:'atrás do posto de gasolina, com um rádio ligado no jogo',
     pede:19, da:{dex:52, nivel:[14,18], apelido:'Bigode', natureza:'Jolly'},
     fala:'"Eu preciso de um Rattata. Sério. Meu sogro tem alergia a Meowth e eu tenho um Meowth."',

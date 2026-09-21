@@ -1678,7 +1678,7 @@ c7_levou_os_dois:{
     'E ele fica calado por um tempo muito longo.'
   ],
   ef:{dinheiro:-2500, rep:{eixo:'bom',delta:4,motivo:'Pagou a van e levou os três até Celadon'},
-      flag:['salvou_treinador_torre','conhece_o_ricardo'],
+      flag:['salvou_treinador_torre','conhece_o_hideo'],
       npc:{nome:'Hideo', opiniao:8, memoria:'Você o tirou do sexto andar da Torre de Lavender depois de quatro dias caído. Ele não esquece.'},
       registrar:'Levou o treinador, o Marowak e o Cubone até o hospital de Celadon.',
       presagio:'Hideo, vinte e dois anos. Você vai reencontrar ele, e não vai ser num hospital.'},
@@ -1699,7 +1699,7 @@ c7_ficou_ate_alta:{
     '"Quatro dias, cara. Ele bateu osso por quatro dias."'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou três dias esperando a alta de um desconhecido'},
-      flag:'sabe_do_ricardo', hp:-2, causa:'Três dias dormindo em Centro Pokémon',
+      flag:'sabe_do_hideo', hp:-2, causa:'Três dias dormindo em Centro Pokémon',
       npc:{nome:'Hideo', opiniao:10, memoria:'Você ficou três dias em Celadon até ele ter alta. Ele te contou da epilepsia.'},
       presagio:'Ele escondeu um laudo por medo de uma exigência que talvez nem existisse. Isso vai acontecer com muita gente nessa história.'},
   escolhas:[
@@ -1837,7 +1837,7 @@ c7_contou_a_verdade:{
     '"Eu não vou te absolver, cara. Eu não tenho energia pra isso agora. Mas eu ia morrer lá em cima."'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Contou a verdade sem melhorar nada'},
-      flag:'contou_a_verdade_ao_ricardo',
+      flag:'contou_a_verdade_ao_hideo',
       npc:{nome:'Hideo', opiniao:6, memoria:'Você contou que atacou o Marowak dele antes de entender. Ele não te absolveu e agradeceu.'},
       presagio:'"Eu não vou te absolver." Você vai precisar disso quando alguém te absolver rápido demais.'},
   escolhas:[
@@ -2198,7 +2198,7 @@ c7_mural_do_treinador:{
     'Isso não conserta nada. É o único registro que vai existir dessa parte.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Deixou registrado o que ninguém ia registrar'},
-      flag:'escreveu_o_ricardo', moral:10,
+      flag:'hideo_escreveu', moral:10,
       registrar:'Escreveu no mural: "O Marowak dele chamou por quatro dias."',
       presagio:'Isso vai ficar nessa parede até alguém apagar. Ninguém vai apagar.'},
   escolhas:[
