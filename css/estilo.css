@@ -537,6 +537,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
     height:100%;
     background:linear-gradient(180deg, rgba(8,10,14,.18) 0%, rgba(8,10,14,.4) 100%);
   }
+  .arena.com-cenario .lutador.aliado .arte .sprite,
+  .arena.arena-ginasio .lutador.aliado .arte .sprite{
+    width:104px;height:104px;margin-bottom:-25px;
+  }
   .arena.com-cenario .lutador .arte{
     height:112px;margin-bottom:10px;border-radius:var(--raio-sm);
     background-image:var(--ar-fundo);
@@ -1410,6 +1414,22 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   width:88px;height:88px;
   filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))
 }
+/* A arte de costas é de corpo inteiro e vem com folga dentro do
+   quadro, então na tela ela sai menor que a de frente. O seu fica
+   maior de propósito: além de compensar isso, é ele que está mais
+   perto de quem olha. */
+.arena.com-cenario .lutador.aliado .arte .sprite,
+.arena.arena-ginasio .lutador.aliado .arte .sprite{
+  width:126px;height:126px;
+  /* A arte de costas guarda 24% do quadro em transparência embaixo
+     (mediana medida nas 251). Sem puxar, o bicho flutua acima da
+     própria sombra. O que desce pra fora da faixa é só o vazio. */
+  margin-bottom:-30px;
+}
+.arena.com-cenario .lutador.aliado .arte:not(:empty)::after,
+.arena.arena-ginasio .lutador.aliado .arte:not(:empty)::after{width:96px;height:22px;bottom:-4px}
+.arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
+.arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{width:70px;height:16px;bottom:-2px}
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
 /* as duas bases: a sua fica mais perto (maior e mais baixa), a do
    outro lado fica mais longe (menor e mais alta) — é o que dá a

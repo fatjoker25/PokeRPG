@@ -116,6 +116,24 @@ As imagens de cenário vieram dos fundos de batalha do Pokémon Showdown
 (`play.pokemonshowdown.com/fx/bg-*.png`), mesma categoria de arte de fã dos
 1264 sprites que o projeto já embute. Crédito no README.
 
+## Arte de costas é de corpo inteiro
+A de frente é HG/SS; a de costas é Black/White, em `battle/back_full/`
+e `battle/back_full_shiny/`. HG/SS enquadra de perto e corta nas bordas,
+e de costas é o Pokémon que fica na tela a partida inteira.
+
+Duas consequências que já mordiam e agora estão no CSS:
+
+- a arte de costas guarda **24% do quadro em transparência embaixo**
+  (mediana medida nas 251), então sem puxar pra baixo o bicho flutua
+  acima da própria sombra;
+- ela também sai menor na tela que a de frente, então o lutador aliado
+  é desenhado maior de propósito — o que também está certo de
+  perspectiva, já que é ele que está mais perto.
+
+Pasta que saiu de uso fica na árvore mas entra em `SPRITES_FORA`, no
+`build.py`, senão o arquivo único carrega megabytes que ninguém pede.
+`ferramentas/chk-sprites.js` confere as duas pontas.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.

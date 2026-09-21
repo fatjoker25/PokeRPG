@@ -14,9 +14,16 @@ scripts  = ['/* ===== ' + j + ' ===== */\n' + open(j, encoding='utf-8').read() f
 # a promessa é abrir em qualquer lugar, sem pasta do lado.
 import base64, json
 SPRITES_DIR = 'sprites_nds'
+# Pastas que ficaram na árvore mas ninguém mais pede: embuti-las
+# custaria megabytes de data URI no arquivo único sem nada aparecer.
+# Sai daqui quando voltar a ser usada em js/data/sprites.js.
+SPRITES_FORA = ('sprites_nds/battle/back/', 'sprites_nds/battle/back_shiny/')
 sprites = {}
 if os.path.isdir(SPRITES_DIR):
     for raiz, _, arqs in os.walk(SPRITES_DIR):
+        pasta = raiz.replace(os.sep, '/').rstrip('/') + '/'
+        if pasta.startswith(SPRITES_FORA):
+            continue
         for a in sorted(arqs):
             if not a.endswith('.png'):
                 continue
