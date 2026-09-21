@@ -1170,7 +1170,58 @@ c8_portao_cinco:{
     {texto:'Seguir o caminhão a pé.', vai:'c8_seguiu_caminhao'},
     {texto:'Ir até a balança dois olhar.', vai:'c8_balanca_dois'},
     {texto:'Anotar o número do lacre e da plaquinha.', vai:'c8_anotou_lacre'},
+    {texto:'Levantar, pôr o colete e ir perguntar o lacre de frente.',
+     vai:'c8_de_colete', cond:d=>typeof Cargos !== 'undefined'
+       && (Cargos.tem('guarda_rota') || Cargos.tem('investigador') || Cargos.tem('comissao'))},
     {texto:'Sair correndo e gritar.', vai:'c8_gritou_no_portao'}
+  ]
+},
+
+c8_de_colete:{
+  texto:[
+    'Você sai de trás dos pallets, põe o colete e anda até a cancela pelo meio do asfalto, que é o jeito de andar de quem tem motivo pra estar ali.',
+    'O motorista te vê pelo retrovisor e para sozinho, antes de você pedir. É isso que o colete faz.',
+    fala('o motorista', 'Problema?'),
+    d=>fala(d.jogador.nome, 'Conferência. Lacre e plaquinha.'),
+    'Ele entrega os dois papéis pela janela sem nenhuma resistência, porque quem entrega papel a noite inteira entrega papel.',
+    'Você lê com a lanterna. O lacre bate com a plaquinha. A plaquinha bate com o manifesto.',
+    'E o manifesto diz que o contêiner tem quatro mil e duzentos quilos de ração seca.',
+    'Quatro mil e duzentos quilos de ração seca não fazem o barulho que esse contêiner fez na lombada.',
+    fala('o motorista', 'Tá certo?'),
+    d=>fala(d.jogador.nome, 'Tá certo.'),
+    'E está mesmo. Está certo no papel, que é exatamente o problema.'
+  ],
+  ef:{flag:['viu_o_manifesto','sabe_do_peso_errado'],
+      rep:{eixo:'bom', delta:2, motivo:'Usou a credencial na cara, à noite, no portão cinco'},
+      npc:{nome:'Motorista do turno', opiniao:1, memoria:'Parou por causa do seu colete e te entregou os papéis sem discutir.'},
+      registrar:'O manifesto do contêiner das 3h42 declara 4.200 kg de ração seca.',
+      presagio:'Papel certo é mais difícil de derrubar que papel errado, e alguém sabe disso.'},
+  escolhas:[
+    {texto:'"Quem assina esse manifesto?"', vai:'c8_quem_assina'},
+    {texto:'Deixar ele ir e seguir o caminhão até o cais.', vai:'c8_seguiu_caminhao'},
+    {texto:'Anotar tudo e ir embora antes que alguém repare.', vai:'c8_anotou_lacre'}
+  ]
+},
+
+c8_quem_assina:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem assina esse manifesto?'),
+    'Ele vira o papel pra ler, o que quer dizer que ele nunca leu.',
+    fala('o motorista', 'Tem uma rubrica aqui e um carimbo. O carimbo é do expedidor.'),
+    d=>fala(d.jogador.nome, 'E o expedidor é quem?'),
+    fala('o motorista', 'Moço, eu pego no cinco e largo no três. Eu não sei nem o que tem dentro.'),
+    'Uma pausa.',
+    fala('o motorista', 'E eu prefiro não saber, se for pra ser honesto, e você tá de colete então eu tô sendo honesto.'),
+    'Você devolve os papéis. Ele engata e sai devagar pela lombada, e o barulho acontece de novo, igualzinho.',
+    'Você fica olhando as luzes de trás até elas virarem no cais três.'
+  ],
+  ef:{flag:'sabe_do_carimbo_do_expedidor',
+      rep:{eixo:'bom', delta:1, motivo:'Perguntou quem assinou em vez de acusar quem dirigia'},
+      registrar:'O manifesto tem carimbo de expedidor e rubrica, e o motorista nunca leu nenhum dos dois.'},
+  escolhas:[
+    {texto:'Seguir o caminhão a pé.', vai:'c8_seguiu_caminhao'},
+    {texto:'Ir até a balança dois olhar.', vai:'c8_balanca_dois'},
+    {texto:'Anotar tudo e sair.', vai:'c8_anotou_lacre'}
   ]
 },
 

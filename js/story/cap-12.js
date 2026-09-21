@@ -1737,7 +1737,82 @@ c12_cerca:{
     {texto:'Pular a cerca aqui.', vai:'c12_setor7'},
     {texto:'Esperar um caminhão passar.', vai:'c12_esperou_caminhao'},
     {texto:'Voltar à noite pela trilha.', vai:'c12_noite_zona'},
+    {texto:'Pedir por escrito o empenho desses oitenta metros.',
+     vai:'c12_empenho', cond:d=>typeof Cargos !== 'undefined'
+       && (Cargos.tem('comissao') || Cargos.tem('investigador') || Cargos.tem('reporter'))},
     {texto:'Voltar e procurar quem aprovou esse asfalto.', vai:'c12_diretor'}
+  ]
+},
+
+c12_empenho:{
+  texto:[
+    'Você não pula a cerca. Você anda de volta os quatro quilômetros, entra na administração da reserva pela porta da frente e pede uma coisa que ninguém nunca pediu ali:',
+    d=>fala(d.jogador.nome, 'O empenho do serviço de pavimentação do acesso de serviço. Ano, número e valor.'),
+    'A funcionária do balcão pede pra você repetir. Você repete.',
+    'Ela some por onze minutos e volta com uma pasta fina e uma expressão que não estava no rosto dela antes.',
+    fala('a funcionária da reserva', 'Não tem empenho.'),
+    d=>fala(d.jogador.nome, 'Como não tem?'),
+    fala('a funcionária da reserva', 'Tem uma nota de doação. O asfalto foi doado.'),
+    'Ela vira a pasta pra você. É uma folha só, com um logotipo pequeno no canto superior e um campo de "doador" preenchido a máquina.',
+    'O campo diz: SOLICITANTE PREFERE NÃO SE IDENTIFICAR.',
+    'Oitenta metros de asfalto de grau industrial, doados por alguém que preferiu não se identificar, dentro de uma reserva federal.'
+  ],
+  ef:{flag:['sabe_da_doacao_do_asfalto','achou_o_portao'],
+      rep:{eixo:'bom', delta:3, motivo:'Pediu o empenho no balcão em vez de pular a cerca', notorio:true},
+      npc:{nome:'Funcionária da reserva', opiniao:2, memoria:'Procurou um empenho que não existia e te mostrou a nota de doação.'},
+      registrar:'O asfalto do acesso de serviço foi doado por quem "prefere não se identificar".',
+      presagio:'Doação anônima a órgão público tem um nome técnico e o nome técnico não é doação.'},
+  escolhas:[
+    {texto:'"Tem cópia dessa folha?"', vai:'c12_copia_da_folha'},
+    {texto:'"Quem recebeu a doação assinou?"', vai:'c12_quem_recebeu'},
+    {texto:'Agradecer e voltar pra cerca de noite.', vai:'c12_noite_zona'},
+    {texto:'Ir falar com o diretor com isso na mão.', vai:'c12_diretor'}
+  ]
+},
+
+c12_copia_da_folha:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Tem cópia dessa folha?'),
+    'Ela olha pra pasta, pra você, pra porta da sala do diretor, que está fechada.',
+    fala('a funcionária da reserva', 'A copiadora tá quebrada faz três semanas.'),
+    'Uma pausa exatamente longa demais.',
+    fala('a funcionária da reserva', 'Mas o seu aparelho tem câmera.'),
+    'Ela empurra a pasta dois centímetros na sua direção e vai olhar uma coisa muito interessante no outro lado do balcão.',
+    'Você fotografa em quatro segundos e devolve a pasta fechada.',
+    fala('a funcionária da reserva', 'Eu não vi nada.'),
+    d=>fala(d.jogador.nome, 'Não viu mesmo.')
+  ],
+  ef:{flag:['tem_foto_da_doacao'],
+      itens:{'Câmera descartável':0},
+      rep:{eixo:'bom', delta:2, motivo:'Saiu da reserva com prova em vez de indignação'},
+      npc:{nome:'Funcionária da reserva', opiniao:4, memoria:'Empurrou a pasta dois centímetros e olhou pro outro lado.'},
+      registrar:'Você tem foto da nota de doação do asfalto.',
+      presagio:'Ela arriscou o emprego por dois centímetros de pasta. Lembre disso quando precisar decidir o que publicar.'},
+  escolhas:[
+    {texto:'Ir falar com o diretor com a foto na mão.', vai:'c12_diretor'},
+    {texto:'Guardar e ir ver o setor 7 à noite.', vai:'c12_noite_zona'}
+  ]
+},
+
+c12_quem_recebeu:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem recebeu a doação assinou?'),
+    'Ela vira a folha. No rodapé tem um campo de recebimento com uma rubrica e um carimbo.',
+    'A rubrica é de três letras. O carimbo é da direção da reserva.',
+    fala('a funcionária da reserva', 'É o diretor.'),
+    d=>fala(d.jogador.nome, 'Ele recebeu asfalto de alguém que não quis dizer o nome e assinou.'),
+    fala('a funcionária da reserva', 'Ele recebeu, assinou e mandou arquivar em doações diversas, que é a pasta onde vai camiseta de evento e cesta de Natal.'),
+    'Ela fecha a pasta.',
+    fala('a funcionária da reserva', 'Eu trabalho aqui há nove anos e essa é a única folha dessa pasta que eu já reli.', 'baixo')
+  ],
+  ef:{flag:['diretor_assinou_a_doacao'],
+      rep:{eixo:'bom', delta:2, motivo:'Foi atrás de quem assinou embaixo, não de quem doou em cima'},
+      npc:{nome:'Funcionária da reserva', opiniao:3, memoria:'Te disse que releu aquela folha uma vez em nove anos.'},
+      registrar:'O diretor da reserva assinou o recebimento do asfalto e mandou arquivar em "doações diversas".'},
+  escolhas:[
+    {texto:'"Tem cópia dessa folha?"', vai:'c12_copia_da_folha'},
+    {texto:'Ir falar com o diretor agora.', vai:'c12_diretor'},
+    {texto:'Ir ver o setor 7 à noite.', vai:'c12_noite_zona'}
   ]
 },
 

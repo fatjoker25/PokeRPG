@@ -1794,3 +1794,16 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
+
+/* epílogo: o que aconteceu com você, depois do que aconteceu com Kanto */
+.painel.final .tit.epilogo{font-size:20px;letter-spacing:.14em;color:var(--destaque-2, var(--destaque))}
+.painel.final .epilogo-rodape{
+  margin-top:22px;padding-top:16px;border-top:1px dashed var(--borda);
+  font-style:italic;color:var(--texto-fraco);
+}
+
+/* a linha que diz como o lugar te recebe hoje */
+.narrativa p.recepcao{
+  margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
+  color:var(--texto-fraco);font-style:italic;
+}

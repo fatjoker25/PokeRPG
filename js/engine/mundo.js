@@ -353,6 +353,49 @@ const Mundo = {
    AFAZERES — o que dá pra fazer onde você está
    Alguns aparecem só depois que você descobre que existem.
    ============================================================ */
+/* ============================================================
+   COMO O LUGAR TE RECEBE
+   A mesma cidade não recebe do mesmo jeito quem chegou ontem e
+   quem já resolveu três coisas aqui. Uma linha, no alto da tela,
+   que muda com reputação, crachá e quantas vezes você já veio.
+   ============================================================ */
+function comoOlugarTeRecebe(){
+  const d = Estado.dados;
+  const L = Mundo.atual();
+  const id = Mundo.id();
+  const r = Estado.rep;
+  const vezes = (d.visitados[id] && d.visitados[id].vezes) || 0;
+  const cidade = L.tipo === 'cidade';
+  const cargo = (typeof Cargos !== 'undefined') ? Cargos.principal() : null;
+
+  /* má fama fala mais alto que qualquer crachá */
+  if (r.eixo === 'ruim' && r.ruim >= 4)
+    return cidade
+      ? 'Duas pessoas mudam de calçada quando você passa. Não é medo — é a economia de quem não quer ser visto perto de você.'
+      : 'Um grupo que vinha na sua direção sai da trilha e passa pelo capim, e nenhum deles olha pra você.';
+  if (r.eixo === 'ruim' && r.ruim >= 2)
+    return cidade
+      ? 'Ninguém te trata mal. Só te tratam com um cuidado a mais do que o normal, e cuidado a mais é uma informação.'
+      : 'Quem cruza com você na trilha cumprimenta rápido demais e segue.';
+
+  /* crachá pesado muda o tratamento antes da reputação */
+  if (cargo && cargo.peso >= 5 && cidade)
+    return `Alguém te reconhece pelo cargo antes de reconhecer pelo rosto, e a frase que sai é sempre a mesma: "o senhor é o de..." e aí a pessoa não sabe como terminar.`;
+  if (cargo && cargo.peso >= 3 && cidade && Cargos.temBeneficio('guarita'))
+    return 'O guarda da esquina te vê, confere o crachá de longe e volta pro que estava fazendo. Isso é o que passagem faz: te torna sem graça.';
+
+  if (r.eixo === 'bom' && r.bom >= 4)
+    return cidade
+      ? 'Duas pessoas te cumprimentam pelo nome e você não conhece nenhuma das duas. Kanto é pequena e fala.'
+      : 'Um casal com mochila te reconhece na trilha e pede uma foto, o que é constrangedor no melhor sentido possível.';
+  if (r.eixo === 'bom' && r.bom >= 2 && cidade)
+    return 'Alguém no balcão acha que já te viu em algum lugar e não lembra onde, e isso vai acontecer cada vez mais.';
+
+  if (cidade && vezes >= 3)
+    return 'Você já sabe onde ficam as coisas aqui, o que muda o jeito de andar: mais devagar, menos olhando pra cima.';
+  return null;
+}
+
 function afazeresDoLocal(){
   const L = Mundo.atual();
   const id = Mundo.id();

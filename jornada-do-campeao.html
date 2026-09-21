@@ -1804,6 +1804,19 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* fala que continua a anterior: sem repetir o nome, colada na de cima */
 .narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
 
+/* epílogo: o que aconteceu com você, depois do que aconteceu com Kanto */
+.painel.final .tit.epilogo{font-size:20px;letter-spacing:.14em;color:var(--destaque-2, var(--destaque))}
+.painel.final .epilogo-rodape{
+  margin-top:22px;padding-top:16px;border-top:1px dashed var(--borda);
+  font-style:italic;color:var(--texto-fraco);
+}
+
+/* a linha que diz como o lugar te recebe hoje */
+.narrativa p.recepcao{
+  margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
+  color:var(--texto-fraco);font-style:italic;
+}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -4200,6 +4213,49 @@ const Mundo = {
    AFAZERES — o que dá pra fazer onde você está
    Alguns aparecem só depois que você descobre que existem.
    ============================================================ */
+/* ============================================================
+   COMO O LUGAR TE RECEBE
+   A mesma cidade não recebe do mesmo jeito quem chegou ontem e
+   quem já resolveu três coisas aqui. Uma linha, no alto da tela,
+   que muda com reputação, crachá e quantas vezes você já veio.
+   ============================================================ */
+function comoOlugarTeRecebe(){
+  const d = Estado.dados;
+  const L = Mundo.atual();
+  const id = Mundo.id();
+  const r = Estado.rep;
+  const vezes = (d.visitados[id] && d.visitados[id].vezes) || 0;
+  const cidade = L.tipo === 'cidade';
+  const cargo = (typeof Cargos !== 'undefined') ? Cargos.principal() : null;
+
+  /* má fama fala mais alto que qualquer crachá */
+  if (r.eixo === 'ruim' && r.ruim >= 4)
+    return cidade
+      ? 'Duas pessoas mudam de calçada quando você passa. Não é medo — é a economia de quem não quer ser visto perto de você.'
+      : 'Um grupo que vinha na sua direção sai da trilha e passa pelo capim, e nenhum deles olha pra você.';
+  if (r.eixo === 'ruim' && r.ruim >= 2)
+    return cidade
+      ? 'Ninguém te trata mal. Só te tratam com um cuidado a mais do que o normal, e cuidado a mais é uma informação.'
+      : 'Quem cruza com você na trilha cumprimenta rápido demais e segue.';
+
+  /* crachá pesado muda o tratamento antes da reputação */
+  if (cargo && cargo.peso >= 5 && cidade)
+    return `Alguém te reconhece pelo cargo antes de reconhecer pelo rosto, e a frase que sai é sempre a mesma: "o senhor é o de..." e aí a pessoa não sabe como terminar.`;
+  if (cargo && cargo.peso >= 3 && cidade && Cargos.temBeneficio('guarita'))
+    return 'O guarda da esquina te vê, confere o crachá de longe e volta pro que estava fazendo. Isso é o que passagem faz: te torna sem graça.';
+
+  if (r.eixo === 'bom' && r.bom >= 4)
+    return cidade
+      ? 'Duas pessoas te cumprimentam pelo nome e você não conhece nenhuma das duas. Kanto é pequena e fala.'
+      : 'Um casal com mochila te reconhece na trilha e pede uma foto, o que é constrangedor no melhor sentido possível.';
+  if (r.eixo === 'bom' && r.bom >= 2 && cidade)
+    return 'Alguém no balcão acha que já te viu em algum lugar e não lembra onde, e isso vai acontecer cada vez mais.';
+
+  if (cidade && vezes >= 3)
+    return 'Você já sabe onde ficam as coisas aqui, o que muda o jeito de andar: mais devagar, menos olhando pra cima.';
+  return null;
+}
+
 function afazeresDoLocal(){
   const L = Mundo.atual();
   const id = Mundo.id();
@@ -25992,7 +26048,58 @@ c8_portao_cinco:{
     {texto:'Seguir o caminhão a pé.', vai:'c8_seguiu_caminhao'},
     {texto:'Ir até a balança dois olhar.', vai:'c8_balanca_dois'},
     {texto:'Anotar o número do lacre e da plaquinha.', vai:'c8_anotou_lacre'},
+    {texto:'Levantar, pôr o colete e ir perguntar o lacre de frente.',
+     vai:'c8_de_colete', cond:d=>typeof Cargos !== 'undefined'
+       && (Cargos.tem('guarda_rota') || Cargos.tem('investigador') || Cargos.tem('comissao'))},
     {texto:'Sair correndo e gritar.', vai:'c8_gritou_no_portao'}
+  ]
+},
+
+c8_de_colete:{
+  texto:[
+    'Você sai de trás dos pallets, põe o colete e anda até a cancela pelo meio do asfalto, que é o jeito de andar de quem tem motivo pra estar ali.',
+    'O motorista te vê pelo retrovisor e para sozinho, antes de você pedir. É isso que o colete faz.',
+    fala('o motorista', 'Problema?'),
+    d=>fala(d.jogador.nome, 'Conferência. Lacre e plaquinha.'),
+    'Ele entrega os dois papéis pela janela sem nenhuma resistência, porque quem entrega papel a noite inteira entrega papel.',
+    'Você lê com a lanterna. O lacre bate com a plaquinha. A plaquinha bate com o manifesto.',
+    'E o manifesto diz que o contêiner tem quatro mil e duzentos quilos de ração seca.',
+    'Quatro mil e duzentos quilos de ração seca não fazem o barulho que esse contêiner fez na lombada.',
+    fala('o motorista', 'Tá certo?'),
+    d=>fala(d.jogador.nome, 'Tá certo.'),
+    'E está mesmo. Está certo no papel, que é exatamente o problema.'
+  ],
+  ef:{flag:['viu_o_manifesto','sabe_do_peso_errado'],
+      rep:{eixo:'bom', delta:2, motivo:'Usou a credencial na cara, à noite, no portão cinco'},
+      npc:{nome:'Motorista do turno', opiniao:1, memoria:'Parou por causa do seu colete e te entregou os papéis sem discutir.'},
+      registrar:'O manifesto do contêiner das 3h42 declara 4.200 kg de ração seca.',
+      presagio:'Papel certo é mais difícil de derrubar que papel errado, e alguém sabe disso.'},
+  escolhas:[
+    {texto:'"Quem assina esse manifesto?"', vai:'c8_quem_assina'},
+    {texto:'Deixar ele ir e seguir o caminhão até o cais.', vai:'c8_seguiu_caminhao'},
+    {texto:'Anotar tudo e ir embora antes que alguém repare.', vai:'c8_anotou_lacre'}
+  ]
+},
+
+c8_quem_assina:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem assina esse manifesto?'),
+    'Ele vira o papel pra ler, o que quer dizer que ele nunca leu.',
+    fala('o motorista', 'Tem uma rubrica aqui e um carimbo. O carimbo é do expedidor.'),
+    d=>fala(d.jogador.nome, 'E o expedidor é quem?'),
+    fala('o motorista', 'Moço, eu pego no cinco e largo no três. Eu não sei nem o que tem dentro.'),
+    'Uma pausa.',
+    fala('o motorista', 'E eu prefiro não saber, se for pra ser honesto, e você tá de colete então eu tô sendo honesto.'),
+    'Você devolve os papéis. Ele engata e sai devagar pela lombada, e o barulho acontece de novo, igualzinho.',
+    'Você fica olhando as luzes de trás até elas virarem no cais três.'
+  ],
+  ef:{flag:'sabe_do_carimbo_do_expedidor',
+      rep:{eixo:'bom', delta:1, motivo:'Perguntou quem assinou em vez de acusar quem dirigia'},
+      registrar:'O manifesto tem carimbo de expedidor e rubrica, e o motorista nunca leu nenhum dos dois.'},
+  escolhas:[
+    {texto:'Seguir o caminhão a pé.', vai:'c8_seguiu_caminhao'},
+    {texto:'Ir até a balança dois olhar.', vai:'c8_balanca_dois'},
+    {texto:'Anotar tudo e sair.', vai:'c8_anotou_lacre'}
   ]
 },
 
@@ -34867,17 +34974,125 @@ c11_recepcao:{
       if (d.flags.tem_cracha_verde) return 'O crachá verde da Sra. Kubo abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
       if (d.flags.crachas_sabrina) return 'O crachá do zelador é vencido faz três anos, mas a catraca da Silph lê o chip, não a data. Ela abre.';
       if (d.flags.cracha_roubado) return 'O crachá reserva da Hitomi abre a catraca no primeiro toque.';
+      if (typeof Cargos !== 'undefined' && (Cargos.tem('investigador') || Cargos.tem('comissao')))
+        return 'Você não tem crachá da Silph. Você tem um número de processo, que é uma coisa que prédio comercial nenhum sabe recusar sem consultar o jurídico — e consultar o jurídico leva quarenta minutos que ninguém quer gastar às três da tarde.';
+      if (typeof Cargos !== 'undefined' && Cargos.tem('reporter'))
+        return 'Você não tem crachá da Silph. Você tem um crachá de imprensa de papel laminado, e a recepcionista olha pra ele do jeito que se olha pra uma coisa que dá trabalho.';
       return 'Você não tem crachá. A recepcionista sorri com o sorriso cronometrado e pergunta com quem você tem hora marcada.';
     }
   ],
   ef:{flag:'entrou_na_recepcao'},
   escolhas:[
+    {texto:'Pôr a credencial no balcão e pedir o livro de visitantes.',
+     vai:'c11_credencial_no_balcao',
+     cond:d=>typeof Cargos !== 'undefined' && (Cargos.tem('investigador') || Cargos.tem('comissao'))},
+    {texto:'Dizer que é imprensa e pedir uma resposta oficial.',
+     vai:'c11_imprensa_no_balcao',
+     cond:d=>typeof Cargos !== 'undefined' && Cargos.tem('reporter')},
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada',
      cond:d=>!!(d.flags.entrou_com_marina||d.flags.crachas_sabrina||d.flags.cracha_roubado||d.flags.dentro_da_silph||d.flags.tem_cracha_verde||d.flags.tem_credencial_de_verificacao||d.flags.tem_cracha_visitante)},
     {texto:'Subir pro sétimo ver a sala vazia.', vai:'c11_sala_vazia', cond:d=>!!d.flags.sabe_da_sala_vazia && !!d.flags.dentro_da_silph},
     {texto:'Subir pro nono andar.', vai:'c11_nono_andar', cond:d=>!!d.flags.dentro_da_silph},
     {texto:'Inventar uma reunião.', vai:'c11_inventar'},
     {texto:'Ir pela doca de carga.', vai:'c11_doca'}
+  ]
+},
+
+c11_credencial_no_balcao:{
+  texto:[
+    'Você põe a credencial no balcão virada pra ela e não fala nada por três segundos, que é o tempo exato de ela ler o número de processo.',
+    d=>fala(d.jogador.nome, 'Livro de visitantes dos últimos trinta dias, por favor.'),
+    'O sorriso cronometrado não sai do rosto dela, mas para de ser um sorriso.',
+    fala('a recepcionista', 'O senhor tem hora marcada?'),
+    d=>fala(d.jogador.nome, 'Não. Eu tenho um número de processo.'),
+    'Ela olha pro segurança do fundo. O segurança do fundo olha pra ela. Nenhum dos dois foi treinado pra isso, porque ninguém treina recepção pra receber auditoria a pé.',
+    fala('a recepcionista', 'Eu vou precisar consultar o jurídico.'),
+    d=>fala(d.jogador.nome, 'Consulte. Eu espero aqui.'),
+    'E aí você senta numa das duas poltronas onde ninguém senta.',
+    'Você fica quarenta minutos naquela poltrona, em silêncio, no meio do saguão de granito, e o prédio inteiro vai sabendo aos poucos que tem alguém sentado ali.',
+    'É a coisa mais agressiva que dá pra fazer dentro de uma recepção sem levantar a voz.'
+  ],
+  ef:{flag:['entrou_na_silph_por_cima','dentro_da_silph'],
+      rep:{eixo:'bom', delta:2, motivo:'Sentou na recepção da Silph e esperou o jurídico descer', notorio:true},
+      registrar:'Entrou na Silph pela porta da frente, com número de processo e quarenta minutos de poltrona.',
+      presagio:'Quatro pessoas viram você sentado ali. Uma delas vai te procurar depois, fora do prédio.'},
+  escolhas:[
+    {texto:'Subir com quem desceu.', vai:'c11_nono_andar'},
+    {texto:'Pedir o livro de visitantes antes de subir.', vai:'c11_livro_visitantes'},
+    {texto:'Desistir e sair pela porta giratória, devagar.', vai:'c11_desistiu'}
+  ]
+},
+
+c11_livro_visitantes:{
+  texto:[
+    'O livro é físico. Isso surpreende num prédio com catraca de vidro, e a explicação é entediante: exigência de seguro.',
+    'Trinta dias, seis colunas, letra de gente diferente em cada linha.',
+    'Você passa o dedo pela coluna do sétimo andar e a coluna do sétimo andar está vazia. Trinta dias sem uma visita.',
+    'Só que a coluna de saída tem catorze assinaturas de gente que saiu do sétimo.',
+    d=>fala(d.jogador.nome, 'Catorze pessoas saíram de um andar em que ninguém entrou.'),
+    'A recepcionista olha o livro pela primeira vez em muito tempo, de verdade, e você vê no rosto dela o momento em que ela também não entende.',
+    fala('a recepcionista', 'Isso deve ser erro de preenchimento.'),
+    'Pode ser. Erro de preenchimento catorze vezes seguidas, sempre na mesma coluna.'
+  ],
+  ef:{flag:['sabe_da_sala_vazia','catorze_saidas'],
+      rep:{eixo:'bom', delta:2, motivo:'Leu um livro de visitantes até achar a coluna que não fechava'},
+      registrar:'Catorze pessoas assinaram saída do 7º andar em trinta dias. Nenhuma assinou entrada.',
+      presagio:'Quem entra sem assinar entra por outro lugar, e o outro lugar é sempre a doca.'},
+  escolhas:[
+    {texto:'Subir pro sétimo.', vai:'c11_sala_vazia'},
+    {texto:'Subir pro nono.', vai:'c11_nono_andar'},
+    {texto:'Ir ver a doca de carga.', vai:'c11_doca'}
+  ]
+},
+
+c11_imprensa_no_balcao:{
+  texto:[
+    'Você põe o crachá de papel laminado no balcão e faz a única pergunta que imprensa faz:',
+    d=>fala(d.jogador.nome, 'Vocês têm alguma resposta oficial sobre o sétimo andar?'),
+    'A palavra "oficial" faz num saguão de granito o que faz em qualquer lugar: ela muda quem precisa responder.',
+    fala('a recepcionista', 'Eu vou chamar a assessoria.'),
+    'A assessoria desce em seis minutos, o que é rápido demais pra ser coincidência, e é uma moça de uns trinta anos com um sorriso muito melhor treinado que o da recepção.',
+    fala('a assessora', 'A Silph não comenta sobre setores internos. Posso te mandar o release do trimestre.'),
+    d=>fala(d.jogador.nome, 'Eu não perguntei sobre setor. Eu perguntei sobre o sétimo andar.'),
+    'O sorriso continua exatamente igual e os olhos mudam um grau.',
+    fala('a assessora', 'A Silph não comenta sobre setores internos.'),
+    'A segunda vez que uma pessoa repete a mesma frase palavra por palavra é a resposta de verdade.'
+  ],
+  ef:{flag:['sabe_da_sala_vazia','silph_nao_comenta'],
+      rep:{eixo:'bom', delta:1, motivo:'Fez a pergunta oficial no balcão em vez de entrar escondido'},
+      npc:{nome:'Assessora da Silph', opiniao:-1, memoria:'Repetiu a mesma frase duas vezes pra você, palavra por palavra.'},
+      registrar:'A assessoria da Silph repetiu a mesma frase duas vezes sobre o 7º andar.',
+      presagio:'Frase repetida palavra por palavra é frase decorada, e frase decorada foi escrita por alguém.'},
+  escolhas:[
+    {texto:'"Quem escreveu essa frase pra você?"', vai:'c11_quem_escreveu'},
+    {texto:'Agradecer, sair, e ir pela doca de carga.', vai:'c11_doca'},
+    {texto:'Agradecer e sair de verdade.', vai:'c11_desistiu'}
+  ]
+},
+
+c11_quem_escreveu:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem escreveu essa frase pra você?'),
+    'Pela primeira vez o sorriso treinado falha por um oitavo de segundo, e um oitavo de segundo é muito.',
+    fala('a assessora', 'É a nossa posição institucional.'),
+    d=>fala(d.jogador.nome, 'Eu sei. Eu perguntei quem escreveu.'),
+    'Ela olha pro saguão, pro segurança, pro teto de doze metros.',
+    fala('a assessora', 'Eu recebi por e-mail na terça.', 'baixo'),
+    fala('a assessora', 'De quem?'),
+    fala('a assessora', 'De um endereço que não é de ninguém. Eu perguntei e me mandaram continuar.'),
+    'Ela endireita o crachá dela, que está perfeitamente reto.',
+    fala('a assessora', 'Eu não deveria ter dito isso. Não use o meu nome.'),
+    d=>fala(d.jogador.nome, 'Eu não vou usar o seu nome.'),
+    'E você não usa. Nem naquela semana nem nunca.'
+  ],
+  ef:{flag:['fonte_da_assessoria','sabe_do_email_de_terca'],
+      rep:{eixo:'bom', delta:3, motivo:'Ganhou uma fonte dentro da Silph e protegeu o nome dela', notorio:true},
+      npc:{nome:'Assessora da Silph', opiniao:4, memoria:'Te contou de onde veio a frase decorada, e você nunca usou o nome dela.'},
+      registrar:'A posição oficial da Silph chegou por e-mail de um endereço sem dono, numa terça.',
+      presagio:'Ela vai te ligar. Não nessa semana.'},
+  escolhas:[
+    {texto:'Ir pela doca de carga.', vai:'c11_doca'},
+    {texto:'Sair e voltar de noite.', vai:'c11_desistiu'}
   ]
 },
 
@@ -38433,7 +38648,82 @@ c12_cerca:{
     {texto:'Pular a cerca aqui.', vai:'c12_setor7'},
     {texto:'Esperar um caminhão passar.', vai:'c12_esperou_caminhao'},
     {texto:'Voltar à noite pela trilha.', vai:'c12_noite_zona'},
+    {texto:'Pedir por escrito o empenho desses oitenta metros.',
+     vai:'c12_empenho', cond:d=>typeof Cargos !== 'undefined'
+       && (Cargos.tem('comissao') || Cargos.tem('investigador') || Cargos.tem('reporter'))},
     {texto:'Voltar e procurar quem aprovou esse asfalto.', vai:'c12_diretor'}
+  ]
+},
+
+c12_empenho:{
+  texto:[
+    'Você não pula a cerca. Você anda de volta os quatro quilômetros, entra na administração da reserva pela porta da frente e pede uma coisa que ninguém nunca pediu ali:',
+    d=>fala(d.jogador.nome, 'O empenho do serviço de pavimentação do acesso de serviço. Ano, número e valor.'),
+    'A funcionária do balcão pede pra você repetir. Você repete.',
+    'Ela some por onze minutos e volta com uma pasta fina e uma expressão que não estava no rosto dela antes.',
+    fala('a funcionária da reserva', 'Não tem empenho.'),
+    d=>fala(d.jogador.nome, 'Como não tem?'),
+    fala('a funcionária da reserva', 'Tem uma nota de doação. O asfalto foi doado.'),
+    'Ela vira a pasta pra você. É uma folha só, com um logotipo pequeno no canto superior e um campo de "doador" preenchido a máquina.',
+    'O campo diz: SOLICITANTE PREFERE NÃO SE IDENTIFICAR.',
+    'Oitenta metros de asfalto de grau industrial, doados por alguém que preferiu não se identificar, dentro de uma reserva federal.'
+  ],
+  ef:{flag:['sabe_da_doacao_do_asfalto','achou_o_portao'],
+      rep:{eixo:'bom', delta:3, motivo:'Pediu o empenho no balcão em vez de pular a cerca', notorio:true},
+      npc:{nome:'Funcionária da reserva', opiniao:2, memoria:'Procurou um empenho que não existia e te mostrou a nota de doação.'},
+      registrar:'O asfalto do acesso de serviço foi doado por quem "prefere não se identificar".',
+      presagio:'Doação anônima a órgão público tem um nome técnico e o nome técnico não é doação.'},
+  escolhas:[
+    {texto:'"Tem cópia dessa folha?"', vai:'c12_copia_da_folha'},
+    {texto:'"Quem recebeu a doação assinou?"', vai:'c12_quem_recebeu'},
+    {texto:'Agradecer e voltar pra cerca de noite.', vai:'c12_noite_zona'},
+    {texto:'Ir falar com o diretor com isso na mão.', vai:'c12_diretor'}
+  ]
+},
+
+c12_copia_da_folha:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Tem cópia dessa folha?'),
+    'Ela olha pra pasta, pra você, pra porta da sala do diretor, que está fechada.',
+    fala('a funcionária da reserva', 'A copiadora tá quebrada faz três semanas.'),
+    'Uma pausa exatamente longa demais.',
+    fala('a funcionária da reserva', 'Mas o seu aparelho tem câmera.'),
+    'Ela empurra a pasta dois centímetros na sua direção e vai olhar uma coisa muito interessante no outro lado do balcão.',
+    'Você fotografa em quatro segundos e devolve a pasta fechada.',
+    fala('a funcionária da reserva', 'Eu não vi nada.'),
+    d=>fala(d.jogador.nome, 'Não viu mesmo.')
+  ],
+  ef:{flag:['tem_foto_da_doacao'],
+      itens:{'Câmera descartável':0},
+      rep:{eixo:'bom', delta:2, motivo:'Saiu da reserva com prova em vez de indignação'},
+      npc:{nome:'Funcionária da reserva', opiniao:4, memoria:'Empurrou a pasta dois centímetros e olhou pro outro lado.'},
+      registrar:'Você tem foto da nota de doação do asfalto.',
+      presagio:'Ela arriscou o emprego por dois centímetros de pasta. Lembre disso quando precisar decidir o que publicar.'},
+  escolhas:[
+    {texto:'Ir falar com o diretor com a foto na mão.', vai:'c12_diretor'},
+    {texto:'Guardar e ir ver o setor 7 à noite.', vai:'c12_noite_zona'}
+  ]
+},
+
+c12_quem_recebeu:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem recebeu a doação assinou?'),
+    'Ela vira a folha. No rodapé tem um campo de recebimento com uma rubrica e um carimbo.',
+    'A rubrica é de três letras. O carimbo é da direção da reserva.',
+    fala('a funcionária da reserva', 'É o diretor.'),
+    d=>fala(d.jogador.nome, 'Ele recebeu asfalto de alguém que não quis dizer o nome e assinou.'),
+    fala('a funcionária da reserva', 'Ele recebeu, assinou e mandou arquivar em doações diversas, que é a pasta onde vai camiseta de evento e cesta de Natal.'),
+    'Ela fecha a pasta.',
+    fala('a funcionária da reserva', 'Eu trabalho aqui há nove anos e essa é a única folha dessa pasta que eu já reli.', 'baixo')
+  ],
+  ef:{flag:['diretor_assinou_a_doacao'],
+      rep:{eixo:'bom', delta:2, motivo:'Foi atrás de quem assinou embaixo, não de quem doou em cima'},
+      npc:{nome:'Funcionária da reserva', opiniao:3, memoria:'Te disse que releu aquela folha uma vez em nove anos.'},
+      registrar:'O diretor da reserva assinou o recebimento do asfalto e mandou arquivar em "doações diversas".'},
+  escolhas:[
+    {texto:'"Tem cópia dessa folha?"', vai:'c12_copia_da_folha'},
+    {texto:'Ir falar com o diretor agora.', vai:'c12_diretor'},
+    {texto:'Ir ver o setor 7 à noite.', vai:'c12_noite_zona'}
   ]
 },
 
@@ -62827,6 +63117,295 @@ c1e_ficou_na_praca:{
 function fall_curto(){ return 'Ele deixa a piada respirar e depois continua.'; }
 
 
+/* ===== js/story/epilogos.js ===== */
+/* ============================================================
+   EPÍLOGOS — o final conta o que aconteceu com o mundo.
+   O epílogo conta o que aconteceu com VOCÊ.
+
+   Quem escolhe é a soma de três coisas que a campanha inteira
+   vem medindo em silêncio: o crachá que você carrega, o caminho
+   que Kanto viu você seguir, e o que Kanto conta sobre você.
+
+   `peso` desempata: crachá de peso 5 fala mais alto que via, e
+   via fala mais alto que reputação. O último da lista é o que
+   sobra pra quem não virou nada — e esse também é um final.
+   ============================================================ */
+const EPILOGOS = [
+
+/* ─── pelo cargo (o que fala mais alto) ─────────────────── */
+{
+  id:'ep_conselheiro', peso:60, titulo:'A CADEIRA DESCONFORTÁVEL',
+  requer:d=>Cargos.tem('conselheiro'),
+  texto:[
+    'Você tem dezesseis anos e uma plaquinha de latão com o seu nome numa cadeira que foi feita desconfortável de propósito.',
+    'A primeira coisa que você descobre é que ninguém ali é vilão. São onze pessoas cansadas com pautas longas demais e prazos que ninguém cumpre, e é por isso que demora dois anos pra mudar qualquer coisa.',
+    'A segunda coisa você descobre em abril: um parágrafo que você escreveu numa quarta-feira à tarde vira regra em Pewter, em Fuchsia e numa ilha que você nunca visitou, de uma vez, sem você estar lá.',
+    'Você nunca mais bate numa porta pedindo pra alguém fazer alguma coisa. Agora batem na sua.',
+    'É pior do que a estrada e é mais útil, e você vai passar a vida sabendo que as duas coisas são verdade ao mesmo tempo.'
+  ]
+},
+{
+  id:'ep_elite', peso:58, titulo:'A PAREDE DE ALGUÉM',
+  requer:d=>Cargos.tem('elite'),
+  texto:[
+    'A sua porta tem uma placa de bronze parafusada na altura dos olhos, e a fonte é a mesma dos outros três.',
+    'A parte difícil não é ganhar. É a cara das pessoas depois.',
+    'Chega gente que treinou um ano inteiro pra te enfrentar, e você ganha, e elas descem o corredor em silêncio, e você fica sozinho numa sala ouvindo o passo delas sumir.',
+    'Você começou a fazer uma coisa que ninguém ali fazia: desce atrás. Alcança na escada. Fala duas frases.',
+    'Em quatro anos, seis das pessoas que perderam pra você voltaram. Três ganharam.',
+    'Ninguém escreveu isso em regulamento nenhum, e é a única coisa que você mudou no Planalto.'
+  ]
+},
+{
+  id:'ep_professor', peso:57, titulo:'A CADEIRA QUE NÃO É SUA',
+  requer:d=>Cargos.tem('professor'),
+  texto:[
+    'O laboratório de Pallet tem um pátio, uma prateleira que ninguém gosta de olhar e uma cadeira que é do cargo, não da pessoa.',
+    'Você senta nela e a primeira coisa que faz é uma que o Professor anterior nunca teve coragem: esvazia a prateleira.',
+    'Os onze que ninguém foi buscar vão pra onze casas em quatro meses. Você acompanha os onze pessoalmente, o que é ineficiente e é o ponto.',
+    'A segunda coisa é que a perua ganha um segundo motorista, porque a volta de onze cidades num carro de vinte e seis anos sempre foi uma aposta e você conhece bem quem apostava.',
+    'A terceira você demora três anos pra fazer: sai do laboratório e vai a campo, e volta com noventa páginas que ninguém pediu.',
+    'Quem mandou fazer isso foi você, porque agora é você que manda. Demora pra acostumar.'
+  ]
+},
+{
+  id:'ep_lider', peso:56, titulo:'QUINTA-FEIRA',
+  requer:d=>Cargos.tem('lider'),
+  texto:[
+    'Ginásio não é prêmio. É um posto de trabalho com horário fixo e uma criança chorando na sua sala toda quinta.',
+    'Você descobre, na terceira semana, que noventa por cento do trabalho não é batalhar. É dizer a alguém de doze anos que o problema não é o time.',
+    'Quase nunca é o time.',
+    'Você começa a anotar num caderno de capa dura quem passa, quem volta e quanto tempo demora entre as duas coisas. A média é catorze meses.',
+    'Na sua sala tem uma janela que dá pro corredor e não pro vale, e você nunca pediu pra trocar.',
+    'De vez em quando alguém chega com uma insígnia sua num cartão e não lembra do seu rosto, e tudo bem. A insígnia é que tinha que ficar.'
+  ]
+},
+{
+  id:'ep_rocket', peso:55, titulo:'ARMÁRIO 14',
+  requer:d=>Cargos.tem('rocket'),
+  texto:[
+    'O envelope continua chegando no armário 14 do Centro de Vermilion toda virada de mês, e você continua não perguntando de onde.',
+    'A quantia sobe devagar, do jeito que sobe salário de quem é útil e não é insubstituível.',
+    'Você tem dinheiro, tem trânsito e tem gente que atende o seu telefone em três cidades. Não tem uma única pessoa pra quem contar o que faz.',
+    'Numa terça de março você passa na frente do Centro e vê uma menina de treze anos abrir o armário 12, do lado do seu, e tirar de lá uma mochila com um adesivo de Pidgey.',
+    'Você fica olhando tempo demais e ela percebe e sorri pra você, do jeito que gente de treze anos sorri pra estranho.',
+    'Você vai embora sem pegar o seu envelope naquele mês. No mês seguinte você pega.'
+  ]
+},
+{
+  id:'ep_comissao', peso:50, titulo:'PERITO NÃO VOTA',
+  requer:d=>Cargos.tem('comissao'),
+  texto:[
+    'Perito não vota. Perito fala antes da votação, e em oito de dez casos é quem fala antes que decide.',
+    'Você aprende a redigir. Aprende que uma frase com "poderá" perde pra uma frase com "deverá", e que a diferença entre as duas é dois anos da vida de alguém.',
+    'Aprende também que a pasta tem trinta e uma páginas e que a primeira é um termo de sigilo, e que assinar aquilo foi a decisão mais pesada que você tomou sem ninguém olhando.',
+    'Tem uma pauta que você segurou por catorze meses e que teria passado sem você.',
+    'Não tem placa pra isso. Tem uma ata, e a ata é pública, e custa oito pokedólares.'
+  ]
+},
+{
+  id:'ep_instrutor', peso:48, titulo:'A SALA PEQUENA',
+  requer:d=>Cargos.tem('instrutor'),
+  texto:[
+    'A sala é pequena, tem janela pro corredor e é sua.',
+    'Chega gente que apanhou em oito ginásios e acha que o problema é o time, e você diz a mesma frase que alguém disse pra você e que na hora você achou inútil.',
+    'Uns entendem. A maioria não entende na hora e entende dois anos depois, e desses você nunca fica sabendo.',
+    'Você guarda uma lista com os nomes de quem passou pela sala. Não é lista de alunos. É lista de gente, com uma linha do lado de cada um.',
+    'Em nove anos a lista tem trezentos e quarenta e um nomes e você lembra de todos, o que é impossível e é verdade.'
+  ]
+},
+{
+  id:'ep_investigador', peso:44, titulo:'USE COM VERGONHA',
+  requer:d=>Cargos.tem('investigador'),
+  texto:[
+    '"Use com vergonha", disse a auditora. "Quem usa sem vergonha eu cancelo em seis meses."',
+    'Você usou com vergonha por nove anos e a credencial nunca foi cancelada.',
+    'O trabalho é entrar em lugar onde ninguém quer que você entre e depois escrever o que viu, e a parte difícil é a segunda: escrever sem raiva o que você viu com raiva.',
+    'Três relatórios seus viraram processo. Um virou lei. Dois viraram nada e são os dois de que você mais se lembra.',
+    'Você continua batendo na porta antes de entrar, mesmo quando a credencial dispensa.'
+  ]
+},
+{
+  id:'ep_pesquisador', peso:42, titulo:'NOVENTA, ANDANDO',
+  requer:d=>Cargos.tem('pesquisador'),
+  texto:[
+    'A bolsa é pequena, porque bolsa é sempre pequena.',
+    'Você passa os anos seguintes fazendo o que já fazia de graça, agora com número de processo: andar, olhar, anotar, e mandar de volta.',
+    'A sua contribuição não é uma descoberta. É um método: você prova, em cento e sessenta páginas, que dado de campo colhido por uma pessoa que dorme no acostamento vale mais que dado de campo colhido por uma equipe que volta pro hotel.',
+    'Metade da academia acha isso ofensivo. A outra metade começa a dormir no acostamento.',
+    'Em doze anos o jeito de fazer pesquisa de campo em Kanto mudou, e quase ninguém sabe que mudou por causa de um menino de quinze anos que catalogou noventa espécies a pé.'
+  ]
+},
+{
+  id:'ep_reporter', peso:38, titulo:'ACESSO NÃO É RAZÃO',
+  requer:d=>Cargos.tem('reporter'),
+  texto:[
+    '"Isso não te dá razão", disse a editora. "Te dá acesso."',
+    'Você demorou uns quatro anos pra entender inteiro o que ela quis dizer, e entendeu numa matéria que você não publicou.',
+    'Tinha tudo: documento, fonte, data. E tinha uma pessoa no meio que ia perder o emprego e não tinha feito nada além de assinar onde mandaram.',
+    'Você segurou, foi atrás de quem mandou, e publicou quatro meses depois com o nome certo na manchete.',
+    'A editora leu, não elogiou, e passou a te mandar as pautas difíceis. É assim que se elogia ali.'
+  ]
+},
+{
+  id:'ep_guarda', peso:34, titulo:'O COLETE NÃO DÁ AUTORIDADE',
+  requer:d=>Cargos.tem('guarda_rota'),
+  texto:[
+    'O colete não dá autoridade. Dá passagem. As duas coisas se parecem e não são a mesma.',
+    'Você passou anos usando a passagem e nunca a autoridade, o que fez de você uma pessoa estranha de se ter numa patrulha.',
+    'Sua especialidade virou uma coisa que não tem nome no regulamento: chegar antes. Em trilha que ia cair, em cerca que ia abrir, em criança que ia entrar no mato sozinha às cinco da tarde.',
+    'Ninguém te condecora por acidente que não aconteceu.',
+    'Você sabe contar sete. Ninguém mais sabe, e é melhor assim.'
+  ]
+},
+{
+  id:'ep_criador', peso:32, titulo:'PATA, PELAGEM, PESO',
+  requer:d=>Cargos.tem('criador'),
+  texto:[
+    'A avaliadora olhou pata, pelagem, peso e o jeito que eles olhavam pra você quando você não estava olhando.',
+    'Você passou. E passou a vida seguinte fazendo isso com os bichos dos outros.',
+    'Não é treino, não é medicina e não é ginásio. É a profissão mais invisível de Kanto e é a única em que a nota é dada por quem não fala.',
+    'Você atende num galpão com piso de terra batida, e a fila é de gente que já tentou tudo e chegou aqui por indicação de alguém.',
+    'A sua taxa de acerto é alta e a explicação é chata: você passa os primeiros quarenta minutos sem tocar em nada, só olhando.'
+  ]
+},
+{
+  id:'ep_auxiliar', peso:24, titulo:'CONTINUA MANDANDO',
+  requer:d=>Cargos.tem('auxiliar') || Cargos.tem('treinador'),
+  texto:[
+    'Você nunca virou nada com nome grande. Ficou treinador, e ficou bem.',
+    'A licença renova todo ano numa fila de balcão, e todo ano a atendente pergunta se mudou alguma coisa no cadastro, e todo ano você diz que não.',
+    'O que mudou fica fora do cadastro: a Pokédex, que continua enchendo devagar; a agenda do aparelho azul, que virou uma lista de gente que atende quando você liga; e o cinto, que é o mesmo de sempre e nunca foi de seis.',
+    'Em Kanto tem umas quarenta pessoas que lembram do seu nome por um motivo específico. Nenhuma delas é famosa.',
+    'É uma vida pequena e é inteiramente sua, e você não trocaria por nenhuma das outras — o que, tendo visto as outras de perto, é uma informação e não um consolo.'
+  ]
+},
+
+/* ─── pela via, quando não tem crachá que mande ──────────── */
+{
+  id:'ep_via_heroi', peso:20, titulo:'QUEM FOI SEM ESPERAR',
+  requer:d=>(d.via === 'heroi'),
+  texto:[
+    'Kanto te tratou como quem vai sem esperar autorização, e Kanto tinha razão.',
+    'Você resolveu três coisas que o sistema ia resolver em nove meses, e resolveu em quatro dias cada uma, e em duas delas quebrou uma regra que existia por um bom motivo.',
+    'Ninguém te processou. Ninguém te agradeceu por escrito, também.',
+    'O que sobrou foi uma reputação de que você aparece — e gente que sabe disso te liga primeiro, antes de ligar pra quem tem crachá.',
+    'É um lugar desconfortável de ocupar. Você ocupa mesmo assim, porque o telefone toca e do outro lado tem alguém.'
+  ]
+},
+{
+  id:'ep_via_pesquisador', peso:20, titulo:'QUEM PAROU PRA OLHAR',
+  requer:d=>(d.via === 'pesquisador'),
+  texto:[
+    'Você foi a pessoa que parou pra olhar quando todo mundo estava andando, e isso te custou tempo em todas as ocasiões em que você fez.',
+    'Em compensação, você é a única pessoa que viu certas coisas — e viu inteiras, do começo ao fim, em vez de chegar no meio.',
+    'Seus cadernos não valem nada como documento: não têm data padronizada, não têm metodologia e têm desenho no canto.',
+    'Valem como testemunho, que é outra coisa, e que ninguém pediu.',
+    'Um dia alguém vai abrir esses cadernos procurando uma data e vai encontrar, no meio delas, o único registro que existe de uma coisa que já não existe mais.'
+  ]
+},
+{
+  id:'ep_via_mercenario', peso:20, titulo:'O PREÇO ESTAVA CERTO',
+  requer:d=>(d.via === 'mercenario'),
+  texto:[
+    'Você cobrou pelo que fez e o preço estava certo em todas as vezes, o que é mais do que a maioria consegue dizer.',
+    'A parte que ninguém te avisou é que preço certo cria um tipo específico de relação: as pessoas te chamam quando precisam e não te chamam quando não precisam, e isso é limpo e é exatamente tão solitário quanto parece.',
+    'Você tem economia, contatos e nenhuma dívida em aberto com ninguém.',
+    'Também não tem ninguém com dívida em aberto com você, e dívida em aberto é o que faz gente aparecer na sua porta sem motivo.',
+    'Aos vinte e poucos você começa a fazer um serviço por ano de graça, e não conta pra ninguém, e nem você sabe direito por quê.'
+  ]
+},
+{
+  id:'ep_via_foragido', peso:20, titulo:'SEM ENDEREÇO FIXO',
+  requer:d=>(d.via === 'foragido'),
+  texto:[
+    'Existe uma pasta com o seu nome numa sala de Saffron, e a pasta não é grossa, e é isso que te mantém livre: ninguém alocou orçamento pra te procurar de verdade.',
+    'Você dorme em cidade pequena, paga em dinheiro e conhece o horário das guaritas de Kanto inteira de cor.',
+    'A liberdade é real e o preço também: você não volta pra casa há anos, e a pessoa que ficou lá não sabe se você está vivo, e você decidiu que não saber é melhor que saber.',
+    'Talvez seja. Você não tem como conferir.',
+    'De vez em quando alguém te reconhece numa rodoviária e não fala nada, e você passa a semana inteira tentando decidir o que aquilo significou.'
+  ]
+},
+
+/* ─── pela reputação, quando não tem nem crachá nem via ──── */
+{
+  id:'ep_rep_bom_alto', peso:12, titulo:'CONTAM DE VOCÊ',
+  requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4,
+  texto:[
+    'Kanto é pequena e fala, e o que Kanto fala de você é bom de um jeito específico: não é que você é forte. É que você aparece.',
+    'Você entra num Centro Pokémon de uma cidade em que nunca pisou e a atendente sabe o seu nome, porque alguém contou.',
+    'Isso abre porta. Também cria uma expectativa que não te deixa em paz: gente chega em você com problema já pronto, por indicação, e olha na sua cara esperando.',
+    'Você atende quase sempre. Nas vezes em que não atendeu, você lembra qual foi cada uma.'
+  ]
+},
+{
+  id:'ep_rep_ruim_alto', peso:12, titulo:'CONTAM DE VOCÊ, TAMBÉM',
+  requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 4,
+  texto:[
+    'Kanto é pequena e fala, e o que Kanto fala de você não é bom.',
+    'A coisa engraçada da má reputação é que ela é útil em lugares específicos: portas que não abrem pra gente correta abrem pra você na primeira batida.',
+    'A coisa não engraçada é que ela não se desfaz. Você pode passar dez anos sem fazer nada errado e continuar sendo, numa cidade que você visitou uma vez, o que você foi lá.',
+    'Você tentou consertar em duas cidades. Numa deu certo e na outra você desistiu no meio.',
+    'A que deu certo você visita todo ano. A outra você não visita mais.'
+  ]
+},
+{
+  id:'ep_rep_neutro', peso:5, titulo:'SEM NADA A REGISTRAR',
+  requer:d=>true,
+  texto:[
+    'Você atravessou Kanto inteira e Kanto não formou opinião.',
+    'Não é fracasso. É a condição normal de quase todo mundo: fazer o que tinha que fazer, sem plateia, e ir embora antes que alguém precisasse decidir o que achava de você.',
+    'Tem umas seis pessoas que lembram do seu rosto e nenhuma lembra do seu nome. Tem uma que lembra dos dois, e mora na casa de onde você saiu.',
+    'Você volta pra lá em algum momento, e a porta dos fundos continua abrindo e fechando duas vezes, do jeito que sempre abriu.'
+  ]
+}
+];
+
+/* Qual epílogo é o seu: o de maior peso entre os que se aplicam. */
+function epilogoDaJornada(){
+  const d = Estado.dados;
+  let melhor = null;
+  for (const e of EPILOGOS){
+    let vale = false;
+    try { vale = !!e.requer(d); } catch(err){ vale = false; }
+    if (!vale) continue;
+    if (!melhor || e.peso > melhor.peso) melhor = e;
+  }
+  return melhor;
+}
+
+/* Linhas curtas que entram no epílogo conforme o que ficou pelo
+   caminho. Não são epílogo inteiro — são o rodapé dele. */
+function rodapeDaJornada(){
+  const d = Estado.dados;
+  const L = [];
+  if (d.cemiterio.length)
+    L.push(d.cemiterio.length === 1
+      ? `Você carrega o nome de ${nomeExib(d.cemiterio[0])} pelo resto disso, e não conta a história pra qualquer um.`
+      : `Você carrega ${d.cemiterio.length} nomes pelo resto disso, e não conta a história pra qualquer um.`);
+  else
+    L.push('Ninguém do seu cinto ficou pelo caminho, o que é raro o bastante pra você só entender quanto tempo depois.');
+
+  if (d.flags.promessa_voltar && d.flags.campeao_de_kanto)
+    L.push('Você prometeu voltar e voltou, e a pessoa que abriu a porta já sabia, porque em cidade pequena todo mundo já sabe.');
+  else if (d.flags.promessa_voltar)
+    L.push('Você prometeu voltar. Levou mais tempo do que devia, e voltou.');
+  else if (d.flags.sem_promessa)
+    L.push('Você não prometeu voltar. Voltou assim mesmo, o que conta mais do que a promessa teria contado.');
+
+  const dex = Estado.contagemDex().catalogados;
+  if (dex >= 140) L.push(`${dex} espécies catalogadas a pé. Existem três pessoas em Kanto com esse número e as outras duas têm laboratório.`);
+  else if (dex >= 80) L.push(`${dex} espécies na Pokédex — mais do que a maioria de quem faz isso por profissão.`);
+
+  if ((d.cargos || []).length >= 3)
+    L.push(`Você acumulou ${d.cargos.length} credenciais diferentes, o que em Kanto é quase uma acusação.`);
+
+  const presos = Estado.lendariosCapturados();
+  if (presos.length) L.push('E tem uma bola no seu cinto que nunca devia ter sido lacrada, e você sabe disso desde o dia em que lacrou.');
+  return L;
+}
+
+
 /* ===== js/ui/interface.js ===== */
 /* ============================================================
    INTERFACE
@@ -64704,9 +65283,20 @@ const UI = {
     const mortos = d.cemiterio.length
       ? `<h3>Quem não voltou</h3><p class="sussurro">${d.cemiterio.map(p=>this.esc(nomeExib(p))+' — '+this.esc(p.causaMorte)).join('<br>')}</p>` : '';
     const presos = Estado.lendariosCapturados();
+    /* O final conta o que aconteceu com Kanto. O epílogo conta o que
+       aconteceu com você, e quem escolhe é o crachá, a via e o que
+       Kanto conta de você. */
+    const ep = (typeof epilogoDaJornada === 'function') ? epilogoDaJornada() : null;
+    const rodape = (typeof rodapeDaJornada === 'function') ? rodapeDaJornada() : [];
+    if (ep) Estado.registrarFinal('ep_' + ep.id, 'Epílogo: ' + ep.titulo);
+
     this.add(`<div class="painel final">
       <div class="tit">${this.esc(final.titulo)}</div>
       ${final.texto.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}
+      ${ep ? `<hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
+        <div class="tit epilogo">${this.esc(ep.titulo)}</div>
+        ${ep.texto.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}
+        ${rodape.length ? `<div class="epilogo-rodape">${rodape.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>` : ''}` : ''}
       <hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
       <div style="text-align:left;max-width:610px;margin:0 auto">
         <h3>Como você terminou</h3>
@@ -65281,11 +65871,18 @@ const UI = {
 
   modalFinais(){
     const codice = Estado.finaisDescobertos();
-    const total = CAPITULOS.reduce((n,c)=>n+Object.values(c.cenas).filter(x=>x.final).length,0);
-    this.modal('Códice de finais', codice.length
-      ? `<p class="sussurro">${codice.length} de ${total} descobertos.</p>` +
-        codice.map(f=>`<div class="linha"><span class="k">${this.esc(f.titulo)}</span><span class="v">✓</span></div>`).join('')
-      : `<p class="nada">Nenhum final descoberto ainda. A campanha tem ${total}.</p>`);
+    const totalFim = CAPITULOS.reduce((n,c)=>n+Object.values(c.cenas).filter(x=>x.final).length,0);
+    const totalEp = (typeof EPILOGOS !== 'undefined') ? EPILOGOS.length : 0;
+    const eps = codice.filter(f => String(f.id||'').indexOf('ep_') === 0 || /^Epílogo/.test(f.titulo));
+    const fins = codice.filter(f => eps.indexOf(f) === -1);
+    const bloco = (titulo, lista, total, vazio) =>
+      `<h3>${titulo} — ${lista.length} de ${total}</h3>` +
+      (lista.length ? lista.map(f=>`<div class="linha"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
+                    : `<p class="nada">${vazio}</p>`);
+    this.modal('Códice de finais',
+      bloco('Finais', fins, totalFim, 'Nenhum ainda.') +
+      bloco('Epílogos', eps, totalEp, 'Nenhum ainda.') +
+      `<p class="sussurro">O final é o que aconteceu com Kanto. O epílogo é o que aconteceu com você, e depende do crachá que você carregava, do caminho que Kanto viu você seguir e do que Kanto conta de você.</p>`);
   },
 
   /* ========================================================
@@ -65516,12 +66113,25 @@ const UI = {
       ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
       ${L('Situações', 'cidade e rota têm coisa acontecendo por conta própria')}
       ${L('Doação', 'aparece quando existe uma causa que você já conheceu · rende reputação, nunca item')}
+      ${L('Como te recebem', 'uma linha no alto da tela que muda com reputação e crachá')}
       <h3>Preço por cidade</h3>
       ${L('Celadon', '0,85× — o mais barato de Kanto, sete andares')}
       ${L('Cais de Vermilion', '0,9× — metade do estoque entra sem imposto')}
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Finais e epílogos</h3>
+      <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
+      <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
+      <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
+      <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
+      <p class="sussurro">São 36 finais e 20 epílogos, e os dois se combinam: a mesma conversa com Mewtwo termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+
+      <h3>O que o crachá muda na história</h3>
+      <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
+      <div class="linha"><span class="k">Como o lugar te recebe</span><span class="v">uma linha no alto da tela, que muda com reputação e crachá</span></div>
+      <p class="sussurro">Com credencial na mão dá pra entrar pela porta da frente onde antes só dava pra pular a cerca — e o que você acha entrando pela frente não é o mesmo que você acha pulando.</p>
+
       <h3>Onde o dinheiro vira outra coisa</h3>
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
@@ -65553,7 +66163,7 @@ const UI = {
       ${L('Notícia', 'não rende nada material — muda o que a pessoa pensa de você')}
       <p class="sussurro">Missão entregue não se pede de novo e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro: atender custa tempo e não atender custa outra coisa.</p>
       <h3>Cargos</h3>
-      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo e onde você entra. O balcão de credenciais fica no Centro Pokémon, e o Cartão de Treinador tem um atalho.</p>
+      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo, onde você entra, como as pessoas te recebem e com que epílogo a sua história termina. O balcão de credenciais fica no Centro Pokémon, e o Cartão de Treinador tem um atalho.</p>
       ${L('Peso 1 · cedo', 'Treinador licenciado · Auxiliar de campo')}
       ${L('Peso 2 · meio', 'Guarda de rota · Criador registrado · Repórter credenciado')}
       ${L('Peso 3 · tarde', 'Informante · Investigador de campo · Pesquisador associado')}
@@ -65563,6 +66173,12 @@ const UI = {
       ${L('Incompatível', 'crachá da Liga e envelope sem timbre não cabem no mesmo bolso')}`;
 
     return `
+      <h3>Como isso acaba</h3>
+      ${L('Final', 'o que aconteceu com Kanto — 36 deles')}
+      ${L('Epílogo', 'o que aconteceu com você — 20 deles')}
+      ${L('Quem escolhe o epílogo', 'o crachá primeiro, depois a via, depois a reputação')}
+      <p class="sussurro">Terminar a campanha duas vezes com as mesmas escolhas e credenciais diferentes dá dois desfechos diferentes. O códice de finais guarda os dois em listas separadas.</p>
+
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. O cemitério não esvazia.</p>
       ${L('Treinador com 0 HP', 'fim de jogo permanente')}
@@ -65663,6 +66279,18 @@ const UI = {
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
 
+      <h3>Finais e epílogos</h3>
+      <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
+      <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
+      <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
+      <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
+      <p class="sussurro">São 36 finais e 20 epílogos, e os dois se combinam: a mesma conversa com Mewtwo termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+
+      <h3>O que o crachá muda na história</h3>
+      <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
+      <div class="linha"><span class="k">Como o lugar te recebe</span><span class="v">uma linha no alto da tela, que muda com reputação e crachá</span></div>
+      <p class="sussurro">Com credencial na mão dá pra entrar pela porta da frente onde antes só dava pra pular a cerca — e o que você acha entrando pela frente não é o mesmo que você acha pulando.</p>
+
       <h3>Onde o dinheiro vira outra coisa</h3>
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
@@ -65737,7 +66365,9 @@ const Exploracao = {
         <div class="tit">${UI.esc(L.nome)}</div>
         <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}</div>
       </div>
-      <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(t)}</p>`).join('')}</div>
+      <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(t)}</p>`).join('')}${
+        (() => { const r = (typeof comoOlugarTeRecebe === 'function') ? comoOlugarTeRecebe() : null;
+                 return r ? `<p class="recepcao">${UI.esc(r)}</p>` : ''; })()}</div>
       <div id="avisos" class="avisos"></div>
 
       ${arco ? `<h3>Aqui</h3>

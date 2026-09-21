@@ -1084,17 +1084,125 @@ c11_recepcao:{
       if (d.flags.tem_cracha_verde) return 'O crachá verde da Sra. Kubo abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
       if (d.flags.crachas_sabrina) return 'O crachá do zelador é vencido faz três anos, mas a catraca da Silph lê o chip, não a data. Ela abre.';
       if (d.flags.cracha_roubado) return 'O crachá reserva da Hitomi abre a catraca no primeiro toque.';
+      if (typeof Cargos !== 'undefined' && (Cargos.tem('investigador') || Cargos.tem('comissao')))
+        return 'Você não tem crachá da Silph. Você tem um número de processo, que é uma coisa que prédio comercial nenhum sabe recusar sem consultar o jurídico — e consultar o jurídico leva quarenta minutos que ninguém quer gastar às três da tarde.';
+      if (typeof Cargos !== 'undefined' && Cargos.tem('reporter'))
+        return 'Você não tem crachá da Silph. Você tem um crachá de imprensa de papel laminado, e a recepcionista olha pra ele do jeito que se olha pra uma coisa que dá trabalho.';
       return 'Você não tem crachá. A recepcionista sorri com o sorriso cronometrado e pergunta com quem você tem hora marcada.';
     }
   ],
   ef:{flag:'entrou_na_recepcao'},
   escolhas:[
+    {texto:'Pôr a credencial no balcão e pedir o livro de visitantes.',
+     vai:'c11_credencial_no_balcao',
+     cond:d=>typeof Cargos !== 'undefined' && (Cargos.tem('investigador') || Cargos.tem('comissao'))},
+    {texto:'Dizer que é imprensa e pedir uma resposta oficial.',
+     vai:'c11_imprensa_no_balcao',
+     cond:d=>typeof Cargos !== 'undefined' && Cargos.tem('reporter')},
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada',
      cond:d=>!!(d.flags.entrou_com_marina||d.flags.crachas_sabrina||d.flags.cracha_roubado||d.flags.dentro_da_silph||d.flags.tem_cracha_verde||d.flags.tem_credencial_de_verificacao||d.flags.tem_cracha_visitante)},
     {texto:'Subir pro sétimo ver a sala vazia.', vai:'c11_sala_vazia', cond:d=>!!d.flags.sabe_da_sala_vazia && !!d.flags.dentro_da_silph},
     {texto:'Subir pro nono andar.', vai:'c11_nono_andar', cond:d=>!!d.flags.dentro_da_silph},
     {texto:'Inventar uma reunião.', vai:'c11_inventar'},
     {texto:'Ir pela doca de carga.', vai:'c11_doca'}
+  ]
+},
+
+c11_credencial_no_balcao:{
+  texto:[
+    'Você põe a credencial no balcão virada pra ela e não fala nada por três segundos, que é o tempo exato de ela ler o número de processo.',
+    d=>fala(d.jogador.nome, 'Livro de visitantes dos últimos trinta dias, por favor.'),
+    'O sorriso cronometrado não sai do rosto dela, mas para de ser um sorriso.',
+    fala('a recepcionista', 'O senhor tem hora marcada?'),
+    d=>fala(d.jogador.nome, 'Não. Eu tenho um número de processo.'),
+    'Ela olha pro segurança do fundo. O segurança do fundo olha pra ela. Nenhum dos dois foi treinado pra isso, porque ninguém treina recepção pra receber auditoria a pé.',
+    fala('a recepcionista', 'Eu vou precisar consultar o jurídico.'),
+    d=>fala(d.jogador.nome, 'Consulte. Eu espero aqui.'),
+    'E aí você senta numa das duas poltronas onde ninguém senta.',
+    'Você fica quarenta minutos naquela poltrona, em silêncio, no meio do saguão de granito, e o prédio inteiro vai sabendo aos poucos que tem alguém sentado ali.',
+    'É a coisa mais agressiva que dá pra fazer dentro de uma recepção sem levantar a voz.'
+  ],
+  ef:{flag:['entrou_na_silph_por_cima','dentro_da_silph'],
+      rep:{eixo:'bom', delta:2, motivo:'Sentou na recepção da Silph e esperou o jurídico descer', notorio:true},
+      registrar:'Entrou na Silph pela porta da frente, com número de processo e quarenta minutos de poltrona.',
+      presagio:'Quatro pessoas viram você sentado ali. Uma delas vai te procurar depois, fora do prédio.'},
+  escolhas:[
+    {texto:'Subir com quem desceu.', vai:'c11_nono_andar'},
+    {texto:'Pedir o livro de visitantes antes de subir.', vai:'c11_livro_visitantes'},
+    {texto:'Desistir e sair pela porta giratória, devagar.', vai:'c11_desistiu'}
+  ]
+},
+
+c11_livro_visitantes:{
+  texto:[
+    'O livro é físico. Isso surpreende num prédio com catraca de vidro, e a explicação é entediante: exigência de seguro.',
+    'Trinta dias, seis colunas, letra de gente diferente em cada linha.',
+    'Você passa o dedo pela coluna do sétimo andar e a coluna do sétimo andar está vazia. Trinta dias sem uma visita.',
+    'Só que a coluna de saída tem catorze assinaturas de gente que saiu do sétimo.',
+    d=>fala(d.jogador.nome, 'Catorze pessoas saíram de um andar em que ninguém entrou.'),
+    'A recepcionista olha o livro pela primeira vez em muito tempo, de verdade, e você vê no rosto dela o momento em que ela também não entende.',
+    fala('a recepcionista', 'Isso deve ser erro de preenchimento.'),
+    'Pode ser. Erro de preenchimento catorze vezes seguidas, sempre na mesma coluna.'
+  ],
+  ef:{flag:['sabe_da_sala_vazia','catorze_saidas'],
+      rep:{eixo:'bom', delta:2, motivo:'Leu um livro de visitantes até achar a coluna que não fechava'},
+      registrar:'Catorze pessoas assinaram saída do 7º andar em trinta dias. Nenhuma assinou entrada.',
+      presagio:'Quem entra sem assinar entra por outro lugar, e o outro lugar é sempre a doca.'},
+  escolhas:[
+    {texto:'Subir pro sétimo.', vai:'c11_sala_vazia'},
+    {texto:'Subir pro nono.', vai:'c11_nono_andar'},
+    {texto:'Ir ver a doca de carga.', vai:'c11_doca'}
+  ]
+},
+
+c11_imprensa_no_balcao:{
+  texto:[
+    'Você põe o crachá de papel laminado no balcão e faz a única pergunta que imprensa faz:',
+    d=>fala(d.jogador.nome, 'Vocês têm alguma resposta oficial sobre o sétimo andar?'),
+    'A palavra "oficial" faz num saguão de granito o que faz em qualquer lugar: ela muda quem precisa responder.',
+    fala('a recepcionista', 'Eu vou chamar a assessoria.'),
+    'A assessoria desce em seis minutos, o que é rápido demais pra ser coincidência, e é uma moça de uns trinta anos com um sorriso muito melhor treinado que o da recepção.',
+    fala('a assessora', 'A Silph não comenta sobre setores internos. Posso te mandar o release do trimestre.'),
+    d=>fala(d.jogador.nome, 'Eu não perguntei sobre setor. Eu perguntei sobre o sétimo andar.'),
+    'O sorriso continua exatamente igual e os olhos mudam um grau.',
+    fala('a assessora', 'A Silph não comenta sobre setores internos.'),
+    'A segunda vez que uma pessoa repete a mesma frase palavra por palavra é a resposta de verdade.'
+  ],
+  ef:{flag:['sabe_da_sala_vazia','silph_nao_comenta'],
+      rep:{eixo:'bom', delta:1, motivo:'Fez a pergunta oficial no balcão em vez de entrar escondido'},
+      npc:{nome:'Assessora da Silph', opiniao:-1, memoria:'Repetiu a mesma frase duas vezes pra você, palavra por palavra.'},
+      registrar:'A assessoria da Silph repetiu a mesma frase duas vezes sobre o 7º andar.',
+      presagio:'Frase repetida palavra por palavra é frase decorada, e frase decorada foi escrita por alguém.'},
+  escolhas:[
+    {texto:'"Quem escreveu essa frase pra você?"', vai:'c11_quem_escreveu'},
+    {texto:'Agradecer, sair, e ir pela doca de carga.', vai:'c11_doca'},
+    {texto:'Agradecer e sair de verdade.', vai:'c11_desistiu'}
+  ]
+},
+
+c11_quem_escreveu:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem escreveu essa frase pra você?'),
+    'Pela primeira vez o sorriso treinado falha por um oitavo de segundo, e um oitavo de segundo é muito.',
+    fala('a assessora', 'É a nossa posição institucional.'),
+    d=>fala(d.jogador.nome, 'Eu sei. Eu perguntei quem escreveu.'),
+    'Ela olha pro saguão, pro segurança, pro teto de doze metros.',
+    fala('a assessora', 'Eu recebi por e-mail na terça.', 'baixo'),
+    fala('a assessora', 'De quem?'),
+    fala('a assessora', 'De um endereço que não é de ninguém. Eu perguntei e me mandaram continuar.'),
+    'Ela endireita o crachá dela, que está perfeitamente reto.',
+    fala('a assessora', 'Eu não deveria ter dito isso. Não use o meu nome.'),
+    d=>fala(d.jogador.nome, 'Eu não vou usar o seu nome.'),
+    'E você não usa. Nem naquela semana nem nunca.'
+  ],
+  ef:{flag:['fonte_da_assessoria','sabe_do_email_de_terca'],
+      rep:{eixo:'bom', delta:3, motivo:'Ganhou uma fonte dentro da Silph e protegeu o nome dela', notorio:true},
+      npc:{nome:'Assessora da Silph', opiniao:4, memoria:'Te contou de onde veio a frase decorada, e você nunca usou o nome dela.'},
+      registrar:'A posição oficial da Silph chegou por e-mail de um endereço sem dono, numa terça.',
+      presagio:'Ela vai te ligar. Não nessa semana.'},
+  escolhas:[
+    {texto:'Ir pela doca de carga.', vai:'c11_doca'},
+    {texto:'Sair e voltar de noite.', vai:'c11_desistiu'}
   ]
 },
 

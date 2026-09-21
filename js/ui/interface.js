@@ -1874,9 +1874,20 @@ const UI = {
     const mortos = d.cemiterio.length
       ? `<h3>Quem não voltou</h3><p class="sussurro">${d.cemiterio.map(p=>this.esc(nomeExib(p))+' — '+this.esc(p.causaMorte)).join('<br>')}</p>` : '';
     const presos = Estado.lendariosCapturados();
+    /* O final conta o que aconteceu com Kanto. O epílogo conta o que
+       aconteceu com você, e quem escolhe é o crachá, a via e o que
+       Kanto conta de você. */
+    const ep = (typeof epilogoDaJornada === 'function') ? epilogoDaJornada() : null;
+    const rodape = (typeof rodapeDaJornada === 'function') ? rodapeDaJornada() : [];
+    if (ep) Estado.registrarFinal('ep_' + ep.id, 'Epílogo: ' + ep.titulo);
+
     this.add(`<div class="painel final">
       <div class="tit">${this.esc(final.titulo)}</div>
       ${final.texto.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}
+      ${ep ? `<hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
+        <div class="tit epilogo">${this.esc(ep.titulo)}</div>
+        ${ep.texto.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}
+        ${rodape.length ? `<div class="epilogo-rodape">${rodape.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>` : ''}` : ''}
       <hr style="border:none;border-top:1px solid var(--borda);margin:32px 0">
       <div style="text-align:left;max-width:610px;margin:0 auto">
         <h3>Como você terminou</h3>
@@ -2451,11 +2462,18 @@ const UI = {
 
   modalFinais(){
     const codice = Estado.finaisDescobertos();
-    const total = CAPITULOS.reduce((n,c)=>n+Object.values(c.cenas).filter(x=>x.final).length,0);
-    this.modal('Códice de finais', codice.length
-      ? `<p class="sussurro">${codice.length} de ${total} descobertos.</p>` +
-        codice.map(f=>`<div class="linha"><span class="k">${this.esc(f.titulo)}</span><span class="v">✓</span></div>`).join('')
-      : `<p class="nada">Nenhum final descoberto ainda. A campanha tem ${total}.</p>`);
+    const totalFim = CAPITULOS.reduce((n,c)=>n+Object.values(c.cenas).filter(x=>x.final).length,0);
+    const totalEp = (typeof EPILOGOS !== 'undefined') ? EPILOGOS.length : 0;
+    const eps = codice.filter(f => String(f.id||'').indexOf('ep_') === 0 || /^Epílogo/.test(f.titulo));
+    const fins = codice.filter(f => eps.indexOf(f) === -1);
+    const bloco = (titulo, lista, total, vazio) =>
+      `<h3>${titulo} — ${lista.length} de ${total}</h3>` +
+      (lista.length ? lista.map(f=>`<div class="linha"><span class="k">${this.esc(String(f.titulo).replace(/^Epílogo: /,''))}</span><span class="v">✓</span></div>`).join('')
+                    : `<p class="nada">${vazio}</p>`);
+    this.modal('Códice de finais',
+      bloco('Finais', fins, totalFim, 'Nenhum ainda.') +
+      bloco('Epílogos', eps, totalEp, 'Nenhum ainda.') +
+      `<p class="sussurro">O final é o que aconteceu com Kanto. O epílogo é o que aconteceu com você, e depende do crachá que você carregava, do caminho que Kanto viu você seguir e do que Kanto conta de você.</p>`);
   },
 
   /* ========================================================
@@ -2686,12 +2704,25 @@ const UI = {
       ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
       ${L('Situações', 'cidade e rota têm coisa acontecendo por conta própria')}
       ${L('Doação', 'aparece quando existe uma causa que você já conheceu · rende reputação, nunca item')}
+      ${L('Como te recebem', 'uma linha no alto da tela que muda com reputação e crachá')}
       <h3>Preço por cidade</h3>
       ${L('Celadon', '0,85× — o mais barato de Kanto, sete andares')}
       ${L('Cais de Vermilion', '0,9× — metade do estoque entra sem imposto')}
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Finais e epílogos</h3>
+      <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
+      <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
+      <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
+      <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
+      <p class="sussurro">São 36 finais e 20 epílogos, e os dois se combinam: a mesma conversa com Mewtwo termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+
+      <h3>O que o crachá muda na história</h3>
+      <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
+      <div class="linha"><span class="k">Como o lugar te recebe</span><span class="v">uma linha no alto da tela, que muda com reputação e crachá</span></div>
+      <p class="sussurro">Com credencial na mão dá pra entrar pela porta da frente onde antes só dava pra pular a cerca — e o que você acha entrando pela frente não é o mesmo que você acha pulando.</p>
+
       <h3>Onde o dinheiro vira outra coisa</h3>
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
       <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
@@ -2723,7 +2754,7 @@ const UI = {
       ${L('Notícia', 'não rende nada material — muda o que a pessoa pensa de você')}
       <p class="sussurro">Missão entregue não se pede de novo e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro: atender custa tempo e não atender custa outra coisa.</p>
       <h3>Cargos</h3>
-      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo e onde você entra. O balcão de credenciais fica no Centro Pokémon, e o Cartão de Treinador tem um atalho.</p>
+      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo, onde você entra, como as pessoas te recebem e com que epílogo a sua história termina. O balcão de credenciais fica no Centro Pokémon, e o Cartão de Treinador tem um atalho.</p>
       ${L('Peso 1 · cedo', 'Treinador licenciado · Auxiliar de campo')}
       ${L('Peso 2 · meio', 'Guarda de rota · Criador registrado · Repórter credenciado')}
       ${L('Peso 3 · tarde', 'Informante · Investigador de campo · Pesquisador associado')}
@@ -2733,6 +2764,12 @@ const UI = {
       ${L('Incompatível', 'crachá da Liga e envelope sem timbre não cabem no mesmo bolso')}`;
 
     return `
+      <h3>Como isso acaba</h3>
+      ${L('Final', 'o que aconteceu com Kanto — 36 deles')}
+      ${L('Epílogo', 'o que aconteceu com você — 20 deles')}
+      ${L('Quem escolhe o epílogo', 'o crachá primeiro, depois a via, depois a reputação')}
+      <p class="sussurro">Terminar a campanha duas vezes com as mesmas escolhas e credenciais diferentes dá dois desfechos diferentes. O códice de finais guarda os dois em listas separadas.</p>
+
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. O cemitério não esvazia.</p>
       ${L('Treinador com 0 HP', 'fim de jogo permanente')}
@@ -2832,6 +2869,18 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Finais e epílogos</h3>
+      <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
+      <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
+      <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
+      <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
+      <p class="sussurro">São 36 finais e 20 epílogos, e os dois se combinam: a mesma conversa com Mewtwo termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+
+      <h3>O que o crachá muda na história</h3>
+      <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
+      <div class="linha"><span class="k">Como o lugar te recebe</span><span class="v">uma linha no alto da tela, que muda com reputação e crachá</span></div>
+      <p class="sussurro">Com credencial na mão dá pra entrar pela porta da frente onde antes só dava pra pular a cerca — e o que você acha entrando pela frente não é o mesmo que você acha pulando.</p>
 
       <h3>Onde o dinheiro vira outra coisa</h3>
       <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
