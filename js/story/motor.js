@@ -235,32 +235,27 @@ const Historia = {
     return true;
   },
 
-  /* Qual arco da história espera por você NESTE lugar, agora */
+  /* Qual arco da história espera por você NESTE lugar, agora.
+     Quem decide qual é o próximo é proximoCapitulo(), porque ele é
+     o único que sabe de desvio explícito e de capítulo condicional —
+     contar +1 aqui apontava a bússola pro capítulo errado sempre que
+     a rota desviava. */
   arcoAqui(){
-    const d = Estado.dados;
-    let n = d.capitulo + 1;
-    while (this.capitulo(n)){
-      const cap = this.capitulo(n);
-      if (cap.requer && !this.testaRequisito(cap)){ n++; continue; }
-      const a = ANCORAS[n];
-      if (!a) return null;
-      if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
-      return null;
-    }
+    const n = this.proximoCapitulo(false);
+    if (!n) return null;
+    const cap = this.capitulo(n);
+    const a = ANCORAS[n];
+    if (!cap || !a) return null;
+    if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
     return null;
   },
 
   /* Onde o próximo arco espera — para a bússola da interface */
   proximoDestino(){
-    const d = Estado.dados;
-    let n = d.capitulo + 1;
-    while (this.capitulo(n)){
-      const cap = this.capitulo(n);
-      if (cap.requer && !this.testaRequisito(cap)){ n++; continue; }
-      const a = ANCORAS[n];
-      return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
-    }
-    return null;
+    const n = this.proximoCapitulo(false);
+    if (!n) return null;
+    const a = ANCORAS[n];
+    return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
   },
 
   /* Fim de capítulo: 2 pontos e consequências acumuladas do mundo */
@@ -276,7 +271,7 @@ const Historia = {
      Um capítulo pode definir:
        proximo: d => numero   (desvio explícito, decidido pelas escolhas)
        requer:  d => bool     (capítulo só existe em certas rotas) */
-  proximoCapitulo(){
+  proximoCapitulo(registrando){
     const atual = this.capitulo(Estado.dados.capitulo);
     if (atual && typeof atual.proximo === 'function'){
       let alvo = null;
@@ -287,7 +282,8 @@ const Historia = {
     while (this.capitulo(n)){
       const c = this.capitulo(n);
       if (!c.requer || this.testaRequisito(c)) return n;
-      Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
+      /* a bússola consulta isto a cada tela: só o avanço de verdade escreve no diário */
+      if (registrando) Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
       n++;
     }
     return null;

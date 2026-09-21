@@ -7268,32 +7268,27 @@ const Historia = {
     return true;
   },
 
-  /* Qual arco da história espera por você NESTE lugar, agora */
+  /* Qual arco da história espera por você NESTE lugar, agora.
+     Quem decide qual é o próximo é proximoCapitulo(), porque ele é
+     o único que sabe de desvio explícito e de capítulo condicional —
+     contar +1 aqui apontava a bússola pro capítulo errado sempre que
+     a rota desviava. */
   arcoAqui(){
-    const d = Estado.dados;
-    let n = d.capitulo + 1;
-    while (this.capitulo(n)){
-      const cap = this.capitulo(n);
-      if (cap.requer && !this.testaRequisito(cap)){ n++; continue; }
-      const a = ANCORAS[n];
-      if (!a) return null;
-      if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
-      return null;
-    }
+    const n = this.proximoCapitulo(false);
+    if (!n) return null;
+    const cap = this.capitulo(n);
+    const a = ANCORAS[n];
+    if (!cap || !a) return null;
+    if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
     return null;
   },
 
   /* Onde o próximo arco espera — para a bússola da interface */
   proximoDestino(){
-    const d = Estado.dados;
-    let n = d.capitulo + 1;
-    while (this.capitulo(n)){
-      const cap = this.capitulo(n);
-      if (cap.requer && !this.testaRequisito(cap)){ n++; continue; }
-      const a = ANCORAS[n];
-      return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
-    }
-    return null;
+    const n = this.proximoCapitulo(false);
+    if (!n) return null;
+    const a = ANCORAS[n];
+    return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
   },
 
   /* Fim de capítulo: 2 pontos e consequências acumuladas do mundo */
@@ -7309,7 +7304,7 @@ const Historia = {
      Um capítulo pode definir:
        proximo: d => numero   (desvio explícito, decidido pelas escolhas)
        requer:  d => bool     (capítulo só existe em certas rotas) */
-  proximoCapitulo(){
+  proximoCapitulo(registrando){
     const atual = this.capitulo(Estado.dados.capitulo);
     if (atual && typeof atual.proximo === 'function'){
       let alvo = null;
@@ -7320,7 +7315,8 @@ const Historia = {
     while (this.capitulo(n)){
       const c = this.capitulo(n);
       if (!c.requer || this.testaRequisito(c)) return n;
-      Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
+      /* a bússola consulta isto a cada tela: só o avanço de verdade escreve no diário */
+      if (registrando) Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
       n++;
     }
     return null;
@@ -10192,7 +10188,14 @@ const ANCORAS = {
   25: {local:'saffron',   chamada:'A convocação chegou por telegrama, e telegrama não se responde com "não".'},
   26: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
   27: {local:'norte',     chamada:'O vale entre duas paredes de pedra, sem saída no fundo.'},
-  28: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'}
+  28: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'},
+
+  /* Capítulos condicionais: só existem em certas rotas, e por isso
+     a âncora deles fica aqui embaixo, fora da ordem da jornada. */
+  29: {local:'cerulean',  chamada:'Quarta casa depois da segunda ponte. Portão de chapa verde, sem número.'},
+  30: {local:'lavender',  chamada:'Onze linhas no livro da guarita e a coluna de descida vazia nas onze.'},
+  31: {local:'celadon',   chamada:'A sede da Associação Comercial fica no sobrado de uma loja de tecido, e o fax chega toda segunda.'},
+  32: {local:'saffron',   chamada:'Rua Industrial 3: um galpão sem placa, com a caixa de correio cheia e nenhuma janela na fachada.'}
 };
 
 /* ============================================================
@@ -68523,6 +68526,2329 @@ c23_final_o_papel:{
 );
 
 
+/* ===== js/story/cap-29.js ===== */
+/* ============================================================
+   CAPÍTULO 29 — O PORTÃO VERDE  (Cerulean)  · CONDICIONAL
+
+   Só acontece pra quem saiu do capítulo 6 sabendo que existe uma
+   casa depois da segunda ponte que compra Pokémon de quem está
+   precisando, ou que caminhão-gaiola atravessa a cidade terça,
+   quinta e sábado com nota de material de pesca.
+
+   Quem não descobriu isso segue direto pra Lavender e nunca fica
+   sabendo que essa casa existe. É de propósito.
+   ============================================================ */
+const C29_ABERTURAS = ['c29_a_rua', 'c29_o_vizinho', 'c29_de_madrugada'];
+function c29_cabe(id, d){
+  if (id === 'c29_de_madrugada') return !!d.flags.caminhao_gaiola_terca_quinta_sabado;
+  return true;
+}
+function c29_abertura(d){ return Dados.escolher(C29_ABERTURAS.filter(id => c29_cabe(id, d))); }
+
+CAPITULOS.push(
+{
+num:29, titulo:'O Portão Verde', local:'Cerulean — depois da segunda ponte', ambiente:'cidade', nivelArea:24,
+tom:'sombrio',
+requer: d => !!(d.flags.sabe_do_portao_verde || d.flags.caminhao_gaiola_terca_quinta_sabado ||
+                d.flags.sabe_da_tabela || d.flags.ninguem_fiscaliza_a_venda),
+proximo: d => 7,
+entradas:C29_ABERTURAS,
+inicio: d => c29_abertura(d),
+cenas:{
+
+c29_a_rua:{
+  texto:[
+    'Depois da segunda ponte, Cerulean muda de textura em menos de um quarteirão.',
+    'Some a banca, some a vitrine, some o barulho de água, e começa uma rua de casa baixa com muro alto e cachorro que late de dentro.',
+    'A casa do portão verde é a quarta. Não tem placa, não tem número visível e o portão é de chapa, com uma janelinha de correspondência que está vedada por dentro com fita.',
+    'Do outro lado da rua tem um poste com uma lâmpada quebrada e um meio-fio onde dá pra sentar.',
+    'Você senta.',
+    'Em quarenta minutos entram duas pessoas pelo portão. Nenhuma das duas bate: as duas dão três toques curtos com a palma na chapa, e o portão abre.',
+    'Três toques. Com a palma, não com o nó do dedo. Isso é uma senha que ninguém combinou de chamar de senha.'
+  ],
+  ef:{flag:'achou_o_portao_verde',
+      registrar:'A casa do portão verde fica na quarta casa depois da segunda ponte. Três toques com a palma abrem.',
+      presagio:'Ninguém bate. Todo mundo sabe bater de um jeito só.'},
+  escolhas:[
+    {texto:'Dar os três toques.', vai:'c29_bateu'},
+    {texto:'Esperar sair alguém e seguir.', vai:'c29_seguiu_quem_saiu'},
+    {texto:'Procurar quem more nessa rua.', vai:'c29_o_vizinho'},
+    {texto:'Dar a volta pelo quarteirão e ver os fundos.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_o_vizinho:{
+  texto:[
+    'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.',
+    'Ela te vê olhando o portão e fala primeiro, do jeito de quem estava esperando alguém pra falar disso há muito tempo.',
+    fala('a senhora do vaso', 'Você não é da prefeitura.'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('a senhora do vaso', 'Pena.'),
+    'Ela move o regador pro vaso seguinte.',
+    fala('a senhora do vaso', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pra zoonoses e pra delegacia.'),
+    d=>fala(d.jogador.nome, 'Por causa do quê?'),
+    fala('a senhora do vaso', 'Do barulho.'),
+    'Ela para de regar.',
+    fala('a senhora do vaso', 'Não é barulho de festa, meu filho. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
+    fala('a senhora do vaso', 'E eu moro aqui há trinta e um anos e eu sei diferenciar cachorro de vizinho de o que quer que seja aquilo.', 'baixo')
+  ],
+  ef:{flag:['a_senhora_do_vaso','achou_o_portao_verde'],
+      npc:{nome:'a senhora do vaso', opiniao:2, viuVoce:'Te contou das quatro ligações que ela fez e que ninguém atendeu.'},
+      registrar:'A vizinha do portão verde ligou quatro vezes para três órgãos diferentes. Ninguém foi.'},
+  escolhas:[
+    {texto:'Perguntar o que responderam nas quatro vezes.', vai:'c29_as_quatro_ligacoes'},
+    {texto:'Perguntar se ela já viu quem entra.', vai:'c29_quem_entra_ali'},
+    {texto:'Ir bater no portão.', vai:'c29_bateu'},
+    {texto:'Dar a volta e ver os fundos.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_as_quatro_ligacoes:{
+  texto:[
+    fala('a senhora do vaso', 'Anotei todas. Eu anoto tudo, é o meu defeito.'),
+    'Ela entra em casa e volta com uma agenda de capa de couro sintético, dessas de banco, e abre numa página marcada com um elástico.',
+    fala('a senhora do vaso', 'Prefeitura: "não é competência, é zoonoses".'),
+    fala('a senhora do vaso', 'Zoonoses: "zoonoses trata de animal doméstico, Pokémon é outra pasta".'),
+    fala('a senhora do vaso', 'Delegacia: "sem flagrante não tem ocorrência, a senhora pode registrar um boletim informativo".'),
+    d=>fala(d.jogador.nome, 'E a quarta?'),
+    'Ela vira a página.',
+    fala('a senhora do vaso', 'A quarta foi na Liga.'),
+    fala('a senhora do vaso', 'A Liga foi a única que mandou alguém.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('a senhora do vaso', 'Veio um moço de cinza. Ficou vinte minutos lá dentro, saiu, e me disse que estava tudo regular.'),
+    'Ela fecha a agenda.',
+    fala('a senhora do vaso', 'Eu perguntei regular como. Ele disse que eu não precisava me preocupar.'),
+    fala('a senhora do vaso', 'Isso foi em maio. Aí o barulho de madrugada aumentou.', 'frio')
+  ],
+  ef:{flag:['a_agenda_da_senhora','sabe_do_lote_unico'],
+      registrar:'A Liga mandou um oficial ao portão verde em maio. Ele disse que estava tudo regular. O barulho aumentou depois.',
+      presagio:'Três órgãos não vieram e um veio e disse que estava regular. Esse é o pior dos quatro.'},
+  escolhas:[
+    {texto:'Pedir a agenda emprestada.', vai:'c29_pediu_a_agenda'},
+    {texto:'Ir bater no portão.', vai:'c29_bateu'},
+    {texto:'Dar a volta e ver os fundos.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_pediu_a_agenda:{
+  texto:[
+    d=>fala(d.jogador.nome, 'A senhora me empresta essa agenda?'),
+    'Ela segura a agenda com as duas mãos e você já viu esse gesto antes, num banco em frente a uma cerca em Fuchsia.',
+    fala('a senhora do vaso', 'Eu copio pra você.'),
+    d=>fala(d.jogador.nome, 'A senhora não precisa.'),
+    fala('a senhora do vaso', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
+    'Ela senta na cadeira da calçada e copia à mão, em letra de professora, as quatro ligações com data, hora, número discado, nome de quem atendeu e o que foi dito.',
+    'Leva vinte e dois minutos.',
+    'No fim ela assina, põe a data e escreve embaixo: "declaro que copiei do meu próprio caderno e que é verdade".',
+    'Ninguém ensinou isso pra ela. Ela só sabe que uma coisa escrita à mão vale mais quando tem alguém assumindo que escreveu.'
+  ],
+  ef:{flag:['copia_da_agenda','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:1, motivo:'Uma vizinha copiou à mão quatro ligações e assinou embaixo, por você.'},
+      npc:{nome:'a senhora do vaso', opiniao:4, viuVoce:'Copiou e assinou as quatro ligações para você levar.'},
+      registrar:'Está com a cópia manuscrita e assinada das quatro ligações da vizinha do portão verde.'},
+  escolhas:[
+    {texto:'Ir bater no portão.', vai:'c29_bateu'},
+    {texto:'Dar a volta e ver os fundos.', vai:'c29_os_fundos'},
+    {texto:'Voltar de madrugada, numa terça.', vai:'c29_de_madrugada'}
+  ]
+},
+
+c29_quem_entra_ali:{
+  texto:[
+    fala('a senhora do vaso', 'Gente nova, quase sempre. Da sua idade e pouco mais.'),
+    'Ela recomeça a regar, porque as plantas não têm culpa.',
+    fala('a senhora do vaso', 'Entram com bicho e saem sem.'),
+    d=>fala(d.jogador.nome, 'Todos?'),
+    fala('a senhora do vaso', 'Não. Uns saem com o bicho e com a cara de quem não gostou do preço.'),
+    'Ela move o regador.',
+    fala('a senhora do vaso', 'Esses eu fico contente. Eu fico na janela torcendo, que é uma coisa ridícula de se fazer aos setenta anos.'),
+    fala('a senhora do vaso', 'E uns saem sem o bicho e sem olhar pra trás, e andam rápido.'),
+    fala('a senhora do vaso', 'Esses eu não consigo esquecer a cara, e são muitos, e eu lembro de todas.', 'baixo')
+  ],
+  ef:{flag:'entram_com_bicho_saem_sem',
+      registrar:'No portão verde entra gente nova com Pokémon e sai sem.'},
+  escolhas:[
+    {texto:'Perguntar das quatro ligações dela.', vai:'c29_as_quatro_ligacoes'},
+    {texto:'Ir bater no portão.', vai:'c29_bateu'},
+    {texto:'Dar a volta e ver os fundos.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_os_fundos:{
+  texto:[
+    'O quarteirão dá a volta em seis minutos e os fundos da casa do portão verde dão num beco de serviço com três latões de lixo e um muro de dois metros e meio.',
+    'O muro tem caco de vidro em cima, o que é normal, e uma coisa que não é normal: um exaustor industrial embutido, desses de cozinha de restaurante, com a grade suja de gordura e poeira.',
+    'Casa de família não tem exaustor industrial.',
+    'Você encosta a mão na grade. Está desligado e está morno, o que quer dizer que esteve ligado há pouco.',
+    'E nos latões de lixo tem, em cima de tudo, seis sacos de ração de vinte quilos vazios e dobrados.',
+    'Seis, da mesma marca, da mesma semana.',
+    'Seis sacos de vinte quilos é cento e vinte quilos de ração por semana numa casa de rua residencial com um portão que só abre com três toques.'
+  ],
+  ef:{flag:'os_fundos_do_portao_verde',
+      registrar:'Nos fundos do portão verde: exaustor industrial e seis sacos de ração de 20 kg vazios por semana.',
+      presagio:'Cento e vinte quilos por semana. Isso não alimenta um bicho nem dez.'},
+  escolhas:[
+    {texto:'Pular o muro.', vai:'c29_pulou_o_muro'},
+    {texto:'Levar um saco vazio como prova.', vai:'c29_pegou_o_saco'},
+    {texto:'Voltar pra frente e bater no portão.', vai:'c29_bateu'},
+    {texto:'Voltar de madrugada, numa terça.', vai:'c29_de_madrugada'}
+  ]
+},
+
+c29_pegou_o_saco:{
+  texto:[
+    'Você tira um dos sacos dobrados de cima do latão e abre.',
+    'É saco de ração de granja, cinquenta por setenta, com impressão em três cores e — na lateral, onde ninguém olha — uma etiqueta de expedição colada.',
+    'A etiqueta tem: número de lote, data, o nome de uma distribuidora de Celadon, e um campo de destinatário preenchido à máquina.',
+    'O destinatário não é um nome de pessoa e não é um nome de empresa.',
+    'É uma sigla de cinco caracteres que você já viu escrita à mão num livro de destinos.',
+    'Você dobra o saco em oito e enfia dentro da mochila, e ele não cabe direito, e você força.'
+  ],
+  ef:{flag:['tem_o_saco_de_racao','reika_precisa_de_papel','sabe_do_lote_unico'],
+      registrar:'Está com um saco de ração vazio do portão verde, com etiqueta de expedição e destinatário em sigla.',
+      presagio:'Uma sigla de cinco caracteres numa etiqueta de ração. Ninguém falsifica nota de ração.'},
+  escolhas:[
+    {texto:'Pular o muro agora que você tem certeza.', vai:'c29_pulou_o_muro'},
+    {texto:'Ir bater no portão pela frente.', vai:'c29_bateu'},
+    {texto:'Sair com o que você tem e não voltar.', vai:'c29_fim'}
+  ]
+},
+
+c29_bateu:{
+  texto:[
+    'Você dá os três toques com a palma.',
+    'O portão abre quarenta centímetros e atrás dele tem um homem de uns trinta anos de camiseta regata, descalço, com um copo de café na mão.',
+    'Ele olha você de cima a baixo em menos de um segundo e chega a uma conclusão.',
+    fala('o homem do portão', 'Traz?'),
+    d=>fala(d.jogador.nome, 'Trago o quê?'),
+    'Ele suspira, do jeito de quem já explicou isso hoje.',
+    fala('o homem do portão', 'Bicho, moço. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} está do seu lado e ele olha pro ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
+               : 'Ele olha pros seus ombros procurando uma bola no cinto e não acha.';
+    },
+    fala('o homem do portão', 'Tabela tá na parede. Entra ou não entra, mas decide aí que tá frio.')
+  ],
+  ef:{flag:'o_portao_abriu',
+      registrar:'O portão verde abriu. Tem uma tabela de preço na parede de dentro.'},
+  escolhas:[
+    {texto:'Entrar.', vai:'c29_dentro'},
+    {texto:'"Eu vim ver a tabela." — entrar dizendo a verdade.', vai:'c29_dentro_verdade'},
+    {texto:'Não entrar. Sair andando.', vai:'c29_nao_entrou'}
+  ]
+},
+
+c29_dentro:{
+  texto:[
+    'A sala da frente é uma sala. Sofá, televisão, um calendário de posto de gasolina, e cheiro de café.',
+    'Na parede, num quadro de cortiça, a tabela.',
+    'É datilografada, plastificada e organizada por três colunas: espécie, faixa de nível e valor.',
+    'Os valores são bons. São muito melhores do que você imaginava, e é isso que você não tinha previsto: a coisa toda funciona porque paga bem.',
+    'E na quarta coluna, sem cabeçalho, tem uma letra em cada linha: C, C, C, R, C, R, R, C.',
+    d=>fala(d.jogador.nome, 'O que é a última coluna?'),
+    fala('o homem do portão', 'Destino.'),
+    d=>fala(d.jogador.nome, 'C e R.'),
+    'Ele toma o café dele.',
+    fala('o homem do portão', 'Criação e Recurso.'),
+    'Ele diz as duas palavras sem nenhum peso, do jeito de quem repete uma classificação de manual que ele nunca parou pra ouvir.'
+  ],
+  ef:{flag:['viu_a_tabela','sabe_do_lote_unico'],
+      registrar:'A tabela do portão verde classifica cada espécie como "Criação" ou "Recurso".',
+      presagio:'Criação e Recurso. Ele não sabe o que está dizendo, e é por isso que ele diz.'},
+  escolhas:[
+    {texto:'Perguntar o que é Recurso.', vai:'c29_o_que_e_recurso'},
+    {texto:'Fotografar ou copiar a tabela.', vai:'c29_copiou_a_tabela'},
+    {texto:'Perguntar quem paga.', vai:'c29_quem_paga'},
+    {texto:'Sair.', vai:'c29_nao_entrou'}
+  ]
+},
+
+c29_dentro_verdade:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu não vim vender nada. Eu vim ver a tabela.'),
+    'Ele para com o copo de café na metade do caminho.',
+    'E aí ele faz uma coisa que desmonta a cena inteira: ele dá de ombros e abre mais o portão.',
+    fala('o homem do portão', 'Tá na parede. Pode ver.'),
+    d=>fala(d.jogador.nome, 'Assim?'),
+    fala('o homem do portão', 'Moço, eu não tô escondendo nada. Eu tenho alvará.'),
+    'Ele aponta com o queixo pra uma moldura na parede da sala e tem mesmo um alvará ali, emitido, com brasão, dentro da validade.',
+    fala('o homem do portão', 'Compra e venda de espécimes, atividade licenciada, código quatro dois sete.'),
+    'Ele toma o café.',
+    fala('o homem do portão', 'Você achou que era o quê? Que eu ia te bater?'),
+    'E você achou, e ele viu que você achou, e é humilhante de um jeito muito específico.'
+  ],
+  ef:{flag:['viu_a_tabela','o_alvara_quatro_dois_sete','sabe_do_lote_unico'],
+      registrar:'A casa do portão verde tem alvará: compra e venda de espécimes, código 427, dentro da validade.',
+      presagio:'É licenciado. O problema nunca foi a ilegalidade.'},
+  escolhas:[
+    {texto:'Perguntar o que é a coluna C e R.', vai:'c29_o_que_e_recurso'},
+    {texto:'Copiar a tabela e o número do alvará.', vai:'c29_copiou_a_tabela'},
+    {texto:'Perguntar quem paga.', vai:'c29_quem_paga'},
+    {texto:'Sair.', vai:'c29_nao_entrou'}
+  ]
+},
+
+c29_o_que_e_recurso:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que é Recurso?'),
+    fala('o homem do portão', 'É a classificação. Vem na tabela que eles mandam.'),
+    d=>fala(d.jogador.nome, 'Eu sei que vem. Eu tô perguntando o que quer dizer.'),
+    'Ele olha pra tabela. É a primeira vez na conversa que ele olha pra tabela.',
+    fala('o homem do portão', 'Criação é o que vai pra criadouro. Pra reprodução, entende?'),
+    d=>fala(d.jogador.nome, 'E Recurso?'),
+    'Silêncio.',
+    fala('o homem do portão', 'Recurso é o que não vai pra criadouro.'),
+    'Ele põe o copo de café na mesinha do sofá e fica com as duas mãos livres e não sabe o que fazer com elas.',
+    fala('o homem do portão', 'Eu faço isso há seis anos e você é o primeiro que pergunta.'),
+    fala('o homem do portão', 'E eu tô ouvindo a minha resposta agora, em voz alta, pela primeira vez.', 'baixo')
+  ],
+  ef:{flag:'a_coluna_recurso', moral:1,
+      npc:{nome:'o homem do portão', opiniao:1, viuVoce:'Você o fez dizer em voz alta, depois de seis anos, o que a coluna significa.'},
+      registrar:'"Recurso é o que não vai pra criadouro." Ele nunca tinha dito isso em voz alta.',
+      presagio:'Seis anos. E bastou alguém perguntar uma vez.'},
+  escolhas:[
+    {texto:'Perguntar quem manda a tabela.', vai:'c29_quem_paga'},
+    {texto:'Copiar a tabela.', vai:'c29_copiou_a_tabela'},
+    {texto:'Sair sem falar mais nada.', vai:'c29_nao_entrou'}
+  ]
+},
+
+c29_quem_paga:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem manda a tabela?'),
+    fala('o homem do portão', 'Chega por malote.'),
+    d=>fala(d.jogador.nome, 'De onde?'),
+    fala('o homem do portão', 'Do escritório.'),
+    d=>fala(d.jogador.nome, 'Que escritório?'),
+    'Ele abre uma gaveta do móvel da sala, tira um envelope pardo usado e vira o verso pra você, onde tem o carimbo de expedição.',
+    'Rua do Comércio, 118 — sala 704.',
+    'Você lê duas vezes e a sala fica com um zumbido que não existe.',
+    fala('o homem do portão', 'Eu nunca fui lá. Eu recebo malote, eu pago à vista, eu entrego na terça, quinta e sábado.'),
+    fala('o homem do portão', 'Você tá me olhando como se eu fosse o dono disso.'),
+    'Ele guarda o envelope.',
+    fala('o homem do portão', 'Eu ganho oito por cento.', 'baixo')
+  ],
+  ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
+      registrar:'Os malotes do portão verde vêm da Rua do Comércio, 118, sala 704.',
+      presagio:'Sétimo andar, prédio comercial, farmácia no térreo. Guarde o endereço.'},
+  escolhas:[
+    {texto:'Pedir o envelope.', vai:'c29_pediu_o_envelope'},
+    {texto:'Copiar a tabela antes de sair.', vai:'c29_copiou_a_tabela'},
+    {texto:'Sair.', vai:'c29_nao_entrou'}
+  ]
+},
+
+c29_pediu_o_envelope:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Me dá esse envelope.'),
+    fala('o homem do portão', 'Não.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o homem do portão', 'Porque eu tenho dois filhos e um alvará.'),
+    'Ele fecha a gaveta com a mão espalmada, devagar.',
+    fala('o homem do portão', 'Mas eu não vou te expulsar e eu não vou te vigiar, e eu preciso ir no banheiro.'),
+    'E ele sai da sala.',
+    'Leva quatro minutos.',
+    'A gaveta não tem chave.'
+  ],
+  ef:{flag:'ele_saiu_da_sala',
+      presagio:'Ele disse o que não podia fazer e foi embora da sala. Isso é uma frase inteira.'},
+  escolhas:[
+    {texto:'Abrir a gaveta e pegar o envelope.', vai:'c29_pegou_o_envelope'},
+    {texto:'Não abrir. Copiar o endereço à mão e sair.', vai:'c29_copiou_a_tabela'},
+    {texto:'Não abrir e não copiar. Sair.', vai:'c29_nao_entrou'}
+  ]
+},
+
+c29_pegou_o_envelope:{
+  texto:[
+    'Você abre a gaveta e pega o envelope e fecha a gaveta e sai da sala antes dos quatro minutos.',
+    'Do portão, antes de sair, você ouve a descarga.',
+    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinho, e isso é o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
+    'Na rua, com o envelope pardo na mão, você entende que acabou de receber uma prova de alguém que precisa poder jurar que não deu.'
+  ],
+  ef:{flag:['tem_o_envelope_do_malote','reika_precisa_de_papel'],
+      rep:{eixo:'ruim', delta:1, motivo:'Levou um envelope da casa de outra pessoa, mesmo com a porta aberta de propósito.'},
+      npc:{nome:'o homem do portão', opiniao:2, viuVoce:'Saiu da sala de propósito e deixou a gaveta sem chave.'},
+      registrar:'Está com o envelope de malote carimbado: Rua do Comércio, 118, sala 704.'},
+  escolhas:[
+    {texto:'Sair de Cerulean com isso.', vai:'c29_fim'},
+    {texto:'Voltar de madrugada, numa terça, ver o caminhão.', vai:'c29_de_madrugada'}
+  ]
+},
+
+c29_copiou_a_tabela:{
+  texto:[
+    'Você copia a tabela inteira no verso de um papel qualquer: trinta e uma linhas, três colunas, e a quarta coluna sem cabeçalho.',
+    'Leva dezoito minutos e ele não te atrapalha uma vez. Ele assiste televisão com o som baixo enquanto você escreve.',
+    'Quando você termina, ele fala sem tirar os olhos da televisão:',
+    fala('o homem do portão', 'Vinte e dois "R".'),
+    d=>fala(d.jogador.nome, 'O quê?'),
+    fala('o homem do portão', 'Das trinta e uma linhas, vinte e dois são "R".'),
+    'Ele muda de canal.',
+    fala('o homem do portão', 'Eu também nunca tinha contado.'),
+    'Você olha a sua cópia e conta.',
+    'Vinte e dois.'
+  ],
+  ef:{flag:['copia_da_tabela','reika_precisa_de_papel','sabe_do_lote_unico'],
+      registrar:'Copiou a tabela do portão verde: 31 espécies, 22 classificadas como "Recurso".',
+      presagio:'Vinte e duas de trinta e uma. Isso não é exceção: é a regra da tabela.'},
+  escolhas:[
+    {texto:'Sair de Cerulean com isso.', vai:'c29_fim'},
+    {texto:'Perguntar quem manda a tabela antes de sair.', vai:'c29_quem_paga'},
+    {texto:'Voltar de madrugada, numa terça.', vai:'c29_de_madrugada'}
+  ]
+},
+
+c29_nao_entrou:{
+  texto:[
+    'Você sai andando e não olha pra trás, e o portão fecha atrás de você com o barulho de chapa que chapa faz.',
+    'Na esquina você para.',
+    'Não tem nada de heroico em não entrar. Você não salvou nada e não impediu nada, e amanhã é terça.',
+    'Mas você sabe onde é a casa, sabe que abre com três toques, e sabe que a vizinha da esquerda anota tudo numa agenda de capa de couro sintético.',
+    'Isso é mais do que você tinha ontem.'
+  ],
+  ef:{flag:'nao_entrou_no_portao_verde',
+      registrar:'Não entrou na casa do portão verde.'},
+  escolhas:[
+    {texto:'Voltar de madrugada, numa terça.', vai:'c29_de_madrugada'},
+    {texto:'Falar com a vizinha da esquerda.', vai:'c29_o_vizinho'},
+    {texto:'Dar a volta e ver os fundos.', vai:'c29_os_fundos'},
+    {texto:'Ir embora de Cerulean.', vai:'c29_fim'}
+  ]
+},
+
+c29_pulou_o_muro:{
+  texto:[
+    'Dois metros e meio com caco de vidro em cima é um muro sério, e a solução é a de sempre: o cobertor dobrado em quatro por cima do vidro e a força dos braços, que você não tem toda.',
+    'Você cai do outro lado num quintal cimentado e machuca o tornozelo na aterrissagem, não muito.',
+    'O quintal tem: um varal sem roupa, um tanque, e uma construção baixa de alvenaria no fundo, sem janela, com uma porta de ferro e um exaustor.',
+    'A porta de ferro não tem cadeado. Tem tranca do lado de fora, que é a informação: quem tranca por fora não está se protegendo do que está dentro. Está impedindo de sair.',
+    'E de dentro vem o som.',
+    'Muita coisa viva no mesmo lugar, abafada por alvenaria, parando toda de uma vez quando você põe a mão na tranca.'
+  ],
+  ef:{hp:-3, causa:'Queda do muro do portão verde',
+      flag:['pulou_o_muro_verde','sabe_do_lote_unico'],
+      rep:{eixo:'ruim', delta:1, motivo:'Invadiu o quintal de uma casa em Cerulean.'},
+      registrar:'Pulou o muro do portão verde. Nos fundos há uma construção sem janela, trancada por fora.'},
+  escolhas:[
+    {texto:'Abrir a tranca.', vai:'c29_abriu_a_tranca'},
+    {texto:'Não abrir. Olhar pelo exaustor.', vai:'c29_pelo_exaustor'},
+    {texto:'Sair do quintal do jeito que entrou.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_pelo_exaustor:{
+  texto:[
+    'O exaustor está na altura do seu peito e a grade tem vãos de um centímetro e meio.',
+    'Você encosta o olho e leva uns vinte segundos pra pupila abrir.',
+    'Lá dentro tem quatro fileiras de gaiola empilhadas em três alturas, com corredor entre elas, piso de cimento com ralo central e uma lâmpada de tubo apagada.',
+    'Você conta as que dá pra ver: trinta e uma ocupadas.',
+    'Trinta e uma, que é o número de linhas da tabela da sala da frente, e você não sabe se isso é coincidência e desconfia que não.',
+    'E aí acontece a pior parte, que é uma coisa muito pequena.',
+    'Um deles, na gaiola de baixo da segunda fileira, vira a cabeça na direção do exaustor e olha pro seu olho.',
+    'E não faz barulho nenhum.',
+    'Porque ele aprendeu que barulho não adianta.'
+  ],
+  ef:{flag:['contou_trinta_e_uma','sabe_do_lote_unico'], moral:-2,
+      registrar:'Há 31 gaiolas ocupadas na construção dos fundos do portão verde.',
+      presagio:'Ele olhou e não fez barulho. Isso leva tempo pra aprender.'},
+  escolhas:[
+    {texto:'Abrir a tranca.', vai:'c29_abriu_a_tranca'},
+    {texto:'Sair, e sair com isso.', vai:'c29_fim'}
+  ]
+},
+
+c29_abriu_a_tranca:{
+  texto:[
+    'Você puxa a tranca e ela corre fácil, porque tranca de porta usada corre fácil.',
+    'A porta abre pra fora e a luz do quintal entra no galpão pela primeira vez no dia.',
+    'Trinta e uma gaiolas. Quatro fileiras. Corredor no meio. Ralo no centro do piso.',
+    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do capítulo:',
+    'abrir trinta e uma gaiolas leva mais de doze segundos.'
+  ],
+  ef:{flag:'a_porta_aberta_do_galpao'},
+  escolhas:[
+    {texto:'Abrir todas. Que dê o que der.', vai:'c29_abriu_todas'},
+    {texto:'Abrir as que der e correr.', vai:'c29_abriu_as_que_deu'},
+    {texto:'Fechar a porta e sair sem ser visto.', vai:'c29_fechou_a_porta'}
+  ]
+},
+
+c29_abriu_todas:{
+  texto:[
+    'Você começa pela fileira de baixo porque é a mais rápida e não conta mais nada depois da quarta.',
+    'Trava de gaveta, trava de gaveta, trava de gaveta. É tudo igual e é tudo rápido e nenhum deles sai correndo, porque nenhum deles esperava que a porta fosse abrir.',
+    'Eles ficam.',
+    'Essa é a parte que você não tinha previsto: você abre trinta e uma gaiolas e trinta e uma criaturas continuam sentadas.',
+    'O homem do portão aparece na porta do galpão no meio da segunda fileira e não avança.',
+    fala('o homem do portão', 'Ah, moleque.'),
+    'Ele não grita. Ele fala do jeito de quem viu um copo cair e sabe que não dá pra pegar.',
+    fala('o homem do portão', 'Você sabe que eu vou ter que pagar por cada um desses?'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    'E você continua abrindo.'
+  ],
+  ef:{flag:'abriu_as_trinta_e_uma', moral:8,
+      rep:{eixo:'bom', delta:4, motivo:'Abriu trinta e uma gaiolas num galpão de Cerulean.', notorio:true},
+      registrar:'Abriu as 31 gaiolas do galpão do portão verde.'},
+  escolhas:[
+    {texto:'Enfrentar ele.', vai:'c29_luta'},
+    {texto:'Passar por ele e sair.', vai:'c29_passou_por_ele'}
+  ]
+},
+
+c29_abriu_as_que_deu:{
+  texto:[
+    'Você abre onze e os passos chegam no quintal e você sai pela porta antes deles virarem a esquina da casa.',
+    'Onze de trinta e uma.',
+    'Você pula o muro pelo mesmo lugar, com o cobertor ainda em cima do vidro, e cai na rua de trás e anda rápido sem correr.',
+    'E nas semanas seguintes você vai refazer a conta de onze contra trinta e uma muitas vezes, e a conta nunca vai ficar boa.',
+    'Mas onze é onze.'
+  ],
+  ef:{flag:'abriu_onze', moral:4,
+      rep:{eixo:'bom', delta:2, motivo:'Abriu onze gaiolas e saiu antes de ser visto.'},
+      registrar:'Abriu onze das 31 gaiolas do galpão do portão verde.'},
+  escolhas:[
+    {texto:'Sair de Cerulean.', vai:'c29_fim'}
+  ]
+},
+
+c29_fechou_a_porta:{
+  texto:[
+    'Você fecha a porta e corre a tranca de volta e o som da tranca é o som mais alto do dia.',
+    'Você pula o muro pelo mesmo lugar e cai na rua de trás e anda rápido sem correr, e ninguém te vê.',
+    'Você fez a coisa sensata e a coisa sensata deixa trinta e uma criaturas onde elas estavam.',
+    'Você tem um endereço, uma tabela, uma agenda copiada à mão e um saco de ração com etiqueta.',
+    'Isso derruba a coisa toda daqui a três anos, se derrubar.',
+    'Trinta e uma gaiolas não têm três anos.'
+  ],
+  ef:{flag:'fechou_a_tranca', moral:-3,
+      registrar:'Fechou a tranca do galpão e saiu sem ser visto.',
+      presagio:'A conta certa e a conta possível não são a mesma conta, e você escolheu uma.'},
+  escolhas:[
+    {texto:'Sair de Cerulean.', vai:'c29_fim'}
+  ]
+},
+
+c29_luta:{
+  texto:[
+    'Ele não quer brigar e briga do mesmo jeito, porque tem dois filhos e um alvará e trinta e uma gaiolas abertas.',
+    'Ele solta o dele sem nenhum entusiasmo, e a falta de entusiasmo não tira nada do nível.'
+  ],
+  batalha:{dex:24, nivel:26, tipo:'treinador', treinador:'o homem do portão', fuga:true,
+           timeExtra:[{dex:20, nivel:25}],
+           vitoria:'c29_venceu', derrota:'c29_perdeu', gameover:'gameover'}
+},
+
+c29_venceu:{
+  texto:[
+    'Ele recolhe o dele e senta no batente da porta do galpão com as costas na ombreira.',
+    'Atrás dele, trinta e uma gaiolas abertas e trinta e uma criaturas que ainda não entenderam que podem sair.',
+    fala('o homem do portão', 'Eles não vão embora.'),
+    d=>fala(d.jogador.nome, 'Vão.'),
+    fala('o homem do portão', 'Hoje não.'),
+    'E ele tem razão, e vocês dois ficam ali, sentados em pontos diferentes do mesmo quintal, esperando a primeira sair.',
+    'Leva quarenta minutos.',
+    'A primeira é da gaiola de baixo da segunda fileira, que é a que olhou pro exaustor, e quando ela passa pela porta as outras trinta entendem de uma vez.'
+  ],
+  ef:{flag:'as_trinta_e_uma_sairam', moral:6,
+      rep:{eixo:'bom', delta:3, motivo:'Ficou até as trinta e uma saírem.'},
+      registrar:'As 31 saíram do galpão do portão verde. A primeira levou quarenta minutos.'},
+  escolhas:[
+    {texto:'Ir embora de Cerulean.', vai:'c29_fim'}
+  ]
+},
+
+c29_perdeu:{
+  texto:[
+    'Você perde, e perder aqui não é apanhar: é ele recolher o seu time do chão do quintal, com cuidado até, e te pôr na rua pelo portão da frente.',
+    fala('o homem do portão', 'Some.'),
+    'Ele fecha o portão verde e você ouve, de fora, a tranca do galpão correndo de volta.',
+    'Uma por uma. Trinta e uma vezes.',
+    'Leva quatro minutos e você fica na calçada ouvindo os quatro minutos inteiros porque ir embora antes seria pior.'
+  ],
+  ef:{flag:'perdeu_no_quintal', moral:-4,
+      registrar:'Perdeu no quintal do portão verde. Ele trancou as 31 de volta.',
+      presagio:'Você ouviu as trinta e uma trancas. Guarde esse som.'},
+  escolhas:[
+    {texto:'Ir embora de Cerulean.', vai:'c29_fim'}
+  ]
+},
+
+c29_passou_por_ele:{
+  texto:[
+    'Você passa por ele e ele deixa passar, e os dois sabem que ele deixou.',
+    'No portão da frente, antes de você sair, ele fala:',
+    fala('o homem do portão', 'Terça que vem chega outro caminhão.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    fala('o homem do portão', 'E eu vou receber.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    'Ele segura o portão aberto.',
+    fala('o homem do portão', 'Então não volta aqui. Vai no endereço do carimbo.', 'baixo')
+  ],
+  ef:{flag:'ele_mandou_ir_no_endereco',
+      npc:{nome:'o homem do portão', opiniao:2, viuVoce:'Deixou você passar e mandou ir ao endereço do carimbo.'},
+      registrar:'Ele mandou você ir ao endereço do carimbo em vez de voltar ali.'},
+  escolhas:[
+    {texto:'Ir embora de Cerulean.', vai:'c29_fim'}
+  ]
+},
+
+c29_de_madrugada:{
+  texto:[
+    'Terça, duas e dez da manhã. A rua de casa baixa não tem um poste funcionando e você já sabia disso.',
+    'Você está sentado no meio-fio do outro lado, encostado no poste da lâmpada quebrada, há uma hora e quarenta.',
+    'Às duas e dezoito entra o caminhão.',
+    'Não é caminhão-baú: é caminhonete de cabine dupla com gaiola na caçamba, coberta com lona, com os vãos amarrados com corda de nylon amarela.',
+    'Você já viu essa corda, num caminhão, numa zona industrial, em outra cidade.',
+    'O portão verde abre inteiro, o que ele não faz de dia, e a caminhonete entra de ré.',
+    'A descarga leva dezoito minutos e é silenciosa de um jeito que custa treino: ninguém fala, ninguém bate gaiola, ninguém acende luz de fora.',
+    'Às duas e trinta e seis o portão fecha e a rua volta a ser uma rua.'
+  ],
+  ef:{flag:['viu_a_descarga','caminhao_gaiola_terca_quinta_sabado','sabe_do_lote_unico'],
+      hp:-1, causa:'Noite inteira acordado num meio-fio',
+      registrar:'Viu a descarga da madrugada de terça no portão verde: dezoito minutos, sem uma palavra.',
+      presagio:'Dezoito minutos em silêncio absoluto não é discrição. É procedimento treinado.'},
+  escolhas:[
+    {texto:'Anotar a placa.', vai:'c29_a_placa'},
+    {texto:'Ir bater no portão agora.', vai:'c29_bateu'},
+    {texto:'Dar a volta e ver os fundos com a descarga fresca.', vai:'c29_os_fundos'},
+    {texto:'Seguir a caminhonete quando ela sair.', vai:'c29_seguiu_quem_saiu'}
+  ]
+},
+
+c29_a_placa:{
+  texto:[
+    'A placa está suja de barro, o que é normal numa caminhonete, e suja de barro só na placa, o que não é.',
+    'Você atravessa a rua e se agacha atrás do para-choque e limpa com o polegar, três dígitos por vez, e leva mais tempo do que devia.',
+    'Anota no braço, a caneta, porque papel na mão tremendo não funciona.',
+    'E quando você está levantando, a porta do motorista abre.',
+    'Você fica agachado.',
+    'Ele desce, acende um cigarro, fuma metade encostado na lateral da caminhonete a um metro e meio da sua cabeça, e sobe de novo.',
+    'Cinco minutos e quarenta.',
+    'Você conta cada um.'
+  ],
+  ef:{flag:['anotou_a_placa_de_cerulean','reika_precisa_de_papel'], hp:-1,
+      registrar:'Anotou a placa da caminhonete de descarga do portão verde.'},
+  escolhas:[
+    {texto:'Seguir a caminhonete.', vai:'c29_seguiu_quem_saiu'},
+    {texto:'Ir embora com a placa e o resto.', vai:'c29_fim'},
+    {texto:'Dar a volta e ver os fundos.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_seguiu_quem_saiu:{
+  texto:[
+    'Seguir veículo a pé é uma coisa que só funciona em duas situações: trânsito parado e cidade pequena.',
+    'Cerulean, às três da manhã, é a segunda.',
+    'A caminhonete anda devagar porque a rua é de paralelepípedo e você anda rápido pela calçada, duas quadras atrás, encostado no muro.',
+    'Ela atravessa a segunda ponte, pega a marginal do rio e para num posto de gasolina de vinte e quatro horas.',
+    'O motorista desce, abastece, entra na conveniência e compra café e um salgado, e fica dez minutos conversando com o frentista do jeito de quem conversa com o mesmo frentista toda terça.',
+    'Você entra na conveniência atrás dele e compra um salgado também, porque comprar um salgado é a coisa mais invisível que existe.',
+    'E ouve os dez minutos inteiros.'
+  ],
+  ef:{flag:'seguiu_a_caminhonete',
+      registrar:'Seguiu a caminhonete até um posto 24 horas na marginal do rio.'},
+  escolhas:[
+    {texto:'Ouvir a conversa com o frentista.', vai:'c29_o_frentista'},
+    {texto:'Falar com o frentista depois que ele sair.', vai:'c29_o_frentista'},
+    {texto:'Voltar e ver os fundos da casa enquanto ele não está.', vai:'c29_os_fundos'}
+  ]
+},
+
+c29_o_frentista:{
+  texto:[
+    'A conversa é sobre futebol por sete minutos e sobre o preço do diesel por dois, e no último minuto é sobre outra coisa.',
+    fala('o motorista', 'Semana que vem eu não venho terça.'),
+    fala('o frentista', 'Férias?'),
+    fala('o motorista', 'Que férias. Mudou a rota.'),
+    'Ele mexe o café com o palito.',
+    fala('o motorista', 'Agora é direto pra Saffron. Corta Cerulean.'),
+    fala('o frentista', 'E o cara daqui?'),
+    fala('o motorista', 'Sei lá. Fecharam.'),
+    'Ele joga o copo no lixo e sai, e o sino da porta toca, e o frentista fica com a expressão de quem perdeu um cliente de terça.',
+    'E você fica com a informação de que a casa do portão verde tem os dias contados e de que o que está lá dentro vai pra algum lugar antes de fechar.'
+  ],
+  ef:{flag:['a_rota_mudou','sabe_do_lote_unico'],
+      registrar:'A rota vai mudar: passa a ir direto para Saffron e o ponto de Cerulean fecha.',
+      presagio:'Fecham a casa. Trinta e uma gaiolas não desaparecem sozinhas quando uma casa fecha.'},
+  escolhas:[
+    {texto:'Voltar correndo pros fundos da casa.', vai:'c29_os_fundos'},
+    {texto:'Voltar e bater no portão de manhã.', vai:'c29_bateu'},
+    {texto:'Ir embora de Cerulean com o que você tem.', vai:'c29_fim'}
+  ]
+},
+
+c29_fim:{
+  texto:[
+    'Você sai de Cerulean pela estrada do sul, de manhã cedo, com o barulho de água ficando pra trás pela primeira vez em dias.',
+    d=>{
+      if (d.flags.as_trinta_e_uma_sairam) return 'Trinta e uma saíram por uma porta de ferro que estava trancada por fora, e a primeira levou quarenta minutos pra entender que podia.';
+      if (d.flags.abriu_onze) return 'Onze saíram. Vinte não. Você vai refazer essa conta por um tempo.';
+      if (d.flags.fechou_a_tranca) return 'Você ouviu a tranca correndo de volta e foi você que correu, e ninguém nunca vai saber disso além de você.';
+      if (d.flags.contou_trinta_e_uma) return 'Trinta e uma gaiolas ocupadas, quatro fileiras, ralo no meio do piso. Você não abriu nenhuma.';
+      return 'Você não entrou no galpão e não sabe quantas são, e não saber é pior do que saber, o que é uma descoberta desagradável.';
+    },
+    d=>{
+      const papeis = ['copia_da_agenda','tem_o_saco_de_racao','copia_da_tabela',
+                      'tem_o_envelope_do_malote','anotou_a_placa_de_cerulean'].filter(f=>d.flags[f]).length;
+      if (papeis >= 3) return `Na mochila tem ${papeis} coisas que, sozinhas, não provam nada, e que juntas são um endereço.`;
+      if (papeis >= 1) return `Na mochila tem ${papeis === 1 ? 'uma coisa' : papeis + ' coisas'} que não prova nada sozinha.`;
+      return 'Na mochila não tem nada. Só o que você viu, e o que você viu não é documento.';
+    },
+    'Lavender fica a três dias a pé, e dizem que lá tem uma torre de sete andares.',
+    'Dizem também que a cidade não tem música, e ninguém explica isso direito.'
+  ],
+  fim:true, resumo:'A casa do portão verde: alvará na parede, trinta e uma gaiolas no fundo e um carimbo da Rua do Comércio, 118.'
+}
+
+}
+});
+
+
+/* ===== js/story/cap-30.js ===== */
+/* ============================================================
+   CAPÍTULO 30 — AS ONZE LINHAS  (Lavender)  · CONDICIONAL
+
+   Só acontece pra quem viu o livro de registro da guarita de
+   Lavender: onze pessoas subiram a torre em dois meses e a
+   coluna de descida está vazia nas onze. Oito subiram entre três
+   e quatro da manhã, com a guarita fechada, escritas com a letra
+   da funcionária.
+   ============================================================ */
+const C30_ABERTURAS = ['c30_a_guarita', 'c30_o_cartorio', 'c30_a_lista_dos_onze'];
+function c30_cabe(id, d){
+  if (id === 'c30_a_lista_dos_onze') return !!d.flags.oito_linhas_de_madrugada;
+  return true;
+}
+function c30_abertura(d){ return Dados.escolher(C30_ABERTURAS.filter(id => c30_cabe(id, d))); }
+
+CAPITULOS.push(
+{
+num:30, titulo:'As Onze Linhas', local:'Lavender — a guarita e o cartório', ambiente:'cemiterio', nivelArea:30,
+tom:'muito sombrio',
+requer: d => !!(d.flags.o_livro_da_guarita || d.flags.oito_linhas_de_madrugada ||
+                d.flags.copia_das_tres_respostas),
+proximo: d => 8,
+entradas:C30_ABERTURAS,
+inicio: d => c30_abertura(d),
+cenas:{
+
+c30_a_guarita:{
+  texto:[
+    'Você volta na guarita da entrada de Lavender às sete e dez da manhã e ela já está aberta, porque ela abre às sete.',
+    'A funcionária te vê chegar e não finge surpresa.',
+    fala('a funcionária da guarita', 'Eu sabia que você ia voltar.'),
+    d=>fala(d.jogador.nome, 'Como?'),
+    fala('a funcionária da guarita', 'Porque ninguém pede pra ver o livro e vai embora.'),
+    'Ela puxa o livro de baixo do balcão e abre nas últimas páginas sem precisar procurar.',
+    fala('a funcionária da guarita', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
+    'Ela vira uma folha solta, dobrada em quatro, e desdobra na bancada.',
+    fala('a funcionária da guarita', 'Eu copiei as onze. Nome, data, hora de subida.'),
+    fala('a funcionária da guarita', 'E depois eu fui na lista telefônica.'),
+    'Ela alisa a folha com a palma.',
+    fala('a funcionária da guarita', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
+  ],
+  ef:{flag:['a_funcionaria_ligou','o_livro_da_guarita'],
+      npc:{nome:'a funcionária da guarita', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
+      registrar:'A funcionária da guarita copiou as onze linhas e ligou para os sete que tinham telefone.'},
+  escolhas:[
+    {texto:'Perguntar o que os sete disseram.', vai:'c30_os_sete_telefones'},
+    {texto:'Pedir a folha copiada.', vai:'c30_a_lista_dos_onze'},
+    {texto:'Perguntar o que ela vai fazer agora.', vai:'c30_o_que_ela_vai_fazer'}
+  ]
+},
+
+c30_os_sete_telefones:{
+  texto:[
+    'Ela pega um lápis e vai apontando linha por linha enquanto fala, e ela fez isso a noite inteira e está precisa como quem fez a noite inteira.',
+    fala('a funcionária da guarita', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
+    d=>fala(d.jogador.nome, 'Então três são erro de registro.'),
+    fala('a funcionária da guarita', 'Três são erro meu. Eu registrei mal.'),
+    'Ela não se defende. Anota o erro e segue.',
+    fala('a funcionária da guarita', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
+    d=>fala(d.jogador.nome, 'Não lembram?'),
+    fala('a funcionária da guarita', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
+    'Ela move o lápis.',
+    fala('a funcionária da guarita', 'O outro tem vinte e seis.'),
+    'Silêncio na guarita.',
+    fala('a funcionária da guarita', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
+  ],
+  ef:{flag:['os_dois_numeros_falsos','tres_erros_de_registro'],
+      registrar:'Dos sete telefones: 3 erros de registro, 2 vivos e um deles de 26 anos que não lembra, 2 números que nunca existiram.',
+      presagio:'Número que nunca existiu foi escrito por alguém que precisava escrever alguma coisa naquele campo.'},
+  escolhas:[
+    {texto:'Ir atrás do rapaz de vinte e seis anos.', vai:'c30_o_rapaz_de_vinte_e_seis'},
+    {texto:'Ir atrás dos dois nomes de telefone falso.', vai:'c30_o_cartorio'},
+    {texto:'Pedir a folha copiada.', vai:'c30_a_lista_dos_onze'}
+  ]
+},
+
+c30_a_lista_dos_onze:{
+  texto:[
+    'A folha tem onze linhas em letra de quem escreve o dia inteiro: pequena, reta e legível.',
+    'Nome. Data. Hora de subida. E, nas oito linhas de madrugada, um asterisco a lápis que ela pôs depois.',
+    'Você lê as onze duas vezes e na segunda leitura vê a coisa que não dá pra desver.',
+    'Os quatro nomes do primeiro mês são nomes comuns de Kanto: sobrenome de três sílabas, nome de duas.',
+    'Os sete do segundo mês também.',
+    'Mas as oito linhas de madrugada têm todas a mesma estrutura de nome: dois caracteres, ponto, sobrenome.',
+    '**H. Sawada. K. Torii. M. Anzai. Y. Ihara. T. Ebina. R. Okuda. S. Fuse. N. Maki.**',
+    'Ninguém assina o próprio nome assim num livro de guarita.',
+    'Gente assina assim em formulário de trabalho.'
+  ],
+  ef:{flag:['tem_a_lista_dos_onze','reika_precisa_de_papel'],
+      registrar:'As oito linhas de madrugada têm formato de assinatura de formulário: inicial, ponto, sobrenome.',
+      presagio:'Oito pessoas que assinam como quem assina no serviço, de madrugada, numa guarita fechada.'},
+  escolhas:[
+    {texto:'Ir ao cartório procurar os oito sobrenomes.', vai:'c30_o_cartorio'},
+    {texto:'Perguntar o que os sete telefones disseram.', vai:'c30_os_sete_telefones'},
+    {texto:'Subir a torre e procurar rastro deles.', vai:'c30_subiu_procurando'}
+  ]
+},
+
+c30_o_que_ela_vai_fazer:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que a senhora vai fazer agora?'),
+    'Ela fecha o livro e põe as duas mãos em cima dele.',
+    fala('a funcionária da guarita', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
+    d=>fala(d.jogador.nome, 'Isso não é resposta.'),
+    fala('a funcionária da guarita', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
+    'Ela olha pra rua, onde ainda não passa ninguém.',
+    fala('a funcionária da guarita', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
+    fala('a funcionária da guarita', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
+    'Ela empurra a folha copiada na sua direção.',
+    fala('a funcionária da guarita', 'Você faz.', 'baixo')
+  ],
+  ef:{flag:['tem_a_lista_dos_onze','reika_precisa_de_papel'],
+      npc:{nome:'a funcionária da guarita', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
+      registrar:'A funcionária te entregou a cópia das onze linhas e disse que não vai adiante.'},
+  escolhas:[
+    {texto:'Ler as onze linhas com atenção.', vai:'c30_a_lista_dos_onze'},
+    {texto:'Ir ao cartório com os nomes.', vai:'c30_o_cartorio'},
+    {texto:'Subir a torre.', vai:'c30_subiu_procurando'}
+  ]
+},
+
+c30_o_rapaz_de_vinte_e_seis:{
+  texto:[
+    'O endereço está na lista telefônica e é uma casa geminada de fachada azul na terceira rua a partir da praça.',
+    'Quem atende é ele mesmo. Vinte e seis anos, camiseta de time, chinelo, e a cara de quem acordou faz vinte minutos.',
+    d=>fala(d.jogador.nome, 'Você subiu a Torre Pokémon no dia dezessete?'),
+    fala('o rapaz da casa azul', 'Não.'),
+    d=>fala(d.jogador.nome, 'Tem o seu nome no livro da guarita.'),
+    'Ele coça a cabeça. Não está mentindo — é possível ver quando alguém não está mentindo e ele não está.',
+    fala('o rapaz da casa azul', 'Eu nunca subi aquela torre na minha vida. Eu tenho medo.'),
+    'Ele diz "eu tenho medo" com a naturalidade de quem já disse isso muitas vezes e parou de achar vergonhoso.',
+    d=>fala(d.jogador.nome, 'Você perdeu algum documento nos últimos meses?'),
+    'E aí ele para.',
+    fala('o rapaz da casa azul', 'Perdi a carteira em agosto. No ônibus.'),
+    fala('o rapaz da casa azul', 'Apareceu depois, na rodoviária. Tava tudo lá, até o dinheiro.', 'baixo')
+  ],
+  ef:{flag:['a_carteira_perdida','sabe_do_lote_unico'],
+      npc:{nome:'o rapaz da casa azul', opiniao:1, viuVoce:'Você descobriu que o nome dele foi usado no livro da torre.'},
+      registrar:'O nome do rapaz de 26 anos foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta em agosto.',
+      presagio:'Devolveram a carteira com o dinheiro. Ninguém devolve dinheiro. Eles só queriam o nome.'},
+  escolhas:[
+    {texto:'Pedir pra ele ir junto na guarita reconhecer a letra.', vai:'c30_a_letra'},
+    {texto:'Ir ao cartório com os oito sobrenomes.', vai:'c30_o_cartorio'},
+    {texto:'Subir a torre.', vai:'c30_subiu_procurando'}
+  ]
+},
+
+c30_a_letra:{
+  texto:[
+    'Ele vai junto, de chinelo, porque são quatro quadras e porque ele quer ver.',
+    'A funcionária abre o livro e vira na data.',
+    'Ele olha a assinatura dele mesmo por uns dez segundos.',
+    fala('o rapaz da casa azul', 'Essa é a minha letra.'),
+    d=>fala(d.jogador.nome, 'Você acabou de dizer que não subiu.'),
+    fala('o rapaz da casa azul', 'E não subi. Mas essa é a minha letra.'),
+    'Ele pega uma caneta do balcão e assina numa folha em branco, do lado, e vira as duas pra vocês verem.',
+    'São idênticas. Não parecidas: idênticas, inclusive na pressão do traço e no jeito que o "a" não fecha.',
+    'A funcionária põe a mão na boca e não tira por um tempo.',
+    fala('a funcionária da guarita', 'Isso é decalque.'),
+    d=>fala(d.jogador.nome, 'Como assim decalque?'),
+    fala('a funcionária da guarita', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
+    fala('a funcionária da guarita', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
+  ],
+  ef:{flag:['a_assinatura_decalcada','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:2, motivo:'Provou que uma assinatura do livro da torre foi decalcada.'},
+      registrar:'A assinatura no livro da torre é decalque da carteira que sumiu e voltou.',
+      presagio:'Decalque exige a assinatura original na mão e tempo. A carteira ficou sumida quatro dias.'},
+  escolhas:[
+    {texto:'Ir ao cartório com os oito sobrenomes.', vai:'c30_o_cartorio'},
+    {texto:'Subir a torre procurando os outros dez.', vai:'c30_subiu_procurando'}
+  ]
+},
+
+c30_o_cartorio:{
+  texto:[
+    'Lavender tem um cartório de registro civil que ocupa a sala da frente de uma casa e fecha para o almoço das doze às catorze, e tem uma escrivã que trabalha ali há vinte e nove anos.',
+    'Você leva os oito sobrenomes.',
+    'Ela pede quatro pokedólares por busca e você paga trinta e dois, que é o preço de saber uma coisa.',
+    'A busca leva quarenta minutos e ela faz de pé, num arquivo de gavetas metálicas que vai do chão ao teto.',
+    'Quando volta, ela põe oito fichas na bancada e nenhuma expressão no rosto.',
+    fala('a escrivã', 'Os oito existem. Os oito nasceram em Kanto.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('a escrivã', 'E os oito têm registro de óbito.'),
+    'Ela alinha as fichas.',
+    fala('a escrivã', 'O mais antigo é de mil novecentos e setenta e um. O mais recente é de oitenta e nove.'),
+    'Ela endireita a última.',
+    fala('a escrivã', 'As oito pessoas que assinaram o seu livro nos últimos dois meses estão mortas há mais de dez anos, moço.'),
+    'E ela fala isso sem drama nenhum, porque ela trabalha com óbito há vinte e nove anos e não tem drama nenhum numa ficha.'
+  ],
+  ef:{dinheiro:-32, flag:['os_oito_estao_mortos','reika_precisa_de_papel','sabe_do_lote_unico'],
+      registrar:'As oito assinaturas de madrugada do livro da torre pertencem a pessoas mortas entre 1971 e 1989.',
+      presagio:'Não é assombração. É que nome de morto não reclama, não é achado em busca e não aparece em lista de desaparecido.'},
+  escolhas:[
+    {texto:'Pedir cópia das oito certidões.', vai:'c30_as_certidoes'},
+    {texto:'Perguntar de onde alguém tiraria oito nomes assim.', vai:'c30_de_onde_saem_os_nomes'},
+    {texto:'Subir a torre com isso na cabeça.', vai:'c30_subiu_procurando'}
+  ]
+},
+
+c30_de_onde_saem_os_nomes:{
+  texto:[
+    d=>fala(d.jogador.nome, 'De onde alguém tira oito nomes de morto com sobrenome de Lavender?'),
+    'A escrivã olha pra você por três segundos inteiros e é o único momento da conversa em que ela demonstra alguma coisa.',
+    fala('a escrivã', 'Daqui.'),
+    d=>fala(d.jogador.nome, 'Daqui do cartório?'),
+    fala('a escrivã', 'Daqui, do arquivo da torre, ou da lápide.'),
+    'Ela aponta com o queixo pra janela, por onde dá pra ver o prédio de concreto no fim da rua.',
+    fala('a escrivã', 'A torre tem um livro de sepultamento desde mil novecentos e sessenta e seis. Está no quinto andar, e é público.'),
+    fala('a escrivã', 'Qualquer um sobe e lê.'),
+    'Ela recolhe as fichas.',
+    fala('a escrivã', 'Quem quer nome de morto em Lavender não precisa roubar nada. Precisa subir cinco andares.'),
+    fala('a escrivã', 'E os que precisam subir cinco andares são os que assinam o livro da guarita.', 'baixo')
+  ],
+  ef:{flag:'o_livro_do_quinto_andar',
+      registrar:'O livro de sepultamento do quinto andar da torre é público desde 1966. É de lá que saem os nomes.'},
+  escolhas:[
+    {texto:'Subir até o quinto andar.', vai:'c30_subiu_procurando'},
+    {texto:'Pedir cópia das oito certidões antes.', vai:'c30_as_certidoes'}
+  ]
+},
+
+c30_as_certidoes:{
+  texto:[
+    'Ela tira as oito certidões de óbito e carimba as oito e assina as oito, e leva quase uma hora, e cobra o preço de tabela que é caro.',
+    'Você paga.',
+    'Oito folhas de papel timbrado com selo em relevo, cada uma com um nome que subiu uma torre em Lavender entre uma e quatro da manhã, nos últimos dois meses, mais de dez anos depois de morrer.',
+    'Não existe documento mais definitivo do que certidão de óbito, e é por isso que ninguém pensou em usar nomes de morto numa fraude: porque é fácil demais de conferir.',
+    'Ninguém conferiu por dois meses.',
+    fala('a escrivã', 'Guarda isso num plástico, que papel timbrado é frágil.')
+  ],
+  ef:{dinheiro:-320, flag:['tem_as_oito_certidoes','reika_precisa_de_papel'],
+      npc:{nome:'a escrivã', opiniao:2, viuVoce:'Emitiu e assinou as oito certidões de óbito para você.'},
+      registrar:'Está com as oito certidões de óbito carimbadas e assinadas.'},
+  escolhas:[
+    {texto:'Subir a torre.', vai:'c30_subiu_procurando'},
+    {texto:'Ir embora de Lavender com isso.', vai:'c30_fim'}
+  ]
+},
+
+c30_subiu_procurando:{
+  texto:[
+    'Você sobe a Torre Pokémon de manhã, com a torre aberta e com gente nela, e é uma experiência completamente diferente de subir a torre à noite.',
+    'Tem uma família no segundo andar. Tem um zelador varrendo o terceiro. Tem duas mulheres conversando baixo no quarto, perto da janela de onde se vê a cidade.',
+    'No quinto andar está o livro de sepultamento, numa bancada de madeira, aberto, com um lápis amarrado num barbante.',
+    'É um livro enorme. Trinta e quatro anos de nomes.',
+    'E, entre as páginas, marcando lugares, tem oito tiras de papel.',
+    'Oito.',
+    'Você abre nas oito e cada uma marca um nome, e os oito nomes são os oito da madrugada, e a tira de papel é papel de caderno rasgado à mão.',
+    'Alguém marcou os oito e não tirou as marcas, porque quem marca não imagina que alguém vá procurar.'
+  ],
+  ef:{flag:['as_oito_tiras','sabe_do_lote_unico'],
+      registrar:'No livro de sepultamento do quinto andar há oito tiras de papel marcando exatamente os oito nomes da madrugada.',
+      presagio:'Oito marcadores deixados no lugar. Eles vão voltar pra pegar mais.'},
+  escolhas:[
+    {texto:'Ficar escondido no quinto andar e esperar.', vai:'c30_esperou_no_quinto'},
+    {texto:'Levar as oito tiras.', vai:'c30_levou_as_tiras'},
+    {texto:'Deixar tudo no lugar e sair.', vai:'c30_fim'}
+  ]
+},
+
+c30_levou_as_tiras:{
+  texto:[
+    'Você tira as oito tiras do livro e guarda, e imediatamente entende que acabou de fazer uma coisa burra.',
+    'Sem as tiras, o livro volta a ser um livro de sepultamento comum e quem voltar não vai saber que alguém descobriu.',
+    'Com as tiras na sua mão, você tem oito pedaços de papel de caderno rasgados que não provam absolutamente nada pra ninguém.',
+    'Você fica olhando os oito pedaços na palma da mão no quinto andar de uma torre e considera seriamente pôr de volta.'
+  ],
+  ef:{flag:'levou_as_tiras',
+      registrar:'Levou as oito tiras que marcavam os nomes no livro de sepultamento.'},
+  escolhas:[
+    {texto:'Pôr de volta e esperar escondido.', vai:'c30_esperou_no_quinto'},
+    {texto:'Levar mesmo assim e ir embora.', vai:'c30_fim'}
+  ]
+},
+
+c30_esperou_no_quinto:{
+  texto:[
+    'O quinto andar da Torre Pokémon tem uma sala lateral com cadeira empilhada e vassoura, que é onde o zelador guarda coisa, e a porta não tranca.',
+    'Você espera ali das seis da tarde às duas e quarenta da manhã.',
+    'Oito horas e quarenta minutos sentado no escuro em cima de uma cadeira empilhada.',
+    'A torre de noite não tem nada de sobrenatural e é pior por isso: é concreto, é frio, e o eco devolve o seu próprio movimento com meio segundo de atraso, e depois de duas horas você começa a se assustar consigo mesmo.',
+    'Às duas e quarenta e um, alguém sobe.',
+    'Passo de sapato de sola dura. Uma pessoa. Lanterna.',
+    'E vai direto pro livro, sem procurar, porque já sabe onde ele fica.'
+  ],
+  ef:{hp:-3, causa:'Oito horas imóvel no escuro da torre',
+      flag:'esperou_no_quinto',
+      registrar:'Esperou até as 2h41 no quinto andar. Alguém subiu.'},
+  escolhas:[
+    {texto:'Acender a lanterna na cara dele.', vai:'c30_acendeu'},
+    {texto:'Ficar quieto e ver o que ele faz.', vai:'c30_ficou_quieto'}
+  ]
+},
+
+c30_ficou_quieto:{
+  texto:[
+    'Ele leva doze minutos.',
+    'Abre o livro, passa o dedo pelas colunas, e copia nomes num caderninho — você ouve a caneta.',
+    'Quando termina, rasga uma folha do próprio caderno em tiras e marca as páginas novas, do mesmo jeito que estava marcado antes, e você entende que ele faz isso sempre e que as oito tiras não eram descuido: eram método.',
+    'Ele marca seis.',
+    'Seis nomes novos, o que quer dizer que vão subir mais seis pessoas mortas naquela guarita nas próximas semanas.',
+    'Ele desce.',
+    'E você fica no escuro do quinto andar entendendo que acabou de ver o começo, não o fim.'
+  ],
+  ef:{flag:['viu_ele_marcar','sabe_do_lote_unico'],
+      registrar:'Ele marcou seis nomes novos no livro de sepultamento. Vão ser usados nas próximas semanas.',
+      presagio:'Seis novos. Você sabe quais são e eles não sabem que você sabe.'},
+  escolhas:[
+    {texto:'Anotar os seis nomes que ele marcou.', vai:'c30_os_seis_novos'},
+    {texto:'Descer atrás dele.', vai:'c30_desceu_atras'}
+  ]
+},
+
+c30_os_seis_novos:{
+  texto:[
+    'Você acende a lanterna quando o passo dele chega no segundo andar e copia os seis nomes na sua própria folha, com data de óbito e número de registro, que estão os dois na mesma linha do livro.',
+    'Seis nomes, seis datas, seis números.',
+    'Daqui a algumas semanas, esses seis vão aparecer assinados num livro de guarita entre uma e quatro da manhã.',
+    'Você é a única pessoa em Kanto que sabe disso com antecedência.',
+    'E isso não é uma prova: é melhor que prova. É uma previsão que vai se cumprir e que está escrita antes de acontecer, na sua letra, com a data de hoje.'
+  ],
+  ef:{flag:['tem_os_seis_nomes','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:2, motivo:'Anotou, com antecedência, os seis nomes que ainda vão ser usados.'},
+      registrar:'Anotou os seis nomes marcados, com data de óbito e número de registro, antes de serem usados.',
+      presagio:'Uma previsão datada é a única prova que ninguém consegue dizer que foi plantada depois.'},
+  escolhas:[
+    {texto:'Ir embora de Lavender com isso.', vai:'c30_fim'}
+  ]
+},
+
+c30_acendeu:{
+  texto:[
+    'Você acende a lanterna na cara dele a dois metros e ele derruba a dele, que rola e para apontada pro teto.',
+    'É um homem de uns quarenta anos, de camisa social sem gravata, com um caderninho de bolso na mão.',
+    'Ele não corre. Ele fecha os olhos por causa da luz e levanta a mão livre.',
+    fala('o homem do caderninho', 'Baixa isso, por favor.'),
+    d=>fala(d.jogador.nome, 'O que você tá fazendo?'),
+    fala('o homem do caderninho', 'Pesquisa de campo.'),
+    d=>fala(d.jogador.nome, 'Às duas e quarenta da manhã.'),
+    fala('o homem do caderninho', 'A torre é pública vinte e quatro horas. Está na placa.'),
+    'E está mesmo. É a coisa mais irritante do capítulo: ele não está fazendo nada de ilegal neste exato momento.',
+    fala('o homem do caderninho', 'Você é quem? Da prefeitura?'),
+    'E aí ele te reconhece, e dá pra ver o momento em que reconhece, e a cara dele muda pra uma coisa muito pior que medo: alívio.',
+    fala('o homem do caderninho', 'Ah. É você.', 'baixo')
+  ],
+  ef:{flag:'ele_te_reconheceu',
+      registrar:'O homem do caderninho te reconheceu, e ficou aliviado.',
+      presagio:'Alívio. Ele estava esperando outra pessoa e você não é ela.'},
+  escolhas:[
+    {texto:'"Quem você achou que eu era?"', vai:'c30_quem_voce_achou'},
+    {texto:'Pegar o caderninho.', vai:'c30_pegou_o_caderninho'},
+    {texto:'Enfrentar ele.', vai:'c30_luta'}
+  ]
+},
+
+c30_quem_voce_achou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem você achou que eu era?'),
+    'Ele abaixa a mão e apanha a lanterna dele do chão, devagar, e você deixa.',
+    fala('o homem do caderninho', 'Da Comissão.'),
+    d=>fala(d.jogador.nome, 'Você não é da Comissão?'),
+    fala('o homem do caderninho', 'Eu sou terceirizado.'),
+    'Ele diz essa palavra com um cansaço específico de quem já explicou isso pra muita gente e pra si mesmo.',
+    fala('o homem do caderninho', 'Eu presto serviço de levantamento cadastral. Eu recebo uma lista de requisitos e eu entrego nomes.'),
+    d=>fala(d.jogador.nome, 'Nomes de morto.'),
+    fala('o homem do caderninho', 'Nomes sem pendência, sem herdeiro reclamante e sem registro ativo em nenhum sistema.'),
+    'Ele guarda o caderninho no bolso interno.',
+    fala('o homem do caderninho', 'Eu nunca escrevi "morto" em nenhum documento meu. Eles é que sabem o que pedem.'),
+    fala('o homem do caderninho', 'Eu ganho por nome entregue. Setecentos.', 'baixo')
+  ],
+  ef:{flag:['o_terceirizado','sabe_do_lote_unico'],
+      npc:{nome:'o homem do caderninho', opiniao:0, viuVoce:'Te explicou o próprio serviço no quinto andar da torre, às três da manhã.'},
+      registrar:'Um terceirizado entrega "nomes sem pendência" por 700 ₽ cada. Ele nunca escreveu "morto" em documento nenhum.',
+      presagio:'Ninguém na cadeia inteira escreveu a palavra. Cada um escreveu a sua parte, e cada parte está em ordem.'},
+  escolhas:[
+    {texto:'Perguntar quem manda a lista de requisitos.', vai:'c30_quem_manda_a_lista'},
+    {texto:'Pedir o caderninho.', vai:'c30_pegou_o_caderninho'},
+    {texto:'Deixar ele ir e ir embora com o que você tem.', vai:'c30_fim'}
+  ]
+},
+
+c30_quem_manda_a_lista:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem manda a lista de requisitos?'),
+    fala('o homem do caderninho', 'Chega por malote. Eu entrego por malote.'),
+    d=>fala(d.jogador.nome, 'De onde?'),
+    'Ele tira do bolso um envelope pardo, usado, dobrado ao meio, e mostra o verso na luz da sua lanterna.',
+    'Carimbo de expedição: Rua do Comércio, 118 — sala 704.',
+    'Você fica olhando o carimbo mais tempo do que precisaria.',
+    fala('o homem do caderninho', 'Você já tinha visto esse carimbo.'),
+    'Não é pergunta.',
+    fala('o homem do caderninho', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.'),
+    'Ele guarda o envelope.',
+    fala('o homem do caderninho', 'É a coisa mais estranha desse serviço, moço. Não tem nada escondido. Tem carimbo em tudo.')
+  ],
+  ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
+      registrar:'O malote do terceirizado vem da Rua do Comércio, 118, sala 704.',
+      presagio:'Carimbo em tudo. O esconderijo é a papelada, não o segredo.'},
+  escolhas:[
+    {texto:'Pedir o envelope.', vai:'c30_pegou_o_caderninho'},
+    {texto:'Deixar ele ir e ir embora.', vai:'c30_fim'}
+  ]
+},
+
+c30_pegou_o_caderninho:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Me dá o caderninho.'),
+    fala('o homem do caderninho', 'Não.'),
+    'E ele diz isso com uma firmeza que não estava na conversa até agora.',
+    fala('o homem do caderninho', 'Esse caderno tem três anos de serviço meu e o nome de todo mundo que me pagou.'),
+    d=>fala(d.jogador.nome, 'Exatamente.'),
+    fala('o homem do caderninho', 'E é a única coisa que me segura vivo.'),
+    'Ele dá dois passos pra trás na direção da escada.',
+    fala('o homem do caderninho', 'Olha. Eu vou te dar uma coisa melhor que o caderno.'),
+    'Ele arranca uma folha, a última escrita, e estende.',
+    fala('o homem do caderninho', 'A entrega de hoje. Os seis nomes, com data de óbito e número de registro, na minha letra, com a minha data.'),
+    fala('o homem do caderninho', 'Se aparecerem assinados numa guarita, você tem uma previsão datada.'),
+    'Ele desce a escada.',
+    fala('o homem do caderninho', 'E eu tenho o resto do caderno.', 'baixo')
+  ],
+  ef:{flag:['tem_os_seis_nomes','reika_precisa_de_papel','sabe_do_lote_unico'],
+      npc:{nome:'o homem do caderninho', opiniao:1, viuVoce:'Te entregou a folha dos seis nomes e ficou com o caderno.'},
+      registrar:'Está com a folha dos seis nomes, na letra e na data do terceirizado.',
+      presagio:'Ele ficou com o caderno de propósito. Esse caderno vai reaparecer.'},
+  escolhas:[
+    {texto:'Ir embora de Lavender.', vai:'c30_fim'}
+  ]
+},
+
+c30_desceu_atras:{
+  texto:[
+    'Descer sete andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
+    'O passo dele chega até você com meio segundo de atraso e você anda no atraso dele.',
+    'Na base da torre ele sai e atravessa a praça e entra num carro estacionado na rua lateral, e o carro parte, e você anota a placa na palma da mão com a caneta.',
+    'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda o capítulo.',
+    'Tem uma segunda pessoa encostada na parede lateral da torre, na sombra, que estava ali o tempo todo e que não estava esperando o carro.',
+    'Estava esperando você descer.'
+  ],
+  ef:{flag:'a_segunda_pessoa', hp:-1,
+      registrar:'Havia uma segunda pessoa esperando na base da torre.',
+      presagio:'O do caderninho ficou aliviado ao te ver. Esta é a pessoa que ele estava esperando.'},
+  escolhas:[
+    {texto:'Ir até ela.', vai:'c30_luta'},
+    {texto:'Voltar pra dentro da torre.', vai:'c30_fim'},
+    {texto:'Andar na direção contrária, devagar, sem correr.', vai:'c30_fim'}
+  ]
+},
+
+c30_luta:{
+  texto:[
+    'Não tem conversa. A pessoa solta o dela antes de você chegar a cinco metros, e isso responde todas as perguntas que você ia fazer.'
+  ],
+  batalha:{dex:42, nivel:29, tipo:'treinador', treinador:'a pessoa da sombra', fuga:true,
+           timeExtra:[{dex:93, nivel:28}],
+           vitoria:'c30_venceu', derrota:'c30_perdeu', gameover:'gameover'}
+},
+
+c30_venceu:{
+  texto:[
+    'A pessoa recolhe o time e recua, de costas, até a esquina, e some.',
+    'Não fala nada a briga inteira e não fala nada no fim, e é isso que fica com você: não teve uma palavra.',
+    'No chão, onde ela estava encostada, tem um maço de cigarro amassado e uma fita de crachá sem o crachá.',
+    'A fita é azul com escrita branca repetida, dessas de evento. A escrita diz um nome de empresa que você não reconhece e um ano.',
+    'Você guarda a fita.'
+  ],
+  ef:{flag:['a_fita_de_cracha','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:1, motivo:'Enfrentou quem esperava na base da torre.'},
+      registrar:'Ficou com uma fita de crachá sem crachá, com nome de empresa e ano.'},
+  escolhas:[
+    {texto:'Ir embora de Lavender.', vai:'c30_fim'}
+  ]
+},
+
+c30_perdeu:{
+  texto:[
+    'Você perde e a pessoa não faz mais nada: não te revista, não te ameaça, não fala.',
+    'Recolhe o time dela e vai embora andando, no passo normal, pela praça, na frente da Torre Pokémon, às três e vinte da manhã.',
+    'Você fica sentado na base da torre com o seu time no chão e a certeza muito clara de que aquilo não foi um aviso.',
+    'Foi só alguém te tirando do caminho por uma noite, porque uma noite era o que eles precisavam.'
+  ],
+  ef:{hp:-5, causa:'Briga na base da torre', flag:'perdeu_na_base_da_torre', moral:-3,
+      registrar:'Perdeu na base da torre. A pessoa foi embora andando.',
+      presagio:'Eles precisavam de uma noite. Amanhã de manhã alguma coisa em Lavender vai estar diferente.'},
+  escolhas:[
+    {texto:'Ir embora de Lavender.', vai:'c30_fim'}
+  ]
+},
+
+c30_fim:{
+  texto:[
+    'Você sai de Lavender pela estrada do sul, de manhã, e a cidade continua sem música atrás de você.',
+    d=>{
+      if (d.flags.tem_os_seis_nomes) return 'Na mochila tem seis nomes de gente morta que ainda não foram usados, com data de óbito, número de registro e a data de hoje escrita por cima.';
+      if (d.flags.tem_as_oito_certidoes) return 'Na mochila tem oito certidões de óbito com selo em relevo, de oito pessoas que assinaram um livro de guarita depois de mortas.';
+      if (d.flags.as_oito_tiras) return 'Na cabeça ficam oito tiras de papel de caderno marcando oito páginas de um livro de sepultamento, e a certeza de que elas vão ser substituídas por seis.';
+      return 'Na mochila não tem nada e na cabeça tem onze linhas com a coluna de descida vazia.';
+    },
+    d=>d.flags.o_endereco_no_envelope
+      ? 'E um endereço que apareceu duas vezes agora, em duas cidades diferentes, carimbado no verso de dois envelopes pardos: Rua do Comércio, 118, sala 704.'
+      : 'E a sensação, que ainda não é uma ideia, de que tudo isso passa por um lugar só.',
+    'Vermilion fica a dois dias, e lá tem um porto que trabalha vinte e quatro horas e um navio atracado no cais três.'
+  ],
+  fim:true, resumo:'As onze linhas do livro da guarita: oito assinaturas de gente morta há mais de dez anos, decalcadas, e seis nomes novos já marcados.'
+}
+
+}
+});
+
+
+/* ===== js/story/cap-31.js ===== */
+/* ============================================================
+   CAPÍTULO 31 — QUEM ASSINA O FAX  (Celadon)  · CONDICIONAL
+
+   Só acontece pra quem foi seguido por segurança privada em
+   Celadon e descobriu que existe uma lista que chega por fax na
+   sede da Associação Comercial toda segunda-feira.
+
+   O fax tem cabeçalho. Ninguém nunca perguntou de quem é.
+   ============================================================ */
+const C31_ABERTURAS = ['c31_a_sede', 'c31_a_loja', 'c31_o_papel_termico'];
+function c31_cabe(id, d){
+  if (id === 'c31_o_papel_termico') return !!d.flags.o_fax_tem_cabecalho;
+  return true;
+}
+function c31_abertura(d){ return Dados.escolher(C31_ABERTURAS.filter(id => c31_cabe(id, d))); }
+
+CAPITULOS.push(
+{
+num:31, titulo:'Quem Assina o Fax', local:'Celadon — Associação Comercial da Avenida Cinco', ambiente:'cidade', nivelArea:33,
+tom:'muito sombrio',
+requer: d => !!(d.flags.a_lista_da_associacao || d.flags.o_fax_tem_cabecalho ||
+                d.flags.seguranca_privada_te_seguiu),
+proximo: d => 10,
+entradas:C31_ABERTURAS,
+inicio: d => c31_abertura(d),
+cenas:{
+
+c31_a_sede:{
+  texto:[
+    'A Associação Comercial da Avenida Cinco funciona no sobrado de uma loja de tecido e tem uma placa de bronze do tamanho de uma folha de caderno, gasta no canto de baixo de tanto ser limpa.',
+    'Lá em cima é uma sala só: quatro mesas, um bebedouro, um quadro com o retrato de doze presidentes anteriores, e um aparelho de fax numa mesinha separada, no canto, com uma cesta embaixo.',
+    'Quem atende é uma mulher de uns sessenta anos que é a secretária da associação há vinte e dois.',
+    fala('a secretária da associação', 'Associado?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('a secretária da associação', 'Vendedor?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    'Ela tira os óculos de leitura.',
+    fala('a secretária da associação', 'Então o senhor é o terceiro tipo, que é o que vem reclamar de alguma coisa.'),
+    fala('a secretária da associação', 'Senta aí que eu faço um café.')
+  ],
+  ef:{flag:'achou_a_associacao',
+      npc:{nome:'a secretária da associação', opiniao:1, viuVoce:'Te classificou como o terceiro tipo e foi fazer café.'},
+      registrar:'A Associação Comercial da Avenida Cinco funciona no sobrado de uma loja de tecido.'},
+  escolhas:[
+    {texto:'Perguntar da lista que chega por fax.', vai:'c31_a_lista'},
+    {texto:'Perguntar da segurança de polo azul.', vai:'c31_a_seguranca'},
+    {texto:'Olhar o aparelho de fax e a cesta embaixo.', vai:'c31_o_papel_termico'}
+  ]
+},
+
+c31_a_loja:{
+  texto:[
+    'Vinte e duas lojas pagam a segurança de polo azul da Avenida Cinco e você entra na primeira que tem a porta aberta, que é uma papelaria.',
+    'O dono tem uns cinquenta anos e está remarcando preço de caderno com uma etiquetadora.',
+    d=>fala(d.jogador.nome, 'O senhor paga a segurança da associação?'),
+    fala('o dono da papelaria', 'Pago. Quarenta e dois por mês.'),
+    d=>fala(d.jogador.nome, 'E o senhor sabe o que eles fazem?'),
+    'Ele para a etiquetadora.',
+    fala('o dono da papelaria', 'Andam na calçada.'),
+    d=>fala(d.jogador.nome, 'E a lista?'),
+    'Ele volta a etiquetar, dois cadernos, e só responde no terceiro.',
+    fala('o dono da papelaria', 'Ah. Você sabe da lista.'),
+    fala('o dono da papelaria', 'Eu perguntei da lista numa assembleia, faz uns dois anos.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('o dono da papelaria', 'E me explicaram que é um serviço de prevenção e que vinte e uma lojas acham ótimo.'),
+    'Ele põe a etiquetadora na bancada.',
+    fala('o dono da papelaria', 'Vinte e uma de vinte e duas. Faz dois anos que eu sou a vigésima segunda em tudo.', 'baixo')
+  ],
+  ef:{flag:['o_dono_da_papelaria','a_lista_da_associacao'],
+      npc:{nome:'o dono da papelaria', opiniao:2, viuVoce:'É o único dos vinte e dois que já questionou a lista em assembleia.'},
+      registrar:'Um dos 22 lojistas questionou a lista em assembleia há dois anos e perdeu por 21 a 1.'},
+  escolhas:[
+    {texto:'Perguntar se ele tem a ata daquela assembleia.', vai:'c31_a_ata_da_assembleia'},
+    {texto:'Ir até a sede da associação.', vai:'c31_a_sede'},
+    {texto:'Perguntar se ele já viu a lista.', vai:'c31_ele_viu_a_lista'}
+  ]
+},
+
+c31_a_ata_da_assembleia:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O senhor tem a ata daquela assembleia?'),
+    fala('o dono da papelaria', 'Tenho a de todas. Vinte e seis anos de associado.'),
+    'Ele sobe no banquinho e tira uma pasta de arquivo morto de cima do armário, e a pasta é pesada e levanta poeira.',
+    'Ele acha a ata em quatro minutos porque ele sabe exatamente qual é.',
+    'É uma folha datilografada, com a assinatura de dezesseis presentes, e no item quatro da pauta:',
+    '**"4. Manifestação do associado sobre a relação de acompanhamento recebida semanalmente. Esclarecido que o serviço é prestado por convênio e que a relação é fornecida por entidade conveniada. Aprovada a manutenção por 21 votos a 1."**',
+    'Entidade conveniada.',
+    'A ata não diz qual. A ata não precisou dizer qual, porque ninguém perguntou depois do "21 a 1".',
+    fala('o dono da papelaria', 'Leva. Eu tenho cópia.')
+  ],
+  ef:{flag:['a_ata_da_associacao','reika_precisa_de_papel','sabe_do_lote_unico'],
+      registrar:'A ata da associação registra que a lista é fornecida por "entidade conveniada", sem nomear qual.',
+      presagio:'Entidade conveniada. A mesma palavra que aparece num quadro de prestação de contas de banco.'},
+  escolhas:[
+    {texto:'Ir até a sede da associação com a ata.', vai:'c31_a_sede'},
+    {texto:'Perguntar se ele já viu a lista.', vai:'c31_ele_viu_a_lista'}
+  ]
+},
+
+c31_ele_viu_a_lista:{
+  texto:[
+    fala('o dono da papelaria', 'Vi uma vez. Caiu no chão da sede e eu peguei.'),
+    d=>fala(d.jogador.nome, 'E o que tinha?'),
+    fala('o dono da papelaria', 'Nome, idade, cidade de origem e uma coluna de observação.'),
+    'Ele tira os óculos e limpa na barra da camisa, o que é o gesto dele pra ganhar tempo.',
+    fala('o dono da papelaria', 'Uns quarenta nomes. Quase tudo gente nova.'),
+    d=>fala(d.jogador.nome, 'O que tinha na coluna de observação?'),
+    fala('o dono da papelaria', 'Coisa curta. "Perguntou por carga." "Esteve no terminal." "Fotografou."'),
+    'Ele põe os óculos de volta.',
+    fala('o dono da papelaria', 'E num tinha uma coisa que eu não esqueci: "acompanhar até sair da cidade".'),
+    fala('o dono da papelaria', 'É uma lista de quem anda perguntando, moço.', 'baixo')
+  ],
+  ef:{flag:['o_que_tem_na_lista','sabe_do_lote_unico'],
+      registrar:'A lista tem nome, idade, cidade e observações como "perguntou por carga" e "acompanhar até sair da cidade".',
+      presagio:'Não é lista de ladrão. É lista de quem pergunta.'},
+  escolhas:[
+    {texto:'Ir até a sede e pedir pra ver a lista.', vai:'c31_a_lista'},
+    {texto:'Pedir a ata da assembleia.', vai:'c31_a_ata_da_assembleia'}
+  ]
+},
+
+c31_a_seguranca:{
+  texto:[
+    fala('a secretária da associação', 'A segurança é terceirizada. Tem contrato, tem nota, tem tudo.'),
+    'Ela serve o café em copo de vidro grosso e senta do outro lado da mesa dela.',
+    fala('a secretária da associação', 'São quatro rapazes em dois turnos. Todos daqui.'),
+    d=>fala(d.jogador.nome, 'E a lista que eles recebem?'),
+    'Ela toma o café dela.',
+    fala('a secretária da associação', 'Eu recebo o fax e eu tiro quatro cópias e eu ponho no escaninho dos quatro.'),
+    d=>fala(d.jogador.nome, 'E a senhora lê?'),
+    fala('a secretária da associação', 'Eu leio tudo que passa pela minha mão. É o meu serviço.'),
+    'Ela põe o copo na mesa.',
+    fala('a secretária da associação', 'Eu leio há dois anos e três meses e eu vou te falar uma coisa que eu não falo em assembleia.'),
+    fala('a secretária da associação', 'Semana passada tinha uma menina de treze anos naquela lista.', 'baixo')
+  ],
+  ef:{flag:['a_menina_de_treze_na_lista','a_lista_da_associacao'],
+      npc:{nome:'a secretária da associação', opiniao:2, viuVoce:'Te contou da menina de treze anos que apareceu na lista semana passada.'},
+      registrar:'Havia uma menina de treze anos na lista de acompanhamento da semana passada.'},
+  escolhas:[
+    {texto:'Pedir pra ver a lista.', vai:'c31_a_lista'},
+    {texto:'Perguntar o que estava escrito na observação dela.', vai:'c31_a_observacao_da_menina'},
+    {texto:'Olhar o aparelho de fax.', vai:'c31_o_papel_termico'}
+  ]
+},
+
+c31_a_observacao_da_menina:{
+  texto:[
+    'Ela levanta, vai até um escaninho e volta com uma folha, sem pedir licença pra ninguém, porque ela é a secretária há vinte e dois anos e o escaninho é dela.',
+    'Passa o dedo pela coluna e para.',
+    fala('a secretária da associação', '"Perguntou na banca sobre os caminhões brancos."'),
+    'Ela vira a folha pra você ver.',
+    'Nome, treze anos, Celadon. E a observação.',
+    fala('a secretária da associação', 'Treze anos. Perguntou numa banca de jornal.'),
+    d=>fala(d.jogador.nome, 'E o que a segurança faz com isso?'),
+    fala('a secretária da associação', 'Acompanha. É o que está escrito no contrato: acompanhamento preventivo.'),
+    'Ela dobra a folha em quatro, sem pressa, e põe na sua mão.',
+    fala('a secretária da associação', 'Eu tenho uma neta de doze.', 'baixo')
+  ],
+  ef:{flag:['tem_a_lista_da_semana','reika_precisa_de_papel','sabe_do_lote_unico'],
+      rep:{eixo:'bom', delta:1, motivo:'Uma secretária de vinte e dois anos de casa te entregou a lista da semana.'},
+      npc:{nome:'a secretária da associação', opiniao:4, viuVoce:'Te entregou a lista da semana, com a menina de treze anos nela.'},
+      registrar:'Está com a lista de acompanhamento da semana, com uma menina de treze anos e a observação dela.'},
+  escolhas:[
+    {texto:'Perguntar de onde vem o fax.', vai:'c31_o_papel_termico'},
+    {texto:'Ir procurar a menina na banca de jornal.', vai:'c31_a_banca'}
+  ]
+},
+
+c31_a_lista:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu posso ver a lista?'),
+    'A secretária não hesita, e é isso que te desmonta.',
+    fala('a secretária da associação', 'Pode. É documento da associação e o senhor pode pedir vista.'),
+    'Ela traz a última e põe na mesa, virada pra você, e senta do outro lado com o café dela.',
+    'Quarenta e um nomes. Nome, idade, cidade de origem, observação.',
+    d=>{
+      const r = Estado.nomeRep();
+      if (Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3)
+        return `O seu nome está na linha dezenove. Na observação: "${r} — acompanhar até sair da cidade."`;
+      return 'O seu nome não está. Você procura três vezes, de cima pra baixo, e não está, e é um alívio e é uma decepção ao mesmo tempo e você não vai contar isso pra ninguém.';
+    },
+    'Das quarenta e uma observações, trinta e quatro são variações da mesma coisa: perguntou, olhou, esteve, fotografou.',
+    'As outras sete são "acompanhar até sair da cidade".'
+  ],
+  ef:{flag:['viu_a_lista_inteira','a_lista_da_associacao'],
+      registrar:'A lista tem 41 nomes. 34 observações são de perguntar ou olhar; 7 são "acompanhar até sair da cidade".'},
+  escolhas:[
+    {texto:'Pedir uma cópia.', vai:'c31_a_copia_da_lista'},
+    {texto:'Perguntar de onde vem o fax.', vai:'c31_o_papel_termico'},
+    {texto:'Perguntar o que acontece com os sete.', vai:'c31_os_sete_acompanhados'}
+  ]
+},
+
+c31_os_sete_acompanhados:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que acontece com os sete?'),
+    fala('a secretária da associação', 'Os rapazes andam atrás até eles pegarem estrada.'),
+    d=>fala(d.jogador.nome, 'Só isso?'),
+    fala('a secretária da associação', 'Até onde eu sei, só isso.'),
+    'Ela gira o copo de café na mesa, meia volta.',
+    fala('a secretária da associação', 'E eu faço questão de dizer "até onde eu sei" porque eu não sei.'),
+    fala('a secretária da associação', 'Eu tiro quatro cópias e ponho em quatro escaninhos. O que acontece depois não passa pela minha mão e eu escolhi não perguntar por dois anos.'),
+    'Ela olha pro quadro dos doze presidentes anteriores.',
+    fala('a secretária da associação', 'Eu trabalhei com todos esses doze. Nenhum deles teria assinado esse convênio.'),
+    fala('a secretária da associação', 'O décimo terceiro assinou em quarenta minutos de assembleia.', 'frio')
+  ],
+  ef:{flag:'o_decimo_terceiro_presidente',
+      registrar:'O convênio da lista foi assinado pelo 13º presidente da associação, em quarenta minutos de assembleia.'},
+  escolhas:[
+    {texto:'Pedir cópia da lista e do convênio.', vai:'c31_a_copia_da_lista'},
+    {texto:'Perguntar de onde vem o fax.', vai:'c31_o_papel_termico'}
+  ]
+},
+
+c31_a_copia_da_lista:{
+  texto:[
+    'Ela tira a cópia na copiadora da sala, que é uma máquina de mesa que faz barulho de secador, e carimba com o carimbo da associação.',
+    fala('a secretária da associação', 'Confere com o original. É a fórmula.'),
+    'Ela assina embaixo do carimbo com o nome completo e o cargo.',
+    d=>fala(d.jogador.nome, 'A senhora não tem medo?'),
+    'Ela guarda a caneta no porta-lápis, de pé, com a ponta pra cima.',
+    fala('a secretária da associação', 'Eu tenho sessenta e um anos e vinte e dois de associação e um contrato que não me deixa ser demitida sem justa causa.'),
+    fala('a secretária da associação', 'E eu acabei de carimbar um documento público a pedido de um cidadão, que é literalmente o meu cargo.'),
+    'Ela empurra a cópia.',
+    fala('a secretária da associação', 'Se isso for justa causa, eu quero muito ver escrito.')
+  ],
+  ef:{flag:['copia_da_lista_carimbada','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:1, motivo:'Obteve a lista de acompanhamento carimbada e assinada pela secretária da associação.'},
+      npc:{nome:'a secretária da associação', opiniao:5, viuVoce:'Carimbou e assinou a cópia da lista com nome e cargo.'},
+      registrar:'Está com a cópia carimbada e assinada da lista de acompanhamento da Avenida Cinco.'},
+  escolhas:[
+    {texto:'Perguntar de onde vem o fax.', vai:'c31_o_papel_termico'},
+    {texto:'Ir procurar a menina de treze anos.', vai:'c31_a_banca'},
+    {texto:'Sair de Celadon com isso.', vai:'c31_fim'}
+  ]
+},
+
+c31_o_papel_termico:{
+  texto:[
+    'O aparelho de fax fica numa mesinha no canto e é um modelo de papel térmico, daqueles de rolo, que já era antigo quando foi comprado.',
+    'Papel térmico apaga. Em dois anos vira uma folha cinza em branco, e é por isso que quem trabalha com papel térmico tira cópia de tudo.',
+    'Embaixo da mesinha tem uma cesta de lixo de vime.',
+    'E na cesta tem o rolo usado da semana, enrolado, porque o rolo só é trocado quando acaba e o acabado fica na cesta até a faxina de sexta.',
+    'Hoje é quinta.',
+    'O rolo usado de um fax térmico guarda, em negativo, tudo que passou por ele desde a última troca.',
+    'Você olha pra secretária.',
+    'Ela olha pro rolo. Depois pra você. Depois volta pro computador dela e começa a digitar uma coisa com muita atenção.'
+  ],
+  ef:{flag:'o_rolo_na_cesta',
+      presagio:'Ela está digitando com atenção demais. Isso é uma permissão.'},
+  escolhas:[
+    {texto:'Pegar o rolo.', vai:'c31_pegou_o_rolo'},
+    {texto:'Perguntar antes se pode pegar.', vai:'c31_pediu_o_rolo'},
+    {texto:'Não pegar. Pedir cópia da lista da semana.', vai:'c31_a_copia_da_lista'}
+  ]
+},
+
+c31_pediu_o_rolo:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu posso levar o rolo do lixo?'),
+    'Ela para de digitar.',
+    fala('a secretária da associação', 'Ai, meu filho.'),
+    'Ela tira os óculos.',
+    fala('a secretária da associação', 'Você tinha que ter pegado.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a secretária da associação', 'Porque agora eu sei que você pegou, e eu não posso dizer que não sabia.'),
+    'Ela suspira e põe os óculos de volta.',
+    fala('a secretária da associação', 'Leva. Eu não vou mentir se me perguntarem, e ninguém vai me perguntar, porque ninguém nesse prédio sabe o que é papel térmico.'),
+    fala('a secretária da associação', 'E da próxima vez que alguém te deixar sozinho numa sala com uma cesta de lixo, entende o favor.', 'baixo')
+  ],
+  ef:{flag:['tem_o_rolo_termico','reika_precisa_de_papel'],
+      npc:{nome:'a secretária da associação', opiniao:3, viuVoce:'Te deixou levar o rolo depois de você estragar o favor perguntando.'},
+      registrar:'Está com o rolo usado do fax térmico da associação.'},
+  escolhas:[
+    {texto:'Perguntar o que fazer com o rolo.', vai:'c31_o_que_tem_no_rolo'},
+    {texto:'Sair de Celadon com ele.', vai:'c31_fim'}
+  ]
+},
+
+c31_pegou_o_rolo:{
+  texto:[
+    'Você abaixa, tira o rolo da cesta de vime e guarda na mochila, e leva quatro segundos.',
+    'A secretária continua digitando com muita atenção e não olha uma vez.',
+    'Quando você levanta, ela fala, pra tela do computador:',
+    fala('a secretária da associação', 'A faxina é sexta e a cesta é esvaziada antes das oito.'),
+    'Ela digita mais uma linha.',
+    fala('a secretária da associação', 'Eu não vi nada e ninguém me perguntou nada.'),
+    'E continua digitando, e você sai, e essa é a última coisa que ela te diz.'
+  ],
+  ef:{flag:['tem_o_rolo_termico','reika_precisa_de_papel'],
+      npc:{nome:'a secretária da associação', opiniao:4, viuVoce:'Digitou de costas enquanto você pegava o rolo da cesta.'},
+      registrar:'Está com o rolo usado do fax térmico da associação.',
+      presagio:'Ela falou o horário da faxina antes de você perguntar. Ela planejou isso.'},
+  escolhas:[
+    {texto:'Procurar alguém que saiba ler papel térmico usado.', vai:'c31_o_que_tem_no_rolo'},
+    {texto:'Ir procurar a menina de treze anos.', vai:'c31_a_banca'},
+    {texto:'Sair de Celadon com o rolo.', vai:'c31_fim'}
+  ]
+},
+
+c31_o_que_tem_no_rolo:{
+  texto:[
+    'Quem sabe ler rolo térmico usado, em Celadon, é quem trabalha com revelação.',
+    'Tem um laboratório fotográfico na avenida sete que revela em uma hora e que tem um quarto escuro nos fundos, e o dono tem uns quarenta e cinco anos e uma paciência infinita pra explicar coisa técnica.',
+    fala('o revelador', 'Isso aqui não é foto.'),
+    d=>fala(d.jogador.nome, 'Eu sei. É rolo de fax usado.'),
+    'Ele desenrola vinte centímetros e vira contra a luz da bancada.',
+    fala('o revelador', 'Ó, dá pra ler. Fica ao contrário e fica fraco, mas dá.'),
+    'Ele prende o rolo em dois clipes e acende uma luminária de mesa por baixo.',
+    'E ali, em negativo, ao contrário, fraco, está tudo que passou pelo fax da Associação Comercial da Avenida Cinco nas últimas nove semanas.',
+    'Nove listas. Nove cabeçalhos.',
+    'E o cabeçalho é o mesmo nas nove: um número de origem, uma data, uma hora, e um nome de aparelho, que é aquele nome que a pessoa cadastra no fax e que ninguém nunca troca.',
+    'O nome do aparelho é uma sigla de cinco caracteres.',
+    'Você já viu essa sigla escrita à mão num livro de destinos.'
+  ],
+  ef:{flag:['leu_o_rolo','sabe_o_nome_da_comissao','sabe_do_lote_unico'],
+      npc:{nome:'o revelador', opiniao:2, viuVoce:'Leu com você nove semanas de fax num rolo térmico usado.'},
+      registrar:'O rolo térmico traz nove semanas de listas, todas com o mesmo nome de aparelho: a sigla.',
+      presagio:'Nome de aparelho de fax é a coisa que ninguém lembra de esconder porque ninguém lembra que existe.'},
+  escolhas:[
+    {texto:'Pedir pra ele fotografar o rolo inteiro.', vai:'c31_fotografou_o_rolo'},
+    {texto:'Ir procurar a menina de treze anos.', vai:'c31_a_banca'},
+    {texto:'Sair de Celadon com isso.', vai:'c31_fim'}
+  ]
+},
+
+c31_fotografou_o_rolo:{
+  texto:[
+    'Ele monta o rolo numa mesa de luz com o vidro fosco, prende com clipe, e fotografa em trechos de trinta centímetros com uma máquina de fole em cima de um tripé.',
+    'Quarenta e uma fotos.',
+    'Revela na hora, no quarto escuro dos fundos, e sai com quarenta e uma cópias em papel brilhante, ainda cheirando a fixador.',
+    'Nas quarenta e uma dá pra ler o cabeçalho.',
+    d=>fala(d.jogador.nome, 'Quanto é?'),
+    'Ele empilha as fotos e bate na bancada pra alinhar.',
+    fala('o revelador', 'Nada.'),
+    d=>fala(d.jogador.nome, 'Como assim nada?'),
+    fala('o revelador', 'Eu revelo foto de casamento e foto de formatura há dezenove anos.'),
+    'Ele põe a pilha na sua mão.',
+    fala('o revelador', 'Hoje eu revelei outra coisa. Deixa comigo.', 'baixo')
+  ],
+  ef:{flag:['fotografou_o_rolo','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:1, motivo:'Um revelador de Celadon fotografou nove semanas de fax e não cobrou.'},
+      npc:{nome:'o revelador', opiniao:4, viuVoce:'Fotografou e revelou o rolo inteiro e não cobrou nada.'},
+      registrar:'Tem 41 fotografias legíveis do rolo térmico, com o cabeçalho em todas.'},
+  escolhas:[
+    {texto:'Ir procurar a menina de treze anos.', vai:'c31_a_banca'},
+    {texto:'Sair de Celadon com as quarenta e uma.', vai:'c31_fim'}
+  ]
+},
+
+c31_a_banca:{
+  texto:[
+    'A banca de jornal é na esquina da Avenida Cinco com a rua do mercado e o jornaleiro tem uns quarenta anos e uma televisãozinha ligada no balcão.',
+    d=>fala(d.jogador.nome, 'Tem uma menina de uns treze que veio aqui semana passada perguntar de caminhão branco?'),
+    'Ele demora meio segundo.',
+    fala('o jornaleiro da cinco', 'A Kazu.'),
+    d=>fala(d.jogador.nome, 'Você conhece?'),
+    fala('o jornaleiro da cinco', 'Ela compra revista de bicho aqui desde os oito anos. Toda quinta.'),
+    'Ele aponta com o queixo pra prateleira de revista, onde tem uma publicação de capa colorida sobre criação.',
+    fala('o jornaleiro da cinco', 'Ela perguntou porque viu os caminhões passando no fim da rua dela de madrugada.'),
+    'E aí ele olha pros lados, o que ele não tinha feito até agora.',
+    fala('o jornaleiro da cinco', 'E ela não veio essa quinta.', 'baixo')
+  ],
+  ef:{flag:'a_kazu',
+      registrar:'A menina da lista se chama Kazu, compra revista na banca desde os oito anos, e não apareceu esta quinta.',
+      presagio:'Uma quinta. Pode não ser nada. Você não vai conseguir tratar como nada.'},
+  escolhas:[
+    {texto:'Perguntar onde ela mora.', vai:'c31_a_casa_da_kazu'},
+    {texto:'Voltar à associação e cobrar a segurança.', vai:'c31_cobrou_a_seguranca'},
+    {texto:'Sair de Celadon com o que você tem.', vai:'c31_fim'}
+  ]
+},
+
+c31_a_casa_da_kazu:{
+  texto:[
+    'É uma casa de vila, com portão de grade e uma bicicleta rosa encostada na parede da garagem.',
+    'Quem atende é a mãe dela, de uns trinta e cinco anos, com um pano de prato no ombro.',
+    d=>fala(d.jogador.nome, 'A Kazu tá?'),
+    fala('a mãe da Kazu', 'Tá. Ela tá de castigo.'),
+    'A resposta mais banal possível derruba metade da tensão da sua barriga de uma vez.',
+    d=>fala(d.jogador.nome, 'De castigo por quê?'),
+    fala('a mãe da Kazu', 'Porque ela saiu de madrugada pra tirar foto de caminhão.'),
+    'A mãe suspira do jeito que só mãe de menina de treze anos suspira.',
+    fala('a mãe da Kazu', 'Semana passada. Duas da manhã, com a máquina do pai dela.'),
+    d=>fala(d.jogador.nome, 'Ela tirou foto?'),
+    fala('a mãe da Kazu', 'Tirou. E o filme tá lá, e ela não quer que ninguém revele porque ela acha que é prova de alguma coisa.'),
+    'Ela vira pra dentro de casa.',
+    fala('a mãe da Kazu', 'Kazu! Tem um menino aqui perguntando do teu caminhão!', 'grita')
+  ],
+  ef:{flag:'achou_a_kazu',
+      npc:{nome:'a mãe da Kazu', opiniao:1, viuVoce:'Te recebeu no portão e chamou a filha.'},
+      registrar:'Kazu está bem, de castigo, e tem um filme não revelado com fotos dos caminhões.'},
+  escolhas:[
+    {texto:'Falar com a Kazu.', vai:'c31_falou_com_a_kazu'},
+    {texto:'Avisar a mãe da lista antes.', vai:'c31_avisou_a_mae'}
+  ]
+},
+
+c31_avisou_a_mae:{
+  texto:[
+    d=>fala(d.jogador.nome, 'A senhora precisa saber de uma coisa antes.'),
+    'Você conta da lista. Conta do fax, conta da observação, e conta que tem quatro rapazes de polo azul com o nome e a idade da filha dela num escaninho.',
+    'A mãe ouve sem interromper e o pano de prato do ombro dela desce pra mão e ela torce o pano de prato o tempo todo.',
+    'Quando você termina, ela fica quieta uns dez segundos.',
+    fala('a mãe da Kazu', 'Ela tem treze anos.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    fala('a mãe da Kazu', 'Ela tem treze anos e um aparelho nos dentes e dorme com a luz do corredor acesa.'),
+    'Ela solta o pano de prato.',
+    fala('a mãe da Kazu', 'Onde é essa associação?'),
+    'E é assim que você descobre uma coisa sobre o capítulo: você passou três dias juntando papel e a mãe da Kazu vai resolver isso numa tarde.'
+  ],
+  ef:{flag:['a_mae_vai_na_associacao','sabe_do_lote_unico'], moral:2,
+      rep:{eixo:'bom', delta:2, motivo:'Avisou a mãe de uma menina de treze anos que o nome dela estava numa lista de acompanhamento.'},
+      npc:{nome:'a mãe da Kazu', opiniao:5, viuVoce:'Você contou da lista antes de falar com a filha dela.'},
+      registrar:'A mãe da Kazu vai à Associação Comercial cobrar explicação.',
+      presagio:'Vinte e uma lojas votaram a favor da lista. Nenhuma delas tinha uma mãe na porta.'},
+  escolhas:[
+    {texto:'Falar com a Kazu.', vai:'c31_falou_com_a_kazu'},
+    {texto:'Ir junto com a mãe até a associação.', vai:'c31_cobrou_a_seguranca'}
+  ]
+},
+
+c31_falou_com_a_kazu:{
+  texto:[
+    'Ela tem treze anos, aparelho nos dentes e uma revista de criação dobrada no bolso de trás, e ela te olha com a desconfiança exata de quem já foi chamada de criança hoje.',
+    fala('Kazu', 'Você é da polícia?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('Kazu', 'Da associação?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('Kazu', 'Então você é o quê?'),
+    d=>fala(d.jogador.nome, 'Eu também tô perguntando dos caminhões.'),
+    'A cara dela muda completamente.',
+    fala('Kazu', 'ESPERA.', 'grita'),
+    'Ela some pra dentro de casa e volta em quarenta segundos com um filme de trinta e seis poses numa caixinha preta, e com um caderno.',
+    'O caderno tem data, hora e placa. Onze entradas, nas últimas cinco semanas, todas entre uma e três da manhã.',
+    fala('Kazu', 'Eu comecei em setembro. Ninguém acreditou em mim.')
+  ],
+  ef:{flag:['o_caderno_da_kazu','reika_precisa_de_papel','sabe_do_lote_unico'],
+      npc:{nome:'Kazu', opiniao:4, viuVoce:'Você foi a primeira pessoa a acreditar nela.'},
+      registrar:'Kazu tem onze registros de placa, data e hora dos caminhões, e um filme de 36 poses não revelado.',
+      presagio:'Ela tem treze anos e anota placa desde setembro. Ninguém acreditou nela.'},
+  escolhas:[
+    {texto:'Levar o filme pro revelador da avenida sete.', vai:'c31_revelou_o_filme'},
+    {texto:'Dizer pra ela parar de sair de madrugada.', vai:'c31_mandou_parar'},
+    {texto:'Copiar o caderno e deixar o filme com ela.', vai:'c31_copiou_o_caderno'}
+  ]
+},
+
+c31_revelou_o_filme:{
+  texto:[
+    'O revelador da avenida sete revela em uma hora e vocês esperam a uma hora inteira sentados no meio-fio da frente, porque a Kazu se recusa a ir embora e deixar o filme dela com um estranho.',
+    'Trinta e seis poses. Vinte e nove saem pretas, porque fotografar de madrugada com filme comum e sem tripé dá nisso.',
+    'Sete prestam.',
+    'Em quatro dá pra ver a traseira de um caminhão com gaiola sob lona.',
+    'Em duas dá pra ver a placa.',
+    'E numa — a última do rolo, que ela tirou correndo — dá pra ver o portão de um galpão subindo e, do lado de dentro, sob a luz, três fileiras de gaiola empilhadas.',
+    'Ela olha essa foto por um tempo longo e não fala nada.',
+    fala('Kazu', 'Eu achei que era ração.'),
+    'Ela guarda a foto no bolso da frente, não no de trás, que é onde ela guarda o que é importante.'
+  ],
+  ef:{flag:['as_fotos_da_kazu','reika_precisa_de_papel','sabe_do_lote_unico'], moral:1,
+      rep:{eixo:'bom', delta:2, motivo:'Revelou com a Kazu o filme que ninguém tinha acreditado nela.'},
+      npc:{nome:'Kazu', opiniao:6, viuVoce:'Estava do seu lado quando a foto do galpão saiu da revelação.'},
+      registrar:'Sete fotos legíveis: quatro da traseira com gaiola, duas da placa e uma do interior de um galpão.'},
+  escolhas:[
+    {texto:'Dizer pra ela parar de sair de madrugada.', vai:'c31_mandou_parar'},
+    {texto:'Sair de Celadon com as fotos.', vai:'c31_fim'}
+  ]
+},
+
+c31_copiou_o_caderno:{
+  texto:[
+    'Você copia as onze entradas à mão e devolve o caderno, e devolver o caderno é a parte que importa.',
+    fala('Kazu', 'Você não vai levar?'),
+    d=>fala(d.jogador.nome, 'É seu.'),
+    'Ela fica com o caderno nas duas mãos e não sabe o que fazer com a cara.',
+    fala('Kazu', 'Todo mundo que eu mostrei falou pra eu parar.'),
+    d=>fala(d.jogador.nome, 'Eu também vou falar. Só não agora.'),
+    'Ela ri, e é a primeira coisa de treze anos que ela faz na cena inteira.'
+  ],
+  ef:{flag:['copia_do_caderno_da_kazu','reika_precisa_de_papel'], moral:1,
+      npc:{nome:'Kazu', opiniao:5, viuVoce:'Você copiou o caderno e devolveu em vez de levar.'},
+      registrar:'Copiou as onze entradas do caderno da Kazu e devolveu o caderno.'},
+  escolhas:[
+    {texto:'Dizer pra ela parar de sair de madrugada.', vai:'c31_mandou_parar'},
+    {texto:'Levar o filme pra revelar.', vai:'c31_revelou_o_filme'},
+    {texto:'Sair de Celadon.', vai:'c31_fim'}
+  ]
+},
+
+c31_mandou_parar:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Para de sair de madrugada.'),
+    fala('Kazu', 'Por quê? Você sai.'),
+    'É a melhor resposta possível e você não tem contra-argumento nenhum que não seja a idade dela, que é exatamente o argumento que todo adulto usou com você nos últimos meses.',
+    d=>fala(d.jogador.nome, 'Porque tem uma lista com o seu nome nela.'),
+    'Isso funciona. Não do jeito que você queria: ela não fica com medo.',
+    fala('Kazu', 'Tem uma lista com o MEU nome?'),
+    'Ela fala isso com um orgulho que você reconhece imediatamente porque você já sentiu ele.',
+    d=>fala(d.jogador.nome, 'Kazu.'),
+    fala('Kazu', 'Tá bom, tá bom.'),
+    'E você sabe, e ela sabe que você sabe, que ela vai sair de madrugada de novo.',
+    'A única coisa que você consegue é fazer ela prometer anotar pra quem ligar se alguma coisa acontecer, e ela promete, e anota o nome de três pessoas, e a terceira é você.'
+  ],
+  ef:{flag:'a_kazu_prometeu', moral:1,
+      npc:{nome:'Kazu', opiniao:5, viuVoce:'Anotou o seu nome como terceira pessoa pra quem ligar.'},
+      registrar:'Kazu anotou três nomes pra ligar se algo acontecer. O terceiro é o seu.',
+      presagio:'Você é o terceiro nome de uma lista de emergência de uma menina de treze anos.'},
+  escolhas:[
+    {texto:'Levar o filme pra revelar antes de sair.', vai:'c31_revelou_o_filme'},
+    {texto:'Sair de Celadon.', vai:'c31_fim'}
+  ]
+},
+
+c31_cobrou_a_seguranca:{
+  texto:[
+    'Você volta na sede da associação e dessa vez tem gente: três lojistas e o presidente, que é um homem de uns cinquenta anos de camisa social azul-clara com o punho dobrado duas vezes.',
+    'Ele é simpático. Ele é muito simpático, e ele é simpático do jeito que se é simpático com alguém que a gente pretende não levar a sério.',
+    fala('o presidente da associação', 'Rapaz, eu entendo a preocupação. Eu entendo mesmo.'),
+    fala('o presidente da associação', 'Mas o acompanhamento preventivo é um serviço contratado por vinte e duas lojas que foram assaltadas quarenta e uma vezes em dois anos.'),
+    d=>fala(d.jogador.nome, 'E a menina de treze anos?'),
+    'Ele abre as mãos.',
+    fala('o presidente da associação', 'Eu não faço a lista. A lista vem da entidade conveniada.'),
+    d=>fala(d.jogador.nome, 'Qual entidade?'),
+    'E aí ele faz uma coisa que resume o capítulo: ele olha pra secretária.',
+    'E a secretária, que está sentada na mesa dela há vinte e dois anos, responde antes dele:',
+    fala('a secretária da associação', 'Está no convênio, doutor. Eu pego pro senhor.', 'baixo')
+  ],
+  ef:{flag:'a_secretaria_foi_pegar',
+      registrar:'O presidente da associação não sabe qual é a entidade conveniada. A secretária foi buscar o convênio.'},
+  escolhas:[
+    {texto:'Esperar ela voltar com o convênio.', vai:'c31_o_convenio'},
+    {texto:'Ir embora antes que ele mude de ideia.', vai:'c31_fim'}
+  ]
+},
+
+c31_o_convenio:{
+  texto:[
+    'Ela volta com uma pasta de elástico e tira três folhas grampeadas e põe na mesa do presidente, virada pra você.',
+    'O presidente lê a primeira página pela primeira vez na vida dele, o que dá pra ver pelo jeito que ele acompanha com o dedo.',
+    'Na cláusula primeira, o objeto: "fornecimento de relação de acompanhamento preventivo".',
+    'No preâmbulo, as partes.',
+    'E no lugar do nome da segunda parte, a sigla de cinco caracteres que você já viu num livro de destinos, num saco de ração, num carimbo de envelope e no cabeçalho de nove semanas de fax.',
+    'O presidente lê a sigla em voz alta, devagar, soletrando, e fica claro que é a primeira vez que ele soletra aquilo.',
+    fala('o presidente da associação', 'Isso é a... quem é isso?'),
+    'E a sala inteira olha pra você, porque você é o único ali que não perguntou.'
+  ],
+  ef:{flag:['o_convenio_da_associacao','sabe_o_nome_da_comissao','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:2, motivo:'Fez um presidente de associação comercial ler em voz alta, pela primeira vez, com quem ele assinou convênio.'},
+      registrar:'O convênio da lista traz a sigla como segunda parte. O presidente nunca tinha lido.',
+      presagio:'Ele assinou e nunca leu. Essa é a resposta pra metade das perguntas desta jornada.'},
+  escolhas:[
+    {texto:'Pedir cópia do convênio.', vai:'c31_a_copia_da_lista'},
+    {texto:'Sair de Celadon com isso.', vai:'c31_fim'}
+  ]
+},
+
+c31_fim:{
+  texto:[
+    'Você sai de Celadon pela avenida dois, de manhã, passando pelo terminal de carga onde todo mundo que tem nota descarrega.',
+    d=>{
+      if (d.flags.fotografou_o_rolo) return 'Na mochila tem quarenta e uma fotografias de um rolo de papel térmico que ia pro lixo na sexta-feira.';
+      if (d.flags.tem_o_rolo_termico) return 'Na mochila tem um rolo de papel térmico usado que ia pro lixo na sexta-feira, e que guarda nove semanas de cabeçalho em negativo.';
+      if (d.flags.copia_da_lista_carimbada) return 'Na mochila tem uma lista de quarenta e um nomes, carimbada e assinada por uma secretária de sessenta e um anos.';
+      return 'Na mochila não tem papel nenhum e na cabeça tem quarenta e um nomes, sete deles com a observação "acompanhar até sair da cidade".';
+    },
+    d=>d.flags.as_fotos_da_kazu
+      ? 'E sete fotografias tiradas às duas da manhã por uma menina de treze anos com a máquina do pai, das quais uma mostra três fileiras de gaiola empilhadas dentro de um galpão.'
+      : (d.flags.a_kazu ? 'E o nome de uma menina de treze anos que ninguém quis acreditar desde setembro.' : ''),
+    'A Rota 10 fica a um dia de estrada e, no fim dela, tem uma usina desligada há onze anos que não para de zumbir.'
+  ],
+  fim:true, resumo:'A lista que chega por fax toda segunda: quarenta e um nomes, um convênio que o presidente nunca leu e uma menina de treze anos que anota placa desde setembro.'
+}
+
+}
+});
+
+
+/* ===== js/story/cap-32.js ===== */
+/* ============================================================
+   CAPÍTULO 32 — O GALPÃO DA ZONA NORTE  (Saffron)  · CONDICIONAL
+
+   Só acontece pra quem entrou em Saffron pela zona industrial —
+   porque as outras três entradas estavam com triagem — e viu um
+   caminhão-gaiola entrar num galpão sem placa.
+
+   É o capítulo mais curto da jornada e o mais direto: não tem
+   mistério pra desvendar. Você já sabe o que tem lá dentro.
+   ============================================================ */
+const C32_ABERTURAS = ['c32_a_rua_de_galpao', 'c32_a_lanchonete', 'c32_o_turno_da_noite'];
+function c32_cabe(id, d){
+  if (id === 'c32_o_turno_da_noite') return !!d.flags.o_som_do_galpao;
+  return true;
+}
+function c32_abertura(d){ return Dados.escolher(C32_ABERTURAS.filter(id => c32_cabe(id, d))); }
+
+CAPITULOS.push(
+{
+num:32, titulo:'O Galpão da Zona Norte', local:'Saffron — zona industrial', ambiente:'cidade', nivelArea:39,
+tom:'muito sombrio',
+requer: d => !!(d.flags.o_som_do_galpao || d.flags.o_galpao_do_norte),
+proximo: d => 12,
+entradas:C32_ABERTURAS,
+inicio: d => c32_abertura(d),
+cenas:{
+
+c32_a_rua_de_galpao:{
+  texto:[
+    'A zona industrial norte de Saffron tem quatro ruas e as quatro se chamam rua, sem nome, com número: Rua Industrial 1 a 4.',
+    'O galpão sem placa fica na 3, entre uma oficina de empilhadeira e um depósito de material de construção.',
+    'De dia é o prédio mais discreto da rua: portão de aço rolante, porta social pintada da mesma cor da parede, e nenhuma janela na fachada.',
+    'Tem uma caixa de correio parafusada do lado da porta social, e ela está cheia.',
+    'Correspondência acumulada numa caixa de um lugar onde entra caminhão toda semana quer dizer uma coisa só: ninguém que trabalha ali é responsável por pegar a correspondência.',
+    'E quem não pega correspondência não tem endereço.',
+    'Você puxa o maço pela fresta. São nove envelopes.',
+    'Oito são propaganda. O nono é uma conta de energia.'
+  ],
+  ef:{flag:'a_caixa_de_correio',
+      registrar:'A caixa de correio do galpão sem placa está cheia. Nove envelopes, um deles conta de energia.',
+      presagio:'Conta de energia tem titular, endereço e CNPJ impressos na frente.'},
+  escolhas:[
+    {texto:'Abrir a conta de energia.', vai:'c32_a_conta_de_energia'},
+    {texto:'Pôr tudo de volta e observar o galpão.', vai:'c32_observou'},
+    {texto:'Bater na porta social.', vai:'c32_bateu_na_porta'},
+    {texto:'Procurar quem trabalha na rua.', vai:'c32_a_lanchonete'}
+  ]
+},
+
+c32_a_conta_de_energia:{
+  texto:[
+    'Você abre a conta de energia num galpão de rua industrial em Saffron, o que é violação de correspondência, e você sabe que é.',
+    'A conta tem três informações que valem alguma coisa.',
+    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras e um "Ltda." no fim, que você nunca viu em nenhum papel desta jornada.',
+    'A segunda: o consumo. Dezenove mil e quatrocentos quilowatt-hora no mês.',
+    'Isso é consumo de uma fábrica. Não é consumo de um galpão de armazenagem, que gasta luz e mais nada.',
+    'A terceira é a que fecha: a classificação tarifária.',
+    '**GRUPO A4 — SUBGRUPO INDUSTRIAL — ATIVIDADE: CLIMATIZAÇÃO E REFRIGERAÇÃO CONTÍNUA**',
+    'Alguém climatiza esse galpão vinte e quatro horas por dia.',
+    'Ninguém climatiza caixa.'
+  ],
+  ef:{flag:['a_conta_de_energia','reika_precisa_de_papel','sabe_do_lote_unico'],
+      registrar:'O galpão consome 19.400 kWh/mês em climatização contínua, no nome de uma Ltda. de quatro palavras.',
+      presagio:'Climatização contínua é o que se paga por coisa que estraga. Ou por coisa que sente frio.'},
+  escolhas:[
+    {texto:'Guardar a conta e observar o galpão.', vai:'c32_observou'},
+    {texto:'Bater na porta social com a conta na mão.', vai:'c32_bateu_na_porta'},
+    {texto:'Procurar quem trabalha na rua.', vai:'c32_a_lanchonete'}
+  ]
+},
+
+c32_a_lanchonete:{
+  texto:[
+    'Toda rua de galpão de Kanto tem uma lanchonete, porque quatro ruas de galpão dão umas quatrocentas pessoas e quatrocentas pessoas almoçam.',
+    'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.',
+    'Você senta no balcão e pede o prato do dia, que custa oito e vem com arroz, feijão, uma carne e salada de repolho.',
+    'Na mesa do fundo tem quatro homens de macacão azul da oficina de empilhadeira e eles falam alto porque trabalham com máquina e ficaram com o hábito.',
+    'Você ouve quarenta minutos de conversa sobre: futebol, um colega que se aposentou, o preço do aluguel em Saffron, e — nos últimos seis minutos — o galpão da 3.',
+    fala('o homem de macacão', 'Aquilo ali é laboratório.'),
+    fala('o segundo de macacão', 'Laboratório nada. É armazém.'),
+    fala('o homem de macacão', 'Armazém com ar-condicionado central, Kouji?'),
+    'Os quatro riem.',
+    fala('o segundo de macacão', 'Armazém de remédio tem.'),
+    fala('o homem de macacão', 'Então é armazém de remédio que solta cheiro de bicho na sexta-feira.', 'baixo')
+  ],
+  ef:{flag:'a_conversa_da_lanchonete',
+      registrar:'Os mecânicos da rua ao lado discutem o que é o galpão. Ele solta cheiro na sexta-feira.'},
+  escolhas:[
+    {texto:'Puxar conversa com os quatro.', vai:'c32_os_quatro_mecanicos'},
+    {texto:'Perguntar ao dono da lanchonete.', vai:'c32_o_dono_da_lanchonete'},
+    {texto:'Ir observar o galpão.', vai:'c32_observou'}
+  ]
+},
+
+c32_os_quatro_mecanicos:{
+  texto:[
+    'Você vira no banquinho e pergunta direto, o que numa lanchonete de rua industrial é normal, porque todo mundo pergunta tudo.',
+    d=>fala(d.jogador.nome, 'Cheiro de bicho como?'),
+    'Os quatro param de comer ao mesmo tempo.',
+    fala('o homem de macacão', 'Você é de onde?'),
+    d=>fala(d.jogador.nome, 'De passagem.'),
+    'Eles se olham, e é o mais velho dos quatro, que não tinha falado ainda, que responde.',
+    fala('o mecânico mais velho', 'Cheiro de canil, moço. De canil grande.'),
+    fala('o mecânico mais velho', 'Toda sexta, de manhã cedo, quando eles abrem o portão pra carregar.'),
+    d=>fala(d.jogador.nome, 'Carregar o quê?'),
+    fala('o mecânico mais velho', 'Caixa branca. Fechada. Do tamanho de uma caixa de feira.'),
+    'Ele volta pro prato.',
+    fala('o mecânico mais velho', 'Eu trabalho nessa rua há vinte e seis anos e eu já vi galpão de tudo. De pneu, de tecido, de azulejo, de frango congelado.'),
+    fala('o mecânico mais velho', 'Aquele é o primeiro que eu não sei dizer o que é, e eu paro em frente dele todo dia às sete da manhã.', 'baixo')
+  ],
+  ef:{flag:['carregam_na_sexta','sabe_do_lote_unico'],
+      npc:{nome:'o mecânico mais velho', opiniao:1, viuVoce:'Te contou do cheiro e das caixas brancas da sexta-feira.'},
+      registrar:'Toda sexta de manhã o galpão abre e carrega caixas brancas fechadas. Sai cheiro de canil grande.'},
+  escolhas:[
+    {texto:'Perguntar que horas exatamente.', vai:'c32_que_horas'},
+    {texto:'Ir observar o galpão agora.', vai:'c32_observou'},
+    {texto:'Voltar na sexta de manhã.', vai:'c32_a_sexta'}
+  ]
+},
+
+c32_que_horas:{
+  texto:[
+    fala('o mecânico mais velho', 'Seis e quarenta. Sempre.'),
+    d=>fala(d.jogador.nome, 'Como o senhor sabe que é sempre?'),
+    'Ele aponta o próprio pulso com o garfo.',
+    fala('o mecânico mais velho', 'Porque eu entro às sete e eu passo em frente às seis e quarenta e cinco, e já tá acontecendo, e já acabou quando eu volto do café às sete e dez.'),
+    'Ele come mais um pouco.',
+    fala('o mecânico mais velho', 'Trinta minutos. Todo sexta. Faz uns três anos.'),
+    fala('o segundo de macacão', 'Quatro, Tetsu. Começou quando a empilhadeira nova chegou.'),
+    fala('o mecânico mais velho', 'Quatro, então.'),
+    'Quatro anos de trinta minutos toda sexta-feira, a cinquenta metros de uma oficina com vinte e seis anos de rua.',
+    'E ninguém nunca perguntou o que era, porque em rua de galpão a educação é não perguntar o que tem no galpão do vizinho.'
+  ],
+  ef:{flag:'seis_e_quarenta_na_sexta',
+      registrar:'O carregamento acontece toda sexta, às 6h40, e dura trinta minutos. Faz quatro anos.'},
+  escolhas:[
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir observar o galpão agora.', vai:'c32_observou'},
+    {texto:'Bater na porta social.', vai:'c32_bateu_na_porta'}
+  ]
+},
+
+c32_o_dono_da_lanchonete:{
+  texto:[
+    'O dono tem uns sessenta anos e um avental que já foi branco, e ele limpa o balcão com um pano enquanto conversa porque ele nunca para de limpar o balcão.',
+    d=>fala(d.jogador.nome, 'O pessoal do galpão da 3 almoça aqui?'),
+    'Ele para de limpar.',
+    fala('o dono da lanchonete', 'Não.'),
+    d=>fala(d.jogador.nome, 'Nunca?'),
+    fala('o dono da lanchonete', 'Em quatro anos, nenhuma vez.'),
+    'Ele volta a limpar.',
+    fala('o dono da lanchonete', 'Eu sirvo o pessoal da oficina, do depósito, da serralheria, da gráfica e da transportadora. Quatro ruas.'),
+    fala('o dono da lanchonete', 'Do galpão da 3, ninguém.'),
+    d=>fala(d.jogador.nome, 'E eles comem o quê?'),
+    'Ele dobra o pano no ombro.',
+    fala('o dono da lanchonete', 'Chega marmita. Numa van, meio-dia, quinze marmitas de uma vez, todo dia.'),
+    fala('o dono da lanchonete', 'Quinze pessoas trabalhando lá dentro todo dia há quatro anos e nenhuma delas nunca atravessou a rua pra tomar um café.', 'baixo')
+  ],
+  ef:{flag:['quinze_marmitas','sabe_do_lote_unico'],
+      npc:{nome:'o dono da lanchonete', opiniao:1, viuVoce:'Te contou que ninguém do galpão nunca almoçou ali em quatro anos.'},
+      registrar:'Quinze marmitas chegam de van ao galpão todo dia. Ninguém de lá nunca entrou na lanchonete.',
+      presagio:'Quinze pessoas com contrato de sigilo almoçam dentro do prédio. É o custo de não deixar ninguém conversar na rua.'},
+  escolhas:[
+    {texto:'Esperar a van das marmitas.', vai:'c32_a_van_das_marmitas'},
+    {texto:'Ir observar o galpão.', vai:'c32_observou'},
+    {texto:'Falar com os quatro mecânicos.', vai:'c32_os_quatro_mecanicos'}
+  ]
+},
+
+c32_a_van_das_marmitas:{
+  texto:[
+    'A van chega às onze e cinquenta e cinco e é uma van de cozinha industrial, com adesivo e telefone, o que é o oposto de discreto.',
+    'O entregador é um rapaz de uns vinte anos e ele desce com duas caixas térmicas empilhadas e toca a campainha da porta social.',
+    'A porta abre quinze centímetros. Uma mão pega as duas caixas. A porta fecha.',
+    'Ele volta pra van com as caixas do dia anterior.',
+    'Você fala com ele antes dele arrancar.',
+    d=>fala(d.jogador.nome, 'Quinze marmitas todo dia?'),
+    fala('o entregador de marmita', 'Quinze de segunda a quinta. Vinte e duas na sexta.'),
+    d=>fala(d.jogador.nome, 'Por que mais na sexta?'),
+    'Ele dá de ombros e sobe na van.',
+    fala('o entregador de marmita', 'Sei lá. Sexta tem mais gente. Eles pedem sete a mais desde que eu peguei a rota.'),
+    'Ele dá a partida.',
+    fala('o entregador de marmita', 'E na sexta eles pegam na porta do portão, não na porta social. É a única coisa que muda.')
+  ],
+  ef:{flag:['vinte_e_duas_na_sexta','carregam_na_sexta'],
+      registrar:'São 15 marmitas de segunda a quinta e 22 na sexta. Na sexta a entrega é pelo portão, não pela porta social.',
+      presagio:'Sete pessoas a mais só na sexta. Sete pessoas que não trabalham ali: trabalham no carregamento.'},
+  escolhas:[
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir observar o galpão.', vai:'c32_observou'},
+    {texto:'Bater na porta social.', vai:'c32_bateu_na_porta'}
+  ]
+},
+
+c32_observou:{
+  texto:[
+    'Existe um jeito certo de observar um galpão em rua industrial e ele não é escondido: é sentar no meio-fio com uma marmita no colo, porque em rua de galpão, ao meio-dia, tem quarenta pessoas sentadas em meio-fio com marmita no colo.',
+    'Você fica quatro horas.',
+    'Em quatro horas o portão rolante não abre nenhuma vez. A porta social abre três vezes: a van da marmita, um homem que sai pra fumar e volta em sete minutos, e uma entrega de material de escritório.',
+    'O homem que sai pra fumar fica virado pra parede do prédio, não pra rua, o que é uma coisa que ninguém faz.',
+    'Ninguém fuma de frente pra parede.',
+    'A não ser quem não quer ser visto de frente.'
+  ],
+  ef:{flag:'observou_o_galpao',
+      registrar:'Quatro horas de observação: o portão não abriu, e o único funcionário que saiu fumou virado para a parede.'},
+  escolhas:[
+    {texto:'Falar com o fumante na próxima vez que ele sair.', vai:'c32_o_fumante'},
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Bater na porta social.', vai:'c32_bateu_na_porta'},
+    {texto:'Voltar à noite.', vai:'c32_o_turno_da_noite'}
+  ]
+},
+
+c32_o_fumante:{
+  texto:[
+    'Ele sai às quatro e dez e você atravessa a rua antes dele acender.',
+    d=>fala(d.jogador.nome, 'Tem fogo?'),
+    'É a abordagem mais velha do mundo e funciona porque ele está com o isqueiro na mão.',
+    'Ele te dá fogo pra um cigarro que você não tem e você fica com a mão em concha em volta de nada por dois segundos, e ele vê, e não fala nada.',
+    'É um homem de uns trinta e cinco anos, de calça de uniforme e camiseta, com um crachá virado pra dentro preso no cós.',
+    fala('o fumante', 'Você tá aqui desde meio-dia.'),
+    d=>fala(d.jogador.nome, 'Tô.'),
+    fala('o fumante', 'A gente viu pela câmera.'),
+    'Ele fuma.',
+    fala('o fumante', 'Não é ameaça. É só pra você saber que não adianta ficar sentado no meio-fio.'),
+    d=>fala(d.jogador.nome, 'O que tem lá dentro?'),
+    'Ele olha pro cigarro dele.',
+    fala('o fumante', 'Eu assinei um papel de quatro páginas que diz que eu não posso responder isso.'),
+    fala('o fumante', 'E eu leio esse papel de novo umas duas vezes por mês.', 'baixo')
+  ],
+  ef:{flag:'o_fumante_do_galpao',
+      npc:{nome:'o fumante', opiniao:1, viuVoce:'Sabia que você estava ali desde meio-dia e saiu pra falar com você mesmo assim.'},
+      registrar:'Um funcionário do galpão saiu para falar com você. Ele relê o contrato de sigilo duas vezes por mês.',
+      presagio:'Quem relê o próprio contrato de sigilo duas vezes por mês está procurando a brecha.'},
+  escolhas:[
+    {texto:'"Tem alguma coisa que o papel deixa você dizer?"', vai:'c32_a_brecha'},
+    {texto:'"Você quer sair de lá?"', vai:'c32_quer_sair'},
+    {texto:'Agradecer o fogo e ir embora.', vai:'c32_a_sexta'}
+  ]
+},
+
+c32_a_brecha:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Tem alguma coisa que o papel deixa você dizer?'),
+    'Ele para com o cigarro na metade do caminho e é a primeira vez que alguém faz essa pergunta pra ele.',
+    fala('o fumante', 'Tem.'),
+    'Ele pensa por uns dez segundos, de verdade, procurando na memória o texto de quatro páginas que ele relê duas vezes por mês.',
+    fala('o fumante', 'O sigilo é sobre espécimes, procedimentos, instalações e pessoas.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('o fumante', 'E não é sobre mim.'),
+    'Ele fuma.',
+    fala('o fumante', 'Eu posso falar de mim. Eu sou ferramenteiro. Eu fui contratado pra manutenção de equipamento.'),
+    fala('o fumante', 'Eu faço manutenção de trezentas e onze unidades de um equipamento que eu não posso descrever.'),
+    'Ele apaga o cigarro na sola do sapato e guarda a guimba no bolso, porque em rua industrial não se joga guimba no chão.',
+    fala('o fumante', 'Trezentas e onze. Esse número é meu. Tá na minha ordem de serviço com o meu nome.', 'baixo')
+  ],
+  ef:{flag:['trezentas_e_onze_unidades','reika_precisa_de_papel','sabe_do_lote_unico'],
+      rep:{eixo:'bom', delta:2, motivo:'Achou, com um ferramenteiro, a brecha no próprio contrato de sigilo dele.'},
+      npc:{nome:'o fumante', opiniao:4, viuVoce:'Você achou a brecha do contrato dele e ele usou.'},
+      registrar:'Um ferramenteiro faz manutenção de 311 unidades de equipamento no galpão. O número está na ordem de serviço dele.',
+      presagio:'Trezentas e onze. O mesmo número de baias de uma estação de manejo na Rota 21.'},
+  escolhas:[
+    {texto:'Perguntar se ele guarda cópia das ordens de serviço.', vai:'c32_as_ordens_de_servico'},
+    {texto:'"Você quer sair de lá?"', vai:'c32_quer_sair'},
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'}
+  ]
+},
+
+c32_as_ordens_de_servico:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Você guarda cópia das suas ordens de serviço?'),
+    fala('o fumante', 'Guardo. Todo ferramenteiro guarda.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o fumante', 'Porque quando quebra alguma coisa e querem descontar do teu salário, a ordem de serviço é o que te salva.'),
+    'Ele encosta na parede.',
+    fala('o fumante', 'Eu tenho quatro anos de ordem de serviço numa caixa de sapato na minha casa.'),
+    'Silêncio de uns cinco segundos.',
+    fala('o fumante', 'E cada uma delas tem quantidade, tipo de intervenção e data. Sem falar de espécime, sem falar de procedimento, sem falar de instalação e sem falar de pessoa.'),
+    fala('o fumante', 'É só manutenção de equipamento.'),
+    'Ele olha pra porta social do galpão.',
+    fala('o fumante', 'Quatro anos de número.'),
+    d=>fala(d.jogador.nome, 'Você me daria?'),
+    fala('o fumante', 'Não hoje.'),
+    'Ele tira o crachá do cós, olha, e põe de volta virado pra dentro.',
+    fala('o fumante', 'Mas eu não vou jogar fora, e eu sei onde te achar se você continuar perguntando por Kanto.', 'baixo')
+  ],
+  ef:{flag:['a_caixa_de_sapato_do_ferramenteiro','sabe_do_lote_unico'],
+      npc:{nome:'o fumante', opiniao:5, viuVoce:'Tem quatro anos de ordem de serviço numa caixa de sapato e sabe onde te achar.'},
+      registrar:'O ferramenteiro guarda quatro anos de ordens de serviço com quantidade e data, numa caixa de sapato.',
+      presagio:'Ele não deu hoje. Ele disse que sabe onde te achar. Isso é um compromisso.'},
+  escolhas:[
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir embora de Saffron com isso.', vai:'c32_fim'}
+  ]
+},
+
+c32_quer_sair:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Você quer sair de lá?'),
+    'Ele ri sem alegria nenhuma e é uma risada curta que morre rápido.',
+    fala('o fumante', 'Eu ganho o dobro do mercado.'),
+    d=>fala(d.jogador.nome, 'Não foi isso que eu perguntei.'),
+    'Ele fica quieto.',
+    fala('o fumante', 'Eu tenho uma filha de seis anos e uma prestação de nove anos.'),
+    fala('o fumante', 'Todo mundo que trabalha ali dentro tem uma dessas duas coisas. Não é coincidência: eles perguntam na entrevista.'),
+    d=>fala(d.jogador.nome, 'Perguntam?'),
+    fala('o fumante', 'Perguntam se você tem dependente e se você tem financiamento. Tá no formulário, é normal, todo lugar pergunta.'),
+    'Ele fuma o resto do cigarro em duas tragadas.',
+    fala('o fumante', 'Aí você descobre depois pra que serve a pergunta.', 'frio')
+  ],
+  ef:{flag:'perguntam_na_entrevista', moral:-1,
+      registrar:'O galpão pergunta na entrevista se o candidato tem dependente e financiamento.',
+      presagio:'Não contratam quem pode ir embora.'},
+  escolhas:[
+    {texto:'"Tem alguma coisa que o papel deixa você dizer?"', vai:'c32_a_brecha'},
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir embora de Saffron.', vai:'c32_fim'}
+  ]
+},
+
+c32_bateu_na_porta:{
+  texto:[
+    'Você toca a campainha da porta social do galpão da Industrial 3 às três da tarde de uma quarta-feira.',
+    'A porta abre quinze centímetros, no limite da corrente, e atrás dela tem uma mulher de uns quarenta anos de jaleco branco.',
+    fala('a mulher de jaleco', 'Pois não.'),
+    d=>fala(d.jogador.nome, 'O que é aqui?'),
+    'Ela não hesita e não se irrita.',
+    fala('a mulher de jaleco', 'Instalação privada. Não tem atendimento ao público.'),
+    d=>fala(d.jogador.nome, 'Instalação privada de quê?'),
+    fala('a mulher de jaleco', 'De uma empresa privada.'),
+    'E é tudo verdade, e é tudo suficiente, e não tem uma única palavra ali que dê pra transformar em denúncia.',
+    fala('a mulher de jaleco', 'O senhor precisa de alguma coisa?'),
+    d=>fala(d.jogador.nome, 'Preciso.'),
+    fala('a mulher de jaleco', 'Então o senhor pode protocolar um pedido na sede da empresa. O endereço está na junta comercial.'),
+    'E fecha a porta, educadamente, sem bater.'
+  ],
+  ef:{flag:'bateu_no_galpao',
+      registrar:'Bateram a porta educadamente: instalação privada, sem atendimento ao público, endereço na junta comercial.',
+      presagio:'Ela te mandou pra junta comercial. Ela não precisava. Ou é treinamento, ou é outra coisa.'},
+  escolhas:[
+    {texto:'Ir à junta comercial procurar o endereço da sede.', vai:'c32_a_junta'},
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Observar o galpão de fora.', vai:'c32_observou'}
+  ]
+},
+
+c32_a_junta:{
+  texto:[
+    'A junta comercial de Saffron fica no segundo andar de um prédio público, atende das nove às dezesseis, e cobra doze pokedólares por certidão simplificada.',
+    'Você entrega a razão social de quatro palavras da conta de energia — ou, se não tem a conta, o endereço do galpão, que também dá.',
+    'A certidão sai em vinte minutos.',
+    'Objeto social: "armazenagem e logística de material biológico, com climatização controlada".',
+    'Capital social: baixo. Quadro societário: duas pessoas físicas, com nome e documento.',
+    'E na última linha, onde vai o administrador designado, tem um nome que não é nenhum dos dois sócios.',
+    'É uma administradora contratada, também pessoa jurídica.',
+    'E o nome dela é a sigla de cinco caracteres.'
+  ],
+  ef:{dinheiro:-12, flag:['a_certidao_da_junta','sabe_o_nome_da_comissao','reika_precisa_de_papel','sabe_do_lote_unico'],
+      registrar:'A certidão da junta: armazenagem de material biológico com climatização, administrada pela sigla.',
+      presagio:'Dois sócios que ninguém conhece e uma administradora que aparece em todo papel desta jornada.'},
+  escolhas:[
+    {texto:'Pedir também a ficha dos dois sócios.', vai:'c32_os_dois_socios'},
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir embora de Saffron com a certidão.', vai:'c32_fim'}
+  ]
+},
+
+c32_os_dois_socios:{
+  texto:[
+    'Mais doze pokedólares e mais vinte minutos.',
+    'Os dois sócios são pessoas físicas com documento válido e endereço declarado em Saffron.',
+    'E a atendente da junta, que tem uns cinquenta anos e já viu muita certidão, faz uma coisa que ninguém pediu: ela roda os dois documentos numa segunda consulta.',
+    fala('a atendente da junta', 'Esses dois são sócios de mais quarenta e uma empresas.'),
+    d=>fala(d.jogador.nome, 'Quarenta e uma?'),
+    fala('a atendente da junta', 'Quarenta e uma. Todas com a mesma administradora contratada.'),
+    'Ela vira a tela.',
+    fala('a atendente da junta', 'Isso aqui a gente chama de laranja, moço. É um par de laranja.'),
+    fala('a atendente da junta', 'E eu sou obrigada a te falar uma coisa: ser sócio de quarenta e uma empresas não é crime.'),
+    'Ela imprime a lista das quarenta e uma, que sai em três folhas.',
+    fala('a atendente da junta', 'Só que quem monta quarenta e uma empresas com dois nomes e uma administradora só não está economizando papel.', 'baixo')
+  ],
+  ef:{dinheiro:-12, flag:['as_quarenta_e_uma_empresas','reika_precisa_de_papel','sabe_o_nome_da_comissao'],
+      rep:{eixo:'bom', delta:2, motivo:'Puxou na junta comercial a lista das quarenta e uma empresas do mesmo par de sócios.'},
+      npc:{nome:'a atendente da junta', opiniao:3, viuVoce:'Rodou a segunda consulta sem você pedir e imprimiu as quarenta e uma.'},
+      registrar:'Os dois sócios do galpão são sócios de 41 empresas, todas com a mesma administradora contratada.',
+      presagio:'Quarenta e uma empresas. Uma delas é um galpão climatizado com trezentas e onze unidades de equipamento.'},
+  escolhas:[
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir embora de Saffron com as três folhas.', vai:'c32_fim'}
+  ]
+},
+
+c32_o_turno_da_noite:{
+  texto:[
+    'Você volta na Industrial 3 às onze da noite e a rua inteira está apagada, menos duas coisas: um poste na esquina e uma fresta de luz embaixo do portão rolante do galpão.',
+    'Uma fresta de luz embaixo de um portão às onze da noite quer dizer turno da noite.',
+    'Você encosta na parede do depósito de material de construção do outro lado e fica.',
+    'E é aqui que o galpão finalmente para de ser discreto.',
+    'Porque de dia a rua tem barulho de oficina e de caminhão e de gente, e de noite a rua não tem nada.',
+    'E, sem nada, dá pra ouvir.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} está do seu lado e para de andar antes de você, e vira a cabeça pro galpão, e as orelhas dele fazem uma coisa que você já viu ele fazer duas vezes na vida.`
+               : 'Você para de andar sem decidir parar.';
+    },
+    'Muita coisa viva no mesmo lugar, abafada por parede de alvenaria e por portão de aço, às onze da noite, numa rua de galpão em Saffron.',
+    'E não é barulho de agitação.',
+    'É constante. É um murmúrio que não sobe e não desce, e um murmúrio que não sobe e não desce é de quem está acordado há muito tempo e não espera mais nada.'
+  ],
+  ef:{flag:['o_som_do_galpao','ouviu_a_noite'], hp:-1, moral:-2,
+      registrar:'À noite, sem o barulho da rua, dá para ouvir o galpão por fora.',
+      presagio:'Um murmúrio que não sobe e não desce.'},
+  escolhas:[
+    {texto:'Voltar às seis e quarenta da sexta.', vai:'c32_a_sexta'},
+    {texto:'Procurar uma entrada agora, à noite.', vai:'c32_procurou_entrada'},
+    {texto:'Sair de Saffron. Você não vai conseguir dormir de qualquer jeito.', vai:'c32_fim'}
+  ]
+},
+
+c32_procurou_entrada:{
+  texto:[
+    'Você dá a volta no quarteirão e o galpão tem, além do portão rolante e da porta social, exatamente mais uma abertura: uma janela basculante de vidro aramado na empena lateral, a três metros e meio do chão, aberta em quarenta e cinco graus pra ventilação.',
+    'Três metros e meio é alto. Tem um contêiner de entulho do depósito vizinho encostado na parede e o contêiner tem um metro e oitenta.',
+    'Em cima do contêiner, com os braços esticados, você alcança o peitoril.',
+    'E não entra, porque você não cabe numa basculante, e porque não era pra entrar.',
+    'Era pra ver.',
+    'O interior do galpão é iluminado com luz fria e é organizado de um jeito que dói: quatro corredores, gaiolas empilhadas em três alturas dos dois lados, numeração pintada no chão, e duas pessoas de jaleco andando entre os corredores com prancheta.',
+    'Está tudo limpo.',
+    'Está tudo em ordem.',
+    'E você fica pendurado numa basculante de vidro aramado, às onze e vinte da noite, contando corredores, até os braços não aguentarem mais.'
+  ],
+  ef:{hp:-3, causa:'Pendurado numa janela por tempo demais',
+      flag:['viu_dentro_do_galpao','sabe_do_lote_unico'], moral:-2,
+      rep:{eixo:'ruim', delta:1, motivo:'Subiu num contêiner de entulho para olhar dentro de uma instalação privada.'},
+      registrar:'Viu o interior do galpão: quatro corredores, gaiolas em três alturas, numeração no chão, duas pessoas de jaleco.',
+      presagio:'Limpo, iluminado, numerado e com prancheta. É pior do que se fosse um porão.'},
+  escolhas:[
+    {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
+    {texto:'Ir embora de Saffron.', vai:'c32_fim'}
+  ]
+},
+
+c32_a_sexta:{
+  texto:[
+    'Sexta, seis e trinta e cinco da manhã. A rua Industrial 3 já tem gente: a oficina abre às sete e o pessoal chega antes.',
+    'Às seis e quarenta o portão rolante do galpão sobe.',
+    'Sobe inteiro, o que ele não faz em nenhum outro dia da semana, e atrás dele tem um caminhão-baú já posicionado de ré e sete pessoas de jaleco esperando.',
+    'O carregamento é rápido e é silencioso e é organizado.',
+    'Caixa branca fechada, do tamanho de uma caixa de feira, passada de mão em mão em corrente humana, do corredor do galpão até o baú.',
+    'Você conta.',
+    'Quarenta e uma caixas em vinte e seis minutos.',
+    'Às sete e seis o baú fecha, o portão desce, e a rua Industrial 3 volta a ser uma rua de galpão numa manhã de sexta-feira.',
+    'A cinquenta metros, o mecânico mais velho está encostado na porta da oficina com um copo de café, olhando.',
+    'Ele olha pra você. Você olha pra ele.',
+    'Nenhum dos dois fala nada, porque não tem nada pra falar que já não tenha sido dito por vinte e seis minutos de corrente humana.'
+  ],
+  ef:{flag:['viu_o_carregamento','sabe_do_lote_unico'], moral:-2,
+      registrar:'Quarenta e uma caixas brancas carregadas em 26 minutos, numa manhã de sexta, na Industrial 3.',
+      presagio:'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'},
+  escolhas:[
+    {texto:'Seguir o caminhão-baú.', vai:'c32_seguiu_o_bau'},
+    {texto:'Ir falar com o mecânico.', vai:'c32_o_mecanico_de_novo'},
+    {texto:'Ir embora de Saffron com o que você tem.', vai:'c32_fim'}
+  ]
+},
+
+c32_seguiu_o_bau:{
+  texto:[
+    'Seguir caminhão-baú a pé numa zona industrial de manhã funciona por quatro quarteirões, que é o tempo que ele leva pra chegar na avenida.',
+    'Na avenida acaba.',
+    'Você fica na esquina vendo o baú entrar no fluxo e virar um caminhão branco entre outros vinte caminhões brancos, e a única coisa que você consegue guardar é a direção.',
+    'Sul.',
+    'Sul de Saffron é Vermilion, e Vermilion é porto.',
+    'E porto é onde carga com nota atravessa e ninguém abre nada.'
+  ],
+  ef:{flag:['o_bau_foi_pro_sul','sabe_do_lote_unico'],
+      registrar:'O caminhão-baú do carregamento de sexta seguiu para o sul: sentido Vermilion.'},
+  escolhas:[
+    {texto:'Ir embora de Saffron.', vai:'c32_fim'}
+  ]
+},
+
+c32_o_mecanico_de_novo:{
+  texto:[
+    'Você atravessa a rua e ele te oferece o copo de café antes de você falar, e você aceita porque recusar seria grosseria.',
+    fala('o mecânico mais velho', 'Quarenta e uma.'),
+    d=>fala(d.jogador.nome, 'Você conta?'),
+    fala('o mecânico mais velho', 'Todo sexta, há quatro anos.'),
+    'Ele toma o café dele do outro copo.',
+    fala('o mecânico mais velho', 'Tem semana de trinta e seis. Tem semana de cinquenta e dois. A média é quarenta e uma.'),
+    d=>fala(d.jogador.nome, 'Você anota?'),
+    'Ele entra na oficina e volta em quarenta segundos com um calendário de parede de fornecedor de peça, do tipo que vem de graça em janeiro.',
+    'Cada sexta-feira tem um número escrito a caneta no canto do quadrinho.',
+    'Quatro calendários. Quatro anos.',
+    fala('o mecânico mais velho', 'Eu não sei o que eu tô contando, moço.'),
+    fala('o mecânico mais velho', 'Eu só sei que quando eu comecei era vinte e dois.', 'baixo')
+  ],
+  ef:{flag:['os_calendarios_do_mecanico','reika_precisa_de_papel','sabe_do_lote_unico'],
+      rep:{eixo:'bom', delta:2, motivo:'Um mecânico de vinte e seis anos de rua te mostrou quatro anos de contagem em calendário de parede.'},
+      npc:{nome:'o mecânico mais velho', opiniao:4, viuVoce:'Te mostrou quatro calendários com a contagem de sexta-feira.'},
+      registrar:'O mecânico tem quatro anos de contagem: começou em 22 caixas por sexta e hoje é 41.',
+      presagio:'De vinte e dois pra quarenta e um em quatro anos. Isso dobrou, e nada para de dobrar sozinho.'},
+  escolhas:[
+    {texto:'Pedir os calendários.', vai:'c32_pediu_os_calendarios'},
+    {texto:'Ir embora de Saffron.', vai:'c32_fim'}
+  ]
+},
+
+c32_pediu_os_calendarios:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Me dá os calendários.'),
+    'Ele olha pros quatro, empilhados no braço dele.',
+    fala('o mecânico mais velho', 'Eu ia jogar fora esse ano.'),
+    d=>fala(d.jogador.nome, 'Então me dá.'),
+    fala('o mecânico mais velho', 'É que aí eu paro de contar.'),
+    'E ele fica com os quatro no braço e essa frase no ar por uns bons dez segundos, e é o dilema mais honesto que alguém te apresentou em Kanto.',
+    'Aí ele entrega três.',
+    fala('o mecânico mais velho', 'Leva os três velhos. Esse ano é meu até dezembro.'),
+    'Ele volta pra oficina com o de dois mil pendurado no braço e é sete e vinte da manhã e ele tem que abrir.',
+    fala('o mecânico mais velho', 'Volta em janeiro que eu te dou esse.')
+  ],
+  ef:{flag:['tem_os_tres_calendarios','reika_precisa_de_papel'],
+      npc:{nome:'o mecânico mais velho', opiniao:6, viuVoce:'Te deu três dos quatro calendários e ficou contando o do ano corrente.'},
+      registrar:'Está com três calendários de parede com a contagem semanal de caixas, de três anos.',
+      presagio:'Ele ficou com o do ano em curso pra continuar contando. Volta em janeiro.'},
+  escolhas:[
+    {texto:'Ir embora de Saffron.', vai:'c32_fim'}
+  ]
+},
+
+c32_fim:{
+  texto:[
+    'Você sai de Saffron pelo sul, pela avenida, no mesmo sentido em que o baú saiu.',
+    d=>{
+      if (d.flags.tem_os_tres_calendarios) return 'Na mochila tem três calendários de parede de fornecedor de peça de empilhadeira, com um número escrito a caneta em cada sexta-feira de três anos.';
+      if (d.flags.as_quarenta_e_uma_empresas) return 'Na mochila tem três folhas impressas com quarenta e uma razões sociais, dois nomes de sócio e uma administradora contratada.';
+      if (d.flags.a_certidao_da_junta) return 'Na mochila tem uma certidão simplificada de doze pokedólares que diz "armazenagem de material biológico com climatização controlada".';
+      if (d.flags.a_conta_de_energia) return 'Na mochila tem uma conta de energia de dezenove mil e quatrocentos quilowatt-hora que não é sua e que você não devia ter aberto.';
+      return 'Na mochila não tem nada. Na cabeça tem quatro corredores, três alturas de gaiola e numeração pintada no chão.';
+    },
+    d=>d.flags.trezentas_e_onze_unidades
+      ? 'E um número que um ferramenteiro te deu porque o contrato de sigilo dele falava de espécime, de procedimento, de instalação e de pessoa, e não falava dele: trezentas e onze.'
+      : 'E a certeza de que aquele galpão tem quatro anos, quinze funcionários que nunca atravessam a rua pra tomar café, e climatização contínua.',
+    'Fuchsia fica a dois dias, e lá tem nove mil hectares de reserva com trinta e um quilômetros de cerca e uma frase em letra garrafal na fachada da recepção.'
+  ],
+  fim:true, resumo:'O galpão da Industrial 3: climatização contínua, trezentas e onze unidades, quarenta e uma caixas por sexta-feira e quatro anos de contagem num calendário de parede.'
+}
+
+}
+});
+
+
 /* ===== js/story/entrega.js ===== */
 /* ============================================================
    A ENTREGA — quem não nasceu em Pallet não recebe da mão do
@@ -70026,6 +72352,56 @@ c26_fim_recusou:{
   {de:'c21_saguao', para:'c26_aceitou_o_posto', texto:'Subir. Já é quase catorze.'},
   {de:'c21_refeitorio', para:'c26_aceitou_o_posto', texto:'Subir pra reunião.'}
 ]);
+
+
+/* ===== js/story/condicionais.js ===== */
+/* ============================================================
+   CAPÍTULOS CONDICIONAIS — desvios de rota
+
+   Um capítulo condicional não entra na contagem normal: ele é um
+   desvio que só existe se a sua jornada passou por onde precisava
+   passar. Quem não passou segue reto e nunca fica sabendo que o
+   desvio existia.
+
+   O motor já sabia fazer isso (`requer` e `proximo` em motor.js) e
+   ninguém usava. Aqui é onde os desvios são ligados: cada capítulo
+   anfitrião ganha um `proximo` que manda pro desvio quando o
+   requisito bate, e o desvio devolve a rota pro lugar certo.
+
+   O `requer` de cada capítulo condicional mora no arquivo dele.
+   Aqui só fica a ligação, pra caber tudo numa tela.
+   ============================================================ */
+(function(){
+
+  /* de qual capítulo sai o desvio, e pra qual ele devolve */
+  const DESVIOS = [
+    {de: 6,  desvio: 29, volta: 7},   // Cerulean → o portão verde
+    {de: 7,  desvio: 30, volta: 8},   // Lavender → as onze linhas do livro
+    {de: 9,  desvio: 31, volta: 10},  // Celadon  → quem assina o fax
+    {de: 11, desvio: 32, volta: 12}   // Saffron  → o galpão da zona norte
+  ];
+
+  DESVIOS.forEach(({de, desvio, volta}) => {
+    const anfitriao = CAPITULOS.find(c => c.num === de);
+    const cond      = CAPITULOS.find(c => c.num === desvio);
+    if (!anfitriao || !cond) return;
+
+    /* o anfitrião manda pro desvio só quando o requisito do desvio bate */
+    const antes = anfitriao.proximo;
+    anfitriao.proximo = d => {
+      if (typeof antes === 'function'){
+        const forcado = antes(d);
+        if (forcado && forcado !== volta) return forcado;   // desvio explícito manda mais
+      }
+      try { if (cond.requer && cond.requer(d)) return desvio; } catch(e){}
+      return volta;
+    };
+
+    /* e o desvio devolve a rota, sempre */
+    cond.proximo = d => volta;
+  });
+
+})();
 
 
 /* ===== js/story/epilogos.js ===== */
@@ -73031,6 +75407,13 @@ const UI = {
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Capítulos que podem não acontecer</h3>
+      <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
+      <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
+      <div class="linha"><span class="k">Se não abrir</span><span class="v">a jornada segue reto e você nunca fica sabendo que existia</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista "o que não aconteceu nesta jornada"</span></div>
+      <p class="sussurro">Quatro capítulos só existem pra quem passou por onde precisava passar: uma casa de portão verde em Cerulean, onze linhas num livro de guarita em Lavender, um fax que chega toda segunda em Celadon e um galpão sem placa na zona industrial de Saffron. Cada um deles nasce de uma cena de abertura específica dos capítulos 6, 7, 9 e 11 — e as aberturas são sorteadas de acordo com o seu estado. Duas jornadas seguidas podem ver capítulos diferentes.</p>
+
       <h3>Finais e epílogos</h3>
       <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
       <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
@@ -73191,6 +75574,13 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Capítulos que podem não acontecer</h3>
+      <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
+      <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
+      <div class="linha"><span class="k">Se não abrir</span><span class="v">a jornada segue reto e você nunca fica sabendo que existia</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista "o que não aconteceu nesta jornada"</span></div>
+      <p class="sussurro">Quatro capítulos só existem pra quem passou por onde precisava passar: uma casa de portão verde em Cerulean, onze linhas num livro de guarita em Lavender, um fax que chega toda segunda em Celadon e um galpão sem placa na zona industrial de Saffron. Cada um deles nasce de uma cena de abertura específica dos capítulos 6, 7, 9 e 11 — e as aberturas são sorteadas de acordo com o seu estado. Duas jornadas seguidas podem ver capítulos diferentes.</p>
 
       <h3>Finais e epílogos</h3>
       <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
@@ -73898,7 +76288,7 @@ const Jogo = {
 
   avancarCapitulo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
-    const prox = Historia.proximoCapitulo();
+    const prox = Historia.proximoCapitulo(true);
     if (!prox){
       return UI.telaFinal({titulo:'A JORNADA CONTINUA', texto:[
         'Você chegou ao fim do que está escrito. O resto é estrada.',

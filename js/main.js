@@ -355,7 +355,7 @@ const Jogo = {
 
   avancarCapitulo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
-    const prox = Historia.proximoCapitulo();
+    const prox = Historia.proximoCapitulo(true);
     if (!prox){
       return UI.telaFinal({titulo:'A JORNADA CONTINUA', texto:[
         'Você chegou ao fim do que está escrito. O resto é estrada.',

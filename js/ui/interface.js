@@ -2711,6 +2711,13 @@ const UI = {
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Capítulos que podem não acontecer</h3>
+      <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
+      <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
+      <div class="linha"><span class="k">Se não abrir</span><span class="v">a jornada segue reto e você nunca fica sabendo que existia</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista "o que não aconteceu nesta jornada"</span></div>
+      <p class="sussurro">Quatro capítulos só existem pra quem passou por onde precisava passar: uma casa de portão verde em Cerulean, onze linhas num livro de guarita em Lavender, um fax que chega toda segunda em Celadon e um galpão sem placa na zona industrial de Saffron. Cada um deles nasce de uma cena de abertura específica dos capítulos 6, 7, 9 e 11 — e as aberturas são sorteadas de acordo com o seu estado. Duas jornadas seguidas podem ver capítulos diferentes.</p>
+
       <h3>Finais e epílogos</h3>
       <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>
       <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
@@ -2871,6 +2878,13 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Capítulos que podem não acontecer</h3>
+      <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
+      <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
+      <div class="linha"><span class="k">Se não abrir</span><span class="v">a jornada segue reto e você nunca fica sabendo que existia</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista "o que não aconteceu nesta jornada"</span></div>
+      <p class="sussurro">Quatro capítulos só existem pra quem passou por onde precisava passar: uma casa de portão verde em Cerulean, onze linhas num livro de guarita em Lavender, um fax que chega toda segunda em Celadon e um galpão sem placa na zona industrial de Saffron. Cada um deles nasce de uma cena de abertura específica dos capítulos 6, 7, 9 e 11 — e as aberturas são sorteadas de acordo com o seu estado. Duas jornadas seguidas podem ver capítulos diferentes.</p>
 
       <h3>Finais e epílogos</h3>
       <div class="linha"><span class="k">Final</span><span class="v">o que aconteceu com Kanto — sai das suas escolhas no fim</span></div>

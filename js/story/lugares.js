@@ -31,7 +31,14 @@ const ANCORAS = {
   25: {local:'saffron',   chamada:'A convocação chegou por telegrama, e telegrama não se responde com "não".'},
   26: {local:'planalto',  chamada:'Eles te esperam numa sala com mesa comprida e quatro cadeiras.'},
   27: {local:'norte',     chamada:'O vale entre duas paredes de pedra, sem saída no fundo.'},
-  28: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'}
+  28: {local:'norte',     chamada:'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno.'},
+
+  /* Capítulos condicionais: só existem em certas rotas, e por isso
+     a âncora deles fica aqui embaixo, fora da ordem da jornada. */
+  29: {local:'cerulean',  chamada:'Quarta casa depois da segunda ponte. Portão de chapa verde, sem número.'},
+  30: {local:'lavender',  chamada:'Onze linhas no livro da guarita e a coluna de descida vazia nas onze.'},
+  31: {local:'celadon',   chamada:'A sede da Associação Comercial fica no sobrado de uma loja de tecido, e o fax chega toda segunda.'},
+  32: {local:'saffron',   chamada:'Rua Industrial 3: um galpão sem placa, com a caixa de correio cheia e nenhuma janela na fachada.'}
 };
 
 /* ============================================================
