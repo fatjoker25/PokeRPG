@@ -362,7 +362,7 @@ function afazeresDoLocal(){
 
   if (L.tipo === 'rota' || L.tipo === 'especial'){
     lista.push({id:'procurar', titulo:'Procurar Pokémon no mato',
-      sub:'Andar devagar, prestar atenção no barulho, esperar alguma coisa se mexer.'});
+      sub:'Andar devagar, prestar atenção no barulho, esperar um Pokémon se mexer.'});
     lista.push({id:'vasculhar', titulo:'Vasculhar a área',
       sub:'Olhar debaixo de coisa, seguir trilha que não é trilha, ver o que ninguém viu.'});
     lista.push({id:'treinar', titulo:'Treinar o time',

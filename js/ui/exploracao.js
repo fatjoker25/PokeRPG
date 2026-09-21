@@ -83,7 +83,9 @@ const Exploracao = {
       const risco = {critico:10, sucesso:18, parcial:28, falha:40}[t.grau];
       if (Dados.chance(risco)){
         const enc = sortearSelvagem(novo.ambiente, novo.nivel);
-        return this.encontro(enc, ['No meio do caminho, alguma coisa sai do mato e não desvia.']);
+        return this.encontro(enc, [Estado.conheceu(enc.dex)
+          ? `No meio do caminho, um ${enc.nome} sai do mato e não desvia.`
+          : 'No meio do caminho, um Pokémon sai do mato e não desvia.']);
       }
     }
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
@@ -277,7 +279,7 @@ const Exploracao = {
   encontro(selvagem, intro){
     const meu = Estado.primeiroApto();
     if (!meu){
-      return this.tela([{tipo:'dano', texto:'Alguma coisa se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}]);
+      return this.tela([{tipo:'dano', texto:'Um Pokémon se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}]);
     }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null;

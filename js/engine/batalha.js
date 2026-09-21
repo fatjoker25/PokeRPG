@@ -73,7 +73,7 @@ const Batalha = {
     if (this.tipo === 'selvagem'){
       return conhece
         ? `Um ${i.nome} selvagem (Nv ${i.nivel}${nat}) aparece!`
-        : `Alguma coisa sai do mato e para na sua frente (Nv ${i.nivel}). Você não sabe o nome disso.`;
+        : `Um Pokémon sai do mato e para na sua frente (Nv ${i.nivel}). Você nunca viu um desses.`;
     }
     if (this.tipo === 'lendario') return `${nomeVisivel(i)} encara você. O ar fica pesado.`;
     return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
@@ -594,7 +594,7 @@ const Batalha = {
     } else if (info.tipo === 'fuga'){
       if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
       Estado.usarItem(nome);
-      this.ev('vitoria', 'Você joga o boneco pro lado. O bicho vai atrás dele. Você sai andando sem correr, que é o jeito certo.');
+      this.ev('vitoria', 'Você joga o boneco pro lado. O Pokémon vai atrás dele. Você sai andando sem correr, que é o jeito certo.');
       this.fugiuComBoneco = true;
       this.encerrar('fuga');
       return;

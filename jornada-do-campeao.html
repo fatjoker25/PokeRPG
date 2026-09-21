@@ -4209,7 +4209,7 @@ function afazeresDoLocal(){
 
   if (L.tipo === 'rota' || L.tipo === 'especial'){
     lista.push({id:'procurar', titulo:'Procurar Pokémon no mato',
-      sub:'Andar devagar, prestar atenção no barulho, esperar alguma coisa se mexer.'});
+      sub:'Andar devagar, prestar atenção no barulho, esperar um Pokémon se mexer.'});
     lista.push({id:'vasculhar', titulo:'Vasculhar a área',
       sub:'Olhar debaixo de coisa, seguir trilha que não é trilha, ver o que ninguém viu.'});
     lista.push({id:'treinar', titulo:'Treinar o time',
@@ -6255,7 +6255,7 @@ const Batalha = {
     if (this.tipo === 'selvagem'){
       return conhece
         ? `Um ${i.nome} selvagem (Nv ${i.nivel}${nat}) aparece!`
-        : `Alguma coisa sai do mato e para na sua frente (Nv ${i.nivel}). Você não sabe o nome disso.`;
+        : `Um Pokémon sai do mato e para na sua frente (Nv ${i.nivel}). Você nunca viu um desses.`;
     }
     if (this.tipo === 'lendario') return `${nomeVisivel(i)} encara você. O ar fica pesado.`;
     return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
@@ -6776,7 +6776,7 @@ const Batalha = {
     } else if (info.tipo === 'fuga'){
       if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
       Estado.usarItem(nome);
-      this.ev('vitoria', 'Você joga o boneco pro lado. O bicho vai atrás dele. Você sai andando sem correr, que é o jeito certo.');
+      this.ev('vitoria', 'Você joga o boneco pro lado. O Pokémon vai atrás dele. Você sai andando sem correr, que é o jeito certo.');
       this.fugiuComBoneco = true;
       this.encerrar('fuga');
       return;
@@ -65784,7 +65784,9 @@ const Exploracao = {
       const risco = {critico:10, sucesso:18, parcial:28, falha:40}[t.grau];
       if (Dados.chance(risco)){
         const enc = sortearSelvagem(novo.ambiente, novo.nivel);
-        return this.encontro(enc, ['No meio do caminho, alguma coisa sai do mato e não desvia.']);
+        return this.encontro(enc, [Estado.conheceu(enc.dex)
+          ? `No meio do caminho, um ${enc.nome} sai do mato e não desvia.`
+          : 'No meio do caminho, um Pokémon sai do mato e não desvia.']);
       }
     }
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
@@ -65978,7 +65980,7 @@ const Exploracao = {
   encontro(selvagem, intro){
     const meu = Estado.primeiroApto();
     if (!meu){
-      return this.tela([{tipo:'dano', texto:'Alguma coisa se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}]);
+      return this.tela([{tipo:'dano', texto:'Um Pokémon se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}]);
     }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null;
