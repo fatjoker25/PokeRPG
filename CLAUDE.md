@@ -76,11 +76,14 @@ Cena nova que dependa disso entra em `js/story/campo.js`, com `portaDeCampo()`
 pro rótulo que muda sozinho. `ferramentas/chk-campo.js` confere.
 
 ## A arena sai do lugar
-O fundo de combate não é arquivo de imagem: as cinco arenas são desenhadas em
-CSS (`.arena-grama`, `-agua`, `-caverna`, `-predio`, `-ginasio`), justamente
-pra continuarem funcionando com o jogo aberto offline em `file://`. Cada
-ambiente escrito — no capítulo ou no ponto do mapa — cai numa delas por
-`ARENA_POR_AMBIENTE`, em `js/data/arenas.js`:
+São **duas coisas separadas**, e confundir as duas dá bug:
+
+- o **cenário** é uma imagem por ambiente, em `sprites_nds/arenas/`;
+- a **arena** é o grupo de ambientes que compartilham o tipo de chão, e é
+  ela que manda nas bases sob os pés e no gradiente de reserva.
+
+Nove ambientes, nove cenários, cinco arenas. O mapa das duas coisas está em
+`js/data/arenas.js` (`FUNDO_POR_AMBIENTE` e `ARENA_POR_AMBIENTE`):
 
 - `campo`, `floresta` → grama;
 - `agua` → água;
@@ -88,18 +91,37 @@ ambiente escrito — no capítulo ou no ponto do mapa — cai numa delas por
 - `cidade`, `ruina`, `cemiterio` → piso duro;
 - ginásio, Elite dos Quatro e torneio entram **por cima de tudo**, na quadra.
 
-Ambiente novo em capítulo ou em `LOCAIS` tem que entrar no mapa junto, senão
-cai no fundo padrão sem ninguém perceber — `ferramentas/chk-arenas.js` confere
-isso e também se cada arena tem desenho no CSS. Ambiente que quiser um tom
-próprio usa `[data-ambiente="..."]` sobre a arena dele, sem virar arena nova.
-Cena que precise fixar a arena passa `arena:` na batalha.
+A quadra é a única arena sem imagem — fundo de ginásio livre não existe pra
+baixar — então ela é pintada em CSS: arquibancada, refletor, linha de fundo
+e círculo do meio.
+
+Três armadilhas que já aconteceram aqui:
+
+- **URL dentro de `var()`.** O navegador resolve caminho relativo pela pasta
+  do CSS, não pela da página, e o fundo some calado. Por isso `Arenas.fundoDe()`
+  devolve caminho absoluto (`new URL(rel, document.baseURI)`).
+- **Enquadramento único não serve pras nove.** O mar da praia está no alto da
+  imagem e a lava do vulcão no pé dela; cada ambiente tem o seu `--ar-foco` no
+  CSS. Cenário novo entra com o foco junto.
+- **No celular a arena empilha.** Faixa única deixa o segundo lutador no
+  escuro, e esticar a mesma imagem numa caixa alta amplia demais. Empilhado,
+  cada lutador carrega o próprio cenário atrás de si.
+
+Ambiente novo em capítulo ou em `LOCAIS` tem que entrar nos dois mapas junto,
+senão cai no fundo de reserva sem ninguém perceber. `ferramentas/chk-arenas.js`
+confere arena, imagem no disco, desenho no CSS e foco de enquadramento. Cena
+que precise fixar a arena passa `arena:` na batalha.
+
+As imagens de cenário vieram dos fundos de batalha do Pokémon Showdown
+(`play.pokemonshowdown.com/fx/bg-*.png`), mesma categoria de arte de fã dos
+1264 sprites que o projeto já embute. Crédito no README.
 
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `jornada-do-campeao.html` e `artefato.html` (arquivo único
-  com os 1255 sprites embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+  com os 1264 sprites e cenários embutidos). Rodar depois de qualquer mudança em js/ ou css/.
 - Texto do jogo em português do Brasil. Comentário de código também.
 
 ## Onde as coisas ficam

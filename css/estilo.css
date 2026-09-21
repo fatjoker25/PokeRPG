@@ -434,6 +434,84 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
     var(--ar-alto-1) 0%, var(--ar-alto-2) 36%,
     var(--ar-baixo-1) 36%, var(--ar-baixo-2) 100%);
 }
+/* Com cenário, a arte real ocupa uma faixa própria no alto — a mesma
+   altura pras nove imagens, pra moldura não dançar de batalha pra
+   batalha. O gradiente da paleta continua embaixo, como chão onde as
+   fichas se apoiam, e fica de reserva quando a pasta de artes não
+   está do lado. `--ar-foco` é a altura da imagem que aparece na
+   faixa: cada cenário tem a parte que interessa numa altura
+   diferente, e é isso que esse número acerta. */
+.arena.com-cenario,
+.arena.arena-ginasio{--ar-faixa:154px; --ar-foco:55%; padding-top:0}
+.arena.com-cenario::before,
+.arena.arena-ginasio::before{
+  content:'';display:block;position:absolute;left:0;right:0;top:0;
+  height:var(--ar-faixa);z-index:0;
+  background-image:var(--ar-fundo);
+  background-size:cover;background-repeat:no-repeat;
+  background-position:center var(--ar-foco);
+  image-rendering:pixelated;
+}
+/* véu: escurece o pé da faixa pra ela morrer no chão em vez de cortar
+   reto, e segura o contraste do texto que vem logo abaixo */
+.arena.com-cenario::after,
+.arena.arena-ginasio::after{
+  content:'';display:block;position:absolute;left:0;right:0;top:0;
+  height:calc(var(--ar-faixa) + 12px);z-index:0;opacity:1;
+  background:linear-gradient(180deg,
+    rgba(8,10,14,.22) 0%, rgba(8,10,14,.06) 42%,
+    rgba(8,10,14,.55) 84%, var(--ar-baixo-2) 100%);
+}
+/* A quadra não tem imagem pra baixar — fundo de ginásio livre não
+   existe. Então ela é pintada: arquibancada escura em cima, refletor,
+   piso de madeira clara com a linha do fundo e o círculo central. */
+.arena.arena-ginasio::before{
+  background-image:
+    /* risco de meio de quadra */
+    linear-gradient(90deg, transparent 0 49.75%, rgba(250,228,170,.34) 49.75% 50.25%, transparent 50.25%),
+    /* círculo central */
+    radial-gradient(ellipse 168px 34px at 50% 82%,
+      transparent 0 70%, rgba(250,220,140,.5) 71% 74%, transparent 75%),
+    /* linha de fundo da quadra */
+    linear-gradient(180deg, transparent 0 46%, rgba(250,228,180,.3) 46% 46.9%, transparent 46.9%),
+    /* refletor caindo no meio do piso */
+    radial-gradient(ellipse 66% 62% at 50% 104%,
+      rgba(255,236,190,.22) 0%, transparent 72%),
+    /* fileira de luzes altas na arquibancada */
+    repeating-linear-gradient(90deg,
+      rgba(255,242,205,.5) 0 14px, transparent 14px 52px),
+    /* arquibancada escura em cima, piso de madeira embaixo */
+    linear-gradient(180deg,
+      #090b11 0%, #0f1420 20%, #151b28 30%,
+      #5a4728 30.5%, #6f5832 66%, #52401f 100%);
+  background-size:100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 7px, 100% 100%;
+  background-position:center, center, center, center, left 16px, center;
+  background-repeat:no-repeat, no-repeat, no-repeat, no-repeat, repeat-x, no-repeat;
+  image-rendering:auto;
+}
+/* a quadra é desenhada e já nasce no tom certo: o véu por cima dela
+   é mais leve, senão apaga o piso e some com a luz alta */
+.arena.arena-ginasio::after{
+  background:linear-gradient(180deg,
+    rgba(8,10,14,.06) 0%, rgba(8,10,14,0) 44%,
+    rgba(8,10,14,.42) 86%, var(--ar-baixo-2) 100%);
+}
+
+/* Foco por cenário: o mar da praia fica alto na imagem, a lava do
+   vulcão fica no pé dela, e o resto se resolve no meio. */
+.arena.com-cenario[data-ambiente="agua"]     {--ar-foco:34%}
+.arena.com-cenario[data-ambiente="montanha"] {--ar-foco:40%}
+.arena.com-cenario[data-ambiente="cidade"]   {--ar-foco:46%}
+.arena.com-cenario[data-ambiente="caverna"]  {--ar-foco:50%}
+.arena.com-cenario[data-ambiente="cemiterio"]{--ar-foco:52%}
+.arena.com-cenario[data-ambiente="floresta"] {--ar-foco:58%}
+.arena.com-cenario[data-ambiente="campo"]    {--ar-foco:64%}
+.arena.com-cenario[data-ambiente="ruina"]    {--ar-foco:70%}
+.arena.com-cenario[data-ambiente="vulcao"]   {--ar-foco:96%}
+/* o cemitério é a mesma pedra da torre, na luz errada */
+.arena.com-cenario[data-ambiente="cemiterio"]::before{
+  filter:saturate(.55) hue-rotate(-24deg) brightness(.86)
+}
 /* a linha do horizonte, onde o fundo troca de metade */
 .arena::before{
   content:'';position:absolute;left:0;right:0;top:36%;height:1px;z-index:0;
@@ -445,7 +523,37 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   opacity:.5;background:var(--ar-textura, none);
 }
 .arena > *{position:relative;z-index:1}
-@media(max-width:620px){.arena{grid-template-columns:1fr;padding:9px}}
+@media(max-width:620px){
+  .arena{grid-template-columns:1fr;padding:9px}
+  /* Empilhado, os dois lutadores ficam um embaixo do outro, e uma
+     faixa única deixaria o segundo brigando no escuro. Esticar a
+     mesma imagem pela arena inteira também não serve: numa caixa
+     alta e estreita o `cover` amplia tanto que sobra uma folha de
+     palmeira no lugar do mar. Então cada lutador ganha o cenário
+     atrás de si, no mesmo enquadramento do modo largo. */
+  .arena.com-cenario{--ar-faixa:0; padding-top:9px}
+  .arena.com-cenario::before{display:none}
+  .arena.com-cenario::after{
+    height:100%;
+    background:linear-gradient(180deg, rgba(8,10,14,.18) 0%, rgba(8,10,14,.4) 100%);
+  }
+  .arena.com-cenario .lutador .arte{
+    height:112px;margin-bottom:10px;border-radius:var(--raio-sm);
+    background-image:var(--ar-fundo);
+    background-size:cover;background-repeat:no-repeat;
+    background-position:center var(--ar-foco);
+    image-rendering:pixelated;
+    box-shadow:inset 0 -34px 40px -24px rgba(8,10,14,.95),
+               inset 0 0 0 1px rgba(255,255,255,.05);
+  }
+  .arena.com-cenario[data-ambiente="cemiterio"] .lutador .arte{
+    filter:saturate(.55) hue-rotate(-24deg) brightness(.86)
+  }
+  /* a quadra é gradiente, então estica bem numa caixa alta */
+  .arena.arena-ginasio{--ar-faixa:100%; padding-top:9px}
+  .arena.arena-ginasio::after{height:100%}
+  .arena.arena-ginasio .lutador .arte{height:104px;margin-bottom:10px}
+}
 
 /* --- grama: rota aberta, mato alto no horizonte --- */
 .arena-grama{
@@ -1295,6 +1403,13 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   height:86px;display:flex;align-items:flex-end;justify-content:center;
   margin:0 0 9px;position:relative
 }
+.arena.com-cenario .lutador .arte,
+.arena.arena-ginasio .lutador .arte{height:142px;margin-bottom:12px}
+.arena.com-cenario .lutador .arte .sprite,
+.arena.arena-ginasio .lutador .arte .sprite{
+  width:88px;height:88px;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))
+}
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
 /* as duas bases: a sua fica mais perto (maior e mais baixa), a do
    outro lado fica mais longe (menor e mais alta) — é o que dá a
@@ -1304,6 +1419,13 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   border-radius:50%;z-index:0;
   background:radial-gradient(ellipse at 50% 42%,
     var(--ar-base-1) 0%, var(--ar-base-2) 62%, transparent 74%);
+}
+/* Sobre cenário a base é sombra de apoio, não mancha colorida: assim
+   ela funciona em cima de areia, de lava e de calçada do mesmo jeito. */
+.arena.com-cenario .lutador .arte:not(:empty)::after,
+.arena.arena-ginasio .lutador .arte:not(:empty)::after{
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.5) 0%, rgba(0,0,0,.26) 56%, transparent 72%);
 }
 .lutador.aliado .arte:not(:empty)::after{width:112px;height:26px;bottom:-9px}
 .lutador.inimigo .arte:not(:empty)::after{width:86px;height:19px;bottom:-4px}

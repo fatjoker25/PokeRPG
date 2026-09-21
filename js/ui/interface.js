@@ -784,6 +784,14 @@ const UI = {
       el.className = 'arena arena-' + cen.arena;
       el.dataset.ambiente = cen.ambiente;
       el.title = `Arena: ${cen.nome}`;
+      /* Com a imagem, o fundo é cenário; sem ela (pasta ausente), a
+         arena fica no gradiente da paleta e nada quebra. */
+      if (cen.fundo){
+        el.style.setProperty('--ar-fundo', `url("${cen.fundo}")`);
+        el.classList.add('com-cenario');
+      } else {
+        el.style.removeProperty('--ar-fundo');
+      }
     }
   },
 
@@ -2852,13 +2860,14 @@ const UI = {
       <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo, elevada a 1,15 e limitada entre 0,33× e 3,2×, senão os stats dos jogos não teriam efeito nenhum. Golpes de crítico alto tiram 3 do limite do d20. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
 
       <h3>Onde a batalha acontece</h3>
-      <p class="sussurro">O fundo do combate não é enfeite: ele sai do lugar. Cada ponto do mapa e cada capítulo têm um ambiente, e os nove ambientes escritos caem em cinco arenas. As duas bases embaixo dos lutadores seguem a arena — a sua fica maior e mais perto, a do outro lado menor e mais longe.</p>
+      <p class="sussurro">O fundo do combate não é enfeite: ele sai do lugar. Cada ponto do mapa e cada capítulo têm um ambiente, e cada ambiente tem o seu cenário. Os nove ambientes escritos se agrupam em cinco arenas, que é o que decide o tipo de chão sob os pés. As duas bases embaixo dos lutadores seguem a arena — a sua fica maior e mais perto, a do outro lado menor e mais longe.</p>
       <div class="linha"><span class="k">Grama</span><span class="v">campo · floresta</span></div>
       <div class="linha"><span class="k">Água</span><span class="v">mar, rio, doca e ponte</span></div>
       <div class="linha"><span class="k">Rocha</span><span class="v">caverna · montanha · vulcão</span></div>
       <div class="linha"><span class="k">Piso duro</span><span class="v">cidade · ruína · cemitério</span></div>
       <div class="linha"><span class="k">Quadra</span><span class="v">ginásio, Elite dos Quatro e torneio, em qualquer lugar</span></div>
       <p class="sussurro">Quadra ganha de tudo: se é desafio de líder, Elite ou torneio, o chão é piso oficial, não importa a cidade. Encontro livre no mapa usa o ambiente do ponto onde você está; batalha de cena usa o ambiente do capítulo. Uma cena pode fixar a arena quando a briga acontece num canto que o ambiente do capítulo não descreve.</p>
+      <p class="sussurro">Praia e mar são o cenário de água; a ruína é o mato seco que tomou conta da usina; o cemitério é a pedra da torre na luz errada. A quadra é a única arena sem cenário fotografado: ela é desenhada, com arquibancada, refletor e o círculo do meio.</p>
 
       <h3>Quando ele não faz o que você mandou</h3>
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>

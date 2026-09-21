@@ -352,7 +352,33 @@ sprites_nds/battle/back_shiny/{id}.png    costas brilhante
 ```
 
 `js/data/sprites.js` é o único lugar que conhece esses caminhos. No
-arquivo único o `build.py` embute as 1255 artes como data URI, então
+arquivo único o `build.py` embute as artes como data URI, então
 `jornada-do-campeao.html` continua funcionando sozinho, sem pasta do
 lado. Se a pasta sumir no modo repositório, cada imagem se apaga e a
 tela volta a ser a de texto — nada quebra.
+
+### Cenários de batalha
+
+O fundo do combate é uma imagem por ambiente, na mesma pasta e pelo
+mesmo mecanismo:
+
+```
+sprites_nds/arenas/{ambiente}.png   campo, floresta, agua, caverna,
+                                    montanha, vulcao, cidade, ruina,
+                                    cemiterio
+```
+
+`js/data/arenas.js` é o único lugar que conhece esses caminhos, e
+decide qual cenário entra a partir do ambiente do capítulo ou do ponto
+do mapa. Ginásio, Elite dos Quatro e torneio não usam imagem: a quadra
+é desenhada em CSS. Sem a pasta, a arena cai num gradiente de reserva e
+o combate continua legível.
+
+Com sprites e cenários, o `build.py` embute 1264 arquivos.
+
+### Crédito das artes
+
+As artes de Pokémon são de HeartGold/SoulSilver; os cenários de batalha
+vêm dos fundos do [Pokémon Showdown](https://play.pokemonshowdown.com).
+Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um
+projeto de fã, sem fim comercial.

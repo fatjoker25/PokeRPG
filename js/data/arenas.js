@@ -21,6 +21,24 @@ const ARENA_POR_AMBIENTE = {
   cemiterio: 'predio'     // mesmo piso, luz de vela
 };
 
+/* O fundo de verdade, um por ambiente. São imagens de cenário de
+   batalha, na mesma pasta e pelo mesmo caminho dos 1255 sprites, então
+   o arquivo único as embute junto e o jogo continua abrindo offline.
+   Ginásio não tem imagem: quadra fechada é desenhada em CSS, porque
+   fundo de ginásio livre não existe pra baixar. */
+const ARENAS_BASE = 'sprites_nds/arenas/';
+const FUNDO_POR_AMBIENTE = {
+  campo:     'campo.png',       // rota de terra batida entre o mato
+  floresta:  'floresta.png',    // copa fechada, tronco grosso
+  agua:      'agua.png',        // areia e mar aberto
+  caverna:   'caverna.png',     // pedra e boca de túnel
+  montanha:  'montanha.png',    // mesma pedra com o céu por cima
+  vulcao:    'vulcao.png',      // lava exposta no chão
+  cidade:    'cidade.png',      // calçada e parede de tijolo
+  ruina:     'ruina.png',       // mato seco tomando conta do lugar
+  cemiterio: 'cemiterio.png'    // pedra cinza e névoa baixa
+};
+
 /* O nome que o jogador lê na ficha do combate. */
 const NOME_DA_ARENA = {
   grama:   'campo aberto',
@@ -56,7 +74,24 @@ const Arenas = {
     return 'campo';
   },
 
-  /* {arena, ambiente, nome} — a arena forçada pela cena ganha de tudo. */
+  /* Resolve o caminho do fundo: embutido no arquivo único, ou o
+     arquivo na pasta do lado. Sem a pasta, devolve nada e a arena
+     cai no gradiente de CSS sem quebrar. */
+  fundoDe(ambiente){
+    const arq = FUNDO_POR_AMBIENTE[ambiente];
+    if (!arq) return null;
+    const rel = ARENAS_BASE + arq;
+    if (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) {
+      return SPRITES_EMBUTIDOS[rel];
+    }
+    /* Caminho absoluto de propósito: dentro de var() o navegador
+       resolve URL relativa pela pasta do CSS, não pela da página, e
+       o fundo sumiria calado. */
+    try { return new URL(rel, document.baseURI).href; }
+    catch (e) { return rel; }
+  },
+
+  /* {arena, ambiente, nome, fundo} — a arena forçada pela cena ganha de tudo. */
   atual(){
     const forcada = (typeof Batalha !== 'undefined') ? Batalha.arena : null;
     const ambiente = this.ambienteAtual();
@@ -64,6 +99,8 @@ const Arenas = {
     if (forcada && NOME_DA_ARENA[forcada]) arena = forcada;
     else if (this.ehQuadra()) arena = 'ginasio';
     else arena = ARENA_POR_AMBIENTE[ambiente] || 'grama';
-    return {arena, ambiente, nome: NOME_DA_ARENA[arena]};
+    /* na quadra o chão é desenhado, então ela não carrega imagem */
+    const fundo = (arena === 'ginasio') ? null : this.fundoDe(ambiente);
+    return {arena, ambiente, nome: NOME_DA_ARENA[arena], fundo};
   }
 };

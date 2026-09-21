@@ -42,11 +42,30 @@ for (const a of nomes){
   if (!css.includes('.arena-' + a)) falhas.push(`arena '${a}' sem desenho no CSS (.arena-${a})`);
 }
 
+/* o fundo de verdade: um arquivo por ambiente, e ele tem que existir */
+const fundos = {};
+arenas.match(/const FUNDO_POR_AMBIENTE = \{([\s\S]*?)\};/)[1]
+  .replace(/(\w+)\s*:\s*'([^']+)'/g, (_, a, f) => { fundos[a] = f; return ''; });
+const base = arenas.match(/const ARENAS_BASE = '([^']+)'/)[1];
+for (const amb of usados.keys()){
+  const f = fundos[amb];
+  if (!f){ falhas.push(`ambiente '${amb}' sem imagem de fundo`); continue; }
+  if (!fs.existsSync(path.join(raiz, base, f)))
+    falhas.push(`fundo de '${amb}' aponta pra ${base}${f}, que não está na pasta`);
+}
+for (const amb of Object.keys(fundos)){
+  if (!usados.has(amb)) falhas.push(`fundo mapeado para '${amb}', que ninguém usa`);
+  /* cada imagem precisa do seu foco, senão o enquadramento sai no chute */
+  if (!css.includes(`[data-ambiente="${amb}"]`))
+    falhas.push(`ambiente '${amb}' sem foco de enquadramento no CSS`);
+}
+
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));
   process.exit(1);
 }
 const porArena = {};
 for (const [amb, ar] of Object.entries(mapa)) (porArena[ar] = porArena[ar] || []).push(amb);
-console.log(`ok — ${usados.size} ambientes em ${nomes.size} arenas`);
+console.log(`ok — ${usados.size} ambientes em ${nomes.size} arenas, ` +
+            `${Object.keys(fundos).length} fundos na pasta`);
 for (const a of nomes) console.log(`  ${a}: ${(porArena[a] || ['(só por cima: ginásio, Elite, torneio)']).join(', ')}`);
