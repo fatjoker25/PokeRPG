@@ -743,6 +743,8 @@ const UI = {
 
   atualizarArena(){
     const a = Batalha.aliado, i = Batalha.inimigo;
+    /* O fundo e as duas bases saem do lugar onde a briga acontece. */
+    const cen = (typeof Arenas !== 'undefined') ? Arenas.atual() : null;
     const card = (p, cls, meu) => {
       /* A Pokédex abre a ficha inteira. Um bom Intelecto abre só o
          tipo: você já viu um parecido, não leu o registro dele. */
@@ -762,17 +764,27 @@ const UI = {
       /* O seu aparece de costas, como em qualquer combate; o do outro
          lado, de frente. Espécie não catalogada sai em silhueta. */
       const arte = imgSprite(p, meu ? 'costas' : 'frente', {oculto: !catalogado});
+      /* A arte fica fora da ficha de propósito: é ela que deixa o
+         cenário aparecer atrás do lutador, com a base sob os pés. */
       return `<div class="lutador ${cls}">
         <div class="arte">${arte}</div>
-        <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
-        <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
-        ${this.barraHP(p)}
-        <div class="meta">${nat}</div>
-        <div class="meta">${ficha}</div>
-        ${seg}
+        <div class="ficha">
+          <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
+          <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
+          ${this.barraHP(p)}
+          <div class="meta">${nat}</div>
+          <div class="meta">${ficha}</div>
+          ${seg}
+        </div>
       </div>`;
     };
-    document.getElementById('arena').innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
+    const el = document.getElementById('arena');
+    el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
+    if (cen){
+      el.className = 'arena arena-' + cen.arena;
+      el.dataset.ambiente = cen.ambiente;
+      el.title = `Arena: ${cen.nome}`;
+    }
   },
 
   escreverLog(eventos){
@@ -2838,6 +2850,15 @@ const UI = {
       <div class="linha"><span class="k">Fuga</span><span class="v">1d20 ≥ (Vel. selvagem − sua + 10)</span></div>
       <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: 1d10 × 3 · você leva 25% de volta</span></div>
       <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo, elevada a 1,15 e limitada entre 0,33× e 3,2×, senão os stats dos jogos não teriam efeito nenhum. Golpes de crítico alto tiram 3 do limite do d20. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
+
+      <h3>Onde a batalha acontece</h3>
+      <p class="sussurro">O fundo do combate não é enfeite: ele sai do lugar. Cada ponto do mapa e cada capítulo têm um ambiente, e os nove ambientes escritos caem em cinco arenas. As duas bases embaixo dos lutadores seguem a arena — a sua fica maior e mais perto, a do outro lado menor e mais longe.</p>
+      <div class="linha"><span class="k">Grama</span><span class="v">campo · floresta</span></div>
+      <div class="linha"><span class="k">Água</span><span class="v">mar, rio, doca e ponte</span></div>
+      <div class="linha"><span class="k">Rocha</span><span class="v">caverna · montanha · vulcão</span></div>
+      <div class="linha"><span class="k">Piso duro</span><span class="v">cidade · ruína · cemitério</span></div>
+      <div class="linha"><span class="k">Quadra</span><span class="v">ginásio, Elite dos Quatro e torneio, em qualquer lugar</span></div>
+      <p class="sussurro">Quadra ganha de tudo: se é desafio de líder, Elite ou torneio, o chão é piso oficial, não importa a cidade. Encontro livre no mapa usa o ambiente do ponto onde você está; batalha de cena usa o ambiente do capítulo. Uma cena pode fixar a arena quando a briga acontece num canto que o ambiente do capítulo não descreve.</p>
 
       <h3>Quando ele não faz o que você mandou</h3>
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>

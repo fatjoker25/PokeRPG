@@ -10,7 +10,7 @@ const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,
 const Batalha = {
   ativo:false, aliado:null, inimigo:null, tipo:'selvagem',
   turno:0, fuga:true, eventos:[], fim:null, fase:'normal',
-  estAliado:null, estInimigo:null, aoTerminar:null, contexto:null,
+  estAliado:null, estInimigo:null, aoTerminar:null, contexto:null, arena:null,
 
   /* ---------- ciclo de vida ---------- */
   iniciar(aliado, inimigo, opts={}){
@@ -30,6 +30,9 @@ const Batalha = {
     this.eventos = [];
     this.aoTerminar = opts.aoTerminar || null;
     this.contexto = opts.contexto || null;
+    /* Cena pode fixar a arena quando o ambiente do capítulo não
+       descreve o canto exato da briga (um porão dentro do mato). */
+    this.arena = opts.arena || null;
     this.treinador = opts.treinador || null;
     this.timeInimigo = opts.timeInimigo || null;
     this.estAliado = this.novoEstado();

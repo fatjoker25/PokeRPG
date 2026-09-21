@@ -297,7 +297,8 @@ const Jogo = {
       fuga: permiteFuga,
       treinador: b.treinador,
       timeInimigo,
-      introducao: b.intro
+      introducao: b.intro,
+      arena: b.arena || null
     });
     UI.telaBatalha();
   },

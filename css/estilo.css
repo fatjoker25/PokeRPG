@@ -416,14 +416,128 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .dado-caixa.min{border-color:color-mix(in srgb, var(--perigo) 50%, var(--borda))}
 
 /* ---------- combate ---------- */
-.arena{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:9px}
-@media(max-width:620px){.arena{grid-template-columns:1fr}}
-.lutador{
-  background:linear-gradient(180deg, var(--bg-2), color-mix(in srgb, var(--bg-2) 85%, #000));
-  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
-  animation:surge .4s var(--suave) both;
+/* A arena é desenhada aqui, em CSS: fundo, horizonte e as duas bases.
+   Cinco arenas (grama, água, caverna, prédio, ginásio) e um tom por
+   ambiente por cima. Nenhum arquivo externo, então o combate continua
+   com cara de combate com o jogo aberto offline, em file://. */
+.arena{
+  position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  margin-bottom:9px;padding:14px 11px 11px;border-radius:var(--raio-sm);
+  align-items:end;
+  border:1px solid var(--borda);overflow:hidden;isolation:isolate;
+  /* tons padrão — cada arena reescreve os seus */
+  --ar-alto-1:#1b2430; --ar-alto-2:#141b25;
+  --ar-baixo-1:#1d2a22; --ar-baixo-2:#121a15;
+  --ar-linha:rgba(255,255,255,.07);
+  --ar-base-1:rgba(120,170,120,.42); --ar-base-2:rgba(70,110,75,.22);
+  background:linear-gradient(180deg,
+    var(--ar-alto-1) 0%, var(--ar-alto-2) 36%,
+    var(--ar-baixo-1) 36%, var(--ar-baixo-2) 100%);
 }
-.lutador.inimigo{border-color:#4b3136;background:linear-gradient(180deg, #1d1a20, #16141a)}
+/* a linha do horizonte, onde o fundo troca de metade */
+.arena::before{
+  content:'';position:absolute;left:0;right:0;top:36%;height:1px;z-index:0;
+  background:linear-gradient(90deg, transparent, var(--ar-linha) 18%, var(--ar-linha) 82%, transparent);
+}
+/* a textura de cada arena entra aqui, sem atrapalhar a leitura */
+.arena::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  opacity:.5;background:var(--ar-textura, none);
+}
+.arena > *{position:relative;z-index:1}
+@media(max-width:620px){.arena{grid-template-columns:1fr;padding:9px}}
+
+/* --- grama: rota aberta, mato alto no horizonte --- */
+.arena-grama{
+  --ar-alto-1:#1a2a33; --ar-alto-2:#16242c;
+  --ar-baixo-1:#1e3122; --ar-baixo-2:#101b13;
+  --ar-linha:rgba(150,200,140,.16);
+  --ar-base-1:rgba(126,190,116,.42); --ar-base-2:rgba(58,104,62,.2);
+  --ar-textura:repeating-linear-gradient(94deg,
+    rgba(150,205,140,.07) 0 2px, transparent 2px 9px);
+}
+.arena-grama[data-ambiente="floresta"]{
+  --ar-alto-1:#16241f; --ar-alto-2:#111c18;
+  --ar-baixo-1:#182a1e; --ar-baixo-2:#0d1611;
+  --ar-base-1:rgba(104,162,100,.36); --ar-base-2:rgba(48,88,54,.18);
+}
+/* --- água: mar, rio, doca --- */
+.arena-agua{
+  --ar-alto-1:#17293a; --ar-alto-2:#132233;
+  --ar-baixo-1:#15384d; --ar-baixo-2:#0b1b27;
+  --ar-linha:rgba(150,205,235,.2);
+  --ar-base-1:rgba(120,185,220,.4); --ar-base-2:rgba(46,96,130,.22);
+  --ar-textura:repeating-linear-gradient(180deg,
+    rgba(160,215,240,.08) 0 1px, transparent 1px 7px);
+}
+/* --- caverna: pedra, teto baixo --- */
+.arena-caverna{
+  --ar-alto-1:#201c1a; --ar-alto-2:#17130f;
+  --ar-baixo-1:#2a2420; --ar-baixo-2:#141010;
+  --ar-linha:rgba(220,190,160,.12);
+  --ar-base-1:rgba(178,150,120,.38); --ar-base-2:rgba(96,76,58,.2);
+  --ar-textura:repeating-linear-gradient(118deg,
+    rgba(230,200,165,.05) 0 3px, transparent 3px 14px);
+}
+/* montanha é a mesma pedra com o céu aberto em cima */
+.arena-caverna[data-ambiente="montanha"]{
+  --ar-alto-1:#1d2735; --ar-alto-2:#17202b;
+  --ar-linha:rgba(200,215,235,.16);
+}
+/* vulcão é a mesma pedra com brasa embaixo */
+.arena-caverna[data-ambiente="vulcao"]{
+  --ar-baixo-1:#3a1d16; --ar-baixo-2:#190c0a;
+  --ar-linha:rgba(255,150,80,.24);
+  --ar-base-1:rgba(226,132,72,.4); --ar-base-2:rgba(120,50,28,.24);
+}
+/* --- prédio: asfalto, pátio, piso duro --- */
+.arena-predio{
+  --ar-alto-1:#1c2028; --ar-alto-2:#15181e;
+  --ar-baixo-1:#21252c; --ar-baixo-2:#111316;
+  --ar-linha:rgba(200,210,225,.14);
+  --ar-base-1:rgba(150,160,175,.34); --ar-base-2:rgba(78,86,98,.2);
+  --ar-textura:repeating-linear-gradient(90deg,
+    rgba(210,220,235,.045) 0 1px, transparent 1px 26px);
+}
+/* usina parada, prédio sem manutenção */
+.arena-predio[data-ambiente="ruina"]{
+  --ar-alto-1:#1f2119; --ar-alto-2:#161811;
+  --ar-baixo-1:#24261c; --ar-baixo-2:#111209;
+  --ar-base-1:rgba(160,158,120,.3); --ar-base-2:rgba(82,80,56,.18);
+}
+/* Lavender: mesmo piso, luz de vela */
+.arena-predio[data-ambiente="cemiterio"]{
+  --ar-alto-1:#211c2a; --ar-alto-2:#181322;
+  --ar-baixo-1:#242030; --ar-baixo-2:#100d18;
+  --ar-linha:rgba(200,180,235,.16);
+  --ar-base-1:rgba(160,144,196,.32); --ar-base-2:rgba(80,68,110,.2);
+}
+/* --- ginásio: quadra oficial, piso marcado --- */
+.arena-ginasio{
+  --ar-alto-1:#1a1f2b; --ar-alto-2:#141822;
+  --ar-baixo-1:#2b2419; --ar-baixo-2:#16120c;
+  --ar-linha:rgba(245,197,24,.3);
+  --ar-base-1:rgba(226,190,90,.4); --ar-base-2:rgba(120,96,36,.22);
+  --ar-textura:
+    repeating-linear-gradient(90deg, rgba(245,215,130,.06) 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(0deg, rgba(245,215,130,.05) 0 1px, transparent 1px 34px);
+}
+
+/* O lutador não é mais uma caixa: é o bicho em pé no cenário, com a
+   ficha embaixo. É a arte solta por cima do fundo que faz a arena
+   aparecer — a caixa fechada tapava a cena inteira. */
+.lutador{display:flex;flex-direction:column;justify-content:flex-end;animation:surge .4s var(--suave) both}
+.lutador .ficha{
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--bg-2) 82%, transparent),
+    color-mix(in srgb, var(--bg-2) 92%, #000));
+  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
+  backdrop-filter:blur(3px);
+}
+.lutador.inimigo .ficha{
+  border-color:#4b3136;
+  background:linear-gradient(180deg, rgba(29,26,32,.8), rgba(22,20,26,.92));
+}
 .lutador .nome{font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .lutador .nv{font-size:12px;color:var(--texto-fraco);font-family:var(--mono)}
 .lutador .meta{font-size:11.5px;color:var(--texto-fraco);margin-top:1px;line-height:1.35}
@@ -1178,10 +1292,22 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 /* arena: o seu de costas, o outro de frente.
    Sem a pasta de sprites a <img> se remove e o espaço fecha junto. */
 .lutador .arte{
-  height:76px;display:flex;align-items:flex-end;justify-content:center;
-  margin:-2px 0 1px
+  height:86px;display:flex;align-items:flex-end;justify-content:center;
+  margin:0 0 9px;position:relative
 }
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
+/* as duas bases: a sua fica mais perto (maior e mais baixa), a do
+   outro lado fica mais longe (menor e mais alta) — é o que dá a
+   profundidade da cena sem precisar de arquivo de imagem. */
+.lutador .arte:not(:empty)::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  border-radius:50%;z-index:0;
+  background:radial-gradient(ellipse at 50% 42%,
+    var(--ar-base-1) 0%, var(--ar-base-2) 62%, transparent 74%);
+}
+.lutador.aliado .arte:not(:empty)::after{width:112px;height:26px;bottom:-9px}
+.lutador.inimigo .arte:not(:empty)::after{width:86px;height:19px;bottom:-4px}
+.lutador .arte .sprite{position:relative;z-index:1}
 .lutador .arte .sprite{
   width:74px;height:74px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
@@ -1193,7 +1319,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 }
 @media(prefers-reduced-motion:reduce){.lutador .arte .sprite{animation:none}}
 @media(max-width:620px){
-  .lutador .arte{height:80px}
+  .lutador .arte{height:84px}
   .lutador .arte .sprite{width:74px;height:74px}
 }
 

@@ -75,6 +75,25 @@ fechada é o que faz querer a chave.
 Cena nova que dependa disso entra em `js/story/campo.js`, com `portaDeCampo()`
 pro rótulo que muda sozinho. `ferramentas/chk-campo.js` confere.
 
+## A arena sai do lugar
+O fundo de combate não é arquivo de imagem: as cinco arenas são desenhadas em
+CSS (`.arena-grama`, `-agua`, `-caverna`, `-predio`, `-ginasio`), justamente
+pra continuarem funcionando com o jogo aberto offline em `file://`. Cada
+ambiente escrito — no capítulo ou no ponto do mapa — cai numa delas por
+`ARENA_POR_AMBIENTE`, em `js/data/arenas.js`:
+
+- `campo`, `floresta` → grama;
+- `agua` → água;
+- `caverna`, `montanha`, `vulcao` → rocha;
+- `cidade`, `ruina`, `cemiterio` → piso duro;
+- ginásio, Elite dos Quatro e torneio entram **por cima de tudo**, na quadra.
+
+Ambiente novo em capítulo ou em `LOCAIS` tem que entrar no mapa junto, senão
+cai no fundo padrão sem ninguém perceber — `ferramentas/chk-arenas.js` confere
+isso e também se cada arena tem desenho no CSS. Ambiente que quiser um tom
+próprio usa `[data-ambiente="..."]` sobre a arena dele, sem virar arena nova.
+Cena que precise fixar a arena passa `arena:` na batalha.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
@@ -84,7 +103,8 @@ pro rótulo que muda sozinho. `ferramentas/chk-campo.js` confere.
 - Texto do jogo em português do Brasil. Comentário de código também.
 
 ## Onde as coisas ficam
-- `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav.
+- `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
+  nomes, porte, arenas.
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
 - `js/story/` — capítulos (`cap-01` a `cap-28`), lugares, mercado, eventos, motor.
 - `js/ui/interface.js` — todas as telas e modais.
