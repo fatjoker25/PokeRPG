@@ -75,7 +75,7 @@ c14_ab_o_casal:{
 
 c14_ab_o_nome_do_filho:{
   texto:[
-    fala('a mulher do ferry', 'Kaoru. Kaoru Ishida.'),
+    fala('a mulher do ferry', 'Kira. Kira Ishida.'),
     'Ela fala o nome inteiro, com sobrenome, do jeito que se fala um nome que ninguém mais fala.',
     fala('a mulher do ferry', 'Ele era bioquímico. Vinte e nove anos.'),
     d=>fala(d.jogador.nome, 'E o que foi o acidente?'),
@@ -87,7 +87,7 @@ c14_ab_o_nome_do_filho:{
     fala('o homem do ferry', 'Hoje eu tenho cabeça e não tenho mais nada pra assinar.')
   ],
   ef:{flag:'kaoru_ishida',
-      registrar:'Kaoru Ishida, bioquímico, 29 anos, morreu no laboratório de Cinnabar em 1988. Caixão lacrado.',
+      registrar:'Kira Ishida, bioquímico, 29 anos, morreu no laboratório de Cinnabar em 1988. Caixão lacrado.',
       presagio:'Caixão lacrado por exposição a reagente é decisão de quem não quer que se veja o corpo.'},
   escolhas:[
     {texto:'Desembarcar e ir direto ao laboratório.', vai:'c14_lab'},
@@ -366,12 +366,12 @@ c14_barco_fretado:{
     '"Isso é tinta de casco de fretado de Vermilion. Aqui a gente usa tinta cinza, que é mais barata e aguenta mais enxofre."',
     '"E tem registro de atracação?"',
     'Ele ri.',
-    '"Registro? Moço, aqui não tem capitania. Tem o Sr. Nagai, que anota quem usa o guincho porque ele cobra por uso."',
+    '"Registro? Moço, aqui não tem capitania. Tem o Sr. Nolan, que anota quem usa o guincho porque ele cobra por uso."',
     'Ele aponta um caderno pendurado num prego na parede do barracão do guincho.',
     'Um caderno espiral, pendurado num prego, com um lápis amarrado num barbante.',
     'Você folheia até sábado passado.',
     '**"sáb 14 — fretado azul — 2 pessoas — 40 min — pagou"**',
-    'E embaixo, na mesma linha, na letra do Sr. Nagai:',
+    'E embaixo, na mesma linha, na letra do Sr. Nolan:',
     '**"levaram 4 caixa de papelão"**'
   ],
   ef:{flag:['sabe_das_quatro_caixas','provas_cinnabar'],
@@ -392,7 +392,7 @@ c14_quantas_ficaram:{
     'O homem do bar franze a testa.',
     '"Como assim ficaram? Eles levaram quatro."',
     '"Eu sei. Quantas tinha no total?"',
-    'E aí o Sr. Nagai, que estava ouvindo encostado no barracão sem participar, fala pela primeira vez.',
+    'E aí o Sr. Nolan, que estava ouvindo encostado no barracão sem participar, fala pela primeira vez.',
     '"Nove."',
     'Os dois olham pra ele.',
     '"Nove", ele repete. "Eu sei porque em noventa e seis eu carreguei as nove no guincho. Quatro foram pro fretado e cinco voltaram pro prédio."',
@@ -402,7 +402,7 @@ c14_quantas_ficaram:{
     '"E agora voltaram pra buscar as cinco e não acharam, e aí botaram fogo."'
   ],
   ef:{flag:['sabe_das_nove_caixas','sabe_das_cinco'],
-      npc:{nome:'Sr. Nagai', opiniao:3, memoria:'Carregou as nove caixas em 1996. Quatro foram embora, cinco voltaram para o prédio.'},
+      npc:{nome:'Sr. Nolan', opiniao:3, memoria:'Carregou as nove caixas em 1996. Quatro foram embora, cinco voltaram para o prédio.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou quantas eram no total'},
       instabilidade:1,
       registrar:'Em 1996 saíram quatro das nove caixas. As cinco restantes não foram achadas no sábado, e o prédio foi incendiado.',
@@ -419,7 +419,7 @@ c14_quem_escondeu:{
   texto:[
     '"Quem escondeu as cinco?"',
     'Os dois ficam quietos.',
-    'E aí o Sr. Nagai fala uma coisa e você percebe que ele já tinha decidido falar isso antes de você chegar na ilha, e que ele está esperando alguém perguntar faz quatro anos:',
+    'E aí o Sr. Nolan fala uma coisa e você percebe que ele já tinha decidido falar isso antes de você chegar na ilha, e que ele está esperando alguém perguntar faz quatro anos:',
     '"Em noventa e seis, quando as cinco voltaram do guincho pro prédio, eu levei elas num carrinho até a porta do subsolo."',
     '"E?"',
     '"E o que abriu a porta pra mim não era da Silph."',
@@ -441,7 +441,7 @@ c14_quem_escondeu:{
 
 c14_selma:{
   texto:[
-    'Ela se chama Sra. Maeda, tem setenta e um anos, e trabalhou na limpeza do laboratório de mil novecentos e setenta e nove a mil novecentos e noventa e sete.',
+    'Ela se chama Sra. Wilma, tem setenta e um anos, e trabalhou na limpeza do laboratório de mil novecentos e setenta e nove a mil novecentos e noventa e sete.',
     'Dezoito anos.',
     'Ela te recebe no portão e não abre o portão, e você conversa com ela por cima de um muro de meio metro, e ela aceita o café que você compra na padaria da esquina e bebe em pé.',
     'E fala, depois de aceitar o café e antes de se arrepender:',
@@ -455,7 +455,7 @@ c14_selma:{
     '"E aí um dia não tinha mais tanque, não tinha mais teto, e não tinha mais o Doutor Fuji."'
   ],
   ef:{flag:'ouviu_historia_lab',
-      npc:{nome:'Sra. Maeda', opiniao:2, memoria:'Limpou o laboratório de Cinnabar por dezoito anos, até a linha de fita amarela no chão.'},
+      npc:{nome:'Sra. Wilma', opiniao:2, memoria:'Limpou o laboratório de Cinnabar por dezoito anos, até a linha de fita amarela no chão.'},
       registrar:'Havia um tanque no subsolo do laboratório. O que estava dentro cresceu demais para ele.',
       presagio:'Ela limpava até a fita e parava. Dezoito anos parando na fita.'},
   escolhas:[
@@ -483,7 +483,7 @@ c14_fuji_morreu:{
   ],
   ef:{flag:['sabe_do_iptu','fuji_sem_enterro'],
       rep:{eixo:'bom',delta:4,motivo:'Perguntou pelo enterro'},
-      npc:{nome:'Sra. Maeda', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o IPTU da casa dele.'},
+      npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o IPTU da casa dele.'},
       registrar:'O Dr. Fuji não teve enterro. Alguém paga o IPTU da casa dele até hoje.',
       presagio:'Numa ilha de setecentas pessoas todo mundo vai em todo enterro. Menos nesse.'},
   escolhas:[
@@ -513,7 +513,7 @@ c14_quem_paga:{
     {texto:'Ir ao ginásio.', vai:'c14_ginasio'},
     {texto:'Ir à casa do Fuji.', vai:'c14_casa_do_fuji'},
     {texto:'Ir ao laboratório.', vai:'c14_lab'},
-    {texto:'Voltar e perguntar mais pra Sra. Maeda.', vai:'c14_selma'}
+    {texto:'Voltar e perguntar mais pra Sra. Wilma.', vai:'c14_selma'}
   ]
 },
 
@@ -834,7 +834,7 @@ c14_pode_parar:{
   texto:[
     '"A gente pode parar isso."',
     '"Como?"',
-    'Você conta o que tem: as fotos, as planilhas, os nomes, o que a Dra. Sonoda disse, a data do encerramento, a Dra. Cordell.',
+    'Você conta o que tem: as fotos, as planilhas, os nomes, o que a Dra. Sorrel disse, a data do encerramento, a Dra. Cordell.',
     'Ele ouve inteiro.',
     '"Isso é bom."',
     '"Mas?"',
@@ -1146,7 +1146,7 @@ c14_caderno:{
     'É o caderno 7 de verdade.',
     'Dias duzentos e quarenta e dois em diante.',
     '**"Dia 242. Tiraram-me do projeto ontem às 15h20. Entreguei crachá, chave e as chaves do carro do instituto. Não entreguei os cadernos porque ninguém pediu os cadernos."**',
-    '**"Dia 243. Fui ao prédio à noite. O vigia é o Sr. Tokuda e ele me deixou entrar porque eu trabalho aqui há vinte e dois anos e ninguém avisou o Sr. Tokuda de nada."**',
+    '**"Dia 243. Fui ao prédio à noite. O vigia é o Sr. Berto e ele me deixou entrar porque eu trabalho aqui há vinte e dois anos e ninguém avisou o Sr. Berto de nada."**',
     '**"Dia 243 (cont.). Falei com ele por quatro horas. Contei que eu tinha sido afastado. Contei que eu não ia mais poder vir. Ele perguntou por quê e eu disse a verdade, que é que eu disse não."**',
     '**"Ele perguntou não pra quê."**',
     '**"Eu disse: não pra continuar."**',
@@ -1168,7 +1168,7 @@ c14_caderno:{
 
 c14_caderno2:{
   texto:[
-    '**"Dia 244. Ele passou a noite inteira sem responder. O Sr. Tokuda me deixou ficar."**',
+    '**"Dia 244. Ele passou a noite inteira sem responder. O Sr. Berto me deixou ficar."**',
     '**"Dia 245. Pediu pra sair. Segunda vez. Usou a palavra por favor as duas vezes."**',
     '**"Dia 245 (cont.). Eu disse que não tenho autoridade. Ele perguntou quem tem. Eu disse um conselho em Saffron. Ele perguntou se o conselho já conversou com ele alguma vez."**',
     '**"Eu disse que não."**',
@@ -1589,7 +1589,7 @@ c14_subsolo:{
   texto:[
     'O subsolo não queimou, porque concreto não queima.',
     'A escada desce nove metros e no fim tem um corredor com uma linha de fita amarela no chão, desbotada, com a borda descolando.',
-    'A fita que a Sra. Maeda nunca passou em dezoito anos.',
+    'A fita que a Sra. Wilma nunca passou em dezoito anos.',
     'Você passa.',
     'A sala do tanque tem trinta metros por quinze e nove de pé-direito, e não tem tanque.',
     'Tem o buraco onde ele estava: um poço de concreto de quatro metros de diâmetro e três de profundidade, com a estrutura de fixação arrancada e o aço torcido pra fora.',
@@ -1643,7 +1643,7 @@ c14_mesa_do_subsolo:{
     'Encostada na parede, longe do poço, tem uma mesa de laboratório de aço inox.',
     'Em cima dela: um copo de vidro, uma caneta, e um livro de registro de acesso ao subsolo — daqueles de portaria, com coluna de nome, hora de entrada e hora de saída.',
     'A última página escrita é a do dia doze de novembro de mil novecentos e noventa e seis.',
-    '**21h40 — FUJI, A. — entrada — autorizado por: TOKUDA, S. (vigia)**',
+    '**21h40 — FUJI, A. — entrada — autorizado por: BERTO, S. (vigia)**',
     'E a coluna de saída, na mesma linha, está preenchida.',
     'Preenchida.',
     '**04h10 — saída**',
@@ -1660,7 +1660,7 @@ c14_mesa_do_subsolo:{
       presagio:'Ele saiu. Quatro anos de luto e ele saiu, e está escrito num livro de portaria.'},
   escolhas:[
     {texto:'Levar isso pro Blaine. Correndo.', vai:'c14_correu_pro_blaine'},
-    {texto:'Procurar o vigia Tokuda.', vai:'c14_tokuda'},
+    {texto:'Procurar o vigia Berto.', vai:'c14_tokuda'},
     {texto:'Arrancar a folha e guardar.', vai:'c14_correu_pro_blaine'},
     {texto:'Ficar ali sentado com isso um tempo.', vai:'c14_tokuda'}
   ]
@@ -1668,7 +1668,7 @@ c14_mesa_do_subsolo:{
 
 c14_tokuda:{
   texto:[
-    'Numa ilha de setecentas pessoas, achar o Sr. Tokuda leva quarenta minutos e três perguntas.',
+    'Numa ilha de setecentas pessoas, achar o Sr. Berto leva quarenta minutos e três perguntas.',
     'Ele tem oitenta e um anos, mora com a filha, e está sentado na varanda vendo a rua, do jeito que velho de ilha faz.',
     'Quando você diz "livro de acesso", ele te olha com olho de quem enxerga mal e ouve bem.',
     '"Eu anotei a saída."',
@@ -1682,10 +1682,10 @@ c14_tokuda:{
     '"Eu tinha setenta e sete anos e trabalhava naquela portaria há dezenove."'
   ],
   ef:{flag:['conheceu_tokuda','tokuda_confirma'],
-      npc:{nome:'Sr. Tokuda', opiniao:5, memoria:'Anotou a saída do Dr. Fuji às 4h10 e foi chamado de velho confuso por uma mulher de terno de Saffron.'},
+      npc:{nome:'Sr. Berto', opiniao:5, memoria:'Anotou a saída do Dr. Fuji às 4h10 e foi chamado de velho confuso por uma mulher de terno de Saffron.'},
       rep:{eixo:'bom',delta:5,motivo:'Foi perguntar ao homem que escreveu a linha'},
       moral:-8,
-      registrar:'O Sr. Tokuda confirma que o Dr. Fuji saiu do laboratório às 4h10 de 13/11/1996.',
+      registrar:'O Sr. Berto confirma que o Dr. Fuji saiu do laboratório às 4h10 de 13/11/1996.',
       presagio:'Disseram que ele se confundiu porque é velho. Ele lembra a hora exata em quatro anos.'},
   escolhas:[
     {texto:'"Pra onde ele foi?"', vai:'c14_pra_onde_ele_foi'},
@@ -1698,7 +1698,7 @@ c14_tokuda:{
 c14_pra_onde_ele_foi:{
   texto:[
     '"Pra onde ele foi?"',
-    'O Sr. Tokuda aponta com a bengala.',
+    'O Sr. Berto aponta com a bengala.',
     'Ele aponta pro vulcão.',
     '"Ele saiu e virou à direita, e à direita é a estrada da encosta, e a estrada da encosta não vai pra lugar nenhum a não ser pra cima."',
     '"Sozinho?"',
@@ -1713,7 +1713,7 @@ c14_pra_onde_ele_foi:{
     '"E faz quatro anos que eu penso que eu devia ter seguido."'
   ],
   ef:{flag:['subiram_juntos','sabe_que_subiram'],
-      npc:{nome:'Sr. Tokuda', opiniao:8, memoria:'Viu o Dr. Fuji subir a estrada da encosta às 4h10 com alguma coisa andando do lado dele, no mesmo passo.'},
+      npc:{nome:'Sr. Berto', opiniao:8, memoria:'Viu o Dr. Fuji subir a estrada da encosta às 4h10 com alguma coisa andando do lado dele, no mesmo passo.'},
       rep:{eixo:'bom',delta:6,motivo:'Perguntou pra onde ele foi'},
       instabilidade:2, moral:-10,
       registrar:'O Dr. Fuji subiu o vulcão às 4h10 com alguma coisa andando ao lado dele, no mesmo passo.',
@@ -1722,7 +1722,7 @@ c14_pra_onde_ele_foi:{
     {texto:'Subir o vulcão agora.', vai:'c14_vulcao'},
     {texto:'Buscar o Blaine antes.', vai:'c14_correu_pro_blaine'},
     {texto:'"Por que o senhor não contou?"', vai:'c14_correu_pro_blaine'},
-    {texto:'Levar o Tokuda pra falar com o Blaine.', vai:'c14_correu_pro_blaine'}
+    {texto:'Levar o Berto pra falar com o Blaine.', vai:'c14_correu_pro_blaine'}
   ]
 },
 
@@ -1736,7 +1736,7 @@ c14_correu_pro_blaine:{
     'E depois lê pela terceira vez, com o dedo em cima da coluna de saída, e o dedo dele treme de um jeito que não é de idade.',
     '"Quatro e dez."',
     '"Quatro e dez."',
-    d=>d.flags.subiram_juntos ? '"E o Tokuda diz que os dois subiram a estrada da encosta."\n"Os dois?"\n"Os dois."\nEle se levanta da cadeira de balanço de uma vez, sem apoiar em nada, o que ele não faz há uns dez anos.' :
+    d=>d.flags.subiram_juntos ? '"E o Berto diz que os dois subiram a estrada da encosta."\n"Os dois?"\n"Os dois."\nEle se levanta da cadeira de balanço de uma vez, sem apoiar em nada, o que ele não faz há uns dez anos.' :
        'Ele levanta da cadeira sem apoiar em nada, o que ele não faz há uns dez anos.',
     '"Quarenta anos de ginásio dentro daquele vulcão."',
     '"Quarenta anos, meu filho, e eu nunca subi até a cratera."'
@@ -1750,7 +1750,7 @@ c14_correu_pro_blaine:{
   escolhas:[
     {texto:'Subir o vulcão com ele.', vai:'c14_vulcao'},
     {texto:'"O senhor não precisa subir."', vai:'c14_vulcao'},
-    {texto:'Ir buscar o Tokuda também.', vai:'c14_vulcao'},
+    {texto:'Ir buscar o Berto também.', vai:'c14_vulcao'},
     {texto:'Ir ver o acervo antes.', vai:'c14_ginasio_por_dentro'}
   ]
 },
@@ -2187,10 +2187,10 @@ c14_viu_o_tanque:{
     '"E eu peguei o carrinho e saí, e eu nunca mais entrei naquele corredor, e faz cinco anos que eu acordo com isso umas duas vezes por mês."'
   ],
   ef:{flag:['selma_acenou','ouviu_historia_lab'],
-      npc:{nome:'Sra. Maeda', opiniao:6, memoria:'Acenou para Mewtwo por um vidro em 1995 e ele acenou de volta. Acorda com isso duas vezes por mês.'},
+      npc:{nome:'Sra. Wilma', opiniao:6, memoria:'Acenou para Mewtwo por um vidro em 1995 e ele acenou de volta. Acorda com isso duas vezes por mês.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou se ela tinha visto'},
       moral:-15,
-      registrar:'Sra. Maeda acenou para o que estava no tanque em 1995, e ele acenou de volta.',
+      registrar:'Sra. Wilma acenou para o que estava no tanque em 1995, e ele acenou de volta.',
       presagio:'Ela acenou antes de pensar. Foi a única pessoa naquele prédio que fez isso.'},
   escolhas:[
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
@@ -2220,10 +2220,10 @@ c14_selma_contou:{
     '"E depois ele disse: “então ele conhecia mais gente do que a gente achava”."'
   ],
   ef:{flag:['selma_e_blaine','sabe_do_blaine'],
-      npc:{nome:'Sra. Maeda', opiniao:8, memoria:'Contou ao Blaine em 1997 sobre o aceno, e ele chorou no degrau dela.'},
+      npc:{nome:'Sra. Wilma', opiniao:8, memoria:'Contou ao Blaine em 1997 sobre o aceno, e ele chorou no degrau dela.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou se ela tinha contado'},
       moral:-8,
-      registrar:'Blaine ouviu de Sra. Maeda em 1997 sobre o aceno. "Então ele conhecia mais gente do que a gente achava."',
+      registrar:'Blaine ouviu de Sra. Wilma em 1997 sobre o aceno. "Então ele conhecia mais gente do que a gente achava."',
       presagio:'Ele conhecia mais gente do que a gente achava. Some as pessoas desse capítulo.'},
   escolhas:[
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
@@ -2250,9 +2250,9 @@ c14_incendio_da_semana:{
     '"Eles não queriam queimar o prédio, meu bem. Eles queriam queimar uma sala."'
   ],
   ef:{flag:['selma_viu_o_incendio','sabe_que_foi_forjado'],
-      npc:{nome:'Sra. Maeda', opiniao:5, memoria:'Viu os dois homens e o carro alugado às 3h de sábado, e chamou o João da brigada.'},
+      npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Viu os dois homens e o carro alugado às 3h de sábado, e chamou o João da brigada.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a quem mora do lado'},
-      registrar:'Sra. Maeda viu dois homens e um carro alugado às 3h de sábado. O fogo foi contido em 40 minutos.',
+      registrar:'Sra. Wilma viu dois homens e um carro alugado às 3h de sábado. O fogo foi contido em 40 minutos.',
       presagio:'Eles queriam queimar uma sala. E a sala não tinha o que eles procuravam.'},
   escolhas:[
     {texto:'"A senhora sabe o nome deles?"', vai:'c14_barco_fretado'},

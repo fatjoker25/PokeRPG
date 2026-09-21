@@ -30,7 +30,7 @@ const PRECO_BASE = {
    vende repelente, porque ninguém em Lavender vai pro mato. */
 const LOJAS = {
   pallet: {
-    nome:'Mercado do Sr. Eguchi',
+    nome:'Mercado do Sr. Fenwick',
     ar:'Um mercado de bairro que vende Poké Ball atrás do balcão, junto com pilha e anzol. Ele te conhece desde pequeno e cobra o mesmo de todo mundo.',
     mult:1.0,
     itens:['Poké Ball','Potion','Antidote','Isca','Ração','Pilha','Cantil']
@@ -42,7 +42,7 @@ const LOJAS = {
     itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto','Sino Calmante','Mochila Verde','Bolsa Cinza']
   },
   pewter: {
-    nome:'Casa de Ferragens Bandō',
+    nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
     itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro','Mochila Marrom']
@@ -109,7 +109,7 @@ const LOJAS = {
     itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
   },
   cinnabar: {
-    nome:'Vitrine da Sra. Suzu',
+    nome:'Vitrine da Sra. Juna',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
     itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
@@ -164,7 +164,7 @@ const TROCAS = {
   }],
   cerulean: [{
     id:'cerulean_1',
-    quem:'Lígia, da escola de natação',
+    quem:'Beatrix, da escola de natação',
     onde:'na borda rasa, depois da aula das crianças',
     pede:61, da:{dex:86, nivel:[24,28], apelido:'Bolha', natureza:'Calm'},
     fala:'"Meu Seel não gosta de água parada. Ele nasceu aqui e ele odeia piscina, dá pra acreditar?"',
@@ -212,12 +212,12 @@ const TROCAS = {
   }],
   tunel_rocha: [{
     id:'tunel_1',
-    quem:'Nilton da pedreira',
+    quem:'Arlo da pedreira',
     onde:'no meio do Túnel da Rocha, de capacete com lanterna, mapeando o teto',
     pede:75, da:{dex:67, nivel:[26,30], apelido:'Bloco', natureza:'Adamant'},
     trocaEvolui:true,
     fala:'"Eu tenho um Machoke e nenhuma pedra pra ele quebrar. Você tem Graveler? Aqui ele ia ser feliz."',
-    depois:'Duas semanas depois chega um bilhete pelo Centro Pokémon: "O seu virou Golem no dia seguinte. Eu chorei um pouco. Nilton."',
+    depois:'Duas semanas depois chega um bilhete pelo Centro Pokémon: "O seu virou Golem no dia seguinte. Eu chorei um pouco. Arlo."',
     memoria:'Trocou um Machoke pelo seu Graveler no portão da pedreira.'
   }],
   monte_lua: [{
@@ -231,7 +231,7 @@ const TROCAS = {
   }],
   rota11: [{
     id:'rota11_1',
-    quem:'Toshi ou outro menino do cais',
+    quem:'Nolan ou outro menino do cais',
     onde:'sentado no barranco da Rota 11, com um balde e uma vara curta',
     pede:98, da:{dex:90, nivel:[22,26], apelido:'Tampa', natureza:'Impish'},
     fala:'"Eu acho Shellder demais e Krabby quase nunca. Você troca? É troca de igual, eu não tô querendo levar vantagem."',

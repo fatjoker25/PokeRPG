@@ -474,7 +474,7 @@ c3_surpresa:{
     '"Ô —" começa o mais velho, e não termina.'
   ],
   ef:{flag:'atacou_de_surpresa'},
-  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Otto', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
@@ -673,7 +673,7 @@ c3_caçadores:{
        (d.flags.pikachu_aliado || d.flags.pikachu_capturado_preso ? '"Cadê o amarelo." Não é pergunta.' :
         '"Viu alguma coisa aí atrás?" Ele sorri. O sorriso não sobe até os olhos.')
   ],
-  ef:{npc:{nome:'Caçador Otto', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
+  ef:{npc:{nome:'Caçador Roque', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
   escolhas:[
     {texto:'Enfrentar. Alguém tem que enfrentar.', vai:'c3_luta_cacador'},
     {texto:'Mentir. Dizer que não viu nada.', vai:'c3_mentir'},
@@ -714,7 +714,7 @@ c3_negociou_alto:{
   ],
   ef:{flag:['inimigo_cacadores','soltou_dois_da_caminhonete'],
       rep:{eixo:'bom',delta:2,motivo:'Negociou a soltura de dois Pokémon com quem os capturou'},
-      npc:{nome:'Caçador Otto', opiniao:-4, memoria:'Você o forçou a soltar dois. Ele anotou seu rosto na floresta.'},
+      npc:{nome:'Caçador Roque', opiniao:-4, memoria:'Você o forçou a soltar dois. Ele anotou seu rosto na floresta.'},
       registrar:'Negociou a soltura de dois Pokémon. Os caçadores anotaram seu rosto.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
@@ -729,7 +729,7 @@ c3_devolveu_mochila:{
     '"Vai embora, garoto."'
   ],
   ef:{perdeItens:{'Great Ball':3},
-      npc:{nome:'Caçador Otto', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
+      npc:{nome:'Caçador Roque', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
   escolhas:[{texto:'Ir embora.', vai:'c3_fim'}]
 },
 
@@ -742,7 +742,7 @@ c3_correu_com_mochila:{
   ],
   ef:{hp:-4, causa:'Corrida com a mochila roubada',
       flag:['inimigo_cacadores','provas_da_floresta'],
-      npc:{nome:'Caçador Otto', opiniao:-5, memoria:'Você roubou a mochila dele e correu. Ele te procurou por dois dias.'},
+      npc:{nome:'Caçador Roque', opiniao:-5, memoria:'Você roubou a mochila dele e correu. Ele te procurou por dois dias.'},
       rep:{eixo:'bom',delta:1,motivo:'Roubou de quem rouba'}},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
@@ -753,7 +753,7 @@ c3_luta_cacador:{
     'Ele solta a bola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
     '"Rápido", ele diz pro parceiro. "A gente tem que descer ainda hoje."'
   ],
-  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Otto', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
@@ -765,7 +765,7 @@ c3_venceu_cacador:{
     'Eles saem pela trilha. Sem pressa nenhuma. O mais velho para uma vez e olha pra trás, não pra você — pra clareira.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores na Floresta de Viridian'},
-      npc:{nome:'Caçador Otto', opiniao:-5, memoria:'Você o derrotou na floresta. Ele anotou seu rosto.'},
+      npc:{nome:'Caçador Roque', opiniao:-5, memoria:'Você o derrotou na floresta. Ele anotou seu rosto.'},
       flag:'inimigo_cacadores', registrar:'Fez inimigos: os caçadores da floresta anotaram seu rosto.'},
   escolhas:[
     {texto:'Seguir eles.', vai:'c3_seguir_depois'},
@@ -797,7 +797,7 @@ c3_perdeu_cacador:{
     'É aritmética. Tudo nele é aritmética.'
   ],
   ef:{dinheiro:-500, hp:-5, causa:'Espancamento na Floresta de Viridian',
-      npc:{nome:'Caçador Otto', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
+      npc:{nome:'Caçador Roque', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
       flag:'humilhado_cacadores', registrar:'Perdeu para os caçadores e foi deixado como aviso.'},
   escolhas:[
     {texto:'Levantar e voltar pra clareira.', vai:'c3_som'},
@@ -831,7 +831,7 @@ c3_mentiu_mal:{
     '"A gente se vê."',
     'Vocês vão se ver.'
   ],
-  ef:{npc:{nome:'Caçador Otto', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
+  ef:{npc:{nome:'Caçador Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
   escolhas:[
     {texto:'Voltar pra clareira.', vai:'c3_som'},
     {texto:'Sair da floresta.', vai:'c3_fim'}
@@ -853,7 +853,7 @@ c3_negociou:{
     'O dinheiro pesa no bolso de um jeito estranho, e você vai reparar nesse peso várias vezes nos próximos dias.'
   ],
   ef:{dinheiro:1500, rep:{eixo:'ruim',delta:2,motivo:'Vendeu a localização de um Pokémon preso a caçadores'},
-      npc:{nome:'Caçador Otto', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
+      npc:{nome:'Caçador Roque', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
       flag:['vendeu_para_cacadores','endereco_celadon_cedo'],
       registrar:'Vendeu informação para os caçadores. Eles gostaram de você.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]

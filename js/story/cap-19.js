@@ -272,7 +272,7 @@ c19_cerca:{
     'Às nove e quarenta da manhã, quatro pessoas de macacão tomam café em pé na porta do primeiro galpão, e uma delas está contando alguma coisa engraçada.',
     d=>{
       if (d.flags.trabalha_para_comissao) return 'Você entra pela portaria, mostra a matrícula e é recebido por alguém do setor de pessoal que te explica onde fica o banheiro e onde se pendura a chave do armário.';
-      if (d.flags.cracha_adnan) return 'O crachá da Sandra abre a catraca no primeiro toque. O sistema registra o número dela e o horário. O relógio das quarenta e oito horas começa agora.';
+      if (d.flags.cracha_adnan) return 'O crachá da Elda abre a catraca no primeiro toque. O sistema registra o número dela e o horário. O relógio das quarenta e oito horas começa agora.';
       return 'Você vai ter que entrar de outro jeito.';
     }
   ],
@@ -393,7 +393,7 @@ c19_lixo_comum:{
   texto:[
     'A caçamba comum é a mais honesta de todas.',
     'Embalagem de ração de alto teor, doze sacos. Copo descartável aos montes. Um chinelo de dedo solteiro. Uma revista de palavras cruzadas quase toda preenchida, com a caligrafia caprichada de alguém que gosta.',
-    'Um cartão de aniversário assinado por dezenove pessoas, para uma tal de Sandra.',
+    'Um cartão de aniversário assinado por dezenove pessoas, para uma tal de Elda.',
     'Você lê os dezenove nomes e as dezenove frases curtas.',
     'A décima quarta diz: fica bem, a gente segura aqui.'
   ],
@@ -412,9 +412,9 @@ c19_guardou_cartao:{
     'Dezenove pessoas assinaram. Dezenove pessoas se cotizaram, compraram um cartão, escreveram cada uma a sua frase, e depois o cartão foi para o lixo, porque cartão sempre vai.',
     d=>d.flags.cracha_adnan
       ? 'Você está usando o crachá dessa mulher no pescoço.'
-      : 'A Sandra está de licença. Alguém escreveu que a equipe segura enquanto ela não volta.'
+      : 'A Elda está de licença. Alguém escreveu que a equipe segura enquanto ela não volta.'
   ],
-  ef:{itens:{'Cartão de aniversário da Sandra':1}, moral:-1,
+  ef:{itens:{'Cartão de aniversário da Elda':1}, moral:-1,
       registrar:'Guardou o cartão de aniversário que dezenove colegas assinaram.'},
   escolhas:[
     {texto:'Voltar ao portão.', vai:'c19_cerca'},
@@ -650,13 +650,13 @@ c19_nome_dela:{
     '"Pra quê?"',
     '"Pra eu saber a quem agradecer."',
     'Ela pensa um tempo comprido demais para uma pergunta tão simples.',
-    '"Ruka." Ela põe a marmita debaixo do braço. "Ruka Shioda, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que o senhor entenda por quê."',
+    '"Thea." Ela põe a marmita debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que o senhor entenda por quê."',
     '"Eu entendo."',
     '"Então tá." Ela vai embora. "Galpão do fundo. A porta não tranca."'
   ],
   ef:{flag:['conhece_a_rute','sabe_do_galpao_do_fundo'],
-      npc:{nome:'Ruka Shioda', opiniao:2, memoria:'Te deu o nome dela sabendo que ia negar depois.'},
-      registrar:'Ruka Shioda, turno da madrugada. A porta do galpão do fundo não tranca.'},
+      npc:{nome:'Thea Larkin', opiniao:2, memoria:'Te deu o nome dela sabendo que ia negar depois.'},
+      registrar:'Thea Larkin, turno da madrugada. A porta do galpão do fundo não tranca.'},
   escolhas:[{texto:'Seguir para os galpões.', vai:'c19_dentro'}]
 },
 
@@ -690,15 +690,15 @@ c19_caiu:{
 
 c19_ivo:{
   texto:[
-    '"Isao." Ele termina a atadura e prende com esparadrapo. "Eu sou auxiliar. Faço enfermaria de gente e enfermaria de bicho, o que dá quase o mesmo trabalho."',
+    '"Janus." Ele termina a atadura e prende com esparadrapo. "Eu sou auxiliar. Faço enfermaria de gente e enfermaria de bicho, o que dá quase o mesmo trabalho."',
     '"Vocês machucam muita gente aqui?"',
     '"Vinte e quatro dias sem acidente." Ele aponta o quadro da parede, que tem o mesmo giz da guarita. "E agora eu vou ter que zerar por sua causa, e o pessoal vai me odiar."',
     'Ele diz isso rindo. É uma piada de gente que trabalha junto.',
     'Você ri também, sem querer, e depois passa o resto do dia com essa risada entalada.'
   ],
   ef:{flag:'conheceu_ivo',
-      npc:{nome:'Isao', opiniao:1, memoria:'Auxiliar de enfermaria da Estação 4. Te enfaixou e fez piada.'},
-      registrar:'Isao, auxiliar de enfermaria. Cuida de gente e de bicho.'},
+      npc:{nome:'Janus', opiniao:1, memoria:'Auxiliar de enfermaria da Estação 4. Te enfaixou e fez piada.'},
+      registrar:'Janus, auxiliar de enfermaria. Cuida de gente e de bicho.'},
   escolhas:[
     {texto:'"Você faz enfermaria de bicho. Me conta do galpão do fundo."', vai:'c19_ivo_galpao'},
     {texto:'"Já que estou dentro, eu posso ver?"', vai:'c19_pediu_dentro'},
@@ -718,8 +718,8 @@ c19_ivo_galpao:{
     '"E é isso que me deixa doido. Se eles obrigassem, eu saía."'
   ],
   ef:{flag:['sabe_do_galpao_do_fundo','entende_o_ivo'], instabilidade:2,
-      npc:{nome:'Isao', opiniao:2, memoria:'Te contou que eles deixam você não entrar, e que é isso que o prende.'},
-      registrar:'Isao pediu duas transferências e as duas foram deferidas. Ninguém é obrigado a entrar no galpão do fundo.'},
+      npc:{nome:'Janus', opiniao:2, memoria:'Te contou que eles deixam você não entrar, e que é isso que o prende.'},
+      registrar:'Janus pediu duas transferências e as duas foram deferidas. Ninguém é obrigado a entrar no galpão do fundo.'},
   escolhas:[
     {texto:'"Me leva até lá mesmo assim."', vai:'c19_ivo_leva'},
     {texto:'"Já que estou dentro, eu posso ver o resto?"', vai:'c19_pediu_dentro'},
@@ -737,8 +737,8 @@ c19_ivo_leva:{
     '"Boa sorte. E se o senhor vomitar, tem uma torneira do lado de fora."'
   ],
   ef:{flag:'ivo_te_levou',
-      npc:{nome:'Isao', opiniao:3, memoria:'Te levou até dez metros da porta e ensinou o que dizer para protegê-lo.'},
-      registrar:'Isao te levou até dez metros da porta do galpão do fundo.'},
+      npc:{nome:'Janus', opiniao:3, memoria:'Te levou até dez metros da porta e ensinou o que dizer para protegê-lo.'},
+      registrar:'Janus te levou até dez metros da porta do galpão do fundo.'},
   escolhas:[
     {texto:'Entrar no galpão do fundo.', vai:'c19_galpao'},
     {texto:'Ver o resto da estação antes.', vai:'c19_dentro'}
@@ -767,12 +767,12 @@ c19_pediu_dentro:{
     '"Já que eu estou dentro, eu posso ver?"',
     'O rapaz da enfermaria olha para o colega. O colega dá de ombros.',
     '"Tem que ser com acompanhante", diz o colega. "Regra é regra. Mas acompanhante sou eu, então tá."',
-    'Ele se chama Osamu, é técnico do galpão 2, tem uma caneta no bolso e três canetas na prancheta.',
+    'Ele se chama Pascal, é técnico do galpão 2, tem uma caneta no bolso e três canetas na prancheta.',
     '"Só não me faz perder o horário da pesagem das onze."'
   ],
   ef:{flag:'tem_acompanhante',
-      npc:{nome:'Osamu', opiniao:1, memoria:'Te acompanhou pela estação porque regra é regra.'},
-      registrar:'Osamu, técnico do galpão 2, virou seu acompanhante.'},
+      npc:{nome:'Pascal', opiniao:1, memoria:'Te acompanhou pela estação porque regra é regra.'},
+      registrar:'Pascal, técnico do galpão 2, virou seu acompanhante.'},
   escolhas:[{texto:'Ir com ele.', vai:'c19_dentro'}]
 },
 
@@ -804,7 +804,7 @@ c19_caminhao:{
 
 c19_motorista:{
   texto:[
-    'O motorista se chama Sr. Ozaki, tem uns sessenta anos, e faz essa rota há catorze meses.',
+    'O motorista se chama Sr. Yves, tem uns sessenta anos, e faz essa rota há catorze meses.',
     '"Toda terça e sexta." Ele bate a cinza. "É o melhor cliente que eu tenho. Descarrega rápido, assina na hora, e tem café."',
     '"O senhor já entrou lá dentro?"',
     '"Até o pátio. Do pátio pra dentro eu não entro e não quero."',
@@ -813,8 +813,8 @@ c19_motorista:{
     '"Porque uma vez eu ouvi." Ele não explica o quê. "E a minha função é entregar."'
   ],
   ef:{flag:'conheceu_olegario',
-      npc:{nome:'Sr. Ozaki', opiniao:1, memoria:'Faz a rota de insumos da Estação 4 e não entra do pátio para dentro.'},
-      registrar:'O Sr. Ozaki entrega na Estação 4 toda terça e sexta e não passa do pátio.'},
+      npc:{nome:'Sr. Yves', opiniao:1, memoria:'Faz a rota de insumos da Estação 4 e não entra do pátio para dentro.'},
+      registrar:'O Sr. Yves entrega na Estação 4 toda terça e sexta e não passa do pátio.'},
   escolhas:[
     {texto:'"O que o senhor ouviu?"', vai:'c19_o_que_ele_ouviu'},
     {texto:'"Me deixa entrar com o senhor."', vai:'c19_pediu_carona'},
@@ -832,7 +832,7 @@ c19_o_que_ele_ouviu:{
     '"Eu acreditei." Ele abre a porta da cabine. "Eu acreditei porque eu tenho catorze meses de contrato e um neto."'
   ],
   ef:{instabilidade:1, moral:-2,
-      registrar:'O Sr. Ozaki ouviu o barulho do galpão e acreditou na explicação porque precisava acreditar.'},
+      registrar:'O Sr. Yves ouviu o barulho do galpão e acreditou na explicação porque precisava acreditar.'},
   escolhas:[
     {texto:'"Me deixa entrar com o senhor."', vai:'c19_pediu_carona'},
     {texto:'Entrar sozinho.', vai:'c19_entrou_pelo_caminhao'}
@@ -850,8 +850,8 @@ c19_pediu_carona:{
     '"Eu vou levar sete minutos pra manobrar ali atrás, e eu vou olhar pro outro lado o tempo inteiro, porque manobra exige."'
   ],
   ef:{flag:'olegario_olhou_pro_outro_lado',
-      npc:{nome:'Sr. Ozaki', opiniao:2, memoria:'Recusou te levar e depois te deu sete minutos.'},
-      registrar:'O Sr. Ozaki recusou a carona e te deu sete minutos de manobra.'},
+      npc:{nome:'Sr. Yves', opiniao:2, memoria:'Recusou te levar e depois te deu sete minutos.'},
+      registrar:'O Sr. Yves recusou a carona e te deu sete minutos de manobra.'},
   escolhas:[{texto:'Usar os sete minutos.', vai:'c19_entrou_pelo_caminhao'}]
 },
 
@@ -903,16 +903,16 @@ c19_esperou_o_rapaz:{
 c19_pedir:{
   texto:[
     'Você bate na portaria e pede para ver.',
-    'O porteiro se chama Sr. Daimon, tem uma televisão pequena ligada sem som e um livro de ocorrência aberto.',
+    'O porteiro se chama Sr. Delmar, tem uma televisão pequena ligada sem som e um livro de ocorrência aberto.',
     'Ele liga para alguém. Alguém liga para outro alguém. Em onze minutos, uma técnica de jaleco vem até o portão a pé, sorrindo de um jeito que é profissional e verdadeiro ao mesmo tempo.',
-    '"A gente faz visita monitorada às quintas, das duas às quatro." Ela estende a mão. "Kaoru. Posso agendar?"',
+    '"A gente faz visita monitorada às quintas, das duas às quatro." Ela estende a mão. "Kira. Posso agendar?"',
     '"Hoje é quinta."',
     'O sorriso não cai, mas atrasa meio segundo.',
     '"Então venha. Sério. A gente tem orgulho do que faz aqui."'
   ],
   ef:{flag:'visita_monitorada',
-      npc:{nome:'Kaoru', opiniao:1, memoria:'Te convidou para a visita monitorada e tem orgulho do lugar.'},
-      registrar:'Kaoru, técnica, te levou para a visita monitorada.'},
+      npc:{nome:'Kira', opiniao:1, memoria:'Te convidou para a visita monitorada e tem orgulho do lugar.'},
+      registrar:'Kira, técnica, te levou para a visita monitorada.'},
   escolhas:[
     {texto:'Aceitar a visita.', vai:'c19_visita'},
     {texto:'"Antes: o senhor porteiro me deixa ver o livro de ocorrência?"', vai:'c19_livro_damiao'},
@@ -922,14 +922,14 @@ c19_pedir:{
 
 c19_livro_damiao:{
   texto:[
-    'O Sr. Daimon olha para a Kaoru. A Kaoru dá de ombros: "é público para quem consta."',
+    'O Sr. Delmar olha para a Kira. A Kira dá de ombros: "é público para quem consta."',
     'Ele vira o livro.',
     'Três meses de ocorrências. Queda de energia. Portão emperrado. Um Persian entrando pelo trecho leste, seis vezes, sempre por volta das onze.',
     'E, catorze linhas atrás: veículo da Sanear recusou coleta por excesso de peso. Orientado a Administração.',
     'Recusou coleta por excesso de peso.'
   ],
   ef:{flag:['viu_o_livro_do_damiao','sabe_da_sanear'], instabilidade:1,
-      npc:{nome:'Sr. Daimon', opiniao:1, memoria:'Te deixou ler o livro de ocorrência.'},
+      npc:{nome:'Sr. Delmar', opiniao:1, memoria:'Te deixou ler o livro de ocorrência.'},
       registrar:'A Sanear já recusou coleta na Estação 4 por excesso de peso.'},
   escolhas:[
     {texto:'Aceitar a visita.', vai:'c19_visita'},
@@ -939,7 +939,7 @@ c19_livro_damiao:{
 
 c19_damiao_persian:{
   texto:[
-    '"Todo dia." O Sr. Daimon fala do Persian com um carinho que não esconde. "A gente já remendou três vezes e ele arrebenta de novo."',
+    '"Todo dia." O Sr. Delmar fala do Persian com um carinho que não esconde. "A gente já remendou três vezes e ele arrebenta de novo."',
     '"E ninguém faz nada?"',
     '"Fazer o quê?" Ele ri. "É um Persian velho que vem sentar e olhar. Não come, não briga, não estraga."',
     'Ele baixa a voz sem precisar.',
@@ -954,7 +954,7 @@ c19_visita:{
   texto:[
     'A visita monitorada começa pelas incubadoras, e as incubadoras são bonitas.',
     'É a palavra: bonitas. Fileiras de câmaras de vidro com controle de umidade, cada uma com um ovo ou um filhote recém-saído, com a temperatura registrada a cada quinze minutos numa ficha presa na porta.',
-    'A Kaoru explica o processo com um cuidado indistinguível de amor, e para no meio de uma frase para ajeitar uma ficha que estava torta.',
+    'A Kira explica o processo com um cuidado indistinguível de amor, e para no meio de uma frase para ajeitar uma ficha que estava torta.',
     '"A taxa de sobrevivência aqui é noventa e seis por cento." Ela fala com orgulho legítimo. "No mesmo nicho, lá fora, é trinta e um."',
     'Ela não está mentindo. Nada do que ela vai dizer nesta meia hora é mentira.'
   ],
@@ -991,13 +991,13 @@ c19_de_onde_vem_os_ovos:{
 c19_os_outros_ovos:{
   texto:[
     'Ela vira duas fichas antes de responder, o que é a primeira hesitação dela.',
-    '"Tem uma linha de material conservado, de acervo doado." Ela escolhe cada palavra. "Essa não é a minha área. Essa é do Dr. Amano."',
+    '"Tem uma linha de material conservado, de acervo doado." Ela escolhe cada palavra. "Essa não é a minha área. Essa é do Dr. Hollis."',
     '"Acervo doado de onde?"',
     '"Isso o senhor pergunta pra ele." Ela fecha a prancheta, e o sorriso volta inteiro. "Eu cuido de umidade e de temperatura. É o que eu sei fazer bem."',
     'E é verdade. Ela cuida de umidade e de temperatura muito bem.'
   ],
   ef:{flag:'sabe_do_sena',
-      registrar:'Existe uma linha de material conservado, de acervo doado, que é área do Dr. Amano.'},
+      registrar:'Existe uma linha de material conservado, de acervo doado, que é área do Dr. Hollis.'},
   escolhas:[
     {texto:'"O que acontece com os quatro por cento?"', vai:'c19_os_quatro_por_cento'},
     {texto:'"E aquele galpão do fundo?"', vai:'c19_pergunta_galpao'},
@@ -1015,7 +1015,7 @@ c19_os_quatro_por_cento:{
     '"O senhor está pensando no galpão do fundo, né? Vamos até ele na hora certa. Está no roteiro."'
   ],
   ef:{flag:'ouviu_dos_quatro_por_cento', instabilidade:1,
-      registrar:'Kaoru diz que o galpão do fundo está no roteiro da visita.'},
+      registrar:'Kira diz que o galpão do fundo está no roteiro da visita.'},
   escolhas:[
     {texto:'"Está no roteiro mesmo?"', vai:'c19_esta_no_roteiro'},
     {texto:'Seguir a visita.', vai:'c19_visita_bercario'}
@@ -1062,7 +1062,7 @@ c19_dao_nome:{
     '"Oficialmente, não. Oficialmente é matrícula e lote."',
     'Uma pausa.',
     '"Este aqui eu chamo de Feijão." Ela ajusta o bico da seringa. "E eu sei que não devia, e eu vou continuar."',
-    'A Kaoru não repreende. A Kaoru olha para o lado, para a parede, e espera.'
+    'A Kira não repreende. A Kira olha para o lado, para a parede, e espera.'
   ],
   ef:{flag:'feijao', instabilidade:1, moral:2,
       registrar:'Uma funcionária do berçário dá nome escondido. Este se chama Feijão.'},
@@ -1077,7 +1077,7 @@ c19_o_que_acontece_com_feijao:{
     'Ela levanta os olhos pela primeira vez.',
     '"Adaptação, avaliação e liberação." Ela repete decorado. "Se ele atingir os parâmetros."',
     '"E se não atingir?"',
-    'A Kaoru dá um passo à frente para responder por ela e a moça levanta a mão, sem drama nenhum, e a Kaoru para.',
+    'A Kira dá um passo à frente para responder por ela e a moça levanta a mão, sem drama nenhum, e a Kira para.',
     '"Se não atingir, ele não sai daqui." Ela olha o filhote. "E eu vou saber, porque eu preencho a coluna."',
     'Ela volta para a seringa.',
     '"O senhor quer saber por que eu dou nome? É pra ter alguém pra quem pedir desculpa."'
@@ -1090,13 +1090,13 @@ c19_o_que_acontece_com_feijao:{
 
 c19_quanto_tempo:{
   texto:[
-    '"Quatro semanas no berçário, oito na adaptação, e aí avaliação." A Kaoru responde por todas. "Doze semanas do ovo à liberação, se tudo correr bem."',
+    '"Quatro semanas no berçário, oito na adaptação, e aí avaliação." A Kira responde por todas. "Doze semanas do ovo à liberação, se tudo correr bem."',
     '"E se não correr?"',
     '"Aí é mais tempo, ou é menos." Ela não desvia. "Menos é o que o senhor está pensando."',
     'Ela caminha para a porta.',
     '"Eu vou te falar uma coisa que eu não deveria: eu prefiro quando o visitante pergunta. O que me dá medo é o que vem e acha tudo lindo e vai embora."'
   ],
-  ef:{npc:{nome:'Kaoru', opiniao:2, memoria:'Prefere o visitante que pergunta ao que acha tudo lindo.'},
+  ef:{npc:{nome:'Kira', opiniao:2, memoria:'Prefere o visitante que pergunta ao que acha tudo lindo.'},
       registrar:'Doze semanas do ovo à liberação, quando tudo corre bem.'},
   escolhas:[{texto:'Seguir para o ponto três.', vai:'c19_visita_g3'}]
 },
@@ -1121,7 +1121,7 @@ c19_visita_g3:{
 
 c19_porque_o_rattata:{
   texto:[
-    'A Kaoru olha por um tempo antes de responder, e quando responde é técnica e é honesta.',
+    'A Kira olha por um tempo antes de responder, e quando responde é técnica e é honesta.',
     '"Estereotipia." Ela fala a palavra e depois traduz sozinha. "É movimento repetitivo sem função, de bicho em espaço fechado. Dá em zoológico, dá em criadouro, dá aqui."',
     '"E tem solução?"',
     '"Enriquecimento ambiental. Espaço. Tempo." Ela conta nos dedos. "A gente faz os três e mesmo assim dá em doze por cento."',
@@ -1143,25 +1143,25 @@ c19_contou_os_repetidos:{
     'Você conta.',
     'Trinta e quatro lá dentro. Quatro repetindo movimento sem função: o Rattata da parede, dois Nidoran andando em oito no mesmo canto e um Spearow que abre e fecha a asa a cada sete segundos.',
     'Quatro de trinta e quatro é quase doze por cento, exatamente como ela disse.',
-    'A Kaoru te vê contando e não interrompe.',
+    'A Kira te vê contando e não interrompe.',
     'Quando você termina, ela diz uma coisa baixinho, para você e para mais ninguém:',
     '"Eu conto todo dia. Nunca deu menos."'
   ],
   ef:{flag:'contou_os_quatro', instabilidade:2,
-      npc:{nome:'Kaoru', opiniao:3, memoria:'Conta os mesmos quatro todo dia e nunca deu menos.'},
+      npc:{nome:'Kira', opiniao:3, memoria:'Conta os mesmos quatro todo dia e nunca deu menos.'},
       rep:{eixo:'bom',delta:1,motivo:'Parou e contou, um por um'},
-      registrar:'Quatro de trinta e quatro, no galpão de adaptação. Kaoru conta todo dia.'},
+      registrar:'Quatro de trinta e quatro, no galpão de adaptação. Kira conta todo dia.'},
   escolhas:[
     {texto:'"E aquele galpão do fundo?"', vai:'c19_pergunta_galpao'},
     {texto:'Ir ao ponto sete.', vai:'c19_saiu_do_roteiro'},
-    {texto:'Sair do roteiro e procurar o Dr. Amano.', vai:'c19_sena'}
+    {texto:'Sair do roteiro e procurar o Dr. Hollis.', vai:'c19_sena'}
   ]
 },
 
 c19_pergunta_galpao:{
   texto:[
     '"E aquele galpão?"',
-    'A Kaoru olha para onde você aponta e a resposta é boa demais para ser improvisada.',
+    'A Kira olha para onde você aponta e a resposta é boa demais para ser improvisada.',
     '"Unidade de processamento de material não viável."',
     'Ela continua sorrindo, e é a mesma pessoa que passou meia hora falando de umidade com amor.',
     '"Material não viável."',
@@ -1185,8 +1185,8 @@ c19_quero_entrar:{
     'Ela vira e começa a andar para lá, e você vai atrás.'
   ],
   ef:{flag:['marlene_te_leva','sabe_do_galpao_do_fundo'],
-      npc:{nome:'Kaoru', opiniao:2, memoria:'Não te impediu e foi esperar do lado de fora.'},
-      registrar:'Kaoru entrou uma vez, no terceiro mês. Não recomenda e não impede.'},
+      npc:{nome:'Kira', opiniao:2, memoria:'Não te impediu e foi esperar do lado de fora.'},
+      registrar:'Kira entrou uma vez, no terceiro mês. Não recomenda e não impede.'},
   escolhas:[
     {texto:'Entrar.', vai:'c19_galpao'},
     {texto:'Antes disso, ver o resto da estação.', vai:'c19_dentro'}
@@ -1196,7 +1196,7 @@ c19_quero_entrar:{
 c19_ponto_sete:{
   texto:[
     'O roteiro leva vinte e dois minutos até o ponto sete, passando pelo refeitório, pela oficina e pela área de pesagem.',
-    'No ponto sete, a Kaoru para a três metros da porta de aço, de costas para ela, e faz a apresentação da prática de frente para você.',
+    'No ponto sete, a Kira para a três metros da porta de aço, de costas para ela, e faz a apresentação da prática de frente para você.',
     'Ela fala dois minutos e meio sobre parâmetros de viabilidade, parecer veterinário, dupla assinatura e arquivo de dez anos.',
     'Ela fala tudo certo. Ela não olha para trás uma vez sequer.',
     'Quando termina, diz: "encerramos no refeitório, tem café", e espera.'
@@ -1222,9 +1222,9 @@ c19_nao_olhou:{
     '"Vai lá."'
   ],
   ef:{flag:['marlene_te_leva'], instabilidade:2, moral:2,
-      npc:{nome:'Kaoru', opiniao:4, memoria:'Olhou para a porta pela primeira vez em vinte e sete visitas.'},
+      npc:{nome:'Kira', opiniao:4, memoria:'Olhou para a porta pela primeira vez em vinte e sete visitas.'},
       rep:{eixo:'bom',delta:1,motivo:'Fez alguém olhar para a porta'},
-      registrar:'Kaoru fez a apresentação 27 vezes sem olhar para trás.'},
+      registrar:'Kira fez a apresentação 27 vezes sem olhar para trás.'},
   escolhas:[
     {texto:'Entrar.', vai:'c19_galpao'},
     {texto:'Ver o resto da estação antes.', vai:'c19_dentro'}
@@ -1234,24 +1234,24 @@ c19_nao_olhou:{
 c19_saiu_do_roteiro:{
   texto:[
     'Você sai do roteiro no meio de uma frase e anda em direção ao galpão do fundo.',
-    'A Kaoru não corre atrás. Ela fica parada onde estava e diz, alto o bastante para você ouvir e baixo o bastante para não ser um grito:',
+    'A Kira não corre atrás. Ela fica parada onde estava e diz, alto o bastante para você ouvir e baixo o bastante para não ser um grito:',
     '"Eu não vou chamar ninguém."',
     'Você para e olha para trás.',
     '"Eu não vou chamar ninguém", ela repete, "porque eu não sou obrigada a chamar e porque eu já pensei nisso antes de hoje."'
   ],
   ef:{flag:['marlene_te_deixou'],
-      npc:{nome:'Kaoru', opiniao:3, memoria:'Deixou você sair do roteiro e disse em voz alta que não ia chamar ninguém.'},
-      registrar:'Saiu do roteiro. Kaoru deixou.'},
+      npc:{nome:'Kira', opiniao:3, memoria:'Deixou você sair do roteiro e disse em voz alta que não ia chamar ninguém.'},
+      registrar:'Saiu do roteiro. Kira deixou.'},
   escolhas:[
     {texto:'Ir direto ao galpão do fundo.', vai:'c19_galpao'},
     {texto:'Ver o resto da estação antes.', vai:'c19_dentro'},
-    {texto:'Procurar o Dr. Amano.', vai:'c19_sena'}
+    {texto:'Procurar o Dr. Hollis.', vai:'c19_sena'}
   ]
 },
 
 c19_foi_embora:{
   texto:[
-    'Você toma o café no refeitório, com a Kaoru e mais quatro pessoas que estão no intervalo, e a conversa é sobre um time de futebol e sobre o preço do ovo.',
+    'Você toma o café no refeitório, com a Kira e mais quatro pessoas que estão no intervalo, e a conversa é sobre um time de futebol e sobre o preço do ovo.',
     'Na saída, ela te dá um folheto impresso em papel bom.',
     'Tem um gráfico de sobrevivência, uma foto de um filhote no colo de alguém e a frase conservação de segunda geração.',
     'Você lê esse folheto umas quinze vezes nos dias seguintes, sempre parando na mesma linha, que é a legenda da foto: cada um deles é contado, um por um.'
@@ -1281,7 +1281,7 @@ c19_dentro:{
     {texto:'Ver o galpão 3, o de adaptação.', vai:'c19_g3'},
     {texto:'Procurar o laboratório e o arquivo.', vai:'c19_arquivo'},
     {texto:'Ler o quadro de avisos.', vai:'c19_quadro_de_avisos'},
-    {texto:'Procurar o Dr. Amano.', vai:'c19_sena'},
+    {texto:'Procurar o Dr. Hollis.', vai:'c19_sena'},
     {texto:'Ir ao refeitório e ouvir.', vai:'c19_refeitorio'}
   ]
 },
@@ -1355,12 +1355,12 @@ c19_refeitorio:{
   texto:[
     'O refeitório tem seis mesas de fórmica, um bebedouro, uma televisão pequena e um mural com a lista do almoço da semana.',
     'Às onze e quarenta, tem nove pessoas comendo.',
-    'A conversa é sobre um time de futebol, sobre uma reforma de banheiro e sobre uma moça chamada Sandra, que teve nenê e mandou foto.',
+    'A conversa é sobre um time de futebol, sobre uma reforma de banheiro e sobre uma moça chamada Elda, que teve nenê e mandou foto.',
     'A foto está passando de mão em mão. Quando chega na sua, alguém te entrega naturalmente, porque você está sentado ali.',
     'É uma criança de dois meses de olho fechado.'
   ],
   ef:{flag:'sentou_no_refeitorio', instabilidade:1,
-      registrar:'Sentou no refeitório da Estação 4 e segurou a foto do filho da Sandra.'},
+      registrar:'Sentou no refeitório da Estação 4 e segurou a foto do filho da Elda.'},
   escolhas:[
     {texto:'Puxar assunto sobre o galpão do fundo.', vai:'c19_assunto_no_almoco'},
     {texto:'Perguntar há quanto tempo eles trabalham aqui.', vai:'c19_ha_quanto_tempo'},
@@ -1716,7 +1716,7 @@ c19_fechou_g3:{
   escolhas:[
     {texto:'Ir ao galpão do fundo.', vai:'c19_galpao'},
     {texto:'Procurar o arquivo.', vai:'c19_arquivo'},
-    {texto:'Procurar o Dr. Amano.', vai:'c19_sena'}
+    {texto:'Procurar o Dr. Hollis.', vai:'c19_sena'}
   ]
 },
 
@@ -1863,15 +1863,15 @@ c19_fotografou_arquivo:{
       registrar:'Fotografou o arquivo: 31 fotos ligando ZS-7, Celadon, SPH-11 e a ilha.'},
   escolhas:[
     {texto:'Ir ao galpão do fundo.', vai:'c19_galpao'},
-    {texto:'Procurar o Dr. Amano.', vai:'c19_sena'},
+    {texto:'Procurar o Dr. Hollis.', vai:'c19_sena'},
     {texto:'Sair da estação.', vai:'c19_saida'}
   ]
 },
 
-/* ── Dr. Amano ───────────────────────────────────────────── */
+/* ── Dr. Hollis ───────────────────────────────────────────── */
 c19_sena:{
   texto:[
-    'O Dr. Amano está no galpão 2, de jaleco, anotando numa prancheta, e reconhece você antes de você se apresentar.',
+    'O Dr. Hollis está no galpão 2, de jaleco, anotando numa prancheta, e reconhece você antes de você se apresentar.',
     '"Ah." Ele não corre, não chama ninguém, não parece nem um pouco surpreso. "O do andar 11."',
     '"O senhor estava lá."',
     '"Eu era o terceiro na cadeia. Eu assinava o que o segundo aprovava." Ele continua anotando. "Quando lacraram, eu vim para cá com o projeto. Como quem muda de sala."',
@@ -1879,7 +1879,7 @@ c19_sena:{
     '"O senhor quer saber o que eu acho de verdade? Eu acho que a gente estava errado no andar 11 e certo aqui."',
     '"Lá a gente tentou fazer uma mente. Aqui a gente faz população. Mente pergunta coisa. População não."'
   ],
-  ef:{npc:{nome:'Dr. Amano', opiniao:0, memoria:'Migrou do andar 11 para a Estação 4 como quem muda de sala.'},
+  ef:{npc:{nome:'Dr. Hollis', opiniao:0, memoria:'Migrou do andar 11 para a Estação 4 como quem muda de sala.'},
       flag:'conheceu_sena'},
   escolhas:[
     {texto:'"E o galpão do fundo?"', vai:'c19_sena_galpao'},
@@ -1923,8 +1923,8 @@ c19_sena_trinta_e_um:{
     '"Isso é contável." Ele volta à prancheta. "Eu já não sei se é melhor. Eu sei que é contável, e eu escolhi trabalhar com o que é contável."'
   ],
   ef:{instabilidade:2,
-      npc:{nome:'Dr. Amano', opiniao:1, memoria:'Admitiu que já não sabe se é melhor, só se é contável.'},
-      registrar:'Amano: lá fora morrem 69% sem nome, aqui 31% com formulário.'},
+      npc:{nome:'Dr. Hollis', opiniao:1, memoria:'Admitiu que já não sabe se é melhor, só se é contável.'},
+      registrar:'Hollis: lá fora morrem 69% sem nome, aqui 31% com formulário.'},
   escolhas:[
     {texto:'"O senhor entra lá?"', vai:'c19_sena_entra'},
     {texto:'Ir ao galpão do fundo.', vai:'c19_galpao'},
@@ -1943,8 +1943,8 @@ c19_sena_entra:{
     '"E é também a coisa mais covarde que eu já fiz, porque eu passei a responsabilidade para quem tem menos escolha que eu."'
   ],
   ef:{flag:['sabe_dos_voluntarios'], instabilidade:2,
-      npc:{nome:'Dr. Amano', opiniao:2, memoria:'Chamou a própria decisão de mais covarde da vida dele.'},
-      registrar:'Amano assina e não aplica. Ele mesmo chama isso de covardia.'},
+      npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Chamou a própria decisão de mais covarde da vida dele.'},
+      registrar:'Hollis assina e não aplica. Ele mesmo chama isso de covardia.'},
   escolhas:[
     {texto:'"Então vem comigo lá dentro."', vai:'c19_sena_vem_comigo'},
     {texto:'Ir ao galpão sozinho.', vai:'c19_galpao'},
@@ -1964,8 +1964,8 @@ c19_sena_vem_comigo:{
     '"E essa pessoa não vai discutir com o conselho sobre fratura exposta em reunião de duas horas. Eu já perdi trinta e nove dessas discussões e eu ganhei sete."'
   ],
   ef:{flag:'sena_ganhou_sete', instabilidade:1,
-      npc:{nome:'Dr. Amano', opiniao:2, memoria:'Perdeu 39 discussões no conselho e ganhou 7.'},
-      registrar:'Amano ganhou sete discussões de quarenta e seis no conselho.'},
+      npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Perdeu 39 discussões no conselho e ganhou 7.'},
+      registrar:'Hollis ganhou sete discussões de quarenta e seis no conselho.'},
   escolhas:[
     {texto:'"Quais foram as sete?"', vai:'c19_as_sete'},
     {texto:'Ir ao galpão sozinho.', vai:'c19_galpao'},
@@ -1983,8 +1983,8 @@ c19_as_sete:{
     '"Cento e quatro", ele diz. "Cento e quatro estão vivas por causa dessas sete brigas. Eu conto essas também."'
   ],
   ef:{flag:['sena_conta_as_vivas'], instabilidade:1, moral:-2,
-      npc:{nome:'Dr. Amano', opiniao:3, memoria:'Conta as 104 que estão vivas por causa das brigas que ganhou.'},
-      registrar:'104 unidades estão vivas por causa de sete discussões que o Dr. Amano ganhou.'},
+      npc:{nome:'Dr. Hollis', opiniao:3, memoria:'Conta as 104 que estão vivas por causa das brigas que ganhou.'},
+      registrar:'104 unidades estão vivas por causa de sete discussões que o Dr. Hollis ganhou.'},
   escolhas:[
     {texto:'"E as que o senhor perdeu?"', vai:'c19_as_que_perdeu'},
     {texto:'Ir ao galpão do fundo.', vai:'c19_galpao'},
@@ -2003,8 +2003,8 @@ c19_as_que_perdeu:{
     '"Agora vai lá ver o galpão. É pra isso que o senhor veio."'
   ],
   ef:{flag:['viu_a_lista_do_sena'], instabilidade:2, moral:-2,
-      npc:{nome:'Dr. Amano', opiniao:3, memoria:'Te mostrou a lista das que ele não conseguiu salvar.'},
-      registrar:'O Dr. Amano mantém à mão uma lista chamada as que eu não consegui.'},
+      npc:{nome:'Dr. Hollis', opiniao:3, memoria:'Te mostrou a lista das que ele não conseguiu salvar.'},
+      registrar:'O Dr. Hollis mantém à mão uma lista chamada as que eu não consegui.'},
   escolhas:[
     {texto:'"Me dá essa folha."', vai:'c19_pediu_a_folha'},
     {texto:'Ir ao galpão do fundo.', vai:'c19_galpao'}
@@ -2021,9 +2021,9 @@ c19_pediu_a_folha:{
     '"Se isso sair em algum lugar, eu perco o registro e eu não trabalho mais." Ele solta a folha. "E eu estou te dando assim mesmo, e eu quero que o senhor saiba que eu pensei nisso antes."'
   ],
   ef:{flag:['tem_a_lista_do_sena','provas_do_viveiro'], itens:{'A lista das que ele não conseguiu':1},
-      npc:{nome:'Dr. Amano', opiniao:4, memoria:'Te deu a folha sabendo o que ela custa a ele.'},
+      npc:{nome:'Dr. Hollis', opiniao:4, memoria:'Te deu a folha sabendo o que ela custa a ele.'},
       rep:{eixo:'bom',delta:2,motivo:'Recebeu de um técnico a única folha que ele levava para casa'},
-      registrar:'O Dr. Amano te deu a lista das que ele não conseguiu.'},
+      registrar:'O Dr. Hollis te deu a lista das que ele não conseguiu.'},
   escolhas:[{texto:'Ir ao galpão do fundo.', vai:'c19_galpao'}]
 },
 
@@ -2039,8 +2039,8 @@ c19_sena_filho:{
     '"É a resposta que o senhor queria?"'
   ],
   ef:{instabilidade:1,
-      npc:{nome:'Dr. Amano', opiniao:1, memoria:'Deixa a filha mais nova acreditar que ele é veterinário.'},
-      registrar:'As filhas do Dr. Amano não sabem o que ele faz.'},
+      npc:{nome:'Dr. Hollis', opiniao:1, memoria:'Deixa a filha mais nova acreditar que ele é veterinário.'},
+      registrar:'As filhas do Dr. Hollis não sabem o que ele faz.'},
   escolhas:[
     {texto:'"E o galpão do fundo?"', vai:'c19_sena_galpao'},
     {texto:'"O senhor já viu um selvagem de perto?"', vai:'c19_sena_selvagem'},
@@ -2060,8 +2060,8 @@ c19_sena_substituto:{
     'Ele volta a anotar, e a caneta falha, e ele sacode a caneta.'
   ],
   ef:{instabilidade:1,
-      npc:{nome:'Dr. Amano', opiniao:1, memoria:'Não tira férias há vinte e dois meses porque o serviço fica acumulado.'},
-      registrar:'O Dr. Amano não tira férias há 22 meses porque ninguém assina no lugar dele.'},
+      npc:{nome:'Dr. Hollis', opiniao:1, memoria:'Não tira férias há vinte e dois meses porque o serviço fica acumulado.'},
+      registrar:'O Dr. Hollis não tira férias há 22 meses porque ninguém assina no lugar dele.'},
   escolhas:[
     {texto:'"E o galpão do fundo?"', vai:'c19_sena_galpao'},
     {texto:'"O senhor tem filho?"', vai:'c19_sena_filho'},
@@ -2082,8 +2082,8 @@ c19_sena_selvagem:{
     '"Vai ver o galpão, moço. Eu tenho pesagem às onze."'
   ],
   ef:{instabilidade:1, moral:-1,
-      npc:{nome:'Dr. Amano', opiniao:2, memoria:'Viu um selvagem uma vez na vida, quando era estudante.'},
-      registrar:'O Dr. Amano viu um Pokémon selvagem de perto uma vez, quando era estudante.'},
+      npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Viu um selvagem uma vez na vida, quando era estudante.'},
+      registrar:'O Dr. Hollis viu um Pokémon selvagem de perto uma vez, quando era estudante.'},
   escolhas:[
     {texto:'"E o galpão do fundo?"', vai:'c19_sena_galpao'},
     {texto:'Ir ao galpão.', vai:'c19_galpao'},
@@ -2092,15 +2092,15 @@ c19_sena_selvagem:{
 },
 
 c19_luta_sena:{
-  texto:['"Eu esperava isso." O Dr. Amano põe a prancheta na bancada com cuidado. "Eu sempre espero isso."'],
-  batalha:{comissao:'tecnico', nivel:54, tipo:'treinador', treinador:'Dr. Amano', fuga:true,
+  texto:['"Eu esperava isso." O Dr. Hollis põe a prancheta na bancada com cuidado. "Eu sempre espero isso."'],
+  batalha:{comissao:'tecnico', nivel:54, tipo:'treinador', treinador:'Dr. Hollis', fuga:true,
            vitoria:'c19_venceu_sena', derrota:'c19_perdeu_sena', fuga2:'c19_galpao', gameover:'gameover'}
 },
 
 c19_venceu_sena:{
   texto:[
     'As unidades dele caem e ficam onde caíram, esperando.',
-    'O Dr. Amano recolhe uma por uma com o mesmo cuidado com que pousou a prancheta.',
+    'O Dr. Hollis recolhe uma por uma com o mesmo cuidado com que pousou a prancheta.',
     '"O senhor sabe o que me incomoda?" Ele não parece abalado. "Que o senhor acha que isso foi uma vitória moral."',
     '"O senhor derrotou quatro unidades de lote. A gente produz quatro unidades de lote em dezoito dias."',
     'Ele guarda a última bola.',
@@ -2108,14 +2108,14 @@ c19_venceu_sena:{
   ],
   ef:{flag:'venceu_sena',
       rep:{eixo:'bom',delta:1,motivo:'Derrotou o técnico-chefe do viveiro'},
-      npc:{nome:'Dr. Amano', opiniao:-1, memoria:'Perdeu para você e te disse que o galpão 4 nunca esteve trancado.'}},
+      npc:{nome:'Dr. Hollis', opiniao:-1, memoria:'Perdeu para você e te disse que o galpão 4 nunca esteve trancado.'}},
   escolhas:[{texto:'Ir ao galpão do fundo.', vai:'c19_galpao'}]
 },
 
 c19_perdeu_sena:{
   texto:[
     'Você perde, e ele não comemora, e chama a enfermaria para o seu time.',
-    'Enquanto os seus Pokémon são atendidos por uma equipe competente e educada, o Dr. Amano volta a anotar na prancheta.',
+    'Enquanto os seus Pokémon são atendidos por uma equipe competente e educada, o Dr. Hollis volta a anotar na prancheta.',
     '"A porta do galpão 4 nunca esteve trancada", ele diz, sem levantar a cabeça. "Vai lá. Sério. Eu prefiro que as pessoas vejam."'
   ],
   ef:{hp:-4, causa:'Derrota no viveiro', curaTime:true},
@@ -2323,7 +2323,7 @@ c19_saida:{
     '"Vi."',
     'Ela assente devagar.',
     d=>d.flags.cracha_adnan
-      ? '"O crachá que o senhor usou é da Sandra, que está de licença, e quem tirou da gaveta foi o Fabre." Ela olha o chão. "O sistema me avisou às nove e quarenta e um. Eu tinha quarenta e oito horas para reportar e eu reportei às nove e quarenta e quatro, porque se eu não reportasse eles descobririam de qualquer jeito e aí seríamos dois."'
+      ? '"O crachá que o senhor usou é da Elda, que está de licença, e quem tirou da gaveta foi o Fabre." Ela olha o chão. "O sistema me avisou às nove e quarenta e um. Eu tinha quarenta e oito horas para reportar e eu reportei às nove e quarenta e quatro, porque se eu não reportasse eles descobririam de qualquer jeito e aí seríamos dois."'
       : '"Eu não vou te deter. Não tem crime. Isso é o mais difícil de explicar para quem chega até aqui: não tem crime."'
   ],
   ef:{npc:{nome:'Auditora Brill', memoria:'Te esperou no estacionamento depois que você viu o galpão do fundo.'}},

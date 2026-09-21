@@ -530,7 +530,7 @@ c21_o_que_aconteceu_aqui:{
     'A pergunta pega ela desprevenida, porque ninguém faz essa pergunta pra quem ficou.',
     d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, menino.'),
     'E aí ela conta, por quarenta minutos, tudo que não aconteceu:',
-    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Kuroda que casou. O cachorro do quatorze que morreu — aquele velho, você lembra dele.'),
+    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Vernon que casou. O cachorro do quatorze que morreu — aquele velho, você lembra dele.'),
     d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],

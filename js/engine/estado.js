@@ -40,8 +40,8 @@ const TITULOS_INFLUENTES = [
 ];
 const NOMES_INFLUENTES = [
   'Brock','Misty','Tenente Surge','Erika','Koga','Sabrina','Blaine','Blue','Giovanni',
-  'Lance','Giselle','A.J.','Mandi','Red','Rhea Colman','Saya Kurata','Dra. Cordell',
-  'Curador Fabre','Auditora Brill','Diretor Kusanagi','Conselheira Sakuma'
+  'Lance','Giselle','A.J.','Mandi','Red','Rhea Colman','Maren Kestrel','Dra. Cordell',
+  'Curador Fabre','Auditora Brill','Diretor Quince','Conselheira Thistle'
 ];
 function ehInfluente(nome){
   if (!nome) return false;

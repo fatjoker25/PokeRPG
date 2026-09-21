@@ -250,7 +250,7 @@ c21_placa_de_bronze:{
 
 c21_quem_sao_os_41:{
   texto:[
-    'A recepcionista se chama Sra. Doi e trabalha aqui há vinte e seis anos, e responde sem consultar nada.',
+    'A recepcionista se chama Sra. Ada e trabalha aqui há vinte e seis anos, e responde sem consultar nada.',
     '"Agentes de campo mortos em serviço."',
     'Ela diz isso do mesmo jeito que diria o horário de funcionamento.',
     '"Quarenta e um?"',
@@ -259,7 +259,7 @@ c21_quem_sao_os_41:{
     '"Tem mais quatro nomes para pôr", ela diz, e volta aos formulários.'
   ],
   ef:{flag:['sabe_dos_41','sabe_do_incidente_94'], instabilidade:1,
-      npc:{nome:'Sra. Doi', opiniao:1, memoria:'Recepcionista do Planalto há vinte e seis anos. Sabe tudo de cor.'},
+      npc:{nome:'Sra. Ada', opiniao:1, memoria:'Recepcionista do Planalto há vinte e seis anos. Sabe tudo de cor.'},
       registrar:'41 agentes mortos em serviço desde 1961. Onze em 1994, num incidente no norte. Faltam quatro nomes na placa.'},
   escolhas:[
     {texto:'"Quatro de quando?"', vai:'c21_os_quatro_novos'},
@@ -270,7 +270,7 @@ c21_quem_sao_os_41:{
 
 c21_os_quatro_novos:{
   texto:[
-    'A Sra. Doi para de mexer nos formulários.',
+    'A Sra. Ada para de mexer nos formulários.',
     '"Dos últimos dois anos."',
     'Ela não diz onde. Ela olha para a escada, para cima, na direção da sala em que você tem reunião às catorze.',
     '"O senhor vai perguntar lá em cima e eles vão te contar, porque eles contam." Ela volta aos formulários. "Eu só não quero ser eu a contar."',
@@ -316,13 +316,13 @@ c21_refeitorio:{
 c21_mesa_da_manutencao:{
   texto:[
     'Eles abrem espaço na mesa sem cerimônia nenhuma.',
-    'O mais velho se chama Sr. Niimi e é eletricista do Planalto há dezenove anos.',
+    'O mais velho se chama Sr. Quint e é eletricista do Planalto há dezenove anos.',
     '"Você é o de hoje das duas?" Ele aponta o teto com o garfo. "A sala quatro é a que a gente chama de sala das três cadeiras."',
     '"Por quê?"',
     '"Porque quando é uma cadeira é bronca, quando é duas é acordo, e quando é três é oferta." Ele come. "Três cadeiras é bom, moço. Três cadeiras eles querem alguma coisa de você."'
   ],
   ef:{flag:'sabe_das_tres_cadeiras',
-      npc:{nome:'Sr. Niimi', opiniao:1, memoria:'Eletricista do Planalto. Te explicou o que significam três cadeiras.'},
+      npc:{nome:'Sr. Quint', opiniao:1, memoria:'Eletricista do Planalto. Te explicou o que significam três cadeiras.'},
       registrar:'Três cadeiras na sala quer dizer oferta.'},
   escolhas:[
     {texto:'"E quando é quatro?"', vai:'c21_quatro_cadeiras'},
@@ -357,7 +357,7 @@ c21_ja_viu_sair:{
     '"Quem assinou desce olhando o papel." Ele levanta a bandeja. "Quem não assinou desce olhando a parede dos campeões."'
   ],
   ef:{flag:'ouviu_o_nicacio', instabilidade:1,
-      npc:{nome:'Sr. Niimi', opiniao:2, memoria:'Te contou como dá para saber quem assinou pelo jeito de descer a escada.'},
+      npc:{nome:'Sr. Quint', opiniao:2, memoria:'Te contou como dá para saber quem assinou pelo jeito de descer a escada.'},
       registrar:'Quem assina desce olhando o papel. Quem não assina desce olhando a parede.'},
   escolhas:[{texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'}]
 },
@@ -370,12 +370,12 @@ c21_o_que_acontece_em_cima:{
     '"E a Elite 4?"',
     '"A Elite 4 treina de manhã, das seis às nove, e depois vai embora." Ela volta ao livro. "Eles não moram aqui. Isso é a primeira coisa que decepciona todo mundo que chega."',
     'Ela vira uma página.',
-    '"O senhor Nakada mora. Mas ele tem setenta e três anos e não tem mais para onde ir."'
+    '"O senhor Mervin mora. Mas ele tem setenta e três anos e não tem mais para onde ir."'
   ],
   ef:{flag:'sabe_do_quintino',
-      registrar:'A Elite 4 treina das seis às nove e vai embora. Só o Sr. Nakada mora no Planalto.'},
+      registrar:'A Elite 4 treina das seis às nove e vai embora. Só o Sr. Mervin mora no Planalto.'},
   escolhas:[
-    {texto:'"Quem é o senhor Nakada?"', vai:'c21_quem_e_quintino'},
+    {texto:'"Quem é o senhor Mervin?"', vai:'c21_quem_e_quintino'},
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'},
     {texto:'Puxar assunto com a mesa da manutenção.', vai:'c21_mesa_da_manutencao'}
   ]
@@ -390,7 +390,7 @@ c21_quem_e_quintino:{
     '"Todo mundo acha." Ela abre o livro de novo. "E todo mundo prefere que ele esteja lá. Inclusive eu, e eu nem subo."'
   ],
   ef:{flag:'sabe_do_quintino',
-      registrar:'O Sr. Nakada, campeão de 79, senta na borda do poço da arena há doze anos.'},
+      registrar:'O Sr. Mervin, campeão de 79, senta na borda do poço da arena há doze anos.'},
   escolhas:[
     {texto:'Pedir para ver a arena antes da reunião.', vai:'c21_pediu_a_arena'},
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'}
@@ -399,7 +399,7 @@ c21_quem_e_quintino:{
 
 c21_pediu_a_arena:{
   texto:[
-    'A Sra. Doi olha o relógio da parede.',
+    'A Sra. Ada olha o relógio da parede.',
     '"Treze e vinte e cinco. Dá."',
     'Ela te dá um crachá de visitante com barbante e aponta a escada de serviço.',
     'A arena da Elite 4 fica dois andares abaixo do saguão e é um poço de pedra com iluminação vinda de cima.',
@@ -425,8 +425,8 @@ c21_quintino:{
     '"Então o senhor tem trinta minutos e uma escada." Ele continua olhando o poço. "Pergunta o que quiser. Eu tenho doze anos de tempo livre."'
   ],
   ef:{flag:'conheceu_quintino',
-      npc:{nome:'Sr. Nakada', opiniao:1, memoria:'Campeão de 79. Senta na borda do poço há doze anos.'},
-      registrar:'Conheceu o Sr. Nakada na borda da arena.'},
+      npc:{nome:'Sr. Mervin', opiniao:1, memoria:'Campeão de 79. Senta na borda do poço há doze anos.'},
+      registrar:'Conheceu o Sr. Mervin na borda da arena.'},
   escolhas:[
     {texto:'"O senhor senta aqui por quê?"', vai:'c21_quintino_porque'},
     {texto:'"O que eles vão me oferecer?"', vai:'c21_quintino_oferta'},
@@ -445,8 +445,8 @@ c21_quintino_porque:{
     '"Doze anos depois de me aposentar, sim." Ele ri baixinho. "Eu demorei trinta anos para entender o que tinha faltado. Faltou alguém sentado na borda."'
   ],
   ef:{instabilidade:0, moral:2,
-      npc:{nome:'Sr. Nakada', opiniao:2, memoria:'Senta na borda porque em 79 não tinha ninguém sentado na borda para ele.'},
-      registrar:'O Sr. Nakada senta na borda porque ninguém sentou na borda por ele.'},
+      npc:{nome:'Sr. Mervin', opiniao:2, memoria:'Senta na borda porque em 79 não tinha ninguém sentado na borda para ele.'},
+      registrar:'O Sr. Mervin senta na borda porque ninguém sentou na borda por ele.'},
   escolhas:[
     {texto:'"O que eles vão me oferecer?"', vai:'c21_quintino_oferta'},
     {texto:'"Valeu a pena?"', vai:'c21_quintino_valeu'},
@@ -481,8 +481,8 @@ c21_quintino_foi:{
     '"Eu não podia saber e eu não fui." Ele encolhe os ombros devagar. "As duas coisas são verdade e uma não desmancha a outra. O senhor vai aprender isso hoje, se ainda não aprendeu."'
   ],
   ef:{instabilidade:1, moral:-2,
-      npc:{nome:'Sr. Nakada', opiniao:3, memoria:'Recusou a terceira oferta em 1981 e nunca se perdoou.'},
-      registrar:'O Sr. Nakada recusou a terceira oferta em 1981. Era sobre Cinnabar.'},
+      npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Recusou a terceira oferta em 1981 e nunca se perdoou.'},
+      registrar:'O Sr. Mervin recusou a terceira oferta em 1981. Era sobre Cinnabar.'},
   escolhas:[
     {texto:'"Valeu a pena ser campeão?"', vai:'c21_quintino_valeu'},
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'}
@@ -502,9 +502,9 @@ c21_quintino_valeu:{
     '"O caminho até aqui." Ele aponta o poço vazio com o queixo. "Isso aqui é a parte que acaba. O caminho é a parte que fica."'
   ],
   ef:{moral:3,
-      npc:{nome:'Sr. Nakada', opiniao:3, memoria:'Te disse que o título vale quatro meses e o caminho fica.'},
+      npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te disse que o título vale quatro meses e o caminho fica.'},
       rep:{eixo:'bom',delta:1,motivo:'Sentou na borda do poço e ouviu um velho'},
-      registrar:'O Sr. Nakada: ser campeão valeu quatro meses. O caminho é que fica.'},
+      registrar:'O Sr. Mervin: ser campeão valeu quatro meses. O caminho é que fica.'},
   escolhas:[
     {texto:'"O senhor conheceu os onze de 1994?"', vai:'c21_quintino_94', cond:d=>!!d.flags.sabe_do_incidente_94},
     {texto:'Descer ao poço e pisar no chão.', vai:'c21_pisou_na_arena'},
@@ -540,7 +540,7 @@ c21_quarta_equipe:{
     '"E agora vão te oferecer a quarta, e o senhor vai ser uma pessoa só, e isso na cabeça deles é melhor, porque uma pessoa que some é uma pessoa e não uma equipe."'
   ],
   ef:{flag:['sabe_das_tres_equipes','sabe_dos_quatro_novos'], instabilidade:1, moral:-2,
-      npc:{nome:'Sr. Nakada', opiniao:3, memoria:'Te avisou do que iam te oferecer antes de subirem.'},
+      npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te avisou do que iam te oferecer antes de subirem.'},
       registrar:'Três equipes em dois anos. Quatro mortos. E agora você.'},
   escolhas:[
     {texto:'Descer ao poço e pisar no chão.', vai:'c21_pisou_na_arena'},
@@ -553,7 +553,7 @@ c21_pisou_na_arena:{
     'Você desce a escadinha de ferro e pisa no chão da arena.',
     'É pedra lisa, fria, com marcas de queimado que ninguém tirou e com um ralo no centro para escorrer a água quando lavam.',
     'De baixo, o poço é muito maior do que de cima, e a luz vem de um único ponto do teto e cria uma sombra sua que anda junto.',
-    'Você fica no meio, sozinho, com o Sr. Nakada sentado na borda, e ninguém mais no prédio inteiro sabe que você está aqui.',
+    'Você fica no meio, sozinho, com o Sr. Mervin sentado na borda, e ninguém mais no prédio inteiro sabe que você está aqui.',
     'E, por quatro ou cinco segundos, você é uma criança de novo, saindo de casa, achando que isto aqui era o ponto de chegada.'
   ],
   ef:{flag:'pisou_na_arena', moral:3,
@@ -599,15 +599,15 @@ c21_ficou_em_pe:{
 c21_quem_sao_os_tres:{
   texto:[
     '"Justo." Ela fecha a pasta antes de começar.',
-    '"Conselheira Nagisa Sakuma, diretoria de operações. Eu tomo a decisão de hoje."',
-    'O homem mais velho, da direita: "Kawabe. Fiscalização. Eu assino o que ela decide e eu discordo por escrito quando discordo."',
+    '"Conselheira Edda Thistle, diretoria de operações. Eu tomo a decisão de hoje."',
+    'O homem mais velho, da direita: "Waldo. Fiscalização. Eu assino o que ela decide e eu discordo por escrito quando discordo."',
     'A terceira é uma mulher de uns trinta anos, com um caderno em vez de pasta, que demora um segundo a mais.',
-    '"Saya Kurata. Eu sou do setor de campo." Ela não explica mais que isso. "Eu estava na segunda equipe."',
+    '"Maren Kestrel. Eu sou do setor de campo." Ela não explica mais que isso. "Eu estava na segunda equipe."',
     'Ninguém comenta essa última frase. Ela fica na mesa, no meio de todo mundo, por um tempo.'
   ],
   ef:{flag:['conheceu_os_tres','conheceu_a_bruna'],
-      npc:{nome:'Conselheira Nagisa Sakuma', opiniao:0, memoria:'Diretoria de operações. Toma a decisão.'},
-      registrar:'A mesa: Conselheira Sakuma (operações), Sr. Kawabe (fiscalização) e Saya Kurata, que voltou da segunda equipe.'},
+      npc:{nome:'Conselheira Edda Thistle', opiniao:0, memoria:'Diretoria de operações. Toma a decisão.'},
+      registrar:'A mesa: Conselheira Thistle (operações), Sr. Waldo (fiscalização) e Maren Kestrel, que voltou da segunda equipe.'},
   escolhas:[
     {texto:'"A senhora voltou do norte."', vai:'c21_bruna_voltou'},
     {texto:'Sentar e deixar ela começar.', vai:'c21_pasta'},
@@ -619,14 +619,14 @@ c21_bruna_voltou:{
   texto:[
     '"A senhora voltou do norte."',
     '"Voltei."',
-    'A Conselheira Sakuma abre a boca e o Sr. Kawabe levanta a mão dois centímetros da mesa, e ela não fala.',
-    '"Eu voltei com cinco pessoas de seis", diz a Saya Kurata. "E eu vou te contar o que aconteceu na hora certa, que é depois, porque se eu contar agora o senhor vai decidir com o estômago."',
+    'A Conselheira Thistle abre a boca e o Sr. Waldo levanta a mão dois centímetros da mesa, e ela não fala.',
+    '"Eu voltei com cinco pessoas de seis", diz a Maren Kestrel. "E eu vou te contar o que aconteceu na hora certa, que é depois, porque se eu contar agora o senhor vai decidir com o estômago."',
     'Ela abre o caderno dela numa página em branco.',
     '"Eu decidi com o estômago em março e eu perdi uma pessoa."'
   ],
   ef:{flag:'bruna_vai_contar', instabilidade:1,
-      npc:{nome:'Saya Kurata', opiniao:1, memoria:'Voltou do norte com cinco de seis e vai te contar na hora certa.'},
-      registrar:'Saya Kurata voltou do norte com cinco de seis pessoas.'},
+      npc:{nome:'Maren Kestrel', opiniao:1, memoria:'Voltou do norte com cinco de seis e vai te contar na hora certa.'},
+      registrar:'Maren Kestrel voltou do norte com cinco de seis pessoas.'},
   escolhas:[
     {texto:'Sentar.', vai:'c21_pasta'},
     {texto:'"E por que fiscalização está aqui?"', vai:'c21_porque_fiscalizacao'}
@@ -635,7 +635,7 @@ c21_bruna_voltou:{
 
 c21_porque_fiscalizacao:{
   texto:[
-    'O Sr. Kawabe responde sem esperar a Conselheira.',
+    'O Sr. Waldo responde sem esperar a Conselheira.',
     '"Porque tudo o que for oferecido ao senhor hoje tem efeito jurídico e alguém tem que responder por isso depois."',
     'Ele abre a pasta sanfonada e mostra, sem entregar, uma folha datilografada com seis linhas riscadas a caneta.',
     '"Isto é a minha discordância por escrito sobre a terceira oferta. Eu protocolei na sexta-feira."',
@@ -643,8 +643,8 @@ c21_porque_fiscalizacao:{
     '"E mesmo assim vão te oferecer." Ele fecha a pasta. "Porque eu discordo e não mando, e é assim que tem que ser, e é assim que é ruim."'
   ],
   ef:{flag:['aguiar_discorda'], instabilidade:1,
-      npc:{nome:'Sr. Kawabe', opiniao:2, memoria:'Protocolou discordância por escrito contra a terceira oferta.'},
-      registrar:'O Sr. Kawabe, da fiscalização, protocolou discordância contra a terceira oferta.'},
+      npc:{nome:'Sr. Waldo', opiniao:2, memoria:'Protocolou discordância por escrito contra a terceira oferta.'},
+      registrar:'O Sr. Waldo, da fiscalização, protocolou discordância contra a terceira oferta.'},
   escolhas:[
     {texto:'Sentar.', vai:'c21_pasta'},
     {texto:'"O que está escrito na sua discordância?"', vai:'c21_leu_a_discordancia'}
@@ -653,7 +653,7 @@ c21_porque_fiscalizacao:{
 
 c21_leu_a_discordancia:{
   texto:[
-    'Ele olha a Conselheira Sakuma. Ela assente.',
+    'Ele olha a Conselheira Thistle. Ela assente.',
     'Ele entrega a folha.',
     'Considerando que três missões foram enviadas à área e que quatro agentes não retornaram; considerando que não há protocolo de extração aplicável; considerando que o objetivo da missão não é definido em termos operacionais mensuráveis;',
     'manifesto-me contrariamente ao envio de pessoal, remunerado ou voluntário, servidor ou terceiro, à área, até que se estabeleça o que se pretende que a pessoa enviada faça ao chegar.',
@@ -669,7 +669,7 @@ c21_leu_a_discordancia:{
 /* ── A pasta e as três perguntas ────────────────────────── */
 c21_pasta:{
   texto:[
-    'A Conselheira Sakuma abre a pasta e não lê — ela já leu.',
+    'A Conselheira Thistle abre a pasta e não lê — ela já leu.',
     d=>{
       const d2=Estado.dados;
       const linhas=[];
@@ -700,7 +700,7 @@ c21_pasta:{
 c21_leu_a_propria_pasta:{
   texto:[
     '"Eu quero ler a minha pasta."',
-    'O Sr. Kawabe responde antes da Conselheira, e responde com a rapidez de quem esperava a pergunta.',
+    'O Sr. Waldo responde antes da Conselheira, e responde com a rapidez de quem esperava a pergunta.',
     '"Pode." Ele empurra a pasta pela mesa. "O senhor é o titular do dado. Está na norma interna 14 e ninguém nunca pediu."',
     'São vinte e duas páginas.',
     'Relatórios de agentes de campo, recortes de jornal, um formulário de ocorrência de Pewter com a sua letra de quando você tinha quinze anos, e uma folha com uma linha do tempo dos seus últimos dois anos, com lacunas marcadas a lápis.',
@@ -719,13 +719,13 @@ c21_leu_a_propria_pasta:{
 c21_as_lacunas:{
   texto:[
     '"O que são as lacunas?"',
-    '"São os períodos em que a gente perdeu o senhor." A Conselheira Sakuma responde sem constrangimento. "Quatro lacunas. A maior tem dezenove dias."',
+    '"São os períodos em que a gente perdeu o senhor." A Conselheira Thistle responde sem constrangimento. "Quatro lacunas. A maior tem dezenove dias."',
     'Dezenove dias é exatamente o tempo que você levou entre uma coisa e outra que você preferiria que não estivesse escrita em lugar nenhum.',
     '"E vocês tentaram preencher?"',
-    '"Tentamos e não conseguimos, e o Sr. Kawabe determinou que ficasse a lápis e em branco em vez de ficar suposição a caneta." Ela olha para ele. "Isso, aqui dentro, é uma briga de dois anos que ele ganhou."'
+    '"Tentamos e não conseguimos, e o Sr. Waldo determinou que ficasse a lápis e em branco em vez de ficar suposição a caneta." Ela olha para ele. "Isso, aqui dentro, é uma briga de dois anos que ele ganhou."'
   ],
-  ef:{npc:{nome:'Sr. Kawabe', opiniao:2, memoria:'Brigou dois anos para que suposição não virasse registro.'},
-      registrar:'A Liga tem quatro lacunas sobre você, marcadas a lápis, porque o Sr. Kawabe não deixou virar caneta.'},
+  ef:{npc:{nome:'Sr. Waldo', opiniao:2, memoria:'Brigou dois anos para que suposição não virasse registro.'},
+      registrar:'A Liga tem quatro lacunas sobre você, marcadas a lápis, porque o Sr. Waldo não deixou virar caneta.'},
   escolhas:[
     {texto:'"Quem escreveu isso?"', vai:'c21_quem_escreveu'},
     {texto:'Devolver a pasta.', vai:'c21_pergunta1'}
@@ -738,7 +738,7 @@ c21_quem_escreveu:{
     '"Onze pessoas diferentes." A Conselheira folheia o rodapé das páginas, onde tem matrícula e data. "Agente de campo, agente de campo, delegacia de Pewter, delegacia de Cerulean, uma professora de Pallet."',
     '"Uma professora de Pallet?"',
     'Ela vira a página e lê: "manifestação espontânea de terceiro. Ela escreveu para a Liga por conta própria, há dois anos, dizendo que o senhor tinha saído de casa e pedindo que se alguém do serviço te encontrasse, avisasse a ela que estava tudo bem."',
-    'A Conselheira Sakuma levanta os olhos.',
+    'A Conselheira Thistle levanta os olhos.',
     '"A carta está anexada e nunca foi respondida. Isso é falha nossa e eu vou responder esta semana."'
   ],
   ef:{flag:['a_carta_da_professora'], moral:4, instabilidade:1,
@@ -771,7 +771,7 @@ c21_leu_a_carta:{
 
 c21_copia_da_carta:{
   texto:[
-    'O Sr. Kawabe faz a cópia ele mesmo, numa máquina do corredor, e volta com a folha ainda quente e uma segunda folha.',
+    'O Sr. Waldo faz a cópia ele mesmo, numa máquina do corredor, e volta com a folha ainda quente e uma segunda folha.',
     '"A segunda é o protocolo de recebimento, com data e carimbo." Ele entrega as duas. "Se um dia o senhor quiser provar que ela escreveu, a que vale é essa."',
     'Você dobra as duas juntas e guarda no bolso de dentro, contra o peito, e não é um gesto que você decidiu fazer.'
   ],
@@ -786,9 +786,9 @@ c21_copia_da_carta:{
 c21_vai_responder:{
   texto:[
     '"Eu respondo. Me dá o endereço."',
-    'A Conselheira Sakuma escreve o endereço num papel timbrado e entrega.',
+    'A Conselheira Thistle escreve o endereço num papel timbrado e entrega.',
     'É o endereço da escola, que você sabe de cor, e o número da sala, que você também sabe de cor.',
-    '"O senhor vai responder o quê?", pergunta a Saya Kurata, do outro lado da mesa, e é a primeira coisa que ela diz desde que sentou.',
+    '"O senhor vai responder o quê?", pergunta a Maren Kestrel, do outro lado da mesa, e é a primeira coisa que ela diz desde que sentou.',
     'Você fica um tempo sem responder.',
     '"Eu ainda não sei."',
     '"Boa resposta", ela diz, e escreve alguma coisa no caderno dela.'
@@ -817,9 +817,9 @@ c21_pergunta1:{
 c21_p1_objetivo:{
   texto:[
     'Você responde com a frase que você diz desde os quinze anos, do jeito que você diz.',
-    'A Conselheira Sakuma anota duas palavras. Duas.',
-    'A Saya Kurata anota bem mais que duas.',
-    '"E o senhor conseguiu?", pergunta a Saya.',
+    'A Conselheira Thistle anota duas palavras. Duas.',
+    'A Maren Kestrel anota bem mais que duas.',
+    '"E o senhor conseguiu?", pergunta a Maren.',
     d=>{
       if (d.insignias.length >= 6) return 'Você olha as insígnias no bolso e a resposta não vem, porque a pergunta não é sobre insígnia e vocês dois sabem disso.';
       if (d.cemiterio.length) return 'Você pensa em quem não voltou e a resposta não vem.';
@@ -833,10 +833,10 @@ c21_p1_objetivo:{
 c21_p1_esqueceu:{
   texto:[
     '"Eu já não lembro mais."',
-    'A Conselheira Sakuma levanta os olhos.',
+    'A Conselheira Thistle levanta os olhos.',
     '"O senhor lembra e não quer dizer, ou o senhor esqueceu mesmo?"',
     '"Eu esqueci mesmo."',
-    'Ela anota, e o Sr. Kawabe anota também, e é a primeira vez que ele anota alguma coisa.',
+    'Ela anota, e o Sr. Waldo anota também, e é a primeira vez que ele anota alguma coisa.',
     '"Isso acontece com todo mundo que faz mais de dezoito meses de campo", diz ele, sem levantar a cabeça. "Está na literatura e ninguém aqui lê a literatura."'
   ],
   ef:{instabilidade:1, moral:-2,
@@ -849,7 +849,7 @@ c21_p1_recusou:{
     '"Não é da sua conta."',
     '"Certo." Ela escreve recusou a responder e fecha a caneta. "Não é mesmo."',
     'E segue, sem nenhum ressentimento, o que de alguma maneira é pior.',
-    'A Saya Kurata, do outro lado, escreve muito mais do que quatro palavras.'
+    'A Maren Kestrel, do outro lado, escreve muito mais do que quatro palavras.'
   ],
   escolhas:[{texto:'Segunda pergunta.', vai:'c21_pergunta2'}]
 },
@@ -857,13 +857,13 @@ c21_p1_recusou:{
 c21_p1_ficar_era_pior:{
   texto:[
     '"Pelo mesmo motivo que todo mundo: porque ficar era pior."',
-    'A Saya Kurata para de escrever.',
+    'A Maren Kestrel para de escrever.',
     '"Essa é a minha resposta também", ela diz, para a mesa e não para você. "Eu saí de Fuchsia com dezoito anos com essa frase na boca."',
-    'A Conselheira Sakuma anota sem comentar.',
-    'O Sr. Kawabe diz, do lado, para ninguém em particular: "e a minha, e eu tenho sessenta e dois."'
+    'A Conselheira Thistle anota sem comentar.',
+    'O Sr. Waldo diz, do lado, para ninguém em particular: "e a minha, e eu tenho sessenta e dois."'
   ],
   ef:{flag:'ficar_era_pior', moral:1,
-      npc:{nome:'Saya Kurata', opiniao:2, memoria:'Deu a mesma resposta que você à primeira pergunta.'},
+      npc:{nome:'Maren Kestrel', opiniao:2, memoria:'Deu a mesma resposta que você à primeira pergunta.'},
       registrar:'Os três da mesa saíram de casa pelo mesmo motivo que você.'},
   escolhas:[{texto:'Segunda pergunta.', vai:'c21_pergunta2'}]
 },
@@ -896,28 +896,28 @@ c21_p2_verdade:{
     'Você conta.',
     'Leva quatro minutos e em nenhum momento alguém interrompe, e o pior é que você ouve a própria voz dizendo em voz alta coisas que você só tinha dito para si mesmo em barraca, no escuro.',
     'Quando termina, a sala fica quieta.',
-    'O Sr. Kawabe é quem fala.',
+    'O Sr. Waldo é quem fala.',
     '"Isso que o senhor acabou de contar não está na pasta." Ele bate na pasta sanfonada com dois dedos. "E eu não vou pôr."',
     '"Por quê?"',
     '"Porque o senhor contou por vontade e a gente não achou. E se a gente passar a registrar o que as pessoas contam por vontade, elas param de contar."'
   ],
   ef:{instabilidade:1, moral:4,
-      npc:{nome:'Sr. Kawabe', opiniao:3, memoria:'Decidiu não registrar o que você contou por vontade própria.'},
-      registrar:'Contou à Liga o que refaria. O Sr. Kawabe decidiu não registrar.'},
+      npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Decidiu não registrar o que você contou por vontade própria.'},
+      registrar:'Contou à Liga o que refaria. O Sr. Waldo decidiu não registrar.'},
   escolhas:[{texto:'Terceira pergunta.', vai:'c21_pergunta3'}]
 },
 
 c21_p2_nada:{
   texto:[
     '"Nada."',
-    'A Conselheira Sakuma anota.',
-    'A Saya Kurata levanta os olhos e olha para você por uns três segundos, e depois volta ao caderno.',
+    'A Conselheira Thistle anota.',
+    'A Maren Kestrel levanta os olhos e olha para você por uns três segundos, e depois volta ao caderno.',
     '"Eu vou te dizer uma coisa que não é da entrevista", ela diz. "Eu também respondi nada em março, e eu perdi uma pessoa em abril."',
     'Ela vira a página.',
     '"Não tem relação de causa. Eu só não gosto de ouvir essa resposta."'
   ],
   ef:{instabilidade:1, moral:-2,
-      npc:{nome:'Saya Kurata', opiniao:0, memoria:'Não gosta de ouvir nada como resposta.'},
+      npc:{nome:'Maren Kestrel', opiniao:0, memoria:'Não gosta de ouvir nada como resposta.'},
       registrar:'Disse à Liga que não refaria nada.'},
   escolhas:[{texto:'Terceira pergunta.', vai:'c21_pergunta3'}]
 },
@@ -938,13 +938,13 @@ c21_p2_mais_cedo:{
 c21_p2_perguntado:{
   texto:[
     '"Eu teria perguntado mais e feito menos."',
-    'O Sr. Kawabe solta um som curto pelo nariz que, num homem daquele tamanho, é o equivalente a uma gargalhada.',
+    'O Sr. Waldo solta um som curto pelo nariz que, num homem daquele tamanho, é o equivalente a uma gargalhada.',
     '"Escreve isso inteiro", ele diz para a Conselheira. "Palavra por palavra."',
     'Ela escreve.',
     '"O senhor acabou de resumir o relatório que eu protocolei na sexta em uma linha, e eu levei seis páginas."'
   ],
   ef:{flag:'perguntar_mais_fazer_menos', 
-      npc:{nome:'Sr. Kawabe', opiniao:3, memoria:'Mandou anotar a sua resposta palavra por palavra.'},
+      npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Mandou anotar a sua resposta palavra por palavra.'},
       rep:{eixo:'bom',delta:2,motivo:'Disse em uma linha o que a fiscalização levou seis páginas para dizer'},
       registrar:'Perguntar mais e fazer menos.'},
   escolhas:[{texto:'Terceira pergunta.', vai:'c21_pergunta3'}]
@@ -967,13 +967,13 @@ c21_p3_norte:{
   texto:[
     '"Tem uma coisa no norte."',
     'Os três param ao mesmo tempo, e é a primeira reação sincronizada da reunião inteira.',
-    '"Como o senhor sabe do norte?", pergunta a Conselheira Sakuma.',
+    '"Como o senhor sabe do norte?", pergunta a Conselheira Thistle.',
     d=>{
-      if (d.flags.sabe_do_94 || d.flags.sabe_das_tres_equipes) return 'Você conta do Sr. Nakada e da borda do poço. A Conselheira fecha os olhos por um segundo. O Sr. Kawabe sorri com metade da boca.';
+      if (d.flags.sabe_do_94 || d.flags.sabe_das_tres_equipes) return 'Você conta do Sr. Mervin e da borda do poço. A Conselheira fecha os olhos por um segundo. O Sr. Waldo sorri com metade da boca.';
       if (d.flags.viu_a_placa) return 'Você conta da placa de bronze atrás da escada, dos quarenta e um nomes e dos onze de dezoito de agosto. Ninguém responde nada por uns bons quatro segundos.';
       return 'Você não sabe explicar direito como sabe. Você só sabe.';
     },
-    '"Certo." A Conselheira Sakuma fecha a pasta. "Então a gente pula a parte de te convencer."'
+    '"Certo." A Conselheira Thistle fecha a pasta. "Então a gente pula a parte de te convencer."'
   ],
   ef:{flag:'sabe_do_norte_antes'},
   escolhas:[{texto:'Ouvir as ofertas.', vai:'c21_ofertas'}]
@@ -994,14 +994,14 @@ c21_p3_modestia:{
 c21_p3_arrogancia:{
   texto:[
     '"Tem. Eu."',
-    'O Sr. Kawabe escreve uma linha na pasta dele e a linha é curta.',
-    'A Conselheira Sakuma não reage.',
-    'A Saya Kurata, essa sim, fecha o caderno.',
+    'O Sr. Waldo escreve uma linha na pasta dele e a linha é curta.',
+    'A Conselheira Thistle não reage.',
+    'A Maren Kestrel, essa sim, fecha o caderno.',
     '"O cara que eu perdi em abril disse essa frase na sexta anterior", ela diz. "Não estou dizendo que tem relação. Estou dizendo que eu ouvi."',
     'E aí ela abre o caderno de novo e volta a escrever, e ninguém comenta.'
   ],
   ef:{instabilidade:1, moral:-2,
-      npc:{nome:'Saya Kurata', opiniao:-1, memoria:'Já ouviu essa frase de alguém que não voltou.'},
+      npc:{nome:'Maren Kestrel', opiniao:-1, memoria:'Já ouviu essa frase de alguém que não voltou.'},
       registrar:'Disse à Liga que só você pode resolver.'},
   escolhas:[{texto:'Ouvir as ofertas.', vai:'c21_ofertas'}]
 },
@@ -1010,16 +1010,16 @@ c21_p3_por_isso:{
   texto:[
     '"Não. E é exatamente por isso que vocês vão me mandar."',
     'A sala fica muito quieta.',
-    '"Continua", diz a Conselheira Sakuma.',
+    '"Continua", diz a Conselheira Thistle.',
     '"Vocês mandaram três equipes e perderam quatro pessoas. Mandar mais uma equipe é caro e aparece. Mandar uma pessoa de fora, que não é servidor, não custa vaga, não custa pensão e não entra na estatística."',
-    'O Sr. Kawabe põe a caneta na mesa e não escreve mais nada.',
+    'O Sr. Waldo põe a caneta na mesa e não escreve mais nada.',
     '"Está na minha discordância", ele diz. "Item quatro."',
-    'A Conselheira Sakuma leva um tempo comprido antes de responder, e quando responde, responde a verdade.',
+    'A Conselheira Thistle leva um tempo comprido antes de responder, e quando responde, responde a verdade.',
     '"Está certo. E mesmo assim eu vou te oferecer."'
   ],
   ef:{flag:['entendeu_a_oferta'], instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Disse em voz alta por que estavam te escolhendo'},
-      npc:{nome:'Sr. Kawabe', opiniao:3, memoria:'Você chegou sozinho ao item quatro da discordância dele.'},
+      npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Você chegou sozinho ao item quatro da discordância dele.'},
       registrar:'Uma pessoa de fora não custa vaga, não custa pensão e não entra na estatística.'},
   escolhas:[{texto:'Ouvir as ofertas.', vai:'c21_ofertas'}]
 },
@@ -1028,10 +1028,10 @@ c21_p3_por_isso:{
 c21_ofertas:{
   texto:[
     'Eles se olham. A conversa entre os três acontece sem palavra nenhuma e dura quatro segundos.',
-    '"Certo." A Conselheira Sakuma desliza duas folhas pela mesa e deixa a mão apoiada numa terceira, que não desliza. "Todas são reais. Nenhuma expira hoje."',
+    '"Certo." A Conselheira Thistle desliza duas folhas pela mesa e deixa a mão apoiada numa terceira, que não desliza. "Todas são reais. Nenhuma expira hoje."',
     d=>{
       const via=Historia.via(); const rep=Estado.rep;
-      if (rep.eixo==='bom' && rep.bom>=6) return '"A primeira é uma cadeira na Elite 4. A segunda é a diretoria de fiscalização da Liga, quando o Sr. Kawabe se aposentar em dois anos."';
+      if (rep.eixo==='bom' && rep.bom>=6) return '"A primeira é uma cadeira na Elite 4. A segunda é a diretoria de fiscalização da Liga, quando o Sr. Waldo se aposentar em dois anos."';
       if (rep.eixo==='ruim' && rep.ruim>=5) return '"A primeira é um acordo: o senhor para, a gente arquiva. A segunda é trabalhar para nós fazendo o que o senhor já faz, só que com cobertura."';
       if (via==='pesquisador') return '"A primeira é um cargo de pesquisa com verba própria. A segunda é testemunhar no processo que a Dra. Serizawa está montando, com proteção."';
       return '"A primeira é um cargo de instrutor aqui no Planalto. A segunda é um contrato de campo."';
@@ -1051,7 +1051,7 @@ c21_ofertas:{
 c21_leu_as_folhas:{
   texto:[
     'Você lê as duas folhas inteiras, na frente deles, e leva onze minutos.',
-    'Ninguém reclama. O Sr. Kawabe, inclusive, empurra a garrafa de água para o seu lado da mesa no sexto minuto.',
+    'Ninguém reclama. O Sr. Waldo, inclusive, empurra a garrafa de água para o seu lado da mesa no sexto minuto.',
     'A primeira folha é um cargo: salário, jornada, subordinação, e uma cláusula de dedicação exclusiva.',
     'A segunda é um contrato de prestação de serviço: por missão, sem vínculo, com foro em Saffron e uma cláusula de confidencialidade de cinco anos.',
     'Nas duas tem uma linha idêntica, no mesmo lugar, e é a linha que te faz parar.',
@@ -1072,7 +1072,7 @@ c21_leu_as_folhas:{
 c21_quanto_foi:{
   texto:[
     '"Quanto foi a indenização prevista das quatro pessoas que não voltaram?"',
-    'O Sr. Kawabe responde, porque é a área dele, e responde com o número exato e a base de cálculo.',
+    'O Sr. Waldo responde, porque é a área dele, e responde com o número exato e a base de cálculo.',
     'Depois acrescenta, sem que ninguém pergunte:',
     '"Duas famílias receberam em sessenta dias. Uma recebeu em sete meses porque faltou uma certidão. A quarta não recebeu porque a pessoa era prestadora de serviço e não servidora, e prestador não gera pensão."',
     'Ele fecha a pasta sanfonada.',
@@ -1080,7 +1080,7 @@ c21_quanto_foi:{
   ],
   ef:{flag:['sabe_da_indenizacao'], instabilidade:1, moral:-2,
       rep:{eixo:'bom',delta:1,motivo:'Perguntou pelas famílias antes de perguntar pelo salário'},
-      npc:{nome:'Sr. Kawabe', opiniao:4, memoria:'Te disse, sem ser perguntado, que a quarta família não recebeu nada.'},
+      npc:{nome:'Sr. Waldo', opiniao:4, memoria:'Te disse, sem ser perguntado, que a quarta família não recebeu nada.'},
       registrar:'Prestador de serviço não gera pensão. É esse o contrato da folha da direita.'},
   escolhas:[
     {texto:'"Então mudem o contrato."', vai:'c21_mudem_o_contrato'},
@@ -1092,14 +1092,14 @@ c21_quanto_foi:{
 c21_mudem_o_contrato:{
   texto:[
     '"Então mudem o contrato."',
-    'A Conselheira Sakuma olha o Sr. Kawabe. O Sr. Kawabe olha o teto por uns dois segundos, fazendo uma conta.',
+    'A Conselheira Thistle olha o Sr. Waldo. O Sr. Waldo olha o teto por uns dois segundos, fazendo uma conta.',
     '"Dá." Ele volta a olhar a mesa. "Contratação como servidor temporário, prazo determinado, com regime próprio. Leva dezessete dias e passa por três assinaturas, e uma delas é do presidente da Liga."',
     '"E por que não foi feito nas outras quatro vezes?"',
     '"Porque ninguém pediu." Ele abre a pasta e começa a escrever. "E porque eu não propus, e isso é meu, e eu vou propor agora."'
   ],
   ef:{flag:['mudou_o_contrato'],
       rep:{eixo:'bom',delta:3,motivo:'Fez a Liga mudar o vínculo antes de aceitar qualquer coisa'},
-      npc:{nome:'Sr. Kawabe', opiniao:5, memoria:'Vai propor contratação com regime próprio por sua causa.'},
+      npc:{nome:'Sr. Waldo', opiniao:5, memoria:'Vai propor contratação com regime próprio por sua causa.'},
       registrar:'A Liga vai contratar como servidor temporário, com regime próprio. Ninguém tinha pedido.'},
   escolhas:[
     {texto:'"Quem teve esse cargo antes de mim?"', vai:'c21_quem_teve_antes'},
@@ -1112,7 +1112,7 @@ c21_mudem_o_contrato:{
 c21_quem_teve_antes:{
   texto:[
     '"Quem teve esse cargo antes de mim?"',
-    'A Conselheira Sakuma consulta uma folha.',
+    'A Conselheira Thistle consulta uma folha.',
     '"Instrutor: quatro pessoas em dez anos. Três pediram transferência e uma continua."',
     '"Por que as três pediram transferência?"',
     '"Porque o instrutor treina quem vai para o campo", ela responde sem amaciar. "E quem treina conhece, e quem conhece fica mal quando a pessoa não volta."',
@@ -1130,7 +1130,7 @@ c21_quem_teve_antes:{
 
 c21_instrutora:{
   texto:[
-    'Ela se chama Sra. Chizu Manabe, tem sessenta e sete anos, e recebe você na sala de treino do segundo andar, que é um ginásio comum com colchonete e espelho.',
+    'Ela se chama Sra. Greta Nettle, tem sessenta e sete anos, e recebe você na sala de treino do segundo andar, que é um ginásio comum com colchonete e espelho.',
     'Ela está enrolando uma corda quando você entra e continua enrolando enquanto fala.',
     '"Nove dos onze." Ela diz isso antes de você perguntar. "Eu sei que é essa a pergunta, porque é sempre essa."',
     '"E a senhora continua treinando."',
@@ -1139,8 +1139,8 @@ c21_instrutora:{
     '"Agora o senhor vai me perguntar o que eu ensino, e eu vou responder, e é uma coisa só."'
   ],
   ef:{flag:'conheceu_iracy',
-      npc:{nome:'Sra. Chizu Manabe', opiniao:1, memoria:'Instrutora do Planalto há mais de vinte anos. Treinou nove dos onze.'},
-      registrar:'Sra. Chizu Manabe, instrutora, treinou nove dos onze de 1994.'},
+      npc:{nome:'Sra. Greta Nettle', opiniao:1, memoria:'Instrutora do Planalto há mais de vinte anos. Treinou nove dos onze.'},
+      registrar:'Sra. Greta Nettle, instrutora, treinou nove dos onze de 1994.'},
   escolhas:[
     {texto:'"O que a senhora ensina?"', vai:'c21_o_que_ela_ensina'},
     {texto:'"O que a senhora faria no meu lugar?"', vai:'c21_iracy_no_seu_lugar'},
@@ -1160,7 +1160,7 @@ c21_o_que_ela_ensina:{
   ],
   ef:{flag:['aprendeu_a_voltar'], moral:3,
       rep:{eixo:'bom',delta:2,motivo:'Aprendeu as três regras de voltar'},
-      npc:{nome:'Sra. Chizu Manabe', opiniao:3, memoria:'Te deu as três regras de graça.'},
+      npc:{nome:'Sra. Greta Nettle', opiniao:3, memoria:'Te deu as três regras de graça.'},
       registrar:'As três regras: marque a hora de sair; não desça o que não sabe subir; mais cinco minutos é a hora de ir.'},
   escolhas:[
     {texto:'"O que a senhora faria no meu lugar?"', vai:'c21_iracy_no_seu_lugar'},
@@ -1179,15 +1179,15 @@ c21_iracy_no_seu_lugar:{
     '"Eu não estou te dando conselho. Eu estou te dizendo o que eu carrego. O senhor decide o que faz com isso."'
   ],
   ef:{instabilidade:1, moral:-1,
-      npc:{nome:'Sra. Chizu Manabe', opiniao:3, memoria:'Treinou 41 anos de gente para ir e nunca foi.'},
-      registrar:'A Sra. Manabe treinou quarenta e um anos de gente para ir e nunca foi.'},
+      npc:{nome:'Sra. Greta Nettle', opiniao:3, memoria:'Treinou 41 anos de gente para ir e nunca foi.'},
+      registrar:'A Sra. Nettle treinou quarenta e um anos de gente para ir e nunca foi.'},
   escolhas:[{texto:'Voltar para a sala.', vai:'c21_ofertas'}]
 },
 
 c21_cargo:{
   texto:[
     'Você assina.',
-    'O cargo vem com sala, salário, crachá e uma frase que a Conselheira Sakuma diz na saída, sem maldade nenhuma:',
+    'O cargo vem com sala, salário, crachá e uma frase que a Conselheira Thistle diz na saída, sem maldade nenhuma:',
     '"O senhor vai descobrir em uns seis meses que um cargo aqui dentro resolve menos do que o senhor resolvia sozinho lá fora."',
     '"Por que a senhora está me contratando, então?"',
     '"Porque o que o senhor resolvia sozinho lá fora não escalava, e o que a gente faz aqui dentro escala mal, e ninguém achou nada melhor que isso ainda."'
@@ -1207,16 +1207,16 @@ c21_cargo:{
 c21_reabrir_94:{
   texto:[
     '"O meu primeiro ato é reabrir o caso de mil novecentos e noventa e quatro."',
-    'O Sr. Kawabe levanta a cabeça devagar.',
+    'O Sr. Waldo levanta a cabeça devagar.',
     '"O senhor tem competência para isso a partir de amanhã, e o processo está no arquivo morto do subsolo, caixa vinte e dois." Ele fala isso decorado. "Eu sei porque eu subi ele quatro vezes em vinte e dois anos e ele desceu quatro vezes."',
     '"Por quê?"',
     '"Porque reabrir custa uma equipe de campo por seis meses, e toda vez que eu pedi, a equipe estava em outro lugar."',
-    'Ele olha a Conselheira Sakuma, e ela assente uma vez.',
+    'Ele olha a Conselheira Thistle, e ela assente uma vez.',
     '"Agora não está", diz ela.'
   ],
   ef:{flag:['reabriu_o_94'], 
       rep:{eixo:'bom',delta:3,motivo:'Usou o primeiro dia de cargo para reabrir um caso de vinte e dois anos'},
-      npc:{nome:'Sr. Kawabe', opiniao:5, memoria:'Viu o caso de 94 ser reaberto depois de quatro tentativas dele.'},
+      npc:{nome:'Sr. Waldo', opiniao:5, memoria:'Viu o caso de 94 ser reaberto depois de quatro tentativas dele.'},
       registrar:'O caso de 18 de agosto de 1994 foi reaberto.'},
   escolhas:[{texto:'"E o norte?"', vai:'c21_norte_conversa'}]
 },
@@ -1239,13 +1239,13 @@ c21_contrato:{
       registrar:'Assinou contrato de campo com a Liga.'},
   escolhas:[
     {texto:'"Agora o norte."', vai:'c21_norte_conversa'},
-    {texto:'"Eu quero a Saya Kurata comigo."', vai:'c21_pediu_a_bruna'}
+    {texto:'"Eu quero a Maren Kestrel comigo."', vai:'c21_pediu_a_bruna'}
   ]
 },
 
 c21_pediu_a_bruna:{
   texto:[
-    '"Eu quero a Saya Kurata comigo."',
+    '"Eu quero a Maren Kestrel comigo."',
     'Ela fecha o caderno antes de qualquer um responder.',
     '"Não."',
     'É ela quem responde, e é definitivo, e ela olha para você quando diz.',
@@ -1254,8 +1254,8 @@ c21_pediu_a_bruna:{
     '"Mas eu vou te contar tudo. Cada passo. E isso vale mais do que eu ir."'
   ],
   ef:{flag:['bruna_vai_contar'],
-      npc:{nome:'Saya Kurata', opiniao:3, memoria:'Recusou subir de novo e prometeu te contar cada passo.'},
-      registrar:'Saya Kurata não vai voltar ao norte, mas vai te contar tudo.'},
+      npc:{nome:'Maren Kestrel', opiniao:3, memoria:'Recusou subir de novo e prometeu te contar cada passo.'},
+      registrar:'Maren Kestrel não vai voltar ao norte, mas vai te contar tudo.'},
   escolhas:[{texto:'"Então me conta."', vai:'c21_norte_conversa'}]
 },
 
@@ -1263,11 +1263,11 @@ c21_pediu_a_bruna:{
 c21_desafio_elite:{
   texto:[
     '"Eu não vim para ser contratado."',
-    'A Conselheira Sakuma ri — a primeira reação humana da reunião inteira. "Ótimo. Também tem isso."',
+    'A Conselheira Thistle ri — a primeira reação humana da reunião inteira. "Ótimo. Também tem isso."',
     'A arena da Elite 4 fica dois andares abaixo e é um poço de pedra com iluminação vinda de cima.',
     'Não tem plateia. Nunca teve. É outra coisa que os jogos não contam.',
     d=>d.flags.conheceu_quintino
-      ? 'E, na borda, com as pernas para dentro, o Sr. Nakada continua sentado, exatamente onde estava às treze e trinta.'
+      ? 'E, na borda, com as pernas para dentro, o Sr. Mervin continua sentado, exatamente onde estava às treze e trinta.'
       : 'Na borda, com as pernas para dentro, tem um homem de setenta e poucos anos sentado sozinho, que ninguém apresenta.'
   ],
   escolhas:[
@@ -1279,7 +1279,7 @@ c21_desafio_elite:{
 
 c21_os_quatro_da_elite:{
   texto:[
-    'A Conselheira Sakuma lista sem consultar nada.',
+    'A Conselheira Thistle lista sem consultar nada.',
     '"Três das quatro cadeiras estão com substituto desde agosto." Ela diz isso sem baixar a voz e sem desculpa nenhuma. "Os titulares estão vivos, estão em casa, e não vêm. A Liga não tirou o nome das portas e eu fui voto vencido nisso também."',
     'Na cadeira da Agatha senta um homem de cinquenta e um anos que entra na sala com refletor e música de palco, e que foi vice-campeão da Conferência Indigo antes de virar isso.',
     'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
@@ -1394,7 +1394,7 @@ c21_venceu_elite:{
     'Você vence quatro times seguidos num poço de pedra sem plateia nenhuma.',
     'Não tem confete, não tem hino, não tem foto imediata.',
     'Tem um homem de setenta e poucos anos sentado na borda do poço que desce a escadinha devagar e aperta a sua mão com as duas dele.',
-    '"Muita gente chega aqui", diz o Sr. Nakada. "Quase ninguém chega aqui com o time inteiro de pé e sem ter comprado nenhum deles."',
+    '"Muita gente chega aqui", diz o Sr. Mervin. "Quase ninguém chega aqui com o time inteiro de pé e sem ter comprado nenhum deles."',
     d=>d.cemiterio.length
       ? `Ele olha a lista que trouxeram. "O senhor perdeu ${d.cemiterio.length}. Isso conta. Vai contar para o senhor por muito tempo, e é bom que conte."`
       : 'Ele olha a lista que trouxeram. "E o senhor não perdeu nenhum. Isso é mais raro que vencer."',
@@ -1411,14 +1411,14 @@ c21_venceu_elite:{
   escolhas:[
     {texto:'"E o norte?"', vai:'c21_norte_conversa'},
     {texto:'Perguntar da moldura vazia na parede.', vai:'c21_a_moldura'},
-    {texto:'Subir e sentar na borda com o Sr. Nakada.', vai:'c21_sentou_na_borda'}
+    {texto:'Subir e sentar na borda com o Sr. Mervin.', vai:'c21_sentou_na_borda'}
   ]
 },
 
 c21_a_moldura:{
   texto:[
     'A moldura vazia na parede dos campeões é a trigésima.',
-    '"A foto se tira na segunda de manhã", diz a Sra. Doi, da recepção, já com o formulário na mão. "O senhor escolhe se é aqui em cima ou no poço."',
+    '"A foto se tira na segunda de manhã", diz a Sra. Ada, da recepção, já com o formulário na mão. "O senhor escolhe se é aqui em cima ou no poço."',
     '"Dá para escolher outra coisa?"',
     'Ela levanta os olhos.',
     '"Como assim?"',
@@ -1431,7 +1431,7 @@ c21_a_moldura:{
       registrar:'A trigésima foto da parede dos campeões vai ser do time.'},
   escolhas:[
     {texto:'"E o norte?"', vai:'c21_norte_conversa'},
-    {texto:'Subir e sentar na borda com o Sr. Nakada.', vai:'c21_sentou_na_borda'}
+    {texto:'Subir e sentar na borda com o Sr. Mervin.', vai:'c21_sentou_na_borda'}
   ]
 },
 
@@ -1445,9 +1445,9 @@ c21_sentou_na_borda:{
     'E ficam os dois assim, olhando um poço de pedra vazio, num prédio que fecha às dezoito, numa montanha, enquanto lá embaixo uma van entrega pão para o refeitório do dia seguinte.'
   ],
   ef:{flag:'sentou_na_borda', moral:4,
-      npc:{nome:'Sr. Nakada', opiniao:4, memoria:'Você sentou na borda com ele depois de ganhar.'},
+      npc:{nome:'Sr. Mervin', opiniao:4, memoria:'Você sentou na borda com ele depois de ganhar.'},
       rep:{eixo:'bom',delta:2,motivo:'Sentou na borda do poço em vez de comemorar'},
-      registrar:'Sentou na borda do poço com o Sr. Nakada depois de vencer.'},
+      registrar:'Sentou na borda do poço com o Sr. Mervin depois de vencer.'},
   escolhas:[{texto:'"E o norte?"', vai:'c21_norte_conversa'}]
 },
 
@@ -1455,7 +1455,7 @@ c21_perdeu_elite:{
   texto:[
     'Você perde. Não tem vergonha nisso — perder aqui é o resultado padrão.',
     'Eles curam o seu time, te dão água e te deixam sentar na borda do poço o tempo que você precisar.',
-    '"Volta", diz o Sr. Nakada. "Eu perdi quatro vezes antes de sentar desse lado."',
+    '"Volta", diz o Sr. Mervin. "Eu perdi quatro vezes antes de sentar desse lado."',
     '"Quatro?"',
     '"Quatro, e a terceira foi feia." Ele coça o joelho. "Na quarta eu mudei uma coisa só e ganhei, e eu vou te contar qual foi se o senhor quiser ouvir."'
   ],
@@ -1478,8 +1478,8 @@ c21_o_que_ele_mudou:{
     '"Isso serve para muito mais coisa que luta, e o senhor vai levar uns dez anos para descobrir onde."'
   ],
   ef:{flag:'conselho_do_quintino', moral:2,
-      npc:{nome:'Sr. Nakada', opiniao:3, memoria:'Te contou o que mudou na quarta tentativa.'},
-      registrar:'O Sr. Nakada parou de guardar o melhor para o fim.'},
+      npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te contou o que mudou na quarta tentativa.'},
+      registrar:'O Sr. Mervin parou de guardar o melhor para o fim.'},
   escolhas:[
     {texto:'Treinar e tentar de novo.', vai:'c21_treinou'},
     {texto:'"Me fala do norte."', vai:'c21_norte_conversa'}
@@ -1489,8 +1489,8 @@ c21_o_que_ele_mudou:{
 c21_treinou:{
   texto:[
     'Você fica no Planalto por três semanas.',
-    'Treina das seis às nove com a Sra. Manabe, que não te cobra nada e não te elogia nunca, e come no refeitório do subsolo com o pessoal da manutenção.',
-    'Na segunda semana, o Sr. Niimi te ensina a consertar uma tomada. Na terceira, você conserta a da sala quatro.',
+    'Treina das seis às nove com a Sra. Nettle, que não te cobra nada e não te elogia nunca, e come no refeitório do subsolo com o pessoal da manutenção.',
+    'Na segunda semana, o Sr. Quint te ensina a consertar uma tomada. Na terceira, você conserta a da sala quatro.',
     'E numa quinta de manhã você desce a escadinha de ferro de novo.'
   ],
   ef:{executar:d=>{ d.time.forEach(p=>ganharExp(p, 1800)); return [{tipo:'info', texto:'Três semanas de treino no Planalto. O time sobe.'}]; },
@@ -1505,10 +1505,10 @@ c21_norte_conversa:{
     'A sala fica diferente quando o assunto muda. Todo mundo senta um pouco mais reto.',
     '"Acima da Rota 10 tem um vale entre duas paredes de pedra. Não tem nome, não tem trilha marcada e não aparece na carta topográfica com relevo, só com hachura."',
     '"Nós mandamos três equipes em dois anos."',
-    'A Conselheira Sakuma vira a terceira folha, que continua sem ser entregue a ninguém.',
+    'A Conselheira Thistle vira a terceira folha, que continua sem ser entregue a ninguém.',
     '"Duas voltaram e não conseguem descrever o que viram. Não é trauma: elas tentam descrever e as frases não fecham."',
     '"A terceira voltou com uma pessoa a menos."',
-    'A Saya Kurata não levanta os olhos do caderno.'
+    'A Maren Kestrel não levanta os olhos do caderno.'
   ],
   ef:{flag:'sabe_do_norte', registrar:'A Liga revelou o vale do norte.'},
   escolhas:[
@@ -1525,11 +1525,11 @@ c21_as_tres_equipes:{
     'A Conselheira abre a terceira pasta, que é grossa.',
     '"Primeira equipe, quatro pessoas, dezoito meses atrás. Subiram, chegaram, voltaram em dois dias. Relatório de três páginas dizendo que não encontraram nada."',
     '"Segunda equipe, seis pessoas, em março."',
-    'Ela olha a Saya Kurata, que continua sem levantar a cabeça.',
+    'Ela olha a Maren Kestrel, que continua sem levantar a cabeça.',
     '"Terceira equipe, seis pessoas, há quatro meses. Voltaram seis. Relatório de vinte e duas páginas em que nenhuma frase termina."',
     '"E o quarto nome da placa?"',
     'Silêncio.',
-    '"O quarto nome não é do vale", diz o Sr. Kawabe. "É de um acidente de carro na estrada de descida, na volta da primeira equipe. E é o único dos quatro que a gente sabe explicar."'
+    '"O quarto nome não é do vale", diz o Sr. Waldo. "É de um acidente de carro na estrada de descida, na volta da primeira equipe. E é o único dos quatro que a gente sabe explicar."'
   ],
   ef:{flag:['sabe_das_tres_equipes'], instabilidade:1,
       registrar:'Três equipes. A segunda voltou com cinco de seis. A terceira voltou inteira e não fecha frase.'},
@@ -1544,11 +1544,11 @@ c21_as_tres_equipes:{
 c21_relatorio_22:{
   texto:[
     'Ela entrega.',
-    'São vinte e duas páginas datilografadas por seis pessoas diferentes, cada uma com a sua parte, e o Sr. Kawabe grampeou tudo junto na ordem de chegada.',
+    'São vinte e duas páginas datilografadas por seis pessoas diferentes, cada uma com a sua parte, e o Sr. Waldo grampeou tudo junto na ordem de chegada.',
     'Você lê três páginas e entende o que ela quis dizer.',
     'A gente chegou ao ponto marcado às onze e quarenta e havia. E aí a frase para.',
     'O terreno é aberto no fundo do vale e a sensação de estar sendo. E para.',
-    'Perguntei ao Kuroda se ele também. E para.',
+    'Perguntei ao Vernon se ele também. E para.',
     'Em vinte e duas páginas, quarenta e uma frases inacabadas, e todas param exatamente na palavra antes da informação.'
   ],
   ef:{flag:['leu_o_relatorio_22'], instabilidade:2,
@@ -1568,7 +1568,7 @@ c21_ultima_pagina:{
     'É manuscrita, não datilografada, e tem uma frase só, completa, terminada com ponto final.',
     'Ele não quis nada de nós.',
     'Embaixo, a assinatura e a matrícula, e a matrícula é do homem de mãos grandes que está no vestiário dois andares abaixo alinhando bolas numa toalha.',
-    'A Conselheira Sakuma olha a página de cabeça para baixo, do outro lado da mesa.',
+    'A Conselheira Thistle olha a página de cabeça para baixo, do outro lado da mesa.',
     '"Essa é a única frase completa dos três relatórios", ela diz. "E foi escrita quatro dias depois, em casa, e ele trouxe e entregou no balcão."'
   ],
   ef:{flag:['leu_a_frase_completa'], instabilidade:2,
@@ -1582,8 +1582,8 @@ c21_ultima_pagina:{
 
 c21_quem_ficou:{
   texto:[
-    'A Saya Kurata fecha o caderno e responde ela mesma, porque é dela.',
-    '"Kuroda. Quarenta e dois anos, dezenove de serviço, dois filhos."',
+    'A Maren Kestrel fecha o caderno e responde ela mesma, porque é dela.',
+    '"Vernon. Quarenta e dois anos, dezenove de serviço, dois filhos."',
     'Ela põe as duas mãos na mesa.',
     '"A gente desceu ao fundo do vale às onze. A gente subiu de volta às quatro e vinte da tarde. E no meio do caminho eu contei e a gente era cinco."',
     '"E ninguém viu nada?"',
@@ -1592,12 +1592,12 @@ c21_quem_ficou:{
     '"A gente andou uma hora e quarenta sendo cinco e achando que era cinco."'
   ],
   ef:{flag:['sabe_do_nogueira'], instabilidade:2, moral:-3,
-      npc:{nome:'Saya Kurata', opiniao:3, memoria:'Andou uma hora e quarenta sem sentir falta de quem faltava.'},
-      registrar:'Kuroda ficou no vale e a equipe andou 1h40 sem sentir falta.'},
+      npc:{nome:'Maren Kestrel', opiniao:3, memoria:'Andou uma hora e quarenta sem sentir falta de quem faltava.'},
+      registrar:'Vernon ficou no vale e a equipe andou 1h40 sem sentir falta.'},
   escolhas:[
     {texto:'"E vocês voltaram para procurar?"', vai:'c21_voltaram_procurar'},
     {texto:'"O que vocês querem que eu faça lá?"', vai:'c21_o_que_querem'},
-    {texto:'"Eu vou. E eu procuro o Kuroda."', vai:'c21_vai_procurar_nogueira'}
+    {texto:'"Eu vou. E eu procuro o Vernon."', vai:'c21_vai_procurar_nogueira'}
   ]
 },
 
@@ -1612,7 +1612,7 @@ c21_voltaram_procurar:{
     '"E a gente ficou três dias e não achou mais nada, e no quarto dia o rádio mandou descer."'
   ],
   ef:{instabilidade:2, moral:-2,
-      registrar:'As pegadas do Kuroda param inteiras, com o peso nos dois pés.'},
+      registrar:'As pegadas do Vernon param inteiras, com o peso nos dois pés.'},
   escolhas:[
     {texto:'"Eu vou. E eu procuro ele."', vai:'c21_vai_procurar_nogueira'},
     {texto:'"O que vocês querem que eu faça lá?"', vai:'c21_o_que_querem'},
@@ -1622,8 +1622,8 @@ c21_voltaram_procurar:{
 
 c21_vai_procurar_nogueira:{
   texto:[
-    '"Eu vou. E eu procuro o Kuroda."',
-    'A Saya Kurata fica olhando para você por um tempo que passa do confortável.',
+    '"Eu vou. E eu procuro o Vernon."',
+    'A Maren Kestrel fica olhando para você por um tempo que passa do confortável.',
     'Depois arranca uma folha do caderno e escreve alguma coisa e dobra e empurra pela mesa.',
     '"Isso é o que ele estava vestindo, a marca da bota e o número, e uma coisa que ele carregava no bolso de cima e que ele nunca tirava."',
     '"O que era?"',
@@ -1631,10 +1631,10 @@ c21_vai_procurar_nogueira:{
     'Ela abre o caderno e volta a escrever.',
     '"E se o senhor achar ele, o senhor não precisa me trazer nada. É só descer e dizer o nome dele em voz alta na portaria, que eu ouço do terceiro andar."'
   ],
-  ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Saya sobre o Kuroda':1}, moral:2,
-      npc:{nome:'Saya Kurata', opiniao:5, memoria:'Te pediu para achar a medalha de natação da filha do Kuroda.'},
+  ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Maren sobre o Vernon':1}, moral:2,
+      npc:{nome:'Maren Kestrel', opiniao:5, memoria:'Te pediu para achar a medalha de natação da filha do Vernon.'},
       rep:{eixo:'bom',delta:2,motivo:'Prometeu procurar um homem que a Liga já parou de procurar'},
-      registrar:'Procurar o Kuroda. Medalha de natação no bolso de cima.'},
+      registrar:'Procurar o Vernon. Medalha de natação no bolso de cima.'},
   escolhas:[
     {texto:'"O que vocês querem que eu faça lá?"', vai:'c21_o_que_querem'},
     {texto:'"Agora eu vou."', vai:'c21_aceitou_norte'}
@@ -1645,15 +1645,15 @@ c21_o_que_querem:{
   texto:[
     '"O que vocês querem que eu faça lá?"',
     'A pergunta cai na mesa e fica.',
-    'O Sr. Kawabe tira a folha da discordância dele do bolso, desdobra e põe em cima da mesa sem dizer nada, e todo mundo sabe qual é o item.',
-    'A Conselheira Sakuma leva um tempo comprido.',
+    'O Sr. Waldo tira a folha da discordância dele do bolso, desdobra e põe em cima da mesa sem dizer nada, e todo mundo sabe qual é o item.',
+    'A Conselheira Thistle leva um tempo comprido.',
     '"Eu não sei."',
     'Ela não tenta melhorar isso.',
     '"Eu quero saber se ele é perigoso e eu não sei como se mede isso. Eu quero saber o que ele quer e eu não sei perguntar. E eu quero que alguém volte inteiro, e essa é a única parte em que eu sou competente, e é a parte em que eu já falhei quatro vezes."'
   ],
   ef:{flag:['a_liga_nao_sabe'], instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Fez a Liga admitir que não sabe o que quer'},
-      npc:{nome:'Conselheira Nagisa Sakuma', opiniao:3, memoria:'Admitiu, na sua frente, que não sabe o que quer do vale.'},
+      npc:{nome:'Conselheira Edda Thistle', opiniao:3, memoria:'Admitiu, na sua frente, que não sabe o que quer do vale.'},
       registrar:'A Liga não sabe o que quer que você faça no vale.'},
   escolhas:[
     {texto:'"Então eu vou sem missão. Eu vou só olhar."', vai:'c21_so_olhar'},
@@ -1666,14 +1666,14 @@ c21_o_que_querem:{
 c21_so_olhar:{
   texto:[
     '"Então eu vou sem missão. Eu vou só olhar."',
-    'O Sr. Kawabe fecha os olhos e, pela primeira vez na tarde, sorri de verdade.',
+    'O Sr. Waldo fecha os olhos e, pela primeira vez na tarde, sorri de verdade.',
     '"Isso resolve o meu item quatro." Ele já está escrevendo. "Missão de reconhecimento sem objetivo de intervenção. Isso existe na norma, é a classe D, e ninguém usa porque não dá prestígio."',
     '"E o que muda na prática?"',
     '"Muda que se o senhor chegar lá e não fizer nada e voltar, o senhor cumpriu a missão." Ele levanta os olhos. "E isso, moço, é a diferença entre voltar e não voltar em oitenta por cento dos casos que eu vi em trinta e um anos."'
   ],
   ef:{flag:['missao_classe_d'], 
       rep:{eixo:'bom',delta:3,motivo:'Transformou a missão em reconhecimento sem intervenção'},
-      npc:{nome:'Sr. Kawabe', opiniao:5, memoria:'Você resolveu o item quatro da discordância dele.'},
+      npc:{nome:'Sr. Waldo', opiniao:5, memoria:'Você resolveu o item quatro da discordância dele.'},
       registrar:'Missão de classe D: reconhecimento, sem objetivo de intervenção. Chegar, olhar e voltar já cumpre.'},
   escolhas:[{texto:'"Então está fechado. Eu vou."', vai:'c21_aceitou_norte'}]
 },
@@ -1681,13 +1681,13 @@ c21_so_olhar:{
 c21_escrevam_agora:{
   texto:[
     '"Então escrevam. Agora. Eu espero."',
-    'A Conselheira Sakuma olha o relógio. São quinze e vinte.',
+    'A Conselheira Thistle olha o relógio. São quinze e vinte.',
     '"Isso leva uma hora."',
     '"Eu tenho uma hora."',
     'Eles levam uma hora e quarenta.',
     'Você fica sentado naquela sala enquanto três pessoas discutem, riscam, reescrevem e brigam sobre o verbo de uma frase por doze minutos inteiros.',
-    'Às dezessete horas, o Sr. Kawabe lê em voz alta o que escreveram, e é um parágrafo de quatro linhas, e as quatro linhas dizem uma coisa só: ir, observar, não intervir, voltar em cinco dias.',
-    'E, no rodapé, uma linha que a Saya Kurata pediu para incluir e que ninguém discutiu: a não observância do prazo de retorno não constitui falta.'
+    'Às dezessete horas, o Sr. Waldo lê em voz alta o que escreveram, e é um parágrafo de quatro linhas, e as quatro linhas dizem uma coisa só: ir, observar, não intervir, voltar em cinco dias.',
+    'E, no rodapé, uma linha que a Maren Kestrel pediu para incluir e que ninguém discutiu: a não observância do prazo de retorno não constitui falta.'
   ],
   ef:{flag:['missao_classe_d','tem_a_ordem_escrita'],
       itens:{'Ordem de missão de quatro linhas':1},
@@ -1700,9 +1700,9 @@ c21_devolveu:{
   texto:[
     'Você coloca a bola — ou as bolas — na mesa e empurra.',
     'A sala fica em silêncio de um jeito que não estava previsto na pauta.',
-    '"Obrigada." A Conselheira Sakuma parece genuinamente surpresa, o que diz muito sobre quem sentou nessa cadeira antes de você.',
+    '"Obrigada." A Conselheira Thistle parece genuinamente surpresa, o que diz muito sobre quem sentou nessa cadeira antes de você.',
     'Eles soltam na mesma tarde, na rota mais próxima, com dois biólogos e nenhuma câmera.',
-    'O Sr. Kawabe acompanha a soltura e volta no fim do dia com o formulário preenchido e uma frase escrita no campo de observações que não precisava estar ali.',
+    'O Sr. Waldo acompanha a soltura e volta no fim do dia com o formulário preenchido e uma frase escrita no campo de observações que não precisava estar ali.',
     'Devolvido por vontade do detentor. Sem determinação judicial.'
   ],
   ef:{executar:d=>{
@@ -1722,7 +1722,7 @@ c21_devolveu:{
 c21_aceitou_norte:{
   texto:[
     'Eles te dão um mapa, coordenadas e uma caixa com quatro Ultra Balls e uma Master Ball.',
-    '"A Master Ball é da Liga. Está registrada." A Conselheira Sakuma deixa isso no ar um segundo. "O que o senhor fizer com ela vai ser registrado também."',
+    '"A Master Ball é da Liga. Está registrada." A Conselheira Thistle deixa isso no ar um segundo. "O que o senhor fizer com ela vai ser registrado também."',
     d=>d.flags.missao_classe_d
       ? 'E, em cima do mapa, a ordem de quatro linhas, assinada por três pessoas, dizendo que chegar e não fazer nada já cumpre a missão.'
       : 'E, em cima do mapa, nada. Nenhuma linha dizendo o que você deve fazer ao chegar.',
@@ -1736,7 +1736,7 @@ c21_aceitou_norte:{
       registrar:'A Liga te equipou para o norte.'},
   escolhas:[
     {texto:'Devolver os lendários antes de subir.', vai:'c21_devolveu', cond:d=>Estado.lendariosCapturados().length>0},
-    {texto:'Passar na arena para se despedir do Sr. Nakada.', vai:'c21_despedida', cond:d=>!!d.flags.conheceu_quintino},
+    {texto:'Passar na arena para se despedir do Sr. Mervin.', vai:'c21_despedida', cond:d=>!!d.flags.conheceu_quintino},
     {texto:'Sair do Planalto.', vai:'c21_fim'}
   ]
 },
@@ -1752,9 +1752,9 @@ c21_despedida:{
     '"É o endereço de uma casa em Cinnabar que não existe mais, porque a ilha inteira não existe mais." Ele encolhe os ombros. "Eu carrego desde oitenta e um. Se o senhor voltar do norte, joga fora por mim. Eu não consigo."'
   ],
   ef:{flag:['carrega_o_papel_do_quintino'], itens:{'Um papel dobrado desde 1981':1}, moral:3,
-      npc:{nome:'Sr. Nakada', opiniao:5, memoria:'Te pediu para jogar fora, na volta, um papel que ele carrega desde 1981.'},
+      npc:{nome:'Sr. Mervin', opiniao:5, memoria:'Te pediu para jogar fora, na volta, um papel que ele carrega desde 1981.'},
       rep:{eixo:'bom',delta:2,motivo:'Aceitou carregar o arrependimento de outra pessoa'},
-      registrar:'O Sr. Nakada te deu um papel de 1981 para jogar fora na volta.'},
+      registrar:'O Sr. Mervin te deu um papel de 1981 para jogar fora na volta.'},
   escolhas:[{texto:'Sair do Planalto.', vai:'c21_fim'}]
 },
 
@@ -1764,7 +1764,7 @@ c21_recusou_norte:{
     '"Já mandamos três." Ela não se irrita. "A quarta seria enviar gente sabendo que eles não voltam. Eu não faço isso."',
     '"E mandar eu, a senhora faz?"',
     '"Eu não estou te mandando. Eu estou te contando." Ela empurra o mapa pela mesa mesmo assim. "A diferença importa para mim, mesmo que não importe para o senhor."',
-    'O Sr. Kawabe olha o mapa em cima da mesa e olha para ela, e não diz nada, e o que ele não diz fica na sala.'
+    'O Sr. Waldo olha o mapa em cima da mesa e olha para ela, e não diz nada, e o que ele não diz fica na sala.'
   ],
   ef:{flag:'recusou_norte'},
   escolhas:[
@@ -1778,7 +1778,7 @@ c21_acabou_de_fazer:{
   texto:[
     '"A senhora acabou de fazer exatamente o que disse que não faz."',
     'A sala fica muito quieta.',
-    'A Conselheira Sakuma olha o mapa em cima da mesa, do lado de lá da linha invisível que separa contar de mandar.',
+    'A Conselheira Thistle olha o mapa em cima da mesa, do lado de lá da linha invisível que separa contar de mandar.',
     'Ela puxa o mapa de volta.',
     '"O senhor tem razão."',
     'E aí ela faz uma coisa que ninguém naquela mesa esperava: ela guarda o mapa na pasta e fecha.',
@@ -1786,7 +1786,7 @@ c21_acabou_de_fazer:{
   ],
   ef:{flag:['nao_saiu_com_o_mapa'], 
       rep:{eixo:'bom',delta:3,motivo:'Não deixou que te empurrassem um mapa pela mesa'},
-      npc:{nome:'Conselheira Nagisa Sakuma', opiniao:4, memoria:'Guardou o mapa de volta na pasta quando você apontou o que ela tinha feito.'},
+      npc:{nome:'Conselheira Edda Thistle', opiniao:4, memoria:'Guardou o mapa de volta na pasta quando você apontou o que ela tinha feito.'},
       registrar:'A Conselheira guardou o mapa de volta. Você vai ter que pedir se quiser ir.'},
   escolhas:[
     {texto:'"Então eu estou pedindo."', vai:'c21_aceitou_norte'},

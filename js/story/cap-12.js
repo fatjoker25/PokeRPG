@@ -436,7 +436,7 @@ c12_manejo_padaria:{
 
 c12_marido:{
   texto:[
-    'O marido dela se chama Vandir Tsukada — Sr. Tsukada, como a cidade inteira o trata — e está na sala dos fundos da padaria assistindo televisão às três da tarde, porque se aposentou da reserva faz quatro anos e não sabe o que fazer com o dia.',
+    'O marido dela se chama Vandir Zane — Sr. Zane, como a cidade inteira o trata — e está na sala dos fundos da padaria assistindo televisão às três da tarde, porque se aposentou da reserva faz quatro anos e não sabe o que fazer com o dia.',
     'Ele desliga a televisão sozinho quando você pergunta, o que já é resposta.',
     '"Dezesseis anos. Eu era da equipe de captura."',
     '"Captura de quê?"',
@@ -450,7 +450,7 @@ c12_marido:{
     '"Só que a planilha é de mil novecentos e setenta e um."'
   ],
   ef:{flag:['sabe_do_censo','sabe_da_planilha_71'],
-      npc:{nome:'Sr. Tsukada', opiniao:3, memoria:'Dezesseis anos na equipe de captura da Zona. Desligou a televisão sozinho quando você perguntou.'},
+      npc:{nome:'Sr. Zane', opiniao:3, memoria:'Dezesseis anos na equipe de captura da Zona. Desligou a televisão sozinho quando você perguntou.'},
       rep:{eixo:'bom',delta:3,motivo:'Achou quem fazia a captura e perguntou como a conta era feita'},
       registrar:'A capacidade de suporte da Zona Safári é calculada por uma planilha de 1971.',
       presagio:'Uma planilha de mil novecentos e setenta e um. Ninguém refez a conta em trinta anos.'},
@@ -476,13 +476,13 @@ c12_planilha_errada:{
     '"Não." Você fala devagar, porque você mesmo está entendendo enquanto fala. "A conta tá dizendo que cabe menos. Se a planilha é de uma área maior e a área encolheu, a densidade real ficou maior que a planilha prevê. Aí todo ano a planilha acusa excedente."',
     '"Todo ano."',
     '"Todo ano."',
-    'Sr. Tsukada fica muito quieto.',
+    'Sr. Zane fica muito quieto.',
     '"Dezesseis anos, moço."'
   ],
   ef:{flag:['entendeu_a_conta','sabe_da_planilha_71'],
       rep:{eixo:'bom',delta:5,motivo:'Desmontou trinta anos de política pública num fundo de padaria'},
       moral:-10, instabilidade:1,
-      npc:{nome:'Sr. Tsukada', opiniao:5, memoria:'Descobriu com você que a planilha que justificou dezesseis anos de captura estava errada desde 1985.'},
+      npc:{nome:'Sr. Zane', opiniao:5, memoria:'Descobriu com você que a planilha que justificou dezesseis anos de captura estava errada desde 1985.'},
       registrar:'A cerca recuou em 1985 e a planilha de 1971 nunca foi refeita: o "excedente" é um erro de cálculo.',
       presagio:'Todo ano acusa excedente. Todo ano. Não tem vilão nessa conta.'},
   escolhas:[
@@ -551,16 +551,16 @@ c12_quem_entra:{
     '"E o que mais?"',
     '"Tem uma van branca que entra toda terça de manhã e sai toda terça de tarde."',
     '"Van de quê?"',
-    '"Da veterinária." Ele fala isso como se fosse óbvio. "A doutora Rin. Ela atende a reserva há uns oito anos, mora em Fuchsia mesmo, casa da rua da escola."',
+    '"Da veterinária." Ele fala isso como se fosse óbvio. "A doutora Pia. Ela atende a reserva há uns oito anos, mora em Fuchsia mesmo, casa da rua da escola."',
     'Ele olha pra você com uma cara nova.',
     '"Ela entra no setor 7 toda terça, moço. Toda terça, há dois anos, num setor que tá fechado pra recuperação ambiental."'
   ],
   ef:{flag:['sabe_da_yara','endereco_yara'],
       rep:{eixo:'bom',delta:3,motivo:'Achou a pessoa que entra no setor fechado toda semana'},
-      registrar:'A Dra. Rin, veterinária da reserva, entra no setor 7 toda terça-feira há dois anos.',
+      registrar:'A Dra. Pia, veterinária da reserva, entra no setor 7 toda terça-feira há dois anos.',
       presagio:'Toda terça. Uma veterinária. Num lugar onde supostamente só se planta grama.'},
   escolhas:[
-    {texto:'Ir procurar a Dra. Rin.', vai:'c12_yara'},
+    {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara'},
     {texto:'Ir falar com o diretor primeiro.', vai:'c12_diretor'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'},
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'}
@@ -582,14 +582,14 @@ c12_vandir_soltura:{
     '"E eu tô com a hérnia, e eu dirijo."'
   ],
   ef:{flag:['vandir_dirige','tem_quem_leve'],
-      npc:{nome:'Sr. Tsukada', opiniao:8, memoria:'Se ofereceu para dirigir o caminhão de soltura, com hérnia e sessenta e sete anos.'},
+      npc:{nome:'Sr. Zane', opiniao:8, memoria:'Se ofereceu para dirigir o caminhão de soltura, com hérnia e sessenta e sete anos.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a coisa certa ao homem certo'},
       moral:15,
-      registrar:'Sr. Tsukada dirige o caminhão de soltura se você conseguir abrir o setor 7.',
+      registrar:'Sr. Zane dirige o caminhão de soltura se você conseguir abrir o setor 7.',
       presagio:'Ele tem o mapa na cabeça. Guarde — isso muda o final desse capítulo.'},
   escolhas:[
     {texto:'"Então me ajuda a abrir."', vai:'c12_vandir_setor7'},
-    {texto:'Ir procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Ir falar com o diretor.', vai:'c12_diretor'},
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'}
   ]
@@ -643,7 +643,7 @@ c12_koga_reserva:{
     {texto:'"Eu preciso falar com ele."', vai:'c12_koga'},
     {texto:'"Ele tem cópia do relatório?"', vai:'c12_koga'},
     {texto:'Ir falar com o diretor.', vai:'c12_diretor'},
-    {texto:'Ir procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
+    {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
   ]
 },
 
@@ -730,7 +730,7 @@ c12_derrubar_relatorio:{
       presagio:'"A gente é bem complementar." Anota — é a primeira vez no jogo que alguém divide tarefa com você de igual pra igual.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin antes.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia antes.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Falar com o diretor antes.', vai:'c12_diretor'},
     {texto:'Desafiar o ginásio antes.', vai:'c12_desafio_koga'}
   ]
@@ -770,7 +770,7 @@ c12_quem_assina:{
     'Koga para com as xícaras na mão.',
     '"A entrada, o diretor. A saída, o diretor."',
     '"E ele ganha por unidade?"',
-    '"Não." Ele fala isso com firmeza. "O Kusanagi ganha salário de servidor há trinta e um anos e mora numa casa de dois quartos a quatro quadras daqui, e eu conheço a casa porque eu já entreguei remédio lá quando a mulher dele estava doente."',
+    '"Não." Ele fala isso com firmeza. "O Quince ganha salário de servidor há trinta e um anos e mora numa casa de dois quartos a quatro quadras daqui, e eu conheço a casa porque eu já entreguei remédio lá quando a mulher dele estava doente."',
     'Ele leva as xícaras pra dentro e volta.',
     '"Quem ganha por unidade é o receptor credenciado."',
     '"E quem credencia o receptor?"',
@@ -851,7 +851,7 @@ c12_descredenciar:{
       presagio:'"Vergonha é o instrumento político mais subestimado de Kanto." Ele está certo.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
     {texto:'Desafiar o ginásio.', vai:'c12_desafio_koga'}
   ]
@@ -876,7 +876,7 @@ c12_koga_relatorio:{
       presagio:'"Conta errada é uma instituição fazendo de bom grado." Essa é a tese do capítulo.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Falar com o diretor.', vai:'c12_diretor'}
   ]
@@ -899,7 +899,7 @@ c12_desafio_koga:{
       registrar:'Koga luta quarta, 14h. Sem exceção.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'}
   ]
@@ -912,11 +912,11 @@ c12_passeio:{
     'O guia tem vinte e dois anos, uniforme cáqui com o nome bordado — NICO — e um texto decorado que ele recita há quatro meses e que ainda não ficou automático, porque ele ainda olha pra ver se as pessoas estão gostando.',
     'O grupo tem onze pessoas: um casal de idosos, uma família com duas crianças, três adolescentes e você.',
     'O passeio é honesto e bonito, e essa é a parte que complica tudo.',
-    'Você vê Nidorino em bando, na borda de um capinzal, a uns quarenta metros. Vê um Kangaskhan com filhote, e o Taki faz todo mundo parar e falar baixo, e a criança de seis anos chora de emoção e o pai fica com vergonha e o Taki diz "pode chorar, eu chorei na primeira vez".',
+    'Você vê Nidorino em bando, na borda de um capinzal, a uns quarenta metros. Vê um Kangaskhan com filhote, e o Orin faz todo mundo parar e falar baixo, e a criança de seis anos chora de emoção e o pai fica com vergonha e o Orin diz "pode chorar, eu chorei na primeira vez".',
     'Vê Scyther a distância segura, dois, num tronco caído.',
     'E o folheto plastificado é bom: tem nome científico, tem o que a espécie come, tem em que setor costuma estar.',
     'Alguém fez isso com cuidado.',
-    'Na volta, o grupo passa por uma trilha lateral que o Taki contorna sem comentar — ele nem desacelera, ele só faz a curva um pouco mais aberta.',
+    'Na volta, o grupo passa por uma trilha lateral que o Orin contorna sem comentar — ele nem desacelera, ele só faz a curva um pouco mais aberta.',
     'Na trilha lateral, no chão, tem trilho.',
     'Trilho de carrinho de carga, de bitola estreita, novo, com a superfície polida de uso, indo na direção oposta à saída.'
   ],
@@ -937,14 +937,14 @@ c12_ficou_pra_tras:{
     'Você anda o trilho por setecentos metros.',
     'E aí o trilho passa por baixo de um portão de tela com placa de **ÁREA TÉCNICA — ACESSO RESTRITO**, e do outro lado do portão tem uma clareira, e na clareira tem estrutura de tubo galvanizado.',
     'Você não chega a ver o que tem dentro da estrutura porque uma mão fecha no seu ombro por trás.',
-    'É o Taki.',
+    'É o Orin.',
     'Ele está branco e está ofegante de ter corrido setecentos metros, e a primeira coisa que ele faz não é te repreender.',
     'É te puxar pra trás de uma moita.',
     '"Fica quieto", ele sussurra. "Tem plantão."'
   ],
   ef:{flag:['quase_viu_o_setor7','nico_te_salvou'],
-      npc:{nome:'Guia Taki', opiniao:3, memoria:'Correu setecentos metros para te puxar de trás de uma moita antes do plantão te ver.'},
-      registrar:'O guia Taki te impediu de ser visto pelo plantão do setor 7.',
+      npc:{nome:'Guia Orin', opiniao:3, memoria:'Correu setecentos metros para te puxar de trás de uma moita antes do plantão te ver.'},
+      registrar:'O guia Orin te impediu de ser visto pelo plantão do setor 7.',
       presagio:'Ele correu. Ele não gritou, não chamou ninguém, não te entregou. Ele correu.'},
   escolhas:[
     {texto:'"O que tem ali?"', vai:'c12_nico'},
@@ -967,11 +967,11 @@ c12_guia_perguntado:{
     '"Não volta."',
     'Ele solta o seu braço e vai embora quase correndo, e acena pro casal de idosos, e o casal acena de volta.'
   ],
-  ef:{npc:{nome:'Guia Taki', opiniao:1, memoria:'Te avisou, apavorado e sorrindo, para não voltar à Zona à noite.'},
+  ef:{npc:{nome:'Guia Orin', opiniao:1, memoria:'Te avisou, apavorado e sorrindo, para não voltar à Zona à noite.'},
       flag:'aviso_do_guia',
       presagio:'Ele sorriu o tempo inteiro. Todo mundo aqui sorri o tempo inteiro.'},
   escolhas:[
-    {texto:'Procurar o Taki depois do expediente.', vai:'c12_nico'},
+    {texto:'Procurar o Orin depois do expediente.', vai:'c12_nico'},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'},
     {texto:'Voltar à noite.', vai:'c12_noite_zona'}
@@ -980,7 +980,7 @@ c12_guia_perguntado:{
 
 c12_nico:{
   texto:[
-    'Você espera o Taki na saída dos funcionários, às dezoito e quarenta.',
+    'Você espera o Orin na saída dos funcionários, às dezoito e quarenta.',
     'Ele te vê e quase volta pra dentro, e não volta porque a porta já fechou atrás dele e reabrir daria mais na vista.',
     'Vocês conversam encostados num muro, no escuro, do lado de um contêiner de lixo, e ele fala muito rápido e muito baixo.',
     '"Setor 7 é fechado há dois anos por “recuperação ambiental”. Ninguém recupera nada lá."',
@@ -993,9 +993,9 @@ c12_nico:{
     '"Eu tenho esse emprego e mais nada. Eu tenho isso e mais nada, e meu pai tá com problema de coluna, e a gente mora nos fundos da casa da minha tia."'
   ],
   ef:{flag:['sabe_do_setor7','nico_falou'],
-      npc:{nome:'Guia Taki', opiniao:4, memoria:'Te contou tudo sobre o setor 7 encostado num muro, no escuro, ao lado de um contêiner de lixo.'},
+      npc:{nome:'Guia Orin', opiniao:4, memoria:'Te contou tudo sobre o setor 7 encostado num muro, no escuro, ao lado de um contêiner de lixo.'},
       moral:-5,
-      registrar:'Taki denunciou o setor 7 ao diretor em março e nada aconteceu.',
+      registrar:'Orin denunciou o setor 7 ao diretor em março e nada aconteceu.',
       presagio:'Ele marcou hora, foi de camisa e ensaiou. Guarde os três detalhes.'},
   escolhas:[
     {texto:'"Eu não vou falar seu nome pra ninguém."', vai:'c12_protegeu_nico'},
@@ -1021,13 +1021,13 @@ c12_protegeu_nico:{
   ],
   ef:{flag:['protegeu_nico','tem_a_chave_do_nico'],
       itens:{'Chave do portão de pedestre':1},
-      npc:{nome:'Guia Taki', opiniao:7, memoria:'Te deu a chave do portão de pedestre depois que você prometeu não usar o nome dele.'},
+      npc:{nome:'Guia Orin', opiniao:7, memoria:'Te deu a chave do portão de pedestre depois que você prometeu não usar o nome dele.'},
       rep:{eixo:'bom',delta:3,motivo:'Protegeu a fonte antes de usar a fonte'},
-      registrar:'Taki te deu a chave do portão de pedestre da trilha três.',
+      registrar:'Orin te deu a chave do portão de pedestre da trilha três.',
       presagio:'"Essa chave você achou no chão." Ele pensou nisso antes de oferecer.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin antes.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia antes.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Falar com o diretor antes.', vai:'c12_diretor'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'}
   ]
@@ -1050,15 +1050,15 @@ c12_mapa_do_nico:{
     '"Diz mesmo."'
   ],
   ef:{flag:['tem_o_mapa_do_nico','protegeu_nico'],
-      itens:{'Mapa do Taki (no verso do folheto)':1},
-      npc:{nome:'Guia Taki', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
+      itens:{'Mapa do Orin (no verso do folheto)':1},
+      npc:{nome:'Guia Orin', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Deixou alguém ajudar sem se destruir'},
       moral:8,
-      registrar:'Taki desenhou o mapa do setor 7 com os três pontos de plantão e os horários de ronda.',
+      registrar:'Orin desenhou o mapa do setor 7 com os três pontos de plantão e os horários de ronda.',
       presagio:'"Eu já sei que eu não vou." É a frase mais honesta que alguém te disse em Fuchsia.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'}
   ]
@@ -1075,7 +1075,7 @@ c12_nico_vai:{
   ],
   ef:{flag:['nico_junto'],
       itens:{'Garrafa de água':1},
-      npc:{nome:'Guia Taki', opiniao:6, memoria:'Foi com você ao setor 7, de noite, depois de dizer não quatro vezes.'},
+      npc:{nome:'Guia Orin', opiniao:6, memoria:'Foi com você ao setor 7, de noite, depois de dizer não quatro vezes.'},
       rep:{eixo:'bom',delta:1,motivo:'Convenceu alguém a fazer o que ele queria fazer'},
       presagio:'Ele levou água pra dois. Guia sempre leva água.'},
   escolhas:[{texto:'Ir à noite.', vai:'c12_noite_zona'}]
@@ -1094,9 +1094,9 @@ c12_nico_acusado:{
     'Não diz o nome.',
     'E você nunca vai saber se foi por causa do que você disse ou apesar dele.'
   ],
-  ef:{npc:{nome:'Guia Taki', opiniao:-2, memoria:'Você o chamou de cúmplice. Ele concordou e sumiu. Depois depôs numa audiência.'},
+  ef:{npc:{nome:'Guia Orin', opiniao:-2, memoria:'Você o chamou de cúmplice. Ele concordou e sumiu. Depois depôs numa audiência.'},
       flag:'afastou_nico', moral:-8,
-      registrar:'Chamou o Taki de cúmplice. Ele concordou.',
+      registrar:'Chamou o Orin de cúmplice. Ele concordou.',
       presagio:'Você nunca vai saber se foi por causa ou apesar. Quase nunca se sabe.'},
   escolhas:[
     {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'},
@@ -1120,15 +1120,15 @@ c12_pediu_desculpa_nico:{
     'Depois ele entra em casa e volta com o folheto plastificado e uma caneta, e desenha o mapa, e não fala mais nada enquanto desenha.'
   ],
   ef:{flag:['tem_o_mapa_do_nico'], limpaFlag:'afastou_nico',
-      itens:{'Mapa do Taki (no verso do folheto)':1},
-      npc:{nome:'Guia Taki', opiniao:5, memoria:'Você voltou para pedir desculpa. Ele te deu o mapa em silêncio, sentado num degrau.'},
+      itens:{'Mapa do Orin (no verso do folheto)':1},
+      npc:{nome:'Guia Orin', opiniao:5, memoria:'Você voltou para pedir desculpa. Ele te deu o mapa em silêncio, sentado num degrau.'},
       rep:{eixo:'bom',delta:3,motivo:'Voltou para pedir desculpa'},
       moral:10,
-      registrar:'Pediu desculpa ao Taki e recebeu o mapa.',
+      registrar:'Pediu desculpa ao Orin e recebeu o mapa.',
       presagio:'"Essas duas coisas juntas." Ele reparou que você não usou o certo como desculpa.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
     {texto:'Ir pro bar.', vai:'c12_bar'}
   ]
@@ -1137,7 +1137,7 @@ c12_pediu_desculpa_nico:{
 c12_yara:{
   texto:[
     'A casa da rua da escola tem um portão baixo, um Growlithe velho dormindo no sol e uma van branca com o adesivo **MED. VET. — ATEND. FAUNA** na porta.',
-    'A Dra. Rin tem uns quarenta e cinco anos e atende no quintal, porque o consultório dela é o quintal.',
+    'A Dra. Pia tem uns quarenta e cinco anos e atende no quintal, porque o consultório dela é o quintal.',
     'Ela está fazendo curativo num Pidgey de asa quebrada quando você chega, e não para de fazer pra conversar.',
     '"Eu atendo a reserva por contrato. Doze horas por semana, terça inteira e quinta de manhã."',
     '"O que você faz nas terças?"',
@@ -1149,8 +1149,8 @@ c12_yara:{
     '"Eu marco entre cinquenta e oitenta por terça."'
   ],
   ef:{flag:['conheceu_yara','sabe_do_brinco'],
-      npc:{nome:'Dra. Rin', opiniao:1, memoria:'Veterinária contratada da reserva; marca de 50 a 80 animais por terça-feira.'},
-      registrar:'A Dra. Rin faz marcação e triagem no setor 7 todas as terças: 50 a 80 por dia.',
+      npc:{nome:'Dra. Pia', opiniao:1, memoria:'Veterinária contratada da reserva; marca de 50 a 80 animais por terça-feira.'},
+      registrar:'A Dra. Pia faz marcação e triagem no setor 7 todas as terças: 50 a 80 por dia.',
       presagio:'Ela anda com brinco no bolso do avental. Isso é rotina, não crime.'},
   escolhas:[
     {texto:'"Oitenta por terça dá quatro mil por ano."', vai:'c12_a_conta_da_yara'},
@@ -1179,7 +1179,7 @@ c12_a_conta_da_yara:{
     '"Diz “apto para transporte”."'
   ],
   ef:{flag:['sabe_dos_quatro_mil','sabe_do_apto'],
-      npc:{nome:'Dra. Rin', opiniao:3, memoria:'Fez com você a conta de quatro mil por ano e percebeu o que ela assina.'},
+      npc:{nome:'Dra. Pia', opiniao:3, memoria:'Fez com você a conta de quatro mil por ano e percebeu o que ela assina.'},
       rep:{eixo:'bom',delta:5,motivo:'Fez uma conta de multiplicação que desmontou um sistema inteiro'},
       instabilidade:2, moral:-12,
       registrar:'A retirada real da Zona Safári é ~4.160/ano; só 240 passam pelo conselho. O resto é "manejo sanitário".',
@@ -1215,7 +1215,7 @@ c12_triagem:{
     '"Do receptor."'
   ],
   ef:{flag:['sabe_da_triagem','ficha_do_receptor'],
-      npc:{nome:'Dra. Rin', opiniao:4, memoria:'Percebeu, respondendo a você, que o critério de triagem dela foi escrito pelo próprio comprador.'},
+      npc:{nome:'Dra. Pia', opiniao:4, memoria:'Percebeu, respondendo a você, que o critério de triagem dela foi escrito pelo próprio comprador.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou de onde vinha o critério'},
       moral:-15, instabilidade:1,
       registrar:'O critério de triagem da reserva foi escrito pelo próprio receptor credenciado. 90% caem na categoria A.',
@@ -1237,12 +1237,12 @@ c12_ficha_tecnica:{
     d=>d.flags.ligou_fuchsia_celadon ? 'O mesmo alvará. A mesma empresa que sete conselheiros credenciaram em quarenta minutos em noventa e sete.' :
        d.flags.sabe_do_deposito ? 'Você conhece esse nome. Você esteve naquele galpão. Você contou quarenta e uma gaiolas lá dentro.' :
        'Um armazém em Celadon escreveu o manual médico de uma reserva federal em Fuchsia.',
-    'A Dra. Rin olha o rodapé com você, e ela já leu essa página, e ela nunca leu essa página.',
+    'A Dra. Pia olha o rodapé com você, e ela já leu essa página, e ela nunca leu essa página.',
     '"Oito anos", ela diz. "Eu uso essa ficha há oito anos."'
   ],
   ef:{flag:['tem_a_ficha_tecnica','provas_zona','sabe_do_deposito'],
       itens:{'Ficha técnica de triagem':1},
-      npc:{nome:'Dra. Rin', opiniao:6, memoria:'Te entregou a ficha técnica e viu, com você, de quem era o timbre.'},
+      npc:{nome:'Dra. Pia', opiniao:6, memoria:'Te entregou a ficha técnica e viu, com você, de quem era o timbre.'},
       rep:{eixo:'bom',delta:5,motivo:'Achou o documento que liga o comprador ao critério'},
       moral:-10,
       registrar:'A ficha técnica de triagem da reserva foi elaborada pelo Armazém Geral 7 Ltda., de Celadon.',
@@ -1271,7 +1271,7 @@ c12_yara_pra_onde:{
     'Oito anos de via amarela apontando pra uma ata que ela nunca leu.'
   ],
   ef:{flag:['viu_as_vias','sabe_da_ata_41'],
-      npc:{nome:'Dra. Rin', opiniao:5, memoria:'Sentou no chão do quintal com você e abriu oito anos de vias amarelas.'},
+      npc:{nome:'Dra. Pia', opiniao:5, memoria:'Sentou no chão do quintal com você e abriu oito anos de vias amarelas.'},
       rep:{eixo:'bom',delta:4,motivo:'Fez a pergunta "isso é um endereço?"'},
       instabilidade:1,
       registrar:'Oito anos de formulários de destino apontam apenas para "conf. ata 41/1997".',
@@ -1297,10 +1297,10 @@ c12_formularios:{
   ],
   ef:{flag:['tem_as_vias','provas_zona','yara_aliada'],
       itens:{'112 vias amarelas de triagem':1},
-      npc:{nome:'Dra. Rin', opiniao:9, memoria:'Te deu cento e doze vias amarelas e autorizou você a dar o nome dela.'},
+      npc:{nome:'Dra. Pia', opiniao:9, memoria:'Te deu cento e doze vias amarelas e autorizou você a dar o nome dela.'},
       rep:{eixo:'bom',delta:5,motivo:'Recebeu uma prova com o nome de quem deu, autorizado'},
       moral:12,
-      registrar:'Recebeu 112 vias amarelas de triagem da Dra. Rin, com autorização de citar o nome dela.',
+      registrar:'Recebeu 112 vias amarelas de triagem da Dra. Pia, com autorização de citar o nome dela.',
       presagio:'Ela contou uma por uma em voz alta. Cada uma é um bicho.'},
   escolhas:[
     {texto:'Levar pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
@@ -1330,10 +1330,10 @@ c12_yara_para:{
     '"Você tem quinze anos e eu tenho quarenta e cinco, e a gente acabou de descobrir junto que a minha arma é o campo de observação."'
   ],
   ef:{flag:['yara_vai_registrar','yara_aliada'],
-      npc:{nome:'Dra. Rin', opiniao:8, memoria:'Vai escrever no campo de observação de cada formulário que o critério é do receptor.'},
+      npc:{nome:'Dra. Pia', opiniao:8, memoria:'Vai escrever no campo de observação de cada formulário que o critério é do receptor.'},
       rep:{eixo:'bom',delta:5,motivo:'Não pediu heroísmo — deixou alguém achar a própria arma'},
       moral:12,
-      registrar:'A Dra. Rin vai registrar no campo de observação a origem do critério de triagem.',
+      registrar:'A Dra. Pia vai registrar no campo de observação a origem do critério de triagem.',
       presagio:'O campo de observação. Não é pouco: passa por três setores.'},
   escolhas:[
     {texto:'"Me leva lá na terça."', vai:'c12_yara_leva'},
@@ -1357,7 +1357,7 @@ c12_yara_leva:{
     '"Você vai entender às nove da manhã."'
   ],
   ef:{flag:['vai_com_a_yara','sabe_do_setor7'],
-      npc:{nome:'Dra. Rin', opiniao:6, memoria:'Te credenciou como auxiliar dela para a terça no setor 7.'},
+      npc:{nome:'Dra. Pia', opiniao:6, memoria:'Te credenciou como auxiliar dela para a terça no setor 7.'},
       rep:{eixo:'bom',delta:3,motivo:'Vai entrar pela porta da frente, de dia, com crachá'},
       registrar:'Vai entrar no setor 7 como auxiliar da veterinária, terça às 6h30.',
       presagio:'"Você vai entender às nove da manhã." Ela não estava sendo dramática.'},
@@ -1378,7 +1378,7 @@ c12_terca:{
     'Tem café numa garrafa térmica em cima de uma caixa. Tem rádio tocando baixinho numa estação de Fuchsia. Tem dois rapazes de luva conversando sobre o final de semana enquanto passam animal do corredor de contenção pra baia de triagem.',
     'Tem uma balança. Tem uma prancheta. Tem uma caixa de brincos amarelos numerados.',
     'E tem fila.',
-    'A Dra. Rin calça a luva, liga a lanterna de cabeça, e olha pra você.',
+    'A Dra. Pia calça a luva, liga a lanterna de cabeça, e olha pra você.',
     '"Você segura, eu marco. Se você quiser sair a qualquer momento, você sai e ninguém comenta."',
     'São seis e quarenta e dois da manhã.'
   ],
@@ -1397,14 +1397,14 @@ c12_nove_da_manha:{
   texto:[
     'Às nove da manhã você entende.',
     'Não tem crueldade. Isso é o que ninguém te prepara pra ver.',
-    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Rin é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
+    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Pia é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
     'Ninguém grita com ninguém. Ninguém chuta nada.',
     'E às nove da manhã chega o lote da baia 3, e a baia 3 é a baia dos filhotes, e a triagem de filhote é por peso, porque filhote abaixo de um peso não é “apto para transporte”.',
     'E aí você vê o que acontece com os que não são aptos.',
     'Eles voltam pra reserva. Eles são soltos.',
     'Sozinhos.',
     'Porque a mãe foi triada como categoria A às sete e quarenta.',
-    'Você pergunta e a Dra. Rin responde sem parar de trabalhar, porque se ela parar ela não recomeça:',
+    'Você pergunta e a Dra. Pia responde sem parar de trabalhar, porque se ela parar ela não recomeça:',
     '"A ficha técnica não tem campo de vínculo."'
   ],
   ef:{flag:['viu_a_baia_tres','entendeu_o_horror'],
@@ -1427,7 +1427,7 @@ c12_o_dia_inteiro:{
     'Na metade da tarde você já está fazendo direito: você aprendeu a segurar sem apertar, a virar a orelha sem torcer, a falar baixo do jeito que ajuda.',
     'Você fica bom nisso.',
     'Essa é a parte que vai te acordar de noite nos próximos capítulos: você ficou bom nisso em seis horas.',
-    'Às dezoito e quarenta a Dra. Rin tira a luva, senta no chão encostada na balança, e não fala nada por cinco minutos.',
+    'Às dezoito e quarenta a Dra. Pia tira a luva, senta no chão encostada na balança, e não fala nada por cinco minutos.',
     'Depois ela fala uma coisa só:',
     '"Todo mundo que entra aqui aguenta. Esse é o problema. Eu esperei oito anos por alguém que não aguentasse."',
     d=>d.flags.tem_as_vias ? 'E ela escreveu, nos setenta e um formulários do dia, com a letra dela, que o critério aplicado é de elaboração do receptor.' : ''
@@ -1435,7 +1435,7 @@ c12_o_dia_inteiro:{
   ef:{flag:['ficou_o_dia_inteiro','ficou_bom_nisso'],
       moral:-20, hp:-5, causa:'Doze horas no setor 7',
       rep:{eixo:'bom',delta:4,motivo:'Ficou as doze horas e não desviou o olho'},
-      npc:{nome:'Dra. Rin', opiniao:8, memoria:'Passou doze horas com você no setor 7 e te disse que todo mundo aguenta.'},
+      npc:{nome:'Dra. Pia', opiniao:8, memoria:'Passou doze horas com você no setor 7 e te disse que todo mundo aguenta.'},
       registrar:'Ficou as doze horas do turno de triagem. Setenta e um marcados.',
       presagio:'Você ficou bom nisso em seis horas. Anota isso sobre pessoas, não sobre você.'},
   escolhas:[
@@ -1453,7 +1453,7 @@ c12_parou_a_triagem:{
     '"A mãe desse aqui saiu às sete e quarenta."',
     'Silêncio.',
     'O rádio continua tocando.',
-    'Um dos rapazes de luva olha pro outro. A Dra. Rin não levanta a cabeça.',
+    'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
     'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora do capítulo:',
     '"Eu sei."',
     '"Eu sei qual é a mãe de qual há quatro anos, moço. Eu sei todas."',
@@ -1519,7 +1519,7 @@ c12_saiu_da_terca:{
     '"É o recorde."'
   ],
   ef:{flag:'saiu_do_setor7', moral:-10,
-      npc:{nome:'Dra. Rin', opiniao:5, memoria:'Você durou duas horas e dez no setor 7. É o recorde de auxiliar dela.'},
+      npc:{nome:'Dra. Pia', opiniao:5, memoria:'Você durou duas horas e dez no setor 7. É o recorde de auxiliar dela.'},
       registrar:'Saiu do turno de triagem depois de duas horas e dez minutos.',
       presagio:'É o recorde. Pensa em quantos auxiliares ela já levou.'},
   escolhas:[
@@ -1547,12 +1547,12 @@ c12_diretor:{
     'E na marcação, escrito à mão, numa caligrafia antiga de caneta-tinteiro:',
     '**área de manejo**'
   ],
-  ef:{npc:{nome:'Diretor Kusanagi', opiniao:0, memoria:'Te disse que o setor 7 é recuperação ambiental.'},
+  ef:{npc:{nome:'Diretor Quince', opiniao:0, memoria:'Te disse que o setor 7 é recuperação ambiental.'},
       flag:'falou_com_diretor',
       presagio:'Caligrafia antiga, caneta-tinteiro, numa planta emoldurada. Ele mandou emoldurar sabendo.'},
   escolhas:[
     {texto:'"O que é área de manejo?"', vai:'c12_manejo'},
-    {texto:'"O Taki te procurou em março."', vai:'c12_o_nico_te_procurou', cond:d=>!!d.flags.nico_falou},
+    {texto:'"O Orin te procurou em março."', vai:'c12_o_nico_te_procurou', cond:d=>!!d.flags.nico_falou},
     {texto:'"A planilha é de 1971 e a cerca recuou em 85."', vai:'c12_planilha_pro_diretor', cond:d=>!!d.flags.entendeu_a_conta},
     {texto:'"Eu sei o que tem lá." Blefar.', vai:'c12_blefe_diretor'}
   ]
@@ -1578,7 +1578,7 @@ c12_manejo:{
     {texto:'"Isso tem outro nome."', vai:'c12_confronto_diretor'},
     {texto:'"E se a reserva fosse maior?"', vai:'c12_pergunta_dificil'},
     {texto:'"O receptor escreveu o critério de triagem."', vai:'c12_critico_do_receptor', cond:d=>!!d.flags.ficha_do_receptor},
-    {texto:'"O Taki te procurou em março."', vai:'c12_o_nico_te_procurou', cond:d=>!!d.flags.nico_falou}
+    {texto:'"O Orin te procurou em março."', vai:'c12_o_nico_te_procurou', cond:d=>!!d.flags.nico_falou}
   ]
 },
 
@@ -1601,14 +1601,14 @@ c12_o_nico_te_procurou:{
     '"Eu só não conto pro rapaz, porque contar pro rapaz que eu tentei e não deu é pior do que ele achar que eu não liguei."'
   ],
   ef:{flag:['viu_os_oficios','diretor_humanizado'],
-      npc:{nome:'Diretor Kusanagi', opiniao:5, memoria:'Te mostrou o ofício de março e a negativa do conselho. Tem catorze iguais.'},
+      npc:{nome:'Diretor Quince', opiniao:5, memoria:'Te mostrou o ofício de março e a negativa do conselho. Tem catorze iguais.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou a coisa que fez o homem abrir a gaveta'},
       moral:-8,
       registrar:'O diretor tem catorze ofícios de apuração indeferidos pelo conselho desde 1997.',
-      presagio:'Ele deixou o Taki achar que ele não ligava. Por gentileza. Pense nisso.'},
+      presagio:'Ele deixou o Orin achar que ele não ligava. Por gentileza. Pense nisso.'},
   escolhas:[
     {texto:'"Me dá os catorze."', vai:'c12_papelada'},
-    {texto:'"Conta pro Taki."', vai:'c12_conta_pro_nico'},
+    {texto:'"Conta pro Orin."', vai:'c12_conta_pro_nico'},
     {texto:'"E se a reserva fosse maior?"', vai:'c12_pergunta_dificil'},
     {texto:'"A planilha é de 1971."', vai:'c12_planilha_pro_diretor', cond:d=>!!d.flags.entendeu_a_conta}
   ]
@@ -1616,7 +1616,7 @@ c12_o_nico_te_procurou:{
 
 c12_conta_pro_nico:{
   texto:[
-    '"Conta pro Taki."',
+    '"Conta pro Orin."',
     '"Pra quê?"',
     '"Porque ele ensaiou quatro meses pra falar com você, e ele acha que você não ligou, e ele vai continuar achando isso pelo resto da vida."',
     'O diretor olha a pasta fechada.',
@@ -1624,20 +1624,20 @@ c12_conta_pro_nico:{
     '"Ele já sabe que é uma estrutura. Ele só acha que você faz parte dela de má vontade."',
     'Silêncio.',
     'Ele levanta, abre a porta da sala, e chama a secretária pelo nome, e pede pra chamar o guia Nicolau.',
-    'Você sai antes do Taki chegar, porque essa conversa não é sua.',
-    'Da janela do corredor você vê os dois na sala por dezenove minutos, e o diretor mostrando a pasta, e o Taki sentado com as duas mãos no rosto.'
+    'Você sai antes do Orin chegar, porque essa conversa não é sua.',
+    'Da janela do corredor você vê os dois na sala por dezenove minutos, e o diretor mostrando a pasta, e o Orin sentado com as duas mãos no rosto.'
   ],
   ef:{flag:['diretor_contou_pro_nico'],
-      npc:{nome:'Guia Taki', opiniao:5, memoria:'Descobriu que o diretor tentou catorze vezes. Chorou na sala dele.'},
+      npc:{nome:'Guia Orin', opiniao:5, memoria:'Descobriu que o diretor tentou catorze vezes. Chorou na sala dele.'},
       rep:{eixo:'bom',delta:4,motivo:'Fez duas pessoas que estavam do mesmo lado descobrirem isso'},
       moral:15,
-      registrar:'O diretor contou ao Taki sobre os catorze ofícios indeferidos.',
+      registrar:'O diretor contou ao Orin sobre os catorze ofícios indeferidos.',
       presagio:'Dezenove minutos. Duas pessoas do mesmo lado descobrindo isso com quatro meses de atraso.'},
   escolhas:[
     {texto:'Pedir os catorze ofícios.', vai:'c12_papelada'},
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
     {texto:'Ir falar com o Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Ir falar com a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
+    {texto:'Ir falar com a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
   ]
 },
 
@@ -1655,7 +1655,7 @@ c12_planilha_pro_diretor:{
     '"Eu olhei pra essa planta todo dia útil da minha vida adulta."'
   ],
   ef:{flag:['diretor_viu_o_erro','provou_o_erro'],
-      npc:{nome:'Diretor Kusanagi', opiniao:6, memoria:'Tirou a planta da parede e leu, com você, a área que ele nunca conferiu em 31 anos.'},
+      npc:{nome:'Diretor Quince', opiniao:6, memoria:'Tirou a planta da parede e leu, com você, a área que ele nunca conferiu em 31 anos.'},
       rep:{eixo:'bom',delta:6,motivo:'Mostrou a um homem o erro que estava emoldurado na parede dele'},
       moral:-10, instabilidade:1,
       registrar:'O diretor confrontou a área de 1971 emoldurada na própria sala.',
@@ -1689,7 +1689,7 @@ c12_suspende:{
     '"Oitenta e sete. Embarque quinta."'
   ],
   ef:{flag:['diretor_suspende','sabe_dos_oitenta_e_sete'],
-      npc:{nome:'Diretor Kusanagi', opiniao:8, memoria:'Assinou a revisão técnica que derruba a base legal da retirada do ano.'},
+      npc:{nome:'Diretor Quince', opiniao:8, memoria:'Assinou a revisão técnica que derruba a base legal da retirada do ano.'},
       rep:{eixo:'bom',delta:6,motivo:'Conseguiu a suspensão administrativa da retirada anual'},
       instabilidade:1,
       registrar:'O diretor instaurou revisão técnica: a retirada anual perde base legal. Restam 87 no setor 7, embarque quinta.',
@@ -1698,7 +1698,7 @@ c12_suspende:{
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'"E se eu abrir o curral hoje?"', vai:'c12_se_eu_abrir'},
     {texto:'Ir falar com o Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Ir falar com o Sr. Tsukada sobre a soltura.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
+    {texto:'Ir falar com o Sr. Zane sobre a soltura.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
   ]
 },
 
@@ -1713,21 +1713,21 @@ c12_se_eu_abrir:{
     'Pausa.',
     '"E eu comunico o receptor por ofício postado, que leva de três a cinco dias úteis, porque comunicação a terceiro credenciado é por ofício postado, conforme o regulamento interno que eu mesmo escrevi em noventa e quatro."',
     'Ele olha a janela.',
-    '"E a segurança patrimonial é uma empresa contratada que atende das dezoito às seis, e hoje é terça, e na terça a escala é de um vigia só, e o vigia da terça é o Sr. Onuki que tem setenta e um anos e uma catarata."',
+    '"E a segurança patrimonial é uma empresa contratada que atende das dezoito às seis, e hoje é terça, e na terça a escala é de um vigia só, e o vigia da terça é o Sr. Ulric que tem setenta e um anos e uma catarata."',
     'Ele volta a olhar pra você.',
     '"Eu não te disse nada disso."'
   ],
   ef:{flag:['diretor_te_deu_a_janela','sabe_do_seu_jorge'],
-      npc:{nome:'Diretor Kusanagi', opiniao:9, memoria:'Te explicou, em forma de regulamento, exatamente como abrir o curral sem ser pego.'},
+      npc:{nome:'Diretor Quince', opiniao:9, memoria:'Te explicou, em forma de regulamento, exatamente como abrir o curral sem ser pego.'},
       rep:{eixo:'bom',delta:5,motivo:'Fez um burocrata de trinta e um anos usar o regulamento a favor'},
       moral:12,
       registrar:'O diretor explicou os prazos e a escala de vigia. Terça é o dia.',
       presagio:'"Eu não te disse nada disso." Ele passou trinta e um anos aprendendo esses prazos.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Chamar o Sr. Tsukada para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
+    {texto:'Chamar o Sr. Zane para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Chamar o Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Chamar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
+    {texto:'Chamar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
   ]
 },
 
@@ -1746,7 +1746,7 @@ c12_pergunta_dificil:{
     '"Eu estou te explicando por que um homem honesto vira isso aqui em dezenove anos, porque você tem quinze e vai encontrar muitos de mim pela frente e vai ser útil saber como a gente é feito."'
   ],
   ef:{flag:'diretor_humanizado',
-      npc:{nome:'Diretor Kusanagi', opiniao:3, memoria:'Te contou dos dezenove anos pedindo ampliação da reserva.'},
+      npc:{nome:'Diretor Quince', opiniao:3, memoria:'Te contou dos dezenove anos pedindo ampliação da reserva.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou a pergunta que fez o homem parar'},
       registrar:'O diretor pede ampliação da reserva há dezenove anos.',
       presagio:'"Vai ser útil saber como a gente é feito." Ele está te ensinando a reconhecê-lo em outras pessoas.'},
@@ -1777,7 +1777,7 @@ c12_dono_da_terra:{
   ],
   ef:{flag:['sabe_da_linha_verde','provas_zona'],
       itens:{'Mapa fundiário':1},
-      npc:{nome:'Diretor Kusanagi', opiniao:7, memoria:'Descobriu com você que a terra da ampliação foi comprada por uma só empresa entre 95 e 97.'},
+      npc:{nome:'Diretor Quince', opiniao:7, memoria:'Descobriu com você que a terra da ampliação foi comprada por uma só empresa entre 95 e 97.'},
       rep:{eixo:'bom',delta:6,motivo:'Perguntou quem era o dono da terra ao lado'},
       instabilidade:2,
       registrar:'As quatro propriedades vizinhas ao setor 7 foram compradas pela Agropecuária Linha Verde entre 1995 e 1997.',
@@ -1804,7 +1804,7 @@ c12_quem_e_linha_verde:{
     '"Eu vou tirar quinze dias", ele diz, e é a primeira vez que ele sorri de verdade no capítulo inteiro. "Trinta e um anos e eu nunca tirei quinze dias seguidos."'
   ],
   ef:{flag:['diretor_vai_a_junta','sabe_do_cartorio'],
-      npc:{nome:'Diretor Kusanagi', opiniao:8, memoria:'Vai tirar quinze dias de férias acumuladas para ir à junta comercial de Celadon.'},
+      npc:{nome:'Diretor Quince', opiniao:8, memoria:'Vai tirar quinze dias de férias acumuladas para ir à junta comercial de Celadon.'},
       rep:{eixo:'bom',delta:4,motivo:'Colocou um servidor de trinta e um anos na estrada atrás da resposta'},
       moral:10,
       registrar:'O diretor vai à junta comercial de Celadon investigar a Agropecuária Linha Verde.',
@@ -1813,7 +1813,7 @@ c12_quem_e_linha_verde:{
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Pedir os catorze ofícios antes.', vai:'c12_papelada'},
     {texto:'Ir falar com o Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Ir falar com a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
+    {texto:'Ir falar com a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara}
   ]
 },
 
@@ -1832,7 +1832,7 @@ c12_papelada:{
   ef:{flag:['pasta_do_diretor','provas_zona'],
       itens:{'Pasta de dezenove anos de ofícios':1},
       rep:{eixo:'bom',delta:4,motivo:'Conseguiu dezenove anos de documentação da reserva'},
-      npc:{nome:'Diretor Kusanagi', opiniao:6, memoria:'Te entregou dezenove anos de papelada sabendo o que você ia fazer com ela.'},
+      npc:{nome:'Diretor Quince', opiniao:6, memoria:'Te entregou dezenove anos de papelada sabendo o que você ia fazer com ela.'},
       registrar:'Recebeu dezenove anos de ofícios sobre a Zona Safári.',
       presagio:'"Isso só explica. Eu sei a diferença." Duas pessoas já te disseram isso.'},
   escolhas:[
@@ -1859,7 +1859,7 @@ c12_critico_do_receptor:{
     '"Um armazém não tem departamento técnico."'
   ],
   ef:{flag:['diretor_viu_a_ficha'],
-      npc:{nome:'Diretor Kusanagi', opiniao:6, memoria:'Descobriu com você que aprovou uma ficha técnica escrita pelo próprio comprador.'},
+      npc:{nome:'Diretor Quince', opiniao:6, memoria:'Descobriu com você que aprovou uma ficha técnica escrita pelo próprio comprador.'},
       rep:{eixo:'bom',delta:4,motivo:'Mostrou ao diretor de quem era o timbre'},
       moral:-8,
       registrar:'O diretor aprovou em 1994 a ficha técnica escrita pelo departamento técnico do receptor.',
@@ -1888,7 +1888,7 @@ c12_confronto_diretor:{
     '"Não tem saída dessa frase. Eu procuro há dezenove anos."'
   ],
   ef:{flag:'diretor_confrontado',
-      npc:{nome:'Diretor Kusanagi', opiniao:4, memoria:'Te disse que é a pior pessoa da cidade e a única que impede que seja pior.'},
+      npc:{nome:'Diretor Quince', opiniao:4, memoria:'Te disse que é a pior pessoa da cidade e a única que impede que seja pior.'},
       moral:-8,
       registrar:'"Eu sou a pior pessoa desta cidade e a única que impede isso de ser muito pior."',
       presagio:'Não tem saída dessa frase. Você vai encontrar essa pessoa de novo, com outro rosto.'},
@@ -1918,11 +1918,11 @@ c12_diretor_frio:{
     'Até a saída da cidade.'
   ],
   ef:{flag:'diretor_alerta',
-      npc:{nome:'Diretor Kusanagi', opiniao:-3, memoria:'Você blefou mal na sala dele. Ele mandou te acompanharem até fora da cidade.'},
+      npc:{nome:'Diretor Quince', opiniao:-3, memoria:'Você blefou mal na sala dele. Ele mandou te acompanharem até fora da cidade.'},
       presagio:'"Quem sabe, vai lá." Ele te deu conselho enquanto te expulsava.'},
   escolhas:[
     {texto:'Voltar à noite mesmo assim.', vai:'c12_noite_zona'},
-    {texto:'Procurar a Dra. Rin.', vai:'c12_yara'},
+    {texto:'Procurar a Dra. Pia.', vai:'c12_yara'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'},
     {texto:'Desistir da Zona.', vai:'c12_desistiu_zona'}
   ]
@@ -2007,14 +2007,14 @@ c12_ja_abriram:{
   ef:{flag:['sabe_do_beto','sabe_que_voltam'],
       rep:{eixo:'bom',delta:3,motivo:'Perguntou se alguém já tinha tentado'},
       moral:-10,
-      npc:{nome:'Guarda Enji', opiniao:2, memoria:'Te contou do Beto, que abriu o curral em 1999 e não tinha para onde levar.'},
+      npc:{nome:'Guarda Kell', opiniao:2, memoria:'Te contou do Beto, que abriu o curral em 1999 e não tinha para onde levar.'},
       registrar:'Em 1999 um guarda abriu o curral. Metade voltou sozinha em três dias, por fome.',
       presagio:'Ele abriu a porta e não tinha pra onde levar. Não repita isso.'},
   escolhas:[
     {texto:'"Então eu preciso de caminhão."', vai:'c12_precisa_de_caminhao'},
     {texto:'"Algum de vocês me leva lá?"', vai:'c12_guarda_leva'},
     {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'},
-    {texto:'Ir procurar o Sr. Tsukada.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
+    {texto:'Ir procurar o Sr. Zane.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
   ]
 },
 
@@ -2033,12 +2033,12 @@ c12_precisa_de_caminhao:{
   ],
   ef:{flag:['sabe_dos_caminhoes','plano_de_soltura'],
       rep:{eixo:'bom',delta:4,motivo:'Transformou uma invasão num plano de logística'},
-      npc:{nome:'Guarda Enji', opiniao:5, memoria:'Sabe onde está a chave do galpão de máquinas com os dois caminhões de soltura.'},
+      npc:{nome:'Guarda Kell', opiniao:5, memoria:'Sabe onde está a chave do galpão de máquinas com os dois caminhões de soltura.'},
       moral:10,
       registrar:'A reserva tem dois caminhões de soltura parados desde 2000, no galpão de máquinas.',
       presagio:'"Meu cunhado tem oficina." É assim que as coisas acontecem de verdade.'},
   escolhas:[
-    {texto:'Chamar o Sr. Tsukada para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
+    {texto:'Chamar o Sr. Zane para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Ir ao setor 7 hoje à noite com eles.', vai:'c12_guarda_leva'},
     {texto:'Falar com o diretor sobre os caminhões.', vai:'c12_diretor'},
     {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'}
@@ -2055,12 +2055,12 @@ c12_guarda_leva:{
     '"Eu tô bêbado há quatro anos." Ele levanta e pega o chapéu do encosto da cadeira. "Vamo."',
     'Os outros três não dizem nada.',
     'Na porta, o mais novo fala, sem levantar da mesa:',
-    '"Enji."',
+    '"Kell."',
     '"Que é?"',
     '"Nada não." Pausa. "Boa sorte."'
   ],
   ef:{flag:'guarda_junto',
-      npc:{nome:'Guarda Enji', opiniao:5, memoria:'Te levou ao setor 7 depois de quatro anos calado, e empurrou o copo pra longe antes.'},
+      npc:{nome:'Guarda Kell', opiniao:5, memoria:'Te levou ao setor 7 depois de quatro anos calado, e empurrou o copo pra longe antes.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém decidiu parar de esperar'},
       presagio:'Ele empurrou o copo pra longe. Não terminou. Isso é uma decisão inteira num gesto.'},
   escolhas:[{texto:'Ir.', vai:'c12_setor7'}]
@@ -2251,10 +2251,10 @@ c12_noite_zona:{
     'Sem guia, sem trilha marcada, sem trinta bolas especiais, sem folheto plastificado.',
     'Nove mil hectares no escuro, com bicho que não te conhece e que aqui, diferente de todo o resto de Kanto, não foi ensinado a ter medo de gente — o que é bonito de dia e é um problema sério de noite.',
     'Faz frio e tem orvalho e o capim molha a calça até o joelho em quarenta metros.',
-    d=>d.flags.tem_a_chave_do_nico ? 'A chave do Taki abre o portão de pedestre da trilha três na primeira tentativa, e o portão não range, porque o Taki passa óleo nele.' :
-       d.flags.tem_o_mapa_do_nico ? 'O mapa do Taki está no seu bolso, no verso de um folheto plastificado, e ele marcou os três plantões com X e a hora da ronda ao lado.' :
-       d.flags.nico_junto ? 'Taki anda na sua frente e conhece cada curva, cada bebedouro e cada mourão. Ele não fala nada o caminho inteiro.' :
-       d.flags.guarda_junto ? 'O guarda Enji anda na sua frente, bêbado e absolutamente seguro do caminho, e para duas vezes pra mijar e uma vez pra cuspir.' :
+    d=>d.flags.tem_a_chave_do_nico ? 'A chave do Orin abre o portão de pedestre da trilha três na primeira tentativa, e o portão não range, porque o Orin passa óleo nele.' :
+       d.flags.tem_o_mapa_do_nico ? 'O mapa do Orin está no seu bolso, no verso de um folheto plastificado, e ele marcou os três plantões com X e a hora da ronda ao lado.' :
+       d.flags.nico_junto ? 'Orin anda na sua frente e conhece cada curva, cada bebedouro e cada mourão. Ele não fala nada o caminho inteiro.' :
+       d.flags.guarda_junto ? 'O guarda Kell anda na sua frente, bêbado e absolutamente seguro do caminho, e para duas vezes pra mijar e uma vez pra cuspir.' :
        'Você anda sozinho, guiado pelo trilho de carrinho, que brilha de leve no escuro porque metal polido brilha de leve no escuro.'
   ],
   ef:{flag:'entrou_de_noite',
@@ -2289,7 +2289,7 @@ c12_setor7:{
 c12_plantao:{
   texto:[
     'O plantão é um homem só, de setenta e um anos, numa cadeira de plástico encostada no contêiner de ferramentas, com um rádio ligado numa estação de Fuchsia e um copo de café.',
-    'Sr. Onuki.',
+    'Sr. Ulric.',
     'Ele tem catarata num olho e uma lanterna que ele não usa porque ele conhece o terreno melhor com o pé do que com a luz.',
     'Ele te vê a uns quinze metros — porque ele te ouve antes de ver — e não levanta.',
     '"Boa noite."',
@@ -2299,7 +2299,7 @@ c12_plantao:{
     '"Senta aí que a cadeira tem duas."'
   ],
   ef:{flag:'conheceu_seu_jorge',
-      npc:{nome:'Sr. Onuki', opiniao:1, memoria:'Vigia do setor 7, setenta e um anos, catarata, te convidou para sentar.'},
+      npc:{nome:'Sr. Ulric', opiniao:1, memoria:'Vigia do setor 7, setenta e um anos, catarata, te convidou para sentar.'},
       presagio:'"A cadeira tem duas." Ele deixou a segunda cadeira ali de propósito.'},
   escolhas:[
     {texto:'Sentar.', vai:'c12_conversa_plantao'},
@@ -2329,10 +2329,10 @@ c12_duas_cadeiras:{
     '"Metade não voltou."'
   ],
   ef:{flag:['sabe_do_beto','jorge_conversou'],
-      npc:{nome:'Sr. Onuki', opiniao:5, memoria:'Te ofereceu café e contou que metade dos que o Beto soltou em 1999 não voltou.'},
+      npc:{nome:'Sr. Ulric', opiniao:5, memoria:'Te ofereceu café e contou que metade dos que o Beto soltou em 1999 não voltou.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou em vez de agir'},
       moral:8,
-      registrar:'Sr. Onuki: em 1999 metade dos soltos não voltou. Metade conseguiu.',
+      registrar:'Sr. Ulric: em 1999 metade dos soltos não voltou. Metade conseguiu.',
       presagio:'Metade não voltou. Ele guardou essa metade por onze anos numa cadeira de plástico.'},
   escolhas:[
     {texto:'"Me ajuda a abrir."', vai:'c12_jorge_ajuda'},
@@ -2359,10 +2359,10 @@ c12_conversa_plantao:{
     '"Eles." Ele aponta o curral com o queixo. "Sair e voltar em três dias com fome é uma coisa que quebra bicho por dentro, moço. Eu já vi. O bicho que saiu e voltou não é o mesmo."'
   ],
   ef:{flag:['jorge_conversou','sabe_que_precisa_levar'],
-      npc:{nome:'Sr. Onuki', opiniao:4, memoria:'Passou quarenta minutos conversando com você sobre time e preço de gás antes de falar do curral.'},
+      npc:{nome:'Sr. Ulric', opiniao:4, memoria:'Passou quarenta minutos conversando com você sobre time e preço de gás antes de falar do curral.'},
       rep:{eixo:'bom',delta:3,motivo:'Sentou e ouviu antes de agir'},
       moral:5,
-      registrar:'Sr. Onuki: abrir sem ter para onde levar quebra os bichos por dentro.',
+      registrar:'Sr. Ulric: abrir sem ter para onde levar quebra os bichos por dentro.',
       presagio:'"O bicho que saiu e voltou não é o mesmo." Ele viu isso em noventa e nove.'},
   escolhas:[
     {texto:'"Então me ajuda a arrumar pra onde levar."', vai:'c12_jorge_ajuda'},
@@ -2389,14 +2389,14 @@ c12_jorge_ajuda:{
   ],
   ef:{flag:['jorge_ajuda','tem_a_chave_dos_caminhoes'],
       itens:{'Chave do galpão de máquinas':1},
-      npc:{nome:'Sr. Onuki', opiniao:9, memoria:'Assinou a retirada da chave do galpão de máquinas para você, em nome dele.'},
+      npc:{nome:'Sr. Ulric', opiniao:9, memoria:'Assinou a retirada da chave do galpão de máquinas para você, em nome dele.'},
       rep:{eixo:'bom',delta:6,motivo:'Um vigia de setenta e um anos assinou o próprio nome por você'},
       moral:15,
-      registrar:'Sr. Onuki retirou, em nome dele, a chave do galpão dos caminhões de soltura.',
+      registrar:'Sr. Ulric retirou, em nome dele, a chave do galpão dos caminhões de soltura.',
       presagio:'Ele assinou o próprio nome. Onze anos naquela cadeira e ele assinou o próprio nome.'},
   escolhas:[
     {texto:'Buscar os caminhões e organizar a soltura.', vai:'c12_soltura_organizada'},
-    {texto:'Chamar o Sr. Tsukada para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
+    {texto:'Chamar o Sr. Zane para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Chamar os guardas do bar.', vai:'c12_bar'},
     {texto:'Abrir agora e resolver o transporte depois.', vai:'c12_abriu_curral'}
   ]
@@ -2404,7 +2404,7 @@ c12_jorge_ajuda:{
 
 c12_amarrou:{
   texto:[
-    'Você amarra o Sr. Onuki na cadeira de plástico com a corda do contêiner de ferramentas.',
+    'Você amarra o Sr. Ulric na cadeira de plástico com a corda do contêiner de ferramentas.',
     'Ele não resiste. Ele tem setenta e um anos e uma perna ruim e ele te avisou disso quinze metros atrás.',
     'Enquanto você amarra, ele fala, com a voz normal:',
     '"Aperta mais o pulso, moço."',
@@ -2415,7 +2415,7 @@ c12_amarrou:{
     'E essa é a coisa mais difícil que aconteceu com você em Fuchsia.'
   ],
   ef:{flag:'amarrou_o_jorge',
-      npc:{nome:'Sr. Onuki', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
+      npc:{nome:'Sr. Ulric', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
       rep:{eixo:'ruim',delta:1,motivo:'Amarrou um velho numa cadeira'},
       moral:-10,
       registrar:'Amarrou o vigia — que pediu para apertar mais, para não ser demitido.',
@@ -2434,10 +2434,10 @@ c12_soltura_organizada:{
   texto:[
     'Leva quatro horas.',
     'Não é uma cena de ação. É uma operação logística feita por gente cansada de madrugada, e é a coisa mais bonita desse capítulo exatamente por isso.',
-    'O galpão de máquinas abre com a chave que o Sr. Onuki assinou. Os dois caminhões de soltura estão lá, com pneu vazio e bateria morta e poeira de dois anos.',
+    'O galpão de máquinas abre com a chave que o Sr. Ulric assinou. Os dois caminhões de soltura estão lá, com pneu vazio e bateria morta e poeira de dois anos.',
     d=>d.flags.plano_de_soltura ? 'O cunhado do guarda mais novo chega às duas e vinte da manhã com uma caminhonete, duas baterias e um compressor, e não pergunta nada, e a única coisa que ele diz a noite inteira é "cabe mais dois de cada lado se você virar o de cima".' :
        'Você e quem estiver com você trocam a bateria de um deles com a bateria do gerador da obra, que é a única bateria de doze volts num raio de dez quilômetros.',
-    d=>d.flags.vandir_dirige ? 'O Sr. Tsukada chega às três com uma camisa social e um mapa na cabeça, e ele dirige o primeiro caminhão, com hérnia e sessenta e sete anos, e ele não erra uma curva.' :
+    d=>d.flags.vandir_dirige ? 'O Sr. Zane chega às três com uma camisa social e um mapa na cabeça, e ele dirige o primeiro caminhão, com hérnia e sessenta e sete anos, e ele não erra uma curva.' :
        'Você dirige devagar e mal, e a estrada de serviço ajuda.',
     d=>d.flags.tem_os_vinculos ? 'E você tem doze folhas de caderno escritas por um peão que não escreve bem, e por causa dessas doze folhas o embarque é feito por grupo familiar, e o de orelha rasgada vai no mesmo caminhão que a que manca da pata de trás.' :
        'E o embarque é feito por espécie, porque é o único critério que vocês têm.',
@@ -2453,7 +2453,7 @@ c12_soltura_organizada:{
       registrar:'Esvaziou o setor 7: 87 soltos a 42 km, por grupo familiar, em caminhão de soltura da própria reserva.',
       presagio:'Ninguém volta por fome a quarenta e dois quilômetros. Foi isso que faltou em noventa e nove.'},
   escolhas:[
-    {texto:'Voltar e devolver as chaves ao Sr. Onuki.', vai:'c12_devolveu_a_chave'},
+    {texto:'Voltar e devolver as chaves ao Sr. Ulric.', vai:'c12_devolveu_a_chave'},
     {texto:'Ir direto ao diretor, de manhã, sem dormir.', vai:'c12_diretor'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Sair de Fuchsia antes de amanhecer de vez.', vai:'c12_fim'}
@@ -2462,7 +2462,7 @@ c12_soltura_organizada:{
 
 c12_devolveu_a_chave:{
   texto:[
-    'Você volta ao posto de vigilância às sete e dez da manhã, quando o turno do Sr. Onuki já acabou, e ele ainda está lá porque ele não foi embora.',
+    'Você volta ao posto de vigilância às sete e dez da manhã, quando o turno do Sr. Ulric já acabou, e ele ainda está lá porque ele não foi embora.',
     'Você devolve a chave.',
     'Ele assina a devolução no livro, com data e hora, em letra de quem assina livro há onze anos.',
     'Depois ele fecha o livro e olha o curral vazio por um tempo longo.',
@@ -2476,10 +2476,10 @@ c12_devolveu_a_chave:{
     '"Agora eu sei."'
   ],
   ef:{flag:'jorge_demitido',
-      npc:{nome:'Sr. Onuki', opiniao:10, memoria:'Assinou a devolução da chave às 7h10 e disse que agora sabe o que fazer com o dia.'},
+      npc:{nome:'Sr. Ulric', opiniao:10, memoria:'Assinou a devolução da chave às 7h10 e disse que agora sabe o que fazer com o dia.'},
       rep:{eixo:'bom',delta:4,motivo:'Voltou para devolver a chave e encarar quem pagou a conta'},
       moral:20,
-      registrar:'Sr. Onuki devolveu a chave no livro e sabe que vai ser demitido.',
+      registrar:'Sr. Ulric devolveu a chave no livro e sabe que vai ser demitido.',
       presagio:'"Agora eu sei." Ele esperou onze anos numa cadeira de plástico por essa frase.'},
   escolhas:[
     {texto:'Ir ao diretor.', vai:'c12_diretor'},
@@ -2498,7 +2498,7 @@ c12_abriu_curral:{
     'Oitenta e sete atravessam três hectares de clareira iluminada por refletor de obra e somem no mato em menos de quatro minutos.',
     'E o silêncio depois é absurdo.',
     d=>d.flags.sabe_que_voltam || d.flags.jorge_conversou
-      ? 'E você fica parado no meio do curral vazio sabendo o que o Sr. Onuki te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
+      ? 'E você fica parado no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
       : 'Você fica parado no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
     d=>d.flags.sabe_do_beto ? 'Em noventa e nove um guarda chamado Beto fez exatamente isso, sozinho, às três da manhã. Metade voltou.' : ''
   ],
@@ -2518,10 +2518,10 @@ c12_abriu_curral:{
 c12_tres_dias:{
   texto:[
     'Você tem três dias e usa os três.',
-    'Dia um: você acorda a cidade. Literalmente — você bate na porta do Sr. Tsukada às seis da manhã, na da Dra. Rin às sete, na do bar dos guardas ao meio-dia quando abre.',
+    'Dia um: você acorda a cidade. Literalmente — você bate na porta do Sr. Zane às seis da manhã, na da Dra. Pia às sete, na do bar dos guardas ao meio-dia quando abre.',
     'Dia dois: os dois caminhões de soltura saem do galpão de máquinas com bateria nova e pneu calibrado, e o cunhado do guarda mais novo cobra o conserto e depois não aceita o dinheiro.',
     'Dia três: vocês voltam ao setor 7 e o curral tem trinta e um dentro.',
-    'Trinta e um voltaram por fome, em três dias, exatamente como o Sr. Onuki disse.',
+    'Trinta e um voltaram por fome, em três dias, exatamente como o Sr. Ulric disse.',
     'E vocês embarcam os trinta e um e levam a quarenta e dois quilômetros, e não é uma vitória, é uma correção.',
     'Os outros cinquenta e seis ninguém sabe.',
     d=>d.flags.tem_os_vinculos ? 'E nas doze folhas de caderno do peão você confere: dos trinta e um que voltaram, dezenove eram filhotes.' : ''
@@ -2600,7 +2600,7 @@ c12_saiu_zona:{
   escolhas:[
     {texto:'Ir ao Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Ir ao diretor.', vai:'c12_diretor'},
-    {texto:'Ir à Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
+    {texto:'Ir à Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
     {texto:'Sair de Fuchsia.', vai:'c12_fim'}
   ]
 },
@@ -2663,7 +2663,7 @@ c12_entregou_koga:{
 c12_ficou_pra_reuniao:{
   texto:[
     'Você fica onze dias em Fuchsia.',
-    'São onze dias chatos e você faz coisa de gente: ajuda a Dra. Rin no quintal, come na padaria, dorme na pousada, e na quarta-feira às duas da tarde você aparece no ginásio porque horário existe pra que as pessoas possam contar com ele.',
+    'São onze dias chatos e você faz coisa de gente: ajuda a Dra. Pia no quintal, come na padaria, dorme na pousada, e na quarta-feira às duas da tarde você aparece no ginásio porque horário existe pra que as pessoas possam contar com ele.',
     'No décimo primeiro dia tem a reunião.',
     'É numa sala de escola, com cadeira de plástico e ventilador de teto, porque o conselho não tem sede.',
     'Koga lê as doze folhas em voz alta. Leva quarenta e três minutos e ninguém interrompe.',
@@ -2680,8 +2680,8 @@ c12_ficou_pra_reuniao:{
       presagio:'Quatro a três. Uma pessoa saiu da sala e voltou, e essa pessoa decidiu.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c12_fim'},
-    {texto:'Ir agradecer ao Sr. Onuki.', vai:'c12_devolveu_a_chave'},
-    {texto:'Ir agradecer à Dra. Rin.', vai:'c12_yara'},
+    {texto:'Ir agradecer ao Sr. Ulric.', vai:'c12_devolveu_a_chave'},
+    {texto:'Ir agradecer à Dra. Pia.', vai:'c12_yara'},
     {texto:'Desafiar o ginásio antes de ir.', vai:'c12_desafio_koga'}
   ]
 },
@@ -2771,8 +2771,8 @@ c12_barreira:{
   escolhas:[
     {texto:'Seguir viagem.', vai:'c12_fim'},
     {texto:'Ficar para a reunião do conselho.', vai:'c12_ficou_pra_reuniao', cond:d=>!!d.flags.koga_convoca || !!d.flags.koga_descredencia},
-    {texto:'Contar pro Taki.', vai:'c12_nico', cond:d=>!!d.flags.nico_falou},
-    {texto:'Contar pro Sr. Onuki.', vai:'c12_devolveu_a_chave', cond:d=>!!d.flags.conheceu_seu_jorge}
+    {texto:'Contar pro Orin.', vai:'c12_nico', cond:d=>!!d.flags.nico_falou},
+    {texto:'Contar pro Sr. Ulric.', vai:'c12_devolveu_a_chave', cond:d=>!!d.flags.conheceu_seu_jorge}
   ]
 },
 
@@ -2899,7 +2899,7 @@ c12_desistiu_zona:{
     {texto:'Descer na próxima parada e voltar.', vai:'c12_fuchsia'},
     {texto:'Seguir viagem.', vai:'c12_fim'},
     {texto:'Descer e voltar só para falar com o Koga.', vai:'c12_koga'},
-    {texto:'Descer e voltar só para falar com a Dra. Rin.', vai:'c12_yara'}
+    {texto:'Descer e voltar só para falar com a Dra. Pia.', vai:'c12_yara'}
   ]
 },
 
@@ -2919,7 +2919,7 @@ c12_fim:{
        'E o relatório de manejo do ano que vem vai pedir duzentos e noventa, porque a curva sobe.',
     'Você sai de Fuchsia pela estrada do sul, que corta a reserva por cinco quilômetros antes de sair dela.',
     'Nos cinco quilômetros, de dentro do ônibus, você vê mais Pokémon do que viu em todo o resto de Kanto somado.',
-    'Bando de Nidorino na borda do capinzal. Um Kangaskhan com filhote, a uns quarenta metros da pista, que levanta a cabeça quando o ônibus passa e não sai do lugar.',
+    'Hawthorn de Nidorino na borda do capinzal. Um Kangaskhan com filhote, a uns quarenta metros da pista, que levanta a cabeça quando o ônibus passa e não sai do lugar.',
     'É lindo.',
     'Isso é o que ninguém te prepara pra sentir: é lindo, é bem cuidado, é a maior área protegida de Kanto, e nada disso é mentira.',
     'A próxima coisa no seu mapa é o mar.',

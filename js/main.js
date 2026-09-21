@@ -792,7 +792,7 @@ const Jogo = {
   lutarRival(){
     const enc = this.encontroRival || {tipo:'teo'};
     const R = enc.tipo === 'extra' ? defRival(enc.id) : null;
-    const nome = R ? R.nome : 'Kenta';
+    const nome = R ? R.nome : 'Ezra';
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal(nome, '<p class="nada">Nenhum Pokémon em pé. Ele espera — mas cure o time antes.</p>');
     const time = R ? timeRivalExtra(R) : timeRival();
@@ -817,20 +817,20 @@ const Jogo = {
     const venceu = fim.resultado === 'vitoria';
     registrarResultadoRival(venceu);
     const avisos = [];
-    const npc = Estado.dados.npcs['Kenta'];
+    const npc = Estado.dados.npcs['Ezra'];
 
     if (venceu){
       if (arco === 'parceiro'){ Estado.j.dinheiro += 3000; avisos.push({tipo:'item', texto:'+3.000 ₽ — ele dividiu o que tinha no bolso.'}); }
       if (arco === 'perseguidor'){
-        Estado.lembrarNPC('Kenta', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
+        Estado.lembrarNPC('Ezra', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
         avisos.push({tipo:'dano', texto:'Ele pediu para você parar. Você venceu a batalha.'});
       } else {
-        Estado.lembrarNPC('Kenta', {memoria:`Perdeu para você de novo. Placar ${rival().derrotas}×${rival().vitorias}.`});
+        Estado.lembrarNPC('Ezra', {memoria:`Perdeu para você de novo. Placar ${rival().derrotas}×${rival().vitorias}.`});
       }
       const evs = ganharExp(Estado.primeiroApto() || Estado.dados.time[0], 400);
     } else {
       if (arco === 'perseguidor'){
-        Estado.lembrarNPC('Kenta', {opiniao:(npc?npc.opiniao:0)+1, memoria:'Te venceu e mandou você voltar para casa.'});
+        Estado.lembrarNPC('Ezra', {opiniao:(npc?npc.opiniao:0)+1, memoria:'Te venceu e mandou você voltar para casa.'});
         avisos.push({tipo:'info', texto:'Ele ficou entre você e o caminho.'});
       }
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - 800);
@@ -890,9 +890,9 @@ const Jogo = {
     } else {
       const r = rival();
       r.ultimoCap = cap;
-      const npc = Estado.dados.npcs['Kenta'];
-      Estado.lembrarNPC('Kenta', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
-      Estado.registrar('Evitou o encontro com Kenta.');
+      const npc = Estado.dados.npcs['Ezra'];
+      Estado.lembrarNPC('Ezra', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Você passou por ele sem parar.'});
+      Estado.registrar('Evitou o encontro com Ezra.');
     }
     Estado.salvar('auto');
     this.seguirDepoisDoRival();

@@ -137,6 +137,13 @@ const NOMES_DA_HISTORIA = new Set([
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
   'Arden','Hart','Tanner',
+  /* o resto do elenco escrito, que só aparece em npc:{} e narração */
+  'Ada','Arlo','Beatrix','Berto','Cosmo','Cybil','Dahl','Delmar','Dorian','Edda','Edric',
+  'Elias','Falk','Fenna','Fenwick','Gale','Greta','Hedda','Hedda','Hollis','Isolde','Janus',
+  'Juna','Kell','Kestrel','Kira','Larkin','Lior','Livia','Maren','Mervin','Nettle','Nolan',
+  'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
+  'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
+  'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
   'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle'

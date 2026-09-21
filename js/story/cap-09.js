@@ -680,8 +680,8 @@ c9_pendencias:{
   ],
   escolhas:[
     {texto:'Revelar o filme da câmera.', vai:'c9_revelar', cond:d=>!!d.flags.fotografou_o_porao || !!d.flags.fotografou_o_certificado},
-    {texto:'Procurar a filha da Haruko.', vai:'c9_filha_marta', cond:d=>!!d.flags.a_filha_da_marta},
-    {texto:'Ir ao hospital ver o Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo || !!d.flags.salvou_treinador_torre},
+    {texto:'Procurar a filha da Sibyl.', vai:'c9_filha_marta', cond:d=>!!d.flags.a_filha_da_marta},
+    {texto:'Ir ao hospital ver o Elias.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo || !!d.flags.salvou_treinador_torre},
     {texto:'Tirar certidão do CNPJ na junta comercial.', vai:'c9_junta', cond:d=>!!d.flags.cnpj_de_saffron || !!d.flags.sabe_do_cartorio}
   ]
 },
@@ -822,7 +822,7 @@ c9_filha_marta:{
     'Você não tem endereço. Tem um primeiro nome, uma idade aproximada e a informação de que ela trabalha em Celadon.',
     'Isso, numa cidade de quatrocentos mil habitantes, é nada.',
     'Você tenta mesmo assim, e leva dois dias, e é a coisa mais idiota e mais teimosa que você faz nessa cidade.',
-    'Você acha por acaso: num café do quarto andar do shopping, uma moça de uns vinte e um anos com crachá de funcionária e o mesmo jeito de segurar a caneca que a Haruko tem.',
+    'Você acha por acaso: num café do quarto andar do shopping, uma moça de uns vinte e um anos com crachá de funcionária e o mesmo jeito de segurar a caneca que a Sibyl tem.',
     'Você fica olhando de longe por quase dez minutos antes de conseguir chegar perto.'
   ],
   ef:{flag:'achou_a_filha'},
@@ -846,7 +846,7 @@ c9_falou_com_a_filha:{
     '"Então o que você quer?"',
     'E você percebe, ali, com a pergunta na cara, que você não tem absolutamente nada pra querer. Você só foi.'
   ],
-  ef:{npc:{nome:'Filha da Haruko', opiniao:-1, memoria:'Você a procurou em Celadon sem nada pra dizer.'}},
+  ef:{npc:{nome:'Filha da Sibyl', opiniao:-1, memoria:'Você a procurou em Celadon sem nada pra dizer.'}},
   escolhas:[
     {texto:'"Nada. Desculpa." E sair.', vai:'c9_saiu_do_cafe'},
     {texto:'"O Duque morreu."', vai:'c9_o_duque_morreu', cond:d=>!!d.flags.vaporeon_morreu},
@@ -910,7 +910,7 @@ c9_verdade_pra_filha:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Contou a verdade inteira, com o detalhe que a tornava suportável'},
       flag:'contou_a_verdade_a_filha',
-      npc:{nome:'Filha da Haruko', opiniao:6, memoria:'Você contou como o Duque morreu, com o detalhe da sardinha.'},
+      npc:{nome:'Filha da Sibyl', opiniao:6, memoria:'Você contou como o Duque morreu, com o detalhe da sardinha.'},
       presagio:'O detalhe da sardinha foi o que salvou a conversa. Guarda esse método.'},
   escolhas:[
     {texto:'"Liga pra ela."', vai:'c9_liga_pra_ela'},
@@ -930,7 +930,7 @@ c9_nao_sei_pra_filha:{
     '"Tá." Ela faz que sim. "Tá. Isso é melhor do que não. Obrigada por não falar não."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Disse que não sabia em vez de inventar conforto'},
-      npc:{nome:'Filha da Haruko', opiniao:5, memoria:'Você disse que não sabia se o Duque sofreu, e ela agradeceu por isso.'}},
+      npc:{nome:'Filha da Sibyl', opiniao:5, memoria:'Você disse que não sabia se o Duque sofreu, e ela agradeceu por isso.'}},
   escolhas:[
     {texto:'"Liga pra ela."', vai:'c9_liga_pra_ela'},
     {texto:'Ficar em silêncio.', vai:'c9_silencio_no_cafe'},
@@ -946,7 +946,7 @@ c9_nao_respondeu_filha:{
     '"Tá."',
     'Ela levanta e pega a bandeja e diz obrigada e vai embora, e você fica na mesa.'
   ],
-  ef:{npc:{nome:'Filha da Haruko', opiniao:2, memoria:'Você não respondeu se o Duque sofreu, e ela entendeu.'}},
+  ef:{npc:{nome:'Filha da Sibyl', opiniao:2, memoria:'Você não respondeu se o Duque sofreu, e ela entendeu.'}},
   escolhas:[
     {texto:'Ir atrás e falar.', vai:'c9_verdade_pra_filha'},
     {texto:'Deixar.', vai:'c9_saiu_do_cafe'}
@@ -968,7 +968,7 @@ c9_liga_pra_ela:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou uma ligação sem forçar'},
       flag:'a_filha_pensou_em_ligar',
-      npc:{nome:'Filha da Haruko', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o Pokégear no bolso da frente.'},
+      npc:{nome:'Filha da Sibyl', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o Pokégear no bolso da frente.'},
       presagio:'Bolso da frente, não o de trás. É pouco e é um movimento.'},
   escolhas:[
     {texto:'Se despedir.', vai:'c9_saiu_do_cafe'},
@@ -991,8 +991,8 @@ c9_a_casa_fica_grande:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Levou uma frase de uma casa até a outra'},
       flag:'recado_da_filha',
-      npc:{nome:'Filha da Haruko', opiniao:5, memoria:'Te pediu pra falar que ela está bem e não contar do choro.'},
-      registrar:'A filha da Haruko pediu um recado: que ela está bem.',
+      npc:{nome:'Filha da Sibyl', opiniao:5, memoria:'Te pediu pra falar que ela está bem e não contar do choro.'},
+      registrar:'A filha da Sibyl pediu um recado: que ela está bem.',
       presagio:'Você virou correio entre duas pessoas que se amam e não se falam. Isso vai acontecer de novo.'},
   escolhas:[
     {texto:'"Combinado."', vai:'c9_saiu_do_cafe'},
@@ -1009,7 +1009,7 @@ c9_silencio_no_cafe:{
     'É a coisa mais parecida com uma família que essa cidade te ofereceu.'
   ],
   ef:{hp:3, moral:5,
-      npc:{nome:'Filha da Haruko', opiniao:4, memoria:'Vocês dividiram um prato de pão de queijo em silêncio no café do shopping.'}},
+      npc:{nome:'Filha da Sibyl', opiniao:4, memoria:'Vocês dividiram um prato de pão de queijo em silêncio no café do shopping.'}},
   escolhas:[
     {texto:'Se despedir.', vai:'c9_saiu_do_cafe'},
     {texto:'"Liga pra ela."', vai:'c9_liga_pra_ela'},
@@ -1036,12 +1036,12 @@ c9_nao_chegou:{
     'Você não chega.',
     'Fica dez minutos olhando uma moça de vinte e um anos tomar café num shopping e depois vai embora.',
     'Não é covardia exatamente. É a percepção, que chega tarde, de que você ia até lá pra resolver uma coisa que não é sua e que talvez não precise ser resolvida.',
-    'A Haruko não pediu nada. Ela só mostrou uma foto e não perguntou.',
+    'A Sibyl não pediu nada. Ela só mostrou uma foto e não perguntou.',
     'Você desce a escada rolante com uma sensação estranha de ter feito a coisa certa por acidente.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Reconheceu que uma dor não era sua para resolver'},
       flag:'nao_procurou_a_filha',
-      presagio:'A Haruko não pediu nada. Repara em quantas vezes você vai resolver o que ninguém pediu.'},
+      presagio:'A Sibyl não pediu nada. Repara em quantas vezes você vai resolver o que ninguém pediu.'},
   escolhas:[
     {texto:'Ir ao cassino.', vai:'c9_cassino'},
     {texto:'Procurar os caminhões.', vai:'c9_procurar'},
@@ -1061,7 +1061,7 @@ c9_so_olhou_a_filha:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Foi conferir sem invadir'},
       flag:'recado_da_filha',
-      registrar:'Viu a filha da Haruko de longe. Ela está bem.',
+      registrar:'Viu a filha da Sibyl de longe. Ela está bem.',
       presagio:'Quatro palavras num caderno. É o tipo de coisa que muda um mês de alguém.'},
   escolhas:[
     {texto:'Ir ao cassino.', vai:'c9_cassino'},
@@ -1095,12 +1095,12 @@ c9_hospital:{
     'O hospital de Celadon atende metade de Kanto e parece.',
     'Corredor cheio, cadeira de plástico ocupada, gente dormindo em pé.',
     d=>d.flags.conhece_o_hideo
-      ? 'Hideo está na ala D, leito 12, e já está sentado, o que é notícia boa.'
-      : 'O rapaz que você tirou da Torre de Lavender está na ala D, leito 12. Ele se chama Hideo e você só descobriu o nome pela pulseira.',
+      ? 'Elias está na ala D, leito 12, e já está sentado, o que é notícia boa.'
+      : 'O rapaz que você tirou da Torre de Lavender está na ala D, leito 12. Ele se chama Elias e você só descobriu o nome pela pulseira.',
     'Ele te vê chegando e demora dois segundos pra te reconhecer, e nos dois segundos você vê ele decidir alguma coisa.',
     '"Cara."'
   ],
-  ef:{npc:{nome:'Hideo', opiniao:3, memoria:'Você foi visitar ele no hospital de Celadon.'}},
+  ef:{npc:{nome:'Elias', opiniao:3, memoria:'Você foi visitar ele no hospital de Celadon.'}},
   escolhas:[
     {texto:'"Como você tá?"', vai:'c9_como_voce_ta'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
@@ -1141,7 +1141,7 @@ c9_porque_escondeu:{
     '"Eu marquei não na pergunta. Levou quatro segundos."'
   ],
   ef:{flag:'o_laudo_do_hideo',
-      registrar:'Hideo escondeu a epilepsia no formulário da licença. Levou quatro segundos.',
+      registrar:'Elias escondeu a epilepsia no formulário da licença. Levou quatro segundos.',
       presagio:'Quatro segundos numa pergunta de sim ou não, e quatro dias num sexto andar. A distância entre as duas coisas é a história inteira de Kanto.'},
   escolhas:[
     {texto:'"E se a pergunta não existisse?"', vai:'c9_se_a_pergunta'},
@@ -1165,7 +1165,7 @@ c9_se_a_pergunta:{
   ],
   ef:{flag:'a_pergunta_nao_protegeu',
       rep:{eixo:'bom',delta:2,motivo:'Fez alguém entender o próprio caso'},
-      npc:{nome:'Hideo', opiniao:6, memoria:'Você o fez perceber que a pergunta do formulário não protegia ninguém, só fazia mentir.'},
+      npc:{nome:'Elias', opiniao:6, memoria:'Você o fez perceber que a pergunta do formulário não protegia ninguém, só fazia mentir.'},
       registrar:'"A pergunta não me protegeu de nada. Ela só me fez mentir."',
       presagio:'Uma regra escrita pra proteger que só produz mentira. Você vai reencontrar exatamente isso, com apostas muito maiores.'},
   escolhas:[
@@ -1190,8 +1190,8 @@ c9_escreve_isso:{
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez alguém escrever o próprio caso em vez de engolir'},
       flag:['hideo_escreveu','papel_com_brasao'],
-      npc:{nome:'Hideo', opiniao:9, memoria:'Escreveu quarenta minutos de relato por sua causa, num leito de hospital.'},
-      registrar:'Hideo escreveu um relato sobre a pergunta da licença e a Torre de Lavender.',
+      npc:{nome:'Elias', opiniao:9, memoria:'Escreveu quarenta minutos de relato por sua causa, num leito de hospital.'},
+      registrar:'Elias escreveu um relato sobre a pergunta da licença e a Torre de Lavender.',
       presagio:'Uma folha assinada por quem quase morreu. Isso é o começo de um processo, e você ainda não sabe disso.'},
   escolhas:[
     {texto:'Pedir uma cópia.', vai:'c9_copia_do_hideo'},
@@ -1214,7 +1214,7 @@ c9_copia_do_hideo:{
   ef:{flag:['copia_do_hideo','papel_com_brasao'],
       dinheiro:-100,
       rep:{eixo:'bom',delta:2,motivo:'Guardou cópia de um relato voluntário'},
-      registrar:'Tem cópia assinada do relato do Hideo, cinco páginas.',
+      registrar:'Tem cópia assinada do relato do Elias, cinco páginas.',
       presagio:'Não foi tirada de ninguém. Foi dada. Essa diferença vai valer tudo.'},
   escolhas:[
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
@@ -1260,8 +1260,8 @@ c9_pergunta_pra_ela:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma desculpa de três anos com uma pergunta'},
       flag:'hideo_ligou',
-      npc:{nome:'Hideo', opiniao:8, memoria:'Ligou pra mãe por sua causa, três anos depois do diagnóstico.'},
-      registrar:'Hideo ligou para a mãe.',
+      npc:{nome:'Elias', opiniao:8, memoria:'Ligou pra mãe por sua causa, três anos depois do diagnóstico.'},
+      registrar:'Elias ligou para a mãe.',
       presagio:'Ele ligou. Você não vai saber como foi.'},
   escolhas:[
     {texto:'"Escreve o que aconteceu com você."', vai:'c9_escreve_isso'},
@@ -1301,7 +1301,7 @@ c9_o_nome_do_hideo:{
     'Vocês trocam. Leva quatro segundos e é absurdo que tenha levado tanto tempo.',
     '"Cara", ele diz. "Você me carregou seis andar e a gente não tinha se apresentado."'
   ],
-  ef:{npc:{nome:'Hideo', opiniao:4, memoria:'Vocês se apresentaram formalmente num hospital, depois de tudo.'}},
+  ef:{npc:{nome:'Elias', opiniao:4, memoria:'Vocês se apresentaram formalmente num hospital, depois de tudo.'}},
   escolhas:[
     {texto:'"Como você tá?"', vai:'c9_como_voce_ta'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
@@ -1321,7 +1321,7 @@ c9_sentou_no_hospital:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Passou duas horas numa cadeira de plástico'},
       hp:-1, causa:'Duas horas numa cadeira de hospital',
-      npc:{nome:'Hideo', opiniao:7, memoria:'Você passou duas horas sentado na cadeira do leito dele sem precisar.'},
+      npc:{nome:'Elias', opiniao:7, memoria:'Você passou duas horas sentado na cadeira do leito dele sem precisar.'},
       flag:'ficou_no_hospital',
       presagio:'Em hospital ninguém pergunta quem é o que está sentado na cadeira. Tem gente que passa a vida inteira sem nunca ter ninguém na cadeira.'},
   escolhas:[
@@ -1386,7 +1386,7 @@ c9_por_nome:{
   ef:{flag:'busca_por_nome'},
   escolhas:[
     {texto:'"H. Colman."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
-    {texto:'"Amano. Doutor alguma coisa Amano."', vai:'c9_busca_sena', cond:d=>!!d.flags.sabe_de_sena},
+    {texto:'"Hollis. Doutor alguma coisa Hollis."', vai:'c9_busca_sena', cond:d=>!!d.flags.sabe_de_sena},
     {texto:'"Fabre."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan},
     {texto:'"Eu não tenho nome. Só o número."', vai:'c9_certidao',
      cond:d=>d.jogador.dinheiro>=80, ef:{dinheiro:-80}}
@@ -1414,7 +1414,7 @@ c9_busca_renno:{
     {texto:'Pedir só a da logística. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
      ef:{dinheiro:-80}},
     {texto:'Anotar tudo e não pedir nada.', vai:'c9_anotou_junta'},
-    {texto:'"Busca o Amano também."', vai:'c9_busca_sena', cond:d=>!!d.flags.sabe_de_sena}
+    {texto:'"Busca o Hollis também."', vai:'c9_busca_sena', cond:d=>!!d.flags.sabe_de_sena}
   ]
 },
 
@@ -1482,7 +1482,7 @@ c9_os_dois_juntos:{
   ef:{flag:['papel_com_brasao','tem_os_onze_nomes','a_mesma_gente'],
       rep:{eixo:'bom',delta:4,motivo:'Cruzou os nomes e alguém decidiu ajudar'},
       npc:{nome:'Moça da junta', opiniao:6, memoria:'Cruzou as buscas pra você e imprimiu quatro páginas sem cobrar.'},
-      registrar:'A mesma associação tem Colman na presidência e Amano no conselho técnico. Quatro páginas impressas.',
+      registrar:'A mesma associação tem Colman na presidência e Hollis no conselho técnico. Quatro páginas impressas.',
       presagio:'Ela imprimiu sem cobrar. Guarda o rosto dela; você não vai poder protegê-la.'},
   escolhas:[
     {texto:'"Obrigado." E sair.', vai:'c9_saiu_da_junta'},
@@ -2497,7 +2497,7 @@ c9_o_que_e_o_pregao:{
 c9_nao_tenho_credencial:{
   texto:[
     '"Não tenho."',
-    'A mulher da prancheta — o crachá diz **AUDITORA M. PRADO · COMISSÃO DE BEM-ESTAR** — não se altera nem meio grau.',
+    'A mulher da prancheta — o crachá diz **AUDITORA M. RIDGE · COMISSÃO DE BEM-ESTAR** — não se altera nem meio grau.',
     '"Então o senhor não pode dar lance." Ela olha a sua idade. "E o senhor também não poderia, de qualquer forma."',
     'Mas ela não te tira. Ela dá um passo de lado e abre espaço na parede dos fundos.',
     '"Assistir é público. Sessão pública é pública."',
@@ -2561,7 +2561,7 @@ c9_prado_conversa:{
       registrar:'A Auditora Brill suspende a alienação se houver declaração escrita do tutor, com processo e data.',
       presagio:'Ela te disse o que precisa. Isso é raro e é a coisa mais útil que aconteceu nessa cidade.'},
   escolhas:[
-    {texto:'Entregar a declaração do Hideo agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
+    {texto:'Entregar a declaração do Elias agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
     {texto:'"Eu volto com isso escrito." E ir ao hospital.', vai:'c9_hospital'},
     {texto:'"E os outros mil e duzentos?"', vai:'c9_prado_te_da_o_processo'},
     {texto:'"E se eu simplesmente arrematar o 41?"', vai:'c9_arrematou_o_41'}
@@ -2599,7 +2599,7 @@ c9_prado_te_da_o_processo:{
       presagio:'Papel carbonado desbota. Ela te avisou disso e isso vai importar.'},
   escolhas:[
     {texto:'Ir ao armazém buscar o lote 41 em pessoa.', vai:'c9_dentro_limpo'},
-    {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
+    {texto:'Ir ao hospital contar pro Elias.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
     {texto:'Levar tudo à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir à junta comercial com o nome que ela te deu.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}}
   ]
@@ -2641,7 +2641,7 @@ c9_consignou:{
   escolhas:[
     {texto:'Ir ao armazém buscar os outros quarenta.', vai:'c9_dentro_limpo'},
     {texto:'Perguntar à Auditora quem assina os recolhimentos.', vai:'c9_prado_conversa'},
-    {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
+    {texto:'Ir ao hospital contar pro Elias.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
     {texto:'Sair dali. Você precisa de ar.', vai:'c9_cidade2'}
   ]
 },
@@ -2819,7 +2819,7 @@ c9_gaiola_41:{
     'Quando você chega perto ele levanta a cabeça, olha pra você, e faz uma coisa que arrebenta você por dentro: ele balança o rabo duas vezes e para.',
     'Duas vezes. Como quem já fez isso muitas vezes por muita gente que passou e não era quem ele esperava.',
     d=>d.flags.lote_41_suspenso ? 'Na plaqueta, colado por cima, tem um adesivo amarelo novo: SUSPENSO — AUDITORIA.' :
-       d.flags.conhece_o_hideo ? 'O tutor dele se chama Hideo. Está num hospital em Lavender com a mão ruim, e você sabe disso, e ele não sabe que você sabe.' :
+       d.flags.conhece_o_hideo ? 'O tutor dele se chama Elias. Está num hospital em Lavender com a mão ruim, e você sabe disso, e ele não sabe que você sabe.' :
        'A data de entrada é doze de dezembro. Faz nove meses.'
   ],
   ef:{flag:['achou_o_growlithe','viu_o_44207'],
@@ -3320,7 +3320,7 @@ c9_ivone_44207:{
       presagio:'Escolha de veículo de publicação. Alguém escolheu onde publicar para não ser lido.'},
   escolhas:[
     {texto:'"Eu vou buscar essa declaração." — hospital.', vai:'c9_hospital'},
-    {texto:'"Eu já tenho." — entregar a do Hideo.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
+    {texto:'"Eu já tenho." — entregar a do Elias.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
     {texto:'"Quem é o fiscal que assinou?"', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}},
     {texto:'"Então a gente vai pra Saffron."', vai:'c9_fim', ef:{flag:'vai_para_saffron'}}
   ]
@@ -3386,9 +3386,9 @@ c9_ela_ta_bem:{
     '"Obrigada por vir. Sério. Você é a primeira pessoa em quatro anos que fez alguma coisa em vez de me mandar recado."'
   ],
   ef:{flag:'falou_com_a_filha_da_marta',
-      npc:{nome:'Filha da Haruko', opiniao:2, memoria:'Você foi até Celadon só para dizer que a mãe dela está bem. Ela sabe o que isso custou em dias de caminhada.'},
+      npc:{nome:'Filha da Sibyl', opiniao:2, memoria:'Você foi até Celadon só para dizer que a mãe dela está bem. Ela sabe o que isso custou em dias de caminhada.'},
       rep:{eixo:'bom',delta:1,motivo:'Atravessou uma cidade inteira por um recado que ninguém pediu'},
-      registrar:'Falou com a filha da Haruko. Ela agradeceu e não prometeu nada.',
+      registrar:'Falou com a filha da Sibyl. Ela agradeceu e não prometeu nada.',
       presagio:'Ela agradeceu e não disse que ia ligar. Repare no que ela não disse.'},
   escolhas:[
     {texto:'"Ela queria muito falar com você."', vai:'c9_liga_pra_ela'},

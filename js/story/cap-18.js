@@ -475,12 +475,12 @@ c18_cartorio_furou:{
 c18_cartorio_fila:{
   texto:[
     'Dezesseis e cinquenta e um. A padaria termina e sai com quatro pessoas e uma pasta.',
-    'A escrevente se chama Sra. Kitano, e isso está numa plaquinha de acrílico que ela mesma deve ter mandado fazer, porque é mais bonita que o resto do balcão.',
+    'A escrevente se chama Sra. Cybil, e isso está numa plaquinha de acrílico que ela mesma deve ter mandado fazer, porque é mais bonita que o resto do balcão.',
     '"Pois não."',
     'Você explica o que quer sem saber direito o que quer: uma comissão, um conselho, alguma coisa registrada em Kanto há mais ou menos dois anos, relacionada a risco, a fauna, a controle.',
     'Ela não faz cara de nada. Ela digita.'
   ],
-  ef:{npc:{nome:'Sra. Kitano', opiniao:0, memoria:'Escrevente do cartório de pessoas jurídicas de Saffron.'}},
+  ef:{npc:{nome:'Sra. Cybil', opiniao:0, memoria:'Escrevente do cartório de pessoas jurídicas de Saffron.'}},
   escolhas:[
     {texto:'Esperar em silêncio.', vai:'c18_quintela_achou'},
     {texto:'"A senhora já ouviu falar dessa organização?"', vai:'c18_quintela_ja_ouviu'},
@@ -520,7 +520,7 @@ c18_quintela_achou:{
     'Associação civil sem fins lucrativos. Registro nº 11.402. Constituída há um ano e oito meses.',
     'Sede: Saffron, Rua do Comércio, 118, sala 704.',
     'Estatuto arquivado. Atas depositadas: 34.',
-    '"Trinta e quatro atas em um ano e oito meses." A Sra. Kitano fala isso quase com admiração. "Essa gente se reúne toda quinzena. Isso é raro, moço. Associação normal esquece de fazer assembleia."'
+    '"Trinta e quatro atas em um ano e oito meses." A Sra. Cybil fala isso quase com admiração. "Essa gente se reúne toda quinzena. Isso é raro, moço. Associação normal esquece de fazer assembleia."'
   ],
   ef:{flag:['sabe_da_comissao','sabe_do_endereco_704'],
       rep:{eixo:'bom',delta:1,motivo:'Encontrou a Comissão num cartório, com um número de registro'},
@@ -570,7 +570,7 @@ c18_os_onze_nomes:{
 
 c18_algum_da_liga:{
   texto:[
-    '"Eu não sei o que é a Liga para efeito de registro." A Sra. Kitano é literal do jeito que só quem trabalha com papel é. "Aqui diz ex-diretora de fiscalização. Não diz de onde."',
+    '"Eu não sei o que é a Liga para efeito de registro." A Sra. Cybil é literal do jeito que só quem trabalha com papel é. "Aqui diz ex-diretora de fiscalização. Não diz de onde."',
     '"E a senhora acha que é de onde?"',
     '"Eu acho que quando é da Liga eles escrevem da Liga, porque dá orgulho." Ela ajeita os óculos. "Quando não escrevem, é porque saíram brigados."',
     'Você anota isso também.'
@@ -590,7 +590,7 @@ c18_pedido_discreto:{
     '"Se o senhor quer uma coisa que não deixa rastro, o senhor veio no lugar errado. Aqui é só rastro."'
   ],
   ef:{flag:'pedido_fica_no_livro',
-      npc:{nome:'Sra. Kitano', opiniao:1, memoria:'Te explicou que cartório é feito de rastro e que isso é o valor dele.'},
+      npc:{nome:'Sra. Cybil', opiniao:1, memoria:'Te explicou que cartório é feito de rastro e que isso é o valor dele.'},
       registrar:'O pedido de certidão fica registrado com data e hora. A Comissão pode descobrir que foi você.'},
   escolhas:[
     {texto:'"Tudo bem. Registra."', vai:'c18_quintela_copia'},
@@ -619,7 +619,7 @@ c18_so_estatuto:{
 c18_voltou_amanha:{
   texto:[
     'Você volta no dia seguinte, às nove e dez, e é a primeira pessoa da fila, o que não te dá vantagem nenhuma porque o sistema só entra no ar às nove e meia.',
-    'A Sra. Kitano reconhece você e não comenta.',
+    'A Sra. Cybil reconhece você e não comenta.',
     'Cento e vinte e duas páginas de ata saem da matricial em vinte e dois minutos de chiado.',
     'Ela grampeia em quatro blocos, porque um grampo só não pega.'
   ],
@@ -648,7 +648,7 @@ c18_quintela_copia:{
 
 c18_saiu_sem_nada:{
   texto:[
-    'Você agradece e sai sem pedir nada, o que a Sra. Kitano recebe com um aceno de cabeça e nenhuma curiosidade.',
+    'Você agradece e sai sem pedir nada, o que a Sra. Cybil recebe com um aceno de cabeça e nenhuma curiosidade.',
     'Na rua, você fica parado tempo demais no mesmo lugar.',
     'Você sabe o nome. Sabe o número do registro. Sabe o endereço.',
     'E não tem uma linha escrita para provar que sabe.'
@@ -1063,13 +1063,13 @@ c18_ivone_tem_estomago:{
   texto:[
     '"Tenho."',
     'Ela anota alguma coisa num papel e empurra para você. É um nome e um telefone.',
-    '"Izumi Hashi. Editora de cidades do jornal de Celadon. É a única pessoa naquela redação que lê documento inteiro antes de escrever."',
+    '"Livia Gale. Editora de cidades do jornal de Celadon. É a única pessoa naquela redação que lê documento inteiro antes de escrever."',
     '"E o resto?"',
     '"O resto pergunta se tem foto." Ela guarda a caneta. "Leva o calhamaço inteiro para ela. Não leva resumo. Resumo é o que a gente faz quando quer que acreditem em nós; documento é o que a gente faz quando quer que acreditem no documento."'
   ],
   ef:{flag:['contato_isaura','plano_publicar'],
-      npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Te deu o contato da editora Izumi Hashi.'},
-      registrar:'Izumi Hashi, editora de cidades do jornal de Celadon.'},
+      npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Te deu o contato da editora Livia Gale.'},
+      registrar:'Livia Gale, editora de cidades do jornal de Celadon.'},
   escolhas:[{texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'}]
 },
 
@@ -1078,11 +1078,11 @@ c18_ivone_nao_sei_estomago:{
     '"Não sei."',
     '"Boa resposta." Ela fala sério. "Quem diz tenho na hora costuma sumir no terceiro mês."',
     'Ela escreve um nome e um telefone e dobra o papel antes de entregar.',
-    '"Guarda e não usa até saber. Izumi Hashi, jornal de Celadon. Quando o senhor souber, ela vai estar lá, porque ela está lá há vinte e dois anos."'
+    '"Guarda e não usa até saber. Livia Gale, jornal de Celadon. Quando o senhor souber, ela vai estar lá, porque ela está lá há vinte e dois anos."'
   ],
   ef:{flag:'contato_isaura',
       npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Preferiu sua dúvida à sua certeza.'},
-      registrar:'Guardou o contato de Izumi Hashi sem prometer nada.'},
+      registrar:'Guardou o contato de Livia Gale sem prometer nada.'},
   escolhas:[{texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'}]
 },
 
@@ -1133,7 +1133,7 @@ c18_ivone_da_as_atas:{
 /* ── A Terceira ─────────────────────────────────────────── */
 c18_terceira:{
   texto:[
-    'A Terceira atende num galpão de material de construção que é de verdade um galpão de material de construção, com areia, cimento e um funcionário chamado Nilton que não olha para ninguém.',
+    'A Terceira atende num galpão de material de construção que é de verdade um galpão de material de construção, com areia, cimento e um funcionário chamado Arlo que não olha para ninguém.',
     'Ela ouve a sigla e faz uma careta de quem mordeu limão.',
     '"Comissão." Ela sopra o ar. "Eles são o pior tipo de cliente."',
     '"Por quê? Pagam mal?"',
@@ -1155,7 +1155,7 @@ c18_terceira_nota:{
     '"Porque nota é laço." Ela mostra os dentes num quase-sorriso. "Se eu emito nota, eu existo. Se eu existo, eu declaro. Se eu declaro, eu tenho dono."',
     '"E eles fazem isso de propósito?"',
     '"Eles fazem tudo de propósito, garoto." Ela chuta um saco de cimento para endireitar. "Eles não me compraram. Eles me legalizaram. Metade do meu movimento hoje é nota deles, e no dia em que eu falar demais, a nota vira o processo."',
-    'Ela olha para o lado, para o Nilton, que continua não olhando para ninguém.',
+    'Ela olha para o lado, para o Arlo, que continua não olhando para ninguém.',
     '"Eu já vi gente ser presa por gente pior. Eu nunca vi ser presa por gente mais organizada."'
   ],
   ef:{flag:'terceira_esta_presa', instabilidade:1,
@@ -1239,7 +1239,7 @@ c18_terceira_segunda_via:{
   texto:[
     'Ela hesita pela primeira vez desde que você a conheceu.',
     '"Se eu te der uma segunda via e ela aparecer em algum lugar, eu sei de onde saiu e eles também."',
-    'Ela olha para o Nilton. O Nilton continua não olhando para ninguém.',
+    'Ela olha para o Arlo. O Arlo continua não olhando para ninguém.',
     '"Eu te dou uma." Ela separa uma folha. "Uma de dezenove meses atrás, de quando eles ainda erravam. Nessa aqui o campo destinatário está preenchido à mão."',
     'Você lê o campo. Diz: Estação 4 — via Instituto de Cinnabar.',
     '"Eles não usam mais esse caminho", ela diz. "Então essa aqui não me mata."'
@@ -1273,12 +1273,12 @@ c18_terceira_preco:{
 c18_hemeroteca:{
   texto:[
     'A hemeroteca fica no subsolo da biblioteca municipal de Saffron e cheira a papel e a desumidificador.',
-    'O atendente tem uns setenta anos, se chama Sr. Abe, e fica visivelmente feliz por alguém ter descido.',
+    'O atendente tem uns setenta anos, se chama Sr. Arlo, e fica visivelmente feliz por alguém ter descido.',
     '"Um ano e meio de jornal?" Ele bate as mãos uma na outra. "O senhor tem a tarde inteira?"',
     '"Tenho."',
     '"Então o senhor vai achar." Ele já está puxando as caixas. "Todo mundo que desce aqui acha. O problema é que quase ninguém desce."'
   ],
-  ef:{npc:{nome:'Sr. Abe', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
+  ef:{npc:{nome:'Sr. Arlo', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
       registrar:'Começou a varrer um ano e meio de jornal na hemeroteca de Saffron.'},
   escolhas:[
     {texto:'Procurar por notícia sobre fauna e controle.', vai:'c18_hemero_fauna'},
@@ -1308,7 +1308,7 @@ c18_hemero_legais:{
 
 c18_hemero_copia:{
   texto:[
-    'O Sr. Abe tira a cópia numa máquina antiga que esquenta a folha.',
+    'O Sr. Arlo tira a cópia numa máquina antiga que esquenta a folha.',
     '"O senhor é o segundo a pedir essa página."',
     'Você congela.',
     '"Quem foi o primeiro?"',
@@ -1326,9 +1326,9 @@ c18_hemero_copia:{
 
 c18_hemero_o_que_ela_pediu:{
   texto:[
-    'O Sr. Abe tem um caderno de pedidos, porque é de uma geração que anota.',
+    'O Sr. Arlo tem um caderno de pedidos, porque é de uma geração que anota.',
     'Ele acha a página e vira para você.',
-    'Quatro recortes: a constituição da CGRB; uma nota de falecimento; um anúncio de vaga para técnico de viveiro; e uma reportagem de meia página sobre a reintrodução de Rattata em área urbana de Celadon, assinada por Izumi Hashi.',
+    'Quatro recortes: a constituição da CGRB; uma nota de falecimento; um anúncio de vaga para técnico de viveiro; e uma reportagem de meia página sobre a reintrodução de Rattata em área urbana de Celadon, assinada por Livia Gale.',
     '"A nota de falecimento é de quem?"',
     'Ele confere. "Hélio Colman. Cinquenta e nove anos. Faz dois anos e dois meses."',
     'Colman.'
@@ -2191,7 +2191,7 @@ c18_publicar:{
       registrar:'Disse à Auditora Brill que vai publicar tudo.'},
   escolhas:[
     {texto:'"Duas vezes? Quem foram os outros?"', vai:'c18_os_outros_dois'},
-    {texto:'"Veremos." E ir atrás da Izumi Hashi.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'"Veremos." E ir atrás da Livia Gale.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'"Veremos." E procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura},
     {texto:'"Antes disso, eu quero falar com quem manda."', vai:'c18_conversar'}
   ]
@@ -2209,7 +2209,7 @@ c18_os_outros_dois:{
       registrar:'Duas pessoas já publicaram sobre a CGRB. Uma em revista científica, outra numa rádio de Fuchsia.'},
   escolhas:[
     {texto:'"Quem é a mulher da rádio?"', vai:'c18_mulher_da_radio'},
-    {texto:'Ir atrás da Izumi Hashi.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'Ir atrás da Livia Gale.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura}
   ]
 },
@@ -2225,7 +2225,7 @@ c18_mulher_da_radio:{
       npc:{nome:'Auditora Brill', opiniao:2, memoria:'Te deu o nome da mulher da rádio de Fuchsia.'},
       registrar:'Nadia Arden, rádio comunitária de Fuchsia, programa das 6h.'},
   escolhas:[
-    {texto:'Ir atrás da Izumi Hashi.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'Ir atrás da Livia Gale.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura},
     {texto:'Ir para a Rota 21 e ver com os próprios olhos.', vai:'c18_fim'}
   ]
@@ -2251,7 +2251,7 @@ c18_procura_jornal:{
 
 c18_isaura:{
   texto:[
-    'Izumi Hashi tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.',
+    'Livia Gale tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.',
     'Ela lê por quarenta minutos sem falar com você, o que é a coisa mais educada que alguém fez por você em meses.',
     'Depois fecha o bloco e faz três perguntas seguidas.',
     '"Isso é público?" É. "Você pagou?" Paguei, tenho o recibo. "Você entende que eles vão dizer que é tudo público e que isso vai fazer a matéria parecer boba?"',
@@ -2259,8 +2259,8 @@ c18_isaura:{
     '"Então eu publico."'
   ],
   ef:{flag:['isaura_vai_publicar'],
-      npc:{nome:'Izumi Hashi', opiniao:2, memoria:'Leu 140 páginas antes de decidir.'},
-      registrar:'Izumi Hashi vai publicar.'},
+      npc:{nome:'Livia Gale', opiniao:2, memoria:'Leu 140 páginas antes de decidir.'},
+      registrar:'Livia Gale vai publicar.'},
   escolhas:[
     {texto:'"Publica o Art. 19 na primeira linha."', vai:'c18_publica_art19'},
     {texto:'"Publica a lista dos nove riscos."', vai:'c18_publica_lista', cond:d=>!!d.flags.viu_a_lista_de_riscos},
@@ -2287,7 +2287,7 @@ c18_publica_lista:{
   texto:[
     'Sai na quinta, no caderno de cidades, com a tabela reproduzida inteira, as duas colunas.',
     'A da esquerda diz Risco 01, Risco 02, Risco 03.',
-    'A da direita, porque a Izumi fez questão, diz os nomes.',
+    'A da direita, porque a Livia fez questão, diz os nomes.',
     'É a primeira vez em toda a história de Kanto que um jornal imprime, lado a lado, o número que uma instituição deu a um bicho e o nome que as pessoas dão a ele.',
     'Três leitores escrevem cartas na semana seguinte. Duas são elogios. Uma é de um veterinário dizendo que a tabela está tecnicamente correta e perguntando qual é o problema.'
   ],
@@ -2300,7 +2300,7 @@ c18_publica_lista:{
 c18_publica_419:{
   texto:[
     'O título é um número: 419.',
-    'Foi ideia da Izumi e ela brigou com o chefe de redação por causa disso durante quarenta minutos.',
+    'Foi ideia da Livia e ela brigou com o chefe de redação por causa disso durante quarenta minutos.',
     '"Título com número ninguém lê", ele disse.',
     '"Título com esse número, lê", ela disse.',
     'A matéria explica, em linguagem simples, o que é um formulário de descarte, quem assina, e quantos foram emitidos no ano.',
@@ -2779,7 +2779,7 @@ c18_adnan_traz_tudo:{
       registrar:'Fabre entregou 61 formulários, 3 atas fechadas e fotos do galpão G.'},
   escolhas:[
     {texto:'Olhar a nona foto.', vai:'c18_nona_foto'},
-    {texto:'Não olhar. Levar tudo para a Izumi.', vai:'c18_fim'},
+    {texto:'Não olhar. Levar tudo para a Livia.', vai:'c18_fim'},
     {texto:'"Me leva lá."', vai:'c18_pedido_viveiro'}
   ]
 },
@@ -2796,7 +2796,7 @@ c18_nona_foto:{
       registrar:'A foto do galpão G: uma sala limpa, com ralo, mangueira e um quadro de lote, motivo e data.'},
   escolhas:[
     {texto:'"Me leva lá."', vai:'c18_pedido_viveiro'},
-    {texto:'Levar tudo para a Izumi.', vai:'c18_fim'}
+    {texto:'Levar tudo para a Livia.', vai:'c18_fim'}
   ]
 },
 
@@ -3132,11 +3132,11 @@ c18_pedir_cracha:{
     'Ele olha para o teto da lanchonete por uns três segundos, fazendo uma conta que você não vê.',
     '"O meu tem foto."',
     '"O seu não. Outro."',
-    '"Tem o da Sandra, que está de licença até o dia vinte." Ele fala devagar, ouvindo a si mesmo cometer o erro. "Ela deixou na gaveta porque licença-maternidade não devolve crachá."',
+    '"Tem o da Elda, que está de licença até o dia vinte." Ele fala devagar, ouvindo a si mesmo cometer o erro. "Ela deixou na gaveta porque licença-maternidade não devolve crachá."',
     'Ele passa a mão na cara.',
     '"Quarenta e oito horas. Se não voltar em quarenta e oito horas, eu comunico o extravio e a culpa é minha, não dela. Isso não é negociável."'
   ],
-  ef:{flag:['cracha_adnan','prazo_48h'], itens:{'Crachá da Sandra (CGRB)':1},
+  ef:{flag:['cracha_adnan','prazo_48h'], itens:{'Crachá da Elda (CGRB)':1},
       npc:{nome:'Curador Fabre', opiniao:2, memoria:'Te emprestou o crachá de uma colega em licença, assumindo a culpa.'},
       registrar:'Crachá emprestado da CGRB. 48 horas.'},
   escolhas:[

@@ -1168,7 +1168,7 @@ c16_buscou_o_ze:{
     'No platô, a chefe da expedição levanta da caixa e faz uma coisa que nenhum dos outros três faz: ela estende a mão.',
     '"Senhor Tanner?"',
     '"Sr. Tanner."',
-    '"Doutora Mariko Kubo, do Instituto de Biologia Comparada de Celadon."',
+    '"Doutora Mariko Odile, do Instituto de Biologia Comparada de Celadon."',
     'Ela pega o caderno.',
     '"O senhor tem uma série de observação de cinquenta e sete anos e eu vou te pedir umas quarenta perguntas chatas sobre metodologia, e algumas vão parecer que eu tô desconfiando do senhor, e eu não tô. É assim que se faz."',
     'Ele olha pra você.',

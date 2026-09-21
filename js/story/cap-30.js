@@ -83,7 +83,7 @@ c30_a_lista_dos_onze:{
     'Os quatro nomes do primeiro mês são nomes comuns de Kanto: sobrenome de três sílabas, nome de duas.',
     'Os sete do segundo mês também.',
     'Mas as oito linhas de madrugada têm todas a mesma estrutura de nome: dois caracteres, ponto, sobrenome.',
-    '**H. Sawada. K. Torii. M. Anzai. Y. Ihara. T. Ebina. R. Okuda. S. Fuse. N. Maki.**',
+    '**H. Sawada. K. Torii. M. Anzai. Y. Ihara. T. Ebina. R. Okuda. S. Fuse. N. Dahl.**',
     'Ninguém assina o próprio nome assim num livro de guarita.',
     'Gente assina assim em formulário de trabalho.'
   ],

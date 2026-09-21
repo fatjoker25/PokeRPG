@@ -307,12 +307,12 @@ c20_quem_paga_o_cafe:{
     'A pergunta é dirigida a ninguém e é respondida por uma mulher de uns sessenta anos que está arrumando os copos.',
     '"Eu." Ela alinha a colher no barbante. "Eu compro e eu faço, e eu recebo de volta no mês seguinte por reembolso, com nota."',
     '"A senhora é da Comissão?"',
-    '"Eu sou a secretária da mesa." Ela estende a mão. "Sra. Hidaka. Eu redijo as atas."',
+    '"Eu sou a secretária da mesa." Ela estende a mão. "Sra. Hedda. Eu redijo as atas."',
     'Você aperta a mão de quem escreveu, palavra por palavra, tudo o que você leu numa noite inteira num quarto de Centro Pokémon.'
   ],
   ef:{flag:'conheceu_bonfim',
-      npc:{nome:'Sra. Hidaka', opiniao:1, memoria:'Secretária da mesa. Redige todas as atas e faz o café.'},
-      registrar:'Sra. Hidaka, secretária da mesa, redige as atas da CGRB.'},
+      npc:{nome:'Sra. Hedda', opiniao:1, memoria:'Secretária da mesa. Redige todas as atas e faz o café.'},
+      registrar:'Sra. Hedda, secretária da mesa, redige as atas da CGRB.'},
   escolhas:[
     {texto:'"A senhora escreveu as cento e quarenta páginas?"', vai:'c20_bonfim_atas'},
     {texto:'"E o livro do Art. 33? A senhora escreve esse também?"', vai:'c20_bonfim_livro'},
@@ -331,8 +331,8 @@ c20_bonfim_atas:{
     '"Eu redijo." Ela pega a garrafa. "Se eu começar a concordar ou discordar, a ata deixa de ser confiável, e a ata é a única coisa aqui que é confiável."'
   ],
   ef:{instabilidade:1,
-      npc:{nome:'Sra. Hidaka', opiniao:2, memoria:'Sabe todas as atas de cor de tanto conferir.'},
-      registrar:'A Sra. Hidaka sabe as 140 páginas de cor porque confere, não porque lê.'},
+      npc:{nome:'Sra. Hedda', opiniao:2, memoria:'Sabe todas as atas de cor de tanto conferir.'},
+      registrar:'A Sra. Hedda sabe as 140 páginas de cor porque confere, não porque lê.'},
   escolhas:[
     {texto:'"E o livro do Art. 33?"', vai:'c20_bonfim_livro'},
     {texto:'Entrar e pedir a palavra.', vai:'c20_palavra'},
@@ -351,7 +351,7 @@ c20_bonfim_livro:{
     '"Nove." Ela pega a garrafa de novo. "E as nove estão na mesma prateleira das outras, no mesmo armário, que é fechado com a mesma chave que abre a porta da frente."'
   ],
   ef:{flag:['sabe_do_livro_fechado','sabe_onde_fica_o_livro'], instabilidade:2,
-      npc:{nome:'Sra. Hidaka', opiniao:2, memoria:'Te disse quantas reuniões fechadas houve e onde fica o livro.'},
+      npc:{nome:'Sra. Hedda', opiniao:2, memoria:'Te disse quantas reuniões fechadas houve e onde fica o livro.'},
       rep:{eixo:'bom',delta:1,motivo:'Leu o estatuto inteiro, inclusive o artigo que ninguém lê'},
       registrar:'Nove reuniões fechadas. O livro fica no armário da sala 704, na mesma chave da porta.'},
   escolhas:[
@@ -373,7 +373,7 @@ c20_pediu_o_livro:{
     '"Eu não posso te dar. O conselho pode votar te dar."'
   ],
   ef:{flag:['pode_pedir_o_livro'],
-      npc:{nome:'Sra. Hidaka', opiniao:3, memoria:'Te ensinou como pedir o livro fechado pelo caminho certo.'},
+      npc:{nome:'Sra. Hedda', opiniao:3, memoria:'Te ensinou como pedir o livro fechado pelo caminho certo.'},
       registrar:'O conselho pode votar a exibição do livro de reuniões fechadas, pelo Art. 27, §3º.'},
   escolhas:[
     {texto:'Entrar e pedir a palavra.', vai:'c20_palavra'},
@@ -401,7 +401,7 @@ c20_mesa:{
   texto:[
     'Você olha a mesa antes de falar, e eles deixam.',
     'Doze cadeiras. Onze ocupadas e uma vazia, com a pasta na frente dela mesmo assim.',
-    'Nenhuma pessoa de uniforme. Um jaleco — o Dr. Amano, que levanta os olhos e volta para a pasta. Um terno com crachá no bolso — o Curador Fabre, que não levanta os olhos nenhuma vez.',
+    'Nenhuma pessoa de uniforme. Um jaleco — o Dr. Hollis, que levanta os olhos e volta para a pasta. Um terno com crachá no bolso — o Curador Fabre, que não levanta os olhos nenhuma vez.',
     d=>{
       const L = [];
       if (d.flags.liga_infiltrada || d.flags.liga_aliada) L.push('E, na terceira cadeira da direita, uma mulher que você conhece: a conselheira da Liga Pokémon que te mandou ao norte.');
@@ -430,7 +430,7 @@ c20_quem_e_quem:{
   texto:[
     'A Presidente apresenta a mesa inteira, um por um, com cargo e formação, e leva dois minutos e meio.',
     'Bióloga, com doutorado. Veterinário, vinte e dois anos de clínica de grande porte. Engenheiro agrônomo. Advogada. Contador. Professor titular aposentado, que dormiu por três segundos no meio da apresentação dele mesmo.',
-    'Dois servidores públicos licenciados. Uma ex-diretora de escola técnica. O Dr. Amano. O Curador Fabre.',
+    'Dois servidores públicos licenciados. Uma ex-diretora de escola técnica. O Dr. Hollis. O Curador Fabre.',
     'E ela: Rhea Colman, ex-diretora de fiscalização da Liga por nove anos.',
     'Nenhum deles desvia o olhar quando o nome é dito. Todo mundo aqui está com o nome no cartório desde o primeiro dia.'
   ],
@@ -446,7 +446,7 @@ c20_quem_e_quem:{
 
 c20_o_professor:{
   texto:[
-    'O professor titular aposentado se chama Sr. Tetsuo Maki e tem oitenta e um anos.',
+    'O professor titular aposentado se chama Sr. Tobias Dahl e tem oitenta e um anos.',
     'Ele acorda quando ouve o próprio nome e responde antes de qualquer outra pessoa.',
     '"Eu escrevi o primeiro levantamento de população de fauna de Kanto em 1971." A voz é fraca e a frase é firme. "Cento e oitenta páginas. Eu andei a região inteira a pé com um caderno."',
     '"E o senhor está aqui por quê?"',
@@ -455,8 +455,8 @@ c20_o_professor:{
     '"Eu tenho oitenta e um anos, moço. Alguém finalmente me leu."'
   ],
   ef:{flag:'entendeu_o_professor', instabilidade:1, moral:-2,
-      npc:{nome:'Sr. Tetsuo Maki', opiniao:1, memoria:'Entrou na Comissão porque foram os primeiros a ler o levantamento de 1971.'},
-      registrar:'O levantamento de fauna de 1971 do Sr. Maki foi lido pela Comissão e por mais ninguém.'},
+      npc:{nome:'Sr. Tobias Dahl', opiniao:1, memoria:'Entrou na Comissão porque foram os primeiros a ler o levantamento de 1971.'},
+      registrar:'O levantamento de fauna de 1971 do Sr. Dahl foi lido pela Comissão e por mais ninguém.'},
   escolhas:[
     {texto:'"E o que o senhor acha do Art. 19?"', vai:'c20_professor_art19'},
     {texto:'"De quem é a cadeira vazia?"', vai:'c20_cadeira_vazia'},
@@ -474,7 +474,7 @@ c20_professor_art19:{
     '"Agora é tarde." Ele fecha os olhos. "E quando é tarde, moço, a gente aceita coisa que não aceitaria. Eu sou a prova disso, sentado aqui."'
   ],
   ef:{instabilidade:1, moral:-2,
-      registrar:'O Sr. Maki votou a favor do Art. 19 porque achou que já era tarde.'},
+      registrar:'O Sr. Dahl votou a favor do Art. 19 porque achou que já era tarde.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
     {texto:'"E o veterinário?"', vai:'c20_o_veterinario'},
@@ -510,7 +510,7 @@ c20_aumentar_os_41:{
     'É a primeira vez na manhã inteira que alguém nessa sala faz uma cara de surpresa de verdade.',
     '"Dá." Ele fala devagar, pensando enquanto fala. "Se os critérios do Art. 19 forem revistos, dá. Se a faixa de agressividade for alargada, dá. Se estereotipia leve sair da lista, dá."',
     'Ele olha a Presidente.',
-    '"Isso o Dr. Amano já pediu três vezes."',
+    '"Isso o Dr. Hollis já pediu três vezes."',
     '"E por que não passou?"',
     '"Porque quem pede é ele e ele é técnico e não tem voto." O veterinário fecha a pasta. "Eu tenho voto e nunca propus. Isso é meu e é agora."'
   ],
@@ -528,7 +528,7 @@ c20_cadeira_vazia:{
   texto:[
     '"De quem é a cadeira vazia?"',
     'A Presidente olha para a cadeira antes de responder, o que já é uma resposta.',
-    '"Era da Dra. Akane Kurogane, bióloga. Ela renunciou em março."',
+    '"Era da Dra. Isolde Yarrow, bióloga. Ela renunciou em março."',
     '"Por quê?"',
     '"Consta em ata: motivo pessoal." Ela junta as mãos. "Fora da ata, ela me disse que não conseguia mais ler o relatório mensal do galpão 4 e que preferia sair antes de se acostumar."',
     'Ninguém na mesa desvia o olhar.',
@@ -537,7 +537,7 @@ c20_cadeira_vazia:{
     '"Isso é uma coisa que eu faço e que eu não sei explicar."'
   ],
   ef:{flag:['sabe_da_alcina'], instabilidade:1,
-      registrar:'A Dra. Akane Kurogane renunciou em março para não se acostumar. A cadeira dela segue vaga.'},
+      registrar:'A Dra. Isolde Yarrow renunciou em março para não se acostumar. A cadeira dela segue vaga.'},
   escolhas:[
     {texto:'"Onde ela está agora?"', vai:'c20_onde_esta_alcina'},
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
@@ -555,7 +555,7 @@ c20_onde_esta_alcina:{
     '"Se o senhor quiser falar com ela, o nome é público e a escola tem telefone." Ela abre a pasta. "E eu vou dizer o que eu digo sempre: ela não vai te dizer nada que eu não esteja dizendo agora. Ela só vai dizer com a voz melhor."'
   ],
   ef:{flag:['contato_alcina'],
-      registrar:'A Dra. Akane Kurogane dá aula na escola técnica de Celadon, primeiro ano.'},
+      registrar:'A Dra. Isolde Yarrow dá aula na escola técnica de Celadon, primeiro ano.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
     {texto:'Dizer o seu nome.', vai:'c20_nome'},
@@ -566,16 +566,16 @@ c20_onde_esta_alcina:{
 c20_foi_falar_com_alcina:{
   texto:[
     'Você desce, atravessa a cidade e pega o ônibus para Celadon, e chega na escola técnica no fim da última aula.',
-    'A Dra. Akane Kurogane tem uns quarenta anos, giz na manga e uma pilha de provas para corrigir.',
+    'A Dra. Isolde Yarrow tem uns quarenta anos, giz na manga e uma pilha de provas para corrigir.',
     'Ela ouve, e o rosto dela não muda nada até o fim.',
     '"Eu vou te dizer a única coisa que eu sei que você não ouviu lá."',
     'Ela empilha as provas.',
     '"Eu não saí porque eu discordo. Eu concordo com quase tudo, ainda hoje." Ela põe a pilha na bolsa. "Eu saí porque no oitavo mês eu li o relatório do galpão 4 inteiro enquanto almoçava, e não parei de mastigar."'
   ],
   ef:{flag:['falou_com_alcina'], instabilidade:1,
-      npc:{nome:'Dra. Akane Kurogane', opiniao:2, memoria:'Saiu do conselho por ter lido o relatório do galpão 4 sem parar de mastigar.'},
+      npc:{nome:'Dra. Isolde Yarrow', opiniao:2, memoria:'Saiu do conselho por ter lido o relatório do galpão 4 sem parar de mastigar.'},
       rep:{eixo:'bom',delta:1,motivo:'Foi até Celadon ouvir quem tinha saído'},
-      registrar:'A Dra. Kurogane saiu do conselho por ter se acostumado, não por discordar.'},
+      registrar:'A Dra. Yarrow saiu do conselho por ter se acostumado, não por discordar.'},
   escolhas:[
     {texto:'"Volta comigo para a reunião."', vai:'c20_alcina_volta'},
     {texto:'"Me dá alguma coisa que eu possa usar."', vai:'c20_alcina_da'},
@@ -597,9 +597,9 @@ c20_alcina_volta:{
     '"A próxima reunião é segunda. Eu vou."'
   ],
   ef:{flag:['alcina_volta'], 
-      npc:{nome:'Dra. Akane Kurogane', opiniao:4, memoria:'Voltou ao conselho porque a cadeira dela nunca foi ocupada.'},
+      npc:{nome:'Dra. Isolde Yarrow', opiniao:4, memoria:'Voltou ao conselho porque a cadeira dela nunca foi ocupada.'},
       rep:{eixo:'bom',delta:2,motivo:'Trouxe de volta quem tinha desistido'},
-      registrar:'A Dra. Kurogane vai voltar ao conselho.'},
+      registrar:'A Dra. Yarrow vai voltar ao conselho.'},
   escolhas:[{texto:'Voltar para Saffron com ela.', vai:'c20_palavra'}]
 },
 
@@ -612,7 +612,7 @@ c20_alcina_da:{
     '"Porque eu queria ter certeza de que eu não tinha exagerado na memória." Ela entrega. "Eu não exagerei. É pior do que eu lembro."'
   ],
   ef:{flag:['tem_relatorios_alcina','provas_do_viveiro'], itens:{'Oito relatórios mensais do galpão 4':1},
-      npc:{nome:'Dra. Akane Kurogane', opiniao:3, memoria:'Te deu os relatórios mensais que levou quando saiu.'},
+      npc:{nome:'Dra. Isolde Yarrow', opiniao:3, memoria:'Te deu os relatórios mensais que levou quando saiu.'},
       rep:{eixo:'bom',delta:2,motivo:'Saiu de Celadon com oito meses de relatório na mão'},
       registrar:'Oito relatórios mensais do galpão 4, guardados por quem renunciou.'},
   escolhas:[
@@ -733,7 +733,7 @@ c20_nao_senta:{
 c20_palavra:{
   texto:[
     '"Art. 27. Eu quero a palavra."',
-    'A Presidente olha para a Sra. Hidaka, que confere o estatuto, assente, e anota na ata.',
+    'A Presidente olha para a Sra. Hedda, que confere o estatuto, assente, e anota na ata.',
     '"Concedida. Cinco minutos, prorrogáveis."',
     'E é isso que quebra você: eles te dão a palavra. Formalmente. Em ata. Com hora de início anotada na margem.',
     'A sala fica em silêncio e todo mundo olha para você, e você percebe que passou meses ensaiando o que faria se eles te impedissem e nada do que faria se eles te ouvissem.'
@@ -770,7 +770,7 @@ c20_falou_do_rattata:{
     'Do mato plantado em grade regular, da chuva programada para as dezesseis horas, dos dois Nidoran que se cruzam a meio metro um do outro sem nenhum sinal.',
     'E do Rattata que corre em linha reta até a parede, para, e volta, e faz de novo, e de novo.',
     'Você fala quatro minutos sobre um Rattata numa sala onde onze pessoas decidem o destino de quatrocentas.',
-    'A bióloga anota alguma coisa. O Dr. Amano fecha os olhos.',
+    'A bióloga anota alguma coisa. O Dr. Hollis fecha os olhos.',
     'Quando você termina, a Presidente espera cinco segundos inteiros antes de responder.'
   ],
   ef:{flag:['falou_do_rattata'], instabilidade:1,
@@ -797,7 +797,7 @@ c20_falou_das_pessoas:{
 c20_uma_pergunta_so:{
   texto:[
     '"Eu não vou usar os cinco minutos."',
-    'A Sra. Hidaka levanta os olhos da ata.',
+    'A Sra. Hedda levanta os olhos da ata.',
     '"Eu vou fazer uma pergunta e sentar."',
     'Silêncio.',
     '"Quantos dos senhores já entraram no galpão 4?"',
@@ -957,13 +957,13 @@ c20_abrir_eleicao:{
 c20_se_associou:{
   texto:[
     '"Eu quero me associar. Agora."',
-    'A sala inteira olha para a advogada, que confere, e depois para a Sra. Hidaka, que já está tirando uma folha de papel da pasta.',
-    '"Ficha de proposta de associado", diz a Sra. Hidaka, sem nenhuma emoção. "Nome, qualificação, endereço e duas assinaturas de associados proponentes."',
+    'A sala inteira olha para a advogada, que confere, e depois para a Sra. Hedda, que já está tirando uma folha de papel da pasta.',
+    '"Ficha de proposta de associado", diz a Sra. Hedda, sem nenhuma emoção. "Nome, qualificação, endereço e duas assinaturas de associados proponentes."',
     'Duas assinaturas.',
     'A sala fica muito quieta.',
-    'O Curador Fabre assina primeiro. A Dra. Akane Kurogane assinaria se estivesse aqui.',
+    'O Curador Fabre assina primeiro. A Dra. Isolde Yarrow assinaria se estivesse aqui.',
     d=>d.flags.alcina_volta
-      ? 'A Dra. Kurogane, que voltou hoje, assina em segundo, e a caneta dela falha na primeira letra.'
+      ? 'A Dra. Yarrow, que voltou hoje, assina em segundo, e a caneta dela falha na primeira letra.'
       : 'A segunda assinatura demora quatro minutos e vem do veterinário, que assina sem olhar para ninguém.'
   ],
   ef:{flag:['virou_associado'], instabilidade:1,
@@ -978,13 +978,13 @@ c20_se_associou:{
 
 c20_proxima_assembleia:{
   texto:[
-    '"Assembleia geral ordinária é em março", diz a Sra. Hidaka, sem consultar nada. "Extraordinária pode ser convocada por um quinto dos associados."',
+    '"Assembleia geral ordinária é em março", diz a Sra. Hedda, sem consultar nada. "Extraordinária pode ser convocada por um quinto dos associados."',
     'Um quinto de catorze é três.',
     'Você faz essa conta em voz alta, sem querer, e a sala inteira faz junto.',
     'A Presidente fecha a pasta.',
     '"O senhor entendeu rápido." Ela não parece nem contrariada nem impressionada. "Eu escrevi esse estatuto para ser à prova de mim mesma, e o senhor acabou de achar a porta em vinte minutos."',
     '"E a senhora vai fechar a porta?"',
-    '"Se eu fechar, eu deixo de ser o que eu escrevi que eu era." Ela olha a Sra. Hidaka. "Registra a proposta."'
+    '"Se eu fechar, eu deixo de ser o que eu escrevi que eu era." Ela olha a Sra. Hedda. "Registra a proposta."'
   ],
   ef:{flag:['sabe_da_assembleia'], 
       npc:{nome:'Rhea Colman', opiniao:2, memoria:'Registrou a sua proposta de associado sabendo o que isso abre.'},
@@ -1001,7 +1001,7 @@ c20_quem_elegeu:{
     '"A assembleia de associados." Ela responde no mesmo segundo, porque a resposta existe.',
     '"E quem são os associados?"',
     'Ela abre a boca e não fala.',
-    'A advogada da mesa vira uma página. O contador olha para o teto. O Sr. Maki abre os olhos.',
+    'A advogada da mesa vira uma página. O contador olha para o teto. O Sr. Dahl abre os olhos.',
     '"Catorze pessoas", diz a Presidente. "Onze fundadores e três parentes."',
     '"Então a senhora elegeu a senhora."',
     '"Sim." Ela não tenta amaciar. "Foi exatamente isso que aconteceu, e está tudo registrado, e o senhor acabou de ser a primeira pessoa a dizer em voz alta nesta sala."'
@@ -1043,7 +1043,7 @@ c20_comecem_hoje:{
     'Ninguém responde.',
     'A Presidente olha o relógio de pulso, e o gesto é involuntário e todo mundo vê.',
     '"Eu tenho compromisso às quinze", diz alguém, e a frase fica pendurada no ar de um jeito insuportável.',
-    'A Sra. Hidaka, na ponta da mesa, para de escrever e não escreve mais nada por um tempo.',
+    'A Sra. Hedda, na ponta da mesa, para de escrever e não escreve mais nada por um tempo.',
     'Depois a Presidente fecha a pasta.',
     '"Eu vou." Ela diz isso sem olhar para ninguém. "Quem quiser vai comigo. Quem não quiser não precisa justificar nada, e isso vai constar em ata assim mesmo."'
   ],
@@ -1059,11 +1059,11 @@ c20_comecem_hoje:{
 c20_quantos_levantam:{
   texto:[
     'Levantam quatro.',
-    'A Presidente. O Curador Fabre. A advogada que redigiu o Art. 19. E o Sr. Tetsuo Maki, de oitenta e um anos, que leva quarenta segundos para levantar e não aceita ajuda de ninguém.',
+    'A Presidente. O Curador Fabre. A advogada que redigiu o Art. 19. E o Sr. Tobias Dahl, de oitenta e um anos, que leva quarenta segundos para levantar e não aceita ajuda de ninguém.',
     'O veterinário fica sentado, e diz por quê, em voz alta, para a ata:',
     '"Eu vou na quinta. Hoje eu tenho cirurgia às duas e é de um bicho de verdade, e eu não vou desmarcar por simbolismo."',
     'Sete ficam. Quatro vão.',
-    'A Sra. Hidaka escreve tudo, os nomes dos quatro e os nomes dos sete, porque ata é ata.'
+    'A Sra. Hedda escreve tudo, os nomes dos quatro e os nomes dos sete, porque ata é ata.'
   ],
   ef:{flag:['quatro_foram'], instabilidade:1,
       registrar:'Quatro conselheiros foram ao galpão 4. Sete ficaram, e os nomes dos onze constam em ata.'},
@@ -1075,17 +1075,17 @@ c20_quantos_levantam:{
 
 c20_foi_com_eles:{
   texto:[
-    'Duas horas de carro em silêncio quase completo. Na rodovia, o Sr. Maki adormece com a cabeça no vidro.',
-    'Na Estação 4, o Sr. Daimon abre o portão e não entende por que a Presidente veio numa segunda.',
+    'Duas horas de carro em silêncio quase completo. Na rodovia, o Sr. Dahl adormece com a cabeça no vidro.',
+    'Na Estação 4, o Sr. Delmar abre o portão e não entende por que a Presidente veio numa segunda.',
     'Eles entram no galpão 4 pela porta que não tranca.',
     'A Presidente fica quatro minutos. A advogada fica dois e sai. O Curador Fabre fica até o fim, encostado na parede, olhando o quadro que ele mesmo mandou pendurar.',
-    'O Sr. Maki fica onze minutos e não fala nada, e depois pede para sentar, e sentam ele numa cadeira de plástico no corredor coberto.',
+    'O Sr. Dahl fica onze minutos e não fala nada, e depois pede para sentar, e sentam ele numa cadeira de plástico no corredor coberto.',
     'Na volta, no carro, ele diz a única frase do dia inteiro.',
     '"Em 1971 eu contei quatro mil e oitenta e eu achava que estava sendo o pessimista."'
   ],
   ef:{flag:['levou_o_conselho_ao_galpao'], instabilidade:2, moral:3,
       rep:{eixo:'bom',delta:3,motivo:'Levou quatro conselheiros para dentro do galpão'},
-      registrar:'Quatro conselheiros entraram no galpão 4. O Sr. Maki ficou onze minutos.'},
+      registrar:'Quatro conselheiros entraram no galpão 4. O Sr. Dahl ficou onze minutos.'},
   escolhas:[
     {texto:'Voltar para Saffron e pedir votação na próxima sessão.', vai:'c20_votacao'},
     {texto:'Publicar que o conselho foi.', vai:'c20_publicar_tudo'}
@@ -1098,7 +1098,7 @@ c20_concordar:{
     'A sala fica quieta.',
     '"Isso é uma coisa muito séria de se dizer numa reunião que está sendo registrada em ata", diz a Presidente.',
     '"Eu sei."',
-    'Ela olha para a Sra. Hidaka. "Registra."',
+    'Ela olha para a Sra. Hedda. "Registra."',
     'Depois para você.',
     '"Tem uma cadeira vaga nesta mesa desde março. Ela é de conselheiro titular, com direito a voto."',
     '"O senhor tem quinze anos, o que é um problema jurídico que eu resolvo em três semanas."'
@@ -1120,7 +1120,7 @@ c20_aceitou_e_virou:{
     'A Presidente não muda de expressão.',
     '"Então a senhora me recrutou para perder", ela diz, e demora um segundo até você entender que ela está falando consigo mesma.',
     'Ela olha a mesa.',
-    '"É legítimo." Ela assente para a Sra. Hidaka. "Registra a posse e registra a matéria."',
+    '"É legítimo." Ela assente para a Sra. Hedda. "Registra a posse e registra a matéria."',
     'E aí, com uma calma que te assusta mais que qualquer ameaça:',
     '"Eu prefiro perder para dentro do que continuar ganhando sozinha."'
   ],
@@ -1170,7 +1170,7 @@ c20_virou_conselheiro:{
 c20_votacao:{
   texto:[
     '"Eu quero votação."',
-    'A Presidente olha para a Sra. Hidaka, que confere o estatuto.',
+    'A Presidente olha para a Sra. Hedda, que confere o estatuto.',
     '"Art. 27, §3º: interessado pode propor matéria, que será submetida a voto na mesma sessão, a critério da mesa."',
     '"A critério da mesa", repete a Presidente.',
     'Ela olha a sala inteira, uma pessoa por vez, e leva quase meio minuto para fazer isso.',
@@ -1188,7 +1188,7 @@ c20_votacao:{
 c20_materia_art19:{
   texto:[
     '"Revogação do Art. 19 e suspensão da Fase II até revisão do protocolo de descarte."',
-    'A Sra. Hidaka escreve a matéria e lê em voz alta, palavra por palavra, para conferência, como manda o procedimento.',
+    'A Sra. Hedda escreve a matéria e lê em voz alta, palavra por palavra, para conferência, como manda o procedimento.',
     'A Presidente confirma a redação.',
     'Onze cadeiras com direito a voto, mais o dela em caso de empate.',
     'E, do lado de fora, no corredor, a garrafa térmica esfriando numa mesinha dobrável.'
@@ -1203,12 +1203,12 @@ c20_materia_livro:{
     'A sala muda de temperatura. É a primeira vez na manhã inteira que alguém nessa mesa parece surpreso de verdade.',
     'A advogada é a primeira a falar.',
     '"O Art. 33 diz acesso restrito ao Conselho."',
-    '"E o Art. 27, §3º diz que o Conselho pode deliberar sobre matéria proposta por interessado", diz a Sra. Hidaka, sem levantar os olhos da ata. "Os dois são do mesmo estatuto e não se contradizem: o Conselho pode dar acesso ao que é restrito ao Conselho."',
-    'A Presidente olha para a Sra. Hidaka por um tempo comprido.',
+    '"E o Art. 27, §3º diz que o Conselho pode deliberar sobre matéria proposta por interessado", diz a Sra. Hedda, sem levantar os olhos da ata. "Os dois são do mesmo estatuto e não se contradizem: o Conselho pode dar acesso ao que é restrito ao Conselho."',
+    'A Presidente olha para a Sra. Hedda por um tempo comprido.',
     '"Submeto."'
   ],
   ef:{flag:'materia_livro', instabilidade:1,
-      npc:{nome:'Sra. Hidaka', opiniao:3, memoria:'Resolveu, em voz alta, a contradição entre o Art. 33 e o Art. 27.'},
+      npc:{nome:'Sra. Hedda', opiniao:3, memoria:'Resolveu, em voz alta, a contradição entre o Art. 33 e o Art. 27.'},
       registrar:'Matéria em votação: exibição do livro de reuniões fechadas.'},
   escolhas:[{texto:'Ouvir a votação.', vai:'c20_contagem'}]
 },
@@ -1255,8 +1255,8 @@ c20_contagem:{
       if (d.flags.desarmou_presidente || d.flags.defendeu_reforma){ votos += 1; razoes.push('Uma conselheira diz, antes de votar, que a sua proposta é a primeira que não é um discurso.'); }
       if (d.flags.publicou_as_atas || d.flags.publicou){ votos += 1; razoes.push('Um conselheiro que passou dezenove dias sendo perguntado sobre isso em jantar de família vota a favor.'); }
       if (d.flags.veterinario_vai_propor){ votos += 1; razoes.push('O veterinário vota a favor e pede que conste que ele mesmo vai propor a revisão dos critérios na próxima sessão.'); }
-      if (d.flags.levou_o_conselho_ao_galpao || d.flags.quatro_foram){ votos += 2; razoes.push('Os que foram ao galpão votam juntos, e o Sr. Maki vota levantando a bengala em vez da mão, porque o ombro dele não sobe.'); }
-      if (d.flags.alcina_volta){ votos += 1; razoes.push('A Dra. Kurogane, de volta à cadeira que ficou vazia desde março, vota a favor sem dizer uma palavra.'); }
+      if (d.flags.levou_o_conselho_ao_galpao || d.flags.quatro_foram){ votos += 2; razoes.push('Os que foram ao galpão votam juntos, e o Sr. Dahl vota levantando a bengala em vez da mão, porque o ombro dele não sobe.'); }
+      if (d.flags.alcina_volta){ votos += 1; razoes.push('A Dra. Yarrow, de volta à cadeira que ficou vazia desde março, vota a favor sem dizer uma palavra.'); }
       if (d.flags.fez_a_pergunta_das_maos){ votos += 1; razoes.push('Uma conselheira que não levantou a mão quando você perguntou vota a favor, e diz que é por isso.'); }
       if (Estado.rep.eixo==='bom' && Estado.rep.bom>=6){ votos += 1; razoes.push('Um conselheiro vota a favor e diz o seu nome como justificativa, o que é constrangedor para todo mundo na sala, inclusive para você.'); }
       if (d.flags.conselheira_confrontada){ razoes.push('A conselheira da Liga não vota: assento de observadora, sem direito a voto. Ela fecha os olhos quando a contagem chega nela.'); }
@@ -1281,7 +1281,7 @@ c20_resultado_votacao:{
     },
     d=>{
       const v = Estado.dados.votosComissao || 0;
-      if (v >= 6) return 'A Presidente ouve a contagem, assente uma vez, e diz "aprovada" com a mesma voz com que abriu a reunião. A Sra. Hidaka anota. Acabou assim, numa sala comercial, num prédio com farmácia no térreo.';
+      if (v >= 6) return 'A Presidente ouve a contagem, assente uma vez, e diz "aprovada" com a mesma voz com que abriu a reunião. A Sra. Hedda anota. Acabou assim, numa sala comercial, num prédio com farmácia no térreo.';
       if (v === 5) return 'A sala inteira olha para ela. Ela fica quieta por onze segundos.\n\n"Eu voto a favor."\n\nE depois, antes que alguém respire: "e eu quero que conste que eu levei um ano e oito meses e uma pessoa de fora para fazer isso."';
       return 'A Presidente ouve a contagem e não comemora. Ela agradece a sua manifestação, registra em ata, e retoma a pauta de onde parou — item 4, cronograma de liberação.';
     },
@@ -1339,7 +1339,7 @@ c20_resultado_votacao:{
 
 c20_abriram_o_livro:{
   texto:[
-    'A Sra. Hidaka abre o armário com a mesma chave que abre a porta da frente e põe o livro na mesa.',
+    'A Sra. Hedda abre o armário com a mesma chave que abre a porta da frente e põe o livro na mesa.',
     'Capa dura preta, páginas numeradas, nove atas.',
     'As oito primeiras são sobre contratação de vigilância, sobre um processo trabalhista e sobre a compra de um terreno que não se concretizou.',
     'A nona tem três linhas.',
@@ -1362,7 +1362,7 @@ c20_se_eu_achar_primeiro:{
   texto:[
     '"E se eu achar ele primeiro?"',
     'A Presidente fecha o livro devagar.',
-    '"Aí o senhor vai ter na mão uma coisa que doze pessoas procuram há dois anos, e o senhor vai ter que decidir sozinho o que fazer com ela." Ela empurra o livro de volta para a Sra. Hidaka. "Que é exatamente a situação que esta associação foi criada para não existir."',
+    '"Aí o senhor vai ter na mão uma coisa que doze pessoas procuram há dois anos, e o senhor vai ter que decidir sozinho o que fazer com ela." Ela empurra o livro de volta para a Sra. Hedda. "Que é exatamente a situação que esta associação foi criada para não existir."',
     'Ela olha para você por um tempo comprido.',
     '"E o senhor vai fazer melhor do que nós, provavelmente, porque o senhor vai ter olhado para ele na cara."',
     'Ela abre a pasta e volta para a pauta.',
@@ -1388,7 +1388,7 @@ c20_publicar_tudo:{
   ],
   ef:{flag:'vai_publicar'},
   escolhas:[
-    {texto:'Izumi Hashi, jornal de Celadon.', vai:'c20_pub_isaura', cond:d=>!!d.flags.contato_isaura},
+    {texto:'Livia Gale, jornal de Celadon.', vai:'c20_pub_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Nadia Arden, rádio comunitária de Fuchsia.', vai:'c20_pub_nadia', cond:d=>!!d.flags.contato_nadia},
     {texto:'A Dra. Cordell Serizawa, e pelo caminho do Ministério Público.', vai:'c20_pub_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Qualquer redação que aceite.', vai:'c20_pub_qualquer'}
@@ -1397,7 +1397,7 @@ c20_publicar_tudo:{
 
 c20_pub_isaura:{
   texto:[
-    'Izumi Hashi lê tudo em silêncio por uma hora e vinte, com um lápis, marcando as páginas com tirinhas de papel.',
+    'Livia Gale lê tudo em silêncio por uma hora e vinte, com um lápis, marcando as páginas com tirinhas de papel.',
     'Quando termina, ela faz três perguntas.',
     '"Você tem a ata da reunião de hoje?" Ainda não, sai em cinco dias. "Você consegue?" Consigo, é pública. "Você aceita esperar cinco dias?"',
     'Você aceita.',
@@ -1520,7 +1520,7 @@ c20_luta_presidente:{
   texto:[
     'Você saca uma bola dentro de uma reunião de conselho.',
     'Onze pessoas saem da sala em ordem, sem correr, porque existe um procedimento para isso e eles treinaram.',
-    'A Sra. Hidaka sai por último, levando a ata, porque a ata não pode ficar.',
+    'A Sra. Hedda sai por último, levando a ata, porque a ata não pode ficar.',
     'A Presidente não sai. Ela tira o paletó e o dobra sobre o encosto da cadeira.',
     '"Eu fui treinadora antes de ser diretora." Ela solta a primeira bola. "Todo mundo foi. É esse o problema deste país."',
     'As unidades dela não têm nome. Têm código de lote: 1-A, 1-B, 1-C, 1-D.',
@@ -1647,7 +1647,7 @@ c20_voltou_depois:{
 c20_saiu_sala:{
   texto:[
     'Você sai da sala 704 e a reunião continua atrás de você.',
-    'Dá para ouvir, do corredor, a Sra. Hidaka lendo o item seguinte da pauta em voz normal.',
+    'Dá para ouvir, do corredor, a Sra. Hedda lendo o item seguinte da pauta em voz normal.',
     'No elevador, você divide o espaço com um conselheiro que desceu para fumar. Ele te cumprimenta com a cabeça e não diz nada durante os sete andares, e no térreo segura a porta para você passar primeiro.',
     'Na calçada tem uma farmácia, uma banca de jornal, gente comprando coisa e trânsito.',
     'Lá em cima a reunião vai acabar às onze e quarenta, como todas.'

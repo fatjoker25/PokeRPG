@@ -518,8 +518,8 @@ c17_as_tres_pessoas:{
     'Ele descreve o que ele conseguiu ver da janela da tia dele, que é de onde ele viu.',
     '"Dois homens e uma mulher. Vinte e poucos, trinta. Roupa de trilha nova demais, aquela que ainda tem vinco de loja."',
     '"E eles perguntaram pra quem?"',
-    '"Pro seu Nilton da mercearia. Perguntaram pelo “moleque das fotos”."',
-    '"E o seu Nilton falou?"',
+    '"Pro seu Arlo da mercearia. Perguntaram pelo “moleque das fotos”."',
+    '"E o seu Arlo falou?"',
     '"Falou que não sabia."',
     'Ele finalmente olha pra você.',
     '"E aí ele fechou a mercearia às onze da manhã, na quarta, coisa que ele não faz desde que a mulher dele morreu, e foi na casa da minha tia me avisar."',
@@ -806,7 +806,7 @@ c17_o_nome_dele:{
     '"Por quê?"',
     '"Porque eu tô anotando tudo num caderno desde o primeiro capítulo e eu aprendi que nome importa."',
     'Uma risada curta no rádio, distorcida pelo chiado.',
-    '"Saburo. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
+    '"Roland. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
     'Ele diz a matrícula sem você pedir.',
     '"Anota a matrícula também, garoto."',
     '"Por quê?"',
@@ -817,9 +817,9 @@ c17_o_nome_dele:{
   ],
   ef:{flag:['sabe_do_anselmo','provas_do_planalto'],
       itens:{'Matrícula 4.109 anotada':1},
-      npc:{nome:'Saburo (central do Planalto)', opiniao:5, memoria:'Te deu o nome e a matrícula dele por rádio, para que houvesse resposta se alguém perguntasse.'},
+      npc:{nome:'Roland (central do Planalto)', opiniao:5, memoria:'Te deu o nome e a matrícula dele por rádio, para que houvesse resposta se alguém perguntasse.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou o nome e recebeu a matrícula junto'},
-      registrar:'Saburo, matrícula 4.109, central do Planalto Indigo.',
+      registrar:'Roland, matrícula 4.109, central do Planalto Indigo.',
       presagio:'Ele deu a matrícula. Ele quer que tenha resposta.'},
   escolhas:[
     {texto:'Ir pra clareira.', vai:'c17_a_clareira'},
@@ -985,7 +985,7 @@ c17_contou_as_especies:{
 
 c17_levou_a_muda:{
   texto:[
-    'Você tira a muda com um pouco de terra em volta e enrola num saco plástico, do jeito que a Dra. Rin ensinou sem saber que estava ensinando.',
+    'Você tira a muda com um pouco de terra em volta e enrola num saco plástico, do jeito que a Dra. Pia ensinou sem saber que estava ensinando.',
     'E fica com ela na mão.',
     'Uma planta extinta, viva, numa mão de quinze anos, no meio de um mato da Rota 23.',
     'E aí você pensa, e é um pensamento ruim:',
@@ -1307,12 +1307,12 @@ c17_sabotou_van:{
 c17_denunciou_van:{
   texto:[
     'Você volta ao posto vazio e denuncia pelo rádio.',
-    d=>d.flags.sabe_do_anselmo ? 'O Saburo atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, garoto, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
+    d=>d.flags.sabe_do_anselmo ? 'O Roland atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, garoto, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
        'A Liga responde em quatro horas, porque a Rota 23 é área de acesso controlado ao Planalto e ali eles têm jurisdição imediata, mesmo com os postos vazios.',
     'Os quatro são detidos por acampamento irregular em área restrita — não por caça, porque não dá pra provar caça.',
     'Multa e liberação em dois dias.',
     'Mas a van fica apreendida por três semanas, e três semanas é uma coisa real.',
-    d=>d.flags.sabe_do_anselmo ? 'E no fim, pelo rádio, o Saburo fala uma coisa:\n"Anota no seu caderno que a gente veio."\n"Por quê?"\n"Porque quando escreverem sobre isso depois, vão escrever que ninguém veio."' : ''
+    d=>d.flags.sabe_do_anselmo ? 'E no fim, pelo rádio, o Roland fala uma coisa:\n"Anota no seu caderno que a gente veio."\n"Por quê?"\n"Porque quando escreverem sobre isso depois, vão escrever que ninguém veio."' : ''
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Usou o sistema onde o sistema ainda funcionava'},
       flag:'liga_pegou_a_van',

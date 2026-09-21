@@ -444,7 +444,7 @@ c13_saidas_espuma:{
 c13_estrela_do_sul:{
   texto:[
     'Você acha a linha.',
-    '**ESTRELA DO SUL — mestre: D. Kuroda — saída 03/06, 23h10 — área declarada: quebra das Seafoam — retorno 04/06, 05h40**',
+    '**ESTRELA DO SUL — mestre: D. Vernon — saída 03/06, 23h10 — área declarada: quebra das Seafoam — retorno 04/06, 05h40**',
     'Cinco e quarenta.',
     'Todas as outras saídas pra quebra voltam entre nove e onze.',
     'Essa voltou às cinco e quarenta, no escuro, três a cinco horas antes do normal, no dia em que a água baixou três graus.',
@@ -457,11 +457,11 @@ c13_estrela_do_sul:{
   ef:{flag:['achou_a_linha','provas_espuma','sabe_do_goro'],
       rep:{eixo:'bom',delta:4,motivo:'Achou a linha exata no livro exato'},
       instabilidade:1,
-      registrar:'Estrela do Sul, mestre D. Kuroda: saída 03/06 23h10, retorno antecipado 04/06 05h40, avaria em petrecho.',
+      registrar:'Estrela do Sul, mestre D. Vernon: saída 03/06 23h10, retorno antecipado 04/06 05h40, avaria em petrecho.',
       presagio:'"Avaria em petrecho." Três palavras e dezenove semanas de gelo.'},
   escolhas:[
     {texto:'Copiar a linha.', vai:'c13_copiou_as_linhas'},
-    {texto:'"Onde mora o Kuroda?"', vai:'c13_goro'},
+    {texto:'"Onde mora o Vernon?"', vai:'c13_goro'},
     {texto:'Ir pro cais achar um barco.', vai:'c13_procurar_barco'},
     {texto:'Ver as outras saídas para as Seafoam.', vai:'c13_saidas_espuma'}
   ]

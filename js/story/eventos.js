@@ -111,13 +111,13 @@ viridian:[
     {texto:'Contar a ela do formulário alternativo. Tem sempre um formulário.',
      ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Passou adiante uma informação que salvou a licença de alguém'},
          flag:'ajudou_a_menina_da_licenca',
-         npc:{nome:'Saya de Pewter', opiniao:4, memoria:'Você contou pra ela do formulário alternativo quando ela ia desistir da licença.'},
+         npc:{nome:'Maren de Pewter', opiniao:4, memoria:'Você contou pra ela do formulário alternativo quando ela ia desistir da licença.'},
          registrar:'Contou à menina do formulário que existe formulário para quem não tem responsável.'},
      resultado:[
        'Você conta. Ela não acredita. Você insiste. Ela volta pro balcão.',
        'A enfermeira puxa a gaveta, tira o formulário, e a menina chora de novo — de um jeito completamente diferente do de antes.',
        fala('a menina do formulário', 'Eu ia voltar pra Pewter hoje. Eu ia voltar hoje e não tentar de novo.'),
-       fala('a menina do formulário', 'Saya. Eu me chamo Saya. Eu vou lembrar da sua cara.')
+       fala('a menina do formulário', 'Maren. Eu me chamo Maren. Eu vou lembrar da sua cara.')
      ]},
     {texto:'Pagar a passagem de volta dela, pelo menos.',
      ef:{dinheiro:-800, moral:2, rep:{eixo:'bom',delta:1,motivo:'Pagou a passagem de quem não conseguiu'},
@@ -130,7 +130,7 @@ viridian:[
      cond:d=>!!d.flags.tem_licenca,
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Assinou como responsável de uma pessoa que você não conhece'},
          flag:'assinou_por_bruna',
-         npc:{nome:'Saya de Pewter', opiniao:5, memoria:'Você assinou como responsável dela, o que não podia.'},
+         npc:{nome:'Maren de Pewter', opiniao:5, memoria:'Você assinou como responsável dela, o que não podia.'},
          registrar:'Assinou como responsável de uma desconhecida no balcão de Viridian.'},
      resultado:[
        'A enfermeira olha a sua licença. Olha a sua idade. Olha a idade dela.',
@@ -677,14 +677,14 @@ celadon:[
        'Quatro são de escola, de participação, sem nome.',
        'Duas são de ginástica, do mesmo clube, do mesmo ano, e claramente da mesma pessoa.',
        'A sétima é de natação. Estadual. 1994.',
-       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Kuroda.'
+       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Vernon.'
      ]},
     {texto:'Comprar a de natação.',
      cond:d=>!!d.flags.viu_as_sete_medalhas && d.jogador.dinheiro >= 1200,
-     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Kuroda':1},
+     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Vernon':1},
          flag:'comprou_a_medalha',
          rep:{eixo:'bom',delta:2,motivo:'Comprou de volta uma medalha que tinha sido vendida junto com uma casa'},
-         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Kuroda.'},
+         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Vernon.'},
      resultado:[
        fala('o vendedor do quarto andar', 'Mil e duzentos. E eu tô cobrando caro de propósito.'),
        d=>fala(d.jogador.nome, 'Por quê?'),

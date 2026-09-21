@@ -298,7 +298,7 @@ c6_pescador:{
     'Ele fica calado um tempo e depois diz, do nada:',
     '"O rio mudou de cor duas vezes esse mês."'
   ],
-  ef:{npc:{nome:'Sr. Karube', opiniao:1, memoria:'O pescador da margem de Cerulean. Falou do rio mudando de cor.'}},
+  ef:{npc:{nome:'Sr. Cosmo', opiniao:1, memoria:'O pescador da margem de Cerulean. Falou do rio mudando de cor.'}},
   escolhas:[
     {texto:'"Mudou de cor como?"', vai:'c6_rio_cor'},
     {texto:'"E ninguém fez nada?"', vai:'c6_rio_ninguem'},
@@ -328,7 +328,7 @@ c6_rio_cor:{
 c6_contou_bilac:{
   texto:[
     'Você conta. Não tudo — a parte da caverna, das gaiolas, do gerador.',
-    'Sr. Karube escuta pescando, sem reagir.',
+    'Sr. Cosmo escuta pescando, sem reagir.',
     'No fim ele diz: "Gerador a diesel."',
     '"É."',
     '"Diesel é o que faz a água ficar daquele marrom." Ele puxa a linha e a isca está intacta. "Eu trabalhei em barco trinta anos. Eu conheço esse marrom."',
@@ -336,8 +336,8 @@ c6_contou_bilac:{
     '"Vem cá. Você fala isso pra uma pessoa comigo."'
   ],
   ef:{flag:'bilac_sabe_do_diesel',
-      npc:{nome:'Sr. Karube', opiniao:4, memoria:'Você contou do gerador a diesel e ele reconheceu a cor do rio.'},
-      registrar:'Sr. Karube identificou o marrom do rio como diesel.'},
+      npc:{nome:'Sr. Cosmo', opiniao:4, memoria:'Você contou do gerador a diesel e ele reconheceu a cor do rio.'},
+      registrar:'Sr. Cosmo identificou o marrom do rio como diesel.'},
   escolhas:[
     {texto:'Ir com ele.', vai:'c6_bilac_leva'},
     {texto:'"Agora não." E ir pra ponte norte.', vai:'c6_ponte_norte'},
@@ -351,7 +351,7 @@ c6_quem_e_a_pessoa:{
     '"A Misty."',
     'Ele fala o nome do jeito que se fala o nome de quem se conhece desde criança.',
     '"Ela é o quê, da prefeitura?"',
-    'Sr. Karube ri com a garganta.',
+    'Sr. Cosmo ri com a garganta.',
     '"Ela é a do ginásio, moço." Ele põe a vara no ombro. "E ela é a única pessoa nessa cidade que já processou uma empresa por causa de peixe morto. Duas vezes."'
   ],
   ef:{flag:'sabe_da_misty',
@@ -383,18 +383,18 @@ c6_misty_processos:{
 
 c6_bilac_leva:{
   texto:[
-    'Sr. Karube te leva por três ruas até um prédio baixo e comprido com telhado de chapa e cheiro de cloro saindo pelas frestas.',
+    'Sr. Cosmo te leva por três ruas até um prédio baixo e comprido com telhado de chapa e cheiro de cloro saindo pelas frestas.',
     'Lá dentro é uma piscina coberta, olímpica, com eco.',
     'Tem uma mulher de uns vinte e poucos anos sentada na borda com os pés na água e uma pasta de plástico no colo, discutindo com alguém no telefone sobre uma coisa chamada "outorga".',
     'Ela levanta a mão pedindo um minuto sem olhar pra vocês. Esse minuto dura onze.',
-    'Quando desliga, ela guarda a pasta e diz: "Karube. O que foi?"'
+    'Quando desliga, ela guarda a pasta e diz: "Cosmo. O que foi?"'
   ],
   ef:{executar:d=>{ Mundo.descobrir('ginasio_cerulean'); Mundo.descobrir('achou_ginasio_cerulean'); return []; },
       npc:{nome:'Líder Misty', opiniao:0, memoria:'Você a conheceu na borda da piscina, discutindo outorga por telefone.'}},
   escolhas:[
     {texto:'Contar do gerador e do rio.', vai:'c6_misty_diesel'},
     {texto:'"Eu vim desafiar o ginásio." (Não era isso que você ia falar.)', vai:'c6_misty_desafio'},
-    {texto:'Deixar o Karube falar.', vai:'c6_misty_diesel'},
+    {texto:'Deixar o Cosmo falar.', vai:'c6_misty_diesel'},
     {texto:'"Nada. A gente se enganou." E sair.', vai:'c6_ponte_norte'}
   ]
 },
@@ -402,7 +402,7 @@ c6_bilac_leva:{
 c6_misty_desafio:{
   texto:[
     '"Eu vim desafiar o ginásio."',
-    'Misty olha pro Karube. O Karube olha pro teto.',
+    'Misty olha pro Cosmo. O Cosmo olha pro teto.',
     '"Desafio é de manhã e de tarde, com licença na mão, e hoje já passou das cinco." Ela fala sem nenhuma hostilidade, do jeito de quem repete isso oito vezes por dia. "Você volta amanhã."',
     'Ela começa a se levantar. E aí para.',
     '"Espera. Você tá com poeira de pedra na mochila."'
@@ -410,13 +410,13 @@ c6_misty_desafio:{
   escolhas:[
     {texto:'Contar do gerador e do rio.', vai:'c6_misty_diesel'},
     {texto:'"É, eu vim do Monte da Lua." E parar aí.', vai:'c6_ponte_norte'},
-    {texto:'Deixar o Karube falar.', vai:'c6_misty_diesel'}
+    {texto:'Deixar o Cosmo falar.', vai:'c6_misty_diesel'}
   ]
 },
 
 c6_misty_diesel:{
   texto:[
-    'Karube fala a parte do marrom. Você fala a parte do gerador.',
+    'Cosmo fala a parte do marrom. Você fala a parte do gerador.',
     'Misty não interrompe. Quando acaba, ela pergunta uma coisa só:',
     '"O gerador tá lá ainda?"',
     d=>d.flags.destruiu_operacao || d.flags.expos_operacao ? '"Não. Levaram tudo."' : '"Tava lá quando eu saí."',
@@ -596,7 +596,7 @@ c6_misty_volto:{
 c6_rio_ninguem:{
   texto:[
     '"E ninguém fez nada?"',
-    'Sr. Karube ri. É uma risada sem graça nenhuma e ele para no meio dela.',
+    'Sr. Cosmo ri. É uma risada sem graça nenhuma e ele para no meio dela.',
     '"Fizeram. Reclamaram na prefeitura. A prefeitura mandou ofício pra empresa de saneamento, a de saneamento mandou ofício pro estado, e o estado mandou de volta pra prefeitura."',
     'Ele puxa a linha.',
     '"Isso levou cinco meses. Eu sei porque eu acompanhei. Eu não tenho mais nada pra fazer."'
@@ -619,7 +619,7 @@ c6_bilac_tempo:{
     'Ele joga a linha de novo.',
     '"Então eu venho aqui. Não pego nada. Mas eu venho, entende? Eu venho todo dia."'
   ],
-  ef:{npc:{nome:'Sr. Karube', opiniao:2, memoria:'Pesca há quatro anos e não pega nada. Vem todo dia.'}},
+  ef:{npc:{nome:'Sr. Cosmo', opiniao:2, memoria:'Pesca há quatro anos e não pega nada. Vem todo dia.'}},
   escolhas:[
     {texto:'"Mudou de cor como, o rio?"', vai:'c6_rio_cor'},
     {texto:'Ficar pescando com ele um tempo.', vai:'c6_bilac_calado'},
@@ -635,7 +635,7 @@ c6_bilac_calado:{
     'Quando você levanta pra ir, ele diz, sem olhar: "Passa aqui de novo."',
     'E é a coisa mais simples do mundo e você vai lembrar disso em lugares muito piores.'
   ],
-  ef:{hp:3, npc:{nome:'Sr. Karube', opiniao:3, memoria:'Passaram uma hora em silêncio na margem. Ele pediu pra você passar de novo.'},
+  ef:{hp:3, npc:{nome:'Sr. Cosmo', opiniao:3, memoria:'Passaram uma hora em silêncio na margem. Ele pediu pra você passar de novo.'},
       presagio:'"Passa aqui de novo." Tenta passar.'},
   escolhas:[
     {texto:'Ir pra ponte norte.', vai:'c6_ponte_norte'},
@@ -1401,12 +1401,12 @@ c6_leu_tudo:{
     'Quase tudo é chato. É essa a descoberta: é chatíssimo. Ofício respondendo ofício, prorrogação de prazo, juntada de documento.',
     'Mas em duas folhas tem nome.',
     'Um despacho assinado por "H. Colman — Presidência".',
-    'E um laudo assinado por "Dr. M. Amano — Núcleo Técnico".',
+    'E um laudo assinado por "Dr. M. Hollis — Núcleo Técnico".',
     'E, num canto de uma folha de rosto, um endereço: um prédio comercial em Saffron, sétimo andar, sala 704.'
   ],
   ef:{flag:['sabe_da_sala704','sabe_de_renno','sabe_de_sena'],
       hp:-2, causa:'Noite sem dormir lendo processo',
-      registrar:'Nomes: H. Colman (Presidência), Dr. M. Amano (Núcleo Técnico). Endereço: Saffron, sala 704.',
+      registrar:'Nomes: H. Colman (Presidência), Dr. M. Hollis (Núcleo Técnico). Endereço: Saffron, sala 704.',
       presagio:'Sala 704. Sétimo andar. Você acabou de ganhar um destino final, e faltam muitas cidades até lá.'},
   escolhas:[
     {texto:'Ir pra Cerulean, procurar a Misty.', vai:'c6_bilac_leva'},
@@ -1760,8 +1760,8 @@ c6_marta:{
     '"Ele é seu?"',
     '"Ele é de rua." Ela ajeita a cabeça dele no colo. "Ele é de rua e ele é meu. As duas coisas."'
   ],
-  ef:{npc:{nome:'Haruko', opiniao:0, memoria:'Você a encontrou na Rota 25 com um Vaporeon de rua envenenado no colo.'},
-      registrar:'Encontrou Haruko e o Vaporeon envenenado na Rota 25.'},
+  ef:{npc:{nome:'Sibyl', opiniao:0, memoria:'Você a encontrou na Rota 25 com um Vaporeon de rua envenenado no colo.'},
+      registrar:'Encontrou Sibyl e o Vaporeon envenenado na Rota 25.'},
   escolhas:[
     {texto:'Dar seu Antídoto / Full Heal.', vai:'c6_curou', cond:d=>Estado.contaItem('Antidote')>0||Estado.contaItem('Full Heal')>0},
     {texto:'Carregar o Vaporeon até o Centro Pokémon. Uma hora de corrida.', vai:'c6_correu'},
@@ -1811,7 +1811,7 @@ c6_virou_antes:{
   texto:[
     'Você vira as quinze tigelas. Leva quatro minutos e você faz isso com raiva, chutando.',
     'Quatro minutos que você não tinha.',
-    'Quando volta, a Haruko está do mesmo jeito e o Vaporeon está pior, e você não vai nunca saber se os quatro minutos importaram.'
+    'Quando volta, a Sibyl está do mesmo jeito e o Vaporeon está pior, e você não vai nunca saber se os quatro minutos importaram.'
   ],
   ef:{flag:['destruiu_tigelas','quatro_minutos'],
       presagio:'Você não vai nunca saber se os quatro minutos importaram. É esse o formato dessa dúvida.'},
@@ -1825,7 +1825,7 @@ c6_virou_antes:{
 c6_voltou_com_pacote:{
   texto:[
     'Você volta correndo com o pacote rasgado na mão.',
-    'Haruko lê o nome e não entende nada, e é claro que não entende, e você também não.',
+    'Sibyl lê o nome e não entende nada, e é claro que não entende, e você também não.',
     'Mas agora existe um papel com um nome, e um papel com um nome é uma coisa que se entrega numa recepção de Centro Pokémon.',
     '"Vamos", você diz, e pega o Vaporeon do colo dela antes de ela decidir.'
   ],
@@ -1844,7 +1844,7 @@ c6_seguiu_do_choro:{
     'Você não volta pra descobrir. Essa é a parte que você vai ter que carregar, e ela não pesa nada, e é justamente por não pesar nada que ela funciona assim.'
   ],
   ef:{rep:{eixo:'ruim',delta:2,motivo:'Passou reto por alguém em desespero'},
-      flag:'ignorou_marta', registrar:'Ignorou Haruko e o Vaporeon morrendo na Rota 25.',
+      flag:'ignorou_marta', registrar:'Ignorou Sibyl e o Vaporeon morrendo na Rota 25.',
       presagio:'Não pesou nada. Isso vai ser o problema.'},
   escolhas:[
     {texto:'Continuar pela rota.', vai:'c6_veneno'},
@@ -1858,12 +1858,12 @@ c6_curou:{
     'Ela aplica errado na primeira vez. Você segura a mão dela e mostra, e a mão dela está gelada.',
     'Leva sete minutos.',
     'A respiração do Vaporeon vai ficando longa de novo, aquela pausa horrível no fim do ciclo vai sumindo, e no oitavo minuto ele abre os olhos e lambe a mão dela.',
-    'Haruko chora de um jeito completamente diferente agora.',
+    'Sibyl chora de um jeito completamente diferente agora.',
     '"Como é seu nome?" ela pergunta. Você fala. Ela repete duas vezes pra decorar.'
   ],
   ef:{executar:d=>{ if(Estado.contaItem('Full Heal')) Estado.usarItem('Full Heal'); else Estado.usarItem('Antidote'); return []; },
       rep:{eixo:'bom',delta:3,motivo:'Salvou o Pokémon de uma estranha na Rota 25'},
-      npc:{nome:'Haruko', opiniao:8, memoria:'Você salvou o Vaporeon dela. Ela decorou o seu nome na hora.'},
+      npc:{nome:'Sibyl', opiniao:8, memoria:'Você salvou o Vaporeon dela. Ela decorou o seu nome na hora.'},
       flag:'salvou_vaporeon', itens:{'Hyper Potion':2,'Full Heal':2},
       presagio:'Ela decorou o seu nome. Em Kanto, gente que decora seu nome é o que sobra no fim.'},
   escolhas:[
@@ -1885,7 +1885,7 @@ c6_marta_agua:{
     '"Ficar é melhor. Ficar é uma coisa que a pessoa faz todo dia de novo."'
   ],
   ef:{flag:'ficar_e_melhor', moral:10,
-      npc:{nome:'Haruko', opiniao:3, memoria:'Te contou por que nunca pôs o Vaporeon numa bola.'},
+      npc:{nome:'Sibyl', opiniao:3, memoria:'Te contou por que nunca pôs o Vaporeon numa bola.'},
       presagio:'"Ficar é uma coisa que a pessoa faz todo dia de novo." Pensa nisso olhando pro seu cinto.'},
   escolhas:[
     {texto:'"Quem faz isso? O veneno."', vai:'c6_marta_conta'},
@@ -1902,7 +1902,7 @@ c6_levou_pra_casa:{
     'Na estante tem um porta-retrato com uma menina de uns dezoito anos de uniforme de escola.',
     'Você não pergunta. Ela repara que você não perguntou, e agradece com a cabeça.'
   ],
-  ef:{hp:5, npc:{nome:'Haruko', opiniao:4, memoria:'Você subiu com o Vaporeon e tomou café na cozinha dela.'},
+  ef:{hp:5, npc:{nome:'Sibyl', opiniao:4, memoria:'Você subiu com o Vaporeon e tomou café na cozinha dela.'},
       presagio:'Tem um porta-retrato na estante e você não perguntou. Você vai perguntar um dia, e vai ser tarde.'},
   escolhas:[
     {texto:'"Quem faz isso? O veneno."', vai:'c6_marta_conta'},
@@ -1914,17 +1914,17 @@ c6_levou_pra_casa:{
 c6_a_foto:{
   texto:[
     '"Quem é na foto?"',
-    'Haruko olha a estante como se tivesse esquecido que a foto existia.',
+    'Sibyl olha a estante como se tivesse esquecido que a foto existia.',
     '"Minha filha."',
     'Ela mexe o café.',
     '"Ela saiu de casa aos quinze, igual você." Uma pausa exata. "Faz três anos."',
     '"E ela—"',
-    '"Ela liga no Natal." Haruko sorri um sorriso pequeno e verdadeiro. "Ela tá bem. Ela tá em Celadon e ela tá bem e ela não volta."',
+    '"Ela liga no Natal." Sibyl sorri um sorriso pequeno e verdadeiro. "Ela tá bem. Ela tá em Celadon e ela tá bem e ela não volta."',
     'Ela bebe o café.',
     '"E tá tudo certo. Foi pra isso que eu criei. Só que a casa fica muito grande."'
   ],
   ef:{flag:'a_filha_da_marta',
-      npc:{nome:'Haruko', opiniao:4, memoria:'Te contou da filha que saiu aos quinze e liga no Natal.'},
+      npc:{nome:'Sibyl', opiniao:4, memoria:'Te contou da filha que saiu aos quinze e liga no Natal.'},
       presagio:'A casa fica muito grande. Pensa na sua, e em quem ficou nela.'},
   escolhas:[
     {texto:'"Eu ligo pra minha mãe hoje."', vai:'c6_ligou_pra_casa',
@@ -1954,7 +1954,7 @@ c6_ligou_pra_casa:{
 c6_marta_conta:{
   texto:[
     '"Quem faz isso? O veneno."',
-    'Haruko fica dura.',
+    'Sibyl fica dura.',
     '"Todo mundo sabe quem faz."',
     '"E ninguém—"',
     '"Ninguém." Ela corta. "Porque ele tem razão."',
@@ -1975,7 +1975,7 @@ c6_marta_conta:{
 c6_marta_acha:{
   texto:[
     '"E a senhora, acha o quê?"',
-    'Haruko demora muito.',
+    'Sibyl demora muito.',
     '"Eu acho que eu ia fazer igual." Ela fala olhando pro chão. "Se fosse a minha filha com sete anos e a mão costurada, eu ia fazer igual e eu ia dormir bem."',
     'Ela levanta a cabeça.',
     '"E aí um dia ia chegar um garoto na minha porta e eu ia ter que explicar."',
@@ -1994,7 +1994,7 @@ c6_marta_acha:{
 c6_onde_mora:{
   texto:[
     '"Onde é que ele mora?"',
-    'Haruko te olha desconfiada pela primeira vez desde que vocês se conheceram.',
+    'Sibyl te olha desconfiada pela primeira vez desde que vocês se conheceram.',
     '"Pra quê?"',
     '"Pra conversar."',
     '"Conversar." Ela repete sem acreditar. "Todo mundo que pergunta endereço fala que é pra conversar."',
@@ -2014,7 +2014,7 @@ c6_correu:{
   texto:[
     'O Vaporeon pesa vinte e nove quilos. Você descobre isso na prática, no quilômetro dois.',
     'Ele é escorregadio e não tem onde segurar direito e a cabeça dele balança com o seu passo, o que te obriga a correr de um jeito que não é correr.',
-    'Haruko corre do seu lado dizendo o nome dele sem parar, como se o nome fosse segurar ele aqui.',
+    'Sibyl corre do seu lado dizendo o nome dele sem parar, como se o nome fosse segurar ele aqui.',
     'O nome dele é Duque. Você vai lembrar disso.'
   ],
   teste:{status:'forca', dificuldade:7, nomeStatus:'Força',
@@ -2027,11 +2027,11 @@ c6_correu_ok:{
     'A enfermeira leva o Vaporeon pra dentro correndo.',
     d=>d.flags.com_o_pacote ? 'Você entrega o pacote rasgado do veneno na recepção, e a enfermeira lê o princípio ativo enquanto anda, e grita uma coisa pra dentro que você não entende, e isso — você vai descobrir depois — foi o que resolveu.' : 'Ninguém sabe o que ele comeu. Eles tratam pelo sintoma, que é o mesmo que tratar no escuro.',
     'Vinte minutos depois ela volta e faz que sim com a cabeça.',
-    'Haruko abraça você. É desconfortável e você deixa acontecer.'
+    'Sibyl abraça você. É desconfortável e você deixa acontecer.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Carregou um Pokémon envenenado por uma hora até o Centro'},
       hp:-4, causa:'Exaustão na Rota 25',
-      npc:{nome:'Haruko', opiniao:9, memoria:'Você carregou o Vaporeon dela por uma hora inteira. Ela conta essa história pra todo mundo do supermercado.'},
+      npc:{nome:'Sibyl', opiniao:9, memoria:'Você carregou o Vaporeon dela por uma hora inteira. Ela conta essa história pra todo mundo do supermercado.'},
       flag:'salvou_vaporeon', itens:{'Hyper Potion':2}, dinheiro:800},
   escolhas:[
     {texto:'"Quem faz isso? O veneno."', vai:'c6_marta_conta'},
@@ -2065,11 +2065,11 @@ c6_correu_quase:{
   texto:[
     'Você chega. Tarde, mas chega.',
     'Eles conseguem estabilizar. O Vaporeon vai viver, e não vai voltar a ser o que era — o veneno ficou em algum lugar que não sai, e uma das patas traseiras não responde direito.',
-    'Haruko agradece muito. Muito demais, do jeito de quem está agradecendo pra não pensar no resto.',
+    'Sibyl agradece muito. Muito demais, do jeito de quem está agradecendo pra não pensar no resto.',
     'Três semanas depois, se você voltar a Cerulean, vai ver um Vaporeon na beira do rio com um jeito de andar diferente, e uma mulher de uniforme de supermercado sentada do lado dele.'
   ],
-  ef:{rep:{eixo:'bom',delta:2,motivo:'Tentou salvar o Vaporeon de Haruko'}, hp:-5, causa:'Exaustão na Rota 25',
-      npc:{nome:'Haruko', opiniao:5, memoria:'Você correu com o Vaporeon dela. Ele sobreviveu com sequelas.'},
+  ef:{rep:{eixo:'bom',delta:2,motivo:'Tentou salvar o Vaporeon de Sibyl'}, hp:-5, causa:'Exaustão na Rota 25',
+      npc:{nome:'Sibyl', opiniao:5, memoria:'Você correu com o Vaporeon dela. Ele sobreviveu com sequelas.'},
       flag:['vaporeon_sequela','salvou_vaporeon']},
   escolhas:[
     {texto:'"Quem faz isso? O veneno."', vai:'c6_marta_conta'},
@@ -2082,12 +2082,12 @@ c6_correu_tarde:{
   texto:[
     'Você tropeça no quilômetro quatro. Cai com o Vaporeon e ele guincha, e o guincho é o som mais horrível que você já produziu no mundo.',
     'Vocês chegam. Não adianta.',
-    'Haruko não te culpa. Ela agradece — agradece de verdade, olhando no seu olho, com as duas mãos nas suas — e isso é muito pior do que se ela gritasse com você.',
+    'Sibyl não te culpa. Ela agradece — agradece de verdade, olhando no seu olho, com as duas mãos nas suas — e isso é muito pior do que se ela gritasse com você.',
     'Depois ela vai embora andando, sozinha, e recusa companhia, e você fica na porta do Centro Pokémon vendo ela virar a esquina.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Tentou salvar o Vaporeon e falhou'}, hp:-6, causa:'Queda na Rota 25',
-      npc:{nome:'Haruko', opiniao:4, memoria:'Você tentou salvar o Vaporeon dela. Ele morreu no seu colo, e ela te agradeceu.'},
-      flag:'vaporeon_morreu', registrar:'O Vaporeon de Haruko morreu apesar da corrida.',
+      npc:{nome:'Sibyl', opiniao:4, memoria:'Você tentou salvar o Vaporeon dela. Ele morreu no seu colo, e ela te agradeceu.'},
+      flag:'vaporeon_morreu', registrar:'O Vaporeon de Sibyl morreu apesar da corrida.',
       presagio:'Ela agradeceu. Você vai preferir, pelo resto da vida, que ela tivesse gritado.'},
   escolhas:[
     {texto:'Ir atrás dela.', vai:'c6_atras_da_marta'},
@@ -2108,7 +2108,7 @@ c6_atras_da_marta:{
     'Ela solta.',
     '"Se você começar essa conta, ela não acaba nunca. Eu sei porque eu já fiz essa conta com outra coisa."'
   ],
-  ef:{npc:{nome:'Haruko', opiniao:6, memoria:'Você foi atrás dela pedir desculpa e ela te proibiu de fazer a conta.'},
+  ef:{npc:{nome:'Sibyl', opiniao:6, memoria:'Você foi atrás dela pedir desculpa e ela te proibiu de fazer a conta.'},
       flag:'a_conta_que_nao_acaba', moral:5,
       presagio:'Você vai começar essa conta mesmo assim. Todo mundo começa.'},
   escolhas:[
@@ -2122,14 +2122,14 @@ c6_ficou:{
   texto:[
     'Você senta na grama. Não fala nada, porque não tem nada.',
     'Leva quarenta minutos.',
-    'Haruko segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de peixe e não o de carne.',
+    'Sibyl segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de peixe e não o de carne.',
     'No fim ela põe a mão nos olhos dele, que já estão fechados, e deixa lá.',
     'Depois ela olha pra você.',
     '"Obrigada por não ter ido embora."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Ficou com uma estranha no pior momento dela'},
-      npc:{nome:'Haruko', opiniao:6, memoria:'Você ficou com ela até o Vaporeon morrer. Ela lembra disso.'},
-      flag:'vaporeon_morreu', registrar:'Ficou com Haruko até o fim do Vaporeon.',
+      npc:{nome:'Sibyl', opiniao:6, memoria:'Você ficou com ela até o Vaporeon morrer. Ela lembra disso.'},
+      flag:'vaporeon_morreu', registrar:'Ficou com Sibyl até o fim do Vaporeon.',
       presagio:'Você não fez nada e fez a única coisa. Vai levar anos pra entender que essas duas frases são a mesma.'},
   escolhas:[
     {texto:'Ajudar ela a enterrar.', vai:'c6_enterrou'},
@@ -2143,13 +2143,13 @@ c6_enterrou:{
   texto:[
     'Vocês cavam com as mãos e com uma tábua de cabana velha, na terra fofa da beira do rio, a uns dez metros da água.',
     'Leva mais de uma hora porque a terra da beira de rio tem pedra e raiz.',
-    'Haruko põe a toalha velha dele no fundo antes. Você não pergunta de onde veio a toalha; ela estava na mochila dela.',
+    'Sibyl põe a toalha velha dele no fundo antes. Você não pergunta de onde veio a toalha; ela estava na mochila dela.',
     'Ela trouxe a toalha de casa antes de sair. Isso quer dizer que ela já sabia, no apartamento, antes de descer os dezoito degraus.',
     'Ninguém diz nada quando acaba. Vocês dois ficam olhando um monte de terra.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Cavou por uma hora ao lado de uma estranha'},
       hp:-3, causa:'Cavar na beira do rio',
-      npc:{nome:'Haruko', opiniao:8, memoria:'Vocês enterraram o Vaporeon juntos na beira do rio.'},
+      npc:{nome:'Sibyl', opiniao:8, memoria:'Vocês enterraram o Vaporeon juntos na beira do rio.'},
       flag:'enterrou_o_vaporeon',
       presagio:'Ela trouxe a toalha de casa. Ela já sabia. Todo mundo sabe antes.'},
   escolhas:[
@@ -2181,7 +2181,7 @@ c6_cafe_depois:{
     'Você fica uma hora e quinze.',
     'Na estante tem um porta-retrato com uma menina de uns dezoito anos de uniforme de escola.'
   ],
-  ef:{hp:3, npc:{nome:'Haruko', opiniao:5, memoria:'Você ficou uma hora e quinze na cozinha dela depois de enterrarem o Vaporeon.'}},
+  ef:{hp:3, npc:{nome:'Sibyl', opiniao:5, memoria:'Você ficou uma hora e quinze na cozinha dela depois de enterrarem o Vaporeon.'}},
   escolhas:[
     {texto:'Perguntar da foto.', vai:'c6_a_foto'},
     {texto:'"Quem fez isso? O veneno."', vai:'c6_marta_conta'},
@@ -2358,7 +2358,7 @@ c6_quem_mora_aqui:{
     '"Procurar quem?"',
     'E você não tem nome nenhum. Você chegou hoje.',
     'Mas aí você tem.',
-    '"A Haruko. Do supermercado da ponte sul."',
+    '"A Sibyl. Do supermercado da ponte sul."',
     'Ele fica pálido.',
     '"O Duque era dela."',
     '"Era."',
@@ -2389,7 +2389,7 @@ c6_vai_falar_com_ela:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Empurrou duas pessoas pra uma conversa impossível'},
       flag:'marta_e_ele_conversaram',
-      registrar:'Você fez o homem das tigelas ir falar com a Haruko.',
+      registrar:'Você fez o homem das tigelas ir falar com a Sibyl.',
       presagio:'Você não vai estar lá pra ver. Quase nada do que você conserta acontece na sua frente.'},
   escolhas:[
     {texto:'Seguir pela rota.', vai:'c6_fim'}
@@ -2416,7 +2416,7 @@ c6_juntos:{
     {texto:'"Amanhã eu volto."', vai:'c6_prometeu_voltar_25',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu voltar'}, flag:'promessa_tigelas'}},
     {texto:'Seguir pela rota.', vai:'c6_fim'},
-    {texto:'"Vai falar com a Haruko."', vai:'c6_quem_mora_aqui'}
+    {texto:'"Vai falar com a Sibyl."', vai:'c6_quem_mora_aqui'}
   ]
 },
 
@@ -2556,7 +2556,7 @@ c6_recolheu_racao:{
       npc:{nome:'Homem das tigelas', opiniao:5, memoria:'Vocês dois passaram duas horas de quatro catando a ração envenenada que você espalhou.'},
       presagio:'Ele catou do outro lado da trilha sem você pedir. As pessoas fazem isso quando alguém começa.'},
   escolhas:[
-    {texto:'"Vai falar com a Haruko."', vai:'c6_quem_mora_aqui'},
+    {texto:'"Vai falar com a Sibyl."', vai:'c6_quem_mora_aqui'},
     {texto:'"Amanhã eu volto."', vai:'c6_prometeu_voltar_25',
      ef:{flag:'promessa_tigelas', rep:{eixo:'bom',delta:1,motivo:'Prometeu voltar'}}},
     {texto:'Seguir pela rota.', vai:'c6_fim'}
@@ -2786,7 +2786,7 @@ c6_pai_depois:{
       presagio:'Cinco meses e dois degraus. Essa é a escala real das coisas que você vai conseguir mudar.'},
   escolhas:[
     {texto:'Seguir pela rota.', vai:'c6_fim'},
-    {texto:'"Vai falar com a Haruko."', vai:'c6_quem_mora_aqui'}
+    {texto:'"Vai falar com a Sibyl."', vai:'c6_quem_mora_aqui'}
   ]
 },
 

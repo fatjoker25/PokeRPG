@@ -318,16 +318,16 @@ function registrarResultadoRival(venceuJogador){
    ============================================================ */
 const RIVAIS_EXTRA = [
 {
-  id:'nilo', nome:'Jiro', npc:'Jiro', desde:'Pewter', caps:[8, 14, 20],
+  id:'nilo', nome:'Lior', npc:'Lior', desde:'Pewter', caps:[8, 14, 20],
   origem:'O rapaz do portão da pedreira de Pewter. Você ouviu a história dele inteira e ele largou a pedreira.',
   gatilho:d => !!d.flags.historia_do_nilo,
-  nascimento:'Jiro pediu demissão da pedreira de Pewter na segunda-feira seguinte. Ele não avisou a mãe.',
+  nascimento:'Lior pediu demissão da pedreira de Pewter na segunda-feira seguinte. Ele não avisou a mãe.',
   pool:[76, 112, 105, 51, 28, 142],          // Golem, Rhydon, Marowak, Dugtrio, Sandslash, Aerodactyl
   ace:95, nivelExtra:0, moral:75,           // o Onix é o dele desde a pedreira
   cor:'var(--destaque-2)',
 
   fala:(d, r) => {
-    const L = ['Jiro está sentado no meio-fio com um Geodude do lado, e o Geodude está sentado exatamente do mesmo jeito que ele.'];
+    const L = ['Lior está sentado no meio-fio com um Geodude do lado, e o Geodude está sentado exatamente do mesmo jeito que ele.'];
     L.push(r.encontros === 0
       ? '"Eu larguei." Ele diz isso antes de dizer oi. "Eu larguei a pedreira e a minha mãe ficou três semanas sem falar comigo, e eu larguei do mesmo jeito."'
       : `"${r.derrotas} a ${r.vitorias}." Ele fala o placar como quem fala a hora. "Eu anoto num caderno. Eu sei que é ridículo."`);
@@ -337,27 +337,27 @@ const RIVAIS_EXTRA = [
   },
   vitoria:(d, r) => [
     'O último dele cai e faz barulho de coisa pesada caindo, porque é exatamente isso.',
-    'Jiro anota no caderno antes de recolher o time, o que é uma ordem esquisita de fazer as coisas.',
+    'Lior anota no caderno antes de recolher o time, o que é uma ordem esquisita de fazer as coisas.',
     `"${r.derrotas + 1}." Ele fecha o caderno. "Tá certo. Eu volto."`,
     'Ele não parece abalado. Ele parece um cara que calculou quantas vezes ia perder antes de começar.'
   ],
   derrota:(d, r) => [
-    'Jiro ganha, e a primeira coisa que ele faz é olhar em volta pra ver se alguém viu.',
+    'Lior ganha, e a primeira coisa que ele faz é olhar em volta pra ver se alguém viu.',
     'Ninguém viu. Tem só vocês dois numa rua de cidade pequena.',
     `"Uma." Ele mostra o caderno pra você, aberto, com a coluna certa. "Uma de ${r.vitorias + 1}. Eu queria que a minha mãe tivesse visto essa."`
   ]
 },
 {
-  id:'tunico', nome:'Toshi', npc:'Menino do cais', desde:'Vermilion', caps:[11, 16, 22],
+  id:'tunico', nome:'Nolan', npc:'Menino do cais', desde:'Vermilion', caps:[11, 16, 22],
   origem:'O menino do cais de Vermilion. Você tratou ele como gente e ele resolveu que ia ser treinador.',
   gatilho:d => { const n = d.npcs['Menino do cais']; return !!n && n.opiniao >= 4; },
-  nascimento:'Toshi saiu do cais de Vermilion com o Krabby e uma mochila emprestada. A carta da mãe dele continua sem resposta.',
+  nascimento:'Nolan saiu do cais de Vermilion com o Krabby e uma mochila emprestada. A carta da mãe dele continua sem resposta.',
   pool:[99, 73, 117, 55, 91, 131],           // Kingler, Tentacruel, Seadra, Golduck, Cloyster, Lapras
   ace:121, nivelExtra:1, moral:85,          // o Starmie veio depois e é o orgulho dele
   cor:'var(--destaque-3)',
 
   fala:(d, r) => {
-    const L = ['Toshi te vê primeiro e grita o seu nome inteiro de longe, do jeito que só criança de cais grita.'];
+    const L = ['Nolan te vê primeiro e grita o seu nome inteiro de longe, do jeito que só criança de cais grita.'];
     L.push(r.encontros === 0
       ? '"EU SAÍ!" Ele chega correndo. "Eu saí do cais! Eu peguei o Krabby e eu saí e eu não avisei ninguém e agora eu tô aqui!"'
       : '"Eu tenho seis agora." Ele mostra o cinto com um orgulho que não cabe nele. "SEIS."');
@@ -369,12 +369,12 @@ const RIVAIS_EXTRA = [
   },
   vitoria:(d, r) => [
     'O Starmie dele gira uma última vez e para.',
-    'Toshi senta no chão onde estava de pé, sem drama nenhum, e fica olhando o núcleo apagar.',
+    'Nolan senta no chão onde estava de pé, sem drama nenhum, e fica olhando o núcleo apagar.',
     '"Tá." Ele levanta antes de você dizer qualquer coisa. "Tá, eu vi o que você fez no terceiro. Eu vou copiar."',
     'Ele te aperta a mão com as duas mãos, que é como ele aprendeu a fechar negócio no cais.'
   ],
   derrota:(d, r) => [
-    'Toshi ganha e não comemora na hora — ele leva uns três segundos pra acreditar.',
+    'Nolan ganha e não comemora na hora — ele leva uns três segundos pra acreditar.',
     'Aí ele comemora. Muito. Alto. Sozinho, no meio da rua.',
     '"EU GANHEI DE VOCÊ." Ele aponta pra você e depois pra ele. "EU. DE VOCÊ."',
     'Ele vai te contar isso toda vez que se encontrarem pelo resto da vida, e você sabe disso agora.'
@@ -445,10 +445,10 @@ const RIVAIS_EXTRA = [
   }
 },
 {
-  id:'vasco', nome:'Otto', npc:'Caçador Otto', desde:'Floresta de Viridian', caps:[7, 10, 15, 19],
+  id:'vasco', nome:'Otto', npc:'Caçador Roque', desde:'Floresta de Viridian', caps:[7, 10, 15, 19],
   origem:'O caçador da Floresta de Viridian. Você o obrigou a abrir as gaiolas e ele anotou o seu rosto.',
-  gatilho:d => { const n = d.npcs['Caçador Otto']; return !!n && n.opiniao <= -3; },
-  nascimento:'O Caçador Otto perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
+  gatilho:d => { const n = d.npcs['Caçador Roque']; return !!n && n.opiniao <= -3; },
+  nascimento:'O Caçador Roque perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
   pool:[42, 49, 89, 94, 71, 110],            // Golbat, Venomoth, Muk, Gengar, Victreebel, Weezing
   ace:24, nivelExtra:3, moral:35,           // o Arbok é o que ele usa para prender
   cor:'var(--ruim)',

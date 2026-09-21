@@ -594,7 +594,7 @@ c5_devolver_ovos:{
 c5_ovos_pro_museu:{
   texto:[
     'Três horas de descida com uma caixa de ovos nos braços.',
-    'Takeo abre a porta do museu fora do horário porque você bate insistindo, olha a caixa, e chama a Dra. Cordell pelo telefone da bilheteria sem perguntar nada.',
+    'Varian abre a porta do museu fora do horário porque você bate insistindo, olha a caixa, e chama a Dra. Cordell pelo telefone da bilheteria sem perguntar nada.',
     'Ela chega em vinte minutos com um termômetro e uma caixa de isopor.',
     '"Quatro estão mortos." Ela fala isso rápido e sem drama, que é o jeito dela de ser gentil. "Dois não."',
     'Os dois ficam numa incubadora improvisada no museu de Pewter, entre uma vitrine de minerais e um balde.'
@@ -1399,7 +1399,7 @@ c5_fuga_tunel:{
 c5_pasta_pra_ivone:{
   texto:[
     'A Dra. Cordell abre a pasta na mesa da bilheteria do museu e fica em pé, lendo, por quarenta minutos sem sentar.',
-    'Takeo traz café. Ela não toca.',
+    'Varian traz café. Ela não toca.',
     'No fim ela fecha a pasta e põe as duas mãos em cima dela.',
     '"Isso aqui não pode ficar comigo."',
     '"Por quê?"',
@@ -1443,16 +1443,16 @@ c5_virar_alguem:{
 c5_ivone_guarda:{
   texto:[
     '"Então guarda a pasta até lá."',
-    'Ela pensa. Olha pro Takeo, que está fingindo arrumar panfleto a quatro metros e escutando tudo.',
-    '"Takeo."',
+    'Ela pensa. Olha pro Varian, que está fingindo arrumar panfleto a quatro metros e escutando tudo.',
+    '"Varian."',
     '"Doutora."',
     '"O senhor tem um lugar aqui onde nunca ninguém olha?"',
-    'Takeo pensa com uma seriedade cômica.',
+    'Varian pensa com uma seriedade cômica.',
     '"Tenho a reserva técnica." Ele coça a cabeça. "Tem caixa lá que não abre desde mil novecentos e oitenta e quatro."',
     'E é assim que a contabilidade de uma operação de tráfico de vida vai parar numa caixa de papelão da reserva técnica do museu de Pewter, entre um crânio de Rhyhorn e um mapa geológico desatualizado.'
   ],
   ef:{flag:'pasta_na_reserva', limpaFlag:'levou_a_pasta',
-      npc:{nome:'Takeo', opiniao:5, memoria:'Guardou a pasta na reserva técnica do museu, entre coisas que ninguém abre desde 1984.'},
+      npc:{nome:'Varian', opiniao:5, memoria:'Guardou a pasta na reserva técnica do museu, entre coisas que ninguém abre desde 1984.'},
       registrar:'A pasta está na reserva técnica do museu de Pewter, esperando as oito insígnias.',
       presagio:'Tem uma caixa em Pewter esperando você ter oito insígnias.'},
   escolhas:[
@@ -1536,7 +1536,7 @@ c5_observou_camara:{
     'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
   ],
   ef:{flag:'observou_a_camara',
-      npc:{nome:'Caçador Otto', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'},
+      npc:{nome:'Caçador Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'},
       presagio:'Ninguém ali está armado. Ninguém ali acha que vai precisar.'},
   escolhas:[
     {texto:'Chegar mais perto.', vai:'c5_camara'},
@@ -1555,7 +1555,7 @@ c5_camara:{
     'Um deles é o Otto. O da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
     '"Ah, não."'
   ],
-  ef:{npc:{nome:'Caçador Otto', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
+  ef:{npc:{nome:'Caçador Roque', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
       registrar:'Encontrou a operação do Monte da Lua. Otto está lá.'},
   escolhas:[
     {texto:'Atacar. Agora, antes que se organizem.', vai:'c5_ataque'},
@@ -1639,7 +1639,7 @@ c5_onde_ficam:{
     '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena bicho de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, moleque. Você não acredita, mas eu tenho."'
   ],
   ef:{flag:'sabe_do_envenenador', registrar:'Alguém envenena Pokémon de rua na Rota 25 e vende o que sobra.',
-      npc:{nome:'Caçador Otto', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'},
+      npc:{nome:'Caçador Roque', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'},
       presagio:'Todo mundo tem um limite, e o limite de todo mundo é logo depois do que essa pessoa faz.'},
   escolhas:[
     {texto:'Atacar. Limite ou não.', vai:'c5_ataque'},
@@ -1671,7 +1671,7 @@ c5_venceu:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma operação de tráfico no Monte da Lua'},
       itens:{'Ultra Ball':1,'Hyper Potion':1}, dinheiro:900,
-      npc:{nome:'Caçador Otto', opiniao:-8, memoria:'Você destruiu a operação dele no Monte da Lua. Ele não esquece.'},
+      npc:{nome:'Caçador Roque', opiniao:-8, memoria:'Você destruiu a operação dele no Monte da Lua. Ele não esquece.'},
       flag:'destruiu_operacao', registrar:'Libertou os Pokémon do Monte da Lua e fez um inimigo permanente.'},
   escolhas:[
     {texto:'Carregar o Paras até o Centro Pokémon. São três horas.', vai:'c5_paras'},
@@ -1751,7 +1751,7 @@ c5_perdeu:{
   ],
   ef:{hp:-9, causa:'Espancado no Monte da Lua', dinheiro:-1000,
       flag:['operacao_escapou','viu_o_retangulo'], instabilidade:1,
-      npc:{nome:'Caçador Otto', opiniao:-4, memoria:'Te derrubou no Monte da Lua e levou tudo embora numa noite.'},
+      npc:{nome:'Caçador Roque', opiniao:-4, memoria:'Te derrubou no Monte da Lua e levou tudo embora numa noite.'},
       registrar:'Perdeu no Monte da Lua. A operação se mudou em uma noite e levou os Pokémon.',
       presagio:'Eles desmontaram em uma noite. Ninguém desmonta em uma noite na primeira vez.'},
   escolhas:[
@@ -1806,7 +1806,7 @@ c5_aceitou:{
   ],
   ef:{dinheiro:4000, itens:{'Ultra Ball':2},
       rep:{eixo:'ruim',delta:3,motivo:'Trabalhou para traficantes de Pokémon'},
-      npc:{nome:'Caçador Otto', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
+      npc:{nome:'Caçador Roque', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
       flag:'trabalhou_rocket', moral:-15,
       registrar:'Passou a trabalhar para os remanescentes da Rocket.',
       presagio:'Você fez a conta três vezes. Ninguém faz a conta três vezes de uma coisa que vai fazer só uma.'},
@@ -1848,7 +1848,7 @@ c5_traicao:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Voltou de madrugada e abriu as gaiolas que tinha ajudado a carregar'},
       flag:['destruiu_operacao','traiu_vasco'],
-      npc:{nome:'Caçador Otto', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
+      npc:{nome:'Caçador Roque', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
       registrar:'Voltou de madrugada e libertou os Pokémon depois de ter trabalhado para eles.',
       presagio:'A pessoa da cadeira de praia te viu e não levantou. Você vai pensar nisso por anos.'},
   escolhas:[
@@ -1904,7 +1904,7 @@ c5_recusou_perto:{
     'Pra você: "Você entrou aqui e viu tudo. Agora sobe essa passarela devagar e esquece o caminho."',
     'Você sobe. Devagar. Ele te olha o percurso inteiro, sem piscar, e continua olhando quando você some na curva — dá pra sentir.'
   ],
-  ef:{flag:'recusou_rocket', npc:{nome:'Caçador Otto', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},
+  ef:{flag:'recusou_rocket', npc:{nome:'Caçador Roque', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},
       registrar:'Recusou trabalhar para os traficantes.'},
   escolhas:[
     {texto:'Voltar depois com um plano — e atacar.', vai:'c5_ataque'},

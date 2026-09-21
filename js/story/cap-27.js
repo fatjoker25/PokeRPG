@@ -159,13 +159,13 @@ c22_subida:{
 c22_posto:{
   texto:[
     'O posto florestal da Rota 10 é uma casa de madeira com antena, um gerador e uma caixa d água em cima de quatro pernas.',
-    'Quem atende é um homem de uns cinquenta anos de camisa cáqui desbotada, que se apresenta como Sr. Saburo Iketani e que está sozinho aqui há dois anos e meio.',
+    'Quem atende é um homem de uns cinquenta anos de camisa cáqui desbotada, que se apresenta como Sr. Roland Poplar e que está sozinho aqui há dois anos e meio.',
     '"O senhor vai subir." Não é pergunta. "Assina o livro."',
     'O livro fica num prego, do lado da porta. É um caderno de capa dura com uma coluna de nomes, uma de datas de subida e uma de datas de descida.',
     'Você passa o dedo pela terceira coluna e conta quatro linhas em branco.'
   ],
   ef:{flag:'assinou_o_livro',
-      npc:{nome:'Sr. Saburo Iketani', opiniao:1, memoria:'Guarda do posto florestal da Rota 10, sozinho há dois anos e meio.'},
+      npc:{nome:'Sr. Roland Poplar', opiniao:1, memoria:'Guarda do posto florestal da Rota 10, sozinho há dois anos e meio.'},
       registrar:'Assinou o livro do posto florestal. Quatro linhas sem data de descida.'},
   escolhas:[
     {texto:'Perguntar quem são as quatro linhas em branco.', vai:'c22_as_quatro_linhas'},
@@ -178,7 +178,7 @@ c22_posto:{
 c22_as_quatro_linhas:{
   texto:[
     'Ele não precisa olhar o livro.',
-    '"Kuroda, em março." Ele conta com o queixo. "E três de agora, de quatro meses atrás."',
+    '"Vernon, em março." Ele conta com o queixo. "E três de agora, de quatro meses atrás."',
     '"Três? Eles voltaram. A Liga disse que a terceira equipe voltou inteira."',
     'Ele olha para você com uma paciência de quem já explicou isso.',
     '"Voltaram seis do vale e desceram três daqui." Ele bate no livro com o dedo. "Três ficaram. Montaram acampamento lá em cima, num ponto que dá para ver daqui com binóculo, e estão lá até hoje."',
@@ -224,7 +224,7 @@ c22_porque_nao_desce:{
     'Desculpe o incômodo. Eu preciso estar lá quando ele perguntar de novo.'
   ],
   ef:{flag:['sabe_do_bilhete'], instabilidade:2, moral:-2,
-      npc:{nome:'Sr. Saburo Iketani', opiniao:2, memoria:'Já trouxe um deles para baixo e ele subiu de novo na manhã seguinte.'},
+      npc:{nome:'Sr. Roland Poplar', opiniao:2, memoria:'Já trouxe um deles para baixo e ele subiu de novo na manhã seguinte.'},
       registrar:'Eu preciso estar lá quando ele perguntar de novo.'},
   escolhas:[
     {texto:'"O senhor já subiu até o vale?"', vai:'c22_ele_ja_subiu'},
@@ -259,9 +259,9 @@ c22_pediu_binoculo:{
     '"É do meu pai. Volta com ele."',
     'Você pendura a correia rachada no pescoço e promete voltar com ele, e é a primeira promessa que você faz nesta subida.'
   ],
-  ef:{flag:'tem_o_binoculo', itens:{'Binóculo do pai do Sr. Iketani':1},
-      npc:{nome:'Sr. Saburo Iketani', opiniao:3, memoria:'Te emprestou o binóculo do pai dele.'},
-      registrar:'Pegou emprestado o binóculo do pai do Sr. Iketani, com promessa de devolver.'},
+  ef:{flag:'tem_o_binoculo', itens:{'Binóculo do pai do Sr. Poplar':1},
+      npc:{nome:'Sr. Roland Poplar', opiniao:3, memoria:'Te emprestou o binóculo do pai dele.'},
+      registrar:'Pegou emprestado o binóculo do pai do Sr. Poplar, com promessa de devolver.'},
   escolhas:[
     {texto:'"O que o senhor vê daqui?"', vai:'c22_o_que_ele_ve'},
     {texto:'Subir.', vai:'c22_primeiro_dia'}
@@ -373,7 +373,7 @@ c22_o_acidente:{
 c22_quem_repinta:{
   texto:[
     '"Eu."',
-    'O Sr. Iketani diz isso sem nenhum floreio, do jeito que se diz que a gente varre a própria calçada.',
+    'O Sr. Poplar diz isso sem nenhum floreio, do jeito que se diz que a gente varre a própria calçada.',
     '"De ano em ano, no aniversário. Com tinta de esmalte, que aguenta."',
     '"E a frase?"',
     '"A frase foi ideia minha e eu apanhei por isso." Ele enche a caneca. "A Liga mandou um ofício pedindo que eu retirasse, porque é impróprio. Eu respondi que a cruz é minha, que a tinta é minha, e que o terreno é da União."',
@@ -381,9 +381,9 @@ c22_quem_repinta:{
     '"Eu botei porque ela voltou. Eles mandaram três equipes e falam das que não voltaram, e ninguém nunca escreveu em lugar nenhum que essa aqui voltou."'
   ],
   ef:{flag:['ela_voltou'], moral:3,
-      npc:{nome:'Sr. Saburo Iketani', opiniao:3, memoria:'Repinta a cruz todo ano e brigou com a Liga pela frase.'},
+      npc:{nome:'Sr. Roland Poplar', opiniao:3, memoria:'Repinta a cruz todo ano e brigou com a Liga pela frase.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou quem cuidava da cruz'},
-      registrar:'O Sr. Iketani repinta a cruz todo ano e escreveu ELA VOLTOU contra um ofício da Liga.'},
+      registrar:'O Sr. Poplar repinta a cruz todo ano e escreveu ELA VOLTOU contra um ofício da Liga.'},
   escolhas:[
     {texto:'Perguntar das quatro linhas em branco.', vai:'c22_as_quatro_linhas'},
     {texto:'Subir.', vai:'c22_primeiro_dia'}
@@ -394,7 +394,7 @@ c22_primeiro_dia:{
   texto:[
     'O primeiro dia é só cansaço.',
     'Pedra, subida, vento, e a mesma vista virando devagar à sua esquerda.',
-    'Às quatro da tarde você passa a lomba que o Sr. Iketani apontou, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.',
+    'Às quatro da tarde você passa a lomba que o Sr. Poplar apontou, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.',
     'Não tem bicho.',
     'Nenhum. Nem inseto, nem Pidgey, nem barulho de coisa pequena fugindo do lado da trilha.',
     d=>{
@@ -451,7 +451,7 @@ c22_andou_mais:{
 
 c22_binoculo_no_vale:{
   texto:[
-    'Você deita na pedra e aponta o binóculo do pai do Sr. Iketani para o fundo do vale.',
+    'Você deita na pedra e aponta o binóculo do pai do Sr. Poplar para o fundo do vale.',
     'A lente é velha e tem uma mancha no canto, e mesmo assim dá para ver.',
     'Dois vultos grandes, um em cada borda, parados.',
     'Os dois virados para o mesmo lado, que é a parede de pedra do fundo.',
@@ -655,7 +655,7 @@ c22_o_equipamento:{
       registrar:'Um medidor da terceira equipe está com a agulha no fim da escala desde o dia 2. Não é defeito.'},
   escolhas:[
     {texto:'Levar o aparelho.', vai:'c22_levou_o_aparelho'},
-    {texto:'Procurar a mochila do Kuroda.', vai:'c22_a_mochila_do_nogueira', cond:d=>!!d.flags.procura_o_nogueira},
+    {texto:'Procurar a mochila do Vernon.', vai:'c22_a_mochila_do_nogueira', cond:d=>!!d.flags.procura_o_nogueira},
     {texto:'Procurar a equipe.', vai:'c22_procurou_equipe'},
     {texto:'Ir ao vale.', vai:'c22_encontro'}
   ]
@@ -677,7 +677,7 @@ c22_levou_o_aparelho:{
 
 c22_a_mochila_do_nogueira:{
   texto:[
-    'A mochila do Kuroda não está aqui, porque ele era da segunda equipe e a segunda equipe desceu.',
+    'A mochila do Vernon não está aqui, porque ele era da segunda equipe e a segunda equipe desceu.',
     'Mas tem uma coisa que você não esperava, encostada na perna da mesa dobrável, dentro de um saco plástico de mercado bem amarrado.',
     'É um casaco impermeável azul, tamanho grande, com a etiqueta da Liga costurada no peito.',
     'No bolso de cima, do lado de dentro, uma medalha de natação de participação infantil, com uma fita azul e branca desbotada.',
@@ -685,9 +685,9 @@ c22_a_mochila_do_nogueira:{
     'Do lado, preso ao saco com um elástico, um bilhete: achamos no dia 2, a 60 m da entrada. Fica aqui para quem vier atrás. Não é nosso para levar.'
   ],
   ef:{flag:['achou_a_medalha'], instabilidade:1, moral:-2,
-      itens:{'Medalha de natação da filha do Kuroda':1},
+      itens:{'Medalha de natação da filha do Vernon':1},
       rep:{eixo:'bom',delta:2,motivo:'A medalha estava esperando quem viesse atrás, e veio você'},
-      registrar:'A medalha do Kuroda estava no acampamento, guardada para quem viesse atrás.'},
+      registrar:'A medalha do Vernon estava no acampamento, guardada para quem viesse atrás.'},
   escolhas:[
     {texto:'Procurar a equipe.', vai:'c22_procurou_equipe'},
     {texto:'Ir ao vale.', vai:'c22_encontro'}
@@ -765,7 +765,7 @@ c22_descem_comigo:{
 c22_desceu_os_dois:{
   texto:[
     'Você desce os dois até o posto florestal, e leva sete horas, e ninguém fala quase nada no caminho.',
-    'No posto, o Sr. Iketani não faz nenhuma pergunta. Ele põe café, tira dois cobertores do armário e escreve duas datas na terceira coluna do livro.',
+    'No posto, o Sr. Poplar não faz nenhuma pergunta. Ele põe café, tira dois cobertores do armário e escreve duas datas na terceira coluna do livro.',
     'Depois acompanha você até a porta.',
     '"O senhor vai subir de novo."',
     '"Vou."',
@@ -774,7 +774,7 @@ c22_desceu_os_dois:{
   ],
   ef:{flag:['desceu_dois'], hp:-4, causa:'Sete horas de descida e a subida de volta',
       rep:{eixo:'bom',delta:3,motivo:'Desceu duas pessoas e subiu de novo'},
-      npc:{nome:'Sr. Saburo Iketani', opiniao:3, memoria:'Escreveu a sua data de subida duas vezes no mesmo livro.'},
+      npc:{nome:'Sr. Roland Poplar', opiniao:3, memoria:'Escreveu a sua data de subida duas vezes no mesmo livro.'},
       registrar:'Desceu dois da terceira equipe até o posto e subiu de novo.'},
   escolhas:[
     {texto:'Subir e ir ao vale.', vai:'c22_encontro'},
@@ -923,7 +923,7 @@ c22_tirou_equipe:{
     '"Espera." A voz dele muda completamente. "Espera, o que —"',
     'E aí eles todos acordam, ao mesmo tempo, e o pânico chega de uma vez em três pessoas adultas.',
     'Vocês levam quatro horas para descer até o posto da Rota 10. Nenhum dos três fala nada no caminho.',
-    'No posto, o Sr. Iketani olha os três, olha você, e vai pôr água no fogo sem dizer uma palavra.'
+    'No posto, o Sr. Poplar olha os três, olha você, e vai pôr água no fogo sem dizer uma palavra.'
   ],
   ef:{flag:'salvou_a_equipe',
       rep:{eixo:'bom',delta:3,motivo:'Tirou três pessoas do vale antes que fosse tarde'},
@@ -1241,7 +1241,7 @@ c22_voltou:{
   texto:[
     'Você volta. Dois dias de caminhada no sentido contrário, com o vale nas costas o tempo todo.',
     d=>d.flags.assinou_o_livro
-      ? 'No posto, o Sr. Iketani escreve a sua data de descida na terceira coluna e não pergunta nada, e é justamente o não perguntar que dói.'
+      ? 'No posto, o Sr. Poplar escreve a sua data de descida na terceira coluna e não pergunta nada, e é justamente o não perguntar que dói.'
       : 'Ninguém te vê descer, porque não tem ninguém para ver.',
     'Em Saffron, você tenta explicar para alguém da Liga o que viu. Eles anotam. Agradecem.',
     'Onze dias depois, os jornais publicam que a temperatura na Rota 10 caiu sozinha, que houve relato de descarga elétrica sem tempestade, e que uma equipe de campo não retornou.',

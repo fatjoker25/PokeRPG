@@ -68,7 +68,7 @@ const GINASIOS = [
   recusa:d=>{
     const lavou = Estado.rep.eixo==='bom' && Estado.rep.bom >= 4;
     if (lavou) return null;
-    if (d.flags.ignorou_marta) return '"Eu conheço a Haruko." Misty não se levanta da beira da piscina. "Ela me contou de um treinador que passou reto. Não descreveu, mas eu não preciso de descrição."';
+    if (d.flags.ignorou_marta) return '"Eu conheço a Sibyl." Misty não se levanta da beira da piscina. "Ela me contou de um treinador que passou reto. Não descreveu, mas eu não preciso de descrição."';
     if (d.flags.agrediu_envenenador) return '"Três pessoas estavam pescando a duzentos metros." Ela olha a água. "Elas vieram aqui contar. Eu não luto com quem resolve as coisas assim."';
     return null;
   },
@@ -77,7 +77,7 @@ const GINASIOS = [
   intro:d=>[
     'O ginásio de Cerulean é uma piscina olímpica com uma passarela no meio. A acústica faz tudo ecoar duas vezes.',
     d.flags.salvou_vaporeon
-      ? '"Você é o da Rota 25." Misty já está de pé quando você entra. "A Haruko chorou aqui na minha porta contando. Eu ia te procurar."'
+      ? '"Você é o da Rota 25." Misty já está de pé quando você entra. "A Sibyl chorou aqui na minha porta contando. Eu ia te procurar."'
       : d.flags.destruiu_tigelas || d.flags.entregou_envenenador
       ? '"As tigelas." Ela assente devagar. "Foi você. Meus irmãos acham que foi a prefeitura."'
       : '"Regra da casa: o chão é escorregadio e eu não aviso duas vezes."',

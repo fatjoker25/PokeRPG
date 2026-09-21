@@ -232,17 +232,17 @@ c8_ab_ouviu:{
 
 c8_ab_os_nomes:{
   texto:[
-    fala('o homem do megafone', 'Saya Kurata e um rapaz novo que eu não lembro o sobrenome.'),
+    fala('o homem do megafone', 'Maren Kestrel e um rapaz novo que eu não lembro o sobrenome.'),
     'Você anota. Ele repara que você anota e isso muda a cara dele.',
-    fala('o homem do megafone', 'A Kurata voltou aqui depois. Sozinha, sem crachá, de tarde.'),
+    fala('o homem do megafone', 'A Kestrel voltou aqui depois. Sozinha, sem crachá, de tarde.'),
     fala('o homem do megafone', 'Ela não perguntou nada sobre o protesto. Ela perguntou o horário da maré.'),
     d=>fala(d.jogador.nome, 'Da maré?'),
     fala('o homem do megafone', 'Da maré. E foi embora com o horário anotado.'),
     'Ele dá de ombros, mas é um dar de ombros que sabe que aquilo significa alguma coisa.'
   ],
   ef:{flag:'kurata_perguntou_da_mare',
-      npc:{nome:'Saya Kurata', conhece:true, viuVoce:'Ainda não te viu — você ouviu falar dela primeiro.'},
-      registrar:'Saya Kurata voltou ao porto sem crachá e perguntou o horário da maré.'},
+      npc:{nome:'Maren Kestrel', conhece:true, viuVoce:'Ainda não te viu — você ouviu falar dela primeiro.'},
+      registrar:'Maren Kestrel voltou ao porto sem crachá e perguntou o horário da maré.'},
   escolhas:[
     {texto:'Descer pro cais três.', vai:'c8_cais'},
     {texto:'Andar pela cidade.', vai:'c8_cidade'}
@@ -1038,7 +1038,7 @@ c8_pediu_trabalho:{
     '"Você quer lavar louça pra oitocentas pessoa?"',
     '"Quero."',
     'Ela para de rir.',
-    '"Tá." Ela escreve um nome num guardanapo. "Fala pro contramestre que a Neusa mandou. Turno começa às seis. Oito hora."',
+    '"Tá." Ela escreve um nome num guardanapo. "Fala pro contramestre que a Rina mandou. Turno começa às seis. Oito hora."',
     'Ela devolve o lápis pro balcão.',
     '"E, garoto: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
   ],
@@ -1150,14 +1150,14 @@ c8_avisou_o_menino:{
     'O menino escuta com a batata parada no meio do caminho.',
     '"Eu sei."',
     'Ele volta a comer.',
-    '"O Denis foi ano passado. Ele tinha dezesseis." Ele mastiga. "Ele mandou carta de Cinnabar. Aí parou."',
+    '"O Dorian foi ano passado. Ele tinha dezesseis." Ele mastiga. "Ele mandou carta de Cinnabar. Aí parou."',
     '"Parou como?"',
     '"Parou." Ele dá de ombros com uma naturalidade que te gela. "Mas ele mandou carta. Ele chegou."',
     'Ele fecha a caixa de isopor.',
     '"Eu vou de passagem. Com nome na lista. Por isso eu tô juntando."'
   ],
-  ef:{flag:'o_denis', registrar:'Denis, 16 anos, foi de "vaga de trabalho" ano passado. Mandou uma carta de Cinnabar e parou.',
-      npc:{nome:'Menino do cais', opiniao:4, memoria:'Te contou do Denis, que foi de vaga de trabalho e mandou uma carta só.'},
+  ef:{flag:'o_denis', registrar:'Dorian, 16 anos, foi de "vaga de trabalho" ano passado. Mandou uma carta de Cinnabar e parou.',
+      npc:{nome:'Menino do cais', opiniao:4, memoria:'Te contou do Dorian, que foi de vaga de trabalho e mandou uma carta só.'},
       presagio:'Ele mandou carta e chegou. Uma carta. Uma.'},
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
@@ -1166,7 +1166,7 @@ c8_avisou_o_menino:{
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}},
     {texto:'Dar oito mil pra ele comprar a passagem. (8.000 ₽)', vai:'c8_pagou_a_passagem_dele',
      cond:d=>d.jogador.dinheiro>=8000},
-    {texto:'"Guarda a carta do Denis." Perguntar dela.', vai:'c8_a_carta_do_denis'},
+    {texto:'"Guarda a carta do Dorian." Perguntar dela.', vai:'c8_a_carta_do_denis'},
     {texto:'Ir pro cais.', vai:'c8_cais'}
   ]
 },
@@ -1201,15 +1201,15 @@ c8_atras_do_menino:{
     'Você vai atrás e não acha. Menino de porto some em porto melhor do que qualquer um.',
     'Duas quadras depois você desiste e volta pro banquinho.',
     'A dona da fritura está olhando pra você com uma expressão que você não sabe ler.',
-    '"Você deu oito mil pro Toshi."',
+    '"Você deu oito mil pro Nolan."',
     '"É o nome dele?"',
     '"É." Ela vira o peixe. "Ele vende Krabby na minha porta faz três ano."',
     'Ela serve outra porção e empurra pra você sem cobrar.',
     '"A mãe dele embarcou nesse navio há quatro ano. Pra trabalhar. Ela mandou uma carta de Cinnabar."'
   ],
   ef:{flag:['o_nome_do_menino','a_mae_do_tunico'],
-      registrar:'O menino se chama Toshi. A mãe dele embarcou no S.S. Anne há quatro anos e mandou uma carta.',
-      npc:{nome:'Menino do cais', opiniao:2, memoria:'Nome: Toshi. A mãe embarcou no Anne há quatro anos.'},
+      registrar:'O menino se chama Nolan. A mãe dele embarcou no S.S. Anne há quatro anos e mandou uma carta.',
+      npc:{nome:'Menino do cais', opiniao:2, memoria:'Nome: Nolan. A mãe embarcou no Anne há quatro anos.'},
       presagio:'Uma carta de Cinnabar. De novo. Sempre uma carta de Cinnabar.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
@@ -1245,7 +1245,7 @@ c8_pode_estar_viva:{
     'Ela limpa as mãos.',
     '"Eu não digo que morreu. Eu digo que não escreveu de novo, e que são coisas diferentes, e que uma delas eu consigo viver."',
     'Ela serve outro cliente.',
-    '"O Toshi não consegue viver com nenhuma das duas. Por isso ele junta."'
+    '"O Nolan não consegue viver com nenhuma das duas. Por isso ele junta."'
   ],
   ef:{flag:'nao_escreveu_de_novo',
       presagio:'Não morreu: não escreveu de novo. Você vai conhecer muita gente que vive na diferença entre essas duas coisas.'},
@@ -1281,14 +1281,14 @@ c8_vai_junto:{
 
 c8_a_carta_do_denis:{
   texto:[
-    '"Você tem a carta do Denis?"',
+    '"Você tem a carta do Dorian?"',
     'O menino tira do bolso de trás uma folha dobrada em oito, mole de tanto ser aberta.',
     'Letra ruim. Caneta esferográfica. Sete linhas.',
-    '"Cheguei. Tá tudo certo. O trabalho é de descarregar e eles pagam no fim. Fala pra minha tia que eu ligo quando der. Não conta pra ninguém que eu fui assim. Eu tô bem. Denis."',
+    '"Cheguei. Tá tudo certo. O trabalho é de descarregar e eles pagam no fim. Fala pra minha tia que eu ligo quando der. Não conta pra ninguém que eu fui assim. Eu tô bem. Dorian."',
     'No verso, escrito de cabeça pra baixo, quase apagado, como quem escreveu com a folha em cima do joelho e depois desistiu de mandar:',
     '"eles contaram a gente duas vezes"'
   ],
-  ef:{flag:'a_carta_do_denis', registrar:'No verso da carta do Denis: "eles contaram a gente duas vezes".',
+  ef:{flag:'a_carta_do_denis', registrar:'No verso da carta do Dorian: "eles contaram a gente duas vezes".',
       presagio:'Contaram duas vezes. Conferência. Ele viu conferência e não soube o nome do que viu.'},
   escolhas:[
     {texto:'Pedir a carta emprestada.', vai:'c8_pegou_a_carta'},
@@ -1313,8 +1313,8 @@ c8_pegou_a_carta:{
   ],
   ef:{flag:'copiou_a_carta',
       rep:{eixo:'bom',delta:1,motivo:'Copiou em vez de tomar'},
-      npc:{nome:'Menino do cais', opiniao:4, memoria:'Você copiou a carta do Denis em vez de levar a dele.'},
-      registrar:'Copiou a carta do Denis, com a frase do verso.',
+      npc:{nome:'Menino do cais', opiniao:4, memoria:'Você copiou a carta do Dorian em vez de levar a dele.'},
+      registrar:'Copiou a carta do Dorian, com a frase do verso.',
       presagio:'Você tem uma cópia. Ele ficou com o original. Alguém em Cerulean te ensinou a diferença.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
@@ -1329,7 +1329,7 @@ c8_pegou_a_carta:{
 c8_mostra_pra_tia:{
   texto:[
     '"Mostra isso pra sua tia."',
-    '"A tia é do Denis, não minha."',
+    '"A tia é do Dorian, não minha."',
     '"Mostra pra ela."',
     'Ele dobra a carta em oito de novo, com uma precisão de quem dobra essa carta há um ano.',
     '"Ela já viu."',
@@ -1911,7 +1911,7 @@ c8_pego:{
 c8_trabalho:{
   texto:[
     'O contramestre é um homem de sessenta anos com antebraços de trinta e um bigode que já foi moda.',
-    d=>d.flags.indicacao_da_neusa ? '"A Neusa mandou?" Ele lê o guardanapo. "Então tá."' : '"Mão de obra." Ele te mede de cima a baixo. "Cozinha ou carga?"',
+    d=>d.flags.indicacao_da_neusa ? '"A Rina mandou?" Ele lê o guardanapo. "Então tá."' : '"Mão de obra." Ele te mede de cima a baixo. "Cozinha ou carga?"',
     'Nenhuma das duas tem a ver com Pokémon. As duas pagam a passagem.',
     '"Carga é seis hora e é pesado. Cozinha é oito hora e é chato."',
     'Ele já está olhando o próximo da fila, que também é um adolescente.'
@@ -2124,7 +2124,7 @@ c8_bandejas_do_40:{
     '"Quem monta as bandeja do quarenta?"',
     'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e isso é mais eloquente que qualquer resposta.',
     'Um cozinheiro de uns trinta anos responde sem olhar:',
-    '"A Neusa monta."',
+    '"A Rina monta."',
     '"Quantas?"',
     'Pausa de dois segundos e o barulho de panela continua.',
     '"Quatro."',
@@ -2209,16 +2209,16 @@ c8_segundo_bilhete:{
   texto:[
     'Você manda outro. "QUAL SEU NOME?"',
     'Volta no dia seguinte, com o mesmo molho, num guardanapo em vez do bilhete, porque o bilhete não voltou.',
-    'Está escrito: "DENIS"',
+    'Está escrito: "DORIAN"',
     d=>d.flags.a_carta_do_denis || d.flags.copiou_a_carta
       ? 'Você senta no chão do corredor de serviço com um guardanapo na mão e fica um tempo sem conseguir respirar direito.'
-      : 'Você não conhece nenhum Denis. Mas agora tem um nome, e nome é tudo.',
+      : 'Você não conhece nenhum Dorian. Mas agora tem um nome, e nome é tudo.',
     'Embaixo, menor, quase sem molho porque estava acabando:',
     '"SOMOS 2"'
   ],
   ef:{flag:['o_denis_esta_no_40','somos_2'],
       rep:{eixo:'bom',delta:2,motivo:'Insistiu até ter um nome'},
-      registrar:'Dentro do camarote 40: Denis, e mais um. "SOMOS 2".',
+      registrar:'Dentro do camarote 40: Dorian, e mais um. "SOMOS 2".',
       presagio:'Somos dois. Quatro bandejas, duas camas, dois que comem com talher e dois que não.'},
   escolhas:[
     {texto:'Procurar o capitão.', vai:'c8_capitao'},
@@ -2495,13 +2495,13 @@ c8_os_quatro_nomes:{
     'Ele põe a taça na mesa.',
     '"E eu vou te falar porque eu tô com três taça e porque eu vou descer em Cinnabar amanhã e provavelmente nunca mais te ver."',
     'Ele diz um nome. É um sobrenome curto, comum, do tipo que tem em qualquer lista telefônica.',
-    '"Amano. Doutor alguma coisa Amano. Ele era da parte técnica e ele é o único que eu vi de perto, porque ele descia pro nosso andar pra pegar café, o que nenhum crachá preto fazia."',
+    '"Hollis. Doutor alguma coisa Hollis. Ele era da parte técnica e ele é o único que eu vi de perto, porque ele descia pro nosso andar pra pegar café, o que nenhum crachá preto fazia."',
     'Ele volta pra taça.',
     '"Ele era simpático. Isso é o que me tira o sono."'
   ],
   ef:{flag:['sabe_de_sena','sabe_do_tanque'],
-      registrar:'Dr. Amano, da parte técnica do laboratório de Cinnabar, foi promovido e transferido para Saffron.',
-      npc:{nome:'Ex-Silph', opiniao:3, memoria:'Te deu o nome do Dr. Amano com três taças na frente.'},
+      registrar:'Dr. Hollis, da parte técnica do laboratório de Cinnabar, foi promovido e transferido para Saffron.',
+      npc:{nome:'Ex-Silph', opiniao:3, memoria:'Te deu o nome do Dr. Hollis com três taças na frente.'},
       presagio:'"Ele era simpático. Isso é o que me tira o sono." Você vai apertar a mão dele.'},
   escolhas:[
     {texto:'"O senhor devia contar isso pra alguém."', vai:'c8_falou_com_alguem'},
@@ -3349,12 +3349,12 @@ c8_esperou_acordar:{
     'Ele fecha os olhos.',
     '"Que vergonha."',
     'E é isso que ele diz. Não "que fome", não "que injustiça", não "eu ia ganhar". Que vergonha.',
-    'Vocês conversam por uns vinte minutos. Ele se chama Seiji, é de Saffron, e ele não vai voltar pra casa porque em casa ele teria que explicar.'
+    'Vocês conversam por uns vinte minutos. Ele se chama Stellan, é de Saffron, e ele não vai voltar pra casa porque em casa ele teria que explicar.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Esperou um desconhecido acordar'},
       flag:'conhece_o_wilton',
-      npc:{nome:'Seiji', opiniao:5, memoria:'Desmaiou no torneio do Anne. Você esperou ele acordar. Ele é de Saffron e não vai voltar pra casa.'},
-      registrar:'Seiji, 16 anos, de Saffron. Não vai voltar pra casa porque teria que explicar.',
+      npc:{nome:'Stellan', opiniao:5, memoria:'Desmaiou no torneio do Anne. Você esperou ele acordar. Ele é de Saffron e não vai voltar pra casa.'},
+      registrar:'Stellan, 16 anos, de Saffron. Não vai voltar pra casa porque teria que explicar.',
       presagio:'Ele não vai voltar pra casa porque teria que explicar. Kanto está cheia de gente que não volta por isso.'},
   escolhas:[
     {texto:'Deixar dinheiro com a enfermeira pra ele. (5.000 ₽)', vai:'c8_deixou_pro_garoto',
@@ -3604,14 +3604,14 @@ c8_podem_levantar:{
     '"Está tudo bem. Pode levantar."',
     'E aí eles levantam.',
     'E é nesse segundo que você entende o tamanho exato da coisa, e o tamanho é pior do que gaiola: gaiola é ferro, e isso aqui não tem ferro nenhum.',
-    'Um deles se chama Denis e ele não te reconhece porque vocês nunca se viram.'
+    'Um deles se chama Dorian e ele não te reconhece porque vocês nunca se viram.'
   ],
   ef:{flag:['achou_o_denis','abriu_o_40'],
-      registrar:'Denis está vivo. Ele levantou quando o homem de camisa social autorizou.',
+      registrar:'Dorian está vivo. Ele levantou quando o homem de camisa social autorizou.',
       rep:{eixo:'bom',delta:3,motivo:'Falou com quem ninguém falava'},
       presagio:'Não tem ferro nenhum. É essa a parte que você não vai conseguir explicar depois.'},
   escolhas:[
-    {texto:'"Denis. Sua tia tem uma carta sua."', vai:'c8_a_carta_de_volta',
+    {texto:'"Dorian. Sua tia tem uma carta sua."', vai:'c8_a_carta_de_volta',
      cond:d=>!!(d.flags.a_carta_do_denis||d.flags.copiou_a_carta||d.flags.o_denis_esta_no_40)},
     {texto:'Pegar os dois pela mão e sair andando.', vai:'c8_saiu_andando'},
     {texto:'Gritar por socorro com a porta aberta.', vai:'c8_socorro_com_porta_aberta'},
@@ -3621,7 +3621,7 @@ c8_podem_levantar:{
 
 c8_a_carta_de_volta:{
   texto:[
-    '"Denis. Sua tia tem uma carta sua."',
+    '"Dorian. Sua tia tem uma carta sua."',
     'Ele para no meio do movimento de levantar.',
     '"Como você sabe meu nome?"',
     '"Um menino do cais de Vermilion tem a sua carta dobrada em oito no bolso de trás. Faz um ano."',
@@ -3632,7 +3632,7 @@ c8_a_carta_de_volta:{
     '"Ele disse que ia postar."'
   ],
   ef:{flag:'o_denis_chorou', rep:{eixo:'bom',delta:4,motivo:'Levou o nome de alguém até dentro de uma porta fechada'},
-      registrar:'Denis escreveu outras quatro cartas. Nenhuma foi postada.',
+      registrar:'Dorian escreveu outras quatro cartas. Nenhuma foi postada.',
       presagio:'Quatro cartas que nunca foram postadas. Alguém guardou quatro cartas.'},
   escolhas:[
     {texto:'Procurar as quatro cartas nas pastas.', vai:'c8_pegou_as_pastas'},
@@ -3724,8 +3724,8 @@ c8_posta_agora:{
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez um homem postar quatro cartas que ele mesmo tinha retido'},
       flag:'as_cartas_foram_postadas',
-      npc:{nome:'Homem do camarote 40', opiniao:3, memoria:'Você o fez postar as quatro cartas do Denis. Ele disse que ia dar problema pra ele.'},
-      registrar:'As quatro cartas do Denis foram postadas na caixa do convés dois.',
+      npc:{nome:'Homem do camarote 40', opiniao:3, memoria:'Você o fez postar as quatro cartas do Dorian. Ele disse que ia dar problema pra ele.'},
+      registrar:'As quatro cartas do Dorian foram postadas na caixa do convés dois.',
       presagio:'"Pra mim." Ele postou sabendo. Isso não o absolve de nada e aconteceu mesmo assim.'},
   escolhas:[
     {texto:'Pegar os dois e sair andando.', vai:'c8_saiu_andando'},
@@ -3775,7 +3775,7 @@ c8_socorro_com_porta_aberta:{
 c8_corredor_servico:{
   texto:[
     'O corredor de serviço do convés três corre paralelo ao dos camarotes, do outro lado da antepara, e serve pra copa, rouparia e manutenção.',
-    d=>d.flags.tem_a_chave ? 'A chave de latão que a Neusa perdeu em dois mil e dezenove abre a porta no primeiro giro.'
+    d=>d.flags.tem_a_chave ? 'A chave de latão que a Rina perdeu em dois mil e dezenove abre a porta no primeiro giro.'
        : d.flags.janela_das_23h ? 'A porta está destrancada, porque são 23h07 e a troca de turno da copa vai até 23h20.'
        : 'A porta está trancada. Você espera dezoito minutos encostado na parede e uma copeira sai empurrando um carrinho e você segura a porta pra ela, e ela agradece, e você entra.',
     'Lá dentro é estreito, quente e cheio de cano.',
@@ -3821,7 +3821,7 @@ c8_continuou_escutando:{
     'Um deles responde alguma coisa que você não ouve.',
     '"Eu sei, eu sei. Amanhã a gente chega e aí melhora. Alojamento tem janela."',
     'Silêncio.',
-    '"Denis, vira pra cá. Olha. Você assinou por vontade própria, lembra? Eu perguntei três vezes."',
+    '"Dorian, vira pra cá. Olha. Você assinou por vontade própria, lembra? Eu perguntei três vezes."',
     'E a coisa mais horrível da noite inteira:',
     '"Lembro", diz o menino.'
   ],
@@ -3843,12 +3843,12 @@ c8_desparafusou:{
     'Do outro lado tem um duto de trinta centímetros que dá na parte de cima do box do banheiro do camarote 40, e você não cabe.',
     'Mas dá pra ver.',
     'E dá pra falar.',
-    'Você põe a boca no duto e fala, muito baixo: "Denis."',
+    'Você põe a boca no duto e fala, muito baixo: "Dorian."',
     'E do outro lado, depois de uns quatro segundos, uma voz de menino responde, muito baixa: "Quem é?"'
   ],
   ef:{flag:'falou_com_o_denis',
       rep:{eixo:'bom',delta:3,motivo:'Falou com quem estava do outro lado da parede'},
-      registrar:'Falou com Denis por um duto de ventilação do camarote 40.',
+      registrar:'Falou com Dorian por um duto de ventilação do camarote 40.',
       presagio:'"Quem é?" Ninguém perguntou isso pra ele há muito tempo.'},
   escolhas:[
     {texto:'"Um amigo do menino do cais."', vai:'c8_amigo_do_cais'},
@@ -3862,15 +3862,15 @@ c8_amigo_do_cais:{
   texto:[
     '"Um amigo do menino do cais."',
     'Silêncio comprido do outro lado.',
-    '"Do Toshi?"',
-    '"Do Toshi."',
+    '"Do Nolan?"',
+    '"Do Nolan."',
     'E aí você ouve, através de trinta centímetros de duto de ventilação de aço galvanizado, um menino de dezessete anos chorando o mais baixo que ele consegue.',
     'Você fica com o rosto encostado no duto até ele parar.',
     'Leva seis minutos.'
   ],
   ef:{flag:['achou_o_denis','o_denis_chorou'],
       rep:{eixo:'bom',delta:3,motivo:'Levou um nome conhecido através de uma parede'},
-      registrar:'Denis está vivo, no camarote 40, e sabe o nome do Toshi.',
+      registrar:'Dorian está vivo, no camarote 40, e sabe o nome do Nolan.',
       presagio:'Seis minutos com o rosto num duto de ventilação. Isso vai ficar.'},
   escolhas:[
     {texto:'"Eu vou tirar vocês daí."', vai:'c8_vai_tirar'},
@@ -3917,7 +3917,7 @@ c8_vai_tirar:{
     '"Tira eu daqui e me põe aonde?"'
   ],
   ef:{flag:'me_poe_aonde',
-      registrar:'Denis recusou ser tirado: "tira eu daqui e me põe aonde?"',
+      registrar:'Dorian recusou ser tirado: "tira eu daqui e me põe aonde?"',
       presagio:'"Me põe aonde?" É a pergunta que derruba quase toda intenção boa de Kanto.'},
   escolhas:[
     {texto:'"Comigo."', vai:'c8_comigo'},
@@ -3934,14 +3934,14 @@ c8_comigo:{
     'Silêncio muito longo.',
     '"Você tem quantos anos?"',
     '"Quinze."',
-    'E o Denis ri. Ri de verdade, do outro lado, um riso curto e sem nenhuma maldade.',
+    'E o Dorian ri. Ri de verdade, do outro lado, um riso curto e sem nenhuma maldade.',
     '"Cara."',
     'Pausa.',
     '"Tá bom."'
   ],
   ef:{flag:['o_denis_topou','achou_o_denis'],
       rep:{eixo:'bom',delta:3,motivo:'Ofereceu o que não tinha e ofereceu mesmo assim'},
-      registrar:'Denis topou sair, com você, sem plano nenhum.',
+      registrar:'Dorian topou sair, com você, sem plano nenhum.',
       presagio:'"Tá bom." Ele topou porque alguém ofereceu. Era só isso que faltava, e faltou por um ano.'},
   escolhas:[
     {texto:'Ir bater na porta do 40 agora.', vai:'c8_bateu_no_40'},
@@ -3974,17 +3974,17 @@ c8_nao_sei_mas_nao_ai:{
 c8_arranjou_a_cama:{
   texto:[
     'Você passa a madrugada inteira nisso.',
-    'Acorda a enfermeira. Acorda o contramestre. Acorda a Neusa da cozinha, que dorme no alojamento de temporada e que te xinga por quatro minutos antes de escutar.',
+    'Acorda a enfermeira. Acorda o contramestre. Acorda a Rina da cozinha, que dorme no alojamento de temporada e que te xinga por quatro minutos antes de escutar.',
     'E às cinco e quarenta da manhã existe, escrito num papel de carta de camarote, assinado por três funcionários do S.S. Anne:',
-    'uma vaga de auxiliar de cozinha, com registro, com carteira, com alojamento, começando na próxima temporada — e um lugar pra dormir em Cinnabar até lá, na casa da irmã da Neusa, que aluga quarto.',
+    'uma vaga de auxiliar de cozinha, com registro, com carteira, com alojamento, começando na próxima temporada — e um lugar pra dormir em Cinnabar até lá, na casa da irmã da Rina, que aluga quarto.',
     'Não é resgate. É muito mais chato que resgate e leva sete horas e envolve três pessoas assinando coisa.',
     'Você bate na porta do 40 às seis da manhã com o papel na mão.'
   ],
   ef:{rep:{eixo:'bom',delta:5,motivo:'Passou a madrugada inteira arranjando uma cama antes de abrir uma porta'},
       hp:-3, causa:'Noite em claro no S.S. Anne',
       flag:['arranjou_a_cama','com_testemunha'],
-      npc:{nome:'Cozinheira do Anne', opiniao:6, memoria:'Você a acordou às três da manhã e ela assinou uma vaga de auxiliar de cozinha pro Denis.'},
-      registrar:'Arranjou vaga com registro e alojamento para o Denis antes de abrir a porta.',
+      npc:{nome:'Cozinheira do Anne', opiniao:6, memoria:'Você a acordou às três da manhã e ela assinou uma vaga de auxiliar de cozinha pro Dorian.'},
+      registrar:'Arranjou vaga com registro e alojamento para o Dorian antes de abrir a porta.',
       presagio:'Não é resgate. É sete horas e três assinaturas. É assim que as coisas funcionam de verdade.'},
   escolhas:[
     {texto:'Bater na porta.', vai:'c8_bateu_no_40'},
@@ -4381,8 +4381,8 @@ c8_fim_navio:{
     'Você desce com o resto e ninguém te olha duas vezes.',
     d=>{
       if (d.flags.tirou_os_dois_do_40 || d.flags.abriu_o_40) return 'Dois adolescentes descem atrás de você, sem mala, com a roupa do corpo, e param no fim da passarela sem saber pra onde ir.';
-      if (d.flags.arranjou_a_cama) return 'Denis desce com um papel de carta dobrado no bolso e um endereço em Cinnabar escrito atrás, e uma vaga com registro pra próxima temporada.';
-      if (d.flags.o_denis_topou) return 'Você procura o Denis no desembarque e não acha. O camarote 40 desembarcou antes, por uma prancha de serviço, às cinco da manhã.';
+      if (d.flags.arranjou_a_cama) return 'Dorian desce com um papel de carta dobrado no bolso e um endereço em Cinnabar escrito atrás, e uma vaga com registro pra próxima temporada.';
+      if (d.flags.o_denis_topou) return 'Você procura o Dorian no desembarque e não acha. O camarote 40 desembarcou antes, por uma prancha de serviço, às cinco da manhã.';
       if (d.flags.respeitou_o_denis) return 'Em algum lugar dessa passarela tem um menino de dezessete anos que te pediu pra não abrir a porta, e você não abriu, e você vai carregar isso.';
       return 'Em algum lugar desse navio ficou uma coisa que você viu e não resolveu, e o navio vai zarpar de novo em três dias.';
     },

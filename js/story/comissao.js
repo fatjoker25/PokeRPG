@@ -51,7 +51,7 @@ const GENTE_COMISSAO = {
     descricao:'Faz o trabalho de rua. Não gosta do trabalho de rua. Faz mesmo assim, bem, todos os dias.'
   },
   tecnico:{
-    nome:'Dr. Amano', cargo:'Técnico-chefe de Viveiro',
+    nome:'Dr. Hollis', cargo:'Técnico-chefe de Viveiro',
     descricao:'Trabalhou na Silph até o andar 11 ser lacrado. Migrou com o projeto, como se muda de sala.'
   }
 };

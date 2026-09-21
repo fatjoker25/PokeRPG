@@ -1671,7 +1671,7 @@ c7_levou_os_dois:{
   texto:[
     'Você paga a van de Lavender pra levar os três — você, o Marowak e o Cubone — até Celadon, o que custa quase tudo que você tem e leva cinco horas.',
     'O Cubone é operado. A pata vai ficar torta e vai funcionar.',
-    'O treinador acorda no dia seguinte. Chama-se Hideo, tem vinte e dois anos, e a primeira coisa que ele pergunta é pelo Marowak.',
+    'O treinador acorda no dia seguinte. Chama-se Elias, tem vinte e dois anos, e a primeira coisa que ele pergunta é pelo Marowak.',
     'Você fala. Ele chora de um jeito que adulto nenhum devia chorar num corredor de hospital.',
     'Depois ele pergunta quantos dias foram.',
     'Você diz quatro.',
@@ -1679,9 +1679,9 @@ c7_levou_os_dois:{
   ],
   ef:{dinheiro:-2500, rep:{eixo:'bom',delta:4,motivo:'Pagou a van e levou os três até Celadon'},
       flag:['salvou_treinador_torre','conhece_o_hideo'],
-      npc:{nome:'Hideo', opiniao:8, memoria:'Você o tirou do sexto andar da Torre de Lavender depois de quatro dias caído. Ele não esquece.'},
+      npc:{nome:'Elias', opiniao:8, memoria:'Você o tirou do sexto andar da Torre de Lavender depois de quatro dias caído. Ele não esquece.'},
       registrar:'Levou o treinador, o Marowak e o Cubone até o hospital de Celadon.',
-      presagio:'Hideo, vinte e dois anos. Você vai reencontrar ele, e não vai ser num hospital.'},
+      presagio:'Elias, vinte e dois anos. Você vai reencontrar ele, e não vai ser num hospital.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c7_fim'},
     {texto:'Ficar até ele ter alta.', vai:'c7_ficou_ate_alta'}
@@ -1700,7 +1700,7 @@ c7_ficou_ate_alta:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou três dias esperando a alta de um desconhecido'},
       flag:'sabe_do_hideo', hp:-2, causa:'Três dias dormindo em Centro Pokémon',
-      npc:{nome:'Hideo', opiniao:10, memoria:'Você ficou três dias em Celadon até ele ter alta. Ele te contou da epilepsia.'},
+      npc:{nome:'Elias', opiniao:10, memoria:'Você ficou três dias em Celadon até ele ter alta. Ele te contou da epilepsia.'},
       presagio:'Ele escondeu um laudo por medo de uma exigência que talvez nem existisse. Isso vai acontecer com muita gente nessa história.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c7_fim'}
@@ -1828,7 +1828,7 @@ c7_contou_a_verdade:{
   texto:[
     'Você conta tudo. Sem melhorar nada.',
     'Que você achou que era ameaça. Que você atacou. Que ele estava chamando há quatro dias e você atacou.',
-    'O treinador — Hideo, vinte e dois anos — escuta inteiro, com soro no braço, olhando o teto.',
+    'O treinador — Elias, vinte e dois anos — escuta inteiro, com soro no braço, olhando o teto.',
     'Quando você acaba, ele demora.',
     '"Você subiu."',
     '"Eu bati nele."',
@@ -1838,7 +1838,7 @@ c7_contou_a_verdade:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Contou a verdade sem melhorar nada'},
       flag:'contou_a_verdade_ao_hideo',
-      npc:{nome:'Hideo', opiniao:6, memoria:'Você contou que atacou o Marowak dele antes de entender. Ele não te absolveu e agradeceu.'},
+      npc:{nome:'Elias', opiniao:6, memoria:'Você contou que atacou o Marowak dele antes de entender. Ele não te absolveu e agradeceu.'},
       presagio:'"Eu não vou te absolver." Você vai precisar disso quando alguém te absolver rápido demais.'},
   escolhas:[
     {texto:'Buscar o Cubone.', vai:'c7_cubone'},
@@ -2191,7 +2191,7 @@ c7_ajuda:{
 c7_mural_do_treinador:{
   texto:[
     'Você desce e pergunta o nome dele pro zelador, que confere na carteira que estava no bolso do rapaz.',
-    'Hideo. Vinte e dois anos.',
+    'Elias. Vinte e dois anos.',
     'Você escreve o nome dele no mural com giz. Não é o lugar certo — o mural é pra Pokémon —, mas você escreve mesmo assim, e o zelador vê e não impede.',
     'Depois você escreve, embaixo, com letra menor:',
     '"O Marowak dele chamou por quatro dias."',

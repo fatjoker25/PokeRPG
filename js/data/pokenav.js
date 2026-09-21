@@ -89,12 +89,12 @@ const CONTATOS = [
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
       fala('Sr. Ives', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
-      fala('Sr. Ives', 'A filha do Kuroda ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
-      fala('Sr. Ives', 'Ela morreu em 95 e o Kuroda vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      fala('Sr. Ives', 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      fala('Sr. Ives', 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
       fala('Sr. Ives', 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
       fala('Sr. Ives', 'Você anda por aí. Se aparecer, você vai saber que é.')
     ],
-    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Kuroda') > 0,
+    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Vernon') > 0,
     entregue:[
       d=>fala(d.jogador.nome, 'Eu achei.'),
       'Silêncio do outro lado por uns quatro segundos.',
@@ -103,10 +103,10 @@ const CONTATOS = [
       fala('Sr. Ives', 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
       fala('Sr. Ives', 'Ele vai querer conversar. Não fica.')
     ],
-    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Kuroda');
+    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Vernon');
       Estado.subirStatus('carisma');
       return [{tipo:'rep', texto:'CARISMA +1 — você aprendeu a entregar uma coisa e ir embora.'}]; },
-    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Kuroda', notorio:true},
+    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Vernon', notorio:true},
     marca:'devolveu_a_medalha'
   },
   favor:{

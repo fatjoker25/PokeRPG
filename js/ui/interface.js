@@ -358,7 +358,7 @@ const UI = {
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Ezra','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Fabre','Nadia','Kuroda'].forEach(x => n.add(x));
+     'Blue','Red','Fabre','Nadia','Vernon'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)
@@ -1718,7 +1718,7 @@ const UI = {
       </div>
       <div class="narrativa">${this.narrar(falaRivalExtra(R))}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
-        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Toshi' ? 'ele' : 'ele'}</span></div>
+        <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Nolan' ? 'ele' : 'ele'}</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
         <span class="v">${this.esc(time.map(p=>p.nome+' Nv'+p.nivel).join(', '))}</span></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
