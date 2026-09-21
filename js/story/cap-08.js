@@ -1,11 +1,395 @@
+/* ------------------------------------------------------------
+   ABERTURAS — porto é lugar de portão, e portão separa quem
+   entra de quem fica. Quem chega com dinheiro, quem chega sem,
+   quem chega com crachá e quem chega com nome na boca do povo
+   encontram portões diferentes.
+   ------------------------------------------------------------ */
+const C8_ABERTURAS = ['c8_chegada', 'c8_ab_sem_passagem', 'c8_ab_parede_de_gente', 'c8_ab_convite', 'c8_ab_pelo_portao_de_carga'];
+function c8_cabe(id, d){
+  if (id === 'c8_ab_sem_passagem') return d.jogador.dinheiro < 2000;
+  if (id === 'c8_ab_convite')      return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4;
+  if (id === 'c8_ab_pelo_portao_de_carga')
+    return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3 || d.via === 'foragido';
+  return true;
+}
+function c8_abertura(d){
+  const cand = C8_ABERTURAS.filter(id => c8_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 8 — TODO MUNDO PAGA PASSAGEM  (Vermilion / S.S. Anne)
    ============================================================ */
 CAPITULOS.push(
 {
 num:8, titulo:'Todo Mundo Paga Passagem', local:'Vermilion / S.S. Anne', ambiente:'agua', nivelArea:30,
-tom:'sombrio', inicio:'c8_chegada',
+tom:'sombrio', entradas:C8_ABERTURAS,
+inicio: d => c8_abertura(d),
 cenas:{
+
+c8_ab_sem_passagem:{
+  texto:[
+    'A passarela do cais três tem uma roleta e a roleta tem um preço, e o preço está numa placa de acrílico em quatro idiomas.',
+    'Visitação a bordo: 2.000 ₽.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽.`,
+    'Tem umas quinze pessoas encostadas no gradil do lado de fora, olhando o navio, e você entende em cinco segundos que as quinze estão na mesma situação que você.',
+    'Ninguém fala isso em voz alta. Todo mundo olha o navio como se estivesse ali pela vista.',
+    'Um rapaz mais ou menos da sua idade cospe no chão sem mirar em nada.',
+    fala('o rapaz do gradil', 'Dois mil pra subir num barco que não vai a lugar nenhum.'),
+    d=>fala(d.jogador.nome, 'Ele não navega?'),
+    fala('o rapaz do gradil', 'Navega quatro vezes por ano. O resto do tempo ele é um hotel que flutua.'),
+    fala('o rapaz do gradil', 'E quem tá lá dentro não pagou dois mil, ó. Quem tá lá dentro foi convidado.')
+  ],
+  ef:{flag:'ficou_do_lado_de_fora', registrar:'A visitação ao S.S. Anne custa 2.000 ₽. Você ficou no gradil.'},
+  escolhas:[
+    {texto:'Perguntar como se consegue convite.', vai:'c8_ab_como_se_consegue'},
+    {texto:'Procurar trabalho no cais pra levantar os dois mil.', vai:'c8_ab_trabalho'},
+    {texto:'Dar a volta e procurar outro jeito de entrar.', vai:'c8_ab_a_volta'},
+    {texto:'Deixar o navio pra depois e andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_como_se_consegue:{
+  texto:[
+    'Ele ri e o riso não é simpático nem antipático, é só cansado.',
+    fala('o rapaz do gradil', 'Três jeitos. Ser rico, ser famoso, ou trabalhar lá dentro.'),
+    fala('o rapaz do gradil', 'Meu tio trabalha. Cozinha. Entra pelo portão de carga às quatro da manhã e sai às onze da noite, e ele já subiu nesse navio mais vezes que qualquer milionário de Kanto.'),
+    d=>fala(d.jogador.nome, 'E ele conta o que tem lá dentro?'),
+    'O rapaz para de olhar o navio e olha pra você pela primeira vez.',
+    fala('o rapaz do gradil', 'Ele contava. Faz umas três semanas que ele parou de contar.', 'baixo'),
+    fala('o rapaz do gradil', 'Continua indo todo dia. Só parou de contar.')
+  ],
+  ef:{flag:'o_tio_parou_de_contar',
+      registrar:'Um cozinheiro do S.S. Anne parou de contar o que vê a bordo, mas continua indo todo dia.',
+      presagio:'Quem para de contar viu alguma coisa que dá medo de repetir.'},
+  escolhas:[
+    {texto:'Perguntar onde fica o portão de carga.', vai:'c8_ab_a_volta'},
+    {texto:'Procurar trabalho no cais.', vai:'c8_ab_trabalho'},
+    {texto:'Ir andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_trabalho:{
+  texto:[
+    'O cais contrata por dia e contrata na hora: tem um quadro de giz do lado do galpão dois com o que precisa e quanto paga.',
+    'Descarga de contêiner refrigerado, 400 ₽ por turno de quatro horas. Limpeza de casco, 700 ₽ e você trabalha pendurado. Conferência de carga, 900 ₽ e precisa saber ler rápido.',
+    'O homem da prancheta te mede de cima a baixo sem nenhuma grosseria, do jeito que se mede um saco pra saber se cabe.',
+    fala('o conferente', 'Idade?'),
+    d=>fala(d.jogador.nome, 'Quinze.'),
+    fala('o conferente', 'Então não é limpeza de casco. Pendurado só com dezoito.'),
+    'Ele escreve o seu nome numa lista de doze e a lista de doze é o turno das duas.'
+  ],
+  ef:{flag:'pegou_turno_no_cais', registrar:'Se inscreveu para um turno de trabalho no cais de Vermilion.'},
+  escolhas:[
+    {texto:'Pegar a descarga de refrigerado. 400 ₽.', vai:'c8_ab_refrigerado'},
+    {texto:'Pegar a conferência de carga. 900 ₽.', vai:'c8_ab_conferencia'},
+    {texto:'Desistir e ir andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_refrigerado:{
+  texto:[
+    'Quatro horas dentro de um contêiner a dois graus, tirando caixa de peixe de um lado e pondo do outro.',
+    'Nos primeiros quarenta minutos é suportável. Depois da primeira hora, as pontas dos dedos param de ter opinião sobre o que estão segurando.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} passa os quatro turnos do lado de fora do contêiner, sentado na doca, e não sai de lá.`
+               : 'Você faz as quatro horas sozinho e não é a pior coisa que já aconteceu essa semana.';
+    },
+    'No fim, o conferente conta quatrocentos na sua mão em notas usadas e você sai do galpão com o cheiro no cabelo.',
+    'O cheiro vai levar dois dias pra sair. Isso não estava no quadro de giz.'
+  ],
+  ef:{dinheiro:400, hp:-3, flag:'trabalhou_no_frio',
+      registrar:'Trabalhou quatro horas num contêiner refrigerado. 400 ₽.'},
+  escolhas:[
+    {texto:'Pegar outro turno.', vai:'c8_ab_trabalho'},
+    {texto:'Ir pro navio com o que você tem.', vai:'c8_cais'},
+    {texto:'Chega. Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_conferencia:{
+  texto:[
+    'Conferência de carga é o trabalho mais fácil do cais e por isso paga mais, o que é uma das coisas mais estranhas que você já viu.',
+    'Você fica com uma prancheta na mão de manifesto e confere número de contêiner contra número de lista enquanto eles passam.',
+    'Quatro horas. Duzentos e onze contêineres. Duzentos e nove batem.',
+    'Os dois que não batem estão no manifesto do S.S. Anne e a descrição dos dois é "suprimentos de bordo — perecível".',
+    'Contêiner de perecível é refrigerado. Esses dois não são: são secos, lacrados, e têm furo de ventilação de trinta em trinta centímetros na lateral.',
+    'Você aponta pro conferente. Ele olha, confere, e faz uma coisa que você não esperava: risca a sua observação da prancheta com a caneta dele.',
+    fala('o conferente', 'Esses dois são do navio.'),
+    d=>fala(d.jogador.nome, 'Eu sei. Tá errado.'),
+    fala('o conferente', 'Esses dois são do navio.', 'frio')
+  ],
+  ef:{dinheiro:900, flag:'dois_conteineres_com_furo',
+      registrar:'Dois contêineres do S.S. Anne têm furo de ventilação e manifesto de perecível seco. O conferente riscou a observação.',
+      presagio:'Furo de ventilação existe por um motivo só, e não é para conservar comida.'},
+  escolhas:[
+    {texto:'Insistir com o conferente.', vai:'c8_ab_insistiu'},
+    {texto:'Não insistir. Pegar o dinheiro e ir pro navio.', vai:'c8_cais'},
+    {texto:'Não insistir. Andar pela cidade e pensar.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_insistiu:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Tem furo de ventilação na lateral.'),
+    'Ele para de andar. Olha pros lados antes de falar, e no cais de Vermilion olhar pros lados não adianta nada porque tem trezentas pessoas em volta.',
+    fala('o conferente', 'Escuta. Eu faço isso há dezenove anos.'),
+    fala('o conferente', 'Eu já conferi carga que eu sabia o que era. Já conferi carga que eu não quis saber.'),
+    fala('o conferente', 'A diferença entre as duas é que na segunda eu ainda tenho emprego.', 'baixo'),
+    'Ele arranca a folha do manifesto, dobra em quatro, e põe no seu bolso sem pedir licença.',
+    fala('o conferente', 'Some com isso. E não trabalha mais nesse cais essa semana.')
+  ],
+  ef:{flag:'provas_navio',
+      npc:{nome:'o conferente', opiniao:1, viuVoce:'Te deu a folha do manifesto e te mandou sumir do cais.'},
+      registrar:'O conferente te entregou a folha do manifesto com os dois contêineres irregulares.'},
+  escolhas:[
+    {texto:'Ir pro cais três olhar o navio de perto.', vai:'c8_cais'},
+    {texto:'Andar pela cidade primeiro.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_a_volta:{
+  texto:[
+    'O cais três tem um portão de visitação e tem um portão de carga, e o de carga fica oitocentos metros mais pro norte, depois do galpão sete.',
+    'Não tem roleta. Tem uma cancela de ferro, um guarita com um homem dentro e um fluxo de caminhão que não para.',
+    'Você fica vinte minutos olhando e aprende três coisas.',
+    'Uma: ninguém apresenta documento. Duas: todo mundo que entra a pé está de colete laranja. Três: tem uma pilha de coletes laranja num carrinho do lado de fora da guarita, e o carrinho está ali porque os coletes são de todo mundo e de ninguém.',
+    'O homem da guarita está de costas, resolvendo alguma coisa num telefone de fio.'
+  ],
+  ef:{flag:'viu_o_portao_de_carga', registrar:'O portão de carga do cais três não pede documento — pede colete laranja.'},
+  escolhas:[
+    {texto:'Pegar um colete e entrar.', vai:'c8_ab_de_colete_entrou'},
+    {texto:'Não. Voltar pro portão de visitação.', vai:'c8_cais'},
+    {texto:'Andar pela cidade e pensar no assunto.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_de_colete_entrou:{
+  texto:[
+    'Você veste o colete no meio do caminho, sem parar de andar, que é a única maneira de fazer isso sem parecer que você está fazendo isso.',
+    'Passa pela cancela atrás de um carrinho de empilhadeira. O homem da guarita não olha.',
+    'Do lado de dentro, o porto é outro lugar: menos organizado, mais barulhento, e com muito mais gente parada do que se vê de fora.',
+    'Ninguém pergunta nada. Um colete laranja é um passaporte perfeito porque ele responde a pergunta antes dela ser feita.',
+    'O S.S. Anne está a duzentos metros e daqui dá pra ver o que não dá pra ver do gradil: tem uma segunda passarela, menor, na popa, e por ela não sobe passageiro nenhum.'
+  ],
+  ef:{flag:['entrou_de_colete','segunda_passarela'],
+      rep:{eixo:'ruim', delta:1, motivo:'Entrou na área restrita do porto vestindo um colete que não era seu.'},
+      registrar:'Entrou no cais três pelo portão de carga, de colete. Tem uma segunda passarela na popa.'},
+  escolhas:[
+    {texto:'Seguir até a segunda passarela.', vai:'c8_cais'},
+    {texto:'Andar pela área de carga vendo o que dá pra ver.', vai:'c8_olhou_o_porto'}
+  ]
+},
+
+c8_ab_parede_de_gente:{
+  texto:[
+    'Vermilion cheira a sal, diesel e fritura, e hoje cheira também a gente parada, que é um cheiro diferente de gente andando.',
+    'Tem uma parede de gente no fim da Avenida do Porto. Umas duzentas pessoas, faixa pintada à mão, e um homem em cima de uma caixa de feira com um megafone de pilha.',
+    'A faixa diz: CONTÊINER LACRADO NÃO É CARGA, É CONTRABANDO.',
+    fala('o homem do megafone', 'Dezenove! Dezenove contêineres em dois meses que ninguém abriu, ninguém pesou, ninguém conferiu!'),
+    fala('o homem do megafone', 'E todos com destino registrado no mesmo navio!'),
+    'Do outro lado da rua, a uns quarenta metros, tem oito guardas portuários parados em linha, sem capacete, sem escudo, com as mãos pra trás.',
+    'Eles não estão ali pra dispersar ninguém. Estão ali pra ser vistos.',
+    d=>{
+      const r = Estado.nomeRep();
+      if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4) return `Alguém no meio da multidão te reconhece e fala "${r}" alto demais, e umas trinta cabeças viram ao mesmo tempo.`;
+      return 'Ninguém te reconhece. Você é mais uma pessoa que parou pra ver o que era.';
+    }
+  ],
+  ef:{flag:'a_manifestacao_do_porto',
+      registrar:'Duzentas pessoas protestam no porto de Vermilion contra dezenove contêineres lacrados em dois meses.'},
+  escolhas:[
+    {texto:'Ficar e ouvir o homem do megafone até o fim.', vai:'c8_ab_ouviu'},
+    {texto:'Ir falar com os guardas do outro lado.', vai:'c8_ab_os_guardas'},
+    {texto:'Contornar e descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_ouviu:{
+  texto:[
+    'Ele fala mais dezoito minutos e nos dezoito minutos não repete nenhum número, o que quer dizer que ele anotou tudo antes.',
+    'No fim ele desce da caixa e vira uma pessoa normal de uns cinquenta anos com uma camisa suada, e é essa versão dele que fala com você quando você chega perto.',
+    fala('o homem do megafone', 'Você é de onde?'),
+    d=>fala(d.jogador.nome, 'De passagem.'),
+    fala('o homem do megafone', 'Todo mundo aqui é de passagem. Eu sou daqui e sou de passagem.'),
+    'Ele enrola o fio do megafone com muito cuidado, na dobra certa, como quem vai usar de novo amanhã.',
+    fala('o homem do megafone', 'A gente tá aqui há onze dias. Sabe quantos jornalistas vieram?'),
+    d=>fala(d.jogador.nome, 'Quantos?'),
+    fala('o homem do megafone', 'Dois. Os dois do jornal de Vermilion. Os dois escreveram. Nenhum dos dois saiu impresso.')
+  ],
+  ef:{flag:'nada_saiu_impresso',
+      npc:{nome:'o homem do megafone', opiniao:1, viuVoce:'Você ficou até o fim da fala dele no porto.'},
+      registrar:'Dois repórteres escreveram sobre os contêineres de Vermilion. Nenhuma das duas matérias saiu impressa.',
+      presagio:'Matéria escrita que não sai impressa foi parada por alguém acima do repórter.'},
+  escolhas:[
+    {texto:'Perguntar o nome dos dois jornalistas.', vai:'c8_ab_os_nomes'},
+    {texto:'Descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_os_nomes:{
+  texto:[
+    fala('o homem do megafone', 'Saya Kurata e um rapaz novo que eu não lembro o sobrenome.'),
+    'Você anota. Ele repara que você anota e isso muda a cara dele.',
+    fala('o homem do megafone', 'A Kurata voltou aqui depois. Sozinha, sem crachá, de tarde.'),
+    fala('o homem do megafone', 'Ela não perguntou nada sobre o protesto. Ela perguntou o horário da maré.'),
+    d=>fala(d.jogador.nome, 'Da maré?'),
+    fala('o homem do megafone', 'Da maré. E foi embora com o horário anotado.'),
+    'Ele dá de ombros, mas é um dar de ombros que sabe que aquilo significa alguma coisa.'
+  ],
+  ef:{flag:'kurata_perguntou_da_mare',
+      npc:{nome:'Saya Kurata', conhece:true, viuVoce:'Ainda não te viu — você ouviu falar dela primeiro.'},
+      registrar:'Saya Kurata voltou ao porto sem crachá e perguntou o horário da maré.'},
+  escolhas:[
+    {texto:'Descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_os_guardas:{
+  texto:[
+    'Você atravessa a rua e chega nos oito, e os oito te veem chegar de longe e nenhum muda de posição.',
+    'O do meio é o que fala, o que quer dizer que ele é o que manda.',
+    fala('o guarda do meio', 'Não pode passar por aqui.'),
+    d=>fala(d.jogador.nome, 'Eu não ia passar. Eu ia perguntar.'),
+    'Isso desarma ele por meio segundo.',
+    fala('o guarda do meio', 'Pergunta.'),
+    d=>fala(d.jogador.nome, 'Vocês vão abrir os contêineres?'),
+    'Silêncio. O guarda da ponta esquerda muda o peso de perna.',
+    fala('o guarda do meio', 'A gente não abre contêiner. A gente guarda portão.'),
+    fala('o guarda do meio', 'Quem abre contêiner é a alfândega.'),
+    d=>fala(d.jogador.nome, 'E a alfândega tá aonde?'),
+    'Ele olha pro lado, pro prédio da alfândega, que está a cento e vinte metros com as luzes acesas e a porta fechada, e que está assim há onze dias.',
+    fala('o guarda do meio', 'Boa pergunta.', 'baixo')
+  ],
+  ef:{flag:'alfandega_fechada_ha_onze_dias',
+      registrar:'A alfândega de Vermilion está de luz acesa e porta fechada há onze dias.'},
+  escolhas:[
+    {texto:'Ir até a porta da alfândega.', vai:'c8_ab_a_porta'},
+    {texto:'Voltar pro protesto.', vai:'c8_ab_ouviu'},
+    {texto:'Descer pro cais três.', vai:'c8_cais'}
+  ]
+},
+
+c8_ab_a_porta:{
+  texto:[
+    'A porta da alfândega é de vidro fumê com um adesivo do brasão de Kanto descascando na altura do joelho.',
+    'Tem um papel colado por dentro, impresso, com data de onze dias atrás:',
+    'ATENDIMENTO SUSPENSO POR TEMPO INDETERMINADO — REESTRUTURAÇÃO INTERNA.',
+    'Você bate. Bate de novo. Na terceira vez, uma sombra passa do lado de dentro e não para.',
+    'Você fica olhando o vidro até entender que o reflexo é melhor que a transparência: no reflexo, dá pra ver os oito guardas do outro lado da rua todos virados pra você.',
+    'Os oito. Ao mesmo tempo.'
+  ],
+  ef:{flag:'bateu_na_alfandega',
+      registrar:'Tem gente dentro da alfândega de Vermilion, com o atendimento suspenso há onze dias.',
+      presagio:'Prédio fechado com gente dentro não está fechado. Está escolhendo quem entra.'},
+  escolhas:[
+    {texto:'Descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_convite:{
+  texto:[
+    'Você não chega a andar cem metros dentro de Vermilion.',
+    'Tem um homem de terno claro encostado num carro parado na entrada da cidade, e ele levanta a mão quando te vê, do jeito que se chama um táxi.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Ele fala o seu nome e depois "${r}" e depois sorri, e a ordem dessas três coisas foi ensaiada.`;
+    },
+    fala('o homem de terno claro', 'O comandante pediu pra eu te esperar aqui desde ontem.'),
+    d=>fala(d.jogador.nome, 'Que comandante?'),
+    fala('o homem de terno claro', 'Do S.S. Anne. Ele acompanha o que sai nos jornais.'),
+    'Ele abre a porta de trás do carro, o que é um jeito de encerrar a conversa.',
+    fala('o homem de terno claro', 'Jantar às oito. Terno a gente empresta. Você só precisa entrar no carro.'),
+    'A distância da entrada de Vermilion até o cais três é de dois quilômetros e meio, e a pé leva quarenta minutos, e você tem as duas opções na mão.'
+  ],
+  ef:{flag:'convite_do_comandante',
+      registrar:'O comandante do S.S. Anne mandou um carro te esperar na entrada de Vermilion.',
+      presagio:'Convite que te espera desde ontem não é convite. É captura com boas maneiras.'},
+  escolhas:[
+    {texto:'Entrar no carro.', vai:'c8_ab_entrou_no_carro'},
+    {texto:'Recusar e ir a pé.', vai:'c8_ab_recusou_o_carro'},
+    {texto:'Perguntar por que ele está te esperando desde ontem.', vai:'c8_ab_desde_ontem'}
+  ]
+},
+
+c8_ab_desde_ontem:{
+  texto:[
+    'Ele não perde o sorriso mas leva um segundo a mais pra responder do que levou pra falar o seu nome.',
+    fala('o homem de terno claro', 'Porque o comandante achou que você chegaria ontem.'),
+    d=>fala(d.jogador.nome, 'E como ele sabia que eu chegaria?'),
+    fala('o homem de terno claro', 'Você veio de Lavender pela Rota 11. Tem uma estrada só.'),
+    'Isso é verdade e não responde nada.',
+    fala('o homem de terno claro', 'Olha, eu sou motorista. Eu dirijo e eu espero. Quem sabe as coisas é quem manda esperar.'),
+    'Ele destranca a porta de trás de novo, e dessa vez o gesto tem menos certeza.'
+  ],
+  ef:{flag:'o_motorista_nao_sabe',
+      registrar:'O carro te esperava desde ontem. O motorista não sabe como sabiam da sua rota.'},
+  escolhas:[
+    {texto:'Entrar no carro.', vai:'c8_ab_entrou_no_carro'},
+    {texto:'Recusar e ir a pé.', vai:'c8_ab_recusou_o_carro'}
+  ]
+},
+
+c8_ab_entrou_no_carro:{
+  texto:[
+    'O carro desce a cidade inteira em seis minutos e não para em nenhum sinal, o que quer dizer que ele não pegou nenhum vermelho ou que ele não para em vermelho.',
+    'Pela janela, Vermilion passa em ordem inversa à que você teria visto a pé: primeiro o cais, depois a cidade, depois o resto.',
+    'Ele entra pelo portão de carga, não pelo de visitação. A cancela sobe antes do carro chegar.',
+    'No cais três, do lado da passarela, tem um homem de uniforme branco com quatro listras douradas na manga esperando, e ele começa a andar na sua direção antes do carro parar.',
+    'Você ainda não desceu do carro e já deve alguma coisa pra alguém. Você não sabe ainda o quê.'
+  ],
+  ef:{flag:['aceitou_o_convite','entrou_pelo_portao_de_carga'],
+      registrar:'Entrou no S.S. Anne pelo portão de carga, a convite do comandante.',
+      presagio:'A cancela subiu antes do carro chegar. Esse carro passa por ali todo dia.'},
+  escolhas:[
+    {texto:'Descer e cumprimentar o comandante.', vai:'c8_cais'}
+  ]
+},
+
+c8_ab_recusou_o_carro:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu vou a pé.'),
+    fala('o homem de terno claro', 'São dois quilômetros e meio.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    'Ele fecha a porta de trás sem bater, entra no carro e desce a avenida devagar, no seu ritmo, os dois quilômetros e meio inteiros.',
+    'Ele não te ultrapassa. Ele desce na sua frente, a trinta metros, em segunda marcha, durante quarenta minutos.',
+    'No fim dos quarenta minutos você chega no cais três a pé e ele já está lá, parado, com a porta de trás aberta.',
+    fala('o homem de terno claro', 'Jantar às oito.', 'frio')
+  ],
+  ef:{flag:['recusou_o_convite','o_carro_te_seguiu'],
+      registrar:'Recusou o carro do comandante. Ele desceu a avenida inteira na sua frente, em segunda marcha.',
+      presagio:'Recusar um convite assim não cancela o convite. Só informa quem convidou.'},
+  escolhas:[
+    {texto:'Ir até a passarela do cais três.', vai:'c8_cais'},
+    {texto:'Ignorar o carro e andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_pelo_portao_de_carga:{
+  texto:[
+    'Você entra em Vermilion pela linha do trem, não pela estrada, porque a estrada tem um posto na entrada e o posto tem uma lista.',
+    'Andar em leito de linha é ilegal, cansativo e razoavelmente perigoso, e é a coisa mais sensata que você faz hoje.',
+    'Do leito da linha, o porto aparece de trás: pátio de contêiner, oficina, galpão, e só no fim a água.',
+    d=>{
+      if (d.via === 'foragido') return 'Você conhece esse tipo de entrada agora. Aprendeu em algum momento dos últimos meses e não lembra exatamente quando, o que é a parte que incomoda.';
+      return 'Você nunca tinha entrado numa cidade assim. Foi mais fácil do que devia ser, e essa é a parte que incomoda.';
+    },
+    'No pátio tem um carrinho com coletes laranja de todo mundo e de ninguém, e ninguém olha duas vezes pra quem está de colete.',
+    'A duzentos metros, o S.S. Anne: um prédio deitado na água com nove fileiras de janela acesa.'
+  ],
+  ef:{flag:'entrou_por_tras', registrar:'Entrou em Vermilion pela linha do trem, evitando o posto da estrada.'},
+  escolhas:[
+    {texto:'Pegar um colete e andar pelo pátio como se fosse seu.', vai:'c8_ab_de_colete_entrou'},
+    {texto:'Sair do pátio e entrar na cidade normalmente.', vai:'c8_cidade'},
+    {texto:'Sentar num canto e olhar o porto trabalhar antes de decidir.', vai:'c8_olhou_o_porto'}
+  ]
+},
+
 
 c8_chegada:{
   texto:[

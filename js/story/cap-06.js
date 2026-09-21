@@ -1,11 +1,240 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Cerulean é cidade de ponte, e ponte é lugar onde
+   se vê quem chega. Quem desce do Monte inteiro, quem desce
+   arrebentado e quem desce com nome já falado entram na cidade
+   por ângulos diferentes.
+   ------------------------------------------------------------ */
+const C6_ABERTURAS = ['c6_chegada', 'c6_ab_pela_agua', 'c6_ab_arrebentado', 'c6_ab_cartaz', 'c6_ab_de_cracha'];
+function c6_cabe(id, d){
+  if (id === 'c6_ab_arrebentado')
+    return (d.time || []).some(p => !p.morto && p.hp < p.hpMax * 0.5) || d.jogador.hp < Estado.hpMaxJogador() * 0.7;
+  if (id === 'c6_ab_cartaz')  return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3;
+  if (id === 'c6_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c6_abertura(d){
+  const cand = C6_ABERTURAS.filter(id => c6_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 6 — O PREÇO DE UMA COISA VIVA  (Cerulean / Rota 25)
    ============================================================ */
 CAPITULOS.push(
 {
 num:6, titulo:'O Preço de Uma Coisa Viva', local:'Cerulean / Rota 25', ambiente:'agua', nivelArea:22,
-tom:'sombrio', inicio:'c6_chegada',
+tom:'sombrio', entradas:C6_ABERTURAS,
+inicio: d => c6_abertura(d),
 cenas:{
+
+c6_ab_pela_agua:{
+  texto:[
+    'A saída norte do Monte da Lua dá num córrego, e o córrego dá no rio, e tem um homem com uma chata de fundo chato amarrada numa raiz esperando exatamente isso: gente saindo da caverna sem vontade nenhuma de andar mais.',
+    fala('o barqueiro', 'Cento e vinte até a ponte sul. Cento e oitenta se você quiser que eu vá devagar.'),
+    d=>fala(d.jogador.nome, 'Por que alguém pagaria mais pra ir mais devagar?'),
+    fala('o barqueiro', 'Você acabou de sair do Monte da Lua e tá me perguntando isso.'),
+    'Você paga os cento e vinte, porque cento e oitenta é dinheiro, e ele vai devagar do mesmo jeito.',
+    'O rio leva quarenta minutos e nos quarenta minutos não acontece absolutamente nada, e isso é a coisa mais generosa que te aconteceu em três dias.',
+    'Cerulean aparece de baixo pra cima: primeiro as estacas das pontes, depois as pontes, depois a cidade em cima delas.'
+  ],
+  ef:{dinheiro:-120, flag:'desceu_de_chata', registrar:'Desceu o rio de chata até Cerulean.'},
+  escolhas:[
+    {texto:'Descer na ponte sul e ir ver o movimento.', vai:'c6_ponte_norte'},
+    {texto:'Perguntar ao barqueiro o que mudou na cidade.', vai:'c6_ab_o_que_mudou'},
+    {texto:'Descer e procurar onde se come.', vai:'c6_peixe'}
+  ]
+},
+
+c6_ab_o_que_mudou:{
+  texto:[
+    'Ele demora a responder porque está manobrando, e manobrar uma chata exige as duas mãos e metade da cabeça.',
+    fala('o barqueiro', 'Apareceu comprador.'),
+    d=>fala(d.jogador.nome, 'Comprador de quê?'),
+    fala('o barqueiro', 'De bicho. De Pokémon.'),
+    'Ele encosta a chata na escadinha de pedra e amarra com um nó que leva um segundo e meio.',
+    fala('o barqueiro', 'Sempre teve, né. Sempre teve gente comprando e vendendo. Mas agora tem preço de tabela.', 'baixo'),
+    fala('o barqueiro', 'Quando vira tabela, não é mais um sujeito. É um negócio.')
+  ],
+  ef:{flag:'sabe_da_tabela', registrar:'Em Cerulean, comprar e vender Pokémon virou negócio com preço de tabela.',
+      presagio:'Preço de tabela precisa de alguém que faça a tabela.'},
+  escolhas:[
+    {texto:'Descer e ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
+    {texto:'Descer e olhar a cidade com calma.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_arrebentado:{
+  texto:[
+    'Você atravessa a primeira ponte de Cerulean encostando na mureta a cada vinte metros, e a mureta é fria e é boa.',
+    'A cidade tem barulho de água o tempo todo e hoje isso não é bonito, é só barulho.',
+    d=>{
+      const p = (d.time || []).filter(x => !x.morto && x.hp < x.hpMax * 0.5)[0];
+      return p ? `${nomeExib(p)} está na bola porque não dava pra andar do lado de fora, e você fica com a mão em cima da bola o caminho inteiro sem perceber que está fazendo isso.`
+               : 'Você está inteiro por fora e nem um pouco por dentro, que é uma distinção que ninguém na rua consegue fazer olhando.';
+    },
+    'O Centro Pokémon de Cerulean fica na terceira quadra depois da ponte e tem uma fila de quatro pessoas, e as quatro estão iguais a você.',
+    'Vocês não conversam. Ninguém que saiu do Monte da Lua hoje quer conversar.',
+    'A enfermeira olha a sua ficha, olha você, e não pergunta nada. É o segundo Centro de Kanto em volume de atendimento e ela parou de perguntar faz tempo.'
+  ],
+  ef:{curaTime:true, flag:'chegou_quebrado_em_cerulean',
+      registrar:'Chegou a Cerulean direto pro Centro Pokémon, e não foi o único.'},
+  escolhas:[
+    {texto:'Esperar sentado até terminarem o atendimento.', vai:'c6_ab_sala_de_espera'},
+    {texto:'Sair e ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
+    {texto:'Sair e sentar na beira do rio.', vai:'c6_beira'}
+  ]
+},
+
+c6_ab_sala_de_espera:{
+  texto:[
+    'A sala de espera do Centro de Cerulean tem doze cadeiras e uma televisão presa no alto com o som desligado.',
+    'Na televisão está passando um programa sobre a Liga com o volume mudo, e todo mundo olha mesmo assim, porque o alternativo é olhar um pro outro.',
+    'A mulher do seu lado é uns dez anos mais velha e tem uma bandagem no antebraço que ela mesma fez.',
+    fala('a mulher da bandagem', 'Monte da Lua?'),
+    d=>fala(d.jogador.nome, 'Monte da Lua.'),
+    fala('a mulher da bandagem', 'Terceira vez que eu venho parar aqui vindo de lá.'),
+    'Ela fala isso com um orgulho triste, do tipo que a pessoa não sabe que está demonstrando.',
+    fala('a mulher da bandagem', 'Uma dica: nessa cidade não aceita bicho como pagamento em lugar nenhum. Se alguém te oferecer isso, é porque não é loja.', 'baixo')
+  ],
+  ef:{flag:'aviso_do_pagamento_em_bicho', registrar:'Em Cerulean, quem aceita Pokémon como pagamento não é loja.'},
+  escolhas:[
+    {texto:'Perguntar quem oferece isso.', vai:'c6_ab_quem_oferece'},
+    {texto:'Agradecer e sair pra rua.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_quem_oferece:{
+  texto:[
+    'Ela olha pros lados antes de responder, e o fato de ela olhar pros lados numa sala de espera vazia é mais informativo que a resposta.',
+    fala('a mulher da bandagem', 'Tem uma casa depois da segunda ponte. Portão verde. Não tem placa.'),
+    fala('a mulher da bandagem', 'Eles não compram de qualquer um. Eles compram de quem tá precisando.'),
+    d=>fala(d.jogador.nome, 'E como eles sabem quem tá precisando?'),
+    fala('a mulher da bandagem', 'Porque quem tá precisando aparece na fila do Centro Pokémon sem dinheiro pra poção.'),
+    'Ela volta a olhar a televisão muda.',
+    fala('a mulher da bandagem', 'Eu tô te contando porque alguém me contou e eu não acreditei.')
+  ],
+  ef:{flag:'sabe_do_portao_verde', registrar:'Uma casa de portão verde, depois da segunda ponte, compra Pokémon de quem está precisando.',
+      presagio:'Quem escolhe comprar de quem está precisando escolheu o preço antes de escolher a mercadoria.'},
+  escolhas:[
+    {texto:'Sair e ir direto pra estrada velha, depois da segunda ponte.', vai:'c6_estrada_velha', cond:d=>!!d.flags.ponto_da_van},
+    {texto:'Sair pra rua e olhar a cidade primeiro.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_cartaz:{
+  texto:[
+    'Tem um quadro de avisos na cabeceira da ponte sul, daqueles com vidro e cadeado, e é ali que Cerulean pendura o que a cidade precisa saber.',
+    'Aviso de dedetização. Horário da balsa. Um cachorro perdido com foto ruim.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `E uma folha impressa, colada por dentro do vidro, com um retrato falado que não é bom e com uma palavra que é: "${r}".`;
+    },
+    d=>`A descrição diz ${Estado.descricaoFisica() || 'pouca coisa'}. É o bastante.`,
+    'Uma mulher está lendo o quadro do seu lado. Ela lê o cartaz, olha pra você, e lê o cartaz de novo.',
+    'Ela não grita. Ela dobra o jornal debaixo do braço e atravessa a ponte no sentido contrário ao seu, no passo de quem não quer que pareça pressa.',
+    'Você tem entre trinta segundos e dez minutos.'
+  ],
+  ef:{flag:'seu_retrato_na_ponte', registrar:'Seu retrato falado está no quadro de avisos da ponte sul de Cerulean.'},
+  escolhas:[
+    {texto:'Arrancar o cartaz. É vidro com cadeado, mas vidro quebra.', vai:'c6_ab_quebrou_o_vidro'},
+    {texto:'Sair da ponte e sumir no movimento da cidade.', vai:'c6_ab_sumiu'},
+    {texto:'Ficar. Deixar acontecer o que vai acontecer.', vai:'c6_ab_ficou'}
+  ]
+},
+
+c6_ab_quebrou_o_vidro:{
+  texto:[
+    'Você quebra o vidro com o cotovelo enrolado na manga, que é o jeito certo, e arranca a folha, que é o jeito errado de resolver o problema.',
+    'O barulho de vidro numa ponte de pedra viaja. Três pessoas olham. Um homem numa banca de peixe grita alguma coisa que você não ouve porque já está andando.',
+    'A folha na sua mão é uma folha. Tem mais quatro iguais em quatro quadros de avisos dessa cidade e você não sabe onde ficam os outros quatro.',
+    'Você amassa e joga no rio, e o papel boia, o que é a pior coisa que papel pode fazer nessa situação.'
+  ],
+  ef:{rep:{eixo:'ruim', delta:2, motivo:'Quebrou o quadro de avisos da ponte sul na frente de meia dúzia de pessoas.'},
+      flag:'quebrou_o_quadro', registrar:'Quebrou o quadro de avisos da ponte sul de Cerulean.'},
+  escolhas:[
+    {texto:'Sumir no movimento da cidade.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_sumiu:{
+  texto:[
+    'Você desce da ponte pelo lado de dentro, entra na primeira travessa, e faz a coisa que aprendeu sem ninguém ensinar: anda no ritmo de quem mora aqui.',
+    'Duas quadras depois passa uma viatura branca e verde no sentido da ponte, sem sirene, no passo de quem foi chamado mas não foi chamado com urgência.',
+    'Você não olha pra ela. Olhar pra viatura é o que denuncia.',
+    'Na terceira quadra tem uma feira coberta e você entra na feira, porque feira é o melhor lugar do mundo pra deixar de existir por quarenta minutos.'
+  ],
+  ef:{flag:'sumiu_na_feira', registrar:'Sumiu na feira coberta de Cerulean antes da viatura chegar na ponte.'},
+  escolhas:[
+    {texto:'Sair da feira quando esfriar e ver a cidade.', vai:'c6_chegada'},
+    {texto:'Ir direto pra estrada velha, depois da segunda ponte.', vai:'c6_estrada_velha', cond:d=>!!d.flags.ponto_da_van}
+  ]
+},
+
+c6_ab_ficou:{
+  texto:[
+    'Você fica. Encosta na mureta da ponte e olha a água, que é o que todo mundo faz nessa ponte, e espera.',
+    'Doze minutos depois param dois oficiais da Liga. Não é a polícia da cidade: é a Liga, de uniforme cinza, e isso é pior e melhor ao mesmo tempo.',
+    fala('a oficial de cinza', 'Documento.'),
+    'Você entrega. Ela lê com calma, compara com a folha do quadro, e a comparação não fecha do jeito que ela esperava que fechasse.',
+    fala('a oficial de cinza', 'Esse retrato aqui é de três semanas atrás e foi feito por alguém que te viu de longe.'),
+    fala('a oficial de cinza', 'A Liga tem três avisos abertos no seu nome. Aviso não é mandado. Você sabe a diferença?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('a oficial de cinza', 'A diferença é que hoje eu te devolvo o documento.'),
+    'Ela devolve. O parceiro dela anota alguma coisa numa prancheta e o ato de anotar demora mais do que precisaria.',
+    fala('a oficial de cinza', 'Quarto aviso é mandado. Boa estadia em Cerulean.', 'frio')
+  ],
+  ef:{flag:'tres_avisos_da_liga',
+      executar:d=>{ d.liga.avisos = Math.max(d.liga.avisos, 3); return [{tipo:'liga', texto:'A Liga registrou três avisos abertos no seu nome.'}]; },
+      registrar:'Dois oficiais da Liga te pararam na ponte sul. Três avisos abertos; o quarto vira mandado.',
+      presagio:'Ela devolveu o documento hoje. Ela disse "hoje" de propósito.'},
+  escolhas:[
+    {texto:'Seguir pra cidade com a conversa na cabeça.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `Na cabeceira da ponte sul tem um posto de fiscalização de pesca, e o rapaz do posto olha o seu crachá de ${c ? c.nome : 'serviço'} antes de olhar a sua cara.`;
+    },
+    'Isso nunca tinha acontecido com você. É uma inversão pequena e ela muda tudo.',
+    fala('o rapaz do posto', 'Você é de fora, né? Assina aqui o livro de entrada, é protocolo.'),
+    'Você assina. O livro tem quatro assinaturas hoje e a quarta é a sua.',
+    fala('o rapaz do posto', 'Então, já que você tá aqui e é do serviço — eu posso te perguntar uma coisa fora do protocolo?'),
+    d=>fala(d.jogador.nome, 'Pode.'),
+    fala('o rapaz do posto', 'Quem é que fiscaliza venda de Pokémon nessa cidade?', 'baixo'),
+    fala('o rapaz do posto', 'Eu perguntei pro meu chefe. Ele falou que é a Liga. Eu liguei pra Liga. A Liga falou que é a prefeitura.')
+  ],
+  ef:{flag:'ninguem_fiscaliza_a_venda',
+      registrar:'Nenhum órgão assume a fiscalização de venda de Pokémon em Cerulean.',
+      npc:{nome:'o rapaz do posto', opiniao:1, viuVoce:'Te reconheceu como gente do serviço na ponte sul.'},
+      presagio:'Quando dois órgãos apontam um pro outro, o que tem no meio funciona sem ninguém olhando.'},
+  escolhas:[
+    {texto:'Perguntar o que ele viu que fez ele perguntar isso.', vai:'c6_ab_o_que_ele_viu'},
+    {texto:'Anotar e seguir pra cidade.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_o_que_ele_viu:{
+  texto:[
+    'Ele fecha o livro de entrada antes de falar, o que não faz diferença nenhuma e faz toda diferença.',
+    fala('o rapaz do posto', 'Passa caminhão-gaiola por essa ponte três vezes por semana. Terça, quinta e sábado, de madrugada.'),
+    fala('o rapaz do posto', 'Gaiola de transporte é legal. Tem nota, tem tudo.'),
+    d=>fala(d.jogador.nome, 'Então qual é o problema?'),
+    fala('o rapaz do posto', 'A nota diz "material de pesca".'),
+    'Ele dá de ombros de um jeito que não é despreocupação, é impotência.',
+    fala('o rapaz do posto', 'Eu sou da pesca. Eu sei o que é material de pesca. E material de pesca não respira.')
+  ],
+  ef:{flag:'caminhao_gaiola_terca_quinta_sabado',
+      registrar:'Caminhão-gaiola atravessa Cerulean terça, quinta e sábado de madrugada, com nota de "material de pesca".'},
+  escolhas:[
+    {texto:'Ir pra estrada velha, depois da segunda ponte.', vai:'c6_estrada_velha', cond:d=>!!d.flags.ponto_da_van},
+    {texto:'Ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
+    {texto:'Andar pela cidade e entender onde você está.', vai:'c6_chegada'}
+  ]
+},
+
 
 c6_chegada:{
   texto:[

@@ -489,7 +489,6 @@ c3_seguir_cacadores:{
   ],
   ef:{flag:['seguiu_os_cacadores','provas_da_floresta','placa_da_caminhonete'],
       rep:{eixo:'ruim',delta:1,motivo:'Deixou levarem um Pokémon para descobrir para onde levavam'},
-      rep2:null,
       registrar:'Seguiu os caçadores até a caminhonete. Anotou a placa e viu mais três bolsas.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },

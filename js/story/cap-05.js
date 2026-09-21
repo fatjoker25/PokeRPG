@@ -1,11 +1,219 @@
+/* ------------------------------------------------------------
+   ABERTURAS — o Monte da Lua não recebe todo mundo igual.
+   Quem sobe de carona, quem sobe com um nome a menos no time e
+   quem sobe sem dinheiro pra pilha chegam na mesma boca de
+   caverna por estradas que não se parecem.
+   ------------------------------------------------------------ */
+const C5_ABERTURAS = ['c5_boca', 'c5_ab_carona', 'c5_ab_luto', 'c5_ab_sem_pilha', 'c5_ab_fila'];
+function c5_cabe(id, d){
+  if (id === 'c5_ab_luto')      return (d.cemiterio || []).length > 0;
+  if (id === 'c5_ab_sem_pilha') return d.jogador.dinheiro < 900;
+  if (id === 'c5_ab_fila')      return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 3;
+  return true;
+}
+function c5_abertura(d){
+  const cand = C5_ABERTURAS.filter(id => c5_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 5 — O QUE SOBROU DA ROCKET  (Monte da Lua)
    ============================================================ */
 CAPITULOS.push(
 {
 num:5, titulo:'O Que Sobrou da Rocket', local:'Monte da Lua', ambiente:'caverna', nivelArea:18,
-tom:'sombrio', inicio:'c5_boca',
+tom:'sombrio', entradas:C5_ABERTURAS,
+inicio: d => c5_abertura(d),
 cenas:{
+
+c5_ab_carona:{
+  texto:[
+    'Você não subiu a pé. Um caminhão de ração parou sozinho na subida da Rota 3, o motorista abriu a porta sem você pedir e disse "vai pro Monte?" como quem já sabe que não tem outro destino nessa estrada.',
+    'O nome dele é Kenji, ele tem cinquenta e poucos anos, e ele fala o caminho inteiro sem exigir resposta nenhuma.',
+    fala('Kenji', 'Eu faço essa subida três vezes por semana faz dezenove anos. Sabe o que mudou?'),
+    d=>fala(d.jogador.nome, 'O quê?'),
+    fala('Kenji', 'Nada. Absolutamente nada. Essa é a parte boa.'),
+    'Na última curva ele fica quieto. Fica quieto de um jeito diferente do resto do trajeto.',
+    fala('Kenji', 'Mudou uma coisa, na verdade. Tem uns dois meses que tem carro subindo de noite.', 'baixo'),
+    fala('Kenji', 'Carro bom. Desses que não deviam estar em estrada de terra.'),
+    'Ele encosta antes da boca da caverna, porque daí pra frente não é mais estrada.',
+    fala('Kenji', 'Não vou te dizer pra não entrar. Você ia entrar do mesmo jeito.')
+  ],
+  ef:{flag:'kenji_falou_dos_carros', registrar:'Kenji, caminhoneiro de ração, subiu com você até a boca do Monte da Lua.',
+      npc:{nome:'Kenji', opiniao:1, viuVoce:'Deu carona na subida da Rota 3.'},
+      presagio:'Carro bom em estrada de terra, de noite, é gente que não quer ser vista de dia.'},
+  escolhas:[
+    {texto:'Perguntar onde exatamente ele viu os carros.', vai:'c5_ab_onde'},
+    {texto:'Agradecer e descer.', vai:'c5_boca'},
+    {texto:'Perguntar se ele já entrou na caverna.', vai:'c5_ab_ja_entrou'}
+  ]
+},
+
+c5_ab_onde:{
+  texto:[
+    'Ele aponta com dois dedos, sem tirar a mão do volante, pra um ponto acima da boca da caverna.',
+    fala('Kenji', 'Ali em cima. Eles param ali em cima, não na entrada.'),
+    fala('Kenji', 'Sabe por quê? Porque da entrada dá pra te ver da estrada. Dali em cima não dá.'),
+    'Você olha pra onde ele apontou e vê uma saliência de rocha a uns quatro metros do chão, com uma sombra do lado que pode ser sombra e pode ser outra coisa.',
+    fala('Kenji', 'Eu passo de dia. De dia não tem ninguém. Isso também não me acalma.')
+  ],
+  ef:{flag:'sabe_da_saliencia', registrar:'Alguém estaciona de noite acima da boca do Monte da Lua.'},
+  escolhas:[
+    {texto:'Descer e ir ver essa saliência.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_ja_entrou:{
+  texto:[
+    'Ele ri sem alegria nenhuma.',
+    fala('Kenji', 'Uma vez. Em oitenta e nove. Levei uma lanterna de quatro pilhas e voltei em quarenta minutos.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('Kenji', 'Porque lá dentro o barulho do meu próprio pé ficava chegando depois de mim.'),
+    fala('Kenji', 'Não tem nada de sobrenatural nisso. É eco. Eu sei que é eco.'),
+    'Ele destrava a porta.',
+    fala('Kenji', 'Sabendo que é eco, eu voltei em quarenta minutos.')
+  ],
+  ef:{registrar:'Kenji entrou no Monte da Lua uma vez, em 1989, e voltou em quarenta minutos.'},
+  escolhas:[
+    {texto:'Descer.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_luto:{
+  texto:[
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length - 1];
+      return `A estrada sobe por três horas e você faz as três horas contando de novo, sem querer, o que deu errado com ${m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'ele')}.`;
+    },
+    'Não adianta. A conta não fecha melhor na terceira vez do que na primeira.',
+    'A boca do Monte da Lua é mais baixa do que você imaginava — você tem que abaixar a cabeça pra entrar, e hoje abaixar a cabeça custa mais do que devia.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} para antes de você, na entrada, e espera. Não entra sozinho. Espera.`
+               : 'Você para na entrada e o vento morno que sai da caverna bate na sua cara como se estivesse te esperando.';
+    },
+    'Do lado de dentro o ar sai morno, o que é o contrário do que uma caverna devia fazer, e hoje você não tem paciência nenhuma pra coisas que fazem o contrário do que deviam.'
+  ],
+  ef:{flag:'subiu_o_monte_de_luto', registrar:'Chegou à boca do Monte da Lua carregando uma morte recente.'},
+  escolhas:[
+    {texto:'Entrar. Parar de pensar nisso.', vai:'c5_entrada'},
+    {texto:'Sentar na boca da caverna um tempo antes.', vai:'c5_esperar'},
+    {texto:'Examinar a escada de madeira encostada na parede.', vai:'c5_escada'}
+  ]
+},
+
+c5_ab_sem_pilha:{
+  texto:[
+    'Tem uma barraca de beira de estrada a seiscentos metros da boca da caverna. Lona azul, um balcão de madeira compensada, e uma senhora que vende três coisas: água, biscoito e pilha.',
+    'A pilha é o único produto com preço escrito à mão em papelão. Quinhentos e vinte por par.',
+    d=>fala(d.jogador.nome, `Quinhentos e vinte?`),
+    fala('a senhora da barraca', 'Você tá vendo outra barraca aqui?'),
+    'Ela não diz isso com maldade. Diz com a serenidade de quem entendeu a economia do lugar antes de você.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽ e uma caverna pela frente.`,
+    fala('a senhora da barraca', 'Tem gente que entra sem. Eu não julgo. Só vendo.', 'baixo')
+  ],
+  ef:{registrar:'A barraca antes do Monte da Lua vende pilha a 520 ₽ o par.'},
+  escolhas:[
+    {texto:'Comprar o par de pilhas mesmo assim.', vai:'c5_ab_comprou', cond:d=>d.jogador.dinheiro >= 520},
+    {texto:'Não comprar. Entrar no escuro do jeito que dá.', vai:'c5_ab_sem_comprar'},
+    {texto:'Perguntar se ela vê muita gente entrando.', vai:'c5_ab_quem_entra'}
+  ]
+},
+
+c5_ab_comprou:{
+  texto:[
+    'Você paga. Ela conta as moedas duas vezes, porque é o jeito dela, não porque desconfia de você.',
+    'Ela entrega o par de pilhas e mais uma coisa que você não comprou: um toco de vela de sete centímetros, desses de igreja.',
+    fala('a senhora da barraca', 'Esse é de graça.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a senhora da barraca', 'Porque pilha acaba e vela avisa antes de acabar.')
+  ],
+  ef:{dinheiro:-520, itens:{'Poção':1}, flag:'tem_a_vela_da_barraca',
+      registrar:'Comprou pilhas na barraca da estrada e ganhou um toco de vela.'},
+  escolhas:[
+    {texto:'Seguir pra boca da caverna.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_sem_comprar:{
+  texto:[
+    'Você agradece e não compra. Ela balança a cabeça uma vez, sem cobrança nenhuma, e volta a olhar a estrada.',
+    'Seiscentos metros depois a barraca não dá mais pra ver e você pensa nas pilhas de novo, o que é exatamente o que ela sabia que ia acontecer e é exatamente por isso que ela montou a barraca aí.',
+    'A boca do Monte da Lua é mais baixa do que você imaginava. Lá dentro, a luz do dia morre depois de uns nove metros, e dá pra ver exatamente onde.'
+  ],
+  ef:{flag:'entrou_sem_luz', registrar:'Entrou no Monte da Lua sem lanterna boa.'},
+  escolhas:[
+    {texto:'Entrar assim mesmo.', vai:'c5_entrada'},
+    {texto:'Examinar a escada de madeira encostada na parede de fora.', vai:'c5_escada'}
+  ]
+},
+
+c5_ab_quem_entra:{
+  texto:[
+    fala('a senhora da barraca', 'Cinco, seis por semana. Sobe muito menino da sua idade.'),
+    'Ela dobra um pano no balcão enquanto fala, e dobrar o pano parece ser mais importante que a conversa.',
+    fala('a senhora da barraca', 'Volta menos.'),
+    d=>fala(d.jogador.nome, 'Volta menos?'),
+    fala('a senhora da barraca', 'Volta menos por aqui. A caverna tem outra saída do lado de Cerulean, todo mundo sabe disso.'),
+    'Ela para de dobrar o pano.',
+    fala('a senhora da barraca', 'Mas nos últimos dois meses parou de voltar gente dos dois lados. Aí não é mais a saída, é outra coisa.', 'baixo')
+  ],
+  ef:{flag:'sumiram_dos_dois_lados', registrar:'Faz dois meses que gente entra no Monte da Lua e não sai por nenhum dos lados.'},
+  escolhas:[
+    {texto:'Comprar o par de pilhas.', vai:'c5_ab_comprou', cond:d=>d.jogador.dinheiro >= 520},
+    {texto:'Seguir pra boca da caverna.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_fila:{
+  texto:[
+    'Tem três pessoas na boca da caverna quando você chega, e as três param de falar ao mesmo tempo.',
+    'Não é medo. É o outro negócio, o que começou a acontecer com você depois de Pewter e que você ainda não sabe manejar.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Um deles, o mais novo, fala o seu nome pro amigo com a mão do lado da boca. O amigo responde "${r}" como se isso fosse uma explicação completa.`;
+    },
+    'O terceiro, que é mais velho e não está impressionado com nada, é o único que fala com você:',
+    fala('o homem de bota', 'Se você vai entrar, entra na frente. Eles vão te seguir de qualquer jeito e é melhor você saber onde eles estão.'),
+    d=>fala(d.jogador.nome, 'Eu não pedi pra ninguém me seguir.'),
+    fala('o homem de bota', 'Eu sei. Não muda nada.')
+  ],
+  ef:{flag:'tem_gente_te_seguindo_no_monte', registrar:'Três pessoas esperavam na boca do Monte da Lua e reconheceram você.'},
+  escolhas:[
+    {texto:'Entrar na frente, como ele disse.', vai:'c5_entrada'},
+    {texto:'Esperar os três entrarem primeiro.', vai:'c5_ab_deixou_passar'},
+    {texto:'Dizer que ninguém entra atrás de você.', vai:'c5_ab_negou'}
+  ]
+},
+
+c5_ab_deixou_passar:{
+  texto:[
+    'Você encosta na parede de fora e faz sinal pra eles irem.',
+    'Os dois mais novos hesitam, porque eles vieram pra seguir alguém, não pra ir na frente de alguém.',
+    'O homem de bota entra sem discutir. Os outros dois entram atrás dele.',
+    'Quinze minutos depois você entra e ouve os três lá na frente, três vozes que o eco transforma em seis, e isso é informação: agora você sabe onde eles estão e eles não sabem onde você está.'
+  ],
+  ef:{flag:'entrou_por_ultimo', registrar:'Deixou os três entrarem primeiro no Monte da Lua.'},
+  escolhas:[
+    {texto:'Entrar.', vai:'c5_entrada'}
+  ]
+},
+
+c5_ab_negou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Ninguém entra atrás de mim.'),
+    'Sai mais duro do que você queria. O mais novo dos três fica vermelho até a orelha.',
+    fala('o homem de bota', 'Tá certo.'),
+    'Ele diz isso sem discordar e sem concordar, do jeito de quem já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
+    'Você entra sozinho. Dez minutos depois, lá dentro, você ouve três pares de pé na pedra atrás de você mesmo assim.'
+  ],
+  ef:{rep:{eixo:'ruim', delta:1, motivo:'Cortou três pessoas na boca da caverna.'},
+      flag:'tem_gente_te_seguindo_no_monte', registrar:'Mandou os três não te seguirem. Eles seguiram.'},
+  escolhas:[
+    {texto:'Seguir em frente e fingir que não ouviu.', vai:'c5_entrada'}
+  ]
+},
+
 
 c5_boca:{
   texto:[

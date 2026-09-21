@@ -15966,7 +15966,6 @@ c3_seguir_cacadores:{
   ],
   ef:{flag:['seguiu_os_cacadores','provas_da_floresta','placa_da_caminhonete'],
       rep:{eixo:'ruim',delta:1,motivo:'Deixou levarem um Pokémon para descobrir para onde levavam'},
-      rep2:null,
       registrar:'Seguiu os caçadores até a caminhonete. Anotou a placa e viu mais três bolsas.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
@@ -18926,14 +18925,222 @@ c4_fim:{
 
 
 /* ===== js/story/cap-05.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — o Monte da Lua não recebe todo mundo igual.
+   Quem sobe de carona, quem sobe com um nome a menos no time e
+   quem sobe sem dinheiro pra pilha chegam na mesma boca de
+   caverna por estradas que não se parecem.
+   ------------------------------------------------------------ */
+const C5_ABERTURAS = ['c5_boca', 'c5_ab_carona', 'c5_ab_luto', 'c5_ab_sem_pilha', 'c5_ab_fila'];
+function c5_cabe(id, d){
+  if (id === 'c5_ab_luto')      return (d.cemiterio || []).length > 0;
+  if (id === 'c5_ab_sem_pilha') return d.jogador.dinheiro < 900;
+  if (id === 'c5_ab_fila')      return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 3;
+  return true;
+}
+function c5_abertura(d){
+  const cand = C5_ABERTURAS.filter(id => c5_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 5 — O QUE SOBROU DA ROCKET  (Monte da Lua)
    ============================================================ */
 CAPITULOS.push(
 {
 num:5, titulo:'O Que Sobrou da Rocket', local:'Monte da Lua', ambiente:'caverna', nivelArea:18,
-tom:'sombrio', inicio:'c5_boca',
+tom:'sombrio', entradas:C5_ABERTURAS,
+inicio: d => c5_abertura(d),
 cenas:{
+
+c5_ab_carona:{
+  texto:[
+    'Você não subiu a pé. Um caminhão de ração parou sozinho na subida da Rota 3, o motorista abriu a porta sem você pedir e disse "vai pro Monte?" como quem já sabe que não tem outro destino nessa estrada.',
+    'O nome dele é Kenji, ele tem cinquenta e poucos anos, e ele fala o caminho inteiro sem exigir resposta nenhuma.',
+    fala('Kenji', 'Eu faço essa subida três vezes por semana faz dezenove anos. Sabe o que mudou?'),
+    d=>fala(d.jogador.nome, 'O quê?'),
+    fala('Kenji', 'Nada. Absolutamente nada. Essa é a parte boa.'),
+    'Na última curva ele fica quieto. Fica quieto de um jeito diferente do resto do trajeto.',
+    fala('Kenji', 'Mudou uma coisa, na verdade. Tem uns dois meses que tem carro subindo de noite.', 'baixo'),
+    fala('Kenji', 'Carro bom. Desses que não deviam estar em estrada de terra.'),
+    'Ele encosta antes da boca da caverna, porque daí pra frente não é mais estrada.',
+    fala('Kenji', 'Não vou te dizer pra não entrar. Você ia entrar do mesmo jeito.')
+  ],
+  ef:{flag:'kenji_falou_dos_carros', registrar:'Kenji, caminhoneiro de ração, subiu com você até a boca do Monte da Lua.',
+      npc:{nome:'Kenji', opiniao:1, viuVoce:'Deu carona na subida da Rota 3.'},
+      presagio:'Carro bom em estrada de terra, de noite, é gente que não quer ser vista de dia.'},
+  escolhas:[
+    {texto:'Perguntar onde exatamente ele viu os carros.', vai:'c5_ab_onde'},
+    {texto:'Agradecer e descer.', vai:'c5_boca'},
+    {texto:'Perguntar se ele já entrou na caverna.', vai:'c5_ab_ja_entrou'}
+  ]
+},
+
+c5_ab_onde:{
+  texto:[
+    'Ele aponta com dois dedos, sem tirar a mão do volante, pra um ponto acima da boca da caverna.',
+    fala('Kenji', 'Ali em cima. Eles param ali em cima, não na entrada.'),
+    fala('Kenji', 'Sabe por quê? Porque da entrada dá pra te ver da estrada. Dali em cima não dá.'),
+    'Você olha pra onde ele apontou e vê uma saliência de rocha a uns quatro metros do chão, com uma sombra do lado que pode ser sombra e pode ser outra coisa.',
+    fala('Kenji', 'Eu passo de dia. De dia não tem ninguém. Isso também não me acalma.')
+  ],
+  ef:{flag:'sabe_da_saliencia', registrar:'Alguém estaciona de noite acima da boca do Monte da Lua.'},
+  escolhas:[
+    {texto:'Descer e ir ver essa saliência.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_ja_entrou:{
+  texto:[
+    'Ele ri sem alegria nenhuma.',
+    fala('Kenji', 'Uma vez. Em oitenta e nove. Levei uma lanterna de quatro pilhas e voltei em quarenta minutos.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('Kenji', 'Porque lá dentro o barulho do meu próprio pé ficava chegando depois de mim.'),
+    fala('Kenji', 'Não tem nada de sobrenatural nisso. É eco. Eu sei que é eco.'),
+    'Ele destrava a porta.',
+    fala('Kenji', 'Sabendo que é eco, eu voltei em quarenta minutos.')
+  ],
+  ef:{registrar:'Kenji entrou no Monte da Lua uma vez, em 1989, e voltou em quarenta minutos.'},
+  escolhas:[
+    {texto:'Descer.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_luto:{
+  texto:[
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length - 1];
+      return `A estrada sobe por três horas e você faz as três horas contando de novo, sem querer, o que deu errado com ${m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'ele')}.`;
+    },
+    'Não adianta. A conta não fecha melhor na terceira vez do que na primeira.',
+    'A boca do Monte da Lua é mais baixa do que você imaginava — você tem que abaixar a cabeça pra entrar, e hoje abaixar a cabeça custa mais do que devia.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} para antes de você, na entrada, e espera. Não entra sozinho. Espera.`
+               : 'Você para na entrada e o vento morno que sai da caverna bate na sua cara como se estivesse te esperando.';
+    },
+    'Do lado de dentro o ar sai morno, o que é o contrário do que uma caverna devia fazer, e hoje você não tem paciência nenhuma pra coisas que fazem o contrário do que deviam.'
+  ],
+  ef:{flag:'subiu_o_monte_de_luto', registrar:'Chegou à boca do Monte da Lua carregando uma morte recente.'},
+  escolhas:[
+    {texto:'Entrar. Parar de pensar nisso.', vai:'c5_entrada'},
+    {texto:'Sentar na boca da caverna um tempo antes.', vai:'c5_esperar'},
+    {texto:'Examinar a escada de madeira encostada na parede.', vai:'c5_escada'}
+  ]
+},
+
+c5_ab_sem_pilha:{
+  texto:[
+    'Tem uma barraca de beira de estrada a seiscentos metros da boca da caverna. Lona azul, um balcão de madeira compensada, e uma senhora que vende três coisas: água, biscoito e pilha.',
+    'A pilha é o único produto com preço escrito à mão em papelão. Quinhentos e vinte por par.',
+    d=>fala(d.jogador.nome, `Quinhentos e vinte?`),
+    fala('a senhora da barraca', 'Você tá vendo outra barraca aqui?'),
+    'Ela não diz isso com maldade. Diz com a serenidade de quem entendeu a economia do lugar antes de você.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽ e uma caverna pela frente.`,
+    fala('a senhora da barraca', 'Tem gente que entra sem. Eu não julgo. Só vendo.', 'baixo')
+  ],
+  ef:{registrar:'A barraca antes do Monte da Lua vende pilha a 520 ₽ o par.'},
+  escolhas:[
+    {texto:'Comprar o par de pilhas mesmo assim.', vai:'c5_ab_comprou', cond:d=>d.jogador.dinheiro >= 520},
+    {texto:'Não comprar. Entrar no escuro do jeito que dá.', vai:'c5_ab_sem_comprar'},
+    {texto:'Perguntar se ela vê muita gente entrando.', vai:'c5_ab_quem_entra'}
+  ]
+},
+
+c5_ab_comprou:{
+  texto:[
+    'Você paga. Ela conta as moedas duas vezes, porque é o jeito dela, não porque desconfia de você.',
+    'Ela entrega o par de pilhas e mais uma coisa que você não comprou: um toco de vela de sete centímetros, desses de igreja.',
+    fala('a senhora da barraca', 'Esse é de graça.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a senhora da barraca', 'Porque pilha acaba e vela avisa antes de acabar.')
+  ],
+  ef:{dinheiro:-520, itens:{'Poção':1}, flag:'tem_a_vela_da_barraca',
+      registrar:'Comprou pilhas na barraca da estrada e ganhou um toco de vela.'},
+  escolhas:[
+    {texto:'Seguir pra boca da caverna.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_sem_comprar:{
+  texto:[
+    'Você agradece e não compra. Ela balança a cabeça uma vez, sem cobrança nenhuma, e volta a olhar a estrada.',
+    'Seiscentos metros depois a barraca não dá mais pra ver e você pensa nas pilhas de novo, o que é exatamente o que ela sabia que ia acontecer e é exatamente por isso que ela montou a barraca aí.',
+    'A boca do Monte da Lua é mais baixa do que você imaginava. Lá dentro, a luz do dia morre depois de uns nove metros, e dá pra ver exatamente onde.'
+  ],
+  ef:{flag:'entrou_sem_luz', registrar:'Entrou no Monte da Lua sem lanterna boa.'},
+  escolhas:[
+    {texto:'Entrar assim mesmo.', vai:'c5_entrada'},
+    {texto:'Examinar a escada de madeira encostada na parede de fora.', vai:'c5_escada'}
+  ]
+},
+
+c5_ab_quem_entra:{
+  texto:[
+    fala('a senhora da barraca', 'Cinco, seis por semana. Sobe muito menino da sua idade.'),
+    'Ela dobra um pano no balcão enquanto fala, e dobrar o pano parece ser mais importante que a conversa.',
+    fala('a senhora da barraca', 'Volta menos.'),
+    d=>fala(d.jogador.nome, 'Volta menos?'),
+    fala('a senhora da barraca', 'Volta menos por aqui. A caverna tem outra saída do lado de Cerulean, todo mundo sabe disso.'),
+    'Ela para de dobrar o pano.',
+    fala('a senhora da barraca', 'Mas nos últimos dois meses parou de voltar gente dos dois lados. Aí não é mais a saída, é outra coisa.', 'baixo')
+  ],
+  ef:{flag:'sumiram_dos_dois_lados', registrar:'Faz dois meses que gente entra no Monte da Lua e não sai por nenhum dos lados.'},
+  escolhas:[
+    {texto:'Comprar o par de pilhas.', vai:'c5_ab_comprou', cond:d=>d.jogador.dinheiro >= 520},
+    {texto:'Seguir pra boca da caverna.', vai:'c5_boca'}
+  ]
+},
+
+c5_ab_fila:{
+  texto:[
+    'Tem três pessoas na boca da caverna quando você chega, e as três param de falar ao mesmo tempo.',
+    'Não é medo. É o outro negócio, o que começou a acontecer com você depois de Pewter e que você ainda não sabe manejar.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Um deles, o mais novo, fala o seu nome pro amigo com a mão do lado da boca. O amigo responde "${r}" como se isso fosse uma explicação completa.`;
+    },
+    'O terceiro, que é mais velho e não está impressionado com nada, é o único que fala com você:',
+    fala('o homem de bota', 'Se você vai entrar, entra na frente. Eles vão te seguir de qualquer jeito e é melhor você saber onde eles estão.'),
+    d=>fala(d.jogador.nome, 'Eu não pedi pra ninguém me seguir.'),
+    fala('o homem de bota', 'Eu sei. Não muda nada.')
+  ],
+  ef:{flag:'tem_gente_te_seguindo_no_monte', registrar:'Três pessoas esperavam na boca do Monte da Lua e reconheceram você.'},
+  escolhas:[
+    {texto:'Entrar na frente, como ele disse.', vai:'c5_entrada'},
+    {texto:'Esperar os três entrarem primeiro.', vai:'c5_ab_deixou_passar'},
+    {texto:'Dizer que ninguém entra atrás de você.', vai:'c5_ab_negou'}
+  ]
+},
+
+c5_ab_deixou_passar:{
+  texto:[
+    'Você encosta na parede de fora e faz sinal pra eles irem.',
+    'Os dois mais novos hesitam, porque eles vieram pra seguir alguém, não pra ir na frente de alguém.',
+    'O homem de bota entra sem discutir. Os outros dois entram atrás dele.',
+    'Quinze minutos depois você entra e ouve os três lá na frente, três vozes que o eco transforma em seis, e isso é informação: agora você sabe onde eles estão e eles não sabem onde você está.'
+  ],
+  ef:{flag:'entrou_por_ultimo', registrar:'Deixou os três entrarem primeiro no Monte da Lua.'},
+  escolhas:[
+    {texto:'Entrar.', vai:'c5_entrada'}
+  ]
+},
+
+c5_ab_negou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Ninguém entra atrás de mim.'),
+    'Sai mais duro do que você queria. O mais novo dos três fica vermelho até a orelha.',
+    fala('o homem de bota', 'Tá certo.'),
+    'Ele diz isso sem discordar e sem concordar, do jeito de quem já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
+    'Você entra sozinho. Dez minutos depois, lá dentro, você ouve três pares de pé na pedra atrás de você mesmo assim.'
+  ],
+  ef:{rep:{eixo:'ruim', delta:1, motivo:'Cortou três pessoas na boca da caverna.'},
+      flag:'tem_gente_te_seguindo_no_monte', registrar:'Mandou os três não te seguirem. Eles seguiram.'},
+  escolhas:[
+    {texto:'Seguir em frente e fingir que não ouviu.', vai:'c5_entrada'}
+  ]
+},
+
 
 c5_boca:{
   texto:[
@@ -20696,14 +20903,243 @@ c5_fim:{
 
 
 /* ===== js/story/cap-06.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — Cerulean é cidade de ponte, e ponte é lugar onde
+   se vê quem chega. Quem desce do Monte inteiro, quem desce
+   arrebentado e quem desce com nome já falado entram na cidade
+   por ângulos diferentes.
+   ------------------------------------------------------------ */
+const C6_ABERTURAS = ['c6_chegada', 'c6_ab_pela_agua', 'c6_ab_arrebentado', 'c6_ab_cartaz', 'c6_ab_de_cracha'];
+function c6_cabe(id, d){
+  if (id === 'c6_ab_arrebentado')
+    return (d.time || []).some(p => !p.morto && p.hp < p.hpMax * 0.5) || d.jogador.hp < Estado.hpMaxJogador() * 0.7;
+  if (id === 'c6_ab_cartaz')  return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3;
+  if (id === 'c6_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c6_abertura(d){
+  const cand = C6_ABERTURAS.filter(id => c6_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 6 — O PREÇO DE UMA COISA VIVA  (Cerulean / Rota 25)
    ============================================================ */
 CAPITULOS.push(
 {
 num:6, titulo:'O Preço de Uma Coisa Viva', local:'Cerulean / Rota 25', ambiente:'agua', nivelArea:22,
-tom:'sombrio', inicio:'c6_chegada',
+tom:'sombrio', entradas:C6_ABERTURAS,
+inicio: d => c6_abertura(d),
 cenas:{
+
+c6_ab_pela_agua:{
+  texto:[
+    'A saída norte do Monte da Lua dá num córrego, e o córrego dá no rio, e tem um homem com uma chata de fundo chato amarrada numa raiz esperando exatamente isso: gente saindo da caverna sem vontade nenhuma de andar mais.',
+    fala('o barqueiro', 'Cento e vinte até a ponte sul. Cento e oitenta se você quiser que eu vá devagar.'),
+    d=>fala(d.jogador.nome, 'Por que alguém pagaria mais pra ir mais devagar?'),
+    fala('o barqueiro', 'Você acabou de sair do Monte da Lua e tá me perguntando isso.'),
+    'Você paga os cento e vinte, porque cento e oitenta é dinheiro, e ele vai devagar do mesmo jeito.',
+    'O rio leva quarenta minutos e nos quarenta minutos não acontece absolutamente nada, e isso é a coisa mais generosa que te aconteceu em três dias.',
+    'Cerulean aparece de baixo pra cima: primeiro as estacas das pontes, depois as pontes, depois a cidade em cima delas.'
+  ],
+  ef:{dinheiro:-120, flag:'desceu_de_chata', registrar:'Desceu o rio de chata até Cerulean.'},
+  escolhas:[
+    {texto:'Descer na ponte sul e ir ver o movimento.', vai:'c6_ponte_norte'},
+    {texto:'Perguntar ao barqueiro o que mudou na cidade.', vai:'c6_ab_o_que_mudou'},
+    {texto:'Descer e procurar onde se come.', vai:'c6_peixe'}
+  ]
+},
+
+c6_ab_o_que_mudou:{
+  texto:[
+    'Ele demora a responder porque está manobrando, e manobrar uma chata exige as duas mãos e metade da cabeça.',
+    fala('o barqueiro', 'Apareceu comprador.'),
+    d=>fala(d.jogador.nome, 'Comprador de quê?'),
+    fala('o barqueiro', 'De bicho. De Pokémon.'),
+    'Ele encosta a chata na escadinha de pedra e amarra com um nó que leva um segundo e meio.',
+    fala('o barqueiro', 'Sempre teve, né. Sempre teve gente comprando e vendendo. Mas agora tem preço de tabela.', 'baixo'),
+    fala('o barqueiro', 'Quando vira tabela, não é mais um sujeito. É um negócio.')
+  ],
+  ef:{flag:'sabe_da_tabela', registrar:'Em Cerulean, comprar e vender Pokémon virou negócio com preço de tabela.',
+      presagio:'Preço de tabela precisa de alguém que faça a tabela.'},
+  escolhas:[
+    {texto:'Descer e ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
+    {texto:'Descer e olhar a cidade com calma.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_arrebentado:{
+  texto:[
+    'Você atravessa a primeira ponte de Cerulean encostando na mureta a cada vinte metros, e a mureta é fria e é boa.',
+    'A cidade tem barulho de água o tempo todo e hoje isso não é bonito, é só barulho.',
+    d=>{
+      const p = (d.time || []).filter(x => !x.morto && x.hp < x.hpMax * 0.5)[0];
+      return p ? `${nomeExib(p)} está na bola porque não dava pra andar do lado de fora, e você fica com a mão em cima da bola o caminho inteiro sem perceber que está fazendo isso.`
+               : 'Você está inteiro por fora e nem um pouco por dentro, que é uma distinção que ninguém na rua consegue fazer olhando.';
+    },
+    'O Centro Pokémon de Cerulean fica na terceira quadra depois da ponte e tem uma fila de quatro pessoas, e as quatro estão iguais a você.',
+    'Vocês não conversam. Ninguém que saiu do Monte da Lua hoje quer conversar.',
+    'A enfermeira olha a sua ficha, olha você, e não pergunta nada. É o segundo Centro de Kanto em volume de atendimento e ela parou de perguntar faz tempo.'
+  ],
+  ef:{curaTime:true, flag:'chegou_quebrado_em_cerulean',
+      registrar:'Chegou a Cerulean direto pro Centro Pokémon, e não foi o único.'},
+  escolhas:[
+    {texto:'Esperar sentado até terminarem o atendimento.', vai:'c6_ab_sala_de_espera'},
+    {texto:'Sair e ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
+    {texto:'Sair e sentar na beira do rio.', vai:'c6_beira'}
+  ]
+},
+
+c6_ab_sala_de_espera:{
+  texto:[
+    'A sala de espera do Centro de Cerulean tem doze cadeiras e uma televisão presa no alto com o som desligado.',
+    'Na televisão está passando um programa sobre a Liga com o volume mudo, e todo mundo olha mesmo assim, porque o alternativo é olhar um pro outro.',
+    'A mulher do seu lado é uns dez anos mais velha e tem uma bandagem no antebraço que ela mesma fez.',
+    fala('a mulher da bandagem', 'Monte da Lua?'),
+    d=>fala(d.jogador.nome, 'Monte da Lua.'),
+    fala('a mulher da bandagem', 'Terceira vez que eu venho parar aqui vindo de lá.'),
+    'Ela fala isso com um orgulho triste, do tipo que a pessoa não sabe que está demonstrando.',
+    fala('a mulher da bandagem', 'Uma dica: nessa cidade não aceita bicho como pagamento em lugar nenhum. Se alguém te oferecer isso, é porque não é loja.', 'baixo')
+  ],
+  ef:{flag:'aviso_do_pagamento_em_bicho', registrar:'Em Cerulean, quem aceita Pokémon como pagamento não é loja.'},
+  escolhas:[
+    {texto:'Perguntar quem oferece isso.', vai:'c6_ab_quem_oferece'},
+    {texto:'Agradecer e sair pra rua.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_quem_oferece:{
+  texto:[
+    'Ela olha pros lados antes de responder, e o fato de ela olhar pros lados numa sala de espera vazia é mais informativo que a resposta.',
+    fala('a mulher da bandagem', 'Tem uma casa depois da segunda ponte. Portão verde. Não tem placa.'),
+    fala('a mulher da bandagem', 'Eles não compram de qualquer um. Eles compram de quem tá precisando.'),
+    d=>fala(d.jogador.nome, 'E como eles sabem quem tá precisando?'),
+    fala('a mulher da bandagem', 'Porque quem tá precisando aparece na fila do Centro Pokémon sem dinheiro pra poção.'),
+    'Ela volta a olhar a televisão muda.',
+    fala('a mulher da bandagem', 'Eu tô te contando porque alguém me contou e eu não acreditei.')
+  ],
+  ef:{flag:'sabe_do_portao_verde', registrar:'Uma casa de portão verde, depois da segunda ponte, compra Pokémon de quem está precisando.',
+      presagio:'Quem escolhe comprar de quem está precisando escolheu o preço antes de escolher a mercadoria.'},
+  escolhas:[
+    {texto:'Sair e ir direto pra estrada velha, depois da segunda ponte.', vai:'c6_estrada_velha', cond:d=>!!d.flags.ponto_da_van},
+    {texto:'Sair pra rua e olhar a cidade primeiro.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_cartaz:{
+  texto:[
+    'Tem um quadro de avisos na cabeceira da ponte sul, daqueles com vidro e cadeado, e é ali que Cerulean pendura o que a cidade precisa saber.',
+    'Aviso de dedetização. Horário da balsa. Um cachorro perdido com foto ruim.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `E uma folha impressa, colada por dentro do vidro, com um retrato falado que não é bom e com uma palavra que é: "${r}".`;
+    },
+    d=>`A descrição diz ${Estado.descricaoFisica() || 'pouca coisa'}. É o bastante.`,
+    'Uma mulher está lendo o quadro do seu lado. Ela lê o cartaz, olha pra você, e lê o cartaz de novo.',
+    'Ela não grita. Ela dobra o jornal debaixo do braço e atravessa a ponte no sentido contrário ao seu, no passo de quem não quer que pareça pressa.',
+    'Você tem entre trinta segundos e dez minutos.'
+  ],
+  ef:{flag:'seu_retrato_na_ponte', registrar:'Seu retrato falado está no quadro de avisos da ponte sul de Cerulean.'},
+  escolhas:[
+    {texto:'Arrancar o cartaz. É vidro com cadeado, mas vidro quebra.', vai:'c6_ab_quebrou_o_vidro'},
+    {texto:'Sair da ponte e sumir no movimento da cidade.', vai:'c6_ab_sumiu'},
+    {texto:'Ficar. Deixar acontecer o que vai acontecer.', vai:'c6_ab_ficou'}
+  ]
+},
+
+c6_ab_quebrou_o_vidro:{
+  texto:[
+    'Você quebra o vidro com o cotovelo enrolado na manga, que é o jeito certo, e arranca a folha, que é o jeito errado de resolver o problema.',
+    'O barulho de vidro numa ponte de pedra viaja. Três pessoas olham. Um homem numa banca de peixe grita alguma coisa que você não ouve porque já está andando.',
+    'A folha na sua mão é uma folha. Tem mais quatro iguais em quatro quadros de avisos dessa cidade e você não sabe onde ficam os outros quatro.',
+    'Você amassa e joga no rio, e o papel boia, o que é a pior coisa que papel pode fazer nessa situação.'
+  ],
+  ef:{rep:{eixo:'ruim', delta:2, motivo:'Quebrou o quadro de avisos da ponte sul na frente de meia dúzia de pessoas.'},
+      flag:'quebrou_o_quadro', registrar:'Quebrou o quadro de avisos da ponte sul de Cerulean.'},
+  escolhas:[
+    {texto:'Sumir no movimento da cidade.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_sumiu:{
+  texto:[
+    'Você desce da ponte pelo lado de dentro, entra na primeira travessa, e faz a coisa que aprendeu sem ninguém ensinar: anda no ritmo de quem mora aqui.',
+    'Duas quadras depois passa uma viatura branca e verde no sentido da ponte, sem sirene, no passo de quem foi chamado mas não foi chamado com urgência.',
+    'Você não olha pra ela. Olhar pra viatura é o que denuncia.',
+    'Na terceira quadra tem uma feira coberta e você entra na feira, porque feira é o melhor lugar do mundo pra deixar de existir por quarenta minutos.'
+  ],
+  ef:{flag:'sumiu_na_feira', registrar:'Sumiu na feira coberta de Cerulean antes da viatura chegar na ponte.'},
+  escolhas:[
+    {texto:'Sair da feira quando esfriar e ver a cidade.', vai:'c6_chegada'},
+    {texto:'Ir direto pra estrada velha, depois da segunda ponte.', vai:'c6_estrada_velha', cond:d=>!!d.flags.ponto_da_van}
+  ]
+},
+
+c6_ab_ficou:{
+  texto:[
+    'Você fica. Encosta na mureta da ponte e olha a água, que é o que todo mundo faz nessa ponte, e espera.',
+    'Doze minutos depois param dois oficiais da Liga. Não é a polícia da cidade: é a Liga, de uniforme cinza, e isso é pior e melhor ao mesmo tempo.',
+    fala('a oficial de cinza', 'Documento.'),
+    'Você entrega. Ela lê com calma, compara com a folha do quadro, e a comparação não fecha do jeito que ela esperava que fechasse.',
+    fala('a oficial de cinza', 'Esse retrato aqui é de três semanas atrás e foi feito por alguém que te viu de longe.'),
+    fala('a oficial de cinza', 'A Liga tem três avisos abertos no seu nome. Aviso não é mandado. Você sabe a diferença?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('a oficial de cinza', 'A diferença é que hoje eu te devolvo o documento.'),
+    'Ela devolve. O parceiro dela anota alguma coisa numa prancheta e o ato de anotar demora mais do que precisaria.',
+    fala('a oficial de cinza', 'Quarto aviso é mandado. Boa estadia em Cerulean.', 'frio')
+  ],
+  ef:{flag:'tres_avisos_da_liga',
+      executar:d=>{ d.liga.avisos = Math.max(d.liga.avisos, 3); return [{tipo:'liga', texto:'A Liga registrou três avisos abertos no seu nome.'}]; },
+      registrar:'Dois oficiais da Liga te pararam na ponte sul. Três avisos abertos; o quarto vira mandado.',
+      presagio:'Ela devolveu o documento hoje. Ela disse "hoje" de propósito.'},
+  escolhas:[
+    {texto:'Seguir pra cidade com a conversa na cabeça.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `Na cabeceira da ponte sul tem um posto de fiscalização de pesca, e o rapaz do posto olha o seu crachá de ${c ? c.nome : 'serviço'} antes de olhar a sua cara.`;
+    },
+    'Isso nunca tinha acontecido com você. É uma inversão pequena e ela muda tudo.',
+    fala('o rapaz do posto', 'Você é de fora, né? Assina aqui o livro de entrada, é protocolo.'),
+    'Você assina. O livro tem quatro assinaturas hoje e a quarta é a sua.',
+    fala('o rapaz do posto', 'Então, já que você tá aqui e é do serviço — eu posso te perguntar uma coisa fora do protocolo?'),
+    d=>fala(d.jogador.nome, 'Pode.'),
+    fala('o rapaz do posto', 'Quem é que fiscaliza venda de Pokémon nessa cidade?', 'baixo'),
+    fala('o rapaz do posto', 'Eu perguntei pro meu chefe. Ele falou que é a Liga. Eu liguei pra Liga. A Liga falou que é a prefeitura.')
+  ],
+  ef:{flag:'ninguem_fiscaliza_a_venda',
+      registrar:'Nenhum órgão assume a fiscalização de venda de Pokémon em Cerulean.',
+      npc:{nome:'o rapaz do posto', opiniao:1, viuVoce:'Te reconheceu como gente do serviço na ponte sul.'},
+      presagio:'Quando dois órgãos apontam um pro outro, o que tem no meio funciona sem ninguém olhando.'},
+  escolhas:[
+    {texto:'Perguntar o que ele viu que fez ele perguntar isso.', vai:'c6_ab_o_que_ele_viu'},
+    {texto:'Anotar e seguir pra cidade.', vai:'c6_chegada'}
+  ]
+},
+
+c6_ab_o_que_ele_viu:{
+  texto:[
+    'Ele fecha o livro de entrada antes de falar, o que não faz diferença nenhuma e faz toda diferença.',
+    fala('o rapaz do posto', 'Passa caminhão-gaiola por essa ponte três vezes por semana. Terça, quinta e sábado, de madrugada.'),
+    fala('o rapaz do posto', 'Gaiola de transporte é legal. Tem nota, tem tudo.'),
+    d=>fala(d.jogador.nome, 'Então qual é o problema?'),
+    fala('o rapaz do posto', 'A nota diz "material de pesca".'),
+    'Ele dá de ombros de um jeito que não é despreocupação, é impotência.',
+    fala('o rapaz do posto', 'Eu sou da pesca. Eu sei o que é material de pesca. E material de pesca não respira.')
+  ],
+  ef:{flag:'caminhao_gaiola_terca_quinta_sabado',
+      registrar:'Caminhão-gaiola atravessa Cerulean terça, quinta e sábado de madrugada, com nota de "material de pesca".'},
+  escolhas:[
+    {texto:'Ir pra estrada velha, depois da segunda ponte.', vai:'c6_estrada_velha', cond:d=>!!d.flags.ponto_da_van},
+    {texto:'Ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
+    {texto:'Andar pela cidade e entender onde você está.', vai:'c6_chegada'}
+  ]
+},
+
 
 c6_chegada:{
   texto:[
@@ -23340,14 +23776,280 @@ c6_fim:{
 
 
 /* ===== js/story/cap-07.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — Lavender é a única cidade de Kanto onde a hora do
+   dia muda o que a cidade é. E quem chega carregando morte não
+   chega na mesma Lavender de quem chega curioso.
+   ------------------------------------------------------------ */
+const C7_ABERTURAS = ['c7_chegada', 'c7_ab_cortejo', 'c7_ab_de_noite', 'c7_ab_encomenda', 'c7_ab_de_cracha'];
+function c7_cabe(id, d){
+  if (id === 'c7_ab_cortejo')   return (d.cemiterio || []).length > 0;
+  if (id === 'c7_ab_de_noite')  return d.relogio && (d.relogio.periodo === 'noite' || d.relogio.periodo === 'tarde');
+  if (id === 'c7_ab_encomenda') return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 3;
+  if (id === 'c7_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c7_abertura(d){
+  const cand = C7_ABERTURAS.filter(id => c7_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 7 — A TORRE  (Lavender)
    ============================================================ */
 CAPITULOS.push(
 {
 num:7, titulo:'A Torre', local:'Lavender', ambiente:'cemiterio', nivelArea:28,
-tom:'muito sombrio', inicio:'c7_chegada',
+tom:'muito sombrio', entradas:C7_ABERTURAS,
+inicio: d => c7_abertura(d),
 cenas:{
+
+c7_ab_cortejo:{
+  texto:[
+    'Você entra em Lavender atrás de um cortejo e leva onze minutos pra perceber que é um cortejo, porque ninguém está chorando e ninguém está de preto.',
+    'São nove pessoas andando devagar no meio da rua. Na frente, um homem de uns sessenta anos carrega uma caixa de madeira do tamanho de uma caixa de sapato, com as duas mãos, na altura do peito.',
+    'Os carros param. Não tem guarda mandando parar. Eles param.',
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length - 1];
+      const nome = m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'o seu');
+      return `Você não consegue olhar pra caixa sem pensar em ${nome}, e não consegue parar de olhar pra caixa.`;
+    },
+    'O cortejo entra na rua da torre. Você para na esquina porque seguir seria invadir alguma coisa.',
+    'Uma mulher mais velha, que ficou pra trás do grupo, para do seu lado sem falar nada por um tempo.',
+    fala('a mulher do cortejo', 'Você pode ir junto, sabia.'),
+    d=>fala(d.jogador.nome, 'Eu não conheço vocês.'),
+    fala('a mulher do cortejo', 'Ninguém conhece ninguém aqui. Essa cidade é feita disso.'),
+    fala('a mulher do cortejo', 'A gente enterra junto porque enterrar sozinho é pior. É só isso.')
+  ],
+  ef:{flag:'viu_o_cortejo', registrar:'Chegou a Lavender atrás de um cortejo de nove pessoas.',
+      presagio:'Em Lavender o luto é obra coletiva. Quem recusa a companhia carrega sozinho de propósito.'},
+  escolhas:[
+    {texto:'Ir junto.', vai:'c7_ab_foi_junto'},
+    {texto:'Não ir. Ficar na esquina e deixar passar.', vai:'c7_ab_ficou_na_esquina'},
+    {texto:'Perguntar o que tem na caixa.', vai:'c7_ab_a_caixa'}
+  ]
+},
+
+c7_ab_a_caixa:{
+  texto:[
+    fala('a mulher do cortejo', 'Um Growlithe. Dezessete anos.'),
+    'Ela fala a idade primeiro porque a idade é a parte boa.',
+    fala('a mulher do cortejo', 'Do meu irmão, aquele da frente. Era de patrulha, aposentou com nove, viveu mais oito de sofá.'),
+    fala('a mulher do cortejo', 'Ele não chorou nenhuma vez ainda. Vai chorar lá em cima, no quarto andar, que é onde todo mundo chora.'),
+    d=>fala(d.jogador.nome, 'Por que o quarto andar?'),
+    fala('a mulher do cortejo', 'Porque do quarto andar dá pra ver a casa da gente.')
+  ],
+  ef:{registrar:'No quarto andar da Torre Pokémon dá pra ver a cidade inteira. É onde as pessoas choram.'},
+  escolhas:[
+    {texto:'Ir junto com eles.', vai:'c7_ab_foi_junto'},
+    {texto:'Deixar passar e andar pela cidade.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_foi_junto:{
+  texto:[
+    'Você anda no fim do grupo, a três passos de todo mundo, que é a distância de quem foi convidado mas não pertence.',
+    'Ninguém olha pra você com estranheza. Duas pessoas acenam com a cabeça.',
+    'Na base da torre tem um homem de camisa cinza com uma prancheta, e ele não pergunta nome de ninguém: ele conta.',
+    fala('o homem da prancheta', 'Dez.'),
+    'Ele escreve dez. Você virou o décimo de um luto que não é seu, e de alguma forma isso não é uma mentira.',
+    'Lá dentro é fresco e cheira a incenso queimado há muito tempo, não agora. O grupo sobe. Você fica no térreo.',
+    'Do térreo dá pra ouvir nove pares de pé subindo, e depois, quatro andares acima, um homem de sessenta anos chorando de um jeito que é melhor não ouvir de perto.'
+  ],
+  ef:{flag:'subiu_com_o_cortejo', moral:1,
+      rep:{eixo:'bom', delta:1, motivo:'Acompanhou o enterro de um Growlithe que não era seu.'},
+      registrar:'Acompanhou um cortejo desconhecido até a base da Torre Pokémon.'},
+  escolhas:[
+    {texto:'Subir também.', vai:'c7_base'},
+    {texto:'Sair e andar pela cidade.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_ficou_na_esquina:{
+  texto:[
+    'Você fica. O cortejo entra na rua da torre e some atrás do primeiro quarteirão, e a rua volta a ter carro em menos de dez segundos.',
+    'É assustador como volta rápido.',
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length - 1];
+      const nome = m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'o seu');
+      return `Você fica pensando que ${nome} não teve nove pessoas. Teve você.`;
+    },
+    'Lavender não tem música. Você repara nisso agora, parado numa esquina sem nada pra fazer, e quando repara não consegue mais deixar de reparar.'
+  ],
+  ef:{flag:'nao_foi_no_cortejo', registrar:'Viu o cortejo passar e não foi junto.'},
+  escolhas:[
+    {texto:'Ir até a base da torre mesmo assim.', vai:'c7_base'},
+    {texto:'Andar pela cidade.', vai:'c7_cidade'},
+    {texto:'Procurar onde dormir.', vai:'c7_pousada'}
+  ]
+},
+
+c7_ab_de_noite:{
+  texto:[
+    'Você chega em Lavender com o sol já baixo, e Lavender ao entardecer faz uma coisa que nenhuma outra cidade de Kanto faz: ela acende as janelas antes de acender a rua.',
+    'Primeiro as casas. Depois, com uns vinte minutos de atraso, os postes.',
+    'Nesses vinte minutos a cidade inteira é só quadradinhos amarelos de janela com gente dentro, e a torre no fim da rua principal sem nenhuma luz nenhuma, porque a Torre Pokémon não tem luz externa.',
+    'Sete andares de concreto cinza que somem no escuro de baixo pra cima.',
+    'Um homem passa de bicicleta com um saco de pão no guidão e freia do seu lado sem você pedir.',
+    fala('o homem da bicicleta', 'Não sobe hoje.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o homem da bicicleta', 'Porque não tem luz lá dentro e porque eu moro aqui há quarenta anos e é o que eu falo pra todo mundo que chega nesse horário.'),
+    'Ele volta a pedalar.',
+    fala('o homem da bicicleta', 'Metade sobe mesmo assim. Eu falo do mesmo jeito.')
+  ],
+  ef:{flag:'avisaram_pra_nao_subir_de_noite', registrar:'Chegou a Lavender ao anoitecer. Avisaram para não subir a torre hoje.'},
+  escolhas:[
+    {texto:'Subir hoje mesmo assim.', vai:'c7_base'},
+    {texto:'Procurar onde dormir e deixar a torre pra amanhã.', vai:'c7_pousada'},
+    {texto:'Andar pela cidade enquanto ainda tem gente na rua.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_encomenda:{
+  texto:[
+    'Você ainda não chegou na cidade direito — está na entrada, na altura da última curva da Rota 8 — e já tem alguém te esperando na beira da estrada.',
+    'É uma menina de uns treze anos, sentada numa mochila, com uma caixa de papelão no colo amarrada com barbante.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Ela levanta quando te vê e fala o seu nome inteiro, com sobrenome e tudo, do jeito de quem ensaiou. "${r}", ela acrescenta, como se precisasse confirmar que é você mesmo.`;
+    },
+    fala('a menina da caixa', 'Me falaram que você ia passar por aqui essa semana.'),
+    d=>fala(d.jogador.nome, 'Quem falou?'),
+    fala('a menina da caixa', 'Todo mundo. Você é o assunto de duas cidades, você não sabe disso?'),
+    'Ela estende a caixa. É leve. Chacoalha um pouco.',
+    fala('a menina da caixa', 'É pra levar pro quarto andar da torre. Eu não consigo subir.'),
+    fala('a menina da caixa', 'Eu tentei três vezes.', 'baixo')
+  ],
+  ef:{flag:'tem_a_caixa_da_menina',
+      npc:{nome:'a menina da caixa', opiniao:1, viuVoce:'Te esperou na entrada de Lavender com uma encomenda.'},
+      registrar:'Uma menina te entregou uma caixa para levar ao quarto andar da Torre Pokémon.'},
+  escolhas:[
+    {texto:'Aceitar. Perguntar o que tem dentro depois.', vai:'c7_ab_aceitou'},
+    {texto:'Perguntar o que tem dentro antes de aceitar.', vai:'c7_ab_o_que_tem'},
+    {texto:'Dizer que ela tem que subir. Você vai junto.', vai:'c7_ab_vai_junto'}
+  ]
+},
+
+c7_ab_o_que_tem:{
+  texto:[
+    'Ela demora. Olha pra caixa como se a caixa fosse responder por ela.',
+    fala('a menina da caixa', 'Coleira, uma bola vazia e um chinelo.'),
+    d=>fala(d.jogador.nome, 'Um chinelo?'),
+    fala('a menina da caixa', 'Ele dormia em cima do chinelo do meu pai. Todo dia. Oito anos.'),
+    'Ela diz "oito anos" e a voz não quebra, porque ela já contou isso muitas vezes e treinou.',
+    fala('a menina da caixa', 'Meu pai falou que a gente não ia guardar. Falou que guardar faz mal.'),
+    fala('a menina da caixa', 'Eu concordo com ele. Só não consigo jogar fora. Na torre não é jogar fora.')
+  ],
+  ef:{registrar:'A caixa tem uma coleira, uma bola vazia e um chinelo.'},
+  escolhas:[
+    {texto:'Aceitar levar.', vai:'c7_ab_aceitou'},
+    {texto:'Dizer que ela tem que subir. Você vai junto.', vai:'c7_ab_vai_junto'}
+  ]
+},
+
+c7_ab_aceitou:{
+  texto:[
+    'Você pega a caixa e põe debaixo do braço, e ela é leve de um jeito que incomoda.',
+    'A menina agradece três vezes, o que é duas vezes mais do que a situação pede, e vai embora rápido pra estrada, no sentido de Saffron.',
+    'Ela some na curva e você fica na entrada de Lavender segurando a caixa de outra pessoa.',
+    'A cidade não tem música. Você repara nisso agora.'
+  ],
+  ef:{flag:'levou_a_caixa_sozinho', registrar:'Aceitou levar a caixa da menina até a torre.'},
+  escolhas:[
+    {texto:'Ir direto até a base da torre.', vai:'c7_base'},
+    {texto:'Andar pela cidade primeiro.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_vai_junto:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu levo. Mas você sobe comigo.'),
+    'Ela balança a cabeça antes de você terminar a frase.',
+    fala('a menina da caixa', 'Não.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a menina da caixa', 'Porque eu já subi três vezes e nas três eu voltei no segundo andar.'),
+    'Ela senta na mochila de novo.',
+    fala('a menina da caixa', 'Não é medo de fantasma. Todo mundo acha que é medo de fantasma.'),
+    fala('a menina da caixa', 'É que subindo a escada eu ainda tô levando ele pra algum lugar. Quando eu chegar em cima acabou de levar.', 'baixo'),
+    'Você fica um tempo sem saber o que dizer, o que é a resposta certa.',
+    d=>fala(d.jogador.nome, 'Então a gente sobe devagar.'),
+    'Ela levanta.'
+  ],
+  ef:{flag:'a_menina_vai_subir', moral:1,
+      rep:{eixo:'bom', delta:1, motivo:'Convenceu a menina a subir a torre em vez de levar a caixa por ela.'},
+      npc:{nome:'a menina da caixa', opiniao:2, viuVoce:'Subiu a Torre Pokémon com você.'},
+      registrar:'A menina da caixa vai subir a torre com você.'},
+  escolhas:[
+    {texto:'Ir até a base da torre com ela.', vai:'c7_base'}
+  ]
+},
+
+c7_ab_de_cracha:{
+  texto:[
+    'Tem um posto da prefeitura na entrada de Lavender que não existe em nenhuma outra cidade de Kanto: uma guarita de dois metros por dois com uma janelinha, e dentro dela uma mulher com um livro de registro.',
+    'Não é fiscalização. É outra coisa.',
+    fala('a funcionária da guarita', 'Bom dia. Veio visitar ou veio sepultar?'),
+    'É a pergunta mais direta que alguém já te fez.',
+    d=>{
+      const c = Cargos.principal();
+      return `Você mostra o crachá de ${c ? c.nome : 'serviço'} sem saber muito bem por quê, e ela lê com atenção de quem lê tudo.`;
+    },
+    fala('a funcionária da guarita', 'Ah. Do serviço.'),
+    'Ela fecha o livro de registro. Não guarda: fecha, e deixa a mão em cima.',
+    fala('a funcionária da guarita', 'Então eu vou te falar uma coisa que eu não falo pra visitante.', 'baixo'),
+    fala('a funcionária da guarita', 'Esse livro aqui registra quem sobe a torre desde mil novecentos e setenta e quatro.'),
+    fala('a funcionária da guarita', 'Nos últimos dois meses subiu gente que não desceu, e eu reportei três vezes, e ninguém veio.')
+  ],
+  ef:{flag:'o_livro_da_guarita',
+      npc:{nome:'a funcionária da guarita', opiniao:1, viuVoce:'Te contou do livro de registro porque você tinha crachá.'},
+      registrar:'O livro da guarita registra quem sobe a torre desde 1974. Nos últimos dois meses, subiu gente que não desceu.',
+      presagio:'Ela reportou três vezes e ninguém veio. Isso é informação sobre quem devia vir.'},
+  escolhas:[
+    {texto:'Pedir pra ver o livro.', vai:'c7_ab_o_livro'},
+    {texto:'Perguntar pra quem exatamente ela reportou.', vai:'c7_ab_pra_quem'},
+    {texto:'Agradecer e ir direto pra torre.', vai:'c7_base'}
+  ]
+},
+
+c7_ab_o_livro:{
+  texto:[
+    'Ela abre o livro nas últimas páginas e vira pra você sem entregar.',
+    'Cada linha tem data, hora de subida e hora de descida. A terceira coluna é preenchida a lápis, porque a terceira coluna é a que às vezes não acontece.',
+    'Nos últimos dois meses tem onze linhas com a terceira coluna vazia.',
+    'Das onze, oito são da mesma hora do dia: entre três e quatro da manhã.',
+    fala('a funcionária da guarita', 'A guarita fecha às dez.'),
+    d=>fala(d.jogador.nome, 'Então quem anotou essas oito?'),
+    'Ela vira o livro de volta e não responde na hora.',
+    fala('a funcionária da guarita', 'Elas aparecem escritas quando eu abro de manhã.', 'baixo'),
+    fala('a funcionária da guarita', 'Com a minha letra.')
+  ],
+  ef:{flag:'oito_linhas_de_madrugada',
+      registrar:'Onze pessoas subiram a torre nos últimos dois meses e não desceram. Oito subiram entre três e quatro da manhã.',
+      presagio:'Alguém escreve no livro com a letra dela, de madrugada, com a guarita fechada.'},
+  escolhas:[
+    {texto:'Ir até a base da torre.', vai:'c7_base'},
+    {texto:'Andar pela cidade primeiro e perguntar por aí.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_pra_quem:{
+  texto:[
+    fala('a funcionária da guarita', 'Primeiro pra prefeitura. A prefeitura falou que a torre é da Liga.'),
+    fala('a funcionária da guarita', 'Aí eu liguei pra Liga. A Liga falou que a torre é patrimônio, quem cuida é a Fundação.'),
+    d=>fala(d.jogador.nome, 'E a Fundação?'),
+    fala('a funcionária da guarita', 'A Fundação não existe desde oitenta e seis.'),
+    'Ela fala isso sem drama nenhum, como quem já passou da parte de achar isso absurdo.',
+    fala('a funcionária da guarita', 'Eu tenho as três respostas por escrito. Se você quiser cópia eu tiro.'),
+    'Você diz que quer, e ela já tinha tirado. Estava numa pasta embaixo do livro, esperando alguém pedir há dois meses.'
+  ],
+  ef:{flag:'copia_das_tres_respostas',
+      registrar:'Tem cópia por escrito: prefeitura aponta pra Liga, Liga aponta pra Fundação, Fundação não existe desde 1986.'},
+  escolhas:[
+    {texto:'Pedir pra ver o livro de registro também.', vai:'c7_ab_o_livro'},
+    {texto:'Ir até a base da torre.', vai:'c7_base'}
+  ]
+},
+
 
 c7_chegada:{
   texto:[
@@ -25331,14 +26033,398 @@ c7_fim:{
 
 
 /* ===== js/story/cap-08.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — porto é lugar de portão, e portão separa quem
+   entra de quem fica. Quem chega com dinheiro, quem chega sem,
+   quem chega com crachá e quem chega com nome na boca do povo
+   encontram portões diferentes.
+   ------------------------------------------------------------ */
+const C8_ABERTURAS = ['c8_chegada', 'c8_ab_sem_passagem', 'c8_ab_parede_de_gente', 'c8_ab_convite', 'c8_ab_pelo_portao_de_carga'];
+function c8_cabe(id, d){
+  if (id === 'c8_ab_sem_passagem') return d.jogador.dinheiro < 2000;
+  if (id === 'c8_ab_convite')      return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4;
+  if (id === 'c8_ab_pelo_portao_de_carga')
+    return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3 || d.via === 'foragido';
+  return true;
+}
+function c8_abertura(d){
+  const cand = C8_ABERTURAS.filter(id => c8_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 8 — TODO MUNDO PAGA PASSAGEM  (Vermilion / S.S. Anne)
    ============================================================ */
 CAPITULOS.push(
 {
 num:8, titulo:'Todo Mundo Paga Passagem', local:'Vermilion / S.S. Anne', ambiente:'agua', nivelArea:30,
-tom:'sombrio', inicio:'c8_chegada',
+tom:'sombrio', entradas:C8_ABERTURAS,
+inicio: d => c8_abertura(d),
 cenas:{
+
+c8_ab_sem_passagem:{
+  texto:[
+    'A passarela do cais três tem uma roleta e a roleta tem um preço, e o preço está numa placa de acrílico em quatro idiomas.',
+    'Visitação a bordo: 2.000 ₽.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽.`,
+    'Tem umas quinze pessoas encostadas no gradil do lado de fora, olhando o navio, e você entende em cinco segundos que as quinze estão na mesma situação que você.',
+    'Ninguém fala isso em voz alta. Todo mundo olha o navio como se estivesse ali pela vista.',
+    'Um rapaz mais ou menos da sua idade cospe no chão sem mirar em nada.',
+    fala('o rapaz do gradil', 'Dois mil pra subir num barco que não vai a lugar nenhum.'),
+    d=>fala(d.jogador.nome, 'Ele não navega?'),
+    fala('o rapaz do gradil', 'Navega quatro vezes por ano. O resto do tempo ele é um hotel que flutua.'),
+    fala('o rapaz do gradil', 'E quem tá lá dentro não pagou dois mil, ó. Quem tá lá dentro foi convidado.')
+  ],
+  ef:{flag:'ficou_do_lado_de_fora', registrar:'A visitação ao S.S. Anne custa 2.000 ₽. Você ficou no gradil.'},
+  escolhas:[
+    {texto:'Perguntar como se consegue convite.', vai:'c8_ab_como_se_consegue'},
+    {texto:'Procurar trabalho no cais pra levantar os dois mil.', vai:'c8_ab_trabalho'},
+    {texto:'Dar a volta e procurar outro jeito de entrar.', vai:'c8_ab_a_volta'},
+    {texto:'Deixar o navio pra depois e andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_como_se_consegue:{
+  texto:[
+    'Ele ri e o riso não é simpático nem antipático, é só cansado.',
+    fala('o rapaz do gradil', 'Três jeitos. Ser rico, ser famoso, ou trabalhar lá dentro.'),
+    fala('o rapaz do gradil', 'Meu tio trabalha. Cozinha. Entra pelo portão de carga às quatro da manhã e sai às onze da noite, e ele já subiu nesse navio mais vezes que qualquer milionário de Kanto.'),
+    d=>fala(d.jogador.nome, 'E ele conta o que tem lá dentro?'),
+    'O rapaz para de olhar o navio e olha pra você pela primeira vez.',
+    fala('o rapaz do gradil', 'Ele contava. Faz umas três semanas que ele parou de contar.', 'baixo'),
+    fala('o rapaz do gradil', 'Continua indo todo dia. Só parou de contar.')
+  ],
+  ef:{flag:'o_tio_parou_de_contar',
+      registrar:'Um cozinheiro do S.S. Anne parou de contar o que vê a bordo, mas continua indo todo dia.',
+      presagio:'Quem para de contar viu alguma coisa que dá medo de repetir.'},
+  escolhas:[
+    {texto:'Perguntar onde fica o portão de carga.', vai:'c8_ab_a_volta'},
+    {texto:'Procurar trabalho no cais.', vai:'c8_ab_trabalho'},
+    {texto:'Ir andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_trabalho:{
+  texto:[
+    'O cais contrata por dia e contrata na hora: tem um quadro de giz do lado do galpão dois com o que precisa e quanto paga.',
+    'Descarga de contêiner refrigerado, 400 ₽ por turno de quatro horas. Limpeza de casco, 700 ₽ e você trabalha pendurado. Conferência de carga, 900 ₽ e precisa saber ler rápido.',
+    'O homem da prancheta te mede de cima a baixo sem nenhuma grosseria, do jeito que se mede um saco pra saber se cabe.',
+    fala('o conferente', 'Idade?'),
+    d=>fala(d.jogador.nome, 'Quinze.'),
+    fala('o conferente', 'Então não é limpeza de casco. Pendurado só com dezoito.'),
+    'Ele escreve o seu nome numa lista de doze e a lista de doze é o turno das duas.'
+  ],
+  ef:{flag:'pegou_turno_no_cais', registrar:'Se inscreveu para um turno de trabalho no cais de Vermilion.'},
+  escolhas:[
+    {texto:'Pegar a descarga de refrigerado. 400 ₽.', vai:'c8_ab_refrigerado'},
+    {texto:'Pegar a conferência de carga. 900 ₽.', vai:'c8_ab_conferencia'},
+    {texto:'Desistir e ir andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_refrigerado:{
+  texto:[
+    'Quatro horas dentro de um contêiner a dois graus, tirando caixa de peixe de um lado e pondo do outro.',
+    'Nos primeiros quarenta minutos é suportável. Depois da primeira hora, as pontas dos dedos param de ter opinião sobre o que estão segurando.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} passa os quatro turnos do lado de fora do contêiner, sentado na doca, e não sai de lá.`
+               : 'Você faz as quatro horas sozinho e não é a pior coisa que já aconteceu essa semana.';
+    },
+    'No fim, o conferente conta quatrocentos na sua mão em notas usadas e você sai do galpão com o cheiro no cabelo.',
+    'O cheiro vai levar dois dias pra sair. Isso não estava no quadro de giz.'
+  ],
+  ef:{dinheiro:400, hp:-3, flag:'trabalhou_no_frio',
+      registrar:'Trabalhou quatro horas num contêiner refrigerado. 400 ₽.'},
+  escolhas:[
+    {texto:'Pegar outro turno.', vai:'c8_ab_trabalho'},
+    {texto:'Ir pro navio com o que você tem.', vai:'c8_cais'},
+    {texto:'Chega. Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_conferencia:{
+  texto:[
+    'Conferência de carga é o trabalho mais fácil do cais e por isso paga mais, o que é uma das coisas mais estranhas que você já viu.',
+    'Você fica com uma prancheta na mão de manifesto e confere número de contêiner contra número de lista enquanto eles passam.',
+    'Quatro horas. Duzentos e onze contêineres. Duzentos e nove batem.',
+    'Os dois que não batem estão no manifesto do S.S. Anne e a descrição dos dois é "suprimentos de bordo — perecível".',
+    'Contêiner de perecível é refrigerado. Esses dois não são: são secos, lacrados, e têm furo de ventilação de trinta em trinta centímetros na lateral.',
+    'Você aponta pro conferente. Ele olha, confere, e faz uma coisa que você não esperava: risca a sua observação da prancheta com a caneta dele.',
+    fala('o conferente', 'Esses dois são do navio.'),
+    d=>fala(d.jogador.nome, 'Eu sei. Tá errado.'),
+    fala('o conferente', 'Esses dois são do navio.', 'frio')
+  ],
+  ef:{dinheiro:900, flag:'dois_conteineres_com_furo',
+      registrar:'Dois contêineres do S.S. Anne têm furo de ventilação e manifesto de perecível seco. O conferente riscou a observação.',
+      presagio:'Furo de ventilação existe por um motivo só, e não é para conservar comida.'},
+  escolhas:[
+    {texto:'Insistir com o conferente.', vai:'c8_ab_insistiu'},
+    {texto:'Não insistir. Pegar o dinheiro e ir pro navio.', vai:'c8_cais'},
+    {texto:'Não insistir. Andar pela cidade e pensar.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_insistiu:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Tem furo de ventilação na lateral.'),
+    'Ele para de andar. Olha pros lados antes de falar, e no cais de Vermilion olhar pros lados não adianta nada porque tem trezentas pessoas em volta.',
+    fala('o conferente', 'Escuta. Eu faço isso há dezenove anos.'),
+    fala('o conferente', 'Eu já conferi carga que eu sabia o que era. Já conferi carga que eu não quis saber.'),
+    fala('o conferente', 'A diferença entre as duas é que na segunda eu ainda tenho emprego.', 'baixo'),
+    'Ele arranca a folha do manifesto, dobra em quatro, e põe no seu bolso sem pedir licença.',
+    fala('o conferente', 'Some com isso. E não trabalha mais nesse cais essa semana.')
+  ],
+  ef:{flag:'provas_navio',
+      npc:{nome:'o conferente', opiniao:1, viuVoce:'Te deu a folha do manifesto e te mandou sumir do cais.'},
+      registrar:'O conferente te entregou a folha do manifesto com os dois contêineres irregulares.'},
+  escolhas:[
+    {texto:'Ir pro cais três olhar o navio de perto.', vai:'c8_cais'},
+    {texto:'Andar pela cidade primeiro.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_a_volta:{
+  texto:[
+    'O cais três tem um portão de visitação e tem um portão de carga, e o de carga fica oitocentos metros mais pro norte, depois do galpão sete.',
+    'Não tem roleta. Tem uma cancela de ferro, um guarita com um homem dentro e um fluxo de caminhão que não para.',
+    'Você fica vinte minutos olhando e aprende três coisas.',
+    'Uma: ninguém apresenta documento. Duas: todo mundo que entra a pé está de colete laranja. Três: tem uma pilha de coletes laranja num carrinho do lado de fora da guarita, e o carrinho está ali porque os coletes são de todo mundo e de ninguém.',
+    'O homem da guarita está de costas, resolvendo alguma coisa num telefone de fio.'
+  ],
+  ef:{flag:'viu_o_portao_de_carga', registrar:'O portão de carga do cais três não pede documento — pede colete laranja.'},
+  escolhas:[
+    {texto:'Pegar um colete e entrar.', vai:'c8_ab_de_colete_entrou'},
+    {texto:'Não. Voltar pro portão de visitação.', vai:'c8_cais'},
+    {texto:'Andar pela cidade e pensar no assunto.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_de_colete_entrou:{
+  texto:[
+    'Você veste o colete no meio do caminho, sem parar de andar, que é a única maneira de fazer isso sem parecer que você está fazendo isso.',
+    'Passa pela cancela atrás de um carrinho de empilhadeira. O homem da guarita não olha.',
+    'Do lado de dentro, o porto é outro lugar: menos organizado, mais barulhento, e com muito mais gente parada do que se vê de fora.',
+    'Ninguém pergunta nada. Um colete laranja é um passaporte perfeito porque ele responde a pergunta antes dela ser feita.',
+    'O S.S. Anne está a duzentos metros e daqui dá pra ver o que não dá pra ver do gradil: tem uma segunda passarela, menor, na popa, e por ela não sobe passageiro nenhum.'
+  ],
+  ef:{flag:['entrou_de_colete','segunda_passarela'],
+      rep:{eixo:'ruim', delta:1, motivo:'Entrou na área restrita do porto vestindo um colete que não era seu.'},
+      registrar:'Entrou no cais três pelo portão de carga, de colete. Tem uma segunda passarela na popa.'},
+  escolhas:[
+    {texto:'Seguir até a segunda passarela.', vai:'c8_cais'},
+    {texto:'Andar pela área de carga vendo o que dá pra ver.', vai:'c8_olhou_o_porto'}
+  ]
+},
+
+c8_ab_parede_de_gente:{
+  texto:[
+    'Vermilion cheira a sal, diesel e fritura, e hoje cheira também a gente parada, que é um cheiro diferente de gente andando.',
+    'Tem uma parede de gente no fim da Avenida do Porto. Umas duzentas pessoas, faixa pintada à mão, e um homem em cima de uma caixa de feira com um megafone de pilha.',
+    'A faixa diz: CONTÊINER LACRADO NÃO É CARGA, É CONTRABANDO.',
+    fala('o homem do megafone', 'Dezenove! Dezenove contêineres em dois meses que ninguém abriu, ninguém pesou, ninguém conferiu!'),
+    fala('o homem do megafone', 'E todos com destino registrado no mesmo navio!'),
+    'Do outro lado da rua, a uns quarenta metros, tem oito guardas portuários parados em linha, sem capacete, sem escudo, com as mãos pra trás.',
+    'Eles não estão ali pra dispersar ninguém. Estão ali pra ser vistos.',
+    d=>{
+      const r = Estado.nomeRep();
+      if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4) return `Alguém no meio da multidão te reconhece e fala "${r}" alto demais, e umas trinta cabeças viram ao mesmo tempo.`;
+      return 'Ninguém te reconhece. Você é mais uma pessoa que parou pra ver o que era.';
+    }
+  ],
+  ef:{flag:'a_manifestacao_do_porto',
+      registrar:'Duzentas pessoas protestam no porto de Vermilion contra dezenove contêineres lacrados em dois meses.'},
+  escolhas:[
+    {texto:'Ficar e ouvir o homem do megafone até o fim.', vai:'c8_ab_ouviu'},
+    {texto:'Ir falar com os guardas do outro lado.', vai:'c8_ab_os_guardas'},
+    {texto:'Contornar e descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_ouviu:{
+  texto:[
+    'Ele fala mais dezoito minutos e nos dezoito minutos não repete nenhum número, o que quer dizer que ele anotou tudo antes.',
+    'No fim ele desce da caixa e vira uma pessoa normal de uns cinquenta anos com uma camisa suada, e é essa versão dele que fala com você quando você chega perto.',
+    fala('o homem do megafone', 'Você é de onde?'),
+    d=>fala(d.jogador.nome, 'De passagem.'),
+    fala('o homem do megafone', 'Todo mundo aqui é de passagem. Eu sou daqui e sou de passagem.'),
+    'Ele enrola o fio do megafone com muito cuidado, na dobra certa, como quem vai usar de novo amanhã.',
+    fala('o homem do megafone', 'A gente tá aqui há onze dias. Sabe quantos jornalistas vieram?'),
+    d=>fala(d.jogador.nome, 'Quantos?'),
+    fala('o homem do megafone', 'Dois. Os dois do jornal de Vermilion. Os dois escreveram. Nenhum dos dois saiu impresso.')
+  ],
+  ef:{flag:'nada_saiu_impresso',
+      npc:{nome:'o homem do megafone', opiniao:1, viuVoce:'Você ficou até o fim da fala dele no porto.'},
+      registrar:'Dois repórteres escreveram sobre os contêineres de Vermilion. Nenhuma das duas matérias saiu impressa.',
+      presagio:'Matéria escrita que não sai impressa foi parada por alguém acima do repórter.'},
+  escolhas:[
+    {texto:'Perguntar o nome dos dois jornalistas.', vai:'c8_ab_os_nomes'},
+    {texto:'Descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_os_nomes:{
+  texto:[
+    fala('o homem do megafone', 'Saya Kurata e um rapaz novo que eu não lembro o sobrenome.'),
+    'Você anota. Ele repara que você anota e isso muda a cara dele.',
+    fala('o homem do megafone', 'A Kurata voltou aqui depois. Sozinha, sem crachá, de tarde.'),
+    fala('o homem do megafone', 'Ela não perguntou nada sobre o protesto. Ela perguntou o horário da maré.'),
+    d=>fala(d.jogador.nome, 'Da maré?'),
+    fala('o homem do megafone', 'Da maré. E foi embora com o horário anotado.'),
+    'Ele dá de ombros, mas é um dar de ombros que sabe que aquilo significa alguma coisa.'
+  ],
+  ef:{flag:'kurata_perguntou_da_mare',
+      npc:{nome:'Saya Kurata', conhece:true, viuVoce:'Ainda não te viu — você ouviu falar dela primeiro.'},
+      registrar:'Saya Kurata voltou ao porto sem crachá e perguntou o horário da maré.'},
+  escolhas:[
+    {texto:'Descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_os_guardas:{
+  texto:[
+    'Você atravessa a rua e chega nos oito, e os oito te veem chegar de longe e nenhum muda de posição.',
+    'O do meio é o que fala, o que quer dizer que ele é o que manda.',
+    fala('o guarda do meio', 'Não pode passar por aqui.'),
+    d=>fala(d.jogador.nome, 'Eu não ia passar. Eu ia perguntar.'),
+    'Isso desarma ele por meio segundo.',
+    fala('o guarda do meio', 'Pergunta.'),
+    d=>fala(d.jogador.nome, 'Vocês vão abrir os contêineres?'),
+    'Silêncio. O guarda da ponta esquerda muda o peso de perna.',
+    fala('o guarda do meio', 'A gente não abre contêiner. A gente guarda portão.'),
+    fala('o guarda do meio', 'Quem abre contêiner é a alfândega.'),
+    d=>fala(d.jogador.nome, 'E a alfândega tá aonde?'),
+    'Ele olha pro lado, pro prédio da alfândega, que está a cento e vinte metros com as luzes acesas e a porta fechada, e que está assim há onze dias.',
+    fala('o guarda do meio', 'Boa pergunta.', 'baixo')
+  ],
+  ef:{flag:'alfandega_fechada_ha_onze_dias',
+      registrar:'A alfândega de Vermilion está de luz acesa e porta fechada há onze dias.'},
+  escolhas:[
+    {texto:'Ir até a porta da alfândega.', vai:'c8_ab_a_porta'},
+    {texto:'Voltar pro protesto.', vai:'c8_ab_ouviu'},
+    {texto:'Descer pro cais três.', vai:'c8_cais'}
+  ]
+},
+
+c8_ab_a_porta:{
+  texto:[
+    'A porta da alfândega é de vidro fumê com um adesivo do brasão de Kanto descascando na altura do joelho.',
+    'Tem um papel colado por dentro, impresso, com data de onze dias atrás:',
+    'ATENDIMENTO SUSPENSO POR TEMPO INDETERMINADO — REESTRUTURAÇÃO INTERNA.',
+    'Você bate. Bate de novo. Na terceira vez, uma sombra passa do lado de dentro e não para.',
+    'Você fica olhando o vidro até entender que o reflexo é melhor que a transparência: no reflexo, dá pra ver os oito guardas do outro lado da rua todos virados pra você.',
+    'Os oito. Ao mesmo tempo.'
+  ],
+  ef:{flag:'bateu_na_alfandega',
+      registrar:'Tem gente dentro da alfândega de Vermilion, com o atendimento suspenso há onze dias.',
+      presagio:'Prédio fechado com gente dentro não está fechado. Está escolhendo quem entra.'},
+  escolhas:[
+    {texto:'Descer pro cais três.', vai:'c8_cais'},
+    {texto:'Andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_convite:{
+  texto:[
+    'Você não chega a andar cem metros dentro de Vermilion.',
+    'Tem um homem de terno claro encostado num carro parado na entrada da cidade, e ele levanta a mão quando te vê, do jeito que se chama um táxi.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Ele fala o seu nome e depois "${r}" e depois sorri, e a ordem dessas três coisas foi ensaiada.`;
+    },
+    fala('o homem de terno claro', 'O comandante pediu pra eu te esperar aqui desde ontem.'),
+    d=>fala(d.jogador.nome, 'Que comandante?'),
+    fala('o homem de terno claro', 'Do S.S. Anne. Ele acompanha o que sai nos jornais.'),
+    'Ele abre a porta de trás do carro, o que é um jeito de encerrar a conversa.',
+    fala('o homem de terno claro', 'Jantar às oito. Terno a gente empresta. Você só precisa entrar no carro.'),
+    'A distância da entrada de Vermilion até o cais três é de dois quilômetros e meio, e a pé leva quarenta minutos, e você tem as duas opções na mão.'
+  ],
+  ef:{flag:'convite_do_comandante',
+      registrar:'O comandante do S.S. Anne mandou um carro te esperar na entrada de Vermilion.',
+      presagio:'Convite que te espera desde ontem não é convite. É captura com boas maneiras.'},
+  escolhas:[
+    {texto:'Entrar no carro.', vai:'c8_ab_entrou_no_carro'},
+    {texto:'Recusar e ir a pé.', vai:'c8_ab_recusou_o_carro'},
+    {texto:'Perguntar por que ele está te esperando desde ontem.', vai:'c8_ab_desde_ontem'}
+  ]
+},
+
+c8_ab_desde_ontem:{
+  texto:[
+    'Ele não perde o sorriso mas leva um segundo a mais pra responder do que levou pra falar o seu nome.',
+    fala('o homem de terno claro', 'Porque o comandante achou que você chegaria ontem.'),
+    d=>fala(d.jogador.nome, 'E como ele sabia que eu chegaria?'),
+    fala('o homem de terno claro', 'Você veio de Lavender pela Rota 11. Tem uma estrada só.'),
+    'Isso é verdade e não responde nada.',
+    fala('o homem de terno claro', 'Olha, eu sou motorista. Eu dirijo e eu espero. Quem sabe as coisas é quem manda esperar.'),
+    'Ele destranca a porta de trás de novo, e dessa vez o gesto tem menos certeza.'
+  ],
+  ef:{flag:'o_motorista_nao_sabe',
+      registrar:'O carro te esperava desde ontem. O motorista não sabe como sabiam da sua rota.'},
+  escolhas:[
+    {texto:'Entrar no carro.', vai:'c8_ab_entrou_no_carro'},
+    {texto:'Recusar e ir a pé.', vai:'c8_ab_recusou_o_carro'}
+  ]
+},
+
+c8_ab_entrou_no_carro:{
+  texto:[
+    'O carro desce a cidade inteira em seis minutos e não para em nenhum sinal, o que quer dizer que ele não pegou nenhum vermelho ou que ele não para em vermelho.',
+    'Pela janela, Vermilion passa em ordem inversa à que você teria visto a pé: primeiro o cais, depois a cidade, depois o resto.',
+    'Ele entra pelo portão de carga, não pelo de visitação. A cancela sobe antes do carro chegar.',
+    'No cais três, do lado da passarela, tem um homem de uniforme branco com quatro listras douradas na manga esperando, e ele começa a andar na sua direção antes do carro parar.',
+    'Você ainda não desceu do carro e já deve alguma coisa pra alguém. Você não sabe ainda o quê.'
+  ],
+  ef:{flag:['aceitou_o_convite','entrou_pelo_portao_de_carga'],
+      registrar:'Entrou no S.S. Anne pelo portão de carga, a convite do comandante.',
+      presagio:'A cancela subiu antes do carro chegar. Esse carro passa por ali todo dia.'},
+  escolhas:[
+    {texto:'Descer e cumprimentar o comandante.', vai:'c8_cais'}
+  ]
+},
+
+c8_ab_recusou_o_carro:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu vou a pé.'),
+    fala('o homem de terno claro', 'São dois quilômetros e meio.'),
+    d=>fala(d.jogador.nome, 'Eu sei.'),
+    'Ele fecha a porta de trás sem bater, entra no carro e desce a avenida devagar, no seu ritmo, os dois quilômetros e meio inteiros.',
+    'Ele não te ultrapassa. Ele desce na sua frente, a trinta metros, em segunda marcha, durante quarenta minutos.',
+    'No fim dos quarenta minutos você chega no cais três a pé e ele já está lá, parado, com a porta de trás aberta.',
+    fala('o homem de terno claro', 'Jantar às oito.', 'frio')
+  ],
+  ef:{flag:['recusou_o_convite','o_carro_te_seguiu'],
+      registrar:'Recusou o carro do comandante. Ele desceu a avenida inteira na sua frente, em segunda marcha.',
+      presagio:'Recusar um convite assim não cancela o convite. Só informa quem convidou.'},
+  escolhas:[
+    {texto:'Ir até a passarela do cais três.', vai:'c8_cais'},
+    {texto:'Ignorar o carro e andar pela cidade.', vai:'c8_cidade'}
+  ]
+},
+
+c8_ab_pelo_portao_de_carga:{
+  texto:[
+    'Você entra em Vermilion pela linha do trem, não pela estrada, porque a estrada tem um posto na entrada e o posto tem uma lista.',
+    'Andar em leito de linha é ilegal, cansativo e razoavelmente perigoso, e é a coisa mais sensata que você faz hoje.',
+    'Do leito da linha, o porto aparece de trás: pátio de contêiner, oficina, galpão, e só no fim a água.',
+    d=>{
+      if (d.via === 'foragido') return 'Você conhece esse tipo de entrada agora. Aprendeu em algum momento dos últimos meses e não lembra exatamente quando, o que é a parte que incomoda.';
+      return 'Você nunca tinha entrado numa cidade assim. Foi mais fácil do que devia ser, e essa é a parte que incomoda.';
+    },
+    'No pátio tem um carrinho com coletes laranja de todo mundo e de ninguém, e ninguém olha duas vezes pra quem está de colete.',
+    'A duzentos metros, o S.S. Anne: um prédio deitado na água com nove fileiras de janela acesa.'
+  ],
+  ef:{flag:'entrou_por_tras', registrar:'Entrou em Vermilion pela linha do trem, evitando o posto da estrada.'},
+  escolhas:[
+    {texto:'Pegar um colete e andar pelo pátio como se fosse seu.', vai:'c8_ab_de_colete_entrou'},
+    {texto:'Sair do pátio e entrar na cidade normalmente.', vai:'c8_cidade'},
+    {texto:'Sentar num canto e olhar o porto trabalhar antes de decidir.', vai:'c8_olhou_o_porto'}
+  ]
+},
+
 
 c8_chegada:{
   texto:[
@@ -29308,6 +30394,24 @@ c8_fim_porto:{
 
 
 /* ===== js/story/cap-09.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — Celadon vende. Quem chega com dinheiro, quem
+   chega sem, quem chega com nome e quem chega com crachá são
+   quatro clientes diferentes, e a cidade sabe disso antes de
+   você saber.
+   ------------------------------------------------------------ */
+const C9_ABERTURAS = ['c9_chegada', 'c9_ab_de_onibus', 'c9_ab_sem_nada', 'c9_ab_seguido', 'c9_ab_de_cracha'];
+function c9_cabe(id, d){
+  if (id === 'c9_ab_sem_nada')  return d.jogador.dinheiro < 1500;
+  if (id === 'c9_ab_seguido')   return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3;
+  if (id === 'c9_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c9_abertura(d){
+  const cand = C9_ABERTURAS.filter(id => c9_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 9 — A CIDADE QUE COMPRA  (Celadon)
    PONTO DE VIRADA: aqui a sua rota é definida.
@@ -29315,8 +30419,246 @@ c8_fim_porto:{
 CAPITULOS.push(
 {
 num:9, titulo:'A Cidade que Compra', local:'Celadon', ambiente:'cidade', nivelArea:32,
-tom:'muito sombrio', inicio:'c9_chegada',
+tom:'muito sombrio', entradas:C9_ABERTURAS,
+inicio: d => c9_abertura(d),
 cenas:{
+
+c9_ab_de_onibus:{
+  texto:[
+    'Existe ônibus entre as cidades de Kanto e ninguém te contou isso antes porque ninguém acha que você é o tipo de pessoa que pega ônibus.',
+    'Custa duzentos e quarenta, leva uma hora e quarenta, e tem quarenta e dois assentos dos quais trinta e nove estão ocupados por gente indo trabalhar.',
+    'Você é a única pessoa do ônibus com um Pokémon no colo, e as pessoas olham do jeito que se olha alguém carregando uma prancha de surfe no metrô.',
+    'O ônibus entra em Celadon pela avenida oito e a cidade começa de uma vez: não tem subúrbio, não tem transição. Roça, roça, roça, prédio de doze andares.',
+    'Na rodoviária, um painel eletrônico anuncia as saídas e o painel tem um problema: metade das letras não acende, então todos os destinos estão escritos pela metade.',
+    'Você fica um minuto e meio olhando o painel tentando ler "VERMILION" a partir de "V RM L O ", e é a coisa mais Celadon que existe: informação completa que chega incompleta.'
+  ],
+  ef:{dinheiro:-240, flag:'veio_de_onibus', registrar:'Chegou a Celadon de ônibus intermunicipal, por 240 ₽.'},
+  escolhas:[
+    {texto:'Sair da rodoviária e andar pela cidade.', vai:'c9_cidade'},
+    {texto:'Ir direto ao shopping. Sete andares.', vai:'c9_shopping'},
+    {texto:'Perguntar no guichê sobre os caminhões de Vermilion.', vai:'c9_ab_o_guiche'}
+  ]
+},
+
+c9_ab_o_guiche:{
+  texto:[
+    'O guichê de informações da rodoviária tem uma mulher de uns trinta anos que responde três perguntas por minuto há nove horas.',
+    d=>fala(d.jogador.nome, 'Carga de Vermilion descarrega aonde nessa cidade?'),
+    'Ela nem pensa. É pergunta de rotina.',
+    fala('a mulher do guichê', 'Terminal de carga da avenida dois. Todo mundo descarrega lá.'),
+    d=>fala(d.jogador.nome, 'Todo mundo?'),
+    fala('a mulher do guichê', 'Todo mundo que tem nota.'),
+    'Ela diz isso sem baixar a voz, sem olhar pros lados, sem nada — é uma informação pública e cansada.',
+    fala('a mulher do guichê', 'Quem não tem nota descarrega nos fundos do cassino. Isso todo mundo sabe também.'),
+    fala('a mulher do guichê', 'Próximo.')
+  ],
+  ef:{flag:'sabe_do_deposito',
+      registrar:'Carga sem nota descarrega nos fundos do cassino de Celadon. É de conhecimento público.',
+      presagio:'Quando o crime é de conhecimento público e continua, alguém decidiu que continua.'},
+  escolhas:[
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Ir ao cassino.', vai:'c9_cassino'},
+    {texto:'Andar pela cidade primeiro.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_sem_nada:{
+  texto:[
+    'Celadon é a pior cidade de Kanto pra se estar sem dinheiro, e ela te informa disso na primeira quadra.',
+    'Vitrine, vitrine, vitrine, praça com chafariz, vitrine.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽ e tudo que você precisa custa mais do que isso.`,
+    'O shopping de sete andares tem ar-condicionado e banheiro limpo e o ar-condicionado e o banheiro limpo são de graça, e você entra pelos dois, e não é a primeira pessoa a fazer isso hoje.',
+    'No terceiro andar, na praça de alimentação, tem uma mesa com sete pessoas na sua faixa de idade que claramente também não vieram comprar nada.',
+    'Eles abrem espaço sem você pedir.',
+    fala('o rapaz de boné', 'Senta. A segurança não incomoda se você for menos de dez.'),
+    d=>fala(d.jogador.nome, 'E se for mais de dez?'),
+    fala('o rapaz de boné', 'Aí vira ajuntamento. Aí incomoda.')
+  ],
+  ef:{flag:'a_mesa_do_terceiro_andar',
+      registrar:'Sete treinadores sem dinheiro ocupam a praça de alimentação do shopping de Celadon.'},
+  escolhas:[
+    {texto:'Sentar e ouvir do que eles falam.', vai:'c9_ab_a_mesa'},
+    {texto:'Agradecer e subir os sete andares mesmo assim.', vai:'c9_shopping'},
+    {texto:'Sair e andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_a_mesa:{
+  texto:[
+    'Você senta. Ninguém pergunta o seu nome, o que é a regra da mesa, e leva uns dez minutos pra você entender que a mesa tem regras.',
+    'Eles falam sobre: o preço da Poção nessa cidade contra o preço em Saffron. Um ginásio que ninguém consegue marcar. E dinheiro.',
+    'Principalmente dinheiro, e principalmente o cassino.',
+    fala('a menina de jaqueta', 'Eu entrei três vezes. Nas três eu saí com mais do que entrei.'),
+    fala('o rapaz de boné', 'E por que você não tá rica?'),
+    fala('a menina de jaqueta', 'Porque na quarta eu saí com menos do que tinha nas três.'),
+    'Risada geral, do tipo que só funciona porque é verdade pra todo mundo na mesa.',
+    fala('o rapaz de boné', 'Tem uma coisa no cassino, ó.', 'baixo'),
+    'A mesa fica quieta, o que quer dizer que essa parte já foi falada antes e é a parte séria.',
+    fala('o rapaz de boné', 'Eles trocam ficha por Pokémon. Não é rumor, tem tabela na parede do fundo.'),
+    fala('o rapaz de boné', 'E ninguém aqui nunca viu de onde vem os bichos.')
+  ],
+  ef:{flag:['a_tabela_do_cassino','sabe_do_deposito'],
+      registrar:'O cassino de Celadon troca ficha por Pokémon, com tabela na parede do fundo.',
+      presagio:'Tabela de preço fixa precisa de fornecimento constante.'},
+  escolhas:[
+    {texto:'Ir ao cassino agora.', vai:'c9_cassino'},
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Subir o shopping primeiro.', vai:'c9_shopping'}
+  ]
+},
+
+c9_ab_seguido:{
+  texto:[
+    'Você entra em Celadon às dez e quarenta e às dez e quarenta e três tem alguém atrás de você.',
+    'Não é discreto. Não foi feito pra ser discreto: é um homem de camisa polo azul com um rádio na cintura, a quinze metros, replicando cada curva sua.',
+    'Você entra numa farmácia. Ele espera na calçada. Você sai, ele anda.',
+    'Você atravessa a rua sem motivo. Ele atravessa a rua sem motivo.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Na quarta quadra ele encosta o rádio na boca e você ouve, de quinze metros, uma palavra: "${r}".`;
+    },
+    'Não é a polícia. Polícia não usa polo.',
+    'É segurança privada, e segurança privada em Celadon trabalha pra loja, o que quer dizer que alguma loja dessa cidade sabe o seu nome e pagou por isso.'
+  ],
+  ef:{flag:'seguranca_privada_te_seguiu',
+      registrar:'Segurança privada te seguiu por quatro quadras em Celadon. Alguma loja pagou por isso.',
+      presagio:'Segurança privada não te prende. Ela te acompanha até você sair do quarteirão de quem paga.'},
+  escolhas:[
+    {texto:'Parar e perguntar pra ele quem paga.', vai:'c9_ab_quem_paga'},
+    {texto:'Perder ele no movimento e seguir.', vai:'c9_ab_perdeu'},
+    {texto:'Ir direto ao shopping e deixar ele te seguir.', vai:'c9_shopping'}
+  ]
+},
+
+c9_ab_quem_paga:{
+  texto:[
+    'Você para no meio da calçada e vira de frente. Ele para também, a quinze metros, e não se aproxima nem recua.',
+    'Vocês ficam assim por uns oito segundos, que é muito tempo pra duas pessoas se olharem numa calçada de Celadon.',
+    'Aí ele anda até você, sem pressa.',
+    fala('o homem de polo azul', 'Boa tarde.'),
+    d=>fala(d.jogador.nome, 'Quem te paga?'),
+    fala('o homem de polo azul', 'Associação Comercial da Avenida Cinco.'),
+    'Ele responde na hora, com orgulho até, porque não tem nada de ilegal nisso e ele sabe.',
+    fala('o homem de polo azul', 'Vinte e duas lojas. A gente acompanha quem tá na lista.'),
+    d=>fala(d.jogador.nome, 'Que lista?'),
+    fala('o homem de polo azul', 'A lista da associação. Chega por fax toda segunda.'),
+    fala('o homem de polo azul', 'Não é lista de bandido, moço. É lista de quem a gente acompanha.'),
+    'Ele diz isso como se as duas coisas fossem diferentes, e para ele são.'
+  ],
+  ef:{flag:'a_lista_da_associacao',
+      registrar:'A Associação Comercial da Avenida Cinco recebe por fax, toda segunda, uma lista de quem acompanhar.',
+      presagio:'Alguém monta essa lista e manda o fax. O fax vem de algum lugar.'},
+  escolhas:[
+    {texto:'Perguntar de onde vem o fax.', vai:'c9_ab_o_fax'},
+    {texto:'Deixar ele pra lá e andar pela cidade.', vai:'c9_cidade'},
+    {texto:'Ir ao shopping com ele atrás.', vai:'c9_shopping'}
+  ]
+},
+
+c9_ab_o_fax:{
+  texto:[
+    'Ele coça o queixo, e é um gesto sincero de quem nunca pensou nisso.',
+    fala('o homem de polo azul', 'Sei lá. Chega na sede.'),
+    d=>fala(d.jogador.nome, 'Tem cabeçalho? Tem número no alto?'),
+    fala('o homem de polo azul', 'Tem. Tem um número. Eu não sei de quem é.'),
+    'Ele olha pro rádio na cintura. Depois pra você. Depois pro rádio de novo.',
+    fala('o homem de polo azul', 'Você sabe que eu trabalho aqui há sete anos e ninguém nunca me perguntou isso?'),
+    d=>fala(d.jogador.nome, 'Sete anos.'),
+    fala('o homem de polo azul', 'Sete anos.'),
+    'Ele fica parado na calçada quando você sai andando. Não te segue mais.'
+  ],
+  ef:{flag:'o_fax_tem_cabecalho', moral:1,
+      npc:{nome:'o homem de polo azul', opiniao:1, viuVoce:'Você perguntou de onde vinha o fax. Ele parou de te seguir.'},
+      registrar:'O fax da lista tem cabeçalho com número. Ninguém nunca perguntou de quem é.'},
+  escolhas:[
+    {texto:'Andar pela cidade e entender onde você está.', vai:'c9_cidade'},
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'}
+  ]
+},
+
+c9_ab_perdeu:{
+  texto:[
+    'Você entra na porta giratória do shopping, dá a volta inteira na giratória e sai de novo pela calçada, no sentido contrário.',
+    'É o truque mais velho do mundo e funciona por três segundos, que são os três segundos que ele leva pra olhar pra dentro do shopping e não te achar.',
+    'Três segundos é o suficiente pra você entrar na travessa e a travessa dá na feira coberta e a feira coberta dá na avenida sete.',
+    'Você sai na avenida sete com o coração acelerado e a certeza inútil de que venceu alguma coisa.',
+    'Venceu um homem de polo azul. O fax continua chegando toda segunda.'
+  ],
+  ef:{flag:'despistou_a_seguranca', registrar:'Despistou a segurança privada na porta giratória do shopping.'},
+  escolhas:[
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Ir ao cassino.', vai:'c9_cassino'},
+    {texto:'Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `A Prefeitura de Celadon tem um balcão de protocolo na entrada da cidade, e o rapaz do balcão vê o seu crachá de ${c ? c.nome : 'serviço'} e faz uma coisa que ninguém nunca fez com você: ele levanta.`;
+    },
+    fala('o rapaz do protocolo', 'Serviço? O senhor quer dar entrada em alguma coisa?'),
+    'Ele te chama de senhor. Você tem quinze anos.',
+    d=>fala(d.jogador.nome, 'Eu não sei. O que dá pra dar entrada aqui?'),
+    fala('o rapaz do protocolo', 'Tudo. Licença, denúncia, pedido de vista, requerimento de informação.'),
+    'Ele empurra uma pasta de formulários pela bancada, e a pasta tem quatro centímetros de espessura.',
+    fala('o rapaz do protocolo', 'Requerimento de informação é o de cima. Qualquer cidadão pode fazer.'),
+    fala('o rapaz do protocolo', 'Mas com crachá eles respondem em quinze dias. Sem crachá eles respondem em noventa.', 'baixo'),
+    'Ele diz isso e volta a sentar, e volta a ser um rapaz num balcão.'
+  ],
+  ef:{flag:'sabe_do_requerimento',
+      registrar:'Com crachá, a Prefeitura de Celadon responde requerimento de informação em 15 dias; sem, em 90.'},
+  escolhas:[
+    {texto:'Requerer as notas de descarga do terminal de carga.', vai:'c9_ab_requereu_carga'},
+    {texto:'Requerer a lista de alvarás do cassino.', vai:'c9_ab_requereu_cassino'},
+    {texto:'Não dar entrada em nada. Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_requereu_carga:{
+  texto:[
+    'Você preenche o formulário na bancada, com a caneta amarrada por barbante, e é a coisa mais adulta que você já fez.',
+    'Campo "objeto do requerimento": você escreve "relação de notas de descarga do terminal de carga da avenida dois, últimos sessenta dias".',
+    'O rapaz lê enquanto carimba e o carimbo para no meio do caminho.',
+    fala('o rapaz do protocolo', 'Últimos sessenta dias.'),
+    d=>fala(d.jogador.nome, 'É.'),
+    'Ele carimba. Destaca o canhoto. Entrega.',
+    fala('o rapaz do protocolo', 'Protocolo 4.417. Guarda esse papelzinho.'),
+    fala('o rapaz do protocolo', 'E, ó — se em quinze dias não responderem, volta aqui e pede o número do processo. Sem o número do processo eles enrolam pra sempre.', 'baixo')
+  ],
+  ef:{flag:'protocolo_das_notas',
+      registrar:'Protocolo 4.417: requerimento das notas de descarga do terminal de carga de Celadon, últimos 60 dias.'},
+  escolhas:[
+    {texto:'Ir procurar onde os caminhões descarregaram, sem esperar quinze dias.', vai:'c9_procurar'},
+    {texto:'Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_requereu_cassino:{
+  texto:[
+    'Campo "objeto do requerimento": "relação de alvarás e atividades licenciadas do estabelecimento da avenida cinco, número 300".',
+    'O rapaz lê. Não carimba.',
+    fala('o rapaz do protocolo', 'Isso aqui é o cassino.'),
+    d=>fala(d.jogador.nome, 'É.'),
+    'Ele olha pra porta da sala do chefe dele, que está fechada, e volta a olhar pro formulário.',
+    fala('o rapaz do protocolo', 'Eu vou carimbar. É meu dever carimbar.'),
+    'Ele carimba. Destaca o canhoto. Entrega. E não solta o papel na hora.',
+    fala('o rapaz do protocolo', 'Protocolo 4.418. Em três anos aqui, esse é o segundo pedido que eu recebo sobre esse endereço.', 'baixo'),
+    d=>fala(d.jogador.nome, 'E o primeiro?'),
+    fala('o rapaz do protocolo', 'Uma repórter. Ano passado.'),
+    fala('o rapaz do protocolo', 'Nunca respondeu.')
+  ],
+  ef:{flag:['protocolo_do_cassino','sabe_do_deposito'],
+      registrar:'Protocolo 4.418: alvarás do cassino de Celadon. É o segundo pedido em três anos; o primeiro nunca foi respondido.',
+      presagio:'Um requerimento que nunca é respondido também é uma resposta.'},
+  escolhas:[
+    {texto:'Ir ao cassino ver com os próprios olhos.', vai:'c9_cassino'},
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
 
 c9_chegada:{
   texto:[

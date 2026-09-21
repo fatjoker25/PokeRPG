@@ -1,3 +1,21 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Celadon vende. Quem chega com dinheiro, quem
+   chega sem, quem chega com nome e quem chega com crachá são
+   quatro clientes diferentes, e a cidade sabe disso antes de
+   você saber.
+   ------------------------------------------------------------ */
+const C9_ABERTURAS = ['c9_chegada', 'c9_ab_de_onibus', 'c9_ab_sem_nada', 'c9_ab_seguido', 'c9_ab_de_cracha'];
+function c9_cabe(id, d){
+  if (id === 'c9_ab_sem_nada')  return d.jogador.dinheiro < 1500;
+  if (id === 'c9_ab_seguido')   return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3;
+  if (id === 'c9_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c9_abertura(d){
+  const cand = C9_ABERTURAS.filter(id => c9_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 9 — A CIDADE QUE COMPRA  (Celadon)
    PONTO DE VIRADA: aqui a sua rota é definida.
@@ -5,8 +23,246 @@
 CAPITULOS.push(
 {
 num:9, titulo:'A Cidade que Compra', local:'Celadon', ambiente:'cidade', nivelArea:32,
-tom:'muito sombrio', inicio:'c9_chegada',
+tom:'muito sombrio', entradas:C9_ABERTURAS,
+inicio: d => c9_abertura(d),
 cenas:{
+
+c9_ab_de_onibus:{
+  texto:[
+    'Existe ônibus entre as cidades de Kanto e ninguém te contou isso antes porque ninguém acha que você é o tipo de pessoa que pega ônibus.',
+    'Custa duzentos e quarenta, leva uma hora e quarenta, e tem quarenta e dois assentos dos quais trinta e nove estão ocupados por gente indo trabalhar.',
+    'Você é a única pessoa do ônibus com um Pokémon no colo, e as pessoas olham do jeito que se olha alguém carregando uma prancha de surfe no metrô.',
+    'O ônibus entra em Celadon pela avenida oito e a cidade começa de uma vez: não tem subúrbio, não tem transição. Roça, roça, roça, prédio de doze andares.',
+    'Na rodoviária, um painel eletrônico anuncia as saídas e o painel tem um problema: metade das letras não acende, então todos os destinos estão escritos pela metade.',
+    'Você fica um minuto e meio olhando o painel tentando ler "VERMILION" a partir de "V RM L O ", e é a coisa mais Celadon que existe: informação completa que chega incompleta.'
+  ],
+  ef:{dinheiro:-240, flag:'veio_de_onibus', registrar:'Chegou a Celadon de ônibus intermunicipal, por 240 ₽.'},
+  escolhas:[
+    {texto:'Sair da rodoviária e andar pela cidade.', vai:'c9_cidade'},
+    {texto:'Ir direto ao shopping. Sete andares.', vai:'c9_shopping'},
+    {texto:'Perguntar no guichê sobre os caminhões de Vermilion.', vai:'c9_ab_o_guiche'}
+  ]
+},
+
+c9_ab_o_guiche:{
+  texto:[
+    'O guichê de informações da rodoviária tem uma mulher de uns trinta anos que responde três perguntas por minuto há nove horas.',
+    d=>fala(d.jogador.nome, 'Carga de Vermilion descarrega aonde nessa cidade?'),
+    'Ela nem pensa. É pergunta de rotina.',
+    fala('a mulher do guichê', 'Terminal de carga da avenida dois. Todo mundo descarrega lá.'),
+    d=>fala(d.jogador.nome, 'Todo mundo?'),
+    fala('a mulher do guichê', 'Todo mundo que tem nota.'),
+    'Ela diz isso sem baixar a voz, sem olhar pros lados, sem nada — é uma informação pública e cansada.',
+    fala('a mulher do guichê', 'Quem não tem nota descarrega nos fundos do cassino. Isso todo mundo sabe também.'),
+    fala('a mulher do guichê', 'Próximo.')
+  ],
+  ef:{flag:'sabe_do_deposito',
+      registrar:'Carga sem nota descarrega nos fundos do cassino de Celadon. É de conhecimento público.',
+      presagio:'Quando o crime é de conhecimento público e continua, alguém decidiu que continua.'},
+  escolhas:[
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Ir ao cassino.', vai:'c9_cassino'},
+    {texto:'Andar pela cidade primeiro.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_sem_nada:{
+  texto:[
+    'Celadon é a pior cidade de Kanto pra se estar sem dinheiro, e ela te informa disso na primeira quadra.',
+    'Vitrine, vitrine, vitrine, praça com chafariz, vitrine.',
+    d=>`Você tem ${d.jogador.dinheiro} ₽ e tudo que você precisa custa mais do que isso.`,
+    'O shopping de sete andares tem ar-condicionado e banheiro limpo e o ar-condicionado e o banheiro limpo são de graça, e você entra pelos dois, e não é a primeira pessoa a fazer isso hoje.',
+    'No terceiro andar, na praça de alimentação, tem uma mesa com sete pessoas na sua faixa de idade que claramente também não vieram comprar nada.',
+    'Eles abrem espaço sem você pedir.',
+    fala('o rapaz de boné', 'Senta. A segurança não incomoda se você for menos de dez.'),
+    d=>fala(d.jogador.nome, 'E se for mais de dez?'),
+    fala('o rapaz de boné', 'Aí vira ajuntamento. Aí incomoda.')
+  ],
+  ef:{flag:'a_mesa_do_terceiro_andar',
+      registrar:'Sete treinadores sem dinheiro ocupam a praça de alimentação do shopping de Celadon.'},
+  escolhas:[
+    {texto:'Sentar e ouvir do que eles falam.', vai:'c9_ab_a_mesa'},
+    {texto:'Agradecer e subir os sete andares mesmo assim.', vai:'c9_shopping'},
+    {texto:'Sair e andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_a_mesa:{
+  texto:[
+    'Você senta. Ninguém pergunta o seu nome, o que é a regra da mesa, e leva uns dez minutos pra você entender que a mesa tem regras.',
+    'Eles falam sobre: o preço da Poção nessa cidade contra o preço em Saffron. Um ginásio que ninguém consegue marcar. E dinheiro.',
+    'Principalmente dinheiro, e principalmente o cassino.',
+    fala('a menina de jaqueta', 'Eu entrei três vezes. Nas três eu saí com mais do que entrei.'),
+    fala('o rapaz de boné', 'E por que você não tá rica?'),
+    fala('a menina de jaqueta', 'Porque na quarta eu saí com menos do que tinha nas três.'),
+    'Risada geral, do tipo que só funciona porque é verdade pra todo mundo na mesa.',
+    fala('o rapaz de boné', 'Tem uma coisa no cassino, ó.', 'baixo'),
+    'A mesa fica quieta, o que quer dizer que essa parte já foi falada antes e é a parte séria.',
+    fala('o rapaz de boné', 'Eles trocam ficha por Pokémon. Não é rumor, tem tabela na parede do fundo.'),
+    fala('o rapaz de boné', 'E ninguém aqui nunca viu de onde vem os bichos.')
+  ],
+  ef:{flag:['a_tabela_do_cassino','sabe_do_deposito'],
+      registrar:'O cassino de Celadon troca ficha por Pokémon, com tabela na parede do fundo.',
+      presagio:'Tabela de preço fixa precisa de fornecimento constante.'},
+  escolhas:[
+    {texto:'Ir ao cassino agora.', vai:'c9_cassino'},
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Subir o shopping primeiro.', vai:'c9_shopping'}
+  ]
+},
+
+c9_ab_seguido:{
+  texto:[
+    'Você entra em Celadon às dez e quarenta e às dez e quarenta e três tem alguém atrás de você.',
+    'Não é discreto. Não foi feito pra ser discreto: é um homem de camisa polo azul com um rádio na cintura, a quinze metros, replicando cada curva sua.',
+    'Você entra numa farmácia. Ele espera na calçada. Você sai, ele anda.',
+    'Você atravessa a rua sem motivo. Ele atravessa a rua sem motivo.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Na quarta quadra ele encosta o rádio na boca e você ouve, de quinze metros, uma palavra: "${r}".`;
+    },
+    'Não é a polícia. Polícia não usa polo.',
+    'É segurança privada, e segurança privada em Celadon trabalha pra loja, o que quer dizer que alguma loja dessa cidade sabe o seu nome e pagou por isso.'
+  ],
+  ef:{flag:'seguranca_privada_te_seguiu',
+      registrar:'Segurança privada te seguiu por quatro quadras em Celadon. Alguma loja pagou por isso.',
+      presagio:'Segurança privada não te prende. Ela te acompanha até você sair do quarteirão de quem paga.'},
+  escolhas:[
+    {texto:'Parar e perguntar pra ele quem paga.', vai:'c9_ab_quem_paga'},
+    {texto:'Perder ele no movimento e seguir.', vai:'c9_ab_perdeu'},
+    {texto:'Ir direto ao shopping e deixar ele te seguir.', vai:'c9_shopping'}
+  ]
+},
+
+c9_ab_quem_paga:{
+  texto:[
+    'Você para no meio da calçada e vira de frente. Ele para também, a quinze metros, e não se aproxima nem recua.',
+    'Vocês ficam assim por uns oito segundos, que é muito tempo pra duas pessoas se olharem numa calçada de Celadon.',
+    'Aí ele anda até você, sem pressa.',
+    fala('o homem de polo azul', 'Boa tarde.'),
+    d=>fala(d.jogador.nome, 'Quem te paga?'),
+    fala('o homem de polo azul', 'Associação Comercial da Avenida Cinco.'),
+    'Ele responde na hora, com orgulho até, porque não tem nada de ilegal nisso e ele sabe.',
+    fala('o homem de polo azul', 'Vinte e duas lojas. A gente acompanha quem tá na lista.'),
+    d=>fala(d.jogador.nome, 'Que lista?'),
+    fala('o homem de polo azul', 'A lista da associação. Chega por fax toda segunda.'),
+    fala('o homem de polo azul', 'Não é lista de bandido, moço. É lista de quem a gente acompanha.'),
+    'Ele diz isso como se as duas coisas fossem diferentes, e para ele são.'
+  ],
+  ef:{flag:'a_lista_da_associacao',
+      registrar:'A Associação Comercial da Avenida Cinco recebe por fax, toda segunda, uma lista de quem acompanhar.',
+      presagio:'Alguém monta essa lista e manda o fax. O fax vem de algum lugar.'},
+  escolhas:[
+    {texto:'Perguntar de onde vem o fax.', vai:'c9_ab_o_fax'},
+    {texto:'Deixar ele pra lá e andar pela cidade.', vai:'c9_cidade'},
+    {texto:'Ir ao shopping com ele atrás.', vai:'c9_shopping'}
+  ]
+},
+
+c9_ab_o_fax:{
+  texto:[
+    'Ele coça o queixo, e é um gesto sincero de quem nunca pensou nisso.',
+    fala('o homem de polo azul', 'Sei lá. Chega na sede.'),
+    d=>fala(d.jogador.nome, 'Tem cabeçalho? Tem número no alto?'),
+    fala('o homem de polo azul', 'Tem. Tem um número. Eu não sei de quem é.'),
+    'Ele olha pro rádio na cintura. Depois pra você. Depois pro rádio de novo.',
+    fala('o homem de polo azul', 'Você sabe que eu trabalho aqui há sete anos e ninguém nunca me perguntou isso?'),
+    d=>fala(d.jogador.nome, 'Sete anos.'),
+    fala('o homem de polo azul', 'Sete anos.'),
+    'Ele fica parado na calçada quando você sai andando. Não te segue mais.'
+  ],
+  ef:{flag:'o_fax_tem_cabecalho', moral:1,
+      npc:{nome:'o homem de polo azul', opiniao:1, viuVoce:'Você perguntou de onde vinha o fax. Ele parou de te seguir.'},
+      registrar:'O fax da lista tem cabeçalho com número. Ninguém nunca perguntou de quem é.'},
+  escolhas:[
+    {texto:'Andar pela cidade e entender onde você está.', vai:'c9_cidade'},
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'}
+  ]
+},
+
+c9_ab_perdeu:{
+  texto:[
+    'Você entra na porta giratória do shopping, dá a volta inteira na giratória e sai de novo pela calçada, no sentido contrário.',
+    'É o truque mais velho do mundo e funciona por três segundos, que são os três segundos que ele leva pra olhar pra dentro do shopping e não te achar.',
+    'Três segundos é o suficiente pra você entrar na travessa e a travessa dá na feira coberta e a feira coberta dá na avenida sete.',
+    'Você sai na avenida sete com o coração acelerado e a certeza inútil de que venceu alguma coisa.',
+    'Venceu um homem de polo azul. O fax continua chegando toda segunda.'
+  ],
+  ef:{flag:'despistou_a_seguranca', registrar:'Despistou a segurança privada na porta giratória do shopping.'},
+  escolhas:[
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Ir ao cassino.', vai:'c9_cassino'},
+    {texto:'Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `A Prefeitura de Celadon tem um balcão de protocolo na entrada da cidade, e o rapaz do balcão vê o seu crachá de ${c ? c.nome : 'serviço'} e faz uma coisa que ninguém nunca fez com você: ele levanta.`;
+    },
+    fala('o rapaz do protocolo', 'Serviço? O senhor quer dar entrada em alguma coisa?'),
+    'Ele te chama de senhor. Você tem quinze anos.',
+    d=>fala(d.jogador.nome, 'Eu não sei. O que dá pra dar entrada aqui?'),
+    fala('o rapaz do protocolo', 'Tudo. Licença, denúncia, pedido de vista, requerimento de informação.'),
+    'Ele empurra uma pasta de formulários pela bancada, e a pasta tem quatro centímetros de espessura.',
+    fala('o rapaz do protocolo', 'Requerimento de informação é o de cima. Qualquer cidadão pode fazer.'),
+    fala('o rapaz do protocolo', 'Mas com crachá eles respondem em quinze dias. Sem crachá eles respondem em noventa.', 'baixo'),
+    'Ele diz isso e volta a sentar, e volta a ser um rapaz num balcão.'
+  ],
+  ef:{flag:'sabe_do_requerimento',
+      registrar:'Com crachá, a Prefeitura de Celadon responde requerimento de informação em 15 dias; sem, em 90.'},
+  escolhas:[
+    {texto:'Requerer as notas de descarga do terminal de carga.', vai:'c9_ab_requereu_carga'},
+    {texto:'Requerer a lista de alvarás do cassino.', vai:'c9_ab_requereu_cassino'},
+    {texto:'Não dar entrada em nada. Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_requereu_carga:{
+  texto:[
+    'Você preenche o formulário na bancada, com a caneta amarrada por barbante, e é a coisa mais adulta que você já fez.',
+    'Campo "objeto do requerimento": você escreve "relação de notas de descarga do terminal de carga da avenida dois, últimos sessenta dias".',
+    'O rapaz lê enquanto carimba e o carimbo para no meio do caminho.',
+    fala('o rapaz do protocolo', 'Últimos sessenta dias.'),
+    d=>fala(d.jogador.nome, 'É.'),
+    'Ele carimba. Destaca o canhoto. Entrega.',
+    fala('o rapaz do protocolo', 'Protocolo 4.417. Guarda esse papelzinho.'),
+    fala('o rapaz do protocolo', 'E, ó — se em quinze dias não responderem, volta aqui e pede o número do processo. Sem o número do processo eles enrolam pra sempre.', 'baixo')
+  ],
+  ef:{flag:'protocolo_das_notas',
+      registrar:'Protocolo 4.417: requerimento das notas de descarga do terminal de carga de Celadon, últimos 60 dias.'},
+  escolhas:[
+    {texto:'Ir procurar onde os caminhões descarregaram, sem esperar quinze dias.', vai:'c9_procurar'},
+    {texto:'Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
+c9_ab_requereu_cassino:{
+  texto:[
+    'Campo "objeto do requerimento": "relação de alvarás e atividades licenciadas do estabelecimento da avenida cinco, número 300".',
+    'O rapaz lê. Não carimba.',
+    fala('o rapaz do protocolo', 'Isso aqui é o cassino.'),
+    d=>fala(d.jogador.nome, 'É.'),
+    'Ele olha pra porta da sala do chefe dele, que está fechada, e volta a olhar pro formulário.',
+    fala('o rapaz do protocolo', 'Eu vou carimbar. É meu dever carimbar.'),
+    'Ele carimba. Destaca o canhoto. Entrega. E não solta o papel na hora.',
+    fala('o rapaz do protocolo', 'Protocolo 4.418. Em três anos aqui, esse é o segundo pedido que eu recebo sobre esse endereço.', 'baixo'),
+    d=>fala(d.jogador.nome, 'E o primeiro?'),
+    fala('o rapaz do protocolo', 'Uma repórter. Ano passado.'),
+    fala('o rapaz do protocolo', 'Nunca respondeu.')
+  ],
+  ef:{flag:['protocolo_do_cassino','sabe_do_deposito'],
+      registrar:'Protocolo 4.418: alvarás do cassino de Celadon. É o segundo pedido em três anos; o primeiro nunca foi respondido.',
+      presagio:'Um requerimento que nunca é respondido também é uma resposta.'},
+  escolhas:[
+    {texto:'Ir ao cassino ver com os próprios olhos.', vai:'c9_cassino'},
+    {texto:'Ir procurar onde os caminhões descarregaram.', vai:'c9_procurar'},
+    {texto:'Andar pela cidade.', vai:'c9_cidade'}
+  ]
+},
+
 
 c9_chegada:{
   texto:[

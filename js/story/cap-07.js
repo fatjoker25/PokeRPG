@@ -1,11 +1,277 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Lavender é a única cidade de Kanto onde a hora do
+   dia muda o que a cidade é. E quem chega carregando morte não
+   chega na mesma Lavender de quem chega curioso.
+   ------------------------------------------------------------ */
+const C7_ABERTURAS = ['c7_chegada', 'c7_ab_cortejo', 'c7_ab_de_noite', 'c7_ab_encomenda', 'c7_ab_de_cracha'];
+function c7_cabe(id, d){
+  if (id === 'c7_ab_cortejo')   return (d.cemiterio || []).length > 0;
+  if (id === 'c7_ab_de_noite')  return d.relogio && (d.relogio.periodo === 'noite' || d.relogio.periodo === 'tarde');
+  if (id === 'c7_ab_encomenda') return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 3;
+  if (id === 'c7_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c7_abertura(d){
+  const cand = C7_ABERTURAS.filter(id => c7_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 7 — A TORRE  (Lavender)
    ============================================================ */
 CAPITULOS.push(
 {
 num:7, titulo:'A Torre', local:'Lavender', ambiente:'cemiterio', nivelArea:28,
-tom:'muito sombrio', inicio:'c7_chegada',
+tom:'muito sombrio', entradas:C7_ABERTURAS,
+inicio: d => c7_abertura(d),
 cenas:{
+
+c7_ab_cortejo:{
+  texto:[
+    'Você entra em Lavender atrás de um cortejo e leva onze minutos pra perceber que é um cortejo, porque ninguém está chorando e ninguém está de preto.',
+    'São nove pessoas andando devagar no meio da rua. Na frente, um homem de uns sessenta anos carrega uma caixa de madeira do tamanho de uma caixa de sapato, com as duas mãos, na altura do peito.',
+    'Os carros param. Não tem guarda mandando parar. Eles param.',
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length - 1];
+      const nome = m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'o seu');
+      return `Você não consegue olhar pra caixa sem pensar em ${nome}, e não consegue parar de olhar pra caixa.`;
+    },
+    'O cortejo entra na rua da torre. Você para na esquina porque seguir seria invadir alguma coisa.',
+    'Uma mulher mais velha, que ficou pra trás do grupo, para do seu lado sem falar nada por um tempo.',
+    fala('a mulher do cortejo', 'Você pode ir junto, sabia.'),
+    d=>fala(d.jogador.nome, 'Eu não conheço vocês.'),
+    fala('a mulher do cortejo', 'Ninguém conhece ninguém aqui. Essa cidade é feita disso.'),
+    fala('a mulher do cortejo', 'A gente enterra junto porque enterrar sozinho é pior. É só isso.')
+  ],
+  ef:{flag:'viu_o_cortejo', registrar:'Chegou a Lavender atrás de um cortejo de nove pessoas.',
+      presagio:'Em Lavender o luto é obra coletiva. Quem recusa a companhia carrega sozinho de propósito.'},
+  escolhas:[
+    {texto:'Ir junto.', vai:'c7_ab_foi_junto'},
+    {texto:'Não ir. Ficar na esquina e deixar passar.', vai:'c7_ab_ficou_na_esquina'},
+    {texto:'Perguntar o que tem na caixa.', vai:'c7_ab_a_caixa'}
+  ]
+},
+
+c7_ab_a_caixa:{
+  texto:[
+    fala('a mulher do cortejo', 'Um Growlithe. Dezessete anos.'),
+    'Ela fala a idade primeiro porque a idade é a parte boa.',
+    fala('a mulher do cortejo', 'Do meu irmão, aquele da frente. Era de patrulha, aposentou com nove, viveu mais oito de sofá.'),
+    fala('a mulher do cortejo', 'Ele não chorou nenhuma vez ainda. Vai chorar lá em cima, no quarto andar, que é onde todo mundo chora.'),
+    d=>fala(d.jogador.nome, 'Por que o quarto andar?'),
+    fala('a mulher do cortejo', 'Porque do quarto andar dá pra ver a casa da gente.')
+  ],
+  ef:{registrar:'No quarto andar da Torre Pokémon dá pra ver a cidade inteira. É onde as pessoas choram.'},
+  escolhas:[
+    {texto:'Ir junto com eles.', vai:'c7_ab_foi_junto'},
+    {texto:'Deixar passar e andar pela cidade.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_foi_junto:{
+  texto:[
+    'Você anda no fim do grupo, a três passos de todo mundo, que é a distância de quem foi convidado mas não pertence.',
+    'Ninguém olha pra você com estranheza. Duas pessoas acenam com a cabeça.',
+    'Na base da torre tem um homem de camisa cinza com uma prancheta, e ele não pergunta nome de ninguém: ele conta.',
+    fala('o homem da prancheta', 'Dez.'),
+    'Ele escreve dez. Você virou o décimo de um luto que não é seu, e de alguma forma isso não é uma mentira.',
+    'Lá dentro é fresco e cheira a incenso queimado há muito tempo, não agora. O grupo sobe. Você fica no térreo.',
+    'Do térreo dá pra ouvir nove pares de pé subindo, e depois, quatro andares acima, um homem de sessenta anos chorando de um jeito que é melhor não ouvir de perto.'
+  ],
+  ef:{flag:'subiu_com_o_cortejo', moral:1,
+      rep:{eixo:'bom', delta:1, motivo:'Acompanhou o enterro de um Growlithe que não era seu.'},
+      registrar:'Acompanhou um cortejo desconhecido até a base da Torre Pokémon.'},
+  escolhas:[
+    {texto:'Subir também.', vai:'c7_base'},
+    {texto:'Sair e andar pela cidade.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_ficou_na_esquina:{
+  texto:[
+    'Você fica. O cortejo entra na rua da torre e some atrás do primeiro quarteirão, e a rua volta a ter carro em menos de dez segundos.',
+    'É assustador como volta rápido.',
+    d=>{
+      const m = d.cemiterio[d.cemiterio.length - 1];
+      const nome = m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'o seu');
+      return `Você fica pensando que ${nome} não teve nove pessoas. Teve você.`;
+    },
+    'Lavender não tem música. Você repara nisso agora, parado numa esquina sem nada pra fazer, e quando repara não consegue mais deixar de reparar.'
+  ],
+  ef:{flag:'nao_foi_no_cortejo', registrar:'Viu o cortejo passar e não foi junto.'},
+  escolhas:[
+    {texto:'Ir até a base da torre mesmo assim.', vai:'c7_base'},
+    {texto:'Andar pela cidade.', vai:'c7_cidade'},
+    {texto:'Procurar onde dormir.', vai:'c7_pousada'}
+  ]
+},
+
+c7_ab_de_noite:{
+  texto:[
+    'Você chega em Lavender com o sol já baixo, e Lavender ao entardecer faz uma coisa que nenhuma outra cidade de Kanto faz: ela acende as janelas antes de acender a rua.',
+    'Primeiro as casas. Depois, com uns vinte minutos de atraso, os postes.',
+    'Nesses vinte minutos a cidade inteira é só quadradinhos amarelos de janela com gente dentro, e a torre no fim da rua principal sem nenhuma luz nenhuma, porque a Torre Pokémon não tem luz externa.',
+    'Sete andares de concreto cinza que somem no escuro de baixo pra cima.',
+    'Um homem passa de bicicleta com um saco de pão no guidão e freia do seu lado sem você pedir.',
+    fala('o homem da bicicleta', 'Não sobe hoje.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o homem da bicicleta', 'Porque não tem luz lá dentro e porque eu moro aqui há quarenta anos e é o que eu falo pra todo mundo que chega nesse horário.'),
+    'Ele volta a pedalar.',
+    fala('o homem da bicicleta', 'Metade sobe mesmo assim. Eu falo do mesmo jeito.')
+  ],
+  ef:{flag:'avisaram_pra_nao_subir_de_noite', registrar:'Chegou a Lavender ao anoitecer. Avisaram para não subir a torre hoje.'},
+  escolhas:[
+    {texto:'Subir hoje mesmo assim.', vai:'c7_base'},
+    {texto:'Procurar onde dormir e deixar a torre pra amanhã.', vai:'c7_pousada'},
+    {texto:'Andar pela cidade enquanto ainda tem gente na rua.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_encomenda:{
+  texto:[
+    'Você ainda não chegou na cidade direito — está na entrada, na altura da última curva da Rota 8 — e já tem alguém te esperando na beira da estrada.',
+    'É uma menina de uns treze anos, sentada numa mochila, com uma caixa de papelão no colo amarrada com barbante.',
+    d=>{
+      const r = Estado.nomeRep();
+      return `Ela levanta quando te vê e fala o seu nome inteiro, com sobrenome e tudo, do jeito de quem ensaiou. "${r}", ela acrescenta, como se precisasse confirmar que é você mesmo.`;
+    },
+    fala('a menina da caixa', 'Me falaram que você ia passar por aqui essa semana.'),
+    d=>fala(d.jogador.nome, 'Quem falou?'),
+    fala('a menina da caixa', 'Todo mundo. Você é o assunto de duas cidades, você não sabe disso?'),
+    'Ela estende a caixa. É leve. Chacoalha um pouco.',
+    fala('a menina da caixa', 'É pra levar pro quarto andar da torre. Eu não consigo subir.'),
+    fala('a menina da caixa', 'Eu tentei três vezes.', 'baixo')
+  ],
+  ef:{flag:'tem_a_caixa_da_menina',
+      npc:{nome:'a menina da caixa', opiniao:1, viuVoce:'Te esperou na entrada de Lavender com uma encomenda.'},
+      registrar:'Uma menina te entregou uma caixa para levar ao quarto andar da Torre Pokémon.'},
+  escolhas:[
+    {texto:'Aceitar. Perguntar o que tem dentro depois.', vai:'c7_ab_aceitou'},
+    {texto:'Perguntar o que tem dentro antes de aceitar.', vai:'c7_ab_o_que_tem'},
+    {texto:'Dizer que ela tem que subir. Você vai junto.', vai:'c7_ab_vai_junto'}
+  ]
+},
+
+c7_ab_o_que_tem:{
+  texto:[
+    'Ela demora. Olha pra caixa como se a caixa fosse responder por ela.',
+    fala('a menina da caixa', 'Coleira, uma bola vazia e um chinelo.'),
+    d=>fala(d.jogador.nome, 'Um chinelo?'),
+    fala('a menina da caixa', 'Ele dormia em cima do chinelo do meu pai. Todo dia. Oito anos.'),
+    'Ela diz "oito anos" e a voz não quebra, porque ela já contou isso muitas vezes e treinou.',
+    fala('a menina da caixa', 'Meu pai falou que a gente não ia guardar. Falou que guardar faz mal.'),
+    fala('a menina da caixa', 'Eu concordo com ele. Só não consigo jogar fora. Na torre não é jogar fora.')
+  ],
+  ef:{registrar:'A caixa tem uma coleira, uma bola vazia e um chinelo.'},
+  escolhas:[
+    {texto:'Aceitar levar.', vai:'c7_ab_aceitou'},
+    {texto:'Dizer que ela tem que subir. Você vai junto.', vai:'c7_ab_vai_junto'}
+  ]
+},
+
+c7_ab_aceitou:{
+  texto:[
+    'Você pega a caixa e põe debaixo do braço, e ela é leve de um jeito que incomoda.',
+    'A menina agradece três vezes, o que é duas vezes mais do que a situação pede, e vai embora rápido pra estrada, no sentido de Saffron.',
+    'Ela some na curva e você fica na entrada de Lavender segurando a caixa de outra pessoa.',
+    'A cidade não tem música. Você repara nisso agora.'
+  ],
+  ef:{flag:'levou_a_caixa_sozinho', registrar:'Aceitou levar a caixa da menina até a torre.'},
+  escolhas:[
+    {texto:'Ir direto até a base da torre.', vai:'c7_base'},
+    {texto:'Andar pela cidade primeiro.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_vai_junto:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu levo. Mas você sobe comigo.'),
+    'Ela balança a cabeça antes de você terminar a frase.',
+    fala('a menina da caixa', 'Não.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a menina da caixa', 'Porque eu já subi três vezes e nas três eu voltei no segundo andar.'),
+    'Ela senta na mochila de novo.',
+    fala('a menina da caixa', 'Não é medo de fantasma. Todo mundo acha que é medo de fantasma.'),
+    fala('a menina da caixa', 'É que subindo a escada eu ainda tô levando ele pra algum lugar. Quando eu chegar em cima acabou de levar.', 'baixo'),
+    'Você fica um tempo sem saber o que dizer, o que é a resposta certa.',
+    d=>fala(d.jogador.nome, 'Então a gente sobe devagar.'),
+    'Ela levanta.'
+  ],
+  ef:{flag:'a_menina_vai_subir', moral:1,
+      rep:{eixo:'bom', delta:1, motivo:'Convenceu a menina a subir a torre em vez de levar a caixa por ela.'},
+      npc:{nome:'a menina da caixa', opiniao:2, viuVoce:'Subiu a Torre Pokémon com você.'},
+      registrar:'A menina da caixa vai subir a torre com você.'},
+  escolhas:[
+    {texto:'Ir até a base da torre com ela.', vai:'c7_base'}
+  ]
+},
+
+c7_ab_de_cracha:{
+  texto:[
+    'Tem um posto da prefeitura na entrada de Lavender que não existe em nenhuma outra cidade de Kanto: uma guarita de dois metros por dois com uma janelinha, e dentro dela uma mulher com um livro de registro.',
+    'Não é fiscalização. É outra coisa.',
+    fala('a funcionária da guarita', 'Bom dia. Veio visitar ou veio sepultar?'),
+    'É a pergunta mais direta que alguém já te fez.',
+    d=>{
+      const c = Cargos.principal();
+      return `Você mostra o crachá de ${c ? c.nome : 'serviço'} sem saber muito bem por quê, e ela lê com atenção de quem lê tudo.`;
+    },
+    fala('a funcionária da guarita', 'Ah. Do serviço.'),
+    'Ela fecha o livro de registro. Não guarda: fecha, e deixa a mão em cima.',
+    fala('a funcionária da guarita', 'Então eu vou te falar uma coisa que eu não falo pra visitante.', 'baixo'),
+    fala('a funcionária da guarita', 'Esse livro aqui registra quem sobe a torre desde mil novecentos e setenta e quatro.'),
+    fala('a funcionária da guarita', 'Nos últimos dois meses subiu gente que não desceu, e eu reportei três vezes, e ninguém veio.')
+  ],
+  ef:{flag:'o_livro_da_guarita',
+      npc:{nome:'a funcionária da guarita', opiniao:1, viuVoce:'Te contou do livro de registro porque você tinha crachá.'},
+      registrar:'O livro da guarita registra quem sobe a torre desde 1974. Nos últimos dois meses, subiu gente que não desceu.',
+      presagio:'Ela reportou três vezes e ninguém veio. Isso é informação sobre quem devia vir.'},
+  escolhas:[
+    {texto:'Pedir pra ver o livro.', vai:'c7_ab_o_livro'},
+    {texto:'Perguntar pra quem exatamente ela reportou.', vai:'c7_ab_pra_quem'},
+    {texto:'Agradecer e ir direto pra torre.', vai:'c7_base'}
+  ]
+},
+
+c7_ab_o_livro:{
+  texto:[
+    'Ela abre o livro nas últimas páginas e vira pra você sem entregar.',
+    'Cada linha tem data, hora de subida e hora de descida. A terceira coluna é preenchida a lápis, porque a terceira coluna é a que às vezes não acontece.',
+    'Nos últimos dois meses tem onze linhas com a terceira coluna vazia.',
+    'Das onze, oito são da mesma hora do dia: entre três e quatro da manhã.',
+    fala('a funcionária da guarita', 'A guarita fecha às dez.'),
+    d=>fala(d.jogador.nome, 'Então quem anotou essas oito?'),
+    'Ela vira o livro de volta e não responde na hora.',
+    fala('a funcionária da guarita', 'Elas aparecem escritas quando eu abro de manhã.', 'baixo'),
+    fala('a funcionária da guarita', 'Com a minha letra.')
+  ],
+  ef:{flag:'oito_linhas_de_madrugada',
+      registrar:'Onze pessoas subiram a torre nos últimos dois meses e não desceram. Oito subiram entre três e quatro da manhã.',
+      presagio:'Alguém escreve no livro com a letra dela, de madrugada, com a guarita fechada.'},
+  escolhas:[
+    {texto:'Ir até a base da torre.', vai:'c7_base'},
+    {texto:'Andar pela cidade primeiro e perguntar por aí.', vai:'c7_cidade'}
+  ]
+},
+
+c7_ab_pra_quem:{
+  texto:[
+    fala('a funcionária da guarita', 'Primeiro pra prefeitura. A prefeitura falou que a torre é da Liga.'),
+    fala('a funcionária da guarita', 'Aí eu liguei pra Liga. A Liga falou que a torre é patrimônio, quem cuida é a Fundação.'),
+    d=>fala(d.jogador.nome, 'E a Fundação?'),
+    fala('a funcionária da guarita', 'A Fundação não existe desde oitenta e seis.'),
+    'Ela fala isso sem drama nenhum, como quem já passou da parte de achar isso absurdo.',
+    fala('a funcionária da guarita', 'Eu tenho as três respostas por escrito. Se você quiser cópia eu tiro.'),
+    'Você diz que quer, e ela já tinha tirado. Estava numa pasta embaixo do livro, esperando alguém pedir há dois meses.'
+  ],
+  ef:{flag:'copia_das_tres_respostas',
+      registrar:'Tem cópia por escrito: prefeitura aponta pra Liga, Liga aponta pra Fundação, Fundação não existe desde 1986.'},
+  escolhas:[
+    {texto:'Pedir pra ver o livro de registro também.', vai:'c7_ab_o_livro'},
+    {texto:'Ir até a base da torre.', vai:'c7_base'}
+  ]
+},
+
 
 c7_chegada:{
   texto:[
