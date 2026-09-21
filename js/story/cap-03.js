@@ -1,3 +1,19 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a floresta recebe diferente quem entra sozinho,
+   quem entra com companhia e quem entra sendo procurado.
+   ------------------------------------------------------------ */
+const C3_ABERTURAS = ['c3_entrada', 'c3_ab_de_noite', 'c3_ab_com_companhia', 'c3_ab_pelo_mato'];
+function c3_cabe(id, d){
+  const r = Estado.rep;
+  if (id === 'c3_ab_com_companhia') return !!d.npcs['Kenta'] && !d.flags.teo_ferido;
+  if (id === 'c3_ab_pelo_mato')     return (r.eixo === 'ruim' && r.ruim >= 2) || d.via === 'foragido';
+  return true;
+}
+function c3_abertura(d){
+  const cand = C3_ABERTURAS.filter(id => c3_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 3 — O QUE TEM DEBAIXO DAS FOLHAS
    ============================================================ */
@@ -5,8 +21,132 @@ CAPITULOS.push(
 
 {
 num:3, titulo:'O Que Tem Debaixo das Folhas', local:'Floresta de Viridian', ambiente:'floresta', nivelArea:9,
-tom:'inquieto', inicio:'c3_entrada',
+tom:'inquieto', entradas:C3_ABERTURAS,
+inicio: d => c3_abertura(d),
 cenas:{
+
+c3_ab_de_noite:{
+  texto:[
+    'Você chega na boca da floresta às seis e quarenta da tarde, que é a pior hora possível: cedo demais pra acampar e tarde demais pra atravessar.',
+    'A luz dentro do mato já acabou. Aqui fora ainda tem uns vinte minutos dela.',
+    'Tem uma placa da Liga com três avisos, e o terceiro aviso está escrito à mão por cima do impresso: NÃO ENTRE DEPOIS DAS 18H.',
+    'Letra de gente que se cansou de ver o mesmo erro.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} para na altura da placa e não passa dela. Bicho lê o mato, não a placa, e chegou na mesma conclusão.`
+               : 'Alguma coisa dentro da floresta faz um barulho que não combina com o horário.';
+    }
+  ],
+  ef:{flag:'chegou_na_floresta_tarde', registrar:'Chegou na boca da Floresta de Viridian às 18h40.'},
+  escolhas:[
+    {texto:'Acampar aqui fora e entrar de manhã.', vai:'c3_ab_acampou', ef:{hp:3, moral:2}},
+    {texto:'Entrar assim mesmo. Vinte minutos de luz é alguma coisa.', vai:'c3_entrada',
+     ef:{flag:'entrou_de_noite_na_floresta', hp:-3,
+         rep:{eixo:'ruim',delta:1,motivo:'Entrou na floresta depois do horário da placa'}}},
+    {texto:'Ler os outros dois avisos da placa antes de decidir.', vai:'c3_ab_a_placa'}
+  ]
+},
+
+c3_ab_a_placa:{
+  texto:[
+    'O primeiro aviso é padrão: espécies de inseto, risco de picada, procure o Centro em caso de reação.',
+    'O segundo é mais específico e por isso mais desconfortável: "A sinalização da trilha foi refeita em 2019. Marcações anteriores a essa data não são confiáveis."',
+    'Dois mil e dezenove. Você olha a placa de novo e a placa é claramente mais velha que isso.',
+    'Quer dizer que em algum lugar aí dentro tem marcação antiga que continua parecendo marcação, e ninguém tirou.',
+    'O terceiro aviso é o escrito à mão.'
+  ],
+  ef:{flag:'sabe_das_marcacoes_velhas',
+      registrar:'Tem marcação de trilha anterior a 2019 na floresta, e ninguém tirou.',
+      presagio:'Marcação que não é confiável é pior que marcação nenhuma, porque você segue.'},
+  escolhas:[
+    {texto:'Acampar aqui fora e entrar de manhã.', vai:'c3_ab_acampou', ef:{hp:3}},
+    {texto:'Entrar com vinte minutos de luz.', vai:'c3_entrada', ef:{hp:-3}}
+  ]
+},
+
+c3_ab_acampou:{
+  texto:[
+    'Você monta acampamento a uns trinta metros da boca da floresta, do lado de fora, no capim baixo.',
+    'De noite a floresta faz um barulho contínuo que não é ameaçador e não deixa dormir, e as duas coisas juntas são uma novidade.',
+    'Às três da manhã o barulho para por uns quinze segundos.',
+    'Você acorda exatamente nesses quinze segundos, sem saber por quê, e quando o barulho volta você entende que acordou porque ele tinha parado.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} está acordado, sentado, olhando pro mato. Não está tenso. Está esperando.`
+               : 'Você fica acordado olhando o mato até clarear.';
+    },
+    'Nada acontece. Amanhece às cinco e meia e a floresta é verde e comum de novo.'
+  ],
+  ef:{hp:4, moral:3, flag:'acampou_na_boca_da_floresta',
+      presagio:'Quinze segundos de silêncio no meio da noite. Alguma coisa passou.'},
+  escolhas:[{texto:'Entrar de manhã, com luz.', vai:'c3_entrada'}]
+},
+
+c3_ab_com_companhia:{
+  texto:[
+    'Kenta está sentado na boca da floresta com a mochila entre os pés, e pela cara dele está ali há um tempo decidindo não entrar sozinho.',
+    fala('Kenta', 'Eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.'),
+    d=>fala(d.jogador.nome, 'Ia dizer pra quem?'),
+    fala('Kenta', 'Pra mim, cara. Principalmente pra mim.'),
+    'Ele levanta, sacode a calça e olha pro verde.',
+    fala('Kenta', 'Atravessa junto?'),
+    'E aí ele fala uma coisa que você não esperava, mais baixo:',
+    fala('Kenta', 'Eu não gosto de lugar fechado. Nunca gostei. Isso é informação ou é reclamação, você decide.', 'baixo')
+  ],
+  ef:{flag:'entrou_com_teo', moral:4,
+      npc:{nome:'Kenta', opiniao:3, memoria:'Te contou, na boca da floresta, que não gosta de lugar fechado.'},
+      registrar:'Atravessou a Floresta de Viridian com Kenta.'},
+  escolhas:[
+    {texto:'"É informação. Vem."', vai:'c3_entrada',
+     ef:{moral:4, npc:{nome:'Kenta', opiniao:3, memoria:'Você tratou o medo dele como informação e não como fraqueza.'},
+         rep:{eixo:'bom',delta:1,motivo:'Aceitou o medo de um amigo sem fazer piada'}}},
+    {texto:'"Então fica aqui fora. Eu atravesso."', vai:'c3_entrada',
+     ef:{flag:'teo_ficou_de_fora', npc:{nome:'Kenta', opiniao:-1, memoria:'Você atravessou a floresta sem ele depois de ele admitir o medo.'}}},
+    {texto:'Perguntar desde quando.', vai:'c3_ab_desde_quando'}
+  ]
+},
+
+c3_ab_desde_quando:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Desde quando?'),
+    fala('Kenta', 'Desde os seis.'),
+    'Ele fala rápido, do jeito de quem já contou e quer que a parte de contar acabe logo.',
+    fala('Kenta', 'Porão da casa da minha avó, porta que emperrou, quarenta minutos. Todo mundo achando graça do lado de fora porque achavam que eu tava brincando.'),
+    fala('Kenta', 'Aí abriram e eu tava mijado, e aí eles pararam de achar graça, e aí ninguém nunca mais falou disso.', 'baixo'),
+    'Uma pausa.',
+    fala('Kenta', 'Eu acabei de falar disso pela primeira vez em nove anos e foi pra você, na frente de uma floresta. Que ótimo.', 'riso'),
+    'Ele põe a mochila nas costas.',
+    fala('Kenta', 'Vamos antes que eu pense.')
+  ],
+  ef:{flag:['entrou_com_teo','sabe_do_porao'], moral:6,
+      npc:{nome:'Kenta', opiniao:5, memoria:'Te contou do porão da avó, coisa que ele não contava havia nove anos.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ouviu até o fim uma coisa que custava contar'},
+      presagio:'Ele vai entrar em lugar fechado outras vezes nessa história, e vai entrar por você.'},
+  escolhas:[{texto:'Entrar juntos.', vai:'c3_entrada'}]
+},
+
+c3_ab_pelo_mato:{
+  texto:[
+    'Você não entra pela boca da trilha. Você entra oitenta metros ao lado, pelo mato, porque a boca da trilha é onde tem gente e gente é onde tem quem repare.',
+    'É mais difícil. O mato fechado arranha, esconde raiz e faz barulho, e você gasta o dobro do fôlego pra andar metade.',
+    'Vale a pena por um motivo só: ninguém vai poder dizer a que horas você entrou.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} não entende por que vocês estão fazendo isso do jeito difícil, e te olha duas vezes esperando você corrigir a rota.`
+               : 'Você olha pra trás duas vezes nos primeiros cem metros.';
+    },
+    'Vinte minutos depois você encontra a trilha de novo, por dentro, e entra nela como quem sempre esteve ali.'
+  ],
+  ef:{hp:-3, flag:'entrou_pela_lateral',
+      registrar:'Entrou na Floresta de Viridian pelo mato, evitando a boca da trilha.',
+      presagio:'Ninguém viu você entrar. Isso serve pras duas coisas: pra te proteger e pra te acusar.'},
+  escolhas:[
+    {texto:'Seguir pela trilha agora que está dentro.', vai:'c3_entrada'},
+    {texto:'Continuar pelo mato até o fim.', vai:'c3_entrada',
+     ef:{hp:-3, flag:'atravessou_tudo_pelo_mato'}}
+  ]
+},
+
 
 c3_entrada:{
   texto:[

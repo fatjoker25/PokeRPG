@@ -2278,7 +2278,7 @@ c9_o_lote_41:{
       registrar:'Lote 41: processo 44.207, recolhido em Lavender, tutor notificado só por edital.',
       presagio:'Notificado por edital. Quer dizer: publicaram num jornal que ele não lê e chamaram isso de avisar.'},
   escolhas:[
-    {texto:'"O tutor está internado. Ele não viu edital nenhum."', vai:'c9_prado_conversa', cond:d=>!!d.flags.conhece_o_ricardo || !!d.flags.copia_do_ricardo},
+    {texto:'"O tutor está internado. Ele não viu edital nenhum."', vai:'c9_prado_conversa', cond:d=>!!d.flags.conhece_o_ricardo || !!d.flags.tem_o_relato_do_ricardo},
     {texto:'"Eu quero dar lance no 41."', vai:'c9_arrematou_o_41'},
     {texto:'"Quem assinou esse recolhimento?"', vai:'c9_prado_conversa'},
     {texto:'Gritar pra sala inteira.', vai:'c9_gritou_no_pregao'}

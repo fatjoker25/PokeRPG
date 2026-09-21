@@ -1,11 +1,159 @@
+/* ------------------------------------------------------------
+   ABERTURAS — Pewter não recebe igual quem chega inteiro, quem
+   chega arrebentado da floresta e quem chega com crachá.
+   ------------------------------------------------------------ */
+const C4_ABERTURAS = ['c4_chegada', 'c4_ab_arrebentado', 'c4_ab_detonacao', 'c4_ab_com_cracha'];
+function c4_cabe(id, d){
+  if (id === 'c4_ab_arrebentado')
+    return (d.time || []).some(p => !p.morto && p.hp < p.hpMax * 0.5) || d.jogador.hp < Estado.hpMaxJogador() * 0.7;
+  if (id === 'c4_ab_com_cracha')
+    return typeof Cargos !== 'undefined' && Cargos.lista().length >= 2;
+  return true;
+}
+function c4_abertura(d){
+  const cand = C4_ABERTURAS.filter(id => c4_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 4 — PEDRA SOBRE PEDRA  (Pewter)
    ============================================================ */
 CAPITULOS.push(
 {
 num:4, titulo:'Pedra Sobre Pedra', local:'Pewter', ambiente:'montanha', nivelArea:14,
-tom:'inquieto', inicio:'c4_chegada',
+tom:'inquieto', entradas:C4_ABERTURAS,
+inicio: d => c4_abertura(d),
 cenas:{
+
+c4_ab_arrebentado:{
+  texto:[
+    'Você sai da floresta e a primeira coisa que Pewter te dá é asfalto, e asfalto depois de dois dias de raiz é um luxo que você não sabia que era luxo.',
+    'A segunda coisa que Pewter te dá é um espelho: a porta de vidro do Centro Pokémon, e você se vê nela antes de entrar.',
+    'Arranhão no braço, calça rasgada na altura do joelho, cabelo de quem dormiu sentado.',
+    d=>{
+      const feridos = (d.time||[]).filter(p => !p.morto && p.hp < p.hpMax * 0.5).length;
+      return feridos
+        ? `E ${feridos === 1 ? 'um do cinto está' : feridos + ' do cinto estão'} pior que você, o que muda a ordem das suas prioridades na hora.`
+        : 'Você está pior do que achava que estava.';
+    },
+    'A enfermeira de Pewter olha pra você e não pergunta o que aconteceu. Ela estende a mão pedindo o cinto.',
+    fala('a enfermeira de Pewter', 'Floresta?'),
+    d=>fala(d.jogador.nome, 'Floresta.'),
+    fala('a enfermeira de Pewter', 'Senta ali. Vai levar uns quarenta minutos e você vai dormir nesses quarenta minutos, e tudo bem.')
+  ],
+  ef:{flag:'chegou_arrebentado_em_pewter',
+      executar:d=>{ (d.time||[]).forEach(p=>{ if(!p.morto) p.hp = p.hpMax; });
+                    Estado.curarJogador(8);
+                    return [{tipo:'cura', texto:'O time voltou inteiro. Você dormiu quarenta minutos numa cadeira de plástico.'}]; },
+      npc:{nome:'Enfermeira de Pewter', opiniao:2, memoria:'Te atendeu sem perguntar nada no dia em que você saiu da floresta.'}},
+  escolhas:[
+    {texto:'Acordar e ir ver a cidade.', vai:'c4_chegada'},
+    {texto:'Perguntar quantos chegam assim.', vai:'c4_ab_quantos_chegam'}
+  ]
+},
+
+c4_ab_quantos_chegam:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quantos chegam assim?'),
+    fala('a enfermeira de Pewter', 'Por dia?'),
+    d=>fala(d.jogador.nome, 'É.'),
+    fala('a enfermeira de Pewter', 'Seis. Sete no verão.'),
+    'Ela continua trabalhando enquanto fala, sem levantar a cabeça, que é como se fala de uma coisa que se diz todo dia.',
+    fala('a enfermeira de Pewter', 'A floresta não é perigosa. Ela é longa, e longa cansa, e cansado erra.'),
+    fala('a enfermeira de Pewter', 'Quem chega aqui não foi atacado. Quem chega aqui andou catorze horas achando que ia andar seis.'),
+    'Ela devolve o cinto.',
+    fala('a enfermeira de Pewter', 'Da próxima vez leva comida pro dobro do tempo. É o único conselho que eu dou de graça e é o único que ninguém segue.', 'baixo')
+  ],
+  ef:{moral:2, flag:'conselho_da_enfermeira_de_pewter',
+      npc:{nome:'Enfermeira de Pewter', opiniao:3, memoria:'Te disse que ninguém segue o único conselho que ela dá de graça.'},
+      registrar:'Seis a sete pessoas por dia saem da floresta em estado ruim. Nenhuma foi atacada — todas subestimaram a distância.'},
+  escolhas:[{texto:'Ir ver a cidade.', vai:'c4_chegada'}]
+},
+
+c4_ab_detonacao:{
+  texto:[
+    'Você chega em Pewter às onze e quarenta e sete da manhã e a cidade inteira para.',
+    'Não é figura de linguagem: para mesmo. Quem está andando encosta, quem está no balcão apoia a mão, quem está de bicicleta põe o pé no chão.',
+    'Doze horas em ponto: a detonação.',
+    'Você sente no peito antes de ouvir, e o vidro da loja mais próxima faz um som miúdo, e um cachorro late em algum quintal.',
+    'E aí, três segundos depois, a cidade volta a andar, toda ao mesmo tempo, como se ninguém tivesse parado.',
+    'Ninguém comenta. Ninguém olha pra ninguém. É um ritual que eles nem sabem mais que fazem.',
+    'Você é a única pessoa em Pewter que ficou parada quatro segundos a mais, olhando em volta.'
+  ],
+  ef:{flag:'viu_a_cidade_parar', moral:2,
+      registrar:'Pewter inteira para por três segundos ao meio-dia, e ninguém repara que faz isso.',
+      presagio:'Uma cidade que aprendeu a parar sem perceber aprendeu outras coisas sem perceber também.'},
+  escolhas:[
+    {texto:'Perguntar a alguém por que todo mundo parou.', vai:'c4_ab_por_que_param'},
+    {texto:'Seguir andando e guardar isso.', vai:'c4_chegada'}
+  ]
+},
+
+c4_ab_por_que_param:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Por que todo mundo parou agora?'),
+    'O homem da banca de jornal leva um tempo pra entender a pergunta, e quando entende faz cara de quem nunca foi perguntado.',
+    fala('o homem da banca', 'Parou como?'),
+    d=>fala(d.jogador.nome, 'Na detonação. A rua inteira parou.'),
+    'Ele olha pra rua, que agora está normal, e depois pra você.',
+    fala('o homem da banca', 'A gente não para.'),
+    d=>fala(d.jogador.nome, 'Parou.'),
+    'Ele abre a boca, fecha, e fica visivelmente incomodado por uns cinco segundos.',
+    fala('o homem da banca', 'Deve ser porque uma vez caiu pedra na Rua Nova. Faz uns doze anos.', 'baixo'),
+    fala('o homem da banca', 'Morreu ninguém, não. Mas caiu.'),
+    'Ele arruma as revistas que já estavam arrumadas.',
+    fala('o homem da banca', 'Nunca tinha reparado que a gente para. Obrigado, viu. Agora eu vou reparar todo dia.', 'riso')
+  ],
+  ef:{flag:'sabe_da_pedra_na_rua_nova', moral:3,
+      npc:{nome:'Homem da banca', opiniao:2, memoria:'Descobriu, por causa da sua pergunta, que a cidade dele para ao meio-dia.'},
+      rep:{eixo:'bom',delta:1,motivo:'Fez a pergunta que a cidade tinha parado de fazer'},
+      registrar:'Caiu pedra na Rua Nova de Pewter há doze anos. Desde então a cidade para ao meio-dia sem saber que para.'},
+  escolhas:[{texto:'Ir ver a cidade.', vai:'c4_chegada'}]
+},
+
+c4_ab_com_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `Você entra em Pewter com ${c ? 'a credencial de ' + c.nome.toLowerCase() : 'crachá'} no bolso, e credencial muda o jeito que uma cidade de mil e duzentas pessoas te olha.`;
+    },
+    'Não é respeito. É cálculo: gente de cidade pequena sabe reconhecer quem tem autoridade de alguma coisa e sabe que autoridade de alguma coisa dá trabalho.',
+    'Duas pessoas te cumprimentam primeiro. Uma terceira atravessa a rua antes de chegar perto.',
+    'Na porta da pedreira, o guarda te vê de longe, confere alguma coisa num caderno, e não sai da cadeira — o que quer dizer que ele decidiu que você não é problema dele hoje.',
+    'Você ainda não perguntou nada a ninguém e a cidade inteira já ajustou a postura.'
+  ],
+  ef:{flag:'chegou_de_cracha_em_pewter',
+      registrar:'Pewter ajustou a postura antes de você abrir a boca.',
+      presagio:'Quem atravessa a rua pra não falar com você tem um motivo, e o motivo geralmente está na pedreira.'},
+  escolhas:[
+    {texto:'Ir atrás de quem atravessou a rua.', vai:'c4_ab_quem_atravessou'},
+    {texto:'Ignorar e ver a cidade como qualquer um.', vai:'c4_chegada'}
+  ]
+},
+
+c4_ab_quem_atravessou:{
+  texto:[
+    'Você anda na direção dela sem pressa, que é o único jeito de andar atrás de alguém sem parecer que está andando atrás de alguém.',
+    'É uma mulher de uns cinquenta, de uniforme cinza de operária, com a marmita na mão.',
+    'Ela para quando entende que você parou do lado.',
+    fala('a operária', 'Eu não vi nada.'),
+    d=>fala(d.jogador.nome, 'Eu não perguntei nada.'),
+    fala('a operária', 'Então tá.'),
+    'Ela fica. Não vai embora, o que é uma informação.',
+    d=>fala(d.jogador.nome, 'O que a senhora não viu?'),
+    'Ela solta o ar pelo nariz, do jeito de quem se cansa da própria cautela.',
+    fala('a operária', 'Eu não vi um caminhão sair do setor quatro numa quarta-feira à noite com o farol apagado até a estrada.'),
+    fala('a operária', 'E eu não vi isso três vezes.', 'baixo'),
+    'E aí ela vai embora de verdade, e não olha pra trás, e você não segue.'
+  ],
+  ef:{flag:['sabe_do_caminhao_do_setor_quatro','sabe_do_setor_quatro'],
+      rep:{eixo:'bom',delta:2,motivo:'Deixou alguém falar do próprio jeito em vez de interrogar'},
+      npc:{nome:'Operária do turno', opiniao:2, memoria:'Te contou o que não viu três vezes, e você não a seguiu.'},
+      registrar:'Um caminhão sai do setor quatro à noite, de farol apagado, e já saiu três vezes.',
+      presagio:'Ela contou porque você tinha crachá. Vai chegar um dia em que ela vai precisar que você tenha.'},
+  escolhas:[{texto:'Ir ver a cidade.', vai:'c4_chegada'}]
+},
+
 
 c4_chegada:{
   texto:[

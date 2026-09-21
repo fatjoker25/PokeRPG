@@ -121,7 +121,7 @@ const CARGOS = [
 },
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
-  requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_elite4,
+  requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite,
   veta:['rocket'],
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
   beneficios:{renda:5000, centro:true, semEspera:true},

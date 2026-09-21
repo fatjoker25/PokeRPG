@@ -1,3 +1,21 @@
+/* ------------------------------------------------------------
+   ABERTURAS — o capítulo não começa sempre no mesmo lugar.
+   Quem chega molhado, quem chega sem dinheiro e quem chega com
+   nome já correndo não entram em Viridian do mesmo jeito.
+   ------------------------------------------------------------ */
+const C2_ABERTURAS = ['c2_mural', 'c2_ab_encharcado', 'c2_ab_sem_troco', 'c2_ab_ja_falam', 'c2_ab_de_lado'];
+function c2_cabe(id, d){
+  const r = Estado.rep;
+  if (id === 'c2_ab_sem_troco') return d.jogador.dinheiro < 1200;
+  if (id === 'c2_ab_ja_falam')  return r.eixo === 'bom' && r.bom >= 2;
+  if (id === 'c2_ab_de_lado')   return r.eixo === 'ruim' && r.ruim >= 2;
+  return true;
+}
+function c2_abertura(d){
+  const cand = C2_ABERTURAS.filter(id => c2_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 2 — GENTE BOA E GENTE COMUM
    ============================================================ */
@@ -5,8 +23,157 @@ CAPITULOS.push(
 
 {
 num:2, titulo:'Gente Boa e Gente Comum', local:'Viridian', ambiente:'cidade', nivelArea:7,
-tom:'leve', inicio:'c2_mural',
+tom:'leve', entradas:C2_ABERTURAS,
+inicio: d => c2_abertura(d),
 cenas:{
+
+c2_ab_encharcado:{
+  texto:[
+    'Choveu nos últimos onze quilômetros e não foi chuva de passar: foi chuva de molhar até o forro da mochila.',
+    'Você entra em Viridian pingando, com a bainha da calça pesada, e a primeira coisa que Viridian faz é não reparar em você — o que é a coisa mais urbana que existe.',
+    'O Centro Pokémon tem um capacho enorme na porta e uma placa pedindo pra bater o pé, e tem gente que bate e gente que não bate.',
+    'Você bate.',
+    'Lá dentro é morno, cheira a café de máquina e tem um ventilador de teto girando devagar em cima de dezesseis pessoas que também chegaram de algum lugar.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} sacode a água em cima de uma poltrona e um senhor levanta o jornal sem falar nada, do jeito de quem já viu isso duzentas vezes.`
+               : 'Alguém levanta o jornal sem falar nada quando você passa pingando.';
+    }
+  ],
+  ef:{hp:-2, flag:'chegou_molhado_em_viridian', registrar:'Chegou a Viridian debaixo de chuva.'},
+  escolhas:[
+    {texto:'Ir direto pro mural de recados, molhado mesmo.', vai:'c2_mural'},
+    {texto:'Sentar e esperar secar antes de fazer qualquer coisa.', vai:'c2_ab_secando'},
+    {texto:'Perguntar à atendente onde dá pra secar roupa.', vai:'c2_ab_secando'}
+  ]
+},
+
+c2_ab_secando:{
+  texto:[
+    'Você senta numa das cadeiras de plástico perto do ventilador, que é o assento mais disputado do Centro e estava vago porque ninguém mais tinha chegado tão molhado.',
+    'Passa meia hora. A roupa não seca, mas para de escorrer, que é uma vitória menor e é a única disponível.',
+    'Do lado, uma mulher de uns quarenta anos está com a mesma cara de quem chegou de longe hoje, e ela fala primeiro:',
+    fala('a mulher do ventilador', 'Primeira vez?'),
+    d=>fala(d.jogador.nome, 'Primeira semana.'),
+    fala('a mulher do ventilador', 'Ah.'),
+    'Ela diz "ah" do jeito que se diz quando a resposta explica uma coisa que não era sobre a pergunta.',
+    fala('a mulher do ventilador', 'Olha o mural antes de sair. Não porque tem coisa útil. Porque tem.'),
+    'E ela não explica o que quis dizer com isso.'
+  ],
+  ef:{hp:2, npc:{nome:'Mulher do ventilador', opiniao:1, memoria:'Dividiu o ventilador do Centro de Viridian com você numa tarde de chuva.'}},
+  escolhas:[{texto:'Ir ver o mural.', vai:'c2_mural'}]
+},
+
+c2_ab_sem_troco:{
+  texto:[
+    d=>`Você conta o dinheiro antes de entrar em Viridian, sentado na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${d.jogador.dinheiro} ₽.`,
+    'Não é pouco de passar fome. É pouco de fazer conta: se comprar isso, não compra aquilo.',
+    'Viridian é a primeira cidade de verdade que você vê, e cidade de verdade tem uma coisa que a sua não tinha — vitrine.',
+    'Você passa por três delas no caminho do Centro e não entra em nenhuma, e isso custa um esforço que você não esperava que custasse.',
+    'No Centro tem café de máquina de graça. Você toma dois.'
+  ],
+  ef:{flag:'chegou_contando_moeda', registrar:'Chegou a Viridian contando moeda na guia.'},
+  escolhas:[
+    {texto:'Ir ao mural de recados — recompensa é dinheiro.', vai:'c2_mural'},
+    {texto:'Perguntar na recepção se tem trabalho de um dia.', vai:'c2_ab_trabalho'},
+    {texto:'Tomar o terceiro café e encarar isso amanhã.', vai:'c2_mural', ef:{hp:1}}
+  ]
+},
+
+c2_ab_trabalho:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Tem trabalho de um dia por aqui? Qualquer coisa.'),
+    'A atendente não ri e não faz cara de pena, e as duas coisas são gentileza.',
+    fala('a atendente', 'Tem sempre. A pergunta é se você quer o que tem.'),
+    fala('a atendente', 'O mercado precisa de gente pra descarregar às cinco da manhã. Paga oitocentos, em dinheiro, e acaba às oito.'),
+    d=>fala(d.jogador.nome, 'Cinco da manhã.'),
+    fala('a atendente', 'Você é treinador. Achei que acordar cedo fosse parte.'),
+    'Ela anota um endereço num pedaço de papel de receituário e empurra pelo balcão.',
+    fala('a atendente', 'Se for, fala que eu mandei. Se não for, tudo bem, e o papel não vale nada mesmo.')
+  ],
+  ef:{flag:'tem_bico_no_mercado', itens:{'Ração':1},
+      npc:{nome:'Atendente de Viridian', opiniao:2, memoria:'Te arrumou um bico de descarga no mercado sem fazer cara de pena.'},
+      registrar:'Tem um bico de descarga no mercado de Viridian, às cinco da manhã, por 800 ₽.'},
+  escolhas:[
+    {texto:'Ir ao mural agora e decidir de manhã.', vai:'c2_mural'}
+  ]
+},
+
+c2_ab_ja_falam:{
+  texto:[
+    'Você entra em Viridian e a terceira pessoa que cruza com você olha duas vezes.',
+    'Não é reconhecimento — ainda não. É aquele olhar de quem acha que já viu a sua cara em algum lugar e não vai conseguir lembrar onde, e vai passar o resto do dia com isso na cabeça.',
+    'Notícia anda mais rápido do que gente, e você andou.',
+    'No Centro Pokémon, a atendente te atende normalmente até ler o seu nome na licença, e aí ela levanta os olhos meio centímetro.',
+    fala('a atendente', 'É você mesmo.'),
+    d=>fala(d.jogador.nome, 'Depende do que contaram.'),
+    fala('a atendente', 'Contaram bem.', 'riso'),
+    'Ela devolve a licença e não cobra o atendimento, o que ela já não ia cobrar, mas desta vez ela faz questão de dizer que não vai cobrar.'
+  ],
+  ef:{moral:3, flag:'reconhecido_em_viridian',
+      npc:{nome:'Atendente de Viridian', opiniao:2, memoria:'Reconheceu o seu nome na licença antes de você falar qualquer coisa.'},
+      registrar:'Em Viridian já sabem quem você é.'},
+  escolhas:[
+    {texto:'"Contaram o quê, exatamente?"', vai:'c2_ab_contaram'},
+    {texto:'Agradecer e ir ver o mural.', vai:'c2_mural'}
+  ]
+},
+
+c2_ab_contaram:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Contaram o quê, exatamente?'),
+    'Ela pensa em como resumir, e o resumo sai curto demais e por isso certeiro:',
+    fala('a atendente', 'Que você para.'),
+    d=>fala(d.jogador.nome, 'Paro?'),
+    fala('a atendente', 'Pra ajudar. Pra olhar. Sei lá. Alguém que passou por aqui falou de você e a frase foi essa: "aquele para".'),
+    'Ela dá de ombros como quem entrega uma encomenda que não é dela.',
+    fala('a atendente', 'É pouca coisa pra virar fama. Mas virou, e agora é sua.', 'baixo'),
+    'Você vai passar uns dias tentando decidir se isso é elogio ou aviso, e a resposta é que é os dois.'
+  ],
+  ef:{moral:4, flag:'sabe_o_que_falam_de_voce',
+      presagio:'"Aquele para." Você vai lembrar dessa frase numa hora em que parar vai custar caro.'},
+  escolhas:[{texto:'Ir ver o mural.', vai:'c2_mural'}]
+},
+
+c2_ab_de_lado:{
+  texto:[
+    'Viridian não te expulsa. Viridian faz uma coisa pior, que é te tratar com um cuidado que ninguém tem com estranho comum.',
+    'O lojista do mercado acompanha você com os olhos entre uma prateleira e outra, e quando você olha de volta ele sorri, e continua acompanhando.',
+    'No Centro Pokémon a atendente lê a sua licença por dois segundos a mais do que leu a da pessoa da frente.',
+    fala('a atendente', 'Tudo certo.'),
+    'E está mesmo tudo certo. Ela não fez nada. É isso que é ruim: não tem nada pra reclamar, só tem um clima.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} percebe antes de você e fica mais perto da sua perna do que costuma ficar.`
+               : 'Você repara no clima antes de entender de onde ele veio.';
+    }
+  ],
+  ef:{moral:-2, flag:'clima_ruim_em_viridian',
+      registrar:'Em Viridian te tratam com um cuidado que não é gentileza.'},
+  escolhas:[
+    {texto:'Ignorar e ir ao mural.', vai:'c2_mural'},
+    {texto:'Perguntar de frente o que ela ouviu falar.', vai:'c2_ab_perguntou_de_frente'}
+  ]
+},
+
+c2_ab_perguntou_de_frente:{
+  texto:[
+    d=>fala(d.jogador.nome, 'A senhora ouviu alguma coisa sobre mim?'),
+    'Ela não esperava a pergunta e por isso responde a verdade.',
+    fala('a atendente', 'Ouvi.'),
+    d=>fala(d.jogador.nome, 'E é verdade?'),
+    fala('a atendente', 'Eu não estava lá. Eu só repito o que chegou aqui, e o que chegou aqui foi curto.'),
+    'Ela alinha a papelada do balcão, que já estava alinhada.',
+    fala('a atendente', 'Olha, eu vou te dizer uma coisa que você não vai gostar: não adianta explicar pra mim.'),
+    fala('a atendente', 'Adianta fazer uma coisa nova, numa cidade onde tenha gente olhando, e esperar isso andar. Anda mais devagar que o outro tipo de notícia, mas anda.', 'baixo')
+  ],
+  ef:{flag:'sabe_como_consertar_fama',
+      npc:{nome:'Atendente de Viridian', opiniao:1, memoria:'Te disse na cara o que ouviu, e te disse como se conserta.'},
+      registrar:'Notícia boa anda mais devagar que a ruim, mas anda.',
+      presagio:'Ela te deu a receita. Falta a cidade com gente olhando.'},
+  escolhas:[{texto:'Ir ver o mural.', vai:'c2_mural'}]
+},
+
 
 c2_mural:{
   texto:[
