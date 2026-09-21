@@ -1,11 +1,247 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a convocação da Liga chega de quatro jeitos, e o
+   jeito que ela chega já diz o que a Liga acha de você.
+   ------------------------------------------------------------ */
+const C17_ABERTURAS = ['c17_envelope', 'c17_ab_no_quadro', 'c17_ab_sem_insignias', 'c17_ab_de_cracha', 'c17_ab_o_oficial'];
+function c17_cabe(id, d){
+  if (id === 'c17_ab_sem_insignias') return (d.insignias || []).length < 8;
+  if (id === 'c17_ab_de_cracha')     return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c17_ab_o_oficial')     return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3 || d.liga.avisos >= 2;
+  return true;
+}
+function c17_abertura(d){
+  const cand = C17_ABERTURAS.filter(id => c17_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 17 — O JARDIM  (Rota 23 / Caminho Vitória)
    ============================================================ */
 CAPITULOS.push(
 {
 num:17, titulo:'O Jardim', local:'Rota 23 / Caminho Vitória', ambiente:'floresta', nivelArea:50,
-tom:'muito sombrio', inicio:'c17_envelope',
+tom:'muito sombrio', entradas:C17_ABERTURAS,
+inicio: d => c17_abertura(d),
 cenas:{
+
+c17_ab_no_quadro:{
+  texto:[
+    'A convocação não chega pra você. Ela chega pro mural.',
+    'No quadro de avisos do Centro Pokémon tem uma folha impressa com trinta e um nomes em ordem alfabética, sob o título CONVOCADOS — TEMPORADA CORRENTE.',
+    d=>`O seu está na lista, entre dois nomes que você não conhece, em corpo doze, como todos os outros.`,
+    'Tem quatro pessoas lendo o mural com você e uma delas está passando o dedo linha por linha, duas vezes, procurando um nome que não está lá.',
+    'Ela para de procurar e fica olhando o quadro por mais tempo do que precisa.',
+    'Embaixo da lista tem um parágrafo em corpo oito que ninguém está lendo:',
+    '**"Em razão de reestruturação administrativa em curso, o acesso ao Planalto Indigo permanece por conta e risco do desafiante. Os postos de controle das Rotas 22 e 23 estão temporariamente desguarnecidos."**',
+    'Trinta e uma pessoas foram convocadas e avisadas, em corpo oito, de que tiraram a segurança do caminho.'
+  ],
+  ef:{flag:['leu_o_anexo','sabe_dos_postos_vazios'],
+      rep:{eixo:'bom', delta:1, motivo:'Leu o corpo oito do mural.'},
+      registrar:'A convocação da Liga saiu em mural, com 31 nomes e um aviso em corpo oito sobre postos desguarnecidos.',
+      presagio:'Publicar em mural é o jeito de avisar sem comunicar.'},
+  escolhas:[
+    {texto:'Falar com a mulher que não achou o nome dela.', vai:'c17_ab_a_mulher_do_mural'},
+    {texto:'Arrancar a folha e levar.', vai:'c17_ab_arrancou_a_folha'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_a_mulher_do_mural:{
+  texto:[
+    'Ela tem uns vinte e cinco anos e seis insígnias no estojo preso no cinto, o que é mais do que a maioria dos trinta e um nomes da folha.',
+    d=>fala(d.jogador.nome, 'Você não tá na lista?'),
+    fala('a mulher do mural', 'Não.'),
+    fala('a mulher do mural', 'E eu tenho seis. Tem gente com quatro nessa folha.'),
+    'Ela não fala isso com revolta. Fala com a precisão de quem já conferiu.',
+    d=>fala(d.jogador.nome, 'Você reclamou?'),
+    fala('a mulher do mural', 'Liguei pro Planalto. Uma moça muito educada me explicou que a convocação é por critério administrativo.'),
+    d=>fala(d.jogador.nome, 'Que critério?'),
+    fala('a mulher do mural', 'Ela não soube dizer.'),
+    'Ela dá um passo pra trás pra ver o mural inteiro de uma vez.',
+    fala('a mulher do mural', 'Eu contei. Vinte e dois dos trinta e um são de Saffron, Celadon ou Vermilion.', 'baixo'),
+    fala('a mulher do mural', 'Eu sou de Pewter.')
+  ],
+  ef:{flag:'o_criterio_administrativo',
+      npc:{nome:'a mulher do mural', opiniao:1, viuVoce:'Você foi o único a perguntar por que ela não estava na lista.'},
+      registrar:'Vinte e dois dos 31 convocados são de Saffron, Celadon ou Vermilion. O critério é "administrativo".',
+      presagio:'Convocação concentrada em três cidades é escolha, e escolha tem quem escolha.'},
+  escolhas:[
+    {texto:'Anotar os trinta e um nomes antes de sair.', vai:'c17_ab_arrancou_a_folha'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
+  ]
+},
+
+c17_ab_arrancou_a_folha:{
+  texto:[
+    'Você tira a folha do mural, e tirar folha de mural de Centro Pokémon é uma coisa que ninguém faz e que ninguém impede.',
+    'A atendente vê. Não fala nada. Volta pro computador.',
+    'Você dobra a folha em quatro e guarda junto do resto do papel que você vem juntando há meses, e o resto do papel já é uma pilha que não cabe mais no bolso de fora.',
+    'Trinta e um nomes, um endereço de origem em cada um, e um parágrafo em corpo oito.',
+    'Não é prova de nada. É a lista de quem a Liga decidiu mandar pra uma estrada que ela mesma desguarneceu.'
+  ],
+  ef:{flag:['tem_a_lista_dos_trinta_e_um','reika_precisa_de_papel'],
+      registrar:'Está com a folha de convocação arrancada do mural: 31 nomes e o aviso dos postos desguarnecidos.'},
+  escolhas:[
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
+  ]
+},
+
+c17_ab_sem_insignias:{
+  texto:[
+    d=>{
+      const n = (d.insignias || []).length;
+      return `Você tem ${n} insígnia${n===1?'':'s'}. O regulamento da Liga pede oito. E o envelope está na sua mão mesmo assim.`;
+    },
+    'Papel de gramatura alta, dobra em três, timbre em relevo. A atendente do Centro estava com ele separado há três dias.',
+    '**"Sua presença é solicitada no Planalto Indigo. Apresentar-se à recepção com as insígnias em mãos."**',
+    '"Com as insígnias em mãos." Não diz oito. Você lê a frase quatro vezes procurando o oito e ele não está lá.',
+    'Ou o regulamento mudou, ou a convocação não é sobre o regulamento.',
+    d=>fala(d.jogador.nome, 'Isso chegou pra mais alguém?'),
+    fala('a atendente do Centro', 'Chegaram sete aqui essa semana.'),
+    d=>fala(d.jogador.nome, 'E os sete têm oito insígnias?'),
+    'Ela olha pro lado, pro arquivo de envelopes que ainda não foram entregues.',
+    fala('a atendente do Centro', 'Eu não confiro insígnia. Eu entrego envelope.', 'baixo')
+  ],
+  ef:{flag:['convocado_sem_as_oito','sabe_dos_postos_vazios'],
+      registrar:'Recebeu a convocação da Liga sem ter as oito insígnias. A carta não menciona o número.',
+      presagio:'Convocação que não exige o requisito não está convocando por mérito. Está convocando por outro motivo.'},
+  escolhas:[
+    {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
+    {texto:'Perguntar quem assinou o carimbo.', vai:'c17_ab_o_carimbo'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_o_carimbo:{
+  texto:[
+    'O carimbo é redondo, azul, com o brasão da Liga no meio e uma linha de texto na borda.',
+    'Você lê a borda com o envelope inclinado contra a luz, porque a tinta está fraca:',
+    '**SECRETARIA DE COMPETIÇÕES — USO INTERNO**',
+    'Uso interno. Uma convocação a desafiantes carimbada com o carimbo de uso interno.',
+    'Você mostra pra atendente, que olha com o interesse educado de quem tem fila.',
+    fala('a atendente do Centro', 'Esse é o carimbo que vem em tudo da Liga.'),
+    d=>fala(d.jogador.nome, 'Tudo o quê?'),
+    fala('a atendente do Centro', 'Tudo. Aviso de manutenção, mudança de horário, circular.'),
+    'Ela puxa uma pasta de baixo do balcão e mostra quatro circulares dos últimos meses. As quatro com o mesmo carimbo azul.',
+    fala('a atendente do Centro', 'Ninguém carimba nada com carimbo de fora há uns dois anos. Sumiu.')
+  ],
+  ef:{flag:'o_carimbo_de_uso_interno',
+      registrar:'Há dois anos a Liga só usa o carimbo de "uso interno" — o carimbo externo sumiu.',
+      presagio:'Documento carimbado como interno não vale contra a Liga. Sempre coube a eles dizer que era rascunho.'},
+  escolhas:[
+    {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `O envelope não chega pelo Centro Pokémon. Chega pelo serviço: vem junto com a correspondência de ${c ? c.nome : 'praxe'}, num malote lacrado, com protocolo de recebimento pra você assinar.`;
+    },
+    'Dentro do malote tem duas coisas.',
+    'A convocação, igual à de todo mundo.',
+    'E um segundo envelope, menor, sem timbre, com o seu nome escrito à mão.',
+    'Dentro do segundo: meia folha, datilografada, sem assinatura e sem carimbo.',
+    '**"Antes de subir a Rota 23, confira quem está lotado nos postos 3, 5 e 7. A resposta oficial é que estão desguarnecidos. Não estão."**',
+    'Você lê duas vezes. Vira a folha. O verso está em branco.',
+    'Alguém dentro do serviço te mandou isso sabendo que você tem acesso ao malote e sabendo que você ia subir.'
+  ],
+  ef:{flag:['o_bilhete_do_malote','sabe_dos_postos_vazios'],
+      registrar:'Um bilhete anônimo no malote: os postos 3, 5 e 7 da Rota 23 não estão desguarnecidos como a Liga informou.',
+      presagio:'Quem escreveu tem acesso à lotação dos postos e não quer assinar. Isso é alguém de dentro com medo.'},
+  escolhas:[
+    {texto:'Ler a convocação normal também.', vai:'c17_leu_o_envelope'},
+    {texto:'Tentar descobrir quem pôs o bilhete no malote.', vai:'c17_ab_quem_pos'},
+    {texto:'Subir a Rota 23 com isso na cabeça.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_quem_pos:{
+  texto:[
+    'O malote tem protocolo, e protocolo tem origem, e a origem está impressa na etiqueta: expedido pelo setor de correspondência do Planalto Indigo, às seis e quarenta da manhã de anteontem.',
+    'Você liga pro setor. Atende um rapaz.',
+    d=>fala(d.jogador.nome, 'Quem fecha os malotes aí?'),
+    fala('o rapaz do setor', 'Depende do turno. De manhã sou eu.'),
+    d=>fala(d.jogador.nome, 'Anteontem, seis e quarenta.'),
+    'Papel sendo mexido.',
+    fala('o rapaz do setor', 'Anteontem eu entrei às sete.'),
+    'Silêncio dos dois lados.',
+    fala('o rapaz do setor', 'O malote saiu às seis e quarenta?'),
+    d=>fala(d.jogador.nome, 'Tá na etiqueta.'),
+    fala('o rapaz do setor', 'Então alguém entrou no setor antes de mim e lacrou um malote.'),
+    'Ele para. Você ouve ele respirando.',
+    fala('o rapaz do setor', 'Moço, eu vou desligar. E eu não vou falar disso com ninguém daqui.', 'baixo')
+  ],
+  ef:{flag:'alguem_lacrou_antes_do_turno',
+      registrar:'O malote foi lacrado no Planalto vinte minutos antes de o responsável pelo turno chegar.'},
+  escolhas:[
+    {texto:'Subir a Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ler a convocação normal antes.', vai:'c17_leu_o_envelope'}
+  ]
+},
+
+c17_ab_o_oficial:{
+  texto:[
+    'A convocação não chega em envelope. Chega na mão de um oficial da Liga, de uniforme cinza, que estava sentado na recepção do Centro Pokémon esperando você entrar.',
+    'Ele levanta quando te vê. Não bloqueia a porta. Fica em pé e espera você chegar até ele, que é uma escolha e você repara nela.',
+    fala('o oficial de cinza', 'Eu tenho duas coisas pra te entregar e a ordem importa.'),
+    'A primeira é a convocação, igual à de todo mundo, papel de gramatura alta, timbre em relevo.',
+    'A segunda é uma folha comum, com o brasão impresso e não em relevo.',
+    d=>{
+      const n = d.liga.avisos || 3;
+      return `**"NOTIFICAÇÃO — ${n} ocorrências registradas. A presente convocação não suspende, anula ou substitui as ocorrências acima."**`;
+    },
+    fala('o oficial de cinza', 'Você pode subir. É o seu direito.'),
+    fala('o oficial de cinza', 'E se você subir, isso aqui sobe com você.'),
+    'Ele entrega as duas folhas juntas, uma em cima da outra, com a notificação por baixo.'
+  ],
+  ef:{flag:['convocado_com_notificacao','sabe_dos_postos_vazios'],
+      registrar:'A Liga entregou a convocação em mão, junto com a notificação das ocorrências abertas.',
+      presagio:'Ele pôs a notificação por baixo. Foi cuidado, não descuido.'},
+  escolhas:[
+    {texto:'Perguntar quem mandou ele te esperar aqui.', vai:'c17_ab_quem_mandou'},
+    {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
+    {texto:'Subir a Rota 23 sem dizer nada.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_quem_mandou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem mandou você me esperar?'),
+    fala('o oficial de cinza', 'Ordem de serviço.'),
+    d=>fala(d.jogador.nome, 'Assinada por quem?'),
+    'Ele tira a ordem do bolso do peito e mostra, e mostrar isso não é obrigação dele.',
+    'É um formulário de meia página. No campo "solicitante" está escrito, à máquina: CONSELHO.',
+    'Só isso. Sem nome, sem sigla, sem número.',
+    d=>fala(d.jogador.nome, 'Que conselho?'),
+    fala('o oficial de cinza', 'Eu ia te perguntar a mesma coisa.'),
+    'Ele dobra a ordem e guarda.',
+    fala('o oficial de cinza', 'Eu tenho dezenove anos de Liga. Ordem de serviço sempre teve nome de quem assina.'),
+    fala('o oficial de cinza', 'Nos últimos oito meses, quatro das minhas vieram assim.', 'baixo')
+  ],
+  ef:{flag:'ordens_assinadas_por_conselho',
+      npc:{nome:'o oficial de cinza', opiniao:1, viuVoce:'Te mostrou a ordem de serviço assinada apenas por "conselho".'},
+      registrar:'Quatro ordens de serviço da Liga, em oito meses, vieram assinadas apenas como "CONSELHO".',
+      presagio:'Um solicitante sem nome que a própria Liga obedece.'},
+  escolhas:[
+    {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
+    {texto:'Subir a Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
 
 c17_envelope:{
   texto:[

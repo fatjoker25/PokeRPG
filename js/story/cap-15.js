@@ -1,11 +1,264 @@
+/* ------------------------------------------------------------
+   ABERTURAS — vinte e dois quilômetros de ciclovia vazia. Dá
+   pra chegar nela de bicicleta emprestada, pela cabine de
+   pedágio, atrás de quem esvaziou, ou com crachá na mão.
+   ------------------------------------------------------------ */
+const C15_ABERTURAS = ['c15_rotas', 'c15_ab_a_bicicleta', 'c15_ab_a_cabine', 'c15_ab_a_caminhonete', 'c15_ab_de_cracha'];
+function c15_cabe(id, d){
+  if (id === 'c15_ab_a_bicicleta') return d.jogador.dinheiro >= 400;
+  if (id === 'c15_ab_de_cracha')   return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c15_abertura(d){
+  const cand = C15_ABERTURAS.filter(id => c15_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 15 — OS TRÊS QUE CORREM  (Rotas 14–18)
    ============================================================ */
 CAPITULOS.push(
 {
 num:15, titulo:'Os Três que Correm', local:'Rotas 14–18', ambiente:'campo', nivelArea:46,
-tom:'muito sombrio', inicio:'c15_rotas',
+tom:'muito sombrio', entradas:C15_ABERTURAS,
+inicio: d => c15_abertura(d),
 cenas:{
+
+c15_ab_a_bicicleta:{
+  texto:[
+    'Tem uma locadora de bicicleta na entrada norte da ciclovia: um contêiner pintado de azul com dezesseis bicicletas do lado de fora e uma mulher lendo revista numa cadeira de plástico.',
+    'Quatrocentos o dia. Ela nem levanta pra alugar.',
+    fala('a mulher da locadora', 'Capacete é mais cem e ninguém leva.'),
+    d=>fala(d.jogador.nome, 'Eu levo.'),
+    'Ela levanta.',
+    fala('a mulher da locadora', 'Ah.'),
+    'Ela escolhe a bicicleta pra você, o que é um serviço que ela claramente não presta pra todo mundo, e escolhe a de aro vinte e seis com pneu novo.',
+    fala('a mulher da locadora', 'Olha, um aviso.'),
+    fala('a mulher da locadora', 'Não vai ter bicho. Se você tá indo pra ver bicho, é melhor eu te devolver os quatrocentos agora.'),
+    d=>fala(d.jogador.nome, 'Desde quando?'),
+    fala('a mulher da locadora', 'Umas seis semanas.'),
+    'Ela volta pra cadeira de plástico.',
+    fala('a mulher da locadora', 'Eu aluguei três bicicletas essa semana. No ano passado eu alugava trinta por dia.')
+  ],
+  ef:{dinheiro:-500, flag:'alugou_bicicleta',
+      registrar:'Alugou bicicleta e capacete na entrada norte da ciclovia. A locação caiu de trinta por dia para três por semana.'},
+  escolhas:[
+    {texto:'Pedalar a ciclovia inteira.', vai:'c15_ciclovia'},
+    {texto:'Perguntar se ela viu alguma coisa nas seis semanas.', vai:'c15_ab_o_que_ela_viu'},
+    {texto:'Ir primeiro à cabine de pedágio.', vai:'c15_cabine'}
+  ]
+},
+
+c15_ab_o_que_ela_viu:{
+  texto:[
+    'Ela fecha a revista e põe no colo, o que é o gesto de quem vai falar sério.',
+    fala('a mulher da locadora', 'Caminhonete. Cabine dupla, branca, caçamba com lona.'),
+    fala('a mulher da locadora', 'Passa de madrugada, pela ciclovia.'),
+    d=>fala(d.jogador.nome, 'Pela ciclovia? Não é proibido veículo?'),
+    fala('a mulher da locadora', 'É proibido. Mas a cancela da cabine tá quebrada há nove anos e ninguém consertou porque ninguém precisava.'),
+    'Ela aponta com a revista pra entrada.',
+    fala('a mulher da locadora', 'Eu durmo aqui. Meu contêiner é aqui.'),
+    fala('a mulher da locadora', 'Nas últimas seis semanas eu ouvi ela passar dezessete vezes. Eu conto porque acorda.')
+  ],
+  ef:{flag:'a_caminhonete_da_madrugada',
+      npc:{nome:'a mulher da locadora', opiniao:1, viuVoce:'Te contou das dezessete passagens da caminhonete.'},
+      registrar:'Uma caminhonete branca de caçamba com lona passou dezessete vezes pela ciclovia em seis semanas, de madrugada.'},
+  escolhas:[
+    {texto:'Pedalar a ciclovia procurando o rastro.', vai:'c15_ciclovia'},
+    {texto:'Ir à cabine de pedágio.', vai:'c15_cabine'},
+    {texto:'Procurar quem more por aqui.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_a_cabine:{
+  texto:[
+    'A cabine de pedágio da entrada norte está desativada desde noventa e um, e desativada quer dizer: vidro inteiro, cancela quebrada na posição levantada, e uma porta que não tranca.',
+    'Você abre a porta porque a porta está lá.',
+    'Dentro tem uma cadeira giratória sem encosto, um calendário de mil novecentos e noventa e um com uma foto de Cerulean, e poeira em tudo.',
+    'Em tudo menos numa coisa.',
+    'O peitoril da janela da cabine, o de dentro, na altura de quem senta, está limpo numa faixa de uns quarenta centímetros. Limpo de cotovelo.',
+    'Alguém senta aqui. Regularmente. Olhando pra ciclovia.',
+    'E no chão, embaixo da cadeira, tem oito bitucas de cigarro, e as oito são da mesma marca, e três delas ainda estão com o filtro branco.'
+  ],
+  ef:{flag:'alguem_senta_na_cabine',
+      registrar:'Alguém senta na cabine de pedágio desativada olhando a ciclovia. Oito bitucas, três recentes.',
+      presagio:'De dentro da cabine dá pra ver quem entra na ciclovia. É por isso que se senta ali.'},
+  escolhas:[
+    {texto:'Ficar escondido na cabine e esperar quem senta.', vai:'c15_ab_esperou_na_cabine'},
+    {texto:'Andar a ciclovia agora, antes que a pessoa chegue.', vai:'c15_ciclovia'},
+    {texto:'Procurar quem more por aqui e conheça a cabine.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_esperou_na_cabine:{
+  texto:[
+    'Você senta no chão da cabine, atrás do balcão, onde de fora não se vê, e espera.',
+    'Espera uma hora e quarenta. É muito tempo pra ficar em silêncio num lugar que cheira a poeira e cigarro velho.',
+    'Às onze e dez chega um homem de uns trinta e cinco anos, de calça de brim e bota, com uma garrafa térmica.',
+    'Ele senta na cadeira giratória sem encosto, apoia o cotovelo no peitoril limpo, acende um cigarro e não faz mais nada.',
+    'Fica quarenta minutos olhando a ciclovia vazia.',
+    'Em quarenta minutos, passa uma pessoa de bicicleta. Ele pega um caderninho do bolso de trás e anota alguma coisa.',
+    'Anota. Guarda o caderninho. Volta a olhar.'
+  ],
+  ef:{flag:'o_homem_do_caderninho', hp:-1,
+      registrar:'Um homem senta na cabine e anota num caderninho cada pessoa que entra na ciclovia.',
+      presagio:'Ele não impede ninguém de entrar. Ele anota quem entra.'},
+  escolhas:[
+    {texto:'Aparecer e perguntar o que ele anota.', vai:'c15_ab_perguntou_o_caderninho'},
+    {texto:'Esperar ele sair e seguir ele.', vai:'c15_ab_seguiu_o_homem'},
+    {texto:'Sair sem ele ver e ir pra ciclovia.', vai:'c15_ciclovia'}
+  ]
+},
+
+c15_ab_perguntou_o_caderninho:{
+  texto:[
+    'Você levanta de trás do balcão e ele quase cai da cadeira, o que é, por um segundo, engraçado.',
+    d=>fala(d.jogador.nome, 'O que você anota?'),
+    'Ele se recompõe rápido demais pra alguém que levou um susto de verdade.',
+    fala('o homem da cabine', 'Fluxo. Eu sou da concessionária.'),
+    d=>fala(d.jogador.nome, 'A cabine tá desativada desde noventa e um.'),
+    'Silêncio.',
+    fala('o homem da cabine', 'Estudo de reativação.'),
+    d=>fala(d.jogador.nome, 'Com caderninho de bolso?'),
+    'Ele apaga o cigarro no peitoril, o que estraga a faixa limpa que ele mesmo mantinha.',
+    fala('o homem da cabine', 'Olha, menino. Você não tá entendendo o que tá acontecendo aqui e é melhor assim.'),
+    'Ele sai. Não corre. Desce a rampa da cabine e entra numa caminhonete branca de cabine dupla que estava estacionada atrás do mato, fora do seu campo de visão, o tempo todo.'
+  ],
+  ef:{flag:['assustou_o_vigia','a_caminhonete_da_madrugada'],
+      registrar:'O vigia da cabine foi embora numa caminhonete branca de cabine dupla escondida atrás do mato.',
+      presagio:'Agora eles sabem que tem alguém perguntando. Isso muda o ritmo deles e o seu.'},
+  escolhas:[
+    {texto:'Ir pra ciclovia agora, rápido.', vai:'c15_ciclovia'},
+    {texto:'Procurar o vilarejo e avisar as pessoas.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_seguiu_o_homem:{
+  texto:[
+    'Você espera. Ele fica mais uma hora e vinte e sai às doze e trinta, sem pressa, com a garrafa térmica vazia.',
+    'Você deixa ele sair do seu campo de visão e sai atrás, pelo capinzal do lado, o que é lento e é barulhento e é a única opção.',
+    'Ele anda trezentos metros pela beira da ciclovia e entra numa trilha de terra que não está em mapa nenhum, aberta por veículo, com o capim deitado nos dois lados.',
+    'A trilha dá num barracão de madeira e telha de fibrocimento, com uma caminhonete branca estacionada na frente e um gerador ligado.',
+    'E, encostadas na parede externa do barracão, sob uma lona: doze gaiolas de transporte vazias e empilhadas.',
+    'Vazias. Empilhadas. Limpas.',
+    'Doze gaiolas limpas quer dizer que o que estava nelas já foi levado.'
+  ],
+  ef:{flag:['o_barracao_da_trilha','caderno_do_trafico'],
+      registrar:'Um barracão escondido a trezentos metros da ciclovia, com doze gaiolas de transporte vazias e limpas.',
+      presagio:'Doze gaiolas limpas e empilhadas. Eles terminaram este trecho.'},
+  escolhas:[
+    {texto:'Chegar mais perto do barracão.', vai:'c15_ciclovia'},
+    {texto:'Voltar e procurar o vilarejo.', vai:'c15_vilarejo'},
+    {texto:'Voltar à cabine e pegar o caderninho, se ele deixou.', vai:'c15_ab_o_caderninho'}
+  ]
+},
+
+c15_ab_o_caderninho:{
+  texto:[
+    'O caderninho não ficou na cabine. Claro que não ficou.',
+    'Mas ficou outra coisa, e essa você não esperava: embaixo da cadeira giratória, junto com as oito bitucas, tem uma folha amassada e jogada fora.',
+    'É uma folha arrancada do caderninho. Ele arrancou e amassou e jogou porque errou alguma coisa e refez.',
+    'Você desamassa.',
+    'É uma tabela. Três colunas: data, trecho, e um número.',
+    '14/10 — km 4 ao 9 — 31. 16/10 — km 9 ao 14 — 27. 19/10 — km 14 ao 18 — 22.',
+    'Eles estão contando quantos retiraram de cada trecho.',
+    'E na quarta linha, a que ele errou e refez, está escrito: 22/10 — km 18 ao 22 — e o número está em branco.',
+    'Hoje é dia vinte e dois.'
+  ],
+  ef:{flag:['a_folha_da_contagem','caderno_do_trafico'],
+      registrar:'Uma folha arrancada do caderninho: 31, 27 e 22 Pokémon retirados de três trechos. O quarto trecho é hoje.',
+      presagio:'A quarta linha está em branco porque o trabalho é hoje. Você não chegou tarde: você chegou junto.'},
+  escolhas:[
+    {texto:'Ir pro km 18. Agora.', vai:'c15_ciclovia'},
+    {texto:'Procurar o vilarejo e juntar gente primeiro.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_a_caminhonete:{
+  texto:[
+    'Você está na ciclovia no quilômetro três quando ouve motor atrás de você, e motor na ciclovia é uma frase que não devia existir.',
+    'Caminhonete branca de cabine dupla, caçamba com lona, vindo do norte, no meio do asfalto onde não cabe caminhonete.',
+    'Você sai pro acostamento de brita. Ela passa a uns sessenta, a dois metros de você, e não desacelera nem um pouco.',
+    'Dois homens na cabine. O do carona olha pra você pelo retrovisor de porta por uns quatro segundos, e você vê ele te olhando, e ele vê você vendo.',
+    'A caminhonete continua e some na curva do quilômetro cinco.',
+    'A lona da caçamba estava mal amarrada de um lado e balançava, e no balanço dava pra ver o que tinha embaixo: metal quadriculado.',
+    'Grade.'
+  ],
+  ef:{flag:'a_caminhonete_te_viu', hp:-1,
+      registrar:'Uma caminhonete branca com gaiolas na caçamba passou por você na ciclovia. O carona te viu.',
+      presagio:'Ele te olhou por quatro segundos pelo retrovisor. Quatro segundos é tempo de decorar uma cara.'},
+  escolhas:[
+    {texto:'Seguir a caminhonete pela ciclovia.', vai:'c15_ciclovia'},
+    {texto:'Voltar à cabine de pedágio e ver de onde ela saiu.', vai:'c15_cabine'},
+    {texto:'Procurar quem more por aqui e avisar.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_de_cracha:{
+  texto:[
+    'A ciclovia das rotas 14 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
+    d=>{
+      const c = Cargos.principal();
+      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
+    },
+    'O livro tem uma ocorrência por página e as páginas são quase todas de coisas pequenas: guarda-corpo amassado, buraco no asfalto, ciclista com torção de tornozelo.',
+    'As últimas seis semanas têm onze ocorrências, e as onze são a mesma frase escrita por seis pessoas diferentes:',
+    '"Usuário relata ausência de fauna no trecho."',
+    'Onze relatos. E, na coluna de providência, onze vezes a mesma palavra: "aguardando".',
+    fala('a moça da administração', 'Aguardando o quê, né.'),
+    'Ela fala isso sem você perguntar.'
+  ],
+  ef:{flag:'o_livro_de_ocorrencias',
+      registrar:'Onze ocorrências em seis semanas relatam ausência de fauna na ciclovia. Todas com providência "aguardando".'},
+  escolhas:[
+    {texto:'Perguntar quem escreve "aguardando".', vai:'c15_ab_quem_escreve'},
+    {texto:'Pedir cópia das onze e ir pra ciclovia.', vai:'c15_ab_copia_das_onze'},
+    {texto:'Ir direto pra ciclovia.', vai:'c15_rotas'}
+  ]
+},
+
+c15_ab_quem_escreve:{
+  texto:[
+    fala('a moça da administração', 'A providência quem preenche é a chefia.'),
+    d=>fala(d.jogador.nome, 'E a chefia é quem?'),
+    'Ela vira o livro e aponta a rubrica no pé da página. É uma rubrica só, repetida onze vezes, feita com a mesma caneta.',
+    fala('a moça da administração', 'Superintendente da concessão. Ele vem aqui duas vezes por mês.'),
+    fala('a moça da administração', 'E ele assinou as onze no mesmo dia.'),
+    d=>fala(d.jogador.nome, 'Como você sabe?'),
+    fala('a moça da administração', 'Porque eu protocolei as onze em datas diferentes e as onze ficaram sem providência até o dia treze.'),
+    'Ela fecha o livro.',
+    fala('a moça da administração', 'No dia treze ele veio, sentou nessa cadeira, e assinou as onze de uma vez, em três minutos, sem ler nenhuma.', 'baixo')
+  ],
+  ef:{flag:'a_rubrica_do_superintendente',
+      npc:{nome:'a moça da administração', opiniao:2, viuVoce:'Te mostrou que as onze providências foram assinadas de uma vez.'},
+      registrar:'O superintendente da concessão assinou as onze ocorrências de uma vez, sem ler, no dia 13.'},
+  escolhas:[
+    {texto:'Pedir cópia das onze.', vai:'c15_ab_copia_das_onze'},
+    {texto:'Ir pra ciclovia.', vai:'c15_rotas'}
+  ]
+},
+
+c15_ab_copia_das_onze:{
+  texto:[
+    'Ela tira as cópias na máquina da sala do lado, que faz um barulho de avião, e as onze folhas saem quentes.',
+    'Ela carimba cada uma com o carimbo de "confere com o original" e assina embaixo do carimbo.',
+    fala('a moça da administração', 'Não precisava carimbar.'),
+    d=>fala(d.jogador.nome, 'Então por que carimbou?'),
+    fala('a moça da administração', 'Porque sem carimbo é fotocópia e com carimbo é documento.'),
+    'Ela empilha, bate na mesa pra alinhar, e entrega.',
+    fala('a moça da administração', 'Eu trabalho aqui há sete anos e é a primeira vez que alguém vem pedir esse livro.'),
+    fala('a moça da administração', 'Eu reli as onze ontem à noite, depois que você marcou de vir.'),
+    fala('a moça da administração', 'Onze pessoas diferentes escreveram a mesma coisa e ninguém foi lá ver.', 'baixo')
+  ],
+  ef:{flag:['copia_das_onze_ocorrencias','reika_precisa_de_papel'],
+      npc:{nome:'a moça da administração', opiniao:3, viuVoce:'Carimbou as onze cópias como conferidas com o original.'},
+      registrar:'Tem onze ocorrências carimbadas como documento: ausência de fauna na ciclovia, providência "aguardando".'},
+  escolhas:[
+    {texto:'Ir pra ciclovia.', vai:'c15_rotas'},
+    {texto:'Ir direto ao vilarejo da ciclovia.', vai:'c15_vilarejo'}
+  ]
+},
+
 
 c15_rotas:{
   texto:[

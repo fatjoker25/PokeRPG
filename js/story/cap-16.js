@@ -1,16 +1,267 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a ilha sem nome chega até você por quatro bocas
+   diferentes: o Sr. Tanabe no dominó, uma carta náutica numa
+   loja de material de pesca, um pescador que não quer falar, e
+   uma pena que alguém achou na praia.
+   ------------------------------------------------------------ */
+const C16_ABERTURAS = ['c16_velho', 'c16_ab_a_carta_nautica', 'c16_ab_a_pena', 'c16_ab_quem_nao_fala'];
+function c16_cabe(id, d){
+  if (id === 'c16_ab_a_carta_nautica') return d.jogador.dinheiro >= 900;
+  return true;
+}
+function c16_abertura(d){
+  const cand = C16_ABERTURAS.filter(id => c16_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 16 — A ILHA SEM NOME
    ============================================================ */
 CAPITULOS.push(
 {
 num:16, titulo:'A Ilha Sem Nome', local:'Mar a sudoeste de Kanto', ambiente:'montanha', nivelArea:52,
-tom:'muito sombrio', inicio:'c16_velho',
+tom:'muito sombrio', entradas:C16_ABERTURAS,
+inicio: d => c16_abertura(d),
 cenas:{
+
+c16_ab_a_carta_nautica:{
+  texto:[
+    'A loja de material de pesca de Fuchsia vende anzol, linha, bóia, isca, e numa gaveta de madeira no fundo da loja, cartas náuticas.',
+    'Elas custam novecentos cada e ninguém compra, porque quem precisa de carta náutica já tem a carta náutica.',
+    'Você pede a do setor sudoeste. O dono levanta as sobrancelhas e não pergunta nada, que é o serviço dele.',
+    'A carta é linda: azul-clara nos baixios, azul-escura nos fundões, com números em cada metro de profundidade e uma malha de linhas finas.',
+    'E a sudoeste, a noventa e poucas milhas, um ponto preto com uma legenda de três palavras:',
+    '**RECIFE ALTO S/ NOME**',
+    'Recife alto quer dizer que é rocha que sai da água. Ilha, portanto.',
+    'Uma ilha que está na carta náutica e não está em nenhum mapa de Kanto, porque mapa de Kanto é feito pra quem anda em terra e ninguém anda em terra até lá.'
+  ],
+  ef:{dinheiro:-900, flag:['sabe_da_ilha','tem_a_carta_nautica'],
+      registrar:'Comprou a carta náutica do setor sudoeste. A ilha consta como "recife alto s/ nome".',
+      presagio:'A informação nunca esteve escondida. Estava no documento que ninguém lê.'},
+  escolhas:[
+    {texto:'Perguntar ao dono se alguém já foi lá.', vai:'c16_ab_o_dono_da_loja'},
+    {texto:'Levar a carta pro cais e procurar quem leve você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó que fala dessa ilha.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_o_dono_da_loja:{
+  texto:[
+    'Ele olha o ponto na carta onde o seu dedo está e demora a responder.',
+    fala('o dono da loja', 'Essa carta aí eu vendi três vezes em dezoito anos.'),
+    d=>fala(d.jogador.nome, 'Pra quem?'),
+    fala('o dono da loja', 'Uma pra um pesquisador em oitenta e nove. Uma pra uns caras de terno em noventa e sete.'),
+    'Ele bate no balcão com o nó do dedo.',
+    fala('o dono da loja', 'E uma pra você.'),
+    d=>fala(d.jogador.nome, 'Caras de terno compram carta náutica?'),
+    fala('o dono da loja', 'Compraram quatro. Sudoeste, sul, sudeste e a geral.'),
+    fala('o dono da loja', 'E compraram dois GPS, que naquela época custava o preço de um carro.'),
+    'Ele dobra a carta pra você no vinco certo, que é um cuidado de quem respeita papel.',
+    fala('o dono da loja', 'Homem que compra GPS de preço de carro pra ir num recife sem nome não tá indo pescar.', 'baixo')
+  ],
+  ef:{flag:'os_de_terno_compraram_carta',
+      npc:{nome:'o dono da loja', opiniao:1, viuVoce:'Te vendeu a carta náutica do setor sudoeste.'},
+      registrar:'Em 1997, homens de terno compraram quatro cartas náuticas e dois GPS na loja de pesca de Fuchsia.',
+      presagio:'Noventa e sete. A mesma década em que a luz aparece duas vezes.'},
+  escolhas:[
+    {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó.', vai:'c16_velho'},
+    {texto:'Procurar quem foi com os de terno em noventa e sete.', vai:'c16_ab_quem_nao_fala'}
+  ]
+},
+
+c16_ab_a_pena:{
+  texto:[
+    'Tem uma menina de uns nove anos vendendo concha numa toalha estendida no calçadão de Fuchsia, e o negócio dela vai mal porque concha é de graça na praia, e ela sabe disso e monta a toalha todo dia mesmo assim.',
+    'No canto da toalha, entre as conchas, tem uma coisa que não é concha.',
+    'É uma pena. Uns vinte e dois centímetros, curvada, com a haste clara e a barba em três faixas: vermelha na ponta, depois branca, depois uma faixa que não é bem dourada e não é bem verde e que muda quando você move a cabeça.',
+    'Você já viu pena de Pidgeot, de Fearow, de Spearow. Nenhuma faz isso.',
+    d=>fala(d.jogador.nome, 'Quanto é essa?'),
+    fala('a menina da toalha', 'Essa não é de vender.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a menina da toalha', 'Porque meu irmão achou na praia do sul e ele falou que é de sorte.'),
+    'Ela endireita a pena na toalha com um dedo.',
+    fala('a menina da toalha', 'Mas ele morreu em agosto. Então eu não sei mais se é.')
+  ],
+  ef:{flag:'viu_a_pena',
+      npc:{nome:'a menina da toalha', opiniao:1, viuVoce:'Você reparou na pena entre as conchas dela.'},
+      registrar:'Uma menina de Fuchsia tem uma pena de três faixas que o irmão achou na praia do sul.',
+      presagio:'Vermelha, branca e uma cor que muda com o ângulo. Isso não é de nenhum bicho que você conhece.'},
+  escolhas:[
+    {texto:'Perguntar exatamente onde o irmão achou.', vai:'c16_ab_onde_achou'},
+    {texto:'Oferecer para comprar mesmo assim.', vai:'c16_ab_ofereceu_pela_pena'},
+    {texto:'Não insistir. Procurar o velho que fala da ilha.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_onde_achou:{
+  texto:[
+    fala('a menina da toalha', 'Na ponta sul, depois da pedra grande.'),
+    'Ela aponta e a ponta sul fica visível daqui, a uns dois quilômetros, e a pedra grande também.',
+    fala('a menina da toalha', 'Ele ia lá todo dia de manhã. Ele catava vidro.'),
+    d=>fala(d.jogador.nome, 'Vidro?'),
+    fala('a menina da toalha', 'Vidro de garrafa que o mar lixa. Fica fosco e fica bonito.'),
+    'Ela puxa um potinho de plástico de dentro da bolsa e mostra: uns quarenta cacos de vidro verde e âmbar, lixados pelo mar, bonitos mesmo.',
+    fala('a menina da toalha', 'A pena tava junto do vidro. Em cima da linha da maré.'),
+    'E aí ela fala a frase que muda a cena:',
+    fala('a menina da toalha', 'Ele achou em três de agosto e a gente enterrou ele dia sete.'),
+    fala('a menina da toalha', 'Meu pai falou que a pena deu azar. Eu acho que ela só tava lá.', 'baixo')
+  ],
+  ef:{flag:'a_pena_da_ponta_sul',
+      registrar:'A pena foi achada na linha da maré da ponta sul de Fuchsia, em 3 de agosto.',
+      presagio:'Coisa que boia vem de onde o mar vem. O mar de Fuchsia vem do sudoeste.'},
+  escolhas:[
+    {texto:'Oferecer para comprar a pena.', vai:'c16_ab_ofereceu_pela_pena'},
+    {texto:'Ir até a ponta sul procurar mais.', vai:'c16_ab_a_ponta_sul'},
+    {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_ofereceu_pela_pena:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu não quero comprar pra guardar. Eu quero saber de onde ela veio.'),
+    'A menina te olha do jeito que criança olha adulto que falou uma coisa que criança entende e adulto não costuma dizer.',
+    fala('a menina da toalha', 'De onde ela veio ou de quem ela é?'),
+    d=>fala(d.jogador.nome, 'De quem ela é.'),
+    'Ela pega a pena, olha contra o sol, e a faixa do meio muda de cor na mão dela.',
+    fala('a menina da toalha', 'Então leva.'),
+    d=>fala(d.jogador.nome, 'Eu pago.'),
+    fala('a menina da toalha', 'Não. Se você pagar vira concha.'),
+    'Ela põe a pena na sua mão com as duas mãos dela, que é como se entrega coisa importante.',
+    fala('a menina da toalha', 'Você volta e me conta de quem é.'),
+    'Não é pedido. É condição.'
+  ],
+  ef:{flag:['carrega_a_pena','a_promessa_da_menina'], moral:1,
+      npc:{nome:'a menina da toalha', opiniao:3, viuVoce:'Te deu a pena de graça, com a condição de você voltar e contar de quem é.'},
+      registrar:'Está carregando a pena de três faixas. Prometeu voltar e dizer de quem ela é.',
+      presagio:'Você prometeu voltar. Guarde isso: promessa feita pra criança tem cobrança diferente.'},
+  escolhas:[
+    {texto:'Ir até a ponta sul procurar mais.', vai:'c16_ab_a_ponta_sul'},
+    {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'},
+    {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'}
+  ]
+},
+
+c16_ab_a_ponta_sul:{
+  texto:[
+    'A ponta sul de Fuchsia é uma praia de pedra com dois quilômetros de nada e uma pedra grande que dá nome ao lugar.',
+    'Você anda a linha da maré por uma hora e quarenta, de cabeça baixa, catando com os olhos.',
+    'Acha: vidro fosco (muito), uma sandália, meio quilômetro de linha de pesca enrolada em alga, e um isqueiro.',
+    'Não acha pena nenhuma.',
+    'Mas na volta, em cima da pedra grande, tem uma coisa que você não viu na ida porque estava olhando pro chão.',
+    'Uma marca. Uma queimadura circular na rocha, de uns setenta centímetros, com a borda vitrificada.',
+    'Pedra vitrifica a mil e poucos graus. Isso não é fogueira de pescador.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} não sobe na pedra. Fica embaixo, olhando pra cima, e não sobe nem quando você chama.`
+               : 'Você põe a mão na marca e a rocha está fria, o que de alguma forma é pior.';
+    }
+  ],
+  ef:{flag:'a_marca_na_pedra',
+      registrar:'Na pedra grande da ponta sul há uma queimadura circular de 70 cm com a borda vitrificada.',
+      presagio:'Mil e poucos graus, na beira do mar, e ninguém na cidade comentou.'},
+  escolhas:[
+    {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'},
+    {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'}
+  ]
+},
+
+c16_ab_quem_nao_fala:{
+  texto:[
+    'Tem um homem no cais de Fuchsia que todo mundo aponta e ninguém apresenta.',
+    'Cinquenta e poucos anos, barco médio, trabalha sozinho, e a frase que dizem dele é sempre a mesma: "aquele ali foi em noventa e sete".',
+    'Ninguém completa a frase. Você tem que perguntar pra ele.',
+    'Ele está remendando rede na proa e não levanta a cabeça quando você chega.',
+    fala('o homem da rede', 'Não.'),
+    d=>fala(d.jogador.nome, 'Eu não perguntei nada.'),
+    fala('o homem da rede', 'Você ia perguntar de noventa e sete.'),
+    'Ele passa a agulha de rede duas vezes antes de falar de novo.',
+    fala('o homem da rede', 'Eu levo carga, levo gente, levo o que pagarem. Pra sudoeste eu não vou.'),
+    d=>fala(d.jogador.nome, 'Por quanto?'),
+    'Aí ele levanta a cabeça.',
+    fala('o homem da rede', 'Menino, eu acabei de te dizer que tem um preço que eu não aceito. Você perguntou o preço.')
+  ],
+  ef:{flag:'sabe_da_ilha',
+      npc:{nome:'o homem da rede', opiniao:-1, viuVoce:'Você perguntou o preço depois de ele dizer que não tinha preço.'},
+      registrar:'Um pescador de Fuchsia foi à ilha em 1997 e não volta lá por dinheiro nenhum.'},
+  escolhas:[
+    {texto:'Pedir desculpa e perguntar o que aconteceu.', vai:'c16_ab_pediu_desculpa'},
+    {texto:'Insistir no dinheiro.', vai:'c16_ab_insistiu_no_dinheiro'},
+    {texto:'Deixar ele em paz e procurar o velho do dominó.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_pediu_desculpa:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Desculpa. Foi burrice.'),
+    'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parado, porque sair agora seria pior.',
+    fala('o homem da rede', 'Eu levei quatro homens em noventa e sete. Dois dias, ida e volta, muito bem pago.'),
+    fala('o homem da rede', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
+    'Ele para de costurar.',
+    fala('o homem da rede', 'Na segunda noite apareceu a luz.'),
+    d=>fala(d.jogador.nome, 'A luz colorida.'),
+    fala('o homem da rede', 'Colorida. Igual arco-íris, mas de noite, e arco-íris de noite não existe.'),
+    fala('o homem da rede', 'Durou uns trinta minutos.'),
+    'Ele olha pro mar.',
+    fala('o homem da rede', 'E no outro dia eu levei três homens de volta.', 'baixo')
+  ],
+  ef:{flag:['sabe_da_ilha','tres_voltaram_de_quatro'],
+      npc:{nome:'o homem da rede', opiniao:2, viuVoce:'Te contou de 1997 porque você pediu desculpa.'},
+      registrar:'Em 1997 ele levou quatro homens à ilha e trouxe três de volta. Na segunda noite houve luz colorida.',
+      presagio:'Quatro entraram e três saíram. Você já ouviu essa conta antes, em outro porto.'},
+  escolhas:[
+    {texto:'Perguntar quem era o quarto.', vai:'c16_ab_quem_era_o_quarto'},
+    {texto:'Perguntar se ele levaria você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó com isso na cabeça.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_quem_era_o_quarto:{
+  texto:[
+    fala('o homem da rede', 'Eu não sei o nome de nenhum dos quatro.'),
+    fala('o homem da rede', 'Eles não falaram nome e eu não perguntei, porque quem paga o triplo não gosta de pergunta.'),
+    'Ele enrola o fio da agulha de rede no dedo.',
+    fala('o homem da rede', 'Mas eu sei que o quarto era o mais velho e era o que mandava.'),
+    fala('o homem da rede', 'E eu sei que os três que voltaram não falaram uma palavra no caminho inteiro.'),
+    d=>fala(d.jogador.nome, 'Você não perguntou do quarto?'),
+    fala('o homem da rede', 'Perguntei. Uma vez.'),
+    'Ele volta pra rede.',
+    fala('o homem da rede', 'Um deles falou "que quarto".'),
+    fala('o homem da rede', 'E aí eu não perguntei mais, e recebi, e nunca mais fui pro sudoeste.', 'baixo')
+  ],
+  ef:{flag:'que_quarto',
+      registrar:'Os três que voltaram negaram que houvesse um quarto homem.',
+      presagio:'"Que quarto." Eles ensaiaram isso na ilha, antes de embarcar.'},
+  escolhas:[
+    {texto:'Perguntar se ele levaria você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_insistiu_no_dinheiro:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Todo mundo tem preço.'),
+    'Ele corta a linha da rede com o dente, devagar, e enrola a sobra no dedo.',
+    fala('o homem da rede', 'Todo mundo tem. Eu tinha.'),
+    fala('o homem da rede', 'Em noventa e sete o meu preço foi o triplo da diária, e eu aceitei, e eu levei quatro homens pra lá.'),
+    'Ele levanta e amarra a rede na amurada, de costas pra você.',
+    fala('o homem da rede', 'Sai do meu barco.'),
+    'Você desce. Do cais dá pra ver ele ainda de costas, parado, sem fazer nada com as mãos.'
+  ],
+  ef:{flag:['sabe_da_ilha','quatro_homens_em_noventa_e_sete'],
+      npc:{nome:'o homem da rede', opiniao:-3, viuVoce:'Você insistiu no dinheiro depois do "não".'},
+      registrar:'Em 1997 ele levou quatro homens à ilha pelo triplo da diária. Não fala mais com você.'},
+  escolhas:[
+    {texto:'Procurar outro barco no cais.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó.', vai:'c16_velho'}
+  ]
+},
+
 
 c16_velho:{
   texto:[
-    'O pescador se chama José Antônio Tanabe, tem oitenta e um anos e conta a mesma história há quarenta.',
-    'No cais o chamam de Zé Antônio. Você vai chamá-lo de Sr. Tanabe o capítulo inteiro, e na terceira vez ele vai reparar, e não vai corrigir.',
+    'O pescador se chama Ichiro Tanabe, tem oitenta e um anos e conta a mesma história há quarenta.',
+    'No cais o chamam de Seu Ichiro. Você vai chamá-lo de Sr. Tanabe o capítulo inteiro, e na terceira vez ele vai reparar, e não vai corrigir.',
     'Ele conta ela no cais de Fuchsia, na mesa de dominó, pra quem pedir e pra quem não pedir, e todo mundo já ouviu, e todo mundo muda de assunto educadamente.',
     'Hoje ele conta pra você.',
     '"Tem uma ilha a sudoeste que não entra em mapa nenhum porque não tem nada nela. Pedra e mato. Nem água doce."',
@@ -49,7 +300,7 @@ c16_desde_quando:{
     'Dentro tem papel.',
     'Muito papel: folha de caderno, verso de nota fiscal, guardanapo, e uns quarenta bilhetes em papel de pão.',
     'Cada um com uma data e uma linha.',
-    '**"12/3/61 — luz sobre a ilha da torre, 23h mais ou menos, uns 30 min. — J. A. Tanabe"**',
+    '**"12/3/61 — luz sobre a ilha da torre, 23h mais ou menos, uns 30 min. — I. Tanabe"**',
     '**"4/9/68 — luz, cor, 22h40 até 23h20. Meu pai viu junto. — Z. A."**',
     '**"19/11/74 — luz. Sozinho. Ninguém acreditou. — Z. A."**',
     '"Quarenta anos disso?"',
@@ -197,7 +448,7 @@ c16_colonia_caixa:{
   texto:[
     'Você leva a caixa à Colônia Z-14 e a secretária de sessenta e dois anos abre o elástico com um cuidado que você não esperava.',
     'Ela lê três bilhetes e para.',
-    '"J. A. Tanabe."',
+    '"I. Tanabe."',
     '"A senhora conhece?"',
     '"Meu bem, eu tenho o livro de saída de embarcação de mil novecentos e trinta e nove."',
     'Ela vai ao armário e volta com o livro mais velho da pilha, com a capa descolando, e abre em março.',
@@ -217,7 +468,7 @@ c16_colonia_caixa:{
       npc:{nome:'Secretária da Colônia Z-14', opiniao:8, memoria:'Cruzou a caixa de charuto com o livro de 1939 e descobriu que o velho Tanabe ia à ilha.'},
       rep:{eixo:'bom',delta:6,motivo:'Cruzou a caixa com o livro de 1939'},
       instabilidade:1,
-      registrar:'J. A. Tanabe declarou saída para a ilha em todas as 23 datas do arco-íris, desde 1939.',
+      registrar:'I. Tanabe declarou saída para a ilha em todas as 23 datas do arco-íris, desde 1939.',
       presagio:'Ele ia. Sessenta e um anos e o filho achava que era da costa.'},
   escolhas:[
     {texto:'Contar isso pro Sr. Tanabe.', vai:'c16_contou_que_ele_ia'},
@@ -885,7 +1136,7 @@ c16_o_que_oferece:{
     '"Se a série temporal for real e verificável, ela é o dado mais importante de toda essa linha de pesquisa, e ela não é minha, e eu não vou publicar dado dos outros com o meu nome sozinho."',
     'Ela abre o caderno numa página em branco.',
     '"Eu preciso do nome de quem anotou."',
-    '"O nome é Tanabe. J. A. Tanabe e Z. A. Tanabe. Pai e filho, pescadores de Fuchsia."',
+    '"O nome é Tanabe. I. Tanabe e Z. A. Tanabe. Pai e filho, pescadores de Fuchsia."',
     'Ela escreve.',
     'E escreve devagar, conferindo a grafia com você duas vezes, que é a segunda vez que alguém faz isso na sua frente neste mês.',
     '"E o velho tá vivo?"',
@@ -896,7 +1147,7 @@ c16_o_que_oferece:{
     '"Isso diz mais sobre a minha carreira do que sobre pescador."'
   ],
   ef:{flag:['coautoria','equipe_aliada'],
-      npc:{nome:'Chefe da expedição', opiniao:6, memoria:'Anotou J. A. Tanabe e Z. A. Tanabe como coautores da série temporal.'},
+      npc:{nome:'Chefe da expedição', opiniao:6, memoria:'Anotou I. Tanabe e Z. A. Tanabe como coautores da série temporal.'},
       rep:{eixo:'bom',delta:6,motivo:'Transformou uma caixa de charuto em coautoria'},
       moral:20,
       registrar:'A expedição vai creditar os Tanabe como coautores da série temporal.',

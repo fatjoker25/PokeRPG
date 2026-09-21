@@ -12,16 +12,16 @@ for(const d of dirs){
   for(const f of fs.readdirSync(p).filter(x=>x.endsWith('.js'))){
     const t=fs.readFileSync(path.join(p,f),'utf8');
     // escritas: flag:'x' / flag:['x','y'] / marcar('x')
-    for(const m of t.matchAll(/\bflag\s*:\s*'([a-z0-9_]+)'/g)) poe(escritas,m[1],f);
+    for(const m of t.matchAll(/\bflag\s*:\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
     for(const m of t.matchAll(/\bflag\s*:\s*\[([^\]]+)\]/g))
-      for(const q of m[1].matchAll(/'([a-z0-9_]+)'/g)) poe(escritas,q[1],f);
-    for(const m of t.matchAll(/\bmarcar\s*\(\s*'([a-z0-9_]+)'/g)) poe(escritas,m[1],f);
-    for(const m of t.matchAll(/\bflags\.([a-z0-9_]+)\s*=/g)) poe(escritas,m[1],f);
-    for(const m of t.matchAll(/\blimpaFlag\s*:\s*'([a-z0-9_]+)'/g)) poe(escritas,m[1],f);
+      for(const q of m[1].matchAll(/'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,q[1],f);
+    for(const m of t.matchAll(/\bmarcar\s*\(\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
+    for(const m of t.matchAll(/\bflags\.([a-zà-ÿ0-9_]+)\s*=/g)) poe(escritas,m[1],f);
+    for(const m of t.matchAll(/\blimpaFlag\s*:\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
     // leituras: d.flags.x / flags['x'] / Estado.tem('x')
-    for(const m of t.matchAll(/\bflags\.([a-z0-9_]+)/g)) poe(lidas,m[1],f);
-    for(const m of t.matchAll(/\bflags\[\s*'([a-z0-9_]+)'/g)) poe(lidas,m[1],f);
-    for(const m of t.matchAll(/\btem\s*\(\s*'([a-z0-9_]+)'\s*\)/g)) poe(lidas,m[1],f);
+    for(const m of t.matchAll(/\bflags\.([a-zà-ÿ0-9_]+)/g)) poe(lidas,m[1],f);
+    for(const m of t.matchAll(/\bflags\[\s*'([a-zà-ÿ0-9_]+)'/g)) poe(lidas,m[1],f);
+    for(const m of t.matchAll(/\btem\s*\(\s*'([a-zà-ÿ0-9_]+)'\s*\)/g)) poe(lidas,m[1],f);
   }
 }
 // uma leitura que também é atribuição (flags.x = ...) não conta como leitura
@@ -29,7 +29,7 @@ for(const d of dirs){
    moram em Estado.dados.cargos e são consultados pelo mesmo caminho, e
    alguns nomes são montados em tempo de execução. */
 const cargosSrc=fs.readFileSync(path.join(raiz,'js/data/cargos.js'),'utf8');
-const idsDeCargo=new Set([...cargosSrc.matchAll(/\bid\s*:\s*'([a-z0-9_]+)'/g)].map(m=>m[1]));
+const idsDeCargo=new Set([...cargosSrc.matchAll(/\bid\s*:\s*'([a-zà-ÿ0-9_]+)'/g)].map(m=>m[1]));
 const montadas=new Set(['enfrentou_','campeao_de_kanto','oito_insignias','dex_nacional','johto_liberado']);
 const ignorar=f=>idsDeCargo.has(f)||montadas.has(f);
 const mortas=[...lidas.keys()].filter(f=>!escritas.has(f)&&!ignorar(f)).sort();

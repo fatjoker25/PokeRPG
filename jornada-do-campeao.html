@@ -46947,14 +46947,267 @@ c14_incendio_da_semana:{
 
 
 /* ===== js/story/cap-15.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — vinte e dois quilômetros de ciclovia vazia. Dá
+   pra chegar nela de bicicleta emprestada, pela cabine de
+   pedágio, atrás de quem esvaziou, ou com crachá na mão.
+   ------------------------------------------------------------ */
+const C15_ABERTURAS = ['c15_rotas', 'c15_ab_a_bicicleta', 'c15_ab_a_cabine', 'c15_ab_a_caminhonete', 'c15_ab_de_cracha'];
+function c15_cabe(id, d){
+  if (id === 'c15_ab_a_bicicleta') return d.jogador.dinheiro >= 400;
+  if (id === 'c15_ab_de_cracha')   return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c15_abertura(d){
+  const cand = C15_ABERTURAS.filter(id => c15_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 15 — OS TRÊS QUE CORREM  (Rotas 14–18)
    ============================================================ */
 CAPITULOS.push(
 {
 num:15, titulo:'Os Três que Correm', local:'Rotas 14–18', ambiente:'campo', nivelArea:46,
-tom:'muito sombrio', inicio:'c15_rotas',
+tom:'muito sombrio', entradas:C15_ABERTURAS,
+inicio: d => c15_abertura(d),
 cenas:{
+
+c15_ab_a_bicicleta:{
+  texto:[
+    'Tem uma locadora de bicicleta na entrada norte da ciclovia: um contêiner pintado de azul com dezesseis bicicletas do lado de fora e uma mulher lendo revista numa cadeira de plástico.',
+    'Quatrocentos o dia. Ela nem levanta pra alugar.',
+    fala('a mulher da locadora', 'Capacete é mais cem e ninguém leva.'),
+    d=>fala(d.jogador.nome, 'Eu levo.'),
+    'Ela levanta.',
+    fala('a mulher da locadora', 'Ah.'),
+    'Ela escolhe a bicicleta pra você, o que é um serviço que ela claramente não presta pra todo mundo, e escolhe a de aro vinte e seis com pneu novo.',
+    fala('a mulher da locadora', 'Olha, um aviso.'),
+    fala('a mulher da locadora', 'Não vai ter bicho. Se você tá indo pra ver bicho, é melhor eu te devolver os quatrocentos agora.'),
+    d=>fala(d.jogador.nome, 'Desde quando?'),
+    fala('a mulher da locadora', 'Umas seis semanas.'),
+    'Ela volta pra cadeira de plástico.',
+    fala('a mulher da locadora', 'Eu aluguei três bicicletas essa semana. No ano passado eu alugava trinta por dia.')
+  ],
+  ef:{dinheiro:-500, flag:'alugou_bicicleta',
+      registrar:'Alugou bicicleta e capacete na entrada norte da ciclovia. A locação caiu de trinta por dia para três por semana.'},
+  escolhas:[
+    {texto:'Pedalar a ciclovia inteira.', vai:'c15_ciclovia'},
+    {texto:'Perguntar se ela viu alguma coisa nas seis semanas.', vai:'c15_ab_o_que_ela_viu'},
+    {texto:'Ir primeiro à cabine de pedágio.', vai:'c15_cabine'}
+  ]
+},
+
+c15_ab_o_que_ela_viu:{
+  texto:[
+    'Ela fecha a revista e põe no colo, o que é o gesto de quem vai falar sério.',
+    fala('a mulher da locadora', 'Caminhonete. Cabine dupla, branca, caçamba com lona.'),
+    fala('a mulher da locadora', 'Passa de madrugada, pela ciclovia.'),
+    d=>fala(d.jogador.nome, 'Pela ciclovia? Não é proibido veículo?'),
+    fala('a mulher da locadora', 'É proibido. Mas a cancela da cabine tá quebrada há nove anos e ninguém consertou porque ninguém precisava.'),
+    'Ela aponta com a revista pra entrada.',
+    fala('a mulher da locadora', 'Eu durmo aqui. Meu contêiner é aqui.'),
+    fala('a mulher da locadora', 'Nas últimas seis semanas eu ouvi ela passar dezessete vezes. Eu conto porque acorda.')
+  ],
+  ef:{flag:'a_caminhonete_da_madrugada',
+      npc:{nome:'a mulher da locadora', opiniao:1, viuVoce:'Te contou das dezessete passagens da caminhonete.'},
+      registrar:'Uma caminhonete branca de caçamba com lona passou dezessete vezes pela ciclovia em seis semanas, de madrugada.'},
+  escolhas:[
+    {texto:'Pedalar a ciclovia procurando o rastro.', vai:'c15_ciclovia'},
+    {texto:'Ir à cabine de pedágio.', vai:'c15_cabine'},
+    {texto:'Procurar quem more por aqui.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_a_cabine:{
+  texto:[
+    'A cabine de pedágio da entrada norte está desativada desde noventa e um, e desativada quer dizer: vidro inteiro, cancela quebrada na posição levantada, e uma porta que não tranca.',
+    'Você abre a porta porque a porta está lá.',
+    'Dentro tem uma cadeira giratória sem encosto, um calendário de mil novecentos e noventa e um com uma foto de Cerulean, e poeira em tudo.',
+    'Em tudo menos numa coisa.',
+    'O peitoril da janela da cabine, o de dentro, na altura de quem senta, está limpo numa faixa de uns quarenta centímetros. Limpo de cotovelo.',
+    'Alguém senta aqui. Regularmente. Olhando pra ciclovia.',
+    'E no chão, embaixo da cadeira, tem oito bitucas de cigarro, e as oito são da mesma marca, e três delas ainda estão com o filtro branco.'
+  ],
+  ef:{flag:'alguem_senta_na_cabine',
+      registrar:'Alguém senta na cabine de pedágio desativada olhando a ciclovia. Oito bitucas, três recentes.',
+      presagio:'De dentro da cabine dá pra ver quem entra na ciclovia. É por isso que se senta ali.'},
+  escolhas:[
+    {texto:'Ficar escondido na cabine e esperar quem senta.', vai:'c15_ab_esperou_na_cabine'},
+    {texto:'Andar a ciclovia agora, antes que a pessoa chegue.', vai:'c15_ciclovia'},
+    {texto:'Procurar quem more por aqui e conheça a cabine.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_esperou_na_cabine:{
+  texto:[
+    'Você senta no chão da cabine, atrás do balcão, onde de fora não se vê, e espera.',
+    'Espera uma hora e quarenta. É muito tempo pra ficar em silêncio num lugar que cheira a poeira e cigarro velho.',
+    'Às onze e dez chega um homem de uns trinta e cinco anos, de calça de brim e bota, com uma garrafa térmica.',
+    'Ele senta na cadeira giratória sem encosto, apoia o cotovelo no peitoril limpo, acende um cigarro e não faz mais nada.',
+    'Fica quarenta minutos olhando a ciclovia vazia.',
+    'Em quarenta minutos, passa uma pessoa de bicicleta. Ele pega um caderninho do bolso de trás e anota alguma coisa.',
+    'Anota. Guarda o caderninho. Volta a olhar.'
+  ],
+  ef:{flag:'o_homem_do_caderninho', hp:-1,
+      registrar:'Um homem senta na cabine e anota num caderninho cada pessoa que entra na ciclovia.',
+      presagio:'Ele não impede ninguém de entrar. Ele anota quem entra.'},
+  escolhas:[
+    {texto:'Aparecer e perguntar o que ele anota.', vai:'c15_ab_perguntou_o_caderninho'},
+    {texto:'Esperar ele sair e seguir ele.', vai:'c15_ab_seguiu_o_homem'},
+    {texto:'Sair sem ele ver e ir pra ciclovia.', vai:'c15_ciclovia'}
+  ]
+},
+
+c15_ab_perguntou_o_caderninho:{
+  texto:[
+    'Você levanta de trás do balcão e ele quase cai da cadeira, o que é, por um segundo, engraçado.',
+    d=>fala(d.jogador.nome, 'O que você anota?'),
+    'Ele se recompõe rápido demais pra alguém que levou um susto de verdade.',
+    fala('o homem da cabine', 'Fluxo. Eu sou da concessionária.'),
+    d=>fala(d.jogador.nome, 'A cabine tá desativada desde noventa e um.'),
+    'Silêncio.',
+    fala('o homem da cabine', 'Estudo de reativação.'),
+    d=>fala(d.jogador.nome, 'Com caderninho de bolso?'),
+    'Ele apaga o cigarro no peitoril, o que estraga a faixa limpa que ele mesmo mantinha.',
+    fala('o homem da cabine', 'Olha, menino. Você não tá entendendo o que tá acontecendo aqui e é melhor assim.'),
+    'Ele sai. Não corre. Desce a rampa da cabine e entra numa caminhonete branca de cabine dupla que estava estacionada atrás do mato, fora do seu campo de visão, o tempo todo.'
+  ],
+  ef:{flag:['assustou_o_vigia','a_caminhonete_da_madrugada'],
+      registrar:'O vigia da cabine foi embora numa caminhonete branca de cabine dupla escondida atrás do mato.',
+      presagio:'Agora eles sabem que tem alguém perguntando. Isso muda o ritmo deles e o seu.'},
+  escolhas:[
+    {texto:'Ir pra ciclovia agora, rápido.', vai:'c15_ciclovia'},
+    {texto:'Procurar o vilarejo e avisar as pessoas.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_seguiu_o_homem:{
+  texto:[
+    'Você espera. Ele fica mais uma hora e vinte e sai às doze e trinta, sem pressa, com a garrafa térmica vazia.',
+    'Você deixa ele sair do seu campo de visão e sai atrás, pelo capinzal do lado, o que é lento e é barulhento e é a única opção.',
+    'Ele anda trezentos metros pela beira da ciclovia e entra numa trilha de terra que não está em mapa nenhum, aberta por veículo, com o capim deitado nos dois lados.',
+    'A trilha dá num barracão de madeira e telha de fibrocimento, com uma caminhonete branca estacionada na frente e um gerador ligado.',
+    'E, encostadas na parede externa do barracão, sob uma lona: doze gaiolas de transporte vazias e empilhadas.',
+    'Vazias. Empilhadas. Limpas.',
+    'Doze gaiolas limpas quer dizer que o que estava nelas já foi levado.'
+  ],
+  ef:{flag:['o_barracao_da_trilha','caderno_do_trafico'],
+      registrar:'Um barracão escondido a trezentos metros da ciclovia, com doze gaiolas de transporte vazias e limpas.',
+      presagio:'Doze gaiolas limpas e empilhadas. Eles terminaram este trecho.'},
+  escolhas:[
+    {texto:'Chegar mais perto do barracão.', vai:'c15_ciclovia'},
+    {texto:'Voltar e procurar o vilarejo.', vai:'c15_vilarejo'},
+    {texto:'Voltar à cabine e pegar o caderninho, se ele deixou.', vai:'c15_ab_o_caderninho'}
+  ]
+},
+
+c15_ab_o_caderninho:{
+  texto:[
+    'O caderninho não ficou na cabine. Claro que não ficou.',
+    'Mas ficou outra coisa, e essa você não esperava: embaixo da cadeira giratória, junto com as oito bitucas, tem uma folha amassada e jogada fora.',
+    'É uma folha arrancada do caderninho. Ele arrancou e amassou e jogou porque errou alguma coisa e refez.',
+    'Você desamassa.',
+    'É uma tabela. Três colunas: data, trecho, e um número.',
+    '14/10 — km 4 ao 9 — 31. 16/10 — km 9 ao 14 — 27. 19/10 — km 14 ao 18 — 22.',
+    'Eles estão contando quantos retiraram de cada trecho.',
+    'E na quarta linha, a que ele errou e refez, está escrito: 22/10 — km 18 ao 22 — e o número está em branco.',
+    'Hoje é dia vinte e dois.'
+  ],
+  ef:{flag:['a_folha_da_contagem','caderno_do_trafico'],
+      registrar:'Uma folha arrancada do caderninho: 31, 27 e 22 Pokémon retirados de três trechos. O quarto trecho é hoje.',
+      presagio:'A quarta linha está em branco porque o trabalho é hoje. Você não chegou tarde: você chegou junto.'},
+  escolhas:[
+    {texto:'Ir pro km 18. Agora.', vai:'c15_ciclovia'},
+    {texto:'Procurar o vilarejo e juntar gente primeiro.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_a_caminhonete:{
+  texto:[
+    'Você está na ciclovia no quilômetro três quando ouve motor atrás de você, e motor na ciclovia é uma frase que não devia existir.',
+    'Caminhonete branca de cabine dupla, caçamba com lona, vindo do norte, no meio do asfalto onde não cabe caminhonete.',
+    'Você sai pro acostamento de brita. Ela passa a uns sessenta, a dois metros de você, e não desacelera nem um pouco.',
+    'Dois homens na cabine. O do carona olha pra você pelo retrovisor de porta por uns quatro segundos, e você vê ele te olhando, e ele vê você vendo.',
+    'A caminhonete continua e some na curva do quilômetro cinco.',
+    'A lona da caçamba estava mal amarrada de um lado e balançava, e no balanço dava pra ver o que tinha embaixo: metal quadriculado.',
+    'Grade.'
+  ],
+  ef:{flag:'a_caminhonete_te_viu', hp:-1,
+      registrar:'Uma caminhonete branca com gaiolas na caçamba passou por você na ciclovia. O carona te viu.',
+      presagio:'Ele te olhou por quatro segundos pelo retrovisor. Quatro segundos é tempo de decorar uma cara.'},
+  escolhas:[
+    {texto:'Seguir a caminhonete pela ciclovia.', vai:'c15_ciclovia'},
+    {texto:'Voltar à cabine de pedágio e ver de onde ela saiu.', vai:'c15_cabine'},
+    {texto:'Procurar quem more por aqui e avisar.', vai:'c15_vilarejo'}
+  ]
+},
+
+c15_ab_de_cracha:{
+  texto:[
+    'A ciclovia das rotas 14 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
+    d=>{
+      const c = Cargos.principal();
+      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
+    },
+    'O livro tem uma ocorrência por página e as páginas são quase todas de coisas pequenas: guarda-corpo amassado, buraco no asfalto, ciclista com torção de tornozelo.',
+    'As últimas seis semanas têm onze ocorrências, e as onze são a mesma frase escrita por seis pessoas diferentes:',
+    '"Usuário relata ausência de fauna no trecho."',
+    'Onze relatos. E, na coluna de providência, onze vezes a mesma palavra: "aguardando".',
+    fala('a moça da administração', 'Aguardando o quê, né.'),
+    'Ela fala isso sem você perguntar.'
+  ],
+  ef:{flag:'o_livro_de_ocorrencias',
+      registrar:'Onze ocorrências em seis semanas relatam ausência de fauna na ciclovia. Todas com providência "aguardando".'},
+  escolhas:[
+    {texto:'Perguntar quem escreve "aguardando".', vai:'c15_ab_quem_escreve'},
+    {texto:'Pedir cópia das onze e ir pra ciclovia.', vai:'c15_ab_copia_das_onze'},
+    {texto:'Ir direto pra ciclovia.', vai:'c15_rotas'}
+  ]
+},
+
+c15_ab_quem_escreve:{
+  texto:[
+    fala('a moça da administração', 'A providência quem preenche é a chefia.'),
+    d=>fala(d.jogador.nome, 'E a chefia é quem?'),
+    'Ela vira o livro e aponta a rubrica no pé da página. É uma rubrica só, repetida onze vezes, feita com a mesma caneta.',
+    fala('a moça da administração', 'Superintendente da concessão. Ele vem aqui duas vezes por mês.'),
+    fala('a moça da administração', 'E ele assinou as onze no mesmo dia.'),
+    d=>fala(d.jogador.nome, 'Como você sabe?'),
+    fala('a moça da administração', 'Porque eu protocolei as onze em datas diferentes e as onze ficaram sem providência até o dia treze.'),
+    'Ela fecha o livro.',
+    fala('a moça da administração', 'No dia treze ele veio, sentou nessa cadeira, e assinou as onze de uma vez, em três minutos, sem ler nenhuma.', 'baixo')
+  ],
+  ef:{flag:'a_rubrica_do_superintendente',
+      npc:{nome:'a moça da administração', opiniao:2, viuVoce:'Te mostrou que as onze providências foram assinadas de uma vez.'},
+      registrar:'O superintendente da concessão assinou as onze ocorrências de uma vez, sem ler, no dia 13.'},
+  escolhas:[
+    {texto:'Pedir cópia das onze.', vai:'c15_ab_copia_das_onze'},
+    {texto:'Ir pra ciclovia.', vai:'c15_rotas'}
+  ]
+},
+
+c15_ab_copia_das_onze:{
+  texto:[
+    'Ela tira as cópias na máquina da sala do lado, que faz um barulho de avião, e as onze folhas saem quentes.',
+    'Ela carimba cada uma com o carimbo de "confere com o original" e assina embaixo do carimbo.',
+    fala('a moça da administração', 'Não precisava carimbar.'),
+    d=>fala(d.jogador.nome, 'Então por que carimbou?'),
+    fala('a moça da administração', 'Porque sem carimbo é fotocópia e com carimbo é documento.'),
+    'Ela empilha, bate na mesa pra alinhar, e entrega.',
+    fala('a moça da administração', 'Eu trabalho aqui há sete anos e é a primeira vez que alguém vem pedir esse livro.'),
+    fala('a moça da administração', 'Eu reli as onze ontem à noite, depois que você marcou de vir.'),
+    fala('a moça da administração', 'Onze pessoas diferentes escreveram a mesma coisa e ninguém foi lá ver.', 'baixo')
+  ],
+  ef:{flag:['copia_das_onze_ocorrencias','reika_precisa_de_papel'],
+      npc:{nome:'a moça da administração', opiniao:3, viuVoce:'Carimbou as onze cópias como conferidas com o original.'},
+      registrar:'Tem onze ocorrências carimbadas como documento: ausência de fauna na ciclovia, providência "aguardando".'},
+  escolhas:[
+    {texto:'Ir pra ciclovia.', vai:'c15_rotas'},
+    {texto:'Ir direto ao vilarejo da ciclovia.', vai:'c15_vilarejo'}
+  ]
+},
+
 
 c15_rotas:{
   texto:[
@@ -48519,19 +48772,270 @@ c15_fim:{
 
 
 /* ===== js/story/cap-16.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — a ilha sem nome chega até você por quatro bocas
+   diferentes: o Sr. Tanabe no dominó, uma carta náutica numa
+   loja de material de pesca, um pescador que não quer falar, e
+   uma pena que alguém achou na praia.
+   ------------------------------------------------------------ */
+const C16_ABERTURAS = ['c16_velho', 'c16_ab_a_carta_nautica', 'c16_ab_a_pena', 'c16_ab_quem_nao_fala'];
+function c16_cabe(id, d){
+  if (id === 'c16_ab_a_carta_nautica') return d.jogador.dinheiro >= 900;
+  return true;
+}
+function c16_abertura(d){
+  const cand = C16_ABERTURAS.filter(id => c16_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 16 — A ILHA SEM NOME
    ============================================================ */
 CAPITULOS.push(
 {
 num:16, titulo:'A Ilha Sem Nome', local:'Mar a sudoeste de Kanto', ambiente:'montanha', nivelArea:52,
-tom:'muito sombrio', inicio:'c16_velho',
+tom:'muito sombrio', entradas:C16_ABERTURAS,
+inicio: d => c16_abertura(d),
 cenas:{
+
+c16_ab_a_carta_nautica:{
+  texto:[
+    'A loja de material de pesca de Fuchsia vende anzol, linha, bóia, isca, e numa gaveta de madeira no fundo da loja, cartas náuticas.',
+    'Elas custam novecentos cada e ninguém compra, porque quem precisa de carta náutica já tem a carta náutica.',
+    'Você pede a do setor sudoeste. O dono levanta as sobrancelhas e não pergunta nada, que é o serviço dele.',
+    'A carta é linda: azul-clara nos baixios, azul-escura nos fundões, com números em cada metro de profundidade e uma malha de linhas finas.',
+    'E a sudoeste, a noventa e poucas milhas, um ponto preto com uma legenda de três palavras:',
+    '**RECIFE ALTO S/ NOME**',
+    'Recife alto quer dizer que é rocha que sai da água. Ilha, portanto.',
+    'Uma ilha que está na carta náutica e não está em nenhum mapa de Kanto, porque mapa de Kanto é feito pra quem anda em terra e ninguém anda em terra até lá.'
+  ],
+  ef:{dinheiro:-900, flag:['sabe_da_ilha','tem_a_carta_nautica'],
+      registrar:'Comprou a carta náutica do setor sudoeste. A ilha consta como "recife alto s/ nome".',
+      presagio:'A informação nunca esteve escondida. Estava no documento que ninguém lê.'},
+  escolhas:[
+    {texto:'Perguntar ao dono se alguém já foi lá.', vai:'c16_ab_o_dono_da_loja'},
+    {texto:'Levar a carta pro cais e procurar quem leve você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó que fala dessa ilha.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_o_dono_da_loja:{
+  texto:[
+    'Ele olha o ponto na carta onde o seu dedo está e demora a responder.',
+    fala('o dono da loja', 'Essa carta aí eu vendi três vezes em dezoito anos.'),
+    d=>fala(d.jogador.nome, 'Pra quem?'),
+    fala('o dono da loja', 'Uma pra um pesquisador em oitenta e nove. Uma pra uns caras de terno em noventa e sete.'),
+    'Ele bate no balcão com o nó do dedo.',
+    fala('o dono da loja', 'E uma pra você.'),
+    d=>fala(d.jogador.nome, 'Caras de terno compram carta náutica?'),
+    fala('o dono da loja', 'Compraram quatro. Sudoeste, sul, sudeste e a geral.'),
+    fala('o dono da loja', 'E compraram dois GPS, que naquela época custava o preço de um carro.'),
+    'Ele dobra a carta pra você no vinco certo, que é um cuidado de quem respeita papel.',
+    fala('o dono da loja', 'Homem que compra GPS de preço de carro pra ir num recife sem nome não tá indo pescar.', 'baixo')
+  ],
+  ef:{flag:'os_de_terno_compraram_carta',
+      npc:{nome:'o dono da loja', opiniao:1, viuVoce:'Te vendeu a carta náutica do setor sudoeste.'},
+      registrar:'Em 1997, homens de terno compraram quatro cartas náuticas e dois GPS na loja de pesca de Fuchsia.',
+      presagio:'Noventa e sete. A mesma década em que a luz aparece duas vezes.'},
+  escolhas:[
+    {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó.', vai:'c16_velho'},
+    {texto:'Procurar quem foi com os de terno em noventa e sete.', vai:'c16_ab_quem_nao_fala'}
+  ]
+},
+
+c16_ab_a_pena:{
+  texto:[
+    'Tem uma menina de uns nove anos vendendo concha numa toalha estendida no calçadão de Fuchsia, e o negócio dela vai mal porque concha é de graça na praia, e ela sabe disso e monta a toalha todo dia mesmo assim.',
+    'No canto da toalha, entre as conchas, tem uma coisa que não é concha.',
+    'É uma pena. Uns vinte e dois centímetros, curvada, com a haste clara e a barba em três faixas: vermelha na ponta, depois branca, depois uma faixa que não é bem dourada e não é bem verde e que muda quando você move a cabeça.',
+    'Você já viu pena de Pidgeot, de Fearow, de Spearow. Nenhuma faz isso.',
+    d=>fala(d.jogador.nome, 'Quanto é essa?'),
+    fala('a menina da toalha', 'Essa não é de vender.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a menina da toalha', 'Porque meu irmão achou na praia do sul e ele falou que é de sorte.'),
+    'Ela endireita a pena na toalha com um dedo.',
+    fala('a menina da toalha', 'Mas ele morreu em agosto. Então eu não sei mais se é.')
+  ],
+  ef:{flag:'viu_a_pena',
+      npc:{nome:'a menina da toalha', opiniao:1, viuVoce:'Você reparou na pena entre as conchas dela.'},
+      registrar:'Uma menina de Fuchsia tem uma pena de três faixas que o irmão achou na praia do sul.',
+      presagio:'Vermelha, branca e uma cor que muda com o ângulo. Isso não é de nenhum bicho que você conhece.'},
+  escolhas:[
+    {texto:'Perguntar exatamente onde o irmão achou.', vai:'c16_ab_onde_achou'},
+    {texto:'Oferecer para comprar mesmo assim.', vai:'c16_ab_ofereceu_pela_pena'},
+    {texto:'Não insistir. Procurar o velho que fala da ilha.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_onde_achou:{
+  texto:[
+    fala('a menina da toalha', 'Na ponta sul, depois da pedra grande.'),
+    'Ela aponta e a ponta sul fica visível daqui, a uns dois quilômetros, e a pedra grande também.',
+    fala('a menina da toalha', 'Ele ia lá todo dia de manhã. Ele catava vidro.'),
+    d=>fala(d.jogador.nome, 'Vidro?'),
+    fala('a menina da toalha', 'Vidro de garrafa que o mar lixa. Fica fosco e fica bonito.'),
+    'Ela puxa um potinho de plástico de dentro da bolsa e mostra: uns quarenta cacos de vidro verde e âmbar, lixados pelo mar, bonitos mesmo.',
+    fala('a menina da toalha', 'A pena tava junto do vidro. Em cima da linha da maré.'),
+    'E aí ela fala a frase que muda a cena:',
+    fala('a menina da toalha', 'Ele achou em três de agosto e a gente enterrou ele dia sete.'),
+    fala('a menina da toalha', 'Meu pai falou que a pena deu azar. Eu acho que ela só tava lá.', 'baixo')
+  ],
+  ef:{flag:'a_pena_da_ponta_sul',
+      registrar:'A pena foi achada na linha da maré da ponta sul de Fuchsia, em 3 de agosto.',
+      presagio:'Coisa que boia vem de onde o mar vem. O mar de Fuchsia vem do sudoeste.'},
+  escolhas:[
+    {texto:'Oferecer para comprar a pena.', vai:'c16_ab_ofereceu_pela_pena'},
+    {texto:'Ir até a ponta sul procurar mais.', vai:'c16_ab_a_ponta_sul'},
+    {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_ofereceu_pela_pena:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu não quero comprar pra guardar. Eu quero saber de onde ela veio.'),
+    'A menina te olha do jeito que criança olha adulto que falou uma coisa que criança entende e adulto não costuma dizer.',
+    fala('a menina da toalha', 'De onde ela veio ou de quem ela é?'),
+    d=>fala(d.jogador.nome, 'De quem ela é.'),
+    'Ela pega a pena, olha contra o sol, e a faixa do meio muda de cor na mão dela.',
+    fala('a menina da toalha', 'Então leva.'),
+    d=>fala(d.jogador.nome, 'Eu pago.'),
+    fala('a menina da toalha', 'Não. Se você pagar vira concha.'),
+    'Ela põe a pena na sua mão com as duas mãos dela, que é como se entrega coisa importante.',
+    fala('a menina da toalha', 'Você volta e me conta de quem é.'),
+    'Não é pedido. É condição.'
+  ],
+  ef:{flag:['carrega_a_pena','a_promessa_da_menina'], moral:1,
+      npc:{nome:'a menina da toalha', opiniao:3, viuVoce:'Te deu a pena de graça, com a condição de você voltar e contar de quem é.'},
+      registrar:'Está carregando a pena de três faixas. Prometeu voltar e dizer de quem ela é.',
+      presagio:'Você prometeu voltar. Guarde isso: promessa feita pra criança tem cobrança diferente.'},
+  escolhas:[
+    {texto:'Ir até a ponta sul procurar mais.', vai:'c16_ab_a_ponta_sul'},
+    {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'},
+    {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'}
+  ]
+},
+
+c16_ab_a_ponta_sul:{
+  texto:[
+    'A ponta sul de Fuchsia é uma praia de pedra com dois quilômetros de nada e uma pedra grande que dá nome ao lugar.',
+    'Você anda a linha da maré por uma hora e quarenta, de cabeça baixa, catando com os olhos.',
+    'Acha: vidro fosco (muito), uma sandália, meio quilômetro de linha de pesca enrolada em alga, e um isqueiro.',
+    'Não acha pena nenhuma.',
+    'Mas na volta, em cima da pedra grande, tem uma coisa que você não viu na ida porque estava olhando pro chão.',
+    'Uma marca. Uma queimadura circular na rocha, de uns setenta centímetros, com a borda vitrificada.',
+    'Pedra vitrifica a mil e poucos graus. Isso não é fogueira de pescador.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} não sobe na pedra. Fica embaixo, olhando pra cima, e não sobe nem quando você chama.`
+               : 'Você põe a mão na marca e a rocha está fria, o que de alguma forma é pior.';
+    }
+  ],
+  ef:{flag:'a_marca_na_pedra',
+      registrar:'Na pedra grande da ponta sul há uma queimadura circular de 70 cm com a borda vitrificada.',
+      presagio:'Mil e poucos graus, na beira do mar, e ninguém na cidade comentou.'},
+  escolhas:[
+    {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'},
+    {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'}
+  ]
+},
+
+c16_ab_quem_nao_fala:{
+  texto:[
+    'Tem um homem no cais de Fuchsia que todo mundo aponta e ninguém apresenta.',
+    'Cinquenta e poucos anos, barco médio, trabalha sozinho, e a frase que dizem dele é sempre a mesma: "aquele ali foi em noventa e sete".',
+    'Ninguém completa a frase. Você tem que perguntar pra ele.',
+    'Ele está remendando rede na proa e não levanta a cabeça quando você chega.',
+    fala('o homem da rede', 'Não.'),
+    d=>fala(d.jogador.nome, 'Eu não perguntei nada.'),
+    fala('o homem da rede', 'Você ia perguntar de noventa e sete.'),
+    'Ele passa a agulha de rede duas vezes antes de falar de novo.',
+    fala('o homem da rede', 'Eu levo carga, levo gente, levo o que pagarem. Pra sudoeste eu não vou.'),
+    d=>fala(d.jogador.nome, 'Por quanto?'),
+    'Aí ele levanta a cabeça.',
+    fala('o homem da rede', 'Menino, eu acabei de te dizer que tem um preço que eu não aceito. Você perguntou o preço.')
+  ],
+  ef:{flag:'sabe_da_ilha',
+      npc:{nome:'o homem da rede', opiniao:-1, viuVoce:'Você perguntou o preço depois de ele dizer que não tinha preço.'},
+      registrar:'Um pescador de Fuchsia foi à ilha em 1997 e não volta lá por dinheiro nenhum.'},
+  escolhas:[
+    {texto:'Pedir desculpa e perguntar o que aconteceu.', vai:'c16_ab_pediu_desculpa'},
+    {texto:'Insistir no dinheiro.', vai:'c16_ab_insistiu_no_dinheiro'},
+    {texto:'Deixar ele em paz e procurar o velho do dominó.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_pediu_desculpa:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Desculpa. Foi burrice.'),
+    'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parado, porque sair agora seria pior.',
+    fala('o homem da rede', 'Eu levei quatro homens em noventa e sete. Dois dias, ida e volta, muito bem pago.'),
+    fala('o homem da rede', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
+    'Ele para de costurar.',
+    fala('o homem da rede', 'Na segunda noite apareceu a luz.'),
+    d=>fala(d.jogador.nome, 'A luz colorida.'),
+    fala('o homem da rede', 'Colorida. Igual arco-íris, mas de noite, e arco-íris de noite não existe.'),
+    fala('o homem da rede', 'Durou uns trinta minutos.'),
+    'Ele olha pro mar.',
+    fala('o homem da rede', 'E no outro dia eu levei três homens de volta.', 'baixo')
+  ],
+  ef:{flag:['sabe_da_ilha','tres_voltaram_de_quatro'],
+      npc:{nome:'o homem da rede', opiniao:2, viuVoce:'Te contou de 1997 porque você pediu desculpa.'},
+      registrar:'Em 1997 ele levou quatro homens à ilha e trouxe três de volta. Na segunda noite houve luz colorida.',
+      presagio:'Quatro entraram e três saíram. Você já ouviu essa conta antes, em outro porto.'},
+  escolhas:[
+    {texto:'Perguntar quem era o quarto.', vai:'c16_ab_quem_era_o_quarto'},
+    {texto:'Perguntar se ele levaria você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó com isso na cabeça.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_quem_era_o_quarto:{
+  texto:[
+    fala('o homem da rede', 'Eu não sei o nome de nenhum dos quatro.'),
+    fala('o homem da rede', 'Eles não falaram nome e eu não perguntei, porque quem paga o triplo não gosta de pergunta.'),
+    'Ele enrola o fio da agulha de rede no dedo.',
+    fala('o homem da rede', 'Mas eu sei que o quarto era o mais velho e era o que mandava.'),
+    fala('o homem da rede', 'E eu sei que os três que voltaram não falaram uma palavra no caminho inteiro.'),
+    d=>fala(d.jogador.nome, 'Você não perguntou do quarto?'),
+    fala('o homem da rede', 'Perguntei. Uma vez.'),
+    'Ele volta pra rede.',
+    fala('o homem da rede', 'Um deles falou "que quarto".'),
+    fala('o homem da rede', 'E aí eu não perguntei mais, e recebi, e nunca mais fui pro sudoeste.', 'baixo')
+  ],
+  ef:{flag:'que_quarto',
+      registrar:'Os três que voltaram negaram que houvesse um quarto homem.',
+      presagio:'"Que quarto." Eles ensaiaram isso na ilha, antes de embarcar.'},
+  escolhas:[
+    {texto:'Perguntar se ele levaria você.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó.', vai:'c16_velho'}
+  ]
+},
+
+c16_ab_insistiu_no_dinheiro:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Todo mundo tem preço.'),
+    'Ele corta a linha da rede com o dente, devagar, e enrola a sobra no dedo.',
+    fala('o homem da rede', 'Todo mundo tem. Eu tinha.'),
+    fala('o homem da rede', 'Em noventa e sete o meu preço foi o triplo da diária, e eu aceitei, e eu levei quatro homens pra lá.'),
+    'Ele levanta e amarra a rede na amurada, de costas pra você.',
+    fala('o homem da rede', 'Sai do meu barco.'),
+    'Você desce. Do cais dá pra ver ele ainda de costas, parado, sem fazer nada com as mãos.'
+  ],
+  ef:{flag:['sabe_da_ilha','quatro_homens_em_noventa_e_sete'],
+      npc:{nome:'o homem da rede', opiniao:-3, viuVoce:'Você insistiu no dinheiro depois do "não".'},
+      registrar:'Em 1997 ele levou quatro homens à ilha pelo triplo da diária. Não fala mais com você.'},
+  escolhas:[
+    {texto:'Procurar outro barco no cais.', vai:'c16_travessia'},
+    {texto:'Procurar o velho do dominó.', vai:'c16_velho'}
+  ]
+},
+
 
 c16_velho:{
   texto:[
-    'O pescador se chama José Antônio Tanabe, tem oitenta e um anos e conta a mesma história há quarenta.',
-    'No cais o chamam de Zé Antônio. Você vai chamá-lo de Sr. Tanabe o capítulo inteiro, e na terceira vez ele vai reparar, e não vai corrigir.',
+    'O pescador se chama Ichiro Tanabe, tem oitenta e um anos e conta a mesma história há quarenta.',
+    'No cais o chamam de Seu Ichiro. Você vai chamá-lo de Sr. Tanabe o capítulo inteiro, e na terceira vez ele vai reparar, e não vai corrigir.',
     'Ele conta ela no cais de Fuchsia, na mesa de dominó, pra quem pedir e pra quem não pedir, e todo mundo já ouviu, e todo mundo muda de assunto educadamente.',
     'Hoje ele conta pra você.',
     '"Tem uma ilha a sudoeste que não entra em mapa nenhum porque não tem nada nela. Pedra e mato. Nem água doce."',
@@ -48570,7 +49074,7 @@ c16_desde_quando:{
     'Dentro tem papel.',
     'Muito papel: folha de caderno, verso de nota fiscal, guardanapo, e uns quarenta bilhetes em papel de pão.',
     'Cada um com uma data e uma linha.',
-    '**"12/3/61 — luz sobre a ilha da torre, 23h mais ou menos, uns 30 min. — J. A. Tanabe"**',
+    '**"12/3/61 — luz sobre a ilha da torre, 23h mais ou menos, uns 30 min. — I. Tanabe"**',
     '**"4/9/68 — luz, cor, 22h40 até 23h20. Meu pai viu junto. — Z. A."**',
     '**"19/11/74 — luz. Sozinho. Ninguém acreditou. — Z. A."**',
     '"Quarenta anos disso?"',
@@ -48718,7 +49222,7 @@ c16_colonia_caixa:{
   texto:[
     'Você leva a caixa à Colônia Z-14 e a secretária de sessenta e dois anos abre o elástico com um cuidado que você não esperava.',
     'Ela lê três bilhetes e para.',
-    '"J. A. Tanabe."',
+    '"I. Tanabe."',
     '"A senhora conhece?"',
     '"Meu bem, eu tenho o livro de saída de embarcação de mil novecentos e trinta e nove."',
     'Ela vai ao armário e volta com o livro mais velho da pilha, com a capa descolando, e abre em março.',
@@ -48738,7 +49242,7 @@ c16_colonia_caixa:{
       npc:{nome:'Secretária da Colônia Z-14', opiniao:8, memoria:'Cruzou a caixa de charuto com o livro de 1939 e descobriu que o velho Tanabe ia à ilha.'},
       rep:{eixo:'bom',delta:6,motivo:'Cruzou a caixa com o livro de 1939'},
       instabilidade:1,
-      registrar:'J. A. Tanabe declarou saída para a ilha em todas as 23 datas do arco-íris, desde 1939.',
+      registrar:'I. Tanabe declarou saída para a ilha em todas as 23 datas do arco-íris, desde 1939.',
       presagio:'Ele ia. Sessenta e um anos e o filho achava que era da costa.'},
   escolhas:[
     {texto:'Contar isso pro Sr. Tanabe.', vai:'c16_contou_que_ele_ia'},
@@ -49406,7 +49910,7 @@ c16_o_que_oferece:{
     '"Se a série temporal for real e verificável, ela é o dado mais importante de toda essa linha de pesquisa, e ela não é minha, e eu não vou publicar dado dos outros com o meu nome sozinho."',
     'Ela abre o caderno numa página em branco.',
     '"Eu preciso do nome de quem anotou."',
-    '"O nome é Tanabe. J. A. Tanabe e Z. A. Tanabe. Pai e filho, pescadores de Fuchsia."',
+    '"O nome é Tanabe. I. Tanabe e Z. A. Tanabe. Pai e filho, pescadores de Fuchsia."',
     'Ela escreve.',
     'E escreve devagar, conferindo a grafia com você duas vezes, que é a segunda vez que alguém faz isso na sua frente neste mês.',
     '"E o velho tá vivo?"',
@@ -49417,7 +49921,7 @@ c16_o_que_oferece:{
     '"Isso diz mais sobre a minha carreira do que sobre pescador."'
   ],
   ef:{flag:['coautoria','equipe_aliada'],
-      npc:{nome:'Chefe da expedição', opiniao:6, memoria:'Anotou J. A. Tanabe e Z. A. Tanabe como coautores da série temporal.'},
+      npc:{nome:'Chefe da expedição', opiniao:6, memoria:'Anotou I. Tanabe e Z. A. Tanabe como coautores da série temporal.'},
       rep:{eixo:'bom',delta:6,motivo:'Transformou uma caixa de charuto em coautoria'},
       moral:20,
       registrar:'A expedição vai creditar os Tanabe como coautores da série temporal.',
@@ -50444,14 +50948,250 @@ c16_fim:{
 
 
 /* ===== js/story/cap-17.js ===== */
+/* ------------------------------------------------------------
+   ABERTURAS — a convocação da Liga chega de quatro jeitos, e o
+   jeito que ela chega já diz o que a Liga acha de você.
+   ------------------------------------------------------------ */
+const C17_ABERTURAS = ['c17_envelope', 'c17_ab_no_quadro', 'c17_ab_sem_insignias', 'c17_ab_de_cracha', 'c17_ab_o_oficial'];
+function c17_cabe(id, d){
+  if (id === 'c17_ab_sem_insignias') return (d.insignias || []).length < 8;
+  if (id === 'c17_ab_de_cracha')     return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c17_ab_o_oficial')     return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3 || d.liga.avisos >= 2;
+  return true;
+}
+function c17_abertura(d){
+  const cand = C17_ABERTURAS.filter(id => c17_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 17 — O JARDIM  (Rota 23 / Caminho Vitória)
    ============================================================ */
 CAPITULOS.push(
 {
 num:17, titulo:'O Jardim', local:'Rota 23 / Caminho Vitória', ambiente:'floresta', nivelArea:50,
-tom:'muito sombrio', inicio:'c17_envelope',
+tom:'muito sombrio', entradas:C17_ABERTURAS,
+inicio: d => c17_abertura(d),
 cenas:{
+
+c17_ab_no_quadro:{
+  texto:[
+    'A convocação não chega pra você. Ela chega pro mural.',
+    'No quadro de avisos do Centro Pokémon tem uma folha impressa com trinta e um nomes em ordem alfabética, sob o título CONVOCADOS — TEMPORADA CORRENTE.',
+    d=>`O seu está na lista, entre dois nomes que você não conhece, em corpo doze, como todos os outros.`,
+    'Tem quatro pessoas lendo o mural com você e uma delas está passando o dedo linha por linha, duas vezes, procurando um nome que não está lá.',
+    'Ela para de procurar e fica olhando o quadro por mais tempo do que precisa.',
+    'Embaixo da lista tem um parágrafo em corpo oito que ninguém está lendo:',
+    '**"Em razão de reestruturação administrativa em curso, o acesso ao Planalto Indigo permanece por conta e risco do desafiante. Os postos de controle das Rotas 22 e 23 estão temporariamente desguarnecidos."**',
+    'Trinta e uma pessoas foram convocadas e avisadas, em corpo oito, de que tiraram a segurança do caminho.'
+  ],
+  ef:{flag:['leu_o_anexo','sabe_dos_postos_vazios'],
+      rep:{eixo:'bom', delta:1, motivo:'Leu o corpo oito do mural.'},
+      registrar:'A convocação da Liga saiu em mural, com 31 nomes e um aviso em corpo oito sobre postos desguarnecidos.',
+      presagio:'Publicar em mural é o jeito de avisar sem comunicar.'},
+  escolhas:[
+    {texto:'Falar com a mulher que não achou o nome dela.', vai:'c17_ab_a_mulher_do_mural'},
+    {texto:'Arrancar a folha e levar.', vai:'c17_ab_arrancou_a_folha'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_a_mulher_do_mural:{
+  texto:[
+    'Ela tem uns vinte e cinco anos e seis insígnias no estojo preso no cinto, o que é mais do que a maioria dos trinta e um nomes da folha.',
+    d=>fala(d.jogador.nome, 'Você não tá na lista?'),
+    fala('a mulher do mural', 'Não.'),
+    fala('a mulher do mural', 'E eu tenho seis. Tem gente com quatro nessa folha.'),
+    'Ela não fala isso com revolta. Fala com a precisão de quem já conferiu.',
+    d=>fala(d.jogador.nome, 'Você reclamou?'),
+    fala('a mulher do mural', 'Liguei pro Planalto. Uma moça muito educada me explicou que a convocação é por critério administrativo.'),
+    d=>fala(d.jogador.nome, 'Que critério?'),
+    fala('a mulher do mural', 'Ela não soube dizer.'),
+    'Ela dá um passo pra trás pra ver o mural inteiro de uma vez.',
+    fala('a mulher do mural', 'Eu contei. Vinte e dois dos trinta e um são de Saffron, Celadon ou Vermilion.', 'baixo'),
+    fala('a mulher do mural', 'Eu sou de Pewter.')
+  ],
+  ef:{flag:'o_criterio_administrativo',
+      npc:{nome:'a mulher do mural', opiniao:1, viuVoce:'Você foi o único a perguntar por que ela não estava na lista.'},
+      registrar:'Vinte e dois dos 31 convocados são de Saffron, Celadon ou Vermilion. O critério é "administrativo".',
+      presagio:'Convocação concentrada em três cidades é escolha, e escolha tem quem escolha.'},
+  escolhas:[
+    {texto:'Anotar os trinta e um nomes antes de sair.', vai:'c17_ab_arrancou_a_folha'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
+  ]
+},
+
+c17_ab_arrancou_a_folha:{
+  texto:[
+    'Você tira a folha do mural, e tirar folha de mural de Centro Pokémon é uma coisa que ninguém faz e que ninguém impede.',
+    'A atendente vê. Não fala nada. Volta pro computador.',
+    'Você dobra a folha em quatro e guarda junto do resto do papel que você vem juntando há meses, e o resto do papel já é uma pilha que não cabe mais no bolso de fora.',
+    'Trinta e um nomes, um endereço de origem em cada um, e um parágrafo em corpo oito.',
+    'Não é prova de nada. É a lista de quem a Liga decidiu mandar pra uma estrada que ela mesma desguarneceu.'
+  ],
+  ef:{flag:['tem_a_lista_dos_trinta_e_um','reika_precisa_de_papel'],
+      registrar:'Está com a folha de convocação arrancada do mural: 31 nomes e o aviso dos postos desguarnecidos.'},
+  escolhas:[
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
+  ]
+},
+
+c17_ab_sem_insignias:{
+  texto:[
+    d=>{
+      const n = (d.insignias || []).length;
+      return `Você tem ${n} insígnia${n===1?'':'s'}. O regulamento da Liga pede oito. E o envelope está na sua mão mesmo assim.`;
+    },
+    'Papel de gramatura alta, dobra em três, timbre em relevo. A atendente do Centro estava com ele separado há três dias.',
+    '**"Sua presença é solicitada no Planalto Indigo. Apresentar-se à recepção com as insígnias em mãos."**',
+    '"Com as insígnias em mãos." Não diz oito. Você lê a frase quatro vezes procurando o oito e ele não está lá.',
+    'Ou o regulamento mudou, ou a convocação não é sobre o regulamento.',
+    d=>fala(d.jogador.nome, 'Isso chegou pra mais alguém?'),
+    fala('a atendente do Centro', 'Chegaram sete aqui essa semana.'),
+    d=>fala(d.jogador.nome, 'E os sete têm oito insígnias?'),
+    'Ela olha pro lado, pro arquivo de envelopes que ainda não foram entregues.',
+    fala('a atendente do Centro', 'Eu não confiro insígnia. Eu entrego envelope.', 'baixo')
+  ],
+  ef:{flag:['convocado_sem_as_oito','sabe_dos_postos_vazios'],
+      registrar:'Recebeu a convocação da Liga sem ter as oito insígnias. A carta não menciona o número.',
+      presagio:'Convocação que não exige o requisito não está convocando por mérito. Está convocando por outro motivo.'},
+  escolhas:[
+    {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
+    {texto:'Perguntar quem assinou o carimbo.', vai:'c17_ab_o_carimbo'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_o_carimbo:{
+  texto:[
+    'O carimbo é redondo, azul, com o brasão da Liga no meio e uma linha de texto na borda.',
+    'Você lê a borda com o envelope inclinado contra a luz, porque a tinta está fraca:',
+    '**SECRETARIA DE COMPETIÇÕES — USO INTERNO**',
+    'Uso interno. Uma convocação a desafiantes carimbada com o carimbo de uso interno.',
+    'Você mostra pra atendente, que olha com o interesse educado de quem tem fila.',
+    fala('a atendente do Centro', 'Esse é o carimbo que vem em tudo da Liga.'),
+    d=>fala(d.jogador.nome, 'Tudo o quê?'),
+    fala('a atendente do Centro', 'Tudo. Aviso de manutenção, mudança de horário, circular.'),
+    'Ela puxa uma pasta de baixo do balcão e mostra quatro circulares dos últimos meses. As quatro com o mesmo carimbo azul.',
+    fala('a atendente do Centro', 'Ninguém carimba nada com carimbo de fora há uns dois anos. Sumiu.')
+  ],
+  ef:{flag:'o_carimbo_de_uso_interno',
+      registrar:'Há dois anos a Liga só usa o carimbo de "uso interno" — o carimbo externo sumiu.',
+      presagio:'Documento carimbado como interno não vale contra a Liga. Sempre coube a eles dizer que era rascunho.'},
+  escolhas:[
+    {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
+    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `O envelope não chega pelo Centro Pokémon. Chega pelo serviço: vem junto com a correspondência de ${c ? c.nome : 'praxe'}, num malote lacrado, com protocolo de recebimento pra você assinar.`;
+    },
+    'Dentro do malote tem duas coisas.',
+    'A convocação, igual à de todo mundo.',
+    'E um segundo envelope, menor, sem timbre, com o seu nome escrito à mão.',
+    'Dentro do segundo: meia folha, datilografada, sem assinatura e sem carimbo.',
+    '**"Antes de subir a Rota 23, confira quem está lotado nos postos 3, 5 e 7. A resposta oficial é que estão desguarnecidos. Não estão."**',
+    'Você lê duas vezes. Vira a folha. O verso está em branco.',
+    'Alguém dentro do serviço te mandou isso sabendo que você tem acesso ao malote e sabendo que você ia subir.'
+  ],
+  ef:{flag:['o_bilhete_do_malote','sabe_dos_postos_vazios'],
+      registrar:'Um bilhete anônimo no malote: os postos 3, 5 e 7 da Rota 23 não estão desguarnecidos como a Liga informou.',
+      presagio:'Quem escreveu tem acesso à lotação dos postos e não quer assinar. Isso é alguém de dentro com medo.'},
+  escolhas:[
+    {texto:'Ler a convocação normal também.', vai:'c17_leu_o_envelope'},
+    {texto:'Tentar descobrir quem pôs o bilhete no malote.', vai:'c17_ab_quem_pos'},
+    {texto:'Subir a Rota 23 com isso na cabeça.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_quem_pos:{
+  texto:[
+    'O malote tem protocolo, e protocolo tem origem, e a origem está impressa na etiqueta: expedido pelo setor de correspondência do Planalto Indigo, às seis e quarenta da manhã de anteontem.',
+    'Você liga pro setor. Atende um rapaz.',
+    d=>fala(d.jogador.nome, 'Quem fecha os malotes aí?'),
+    fala('o rapaz do setor', 'Depende do turno. De manhã sou eu.'),
+    d=>fala(d.jogador.nome, 'Anteontem, seis e quarenta.'),
+    'Papel sendo mexido.',
+    fala('o rapaz do setor', 'Anteontem eu entrei às sete.'),
+    'Silêncio dos dois lados.',
+    fala('o rapaz do setor', 'O malote saiu às seis e quarenta?'),
+    d=>fala(d.jogador.nome, 'Tá na etiqueta.'),
+    fala('o rapaz do setor', 'Então alguém entrou no setor antes de mim e lacrou um malote.'),
+    'Ele para. Você ouve ele respirando.',
+    fala('o rapaz do setor', 'Moço, eu vou desligar. E eu não vou falar disso com ninguém daqui.', 'baixo')
+  ],
+  ef:{flag:'alguem_lacrou_antes_do_turno',
+      registrar:'O malote foi lacrado no Planalto vinte minutos antes de o responsável pelo turno chegar.'},
+  escolhas:[
+    {texto:'Subir a Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ler a convocação normal antes.', vai:'c17_leu_o_envelope'}
+  ]
+},
+
+c17_ab_o_oficial:{
+  texto:[
+    'A convocação não chega em envelope. Chega na mão de um oficial da Liga, de uniforme cinza, que estava sentado na recepção do Centro Pokémon esperando você entrar.',
+    'Ele levanta quando te vê. Não bloqueia a porta. Fica em pé e espera você chegar até ele, que é uma escolha e você repara nela.',
+    fala('o oficial de cinza', 'Eu tenho duas coisas pra te entregar e a ordem importa.'),
+    'A primeira é a convocação, igual à de todo mundo, papel de gramatura alta, timbre em relevo.',
+    'A segunda é uma folha comum, com o brasão impresso e não em relevo.',
+    d=>{
+      const n = d.liga.avisos || 3;
+      return `**"NOTIFICAÇÃO — ${n} ocorrências registradas. A presente convocação não suspende, anula ou substitui as ocorrências acima."**`;
+    },
+    fala('o oficial de cinza', 'Você pode subir. É o seu direito.'),
+    fala('o oficial de cinza', 'E se você subir, isso aqui sobe com você.'),
+    'Ele entrega as duas folhas juntas, uma em cima da outra, com a notificação por baixo.'
+  ],
+  ef:{flag:['convocado_com_notificacao','sabe_dos_postos_vazios'],
+      registrar:'A Liga entregou a convocação em mão, junto com a notificação das ocorrências abertas.',
+      presagio:'Ele pôs a notificação por baixo. Foi cuidado, não descuido.'},
+  escolhas:[
+    {texto:'Perguntar quem mandou ele te esperar aqui.', vai:'c17_ab_quem_mandou'},
+    {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
+    {texto:'Subir a Rota 23 sem dizer nada.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
+c17_ab_quem_mandou:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem mandou você me esperar?'),
+    fala('o oficial de cinza', 'Ordem de serviço.'),
+    d=>fala(d.jogador.nome, 'Assinada por quem?'),
+    'Ele tira a ordem do bolso do peito e mostra, e mostrar isso não é obrigação dele.',
+    'É um formulário de meia página. No campo "solicitante" está escrito, à máquina: CONSELHO.',
+    'Só isso. Sem nome, sem sigla, sem número.',
+    d=>fala(d.jogador.nome, 'Que conselho?'),
+    fala('o oficial de cinza', 'Eu ia te perguntar a mesma coisa.'),
+    'Ele dobra a ordem e guarda.',
+    fala('o oficial de cinza', 'Eu tenho dezenove anos de Liga. Ordem de serviço sempre teve nome de quem assina.'),
+    fala('o oficial de cinza', 'Nos últimos oito meses, quatro das minhas vieram assim.', 'baixo')
+  ],
+  ef:{flag:'ordens_assinadas_por_conselho',
+      npc:{nome:'o oficial de cinza', opiniao:1, viuVoce:'Te mostrou a ordem de serviço assinada apenas por "conselho".'},
+      registrar:'Quatro ordens de serviço da Liga, em oito meses, vieram assinadas apenas como "CONSELHO".',
+      presagio:'Um solicitante sem nome que a própria Liga obedece.'},
+  escolhas:[
+    {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
+    {texto:'Subir a Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Kenta']},
+    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Kenta']}
+  ]
+},
+
 
 c17_envelope:{
   texto:[
