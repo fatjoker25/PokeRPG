@@ -150,6 +150,19 @@ Trocar de conjunto de arte é mexer em **quatro telas**, não só na
 batalha: combate, ficha da Pokédex, varredura da Pokédex e PC. O
 `grep` de `imgSprite` acha todas.
 
+**Nunca escreva `filter` direto num sprite.** O estado dele mora em
+`--fx-sprite`, e quem quiser somar um efeito escreve
+`var(--fx-sprite, opacity(1)) mais-alguma-coisa`. Um `filter` com
+seletor mais específico já apagou a silhueta uma vez — e silhueta
+apagada é o jogo entregando de graça espécie que o jogador ainda não
+catalogou, além de sumir com o brilho do shiny. `opacity(1)` é o
+não-efeito, porque `none` não pode ser somado a outro filtro.
+
+E **testar porte só de um lado não vale**: o adversário tem três
+estados que o seu nunca tem — catalogado, silhueta e brilhante — e foi
+testando sempre com o mesmo Rattata pequenininho que a silhueta quebrada
+passou batida.
+
 Pasta que saiu de uso fica na árvore mas entra em `SPRITES_FORA`, no
 `build.py`, senão o arquivo único carrega megabytes que ninguém pede.
 `ferramentas/chk-sprites.js` confere as duas pontas: pasta apontada

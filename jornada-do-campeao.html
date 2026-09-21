@@ -1414,12 +1414,20 @@ h3.cat-item{
   image-rendering:-moz-crisp-edges;
   image-rendering:crisp-edges;
   display:block;
+  /* O estado do sprite mora numa variável, não no `filter` direto.
+     Quem quiser somar um efeito por cima — a sombra de corpo na
+     arena, por exemplo — escreve `var(--fx-sprite) mais-alguma-coisa`
+     em vez de trocar o filter inteiro. Sobrescrever aqui já apagou a
+     silhueta uma vez, e silhueta apagada é o jogo entregando espécie
+     que o jogador ainda não catalogou. `opacity(1)` é o não-efeito:
+     `none` não pode ser somado a outro filtro. */
+  filter:var(--fx-sprite, opacity(1));
 }
 /* espécie não catalogada: você vê o contorno e mais nada */
-.sprite.silhueta{filter:brightness(0) saturate(0) opacity(.72)}
+.sprite.silhueta{--fx-sprite:brightness(0) saturate(0) opacity(.72)}
 :root:not([data-theme="light"]) .sprite.silhueta,
-html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
-.sprite-brilho{filter:drop-shadow(0 0 7px rgba(245,197,24,.75))}
+html[data-tom] .sprite.silhueta{--fx-sprite:brightness(0) saturate(0) opacity(.55)}
+.sprite-brilho{--fx-sprite:drop-shadow(0 0 7px rgba(245,197,24,.75))}
 
 /* arena: o seu de costas, o outro de frente.
    Sem a pasta de sprites a <img> se remove e o espaço fecha junto. */
@@ -1444,7 +1452,9 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   /* 24% do quadro é transparência embaixo, nas duas vistas: sem puxar,
      o bicho flutua acima da própria sombra. */
   margin-bottom:-25px;
-  filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))
+  /* a sombra de corpo SOMA ao que o sprite já é — silhueta e brilho
+     continuam valendo */
+  filter:var(--fx-sprite, opacity(1)) drop-shadow(0 2px 3px rgba(0,0,0,.45));
 }
 /* A arte de costas é de corpo inteiro e vem com folga dentro do
    quadro, então na tela ela sai menor que a de frente. O seu fica
@@ -1455,13 +1465,16 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   /* o seu fica maior: está mais perto de quem olha */
   width:126px;height:126px;margin-bottom:-30px;
 }
+/* A base é larga de propósito: com um Snorlax ou um Onix em cima,
+   uma elipse estreita some debaixo do corpo e o contato com o chão
+   se perde justamente em quem mais precisa dele. */
 .arena.com-cenario .lutador.aliado .arte:not(:empty)::after,
-.arena.arena-ginasio .lutador.aliado .arte:not(:empty)::after{width:96px;height:22px;bottom:-4px}
+.arena.arena-ginasio .lutador.aliado .arte:not(:empty)::after{width:122px;height:26px;bottom:-5px}
 /* a base do de lá sobe junto com ele: sombra separada do pé é o
    bicho flutuando, que é exatamente o que a profundidade não pode
    parecer */
 .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
-.arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{width:70px;height:16px;bottom:48px}
+.arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{width:94px;height:20px;bottom:46px}
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
 /* as duas bases: a sua fica mais perto (maior e mais baixa), a do
    outro lado fica mais longe (menor e mais alta) — é o que dá a
