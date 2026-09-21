@@ -1775,6 +1775,12 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .cargo-motivo{font-size:11.5px;color:var(--texto-fraco);font-style:italic}
 .loja-abas{margin-bottom:12px;padding-bottom:10px}
 
+/* o balcão tem a cara do resto do jogo, não a do aparelho */
+.modal.credencial .caixa{max-width:720px}
+.modal.credencial h3{margin:18px 0 8px;font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--texto-fraco)}
+.modal.credencial h3:first-child{margin-top:0}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -64760,7 +64766,7 @@ const UI = {
       `<h3>Fora do seu alcance</h3>` +
       fechados.map(x => cartao(x, `<div class="cargo-motivo">${this.esc(x.cedo ? 'Cedo demais.' : x.motivo)}</div>`)).join('');
 
-    this.modal('Credenciais', corpo, false, 'nav');
+    this.modal('Credenciais', corpo, false, 'credencial');
   },
 
   telaCargo(c, avisos){
@@ -65796,7 +65802,7 @@ const Jogo = {
   /* ---------- BALCÃO DE CREDENCIAIS ---------- */
   assumirCargo(id){
     const r = Cargos.assumir(id);
-    if (!r.ok) return UI.modal('Credenciais', `<p class="nada">${UI.esc(r.motivo)}</p>`, false, 'nav');
+    if (!r.ok) return UI.modal('Credenciais', `<p class="nada">${UI.esc(r.motivo)}</p>`, false, 'credencial');
     Estado.salvar('auto');
     UI.telaCargo(r.cargo, r.avisos);
   },

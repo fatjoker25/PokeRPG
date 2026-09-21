@@ -2476,7 +2476,7 @@ const UI = {
       `<h3>Fora do seu alcance</h3>` +
       fechados.map(x => cartao(x, `<div class="cargo-motivo">${this.esc(x.cedo ? 'Cedo demais.' : x.motivo)}</div>`)).join('');
 
-    this.modal('Credenciais', corpo, false, 'nav');
+    this.modal('Credenciais', corpo, false, 'credencial');
   },
 
   telaCargo(c, avisos){

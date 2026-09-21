@@ -425,7 +425,7 @@ const Jogo = {
   /* ---------- BALCÃO DE CREDENCIAIS ---------- */
   assumirCargo(id){
     const r = Cargos.assumir(id);
-    if (!r.ok) return UI.modal('Credenciais', `<p class="nada">${UI.esc(r.motivo)}</p>`, false, 'nav');
+    if (!r.ok) return UI.modal('Credenciais', `<p class="nada">${UI.esc(r.motivo)}</p>`, false, 'credencial');
     Estado.salvar('auto');
     UI.telaCargo(r.cargo, r.avisos);
   },
