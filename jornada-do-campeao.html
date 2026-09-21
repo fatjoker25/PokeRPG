@@ -1781,6 +1781,24 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   text-transform:uppercase;color:var(--texto-fraco)}
 .modal.credencial h3:first-child{margin-top:0}
 
+
+/* ============================================================
+   PORTAS — os lugares da cidade, que não são "o que fazer"
+   ============================================================ */
+.portas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-bottom:6px}
+.porta{
+  display:flex;flex-direction:column;gap:2px;text-align:left;
+  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
+  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
+  color:var(--texto);cursor:pointer;font-family:inherit;
+  transition:border-color .15s,background .15s,transform .1s;
+}
+.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
+.porta:active{transform:translateY(1px)}
+.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
+.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
+@media (max-width:520px){ .portas{grid-template-columns:1fr} }
+
 </style>
 </head>
 <body data-tom="leve">
@@ -3166,11 +3184,6 @@ const EIXO_DO_STATUS = {
   intelecto:'paciencia', resistencia:'coragem', sorte:null
 };
 
-const NOME_EIXO = {
-  discricao:'discrição', paciencia:'paciência', coragem:'coragem',
-  simpatia:'simpatia',  cuidado:'cuidado'
-};
-
 function tempDe(p){
   if (!p || !p.natureza) return null;
   return TEMPERAMENTO[p.natureza] || null;
@@ -3465,17 +3478,6 @@ function linhaDeAfinidade(p){
   return FRASE_AFINIDADE[a.grau];
 }
 
-/* O melhor e o pior do cinto, pra quando a cena precisar apontar. */
-function afinidadeDoTime(time){
-  const lista = (time || (Estado.dados ? Estado.dados.time : []) || []).filter(p => !p.morto);
-  let melhor = null, pior = null;
-  for (const p of lista){
-    const a = afinidadeCom(p);
-    if (!melhor || a.valor > melhor.valor) melhor = a;
-    if (!pior   || a.valor < pior.valor)   pior = a;
-  }
-  return {melhor, pior};
-}
 
 
 /* ===== js/data/cargos.js ===== */
@@ -4222,24 +4224,27 @@ function afazeresDoLocal(){
     lista.push({id:'conversar', titulo:'Conversar com os moradores',
       sub:'Gente de cidade pequena fala demais. Gente de cidade grande fala pouco e diz mais.'});
     if ((L.lugares||[]).includes('centro')){
-      lista.push({id:'centro', titulo:'Centro Pokémon',
+      lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
         sub:'Curar o time, dormir, usar o terminal.'});
-      lista.push({id:'pc', titulo:'PC do Centro',
+      lista.push({lugar:true, id:'pc', titulo:'PC do Centro',
         sub: d.pc.length
           ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
           : 'Guardar e tirar Pokémon. O cinto leva seis.'});
       if (typeof Cargos !== 'undefined'){
         const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
         const meus = Cargos.lista().length;
-        lista.push({id:'credenciais', titulo:'Balcão de credenciais',
+        lista.push({lugar:true, id:'credenciais', titulo:'Balcão de credenciais',
           sub: abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.`
              : meus ? 'Renovar carimbo e conferir o que o seu crachá dá.'
                     : 'Formulário, carimbo e fila. É assim que se vira alguma coisa em Kanto.'});
       }
     }
-    if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({id:'loja', titulo:'Loja',
+    if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
-    if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
+    if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
+      lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
+        sub:'E você tem dinheiro.'});
+    if (tem('ginasio_'+id)) lista.push({lugar:true, id:'ginasio', titulo:'Ginásio',
       sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
     /* (a troca de cidade é montada aqui; a de rota, no bloco de rota) */
     if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
@@ -4251,9 +4256,9 @@ function afazeresDoLocal(){
   }
 
   if (id === 'planalto'){
-    lista.push({id:'liga', titulo:'A ala dos quatro',
+    lista.push({lugar:true, id:'liga', titulo:'A ala dos quatro',
       sub:'Um corredor com quatro portas seguidas. Ninguém explica o que tem atrás delas.'});
-    lista.push({id:'torneio', titulo:'Arena aberta',
+    lista.push({lugar:true, id:'torneio', titulo:'Arena aberta',
       sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.'});
   }
 
@@ -5308,6 +5313,7 @@ const Estado = {
       cargos: [],             // postos assumidos — cada um muda alguma coisa
       cenasAplicadas: {},     // cena cujo efeito já aconteceu — não repete
       escolhasFeitas: {},     // opção já escolhida — some se não tiver mais nada
+      olhadas: {},            // cena em que você já parou pra olhar
       descobertas: {},
       pokedex: {vistos:{}, catalogados:{}, brilhantes:{}},
       pokenav: {tem:false, contatos:{}, ligacoes:[]},   // a agenda e o histórico de ligações
@@ -7031,6 +7037,16 @@ const Historia = {
     return !!v[Estado.dados.capitulo + ':' + idCena];
   },
 
+  /* Já parou pra olhar essa cena? */
+  jaOlhou(idCena){
+    const o = Estado.dados.olhadas || {};
+    return !!o[Estado.dados.capitulo + ':' + idCena];
+  },
+  marcarOlhada(idCena){
+    const o = Estado.dados.olhadas || (Estado.dados.olhadas = {});
+    o[Estado.dados.capitulo + ':' + idCena] = true;
+  },
+
   /* Essa opção já foi escolhida daqui? */
   jaEscolheu(idCena, i){
     const f = Estado.dados.escolhasFeitas || {};
@@ -8098,7 +8114,7 @@ const CONTATOS = [
 },
 {
   id:'dorival', tipo:'figura', nome:'Goro', papel:'dirige a perua do laboratório', cidade:'estrada',
-  requer:d=>!!d.flags.numero_do_dorival,
+  requer:d=>!!d.flags.numero_do_goro,
   oferece:['favor','prova'],
   favor:{
     rotulo:'Perguntar onde ele está este mês',
@@ -10679,6 +10695,91 @@ const Cidade = {
 
     UI.modal('', topo + linhas, false, 'mochila');
   },
+  /* ------------------------------------------------------------
+     DOAÇÃO — o único lugar em que dinheiro vira outra coisa.
+     Cada causa é uma ponta solta que a história já deixou: a lona
+     no telhado do museu de Pewter, o abrigo de Lavender, e a linha
+     do caderno do Goro que ninguém foi buscar.
+     ------------------------------------------------------------ */
+  causas(){
+    const d = Estado.dados;
+    const id = Mundo.id();
+    return [
+      {id:'museu', cidade:'pewter', valor:12000,
+       nome:'O telhado do museu de Pewter',
+       linha:'Lona de 2015, relatório numa gaveta, e uma pessoa passando pano sozinha há onze anos.',
+       requer:d=>!!d.flags.sabe_da_lona_do_museu || !!d.visitados.pewter,
+       rep:3, marca:'pagou_o_telhado',
+       texto:[
+         'Você entrega o dinheiro no balcão do museu e a moça atrás do balcão não entende a primeira vez que você fala.',
+         fala('Dra. Sayo', 'Doação pra quê?'),
+         fala('Dra. Sayo', 'Pro telhado.'),
+         'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
+         fala('Dra. Sayo', 'Eu escrevi vinte e duas cartas.'),
+         fala('Dra. Sayo', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Sayo', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
+         'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
+       ]},
+      {id:'abrigo', cidade:'lavender', valor:6000,
+       nome:'O abrigo de Lavender',
+       linha:'Bola lacrada de 1989 numa prateleira, e quarenta e uma na frente dela.',
+       requer:d=>!!d.visitados.lavender,
+       rep:2, marca:'pagou_o_abrigo',
+       texto:[
+         'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta.',
+         fala('Curador Ren', 'Você sabe que isso não devolve ninguém, né.'),
+         fala('Curador Ren', 'Sei.'),
+         fala('Curador Ren', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
+         'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
+       ]},
+      {id:'bolsa', cidade:'*', valor:8000,
+       nome:'Uma linha do caderno',
+       linha:'Pagar o pedido de quem não pôde pagar. Você não escolhe quem, e nunca fica sabendo.',
+       requer:d=>!!d.flags.sabe_do_nr || !!d.flags.numero_do_goro,
+       rep:3, marca:'pagou_uma_bola',
+       texto:[
+         'Você liga pro laboratório e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
+         fala('Goro', 'Você quer pagar o pedido de quem?'),
+         fala('Goro', 'De quem não puder pagar. Qualquer um.'),
+         'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
+         fala('Goro', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
+         fala('Goro', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
+         fala('Goro', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
+       ]}
+    ].filter(c => (c.cidade === '*' || c.cidade === id) && !Estado.dados.flags[c.marca]
+                  && (!c.requer || c.requer(d)));
+  },
+
+  doar(){
+    const causas = this.causas();
+    if (!causas.length)
+      return UI.modal('Doação', '<p class="nada">Nada aqui precisa do seu dinheiro hoje.</p>', false, 'credencial');
+    const linhas = causas.map(c => {
+      const caro = Estado.j.dinheiro < c.valor;
+      return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
+        <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
+          <span class="cargo-peso mono">${c.valor} ₽</span></div>
+        <div class="cargo-resumo">${UI.esc(c.linha)}</div>
+        ${caro ? `<div class="cargo-motivo">Você tem ${Estado.j.dinheiro} ₽.</div>`
+               : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
+      </div>`;
+    }).join('');
+    UI.modal('Doação', linhas, false, 'credencial');
+  },
+
+  doarPara(idCausa){
+    const c = this.causas().find(x => x.id === idCausa);
+    if (!c || Estado.j.dinheiro < c.valor) return;
+    Estado.j.dinheiro -= c.valor;
+    Estado.marcar(c.marca);
+    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso uma coisa que não era dele', {notorio:true});
+    Estado.registrar(`Pagou ${c.valor} ₽ por: ${c.nome}.`);
+    Estado.salvar('auto');
+    const avisos = [{tipo:'item', texto:`−${c.valor} ₽.`}];
+    if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    UI.telaDoacao(c, avisos);
+  },
+
   comprar(nome, preco){
     if (Estado.j.dinheiro < preco) return;
     Estado.j.dinheiro -= preco;
@@ -11758,12 +11859,21 @@ const EVENTOS_GERAIS = [
   /* Uma vez por mês a perua do laboratório passa. Não é evento de
      uma vez só: ele volta, porque a volta dele é mensal mesmo. */
   id:'ger_a_perua', peso:3,
-  cond:d=>(((d.relogio && d.relogio.dia) || 1) % 30) <= 3,
+  /* A volta dele é fixa e ele não atrasa: cada cidade tem o seu dia
+     do mês, e a perua só está aqui se hoje for o dia daqui. */
+  cond:d=>{
+    const DIA_DA_CIDADE = {pallet:1, viridian:2, pewter:4, cerulean:6, vermilion:8,
+                           lavender:10, celadon:12, saffron:14, fuchsia:15, cinnabar:16};
+    const quando = DIA_DA_CIDADE[Mundo.id()];
+    if (!quando) return false;
+    const hoje = (((d.relogio && d.relogio.dia) || 1) - 1) % 30 + 1;
+    return Math.abs(hoje - quando) <= 1;
+  },
   titulo:'A perua na praça',
   texto:[
     'Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.',
     'Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
-    d=>!!d.flags.numero_do_dorival
+    d=>!!d.flags.numero_do_goro
       ? 'Goro está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
       : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.',
     'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
@@ -11797,8 +11907,8 @@ const EVENTOS_GERAIS = [
        fala('Goro', 'O outro não. O outro só não veio.', 'baixo')
      ]},
     {texto:'Anotar o número dele antes de seguir.',
-     cond:d=>!d.flags.numero_do_dorival,
-     ef:{flag:'numero_do_dorival',
+     cond:d=>!d.flags.numero_do_goro,
+     ef:{flag:'numero_do_goro',
          npc:{nome:'Goro', opiniao:1, memoria:'Te deu o número na praça, do jeito que dá pra todo mundo.'},
          registrar:'Anotou o número de Goro, da perua do laboratório.'},
      resultado:[
@@ -11936,6 +12046,100 @@ const EVENTOS_ROTA = {
 
 campo:[
 {
+  id:'rot_cerca_caida', peso:2,
+  titulo:'A cerca caída',
+  texto:[
+    'Uns quinze metros de cerca estão no chão, derrubados por peso e não por vento: os mourões saíram inteiros, com terra na ponta.',
+    'Do outro lado tem pasto, e no pasto tem seis Miltank que claramente já entenderam a oportunidade e estão indo devagar na direção da estrada.',
+    'Não tem casa à vista. Tem uma caixa de correio a uns duzentos metros, torta, com um nome apagado.'
+  ],
+  escolhas:[
+    {texto:'Levantar os mourões e escorar com pedra, do jeito que der.',
+     teste:{status:'forca', dificuldade:6, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{hp:-2, rep:{eixo:'bom',delta:2,motivo:'Levantou a cerca de um estranho sem esperar ninguém'},
+              flag:'levantou_a_cerca', registrar:'Levantou sozinho quinze metros de cerca caída numa estrada.'},
+          resultado:[
+            'Leva quase uma hora e você acaba com as duas mãos em carne viva de segurar arame.',
+            'Não fica bonito. Fica de pé, que é o que a cerca precisa ser.',
+            'As seis Miltank param de andar na direção da estrada e voltam a fazer a única coisa que Miltank faz.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Tentou levantar a cerca caída e não deu conta sozinho.'},
+           resultado:[
+             'Você levanta dois mourões e o terceiro te ensina que quinze metros de cerca é coisa de duas pessoas.',
+             'Você fica sentado no chão olhando a cerca meio de pé, que é pior do que cerca caída porque agora parece que alguém tentou.'
+           ]}},
+    {texto:'Ir até a caixa de correio e avisar quem mora ali.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Andou duzentos metros pra avisar de uma cerca que não era sua'},
+         flag:'avisou_da_cerca'},
+     resultado:[
+       'A casa fica mais longe do que parecia e quem atende tem uns setenta anos e leva um tempo pra entender o que você está falando.',
+       fala('o senhor da casa', 'Caiu de novo?'),
+       fala('o senhor da casa', 'Cai todo ano nessa época. É a terra que encharca.'),
+       'Ele agradece, pega o chapéu e vai andando pra lá com uma marreta, no ritmo de quem tem setenta anos e vinte anos de cerca caindo.',
+       fala('o senhor da casa', 'Obrigado por vir falar. A maioria passa.', 'baixo')
+     ]},
+    {texto:'Tocar o gado de volta pro pasto antes de qualquer coisa.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tocou o gado de volta antes que desse acidente na estrada'},
+              registrar:'Tocou seis Miltank de volta pro pasto sozinho.'},
+          resultado:[
+            'Você abre os braços e anda devagar em semicírculo, que é a coisa certa e você não sabe como sabe.',
+            'As seis voltam. A quinta olha pra você de um jeito que dá pra ler como ingratidão.',
+            'Você ainda vai ter que resolver a cerca, mas pelo menos não vai ter Miltank na pista.'
+          ]},
+     ruim:{ef:{hp:-3, registrar:'Tentou tocar o gado e levou um encontrão.'},
+           resultado:[
+             'A terceira decide que você é o problema e vem na sua direção com a cabeça baixa.',
+             'Você sai de perto mais rápido do que gostaria de admitir e elas continuam exatamente onde queriam estar.'
+           ]}},
+    {texto:'Não é sua cerca, não é seu gado, não é sua estrada.',
+     ef:{},
+     resultado:['Você passa.','Uns oitocentos metros adiante você ouve uma buzina longa atrás de você e não olha pra trás.']}
+  ]
+},
+{
+  id:'rot_bicicleta_quebrada', peso:2,
+  titulo:'Alguém empurrando bicicleta',
+  texto:[
+    'Tem uma pessoa de uns vinte anos empurrando uma bicicleta há tempo suficiente pra ter desistido de ficar brava.',
+    'A corrente arrebentou e está enrolada no quadro com uma sacola plástica, do jeito que a gente faz quando não quer perder a peça.',
+    fala('a moça da bicicleta', 'Quanto falta pra próxima cidade? Fala rápido, tipo arrancar band-aid.')
+  ],
+  escolhas:[
+    {texto:'Olhar a corrente. Talvez dê pra emendar.',
+     teste:{status:'intelecto', dificuldade:6, nomeStatus:'Intelecto', eixo:'cuidado'},
+     bom:{ef:{rep:{eixo:'bom',delta:1,motivo:'Emendou a corrente da bicicleta de uma desconhecida na estrada'},
+              flag:'emendou_a_corrente',
+              executar:d=>{ Estado.j.dinheiro += 800; return [{tipo:'item', texto:'+800 ₽ — ela insistiu.'}]; }},
+          resultado:[
+            'O elo torto sai com uma pedra e um pouco de teimosia, e a corrente volta dois elos mais curta.',
+            fala('a moça da bicicleta', 'Ficou curta.'),
+            fala('a moça da bicicleta', 'Curta anda. Quebrada não anda.'),
+            'Ela te enfia dinheiro na mão, sobe na bicicleta e some numa velocidade que não combina com corrente emendada.'
+          ]},
+     ruim:{ef:{registrar:'Tentou consertar a corrente de uma bicicleta e não deu.'},
+           resultado:[
+             'Você mexe dez minutos e chega à conclusão técnica de que a corrente está quebrada.',
+             fala('a moça da bicicleta', 'É, eu também tinha chegado nessa.', 'riso')
+           ]}},
+    {texto:'Empurrar junto até a próxima cidade.',
+     ef:{hp:-2, moral:3, rep:{eixo:'bom',delta:2,motivo:'Empurrou bicicleta alheia por quilômetros sem ganhar nada'},
+         flag:'empurrou_a_bicicleta'},
+     resultado:[
+       'Dá quase duas horas, e nas duas horas ela conta a vida inteira dela, incluindo partes que ninguém conta pra estranho.',
+       fala('a moça da bicicleta', 'Eu falo demais quando tô com vergonha de aceitar ajuda.'),
+       fala('a moça da bicicleta', 'Você reparou e não falou nada. Isso é de boa pessoa.', 'baixo'),
+       'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela, e vai lembrar disso.'
+     ]},
+    {texto:'"Falta bastante." E seguir.',
+     ef:{},
+     resultado:[
+       fala('a moça da bicicleta', 'Band-aid arrancado. Valeu.', 'riso'),
+       'Ela volta a empurrar. Você segue no seu ritmo, que é mais rápido que o dela, e a distância entre vocês aumenta devagar por uns dez minutos.'
+     ]}
+  ]
+},
+{
   id:'rot_ninho_no_chao', peso:3,
   titulo:'Um ninho no chão da trilha',
   texto:[
@@ -12052,6 +12256,79 @@ campo:[
 
 floresta:[
 {
+  id:'rot_fita_nas_arvores', peso:2,
+  titulo:'Fita amarrada nas árvores',
+  texto:[
+    'Tem fita plástica amarrada em tronco, na altura do peito, de dez em dez metros, entrando mato adentro.',
+    'A fita é nova. O laço é bem feito, com duas voltas, do jeito de quem amarra muita coisa.',
+    'Ela vai pra um lado que a trilha não vai.'
+  ],
+  escolhas:[
+    {texto:'Seguir a fita.',
+     teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'discricao'},
+     bom:{ef:{flag:'seguiu_a_fita', rep:{eixo:'bom',delta:1,motivo:'Foi ver o que a fita marcava em vez de passar batido'},
+              registrar:'A fita da floresta marcava uma armadilha de contenção, vazia e mal instalada.'},
+          resultado:[
+            'Duzentos metros depois a fita termina numa clareira pequena com uma gaiola de contenção montada no chão.',
+            'A gaiola está vazia, armada, e com a isca podre — o que quer dizer que está armada há muito tempo e ninguém veio conferir.',
+            'Tem uma etiqueta de identificação no canto, plastificada, com um número de licença e nenhum nome.',
+            'Você desarma. Leva menos de um minuto e é a coisa mais certa que você faz hoje.'
+          ]},
+     ruim:{ef:{hp:-2, registrar:'Se perdeu seguindo uma fita na floresta.'},
+           resultado:[
+             'Você perde a fita na sexta árvore, acha de novo, perde na nona e não acha mais.',
+             'Leva quarenta minutos pra voltar pra trilha e você volta arranhado e sem nada.'
+           ]}},
+    {texto:'Cortar a fita toda e levar.',
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Arrancou a marcação de alguém sem saber pra que servia'},
+         flag:'cortou_a_fita', registrar:'Arrancou a fita de marcação da floresta.'},
+     resultado:[
+       'Você tira todas as que alcança e enrola num novelo que cabe no bolso.',
+       'Pode ser que você tenha estragado o trabalho de um pesquisador. Pode ser que você tenha estragado o trabalho de um caçador.',
+       'A floresta não vai te contar qual dos dois.'
+     ]},
+    {texto:'Anotar onde fica e seguir a trilha.',
+     ef:{flag:'anotou_a_fita', registrar:'Anotou onde começa a fita de marcação da floresta.'},
+     resultado:['Você marca no mapa com o dedo sujo e continua andando.','É pouco. Mas é mais do que nada, e um dia alguém pergunta.']}
+  ]
+},
+{
+  id:'rot_arvore_no_caminho', peso:2,
+  titulo:'A árvore atravessada',
+  texto:[
+    'Uma árvore caiu de través na trilha e não caiu hoje: já tem cogumelo no tronco e já tem trilha nova contornando por baixo.',
+    'Só que a trilha nova passa rente a um barranco e dá pra ver, pela terra solta, que já escorregou gente ali.',
+    'Do outro lado tem duas crianças de mochila parando pra decidir por onde passar.'
+  ],
+  escolhas:[
+    {texto:'Passar primeiro e mostrar onde pisar.',
+     ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Passou na frente no trecho ruim pra mostrar onde pisar'},
+         flag:'guiou_as_criancas'},
+     resultado:[
+       'Você passa devagar, marcando pé por pé, e fala em voz alta onde a terra está firme.',
+       'As duas passam atrás de você imitando exatamente, o que é ao mesmo tempo bonito e assustador.',
+       fala('a menina da mochila', 'Você é guia?'),
+       fala('a menina da mochila', 'Não, ele só é grande.', null, 'A outra responde antes de você.')
+     ]},
+    {texto:'Abrir passagem por cima do tronco, com machado de mão e paciência.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
+     bom:{ef:{hp:-3, rep:{eixo:'bom',delta:2,motivo:'Abriu passagem numa trilha pra quem vier depois'},
+              flag:'abriu_a_trilha', registrar:'Abriu um degrau no tronco caído da floresta.'},
+          resultado:[
+            'Você não derruba a árvore — ninguém derruba árvore com machado de mão. Você cava um degrau.',
+            'Leva uma hora e meia e sai um degrau feio, torto e completamente funcional.',
+            'A trilha do barranco vai deixar de ser usada em uma semana e ninguém nunca vai saber por quê.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Tentou abrir o tronco caído e só se machucou.'},
+           resultado:['A madeira está mais dura do que parecia e o cabo escapa duas vezes.','Na segunda, o cabo acerta o seu joelho e você desiste com a dignidade que sobrou.']}},
+    {texto:'Contornar pelo barranco e seguir.',
+     teste:{status:'forca', dificuldade:5, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{}, resultado:['Você passa rente, com a mão na raiz, e não escorrega.','Atrás de você as duas crianças passam também, agarradas no mesmo lugar em que você agarrou.']},
+     ruim:{ef:{hp:-5, registrar:'Escorregou no barranco da trilha da floresta.'},
+           resultado:['Você escorrega os últimos dois metros de bunda no barro.','Ninguém se machuca de verdade. A sua calça, sim.']}}
+  ]
+},
+{
   id:'rot_a_coisa_no_mato', peso:3,
   titulo:'Alguma coisa grande no mato fechado',
   texto:[
@@ -12124,6 +12401,95 @@ floresta:[
 
 montanha:[
 {
+  id:'rot_pedra_solta', peso:2,
+  titulo:'A pedra que vai cair',
+  texto:[
+    'Tem uma pedra do tamanho de uma geladeira meio fora do barranco, em cima do trecho mais estreito da trilha.',
+    'Ela não vai cair hoje. Mas a terra embaixo dela está seca e rachada, e ela vai cair.',
+    'Passam umas trinta pessoas por dia aqui, segundo o número que alguém pintou num poste de sinalização em mil novecentos e oitenta e alguma coisa.'
+  ],
+  escolhas:[
+    {texto:'Derrubar agora, com o trecho vazio.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{rep:{eixo:'bom',delta:2,motivo:'Derrubou uma pedra solta antes que ela caísse em cima de alguém'},
+              flag:'derrubou_a_pedra', registrar:'Derrubou de propósito a pedra solta do barranco, com a trilha vazia.'},
+          resultado:[
+            'Você grita duas vezes trilha abaixo e espera dois minutos antes de encostar nela.',
+            'Sai com um empurrão de ombro e uma alavanca de galho, e o barulho dura mais do que você imaginava.',
+            'Sobra um monte de pedra na trilha que dá pra contornar andando. Era isso, ou ela na cabeça de alguém em março.'
+          ]},
+     ruim:{ef:{hp:-5, registrar:'Tentou derrubar a pedra solta e ela derrubou você primeiro.'},
+           resultado:[
+             'Ela se mexe uns dez centímetros e trava, e os dez centímetros levam junto o chão em que você estava apoiado.',
+             'Você segura num galho que resolve segurar você de volta, o que é sorte e não competência.'
+           ]}},
+    {texto:'Avisar no próximo lugar que tiver gente.',
+     ef:{flag:'avisou_da_pedra', rep:{eixo:'bom',delta:1,motivo:'Carregou por horas o aviso de uma pedra solta'},
+         registrar:'Avisou da pedra solta do barranco no primeiro lugar com gente.'},
+     resultado:[
+       'Você anda mais três horas com isso na cabeça e conta pra primeira pessoa de uniforme que você vê.',
+       fala('o guarda da guarita', 'Qual trecho?'),
+       'Você explica com as mãos porque não sabe o nome do trecho, e ele entende assim mesmo e anota num caderno.',
+       fala('o guarda da guarita', 'Terceira vez esse ano que me falam dessa. Um dia eu vou lá.', 'baixo')
+     ]},
+    {texto:'Passar rápido embaixo e não pensar mais nisso.',
+     ef:{registrar:'Passou por baixo da pedra solta e seguiu.'},
+     resultado:['Você passa em quatro passos largos e não olha pra cima.','Você vai lembrar dessa pedra em algum momento aleatório daqui a uns dois meses, e vai ser desconfortável.']}
+  ]
+},
+{
+  id:'rot_neblina_alta', peso:2,
+  titulo:'A neblina que fecha',
+  texto:[
+    'A neblina sobe o vale em vinte minutos e fecha tudo num branco que come som também: você fala e a sua voz volta errada.',
+    'A trilha continua ali, dois metros de cada vez.',
+    'Ainda faltam umas três horas de caminho e falta uma hora e meia pra escurecer.'
+  ],
+  escolhas:[
+    {texto:'Parar onde está e esperar abrir.',
+     teste:{status:'resistencia', dificuldade:5, nomeStatus:'Resistência', eixo:'paciencia'},
+     bom:{ef:{hp:-1, moral:3, flag:'esperou_a_neblina',
+              rep:{eixo:'bom',delta:1,motivo:'Parou na neblina em vez de insistir'}},
+          resultado:[
+            'Você senta encostado numa pedra, com o time todo fora da bola, e espera.',
+            'Abre em cinquenta minutos, de uma vez, como cortina.',
+            'Você perde a luz e ganha a noite mais estrelada que já viu, e dorme ali mesmo sem ter planejado.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Esperou a neblina passar e pegou frio.'},
+           resultado:['Não abre. Você fica duas horas sentado no frio e escurece do mesmo jeito.','Você desce no escuro, devagar, com lanterna, e chega tremendo.']}},
+    {texto:'Seguir devagar, contando passo e marcando pedra.',
+     teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'cuidado'},
+     bom:{ef:{flag:'atravessou_a_neblina', rep:{eixo:'bom',delta:1,motivo:'Atravessou a neblina contando passo, sem improviso'},
+              registrar:'Atravessou a neblina alta contando passo e marcando pedra.'},
+          resultado:[
+            'Você conta cento e vinte passos entre marca e marca e empilha três pedras em cada uma.',
+            'Leva o triplo do tempo e funciona exatamente como devia funcionar.',
+            'Quando abre, você está trezentos metros adiante e no lugar certo, o que é mais raro do que parece.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Se perdeu na neblina e voltou ao ponto de partida.'},
+           resultado:[
+             'Você anda quarenta minutos e reconhece a própria pilha de pedra.',
+             'Você andou em círculo, o que todo mundo diz que acontece e ninguém acredita até acontecer.'
+           ]}},
+    {texto:'Soltar o time e deixar que eles achem o caminho.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{moral:5, flag:'o_time_achou_o_caminho',
+              registrar:'Na neblina, foi o time que achou o caminho.'},
+          resultado:[
+            d=>{
+              const m = melhorNoEixo('simpatia');
+              return m.pokemon
+                ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ele está olhando pra trás o tempo todo.`
+                : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
+            },
+            'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
+            'É a primeira vez na jornada que a hierarquia fica invertida por uma hora inteira, e nenhum dos dois lados comenta.'
+          ]},
+     ruim:{ef:{hp:-3, moral:-2, registrar:'Soltou o time na neblina e ficou pior.'},
+           resultado:['Eles se espalham. Você passa quinze minutos chamando e recolhendo.','Ninguém se perde de verdade, mas todo mundo fica pior do que estava.']}}
+  ]
+},
+{
   id:'rot_a_pedra_solta', peso:3,
   titulo:'A pedra que não devia estar ali',
   texto:[
@@ -12183,6 +12549,82 @@ montanha:[
 
 caverna:[
 {
+  id:'rot_marca_de_giz', peso:2,
+  titulo:'Marcas de giz na pedra',
+  texto:[
+    'Tem setas de giz na parede, na altura do joelho, apontando pra frente.',
+    'Estão apagadas pela umidade, mas dá pra ver que já foram refeitas por cima várias vezes, em gizes de cores diferentes.',
+    'Na terceira seta tem uma coisa escrita do lado, pequena, e você precisa agachar pra ler.'
+  ],
+  escolhas:[
+    {texto:'Agachar e ler.',
+     ef:{flag:'leu_o_giz', registrar:'Leu o que estava escrito de giz na parede do túnel.'},
+     resultado:[
+       'Diz: "SE VOCÊ TÁ LENDO ISSO VOCÊ TÁ NO CAMINHO CERTO. CONTINUA. — M."',
+       'A letra é de adulto tentando escrever grande.',
+       'Três setas adiante tem outra, em giz mais novo, outra letra: "OBRIGADO M".',
+       'E mais adiante uma terceira, mais nova ainda: "OBRIGADO M" de novo, outra letra.',
+       'Você conta onze delas até a saída.'
+     ]},
+    {texto:'Refazer as setas apagadas com o que tiver na mochila.',
+     ef:{rep:{eixo:'bom',delta:2,motivo:'Refez a marcação de giz de um túnel pra quem vier depois'},
+         flag:'refez_as_setas', moral:2,
+         registrar:'Refez com pedra branca as setas de giz apagadas do túnel.'},
+     resultado:[
+       'Você não tem giz. Você tem uma pedra clara que risca, e ela serve.',
+       'Você passa por cima de todas as que estão sumindo, e acrescenta duas onde tem bifurcação e não tinha seta.',
+       'Na última você escreve, porque não resiste: "OBRIGADO M".',
+       'A sua letra fica horrível e você deixa do jeito que ficou.'
+     ]},
+    {texto:'Ignorar e ir pelo que você acha que é o caminho.',
+     teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'cuidado'},
+     bom:{ef:{}, resultado:['Você acerta.','Você sai do outro lado e a última seta de giz está apontando exatamente pra onde você saiu, o que é humilhante de um jeito engraçado.']},
+     ruim:{ef:{hp:-3, registrar:'Ignorou as setas de giz e andou uma hora a mais no túnel.'},
+           resultado:['Você anda uma hora, chega num paredão, volta.','Na volta você segue as setas em silêncio e não fala disso com ninguém.']}}
+  ]
+},
+{
+  id:'rot_goteira_na_caverna', peso:2,
+  titulo:'O barulho de água',
+  texto:[
+    'Tem um pingo constante em algum lugar à direita, e ele é o único som do túnel há uns dez minutos.',
+    'Pingo em caverna quer dizer água, e água em caverna quer dizer que o chão pode não ser chão.',
+    'A lanterna alcança uns seis metros e o resto é decisão.'
+  ],
+  escolhas:[
+    {texto:'Ir ver de onde vem a água.',
+     teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'discricao'},
+     bom:{ef:{flag:'achou_a_poca', itens:{'Água Fresca':1},
+              registrar:'Achou uma poça de água limpa no túnel, filtrada pela pedra.'},
+          resultado:[
+            'Vinte metros pra dentro tem uma poça rasa de água limpíssima, filtrada por pedra, com areia branca no fundo.',
+            'Tem três Zubat pendurados no teto em cima dela, que é o motivo de ninguém usar essa poça.',
+            'Você enche o cantil em silêncio e sai andando de costas, o que é ridículo e é o certo.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Foi ver de onde vinha a água e pisou onde não devia.'},
+           resultado:[
+             'Você pisa num trecho que parecia pedra e é lama por cima de pedra, e o pé afunda até a canela.',
+             'Não tem buraco embaixo. Só tem frio, lama e uma bota que vai demorar dois dias pra secar.'
+           ]}},
+    {texto:'Marcar onde é e continuar.',
+     ef:{flag:'marcou_a_agua', registrar:'Marcou onde fica a água dentro do túnel.'},
+     resultado:['Você risca uma seta na parede com pedra e segue.','Se você precisar de água na volta, você sabe onde tem. É pouco, e um dia é tudo.']},
+    {texto:'Apagar a lanterna um minuto e só escutar.',
+     ef:{moral:3, flag:'escutou_no_escuro',
+         presagio:'Você vai repetir isso outras vezes nessa jornada, sempre sozinho, e nunca vai contar pra ninguém que faz isso.'},
+     resultado:[
+       'Escuro de caverna não é escuro de quarto. É um escuro que tem peso.',
+       'No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.',
+       d=>{
+         const p = (Estado.dados.time || []).find(x => !x.morto);
+         return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. Ele não gosta disso e ficou mesmo assim.`
+                  : 'Você fica sozinho no escuro por um minuto inteiro e aguenta.';
+       },
+       'Você acende de novo e os seis metros de sempre voltam a ser o mundo inteiro.'
+     ]}
+  ]
+},
+{
   id:'rot_a_luz_no_fundo', peso:3,
   titulo:'Luz no fundo da galeria',
   texto:[
@@ -12232,6 +12674,85 @@ caverna:[
 ],
 
 agua:[
+{
+  id:'rot_rede_abandonada', peso:2,
+  titulo:'Rede presa na pedra',
+  texto:[
+    'Tem uma rede de náilon presa entre duas pedras, meio submersa, balançando com a corrente.',
+    'Não é rede de pescador em uso: está rasgada de um lado e coberta de limo do outro, o que quer dizer meses.',
+    'Tem coisa viva enroscada nela. Duas, na verdade.'
+  ],
+  escolhas:[
+    {texto:'Entrar na água e soltar os dois.',
+     teste:{status:'forca', dificuldade:6, nomeStatus:'Força', eixo:'cuidado'},
+     bom:{ef:{hp:-2, moral:4, rep:{eixo:'bom',delta:2,motivo:'Entrou na água pra soltar dois bichos de uma rede abandonada'},
+              flag:'soltou_da_rede', registrar:'Soltou dois Pokémon de uma rede de náilon abandonada.'},
+          resultado:[
+            'A água bate no peito e é mais fria do que a superfície prometia.',
+            'O primeiro sai fácil. O segundo está enroscado no náilon de um jeito que só sai cortando, e você corta com a faca de acampamento com a mão tremendo de frio.',
+            'Os dois somem sem olhar pra trás, que é como tem que ser.',
+            'Você puxa a rede inteira pra fora e deixa amontoada na pedra, pesando uns quinze quilos de água.'
+          ]},
+     ruim:{ef:{hp:-5, registrar:'Entrou na água pra soltar bicho da rede e se enroscou também.'},
+           resultado:[
+             'Você enrosca o próprio pé no náilon, e por uns três segundos muito longos você entende exatamente o que os dois estão sentindo.',
+             'Você se solta. Um dos dois você consegue tirar. O outro não.'
+           ]}},
+    {texto:'Puxar a rede pra fora sem entrar na água.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
+     bom:{ef:{rep:{eixo:'bom',delta:1,motivo:'Tirou uma rede abandonada da água'}, flag:'tirou_a_rede'},
+          resultado:['Você engancha com um galho e puxa aos poucos, e os dois se soltam sozinhos no meio do caminho.','A rede sai. Fica ali na pedra, feia, e é melhor feia na pedra que invisível na água.']},
+     ruim:{ef:{hp:-2, registrar:'Tentou puxar a rede de fora e ela rasgou.'},
+           resultado:['A rede rasga no meio e metade dela volta pra água, agora em dois pedaços em vez de um.','Você piorou. É possível piorar.']}},
+    {texto:'Seguir. A água é funda e você não sabe nadar direito.',
+     ef:{},
+     resultado:['Você segue.','É uma decisão razoável e você vai pensar nela de novo hoje à noite, o que é o preço das decisões razoáveis.']}
+  ]
+},
+{
+  id:'rot_balsa_atrasada', peso:2,
+  titulo:'A balsa que não vem',
+  texto:[
+    'O píer tem nove pessoas esperando e uma placa escrita à mão dizendo que a balsa das duas vai atrasar.',
+    'A placa está lá desde as duas. São quatro e vinte.',
+    'Tem um homem de colete que trabalha aqui e que aprendeu a não fazer contato visual com ninguém.'
+  ],
+  escolhas:[
+    {texto:'Esperar junto e puxar conversa com quem espera.',
+     ef:{moral:2, hp:1, rep:{eixo:'bom',delta:1,motivo:'Passou a espera do píer conversando com quem esperava'},
+         flag:'conversou_no_pier'},
+     resultado:[
+       'Em quarenta minutos você aprende: que a balsa atrasa sempre na virada do mês, que o motor é de mil novecentos e oitenta e nove, e que tem um jeito de atravessar a pé que ninguém recomenda e todo mundo já fez.',
+       fala('o pescador da fila', 'Você tá com pressa?'),
+       fala('o pescador da fila', 'Se tiver com pressa, atravessa. Se não tiver, senta. Eu sento faz vinte anos.'),
+       'Você senta.'
+     ]},
+    {texto:'Perguntar ao homem de colete o que está acontecendo de verdade.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{flag:'sabe_da_balsa', rep:{eixo:'bom',delta:1,motivo:'Perguntou com jeito a quem passa o dia levando bronca'},
+              registrar:'A balsa atrasa porque o motor esquenta e tem que parar de hora em hora. Faz três anos.'},
+          resultado:[
+            'Ele demora a responder e responde olhando pro lado.',
+            fala('o homem de colete', 'Ela vem. Ela sempre vem.'),
+            fala('o homem de colete', 'O motor esquenta e tem que parar de hora em hora. Faz três anos assim.'),
+            fala('o homem de colete', 'Eu escrevo essa placa todo dia e todo dia alguém me xinga por causa dela.', 'baixo'),
+            fala('o homem de colete', 'Você é o primeiro em umas duas semanas que pergunta em vez de reclamar.')
+          ]},
+     ruim:{ef:{registrar:'Perguntou da balsa e levou a resposta padrão.'},
+           resultado:[fala('o homem de colete', 'Tá na placa.'), 'E acabou.']}},
+    {texto:'Ir procurar o jeito de atravessar a pé.',
+     teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'coragem'},
+     bom:{ef:{flag:'atravessou_a_pe', rep:{eixo:'bom',delta:1,motivo:'Achou sozinho o caminho que a cidade toda finge não usar'},
+              registrar:'Atravessou a pé pela pedra, a trezentos metros do píer.'},
+          resultado:[
+            'Trezentos metros rio acima tem uma sequência de pedra chata que dá pra atravessar com água na canela.',
+            'Tem marca de pé no limo. Muita marca de pé no limo.',
+            'Você atravessa em seis minutos e vê, do outro lado, as nove pessoas ainda sentadas no píer.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Tentou atravessar a pé e voltou encharcado.'},
+           resultado:['A quarta pedra é mais funda do que as três primeiras.','Você volta encharcado da cintura pra baixo e senta no píer, e ninguém comenta, o que é pior.']}}
+  ]
+},
 {
   id:'rot_a_boia_com_nome', peso:3,
   titulo:'Uma boia com nome escrito',
@@ -62229,14 +62750,19 @@ c1e_por_que_fala:{
 c1e_despedida_dorival:{
   texto:[
     'Ele guarda o caderno numa sacola de pano, dobra o banquinho, fecha o portamalas e bate duas vezes na lataria, que deve ser mania.',
-    d=>fala('Goro', `Eu volto dia ${Dados.entre(2,26)} do mês que vem. Se você ainda estiver na cidade, aparece. Se não estiver, melhor ainda.`, 'riso'),
+    d=>{
+      const DIA = {Pallet:1, Viridian:2, Pewter:4, Cerulean:6, Vermilion:8,
+                   Lavender:10, Celadon:12, Saffron:14, Fuchsia:15, Cinnabar:16};
+      const q = DIA[d.jogador.cidade] || 4;
+      return fala('Goro', `Eu volto dia ${q} do mês que vem. Aqui é sempre dia ${q}. Se você ainda estiver na cidade, aparece. Se não estiver, melhor ainda.`, 'riso');
+    },
     'Ele abre a porta do motorista e para antes de entrar.',
     d=>fala('Goro', `Ah. Anota o meu número, vai. Todo mundo que eu entrego tem.`),
     'Ele dita um número de sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
     d=>fala('Goro', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
   ],
   ef:{executar:d => {
-        Estado.marcar('numero_do_dorival');
+        Estado.marcar('numero_do_goro');
         Estado.lembrarNPC('Goro', {opiniao:2, memoria:'Te deu o número dele no dia da entrega.'});
         return [{tipo:'info', texto:'Número de Goro anotado. Falta um PokéNav pra guardar.'}];
       }},
@@ -62771,14 +63297,29 @@ const UI = {
      casos o balão fica sem nome: melhor sem nome do que com o errado. */
   _ALGUEM_NOVO: /\b(um|uma)\s+(rapaz|mo[çc]o|mo[çc]a|senhor|senhora|garoto|garota|menino|menina|homem|mulher|cara|sujeito|velho|velha|guarda|policial|atendente|funcion[áa]ri[oa]|vendedor|vendedora|enfermeir[oa]|m[ée]dic[oa]|motorista|pescador|treinador|treinadora|crian[çc]a|adolescente|estudante|senhorinha|sujeita)\b/i,
 
+  /* A cena apresenta alguém ("sai um rapaz de uns dezoito anos")? Então
+     é ELE quem fala, e o nome dele é a descrição que a própria cena deu. */
+  quemAcabouDeEntrar(linhas){
+    const ARTIGO = {um:'o', uma:'a', Um:'o', Uma:'a'};
+    for (const linha of (linhas || [])){
+      if (typeof linha === 'function') continue;
+      const t = (linha && linha.diz != null) ? '' : String(linha || '');
+      const m = this._ALGUEM_NOVO.exec(t);
+      this._ALGUEM_NOVO.lastIndex = 0;
+      if (m) return (ARTIGO[m[1]] || 'o') + ' ' + m[2].toLowerCase();
+    }
+    return null;
+  },
+
   nomeConfiavel(npc, linhas, proprio){
+    if (proprio && npc) return npc;
+    const novo = this.quemAcabouDeEntrar(linhas);
+    if (novo) return novo;                                  // quem entrou agora é quem fala
     if (!npc) return null;
-    if (proprio) return npc;
     const curto = npc.split(' ').filter(x => x.length > 3).pop() || npc;
     for (const linha of (linhas || [])){
       if (typeof linha === 'function') continue;
       const t = (linha && linha.diz != null) ? String(linha.diz) : String(linha || '');
-      if (this._ALGUEM_NOVO.test(t)) return null;          // entrou gente nova
       const q = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g; let m;
       while ((m = q.exec(t))) if (m[1].indexOf(curto) !== -1) return null;  // falam DELE
     }
@@ -62789,7 +63330,8 @@ const UI = {
 
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
-    const npc = this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
+    /* `falante` na cena manda em tudo: é o autor dizendo quem fala. */
+    const npc = this.falanteDaCena || this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
     const suas = minhas || this.minhasFalasDaCena || null;
     const meuNome = (Estado.dados && Estado.j) ? Estado.j.nome : null;
     /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
@@ -62865,6 +63407,7 @@ const UI = {
     const mapa = this.donosDoCapitulo(cap);
     this.npcDaCena = mapa.dono[Estado.dados.cena] || null;
     this.npcEhProprio = !!mapa.proprio[Estado.dados.cena];
+    this.falanteDaCena = cena.falante || null;
     this.minhasFalasDaCena = (mapa.minhas[Estado.dados.cena]) || null;
     const paras = this.narrar(cena.texto);
 
@@ -62941,8 +63484,9 @@ const UI = {
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
     });
 
-    // cena curta ganha uma quarta via que sempre cabe: parar e olhar
-    if (visiveis.length && visiveis.length < 4){
+    /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
+       mostrou nada e virava um botão que convidava a clicar à toa. */
+    if (visiveis.length && visiveis.length < 4 && !Historia.jaOlhou(id)){
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.observarCena()">
         Parar e olhar mais um pouco antes de decidir.</button>`));
     }
@@ -64769,6 +65313,25 @@ const UI = {
     this.modal('Credenciais', corpo, false, 'credencial');
   },
 
+  telaDoacao(c, avisos){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${c.valor} ₽</div>
+        <div class="tit">${this.esc(c.nome)}</div>
+        <div class="loc">${this.esc(c.linha)}</div>
+      </div>
+      <div class="narrativa">${this.narrar(c.texto || [])}</div>
+      <div id="avisos" class="avisos"></div>
+      <div class="escolhas" style="margin-top:16px">
+        <button class="escolha" onclick="Exploracao.tela()">Seguir.</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
   telaCargo(c, avisos){
     this.limpar();
     this.add(this.topo());
@@ -64821,6 +65384,7 @@ const UI = {
       <p class="sussurro">Um RPG de mesa de Kanto jogado por texto. Você lê uma cena, escolhe o que faz, e o dado decide o que não é só sua vontade. Não existe caminho certo e não existe desfazer: o mundo guarda o que você fez e devolve depois.</p>
       ${L('Escolhas', 'permanentes — o jogo salva sozinho')}
       ${L('Opção que some', 'você já fez aquilo e não tem mais nada ali')}
+      ${L('Parar e olhar', 'uma vez por cena — a segunda olhada nunca mostra nada')}
       ${L('Escrever em vez de escolher', 'o campo embaixo das opções aceita qualquer coisa')}
       <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
       <h3>Criar o personagem</h3>
@@ -64921,12 +65485,19 @@ const UI = {
       ${L('Loja', 'dez cidades · cada uma vende o que a cidade é')}
       ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
       ${L('Situações', 'cidade e rota têm coisa acontecendo por conta própria')}
+      ${L('Doação', 'aparece quando existe uma causa que você já conheceu · rende reputação, nunca item')}
       <h3>Preço por cidade</h3>
       ${L('Celadon', '0,85× — o mais barato de Kanto, sete andares')}
       ${L('Cais de Vermilion', '0,9× — metade do estoque entra sem imposto')}
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Onde o dinheiro vira outra coisa</h3>
+      <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
+      <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
+      <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
@@ -65009,6 +65580,7 @@ const UI = {
       ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a bola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
+      <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">1d10 + status + o cinto, contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
       <p class="sussurro">O cinto conta porque cada perícia puxa um eixo — Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência. O melhor do time naquele eixo soma, o pior desconta metade, e a afinidade de quem vai na frente entra por cima. A linha embaixo do resultado mostra a soma e quem ajudou; por que aquele ajudou é com você.</p>
       <div class="linha"><span class="k">Força</span><span class="v">fugir de um selvagem que te encurralou · testes de cena</span></div>
@@ -65061,6 +65633,12 @@ const UI = {
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
 
+      <h3>Onde o dinheiro vira outra coisa</h3>
+      <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
+      <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
+      <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
@@ -65104,7 +65682,14 @@ const Exploracao = {
     const d = Estado.dados;
     const arco = Historia.arcoAqui();
 
-    const afazeres = afazeresDoLocal().map(a =>
+    /* Lugar e ação não são a mesma coisa e não merecem o mesmo botão:
+       lugar é porta que você abre, ação é tempo que você gasta. */
+    const todos = afazeresDoLocal();
+    const lugares = todos.filter(a => a.lugar).map(a =>
+      `<button class="porta" onclick="Exploracao.fazer('${a.id}')">
+        <span class="porta-nome">${UI.esc(a.titulo)}</span>
+        <span class="porta-sub">${UI.esc(a.sub)}</span></button>`).join('');
+    const afazeres = todos.filter(a => !a.lugar).map(a =>
       `<button class="escolha" onclick="Exploracao.fazer('${a.id}')">
         ${UI.esc(a.titulo)}<br><span class="pd">${UI.esc(a.sub)}</span></button>`).join('');
 
@@ -65130,6 +65715,9 @@ const Exploracao = {
           <button class="escolha" style="border-color:var(--destaque)" onclick="Exploracao.entrarNoArco()">
             ${UI.esc(arco.chamada)}<br><span class="pd">Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.</span></button>
         </div>` : ''}
+
+      ${lugares ? `<h3>Onde entrar</h3>
+        <div class="portas">${lugares}</div>` : ''}
 
       <h3>O que fazer</h3>
       <div class="escolhas">${afazeres}</div>
@@ -65215,6 +65803,7 @@ const Exploracao = {
     if (acao === 'centro')     return Cidade.centro();
     if (acao === 'pc')         return UI.modalPC();
     if (acao === 'credenciais') return UI.modalCredenciais();
+    if (acao === 'doar')       return Cidade.doar();
     if (acao === 'loja')       return Cidade.loja();
     if (acao === 'ginasio')    return Cidade.ginasio();
     if (acao === 'liga'){ Jogo.voltarDeGinasio = 'exploracao'; return Jogo.abrirLiga('exploracao'); }
@@ -65551,6 +66140,7 @@ const Jogo = {
   },
 
   observarCena(){
+    Historia.marcarOlhada(Estado.dados.cena);
     const t = Dados.testeComTime(Estado.j.status.percepcao, 5, 'Percepção', 'cuidado');
     const cap = Historia.capAtual;
     const bons = [

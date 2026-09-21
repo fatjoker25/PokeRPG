@@ -600,6 +600,91 @@ const Cidade = {
 
     UI.modal('', topo + linhas, false, 'mochila');
   },
+  /* ------------------------------------------------------------
+     DOAÇÃO — o único lugar em que dinheiro vira outra coisa.
+     Cada causa é uma ponta solta que a história já deixou: a lona
+     no telhado do museu de Pewter, o abrigo de Lavender, e a linha
+     do caderno do Goro que ninguém foi buscar.
+     ------------------------------------------------------------ */
+  causas(){
+    const d = Estado.dados;
+    const id = Mundo.id();
+    return [
+      {id:'museu', cidade:'pewter', valor:12000,
+       nome:'O telhado do museu de Pewter',
+       linha:'Lona de 2015, relatório numa gaveta, e uma pessoa passando pano sozinha há onze anos.',
+       requer:d=>!!d.flags.sabe_da_lona_do_museu || !!d.visitados.pewter,
+       rep:3, marca:'pagou_o_telhado',
+       texto:[
+         'Você entrega o dinheiro no balcão do museu e a moça atrás do balcão não entende a primeira vez que você fala.',
+         fala('Dra. Sayo', 'Doação pra quê?'),
+         fala('Dra. Sayo', 'Pro telhado.'),
+         'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
+         fala('Dra. Sayo', 'Eu escrevi vinte e duas cartas.'),
+         fala('Dra. Sayo', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Sayo', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
+         'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
+       ]},
+      {id:'abrigo', cidade:'lavender', valor:6000,
+       nome:'O abrigo de Lavender',
+       linha:'Bola lacrada de 1989 numa prateleira, e quarenta e uma na frente dela.',
+       requer:d=>!!d.visitados.lavender,
+       rep:2, marca:'pagou_o_abrigo',
+       texto:[
+         'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta.',
+         fala('Curador Ren', 'Você sabe que isso não devolve ninguém, né.'),
+         fala('Curador Ren', 'Sei.'),
+         fala('Curador Ren', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
+         'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
+       ]},
+      {id:'bolsa', cidade:'*', valor:8000,
+       nome:'Uma linha do caderno',
+       linha:'Pagar o pedido de quem não pôde pagar. Você não escolhe quem, e nunca fica sabendo.',
+       requer:d=>!!d.flags.sabe_do_nr || !!d.flags.numero_do_goro,
+       rep:3, marca:'pagou_uma_bola',
+       texto:[
+         'Você liga pro laboratório e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
+         fala('Goro', 'Você quer pagar o pedido de quem?'),
+         fala('Goro', 'De quem não puder pagar. Qualquer um.'),
+         'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
+         fala('Goro', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
+         fala('Goro', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
+         fala('Goro', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
+       ]}
+    ].filter(c => (c.cidade === '*' || c.cidade === id) && !Estado.dados.flags[c.marca]
+                  && (!c.requer || c.requer(d)));
+  },
+
+  doar(){
+    const causas = this.causas();
+    if (!causas.length)
+      return UI.modal('Doação', '<p class="nada">Nada aqui precisa do seu dinheiro hoje.</p>', false, 'credencial');
+    const linhas = causas.map(c => {
+      const caro = Estado.j.dinheiro < c.valor;
+      return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
+        <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
+          <span class="cargo-peso mono">${c.valor} ₽</span></div>
+        <div class="cargo-resumo">${UI.esc(c.linha)}</div>
+        ${caro ? `<div class="cargo-motivo">Você tem ${Estado.j.dinheiro} ₽.</div>`
+               : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
+      </div>`;
+    }).join('');
+    UI.modal('Doação', linhas, false, 'credencial');
+  },
+
+  doarPara(idCausa){
+    const c = this.causas().find(x => x.id === idCausa);
+    if (!c || Estado.j.dinheiro < c.valor) return;
+    Estado.j.dinheiro -= c.valor;
+    Estado.marcar(c.marca);
+    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso uma coisa que não era dele', {notorio:true});
+    Estado.registrar(`Pagou ${c.valor} ₽ por: ${c.nome}.`);
+    Estado.salvar('auto');
+    const avisos = [{tipo:'item', texto:`−${c.valor} ₽.`}];
+    if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
+    UI.telaDoacao(c, avisos);
+  },
+
   comprar(nome, preco){
     if (Estado.j.dinheiro < preco) return;
     Estado.j.dinheiro -= preco;

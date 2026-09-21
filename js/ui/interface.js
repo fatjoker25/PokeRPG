@@ -481,14 +481,29 @@ const UI = {
      casos o balão fica sem nome: melhor sem nome do que com o errado. */
   _ALGUEM_NOVO: /\b(um|uma)\s+(rapaz|mo[çc]o|mo[çc]a|senhor|senhora|garoto|garota|menino|menina|homem|mulher|cara|sujeito|velho|velha|guarda|policial|atendente|funcion[áa]ri[oa]|vendedor|vendedora|enfermeir[oa]|m[ée]dic[oa]|motorista|pescador|treinador|treinadora|crian[çc]a|adolescente|estudante|senhorinha|sujeita)\b/i,
 
+  /* A cena apresenta alguém ("sai um rapaz de uns dezoito anos")? Então
+     é ELE quem fala, e o nome dele é a descrição que a própria cena deu. */
+  quemAcabouDeEntrar(linhas){
+    const ARTIGO = {um:'o', uma:'a', Um:'o', Uma:'a'};
+    for (const linha of (linhas || [])){
+      if (typeof linha === 'function') continue;
+      const t = (linha && linha.diz != null) ? '' : String(linha || '');
+      const m = this._ALGUEM_NOVO.exec(t);
+      this._ALGUEM_NOVO.lastIndex = 0;
+      if (m) return (ARTIGO[m[1]] || 'o') + ' ' + m[2].toLowerCase();
+    }
+    return null;
+  },
+
   nomeConfiavel(npc, linhas, proprio){
+    if (proprio && npc) return npc;
+    const novo = this.quemAcabouDeEntrar(linhas);
+    if (novo) return novo;                                  // quem entrou agora é quem fala
     if (!npc) return null;
-    if (proprio) return npc;
     const curto = npc.split(' ').filter(x => x.length > 3).pop() || npc;
     for (const linha of (linhas || [])){
       if (typeof linha === 'function') continue;
       const t = (linha && linha.diz != null) ? String(linha.diz) : String(linha || '');
-      if (this._ALGUEM_NOVO.test(t)) return null;          // entrou gente nova
       const q = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g; let m;
       while ((m = q.exec(t))) if (m[1].indexOf(curto) !== -1) return null;  // falam DELE
     }
@@ -499,7 +514,8 @@ const UI = {
 
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
-    const npc = this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
+    /* `falante` na cena manda em tudo: é o autor dizendo quem fala. */
+    const npc = this.falanteDaCena || this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
     const suas = minhas || this.minhasFalasDaCena || null;
     const meuNome = (Estado.dados && Estado.j) ? Estado.j.nome : null;
     /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
@@ -575,6 +591,7 @@ const UI = {
     const mapa = this.donosDoCapitulo(cap);
     this.npcDaCena = mapa.dono[Estado.dados.cena] || null;
     this.npcEhProprio = !!mapa.proprio[Estado.dados.cena];
+    this.falanteDaCena = cena.falante || null;
     this.minhasFalasDaCena = (mapa.minhas[Estado.dados.cena]) || null;
     const paras = this.narrar(cena.texto);
 
@@ -651,8 +668,9 @@ const UI = {
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
     });
 
-    // cena curta ganha uma quarta via que sempre cabe: parar e olhar
-    if (visiveis.length && visiveis.length < 4){
+    /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
+       mostrou nada e virava um botão que convidava a clicar à toa. */
+    if (visiveis.length && visiveis.length < 4 && !Historia.jaOlhou(id)){
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.observarCena()">
         Parar e olhar mais um pouco antes de decidir.</button>`));
     }
@@ -2479,6 +2497,25 @@ const UI = {
     this.modal('Credenciais', corpo, false, 'credencial');
   },
 
+  telaDoacao(c, avisos){
+    this.limpar();
+    this.add(this.topo());
+    this.add(`<div class="painel">
+      <div class="cap-cabecalho">
+        <div class="num">${c.valor} ₽</div>
+        <div class="tit">${this.esc(c.nome)}</div>
+        <div class="loc">${this.esc(c.linha)}</div>
+      </div>
+      <div class="narrativa">${this.narrar(c.texto || [])}</div>
+      <div id="avisos" class="avisos"></div>
+      <div class="escolhas" style="margin-top:16px">
+        <button class="escolha" onclick="Exploracao.tela()">Seguir.</button>
+      </div>
+    </div>`);
+    if (avisos && avisos.length) this.avisos(avisos);
+    this.rolarTopo();
+  },
+
   telaCargo(c, avisos){
     this.limpar();
     this.add(this.topo());
@@ -2531,6 +2568,7 @@ const UI = {
       <p class="sussurro">Um RPG de mesa de Kanto jogado por texto. Você lê uma cena, escolhe o que faz, e o dado decide o que não é só sua vontade. Não existe caminho certo e não existe desfazer: o mundo guarda o que você fez e devolve depois.</p>
       ${L('Escolhas', 'permanentes — o jogo salva sozinho')}
       ${L('Opção que some', 'você já fez aquilo e não tem mais nada ali')}
+      ${L('Parar e olhar', 'uma vez por cena — a segunda olhada nunca mostra nada')}
       ${L('Escrever em vez de escolher', 'o campo embaixo das opções aceita qualquer coisa')}
       <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
       <h3>Criar o personagem</h3>
@@ -2631,12 +2669,19 @@ const UI = {
       ${L('Loja', 'dez cidades · cada uma vende o que a cidade é')}
       ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
       ${L('Situações', 'cidade e rota têm coisa acontecendo por conta própria')}
+      ${L('Doação', 'aparece quando existe uma causa que você já conheceu · rende reputação, nunca item')}
       <h3>Preço por cidade</h3>
       ${L('Celadon', '0,85× — o mais barato de Kanto, sete andares')}
       ${L('Cais de Vermilion', '0,9× — metade do estoque entra sem imposto')}
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Onde o dinheiro vira outra coisa</h3>
+      <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
+      <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
+      <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
+
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
@@ -2719,6 +2764,7 @@ const UI = {
       ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a bola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
+      <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">1d10 + status + o cinto, contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
       <p class="sussurro">O cinto conta porque cada perícia puxa um eixo — Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência. O melhor do time naquele eixo soma, o pior desconta metade, e a afinidade de quem vai na frente entra por cima. A linha embaixo do resultado mostra a soma e quem ajudou; por que aquele ajudou é com você.</p>
       <div class="linha"><span class="k">Força</span><span class="v">fugir de um selvagem que te encurralou · testes de cena</span></div>
@@ -2770,6 +2816,12 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Onde o dinheiro vira outra coisa</h3>
+      <div class="linha"><span class="k">Doação</span><span class="v">aparece na cidade quando existe uma causa que você conhece</span></div>
+      <div class="linha"><span class="k">O que rende</span><span class="v">reputação notória — nada material, nunca</span></div>
+      <div class="linha"><span class="k">Uma vez cada</span><span class="v">causa paga não volta a pedir</span></div>
+      <p class="sussurro">As causas são pontas soltas que a história deixou e que você só vê depois de ter passado por elas. Quem nunca entrou no museu de Pewter não sabe que tem uma lona no telhado desde 2015.</p>
 
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>

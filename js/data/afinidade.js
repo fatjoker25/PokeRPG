@@ -230,14 +230,3 @@ function linhaDeAfinidade(p){
   return FRASE_AFINIDADE[a.grau];
 }
 
-/* O melhor e o pior do cinto, pra quando a cena precisar apontar. */
-function afinidadeDoTime(time){
-  const lista = (time || (Estado.dados ? Estado.dados.time : []) || []).filter(p => !p.morto);
-  let melhor = null, pior = null;
-  for (const p of lista){
-    const a = afinidadeCom(p);
-    if (!melhor || a.valor > melhor.valor) melhor = a;
-    if (!pior   || a.valor < pior.valor)   pior = a;
-  }
-  return {melhor, pior};
-}

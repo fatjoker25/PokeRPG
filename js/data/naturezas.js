@@ -80,11 +80,6 @@ const EIXO_DO_STATUS = {
   intelecto:'paciencia', resistencia:'coragem', sorte:null
 };
 
-const NOME_EIXO = {
-  discricao:'discrição', paciencia:'paciência', coragem:'coragem',
-  simpatia:'simpatia',  cuidado:'cuidado'
-};
-
 function tempDe(p){
   if (!p || !p.natureza) return null;
   return TEMPERAMENTO[p.natureza] || null;

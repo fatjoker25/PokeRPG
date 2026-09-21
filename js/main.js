@@ -174,6 +174,7 @@ const Jogo = {
   },
 
   observarCena(){
+    Historia.marcarOlhada(Estado.dados.cena);
     const t = Dados.testeComTime(Estado.j.status.percepcao, 5, 'Percepção', 'cuidado');
     const cap = Historia.capAtual;
     const bons = [

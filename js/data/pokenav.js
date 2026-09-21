@@ -122,7 +122,7 @@ const CONTATOS = [
 },
 {
   id:'dorival', tipo:'figura', nome:'Goro', papel:'dirige a perua do laboratório', cidade:'estrada',
-  requer:d=>!!d.flags.numero_do_dorival,
+  requer:d=>!!d.flags.numero_do_goro,
   oferece:['favor','prova'],
   favor:{
     rotulo:'Perguntar onde ele está este mês',

@@ -1051,12 +1051,21 @@ const EVENTOS_GERAIS = [
   /* Uma vez por mês a perua do laboratório passa. Não é evento de
      uma vez só: ele volta, porque a volta dele é mensal mesmo. */
   id:'ger_a_perua', peso:3,
-  cond:d=>(((d.relogio && d.relogio.dia) || 1) % 30) <= 3,
+  /* A volta dele é fixa e ele não atrasa: cada cidade tem o seu dia
+     do mês, e a perua só está aqui se hoje for o dia daqui. */
+  cond:d=>{
+    const DIA_DA_CIDADE = {pallet:1, viridian:2, pewter:4, cerulean:6, vermilion:8,
+                           lavender:10, celadon:12, saffron:14, fuchsia:15, cinnabar:16};
+    const quando = DIA_DA_CIDADE[Mundo.id()];
+    if (!quando) return false;
+    const hoje = (((d.relogio && d.relogio.dia) || 1) - 1) % 30 + 1;
+    return Math.abs(hoje - quando) <= 1;
+  },
   titulo:'A perua na praça',
   texto:[
     'Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.',
     'Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
-    d=>!!d.flags.numero_do_dorival
+    d=>!!d.flags.numero_do_goro
       ? 'Goro está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
       : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.',
     'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
@@ -1090,8 +1099,8 @@ const EVENTOS_GERAIS = [
        fala('Goro', 'O outro não. O outro só não veio.', 'baixo')
      ]},
     {texto:'Anotar o número dele antes de seguir.',
-     cond:d=>!d.flags.numero_do_dorival,
-     ef:{flag:'numero_do_dorival',
+     cond:d=>!d.flags.numero_do_goro,
+     ef:{flag:'numero_do_goro',
          npc:{nome:'Goro', opiniao:1, memoria:'Te deu o número na praça, do jeito que dá pra todo mundo.'},
          registrar:'Anotou o número de Goro, da perua do laboratório.'},
      resultado:[
@@ -1229,6 +1238,100 @@ const EVENTOS_ROTA = {
 
 campo:[
 {
+  id:'rot_cerca_caida', peso:2,
+  titulo:'A cerca caída',
+  texto:[
+    'Uns quinze metros de cerca estão no chão, derrubados por peso e não por vento: os mourões saíram inteiros, com terra na ponta.',
+    'Do outro lado tem pasto, e no pasto tem seis Miltank que claramente já entenderam a oportunidade e estão indo devagar na direção da estrada.',
+    'Não tem casa à vista. Tem uma caixa de correio a uns duzentos metros, torta, com um nome apagado.'
+  ],
+  escolhas:[
+    {texto:'Levantar os mourões e escorar com pedra, do jeito que der.',
+     teste:{status:'forca', dificuldade:6, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{hp:-2, rep:{eixo:'bom',delta:2,motivo:'Levantou a cerca de um estranho sem esperar ninguém'},
+              flag:'levantou_a_cerca', registrar:'Levantou sozinho quinze metros de cerca caída numa estrada.'},
+          resultado:[
+            'Leva quase uma hora e você acaba com as duas mãos em carne viva de segurar arame.',
+            'Não fica bonito. Fica de pé, que é o que a cerca precisa ser.',
+            'As seis Miltank param de andar na direção da estrada e voltam a fazer a única coisa que Miltank faz.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Tentou levantar a cerca caída e não deu conta sozinho.'},
+           resultado:[
+             'Você levanta dois mourões e o terceiro te ensina que quinze metros de cerca é coisa de duas pessoas.',
+             'Você fica sentado no chão olhando a cerca meio de pé, que é pior do que cerca caída porque agora parece que alguém tentou.'
+           ]}},
+    {texto:'Ir até a caixa de correio e avisar quem mora ali.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Andou duzentos metros pra avisar de uma cerca que não era sua'},
+         flag:'avisou_da_cerca'},
+     resultado:[
+       'A casa fica mais longe do que parecia e quem atende tem uns setenta anos e leva um tempo pra entender o que você está falando.',
+       fala('o senhor da casa', 'Caiu de novo?'),
+       fala('o senhor da casa', 'Cai todo ano nessa época. É a terra que encharca.'),
+       'Ele agradece, pega o chapéu e vai andando pra lá com uma marreta, no ritmo de quem tem setenta anos e vinte anos de cerca caindo.',
+       fala('o senhor da casa', 'Obrigado por vir falar. A maioria passa.', 'baixo')
+     ]},
+    {texto:'Tocar o gado de volta pro pasto antes de qualquer coisa.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tocou o gado de volta antes que desse acidente na estrada'},
+              registrar:'Tocou seis Miltank de volta pro pasto sozinho.'},
+          resultado:[
+            'Você abre os braços e anda devagar em semicírculo, que é a coisa certa e você não sabe como sabe.',
+            'As seis voltam. A quinta olha pra você de um jeito que dá pra ler como ingratidão.',
+            'Você ainda vai ter que resolver a cerca, mas pelo menos não vai ter Miltank na pista.'
+          ]},
+     ruim:{ef:{hp:-3, registrar:'Tentou tocar o gado e levou um encontrão.'},
+           resultado:[
+             'A terceira decide que você é o problema e vem na sua direção com a cabeça baixa.',
+             'Você sai de perto mais rápido do que gostaria de admitir e elas continuam exatamente onde queriam estar.'
+           ]}},
+    {texto:'Não é sua cerca, não é seu gado, não é sua estrada.',
+     ef:{},
+     resultado:['Você passa.','Uns oitocentos metros adiante você ouve uma buzina longa atrás de você e não olha pra trás.']}
+  ]
+},
+{
+  id:'rot_bicicleta_quebrada', peso:2,
+  titulo:'Alguém empurrando bicicleta',
+  texto:[
+    'Tem uma pessoa de uns vinte anos empurrando uma bicicleta há tempo suficiente pra ter desistido de ficar brava.',
+    'A corrente arrebentou e está enrolada no quadro com uma sacola plástica, do jeito que a gente faz quando não quer perder a peça.',
+    fala('a moça da bicicleta', 'Quanto falta pra próxima cidade? Fala rápido, tipo arrancar band-aid.')
+  ],
+  escolhas:[
+    {texto:'Olhar a corrente. Talvez dê pra emendar.',
+     teste:{status:'intelecto', dificuldade:6, nomeStatus:'Intelecto', eixo:'cuidado'},
+     bom:{ef:{rep:{eixo:'bom',delta:1,motivo:'Emendou a corrente da bicicleta de uma desconhecida na estrada'},
+              flag:'emendou_a_corrente',
+              executar:d=>{ Estado.j.dinheiro += 800; return [{tipo:'item', texto:'+800 ₽ — ela insistiu.'}]; }},
+          resultado:[
+            'O elo torto sai com uma pedra e um pouco de teimosia, e a corrente volta dois elos mais curta.',
+            fala('a moça da bicicleta', 'Ficou curta.'),
+            fala('a moça da bicicleta', 'Curta anda. Quebrada não anda.'),
+            'Ela te enfia dinheiro na mão, sobe na bicicleta e some numa velocidade que não combina com corrente emendada.'
+          ]},
+     ruim:{ef:{registrar:'Tentou consertar a corrente de uma bicicleta e não deu.'},
+           resultado:[
+             'Você mexe dez minutos e chega à conclusão técnica de que a corrente está quebrada.',
+             fala('a moça da bicicleta', 'É, eu também tinha chegado nessa.', 'riso')
+           ]}},
+    {texto:'Empurrar junto até a próxima cidade.',
+     ef:{hp:-2, moral:3, rep:{eixo:'bom',delta:2,motivo:'Empurrou bicicleta alheia por quilômetros sem ganhar nada'},
+         flag:'empurrou_a_bicicleta'},
+     resultado:[
+       'Dá quase duas horas, e nas duas horas ela conta a vida inteira dela, incluindo partes que ninguém conta pra estranho.',
+       fala('a moça da bicicleta', 'Eu falo demais quando tô com vergonha de aceitar ajuda.'),
+       fala('a moça da bicicleta', 'Você reparou e não falou nada. Isso é de boa pessoa.', 'baixo'),
+       'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela, e vai lembrar disso.'
+     ]},
+    {texto:'"Falta bastante." E seguir.',
+     ef:{},
+     resultado:[
+       fala('a moça da bicicleta', 'Band-aid arrancado. Valeu.', 'riso'),
+       'Ela volta a empurrar. Você segue no seu ritmo, que é mais rápido que o dela, e a distância entre vocês aumenta devagar por uns dez minutos.'
+     ]}
+  ]
+},
+{
   id:'rot_ninho_no_chao', peso:3,
   titulo:'Um ninho no chão da trilha',
   texto:[
@@ -1345,6 +1448,79 @@ campo:[
 
 floresta:[
 {
+  id:'rot_fita_nas_arvores', peso:2,
+  titulo:'Fita amarrada nas árvores',
+  texto:[
+    'Tem fita plástica amarrada em tronco, na altura do peito, de dez em dez metros, entrando mato adentro.',
+    'A fita é nova. O laço é bem feito, com duas voltas, do jeito de quem amarra muita coisa.',
+    'Ela vai pra um lado que a trilha não vai.'
+  ],
+  escolhas:[
+    {texto:'Seguir a fita.',
+     teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'discricao'},
+     bom:{ef:{flag:'seguiu_a_fita', rep:{eixo:'bom',delta:1,motivo:'Foi ver o que a fita marcava em vez de passar batido'},
+              registrar:'A fita da floresta marcava uma armadilha de contenção, vazia e mal instalada.'},
+          resultado:[
+            'Duzentos metros depois a fita termina numa clareira pequena com uma gaiola de contenção montada no chão.',
+            'A gaiola está vazia, armada, e com a isca podre — o que quer dizer que está armada há muito tempo e ninguém veio conferir.',
+            'Tem uma etiqueta de identificação no canto, plastificada, com um número de licença e nenhum nome.',
+            'Você desarma. Leva menos de um minuto e é a coisa mais certa que você faz hoje.'
+          ]},
+     ruim:{ef:{hp:-2, registrar:'Se perdeu seguindo uma fita na floresta.'},
+           resultado:[
+             'Você perde a fita na sexta árvore, acha de novo, perde na nona e não acha mais.',
+             'Leva quarenta minutos pra voltar pra trilha e você volta arranhado e sem nada.'
+           ]}},
+    {texto:'Cortar a fita toda e levar.',
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Arrancou a marcação de alguém sem saber pra que servia'},
+         flag:'cortou_a_fita', registrar:'Arrancou a fita de marcação da floresta.'},
+     resultado:[
+       'Você tira todas as que alcança e enrola num novelo que cabe no bolso.',
+       'Pode ser que você tenha estragado o trabalho de um pesquisador. Pode ser que você tenha estragado o trabalho de um caçador.',
+       'A floresta não vai te contar qual dos dois.'
+     ]},
+    {texto:'Anotar onde fica e seguir a trilha.',
+     ef:{flag:'anotou_a_fita', registrar:'Anotou onde começa a fita de marcação da floresta.'},
+     resultado:['Você marca no mapa com o dedo sujo e continua andando.','É pouco. Mas é mais do que nada, e um dia alguém pergunta.']}
+  ]
+},
+{
+  id:'rot_arvore_no_caminho', peso:2,
+  titulo:'A árvore atravessada',
+  texto:[
+    'Uma árvore caiu de través na trilha e não caiu hoje: já tem cogumelo no tronco e já tem trilha nova contornando por baixo.',
+    'Só que a trilha nova passa rente a um barranco e dá pra ver, pela terra solta, que já escorregou gente ali.',
+    'Do outro lado tem duas crianças de mochila parando pra decidir por onde passar.'
+  ],
+  escolhas:[
+    {texto:'Passar primeiro e mostrar onde pisar.',
+     ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Passou na frente no trecho ruim pra mostrar onde pisar'},
+         flag:'guiou_as_criancas'},
+     resultado:[
+       'Você passa devagar, marcando pé por pé, e fala em voz alta onde a terra está firme.',
+       'As duas passam atrás de você imitando exatamente, o que é ao mesmo tempo bonito e assustador.',
+       fala('a menina da mochila', 'Você é guia?'),
+       fala('a menina da mochila', 'Não, ele só é grande.', null, 'A outra responde antes de você.')
+     ]},
+    {texto:'Abrir passagem por cima do tronco, com machado de mão e paciência.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
+     bom:{ef:{hp:-3, rep:{eixo:'bom',delta:2,motivo:'Abriu passagem numa trilha pra quem vier depois'},
+              flag:'abriu_a_trilha', registrar:'Abriu um degrau no tronco caído da floresta.'},
+          resultado:[
+            'Você não derruba a árvore — ninguém derruba árvore com machado de mão. Você cava um degrau.',
+            'Leva uma hora e meia e sai um degrau feio, torto e completamente funcional.',
+            'A trilha do barranco vai deixar de ser usada em uma semana e ninguém nunca vai saber por quê.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Tentou abrir o tronco caído e só se machucou.'},
+           resultado:['A madeira está mais dura do que parecia e o cabo escapa duas vezes.','Na segunda, o cabo acerta o seu joelho e você desiste com a dignidade que sobrou.']}},
+    {texto:'Contornar pelo barranco e seguir.',
+     teste:{status:'forca', dificuldade:5, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{}, resultado:['Você passa rente, com a mão na raiz, e não escorrega.','Atrás de você as duas crianças passam também, agarradas no mesmo lugar em que você agarrou.']},
+     ruim:{ef:{hp:-5, registrar:'Escorregou no barranco da trilha da floresta.'},
+           resultado:['Você escorrega os últimos dois metros de bunda no barro.','Ninguém se machuca de verdade. A sua calça, sim.']}}
+  ]
+},
+{
   id:'rot_a_coisa_no_mato', peso:3,
   titulo:'Alguma coisa grande no mato fechado',
   texto:[
@@ -1417,6 +1593,95 @@ floresta:[
 
 montanha:[
 {
+  id:'rot_pedra_solta', peso:2,
+  titulo:'A pedra que vai cair',
+  texto:[
+    'Tem uma pedra do tamanho de uma geladeira meio fora do barranco, em cima do trecho mais estreito da trilha.',
+    'Ela não vai cair hoje. Mas a terra embaixo dela está seca e rachada, e ela vai cair.',
+    'Passam umas trinta pessoas por dia aqui, segundo o número que alguém pintou num poste de sinalização em mil novecentos e oitenta e alguma coisa.'
+  ],
+  escolhas:[
+    {texto:'Derrubar agora, com o trecho vazio.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'coragem'},
+     bom:{ef:{rep:{eixo:'bom',delta:2,motivo:'Derrubou uma pedra solta antes que ela caísse em cima de alguém'},
+              flag:'derrubou_a_pedra', registrar:'Derrubou de propósito a pedra solta do barranco, com a trilha vazia.'},
+          resultado:[
+            'Você grita duas vezes trilha abaixo e espera dois minutos antes de encostar nela.',
+            'Sai com um empurrão de ombro e uma alavanca de galho, e o barulho dura mais do que você imaginava.',
+            'Sobra um monte de pedra na trilha que dá pra contornar andando. Era isso, ou ela na cabeça de alguém em março.'
+          ]},
+     ruim:{ef:{hp:-5, registrar:'Tentou derrubar a pedra solta e ela derrubou você primeiro.'},
+           resultado:[
+             'Ela se mexe uns dez centímetros e trava, e os dez centímetros levam junto o chão em que você estava apoiado.',
+             'Você segura num galho que resolve segurar você de volta, o que é sorte e não competência.'
+           ]}},
+    {texto:'Avisar no próximo lugar que tiver gente.',
+     ef:{flag:'avisou_da_pedra', rep:{eixo:'bom',delta:1,motivo:'Carregou por horas o aviso de uma pedra solta'},
+         registrar:'Avisou da pedra solta do barranco no primeiro lugar com gente.'},
+     resultado:[
+       'Você anda mais três horas com isso na cabeça e conta pra primeira pessoa de uniforme que você vê.',
+       fala('o guarda da guarita', 'Qual trecho?'),
+       'Você explica com as mãos porque não sabe o nome do trecho, e ele entende assim mesmo e anota num caderno.',
+       fala('o guarda da guarita', 'Terceira vez esse ano que me falam dessa. Um dia eu vou lá.', 'baixo')
+     ]},
+    {texto:'Passar rápido embaixo e não pensar mais nisso.',
+     ef:{registrar:'Passou por baixo da pedra solta e seguiu.'},
+     resultado:['Você passa em quatro passos largos e não olha pra cima.','Você vai lembrar dessa pedra em algum momento aleatório daqui a uns dois meses, e vai ser desconfortável.']}
+  ]
+},
+{
+  id:'rot_neblina_alta', peso:2,
+  titulo:'A neblina que fecha',
+  texto:[
+    'A neblina sobe o vale em vinte minutos e fecha tudo num branco que come som também: você fala e a sua voz volta errada.',
+    'A trilha continua ali, dois metros de cada vez.',
+    'Ainda faltam umas três horas de caminho e falta uma hora e meia pra escurecer.'
+  ],
+  escolhas:[
+    {texto:'Parar onde está e esperar abrir.',
+     teste:{status:'resistencia', dificuldade:5, nomeStatus:'Resistência', eixo:'paciencia'},
+     bom:{ef:{hp:-1, moral:3, flag:'esperou_a_neblina',
+              rep:{eixo:'bom',delta:1,motivo:'Parou na neblina em vez de insistir'}},
+          resultado:[
+            'Você senta encostado numa pedra, com o time todo fora da bola, e espera.',
+            'Abre em cinquenta minutos, de uma vez, como cortina.',
+            'Você perde a luz e ganha a noite mais estrelada que já viu, e dorme ali mesmo sem ter planejado.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Esperou a neblina passar e pegou frio.'},
+           resultado:['Não abre. Você fica duas horas sentado no frio e escurece do mesmo jeito.','Você desce no escuro, devagar, com lanterna, e chega tremendo.']}},
+    {texto:'Seguir devagar, contando passo e marcando pedra.',
+     teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'cuidado'},
+     bom:{ef:{flag:'atravessou_a_neblina', rep:{eixo:'bom',delta:1,motivo:'Atravessou a neblina contando passo, sem improviso'},
+              registrar:'Atravessou a neblina alta contando passo e marcando pedra.'},
+          resultado:[
+            'Você conta cento e vinte passos entre marca e marca e empilha três pedras em cada uma.',
+            'Leva o triplo do tempo e funciona exatamente como devia funcionar.',
+            'Quando abre, você está trezentos metros adiante e no lugar certo, o que é mais raro do que parece.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Se perdeu na neblina e voltou ao ponto de partida.'},
+           resultado:[
+             'Você anda quarenta minutos e reconhece a própria pilha de pedra.',
+             'Você andou em círculo, o que todo mundo diz que acontece e ninguém acredita até acontecer.'
+           ]}},
+    {texto:'Soltar o time e deixar que eles achem o caminho.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{moral:5, flag:'o_time_achou_o_caminho',
+              registrar:'Na neblina, foi o time que achou o caminho.'},
+          resultado:[
+            d=>{
+              const m = melhorNoEixo('simpatia');
+              return m.pokemon
+                ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ele está olhando pra trás o tempo todo.`
+                : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
+            },
+            'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
+            'É a primeira vez na jornada que a hierarquia fica invertida por uma hora inteira, e nenhum dos dois lados comenta.'
+          ]},
+     ruim:{ef:{hp:-3, moral:-2, registrar:'Soltou o time na neblina e ficou pior.'},
+           resultado:['Eles se espalham. Você passa quinze minutos chamando e recolhendo.','Ninguém se perde de verdade, mas todo mundo fica pior do que estava.']}}
+  ]
+},
+{
   id:'rot_a_pedra_solta', peso:3,
   titulo:'A pedra que não devia estar ali',
   texto:[
@@ -1476,6 +1741,82 @@ montanha:[
 
 caverna:[
 {
+  id:'rot_marca_de_giz', peso:2,
+  titulo:'Marcas de giz na pedra',
+  texto:[
+    'Tem setas de giz na parede, na altura do joelho, apontando pra frente.',
+    'Estão apagadas pela umidade, mas dá pra ver que já foram refeitas por cima várias vezes, em gizes de cores diferentes.',
+    'Na terceira seta tem uma coisa escrita do lado, pequena, e você precisa agachar pra ler.'
+  ],
+  escolhas:[
+    {texto:'Agachar e ler.',
+     ef:{flag:'leu_o_giz', registrar:'Leu o que estava escrito de giz na parede do túnel.'},
+     resultado:[
+       'Diz: "SE VOCÊ TÁ LENDO ISSO VOCÊ TÁ NO CAMINHO CERTO. CONTINUA. — M."',
+       'A letra é de adulto tentando escrever grande.',
+       'Três setas adiante tem outra, em giz mais novo, outra letra: "OBRIGADO M".',
+       'E mais adiante uma terceira, mais nova ainda: "OBRIGADO M" de novo, outra letra.',
+       'Você conta onze delas até a saída.'
+     ]},
+    {texto:'Refazer as setas apagadas com o que tiver na mochila.',
+     ef:{rep:{eixo:'bom',delta:2,motivo:'Refez a marcação de giz de um túnel pra quem vier depois'},
+         flag:'refez_as_setas', moral:2,
+         registrar:'Refez com pedra branca as setas de giz apagadas do túnel.'},
+     resultado:[
+       'Você não tem giz. Você tem uma pedra clara que risca, e ela serve.',
+       'Você passa por cima de todas as que estão sumindo, e acrescenta duas onde tem bifurcação e não tinha seta.',
+       'Na última você escreve, porque não resiste: "OBRIGADO M".',
+       'A sua letra fica horrível e você deixa do jeito que ficou.'
+     ]},
+    {texto:'Ignorar e ir pelo que você acha que é o caminho.',
+     teste:{status:'percepcao', dificuldade:7, nomeStatus:'Percepção', eixo:'cuidado'},
+     bom:{ef:{}, resultado:['Você acerta.','Você sai do outro lado e a última seta de giz está apontando exatamente pra onde você saiu, o que é humilhante de um jeito engraçado.']},
+     ruim:{ef:{hp:-3, registrar:'Ignorou as setas de giz e andou uma hora a mais no túnel.'},
+           resultado:['Você anda uma hora, chega num paredão, volta.','Na volta você segue as setas em silêncio e não fala disso com ninguém.']}}
+  ]
+},
+{
+  id:'rot_goteira_na_caverna', peso:2,
+  titulo:'O barulho de água',
+  texto:[
+    'Tem um pingo constante em algum lugar à direita, e ele é o único som do túnel há uns dez minutos.',
+    'Pingo em caverna quer dizer água, e água em caverna quer dizer que o chão pode não ser chão.',
+    'A lanterna alcança uns seis metros e o resto é decisão.'
+  ],
+  escolhas:[
+    {texto:'Ir ver de onde vem a água.',
+     teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção', eixo:'discricao'},
+     bom:{ef:{flag:'achou_a_poca', itens:{'Água Fresca':1},
+              registrar:'Achou uma poça de água limpa no túnel, filtrada pela pedra.'},
+          resultado:[
+            'Vinte metros pra dentro tem uma poça rasa de água limpíssima, filtrada por pedra, com areia branca no fundo.',
+            'Tem três Zubat pendurados no teto em cima dela, que é o motivo de ninguém usar essa poça.',
+            'Você enche o cantil em silêncio e sai andando de costas, o que é ridículo e é o certo.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Foi ver de onde vinha a água e pisou onde não devia.'},
+           resultado:[
+             'Você pisa num trecho que parecia pedra e é lama por cima de pedra, e o pé afunda até a canela.',
+             'Não tem buraco embaixo. Só tem frio, lama e uma bota que vai demorar dois dias pra secar.'
+           ]}},
+    {texto:'Marcar onde é e continuar.',
+     ef:{flag:'marcou_a_agua', registrar:'Marcou onde fica a água dentro do túnel.'},
+     resultado:['Você risca uma seta na parede com pedra e segue.','Se você precisar de água na volta, você sabe onde tem. É pouco, e um dia é tudo.']},
+    {texto:'Apagar a lanterna um minuto e só escutar.',
+     ef:{moral:3, flag:'escutou_no_escuro',
+         presagio:'Você vai repetir isso outras vezes nessa jornada, sempre sozinho, e nunca vai contar pra ninguém que faz isso.'},
+     resultado:[
+       'Escuro de caverna não é escuro de quarto. É um escuro que tem peso.',
+       'No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.',
+       d=>{
+         const p = (Estado.dados.time || []).find(x => !x.morto);
+         return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. Ele não gosta disso e ficou mesmo assim.`
+                  : 'Você fica sozinho no escuro por um minuto inteiro e aguenta.';
+       },
+       'Você acende de novo e os seis metros de sempre voltam a ser o mundo inteiro.'
+     ]}
+  ]
+},
+{
   id:'rot_a_luz_no_fundo', peso:3,
   titulo:'Luz no fundo da galeria',
   texto:[
@@ -1525,6 +1866,85 @@ caverna:[
 ],
 
 agua:[
+{
+  id:'rot_rede_abandonada', peso:2,
+  titulo:'Rede presa na pedra',
+  texto:[
+    'Tem uma rede de náilon presa entre duas pedras, meio submersa, balançando com a corrente.',
+    'Não é rede de pescador em uso: está rasgada de um lado e coberta de limo do outro, o que quer dizer meses.',
+    'Tem coisa viva enroscada nela. Duas, na verdade.'
+  ],
+  escolhas:[
+    {texto:'Entrar na água e soltar os dois.',
+     teste:{status:'forca', dificuldade:6, nomeStatus:'Força', eixo:'cuidado'},
+     bom:{ef:{hp:-2, moral:4, rep:{eixo:'bom',delta:2,motivo:'Entrou na água pra soltar dois bichos de uma rede abandonada'},
+              flag:'soltou_da_rede', registrar:'Soltou dois Pokémon de uma rede de náilon abandonada.'},
+          resultado:[
+            'A água bate no peito e é mais fria do que a superfície prometia.',
+            'O primeiro sai fácil. O segundo está enroscado no náilon de um jeito que só sai cortando, e você corta com a faca de acampamento com a mão tremendo de frio.',
+            'Os dois somem sem olhar pra trás, que é como tem que ser.',
+            'Você puxa a rede inteira pra fora e deixa amontoada na pedra, pesando uns quinze quilos de água.'
+          ]},
+     ruim:{ef:{hp:-5, registrar:'Entrou na água pra soltar bicho da rede e se enroscou também.'},
+           resultado:[
+             'Você enrosca o próprio pé no náilon, e por uns três segundos muito longos você entende exatamente o que os dois estão sentindo.',
+             'Você se solta. Um dos dois você consegue tirar. O outro não.'
+           ]}},
+    {texto:'Puxar a rede pra fora sem entrar na água.',
+     teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
+     bom:{ef:{rep:{eixo:'bom',delta:1,motivo:'Tirou uma rede abandonada da água'}, flag:'tirou_a_rede'},
+          resultado:['Você engancha com um galho e puxa aos poucos, e os dois se soltam sozinhos no meio do caminho.','A rede sai. Fica ali na pedra, feia, e é melhor feia na pedra que invisível na água.']},
+     ruim:{ef:{hp:-2, registrar:'Tentou puxar a rede de fora e ela rasgou.'},
+           resultado:['A rede rasga no meio e metade dela volta pra água, agora em dois pedaços em vez de um.','Você piorou. É possível piorar.']}},
+    {texto:'Seguir. A água é funda e você não sabe nadar direito.',
+     ef:{},
+     resultado:['Você segue.','É uma decisão razoável e você vai pensar nela de novo hoje à noite, o que é o preço das decisões razoáveis.']}
+  ]
+},
+{
+  id:'rot_balsa_atrasada', peso:2,
+  titulo:'A balsa que não vem',
+  texto:[
+    'O píer tem nove pessoas esperando e uma placa escrita à mão dizendo que a balsa das duas vai atrasar.',
+    'A placa está lá desde as duas. São quatro e vinte.',
+    'Tem um homem de colete que trabalha aqui e que aprendeu a não fazer contato visual com ninguém.'
+  ],
+  escolhas:[
+    {texto:'Esperar junto e puxar conversa com quem espera.',
+     ef:{moral:2, hp:1, rep:{eixo:'bom',delta:1,motivo:'Passou a espera do píer conversando com quem esperava'},
+         flag:'conversou_no_pier'},
+     resultado:[
+       'Em quarenta minutos você aprende: que a balsa atrasa sempre na virada do mês, que o motor é de mil novecentos e oitenta e nove, e que tem um jeito de atravessar a pé que ninguém recomenda e todo mundo já fez.',
+       fala('o pescador da fila', 'Você tá com pressa?'),
+       fala('o pescador da fila', 'Se tiver com pressa, atravessa. Se não tiver, senta. Eu sento faz vinte anos.'),
+       'Você senta.'
+     ]},
+    {texto:'Perguntar ao homem de colete o que está acontecendo de verdade.',
+     teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
+     bom:{ef:{flag:'sabe_da_balsa', rep:{eixo:'bom',delta:1,motivo:'Perguntou com jeito a quem passa o dia levando bronca'},
+              registrar:'A balsa atrasa porque o motor esquenta e tem que parar de hora em hora. Faz três anos.'},
+          resultado:[
+            'Ele demora a responder e responde olhando pro lado.',
+            fala('o homem de colete', 'Ela vem. Ela sempre vem.'),
+            fala('o homem de colete', 'O motor esquenta e tem que parar de hora em hora. Faz três anos assim.'),
+            fala('o homem de colete', 'Eu escrevo essa placa todo dia e todo dia alguém me xinga por causa dela.', 'baixo'),
+            fala('o homem de colete', 'Você é o primeiro em umas duas semanas que pergunta em vez de reclamar.')
+          ]},
+     ruim:{ef:{registrar:'Perguntou da balsa e levou a resposta padrão.'},
+           resultado:[fala('o homem de colete', 'Tá na placa.'), 'E acabou.']}},
+    {texto:'Ir procurar o jeito de atravessar a pé.',
+     teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'coragem'},
+     bom:{ef:{flag:'atravessou_a_pe', rep:{eixo:'bom',delta:1,motivo:'Achou sozinho o caminho que a cidade toda finge não usar'},
+              registrar:'Atravessou a pé pela pedra, a trezentos metros do píer.'},
+          resultado:[
+            'Trezentos metros rio acima tem uma sequência de pedra chata que dá pra atravessar com água na canela.',
+            'Tem marca de pé no limo. Muita marca de pé no limo.',
+            'Você atravessa em seis minutos e vê, do outro lado, as nove pessoas ainda sentadas no píer.'
+          ]},
+     ruim:{ef:{hp:-4, registrar:'Tentou atravessar a pé e voltou encharcado.'},
+           resultado:['A quarta pedra é mais funda do que as três primeiras.','Você volta encharcado da cintura pra baixo e senta no píer, e ninguém comenta, o que é pior.']}}
+  ]
+},
 {
   id:'rot_a_boia_com_nome', peso:3,
   titulo:'Uma boia com nome escrito',

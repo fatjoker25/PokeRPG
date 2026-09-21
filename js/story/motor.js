@@ -70,6 +70,16 @@ const Historia = {
     return !!v[Estado.dados.capitulo + ':' + idCena];
   },
 
+  /* Já parou pra olhar essa cena? */
+  jaOlhou(idCena){
+    const o = Estado.dados.olhadas || {};
+    return !!o[Estado.dados.capitulo + ':' + idCena];
+  },
+  marcarOlhada(idCena){
+    const o = Estado.dados.olhadas || (Estado.dados.olhadas = {});
+    o[Estado.dados.capitulo + ':' + idCena] = true;
+  },
+
   /* Essa opção já foi escolhida daqui? */
   jaEscolheu(idCena, i){
     const f = Estado.dados.escolhasFeitas || {};

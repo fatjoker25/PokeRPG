@@ -612,14 +612,19 @@ c1e_por_que_fala:{
 c1e_despedida_dorival:{
   texto:[
     'Ele guarda o caderno numa sacola de pano, dobra o banquinho, fecha o portamalas e bate duas vezes na lataria, que deve ser mania.',
-    d=>fala('Goro', `Eu volto dia ${Dados.entre(2,26)} do mês que vem. Se você ainda estiver na cidade, aparece. Se não estiver, melhor ainda.`, 'riso'),
+    d=>{
+      const DIA = {Pallet:1, Viridian:2, Pewter:4, Cerulean:6, Vermilion:8,
+                   Lavender:10, Celadon:12, Saffron:14, Fuchsia:15, Cinnabar:16};
+      const q = DIA[d.jogador.cidade] || 4;
+      return fala('Goro', `Eu volto dia ${q} do mês que vem. Aqui é sempre dia ${q}. Se você ainda estiver na cidade, aparece. Se não estiver, melhor ainda.`, 'riso');
+    },
     'Ele abre a porta do motorista e para antes de entrar.',
     d=>fala('Goro', `Ah. Anota o meu número, vai. Todo mundo que eu entrego tem.`),
     'Ele dita um número de sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
     d=>fala('Goro', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
   ],
   ef:{executar:d => {
-        Estado.marcar('numero_do_dorival');
+        Estado.marcar('numero_do_goro');
         Estado.lembrarNPC('Goro', {opiniao:2, memoria:'Te deu o número dele no dia da entrega.'});
         return [{tipo:'info', texto:'Número de Goro anotado. Falta um PokéNav pra guardar.'}];
       }},

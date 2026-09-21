@@ -11,7 +11,14 @@ const Exploracao = {
     const d = Estado.dados;
     const arco = Historia.arcoAqui();
 
-    const afazeres = afazeresDoLocal().map(a =>
+    /* Lugar e ação não são a mesma coisa e não merecem o mesmo botão:
+       lugar é porta que você abre, ação é tempo que você gasta. */
+    const todos = afazeresDoLocal();
+    const lugares = todos.filter(a => a.lugar).map(a =>
+      `<button class="porta" onclick="Exploracao.fazer('${a.id}')">
+        <span class="porta-nome">${UI.esc(a.titulo)}</span>
+        <span class="porta-sub">${UI.esc(a.sub)}</span></button>`).join('');
+    const afazeres = todos.filter(a => !a.lugar).map(a =>
       `<button class="escolha" onclick="Exploracao.fazer('${a.id}')">
         ${UI.esc(a.titulo)}<br><span class="pd">${UI.esc(a.sub)}</span></button>`).join('');
 
@@ -37,6 +44,9 @@ const Exploracao = {
           <button class="escolha" style="border-color:var(--destaque)" onclick="Exploracao.entrarNoArco()">
             ${UI.esc(arco.chamada)}<br><span class="pd">Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.</span></button>
         </div>` : ''}
+
+      ${lugares ? `<h3>Onde entrar</h3>
+        <div class="portas">${lugares}</div>` : ''}
 
       <h3>O que fazer</h3>
       <div class="escolhas">${afazeres}</div>
@@ -122,6 +132,7 @@ const Exploracao = {
     if (acao === 'centro')     return Cidade.centro();
     if (acao === 'pc')         return UI.modalPC();
     if (acao === 'credenciais') return UI.modalCredenciais();
+    if (acao === 'doar')       return Cidade.doar();
     if (acao === 'loja')       return Cidade.loja();
     if (acao === 'ginasio')    return Cidade.ginasio();
     if (acao === 'liga'){ Jogo.voltarDeGinasio = 'exploracao'; return Jogo.abrirLiga('exploracao'); }

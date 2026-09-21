@@ -387,24 +387,27 @@ function afazeresDoLocal(){
     lista.push({id:'conversar', titulo:'Conversar com os moradores',
       sub:'Gente de cidade pequena fala demais. Gente de cidade grande fala pouco e diz mais.'});
     if ((L.lugares||[]).includes('centro')){
-      lista.push({id:'centro', titulo:'Centro Pokémon',
+      lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
         sub:'Curar o time, dormir, usar o terminal.'});
-      lista.push({id:'pc', titulo:'PC do Centro',
+      lista.push({lugar:true, id:'pc', titulo:'PC do Centro',
         sub: d.pc.length
           ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
           : 'Guardar e tirar Pokémon. O cinto leva seis.'});
       if (typeof Cargos !== 'undefined'){
         const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
         const meus = Cargos.lista().length;
-        lista.push({id:'credenciais', titulo:'Balcão de credenciais',
+        lista.push({lugar:true, id:'credenciais', titulo:'Balcão de credenciais',
           sub: abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.`
              : meus ? 'Renovar carimbo e conferir o que o seu crachá dá.'
                     : 'Formulário, carimbo e fila. É assim que se vira alguma coisa em Kanto.'});
       }
     }
-    if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({id:'loja', titulo:'Loja',
+    if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
-    if (tem('ginasio_'+id)) lista.push({id:'ginasio', titulo:'Ginásio',
+    if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
+      lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
+        sub:'E você tem dinheiro.'});
+    if (tem('ginasio_'+id)) lista.push({lugar:true, id:'ginasio', titulo:'Ginásio',
       sub:'Você sabe onde fica. Não sabe o que tem dentro.'});
     /* (a troca de cidade é montada aqui; a de rota, no bloco de rota) */
     if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
@@ -416,9 +419,9 @@ function afazeresDoLocal(){
   }
 
   if (id === 'planalto'){
-    lista.push({id:'liga', titulo:'A ala dos quatro',
+    lista.push({lugar:true, id:'liga', titulo:'A ala dos quatro',
       sub:'Um corredor com quatro portas seguidas. Ninguém explica o que tem atrás delas.'});
-    lista.push({id:'torneio', titulo:'Arena aberta',
+    lista.push({lugar:true, id:'torneio', titulo:'Arena aberta',
       sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.'});
   }
 

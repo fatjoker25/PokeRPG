@@ -1771,3 +1771,21 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .modal.credencial h3{margin:18px 0 8px;font-size:13px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--texto-fraco)}
 .modal.credencial h3:first-child{margin-top:0}
+
+
+/* ============================================================
+   PORTAS — os lugares da cidade, que não são "o que fazer"
+   ============================================================ */
+.portas{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-bottom:6px}
+.porta{
+  display:flex;flex-direction:column;gap:2px;text-align:left;
+  padding:10px 12px;border:1px solid var(--borda);border-radius:6px;
+  background:color-mix(in srgb, var(--destaque) 5%, var(--bg-2));
+  color:var(--texto);cursor:pointer;font-family:inherit;
+  transition:border-color .15s,background .15s,transform .1s;
+}
+.porta:hover{border-color:var(--destaque);background:color-mix(in srgb, var(--destaque) 11%, var(--bg-2))}
+.porta:active{transform:translateY(1px)}
+.porta-nome{font-size:13.5px;font-weight:600;letter-spacing:.01em}
+.porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
+@media (max-width:520px){ .portas{grid-template-columns:1fr} }
