@@ -330,7 +330,10 @@ function falaDe(t){
   const quem = txt(t.quem);
   const diz = txt(t.diz);
   if (!quem || !diz) return null;
-  return {quem, diz, tom: t.tom || null, nota: txt(t.nota) || null};
+  /* se o jogador já perguntou o nome dessa pessoa, o balão passa a
+     usar o nome — aqui e em qualquer cena depois. */
+  const nome = (typeof Nomes !== 'undefined') ? Nomes.comoChamar(quem) : quem;
+  return {quem: nome, rotulo: quem, diz, tom: t.tom || null, nota: txt(t.nota) || null};
 }
 
 /* Açúcar para escrever cena: fala('Sra. Chiyo', 'Bom dia.', 'grita') */

@@ -685,6 +685,18 @@ const UI = {
         Parar e olhar mais um pouco antes de decidir.</button>`));
     }
 
+    /* Quase todo mundo neste jogo é chamado pela função. Quando tem
+       alguém assim falando na cena, dá pra desfazer isso. */
+    if (visiveis.length && typeof Jogo !== 'undefined' && Jogo.anonimosDaCena){
+      const anon = Jogo.anonimosDaCena();
+      if (anon.length){
+        const quem = anon[0];
+        const ela = /^(a|as|uma)\s/i.test(quem);
+        c.appendChild(this.el(`<button class="escolha discreta" onclick="Jogo.perguntarNome(${JSON.stringify(quem).replace(/"/g,'&quot;')})">
+          Perguntar como ${ela ? 'ela' : 'ele'} se chama.</button>`));
+      }
+    }
+
     if (visiveis.length) c.appendChild(this.campoLivre());
   },
 
@@ -694,7 +706,7 @@ const UI = {
       <label for="acao-livre">Ou faça outra coisa — escreva:</label>
       <div class="linha-acao">
         <input id="acao-livre" type="text" maxlength="160" autocomplete="off"
-               placeholder="ex.: chego devagar e estendo a mão">
+               placeholder="ex.: chego devagar e estendo a mão · qual é o seu nome?">
         <button class="btn destaque" onclick="Jogo.acaoLivre()">Fazer</button>
       </div>
 
@@ -2711,6 +2723,14 @@ const UI = {
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Perguntar o nome</h3>
+      <div class="linha"><span class="k">Quando aparece</span><span class="v">sempre que fala com você alguém que o jogo chama pela função</span></div>
+      <div class="linha"><span class="k">Como</span><span class="v">o botão no fim da cena, ou escrevendo "qual é o seu nome?"</span></div>
+      <div class="linha"><span class="k">O que muda</span><span class="v">o balão passa a usar o nome — nessa cena e em todas depois</span></div>
+      <div class="linha"><span class="k">Custa</span><span class="v">nada: não gasta dia, não muda reputação, não fecha escolha</span></div>
+      <div class="linha"><span class="k">Nem todo mundo diz</span><span class="v">alguns recusam, e a recusa é sobre quem eles são</span></div>
+      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o guarda da primeira", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes.</p>
+
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
       <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
@@ -2878,6 +2898,14 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Perguntar o nome</h3>
+      <div class="linha"><span class="k">Quando aparece</span><span class="v">sempre que fala com você alguém que o jogo chama pela função</span></div>
+      <div class="linha"><span class="k">Como</span><span class="v">o botão no fim da cena, ou escrevendo "qual é o seu nome?"</span></div>
+      <div class="linha"><span class="k">O que muda</span><span class="v">o balão passa a usar o nome — nessa cena e em todas depois</span></div>
+      <div class="linha"><span class="k">Custa</span><span class="v">nada: não gasta dia, não muda reputação, não fecha escolha</span></div>
+      <div class="linha"><span class="k">Nem todo mundo diz</span><span class="v">alguns recusam, e a recusa é sobre quem eles são</span></div>
+      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o guarda da primeira", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>

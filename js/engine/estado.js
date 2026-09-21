@@ -467,6 +467,8 @@ const Estado = {
       cenasAplicadas: {},     // cena cujo efeito já aconteceu — não repete
       escolhasFeitas: {},     // opção já escolhida — some se não tiver mais nada
       olhadas: {},            // cena em que você já parou pra olhar
+      nomesSabidos: {},       // "a enfermeira" -> "Emi": você perguntou e ela disse
+      nomesRecusados: {},     // quem você perguntou e não quis dizer
       descobertas: {},
       pokedex: {vistos:{}, catalogados:{}, brilhantes:{}},
       pokenav: {tem:false, contatos:{}, ligacoes:[]},   // a agenda e o histórico de ligações

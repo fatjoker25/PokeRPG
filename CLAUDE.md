@@ -43,6 +43,13 @@ Três armadilhas que já aconteceram:
 automático: recusa escrita de propósito é resposta válida — mas aí a recusa
 precisa estar no texto, não ser esquecimento.
 
+E desde `js/data/nomes.js` o jogador pode **perguntar o nome de qualquer um**
+que fale com ele, em qualquer cena, pelo botão ou escrevendo no campo livre.
+Isso muda o que "anônimo" quer dizer no projeto: personagem sem nome não é
+mais personagem que o jogo esconde, é personagem que o jogador ainda não
+perguntou. Quem não deve dizer entra em `RECUSAM_O_NOME`, com a recusa
+escrita à mão — porque recusar é caracterização e não pode ser sorteada.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.

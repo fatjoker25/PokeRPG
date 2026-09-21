@@ -1807,3 +1807,12 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   margin-top:10px;padding-left:11px;border-left:2px solid var(--destaque);
   color:var(--texto-fraco);font-style:italic;
 }
+
+/* Ação avulsa que não é trilha da história: perguntar o nome de quem
+   está falando. Fica mais apagada que uma escolha de verdade porque
+   não muda o rumo — muda só como o jogo chama a pessoa. */
+.escolha.discreta{
+  opacity:.72;
+  font-style:italic;
+}
+.escolha.discreta:hover{ opacity:1; }

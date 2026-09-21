@@ -153,6 +153,13 @@ const Jogo = {
       .map((e,i)=>({e,i}))
       .filter(x => Historia.disponivel(x.e, Estado.dados.cena, x.i));
 
+    /* "qual é o seu nome?" é pergunta, não trilha: se tem alguém
+       anônimo falando nesta cena, ela vira a ação de perguntar. */
+    if (typeof perguntaDeNome === 'function' && perguntaDeNome(texto)){
+      const alvos = this.anonimosDaCena();
+      if (alvos.length){ this.ecoLivre = null; return this.perguntarNome(alvos[0]); }
+    }
+
     const r = Entrada.interpretar(texto, disponiveis.map(x => x.e));
     if (!r) return;
 
@@ -170,6 +177,40 @@ const Jogo = {
     Estado.registrar(`Ação livre: "${texto}"`);
     Estado.salvar('auto');
     if (Estado.j.hp <= 0) return UI.telaGameOver('Você não aguentou.');
+    UI.telaCena(Historia.ir(Estado.dados.cena, false), avisos);
+  },
+
+  /* Quem está falando nesta cena e ainda não tem nome. O jogo chama
+     quase todo mundo pela função; perguntar o nome desfaz isso. */
+  anonimosDaCena(){
+    const cena = Historia.cenaAtual;
+    if (!cena || typeof Nomes === 'undefined') return [];
+    const vistos = [];
+    for (const linha of (cena.texto || [])){
+      const f = falaDe(linha);
+      if (!f) continue;
+      const rot = f.rotulo || f.quem;
+      if (rot === Estado.j.nome) continue;
+      if (!Nomes.podePerguntar(rot)) continue;
+      if (!vistos.includes(rot)) vistos.push(rot);
+    }
+    return vistos;
+  },
+
+  perguntarNome(rotulo){
+    const alvos = this.anonimosDaCena();
+    const alvo = rotulo || alvos[0];
+    if (!alvo) return;
+    const r = Nomes.perguntar(alvo);
+    /* avisos() já transforma em balão o que falaDe() reconhecer, então
+       a fala vai crua e a narração vai como info. */
+    const avisos = [{tipo:'eco', texto:'Como é o seu nome?'}];
+    r.linhas.forEach(l => avisos.push(falaDe(l) ? {tipo:'info', texto:l}
+                                                : {tipo:'info', texto: txt(l)}));
+    Estado.registrar(r.nome
+      ? `Perguntou o nome de "${alvo}". É ${r.nome}.`
+      : `Perguntou o nome de "${alvo}". Não quis dizer.`);
+    Estado.salvar('auto');
     UI.telaCena(Historia.ir(Estado.dados.cena, false), avisos);
   },
 
