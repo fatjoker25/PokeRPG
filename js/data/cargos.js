@@ -11,7 +11,7 @@
    ============================================================ */
 const CARGOS = [
 {
-  id:'treinador', nome:'Treinador licenciado', orgao:'Liga Pokémon', peso:1, cap:1,
+  id:'treinador', falante:'a atendente', nome:'Treinador licenciado', orgao:'Liga Pokémon', peso:1, cap:1,
   requer:d=>!!d.flags.tem_licenca,
   resumo:'A licença anual. Sem ela você é uma pessoa andando com um bicho.',
   beneficios:{centro:true},
@@ -28,7 +28,7 @@ const CARGOS = [
         'Tem um desconto de convênio que funciona em qualquer loja de Kanto e que ninguém nunca explicou direito.']
 },
 {
-  id:'guarda_rota', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
+  id:'guarda_rota', falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   veta:['rocket'],
@@ -39,7 +39,7 @@ const CARGOS = [
         'Meio salário mínimo por capítulo, pago em dinheiro, sem holerite.']
 },
 {
-  id:'criador', nome:'Criador registrado', orgao:'Associação de Criadores', peso:2, cap:6,
+  id:'criador', falante:'a avaliadora', nome:'Criador registrado', orgao:'Associação de Criadores', peso:2, cap:6,
   requer:d=>d.time.length >= 4 && d.time.filter(p=>!p.morto).every(p=>(p.moral||0) >= 70),
   resumo:'Quem é avaliado pelo time que leva, não pelo que ganha.',
   beneficios:{loja:0.95, moral:3},
@@ -48,7 +48,7 @@ const CARGOS = [
         '"Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia."']
 },
 {
-  id:'reporter', nome:'Repórter credenciado', orgao:'Jornal de Fuchsia', peso:2, cap:7,
+  id:'reporter', falante:'a editora', nome:'Repórter credenciado', orgao:'Jornal de Fuchsia', peso:2, cap:7,
   requer:d=>Object.keys(d.descobertas || {}).length >= 40,
   resumo:'Crachá de imprensa. Entra onde tem fila e sai com o nome anotado.',
   beneficios:{renda:400, status:'intelecto', fila:true},
@@ -57,7 +57,7 @@ const CARGOS = [
         'O crachá é de papel laminado e vence em um ano.']
 },
 {
-  id:'rocket', nome:'Informante', orgao:'sem timbre', peso:3, cap:8,
+  id:'rocket', falante:'a voz do outro lado', nome:'Informante', orgao:'sem timbre', peso:3, cap:8,
   requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3,
   veta:['guarda_rota','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
@@ -68,7 +68,7 @@ const CARGOS = [
   aviso:'Enquanto você carregar isso, a sua reputação piora sozinha todo capítulo.'
 },
 {
-  id:'investigador', nome:'Investigador de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
+  id:'investigador', falante:'a auditora', nome:'Investigador de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
   veta:['rocket'],
@@ -79,7 +79,7 @@ const CARGOS = [
         '"Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses."']
 },
 {
-  id:'pesquisador', nome:'Pesquisador associado', orgao:'Laboratório de Pallet', peso:3, cap:12,
+  id:'pesquisador', falante:'Professor Carvalho', nome:'Pesquisador associado', orgao:'Laboratório de Pallet', peso:3, cap:12,
   requer:d=>Estado.contagemDex().catalogados >= 90,
   resumo:'Noventa espécies andando. Ninguém faz isso de carro.',
   beneficios:{loja:0.85, status:'intelecto', renda:600},
@@ -88,7 +88,7 @@ const CARGOS = [
         '"Então eu vou pedir uma bolsa pra você e ela vai ser pequena, porque bolsa é sempre pequena."']
 },
 {
-  id:'comissao', nome:'Perito da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
+  id:'comissao', falante:'a secretária', nome:'Perito da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6
          && ['heroi','pesquisador'].includes(d.via || 'neutro'),
   veta:['rocket'],
@@ -99,7 +99,7 @@ const CARGOS = [
         'A pasta tem trinta e uma páginas e a primeira é um termo de sigilo.']
 },
 {
-  id:'instrutor', nome:'Instrutor do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
+  id:'instrutor', falante:'o coordenador', nome:'Instrutor do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8,
   veta:['rocket'],
   resumo:'Ensina quem chega. Salário, sala e um crachá que abre tudo do Planalto.',
@@ -109,7 +109,7 @@ const CARGOS = [
         '"Quase nunca é o time."']
 },
 {
-  id:'lider', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  id:'lider', falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
@@ -120,7 +120,7 @@ const CARGOS = [
         '"Pensa bem. E depois assina, porque a gente precisa."']
 },
 {
-  id:'elite', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
+  id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
   requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_elite4,
   veta:['rocket'],
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
@@ -129,7 +129,7 @@ const CARGOS = [
         '"A parte difícil não é ganhar", diz quem estava na porta antes de você. "É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois."']
 },
 {
-  id:'professor', nome:'Professor de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
+  id:'professor', falante:'Professor Carvalho', nome:'Professor de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
   requer:d=>Estado.contagemDex().catalogados >= 140,
   veta:['rocket'],
   resumo:'A cadeira que entrega bola pra quem está saindo de casa.',
@@ -139,7 +139,7 @@ const CARGOS = [
         '"Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande."']
 },
 {
-  id:'conselheiro', nome:'Conselheiro de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
+  id:'conselheiro', falante:'a conselheira mais velha', nome:'Conselheiro de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6
          && (!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias),
   veta:['rocket'],

@@ -510,7 +510,9 @@ const UI = {
     return npc;
   },
 
-  _ESCRITO: /\b(placa|cartaz|aviso|letreiro|etiqueta|plaquinha|faixa|adesivo|mural|pichação|carimbo|formulário|ficha|bilhete|manchete|visor|display|crachá|painel|escrito|escrita)\b/i,
+  /* só o que de fato carrega texto escrito — nada de "carimbo" ou
+     "crachá", que aparecem em cena de conversa e roubavam a fala */
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner)\b/i,
 
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
@@ -521,7 +523,7 @@ const UI = {
     /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
        fala. Duas falas coladas, sem narração no meio, são uma troca:
        a vez passa pro outro. */
-    let pendente = null, primeira = true, lado = null;
+    let pendente = null, primeira = true, lado = null, ultimaBoca = null;
 
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
@@ -531,8 +533,11 @@ const UI = {
            conversa e não como uma pessoa só falando sete vezes. */
         const meu = (meuNome && f.quem === meuNome) ? ' voce' : '';
         lado = meu ? 'voce' : 'npc';
-        return `<div class="fala${tom}${meu}">
-          <div class="fala-quem">${this.esc(f.quem)}</div>
+        /* três falas seguidas da mesma boca não repetem o nome três vezes */
+        const repete = (ultimaBoca === f.quem);
+        ultimaBoca = f.quem;
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}">
+          ${repete ? '' : `<div class="fala-quem">${this.esc(f.quem)}</div>`}
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -543,14 +548,17 @@ const UI = {
       /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
          são aspas de ironia ("análise jurídica") e ficam na narração. */
       const pedacos = this.partirFalas(t);
-      if (!pedacos) { pendente = t; return `<p>${this.esc(t)}</p>`; }
+      if (!pedacos) { pendente = t; ultimaBoca = null; return `<p>${this.esc(t)}</p>`; }
 
       let html = '';
       for (const pe of pedacos){
         if (pe.tipo === 'narracao'){
-          html += html ? `<p class="entre-falas">${this.esc(pe.texto)}</p>`
-                       : `<p>${this.esc(pe.texto)}</p>`;
-          pendente = pe.texto;
+          /* ", diz a atendente" é atribuição da fala anterior, não
+             parágrafo novo: tira a vírgula que ficou órfã na frente. */
+          const limpo = html ? pe.texto.replace(/^[,;]\s*/, '') : pe.texto;
+          html += html ? `<p class="entre-falas">${this.esc(limpo)}</p>`
+                       : `<p>${this.esc(limpo)}</p>`;
+          pendente = pe.texto; ultimaBoca = null;
           continue;
         }
         /* o que está escrito numa placa não é alguém falando com você */
@@ -569,8 +577,10 @@ const UI = {
 
         const quem = lado === 'voce' ? meuNome : npc;
         const meu = lado === 'voce' ? ' voce' : '';
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}">`
-              + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+        const repete = quem && ultimaBoca === quem;
+        ultimaBoca = quem || null;
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}">`
+              + (quem && !repete ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
@@ -2499,6 +2509,8 @@ const UI = {
 
   telaDoacao(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
+    this.npcDaCena = null; this.minhasFalasDaCena = null;
+    this.falanteDaCena = null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -2519,6 +2531,8 @@ const UI = {
 
   telaCargo(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
+    this.npcDaCena = null; this.minhasFalasDaCena = null;
+    this.falanteDaCena = c.falante || null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">

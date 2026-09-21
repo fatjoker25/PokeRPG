@@ -1801,6 +1801,9 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .porta-sub{font-size:11.5px;color:var(--texto-fraco);line-height:1.4}
 @media (max-width:620px){ .portas{grid-template-columns:1fr} }
 
+/* fala que continua a anterior: sem repetir o nome, colada na de cima */
+.narrativa .fala.segue{margin-top:-8px;border-top-left-radius:2px}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -3496,7 +3499,7 @@ function linhaDeAfinidade(p){
    ============================================================ */
 const CARGOS = [
 {
-  id:'treinador', nome:'Treinador licenciado', orgao:'Liga Pokémon', peso:1, cap:1,
+  id:'treinador', falante:'a atendente', nome:'Treinador licenciado', orgao:'Liga Pokémon', peso:1, cap:1,
   requer:d=>!!d.flags.tem_licenca,
   resumo:'A licença anual. Sem ela você é uma pessoa andando com um bicho.',
   beneficios:{centro:true},
@@ -3513,7 +3516,7 @@ const CARGOS = [
         'Tem um desconto de convênio que funciona em qualquer loja de Kanto e que ninguém nunca explicou direito.']
 },
 {
-  id:'guarda_rota', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
+  id:'guarda_rota', falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   veta:['rocket'],
@@ -3524,7 +3527,7 @@ const CARGOS = [
         'Meio salário mínimo por capítulo, pago em dinheiro, sem holerite.']
 },
 {
-  id:'criador', nome:'Criador registrado', orgao:'Associação de Criadores', peso:2, cap:6,
+  id:'criador', falante:'a avaliadora', nome:'Criador registrado', orgao:'Associação de Criadores', peso:2, cap:6,
   requer:d=>d.time.length >= 4 && d.time.filter(p=>!p.morto).every(p=>(p.moral||0) >= 70),
   resumo:'Quem é avaliado pelo time que leva, não pelo que ganha.',
   beneficios:{loja:0.95, moral:3},
@@ -3533,7 +3536,7 @@ const CARGOS = [
         '"Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia."']
 },
 {
-  id:'reporter', nome:'Repórter credenciado', orgao:'Jornal de Fuchsia', peso:2, cap:7,
+  id:'reporter', falante:'a editora', nome:'Repórter credenciado', orgao:'Jornal de Fuchsia', peso:2, cap:7,
   requer:d=>Object.keys(d.descobertas || {}).length >= 40,
   resumo:'Crachá de imprensa. Entra onde tem fila e sai com o nome anotado.',
   beneficios:{renda:400, status:'intelecto', fila:true},
@@ -3542,7 +3545,7 @@ const CARGOS = [
         'O crachá é de papel laminado e vence em um ano.']
 },
 {
-  id:'rocket', nome:'Informante', orgao:'sem timbre', peso:3, cap:8,
+  id:'rocket', falante:'a voz do outro lado', nome:'Informante', orgao:'sem timbre', peso:3, cap:8,
   requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3,
   veta:['guarda_rota','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
@@ -3553,7 +3556,7 @@ const CARGOS = [
   aviso:'Enquanto você carregar isso, a sua reputação piora sozinha todo capítulo.'
 },
 {
-  id:'investigador', nome:'Investigador de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
+  id:'investigador', falante:'a auditora', nome:'Investigador de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
   veta:['rocket'],
@@ -3564,7 +3567,7 @@ const CARGOS = [
         '"Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses."']
 },
 {
-  id:'pesquisador', nome:'Pesquisador associado', orgao:'Laboratório de Pallet', peso:3, cap:12,
+  id:'pesquisador', falante:'Professor Carvalho', nome:'Pesquisador associado', orgao:'Laboratório de Pallet', peso:3, cap:12,
   requer:d=>Estado.contagemDex().catalogados >= 90,
   resumo:'Noventa espécies andando. Ninguém faz isso de carro.',
   beneficios:{loja:0.85, status:'intelecto', renda:600},
@@ -3573,7 +3576,7 @@ const CARGOS = [
         '"Então eu vou pedir uma bolsa pra você e ela vai ser pequena, porque bolsa é sempre pequena."']
 },
 {
-  id:'comissao', nome:'Perito da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
+  id:'comissao', falante:'a secretária', nome:'Perito da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6
          && ['heroi','pesquisador'].includes(d.via || 'neutro'),
   veta:['rocket'],
@@ -3584,7 +3587,7 @@ const CARGOS = [
         'A pasta tem trinta e uma páginas e a primeira é um termo de sigilo.']
 },
 {
-  id:'instrutor', nome:'Instrutor do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
+  id:'instrutor', falante:'o coordenador', nome:'Instrutor do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8,
   veta:['rocket'],
   resumo:'Ensina quem chega. Salário, sala e um crachá que abre tudo do Planalto.',
@@ -3594,7 +3597,7 @@ const CARGOS = [
         '"Quase nunca é o time."']
 },
 {
-  id:'lider', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  id:'lider', falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
@@ -3605,7 +3608,7 @@ const CARGOS = [
         '"Pensa bem. E depois assina, porque a gente precisa."']
 },
 {
-  id:'elite', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
+  id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
   requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_elite4,
   veta:['rocket'],
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
@@ -3614,7 +3617,7 @@ const CARGOS = [
         '"A parte difícil não é ganhar", diz quem estava na porta antes de você. "É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois."']
 },
 {
-  id:'professor', nome:'Professor de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
+  id:'professor', falante:'Professor Carvalho', nome:'Professor de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
   requer:d=>Estado.contagemDex().catalogados >= 140,
   veta:['rocket'],
   resumo:'A cadeira que entrega bola pra quem está saindo de casa.',
@@ -3624,7 +3627,7 @@ const CARGOS = [
         '"Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande."']
 },
 {
-  id:'conselheiro', nome:'Conselheiro de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
+  id:'conselheiro', falante:'a conselheira mais velha', nome:'Conselheiro de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6
          && (!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias),
   veta:['rocket'],
@@ -10720,9 +10723,10 @@ const Cidade = {
        texto:[
          'Você entrega o dinheiro no balcão do museu e a moça atrás do balcão não entende a primeira vez que você fala.',
          fala('Dra. Sayo', 'Doação pra quê?'),
-         fala('Dra. Sayo', 'Pro telhado.'),
+         d=>fala(d.jogador.nome, 'Pro telhado.'),
          'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
          fala('Dra. Sayo', 'Eu escrevi vinte e duas cartas.'),
+         d=>fala(d.jogador.nome, 'Vinte e duas?'),
          fala('Dra. Sayo', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
          fala('Dra. Sayo', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
          'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
@@ -10735,7 +10739,7 @@ const Cidade = {
        texto:[
          'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta.',
          fala('Curador Ren', 'Você sabe que isso não devolve ninguém, né.'),
-         fala('Curador Ren', 'Sei.'),
+         d=>fala(d.jogador.nome, 'Sei.'),
          fala('Curador Ren', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
          'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
        ]},
@@ -10747,7 +10751,7 @@ const Cidade = {
        texto:[
          'Você liga pro laboratório e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
          fala('Goro', 'Você quer pagar o pedido de quem?'),
-         fala('Goro', 'De quem não puder pagar. Qualquer um.'),
+         d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
          'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
          fala('Goro', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
          fala('Goro', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
@@ -10779,7 +10783,10 @@ const Cidade = {
     if (!c || Estado.j.dinheiro < c.valor) return;
     Estado.j.dinheiro -= c.valor;
     Estado.marcar(c.marca);
-    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso uma coisa que não era dele', {notorio:true});
+    /* doação é notícia: passa por cima do teto do capítulo, e por isso
+       vai em ef.rep.notorio, que é onde mudarRep procura */
+    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.toLowerCase(),
+                              {rep:{notorio:true}});
     Estado.registrar(`Pagou ${c.valor} ₽ por: ${c.nome}.`);
     Estado.salvar('auto');
     const avisos = [{tipo:'item', texto:`−${c.valor} ₽.`}];
@@ -63333,7 +63340,9 @@ const UI = {
     return npc;
   },
 
-  _ESCRITO: /\b(placa|cartaz|aviso|letreiro|etiqueta|plaquinha|faixa|adesivo|mural|pichação|carimbo|formulário|ficha|bilhete|manchete|visor|display|crachá|painel|escrito|escrita)\b/i,
+  /* só o que de fato carrega texto escrito — nada de "carimbo" ou
+     "crachá", que aparecem em cena de conversa e roubavam a fala */
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner)\b/i,
 
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
@@ -63344,7 +63353,7 @@ const UI = {
     /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
        fala. Duas falas coladas, sem narração no meio, são uma troca:
        a vez passa pro outro. */
-    let pendente = null, primeira = true, lado = null;
+    let pendente = null, primeira = true, lado = null, ultimaBoca = null;
 
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
@@ -63354,8 +63363,11 @@ const UI = {
            conversa e não como uma pessoa só falando sete vezes. */
         const meu = (meuNome && f.quem === meuNome) ? ' voce' : '';
         lado = meu ? 'voce' : 'npc';
-        return `<div class="fala${tom}${meu}">
-          <div class="fala-quem">${this.esc(f.quem)}</div>
+        /* três falas seguidas da mesma boca não repetem o nome três vezes */
+        const repete = (ultimaBoca === f.quem);
+        ultimaBoca = f.quem;
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}">
+          ${repete ? '' : `<div class="fala-quem">${this.esc(f.quem)}</div>`}
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -63366,14 +63378,17 @@ const UI = {
       /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
          são aspas de ironia ("análise jurídica") e ficam na narração. */
       const pedacos = this.partirFalas(t);
-      if (!pedacos) { pendente = t; return `<p>${this.esc(t)}</p>`; }
+      if (!pedacos) { pendente = t; ultimaBoca = null; return `<p>${this.esc(t)}</p>`; }
 
       let html = '';
       for (const pe of pedacos){
         if (pe.tipo === 'narracao'){
-          html += html ? `<p class="entre-falas">${this.esc(pe.texto)}</p>`
-                       : `<p>${this.esc(pe.texto)}</p>`;
-          pendente = pe.texto;
+          /* ", diz a atendente" é atribuição da fala anterior, não
+             parágrafo novo: tira a vírgula que ficou órfã na frente. */
+          const limpo = html ? pe.texto.replace(/^[,;]\s*/, '') : pe.texto;
+          html += html ? `<p class="entre-falas">${this.esc(limpo)}</p>`
+                       : `<p>${this.esc(limpo)}</p>`;
+          pendente = pe.texto; ultimaBoca = null;
           continue;
         }
         /* o que está escrito numa placa não é alguém falando com você */
@@ -63392,8 +63407,10 @@ const UI = {
 
         const quem = lado === 'voce' ? meuNome : npc;
         const meu = lado === 'voce' ? ' voce' : '';
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}">`
-              + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+        const repete = quem && ultimaBoca === quem;
+        ultimaBoca = quem || null;
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}">`
+              + (quem && !repete ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
@@ -65322,6 +65339,8 @@ const UI = {
 
   telaDoacao(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
+    this.npcDaCena = null; this.minhasFalasDaCena = null;
+    this.falanteDaCena = null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -65342,6 +65361,8 @@ const UI = {
 
   telaCargo(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
+    this.npcDaCena = null; this.minhasFalasDaCena = null;
+    this.falanteDaCena = c.falante || null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">

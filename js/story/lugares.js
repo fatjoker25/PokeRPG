@@ -618,9 +618,10 @@ const Cidade = {
        texto:[
          'Você entrega o dinheiro no balcão do museu e a moça atrás do balcão não entende a primeira vez que você fala.',
          fala('Dra. Sayo', 'Doação pra quê?'),
-         fala('Dra. Sayo', 'Pro telhado.'),
+         d=>fala(d.jogador.nome, 'Pro telhado.'),
          'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
          fala('Dra. Sayo', 'Eu escrevi vinte e duas cartas.'),
+         d=>fala(d.jogador.nome, 'Vinte e duas?'),
          fala('Dra. Sayo', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
          fala('Dra. Sayo', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
          'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
@@ -633,7 +634,7 @@ const Cidade = {
        texto:[
          'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta.',
          fala('Curador Ren', 'Você sabe que isso não devolve ninguém, né.'),
-         fala('Curador Ren', 'Sei.'),
+         d=>fala(d.jogador.nome, 'Sei.'),
          fala('Curador Ren', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
          'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
        ]},
@@ -645,7 +646,7 @@ const Cidade = {
        texto:[
          'Você liga pro laboratório e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
          fala('Goro', 'Você quer pagar o pedido de quem?'),
-         fala('Goro', 'De quem não puder pagar. Qualquer um.'),
+         d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
          'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
          fala('Goro', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
          fala('Goro', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
@@ -677,7 +678,10 @@ const Cidade = {
     if (!c || Estado.j.dinheiro < c.valor) return;
     Estado.j.dinheiro -= c.valor;
     Estado.marcar(c.marca);
-    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso uma coisa que não era dele', {notorio:true});
+    /* doação é notícia: passa por cima do teto do capítulo, e por isso
+       vai em ef.rep.notorio, que é onde mudarRep procura */
+    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.toLowerCase(),
+                              {rep:{notorio:true}});
     Estado.registrar(`Pagou ${c.valor} ₽ por: ${c.nome}.`);
     Estado.salvar('auto');
     const avisos = [{tipo:'item', texto:`−${c.valor} ₽.`}];
