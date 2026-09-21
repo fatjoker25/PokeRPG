@@ -2716,7 +2716,9 @@ const UI = {
       <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
       <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
       <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
-      <p class="sussurro">São 36 finais e 20 epílogos, e os dois se combinam: a mesma conversa com Mewtwo termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+      <div class="linha"><span class="k">Onde a história fecha</span><span class="v">a caverna do norte é um dos nove lugares, não o único</span></div>
+      <p class="sussurro">São 49 finais e 20 epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+      <p class="sussurro">Trinta e seis finais estão na caverna do norte e treze estão antes dela, espalhados por oito capítulos. Esses treze não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
@@ -2875,7 +2877,9 @@ const UI = {
       <div class="linha"><span class="k">Epílogo</span><span class="v">o que aconteceu com você — sai do crachá, da via e da reputação</span></div>
       <div class="linha"><span class="k">Quem desempata</span><span class="v">crachá fala mais alto que via · via fala mais alto que reputação</span></div>
       <div class="linha"><span class="k">Rodapé</span><span class="v">quem ficou pelo caminho, promessa cumprida, Pokédex, credenciais, lendário no cinto</span></div>
-      <p class="sussurro">São 36 finais e 20 epílogos, e os dois se combinam: a mesma conversa com Mewtwo termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+      <div class="linha"><span class="k">Onde a história fecha</span><span class="v">a caverna do norte é um dos nove lugares, não o único</span></div>
+      <p class="sussurro">São 49 finais e 20 epílogos, e os dois se combinam: a mesma cena termina diferente pra quem é Líder de Ginásio, pra quem carrega o envelope sem timbre e pra quem não virou nada. O códice guarda os dois em listas separadas.</p>
+      <p class="sussurro">Trinta e seis finais estão na caverna do norte e treze estão antes dela, espalhados por oito capítulos. Esses treze não são derrota nem desistência: são escolhas escritas, que só aparecem quando o seu caminho pagou por elas, e que encerram a campanha ali com epílogo e tudo. Assinar um contrato, sentar numa cadeira vazia, assumir um ginásio, voltar pra casa e não sair mais — cada um desses é um fim de verdade, e o jogo não avisa antes qual escolha é qual.</p>
 
       <h3>O que o crachá muda na história</h3>
       <div class="linha"><span class="k">Opção que só existe com posto</span><span class="v">cais de Vermilion · recepção da Silph · cerca de Fuchsia</span></div>
