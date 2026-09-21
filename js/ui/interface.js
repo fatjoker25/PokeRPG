@@ -2223,16 +2223,27 @@ const UI = {
     this.modal('Regras do sistema', `
       <h3>Combate</h3>
       <div class="linha"><span class="k">Dano</span><span class="v">1d10 × (poder ÷ 10)</span></div>
-      <div class="linha"><span class="k">Crítico</span><span class="v">1d20 = 20 → ×1,5</span></div>
+      <div class="linha"><span class="k">Crítico</span><span class="v">1d20 ≥ 20 − (Vel. base ÷ 40, até 3) → ×1,5</span></div>
       <div class="linha"><span class="k">Precisão</span><span class="v">1d20 > (100 − precisão) ÷ 5</span></div>
       <div class="linha"><span class="k">STAB</span><span class="v">×1,5</span></div>
       <div class="linha"><span class="k">Eficácia de tipo</span><span class="v">0× / 0,5× / 2×</span></div>
       <div class="linha"><span class="k">Fuga</span><span class="v">1d20 ≥ (Vel. selvagem − sua + 10)</span></div>
-      <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo (limitada entre 0,45× e 2,2×), senão os stats dos jogos não teriam efeito nenhum. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
+      <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: 1d10 × 3 · você leva 25% de volta</span></div>
+      <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo, elevada a 1,15 e limitada entre 0,33× e 3,2×, senão os stats dos jogos não teriam efeito nenhum. Golpes de crítico alto tiram 3 do limite do d20. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
+
+      <h3>Quando ele não faz o que você mandou</h3>
+      <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
+      <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
+      <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador.</p>
       <h3>Vocês dois</h3>
-      <p class="sussurro">A personalidade que você escreveu na ficha e a natureza de cada Pokémon são lidas no mesmo idioma. Quando batem, ele obedece com menos esforço e acerta melhor. Quando não batem, ele demora pra entender a ordem — em combate e fora dele. O jogo não avisa qual é qual: repare em quem vai na frente.</p>
+      <p class="sussurro">A personalidade que você escreveu na ficha e a natureza de cada Pokémon são lidas nos mesmos cinco eixos: discrição, paciência, coragem, simpatia e cuidado. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
+      <div class="linha"><span class="k">+5 ou mais</span><span class="v">obedece muito mais fácil · crítico um ponto mais perto · +1 nas perícias</span></div>
+      <div class="linha"><span class="k">+2 a +4</span><span class="v">obedece mais fácil</span></div>
+      <div class="linha"><span class="k">−2 a −4</span><span class="v">obedece pior · −1 nas perícias</span></div>
+      <div class="linha"><span class="k">−5 ou menos</span><span class="v">obedece muito pior · −1 nas perícias</span></div>
+      <p class="sussurro">Quem vai na frente é quem pesa nas perícias. O jogo não diz qual natureza combina com qual traço, e não avisa antes de uma tarefa que tipo de bicho ela pede: isso é pra reparar, não pra consultar.</p>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `
@@ -2242,7 +2253,8 @@ const UI = {
       ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a bola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
-      <p class="sussurro">1d10 + status contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
+      <p class="sussurro">1d10 + status + o cinto, contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
+      <p class="sussurro">O cinto conta porque cada perícia puxa um eixo — Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência. O melhor do time naquele eixo soma, o pior desconta metade, e a afinidade de quem vai na frente entra por cima. A linha embaixo do resultado mostra a soma e quem ajudou; por que aquele ajudou é com você.</p>
       <div class="linha"><span class="k">Força</span><span class="v">fugir de um selvagem que te encurralou · testes de cena</span></div>
       <div class="linha"><span class="k">Percepção</span><span class="v">vasculhar · ler a natureza do seu time · observar a cena · testes</span></div>
       <div class="linha"><span class="k">Intelecto</span><span class="v">escolher a hora de pegar a estrada · andar pela cidade · ler o tipo de um desconhecido em combate</span></div>
@@ -2271,6 +2283,26 @@ const UI = {
       <div class="linha"><span class="k">Sorte</span><span class="v">cada ponto aperta a conta — no máximo, 1 em 300</span></div>
       <div class="linha"><span class="k">Status</span><span class="v">idênticos aos da espécie</span></div>
       <p class="sussurro">A cor é a única diferença, e é a diferença inteira. Um brilhante avistado fica marcado na Pokédex mesmo que escape; capturado, a marca muda. Evoluir não tira a cor.</p>
+
+      <h3>PokéNav</h3>
+      <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
+      <div class="linha"><span class="k">Revanche</span><span class="v">o mesmo adversário, com o time subido junto com você</span></div>
+      <div class="linha"><span class="k">Favor</span><span class="v">tem limite de vezes e espera de capítulos</span></div>
+      <div class="linha"><span class="k">Missão</span><span class="v">pedir · cumprir no mundo · ligar de volta pra entregar</span></div>
+      <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
+      <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
+
+      <h3>Estrada e tempo</h3>
+      <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
+      <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
+      <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
+      <p class="sussurro">Não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
+
+      <h3>Trocas</h3>
+      <div class="linha"><span class="k">Onde</span><span class="v">algumas cidades e algumas rotas · nunca em todas</span></div>
+      <div class="linha"><span class="k">O que vale</span><span class="v">o que o outro pede · troca feita não desfaz</span></div>
+      <div class="linha"><span class="k">Evolução por troca</span><span class="v">chega já evoluído na sua mão</span></div>
+      <p class="sussurro">Quem só evolui trocando evolui no ato da troca: o Haunter que sai da mão do outro chega como Gengar na sua. O que chega entra na Pokédex na hora.</p>
 
       <h3>Item segurado</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
