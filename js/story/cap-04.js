@@ -162,10 +162,41 @@ c4_recusou_pastel:{
   texto:[
     '"Não, obrigado."',
     'Ela dá de ombros e come as duas metades, sem nenhum ressentimento, porque velha de cidade pequena oferece por educação e não por necessidade de que aceitem.',
-    'Você fica sentado um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão burra.'
+    '"Você é de onde?", ela pergunta de boca cheia, sem olhar pra você.',
+    d=>`"${d.jogador.cidade}."`,
+    '"Longe."',
+    '"Uns dias."',
+    '"Uns dias", ela repete, e no jeito que ela repete cabe uma cidade inteira que ela nunca vai ver.',
+    'Vocês ficam quietos. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
+    'Você fica sentado um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão burra.',
+    '"Tem mais", ela diz, sem olhar. "Eu comprei três."'
   ],
+  ef:{npc:{nome:'Sra. Ercília', opiniao:1, memoria:'Ofereceu pastel, você recusou, e ela comprou três de qualquer jeito.'}},
   escolhas:[
-    {texto:'Voltar atrás. "Ainda tem?"', vai:'c4_senhora_cidade'},
+    {texto:'"Ainda tem?" Aceitar agora.', vai:'c4_senhora_cidade',
+     ef:{hp:3, moral:2, flag:'voltou_atras_no_pastel'}},
+    {texto:'"Tudo bem, sério." Aguentar a fome.', vai:'c4_senhora_teimosia'},
+    {texto:'Ir andar pela cidade.', vai:'c4_rua'},
+    {texto:'Ir atrás do som das detonações.', vai:'c4_pedreira_caminho'}
+  ]
+},
+
+c4_senhora_teimosia:{
+  texto:[
+    '"Tudo bem, sério."',
+    'Ela come o terceiro pastel devagar, na sua frente, sem nenhuma piedade.',
+    '"Você é teimoso."',
+    '"Sou."',
+    '"Isso é bom e é ruim, e você vai descobrir a proporção na estrada."',
+    'Ela limpa a mão no papel e enrola tudo numa bola pequena.',
+    '"Meu filho é teimoso. Passou fome duas vezes por isso e não mudou nenhuma vez."',
+    'Ela levanta.',
+    '"Vai lá, teimoso. A cidade é pra esse lado."'
+  ],
+  ef:{flag:'teimou_com_a_ercilia', moral:2,
+      npc:{nome:'Sra. Ercília', opiniao:2, memoria:'Te chamou de teimoso e disse que o filho dela também é.'}},
+  escolhas:[
+    {texto:'"Ele tá bem? O seu filho."', vai:'c4_senhora_filho'},
     {texto:'Ir andar pela cidade.', vai:'c4_rua'},
     {texto:'Ir atrás do som das detonações.', vai:'c4_pedreira_caminho'}
   ]
@@ -174,16 +205,134 @@ c4_recusou_pastel:{
 c4_senhora_cidade:{
   texto:[
     '"O que tem pra fazer aqui?"',
-    '"Aqui?" Ela acha graça. "Pedra. Tem pedra. Tem o museu, que é pedra velha. Tem a pedreira, que é pedra nova. E tem o resto, que é gente."',
+    '"Aqui?" Ela acha graça, e a graça é genuína. "Pedra. Tem pedra. Tem o museu, que é pedra velha. Tem a pedreira, que é pedra nova. E tem o resto, que é gente."',
+    '"Só isso?"',
+    '"Meu bem, uma cidade não precisa de mais do que isso pra durar cento e quarenta anos."',
+    'Ela ajeita a bolsa no colo, do jeito de quem acabou de decidir que vai falar mais do que pretendia.',
+    '"Pewter existe porque alguém em mil oitocentos e alguma coisa descobriu que aqui embaixo tem uma pedra que não racha. Não é bonita, não é cara, não serve pra joia nenhuma. Ela só não racha."',
+    '"E isso basta?"',
+    '"Isso basta." Ela bate com o nó do dedo no banco. "Metade dos prédios de Saffron tem alicerce daqui. Aquela torre toda envidraçada lá deles, que sai na televisão, tá em cima de pedra que saiu desse buraco, carregada por gente dessa rua."',
+    '"Ninguém sabe disso."',
+    '"Ninguém precisa saber. Alicerce é a parte que ninguém vê e é a parte que segura." Ela dá de ombros sem nenhuma amargura. "A cidade inteira é meio assim."',
     '"O museu vale?"',
     '"O museu é a única coisa dessa cidade que alguém de fora já quis ver." Ela aponta com o queixo pra um prédio quadrado de dois andares. "E tá caindo aos pedaços. Vai lá antes que caia."'
   ],
-  ef:{flag:'ouviu_do_museu'},
+  ef:{flag:['ouviu_do_museu','sabe_do_alicerce'],
+      registrar:'Metade de Saffron está em cima de pedra tirada de Pewter.'},
   escolhas:[
     {texto:'Ir ao museu.', vai:'c4_museu'},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'},
     {texto:'"E gente? Que gente?"', vai:'c4_senhora_gente'},
+    {texto:'"Caindo aos pedaços como assim?"', vai:'c4_senhora_museu_cai'},
+    {texto:'"A senhora tem orgulho daqui?"', vai:'c4_senhora_orgulho'},
     {texto:'Agradecer e andar pela rua principal.', vai:'c4_rua'}
+  ]
+},
+
+c4_senhora_museu_cai:{
+  texto:[
+    '"Caindo aos pedaços como assim?"',
+    '"Como assim literal." Ela levanta dois dedos. "Goteira na sala dois. Vitrine trincada na sala um. E o telhado dos fundos, que eles cobriram com lona em dois mil e quinze e a lona tá lá até hoje."',
+    '"E a prefeitura?"',
+    '"A prefeitura mandou um engenheiro. O engenheiro fez um relatório. O relatório tá numa gaveta e a lona tá no telhado, e as duas coisas vão continuar exatamente onde estão."',
+    'Ela fala isso sem raiva nenhuma, que é pior do que se tivesse raiva.',
+    '"Tem uma moça lá dentro que cuida daquilo sozinha. Cuida mesmo: passa pano, troca balde, escreve carta pra Liga."',
+    '"E a Liga responde?"',
+    '"Respondeu uma vez, em noventa e oito." Ela ri sem alegria. "Pediu mais informações."'
+  ],
+  ef:{flag:'sabe_da_lona_do_museu',
+      presagio:'Uma lona de 2015 ainda no telhado em 2027. Alguém vai te oferecer dinheiro por aquele museu e você vai lembrar dessa lona.'},
+  escolhas:[
+    {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
+    {texto:'"E se alguém quisesse comprar o museu?"', vai:'c4_senhora_comprar'},
+    {texto:'Voltar ao assunto da cidade.', vai:'c4_senhora_gente'}
+  ]
+},
+
+c4_senhora_comprar:{
+  texto:[
+    '"E se alguém quisesse comprar? O museu."',
+    'Ela para de mexer na bolsa.',
+    '"Por que você pergunta isso?"',
+    '"Não sei. Perguntei."',
+    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só um menino de quinze anos fazendo pergunta de menino de quinze anos.',
+    '"Já quiseram", ela diz. "Duas vezes que eu saiba."',
+    '"E?"',
+    '"E o museu é municipal, então não vende. Aí eles perguntaram se dava pra emprestar as peças. Aí perguntaram se dava pra emprestar só duas. Aí perguntaram quanto custava o seguro."',
+    'Ela fecha a bolsa.',
+    '"Pergunta que vem em três etapas não é pergunta, meu bem. É proposta cortada em três pra parecer menor."'
+  ],
+  ef:{flag:'sabe_das_propostas', moral:2,
+      npc:{nome:'Sra. Ercília', opiniao:3, memoria:'Te contou das três perguntas de quem quis as peças do museu.'},
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou da coisa certa antes de qualquer um pedir'},
+      registrar:'Já tentaram comprar, emprestar e segurar as peças do museu de Pewter — em três etapas.',
+      presagio:'Você vai ouvir uma pergunta cortada em três de novo, e da próxima vez vai ser com você.'},
+  escolhas:[
+    {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
+    {texto:'"Quem perguntou?"', vai:'c4_senhora_quem_perguntou'}
+  ]
+},
+
+c4_senhora_quem_perguntou:{
+  texto:[
+    '"Quem perguntou?"',
+    '"Gente de carro bom."',
+    'Ela diz isso do jeito que se diz uma categoria inteira, e em Pewter isso é uma categoria inteira.',
+    '"Educados. Chamavam todo mundo de senhor e senhora, inclusive gente de vinte anos, o que dá até uma agonia."',
+    '"E crachá? Tinham crachá?"',
+    'Ela pensa. Pensa de verdade, sem inventar pra agradar.',
+    '"Tinham. Mas eu não uso óculos na rua e não li."',
+    'Uma pausa.',
+    '"Mas tinha um desenho. Uma coisa assim, duas bandejinhas penduradas." Ela faz o gesto com as duas mãos, equilibrando. "Sabe? Dessas de pesar."'
+  ],
+  ef:{flag:'balanca_em_pewter',
+      npc:{nome:'Sra. Ercília', opiniao:4, memoria:'Descreveu com as mãos o desenho de uma balança no crachá de quem perguntou pelo museu.'},
+      registrar:'O crachá de quem perguntou pelo museu tinha o desenho de uma balança.',
+      presagio:'Uma balança. Você vai ver esse desenho outras seis vezes antes de saber o que ele significa.'},
+  escolhas:[
+    {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
+    {texto:'Agradecer e ir andar.', vai:'c4_rua'}
+  ]
+},
+
+c4_senhora_orgulho:{
+  texto:[
+    '"A senhora tem orgulho daqui?"',
+    'Ela ri alto, uma vez, e algumas pombas saem do chão.',
+    '"Que pergunta é essa, menino."',
+    '"É uma pergunta."',
+    '"Orgulho é palavra de gente que foi embora e voltou." Ela alisa a saia. "Quem nunca saiu não tem orgulho, tem costume."',
+    'Você fica sem resposta, e ela percebe, e sossega o tom.',
+    '"Eu gosto daqui. Gosto de saber o nome de quem passa. Gosto que a padaria abre às cinco e que eu sei o nome do padeiro e o nome do pai do padeiro."',
+    '"E o que a senhora não gosta?"',
+    '"De saber o nome de todo mundo." Ela sorri torto. "É a mesma coisa. Cidade pequena é uma coisa só, vista dos dois lados."'
+  ],
+  ef:{moral:4, hp:2,
+      npc:{nome:'Sra. Ercília', opiniao:3, memoria:'Te disse que orgulho é palavra de quem foi embora e voltou.'}},
+  escolhas:[
+    {texto:'"Eu vou embora hoje."', vai:'c4_senhora_vai_embora'},
+    {texto:'Voltar ao assunto da cidade.', vai:'c4_senhora_gente'},
+    {texto:'Agradecer e ir andar.', vai:'c4_rua'}
+  ]
+},
+
+c4_senhora_vai_embora:{
+  texto:[
+    '"Eu vou embora hoje. Ou amanhã."',
+    '"Eu sei", ela diz. "Dá pra ver pela mochila."',
+    'Ela olha a sua mochila com atenção profissional, do jeito de quem já viu muita mochila passar por essa praça.',
+    '"Fivela quebrada."',
+    '"É."',
+    '"Conserta em Cerulean. Tem um sapateiro na ponte sul que conserta fivela de mochila e cobra pouco, e o nome dele é Anacleto."',
+    'Ela levanta, sacode a saia e guarda o papel do pastel no bolso.',
+    '"Pronto. Agora você já tem uma coisa útil de Pewter e uma velha pra quem voltar e contar se deu certo."'
+  ],
+  ef:{moral:6, flag:'sabe_do_anacleto',
+      npc:{nome:'Sra. Ercília', opiniao:5, memoria:'Te indicou um sapateiro em Cerulean e pediu notícia de volta.'},
+      registrar:'Anacleto, sapateiro da ponte sul de Cerulean, conserta fivela de mochila.'},
+  escolhas:[
+    {texto:'"Eu volto e conto."', vai:'c4_rua', ef:{flag:'prometeu_pra_ercilia', moral:4}},
+    {texto:'Só acenar e ir.', vai:'c4_rua'}
   ]
 },
 
@@ -308,10 +457,92 @@ c4_teo_nome:{
   texto:[
     '"Pico é um nome bom."',
     '"É horrível", ele diz, radiante. "É um nome horrível. Eu tinha NOVE ANOS."',
+    '"Por que Pico?"',
+    '"Porque bicava tudo." Ele abre as mãos. "Tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
     'O Pidgey, ao ouvir o nome duas vezes, para no meio do degrau e olha pra cima, esperando.',
-    'Téo desce e pega ele no colo sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.'
+    '"Ó ele." A voz do Téo muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
+    'Téo desce e pega ele no colo sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
+    '"Ele tá comigo desde antes de tudo isso", ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
+    '"E aí você virou treinador e ele virou time."',
+    '"É." Téo olha pro Pidgey e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
+    'Ele percebe que falou sério e conserta imediatamente, porque é o Téo:',
+    '"Enfim. Ele adora. Ele é burro."'
   ],
-  ef:{hp:2},
+  ef:{hp:2, moral:4, flag:'sabe_do_pico',
+      npc:{nome:'Téo', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'},
+      presagio:'Você vai ouvir essa mesma dúvida da boca de gente muito mais velha que o Téo, e eles não vão ter a piada pronta pra consertar.'},
+  escolhas:[
+    {texto:'"Pergunta pra ele, então."', vai:'c4_teo_pergunta_pro_pico'},
+    {texto:'"Todo mundo faz isso. É o que é ter time."', vai:'c4_teo_todo_mundo_faz'},
+    {texto:'"Treina comigo."', vai:'c4_teo_treino'},
+    {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
+    {texto:'Ir andar sozinho.', vai:'c4_rua'}
+  ]
+},
+
+c4_teo_pergunta_pro_pico:{
+  texto:[
+    '"Pergunta pra ele, então."',
+    '"Como é que eu—" Ele para. "Você tá falando sério."',
+    '"Tô."',
+    'Téo olha pro Pidgey no colo dele com a cara de quem foi pego numa coisa.',
+    '"Pico." Ele fala baixo, meio sem graça de estar fazendo isso na frente de outra pessoa. "Você quer isso? Isso aqui. Ginásio, estrada, apanhar de Onix."',
+    'O Pidgey vira a cabeça de lado.',
+    'E aí, sem nenhum motivo aparente, sobe do colo pro ombro dele — que é onde ele não estava antes — e fica lá.',
+    'Os dois ficam parados uns três segundos.',
+    '"Isso não quer dizer nada", diz o Téo, com a voz esquisita. "Isso não quer dizer nada, cara, ele sobe no ombro de qualquer um."',
+    '"Ele nunca subiu no meu."',
+    '"CALA A BOCA."'
+  ],
+  ef:{moral:8,
+      npc:{nome:'Téo', opiniao:5, memoria:'Perguntou pro próprio Pidgey se ele queria aquilo, e o Pidgey subiu no ombro dele.'},
+      rep:{eixo:'bom',delta:1,motivo:'Fez um amigo perguntar ao próprio Pokémon o que ninguém pergunta'},
+      flag:'pico_no_ombro'},
+  escolhas:[
+    {texto:'"Treina comigo."', vai:'c4_teo_treino'},
+    {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
+    {texto:'Deixar os dois em paz e ir andar.', vai:'c4_rua'}
+  ]
+},
+
+c4_teo_todo_mundo_faz:{
+  texto:[
+    '"Todo mundo faz isso. É o que é ter time."',
+    '"É, né." Ele aceita rápido demais, do jeito de quem queria ser convencido.',
+    'Mas continua com o Pidgey no colo e não muda de assunto.',
+    '"Só que tem uma diferença, cara. O seu veio de um lugar certo. Alguém assinou papel, alguém pesou, alguém anotou numa lista."',
+    d=>`"O Pico veio de baixo de uma caixa d'água. Eu levei ele pra casa numa camiseta e ninguém nunca perguntou nada pra ninguém."`,
+    '"E isso é pior?"',
+    '"Não sei." Ele coça o pescoço. "É mais solto. Papel é chato mas papel é uma promessa de alguém pra alguém."',
+    'Ele olha pro Pidgey.',
+    '"A gente nunca prometeu nada. A gente só foi."'
+  ],
+  ef:{moral:3, flag:'teo_sem_papel',
+      npc:{nome:'Téo', opiniao:2, memoria:'Te contou que achou o Pidgey embaixo de uma caixa d\'água e levou pra casa numa camiseta.'},
+      registrar:'O Pidgey do Téo não veio de lista nenhuma.'},
+  escolhas:[
+    {texto:'"Então promete agora."', vai:'c4_teo_promete_agora'},
+    {texto:'"Treina comigo."', vai:'c4_teo_treino'},
+    {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'}
+  ]
+},
+
+c4_teo_promete_agora:{
+  texto:[
+    '"Então promete agora."',
+    '"Prometer o quê? Pra um Pidgey?"',
+    '"Você fala com ele o dia inteiro."',
+    '"Isso é diferente, isso é—" Ele para no meio e desiste de explicar por que seria diferente.',
+    'Ele endireita o Pidgey no colo.',
+    '"Tá." Uma pausa longa. "Eu não vou te deixar em lugar nenhum. É isso. É essa a promessa e é a única que eu consigo fazer hoje."',
+    'Ele olha pra você meio bravo.',
+    '"Satisfeito?"',
+    '"Muito."',
+    '"Você é insuportável e eu te odeio."'
+  ],
+  ef:{moral:6, flag:'teo_prometeu',
+      npc:{nome:'Téo', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'},
+      presagio:'Guarde essa promessa. Vai chegar um capítulo em que ela vai ser cobrada, e não vai ser por você.'},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
@@ -362,14 +593,73 @@ c4_teo_volta:{
   texto:[
     'Vocês andam. Téo fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
     'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
-    '"Ah, e tem um museu", ele diz, apontando. "Eu entrei. Tem um bicho de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
+    '"Aquela casa ali tem um cachorro que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
+    '"Isso não é mapear a cidade."',
+    '"É o melhor tipo de mapear a cidade."',
+    'Vocês passam pela praça. A poeira cinza cobre tudo num tom só e o Téo escreve o próprio nome no capô de um carro com o dedo, e depois apaga com a manga, envergonhado.',
+    '"Cara, sério agora." Ele baixa o tom sem parar de andar. "Você tá com medo?"',
+    '"Do ginásio?"',
+    '"De tudo. Do ginásio, da estrada, de chegar em casa depois e não ter nada pra contar."',
+    'Ele chuta uma pedrinha e erra.',
+    '"Eu perdi duas vezes e das duas eu saí de lá pensando na cara da minha mãe. Não na batalha. Na cara dela quando eu contar."',
+    'Uma quadra inteira sem ninguém falar nada.',
+    '"Ah, e tem um museu", ele diz, apontando, mudando de assunto do jeito mais óbvio possível. "Eu entrei. Tem um bicho de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
   ],
-  ef:{flag:'ouviu_do_museu'},
+  ef:{flag:'ouviu_do_museu', moral:2,
+      npc:{nome:'Téo', opiniao:2, memoria:'Te perguntou, andando pela rua, se você estava com medo.'}},
   escolhas:[
+    {texto:'"Tô com medo, sim." Responder a pergunta que ele fez.',
+     vai:'c4_teo_medo', ef:{flag:'admitiu_medo_pro_teo'}},
+    {texto:'"Ela vai fazer a cara de sempre. É a sua mãe."', vai:'c4_teo_mae'},
     {texto:'Ir ao museu agora, com ele.', vai:'c4_museu', ef:{flag:'teo_no_museu'}},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'},
     {texto:'"Boa. Depois eu vejo." Continuar andando.', vai:'c4_rua'},
     {texto:'Perguntar por que ele reparou na moça.', vai:'c4_teo_moca'}
+  ]
+},
+
+c4_teo_medo:{
+  texto:[
+    '"Tô com medo, sim."',
+    'Téo para de andar. Você anda mais dois passos antes de perceber e voltar.',
+    '"Sério?"',
+    '"Por que eu mentiria?"',
+    '"Sei lá, cara. Todo mundo mente nessa parte." Ele volta a andar, mais devagar. "Todo mundo que eu encontrei na estrada tava tranquilo. Todo mundo."',
+    '"Todo mundo tava mentindo."',
+    '"Ah, cara." Ele solta o ar. "Isso me ajudou mais do que qualquer coisa que a enfermeira falou."',
+    'Ele anda mais três passos e depois fala, olhando pra frente:',
+    '"Se você perder amanhã, me fala. Não some. Eu sumi depois da segunda e foi pior."'
+  ],
+  ef:{moral:8, flag:'pacto_com_teo',
+      npc:{nome:'Téo', opiniao:5, memoria:'Vocês combinaram de contar um pro outro quando perdessem, em vez de sumir.'},
+      rep:{eixo:'bom',delta:1,motivo:'Admitiu medo em vez de fazer pose'},
+      registrar:'Combinou com Téo: quando perder, avisa. Não some.'},
+  escolhas:[
+    {texto:'"Combinado."', vai:'c4_museu', ef:{flag:'teo_no_museu', moral:4}},
+    {texto:'"Combinado." E ir pra pedreira.', vai:'c4_pedreira_caminho', ef:{moral:4}},
+    {texto:'Só bater no ombro dele e seguir.', vai:'c4_rua'}
+  ]
+},
+
+c4_teo_mae:{
+  texto:[
+    '"Ela vai fazer a cara de sempre. É a sua mãe."',
+    '"Você não conhece a cara de sempre."',
+    '"Conheço a minha."',
+    'Ele ri com o nariz.',
+    '"A minha é pior. A minha não fica brava. A minha fica ORGULHOSA." Ele fala a palavra como quem fala um palavrão. "Ela ia dizer que tudo bem, que eu tentei, que tentar já é muito."',
+    '"E isso é ruim?"',
+    '"É insuportável, cara." Ele passa a mão no cabelo. "Porque aí eu não tenho nem com quem brigar. Fica só eu e o fato."',
+    'Vocês andam mais um pouco.',
+    '"Enfim", ele diz. "Museu."'
+  ],
+  ef:{moral:3, flag:'sabe_da_mae_do_teo',
+      npc:{nome:'Téo', opiniao:3, memoria:'Te contou que o pior da mãe dele é ela não ficar brava.'}},
+  escolhas:[
+    {texto:'Ir ao museu com ele.', vai:'c4_museu', ef:{flag:'teo_no_museu'}},
+    {texto:'"Tô com medo também, pra constar."', vai:'c4_teo_medo',
+     ef:{flag:'admitiu_medo_pro_teo'}},
+    {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'}
   ]
 },
 
@@ -378,10 +668,22 @@ c4_teo_moca:{
     '"Por que você reparou nela?"',
     'Téo demora a responder, o que nele é raro.',
     '"Porque ela tava sozinha num museu vazio numa terça de manhã", ele diz. "Isso não é normal, cara. Ninguém faz isso por hobby."',
-    'Às vezes o Téo diz uma coisa inteligente sem perceber, e depois estraga: "Ou ela é doida. Pode ser que ela seja só doida."'
+    '"Ela trabalha lá."',
+    '"Trabalha, mas não era trabalho." Ele faz um gesto vago. "Sabe quando a pessoa tá no serviço e sabe quando a pessoa tá no serviço? Ela não tava no serviço. Ela tava visitando."',
+    'Às vezes o Téo diz uma coisa inteligente sem perceber, e depois estraga: "Ou ela é doida. Pode ser que ela seja só doida."',
+    '"Você falou com ela?"',
+    '"Falei oi. Ela falou oi. Aí eu falei que o bicho de pedra era grande e ela falou que sim."',
+    '"Conversa boa."',
+    '"Eu sou tímido perto de gente que sabe das coisas, cara, me deixa em paz." Ele empurra você de leve com o ombro. "Vai você. Você faz pergunta de um jeito que não irrita."',
+    '"Isso é elogio?"',
+    '"É a coisa mais elogiosa que eu já falei pra alguém na minha vida e eu quero que fique registrado."'
   ],
+  ef:{moral:3, npc:{nome:'Téo', opiniao:2, memoria:'Disse que você faz pergunta de um jeito que não irrita as pessoas.'}},
   escolhas:[
     {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'teo_no_museu'}},
+    {texto:'"Vem comigo. Você pergunta uma e eu pergunto uma."', vai:'c4_museu',
+     ef:{flag:['teo_no_museu','teo_vai_perguntar'], moral:4,
+         npc:{nome:'Téo', opiniao:3, memoria:'Você o levou junto ao museu e dividiu as perguntas com ele.'}}},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'},
     {texto:'Continuar andando pela cidade.', vai:'c4_rua'}
   ]
@@ -410,12 +712,48 @@ c4_teo_escada:{
   texto:[
     'Você senta na escada onde ele estava sentado.',
     'A pedra ainda está morna do corpo dele. Isso é um detalhe desnecessário e é o único em que você consegue pensar por uns bons dois minutos.',
-    'Pela porta de vidro dá pra ver ele na fila da enfermeira, de costas, falando com o Pidgey.'
+    'Pela porta de vidro dá pra ver ele na fila da enfermeira, de costas, falando com o Pidgey.',
+    'Ele fala muito. Fala com as mãos, inclusive, o que é absurdo de se fazer com um Pidgey que não responde.',
+    'Um menino de uns dez anos senta dois degraus abaixo de você, com a mochila no colo e sem nenhum Pokémon à vista.',
+    '"Ele é seu amigo?", o menino pergunta, sem olhar pra você.',
+    '"É."',
+    '"Ele perdeu duas vezes. Eu vi as duas."',
+    'Você não responde. O menino continua, porque menino de dez anos continua.',
+    '"Na segunda ele chorou lá fora. Atrás da caçamba." Ele aperta a alça da mochila. "Eu não contei pra ninguém."',
+    '"E tá contando pra mim."',
+    '"Você não é ninguém, você é o amigo dele."',
+    'O menino levanta e sai antes que você consiga responder qualquer coisa, do jeito que as crianças saem quando entregam uma informação pesada por engano.'
   ],
+  ef:{flag:'sabe_do_choro_do_teo', moral:-2,
+      registrar:'Um menino te contou que Téo chorou atrás da caçamba depois da segunda derrota.',
+      presagio:'Você vai carregar essa informação sem poder usar. Algumas coisas só servem pra mudar o jeito que você olha.'},
   escolhas:[
     {texto:'Entrar e voltar atrás.', vai:'c4_teo_desculpa'},
+    {texto:'Entrar e não falar nada sobre isso. Só ficar.', vai:'c4_teo_so_ficar'},
     {texto:'Levantar e ir andar.', vai:'c4_rua'},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'}
+  ]
+},
+
+c4_teo_so_ficar:{
+  texto:[
+    'Você entra e senta numa das cadeiras de plástico da fila, duas atrás dele, sem falar nada.',
+    'Ele demora uns bons quarenta segundos pra reparar que você está lá.',
+    '"Ué."',
+    '"Ué."',
+    '"Você não vai falar nada?"',
+    '"Não."',
+    'Ele olha pra você desconfiado, esperando a armadilha, e a armadilha não vem.',
+    'Aí ele vira pra frente de novo e vocês dois ficam ali, na fila da enfermeira de Pewter, num silêncio que não precisa de nada.',
+    'Quando chega a vez dele, ele levanta e fala sem olhar pra trás:',
+    '"Valeu por não falar nada, cara."'
+  ],
+  ef:{moral:8,
+      npc:{nome:'Téo', opiniao:4, memoria:'Você sentou do lado dele na fila sem dizer nada, e era exatamente isso que ele precisava.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou do lado de alguém sem tentar consertar nada'}},
+  escolhas:[
+    {texto:'Esperar ele sair e chamar pra treinar.', vai:'c4_teo_treino'},
+    {texto:'Sair antes e deixar ele em paz.', vai:'c4_rua'}
   ]
 },
 
@@ -668,13 +1006,59 @@ c4_menina_sabe:{
 c4_rua2:{
   texto:[
     'A rua continua sendo a rua. A luz baixou um pouco e a poeira ficou dourada, o que quase compensa a poeira.',
-    'Ainda tem o museu de letras faltando. Ainda tem a porta de metal no fim da rua. E ainda tem, longe, a cada vinte minutos, a detonação.'
+    'Ainda tem o museu de letras faltando. Ainda tem a porta de metal no fim da rua. E ainda tem, longe, a cada vinte minutos, a detonação.',
+    'Na calçada da padaria, dois homens de macacão cinza dividem uma marmita e uma conversa que você pega no meio:',
+    '"...e aí o cara do escritório falou que era pra parar o setor quatro."',
+    '"Parar por quê?"',
+    '"Sei lá. Falou que era estudo."',
+    'O outro raspa a marmita com o garfo.',
+    '"Estudo em pedreira é uma coisa só, Ademar."',
+    '"É?"',
+    '"É alguém querendo comprar."',
+    'Eles te veem parado e param de falar, do jeito educado e total com que gente de cidade pequena para de falar quando alguém de fora chega perto.',
+    '"Boa tarde", diz um.',
+    '"Boa tarde."',
+    'E é o fim da conversa.'
   ],
+  ef:{flag:'ouviu_do_setor_quatro',
+      registrar:'Mandaram parar o setor quatro da pedreira. Os homens chamam isso de estudo; um deles não acredita.',
+      presagio:'Setor quatro. Anota esse número, porque ele volta.'},
   escolhas:[
+    {texto:'Perguntar do setor quatro mesmo assim.', vai:'c4_setor_quatro'},
     {texto:'Museu.', vai:'c4_museu'},
     {texto:'A porta de metal.', vai:'c4_porta_metal'},
     {texto:'A pedreira.', vai:'c4_pedreira_caminho'},
     {texto:'Chega por hoje. Voltar pro Centro.', vai:'c4_fim'}
+  ]
+},
+
+c4_setor_quatro:{
+  texto:[
+    '"Desculpa. O que é o setor quatro?"',
+    'Os dois se olham. É um olhar rápido e completo, desses que decidem uma coisa inteira sem ninguém falar.',
+    '"É uma parte da pedreira", diz o mais velho. "Tem seis setores. Quatro é o mais fundo."',
+    '"E pararam."',
+    '"Pararam." Ele fecha a marmita. "Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou."',
+    '"Mas?"',
+    'O mais novo — Ademar — responde antes que o outro decida não responder:',
+    '"Mas o quatro é o que dá pedra. O dois e o três é entulho, moço. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo."',
+    'O mais velho olha pra ele do jeito que se olha pra quem falou demais.',
+    '"Ele é novo", diz o mais velho, pra você. "Fala o que pensa."',
+    '"Isso é ruim?"',
+    '"Aqui é."'
+  ],
+  ef:{flag:'sabe_do_setor_quatro', moral:2,
+      npc:{nome:'Ademar', opiniao:2, memoria:'Te contou, contra o conselho do colega, que o setor parado é justamente o que dá pedra.'},
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou de frente uma coisa que a cidade evita'},
+      registrar:'O setor quatro é o único que dá pedra boa, e é justamente o que mandaram parar.',
+      presagio:'"Aqui é." Guarde o tom com que ele disse isso.'},
+  escolhas:[
+    {texto:'"Obrigado. Não vou repetir isso pra ninguém."', vai:'c4_rua2',
+     ef:{flag:'prometeu_silencio_pros_pedreiros', moral:2,
+         rep:{eixo:'bom',delta:1,motivo:'Prometeu não repetir o que ouviu de quem podia se prejudicar'}}},
+    {texto:'Ir pra pedreira ver o setor quatro.', vai:'c4_pedreira_caminho',
+     ef:{flag:'foi_ver_o_setor_quatro'}},
+    {texto:'Ir ao museu.', vai:'c4_museu'}
   ]
 },
 
@@ -771,8 +1155,35 @@ c4_ivone_seco:{
   texto:[
     '"Vou."',
     'Você não pergunta mais nada. Ela espera. Você continua não perguntando.',
-    '"Tá bom", ela cede. "Eu falo mesmo assim."'
+    'É um tipo específico de silêncio — o de quem já decidiu e não quer discutir a decisão com ninguém — e ela reconhece na hora, porque é o silêncio dela também.',
+    '"Você é de poucas palavras ou tá com pressa?"',
+    '"As duas."',
+    '"Respeito as duas." Ela cruza os braços. "Mas eu trabalho num museu vazio há onze anos, menino. Eu aprendi a falar com quem não pergunta."',
+    '"Tá bom", ela cede, e não tem cedência nenhuma nisso. "Eu falo mesmo assim."'
   ],
+  ef:{npc:{nome:'Dra. Ivone', opiniao:1, memoria:'Falou com você mesmo você não tendo perguntado nada.'}},
+  escolhas:[
+    {texto:'Escutar.', vai:'c4_ivone_monte'},
+    {texto:'"Onze anos?"', vai:'c4_ivone_onze_anos'}
+  ]
+},
+
+c4_ivone_onze_anos:{
+  texto:[
+    '"Onze anos?"',
+    '"Ah, ele fala."',
+    'Ela abre um sorriso pequeno e rápido, do tipo que some antes de virar sorriso de verdade.',
+    '"Onze anos em abril. Entrei como estagiária de conservação, que é um cargo que não existe mais porque cortaram."',
+    '"E quem sobrou?"',
+    '"Eu." Ela abre os braços devagar, indicando o salão inteiro, as vitrines, a lona no telhado dos fundos. "Eu sou a conservação, a bilheteria, a limpeza e a segurança. Na quarta de manhã eu também sou a guia."',
+    '"E o diretor?"',
+    '"O diretor é um cargo que uma pessoa ocupa três horas por semana e assina papel."',
+    'Ela diz isso sem veneno, o que de novo é pior do que com veneno.',
+    '"Agora deixa eu falar do monte, que é pra isso que você tá aqui e é a única coisa que eu tenho de verdade pra te dar."'
+  ],
+  ef:{flag:'sabe_da_ivone_sozinha', moral:2,
+      npc:{nome:'Dra. Ivone', opiniao:3, memoria:'Te contou que é sozinha no museu há onze anos e faz tudo.'},
+      registrar:'Ivone é a única funcionária do museu de Pewter. Há onze anos.'},
   escolhas:[{texto:'Escutar.', vai:'c4_ivone_monte'}]
 },
 

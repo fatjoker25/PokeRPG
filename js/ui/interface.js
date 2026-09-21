@@ -423,7 +423,7 @@ const UI = {
   /* Quem fala a próxima frase entre aspas. Uma conversa é uma troca:
      alterna entre você e a outra pessoa, e a narração no meio corrige
      o rumo quando diz de quem é a vez. */
-  ladoDaFala(narracao, anterior){
+  ladoDaFala(narracao, anterior, npc){
     if (!narracao) return anterior === 'npc' ? 'voce' : 'npc';
     const n = narracao.trim();
     /* "Você diz", "Você pergunta", "Você responde" — é sua vez */
@@ -439,6 +439,14 @@ const UI = {
     const todos = [];
     const re = /(^|[^a-zà-ÿ])(ele|ela|eles|elas|você|voce)([^a-zà-ÿ]|$)/gi;
     let m; while ((m = re.exec(n))) todos.push({i:m.index, lado: /^(você|voce)$/i.test(m[2]) ? 'voce' : 'npc'});
+    /* o nome da pessoa vale tanto quanto o pronome dela: "Téo olha
+       pro Pidgey e depois pra você" é fala do Téo, não sua */
+    if (npc){
+      const curto = npc.split(' ').filter(x => x.length > 2).pop() || npc;
+      let i = n.indexOf(curto);
+      while (i !== -1){ todos.push({i, lado:'npc'}); i = n.indexOf(curto, i + 1); }
+      todos.sort((a, b) => a.i - b.i);
+    }
     if (todos.length) return doisPontos ? todos[todos.length-1].lado : todos[0].lado;
     if (/^(O |A |Os |As |Um |Uma )/.test(n)) return 'npc';
     /* narração que não diz de quem é ("Uma pausa.", "Rápido demais.")
@@ -536,8 +544,8 @@ const UI = {
         if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
         else if (primeira)
           lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
-               : this.ladoDaFala(pendente, null);
-        else if (pendente !== null) lado = this.ladoDaFala(pendente, lado);
+               : this.ladoDaFala(pendente, null, npc);
+        else if (pendente !== null) lado = this.ladoDaFala(pendente, lado, npc);
         else lado = (lado === 'voce') ? 'npc' : 'voce';
         primeira = false; pendente = null;
 
