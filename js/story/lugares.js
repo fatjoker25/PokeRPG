@@ -155,7 +155,7 @@ pallet:[
   {chave:'pl_troca', texto:['Um menino de sete anos te para na rua e pergunta, muito sério, se você tem um Caterpie. Ele não explica pra quê.']},
   {chave:'pl_praia', texto:['Do alto do morro dá pra ver o mar. Do outro lado dele, num dia limpo, uma mancha escura que é uma ilha.']},
   {chave:'loja_pallet', texto:['O mercado de Pallet abre tarde e vende Poké Ball atrás do balcão, junto com pilha e anzol.'], descobre:'loja_pallet'},
-  {chave:'pl_ushio', texto:['Sr. Ushio varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
+  {chave:'pl_ushio', texto:['Sr. Ives varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
 ]
 };
 
@@ -611,7 +611,7 @@ const Cidade = {
      DOAÇÃO — o único lugar em que dinheiro vira outra coisa.
      Cada causa é uma ponta solta que a história já deixou: a lona
      no telhado do museu de Pewter, o abrigo de Lavender, e a linha
-     do caderno do Goro que ninguém foi buscar.
+     do caderno do Célio que ninguém foi buscar.
      ------------------------------------------------------------ */
   causas(){
     const d = Estado.dados;
@@ -624,13 +624,13 @@ const Cidade = {
        rep:3, marca:'pagou_o_telhado',
        texto:[
          'Você entrega o dinheiro no balcão do museu e a moça atrás do balcão não entende a primeira vez que você fala.',
-         fala('Dra. Sayo', 'Doação pra quê?'),
+         fala('Dra. Cordell', 'Doação pra quê?'),
          d=>fala(d.jogador.nome, 'Pro telhado.'),
          'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
-         fala('Dra. Sayo', 'Eu escrevi vinte e duas cartas.'),
+         fala('Dra. Cordell', 'Eu escrevi vinte e duas cartas.'),
          d=>fala(d.jogador.nome, 'Vinte e duas?'),
-         fala('Dra. Sayo', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
-         fala('Dra. Sayo', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
+         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Cordell', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
          'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
        ]},
       {id:'abrigo', cidade:'lavender', valor:6000,
@@ -640,9 +640,9 @@ const Cidade = {
        rep:2, marca:'pagou_o_abrigo',
        texto:[
          'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta.',
-         fala('Curador Ren', 'Você sabe que isso não devolve ninguém, né.'),
+         fala('Curador Fabre', 'Você sabe que isso não devolve ninguém, né.'),
          d=>fala(d.jogador.nome, 'Sei.'),
-         fala('Curador Ren', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
+         fala('Curador Fabre', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
          'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
        ]},
       {id:'bolsa', cidade:'*', valor:8000,
@@ -652,12 +652,12 @@ const Cidade = {
        rep:3, marca:'pagou_uma_bola',
        texto:[
          'Você liga pro laboratório e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
-         fala('Goro', 'Você quer pagar o pedido de quem?'),
+         fala('Célio', 'Você quer pagar o pedido de quem?'),
          d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
          'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
-         fala('Goro', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
-         fala('Goro', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
-         fala('Goro', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
+         fala('Célio', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
+         fala('Célio', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
+         fala('Célio', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
        ]}
     ].filter(c => (c.cidade === '*' || c.cidade === id) && !Estado.dados.flags[c.marca]
                   && (!c.requer || c.requer(d)));

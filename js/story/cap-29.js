@@ -51,21 +51,21 @@ c29_a_rua:{
 c29_o_vizinho:{
   texto:[
     'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.',
-    'O portão dela tem o sobrenome em ferro fundido, do jeito que se fazia em mil novecentos e setenta: FUJINO.',
+    'O portão dela tem o sobrenome em ferro fundido, do jeito que se fazia em mil novecentos e setenta: VALE.',
     'Ela te vê olhando o portão e fala primeiro, do jeito de quem estava esperando alguém pra falar disso há muito tempo.',
-    fala('Sra. Fujino', 'Você não é da prefeitura.'),
+    fala('Sra. Vale', 'Você não é da prefeitura.'),
     d=>fala(d.jogador.nome, 'Não.'),
-    fala('Sra. Fujino', 'Pena.'),
+    fala('Sra. Vale', 'Pena.'),
     'Ela move o regador pro vaso seguinte.',
-    fala('Sra. Fujino', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pra zoonoses e pra delegacia.'),
+    fala('Sra. Vale', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pra zoonoses e pra delegacia.'),
     d=>fala(d.jogador.nome, 'Por causa do quê?'),
-    fala('Sra. Fujino', 'Do barulho.'),
+    fala('Sra. Vale', 'Do barulho.'),
     'Ela para de regar.',
-    fala('Sra. Fujino', 'Não é barulho de festa, meu filho. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
-    fala('Sra. Fujino', 'E eu moro aqui há trinta e um anos e eu sei diferenciar cachorro de vizinho de o que quer que seja aquilo.', 'baixo')
+    fala('Sra. Vale', 'Não é barulho de festa, meu filho. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
+    fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar cachorro de vizinho de o que quer que seja aquilo.', 'baixo')
   ],
   ef:{flag:['a_senhora_do_vaso','achou_o_portao_verde'],
-      npc:{nome:'Sra. Fujino', opiniao:2, viuVoce:'Te contou das quatro ligações que ela fez e que ninguém atendeu.'},
+      npc:{nome:'Sra. Vale', opiniao:2, viuVoce:'Te contou das quatro ligações que ela fez e que ninguém atendeu.'},
       registrar:'A vizinha do portão verde ligou quatro vezes para três órgãos diferentes. Ninguém foi.'},
   escolhas:[
     {texto:'Perguntar o que responderam nas quatro vezes.', vai:'c29_as_quatro_ligacoes'},
@@ -77,20 +77,20 @@ c29_o_vizinho:{
 
 c29_as_quatro_ligacoes:{
   texto:[
-    fala('Sra. Fujino', 'Anotei todas. Eu anoto tudo, é o meu defeito.'),
+    fala('Sra. Vale', 'Anotei todas. Eu anoto tudo, é o meu defeito.'),
     'Ela entra em casa e volta com uma agenda de capa de couro sintético, dessas de banco, e abre numa página marcada com um elástico.',
-    fala('Sra. Fujino', 'Prefeitura: "não é competência, é zoonoses".'),
-    fala('Sra. Fujino', 'Zoonoses: "zoonoses trata de animal doméstico, Pokémon é outra pasta".'),
-    fala('Sra. Fujino', 'Delegacia: "sem flagrante não tem ocorrência, a senhora pode registrar um boletim informativo".'),
+    fala('Sra. Vale', 'Prefeitura: "não é competência, é zoonoses".'),
+    fala('Sra. Vale', 'Zoonoses: "zoonoses trata de animal doméstico, Pokémon é outra pasta".'),
+    fala('Sra. Vale', 'Delegacia: "sem flagrante não tem ocorrência, a senhora pode registrar um boletim informativo".'),
     d=>fala(d.jogador.nome, 'E a quarta?'),
     'Ela vira a página.',
-    fala('Sra. Fujino', 'A quarta foi na Liga.'),
-    fala('Sra. Fujino', 'A Liga foi a única que mandou alguém.'),
+    fala('Sra. Vale', 'A quarta foi na Liga.'),
+    fala('Sra. Vale', 'A Liga foi a única que mandou alguém.'),
     d=>fala(d.jogador.nome, 'E?'),
-    fala('Sra. Fujino', 'Veio um moço de cinza. Ficou vinte minutos lá dentro, saiu, e me disse que estava tudo regular.'),
+    fala('Sra. Vale', 'Veio um moço de cinza. Ficou vinte minutos lá dentro, saiu, e me disse que estava tudo regular.'),
     'Ela fecha a agenda.',
-    fala('Sra. Fujino', 'Eu perguntei regular como. Ele disse que eu não precisava me preocupar.'),
-    fala('Sra. Fujino', 'Isso foi em maio. Aí o barulho de madrugada aumentou.', 'frio')
+    fala('Sra. Vale', 'Eu perguntei regular como. Ele disse que eu não precisava me preocupar.'),
+    fala('Sra. Vale', 'Isso foi em maio. Aí o barulho de madrugada aumentou.', 'frio')
   ],
   ef:{flag:['a_agenda_da_senhora','sabe_do_lote_unico'],
       registrar:'A Liga mandou um oficial ao portão verde em maio. Ele disse que estava tudo regular. O barulho aumentou depois.',
@@ -106,17 +106,17 @@ c29_pediu_a_agenda:{
   texto:[
     d=>fala(d.jogador.nome, 'A senhora me empresta essa agenda?'),
     'Ela segura a agenda com as duas mãos e você já viu esse gesto antes, num banco em frente a uma cerca em Fuchsia.',
-    fala('Sra. Fujino', 'Eu copio pra você.'),
+    fala('Sra. Vale', 'Eu copio pra você.'),
     d=>fala(d.jogador.nome, 'A senhora não precisa.'),
-    fala('Sra. Fujino', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
+    fala('Sra. Vale', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
     'Ela senta na cadeira da calçada e copia à mão, em letra de professora, as quatro ligações com data, hora, número discado, nome de quem atendeu e o que foi dito.',
     'Leva vinte e dois minutos.',
-    'No fim ela assina — Ayako Fujino, num traço firme —, põe a data e escreve embaixo: "declaro que copiei do meu próprio caderno e que é verdade".',
+    'No fim ela assina — Bianca Vale, num traço firme —, põe a data e escreve embaixo: "declaro que copiei do meu próprio caderno e que é verdade".',
     'Ninguém ensinou isso pra ela. Ela só sabe que uma coisa escrita à mão vale mais quando tem alguém assumindo que escreveu.'
   ],
   ef:{flag:['copia_da_agenda','reika_precisa_de_papel'],
       rep:{eixo:'bom', delta:1, motivo:'Uma vizinha copiou à mão quatro ligações e assinou embaixo, por você.'},
-      npc:{nome:'Sra. Fujino', opiniao:4, viuVoce:'Copiou e assinou as quatro ligações para você levar.'},
+      npc:{nome:'Sra. Vale', opiniao:4, viuVoce:'Copiou e assinou as quatro ligações para você levar.'},
       registrar:'Está com a cópia manuscrita e assinada das quatro ligações da vizinha do portão verde.'},
   escolhas:[
     {texto:'Ir bater no portão.', vai:'c29_bateu'},
@@ -127,15 +127,15 @@ c29_pediu_a_agenda:{
 
 c29_quem_entra_ali:{
   texto:[
-    fala('Sra. Fujino', 'Gente nova, quase sempre. Da sua idade e pouco mais.'),
+    fala('Sra. Vale', 'Gente nova, quase sempre. Da sua idade e pouco mais.'),
     'Ela recomeça a regar, porque as plantas não têm culpa.',
-    fala('Sra. Fujino', 'Entram com bicho e saem sem.'),
+    fala('Sra. Vale', 'Entram com bicho e saem sem.'),
     d=>fala(d.jogador.nome, 'Todos?'),
-    fala('Sra. Fujino', 'Não. Uns saem com o bicho e com a cara de quem não gostou do preço.'),
+    fala('Sra. Vale', 'Não. Uns saem com o bicho e com a cara de quem não gostou do preço.'),
     'Ela move o regador.',
-    fala('Sra. Fujino', 'Esses eu fico contente. Eu fico na janela torcendo, que é uma coisa ridícula de se fazer aos setenta anos.'),
-    fala('Sra. Fujino', 'E uns saem sem o bicho e sem olhar pra trás, e andam rápido.'),
-    fala('Sra. Fujino', 'Esses eu não consigo esquecer a cara, e são muitos, e eu lembro de todas.', 'baixo')
+    fala('Sra. Vale', 'Esses eu fico contente. Eu fico na janela torcendo, que é uma coisa ridícula de se fazer aos setenta anos.'),
+    fala('Sra. Vale', 'E uns saem sem o bicho e sem olhar pra trás, e andam rápido.'),
+    fala('Sra. Vale', 'Esses eu não consigo esquecer a cara, e são muitos, e eu lembro de todas.', 'baixo')
   ],
   ef:{flag:'entram_com_bicho_saem_sem',
       registrar:'No portão verde entra gente nova com Pokémon e sai sem.'},
@@ -190,18 +190,18 @@ c29_bateu:{
   texto:[
     'Você dá os três toques com a palma.',
     'O portão abre quarenta centímetros e atrás dele tem um homem de uns trinta anos de camiseta regata, descalço, com um copo de café na mão.',
-    'O nome dele é Mitsuo e você só descobre isso porque a Sra. Fujino grita do portão ao lado, no meio da conversa, que ele precisa tirar o carro da frente da garagem dela.',
+    'O nome dele é Dario e você só descobre isso porque a Sra. Vale grita do portão ao lado, no meio da conversa, que ele precisa tirar o carro da frente da garagem dela.',
     'Ele olha você de cima a baixo em menos de um segundo e chega a uma conclusão.',
-    fala('Mitsuo', 'Traz?'),
+    fala('Dario', 'Traz?'),
     d=>fala(d.jogador.nome, 'Trago o quê?'),
     'Ele suspira, do jeito de quem já explicou isso hoje.',
-    fala('Mitsuo', 'Bicho, moço. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
+    fala('Dario', 'Bicho, moço. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} está do seu lado e ele olha pro ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
                : 'Ele olha pros seus ombros procurando uma bola no cinto e não acha.';
     },
-    fala('Mitsuo', 'Tabela tá na parede. Entra ou não entra, mas decide aí que tá frio.')
+    fala('Dario', 'Tabela tá na parede. Entra ou não entra, mas decide aí que tá frio.')
   ],
   ef:{flag:'o_portao_abriu',
       registrar:'O portão verde abriu. Tem uma tabela de preço na parede de dentro.'},
@@ -220,10 +220,10 @@ c29_dentro:{
     'Os valores são bons. São muito melhores do que você imaginava, e é isso que você não tinha previsto: a coisa toda funciona porque paga bem.',
     'E na quarta coluna, sem cabeçalho, tem uma letra em cada linha: C, C, C, R, C, R, R, C.',
     d=>fala(d.jogador.nome, 'O que é a última coluna?'),
-    fala('Mitsuo', 'Destino.'),
+    fala('Dario', 'Destino.'),
     d=>fala(d.jogador.nome, 'C e R.'),
     'Ele toma o café dele.',
-    fala('Mitsuo', 'Criação e Recurso.'),
+    fala('Dario', 'Criação e Recurso.'),
     'Ele diz as duas palavras sem nenhum peso, do jeito de quem repete uma classificação de manual que ele nunca parou pra ouvir.'
   ],
   ef:{flag:['viu_a_tabela','sabe_do_lote_unico'],
@@ -242,13 +242,13 @@ c29_dentro_verdade:{
     d=>fala(d.jogador.nome, 'Eu não vim vender nada. Eu vim ver a tabela.'),
     'Ele para com o copo de café na metade do caminho.',
     'E aí ele faz uma coisa que desmonta a cena inteira: ele dá de ombros e abre mais o portão.',
-    fala('Mitsuo', 'Tá na parede. Pode ver.'),
+    fala('Dario', 'Tá na parede. Pode ver.'),
     d=>fala(d.jogador.nome, 'Assim?'),
-    fala('Mitsuo', 'Moço, eu não tô escondendo nada. Eu tenho alvará.'),
+    fala('Dario', 'Moço, eu não tô escondendo nada. Eu tenho alvará.'),
     'Ele aponta com o queixo pra uma moldura na parede da sala e tem mesmo um alvará ali, emitido, com brasão, dentro da validade.',
-    fala('Mitsuo', 'Compra e venda de espécimes, atividade licenciada, código quatro dois sete.'),
+    fala('Dario', 'Compra e venda de espécimes, atividade licenciada, código quatro dois sete.'),
     'Ele toma o café.',
-    fala('Mitsuo', 'Você achou que era o quê? Que eu ia te bater?'),
+    fala('Dario', 'Você achou que era o quê? Que eu ia te bater?'),
     'E você achou, e ele viu que você achou, e é humilhante de um jeito muito específico.'
   ],
   ef:{flag:['viu_a_tabela','o_alvara_quatro_dois_sete','sabe_do_lote_unico'],
@@ -265,19 +265,19 @@ c29_dentro_verdade:{
 c29_o_que_e_recurso:{
   texto:[
     d=>fala(d.jogador.nome, 'O que é Recurso?'),
-    fala('Mitsuo', 'É a classificação. Vem na tabela que eles mandam.'),
+    fala('Dario', 'É a classificação. Vem na tabela que eles mandam.'),
     d=>fala(d.jogador.nome, 'Eu sei que vem. Eu tô perguntando o que quer dizer.'),
     'Ele olha pra tabela. É a primeira vez na conversa que ele olha pra tabela.',
-    fala('Mitsuo', 'Criação é o que vai pra criadouro. Pra reprodução, entende?'),
+    fala('Dario', 'Criação é o que vai pra criadouro. Pra reprodução, entende?'),
     d=>fala(d.jogador.nome, 'E Recurso?'),
     'Silêncio.',
-    fala('Mitsuo', 'Recurso é o que não vai pra criadouro.'),
+    fala('Dario', 'Recurso é o que não vai pra criadouro.'),
     'Ele põe o copo de café na mesinha do sofá e fica com as duas mãos livres e não sabe o que fazer com elas.',
-    fala('Mitsuo', 'Eu faço isso há seis anos e você é o primeiro que pergunta.'),
-    fala('Mitsuo', 'E eu tô ouvindo a minha resposta agora, em voz alta, pela primeira vez.', 'baixo')
+    fala('Dario', 'Eu faço isso há seis anos e você é o primeiro que pergunta.'),
+    fala('Dario', 'E eu tô ouvindo a minha resposta agora, em voz alta, pela primeira vez.', 'baixo')
   ],
   ef:{flag:'a_coluna_recurso', moral:1,
-      npc:{nome:'Mitsuo', opiniao:1, viuVoce:'Você o fez dizer em voz alta, depois de seis anos, o que a coluna significa.'},
+      npc:{nome:'Dario', opiniao:1, viuVoce:'Você o fez dizer em voz alta, depois de seis anos, o que a coluna significa.'},
       registrar:'"Recurso é o que não vai pra criadouro." Ele nunca tinha dito isso em voz alta.',
       presagio:'Seis anos. E bastou alguém perguntar uma vez.'},
   escolhas:[
@@ -290,17 +290,17 @@ c29_o_que_e_recurso:{
 c29_quem_paga:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem manda a tabela?'),
-    fala('Mitsuo', 'Chega por malote.'),
+    fala('Dario', 'Chega por malote.'),
     d=>fala(d.jogador.nome, 'De onde?'),
-    fala('Mitsuo', 'Do escritório.'),
+    fala('Dario', 'Do escritório.'),
     d=>fala(d.jogador.nome, 'Que escritório?'),
     'Ele abre uma gaveta do móvel da sala, tira um envelope pardo usado e vira o verso pra você, onde tem o carimbo de expedição.',
     'Rua do Comércio, 118 — sala 704.',
     'Você lê duas vezes e a sala fica com um zumbido que não existe.',
-    fala('Mitsuo', 'Eu nunca fui lá. Eu recebo malote, eu pago à vista, eu entrego na terça, quinta e sábado.'),
-    fala('Mitsuo', 'Você tá me olhando como se eu fosse o dono disso.'),
+    fala('Dario', 'Eu nunca fui lá. Eu recebo malote, eu pago à vista, eu entrego na terça, quinta e sábado.'),
+    fala('Dario', 'Você tá me olhando como se eu fosse o dono disso.'),
     'Ele guarda o envelope.',
-    fala('Mitsuo', 'Eu ganho oito por cento.', 'baixo')
+    fala('Dario', 'Eu ganho oito por cento.', 'baixo')
   ],
   ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
       registrar:'Os malotes do portão verde vêm da Rua do Comércio, 118, sala 704.',
@@ -315,11 +315,11 @@ c29_quem_paga:{
 c29_pediu_o_envelope:{
   texto:[
     d=>fala(d.jogador.nome, 'Me dá esse envelope.'),
-    fala('Mitsuo', 'Não.'),
+    fala('Dario', 'Não.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('Mitsuo', 'Porque eu tenho dois filhos e um alvará.'),
+    fala('Dario', 'Porque eu tenho dois filhos e um alvará.'),
     'Ele fecha a gaveta com a mão espalmada, devagar.',
-    fala('Mitsuo', 'Mas eu não vou te expulsar e eu não vou te vigiar, e eu preciso ir no banheiro.'),
+    fala('Dario', 'Mas eu não vou te expulsar e eu não vou te vigiar, e eu preciso ir no banheiro.'),
     'E ele sai da sala.',
     'Leva quatro minutos.',
     'A gaveta não tem chave.'
@@ -342,7 +342,7 @@ c29_pegou_o_envelope:{
   ],
   ef:{flag:['tem_o_envelope_do_malote','reika_precisa_de_papel'],
       rep:{eixo:'ruim', delta:1, motivo:'Levou um envelope da casa de outra pessoa, mesmo com a porta aberta de propósito.'},
-      npc:{nome:'Mitsuo', opiniao:2, viuVoce:'Saiu da sala de propósito e deixou a gaveta sem chave.'},
+      npc:{nome:'Dario', opiniao:2, viuVoce:'Saiu da sala de propósito e deixou a gaveta sem chave.'},
       registrar:'Está com o envelope de malote carimbado: Rua do Comércio, 118, sala 704.'},
   escolhas:[
     {texto:'Sair de Cerulean com isso.', vai:'c29_fim'},
@@ -355,11 +355,11 @@ c29_copiou_a_tabela:{
     'Você copia a tabela inteira no verso de um papel qualquer: trinta e uma linhas, três colunas, e a quarta coluna sem cabeçalho.',
     'Leva dezoito minutos e ele não te atrapalha uma vez. Ele assiste televisão com o som baixo enquanto você escreve.',
     'Quando você termina, ele fala sem tirar os olhos da televisão:',
-    fala('Mitsuo', 'Vinte e dois "R".'),
+    fala('Dario', 'Vinte e dois "R".'),
     d=>fala(d.jogador.nome, 'O quê?'),
-    fala('Mitsuo', 'Das trinta e uma linhas, vinte e dois são "R".'),
+    fala('Dario', 'Das trinta e uma linhas, vinte e dois são "R".'),
     'Ele muda de canal.',
-    fala('Mitsuo', 'Eu também nunca tinha contado.'),
+    fala('Dario', 'Eu também nunca tinha contado.'),
     'Você olha a sua cópia e conta.',
     'Vinte e dois.'
   ],
@@ -455,9 +455,9 @@ c29_abriu_todas:{
     'Eles ficam.',
     'Essa é a parte que você não tinha previsto: você abre trinta e uma gaiolas e trinta e uma criaturas continuam sentadas.',
     'O homem do portão aparece na porta do galpão no meio da segunda fileira e não avança.',
-    fala('Mitsuo', 'Ah, moleque.'),
+    fala('Dario', 'Ah, moleque.'),
     'Ele não grita. Ele fala do jeito de quem viu um copo cair e sabe que não dá pra pegar.',
-    fala('Mitsuo', 'Você sabe que eu vou ter que pagar por cada um desses?'),
+    fala('Dario', 'Você sabe que eu vou ter que pagar por cada um desses?'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'E você continua abrindo.'
   ],
@@ -517,9 +517,9 @@ c29_venceu:{
   texto:[
     'Ele recolhe o dele e senta no batente da porta do galpão com as costas na ombreira.',
     'Atrás dele, trinta e uma gaiolas abertas e trinta e uma criaturas que ainda não entenderam que podem sair.',
-    fala('Mitsuo', 'Eles não vão embora.'),
+    fala('Dario', 'Eles não vão embora.'),
     d=>fala(d.jogador.nome, 'Vão.'),
-    fala('Mitsuo', 'Hoje não.'),
+    fala('Dario', 'Hoje não.'),
     'E ele tem razão, e vocês dois ficam ali, sentados em pontos diferentes do mesmo quintal, esperando a primeira sair.',
     'Leva quarenta minutos.',
     'A primeira é da gaiola de baixo da segunda fileira, que é a que olhou pro exaustor, e quando ela passa pela porta as outras trinta entendem de uma vez.'
@@ -535,7 +535,7 @@ c29_venceu:{
 c29_perdeu:{
   texto:[
     'Você perde, e perder aqui não é apanhar: é ele recolher o seu time do chão do quintal, com cuidado até, e te pôr na rua pelo portão da frente.',
-    fala('Mitsuo', 'Some.'),
+    fala('Dario', 'Some.'),
     'Ele fecha o portão verde e você ouve, de fora, a tranca do galpão correndo de volta.',
     'Uma por uma. Trinta e uma vezes.',
     'Leva quatro minutos e você fica na calçada ouvindo os quatro minutos inteiros porque ir embora antes seria pior.'
@@ -552,15 +552,15 @@ c29_passou_por_ele:{
   texto:[
     'Você passa por ele e ele deixa passar, e os dois sabem que ele deixou.',
     'No portão da frente, antes de você sair, ele fala:',
-    fala('Mitsuo', 'Terça que vem chega outro caminhão.'),
+    fala('Dario', 'Terça que vem chega outro caminhão.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
-    fala('Mitsuo', 'E eu vou receber.'),
+    fala('Dario', 'E eu vou receber.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'Ele segura o portão aberto.',
-    fala('Mitsuo', 'Então não volta aqui. Vai no endereço do carimbo.', 'baixo')
+    fala('Dario', 'Então não volta aqui. Vai no endereço do carimbo.', 'baixo')
   ],
   ef:{flag:'ele_mandou_ir_no_endereco',
-      npc:{nome:'Mitsuo', opiniao:2, viuVoce:'Deixou você passar e mandou ir ao endereço do carimbo.'},
+      npc:{nome:'Dario', opiniao:2, viuVoce:'Deixou você passar e mandou ir ao endereço do carimbo.'},
       registrar:'Ele mandou você ir ao endereço do carimbo em vez de voltar ali.'},
   escolhas:[
     {texto:'Ir embora de Cerulean.', vai:'c29_fim'}

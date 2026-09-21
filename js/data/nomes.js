@@ -10,7 +10,7 @@
    você, em qualquer cena, e a partir daí o balão passa a usar o
    nome — nessa cena e em todas as outras.
 
-   Quem tem nome escrito na história (Kenta, Reika Ando, Sr. Fuji)
+   Quem tem nome escrito na história (Ezra, Rhea Colman, Sr. Fuji)
    não entra aqui: já tem nome. Quem é papel e não pessoa (a folha,
    a página do caderno) também não.
 
@@ -100,13 +100,20 @@ const JEITOS = [
                    'E é só isso: você perguntou e ele disse, e levou dois segundos, e podia ter sido no começo da conversa.']}
 ];
 
-const NOMES_F = ['Aya','Emi','Hana','Harumi','Kaori','Keiko','Mari','Michiko','Naoko','Rei',
-                 'Sachiko','Shizu','Tomoe','Yoko','Yumi','Kiyo','Fumi','Ritsu','Sae','Nao'];
-const NOMES_M = ['Akira','Daisuke','Eiji','Hiroshi','Jun','Kazuo','Makoto','Noboru','Ryo','Satoshi',
-                 'Shin','Takeshi','Wataru','Yuji','Hideki','Masa','Tooru','Kenzo','Rei','Sho'];
-const SOBRENOMES = ['Aoki','Ebina','Fukui','Hayashi','Ikeda','Kawase','Maruyama','Nomura','Ogawa','Saito',
-                    'Takada','Uchida','Wada','Yamashita','Shimizu','Morita','Hirano','Kondo','Ando','Sato',
-                    'Ishii','Noda','Kimura','Oda','Tamura','Fujita','Mori','Hara','Kubota','Sugimoto'];
+/* Registro das localizações dos jogos: Samuel Oak, Giovanni, Célio,
+   Bill, Lorelei, Lance. Nem japonês, nem brasileiro — internacional,
+   curto, fácil de ler em voz alta. Nada que colida com nome canônico
+   de Kanto. */
+const NOMES_F = ['Alba','Bianca','Carla','Cleo','Dalia','Elda','Elsa','Flora','Gina','Hilda',
+                 'Lara','Lena','Lina','Mara','Nina','Nora','Petra','Sara','Tessa','Vera'];
+const NOMES_M = ['Aldo','Bram','Dario','Dino','Elio','Enzo','Hugo','Ivo','Leo','Marco',
+                 'Milo','Nico','Nilo','Otto','Rico','Rufo','Silas','Tito','Varo','Vito'];
+/* Sobrenome no espírito dos professores de Pokémon, que são todos
+   árvore ou planta: Oak, Elm, Birch, Rowan, Juniper. Serve pro
+   "Sr." e pro "Sra." e pra quem se apresenta só pelo sobrenome. */
+const SOBRENOMES = ['Alder','Ash','Aspen','Birch','Bram','Cedar','Elm','Hazel','Holly','Holt',
+                    'Laurel','Linden','Lorca','Maple','Myrtle','Olive','Reed','Rowan','Sage','Thorn',
+                    'Vale','Wren','Cross','Hart','Marlow','Tanner','Vance','Stone','Pike','Quill'];
 
 /* o mesmo rótulo sempre dá o mesmo nome dentro de uma jornada, e
    jornadas diferentes dão nomes diferentes */
@@ -122,14 +129,44 @@ function ehFeminino(rotulo){ return /^(a|as|uma)\s/i.test(String(rotulo).trim())
 /* Tratamento formal pra quem o texto já trata por senhor/senhora */
 function _formal(rotulo){ return /senhora|senhor|velh|dona d|dono d|capit[ãa]o|doutor/i.test(rotulo); }
 
+/* Nome que a história já usa, e que o sorteio não pode repetir: duas
+   pessoas com o mesmo nome na mesma jornada confunde, e roubar o nome
+   de um personagem escrito é pior ainda. */
+const NOMES_DA_HISTORIA = new Set([
+  'Amos','Brill','Cleo','Colman','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
+  'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
+  'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
+  'Arden','Hart','Tanner',
+  /* canônicos de Kanto */
+  'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
+  'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle'
+]);
+
+/* anda na lista a partir do ponto sorteado até achar um nome que a
+   jornada ainda não usou */
+function _livre(pool, inicio, tomados){
+  for (let i = 0; i < pool.length; i++){
+    const c = pool[(inicio + i) % pool.length];
+    if (!NOMES_DA_HISTORIA.has(c) && !tomados.has(c)) return c;
+  }
+  return pool[inicio % pool.length];
+}
+
 function nomeSorteado(rotulo){
   const s = _semente(rotulo);
   const f = ehFeminino(rotulo);
-  if (_formal(rotulo)) return (f ? 'Sra. ' : 'Sr. ') + SOBRENOMES[s % SOBRENOMES.length];
+  /* o que já foi dado nesta jornada, pelo nome nu (sem Sr./Sra.) */
+  const tomados = new Set(Object.values((typeof Nomes !== 'undefined' && Nomes.sabidos) ? Nomes.sabidos() : {})
+                            .map(n => String(n).replace(/^Sr[ao]?\.\s*/, '')));
+  /* e o nome do próprio jogador, que seria a repetição mais estranha */
+  const eu = (Estado.dados && Estado.dados.jogador && Estado.dados.jogador.nome) || '';
+  if (eu) tomados.add(String(eu).trim().split(/\s+/)[0]);
+  const casa = (typeof nomeCasa === 'function') ? nomeCasa() : '';
+  if (casa) tomados.add(casa);
+  if (_formal(rotulo)) return (f ? 'Sra. ' : 'Sr. ') + _livre(SOBRENOMES, s, tomados);
   /* guarda e oficial se apresentam pelo sobrenome */
-  if (/guarda|oficial|policial|seguran|fiscal|vigia/i.test(rotulo)) return SOBRENOMES[s % SOBRENOMES.length];
-  const pool = f ? NOMES_F : NOMES_M;
-  return pool[s % pool.length];
+  if (/guarda|oficial|policial|seguran|fiscal|vigia/i.test(rotulo)) return _livre(SOBRENOMES, s, tomados);
+  return _livre(f ? NOMES_F : NOMES_M, s, tomados);
 }
 
 const Nomes = {
@@ -175,8 +212,12 @@ const Nomes = {
     const f = ehFeminino(r);
     const jeito = JEITOS.find(j => j.quando.test(r)) || JEITOS[JEITOS.length - 1];
     const linhas = (f ? jeito.linhas : jeito.linhasM)(r, nome);
+    /* Registra pelo RÓTULO de propósito: lembrarNPC já sabe que o rótulo
+       virou nome e funde as duas entradas. Se registrasse direto pelo nome
+       novo, uma cena que já tivesse guardado essa pessoa pelo rótulo
+       ficaria como uma segunda pessoa, com opinião separada. */
     if (typeof Estado.lembrarNPC === 'function')
-      Estado.lembrarNPC(nome, {nome, conhece:true, viuVoce:'Você perguntou o nome dela ou dele, e ela ou ele disse.'});
+      Estado.lembrarNPC(r, {conhece:true, viuVoce:'Você perguntou o nome e ouviu a resposta.'});
     return {nome, linhas};
   },
 

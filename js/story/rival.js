@@ -1,6 +1,6 @@
 /* ============================================================
    O RIVAL
-   Kenta, da pedra na Rota 1. Ele não é um obstáculo fixo:
+   Ezra, da pedra na Rota 1. Ele não é um obstáculo fixo:
    o time, o tom e o arco dele mudam conforme o que você faz —
    e, se você for longe demais, ele deixa de ser rival.
    ============================================================ */
@@ -41,7 +41,7 @@ function iniciarRival(){
   const meu = d.jogador.inicialDex;
   const dele = contra[meu] || Dados.escolher([1,4,7]);
   d.rival = {
-    nome:'Kenta',
+    nome:'Ezra',
     inicialDex: dele,
     vitorias:0,      // vitórias DELE sobre você
     derrotas:0,      // derrotas dele
@@ -64,7 +64,7 @@ function rival(){
 function arcoRival(){
   const d = Estado.dados;
   const r = rival();
-  const npc = d.npcs['Kenta'];
+  const npc = d.npcs['Ezra'];
   const op = npc ? npc.opiniao : 0;
 
   // 1) você virou uma coisa que ele precisa parar
@@ -163,11 +163,11 @@ function timeRival(){
 const CAPS_RIVAL = [5, 9, 13, 17, 21];
 
 /* Devolve QUEM aparece neste capítulo, ou null.
-   Kenta tem preferência: ele é o de casa. */
+   Ezra tem preferência: ele é o de casa. */
 function rivalDeveAparecer(cap){
   const d = Estado.dados;
-  if (d.npcs['Kenta'] && rival().ultimoCap !== cap && CAPS_RIVAL.includes(cap))
-    return {tipo:'teo', nome:'Kenta'};
+  if (d.npcs['Ezra'] && rival().ultimoCap !== cap && CAPS_RIVAL.includes(cap))
+    return {tipo:'teo', nome:'Ezra'};
   for (const R of RIVAIS_EXTRA){
     if (!R.caps.includes(cap)) continue;
     const reg = registroRival(R.id);
@@ -188,7 +188,7 @@ function falaRival(){
   const L = [];
 
   if (arco === 'parceiro'){
-    L.push('"EI!" Kenta atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome numa parada e eu gritei no meio do Centro Pokémon."');
+    L.push('"EI!" Ezra atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome numa parada e eu gritei no meio do Centro Pokémon."');
     if (d.insignias.length) L.push(`"${d.insignias.filter(i=>i!=='Título de Campeão').length} insígnias. ${d.insignias.length>4?'CARA.':'Já?'}"`);
     if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube do ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
     L.push(placar === 'perdendo'
@@ -197,22 +197,22 @@ function falaRival(){
   }
 
   else if (arco === 'rival'){
-    L.push('"Achei que ia te encontrar aqui." Kenta já está com a mão no cinto. "Não é coincidência, eu perguntei pra umas pessoas."');
+    L.push('"Achei que ia te encontrar aqui." Ezra já está com a mão no cinto. "Não é coincidência, eu perguntei pra umas pessoas."');
     if (d.insignias.length >= 4) L.push('"Você tá na minha frente. Tá tranquilo. Eu prefiro assim, dá menos vergonha de perder."');
     L.push(placar === 'ganhando' ? '"Eu tô ganhando a série. Você percebeu isso ou tá fingindo que não?"' : '"Bora resolver isso."');
   }
 
   else if (arco === 'ressentido'){
-    L.push('Kenta está encostado num poste e não se mexe quando você passa. Ele espera você notar.');
+    L.push('Ezra está encostado num poste e não se mexe quando você passa. Ele espera você notar.');
     L.push('"Oi." Ele não sorri. "Eu tenho treinado."');
-    const npc = d.npcs['Kenta'];
+    const npc = d.npcs['Ezra'];
     const mem = npc && npc.memorias && npc.memorias.length ? npc.memorias[npc.memorias.length-1].texto : null;
     if (mem) L.push(`Ele não esqueceu. "${mem}"`);
     L.push('"Não precisa ser simpático. Eu não vim pra isso."');
   }
 
   else if (arco === 'perseguidor'){
-    L.push('Kenta está esperando no meio do caminho, e dá pra ver que ele está ali há horas.');
+    L.push('Ezra está esperando no meio do caminho, e dá pra ver que ele está ali há horas.');
     L.push('"Eu não vim te desafiar."');
     if (d.cemiterio.length >= 2) L.push(`"Eu contei. Você perdeu ${d.cemiterio.length}. Isso não é acidente duas vezes."`);
     if (d.flags.trabalha_para_comissao || d.flags.conselheiro_da_comissao) L.push('"Eu li as atas. Tem o teu nome numa delas, numa lista de presença, do lado de gente que assina descarte."');
@@ -223,7 +223,7 @@ function falaRival(){
   }
 
   else { // quebrado
-    L.push('Kenta está sentado no chão do Centro Pokémon, de costas para a porta, e demora pra virar.');
+    L.push('Ezra está sentado no chão do Centro Pokémon, de costas para a porta, e demora pra virar.');
     L.push('"Ah. Oi."');
     L.push(`"Eu perdi pra você ${r.derrotas} vezes." Ele diz o número sem drama. "Eu parei de contar como derrota faz um tempo. Agora eu conto como... sei lá. Estatística."`);
     L.push('"Eu vou lutar se você quiser. Eu só não vou fingir que eu acho que dá."');
@@ -237,7 +237,7 @@ function falaVitoriaRival(){   // você venceu
   const r = rival();
   const d = Estado.dados;
   if (arco === 'parceiro') return [
-    'Kenta recolhe o time e vem te abraçar antes de recolher, o que é a ordem errada e é muito a cara dele.',
+    'Ezra recolhe o time e vem te abraçar antes de recolher, o que é a ordem errada e é muito a cara dele.',
     `"${r.derrotas + 1}." Ele conta em voz alta. "Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
     'Ele te dá metade do dinheiro que tem no bolso e não aceita não.'
   ];
@@ -248,7 +248,7 @@ function falaVitoriaRival(){   // você venceu
     'Ele vai embora antes de você responder.'
   ];
   if (arco === 'perseguidor') return [
-    'Kenta cai de joelhos no chão junto com o último do time dele, e não é figura de linguagem.',
+    'Ezra cai de joelhos no chão junto com o último do time dele, e não é figura de linguagem.',
     '"Eu sabia." Ele está chorando e não está tentando esconder. "Eu sabia que não ia dar."',
     '"Eu vim mesmo assim porque não tinha mais ninguém."',
     d.flags.tem_sangue_nas_maos
@@ -261,7 +261,7 @@ function falaVitoriaRival(){   // você venceu
     '"Valeu por lutar." Ele diz isso sério. "Muita gente já não luta comigo."'
   ];
   return [
-    'Kenta aperta a sua mão antes de recolher o time, do jeito que ele faz desde a Rota 1.',
+    'Ezra aperta a sua mão antes de recolher o time, do jeito que ele faz desde a Rota 1.',
     `"${r.derrotas + 1} a ${r.vitorias}." Ele já está calculando outra coisa. "Da próxima eu troco a ordem do time."`
   ];
 }
@@ -270,7 +270,7 @@ function falaDerrotaRival(){   // ele venceu
   const arco = arcoRival();
   const r = rival();
   if (arco === 'parceiro') return [
-    'Kenta ganha e fica genuinamente sem saber como comemorar na sua frente.',
+    'Ezra ganha e fica genuinamente sem saber como comemorar na sua frente.',
     '"Foi sorte." Ele diz isso e nenhum dos dois acredita. "Foi sorte, cara."',
     'Ele te acompanha até o Centro Pokémon e paga a sua sopa.'
   ];
@@ -281,18 +281,18 @@ function falaDerrotaRival(){   // ele venceu
   ];
   if (arco === 'perseguidor') return [
     'Ele ganha, e é a primeira vez em toda a jornada que você perde uma batalha e sente que mereceu.',
-    'Kenta não recolhe o time. Fica de pé entre você e o caminho.',
+    'Ezra não recolhe o time. Fica de pé entre você e o caminho.',
     '"Volta." A voz dele é firme de um jeito que você nunca ouviu. "Volta pra tua cidade. Hoje."',
     'E depois, mais baixo: "Eu não sei o que eu faço se você não voltar."'
   ];
   if (arco === 'quebrado') return [
-    'Kenta ganha.',
+    'Ezra ganha.',
     'Ele olha as bolas na mão dele como se não entendesse o que acabou de acontecer.',
     '"Espera." Ele ri, e o riso quebra no meio. "Espera, eu —"',
     'Ele não termina a frase. Ele não precisa.'
   ];
   return [
-    'Kenta ganha e grita alto demais para o tamanho do lugar.',
+    'Ezra ganha e grita alto demais para o tamanho do lugar.',
     `"${r.vitorias + 1} a ${r.derrotas}!" Ele aponta pra você. "ANOTA ISSO."`
   ];
 }
@@ -304,13 +304,13 @@ function registrarResultadoRival(venceuJogador){
   r.ultimoCap = Estado.dados.capitulo;
   if (venceuJogador) r.derrotas++; else r.vitorias++;
   r.arco = arcoRival();
-  Estado.registrar(`Encontro com Kenta (${ARCOS_RIVAL[r.arco].nome}): ${venceuJogador ? 'você venceu' : 'ele venceu'}. Placar ${r.derrotas}×${r.vitorias}.`);
+  Estado.registrar(`Encontro com Ezra (${ARCOS_RIVAL[r.arco].nome}): ${venceuJogador ? 'você venceu' : 'ele venceu'}. Placar ${r.derrotas}×${r.vitorias}.`);
   return r;
 }
 
 /* ============================================================
    OS OUTROS RIVAIS
-   Kenta é o rival de fábrica: ele estava na pedra da Rota 1 e
+   Ezra é o rival de fábrica: ele estava na pedra da Rota 1 e
    entrou na sua história porque você passou por lá.
    Os outros você conquista. Cada um nasce de uma escolha que
    você fez sem saber que estava escolhendo um rival — e o tom
@@ -445,16 +445,16 @@ const RIVAIS_EXTRA = [
   }
 },
 {
-  id:'vasco', nome:'Tetsu', npc:'Caçador Tetsu', desde:'Floresta de Viridian', caps:[7, 10, 15, 19],
+  id:'vasco', nome:'Otto', npc:'Caçador Otto', desde:'Floresta de Viridian', caps:[7, 10, 15, 19],
   origem:'O caçador da Floresta de Viridian. Você o obrigou a abrir as gaiolas e ele anotou o seu rosto.',
-  gatilho:d => { const n = d.npcs['Caçador Tetsu']; return !!n && n.opiniao <= -3; },
-  nascimento:'O Caçador Tetsu perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
+  gatilho:d => { const n = d.npcs['Caçador Otto']; return !!n && n.opiniao <= -3; },
+  nascimento:'O Caçador Otto perguntou o seu nome em três Centros Pokémon diferentes esta semana.',
   pool:[42, 49, 89, 94, 71, 110],            // Golbat, Venomoth, Muk, Gengar, Victreebel, Weezing
   ace:24, nivelExtra:3, moral:35,           // o Arbok é o que ele usa para prender
   cor:'var(--ruim)',
 
   fala:(d, r) => {
-    const L = ['Tetsu não está escondido. Ele está parado no meio do caminho com as mãos vazias, o que é pior do que se estivessem cheias.'];
+    const L = ['Otto não está escondido. Ele está parado no meio do caminho com as mãos vazias, o que é pior do que se estivessem cheias.'];
     L.push(r.encontros === 0
       ? '"Você me custou dois." Ele não levanta a voz nenhuma vez, nesta nem nas próximas. "Dois que eu tinha pegado com a minha mão."'
       : `"${r.vitorias} a ${r.derrotas}." Ele sabe o placar de cor e você não gosta que ele saiba. "Eu tenho paciência. É o único talento que eu tenho de verdade."`);
@@ -465,13 +465,13 @@ const RIVAIS_EXTRA = [
   },
   vitoria:(d, r) => [
     'O Arbok dele desenrola no chão e para.',
-    'Tetsu recolhe sem pressa, e a falta de pressa é a mensagem.',
+    'Otto recolhe sem pressa, e a falta de pressa é a mensagem.',
     '"Anotado." Ele passa por você no caminho, ombro a ombro, sem empurrar. "Eu tenho mais floresta do que você tem estrada."',
     'Você fica com a sensação de que ele conseguiu o que veio buscar, e você não sabe o que era.'
   ],
   derrota:(d, r) => [
     'Ele ganha e não comemora, porque comemorar seria admitir que era uma competição.',
-    'Tetsu se agacha na sua frente, na altura dos seus olhos, e fala baixo.',
+    'Otto se agacha na sua frente, na altura dos seus olhos, e fala baixo.',
     '"A floresta não é sua." Ele se levanta. "Nunca foi."',
     'Ele abre a sua mochila na sua frente, tira uma coisa qualquer de pouco valor, e leva. É sobre poder fazer isso.'
   ]

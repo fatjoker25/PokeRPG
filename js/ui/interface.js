@@ -186,7 +186,7 @@ const UI = {
       <h3>Quem fica em casa</h3>
       <div class="dois">
         <div class="campo"><label>Nome</label>
-          <input id="f-casa-nome" maxlength="24" placeholder="Chiyo"></div>
+          <input id="f-casa-nome" maxlength="24" placeholder="Perla"></div>
         <div class="campo"><label>É sua/seu</label>
           <input id="f-casa-quem" maxlength="24" placeholder="mãe"></div>
       </div>
@@ -357,8 +357,8 @@ const UI = {
     if (typeof ELITE4  !== 'undefined') por(ELITE4);
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
-    ['Kenta','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Ren','Nozomi','Kuroda'].forEach(x => n.add(x));
+    ['Ezra','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
+     'Blue','Red','Fabre','Nadia','Kuroda'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)
@@ -389,7 +389,7 @@ const UI = {
       if (narracao.indexOf(nome) !== -1) achados.add(nome);
     }
     /* 'Blue' dentro de 'Bluezinho' não vale, mas 'Brock' dentro de
-       'Brock e Kenta' vale pros dois — e aí são dois, e some o nome. */
+       'Brock e Ezra' vale pros dois — e aí são dois, e some o nome. */
     if (achados.size !== 1) return null;
     return achados.values().next().value;
   },
@@ -441,8 +441,8 @@ const UI = {
     const todos = [];
     const re = /(^|[^a-zà-ÿ])(ele|ela|eles|elas|você|voce)([^a-zà-ÿ]|$)/gi;
     let m; while ((m = re.exec(n))) todos.push({i:m.index, lado: /^(você|voce)$/i.test(m[2]) ? 'voce' : 'npc'});
-    /* o nome da pessoa vale tanto quanto o pronome dela: "Kenta olha
-       pro Pidgey e depois pra você" é fala do Kenta, não sua */
+    /* o nome da pessoa vale tanto quanto o pronome dela: "Ezra olha
+       pro Pidgey e depois pra você" é fala do Ezra, não sua */
     if (npc){
       const curto = npc.split(' ').filter(x => x.length > 2).pop() || npc;
       let i = n.indexOf(curto);
@@ -2225,7 +2225,7 @@ const UI = {
       <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
       <p class="sussurro">${this.esc(nivel.ef)}</p>
       <h3>Status</h3>${st}
-      ${d.rival && d.npcs['Kenta'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
+      ${d.rival && d.npcs['Ezra'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
         <p class="sussurro">${this.esc(ARCOS_RIVAL[arcoRival()].resumo)}</p>
         <div class="linha"><span class="k">${this.esc(d.rival.nome)}</span><span class="v">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span></div>
         <div class="linha"><span class="k">Inicial dele</span><span class="v">${this.esc(DEX[d.rival.inicialDex].nome)}</span></div>` : ''}

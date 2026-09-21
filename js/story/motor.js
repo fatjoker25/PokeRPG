@@ -320,7 +320,7 @@ function txt(t){
 /* ============================================================
    QUEM ESTÁ FALANDO
    Uma linha de cena pode ser texto puro (narração) ou uma fala
-   com dono: {quem:'Sra. Chiyo', diz:'...'}. O terceiro campo,
+   com dono: {quem:'Sra. Perla', diz:'...'}. O terceiro campo,
    tom, muda só a cor do balão — 'grita', 'baixo', 'riso',
    'frio'. A função devolve null para narração.
    ============================================================ */
@@ -336,5 +336,5 @@ function falaDe(t){
   return {quem: nome, rotulo: quem, diz, tom: t.tom || null, nota: txt(t.nota) || null};
 }
 
-/* Açúcar para escrever cena: fala('Sra. Chiyo', 'Bom dia.', 'grita') */
+/* Açúcar para escrever cena: fala('Sra. Perla', 'Bom dia.', 'grita') */
 function fala(quem, diz, tom, nota){ return {quem, diz, tom, nota}; }

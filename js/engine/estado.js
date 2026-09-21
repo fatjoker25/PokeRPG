@@ -40,8 +40,8 @@ const TITULOS_INFLUENTES = [
 ];
 const NOMES_INFLUENTES = [
   'Brock','Misty','Tenente Surge','Erika','Koga','Sabrina','Blaine','Blue','Giovanni',
-  'Lance','Giselle','A.J.','Mandi','Red','Reika Ando','Saya Kurata','Dra. Sayo',
-  'Curador Ren','Auditora Nishino','Diretor Kusanagi','Conselheira Sakuma'
+  'Lance','Giselle','A.J.','Mandi','Red','Rhea Colman','Saya Kurata','Dra. Cordell',
+  'Curador Fabre','Auditora Brill','Diretor Kusanagi','Conselheira Sakuma'
 ];
 function ehInfluente(nome){
   if (!nome) return false;
@@ -59,19 +59,19 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    deixar em branco, a casa ganha alguém mesmo assim, porque
    "alguém lá embaixo" não é personagem, é neblina.
    ============================================================ */
-const NOMES_DE_CASA = ['Chiyo','Yuki','Sumire','Kaede','Michiko','Harue','Noriko','Tamae',
-                       'Jiro','Katsu','Masaru','Shouhei','Tadao','Genji'];
+const NOMES_DE_CASA = ['Perla','Alma','Dalva','Elda','Flora','Hilda','Nora','Vera',
+                       'Aldo','Bruno','Dino','Marco','Otto','Vito'];
 const PARENTESCOS   = ['mãe','pai','avó','avô','tia','tio','irmã mais velha','irmão mais velho'];
 function casaDaFicha(ficha){
   const nome = (ficha && ficha.casaNome || '').trim() || Dados.escolher(NOMES_DE_CASA);
   const quem = (ficha && ficha.casaQuem || '').trim() || Dados.escolher(PARENTESCOS);
   return {nome, quem};
 }
-/* Usados na escrita das cenas: nomeCasa() é "Chiyo", casaQuem() é "mãe",
-   casaCompleto() é "Chiyo, sua mãe". Nunca devolvem vazio. */
+/* Usados na escrita das cenas: nomeCasa() é "Perla", casaQuem() é "mãe",
+   casaCompleto() é "Perla, sua mãe". Nunca devolvem vazio. */
 function casaDe(){
   const c = (Estado.dados && Estado.dados.jogador && Estado.dados.jogador.casa) || null;
-  return c && c.nome ? c : {nome:'Chiyo', quem:'mãe'};
+  return c && c.nome ? c : {nome:'Perla', quem:'mãe'};
 }
 function nomeCasa(){ return casaDe().nome; }
 function casaQuem(){ return casaDe().quem; }
@@ -773,6 +773,22 @@ const Estado = {
   },
 
   lembrarNPC(nome, dados){
+    /* "a enfermeira do Centro" e "Nao" são a mesma pessoa depois que o
+       jogador perguntou o nome. Sem isso ela aparecia duas vezes em
+       "quem lembra de você", com duas opiniões separadas. */
+    if (typeof Nomes !== 'undefined' && Nomes.sabe && Nomes.sabe(nome)){
+      const real = Nomes.nomeDe(nome);
+      const velho = this.dados.npcs[nome];
+      if (velho && real && real !== nome){
+        const novo = this.dados.npcs[real] || {nome:real, opiniao:0, memorias:[]};
+        novo.opiniao = (novo.opiniao || 0) + (velho.opiniao || 0);
+        novo.memorias = (novo.memorias || []).concat(velho.memorias || []);
+        if (velho.viuVoce && !novo.viuVoce) novo.viuVoce = velho.viuVoce;
+        this.dados.npcs[real] = novo;
+        delete this.dados.npcs[nome];
+      }
+      nome = real || nome;
+    }
     const n = this.dados.npcs[nome] || {nome, opiniao:0, memorias:[]};
     Object.assign(n, dados);
     if (dados.memoria){ n.memorias.push({cap:this.dados.capitulo, texto:dados.memoria}); delete n.memoria; }

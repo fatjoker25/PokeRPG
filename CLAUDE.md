@@ -26,6 +26,12 @@ Isso não dá pra conferir com script: nome de lugar citado antes é normal e
 fato citado antes não é detectável. Confere na leitura.
 
 ## Nome de personagem
+**Registro: o das localizações dos jogos.** Samuel Oak, Giovanni, Célio, Bill,
+Lorelei, Lance. Nem japonês, nem brasileiro — internacional, curto, fácil de
+ler em voz alta. Sobrenome no espírito dos professores, que são todos planta:
+Oak, Elm, Birch, Rowan. "Estilo do anime" aqui quer dizer o anime dublado,
+que usa os nomes localizados, não os japoneses.
+
 Cargo fica como cargo: "a atendente do Centro", "o barqueiro", "a enfermeira".
 Quem carrega uma cena e assume risco ganha nome, porque nomear é como o jogo
 diz que aquilo é uma pessoa — e numa história sobre instituição que

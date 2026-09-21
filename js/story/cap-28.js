@@ -1072,7 +1072,7 @@ c23_final_compreensao:{
   ],
   final:{id:'compreensao', titulo:'VOLTA?', texto:[
     'Você volta. Não uma vez — muitas.',
-    'Leva comida quente na primeira. Leva um livro na terceira. Na sétima, leva o Kenta, que passa a viagem inteira em pânico e depois não cala a boca sobre isso pelo resto da vida.',
+    'Leva comida quente na primeira. Leva um livro na terceira. Na sétima, leva o Ezra, que passa a viagem inteira em pânico e depois não cala a boca sobre isso pelo resto da vida.',
     'Mewtwo nunca sai da caverna. Ele escolhe não sair, o que é diferente de não poder, e a diferença é tudo.',
     'A Liga nunca descobre a localização exata. Você é a única pessoa que sabe, e você leva isso com um cuidado que ninguém entende.',
     'Anos depois, quando te oferecem um lugar na Elite 4, você recusa. Alguém pergunta por quê.',
@@ -1218,7 +1218,7 @@ c23_final_pena:{
     'Mewtwo sai da caverna três dias depois de você.',
     'Ele não vai pra cidade nenhuma. Vai pro mar, pro sudoeste, pra uma ilha que não entra em mapa nenhum porque não tem nada nela.',
     'Pescadores de Fuchsia começam a relatar duas luzes sobre a ilha sem nome, não uma. Ninguém acredita neles, como sempre.',
-    'O Sr. Tanabe morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
+    'O Sr. Tanner morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
     'Você vai ao enterro. É o único que vai de fora de Fuchsia.',
     'No caixão, na mão dele, tem uma pena que não é de Pidgey e que ninguém da família soube explicar de onde veio.'
   ]}
@@ -1407,7 +1407,7 @@ c23_final_trinta_e_dois:{
     'Trinta e dois viram trinta e três. Depois trinta e cinco. Depois ninguém contou mais.',
     'Você nunca escreveu onde é. Nunca marcou em mapa nenhum, nunca falou em telefone de Centro Pokémon, e quando um pesquisador de Celadon te ofereceu dinheiro pela coordenada, você disse que não lembrava.',
     'A Comissão manteve o item "Risco 01" em pauta por mais quatro anos e depois arquivou por inatividade do objeto.',
-    'A Dra. Sayo morreu aos sessenta e oito sem nunca ter subido naquela cratera, e sabendo que existia, e escolhendo não subir.',
+    'A Dra. Cordell morreu aos sessenta e oito sem nunca ter subido naquela cratera, e sabendo que existia, e escolhendo não subir.',
     'Essa foi a última coisa que ela te ensinou.'
   ]}
 },
@@ -1486,7 +1486,7 @@ c23_final_papelada:{
     'Em quatro meses, cópias autenticadas de mil cento e oitenta e quatro guias de remessa chegam, por via postal, a onze endereços residenciais.',
     'Cada envelope contém apenas os documentos assinados por aquela pessoa. Nada mais. Sem bilhete, sem ameaça, sem exigência.',
     'Sete dos onze pedem exoneração em seis semanas. Dois adoecem. Um processa a Comissão e ganha.',
-    'O décimo primeiro, a Presidente Reika Ando, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
+    'O décimo primeiro, a Presidente Rhea Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
     'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
     'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
     'Você ensinou isso a Kanto inteiro sem nunca ter subido num palco.'
@@ -1654,7 +1654,7 @@ c23_final_silencio:{
     'Você não conta pra ninguém.',
     'Não porque é segredo. Porque não tem o que contar: você entrou numa caverna, sentou no chão e ficou quieto por quase uma hora com uma criatura de dois anos de idade que sabe tudo.',
     'A Liga pergunta. Você diz que não achou nada.',
-    'A Dra. Sayo pergunta. Você diz que não achou nada, e ela olha na sua cara e sabe que você está mentindo, e não insiste, porque ela é ela.',
+    'A Dra. Cordell pergunta. Você diz que não achou nada, e ela olha na sua cara e sabe que você está mentindo, e não insiste, porque ela é ela.',
     'E toda vez, pelo resto da sua vida, que você estiver num lugar barulhento demais — num salão de navio, num pátio de porto, numa sala com mesa comprida e gente educada demais —, você vai conseguir fazer uma coisa que quase ninguém consegue.',
     'Você vai conseguir ficar quieto por dentro.',
     'Foi a única coisa que ele te deu, e ele não deu de propósito, e é a mais valiosa.'

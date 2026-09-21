@@ -48,18 +48,18 @@ c18_entregar_tudo:{
                 .filter(f => d.flags[f]).length;
       return `São ${n} documentos com carimbo, assinatura ou brasão, juntados em cidades que não se falam.`;
     },
-    'Reika Ando lê tudo em silêncio por quarenta minutos e não faz uma anotação, porque anotar atrapalha a primeira leitura.',
-    fala('Reika Ando', 'Você entende o que acontece se eu publicar isso.'),
+    'Rhea Colman lê tudo em silêncio por quarenta minutos e não faz uma anotação, porque anotar atrapalha a primeira leitura.',
+    fala('Rhea Colman', 'Você entende o que acontece se eu publicar isso.'),
     d=>fala(d.jogador.nome, 'Não.'),
-    fala('Reika Ando', 'Nem eu. É por isso que eu perguntei.'),
+    fala('Rhea Colman', 'Nem eu. É por isso que eu perguntei.'),
     'Ela empilha os documentos e bate na mesa pra alinhar, do jeito que todo mundo que lida com papel faz.',
-    fala('Reika Ando', 'Se eu publicar, você vira fonte. Fonte tem nome, endereço e uma vida que continua depois da matéria.'),
-    fala('Reika Ando', 'Se eu não publicar, isso aqui envelhece na minha gaveta e daqui a quatro anos é história antiga.'),
+    fala('Rhea Colman', 'Se eu publicar, você vira fonte. Fonte tem nome, endereço e uma vida que continua depois da matéria.'),
+    fala('Rhea Colman', 'Se eu não publicar, isso aqui envelhece na minha gaveta e daqui a quatro anos é história antiga.'),
     'Ela põe a mão em cima da pilha.',
-    fala('Reika Ando', 'Eu não vou decidir por você.')
+    fala('Rhea Colman', 'Eu não vou decidir por você.')
   ],
   ef:{flag:'entregou_tudo_pra_imprensa',
-      registrar:'Entregou toda a documentação a Reika Ando.'},
+      registrar:'Entregou toda a documentação a Rhea Colman.'},
   escolhas:[
     {texto:'"Publica." — e sair de cena.', vai:'c18_fim_publicou'},
     {texto:'"Publica, e põe o meu nome."', vai:'c18_fim_com_nome'},
@@ -70,12 +70,12 @@ c18_entregar_tudo:{
 c18_fim_publicou:{
   texto:[
     d=>fala(d.jogador.nome, 'Publica.'),
-    fala('Reika Ando', 'E o seu nome?'),
+    fala('Rhea Colman', 'E o seu nome?'),
     d=>fala(d.jogador.nome, 'Não põe.'),
     'Ela assente uma vez e guarda a pilha na pasta de papelão e fecha o elástico, e o elástico faz um estalo pequeno.',
-    fala('Reika Ando', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu em três cidades.'),
+    fala('Rhea Colman', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu em três cidades.'),
     'Ela levanta.',
-    fala('Reika Ando', 'Isso não é frieza. É o jeito de você continuar tendo uma vida.'),
+    fala('Rhea Colman', 'Isso não é frieza. É o jeito de você continuar tendo uma vida.'),
     'Ela vai embora pela praça e você fica sentado no banco.',
     'E é aqui que a sua parte acaba, num banco de praça em Saffron, às quatro da tarde de uma quarta-feira, sem ninguém por perto pra ver.'
   ],
@@ -98,26 +98,26 @@ c18_fim_com_nome:{
   texto:[
     d=>fala(d.jogador.nome, 'Publica, e põe o meu nome.'),
     'Ela para com a mão na pasta.',
-    fala('Reika Ando', 'Você tem quinze anos.'),
+    fala('Rhea Colman', 'Você tem quinze anos.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
-    fala('Reika Ando', 'Fonte identificada de quinze anos vira o assunto. Aí a matéria deixa de ser sobre o lote e passa a ser sobre você.'),
+    fala('Rhea Colman', 'Fonte identificada de quinze anos vira o assunto. Aí a matéria deixa de ser sobre o lote e passa a ser sobre você.'),
     d=>fala(d.jogador.nome, 'Então que seja sobre mim, se é isso que faz alguém ler.'),
     'Ela fica olhando pra você por um tempo comprido e você aguenta o olhar, o que é mais difícil do que parece.',
-    fala('Reika Ando', 'Tá.'),
+    fala('Rhea Colman', 'Tá.'),
     'Ela tira o gravador da bolsa, apoia na mesa do banco de praça, e aperta o botão vermelho.',
-    fala('Reika Ando', 'Diz seu nome inteiro e sua idade pra fita.')
+    fala('Rhea Colman', 'Diz seu nome inteiro e sua idade pra fita.')
   ],
   final:{id:'publicou_com_nome', titulo:'FONTE IDENTIFICADA, QUINZE ANOS', texto:[
     'A matéria sai numa terça e o seu nome está no terceiro parágrafo.',
-    'Reika tinha razão sobre tudo. Em quatro dias a história deixa de ser sobre o lote e passa a ser sobre você: a idade, a cidade onde você nasceu, a foto do cartão de treinador, a opinião de gente que nunca te viu sobre o que você devia ou não devia ter feito.',
+    'Rhea tinha razão sobre tudo. Em quatro dias a história deixa de ser sobre o lote e passa a ser sobre você: a idade, a cidade onde você nasceu, a foto do cartão de treinador, a opinião de gente que nunca te viu sobre o que você devia ou não devia ter feito.',
     'Três programas de rádio discutem se um menor de idade pode ser fonte. Nenhum deles discute o convênio.',
-    'E aí, na segunda semana, acontece a coisa que Reika não tinha previsto.',
+    'E aí, na segunda semana, acontece a coisa que Rhea não tinha previsto.',
     'Uma auditora de manejo em Fuchsia dá entrevista com o nome dela. Depois um gerente de agência bancária em Saffron. Depois um conferente do porto de Vermilion, um capitão de porto em Cinnabar, uma funcionária de guarita em Lavender e o superintendente de uma concessão rodoviária, que pede demissão no mesmo dia.',
     'Seis pessoas adultas, com emprego e família, dizem o próprio nome em voz alta porque um garoto de quinze anos disse primeiro.',
     'A CPI ouve os seis. A CPI não te ouve: você é menor e depõe a portas fechadas, em quarenta minutos, num sábado.',
     'A lei que sai dois anos depois leva o número 9.431 e não leva o nome de ninguém.',
     'Mas em Fuchsia, na parede de uma sala de auditoria de manejo, tem uma cópia da primeira página daquela terça-feira presa com fita adesiva.',
-    'A Nishino nunca tirou.'
+    'A Brill nunca tirou.'
   ]}
 }
 

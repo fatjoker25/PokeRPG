@@ -47,7 +47,7 @@ c21_ab_a_faixa:{
     {texto:'Abraçar quem te esperou e não falar nada.', vai:'c21_dentro_de_casa'},
     {texto:'Perguntar de quem foi a ideia da faixa.', vai:'c21_ab_de_quem_foi_a_ideia'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ushio.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ushio']}
+    {texto:'Passar na calçada do Sr. Ives.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ives']}
   ]
 },
 
@@ -111,7 +111,7 @@ c21_ab_ninguem_sabia:{
   escolhas:[
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ushio.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ushio']},
+    {texto:'Passar na calçada do Sr. Ives.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ives']},
     {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
     {texto:'Ligar pra casa do orelhão da esquina, a trinta metros de casa.', vai:'c21_orelhao', cond:d=>Estado.temPokenav()}
   ]
@@ -135,8 +135,8 @@ c21_chegada_em_casa:{
   escolhas:[
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ushio, que é onde se resolve coisa.', vai:'c21_ushio',
-     cond:d=>!!d.npcs['Sr. Ushio']},
+    {texto:'Passar na calçada do Sr. Ives, que é onde se resolve coisa.', vai:'c21_ushio',
+     cond:d=>!!d.npcs['Sr. Ives']},
     {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
     {texto:'Ligar pra casa do orelhão da esquina, mesmo estando a trinta metros.', vai:'c21_orelhao',
      cond:d=>Estado.temPokenav()},
@@ -165,18 +165,18 @@ c21_a_rua:{
 c21_quem_pregou:{
   texto:[
     'Você bate em duas portas e na terceira acha, porque na terceira a pessoa fica vermelha antes de você terminar a pergunta.',
-    fala('Sra. Chiyo', 'Foi eu. Foi eu e eu não peço desculpa.', 'grita'),
-    fala('Sra. Chiyo', 'Eu imprimi vinte. Tem em Viridian também. Eu fui de ônibus e pus em Viridian.'),
+    fala('Sra. Perla', 'Foi eu. Foi eu e eu não peço desculpa.', 'grita'),
+    fala('Sra. Perla', 'Eu imprimi vinte. Tem em Viridian também. Eu fui de ônibus e pus em Viridian.'),
     'Vinte cartazes. Ela pagou impressão de vinte cartazes com a sua cara de licença.',
-    fala('Sra. Chiyo', 'Você trouxe a caixa?', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
+    fala('Sra. Perla', 'Você trouxe a caixa?', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
   ],
   ef:{moral:6,
-      npc:{nome:'Sra. Chiyo', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pôs até em Viridian.'},
+      npc:{nome:'Sra. Perla', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pôs até em Viridian.'},
       rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', rep:{notorio:true}},
-      registrar:'A Sra. Chiyo imprimiu vinte cartazes. Levou alguns até Viridian.'},
+      registrar:'A Sra. Perla imprimiu vinte cartazes. Levou alguns até Viridian.'},
   escolhas:[
     {texto:'"Eu trouxe a caixa." (mesmo que não tenha)', vai:'c21_a_caixa_de_volta'},
-    {texto:'Abraçar ela, que é o que ninguém faz com a dona Chiyo.', vai:'c21_abracou_odete'},
+    {texto:'Abraçar ela, que é o que ninguém faz com a dona Perla.', vai:'c21_abracou_odete'},
     {texto:'Ir pra casa antes que fique pior.', vai:'c21_dentro_de_casa'}
   ]
 },
@@ -185,12 +185,12 @@ c21_a_caixa_de_volta:{
   texto:[
     'Você não tem a caixa. Você perdeu a caixa em algum lugar entre Pewter e Cerulean, e você sabe disso há meses.',
     'Você compra uma caixa de ventilador no armazém por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.',
-    fala('Sra. Chiyo', 'Essa não é a minha caixa.', 'frio', 'Ela olha por dois segundos.'),
-    fala('Sra. Chiyo', '...mas é melhor que a minha. Obrigada, menino.', 'riso')
+    fala('Sra. Perla', 'Essa não é a minha caixa.', 'frio', 'Ela olha por dois segundos.'),
+    fala('Sra. Perla', '...mas é melhor que a minha. Obrigada, menino.', 'riso')
   ],
   ef:{dinheiro:-400, moral:3,
-      npc:{nome:'Sra. Chiyo', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
-      registrar:'Comprou uma caixa nova pra devolver à Sra. Chiyo. Ela percebeu.'},
+      npc:{nome:'Sra. Perla', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
+      registrar:'Comprou uma caixa nova pra devolver à Sra. Perla. Ela percebeu.'},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -200,16 +200,16 @@ c21_a_caixa_de_volta:{
 
 c21_abracou_odete:{
   texto:[
-    'Você abraça a Sra. Chiyo no meio da calçada, o que é uma coisa que ninguém faz com a Sra. Chiyo.',
+    'Você abraça a Sra. Perla no meio da calçada, o que é uma coisa que ninguém faz com a Sra. Perla.',
     'Ela fica rígida por uns dois segundos inteiros, como quem não sabe onde põe os braços.',
     'Depois ela sabe onde põe os braços.',
-    fala('Sra. Chiyo', 'Tá bom. Tá bom. Chega. CHEGA.', 'grita',
+    fala('Sra. Perla', 'Tá bom. Tá bom. Chega. CHEGA.', 'grita',
          'Ela é quem solta por último, e por uma margem considerável.')
   ],
   ef:{moral:7,
-      npc:{nome:'Sra. Chiyo', opiniao:5, memoria:'Você abraçou ela na calçada. Ela soltou por último.'},
+      npc:{nome:'Sra. Perla', opiniao:5, memoria:'Você abraçou ela na calçada. Ela soltou por último.'},
       rep:{eixo:'bom',delta:1,motivo:'Abraçou quem ninguém abraça'},
-      registrar:'Abraçou a Sra. Chiyo na calçada.'},
+      registrar:'Abraçou a Sra. Perla na calçada.'},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -248,19 +248,19 @@ c21_repos_os_cartazes:{
   ]
 },
 
-/* ── o Sr. Ushio ──────────────────────────────────────────── */
+/* ── o Sr. Ives ──────────────────────────────────────────── */
 c21_ushio:{
   texto:[
     'A calçada está varrida. Ela sempre está varrida.',
-    'O Sr. Ushio está sentado no degrau, e não em pé com a vassoura, e é a primeira vez na sua vida que você vê ele sentado no degrau.',
-    fala('Sr. Ushio', 'Demorou.', null, 'Ele não levanta.'),
-    fala('Sr. Ushio', 'Senta aqui. Eu não subo mais em banquinho e você já é alto o suficiente pra isso não ser um problema seu.'),
+    'O Sr. Ives está sentado no degrau, e não em pé com a vassoura, e é a primeira vez na sua vida que você vê ele sentado no degrau.',
+    fala('Sr. Ives', 'Demorou.', null, 'Ele não levanta.'),
+    fala('Sr. Ives', 'Senta aqui. Eu não subo mais em banquinho e você já é alto o suficiente pra isso não ser um problema seu.'),
     d=>d.flags.divida_pendente
       ? 'Você senta, e tem uma janela entre vocês dois que ninguém mencionou ainda.'
       : 'Você senta.'
   ],
-  ef:{npc:{nome:'Sr. Ushio', opiniao:1, memoria:'Estava sentado no degrau quando você voltou.'},
-      registrar:'O Sr. Ushio estava sentado no degrau, e não em pé com a vassoura.'},
+  ef:{npc:{nome:'Sr. Ives', opiniao:1, memoria:'Estava sentado no degrau quando você voltou.'},
+      registrar:'O Sr. Ives estava sentado no degrau, e não em pé com a vassoura.'},
   escolhas:[
     {texto:'Pagar a janela agora, com juros de oito anos.', vai:'c21_pagou_a_janela',
      cond:d=>!!d.flags.divida_pendente && d.jogador.dinheiro >= 2000},
@@ -275,12 +275,12 @@ c21_pagou_a_janela:{
     'Você põe o dinheiro no degrau entre vocês dois, com o peso de uma pedrinha em cima pra não voar.',
     d=>fala(d.jogador.nome, 'Isso é a janela. E oito anos de juros que eu calculei mal, mas pra cima.'),
     'Ele olha o dinheiro. Não pega.',
-    fala('Sr. Ushio', 'A janela foi vinte pokedólares em 1989 e eu consertei no mesmo dia com um vidro que eu já tinha.'),
-    fala('Sr. Ushio', 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
-    fala('Sr. Ushio', 'Pega o dinheiro de volta e compra Potion, menino. Todo mundo compra bola demais.', 'riso')
+    fala('Sr. Ives', 'A janela foi vinte pokedólares em 1989 e eu consertei no mesmo dia com um vidro que eu já tinha.'),
+    fala('Sr. Ives', 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
+    fala('Sr. Ives', 'Pega o dinheiro de volta e compra Potion, menino. Todo mundo compra bola demais.', 'riso')
   ],
   ef:{limpaFlag:'divida_pendente', moral:5,
-      npc:{nome:'Sr. Ushio', opiniao:5, memoria:'Você voltou pra pagar a janela. Ele nunca quis o dinheiro.'},
+      npc:{nome:'Sr. Ives', opiniao:5, memoria:'Você voltou pra pagar a janela. Ele nunca quis o dinheiro.'},
       rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de vinte pokedólares', rep:{notorio:true}},
       registrar:'Voltou para pagar a janela. Ele não aceitou o dinheiro.'},
   escolhas:[
@@ -292,12 +292,12 @@ c21_pagou_a_janela:{
 c21_insistiu_ushio:{
   texto:[
     'Você deixa o dinheiro no degrau e levanta, e ele deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.',
-    fala('Sr. Ushio', 'Você é teimoso igual a quem te criou.', 'riso'),
-    fala('Sr. Ushio', 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
+    fala('Sr. Ives', 'Você é teimoso igual a quem te criou.', 'riso'),
+    fala('Sr. Ives', 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
   ],
   ef:{dinheiro:-2000, moral:3,
-      npc:{nome:'Sr. Ushio', opiniao:4, memoria:'Insistiu até ele aceitar o dinheiro da janela.'},
-      registrar:'Insistiu e o Sr. Ushio aceitou o dinheiro.'},
+      npc:{nome:'Sr. Ives', opiniao:4, memoria:'Insistiu até ele aceitar o dinheiro da janela.'},
+      registrar:'Insistiu e o Sr. Ives aceitou o dinheiro.'},
   escolhas:[{texto:'Ficar sentado no degrau um pouco.', vai:'c21_silencio_no_degrau'}]
 },
 
@@ -305,14 +305,14 @@ c21_por_que_sentado:{
   texto:[
     d=>fala(d.jogador.nome, 'Por que o senhor tá sentado?'),
     'Ele demora pra responder de um jeito que já é a resposta.',
-    fala('Sr. Ushio', 'Porque o joelho. E porque a calçada já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer.'),
-    fala('Sr. Ushio', 'Aí eu parei de varrer de novo às onze. Foi ano passado.'),
-    fala('Sr. Ushio', 'Não faz essa cara. Todo mundo para de varrer às onze uma hora.', 'riso')
+    fala('Sr. Ives', 'Porque o joelho. E porque a calçada já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer.'),
+    fala('Sr. Ives', 'Aí eu parei de varrer de novo às onze. Foi ano passado.'),
+    fala('Sr. Ives', 'Não faz essa cara. Todo mundo para de varrer às onze uma hora.', 'riso')
   ],
   ef:{flag:'sabe_do_joelho_do_ushio',
-      npc:{nome:'Sr. Ushio', opiniao:3, memoria:'Te contou por que parou de varrer duas vezes por dia.'},
+      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Te contou por que parou de varrer duas vezes por dia.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou uma coisa que ninguém pergunta a um velho'},
-      registrar:'O Sr. Ushio parou de varrer a calçada duas vezes por dia. Foi ano passado.'},
+      registrar:'O Sr. Ives parou de varrer a calçada duas vezes por dia. Foi ano passado.'},
   escolhas:[
     {texto:'Pegar a vassoura e varrer a calçada dele.', vai:'c21_varreu_a_calcada'},
     {texto:'Contar a viagem inteira, do começo.', vai:'c21_contou_tudo'},
@@ -326,13 +326,13 @@ c21_varreu_a_calcada:{
     'Ele reclama assim mesmo. Ele reclama do jeito que você está segurando. Ele reclama do canto que você pulou.',
     'Ele reclama de olho fechado, encostado na parede, no sol das quatro e meia.',
     'Quando você termina, ele não fala nada sobre a calçada.',
-    fala('Sr. Ushio', 'Na terça que vem eu não vou conseguir. Se você ainda estiver na cidade.', 'baixo',
+    fala('Sr. Ives', 'Na terça que vem eu não vou conseguir. Se você ainda estiver na cidade.', 'baixo',
          'É a coisa mais perto de um pedido que esse homem já fez a alguém.')
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio',
-      npc:{nome:'Sr. Ushio', opiniao:6, memoria:'Varreu a calçada dele e ele pediu pra terça que vem.'},
+      npc:{nome:'Sr. Ives', opiniao:6, memoria:'Varreu a calçada dele e ele pediu pra terça que vem.'},
       rep:{eixo:'bom',delta:3,motivo:'Varreu a calçada de um velho com oito insígnias no bolso', rep:{notorio:true}},
-      registrar:'Varreu a calçada do Sr. Ushio. Ele pediu pra terça que vem.'},
+      registrar:'Varreu a calçada do Sr. Ives. Ele pediu pra terça que vem.'},
   escolhas:[
     {texto:'"Eu estou." Prometer a terça.', vai:'c21_prometeu_a_terca',
      ef:{flag:'prometeu_a_terca', moral:4}},
@@ -346,7 +346,7 @@ c21_prometeu_a_terca:{
     d=>fala(d.jogador.nome, 'Eu estou.'),
     'Você não sabe se vai estar. Você tem uma convocação chegando, uma mesa comprida te esperando no Planalto e um vale no norte que ninguém desenhou.',
     'Mas você fala que está, e você fala sério na hora de falar, e essas duas coisas nem sempre são a mesma.',
-    fala('Sr. Ushio', 'Então tá.', null, 'Ele anota na testa com dois dedos, como sempre.')
+    fala('Sr. Ives', 'Então tá.', null, 'Ele anota na testa com dois dedos, como sempre.')
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu uma terça-feira comum a um velho'},
       registrar:'Prometeu voltar na terça pra varrer a calçada.'},
@@ -361,13 +361,13 @@ c21_nao_vai_estar:{
   texto:[
     d=>fala(d.jogador.nome, 'Não vou estar. Me chamaram pro Planalto.'),
     'Ele assente devagar, e não tem decepção na cara dele, o que é pior do que se tivesse.',
-    fala('Sr. Ushio', 'Eu sei. Eu perguntei mesmo assim.'),
-    fala('Sr. Ushio', 'Perguntar é de graça, menino. E de vez em quando a resposta é sim.')
+    fala('Sr. Ives', 'Eu sei. Eu perguntei mesmo assim.'),
+    fala('Sr. Ives', 'Perguntar é de graça, menino. E de vez em quando a resposta é sim.')
   ],
   ef:{moral:2,
-      npc:{nome:'Sr. Ushio', opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'},
+      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'},
       rep:{eixo:'bom',delta:1,motivo:'Preferiu a verdade à promessa fácil'},
-      registrar:'Foi honesto com o Sr. Ushio sobre a terça.'},
+      registrar:'Foi honesto com o Sr. Ives sobre a terça.'},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -380,14 +380,14 @@ c21_contou_tudo:{
     'Você conta tudo. Do começo. A Floresta, o Monte Lua, o navio, o galpão de Celadon, a usina, a Silph, a Estação 4, a sala 704.',
     'Leva quarenta minutos e ele não interrompe uma vez.',
     'Quando você termina, ele fica quieto por um tempo comprido.',
-    fala('Sr. Ushio', 'Eu varri essa calçada todo dia durante esses meses todos.'),
-    fala('Sr. Ushio', 'E enquanto eu varria, tinha isso tudo acontecendo. A mesma quarta-feira pra mim e pra você.'),
-    fala('Sr. Ushio', 'É engraçado. Eu não sei se é bom ou ruim, mas é engraçado.', 'baixo')
+    fala('Sr. Ives', 'Eu varri essa calçada todo dia durante esses meses todos.'),
+    fala('Sr. Ives', 'E enquanto eu varria, tinha isso tudo acontecendo. A mesma quarta-feira pra mim e pra você.'),
+    fala('Sr. Ives', 'É engraçado. Eu não sei se é bom ou ruim, mas é engraçado.', 'baixo')
   ],
   ef:{moral:4,
-      npc:{nome:'Sr. Ushio', opiniao:4, memoria:'Ouviu a sua viagem inteira sem interromper uma vez.'},
+      npc:{nome:'Sr. Ives', opiniao:4, memoria:'Ouviu a sua viagem inteira sem interromper uma vez.'},
       rep:{eixo:'bom',delta:1,motivo:'Contou tudo a quem só queria ouvir'},
-      registrar:'Contou a viagem inteira pro Sr. Ushio, do começo.'},
+      registrar:'Contou a viagem inteira pro Sr. Ives, do começo.'},
   escolhas:[
     {texto:'Pegar a vassoura e varrer a calçada dele.', vai:'c21_varreu_a_calcada'},
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}
@@ -402,7 +402,7 @@ c21_silencio_no_degrau:{
     'Não é constrangedor em momento nenhum, e você percebe que isso é uma coisa rara, e que você não tem isso com quase ninguém.'
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Ficou vinte minutos em silêncio com quem não pediu conversa'},
-      registrar:'Ficou vinte minutos sentado em silêncio no degrau do Sr. Ushio.'},
+      registrar:'Ficou vinte minutos sentado em silêncio no degrau do Sr. Ives.'},
   escolhas:[
     {texto:'Levantar e ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -531,7 +531,7 @@ c21_o_que_aconteceu_aqui:{
     d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, menino.'),
     'E aí ela conta, por quarenta minutos, tudo que não aconteceu:',
     d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Kuroda que casou. O cachorro do quatorze que morreu — aquele velho, você lembra dele.'),
-    d=>fala(nomeCasa(), 'A Chiyo imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
+    d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
   ef:{moral:7, flag:'perguntou_o_que_aconteceu_em_casa',
@@ -634,7 +634,7 @@ c21_saida_de_casa:{
     'A saída é curta, porque segunda saída sempre é curta. A primeira é que é comprida.',
     d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". Ela já disse isso uma vez e não repete.'),
     'Na porta, ela enfia alguma coisa no bolso de fora da sua mochila, do jeito que ela faz, sem avisar o que é.',
-    'Você só vai descobrir depois, na estrada, e é uma foto três por quatro da sua licença — daquelas vinte que a Sra. Chiyo imprimiu — com uma coisa escrita atrás.',
+    'Você só vai descobrir depois, na estrada, e é uma foto três por quatro da sua licença — daquelas vinte que a Sra. Perla imprimiu — com uma coisa escrita atrás.',
     d=>fala(nomeCasa(), 'pra você lembrar da cara que você tinha quando saiu', 'baixo',
             'Escrito a lápis, na letra que você conhece desde que aprendeu a ler.')
   ],

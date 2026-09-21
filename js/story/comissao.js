@@ -39,15 +39,15 @@ const COMISSAO = {
 /* ── Pessoas ─────────────────────────────────────────────── */
 const GENTE_COMISSAO = {
   presidente:{
-    nome:'a Presidente', nomeReal:'Reika Ando', cargo:'Presidente do Conselho',
+    nome:'a Presidente', nomeReal:'Rhea Colman', cargo:'Presidente do Conselho',
     descricao:'Cinquenta e poucos anos, tailleur cinza, fala baixo e nunca repete uma frase. Foi diretora de fiscalização da Liga por nove anos antes de pedir demissão para fundar a Comissão.'
   },
   curador:{
-    nome:'Curador Ren', cargo:'Curador',
+    nome:'Curador Fabre', cargo:'Curador',
     descricao:'Faz o recrutamento. Simpático de um jeito que funciona, porque não é falso — ele acredita.'
   },
   auditora:{
-    nome:'Auditora Nishino', cargo:'Auditora de Campo',
+    nome:'Auditora Brill', cargo:'Auditora de Campo',
     descricao:'Faz o trabalho de rua. Não gosta do trabalho de rua. Faz mesmo assim, bem, todos os dias.'
   },
   tecnico:{

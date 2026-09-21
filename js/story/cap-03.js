@@ -5,7 +5,7 @@
 const C3_ABERTURAS = ['c3_entrada', 'c3_ab_de_noite', 'c3_ab_com_companhia', 'c3_ab_pelo_mato'];
 function c3_cabe(id, d){
   const r = Estado.rep;
-  if (id === 'c3_ab_com_companhia') return !!d.npcs['Kenta'] && !d.flags.teo_ferido;
+  if (id === 'c3_ab_com_companhia') return !!d.npcs['Ezra'] && !d.flags.teo_ferido;
   if (id === 'c3_ab_pelo_mato')     return (r.eixo === 'ruim' && r.ruim >= 2) || d.via === 'foragido';
   return true;
 }
@@ -84,24 +84,24 @@ c3_ab_acampou:{
 
 c3_ab_com_companhia:{
   texto:[
-    'Kenta está sentado na boca da floresta com a mochila entre os pés, e pela cara dele está ali há um tempo decidindo não entrar sozinho.',
-    fala('Kenta', 'Eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.'),
+    'Ezra está sentado na boca da floresta com a mochila entre os pés, e pela cara dele está ali há um tempo decidindo não entrar sozinho.',
+    fala('Ezra', 'Eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.'),
     d=>fala(d.jogador.nome, 'Ia dizer pra quem?'),
-    fala('Kenta', 'Pra mim, cara. Principalmente pra mim.'),
+    fala('Ezra', 'Pra mim, cara. Principalmente pra mim.'),
     'Ele levanta, sacode a calça e olha pro verde.',
-    fala('Kenta', 'Atravessa junto?'),
+    fala('Ezra', 'Atravessa junto?'),
     'E aí ele fala uma coisa que você não esperava, mais baixo:',
-    fala('Kenta', 'Eu não gosto de lugar fechado. Nunca gostei. Isso é informação ou é reclamação, você decide.', 'baixo')
+    fala('Ezra', 'Eu não gosto de lugar fechado. Nunca gostei. Isso é informação ou é reclamação, você decide.', 'baixo')
   ],
   ef:{flag:'entrou_com_teo', moral:4,
-      npc:{nome:'Kenta', opiniao:3, memoria:'Te contou, na boca da floresta, que não gosta de lugar fechado.'},
-      registrar:'Atravessou a Floresta de Viridian com Kenta.'},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, na boca da floresta, que não gosta de lugar fechado.'},
+      registrar:'Atravessou a Floresta de Viridian com Ezra.'},
   escolhas:[
     {texto:'"É informação. Vem."', vai:'c3_entrada',
-     ef:{moral:4, npc:{nome:'Kenta', opiniao:3, memoria:'Você tratou o medo dele como informação e não como fraqueza.'},
+     ef:{moral:4, npc:{nome:'Ezra', opiniao:3, memoria:'Você tratou o medo dele como informação e não como fraqueza.'},
          rep:{eixo:'bom',delta:1,motivo:'Aceitou o medo de um amigo sem fazer piada'}}},
     {texto:'"Então fica aqui fora. Eu atravesso."', vai:'c3_entrada',
-     ef:{flag:'teo_ficou_de_fora', npc:{nome:'Kenta', opiniao:-1, memoria:'Você atravessou a floresta sem ele depois de ele admitir o medo.'}}},
+     ef:{flag:'teo_ficou_de_fora', npc:{nome:'Ezra', opiniao:-1, memoria:'Você atravessou a floresta sem ele depois de ele admitir o medo.'}}},
     {texto:'Perguntar desde quando.', vai:'c3_ab_desde_quando'}
   ]
 },
@@ -109,17 +109,17 @@ c3_ab_com_companhia:{
 c3_ab_desde_quando:{
   texto:[
     d=>fala(d.jogador.nome, 'Desde quando?'),
-    fala('Kenta', 'Desde os seis.'),
+    fala('Ezra', 'Desde os seis.'),
     'Ele fala rápido, do jeito de quem já contou e quer que a parte de contar acabe logo.',
-    fala('Kenta', 'Porão da casa da minha avó, porta que emperrou, quarenta minutos. Todo mundo achando graça do lado de fora porque achavam que eu tava brincando.'),
-    fala('Kenta', 'Aí abriram e eu tava mijado, e aí eles pararam de achar graça, e aí ninguém nunca mais falou disso.', 'baixo'),
+    fala('Ezra', 'Porão da casa da minha avó, porta que emperrou, quarenta minutos. Todo mundo achando graça do lado de fora porque achavam que eu tava brincando.'),
+    fala('Ezra', 'Aí abriram e eu tava mijado, e aí eles pararam de achar graça, e aí ninguém nunca mais falou disso.', 'baixo'),
     'Uma pausa.',
-    fala('Kenta', 'Eu acabei de falar disso pela primeira vez em nove anos e foi pra você, na frente de uma floresta. Que ótimo.', 'riso'),
+    fala('Ezra', 'Eu acabei de falar disso pela primeira vez em nove anos e foi pra você, na frente de uma floresta. Que ótimo.', 'riso'),
     'Ele põe a mochila nas costas.',
-    fala('Kenta', 'Vamos antes que eu pense.')
+    fala('Ezra', 'Vamos antes que eu pense.')
   ],
   ef:{flag:['entrou_com_teo','sabe_do_porao'], moral:6,
-      npc:{nome:'Kenta', opiniao:5, memoria:'Te contou do porão da avó, coisa que ele não contava havia nove anos.'},
+      npc:{nome:'Ezra', opiniao:5, memoria:'Te contou do porão da avó, coisa que ele não contava havia nove anos.'},
       rep:{eixo:'bom',delta:1,motivo:'Ouviu até o fim uma coisa que custava contar'},
       presagio:'Ele vai entrar em lugar fechado outras vezes nessa história, e vai entrar por você.'},
   escolhas:[{texto:'Entrar juntos.', vai:'c3_entrada'}]
@@ -157,7 +157,7 @@ c3_entrada:{
       ? 'E, no barro da entrada, pegada de tênis novo. Uma pessoa só, andando rápido, entrando pelo mato fechado em vez da trilha.'
       : '',
     d=>d.flags.entrou_com_teo
-      ? 'Kenta anda atrás de você e fala sem parar, e você entende, depois de um tempo, que ele fala sem parar porque está com medo.'
+      ? 'Ezra anda atrás de você e fala sem parar, e você entende, depois de um tempo, que ele fala sem parar porque está com medo.'
       : ''
   ],
   ef:{registrar:'Entrou na Floresta de Viridian.'},
@@ -190,14 +190,14 @@ c3_escutar:{
 
 c3_pegadas:{
   texto:[
-    'As pegadas de Kenta entram pelo mato fechado, o que é a decisão errada, e seguem em linha reta por uns duzentos metros, o que é a segunda decisão errada.',
+    'As pegadas de Ezra entram pelo mato fechado, o que é a decisão errada, e seguem em linha reta por uns duzentos metros, o que é a segunda decisão errada.',
     'Depois elas começam a fazer curva. Depois círculo.',
     'Ele andou em círculo por, você chuta, uns quarenta minutos.',
     'E aí as pegadas param de estar sozinhas.',
     'Tem marca de bota adulta por cima das dele, em dois pontos, indo na mesma direção.'
   ],
   ef:{flag:'seguiu_as_pegadas', instabilidade:0,
-      registrar:'Seguiu as pegadas de Kenta. Alguém adulto estava seguindo elas também.'},
+      registrar:'Seguiu as pegadas de Ezra. Alguém adulto estava seguindo elas também.'},
   escolhas:[
     {texto:'Acelerar. Correr, se der.', vai:'c3_correu_atras'},
     {texto:'Sair da trilha das pegadas e contornar por fora.', vai:'c3_contornou'},
@@ -235,7 +235,7 @@ c3_ficou_parado:{
       rep:{eixo:'bom',delta:1,motivo:'Ficou parado quando parar era mais difícil que correr'}},
   escolhas:[
     {texto:'Seguir na direção em que a pessoa foi.', vai:'c3_som'},
-    {texto:'Ir atrás das pegadas de Kenta.', vai:'c3_correu_atras'}
+    {texto:'Ir atrás das pegadas de Ezra.', vai:'c3_correu_atras'}
   ]
 },
 
@@ -243,12 +243,12 @@ c3_correu_atras:{
   texto:[
     'Você corre pelo mato fechado, o que numa floresta significa correr uns oito metros e depois andar rápido, repetidamente.',
     'Galho na cara. Raiz no pé. Você cai uma vez e levanta antes de sentir.',
-    'E aí, numa clareira pequena, você acha o Kenta.',
+    'E aí, numa clareira pequena, você acha o Ezra.',
     'Ele está sentado no chão, de costas pra uma árvore, com o Pidgey no colo, e está bem — fisicamente ele está bem.',
     '"Cara." A voz dele sai errada. "Cara, tem um cara aqui."'
   ],
   ef:{hp:-2, causa:'Corrida pelo mato fechado', flag:'achou_o_teo',
-      npc:{nome:'Kenta', opiniao:4, memoria:'Você correu pelo mato fechado atrás dele quando ele se perdeu na floresta.'}},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Você correu pelo mato fechado atrás dele quando ele se perdeu na floresta.'}},
   escolhas:[
     {texto:'"Que cara?"', vai:'c3_que_cara'},
     {texto:'Pegar ele e sair dali imediatamente.', vai:'c3_tirou_o_teo'},
@@ -263,9 +263,9 @@ c3_tudo_bem:{
     'Ele demora pra responder, o que já responde.',
     '"Tô." Ele não está. "Eu tô. Eu só — eu andei em círculo, e aí eu sentei, e aí eu ouvi um cara falando."',
     '"Falando o quê?"',
-    '"Sozinho. Tipo, ele tava falando sozinho, mas não era sozinho." Kenta aperta o Pidgey. "Ele tava contando. Tipo — um, dois, três. Contando bicho."'
+    '"Sozinho. Tipo, ele tava falando sozinho, mas não era sozinho." Ezra aperta o Pidgey. "Ele tava contando. Tipo — um, dois, três. Contando bicho."'
   ],
-  ef:{npc:{nome:'Kenta', opiniao:2, memoria:'A primeira coisa que você perguntou foi se ele estava bem.'},
+  ef:{npc:{nome:'Ezra', opiniao:2, memoria:'A primeira coisa que você perguntou foi se ele estava bem.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou pela pessoa antes de perguntar pelo problema'},
       flag:'sabe_da_contagem'},
   escolhas:[
@@ -278,17 +278,17 @@ c3_tudo_bem:{
 c3_que_cara:{
   texto:[
     '"Que cara?"',
-    '"Um cara." Kenta aponta com a cabeça, sem soltar o Pidgey. "Adulto. Roupa boa. Com um rolo de fio no ombro."',
+    '"Um cara." Ezra aponta com a cabeça, sem soltar o Pidgey. "Adulto. Roupa boa. Com um rolo de fio no ombro."',
     d=>d.flags.sabe_do_fio_de_aco
       ? 'Fio de aço. A atendente do Centro descreveu a mesma pessoa duas vezes no mesmo relatório.'
       : 'Fio. Rolo de fio, no ombro, numa floresta.',
     '"Ele te viu?"',
-    '"Acho que não." Kenta não parece convencido do que ele mesmo está falando. "Ele parou perto e ficou contando."'
+    '"Acho que não." Ezra não parece convencido do que ele mesmo está falando. "Ele parou perto e ficou contando."'
   ],
   ef:{flag:['sabe_do_fio_de_aco','sabe_da_contagem']},
   escolhas:[
     {texto:'"Me leva onde ele tava."', vai:'c3_som'},
-    {texto:'Tirar o Kenta da floresta antes de qualquer coisa.', vai:'c3_tirou_o_teo'},
+    {texto:'Tirar o Ezra da floresta antes de qualquer coisa.', vai:'c3_tirou_o_teo'},
     {texto:'Olhar em volta.', vai:'c3_olhou_em_volta'},
     {texto:'"Fica aqui. Eu vou sozinho."', vai:'c3_som', ef:{flag:'deixou_teo_na_clareira'}}
   ]
@@ -309,7 +309,7 @@ c3_olhou_em_volta:{
   escolhas:[
     {texto:'Seguir as fitas.', vai:'c3_som'},
     {texto:'Arrancar todas as fitas que conseguir.', vai:'c3_arrancou_fitas'},
-    {texto:'Tirar o Kenta da floresta primeiro.', vai:'c3_tirou_o_teo'},
+    {texto:'Tirar o Ezra da floresta primeiro.', vai:'c3_tirou_o_teo'},
     {texto:'Fotografar e guardar pra mostrar a alguém.', vai:'c3_fotografou_fitas'}
   ]
 },
@@ -339,13 +339,13 @@ c3_fotografou_fitas:{
       rep:{eixo:'bom',delta:1,motivo:'Começou a guardar prova'}},
   escolhas:[
     {texto:'Seguir as fitas.', vai:'c3_som'},
-    {texto:'Tirar o Kenta da floresta.', vai:'c3_tirou_o_teo'}
+    {texto:'Tirar o Ezra da floresta.', vai:'c3_tirou_o_teo'}
   ]
 },
 
 c3_tirou_o_teo:{
   texto:[
-    'Você levanta o Kenta pelo braço e leva ele pra fora, e leva mais de uma hora porque ele andou em círculo e você não sabia disso.',
+    'Você levanta o Ezra pelo braço e leva ele pra fora, e leva mais de uma hora porque ele andou em círculo e você não sabia disso.',
     'Na saída norte, já perto de Pewter, ele senta no chão de pedra e fica quieto por um tempo.',
     '"Valeu." Ele diz pro chão. "Eu ia ficar lá."',
     '"Você não ia ficar lá."',
@@ -353,7 +353,7 @@ c3_tirou_o_teo:{
     'Você não sabe o que responder pra isso e não responde nada, e ele agradece o silêncio.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Tirou alguém da floresta antes de resolver o próprio assunto'},
-      npc:{nome:'Kenta', opiniao:6, memoria:'Você o tirou da Floresta de Viridian. Ele tinha decidido esperar amanhecer sentado.'},
+      npc:{nome:'Ezra', opiniao:6, memoria:'Você o tirou da Floresta de Viridian. Ele tinha decidido esperar amanhecer sentado.'},
       flag:'salvou_o_teo'},
   escolhas:[
     {texto:'Voltar pra dentro sozinho.', vai:'c3_som'},
@@ -365,7 +365,7 @@ c3_tirou_o_teo:{
 c3_perdido:{
   texto:[
     'Você tenta refazer o caminho e não refaz.',
-    'Quarenta minutos depois você passa pela mesma árvore caída pela segunda vez e entende o que aconteceu com o Kenta.',
+    'Quarenta minutos depois você passa pela mesma árvore caída pela segunda vez e entende o que aconteceu com o Ezra.',
     'É humilhante de um jeito muito específico: a floresta não é grande. Você é que é pequeno dentro dela.',
     'Quando você finalmente acha uma referência, o som fino está mais perto do que estava.'
   ],
@@ -474,7 +474,7 @@ c3_surpresa:{
     '"Ô —" começa o mais velho, e não termina.'
   ],
   ef:{flag:'atacou_de_surpresa'},
-  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Tetsu', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Otto', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
@@ -673,7 +673,7 @@ c3_caçadores:{
        (d.flags.pikachu_aliado || d.flags.pikachu_capturado_preso ? '"Cadê o amarelo." Não é pergunta.' :
         '"Viu alguma coisa aí atrás?" Ele sorri. O sorriso não sobe até os olhos.')
   ],
-  ef:{npc:{nome:'Caçador Tetsu', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
+  ef:{npc:{nome:'Caçador Otto', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
   escolhas:[
     {texto:'Enfrentar. Alguém tem que enfrentar.', vai:'c3_luta_cacador'},
     {texto:'Mentir. Dizer que não viu nada.', vai:'c3_mentir'},
@@ -714,7 +714,7 @@ c3_negociou_alto:{
   ],
   ef:{flag:['inimigo_cacadores','soltou_dois_da_caminhonete'],
       rep:{eixo:'bom',delta:2,motivo:'Negociou a soltura de dois Pokémon com quem os capturou'},
-      npc:{nome:'Caçador Tetsu', opiniao:-4, memoria:'Você o forçou a soltar dois. Ele anotou seu rosto na floresta.'},
+      npc:{nome:'Caçador Otto', opiniao:-4, memoria:'Você o forçou a soltar dois. Ele anotou seu rosto na floresta.'},
       registrar:'Negociou a soltura de dois Pokémon. Os caçadores anotaram seu rosto.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
@@ -729,7 +729,7 @@ c3_devolveu_mochila:{
     '"Vai embora, garoto."'
   ],
   ef:{perdeItens:{'Great Ball':3},
-      npc:{nome:'Caçador Tetsu', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
+      npc:{nome:'Caçador Otto', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
   escolhas:[{texto:'Ir embora.', vai:'c3_fim'}]
 },
 
@@ -742,7 +742,7 @@ c3_correu_com_mochila:{
   ],
   ef:{hp:-4, causa:'Corrida com a mochila roubada',
       flag:['inimigo_cacadores','provas_da_floresta'],
-      npc:{nome:'Caçador Tetsu', opiniao:-5, memoria:'Você roubou a mochila dele e correu. Ele te procurou por dois dias.'},
+      npc:{nome:'Caçador Otto', opiniao:-5, memoria:'Você roubou a mochila dele e correu. Ele te procurou por dois dias.'},
       rep:{eixo:'bom',delta:1,motivo:'Roubou de quem rouba'}},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
 },
@@ -753,7 +753,7 @@ c3_luta_cacador:{
     'Ele solta a bola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
     '"Rápido", ele diz pro parceiro. "A gente tem que descer ainda hoje."'
   ],
-  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Tetsu', fuga:false,
+  batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Otto', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
@@ -765,7 +765,7 @@ c3_venceu_cacador:{
     'Eles saem pela trilha. Sem pressa nenhuma. O mais velho para uma vez e olha pra trás, não pra você — pra clareira.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores na Floresta de Viridian'},
-      npc:{nome:'Caçador Tetsu', opiniao:-5, memoria:'Você o derrotou na floresta. Ele anotou seu rosto.'},
+      npc:{nome:'Caçador Otto', opiniao:-5, memoria:'Você o derrotou na floresta. Ele anotou seu rosto.'},
       flag:'inimigo_cacadores', registrar:'Fez inimigos: os caçadores da floresta anotaram seu rosto.'},
   escolhas:[
     {texto:'Seguir eles.', vai:'c3_seguir_depois'},
@@ -797,7 +797,7 @@ c3_perdeu_cacador:{
     'É aritmética. Tudo nele é aritmética.'
   ],
   ef:{dinheiro:-500, hp:-5, causa:'Espancamento na Floresta de Viridian',
-      npc:{nome:'Caçador Tetsu', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
+      npc:{nome:'Caçador Otto', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
       flag:'humilhado_cacadores', registrar:'Perdeu para os caçadores e foi deixado como aviso.'},
   escolhas:[
     {texto:'Levantar e voltar pra clareira.', vai:'c3_som'},
@@ -831,7 +831,7 @@ c3_mentiu_mal:{
     '"A gente se vê."',
     'Vocês vão se ver.'
   ],
-  ef:{npc:{nome:'Caçador Tetsu', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
+  ef:{npc:{nome:'Caçador Otto', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
   escolhas:[
     {texto:'Voltar pra clareira.', vai:'c3_som'},
     {texto:'Sair da floresta.', vai:'c3_fim'}
@@ -853,7 +853,7 @@ c3_negociou:{
     'O dinheiro pesa no bolso de um jeito estranho, e você vai reparar nesse peso várias vezes nos próximos dias.'
   ],
   ef:{dinheiro:1500, rep:{eixo:'ruim',delta:2,motivo:'Vendeu a localização de um Pokémon preso a caçadores'},
-      npc:{nome:'Caçador Tetsu', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
+      npc:{nome:'Caçador Otto', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
       flag:['vendeu_para_cacadores','endereco_celadon_cedo'],
       registrar:'Vendeu informação para os caçadores. Eles gostaram de você.'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
@@ -874,7 +874,7 @@ c3_negociou_mal:{
 c3_fim_sem_ver:{
   texto:[
     'Vocês dois saem da floresta pelo norte e não voltam.',
-    'Kenta fala o caminho inteiro, agora sem medo, e você deixa.',
+    'Ezra fala o caminho inteiro, agora sem medo, e você deixa.',
     'Atrás de vocês, numa clareira que você nunca vai ver, alguma coisa continua girando em volta de uma estaca até não conseguir mais.'
   ],
   ef:{flag:'nao_viu_a_armadilha'},
@@ -891,7 +891,7 @@ c3_fim:{
       if (d.flags.pikachu_aliado)
         return 'O Pikachu senta na pedra do seu lado, ainda mancando um pouco, e olha Pewter lá embaixo com uma curiosidade que não combina com o que aconteceu com ele esta semana.';
       if (d.flags.salvou_o_teo)
-        return 'Kenta desce na frente e para no meio da descida pra esperar você, duas vezes, como se não confiasse que você vem atrás.';
+        return 'Ezra desce na frente e para no meio da descida pra esperar você, duas vezes, como se não confiasse que você vem atrás.';
       return 'Você entrou numa floresta achando que o perigo era o mato. O mato era a parte fácil.';
     },
     'Daqui pra frente, a estrada é sua de novo: dá pra descer pra Pewter, dá pra voltar, dá pra ficar.'

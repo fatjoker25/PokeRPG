@@ -61,21 +61,21 @@ c27_ab_assinou_o_caderno:{
 
 c27_ab_a_mula:{
   texto:[
-    'Na última vila antes da estrada acabar tem um homem que aluga mula, e o nome dele está numa placa de madeira pregada no mourão do curral: KANDA — ALUGA-SE.',
+    'Na última vila antes da estrada acabar tem um homem que aluga mula, e o nome dele está numa placa de madeira pregada no mourão do curral: ENZO — ALUGA-SE.',
     'Mil e duzentos por dois dias, e ele sobe junto, porque ele não aluga a mula: ele aluga a mula com ele.',
-    fala('Kanda', 'Eu subo até a pedra. Da pedra pra cima a mula não vai e eu também não.'),
+    fala('Enzo', 'Eu subo até a pedra. Da pedra pra cima a mula não vai e eu também não.'),
     d=>fala(d.jogador.nome, 'Por que você não vai?'),
-    fala('Kanda', 'Porque eu tenho quarenta e nove anos e dois filhos.'),
+    fala('Enzo', 'Porque eu tenho quarenta e nove anos e dois filhos.'),
     'Ele afivela a cilha com o joelho apoiado na barriga do bicho.',
-    fala('Kanda', 'E porque eu já subi. Em oitenta e oito, com uma equipe da universidade.'),
+    fala('Enzo', 'E porque eu já subi. Em oitenta e oito, com uma equipe da universidade.'),
     d=>fala(d.jogador.nome, 'E o que tinha lá em cima?'),
     'Ele para de afivelar.',
-    fala('Kanda', 'Frio. Muito frio e uma boca de caverna que não sai vento.'),
-    fala('Kanda', 'Caverna sempre sai vento, moço. Sempre. É o primeiro negócio que a gente aprende.'),
-    fala('Kanda', 'Daquela não sai.', 'baixo')
+    fala('Enzo', 'Frio. Muito frio e uma boca de caverna que não sai vento.'),
+    fala('Enzo', 'Caverna sempre sai vento, moço. Sempre. É o primeiro negócio que a gente aprende.'),
+    fala('Enzo', 'Daquela não sai.', 'baixo')
   ],
   ef:{dinheiro:-1200, flag:['subiu_de_mula','a_caverna_sem_vento'],
-      npc:{nome:'Kanda', opiniao:1, viuVoce:'Subiu com você até a pedra, pelo preço combinado.'},
+      npc:{nome:'Enzo', opiniao:1, viuVoce:'Subiu com você até a pedra, pelo preço combinado.'},
       registrar:'Alugou mula e guia até a pedra. Ele subiu em 1988 com uma equipe da universidade.',
       presagio:'Caverna sem vento não tem outra saída. Ou não é caverna.'},
   escolhas:[
@@ -87,18 +87,18 @@ c27_ab_a_mula:{
 
 c27_ab_a_equipe_de_oitenta_e_oito:{
   texto:[
-    fala('Kanda', 'Eram seis. Quatro professores e dois alunos.'),
+    fala('Enzo', 'Eram seis. Quatro professores e dois alunos.'),
     'Ele puxa a mula pela rédea e começa a andar, e você anda do lado, e é assim que a conversa vai acontecer.',
-    fala('Kanda', 'Ficaram onze dias. Eu subi três vezes levando mantimento.'),
+    fala('Enzo', 'Ficaram onze dias. Eu subi três vezes levando mantimento.'),
     d=>fala(d.jogador.nome, 'E depois?'),
-    fala('Kanda', 'Na quarta vez eu subi e não tinha mais ninguém.'),
+    fala('Enzo', 'Na quarta vez eu subi e não tinha mais ninguém.'),
     'A mula bufa. Ele afrouxa a rédea.',
-    fala('Kanda', 'O acampamento tava montado. Barraca em pé, fogareiro, mantimento da terceira viagem intacto.'),
-    fala('Kanda', 'Eu desci e avisei. Vieram uns quinze, da Liga e da polícia, procuraram nove dias.'),
+    fala('Enzo', 'O acampamento tava montado. Barraca em pé, fogareiro, mantimento da terceira viagem intacto.'),
+    fala('Enzo', 'Eu desci e avisei. Vieram uns quinze, da Liga e da polícia, procuraram nove dias.'),
     d=>fala(d.jogador.nome, 'Acharam?'),
-    fala('Kanda', 'Acharam os seis. Todos vivos, todos em lugares diferentes da montanha, todos em três dias.'),
+    fala('Enzo', 'Acharam os seis. Todos vivos, todos em lugares diferentes da montanha, todos em três dias.'),
     'Ele para de andar.',
-    fala('Kanda', 'E nenhum dos seis soube dizer como tinha chegado onde tinha chegado.', 'baixo')
+    fala('Enzo', 'E nenhum dos seis soube dizer como tinha chegado onde tinha chegado.', 'baixo')
   ],
   ef:{flag:['a_equipe_de_oitenta_e_oito','sabe_das_tres_equipes'],
       registrar:'Em 1988 uma equipe de seis sumiu do acampamento e foi achada em três dias, viva, espalhada e sem saber como chegou lá.',

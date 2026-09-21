@@ -1937,7 +1937,7 @@ c8_quantos_como_eu:{
     '"O que acontece dois convés abaixo do meu não é meu departamento, e eu já perguntei duas vez, e das duas vez me disseram que não é meu departamento."'
   ],
   ef:{flag:'nao_e_meu_departamento',
-      npc:{nome:'Contramestre Arai', opiniao:2, memoria:'Já perguntou duas vezes sobre o que acontece dois conveses abaixo. Disseram que não é o departamento dele.'},
+      npc:{nome:'Contramestre Varo', opiniao:2, memoria:'Já perguntou duas vezes sobre o que acontece dois conveses abaixo. Disseram que não é o departamento dele.'},
       presagio:'Ele perguntou duas vezes. Duas é mais do que quase todo mundo.'},
   escolhas:[
     {texto:'Carga.', vai:'c8_carga'},
@@ -1962,7 +1962,7 @@ c8_terceira_vez:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou alguém pra uma terceira pergunta'},
       flag:'a_terceira_pergunta',
-      npc:{nome:'Contramestre Arai', opiniao:4, memoria:'Você o convenceu a perguntar uma terceira vez, depois do contrato assinado.'},
+      npc:{nome:'Contramestre Varo', opiniao:4, memoria:'Você o convenceu a perguntar uma terceira vez, depois do contrato assinado.'},
       presagio:'Ele vai perguntar depois de assinar o contrato. É covardia e é muito mais do que ontem.'},
   escolhas:[
     {texto:'Carga.', vai:'c8_carga'},
@@ -2009,7 +2009,7 @@ c8_carga_ok:{
     'Caixa de carga não tem furo de ventilação.'
   ],
   ef:{flag:['trabalhou_no_navio','viu_caixas_furadas'], dinheiro:600,
-      npc:{nome:'Contramestre Arai', opiniao:4, memoria:'Você aguentou seis horas de carga sem reclamar.'},
+      npc:{nome:'Contramestre Varo', opiniao:4, memoria:'Você aguentou seis horas de carga sem reclamar.'},
       rep:{eixo:'bom',delta:1,motivo:'Trabalhou honestamente pela passagem'}},
   escolhas:[
     {texto:'Subir para o salão — e pensar nas caixas.', vai:'c8_bordo'},
@@ -2032,7 +2032,7 @@ c8_contou_ao_contramestre:{
     '"Eu vou perguntar. Não hoje."'
   ],
   ef:{flag:'bruno_vai_perguntar',
-      npc:{nome:'Contramestre Arai', opiniao:3, memoria:'Você mostrou as caixas com furo pra ele. Ele disse que vai perguntar, não hoje.'},
+      npc:{nome:'Contramestre Varo', opiniao:3, memoria:'Você mostrou as caixas com furo pra ele. Ele disse que vai perguntar, não hoje.'},
       presagio:'"Não hoje." Você vai ouvir isso de muita gente boa.'},
   escolhas:[
     {texto:'Abrir uma caixa você mesmo.', vai:'c8_porao'},
@@ -2811,7 +2811,7 @@ c8_continua_trabalhando:{
     '"Nos outros dias eu não acho. Mas nesses dias eu também vou trabalhar."'
   ],
   ef:{flag:'a_maior_parte_dos_dias',
-      npc:{nome:'Curador Ren', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'},
+      npc:{nome:'Curador Fabre', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'},
       presagio:'Nos outros dias ele também vai trabalhar. É isso que faz a máquina girar, e não é maldade.'},
   escolhas:[
     {texto:'Apertar a mão.', vai:'c8_levou_a_ficha'},
@@ -2825,18 +2825,18 @@ c8_o_nome_dele:{
   texto:[
     '"Como é o seu nome?"',
     'Ele para de ajeitar o paletó.',
-    '"Ren."',
-    '"Ren de quê?"',
+    '"Fabre."',
+    '"Fabre de quê?"',
     'Uma pausa mínima.',
-    '"Ren é suficiente." Ele sorri. "Curador Ren, se você for escrever."',
+    '"Fabre é suficiente." Ele sorri. "Curador Fabre, se você for escrever."',
     '"Curador de quê?"',
     '"De acervo."',
     'Ele vai embora pelo salão e a multidão abre e fecha atrás dele sem ninguém reparar.',
     'Acervo. Você fica sentado naquela mesa com vinte mil pokedólares no bolso pensando na palavra acervo.'
   ],
   ef:{flag:['sabe_do_adnan','sabe_da_comissao'],
-      registrar:'Curador Ren, de acervo.',
-      npc:{nome:'Curador Ren', opiniao:1, memoria:'Você perguntou o nome dele. Ele deu o primeiro e o cargo.'},
+      registrar:'Curador Fabre, de acervo.',
+      npc:{nome:'Curador Fabre', opiniao:1, memoria:'Você perguntou o nome dele. Ele deu o primeiro e o cargo.'},
       presagio:'Curador de acervo. Acervo é onde as coisas ficam quando param de ser de alguém.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
@@ -2859,7 +2859,7 @@ c8_assinou:{
   ef:{flag:['assinou_com_a_comissao','sabe_da_comissao'],
       dinheiro:5000,
       rep:{eixo:'ruim',delta:2,motivo:'Assinou um acompanhamento de espécimes sem ler o estatuto'},
-      npc:{nome:'Curador Ren', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
+      npc:{nome:'Curador Fabre', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
       registrar:'Assinou o termo de acompanhamento da Comissão.',
       presagio:'A sexta você preenche em quatro minutos. Repara em quando parar de doer.'},
   escolhas:[
@@ -2905,7 +2905,7 @@ c8_recusa_venda:{
   ],
   ef:{flag:['recusou_a_comissao','sabe_da_comissao'],
       rep:{eixo:'bom',delta:2,motivo:'Recusou a bolsa e a ficha'},
-      npc:{nome:'Curador Ren', opiniao:1, memoria:'Você recusou a proposta dele no S.S. Anne. Ele não insistiu.'},
+      npc:{nome:'Curador Fabre', opiniao:1, memoria:'Você recusou a proposta dele no S.S. Anne. Ele não insistiu.'},
       registrar:'A Comissão tem quatro mil e duzentas fichas.',
       presagio:'Quatro mil e duzentas. Você recusar não muda nada, e é exatamente por isso que ele te contou.'},
   escolhas:[

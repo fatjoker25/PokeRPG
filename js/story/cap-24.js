@@ -49,19 +49,19 @@ c24_ab_quem_voltou:{
   texto:[
     'Você encontra ele a quatro quilômetros da primeira guarita, descendo, sentado numa pedra da beira da estrada com a mochila no colo.',
     'Uns vinte e cinco anos. Não está chorando e não está bravo: está sentado do jeito de quem parou pra entender uma coisa e não conseguiu.',
-    'O cartão de treinador está aberto na mão dele, virado pra cima, e dá pra ler o nome de onde você está: Riku.',
-    fala('Riku', 'Não sobe hoje.'),
+    'O cartão de treinador está aberto na mão dele, virado pra cima, e dá pra ler o nome de onde você está: Leo.',
+    fala('Leo', 'Não sobe hoje.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('Riku', 'Porque eles têm uma lista e eu tava nela.'),
+    fala('Leo', 'Porque eles têm uma lista e eu tava nela.'),
     'Ele abre o cartão de treinador na mão e olha pra ele.',
-    fala('Riku', 'Oito insígnias. Licença em dia. Sem ocorrência.'),
-    fala('Riku', 'O cara passou o leitor, a máquina apitou uma vez, e ele olhou uma segunda tela que eu não vi.'),
-    fala('Riku', 'E falou "hoje não".'),
+    fala('Leo', 'Oito insígnias. Licença em dia. Sem ocorrência.'),
+    fala('Leo', 'O cara passou o leitor, a máquina apitou uma vez, e ele olhou uma segunda tela que eu não vi.'),
+    fala('Leo', 'E falou "hoje não".'),
     d=>fala(d.jogador.nome, 'Só isso?'),
-    fala('Riku', 'Só isso. Educado. Ele até pediu desculpa.', 'baixo')
+    fala('Leo', 'Só isso. Educado. Ele até pediu desculpa.', 'baixo')
   ],
   ef:{flag:['entrou_nas_guaritas','a_segunda_tela'],
-      npc:{nome:'Riku', opiniao:1, viuVoce:'Te avisou, descendo, que existe uma segunda tela.'},
+      npc:{nome:'Leo', opiniao:1, viuVoce:'Te avisou, descendo, que existe uma segunda tela.'},
       registrar:'As guaritas consultam uma segunda tela que o desafiante não vê.',
       presagio:'A primeira tela diz se você pode. A segunda diz se querem.'},
   escolhas:[
@@ -73,19 +73,19 @@ c24_ab_quem_voltou:{
 
 c24_ab_o_que_ele_vai_fazer:{
   texto:[
-    fala('Riku', 'Voltar. Tentar de novo semana que vem.'),
+    fala('Leo', 'Voltar. Tentar de novo semana que vem.'),
     d=>fala(d.jogador.nome, 'E se semana que vem for igual?'),
     'Ele demora.',
-    fala('Riku', 'Aí eu volto de novo.'),
+    fala('Leo', 'Aí eu volto de novo.'),
     'Ele põe o cartão no bolso e fecha o zíper da mochila.',
-    fala('Riku', 'Eu levei quatro anos pras oito insígnias. Quatro.'),
-    fala('Riku', 'Eu não vou parar por causa de um sujeito com um leitor.'),
+    fala('Leo', 'Eu levei quatro anos pras oito insígnias. Quatro.'),
+    fala('Leo', 'Eu não vou parar por causa de um sujeito com um leitor.'),
     'Ele levanta da pedra e começa a descer, e depois de uns dez metros para e vira.',
-    fala('Riku', 'Ô. Se você passar, olha a segunda tela.'),
-    fala('Riku', 'Não pra mim. Pra você saber o que é.')
+    fala('Leo', 'Ô. Se você passar, olha a segunda tela.'),
+    fala('Leo', 'Não pra mim. Pra você saber o que é.')
   ],
   ef:{flag:'prometeu_olhar_a_segunda_tela',
-      npc:{nome:'Riku', opiniao:2, viuVoce:'Te pediu pra olhar a segunda tela se você passasse.'},
+      npc:{nome:'Leo', opiniao:2, viuVoce:'Te pediu pra olhar a segunda tela se você passasse.'},
       registrar:'Prometeu olhar a segunda tela das guaritas.'},
   escolhas:[
     {texto:'Subir e passar pela primeira guarita.', vai:'c24_a_primeira'},

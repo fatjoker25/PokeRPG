@@ -30,12 +30,12 @@ c11_ab_o_acampamento:{
     'Sete barracas na calçada em frente ao ginásio de Saffron, alinhadas contra a parede pra deixar passagem, com um fogareiro coletivo, uma lona esticada entre dois postes e um balde que alguém enche na torneira da praça.',
     'É organizado. Isso é a parte que impressiona: é organizado de um jeito que só fica organizado depois de muito tempo.',
     'No portão de aço abaixado, o papel A4 plastificado: **SUSPENSO POR TEMPO INDETERMINADO — S.**',
-    'Um rapaz de uns dezoito anos está sentado num banquinho dobrável com um caderno no colo, e o caderno tem uma lista. Na capa do caderno, a caneta: DAICHI — LISTA DO GINÁSIO, NÃO MEXER.',
-    fala('Daichi', 'Chegou agora?'),
+    'Um rapaz de uns dezoito anos está sentado num banquinho dobrável com um caderno no colo, e o caderno tem uma lista. Na capa do caderno, a caneta: MILO — LISTA DO GINÁSIO, NÃO MEXER.',
+    fala('Milo', 'Chegou agora?'),
     d=>fala(d.jogador.nome, 'Agora.'),
-    fala('Daichi', 'Nome, data de chegada e insígnias que você já tem.'),
+    fala('Milo', 'Nome, data de chegada e insígnias que você já tem.'),
     'Ele diz isso do jeito de quem faz isso há semanas.',
-    fala('Daichi', 'Quando abrir, a ordem é essa. A gente combinou.')
+    fala('Milo', 'Quando abrir, a ordem é essa. A gente combinou.')
   ],
   ef:{flag:'o_caderno_da_fila',
       registrar:'Sete treinadores acampam em frente ao ginásio de Saffron, com lista de ordem de chegada.'},
@@ -54,16 +54,16 @@ c11_ab_se_inscreveu:{
       return `Você dita o nome e a data, e quando fala o número de insígnias — ${ins} — o rapaz para de escrever por meio segundo.`;
     },
     'Ele escreve mesmo assim, porque a lista é por ordem de chegada e não por mérito, e isso foi combinado.',
-    fala('Daichi', 'Você é o vinte e três.'),
+    fala('Milo', 'Você é o vinte e três.'),
     d=>fala(d.jogador.nome, 'Tem vinte e dois na frente? Eu só vejo sete barracas.'),
-    fala('Daichi', 'Quinze desistiram.'),
+    fala('Milo', 'Quinze desistiram.'),
     'Ele fecha o caderno com o dedo no meio, marcando a página.',
-    fala('Daichi', 'Eu não risco os que desistem. Eles continuam na lista.'),
+    fala('Milo', 'Eu não risco os que desistem. Eles continuam na lista.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('Daichi', 'Pra quando alguém perguntar quantos desistiram eu ter o número.', 'baixo')
+    fala('Milo', 'Pra quando alguém perguntar quantos desistiram eu ter o número.', 'baixo')
   ],
   ef:{flag:'na_lista_do_ginasio',
-      npc:{nome:'Daichi', opiniao:1, viuVoce:'Te pôs como vigésimo terceiro na lista do ginásio.'},
+      npc:{nome:'Milo', opiniao:1, viuVoce:'Te pôs como vigésimo terceiro na lista do ginásio.'},
       registrar:'Você é o 23º na lista do ginásio de Saffron. Quinze já desistiram e ele não risca ninguém.'},
   escolhas:[
     {texto:'Perguntar quem é o "S." do papel.', vai:'c11_ab_quem_e_s'},
@@ -74,14 +74,14 @@ c11_ab_se_inscreveu:{
 
 c11_ab_ha_quanto_tempo:{
   texto:[
-    fala('Daichi', 'O papel é de onze de março.'),
+    fala('Milo', 'O papel é de onze de março.'),
     'Ele aponta com o queixo, sem olhar, porque olhou muitas vezes.',
-    fala('Daichi', 'Só que o papel foi trocado. O primeiro era escrito à mão.'),
+    fala('Milo', 'Só que o papel foi trocado. O primeiro era escrito à mão.'),
     d=>fala(d.jogador.nome, 'Trocado quando?'),
-    fala('Daichi', 'Em junho. Eu vi. Quatro da tarde, um cara de terno, plastificado e tudo.'),
-    fala('Daichi', 'Eu perguntei se ia reabrir. Ele falou "não é comigo".'),
+    fala('Milo', 'Em junho. Eu vi. Quatro da tarde, um cara de terno, plastificado e tudo.'),
+    fala('Milo', 'Eu perguntei se ia reabrir. Ele falou "não é comigo".'),
     'O rapaz dá de ombros, e o dar de ombros já virou repertório dele.',
-    fala('Daichi', 'Mas quem troca um aviso é alguém que quer que o aviso continue lá.')
+    fala('Milo', 'Mas quem troca um aviso é alguém que quer que o aviso continue lá.')
   ],
   ef:{flag:'o_aviso_foi_trocado',
       registrar:'O aviso do ginásio de Saffron foi trocado em junho por um homem de terno. O original era à mão.',
@@ -162,17 +162,17 @@ c11_ab_a_porta_de_aco:{
 c11_ab_entrevista:{
   texto:[
     'Tem uma mulher esperando você na entrada sul de Saffron com um gravador de fita na mão e um crachá de imprensa pendurado no pescoço, e ela não finge que estava de passagem.',
-    fala('Reika Ando', 'Reika Ando, Correio de Kanto. Você tem dez minutos?'),
+    fala('Rhea Colman', 'Rhea Colman, Correio de Kanto. Você tem dez minutos?'),
     d=>fala(d.jogador.nome, 'Pra quê?'),
-    fala('Reika Ando', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
+    fala('Rhea Colman', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
     'Ela aperta o botão do gravador sem esperar resposta, que é um jeito de já ter começado.',
-    fala('Reika Ando', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
+    fala('Rhea Colman', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
     'A pergunta é específica demais pra ser a primeira pergunta de uma entrevista.',
     'Ela não está te entrevistando. Ela está conferindo uma coisa que já escreveu.'
   ],
   ef:{flag:'reika_te_abordou',
-      npc:{nome:'Reika Ando', opiniao:0, viuVoce:'Te abordou na entrada sul de Saffron com um gravador ligado.'},
-      registrar:'Reika Ando, do Correio de Kanto, te esperava na entrada de Saffron.'},
+      npc:{nome:'Rhea Colman', opiniao:0, viuVoce:'Te abordou na entrada sul de Saffron com um gravador ligado.'},
+      registrar:'Rhea Colman, do Correio de Kanto, te esperava na entrada de Saffron.'},
   escolhas:[
     {texto:'Responder a verdade.', vai:'c11_ab_respondeu'},
     {texto:'Perguntar o que ela já tem escrito.', vai:'c11_ab_o_que_ela_tem'},
@@ -184,17 +184,17 @@ c11_ab_respondeu:{
   texto:[
     'Você conta o que viu, cidade por cidade, e ela não interrompe nenhuma vez, e o gravador roda.',
     'Quando você termina ela desliga a fita, tira do gravador, e guarda no bolso interno do casaco, não na bolsa.',
-    fala('Reika Ando', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
+    fala('Rhea Colman', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
     d=>fala(d.jogador.nome, 'Devia pedir?'),
-    fala('Reika Ando', 'Provavelmente.'),
+    fala('Rhea Colman', 'Provavelmente.'),
     'Ela tira um cartão e escreve um número atrás, à caneta, e o número não é o número impresso na frente.',
-    fala('Reika Ando', 'Esse aqui é meu, não da redação.'),
-    fala('Reika Ando', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
+    fala('Rhea Colman', 'Esse aqui é meu, não da redação.'),
+    fala('Rhea Colman', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
   ],
   ef:{flag:'falou_com_a_imprensa',
       rep:{eixo:'bom', delta:2, motivo:'Falou com a imprensa sobre o transporte em gaiola, com nome e sobrenome.', notorio:true},
-      npc:{nome:'Reika Ando', opiniao:2, viuVoce:'Você deu o depoimento inteiro com o gravador ligado.'},
-      registrar:'Deu um depoimento gravado a Reika Ando sobre o transporte em gaiola.',
+      npc:{nome:'Rhea Colman', opiniao:2, viuVoce:'Você deu o depoimento inteiro com o gravador ligado.'},
+      registrar:'Deu um depoimento gravado a Rhea Colman sobre o transporte em gaiola.',
       presagio:'Depoimento com nome é coragem e é endereço.'},
   escolhas:[
     {texto:'Perguntar o que ela já tem escrito.', vai:'c11_ab_o_que_ela_tem'},
@@ -206,16 +206,16 @@ c11_ab_respondeu:{
 c11_ab_o_que_ela_tem:{
   texto:[
     'Ela pensa se responde. Dá pra ver ela pensando.',
-    fala('Reika Ando', 'Quarenta e uma páginas e nenhum documento.'),
+    fala('Rhea Colman', 'Quarenta e uma páginas e nenhum documento.'),
     d=>fala(d.jogador.nome, 'E isso é pouco?'),
-    fala('Reika Ando', 'Isso é zero. Depoimento sem papel não publica.'),
+    fala('Rhea Colman', 'Isso é zero. Depoimento sem papel não publica.'),
     'Ela guarda o gravador na bolsa.',
-    fala('Reika Ando', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
-    fala('Reika Ando', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
-    fala('Reika Ando', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
+    fala('Rhea Colman', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
+    fala('Rhea Colman', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
+    fala('Rhea Colman', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
   ],
   ef:{flag:'reika_precisa_de_papel',
-      registrar:'Reika Ando tem 41 páginas de depoimento e nenhum documento. Ela precisa de papel com carimbo.'},
+      registrar:'Rhea Colman tem 41 páginas de depoimento e nenhum documento. Ela precisa de papel com carimbo.'},
   escolhas:[
     {texto:'Responder a pergunta dela com o gravador ligado.', vai:'c11_ab_respondeu'},
     {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
@@ -227,17 +227,17 @@ c11_ab_desliga:{
   texto:[
     d=>fala(d.jogador.nome, 'Desliga isso.'),
     'Ela desliga na hora, sem discutir, o que te desarma mais do que se ela tivesse discutido.',
-    fala('Reika Ando', 'Desligado.'),
+    fala('Rhea Colman', 'Desligado.'),
     'Ela põe o gravador na bolsa e fecha a bolsa.',
-    fala('Reika Ando', 'Agora é conversa. Conversa eu não publico.'),
+    fala('Rhea Colman', 'Agora é conversa. Conversa eu não publico.'),
     d=>fala(d.jogador.nome, 'E eu tenho que acreditar nisso por quê?'),
-    fala('Reika Ando', 'Por nada. Você não tem.'),
+    fala('Rhea Colman', 'Por nada. Você não tem.'),
     'Ela dá o cartão mesmo assim, com o número da redação, sem o número escrito atrás.',
-    fala('Reika Ando', 'Quando você mudar de ideia, o gravador continua na bolsa.')
+    fala('Rhea Colman', 'Quando você mudar de ideia, o gravador continua na bolsa.')
   ],
   ef:{flag:'recusou_a_imprensa',
-      npc:{nome:'Reika Ando', opiniao:-1, viuVoce:'Você mandou ela desligar o gravador.'},
-      registrar:'Recusou dar depoimento a Reika Ando.'},
+      npc:{nome:'Rhea Colman', opiniao:-1, viuVoce:'Você mandou ela desligar o gravador.'},
+      registrar:'Recusou dar depoimento a Rhea Colman.'},
   escolhas:[
     {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
     {texto:'Seguir pro ginásio fechado.', vai:'c11_ginasio'},
@@ -1792,7 +1792,7 @@ c11_saiu_com_a_foto:{
       registrar:'Saiu da Silph só com a foto do controlador.',
       presagio:'Não parece vitória. Quase nada do que funciona parece.'},
   escolhas:[
-    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
     {texto:'Voltar e descer assim mesmo.', vai:'c11_escada'}
@@ -2190,7 +2190,7 @@ c11_seguiu_o_caminhao:{
     {texto:'Levar uma caixa vazia como prova.', vai:'c11_levou_a_caixa'},
     {texto:'Voltar e entrar pela doca.', vai:'c11_doca'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_ginasio'},
-    {texto:'Levar isso à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Levar isso à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2208,7 +2208,7 @@ c11_levou_a_caixa:{
       registrar:'Levou uma caixa vazia carimbada do Instituto de Cinnabar.',
       presagio:'Alguém segurou a porta. Guarde essa piada; você vai precisar dela mais tarde.'},
   escolhas:[
-    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
     {texto:'Voltar e descer no prédio assim mesmo.', vai:'c11_escada'}
@@ -2262,7 +2262,7 @@ c11_fotografou_a_caixa:{
       presagio:'As seis fotos vão durar mais do que os sete. Você fez a conta e ela está certa.'},
   escolhas:[
     {texto:'Entrar junto com a caixa mesmo assim.', vai:'c11_com_a_caixa'},
-    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Descer pela escada.', vai:'c11_escada'}
   ]
@@ -2353,7 +2353,7 @@ c11_roubou_caixa_silph:{
   escolhas:[
     {texto:'Voltar ao prédio mesmo assim.', vai:'c11_escada'},
     {texto:'Ir embora de Saffron com os sete.', vai:'c11_fim'},
-    {texto:'Levar a caixa à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar a caixa à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou}
   ]
 },
@@ -2814,7 +2814,7 @@ c11_tirou_os_seis:{
   escolhas:[
     {texto:'Sumir de Saffron com eles.', vai:'c11_fim'},
     {texto:'Levar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Chamar a Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Chamar a Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar pelos cinco que ficaram.', vai:'c11_voltou_pelos_cinco'}
   ]
 },
@@ -2841,7 +2841,7 @@ c11_voltou_pelos_cinco:{
   escolhas:[
     {texto:'Sair. Levar os seis pra longe.', vai:'c11_fim'},
     {texto:'Fotografar os cinco antes de sair.', vai:'c11_fotografou_11'},
-    {texto:'Levar tudo à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou}
   ]
 },
@@ -2914,7 +2914,7 @@ c11_levou_copia:{
     {texto:'Sumir de Saffron.', vai:'c11_fim'},
     {texto:'Levar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Voltar pelos outros três que se mexem.', vai:'c11_tirou_os_seis'},
-    {texto:'Chamar a Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2939,7 +2939,7 @@ c11_deixou_escolher:{
     {texto:'Sair.', vai:'c11_fim'},
     {texto:'Voltar e insistir.', vai:'c11_levou_copia'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir contar pra Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir contar pra Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2980,7 +2980,7 @@ c11_fotografou_11:{
       registrar:'Fotografou o andar 11: 23 fotos.',
       presagio:'A facilidade de fazer a conta. Anota isso sobre você.'},
   escolhas:[
-    {texto:'Levar à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Levar à Liga.', vai:'c11_entregou_liga'},
     {texto:'Guardar. Você decide depois.', vai:'c11_fim', ef:{flag:'guardou_provas_11'}}
@@ -2989,7 +2989,7 @@ c11_fotografou_11:{
 
 c11_entregou_ivone:{
   texto:[
-    'A Dra. Sayo olha as fotos em silêncio absoluto, sentada numa lanchonete de rodoviária que já virou o escritório de vocês dois.',
+    'A Dra. Cordell olha as fotos em silêncio absoluto, sentada numa lanchonete de rodoviária que já virou o escritório de vocês dois.',
     'Na foto do quadro branco — a do "241 dias" — ela tira os óculos e esfrega os olhos por muito tempo.',
     '"Eu conheci o Fuji."',
     'Ela diz isso do nada, com os óculos na mão.',
@@ -3002,9 +3002,9 @@ c11_entregou_ivone:{
     d=>d.flags.tem_os_nomes ? 'E quando você mostra a lista dos vinte e nove nomes, ela lê os vinte e nove em voz alta, um por um, ali na mesa da lanchonete, porque ela diz que nome que não é falado em voz alta não vira registro.' : ''
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Entregou o andar 11 a quem sabia o que fazer com aquilo'},
-      npc:{nome:'Dra. Sayo', opiniao:10, memoria:'Recebeu as provas do andar 11. Conhecia o Dr. Fuji da faculdade.'},
+      npc:{nome:'Dra. Cordell', opiniao:10, memoria:'Recebeu as provas do andar 11. Conhecia o Dr. Fuji da faculdade.'},
       flag:'ivone_tem_o_11', instabilidade:-1, moral:10,
-      registrar:'Dra. Sayo recebeu as provas do andar 11.',
+      registrar:'Dra. Cordell recebeu as provas do andar 11.',
       presagio:'"Má a gente processa." O problema é que ninguém ali é mau.'},
   escolhas:[
     {texto:'Sair de Saffron.', vai:'c11_fim'},
@@ -3035,7 +3035,7 @@ c11_entregou_liga:{
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Perguntar uma quarta vez.', vai:'c11_quarta_vez'},
     {texto:'Ir avisar a Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir avisar a Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir avisar a Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -3060,7 +3060,7 @@ c11_quarta_vez:{
       registrar:'Os onze foram encaminhados para outra unidade da própria Silph, com fiscalização semestral.',
       presagio:'Fiscalização semestral. Eles voltaram pra mesma empresa, com menos gente olhando.'},
   escolhas:[
-    {texto:'Levar isso à Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar isso à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar isso à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Procurar o despacho e copiar.', vai:'c11_fim', ef:{flag:'copiou_o_despacho', rep:{eixo:'bom',delta:2,motivo:'Foi atrás do despacho que ninguém procura'}}}
@@ -3088,7 +3088,7 @@ c11_entregou_sabrina:{
   escolhas:[
     {texto:'Desafiar o ginásio agora.', vai:'c11_desafio_sabrina', cond:d=>!!d.flags.sabrina_promete_insignia},
     {texto:'Sair de Saffron.', vai:'c11_fim'},
-    {texto:'Levar tudo à Dra. Sayo também.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell também.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar ao prédio antes do dia dezenove.', vai:'c11_escada', cond:d=>!!d.flags.sabe_dos_nove_dias}
   ]
 },
@@ -3285,7 +3285,7 @@ c11_saiu_11:{
     {texto:'Seguir.', vai:'c11_fim'},
     {texto:'Voltar e perguntar alguma coisa a eles.', vai:'c11_perguntou'},
     {texto:'Ir contar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
-    {texto:'Ir contar pra Dra. Sayo.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir contar pra Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 

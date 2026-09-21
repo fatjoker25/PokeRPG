@@ -28,20 +28,20 @@ cenas:{
 c30_a_guarita:{
   texto:[
     'Você volta na guarita da entrada de Lavender às sete e dez da manhã e ela já está aberta, porque ela abre às sete.',
-    'A funcionária te vê chegar e não finge surpresa. O crachá dela está na mesa, virado pra cima, e diz E. NAKAI — desde 1974, como o livro.',
-    fala('Sra. Nakai', 'Eu sabia que você ia voltar.'),
+    'A funcionária te vê chegar e não finge surpresa. O crachá dela está na mesa, virado pra cima, e diz E. WREN — desde 1974, como o livro.',
+    fala('Sra. Wren', 'Eu sabia que você ia voltar.'),
     d=>fala(d.jogador.nome, 'Como?'),
-    fala('Sra. Nakai', 'Porque ninguém pede pra ver o livro e vai embora.'),
+    fala('Sra. Wren', 'Porque ninguém pede pra ver o livro e vai embora.'),
     'Ela puxa o livro de baixo do balcão e abre nas últimas páginas sem precisar procurar.',
-    fala('Sra. Nakai', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
+    fala('Sra. Wren', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
     'Ela vira uma folha solta, dobrada em quatro, e desdobra na bancada.',
-    fala('Sra. Nakai', 'Eu copiei as onze. Nome, data, hora de subida.'),
-    fala('Sra. Nakai', 'E depois eu fui na lista telefônica.'),
+    fala('Sra. Wren', 'Eu copiei as onze. Nome, data, hora de subida.'),
+    fala('Sra. Wren', 'E depois eu fui na lista telefônica.'),
     'Ela alisa a folha com a palma.',
-    fala('Sra. Nakai', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
+    fala('Sra. Wren', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
   ],
   ef:{flag:['a_funcionaria_ligou','o_livro_da_guarita'],
-      npc:{nome:'Sra. Nakai', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
+      npc:{nome:'Sra. Wren', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
       registrar:'A funcionária da guarita copiou as onze linhas e ligou para os sete que tinham telefone.'},
   escolhas:[
     {texto:'Perguntar o que os sete disseram.', vai:'c30_os_sete_telefones'},
@@ -53,17 +53,17 @@ c30_a_guarita:{
 c30_os_sete_telefones:{
   texto:[
     'Ela pega um lápis e vai apontando linha por linha enquanto fala, e ela fez isso a noite inteira e está precisa como quem fez a noite inteira.',
-    fala('Sra. Nakai', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
+    fala('Sra. Wren', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
     d=>fala(d.jogador.nome, 'Então três são erro de registro.'),
-    fala('Sra. Nakai', 'Três são erro meu. Eu registrei mal.'),
+    fala('Sra. Wren', 'Três são erro meu. Eu registrei mal.'),
     'Ela não se defende. Anota o erro e segue.',
-    fala('Sra. Nakai', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
+    fala('Sra. Wren', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
     d=>fala(d.jogador.nome, 'Não lembram?'),
-    fala('Sra. Nakai', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
+    fala('Sra. Wren', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
     'Ela move o lápis.',
-    fala('Sra. Nakai', 'O outro tem vinte e seis.'),
+    fala('Sra. Wren', 'O outro tem vinte e seis.'),
     'Silêncio na guarita.',
-    fala('Sra. Nakai', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
+    fala('Sra. Wren', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
   ],
   ef:{flag:['os_dois_numeros_falsos','tres_erros_de_registro'],
       registrar:'Dos sete telefones: 3 erros de registro, 2 vivos e um deles de 26 anos que não lembra, 2 números que nunca existiram.',
@@ -101,17 +101,17 @@ c30_o_que_ela_vai_fazer:{
   texto:[
     d=>fala(d.jogador.nome, 'O que a senhora vai fazer agora?'),
     'Ela fecha o livro e põe as duas mãos em cima dele.',
-    fala('Sra. Nakai', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
+    fala('Sra. Wren', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
     d=>fala(d.jogador.nome, 'Isso não é resposta.'),
-    fala('Sra. Nakai', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
+    fala('Sra. Wren', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
     'Ela olha pra rua, onde ainda não passa ninguém.',
-    fala('Sra. Nakai', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
-    fala('Sra. Nakai', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
+    fala('Sra. Wren', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
+    fala('Sra. Wren', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
     'Ela empurra a folha copiada na sua direção.',
-    fala('Sra. Nakai', 'Você faz.', 'baixo')
+    fala('Sra. Wren', 'Você faz.', 'baixo')
   ],
   ef:{flag:['tem_a_lista_dos_onze','reika_precisa_de_papel'],
-      npc:{nome:'Sra. Nakai', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
+      npc:{nome:'Sra. Wren', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
       registrar:'A funcionária te entregou a cópia das onze linhas e disse que não vai adiante.'},
   escolhas:[
     {texto:'Ler as onze linhas com atenção.', vai:'c30_a_lista_dos_onze'},
@@ -122,23 +122,23 @@ c30_o_que_ela_vai_fazer:{
 
 c30_o_rapaz_de_vinte_e_seis:{
   texto:[
-    'O nome na linha de madrugada é Jun Hamaya, e Jun Hamaya está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
+    'O nome na linha de madrugada é Nico Hart, e Nico Hart está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
     'É uma casa geminada de fachada azul na terceira rua a partir da praça.',
     'Quem atende é ele mesmo. Vinte e seis anos, camiseta de time, chinelo, e a cara de quem acordou faz vinte minutos.',
     d=>fala(d.jogador.nome, 'Você subiu a Torre Pokémon no dia dezessete?'),
-    fala('Jun', 'Não.'),
+    fala('Nico', 'Não.'),
     d=>fala(d.jogador.nome, 'Tem o seu nome no livro da guarita.'),
     'Ele coça a cabeça. Não está mentindo — é possível ver quando alguém não está mentindo e ele não está.',
-    fala('Jun', 'Eu nunca subi aquela torre na minha vida. Eu tenho medo.'),
+    fala('Nico', 'Eu nunca subi aquela torre na minha vida. Eu tenho medo.'),
     'Ele diz "eu tenho medo" com a naturalidade de quem já disse isso muitas vezes e parou de achar vergonhoso.',
     d=>fala(d.jogador.nome, 'Você perdeu algum documento nos últimos meses?'),
     'E aí ele para.',
-    fala('Jun', 'Perdi a carteira em agosto. No ônibus.'),
-    fala('Jun', 'Apareceu depois, na rodoviária. Tava tudo lá, até o dinheiro.', 'baixo')
+    fala('Nico', 'Perdi a carteira em agosto. No ônibus.'),
+    fala('Nico', 'Apareceu depois, na rodoviária. Tava tudo lá, até o dinheiro.', 'baixo')
   ],
   ef:{flag:['a_carteira_perdida','sabe_do_lote_unico'],
-      npc:{nome:'Jun Hamaya', opiniao:1, viuVoce:'Você descobriu que o nome dele foi usado no livro da torre.'},
-      registrar:'O nome de Jun Hamaya, 26 anos, foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta em agosto.',
+      npc:{nome:'Nico Hart', opiniao:1, viuVoce:'Você descobriu que o nome dele foi usado no livro da torre.'},
+      registrar:'O nome de Nico Hart, 26 anos, foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta em agosto.',
       presagio:'Devolveram a carteira com o dinheiro. Ninguém devolve dinheiro. Eles só queriam o nome.'},
   escolhas:[
     {texto:'Pedir pra ele ir junto na guarita reconhecer a letra.', vai:'c30_a_letra'},
@@ -149,19 +149,19 @@ c30_o_rapaz_de_vinte_e_seis:{
 
 c30_a_letra:{
   texto:[
-    'Jun vai junto, de chinelo, porque são quatro quadras e porque ele quer ver.',
+    'Nico vai junto, de chinelo, porque são quatro quadras e porque ele quer ver.',
     'A funcionária abre o livro e vira na data.',
     'Ele olha a assinatura dele mesmo por uns dez segundos.',
-    fala('Jun', 'Essa é a minha letra.'),
+    fala('Nico', 'Essa é a minha letra.'),
     d=>fala(d.jogador.nome, 'Você acabou de dizer que não subiu.'),
-    fala('Jun', 'E não subi. Mas essa é a minha letra.'),
+    fala('Nico', 'E não subi. Mas essa é a minha letra.'),
     'Ele pega uma caneta do balcão e assina numa folha em branco, do lado, e vira as duas pra vocês verem.',
     'São idênticas. Não parecidas: idênticas, inclusive na pressão do traço e no jeito que o "a" não fecha.',
     'A funcionária põe a mão na boca e não tira por um tempo.',
-    fala('Sra. Nakai', 'Isso é decalque.'),
+    fala('Sra. Wren', 'Isso é decalque.'),
     d=>fala(d.jogador.nome, 'Como assim decalque?'),
-    fala('Sra. Nakai', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
-    fala('Sra. Nakai', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
+    fala('Sra. Wren', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
+    fala('Sra. Wren', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
   ],
   ef:{flag:['a_assinatura_decalcada','reika_precisa_de_papel'],
       rep:{eixo:'bom', delta:2, motivo:'Provou que uma assinatura do livro da torre foi decalcada.'},
@@ -305,7 +305,7 @@ c30_ficou_quieto:{
     'E você fica no escuro do quinto andar entendendo que acabou de ver o começo, não o fim.'
   ],
   ef:{flag:['viu_ele_marcar','sabe_do_lote_unico'],
-      registrar:'Segawa marcou seis nomes novos no livro de sepultamento. Vão ser usados nas próximas semanas.',
+      registrar:'Lorca marcou seis nomes novos no livro de sepultamento. Vão ser usados nas próximas semanas.',
       presagio:'Seis novos. Você sabe quais são e eles não sabem que você sabe.'},
   escolhas:[
     {texto:'Anotar os seis nomes que ele marcou.', vai:'c30_os_seis_novos'},
@@ -334,20 +334,20 @@ c30_acendeu:{
   texto:[
     'Você acende a lanterna na cara dele a dois metros e ele derruba a dele, que rola e para apontada pro teto.',
     'É um homem de uns quarenta anos, de camisa social sem gravata, com um caderninho de bolso na mão.',
-    'Na capa do caderninho, escrito a caneta no canto de cima do jeito que se escreve nome em material que pode ser esquecido em mesa de repartição: N. SEGAWA.',
+    'Na capa do caderninho, escrito a caneta no canto de cima do jeito que se escreve nome em material que pode ser esquecido em mesa de repartição: S. LORCA.',
     'Ele não corre. Ele fecha os olhos por causa da luz e levanta a mão livre.',
-    fala('Segawa', 'Baixa isso, por favor.'),
+    fala('Lorca', 'Baixa isso, por favor.'),
     d=>fala(d.jogador.nome, 'O que você tá fazendo?'),
-    fala('Segawa', 'Pesquisa de campo.'),
+    fala('Lorca', 'Pesquisa de campo.'),
     d=>fala(d.jogador.nome, 'Às duas e quarenta da manhã.'),
-    fala('Segawa', 'A torre é pública vinte e quatro horas. Está na placa.'),
+    fala('Lorca', 'A torre é pública vinte e quatro horas. Está na placa.'),
     'E está mesmo. É a coisa mais irritante do capítulo: ele não está fazendo nada de ilegal neste exato momento.',
-    fala('Segawa', 'Você é quem? Da prefeitura?'),
+    fala('Lorca', 'Você é quem? Da prefeitura?'),
     'E aí ele te reconhece, e dá pra ver o momento em que reconhece, e a cara dele muda pra uma coisa muito pior que medo: alívio.',
-    fala('Segawa', 'Ah. É você.', 'baixo')
+    fala('Lorca', 'Ah. É você.', 'baixo')
   ],
   ef:{flag:'ele_te_reconheceu',
-      registrar:'Segawa te reconheceu, e ficou aliviado.',
+      registrar:'Lorca te reconheceu, e ficou aliviado.',
       presagio:'Alívio. Ele estava esperando outra pessoa e você não é ela.'},
   escolhas:[
     {texto:'"Quem você achou que eu era?"', vai:'c30_quem_voce_achou'},
@@ -360,20 +360,20 @@ c30_quem_voce_achou:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem você achou que eu era?'),
     'Ele abaixa a mão e apanha a lanterna dele do chão, devagar, e você deixa.',
-    fala('Segawa', 'Da Comissão.'),
+    fala('Lorca', 'Da Comissão.'),
     d=>fala(d.jogador.nome, 'Você não é da Comissão?'),
-    fala('Segawa', 'Eu sou terceirizado.'),
+    fala('Lorca', 'Eu sou terceirizado.'),
     'Ele diz essa palavra com um cansaço específico de quem já explicou isso pra muita gente e pra si mesmo.',
-    fala('Segawa', 'Eu presto serviço de levantamento cadastral. Eu recebo uma lista de requisitos e eu entrego nomes.'),
+    fala('Lorca', 'Eu presto serviço de levantamento cadastral. Eu recebo uma lista de requisitos e eu entrego nomes.'),
     d=>fala(d.jogador.nome, 'Nomes de morto.'),
-    fala('Segawa', 'Nomes sem pendência, sem herdeiro reclamante e sem registro ativo em nenhum sistema.'),
+    fala('Lorca', 'Nomes sem pendência, sem herdeiro reclamante e sem registro ativo em nenhum sistema.'),
     'Ele guarda o caderninho no bolso interno.',
-    fala('Segawa', 'Eu nunca escrevi "morto" em nenhum documento meu. Eles é que sabem o que pedem.'),
-    fala('Segawa', 'Eu ganho por nome entregue. Setecentos.', 'baixo')
+    fala('Lorca', 'Eu nunca escrevi "morto" em nenhum documento meu. Eles é que sabem o que pedem.'),
+    fala('Lorca', 'Eu ganho por nome entregue. Setecentos.', 'baixo')
   ],
   ef:{flag:['o_terceirizado','sabe_do_lote_unico'],
-      npc:{nome:'Segawa', opiniao:0, viuVoce:'Te explicou o próprio serviço no quinto andar da torre, às três da manhã.'},
-      registrar:'Segawa, terceirizado, entrega "nomes sem pendência" por 700 ₽ cada. Ele nunca escreveu "morto" em documento nenhum.',
+      npc:{nome:'Lorca', opiniao:0, viuVoce:'Te explicou o próprio serviço no quinto andar da torre, às três da manhã.'},
+      registrar:'Lorca, terceirizado, entrega "nomes sem pendência" por 700 ₽ cada. Ele nunca escreveu "morto" em documento nenhum.',
       presagio:'Ninguém na cadeia inteira escreveu a palavra. Cada um escreveu a sua parte, e cada parte está em ordem.'},
   escolhas:[
     {texto:'Perguntar quem manda a lista de requisitos.', vai:'c30_quem_manda_a_lista'},
@@ -385,19 +385,19 @@ c30_quem_voce_achou:{
 c30_quem_manda_a_lista:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem manda a lista de requisitos?'),
-    fala('Segawa', 'Chega por malote. Eu entrego por malote.'),
+    fala('Lorca', 'Chega por malote. Eu entrego por malote.'),
     d=>fala(d.jogador.nome, 'De onde?'),
     'Ele tira do bolso um envelope pardo, usado, dobrado ao meio, e mostra o verso na luz da sua lanterna.',
     'Carimbo de expedição: Rua do Comércio, 118 — sala 704.',
     'Você fica olhando o carimbo mais tempo do que precisaria.',
-    fala('Segawa', 'Você já tinha visto esse carimbo.'),
+    fala('Lorca', 'Você já tinha visto esse carimbo.'),
     'Não é pergunta.',
-    fala('Segawa', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.'),
+    fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.'),
     'Ele guarda o envelope.',
-    fala('Segawa', 'É a coisa mais estranha desse serviço, moço. Não tem nada escondido. Tem carimbo em tudo.')
+    fala('Lorca', 'É a coisa mais estranha desse serviço, moço. Não tem nada escondido. Tem carimbo em tudo.')
   ],
   ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
-      registrar:'O malote do Segawa vem da Rua do Comércio, 118, sala 704.',
+      registrar:'O malote do Lorca vem da Rua do Comércio, 118, sala 704.',
       presagio:'Carimbo em tudo. O esconderijo é a papelada, não o segredo.'},
   escolhas:[
     {texto:'Pedir o envelope.', vai:'c30_pegou_o_caderninho'},
@@ -408,22 +408,22 @@ c30_quem_manda_a_lista:{
 c30_pegou_o_caderninho:{
   texto:[
     d=>fala(d.jogador.nome, 'Me dá o caderninho.'),
-    fala('Segawa', 'Não.'),
+    fala('Lorca', 'Não.'),
     'E ele diz isso com uma firmeza que não estava na conversa até agora.',
-    fala('Segawa', 'Esse caderno tem três anos de serviço meu e o nome de todo mundo que me pagou.'),
+    fala('Lorca', 'Esse caderno tem três anos de serviço meu e o nome de todo mundo que me pagou.'),
     d=>fala(d.jogador.nome, 'Exatamente.'),
-    fala('Segawa', 'E é a única coisa que me segura vivo.'),
+    fala('Lorca', 'E é a única coisa que me segura vivo.'),
     'Ele dá dois passos pra trás na direção da escada.',
-    fala('Segawa', 'Olha. Eu vou te dar uma coisa melhor que o caderno.'),
+    fala('Lorca', 'Olha. Eu vou te dar uma coisa melhor que o caderno.'),
     'Ele arranca uma folha, a última escrita, e estende.',
-    fala('Segawa', 'A entrega de hoje. Os seis nomes, com data de óbito e número de registro, na minha letra, com a minha data.'),
-    fala('Segawa', 'Se aparecerem assinados numa guarita, você tem uma previsão datada.'),
+    fala('Lorca', 'A entrega de hoje. Os seis nomes, com data de óbito e número de registro, na minha letra, com a minha data.'),
+    fala('Lorca', 'Se aparecerem assinados numa guarita, você tem uma previsão datada.'),
     'Ele desce a escada.',
-    fala('Segawa', 'E eu tenho o resto do caderno.', 'baixo')
+    fala('Lorca', 'E eu tenho o resto do caderno.', 'baixo')
   ],
   ef:{flag:['tem_os_seis_nomes','reika_precisa_de_papel','sabe_do_lote_unico'],
-      npc:{nome:'Segawa', opiniao:1, viuVoce:'Te entregou a folha dos seis nomes e ficou com o caderno.'},
-      registrar:'Está com a folha dos seis nomes, na letra e na data do Segawa.',
+      npc:{nome:'Lorca', opiniao:1, viuVoce:'Te entregou a folha dos seis nomes e ficou com o caderno.'},
+      registrar:'Está com a folha dos seis nomes, na letra e na data do Lorca.',
       presagio:'Ele ficou com o caderno de propósito. Esse caderno vai reaparecer.'},
   escolhas:[
     {texto:'Ir embora de Lavender.', vai:'c30_fim'}

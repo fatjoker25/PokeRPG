@@ -139,12 +139,12 @@ const CAMPEAO = {
    Chaveamento de oito. Acontece o ano inteiro, qualquer um entra.
    ============================================================ */
 const RIVAIS_TORNEIO = [
-  {nome:'Kenta', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
-   cond:d=>!!d.npcs['Kenta'] && d.npcs['Kenta'].opiniao >= 0},
-  {nome:'Kenta', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Kenta não aperta a sua mão. "Eu treinei oito meses pra isso."',
-   cond:d=>!!d.npcs['Kenta'] && d.npcs['Kenta'].opiniao < 0},
-  {nome:'Caçador Tetsu', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
-   cond:d=>!!d.npcs['Caçador Tetsu']},
+  {nome:'Ezra', tipos:['Normal','Voador'], fala:'"A GENTE TÁ NO MESMO CHAVEAMENTO! Cara! Isso é tipo o destino!"',
+   cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao >= 0},
+  {nome:'Ezra', tipos:['Normal','Voador'], fala:'"Não sorri pra mim." Ezra não aperta a sua mão. "Eu treinei oito meses pra isso."',
+   cond:d=>!!d.npcs['Ezra'] && d.npcs['Ezra'].opiniao < 0},
+  {nome:'Caçador Otto', tipos:['Venenoso','Terrestre'], fala:'"Torneio é o único lugar onde eu posso te bater na frente de gente e sair aplaudido."',
+   cond:d=>!!d.npcs['Caçador Otto']},
   {nome:'Hitomi, da Silph', tipos:['Elétrico','Psíquico'], fala:'"Eu pedi demissão." Ela dá de ombros. "Sobrou tempo pra treinar."',
    cond:d=>!!d.npcs['Hitomi (crachá azul)']},
   {nome:'Guia Taki', tipos:['Inseto','Grama'], fala:'"Eu saí da Zona." Taki está diferente. "Eu testemunhei. Perdi o emprego. Tô aqui."',
@@ -160,9 +160,9 @@ const RIVAIS_TORNEIO = [
 
 /* Monta um adversário de torneio com time escalado ao jogador */
 function adversarioTorneio(rival, nivelAlvo){
-  // Kenta entra com o time de verdade dele, no arco em que estiver
-  if (rival.nome === 'Kenta' && Estado.dados.rival){
-    return {nome:'Kenta', fala: rival.fala, time: timeRival()};
+  // Ezra entra com o time de verdade dele, no arco em que estiver
+  if (rival.nome === 'Ezra' && Estado.dados.rival){
+    return {nome:'Ezra', fala: rival.fala, time: timeRival()};
   }
   const pool = poolSelvagem().filter(d => {
     const p = DEX[d];

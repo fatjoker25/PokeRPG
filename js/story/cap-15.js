@@ -199,13 +199,13 @@ c15_ab_de_cracha:{
     'A ciclovia das rotas 14 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
     d=>{
       const c = Cargos.principal();
-      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Yuka, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
+      return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Lina, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
     },
     'O livro tem uma ocorrência por página e as páginas são quase todas de coisas pequenas: guarda-corpo amassado, buraco no asfalto, ciclista com torção de tornozelo.',
     'As últimas seis semanas têm onze ocorrências, e as onze são a mesma frase escrita por seis pessoas diferentes:',
     '"Usuário relata ausência de fauna no trecho."',
     'Onze relatos. E, na coluna de providência, onze vezes a mesma palavra: "aguardando".',
-    fala('Yuka', 'Aguardando o quê, né.'),
+    fala('Lina', 'Aguardando o quê, né.'),
     'Ela fala isso sem você perguntar.'
   ],
   ef:{flag:'o_livro_de_ocorrencias',
@@ -219,18 +219,18 @@ c15_ab_de_cracha:{
 
 c15_ab_quem_escreve:{
   texto:[
-    fala('Yuka', 'A providência quem preenche é a chefia.'),
+    fala('Lina', 'A providência quem preenche é a chefia.'),
     d=>fala(d.jogador.nome, 'E a chefia é quem?'),
     'Ela vira o livro e aponta a rubrica no pé da página. É uma rubrica só, repetida onze vezes, feita com a mesma caneta.',
-    fala('Yuka', 'Superintendente da concessão. Ele vem aqui duas vezes por mês.'),
-    fala('Yuka', 'E ele assinou as onze no mesmo dia.'),
+    fala('Lina', 'Superintendente da concessão. Ele vem aqui duas vezes por mês.'),
+    fala('Lina', 'E ele assinou as onze no mesmo dia.'),
     d=>fala(d.jogador.nome, 'Como você sabe?'),
-    fala('Yuka', 'Porque eu protocolei as onze em datas diferentes e as onze ficaram sem providência até o dia treze.'),
+    fala('Lina', 'Porque eu protocolei as onze em datas diferentes e as onze ficaram sem providência até o dia treze.'),
     'Ela fecha o livro.',
-    fala('Yuka', 'No dia treze ele veio, sentou nessa cadeira, e assinou as onze de uma vez, em três minutos, sem ler nenhuma.', 'baixo')
+    fala('Lina', 'No dia treze ele veio, sentou nessa cadeira, e assinou as onze de uma vez, em três minutos, sem ler nenhuma.', 'baixo')
   ],
   ef:{flag:'a_rubrica_do_superintendente',
-      npc:{nome:'Yuka', opiniao:2, viuVoce:'Te mostrou que as onze providências foram assinadas de uma vez.'},
+      npc:{nome:'Lina', opiniao:2, viuVoce:'Te mostrou que as onze providências foram assinadas de uma vez.'},
       registrar:'O superintendente da concessão assinou as onze ocorrências de uma vez, sem ler, no dia 13.'},
   escolhas:[
     {texto:'Pedir cópia das onze.', vai:'c15_ab_copia_das_onze'},
@@ -242,16 +242,16 @@ c15_ab_copia_das_onze:{
   texto:[
     'Ela tira as cópias na máquina da sala do lado, que faz um barulho de avião, e as onze folhas saem quentes.',
     'Ela carimba cada uma com o carimbo de "confere com o original" e assina embaixo do carimbo.',
-    fala('Yuka', 'Não precisava carimbar.'),
+    fala('Lina', 'Não precisava carimbar.'),
     d=>fala(d.jogador.nome, 'Então por que carimbou?'),
-    fala('Yuka', 'Porque sem carimbo é fotocópia e com carimbo é documento.'),
+    fala('Lina', 'Porque sem carimbo é fotocópia e com carimbo é documento.'),
     'Ela empilha, bate na mesa pra alinhar, e entrega.',
-    fala('Yuka', 'Eu trabalho aqui há sete anos e é a primeira vez que alguém vem pedir esse livro.'),
-    fala('Yuka', 'Eu reli as onze ontem à noite, depois que você marcou de vir.'),
-    fala('Yuka', 'Onze pessoas diferentes escreveram a mesma coisa e ninguém foi lá ver.', 'baixo')
+    fala('Lina', 'Eu trabalho aqui há sete anos e é a primeira vez que alguém vem pedir esse livro.'),
+    fala('Lina', 'Eu reli as onze ontem à noite, depois que você marcou de vir.'),
+    fala('Lina', 'Onze pessoas diferentes escreveram a mesma coisa e ninguém foi lá ver.', 'baixo')
   ],
   ef:{flag:['copia_das_onze_ocorrencias','reika_precisa_de_papel'],
-      npc:{nome:'Yuka', opiniao:3, viuVoce:'Carimbou as onze cópias como conferidas com o original.'},
+      npc:{nome:'Lina', opiniao:3, viuVoce:'Carimbou as onze cópias como conferidas com o original.'},
       registrar:'Tem onze ocorrências carimbadas como documento: ausência de fauna na ciclovia, providência "aguardando".'},
   escolhas:[
     {texto:'Ir pra ciclovia.', vai:'c15_rotas'},

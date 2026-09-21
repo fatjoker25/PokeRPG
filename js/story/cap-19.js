@@ -146,18 +146,18 @@ c19_ab_a_vizinhanca:{
     'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com galinha solta e cachorro de portão.',
     'Você bate na primeira porque é a primeira.',
     'Atende uma mulher de uns sessenta anos com uma bacia de feijão no colo, e ela senta na varanda e continua catando o feijão a conversa inteira, e você senta no degrau.',
-    'Ela se apresenta como Sra. Machida antes de você perguntar qualquer coisa, porque é o que se faz quando um desconhecido bate na sua porta no meio do mato.',
-    fala('Sra. Machida', 'A estação? Chegou em noventa e quatro.'),
+    'Ela se apresenta como Sra. Hazel antes de você perguntar qualquer coisa, porque é o que se faz quando um desconhecido bate na sua porta no meio do mato.',
+    fala('Sra. Hazel', 'A estação? Chegou em noventa e quatro.'),
     d=>fala(d.jogador.nome, 'E antes?'),
-    fala('Sra. Machida', 'Antes era pasto. Do Sr. Aoki, que vendeu e foi embora pra Celadon e morreu lá.'),
+    fala('Sra. Hazel', 'Antes era pasto. Do Sr. Aoki, que vendeu e foi embora pra Celadon e morreu lá.'),
     'Feijão bom pra direita, feijão ruim pra esquerda.',
-    fala('Sra. Machida', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
+    fala('Sra. Hazel', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
     d=>fala(d.jogador.nome, 'E depois?'),
     'Ela para de catar.',
-    fala('Sra. Machida', 'Depois o meu cachorro parou de dormir.')
+    fala('Sra. Hazel', 'Depois o meu cachorro parou de dormir.')
   ],
   ef:{flag:'a_vizinhanca_da_estacao',
-      npc:{nome:'Sra. Machida', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
+      npc:{nome:'Sra. Hazel', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
       registrar:'A Estação 4 foi instalada em 1994 num pasto comprado do Sr. Aoki.'},
   escolhas:[
     {texto:'Perguntar do cachorro.', vai:'c19_ab_o_cachorro'},
@@ -168,14 +168,14 @@ c19_ab_a_vizinhanca:{
 
 c19_ab_o_cachorro:{
   texto:[
-    fala('Sra. Machida', 'Um Growlithe. Ele tem onze anos e sempre dormiu na varanda.'),
+    fala('Sra. Hazel', 'Um Growlithe. Ele tem onze anos e sempre dormiu na varanda.'),
     'Ela aponta com o queixo. O Growlithe está deitado no canto, de olhos abertos, e você não tinha reparado nele até agora.',
-    fala('Sra. Machida', 'Faz uns dois anos que ele fica assim. De olho aberto, virado pro mesmo lado.'),
+    fala('Sra. Hazel', 'Faz uns dois anos que ele fica assim. De olho aberto, virado pro mesmo lado.'),
     d=>fala(d.jogador.nome, 'Virado pra estação.'),
-    fala('Sra. Machida', 'Virado pra estação.'),
+    fala('Sra. Hazel', 'Virado pra estação.'),
     'O Growlithe não pisca. Não é que ele não pisque nunca: é que ele pisca do jeito de quem não quer perder nada de vista.',
-    fala('Sra. Machida', 'Levei no veterinário duas vezes. Os dois falaram que ele tá ótimo.'),
-    fala('Sra. Machida', 'Ele tá ótimo. Ele só não dorme.', 'baixo'),
+    fala('Sra. Hazel', 'Levei no veterinário duas vezes. Os dois falaram que ele tá ótimo.'),
+    fala('Sra. Hazel', 'Ele tá ótimo. Ele só não dorme.', 'baixo'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} senta no chão da varanda ao lado do Growlithe, virado pro mesmo lado, e também não deita.`
@@ -194,16 +194,16 @@ c19_ab_o_cachorro:{
 
 c19_ab_o_que_se_ouve:{
   texto:[
-    fala('Sra. Machida', 'De dia, nada. Caminhão, às vezes.'),
+    fala('Sra. Hazel', 'De dia, nada. Caminhão, às vezes.'),
     'Ela recomeça a catar o feijão, e catar feijão é a coisa que ela faz com as mãos quando fala do que não gosta.',
-    fala('Sra. Machida', 'De noite, umas três da manhã, tem uma coisa.'),
+    fala('Sra. Hazel', 'De noite, umas três da manhã, tem uma coisa.'),
     d=>fala(d.jogador.nome, 'Que coisa?'),
-    fala('Sra. Machida', 'Um som de porta.'),
+    fala('Sra. Hazel', 'Um som de porta.'),
     d=>fala(d.jogador.nome, 'Porta?'),
-    fala('Sra. Machida', 'Porta pesada. De metal. Abre e fecha.'),
+    fala('Sra. Hazel', 'Porta pesada. De metal. Abre e fecha.'),
     'Ela separa um feijão ruim e joga pra esquerda com mais força do que precisava.',
-    fala('Sra. Machida', 'Duas quilômetros de distância, menino. Pra eu ouvir daqui, aquela porta é grande.'),
-    fala('Sra. Machida', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
+    fala('Sra. Hazel', 'Duas quilômetros de distância, menino. Pra eu ouvir daqui, aquela porta é grande.'),
+    fala('Sra. Hazel', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
   ],
   ef:{flag:'a_porta_das_tres_da_manha',
       registrar:'De madrugada, entre três e quatro, uma porta de metal grande abre e fecha nove ou dez vezes na Estação 4.',
@@ -2318,15 +2318,15 @@ c19_voltou_pro_galpao:{
 c19_saida:{
   texto:[
     'Na saída da Estação 4 tem alguém encostada num carro no estacionamento, ao lado das bicicletas.',
-    'Auditora Nishino. Ela não faz nenhum movimento de te impedir.',
+    'Auditora Brill. Ela não faz nenhum movimento de te impedir.',
     '"O senhor viu o galpão."',
     '"Vi."',
     'Ela assente devagar.',
     d=>d.flags.cracha_adnan
-      ? '"O crachá que o senhor usou é da Sandra, que está de licença, e quem tirou da gaveta foi o Ren." Ela olha o chão. "O sistema me avisou às nove e quarenta e um. Eu tinha quarenta e oito horas para reportar e eu reportei às nove e quarenta e quatro, porque se eu não reportasse eles descobririam de qualquer jeito e aí seríamos dois."'
+      ? '"O crachá que o senhor usou é da Sandra, que está de licença, e quem tirou da gaveta foi o Fabre." Ela olha o chão. "O sistema me avisou às nove e quarenta e um. Eu tinha quarenta e oito horas para reportar e eu reportei às nove e quarenta e quatro, porque se eu não reportasse eles descobririam de qualquer jeito e aí seríamos dois."'
       : '"Eu não vou te deter. Não tem crime. Isso é o mais difícil de explicar para quem chega até aqui: não tem crime."'
   ],
-  ef:{npc:{nome:'Auditora Nishino', memoria:'Te esperou no estacionamento depois que você viu o galpão do fundo.'}},
+  ef:{npc:{nome:'Auditora Brill', memoria:'Te esperou no estacionamento depois que você viu o galpão do fundo.'}},
   escolhas:[
     {texto:'"Como a senhora dorme?"', vai:'c19_pergunta_prado'},
     {texto:'"A senhora já entrou lá?"', vai:'c19_prado_entrou'},
@@ -2347,7 +2347,7 @@ c19_prado_entrou:{
     '"É o que me faz continuar e é o que me faz não dormir." Ela abre a porta do carro. "As duas coisas, ao mesmo tempo, todo mês."'
   ],
   ef:{flag:['prado_confere_o_peso'], instabilidade:1,
-      npc:{nome:'Auditora Nishino', opiniao:2, memoria:'Confere o peso do resíduo contra a planilha todo mês.'},
+      npc:{nome:'Auditora Brill', opiniao:2, memoria:'Confere o peso do resíduo contra a planilha todo mês.'},
       registrar:'Em 22 meses, o peso do resíduo bateu com a planilha 22 vezes. Eles não mentem no número.'},
   escolhas:[
     {texto:'"Como a senhora dorme?"', vai:'c19_pergunta_prado'},
@@ -2368,7 +2368,7 @@ c19_mostrou_a_prancheta:{
     '"Agora está na sua mão e o senhor vai ter que decidir se publica ou se se acostuma."'
   ],
   ef:{flag:['sabe_o_total','provas_do_galpao4'], instabilidade:2,
-      npc:{nome:'Auditora Nishino', opiniao:3, memoria:'Te disse o número de cabeça: quatro mil cento e nove.'},
+      npc:{nome:'Auditora Brill', opiniao:3, memoria:'Te disse o número de cabeça: quatro mil cento e nove.'},
       registrar:'Quatro mil cento e nove, até anteontem.'},
   escolhas:[
     {texto:'"Como a senhora dorme?"', vai:'c19_pergunta_prado'},
@@ -2388,7 +2388,7 @@ c19_pergunta_prado:{
     'É a terceira vez nesta jornada que alguém te diz exatamente essa frase.'
   ],
   ef:{flag:'prado_explicou',
-      npc:{nome:'Auditora Nishino', opiniao:4, memoria:'Te contou do menino de nove anos em Fuchsia.'},
+      npc:{nome:'Auditora Brill', opiniao:4, memoria:'Te contou do menino de nove anos em Fuchsia.'},
       rep:{eixo:'bom',delta:1,motivo:'Ouviu o motivo de alguém em vez de só o argumento'}},
   escolhas:[
     {texto:'"E o menino teria sido salvo por um viveiro?"', vai:'c19_teria_salvo'},
@@ -2408,9 +2408,9 @@ c19_teria_salvo:{
     '"Porque eu precisava ir para algum lugar depois daquela ocorrência e este foi o único lugar que tinha uma resposta escrita." Ela põe o carro em ponto morto. "Essa é a coisa mais honesta que eu já disse para alguém e eu vou negar."'
   ],
   ef:{flag:['prado_admitiu'], instabilidade:1, moral:2,
-      npc:{nome:'Auditora Nishino', opiniao:5, memoria:'Admitiu que o viveiro não teria salvado o menino.'},
+      npc:{nome:'Auditora Brill', opiniao:5, memoria:'Admitiu que o viveiro não teria salvado o menino.'},
       rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que ninguém tinha feito a ela'},
-      registrar:'A Auditora Nishino admitiu que o viveiro não teria salvado o menino de nove anos.'},
+      registrar:'A Auditora Brill admitiu que o viveiro não teria salvado o menino de nove anos.'},
   escolhas:[
     {texto:'"Me leva até a Presidente."', vai:'c19_leva_presidente'},
     {texto:'Deixá-la ir.', vai:'c19_fim'}
@@ -2426,7 +2426,7 @@ c19_passou_direto:{
     '"Em um ano e oito meses", ela continua, atrás de você, "nenhum interessado apareceu."'
   ],
   ef:{flag:['convite_conselho','endereco_presidente'],
-      npc:{nome:'Auditora Nishino', opiniao:2, memoria:'Te deu o endereço da reunião enquanto você ia embora sem falar.'},
+      npc:{nome:'Auditora Brill', opiniao:2, memoria:'Te deu o endereço da reunião enquanto você ia embora sem falar.'},
       registrar:'Reunião ordinária do conselho: segunda, 10h, sala 704. É aberta ao público.'},
   escolhas:[{texto:'Continuar andando.', vai:'c19_fim'}]
 },
@@ -2434,7 +2434,7 @@ c19_passou_direto:{
 c19_leva_presidente:{
   texto:[
     '"Me leva até a Presidente."',
-    'A Auditora Nishino olha o galpão 4 por cima do seu ombro.',
+    'A Auditora Brill olha o galpão 4 por cima do seu ombro.',
     '"Segunda-feira, dez horas, sala setecentos e quatro." Ela liga o carro. "Reunião ordinária do conselho. É aberta. Consta no estatuto."',
     '"Aberta?"',
     '"Art. 27. Qualquer interessado pode assistir e pedir a palavra." Ela fecha a porta e abaixa o vidro. "Em um ano e oito meses, nenhum interessado apareceu."',
@@ -2442,7 +2442,7 @@ c19_leva_presidente:{
     '"Leve o que o senhor trouxe daí de dentro. Eles vão querer ver, e não é armadilha: eles vão querer ver de verdade, e é isso que o senhor vai achar mais difícil."'
   ],
   ef:{flag:['convite_conselho','endereco_presidente'],
-      npc:{nome:'Auditora Nishino', opiniao:5, memoria:'Te disse a data, a hora e o número da sala da reunião do conselho.'},
+      npc:{nome:'Auditora Brill', opiniao:5, memoria:'Te disse a data, a hora e o número da sala da reunião do conselho.'},
       registrar:'Reunião ordinária do conselho: segunda, 10h, sala 704. Aberta a qualquer interessado.'},
   escolhas:[{texto:'Ir para Saffron.', vai:'c19_fim'}]
 },

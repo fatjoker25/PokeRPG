@@ -1226,9 +1226,9 @@ c6_esconderijo:{
 c6_chamou_ajuda:{
   texto:[
     'Você volta pra cidade e tenta.',
-    d=>d.flags.cartao_ivone ? 'A Dra. Sayo não atende. Toca seis vezes e cai.' : 'Você não tem o número de ninguém que resolva isso.',
+    d=>d.flags.cartao_ivone ? 'A Dra. Cordell não atende. Toca seis vezes e cai.' : 'Você não tem o número de ninguém que resolva isso.',
     d=>d.flags.misty_sabe_do_diesel ? 'A piscina está fechada. Tem um papel na porta: "SEM EXPEDIENTE — QUINTA".' : 'A cidade inteira está fechando.',
-    d=>d.npcs['Kenta'] ? 'E o Kenta não está em Cerulean. Você não sabe nem por onde ele anda.' : '',
+    d=>d.npcs['Ezra'] ? 'E o Ezra não está em Cerulean. Você não sabe nem por onde ele anda.' : '',
     'Você volta pra vala sozinho, no escuro, com uma sensação muito específica de estar fazendo uma coisa que não devia fazer sozinho.'
   ],
   ef:{flag:'tentou_chamar_ajuda',
@@ -1400,13 +1400,13 @@ c6_leu_tudo:{
     'Você lê as duzentas folhas. Leva quatro horas e o sol nasce no meio.',
     'Quase tudo é chato. É essa a descoberta: é chatíssimo. Ofício respondendo ofício, prorrogação de prazo, juntada de documento.',
     'Mas em duas folhas tem nome.',
-    'Um despacho assinado por "H. Ando — Presidência".',
+    'Um despacho assinado por "H. Colman — Presidência".',
     'E um laudo assinado por "Dr. M. Amano — Núcleo Técnico".',
     'E, num canto de uma folha de rosto, um endereço: um prédio comercial em Saffron, sétimo andar, sala 704.'
   ],
   ef:{flag:['sabe_da_sala704','sabe_de_renno','sabe_de_sena'],
       hp:-2, causa:'Noite sem dormir lendo processo',
-      registrar:'Nomes: H. Ando (Presidência), Dr. M. Amano (Núcleo Técnico). Endereço: Saffron, sala 704.',
+      registrar:'Nomes: H. Colman (Presidência), Dr. M. Amano (Núcleo Técnico). Endereço: Saffron, sala 704.',
       presagio:'Sala 704. Sétimo andar. Você acabou de ganhar um destino final, e faltam muitas cidades até lá.'},
   escolhas:[
     {texto:'Ir pra Cerulean, procurar a Misty.', vai:'c6_bilac_leva'},

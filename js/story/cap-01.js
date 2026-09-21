@@ -308,7 +308,7 @@ c1_foi_sem_despedir:{
       }},
   escolhas:[
     {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ushio']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
   ]
 },
 
@@ -398,20 +398,20 @@ c1_contou_as_casas:{
 c1_vizinha:{
   texto:[
     'Socam a porta da frente às seis e cinquenta. Ninguém soca a porta desta casa às seis e cinquenta.',
-    'É a Sra. Chiyo, do número dezoito, de camisola e casaco por cima, com uma caixa de papelão nos braços e cara de quem não vai negociar.',
-    fala('Sra. Chiyo', 'Passou a noite inteira embaixo do meu carro. A NOITE INTEIRA.', 'grita',
+    'É a Sra. Perla, do número dezoito, de camisola e casaco por cima, com uma caixa de papelão nos braços e cara de quem não vai negociar.',
+    fala('Sra. Perla', 'Passou a noite inteira embaixo do meu carro. A NOITE INTEIRA.', 'grita',
          'Ela te empurra a caixa antes de qualquer bom dia.'),
-    fala('Sra. Chiyo', 'E eu pego o ônibus das oito pra Cerulean. Eu não levo bicho no ônibus, menino, e nem a pau eu deixo ele aqui sozinho.'),
+    fala('Sra. Perla', 'E eu pego o ônibus das oito pra Cerulean. Eu não levo bicho no ônibus, menino, e nem a pau eu deixo ele aqui sozinho.'),
     'Dentro da caixa, em cima de um pano de prato, tem um Pokémon pequeno e molhado, acordado, olhando pra cima.',
     'Ele não está ferido. Está com fome, com frio, e com a expressão exata de quem já foi devolvido antes.'
   ],
   ef:{flag:'a_caixa_da_odete',
-      npc:{nome:'Sra. Chiyo', opiniao:1, memoria:'Bateu na sua porta às 6h50 do dia em que você ia sair de casa.'},
-      registrar:'A Sra. Chiyo apareceu com uma caixa e um bicho molhado dentro.'},
+      npc:{nome:'Sra. Perla', opiniao:1, memoria:'Bateu na sua porta às 6h50 do dia em que você ia sair de casa.'},
+      registrar:'A Sra. Perla apareceu com uma caixa e um bicho molhado dentro.'},
   escolhas:[
     {texto:'"Eu fico com ele."', vai:'c1_ficou_com_ele'},
     {texto:'"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."', vai:'c1_leva_ao_centro'},
-    {texto:'"Eu não posso, dona Chiyo. Eu saio hoje."', vai:'c1_recusou_a_caixa'},
+    {texto:'"Eu não posso, dona Perla. Eu saio hoje."', vai:'c1_recusou_a_caixa'},
     {texto:d=>`Chamar ${nomeCasa()} pra decidir junto.`, vai:'c1_chamou_de_dentro'}
   ]
 },
@@ -419,12 +419,12 @@ c1_vizinha:{
 c1_ficou_com_ele:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu fico com ele.'),
-    'A Sra. Chiyo tinha três argumentos prontos e acabou de perder todos de uma vez. Fica um segundo inteiro de boca aberta.',
-    fala('Sra. Chiyo', 'Você sai hoje.'),
+    'A Sra. Perla tinha três argumentos prontos e acabou de perder todos de uma vez. Fica um segundo inteiro de boca aberta.',
+    fala('Sra. Perla', 'Você sai hoje.'),
     d=>fala(d.jogador.nome, 'Saio.'),
-    fala('Sra. Chiyo', 'E vai levar ele.'),
+    fala('Sra. Perla', 'E vai levar ele.'),
     d=>fala(d.jogador.nome, 'Vou.'),
-    fala('Sra. Chiyo', '...Tá.', 'baixo',
+    fala('Sra. Perla', '...Tá.', 'baixo',
          'Ela entrega o pano de prato junto, que não era pra entregar. Depois pede de volta. Depois deixa.')
   ],
   ef:{flag:'ficou_com_o_bicho', moral:4,
@@ -433,7 +433,7 @@ c1_ficou_com_ele:{
         const especies = [19, 16, 10, 13, 21, 41, 52];       // os que vivem debaixo de carro
         const dex = Dados.escolher(especies);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:40});
-        p.historia = 'Passou a noite embaixo do carro da Sra. Chiyo. Já tinha sido devolvido antes.';
+        p.historia = 'Passou a noite embaixo do carro da Sra. Perla. Já tinha sido devolvido antes.';
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.${notaDestino(onde)}`}];
       },
@@ -447,15 +447,15 @@ c1_ficou_com_ele:{
 c1_leva_ao_centro:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito.'),
-    'A Sra. Chiyo bate na caixa duas vezes, como quem fecha negócio, e já está descendo o degrau antes de você terminar a frase.',
-    fala('Sra. Chiyo', 'A caixa eu quero de volta, viu! É a caixa do meu ventilador!', 'grita',
+    'A Sra. Perla bate na caixa duas vezes, como quem fecha negócio, e já está descendo o degrau antes de você terminar a frase.',
+    fala('Sra. Perla', 'A caixa eu quero de volta, viu! É a caixa do meu ventilador!', 'grita',
          'Ela grita isso da calçada, já de costas.'),
     'Você fica na porta de casa, de pijama, às seis e cinquenta e dois, segurando a caixa de um ventilador com um bicho dentro.',
     'A sua jornada começou tecnicamente agora, e não foi nada do que você imaginou nos últimos três anos.'
   ],
   ef:{flag:'leva_a_caixa', itens:{'Caixa de ventilador com um bicho dentro':1},
       rep:{eixo:'bom',delta:1,motivo:'Aceitou levar o bicho ao Centro Pokémon'},
-      registrar:'Vai levar o bicho da Sra. Chiyo ao Centro Pokémon. A caixa tem que voltar.'},
+      registrar:'Vai levar o bicho da Sra. Perla ao Centro Pokémon. A caixa tem que voltar.'},
   escolhas:[
     {texto:'Entrar e tomar café antes.', vai:'c1_cozinha'},
     {texto:'Trocar de roupa e ir direto.', vai:'c1_saida_pro_centro'}
@@ -464,15 +464,15 @@ c1_leva_ao_centro:{
 
 c1_recusou_a_caixa:{
   texto:[
-    d=>fala(d.jogador.nome, 'Eu não posso, dona Chiyo. Eu saio hoje.'),
+    d=>fala(d.jogador.nome, 'Eu não posso, dona Perla. Eu saio hoje.'),
     'Ela olha pra você por um tempo que passa do confortável.',
-    fala('Sra. Chiyo', 'Eu sei que você sai hoje. A rua inteira sabe que você sai hoje.', 'frio'),
+    fala('Sra. Perla', 'Eu sei que você sai hoje. A rua inteira sabe que você sai hoje.', 'frio'),
     'Ela ajeita a caixa nos braços. A caixa não mudou de peso. Alguma coisa ali mudou de peso.',
-    fala('Sra. Chiyo', 'Tudo bem, filho. Eu deixo na porta do Centro antes de pegar o ônibus.'),
+    fala('Sra. Perla', 'Tudo bem, filho. Eu deixo na porta do Centro antes de pegar o ônibus.'),
     'E vai embora. E é justamente o tudo bem que fica atravessado.'
   ],
   ef:{flag:'recusou_a_caixa', moral:-3,
-      registrar:'Recusou a caixa da Sra. Chiyo.'},
+      registrar:'Recusou a caixa da Sra. Perla.'},
   escolhas:[
     {texto:'Chamar ela de volta.', vai:'c1_chamou_de_volta'},
     {texto:'Fechar a porta e descer para a cozinha.', vai:'c1_cozinha'}
@@ -485,13 +485,13 @@ c1_chamou_de_volta:{
     'Ela para no meio da rua e se vira. Não parece nem um pouco surpresa, e é isso que pega.',
     d=>fala(d.jogador.nome, 'Eu levo.'),
     'Ela volta os oito passos e entrega a caixa sem dizer uma palavra.',
-    fala('Sra. Chiyo', '...eu sabia. Eu sabia, eu sabia, eu sabia.', 'baixo',
+    fala('Sra. Perla', '...eu sabia. Eu sabia, eu sabia, eu sabia.', 'baixo',
          'Ela vai falando sozinha o caminho inteiro de volta.')
   ],
   ef:{limpaFlag:'recusou_a_caixa', flag:'leva_a_caixa', moral:3,
       itens:{'Caixa de ventilador com um bicho dentro':1},
       rep:{eixo:'bom',delta:1,motivo:'Chamou de volta e assumiu'},
-      registrar:'Chamou a Sra. Chiyo de volta e ficou com a caixa.'},
+      registrar:'Chamou a Sra. Perla de volta e ficou com a caixa.'},
   escolhas:[
     {texto:'Entrar e se arrumar.', vai:'c1_cozinha'},
     {texto:'Olhar o quarto uma última vez antes.', vai:'c1_quarto'},
@@ -503,7 +503,7 @@ c1_chamou_de_dentro:{
   texto:[
     d=>`Você chama pra dentro e ${casaCompleto()} vem até a porta secando a mão no pano.`,
     'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
-    fala('Sra. Chiyo', 'E o menino sai hoje.'),
+    fala('Sra. Perla', 'E o menino sai hoje.'),
     d=>fala(nomeCasa(), 'Sai.'),
     'Um silêncio de quatro segundos que decide tudo.',
     d=>fala(nomeCasa(), 'Então deixa aqui. Eu cuido até ele achar dono.', null,
@@ -660,11 +660,11 @@ c1_bolso_de_dentro:{
 c1_festa:{
   texto:[
     'Tem gente demais na sua casa às sete da manhã e você não foi consultado sobre isso.',
-    'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Chiyo e alguém que você tem quase certeza de que mora na outra rua.',
+    'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Perla e alguém que você tem quase certeza de que mora na outra rua.',
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
     d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
             'Ela fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
-    d=>fala('Sra. Chiyo', 'Deixa o menino comer! DEIXA O MENINO COMER!', 'grita'),
+    d=>fala('Sra. Perla', 'Deixa o menino comer! DEIXA O MENINO COMER!', 'grita'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} sumiu debaixo da mesa no primeiro minuto e não vai sair de lá nem por bolo.`
@@ -672,7 +672,7 @@ c1_festa:{
     }
   ],
   ef:{flag:'a_casa_estava_cheia', moral:4,
-      npc:{nome:'Sra. Chiyo', opiniao:2, memoria:'Apareceu na despedida às sete da manhã e mandou todo mundo deixar você comer.'},
+      npc:{nome:'Sra. Perla', opiniao:2, memoria:'Apareceu na despedida às sete da manhã e mandou todo mundo deixar você comer.'},
       registrar:'A casa amanheceu cheia de gente no dia da partida.'},
   escolhas:[
     {texto:'Fazer um discurso. Todo mundo está esperando um.', vai:'c1_discurso'},
@@ -687,7 +687,7 @@ c1_discurso:{
     'Você tem sete pessoas olhando pra você e nenhuma frase pronta.',
     d=>fala(d.jogador.nome, d.jogador.objetivo, null, 'É o que sai. É a coisa mais sincera que você já disse em voz alta nesta casa.'),
     'Ninguém aplaude na hora. Demora uns dois segundos.',
-    'E aí a Sra. Chiyo começa a chorar de um jeito absolutamente desproporcional, e a partir daí ninguém mais consegue levar a manhã a sério.'
+    'E aí a Sra. Perla começa a chorar de um jeito absolutamente desproporcional, e a partir daí ninguém mais consegue levar a manhã a sério.'
   ],
   ef:{moral:6, flag:'fez_discurso',
       rep:{eixo:'bom',delta:2,motivo:'Falou o que queria na frente da rua inteira', rep:{notorio:true}},
@@ -704,7 +704,7 @@ c1_todo_mundo_falou:{
     'A cozinha reclama, a cozinha se recusa, a cozinha fala.',
     fala('o primo que você vê uma vez por ano', 'Não empresta dinheiro pra treinador. Nunca. Nem pra você mesmo.'),
     fala('o vizinho do quatorze', 'Leva meia mais grossa do que você acha que precisa.'),
-    fala('Sra. Chiyo', 'ESCREVE. Escreve, menino, que ninguém escreve e todo mundo devia escrever.', 'grita'),
+    fala('Sra. Perla', 'ESCREVE. Escreve, menino, que ninguém escreve e todo mundo devia escrever.', 'grita'),
     d=>fala(nomeCasa(), 'Come sentado. Pelo menos uma vez por dia, come sentado.', 'baixo'),
     'A criança que ninguém sabe de quem é fala por último e fala a melhor de todas:',
     fala('a criança', 'Se você achar um shiny você TEM que voltar aqui pra mostrar.')
@@ -766,8 +766,8 @@ c1_saiu_da_festa:{
 c1_voltou_pra_festa:{
   texto:[
     'Você volta o meio quarteirão e entra pela porta da frente, o que é diferente de nunca ter saído, e todo mundo percebe.',
-    d=>fala('Sra. Chiyo', 'ELE VOLTOU! EU FALEI QUE ELE VOLTAVA!', 'grita'),
-    d=>fala(nomeCasa(), 'Você não falou nada disso, Chiyo.', 'riso'),
+    d=>fala('Sra. Perla', 'ELE VOLTOU! EU FALEI QUE ELE VOLTAVA!', 'grita'),
+    d=>fala(nomeCasa(), 'Você não falou nada disso, Perla.', 'riso'),
     'E aí a cozinha volta a ser barulhenta, e ninguém cobra nada de você, e é assim que se perdoa em casa de rua pequena: fingindo que não houve o que houve.'
   ],
   ef:{moral:5, limpaFlag:'saiu_no_meio_da_festa',
@@ -806,12 +806,12 @@ c1_ele_sumiu:{
 c1_procura_pijama:{
   texto:[
     'Você sai de pijama e de chinelo às seis e quarenta e cinco e percorre a rua inteira chamando, sem se importar com janela nenhuma.',
-    'Duas janelas abrem. Uma fecha de novo. A outra é a Sra. Chiyo, que olha você de cima a baixo e entra sem dizer nada — e volta um minuto depois, de casaco, pra procurar junto.',
+    'Duas janelas abrem. Uma fecha de novo. A outra é a Sra. Perla, que olha você de cima a baixo e entra sem dizer nada — e volta um minuto depois, de casaco, pra procurar junto.',
     'Vocês dois acham ele em onze minutos, na saída da cidade, sentado exatamente em cima da placa que diz PALLET, olhando a estrada.',
     'Ele não fugiu. Ele foi esperar por você no lugar certo.'
   ],
   ef:{moral:8, flag:'ele_estava_na_placa',
-      npc:{nome:'Sra. Chiyo', opiniao:3, memoria:'Saiu de casaco por cima da camisola pra procurar um bicho que não era dela.'},
+      npc:{nome:'Sra. Perla', opiniao:3, memoria:'Saiu de casaco por cima da camisola pra procurar um bicho que não era dela.'},
       rep:{eixo:'bom',delta:2,motivo:'Saiu de pijama pela rua atrás de quem sumiu'},
       registrar:'Ele estava sentado em cima da placa da saída da cidade.'},
   escolhas:[
@@ -822,7 +822,7 @@ c1_procura_pijama:{
 c1_onde_ele_iria:{
   texto:[
     'Você senta no degrau da escada e pensa, que é a coisa mais difícil de fazer quando o corpo inteiro quer correr.',
-    'Ele não gosta da praça. Ele tem medo do carro da Sra. Chiyo. Ele nunca foi pro mercado sozinho.',
+    'Ele não gosta da praça. Ele tem medo do carro da Sra. Perla. Ele nunca foi pro mercado sozinho.',
     'Mas ele te viu arrumando a mochila a noite inteira.'
   ],
   teste:{status:'percepcao', dificuldade:6, nomeStatus:'Percepção',
@@ -931,13 +931,13 @@ c1_pediu_ajuda:{
   texto:[
     'Você bate em três portas antes das sete da manhã, o que numa rua desta não é pedir ajuda: é convocar.',
     'Em oito minutos tem cinco pessoas na calçada, duas com lanterna que não precisa e uma com um Growlithe que claramente não sabe rastrear nada.',
-    d=>fala('Sr. Ushio', 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
+    d=>fala('Sr. Ives', 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
             'Ele organiza a rua inteira em quarenta segundos, de vassoura na mão, e ninguém questiona.'),
     'Quem acha é uma criança de nove anos que nem foi chamada e que estava só olhando.',
     'Estava sentado em cima da placa da saída da cidade, olhando a estrada.'
   ],
   ef:{moral:6, flag:'ele_estava_na_placa',
-      npc:{nome:'Sr. Ushio', opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'},
+      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'},
       rep:{eixo:'bom',delta:2,motivo:'Pediu ajuda em vez de resolver sozinho'},
       registrar:'A rua inteira ajudou a procurar. Uma criança de nove anos achou.'},
   escolhas:[
@@ -1171,17 +1171,17 @@ c1_rua:{
     d=>`${d.jogador.cidade} de manhã cedo é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`,
     'O ar está frio de um jeito que não vai durar mais de uma hora.',
     'Um velho varre a calçada da própria casa, como faz há vinte anos. A vassoura para no meio do movimento quando você passa.',
-    fala('Sr. Ushio', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
-    fala('Sr. Ushio', 'Você me deve uma.')
+    fala('Sr. Ives', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
+    fala('Sr. Ives', 'Você me deve uma.')
   ],
-  ef:{npc:{nome:'Sr. Ushio', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
+  ef:{npc:{nome:'Sr. Ives', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
   escolhas:[
     {texto:'"Eu sei. A janela." Encarar o assunto.', vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
-    {texto:'"Deve nada, seu Ushio." Fingir que esqueceu.', vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
+    {texto:'"Deve nada, seu Ives." Fingir que esqueceu.', vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
     {texto:'Perguntar quanto custa resolver isso hoje.', vai:'c1_divida_paga', cond:d=>d.jogador.dinheiro >= 800},
     {texto:'"Hoje não dá. Mas eu volto e resolvo."', vai:'c1_divida_adiada', ef:{flag:'adiou_divida'}},
     {texto:'"O senhor organizou a rua inteira hoje de manhã. A gente tá quites."',
-     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs['Sr. Ushio']},
+     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs['Sr. Ives']},
     {texto:'Oferecer a vassoura de volta: varrer a calçada agora, no lugar do dinheiro.',
      vai:'c1_varreu_no_lugar', cond:d=>!d.flags.varreu_a_calcada_do_ushio}
   ]
@@ -1192,13 +1192,13 @@ c1_divida_quites:{
     d=>fala(d.jogador.nome, 'O senhor organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.'),
     d=>fala(d.jogador.nome, 'Eu acho que a gente tá quites.'),
     'Ele fica olhando pra você por um tempo que passa do confortável, e depois olha pra vassoura, e depois pro chão.',
-    fala('Sr. Ushio', 'Não é assim que funciona.'),
-    fala('Sr. Ushio', 'Eu ajudei porque eu quis. Você quebrou porque você chutou. São coisas diferentes e você sabe disso.'),
+    fala('Sr. Ives', 'Não é assim que funciona.'),
+    fala('Sr. Ives', 'Eu ajudei porque eu quis. Você quebrou porque você chutou. São coisas diferentes e você sabe disso.'),
     'Ele tem razão, e você odeia que ele tenha razão às sete e meia da manhã.',
-    fala('Sr. Ushio', 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
+    fala('Sr. Ives', 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
   ],
   ef:{moral:4, flag:'quitou_na_lábia',
-      npc:{nome:'Sr. Ushio', opiniao:3, memoria:'Tentou quitar a janela com o favor da manhã. Ele riu e perdoou.'},
+      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Tentou quitar a janela com o favor da manhã. Ele riu e perdoou.'},
       registrar:'Tentou quitar a dívida da janela com o favor da manhã. Funcionou, meio sem querer.'},
   escolhas:[
     {texto:'Insistir que a dívida continua de pé.', vai:'c1_divida_adiada'},
@@ -1208,20 +1208,20 @@ c1_divida_quites:{
 
 c1_varreu_no_lugar:{
   texto:[
-    'Você tira a vassoura da mão dele sem pedir licença, o que é a única maneira de tirar uma vassoura da mão do Sr. Ushio.',
+    'Você tira a vassoura da mão dele sem pedir licença, o que é a única maneira de tirar uma vassoura da mão do Sr. Ives.',
     'Você varre a calçada inteira. Leva doze minutos. Ela já estava varrida.',
     'Ele reclama do jeito que você segura o cabo. Reclama do canto perto do portão. Reclama que você levanta poeira em vez de juntar.',
     'Quando você devolve a vassoura, ele não fala nada da calçada.',
-    fala('Sr. Ushio', 'A janela era vinte pokedólares em 1989.', 'baixo'),
-    fala('Sr. Ushio', 'E doze minutos de calçada hoje vale mais do que vinte pokedólares. Vai embora, menino, antes que eu fique bobo.')
+    fala('Sr. Ives', 'A janela era vinte pokedólares em 1989.', 'baixo'),
+    fala('Sr. Ives', 'E doze minutos de calçada hoje vale mais do que vinte pokedólares. Vai embora, menino, antes que eu fique bobo.')
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio', limpaFlag:'divida_pendente',
-      npc:{nome:'Sr. Ushio', opiniao:5, memoria:'Pagou a janela varrendo a calçada no dia em que saiu de casa.'},
+      npc:{nome:'Sr. Ives', opiniao:5, memoria:'Pagou a janela varrendo a calçada no dia em que saiu de casa.'},
       rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
-      registrar:'Pagou a janela varrendo a calçada do Sr. Ushio.'},
+      registrar:'Pagou a janela varrendo a calçada do Sr. Ives.'},
   escolhas:[
     {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ushio']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
   ]
 },
 
@@ -1236,7 +1236,7 @@ c1_entregou_a_caixa:{
     fala('a enfermeira', 'Se você mudar de ideia nos próximos dez minutos, ele ainda tá aqui.', 'baixo')
   ],
   ef:{flag:'entregou_a_caixa_no_centro',
-      registrar:'Entregou a caixa da Sra. Chiyo no Centro. Era o terceiro do mês.'},
+      registrar:'Entregou a caixa da Sra. Perla no Centro. Era o terceiro do mês.'},
   escolhas:[
     {texto:'Mudar de ideia. Ficar com ele.', vai:'c1_mudou_de_ideia_no_balcao'},
     {texto:'Não mudar. Entrar na fila.', vai:'c1_fila'},
@@ -1257,7 +1257,7 @@ c1_mudou_de_ideia_no_balcao:{
         Estado.usarItem('Caixa de ventilador com um bicho dentro');
         const dex = Dados.escolher([19, 16, 10, 13, 21, 41, 52]);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:45});
-        p.historia = 'Passou a noite embaixo do carro da Sra. Chiyo. Você deixou ele no balcão e voltou em quarenta segundos.';
+        p.historia = 'Passou a noite embaixo do carro da Sra. Perla. Você deixou ele no balcão e voltou em quarenta segundos.';
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) é seu.${notaDestino(onde)}`}];
       },
@@ -1325,47 +1325,47 @@ c1_de_quem_era_o_numero:{
 
 c1_divida_assume:{
   texto:[
-    fala('Sr. Ushio', 'A janela.', null, 'Ele repete a palavra e quase sorri. Quase.'),
-    fala('Sr. Ushio', 'Doze anos e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
+    fala('Sr. Ives', 'A janela.', null, 'Ele repete a palavra e quase sorri. Quase.'),
+    fala('Sr. Ives', 'Doze anos e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
     'Ele apoia a vassoura na parede e entra em casa. Demora o suficiente pra você achar que ele esqueceu que você existe.',
     'Volta com uma caixa de metal amassada, do tipo que já foi de biscoito.',
-    fala('Sr. Ushio', 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
+    fala('Sr. Ives', 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
     'Dentro tem duas Great Balls e um frasco de Super Potion, tudo dentro da validade por pouco.'
   ],
   ef:{itens:{'Great Ball':2,'Super Potion':1},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida antiga no dia em que podia simplesmente ir embora'},
-      npc:{nome:'Sr. Ushio', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
+      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
   escolhas:[
     {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ushio']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
   ]
 },
 
 c1_divida_nega:{
   texto:[
     'O velho te olha por tempo demais. Depois abaixa a cabeça e volta a varrer.',
-    fala('Sr. Ushio', 'Tá certo. Vai com Deus.', 'frio', 'Ele não levanta a cabeça uma vez sequer.'),
+    fala('Sr. Ives', 'Tá certo. Vai com Deus.', 'frio', 'Ele não levanta a cabeça uma vez sequer.'),
     'Ele não vai esquecer. Gente que varre a mesma calçada há vinte anos não esquece nada — e essa cidade é pequena, e você vai voltar um dia.'
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
-      npc:{nome:'Sr. Ushio', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
+      npc:{nome:'Sr. Ives', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
   escolhas:[
     {texto:'Seguir em frente.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ushio']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
   ]
 },
 
 c1_divida_paga:{
   texto:[
     'Você tira o dinheiro do bolso antes que ele termine a frase. Ele olha a nota. Olha você. Olha a nota de novo.',
-    fala('Sr. Ushio', 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
+    fala('Sr. Ives', 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
     'Ele pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.',
     'Você resolveu um problema e criou um assunto.'
   ],
-  ef:{dinheiro:-800, npc:{nome:'Sr. Ushio', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
+  ef:{dinheiro:-800, npc:{nome:'Sr. Ives', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ushio']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
   ]
 },
 
@@ -1373,16 +1373,16 @@ c1_divida_adiada:{
   texto:[
     d=>fala(d.jogador.nome, 'Hoje não dá. Mas eu volto e resolvo.'),
     'Ele para de varrer e te olha com atenção de verdade pela primeira vez na sua vida inteira.',
-    fala('Sr. Ushio', 'Todo mundo que sai daqui fala que volta.', null, 'A vassoura encosta na parede.'),
-    fala('Sr. Ushio', 'Você é o primeiro que fala que volta pra pagar alguma coisa.'),
-    fala('Sr. Ushio', 'Tá anotado. Aqui.', null, 'Ele bate duas vezes na própria testa.')
+    fala('Sr. Ives', 'Todo mundo que sai daqui fala que volta.', null, 'A vassoura encosta na parede.'),
+    fala('Sr. Ives', 'Você é o primeiro que fala que volta pra pagar alguma coisa.'),
+    fala('Sr. Ives', 'Tá anotado. Aqui.', null, 'Ele bate duas vezes na própria testa.')
   ],
   ef:{flag:'divida_pendente',
-      npc:{nome:'Sr. Ushio', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
+      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ushio']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
   ]
 },
 
@@ -1401,7 +1401,7 @@ c1_saida_pro_centro:{
     {texto:'Ir embora sem cadastro. Papel é problema de quem tem medo.', vai:'c1_sem_cadastro'},
     {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
     {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'},
-    {texto:'Entregar a caixa da Sra. Chiyo primeiro. É pra isso que você veio.',
+    {texto:'Entregar a caixa da Sra. Perla primeiro. É pra isso que você veio.',
      vai:'c1_entregou_a_caixa', cond:d=>Estado.contaItem('Caixa de ventilador com um bicho dentro') > 0},
     {texto:'Perguntar se dá pra recarregar o aparelho aqui. Ele veio sem carga.',
      vai:'c1_carregou_o_nav', cond:d=>Estado.temPokenav()}

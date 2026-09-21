@@ -158,14 +158,14 @@ c12_ab_sem_os_quinhentos:{
     d=>`Você tem ${d.jogador.dinheiro} ₽.`,
     'Você fica na frente do painel o tempo suficiente pra a moça da bilheteria entender, e ela entende, e faz uma coisa gentil: olha pro lado e finge conferir uma papelada.',
     'Do lado de fora tem um banco de concreto de frente pra cerca, e nesse banco tem um homem de uns quarenta anos com um binóculo velho pendurado no pescoço.',
-    'O binóculo tem uma fita de couro com o nome gravado a fogo, do jeito que se marcava ferramenta de trabalho: IWATA.',
-    fala('Iwata', 'Também não vai pagar?'),
+    'O binóculo tem uma fita de couro com o nome gravado a fogo, do jeito que se marcava ferramenta de trabalho: IVO.',
+    fala('Ivo', 'Também não vai pagar?'),
     d=>fala(d.jogador.nome, 'Também não vou pagar.'),
-    fala('Iwata', 'Senta. Daqui dá pra ver quase a mesma coisa.'),
+    fala('Ivo', 'Senta. Daqui dá pra ver quase a mesma coisa.'),
     'Ele empresta o binóculo sem você pedir, o que é o gesto mais direto que alguém fez com você hoje.'
   ],
   ef:{flag:'o_banco_da_cerca',
-      npc:{nome:'Iwata', opiniao:1, viuVoce:'Te emprestou o binóculo no banco em frente à cerca.'},
+      npc:{nome:'Ivo', opiniao:1, viuVoce:'Te emprestou o binóculo no banco em frente à cerca.'},
       registrar:'Não pagou a entrada da Zona Safári. Ficou no banco de fora, com um binóculo emprestado.'},
   escolhas:[
     {texto:'Olhar a reserva pelo binóculo.', vai:'c12_ab_pelo_binoculo'},
@@ -180,12 +180,12 @@ c12_ab_pelo_binoculo:{
     'Você vê, a uns oitocentos metros: capim alto, três Nidorino parados, uma árvore caída que virou passagem.',
     'E, mais à direita, uma estrutura que não é natureza: um galpão comprido de telha metálica com quatro veículos estacionados do lado.',
     'Quatro veículos num dia de semana, numa área em recuperação ambiental.',
-    fala('Iwata', 'Achou o galpão.'),
+    fala('Ivo', 'Achou o galpão.'),
     'Ele não pergunta. Constata.',
-    fala('Iwata', 'Todo mundo que pega esse binóculo acha o galpão em menos de dois minutos.'),
-    fala('Iwata', 'Eu sento aqui há quatro anos. Sabe quanta gente perguntou pra recepção o que é aquilo?'),
+    fala('Ivo', 'Todo mundo que pega esse binóculo acha o galpão em menos de dois minutos.'),
+    fala('Ivo', 'Eu sento aqui há quatro anos. Sabe quanta gente perguntou pra recepção o que é aquilo?'),
     d=>fala(d.jogador.nome, 'Quanta?'),
-    fala('Iwata', 'Eu.')
+    fala('Ivo', 'Eu.')
   ],
   ef:{flag:['o_galpao_do_setor_sete','sabe_do_lote_unico'],
       registrar:'Do banco de fora dá pra ver um galpão de telha metálica com quatro veículos dentro da reserva.'},
@@ -198,18 +198,18 @@ c12_ab_pelo_binoculo:{
 
 c12_ab_o_que_responderam:{
   texto:[
-    fala('Iwata', 'Que era depósito de ração.'),
+    fala('Ivo', 'Que era depósito de ração.'),
     'Ele pega o binóculo de volta, ajusta e olha ele mesmo, sem pressa.',
-    fala('Iwata', 'Nove mil hectares de reserva com bicho selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
-    fala('Iwata', 'Eu perguntei isso também. Aí eles pararam de responder.'),
+    fala('Ivo', 'Nove mil hectares de reserva com bicho selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
+    fala('Ivo', 'Eu perguntei isso também. Aí eles pararam de responder.'),
     d=>fala(d.jogador.nome, 'Por que você não desiste?'),
     'Ele abaixa o binóculo.',
-    fala('Iwata', 'Eu trabalhei lá dentro. Onze anos, manejo.'),
-    fala('Iwata', 'Me mandaram embora no dia em que o galpão ficou pronto.', 'baixo')
+    fala('Ivo', 'Eu trabalhei lá dentro. Onze anos, manejo.'),
+    fala('Ivo', 'Me mandaram embora no dia em que o galpão ficou pronto.', 'baixo')
   ],
   ef:{flag:'o_homem_do_binoculo_trabalhou_la',
-      npc:{nome:'Iwata', opiniao:2, viuVoce:'Te contou que foi demitido no dia em que o galpão ficou pronto.'},
-      registrar:'Iwata trabalhou onze anos no manejo da reserva. Foi demitido quando o galpão ficou pronto.'},
+      npc:{nome:'Ivo', opiniao:2, viuVoce:'Te contou que foi demitido no dia em que o galpão ficou pronto.'},
+      registrar:'Ivo trabalhou onze anos no manejo da reserva. Foi demitido quando o galpão ficou pronto.'},
   escolhas:[
     {texto:'Ir andar a cerca por fora.', vai:'c12_cerca'},
     {texto:'Ir procurar o diretor da reserva.', vai:'c12_diretor'},
@@ -219,15 +219,15 @@ c12_ab_o_que_responderam:{
 
 c12_ab_quanto_tempo_ele_senta:{
   texto:[
-    fala('Iwata', 'Quatro anos. Quase todo dia.'),
+    fala('Ivo', 'Quatro anos. Quase todo dia.'),
     d=>fala(d.jogador.nome, 'Fazendo o quê?'),
-    fala('Iwata', 'Contando.'),
+    fala('Ivo', 'Contando.'),
     'Ele tira do bolso de trás uma caderneta de capa dura, dessas de armazém, gasta nas quinas.',
     'Cada página tem uma data e uma coluna de traços.',
-    fala('Iwata', 'Caminhão que entra pelo portão técnico. Eu conto desde noventa e seis.'),
-    fala('Iwata', 'Noventa e seis: dezenove no ano. Noventa e sete: vinte e quatro.'),
+    fala('Ivo', 'Caminhão que entra pelo portão técnico. Eu conto desde noventa e seis.'),
+    fala('Ivo', 'Noventa e seis: dezenove no ano. Noventa e sete: vinte e quatro.'),
     'Ele vira pra última página preenchida.',
-    fala('Iwata', 'Esse ano, até agora: cento e quarenta e um.')
+    fala('Ivo', 'Esse ano, até agora: cento e quarenta e um.')
   ],
   ef:{flag:['a_caderneta_do_binoculo','sabe_do_lote_unico'],
       registrar:'Uma caderneta conta os caminhões que entram no portão técnico da reserva: 19 em 1996, 141 este ano.',
@@ -243,15 +243,15 @@ c12_ab_a_caderneta:{
   texto:[
     d=>fala(d.jogador.nome, 'Me empresta isso.'),
     'Ele segura a caderneta com as duas mãos e não entrega na hora.',
-    fala('Iwata', 'Isso aqui é quatro anos da minha vida.'),
+    fala('Ivo', 'Isso aqui é quatro anos da minha vida.'),
     d=>fala(d.jogador.nome, 'Eu sei. Por isso eu quero.'),
     'Ele entrega.',
-    fala('Iwata', 'Se você perder, eu não tenho cópia.'),
-    fala('Iwata', 'E se você mostrar pra pessoa errada, eu também não tenho cópia.'),
+    fala('Ivo', 'Se você perder, eu não tenho cópia.'),
+    fala('Ivo', 'E se você mostrar pra pessoa errada, eu também não tenho cópia.'),
     'Você guarda a caderneta na parte de dentro da mochila, que é onde vai o que não pode molhar.'
   ],
   ef:{flag:'tem_a_caderneta_do_binoculo',
-      npc:{nome:'Iwata', opiniao:3, viuVoce:'Te entregou quatro anos de contagem sem ter cópia.'},
+      npc:{nome:'Ivo', opiniao:3, viuVoce:'Te entregou quatro anos de contagem sem ter cópia.'},
       registrar:'Está com a caderneta de contagem de caminhões. Não existe cópia.',
       presagio:'Ele não tem cópia. O que você fizer com esse caderno é definitivo.'},
   escolhas:[
@@ -269,16 +269,16 @@ c12_ab_de_cracha:{
     },
     'Do lado de dentro não é a reserva. É um escritório: quatro mesas, dois computadores, um mapa mural de nove mil hectares com alfinete colorido.',
     'Uma mulher de uns cinquenta anos levanta de uma das mesas e vem te receber com a mão estendida e o nome já pronto.',
-    fala('Auditora Nishino', 'Nishino. Auditoria de manejo.'),
+    fala('Auditora Brill', 'Brill. Auditoria de manejo.'),
     d=>fala(d.jogador.nome, 'Auditoria?'),
-    fala('Auditora Nishino', 'Eu chego antes de vocês e saio depois. É o serviço.'),
+    fala('Auditora Brill', 'Eu chego antes de vocês e saio depois. É o serviço.'),
     'Ela olha o seu crachá, depois a sua cara, e faz a conta da sua idade em silêncio.',
-    fala('Auditora Nishino', 'Você é novo. Quanto tempo de casa?'),
+    fala('Auditora Brill', 'Você é novo. Quanto tempo de casa?'),
     'A resposta honesta é constrangedora e você dá ela mesmo assim.'
   ],
   ef:{flag:'conheceu_a_nishino',
-      npc:{nome:'Auditora Nishino', opiniao:1, viuVoce:'Te recebeu pela porta lateral da Zona Safári.'},
-      registrar:'Conheceu a Auditora Nishino, da auditoria de manejo, no escritório da Zona Safári.'},
+      npc:{nome:'Auditora Brill', opiniao:1, viuVoce:'Te recebeu pela porta lateral da Zona Safári.'},
+      registrar:'Conheceu a Auditora Brill, da auditoria de manejo, no escritório da Zona Safári.'},
   escolhas:[
     {texto:'Perguntar o que ela está auditando.', vai:'c12_ab_o_que_ela_audita'},
     {texto:'Perguntar pelo Setor 7 direto.', vai:'c12_ab_perguntou_o_sete'},
@@ -289,13 +289,13 @@ c12_ab_de_cracha:{
 c12_ab_o_que_ela_audita:{
   texto:[
     'Ela volta pra mesa dela e vira uma pasta na sua direção sem entregar.',
-    fala('Auditora Nishino', 'Balanço de espécimes. Entrou, nasceu, morreu, saiu.'),
-    fala('Auditora Nishino', 'É a conta mais simples que existe. E é a única conta que essa reserva não fecha.'),
+    fala('Auditora Brill', 'Balanço de espécimes. Entrou, nasceu, morreu, saiu.'),
+    fala('Auditora Brill', 'É a conta mais simples que existe. E é a única conta que essa reserva não fecha.'),
     d=>fala(d.jogador.nome, 'Não fecha por quanto?'),
-    fala('Auditora Nishino', 'Por quatrocentos e doze.'),
+    fala('Auditora Brill', 'Por quatrocentos e doze.'),
     'Ela diz o número devagar, como quem já disse esse número pra muita gente que não reagiu.',
-    fala('Auditora Nishino', 'Quatrocentos e doze animais que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
-    fala('Auditora Nishino', 'Eu escrevi isso em três relatórios. Os três foram arquivados como "divergência metodológica".')
+    fala('Auditora Brill', 'Quatrocentos e doze animais que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
+    fala('Auditora Brill', 'Eu escrevi isso em três relatórios. Os três foram arquivados como "divergência metodológica".')
   ],
   ef:{flag:['quatrocentos_e_doze','sabe_do_lote_unico'],
       registrar:'A auditoria aponta 412 espécimes que entraram na Zona Safári e não saíram por nenhuma das três portas.',
@@ -311,13 +311,13 @@ c12_ab_perguntou_o_sete:{
   texto:[
     d=>fala(d.jogador.nome, 'O que é o Setor 7?'),
     'Ela não se assusta. Ela fica satisfeita, que é pior.',
-    fala('Auditora Nishino', 'Em que documento você viu isso escrito?'),
+    fala('Auditora Brill', 'Em que documento você viu isso escrito?'),
     d=>fala(d.jogador.nome, 'Numa placa de madeira numa bifurcação.'),
-    fala('Auditora Nishino', 'Então você viu num lugar onde eu não posso citar.'),
+    fala('Auditora Brill', 'Então você viu num lugar onde eu não posso citar.'),
     'Ela puxa o mapa mural com o dedo, sem virar o corpo, e aponta uma área a nordeste.',
-    fala('Auditora Nishino', 'No mapa oficial o Setor 7 não existe. Tem setor 1 a 6 e setor 8.'),
+    fala('Auditora Brill', 'No mapa oficial o Setor 7 não existe. Tem setor 1 a 6 e setor 8.'),
     d=>fala(d.jogador.nome, 'E o oito fica onde?'),
-    fala('Auditora Nishino', 'Do outro lado do sete.')
+    fala('Auditora Brill', 'Do outro lado do sete.')
   ],
   ef:{flag:['o_setor_sete_nao_existe_no_mapa','sabotou_o_setor7'],
       registrar:'O mapa oficial da Zona Safári vai do setor 1 ao 6 e pula direto pro 8.',
@@ -331,19 +331,19 @@ c12_ab_perguntou_o_sete:{
 
 c12_ab_a_copia_do_relatorio:{
   texto:[
-    fala('Auditora Nishino', 'Você sabe o que acontece se eu te der cópia?'),
+    fala('Auditora Brill', 'Você sabe o que acontece se eu te der cópia?'),
     d=>fala(d.jogador.nome, 'Não.'),
-    fala('Auditora Nishino', 'Nada. Absolutamente nada.'),
+    fala('Auditora Brill', 'Nada. Absolutamente nada.'),
     'Ela abre a gaveta e tira três pastas já separadas, com elástico, prontas.',
-    fala('Auditora Nishino', 'Relatório de auditoria é documento público. Qualquer pessoa pode pedir.'),
-    fala('Auditora Nishino', 'Em quatro anos, você é a segunda pessoa a pedir.'),
+    fala('Auditora Brill', 'Relatório de auditoria é documento público. Qualquer pessoa pode pedir.'),
+    fala('Auditora Brill', 'Em quatro anos, você é a segunda pessoa a pedir.'),
     d=>fala(d.jogador.nome, 'E a primeira?'),
-    fala('Auditora Nishino', 'Uma repórter de Saffron. Ano passado.'),
+    fala('Auditora Brill', 'Uma repórter de Saffron. Ano passado.'),
     'Ela empurra as três pastas.',
-    fala('Auditora Nishino', 'Ela pediu, eu dei, e não saiu nada. Eu não sei por quê e parei de perguntar.')
+    fala('Auditora Brill', 'Ela pediu, eu dei, e não saiu nada. Eu não sei por quê e parei de perguntar.')
   ],
   ef:{flag:['tem_os_relatorios_da_nishino','reika_precisa_de_papel'],
-      npc:{nome:'Auditora Nishino', opiniao:3, viuVoce:'Te entregou três relatórios de auditoria arquivados.'},
+      npc:{nome:'Auditora Brill', opiniao:3, viuVoce:'Te entregou três relatórios de auditoria arquivados.'},
       registrar:'Está com três relatórios de auditoria da Zona Safári, arquivados como "divergência metodológica".',
       presagio:'Documento público que ninguém pede é o esconderijo mais seguro que existe.'},
   escolhas:[
@@ -825,7 +825,7 @@ c12_procurou_o_nome:{
   escolhas:[
     {texto:'"Então a gente descredencia."', vai:'c12_descredenciar'},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Levar a ata pra Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar a ata pra Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir falar com o diretor com a ata na mão.', vai:'c12_diretor'}
   ]
 },
@@ -877,7 +877,7 @@ c12_koga_relatorio:{
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Rin.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
-    {texto:'Levar à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Falar com o diretor.', vai:'c12_diretor'}
   ]
 },
@@ -1305,7 +1305,7 @@ c12_formularios:{
   escolhas:[
     {texto:'Levar pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Levar à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"Me leva lá na terça."', vai:'c12_yara_leva'}
   ]
 },
@@ -1442,7 +1442,7 @@ c12_o_dia_inteiro:{
     {texto:'Voltar à noite e abrir o curral.', vai:'c12_noite_zona'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Ir falar com o diretor agora, com o dia inteiro na cabeça.', vai:'c12_diretor'},
-    {texto:'Levar à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1501,7 +1501,7 @@ c12_arrumou_onde:{
     {texto:'Voltar à noite e abrir o curral.', vai:'c12_noite_zona'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Levar tudo pro diretor.', vai:'c12_diretor'},
-    {texto:'Levar à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1838,7 +1838,7 @@ c12_papelada:{
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Levar tudo à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"Quem é o dono da terra ao lado?"', vai:'c12_dono_da_terra'}
   ]
 },
@@ -2240,7 +2240,7 @@ c12_seguiu_caminhao_zona:{
   escolhas:[
     {texto:'Voltar e entrar no setor 7.', vai:'c12_setor7'},
     {texto:'Levar as fotos pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Levar à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Sair de Fuchsia com as fotos.', vai:'c12_fim'}
   ]
 },
@@ -2484,7 +2484,7 @@ c12_devolveu_a_chave:{
   escolhas:[
     {texto:'Ir ao diretor.', vai:'c12_diretor'},
     {texto:'Ir ao Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Levar tudo à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Sair de Fuchsia.', vai:'c12_fim'}
   ]
 },
@@ -2535,7 +2535,7 @@ c12_tres_dias:{
   escolhas:[
     {texto:'Ir ao diretor.', vai:'c12_diretor'},
     {texto:'Ir ao Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Levar tudo à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Sair de Fuchsia.', vai:'c12_fim'}
   ]
 },
@@ -2580,7 +2580,7 @@ c12_fotografou_zona:{
       presagio:'Nota de empenho é dinheiro público com número. Guarde o número.'},
   escolhas:[
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
-    {texto:'Levar à Dra. Sayo.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Liga.', vai:'c12_liga_zona'},
     {texto:'Vender a rota à Terceira.', vai:'c12_vendeu_zona', cond:d=>['mercenario','foragido'].includes(Historia.via())},
     {texto:'Voltar e abrir o curral mesmo assim.', vai:'c12_abriu_curral'}
@@ -2623,7 +2623,7 @@ c12_entregar:{
     'É mais material do que a Liga juntou sobre a Zona Safári em vinte anos, e você juntou em três dias porque você perguntou às pessoas que estavam ali o tempo todo.'
   ],
   escolhas:[
-    {texto:'Levar à Dra. Sayo.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Liga.', vai:'c12_liga_zona'},
     {texto:'Levar à imprensa de Fuchsia.', vai:'c12_imprensa_zona'},
     {texto:'Entregar ao Koga, para a reunião do conselho.', vai:'c12_entregou_koga', cond:d=>!!d.flags.conheceu_koga}
@@ -2655,7 +2655,7 @@ c12_entregou_koga:{
   escolhas:[
     {texto:'Ficar em Fuchsia até a reunião.', vai:'c12_ficou_pra_reuniao'},
     {texto:'Ir ao setor 7 hoje à noite mesmo assim.', vai:'c12_noite_zona'},
-    {texto:'Levar cópia à Dra. Sayo também.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar cópia à Dra. Cordell também.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Seguir viagem.', vai:'c12_fim'}
   ]
 },
@@ -2688,7 +2688,7 @@ c12_ficou_pra_reuniao:{
 
 c12_ivone_zona:{
   texto:[
-    'A Dra. Sayo chega em Fuchsia de ônibus, como sempre, e como sempre não traz nada além de um caderno e uma câmera.',
+    'A Dra. Cordell chega em Fuchsia de ônibus, como sempre, e como sempre não traz nada além de um caderno e uma câmera.',
     'Ela lê tudo em quatro horas, na mesa da pousada, e a dona da pousada traz café três vezes sem cobrar.',
     'No fim, ela separa a pilha em dois montes.',
     '"Esse monte aqui é matéria."',
@@ -2704,10 +2704,10 @@ c12_ivone_zona:{
     '"O resto eu publico junto, porque tristeza também informa. Mas a capa é o número."'
   ],
   ef:{flag:['ivone_tem_zona','provas_zona'],
-      npc:{nome:'Dra. Sayo', opiniao:8, memoria:'Recebeu o material de Fuchsia e separou o que dá capa do que dá tristeza.'},
+      npc:{nome:'Dra. Cordell', opiniao:8, memoria:'Recebeu o material de Fuchsia e separou o que dá capa do que dá tristeza.'},
       rep:{eixo:'bom',delta:5,motivo:'Entregou a Fuchsia inteira a quem publica'},
       instabilidade:-1,
-      registrar:'A Dra. Sayo recebeu o material da Zona Safári.',
+      registrar:'A Dra. Cordell recebeu o material da Zona Safári.',
       presagio:'"Tristeza também informa. Mas a capa é o número." Anote como se faz.'},
   escolhas:[
     {texto:'Ficar até a reunião do conselho.', vai:'c12_ficou_pra_reuniao', cond:d=>!!d.flags.koga_convoca || !!d.flags.koga_descredencia},
@@ -2740,7 +2740,7 @@ c12_liga_zona:{
   escolhas:[
     {texto:'Ficar para ver a barreira na quinta.', vai:'c12_barreira'},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
-    {texto:'Levar cópia à Dra. Sayo.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar cópia à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Seguir viagem.', vai:'c12_fim'}
   ]
 },
@@ -2802,7 +2802,7 @@ c12_imprensa_zona:{
   escolhas:[
     {texto:'Ficar até sair a edição.', vai:'c12_saiu_a_edicao'},
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
-    {texto:'Levar cópia à Dra. Sayo.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar cópia à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Seguir viagem.', vai:'c12_fim'}
   ]
 },
@@ -2852,7 +2852,7 @@ c12_vendeu_zona:{
     {texto:'Seguir viagem.', vai:'c12_fim'},
     {texto:'Voltar e abrir o curral mesmo assim.', vai:'c12_noite_zona'},
     {texto:'Devolver o dinheiro.', vai:'c12_devolveu_o_dinheiro'},
-    {texto:'Levar cópia à Dra. Sayo assim mesmo.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Levar cópia à Dra. Cordell assim mesmo.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -2876,7 +2876,7 @@ c12_devolveu_o_dinheiro:{
       presagio:'"Informação entregue não volta." Anota — vale pra tudo nesse jogo.'},
   escolhas:[
     {texto:'Voltar e abrir o curral.', vai:'c12_noite_zona'},
-    {texto:'Levar tudo à Dra. Sayo.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar tudo ao Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Seguir viagem.', vai:'c12_fim'}
   ]

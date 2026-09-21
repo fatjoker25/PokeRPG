@@ -120,18 +120,18 @@ c14_ab_sem_passagem:{
     'Você fica no galpão. Sai o ferry das sete. O galpão esvazia.',
     'Às oito e pouco entra um homem de setenta e quatro anos com um boné de pano desbotado e uma lata de óleo na mão, e ele vai até a janelinha e não compra passagem: ele reclama de alguma coisa sobre taxa de atracação, e reclama com intimidade.',
     d=>d.flags.sabe_do_ryuzo
-      ? 'Você já ouviu falar dele numa mesa de dominó. Ryuzo, setenta e quatro anos, barco de doze pés que o pai construiu em cinquenta e três, sai toda quarta de manhã sem rede e sem linha e ninguém pergunta o que ele vai fazer.'
-      : 'O homem da janelinha o chama de Ryuzo e o trata como quem trata alguém há quarenta anos.',
+      ? 'Você já ouviu falar dele numa mesa de dominó. Amos, setenta e quatro anos, barco de doze pés que o pai construiu em cinquenta e três, sai toda quarta de manhã sem rede e sem linha e ninguém pergunta o que ele vai fazer.'
+      : 'O homem da janelinha o chama de Amos e o trata como quem trata alguém há quarenta anos.',
     'Quando ele sai, você sai junto.',
     d=>fala(d.jogador.nome, 'O senhor tem barco?'),
-    fala('Ryuzo', 'Tenho doze pés e setenta e quatro anos. Que é o que eu tenho.'),
+    fala('Amos', 'Tenho doze pés e setenta e quatro anos. Que é o que eu tenho.'),
     d=>fala(d.jogador.nome, 'O senhor vai pra Cinnabar?'),
     'Ele para de andar.',
-    fala('Ryuzo', 'Por que é que você quer ir pra Cinnabar?')
+    fala('Amos', 'Por que é que você quer ir pra Cinnabar?')
   ],
   ef:{flag:'conheceu_o_ryuzo',
-      npc:{nome:'Ryuzo', opiniao:0, viuVoce:'Você o abordou no porto de Fuchsia pedindo travessia.'},
-      registrar:'Não tinha os 600 ₽ do ferry. Abordou Ryuzo, dono de um barco de doze pés.'},
+      npc:{nome:'Amos', opiniao:0, viuVoce:'Você o abordou no porto de Fuchsia pedindo travessia.'},
+      registrar:'Não tinha os 600 ₽ do ferry. Abordou Amos, dono de um barco de doze pés.'},
   escolhas:[
     {texto:'Contar a verdade inteira.', vai:'c14_ab_a_verdade_pro_velho'},
     {texto:'Dizer que é a trabalho.', vai:'c14_ab_mentiu_pro_velho'},
@@ -144,20 +144,20 @@ c14_ab_a_verdade_pro_velho:{
     'Você conta. Conta o laboratório, conta o que te trouxe até aqui, conta a parte que faz você parecer ingênuo e conta a parte que faz você parecer perigoso.',
     'Leva uns seis minutos. Ele não interrompe e não olha pra você: olha pro mar, com a lata de óleo na mão.',
     'Quando você termina, ele mexe no boné.',
-    fala('Ryuzo', 'Cinco horas de combustível.'),
+    fala('Amos', 'Cinco horas de combustível.'),
     d=>fala(d.jogador.nome, 'Eu não tenho como pagar cinco horas de combustível.'),
-    fala('Ryuzo', 'Eu sei. Eu falei quanto custa, não falei que você vai pagar.'),
+    fala('Amos', 'Eu sei. Eu falei quanto custa, não falei que você vai pagar.'),
     'Ele desce a rampa na direção de um barco azul de doze pés com o motor de popa levantado.',
-    fala('Ryuzo', 'Meu filho morreu no mar em noventa e sete e desde noventa e sete eu saio toda quarta e não pesco nada.'),
+    fala('Amos', 'Meu filho morreu no mar em noventa e sete e desde noventa e sete eu saio toda quarta e não pesco nada.'),
     d=>fala(d.jogador.nome, 'Pra fazer o quê?'),
-    fala('Ryuzo', 'Pra ninguém perguntar.'),
+    fala('Amos', 'Pra ninguém perguntar.'),
     'Ele destrava o motor de popa e baixa.',
-    fala('Ryuzo', 'Você falou seis minutos direto comigo. Isso não acontecia desde noventa e sete.', 'baixo')
+    fala('Amos', 'Você falou seis minutos direto comigo. Isso não acontecia desde noventa e sete.', 'baixo')
   ],
   ef:{flag:'ryuzo_vai_a_cinnabar', moral:2,
       rep:{eixo:'bom', delta:1, motivo:'Contou a verdade inteira pra um desconhecido que podia recusar.'},
-      npc:{nome:'Ryuzo', opiniao:4, viuVoce:'Te levou a Cinnabar sem cobrar, por seis minutos de conversa.'},
-      registrar:'Ryuzo te levou a Cinnabar num barco de doze pés, sem cobrar.'},
+      npc:{nome:'Amos', opiniao:4, viuVoce:'Te levou a Cinnabar sem cobrar, por seis minutos de conversa.'},
+      registrar:'Amos te levou a Cinnabar num barco de doze pés, sem cobrar.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c14_ilha'}
   ]
@@ -167,16 +167,16 @@ c14_ab_mentiu_pro_velho:{
   texto:[
     d=>fala(d.jogador.nome, 'É a trabalho.'),
     'Ele te olha por dois segundos inteiros.',
-    fala('Ryuzo', 'A trabalho de quem?'),
+    fala('Amos', 'A trabalho de quem?'),
     'Você não tem a segunda frase. Mentira boa precisa de segunda frase e você só preparou a primeira.',
-    fala('Ryuzo', 'Pois é.'),
+    fala('Amos', 'Pois é.'),
     'Ele desce a rampa. Na metade do caminho ele para, sem virar:',
-    fala('Ryuzo', 'Eu levo você assim mesmo. Só não fala mais nada até a gente chegar.'),
+    fala('Amos', 'Eu levo você assim mesmo. Só não fala mais nada até a gente chegar.'),
     'A travessia leva cinco horas e vocês não trocam uma palavra, e as cinco horas são muito compridas.'
   ],
   ef:{flag:'ryuzo_vai_a_cinnabar',
-      npc:{nome:'Ryuzo', opiniao:0, viuVoce:'Te levou a Cinnabar depois de te pegar numa mentira.'},
-      registrar:'Mentiu pro Ryuzo e ele te levou a Cinnabar em silêncio.'},
+      npc:{nome:'Amos', opiniao:0, viuVoce:'Te levou a Cinnabar depois de te pegar numa mentira.'},
+      registrar:'Mentiu pro Amos e ele te levou a Cinnabar em silêncio.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c14_ilha'}
   ]
@@ -187,16 +187,16 @@ c14_ab_ofereceu_tudo:{
     d=>fala(d.jogador.nome, `Eu tenho ${d.jogador.dinheiro}. É tudo. Leva tudo.`),
     'Você estende a mão aberta com as notas e as moedas, e esse gesto é humilhante de um jeito muito específico.',
     'Ele olha a mão. Não pega.',
-    fala('Ryuzo', 'Guarda isso.'),
+    fala('Amos', 'Guarda isso.'),
     d=>fala(d.jogador.nome, 'É sério. Pode levar tudo.'),
-    fala('Ryuzo', 'Menino, se eu levar tudo o que você tem, você chega numa ilha sem ferry até sábado e sem um tostão.'),
+    fala('Amos', 'Menino, se eu levar tudo o que você tem, você chega numa ilha sem ferry até sábado e sem um tostão.'),
     'Ele empurra a sua mão de volta com as costas da dele.',
-    fala('Ryuzo', 'Aí eu não te levei. Eu te abandonei mais longe.'),
+    fala('Amos', 'Aí eu não te levei. Eu te abandonei mais longe.'),
     'Ele desce a rampa.',
-    fala('Ryuzo', 'Vem. E guarda o dinheiro no bolso de dentro, que lá o vento leva.')
+    fala('Amos', 'Vem. E guarda o dinheiro no bolso de dentro, que lá o vento leva.')
   ],
   ef:{flag:'ryuzo_vai_a_cinnabar', moral:1,
-      npc:{nome:'Ryuzo', opiniao:3, viuVoce:'Recusou o seu dinheiro e te levou a Cinnabar mesmo assim.'},
+      npc:{nome:'Amos', opiniao:3, viuVoce:'Recusou o seu dinheiro e te levou a Cinnabar mesmo assim.'},
       registrar:'Ofereceu tudo que tinha pela travessia. O velho recusou e levou mesmo assim.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c14_ilha'}
@@ -834,7 +834,7 @@ c14_pode_parar:{
   texto:[
     '"A gente pode parar isso."',
     '"Como?"',
-    'Você conta o que tem: as fotos, as planilhas, os nomes, o que a Dra. Sonoda disse, a data do encerramento, a Dra. Sayo.',
+    'Você conta o que tem: as fotos, as planilhas, os nomes, o que a Dra. Sonoda disse, a data do encerramento, a Dra. Cordell.',
     'Ele ouve inteiro.',
     '"Isso é bom."',
     '"Mas?"',
@@ -861,7 +861,7 @@ c14_pode_parar:{
     {texto:'"Então me mostra o acervo."', vai:'c14_ginasio_por_dentro'},
     {texto:'"Por que você não denunciou?"', vai:'c14_nunca_leu'},
     {texto:'"O que tem nas cinco caixas?"', vai:'c14_as_cinco_caixas'},
-    {texto:'"Vamos ligar pra Dra. Sayo agora."', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'"Vamos ligar pra Dra. Cordell agora."', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1252,7 +1252,7 @@ c14_publicar:{
       registrar:'Blaine vai publicar os cadernos 1 a 6 do Dr. Fuji e guardar o 7.',
       presagio:'"Carta não se publica." Anota — é uma regra e é uma boa.'},
   escolhas:[
-    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Chamar a Dra. Cordell.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"E o acervo? A cláusula de devolução."', vai:'c14_devolver_acervo'},
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'}
@@ -1284,16 +1284,16 @@ c14_devolver_acervo:{
       registrar:'O acervo do Instituto de Cinnabar pertence à Comissão de Bem-Estar Pokémon desde 1996, com acesso público.',
       presagio:'Acesso público. Repare no que isso faz com tudo o que você viu em Celadon.'},
   escolhas:[
-    {texto:'"Então a gente entrega à Comissão. À Auditora Nishino."', vai:'c14_entregar_prado', cond:d=>!!d.flags.conheceu_prado},
+    {texto:'"Então a gente entrega à Comissão. À Auditora Brill."', vai:'c14_entregar_prado', cond:d=>!!d.flags.conheceu_prado},
     {texto:'"Então a gente entrega à Comissão."', vai:'c14_entregar_comissao'},
     {texto:'"E a gente publica antes."', vai:'c14_publicar'},
-    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Cordell.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
 c14_entregar_prado:{
   texto:[
-    'Você conta pro Blaine da Auditora Nishino: a prancheta, o pregão no cassino, o corredor de azulejo, a via amarela carbonada, as vinte e seis sessões por ano.',
+    'Você conta pro Blaine da Auditora Brill: a prancheta, o pregão no cassino, o corredor de azulejo, a via amarela carbonada, as vinte e seis sessões por ano.',
     'Ele ouve e faz uma pergunta só:',
     '"Ela te deu o papel?"',
     '"Deu."',
@@ -1309,16 +1309,16 @@ c14_entregar_prado:{
     '"Eu prefiro entregar antes de prescrever. Prescrever é a Justiça dizendo que não importa mais. E importa."'
   ],
   ef:{flag:['vai_entregar_a_prado','blaine_aliado'],
-      npc:{nome:'Blaine', opiniao:10, memoria:'Vai entregar as cinco caixas à Auditora Nishino antes de a retenção prescrever.'},
+      npc:{nome:'Blaine', opiniao:10, memoria:'Vai entregar as cinco caixas à Auditora Brill antes de a retenção prescrever.'},
       rep:{eixo:'bom',delta:7,motivo:'Ligou o acervo de Cinnabar à auditoria que preside os pregões de Celadon'},
       moral:20, instabilidade:-1,
-      registrar:'Blaine vai entregar as cinco caixas à Auditora Nishino, e a Comissão pode requisitar as quatro da Silph.',
+      registrar:'Blaine vai entregar as cinco caixas à Auditora Brill, e a Comissão pode requisitar as quatro da Silph.',
       presagio:'"Prescrever é a Justiça dizendo que não importa mais. E importa."'},
   escolhas:[
     {texto:'Subir o vulcão antes de ir.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
-    {texto:'Chamar a Dra. Sayo também.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Cordell também.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1345,14 +1345,14 @@ c14_entregar_comissao:{
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
-    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Chamar a Dra. Cordell.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'}
   ]
 },
 
 c14_chamou_ivone_cinnabar:{
   texto:[
-    'A Dra. Sayo chega no ferry de sábado, porque não tem outro jeito de chegar em Cinnabar.',
+    'A Dra. Cordell chega no ferry de sábado, porque não tem outro jeito de chegar em Cinnabar.',
     'Ela passa dois dias na sala do ginásio lendo, com Blaine trazendo café e sem falar nada, e os dois velhos se dando bem de um jeito imediato e chato de assistir.',
     'No fim do segundo dia ela fecha a caixa nove e fala:',
     '"Eu não vou publicar isso."',
@@ -1370,10 +1370,10 @@ c14_chamou_ivone_cinnabar:{
     '"Eu sou muito pior que o senhor."'
   ],
   ef:{flag:['ivone_tem_cinnabar','plano_de_publicacao'],
-      npc:{nome:'Dra. Sayo', opiniao:10, memoria:'Passou dois dias em Cinnabar e montou o caminho para publicar os cadernos como documento público.'},
+      npc:{nome:'Dra. Cordell', opiniao:10, memoria:'Passou dois dias em Cinnabar e montou o caminho para publicar os cadernos como documento público.'},
       rep:{eixo:'bom',delta:7,motivo:'Juntou o arquivo, o decreto e quem sabe publicar'},
       moral:20, instabilidade:-1,
-      registrar:'A Dra. Sayo vai publicar primeiro o decreto, para tornar o acervo público antes de publicar os cadernos.',
+      registrar:'A Dra. Cordell vai publicar primeiro o decreto, para tornar o acervo público antes de publicar os cadernos.',
       presagio:'Documento público e não vazamento. É essa a diferença que decide tudo.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
@@ -1424,7 +1424,7 @@ c14_pegou_caderno:{
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine', cond:d=>!!d.flags.conheceu_blaine},
-    {texto:'Chamar a Dra. Sayo.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Chamar a Dra. Cordell.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 

@@ -161,10 +161,10 @@ c4_chegada:{
     'A poeira é fina e cinza e entra em tudo. Em duas horas você vai achar poeira dentro do bolso fechado da mochila e não vai entender como.',
     'A cada vinte minutos, longe, um som baixo que você sente no peito antes de ouvir. Detonação na pedreira. Ninguém na rua levanta a cabeça.',
     d=>{
-      const t = d.npcs['Kenta'];
-      if (t && t.opiniao >= 4) return 'Kenta está sentado na escada do Centro Pokémon com a mochila entre os pés. Ele te vê de longe e levanta os dois braços como se você tivesse ganhado alguma coisa.';
-      if (t && t.opiniao >= 1) return 'Kenta está sentado na escada do Centro Pokémon. Ele te vê e faz um aceno curto, e depois finge que estava mexendo na mochila.';
-      if (t) return 'Kenta está sentado na escada do Centro Pokémon. Ele te vê. Não levanta a cabeça de novo.';
+      const t = d.npcs['Ezra'];
+      if (t && t.opiniao >= 4) return 'Ezra está sentado na escada do Centro Pokémon com a mochila entre os pés. Ele te vê de longe e levanta os dois braços como se você tivesse ganhado alguma coisa.';
+      if (t && t.opiniao >= 1) return 'Ezra está sentado na escada do Centro Pokémon. Ele te vê e faz um aceno curto, e depois finge que estava mexendo na mochila.';
+      if (t) return 'Ezra está sentado na escada do Centro Pokémon. Ele te vê. Não levanta a cabeça de novo.';
       return 'Um garoto na escada do Centro Pokémon te olha como se te conhecesse, depois desiste da ideia e volta pra mochila dele.';
     },
     d=>Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3
@@ -173,7 +173,7 @@ c4_chegada:{
   ],
   ef:{registrar:'Chegou a Pewter.'},
   escolhas:[
-    {texto:'Ir falar com Kenta.', vai:'c4_teo', cond:d=>!!d.npcs['Kenta']},
+    {texto:'Ir falar com Ezra.', vai:'c4_teo', cond:d=>!!d.npcs['Ezra']},
     {texto:'Andar até a rua principal e ver o que essa cidade tem.', vai:'c4_rua'},
     {texto:'Seguir o som das detonações.', vai:'c4_pedreira_caminho'},
     {texto:'Sentar na praça e não fazer nada por um tempo. Você atravessou uma floresta.', vai:'c4_praca'}
@@ -271,7 +271,7 @@ c4_senhora_silencio:{
   escolhas:[
     {texto:'Ir andar pela cidade.', vai:'c4_rua'},
     {texto:'Ir atrás do som das detonações.', vai:'c4_pedreira_caminho'},
-    {texto:'Ir falar com Kenta.', vai:'c4_teo', cond:d=>!!d.npcs['Kenta']}
+    {texto:'Ir falar com Ezra.', vai:'c4_teo', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
@@ -520,7 +520,7 @@ c4_senhora_carros:{
 c4_teo:{
   texto:[
     d=>{
-      const t = d.npcs['Kenta'];
+      const t = d.npcs['Ezra'];
       if (t && t.opiniao >= 4) return '"CARA." Ele levanta antes de você chegar. "Eu cheguei ontem. Eu dormi aqui. Eu tô nessa escada desde as sete da manhã esperando você aparecer, isso é patético, eu sei."';
       if (t && t.opiniao >= 1) return '"Ô." Ele levanta meio devagar. "Achei que você tinha ficado na floresta."';
       return '"Ah. Você." Ele continua mexendo na mochila. "Chegou."';
@@ -531,15 +531,15 @@ c4_teo:{
     '"Eu perdi", ele diz, antes de você perguntar qualquer coisa. "No ginásio. Duas vezes."',
     'Ele ri. É um riso ruim — o riso de quem está com medo de descobrir que não serve pra isso e está testando a piada antes que outra pessoa faça.'
   ],
-  ef:{flag:'teo_em_pewter', npc:{nome:'Kenta', memoria:'Te encontrou em Pewter depois de perder duas vezes no ginásio.'}},
+  ef:{flag:'teo_em_pewter', npc:{nome:'Ezra', memoria:'Te encontrou em Pewter depois de perder duas vezes no ginásio.'}},
   escolhas:[
     {texto:'"Duas vezes é pouco. Eu pretendo perder mais."', vai:'c4_teo_piada',
-     ef:{npc:{nome:'Kenta', opiniao:3, memoria:'Você fez piada com a própria derrota pra ele não se sentir sozinho.'},
+     ef:{npc:{nome:'Ezra', opiniao:3, memoria:'Você fez piada com a própria derrota pra ele não se sentir sozinho.'},
          rep:{eixo:'bom',delta:1,motivo:'Segurou a barra de alguém em baixa'}}},
     {texto:'"Me conta como foi. Tudo. Do começo."', vai:'c4_teo_relato'},
     {texto:'"Talvez isso não seja pra todo mundo."', vai:'c4_teo_ferido',
      ef:{rep:{eixo:'ruim',delta:2,motivo:'Disse a um amigo em baixa que talvez ele não servisse'},
-         npc:{nome:'Kenta', opiniao:-6, memoria:'Você disse que talvez ele não servisse pra isso. Ele ouviu de você, e foi de você que doeu.'},
+         npc:{nome:'Ezra', opiniao:-6, memoria:'Você disse que talvez ele não servisse pra isso. Ele ouviu de você, e foi de você que doeu.'},
          flag:'teo_ferido'}},
     {texto:'"Treina comigo. Agora."', vai:'c4_teo_treino'}
   ]
@@ -550,7 +550,7 @@ c4_teo_piada:{
     '"Duas vezes é pouco. Eu pretendo perder mais."',
     'Ele olha pra você com uma desconfiança genuína, procurando o deboche, e não acha.',
     '"Você tá falando sério?"',
-    '"Eu saí de casa faz três dias, Kenta. Eu perdi pra um Rattata na Rota 1 no primeiro dia."',
+    '"Eu saí de casa faz três dias, Ezra. Eu perdi pra um Rattata na Rota 1 no primeiro dia."',
     'Isso é mentira. Ele não precisa saber que é mentira. Ele endireita as costas uns três centímetros e fica evidente que os três centímetros vieram daí.',
     '"Então a gente é dois lixos", ele conclui, feliz.'
   ],
@@ -568,7 +568,7 @@ c4_teo_relato:{
     'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes deitado no beliche.',
     '"Ele tem um bicho pequeno primeiro. Parece fácil. Não é fácil, é uma armadilha, porque ele te faz gastar."',
     '"E depois?"',
-    '"E depois vem uma coisa do tamanho de um ônibus." Kenta mede com os braços e os braços não chegam. "Do tamanho de um ÔNIBUS, cara."',
+    '"E depois vem uma coisa do tamanho de um ônibus." Ezra mede com os braços e os braços não chegam. "Do tamanho de um ÔNIBUS, cara."',
     'Ele para. Fica sério de um jeito que não combina com o rosto dele.',
     '"E o cara nem comemora. Ele te derruba e fica esperando você levantar com a cara de quem já sabia. Isso é pior."'
   ],
@@ -584,17 +584,17 @@ c4_teo_relato:{
 c4_teo_brock:{
   texto:[
     '"Ele fala alguma coisa depois?"',
-    '"Fala." Kenta faz uma cara esquisita. "Ele falou o nome do meu Pidgey. Eu não falei o nome pra ele. Ele ouviu eu gritando durante a luta e guardou."',
+    '"Fala." Ezra faz uma cara esquisita. "Ele falou o nome do meu Pidgey. Eu não falei o nome pra ele. Ele ouviu eu gritando durante a luta e guardou."',
     '"E falou o quê?"',
-    '"Falou: cuida do Pico melhor do que você cuida de você." Kenta encolhe os ombros. "Aí eu chorei um pouco lá fora. Não conta isso pra ninguém."',
+    '"Falou: cuida do Pico melhor do que você cuida de você." Ezra encolhe os ombros. "Aí eu chorei um pouco lá fora. Não conta isso pra ninguém."',
     'Ele olha pro Pidgey subindo o quarto degrau a pé.',
     '"O nome dele é Pico. Eu tinha nove anos quando escolhi."'
   ],
-  ef:{flag:'sabe_do_pico', npc:{nome:'Kenta', opiniao:3, memoria:'Te contou que chorou depois de perder, e o nome do Pidgey: Pico.'},
+  ef:{flag:'sabe_do_pico', npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que chorou depois de perder, e o nome do Pidgey: Pico.'},
       presagio:'Você vai ouvir essa frase de novo, dita pra você, e vai entender por que ele chorou.'},
   escolhas:[
     {texto:'"Pico é um nome bom."', vai:'c4_teo_nome',
-     ef:{npc:{nome:'Kenta', opiniao:2, memoria:'Você elogiou o nome que ele deu ao Pidgey aos nove anos.'}}},
+     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você elogiou o nome que ele deu ao Pidgey aos nove anos.'}}},
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta comigo pela cidade."', vai:'c4_teo_volta'},
     {texto:'Não comentar. Mudar de assunto.', vai:'c4_teo_volta'}
@@ -608,17 +608,17 @@ c4_teo_nome:{
     '"Por que Pico?"',
     '"Porque bicava tudo." Ele abre as mãos. "Tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
     'O Pidgey, ao ouvir o nome duas vezes, para no meio do degrau e olha pra cima, esperando.',
-    '"Ó ele." A voz do Kenta muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
-    'Kenta desce e pega ele no colo sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
+    '"Ó ele." A voz do Ezra muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
+    'Ezra desce e pega ele no colo sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
     '"Ele tá comigo desde antes de tudo isso", ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
     '"E aí você virou treinador e ele virou time."',
-    '"É." Kenta olha pro Pidgey e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
-    'Ele percebe que falou sério e conserta imediatamente, porque é o Kenta:',
+    '"É." Ezra olha pro Pidgey e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
+    'Ele percebe que falou sério e conserta imediatamente, porque é o Ezra:',
     '"Enfim. Ele adora. Ele é burro."'
   ],
   ef:{hp:2, moral:4, flag:'sabe_do_pico',
-      npc:{nome:'Kenta', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'},
-      presagio:'Você vai ouvir essa mesma dúvida da boca de gente muito mais velha que o Kenta, e eles não vão ter a piada pronta pra consertar.'},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'},
+      presagio:'Você vai ouvir essa mesma dúvida da boca de gente muito mais velha que o Ezra, e eles não vão ter a piada pronta pra consertar.'},
   escolhas:[
     {texto:'"Pergunta pra ele, então."', vai:'c4_teo_pergunta_pro_pico'},
     {texto:'"Todo mundo faz isso. É o que é ter time."', vai:'c4_teo_todo_mundo_faz'},
@@ -633,17 +633,17 @@ c4_teo_pergunta_pro_pico:{
     '"Pergunta pra ele, então."',
     '"Como é que eu—" Ele para. "Você tá falando sério."',
     '"Tô."',
-    'Kenta olha pro Pidgey no colo dele com a cara de quem foi pego numa coisa.',
+    'Ezra olha pro Pidgey no colo dele com a cara de quem foi pego numa coisa.',
     '"Pico." Ele fala baixo, meio sem graça de estar fazendo isso na frente de outra pessoa. "Você quer isso? Isso aqui. Ginásio, estrada, apanhar de Onix."',
     'O Pidgey vira a cabeça de lado.',
     'E aí, sem nenhum motivo aparente, sobe do colo pro ombro dele — que é onde ele não estava antes — e fica lá.',
     'Os dois ficam parados uns três segundos.',
-    '"Isso não quer dizer nada", diz o Kenta, com a voz esquisita. "Isso não quer dizer nada, cara, ele sobe no ombro de qualquer um."',
+    '"Isso não quer dizer nada", diz o Ezra, com a voz esquisita. "Isso não quer dizer nada, cara, ele sobe no ombro de qualquer um."',
     '"Ele nunca subiu no meu."',
     '"CALA A BOCA."'
   ],
   ef:{moral:8,
-      npc:{nome:'Kenta', opiniao:5, memoria:'Perguntou pro próprio Pidgey se ele queria aquilo, e o Pidgey subiu no ombro dele.'},
+      npc:{nome:'Ezra', opiniao:5, memoria:'Perguntou pro próprio Pidgey se ele queria aquilo, e o Pidgey subiu no ombro dele.'},
       rep:{eixo:'bom',delta:1,motivo:'Fez um amigo perguntar ao próprio Pokémon o que ninguém pergunta'},
       flag:'pico_no_ombro'},
   escolhas:[
@@ -666,8 +666,8 @@ c4_teo_todo_mundo_faz:{
     '"A gente nunca prometeu nada. A gente só foi."'
   ],
   ef:{moral:3, flag:'teo_sem_papel',
-      npc:{nome:'Kenta', opiniao:2, memoria:'Te contou que achou o Pidgey embaixo de uma caixa d\'água e levou pra casa numa camiseta.'},
-      registrar:'O Pidgey do Kenta não veio de lista nenhuma.'},
+      npc:{nome:'Ezra', opiniao:2, memoria:'Te contou que achou o Pidgey embaixo de uma caixa d\'água e levou pra casa numa camiseta.'},
+      registrar:'O Pidgey do Ezra não veio de lista nenhuma.'},
   escolhas:[
     {texto:'"Então promete agora."', vai:'c4_teo_promete_agora'},
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
@@ -689,7 +689,7 @@ c4_teo_promete_agora:{
     '"Você é insuportável e eu te odeio."'
   ],
   ef:{moral:6, flag:'teo_prometeu',
-      npc:{nome:'Kenta', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'},
       presagio:'Guarde essa promessa. Vai chegar um capítulo em que ela vai ser cobrada, e não vai ser por você.'},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
@@ -710,11 +710,11 @@ c4_teo_treino:{
         d.time.forEach(p=>{ const ev = ganharExp(p, 180); if (ev && ev.length) ev.forEach(x=>av.push({tipo:'info', texto:x})); });
         return av.length ? av : [{tipo:'info', texto:'Vocês treinam até a luz ir embora. Alguma coisa assenta no jeito que o seu time te ouve.'}];
       },
-      moral:8, npc:{nome:'Kenta', opiniao:3, memoria:'Vocês treinaram juntos no pátio do Centro de Pewter até escurecer.'},
+      moral:8, npc:{nome:'Ezra', opiniao:3, memoria:'Vocês treinaram juntos no pátio do Centro de Pewter até escurecer.'},
       flag:'treinou_com_teo'},
   escolhas:[
     {texto:'"Amanhã a gente entra lá. Os dois."', vai:'c4_teo_combinado',
-     ef:{flag:'teo_assiste', npc:{nome:'Kenta', opiniao:3, memoria:'Vocês combinaram de encarar o ginásio de Pewter juntos.'}}},
+     ef:{flag:'teo_assiste', npc:{nome:'Ezra', opiniao:3, memoria:'Vocês combinaram de encarar o ginásio de Pewter juntos.'}}},
     {texto:'"Me conta como foi lá dentro."', vai:'c4_teo_relato'},
     {texto:'"Vem dar uma volta pela cidade comigo."', vai:'c4_teo_volta'},
     {texto:'Encerrar por hoje e ir andar sozinho.', vai:'c4_rua'}
@@ -739,12 +739,12 @@ c4_teo_combinado:{
 
 c4_teo_volta:{
   texto:[
-    'Vocês andam. Kenta fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
+    'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
     'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
     '"Aquela casa ali tem um cachorro que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
     '"Isso não é mapear a cidade."',
     '"É o melhor tipo de mapear a cidade."',
-    'Vocês passam pela praça. A poeira cinza cobre tudo num tom só e o Kenta escreve o próprio nome no capô de um carro com o dedo, e depois apaga com a manga, envergonhado.',
+    'Vocês passam pela praça. A poeira cinza cobre tudo num tom só e o Ezra escreve o próprio nome no capô de um carro com o dedo, e depois apaga com a manga, envergonhado.',
     '"Cara, sério agora." Ele baixa o tom sem parar de andar. "Você tá com medo?"',
     '"Do ginásio?"',
     '"De tudo. Do ginásio, da estrada, de chegar em casa depois e não ter nada pra contar."',
@@ -754,7 +754,7 @@ c4_teo_volta:{
     '"Ah, e tem um museu", ele diz, apontando, mudando de assunto do jeito mais óbvio possível. "Eu entrei. Tem um bicho de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
   ],
   ef:{flag:'ouviu_do_museu', moral:2,
-      npc:{nome:'Kenta', opiniao:2, memoria:'Te perguntou, andando pela rua, se você estava com medo.'}},
+      npc:{nome:'Ezra', opiniao:2, memoria:'Te perguntou, andando pela rua, se você estava com medo.'}},
   escolhas:[
     {texto:'"Tô com medo, sim." Responder a pergunta que ele fez.',
      vai:'c4_teo_medo', ef:{flag:'admitiu_medo_pro_teo'}},
@@ -769,7 +769,7 @@ c4_teo_volta:{
 c4_teo_medo:{
   texto:[
     '"Tô com medo, sim."',
-    'Kenta para de andar. Você anda mais dois passos antes de perceber e voltar.',
+    'Ezra para de andar. Você anda mais dois passos antes de perceber e voltar.',
     '"Sério?"',
     '"Por que eu mentiria?"',
     '"Sei lá, cara. Todo mundo mente nessa parte." Ele volta a andar, mais devagar. "Todo mundo que eu encontrei na estrada tava tranquilo. Todo mundo."',
@@ -779,9 +779,9 @@ c4_teo_medo:{
     '"Se você perder amanhã, me fala. Não some. Eu sumi depois da segunda e foi pior."'
   ],
   ef:{moral:8, flag:'pacto_com_teo',
-      npc:{nome:'Kenta', opiniao:5, memoria:'Vocês combinaram de contar um pro outro quando perdessem, em vez de sumir.'},
+      npc:{nome:'Ezra', opiniao:5, memoria:'Vocês combinaram de contar um pro outro quando perdessem, em vez de sumir.'},
       rep:{eixo:'bom',delta:1,motivo:'Admitiu medo em vez de fazer pose'},
-      registrar:'Combinou com Kenta: quando perder, avisa. Não some.'},
+      registrar:'Combinou com Ezra: quando perder, avisa. Não some.'},
   escolhas:[
     {texto:'"Combinado."', vai:'c4_museu', ef:{flag:'teo_no_museu', moral:4}},
     {texto:'"Combinado." E ir pra pedreira.', vai:'c4_pedreira_caminho', ef:{moral:4}},
@@ -802,7 +802,7 @@ c4_teo_mae:{
     '"Enfim", ele diz. "Museu."'
   ],
   ef:{moral:3, flag:'sabe_da_mae_do_teo',
-      npc:{nome:'Kenta', opiniao:3, memoria:'Te contou que o pior da mãe dele é ela não ficar brava.'}},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que o pior da mãe dele é ela não ficar brava.'}},
   escolhas:[
     {texto:'Ir ao museu com ele.', vai:'c4_museu', ef:{flag:'teo_no_museu'}},
     {texto:'"Tô com medo também, pra constar."', vai:'c4_teo_medo',
@@ -814,11 +814,11 @@ c4_teo_mae:{
 c4_teo_moca:{
   texto:[
     '"Por que você reparou nela?"',
-    'Kenta demora a responder, o que nele é raro.',
+    'Ezra demora a responder, o que nele é raro.',
     '"Porque ela tava sozinha num museu vazio numa terça de manhã", ele diz. "Isso não é normal, cara. Ninguém faz isso por hobby."',
     '"Ela trabalha lá."',
     '"Trabalha, mas não era trabalho." Ele faz um gesto vago. "Sabe quando a pessoa tá no serviço e sabe quando a pessoa tá no serviço? Ela não tava no serviço. Ela tava visitando."',
-    'Às vezes o Kenta diz uma coisa inteligente sem perceber, e depois estraga: "Ou ela é doida. Pode ser que ela seja só doida."',
+    'Às vezes o Ezra diz uma coisa inteligente sem perceber, e depois estraga: "Ou ela é doida. Pode ser que ela seja só doida."',
     '"Você falou com ela?"',
     '"Falei oi. Ela falou oi. Aí eu falei que o bicho de pedra era grande e ela falou que sim."',
     '"Conversa boa."',
@@ -826,12 +826,12 @@ c4_teo_moca:{
     '"Isso é elogio?"',
     '"É a coisa mais elogiosa que eu já falei pra alguém na minha vida e eu quero que fique registrado."'
   ],
-  ef:{moral:3, npc:{nome:'Kenta', opiniao:2, memoria:'Disse que você faz pergunta de um jeito que não irrita as pessoas.'}},
+  ef:{moral:3, npc:{nome:'Ezra', opiniao:2, memoria:'Disse que você faz pergunta de um jeito que não irrita as pessoas.'}},
   escolhas:[
     {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'teo_no_museu'}},
     {texto:'"Vem comigo. Você pergunta uma e eu pergunto uma."', vai:'c4_museu',
      ef:{flag:['teo_no_museu','teo_vai_perguntar'], moral:4,
-         npc:{nome:'Kenta', opiniao:3, memoria:'Você o levou junto ao museu e dividiu as perguntas com ele.'}}},
+         npc:{nome:'Ezra', opiniao:3, memoria:'Você o levou junto ao museu e dividiu as perguntas com ele.'}}},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'},
     {texto:'Continuar andando pela cidade.', vai:'c4_rua'}
   ]
@@ -840,13 +840,13 @@ c4_teo_moca:{
 c4_teo_ferido:{
   texto:[
     '"Talvez isso não seja pra todo mundo."',
-    'Kenta não responde na hora. Fecha o zíper da mochila devagar, com muito mais cuidado do que um zíper precisa.',
+    'Ezra não responde na hora. Fecha o zíper da mochila devagar, com muito mais cuidado do que um zíper precisa.',
     '"É." Ele faz que sim várias vezes, pro chão. "É, pode ser."',
     'Ele chama o Pidgey, que sobe no braço dele na terceira tentativa.',
     '"Boa sorte aí", ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
     'Ele entra no Centro. Você fica na escada.'
   ],
-  ef:{registrar:'Você disse ao Kenta que talvez ele não servisse pra isso.',
+  ef:{registrar:'Você disse ao Ezra que talvez ele não servisse pra isso.',
       presagio:'Isso vai voltar. Não como briga. Como uma pessoa diferente da que era.'},
   escolhas:[
     {texto:'Ir atrás dele e voltar atrás.', vai:'c4_teo_desculpa'},
@@ -873,7 +873,7 @@ c4_teo_escada:{
     'O menino levanta e sai antes que você consiga responder qualquer coisa, do jeito que as crianças saem quando entregam uma informação pesada por engano.'
   ],
   ef:{flag:'sabe_do_choro_do_teo', moral:-2,
-      registrar:'Um menino te contou que Kenta chorou atrás da caçamba depois da segunda derrota.',
+      registrar:'Um menino te contou que Ezra chorou atrás da caçamba depois da segunda derrota.',
       presagio:'Você vai carregar essa informação sem poder usar. Algumas coisas só servem pra mudar o jeito que você olha.'},
   escolhas:[
     {texto:'Entrar e voltar atrás.', vai:'c4_teo_desculpa'},
@@ -897,7 +897,7 @@ c4_teo_so_ficar:{
     '"Valeu por não falar nada, cara."'
   ],
   ef:{moral:8,
-      npc:{nome:'Kenta', opiniao:4, memoria:'Você sentou do lado dele na fila sem dizer nada, e era exatamente isso que ele precisava.'},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Você sentou do lado dele na fila sem dizer nada, e era exatamente isso que ele precisava.'},
       rep:{eixo:'bom',delta:1,motivo:'Ficou do lado de alguém sem tentar consertar nada'}},
   escolhas:[
     {texto:'Esperar ele sair e chamar pra treinar.', vai:'c4_teo_treino'},
@@ -918,7 +918,7 @@ c4_teo_desculpa:{
     'Ele aceita. Não desfaz o que aconteceu — ele vai lembrar dessa frase pelo resto da vida —, mas aceita.'
   ],
   ef:{limpaFlag:'teo_ferido', flag:'teo_perdoou',
-      npc:{nome:'Kenta', opiniao:4, memoria:'Você voltou atrás e admitiu que a frase era sobre você, não sobre ele. Ele lembra das duas coisas.'},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Você voltou atrás e admitiu que a frase era sobre você, não sobre ele. Ele lembra das duas coisas.'},
       rep:{eixo:'bom',delta:1,motivo:'Voltou atrás de uma crueldade'}},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
@@ -1219,7 +1219,7 @@ c4_museu:{
     'Tem um balde no canto, embaixo de uma mancha no teto. O balde tem água.',
     'Na segunda sala, atrás de um vidro que precisa de limpeza, um Kabutops reconstruído em pedra. Do tamanho de uma pessoa. As lâminas dos braços ainda são lâminas depois de trezentos milhões de anos.',
     'A placa diz: "Extinto há aproximadamente 300 milhões de anos."',
-    d=>d.flags.teo_no_museu ? 'Kenta para na porta da segunda sala e não entra. "Eu já vi. Vai você."' : ''
+    d=>d.flags.teo_no_museu ? 'Ezra para na porta da segunda sala e não entra. "Eu já vi. Vai você."' : ''
   ],
   ef:{flag:'viu_o_museu', dinheiro:-200, registrar:'Visitou o museu de Pewter.'},
   escolhas:[
@@ -1254,7 +1254,7 @@ c4_ivone_calado:{
     'Ela vira. Tem olheiras de três dias e um caderno de campo debaixo do braço com elástico e tudo.',
     '"Você vai pro Monte da Lua?"'
   ],
-  ef:{npc:{nome:'Dra. Sayo', opiniao:2, memoria:'Ficou dois minutos em silêncio com você na frente do Kabutops. Gostou disso.'}},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Ficou dois minutos em silêncio com você na frente do Kabutops. Gostou disso.'}},
   escolhas:[
     {texto:'"Vou. Por quê?"', vai:'c4_ivone_monte'},
     {texto:'"Ainda não decidi."', vai:'c4_ivone_monte'},
@@ -1272,13 +1272,13 @@ c4_ivone:{
     'Aí ela fecha o caderno e te olha de verdade pela primeira vez.',
     '"O que não acabou é o que a gente faz com eles depois. Você vai pro Monte da Lua?"'
   ],
-  ef:{npc:{nome:'Dra. Sayo', opiniao:1, memoria:'Te abordou no museu de Pewter falando de fósseis.'}},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Te abordou no museu de Pewter falando de fósseis.'}},
   escolhas:[
     {texto:'"Vou. Por quê?"', vai:'c4_ivone_monte'},
     {texto:'"Por que a senhora quer saber?"', vai:'c4_ivone_desconfiado'},
     {texto:'"Vou." E esperar ela continuar.', vai:'c4_ivone_seco'},
     {texto:'"Não é da sua conta." Sair da sala.', vai:'c4_museu_saiu',
-     ef:{npc:{nome:'Dra. Sayo', opiniao:-2, memoria:'Você a cortou no museu de Pewter.'}}}
+     ef:{npc:{nome:'Dra. Cordell', opiniao:-2, memoria:'Você a cortou no museu de Pewter.'}}}
   ]
 },
 
@@ -1286,11 +1286,11 @@ c4_ivone_desconfiado:{
   texto:[
     '"Por que a senhora quer saber?"',
     'Ela gosta da pergunta. Dá pra ver.',
-    '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Meu nome é Sayo Barcelos. Eu sou paleontóloga e eu trabalhava aqui até três meses atrás."',
+    '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Meu nome é Cordell Barcelos. Eu sou paleontóloga e eu trabalhava aqui até três meses atrás."',
     '"Trabalhava?"',
     '"O museu não tem verba pra dois funcionários. Sobrou o que abre a porta." Ela dá de ombros, e o dar de ombros é a parte mais triste. "Eu continuo vindo. Não tenho pra onde mais ir com isso na cabeça."'
   ],
-  ef:{npc:{nome:'Dra. Sayo', opiniao:3, memoria:'Você desconfiou dela primeiro, e ela respeitou isso.'}},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Você desconfiou dela primeiro, e ela respeitou isso.'}},
   escolhas:[
     {texto:'"Com o quê na cabeça?"', vai:'c4_ivone_monte'},
     {texto:'"E o museu, como fica?"', vai:'c4_funcionario'},
@@ -1309,7 +1309,7 @@ c4_ivone_seco:{
     '"Respeito as duas." Ela cruza os braços. "Mas eu trabalho num museu vazio há onze anos, menino. Eu aprendi a falar com quem não pergunta."',
     '"Tá bom", ela cede, e não tem cedência nenhuma nisso. "Eu falo mesmo assim."'
   ],
-  ef:{npc:{nome:'Dra. Sayo', opiniao:1, memoria:'Falou com você mesmo você não tendo perguntado nada.'}},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Falou com você mesmo você não tendo perguntado nada.'}},
   escolhas:[
     {texto:'Escutar.', vai:'c4_ivone_monte'},
     {texto:'"Onze anos?"', vai:'c4_ivone_onze_anos'}
@@ -1330,8 +1330,8 @@ c4_ivone_onze_anos:{
     '"Agora deixa eu falar do monte, que é pra isso que você tá aqui e é a única coisa que eu tenho de verdade pra te dar."'
   ],
   ef:{flag:'sabe_da_ivone_sozinha', moral:2,
-      npc:{nome:'Dra. Sayo', opiniao:3, memoria:'Te contou que é sozinha no museu há onze anos e faz tudo.'},
-      registrar:'Sayo é a única funcionária do museu de Pewter. Há onze anos.'},
+      npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Te contou que é sozinha no museu há onze anos e faz tudo.'},
+      registrar:'Cordell é a única funcionária do museu de Pewter. Há onze anos.'},
   escolhas:[{texto:'Escutar.', vai:'c4_ivone_monte'}]
 },
 
@@ -1345,7 +1345,7 @@ c4_ivone_monte:{
     'Ela olha o Kabutops atrás do vidro.',
     '"Esse aqui é o único que ainda está inteiro em Kanto num lugar onde qualquer pessoa pode olhar de graça. Digo, por duzentos pokedólares. E o teto dele vaza."'
   ],
-  ef:{flag:'sabe_do_trafico_fossil', registrar:'Dra. Sayo falou do saque de fósseis no Monte da Lua.'},
+  ef:{flag:'sabe_do_trafico_fossil', registrar:'Dra. Cordell falou do saque de fósseis no Monte da Lua.'},
   escolhas:[
     {texto:'"A senhora reportou isso?"', vai:'c4_ivone_reportou'},
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
@@ -1396,7 +1396,7 @@ c4_ivone_liga:{
     'Ela fala isso devagar, como quem repete uma coisa que teve que aceitar.',
     '"Ela organiza campeonato, emite licença e credencia ginásio. Em algum momento nos últimos quarenta anos ela virou também polícia, tribunal e conselho de ética, porque ninguém mais quis fazer isso e ela tinha o carimbo."',
     '"E ela é ruim nisso."',
-    '"Ela é péssima nisso." Sayo guarda a caneta no bolso do jaleco. "E o problema não é a maldade. É que não tem ninguém no organograma cujo trabalho seja se importar."'
+    '"Ela é péssima nisso." Cordell guarda a caneta no bolso do jaleco. "E o problema não é a maldade. É que não tem ninguém no organograma cujo trabalho seja se importar."'
   ],
   ef:{flag:'entendeu_a_liga', presagio:'Você vai reencontrar essa frase escrita num documento, dita com outras palavras e com muito mais frieza.'},
   escolhas:[
@@ -1433,7 +1433,7 @@ c4_ivone_compradores:{
     'Uma pausa exatamente do tamanho errado.',
     '"Fechou no papel."'
   ],
-  ef:{flag:'fossil_e_material', registrar:'Sayo insinuou que alguém quer fósseis pelo material, não pelo enfeite.',
+  ef:{flag:'fossil_e_material', registrar:'Cordell insinuou que alguém quer fósseis pelo material, não pelo enfeite.',
       presagio:'Uma ilha com um laboratório fechado no papel. Você não vai chegar lá tão cedo, e vai chegar.'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
@@ -1468,11 +1468,11 @@ c4_ivone_porque_eu:{
     '"Então por que continuar contando?"',
     '"Porque o custo de contar é dois minutos", ela diz. "E o custo de não contar é não saber o que teria acontecido."'
   ],
-  ef:{npc:{nome:'Dra. Sayo', opiniao:2, memoria:'Explicou por que conta isso a adolescentes: o custo de contar é dois minutos.'}},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Explicou por que conta isso a adolescentes: o custo de contar é dois minutos.'}},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'"Eu volto pra te contar."', vai:'c4_ivone_pedido',
-     ef:{npc:{nome:'Dra. Sayo', opiniao:3, memoria:'Você prometeu voltar pra contar. Ela anotou o seu nome com a data.'}}},
+     ef:{npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Você prometeu voltar pra contar. Ela anotou o seu nome com a data.'}}},
     {texto:'Sair sem prometer nada.', vai:'c4_museu_saiu'}
   ]
 },
@@ -1487,8 +1487,8 @@ c4_ivone_pedido:{
     '"A Liga manda um oficial em dois dias." Ela põe o cartão na sua mão. "Eu chego em seis horas com imprensa."'
   ],
   ef:{flag:'cartao_ivone',
-      npc:{nome:'Dra. Sayo', opiniao:4, memoria:'Te deu o número dela por causa do saque no Monte da Lua.'},
-      registrar:'Dra. Sayo te deu o número dela. Ligar para ela, não para a Liga.',
+      npc:{nome:'Dra. Cordell', opiniao:4, memoria:'Te deu o número dela por causa do saque no Monte da Lua.'},
+      registrar:'Dra. Cordell te deu o número dela. Ligar para ela, não para a Liga.',
       presagio:'Um pedaço de cartolina com um número. Vai amassar no bolso até você precisar dele.'},
   escolhas:[
     {texto:'Guardar o cartão. "Se eu vir, eu ligo."', vai:'c4_ivone_aceitou'},
@@ -1539,7 +1539,7 @@ c4_ivone_recusa:{
     'Você sai do museu com uma sensação irritante de ter feito a coisa razoável.'
   ],
   ef:{flag:'recusou_ivone',
-      npc:{nome:'Dra. Sayo', opiniao:-1, memoria:'Você recusou o cartão dela no museu de Pewter.'},
+      npc:{nome:'Dra. Cordell', opiniao:-1, memoria:'Você recusou o cartão dela no museu de Pewter.'},
       presagio:'Você vai descer numa caverna sem o número de ninguém no bolso.'},
   escolhas:[
     {texto:'Sair do museu.', vai:'c4_museu_saiu'},
@@ -1551,7 +1551,7 @@ c4_ivone_recusa:{
 c4_kabutops_2:{
   texto:[
     'Você fica mais um pouco.',
-    'Sayo volta a anotar. Em algum momento ela fala, sem olhar pra você, no tom de quem não está conversando:',
+    'Cordell volta a anotar. Em algum momento ela fala, sem olhar pra você, no tom de quem não está conversando:',
     '"Kabutops era predador. Rápido, litoral raso, provavelmente em grupo." Uma pausa. "E mesmo assim acabou. Não por ser fraco."',
     '"Por quê, então?"',
     '"Porque o mundo mudou mais rápido do que ele." Ela vira a página. "É sempre isso. Nunca é o predador que mata o predador."'
@@ -1596,7 +1596,7 @@ c4_doou:{
   ef:{presagio:'Existe agora, numa parede de Pewter, um papel com o seu nome que ninguém vai tirar tão cedo.'},
   escolhas:[
     {texto:'Sair do museu.', vai:'c4_museu_saiu'},
-    {texto:'Voltar e falar com a Dra. Sayo.', vai:'c4_ivone'},
+    {texto:'Voltar e falar com a Dra. Cordell.', vai:'c4_ivone'},
     {texto:'Ficar mais um pouco com o Kabutops.', vai:'c4_kabutops_2'}
   ]
 },
@@ -1631,7 +1631,7 @@ c4_limpou_calha:{
       itens:{'Super Potion':1}},
   escolhas:[
     {texto:'Descer e ir embora.', vai:'c4_museu_saiu'},
-    {texto:'Falar com a Dra. Sayo antes de sair.', vai:'c4_ivone'},
+    {texto:'Falar com a Dra. Cordell antes de sair.', vai:'c4_ivone'},
     {texto:'"O balde pode sair?"', vai:'c4_balde'}
   ]
 },
@@ -1679,7 +1679,7 @@ c4_balde:{
   ef:{npc:{nome:'Takeo', opiniao:3, memoria:'Guardou o balde do museu depois que você limpou a calha.'}},
   escolhas:[
     {texto:'Sair do museu.', vai:'c4_museu_saiu'},
-    {texto:'Falar com a Dra. Sayo.', vai:'c4_ivone'}
+    {texto:'Falar com a Dra. Cordell.', vai:'c4_ivone'}
   ]
 },
 
@@ -1693,8 +1693,8 @@ c4_delmo_oferta:{
     '"E?"',
     '"E a prefeitura ia aceitar." Ele volta aos panfletos. "Foi a doutora que travou. Ela apareceu na câmara com um calhamaço e fez um barraco. Por isso demitiram ela."'
   ],
-  ef:{flag:'ivone_foi_demitida', registrar:'Sayo foi demitida do museu por barrar a "cessão" do Kabutops.',
-      npc:{nome:'Dra. Sayo', opiniao:1, memoria:'Você descobriu por que ela foi demitida.'}},
+  ef:{flag:'ivone_foi_demitida', registrar:'Cordell foi demitida do museu por barrar a "cessão" do Kabutops.',
+      npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Você descobriu por que ela foi demitida.'}},
   escolhas:[
     {texto:'Voltar e falar com ela sobre isso.', vai:'c4_ivone_demitida'},
     {texto:'"Quem era a gente de terno?"', vai:'c4_delmo_terno'},
@@ -1715,7 +1715,7 @@ c4_delmo_terno:{
   ef:{flag:'folheto_comissao', registrar:'Guardou um folheto de uma "fundação" que quis levar o Kabutops.',
       presagio:'Você vai ver esse brasão de novo. Não em folheto.'},
   escolhas:[
-    {texto:'Voltar e mostrar pra Sayo.', vai:'c4_ivone_folheto'},
+    {texto:'Voltar e mostrar pra Cordell.', vai:'c4_ivone_folheto'},
     {texto:'Guardar e sair.', vai:'c4_museu_saiu'},
     {texto:'Doar dinheiro pro museu. (1.500 ₽)', vai:'c4_doou', cond:d=>d.jogador.dinheiro>=1500,
      ef:{dinheiro:-1500, flag:'doou_museu', rep:{eixo:'bom',delta:2,motivo:'Doou para o museu de Pewter'}}}
@@ -1733,7 +1733,7 @@ c4_ivone_folheto:{
     '"Por quê?"',
     '"Porque eu não sei ainda." Ela fecha o caderno. "E porque as duas vezes em que eu mostrei uma coisa dessas pra alguém de crachá, a coisa sumiu da minha mesa na semana seguinte."'
   ],
-  ef:{flag:'ivone_viu_folheto', npc:{nome:'Dra. Sayo', opiniao:3, memoria:'Você mostrou o folheto da fundação pra ela. Ela mandou guardar e não mostrar pra Liga.'},
+  ef:{flag:'ivone_viu_folheto', npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Você mostrou o folheto da fundação pra ela. Ela mandou guardar e não mostrar pra Liga.'},
       presagio:'Existe uma coisa em Kanto com papel bom, brasão e advogado, e ela ainda não tem nome na sua cabeça.'},
   escolhas:[
     {texto:'"Me dá o número da gaveta."', vai:'c4_ivone_gaveta'},
@@ -1753,7 +1753,7 @@ c4_ivone_demitida:{
     'Aí ela para de escrever.',
     '"E não adiantou nada, porque eles voltam. Gente assim não desiste, entende? Gente assim só espera."'
   ],
-  ef:{npc:{nome:'Dra. Sayo', opiniao:3, memoria:'Te contou do barraco na câmara e de que "gente assim só espera".'},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Te contou do barraco na câmara e de que "gente assim só espera".'},
       presagio:'Gente assim só espera. Você vai lembrar disso num prédio de escritório, numa segunda-feira, às dez da manhã.'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
@@ -1771,7 +1771,7 @@ c4_museu_saiu:{
   escolhas:[
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'},
     {texto:'Ir olhar a porta de metal no fim da rua.', vai:'c4_porta_metal'},
-    {texto:'Ir falar com Kenta.', vai:'c4_teo', cond:d=>!!d.npcs['Kenta'] && !d.flags.teo_em_pewter},
+    {texto:'Ir falar com Ezra.', vai:'c4_teo', cond:d=>!!d.npcs['Ezra'] && !d.flags.teo_em_pewter},
     {texto:'Chega. Voltar pro Centro.', vai:'c4_fim'}
   ]
 },
@@ -2526,8 +2526,8 @@ c4_fim:{
     d=>{
       if (d.flags.entregou_o_rapaz) return 'Você fica acordado pensando num formulário assinado. Não é culpa, exatamente. É a sensação de ter acertado uma coisa e estragado outra na mesma frase.';
       if (d.flags.limpou_calha_anonimo) return 'Suas mãos ainda cheiram a folha podre. Ninguém sabe o que você fez hoje e isso te deixa numa paz esquisita.';
-      if (d.flags.teo_ferido) return 'Kenta está num dos outros beliches, de costas. Você sabe qual, porque você contou os beliches quando entrou.';
-      if (d.flags.teo_assiste) return 'Kenta está no beliche de baixo do outro lado, acordado, olhando o teto e fingindo que não está nervoso.';
+      if (d.flags.teo_ferido) return 'Ezra está num dos outros beliches, de costas. Você sabe qual, porque você contou os beliches quando entrou.';
+      if (d.flags.teo_assiste) return 'Ezra está no beliche de baixo do outro lado, acordado, olhando o teto e fingindo que não está nervoso.';
       return 'Do outro lado do quarto, um treinador mais velho ronca com uma convicção impressionante.';
     },
     'Amanhã, a estrada pro Monte da Lua. Ela sobe por três horas e a boca da caverna dá pra ver de longe: um buraco preto numa parede cinza, com uma escada de madeira encostada do lado que ninguém sabe quem pôs.',

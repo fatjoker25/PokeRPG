@@ -410,7 +410,7 @@ c23_folha_dez:{
 c23_outros_nomes:{
   texto:[
     'Você percorre o corredor D procurando nome conhecido e acha mais rápido do que gostaria.',
-    'Tem pasta da Nozomi Arata, de Lavender, com duas folhas: a licença de 1979 e a de agora.',
+    'Tem pasta da Nadia Arden, de Lavender, com duas folhas: a licença de 1979 e a de agora.',
     'Tem pasta do Dr. Fuji, com noventa e uma folhas, a mais grossa do corredor.',
     'Tem pasta da enfermeira do Centro, com três folhas, a última datada de seis meses atrás — o pedido de exoneração dela.',
     'Tem pasta com o nome do Blue, e ele tira do seu alcance antes de você tocar.',

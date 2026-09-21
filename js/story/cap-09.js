@@ -465,14 +465,14 @@ c9_anotou_certificado:{
     'Você tira o caderno e copia o certificado inteiro, palavra por palavra, em pé na loja, apoiado no balcão de vidro.',
     'Leva dezoito minutos. O lojista atende dois clientes nesse tempo e nenhum dos dois repara em você.',
     'No fim você tem: o número do credenciamento, a data de emissão, a validade, o órgão emissor por extenso e o nome de quem assinou.',
-    'O nome de quem assinou é H. Ando.'
+    'O nome de quem assinou é H. Colman.'
   ],
   ef:{flag:['papel_com_brasao','sabe_de_renno','copiou_o_certificado'],
       rep:{eixo:'bom',delta:2,motivo:'Copiou um documento inteiro em pé, apoiado num balcão'},
-      registrar:'O credenciamento de leilão é assinado por H. Ando.',
-      presagio:'H. Ando. Uma inicial e um sobrenome, escritos à caneta no seu caderno.'},
+      registrar:'O credenciamento de leilão é assinado por H. Colman.',
+      presagio:'H. Colman. Uma inicial e um sobrenome, escritos à caneta no seu caderno.'},
   escolhas:[
-    {texto:'"Quem é H. Ando?"', vai:'c9_quem_e_renno'},
+    {texto:'"Quem é H. Colman?"', vai:'c9_quem_e_renno'},
     {texto:'"Quando é o próximo leilão?"', vai:'c9_proximo_leilao'},
     {texto:'Sair e procurar os caminhões.', vai:'c9_procurar'},
     {texto:'Ir ao cassino.', vai:'c9_cassino'}
@@ -481,7 +481,7 @@ c9_anotou_certificado:{
 
 c9_quem_e_renno:{
   texto:[
-    '"Quem é H. Ando?"',
+    '"Quem é H. Colman?"',
     'O lojista olha o certificado como se nunca tivesse lido o nome.',
     '"Presidência."',
     '"Presidência de quê?"',
@@ -493,7 +493,7 @@ c9_quem_e_renno:{
     '"Parece professora."'
   ],
   ef:{flag:'sabe_de_renno',
-      registrar:'H. Ando preside a Comissão. Numa foto de informativo, parece professora.',
+      registrar:'H. Colman preside a Comissão. Numa foto de informativo, parece professora.',
       presagio:'Parece professora. Você vai sentar na frente dela.'},
   escolhas:[
     {texto:'Sair e procurar os caminhões.', vai:'c9_procurar'},
@@ -1385,9 +1385,9 @@ c9_por_nome:{
   ],
   ef:{flag:'busca_por_nome'},
   escolhas:[
-    {texto:'"H. Ando."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
+    {texto:'"H. Colman."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
     {texto:'"Amano. Doutor alguma coisa Amano."', vai:'c9_busca_sena', cond:d=>!!d.flags.sabe_de_sena},
-    {texto:'"Ren."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan},
+    {texto:'"Fabre."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan},
     {texto:'"Eu não tenho nome. Só o número."', vai:'c9_certidao',
      cond:d=>d.jogador.dinheiro>=80, ef:{dinheiro:-80}}
   ]
@@ -1406,7 +1406,7 @@ c9_busca_renno:{
   ],
   ef:{flag:['as_quatro_empresas','sabe_do_deposito','papel_com_brasao'],
       rep:{eixo:'bom',delta:3,motivo:'Puxou o fio inteiro numa repartição pública por oitenta pokedólares'},
-      registrar:'H. Ando figura em quatro empresas, incluindo uma de logística com depósito em Celadon.',
+      registrar:'H. Colman figura em quatro empresas, incluindo uma de logística com depósito em Celadon.',
       presagio:'Associação, consultoria, holding, logística. Nove anos montando isso, uma camada por vez.'},
   escolhas:[
     {texto:'Pedir certidão das quatro. (320 ₽)', vai:'c9_certidao_quatro', cond:d=>d.jogador.dinheiro>=320,
@@ -1436,7 +1436,7 @@ c9_busca_sena:{
   escolhas:[
     {texto:'Pedir a certidão da de Saffron. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
      ef:{dinheiro:-80}},
-    {texto:'"Busca a Ando também."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
+    {texto:'"Busca a Colman também."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
     {texto:'Anotar tudo.', vai:'c9_anotou_junta'},
     {texto:'"Os dois aparecem na mesma empresa?"', vai:'c9_os_dois_juntos'}
   ]
@@ -1461,7 +1461,7 @@ c9_busca_adnan:{
     {texto:'Pedir cópia da lista. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
      ef:{dinheiro:-80, flag:'tem_os_onze_nomes'}},
     {texto:'Copiar os onze nomes à mão.', vai:'c9_copiou_os_onze_da_junta'},
-    {texto:'"Busca a Ando."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
+    {texto:'"Busca a Colman."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
     {texto:'Fechar a tela e ir embora. Isso é grande demais.', vai:'c9_recuou_na_junta'}
   ]
 },
@@ -1482,13 +1482,13 @@ c9_os_dois_juntos:{
   ef:{flag:['papel_com_brasao','tem_os_onze_nomes','a_mesma_gente'],
       rep:{eixo:'bom',delta:4,motivo:'Cruzou os nomes e alguém decidiu ajudar'},
       npc:{nome:'Moça da junta', opiniao:6, memoria:'Cruzou as buscas pra você e imprimiu quatro páginas sem cobrar.'},
-      registrar:'A mesma associação tem Ando na presidência e Amano no conselho técnico. Quatro páginas impressas.',
+      registrar:'A mesma associação tem Colman na presidência e Amano no conselho técnico. Quatro páginas impressas.',
       presagio:'Ela imprimiu sem cobrar. Guarda o rosto dela; você não vai poder protegê-la.'},
   escolhas:[
     {texto:'"Obrigado." E sair.', vai:'c9_saiu_da_junta'},
     {texto:'"A senhora pode ter problema por isso?"', vai:'c9_problema_pra_ela'},
     {texto:'Pedir mais.', vai:'c9_certidao_quatro', cond:d=>d.jogador.dinheiro>=320, ef:{dinheiro:-320}},
-    {texto:'"Busca o Ren também."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan}
+    {texto:'"Busca o Fabre também."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan}
   ]
 },
 
@@ -1513,7 +1513,7 @@ c9_problema_pra_ela:{
     {texto:'"Obrigado." E sair.', vai:'c9_saiu_da_junta'},
     {texto:'Pedir as mesmas trinta e duas páginas. (320 ₽)', vai:'c9_certidao_quatro',
      cond:d=>d.jogador.dinheiro>=320, ef:{dinheiro:-320}},
-    {texto:'"Busca o Ren também."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan}
+    {texto:'"Busca o Fabre também."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan}
   ]
 },
 
@@ -1605,7 +1605,7 @@ c9_leu_as_certidoes:{
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
     {texto:'Ir ao cassino com isso na mão.', vai:'c9_cassino'},
     {texto:'Tirar cópia e guardar em outro lugar.', vai:'c9_copia_das_certidoes'},
-    {texto:'Ligar pra Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ligar pra Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -1642,7 +1642,7 @@ c9_copiou_os_onze_da_junta:{
       registrar:'Copiou os onze nomes do conselho da Comissão.',
       presagio:'Agora eles são pessoas com nome. Isso é muito mais difícil de combater e muito mais fácil de enfrentar.'},
   escolhas:[
-    {texto:'"Busca a Ando."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
+    {texto:'"Busca a Colman."', vai:'c9_busca_renno', cond:d=>!!d.flags.sabe_de_renno},
     {texto:'Pedir certidão da associação. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80, ef:{dinheiro:-80}},
     {texto:'Sair.', vai:'c9_saiu_da_junta'},
     {texto:'Ir ao depósito.', vai:'c9_deposito'}
@@ -1676,7 +1676,7 @@ c9_saiu_da_junta:{
   escolhas:[
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
     {texto:'Ir ao cassino.', vai:'c9_cassino'},
-    {texto:'Ligar pra Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Andar mais pela cidade.', vai:'c9_cidade2'}
   ]
 },
@@ -2057,7 +2057,7 @@ c9_olhou_o_leilao:{
     'É chato. É absurdamente chato — é um leiloeiro com microfone lendo número de lote, e trinta pessoas levantando plaquinha, e uma mulher com prancheta anotando.',
     'Os lotes não são mostrados. Só o número e a descrição, projetada numa parede.',
     '"Lote 41. Espécime canino, macho, nível estimado 28, condição regular, procedência: recolhimento administrativo, processo 44.207."',
-    d=>d.flags.numero_da_gaveta ? 'Processo 44.207. É o número que a Dra. Sayo te deu num canto de página no museu de Pewter.' : 'Você anota o número do processo sem saber por quê.',
+    d=>d.flags.numero_da_gaveta ? 'Processo 44.207. É o número que a Dra. Cordell te deu num canto de página no museu de Pewter.' : 'Você anota o número do processo sem saber por quê.',
     'Alguém arremata em quatro segundos.',
     'Aplauso educado. Próximo lote.'
   ],
@@ -2104,7 +2104,7 @@ c9_entrou_no_leilao:{
     'E é isso: você entrou num leilão clandestino e a primeira coisa que te perguntam é se você tem credencial.'
   ],
   ef:{flag:'entrou_no_pregao',
-      npc:{nome:'Auditora Nishino', opiniao:0, memoria:'Te interceptou na porta do pregão de Celadon perguntando pelo credenciamento.'},
+      npc:{nome:'Auditora Brill', opiniao:0, memoria:'Te interceptou na porta do pregão de Celadon perguntando pelo credenciamento.'},
       presagio:'Ela perguntou do credenciamento. Não da sua idade, não de quem você é. Do credenciamento.'},
   escolhas:[
     {texto:'"Não tenho."', vai:'c9_nao_tenho_credencial'},
@@ -2296,7 +2296,7 @@ c9_e_legal:{
       presagio:'Três contratos, três CNPJs, tudo com nota. É por isso que ninguém prendeu ninguém.'},
   escolhas:[
     {texto:'"Então quem decide o recolhimento?"', vai:'c9_proposta_terceira'},
-    {texto:'"Quem é o Ando?"', vai:'c9_proposta_terceira', cond:d=>!!d.flags.sabe_do_renno},
+    {texto:'"Quem é o Colman?"', vai:'c9_proposta_terceira', cond:d=>!!d.flags.sabe_do_renno},
     {texto:'Guardar o guardanapo.', vai:'c9_proposta_terceira', ef:{flag:'guardanapo_terceira', itens:{'Guardanapo do Palace':1}}},
     {texto:'Levantar e ir embora com isso na cabeça.', vai:'c9_neutro'}
   ]
@@ -2376,7 +2376,7 @@ c9_via_heroi:{
   escolhas:[
     {texto:'Ir ao armazém agora.', vai:'c9_deposito'},
     {texto:'Ligar pra Liga primeiro e ir junto.', vai:'c9_liga_deposito'},
-    {texto:'Ligar pra Dra. Sayo antes.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Cordell antes.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir à junta comercial pegar os papéis antes.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}}
   ]
 },
@@ -2507,9 +2507,9 @@ c9_nao_tenho_credencial:{
     'Lote 41.'
   ],
   ef:{flag:['assistiu_o_pregao','conheceu_prado'],
-      npc:{nome:'Auditora Nishino', opiniao:2, memoria:'Te deixou assistir ao pregão encostado na parede dos fundos.'},
+      npc:{nome:'Auditora Brill', opiniao:2, memoria:'Te deixou assistir ao pregão encostado na parede dos fundos.'},
       rep:{eixo:'bom',delta:1,motivo:'Assistiu a coisa inteira em vez de reagir'},
-      registrar:'Auditora M. Nishino, da Comissão, preside o pregão de alienação.',
+      registrar:'Auditora M. Brill, da Comissão, preside o pregão de alienação.',
       presagio:'A Comissão preside. Não é a rede que leiloa: é o Estado que leiloa e a rede que compra.'},
   escolhas:[
     {texto:'"O que é o lote 41?"', vai:'c9_o_lote_41'},
@@ -2522,7 +2522,7 @@ c9_nao_tenho_credencial:{
 c9_o_lote_41:{
   texto:[
     '"O que é o lote 41?"',
-    'A Auditora Nishino consulta a prancheta sem pressa, e responde como se você fosse um adulto.',
+    'A Auditora Brill consulta a prancheta sem pressa, e responde como se você fosse um adulto.',
     '"Lote 41. Espécime canino, macho, nível estimado vinte e oito. Procedência: recolhimento administrativo, processo quarenta e quatro mil duzentos e sete."',
     '"Recolhido em Lavender, dezembro. Tutor notificado por edital em janeiro. Prazo de manifestação: sessenta dias. Não houve manifestação."',
     '"Portanto: alienação."',
@@ -2556,9 +2556,9 @@ c9_prado_conversa:{
     '"Eu posso suspender se ele escrever. Com a letra dele, e com o número do processo, e com a data."'
   ],
   ef:{flag:['prado_te_ouviu','sabe_do_renno','prado_quer_documento'],
-      npc:{nome:'Auditora Nishino', opiniao:5, memoria:'Te ouviu no corredor e te disse exatamente o que ela precisa para suspender uma alienação.'},
+      npc:{nome:'Auditora Brill', opiniao:5, memoria:'Te ouviu no corredor e te disse exatamente o que ela precisa para suspender uma alienação.'},
       rep:{eixo:'bom',delta:3,motivo:'Conseguiu que uma servidora da Comissão te ouvisse'},
-      registrar:'A Auditora Nishino suspende a alienação se houver declaração escrita do tutor, com processo e data.',
+      registrar:'A Auditora Brill suspende a alienação se houver declaração escrita do tutor, com processo e data.',
       presagio:'Ela te disse o que precisa. Isso é raro e é a coisa mais útil que aconteceu nessa cidade.'},
   escolhas:[
     {texto:'Entregar a declaração do Hideo agora.', vai:'c9_prado_te_da_o_processo', cond:d=>!!d.flags.copia_do_hideo || !!d.flags.hideo_escreveu},
@@ -2600,7 +2600,7 @@ c9_prado_te_da_o_processo:{
   escolhas:[
     {texto:'Ir ao armazém buscar o lote 41 em pessoa.', vai:'c9_dentro_limpo'},
     {texto:'Ir ao hospital contar pro Hideo.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo},
-    {texto:'Levar tudo à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar tudo à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir à junta comercial com o nome que ela te deu.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}}
   ]
 },
@@ -2608,7 +2608,7 @@ c9_prado_te_da_o_processo:{
 c9_arrematou_o_41:{
   texto:[
     '"Eu quero dar lance no 41."',
-    'A Auditora Nishino explica, sem ironia nenhuma, que menor não arremata. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você porque você tem quinze anos.',
+    'A Auditora Brill explica, sem ironia nenhuma, que menor não arremata. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você porque você tem quinze anos.',
     'E aí ela diz a coisa que resolve: "Mas o senhor pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
     '"Quanto?"',
     '"Avaliação do 41: doze mil."',
@@ -2635,7 +2635,7 @@ c9_consignou:{
       itens:{'Recibo de consignação':1},
       rep:{eixo:'bom',delta:3,motivo:'Usou o sistema contra ele mesmo e pagou do próprio bolso'},
       umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:30, historia:'Lote 41. Você pagou doze mil numa sala de cassino para ele não ser vendido.'}},
-      npc:{nome:'Auditora Nishino', opiniao:4, memoria:'Você consignou doze mil do próprio bolso pelo lote 41.'},
+      npc:{nome:'Auditora Brill', opiniao:4, memoria:'Você consignou doze mil do próprio bolso pelo lote 41.'},
       registrar:'Consignou 12.000 ₽ e tirou o lote 41 do leilão.',
       presagio:'Um de quarenta e um. Essa fração vai te perseguir.'},
   escolhas:[
@@ -2688,7 +2688,7 @@ c9_blefe_credencial_meio:{
     'Você passa os quarenta minutos seguintes sabendo que tem uma conversa marcada.'
   ],
   ef:{flag:['assistiu_o_pregao','prado_te_pegou','conheceu_prado'],
-      npc:{nome:'Auditora Nishino', opiniao:1, memoria:'Te pegou mentindo sobre credencial e te deixou assistir mesmo assim.'},
+      npc:{nome:'Auditora Brill', opiniao:1, memoria:'Te pegou mentindo sobre credencial e te deixou assistir mesmo assim.'},
       registrar:'Foi pego mentindo no pregão. A Auditora te encostou na parede dos fundos e marcou uma conversa.'},
   escolhas:[
     {texto:'Esperar e ter a conversa no corredor.', vai:'c9_prado_conversa'},
@@ -2708,7 +2708,7 @@ c9_expulso_do_pregao:{
     'Foi uma expulsão de gente que trata expulsão como tarefa administrativa.'
   ],
   ef:{flag:'expulso_do_pregao', hp:-2, causa:'Retirado do pregão',
-      npc:{nome:'Auditora Nishino', opiniao:-1, memoria:'Te mandou retirar do pregão por credencial falsa.'},
+      npc:{nome:'Auditora Brill', opiniao:-1, memoria:'Te mandou retirar do pregão por credencial falsa.'},
       presagio:'Ninguém pediu seu nome. Você não é um risco. Ainda.'},
   escolhas:[
     {texto:'Dar a volta e ir pro armazém.', vai:'c9_deposito'},
@@ -2726,13 +2726,13 @@ c9_gritou_no_pregao:{
     'E aí acontece a pior coisa que podia acontecer: ninguém se envergonha.',
     'Trinta e duas pessoas olham pra você com uma paciência educada de quem já ouviu isso, e depois voltam pro leiloeiro, porque o pregão continua e o lote 42 está sendo anunciado.',
     'Duas pessoas te dão razão em voz baixa. Uma delas dá o lance no 42.',
-    'A segurança te tira pelo corredor de azulejo, e no caminho a Auditora Nishino te acompanha até a porta e diz, sem olhar pra você:',
+    'A segurança te tira pelo corredor de azulejo, e no caminho a Auditora Brill te acompanha até a porta e diz, sem olhar pra você:',
     '"Eu presido vinte e seis sessões por ano. O senhor é o quarto a fazer isso." Pausa. "E o primeiro que sabia o número do processo."'
   ],
   ef:{flag:['gritou_no_pregao','conheceu_prado','sabe_do_lote_41'],
       rep:{eixo:'bom',delta:2,motivo:'Gritou numa sala onde todo mundo achava normal'},
       hp:-2, causa:'Retirado do pregão à força', instabilidade:1, moral:-10,
-      npc:{nome:'Auditora Nishino', opiniao:3, memoria:'Você gritou no pregão dela. Foi o quarto em treze anos e o único que sabia o número do processo.'},
+      npc:{nome:'Auditora Brill', opiniao:3, memoria:'Você gritou no pregão dela. Foi o quarto em treze anos e o único que sabia o número do processo.'},
       registrar:'Gritou no pregão de Celadon. Ninguém se envergonhou.',
       presagio:'O quarto a fazer isso. Quer dizer que já teve três, e que o pregão continua.'},
   escolhas:[
@@ -2852,8 +2852,8 @@ c9_so_o_41:{
   escolhas:[
     {texto:'Voltar e abrir todas.', vai:'c9_abriu_tudo'},
     {texto:'Ir embora com ele.', vai:'c9_saiu_cedo'},
-    {texto:'Ir à Auditora Nishino com ele no colo.', vai:'c9_prado_conversa'},
-    {texto:'Ir à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir à Auditora Brill com ele no colo.', vai:'c9_prado_conversa'},
+    {texto:'Ir à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -3011,7 +3011,7 @@ c9_comprou_um:{
   escolhas:[
     {texto:'Sair.', vai:'c9_fim'},
     {texto:'Voltar pela lateral e abrir as outras.', vai:'c9_lateral'},
-    {texto:'Levar o recibo à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar o recibo à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar o recibo à Liga.', vai:'c9_liga_celadon'}
   ]
 },
@@ -3080,7 +3080,7 @@ c9_carregou_seis:{
   escolhas:[
     {texto:'Ir embora quando deixarem.', vai:'c9_fim'},
     {texto:'Dar depoimento e dar o nome do que você viu no pregão.', vai:'c9_liga_celadon', cond:d=>!!d.flags.viu_o_pregao},
-    {texto:'Ligar pra Dra. Sayo antes de qualquer depoimento.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Ligar pra Dra. Cordell antes de qualquer depoimento.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Não dar depoimento. Sair andando.', vai:'c9_saiu_cedo'}
   ]
 },
@@ -3099,7 +3099,7 @@ c9_saiu_cedo:{
     {texto:'Seguir viagem.', vai:'c9_fim'},
     {texto:'Resolver as pendências antes de sair da cidade.', vai:'c9_pendencias'},
     {texto:'Voltar ao cassino e olhar na cara dela.', vai:'c9_cassino'},
-    {texto:'Ir à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Ir à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -3139,9 +3139,9 @@ c9_documentou:{
       registrar:'Documentou o armazém de Celadon sem soltar ninguém.',
       presagio:'Trinta dias. É esse o tempo que leva pra abrir outro galpão.'},
   escolhas:[
-    {texto:'Levar à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Liga.', vai:'c9_liga_celadon'},
-    {texto:'Levar à Auditora Nishino.', vai:'c9_prado_conversa', cond:d=>!!d.flags.conheceu_prado},
+    {texto:'Levar à Auditora Brill.', vai:'c9_prado_conversa', cond:d=>!!d.flags.conheceu_prado},
     {texto:'Guardar. Você ainda não sabe em quem confiar.', vai:'c9_fim', ef:{flag:'guardou_provas'}}
   ]
 },
@@ -3163,7 +3163,7 @@ c9_livro:{
     {texto:'Abrir as gaiolas também.', vai:'c9_abriu_tudo'},
     {texto:'Sair só com o livro.', vai:'c9_saiu_cedo'},
     {texto:'Fotografar o resto antes de sair.', vai:'c9_documentou'},
-    {texto:'Levar direto pra Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Levar direto pra Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -3223,7 +3223,7 @@ c9_perdeu_deposito:{
     {texto:'Seguir o caminhão a pé enquanto der.', vai:'c9_seguiu_caminhao'},
     {texto:'Sentar no meio-fio.', vai:'c9_fim'},
     {texto:'Voltar amanhã com a Liga.', vai:'c9_liga_celadon'},
-    {texto:'Voltar amanhã com a Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
+    {texto:'Voltar amanhã com a Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone}
   ]
 },
 
@@ -3240,7 +3240,7 @@ c9_seguiu_caminhao:{
       registrar:'Anotou placa, horário e sentido do caminhão: norte, Saffron.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c9_fim'},
-    {texto:'Levar a placa à Dra. Sayo.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Levar a placa à Dra. Cordell.', vai:'c9_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar a placa à Liga.', vai:'c9_liga_celadon'},
     {texto:'Resolver as pendências antes de sair.', vai:'c9_pendencias'}
   ]
@@ -3280,7 +3280,7 @@ c9_tomou:{
 
 c9_ivone:{
   texto:[
-    'A Dra. Sayo chega em Celadon em cinco horas, de ônibus noturno, com duas pessoas e uma câmera, do mesmo jeito do Monte da Lua.',
+    'A Dra. Cordell chega em Celadon em cinco horas, de ônibus noturno, com duas pessoas e uma câmera, do mesmo jeito do Monte da Lua.',
     'Vocês sentam numa lanchonete de rodoviária às cinco da manhã porque é o único lugar aberto.',
     'Ela olha o que você trouxe em silêncio. Vira as páginas devagar, com as duas mãos, do jeito de quem já estragou documento uma vez e aprendeu.',
     'Quando chega na sigla SPH-11, ela para.',
@@ -3291,13 +3291,13 @@ c9_ivone:{
   ],
   ef:{flag:['ivone_sabe','sabe_da_silph'],
       rep:{eixo:'bom',delta:2,motivo:'Entregou a rede de Celadon a quem faz alguma coisa com isso'},
-      npc:{nome:'Dra. Sayo', opiniao:8, memoria:'Você entregou a ela o material de Celadon. Foi o maior que ela já teve.'},
-      registrar:'Dra. Sayo recebeu as provas e identificou a Silph como cliente.',
+      npc:{nome:'Dra. Cordell', opiniao:8, memoria:'Você entregou a ela o material de Celadon. Foi o maior que ela já teve.'},
+      registrar:'Dra. Cordell recebeu as provas e identificou a Silph como cliente.',
       presagio:'Previsão de volume. Alguém encomendou uma quantidade por mês.'},
   escolhas:[
     {texto:'"Então a gente vai pra Saffron."', vai:'c9_fim',
      ef:{flag:'vai_para_saffron', executar:d=>{ if(Historia.via()==='neutro') Historia.definirVia('pesquisador','seguiu a trilha até a Silph'); return []; }}},
-    {texto:'"Me fala da Auditora Nishino."', vai:'c9_prado_conversa', cond:d=>!!d.flags.conheceu_prado},
+    {texto:'"Me fala da Auditora Brill."', vai:'c9_prado_conversa', cond:d=>!!d.flags.conheceu_prado},
     {texto:'"E o processo 44.207?"', vai:'c9_ivone_44207', cond:d=>!!d.flags.numero_da_gaveta || !!d.flags.sabe_do_lote_41},
     {texto:'"Eu já fiz a minha parte."', vai:'c9_fim'}
   ]

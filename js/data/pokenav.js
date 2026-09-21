@@ -80,28 +80,28 @@ const CONTATOS = [
   }
 },
 {
-  id:'ushio', tipo:'figura', nome:'Sr. Ushio', papel:'o velho da vassoura', cidade:'Pallet',
-  requer:d=>!!(d.npcs['Sr. Ushio'] && d.npcs['Sr. Ushio'].opiniao >= 2),
+  id:'ushio', tipo:'figura', nome:'Sr. Ives', papel:'o velho da vassoura', cidade:'Pallet',
+  requer:d=>!!(d.npcs['Sr. Ives'] && d.npcs['Sr. Ives'].opiniao >= 2),
   oferece:['favor','missao'],
   missao:{
     rotulo:'Perguntar se ele precisa de alguma coisa',
     rotuloEntrega:'Ligar e contar da medalha',
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
-      fala('Sr. Ushio', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
-      fala('Sr. Ushio', 'A filha do Kuroda ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
-      fala('Sr. Ushio', 'Ela morreu em 95 e o Kuroda vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
-      fala('Sr. Ushio', 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
-      fala('Sr. Ushio', 'Você anda por aí. Se aparecer, você vai saber que é.')
+      fala('Sr. Ives', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
+      fala('Sr. Ives', 'A filha do Kuroda ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      fala('Sr. Ives', 'Ela morreu em 95 e o Kuroda vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      fala('Sr. Ives', 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
+      fala('Sr. Ives', 'Você anda por aí. Se aparecer, você vai saber que é.')
     ],
     objetivo:d=>Estado.contaItem('Medalha de natação da filha do Kuroda') > 0,
     entregue:[
       d=>fala(d.jogador.nome, 'Eu achei.'),
       'Silêncio do outro lado por uns quatro segundos.',
-      fala('Sr. Ushio', 'Não me diz onde.'),
-      fala('Sr. Ushio', 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
-      fala('Sr. Ushio', 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
-      fala('Sr. Ushio', 'Ele vai querer conversar. Não fica.')
+      fala('Sr. Ives', 'Não me diz onde.'),
+      fala('Sr. Ives', 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
+      fala('Sr. Ives', 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
+      fala('Sr. Ives', 'Ele vai querer conversar. Não fica.')
     ],
     recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Kuroda');
       Estado.subirStatus('carisma');
@@ -113,15 +113,15 @@ const CONTATOS = [
     rotulo:'Perguntar o que ele ouviu falar',
     limite:99, esperaCap:2,
     texto:d=>[
-      fala('Sr. Ushio', 'Eu varro calçada, menino. Calçada é onde a cidade fala.'),
-      fala('Sr. Ushio', 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
-      fala('Sr. Ushio', 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
+      fala('Sr. Ives', 'Eu varro calçada, menino. Calçada é onde a cidade fala.'),
+      fala('Sr. Ives', 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
+      fala('Sr. Ives', 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
     ],
     efeito:d=>{ Estado.subirStatus('percepcao'); return [{tipo:'rep', texto:'PERCEPÇÃO +1 — você passou a contar as saídas das salas.'}]; }
   }
 },
 {
-  id:'goro', tipo:'figura', nome:'Goro', papel:'dirige a perua do laboratório', cidade:'estrada',
+  id:'goro', tipo:'figura', nome:'Célio', papel:'dirige a perua do laboratório', cidade:'estrada',
   requer:d=>!!d.flags.numero_do_goro,
   oferece:['favor','prova'],
   favor:{
@@ -131,9 +131,9 @@ const CONTATOS = [
       const paradas = ['Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Saffron','Fuchsia','Cinnabar'];
       const onde = paradas[(d.capitulo + 3) % paradas.length];
       return [
-        fala('Goro', 'Hoje? Hoje eu tô em ' + onde + '. Amanhã cedo eu saio.'),
-        fala('Goro', 'Se você tiver por perto aparece, que eu sempre tenho coisa sobrando na caixa. Coisa boa não, mas sobrando.', 'riso'),
-        fala('Goro', 'Deixei um pacote pra você no balcão do Centro da última cidade que você passou. Tá no seu nome.')
+        fala('Célio', 'Hoje? Hoje eu tô em ' + onde + '. Amanhã cedo eu saio.'),
+        fala('Célio', 'Se você tiver por perto aparece, que eu sempre tenho coisa sobrando na caixa. Coisa boa não, mas sobrando.', 'riso'),
+        fala('Célio', 'Deixei um pacote pra você no balcão do Centro da última cidade que você passou. Tá no seu nome.')
       ];
     },
     efeito:d=>{ Estado.darItem('Potion', 2); Estado.darItem('Ração', 1);
@@ -145,44 +145,44 @@ const CONTATOS = [
     texto:d=>{
       const p = (d.time || []).find(x => x.dex === d.jogador.inicialDex) || d.time[0];
       if (!p) return [
-        fala('Goro', 'E o bicho?'),
+        fala('Célio', 'E o bicho?'),
         'Você demora pra responder e a demora responde por você.',
-        fala('Goro', '...tá. Não precisa falar. Eu já ouvi essa pausa antes.', 'baixo'),
-        fala('Goro', 'Liga pra mim quando quiser, viu. Não é só pra notícia boa.')
+        fala('Célio', '...tá. Não precisa falar. Eu já ouvi essa pausa antes.', 'baixo'),
+        fala('Célio', 'Liga pra mim quando quiser, viu. Não é só pra notícia boa.')
       ];
       return [
-        fala('Goro', 'E o bicho?'),
+        fala('Célio', 'E o bicho?'),
         d=>`Você conta: ${nomeExib(p)}, nível ${p.nivel}, e conta uma coisa específica que ele faz e que ninguém pediu pra ele fazer.`,
-        fala('Goro', 'Eu anotei numa caderneta que eu tenho aqui, e não é a de trabalho.'),
-        fala('Goro', 'Essa é a minha. Eu anoto o que volta.', 'baixo')
+        fala('Célio', 'Eu anotei numa caderneta que eu tenho aqui, e não é a de trabalho.'),
+        fala('Célio', 'Essa é a minha. Eu anoto o que volta.', 'baixo')
       ];
     },
     rep:{eixo:'bom', delta:1, motivo:'Deu notícia a quem entregou a primeira bola'}
   }
 },
 {
-  id:'odete', tipo:'figura', nome:'Sra. Chiyo', papel:'a vizinha do dezoito', cidade:'Pallet',
-  requer:d=>!!d.npcs['Sra. Chiyo'],
+  id:'odete', tipo:'figura', nome:'Sra. Perla', papel:'a vizinha do dezoito', cidade:'Pallet',
+  requer:d=>!!d.npcs['Sra. Perla'],
   oferece:['favor','missao'],
   missao:{
     rotulo:'Perguntar por que ela ligou duas vezes',
     rotuloEntrega:'Contar o que tem no cais',
     dica:'Ela quer saber do cais de Vermilion.',
     pedido:[
-      fala('Sra. Chiyo', 'Eu liguei duas vezes ontem e desliguei nas duas. Você deve ter visto no aparelho.'),
-      fala('Sra. Chiyo', 'Você vai passar por Vermilion uma hora. Todo mundo passa.'),
-      fala('Sra. Chiyo', 'Quando passar, vai no cais, o de carga, não o de turista. Fica um tempo lá.', 'baixo'),
-      fala('Sra. Chiyo', 'Depois me liga e me conta o que tem lá. Só isso. Não precisa perguntar nada pra ninguém.'),
-      fala('Sra. Chiyo', 'E não precisa me perguntar por quê.', 'frio')
+      fala('Sra. Perla', 'Eu liguei duas vezes ontem e desliguei nas duas. Você deve ter visto no aparelho.'),
+      fala('Sra. Perla', 'Você vai passar por Vermilion uma hora. Todo mundo passa.'),
+      fala('Sra. Perla', 'Quando passar, vai no cais, o de carga, não o de turista. Fica um tempo lá.', 'baixo'),
+      fala('Sra. Perla', 'Depois me liga e me conta o que tem lá. Só isso. Não precisa perguntar nada pra ninguém.'),
+      fala('Sra. Perla', 'E não precisa me perguntar por quê.', 'frio')
     ],
     objetivo:d=>!!d.visitados.vermilion,
     entregue:[
-      fala('Sra. Chiyo', 'Fala.', null, 'Ela atendeu no primeiro toque. Estava sentada perto do telefone.'),
+      fala('Sra. Perla', 'Fala.', null, 'Ela atendeu no primeiro toque. Estava sentada perto do telefone.'),
       'Você conta: guindaste velho, três galpões, o de número dois fechado com chapa, e um quadro de avisos com nome de gente que embarcou.',
-      fala('Sra. Chiyo', 'Tinha nome no quadro?'),
+      fala('Sra. Perla', 'Tinha nome no quadro?'),
       'Você diz que tinha. Ela fica quieta o tempo de quatro respirações.',
-      fala('Sra. Chiyo', 'Tá bom. Obrigada, meu filho.', 'baixo'),
-      fala('Sra. Chiyo', 'Passa aqui quando voltar que eu separo uma coisa pra você.'),
+      fala('Sra. Perla', 'Tá bom. Obrigada, meu filho.', 'baixo'),
+      fala('Sra. Perla', 'Passa aqui quando voltar que eu separo uma coisa pra você.'),
       'Ela desliga antes de você responder.'
     ],
     recompensa:d=>{ Estado.darItem('Super Potion', 3); Estado.darItem('Revive', 1);
@@ -194,8 +194,8 @@ const CONTATOS = [
     rotulo:'Perguntar da caixa',
     limite:99, esperaCap:3,
     texto:d=>[
-      fala('Sra. Chiyo', 'A caixa? A caixa eu quero de volta, mas já desencanei.', 'riso'),
-      fala('Sra. Chiyo', 'Olha, eu separei umas coisas aqui que estavam no armário e que não servem pra mim. Passa um dia.')
+      fala('Sra. Perla', 'A caixa? A caixa eu quero de volta, mas já desencanei.', 'riso'),
+      fala('Sra. Perla', 'Olha, eu separei umas coisas aqui que estavam no armário e que não servem pra mim. Passa um dia.')
     ],
     efeito:d=>{ Estado.darItem('Super Potion', 2); Estado.darItem('Great Ball', 1);
       return [{tipo:'item', texto:'Recebeu 2× Super Potion e 1× Great Ball.'}]; }
@@ -203,6 +203,9 @@ const CONTATOS = [
 },
 {
   id:'enfermeira', tipo:'figura', nome:'Enfermeira do Centro', papel:'seis insígnias, e parou', cidade:'Viridian',
+  /* como ela aparece no balão das cenas: é por aqui que o PokéNav
+     descobre que o jogador já perguntou o nome dela */
+  falaComo:'a enfermeira',
   requer:d=>!!d.flags.historia_da_enfermeira,
   oferece:['favor','missao'],
   missao:{
@@ -549,7 +552,7 @@ const CONTATOS = [
 },
 
 {
-  id:'nadia', tipo:'treinador', nome:'Nozomi Arata', papel:'segunda licença, aos quarenta e um', cidade:'Lavender',
+  id:'nadia', tipo:'treinador', nome:'Nadia Arden', papel:'segunda licença, aos quarenta e um', cidade:'Lavender',
   requer:d=>!!d.flags.numero_da_nadia,
   oferece:['revanche','prova','missao'],
   rivalExtra:null,
@@ -558,21 +561,21 @@ const CONTATOS = [
     rotuloEntrega:'Contar de Saffron',
     dica:'Saffron. Foi onde ela parou aos dezenove.',
     pedido:[
-      fala('Nozomi', 'Da primeira vez eu parei em Saffron. Você já sabia disso?'),
-      fala('Nozomi', 'Eu tinha dezenove anos, quatro insígnias e um Raticate que era a melhor coisa que já aconteceu comigo.'),
-      fala('Nozomi', 'Eu entrei naquele ginásio e ela olhou pra mim e eu entendi, no meio do primeiro turno, que eu não ia conseguir. E eu fui embora e demorei vinte e dois anos pra voltar.', 'baixo'),
-      fala('Nozomi', 'Não é revanche. Eu não quero que você bata nela por mim, isso seria ridículo.'),
-      fala('Nozomi', 'Eu só quero que alguém que eu conheço ganhe aquela insígnia e me ligue contando como foi lá dentro. Eu nunca vi o final.', 'baixo')
+      fala('Nadia', 'Da primeira vez eu parei em Saffron. Você já sabia disso?'),
+      fala('Nadia', 'Eu tinha dezenove anos, quatro insígnias e um Raticate que era a melhor coisa que já aconteceu comigo.'),
+      fala('Nadia', 'Eu entrei naquele ginásio e ela olhou pra mim e eu entendi, no meio do primeiro turno, que eu não ia conseguir. E eu fui embora e demorei vinte e dois anos pra voltar.', 'baixo'),
+      fala('Nadia', 'Não é revanche. Eu não quero que você bata nela por mim, isso seria ridículo.'),
+      fala('Nadia', 'Eu só quero que alguém que eu conheço ganhe aquela insígnia e me ligue contando como foi lá dentro. Eu nunca vi o final.', 'baixo')
     ],
     objetivo:d=>d.insignias.includes('Insígnia Pântano'),
     entregue:[
-      fala('Nozomi', 'Conta. Conta tudo, do começo, e não pula a parte do chão.'),
+      fala('Nadia', 'Conta. Conta tudo, do começo, e não pula a parte do chão.'),
       'Você conta: o chão que engana, as portas, o silêncio dela antes de cada ordem.',
-      fala('Nozomi', 'O chão. Eu lembro do chão.'),
+      fala('Nadia', 'O chão. Eu lembro do chão.'),
       'Ela fica um tempo sem falar nada e você não interrompe.',
-      fala('Nozomi', 'Vinte e dois anos e eu tinha guardado o chão errado na cabeça. Era do outro lado.', 'riso'),
-      fala('Nozomi', 'Obrigada. Agora eu sei como termina.', 'baixo'),
-      fala('Nozomi', 'Eu vou chegar lá. Mais devagar que você, mas eu chego.')
+      fala('Nadia', 'Vinte e dois anos e eu tinha guardado o chão errado na cabeça. Era do outro lado.', 'riso'),
+      fala('Nadia', 'Obrigada. Agora eu sei como termina.', 'baixo'),
+      fala('Nadia', 'Eu vou chegar lá. Mais devagar que você, mas eu chego.')
     ],
     recompensa:d=>{ Estado.j.dinheiro += 4000; Estado.darItem('Hyper Potion', 2);
       Estado.dados.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+5); });
@@ -584,9 +587,9 @@ const CONTATOS = [
     rotulo:'Perguntar como vai a segunda',
     esperaCap:2,
     texto:d=>[
-      fala('Nozomi', 'Duas! Eu tenho duas agora!', 'grita'),
-      fala('Nozomi', 'A de Pewter eu levei três tentativas. Três. E na terceira eu chorei na frente do Brock.', 'riso'),
-      fala('Nozomi', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
+      fala('Nadia', 'Duas! Eu tenho duas agora!', 'grita'),
+      fala('Nadia', 'A de Pewter eu levei três tentativas. Três. E na terceira eu chorei na frente do Brock.', 'riso'),
+      fala('Nadia', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
     ],
     rep:{eixo:'bom', delta:1, motivo:'Acompanhou a segunda licença de alguém'}
   }
@@ -598,7 +601,7 @@ const CONTATOS = [
      A resposta decide o que ele te manda meses depois. Ele nunca
      fala em Pokémon, nem na pergunta, nem na entrega.
      ============================================================ */
-  id:'curador', tipo:'figura', nome:'Ren', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
+  id:'curador', tipo:'figura', nome:'Fabre', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
   requer:d=>!!d.flags.a_pergunta_do_curador,
   oferece:['missao'],
   missao:{
@@ -606,12 +609,12 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
     dica:'Ele espera você em Lavender.',
     pedido:[
-      fala('Ren', 'Eu não anotei pra nada. Eu anoto tudo.'),
-      fala('Ren', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
-      fala('Ren', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
+      fala('Fabre', 'Eu não anotei pra nada. Eu anoto tudo.'),
+      fala('Fabre', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
+      fala('Fabre', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
       d=>fala(d.jogador.nome, 'Pra quê?'),
-      fala('Ren', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
-      fala('Ren', 'Não pergunta o que é. Se eu falar, estraga.')
+      fala('Fabre', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
+      fala('Fabre', 'Não pergunta o que é. Se eu falar, estraga.')
     ],
     objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
     entregue:d=>{
@@ -619,16 +622,16 @@ const CONTATOS = [
       const guarda = d.flags.respondeu_guardar;
       return [
         'O abrigo do Sr. Fuji tem uma sala nos fundos que você nunca tinha visto, com oitenta e três cadernos de capa dura numa estante feita à mão.',
-        fala('Ren', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
-        d=>fala('Ren', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
-        fala('Ren', 'Eu não escolho o que dar. A resposta escolhe.'),
+        fala('Fabre', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
+        d=>fala('Fabre', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
+        fala('Fabre', 'Eu não escolho o que dar. A resposta escolhe.'),
         guarda
           ? 'Ele volta com uma bola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
           : 'Ele volta com uma bola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
         guarda
-          ? fala('Ren', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
-          : fala('Ren', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
-        fala('Ren', 'Não abre aqui. Abre na estrada.')
+          ? fala('Fabre', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
+          : fala('Fabre', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
+        fala('Fabre', 'Não abre aqui. Abre na estrada.')
       ];
     },
     recompensa:d=>{
@@ -656,28 +659,28 @@ const CONTATOS = [
 
 /* ── rivais ──────────────────────────────────────────────── */
 {
-  id:'teo', tipo:'treinador', nome:'Kenta', papel:'o seu rival', cidade:'estrada',
-  requer:d=>!!d.npcs['Kenta'],
+  id:'teo', tipo:'treinador', nome:'Ezra', papel:'o seu rival', cidade:'estrada',
+  requer:d=>!!d.npcs['Ezra'],
   rival:'teo', oferece:['revanche','prova','missao'],
   missao:{
     rotulo:'Perguntar por que ele anda estranho',
     rotuloEntrega:'Ligar e contar quantas espécies você registrou',
     dica:'Ele quer ver o seu número passar o dele.',
     pedido:[
-      fala('Kenta', 'Eu não ando estranho.'),
-      fala('Kenta', '...tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
-      fala('Kenta', 'Eu passo o dia catalogando e não sobe. E aí eu olho e todo mundo que eu conheço tá em vinte e poucas e acha que eu sou doente.', 'baixo'),
-      fala('Kenta', 'Chega em sessenta. Chega em sessenta pra eu ter com quem perder, porque perder pra ninguém não vale nada.')
+      fala('Ezra', 'Eu não ando estranho.'),
+      fala('Ezra', '...tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
+      fala('Ezra', 'Eu passo o dia catalogando e não sobe. E aí eu olho e todo mundo que eu conheço tá em vinte e poucas e acha que eu sou doente.', 'baixo'),
+      fala('Ezra', 'Chega em sessenta. Chega em sessenta pra eu ter com quem perder, porque perder pra ninguém não vale nada.')
     ],
     objetivo:d=>Estado.contagemDex().catalogados >= 60,
     entregue:[
       d=>fala(d.jogador.nome, `Sessenta e ${Math.max(0, Estado.contagemDex().catalogados - 60)}.`),
-      fala('Kenta', 'Mentira.'),
+      fala('Ezra', 'Mentira.'),
       d=>fala(d.jogador.nome, 'Confere no seu aparelho. A Liga sincroniza.'),
       'Você ouve ele digitando. Você ouve ele parando de digitar.',
-      fala('Kenta', 'Você tá em sessenta e eu tô em quarenta e três.'),
-      fala('Kenta', 'Isso é a melhor coisa que aconteceu comigo esse mês e eu odeio isso.', 'riso'),
-      fala('Kenta', 'Agora eu tenho de quem correr atrás. Você não faz ideia do que isso vale.')
+      fala('Ezra', 'Você tá em sessenta e eu tô em quarenta e três.'),
+      fala('Ezra', 'Isso é a melhor coisa que aconteceu comigo esse mês e eu odeio isso.', 'riso'),
+      fala('Ezra', 'Agora eu tenho de quem correr atrás. Você não faz ideia do que isso vale.')
     ],
     recompensa:d=>{ Estado.darItem('Great Ball', 5); Estado.darItem('Ultra Ball', 2);
       return [{tipo:'item', texto:'Ele manda 5× Great Ball e 2× Ultra Ball pelo Centro. "Pra você não parar."'}]; },
@@ -688,12 +691,12 @@ const CONTATOS = [
     rotulo:'Contar o que você fez',
     texto:d=>{
       const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
-      const meu = d.npcs['Kenta'] || {};
+      const meu = d.npcs['Ezra'] || {};
       return (meu.opiniao||0) >= 2
-        ? [fala('Kenta', `${n} já? Cara.`, null, 'Ele não esconde que ficou feliz, e detesta não ter escondido.'),
-           fala('Kenta', 'Eu tô em quatro. Eu vou te alcançar. Tô avisando com antecedência.')]
-        : [fala('Kenta', `${n}. Legal.`, 'frio'),
-           fala('Kenta', 'Eu não liguei pra você. Você que ligou pra mim.')];
+        ? [fala('Ezra', `${n} já? Cara.`, null, 'Ele não esconde que ficou feliz, e detesta não ter escondido.'),
+           fala('Ezra', 'Eu tô em quatro. Eu vou te alcançar. Tô avisando com antecedência.')]
+        : [fala('Ezra', `${n}. Legal.`, 'frio'),
+           fala('Ezra', 'Eu não liguei pra você. Você que ligou pra mim.')];
     },
     rep:{eixo:'bom', delta:1, motivo:'Manteve o rival por perto em vez de sumir'}
   }
@@ -702,7 +705,7 @@ const CONTATOS = [
 ];
 
 /* rivais extras entram na agenda sozinhos, pelo arquivo deles */
-/* A Nozomi não é rival de arco: o time dela é montado na hora */
+/* A Nadia não é rival de arco: o time dela é montado na hora */
 function timeDaNadia(){
   const n = Math.max(40, 34 + Estado.dados.insignias.length * 3);
   return [59, 26, 94, 103].map((dex, i) => criarPokemon(dex, n + i, {}));
@@ -720,7 +723,22 @@ function contatosDeRivaisExtras(){
 
 function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras()); }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
-function textoContato(c, campo){ const v = c[campo]; return typeof v === 'function' ? v(Estado.dados) : v; }
+function textoContato(c, campo){
+  const v = c[campo];
+  const t = typeof v === 'function' ? v(Estado.dados) : v;
+  /* Contato gravado pela função ("Enfermeira do Centro") passa a aparecer
+     pelo nome depois que o jogador perguntou. O PokéNav é a agenda dele:
+     não faz sentido a agenda continuar chamando de "a enfermeira" alguém
+     de quem ele já sabe o nome. */
+  if (campo === 'nome' && typeof Nomes !== 'undefined' && t){
+    /* o contato pode ser gravado por uma função ("Enfermeira do Centro")
+       e falar nas cenas por outro rótulo ("a enfermeira"): falaComo liga
+       os dois, senão a agenda nunca fica sabendo do nome. */
+    if (c.falaComo && Nomes.sabe(c.falaComo)) return Nomes.nomeDe(c.falaComo);
+    return Nomes.comoChamar(t);
+  }
+  return t;
+}
 
 /* ============================================================
    CHAMADAS RECEBIDAS — o telefone toca sozinho
@@ -736,7 +754,7 @@ const CHAMADAS = [
   peso:3,
   falas:d=>[
     d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesmo?', 'grita'),
-    d=>fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Chiyo que me ensinou.'),
+    d=>fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
     d=>fala(nomeCasa(), 'Não é nada. Não aconteceu nada aqui, tá tudo bem, eu só queria ouvir.', 'baixo'),
     d=>fala(nomeCasa(), 'Tá comendo?')
   ],
@@ -762,26 +780,26 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && d.capitulo >= 5,
   peso:2,
   falas:d=>[
-    fala('Sr. Ushio', 'Não é cobrança.'),
-    fala('Sr. Ushio', 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
-    fala('Sr. Ushio', 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
+    fala('Sr. Ives', 'Não é cobrança.'),
+    fala('Sr. Ives', 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
+    fala('Sr. Ives', 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
   ],
   escolhas:[
     {texto:'"Eu volto. Eu prometi e eu volto."',
      ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Repetiu a promessa no telefone quando podia ter mudado de assunto'}},
-     resultado:[fala('Sr. Ushio', 'Eu sei.'), fala('Sr. Ushio', 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
+     resultado:[fala('Sr. Ives', 'Eu sei.'), fala('Sr. Ives', 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
     {texto:'Perguntar como vai o joelho dele.',
      ef:{moral:4, rep:{eixo:'bom',delta:2,motivo:'Perguntou do joelho em vez de falar da dívida'},
-         npc:{nome:'Sr. Ushio', opiniao:3, memoria:'Você perguntou do joelho dele numa ligação em que ele ia falar de dívida.'}},
+         npc:{nome:'Sr. Ives', opiniao:3, memoria:'Você perguntou do joelho dele numa ligação em que ele ia falar de dívida.'}},
      resultado:[
        'Silêncio de uns quatro segundos.',
-       fala('Sr. Ushio', 'Como é que você sabe do joelho?'),
-       fala('Sr. Ushio', 'Eu não falei do joelho pra ninguém.', 'baixo'),
-       fala('Sr. Ushio', 'Tá ruim. Tá ruim mesmo. Obrigado por perguntar.')
+       fala('Sr. Ives', 'Como é que você sabe do joelho?'),
+       fala('Sr. Ives', 'Eu não falei do joelho pra ninguém.', 'baixo'),
+       fala('Sr. Ives', 'Tá ruim. Tá ruim mesmo. Obrigado por perguntar.')
      ]},
-    {texto:'"Vende a caixa, seu Ushio. Eu não mereço."',
+    {texto:'"Vende a caixa, seu Ives. Eu não mereço."',
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou o velho vender o que ele guardava pra você'}},
-     resultado:[fala('Sr. Ushio', 'Não é sobre merecer.', 'frio'), fala('Sr. Ushio', 'Boa viagem, menino.')]}
+     resultado:[fala('Sr. Ives', 'Não é sobre merecer.', 'frio'), fala('Sr. Ives', 'Boa viagem, menino.')]}
   ]
 },
 {
@@ -790,31 +808,31 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('teo') && d.insignias.filter(i=>i!=='Título de Campeão').length >= 3,
   peso:2,
   falas:d=>[
-    fala('Kenta', 'Não é nada. Eu só liguei.'),
-    'Silêncio de três segundos, que no Kenta é muita coisa.',
-    fala('Kenta', 'Eu perdi hoje. Pro ginásio. Terceira vez no mesmo.', 'baixo'),
-    fala('Kenta', 'Eu não sei por que eu tô te contando isso justo pra você.')
+    fala('Ezra', 'Não é nada. Eu só liguei.'),
+    'Silêncio de três segundos, que no Ezra é muita coisa.',
+    fala('Ezra', 'Eu perdi hoje. Pro ginásio. Terceira vez no mesmo.', 'baixo'),
+    fala('Ezra', 'Eu não sei por que eu tô te contando isso justo pra você.')
   ],
   escolhas:[
     {texto:'Perguntar qual foi o time dele e onde travou.',
      ef:{moral:2, rep:{eixo:'bom',delta:2,motivo:'Tratou a derrota do rival como problema e não como vitória sua'},
-         npc:{nome:'Kenta', opiniao:4, memoria:'Ligou pra você depois de perder três vezes e você quis saber onde ele travou.'}},
+         npc:{nome:'Ezra', opiniao:4, memoria:'Ligou pra você depois de perder três vezes e você quis saber onde ele travou.'}},
      resultado:[
        'Vocês passam vinte minutos no telefone falando de ordem de troca e de um golpe que ele insiste em manter.',
-       fala('Kenta', 'Você acha que eu devia tirar o Leer?'),
+       fala('Ezra', 'Você acha que eu devia tirar o Leer?'),
        d=>fala(d.jogador.nome, 'Eu acho que você devia tirar o Leer desde Pewter.'),
-       fala('Kenta', 'Você é um péssimo amigo e você tem razão.', 'riso')
+       fala('Ezra', 'Você é um péssimo amigo e você tem razão.', 'riso')
      ]},
     {texto:'"Três vezes é teimosia. Muda o time."',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Foi direto com o rival em vez de consolar'},
-         npc:{nome:'Kenta', opiniao:1, memoria:'Você chamou a teimosia dele de teimosia por telefone.'}},
-     resultado:[fala('Kenta', 'Valeu. Muito obrigado. Que apoio.', 'frio'),
+         npc:{nome:'Ezra', opiniao:1, memoria:'Você chamou a teimosia dele de teimosia por telefone.'}},
+     resultado:[fala('Ezra', 'Valeu. Muito obrigado. Que apoio.', 'frio'),
                 'Ele desliga.','Duas semanas depois ele ganha, com o time trocado, e não te liga pra contar. Você fica sabendo por outra pessoa.']},
     {texto:'Não falar nada e deixar ele falar.',
      ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou calado no telefone enquanto o outro precisava falar'}},
      resultado:['Ele fala por catorze minutos.',
                 'Você diz "é" quatro vezes e "hum" duas, e não diz mais nada.',
-                fala('Kenta', 'Valeu.', 'baixo'), fala('Kenta', 'Sério.')]}
+                fala('Ezra', 'Valeu.', 'baixo'), fala('Ezra', 'Sério.')]}
   ]
 },
 {
@@ -854,24 +872,24 @@ const CHAMADAS = [
           && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   peso:2,
   falas:d=>[
-    fala('Ren', 'Não desliga, é rápido.'),
-    fala('Ren', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
-    fala('Ren', 'A sua resposta continua lá e continua a mesma, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
-    fala('Ren', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
+    fala('Fabre', 'Não desliga, é rápido.'),
+    fala('Fabre', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
+    fala('Fabre', 'A sua resposta continua lá e continua a mesma, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
+    fala('Fabre', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
   ],
   escolhas:[
     {texto:'Perguntar se alguém já mudou de resposta.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou ao curador se alguém já tinha mudado de resposta'},
          flag:'sabe_dos_que_mudaram'},
      resultado:[
-       fala('Ren', 'Onze pessoas voltaram pra mudar.'),
-       fala('Ren', 'Em dezenove anos, onze. Todas as onze mudaram de "guardar" pra "passar adiante".'),
-       fala('Ren', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
-       fala('Ren', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
+       fala('Fabre', 'Onze pessoas voltaram pra mudar.'),
+       fala('Fabre', 'Em dezenove anos, onze. Todas as onze mudaram de "guardar" pra "passar adiante".'),
+       fala('Fabre', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
+       fala('Fabre', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
      ]},
     {texto:'"Eu vou aparecer."',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou ao curador que ia aparecer'}},
-     resultado:[fala('Ren', 'Todo mundo fala isso.'), fala('Ren', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
+     resultado:[fala('Fabre', 'Todo mundo fala isso.'), fala('Fabre', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
   ]
 },
 {
@@ -880,23 +898,23 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('nadia'),
   peso:2,
   falas:d=>[
-    fala('Nozomi', 'É a Nozomi! Da arena! Eu consegui ligar!', 'grita'),
-    fala('Nozomi', 'Minha filha configurou tudo de novo. Ela ficou com pena de mim.', 'riso'),
-    fala('Nozomi', 'Eu queria te contar uma coisa e agora eu esqueci o que era.'),
+    fala('Nadia', 'É a Nadia! Da arena! Eu consegui ligar!', 'grita'),
+    fala('Nadia', 'Minha filha configurou tudo de novo. Ela ficou com pena de mim.', 'riso'),
+    fala('Nadia', 'Eu queria te contar uma coisa e agora eu esqueci o que era.'),
     'Pausa.',
-    fala('Nozomi', 'Ah! Eu voltei pro ginásio de Pewter. Terceira vez.')
+    fala('Nadia', 'Ah! Eu voltei pro ginásio de Pewter. Terceira vez.')
   ],
   escolhas:[
     {texto:'"E aí?"',
      ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Quis saber como tinha sido'}},
      resultado:[
-       fala('Nozomi', 'Eu ganhei.', 'baixo'),
-       fala('Nozomi', 'Eu chorei na frente do Brock. Eu tenho quarenta e um anos e eu chorei na frente do Brock.'),
-       fala('Nozomi', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
+       fala('Nadia', 'Eu ganhei.', 'baixo'),
+       fala('Nadia', 'Eu chorei na frente do Brock. Eu tenho quarenta e um anos e eu chorei na frente do Brock.'),
+       fala('Nadia', 'Ele fingiu que não viu. Eu vou ser grata a esse homem pelo resto da vida.')
      ]},
     {texto:'Contar quantas você tem, antes de ela perguntar.',
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Falou das próprias insígnias na ligação de outra pessoa'}},
-     resultado:[fala('Nozomi', 'Ah. Que bom!'),
+     resultado:[fala('Nadia', 'Ah. Que bom!'),
                 'Ela fala "que bom" de um jeito que é verdade e que também é o fim da conversa.',
                 'Ela ia contar que ganhou. Você não perguntou.']}
   ]

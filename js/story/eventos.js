@@ -148,7 +148,7 @@ viridian:[
     'Atrás do posto de gasolina tem quatro homens em volta de um carro com o capô aberto e ninguém mexendo em nada.',
     'Tem um Magnemite pairando sobre o motor, parado, com as duas hastes viradas pra bateria.',
     fala('o dono do carro', 'Ele acha o problema. Ele SEMPRE acha o problema. O que ele não faz é explicar.'),
-    fala('Shiro, o do posto', 'Ele tá parado em cima da bateria faz vinte minutos, Yuu. Ele já explicou.')
+    fala('Nilo, o do posto', 'Ele tá parado em cima da bateria faz vinte minutos, Dino. Ele já explicou.')
   ],
   escolhas:[
     {texto:'Escanear o Magnemite com a Pokédex pra ver o que ele está medindo.',
@@ -159,17 +159,17 @@ viridian:[
      resultado:[
        'A leitura mostra campo magnético concentrado num ponto só, e o ponto é o terminal negativo.',
        'Terminal solto. Um parafuso.',
-       fala('Shiro, o do posto', 'EU FALEI!', 'grita'),
-       fala('o dono do carro', 'Você falou "ele já explicou", Shiro, isso não é falar.'),
+       fala('Nilo, o do posto', 'EU FALEI!', 'grita'),
+       fala('o dono do carro', 'Você falou "ele já explicou", Nilo, isso não é falar.'),
        'Eles brigam sobre isso por mais quinze minutos. O carro liga na primeira.'
      ]},
     {texto:'Perguntar de onde veio o Magnemite.',
      ef:{flag:'sabe_do_magnemite_do_posto',
          registrar:'O Magnemite do posto veio da usina abandonada e apareceu sozinho.'},
      resultado:[
-       fala('Shiro, o do posto', 'Ele apareceu. Há uns seis anos.'),
-       fala('Shiro, o do posto', 'Veio andando pela estrada da usina, de dia, no meio do sol, parou em cima da bomba dois e ficou.'),
-       fala('Shiro, o do posto', 'Nunca mais saiu. E não deixa ninguém encostar em bomba com defeito.', 'baixo'),
+       fala('Nilo, o do posto', 'Ele apareceu. Há uns seis anos.'),
+       fala('Nilo, o do posto', 'Veio andando pela estrada da usina, de dia, no meio do sol, parou em cima da bomba dois e ficou.'),
+       fala('Nilo, o do posto', 'Nunca mais saiu. E não deixa ninguém encostar em bomba com defeito.', 'baixo'),
        'A usina abandonada fica a quatro cidades daqui.'
      ]},
     {texto:'Pôr a mão no motor e achar você mesmo.',
@@ -517,38 +517,38 @@ lavender:[
   texto:[
     'Tem um homem sentado num banco de pedra na entrada do abrigo, com um caderno de capa dura aberto no colo e uma caneta atravessada na página.',
     'Ele não está escrevendo. Ele está esperando.',
-    fala('Ren', 'Desculpa. Posso te fazer uma pergunta? Uma só, e não é sobre nada.'),
-    fala('Ren', 'Eu faço essa pergunta pra quem passa aqui desde 1978. Tenho oitenta e três cadernos.'),
-    fala('Ren', 'A pergunta é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
+    fala('Fabre', 'Desculpa. Posso te fazer uma pergunta? Uma só, e não é sobre nada.'),
+    fala('Fabre', 'Eu faço essa pergunta pra quem passa aqui desde 1978. Tenho oitenta e três cadernos.'),
+    fala('Fabre', 'A pergunta é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
     'Ele não explica que coisa. Ele não explica por quê. Ele espera, com a caneta atravessada na página, do jeito de quem já esperou muito.'
   ],
   escolhas:[
     {texto:'"Eu guardo."',
      ef:{flag:['a_pergunta_do_curador','respondeu_guardar'],
-         npc:{nome:'Curador Ren', opiniao:2, memoria:'Você respondeu "guardar" à pergunta dele, no caderno setenta e um, página quatro.'},
+         npc:{nome:'Curador Fabre', opiniao:2, memoria:'Você respondeu "guardar" à pergunta dele, no caderno setenta e um, página quatro.'},
          rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
          registrar:'Respondeu "guardar" à pergunta do curador de Lavender.'},
      resultado:[
        'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
-       fala('Ren', 'Caderno setenta e um, página quatro.'),
+       fala('Fabre', 'Caderno setenta e um, página quatro.'),
        d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
-       fala('Ren', 'Pra nada. Eu anoto.'),
+       fala('Fabre', 'Pra nada. Eu anoto.'),
        'Ele fecha o caderno e prende a caneta na espiral, e você entende que a conversa acabou.',
-       fala('Ren', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       fala('Fabre', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
        'Ele te dá o número antes de você perguntar se ele tem número.'
      ]},
     {texto:'"Eu passo adiante."',
      ef:{flag:'a_pergunta_do_curador', limpaFlag:'respondeu_guardar',
-         npc:{nome:'Curador Ren', opiniao:2, memoria:'Você respondeu "passar adiante" à pergunta dele, no caderno setenta e um, página quatro.'},
+         npc:{nome:'Curador Fabre', opiniao:2, memoria:'Você respondeu "passar adiante" à pergunta dele, no caderno setenta e um, página quatro.'},
          rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
          registrar:'Respondeu "passar adiante" à pergunta do curador de Lavender.'},
      resultado:[
        'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
-       fala('Ren', 'Caderno setenta e um, página quatro.'),
+       fala('Fabre', 'Caderno setenta e um, página quatro.'),
        d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
-       fala('Ren', 'Pra nada. Eu anoto.'),
+       fala('Fabre', 'Pra nada. Eu anoto.'),
        'Ele fecha o caderno e prende a caneta na espiral, e você entende que a conversa acabou.',
-       fala('Ren', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       fala('Fabre', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
        'Ele te dá o número antes de você perguntar se ele tem número.'
      ]},
     {texto:'Perguntar o que as outras pessoas responderam antes de responder.',
@@ -556,18 +556,18 @@ lavender:[
          rep:{eixo:'bom',delta:1,motivo:'Quis saber o que os outros responderam antes de responder'},
          registrar:'Perguntou ao curador o que as outras pessoas tinham respondido.'},
      resultado:[
-       fala('Ren', 'Em dezenove anos: mil e setecentas pessoas.'),
-       fala('Ren', 'Novecentas e quarenta e uma disseram guardar. Setecentas e cinquenta e nove disseram passar adiante.'),
+       fala('Fabre', 'Em dezenove anos: mil e setecentas pessoas.'),
+       fala('Fabre', 'Novecentas e quarenta e uma disseram guardar. Setecentas e cinquenta e nove disseram passar adiante.'),
        d=>fala(d.jogador.nome, 'E qual é a certa?'),
-       fala('Ren', 'Não tem certa. Tem a sua.', null, 'Ele abre o caderno de novo e atravessa a caneta na página.'),
-       fala('Ren', 'Agora responde.')
+       fala('Fabre', 'Não tem certa. Tem a sua.', null, 'Ele abre o caderno de novo e atravessa a caneta na página.'),
+       fala('Fabre', 'Agora responde.')
      ],
      continua:true},
     {texto:'Não responder e ir embora.',
      ef:{registrar:'Não respondeu à pergunta do curador de Lavender.'},
      resultado:[
        'Você não responde. Ele não insiste — ele claramente não insiste desde 1978.',
-       fala('Ren', 'Tudo bem. Eu anoto isso também.'),
+       fala('Fabre', 'Tudo bem. Eu anoto isso também.'),
        'Ele escreve alguma coisa curta e fecha o caderno.',
        'Você vai lembrar dessa pergunta em lugares onde ela não tem nada a ver, pelos próximos meses.'
      ]}
@@ -1066,7 +1066,7 @@ const EVENTOS_GERAIS = [
     'Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.',
     'Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
     d=>!!d.flags.numero_do_goro
-      ? 'Goro está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
+      ? 'Célio está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
       : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.',
     'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
   ],
@@ -1077,36 +1077,36 @@ const EVENTOS_GERAIS = [
        'O menino assina, pega a bola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
        'O que sai da bola olha a praça inteira antes de olhar ele.',
        'Você reconhece a cena de um jeito que dói um pouco e é bom ao mesmo tempo.',
-       fala('Goro', 'Essa parte é sempre a melhor.', 'baixo', 'Ele fala sem olhar pra você, anotando.')
+       fala('Célio', 'Essa parte é sempre a melhor.', 'baixo', 'Ele fala sem olhar pra você, anotando.')
      ]},
     {texto:'Perguntar se ele precisa de ajuda pra carregar.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ajudou a carregar a perua do laboratório'},
-         executar:d=>{ Estado.darItem('Potion',1); Estado.lembrarNPC('Goro',{opiniao:2,memoria:'Ajudou a carregar a perua sem pedir nada.'});
+         executar:d=>{ Estado.darItem('Potion',1); Estado.lembrarNPC('Célio',{opiniao:2,memoria:'Ajudou a carregar a perua sem pedir nada.'});
                        return [{tipo:'item', texto:'Recebeu 1× Potion da caixa de sobras.'}]; }},
      resultado:[
-       fala('Goro', 'Precisar eu não preciso. Aceitar eu aceito.', 'riso'),
+       fala('Célio', 'Precisar eu não preciso. Aceitar eu aceito.', 'riso'),
        'São quatro caixas e uma delas é pesada de um jeito desproporcional ao tamanho.',
-       fala('Goro', 'Livro. É sempre livro que pesa.'),
-       fala('Goro', 'Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.')
+       fala('Célio', 'Livro. É sempre livro que pesa.'),
+       fala('Célio', 'Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.')
      ]},
     {texto:'Perguntar quantos não vieram buscar este mês.',
      cond:d=>!!d.flags.sabe_do_nr,
      ef:{registrar:'Perguntou quantos NR tinham nessa cidade este mês.'},
      resultado:[
-       fala('Goro', 'Dois.'),
+       fala('Célio', 'Dois.'),
        'Ele não precisa conferir o caderno pra responder.',
-       fala('Goro', 'Um cancelou por telefone semana passada, que é o jeito certo de fazer e eu agradeci.'),
-       fala('Goro', 'O outro não. O outro só não veio.', 'baixo')
+       fala('Célio', 'Um cancelou por telefone semana passada, que é o jeito certo de fazer e eu agradeci.'),
+       fala('Célio', 'O outro não. O outro só não veio.', 'baixo')
      ]},
     {texto:'Anotar o número dele antes de seguir.',
      cond:d=>!d.flags.numero_do_goro,
      ef:{flag:'numero_do_goro',
-         npc:{nome:'Goro', opiniao:1, memoria:'Te deu o número na praça, do jeito que dá pra todo mundo.'},
-         registrar:'Anotou o número de Goro, da perua do laboratório.'},
+         npc:{nome:'Célio', opiniao:1, memoria:'Te deu o número na praça, do jeito que dá pra todo mundo.'},
+         registrar:'Anotou o número de Célio, da perua do laboratório.'},
      resultado:[
-       fala('Goro', 'Anota, vai. Todo mundo que eu entrego tem.'),
+       fala('Célio', 'Anota, vai. Todo mundo que eu entrego tem.'),
        'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
-       fala('Goro', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
+       fala('Célio', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
      ]},
     {texto:'Seguir. Não é com você.', ef:{},
      resultado:['Você passa. Atrás de você alguém abre uma bola e a praça inteira faz aquele barulho pequeno de quando vê.']}
