@@ -1,3 +1,12 @@
+/* ------------------------------------------------------------
+   ABERTURAS — as sete guaritas da Rota 23 têm gente dentro pela
+   primeira vez. Você descobre isso na primeira cancela, na fila,
+   no mato ou pela boca de quem voltou.
+   ------------------------------------------------------------ */
+const C24_ABERTURAS = ['c24_a_primeira', 'c24_ab_a_fila', 'c24_ab_quem_voltou', 'c24_ab_o_aviso'];
+function c24_cabe(id, d){ return true; }
+function c24_abertura(d){ return Dados.escolher(C24_ABERTURAS.filter(id => c24_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 24 — SETE GUARITAS
    Rota 23. O caminho para o Planalto agora tem controle de
@@ -8,8 +17,137 @@ CAPITULOS.push(
 
 {
 num:24, titulo:'Sete Guaritas', local:'Rota 23 — controle de acesso', ambiente:'montanha', nivelArea:56,
-tom:'muito sombrio', inicio:'c24_a_primeira',
+tom:'muito sombrio', entradas:C24_ABERTURAS,
+inicio: d => c24_abertura(d),
 cenas:{
+
+c24_ab_a_fila:{
+  texto:[
+    'Tem fila na primeira guarita, o que é a coisa mais absurda que já aconteceu na Rota 23.',
+    'Onze pessoas em fila indiana numa estrada de montanha, com mochila no chão, esperando a vez de mostrar o cartão de treinador.',
+    'O décimo é atendido em quarenta segundos. O nono levou quarenta segundos. O oitavo levou quatro minutos e foi mandado de volta.',
+    'Você não viu por quê. Ninguém viu por quê. Ele desceu a estrada sem falar com ninguém da fila.',
+    'A pessoa na sua frente vira pra trás.',
+    fala('a mulher da fila', 'É o terceiro hoje.'),
+    d=>fala(d.jogador.nome, 'Terceiro que volta?'),
+    fala('a mulher da fila', 'Terceiro. E são nove da manhã.'),
+    'Ela puxa a mochila com o pé pra frente, avançando um lugar.',
+    fala('a mulher da fila', 'Eu tô com as oito insígnias e a licença em dia e eu tô com medo, e eu nem sei do quê.')
+  ],
+  ef:{flag:['entrou_nas_guaritas','tres_voltaram_hoje'],
+      registrar:'Três pessoas foram barradas na primeira guarita antes das nove da manhã.',
+      presagio:'Oito insígnias e licença em dia não estão bastando pra alguma coisa que ninguém explicou.'},
+  escolhas:[
+    {texto:'Esperar a vez e passar.', vai:'c24_a_terceira'},
+    {texto:'Perguntar ao guarda por que barraram os três.', vai:'c24_perguntou_por_que'},
+    {texto:'Perguntar de quem é o uniforme cinza.', vai:'c24_o_uniforme'},
+    {texto:'Sair da fila e contornar pelo mato.', vai:'c24_contornou'}
+  ]
+},
+
+c24_ab_quem_voltou:{
+  texto:[
+    'Você encontra ele a quatro quilômetros da primeira guarita, descendo, sentado numa pedra da beira da estrada com a mochila no colo.',
+    'Uns vinte e cinco anos. Não está chorando e não está bravo: está sentado do jeito de quem parou pra entender uma coisa e não conseguiu.',
+    fala('o rapaz da pedra', 'Não sobe hoje.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o rapaz da pedra', 'Porque eles têm uma lista e eu tava nela.'),
+    'Ele abre o cartão de treinador na mão e olha pra ele.',
+    fala('o rapaz da pedra', 'Oito insígnias. Licença em dia. Sem ocorrência.'),
+    fala('o rapaz da pedra', 'O cara passou o leitor, a máquina apitou uma vez, e ele olhou uma segunda tela que eu não vi.'),
+    fala('o rapaz da pedra', 'E falou "hoje não".'),
+    d=>fala(d.jogador.nome, 'Só isso?'),
+    fala('o rapaz da pedra', 'Só isso. Educado. Ele até pediu desculpa.', 'baixo')
+  ],
+  ef:{flag:['entrou_nas_guaritas','a_segunda_tela'],
+      npc:{nome:'o rapaz da pedra', opiniao:1, viuVoce:'Te avisou, descendo, que existe uma segunda tela.'},
+      registrar:'As guaritas consultam uma segunda tela que o desafiante não vê.',
+      presagio:'A primeira tela diz se você pode. A segunda diz se querem.'},
+  escolhas:[
+    {texto:'Subir mesmo assim e passar pela primeira guarita.', vai:'c24_a_primeira'},
+    {texto:'Perguntar o que ele vai fazer agora.', vai:'c24_ab_o_que_ele_vai_fazer'},
+    {texto:'Subir contornando as guaritas pelo mato.', vai:'c24_contornou'}
+  ]
+},
+
+c24_ab_o_que_ele_vai_fazer:{
+  texto:[
+    fala('o rapaz da pedra', 'Voltar. Tentar de novo semana que vem.'),
+    d=>fala(d.jogador.nome, 'E se semana que vem for igual?'),
+    'Ele demora.',
+    fala('o rapaz da pedra', 'Aí eu volto de novo.'),
+    'Ele põe o cartão no bolso e fecha o zíper da mochila.',
+    fala('o rapaz da pedra', 'Eu levei quatro anos pras oito insígnias. Quatro.'),
+    fala('o rapaz da pedra', 'Eu não vou parar por causa de um sujeito com um leitor.'),
+    'Ele levanta da pedra e começa a descer, e depois de uns dez metros para e vira.',
+    fala('o rapaz da pedra', 'Ô. Se você passar, olha a segunda tela.'),
+    fala('o rapaz da pedra', 'Não pra mim. Pra você saber o que é.')
+  ],
+  ef:{flag:'prometeu_olhar_a_segunda_tela',
+      npc:{nome:'o rapaz da pedra', opiniao:2, viuVoce:'Te pediu pra olhar a segunda tela se você passasse.'},
+      registrar:'Prometeu olhar a segunda tela das guaritas.'},
+  escolhas:[
+    {texto:'Subir e passar pela primeira guarita.', vai:'c24_a_primeira'},
+    {texto:'Contornar pelo mato.', vai:'c24_contornou'}
+  ]
+},
+
+c24_ab_o_aviso:{
+  texto:[
+    'Na entrada da Rota 23, pregado num poste de madeira com quatro tachinhas, tem um aviso que não estava lá da última vez.',
+    'Papel A4 plastificado, impresso, com o brasão da Liga:',
+    '**"CONTROLE DE ACESSO REATIVADO. Desafiantes devem portar cartão de treinador válido. A Liga reserva-se o direito de indeferir o acesso a qualquer tempo, sem necessidade de motivação."**',
+    'Você lê a última parte duas vezes.',
+    '"Sem necessidade de motivação."',
+    'Isso é a frase mais honesta que a Liga escreveu em qualquer papel que chegou às suas mãos, e ela está pregada num poste onde todo mundo passa.',
+    'E, escrito à mão embaixo do aviso, a caneta esferográfica azul, com a letra torta de quem escreveu em pé:',
+    '**"e sem necessidade de explicação, e sem ninguém pra reclamar"**',
+    'A caneta furou o papel em dois pontos.'
+  ],
+  ef:{flag:['entrou_nas_guaritas','o_aviso_do_poste'],
+      registrar:'A Liga reativou o controle de acesso da Rota 23 e reserva-se o direito de indeferir sem motivação.',
+      presagio:'Alguém já leu esse aviso antes de você e escreveu a resposta com a caneta furando o papel.'},
+  escolhas:[
+    {texto:'Seguir e passar pela primeira guarita.', vai:'c24_a_primeira'},
+    {texto:'Arrancar o aviso e levar.', vai:'c24_ab_arrancou_o_aviso'},
+    {texto:'Contornar as guaritas pelo mato.', vai:'c24_contornou'}
+  ]
+},
+
+c24_ab_arrancou_o_aviso:{
+  texto:[
+    'Você tira as quatro tachinhas com a unha, o que leva mais tempo do que arrancar, e é de propósito: você quer o papel inteiro.',
+    'Plastificado, com brasão, com a frase da não-motivação, e com a resposta a caneta azul no rodapé.',
+    'Você dobra ao meio, o que o plástico não gosta, e guarda com o resto.',
+    'E aí você olha pro poste vazio e entende uma coisa desconfortável: quem vier depois de você não vai ler o aviso.',
+    'Não vai saber que pode ser barrado sem motivo. Vai subir os quatro quilômetros e descobrir na guarita.',
+    'Você fica com o papel na mão por um tempo, sem decidir.'
+  ],
+  ef:{flag:'tem_o_aviso_do_poste',
+      registrar:'Arrancou do poste o aviso do controle de acesso da Rota 23.'},
+  escolhas:[
+    {texto:'Pregar de volta e seguir. O papel é mais útil no poste.', vai:'c24_ab_pregou_de_volta'},
+    {texto:'Levar. Papel com brasão vale mais na sua pilha.', vai:'c24_a_primeira'}
+  ]
+},
+
+c24_ab_pregou_de_volta:{
+  texto:[
+    'Você prega de volta com as quatro tachinhas, nos mesmos furos, o que é difícil e você consegue.',
+    'E aí faz uma coisa a mais: tira a caneta e escreve, abaixo da frase de quem passou antes de você, numa letra também torta porque você também está em pé:',
+    '**"mas tem. tem gente pra reclamar. sobe."**',
+    'É bobo. Você sabe que é bobo enquanto escreve.',
+    'Você sobe os quatro quilômetros até a primeira guarita pensando em quem vai ler isso, e é a primeira vez em muito tempo que você pensa em alguém que não tem nome.'
+  ],
+  ef:{flag:'escreveu_no_aviso', moral:1,
+      rep:{eixo:'bom', delta:1, motivo:'Deixou o aviso no poste e escreveu uma linha embaixo pra quem vier.'},
+      registrar:'Deixou o aviso no poste e escreveu uma linha embaixo para quem subir depois.'},
+  escolhas:[
+    {texto:'Passar pela primeira guarita.', vai:'c24_a_primeira'},
+    {texto:'Contornar pelo mato.', vai:'c24_contornou'}
+  ]
+},
+
 
 c24_a_primeira:{
   texto:[

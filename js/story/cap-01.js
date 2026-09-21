@@ -1183,7 +1183,7 @@ c1_rua:{
     {texto:'"O senhor organizou a rua inteira hoje de manhã. A gente tá quites."',
      vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs['Sr. Ushio']},
     {texto:'Oferecer a vassoura de volta: varrer a calçada agora, no lugar do dinheiro.',
-     vai:'c1_varreu_no_lugar', cond:d=>!d.flags.varreu_a_calcada_do_rufino}
+     vai:'c1_varreu_no_lugar', cond:d=>!d.flags.varreu_a_calcada_do_ushio}
   ]
 },
 
@@ -1215,7 +1215,7 @@ c1_varreu_no_lugar:{
     fala('Sr. Ushio', 'A janela era vinte pokedólares em 1989.', 'baixo'),
     fala('Sr. Ushio', 'E doze minutos de calçada hoje vale mais do que vinte pokedólares. Vai embora, menino, antes que eu fique bobo.')
   ],
-  ef:{moral:6, flag:'varreu_a_calcada_do_rufino', limpaFlag:'divida_pendente',
+  ef:{moral:6, flag:'varreu_a_calcada_do_ushio', limpaFlag:'divida_pendente',
       npc:{nome:'Sr. Ushio', opiniao:5, memoria:'Pagou a janela varrendo a calçada no dia em que saiu de casa.'},
       rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
       registrar:'Pagou a janela varrendo a calçada do Sr. Ushio.'},

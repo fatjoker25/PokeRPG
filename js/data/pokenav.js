@@ -80,7 +80,7 @@ const CONTATOS = [
   }
 },
 {
-  id:'rufino', tipo:'figura', nome:'Sr. Ushio', papel:'o velho da vassoura', cidade:'Pallet',
+  id:'ushio', tipo:'figura', nome:'Sr. Ushio', papel:'o velho da vassoura', cidade:'Pallet',
   requer:d=>!!(d.npcs['Sr. Ushio'] && d.npcs['Sr. Ushio'].opiniao >= 2),
   oferece:['favor','missao'],
   missao:{
@@ -757,9 +757,9 @@ const CHAMADAS = [
   ]
 },
 {
-  id:'cha_rufino_cobra',
-  de:'rufino',
-  cond:d=>Estado.temNumero('rufino') && !!d.flags.divida_pendente && d.capitulo >= 5,
+  id:'cha_ushio_cobra',
+  de:'ushio',
+  cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && d.capitulo >= 5,
   peso:2,
   falas:d=>[
     fala('Sr. Ushio', 'Não é cobrança.'),

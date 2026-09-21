@@ -1,3 +1,10 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a subida ao Planalto pra reunião das catorze.
+   ------------------------------------------------------------ */
+const C26_ABERTURAS = ['c21_chegada', 'c26_ab_a_van_do_pao', 'c26_ab_a_carona', 'c26_ab_a_parede'];
+function c26_cabe(id, d){ return true; }
+function c26_abertura(d){ return Dados.escolher(C26_ABERTURAS.filter(id => c26_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 26 — O QUE TE OFERECEM
    Planalto Indigo. Três folhas em cima de uma mesa comprida.
@@ -5,8 +12,130 @@
 CAPITULOS.push(
 {
 num:26, titulo:'O Que Te Oferecem', local:'Planalto Indigo', ambiente:'montanha', nivelArea:56,
-tom:'muito sombrio', inicio:'c21_chegada',
+tom:'muito sombrio', entradas:C26_ABERTURAS,
+inicio: d => c26_abertura(d),
 cenas:{
+
+c26_ab_a_van_do_pao:{
+  texto:[
+    'A van de entrega de pão sobe a estrada do Planalto às onze da manhã de terça, quinta e sábado, e hoje é terça.',
+    'Você está a pé na curva dos últimos duzentos metros quando ela para do seu lado sozinha.',
+    fala('o entregador', 'Vai pro Planalto?'),
+    d=>fala(d.jogador.nome, 'Vou.'),
+    fala('o entregador', 'Sobe. É meio quilômetro e é tudo subida.'),
+    'Você sobe no banco do carona, entre uma caixa de pão de forma e uma caixa de pão francês, e o cheiro é a coisa mais fora de lugar do mês.',
+    fala('o entregador', 'Eu faço essa entrega há oito anos.'),
+    fala('o entregador', 'Sabe o que mudou?'),
+    d=>fala(d.jogador.nome, 'O quê?'),
+    fala('o entregador', 'A quantidade de pão.'),
+    'Ele engata a segunda pra vencer a subida.',
+    fala('o entregador', 'Eu entregava oitenta pães. Hoje eu entrego duzentos e quarenta.'),
+    fala('o entregador', 'O Planalto não contratou ninguém. Eu perguntei na cozinha.', 'baixo')
+  ],
+  ef:{flag:'o_pao_triplicou',
+      npc:{nome:'o entregador', opiniao:1, viuVoce:'Te deu carona nos últimos duzentos metros da subida.'},
+      registrar:'A entrega de pão do Planalto triplicou em oito anos sem contratação de pessoal.',
+      presagio:'Três vezes mais pão e o mesmo quadro de funcionários. Tem gente morando lá que não está na folha.'},
+  escolhas:[
+    {texto:'Perguntar quantos ele acha que tem lá dentro.', vai:'c26_ab_quantos'},
+    {texto:'Descer e subir direto pra porta da sala.', vai:'c21_esperou_na_porta'},
+    {texto:'Descer e andar pelo saguão antes.', vai:'c21_saguao'},
+    {texto:'Descer e procurar o refeitório.', vai:'c21_refeitorio'}
+  ]
+},
+
+c26_ab_quantos:{
+  texto:[
+    fala('o entregador', 'Duzentos e quarenta pães dá pra umas cento e vinte pessoas no café e no jantar.'),
+    'Ele entra no estacionamento e manobra de ré na doca de carga sem olhar pra trás, com a mão no encosto do banco.',
+    fala('o entregador', 'O Planalto tem quarenta e um funcionários. Tá na plaquinha do saguão, "nossa equipe".'),
+    d=>fala(d.jogador.nome, 'Mais os desafiantes.'),
+    fala('o entregador', 'Em temporada, umas dez, quinze pessoas. Fora de temporada, nenhuma.'),
+    'Ele puxa o freio de mão.',
+    fala('o entregador', 'Em janeiro não tem desafiante nenhum. Janeiro é fechado.'),
+    fala('o entregador', 'Em janeiro eu entrego os mesmos duzentos e quarenta.')
+  ],
+  ef:{flag:'cento_e_vinte_no_planalto',
+      registrar:'O Planalto tem 41 funcionários e consome pão para 120 pessoas, inclusive em janeiro, quando fecha.'},
+  escolhas:[
+    {texto:'Subir direto pra porta da sala.', vai:'c21_esperou_na_porta'},
+    {texto:'Andar pelo saguão antes.', vai:'c21_saguao'},
+    {texto:'Procurar o refeitório.', vai:'c21_refeitorio'}
+  ]
+},
+
+c26_ab_a_carona:{
+  texto:[
+    'Você sobe a estrada do Planalto num carro oficial, o que não estava no seu plano e não foi sua escolha.',
+    'Ele parou do seu lado a quatro quilômetros da curva final, com uma placa de Liga no para-brisa, e a mulher do volante abriu a janela e falou o seu nome.',
+    'Você entra porque recusar teria sido pior e porque faltavam quatro quilômetros de subida.',
+    'Ela dirige sem falar nada por dois quilômetros. Aí:',
+    fala('a mulher do volante', 'Eu não vou te perguntar nada e você não vai me contar nada.'),
+    fala('a mulher do volante', 'Eu sou motorista do Planalto há dezessete anos e eu levo as pessoas de um lado pro outro.'),
+    'Ela troca de marcha.',
+    fala('a mulher do volante', 'Só uma coisa, porque eu ia me sentir mal se não falasse.'),
+    fala('a mulher do volante', 'Na reunião de hoje, olha pra quem não fala.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('a mulher do volante', 'Porque eu já levei quase todo mundo dessa reunião de carro, em algum momento.'),
+    fala('a mulher do volante', 'E os que falam muito na reunião são os que ficam calados no carro.', 'baixo')
+  ],
+  ef:{flag:'o_aviso_da_motorista',
+      npc:{nome:'a mulher do volante', opiniao:2, viuVoce:'Te deu carona até o Planalto e te disse pra olhar pra quem não fala.'},
+      registrar:'A motorista do Planalto te disse para observar, na reunião, quem não fala.',
+      presagio:'Quem fala muito na mesa e nada no carro está atuando numa das duas.'},
+  escolhas:[
+    {texto:'Subir direto e esperar na porta da sala.', vai:'c21_esperou_na_porta'},
+    {texto:'Andar pelo saguão antes.', vai:'c21_saguao'},
+    {texto:'Procurar o refeitório. Você não come desde as seis.', vai:'c21_refeitorio'}
+  ]
+},
+
+c26_ab_a_parede:{
+  texto:[
+    'Você entra pelo saguão e não olha pra recepção, não olha pra escada, não olha pro elevador.',
+    'Você vai direto pra parede do fundo, que é onde ficam as fotografias dos campeões em fileira, com nome e ano, e que é a única coisa desse prédio que você queria ver desde criança.',
+    'São vinte e sete molduras.',
+    'As vinte e seis primeiras têm foto de estúdio: fundo azul, gola de camisa, sorriso ensaiado.',
+    'A vigésima sétima é diferente. É uma foto de documento, mal enquadrada, de um menino de uns onze anos que está olhando pra câmera como quem não entendeu por que estão tirando a foto.',
+    'A moldura dele tem nome e ano como todas as outras.',
+    'E, diferente de todas as outras, tem o vidro limpo.',
+    'As vinte e seis têm poeira na quina de baixo. A vigésima sétima não.',
+    'Alguém limpa aquele vidro.'
+  ],
+  ef:{flag:'a_moldura_limpa',
+      registrar:'A 27ª moldura da parede dos campeões é a única com o vidro limpo.',
+      presagio:'Vinte e seis com poeira e uma sem. Alguém desse prédio passa um pano nela.'},
+  escolhas:[
+    {texto:'Perguntar na recepção quem limpa aquela moldura.', vai:'c26_ab_quem_limpa'},
+    {texto:'Andar pelo saguão e ver o resto.', vai:'c21_saguao'},
+    {texto:'Subir e esperar na porta da sala.', vai:'c21_esperou_na_porta'}
+  ]
+},
+
+c26_ab_quem_limpa:{
+  texto:[
+    'A recepcionista olha pra parede sem virar o corpo, porque ela sabe qual moldura é sem precisar conferir.',
+    fala('a recepcionista', 'Esse a gente não comenta muito.'),
+    d=>fala(d.jogador.nome, 'Eu não perguntei dele. Eu perguntei quem limpa o vidro.'),
+    'Ela para.',
+    'E leva uns quatro segundos pra responder, o que é muito tempo pra uma pergunta de limpeza.',
+    fala('a recepcionista', 'A equipe de limpeza limpa tudo.'),
+    d=>fala(d.jogador.nome, 'As outras vinte e seis têm poeira.'),
+    'Ela olha a parede de verdade dessa vez. Vira o corpo e tudo.',
+    'E fica olhando por um tempo, e você vê o momento exato em que ela repara.',
+    fala('a recepcionista', 'Eu trabalho aqui há seis anos.'),
+    fala('a recepcionista', 'Eu nunca tinha reparado nisso.', 'baixo')
+  ],
+  ef:{flag:['a_moldura_limpa','sabe_do_campeao_sumido'],
+      npc:{nome:'a recepcionista', opiniao:1, viuVoce:'Você a fez reparar, depois de seis anos, que uma moldura é limpa e as outras não.'},
+      registrar:'Nem a recepcionista de seis anos de casa sabe quem limpa aquela moldura.'},
+  escolhas:[
+    {texto:'Andar pelo saguão.', vai:'c21_saguao'},
+    {texto:'Subir e esperar na porta da sala.', vai:'c21_esperou_na_porta'},
+    {texto:'Procurar o refeitório.', vai:'c21_refeitorio'}
+  ]
+},
+
 
 c21_chegada:{
   texto:[

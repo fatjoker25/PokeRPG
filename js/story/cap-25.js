@@ -1,3 +1,11 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a audiência é às dez. Dá pra chegar cedo demais,
+   em cima da hora, ou acompanhado.
+   ------------------------------------------------------------ */
+const C25_ABERTURAS = ['c25_a_antessala', 'c25_ab_cedo_demais', 'c25_ab_em_cima_da_hora', 'c25_ab_o_corredor'];
+function c25_cabe(id, d){ return true; }
+function c25_abertura(d){ return Dados.escolher(C25_ABERTURAS.filter(id => c25_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 25 — SEGUNDA, DEZ HORAS
    Saffron. A convocação chegou por telegrama, e o telegrama
@@ -7,8 +15,204 @@ CAPITULOS.push(
 
 {
 num:25, titulo:'Segunda, Dez Horas', local:'Saffron — sala de audiência', ambiente:'cidade', nivelArea:57,
-tom:'muito sombrio', inicio:'c25_a_antessala',
+tom:'muito sombrio', entradas:C25_ABERTURAS,
+inicio: d => c25_abertura(d),
 cenas:{
+
+c25_ab_cedo_demais:{
+  texto:[
+    'Você chega às oito e doze pra uma audiência das dez, o que é uma hora e quarenta e oito minutos de erro de cálculo que você cometeu de propósito.',
+    'O prédio está aberto. A antessala está vazia. As seis cadeiras de plástico estão todas livres e você escolhe a do canto, de frente pra porta.',
+    'A planta precisa de água e o relógio de parede atrasa, e nas próximas uma hora e quarenta e oito você vai olhar pros dois muitas vezes.',
+    'Às oito e quarenta chega a recepcionista, que te vê sentado e não se assusta.',
+    fala('a recepcionista', 'Audiência das dez?'),
+    d=>fala(d.jogador.nome, 'Das dez.'),
+    fala('a recepcionista', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
+    'Ela liga o computador e o computador leva quatro minutos pra ligar, e nos quatro minutos ela fica olhando pra tela preta.',
+    'Duas pessoas esperando uma máquina, cada uma na sua.'
+  ],
+  ef:{flag:['chegou_na_audiencia','chegou_cedo_demais'],
+      registrar:'Chegou uma hora e quarenta e oito minutos antes da audiência.'},
+  escolhas:[
+    {texto:'Regar a planta, que precisa de água.', vai:'c25_regou_a_planta'},
+    {texto:'Ir pegar café no fim do corredor.', vai:'c25_ab_o_corredor'},
+    {texto:'Ficar sentado até dar dez.', vai:'c25_esperou_dar_dez'},
+    {texto:'Perguntar à recepcionista quem convocou a audiência.', vai:'c25_ab_perguntou_a_recepcionista'}
+  ]
+},
+
+c25_ab_perguntou_a_recepcionista:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Quem convocou essa audiência?'),
+    'Ela olha a tela, que agora já ligou.',
+    fala('a recepcionista', 'Aqui tá como "de ofício".'),
+    d=>fala(d.jogador.nome, 'O que é "de ofício"?'),
+    fala('a recepcionista', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
+    'Ela rola a tela.',
+    fala('a recepcionista', 'É raro. Eu tô aqui há nove anos e vi umas cinco.'),
+    d=>fala(d.jogador.nome, 'E as outras quatro?'),
+    'Ela para de rolar.',
+    fala('a recepcionista', 'Foram todas no mesmo ano. Oitenta e nove.'),
+    'Ela olha pra você pela primeira vez desde que sentou.',
+    fala('a recepcionista', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
+  ],
+  ef:{flag:'audiencia_de_oficio',
+      npc:{nome:'a recepcionista', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
+      registrar:'A audiência foi convocada de ofício. As outras quatro da história da casa foram todas em 1989.',
+      presagio:'Oitenta e nove. O mesmo ano do laboratório de Cinnabar e do CNPJ baixado da usina.'},
+  escolhas:[
+    {texto:'Perguntar o que se decidiu nas quatro de oitenta e nove.', vai:'c25_ab_as_quatro_de_oitenta_e_nove'},
+    {texto:'Regar a planta e esperar.', vai:'c25_regou_a_planta'},
+    {texto:'Ficar sentado até dar dez.', vai:'c25_esperou_dar_dez'}
+  ]
+},
+
+c25_ab_as_quatro_de_oitenta_e_nove:{
+  texto:[
+    fala('a recepcionista', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
+    'Ela junta as mãos no balcão.',
+    fala('a recepcionista', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
+    d=>fala(d.jogador.nome, 'Como?'),
+    fala('a recepcionista', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
+    fala('a recepcionista', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
+    d=>fala(d.jogador.nome, 'Quem?'),
+    'Ela balança a cabeça.',
+    fala('a recepcionista', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
+    fala('a recepcionista', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
+  ],
+  ef:{flag:'a_mulher_que_agradecia_o_cafe',
+      registrar:'Nas quatro audiências de ofício de 1989, a última a sair foi sempre a mesma mulher.',
+      presagio:'Ela agradecia o café. Você já ouviu isso de outra mulher, num prédio da Rua do Comércio.'},
+  escolhas:[
+    {texto:'Regar a planta e esperar dar dez.', vai:'c25_regou_a_planta'},
+    {texto:'Ficar sentado até dar dez.', vai:'c25_esperou_dar_dez'},
+    {texto:'Ir pegar café no fim do corredor.', vai:'c25_ab_o_corredor'}
+  ]
+},
+
+c25_ab_em_cima_da_hora:{
+  texto:[
+    'Você chega às nove e cinquenta e sete porque o ônibus atrasou, e chegar em cima da hora numa audiência é uma coisa que muda o seu corpo inteiro.',
+    'Você sobe a escada em vez de esperar o elevador. Chega na antessala suando, com a mochila torta, e todo mundo já está sentado.',
+    'Quatro pessoas em seis cadeiras. As quatro te olham.',
+    d=>d.npcs['Blue']
+      ? 'Blue está na terceira cadeira e levanta a sobrancelha pro seu estado, e não fala nada, o que da parte dele é um gesto de contenção heroico.'
+      : 'Um rapaz da sua idade está na terceira cadeira e levanta a sobrancelha pro seu estado.',
+    'Uma mulher de uns cinquenta com uma pasta de couro olha o relógio de parede, que atrasa, e depois o relógio de pulso dela, que não.',
+    fala('a recepcionista', 'A audiência é às dez. Os senhores podem entrar às dez.'),
+    'São nove e cinquenta e oito. Você tem cento e vinte segundos pra parar de suar e não vai dar.'
+  ],
+  ef:{flag:['chegou_na_audiencia','chegou_em_cima_da_hora'], hp:-1,
+      registrar:'Chegou na audiência às 9h57, sem fôlego.'},
+  escolhas:[
+    {texto:'Falar com o Blue.', vai:'c25_falou_com_blue', cond:d=>!!d.npcs['Blue']},
+    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Perguntar ao homem de crachá azul quem convocou.', vai:'c25_o_cracha_azul'},
+    {texto:'Sentar, respirar, e esperar dar dez.', vai:'c25_esperou_dar_dez'}
+  ]
+},
+
+c25_ab_o_corredor:{
+  texto:[
+    'A máquina de café fica no fim do corredor, do lado de uma janela que dá pro estacionamento.',
+    'Ela engole a sua moeda. Você bate do lado. Ela devolve.',
+    'Você bate de novo, mais forte, e dessa vez ela aceita e começa a fazer um barulho de esforço.',
+    'Enquanto o copo enche, você olha pro estacionamento pela janela.',
+    'Tem sete carros. Seis são carros.',
+    'O sétimo é uma van branca sem identificação, de traseira encostada na parede de serviço do prédio, com as portas abertas e ninguém em volta.',
+    'Você fica olhando a van por tempo demais e o café transborda no copo.',
+    'Quando você olha de volta, a van está com as portas fechadas e continua sem ninguém em volta.'
+  ],
+  ef:{flag:'a_van_no_estacionamento',
+      registrar:'Uma van branca sem identificação está encostada na parede de serviço do prédio da audiência.',
+      presagio:'Traseira encostada na parede de serviço, portas abertas. Alguém carregou ou descarregou alguma coisa aqui hoje de manhã.'},
+  escolhas:[
+    {texto:'Descer e olhar a van de perto.', vai:'c25_ab_a_van_de_perto'},
+    {texto:'Voltar pra antessala. Já vai dar dez.', vai:'c25_a_antessala'},
+    {texto:'Voltar e regar a planta.', vai:'c25_regou_a_planta'}
+  ]
+},
+
+c25_ab_a_van_de_perto:{
+  texto:[
+    'Você desce pela escada de serviço com um copo de café na mão, o que te dá exatamente a aparência de alguém que trabalha ali.',
+    'A van é uma van. Branca, suja de estrada, placa suja de propósito ou de estrada — não dá pra distinguir e é isso que é conveniente.',
+    'A traseira está a quarenta centímetros da parede de serviço, que é a distância de quem descarrega direto na porta.',
+    'No chão, entre a van e a parede, tem palha. Palha de embalagem, dessas de transporte.',
+    'Você pega um punhado e cheira, o que é uma coisa que você aprendeu a fazer nos últimos meses e que você não fazia antes.',
+    'Cheira a animal.',
+    'E a nove minutos daqui, no terceiro andar, tem uma audiência de ofício às dez.'
+  ],
+  ef:{flag:['a_palha_da_van','chegou_na_audiencia'],
+      registrar:'Havia palha de transporte com cheiro de animal entre a van e a parede de serviço.',
+      presagio:'Descarregaram alguma coisa viva no prédio da audiência, na manhã da audiência.'},
+  escolhas:[
+    {texto:'Subir correndo pra antessala.', vai:'c25_a_antessala'},
+    {texto:'Procurar a porta de serviço onde descarregaram.', vai:'c25_ab_a_porta_de_servico'}
+  ]
+},
+
+c25_ab_a_porta_de_servico:{
+  texto:[
+    'A porta de serviço é de aço, com barra antipânico do lado de dentro, o que quer dizer que ela abre de dentro pra fora e não o contrário.',
+    'Está encostada. Não trancada: encostada, com um calço de madeira no pé.',
+    'Alguém calçou pra não fechar.',
+    'Você empurra com dois dedos e ela abre num corredor de serviço com piso de cimento queimado e lâmpada de tubo.',
+    'O corredor tem umas seis portas e uma rampa que desce.',
+    'E, do fundo da rampa, vem som.',
+    'Não é som de máquina. É som de muita coisa viva no mesmo lugar, abafado por parede, que é um som que você já ouviu num galpão da zona norte de Saffron.',
+    d=>`E são nove e cinquenta e um da manhã, e a sua audiência é às dez, e você está a três andares e uma decisão de distância dela.`
+  ],
+  ef:{flag:['o_porao_do_predio','chegou_na_audiencia'], hp:-1,
+      registrar:'Há uma rampa de serviço no prédio da audiência e, do fundo dela, som de muita coisa viva.',
+      presagio:'Nove e cinquenta e um. Você tem nove minutos e duas coisas incompatíveis pra fazer.'},
+  escolhas:[
+    {texto:'Descer a rampa. A audiência que espere.', vai:'c25_ab_desceu_a_rampa'},
+    {texto:'Subir pra audiência. É pra isso que você veio.', vai:'c25_a_antessala'}
+  ]
+},
+
+c25_ab_desceu_a_rampa:{
+  texto:[
+    'Você desce.',
+    'A rampa dá numa garagem de subsolo com pé-direito baixo e luz amarela, e na garagem, encostadas na parede do fundo, tem catorze gaiolas de transporte cobertas com lona cinza.',
+    'Catorze. Cobertas. E o som vem delas e para quando você chega, todas ao mesmo tempo, do jeito que bicho faz quando entra gente.',
+    'Tem uma prancheta pendurada num prego, do lado das gaiolas, e você lê a prancheta antes de levantar qualquer lona.',
+    '**RECEBIMENTO — 14 UN. — DESTINO: SALA DE AUDIÊNCIA 3 — HORÁRIO: 10H00**',
+    'Eles vão levar as catorze pra sala da sua audiência.',
+    'Às dez.',
+    'Você olha o relógio da parede da garagem e são nove e cinquenta e seis.'
+  ],
+  ef:{flag:['catorze_gaiolas','chegou_na_audiencia'],
+      registrar:'Catorze gaiolas de transporte esperam no subsolo, com destino à sala de audiência, às 10h00.',
+      presagio:'A audiência não é sobre papel. Eles vão levar as catorze pra dentro da sala.'},
+  escolhas:[
+    {texto:'Levantar uma lona.', vai:'c25_ab_levantou_a_lona'},
+    {texto:'Subir pra audiência agora, sabendo disso.', vai:'c25_a_antessala'}
+  ]
+},
+
+c25_ab_levantou_a_lona:{
+  texto:[
+    'Você levanta a lona da primeira gaiola.',
+    d=>{
+      const p = d.time[0];
+      return p ? `E lá dentro tem um bicho que olha pra você do jeito que ${nomeExib(p)} olhava pra você no começo de tudo, quando ainda não sabia se você era o tipo de pessoa que abre ou o tipo que fecha.`
+               : 'E lá dentro tem um bicho que olha pra você sem nenhuma expectativa, que é a pior versão de ser olhado.';
+    },
+    'A gaiola é limpa. Tem água. Tem uma etiqueta amarrada na grade com um número e uma letra.',
+    'Está tudo em ordem. É isso que você vai ter que explicar lá em cima e é isso que não tem como explicar.',
+    'Você abaixa a lona com cuidado, porque levantar de novo seria pior pra ele do que nunca ter levantado.',
+    'E sobe os três andares com a palha ainda na mão.'
+  ],
+  ef:{flag:['viu_o_que_tem_nas_gaiolas','catorze_gaiolas'], moral:-1,
+      registrar:'Viu o que há nas catorze gaiolas do subsolo. Estava tudo em ordem.',
+      presagio:'Tudo em ordem é o argumento deles. Você vai ter que atacar a ordem, não a desordem.'},
+  escolhas:[
+    {texto:'Subir pra audiência.', vai:'c25_a_antessala'}
+  ]
+},
+
 
 c25_a_antessala:{
   texto:[

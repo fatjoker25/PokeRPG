@@ -1,3 +1,14 @@
+/* ------------------------------------------------------------
+   ABERTURAS — dois dias de caminhada até o norte. O primeiro dia
+   é só cansaço, e o começo dele depende de com quem você sobe.
+   ------------------------------------------------------------ */
+const C27_ABERTURAS = ['c22_subida', 'c27_ab_o_posto_fechado', 'c27_ab_a_mula', 'c27_ab_sozinho_mesmo'];
+function c27_cabe(id, d){
+  if (id === 'c27_ab_a_mula') return d.jogador.dinheiro >= 1200;
+  return true;
+}
+function c27_abertura(d){ return Dados.escolher(C27_ABERTURAS.filter(id => c27_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 27 — O VALE
    Acima da Rota 10, onde o mapa só tem hachura.
@@ -5,8 +16,125 @@
 CAPITULOS.push(
 {
 num:27, titulo:'O Vale', local:'Norte de Kanto, acima da Rota 10', ambiente:'montanha', nivelArea:58,
-tom:'muito sombrio', inicio:'c22_subida',
+tom:'muito sombrio', entradas:C27_ABERTURAS,
+inicio: d => c27_abertura(d),
 cenas:{
+
+c27_ab_o_posto_fechado:{
+  texto:[
+    'O posto florestal do norte de Kanto é uma casa de madeira com um mastro sem bandeira, e é o último lugar com telhado antes da pedra.',
+    'Está fechado.',
+    'Não é "fechado hoje": tem um cadeado com ferrugem de meses e uma janela com teia de aranha por dentro, e na porta um aviso de papel que a chuva comeu e do qual sobra uma linha:',
+    '**"...atendimento transferido para a unidade de Cerulean."**',
+    'Cerulean fica a quatro dias daqui.',
+    'No degrau do posto tem um caderno de capa dura amarrado num barbante preso ao corrimão, do jeito que se prende caneta em banco.',
+    'É um livro de registro de subida improvisado. Alguém pôs ali.',
+    'A última assinatura é de dezenove dias atrás.',
+    'Você lê as últimas dez linhas e nenhuma tem a coluna de descida preenchida.'
+  ],
+  ef:{flag:'o_posto_fechado',
+      registrar:'O posto florestal do norte está fechado há meses. O livro improvisado tem dez subidas sem descida.',
+      presagio:'Dez sem descida pode ser gente que desceu por outro lado. Pode.'},
+  escolhas:[
+    {texto:'Assinar o caderno antes de subir.', vai:'c27_ab_assinou_o_caderno'},
+    {texto:'Não assinar. Subir direto.', vai:'c22_primeiro_dia'},
+    {texto:'Procurar a trilha antiga, a que não está no mapa.', vai:'c22_trilha_antiga'}
+  ]
+},
+
+c27_ab_assinou_o_caderno:{
+  texto:[
+    d=>`Você escreve o seu nome, a data e a hora, e deixa a coluna de descida em branco como todo mundo deixou.`,
+    'E aí você faz uma coisa que ninguém das dez linhas anteriores fez: escreve embaixo, na coluna de observação, a data em que você pretende descer.',
+    'É uma bobagem. Ninguém vai ler esse caderno.',
+    'Mas se alguém ler, e se a data passar, vai existir no mundo uma linha dizendo que você devia ter voltado e não voltou.',
+    'Você amarra o barbante de volta no corrimão e sobe.'
+  ],
+  ef:{flag:'assinou_o_caderno_do_posto',
+      registrar:'Assinou o livro improvisado do posto e escreveu a data em que pretende descer.'},
+  escolhas:[
+    {texto:'Seguir a trilha antiga, a que não está no mapa.', vai:'c22_trilha_antiga'},
+    {texto:'Subir direto.', vai:'c22_primeiro_dia'},
+    {texto:'Procurar o lugar do acidente da primeira equipe.', vai:'c22_o_acidente', cond:d=>!!d.flags.sabe_das_tres_equipes}
+  ]
+},
+
+c27_ab_a_mula:{
+  texto:[
+    'Na última vila antes da estrada acabar tem um homem que aluga mula.',
+    'Mil e duzentos por dois dias, e ele sobe junto, porque ele não aluga a mula: ele aluga a mula com ele.',
+    fala('o homem da mula', 'Eu subo até a pedra. Da pedra pra cima a mula não vai e eu também não.'),
+    d=>fala(d.jogador.nome, 'Por que você não vai?'),
+    fala('o homem da mula', 'Porque eu tenho quarenta e nove anos e dois filhos.'),
+    'Ele afivela a cilha com o joelho apoiado na barriga do bicho.',
+    fala('o homem da mula', 'E porque eu já subi. Em oitenta e oito, com uma equipe da universidade.'),
+    d=>fala(d.jogador.nome, 'E o que tinha lá em cima?'),
+    'Ele para de afivelar.',
+    fala('o homem da mula', 'Frio. Muito frio e uma boca de caverna que não sai vento.'),
+    fala('o homem da mula', 'Caverna sempre sai vento, moço. Sempre. É o primeiro negócio que a gente aprende.'),
+    fala('o homem da mula', 'Daquela não sai.', 'baixo')
+  ],
+  ef:{dinheiro:-1200, flag:['subiu_de_mula','a_caverna_sem_vento'],
+      npc:{nome:'o homem da mula', opiniao:1, viuVoce:'Subiu com você até a pedra, pelo preço combinado.'},
+      registrar:'Alugou mula e guia até a pedra. Ele subiu em 1988 com uma equipe da universidade.',
+      presagio:'Caverna sem vento não tem outra saída. Ou não é caverna.'},
+  escolhas:[
+    {texto:'Perguntar o que aconteceu com a equipe de oitenta e oito.', vai:'c27_ab_a_equipe_de_oitenta_e_oito'},
+    {texto:'Subir com ele até a pedra.', vai:'c22_primeiro_dia'},
+    {texto:'Pedir pra ele te levar pela trilha antiga.', vai:'c22_trilha_antiga'}
+  ]
+},
+
+c27_ab_a_equipe_de_oitenta_e_oito:{
+  texto:[
+    fala('o homem da mula', 'Eram seis. Quatro professores e dois alunos.'),
+    'Ele puxa a mula pela rédea e começa a andar, e você anda do lado, e é assim que a conversa vai acontecer.',
+    fala('o homem da mula', 'Ficaram onze dias. Eu subi três vezes levando mantimento.'),
+    d=>fala(d.jogador.nome, 'E depois?'),
+    fala('o homem da mula', 'Na quarta vez eu subi e não tinha mais ninguém.'),
+    'A mula bufa. Ele afrouxa a rédea.',
+    fala('o homem da mula', 'O acampamento tava montado. Barraca em pé, fogareiro, mantimento da terceira viagem intacto.'),
+    fala('o homem da mula', 'Eu desci e avisei. Vieram uns quinze, da Liga e da polícia, procuraram nove dias.'),
+    d=>fala(d.jogador.nome, 'Acharam?'),
+    fala('o homem da mula', 'Acharam os seis. Todos vivos, todos em lugares diferentes da montanha, todos em três dias.'),
+    'Ele para de andar.',
+    fala('o homem da mula', 'E nenhum dos seis soube dizer como tinha chegado onde tinha chegado.', 'baixo')
+  ],
+  ef:{flag:['a_equipe_de_oitenta_e_oito','sabe_das_tres_equipes'],
+      registrar:'Em 1988 uma equipe de seis sumiu do acampamento e foi achada em três dias, viva, espalhada e sem saber como chegou lá.',
+      presagio:'Todos vivos. Todos espalhados. Nenhum lembra. Isso não é um acidente de montanha.'},
+  escolhas:[
+    {texto:'Procurar o lugar do acidente da primeira equipe.', vai:'c22_o_acidente'},
+    {texto:'Subir direto.', vai:'c22_primeiro_dia'},
+    {texto:'Seguir a trilha antiga.', vai:'c22_trilha_antiga'}
+  ]
+},
+
+c27_ab_sozinho_mesmo:{
+  texto:[
+    'Ninguém te leva, ninguém te acompanha, ninguém te vende nada. A estrada acaba no posto e vira trilha, e a trilha acaba em duas horas e vira pedra, e você faz as duas horas sem encontrar uma pessoa.',
+    'O primeiro dia é só cansaço, e cansaço sozinho é diferente de cansaço acompanhado: não tem ninguém pra quem reclamar, então você não reclama, então você não repara que está cansado até parar.',
+    'Você para às cinco da tarde porque a luz vai embora e monta o acampamento com as mãos que já não fecham direito.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} deita colado na sua perna e não sai de lá a noite inteira, e você acorda duas vezes só pra conferir que ele continua ali.`
+               : 'Você deita e olha pro teto da barraca por um tempo comprido, e não tem ninguém pra conferir se continua ali.';
+    },
+    'De madrugada você acorda uma terceira vez, sem motivo.',
+    'E fica deitado escutando, e o que você escuta é: nada.',
+    'Nada mesmo. Nenhum bicho, nenhum vento, nenhuma folha.',
+    'Você está a mil e duzentos metros de altitude numa mata fechada e não tem um único som.'
+  ],
+  ef:{flag:'a_noite_sem_som', hp:-2,
+      registrar:'Passou a primeira noite da subida sozinho. De madrugada, silêncio absoluto.',
+      presagio:'Mata sem som é mata que se calou. E mata se cala por alguma coisa.'},
+  escolhas:[
+    {texto:'Levantar e seguir de madrugada mesmo.', vai:'c22_primeiro_dia'},
+    {texto:'Esperar clarear e procurar a trilha antiga.', vai:'c22_trilha_antiga'},
+    {texto:'Esperar clarear e descer até o posto florestal.', vai:'c22_posto'}
+  ]
+},
+
 
 c22_subida:{
   texto:[

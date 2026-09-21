@@ -1,3 +1,18 @@
+/* ------------------------------------------------------------
+   ABERTURAS — voltar pra casa depois de oito insígnias não é
+   uma cena só. Depende de quem você virou e de quem soube.
+   ------------------------------------------------------------ */
+const C21_ABERTURAS = ['c21_chegada_em_casa', 'c21_ab_a_faixa', 'c21_ab_de_madrugada', 'c21_ab_ninguem_sabia'];
+function c21_cabe(id, d){
+  if (id === 'c21_ab_a_faixa')      return Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5;
+  if (id === 'c21_ab_de_madrugada') return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 4 || d.via === 'foragido';
+  return true;
+}
+function c21_abertura(d){
+  const cand = C21_ABERTURAS.filter(id => c21_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 21 — A RUA DE ONDE VOCÊ SAIU
    Pallet. Você tem oito insígnias, um telefone cheio de números
@@ -7,8 +22,101 @@ CAPITULOS.push(
 
 {
 num:21, titulo:'A Rua de Onde Você Saiu', local:d=>d.jogador.cidade, ambiente:'campo', nivelArea:52,
-tom:'sombrio', inicio:'c21_chegada_em_casa',
+tom:'sombrio', entradas:C21_ABERTURAS,
+inicio: d => c21_abertura(d),
 cenas:{
+
+c21_ab_a_faixa:{
+  texto:[
+    d=>`Tem uma faixa atravessada na entrada de ${d.jogador.cidade}, amarrada de um poste ao outro, feita de lençol pintado com tinta látex.`,
+    d=>`**BEM-VINDO(A) DE VOLTA, ${String(d.jogador.nome).toUpperCase()}**`,
+    'O "(A)" está lá porque quem pintou não quis errar, e isso é a coisa mais da sua cidade que existe.',
+    'Tem umas quarenta pessoas embaixo da faixa. Quarenta, numa cidade desse tamanho, é muita gente.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} desce do ônibus atrás de você e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que nenhum dos dois estava esperando.`
+               : 'Você desce do ônibus e trava, porque quarenta pessoas gritando ao mesmo tempo é uma coisa que você não estava esperando.';
+    },
+    d=>fala(nomeCasa(), 'Eu falei que era hoje! EU FALEI!', 'grita'),
+    'E é assim que você descobre que a sua casa vem te esperando no ponto de ônibus há três dias, todo dia, no horário de todos os ônibus.',
+    'Três dias. Todos os ônibus.'
+  ],
+  ef:{flag:['voltou_pra_casa','a_faixa_na_entrada'], moral:2,
+      registrar:'A cidade te recebeu com uma faixa de lençol e quarenta pessoas no ponto de ônibus.'},
+  escolhas:[
+    {texto:'Abraçar quem te esperou e não falar nada.', vai:'c21_dentro_de_casa'},
+    {texto:'Perguntar de quem foi a ideia da faixa.', vai:'c21_ab_de_quem_foi_a_ideia'},
+    {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
+    {texto:'Passar na calçada do Sr. Ushio.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ushio']}
+  ]
+},
+
+c21_ab_de_quem_foi_a_ideia:{
+  texto:[
+    'Ninguém assume. Todo mundo aponta pra outro, e é engraçado por uns quinze segundos, até que uma menina de uns dez anos levanta a mão.',
+    fala('a menina da faixa', 'Foi minha.'),
+    'E a cidade inteira vira pra ela, e ela fica vermelha, e fala mesmo assim:',
+    fala('a menina da faixa', 'Eu falei na escola que eu conhecia você e ninguém acreditou.'),
+    d=>fala(d.jogador.nome, 'A gente se conhece?'),
+    'Silêncio ruim.',
+    fala('a menina da faixa', 'Você consertou a corrente da minha bicicleta no ano passado. Na frente do mercado.'),
+    'Você não lembra. Você não lembra nem um pouco.',
+    'E ela pintou um lençol.'
+  ],
+  ef:{flag:'a_menina_da_faixa', moral:1,
+      npc:{nome:'a menina da faixa', opiniao:4, viuVoce:'Você consertou a corrente da bicicleta dela e não lembra.'},
+      registrar:'A faixa foi ideia de uma menina para quem você consertou uma bicicleta e de quem não lembra.',
+      presagio:'O que sobra de você na cabeça dos outros não é o que você escolheu deixar.'},
+  escolhas:[
+    {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira, devagar.', vai:'c21_a_rua'}
+  ]
+},
+
+c21_ab_de_madrugada:{
+  texto:[
+    d=>`Você entra em ${d.jogador.cidade} às três e quarenta da manhã, a pé, pela estrada velha, porque o ônibus para na praça e a praça tem gente até meia-noite.`,
+    'A sua rua tem sete postes e três funcionam. Você conhece quais três.',
+    'Você anda pelo lado do muro, no escuro entre o quarto e o quinto poste, e chega na frente da sua própria casa sem ninguém ter te visto.',
+    'A luz da cozinha está acesa.',
+    d=>`A luz da cozinha está acesa às três e quarenta da manhã, e isso quer dizer que ${nomeCasa()} não está dormindo, e isso quer dizer que faz tempo que não dorme.`,
+    'Você fica na calçada do outro lado por onze minutos.',
+    'Onze minutos é muito tempo pra ficar parado olhando a própria casa.'
+  ],
+  ef:{flag:['voltou_pra_casa','chegou_de_madrugada'],
+      registrar:'Chegou em casa às 3h40 da manhã, pela estrada velha, e ficou onze minutos na calçada de frente.'},
+  escolhas:[
+    {texto:'Bater.', vai:'c21_dentro_de_casa'},
+    {texto:'Não bater. Andar a rua e esperar clarear.', vai:'c21_a_rua'},
+    {texto:'Não bater. Ir embora antes de alguém acordar.', vai:'c21_nao_foi_pra_casa'},
+    {texto:'Ir ao Centro Pokémon e voltar de manhã.', vai:'c21_centro_primeiro'}
+  ]
+},
+
+c21_ab_ninguem_sabia:{
+  texto:[
+    d=>`Você desce do ônibus na entrada de ${d.jogador.cidade} às quatro e vinte da tarde e não acontece absolutamente nada.`,
+    'O ponto tem três pessoas esperando o de volta. Uma delas te olha por um segundo e meio e volta a olhar a estrada.',
+    'Você fica parado com a mochila no ombro esperando alguma coisa acontecer e nada acontece, e leva uns quarenta segundos pra você entender que isso é a coisa certa e que você é que estava errado.',
+    'Ninguém sabia que você vinha porque você não avisou.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} cheira o ar e entende antes de você que isto aqui é casa.`
+               : 'Você cheira o ar sem querer e reconhece o cheiro, que é uma coisa que ninguém te avisou que ia acontecer.';
+    },
+    'A placa da cidade é menor do que você lembrava. Não encolheu: você viu placa de cidade grande desde então e a sua cabeça refez a escala sem te avisar.'
+  ],
+  ef:{flag:'voltou_pra_casa',
+      registrar:'Voltou para a cidade de onde saiu sem avisar ninguém.'},
+  escolhas:[
+    {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
+    {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
+    {texto:'Passar na calçada do Sr. Ushio.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ushio']},
+    {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
+    {texto:'Ligar pra casa do orelhão da esquina, a trinta metros de casa.', vai:'c21_orelhao', cond:d=>Estado.temPokenav()}
+  ]
+},
+
 
 c21_chegada_em_casa:{
   texto:[
@@ -27,7 +135,7 @@ c21_chegada_em_casa:{
   escolhas:[
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ushio, que é onde se resolve coisa.', vai:'c21_rufino',
+    {texto:'Passar na calçada do Sr. Ushio, que é onde se resolve coisa.', vai:'c21_ushio',
      cond:d=>!!d.npcs['Sr. Ushio']},
     {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
     {texto:'Ligar pra casa do orelhão da esquina, mesmo estando a trinta metros.', vai:'c21_orelhao',
@@ -141,7 +249,7 @@ c21_repos_os_cartazes:{
 },
 
 /* ── o Sr. Ushio ──────────────────────────────────────────── */
-c21_rufino:{
+c21_ushio:{
   texto:[
     'A calçada está varrida. Ela sempre está varrida.',
     'O Sr. Ushio está sentado no degrau, e não em pé com a vassoura, e é a primeira vez na sua vida que você vê ele sentado no degrau.',
@@ -176,12 +284,12 @@ c21_pagou_a_janela:{
       rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de vinte pokedólares', rep:{notorio:true}},
       registrar:'Voltou para pagar a janela. Ele não aceitou o dinheiro.'},
   escolhas:[
-    {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_rufino'},
+    {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio'},
     {texto:'Pegar de volta e ficar sentado ali.', vai:'c21_silencio_no_degrau'}
   ]
 },
 
-c21_insistiu_rufino:{
+c21_insistiu_ushio:{
   texto:[
     'Você deixa o dinheiro no degrau e levanta, e ele deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.',
     fala('Sr. Ushio', 'Você é teimoso igual a quem te criou.', 'riso'),
@@ -201,7 +309,7 @@ c21_por_que_sentado:{
     fala('Sr. Ushio', 'Aí eu parei de varrer de novo às onze. Foi ano passado.'),
     fala('Sr. Ushio', 'Não faz essa cara. Todo mundo para de varrer às onze uma hora.', 'riso')
   ],
-  ef:{flag:'sabe_do_joelho_do_rufino',
+  ef:{flag:'sabe_do_joelho_do_ushio',
       npc:{nome:'Sr. Ushio', opiniao:3, memoria:'Te contou por que parou de varrer duas vezes por dia.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou uma coisa que ninguém pergunta a um velho'},
       registrar:'O Sr. Ushio parou de varrer a calçada duas vezes por dia. Foi ano passado.'},
@@ -221,7 +329,7 @@ c21_varreu_a_calcada:{
     fala('Sr. Ushio', 'Na terça que vem eu não vou conseguir. Se você ainda estiver na cidade.', 'baixo',
          'É a coisa mais perto de um pedido que esse homem já fez a alguém.')
   ],
-  ef:{moral:6, flag:'varreu_a_calcada_do_rufino',
+  ef:{moral:6, flag:'varreu_a_calcada_do_ushio',
       npc:{nome:'Sr. Ushio', opiniao:6, memoria:'Varreu a calçada dele e ele pediu pra terça que vem.'},
       rep:{eixo:'bom',delta:3,motivo:'Varreu a calçada de um velho com oito insígnias no bolso', rep:{notorio:true}},
       registrar:'Varreu a calçada do Sr. Ushio. Ele pediu pra terça que vem.'},

@@ -1,3 +1,11 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a descida para a câmara. Um caminho só, e três
+   jeitos de entrar nele.
+   ------------------------------------------------------------ */
+const C28_ABERTURAS = ['c23_descida', 'c28_ab_a_boca', 'c28_ab_o_que_ficou_na_boca'];
+function c28_cabe(id, d){ return true; }
+function c28_abertura(d){ return Dados.escolher(C28_ABERTURAS.filter(id => c28_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 28 — Eu perguntei primeiro (final)
    ============================================================ */
@@ -5,8 +13,64 @@ CAPITULOS.push(
 
 {
 num:28, titulo:'Eu Perguntei Primeiro', local:'A caverna do norte', ambiente:'ruina', nivelArea:70,
-tom:'final', inicio:'c23_descida',
+tom:'final', entradas:C28_ABERTURAS,
+inicio: d => c28_abertura(d),
 cenas:{
+
+c28_ab_a_boca:{
+  texto:[
+    'A boca da caverna tem dois metros e meio de altura e quatro de largura e é perfeitamente regular, do jeito que boca de caverna não é.',
+    'Você fica parado na frente dela por um tempo que não dá pra medir.',
+    'Não sai vento. Você põe a mão na altura do peito, depois na altura do joelho, depois estende o braço pra dentro do escuro.',
+    'Nada. O ar lá de dentro está tão parado quanto o de fora, e caverna não faz isso: caverna respira, porque a diferença de temperatura empurra o ar.',
+    'Esta não empurra nada.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} está atrás de você, a uns quatro metros, e não vai chegar mais perto. Não é medo: é a distância que ele escolheu, e ele vai manter essa distância a descida inteira.`
+               : 'Você está sozinho na boca de uma coisa que não respira.';
+    },
+    'Você entra.'
+  ],
+  ef:{executar:d=>{ Estado.lend(150).encontros++; return []; },
+      flag:'a_boca_que_nao_respira',
+      registrar:'Entrou pela boca da caverna, que não tem corrente de ar nenhuma.',
+      presagio:'Ela não respira porque não tem outra saída, ou porque o que está lá dentro não precisa de ar.'},
+  escolhas:[
+    {texto:'Olhar as paredes com atenção.', vai:'c23_as_paredes'},
+    {texto:'Olhar o chão.', vai:'c23_o_chao'},
+    {texto:'Chamar em voz alta.', vai:'c23_chamou'},
+    {texto:'Descer direto, sem parar.', vai:'c23_a_camara'}
+  ]
+},
+
+c28_ab_o_que_ficou_na_boca:{
+  texto:[
+    'Antes de descer você tira da mochila o que não vai levar e põe encostado na parede da boca da caverna, numa pilha.',
+    'Não é decisão tática. Você não sabe o que vai encontrar lá embaixo e levar menos não ajuda em nada.',
+    'É outra coisa, e você entende enquanto faz: é pra existir uma pilha.',
+    'Uma pilha de coisas suas, encostada numa parede, num lugar que alguém um dia vai achar.',
+    d=>{
+      const partes = [];
+      if (d.flags.carrega_a_pena) partes.push('A pena de três faixas você não deixa. Você prometeu voltar e contar de quem é.');
+      if (d.flags.copia_do_hideo || d.flags.reika_precisa_de_papel) partes.push('O papel você deixa. Papel não serve pra nada lá embaixo e serve pra tudo aqui em cima.');
+      partes.push('A carteira, a foto, o caderninho.');
+      return partes.join(' ');
+    },
+    'Você olha a pilha por uns dez segundos, achando ridículo, e não desfaz.',
+    'E desce.'
+  ],
+  ef:{executar:d=>{ Estado.lend(150).encontros++; return []; },
+      flag:'deixou_a_pilha_na_boca',
+      registrar:'Deixou parte das próprias coisas numa pilha encostada na boca da caverna.',
+      presagio:'Você montou uma pilha pra alguém achar. Alguma parte de você não está contando com a volta.'},
+  escolhas:[
+    {texto:'Olhar as paredes com atenção.', vai:'c23_as_paredes'},
+    {texto:'Olhar o chão.', vai:'c23_o_chao'},
+    {texto:'Chamar em voz alta.', vai:'c23_chamou'},
+    {texto:'Descer direto, sem parar.', vai:'c23_a_camara'}
+  ]
+},
+
 
 c23_descida:{
   texto:[

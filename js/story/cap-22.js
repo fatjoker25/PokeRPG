@@ -1,3 +1,12 @@
+/* ------------------------------------------------------------
+   ABERTURAS — alguém te inscreveu no chaveamento sem assinar.
+   Você descobre isso no quadro, na mesa, na arquibancada ou na
+   boca de outro inscrito.
+   ------------------------------------------------------------ */
+const C22_ABERTURAS = ['c22_o_quadro', 'c22_ab_a_arquibancada', 'c22_ab_o_outro_inscrito', 'c22_ab_o_recibo'];
+function c22_cabe(id, d){ return true; }
+function c22_abertura(d){ return Dados.escolher(C22_ABERTURAS.filter(id => c22_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 22 — O CHAVEAMENTO
    Planalto Indigo. Arena aberta. O seu nome está no quadro e
@@ -7,8 +16,132 @@ CAPITULOS.push(
 
 {
 num:22, titulo:'O Chaveamento', local:'Planalto Indigo — arena aberta', ambiente:'montanha', nivelArea:54,
-tom:'sombrio', inicio:'c22_o_quadro',
+tom:'sombrio', entradas:C22_ABERTURAS,
+inicio: d => c22_abertura(d),
 cenas:{
+
+c22_ab_a_arquibancada:{
+  texto:[
+    'A arena aberta do Planalto é uma estrutura de concreto para mil e duzentas pessoas e hoje tem umas noventa nela, espalhadas de um jeito que faz parecer menos.',
+    'Você senta na arquibancada antes de procurar qualquer coisa, porque chegou cedo e porque sentar é de graça.',
+    'Na fileira de baixo, três pessoas discutem o chaveamento com uma folha mimeografada na mão.',
+    fala('o homem da folha', 'Chave quatro é o que eu não entendo.'),
+    fala('a mulher do lado', 'Por quê?'),
+    fala('o homem da folha', 'Porque a chave quatro tem um nome que não tava na lista de ontem.'),
+    'Ele bate na folha com as costas da mão.',
+    fala('o homem da folha', 'Eu peguei a lista ontem às seis. Trinta e um nomes. Hoje tem trinta e dois.'),
+    d=>`Você inclina a cabeça pra ler a folha de cima e o nome da chave quatro é o seu, com a sua cidade embaixo: ${d.jogador.cidade}.`,
+    'Você não preencheu ficha nenhuma. Você não pagou inscrição nenhuma. Você chegou aqui hoje.'
+  ],
+  ef:{flag:['inscrito_por_terceiro','o_nome_entrou_de_noite'],
+      registrar:'Seu nome entrou no chaveamento entre as seis da tarde de ontem e a manhã de hoje.',
+      presagio:'Trinta e um viraram trinta e dois de noite, com a mesa fechada.'},
+  escolhas:[
+    {texto:'Descer e falar com o funcionário da mesa.', vai:'c22_o_quadro'},
+    {texto:'Falar com os três da folha mimeografada.', vai:'c22_ab_os_tres_da_folha'},
+    {texto:'Ficar sentado e ver quem aparece.', vai:'c22_aceitou'}
+  ]
+},
+
+c22_ab_os_tres_da_folha:{
+  texto:[
+    'Você desce uma fileira e senta do lado deles, e mostra o cartão de treinador, e o homem da folha olha o cartão e olha a folha e olha o cartão de novo.',
+    fala('o homem da folha', 'É você.'),
+    d=>fala(d.jogador.nome, 'Eu não me inscrevi.'),
+    'Os três se olham. A mulher do lado é a que responde.',
+    fala('a mulher do lado', 'Isso já aconteceu duas vezes esse ano.'),
+    d=>fala(d.jogador.nome, 'Já aconteceu?'),
+    fala('a mulher do lado', 'Em março e em julho. Dois inscritos que apareceram na véspera e que ninguém conhecia.'),
+    fala('o homem da folha', 'Os dois ganharam o torneio.'),
+    'Silêncio dos quatro.',
+    fala('a mulher do lado', 'E os dois sumiram depois. Não é conspiração, é fato: os dois não aparecem em nenhum torneio desde então.'),
+    fala('a mulher do lado', 'Eu procurei. Eu acompanho isso.', 'baixo')
+  ],
+  ef:{flag:['dois_inscritos_antes','inscrito_por_terceiro'],
+      npc:{nome:'a mulher do lado', opiniao:2, viuVoce:'Te contou dos dois inscritos de véspera que ganharam e sumiram.'},
+      registrar:'Já houve dois inscritos de véspera este ano. Os dois venceram e não competiram mais.',
+      presagio:'Ganharam e sumiram. Vencer esse torneio leva a algum lugar de onde não se volta pra arena.'},
+  escolhas:[
+    {texto:'Descer e exigir o nome de quem pagou.', vai:'c22_exigiu_o_nome'},
+    {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
+    {texto:'Aceitar e lutar.', vai:'c22_aceitou'}
+  ]
+},
+
+c22_ab_o_outro_inscrito:{
+  texto:[
+    'Tem um rapaz de uns dezenove anos sentado no chão encostado na parede da arena, com o chaveamento impresso no colo e uma caneta, e ele está circulando nomes.',
+    'Ele te vê chegar e circula mais um sem olhar pra folha.',
+    fala('o rapaz da caneta', 'Chave quatro.'),
+    d=>fala(d.jogador.nome, 'Como você sabe?'),
+    fala('o rapaz da caneta', 'Porque eu sou chave cinco e a chave cinco luta com a chave quatro na segunda rodada.'),
+    'Ele levanta a folha e mostra. Tem sete nomes circulados de trinta e dois.',
+    fala('o rapaz da caneta', 'Eu circulo os que eu conheço de vista. Sete, de trinta e dois.'),
+    d=>fala(d.jogador.nome, 'E os outros vinte e cinco?'),
+    fala('o rapaz da caneta', 'É isso que eu tô tentando entender desde ontem à noite.'),
+    'Ele põe a tampa na caneta.',
+    fala('o rapaz da caneta', 'Esse é o oitavo torneio aberto que eu faço. Normalmente eu conheço uns vinte.')
+  ],
+  ef:{flag:['inscrito_por_terceiro','vinte_e_cinco_desconhecidos'],
+      npc:{nome:'o rapaz da caneta', opiniao:1, viuVoce:'Te identificou como chave quatro antes de você falar.'},
+      registrar:'Num torneio de 32, um veterano de oito torneios reconhece só sete nomes.',
+      presagio:'Vinte e cinco desconhecidos num chaveamento não é acaso: é um chaveamento montado.'},
+  escolhas:[
+    {texto:'Ir até a mesa perguntar quem pagou a sua inscrição.', vai:'c22_o_quadro'},
+    {texto:'Perguntar quais sete ele conhece.', vai:'c22_ab_os_sete'},
+    {texto:'Aceitar e lutar.', vai:'c22_aceitou'}
+  ]
+},
+
+c22_ab_os_sete:{
+  texto:[
+    'Ele lê os sete em voz alta, com a cidade de cada um.',
+    'Três de Saffron, dois de Celadon, um de Vermilion, um de Pewter.',
+    fala('o rapaz da caneta', 'O de Pewter sou eu.'),
+    'Ele dobra a folha no meio.',
+    fala('o rapaz da caneta', 'Sabe o que me incomoda? Os vinte e cinco também têm cidade escrita embaixo.'),
+    d=>fala(d.jogador.nome, 'E daí?'),
+    fala('o rapaz da caneta', 'E daí que eu conheço treinador de Fuchsia, de Cinnabar, de Lavender. Eu viajo.'),
+    fala('o rapaz da caneta', 'Nenhum dos vinte e cinco é de Fuchsia, Cinnabar ou Lavender.'),
+    'Ele guarda a folha no bolso de trás.',
+    fala('o rapaz da caneta', 'Trinta e dois inscritos e nenhum das três cidades mais longe da capital.', 'baixo')
+  ],
+  ef:{flag:'o_chaveamento_e_de_tres_cidades',
+      registrar:'Nenhum dos 32 inscritos é de Fuchsia, Cinnabar ou Lavender.',
+      presagio:'É o mesmo recorte da lista de convocação. As mesmas três cidades, de novo.'},
+  escolhas:[
+    {texto:'Ir até a mesa perguntar quem pagou.', vai:'c22_o_quadro'},
+    {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
+    {texto:'Aceitar e lutar.', vai:'c22_aceitou'}
+  ]
+},
+
+c22_ab_o_recibo:{
+  texto:[
+    'Você chega na mesa de inscrição antes de olhar o quadro, porque em algum momento dos últimos meses você virou o tipo de pessoa que procura o papel antes de procurar o fato.',
+    d=>fala(d.jogador.nome, 'Eu queria me inscrever no aberto.'),
+    fala('o funcionário da mesa', 'Nome?'),
+    'Você diz. Ele corre o dedo pela coluna e para.',
+    fala('o funcionário da mesa', 'Você já tá inscrito.'),
+    d=>fala(d.jogador.nome, 'Não tô.'),
+    fala('o funcionário da mesa', 'Tá sim, ó: chave quatro. Inscrição paga e confirmada.'),
+    'Ele vira o livro na sua direção pra te mostrar, com a boa vontade de quem acha que está resolvendo um mal-entendido.',
+    'Tem um número de recibo na coluna da direita.',
+    d=>fala(d.jogador.nome, 'Esse recibo, quem emitiu?'),
+    'Ele olha o número. Depois olha de novo.',
+    fala('o funcionário da mesa', 'Esse recibo não é do talão daqui.', 'baixo')
+  ],
+  ef:{flag:['inscrito_por_terceiro','o_recibo_de_outro_talao'],
+      registrar:'A sua inscrição foi paga com um recibo de um talão que não é o da mesa do torneio.',
+      presagio:'Recibo de outro talão quer dizer que o pagamento entrou por outro caixa, e caixa tem dono.'},
+  escolhas:[
+    {texto:'Pedir pra ele descobrir de que talão é.', vai:'c22_exigiu_o_nome'},
+    {texto:'Olhar o quadro de chaveamento antes.', vai:'c22_o_quadro'},
+    {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
+    {texto:'Aceitar e lutar.', vai:'c22_aceitou'}
+  ]
+},
+
 
 c22_o_quadro:{
   texto:[

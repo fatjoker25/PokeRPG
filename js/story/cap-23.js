@@ -1,3 +1,14 @@
+/* ------------------------------------------------------------
+   ABERTURAS — o segundo andar do ginásio de Viridian. Quem abre,
+   e em que estado, muda o que se encontra lá em cima.
+   ------------------------------------------------------------ */
+const C23_ABERTURAS = ['c23_a_escada', 'c23_ab_o_biombo', 'c23_ab_chegou_antes', 'c23_ab_de_cracha'];
+function c23_cabe(id, d){
+  if (id === 'c23_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c23_abertura(d){ return Dados.escolher(C23_ABERTURAS.filter(id => c23_cabe(id, d))); }
+
 /* ============================================================
    CAPÍTULO 23 — O SEGUNDO ANDAR
    Viridian. O ginásio tem um andar que ninguém abre desde que
@@ -7,8 +18,84 @@ CAPITULOS.push(
 
 {
 num:23, titulo:'O Segundo Andar', local:'Viridian — ginásio', ambiente:'cidade', nivelArea:55,
-tom:'muito sombrio', inicio:'c23_a_escada',
+tom:'muito sombrio', entradas:C23_ABERTURAS,
+inicio: d => c23_abertura(d),
 cenas:{
+
+c23_ab_o_biombo:{
+  texto:[
+    'O ginásio de Viridian está vazio e a porta da frente está destrancada, o que não é normal nem num dia normal.',
+    'A linha pintada do chão, o piso de borracha, as duas arquibancadas de três degraus. Tudo no lugar.',
+    'E no fundo à direita, o biombo que sempre esteve encostado na parede escondendo uma escada está deitado no chão.',
+    'Deitado. Não encostado, não afastado: tombado, como quem derruba uma coisa e não volta pra levantar.',
+    'A fita de isolamento da escada está arrancada e enrolada num canto do degrau, e a ponta da fita ainda tem cola.',
+    'Foi hoje.',
+    'Lá de cima não vem barulho nenhum, e "nenhum" é diferente de "vazio": tem uma luz acesa no alto da escada.',
+    fala('Blue', 'Sobe ou vai embora.', 'frio', 'A voz vem de cima e não vem alta.')
+  ],
+  ef:{flag:'blue_abriu_o_segundo_andar',
+      npc:{nome:'Blue', opiniao:0, memoria:'Você chegou depois de ele já ter subido.'},
+      registrar:'O biombo do ginásio de Viridian estava tombado e a escada, aberta.'},
+  escolhas:[
+    {texto:'Subir.', vai:'c23_subiu_com_blue'},
+    {texto:'Perguntar daqui de baixo o que tem lá em cima.', vai:'c23_perguntou_antes'},
+    {texto:'Ir embora. Isso não é da sua conta.', vai:'c23_recusou_subir'}
+  ]
+},
+
+c23_ab_chegou_antes:{
+  texto:[
+    'Você chega no ginásio de Viridian às sete e dez da manhã e o ginásio abre às nove, e por isso você senta na calçada do outro lado da rua pra esperar.',
+    'Às sete e quarenta chega Blue.',
+    'Ele não te vê. Ele destranca a porta, entra, e acende as luzes uma fileira por vez, o que leva um tempo.',
+    'Às oito e cinco ele sai de novo, atravessa a rua, e senta na calçada do seu lado sem falar nada.',
+    'Vocês ficam os dois sentados olhando o próprio ginásio dele.',
+    fala('Blue', 'Tem uma escada lá dentro que eu nunca subi.'),
+    d=>fala(d.jogador.nome, 'Em dois anos?'),
+    fala('Blue', 'Em dois anos.'),
+    'Ele mexe numa pedrinha da calçada com o pé.',
+    fala('Blue', 'A Liga me entregou esse lugar com o segundo andar lacrado e um papel dizendo "arquivo do titular anterior, não mexer".'),
+    fala('Blue', 'E eu obedeci. Eu.', 'baixo'),
+    fala('Blue', 'Isso me incomoda mais do que o que tem lá em cima.')
+  ],
+  ef:{flag:'blue_confessou_na_calcada',
+      npc:{nome:'Blue', opiniao:3, memoria:'Sentou na calçada com você e admitiu que obedeceu por dois anos.'},
+      registrar:'Blue admitiu que nunca subiu a escada do próprio ginásio.'},
+  escolhas:[
+    {texto:'"Então vamos subir agora."', vai:'c23_subiu_com_blue'},
+    {texto:'Perguntar por que hoje.', vai:'c23_por_que_esperou'},
+    {texto:'Perguntar o que ele acha que tem lá.', vai:'c23_perguntou_antes'}
+  ]
+},
+
+c23_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `Você chega no ginásio de Viridian com o crachá de ${c ? c.nome : 'serviço'} e Blue vê o crachá antes de ver você.`;
+    },
+    'Ele olha o crachá por uns três segundos. Aí ri, uma vez, sem alegria.',
+    fala('Blue', 'Ótimo. Então você pode assinar.'),
+    d=>fala(d.jogador.nome, 'Assinar o quê?'),
+    'Ele vai até o balcão do canto e volta com uma folha e uma caneta.',
+    fala('Blue', 'Termo de abertura de arquivo lacrado. A Liga exige duas assinaturas: o titular do ginásio e um agente público.'),
+    fala('Blue', 'Eu sou o titular. Faltava o segundo.'),
+    d=>fala(d.jogador.nome, 'Há quanto tempo falta?'),
+    fala('Blue', 'Dois anos.'),
+    'Ele põe a folha e a caneta na sua mão.',
+    fala('Blue', 'Eu pedi quatro vezes. Mandaram quatro respostas diferentes e nenhuma mandou ninguém.', 'frio')
+  ],
+  ef:{flag:['blue_abriu_o_segundo_andar','o_termo_de_abertura'],
+      npc:{nome:'Blue', opiniao:2, memoria:'Precisou da sua assinatura de agente público para abrir o arquivo lacrado.'},
+      registrar:'Blue pediu quatro vezes um agente público para abrir o arquivo do segundo andar. Nunca mandaram ninguém.',
+      presagio:'Quatro respostas e nenhum agente. Não é lentidão: é uma porta que alguém não quer que abra.'},
+  escolhas:[
+    {texto:'Assinar e subir com ele.', vai:'c23_subiu_com_blue'},
+    {texto:'Perguntar o que tem lá em cima antes de assinar.', vai:'c23_perguntou_antes'},
+    {texto:'Não assinar.', vai:'c23_recusou_subir'}
+  ]
+},
+
 
 c23_a_escada:{
   texto:[
