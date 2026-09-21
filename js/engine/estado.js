@@ -200,6 +200,10 @@ const ITENS_INFO = {
                       desc:'Moeda antiga furada e pendurada num barbante. Não vale nada como moeda.'},
 
   /* ─────────── ferramenta ─────────── */
+  'Machado':        {tipo:'ferramenta', cat:'Ferramenta', ficha:'Abre mato fechado, cerca viva e tapume de madeira',
+                     desc:'Cabo curto, lâmina de um palmo. Não é arma e não serve como arma: é do tamanho certo pra galho e do tamanho errado pra qualquer outra coisa.'},
+  'Picareta':       {tipo:'ferramenta', cat:'Ferramenta', ficha:'Quebra pedra solta, reboco e parede fina',
+                     desc:'Bico de um lado, pá do outro, cabo de madeira com a marca de quem segurou por anos. Pesa mais do que você imagina até levantar.'},
   'Corda':          {tipo:'ferramenta', cat:'Ferramenta', ficha:'12 m · usada em cenas de escalada, descida e resgate',
                      desc:'Doze metros. Serve pra mais coisa do que parece e pesa mais do que devia.'},
   'Lanterna':       {tipo:'ferramenta', cat:'Ferramenta', ficha:'Pilha média · usada em caverna, porão e área sem luz',

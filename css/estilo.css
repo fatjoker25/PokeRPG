@@ -1816,3 +1816,6 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   font-style:italic;
 }
 .escolha.discreta:hover{ opacity:1; }
+
+/* Capacidade de campo que o time ainda não tem. */
+.linha .v.nao{ opacity:.55; font-style:italic; }

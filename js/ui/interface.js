@@ -2234,6 +2234,9 @@ const UI = {
             `<div class="linha"><span class="k">${this.esc(def.nome)} <span class="sussurro">${this.esc(def.desde)} · ${this.esc(def.origem)}</span></span>
              <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>`).join('')
         : ''}
+      ${(typeof Campo !== 'undefined') ? '<h3>O que dá pra fazer no mundo</h3>' + Campo.resumo().map(([nome, r]) =>
+        `<div class="linha"><span class="k">${this.esc(nome)}</span><span class="v ${r.pode?'':'nao'}">${
+          r.pode ? this.esc(r.como || 'sim') : this.esc('falta ' + r.falta)}</span></div>`).join('') : ''}
       ${npcs.length ? '<h3>Quem lembra de você</h3>' + npcs.map(n =>
         `<div class="linha"><span class="k">${this.esc(n.nome)} <span class="sussurro">${this.esc((n.memorias||[]).slice(-1)[0]?.texto||'')}</span></span>
          <span class="v" style="color:${n.opiniao>0?'var(--bom)':n.opiniao<0?'var(--ruim)':'var(--texto-fraco)'}">${n.opiniao>0?'+':''}${n.opiniao}</span></div>`).join('') : ''}
@@ -2723,6 +2726,18 @@ const UI = {
       ${L('Pallet, Viridian, Fuchsia', '1×')}
       ${L('Cerulean', '1,05×')} ${L('Lavender', '1,1×')} ${L('Pewter', '1,15×')}
       ${L('Cinnabar', '1,25×')} ${L('Saffron', '1,3× — tudo com nota fiscal')}
+      <h3>Cortar, atravessar, voar, forçar, iluminar</h3>
+      <div class="linha"><span class="k">Não existe HM</span><span class="v">nenhum Pokémon aprende "Corte" nem "Surf" neste jogo</span></div>
+      <div class="linha"><span class="k">Cortar</span><span class="v">machado na mochila · 900 ₽ na ferragem de Pewter e no posto do Safári</span></div>
+      <div class="linha"><span class="k">Quebrar pedra</span><span class="v">picareta na mochila · 1.100 ₽ na ferragem de Pewter</span></div>
+      <div class="linha"><span class="k">Atravessar água</span><span class="v">Pokémon do tipo Água de porte médio ou grande</span></div>
+      <div class="linha"><span class="k">Voar</span><span class="v">Pokémon do tipo Voador de grande porte, e que voe de verdade</span></div>
+      <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
+      <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista o que o seu time consegue fazer agora</span></div>
+      <p class="sussurro">Metade disso é objeto e metade é o corpo do bicho. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
+      <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
+
       <h3>Perguntar o nome</h3>
       <div class="linha"><span class="k">Quando aparece</span><span class="v">sempre que fala com você alguém que o jogo chama pela função</span></div>
       <div class="linha"><span class="k">Como</span><span class="v">o botão no fim da cena, ou escrevendo "qual é o seu nome?"</span></div>
@@ -2898,6 +2913,18 @@ const UI = {
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
       <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
+      <h3>Cortar, atravessar, voar, forçar, iluminar</h3>
+      <div class="linha"><span class="k">Não existe HM</span><span class="v">nenhum Pokémon aprende "Corte" nem "Surf" neste jogo</span></div>
+      <div class="linha"><span class="k">Cortar</span><span class="v">machado na mochila · 900 ₽ na ferragem de Pewter e no posto do Safári</span></div>
+      <div class="linha"><span class="k">Quebrar pedra</span><span class="v">picareta na mochila · 1.100 ₽ na ferragem de Pewter</span></div>
+      <div class="linha"><span class="k">Atravessar água</span><span class="v">Pokémon do tipo Água de porte médio ou grande</span></div>
+      <div class="linha"><span class="k">Voar</span><span class="v">Pokémon do tipo Voador de grande porte, e que voe de verdade</span></div>
+      <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
+      <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista o que o seu time consegue fazer agora</span></div>
+      <p class="sussurro">Metade disso é objeto e metade é o corpo do bicho. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
+      <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
 
       <h3>Perguntar o nome</h3>
       <div class="linha"><span class="k">Quando aparece</span><span class="v">sempre que fala com você alguém que o jogo chama pela função</span></div>

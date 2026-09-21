@@ -9,7 +9,7 @@ const PRECO_BASE = {
   'Revive':1500, 'Antidote':250, 'Full Heal':600,
   'Bandagem':400, 'Ração':350, 'Água Fresca':250, 'Cantil':500,
   'Éter':900, 'Elixir':2000, 'Boneco':700, 'Repelente':400,
-  'Corda':450, 'Lanterna':600, 'Pilha':180, 'Isca':150,
+  'Corda':450, 'Lanterna':600, 'Pilha':180, 'Isca':150, 'Machado':900, 'Picareta':1100,
   'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
   'Câmera descartável':800, 'Caderno de campo':350, 'Mapa de Kanto':600,
   'Pedra do Fogo':4000, 'Pedra da Água':4000, 'Pedra do Trovão':4000,
@@ -45,7 +45,7 @@ const LOJAS = {
     nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro','Mochila Marrom']
+    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro','Mochila Marrom']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
@@ -100,7 +100,7 @@ const LOJAS = {
     nome:'Posto da Zona Safári',
     ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Água Fresca','Mapa de Kanto','Antidote','Full Heal','Resto de Ração']
+    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Full Heal','Resto de Ração']
   },
   saffron: {
     nome:'Conveniência Silph — térreo',

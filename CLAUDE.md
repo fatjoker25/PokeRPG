@@ -56,6 +56,25 @@ mais personagem que o jogo esconde, é personagem que o jogador ainda não
 perguntou. Quem não deve dizer entra em `RECUSAM_O_NOME`, com a recusa
 escrita à mão — porque recusar é caracterização e não pode ser sorteada.
 
+## Não existe HM
+Nenhum Pokémon aprende "Corte" ou "Surf" aqui. O que existe:
+
+- **machado** e **picareta** são objeto de mochila, comprados na ferragem;
+- **atravessar água** pede tipo Água de porte médio ou grande;
+- **voar** pede tipo Voador de porte grande que voe de verdade — Doduo,
+  Dodrio e Gyarados têm o tipo e não decolam, e estão em `NAO_DECOLA`;
+- **forçar** pede porte grande, de qualquer tipo;
+- **iluminar** pede lanterna (gasta pilha) ou bicho que emita luz (não gasta).
+
+Porte e luz moram em `js/data/porte.js`, por número de dex. `Campo.cortar()`,
+`.surfar()`, `.voar()`, `.forcar()`, `.quebrar()` e `.iluminar()` devolvem
+`{pode, quem, como, falta}` — sempre com o `falta` preenchido, porque a cena
+precisa poder **dizer o que falta** em vez de esconder a opção. Ver a porta
+fechada é o que faz querer a chave.
+
+Cena nova que dependa disso entra em `js/story/campo.js`, com `portaDeCampo()`
+pro rótulo que muda sozinho. `ferramentas/chk-campo.js` confere.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
