@@ -1,3 +1,16 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a sala 704 é uma sala de reunião comum num prédio
+   comum, e é por isso que o capítulo é o que é. Dá pra chegar
+   nela pela banca de jornal, pelo elevador, pela farmácia do
+   térreo ou pela porta, direto.
+   ------------------------------------------------------------ */
+const C20_ABERTURAS = ['c20_predio', 'c20_ab_a_banca', 'c20_ab_o_elevador', 'c20_ab_a_farmacia'];
+function c20_cabe(id, d){ return true; }
+function c20_abertura(d){
+  const cand = C20_ABERTURAS.filter(id => c20_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 20 — A PRESIDENTE
    Sala comercial, sétimo andar, farmácia no térreo.
@@ -5,8 +18,232 @@
 CAPITULOS.push(
 {
 num:20, titulo:'A Presidente', local:'Saffron — sala 704', ambiente:'cidade', nivelArea:60,
-tom:'muito sombrio', inicio:'c20_predio',
+tom:'muito sombrio', entradas:C20_ABERTURAS,
+inicio: d => c20_abertura(d),
 cenas:{
+
+c20_ab_a_banca:{
+  texto:[
+    'Rua do Comércio, 118. Antes de entrar no prédio você para na banca de jornal da porta, porque você está adiando e porque banca de jornal é o melhor lugar do mundo pra adiar.',
+    'O jornaleiro tem uns sessenta anos, um banquinho e um rádio pequeno tocando baixo.',
+    d=>fala(d.jogador.nome, 'O senhor tá aqui há muito tempo?'),
+    fala('o jornaleiro', 'Vinte e seis anos nessa esquina.'),
+    d=>fala(d.jogador.nome, 'O senhor conhece o pessoal do sétimo andar?'),
+    'Ele não pergunta por que você quer saber, o que é a gentileza dos jornaleiros.',
+    fala('o jornaleiro', 'Sala 704? Conheço doze deles de vista.'),
+    fala('o jornaleiro', 'Eles vêm uma vez por mês, numa terça, sempre de manhã.'),
+    'Ele dobra um jornal pra um cliente sem parar de falar.',
+    fala('o jornaleiro', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
+    fala('o jornaleiro', 'São gente normal, moço. É isso que eu ia te falar antes de você perguntar.')
+  ],
+  ef:{flag:'o_jornaleiro_da_118',
+      npc:{nome:'o jornaleiro', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
+      registrar:'O conselho da sala 704 se reúne uma vez por mês, numa terça de manhã, há anos.',
+      presagio:'"São gente normal." Ele disse isso antes de você perguntar como eles são.'},
+  escolhas:[
+    {texto:'Perguntar se ele sabe o que eles fazem.', vai:'c20_ab_o_que_eles_fazem'},
+    {texto:'Perguntar quem é a mulher da cabeceira.', vai:'c20_ab_a_mulher_da_cabeceira'},
+    {texto:'Subir.', vai:'c20_predio'}
+  ]
+},
+
+c20_ab_o_que_eles_fazem:{
+  texto:[
+    fala('o jornaleiro', 'Sei lá. É uma sigla.'),
+    'Ele coça a nuca.',
+    fala('o jornaleiro', 'Já perguntei uma vez, faz uns dez anos, pra uma delas. Ela falou que é gestão de recurso.'),
+    d=>fala(d.jogador.nome, 'Recurso de quê?'),
+    fala('o jornaleiro', 'Foi exatamente o que eu perguntei.'),
+    'Ele ri, e é um riso curto de quem lembra de uma coisa engraçada de dez anos atrás.',
+    fala('o jornaleiro', 'Ela falou "recurso natural" e sorriu e comprou uma revista de palavra cruzada.'),
+    'Ele volta a arrumar os jornais.',
+    fala('o jornaleiro', 'E eu achei ótimo, porque recurso natural é árvore, é água. É coisa boa.', 'baixo'),
+    fala('o jornaleiro', 'Eu achei isso por dez anos.')
+  ],
+  ef:{flag:'recurso_natural',
+      registrar:'Uma conselheira da 704 descreveu o trabalho como "gestão de recurso natural".',
+      presagio:'Recurso natural é uma categoria contábil. Cabe árvore, cabe água, e cabe outra coisa.'},
+  escolhas:[
+    {texto:'Perguntar quem é a mulher da cabeceira.', vai:'c20_ab_a_mulher_da_cabeceira'},
+    {texto:'Subir.', vai:'c20_predio'}
+  ]
+},
+
+c20_ab_a_mulher_da_cabeceira:{
+  texto:[
+    'Você descreve: cinquenta e poucos anos, tailleur cinza, senta na cabeceira.',
+    'Ele sabe de quem você está falando antes de você terminar.',
+    fala('o jornaleiro', 'A presidente. Ela vem a pé.'),
+    d=>fala(d.jogador.nome, 'A pé?'),
+    fala('o jornaleiro', 'A pé, de sacola de pano, todo mês. Ela mora a seis quadras.'),
+    'Ele aponta com o queixo numa direção qualquer.',
+    fala('o jornaleiro', 'Ela compra o mesmo jornal há não sei quantos anos e sempre paga contado e nunca pede troco arredondado.'),
+    fala('o jornaleiro', 'Uma vez o filho dela ficou doente e ela me contou. Aí eu perguntei do menino no mês seguinte e ela ficou tão feliz que eu tinha lembrado que ela quase chorou.'),
+    'Ele arruma uma pilha de revista.',
+    fala('o jornaleiro', 'Eu tô te falando isso porque você tá com cara de quem vai subir e brigar com alguém.'),
+    fala('o jornaleiro', 'Sobe. Mas sobe sabendo que ela é assim.')
+  ],
+  ef:{flag:'a_presidente_vem_a_pe',
+      registrar:'A presidente do conselho vem a pé, de sacola de pano, e mora a seis quadras.',
+      presagio:'Ninguém do outro lado dessa mesa vai parecer o que você precisa que ele pareça.'},
+  escolhas:[
+    {texto:'Subir.', vai:'c20_predio'},
+    {texto:'Sentar na banca mais um pouco antes.', vai:'c20_ab_sentou_na_banca'}
+  ]
+},
+
+c20_ab_sentou_na_banca:{
+  texto:[
+    'Ele te empresta o banquinho dele e fica em pé, o que você tenta recusar e não consegue.',
+    'Você fica sentado na esquina da Rua do Comércio por uns vinte minutos, olhando a porta do 118.',
+    'Nesses vinte minutos entram no prédio: dois entregadores, uma mulher com uma criança de colo, um homem de terno com pasta, três adolescentes de uniforme escolar e um senhor com um saco de pão.',
+    'Nenhum deles parece nada.',
+    'Você entende, sentado num banquinho emprestado, a coisa mais difícil deste capítulo: você veio preparado pra um esconderijo e vai entrar numa reunião.',
+    'E não existe treino pra isso.'
+  ],
+  ef:{flag:'sentou_na_banca', hp:2,
+      registrar:'Sentou vinte minutos na banca antes de subir.'},
+  escolhas:[
+    {texto:'Subir.', vai:'c20_predio'}
+  ]
+},
+
+c20_ab_o_elevador:{
+  texto:[
+    'O elevador do 118 é de 1971 e demora, e a demora dele é parte da arquitetura do prédio: todo mundo que vai ao sétimo andar passa um minuto e quarenta parado no saguão.',
+    'Você passa esse minuto e quarenta com outras três pessoas.',
+    'Uma mulher com uma pasta de couro. Um homem com um saquinho de padaria. Uma moça com uma pilha de papel e uma caneta atrás da orelha.',
+    'O elevador chega. Vocês quatro entram. A mulher da pasta aperta o sete sem perguntar a ninguém, e quando ela aperta o sete, o homem do saquinho de padaria não aperta nada.',
+    'Nem a moça do papel.',
+    'Três dos quatro vão pro sétimo andar. Só você não apertou nada.',
+    'A moça do papel olha pro painel, depois pra você.',
+    fala('a moça do papel', 'Sétimo também?'),
+    'É a pergunta mais simples do mundo e você leva dois segundos pra responder.'
+  ],
+  ef:{flag:'subiu_no_elevador_com_eles',
+      registrar:'Subiu no elevador do 118 com três pessoas do conselho.'},
+  escolhas:[
+    {texto:'"Sétimo."', vai:'c20_ab_disse_setimo'},
+    {texto:'"Eu não sei ainda."', vai:'c20_ab_nao_sei_ainda'},
+    {texto:'Não responder.', vai:'c20_predio'}
+  ]
+},
+
+c20_ab_disse_setimo:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Sétimo.'),
+    'Ela aperta o sete de novo, sem precisar, que é o gesto automático de quem ouviu.',
+    fala('a moça do papel', 'Você é do conselho ou é visita?'),
+    d=>fala(d.jogador.nome, 'Visita.'),
+    fala('a moça do papel', 'Ah, ótimo. A gente quase nunca tem visita.'),
+    'Ela diz isso com alegria genuína, e isso é a coisa mais desorientadora que te aconteceu em semanas.',
+    fala('a moça do papel', 'A pauta de hoje é chata, aviso desde já. Cronograma de liberação e aprovação de ata.'),
+    'O elevador passa pelo quarto andar.',
+    fala('a moça do papel', 'Mas tem café na porta. O café é bom. É a única coisa que a gente faz bem por unanimidade.'),
+    'A mulher da pasta de couro dá um riso curto pelo nariz.',
+    'O elevador chega no sétimo e a porta abre e é um corredor com carpete gasto.'
+  ],
+  ef:{flag:'foi_recebido_como_visita',
+      npc:{nome:'a moça do papel', opiniao:1, viuVoce:'Te recebeu no elevador como visita da reunião.'},
+      registrar:'A pauta da reunião de hoje é cronograma de liberação e aprovação de ata.'},
+  escolhas:[
+    {texto:'Entrar na sala com eles.', vai:'c20_predio'},
+    {texto:'Ficar no corredor e tomar o café primeiro.', vai:'c20_cafe'}
+  ]
+},
+
+c20_ab_nao_sei_ainda:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu não sei ainda.'),
+    'Os três olham pra você ao mesmo tempo, e é o homem do saquinho de padaria que fala, e ele fala com a boca cheia de uma coisa que ele acabou de comer.',
+    fala('o homem do saquinho', 'Melhor resposta que eu já ouvi nesse elevador.'),
+    'A mulher da pasta de couro não acha graça. Ela te olha do jeito que se olha um problema de agenda.',
+    fala('a mulher da pasta', 'Você é jornalista?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('a mulher da pasta', 'Advogado de alguma parte?'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    'O elevador passa pelo quinto andar. Ninguém fala nada por dois andares, o que num elevador é uma eternidade.',
+    fala('a mulher da pasta', 'Então você é a terceira coisa.'),
+    'Ela não diz qual é a terceira coisa. A porta abre no sétimo.'
+  ],
+  ef:{flag:'a_terceira_coisa',
+      npc:{nome:'a mulher da pasta de couro', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
+      registrar:'A mulher da pasta de couro te classificou como "a terceira coisa".',
+      presagio:'Ela tem uma lista de três tipos de gente que sobe nesse elevador. Duas ela sabe lidar.'},
+  escolhas:[
+    {texto:'Entrar na sala atrás deles.', vai:'c20_predio'},
+    {texto:'Ficar no corredor e tomar o café primeiro.', vai:'c20_cafe'}
+  ]
+},
+
+c20_ab_a_farmacia:{
+  texto:[
+    'Tem uma farmácia no térreo do 118 e você entra nela porque está com dor de cabeça de verdade e porque a farmácia atrasa a subida em mais dez minutos.',
+    'A balconista tem uns trinta anos e um crachá com o nome dela e uma caneta presa no bolso do jaleco.',
+    'Você compra o analgésico mais barato e toma ali mesmo, com água do bebedouro.',
+    d=>fala(d.jogador.nome, 'Você conhece o pessoal da 704?'),
+    fala('a balconista', 'Da reunião?'),
+    'Ela nem levanta os olhos do caixa.',
+    fala('a balconista', 'Eles descem aqui de vez em quando. Uma delas compra remédio de pressão.'),
+    d=>fala(d.jogador.nome, 'Você sabe o que eles fazem?'),
+    fala('a balconista', 'Reunião, ué.'),
+    'E aí ela levanta os olhos, porque a pergunta foi estranha.',
+    fala('a balconista', 'Por quê? Eles devem alguma coisa pra você?'),
+    'É a pergunta certa, feita pela pessoa errada, e ela é a primeira pessoa a fazer ela em voz alta.'
+  ],
+  ef:{dinheiro:-40, hp:2, flag:'a_farmacia_do_terreo',
+      registrar:'Uma das conselheiras da 704 compra remédio de pressão na farmácia do térreo.'},
+  escolhas:[
+    {texto:'"Devem."', vai:'c20_ab_devem'},
+    {texto:'"Ainda não sei."', vai:'c20_predio'},
+    {texto:'Perguntar qual delas compra o remédio.', vai:'c20_ab_qual_delas'}
+  ]
+},
+
+c20_ab_devem:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Devem.'),
+    'Ela fecha a gaveta do caixa devagar.',
+    fala('a balconista', 'Então sobe e cobra.'),
+    d=>fala(d.jogador.nome, 'É o que eu vim fazer.'),
+    fala('a balconista', 'Então por que você tá comprando analgésico?'),
+    'Você não tem resposta pra isso.',
+    'Ela pega o troco e conta na sua mão, moeda por moeda, sem pressa.',
+    fala('a balconista', 'Meu pai trabalhou vinte e dois anos numa firma que devia pra ele. Ele nunca subiu cobrar.'),
+    fala('a balconista', 'Ele reclamava todo domingo no almoço, por vinte e dois anos.'),
+    'Ela fecha a sua mão em volta do troco com as duas mãos dela.',
+    fala('a balconista', 'Sobe.', 'baixo')
+  ],
+  ef:{flag:'a_balconista_mandou_subir', moral:1,
+      npc:{nome:'a balconista', opiniao:2, viuVoce:'Fechou a sua mão em volta do troco e mandou você subir.'},
+      registrar:'A balconista da farmácia do térreo mandou você subir e cobrar.'},
+  escolhas:[
+    {texto:'Subir.', vai:'c20_predio'}
+  ]
+},
+
+c20_ab_qual_delas:{
+  texto:[
+    fala('a balconista', 'A da cabeceira. A que manda.'),
+    d=>fala(d.jogador.nome, 'Como você sabe que ela é a que manda?'),
+    fala('a balconista', 'Porque ela é a única que desce sozinha.'),
+    'Ela arruma umas caixas no balcão.',
+    fala('a balconista', 'Os outros descem em dupla, em trio, conversando. Ela desce sozinha, compra, e sobe.'),
+    fala('a balconista', 'E uma vez ela esqueceu a receita aqui e eu subi pra devolver.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('a balconista', 'E a porta tava aberta e eles tavam discutindo, e pararam quando eu bati.'),
+    'Ela dá de ombros.',
+    fala('a balconista', 'Eles discutem. Eu achei isso interessante. Eu achava que gente assim não discutia.')
+  ],
+  ef:{flag:'eles_discutem',
+      registrar:'O conselho da 704 discute entre si. A presidente é a única que desce sozinha.',
+      presagio:'Se eles discutem, não são um bloco. Se não são um bloco, tem alguém na mesa que perde as votações.'},
+  escolhas:[
+    {texto:'Subir.', vai:'c20_predio'},
+    {texto:'"Eles devem alguma coisa pra mim."', vai:'c20_ab_devem'}
+  ]
+},
+
 
 c20_predio:{
   texto:[

@@ -1,3 +1,19 @@
+/* ------------------------------------------------------------
+   ABERTURAS — o capítulo do nome. Ele começa onde a ficha cai:
+   numa fila de banco, num arquivo público, na conta de um
+   contador, ou na mesa de quem já tinha o nome e não tinha papel.
+   ------------------------------------------------------------ */
+const C18_ABERTURAS = ['c18_fio', 'c18_ab_a_fila_do_banco', 'c18_ab_o_diario_oficial', 'c18_ab_a_reporter', 'c18_ab_de_cracha'];
+function c18_cabe(id, d){
+  if (id === 'c18_ab_a_reporter') return !!(d.flags.falou_com_a_imprensa || d.flags.reika_precisa_de_papel || d.flags.reika_te_abordou);
+  if (id === 'c18_ab_de_cracha')  return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  return true;
+}
+function c18_abertura(d){
+  const cand = C18_ABERTURAS.filter(id => c18_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 18 — ATAS
    O que veio depois da Rocket não usa uniforme. Usa estatuto.
@@ -5,8 +21,341 @@
 CAPITULOS.push(
 {
 num:18, titulo:'Atas', local:'Saffron / Celadon', ambiente:'cidade', nivelArea:52,
-tom:'muito sombrio', inicio:'c18_fio',
+tom:'muito sombrio', entradas:C18_ABERTURAS,
+inicio: d => c18_abertura(d),
 cenas:{
+
+c18_ab_a_fila_do_banco:{
+  texto:[
+    'A ficha cai numa fila de banco em Saffron, o que é o lugar mais banal possível pra uma ficha cair.',
+    'Você está lá por um motivo idiota — trocar uma nota rasgada — e a fila tem dezenove pessoas e leva quarenta minutos.',
+    'Na parede, ao lado do caixa, tem um quadro emoldurado com dizeres em letra de fôrma:',
+    '**PRESTAÇÃO DE CONTAS — CONVÊNIOS E REPASSES — EXERCÍCIO ANTERIOR**',
+    'É uma folha de papel almaço datilografada, pendurada porque a lei obriga a pendurar, num lugar onde todo mundo fica quarenta minutos parado sem nada pra ler.',
+    'Você lê porque não tem nada pra fazer.',
+    'Tem quatorze linhas. Nome do convenente, objeto, valor.',
+    'E na décima primeira linha, entre um convênio de merenda e um de pavimentação, está uma sigla que você já viu escrita à mão num livro de destinos e numa etiqueta de caixa térmica.'
+  ],
+  ef:{flag:'viu_a_sigla_no_quadro',
+      registrar:'A sigla apareceu num quadro de prestação de contas pendurado numa agência bancária de Saffron.',
+      presagio:'Ela estava num quadro na parede de um banco o tempo todo. Ninguém precisava esconder o que ninguém lê.'},
+  escolhas:[
+    {texto:'Anotar a linha inteira e sair da fila.', vai:'c18_ab_anotou_a_linha'},
+    {texto:'Perguntar ao gerente o que é aquele quadro.', vai:'c18_ab_o_gerente'},
+    {texto:'Ir direto ao cartório de pessoas jurídicas.', vai:'c18_cartorio'}
+  ]
+},
+
+c18_ab_anotou_a_linha:{
+  texto:[
+    'Você copia a linha inteira no verso da nota rasgada, que é o único papel que você tem na mão.',
+    'Convenente: a sigla. Objeto: "gestão de fauna — programa continuado". Valor: um número de sete dígitos.',
+    'Sete dígitos. Um número que precisa de vírgula pra ser lido em voz alta.',
+    'Você sai da fila sem trocar a nota e a nota rasgada agora vale mais rasgada do que valia inteira.',
+    'Na calçada, você lê de novo.',
+    '"Programa continuado" quer dizer que não é um contrato: é uma rotina orçamentária que se renova sozinha todo ano até alguém cancelar.',
+    'E ninguém cancela o que ninguém lê.'
+  ],
+  ef:{flag:['tem_a_linha_do_convenio','reika_precisa_de_papel'],
+      registrar:'Anotou a linha do convênio: "gestão de fauna — programa continuado", valor de sete dígitos.',
+      presagio:'Programa continuado se renova sozinho. Isso não começou ano passado.'},
+  escolhas:[
+    {texto:'Ir ao cartório de registro de pessoas jurídicas.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca procurar o nome em jornal velho.', vai:'c18_hemeroteca'},
+    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+  ]
+},
+
+c18_ab_o_gerente:{
+  texto:[
+    'O gerente tem uns quarenta e cinco anos e uma mesa com três porta-retratos virados pra ele e nenhum pra você.',
+    d=>fala(d.jogador.nome, 'Aquele quadro da parede. O que é?'),
+    'Ele olha pro quadro como quem olha pra um móvel.',
+    fala('o gerente', 'Prestação de contas. Convênio público passa por agência bancária e agência publica.'),
+    d=>fala(d.jogador.nome, 'E alguém lê?'),
+    fala('o gerente', 'Você.'),
+    'Ele diz isso sem ironia nenhuma, o que é pior que ironia.',
+    fala('o gerente', 'Eu trabalho aqui há onze anos. Você é a primeira pessoa que pergunta desse quadro.'),
+    d=>fala(d.jogador.nome, 'E onde ficam os quadros dos anos anteriores?'),
+    'Aí ele para.',
+    fala('o gerente', 'No arquivo morto. Por dez anos, por lei.'),
+    'Ele olha pro quadro de novo, dessa vez de verdade.',
+    fala('o gerente', 'Você quer ver os dez?')
+  ],
+  ef:{flag:'o_gerente_ofereceu_os_dez',
+      npc:{nome:'o gerente', opiniao:1, viuVoce:'Você foi a primeira pessoa em onze anos a perguntar do quadro.'},
+      registrar:'O banco guarda dez anos de prestações de contas no arquivo morto, por lei.'},
+  escolhas:[
+    {texto:'Ver os dez anos.', vai:'c18_ab_os_dez_anos'},
+    {texto:'Só anotar a linha deste ano e ir embora.', vai:'c18_ab_anotou_a_linha'},
+    {texto:'Ir ao cartório de pessoas jurídicas.', vai:'c18_cartorio'}
+  ]
+},
+
+c18_ab_os_dez_anos:{
+  texto:[
+    'O arquivo morto do banco é uma sala de dois por três com prateleira de metal e uma lâmpada fluorescente que pisca.',
+    'Ele tira dez pastas e põe na mesinha, e senta com você, o que ele não precisava fazer.',
+    'Vocês passam quarenta minutos abrindo pasta e procurando a sigla.',
+    'Ela aparece em oito dos dez anos.',
+    'E o valor cresce numa curva que não é curva de convênio de fauna: noventa e três, dois dígitos. Noventa e sete, três. Ano passado, sete.',
+    fala('o gerente', 'Isso aqui não é reajuste.'),
+    d=>fala(d.jogador.nome, 'Não.'),
+    fala('o gerente', 'Reajuste é dez por cento, quinze por cento.'),
+    'Ele fecha a pasta do ano passado com cuidado, do jeito que se fecha uma coisa que assusta.',
+    fala('o gerente', 'Isso multiplicou por mil em sete anos e passou por essa agência e eu assinei o recebimento de todas.', 'baixo')
+  ],
+  ef:{flag:['oito_anos_de_convenio','reika_precisa_de_papel','tem_a_linha_do_convenio'],
+      npc:{nome:'o gerente', opiniao:3, viuVoce:'Sentou com você no arquivo morto e abriu dez anos de pasta.'},
+      registrar:'O convênio aparece em oito dos dez anos e multiplicou por mil em sete anos.',
+      presagio:'Ele assinou o recebimento de todas. Agora ele sabe disso, e isso não tem volta pra ele.'},
+  escolhas:[
+    {texto:'Pedir cópia dos oito.', vai:'c18_ab_copia_dos_oito'},
+    {texto:'Ir ao cartório de pessoas jurídicas com o nome.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'}
+  ]
+},
+
+c18_ab_copia_dos_oito:{
+  texto:[
+    'Ele tira as cópias ele mesmo, na máquina da sala dele, com a porta fechada.',
+    'Oito folhas. Ele não carimba e não assina.',
+    fala('o gerente', 'Eu não posso autenticar. Se eu autenticar, fica meu nome.'),
+    d=>fala(d.jogador.nome, 'Seu nome já tá nas oito originais.'),
+    'Ele para com a última folha na mão.',
+    fala('o gerente', 'É.'),
+    'E assina. E carimba. E data.',
+    fala('o gerente', 'Pronto. Agora tá duas vezes.'),
+    'Ele entrega as oito e volta pra mesa dele e vira um dos porta-retratos pra frente, o que não tem nada a ver e tem tudo a ver.'
+  ],
+  ef:{flag:['copia_dos_oito_convenios','reika_precisa_de_papel'],
+      rep:{eixo:'bom', delta:1, motivo:'Um gerente de banco autenticou, com o próprio nome, oito anos de convênio.'},
+      npc:{nome:'o gerente', opiniao:5, viuVoce:'Autenticou as oito cópias com nome, carimbo e data.'},
+      registrar:'Tem oito prestações de contas autenticadas pelo gerente da agência.'},
+  escolhas:[
+    {texto:'Ir ao cartório de pessoas jurídicas.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'},
+    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+  ]
+},
+
+c18_ab_o_diario_oficial:{
+  texto:[
+    'A biblioteca pública de Celadon tem uma sala no subsolo que se chama, numa plaquinha de madeira, PERIÓDICOS OFICIAIS.',
+    'É uma sala com onze estantes de diário oficial encadernado por semestre, desde mil novecentos e cinquenta e dois, e uma mesa comprida com seis cadeiras.',
+    'Às nove da manhã de uma terça-feira tem uma pessoa na sala, e é o bibliotecário, e ele está dormindo sentado.',
+    'Ele acorda quando você entra e fica genuinamente feliz, o que é constrangedor.',
+    fala('o bibliotecário', 'Pesquisa? Você tá pesquisando?'),
+    d=>fala(d.jogador.nome, 'Tô procurando um nome.'),
+    fala('o bibliotecário', 'Nome de quê? Empresa, pessoa, associação, fundação, autarquia?'),
+    'Ele já está de pé e já está andando pra uma estante.',
+    fala('o bibliotecário', 'Porque cada um sai numa seção diferente e num dia diferente da semana, e se você não souber a seção você vai ler quarenta e oito anos de diário e eu vou ter que te ver fazendo isso.')
+  ],
+  ef:{flag:'achou_a_hemeroteca_oficial',
+      npc:{nome:'o bibliotecário', opiniao:2, viuVoce:'Você é a primeira pessoa a entrar na sala de periódicos oficiais em muito tempo.'},
+      registrar:'A sala de periódicos oficiais da biblioteca de Celadon tem 48 anos de diário oficial encadernado.'},
+  escolhas:[
+    {texto:'"Associação. Ou fundação. Alguma coisa com conselho."', vai:'c18_ab_a_secao_certa'},
+    {texto:'"Eu não sei. Me ensina a procurar."', vai:'c18_ab_ensina_a_procurar'},
+    {texto:'Agradecer e ir ao cartório em vez disso.', vai:'c18_cartorio'}
+  ]
+},
+
+c18_ab_a_secao_certa:{
+  texto:[
+    fala('o bibliotecário', 'Então é a seção três. Sai às quintas.'),
+    'Ele puxa um volume de uma estante sem precisar procurar, o que é um truque de vinte anos de sala vazia.',
+    fala('o bibliotecário', 'Constituição, alteração e extinção de pessoa jurídica de direito privado sem fins lucrativos.'),
+    fala('o bibliotecário', 'Tudo que é conselho, comissão, instituto e fundação nasce numa dessas páginas. Tem que nascer. É lei.'),
+    d=>fala(d.jogador.nome, 'E se não nasceu?'),
+    'Ele para com o dedo no volume.',
+    fala('o bibliotecário', 'Aí não existe.'),
+    fala('o bibliotecário', 'E se não existe e mesmo assim manda em alguma coisa, meu jovem, aí você tem um problema que não é de biblioteca.')
+  ],
+  ef:{flag:'a_secao_tres_das_quintas',
+      registrar:'Toda comissão, conselho ou fundação precisa nascer na seção 3 do diário oficial, publicada às quintas.'},
+  escolhas:[
+    {texto:'Procurar na seção três.', vai:'c18_hemeroteca'},
+    {texto:'Ir ao cartório de pessoas jurídicas primeiro.', vai:'c18_cartorio'},
+    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+  ]
+},
+
+c18_ab_ensina_a_procurar:{
+  texto:[
+    'Ele te ensina por uma hora e dez e não olha pro relógio uma vez.',
+    'Você aprende: que diário oficial tem índice onomástico no último volume do semestre; que o índice remete à página e à coluna; que ato de constituição traz sempre o nome dos fundadores e o objeto social; e que o objeto social é onde as pessoas mentem com mais criatividade.',
+    'Você aprende também uma coisa que não estava no plano dele ensinar.',
+    fala('o bibliotecário', 'Se o nome não estiver no índice, tenta o índice do semestre seguinte.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('o bibliotecário', 'Porque tem gente que publica em dezembro, entre o Natal e o ano novo, e cai no índice do semestre seguinte por erro de fechamento.'),
+    'Ele arruma os volumes na mesa, alinhados.',
+    fala('o bibliotecário', 'Quem quer publicar sem ninguém ver, publica entre o Natal e o ano novo.', 'baixo')
+  ],
+  ef:{flag:['aprendeu_a_ler_diario','a_secao_tres_das_quintas'],
+      npc:{nome:'o bibliotecário', opiniao:4, viuVoce:'Passou uma hora e dez te ensinando a ler diário oficial.'},
+      registrar:'Quem publica um ato sem querer ser visto publica entre o Natal e o ano novo.',
+      presagio:'Procure entre vinte e cinco de dezembro e primeiro de janeiro.'},
+  escolhas:[
+    {texto:'Procurar na hemeroteca com o que você aprendeu.', vai:'c18_hemeroteca'},
+    {texto:'Ir ao cartório de pessoas jurídicas.', vai:'c18_cartorio'}
+  ]
+},
+
+c18_ab_a_reporter:{
+  texto:[
+    'Reika Ando te encontra primeiro, o que é a função dela.',
+    'Ela está sentada num banco de praça em Saffron com uma pasta de papelão no colo e duas xícaras de café, e uma delas é sua antes de você sentar.',
+    fala('Reika Ando', 'Eu tenho quarenta e uma páginas e nenhum documento. Você lembra.'),
+    d=>fala(d.jogador.nome, 'Lembro.'),
+    fala('Reika Ando', 'Agora eu tenho quarenta e uma páginas e um nome.'),
+    'Ela abre a pasta e tira uma folha com uma única linha datilografada no meio, e o resto em branco, o que é um jeito teatral de mostrar uma coisa e ela sabe disso.',
+    fala('Reika Ando', 'Esse nome apareceu em três lugares diferentes nas minhas quarenta e uma páginas e eu levei nove meses pra ver que era o mesmo.'),
+    d=>fala(d.jogador.nome, 'E o que você quer de mim?'),
+    fala('Reika Ando', 'Eu quero que você vá ao cartório e peça a ficha.'),
+    d=>fala(d.jogador.nome, 'Por que eu?'),
+    fala('Reika Ando', 'Porque se eu pedir, em quarenta minutos alguém sabe que o Correio de Kanto pediu.')
+  ],
+  ef:{flag:['reika_te_deu_o_nome','sabe_o_nome_da_comissao'],
+      npc:{nome:'Reika Ando', opiniao:3, viuVoce:'Te entregou o nome e pediu que você fosse ao cartório no lugar dela.'},
+      registrar:'Reika Ando te entregou o nome e pediu que você pedisse a ficha no cartório.',
+      presagio:'Ela não pode pedir. Isso diz o tamanho de quem está do outro lado.'},
+  escolhas:[
+    {texto:'Ir ao cartório pedir a ficha.', vai:'c18_cartorio'},
+    {texto:'Perguntar onde ela achou o nome as três vezes.', vai:'c18_ab_as_tres_vezes'},
+    {texto:'Recusar. Não é a sua briga.', vai:'c18_ab_recusou_a_reika'}
+  ]
+},
+
+c18_ab_as_tres_vezes:{
+  texto:[
+    'Ela abre a pasta na mesa do banco e mostra as três, com marcador amarelo em cada uma.',
+    fala('Reika Ando', 'Um: ata de reunião da Liga, oitenta e nove, "manifestação da comissão sobre o pleito".'),
+    fala('Reika Ando', 'Dois: nota de rodapé de um relatório de auditoria da Zona Safári. Rodapé, tamanho seis.'),
+    fala('Reika Ando', 'Três: uma procuração juntada num processo trabalhista de um ex-funcionário da Silph.'),
+    'Ela alinha as três folhas.',
+    fala('Reika Ando', 'Liga, reserva ambiental e empresa privada. Três mundos que não se falam.'),
+    d=>fala(d.jogador.nome, 'E o mesmo nome nos três.'),
+    fala('Reika Ando', 'O mesmo nome nos três, e nos três aparece como se todo mundo já soubesse quem é.'),
+    'Ela fecha a pasta.',
+    fala('Reika Ando', 'Ninguém explica o que é. Todo mundo cita.')
+  ],
+  ef:{flag:['as_tres_citacoes','sabe_o_nome_da_comissao'],
+      registrar:'O mesmo nome aparece em ata da Liga, rodapé de auditoria da Zona Safári e procuração num processo da Silph.'},
+  escolhas:[
+    {texto:'Ir ao cartório pedir a ficha.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca procurar o ato de constituição.', vai:'c18_hemeroteca'},
+    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+  ]
+},
+
+c18_ab_recusou_a_reika:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Não. Eu não sou o seu estagiário.'),
+    'Ela recebe isso melhor do que você esperava. Toma um gole do café e concorda com a cabeça.',
+    fala('Reika Ando', 'Justo.'),
+    'Ela guarda a folha de volta na pasta e fecha o elástico.',
+    fala('Reika Ando', 'Eu vou pedir eu mesma, então. Provavelmente não vai dar em nada e eu vou queimar o nome.'),
+    'Ela levanta.',
+    fala('Reika Ando', 'Mas antes de eu ir: você reparou que a gente se encontrou três vezes em três cidades diferentes?'),
+    d=>fala(d.jogador.nome, 'Reparei.'),
+    fala('Reika Ando', 'Eu não te procurei nenhuma dessas vezes.'),
+    'Ela vai embora e deixa a xícara no banco, e você fica sentado com essa frase.'
+  ],
+  ef:{flag:'recusou_a_reika',
+      npc:{nome:'Reika Ando', opiniao:0, viuVoce:'Você recusou ir ao cartório por ela.'},
+      registrar:'Recusou ajudar Reika Ando. Ela não te procurou em nenhum dos três encontros.',
+      presagio:'Se nenhum dos dois procurou o outro, os dois estão sendo postos no mesmo lugar.'},
+  escolhas:[
+    {texto:'Ir ao cartório mesmo assim, por conta própria.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'},
+    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+  ]
+},
+
+c18_ab_de_cracha:{
+  texto:[
+    d=>{
+      const c = Cargos.principal();
+      return `Ser ${c ? c.nome : 'do serviço'} dá acesso a uma coisa que você descobriu tarde demais e que muda o capítulo inteiro: o sistema de consulta.`;
+    },
+    'É um terminal de tela verde numa sala sem janela, com um teclado de membrana e uma etiqueta colada no monitor com a senha escrita à caneta, o que é ilegal e é universal.',
+    'O sistema consulta três bases: pessoa jurídica, convênio público e processo administrativo.',
+    'Você senta. A sala é sua por quanto tempo você quiser, e é a primeira vez em meses que você tem tempo e não tem pressa.',
+    'O cursor pisca no campo de busca.',
+    'E é aí que você percebe o problema que ninguém te avisou: pra buscar um nome, você precisa do nome.'
+  ],
+  ef:{flag:'tem_acesso_ao_terminal',
+      registrar:'Tem acesso ao terminal de consulta do serviço: pessoa jurídica, convênio público e processo administrativo.'},
+  escolhas:[
+    {texto:'Buscar pelo que você tem: as siglas.', vai:'c18_ab_buscou_a_sigla'},
+    {texto:'Buscar pelos nomes de quem você já conheceu.', vai:'c18_ab_buscou_pessoas'},
+    {texto:'Desligar e ir ao cartório, onde tem gente.', vai:'c18_cartorio'}
+  ]
+},
+
+c18_ab_buscou_a_sigla:{
+  texto:[
+    'Você digita a sigla que viu no livro de destinos e aperta a tecla.',
+    'O terminal pensa por onze segundos, que é muito tempo pra um terminal.',
+    '**NENHUM REGISTRO ENCONTRADO NA BASE DE PESSOA JURÍDICA.**',
+    'Você tenta na base de convênio.',
+    '**4 REGISTROS.**',
+    'Quatro convênios públicos assinados com uma entidade que não consta na base de pessoa jurídica.',
+    'Você fica olhando as duas telas alternadamente por um tempo que não dá pra medir.',
+    'O Estado assinou quatro convênios com uma coisa que o Estado não registrou.'
+  ],
+  ef:{flag:['quatro_convenios_sem_registro','sabe_o_nome_da_comissao'],
+      registrar:'Quatro convênios públicos assinados com uma entidade que não consta na base de pessoa jurídica.',
+      presagio:'Ou a base está errada, ou alguém assinou convênio com uma entidade que nunca nasceu.'},
+  escolhas:[
+    {texto:'Imprimir as quatro telas.', vai:'c18_ab_imprimiu'},
+    {texto:'Ir ao cartório conferir na fonte de papel.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca procurar o ato de constituição.', vai:'c18_hemeroteca'}
+  ]
+},
+
+c18_ab_buscou_pessoas:{
+  texto:[
+    'Você digita os nomes que juntou pelo caminho, um por um, na base de processo administrativo.',
+    'A maioria não dá nada. Duas dão.',
+    'E a segunda te faz parar.',
+    'Um processo administrativo aberto há quatro anos, arquivado há três, com uma única movimentação registrada.',
+    'Objeto: "apuração de denúncia — transporte irregular de espécimes".',
+    'Motivo do arquivamento: "ausência de interesse público superveniente".',
+    'E o campo do solicitante do arquivamento traz uma palavra sozinha, sem sigla e sem número, do jeito que você já viu antes numa ordem de serviço:',
+    '**CONSELHO**'
+  ],
+  ef:{flag:['o_processo_arquivado','sabe_o_nome_da_comissao'],
+      registrar:'Um processo de apuração de transporte irregular foi arquivado por "ausência de interesse público superveniente", a pedido do "conselho".',
+      presagio:'A mesma palavra sozinha, no mesmo campo, em dois documentos de órgãos diferentes.'},
+  escolhas:[
+    {texto:'Imprimir as telas.', vai:'c18_ab_imprimiu'},
+    {texto:'Buscar pela sigla também.', vai:'c18_ab_buscou_a_sigla'},
+    {texto:'Ir ao cartório.', vai:'c18_cartorio'}
+  ]
+},
+
+c18_ab_imprimiu:{
+  texto:[
+    'A impressora é matricial e faz um barulho que ocupa a sala inteira e o corredor.',
+    'Leva quatro minutos pra imprimir o que a tela mostra em um segundo, e nos quatro minutos você fica olhando a porta.',
+    'Ninguém vem.',
+    'O papel sai contínuo, com furo nas duas bordas, e você destaca as bordas devagar pra não rasgar.',
+    'No rodapé de cada folha, o sistema imprime automaticamente: data, hora, terminal e matrícula de quem consultou.',
+    'A sua matrícula.',
+    'Você lê isso e entende que a partir de agora existe, num log em algum lugar, uma linha dizendo exatamente quem procurou esse nome e quando.'
+  ],
+  ef:{flag:['imprimiu_do_terminal','reika_precisa_de_papel'],
+      registrar:'Imprimiu as consultas. O rodapé traz a sua matrícula, a data e a hora.',
+      presagio:'Você deixou o seu nome escrito no rastro. Isso não dá pra desfazer.'},
+  escolhas:[
+    {texto:'Ir ao cartório conferir no papel.', vai:'c18_cartorio'},
+    {texto:'Ir à hemeroteca.', vai:'c18_hemeroteca'},
+    {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
+  ]
+},
+
 
 c18_fio:{
   texto:[

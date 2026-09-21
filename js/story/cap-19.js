@@ -1,3 +1,15 @@
+/* ------------------------------------------------------------
+   ABERTURAS — a Estação 4 parece um lugar de trabalho, e é isso
+   que assusta. Dá pra chegar nela pela estrada, pelo ônibus dos
+   funcionários, pela vizinhança ou pela portaria, de crachá.
+   ------------------------------------------------------------ */
+const C19_ABERTURAS = ['c19_cerca', 'c19_ab_o_onibus', 'c19_ab_a_vizinhanca', 'c19_ab_o_anuncio'];
+function c19_cabe(id, d){ return true; }
+function c19_abertura(d){
+  const cand = C19_ABERTURAS.filter(id => c19_cabe(id, d));
+  return Dados.escolher(cand);
+}
+
 /* ============================================================
    CAPÍTULO 19 — O VIVEIRO
    Oito hectares, cerca nova e uma placa de dias sem acidentes.
@@ -5,8 +17,250 @@
 CAPITULOS.push(
 {
 num:19, titulo:'O Viveiro', local:'Estação 4 — Rota 21', ambiente:'campo', nivelArea:56,
-tom:'muito sombrio', inicio:'c19_cerca',
+tom:'muito sombrio', entradas:C19_ABERTURAS,
+inicio: d => c19_abertura(d),
 cenas:{
+
+c19_ab_o_onibus:{
+  texto:[
+    'Existe um ônibus fretado que sai da rodoviária de Fuchsia às seis e dez e não tem destino no letreiro: tem um papelão escrito ESTAÇÃO na frente, preso com fita no para-brisa.',
+    'Trinta e um lugares, vinte e nove ocupados, e você é o trigésimo.',
+    'Ninguém pergunta quem você é. Às seis e dez da manhã ninguém pergunta nada.',
+    'As pessoas do ônibus são: gente de macacão, gente de jaleco, duas mulheres com crachá plastificado e uma senhora com uma marmita no colo.',
+    'Na quarta parada entra um rapaz que claramente é novo, porque ele cumprimenta todo mundo, e ninguém responde, e ele senta na frente.',
+    'A conversa do banco de trás é sobre um colega que se demitiu.',
+    fala('a mulher do banco de trás', 'Ele aguentou onze meses.'),
+    fala('o homem do banco de trás', 'É mais que a média.'),
+    'E aí os dois ficam quietos, e o "mais que a média" fica pairando pelos vinte minutos seguintes de estrada.'
+  ],
+  ef:{flag:'pegou_o_onibus_da_estacao',
+      registrar:'Um ônibus fretado sai de Fuchsia às 6h10 para a Estação 4, com um papelão no para-brisa.',
+      presagio:'"Onze meses é mais que a média." Média de quê.'},
+  escolhas:[
+    {texto:'Perguntar aos dois do banco de trás.', vai:'c19_ab_os_dois_do_fundo'},
+    {texto:'Falar com o rapaz novo da frente.', vai:'c19_ab_o_rapaz_novo'},
+    {texto:'Ficar quieto e descer com todo mundo na portaria.', vai:'c19_dentro'},
+    {texto:'Descer antes, na curva, e dar a volta no perímetro.', vai:'c19_perimetro'}
+  ]
+},
+
+c19_ab_os_dois_do_fundo:{
+  texto:[
+    'Eles te olham do jeito que se olha alguém que ouviu.',
+    d=>fala(d.jogador.nome, 'Média de quanto tempo?'),
+    'A mulher responde e o homem deixa ela responder.',
+    fala('a mulher do banco de trás', 'Sete, oito meses.'),
+    d=>fala(d.jogador.nome, 'Todo mundo sai em sete, oito meses?'),
+    fala('a mulher do banco de trás', 'Do setor de baixo, sai.'),
+    'O ônibus pega um buraco e todo mundo balança junto.',
+    fala('a mulher do banco de trás', 'Eu sou do administrativo. Eu tô lá há quatro anos.'),
+    fala('o homem do banco de trás', 'Eu sou da manutenção. Seis.'),
+    d=>fala(d.jogador.nome, 'E quem é do setor de baixo?'),
+    'Eles se olham, e é o homem que responde dessa vez.',
+    fala('o homem do banco de trás', 'Gente que a gente conhece três meses e depois não conhece mais.', 'baixo')
+  ],
+  ef:{flag:'o_setor_de_baixo',
+      registrar:'Quem trabalha no "setor de baixo" da Estação 4 dura sete ou oito meses.',
+      presagio:'Rotatividade não é acaso: é o tempo que uma pessoa aguenta ver aquilo.'},
+  escolhas:[
+    {texto:'Perguntar o que tem no setor de baixo.', vai:'c19_ab_o_que_tem_embaixo'},
+    {texto:'Descer com todos na portaria.', vai:'c19_dentro'},
+    {texto:'Descer antes e dar a volta no perímetro.', vai:'c19_perimetro'}
+  ]
+},
+
+c19_ab_o_que_tem_embaixo:{
+  texto:[
+    'A mulher do administrativo olha pra frente do ônibus antes de responder, pra conferir quem pode ouvir.',
+    fala('a mulher do banco de trás', 'Eu nunca desci.'),
+    d=>fala(d.jogador.nome, 'Em quatro anos?'),
+    fala('a mulher do banco de trás', 'Em quatro anos. Meu crachá não abre e eu nunca pedi que abrisse.'),
+    'O homem da manutenção mexe na alça da bolsa de ferramenta.',
+    fala('o homem do banco de trás', 'Eu desci duas vezes. Conserto de bomba.'),
+    'Ele para. O ônibus entra numa estrada de terra e o barulho muda.',
+    fala('o homem do banco de trás', 'É limpo. É muito limpo. Piso epóxi, luz boa, temperatura certa.'),
+    fala('o homem do banco de trás', 'Não tem nada de sujo lá embaixo. É isso que eu não consigo explicar pra minha mulher.'),
+    fala('o homem do banco de trás', 'Não tem nada errado e eu sonho com aquilo.', 'baixo')
+  ],
+  ef:{flag:'o_setor_de_baixo_e_limpo',
+      registrar:'O setor de baixo da Estação 4 é limpo, climatizado e de piso epóxi. Quem desceu duas vezes sonha com aquilo.',
+      presagio:'O que assusta não é a sujeira. É o cuidado.'},
+  escolhas:[
+    {texto:'Descer com todos na portaria.', vai:'c19_dentro'},
+    {texto:'Descer antes e dar a volta no perímetro.', vai:'c19_perimetro'},
+    {texto:'Falar com o rapaz novo da frente.', vai:'c19_ab_o_rapaz_novo'}
+  ]
+},
+
+c19_ab_o_rapaz_novo:{
+  texto:[
+    'Ele tem uns vinte e dois anos e está com a camisa passada, o que ninguém mais no ônibus está.',
+    fala('o rapaz novo', 'Primeiro dia. Dá pra ver, né?'),
+    d=>fala(d.jogador.nome, 'Dá.'),
+    fala('o rapaz novo', 'Eu passei em três entrevistas. Três! Pra auxiliar de campo.'),
+    'Ele mostra o contrato dobrado no bolso da camisa, que ele claramente leu muitas vezes.',
+    fala('o rapaz novo', 'Salário é o dobro do mercado. O dobro.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    'Ele hesita pela primeira vez.',
+    fala('o rapaz novo', 'Eles falaram que é por causa da cláusula.'),
+    d=>fala(d.jogador.nome, 'Que cláusula?'),
+    'Ele desdobra o contrato e procura, e acha, e lê em voz alta, e vai ficando mais devagar conforme lê:',
+    '**"O contratado se obriga a não divulgar, por prazo indeterminado, inclusive após o término do vínculo, qualquer informação sobre espécimes, procedimentos, instalações ou pessoas..."**',
+    'Ele para de ler. Dobra o contrato. Guarda.',
+    fala('o rapaz novo', 'É normal, né? Empresa grande tem isso.')
+  ],
+  ef:{flag:'a_clausula_do_contrato',
+      npc:{nome:'o rapaz novo', opiniao:1, viuVoce:'Leu a cláusula de sigilo em voz alta pra você, no primeiro dia dele.'},
+      registrar:'O contrato de auxiliar de campo da Estação 4 paga o dobro do mercado e tem sigilo por prazo indeterminado.',
+      presagio:'Ele perguntou "é normal, né?" e não esperou resposta.'},
+  escolhas:[
+    {texto:'Dizer que não é normal.', vai:'c19_ab_nao_e_normal'},
+    {texto:'Não dizer nada. Deixar ele descer.', vai:'c19_dentro'},
+    {texto:'Descer antes, na curva.', vai:'c19_perimetro'}
+  ]
+},
+
+c19_ab_nao_e_normal:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Não é normal.'),
+    'Ele ri. Depois vê que você não está rindo.',
+    fala('o rapaz novo', 'Como assim?'),
+    d=>fala(d.jogador.nome, 'Sigilo de processo é normal. Sigilo sobre pessoas, por prazo indeterminado, depois que você sai, não é.'),
+    'Ele desdobra o contrato de novo e lê a cláusula mais uma vez, e dessa vez lê como quem procura, não como quem confere.',
+    'O ônibus entra no estacionamento de terra batida e para. Todo mundo levanta ao mesmo tempo.',
+    'Ele continua sentado.',
+    fala('o rapaz novo', 'Eu pedi demissão do outro emprego semana passada.'),
+    'E levanta, porque a fila está andando, e porque não tem mais o que fazer hoje além de descer.'
+  ],
+  ef:{flag:'avisou_o_rapaz_novo', moral:1,
+      npc:{nome:'o rapaz novo', opiniao:2, viuVoce:'Você leu a cláusula com ele e disse que não era normal.'},
+      registrar:'O rapaz novo entendeu a cláusula tarde demais e desceu do ônibus mesmo assim.'},
+  escolhas:[
+    {texto:'Descer junto com ele e entrar pela portaria.', vai:'c19_dentro'},
+    {texto:'Ficar no ônibus e descer na curva.', vai:'c19_perimetro'}
+  ]
+},
+
+c19_ab_a_vizinhanca:{
+  texto:[
+    'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com galinha solta e cachorro de portão.',
+    'Você bate na primeira porque é a primeira.',
+    'Atende uma mulher de uns sessenta anos com uma bacia de feijão no colo, e ela senta na varanda e continua catando o feijão a conversa inteira, e você senta no degrau.',
+    fala('a mulher da varanda', 'A estação? Chegou em noventa e quatro.'),
+    d=>fala(d.jogador.nome, 'E antes?'),
+    fala('a mulher da varanda', 'Antes era pasto. Do Sr. Aoki, que vendeu e foi embora pra Celadon e morreu lá.'),
+    'Feijão bom pra direita, feijão ruim pra esquerda.',
+    fala('a mulher da varanda', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
+    d=>fala(d.jogador.nome, 'E depois?'),
+    'Ela para de catar.',
+    fala('a mulher da varanda', 'Depois o meu cachorro parou de dormir.')
+  ],
+  ef:{flag:'a_vizinhanca_da_estacao',
+      npc:{nome:'a mulher da varanda', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
+      registrar:'A Estação 4 foi instalada em 1994 num pasto comprado do Sr. Aoki.'},
+  escolhas:[
+    {texto:'Perguntar do cachorro.', vai:'c19_ab_o_cachorro'},
+    {texto:'Perguntar o que se ouve da estação à noite.', vai:'c19_ab_o_que_se_ouve'},
+    {texto:'Agradecer e ir dar a volta no perímetro.', vai:'c19_perimetro'}
+  ]
+},
+
+c19_ab_o_cachorro:{
+  texto:[
+    fala('a mulher da varanda', 'Um Growlithe. Ele tem onze anos e sempre dormiu na varanda.'),
+    'Ela aponta com o queixo. O Growlithe está deitado no canto, de olhos abertos, e você não tinha reparado nele até agora.',
+    fala('a mulher da varanda', 'Faz uns dois anos que ele fica assim. De olho aberto, virado pro mesmo lado.'),
+    d=>fala(d.jogador.nome, 'Virado pra estação.'),
+    fala('a mulher da varanda', 'Virado pra estação.'),
+    'O Growlithe não pisca. Não é que ele não pisque nunca: é que ele pisca do jeito de quem não quer perder nada de vista.',
+    fala('a mulher da varanda', 'Levei no veterinário duas vezes. Os dois falaram que ele tá ótimo.'),
+    fala('a mulher da varanda', 'Ele tá ótimo. Ele só não dorme.', 'baixo'),
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} senta no chão da varanda ao lado do Growlithe, virado pro mesmo lado, e também não deita.`
+               : 'Você fica olhando pro mesmo lado que ele por um tempo e não vê nada além de mato e, muito longe, uma linha de cerca.';
+    }
+  ],
+  ef:{flag:'o_growlithe_que_nao_dorme',
+      registrar:'Um Growlithe de onze anos parou de dormir há dois anos, virado para a Estação 4.',
+      presagio:'Dois anos. O que mudou lá dentro há dois anos.'},
+  escolhas:[
+    {texto:'Perguntar o que se ouve da estação à noite.', vai:'c19_ab_o_que_se_ouve'},
+    {texto:'Ir dar a volta no perímetro.', vai:'c19_perimetro'},
+    {texto:'Ir pular a cerca pelo lado do mar.', vai:'c19_cerca_mar'}
+  ]
+},
+
+c19_ab_o_que_se_ouve:{
+  texto:[
+    fala('a mulher da varanda', 'De dia, nada. Caminhão, às vezes.'),
+    'Ela recomeça a catar o feijão, e catar feijão é a coisa que ela faz com as mãos quando fala do que não gosta.',
+    fala('a mulher da varanda', 'De noite, umas três da manhã, tem uma coisa.'),
+    d=>fala(d.jogador.nome, 'Que coisa?'),
+    fala('a mulher da varanda', 'Um som de porta.'),
+    d=>fala(d.jogador.nome, 'Porta?'),
+    fala('a mulher da varanda', 'Porta pesada. De metal. Abre e fecha.'),
+    'Ela separa um feijão ruim e joga pra esquerda com mais força do que precisava.',
+    fala('a mulher da varanda', 'Duas quilômetros de distância, menino. Pra eu ouvir daqui, aquela porta é grande.'),
+    fala('a mulher da varanda', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
+  ],
+  ef:{flag:'a_porta_das_tres_da_manha',
+      registrar:'De madrugada, entre três e quatro, uma porta de metal grande abre e fecha nove ou dez vezes na Estação 4.',
+      presagio:'Entre três e quatro da manhã. Você já ouviu esse horário em outro lugar deste mapa.'},
+  escolhas:[
+    {texto:'Perguntar do cachorro que não dorme.', vai:'c19_ab_o_cachorro'},
+    {texto:'Ir dar a volta no perímetro.', vai:'c19_perimetro'},
+    {texto:'Voltar às três da manhã.', vai:'c19_cerca_mar'}
+  ]
+},
+
+c19_ab_o_anuncio:{
+  texto:[
+    'O anúncio está colado num poste na saída de Fuchsia, impresso em papel colorido, com franjinha de telefone pra destacar.',
+    '**AUXILIAR DE CAMPO — SEM EXPERIÊNCIA — SALÁRIO ACIMA DO MERCADO — TRANSPORTE FRETADO — ESTAÇÃO 4, ROTA 21**',
+    'Das doze franjinhas, dez já foram destacadas.',
+    'Você destaca a décima primeira.',
+    'Do outro lado da rua tem uma padaria com telefone público na porta, e você liga de lá, e atende uma mulher na primeira chamada, o que quer dizer que tem alguém sentado esperando o telefone tocar.',
+    fala('a voz do telefone', 'Estação 4, bom dia.'),
+    d=>fala(d.jogador.nome, 'É sobre o anúncio.'),
+    fala('a voz do telefone', 'Idade?'),
+    d=>fala(d.jogador.nome, 'Quinze.'),
+    'Pausa de um segundo. Você espera o não.',
+    fala('a voz do telefone', 'Você pode vir amanhã às seis e dez? Tem ônibus da rodoviária.')
+  ],
+  ef:{flag:'respondeu_o_anuncio',
+      registrar:'A Estação 4 contrata auxiliar de campo sem experiência, aos quinze anos, sem hesitar.',
+      presagio:'Ela não pestanejou com quinze anos. Um emprego que aceita qualquer idade não é um emprego difícil de preencher — é um emprego difícil de manter preenchido.'},
+  escolhas:[
+    {texto:'Ir amanhã, no ônibus das seis e dez.', vai:'c19_ab_o_onibus'},
+    {texto:'Perguntar o que faz um auxiliar de campo.', vai:'c19_ab_o_que_faz'},
+    {texto:'Não ir. Dar a volta no perímetro por fora.', vai:'c19_perimetro'}
+  ]
+},
+
+c19_ab_o_que_faz:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O que faz um auxiliar de campo?'),
+    fala('a voz do telefone', 'Apoio geral. Limpeza de baia, transporte interno, conferência de lote.'),
+    'Ela lê isso. Dá pra ouvir que ela lê.',
+    d=>fala(d.jogador.nome, 'Conferência de lote de quê?'),
+    'Pausa.',
+    fala('a voz do telefone', 'De espécime.'),
+    d=>fala(d.jogador.nome, 'Vocês conferem Pokémon por lote?'),
+    'Pausa maior.',
+    fala('a voz do telefone', 'Você pode vir amanhã às seis e dez?'),
+    'Ela repete a frase exatamente igual à primeira vez, com a mesma entonação, o que é o que se faz quando se decide não responder.'
+  ],
+  ef:{flag:['conferencia_de_lote','sabe_do_lote_unico'],
+      registrar:'Na Estação 4, Pokémon são conferidos por lote.',
+      presagio:'Lote é unidade de mercadoria. A palavra escapou e ela repetiu a frase pra cobrir.'},
+  escolhas:[
+    {texto:'Ir amanhã, no ônibus das seis e dez.', vai:'c19_ab_o_onibus'},
+    {texto:'Não ir. Dar a volta no perímetro por fora.', vai:'c19_perimetro'},
+    {texto:'Ir pular a cerca pelo lado do mar.', vai:'c19_cerca_mar'}
+  ]
+},
+
 
 c19_cerca:{
   texto:[
