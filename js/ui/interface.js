@@ -2487,6 +2487,19 @@ const UI = {
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
+      <h3>De onde vem o seu primeiro</h3>
+      <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor entrega na saída da cidade</span></div>
+      <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
+      <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
+      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica. Quem assina o formulário é quem é responsável por você, e a bola fica lacrada com o seu nome numa etiqueta até você aparecer. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
+
+      <h3>Loja</h3>
+      <div class="linha"><span class="k">Onde</span><span class="v">dez cidades · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
+      <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
+      <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
+      <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+
       <h3>Estrada e tempo</h3>
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>

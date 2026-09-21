@@ -1048,6 +1048,62 @@ cinnabar:[
    ============================================================ */
 const EVENTOS_GERAIS = [
 {
+  /* Uma vez por mês a perua do laboratório passa. Não é evento de
+     uma vez só: ele volta, porque a volta dele é mensal mesmo. */
+  id:'ger_a_perua', peso:3,
+  cond:d=>((d.dia || 1) % 30) <= 3,
+  titulo:'A perua na praça',
+  texto:[
+    'Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.',
+    'Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
+    d=>!!d.flags.numero_do_dorival
+      ? 'Dorival está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
+      : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.',
+    'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
+  ],
+  escolhas:[
+    {texto:'Ficar olhando a entrega de longe.',
+     ef:{moral:2, registrar:'Ficou olhando a perua do laboratório entregar a bola de outra pessoa.'},
+     resultado:[
+       'O menino assina, pega a bola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
+       'O que sai da bola olha a praça inteira antes de olhar ele.',
+       'Você reconhece a cena de um jeito que dói um pouco e é bom ao mesmo tempo.',
+       fala('Dorival', 'Essa parte é sempre a melhor.', 'baixo', 'Ele fala sem olhar pra você, anotando.')
+     ]},
+    {texto:'Perguntar se ele precisa de ajuda pra carregar.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Ajudou a carregar a perua do laboratório'},
+         executar:d=>{ Estado.darItem('Potion',1); Estado.lembrarNPC('Dorival',{opiniao:2,memoria:'Ajudou a carregar a perua sem pedir nada.'});
+                       return [{tipo:'item', texto:'Recebeu 1× Potion da caixa de sobras.'}]; }},
+     resultado:[
+       fala('Dorival', 'Precisar eu não preciso. Aceitar eu aceito.', 'riso'),
+       'São quatro caixas e uma delas é pesada de um jeito desproporcional ao tamanho.',
+       fala('Dorival', 'Livro. É sempre livro que pesa.'),
+       fala('Dorival', 'Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.')
+     ]},
+    {texto:'Perguntar quantos não vieram buscar este mês.',
+     cond:d=>!!d.flags.sabe_do_nr,
+     ef:{registrar:'Perguntou quantos NR tinham nessa cidade este mês.'},
+     resultado:[
+       fala('Dorival', 'Dois.'),
+       'Ele não precisa conferir o caderno pra responder.',
+       fala('Dorival', 'Um cancelou por telefone semana passada, que é o jeito certo de fazer e eu agradeci.'),
+       fala('Dorival', 'O outro não. O outro só não veio.', 'baixo')
+     ]},
+    {texto:'Anotar o número dele antes de seguir.',
+     cond:d=>!d.flags.numero_do_dorival,
+     ef:{flag:'numero_do_dorival',
+         npc:{nome:'Dorival', opiniao:1, memoria:'Te deu o número na praça, do jeito que dá pra todo mundo.'},
+         registrar:'Anotou o número de Dorival, da perua do laboratório.'},
+     resultado:[
+       fala('Dorival', 'Anota, vai. Todo mundo que eu entrego tem.'),
+       'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
+       fala('Dorival', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
+     ]},
+    {texto:'Seguir. Não é com você.', ef:{},
+     resultado:['Você passa. Atrás de você alguém abre uma bola e a praça inteira faz aquele barulho pequeno de quando vê.']}
+  ]
+},
+{
   id:'ger_bicho_na_calcada', peso:2,
   titulo:'Um bicho na calçada',
   texto:[

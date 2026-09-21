@@ -121,6 +121,46 @@ const CONTATOS = [
   }
 },
 {
+  id:'dorival', tipo:'figura', nome:'Dorival', papel:'dirige a perua do laboratório', cidade:'estrada',
+  requer:d=>!!d.flags.numero_do_dorival,
+  oferece:['favor','prova'],
+  favor:{
+    rotulo:'Perguntar onde ele está este mês',
+    limite:99, esperaCap:2,
+    texto:d=>{
+      const paradas = ['Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Saffron','Fuchsia','Cinnabar'];
+      const onde = paradas[(d.capitulo + 3) % paradas.length];
+      return [
+        fala('Dorival', 'Hoje? Hoje eu tô em ' + onde + '. Amanhã cedo eu saio.'),
+        fala('Dorival', 'Se você tiver por perto aparece, que eu sempre tenho coisa sobrando na caixa. Coisa boa não, mas sobrando.', 'riso'),
+        fala('Dorival', 'Deixei um pacote pra você no balcão do Centro da última cidade que você passou. Tá no seu nome.')
+      ];
+    },
+    efeito:d=>{ Estado.darItem('Potion', 2); Estado.darItem('Ração', 1);
+      return [{tipo:'item', texto:'Recebeu 2× Potion e 1× Ração pelo correio da perua.'}]; }
+  },
+  prova:{
+    rotulo:'Contar como ele está',
+    esperaCap:3,
+    texto:d=>{
+      const p = (d.time || []).find(x => x.dex === d.jogador.inicialDex) || d.time[0];
+      if (!p) return [
+        fala('Dorival', 'E o bicho?'),
+        'Você demora pra responder e a demora responde por você.',
+        fala('Dorival', '...tá. Não precisa falar. Eu já ouvi essa pausa antes.', 'baixo'),
+        fala('Dorival', 'Liga pra mim quando quiser, viu. Não é só pra notícia boa.')
+      ];
+      return [
+        fala('Dorival', 'E o bicho?'),
+        d=>`Você conta: ${nomeExib(p)}, nível ${p.nivel}, e conta uma coisa específica que ele faz e que ninguém pediu pra ele fazer.`,
+        fala('Dorival', 'Eu anotei numa caderneta que eu tenho aqui, e não é a de trabalho.'),
+        fala('Dorival', 'Essa é a minha. Eu anoto o que volta.', 'baixo')
+      ];
+    },
+    rep:{eixo:'bom', delta:1, motivo:'Deu notícia a quem entregou a primeira bola'}
+  }
+},
+{
   id:'odete', tipo:'figura', nome:'Sra. Odete', papel:'a vizinha do dezoito', cidade:'Pallet',
   requer:d=>!!d.npcs['Sra. Odete'],
   oferece:['favor','missao'],

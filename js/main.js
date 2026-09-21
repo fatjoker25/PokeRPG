@@ -78,6 +78,16 @@ const Jogo = {
         moral:100, naturezaVista:true,
         historia:'Já morava na sua casa quando você decidiu sair. Vínculo máximo.'
       });
+    } else if (f.cidade !== 'Pallet'){
+      /* Quem não nasceu em Pallet não recebe da mão do Professor: o
+         laboratório manda alguém, uma vez por mês, com uma caixa
+         térmica e um caderno. O bicho ainda não é seu — o capítulo 1
+         começa na manhã da entrega. */
+      Estado.dados.entrega = {dex: parseInt(f.inicial, 10)};
+      Estado.marcar('espera_o_assistente');
+      Estado.registrar(`${Estado.j.nome} pediu em fevereiro e espera a perua do laboratório em ${Estado.j.cidade}.`);
+      Estado.salvar('auto');
+      return UI.telaCena(Historia.iniciarCapitulo(1), []);
     } else {
       inicial = criarPokemon(parseInt(f.inicial,10), 5, {
         moral:80, naturezaVista:true,
