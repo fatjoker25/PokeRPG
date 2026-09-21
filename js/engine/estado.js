@@ -882,7 +882,7 @@ const Estado = {
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         p.naturezaVista = true;
         this.registrar(`Natureza de ${nomeExib(p)} percebida: ${p.natureza}.`);
-        avisos.push({tipo:'natureza', texto:`Você finalmente entende o jeito de ${nomeExib(p)}. É ${p.natureza}: ${(NATUREZAS[p.natureza]||{}).traco || 'difícil de descrever.'}`});
+        avisos.push({tipo:'natureza', texto:`Você convive o bastante com ${nomeExib(p)} pra botar um nome no jeito dele: ${p.natureza}.`});
       }
     });
     return avisos;

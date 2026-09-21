@@ -256,6 +256,15 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
     color-mix(in srgb, var(--destaque) 2%, var(--bg-2)));
 }
 .narrativa .fala.anonima::before{border-right-color:color-mix(in srgb, var(--destaque) 55%, var(--borda))}
+/* o que está escrito numa placa, num cartaz, num formulário */
+.narrativa p.escrito{
+  margin:2px 0 12px;max-width:62ch;
+  padding:7px 12px;border-left:2px solid var(--borda);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;letter-spacing:.02em;color:var(--texto-fraco);
+  background:color-mix(in srgb, var(--texto) 4%, transparent);
+}
+
 /* narração curta no meio de uma troca de falas */
 .narrativa p.entre-falas{
   margin:-4px 0 10px 14px;max-width:62ch;
@@ -5370,7 +5379,7 @@ const Estado = {
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         p.naturezaVista = true;
         this.registrar(`Natureza de ${nomeExib(p)} percebida: ${p.natureza}.`);
-        avisos.push({tipo:'natureza', texto:`Você finalmente entende o jeito de ${nomeExib(p)}. É ${p.natureza}: ${(NATUREZAS[p.natureza]||{}).traco || 'difícil de descrever.'}`});
+        avisos.push({tipo:'natureza', texto:`Você convive o bastante com ${nomeExib(p)} pra botar um nome no jeito dele: ${p.natureza}.`});
       }
     });
     return avisos;
@@ -6334,7 +6343,6 @@ const Batalha = {
     p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
     this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
-    this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
     this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
     this.ev('pokedex', `Base da espécie: ${esp.base.hp}/${esp.base.atk}/${esp.base.def}/${esp.base.spa}/${esp.base.spd}/${esp.base.spe} — soma ${esp.total}.`);
     if (p.shiny)
@@ -60932,6 +60940,95 @@ const UI = {
      com o nome de quem falou em cima. Assim dá pra saber quem
      está falando com você sem ter que deduzir pelo contexto.
      ======================================================== */
+  /* ------------------------------------------------------------
+     DE QUEM É A CENA
+     A história registra quem você conheceu: `ef:{npc:{nome:'...'}}`.
+     Esse nome é autoral e não erra. A partir dele, a conversa se
+     espalha pelas cenas seguintes — uma conversa é um punhado de
+     cenas ligadas, e quem estava falando continua falando.
+     ------------------------------------------------------------ */
+  donosDoCapitulo(cap){
+    if (!cap || !cap.cenas) return {};
+    this._donos = this._donos || {};
+    if (this._donos[cap.num]) return this._donos[cap.num];
+
+    const nomeDoEf = ef => {
+      if (!ef) return null;
+      const n = ef.npc;
+      if (!n) return null;
+      if (Array.isArray(n)) return n.length === 1 && n[0] && n[0].nome ? n[0].nome : null;
+      return n.nome || null;
+    };
+
+    const dono = {}, proprio = {};
+    /* semente forte: a própria cena registra de quem é */
+    for (const id in cap.cenas){
+      const n = nomeDoEf(cap.cenas[id].ef);
+      if (n){ dono[id] = n; proprio[id] = true; }
+    }
+
+    /* espalha: uma conversa é um punhado de cenas ligadas, e quem
+       estava falando continua falando na cena seguinte. Vale pros
+       dois lados — a cena em que a pessoa aparece costuma vir antes
+       da cena em que a história registra o nome dela. */
+    const ehDono = id => Object.prototype.hasOwnProperty.call(dono, id);
+    for (let passo = 0; passo < 4; passo++){
+      const novos = {};
+      for (const id in cap.cenas){
+        const c = cap.cenas[id];
+        for (const e of (c.escolhas || [])){
+          const alvo = e && e.vai;
+          if (!alvo || !cap.cenas[alvo]) continue;
+          /* pra frente */
+          if (ehDono(id) && !ehDono(alvo) && !novos[alvo] && !nomeDoEf(cap.cenas[alvo].ef))
+            novos[alvo] = dono[id];
+          /* pra trás: só quando não há dúvida — se as saídas da cena
+             levam a gente diferente, ela não herda de ninguém */
+          if (ehDono(alvo) && !ehDono(id) && !nomeDoEf(c.ef)){
+            if (novos[id] === undefined) novos[id] = dono[alvo];
+            else if (novos[id] !== dono[alvo]) novos[id] = null;
+          }
+        }
+      }
+      let mudou = false;
+      for (const k in novos){ if (!ehDono(k) && novos[k]){ dono[k] = novos[k]; mudou = true; } }
+      if (!mudou) break;
+    }
+
+    /* semente fraca, só pro que sobrou: a narração cita um nome
+       conhecido, e só um. Vale menos porque a cena pode estar
+       falando SOBRE a pessoa em vez de falar COM ela — por isso
+       vem depois de tudo. */
+    const nomes = this.registroDeNomes();
+    for (const id in cap.cenas){
+      if (ehDono(id)) continue;
+      const achados = new Set();
+      for (const linha of (cap.cenas[id].texto || [])){
+        if (typeof linha === 'function') continue;
+        const t = (linha && linha.diz != null) ? String(linha.quem || '') : String(linha || '');
+        for (const nome of nomes) if (nome && t.indexOf(nome) !== -1) achados.add(nome);
+      }
+      if (achados.size === 1) dono[id] = achados.values().next().value;
+    }
+
+    /* o que VOCÊ disse: quando a opção escolhida era uma frase entre
+       aspas, a cena de destino repete essa frase. Ela é sua, e isso
+       vale mesmo depois de fechar o jogo e voltar. */
+    const minhas = {};
+    for (const id in cap.cenas){
+      for (const e of (cap.cenas[id].escolhas || [])){
+        if (!e || !e.vai || typeof e.texto !== 'string') continue;
+        const reg = minhas[e.vai] = minhas[e.vai] || {quotes:[], acoes:[]};
+        const m = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/.exec(e.texto);
+        if (m) reg.quotes.push(m[1].trim());
+        else reg.acoes.push(e.texto);
+      }
+    }
+
+    this._donos[cap.num] = {dono, minhas, proprio};
+    return this._donos[cap.num];
+  },
+
   /* Todo nome próprio que o jogo conhece. Serve pra descobrir quem
      está falando quando a linha é só uma frase entre aspas. */
   registroDeNomes(){
@@ -60945,6 +61042,15 @@ const UI = {
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Téo','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
      'Blue','Red','Adnan','Nádia','Nogueira'].forEach(x => n.add(x));
+    /* e todo nome que a história registra como gente que você conheceu */
+    if (typeof CAPITULOS !== 'undefined')
+      for (const cap of CAPITULOS)
+        for (const id in (cap.cenas || {})){
+          const ef = cap.cenas[id].ef;
+          if (!ef || !ef.npc) continue;
+          const lista = Array.isArray(ef.npc) ? ef.npc : [ef.npc];
+          lista.forEach(x => { if (x && x.nome) n.add(x.nome); });
+        }
     this._nomes = n;
     return n;
   },
@@ -60976,11 +61082,17 @@ const UI = {
      quando não há fala nenhuma, pra linha seguir sendo parágrafo. */
   partirFalas(texto){
     const re = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g;
+    /* quantas aspas dessa linha terminam em pontuação: se pelo menos
+       uma termina, a linha é diálogo e as outras também são fala */
+    const pontuadas = (texto.match(/[\u201C\"][^\u201C\u201D\"]+[.?!\u2026\u2014,:;)][\u201D\"]/g) || []).length;
     const pedacos = []; let fim = 0, m, achouFala = false;
     while ((m = re.exec(texto))){
       const dentro = m[1].trim();
-      /* fala de verdade termina em pontuação; o resto é aspas de ironia */
-      if (dentro.length < 2 || !/[.?!\u2026\u2014,:;)]$/.test(dentro)) continue;
+      /* fala de verdade termina em pontuação; o resto é aspas de ironia,
+         a não ser que a linha já seja diálogo e o trecho tenha fôlego */
+      const pontuada = /[.?!\u2026\u2014,:;)]$/.test(dentro);
+      if (dentro.length < 2) continue;
+      if (!pontuada && !(pontuadas > 0 && dentro.indexOf(' ') !== -1)) continue;
       const antes = texto.slice(fim, m.index).trim();
       if (antes) pedacos.push({tipo:'narracao', texto:antes});
       pedacos.push({tipo:'fala', texto:dentro});
@@ -60993,15 +61105,91 @@ const UI = {
     return pedacos;
   },
 
-  narrar(linhas){
-    let ultimaNarracao = null, jaAtribuiu = false;
+  /* Quem fala a próxima frase entre aspas. Uma conversa é uma troca:
+     alterna entre você e a outra pessoa, e a narração no meio corrige
+     o rumo quando diz de quem é a vez. */
+  ladoDaFala(narracao, anterior){
+    if (!narracao) return anterior === 'npc' ? 'voce' : 'npc';
+    const n = narracao.trim();
+    /* "Você diz", "Você pergunta", "Você responde" — é sua vez */
+    /* Quem é o sujeito da frase manda. "Ele desliga a televisão quando
+       você pergunta" é dele, não seu — por isso o sujeito vem primeiro
+       e o "você <verbo>" solto vem por último.
+       (E nada de \b depois de "Você": o ê não é caractere de palavra
+       em JS e a borda simplesmente não existe ali.) */
+    /* Narração que termina em dois-pontos anuncia a fala que vem: quem
+       fala é o sujeito da última oração ("...e ela responde:"). Sem os
+       dois-pontos, vale o primeiro sujeito da frase. */
+    const doisPontos = /:$/.test(n);
+    const todos = [];
+    const re = /(^|[^a-zà-ÿ])(ele|ela|eles|elas|você|voce)([^a-zà-ÿ]|$)/gi;
+    let m; while ((m = re.exec(n))) todos.push({i:m.index, lado: /^(você|voce)$/i.test(m[2]) ? 'voce' : 'npc'});
+    if (todos.length) return doisPontos ? todos[todos.length-1].lado : todos[0].lado;
+    if (/^(O |A |Os |As |Um |Uma )/.test(n)) return 'npc';
+    /* narração que não diz de quem é ("Uma pausa.", "Rápido demais.")
+       não troca a vez: quem estava falando continua */
+    return anterior || 'npc';
+  },
+
+  /* A primeira fala da cena é a mais difícil: ninguém falou antes dela.
+     A pista está na opção que trouxe você até aqui. */
+  _normaliza(t){
+    return String(t||'').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  },
+  primeiraEhSua(fala, suas, comecaNaFala){
+    const f = this._normaliza(fala);
+    for (const q of (suas && suas.quotes || [])){
+      const n = this._normaliza(q);
+      if (n === f) return true;
+      if (n.slice(0,20) && f.slice(0,20) && n.slice(0,20) === f.slice(0,20)) return true;
+    }
+    /* Sem casar com nenhuma opção: a cena que abre na boca do jogador
+       quase sempre abre com uma pergunta. Resposta é do outro lado. */
+    if (!comecaNaFala) return false;
+    return /\?$/.test(String(fala||'').trim());
+  },
+
+  /* Alguém novo entra em cena ("sai um rapaz de uns dezoito anos") e é
+     ELE quem fala, não quem estava conversando com você antes. Nesses
+     casos o balão fica sem nome: melhor sem nome do que com o errado. */
+  _ALGUEM_NOVO: /\b(um|uma)\s+(rapaz|mo[çc]o|mo[çc]a|senhor|senhora|garoto|garota|menino|menina|homem|mulher|cara|sujeito|velho|velha|guarda|policial|atendente|funcion[áa]ri[oa]|vendedor|vendedora|enfermeir[oa]|m[ée]dic[oa]|motorista|pescador|treinador|treinadora|crian[çc]a|adolescente|estudante|senhorinha|sujeita)\b/i,
+
+  nomeConfiavel(npc, linhas, proprio){
+    if (!npc) return null;
+    if (proprio) return npc;
+    const curto = npc.split(' ').filter(x => x.length > 3).pop() || npc;
+    for (const linha of (linhas || [])){
+      if (typeof linha === 'function') continue;
+      const t = (linha && linha.diz != null) ? String(linha.diz) : String(linha || '');
+      if (this._ALGUEM_NOVO.test(t)) return null;          // entrou gente nova
+      const q = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g; let m;
+      while ((m = q.exec(t))) if (m[1].indexOf(curto) !== -1) return null;  // falam DELE
+    }
+    return npc;
+  },
+
+  _ESCRITO: /\b(placa|cartaz|aviso|letreiro|etiqueta|plaquinha|faixa|adesivo|mural|pichação|carimbo|formulário|ficha|bilhete|manchete|visor|display|crachá|painel|escrito|escrita)\b/i,
+
+  narrar(linhas, dono, minhas){
+    const bruto = dono || this.npcDaCena || null;
+    const npc = this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
+    const suas = minhas || this.minhasFalasDaCena || null;
+    const meuNome = (Estado.dados && Estado.j) ? Estado.j.nome : null;
+    /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
+       fala. Duas falas coladas, sem narração no meio, são uma troca:
+       a vez passa pro outro. */
+    let pendente = null, primeira = true, lado = null;
+
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
       if (f){
         const tom = f.tom ? ' ' + f.tom : '';
         /* A sua própria fala encosta no outro lado, pra conversa ler como
            conversa e não como uma pessoa só falando sete vezes. */
-        const meu = (Estado.dados && Estado.j && f.quem === Estado.j.nome) ? ' voce' : '';
+        const meu = (meuNome && f.quem === meuNome) ? ' voce' : '';
+        lado = meu ? 'voce' : 'npc';
         return `<div class="fala${tom}${meu}">
           <div class="fala-quem">${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
@@ -61014,23 +61202,32 @@ const UI = {
       /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
          são aspas de ironia ("análise jurídica") e ficam na narração. */
       const pedacos = this.partirFalas(t);
-      if (!pedacos) { ultimaNarracao = t; jaAtribuiu = false; return `<p>${this.esc(t)}</p>`; }
+      if (!pedacos) { pendente = t; return `<p>${this.esc(t)}</p>`; }
 
       let html = '';
       for (const pe of pedacos){
         if (pe.tipo === 'narracao'){
           html += html ? `<p class="entre-falas">${this.esc(pe.texto)}</p>`
                        : `<p>${this.esc(pe.texto)}</p>`;
-          ultimaNarracao = pe.texto; jaAtribuiu = false;
+          pendente = pe.texto;
           continue;
         }
-        /* a frase que você acabou de escolher é sua, e o balão vai
-           pro seu lado com o seu nome */
-        const souEu = this.falaDoJogador && pe.texto === this.falaDoJogador;
-        const quem = souEu ? (Estado.j ? Estado.j.nome : null)
-                           : (jaAtribuiu ? null : this.quemFalouAntes(ultimaNarracao));
-        jaAtribuiu = true;
-        const meu = (quem && Estado.dados && Estado.j && quem === Estado.j.nome) ? ' voce' : '';
+        /* o que está escrito numa placa não é alguém falando com você */
+        if (this._ESCRITO.test(pendente || '')){
+          html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
+          continue;
+        }
+        /* a frase que você acabou de escolher é sua, sem discussão */
+        if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
+        else if (primeira)
+          lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
+               : this.ladoDaFala(pendente, null);
+        else if (pendente !== null) lado = this.ladoDaFala(pendente, lado);
+        else lado = (lado === 'voce') ? 'npc' : 'voce';
+        primeira = false; pendente = null;
+
+        const quem = lado === 'voce' ? meuNome : npc;
+        const meu = lado === 'voce' ? ' voce' : '';
         html += `<div class="fala${quem ? '' : ' anonima'}${meu}">`
               + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
@@ -61048,6 +61245,12 @@ const UI = {
     this.tom(cap.tom); this.limpar(); this.limparDados();
     this.add(this.topo());
 
+    /* de quem é essa conversa: a história registra o nome, e ele
+       vale pra cena inteira e pras cenas em que a conversa continua */
+    const mapa = this.donosDoCapitulo(cap);
+    this.npcDaCena = mapa.dono[Estado.dados.cena] || null;
+    this.npcEhProprio = !!mapa.proprio[Estado.dados.cena];
+    this.minhasFalasDaCena = (mapa.minhas[Estado.dados.cena]) || null;
     const paras = this.narrar(cena.texto);
 
     const html = `<div class="painel">
@@ -61411,7 +61614,7 @@ const UI = {
           <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite(p, 'frente')}</div>
-        <div class="nota">Nível ${p.nivel} · ${this.esc(p.natureza)}${nat.traco ? ' — ' + this.esc(nat.traco) : ''}</div>
+        <div class="nota">Nível ${p.nivel} · ${this.esc(p.natureza)}</div>
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
         ${nat.agressiva ? '<div class="nota alerta">Temperamento agressivo: se o seu time cair, ele não recua.</div>' : ''}
 
@@ -62407,8 +62610,8 @@ const UI = {
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
-        ? this.esc(p.natureza) + ' — ' + this.esc((NATUREZAS[p.natureza]||{}).traco||'')
-        : 'Natureza <b>???</b> — você ainda não entendeu o jeito dele. Convivência e Percepção resolvem isso.'}</div>
+        ? 'Natureza <b>' + this.esc(p.natureza) + '</b>'
+        : 'Natureza <b>???</b> — você ainda não conviveu o bastante.'}</div>
       <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
       ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
           return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
@@ -63369,7 +63572,7 @@ const Jogo = {
     Estado.salvar('auto');
 
     const cena = Historia.iniciarCapitulo(1);
-    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5, ${inicial.natureza}) — ${(NATUREZAS[inicial.natureza]||{}).traco||''}`}]);
+    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5, ${inicial.natureza}).`}]);
   },
 
   /* ---------- navegação ---------- */

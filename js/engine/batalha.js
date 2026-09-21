@@ -525,7 +525,6 @@ const Batalha = {
     p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
     this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
-    this.ev('pokedex', `${(NATUREZAS[p.natureza]||{}).traco || ''}`);
     this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
     this.ev('pokedex', `Base da espécie: ${esp.base.hp}/${esp.base.atk}/${esp.base.def}/${esp.base.spa}/${esp.base.spd}/${esp.base.spe} — soma ${esp.total}.`);
     if (p.shiny)

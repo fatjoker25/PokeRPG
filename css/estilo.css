@@ -247,6 +247,15 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
     color-mix(in srgb, var(--destaque) 2%, var(--bg-2)));
 }
 .narrativa .fala.anonima::before{border-right-color:color-mix(in srgb, var(--destaque) 55%, var(--borda))}
+/* o que está escrito numa placa, num cartaz, num formulário */
+.narrativa p.escrito{
+  margin:2px 0 12px;max-width:62ch;
+  padding:7px 12px;border-left:2px solid var(--borda);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px;letter-spacing:.02em;color:var(--texto-fraco);
+  background:color-mix(in srgb, var(--texto) 4%, transparent);
+}
+
 /* narração curta no meio de uma troca de falas */
 .narrativa p.entre-falas{
   margin:-4px 0 10px 14px;max-width:62ch;

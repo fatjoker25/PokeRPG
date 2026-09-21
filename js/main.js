@@ -91,7 +91,7 @@ const Jogo = {
     Estado.salvar('auto');
 
     const cena = Historia.iniciarCapitulo(1);
-    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5, ${inicial.natureza}) — ${(NATUREZAS[inicial.natureza]||{}).traco||''}`}]);
+    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5, ${inicial.natureza}).`}]);
   },
 
   /* ---------- navegação ---------- */
