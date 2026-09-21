@@ -25,19 +25,19 @@ cenas:{
 c20_ab_a_banca:{
   texto:[
     'Rua do Comércio, 118. Antes de entrar no prédio você para na banca de jornal da porta, porque você está adiando e porque banca de jornal é o melhor lugar do mundo pra adiar.',
-    'O jornaleiro tem uns sessenta anos, um banquinho e um rádio pequeno tocando baixo.',
+    'O jornaleiro tem uns sessenta anos, um banquinho e um rádio pequeno tocando baixo. A banca tem o nome dele pintado na lateral, desbotado: BANCA DO NISHI.',
     d=>fala(d.jogador.nome, 'O senhor tá aqui há muito tempo?'),
-    fala('o jornaleiro', 'Vinte e seis anos nessa esquina.'),
+    fala('Sr. Nishi', 'Vinte e seis anos nessa esquina.'),
     d=>fala(d.jogador.nome, 'O senhor conhece o pessoal do sétimo andar?'),
     'Ele não pergunta por que você quer saber, o que é a gentileza dos jornaleiros.',
-    fala('o jornaleiro', 'Sala 704? Conheço doze deles de vista.'),
-    fala('o jornaleiro', 'Eles vêm uma vez por mês, numa terça, sempre de manhã.'),
+    fala('Sr. Nishi', 'Sala 704? Conheço doze deles de vista.'),
+    fala('Sr. Nishi', 'Eles vêm uma vez por mês, numa terça, sempre de manhã.'),
     'Ele dobra um jornal pra um cliente sem parar de falar.',
-    fala('o jornaleiro', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
-    fala('o jornaleiro', 'São gente normal, moço. É isso que eu ia te falar antes de você perguntar.')
+    fala('Sr. Nishi', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
+    fala('Sr. Nishi', 'São gente normal, moço. É isso que eu ia te falar antes de você perguntar.')
   ],
   ef:{flag:'o_jornaleiro_da_118',
-      npc:{nome:'o jornaleiro', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
+      npc:{nome:'Sr. Nishi', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
       registrar:'O conselho da sala 704 se reúne uma vez por mês, numa terça de manhã, há anos.',
       presagio:'"São gente normal." Ele disse isso antes de você perguntar como eles são.'},
   escolhas:[
@@ -49,16 +49,16 @@ c20_ab_a_banca:{
 
 c20_ab_o_que_eles_fazem:{
   texto:[
-    fala('o jornaleiro', 'Sei lá. É uma sigla.'),
+    fala('Sr. Nishi', 'Sei lá. É uma sigla.'),
     'Ele coça a nuca.',
-    fala('o jornaleiro', 'Já perguntei uma vez, faz uns dez anos, pra uma delas. Ela falou que é gestão de recurso.'),
+    fala('Sr. Nishi', 'Já perguntei uma vez, faz uns dez anos, pra uma delas. Ela falou que é gestão de recurso.'),
     d=>fala(d.jogador.nome, 'Recurso de quê?'),
-    fala('o jornaleiro', 'Foi exatamente o que eu perguntei.'),
+    fala('Sr. Nishi', 'Foi exatamente o que eu perguntei.'),
     'Ele ri, e é um riso curto de quem lembra de uma coisa engraçada de dez anos atrás.',
-    fala('o jornaleiro', 'Ela falou "recurso natural" e sorriu e comprou uma revista de palavra cruzada.'),
+    fala('Sr. Nishi', 'Ela falou "recurso natural" e sorriu e comprou uma revista de palavra cruzada.'),
     'Ele volta a arrumar os jornais.',
-    fala('o jornaleiro', 'E eu achei ótimo, porque recurso natural é árvore, é água. É coisa boa.', 'baixo'),
-    fala('o jornaleiro', 'Eu achei isso por dez anos.')
+    fala('Sr. Nishi', 'E eu achei ótimo, porque recurso natural é árvore, é água. É coisa boa.', 'baixo'),
+    fala('Sr. Nishi', 'Eu achei isso por dez anos.')
   ],
   ef:{flag:'recurso_natural',
       registrar:'Uma conselheira da 704 descreveu o trabalho como "gestão de recurso natural".',
@@ -73,15 +73,15 @@ c20_ab_a_mulher_da_cabeceira:{
   texto:[
     'Você descreve: cinquenta e poucos anos, tailleur cinza, senta na cabeceira.',
     'Ele sabe de quem você está falando antes de você terminar.',
-    fala('o jornaleiro', 'A presidente. Ela vem a pé.'),
+    fala('Sr. Nishi', 'A presidente. Ela vem a pé.'),
     d=>fala(d.jogador.nome, 'A pé?'),
-    fala('o jornaleiro', 'A pé, de sacola de pano, todo mês. Ela mora a seis quadras.'),
+    fala('Sr. Nishi', 'A pé, de sacola de pano, todo mês. Ela mora a seis quadras.'),
     'Ele aponta com o queixo numa direção qualquer.',
-    fala('o jornaleiro', 'Ela compra o mesmo jornal há não sei quantos anos e sempre paga contado e nunca pede troco arredondado.'),
-    fala('o jornaleiro', 'Uma vez o filho dela ficou doente e ela me contou. Aí eu perguntei do menino no mês seguinte e ela ficou tão feliz que eu tinha lembrado que ela quase chorou.'),
+    fala('Sr. Nishi', 'Ela compra o mesmo jornal há não sei quantos anos e sempre paga contado e nunca pede troco arredondado.'),
+    fala('Sr. Nishi', 'Uma vez o filho dela ficou doente e ela me contou. Aí eu perguntei do menino no mês seguinte e ela ficou tão feliz que eu tinha lembrado que ela quase chorou.'),
     'Ele arruma uma pilha de revista.',
-    fala('o jornaleiro', 'Eu tô te falando isso porque você tá com cara de quem vai subir e brigar com alguém.'),
-    fala('o jornaleiro', 'Sobe. Mas sobe sabendo que ela é assim.')
+    fala('Sr. Nishi', 'Eu tô te falando isso porque você tá com cara de quem vai subir e brigar com alguém.'),
+    fala('Sr. Nishi', 'Sobe. Mas sobe sabendo que ela é assim.')
   ],
   ef:{flag:'a_presidente_vem_a_pe',
       registrar:'A presidente do conselho vem a pé, de sacola de pano, e mora a seis quadras.',

@@ -25,6 +25,24 @@ no fim. Presságio insinua; não entrega.
 Isso não dá pra conferir com script: nome de lugar citado antes é normal e
 fato citado antes não é detectável. Confere na leitura.
 
+## Nome de personagem
+Cargo fica como cargo: "a atendente do Centro", "o barqueiro", "a enfermeira".
+Quem carrega uma cena e assume risco ganha nome, porque nomear é como o jogo
+diz que aquilo é uma pessoa — e numa história sobre instituição que
+transforma bicho em "lote" e em "recurso", isso importa dentro do texto.
+
+Três armadilhas que já aconteceram:
+- o personagem **diz o próprio nome na fala** e o balão por cima continua com
+  a descrição ("Reika Ando, Correio de Kanto" debaixo de A REPÓRTER);
+- dois personagens **se chamam pelo nome** no diálogo e nenhum dos dois tem
+  nome no balão ("Quatro, Tetsu" debaixo de O MECÂNICO MAIS VELHO);
+- a narração diz que **ela assina com o nome completo** e o jogo nunca conta
+  qual é.
+
+`ferramentas/chk-nomes.js` lista quem tem 12+ falas e nenhum nome. Não é erro
+automático: recusa escrita de propósito é resposta válida — mas aí a recusa
+precisa estar no texto, não ser esquecimento.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.

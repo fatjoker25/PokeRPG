@@ -130,20 +130,20 @@ c7_ab_de_noite:{
 c7_ab_encomenda:{
   texto:[
     'Você ainda não chegou na cidade direito — está na entrada, na altura da última curva da Rota 8 — e já tem alguém te esperando na beira da estrada.',
-    'É uma menina de uns treze anos, sentada numa mochila, com uma caixa de papelão no colo amarrada com barbante.',
+    'É uma menina de uns treze anos, sentada numa mochila, com uma caixa de papelão no colo amarrada com barbante. A caixa tem um nome escrito no barbante com caneta de retroprojetor: NORI.',
     d=>{
       const r = Estado.nomeRep();
       return `Ela levanta quando te vê e fala o seu nome inteiro, com sobrenome e tudo, do jeito de quem ensaiou. "${r}", ela acrescenta, como se precisasse confirmar que é você mesmo.`;
     },
-    fala('a menina da caixa', 'Me falaram que você ia passar por aqui essa semana.'),
+    fala('Nori', 'Me falaram que você ia passar por aqui essa semana.'),
     d=>fala(d.jogador.nome, 'Quem falou?'),
-    fala('a menina da caixa', 'Todo mundo. Você é o assunto de duas cidades, você não sabe disso?'),
+    fala('Nori', 'Todo mundo. Você é o assunto de duas cidades, você não sabe disso?'),
     'Ela estende a caixa. É leve. Chacoalha um pouco.',
-    fala('a menina da caixa', 'É pra levar pro quarto andar da torre. Eu não consigo subir.'),
-    fala('a menina da caixa', 'Eu tentei três vezes.', 'baixo')
+    fala('Nori', 'É pra levar pro quarto andar da torre. Eu não consigo subir.'),
+    fala('Nori', 'Eu tentei três vezes.', 'baixo')
   ],
   ef:{flag:'tem_a_caixa_da_menina',
-      npc:{nome:'a menina da caixa', opiniao:1, viuVoce:'Te esperou na entrada de Lavender com uma encomenda.'},
+      npc:{nome:'Nori', opiniao:1, viuVoce:'Te esperou na entrada de Lavender com uma encomenda.'},
       registrar:'Uma menina te entregou uma caixa para levar ao quarto andar da Torre Pokémon.'},
   escolhas:[
     {texto:'Aceitar. Perguntar o que tem dentro depois.', vai:'c7_ab_aceitou'},
@@ -155,12 +155,12 @@ c7_ab_encomenda:{
 c7_ab_o_que_tem:{
   texto:[
     'Ela demora. Olha pra caixa como se a caixa fosse responder por ela.',
-    fala('a menina da caixa', 'Coleira, uma bola vazia e um chinelo.'),
+    fala('Nori', 'Coleira, uma bola vazia e um chinelo.'),
     d=>fala(d.jogador.nome, 'Um chinelo?'),
-    fala('a menina da caixa', 'Ele dormia em cima do chinelo do meu pai. Todo dia. Oito anos.'),
+    fala('Nori', 'Ele dormia em cima do chinelo do meu pai. Todo dia. Oito anos.'),
     'Ela diz "oito anos" e a voz não quebra, porque ela já contou isso muitas vezes e treinou.',
-    fala('a menina da caixa', 'Meu pai falou que a gente não ia guardar. Falou que guardar faz mal.'),
-    fala('a menina da caixa', 'Eu concordo com ele. Só não consigo jogar fora. Na torre não é jogar fora.')
+    fala('Nori', 'Meu pai falou que a gente não ia guardar. Falou que guardar faz mal.'),
+    fala('Nori', 'Eu concordo com ele. Só não consigo jogar fora. Na torre não é jogar fora.')
   ],
   ef:{registrar:'A caixa tem uma coleira, uma bola vazia e um chinelo.'},
   escolhas:[
@@ -187,19 +187,19 @@ c7_ab_vai_junto:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu levo. Mas você sobe comigo.'),
     'Ela balança a cabeça antes de você terminar a frase.',
-    fala('a menina da caixa', 'Não.'),
+    fala('Nori', 'Não.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('a menina da caixa', 'Porque eu já subi três vezes e nas três eu voltei no segundo andar.'),
+    fala('Nori', 'Porque eu já subi três vezes e nas três eu voltei no segundo andar.'),
     'Ela senta na mochila de novo.',
-    fala('a menina da caixa', 'Não é medo de fantasma. Todo mundo acha que é medo de fantasma.'),
-    fala('a menina da caixa', 'É que subindo a escada eu ainda tô levando ele pra algum lugar. Quando eu chegar em cima acabou de levar.', 'baixo'),
+    fala('Nori', 'Não é medo de fantasma. Todo mundo acha que é medo de fantasma.'),
+    fala('Nori', 'É que subindo a escada eu ainda tô levando ele pra algum lugar. Quando eu chegar em cima acabou de levar.', 'baixo'),
     'Você fica um tempo sem saber o que dizer, o que é a resposta certa.',
     d=>fala(d.jogador.nome, 'Então a gente sobe devagar.'),
     'Ela levanta.'
   ],
   ef:{flag:'a_menina_vai_subir', moral:1,
       rep:{eixo:'bom', delta:1, motivo:'Convenceu a menina a subir a torre em vez de levar a caixa por ela.'},
-      npc:{nome:'a menina da caixa', opiniao:2, viuVoce:'Subiu a Torre Pokémon com você.'},
+      npc:{nome:'Nori', opiniao:2, viuVoce:'Subiu a Torre Pokémon com você.'},
       registrar:'A menina da caixa vai subir a torre com você.'},
   escolhas:[
     {texto:'Ir até a base da torre com ela.', vai:'c7_base'}

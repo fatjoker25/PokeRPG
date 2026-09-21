@@ -75,12 +75,13 @@ c32_a_lanchonete:{
     'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.',
     'Você senta no balcão e pede o prato do dia, que custa oito e vem com arroz, feijão, uma carne e salada de repolho.',
     'Na mesa do fundo tem quatro homens de macacão azul da oficina de empilhadeira e eles falam alto porque trabalham com máquina e ficaram com o hábito.',
+    'Você aprende o nome de dois deles sem precisar perguntar, do jeito que se aprende nome em mesa de lanchonete: porque eles se chamam o tempo todo. O mais velho é o Tetsu. O de boné é o Kouji.',
     'Você ouve quarenta minutos de conversa sobre: futebol, um colega que se aposentou, o preço do aluguel em Saffron, e — nos últimos seis minutos — o galpão da 3.',
     fala('o homem de macacão', 'Aquilo ali é laboratório.'),
-    fala('o segundo de macacão', 'Laboratório nada. É armazém.'),
+    fala('Kouji', 'Laboratório nada. É armazém.'),
     fala('o homem de macacão', 'Armazém com ar-condicionado central, Kouji?'),
     'Os quatro riem.',
-    fala('o segundo de macacão', 'Armazém de remédio tem.'),
+    fala('Kouji', 'Armazém de remédio tem.'),
     fala('o homem de macacão', 'Então é armazém de remédio que solta cheiro de bicho na sexta-feira.', 'baixo')
   ],
   ef:{flag:'a_conversa_da_lanchonete',
@@ -99,17 +100,17 @@ c32_os_quatro_mecanicos:{
     'Os quatro param de comer ao mesmo tempo.',
     fala('o homem de macacão', 'Você é de onde?'),
     d=>fala(d.jogador.nome, 'De passagem.'),
-    'Eles se olham, e é o mais velho dos quatro, que não tinha falado ainda, que responde.',
-    fala('o mecânico mais velho', 'Cheiro de canil, moço. De canil grande.'),
-    fala('o mecânico mais velho', 'Toda sexta, de manhã cedo, quando eles abrem o portão pra carregar.'),
+    'Eles se olham, e é o Tetsu, que não tinha falado ainda, que responde.',
+    fala('Tetsu', 'Cheiro de canil, moço. De canil grande.'),
+    fala('Tetsu', 'Toda sexta, de manhã cedo, quando eles abrem o portão pra carregar.'),
     d=>fala(d.jogador.nome, 'Carregar o quê?'),
-    fala('o mecânico mais velho', 'Caixa branca. Fechada. Do tamanho de uma caixa de feira.'),
+    fala('Tetsu', 'Caixa branca. Fechada. Do tamanho de uma caixa de feira.'),
     'Ele volta pro prato.',
-    fala('o mecânico mais velho', 'Eu trabalho nessa rua há vinte e seis anos e eu já vi galpão de tudo. De pneu, de tecido, de azulejo, de frango congelado.'),
-    fala('o mecânico mais velho', 'Aquele é o primeiro que eu não sei dizer o que é, e eu paro em frente dele todo dia às sete da manhã.', 'baixo')
+    fala('Tetsu', 'Eu trabalho nessa rua há vinte e seis anos e eu já vi galpão de tudo. De pneu, de tecido, de azulejo, de frango congelado.'),
+    fala('Tetsu', 'Aquele é o primeiro que eu não sei dizer o que é, e eu paro em frente dele todo dia às sete da manhã.', 'baixo')
   ],
   ef:{flag:['carregam_na_sexta','sabe_do_lote_unico'],
-      npc:{nome:'o mecânico mais velho', opiniao:1, viuVoce:'Te contou do cheiro e das caixas brancas da sexta-feira.'},
+      npc:{nome:'Tetsu', opiniao:1, viuVoce:'Te contou do cheiro e das caixas brancas da sexta-feira.'},
       registrar:'Toda sexta de manhã o galpão abre e carrega caixas brancas fechadas. Sai cheiro de canil grande.'},
   escolhas:[
     {texto:'Perguntar que horas exatamente.', vai:'c32_que_horas'},
@@ -120,14 +121,14 @@ c32_os_quatro_mecanicos:{
 
 c32_que_horas:{
   texto:[
-    fala('o mecânico mais velho', 'Seis e quarenta. Sempre.'),
+    fala('Tetsu', 'Seis e quarenta. Sempre.'),
     d=>fala(d.jogador.nome, 'Como o senhor sabe que é sempre?'),
     'Ele aponta o próprio pulso com o garfo.',
-    fala('o mecânico mais velho', 'Porque eu entro às sete e eu passo em frente às seis e quarenta e cinco, e já tá acontecendo, e já acabou quando eu volto do café às sete e dez.'),
+    fala('Tetsu', 'Porque eu entro às sete e eu passo em frente às seis e quarenta e cinco, e já tá acontecendo, e já acabou quando eu volto do café às sete e dez.'),
     'Ele come mais um pouco.',
-    fala('o mecânico mais velho', 'Trinta minutos. Todo sexta. Faz uns três anos.'),
-    fala('o segundo de macacão', 'Quatro, Tetsu. Começou quando a empilhadeira nova chegou.'),
-    fala('o mecânico mais velho', 'Quatro, então.'),
+    fala('Tetsu', 'Trinta minutos. Todo sexta. Faz uns três anos.'),
+    fala('Kouji', 'Quatro, Tetsu. Começou quando a empilhadeira nova chegou.'),
+    fala('Tetsu', 'Quatro, então.'),
     'Quatro anos de trinta minutos toda sexta-feira, a cinquenta metros de uma oficina com vinte e seis anos de rua.',
     'E ninguém nunca perguntou o que era, porque em rua de galpão a educação é não perguntar o que tem no galpão do vizinho.'
   ],
@@ -282,12 +283,23 @@ c32_as_ordens_de_servico:{
     d=>fala(d.jogador.nome, 'Você me daria?'),
     fala('o fumante', 'Não hoje.'),
     'Ele tira o crachá do cós, olha, e põe de volta virado pra dentro.',
-    fala('o fumante', 'Mas eu não vou jogar fora, e eu sei onde te achar se você continuar perguntando por Kanto.', 'baixo')
+    fala('o fumante', 'Mas eu não vou jogar fora, e eu sei onde te achar se você continuar perguntando por Kanto.', 'baixo'),
+    d=>fala(d.jogador.nome, 'Como é o seu nome?'),
+    'Ele leva a mão até o crachá de novo e para no meio do caminho.',
+    fala('o fumante', 'O sigilo é sobre espécimes, procedimentos, instalações e pessoas.'),
+    d=>fala(d.jogador.nome, 'Você me disse que não é sobre você.'),
+    fala('o fumante', 'Eu disse que o que eu faço não é sobre mim.'),
+    'Ele abotoa o bolso onde guardou a guimba.',
+    fala('o fumante', 'Eu sou uma pessoa. Pessoa tá na cláusula.'),
+    'E é aí que você entende que ele não achou uma brecha: ele achou os dois lados da mesma frase e usou os dois, um pra te contar e outro pra se proteger, e ele fez isso de cabeça, em pé numa calçada, sem consultar nada.',
+    fala('o fumante', 'Quando eu te entregar a caixa de sapato eu te digo o meu nome.'),
+    fala('o fumante', 'Aí já não vai fazer diferença.', 'baixo')
   ],
   ef:{flag:['a_caixa_de_sapato_do_ferramenteiro','sabe_do_lote_unico'],
       npc:{nome:'o fumante', opiniao:5, viuVoce:'Tem quatro anos de ordem de serviço numa caixa de sapato e sabe onde te achar.'},
-      registrar:'O ferramenteiro guarda quatro anos de ordens de serviço com quantidade e data, numa caixa de sapato.',
-      presagio:'Ele não deu hoje. Ele disse que sabe onde te achar. Isso é um compromisso.'},
+      registrar:'O ferramenteiro guarda quatro anos de ordens de serviço com quantidade e data, numa caixa de sapato. Não disse o nome.',
+      presagio:['Ele não deu hoje. Ele disse que sabe onde te achar. Isso é um compromisso.',
+                'Ele te contou tudo e não disse o nome, e usou a mesma cláusula pras duas coisas.']},
   escolhas:[
     {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
     {texto:'Ir embora de Saffron com isso.', vai:'c32_fim'}
@@ -450,7 +462,7 @@ c32_a_sexta:{
     'Você conta.',
     'Quarenta e uma caixas em vinte e seis minutos.',
     'Às sete e seis o baú fecha, o portão desce, e a rua Industrial 3 volta a ser uma rua de galpão numa manhã de sexta-feira.',
-    'A cinquenta metros, o mecânico mais velho está encostado na porta da oficina com um copo de café, olhando.',
+    'A cinquenta metros, o Tetsu está encostado na porta da oficina com um copo de café, olhando.',
     'Ele olha pra você. Você olha pra ele.',
     'Nenhum dos dois fala nada, porque não tem nada pra falar que já não tenha sido dito por vinte e seis minutos de corrente humana.'
   ],
@@ -459,7 +471,7 @@ c32_a_sexta:{
       presagio:'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'},
   escolhas:[
     {texto:'Seguir o caminhão-baú.', vai:'c32_seguiu_o_bau'},
-    {texto:'Ir falar com o mecânico.', vai:'c32_o_mecanico_de_novo'},
+    {texto:'Ir falar com o Tetsu.', vai:'c32_o_mecanico_de_novo'},
     {texto:'Ir embora de Saffron com o que você tem.', vai:'c32_fim'}
   ]
 },
@@ -483,21 +495,21 @@ c32_seguiu_o_bau:{
 c32_o_mecanico_de_novo:{
   texto:[
     'Você atravessa a rua e ele te oferece o copo de café antes de você falar, e você aceita porque recusar seria grosseria.',
-    fala('o mecânico mais velho', 'Quarenta e uma.'),
+    fala('Tetsu', 'Quarenta e uma.'),
     d=>fala(d.jogador.nome, 'Você conta?'),
-    fala('o mecânico mais velho', 'Todo sexta, há quatro anos.'),
+    fala('Tetsu', 'Todo sexta, há quatro anos.'),
     'Ele toma o café dele do outro copo.',
-    fala('o mecânico mais velho', 'Tem semana de trinta e seis. Tem semana de cinquenta e dois. A média é quarenta e uma.'),
+    fala('Tetsu', 'Tem semana de trinta e seis. Tem semana de cinquenta e dois. A média é quarenta e uma.'),
     d=>fala(d.jogador.nome, 'Você anota?'),
     'Ele entra na oficina e volta em quarenta segundos com um calendário de parede de fornecedor de peça, do tipo que vem de graça em janeiro.',
     'Cada sexta-feira tem um número escrito a caneta no canto do quadrinho.',
     'Quatro calendários. Quatro anos.',
-    fala('o mecânico mais velho', 'Eu não sei o que eu tô contando, moço.'),
-    fala('o mecânico mais velho', 'Eu só sei que quando eu comecei era vinte e dois.', 'baixo')
+    fala('Tetsu', 'Eu não sei o que eu tô contando, moço.'),
+    fala('Tetsu', 'Eu só sei que quando eu comecei era vinte e dois.', 'baixo')
   ],
   ef:{flag:['os_calendarios_do_mecanico','reika_precisa_de_papel','sabe_do_lote_unico'],
       rep:{eixo:'bom', delta:2, motivo:'Um mecânico de vinte e seis anos de rua te mostrou quatro anos de contagem em calendário de parede.'},
-      npc:{nome:'o mecânico mais velho', opiniao:4, viuVoce:'Te mostrou quatro calendários com a contagem de sexta-feira.'},
+      npc:{nome:'Tetsu', opiniao:4, viuVoce:'Te mostrou quatro calendários com a contagem de sexta-feira.'},
       registrar:'O mecânico tem quatro anos de contagem: começou em 22 caixas por sexta e hoje é 41.',
       presagio:'De vinte e dois pra quarenta e um em quatro anos. Isso dobrou, e nada para de dobrar sozinho.'},
   escolhas:[
@@ -510,17 +522,17 @@ c32_pediu_os_calendarios:{
   texto:[
     d=>fala(d.jogador.nome, 'Me dá os calendários.'),
     'Ele olha pros quatro, empilhados no braço dele.',
-    fala('o mecânico mais velho', 'Eu ia jogar fora esse ano.'),
+    fala('Tetsu', 'Eu ia jogar fora esse ano.'),
     d=>fala(d.jogador.nome, 'Então me dá.'),
-    fala('o mecânico mais velho', 'É que aí eu paro de contar.'),
+    fala('Tetsu', 'É que aí eu paro de contar.'),
     'E ele fica com os quatro no braço e essa frase no ar por uns bons dez segundos, e é o dilema mais honesto que alguém te apresentou em Kanto.',
     'Aí ele entrega três.',
-    fala('o mecânico mais velho', 'Leva os três velhos. Esse ano é meu até dezembro.'),
+    fala('Tetsu', 'Leva os três velhos. Esse ano é meu até dezembro.'),
     'Ele volta pra oficina com o de dois mil pendurado no braço e é sete e vinte da manhã e ele tem que abrir.',
-    fala('o mecânico mais velho', 'Volta em janeiro que eu te dou esse.')
+    fala('Tetsu', 'Volta em janeiro que eu te dou esse.')
   ],
   ef:{flag:['tem_os_tres_calendarios','reika_precisa_de_papel'],
-      npc:{nome:'o mecânico mais velho', opiniao:6, viuVoce:'Te deu três dos quatro calendários e ficou contando o do ano corrente.'},
+      npc:{nome:'Tetsu', opiniao:6, viuVoce:'Te deu três dos quatro calendários e ficou contando o do ano corrente.'},
       registrar:'Está com três calendários de parede com a contagem semanal de caixas, de três anos.',
       presagio:'Ele ficou com o do ano em curso pra continuar contando. Volta em janeiro.'},
   escolhas:[

@@ -91,18 +91,19 @@ c10_ab_dormiu:{
 c10_ab_o_operador:{
   texto:[
     'Na curva antes do vale tem uma casa de alvenaria sem reboco com um quintal de terra batida e um homem de uns setenta anos sentado numa cadeira de praça — dessas de ferro fundido, que alguém claramente levou de uma praça.',
+    'A caixa de correio do portão diz KATAYAMA em letra de adesivo de papelaria.',
     'Ele te vê subir e fala antes de você chegar:',
-    fala('o velho da cadeira', 'Você vai pra usina.'),
+    fala('Sr. Katayama', 'Você vai pra usina.'),
     d=>fala(d.jogador.nome, 'Como é que você sabe?'),
-    fala('o velho da cadeira', 'Porque essa estrada não vai pra mais lugar nenhum.'),
+    fala('Sr. Katayama', 'Porque essa estrada não vai pra mais lugar nenhum.'),
     'Ele aponta a cadeira vazia do lado, que também é de praça, e que também claramente foi levada de uma praça.',
     'Você senta porque não sentar seria pior.',
-    fala('o velho da cadeira', 'Eu trabalhei lá dentro por vinte e seis anos. Operador de sala de controle.'),
-    fala('o velho da cadeira', 'Fecharam em oitenta e sete. Pagaram todo mundo direitinho, com carta e tudo.'),
-    fala('o velho da cadeira', 'Só que ninguém desmontou nada.', 'baixo')
+    fala('Sr. Katayama', 'Eu trabalhei lá dentro por vinte e seis anos. Operador de sala de controle.'),
+    fala('Sr. Katayama', 'Fecharam em oitenta e sete. Pagaram todo mundo direitinho, com carta e tudo.'),
+    fala('Sr. Katayama', 'Só que ninguém desmontou nada.', 'baixo')
   ],
   ef:{flag:'conheceu_o_operador',
-      npc:{nome:'o velho da cadeira', opiniao:1, viuVoce:'Trabalhou 26 anos na usina e te chamou pra sentar.'},
+      npc:{nome:'Sr. Katayama', opiniao:1, viuVoce:'Trabalhou 26 anos na usina e te chamou pra sentar.'},
       registrar:'Um ex-operador da usina mora na curva antes do vale.'},
   escolhas:[
     {texto:'Perguntar por que não desmontaram.', vai:'c10_ab_por_que_nao'},
@@ -114,14 +115,14 @@ c10_ab_o_operador:{
 
 c10_ab_por_que_nao:{
   texto:[
-    fala('o velho da cadeira', 'Porque desmontar custa mais que deixar.'),
+    fala('Sr. Katayama', 'Porque desmontar custa mais que deixar.'),
     'Ele diz isso como quem já explicou pra muita gente.',
-    fala('o velho da cadeira', 'Pra desmontar, você tem que drenar o óleo dos transformadores, tirar o cobre, levar a turbina de caminhão.'),
-    fala('o velho da cadeira', 'Pra deixar, você tranca o portão.'),
+    fala('Sr. Katayama', 'Pra desmontar, você tem que drenar o óleo dos transformadores, tirar o cobre, levar a turbina de caminhão.'),
+    fala('Sr. Katayama', 'Pra deixar, você tranca o portão.'),
     d=>fala(d.jogador.nome, 'E o zumbido?'),
     'Ele não responde na hora. Mexe na cadeira, que range.',
-    fala('o velho da cadeira', 'Uma usina desligada não zumbe, menino.'),
-    fala('o velho da cadeira', 'Eu escuto esse zumbido da minha varanda faz sete anos. Não escutava nos quatro primeiros.')
+    fala('Sr. Katayama', 'Uma usina desligada não zumbe, menino.'),
+    fala('Sr. Katayama', 'Eu escuto esse zumbido da minha varanda faz sete anos. Não escutava nos quatro primeiros.')
   ],
   ef:{flag:'zumbido_ha_sete_anos',
       registrar:'A usina está desligada há onze anos, mas zumbe há sete.',
@@ -135,15 +136,15 @@ c10_ab_por_que_nao:{
 
 c10_ab_a_sala:{
   texto:[
-    fala('o velho da cadeira', 'Painel sinótico do vale inteiro. Uma parede de doze metros com lampadinha pra cada subestação.'),
+    fala('Sr. Katayama', 'Painel sinótico do vale inteiro. Uma parede de doze metros com lampadinha pra cada subestação.'),
     'Ele desenha no ar com o dedo, e o desenho é preciso, e ele não pensa antes de desenhar.',
-    fala('o velho da cadeira', 'Se acender a lampadinha, tem carga. Se apagar, não tem.'),
-    fala('o velho da cadeira', 'A gente ficava oito horas olhando pra parede. Oito horas, doze metros de lâmpada.'),
+    fala('Sr. Katayama', 'Se acender a lampadinha, tem carga. Se apagar, não tem.'),
+    fala('Sr. Katayama', 'A gente ficava oito horas olhando pra parede. Oito horas, doze metros de lâmpada.'),
     d=>fala(d.jogador.nome, 'E hoje?'),
     'Ele fica quieto uns cinco segundos.',
-    fala('o velho da cadeira', 'Eu fui lá em noventa e quatro. Pulei a cerca, que naquela época dava pra pular.'),
-    fala('o velho da cadeira', 'A parede tava acesa.'),
-    fala('o velho da cadeira', 'Toda acesa. Doze metros. Numa usina sem energia há sete anos.', 'baixo')
+    fala('Sr. Katayama', 'Eu fui lá em noventa e quatro. Pulei a cerca, que naquela época dava pra pular.'),
+    fala('Sr. Katayama', 'A parede tava acesa.'),
+    fala('Sr. Katayama', 'Toda acesa. Doze metros. Numa usina sem energia há sete anos.', 'baixo')
   ],
   ef:{flag:'o_painel_aceso',
       registrar:'Em 1994 o painel sinótico da sala de controle estava todo aceso, numa usina sem energia.',
@@ -158,14 +159,14 @@ c10_ab_o_arame:{
   texto:[
     d=>fala(d.jogador.nome, 'O arame farpado da cerca é inclinado pra dentro.'),
     'Ele para de balançar a cadeira.',
-    fala('o velho da cadeira', 'Você já foi lá?'),
+    fala('Sr. Katayama', 'Você já foi lá?'),
     d=>fala(d.jogador.nome, 'Ainda não. Me falaram.'),
     'Mentira boba e ele deixa passar.',
-    fala('o velho da cadeira', 'Foi assim desde o começo. Setenta e seis, quando construíram.'),
-    fala('o velho da cadeira', 'A gente perguntou. O engenheiro falou que era "norma de instalação de alta tensão".'),
-    fala('o velho da cadeira', 'Eu trabalhei em mais duas usinas depois. Em nenhuma das duas o arame era pra dentro.'),
+    fala('Sr. Katayama', 'Foi assim desde o começo. Setenta e seis, quando construíram.'),
+    fala('Sr. Katayama', 'A gente perguntou. O engenheiro falou que era "norma de instalação de alta tensão".'),
+    fala('Sr. Katayama', 'Eu trabalhei em mais duas usinas depois. Em nenhuma das duas o arame era pra dentro.'),
     'Ele volta a balançar a cadeira, e o rangido volta, e o rangido agora incomoda.',
-    fala('o velho da cadeira', 'Então ou era norma e as outras duas tavam erradas, ou não era norma.')
+    fala('Sr. Katayama', 'Então ou era norma e as outras duas tavam erradas, ou não era norma.')
   ],
   ef:{flag:'o_arame_desde_setenta_e_seis',
       registrar:'O arame inclinado pra dentro está lá desde a construção, em 1976. Não é norma.',

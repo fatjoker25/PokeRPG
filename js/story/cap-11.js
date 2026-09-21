@@ -30,12 +30,12 @@ c11_ab_o_acampamento:{
     'Sete barracas na calçada em frente ao ginásio de Saffron, alinhadas contra a parede pra deixar passagem, com um fogareiro coletivo, uma lona esticada entre dois postes e um balde que alguém enche na torneira da praça.',
     'É organizado. Isso é a parte que impressiona: é organizado de um jeito que só fica organizado depois de muito tempo.',
     'No portão de aço abaixado, o papel A4 plastificado: **SUSPENSO POR TEMPO INDETERMINADO — S.**',
-    'Um rapaz de uns dezoito anos está sentado num banquinho dobrável com um caderno no colo, e o caderno tem uma lista.',
-    fala('o rapaz do caderno', 'Chegou agora?'),
+    'Um rapaz de uns dezoito anos está sentado num banquinho dobrável com um caderno no colo, e o caderno tem uma lista. Na capa do caderno, a caneta: DAICHI — LISTA DO GINÁSIO, NÃO MEXER.',
+    fala('Daichi', 'Chegou agora?'),
     d=>fala(d.jogador.nome, 'Agora.'),
-    fala('o rapaz do caderno', 'Nome, data de chegada e insígnias que você já tem.'),
+    fala('Daichi', 'Nome, data de chegada e insígnias que você já tem.'),
     'Ele diz isso do jeito de quem faz isso há semanas.',
-    fala('o rapaz do caderno', 'Quando abrir, a ordem é essa. A gente combinou.')
+    fala('Daichi', 'Quando abrir, a ordem é essa. A gente combinou.')
   ],
   ef:{flag:'o_caderno_da_fila',
       registrar:'Sete treinadores acampam em frente ao ginásio de Saffron, com lista de ordem de chegada.'},
@@ -54,16 +54,16 @@ c11_ab_se_inscreveu:{
       return `Você dita o nome e a data, e quando fala o número de insígnias — ${ins} — o rapaz para de escrever por meio segundo.`;
     },
     'Ele escreve mesmo assim, porque a lista é por ordem de chegada e não por mérito, e isso foi combinado.',
-    fala('o rapaz do caderno', 'Você é o vinte e três.'),
+    fala('Daichi', 'Você é o vinte e três.'),
     d=>fala(d.jogador.nome, 'Tem vinte e dois na frente? Eu só vejo sete barracas.'),
-    fala('o rapaz do caderno', 'Quinze desistiram.'),
+    fala('Daichi', 'Quinze desistiram.'),
     'Ele fecha o caderno com o dedo no meio, marcando a página.',
-    fala('o rapaz do caderno', 'Eu não risco os que desistem. Eles continuam na lista.'),
+    fala('Daichi', 'Eu não risco os que desistem. Eles continuam na lista.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('o rapaz do caderno', 'Pra quando alguém perguntar quantos desistiram eu ter o número.', 'baixo')
+    fala('Daichi', 'Pra quando alguém perguntar quantos desistiram eu ter o número.', 'baixo')
   ],
   ef:{flag:'na_lista_do_ginasio',
-      npc:{nome:'o rapaz do caderno', opiniao:1, viuVoce:'Te pôs como vigésimo terceiro na lista do ginásio.'},
+      npc:{nome:'Daichi', opiniao:1, viuVoce:'Te pôs como vigésimo terceiro na lista do ginásio.'},
       registrar:'Você é o 23º na lista do ginásio de Saffron. Quinze já desistiram e ele não risca ninguém.'},
   escolhas:[
     {texto:'Perguntar quem é o "S." do papel.', vai:'c11_ab_quem_e_s'},
@@ -74,14 +74,14 @@ c11_ab_se_inscreveu:{
 
 c11_ab_ha_quanto_tempo:{
   texto:[
-    fala('o rapaz do caderno', 'O papel é de onze de março.'),
+    fala('Daichi', 'O papel é de onze de março.'),
     'Ele aponta com o queixo, sem olhar, porque olhou muitas vezes.',
-    fala('o rapaz do caderno', 'Só que o papel foi trocado. O primeiro era escrito à mão.'),
+    fala('Daichi', 'Só que o papel foi trocado. O primeiro era escrito à mão.'),
     d=>fala(d.jogador.nome, 'Trocado quando?'),
-    fala('o rapaz do caderno', 'Em junho. Eu vi. Quatro da tarde, um cara de terno, plastificado e tudo.'),
-    fala('o rapaz do caderno', 'Eu perguntei se ia reabrir. Ele falou "não é comigo".'),
+    fala('Daichi', 'Em junho. Eu vi. Quatro da tarde, um cara de terno, plastificado e tudo.'),
+    fala('Daichi', 'Eu perguntei se ia reabrir. Ele falou "não é comigo".'),
     'O rapaz dá de ombros, e o dar de ombros já virou repertório dele.',
-    fala('o rapaz do caderno', 'Mas quem troca um aviso é alguém que quer que o aviso continue lá.')
+    fala('Daichi', 'Mas quem troca um aviso é alguém que quer que o aviso continue lá.')
   ],
   ef:{flag:'o_aviso_foi_trocado',
       registrar:'O aviso do ginásio de Saffron foi trocado em junho por um homem de terno. O original era à mão.',
@@ -162,11 +162,11 @@ c11_ab_a_porta_de_aco:{
 c11_ab_entrevista:{
   texto:[
     'Tem uma mulher esperando você na entrada sul de Saffron com um gravador de fita na mão e um crachá de imprensa pendurado no pescoço, e ela não finge que estava de passagem.',
-    fala('a repórter', 'Reika Ando, Correio de Kanto. Você tem dez minutos?'),
+    fala('Reika Ando', 'Reika Ando, Correio de Kanto. Você tem dez minutos?'),
     d=>fala(d.jogador.nome, 'Pra quê?'),
-    fala('a repórter', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
+    fala('Reika Ando', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
     'Ela aperta o botão do gravador sem esperar resposta, que é um jeito de já ter começado.',
-    fala('a repórter', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
+    fala('Reika Ando', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
     'A pergunta é específica demais pra ser a primeira pergunta de uma entrevista.',
     'Ela não está te entrevistando. Ela está conferindo uma coisa que já escreveu.'
   ],
@@ -184,12 +184,12 @@ c11_ab_respondeu:{
   texto:[
     'Você conta o que viu, cidade por cidade, e ela não interrompe nenhuma vez, e o gravador roda.',
     'Quando você termina ela desliga a fita, tira do gravador, e guarda no bolso interno do casaco, não na bolsa.',
-    fala('a repórter', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
+    fala('Reika Ando', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
     d=>fala(d.jogador.nome, 'Devia pedir?'),
-    fala('a repórter', 'Provavelmente.'),
+    fala('Reika Ando', 'Provavelmente.'),
     'Ela tira um cartão e escreve um número atrás, à caneta, e o número não é o número impresso na frente.',
-    fala('a repórter', 'Esse aqui é meu, não da redação.'),
-    fala('a repórter', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
+    fala('Reika Ando', 'Esse aqui é meu, não da redação.'),
+    fala('Reika Ando', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
   ],
   ef:{flag:'falou_com_a_imprensa',
       rep:{eixo:'bom', delta:2, motivo:'Falou com a imprensa sobre o transporte em gaiola, com nome e sobrenome.', notorio:true},
@@ -206,13 +206,13 @@ c11_ab_respondeu:{
 c11_ab_o_que_ela_tem:{
   texto:[
     'Ela pensa se responde. Dá pra ver ela pensando.',
-    fala('a repórter', 'Quarenta e uma páginas e nenhum documento.'),
+    fala('Reika Ando', 'Quarenta e uma páginas e nenhum documento.'),
     d=>fala(d.jogador.nome, 'E isso é pouco?'),
-    fala('a repórter', 'Isso é zero. Depoimento sem papel não publica.'),
+    fala('Reika Ando', 'Isso é zero. Depoimento sem papel não publica.'),
     'Ela guarda o gravador na bolsa.',
-    fala('a repórter', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
-    fala('a repórter', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
-    fala('a repórter', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
+    fala('Reika Ando', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
+    fala('Reika Ando', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
+    fala('Reika Ando', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
   ],
   ef:{flag:'reika_precisa_de_papel',
       registrar:'Reika Ando tem 41 páginas de depoimento e nenhum documento. Ela precisa de papel com carimbo.'},
@@ -227,13 +227,13 @@ c11_ab_desliga:{
   texto:[
     d=>fala(d.jogador.nome, 'Desliga isso.'),
     'Ela desliga na hora, sem discutir, o que te desarma mais do que se ela tivesse discutido.',
-    fala('a repórter', 'Desligado.'),
+    fala('Reika Ando', 'Desligado.'),
     'Ela põe o gravador na bolsa e fecha a bolsa.',
-    fala('a repórter', 'Agora é conversa. Conversa eu não publico.'),
+    fala('Reika Ando', 'Agora é conversa. Conversa eu não publico.'),
     d=>fala(d.jogador.nome, 'E eu tenho que acreditar nisso por quê?'),
-    fala('a repórter', 'Por nada. Você não tem.'),
+    fala('Reika Ando', 'Por nada. Você não tem.'),
     'Ela dá o cartão mesmo assim, com o número da redação, sem o número escrito atrás.',
-    fala('a repórter', 'Quando você mudar de ideia, o gravador continua na bolsa.')
+    fala('Reika Ando', 'Quando você mudar de ideia, o gravador continua na bolsa.')
   ],
   ef:{flag:'recusou_a_imprensa',
       npc:{nome:'Reika Ando', opiniao:-1, viuVoce:'Você mandou ela desligar o gravador.'},

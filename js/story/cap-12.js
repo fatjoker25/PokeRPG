@@ -158,13 +158,14 @@ c12_ab_sem_os_quinhentos:{
     d=>`Você tem ${d.jogador.dinheiro} ₽.`,
     'Você fica na frente do painel o tempo suficiente pra a moça da bilheteria entender, e ela entende, e faz uma coisa gentil: olha pro lado e finge conferir uma papelada.',
     'Do lado de fora tem um banco de concreto de frente pra cerca, e nesse banco tem um homem de uns quarenta anos com um binóculo velho pendurado no pescoço.',
-    fala('o homem do binóculo', 'Também não vai pagar?'),
+    'O binóculo tem uma fita de couro com o nome gravado a fogo, do jeito que se marcava ferramenta de trabalho: IWATA.',
+    fala('Iwata', 'Também não vai pagar?'),
     d=>fala(d.jogador.nome, 'Também não vou pagar.'),
-    fala('o homem do binóculo', 'Senta. Daqui dá pra ver quase a mesma coisa.'),
+    fala('Iwata', 'Senta. Daqui dá pra ver quase a mesma coisa.'),
     'Ele empresta o binóculo sem você pedir, o que é o gesto mais direto que alguém fez com você hoje.'
   ],
   ef:{flag:'o_banco_da_cerca',
-      npc:{nome:'o homem do binóculo', opiniao:1, viuVoce:'Te emprestou o binóculo no banco em frente à cerca.'},
+      npc:{nome:'Iwata', opiniao:1, viuVoce:'Te emprestou o binóculo no banco em frente à cerca.'},
       registrar:'Não pagou a entrada da Zona Safári. Ficou no banco de fora, com um binóculo emprestado.'},
   escolhas:[
     {texto:'Olhar a reserva pelo binóculo.', vai:'c12_ab_pelo_binoculo'},
@@ -179,12 +180,12 @@ c12_ab_pelo_binoculo:{
     'Você vê, a uns oitocentos metros: capim alto, três Nidorino parados, uma árvore caída que virou passagem.',
     'E, mais à direita, uma estrutura que não é natureza: um galpão comprido de telha metálica com quatro veículos estacionados do lado.',
     'Quatro veículos num dia de semana, numa área em recuperação ambiental.',
-    fala('o homem do binóculo', 'Achou o galpão.'),
+    fala('Iwata', 'Achou o galpão.'),
     'Ele não pergunta. Constata.',
-    fala('o homem do binóculo', 'Todo mundo que pega esse binóculo acha o galpão em menos de dois minutos.'),
-    fala('o homem do binóculo', 'Eu sento aqui há quatro anos. Sabe quanta gente perguntou pra recepção o que é aquilo?'),
+    fala('Iwata', 'Todo mundo que pega esse binóculo acha o galpão em menos de dois minutos.'),
+    fala('Iwata', 'Eu sento aqui há quatro anos. Sabe quanta gente perguntou pra recepção o que é aquilo?'),
     d=>fala(d.jogador.nome, 'Quanta?'),
-    fala('o homem do binóculo', 'Eu.')
+    fala('Iwata', 'Eu.')
   ],
   ef:{flag:['o_galpao_do_setor_sete','sabe_do_lote_unico'],
       registrar:'Do banco de fora dá pra ver um galpão de telha metálica com quatro veículos dentro da reserva.'},
@@ -197,18 +198,18 @@ c12_ab_pelo_binoculo:{
 
 c12_ab_o_que_responderam:{
   texto:[
-    fala('o homem do binóculo', 'Que era depósito de ração.'),
+    fala('Iwata', 'Que era depósito de ração.'),
     'Ele pega o binóculo de volta, ajusta e olha ele mesmo, sem pressa.',
-    fala('o homem do binóculo', 'Nove mil hectares de reserva com bicho selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
-    fala('o homem do binóculo', 'Eu perguntei isso também. Aí eles pararam de responder.'),
+    fala('Iwata', 'Nove mil hectares de reserva com bicho selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
+    fala('Iwata', 'Eu perguntei isso também. Aí eles pararam de responder.'),
     d=>fala(d.jogador.nome, 'Por que você não desiste?'),
     'Ele abaixa o binóculo.',
-    fala('o homem do binóculo', 'Eu trabalhei lá dentro. Onze anos, manejo.'),
-    fala('o homem do binóculo', 'Me mandaram embora no dia em que o galpão ficou pronto.', 'baixo')
+    fala('Iwata', 'Eu trabalhei lá dentro. Onze anos, manejo.'),
+    fala('Iwata', 'Me mandaram embora no dia em que o galpão ficou pronto.', 'baixo')
   ],
   ef:{flag:'o_homem_do_binoculo_trabalhou_la',
-      npc:{nome:'o homem do binóculo', opiniao:2, viuVoce:'Te contou que foi demitido no dia em que o galpão ficou pronto.'},
-      registrar:'O homem do binóculo trabalhou onze anos no manejo da reserva. Foi demitido quando o galpão ficou pronto.'},
+      npc:{nome:'Iwata', opiniao:2, viuVoce:'Te contou que foi demitido no dia em que o galpão ficou pronto.'},
+      registrar:'Iwata trabalhou onze anos no manejo da reserva. Foi demitido quando o galpão ficou pronto.'},
   escolhas:[
     {texto:'Ir andar a cerca por fora.', vai:'c12_cerca'},
     {texto:'Ir procurar o diretor da reserva.', vai:'c12_diretor'},
@@ -218,15 +219,15 @@ c12_ab_o_que_responderam:{
 
 c12_ab_quanto_tempo_ele_senta:{
   texto:[
-    fala('o homem do binóculo', 'Quatro anos. Quase todo dia.'),
+    fala('Iwata', 'Quatro anos. Quase todo dia.'),
     d=>fala(d.jogador.nome, 'Fazendo o quê?'),
-    fala('o homem do binóculo', 'Contando.'),
+    fala('Iwata', 'Contando.'),
     'Ele tira do bolso de trás uma caderneta de capa dura, dessas de armazém, gasta nas quinas.',
     'Cada página tem uma data e uma coluna de traços.',
-    fala('o homem do binóculo', 'Caminhão que entra pelo portão técnico. Eu conto desde noventa e seis.'),
-    fala('o homem do binóculo', 'Noventa e seis: dezenove no ano. Noventa e sete: vinte e quatro.'),
+    fala('Iwata', 'Caminhão que entra pelo portão técnico. Eu conto desde noventa e seis.'),
+    fala('Iwata', 'Noventa e seis: dezenove no ano. Noventa e sete: vinte e quatro.'),
     'Ele vira pra última página preenchida.',
-    fala('o homem do binóculo', 'Esse ano, até agora: cento e quarenta e um.')
+    fala('Iwata', 'Esse ano, até agora: cento e quarenta e um.')
   ],
   ef:{flag:['a_caderneta_do_binoculo','sabe_do_lote_unico'],
       registrar:'Uma caderneta conta os caminhões que entram no portão técnico da reserva: 19 em 1996, 141 este ano.',
@@ -242,15 +243,15 @@ c12_ab_a_caderneta:{
   texto:[
     d=>fala(d.jogador.nome, 'Me empresta isso.'),
     'Ele segura a caderneta com as duas mãos e não entrega na hora.',
-    fala('o homem do binóculo', 'Isso aqui é quatro anos da minha vida.'),
+    fala('Iwata', 'Isso aqui é quatro anos da minha vida.'),
     d=>fala(d.jogador.nome, 'Eu sei. Por isso eu quero.'),
     'Ele entrega.',
-    fala('o homem do binóculo', 'Se você perder, eu não tenho cópia.'),
-    fala('o homem do binóculo', 'E se você mostrar pra pessoa errada, eu também não tenho cópia.'),
+    fala('Iwata', 'Se você perder, eu não tenho cópia.'),
+    fala('Iwata', 'E se você mostrar pra pessoa errada, eu também não tenho cópia.'),
     'Você guarda a caderneta na parte de dentro da mochila, que é onde vai o que não pode molhar.'
   ],
   ef:{flag:'tem_a_caderneta_do_binoculo',
-      npc:{nome:'o homem do binóculo', opiniao:3, viuVoce:'Te entregou quatro anos de contagem sem ter cópia.'},
+      npc:{nome:'Iwata', opiniao:3, viuVoce:'Te entregou quatro anos de contagem sem ter cópia.'},
       registrar:'Está com a caderneta de contagem de caminhões. Não existe cópia.',
       presagio:'Ele não tem cópia. O que você fizer com esse caderno é definitivo.'},
   escolhas:[

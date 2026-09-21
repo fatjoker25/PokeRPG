@@ -14,6 +14,7 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `chk-canon.js` | tipo, ginásio, líder, golpe ou nível que briga com o cânone de Kanto |
 | `chk-flags.js` | gancho morto: flag que alguma cena lê e nenhuma escreve, então a cena condicional nunca aparece |
 | `chk-finais.js` | todo final do jogo, onde mora, id repetido e final que nenhuma escolha alcança |
+| `chk-nomes.js` | personagem que carrega cena (12+ falas) e continua sendo chamado por descrição em vez de nome |
 | `chk-caminho.js` | menor caminho da entrada até o fim de cada capítulo, e quanto do capítulo dá pra alcançar de uma entrada só |
 
 Rodar todos:

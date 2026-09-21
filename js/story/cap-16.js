@@ -73,19 +73,20 @@ c16_ab_o_dono_da_loja:{
 c16_ab_a_pena:{
   texto:[
     'Tem uma menina de uns nove anos vendendo concha numa toalha estendida no calçadão de Fuchsia, e o negócio dela vai mal porque concha é de graça na praia, e ela sabe disso e monta a toalha todo dia mesmo assim.',
+    'Tem um papelão na frente da toalha com o preço e o nome do negócio em letra de criança: CONCHAS DA MIKU.',
     'No canto da toalha, entre as conchas, tem uma coisa que não é concha.',
     'É uma pena. Uns vinte e dois centímetros, curvada, com a haste clara e a barba em três faixas: vermelha na ponta, depois branca, depois uma faixa que não é bem dourada e não é bem verde e que muda quando você move a cabeça.',
     'Você já viu pena de Pidgeot, de Fearow, de Spearow. Nenhuma faz isso.',
     d=>fala(d.jogador.nome, 'Quanto é essa?'),
-    fala('a menina da toalha', 'Essa não é de vender.'),
+    fala('Miku', 'Essa não é de vender.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('a menina da toalha', 'Porque meu irmão achou na praia do sul e ele falou que é de sorte.'),
+    fala('Miku', 'Porque meu irmão achou na praia do sul e ele falou que é de sorte.'),
     'Ela endireita a pena na toalha com um dedo.',
-    fala('a menina da toalha', 'Mas ele morreu em agosto. Então eu não sei mais se é.')
+    fala('Miku', 'Mas ele morreu em agosto. Então eu não sei mais se é.')
   ],
   ef:{flag:'viu_a_pena',
-      npc:{nome:'a menina da toalha', opiniao:1, viuVoce:'Você reparou na pena entre as conchas dela.'},
-      registrar:'Uma menina de Fuchsia tem uma pena de três faixas que o irmão achou na praia do sul.',
+      npc:{nome:'Miku', opiniao:1, viuVoce:'Você reparou na pena entre as conchas dela.'},
+      registrar:'Miku, de Fuchsia, tem uma pena de três faixas que o irmão achou na praia do sul.',
       presagio:'Vermelha, branca e uma cor que muda com o ângulo. Isso não é de nenhum bicho que você conhece.'},
   escolhas:[
     {texto:'Perguntar exatamente onde o irmão achou.', vai:'c16_ab_onde_achou'},
@@ -96,16 +97,16 @@ c16_ab_a_pena:{
 
 c16_ab_onde_achou:{
   texto:[
-    fala('a menina da toalha', 'Na ponta sul, depois da pedra grande.'),
+    fala('Miku', 'Na ponta sul, depois da pedra grande.'),
     'Ela aponta e a ponta sul fica visível daqui, a uns dois quilômetros, e a pedra grande também.',
-    fala('a menina da toalha', 'Ele ia lá todo dia de manhã. Ele catava vidro.'),
+    fala('Miku', 'Ele ia lá todo dia de manhã. Ele catava vidro.'),
     d=>fala(d.jogador.nome, 'Vidro?'),
-    fala('a menina da toalha', 'Vidro de garrafa que o mar lixa. Fica fosco e fica bonito.'),
+    fala('Miku', 'Vidro de garrafa que o mar lixa. Fica fosco e fica bonito.'),
     'Ela puxa um potinho de plástico de dentro da bolsa e mostra: uns quarenta cacos de vidro verde e âmbar, lixados pelo mar, bonitos mesmo.',
-    fala('a menina da toalha', 'A pena tava junto do vidro. Em cima da linha da maré.'),
+    fala('Miku', 'A pena tava junto do vidro. Em cima da linha da maré.'),
     'E aí ela fala a frase que muda a cena:',
-    fala('a menina da toalha', 'Ele achou em três de agosto e a gente enterrou ele dia sete.'),
-    fala('a menina da toalha', 'Meu pai falou que a pena deu azar. Eu acho que ela só tava lá.', 'baixo')
+    fala('Miku', 'Ele achou em três de agosto e a gente enterrou ele dia sete.'),
+    fala('Miku', 'Meu pai falou que a pena deu azar. Eu acho que ela só tava lá.', 'baixo')
   ],
   ef:{flag:'a_pena_da_ponta_sul',
       registrar:'A pena foi achada na linha da maré da ponta sul de Fuchsia, em 3 de agosto.',
@@ -121,19 +122,19 @@ c16_ab_ofereceu_pela_pena:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu não quero comprar pra guardar. Eu quero saber de onde ela veio.'),
     'A menina te olha do jeito que criança olha adulto que falou uma coisa que criança entende e adulto não costuma dizer.',
-    fala('a menina da toalha', 'De onde ela veio ou de quem ela é?'),
+    fala('Miku', 'De onde ela veio ou de quem ela é?'),
     d=>fala(d.jogador.nome, 'De quem ela é.'),
     'Ela pega a pena, olha contra o sol, e a faixa do meio muda de cor na mão dela.',
-    fala('a menina da toalha', 'Então leva.'),
+    fala('Miku', 'Então leva.'),
     d=>fala(d.jogador.nome, 'Eu pago.'),
-    fala('a menina da toalha', 'Não. Se você pagar vira concha.'),
+    fala('Miku', 'Não. Se você pagar vira concha.'),
     'Ela põe a pena na sua mão com as duas mãos dela, que é como se entrega coisa importante.',
-    fala('a menina da toalha', 'Você volta e me conta de quem é.'),
+    fala('Miku', 'Você volta e me conta de quem é.'),
     'Não é pedido. É condição.'
   ],
   ef:{flag:['carrega_a_pena','a_promessa_da_menina'], moral:1,
-      npc:{nome:'a menina da toalha', opiniao:3, viuVoce:'Te deu a pena de graça, com a condição de você voltar e contar de quem é.'},
-      registrar:'Está carregando a pena de três faixas. Prometeu voltar e dizer de quem ela é.',
+      npc:{nome:'Miku', opiniao:3, viuVoce:'Te deu a pena de graça, com a condição de você voltar e contar de quem é.'},
+      registrar:'Está carregando a pena de três faixas. Prometeu à Miku voltar e dizer de quem ela é.',
       presagio:'Você prometeu voltar. Guarde isso: promessa feita pra criança tem cobrança diferente.'},
   escolhas:[
     {texto:'Ir até a ponta sul procurar mais.', vai:'c16_ab_a_ponta_sul'},
@@ -169,20 +170,20 @@ c16_ab_a_ponta_sul:{
 c16_ab_quem_nao_fala:{
   texto:[
     'Tem um homem no cais de Fuchsia que todo mundo aponta e ninguém apresenta.',
-    'Cinquenta e poucos anos, barco médio, trabalha sozinho, e a frase que dizem dele é sempre a mesma: "aquele ali foi em noventa e sete".',
+    'Cinquenta e poucos anos, barco médio, trabalha sozinho. Chama-se Ogata — está pintado na popa, como em todo barco de dono — e a frase que dizem dele é sempre a mesma: "aquele ali foi em noventa e sete".',
     'Ninguém completa a frase. Você tem que perguntar pra ele.',
     'Ele está remendando rede na proa e não levanta a cabeça quando você chega.',
-    fala('o homem da rede', 'Não.'),
+    fala('Ogata', 'Não.'),
     d=>fala(d.jogador.nome, 'Eu não perguntei nada.'),
-    fala('o homem da rede', 'Você ia perguntar de noventa e sete.'),
+    fala('Ogata', 'Você ia perguntar de noventa e sete.'),
     'Ele passa a agulha de rede duas vezes antes de falar de novo.',
-    fala('o homem da rede', 'Eu levo carga, levo gente, levo o que pagarem. Pra sudoeste eu não vou.'),
+    fala('Ogata', 'Eu levo carga, levo gente, levo o que pagarem. Pra sudoeste eu não vou.'),
     d=>fala(d.jogador.nome, 'Por quanto?'),
     'Aí ele levanta a cabeça.',
-    fala('o homem da rede', 'Menino, eu acabei de te dizer que tem um preço que eu não aceito. Você perguntou o preço.')
+    fala('Ogata', 'Menino, eu acabei de te dizer que tem um preço que eu não aceito. Você perguntou o preço.')
   ],
   ef:{flag:'sabe_da_ilha',
-      npc:{nome:'o homem da rede', opiniao:-1, viuVoce:'Você perguntou o preço depois de ele dizer que não tinha preço.'},
+      npc:{nome:'Ogata', opiniao:-1, viuVoce:'Você perguntou o preço depois de ele dizer que não tinha preço.'},
       registrar:'Um pescador de Fuchsia foi à ilha em 1997 e não volta lá por dinheiro nenhum.'},
   escolhas:[
     {texto:'Pedir desculpa e perguntar o que aconteceu.', vai:'c16_ab_pediu_desculpa'},
@@ -195,18 +196,18 @@ c16_ab_pediu_desculpa:{
   texto:[
     d=>fala(d.jogador.nome, 'Desculpa. Foi burrice.'),
     'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parado, porque sair agora seria pior.',
-    fala('o homem da rede', 'Eu levei quatro homens em noventa e sete. Dois dias, ida e volta, muito bem pago.'),
-    fala('o homem da rede', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
+    fala('Ogata', 'Eu levei quatro homens em noventa e sete. Dois dias, ida e volta, muito bem pago.'),
+    fala('Ogata', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
     'Ele para de costurar.',
-    fala('o homem da rede', 'Na segunda noite apareceu a luz.'),
+    fala('Ogata', 'Na segunda noite apareceu a luz.'),
     d=>fala(d.jogador.nome, 'A luz colorida.'),
-    fala('o homem da rede', 'Colorida. Igual arco-íris, mas de noite, e arco-íris de noite não existe.'),
-    fala('o homem da rede', 'Durou uns trinta minutos.'),
+    fala('Ogata', 'Colorida. Igual arco-íris, mas de noite, e arco-íris de noite não existe.'),
+    fala('Ogata', 'Durou uns trinta minutos.'),
     'Ele olha pro mar.',
-    fala('o homem da rede', 'E no outro dia eu levei três homens de volta.', 'baixo')
+    fala('Ogata', 'E no outro dia eu levei três homens de volta.', 'baixo')
   ],
   ef:{flag:['sabe_da_ilha','tres_voltaram_de_quatro'],
-      npc:{nome:'o homem da rede', opiniao:2, viuVoce:'Te contou de 1997 porque você pediu desculpa.'},
+      npc:{nome:'Ogata', opiniao:2, viuVoce:'Te contou de 1997 porque você pediu desculpa.'},
       registrar:'Em 1997 ele levou quatro homens à ilha e trouxe três de volta. Na segunda noite houve luz colorida.',
       presagio:'Quatro entraram e três saíram. Você já ouviu essa conta antes, em outro porto.'},
   escolhas:[
@@ -218,16 +219,16 @@ c16_ab_pediu_desculpa:{
 
 c16_ab_quem_era_o_quarto:{
   texto:[
-    fala('o homem da rede', 'Eu não sei o nome de nenhum dos quatro.'),
-    fala('o homem da rede', 'Eles não falaram nome e eu não perguntei, porque quem paga o triplo não gosta de pergunta.'),
+    fala('Ogata', 'Eu não sei o nome de nenhum dos quatro.'),
+    fala('Ogata', 'Eles não falaram nome e eu não perguntei, porque quem paga o triplo não gosta de pergunta.'),
     'Ele enrola o fio da agulha de rede no dedo.',
-    fala('o homem da rede', 'Mas eu sei que o quarto era o mais velho e era o que mandava.'),
-    fala('o homem da rede', 'E eu sei que os três que voltaram não falaram uma palavra no caminho inteiro.'),
+    fala('Ogata', 'Mas eu sei que o quarto era o mais velho e era o que mandava.'),
+    fala('Ogata', 'E eu sei que os três que voltaram não falaram uma palavra no caminho inteiro.'),
     d=>fala(d.jogador.nome, 'Você não perguntou do quarto?'),
-    fala('o homem da rede', 'Perguntei. Uma vez.'),
+    fala('Ogata', 'Perguntei. Uma vez.'),
     'Ele volta pra rede.',
-    fala('o homem da rede', 'Um deles falou "que quarto".'),
-    fala('o homem da rede', 'E aí eu não perguntei mais, e recebi, e nunca mais fui pro sudoeste.', 'baixo')
+    fala('Ogata', 'Um deles falou "que quarto".'),
+    fala('Ogata', 'E aí eu não perguntei mais, e recebi, e nunca mais fui pro sudoeste.', 'baixo')
   ],
   ef:{flag:'que_quarto',
       registrar:'Os três que voltaram negaram que houvesse um quarto homem.',
@@ -242,14 +243,14 @@ c16_ab_insistiu_no_dinheiro:{
   texto:[
     d=>fala(d.jogador.nome, 'Todo mundo tem preço.'),
     'Ele corta a linha da rede com o dente, devagar, e enrola a sobra no dedo.',
-    fala('o homem da rede', 'Todo mundo tem. Eu tinha.'),
-    fala('o homem da rede', 'Em noventa e sete o meu preço foi o triplo da diária, e eu aceitei, e eu levei quatro homens pra lá.'),
+    fala('Ogata', 'Todo mundo tem. Eu tinha.'),
+    fala('Ogata', 'Em noventa e sete o meu preço foi o triplo da diária, e eu aceitei, e eu levei quatro homens pra lá.'),
     'Ele levanta e amarra a rede na amurada, de costas pra você.',
-    fala('o homem da rede', 'Sai do meu barco.'),
+    fala('Ogata', 'Sai do meu barco.'),
     'Você desce. Do cais dá pra ver ele ainda de costas, parado, sem fazer nada com as mãos.'
   ],
   ef:{flag:['sabe_da_ilha','quatro_homens_em_noventa_e_sete'],
-      npc:{nome:'o homem da rede', opiniao:-3, viuVoce:'Você insistiu no dinheiro depois do "não".'},
+      npc:{nome:'Ogata', opiniao:-3, viuVoce:'Você insistiu no dinheiro depois do "não".'},
       registrar:'Em 1997 ele levou quatro homens à ilha pelo triplo da diária. Não fala mais com você.'},
   escolhas:[
     {texto:'Procurar outro barco no cais.', vai:'c16_travessia'},

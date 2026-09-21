@@ -146,17 +146,18 @@ c19_ab_a_vizinhanca:{
     'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com galinha solta e cachorro de portão.',
     'Você bate na primeira porque é a primeira.',
     'Atende uma mulher de uns sessenta anos com uma bacia de feijão no colo, e ela senta na varanda e continua catando o feijão a conversa inteira, e você senta no degrau.',
-    fala('a mulher da varanda', 'A estação? Chegou em noventa e quatro.'),
+    'Ela se apresenta como Sra. Machida antes de você perguntar qualquer coisa, porque é o que se faz quando um desconhecido bate na sua porta no meio do mato.',
+    fala('Sra. Machida', 'A estação? Chegou em noventa e quatro.'),
     d=>fala(d.jogador.nome, 'E antes?'),
-    fala('a mulher da varanda', 'Antes era pasto. Do Sr. Aoki, que vendeu e foi embora pra Celadon e morreu lá.'),
+    fala('Sra. Machida', 'Antes era pasto. Do Sr. Aoki, que vendeu e foi embora pra Celadon e morreu lá.'),
     'Feijão bom pra direita, feijão ruim pra esquerda.',
-    fala('a mulher da varanda', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
+    fala('Sra. Machida', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
     d=>fala(d.jogador.nome, 'E depois?'),
     'Ela para de catar.',
-    fala('a mulher da varanda', 'Depois o meu cachorro parou de dormir.')
+    fala('Sra. Machida', 'Depois o meu cachorro parou de dormir.')
   ],
   ef:{flag:'a_vizinhanca_da_estacao',
-      npc:{nome:'a mulher da varanda', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
+      npc:{nome:'Sra. Machida', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
       registrar:'A Estação 4 foi instalada em 1994 num pasto comprado do Sr. Aoki.'},
   escolhas:[
     {texto:'Perguntar do cachorro.', vai:'c19_ab_o_cachorro'},
@@ -167,14 +168,14 @@ c19_ab_a_vizinhanca:{
 
 c19_ab_o_cachorro:{
   texto:[
-    fala('a mulher da varanda', 'Um Growlithe. Ele tem onze anos e sempre dormiu na varanda.'),
+    fala('Sra. Machida', 'Um Growlithe. Ele tem onze anos e sempre dormiu na varanda.'),
     'Ela aponta com o queixo. O Growlithe está deitado no canto, de olhos abertos, e você não tinha reparado nele até agora.',
-    fala('a mulher da varanda', 'Faz uns dois anos que ele fica assim. De olho aberto, virado pro mesmo lado.'),
+    fala('Sra. Machida', 'Faz uns dois anos que ele fica assim. De olho aberto, virado pro mesmo lado.'),
     d=>fala(d.jogador.nome, 'Virado pra estação.'),
-    fala('a mulher da varanda', 'Virado pra estação.'),
+    fala('Sra. Machida', 'Virado pra estação.'),
     'O Growlithe não pisca. Não é que ele não pisque nunca: é que ele pisca do jeito de quem não quer perder nada de vista.',
-    fala('a mulher da varanda', 'Levei no veterinário duas vezes. Os dois falaram que ele tá ótimo.'),
-    fala('a mulher da varanda', 'Ele tá ótimo. Ele só não dorme.', 'baixo'),
+    fala('Sra. Machida', 'Levei no veterinário duas vezes. Os dois falaram que ele tá ótimo.'),
+    fala('Sra. Machida', 'Ele tá ótimo. Ele só não dorme.', 'baixo'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} senta no chão da varanda ao lado do Growlithe, virado pro mesmo lado, e também não deita.`
@@ -193,16 +194,16 @@ c19_ab_o_cachorro:{
 
 c19_ab_o_que_se_ouve:{
   texto:[
-    fala('a mulher da varanda', 'De dia, nada. Caminhão, às vezes.'),
+    fala('Sra. Machida', 'De dia, nada. Caminhão, às vezes.'),
     'Ela recomeça a catar o feijão, e catar feijão é a coisa que ela faz com as mãos quando fala do que não gosta.',
-    fala('a mulher da varanda', 'De noite, umas três da manhã, tem uma coisa.'),
+    fala('Sra. Machida', 'De noite, umas três da manhã, tem uma coisa.'),
     d=>fala(d.jogador.nome, 'Que coisa?'),
-    fala('a mulher da varanda', 'Um som de porta.'),
+    fala('Sra. Machida', 'Um som de porta.'),
     d=>fala(d.jogador.nome, 'Porta?'),
-    fala('a mulher da varanda', 'Porta pesada. De metal. Abre e fecha.'),
+    fala('Sra. Machida', 'Porta pesada. De metal. Abre e fecha.'),
     'Ela separa um feijão ruim e joga pra esquerda com mais força do que precisava.',
-    fala('a mulher da varanda', 'Duas quilômetros de distância, menino. Pra eu ouvir daqui, aquela porta é grande.'),
-    fala('a mulher da varanda', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
+    fala('Sra. Machida', 'Duas quilômetros de distância, menino. Pra eu ouvir daqui, aquela porta é grande.'),
+    fala('Sra. Machida', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
   ],
   ef:{flag:'a_porta_das_tres_da_manha',
       registrar:'De madrugada, entre três e quatro, uma porta de metal grande abre e fecha nove ou dez vezes na Estação 4.',
