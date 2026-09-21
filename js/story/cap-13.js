@@ -1363,8 +1363,8 @@ c13_camadas:{
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
     {texto:'Tentar tirar o Dewgong.', vai:'c13_dewgong'},
-    {texto:'Voltar e contar isso pro Sr. Hoshino.', vai:'c13_voltou_da_caverna'},
-    {texto:'Ir mais fundo com cuidado, contando camadas.', vai:'c13_fundo'}
+    {texto:'Procurar mais bichos ao longo da parede lateral.', vai:'c13_o_filhote'},
+    {texto:'Voltar e contar isso pro Sr. Hoshino.', vai:'c13_voltou_da_caverna'}
   ]
 },
 
@@ -1427,8 +1427,140 @@ c13_deixou_dewgong:{
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
     {texto:'Contar as camadas do gelo.', vai:'c13_camadas'},
-    {texto:'Voltar pro barco.', vai:'c13_voltou_da_caverna'},
-    {texto:'Procurar mais bichos em torpor.', vai:'c13_camadas'}
+    {texto:'Procurar mais bichos em torpor.', vai:'c13_o_filhote'},
+    {texto:'Voltar pro barco.', vai:'c13_voltou_da_caverna'}
+  ]
+},
+
+/* ── O filhote e a figura na pedra ──────────────────────── */
+c13_o_filhote:{
+  texto:[
+    'A trinta metros da parede lateral, numa reentrância que a lanterna só pega de raspão, tem uma coisa pequena que se mexe.',
+    'É um Seel filhote. Pequeno de verdade: uns quarenta centímetros, com a pelagem ainda clara da primeira muda.',
+    'Ele não está em torpor. Ele está acordado, e é isso que está errado.',
+    'Todo bicho dessa caverna baixou o metabolismo e parou. Ele não conseguiu, porque filhote não sabe, e por isso ele passou dezenove semanas acordado num lugar onde não tem o que comer.',
+    'Ele está com metade do peso que devia.',
+    'Quando a luz bate nele, ele não foge. Ele não tem energia pra fugir e provavelmente não teria de qualquer jeito.',
+    d=>{
+      const p = d.time[0];
+      return p ? `${nomeExib(p)} chega antes de você e para a um metro, e não encosta, e olha pra você esperando você decidir.`
+               : 'Você para a um metro e fica agachado olhando, e o filhote olha de volta sem nenhuma expectativa.';
+    }
+  ],
+  ef:{flag:'achou_o_filhote',
+      registrar:'Um Seel filhote passou dezenove semanas acordado nas Seafoam, sem conseguir entrar em torpor.',
+      presagio:'Os adultos dormiram. Ele não soube dormir.'},
+  escolhas:[
+    {texto:'Levar ele daqui. Agora.', vai:'c13_salvou_o_filhote'},
+    {texto:'Deixar. Você não tem como alimentar isso.', vai:'c13_deixou_o_filhote'},
+    {texto:'Tentar pôr ele em torpor junto dos adultos.', vai:'c13_torpor_do_filhote'}
+  ]
+},
+
+c13_salvou_o_filhote:{
+  texto:[
+    'Você abre a jaqueta, põe ele por dentro contra a sua barriga e fecha o zíper até o queixo dele.',
+    'Ele pesa menos do que devia e é gelado de um jeito que atravessa a camisa em quatro segundos.',
+    'Os cento e setenta metros de volta você faz com os dois braços cruzados na frente do corpo, segurando por baixo, e sem lanterna, porque a lanterna não cabe nessa geometria.',
+    'Você bate em três paredes.',
+    'Lá fora, o vento de dois graus parece morno.',
+    d=>d.flags.conheceu_ryuzo
+      ? 'Ryuzo vê você sair da caverna com a jaqueta cheia e abre o casaco dele sem falar nada, e vocês fazem a travessia com o filhote entre os dois.'
+      : 'No barco você senta no chão, encostado no motor, que é a única fonte de calor de doze pés de comprimento.',
+    'Ele começa a tremer na terceira hora, e tremer é a melhor notícia do dia, porque tremer custa energia e ele decidiu que valia a pena gastar.'
+  ],
+  ef:{flag:'salvou_o_filhote', moral:6,
+      hp:-4, causa:'Três horas de travessia molhado e no frio',
+      rep:{eixo:'bom', delta:3, motivo:'Tirou um filhote de Seel das Seafoam dentro da própria jaqueta.'},
+      registrar:'Tirou um Seel filhote das Seafoam. Ele sobreviveu.',
+      presagio:'Ele viu de onde você tirou ele. E não foi só ele que viu.'},
+  escolhas:[
+    {texto:'Voltar à caverna depois de entregar ele.', vai:'c13_fundo'},
+    {texto:'Voltar e contar tudo no cais.', vai:'c13_avisou_a_colonia'},
+    {texto:'Voltar e procurar o Goro.', vai:'c13_goro'}
+  ]
+},
+
+c13_deixou_o_filhote:{
+  texto:[
+    'Você não tem tanque, não tem peixe, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
+    'Você sabe disso e é verdade e continua sendo a coisa mais difícil que você fez hoje.',
+    'Você tira o cobertor de lã da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
+    'Nos primeiros vinte metros de volta você não olha pra trás. Nos vinte seguintes, olha.',
+    'Ele não se mexeu.'
+  ],
+  ef:{flag:'deixou_o_filhote', moral:-2,
+      registrar:'Deixou o Seel filhote na caverna com um cobertor de lã.',
+      presagio:'Você vai carregar esse por um tempo, e não vai ter ninguém pra quem contar.'},
+  escolhas:[
+    {texto:'Ir mais fundo.', vai:'c13_fundo'},
+    {texto:'Contar as camadas do gelo.', vai:'c13_camadas'},
+    {texto:'Voltar pro barco.', vai:'c13_voltou_da_caverna'}
+  ]
+},
+
+c13_torpor_do_filhote:{
+  texto:[
+    'Você carrega ele os quarenta metros até onde estão os adultos e encosta ele no flanco do maior, que está a quatro batidas por minuto e que não reage a nada.',
+    'O filhote se encaixa na curva do corpo do adulto do jeito que ele claramente já fez muitas vezes.',
+    'E não dorme.',
+    'Você espera quarenta minutos agachado, com a lanterna apagada pra não atrapalhar, e ele fica acordado os quarenta minutos inteiros, tremendo.',
+    'Torpor não é decisão. É uma coisa que o corpo faz ou não faz, e o corpo dele não aprendeu.',
+    'Você fica ali agachado no escuro entendendo que existe um problema que não tem solução elegante, e que você vai ter que escolher a deselegante.'
+  ],
+  ef:{flag:'tentou_o_torpor',
+      registrar:'Tentou pôr o filhote em torpor junto dos adultos. Não funcionou.'},
+  escolhas:[
+    {texto:'Levar ele daqui dentro da jaqueta.', vai:'c13_salvou_o_filhote'},
+    {texto:'Deixar ele com os adultos e ir embora.', vai:'c13_deixou_o_filhote'}
+  ]
+},
+
+c13_a_pedra_do_meio:{
+  texto:[
+    'Na travessia de volta, com o barco a uns quatro quilômetros da ilha, o Sr. Hoshino desvia de uma coisa que você não tinha visto.',
+    'É um afloramento de rocha que sai do mar uns seis metros, preto, sem nada em cima. Não está na carta como ilha: está como pedra.',
+    'Só que hoje tem alguma coisa em cima dela.',
+    'Uma pessoa. Sentada. De casaco escuro com capuz, com os joelhos dobrados e os braços em volta dos joelhos, virada pro sul.',
+    'A quatro quilômetros da costa, num afloramento de seis metros, num mar a dois graus, sem barco nenhum amarrado.',
+    d=>fala(d.jogador.nome, 'Tem uma pessoa ali.'),
+    'Ele olha, desvia mais um pouco, e não muda de expressão.',
+    fala('Sr. Hoshino', 'Tem.'),
+    d=>fala(d.jogador.nome, 'Como ela chegou ali?'),
+    fala('Sr. Hoshino', 'Não sei.'),
+    'Ele corrige o rumo.',
+    fala('Sr. Hoshino', 'Tá ali desde junho. Eu passo por aqui duas vezes por semana.', 'baixo'),
+    'Você olha até a pedra sumir, e em nenhum momento a pessoa se mexe, e em nenhum momento ela olha pro barco.'
+  ],
+  ef:{flag:'viu_o_red',
+      registrar:'Havia alguém sentado num afloramento de rocha a quatro quilômetros da costa das Seafoam. Está lá desde junho.',
+      presagio:'Sem barco amarrado, num mar a dois graus, desde junho. Guarde o rosto.'},
+  escolhas:[
+    {texto:'Pedir pra encostar na pedra.', vai:'c13_encostar_na_pedra'},
+    {texto:'Não pedir. Seguir pra Fuchsia.', vai:'c13_voltou'}
+  ]
+},
+
+c13_encostar_na_pedra:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Encosta.'),
+    fala('Sr. Hoshino', 'Não.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    'Ele não responde na hora. Reduz o motor, o que é mais do que você esperava, e o barco fica derivando a uns oitenta metros da pedra.',
+    'Daqui dá pra ver melhor. É um rapaz. Vinte e poucos anos, talvez menos. O casaco é bom, de montanha, do tipo que custa caro e dura vinte anos.',
+    'Ele está olhando pro sul, pra direção de onde vocês vieram, pra direção da caverna.',
+    'Ele sabe que o barco está ali. Dá pra ver que sabe, pela maneira como ele não olha.',
+    fala('Sr. Hoshino', 'Eu tentei encostar em julho.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('Sr. Hoshino', 'E eu cheguei a uns vinte metros e resolvi que não.'),
+    'Ele acelera de volta.',
+    fala('Sr. Hoshino', 'Eu não sei explicar melhor que isso, moço. Eu resolvi que não e eu não sei quem resolveu.', 'baixo')
+  ],
+  ef:{flag:['viu_o_red','chegou_perto_da_pedra'],
+      registrar:'Chegou a oitenta metros da pedra. O rapaz do casaco de montanha olhava para a direção da caverna.',
+      presagio:'"Eu resolvi que não e eu não sei quem resolveu."'},
+  escolhas:[
+    {texto:'Seguir pra Fuchsia.', vai:'c13_voltou'}
   ]
 },
 
@@ -1447,6 +1579,7 @@ c13_voltou_da_caverna:{
       presagio:'"Tá bom. Eu vi." Ele conseguiu o dele. Você não conseguiu o seu.'},
   escolhas:[
     {texto:'Voltar amanhã.', vai:'c13_ilha'},
+    {texto:'Olhar o mar na travessia de volta.', vai:'c13_a_pedra_do_meio'},
     {texto:'Procurar o Goro.', vai:'c13_goro'},
     {texto:'Ir à colônia.', vai:'c13_colonia'},
     {texto:'Seguir para Cinnabar.', vai:'c13_fim'}

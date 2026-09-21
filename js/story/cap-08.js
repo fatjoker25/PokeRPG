@@ -4009,7 +4009,8 @@ c8_capitao:{
     {texto:'Ficar calado e esperar ele continuar.', vai:'c8_ele_continuou'},
     {texto:'Mostrar o que você tem.', vai:'c8_mostrou_ao_capitao',
      cond:d=>!!(d.flags.papel_com_brasao||d.flags.fotografou_o_porao||d.flags.tem_as_pastas_do_40||d.flags.tem_a_etiqueta)},
-    {texto:'"Eu vou contar pra imprensa quando descer."', vai:'c8_ameacou_o_capitao'}
+    {texto:'"Eu vou contar pra imprensa quando descer."', vai:'c8_ameacou_o_capitao'},
+    {texto:'"E o senhor sabe há quanto tempo?"', vai:'c8_ele_continuou'}
   ]
 },
 
@@ -4031,6 +4032,7 @@ c8_ele_continuou:{
       presagio:'Ninguém é responsável. Cada um é responsável por um pedaço, e o pedaço de cada um está em ordem.'},
   escolhas:[
     {texto:'"Então quem é responsável?"', vai:'c8_quem_e_responsavel'},
+    {texto:'"Então a matéria é sobre o senhor." — usar os quatro anos dele.', vai:'c8_chantageou_o_capitao'},
     {texto:'"O senhor pode registrar em diário de bordo."', vai:'c8_diario_de_bordo'},
     {texto:'"O senhor pode atracar e chamar a capitania."', vai:'c8_capitania'},
     {texto:'Mostrar o que você tem.', vai:'c8_mostrou_ao_capitao',
@@ -4297,6 +4299,58 @@ c8_mostrou_ao_capitao:{
   ]
 },
 
+c8_chantageou_o_capitao:{
+  texto:[
+    d=>fala(d.jogador.nome, 'O senhor sabe há quatro anos.'),
+    '"Sei."',
+    d=>fala(d.jogador.nome, 'Então não é uma nota de quarenta linhas sobre modernização de frota.'),
+    'Ele para com a caneca na metade do caminho.',
+    d=>fala(d.jogador.nome, 'É uma matéria sobre o capitão do S.S. Anne, com nome, com patente e com tempo de casa, que sabia de nove garotos embarcados sem nome em lista e escolheu não ser autoridade policial.'),
+    'A ponte de comando fica muito quieta. O radar gira.',
+    '"Isso é chantagem."',
+    d=>fala(d.jogador.nome, 'É.'),
+    'Ele põe a caneca na bancada com muito cuidado, do jeito de quem está se controlando e sabe que está.',
+    '"Você tem quinze anos e acabou de me chantagear na minha própria ponte."',
+    'Uma pausa comprida.',
+    '"E funcionou, que é a parte que eu vou ter que pensar a respeito pelo resto da vida."'
+  ],
+  ef:{flag:'chantageou_capitao',
+      rep:{eixo:'ruim', delta:2, motivo:'Chantageou o capitão do S.S. Anne com o próprio silêncio dele.'},
+      moral:-2,
+      npc:{nome:'Capitão do Anne', opiniao:-2, memoria:'Você o chantageou com a omissão dele, na ponte de comando, e funcionou.'},
+      registrar:'Chantageou o capitão do S.S. Anne: ou ele entrega papel, ou o nome dele é a matéria.',
+      presagio:'Funcionou. Isso não é a mesma coisa que ter sido certo, e você vai levar tempo pra separar as duas.'},
+  escolhas:[
+    {texto:'"Então me dá papel."', vai:'c8_copia_do_capitao'},
+    {texto:'"Registra em diário de bordo. Hoje."', vai:'c8_diario_de_bordo'},
+    {texto:'Recuar. Dizer que não ia fazer isso mesmo.', vai:'c8_recuou_da_chantagem'}
+  ]
+},
+
+c8_recuou_da_chantagem:{
+  texto:[
+    d=>fala(d.jogador.nome, 'Eu não ia fazer isso.'),
+    '"Ia sim."',
+    'Ele não fala isso com raiva. Fala como quem corrige uma conta.',
+    '"Você ia, e eu ia ceder, e nós dois íamos descer desse navio sabendo disso."',
+    'Ele pega a caneca de novo e o café já esfriou e ele bebe mesmo assim.',
+    '"Eu vou te dar o papel de qualquer jeito, garoto."',
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    '"Porque eu ia ceder."',
+    'Ele olha o radar, que continua não mostrando nada.',
+    '"Quatro anos eu esperei alguém subir aqui e me obrigar. Eu só não sabia que ia ser alguém de quinze."'
+  ],
+  ef:{flag:'recuou_da_chantagem', moral:2,
+      rep:{eixo:'bom', delta:1, motivo:'Recuou de uma chantagem que já tinha funcionado.'},
+      npc:{nome:'Capitão do Anne', opiniao:3, memoria:'Você recuou de uma chantagem que já tinha funcionado, e ele entregou o papel mesmo assim.'},
+      registrar:'Recuou da chantagem. O capitão entregou o papel do mesmo jeito.',
+      presagio:'"Quatro anos eu esperei alguém subir aqui e me obrigar."'},
+  escolhas:[
+    {texto:'Pegar o papel.', vai:'c8_copia_do_capitao'},
+    {texto:'"Registra em diário de bordo também."', vai:'c8_diario_de_bordo'}
+  ]
+},
+
 c8_ameacou_o_capitao:{
   texto:[
     '"Eu vou contar pra imprensa quando descer."',
@@ -4311,6 +4365,7 @@ c8_ameacou_o_capitao:{
   ef:{flag:'o_capitao_mandou_pedir_papel'},
   escolhas:[
     {texto:'"Então me dá papel."', vai:'c8_copia_do_capitao'},
+    {texto:'"Então a matéria é sobre o senhor." — usar os quatro anos dele.', vai:'c8_chantageou_o_capitao', cond:d=>!!d.flags.o_capitao_sabe},
     {texto:'"O senhor pode registrar em diário de bordo."', vai:'c8_diario_de_bordo'},
     {texto:'"Então quem é responsável?"', vai:'c8_quem_e_responsavel'},
     {texto:'Descer sem nada.', vai:'c8_fim_navio'}
