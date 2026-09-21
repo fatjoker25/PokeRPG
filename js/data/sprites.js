@@ -4,16 +4,20 @@
    A convenção de pastas é a do diretório sprites_nds/:
 
      sprites_nds/party_icons/{id}.png               ícone de equipe e PC
-     sprites_nds/battle/front/{id}.png              frente: batalha e Pokédex
-     sprites_nds/battle/front_shiny/{id}.png        frente brilhante
+     sprites_nds/battle/front_full/{id}.png         frente: batalha e Pokédex
+     sprites_nds/battle/front_full_shiny/{id}.png   frente brilhante
      sprites_nds/battle/back_full/{id}.png          costas: o seu, em combate
      sprites_nds/battle/back_full_shiny/{id}.png    costas brilhante
 
-   As artes de frente são as de HeartGold/SoulSilver. As de costas são
-   as de Black/White: as de HG/SS são recortadas na cintura e cortam
-   nas bordas — Charizard perde a asa, Snorlax perde o pé —, e de
-   costas é justamente o Pokémon que o jogador vê a partida inteira.
-   As antigas ficam em battle/back/ e battle/back_shiny/, fora de uso.
+   Frente e costas são as artes de Black/White, de corpo inteiro. As
+   de HeartGold/SoulSilver enquadram de perto e cortam nas bordas —
+   Charizard perde a asa, Snorlax perde o pé. Ficam em battle/front/,
+   front_shiny/, back/ e back_shiny/, fora de uso.
+
+   O corpo inteiro vem com folga: a arte ocupa 53% do quadro, contra
+   62% da antiga de frente e 76% da antiga de costas. Por isso o CSS
+   desenha maior — senão o bicho encolhe na tela sem ter encolhido.
+   Os números estão medidos, não chutados; ver CLAUDE.md.
 
    Nada aqui é obrigatório: se a pasta não estiver do lado do jogo,
    cada <img> se apaga sozinha e a tela volta a ser a de antes.
@@ -24,8 +28,8 @@ const SPRITES_BASE = 'sprites_nds/';
 
 const SPRITES_PASTA = {
   icone:        'party_icons/',
-  frente:       'battle/front/',
-  frenteShiny:  'battle/front_shiny/',
+  frente:       'battle/front_full/',
+  frenteShiny:  'battle/front_full_shiny/',
   costas:       'battle/back_full/',
   costasShiny:  'battle/back_full_shiny/'
 };

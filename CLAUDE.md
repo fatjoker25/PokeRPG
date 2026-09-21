@@ -116,23 +116,35 @@ As imagens de cenário vieram dos fundos de batalha do Pokémon Showdown
 (`play.pokemonshowdown.com/fx/bg-*.png`), mesma categoria de arte de fã dos
 1264 sprites que o projeto já embute. Crédito no README.
 
-## Arte de costas é de corpo inteiro
-A de frente é HG/SS; a de costas é Black/White, em `battle/back_full/`
-e `battle/back_full_shiny/`. HG/SS enquadra de perto e corta nas bordas,
-e de costas é o Pokémon que fica na tela a partida inteira.
+## A arte é de corpo inteiro
+Frente e costas são Black/White, em `battle/front_full/`,
+`front_full_shiny/`, `back_full/` e `back_full_shiny/`. As de HG/SS
+enquadram de perto e cortam nas bordas. Os **ícones de equipe**
+continuam HG/SS: ícone é outra arte, não a mesma imagem reduzida.
 
-Duas consequências que já mordiam e agora estão no CSS:
+Duas consequências que mordem e já estão no CSS. Os dois números
+foram **medidos** pelo canvas nas 251 espécies, não chutados:
 
-- a arte de costas guarda **24% do quadro em transparência embaixo**
-  (mediana medida nas 251), então sem puxar pra baixo o bicho flutua
-  acima da própria sombra;
-- ela também sai menor na tela que a de frente, então o lutador aliado
-  é desenhado maior de propósito — o que também está certo de
-  perspectiva, já que é ele que está mais perto.
+- a arte guarda **24% do quadro em transparência embaixo**, nas duas
+  vistas, então sem puxar pra baixo o bicho flutua acima da própria
+  sombra;
+- ela ocupa **53% do quadro**, contra 62% da antiga de frente e 76%
+  da antiga de costas, então sai menor na tela sem ter encolhido. Todo
+  tamanho já vem multiplicado por essa diferença: **1,18x na frente,
+  1,44x nas costas**. O lutador aliado fica maior que o inimigo de
+  propósito, o que também acerta a perspectiva — é ele que está mais
+  perto de quem olha.
+
+Trocar de conjunto de arte é mexer em **quatro telas**, não só na
+batalha: combate, ficha da Pokédex, varredura da Pokédex e PC. O
+`grep` de `imgSprite` acha todas.
 
 Pasta que saiu de uso fica na árvore mas entra em `SPRITES_FORA`, no
 `build.py`, senão o arquivo único carrega megabytes que ninguém pede.
-`ferramentas/chk-sprites.js` confere as duas pontas.
+`ferramentas/chk-sprites.js` confere as duas pontas: pasta apontada
+tem que existir e estar completa, e o build não pode pular pasta em
+uso. Caminho pra pasta ausente não quebra nada — cada `<img>` se apaga
+sozinha — e é por ser silencioso que precisa de script.
 
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`

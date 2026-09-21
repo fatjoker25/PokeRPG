@@ -1386,8 +1386,12 @@ h3.cat-item{
 .dex-ficha .nota.mono{font-family:var(--mono);font-style:normal;letter-spacing:.02em}
 
 /* ============================================================
-   SPRITES — HeartGold/SoulSilver
+   SPRITES — Black/White, corpo inteiro
    Arte de pixel: nada de suavizar na ampliação.
+   A arte ocupa 53% do quadro (medido nas 251), contra 62% da antiga
+   de frente e 76% da antiga de costas. Todo tamanho daqui pra baixo
+   já vem multiplicado por essa diferença — 1,18x na frente e 1,44x
+   nas costas —, senão o bicho encolhe na tela sem ter encolhido.
    ============================================================ */
 .sprite{
   image-rendering:pixelated;
@@ -1411,7 +1415,10 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .arena.arena-ginasio .lutador .arte{height:142px;margin-bottom:12px}
 .arena.com-cenario .lutador .arte .sprite,
 .arena.arena-ginasio .lutador .arte .sprite{
-  width:88px;height:88px;
+  width:104px;height:104px;
+  /* 24% do quadro é transparência embaixo, nas duas vistas: sem puxar,
+     o bicho flutua acima da própria sombra. */
+  margin-bottom:-25px;
   filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))
 }
 /* A arte de costas é de corpo inteiro e vem com folga dentro do
@@ -1420,11 +1427,8 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
    perto de quem olha. */
 .arena.com-cenario .lutador.aliado .arte .sprite,
 .arena.arena-ginasio .lutador.aliado .arte .sprite{
-  width:126px;height:126px;
-  /* A arte de costas guarda 24% do quadro em transparência embaixo
-     (mediana medida nas 251). Sem puxar, o bicho flutua acima da
-     própria sombra. O que desce pra fora da faixa é só o vazio. */
-  margin-bottom:-30px;
+  /* o seu fica maior: está mais perto de quem olha */
+  width:126px;height:126px;margin-bottom:-30px;
 }
 .arena.com-cenario .lutador.aliado .arte:not(:empty)::after,
 .arena.arena-ginasio .lutador.aliado .arte:not(:empty)::after{width:96px;height:22px;bottom:-4px}
@@ -1451,7 +1455,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .lutador.inimigo .arte:not(:empty)::after{width:86px;height:19px;bottom:-4px}
 .lutador .arte .sprite{position:relative;z-index:1}
 .lutador .arte .sprite{
-  width:74px;height:74px;object-fit:contain;
+  width:88px;height:88px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
 }
 .lutador.inimigo .arte .sprite{animation-delay:.08s}
@@ -1462,7 +1466,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 @media(prefers-reduced-motion:reduce){.lutador .arte .sprite{animation:none}}
 @media(max-width:620px){
   .lutador .arte{height:84px}
-  .lutador .arte .sprite{width:74px;height:74px}
+  .lutador .arte .sprite{width:88px;height:88px}
 }
 
 /* ícone de equipe: ao lado do nome, em lista e em carta */
@@ -1475,15 +1479,15 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 .dex-cela.vazia .dex-icone{display:none}
 .dex-arte{
   display:flex;justify-content:center;align-items:center;
-  height:104px;margin:2px 0 6px
+  height:118px;margin:2px 0 6px
 }
-.dex-arte .sprite{width:96px;height:96px;object-fit:contain}
+.dex-arte .sprite{width:114px;height:114px;object-fit:contain}
 /* a varredura passa por cima da silhueta, não por baixo */
 .dex-scan .silhueta{
   display:flex;align-items:center;justify-content:center;
-  width:96px;height:96px;border-radius:0;background:none;box-shadow:none
+  width:114px;height:114px;border-radius:0;background:none;box-shadow:none
 }
-.dex-scan .silhueta .scan-arte{width:96px;height:96px;object-fit:contain}
+.dex-scan .silhueta .scan-arte{width:114px;height:114px;object-fit:contain}
 .dex-scan .silhueta.brilho{background:none;box-shadow:none}
 .dex-scan .silhueta.brilho .scan-arte{filter:brightness(0) opacity(.8) drop-shadow(0 0 12px rgba(245,197,24,.9))}
 
@@ -1792,7 +1796,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   background:rgba(0,0,0,.22);
 }
 .pc-arte{display:flex;align-items:center;justify-content:center}
-.pc-arte img{width:96px;height:96px;image-rendering:pixelated;
+.pc-arte img{width:114px;height:114px;image-rendering:pixelated;
   filter:drop-shadow(0 0 10px rgba(125,252,168,.22))}
 .pc-dados{min-width:0}
 .pc-cab{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
@@ -1839,7 +1843,7 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   .pc-colunas{grid-template-columns:1fr}
   .pc-lado + .pc-lado{border-left:none;border-top:1px solid var(--pc-linha)}
   .pc-ficha{grid-template-columns:1fr}
-  .pc-arte img{width:76px;height:76px}
+  .pc-arte img{width:90px;height:90px}
 }
 
 /* ============================================================

@@ -17,7 +17,8 @@ SPRITES_DIR = 'sprites_nds'
 # Pastas que ficaram na árvore mas ninguém mais pede: embuti-las
 # custaria megabytes de data URI no arquivo único sem nada aparecer.
 # Sai daqui quando voltar a ser usada em js/data/sprites.js.
-SPRITES_FORA = ('sprites_nds/battle/back/', 'sprites_nds/battle/back_shiny/')
+SPRITES_FORA = ('sprites_nds/battle/back/', 'sprites_nds/battle/back_shiny/',
+                'sprites_nds/battle/front/', 'sprites_nds/battle/front_shiny/')
 sprites = {}
 if os.path.isdir(SPRITES_DIR):
     for raiz, _, arqs in os.walk(SPRITES_DIR):

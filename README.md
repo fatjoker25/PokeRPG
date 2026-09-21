@@ -344,19 +344,26 @@ As artes cobrem os 251 registros de Kanto e Johto e ficam em
 `sprites_nds/` com esta convenção:
 
 ```
-sprites_nds/party_icons/{id}.png             ícone de equipe e PC
-sprites_nds/battle/front/{id}.png            frente: batalha e Pokédex
-sprites_nds/battle/front_shiny/{id}.png      frente brilhante
-sprites_nds/battle/back_full/{id}.png        costas: o seu, em combate
-sprites_nds/battle/back_full_shiny/{id}.png  costas brilhante
+sprites_nds/party_icons/{id}.png              ícone de equipe e PC
+sprites_nds/battle/front_full/{id}.png        frente: batalha e Pokédex
+sprites_nds/battle/front_full_shiny/{id}.png  frente brilhante
+sprites_nds/battle/back_full/{id}.png         costas: o seu, em combate
+sprites_nds/battle/back_full_shiny/{id}.png   costas brilhante
 ```
 
-As de frente são as de HeartGold/SoulSilver. As de costas são as de
-Black/White, que mostram o corpo inteiro: as de HG/SS são enquadradas
-de perto e cortam nas bordas — Charizard perde a asa, Snorlax perde o
-pé — e de costas é justamente o Pokémon que fica na tela a partida
-toda. As antigas continuam em `battle/back/` e `battle/back_shiny/`,
-fora de uso e fora do arquivo único.
+Frente e costas são as artes de Black/White, de corpo inteiro. As de
+HeartGold/SoulSilver enquadram de perto e cortam nas bordas —
+Charizard perde a asa, Snorlax perde o pé. As antigas continuam em
+`battle/front/`, `front_shiny/`, `back/` e `back_shiny/`, fora de uso
+e fora do arquivo único.
+
+Os ícones de equipe continuam sendo os de HG/SS: ícone é outra arte,
+não é a mesma imagem reduzida, e o corte não afeta ele.
+
+O corpo inteiro vem com folga: a arte ocupa 53% do quadro, contra 62%
+da antiga de frente e 76% da antiga de costas. Todo tamanho no CSS já
+vem multiplicado por essa diferença, senão o Pokémon encolhe na tela
+sem ter encolhido.
 
 `ferramentas/chk-sprites.js` confere que toda pasta apontada existe e
 está completa, e que o build não pula nenhuma que ainda esteja em uso.
@@ -388,8 +395,9 @@ Com sprites e cenários, o `build.py` embute 1264 arquivos.
 
 ### Crédito das artes
 
-As artes de Pokémon são de HeartGold/SoulSilver (frente e ícone) e de
-Black/White (costas); os cenários de batalha vêm dos fundos do
+As artes de Pokémon são de Black/White (frente e costas) e de
+HeartGold/SoulSilver (ícones de equipe); os cenários de batalha vêm
+dos fundos do
 [Pokémon Showdown](https://play.pokemonshowdown.com).
 Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um
 projeto de fã, sem fim comercial.
