@@ -107,6 +107,17 @@ Três armadilhas que já aconteceram aqui:
   escuro, e esticar a mesma imagem numa caixa alta amplia demais. Empilhado,
   cada lutador carrega o próprio cenário atrás de si.
 
+Os dois lutadores ficam **espelhados** na cena: cada um centrado na sua
+metade, à mesma distância da borda de fora e do meio. O que os diferencia
+é a profundidade — o de lá pousa mais alto no quadro e menor, o seu mais
+baixo e maior. Se os dois pousassem na mesma linha, um deles estaria
+flutuando sobre o chão que a imagem desenha.
+
+Duas coisas andam junto com isso e já quebraram: **a base tem que subir
+com o sprite** (sombra descolada do pé é bicho flutuando), e **no celular
+o recuo não se aplica** — empilhado não existe chão compartilhado, cada
+lutador tem a sua moldura e os dois pousam no pé dela.
+
 Ambiente novo em capítulo ou em `LOCAIS` tem que entrar nos dois mapas junto,
 senão cai no fundo de reserva sem ninguém perceber. `ferramentas/chk-arenas.js`
 confere arena, imagem no disco, desenho no CSS e foco de enquadramento. Cena

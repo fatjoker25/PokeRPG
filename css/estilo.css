@@ -421,8 +421,8 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    ambiente por cima. Nenhum arquivo externo, então o combate continua
    com cara de combate com o jogo aberto offline, em file://. */
 .arena{
-  position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;
-  margin-bottom:9px;padding:14px 11px 11px;border-radius:var(--raio-sm);
+  position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  margin-bottom:14px;padding:14px 14px 14px;border-radius:var(--raio-sm);
   align-items:end;
   border:1px solid var(--borda);overflow:hidden;isolation:isolate;
   /* tons padrão — cada arena reescreve os seus */
@@ -442,7 +442,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    faixa: cada cenário tem a parte que interessa numa altura
    diferente, e é isso que esse número acerta. */
 .arena.com-cenario,
-.arena.arena-ginasio{--ar-faixa:154px; --ar-foco:55%; padding-top:0}
+.arena.arena-ginasio{--ar-faixa:196px; --ar-foco:55%; padding-top:0}
 .arena.com-cenario::before,
 .arena.arena-ginasio::before{
   content:'';display:block;position:absolute;left:0;right:0;top:0;
@@ -541,8 +541,15 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   .arena.arena-ginasio .lutador.aliado .arte .sprite{
     width:104px;height:104px;margin-bottom:-25px;
   }
+  /* Empilhado não existe chão compartilhado: cada um tem a sua cena,
+     então o recuo de profundidade não quer dizer nada aqui e só
+     apertaria a caixa. Os dois pousam no pé da própria moldura. */
+  .arena.com-cenario .lutador.inimigo .arte,
+  .arena.arena-ginasio .lutador.inimigo .arte{padding-bottom:0}
+  .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
+  .arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{bottom:-2px}
   .arena.com-cenario .lutador .arte{
-    height:112px;margin-bottom:10px;border-radius:var(--raio-sm);
+    height:120px;margin-bottom:10px;border-radius:var(--raio-sm);
     background-image:var(--ar-fundo);
     background-size:cover;background-repeat:no-repeat;
     background-position:center var(--ar-foco);
@@ -556,7 +563,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   /* a quadra é gradiente, então estica bem numa caixa alta */
   .arena.arena-ginasio{--ar-faixa:100%; padding-top:9px}
   .arena.arena-ginasio::after{height:100%}
-  .arena.arena-ginasio .lutador .arte{height:104px;margin-bottom:10px}
+  .arena.arena-ginasio .lutador .arte{height:120px;margin-bottom:10px}
 }
 
 /* --- grama: rota aberta, mato alto no horizonte --- */
@@ -643,7 +650,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   background:linear-gradient(180deg,
     color-mix(in srgb, var(--bg-2) 82%, transparent),
     color-mix(in srgb, var(--bg-2) 92%, #000));
-  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:9px 12px;
+  border:1px solid var(--borda);border-radius:var(--raio-sm);padding:11px 14px 12px;
   backdrop-filter:blur(3px);
 }
 .lutador.inimigo .ficha{
@@ -1411,8 +1418,17 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
   height:86px;display:flex;align-items:flex-end;justify-content:center;
   margin:0 0 9px;position:relative
 }
+/* Os dois ficam espelhados no cenário: mesma distância da borda de
+   fora e do meio, cada um centrado na sua metade. O que muda entre
+   eles é a profundidade — o de lá está mais longe, então sobe no
+   quadro e fica menor; o seu está mais perto, desce e fica maior.
+   É a simetria que o chão da cena pede: se os dois pousassem na
+   mesma linha, um dos dois estaria flutuando. */
 .arena.com-cenario .lutador .arte,
-.arena.arena-ginasio .lutador .arte{height:142px;margin-bottom:12px}
+.arena.arena-ginasio .lutador .arte{height:176px;margin-bottom:16px}
+/* o de lá pousa mais alto, dentro da mesma caixa */
+.arena.com-cenario .lutador.inimigo .arte,
+.arena.arena-ginasio .lutador.inimigo .arte{padding-bottom:52px}
 .arena.com-cenario .lutador .arte .sprite,
 .arena.arena-ginasio .lutador .arte .sprite{
   width:104px;height:104px;
@@ -1432,8 +1448,11 @@ html[data-tom] .sprite.silhueta{filter:brightness(0) saturate(0) opacity(.55)}
 }
 .arena.com-cenario .lutador.aliado .arte:not(:empty)::after,
 .arena.arena-ginasio .lutador.aliado .arte:not(:empty)::after{width:96px;height:22px;bottom:-4px}
+/* a base do de lá sobe junto com ele: sombra separada do pé é o
+   bicho flutuando, que é exatamente o que a profundidade não pode
+   parecer */
 .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
-.arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{width:70px;height:16px;bottom:-2px}
+.arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{width:70px;height:16px;bottom:48px}
 .lutador .arte:empty,.dex-arte:empty{height:0;margin:0}
 /* as duas bases: a sua fica mais perto (maior e mais baixa), a do
    outro lado fica mais longe (menor e mais alta) — é o que dá a
