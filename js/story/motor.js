@@ -269,9 +269,15 @@ const Historia = {
     return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
   },
 
-  /* Fim de capítulo: 2 pontos e consequências acumuladas do mundo */
+  /* Fim de capítulo: 1 ponto e consequências acumuladas do mundo.
+     Cada capítulo fecha uma vez só: recarregar na tela de encerramento
+     mostrava o botão de novo, e o ponto vinha em dobro. */
   fecharCapitulo(){
-    Estado.j.pontos += 2;
+    const d = Estado.dados;
+    d.capitulosFechados = d.capitulosFechados || [];
+    if (d.capitulosFechados.includes(d.capitulo)) return [];
+    d.capitulosFechados.push(d.capitulo);
+    Estado.j.pontos += 1;
     const avisos = Estado.tickLendarios();
     Estado.dados.relogio.dia += Dados.entre(2,5);
     Estado.salvar('auto');

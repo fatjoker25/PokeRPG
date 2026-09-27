@@ -50,7 +50,12 @@ const PREMIO_RIVAL_PARCEIRO = 3000;
 const PREMIO_CAMPEAO = 80000;
 
 const Jogo = {
-  subidosNoCap: [],
+  /* o que já subiu neste capítulo fica no save: recarregar não zera a trava */
+  get subidosNoCap(){
+    const d = Estado.dados; if (!d) return [];
+    if (!d.subidos || d.subidos.cap !== d.capitulo) d.subidos = {cap:d.capitulo, lista:[]};
+    return d.subidos.lista;
+  },
   cenaBatalha: null,
   ginasioAtual: null,
   voltarDeGinasio: 'hub',
@@ -609,7 +614,6 @@ const Jogo = {
 
   /* ---------- fim de capítulo ---------- */
   fecharCapitulo(){
-    this.subidosNoCap = [];
     const avisos = Historia.fecharCapitulo();
     /* Rede: nenhuma rota do primeiro capítulo termina sem o aparelho.
        Quem saiu por uma porta que não passa por casa recebe do balcão. */

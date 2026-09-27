@@ -102,11 +102,14 @@ const Captura = {
 
     ev('info', `HP em ${Math.round(propHP*100)}%${alvo.status ? ', com '+alvo.status : ''} — chance de captura ≈ ${Math.round(chance)}%`);
 
+    /* A chance mostrada é a de verdade: cada uma das três sacudidas
+       passa com a raiz cúbica dela, e as três juntas dão a chance. Antes
+       cada sacudida usava a chance inteira, e 60% na tela era 22% na mão. */
     let sacudidas = 0;
+    const porSacudida = Math.pow(chance / 100, 1 / 3);
     for (let i = 0; i < 3; i++){
-      const d = Dados.d20('Sacudida ' + (i+1));
-      const limite = Math.max(1, Math.round((chance / 100) * 20));
-      if (d <= limite) sacudidas++;
+      const d = Dados.rolar(100, 'Sacudida ' + (i+1));
+      if (d <= Math.max(1, Math.round(porSacudida * 100))) sacudidas++;
       else break;
     }
     const nomes = ['A bola balança uma vez...', 'Duas vezes...', 'Três vezes...'];

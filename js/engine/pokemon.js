@@ -303,8 +303,15 @@ function linhaDeExp(p, e){
 
 function expGanha(vencido, venceu){
   const esp = DEX[vencido.dex];
-  const bruto = Math.floor((esp.total * vencido.nivel) / 22);
-  return Math.max(6, bruto);
+  let bruto = (esp.total * vencido.nivel) / 22;
+  /* Como na 5ª geração: bater em quem é bem mais fraco rende pouco, e
+     em quem é mais forte rende mais. Sem isso, Nv 100 se fazia em
+     Rattata da Rota 1. */
+  if (venceu && venceu.nivel){
+    const a = 2 * vencido.nivel + 10, b = vencido.nivel + venceu.nivel + 10;
+    bruto *= Math.pow(a / b, 2.5);
+  }
+  return Math.max(1, Math.floor(bruto));
 }
 
 /* Sobe de nível e recalcula stats. Retorna eventos.

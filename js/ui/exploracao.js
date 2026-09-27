@@ -276,16 +276,36 @@ const Exploracao = {
 
   treinar(){
     const L = Mundo.atual();
-    Mundo.passar(2);
+    const d = Estado.dados;
     const vivos = Estado.timeVivo();
     if (!vivos.length) return this.tela([{tipo:'dano', texto:'Não tem ninguém em pé pra treinar.'}]);
+    /* Um dia de treino por dia: o corpo precisa do resto do dia. */
+    if (d.treinoDia === d.relogio.dia)
+      return this.tela([{tipo:'info', texto:'O time já treinou hoje. Eles estão deitados na grama, e forçar agora é ensinar a odiar treino.'}]);
+    /* E o lugar ensina até onde ele vai: numa rota de bicho de nível 4
+       não se aprende a brigar como nível 30. Treino rende até 5 níveis
+       acima da área, e cada nível acima rende menos. */
+    const teto = L.nivel + 5;
+    const aprendem = vivos.filter(p => p.nivel < teto);
+    if (!aprendem.length)
+      return this.tela([{tipo:'info', texto:'Não tem mais o que aprender aqui. O que vive neste mato não desafia o seu time: pra render, só lugar mais difícil.'}]);
+    d.treinoDia = d.relogio.dia;
+    Mundo.passar(2);
     /* Treinar é dar ordem o dia inteiro. Quem sabe mandar rende mais,
        e o time inteiro sai do dia gostando mais ou menos de você. */
     const t = Dados.teste(Estado.j.status.carisma, 6, 'Carisma');
     const fator = {critico:1.6, sucesso:1.25, parcial:1, falha:0.6}[t.grau];
     const ganho = Math.round((40 + L.nivel * 9) * fator);
     const eventos = [];
-    vivos.forEach(p => ganharExp(p, ganho).forEach(e => { if (e.tipo!=='exp') eventos.push(e); }));
+    aprendem.forEach(p => {
+      const acima = Math.max(0, p.nivel - L.nivel);
+      let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6));
+      /* nunca passa do teto num dia só, por maior que seja o ganho */
+      let falta = p.expProx - p.exp;
+      for (let n = p.nivel + 1; n < teto; n++) falta += expNecessaria(n);
+      q = Math.min(q, Math.max(0, falta));
+      ganharExp(p, q).forEach(e => { if (e.tipo!=='exp') eventos.push(e); });
+    });
     const dMoral = {critico:4, sucesso:2, parcial:0, falha:-2}[t.grau];
     if (dMoral) vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + dMoral)); });
     const abertura = {
@@ -313,7 +333,10 @@ const Exploracao = {
     const t = Dados.teste(Estado.j.status.sorte, 5, 'Sorte');
     const chance = {critico:85, sucesso:70, parcial:50, falha:25}[t.grau];
     if (Dados.chance(chance)){
-      const aquaticos = poolSelvagem().filter(d => DEX[d].tipos.includes('Água'));
+      /* o que a vara acha é o que vive na água DAQUI; sem água na
+         tabela do lugar, vale a água de Kanto (lago, poça, córrego) */
+      const daqui = (ENCONTROS[Mundo.id()] || []).map(x => x[0]).filter(d => DEX[d].tipos.includes('Água'));
+      const aquaticos = daqui.length ? daqui : [129, 60, 118, 54, 72];
       const bonus = {critico:6, sucesso:2, parcial:0, falha:-2}[t.grau];
       const p = criarPokemon(Dados.escolher(aquaticos), Math.max(3, L.nivel + bonus + Dados.entre(-4,3)), {selvagem:true});
       return this.encontro(p, [t.grau === 'critico'

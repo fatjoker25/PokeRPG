@@ -302,7 +302,7 @@ Dois eixos de 8 níveis (Bom: Desconhecido → Lendário; Ruim: Desconhecido →
 
 ### Perícias
 `1d10 + status` contra a dificuldade: 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico.
-Status do treinador: Força, Percepção, Intelecto, Carisma, Sorte, Resistência (1 → 10). **2 pontos por capítulo**, no máximo +1 por status por capítulo.
+Status do treinador: Força, Percepção, Intelecto, Carisma, Sorte, Resistência (1 → 10). **1 ponto por capítulo**, no máximo +1 por status por capítulo.
 
 ## Estrutura do projeto
 

@@ -2564,3 +2564,7 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .barrinha.faixa{position:relative}
 .barrinha.faixa i{position:absolute;top:0}
 @media (prefers-reduced-motion: reduce){ .parada .p-faces .f{animation:none} }
+
+/* experiência: barra fina embaixo do HP, azul como nos jogos */
+.barra-exp{height:4px;border-radius:3px;background:#090c11;border:1px solid var(--borda);overflow:hidden;margin:3px 0 2px}
+.barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}

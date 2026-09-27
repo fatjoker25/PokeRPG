@@ -146,6 +146,12 @@ const UI = {
 
   tipoTag(t){ return `<span class="tipo-tag" style="background:${COR_TIPO[t]||'#888'}">${t}</span>`; },
 
+  /* experiência até o próximo nível: barra fina, azul, como nos jogos */
+  barraExp(p){
+    if (!p || p.morto || !p.expProx || p.nivel >= 100) return '';
+    const pct = Math.max(0, Math.min(100, Math.round(p.exp / p.expProx * 100)));
+    return `<div class="barra-exp" title="${p.exp} / ${p.expProx} de experiência"><i style="width:${pct}%"></i></div>`;
+  },
   barraHP(p){
     const pct = Math.max(0, (p.hp / p.hpMax) * 100);
     const cls = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
@@ -911,6 +917,7 @@ const UI = {
           <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
           <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
           ${this.barraHP(p)}
+          ${meu ? this.barraExp(p) : ''}
           <div class="meta">${nat}</div>
           <div class="meta">${ficha}</div>
           ${seg}
@@ -2646,7 +2653,7 @@ const UI = {
     const carta = p => `<div class="carta ${p.morto?'morto':''}">
       <div class="t"><span class="com-icone">${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
-      ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
+      ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p) + this.barraExp(p)}
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
         ? 'Natureza <b>' + this.esc(p.natureza) + '</b>'
         : 'Natureza <b>???</b> — você ainda não conviveu o bastante.'}</div>
@@ -3407,7 +3414,7 @@ const UI = {
       ${L('Carisma', 'treinar · encarar um selvagem · ser obedecido com a moral baixa')}
       ${L('Sorte', 'o que o vasculho acha · pescaria · chance de brilhante')}
       ${L('Resistência', 'HP máximo · aguentar o golpe que sobra pra você')}
-      <p class="sussurro">Sobem por ponto ganho no fim do capítulo, no máximo +1 por status por capítulo. Alguns cargos e algumas cenas dão um ponto fora disso.</p>
+      <p class="sussurro">Sobem por ponto: 1 no fim de cada capítulo, no máximo +1 por status por capítulo. Alguns cargos e algumas cenas dão um ponto fora disso.</p>
       <h3>Perícia</h3>
       ${L('A rolagem', '1d10 + status + o cinto, contra a dificuldade')}
       ${L('1 a 3', 'fracasso')} ${L('4 a 6', 'parcial')} ${L('7 a 9', 'sucesso')} ${L('10+', 'crítico')}
@@ -3694,6 +3701,10 @@ const UI = {
       <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água +1 de poder · Fogo −1 de dano</span></div>
       <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo +1 de poder · Água −1 de dano · Solar Beam sem carregar</span></div>
       <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · 1 de dano no fim do turno, menos Pedra, Terrestre e Metálico · Pedra ganha +1 de Instinto</span></div>
+      <h3>Captura</h3>
+      <div class="linha"><span class="k">Chance</span><span class="v">(3 × HP máx − 2 × HP) ÷ (3 × HP máx) × taxa da espécie × bola × condição ÷ 255</span></div>
+      <div class="linha"><span class="k">Condição</span><span class="v">dormindo ou congelado ×2 · outra condição ×1,5</span></div>
+      <div class="linha"><span class="k">Sacudidas</span><span class="v">três, cada uma passa com a raiz cúbica da chance: as três juntas dão a chance que aparece no log</span></div>
       <h3>Quem aparece onde</h3>
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
@@ -3704,7 +3715,9 @@ const UI = {
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
-      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · ×1,5 se era de treinador</span></div>
+      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 · ×1,5 se era de treinador</span></div>
+      <div class="linha"><span class="k">Diferença de nível</span><span class="v">× ((2 × nível dele + 10) ÷ (nível dele + o seu + 10))^2,5 · bater em quem é bem mais fraco quase não rende</span></div>
+      <div class="linha"><span class="k">Treinar</span><span class="v">uma vez por dia · rende até 5 níveis acima da área e menos a cada nível acima dela · Carisma decide quanto</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
       <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura fica com metade, mesmo sem entrar · quem lutou divide a outra metade</span></div>
       <div class="linha"><span class="k">PP Up</span><span class="v">+1/5 do PP base de um golpe, pra sempre · até 3 vezes no mesmo golpe</span></div>
