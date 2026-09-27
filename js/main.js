@@ -14,6 +14,20 @@ function premioTorneio(t, venceu){
   const pr = PREMIO_TORNEIO[t.rodada];
   return venceu ? pr.dinheiro : Math.round(pr.dinheiro * 0.3);
 }
+/* Batalha de cena contra treinador paga como nos jogos: o valor da
+   classe × o nível do último Pokémon dele (× o Amuleto de Moeda). Quando
+   a própria cena de vitória já te entrega dinheiro (o Ezra que tira do
+   bolso, o envelope do torneio), o prêmio é esse — não paga em dobro. */
+function premioCena(b){
+  if (!b || b.tipo !== 'treinador') return {valor:0};
+  const cap = (typeof Historia !== 'undefined') ? Historia.capAtual : null;
+  const v = cap && cap.cenas ? cap.cenas[b.vitoria] : null;
+  const d = v && v.ef ? v.ef.dinheiro : null;
+  if (typeof d === 'number' && d > 0) return {valor:d, pelaCena:true};
+  const nivel = (Batalha.inimigo && Batalha.inimigo.nivel) || 1;
+  return {valor: Math.round(pagaPorNivel(b.treinador || Batalha.treinador) * nivel * (Batalha.bonusDinheiro || 1))};
+}
+
 /* rival de estrada: perder pra ele custa isto */
 function perdaRivalExtra(id){ return id === 'vasco' ? 1200 : 700; }
 
@@ -466,6 +480,8 @@ const Jogo = {
       const c = primeiraFala(this.falasRival, R.nome);
       if (c){ L('citacao', c); }
       if (fim.resultado === 'derrota') dinheiro(-Math.min(perdaRivalExtra(R.id), Estado.j.dinheiro));
+    } else if (this.cenaBatalha && Batalha.tipo === 'treinador' && !this.eliteAtual){
+      if (venceu) dinheiro(premioCena(this.cenaBatalha).valor);
     } else if (this.eliteAtual){
       const e = this.eliteAtual;
       const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
@@ -541,8 +557,15 @@ const Jogo = {
     switch (fim.resultado){
       case 'gameover':
         return UI.telaGameOver('Um Pokémon selvagem te matou. Não tinha mais ninguém entre você e ele.');
-      case 'vitoria':
-        destino = b.vitoria; aviso = {tipo:'info', texto:'Você venceu.'}; break;
+      case 'vitoria': {
+        destino = b.vitoria; aviso = {tipo:'info', texto:'Você venceu.'};
+        const pr = premioCena(b);
+        if (pr.valor && !pr.pelaCena){
+          Estado.j.dinheiro += pr.valor;
+          aviso = {tipo:'item', texto:`Você venceu. +${pr.valor.toLocaleString('pt-BR')} ₽`};
+        }
+        break;
+      }
       case 'captura':
         destino = b.captura || b.vitoria; aviso = {tipo:'pokemon', texto:'Captura concluída.'}; break;
       case 'derrota':

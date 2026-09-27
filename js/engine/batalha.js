@@ -10,7 +10,8 @@ const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,
 /* o que o jogo diz quando o tempo muda */
 const CLIMA_TEXTO = {
   chuva:{comeca:'Começa a chover forte.', acaba:'A chuva para.'},
-  areia:{comeca:'Uma tempestade de areia se levanta.', acaba:'A tempestade de areia assenta.'}
+  areia:{comeca:'Uma tempestade de areia se levanta.', acaba:'A tempestade de areia assenta.'},
+  sol:{comeca:'O sol fica forte de repente.', acaba:'O sol volta ao normal.'}
 };
 
 const Batalha = {
@@ -240,10 +241,12 @@ const Batalha = {
     }
 
     if (atk.tipos.includes(g.t)) total = Math.round(total * 1.5);   // STAB
-    /* chuva: Água ×1,5 e Fogo ×0,5 */
-    if (this.clima && this.clima.tipo === 'chuva'){
-      if (g.t === 'Água') total = Math.round(total * 1.5);
-      if (g.t === 'Fogo') total = Math.round(total * 0.5);
+    /* chuva: Água ×1,5 e Fogo ×0,5 · sol: o contrário */
+    if (this.clima && (this.clima.tipo === 'chuva' || this.clima.tipo === 'sol')){
+      const forte = this.clima.tipo === 'chuva' ? 'Água' : 'Fogo';
+      const fraco = this.clima.tipo === 'chuva' ? 'Fogo' : 'Água';
+      if (g.t === forte) total = Math.round(total * 1.5);
+      if (g.t === fraco) total = Math.round(total * 0.5);
     }
     total = Math.round(total * res.efic);
     const txt = textoEficacia(res.efic);
@@ -313,7 +316,9 @@ const Batalha = {
     const g = GOLPES[nome];
 
     // golpes de carga (Dig, Fly, Solar Beam, Sky Attack)
-    if (g.ef && g.ef.carga && estAtk.carregando !== nome){
+    /* no sol, Solar Beam dispara sem carregar */
+    const semCarga = nome === 'Solar Beam' && this.clima && this.clima.tipo === 'sol';
+    if (g.ef && g.ef.carga && estAtk.carregando !== nome && !semCarga){
       estAtk.carregando = nome;
       this.ev('info', `${nomeVisivel(atacante)} se prepara para ${nome}!`);
       return;
@@ -487,6 +492,8 @@ const Batalha = {
     const pontuar = (x) => {
       const G = GOLPES[x.g.nome];
       if (G.c === 'status'){
+        /* clima que já está valendo não se chama de novo */
+        if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
         if (alvo.status || (G.ef && G.ef.tipo && alvo.status)) return 5;
         return (p.hp / p.hpMax > 0.6) ? 45 : 20;
       }

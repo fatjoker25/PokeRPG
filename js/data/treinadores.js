@@ -58,13 +58,42 @@ function caminhoNPC(arq){
   return (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) || rel;
 }
 
-/* "Líder Brock", "Sabrina, Líder de Saffron" e "Brock" são a mesma pessoa */
-function retratoDe(nome){
+/* "Líder Brock", "Sabrina, Líder de Saffron" e "Brock" são a mesma pessoa.
+   Devolve a classe (o arquivo, sem .png): é dela que sai o rosto e o
+   quanto a pessoa paga quando perde. */
+function classeDoTreinador(nome){
   if (!nome) return null;
   let n = String(nome).trim();
-  if (RETRATO_POR_NOME[n]) return caminhoNPC(RETRATO_POR_NOME[n]);
+  if (RETRATO_POR_NOME[n]) return RETRATO_POR_NOME[n];
   n = n.replace(/^Líder\s+/, '').replace(/,\s*Líder de .*$/, '').trim();
-  if (RETRATO_POR_NOME[n]) return caminhoNPC(RETRATO_POR_NOME[n]);
-  for (const [re, arq] of RETRATO_POR_CARGO) if (re.test(n)) return caminhoNPC(arq);
+  if (RETRATO_POR_NOME[n]) return RETRATO_POR_NOME[n];
+  for (const [re, arq] of RETRATO_POR_CARGO) if (re.test(n)) return arq;
   return null;
+}
+function retratoDe(nome){
+  const c = classeDoTreinador(nome);
+  return c ? caminhoNPC(c) : null;
+}
+
+/* Quanto cada classe paga por nível do último Pokémon dela quando perde —
+   a tabela de Red/Blue, pela classe equivalente dos jogos (Caçador é
+   Burglar, Carregador e Motorista são Engineer, Auditora e Presidente
+   são Gentleman). Quem não tem classe honesta paga como Jr. Trainer. */
+const PAGA_POR_CLASSE = {
+  'gym_leaders':99, 'elite':99,
+  'trainers/youngster':15, 'trainers/lass':15, 'trainers/bug_catcher':10, 'trainers/hiker':35,
+  'trainers/team_rocket_grunt_m':30, 'trainers/team_rocket_grunt_f':30, 'trainers/rival':35,
+  'trainers/ace_trainer':35, 'trainers/ace_trainer_f':35, 'trainers/worker':50,
+  'trainers/scientist':50, 'trainers/scientist_f':50, 'trainers/office_worker_f':70,
+  'trainers/veteran_f':70, 'trainers/roughneck':90, 'trainers/sailor':30, 'trainers/gentleman':70,
+  'trainers/camper':20, 'trainers/pokemon_breeder':40, 'trainers/psychic_f':10,
+  'trainers/fisherman':35, 'trainers/backpacker':25, 'trainers/dragon_tamer':40,
+  'trainers/pokemon_ranger':35, 'trainers/schoolkid':25,
+  'overworld/nurse_joy':20, 'overworld/policial':50
+};
+const PAGA_PADRAO = 20;
+function pagaPorNivel(nome){
+  const c = classeDoTreinador(nome);
+  if (!c) return PAGA_PADRAO;
+  return PAGA_POR_CLASSE[c] || PAGA_POR_CLASSE[c.split('/')[0]] || PAGA_PADRAO;
 }

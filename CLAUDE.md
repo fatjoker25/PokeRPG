@@ -245,14 +245,27 @@ Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
 
 ## TM e mapa
-As TMs são as de Red/Blue, com o número dos jogos (`js/data/tms.js`). Seis
-ficam de fora porque o golpe não existe aqui, e o número fica vago — não é
+As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
+não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). Os
+números se repetem entre as gerações (TM11 é Bubble Beam e é Sunny Day),
+então a TM é **geração + número** (`'2.11'` em `TM_COMPAT`), nunca só o
+número. TM de golpe que não existe aqui fica vaga — o número não é
 reaproveitado. Quem aprende o quê (`TM_COMPAT`) saiu dos learnsets de Gen 1
 e 2 do Showdown (`data/mods/gen2/learnsets.ts`, códigos `1M`/`2M`); o
 `learnsets.js` do cliente do Showdown **não traz** Gen 1/2 e dá tabela vazia.
 Golpe novo que entrar em `GOLPES` e for TM de Gen 1 tem que voltar pra
 `TM_LISTA` no número dele. O ícone do disco sai do tipo do golpe
 (`arquivoTM`), então item TM novo não precisa de entrada em `ITEM_SPRITE`.
+
+Loja de vários andares só mostra, em cada andar, o que está na lista
+**daquele andar**. Item que entra no catálogo depois (`ESTOQUE_NACIONAL`)
+tem que estar também num andar, senão nunca aparece — a Pedra do Sol ficou
+invisível assim até alguém olhar.
+
+Toda batalha contra treinador paga. Cena de vitória com `ef.dinheiro` já é
+o prêmio; sem isso, paga `pagaPorNivel(classe) × nível do último Pokémon`
+(`premioCena`, em `main.js`), com a classe saindo do rosto em
+`treinadores.js`.
 
 O mapa desenhado (`Exploracao.mapa`) só abre com o item **Mapa de Kanto**
 na mochila, como o Town Map dos jogos. O `town-map.png` do roteiro é o

@@ -3540,6 +3540,7 @@ const UI = {
       <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
       <h3>Clima</h3>
       <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água ×1,5 · Fogo ×0,5</span></div>
+      <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo ×1,5 · Água ×0,5 · Solar Beam sem carregar</span></div>
       <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · fere 1/8 do HP no fim do turno, menos Pedra, Terrestre e Metálico</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
@@ -3557,10 +3558,11 @@ const UI = {
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
       <h3>TM</h3>
-      <div class="linha"><span class="k">Quais</span><span class="v">as de Red/Blue, com o número dos jogos · 44 das 50 (seis golpes não existem aqui)</span></div>
+      <div class="linha"><span class="k">Quais</span><span class="v">44 das 50 de Red/Blue e 21 de Gold/Silver, cada uma com o número dos jogos dela</span></div>
       <div class="linha"><span class="k">Quem aprende</span><span class="v">a tabela de TM da espécie nos jogos de Game Boy</span></div>
       <div class="linha"><span class="k">Uso</span><span class="v">fora de batalha, pela mochila · some ao ensinar · desistiu, ela fica</span></div>
       <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio de seis líderes de ginásio</span></div>
+      <div class="linha"><span class="k">Gold/Silver</span><span class="v">Sunny Day, Rain Dance e Sandstorm desde o começo · as outras com a Pokédex Nacional</span></div>
 
       <h3>Fim da batalha</h3>
       <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do adversário, dinheiro e captura que foi pro PC</span></div>
@@ -3569,7 +3571,8 @@ const UI = {
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
       <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
       <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
-      <div class="linha"><span class="k">Treinador de cena</span><span class="v">o que a história decidir — nem toda briga tem aposta</span></div>
+      <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
+      <div class="linha"><span class="k">Valor por classe</span><span class="v">o de Red/Blue: 10 (Bug Catcher) a 99 (líder e Elite) · sem classe, 20</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
       <p class="sussurro">A tela não fecha sozinha: nada anda até você apertar Continuar.</p>
 

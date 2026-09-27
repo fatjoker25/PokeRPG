@@ -270,7 +270,8 @@ const GOLPES = {
   'Mirror Coat':   {t:'Psíquico',c:'esp',p:60,a:100,pp:20,nv:1},
   /* Sandstorm e Rain Dance mudam o tempo; sem clima, o que sobra é o estorvo */
   'Sandstorm':     {t:'Pedra',c:'status',p:0,a:999,pp:10,nv:1,ef:{clima:'areia'}},
-  'Rain Dance':    {t:'Água',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'chuva'}}
+  'Rain Dance':    {t:'Água',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'chuva'}},
+  'Sunny Day':     {t:'Fogo',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'sol'}}
 };
 
 /* Golpes por tipo, prontos para montar learnsets */

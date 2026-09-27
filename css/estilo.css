@@ -2511,4 +2511,11 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
   animation:venta .8s linear infinite;
 }
 @keyframes venta{to{background-position:92px 8px, 60px -4px, 0 0}}
+.clima-camada.clima-sol{
+  background:
+    radial-gradient(ellipse at 85% -10%, rgba(255,236,160,.55), transparent 55%),
+    linear-gradient(180deg, rgba(255,190,90,.22), rgba(255,150,60,.08));
+  animation:solPulsa 2.4s ease-in-out infinite;
+}
+@keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
