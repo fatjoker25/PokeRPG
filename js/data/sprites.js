@@ -100,7 +100,8 @@ const ITEM_SPRITE = {
   'Resto de Ração':'leftovers', 'Faixa Firme':'focus_band', 'Sino Calmante':'soothe_bell',
   'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses',
   /* o mapa da região: o ícone do Town Map abre o mapa desenhado */
-  'Mapa de Kanto':'town_map'
+  'Mapa de Kanto':'town_map',
+  'PP Up':'pp_up', 'Exp. Share':'exp_share'
 };
 
 /* Disco de TM: o ícone é o do tipo do golpe que ele ensina. O nome do

@@ -7,6 +7,12 @@
 
 const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,'0':1,'1':1.5,'2':2,'3':2.5,'4':3,'5':3.5,'6':4};
 
+/* o que o jogo diz quando o tempo muda */
+const CLIMA_TEXTO = {
+  chuva:{comeca:'Começa a chover forte.', acaba:'A chuva para.'},
+  areia:{comeca:'Uma tempestade de areia se levanta.', acaba:'A tempestade de areia assenta.'}
+};
+
 const Batalha = {
   ativo:false, aliado:null, inimigo:null, tipo:'selvagem',
   turno:0, fuga:true, eventos:[], fim:null, fase:'normal',
@@ -41,6 +47,8 @@ const Batalha = {
     /* quem enfrentou o adversário da vez: é entre eles que a experiência
        se divide, como nos jogos */
     this.participantes = new Set(aliado ? [aliado.uid] : []);
+    /* chuva ou areia: dura cinco turnos, como na 2ª geração */
+    this.clima = null;
     /* A cena que vem depois quer saber se sobrou pra você. */
     this.hpJogadorInicio = (Estado.j && Estado.j.hp) || 0;
     this.leituraIntelecto = false;
@@ -232,6 +240,11 @@ const Batalha = {
     }
 
     if (atk.tipos.includes(g.t)) total = Math.round(total * 1.5);   // STAB
+    /* chuva: Água ×1,5 e Fogo ×0,5 */
+    if (this.clima && this.clima.tipo === 'chuva'){
+      if (g.t === 'Água') total = Math.round(total * 1.5);
+      if (g.t === 'Fogo') total = Math.round(total * 0.5);
+    }
     total = Math.round(total * res.efic);
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
@@ -374,6 +387,12 @@ const Batalha = {
 
   efeitoStatus(atacante, defensor, estAtk, estDef, g, nome){
     const e = g.ef || {};
+    if (e.clima){
+      if (this.clima && this.clima.tipo === e.clima){ this.ev('erro', 'Mas nada aconteceu.'); return; }
+      this.clima = {tipo:e.clima, turnos:5};
+      this.ev('status', CLIMA_TEXTO[e.clima].comeca, {clima:e.clima});
+      return;
+    }
     if (e.cura){
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
@@ -427,6 +446,25 @@ const Batalha = {
       const antes = p.hp;
       p.hp = Math.min(p.hpMax, p.hp + c);
       this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
+    }
+  },
+
+  /* Fim de turno do clima: a areia fere quem não é Pedra, Terrestre ou
+     Metálico (1/8 do HP), e o clima acaba sozinho no quinto turno. */
+  passarClima(){
+    if (!this.clima) return;
+    if (this.clima.tipo === 'areia'){
+      for (const p of [this.aliado, this.inimigo]){
+        if (!p || p.hp <= 0 || p.tipos.some(t => ['Pedra', 'Terrestre', 'Metálico'].includes(t))) continue;
+        const d = Math.max(1, Math.floor(p.hpMax / 8));
+        p.hp = Math.max(0, p.hp - d);
+        this.ev('dano', `A areia fere ${nomeVisivel(p)}. (${p.hp}/${p.hpMax})`, {causa:'areia'});
+      }
+    }
+    if (--this.clima.turnos <= 0){
+      const t = this.clima.tipo;
+      this.clima = null;
+      this.ev('status', CLIMA_TEXTO[t].acaba, {clima:null});
     }
   },
 
@@ -525,6 +563,7 @@ const Batalha = {
     if (this.aliado.hp > 0 && this.inimigo.hp > 0){
       this.fimDeTurno(this.aliado, this.estAliado, 'aliado');
       this.fimDeTurno(this.inimigo, this.estInimigo, 'inimigo');
+      this.passarClima();
     }
     return this.verificarFim();
   },
@@ -562,6 +601,7 @@ const Batalha = {
       }
       this.fimDeTurno(this.aliado, this.estAliado);
       this.fimDeTurno(this.inimigo, this.estInimigo);
+      this.passarClima();
     }
     return this.verificarFim();
   },
@@ -667,10 +707,17 @@ const Batalha = {
          entrou contra esse adversário e ainda está de pé, e vale 1,5×
          quando o Pokémon era de um treinador. */
       const part = this.participantes || new Set([this.aliado.uid]);
-      const quem = (Estado.dados.time || []).filter(p => part.has(p.uid) && estaVivo(p));
+      const time = (Estado.dados.time || []).filter(p => estaVivo(p));
+      const quem = time.filter(p => part.has(p.uid));
+      /* Exp. Share (2ª geração): quem segura fica com metade, entre
+         eles; quem lutou divide a outra metade */
+      const donos = time.filter(p => (efeitoSegurado(p) || {}).expShare);
       const total = Math.floor(expGanha(this.inimigo, this.aliado) * (this.tipo === 'treinador' ? 1.5 : 1));
-      const cada = quem.length ? Math.max(1, Math.floor(total / quem.length)) : 0;
-      for (const p of quem){
+      const metade = donos.length ? Math.floor(total / 2) : total;
+      const ganhos = new Map();
+      if (quem.length) quem.forEach(p => ganhos.set(p, Math.max(1, Math.floor(metade / quem.length))));
+      if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
+      for (const [p, cada] of ganhos){
         const evs = ganharExp(p, cada);
         this.ev('exp', `${nomeVisivel(p)} ganhou ${cada} de experiência.`);
         evs.forEach(e => {

@@ -299,7 +299,21 @@ const Efeitos = {
       return Promise.all([...b, this.tingir(lado, COR_EFEITO.veneno, 560, 2, .5)]);
     }
     if (st === 'congelamento') return this.tingir(lado, COR_EFEITO.gelo, 520, 1, .6);
+    if (st === 'areia') return Promise.all([this.tingir(lado, '#C8A060', 420, 2, .5), this.tremer(lado, 300, 3)]);
     if (st === 'sono') return this.anel(lado, COR_EFEITO.sono);
+  },
+
+  /* chuva ou areia por cima de cada lutador (a ficha fica limpa), entrando
+     e saindo devagar. Dentro da moldura de cada um porque no celular a
+     arena empilha e cada lutador tem o próprio cenário. */
+  pintarClima(tipo){
+    const a = this.arena();
+    if (!a) return;
+    a.querySelectorAll('.lutador .arte').forEach(arte => {
+      const velha = arte.querySelector('.clima-camada');
+      if (velha){ velha.classList.add('saindo'); setTimeout(() => velha.remove(), 450); }
+      if (tipo) arte.insertAdjacentHTML('beforeend', `<div class="clima-camada clima-${tipo} chegando" aria-hidden="true"></div>`);
+    });
   },
 
   /* ---------- o turno inteiro ---------- */
@@ -338,6 +352,7 @@ const Efeitos = {
       return;
     }
     if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }
+    if (e.clima !== undefined){ this.pintarClima(e.clima); await this.esperar(e.clima ? 700 : 300); return; }
     if (e.travou && e.lado){ await this.condicao(e.lado, e.travou, true); return; }
 
     const passos = [];

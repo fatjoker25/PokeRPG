@@ -850,7 +850,7 @@ const UI = {
       const fundo = (!meu && rosto) ? `<img class="treinador-fundo" src="${rosto}" alt="${this.esc(Batalha.treinador)}" onerror="this.remove()">` : '';
       const vida = (meu && Batalha.fase === 'ameaca') ? this.vidaJogadorHTML() : '';
       return `<div class="lutador ${cls}${fixo}${entrando}">
-        <div class="arte">${fundo}${arte}</div>
+        <div class="arte">${fundo}${arte}${Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : ''}</div>
         <div class="ficha">
           ${vida}
           <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
@@ -2605,6 +2605,7 @@ const UI = {
       const linhas = grupos[c].map(([n,q]) => {
         const info = ITENS_INFO[n] || {};
         const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos','tm'].includes(info.tipo)
+                        || info.tipo === 'ppUp'
                         || (info.tipo === 'mapa' && Estado.dados.modo === 'mundo'))
                        && Estado.dados.modo !== 'batalha';
         const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
@@ -2681,6 +2682,36 @@ const UI = {
     });
   },
 
+  /* ---------- PP Up: +1/5 do PP base, até três vezes por golpe ---------- */
+  escolherPPUp(nome, uid){
+    const d = Estado.dados;
+    const esc = s => s.replace(/'/g, "\\'");
+    if (!uid){
+      const alvos = d.time.filter(p => !p.morto);
+      return this.modal('Em quem?', alvos.map(p =>
+        `<button class="escolha com-item" onclick="UI.escolherPPUp('${esc(nome)}','${p.uid}')">
+          ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))} <span class="pd">Nv ${p.nivel}</span></button>`).join(''), false, 'mochila');
+    }
+    const p = d.time.find(x => x.uid === uid);
+    if (!p) return;
+    this.modal('Em qual golpe?', p.golpes.map((g, i) => {
+      const cheio = (g.ups || 0) >= 3;
+      return `<button class="escolha" ${cheio ? 'disabled' : ''} onclick="UI.aplicarPPUp('${esc(nome)}','${p.uid}',${i})">
+        ${this.esc(g.nome)} <span class="pd">PP ${g.pp}/${g.ppMax}${cheio ? ' · no máximo' : ''}</span></button>`;
+    }).join(''), false, 'mochila');
+  },
+  aplicarPPUp(nome, uid, i){
+    const p = Estado.dados.time.find(x => x.uid === uid);
+    const g = p && p.golpes[i];
+    if (!g || !GOLPES[g.nome] || (g.ups || 0) >= 3 || !Estado.contaItem(nome)) return;
+    const mais = Math.max(1, Math.floor(GOLPES[g.nome].pp / 5));
+    Estado.usarItem(nome);
+    g.ups = (g.ups || 0) + 1;
+    g.ppMax += mais; g.pp += mais;
+    Estado.salvar('auto');
+    this.modal('', `<p>O PP de ${this.esc(g.nome)} subiu: agora ${g.ppMax}.</p>`, false, 'mochila');
+  },
+
   /* ---------- EQUIPAR ---------- */
   menuEquipar(uid){
     const d = Estado.dados;
@@ -2721,6 +2752,7 @@ const UI = {
     const d = Estado.dados;
     if (!Estado.contaItem(nome)) return;
     if (info.tipo === 'tm') return this.ensinarTM(nome);
+    if (info.tipo === 'ppUp') return this.escolherPPUp(nome);
     if (info.tipo === 'mapa') return Exploracao.mapa();
 
     if (info.tipo === 'curaJogador'){
@@ -3506,11 +3538,16 @@ const UI = {
       <div class="linha"><span class="k">SLP · dormindo</span><span class="v">1 a 3 turnos sem agir</span></div>
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
       <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
+      <h3>Clima</h3>
+      <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água ×1,5 · Fogo ×0,5</span></div>
+      <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · fere 1/8 do HP no fim do turno, menos Pedra, Terrestre e Metálico</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · ×1,5 se era de treinador</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
+      <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura fica com metade, mesmo sem entrar · quem lutou divide a outra metade</span></div>
+      <div class="linha"><span class="k">PP Up</span><span class="v">+1/5 do PP base de um golpe, pra sempre · até 3 vezes no mesmo golpe</span></div>
       <div class="linha"><span class="k">Próximo nível</span><span class="v">nível³ × 0,08 + nível × 12 + 20</span></div>
       <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a espécie aprende naquele nível, pela tabela dela</span></div>
       <div class="linha"><span class="k">Selvagem e de treinador</span><span class="v">os quatro últimos golpes da tabela da espécie até o nível dele</span></div>

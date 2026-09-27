@@ -236,6 +236,11 @@ bola do seu sai do canto de baixo, abre, e ele nasce branco e ganha cor.
 Rosto de treinador mora em `js/data/treinadores.js` (Showdown, 80×80) —
 quem não tem equivalente honesto fica sem, e a abertura pula o treinador.
 
+Clima (Rain Dance, Sandstorm) mora em `Batalha.clima` e dura cinco turnos;
+o evento que muda o clima leva `clima` e a camada é pintada **dentro da
+moldura de cada lutador**, nunca por cima da arena inteira — por cima, ela
+cobria as fichas de HP.
+
 Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
 
