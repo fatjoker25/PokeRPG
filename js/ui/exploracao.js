@@ -4,6 +4,9 @@
 const Exploracao = {
 
   tela(avisos){
+    /* a viagem de ônibus do fim do capítulo 1 aparece na primeira tela
+       de mapa, mesmo que o rival tenha aparecido antes dela */
+    if (!avisos && typeof Jogo !== 'undefined' && Jogo.avisoOnibus){ avisos = Jogo.avisoOnibus; Jogo.avisoOnibus = null; }
     Estado.dados.modo = 'mundo';
     UI.limpar();
     UI.add(UI.topo());
@@ -369,6 +372,7 @@ const Exploracao = {
   andar(){
     Mundo.passar(1);
     const id = Mundo.id();
+    Mundo.descobrir('andou_' + id);
     if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30) && Jogo.talvezToque()) return;
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */

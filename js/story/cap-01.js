@@ -1165,7 +1165,7 @@ c1_verdade:{
 c1_objetivo:{
   texto:[
     d=>fala(d.jogador.nome, d.jogador.objetivo),
-    'Você fala isso em voz alta, na sua cozinha, de manhã, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
+    'Você fala isso em voz alta, na sua cozinha, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
     'Do outro lado da mesa, a colher para no meio do café.',
     d=>fala(nomeCasa(), 'Então vai.'),
     d=>fala(nomeCasa(), 'E quando isso mudar — porque isso muda, sempre muda — não trata como derrota.')
@@ -1197,7 +1197,7 @@ c1_despedida:{
     d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
-    d=>fala(nomeCasa(), 'Isso aqui é um PokéNav. Era do seu tio e ele não usava, e eu mandei consertar a tampa.'),
+    d=>fala(nomeCasa(), `Isso aqui é um PokéNav. Era ${/^(tio|tia)$/.test(casaQuem()) ? 'do seu avô' : 'do seu tio'} e ele não usava, e eu mandei consertar a tampa.`),
     d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
     d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui. Não precisa usar todo dia.', 'baixo'),
     d=>fala(nomeCasa(), 'Mas usa.'),
@@ -1452,7 +1452,7 @@ c1_saida_pro_centro:{
     d=>d.jogador.cidade === 'Pallet'
       ? 'O posto do Centro Pokémon de Pallet funciona numa sala dos fundos do mercado, três manhãs por semana. Hoje é uma delas.'
       : d.flags.recebeu_do_goro
-        ? `O Centro Pokémon de ${d.jogador.cidade} está na fila de depois do almoço. É meio-dia e meia.`
+        ? `No Centro Pokémon de ${d.jogador.cidade}, a fila de depois do almoço já começou. É meio-dia e meia.`
         : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
     'Tem uma fila de três pessoas e todas as três têm a sua idade.'
   ],
@@ -1547,7 +1547,7 @@ c1_registro_anterior:{
   texto:[
     d=>fala(d.jogador.nome, 'O que acontece se ele tivesse registro anterior?'),
     'A enfermeira não levanta os olhos da prancheta.',
-    fala('a enfermeira', 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta esta manhã ia ser muito, muito diferente.', 'frio'),
+    fala('a enfermeira', 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta o seu dia ia ser muito, muito diferente.', 'frio'),
     fala('a enfermeira', 'Boa sorte que não é o caso.', null, 'O carimbo desce com força.')
   ],
   ef:{flag:'sabe_do_registro_anterior'},
@@ -1577,7 +1577,9 @@ c1_registro:{
     fala('a enfermeira', 'Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade.'),
     fala('a enfermeira', 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.'),
     fala('a enfermeira', 'Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar. Se você devolver com menos de vinte registros, eles vão te ligar.'),
-    fala('a enfermeira', 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.')
+    fala('a enfermeira', 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.'),
+    d=>['Pallet','Viridian'].includes(d.jogador.cidade) ? ''
+      : fala('a enfermeira', 'E a passagem do ônibus até Viridian, que é onde começa a estrada dos ginásios. Grampeada aí atrás. Não perde essa também.')
   ],
   ef:{flag:['tem_licenca','tem_pokedex','tem_cartao'],
       itens:{'Poké Ball':5,'Potion':2},
@@ -1804,7 +1806,7 @@ c1_fim_perdeu:{
       const p = C1.meu(d);
       if (!p) return 'Você fica ali parad{o|a}, sozinh{o|a} no mato, com as mãos vazias.';
       return C1.qual(d, [
-        `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
+        `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que devia, do jeito que um corpo pesa quando não ajuda.`,
         `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhad{o|a}. Está respirando. É a primeira coisa que você confere e a única que importa.`
       ]);
     },

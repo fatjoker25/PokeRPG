@@ -6559,7 +6559,8 @@ function afazeresDoLocal(){
     /* o Relembrador não tem placa: quem acha é quem anda pela cidade */
     if (RELEMBRADOR[id] && tem('relembrar_'+id)) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
       sub:RELEMBRADOR[id].sub});
-    if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
+    /* o que precisa de dinheiro na cidade só aparece pra quem já andou por ela */
+    if (tem('andou_'+id) && typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
         sub:'E você tem dinheiro.'});
     if (tem('ginasio_'+id)) lista.push({lugar:true, id:'ginasio', titulo:'Ginásio',
@@ -17912,7 +17913,7 @@ c1_verdade:{
 c1_objetivo:{
   texto:[
     d=>fala(d.jogador.nome, d.jogador.objetivo),
-    'Você fala isso em voz alta, na sua cozinha, de manhã, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
+    'Você fala isso em voz alta, na sua cozinha, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
     'Do outro lado da mesa, a colher para no meio do café.',
     d=>fala(nomeCasa(), 'Então vai.'),
     d=>fala(nomeCasa(), 'E quando isso mudar — porque isso muda, sempre muda — não trata como derrota.')
@@ -17944,7 +17945,7 @@ c1_despedida:{
     d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
-    d=>fala(nomeCasa(), 'Isso aqui é um PokéNav. Era do seu tio e ele não usava, e eu mandei consertar a tampa.'),
+    d=>fala(nomeCasa(), `Isso aqui é um PokéNav. Era ${/^(tio|tia)$/.test(casaQuem()) ? 'do seu avô' : 'do seu tio'} e ele não usava, e eu mandei consertar a tampa.`),
     d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
     d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui. Não precisa usar todo dia.', 'baixo'),
     d=>fala(nomeCasa(), 'Mas usa.'),
@@ -18199,7 +18200,7 @@ c1_saida_pro_centro:{
     d=>d.jogador.cidade === 'Pallet'
       ? 'O posto do Centro Pokémon de Pallet funciona numa sala dos fundos do mercado, três manhãs por semana. Hoje é uma delas.'
       : d.flags.recebeu_do_goro
-        ? `O Centro Pokémon de ${d.jogador.cidade} está na fila de depois do almoço. É meio-dia e meia.`
+        ? `No Centro Pokémon de ${d.jogador.cidade}, a fila de depois do almoço já começou. É meio-dia e meia.`
         : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
     'Tem uma fila de três pessoas e todas as três têm a sua idade.'
   ],
@@ -18294,7 +18295,7 @@ c1_registro_anterior:{
   texto:[
     d=>fala(d.jogador.nome, 'O que acontece se ele tivesse registro anterior?'),
     'A enfermeira não levanta os olhos da prancheta.',
-    fala('a enfermeira', 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta esta manhã ia ser muito, muito diferente.', 'frio'),
+    fala('a enfermeira', 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta o seu dia ia ser muito, muito diferente.', 'frio'),
     fala('a enfermeira', 'Boa sorte que não é o caso.', null, 'O carimbo desce com força.')
   ],
   ef:{flag:'sabe_do_registro_anterior'},
@@ -18324,7 +18325,9 @@ c1_registro:{
     fala('a enfermeira', 'Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade.'),
     fala('a enfermeira', 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.'),
     fala('a enfermeira', 'Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar. Se você devolver com menos de vinte registros, eles vão te ligar.'),
-    fala('a enfermeira', 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.')
+    fala('a enfermeira', 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.'),
+    d=>['Pallet','Viridian'].includes(d.jogador.cidade) ? ''
+      : fala('a enfermeira', 'E a passagem do ônibus até Viridian, que é onde começa a estrada dos ginásios. Grampeada aí atrás. Não perde essa também.')
   ],
   ef:{flag:['tem_licenca','tem_pokedex','tem_cartao'],
       itens:{'Poké Ball':5,'Potion':2},
@@ -18551,7 +18554,7 @@ c1_fim_perdeu:{
       const p = C1.meu(d);
       if (!p) return 'Você fica ali parad{o|a}, sozinh{o|a} no mato, com as mãos vazias.';
       return C1.qual(d, [
-        `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
+        `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que devia, do jeito que um corpo pesa quando não ajuda.`,
         `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhad{o|a}. Está respirando. É a primeira coisa que você confere e a única que importa.`
       ]);
     },
@@ -80952,6 +80955,7 @@ const UI = {
       <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor entrega na rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
+      <div class="linha"><span class="k">Nasceu longe de Pallet e Viridian</span><span class="v">a licença vem com a passagem do ônibus da Liga até Viridian, onde a estrada dos ginásios começa · sem licença, você paga a passagem</span></div>
       <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica. Quem assina o formulário é quem é responsável por você, e a bola fica lacrada com o seu nome numa etiqueta até você aparecer. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
@@ -81592,6 +81596,9 @@ const Efeitos = {
 const Exploracao = {
 
   tela(avisos){
+    /* a viagem de ônibus do fim do capítulo 1 aparece na primeira tela
+       de mapa, mesmo que o rival tenha aparecido antes dela */
+    if (!avisos && typeof Jogo !== 'undefined' && Jogo.avisoOnibus){ avisos = Jogo.avisoOnibus; Jogo.avisoOnibus = null; }
     Estado.dados.modo = 'mundo';
     UI.limpar();
     UI.add(UI.topo());
@@ -81957,6 +81964,7 @@ const Exploracao = {
   andar(){
     Mundo.passar(1);
     const id = Mundo.id();
+    Mundo.descobrir('andou_' + id);
     if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30) && Jogo.talvezToque()) return;
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */
@@ -82654,6 +82662,22 @@ const Jogo = {
 
   voltarAoMundo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
+    /* Quem nasceu longe da estrada dos ginásios não faz Kanto de trás
+       pra frente a pé com um bicho de nível 5: a licença vem com a
+       passagem do ônibus da Liga até Viridian, como nos jogos em que
+       tudo começa entre Pallet e Viridian. */
+    const d = Estado.dados;
+    if (d.capitulo === 1 && !d.flags.onibus_da_liga && !['Pallet','Viridian'].includes(d.jogador.cidade)){
+      d.flags.onibus_da_liga = true;
+      Mundo.viajar('viridian');
+      Mundo.passar(2);
+      this.avisoOnibus = [
+        {tipo:'info', texto: d.flags.tem_licenca
+          ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
+          : 'Sem licença não tem passagem de graça: você paga o ônibus da rodoviária do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
+        {tipo:'info', texto:'Você desce em Viridian no fim da tarde. Daqui pra frente a estrada é sua, e é a pé.'}
+      ];
+    }
     const prox = Estado.dados.capitulo + 1;
     const enc = rivalDeveAparecer(prox);
     if (enc){
@@ -82662,7 +82686,8 @@ const Jogo = {
       return UI.telaRival();
     }
     Estado.salvar('auto');
-    Exploracao.tela();
+    const av = this.avisoOnibus; this.avisoOnibus = null;
+    Exploracao.tela(av || undefined);
   },
 
   avancarCapitulo(){

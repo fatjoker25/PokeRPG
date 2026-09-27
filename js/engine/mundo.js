@@ -440,7 +440,8 @@ function afazeresDoLocal(){
     /* o Relembrador não tem placa: quem acha é quem anda pela cidade */
     if (RELEMBRADOR[id] && tem('relembrar_'+id)) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
       sub:RELEMBRADOR[id].sub});
-    if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
+    /* o que precisa de dinheiro na cidade só aparece pra quem já andou por ela */
+    if (tem('andou_'+id) && typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
         sub:'E você tem dinheiro.'});
     if (tem('ginasio_'+id)) lista.push({lugar:true, id:'ginasio', titulo:'Ginásio',

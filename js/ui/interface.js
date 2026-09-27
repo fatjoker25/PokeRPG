@@ -3832,6 +3832,7 @@ const UI = {
       <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor entrega na rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
+      <div class="linha"><span class="k">Nasceu longe de Pallet e Viridian</span><span class="v">a licença vem com a passagem do ônibus da Liga até Viridian, onde a estrada dos ginásios começa · sem licença, você paga a passagem</span></div>
       <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica. Quem assina o formulário é quem é responsável por você, e a bola fica lacrada com o seu nome numa etiqueta até você aparecer. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>

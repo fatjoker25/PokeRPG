@@ -648,6 +648,22 @@ const Jogo = {
 
   voltarAoMundo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
+    /* Quem nasceu longe da estrada dos ginásios não faz Kanto de trás
+       pra frente a pé com um bicho de nível 5: a licença vem com a
+       passagem do ônibus da Liga até Viridian, como nos jogos em que
+       tudo começa entre Pallet e Viridian. */
+    const d = Estado.dados;
+    if (d.capitulo === 1 && !d.flags.onibus_da_liga && !['Pallet','Viridian'].includes(d.jogador.cidade)){
+      d.flags.onibus_da_liga = true;
+      Mundo.viajar('viridian');
+      Mundo.passar(2);
+      this.avisoOnibus = [
+        {tipo:'info', texto: d.flags.tem_licenca
+          ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
+          : 'Sem licença não tem passagem de graça: você paga o ônibus da rodoviária do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
+        {tipo:'info', texto:'Você desce em Viridian no fim da tarde. Daqui pra frente a estrada é sua, e é a pé.'}
+      ];
+    }
     const prox = Estado.dados.capitulo + 1;
     const enc = rivalDeveAparecer(prox);
     if (enc){
@@ -656,7 +672,8 @@ const Jogo = {
       return UI.telaRival();
     }
     Estado.salvar('auto');
-    Exploracao.tela();
+    const av = this.avisoOnibus; this.avisoOnibus = null;
+    Exploracao.tela(av || undefined);
   },
 
   avancarCapitulo(){
