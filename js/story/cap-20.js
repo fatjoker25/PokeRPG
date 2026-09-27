@@ -34,7 +34,7 @@ c20_ab_a_banca:{
     fala('Sr. Bram', 'Eles vêm uma vez por mês, numa terça, sempre de manhã.'),
     'Ele dobra um jornal pra um cliente sem parar de falar.',
     fala('Sr. Bram', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
-    fala('Sr. Bram', 'São gente normal, moço. É isso que eu ia te falar antes de você perguntar.')
+    fala('Sr. Bram', 'São gente normal, {moço|moça}. É isso que eu ia te falar antes de você perguntar.')
   ],
   ef:{flag:'o_jornaleiro_da_118',
       npc:{nome:'Sr. Bram', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
@@ -95,10 +95,10 @@ c20_ab_a_mulher_da_cabeceira:{
 c20_ab_sentou_na_banca:{
   texto:[
     'Ele te empresta o banquinho dele e fica em pé, o que você tenta recusar e não consegue.',
-    'Você fica sentado na esquina da Rua do Comércio por uns vinte minutos, olhando a porta do 118.',
+    'Você fica sentad{o|a} na esquina da Rua do Comércio por uns vinte minutos, olhando a porta do 118.',
     'Nesses vinte minutos entram no prédio: dois entregadores, uma mulher com uma criança de colo, um homem de terno com pasta, três adolescentes de uniforme escolar e um senhor com um saco de pão.',
     'Nenhum deles parece nada.',
-    'Você entende, sentado num banquinho emprestado, a coisa mais difícil deste capítulo: você veio preparado pra um esconderijo e vai entrar numa reunião.',
+    'Você entende, sentad{o|a} num banquinho emprestado, a coisa mais difícil deste capítulo: você veio preparado pra um esconderijo e vai entrar numa reunião.',
     'E não existe treino pra isso.'
   ],
   ef:{flag:'sentou_na_banca', hp:2,
@@ -253,7 +253,7 @@ c20_predio:{
     'A porta está aberta. Do lado de fora, numa mesinha dobrável, tem uma garrafa térmica de café, copos descartáveis, um saquinho de açúcar e uma colher amarrada com barbante para não sumir.',
     'Lá dentro, doze pessoas sentadas em volta de uma mesa oval, com pasta e caneta. Uma delas está falando sobre cronograma de liberação. A pauta está escrita num flip chart, em letra grande.',
     'Eles param quando você entra. Não com susto: com a pausa educada de quem foi interrompido numa reunião.',
-    '"Bom dia." A mulher na cabeceira tem cinquenta e poucos anos e um tailleur cinza sem nada de caro. "O senhor é…?"'
+    '"Bom dia." A mulher na cabeceira tem cinquenta e poucos anos e um tailleur cinza sem nada de caro. "{O senhor|A senhora} é…?"'
   ],
   ef:{registrar:'Entrou na reunião ordinária do conselho da CGRB.'},
   escolhas:[
@@ -326,7 +326,7 @@ c20_bonfim_atas:{
     '"Escrevi." Ela não tem orgulho nem vergonha nisso. "Trinta e quatro atas em um ano e oito meses, mais as alterações de estatuto."',
     '"A senhora lê o que escreve?"',
     'Ela para de arrumar os copos.',
-    '"Moço, eu não leio o que eu escrevo. Eu escrevo e depois eu confiro, que é diferente e é pior." Ela alinha um copo. "Conferir é ler duas vezes procurando erro, e a gente não erra, e por isso eu sei tudo de cor."',
+    '"{Moço|Moça}, eu não leio o que eu escrevo. Eu escrevo e depois eu confiro, que é diferente e é pior." Ela alinha um copo. "Conferir é ler duas vezes procurando erro, e a gente não erra, e por isso eu sei tudo de cor."',
     '"E a senhora concorda?"',
     '"Eu redijo." Ela pega a garrafa. "Se eu começar a concordar ou discordar, a ata deixa de ser confiável, e a ata é a única coisa aqui que é confiável."'
   ],
@@ -343,7 +343,7 @@ c20_bonfim_atas:{
 c20_bonfim_livro:{
   texto:[
     'Ela para com a garrafa térmica na mão.',
-    '"O senhor leu o estatuto inteiro."',
+    '"{O senhor|A senhora} leu o estatuto inteiro."',
     '"Li."',
     '"Poucos leem o Art. 33." Ela põe a garrafa na mesinha. "Eu escrevo esse também. É um livro de capa dura, numerado, que fica no armário e não sai da sala."',
     '"Quantas reuniões fechadas já teve?"',
@@ -366,9 +366,9 @@ c20_pediu_o_livro:{
     '"Me deixa ver o livro."',
     '"Não."',
     'Sem hesitação nenhuma, e sem hostilidade nenhuma.',
-    '"Eu sou secretária de uma associação e o estatuto diz acesso restrito ao Conselho. Se eu te der, eu não sirvo mais para nada, nem para o senhor."',
+    '"Eu sou secretária de uma associação e o estatuto diz acesso restrito ao Conselho. Se eu te der, eu não sirvo mais para nada, nem para {o senhor|a senhora}."',
     'Ela ajeita o barbante da colher.',
-    '"Mas o senhor pode pedir na mesa. Interessado pode propor matéria, e matéria pode ser exibição de documento. Art. 27, §3º."',
+    '"Mas {o senhor|a senhora} pode pedir na mesa. Interessado pode propor matéria, e matéria pode ser exibição de documento. Art. 27, §3º."',
     'Ela olha para você por cima dos óculos.',
     '"Eu não posso te dar. O conselho pode votar te dar."'
   ],
@@ -385,7 +385,7 @@ c20_foi_embora_do_predio:{
   texto:[
     'Você desce sem entrar.',
     'No térreo tem uma farmácia, uma banca de jornal e gente comprando coisa, e trânsito, e um rapaz distribuindo panfleto de curso de informática.',
-    'Você fica parado na calçada com o panfleto na mão por bastante tempo.',
+    'Você fica parad{o|a} na calçada com o panfleto na mão por bastante tempo.',
     'Lá em cima, no sétimo andar, a reunião continua e vai terminar às onze e quarenta, como todas as reuniões.'
   ],
   ef:{flag:'nao_entrou_na_reuniao', moral:-4,
@@ -452,7 +452,7 @@ c20_o_professor:{
     '"E o senhor está aqui por quê?"',
     '"Porque eu entreguei aquele levantamento para três governos e nenhum deles abriu." Ele arruma os óculos. "Estes aqui abriram. Eles leram as cento e oitenta páginas e me chamaram."',
     'Ele volta a se encostar na cadeira.',
-    '"Eu tenho oitenta e um anos, moço. Alguém finalmente me leu."'
+    '"Eu tenho oitenta e um anos, {moço|moça}. Alguém finalmente me leu."'
   ],
   ef:{flag:'entendeu_o_professor', instabilidade:1, moral:-2,
       npc:{nome:'Sr. Tobias Dahl', opiniao:1, memoria:'Entrou na Comissão porque foram os primeiros a ler o levantamento de 1971.'},
@@ -471,7 +471,7 @@ c20_professor_art19:{
     'Ele põe as duas mãos na bengala.',
     '"Em 1971 eu contei quatro mil e oitenta indivíduos numa faixa que hoje tem oitocentos. Eu vi a conta descer a vida inteira, e todo ano alguém me dizia que era cedo para agir."',
     '"E agora é tarde?"',
-    '"Agora é tarde." Ele fecha os olhos. "E quando é tarde, moço, a gente aceita coisa que não aceitaria. Eu sou a prova disso, sentado aqui."'
+    '"Agora é tarde." Ele fecha os olhos. "E quando é tarde, {moço|moça}, a gente aceita coisa que não aceitaria. Eu sou a prova disso, sentado aqui."'
   ],
   ef:{instabilidade:1, moral:-2,
       registrar:'O Sr. Dahl votou a favor do Art. 19 porque achou que já era tarde.'},
@@ -491,7 +491,7 @@ c20_o_veterinario:{
     'Ele não hesita e não amacia.',
     '"Todos os outros."',
     'Ele fecha a pasta.',
-    '"O senhor queria que eu dissesse um número menor. Eu não vou dizer um número menor."'
+    '"{O senhor|A senhora} queria que eu dissesse um número menor. Eu não vou dizer um número menor."'
   ],
   ef:{flag:'ouviu_o_veterinario', instabilidade:1,
       npc:{nome:'o veterinário do conselho', opiniao:1, memoria:'Reprovou 41 pedidos de descarte e aprovou todos os outros.'},
@@ -552,7 +552,7 @@ c20_onde_esta_alcina:{
     '"A senhora sabe de cor."',
     '"Eu sei de cor onde estão as três pessoas que saíram daqui." Ela não desvia. "Eu ligo em dezembro. Duas atendem."',
     'A sala está muito quieta.',
-    '"Se o senhor quiser falar com ela, o nome é público e a escola tem telefone." Ela abre a pasta. "E eu vou dizer o que eu digo sempre: ela não vai te dizer nada que eu não esteja dizendo agora. Ela só vai dizer com a voz melhor."'
+    '"Se {o senhor|a senhora} quiser falar com ela, o nome é público e a escola tem telefone." Ela abre a pasta. "E eu vou dizer o que eu digo sempre: ela não vai te dizer nada que eu não esteja dizendo agora. Ela só vai dizer com a voz melhor."'
   ],
   ef:{flag:['contato_alcina'],
       registrar:'A Dra. Isolde Yarrow dá aula na escola técnica de Celadon, primeiro ano.'},
@@ -579,7 +579,7 @@ c20_foi_falar_com_alcina:{
   escolhas:[
     {texto:'"Volta comigo para a reunião."', vai:'c20_alcina_volta'},
     {texto:'"Me dá alguma coisa que eu possa usar."', vai:'c20_alcina_da'},
-    {texto:'Voltar sozinho para Saffron.', vai:'c20_palavra'}
+    {texto:'Voltar sozinh{o|a} para Saffron.', vai:'c20_palavra'}
   ]
 },
 
@@ -701,9 +701,9 @@ c20_nome:{
     'Você diz o seu nome.',
     'Metade da mesa reage. A Presidente, não.',
     d=>{
-      if (Estado.rep.eixo==='bom' && Estado.rep.bom>=6) return '"Ah." Ela fecha a pasta. "O senhor é bem mais novo do que o relatório sugere."';
+      if (Estado.rep.eixo==='bom' && Estado.rep.bom>=6) return '"Ah." Ela fecha a pasta. "{O senhor|A senhora} é bem mais nov{o|a} do que o relatório sugere."';
       if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=5) return '"Ah." Ela fecha a pasta. "Nós temos uma pasta sua. É mais grossa que a de qualquer conselheiro aqui."';
-      return '"Ah." Ela fecha a pasta. "Nós esperávamos o senhor em algum momento. Não hoje, mas em algum momento."';
+      return '"Ah." Ela fecha a pasta. "Nós esperávamos {o senhor|a senhora} em algum momento. Não hoje, mas em algum momento."';
     },
     '"Senta, por favor. Tem café lá fora."'
   ],
@@ -717,15 +717,15 @@ c20_nome:{
 c20_nao_senta:{
   texto:[
     '"Eu não vou sentar."',
-    '"Tudo bem." Ela não insiste. "O senhor pode falar em pé. Alguns preferem."',
+    '"Tudo bem." Ela não insiste. "{O senhor|A senhora} pode falar em pé. Alguns preferem."',
     'Alguns.',
     'Você fica com essa palavra atravessada por uns segundos, tentando imaginar quem foram os outros, e a Presidente vê você tentar.',
     '"Três", ela diz. "Em um ano e oito meses. Duas por escrito e uma por telefone."',
     '"E nenhuma apareceu aqui."',
-    '"Nenhuma apareceu aqui." Ela abre o estatuto na página do Art. 27. "O senhor é o primeiro. Eu peço que o senhor leve isso a sério, porque eu estou levando."'
+    '"Nenhuma apareceu aqui." Ela abre o estatuto na página do Art. 27. "{O senhor|A senhora} é {o primeiro|a primeira}. Eu peço que {o senhor|a senhora} leve isso a sério, porque eu estou levando."'
   ],
   ef:{flag:'ficou_em_pe', instabilidade:1,
-      registrar:'Três manifestações em um ano e oito meses. Nenhuma presencial. Você é o primeiro.'},
+      registrar:'Três manifestações em um ano e oito meses. Nenhuma presencial. Você é {o primeiro|a primeira}.'},
   escolhas:[{texto:'Pedir a palavra.', vai:'c20_palavra'}]
 },
 
@@ -832,7 +832,7 @@ c20_leu_o_art19:{
 c20_resposta:{
   texto:[
     '"Obrigada." Ela diz isso sem ironia nenhuma. "É a primeira manifestação presencial de interessado em um ano e oito meses. Vai constar na ata com o seu nome."',
-    '"Agora eu vou responder, e eu peço que o senhor me ouça com a mesma atenção, porque eu ouvi."',
+    '"Agora eu vou responder, e eu peço que {o senhor|a senhora} me ouça com a mesma atenção, porque eu ouvi."',
     COMISSAO.doutrina[0],
     COMISSAO.doutrina[1],
     COMISSAO.doutrina[2],
@@ -841,7 +841,7 @@ c20_resposta:{
     'Ela junta as mãos.',
     '"O galpão 4 é indefensável. Eu sei. Eu votei a favor do Art. 19, eu durmo mal por causa dele, e eu votaria de novo, porque a alternativa era não produzir, e não produzir é aceitar o número que a gente tinha antes."',
     '"Eu não vou te pedir que concorde. Eu vou fazer uma pergunta, e ela é honesta:"',
-    d=>`"${d.jogador.nome}, o que o senhor faria no meu lugar?"`
+    d=>`"${d.jogador.nome}, o que {o senhor|a senhora} faria no meu lugar?"`
   ],
   ef:{flag:'presidente_perguntou'},
   escolhas:[
@@ -860,7 +860,7 @@ c20_fechar:{
     '"Eu fecharia. Hoje. E aceitaria o número."',
     '"O número são pessoas." A voz dela não muda. "Trinta e uma ocorrências graves por ano. Onze crianças em quatro anos."',
     '"Eu sei."',
-    '"O senhor aceitaria isso."',
+    '"{O senhor|A senhora} aceitaria isso."',
     '"Eu aceitaria isso, porque o outro lado do número está numa planilha pendurada num prego, tem quatro dígitos, e ninguém nunca votou nele."',
     'Silêncio na sala oval.',
     'Uma conselheira anota. Outra olha para a Presidente. O Curador Fabre, pela primeira vez, levanta a cabeça.'
@@ -878,12 +878,12 @@ c20_e_se_eu_estiver_errado:{
     '"E se eu estiver errado?"',
     'Você diz isso na frente de onze pessoas que passaram dois anos tendo certeza.',
     'A Presidente demora a responder, e quando responde, responde mais devagar do que falou a manhã inteira.',
-    '"Aí o senhor vai ter defendido uma coisa que custou vidas de gente." Ela apoia as mãos na mesa. "E vai viver com isso, como eu vivo com o meu lado."',
+    '"Aí {o senhor|a senhora} vai ter defendido uma coisa que custou vidas de gente." Ela apoia as mãos na mesa. "E vai viver com isso, como eu vivo com o meu lado."',
     'Ela olha para a mesa inteira.',
     '"É isso que ninguém entende sobre esta sala. Aqui dentro não tem ninguém confortável. Tem gente que escolheu de que lado ia ficar mal."'
   ],
   ef:{flag:'perguntou_se_estava_errado', instabilidade:1, moral:3,
-      npc:{nome:'Rhea Colman', opiniao:3, memoria:'Você perguntou, na frente da mesa, e se estivesse errado.'},
+      npc:{nome:'Rhea Colman', opiniao:3, memoria:'Você perguntou, na frente da mesa, e se estivesse errad{o|a}.'},
       rep:{eixo:'bom',delta:2,motivo:'Admitiu dúvida numa sala cheia de certezas'},
       registrar:'Perguntou em voz alta se estava errado, na frente do conselho.'},
   escolhas:[
@@ -982,7 +982,7 @@ c20_proxima_assembleia:{
     'Um quinto de catorze é três.',
     'Você faz essa conta em voz alta, sem querer, e a sala inteira faz junto.',
     'A Presidente fecha a pasta.',
-    '"O senhor entendeu rápido." Ela não parece nem contrariada nem impressionada. "Eu escrevi esse estatuto para ser à prova de mim mesma, e o senhor acabou de achar a porta em vinte minutos."',
+    '"{O senhor|A senhora} entendeu rápido." Ela não parece nem contrariada nem impressionada. "Eu escrevi esse estatuto para ser à prova de mim mesma, e {o senhor|a senhora} acabou de achar a porta em vinte minutos."',
     '"E a senhora vai fechar a porta?"',
     '"Se eu fechar, eu deixo de ser o que eu escrevi que eu era." Ela olha a Sra. Hedda. "Registra a proposta."'
   ],
@@ -1004,7 +1004,7 @@ c20_quem_elegeu:{
     'A advogada da mesa vira uma página. O contador olha para o teto. O Sr. Dahl abre os olhos.',
     '"Catorze pessoas", diz a Presidente. "Onze fundadores e três parentes."',
     '"Então a senhora elegeu a senhora."',
-    '"Sim." Ela não tenta amaciar. "Foi exatamente isso que aconteceu, e está tudo registrado, e o senhor acabou de ser a primeira pessoa a dizer em voz alta nesta sala."'
+    '"Sim." Ela não tenta amaciar. "Foi exatamente isso que aconteceu, e está tudo registrado, e {o senhor|a senhora} acabou de ser a primeira pessoa a dizer em voz alta nesta sala."'
   ],
   ef:{flag:['desarmou_presidente','sabe_do_art6'], instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Fez a pergunta de uma linha que o conselho não sabia responder'},
@@ -1101,7 +1101,7 @@ c20_concordar:{
     'Ela olha para a Sra. Hedda. "Registra."',
     'Depois para você.',
     '"Tem uma cadeira vaga nesta mesa desde março. Ela é de conselheiro titular, com direito a voto."',
-    '"O senhor tem quinze anos, o que é um problema jurídico que eu resolvo em três semanas."'
+    '"{O senhor|A senhora} tem quinze anos, o que é um problema jurídico que eu resolvo em três semanas."'
   ],
   ef:{flag:'aceitou_cadeira_conselho',
       rep:{eixo:'ruim',delta:3,motivo:'Aceitou uma cadeira no conselho da Comissão'},
@@ -1287,7 +1287,7 @@ c20_resultado_votacao:{
     },
     d=>{
       const v = Estado.dados.votosComissao || 0;
-      if (v < 5) return 'Você fica sentado. A reunião continua por mais uma hora e quarenta e você fica sentado até o fim, porque sair agora seria dizer que veio fazer discurso.';
+      if (v < 5) return 'Você fica sentad{o|a}. A reunião continua por mais uma hora e quarenta e você fica sentad{o|a} até o fim, porque sair agora seria dizer que veio fazer discurso.';
       return 'Do lado de fora, no corredor, a garrafa térmica de café está fria e ninguém foi recolher.';
     }
   ],
@@ -1323,7 +1323,7 @@ c20_resultado_votacao:{
         } else {
           Estado.marcar('votacao_perdida');
           Estado.mudarRep('bom', 1, 'Perdeu a votação e ficou até o fim da sessão', {rep:{notorio:true, peso:3}});
-          avisos.push({tipo:'info', texto:'Você perdeu. E ficou sentado até o fim da sessão, que durou mais uma hora e quarenta.'});
+          avisos.push({tipo:'info', texto:'Você perdeu. E ficou sentad{o|a} até o fim da sessão, que durou mais uma hora e quarenta.'});
         }
         return avisos;
       }},
@@ -1362,9 +1362,9 @@ c20_se_eu_achar_primeiro:{
   texto:[
     '"E se eu achar ele primeiro?"',
     'A Presidente fecha o livro devagar.',
-    '"Aí o senhor vai ter na mão uma coisa que doze pessoas procuram há dois anos, e o senhor vai ter que decidir sozinho o que fazer com ela." Ela empurra o livro de volta para a Sra. Hedda. "Que é exatamente a situação que esta associação foi criada para não existir."',
+    '"Aí {o senhor|a senhora} vai ter na mão uma coisa que doze pessoas procuram há dois anos, e {o senhor|a senhora} vai ter que decidir sozinho o que fazer com ela." Ela empurra o livro de volta para a Sra. Hedda. "Que é exatamente a situação que esta associação foi criada para não existir."',
     'Ela olha para você por um tempo comprido.',
-    '"E o senhor vai fazer melhor do que nós, provavelmente, porque o senhor vai ter olhado para ele na cara."',
+    '"E {o senhor|a senhora} vai fazer melhor do que nós, provavelmente, porque {o senhor|a senhora} vai ter olhado para ele na cara."',
     'Ela abre a pasta e volta para a pauta.',
     '"Item quatro."'
   ],
@@ -1580,7 +1580,7 @@ c20_solta_aqui:{
 c20_levou_unidade01:{
   texto:[
     'Você tira a bola da mão dela. Ela não impede, e não impedir, aqui, é uma decisão dela.',
-    '"Ela vai te obedecer", diz a Presidente. "É para isso que ela existe. O senhor vai descobrir que isso é a pior parte."'
+    '"Ela vai te obedecer", diz a Presidente. "É para isso que ela existe. {O senhor|A senhora} vai descobrir que isso é a pior parte."'
   ],
   ef:{flag:'tem_a_unidade01',
       executar:d=>{
@@ -1601,7 +1601,7 @@ c20_destruiu_unidade01:{
     'Ela não tenta impedir. Anota alguma coisa na pasta quando acaba.',
     '"Quarta tentativa perdida", ela diz. "Dezoito meses de trabalho."',
     'E aí, pela única vez na manhã inteira, a voz dela falha:',
-    '"Eu vou ter que aprovar a quinta. O senhor entende isso? O senhor acabou de me obrigar a aprovar a quinta."'
+    '"Eu vou ter que aprovar a quinta. {O senhor|A senhora} entende isso? {O senhor|A senhora} acabou de me obrigar a aprovar a quinta."'
   ],
   ef:{flag:['destruiu_a_unidade01','tem_sangue_nas_maos'], instabilidade:1,
       rep:{eixo:'ruim',delta:2,motivo:'Destruiu uma criatura que não escolheu existir'},
@@ -1632,7 +1632,7 @@ c20_voltou_depois:{
     'Você fica na porta e não entra.',
     'A Presidente te vê, para a frase no meio, e diz para a mesa: "suspendo por dois minutos."',
     'Depois olha para você.',
-    '"O senhor ainda pode pedir a palavra. O incidente não tira o seu direito, porque o estatuto não prevê isso, e eu não vou inventar."'
+    '"{O senhor|A senhora} ainda pode pedir a palavra. O incidente não tira o seu direito, porque o estatuto não prevê isso, e eu não vou inventar."'
   ],
   ef:{flag:'voltou_com_tipoia', moral:2,
       npc:{nome:'Rhea Colman', opiniao:2, memoria:'Suspendeu a sessão por dois minutos quando você voltou.'},
@@ -1664,10 +1664,10 @@ c20_esperou_na_calcada:{
     'Onze e quarenta e dois. Eles descem em três levas, porque o elevador é pequeno.',
     'Ninguém corre de você. Dois cumprimentam. O contador para na banca e compra um jornal.',
     'O Curador Fabre sai por último e vem direto até você, com a pasta debaixo do braço.',
-    '"O senhor vai voltar na próxima?"',
+    '"{O senhor|A senhora} vai voltar na próxima?"',
     '"Vou."',
     'Ele assente, e alguma coisa nos ombros dele desce dois centímetros.',
-    '"Então eu tenho dois votos na próxima." Ele ajeita a pasta. "Um meu e o do senhor, que não conta, mas que muda a sala, e a sala é onde eu perco."'
+    '"Então eu tenho dois votos na próxima." Ele ajeita a pasta. "Um meu e o {do senhor|da senhora}, que não conta, mas que muda a sala, e a sala é onde eu perco."'
   ],
   ef:{flag:['adnan_espera_voce'], moral:3,
       npc:{nome:'Curador Fabre', opiniao:4, memoria:'Perguntou se você vai voltar na próxima reunião.'},

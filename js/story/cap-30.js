@@ -186,7 +186,7 @@ c30_o_cartorio:{
     'Ela alinha as fichas.',
     fala('a escrivã', 'O mais antigo é de mil novecentos e setenta e um. O mais recente é de oitenta e nove.'),
     'Ela endireita a última.',
-    fala('a escrivã', 'As oito pessoas que assinaram o seu livro nos últimos dois meses estão mortas há mais de dez anos, moço.'),
+    fala('a escrivã', 'As oito pessoas que assinaram o seu livro nos últimos dois meses estão mortas há mais de dez anos, {moço|moça}.'),
     'E ela fala isso sem drama nenhum, porque ela trabalha com óbito há vinte e nove anos e não tem drama nenhum numa ficha.'
   ],
   ef:{dinheiro:-32, flag:['os_oito_estao_mortos','reika_precisa_de_papel','sabe_do_lote_unico'],
@@ -280,7 +280,7 @@ c30_esperou_no_quinto:{
     'O quinto andar da Torre Pokémon tem uma sala lateral com cadeira empilhada e vassoura, que é onde o zelador guarda coisa, e a porta não tranca.',
     'Você espera ali das seis da tarde às duas e quarenta da manhã.',
     'Oito horas e quarenta minutos sentado no escuro em cima de uma cadeira empilhada.',
-    'A torre de noite não tem nada de sobrenatural e é pior por isso: é concreto, é frio, e o eco devolve o seu próprio movimento com meio segundo de atraso, e depois de duas horas você começa a se assustar consigo mesmo.',
+    'A torre de noite não tem nada de sobrenatural e é pior por isso: é concreto, é frio, e o eco devolve o seu próprio movimento com meio segundo de atraso, e depois de duas horas você começa a se assustar consigo mesm{o|a}.',
     'Às duas e quarenta e um, alguém sobe.',
     'Passo de sapato de sola dura. Uma pessoa. Lanterna.',
     'E vai direto pro livro, sem procurar, porque já sabe onde ele fica.'
@@ -394,7 +394,7 @@ c30_quem_manda_a_lista:{
     'Não é pergunta.',
     fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.'),
     'Ele guarda o envelope.',
-    fala('Lorca', 'É a coisa mais estranha desse serviço, moço. Não tem nada escondido. Tem carimbo em tudo.')
+    fala('Lorca', 'É a coisa mais estranha desse serviço, {moço|moça}. Não tem nada escondido. Tem carimbo em tudo.')
   ],
   ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
       registrar:'O malote do Lorca vem da Rua do Comércio, 118, sala 704.',
@@ -478,7 +478,7 @@ c30_perdeu:{
   texto:[
     'Você perde e a pessoa não faz mais nada: não te revista, não te ameaça, não fala.',
     'Recolhe o time dela e vai embora andando, no passo normal, pela praça, na frente da Torre Pokémon, às três e vinte da manhã.',
-    'Você fica sentado na base da torre com o seu time no chão e a certeza muito clara de que aquilo não foi um aviso.',
+    'Você fica sentad{o|a} na base da torre com o seu time no chão e a certeza muito clara de que aquilo não foi um aviso.',
     'Foi só alguém te tirando do caminho por uma noite, porque uma noite era o que eles precisavam.'
   ],
   ef:{hp:-5, causa:'Briga na base da torre', flag:'perdeu_na_base_da_torre', moral:-3,

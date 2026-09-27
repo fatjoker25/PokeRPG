@@ -310,6 +310,27 @@ Sem sexo fica no masculino, que é o gênero da palavra "Pokémon". Selvagem
 que o texto chama de "o bicho" ou "o Rattata" também: concorda com o
 substantivo, não com o sexo.
 
+## Gênero de quem joga
+A ficha pergunta Homem ou Mulher, e **o texto inteiro concorda**. Frase
+que fala do jogador escreve as duas formas numa marca, **forma de Homem
+primeiro**: `sentad{o|a}`, `{o senhor|a senhora}`, `{moço|moça}`,
+`{Obrigado|Obrigada}`. Quem resolve é `concordaJogador` (em `motor.js`),
+chamado por `UI.esc` — então todo texto que vai pra tela já sai certo,
+inclusive diário e `registrar` gravados antes. Texto que for pra tela
+sem passar por `UI.esc` tem que chamar `concordaJogador` na mão.
+
+Duas marcas irmãs, pelo mesmo caminho:
+- `{casa:ela|ele}` — a pessoa que ficou em casa, **forma feminina
+  primeiro** (as cenas foram escritas pra ela). O parentesco da ficha
+  decide (`parentescoEhMulher`); o que fica em branco é sorteado
+  combinando nome e parentesco.
+- `{pk:ele|ela}` — o Pokémon da frente do time, pra cena escrita sem
+  variável. Com `p` na mão, prefira `pron(p)`.
+
+Cuidado ao marcar "o senhor": **metade deles é o jogador falando com um
+homem**, e esses não mudam. A pergunta é sempre quem está sendo tratado.
+Vocativo neutro ("cara") fica como está.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.

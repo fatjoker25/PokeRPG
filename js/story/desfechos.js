@@ -76,7 +76,7 @@ c18_fim_publicou:{
     fala('Rhea Colman', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu em três cidades.'),
     'Ela levanta.',
     fala('Rhea Colman', 'Isso não é frieza. É o jeito de você continuar tendo uma vida.'),
-    'Ela vai embora pela praça e você fica sentado no banco.',
+    'Ela vai embora pela praça e você fica sentad{o|a} no banco.',
     'E é aqui que a sua parte acaba, num banco de praça em Saffron, às quatro da tarde de uma quarta-feira, sem ninguém por perto pra ver.'
   ],
   final:{id:'publicou_sem_nome', titulo:'A FONTE QUE NÃO TEM NOME', texto:[
@@ -176,14 +176,14 @@ c19_fim_assinou:{
   final:{id:'ficou_dentro', titulo:'ONZE MESES É MAIS QUE A MÉDIA', texto:[
     'Você dura mais que a média. Você dura muito mais que a média.',
     'No sexto mês você aprende a ler a planilha de lote. No nono, descobre que a planilha de lote e o livro de entrada não fecham e que ninguém nunca cruzou os dois porque os dois ficam em salas diferentes.',
-    'No décimo quarto mês você é promovido a conferente, o que te dá acesso às duas salas.',
+    'No décimo quarto mês você é promovid{o|a} a conferente, o que te dá acesso às duas salas.',
     'Você não denuncia nada. Você anota. Por três anos e sete meses você anota, num caderno de capa dura que mora dentro do armário quarenta e um, e a cada seis meses você tira uma cópia e manda pelo correio pra um endereço em Saffron que não é o seu.',
     'Quando a comissão parlamentar finalmente chega à Estação 4, ela chega com mandado e com uma lista de perguntas boas demais pra terem sido escritas por quem nunca esteve lá dentro.',
     'Você depõe por seis horas. Depois volta a trabalhar, porque a estação não fecha: ela é reestruturada, e reestruturada quer dizer que alguém tem que ficar cuidando das trezentas e onze baias enquanto os advogados discutem.',
     'Você fica. Por mais quatro anos.',
     'Não tem nada de heroico nisso e você nunca vai aparecer em jornal nenhum.',
     'Mas em algum ponto do sétimo ano alguém na sua equipe desce pela primeira vez, olha as baias e pergunta se aquilo é normal.',
-    'E você é o encarregado. E você responde que não.'
+    'E você é {o encarregado|a encarregada}. E você responde que não.'
   ]}
 },
 
@@ -243,7 +243,7 @@ c20_a_cadeira:{
     'Ela junta as mãos em cima da pasta.',
     fala('a presidente', 'Nós publicamos o edital sete vezes. Sete. Está tudo no diário oficial.'),
     'Ninguém na mesa está sorrindo e ninguém está constrangido. É uma informação administrativa e eles a tratam como tal.',
-    fala('a presidente', 'O senhor tem uma entidade que o indique?')
+    fala('a presidente', '{O senhor|A senhora} tem uma entidade que o indique?')
   ],
   ef:{flag:'a_cadeira_vaga',
       registrar:'A 13ª cadeira do conselho está vaga há três anos: representação externa, por indicação de entidade civil.',
@@ -346,7 +346,7 @@ c21_ficar_de_vez:{
     d=>fala(d.jogador.nome, 'Não sei.'),
     d=>fala(nomeCasa(), 'Tá.'),
     'E vai embora, porque a pergunta era de verdade e a resposta foi aceita.',
-    'Você fica sentado na cama olhando uma mochila encostada numa parede.'
+    'Você fica sentad{o|a} na cama olhando uma mochila encostada numa parede.'
   ],
   ef:{flag:'a_mochila_encostada',
       registrar:'Faz quatro dias que a mochila está encostada na parede sem ser tocada.'},
@@ -375,7 +375,7 @@ c21_fim_ficou:{
       return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar ${pron(p).dele}.`
                : 'O time envelhece com você, no quintal, e isso é uma frase que você não teria entendido aos quinze.';
     },
-    'A parte que ninguém te avisa é esta: o que você viu não sai de você por ficar parado.',
+    'A parte que ninguém te avisa é esta: o que você viu não sai de você por ficar parad{o|a}.',
     'Em algum momento do terceiro ano, um caminhão-gaiola passa na estrada da sua cidade, de madrugada, e você acorda com o barulho.',
     'E você levanta, e anota a placa, e volta pra cama.',
     'E na manhã seguinte você manda a placa por carta pra um endereço em Saffron, e paga o selo, e não conta pra ninguém.',
@@ -522,7 +522,7 @@ c24_a_setima_barrou:{
     'Ele fecha a segunda tela com um clique.',
     fala('o guarda da sétima', 'Porque a sétima é a última.'),
     'E não tem nada de ameaçador no jeito que ele diz. Ele parece cansado e parece que já disse isso hoje e que vai dizer de novo.',
-    fala('o guarda da sétima', 'Desculpa, moço. É de verdade.')
+    fala('o guarda da sétima', 'Desculpa, {moço|moça}. É de verdade.')
   ],
   ef:{flag:'barrado_na_setima',
       registrar:'Passou em seis guaritas e foi barrado na sétima, pela segunda tela.',
@@ -563,7 +563,7 @@ c24_fim_voltou:{
     'Sentar na pedra em frente à primeira guarita da Rota 23 não é crime nenhum. É uma pedra numa estrada pública.',
     'Às onze da manhã passa uma pessoa subindo e você conta pra ela o que tem na sétima.',
     'Às onze e quarenta passam duas.',
-    'À uma da tarde o guarda da primeira sai da guarita e vem falar com você, e você está preparado pra briga e não é briga.',
+    'À uma da tarde o guarda da primeira sai da guarita e vem falar com você, e você está preparad{o|a} pra briga e não é briga.',
     fala('o guarda da primeira', 'Você vai ficar aí o dia inteiro?'),
     d=>fala(d.jogador.nome, 'Vou.'),
     'Ele olha a estrada. Depois a guarita. Depois a estrada de novo.',
@@ -715,14 +715,14 @@ c26_aceitou_o_posto:{
   texto:[
     'A sala tem uma mesa comprida, oito cadeiras e uma janela com o vidro trincado remendado com fita, que você viu de fora quando chegou.',
     'Sentadas, quatro pessoas. Uma delas é da Liga, uma é da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.',
-    fala('a conselheira da Liga', 'Vamos ser diretos, porque o senhor já perdeu bastante tempo com gente que não foi direta.'),
+    fala('a conselheira da Liga', 'Vamos ser diretos, porque {o senhor|a senhora} já perdeu bastante tempo com gente que não foi direta.'),
     'Ela empurra uma pasta fina pela mesa.',
     fala('a conselheira da Liga', 'Coordenação de campo. Cargo novo, criado no mês passado, com dotação orçamentária própria.'),
     d=>fala(d.jogador.nome, 'Criado no mês passado.'),
     fala('a conselheira da Liga', 'Criado no mês passado.'),
     'Ela não finge que isso é coincidência, o que é quase um elogio.',
-    fala('a conselheira da Liga', 'O senhor teria acesso a todas as estações, a todos os manifestos e a todos os relatórios de manejo de Kanto. Legalmente. Com crachá.'),
-    fala('a conselheira da Liga', 'E um dever funcional de sigilo, que é a parte que o senhor está pensando agora.'),
+    fala('a conselheira da Liga', '{O senhor|A senhora} teria acesso a todas as estações, a todos os manifestos e a todos os relatórios de manejo de Kanto. Legalmente. Com crachá.'),
+    fala('a conselheira da Liga', 'E um dever funcional de sigilo, que é a parte que {o senhor|a senhora} está pensando agora.'),
     'Ela junta as mãos.',
     fala('a conselheira da Liga', 'Acesso total e boca fechada. É a oferta. Não vai ficar mais bonita se eu repetir.')
   ],
@@ -748,7 +748,7 @@ c26_quem_criou_o_cargo:{
     'Silêncio de uns quatro segundos, e é o silêncio mais informativo do capítulo.',
     fala('a conselheira da Liga', 'Desde mil novecentos e sessenta e dois.'),
     'Ela diz isso sem nenhum constrangimento, e é aí que você entende que ela nunca achou que isso fosse segredo.',
-    fala('a conselheira da Liga', 'O senhor passou meses procurando uma conspiração e o que existe é um convênio. Está publicado.', 'baixo')
+    fala('a conselheira da Liga', '{O senhor|A senhora} passou meses procurando uma conspiração e o que existe é um convênio. Está publicado.', 'baixo')
   ],
   ef:{flag:'resolucao_conjunta_desde_sessenta_e_dois',
       registrar:'A Liga e a Comissão assinam resolução conjunta desde 1962. Está publicado.',
@@ -790,9 +790,9 @@ c26_fim_recusou:{
     fala('a conselheira da Liga', 'Não é uma oferta que se repete.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'Ela fecha a pasta fina.',
-    fala('a conselheira da Liga', 'O senhor entende que, recusando, continua sem acesso a nada, e que tudo que o senhor tem é papel juntado de forma irregular por um menor de idade.'),
+    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por um menor de idade.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
-    fala('a conselheira da Liga', 'E que o senhor está escolhendo a versão mais difícil de todas.'),
+    fala('a conselheira da Liga', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
     d=>fala(d.jogador.nome, 'Tô.'),
     'Ela assente uma vez, e é um gesto de quem registra, não de quem concorda.',
     'O homem sem crachá, que não falou desde o começo, é o único que fala quando você já está na porta:',
@@ -810,7 +810,7 @@ c26_fim_recusou:{
     'Leva onze anos.',
     'Não existe um momento de virada, não existe uma manchete, não existe um dia em que tudo muda. Existem onze anos de gente comum guardando papel e passando adiante, até a pilha ficar grande demais pra caber numa gaveta.',
     'A comissão parlamentar de inquérito é instalada numa quarta-feira de setembro.',
-    'Você tem vinte e seis anos e está sentado na galeria, no meio do público, sem crachá nenhum.',
+    'Você tem vinte e seis anos e está sentad{o|a} na galeria, no meio do público, sem crachá nenhum.',
     'E quando o relator lê a lista de pessoas que contribuíram com documentação, ele leva dezenove minutos, porque são cento e quarenta e um nomes.',
     'O seu é um deles. É o de número oitenta e três, em ordem alfabética.',
     'É exatamente o tamanho que tinha que ter.'

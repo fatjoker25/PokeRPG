@@ -139,7 +139,7 @@ c13_ab_convocado:{
       const c = Cargos.principal();
       return `O telefone do Centro Pokémon de Fuchsia toca às cinco e dez da manhã e a atendente atende, ouve, e vem te acordar pelo nome e pelo cargo de ${c ? c.nome : 'serviço'}.`;
     },
-    'Isso nunca aconteceu antes. Você é acordado porque é você, não apesar de ser você.',
+    'Isso nunca aconteceu antes. Você é acordad{o|a} porque é você, não apesar de ser você.',
     'Do outro lado da linha tem um homem com voz de quem já falou com quatorze pessoas hoje.',
     fala('a voz no telefone', 'Defesa Civil de Fuchsia. Estamos acionando todo mundo com registro na cidade.'),
     d=>fala(d.jogador.nome, 'Acionando pra quê?'),
@@ -172,7 +172,7 @@ c13_ab_o_que_esperam:{
     fala('a voz no telefone', 'Se você for pro cais, você vai ser a quinta pessoa lá que não sabe o que fazer. Mas cinco é melhor que quatro.', 'baixo')
   ],
   ef:{flag:'a_defesa_civil_sao_tres',
-      registrar:'A Defesa Civil de Fuchsia tem três pessoas e uma caminhonete. Você é o quinto voluntário.'},
+      registrar:'A Defesa Civil de Fuchsia tem três pessoas e uma caminhonete. Você é {o quinto voluntário|a quinta voluntária}.'},
   escolhas:[
     {texto:'Ir pro cais.', vai:'c13_cais'},
     {texto:'Ir à colônia de pescadores.', vai:'c13_colonia'},
@@ -235,7 +235,7 @@ c13_ab_por_que_leilao:{
     d=>fala(d.jogador.nome, 'E esses aí querem o quê?'),
     fala('o dono do casco reforçado', 'Querem chegar perto, olhar, e voltar.'),
     'Ele aponta o casco do próprio barco com o pé.',
-    fala('o dono do casco reforçado', 'Esse casco é reforçado pra gelo de rio. Pra gelo de rio, moço.'),
+    fala('o dono do casco reforçado', 'Esse casco é reforçado pra gelo de rio. Pra gelo de rio, {moço|moça}.'),
     fala('o dono do casco reforçado', 'Se eu for buscar barco encalhado, eu não volto. Se eu for olhar e voltar, eu volto.'),
     'Ele diz isso alto o bastante pra os sessenta pescadores do outro lado ouvirem, e é pra eles que ele está falando.',
     fala('o dono do casco reforçado', 'Eu não sou covarde. Eu sou o único que ainda tem barco pra amanhã.', 'baixo')
@@ -304,7 +304,7 @@ c13_quando_comecou:{
     'Um deles — magro, de boné — ri.',
     '"Porque no dia quatro de junho a água baixou três graus de um dia pro outro."',
     '"Três graus em um dia?"',
-    '"Três graus em um dia. Todo barco daqui tem termômetro de fundo, moço, porque peixe segue temperatura. A gente anota todo dia desde sempre, é o caderno de bordo."',
+    '"Três graus em um dia. Todo barco daqui tem termômetro de fundo, {moço|moça}, porque peixe segue temperatura. A gente anota todo dia desde sempre, é o caderno de bordo."',
     'Ele bate no bolso da camisa.',
     '"Três de junho: dezenove e meio. Quatro de junho: dezesseis e meio."',
     '"E depois?"',
@@ -740,7 +740,7 @@ c13_goro_conta:{
     '"E aí eu pulei."',
     'Você não esperava essa.',
     '"Você pulou?"',
-    '"Eu pulei na água a quatro da manhã, com cinquenta e oito anos, e eu botei ela no bote de apoio com a ajuda do menino de quinze, e a gente voltou pra Fuchsia a cinco e quarenta com uma coisa azul no fundo do bote."',
+    '"Eu pulei na água a quatro da manhã, com cinquenta e oito anos, e eu botei ela no bote de apoio com a ajuda {do menino|da menina} de quinze, e a gente voltou pra Fuchsia a cinco e quarenta com uma coisa azul no fundo do bote."',
     'Ele finalmente olha pra você.',
     '"E aí veio a parte que eu não sei resolver."'
   ],
@@ -765,7 +765,7 @@ c13_a_parte_dificil:{
     'Ele levanta e vai até a janela.',
     '"Ela não pode voar. A asa quebrou em dois lugares e o veterinário do Amos disse que ossifica mal e que sem voar ela não sobrevive um dia lá."',
     '"E se eu devolver, eu tenho que devolver onde eu peguei, que é a quebra das Seafoam, que é seis milhas de área proibida pra arrasto e que eu declarei que eu tava pescando."',
-    '"Eu declarei no livro da colônia, moço. Tá escrito. Eu escrevi de próprio punho “quebra das Seafoam” às vinte e três e dez do dia três de junho."',
+    '"Eu declarei no livro da colônia, {moço|moça}. Tá escrito. Eu escrevi de próprio punho “quebra das Seafoam” às vinte e três e dez do dia três de junho."',
     '"E se eu chegar lá com ela, eu tô confessando arrasto em área proibida com dano a espécime protegido, que é três a cinco anos e perda da embarcação."',
     'Ele volta pra poltrona.',
     '"E eu tenho dívida de motor de quarenta e dois mil, e a embarcação é a garantia."',
@@ -828,7 +828,7 @@ c13_ele_sabe:{
     '"E você sabe a origem."',
     '"Eu sei a origem, e a origem tá num galpão a seiscentos metros daqui comendo peixe cortado que eu compro com o dinheiro que eu não tenho."',
     'Ele encosta a cabeça na poltrona.',
-    '"Trezentos e onze famílias, moço. Trezentos e onze. Eu conheço o nome de quase todo mundo."',
+    '"Trezentos e onze famílias, {moço|moça}. Trezentos e onze. Eu conheço o nome de quase todo mundo."',
     '"E por que você não conta?"',
     '"Porque no dia que eu contar, eles vão saber que foi eu."',
     'Pausa.',
@@ -962,7 +962,7 @@ c13_ryuzo:{
     'Ele te vê chegando de longe e espera você chegar, e a primeira coisa que ele fala é:',
     '"Eu levo."',
     '"Eu nem falei nada."',
-    '"Tá escrito na sua cara e você andou o cais inteiro perguntando. Fuchsia é pequena, meu filho."',
+    '"Tá escrito na sua cara e você andou o cais inteiro perguntando. Fuchsia é pequena, {meu filho|minha filha}."',
     'Ele amarra o cabo.',
     '"Três horas de ida. A gente sai às cinco, chega às oito, e eu não fico depois das quinze porque o vento vira."',
     '"Quanto você quer?"',
@@ -990,7 +990,7 @@ c13_ver_o_que:{
     '"Eu tenho setenta e quatro anos e eu vivi desse mar desde os nove. Eu conheço o fundo daqui até a quebra melhor do que eu conheço a minha rua."',
     '"E em junho ele começou a fazer uma coisa que eu nunca vi, e que o meu pai nunca viu, e que o pai dele nunca viu, porque a gente conta essas coisas em casa e eu ia lembrar."',
     'Ele fecha a caixa.',
-    '"Eu não quero salvar ninguém, meu filho. Eu tenho setenta e quatro anos e eu não salvo mais ninguém."',
+    '"Eu não quero salvar ninguém, {meu filho|minha filha}. Eu tenho setenta e quatro anos e eu não salvo mais ninguém."',
     '"Eu quero entender uma coisa antes de acabar. Uma. Eu não fui muito longe na escola e eu não entendi quase nada da vida."',
     'Ele aponta o horizonte com o queixo, na direção da linha branca.',
     '"Essa aqui eu tenho chance."'
@@ -1176,7 +1176,7 @@ c13_chamou_ivone:{
       presagio:'Alguém tem que explicar pra ele. Essa é a parte que nenhuma veterinária resolve.'},
   escolhas:[
     {texto:'Ir explicar. Levar o pequeno junto, para ele ver.', vai:'c13_os_tres'},
-    {texto:'Ir sozinho explicar primeiro, sem levar ele.', vai:'c13_travessia'},
+    {texto:'Ir sozinh{o|a} explicar primeiro, sem levar ele.', vai:'c13_travessia'},
     {texto:'Levar direto pra Cerulean sem explicar nada.', vai:'c13_levou_pra_cerulean'},
     {texto:'Ir com o comboio da colônia.', vai:'c13_comboio', cond:d=>!!d.flags.avisou_a_colonia}
   ]
@@ -1217,7 +1217,7 @@ c13_o_que_ele_viu:{
     '"Isso eu já sabia."',
     '"Você sabia de ouvir. Eu sei de olhar." Ele aponta a linha reta entre a água e o gelo. "Olha o corte."',
     'Você olha.',
-    '"Gelo natural não faz linha reta, meu filho. Gelo natural faz dedo, faz língua, faz borda podre. Ele avança onde é mais fácil e para onde é mais difícil."',
+    '"Gelo natural não faz linha reta, {meu filho|minha filha}. Gelo natural faz dedo, faz língua, faz borda podre. Ele avança onde é mais fácil e para onde é mais difícil."',
     '"Isso aí tem cento e poucos metros de linha reta."',
     'Ele engata a marcha lenta pra manter o barco.',
     '"Isso aí é alguém segurando na mão."',
@@ -1243,7 +1243,7 @@ c13_se_soltar:{
     'Ele pensa com o queixo.',
     '"Aí vem tudo de uma vez."',
     '"Tudo o quê?"',
-    '"A água." Ele bate na borda do barco. "Tem duzentos quilômetros de mar preso aí, meu filho. Preso quer dizer: não tá circulando, não tá subindo, não tá descendo."',
+    '"A água." Ele bate na borda do barco. "Tem duzentos quilômetros de mar preso aí, {meu filho|minha filha}. Preso quer dizer: não tá circulando, não tá subindo, não tá descendo."',
     '"E quando soltar, ele vai voltar a fazer tudo isso ao mesmo tempo."',
     'Ele olha a linha reta.',
     '"Vai ter uma onda."',
@@ -1444,7 +1444,7 @@ c13_o_filhote:{
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} chega antes de você e para a um metro, e não encosta, e olha pra você esperando você decidir.`
-               : 'Você para a um metro e fica agachado olhando, e o filhote olha de volta sem nenhuma expectativa.';
+               : 'Você para a um metro e fica agachad{o|a} olhando, e o filhote olha de volta sem nenhuma expectativa.';
     }
   ],
   ef:{flag:'achou_o_filhote',
@@ -1466,7 +1466,7 @@ c13_salvou_o_filhote:{
     'Lá fora, o vento de dois graus parece morno.',
     d=>d.flags.conheceu_ryuzo
       ? 'Amos vê você sair da caverna com a jaqueta cheia e abre o casaco dele sem falar nada, e vocês fazem a travessia com o filhote entre os dois.'
-      : 'No barco você senta no chão, encostado no motor, que é a única fonte de calor de doze pés de comprimento.',
+      : 'No barco você senta no chão, encostad{o|a} no motor, que é a única fonte de calor de doze pés de comprimento.',
     'Ele começa a tremer na terceira hora, e tremer é a melhor notícia do dia, porque tremer custa energia e ele decidiu que valia a pena gastar.'
   ],
   ef:{flag:'salvou_o_filhote', moral:6,
@@ -1504,9 +1504,9 @@ c13_torpor_do_filhote:{
     'Você carrega ele os quarenta metros até onde estão os adultos e encosta ele no flanco do maior, que está a quatro batidas por minuto e que não reage a nada.',
     'O filhote se encaixa na curva do corpo do adulto do jeito que ele claramente já fez muitas vezes.',
     'E não dorme.',
-    'Você espera quarenta minutos agachado, com a lanterna apagada pra não atrapalhar, e ele fica acordado os quarenta minutos inteiros, tremendo.',
+    'Você espera quarenta minutos agachad{o|a}, com a lanterna apagada pra não atrapalhar, e ele fica acordado os quarenta minutos inteiros, tremendo.',
     'Torpor não é decisão. É uma coisa que o corpo faz ou não faz, e o corpo dele não aprendeu.',
-    'Você fica ali agachado no escuro entendendo que existe um problema que não tem solução elegante, e que você vai ter que escolher a deselegante.'
+    'Você fica ali agachad{o|a} no escuro entendendo que existe um problema que não tem solução elegante, e que você vai ter que escolher a deselegante.'
   ],
   ef:{flag:'tentou_o_torpor',
       registrar:'Tentou pôr o filhote em torpor junto dos adultos. Não funcionou.'},
@@ -1554,7 +1554,7 @@ c13_encostar_na_pedra:{
     d=>fala(d.jogador.nome, 'E?'),
     fala('Sr. Dane', 'E eu cheguei a uns vinte metros e resolvi que não.'),
     'Ele acelera de volta.',
-    fala('Sr. Dane', 'Eu não sei explicar melhor que isso, moço. Eu resolvi que não e eu não sei quem resolveu.', 'baixo')
+    fala('Sr. Dane', 'Eu não sei explicar melhor que isso, {moço|moça}. Eu resolvi que não e eu não sei quem resolveu.', 'baixo')
   ],
   ef:{flag:['viu_o_red','chegou_perto_da_pedra'],
       registrar:'Chegou a oitenta metros da pedra. O rapaz do casaco de montanha olhava para a direção da caverna.',
@@ -1840,8 +1840,8 @@ c13_os_tres:{
       presagio:'Ele está ensaiando. Dezenove semanas ensaiando.'},
   escolhas:[
     {texto:'Entrar na caverna com ele.', vai:'c13_devolveu'},
-    {texto:'Deixar o Célio entrar sozinho.', vai:'c13_goro_sozinho'},
-    {texto:'Entrar sozinho e deixar os dois no barco.', vai:'c13_devolveu'},
+    {texto:'Deixar o Célio entrar sozinh{o|a}.', vai:'c13_goro_sozinho'},
+    {texto:'Entrar sozinh{o|a} e deixar os dois no barco.', vai:'c13_devolveu'},
     {texto:'Avisar o cais antes de entrar.', vai:'c13_mandou_avisar'}
   ]
 },
@@ -1937,7 +1937,7 @@ c13_ficou_e_viu:{
     'Mas você fica e vê os dois se encontrarem no meio de uma câmara desabando, e o grande desce do pilar e não voa — ele desce andando, e chega devagar, e encosta a cabeça na cabeça do pequeno e fica assim.',
     'Fica assim uns quatro segundos com o teto caindo em volta e sem se importar com o teto caindo em volta.',
     'Depois ele pega o pequeno com as garras, com um cuidado absurdo pro tamanho dele, e sobe pelo furo do teto.',
-    'E você fica sozinho numa caverna desabando com água até o joelho.',
+    'E você fica sozinh{o|a} numa caverna desabando com água até o joelho.',
     'E aí o teto abre de vez.',
     'E o que te salva é uma coisa que você não controla: a coluna de gelo que cai na sua direção bate numa outra e desvia dois metros, e dois metros é tudo.'
   ],
@@ -2000,7 +2000,7 @@ c13_comboio:{
       presagio:'Ninguém queria ser o que ficou. É assim que cidade pequena funciona nos dois sentidos.'},
   escolhas:[
     {texto:'Entrar e devolver.', vai:'c13_devolveu'},
-    {texto:'Deixar o Célio entrar sozinho.', vai:'c13_goro_sozinho', cond:d=>!!d.flags.goro_vai || !!d.flags.ryuzo_e_goro_juntos},
+    {texto:'Deixar o Célio entrar sozinh{o|a}.', vai:'c13_goro_sozinho', cond:d=>!!d.flags.goro_vai || !!d.flags.ryuzo_e_goro_juntos},
     {texto:'Entrar com dois pra ajudar a carregar.', vai:'c13_devolveu'},
     {texto:'Subir na rocha alta primeiro e olhar.', vai:'c13_rocha_alta'}
   ]
@@ -2087,7 +2087,7 @@ c13_juntos:{
     '"E eu vou perder o barco."',
     '"Provavelmente."',
     'Ele ri. É a primeira vez que ele ri.',
-    '"Você é péssimo em convencer gente, moço."',
+    '"Você é péssimo em convencer gente, {moço|moça}."',
     '"Eu sei."',
     'Ele levanta da poltrona com dificuldade e pega a chave do cadeado no prego da parede.',
     '"Eu tenho dívida de motor de quarenta e dois mil e dezenove semanas de peixe cortado, que dá mais uns oito."',
@@ -2120,7 +2120,7 @@ c13_aguenta:{
     'Ele encosta a mão na parede da câmara fria.',
     '"Eu botei ele aqui a quatro graus porque eu achei que ele gostava de frio."',
     '"E ele gosta?"',
-    '"Eu não sei, moço. Eu sou pescador. Eu não sei nada."',
+    '"Eu não sei, {moço|moça}. Eu sou pescador. Eu não sei nada."',
     'Longo silêncio.',
     '"Ele parou de tremer no segundo dia. Eu achei que era bom sinal. Faz dezenove semanas que eu acho que era bom sinal."'
   ],
@@ -2142,9 +2142,9 @@ c13_voce_fez_certo:{
     '"Você fez certo."',
     'Ele não aceita.',
     '"Você não sabe disso."',
-    '"Eu sei uma parte. Você cortou a rede pra não virar o barco com um menino de quinze anos a bordo, e depois você pulou na água de madrugada com cinquenta e oito anos pra pegar de volta o que você tinha derrubado."',
+    '"Eu sei uma parte. Você cortou a rede pra não virar o barco com {um menino|uma menina} de quinze anos a bordo, e depois você pulou na água de madrugada com cinquenta e oito anos pra pegar de volta o que você tinha derrubado."',
     'Você aponta os baldes.',
-    '"E depois você levou peixe cortado três vezes por semana durante dezenove semanas com dinheiro que você não tem, pra uma coisa que não te agradece, escondido de uma cidade inteira."',
+    '"E depois você levou peixe cortado três vezes por semana durante dezenove semanas com dinheiro que você não tem, pra uma coisa que não te agradece, escondid{o|a} de uma cidade inteira."',
     'Ele não olha pra você.',
     '"Isso não apaga o arrasto."',
     '"Não apaga."',
@@ -2277,7 +2277,7 @@ c13_soltou_articuno:{
     'Ele sai e não te ataca.',
     'Ele olha em volta — pra água que já está subindo, pras colunas caídas, pro vazio da parede que está se partindo — e faz uma coisa que você não previu:',
     'ele volta pro pilar e recomeça.',
-    'O gelo volta a fechar, camada por camada, e leva quarenta minutos pra voltar ao que era, e ele faz os quarenta minutos com você ali parado olhando.',
+    'O gelo volta a fechar, camada por camada, e leva quarenta minutos pra voltar ao que era, e ele faz os quarenta minutos com você ali parad{o|a} olhando.',
     'No fim, tudo está exatamente como estava quando você chegou.',
     'Exatamente como estava.',
     'Dezenove camadas. Um vazio na parede. Um pilar. Uma vigília.',
@@ -2391,7 +2391,7 @@ c13_contou_pro_ryuzo_o_que_fez:{
     'E no fim ele fala uma coisa que você não estava preparado pra ouvir:',
     '"Meu filho tinha vinte e seis anos e morreu porque eu deixei ele sair sozinho numa quarta-feira de novembro com vento de sudeste."',
     'Ele corrige o rumo.',
-    '"Eu penso nisso todo dia faz quatro anos. Todo dia, meu filho, sem falta."',
+    '"Eu penso nisso todo dia faz quatro anos. Todo dia, {meu filho|minha filha}, sem falta."',
     '"E o que eu aprendi em quatro anos é que não adianta nada."',
     '"Não adianta nada?"',
     '"Pensar não adianta nada. Devolver adianta."',

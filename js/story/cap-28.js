@@ -20,14 +20,14 @@ cenas:{
 c28_ab_a_boca:{
   texto:[
     'A boca da caverna tem dois metros e meio de altura e quatro de largura e é perfeitamente regular, do jeito que boca de caverna não é.',
-    'Você fica parado na frente dela por um tempo que não dá pra medir.',
+    'Você fica parad{o|a} na frente dela por um tempo que não dá pra medir.',
     'Não sai vento. Você põe a mão na altura do peito, depois na altura do joelho, depois estende o braço pra dentro do escuro.',
     'Nada. O ar lá de dentro está tão parado quanto o de fora, e caverna não faz isso: caverna respira, porque a diferença de temperatura empurra o ar.',
     'Esta não empurra nada.',
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} está atrás de você, a uns quatro metros, e não vai chegar mais perto. Não é medo: é a distância que ${pron(p).ele} escolheu, e ${pron(p).ele} vai manter essa distância a descida inteira.`
-               : 'Você está sozinho na boca de uma coisa que não respira.';
+               : 'Você está sozinh{o|a} na boca de uma coisa que não respira.';
     },
     'Você entra.'
   ],
@@ -182,7 +182,7 @@ c23_o_chao:{
     'E, por cima delas, um par mais antigo, de bota maior, que desce e não volta.',
     d=>d.flags.procura_o_nogueira
       ? 'Você senta no chão e mede a pegada maior com a mão aberta, e confere com o que está escrito no bilhete que a Maren Kestrel te deu.'
-      : 'Você fica um tempo agachado olhando o par que não volta.'
+      : 'Você fica um tempo agachad{o|a} olhando o par que não volta.'
   ],
   ef:{flag:['viu_as_pegadas_na_rampa'], instabilidade:1,
       registrar:'Três pares descem duzentos metros e voltam. Um par mais antigo desce e não volta.'},
@@ -492,7 +492,7 @@ c23_nogueira_vamos:{
 
 c23_sentou_com_nogueira:{
   texto:[
-    'Você senta no chão do lado dele, encostado na mesma parede, e por uns dois minutos ninguém fala.',
+    'Você senta no chão do lado dele, encostad{o|a} na mesma parede, e por uns dois minutos ninguém fala.',
     '"Ele fala com você?", você acaba perguntando.',
     '"Todo dia." O Vernon ajeita o casaco dobrado. "De manhã e à noite. Eu sei que é de manhã e à noite porque ele me diz."',
     '"Sobre o quê?"',
@@ -532,10 +532,10 @@ c23_prometeu_voltar_aqui:{
   texto:[
     '"Eu volto. Eu volto toda semana, se for preciso."',
     'O Vernon olha para você com uma desconfiança profissional de dezenove anos de serviço.',
-    '"O senhor tem quantos anos?"',
+    '"{O senhor|A senhora} tem quantos anos?"',
     'Você diz.',
     'Ele solta um som que é quase riso.',
-    '"E o senhor está prometendo subir uma montanha toda semana pelo resto da vida."',
+    '"E {o senhor|a senhora} está prometendo subir uma montanha toda semana pelo resto da vida."',
     '"Estou."',
     'E da pedra, do outro lado da câmara, com uma coisa na voz que você não consegue nomear:',
     '"Ele está falando sério, Vernon."',
@@ -894,7 +894,7 @@ c23_perdeu:{
 c23_capturou:{
   texto:[
     'A bola fecha e a câmara fica escura de uma vez.',
-    'Você está sozinho embaixo de uma montanha com uma esfera na mão que pesa exatamente o mesmo que qualquer outra.',
+    'Você está sozinh{o|a} embaixo de uma montanha com uma esfera na mão que pesa exatamente o mesmo que qualquer outra.',
     'Lá fora, as duas Aves abandonam o posto ao mesmo tempo — não têm mais o que guardar.',
     'Elas não vão embora. Elas viram na sua direção.'
   ],
@@ -1015,7 +1015,7 @@ c23_final_quinta:{
     '"Então eu vou ter passado a vida perguntando a alguém que não responde." Ele olha você. "Eu sei exatamente o que isso é, e eu sei o que a outra opção faz com a pessoa."'
   ],
   final:{id:'quinta', titulo:'TODO DIA, PELO TEMPO QUE FOR', texto:[
-    'Você desce a montanha sozinho, sem a Unidade 01 e sem nenhuma prova de nada.',
+    'Você desce a montanha sozinh{o|a}, sem a Unidade 01 e sem nenhuma prova de nada.',
     'A Comissão aprova a quinta tentativa em março, como estava previsto, porque a quarta foi perdida.',
     'A quinta não vinga. A sexta também não. A sétima é cancelada por corte de orçamento, porque interesse de conselho também cansa.',
     'Quatro anos depois, uma equipe de campo da Liga fotografa duas figuras no alto do vale do norte, uma sentada e uma de pé.',
@@ -1154,12 +1154,12 @@ c23_final_o_decimo_segundo:{
     '"Ele tem dois anos de idade e três semanas de vida." Uma pausa. "Igual a mim. Eu tenho dois anos de idade e três semanas de vida, e eu passei os dois anos achando que os dois anos contavam."'
   ],
   final:{id:'decimo_segundo', titulo:'DOIS ANOS DE IDADE', texto:[
-    'Você desce a montanha sozinho. Os dois ficam.',
+    'Você desce a montanha sozinh{o|a}. Os dois ficam.',
     'A Liga te pergunta o que houve. Você entrega um relatório de uma página que diz a verdade e não diz onde.',
     'Eles aceitam, porque não têm outra opção, e porque a pessoa que assinou o relatório é você.',
     'Cinco anos depois, existe uma comunidade de sete indivíduos numa região de Kanto que não consta em mapa. Eles não incomodam ninguém. Ninguém os incomoda.',
     'Isso é fruto de um tratado que você não assinou, que não está escrito, e que funciona há cinco anos porque as duas partes decidiram que funcionaria.',
-    'Você é convidado uma vez por ano. Você vai todos os anos.',
+    'Você é convidad{o|a} uma vez por ano. Você vai todos os anos.',
     'Na última visita, o Décimo Segundo — que agora tem um nome que você não consegue pronunciar e chama de Doze mesmo assim — te perguntou como é envelhecer.',
     'Você respondeu com a verdade, que é: "Não sei ainda. Eu te conto."'
   ]}
@@ -1219,7 +1219,7 @@ c23_final_pena:{
     'Ele não vai pra cidade nenhuma. Vai pro mar, pro sudoeste, pra uma ilha que não entra em mapa nenhum porque não tem nada nela.',
     'Pescadores de Fuchsia começam a relatar duas luzes sobre a ilha sem nome, não uma. Ninguém acredita neles, como sempre.',
     'O Sr. Tanner morre aos oitenta e três anos tendo visto as duas luzes juntas quatro vezes, e tendo contado pra todo mundo, e ninguém tendo acreditado, e ele não se importando nem um pouco.',
-    'Você vai ao enterro. É o único que vai de fora de Fuchsia.',
+    'Você vai ao enterro. É {o único|a única} que vai de fora de Fuchsia.',
     'No caixão, na mão dele, tem uma pena que não é de Pidgey e que ninguém da família soube explicar de onde veio.'
   ]}
 },
@@ -1564,11 +1564,11 @@ c23_final_a_pagina:{
     'Em Pewter, na rua principal, tem uma menina de onze anos sentada no meio-fio com um caderno de colunas.',
     'Ela te vê. Não sorri. Abre na página PROMETEU, procura o seu nome, e escreve do lado, com régua: VOLTOU.',
     'Depois fecha o caderno.',
-    '"Você é o primeiro."',
+    '"Você é {o primeiro|a primeira}."',
     '"Da página?"',
     '"Da página."',
     'Ela olha a rua.',
-    '"Eu botei quatro nome nessa página nesses meses. Você é o primeiro que volta."',
+    '"Eu botei quatro nome nessa página nesses meses. Você é {o primeiro|a primeira} que volta."',
     'Você senta no meio-fio ao lado dela e vocês dois ficam ali olhando uma rua de cidade de pedra.',
     'Muito longe, ao norte, numa caverna, alguém decidiu continuar existindo porque uma criança tinha um caderno.',
     'Ninguém em Kanto jamais vai saber disso, e as duas colunas continuam sendo atualizadas até hoje.'
@@ -1614,7 +1614,7 @@ c23_final_a_troca:{
     'Não vira militância, não vira discurso, não vira nada que dê pra escrever num cartaz. Você só para, e quando alguém oferece você diz que não, e quando perguntam por quê você dá de ombros e muda de assunto, porque a explicação envolve uma caverna e você não vai contar da caverna.',
     'Em Cerulean tem uma professora de natação que até hoje não entende por que você recusou um Seel.',
     'Em Pewter tem um homem da pedreira que conta pra todo mundo que já ofereceu um Machoke pra você e que você falou que não.',
-    'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por um garoto de quinze anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
+    'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por {um garoto|uma garota} de quinze anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
     'Foi a coisa mais barata que você fez na vida. Não custou nada.',
     'Isso não desconta.'
   ]}
@@ -1652,11 +1652,11 @@ c23_final_silencio:{
   ],
   final:{id:'silencio', titulo:'CABEÇA NÃO FAZ SILÊNCIO', texto:[
     'Você não conta pra ninguém.',
-    'Não porque é segredo. Porque não tem o que contar: você entrou numa caverna, sentou no chão e ficou quieto por quase uma hora com uma criatura de dois anos de idade que sabe tudo.',
+    'Não porque é segredo. Porque não tem o que contar: você entrou numa caverna, sentou no chão e ficou quiet{o|a} por quase uma hora com uma criatura de dois anos de idade que sabe tudo.',
     'A Liga pergunta. Você diz que não achou nada.',
     'A Dra. Cordell pergunta. Você diz que não achou nada, e ela olha na sua cara e sabe que você está mentindo, e não insiste, porque ela é ela.',
     'E toda vez, pelo resto da sua vida, que você estiver num lugar barulhento demais — num salão de navio, num pátio de porto, numa sala com mesa comprida e gente educada demais —, você vai conseguir fazer uma coisa que quase ninguém consegue.',
-    'Você vai conseguir ficar quieto por dentro.',
+    'Você vai conseguir ficar quiet{o|a} por dentro.',
     'Foi a única coisa que ele te deu, e ele não deu de propósito, e é a mais valiosa.'
   ]}
 },
@@ -1971,7 +1971,7 @@ c23_final_nao_precisa:{
     'A escola tem uma sala nova, um muro pintado e a mesma professora, que está mais velha e que te reconhece antes de você chegar no portão.',
     'Ela não pergunta onde você esteve, nem o que você fez, nem se você virou campeão.',
     'Ela pergunta se você comeu.',
-    'Você fica na sala dela até a última aula, sentado numa carteira que é pequena demais para você agora, ouvindo ela ensinar sílaba a vinte e três crianças de sete anos.',
+    'Você fica na sala dela até a última aula, sentad{o|a} numa carteira que é pequena demais para você agora, ouvindo ela ensinar sílaba a vinte e três crianças de sete anos.',
     'Uma delas, no fim, pergunta se você é treinador.',
     'Você diz que é, e ela pergunta o que tem de mais legal em ser, e você pensa muito antes de responder, e a resposta que sai não é a que você esperava:',
     '"Conhecer gente."'

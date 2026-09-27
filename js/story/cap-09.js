@@ -146,7 +146,7 @@ c9_ab_quem_paga:{
     fala('o homem de polo azul', 'Vinte e duas lojas. A gente acompanha quem tá na lista.'),
     d=>fala(d.jogador.nome, 'Que lista?'),
     fala('o homem de polo azul', 'A lista da associação. Chega por fax toda segunda.'),
-    fala('o homem de polo azul', 'Não é lista de bandido, moço. É lista de quem a gente acompanha.'),
+    fala('o homem de polo azul', 'Não é lista de bandido, {moço|moça}. É lista de quem a gente acompanha.'),
     'Ele diz isso como se as duas coisas fossem diferentes, e para ele são.'
   ],
   ef:{flag:'a_lista_da_associacao',
@@ -202,7 +202,7 @@ c9_ab_de_cracha:{
       const c = Cargos.principal();
       return `A Prefeitura de Celadon tem um balcão de protocolo na entrada da cidade, e o rapaz do balcão vê o seu crachá de ${c ? c.nome : 'serviço'} e faz uma coisa que ninguém nunca fez com você: ele levanta.`;
     },
-    fala('o rapaz do protocolo', 'Serviço? O senhor quer dar entrada em alguma coisa?'),
+    fala('o rapaz do protocolo', 'Serviço? {O senhor|A senhora} quer dar entrada em alguma coisa?'),
     'Ele te chama de senhor. Você tem quinze anos.',
     d=>fala(d.jogador.nome, 'Eu não sei. O que dá pra dar entrada aqui?'),
     fala('o rapaz do protocolo', 'Tudo. Licença, denúncia, pedido de vista, requerimento de informação.'),
@@ -359,7 +359,7 @@ c9_quem_emite:{
     'Ele encolhe os ombros.',
     '"E destinar às vezes é leilão. Leilão gera nota. Nota é documentação."',
     'Ele volta a arrumar o balcão.',
-    '"É tudo muito certinho, moço. É esse o ponto."'
+    '"É tudo muito certinho, {moço|moça}. É esse o ponto."'
   ],
   ef:{flag:['leilao_de_custodia','sabe_da_comissao'],
       registrar:'Pokémon recolhidos pela Comissão são destinados a leilão, e o leilão gera a nota que legaliza a venda.',
@@ -462,7 +462,7 @@ c9_fotografou_certificado:{
 
 c9_anotou_certificado:{
   texto:[
-    'Você tira o caderno e copia o certificado inteiro, palavra por palavra, em pé na loja, apoiado no balcão de vidro.',
+    'Você tira o caderno e copia o certificado inteiro, palavra por palavra, em pé na loja, apoiad{o|a} no balcão de vidro.',
     'Leva dezoito minutos. O lojista atende dois clientes nesse tempo e nenhum dos dois repara em você.',
     'No fim você tem: o número do credenciamento, a data de emissão, a validade, o órgão emissor por extenso e o nome de quem assinou.',
     'O nome de quem assinou é H. Colman.'
@@ -569,7 +569,7 @@ c9_como_viu:{
       presagio:'Quem precisa pôr preço olha melhor que quem ama. Isso é a coisa mais desconfortável que Celadon vai te ensinar.'},
   escolhas:[
     {texto:'"Não vou vender."', vai:'c9_nao_vou_vender'},
-    {texto:'"Obrigado." E sair.', vai:'c9_cidade2'},
+    {texto:'"{Obrigado|Obrigada}." E sair.', vai:'c9_cidade2'},
     {texto:'"Quem emite a documentação?"', vai:'c9_quem_emite'},
     {texto:'Procurar os caminhões.', vai:'c9_procurar'}
   ]
@@ -1321,7 +1321,7 @@ c9_sentou_no_hospital:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Passou duas horas numa cadeira de plástico'},
       hp:-1, causa:'Duas horas numa cadeira de hospital',
-      npc:{nome:'Elias', opiniao:7, memoria:'Você passou duas horas sentado na cadeira do leito dele sem precisar.'},
+      npc:{nome:'Elias', opiniao:7, memoria:'Você passou duas horas sentad{o|a} na cadeira do leito dele sem precisar.'},
       flag:'ficou_no_hospital',
       presagio:'Em hospital ninguém pergunta quem é o que está sentado na cadeira. Tem gente que passa a vida inteira sem nunca ter ninguém na cadeira.'},
   escolhas:[
@@ -1485,7 +1485,7 @@ c9_os_dois_juntos:{
       registrar:'A mesma associação tem Colman na presidência e Hollis no conselho técnico. Quatro páginas impressas.',
       presagio:'Ela imprimiu sem cobrar. Guarda o rosto dela; você não vai poder protegê-la.'},
   escolhas:[
-    {texto:'"Obrigado." E sair.', vai:'c9_saiu_da_junta'},
+    {texto:'"{Obrigado|Obrigada}." E sair.', vai:'c9_saiu_da_junta'},
     {texto:'"A senhora pode ter problema por isso?"', vai:'c9_problema_pra_ela'},
     {texto:'Pedir mais.', vai:'c9_certidao_quatro', cond:d=>d.jogador.dinheiro>=320, ef:{dinheiro:-320}},
     {texto:'"Busca o Fabre também."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan}
@@ -1510,7 +1510,7 @@ c9_problema_pra_ela:{
       registrar:'Uma mulher de jaleco levou trinta e duas páginas dessa mesma junta ano retrasado.',
       presagio:'Trinta e duas páginas, e ela não voltou mais. Pergunta pra ela por quê.'},
   escolhas:[
-    {texto:'"Obrigado." E sair.', vai:'c9_saiu_da_junta'},
+    {texto:'"{Obrigado|Obrigada}." E sair.', vai:'c9_saiu_da_junta'},
     {texto:'Pedir as mesmas trinta e duas páginas. (320 ₽)', vai:'c9_certidao_quatro',
      cond:d=>d.jogador.dinheiro>=320, ef:{dinheiro:-320}},
     {texto:'"Busca o Fabre também."', vai:'c9_busca_adnan', cond:d=>!!d.flags.sabe_do_adnan}
@@ -1600,7 +1600,7 @@ c9_leu_as_certidoes:{
       hp:-2, causa:'Três horas e quarenta lendo certidão num banco de praça',
       rep:{eixo:'bom',delta:3,motivo:'Leu trinta e duas páginas até achar a linha'},
       registrar:'Página 27: a empresa registrou oficialmente a guarda de espécimes vivos em custódia administrativa.',
-      presagio:'Está publicado no diário oficial. Qualquer um podia ter lido. Você foi o primeiro.'},
+      presagio:'Está publicado no diário oficial. Qualquer um podia ter lido. Você foi {o primeiro|a primeira}.'},
   escolhas:[
     {texto:'Ir ao depósito.', vai:'c9_deposito'},
     {texto:'Ir ao cassino com isso na mão.', vai:'c9_cassino'},
@@ -1651,7 +1651,7 @@ c9_copiou_os_onze_da_junta:{
 
 c9_recuou_na_junta:{
   texto:[
-    '"Deixa. Obrigado."',
+    '"Deixa. {Obrigado|Obrigada}."',
     'Ela fecha a tela sem comentar.',
     'Você desce três andares a pé, num prédio público com elevador quebrado, e sai na rua, e fica na calçada por um tempo.',
     'Você tinha onze nomes na tela e fechou a tela.',
@@ -1685,7 +1685,7 @@ c9_shopping:{
   texto:[
     'O shopping de Celadon tem sete andares e um vão central que vai do térreo até a claraboia.',
     'Da mureta do sexto andar dá pra ver todo mundo lá embaixo, pequeno, andando devagar em volta de um chafariz.',
-    'O quarto andar inteiro é item de treinador. Você fica quinze minutos parado só olhando prateleira, e não é vergonha nenhuma: é a maior concentração de coisa útil que existe em Kanto.',
+    'O quarto andar inteiro é item de treinador. Você fica quinze minutos parad{o|a} só olhando prateleira, e não é vergonha nenhuma: é a maior concentração de coisa útil que existe em Kanto.',
     'No sétimo tem estufa de vidro, e da estufa sai verde por cima do teto.',
     'E no elevador de serviço tem um botão sem número, abaixo do subsolo.'
   ],
@@ -2137,7 +2137,7 @@ c9_achou_deposito:{
     'É um galpão de alvenaria pintado de cinza, com portão de enrolar azul, câmera nova no canto e uma placa de esmalte parafusada na parede ao lado da porta social:',
     '**ARMAZÉM GERAL 7 — CUSTÓDIA E DEPÓSITO — ALVARÁ MUNICIPAL 3.318**',
     'Tem alvará. Tem número. Tem placa de esmalte, dessas que custam caro e duram vinte anos.',
-    'Você fica parado na calçada de frente pra ele durante um tempo difícil de medir, e a coisa que você pensa não é "achei". É: então é assim.',
+    'Você fica parad{o|a} na calçada de frente pra ele durante um tempo difícil de medir, e a coisa que você pensa não é "achei". É: então é assim.',
     'Dá pra ouvir de fora o gerador. E, por baixo do gerador, um som contínuo que não é máquina.'
   ],
   ef:{flag:['sabe_do_deposito','viu_o_alvara'],
@@ -2223,8 +2223,8 @@ c9_cassino:{
     'A gerente do salão é uma mulher de uns quarenta anos, terno cinza, sem joia nenhuma, que anda pelo cassino como se fosse a sala de casa dela. Porque é.',
     'Ela para na sua frente antes de você decidir se quer falar com ela.',
     d=>{
-      if (d.flags.trabalhou_rocket) return '"Você é o que carregou caixa no Monte da Lua." Ela acende um cigarro dentro de um lugar onde não se pode fumar. "Eu lembro de folha de pagamento."';
-      if (d.flags.destruiu_operacao || d.flags.expos_operacao) return '"Você é o que estragou o Monte da Lua." Ela acende um cigarro dentro de um lugar onde não se pode fumar. "Custou noventa mil e quatro meses."';
+      if (d.flags.trabalhou_rocket) return '"Você é {o|a} que carregou caixa no Monte da Lua." Ela acende um cigarro dentro de um lugar onde não se pode fumar. "Eu lembro de folha de pagamento."';
+      if (d.flags.destruiu_operacao || d.flags.expos_operacao) return '"Você é {o|a} que estragou o Monte da Lua." Ela acende um cigarro dentro de um lugar onde não se pode fumar. "Custou noventa mil e quatro meses."';
       return '"Você é o de Pewter." Ela acende um cigarro dentro de um lugar onde não se pode fumar. "Ou o do Monte da Lua. As histórias se misturam."';
     }
   ],
@@ -2313,7 +2313,7 @@ c9_proposta_terceira:{
       if (d.flags.trabalhou_rocket) return '"E você já carregou caixa pra mim uma vez, no Monte da Lua. Você só não sabia que era pra mim. Não fica com essa cara — todo mundo carregou caixa pra alguém."';
       if (d.flags.destruiu_operacao || d.flags.expos_operacao) return '"E você já me custou uma operação inteira no Monte da Lua. Eu sei exatamente quem você é. Estou falando com você mesmo assim — isso devia te dizer alguma coisa sobre o tamanho disso aqui."';
       if (d.flags.carregou_os_seis || d.flags.esvaziou_deposito) return '"E você tem histórico de carregar bicho no colo. Isso é caráter, e caráter é caro, e eu pago caro."';
-      return '"E você chegou até aqui sozinho, com quinze anos, com uma mochila e um bloco de anotação. Isso é currículo."';
+      return '"E você chegou até aqui sozinh{o|a}, com quinze anos, com uma mochila e um bloco de anotação. Isso é currículo."';
     },
     '"Eu tenho três coisas pra te oferecer. Escolhe uma, ou escolhe nenhuma e a gente se despede sem drama. Eu não ameaço criança. Dá muito trabalho e não resolve."'
   ],
@@ -2335,7 +2335,7 @@ c9_via_mercenario:{
     '"Trabalhar pra você."',
     'Ela não comemora. Empurra um envelope pardo pela mesa, com dois dedos, como quem paga uma conta de luz.',
     '"Regra única: você não pergunta o que tem na caixa, e eu não pergunto o que você faz com o dinheiro."',
-    '"Você vai carregar em rota, porque treinador em rota é invisível — ninguém para um moleque de mochila entre duas cidades. Você vai ter proteção nas cidades: se um guarda te encostar em Celadon, Fuchsia ou Saffron, você diz o nome do Palace e ele desencosta."',
+    '"Você vai carregar em rota, porque treinador em rota é invisível — ninguém para {um moleque|uma moleca} de mochila entre duas cidades. Você vai ter proteção nas cidades: se um guarda te encostar em Celadon, Fuchsia ou Saffron, você diz o nome do Palace e ele desencosta."',
     '"E se a Liga te parar de verdade, você me liga antes de abrir a boca. Antes. Não depois de explicar metade."',
     'O envelope é grosso. O primeiro sempre é.',
     'Você pega. E a coisa que te assusta não é pegar. É como é fácil.'
@@ -2481,7 +2481,7 @@ c9_o_que_e_o_pregao:{
   ],
   ef:{flag:['sabe_que_e_publico','viu_o_pregao'],
       rep:{eixo:'bom',delta:2,motivo:'Chegou ao leilão antes de chegar a quem o opera'},
-      npc:{nome:'A Terceira', opiniao:2, memoria:'Você achou o pregão sozinho antes de falar com ela.'},
+      npc:{nome:'A Terceira', opiniao:2, memoria:'Você achou o pregão sozinh{o|a} antes de falar com ela.'},
       registrar:'O pregão é quinzenal, terça, 19h, com edital em diário oficial.',
       presagio:'Publicado em letra que ninguém aguenta. É assim que uma coisa fica escondida à vista.'},
   escolhas:[
@@ -2498,10 +2498,10 @@ c9_nao_tenho_credencial:{
   texto:[
     '"Não tenho."',
     'A mulher da prancheta — o crachá diz **AUDITORA M. RIDGE · COMISSÃO DE BEM-ESTAR** — não se altera nem meio grau.',
-    '"Então o senhor não pode dar lance." Ela olha a sua idade. "E o senhor também não poderia, de qualquer forma."',
+    '"Então {o senhor|a senhora} não pode dar lance." Ela olha a sua idade. "E {o senhor|a senhora} também não poderia, de qualquer forma."',
     'Mas ela não te tira. Ela dá um passo de lado e abre espaço na parede dos fundos.',
     '"Assistir é público. Sessão pública é pública."',
-    'E é isso: você fica encostado na parede dos fundos de um leilão que você levou um capítulo inteiro pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
+    'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou um capítulo inteiro pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
     'O leiloeiro anuncia o lote 38. Uma senhora de tailleur levanta a plaquinha. Batido.',
     'Lote 39. Batido. Lote 40. Retirado por decisão judicial.',
     'Lote 41.'
@@ -2522,12 +2522,12 @@ c9_nao_tenho_credencial:{
 c9_o_lote_41:{
   texto:[
     '"O que é o lote 41?"',
-    'A Auditora Brill consulta a prancheta sem pressa, e responde como se você fosse um adulto.',
+    'A Auditora Brill consulta a prancheta sem pressa, e responde como se você fosse {um adulto|uma adulta}.',
     '"Lote 41. Espécime canino, macho, nível estimado vinte e oito. Procedência: recolhimento administrativo, processo quarenta e quatro mil duzentos e sete."',
     '"Recolhido em Lavender, dezembro. Tutor notificado por edital em janeiro. Prazo de manifestação: sessenta dias. Não houve manifestação."',
     '"Portanto: alienação."',
     'Ela vira a folha e você vê, de relance, que atrás tem mais quarenta linhas iguais.',
-    '"O senhor tem alguma informação sobre o processo quarenta e quatro mil duzentos e sete?"',
+    '"{O senhor|A senhora} tem alguma informação sobre o processo quarenta e quatro mil duzentos e sete?"',
     'E a pergunta é honesta. Ela está realmente perguntando.'
   ],
   ef:{flag:['sabe_do_lote_41','numero_da_gaveta'],
@@ -2552,7 +2552,7 @@ c9_prado_conversa:{
     '"E quem assina o recolhimento não é a Comissão inteira. É o fiscal da área. Em Kanto central, de oitenta e nove pra cá, quase tudo tem a mesma assinatura."',
     d=>d.flags.sabe_do_renno ? '"Você já sabe o nome." Ela não diz. Você já sabe o nome.' :
        'Ela não diz o nome. Escreve num canto de papel, dobra, e te entrega.',
-    '"Se o tutor do 41 está vivo e internado, isso muda tudo. Mas eu não posso suspender uma alienação porque um menino de quinze anos me contou uma história no corredor."',
+    '"Se o tutor do 41 está vivo e internado, isso muda tudo. Mas eu não posso suspender uma alienação porque {um menino|uma menina} de quinze anos me contou uma história no corredor."',
     '"Eu posso suspender se ele escrever. Com a letra dele, e com o número do processo, e com a data."'
   ],
   ef:{flag:['prado_te_ouviu','sabe_do_renno','prado_quer_documento'],
@@ -2609,7 +2609,7 @@ c9_arrematou_o_41:{
   texto:[
     '"Eu quero dar lance no 41."',
     'A Auditora Brill explica, sem ironia nenhuma, que menor não arremata. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você porque você tem quinze anos.',
-    'E aí ela diz a coisa que resolve: "Mas o senhor pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
+    'E aí ela diz a coisa que resolve: "Mas {o senhor|a senhora} pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
     '"Quanto?"',
     '"Avaliação do 41: doze mil."',
     'Doze mil por um Growlithe que alguém perdeu porque não leu um jornal que ninguém lê.'
@@ -2659,7 +2659,7 @@ c9_blefe:{
 c9_blefe_credencial_ok:{
   texto:[
     'Funciona, e funciona pelo pior motivo possível: ela acredita que existe um adulto.',
-    '"Ah. Então o senhor aguarda aqui na lateral que eu confiro quando ele subir."',
+    '"Ah. Então {o senhor|a senhora} aguarda aqui na lateral que eu confiro quando ele subir."',
     'Ela volta pra frente da sala e te deixa em pé na lateral, com vista pro leiloeiro, pra plateia e pra parede projetada.',
     'Você fica quarenta minutos vendo trinta e duas pessoas adultas comprarem seres vivos por número de processo, com plaquinha numerada, em ordem crescente.',
     'Lote 38, 39, 40, 41, 42.',
@@ -2683,7 +2683,7 @@ c9_blefe_credencial_meio:{
     'Você diz um nome. Qualquer nome. Um nome de pessoa que não existe, inventado com a boca seca em três quartos de segundo.',
     'Ela procura na lista, não acha, e faz a cara de quem já entendeu tudo e está decidindo o que fazer com isso.',
     'Decide o seguinte: te leva pelo cotovelo até a parede dos fundos e te encosta lá.',
-    '"O senhor assiste. Sessão pública é pública." Voz baixa. "E depois o senhor e eu vamos conversar no corredor."',
+    '"{O senhor|A senhora} assiste. Sessão pública é pública." Voz baixa. "E depois {o senhor|a senhora} e eu vamos conversar no corredor."',
     'Ela volta pra frente da sala.',
     'Você passa os quarenta minutos seguintes sabendo que tem uma conversa marcada.'
   ],
@@ -2727,7 +2727,7 @@ c9_gritou_no_pregao:{
     'Trinta e duas pessoas olham pra você com uma paciência educada de quem já ouviu isso, e depois voltam pro leiloeiro, porque o pregão continua e o lote 42 está sendo anunciado.',
     'Duas pessoas te dão razão em voz baixa. Uma delas dá o lance no 42.',
     'A segurança te tira pelo corredor de azulejo, e no caminho a Auditora Brill te acompanha até a porta e diz, sem olhar pra você:',
-    '"Eu presido vinte e seis sessões por ano. O senhor é o quarto a fazer isso." Pausa. "E o primeiro que sabia o número do processo."'
+    '"Eu presido vinte e seis sessões por ano. {O senhor|A senhora} é {o quarto|a quarta} a fazer isso." Pausa. "E o primeiro que sabia o número do processo."'
   ],
   ef:{flag:['gritou_no_pregao','conheceu_prado','sabe_do_lote_41'],
       rep:{eixo:'bom',delta:2,motivo:'Gritou numa sala onde todo mundo achava normal'},
@@ -2880,7 +2880,7 @@ c9_verdade_no_armazem:{
     'O mais velho — o que não estava com a bola na mão — coça a nuca e faz uma pergunta que você não esperava:',
     '"Você é da família?"',
     'E a pergunta é honesta. Ele acha normal que apareça alguém procurando um número, porque já aconteceu antes.',
-    '"Olha, garoto." Ele baixa a mão do outro, a que tem a bola. "Aqui é custódia. A gente guarda, alimenta e entrega. Se tem gente da família, tem que ir na Comissão, não aqui."',
+    '"Olha, {garoto|garota}." Ele baixa a mão do outro, a que tem a bola. "Aqui é custódia. A gente guarda, alimenta e entrega. Se tem gente da família, tem que ir na Comissão, não aqui."',
     '"Se você entrar e tirar, eu perco o emprego e o bicho volta, porque ele tem número."',
     'Ele diz isso sem raiva. É a coisa mais difícil de ouvir da noite inteira.'
   ],
@@ -3064,7 +3064,7 @@ c9_carregou_seis:{
     'Você fica.',
     'Faz seis viagens até a esquina, uma por vez, com uma manta de mudança encontrada no chão do armazém.',
     'Na primeira viagem você ainda tem pressa. Na terceira você já entendeu que pressa não ajuda em nada e começa a fazer direito: apoiar a cabeça, não dobrar a pata, ir devagar.',
-    'Na quarta viagem os funcionários já foram embora e você está sozinho num armazém aberto às duas da manhã com o gerador ligado e o portão levantado.',
+    'Na quarta viagem os funcionários já foram embora e você está sozinh{o|a} num armazém aberto às duas da manhã com o gerador ligado e o portão levantado.',
     'Na sexta, chega a polícia.',
     'Eles te encontram sentado no meio-fio com um Lickitung desidratado no colo, molhando o pescoço dele com água de garrafa, do jeito errado, porque ninguém nunca te ensinou o jeito certo.',
     'O oficial mais novo pergunta o que aconteceu.',
@@ -3074,7 +3074,7 @@ c9_carregou_seis:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou até o fim, carregando quem não podia andar'},
       hp:-5, causa:'Exaustão em Celadon',
       flag:'carregou_os_seis',
-      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você {o} carregou numa manta de mudança, sozinho, às duas da manhã em Celadon.'}},
+      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você {o} carregou numa manta de mudança, sozinh{o|a}, às duas da manhã em Celadon.'}},
       registrar:'Carregou os seis que não andavam. A polícia te encontrou no meio-fio.',
       presagio:'"Aconteceu isso aí." Ele viu as plaquetas e não fez nenhuma pergunta sobre elas.'},
   escolhas:[
@@ -3115,7 +3115,7 @@ c9_incendio:{
       flag:['incendiou_deposito','tem_sangue_nas_maos'], instabilidade:2, moral:-25,
       executar:d=>{ Estado.dados.liga.avisos++; return [{tipo:'liga', texto:'A Liga Pokémon abriu inquérito sobre o incêndio de Celadon.'}]; },
       registrar:'Incendiou o armazém de Celadon com seis Pokémon feridos dentro.',
-      presagio:'Você lembra depois. Não durante. Anota isso sobre você mesmo.'},
+      presagio:'Você lembra depois. Não durante. Anota isso sobre você mesm{o|a}.'},
   escolhas:[
     {texto:'Ir embora.', vai:'c9_fim'},
     {texto:'Ficar e assistir.', vai:'c9_fim', ef:{flag:'assistiu_o_incendio', moral:-10}},
@@ -3213,7 +3213,7 @@ c9_perdeu_deposito:{
     'Você perde.',
     'Eles não te machucam muito — machucar dá processo, e o mais velho repete isso em voz alta duas vezes pros outros dois, como quem lembra de procedimento.',
     'Te colocam na rua, com a sua mochila inteira, e fecham o portão azul.',
-    'Às três da manhã, o caminhão sai carregado. Você vê da esquina, sentado numa caçamba, com a perna doendo.',
+    'Às três da manhã, o caminhão sai carregado. Você vê da esquina, sentad{o|a} numa caçamba, com a perna doendo.',
     'Quarenta e uma gaiolas passam por você a quarenta quilômetros por hora.'
   ],
   ef:{hp:-7, causa:'Derrota no armazém de Celadon', flag:'falhou_deposito', instabilidade:1, moral:-12,
@@ -3249,7 +3249,7 @@ c9_seguiu_caminhao:{
 c9_tomou:{
   texto:[
     'Você não abre as gaiolas.',
-    'Você chama os dois funcionários que ainda estão ali e diz — com uma calma que assusta você mesmo — que a partir de hoje eles se reportam a você, que o pagamento continua igual, que ninguém perde emprego, e que a carga de amanhã sai no horário.',
+    'Você chama os dois funcionários que ainda estão ali e diz — com uma calma que assusta você mesm{o|a} — que a partir de hoje eles se reportam a você, que o pagamento continua igual, que ninguém perde emprego, e que a carga de amanhã sai no horário.',
     'Eles olham um pro outro.',
     'Um deles pergunta da Terceira.',
     '"A Terceira sabe", você diz. E tecnicamente é verdade.',
@@ -3365,7 +3365,7 @@ c9_liga_deposito:{
       registrar:'A Liga foi ao armazém, não pôde entrar, e o caminhão saiu vinte e nove minutos depois.',
       presagio:'Vinte e nove minutos. Eles esperaram a viatura virar a esquina.'},
   escolhas:[
-    {texto:'Entrar sozinho agora, com raiva.', vai:'c9_frente',
+    {texto:'Entrar sozinh{o|a} agora, com raiva.', vai:'c9_frente',
      ef:{executar:d=>{ if(Historia.via()==='neutro') Historia.definirVia('heroi','perdeu a fé no caminho oficial'); return []; }}},
     {texto:'Seguir o caminhão.', vai:'c9_seguiu_caminhao'},
     {texto:'Ir ao cassino e olhar na cara dela.', vai:'c9_cassino'},

@@ -97,7 +97,7 @@ c21_ab_ninguem_sabia:{
   texto:[
     d=>`Você desce do ônibus na entrada de ${d.jogador.cidade} às quatro e vinte da tarde e não acontece absolutamente nada.`,
     'O ponto tem três pessoas esperando o de volta. Uma delas te olha por um segundo e meio e volta a olhar a estrada.',
-    'Você fica parado com a mochila no ombro esperando alguma coisa acontecer e nada acontece, e leva uns quarenta segundos pra você entender que isso é a coisa certa e que você é que estava errado.',
+    'Você fica parad{o|a} com a mochila no ombro esperando alguma coisa acontecer e nada acontece, e leva uns quarenta segundos pra você entender que isso é a coisa certa e que você é que estava errad{o|a}.',
     'Ninguém sabia que você vinha porque você não avisou.',
     d=>{
       const p = d.time[0];
@@ -186,7 +186,7 @@ c21_a_caixa_de_volta:{
     'Você não tem a caixa. Você perdeu a caixa em algum lugar entre Pewter e Cerulean, e você sabe disso há meses.',
     'Você compra uma caixa de ventilador no armazém por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.',
     fala('Sra. Perla', 'Essa não é a minha caixa.', 'frio', 'Ela olha por dois segundos.'),
-    fala('Sra. Perla', '...mas é melhor que a minha. Obrigada, menino.', 'riso')
+    fala('Sra. Perla', '...mas é melhor que a minha. Obrigada, {menino|menina}.', 'riso')
   ],
   ef:{dinheiro:-400, moral:3,
       npc:{nome:'Sra. Perla', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
@@ -277,7 +277,7 @@ c21_pagou_a_janela:{
     'Ele olha o dinheiro. Não pega.',
     fala('Sr. Ives', 'A janela foi vinte pokedólares em 1989 e eu consertei no mesmo dia com um vidro que eu já tinha.'),
     fala('Sr. Ives', 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
-    fala('Sr. Ives', 'Pega o dinheiro de volta e compra Potion, menino. Todo mundo compra bola demais.', 'riso')
+    fala('Sr. Ives', 'Pega o dinheiro de volta e compra Potion, {menino|menina}. Todo mundo compra bola demais.', 'riso')
   ],
   ef:{limpaFlag:'divida_pendente', moral:5,
       npc:{nome:'Sr. Ives', opiniao:5, memoria:'Você voltou pra pagar a janela. Ele nunca quis o dinheiro.'},
@@ -292,7 +292,7 @@ c21_pagou_a_janela:{
 c21_insistiu_ushio:{
   texto:[
     'Você deixa o dinheiro no degrau e levanta, e ele deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.',
-    fala('Sr. Ives', 'Você é teimoso igual a quem te criou.', 'riso'),
+    fala('Sr. Ives', 'Você é teimos{o|a} igual a quem te criou.', 'riso'),
     fala('Sr. Ives', 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
   ],
   ef:{dinheiro:-2000, moral:3,
@@ -362,7 +362,7 @@ c21_nao_vai_estar:{
     d=>fala(d.jogador.nome, 'Não vou estar. Me chamaram pro Planalto.'),
     'Ele assente devagar, e não tem decepção na cara dele, o que é pior do que se tivesse.',
     fala('Sr. Ives', 'Eu sei. Eu perguntei mesmo assim.'),
-    fala('Sr. Ives', 'Perguntar é de graça, menino. E de vez em quando a resposta é sim.')
+    fala('Sr. Ives', 'Perguntar é de graça, {menino|menina}. E de vez em quando a resposta é sim.')
   ],
   ef:{moral:2,
       npc:{nome:'Sr. Ives', opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'},
@@ -470,7 +470,7 @@ c21_orelhao:{
   texto:[
     'Você está a trinta metros da sua própria porta e liga do orelhão da esquina, o que não faz sentido nenhum e faz todo sentido.',
     'Dois toques.',
-    d=>fala(nomeCasa(), 'Alô?', null, 'A voz está sem fôlego. Ela correu pro telefone.'),
+    d=>fala(nomeCasa(), 'Alô?', null, 'A voz está sem fôlego. {casa:Ela|Ele} correu pro telefone.'),
     d=>fala(d.jogador.nome, 'Oi. Sou eu.'),
     'Silêncio do outro lado.',
     d=>fala(nomeCasa(), 'Você tá onde?', 'baixo'),
@@ -481,7 +481,7 @@ c21_orelhao:{
       rep:{eixo:'bom',delta:1,motivo:'Ligou da esquina em vez de chegar de surpresa'},
       registrar:'Ligou pra casa do orelhão da esquina, a trinta metros da porta.'},
   escolhas:[
-    {texto:'Ficar parado e deixar ela vir.', vai:'c21_dentro_de_casa'},
+    {texto:'Ficar parad{o|a} e deixar {casa:ela|ele} vir.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
     {texto:'Passar no Centro Pokémon antes.', vai:'c21_centro_primeiro', cond:d=>!d.flags.a_enfermeira_nova}
   ]
@@ -512,8 +512,8 @@ c21_mostrou_as_oito:{
     d=>fala(nomeCasa(), 'Repete.'),
     'Você repete.',
     d=>fala(nomeCasa(), 'Repete de novo. Devagar. Eu quero decorar a ordem.', 'baixo'),
-    'Você repete três vezes ao todo, e na terceira ela fecha os olhos pra ouvir melhor, e mexe os lábios junto.',
-    'Ela vai contar essa lista pra rua inteira. Ela vai errar a ordem. Ninguém vai corrigir.'
+    'Você repete três vezes ao todo, e na terceira {casa:ela|ele} fecha os olhos pra ouvir melhor, e mexe os lábios junto.',
+    '{casa:Ela|Ele} vai contar essa lista pra rua inteira. {casa:Ela|Ele} vai errar a ordem. Ninguém vai corrigir.'
   ],
   ef:{moral:8, flag:'mostrou_as_insignias_em_casa',
       rep:{eixo:'bom',delta:2,motivo:'Contou as oito insígnias em casa, três vezes, devagar'},
@@ -527,9 +527,9 @@ c21_mostrou_as_oito:{
 c21_o_que_aconteceu_aqui:{
   texto:[
     d=>fala(d.jogador.nome, 'E aqui? O que aconteceu aqui?'),
-    'A pergunta pega ela desprevenida, porque ninguém faz essa pergunta pra quem ficou.',
-    d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, menino.'),
-    'E aí ela conta, por quarenta minutos, tudo que não aconteceu:',
+    'A pergunta pega {casa:ela desprevenida|ele desprevenido}, porque ninguém faz essa pergunta pra quem ficou.',
+    d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, {menino|menina}.'),
+    'E aí {casa:ela|ele} conta, por quarenta minutos, tudo que não aconteceu:',
     d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Vernon que casou. O cachorro do quatorze que morreu — aquele velho, você lembra dele.'),
     d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
@@ -549,7 +549,7 @@ c21_o_telhado:{
     'Você sobe no telhado dos fundos às cinco e meia da tarde com uma chave de fenda e nenhuma competência.',
     'São três telhas. Uma rachada, duas fora de posição. Você resolve as duas fora de posição em dez minutos e a rachada não tem como resolver sem telha nova.',
     'Você desce, vai no armazém, compra três telhas por seiscentos, volta e sobe de novo.',
-    d=>fala(nomeCasa(), 'DESCE DAÍ!', 'grita', 'Ela grita do quintal, e continua gritando o tempo inteiro, e não sai de lá em nenhum momento.'),
+    d=>fala(nomeCasa(), 'DESCE DAÍ!', 'grita', '{casa:Ela|Ele} grita do quintal, e continua gritando o tempo inteiro, e não sai de lá em nenhum momento.'),
     'Você desce quando termina. O telhado não vai mais pingar neste inverno.'
   ],
   ef:{dinheiro:-600, moral:6, flag:'consertou_o_telhado',
@@ -569,14 +569,14 @@ c21_contou_da_convocacao:{
     d=>fala(d.jogador.nome, 'Eu não sei.'),
     d=>fala(nomeCasa(), 'Você sabe alguma coisa?'),
     d=>fala(d.jogador.nome, 'Eu sei que eles não convocam quem não incomoda.'),
-    'Ela lê o papel amarelo mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
+    '{casa:Ela|Ele} lê o papel amarelo mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
     d=>fala(nomeCasa(), 'Come antes de ir. Só isso que eu tenho pra falar sobre isso.', 'baixo')
   ],
   ef:{flag:'contou_da_convocacao_em_casa', moral:3,
       registrar:'Mostrou a convocação do Planalto em casa.'},
   escolhas:[
     {texto:'Dormir na sua cama.', vai:'c21_dormiu_na_cama'},
-    {texto:'Ficar acordado na cozinha com ela até tarde.', vai:'c21_acordados_ate_tarde'}
+    {texto:'Ficar acordad{o|a} na cozinha com {casa:ela|ele} até tarde.', vai:'c21_acordados_ate_tarde'}
   ]
 },
 
@@ -632,8 +632,8 @@ c21_mais_um_dia:{
 c21_saida_de_casa:{
   texto:[
     'A saída é curta, porque segunda saída sempre é curta. A primeira é que é comprida.',
-    d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". Ela já disse isso uma vez e não repete.'),
-    'Na porta, ela enfia alguma coisa no bolso de fora da sua mochila, do jeito que ela faz, sem avisar o que é.',
+    d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". {casa:Ela|Ele} já disse isso uma vez e não repete.'),
+    'Na porta, {casa:ela|ele} enfia alguma coisa no bolso de fora da sua mochila, do jeito que {casa:ela|ele} faz, sem avisar o que é.',
     'Você só vai descobrir depois, na estrada, e é uma foto três por quatro da sua licença — daquelas vinte que a Sra. Perla imprimiu — com uma coisa escrita atrás.',
     d=>fala(nomeCasa(), 'pra você lembrar da cara que você tinha quando saiu', 'baixo',
             'Escrito a lápis, na letra que você conhece desde que aprendeu a ler.')

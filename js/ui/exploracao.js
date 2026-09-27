@@ -289,7 +289,7 @@ const Exploracao = {
     const dMoral = {critico:4, sucesso:2, parcial:0, falha:-2}[t.grau];
     if (dMoral) vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + dMoral)); });
     const abertura = {
-      critico:'Sai tudo certo hoje. Você fala pouco e eles entendem na primeira, e num certo momento você percebe que está rindo sozinho no meio de um campo.',
+      critico:'Sai tudo certo hoje. Você fala pouco e eles entendem na primeira, e num certo momento você percebe que está rindo sozinh{o|a} no meio de um campo.',
       sucesso:'Vocês passam o resto do dia repetindo a mesma coisa até sair certo. É assim que fica bom, e é chato, e ninguém conta isso.',
       parcial:'Metade do dia rende e a outra metade é você explicando a mesma coisa de quatro jeitos diferentes.',
       falha:'Não engata. Você manda, eles fazem quase, você manda de novo, e no fim do dia todo mundo está de mau humor por motivo nenhum.'
@@ -335,7 +335,7 @@ const Exploracao = {
     Estado.curarJogador(meu);
     Estado.salvar('auto');
     const texto = {
-      critico:'Vocês param, e por algum motivo essa noite funciona: o fogo pega de primeira, o chão não incomoda, e você acorda antes do sol sem estar cansado.',
+      critico:'Vocês param, e por algum motivo essa noite funciona: o fogo pega de primeira, o chão não incomoda, e você acorda antes do sol sem estar cansad{o|a}.',
       sucesso:'Vocês param. Fogo pequeno, comida ruim, chão duro. Ninguém dorme direito e todo mundo melhora um pouco.',
       parcial:'Vocês param. Você acorda três vezes e uma delas é por nada.',
       falha:'Vocês param, e a noite é ruim. Frio pelas costas, raiz nas costelas, e de manhã você está pior do que deitou.'

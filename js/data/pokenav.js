@@ -60,7 +60,7 @@ const CONTATOS = [
     texto:d=>{
       const n = d.insignias.filter(i=>i!=='Título de Campeão').length;
       if (d.flags.campeao_de_kanto) return [
-        fala(nomeCasa(), 'Campeão.', 'baixo', 'Ela repete a palavra três vezes antes de conseguir dizer outra coisa.'),
+        fala(nomeCasa(), '{Campeão|Campeã}.', 'baixo', '{casa:Ela|Ele} repete a palavra três vezes antes de conseguir dizer outra coisa.'),
         fala(nomeCasa(), 'Eu vou ter que sentar. Espera. Espera um pouco.')
       ];
       if (n >= 6) return [
@@ -113,7 +113,7 @@ const CONTATOS = [
     rotulo:'Perguntar o que ele ouviu falar',
     limite:99, esperaCap:2,
     texto:d=>[
-      fala('Sr. Ives', 'Eu varro calçada, menino. Calçada é onde a cidade fala.'),
+      fala('Sr. Ives', 'Eu varro calçada, {menino|menina}. Calçada é onde a cidade fala.'),
       fala('Sr. Ives', 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
       fala('Sr. Ives', 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
     ],
@@ -181,7 +181,7 @@ const CONTATOS = [
       'Você conta: guindaste velho, três galpões, o de número dois fechado com chapa, e um quadro de avisos com nome de gente que embarcou.',
       fala('Sra. Perla', 'Tinha nome no quadro?'),
       'Você diz que tinha. Ela fica quieta o tempo de quatro respirações.',
-      fala('Sra. Perla', 'Tá bom. Obrigada, meu filho.', 'baixo'),
+      fala('Sra. Perla', 'Tá bom. Obrigada, {meu filho|minha filha}.', 'baixo'),
       fala('Sra. Perla', 'Passa aqui quando voltar que eu separo uma coisa pra você.'),
       'Ela desliga antes de você responder.'
     ],
@@ -478,7 +478,7 @@ const CONTATOS = [
     objetivo:d=>!!d.visitados.lavender,
     entregue:[
       fala('Sabrina', 'Está ligando de lá.', 'frio', 'Não é pergunta.'),
-      'Você fica quieto. Ela também. O telefone sustenta os dois silêncios sem reclamar.',
+      'Você fica quiet{o|a}. Ela também. O telefone sustenta os dois silêncios sem reclamar.',
       fala('Sabrina', 'Então você ouviu.'),
       fala('Sabrina', 'Todo mundo ouve uma coisa diferente e todo mundo tem certeza de que é a mesma coisa. Isso me interessa mais do que fantasma.', 'baixo'),
       fala('Sabrina', 'Obrigada. Eu não podia subir de novo.'),
@@ -753,7 +753,7 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('casa') && d.capitulo >= 3 && !d.flags.voltou_pra_casa,
   peso:3,
   falas:d=>[
-    d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesmo?', 'grita'),
+    d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
     d=>fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
     d=>fala(nomeCasa(), 'Não é nada. Não aconteceu nada aqui, tá tudo bem, eu só queria ouvir.', 'baixo'),
     d=>fala(nomeCasa(), 'Tá comendo?')
@@ -799,7 +799,7 @@ const CHAMADAS = [
      ]},
     {texto:'"Vende a caixa, seu Ives. Eu não mereço."',
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou o velho vender o que ele guardava pra você'}},
-     resultado:[fala('Sr. Ives', 'Não é sobre merecer.', 'frio'), fala('Sr. Ives', 'Boa viagem, menino.')]}
+     resultado:[fala('Sr. Ives', 'Não é sobre merecer.', 'frio'), fala('Sr. Ives', 'Boa viagem, {menino|menina}.')]}
   ]
 },
 {

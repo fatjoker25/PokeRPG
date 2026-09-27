@@ -113,7 +113,7 @@ c12_ab_perguntou_o_setor:{
 
 c12_ab_com_a_turma:{
   texto:[
-    'Você paga a entrada e entra colado na excursão, e ninguém pergunta nada, porque uma pessoa a mais em quarenta e sete é invisível.',
+    'Você paga a entrada e entra colad{o|a} na excursão, e ninguém pergunta nada, porque uma pessoa a mais em quarenta e sete é invisível.',
     'O passeio guiado dura meia hora e é honestamente bom. Tem um Nidoran fêmea a doze metros da trilha que não liga pra quarenta e sete pessoas, e quarenta e sete pessoas ficam em silêncio ao mesmo tempo, o que é bonito.',
     'Na volta, a trilha passa por uma bifurcação com uma corrente de ferro atravessada e uma placa de madeira: SETOR 7 — ACESSO TÉCNICO.',
     'A trilha do setor 7 é de terra batida e tem marca de pneu. Pneu largo, de veículo pesado, fresco.',
@@ -125,7 +125,7 @@ c12_ab_com_a_turma:{
       presagio:'O guia olhou pro outro lado na hora exata. Ele sabe onde não olhar.'},
   escolhas:[
     {texto:'Perguntar ao guia na frente da turma.', vai:'c12_ab_na_frente_da_turma'},
-    {texto:'Não falar nada e voltar sozinho depois.', vai:'c12_cerca'},
+    {texto:'Não falar nada e voltar sozinh{o|a} depois.', vai:'c12_cerca'},
     {texto:'Procurar o diretor da reserva.', vai:'c12_diretor'}
   ]
 },
@@ -135,7 +135,7 @@ c12_ab_na_frente_da_turma:{
     d=>fala(d.jogador.nome, 'Por que tem marca de caminhão numa área em recuperação?'),
     'Você fala alto. Quarenta e dois alunos de onze anos viram ao mesmo tempo, o que é o som de quarenta e duas mochilas.',
     'O guia sorri com a boca.',
-    fala('o guia do colete verde', 'Manutenção, meu amigo. Tem que levar muda, tem que levar cerca.'),
+    fala('o guia do colete verde', 'Manutenção, {meu amigo|minha amiga}. Tem que levar muda, tem que levar cerca.'),
     'Uma menina do meio da turma, sem levantar a mão:',
     fala('a aluna', 'Mas a marca tá pra dentro e não tem marca voltando.'),
     'Silêncio geral.',
@@ -473,11 +473,11 @@ c12_planilha_errada:{
     '"Então a área diminuiu e a conta não mudou."',
     'Ele olha a televisão desligada.',
     '"Se a área diminuiu e a conta não mudou, a conta tá dizendo que cabe mais gente do que cabe."',
-    '"Não." Você fala devagar, porque você mesmo está entendendo enquanto fala. "A conta tá dizendo que cabe menos. Se a planilha é de uma área maior e a área encolheu, a densidade real ficou maior que a planilha prevê. Aí todo ano a planilha acusa excedente."',
+    '"Não." Você fala devagar, porque você mesm{o|a} está entendendo enquanto fala. "A conta tá dizendo que cabe menos. Se a planilha é de uma área maior e a área encolheu, a densidade real ficou maior que a planilha prevê. Aí todo ano a planilha acusa excedente."',
     '"Todo ano."',
     '"Todo ano."',
     'Sr. Zane fica muito quieto.',
-    '"Dezesseis anos, moço."'
+    '"Dezesseis anos, {moço|moça}."'
   ],
   ef:{flag:['entendeu_a_conta','sabe_da_planilha_71'],
       rep:{eixo:'bom',delta:5,motivo:'Desmontou trinta anos de política pública num fundo de padaria'},
@@ -553,7 +553,7 @@ c12_quem_entra:{
     '"Van de quê?"',
     '"Da veterinária." Ele fala isso como se fosse óbvio. "A doutora Pia. Ela atende a reserva há uns oito anos, mora em Fuchsia mesmo, casa da rua da escola."',
     'Ele olha pra você com uma cara nova.',
-    '"Ela entra no setor 7 toda terça, moço. Toda terça, há dois anos, num setor que tá fechado pra recuperação ambiental."'
+    '"Ela entra no setor 7 toda terça, {moço|moça}. Toda terça, há dois anos, num setor que tá fechado pra recuperação ambiental."'
   ],
   ef:{flag:['sabe_da_yara','endereco_yara'],
       rep:{eixo:'bom',delta:3,motivo:'Achou a pessoa que entra no setor fechado toda semana'},
@@ -578,7 +578,7 @@ c12_vandir_soltura:{
     '"Isso é sim."',
     '"Isso é sim."',
     'Ele liga a televisão de novo e desliga na mesma hora, que é uma coisa que gente faz quando está mexida.',
-    '"Se você conseguir que aquilo abra, moço, eu dirijo. Eu conheço os pontos de soltura todos, eu tenho o mapa na cabeça, e eu sei qual espécie vai pra qual lugar sem precisar de livro."',
+    '"Se você conseguir que aquilo abra, {moço|moça}, eu dirijo. Eu conheço os pontos de soltura todos, eu tenho o mapa na cabeça, e eu sei qual espécie vai pra qual lugar sem precisar de livro."',
     '"E eu tô com a hérnia, e eu dirijo."'
   ],
   ef:{flag:['vandir_dirige','tem_quem_leve'],
@@ -740,7 +740,7 @@ c12_enchendo:{
   texto:[
     '"Como assim enchendo a reserva?"',
     '"Solturas."',
-    'Ele espera você entender sozinho e você não entende, e ele explica sem impaciência.',
+    'Ele espera você entender sozinh{o|a} e você não entende, e ele explica sem impaciência.',
     '"A reserva recebe solturas. Apreensão de Liga, resgate de maus-tratos, entrega voluntária. São umas duzentas por ano e elas entram na população."',
     '"E isso é bom."',
     '"Isso é ótimo. É o que uma reserva deve fazer."',
@@ -801,7 +801,7 @@ c12_quem_assina:{
 c12_procurou_o_nome:{
   texto:[
     'Ele procura por duas horas e vinte.',
-    'Você fica sentado na varanda, e a filha dele traz chá duas vezes e não pergunta nada, e a segunda vez ela senta do seu lado e fica.',
+    'Você fica sentad{o|a} na varanda, e a filha dele traz chá duas vezes e não pergunta nada, e a segunda vez ela senta do seu lado e fica.',
     'Às nove e quarenta da noite ele volta com uma folha xerocada e a mão um pouco trêmula, e é a única vez no capítulo em que Koga parece velho.',
     '**ATA DA 41ª REUNIÃO ORDINÁRIA — 14/08/1997 — ITEM 4: CREDENCIAMENTO DE RECEPTOR DE FAUNA EXCEDENTE**',
     '**DELIBERAÇÃO: APROVADO POR UNANIMIDADE**',
@@ -892,7 +892,7 @@ c12_desafio_koga:{
     'Ele diz isso sem nenhuma dureza, e depois faz uma coisa inesperada: sorri.',
     '"Horário existe pra que as pessoas possam contar com ele. Um ginásio que abre quando dá é um ginásio que ninguém pode planejar visitar, e aí só desafia quem mora perto."',
     '"Isso é sobre a reserva também?"',
-    '"Tudo aqui é sobre a reserva." Ele se levanta. "Quarta, duas da tarde. Se você estiver vivo e na cidade, eu luto com você e eu não vou pegar leve."'
+    '"Tudo aqui é sobre a reserva." Ele se levanta. "Quarta, duas da tarde. Se você estiver viv{o|a} e na cidade, eu luto com você e eu não vou pegar leve."'
   ],
   ef:{flag:'koga_marcou',
       npc:{nome:'Koga', opiniao:4, memoria:'Recusou lutar fora do horário e te marcou para quarta às 14h.'},
@@ -1099,7 +1099,7 @@ c12_nico_acusado:{
       registrar:'Chamou o Orin de cúmplice. Ele concordou.',
       presagio:'Você nunca vai saber se foi por causa ou apesar. Quase nunca se sabe.'},
   escolhas:[
-    {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'},
+    {texto:'Ir sozinh{o|a} à noite.', vai:'c12_noite_zona'},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
     {texto:'Ir pro bar dos guardas.', vai:'c12_bar'},
     {texto:'Ir atrás dele e pedir desculpa.', vai:'c12_pediu_desculpa_nico'}
@@ -1463,7 +1463,7 @@ c12_parou_a_triagem:{
     'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
     'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora do capítulo:',
     '"Eu sei."',
-    '"Eu sei qual é a mãe de qual há quatro anos, moço. Eu sei todas."',
+    '"Eu sei qual é a mãe de qual há quatro anos, {moço|moça}. Eu sei todas."',
     'Ele ajeita a luva.',
     '"Eu só não tenho onde anotar."'
   ],
@@ -1921,7 +1921,7 @@ c12_diretor_frio:{
     '"Se soubesse, não estaria sentado na minha sala me contando. Quem sabe, vai lá."',
     'Ele toca um botão do telefone.',
     '"Por favor, acompanhe nosso visitante até a saída."',
-    'Você é acompanhado até a saída. Educadamente, com um "obrigado pela visita" na porta.',
+    'Você é acompanhad{o|a} até a saída. Educadamente, com um "obrigado pela visita" na porta.',
     'Até a saída da cidade.'
   ],
   ef:{flag:'diretor_alerta',
@@ -1949,7 +1949,7 @@ c12_bar:{
     'Ele vira o copo.',
     '"Fuchsia inteira sabe e Fuchsia inteira come do que sai de lá. A padaria, a escola, o posto. Cinquenta e dois por cento do orçamento desta cidade vem de repasse da reserva e a reserva só tem superávit por causa do setor 7."',
     '"Cinquenta e dois?"',
-    '"Cinquenta e dois. Tá no mural da prefeitura, moço. Tá no mural, em cartaz, com gráfico de pizza."'
+    '"Cinquenta e dois. Tá no mural da prefeitura, {moço|moça}. Tá no mural, em cartaz, com gráfico de pizza."'
   ],
   ef:{flag:['sabe_do_setor7','sabe_dos_cinquenta_e_dois'], dinheiro:-400,
       registrar:'52% do orçamento de Fuchsia vem de repasse da reserva, e o superávit vem do setor 7.',
@@ -1958,7 +1958,7 @@ c12_bar:{
     {texto:'"Algum de vocês me leva lá?"', vai:'c12_guarda_leva'},
     {texto:'"Quantos ficam no caminho?"', vai:'c12_quantos_ficam'},
     {texto:'"E ninguém nunca abriu aquele curral?"', vai:'c12_ja_abriram'},
-    {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'}
+    {texto:'Ir sozinh{o|a} à noite.', vai:'c12_noite_zona'}
   ]
 },
 
@@ -1975,7 +1975,7 @@ c12_quantos_ficam:{
     'Ele finalmente olha pra você.',
     '"E a perda de transporte não sai da conta de ninguém, porque a retirada já foi baixada da população da reserva no momento do embarque, e o recebimento no destino é por cabeça entregue."',
     '"Então quem perde?"',
-    '"Ninguém perde, moço. Esse é o desenho."',
+    '"Ninguém perde, {moço|moça}. Esse é o desenho."',
     'Ele empurra o copo.',
     '"Eles somem entre uma planilha e outra e as duas planilhas fecham."'
   ],
@@ -1987,7 +1987,7 @@ c12_quantos_ficam:{
   escolhas:[
     {texto:'"Algum de vocês me leva lá?"', vai:'c12_guarda_leva'},
     {texto:'"E ninguém nunca abriu aquele curral?"', vai:'c12_ja_abriram'},
-    {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'},
+    {texto:'Ir sozinh{o|a} à noite.', vai:'c12_noite_zona'},
     {texto:'Levar isso pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia}
   ]
 },
@@ -2020,7 +2020,7 @@ c12_ja_abriram:{
   escolhas:[
     {texto:'"Então eu preciso de caminhão."', vai:'c12_precisa_de_caminhao'},
     {texto:'"Algum de vocês me leva lá?"', vai:'c12_guarda_leva'},
-    {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'},
+    {texto:'Ir sozinh{o|a} à noite.', vai:'c12_noite_zona'},
     {texto:'Ir procurar o Sr. Zane.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta}
   ]
 },
@@ -2048,7 +2048,7 @@ c12_precisa_de_caminhao:{
     {texto:'Chamar o Sr. Zane para dirigir.', vai:'c12_marido', cond:d=>!!d.flags.ninguem_pergunta},
     {texto:'Ir ao setor 7 hoje à noite com eles.', vai:'c12_guarda_leva'},
     {texto:'Falar com o diretor sobre os caminhões.', vai:'c12_diretor'},
-    {texto:'Ir sozinho à noite.', vai:'c12_noite_zona'}
+    {texto:'Ir sozinh{o|a} à noite.', vai:'c12_noite_zona'}
   ]
 },
 
@@ -2172,7 +2172,7 @@ c12_quem_recebeu:{
 
 c12_esperou_caminhao:{
   texto:[
-    'Você espera cinco horas e quarenta na beira do asfalto, deitado no capim, com formiga.',
+    'Você espera cinco horas e quarenta na beira do asfalto, deitad{o|a} no capim, com formiga.',
     'Às três e vinte da manhã, um caminhão baú sai do portão.',
     'Sem placa iluminada, sem logotipo, com a lona amarrada por cima da carroceria porque é baú com sobrecarga.',
     'E o som.',
@@ -2193,7 +2193,7 @@ c12_esperou_caminhao:{
 c12_ficou_parado:{
   texto:[
     'Você não se mexe.',
-    'O caminhão passa a vinte metros de você e você fica deitado no capim, com formiga no braço, sem fazer absolutamente nada.',
+    'O caminhão passa a vinte metros de você e você fica deitad{o|a} no capim, com formiga no braço, sem fazer absolutamente nada.',
     'Dois minutos depois ele já é uma luz vermelha na curva. Quatro minutos depois não é nada.',
     'Você levanta às quatro e dez da manhã, com o corpo dormente de um lado, e anda de volta pra cidade.',
     'Você não fez nada errado. Não tinha nada que você pudesse fazer com um caminhão em movimento numa estrada vicinal.',
@@ -2262,7 +2262,7 @@ c12_noite_zona:{
        d.flags.tem_o_mapa_do_nico ? 'O mapa do Orin está no seu bolso, no verso de um folheto plastificado, e ele marcou os três plantões com X e a hora da ronda ao lado.' :
        d.flags.nico_junto ? 'Orin anda na sua frente e conhece cada curva, cada bebedouro e cada mourão. Ele não fala nada o caminho inteiro.' :
        d.flags.guarda_junto ? 'O guarda Kell anda na sua frente, bêbado e absolutamente seguro do caminho, e para duas vezes pra mijar e uma vez pra cuspir.' :
-       'Você anda sozinho, guiado pelo trilho de carrinho, que brilha de leve no escuro porque metal polido brilha de leve no escuro.'
+       'Você anda sozinh{o|a}, guiado pelo trilho de carrinho, que brilha de leve no escuro porque metal polido brilha de leve no escuro.'
   ],
   ef:{flag:'entrou_de_noite',
       presagio:'Aqui os bichos não foram ensinados a ter medo de gente. Repare no que isso implica.'},
@@ -2300,8 +2300,8 @@ c12_plantao:{
     'Ele tem catarata num olho e uma lanterna que ele não usa porque ele conhece o terreno melhor com o pé do que com a luz.',
     'Ele te vê a uns quinze metros — porque ele te ouve antes de ver — e não levanta.',
     '"Boa noite."',
-    'Você fica parado.',
-    '"Pode chegar, moço. Eu tenho setenta e um anos e uma perna ruim. Se você quiser fazer alguma coisa aqui, você vai fazer."',
+    'Você fica parad{o|a}.',
+    '"Pode chegar, {moço|moça}. Eu tenho setenta e um anos e uma perna ruim. Se você quiser fazer alguma coisa aqui, você vai fazer."',
     'Ele mexe no rádio pra pegar melhor.',
     '"Senta aí que a cadeira tem duas."'
   ],
@@ -2326,13 +2326,13 @@ c12_duas_cadeiras:{
     '"E você faz o quê?"',
     '"Eu ofereço café."',
     'Ele serve num copo plástico de uma garrafa térmica e estende.',
-    '"Eu tô aqui há onze anos, moço. Onze anos nessa cadeira, três turnos por semana, das dezoito às seis."',
+    '"Eu tô aqui há onze anos, {moço|moça}. Onze anos nessa cadeira, três turnos por semana, das dezoito às seis."',
     '"E nenhum deles conseguiu nada?"',
     '"Um conseguiu."',
     'Ele olha o curral.',
     '"Em noventa e nove. Chamava Beto, trabalhava aqui. Abriu tudo."',
     '"E?"',
-    '"E metade voltou porque tava com fome." Ele bebe. "Mas metade não voltou, moço."',
+    '"E metade voltou porque tava com fome." Ele bebe. "Mas metade não voltou, {moço|moça}."',
     '"Metade não voltou."'
   ],
   ef:{flag:['sabe_do_beto','jorge_conversou'],
@@ -2363,7 +2363,7 @@ c12_conversa_plantao:{
     '"Fala."',
     '"Abrir sem ter pra onde levar é o mesmo que não abrir, e custa mais caro pra eles."',
     '"Eles quem?"',
-    '"Eles." Ele aponta o curral com o queixo. "Sair e voltar em três dias com fome é uma coisa que quebra bicho por dentro, moço. Eu já vi. O bicho que saiu e voltou não é o mesmo."'
+    '"Eles." Ele aponta o curral com o queixo. "Sair e voltar em três dias com fome é uma coisa que quebra bicho por dentro, {moço|moça}. Eu já vi. O bicho que saiu e voltou não é o mesmo."'
   ],
   ef:{flag:['jorge_conversou','sabe_que_precisa_levar'],
       npc:{nome:'Sr. Ulric', opiniao:4, memoria:'Passou quarenta minutos conversando com você sobre time e preço de gás antes de falar do curral.'},
@@ -2414,7 +2414,7 @@ c12_amarrou:{
     'Você amarra o Sr. Ulric na cadeira de plástico com a corda do contêiner de ferramentas.',
     'Ele não resiste. Ele tem setenta e um anos e uma perna ruim e ele te avisou disso quinze metros atrás.',
     'Enquanto você amarra, ele fala, com a voz normal:',
-    '"Aperta mais o pulso, moço."',
+    '"Aperta mais o pulso, {moço|moça}."',
     '"O quê?"',
     '"Aperta mais o pulso. Se ficar frouxo demais, eles vão dizer que eu deixei."',
     'Você aperta mais o pulso de um homem de setenta e um anos porque ele pediu, pra ele não perder o emprego.',
@@ -2478,7 +2478,7 @@ c12_devolveu_a_chave:{
     'Ele assente devagar.',
     '"Eu vou ser demitido."',
     '"Você vai."',
-    '"Eu tenho setenta e um anos e aposentadoria integral desde os sessenta e cinco, moço. Eu trabalho aqui porque eu não sabia o que fazer com o dia."',
+    '"Eu tenho setenta e um anos e aposentadoria integral desde os sessenta e cinco, {moço|moça}. Eu trabalho aqui porque eu não sabia o que fazer com o dia."',
     'Ele guarda a caneta no bolso da camisa.',
     '"Agora eu sei."'
   ],
@@ -2505,8 +2505,8 @@ c12_abriu_curral:{
     'Oitenta e sete atravessam três hectares de clareira iluminada por refletor de obra e somem no mato em menos de quatro minutos.',
     'E o silêncio depois é absurdo.',
     d=>d.flags.sabe_que_voltam || d.flags.jorge_conversou
-      ? 'E você fica parado no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
-      : 'Você fica parado no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
+      ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
+      : 'Você fica parad{o|a} no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
     d=>d.flags.sabe_do_beto ? 'Em noventa e nove um guarda chamado Beto fez exatamente isso, sozinho, às três da manhã. Metade voltou.' : ''
   ],
   ef:{flag:['abriu_o_curral','esvaziou_o_setor7'],

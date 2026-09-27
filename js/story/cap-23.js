@@ -184,7 +184,7 @@ c23_deixou_subir_sozinho:{
       registrar:'Blue desceu com três pastas e te entregou uma com o seu nome.'},
   escolhas:[
     {texto:'Abrir a pasta agora, na frente dele.', vai:'c23_abriu_a_pasta'},
-    {texto:'Não abrir. Subir e ver o resto você mesmo.', vai:'c23_a_sala'},
+    {texto:'Não abrir. Subir e ver o resto você mesm{o|a}.', vai:'c23_a_sala'},
     {texto:'Guardar e ir embora.', vai:'c23_foi_embora_sem_ler'}
   ]
 },
@@ -211,7 +211,7 @@ c23_subiu_com_blue:{
 
 c23_a_sala:{
   texto:[
-    'Você sobe sozinho os dezenove degraus e a sala é exatamente como ele descreveu, o que de alguma forma é pior.',
+    'Você sobe sozinh{o|a} os dezenove degraus e a sala é exatamente como ele descreveu, o que de alguma forma é pior.',
     'Quatro corredores de aço. Uma mesa. Uma cadeira virada pra parede.'
   ],
   escolhas:[

@@ -288,7 +288,7 @@ const Jogo = {
       'Nada novo. Mas você deixa de ter pressa, e isso vale alguma coisa.'
     ];
     const ruins = [
-      'Você fica parado tempo demais e perde o fio.',
+      'Você fica parad{o|a} tempo demais e perde o fio.',
       'Olhar sem saber o que procurar é só demorar.'
     ];
     const linha = (t.grau==='critico'||t.grau==='sucesso') ? Dados.escolher(bons)
@@ -1030,7 +1030,7 @@ const Jogo = {
   resultadoRevanche(fim){
     const rev = this.revancheAtual;
     this.revancheAtual = null;
-    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa revanche que você mesmo marcou.');
+    if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa revanche que você mesm{o|a} marcou.');
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
     if (venceu){
@@ -1232,7 +1232,7 @@ const Jogo = {
       // CAMPEÃO DE KANTO
       this.eliteAtual = null;
       Estado.marcar('campeao_de_kanto');
-      Estado.j.cargo = 'Campeão de Kanto';
+      Estado.j.cargo = '{Campeão|Campeã} de Kanto';
       Estado.dados.insignias.push('Título de Campeão');
       Estado.j.dinheiro += PREMIO_CAMPEAO;
       Estado.darItem('Master Ball', 1);

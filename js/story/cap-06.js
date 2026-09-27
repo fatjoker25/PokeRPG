@@ -70,7 +70,7 @@ c6_ab_arrebentado:{
     d=>{
       const p = (d.time || []).filter(x => !x.morto && x.hp < x.hpMax * 0.5)[0];
       return p ? `${nomeExib(p)} está na bola porque não dava pra andar do lado de fora, e você fica com a mão em cima da bola o caminho inteiro sem perceber que está fazendo isso.`
-               : 'Você está inteiro por fora e nem um pouco por dentro, que é uma distinção que ninguém na rua consegue fazer olhando.';
+               : 'Você está inteir{o|a} por fora e nem um pouco por dentro, que é uma distinção que ninguém na rua consegue fazer olhando.';
     },
     'O Centro Pokémon de Cerulean fica na terceira quadra depois da ponte e tem uma fila de quatro pessoas, e as quatro estão iguais a você.',
     'Vocês não conversam. Ninguém que saiu do Monte da Lua hoje quer conversar.',
@@ -277,7 +277,7 @@ c6_beira:{
 c6_beira_2:{
   texto:[
     'Você fica.',
-    'A luz na água faz aquela coisa que luz na água faz e você entende, sentado ali, por que tem gente que mora em cidade de rio a vida inteira e nunca sai.',
+    'A luz na água faz aquela coisa que luz na água faz e você entende, sentad{o|a} ali, por que tem gente que mora em cidade de rio a vida inteira e nunca sai.',
     'Em algum momento você tira um dos seus da bola e ele senta do seu lado, e vocês dois ficam olhando a mesma água.',
     'Ninguém passa. Ninguém precisa de nada. Dura uns quarenta minutos e é o melhor pedaço da semana.'
   ],
@@ -352,7 +352,7 @@ c6_quem_e_a_pessoa:{
     'Ele fala o nome do jeito que se fala o nome de quem se conhece desde criança.',
     '"Ela é o quê, da prefeitura?"',
     'Sr. Cosmo ri com a garganta.',
-    '"Ela é a do ginásio, moço." Ele põe a vara no ombro. "E ela é a única pessoa nessa cidade que já processou uma empresa por causa de peixe morto. Duas vezes."'
+    '"Ela é a do ginásio, {moço|moça}." Ele põe a vara no ombro. "E ela é a única pessoa nessa cidade que já processou uma empresa por causa de peixe morto. Duas vezes."'
   ],
   ef:{flag:'sabe_da_misty',
       executar:d=>{ Mundo.descobrir('ginasio_cerulean'); Mundo.descobrir('achou_ginasio_cerulean'); return [{tipo:'eco', texto:'Agora você sabe onde fica o prédio da piscina coberta.'}]; },
@@ -371,7 +371,7 @@ c6_misty_processos:{
     '"E a segunda?"',
     '"A segunda foi ano retrasado, contra uma empresa de Saffron." Ele para de andar por um segundo. "Essa ela ganhou. E aí aconteceu uma coisa engraçada."',
     '"O quê?"',
-    '"A empresa recorreu, e enquanto recorria comprou a tinturaria da primeira ação." Ele volta a andar. "Hoje é tudo a mesma gente, moço. Tudo. Por isso que ela não processa mais ninguém."'
+    '"A empresa recorreu, e enquanto recorria comprou a tinturaria da primeira ação." Ele volta a andar. "Hoje é tudo a mesma gente, {moço|moça}. Tudo. Por isso que ela não processa mais ninguém."'
   ],
   ef:{flag:'historia_da_misty', registrar:'Misty processou duas empresas. A segunda comprou a primeira.',
       presagio:'Tudo vira a mesma gente. Você vai ver isso acontecer de novo, mais rápido.'},
@@ -648,7 +648,7 @@ c6_peixe:{
   texto:[
     'A barraca de peixe frito fica na cabeceira da ponte sul e tem fila às cinco da tarde.',
     'A moça serve num papel pardo, com farinha e limão, e cobra pouco.',
-    'Você come em pé, encostado no parapeito, e é a primeira comida quente desde Pewter.',
+    'Você come em pé, encostad{o|a} no parapeito, e é a primeira comida quente desde Pewter.',
     'Do lado, dois estivadores discutem sobre um navio. Atrás, uma família inteira come em silêncio.',
     'E na ponte norte, cinquenta metros rio acima, tem gente reunida em volta de alguma coisa.'
   ],
@@ -686,7 +686,7 @@ c6_porque_nao_gosta:{
     'Ela pensa enquanto tira o peixe do óleo.',
     '"Porque tem preço na plaquinha."',
     'Ela embrulha no papel pardo.',
-    '"Peixe tem preço na plaquinha. Peixe tá morto. Aquilo ali tá vivo e tem preço na plaquinha, e eu não sei explicar melhor que isso, moço, mas é isso."'
+    '"Peixe tem preço na plaquinha. Peixe tá morto. Aquilo ali tá vivo e tem preço na plaquinha, e eu não sei explicar melhor que isso, {moço|moça}, mas é isso."'
   ],
   ef:{flag:'preco_na_plaquinha',
       presagio:'Preço na plaquinha numa coisa viva. Você vai ver isso com cifras muito maiores.'},
@@ -764,7 +764,7 @@ c6_nao_vende:{
     'Ele olha em volta. Tem gente perto. Ele baixa a voz, e a baixada de voz já é a resposta.',
     '"Tem quem compre lote." Ele arruma a toalha da mesa sem precisão nenhuma. "Não é da minha alçada o que eles fazem. Eu emito nota."',
     '"Compra lote pra quê?"',
-    '"Moço." Ele te olha. "Eu emito nota."'
+    '"{Moço|Moça}." Ele te olha. "Eu emito nota."'
   ],
   ef:{flag:'compra_de_lote', registrar:'O que não vende na banca da ponte é vendido em lote para alguém.',
       presagio:'"Eu emito nota." Toda essa história vai ser feita de gente que emite nota.'},
@@ -837,7 +837,7 @@ c6_desistente:{
     'Ele para nos quatro dedos levantados e pensa se vale a pena o quinto.',
     '"E o quinto é o que traz a maioria aqui." Ele levanta o polegar. "Perceber que gostava menos do que achava."',
     'Ele fecha a mão.',
-    '"Esse quinto é o pior de todos, moço, porque não dá pra falar pra ninguém. Você pode chegar em casa e dizer que acabou o dinheiro. Você não pode chegar em casa e dizer que não era pra você."'
+    '"Esse quinto é o pior de todos, {moço|moça}, porque não dá pra falar pra ninguém. Você pode chegar em casa e dizer que acabou o dinheiro. Você não pode chegar em casa e dizer que não era pra você."'
   ],
   ef:{flag:'os_cinco_motivos',
       presagio:'Cinco motivos. Anota. Em algum momento você vai testar quantos deles se aplicam a você.'},
@@ -894,7 +894,7 @@ c6_legal:{
   texto:[
     '"Isso não é ilegal?"',
     'Ele acha graça de verdade — não é deboche, é alívio de ouvir uma pergunta fácil.',
-    '"Rapaz, a Liga cobra imposto disso. Tem formulário e tudo. Tem campo pra alíquota."',
+    '"{Rapaz|Moça}, a Liga cobra imposto disso. Tem formulário e tudo. Tem campo pra alíquota."',
     'Ele tira uma nota fiscal do bolso e balança.',
     '"Ilegal é o que acontece quando não tem banca. Aí o bicho vai pro porão de alguém em Celadon e ninguém carimba nada e ninguém sabe quantos foram."',
     'Ele não está errado. É por isso que incomoda.'
@@ -915,7 +915,7 @@ c6_quem_carimba:{
     '"Quantos?"',
     '"Eu não sei quantos. Eu sei que sabe." Ele guarda a nota. "Cada nota minha tem número. Número é sequência. Sequência é contagem."',
     'Ele olha pra você com uma atenção nova, do jeito de quem reavalia com quem está falando.',
-    '"Você não é o primeiro a perguntar isso. Mas você é o primeiro de mochila."'
+    '"Você não é {o primeiro|a primeira} a perguntar isso. Mas você é {o primeiro|a primeira} de mochila."'
   ],
   ef:{flag:'sequencia_e_contagem',
       presagio:'Alguém, em algum lugar, tem a contagem completa. E a contagem completa é a coisa mais perigosa que existe.'},
@@ -1039,8 +1039,8 @@ c6_nome_anterior:{
   texto:[
     '"Como era o nome do treinador anterior?"',
     'Ele olha o papel.',
-    '"Isso aqui é dado pessoal, moço. Eu não posso passar."',
-    'E aí, porque você fica parado sem sair, ele suspira e olha em volta e vira a folha pra você por dois segundos, com o polegar cobrindo o sobrenome.',
+    '"Isso aqui é dado pessoal, {moço|moça}. Eu não posso passar."',
+    'E aí, porque você fica parad{o|a} sem sair, ele suspira e olha em volta e vira a folha pra você por dois segundos, com o polegar cobrindo o sobrenome.',
     'Você lê o primeiro nome. É um nome comum. Um nome que tem em qualquer sala de aula.',
     'De alguma forma isso é pior do que se fosse um nome esquisito.'
   ],
@@ -1072,11 +1072,11 @@ c6_so_avaliar:{
     '"Avalia, mas eu não vendo. Só quero saber."',
     'Ele avalia. Faz perguntas técnicas, olha, digita.',
     'E diz um número.',
-    'O número é baixo. Muito mais baixo do que você esperava, e a sua reação a isso te envergonha imediatamente, porque por meio segundo você ficou ofendido — não por ele ter posto preço, mas por o preço ser pouco.',
+    'O número é baixo. Muito mais baixo do que você esperava, e a sua reação a isso te envergonha imediatamente, porque por meio segundo você ficou ofendid{o|a} — não por ele ter posto preço, mas por o preço ser pouco.',
     'Você agradece e sai andando rápido.'
   ],
   ef:{flag:'avaliou_o_time', moral:-5,
-      presagio:'Por meio segundo você ficou ofendido pelo valor, não pela pergunta. Isso vai voltar.'},
+      presagio:'Por meio segundo você ficou ofendid{o|a} pelo valor, não pela pergunta. Isso vai voltar.'},
   escolhas:[
     {texto:'Ir pra Rota 25.', vai:'c6_saida_norte'},
     {texto:'Voltar e vender mesmo assim.', vai:'c6_venda_feita', vendaTime:true},
@@ -1198,7 +1198,7 @@ c6_levou_prova:{
     'A fita com meio brasão é a peça boa. Meio brasão é mais convincente que um brasão inteiro, porque brasão inteiro parece que você desenhou.',
     'Você não sabe por que pensou isso. Você está começando a pensar como quem monta um caso, e isso aconteceu em algum lugar entre uma caverna e uma ponte.'
   ],
-  ef:{presagio:'Você está montando um caso. Ninguém te ensinou isso. Você começou sozinho.'},
+  ef:{presagio:'Você está montando um caso. Ninguém te ensinou isso. Você começou sozinh{o|a}.'},
   escolhas:[
     {texto:'Achar um lugar pra esperar sexta.', vai:'c6_esconderijo'},
     {texto:'Levar pra Misty.', vai:'c6_bilac_leva'},
@@ -1229,10 +1229,10 @@ c6_chamou_ajuda:{
     d=>d.flags.cartao_ivone ? 'A Dra. Cordell não atende. Toca seis vezes e cai.' : 'Você não tem o número de ninguém que resolva isso.',
     d=>d.flags.misty_sabe_do_diesel ? 'A piscina está fechada. Tem um papel na porta: "SEM EXPEDIENTE — QUINTA".' : 'A cidade inteira está fechando.',
     d=>d.npcs['Ezra'] ? 'E o Ezra não está em Cerulean. Você não sabe nem por onde ele anda.' : '',
-    'Você volta pra vala sozinho, no escuro, com uma sensação muito específica de estar fazendo uma coisa que não devia fazer sozinho.'
+    'Você volta pra vala sozinh{o|a}, no escuro, com uma sensação muito específica de estar fazendo uma coisa que não devia fazer sozinho.'
   ],
   ef:{flag:'tentou_chamar_ajuda',
-      presagio:'Você tentou. Isso vai contar depois, quando alguém perguntar por que você estava lá sozinho.'},
+      presagio:'Você tentou. Isso vai contar depois, quando alguém perguntar por que você estava lá sozinh{o|a}.'},
   escolhas:[
     {texto:'Esperar na vala.', vai:'c6_espera_van'},
     {texto:'Desistir. Ir pra rota.', vai:'c6_rota25'}
@@ -1376,7 +1376,7 @@ c6_roubou_papel:{
 
 c6_leu_estatuto:{
   texto:[
-    'Você lê com lanterna, deitado no mato, às seis da manhã, com a mão tremendo de frio.',
+    'Você lê com lanterna, deitad{o|a} no mato, às seis da manhã, com a mão tremendo de frio.',
     '"Art. 1º — A guarda de um ser vivo não é direito adquirido, mas concessão condicionada à idoneidade do guardião."',
     'Você lê três vezes.',
     '"Art. 4º — Compete à Comissão avaliar, de ofício ou mediante provocação, a idoneidade de qualquer guardião, independentemente de registro, licença ou vínculo com federação esportiva."',
@@ -1456,7 +1456,7 @@ c6_pra_onde_vai:{
     '"E depois?"',
     '"Não tem depois pra mim." Ele abre a porta da van. "Eu levo até o depósito. No depósito tem gente que recebe. Essa gente tem crachá e chefe e a gente não conversa."',
     'Ele entra.',
-    '"Olha, garoto. Eu dirijo. Faz onze anos que eu dirijo. Antes eu levava peixe congelado."',
+    '"Olha, {garoto|garota}. Eu dirijo. Faz onze anos que eu dirijo. Antes eu levava peixe congelado."',
     'Ele fecha a porta e fala pela janela:',
     '"Peixe congelado era pior. Cheirava."'
   ],
@@ -1484,7 +1484,7 @@ c6_luta_van:{
 
 c6_venceu_van:{
   texto:[
-    'Você ganha. Os três ficam parados no cascalho, e você fica parado no cascalho, e as quatro caixas continuam exatamente onde estavam.',
+    'Você ganha. Os três ficam parados no cascalho, e você fica parad{o|a} no cascalho, e as quatro caixas continuam exatamente onde estavam.',
     'O motorista recolhe o time e limpa a mão na calça.',
     '"Pronto." Ele não parece abalado. "E agora?"',
     'É sempre essa pergunta. Em toda cidade, em toda caverna, é sempre essa pergunta.',
@@ -1502,10 +1502,10 @@ c6_venceu_van:{
 c6_perdeu_van:{
   texto:[
     'Você perde.',
-    'Ninguém encosta em você. O motorista recolhe a bola, olha o relógio, e pergunta se você tem como voltar pra cidade sozinho.',
+    'Ninguém encosta em você. O motorista recolhe a bola, olha o relógio, e pergunta se você tem como voltar pra cidade sozinh{o|a}.',
     'Você responde que tem.',
     '"Então vai." Ele já está carregando a última caixa. "E não conta pra ninguém que você veio aqui, tá? Não por mim. Por você."',
-    'A van sai. Você fica sentado no cascalho com o time desmaiado e o sol nascendo.'
+    'A van sai. Você fica sentad{o|a} no cascalho com o time desmaiado e o sol nascendo.'
   ],
   ef:{hp:-4, causa:'Derrota no ponto da van', flag:'perdeu_pro_motorista',
       presagio:'"Não por mim. Por você." Foi a única ameaça da noite e ela veio embrulhada em cuidado.'},
@@ -1640,7 +1640,7 @@ c6_nao_justifica_25:{
     'Ele para de montar na bicicleta.',
     '"Eu não falei que justifica."',
     'Ele não está bravo. Ele está corrigindo um erro de leitura, com paciência.',
-    '"Eu falei que é o que tem." Ele monta. "Justificar é coisa de quem tem escolha, moço. Eu tenho asma de criança."',
+    '"Eu falei que é o que tem." Ele monta. "Justificar é coisa de quem tem escolha, {moço|moça}. Eu tenho asma de criança."',
     'Ele sai pedalando e vira na esquina sem olhar pra trás.'
   ],
   ef:{flag:'discutiu_com_o_carregador'},
@@ -1724,7 +1724,7 @@ c6_rota25:{
 
 c6_escutou_choro:{
   texto:[
-    'Você fica parado na trilha por uns quarenta segundos escutando alguém chorar.',
+    'Você fica parad{o|a} na trilha por uns quarenta segundos escutando alguém chorar.',
     'É uma coisa horrível de fazer e você faz.',
     'Pelo som dá pra saber três coisas: é mulher, está a uns trinta metros na direção da água, e já está chorando há muito tempo — a respiração está naquele ritmo que só acontece depois de um bom tempo.',
     'Também dá pra ouvir que ela está falando. Não palavras: um nome, repetido.'
@@ -1980,7 +1980,7 @@ c6_marta_acha:{
     'Ela levanta a cabeça.',
     '"E aí um dia ia chegar um garoto na minha porta e eu ia ter que explicar."',
     'Ela mexe o café que já acabou.',
-    '"Eu não sei o que eu acho, moço. Eu sei que o meu tá vivo no chão da minha sala e que outro não tá."'
+    '"Eu não sei o que eu acho, {moço|moça}. Eu sei que o meu tá vivo no chão da minha sala e que outro não tá."'
   ],
   ef:{flag:'as_duas_metades',
       presagio:'Ninguém aqui é o vilão. Você já ouviu isso numa pedreira e vai ouvir de novo numa torre.'},
@@ -2114,7 +2114,7 @@ c6_atras_da_marta:{
   escolhas:[
     {texto:'Ir atrás de quem pôs o veneno.', vai:'c6_veneno'},
     {texto:'Ficar com ela.', vai:'c6_ficou'},
-    {texto:'Seguir pela rota sozinho.', vai:'c6_veneno'}
+    {texto:'Seguir pela rota sozinh{o|a}.', vai:'c6_veneno'}
   ]
 },
 
@@ -2245,7 +2245,7 @@ c6_resolveu:{
     '"Eu acho que em algum momento parou de ser pela menina."'
   ],
   ef:{flag:'parou_de_ser_pela_menina',
-      presagio:'"Parou de ser pela menina." Guarda isso pra quando você mesmo estiver na décima sexta tigela de alguma coisa.'},
+      presagio:'"Parou de ser pela menina." Guarda isso pra quando você mesm{o|a} estiver na décima sexta tigela de alguma coisa.'},
   escolhas:[
     {texto:'"Então para."', vai:'c6_entao_para'},
     {texto:'"Deixa eu tentar de outro jeito."', vai:'c6_outro_jeito'},
@@ -2427,7 +2427,7 @@ c6_no_quintal:{
     'Olha pra cabana verde. A menina já entrou, mas a porta dos fundos está aberta e dá pra ver o quintal daqui.',
     '"Ela tava no quintal", ele repete, com a voz completamente diferente.',
     'Ele larga a tigela que estava segurando e vai andando pra casa, rápido, quase correndo, e não se despede.',
-    'Você fica sozinho na trilha com dezesseis tigelas viradas.'
+    'Você fica sozinh{o|a} na trilha com dezesseis tigelas viradas.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Mostrou a alguém a coisa que ele não conseguia ver'},
       flag:'ela_estava_no_quintal', moral:10,
@@ -2809,7 +2809,7 @@ c6_recuou_do_desafio:{
 
 c6_perdeu_veneno:{
   texto:[
-    'Você perde. Ele nem comemora — recolhe as coisas e continua enchendo a décima sétima tigela enquanto você se recupera sentado na grama.',
+    'Você perde. Ele nem comemora — recolhe as coisas e continua enchendo a décima sétima tigela enquanto você se recupera sentad{o|a} na grama.',
     'Isso é o pior tipo de derrota: a que não interrompe nada.',
     'Ele trabalha na sua frente por vinte minutos. Depois pega o saco de ração vazio, dobra, guarda no bolso de trás, e vai embora pra cabana verde.',
     'Na porta ele grita "CHEGUEI" e uma voz de criança responde de dentro.'
@@ -2830,7 +2830,7 @@ c6_liga_veneno:{
     'Você liga e fica.',
     'Duas horas e quarenta na beira da trilha, olhando ele encher tigela e ele olhando você. Em certo momento ele oferece água da garrafa dele e você recusa e depois aceita.',
     'Os oficiais chegam. São dois, educados, com formulário. Levam ele. Levam as tigelas em sacos etiquetados.',
-    'Um dos oficiais anota seu nome no relatório. "Boa, garoto. Sério."',
+    'Um dos oficiais anota seu nome no relatório. "Boa, {garoto|garota}. Sério."',
     'Três semanas depois ele está de volta na rota. Advertência e multa de setecentos.',
     'A menina de sete anos ficou sozinha em casa naquela tarde, pela primeira vez em cinco meses, porque o pai foi levado pra prestar depoimento.'
   ],
@@ -2852,7 +2852,7 @@ c6_fim:{
       if (d.flags.agrediu_envenenador) return 'Você percebe que não pensou uma vez no homem desde que saiu de lá. Isso deveria incomodar mais do que incomoda.';
       if (d.flags.ignorou_marta) return 'Você percebe que não lembra do rosto da mulher. Só do som.';
       if (d.flags.resolveu_tigelas) return 'As suas mãos ainda cheiram a ração. Você não lava por mais tempo do que precisaria.';
-      if (d.flags.vaporeon_morreu) return 'O nome dele era Duque. Você repete isso pra você mesmo, olhando o mar, porque alguém tem que continuar sabendo.';
+      if (d.flags.vaporeon_morreu) return 'O nome dele era Duque. Você repete isso pra você mesm{o|a}, olhando o mar, porque alguém tem que continuar sabendo.';
       return 'Você fica ali até escurecer. Foi um dia longo e você fez o que deu.';
     },
     d=>d.flags.leu_o_estatuto

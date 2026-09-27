@@ -66,7 +66,7 @@ c2_ab_secando:{
 
 c2_ab_sem_troco:{
   texto:[
-    d=>`Você conta o dinheiro antes de entrar em Viridian, sentado na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${d.jogador.dinheiro} ₽.`,
+    d=>`Você conta o dinheiro antes de entrar em Viridian, sentad{o|a} na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${d.jogador.dinheiro} ₽.`,
     'Não é pouco de passar fome. É pouco de fazer conta: se comprar isso, não compra aquilo.',
     'Viridian é a primeira cidade de verdade que você vê, e cidade de verdade tem uma coisa que a sua não tinha — vitrine.',
     'Você passa por três delas no caminho do Centro e não entra em nenhuma, e isso custa um esforço que você não esperava que custasse.',
@@ -105,7 +105,7 @@ c2_ab_ja_falam:{
     'Não é reconhecimento — ainda não. É aquele olhar de quem acha que já viu a sua cara em algum lugar e não vai conseguir lembrar onde, e vai passar o resto do dia com isso na cabeça.',
     'Notícia anda mais rápido do que gente, e você andou.',
     'No Centro Pokémon, a atendente te atende normalmente até ler o seu nome na licença, e aí ela levanta os olhos meio centímetro.',
-    fala('a atendente', 'É você mesmo.'),
+    fala('a atendente', 'É você mesm{o|a}.'),
     d=>fala(d.jogador.nome, 'Depende do que contaram.'),
     fala('a atendente', 'Contaram bem.', 'riso'),
     'Ela devolve a licença e não cobra o atendimento, o que ela já não ia cobrar, mas desta vez ela faz questão de dizer que não vai cobrar.'
@@ -228,7 +228,7 @@ c2_ligou_por_causa_do_cartaz:{
     'Silêncio do outro lado por dois segundos.',
     d=>fala(nomeCasa(), 'Você tá em Viridian já? Você saiu ontem, criatura.', 'riso'),
     d=>fala(nomeCasa(), 'Tá comendo?'),
-    'Ela vai perguntar isso todas as vezes, pelos próximos nove meses, em qualquer circunstância, inclusive nas piores.'
+    '{casa:Ela|Ele} vai perguntar isso todas as vezes, pelos próximos nove meses, em qualquer circunstância, inclusive nas piores.'
   ],
   ef:{flag:'ligou_por_causa_do_cartaz', moral:5,
       rep:{eixo:'bom',delta:1,motivo:'Ligou pra casa por causa de um cartaz de outra pessoa'},
@@ -497,7 +497,7 @@ c2_pergunta_pedra:{
     {texto:'"Seu pai é um idiota."', vai:'c2_conversa',
      ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
     {texto:'Não dizer nada e esperar ele continuar.', vai:'c2_conversa',
-     ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Você ficou calado e deixou ele falar. Foi o suficiente.'}}}
+     ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Você ficou calad{o|a} e deixou ele falar. Foi o suficiente.'}}}
   ]
 },
 
@@ -519,7 +519,7 @@ c2_desculpa:{
   texto:[
     '"Espera. Desculpa. Eu falei merda."',
     'Ele para no meio do movimento de guardar o cinto.',
-    '"Falou." Ele não facilita. "Mas todo mundo fala. Você foi só o primeiro hoje."',
+    '"Falou." Ele não facilita. "Mas todo mundo fala. Você foi só {o primeiro|a primeira} hoje."',
     'Ele senta na escada de novo e bate no degrau do lado.'
   ],
   ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você falou merda e pediu desculpa em menos de dez segundos. Ele reparou nos dez segundos.'},

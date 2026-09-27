@@ -287,7 +287,7 @@ c11_ab_pelo_norte:{
 
 c11_ab_vigiou:{
   texto:[
-    'Você fica uma hora e quarenta encostado num muro do outro lado da rua, e em uma hora e quarenta acontecem quatro coisas.',
+    'Você fica uma hora e quarenta encostad{o|a} num muro do outro lado da rua, e em uma hora e quarenta acontecem quatro coisas.',
     'O portão do galpão sobe uma vez, por noventa segundos, e não entra nem sai veículo nenhum. Só ar.',
     'Um homem sai pela porta social, fuma um cigarro inteiro olhando pro chão e volta.',
     'Um carro de passeio preto encosta, alguém desce, entra pela porta social sem bater, e o carro vai embora sem ele.',
@@ -387,7 +387,7 @@ c11_parede_cega:{
     '"Ninguém senta aí", ele diz, sem você perguntar. "Trinta anos que eu paro aqui e ninguém nunca sentou nesse banco."',
     '"Por quê?"',
     'Ele dá de ombros. "Sei lá. É frio. Você não tá sentindo frio?"',
-    'Você está. Faz vinte e oito graus em Saffron e você está com frio, sentado num banco encostado numa parede cega, e não tinha reparado nisso até ele falar.',
+    'Você está. Faz vinte e oito graus em Saffron e você está com frio, sentad{o|a} num banco encostado numa parede cega, e não tinha reparado nisso até ele falar.',
     '"Tem gente que diz que é a refrigeração deles, que joga o calor pro outro lado. Eu acho que é isso mesmo, viu. Não tem mistério não."',
     'Ele vende pipoca pra você e você compra por educação e por gratidão.'
   ],
@@ -638,7 +638,7 @@ c11_silencio_com_sabrina:{
     'Ela também não.',
     'Ficam assim um tempo que você não mede, numa arena vazia com a iluminação de galpão esportivo toda acesa, porque ela não desliga a luz há três semanas e você não vai perguntar por quê.',
     'Em algum momento ela empurra o saco de pão de forma na sua direção com o pé.',
-    'Você come duas fatias de pão sem nada, sentado no chão de um ginásio de Liga, ao lado da líder mais forte de Kanto.',
+    'Você come duas fatias de pão sem nada, sentad{o|a} no chão de um ginásio de Liga, ao lado da líder mais forte de Kanto.',
     'Perto do fim ela fala uma coisa só:',
     '"Obrigada por não pensar alto agora."',
     'E você percebe que, pela primeira vez em muito tempo, você não estava pensando em nada.'
@@ -664,7 +664,7 @@ c11_sabrina_quanto_tempo:{
     '"Mas o prédio faz barulho pra mim desde que eu tenho memória."',
     '"Eu cresci em Saffron. Quando eu era criança aquele prédio era um zumbido de fundo, tipo geladeira. Todo mundo que é psíquico em Saffron cresce achando que aquele zumbido é normal."',
     '"Em noventa e seis o zumbido mudou."',
-    'Você fica quieto.',
+    'Você fica quiet{o|a}.',
     '"Eu tinha dezesseis. Uma noite o zumbido parou completamente, por umas seis horas, e depois voltou diferente — mais baixo, mais organizado."',
     '"Eu achei que tinha melhorado. Eu comemorei."',
     '"E agora eu sei que o que aconteceu em noventa e seis foi que eles mudaram alguma coisa de lugar."'
@@ -782,13 +782,13 @@ c11_vim_desafiar:{
     '"Eu sei quantos você tem. Eu sei sem perguntar, o que é chato, e eu peço desculpa por isso."',
     'Ela olha a arena vazia.',
     '"Não hoje. Eu não consigo separar, e se eu não consigo separar eu não consigo lutar sem te machucar de um jeito que não sai."',
-    '"Mas eu vou te dizer o que ninguém diz: se você descer naquele prédio e voltar inteiro, você não vai precisar da minha insígnia pra provar nada pra ninguém."',
+    '"Mas eu vou te dizer o que ninguém diz: se você descer naquele prédio e voltar inteir{o|a}, você não vai precisar da minha insígnia pra provar nada pra ninguém."',
     '"E eu vou te dar ela do mesmo jeito, porque regra é regra e eu gosto de regra."'
   ],
   ef:{flag:'sabrina_promete_insignia',
-      npc:{nome:'Sabrina', opiniao:3, memoria:'Prometeu a insígnia de Saffron se você voltar inteiro do andar 11.'},
+      npc:{nome:'Sabrina', opiniao:3, memoria:'Prometeu a insígnia de Saffron se você voltar inteir{o|a} do andar 11.'},
       registrar:'Sabrina não luta enquanto não conseguir separar. Prometeu a insígnia se você voltar.',
-      presagio:'"Se você voltar inteiro." Reparou que ela disse inteiro e não vivo?'},
+      presagio:'"Se você voltar inteir{o|a}." Reparou que ela disse inteir{o|a} e não viv{o|a}?'},
   escolhas:[
     {texto:'"Me ajuda a entrar, então."', vai:'c11_sabrina_ajuda'},
     {texto:'"Vem até a porta."', vai:'c11_sabrina_ate_a_porta'},
@@ -878,7 +878,7 @@ c11_funcionarios:{
 
 c11_fila:{
   texto:[
-    'Você fica meia hora ouvindo, encostado na parede da lanchonete como quem espera alguém.',
+    'Você fica meia hora ouvindo, encostad{o|a} na parede da lanchonete como quem espera alguém.',
     'Colhe quatro coisas.',
     '— Crachá branco vai até o andar 8. Crachá azul vai até o 10. Não existe crachá pra além do 10 e ninguém acha isso estranho.',
     '— O elevador de serviço não tem botão pro subsolo 4, mas a escada de incêndio tem o patamar, e todo mundo sabe porque todo mundo faz o treinamento de brigada de incêndio uma vez por ano e desce a escada inteira.',
@@ -958,7 +958,7 @@ c11_quem_limpa:{
     '"Os de jaleco. Eles mesmos."',
     'Ela ajeita a sacola de pano no ombro.',
     '"Desce o carrinho de material deles pelo elevador de carga, na sexta de manhã, sempre. Detergente enzimático, desinfetante de hospital, saco branco de resíduo infectante."',
-    '"Saco branco, meu filho. Saco branco é resíduo de hospital. Eu trabalhei doze anos em hospital antes disso."',
+    '"Saco branco, {meu filho|minha filha}. Saco branco é resíduo de hospital. Eu trabalhei doze anos em hospital antes disso."',
     '"E eles sobem o carrinho de volta com o saco cheio e a gente nem toca."',
     'Ela olha o prédio.',
     '"Eu limpo escritório há trinta e um anos. Quem limpa a própria sujeira num prédio grande é porque não quer que ninguém veja a sujeira."'
@@ -1020,7 +1020,7 @@ c11_cida_topou:{
     'Ela põe na sua mão e fecha os seus dedos por cima, do jeito que avó faz com dinheiro.',
     '"Verde abre tudo menos o subsolo quatro. E no subsolo quatro o que você precisa não é de crachá."',
     '"Do que eu preciso?"',
-    '"De alguém abrindo por dentro, meu filho. Sempre é."'
+    '"De alguém abrindo por dentro, {meu filho|minha filha}. Sempre é."'
   ],
   ef:{flag:['tem_cracha_verde','dentro_da_silph'],
       itens:{'Crachá verde (Limptotal)':1},
@@ -1148,7 +1148,7 @@ c11_cracha_azul:{
   escolhas:[
     {texto:'"O que você assina, exatamente?"', vai:'c11_o_que_ela_assina'},
     {texto:'"Me leva até a porta."', vai:'c11_marina_leva'},
-    {texto:'"Obrigado. Some daqui."', vai:'c11_protegeu_marina'},
+    {texto:'"{Obrigado|Obrigada}. Some daqui."', vai:'c11_protegeu_marina'},
     {texto:'"Assina uma requisição pra mim."', vai:'c11_requisicao'}
   ]
 },
@@ -1176,7 +1176,7 @@ c11_o_que_ela_assina:{
     {texto:'"Me leva até a porta."', vai:'c11_marina_leva'},
     {texto:'"Assina uma requisição pra mim."', vai:'c11_requisicao'},
     {texto:'"Me manda as fotos do sistema."', vai:'c11_fotos_do_sistema'},
-    {texto:'"Obrigado. Some daqui."', vai:'c11_protegeu_marina'}
+    {texto:'"{Obrigado|Obrigada}. Some daqui."', vai:'c11_protegeu_marina'}
   ]
 },
 
@@ -1271,7 +1271,7 @@ c11_requisicao:{
 
 c11_protegeu_marina:{
   texto:[
-    '"Obrigado. Some daqui."',
+    '"{Obrigado|Obrigada}. Some daqui."',
     'Ela pisca.',
     '"Como assim?"',
     '"Você já falou. Se você falar mais, alguém lembra que você falou. Vai almoçar em outro lugar essa semana."',
@@ -1434,7 +1434,7 @@ c11_credencial_no_balcao:{
     'Você põe a credencial no balcão virada pra ela e não fala nada por três segundos, que é o tempo exato de ela ler o número de processo.',
     d=>fala(d.jogador.nome, 'Livro de visitantes dos últimos trinta dias, por favor.'),
     'O sorriso cronometrado não sai do rosto dela, mas para de ser um sorriso.',
-    fala('a recepcionista', 'O senhor tem hora marcada?'),
+    fala('a recepcionista', '{O senhor|A senhora} tem hora marcada?'),
     d=>fala(d.jogador.nome, 'Não. Eu tenho um número de processo.'),
     'Ela olha pro segurança do fundo. O segurança do fundo olha pra ela. Nenhum dos dois foi treinado pra isso, porque ninguém treina recepção pra receber auditoria a pé.',
     fala('a recepcionista', 'Eu vou precisar consultar o jurídico.'),
@@ -1446,7 +1446,7 @@ c11_credencial_no_balcao:{
   ef:{flag:['entrou_na_silph_por_cima','dentro_da_silph'],
       rep:{eixo:'bom', delta:2, motivo:'Sentou na recepção da Silph e esperou o jurídico descer', notorio:true},
       registrar:'Entrou na Silph pela porta da frente, com número de processo e quarenta minutos de poltrona.',
-      presagio:'Quatro pessoas viram você sentado ali. Uma delas vai te procurar depois, fora do prédio.'},
+      presagio:'Quatro pessoas viram você sentad{o|a} ali. Uma delas vai te procurar depois, fora do prédio.'},
   escolhas:[
     {texto:'Subir com quem desceu.', vai:'c11_nono_andar'},
     {texto:'Pedir o livro de visitantes antes de subir.', vai:'c11_livro_visitantes'},
@@ -1561,7 +1561,7 @@ c11_barrado:{
     'Ela sorri, digita, e o sorriso não muda nem um milímetro enquanto ela aperta um botão embaixo do balcão.',
     'Nenhum alarme toca. Nenhuma luz acende. Ela continua sorrindo e te oferece uma poltrona.',
     'A segurança chega em quarenta segundos. Dois homens grandes e muito educados, um de cada lado, sem tocar em você.',
-    '"O senhor precisa se retirar."',
+    '"{O senhor|A senhora} precisa se retirar."',
     'Eles te acompanham até a porta giratória andando no seu ritmo, e o da direita segura a porta, e nenhum dos dois encosta um dedo.',
     'Na calçada, o de sempre: sua mochila inteira, nada revistado, nada perguntado.'
   ],
@@ -2033,7 +2033,7 @@ c11_escreve_os_nomes:{
     {texto:'"Me deixa descer."', vai:'c11_reis_deixa'},
     {texto:'"Então não assina o dia dezenove."', vai:'c11_nao_assina'},
     {texto:'"Você já perguntou alguma coisa pra eles?"', vai:'c11_reis_ja_perguntou'},
-    {texto:'Agradecer e descer sozinho.', vai:'c11_escada'}
+    {texto:'Agradecer e descer sozinh{o|a}.', vai:'c11_escada'}
   ]
 },
 
@@ -2061,7 +2061,7 @@ c11_reis_ja_perguntou:{
       presagio:'Ela escreveu e apagou três vezes. Alguma parte dela sabia.'},
   escolhas:[
     {texto:'"Então desce comigo e pergunta."', vai:'c11_reis_desce'},
-    {texto:'"Me deixa descer sozinho."', vai:'c11_reis_deixa'},
+    {texto:'"Me deixa descer sozinh{o|a}."', vai:'c11_reis_deixa'},
     {texto:'"Então não assina."', vai:'c11_nao_assina'},
     {texto:'"Escreve os nomes. Eu levo."', vai:'c11_escreve_os_nomes'}
   ]
@@ -2095,7 +2095,7 @@ c11_nao_assina:{
     {texto:'"Me deixa descer agora."', vai:'c11_reis_deixa'},
     {texto:'"Desce comigo e pergunta."', vai:'c11_reis_desce'},
     {texto:'"Escreve os nomes. Eu levo."', vai:'c11_escreve_os_nomes'},
-    {texto:'Agradecer e descer sozinho.', vai:'c11_escada'}
+    {texto:'Agradecer e descer sozinh{o|a}.', vai:'c11_escada'}
   ]
 },
 
@@ -2405,7 +2405,7 @@ c11_sala_vazia:{
 
 c11_sentou_na_sala:{
   texto:[
-    'Você senta no chão, encostado na parede, no mesmo lugar, do lado da tomada.',
+    'Você senta no chão, encostad{o|a} na parede, no mesmo lugar, do lado da tomada.',
     'E fica.',
     'Dez minutos. Quinze.',
     'Não acontece nada, e o nada é a informação: dessa sala não se vê nada, não se ouve nada, não se acessa nada. É a sala mais inútil do prédio.',
@@ -2625,7 +2625,7 @@ c11_alarme:{
 
 c11_esperou_11:{
   texto:[
-    'Você sobe meio lance e senta no patamar de cima, agachado atrás do corrimão, e espera.',
+    'Você sobe meio lance e senta no patamar de cima, agachad{o|a} atrás do corrimão, e espera.',
     'Duas horas e meia.',
     'Passam duas pessoas — uma às vinte e uma e dez, outra às vinte e duas e quinze — e nenhuma das duas olha pra cima, porque ninguém olha pra cima numa escada de incêndio.',
     'Às vinte e duas e quarenta a porta abre de novo e sai uma mulher de jaleco, sozinha, falando ao telefone e segurando a porta com o pé, que é o que se faz quando se sai falando ao telefone.',
@@ -2798,7 +2798,7 @@ c11_tirou_os_seis:{
     'Leva duas horas e quarenta minutos e é a coisa mais difícil que você já fez fisicamente.',
     'Quatro lances de escada, seis vezes, com um corpo de mais ou menos o seu tamanho e o seu peso, molhado, que não sabe ajudar porque nunca usou o próprio corpo.',
     d=>d.flags.reis_desce_com_voce ? 'A Dra. Sorrel carrega três. Ela tem cinquenta e um anos e carrega três, e na terceira ela senta no degrau e chora com raiva de estar chorando, e depois levanta e faz mais uma.' :
-       'Você faz as seis viagens sozinho e na quarta você já não sente o braço esquerdo.',
+       'Você faz as seis viagens sozinh{o|a} e na quarta você já não sente o braço esquerdo.',
     'Na garagem, no nível 3, entre dois carros, você senta no chão com seis criaturas que nunca viram uma parede que não fosse branca.',
     'E a mais adiantada delas — a que ficou de pé no tanque — olha o teto de concreto da garagem por muito tempo e depois olha pra você e faz a primeira coisa que ela faz por vontade própria na vida:',
     'ela põe a mão no chão. E deixa ali.',
@@ -2927,13 +2927,13 @@ c11_deixou_escolher:{
     'Depois senta no chão, ao lado deles.',
     'Ele escolheu.',
     'A primeira escolha da vida dele foi ficar com os outros três, e ele tomou essa decisão em menos de dois minutos, e ninguém nunca vai saber disso porque ninguém além de você estava lá.',
-    'Você sai sozinho.',
+    'Você sai sozinh{o|a}.',
     'E essa imagem vai te acompanhar até o último capítulo desse jogo.'
   ],
   ef:{flag:['deixou_a_copia','divida_com_os_doze'],
       rep:{eixo:'bom',delta:4,motivo:'Deu a alguém a primeira escolha da vida dele'},
       moral:-10,
-      registrar:'A cópia escolheu ficar com os outros três. Você saiu sozinho.',
+      registrar:'A cópia escolheu ficar com os outros três. Você saiu sozinh{o|a}.',
       presagio:'Ninguém além de você estava lá. Então conte. É pra isso que serve ter estado lá.'},
   escolhas:[
     {texto:'Sair.', vai:'c11_fim'},
@@ -3246,7 +3246,7 @@ c11_destruir:{
 
 c11_esperou_chegarem:{
   texto:[
-    'Você senta no chão molhado do andar 11, entre acrílico quebrado, e espera.',
+    'Você senta no chão molhad{o|a} do andar 11, entre acrílico quebrado, e espera.',
     'Chegam em dezoito minutos: dois seguranças e a Dra. Sorrel.',
     'Os seguranças param na porta. Ela passa.',
     'Ela anda entre os tanques quebrados devagar, olhando cada um, e não chora e não grita e não pergunta nada.',

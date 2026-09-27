@@ -322,6 +322,31 @@ const Historia = {
 };
 
 /* Resolve texto que pode ser função do estado */
+/* ============================================================
+   VOCÊ, NO SEU GÊNERO
+   O texto é escrito em segunda pessoa, mas adjetivo e tratamento
+   concordam com quem joga: "você fica sentad{o|a}", "{o senhor|a
+   senhora}", "{filho|filha}". A marca é {forma de Homem|forma de
+   Mulher}, resolvida quando o texto vai pra tela (UI.esc), então o
+   diário e o que foi guardado antes também saem certos.
+   ============================================================ */
+function concordaJogador(s){
+  if (typeof s !== 'string' || s.indexOf('|') < 0 || s.indexOf('{') < 0) return s;
+  let fem = false;
+  try { fem = !!(Estado.dados && Estado.j && /^mulher/i.test(Estado.j.genero || '')); } catch(e){}
+  /* A pessoa que ficou em casa tem a marca dela, {casa:ela|ele}, com a
+     forma feminina primeiro porque as cenas foram escritas pra ela. Vem
+     antes da do jogador, que senão leria "casa:ela" como forma de Homem. */
+  const casaF = (typeof casaEhMulher === 'function') ? casaEhMulher() : true;
+  /* {pk:ele|ela}: o Pokémon da frente do time, em cena escrita sem
+     variável (o que sumiu de casa na última manhã). */
+  let pkF = false;
+  try { const p = Estado.dados && Estado.dados.time && Estado.dados.time[0]; pkF = !!p && generoDe(p) === 'f'; } catch(e){}
+  return s.replace(/\{casa:([^{}|]*)\|([^{}|]*)\}/g, (_, f, m) => casaF ? f : m)
+          .replace(/\{pk:([^{}|]*)\|([^{}|]*)\}/g, (_, m, f) => pkF ? f : m)
+          .replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_, m, f) => fem ? f : m);
+}
+
 function txt(t){
   if (typeof t === 'function'){ try { return t(Estado.dados); } catch(e){ return ''; } }
   if (t && typeof t === 'object' && t.diz != null) return txt(t.diz);

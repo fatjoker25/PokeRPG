@@ -79,7 +79,7 @@ c10_ab_dormiu:{
     'O vale inteiro volta junto. Dá pra ouvir: onze geladeiras religando ao mesmo tempo, um rádio que ficou ligado, o zumbido do poste.',
     'E, atrás de tudo isso, de muito longe, uma coisa grande desacelerando.',
     'É o som de um motor enorme reduzindo. Dura uns quarenta segundos e some.',
-    'Você fica deitado no escuro com os olhos abertos até clarear.'
+    'Você fica deitad{o|a} no escuro com os olhos abertos até clarear.'
   ],
   ef:{flag:'ouviu_o_motor_desacelerar',
       registrar:'Às 4h11, quando a luz voltou, algo grande desacelerou no fundo do vale por quarenta segundos.'},
@@ -121,7 +121,7 @@ c10_ab_por_que_nao:{
     fala('Sr. Holt', 'Pra deixar, você tranca o portão.'),
     d=>fala(d.jogador.nome, 'E o zumbido?'),
     'Ele não responde na hora. Mexe na cadeira, que range.',
-    fala('Sr. Holt', 'Uma usina desligada não zumbe, menino.'),
+    fala('Sr. Holt', 'Uma usina desligada não zumbe, {menino|menina}.'),
     fala('Sr. Holt', 'Eu escuto esse zumbido da minha varanda faz sete anos. Não escutava nos quatro primeiros.')
   ],
   ef:{flag:'zumbido_ha_sete_anos',
@@ -269,9 +269,9 @@ c10_ab_a_via:{
     'Ele destaca a terceira via, a rosa, que é a via que fica com o cliente e que nesse caso não tem cliente.',
     fala('o homem do macacão', 'Leva. Se der merda eu falo que perdi.'),
     'Você dobra o papel em quatro e guarda, e a partir daqui você está carregando um documento, o que é diferente de carregar uma suspeita.',
-    fala('o segundo homem', 'Ó, moço.'),
+    fala('o segundo homem', 'Ó, {moço|moça}.'),
     'Ele fala pela primeira vez sem ser por cima do ombro do colega.',
-    fala('o segundo homem', 'Se você entrar aí, não entra sozinho.'),
+    fala('o segundo homem', 'Se você entrar aí, não entra sozinh{o|a}.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('o segundo homem', 'Porque quarenta megawatt-hora é energia de bairro. E não tem bairro lá dentro.')
   ],
@@ -279,7 +279,7 @@ c10_ab_a_via:{
       registrar:'Tem a via rosa do chamado da companhia energética, com o consumo da unidade 4.'},
   escolhas:[
     {texto:'Pedir pra eles abrirem o portão.', vai:'c10_portao'},
-    {texto:'Dar a volta pela cerca sozinho.', vai:'c10_perimetro'}
+    {texto:'Dar a volta pela cerca sozinh{o|a}.', vai:'c10_perimetro'}
   ]
 },
 
@@ -585,7 +585,7 @@ c10_convidou_eloi:{
     'Ele olha pra você um tempo desconfortável.',
     '"Eu tenho sessenta e nove anos, uma ponte de safena e um marca-passo."',
     'Pausa.',
-    '"Marca-passo, garoto. Num lugar que faz sessenta hertz sem carga."',
+    '"Marca-passo, {garoto|garota}. Num lugar que faz sessenta hertz sem carga."',
     'Ele volta a olhar a usina.',
     '"Eu vou até o portão. Do portão eu fico. E eu vou ficar até você sair, e se você não sair até as seis da manhã eu vou até Lavender chamar quem tiver que chamar."',
     '"É o máximo que um velho com marca-passo consegue oferecer e eu odeio que seja."'
@@ -634,7 +634,7 @@ c10_alguem_entrou:{
     'Ela conta nos dedos, sem drama, como quem lista compras.',
     '"Ano passado entrou um grupo de quatro. Saíram os quatro, sem nada. Disseram que não tinha nada lá."',
     '"Em janeiro entrou um sozinho. Saiu. Não falou com ninguém, foi embora andando pro sul e deixou a barraca armada aqui. A barraca ficou nove dias e a gente desmontou."',
-    '"Em abril entrou um casal de Vermilion. Saíram correndo em quarenta minutos e um deles estava com o braço queimado numa listra fina, assim." Ela desenha no próprio antebraço uma linha reta. "Reta. Queimadura reta, garoto. Fogo não faz linha reta."',
+    '"Em abril entrou um casal de Vermilion. Saíram correndo em quarenta minutos e um deles estava com o braço queimado numa listra fina, assim." Ela desenha no próprio antebraço uma linha reta. "Reta. Queimadura reta, {garoto|garota}. Fogo não faz linha reta."',
     '"E sempre a mesma coisa quando a gente pergunta o que teve lá: eles ficam um tempão pensando antes de responder. Todos. Como se tivessem que lembrar."'
   ],
   ef:{flag:'sabe_dos_que_entraram',
@@ -671,7 +671,7 @@ c10_perimetro:{
 
 c10_buraco:{
   texto:[
-    'Você passa por um dos buracos derretidos, agachado, e a borda da tela ainda está com aquele acabamento liso de metal que fundiu e voltou a endurecer.',
+    'Você passa por um dos buracos derretidos, agachad{o|a}, e a borda da tela ainda está com aquele acabamento liso de metal que fundiu e voltou a endurecer.',
     'Você encosta o dedo sem pensar.',
     'Está morna.',
     'Uma cerca de alambrado num vale de vento, às sete da noite, morna ao toque.',
@@ -923,7 +923,7 @@ c10_consolou_eloi:{
   texto:[
     '"Você avisou. Só não teve quem lesse."',
     'Ele balança a cabeça, e é um não.',
-    '"Garoto, essa frase é gentil e eu agradeço, mas eu passei dezenove anos numa sala de controle."',
+    '"{Garoto|Garota}, essa frase é gentil e eu agradeço, mas eu passei dezenove anos numa sala de controle."',
     '"Numa sala de controle, quando é sério, você não escreve. Você pega o rádio. Você liga pro supervisor em casa, de madrugada, e aguenta ele gritar com você, e no dia seguinte todo mundo reclama que o Elói é exagerado."',
     '"Eu não quis ser o exagerado."',
     'Ele bate duas vezes na capa da agenda com a ponta do dedo.',
@@ -1038,7 +1038,7 @@ c10_registro_pro_eloi:{
     'Ele lê de novo.',
     '"Cinco e trinta e um, porta externa."',
     'Ele abaixa a fita.',
-    '"Garoto, eu chego às sete. O turno da madrugada é um homem só. Não tinha ninguém pra abrir a P2 às cinco e trinta e um."',
+    '"{Garoto|Garota}, eu chego às sete. O turno da madrugada é um homem só. Não tinha ninguém pra abrir a P2 às cinco e trinta e um."',
     'Longa pausa.',
     '"A não ser que a P2 não tenha sido aberta por uma pessoa."',
     'Vocês dois olham pro galpão ao mesmo tempo, sem combinar.',
@@ -1410,13 +1410,13 @@ c10_esperou_no_poco:{
     'Às dezoito e quarenta um raio cai no galpão, a duzentos metros, e o clarão te cega por dois segundos.',
     'Às dezoito e quarenta e um o pátio da subestação escurece de uma vez porque alguma coisa passou entre você e o céu.',
     'Ela pousa do outro lado do T3, e o transformador de onze toneladas range.',
-    'Você está sentado na cama dela.'
+    'Você está sentad{o|a} na cama dela.'
   ],
   ef:{flag:'esperou_zapdos',
       executar:d=>{ Estado.lend(145).encontros++; return []; },
       instabilidade:1,
       registrar:'Esperou no poço de contenção até Zapdos voltar.',
-      presagio:'Você está sentado na cama dela. Sai devagar ou não sai.'},
+      presagio:'Você está sentad{o|a} na cama dela. Sai devagar ou não sai.'},
   escolhas:[
     {texto:'Ficar absolutamente imóvel.', vai:'c10_imovel'},
     {texto:'Sair de lado, devagar, sem virar as costas.', vai:'c10_saiu_de_lado'},
@@ -1433,7 +1433,7 @@ c10_imovel:{
     'Na segunda volta ela para na sua frente, a três metros.',
     'Olha.',
     'E depois faz a coisa que te desmonta: ela ignora você e entra no poço, e deita na pena, encostada no seu joelho, e fecha os olhos.',
-    'Você fica mais uma hora sentado na borda de um poço de contenção com uma ave lendária dormindo encostada na sua perna.',
+    'Você fica mais uma hora sentad{o|a} na borda de um poço de contenção com uma ave lendária dormindo encostada na sua perna.',
     'Não tem música. Não tem clarão. Não tem nada. Só um bicho muito velho e muito cansado dormindo do lado de um estranho que não fez movimento brusco.'
   ],
   ef:{flag:['zapdos_dormiu_do_lado','respeitou_zapdos'],
@@ -1501,7 +1501,7 @@ c10_religou:{
     'Você empurra a alavanca de volta antes de pensar.',
     'A seccionadora fecha com o mesmo estouro surdo e o zumbido volta em menos de um segundo — e volta mais alto do que estava.',
     'O grito para no meio.',
-    'Você fica parado com as duas mãos na alavanca, ofegante, numa subestação escura, e a coisa que você acabou de fazer é pedir desculpa pra um bicho de cinquenta níveis usando a única língua que vocês dois falam.',
+    'Você fica parad{o|a} com as duas mãos na alavanca, ofegante, numa subestação escura, e a coisa que você acabou de fazer é pedir desculpa pra um bicho de cinquenta níveis usando a única língua que vocês dois falam.',
     'Do outro lado do pátio, silêncio.',
     'Depois de uns quarenta segundos, um estalo baixo. Duas vezes.',
     'E o zumbido assenta de volta na frequência de antes.'
@@ -1525,7 +1525,7 @@ c10_correu_do_portao:{
   texto:[
     'Você corre os duzentos metros do pátio até o portão com o cabelo em pé e gosto de metal na boca.',
     'Não vem atrás.',
-    d=>d.flags.eloi_no_portao ? 'O Sr. Edric está no portão, de pé, com a mão no peito em cima do marca-passo, branco. "Eu senti", ele diz. "Eu senti no peito, garoto. Não faz isso de novo."' :
+    d=>d.flags.eloi_no_portao ? 'O Sr. Edric está no portão, de pé, com a mão no peito em cima do marca-passo, branco. "Eu senti", ele diz. "Eu senti no peito, {garoto|garota}. Não faz isso de novo."' :
        'No portão você para, com as mãos no joelho, e olha pra trás. O zumbido continua exatamente igual.',
     'Ave lendária não persegue. Ave lendária lembra.'
   ],
@@ -1660,7 +1660,7 @@ c10_respondeu:{
     'Seis.',
     'O galpão fica absolutamente parado.',
     'Nenhum Voltorb brilha. Nenhum ímã gira. Zapdos não se mexe na viga.',
-    'Nove segundos de nada, e você já está se sentindo o maior idiota de Kanto.',
+    'Nove segundos de nada, e você já está se sentindo {o|a} maior idiota de Kanto.',
     'E aí vem o sétimo.',
     'Um pulso só, da viga, tão forte que as lâmpadas de emergência mortas do galpão acendem por um instante e queimam de vez com um estalo.',
     'Ela respondeu pra você.',
@@ -1914,7 +1914,7 @@ c10_capturou_zapdos:{
     'E os quarenta e poucos Voltorb do chão apagam ao mesmo tempo.',
     'Não em sequência. Ao mesmo tempo, como interruptor.',
     'O galpão fica escuro, silencioso e — pela primeira vez em onze anos — desligado de verdade.',
-    'Você fica parado no escuro com uma bola na mão e quarenta bichos em volta que pararam no meio de uma frase.',
+    'Você fica parad{o|a} no escuro com uma bola na mão e quarenta bichos em volta que pararam no meio de uma frase.',
     'Lá fora, no céu limpo, uma nuvem começa a se formar exatamente sobre a usina.',
     'E outra no norte. E outra no sul.'
   ],
@@ -2115,7 +2115,7 @@ c10_contou_pro_eloi_da_foto:{
     'Ele põe o boné.',
     '"Onze anos eu deixo panetone nesse degrau e nunca vi ela descer."',
     'Ele senta na cadeira de praia, de frente pra usina, como todo primeiro sábado.',
-    '"Vai pra Saffron, garoto. Você tá indo bem e eu não sou de dizer isso."'
+    '"Vai pra Saffron, {garoto|garota}. Você tá indo bem e eu não sou de dizer isso."'
   ],
   ef:{flag:'eloi_se_despediu',
       npc:{nome:'Sr. Edric', opiniao:8, memoria:'Soube que a Sra. Vesna desceu no degrau. Foi o melhor dia dele em onze anos.'},

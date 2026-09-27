@@ -101,7 +101,7 @@ c32_os_quatro_mecanicos:{
     fala('o homem de macacão', 'Você é de onde?'),
     d=>fala(d.jogador.nome, 'De passagem.'),
     'Eles se olham, e é o Otto, que não tinha falado ainda, que responde.',
-    fala('Otto', 'Cheiro de canil, moço. De canil grande.'),
+    fala('Otto', 'Cheiro de canil, {moço|moça}. De canil grande.'),
     fala('Otto', 'Toda sexta, de manhã cedo, quando eles abrem o portão pra carregar.'),
     d=>fala(d.jogador.nome, 'Carregar o quê?'),
     fala('Otto', 'Caixa branca. Fechada. Do tamanho de uma caixa de feira.'),
@@ -223,7 +223,7 @@ c32_o_fumante:{
     d=>fala(d.jogador.nome, 'Tô.'),
     fala('o fumante', 'A gente viu pela câmera.'),
     'Ele fuma.',
-    fala('o fumante', 'Não é ameaça. É só pra você saber que não adianta ficar sentado no meio-fio.'),
+    fala('o fumante', 'Não é ameaça. É só pra você saber que não adianta ficar sentad{o|a} no meio-fio.'),
     d=>fala(d.jogador.nome, 'O que tem lá dentro?'),
     'Ele olha pro cigarro dele.',
     fala('o fumante', 'Eu assinei um papel de quatro páginas que diz que eu não posso responder isso.'),
@@ -341,9 +341,9 @@ c32_bateu_na_porta:{
     d=>fala(d.jogador.nome, 'Instalação privada de quê?'),
     fala('a mulher de jaleco', 'De uma empresa privada.'),
     'E é tudo verdade, e é tudo suficiente, e não tem uma única palavra ali que dê pra transformar em denúncia.',
-    fala('a mulher de jaleco', 'O senhor precisa de alguma coisa?'),
+    fala('a mulher de jaleco', '{O senhor|A senhora} precisa de alguma coisa?'),
     d=>fala(d.jogador.nome, 'Preciso.'),
-    fala('a mulher de jaleco', 'Então o senhor pode protocolar um pedido na sede da empresa. O endereço está na junta comercial.'),
+    fala('a mulher de jaleco', 'Então {o senhor|a senhora} pode protocolar um pedido na sede da empresa. O endereço está na junta comercial.'),
     'E fecha a porta, educadamente, sem bater.'
   ],
   ef:{flag:'bateu_no_galpao',
@@ -386,7 +386,7 @@ c32_os_dois_socios:{
     d=>fala(d.jogador.nome, 'Quarenta e uma?'),
     fala('a atendente da junta', 'Quarenta e uma. Todas com a mesma administradora contratada.'),
     'Ela vira a tela.',
-    fala('a atendente da junta', 'Isso aqui a gente chama de laranja, moço. É um par de laranja.'),
+    fala('a atendente da junta', 'Isso aqui a gente chama de laranja, {moço|moça}. É um par de laranja.'),
     fala('a atendente da junta', 'E eu sou obrigada a te falar uma coisa: ser sócio de quarenta e uma empresas não é crime.'),
     'Ela imprime a lista das quarenta e uma, que sai em três folhas.',
     fala('a atendente da junta', 'Só que quem monta quarenta e uma empresas com dois nomes e uma administradora só não está economizando papel.', 'baixo')
@@ -439,7 +439,7 @@ c32_procurou_entrada:{
     'O interior do galpão é iluminado com luz fria e é organizado de um jeito que dói: quatro corredores, gaiolas empilhadas em três alturas dos dois lados, numeração pintada no chão, e duas pessoas de jaleco andando entre os corredores com prancheta.',
     'Está tudo limpo.',
     'Está tudo em ordem.',
-    'E você fica pendurado numa basculante de vidro aramado, às onze e vinte da noite, contando corredores, até os braços não aguentarem mais.'
+    'E você fica pendurad{o|a} numa basculante de vidro aramado, às onze e vinte da noite, contando corredores, até os braços não aguentarem mais.'
   ],
   ef:{hp:-3, causa:'Pendurado numa janela por tempo demais',
       flag:['viu_dentro_do_galpao','sabe_do_lote_unico'], moral:-2,
@@ -504,7 +504,7 @@ c32_o_mecanico_de_novo:{
     'Ele entra na oficina e volta em quarenta segundos com um calendário de parede de fornecedor de peça, do tipo que vem de graça em janeiro.',
     'Cada sexta-feira tem um número escrito a caneta no canto do quadrinho.',
     'Quatro calendários. Quatro anos.',
-    fala('Otto', 'Eu não sei o que eu tô contando, moço.'),
+    fala('Otto', 'Eu não sei o que eu tô contando, {moço|moça}.'),
     fala('Otto', 'Eu só sei que quando eu comecei era vinte e dois.', 'baixo')
   ],
   ef:{flag:['os_calendarios_do_mecanico','reika_precisa_de_papel','sabe_do_lote_unico'],

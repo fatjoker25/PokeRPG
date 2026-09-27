@@ -71,7 +71,7 @@ c27_ab_a_mula:{
     d=>fala(d.jogador.nome, 'E o que tinha lá em cima?'),
     'Ele para de afivelar.',
     fala('Enzo', 'Frio. Muito frio e uma boca de caverna que não sai vento.'),
-    fala('Enzo', 'Caverna sempre sai vento, moço. Sempre. É o primeiro negócio que a gente aprende.'),
+    fala('Enzo', 'Caverna sempre sai vento, {moço|moça}. Sempre. É o primeiro negócio que a gente aprende.'),
     fala('Enzo', 'Daquela não sai.', 'baixo')
   ],
   ef:{dinheiro:-1200, flag:['subiu_de_mula','a_caverna_sem_vento'],
@@ -113,7 +113,7 @@ c27_ab_a_equipe_de_oitenta_e_oito:{
 c27_ab_sozinho_mesmo:{
   texto:[
     'Ninguém te leva, ninguém te acompanha, ninguém te vende nada. A estrada acaba no posto e vira trilha, e a trilha acaba em duas horas e vira pedra, e você faz as duas horas sem encontrar uma pessoa.',
-    'O primeiro dia é só cansaço, e cansaço sozinho é diferente de cansaço acompanhado: não tem ninguém pra quem reclamar, então você não reclama, então você não repara que está cansado até parar.',
+    'O primeiro dia é só cansaço, e cansaço sozinho é diferente de cansaço acompanhado: não tem ninguém pra quem reclamar, então você não reclama, então você não repara que está cansad{o|a} até parar.',
     'Você para às cinco da tarde porque a luz vai embora e monta o acampamento com as mãos que já não fecham direito.',
     d=>{
       const p = d.time[0];
@@ -160,7 +160,7 @@ c22_posto:{
   texto:[
     'O posto florestal da Rota 10 é uma casa de madeira com antena, um gerador e uma caixa d água em cima de quatro pernas.',
     'Quem atende é um homem de uns cinquenta anos de camisa cáqui desbotada, que se apresenta como Sr. Roland Poplar e que está sozinho aqui há dois anos e meio.',
-    '"O senhor vai subir." Não é pergunta. "Assina o livro."',
+    '"{O senhor|A senhora} vai subir." Não é pergunta. "Assina o livro."',
     'O livro fica num prego, do lado da porta. É um caderno de capa dura com uma coluna de nomes, uma de datas de subida e uma de datas de descida.',
     'Você passa o dedo pela terceira coluna e conta quatro linhas em branco.'
   ],
@@ -202,7 +202,7 @@ c22_conversa_com_eles:{
     '"Qual?"',
     '"Se eu pergunto quanto tempo faz que eles estão lá, eles erram sempre para menos." Ele sopra o café dele. "Já perguntei nove vezes. A resposta mais alta foi duas semanas."',
     'Ele bebe.',
-    '"E faz quatro meses, moço. Eu marco no calendário."'
+    '"E faz quatro meses, {moço|moça}. Eu marco no calendário."'
   ],
   ef:{flag:['sabe_do_tempo_errado'], instabilidade:2,
       registrar:'Os três acampados erram o tempo sempre para menos. A resposta mais alta foi duas semanas.'},
@@ -242,7 +242,7 @@ c22_ele_ja_subiu:{
     'Ele abre uma gaveta e tira um binóculo velho, de correia rachada.',
     '"Eu cheguei na borda, olhei para baixo, e desci sem entrar."',
     '"Por quê?"',
-    '"Porque tinha dois bichos grandes lá embaixo virados para o mesmo lado, e eu tenho trinta anos de mato, moço." Ele fecha a gaveta. "Bicho não fica virado para o mesmo lado. Bicho fica virado um contra o outro."'
+    '"Porque tinha dois bichos grandes lá embaixo virados para o mesmo lado, e eu tenho trinta anos de mato, {moço|moça}." Ele fecha a gaveta. "Bicho não fica virado para o mesmo lado. Bicho fica virado um contra o outro."'
   ],
   ef:{flag:['sabe_dos_dois_virados'], instabilidade:1,
       registrar:'Ele viu dois bichos grandes no vale, virados para o mesmo lado. Bicho não faz isso.'},
@@ -417,7 +417,7 @@ c22_primeiro_dia:{
 
 c22_acampou:{
   texto:[
-    'Você acampa num ponto alto e passa a noite acordado olhando o vale a dois quilômetros.',
+    'Você acampa num ponto alto e passa a noite acordad{o|a} olhando o vale a dois quilômetros.',
     'Às duas da manhã, uma luz azul acende no fundo do vale e apaga. Uma vez só, e dura menos de um segundo.',
     'Às três e dez você percebe que está com fome e que não jantou, e que não sentiu fome antes disso, e que isso é estranho.',
     'Às quatro e quarenta, alguma coisa cruza o céu acima do vale: grande, rápida, e reta demais para ser pássaro comum.',
@@ -767,7 +767,7 @@ c22_desceu_os_dois:{
     'Você desce os dois até o posto florestal, e leva sete horas, e ninguém fala quase nada no caminho.',
     'No posto, o Sr. Poplar não faz nenhuma pergunta. Ele põe café, tira dois cobertores do armário e escreve duas datas na terceira coluna do livro.',
     'Depois acompanha você até a porta.',
-    '"O senhor vai subir de novo."',
+    '"{O senhor|A senhora} vai subir de novo."',
     '"Vou."',
     'Ele assente. "Então eu escrevo a sua data de subida outra vez, porque tem que constar."',
     'E escreve.'
@@ -790,7 +790,7 @@ c22_o_que_ficou:{
     '"Eles chegaram bem?"',
     '"Chegaram."',
     'Ele assente.',
-    '"Eu sei o que o senhor está pensando e está certo." Ele não tira os olhos do vale. "Eu sei que estou esperando uma coisa que talvez não venha, e que quatro meses é muito, e que a minha filha faz aniversário em novembro."',
+    '"Eu sei o que {o senhor|a senhora} está pensando e está cert{o|a}." Ele não tira os olhos do vale. "Eu sei que estou esperando uma coisa que talvez não venha, e que quatro meses é muito, e que a minha filha faz aniversário em novembro."',
     'Ele encolhe os ombros.',
     '"E mesmo assim eu não consigo descer sem responder. É assim que é. Eu não sei explicar melhor e eu já tentei muito."'
   ],
@@ -930,7 +930,7 @@ c22_tirou_equipe:{
       hp:-3, causa:'Descida forçada carregando gente',
       registrar:'Tirou a terceira equipe do vale. Eles acordaram a 200 metros.'},
   escolhas:[
-    {texto:'Voltar sozinho ao vale.', vai:'c22_encontro'},
+    {texto:'Voltar sozinh{o|a} ao vale.', vai:'c22_encontro'},
     {texto:'Perguntar a eles, agora acordados, o que foi perguntado.', vai:'c22_acordados'}
   ]
 },
@@ -1100,7 +1100,7 @@ c22_deitou_na_depressao:{
   texto:[
     'Você deita na depressão do meio do círculo, e ela é grande demais para você, e as bordas ficam a meio metro de cada lado.',
     'O vidro é morno. Depois de tantos anos, ainda é morno.',
-    'Você fica deitado olhando o céu entre duas paredes de pedra, que daqui é uma faixa comprida e nada mais.',
+    'Você fica deitad{o|a} olhando o céu entre duas paredes de pedra, que daqui é uma faixa comprida e nada mais.',
     'E aí uma coisa muito simples e muito ruim ocorre a você: quem esteve deitado aqui olhou exatamente para isto.',
     'Uma faixa de céu entre duas paredes, e nada mais, por muito tempo.'
   ],
@@ -1271,7 +1271,7 @@ c22_fim:{
     },
     'Você não precisa de mais nenhuma pista para saber o que tem no fim dessa descida.'
   ],
-  fim:true, resumo:'Capítulo 22 concluído — você chegou onde só cabe ir sozinho.'
+  fim:true, resumo:'Capítulo 22 concluído — você chegou onde só cabe ir sozinh{o|a}.'
 }
 }}
 

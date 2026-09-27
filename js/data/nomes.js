@@ -31,7 +31,7 @@ const RECUSAM_O_NOME = {
   'a mulher da pasta': () => [
     'Ela olha o relógio de pulso antes de responder, e o relógio dela não atrasa.',
     fala('a mulher da pasta', 'Meu nome está na procuração, que é pública.'),
-    fala('a mulher da pasta', 'Se o senhor quiser, protocola um pedido de vista.', 'frio')
+    fala('a mulher da pasta', 'Se {o senhor|a senhora} quiser, protocola um pedido de vista.', 'frio')
   ],
   'a mulher da pasta de couro': () => [
     'Ela ajeita a pasta debaixo do braço.',

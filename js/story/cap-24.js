@@ -177,7 +177,7 @@ c24_perguntou_por_que:{
     fala('o guarda da primeira', 'Porque a minha máquina lê o cartão e a máquina dele lê outra coisa.'),
     fala('o guarda da primeira', 'A da terceira lê outra. A da quinta lê outra.'),
     d=>fala(d.jogador.nome, 'Lê o quê?'),
-    fala('o guarda da primeira', 'Moço, eu ganho por turno.', 'baixo'),
+    fala('o guarda da primeira', '{Moço|Moça}, eu ganho por turno.', 'baixo'),
     fala('o guarda da primeira', 'Eu sei ligar a minha e sei desligar a minha. Passa.')
   ],
   ef:{flag:'as_maquinas_leem_coisas_diferentes',
@@ -281,7 +281,7 @@ c24_voltou_pra_estrada:{
     'Você desce os trinta metros de mato de volta, entra na estrada antes da segunda guarita, e passa pelas seis que faltavam na ordem.',
     'Leva uma hora e quarenta. Cada uma confere uma coisa diferente e nenhuma explica o quê.',
     'Na sétima, a mulher de uniforme cinza olha o seu cartão e o histórico de passagem e franze a testa.',
-    fala('a guarda da sétima', 'O senhor entrou pela primeira e reapareceu na segunda quarenta minutos depois.'),
+    fala('a guarda da sétima', '{O senhor|A senhora} entrou pela primeira e reapareceu na segunda quarenta minutos depois.'),
     fala('a guarda da sétima', 'Isso é sete minutos de caminhada.'),
     d=>fala(d.jogador.nome, 'Eu me perdi.'),
     fala('a guarda da sétima', 'Aqui não tem onde se perder.', 'frio', 'Ela escreve alguma coisa. Ela escreve mais do que caberia em "se perdeu".')
@@ -297,7 +297,7 @@ c24_a_terceira:{
     'Segunda guarita: leitor de cartão, apita, passa.',
     'Terceira guarita: a máquina é diferente. É maior, tem um visor verde, e o guarda digita alguma coisa antes de passar o cartão.',
     'Ele lê o visor. Ele lê de novo. Ele olha pra você.',
-    fala('o guarda da terceira', 'O senhor tem registro de acompanhamento ativo.'),
+    fala('o guarda da terceira', '{O senhor|A senhora} tem registro de acompanhamento ativo.'),
     d=>fala(d.jogador.nome, 'O que é isso?'),
     fala('o guarda da terceira', 'Eu não sei o que é. Aparece no meu visor e eu sou obrigado a informar ao portador.'),
     fala('o guarda da terceira', 'Tá informado. Passa.', 'frio')
@@ -318,7 +318,7 @@ c24_exigiu_o_visor:{
     fala('o visor', 'ACOMP. ATIVO — ORIGEM: 704 — NÍVEL: 2 — REVISÃO: TRIMESTRAL', 'frio'),
     'Sala 704. Sétimo andar. Prédio comercial com farmácia no térreo.',
     'Nível 2. Existe nível 1 e existem níveis acima de 2.',
-    fala('o guarda da terceira', 'O senhor não viu isso.', 'baixo'),
+    fala('o guarda da terceira', '{O senhor|A senhora} não viu isso.', 'baixo'),
     fala('o guarda da terceira', 'Eu tenho filho. Passa.')
   ],
   ef:{flag:'viu_o_visor', moral:-2,
@@ -352,9 +352,9 @@ c24_desde_quando:{
     d=>fala(d.jogador.nome, 'Desde quando eu tenho isso?'),
     'Ele digita. Espera. Lê.',
     fala('o guarda da terceira', 'Data de abertura...', null, 'Ele para e confere de novo, porque o número parece errado.'),
-    d=>fala('o guarda da terceira', `Três semanas depois da sua primeira licença. O senhor tinha... ${d.insignias.length ? 'nenhuma insígnia ainda' : 'nada ainda'}.`),
+    d=>fala('o guarda da terceira', `Três semanas depois da sua primeira licença. {O senhor|A senhora} tinha... ${d.insignias.length ? 'nenhuma insígnia ainda' : 'nada ainda'}.`),
     'Três semanas. Você ainda estava na Floresta de Viridian errando o caminho marcado.',
-    fala('o guarda da terceira', 'Passa, moço. Por favor.', 'baixo')
+    fala('o guarda da terceira', 'Passa, {moço|moça}. Por favor.', 'baixo')
   ],
   ef:{flag:'sabe_desde_quando_te_seguem', moral:-3,
       rep:{eixo:'bom',delta:1,motivo:'Descobriu há quanto tempo era observado'},
@@ -387,7 +387,7 @@ c24_a_quinta:{
 c24_agradeceu_o_aviso:{
   texto:[
     'Você chega perto e fala baixo, olhando pra estrada e não pra ele, do jeito que se fala com alguém que arriscou alguma coisa por você.',
-    d=>fala(d.jogador.nome, 'Obrigado.'),
+    d=>fala(d.jogador.nome, '{Obrigado|Obrigada}.'),
     fala('o guarda da quinta', 'Eu não fiz nada.'),
     fala('o guarda da quinta', 'Estão aí desde as sete da manhã. Não desceram, não falaram comigo, não mostraram documento.'),
     fala('o guarda da quinta', 'E o meu visor apitou quando eles chegaram, e eu não apertei nada.', 'baixo')

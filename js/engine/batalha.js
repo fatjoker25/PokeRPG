@@ -995,7 +995,12 @@ const Batalha = {
         this.ev('erro', `${nomeVisivel(this.aliado)} está pres${pron(this.aliado).o} por ${this.estAliado.presoPor} e não consegue voltar.`);
         return {eventos:this.eventos, fim:null};
       }
-      this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho();
+      /* Substituir quem desmaiou não é trocar: como nos jogos, o novo
+         entra e o turno começa com ele, sem apanhar de graça. */
+      const substituicao = !estaVivo(this.aliado);
+      this.trocarPokemon(acao.uid);
+      if (substituicao){ this.turno--; return {eventos:this.eventos, fim:null}; }
+      return this.turnoInimigoSozinho();
     }
 
     // ordem por velocidade (prioridade primeiro)
@@ -1137,7 +1142,9 @@ const Batalha = {
   trocarPokemon(uid){
     const novo = Estado.dados.time.find(p => p.uid === uid);
     if (!novo || !estaVivo(novo)){ this.ev('erro', 'Esse Pokémon não pode lutar.'); return; }
-    this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
+    this.ev('info', estaVivo(this.aliado)
+      ? `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`
+      : `Vai, ${nomeVisivel(novo)}!`);
     this.desfazerMudancas(this.aliado, this.estAliado);
     this.aliado = novo;
     this.estAliado = this.novoEstado();

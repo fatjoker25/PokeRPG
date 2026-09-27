@@ -205,7 +205,7 @@ c5_ab_negou:{
     'Sai mais duro do que você queria. O mais novo dos três fica vermelho até a orelha.',
     fala('o homem de bota', 'Tá certo.'),
     'Ele diz isso sem discordar e sem concordar, do jeito de quem já viu isso acontecer com outra pessoa que também achava que tinha autoridade pra dizer.',
-    'Você entra sozinho. Dez minutos depois, lá dentro, você ouve três pares de pé na pedra atrás de você mesmo assim.'
+    'Você entra sozinh{o|a}. Dez minutos depois, lá dentro, você ouve três pares de pé na pedra atrás de você mesmo assim.'
   ],
   ef:{rep:{eixo:'ruim', delta:1, motivo:'Cortou três pessoas na boca da caverna.'},
       flag:'tem_gente_te_seguindo_no_monte', registrar:'Mandou os três não te seguirem. Eles seguiram.'},
@@ -310,7 +310,7 @@ c5_gritou_trio:{
     '"O QUE TEM NA CAIXA?"',
     'Os três param. Procuram. Um deles acha você em cima da saliência, aponta, e os outros dois olham.',
     'O que carrega uma caixa só põe ela no chão devagar.',
-    '"Desce aí, moleque."',
+    '"Desce aí, {moleque|moleca}."',
     'A voz não é ameaçadora. É pior: é entediada.'
   ],
   escolhas:[
@@ -344,7 +344,7 @@ c5_poe_de_volta:{
   texto:[
     '"Põe de volta."',
     'O da aliança fecha a tampa com o joelho, sem pressa.',
-    '"Põe de volta onde, moleque? Eu não sei mais de qual ninho é qual."',
+    '"Põe de volta onde, {moleque|moleca}? Eu não sei mais de qual ninho é qual."',
     'Ele fala isso sem crueldade nenhuma, e é um argumento verdadeiro, e ele vence a discussão com um argumento verdadeiro.',
     '"Se eu jogar de volta lá dentro no ninho errado, a mãe come." Ele levanta a caixa. "Você quer isso?"',
     'Você não quer isso. Você não quer nada disso. Não existe nenhuma escolha aqui que devolva os seis ovos aos seis lugares certos.'
@@ -396,7 +396,7 @@ c5_de_graca:{
   texto:[
     '"De graça. Eu só quero ver onde vai."',
     'O riso morre.',
-    '"Não." O da aliança fica sério de uma vez. "Isso aí é a resposta errada, moleque. Quem trabalha de graça quer outra coisa."',
+    '"Não." O da aliança fica sério de uma vez. "Isso aí é a resposta errada, {moleque|moleca}. Quem trabalha de graça quer outra coisa."',
     'Ele levanta a caixa e passa por você com um ombro que quase encosta e não encosta.',
     '"Vai pra dentro da caverna brincar. Não vem atrás."',
     'Eles descem. Você fica com a certeza clara de que errou a jogada por meio segundo de honestidade.'
@@ -579,7 +579,7 @@ c5_devolver_ovos:{
     'Você entra na caverna com a caixa nos braços.',
     'Leva quarenta minutos pra achar um ninho — uma depressão na rocha forrada de fibra seca, com casca de ovo antiga em volta, num nível de umidade completamente diferente do resto.',
     'Você põe os dois ovos lá. Só dois: os outros já estavam frios demais quando você abriu a caixa, e você não sabia disso até abrir a caixa.',
-    'Você fica escondido a uns vinte metros por uma hora e meia. Aparece um Clefairy. Ele chega perto do ninho, para, e fica olhando os dois ovos de um jeito que não dá pra interpretar.',
+    'Você fica escondid{o|a} a uns vinte metros por uma hora e meia. Aparece um Clefairy. Ele chega perto do ninho, para, e fica olhando os dois ovos de um jeito que não dá pra interpretar.',
     'Depois senta em cima deles.',
     'Você não sabe se ele sabe que não são os mesmos. Você prefere não saber.'
   ],
@@ -660,8 +660,8 @@ c5_perdeu_trio:{
   texto:[
     'Você perde.',
     'Eles não te machucam. Isso é importante e é pior do que se machucassem: o da aliança dá um tapinha no seu ombro, do jeito de quem consola um sobrinho.',
-    '"Treina mais." Ele pega a caixa. "Sério, moleque. Treina mais."',
-    'Eles descem a trilha conversando sobre futebol de novo, e você fica sentado na terra com o time desmaiado e uma humilhação que não tem nome.'
+    '"Treina mais." Ele pega a caixa. "Sério, {moleque|moleca}. Treina mais."',
+    'Eles descem a trilha conversando sobre futebol de novo, e você fica sentad{o|a} na terra com o time desmaiado e uma humilhação que não tem nome.'
   ],
   ef:{flag:['perdeu_pro_trio','deixou_os_ovos_irem'], hp:-3, causa:'Derrota na trilha do Monte da Lua',
       presagio:'"Treina mais." Você vai treinar. Vai treinar muito. E vai lembrar de onde veio a vontade.'},
@@ -729,7 +729,7 @@ c5_quem_manda:{
     'O da aliança levanta a caixa e não responde na hora. Responde na quarta passada, já de costas, já descendo:',
     '"Gente que assina papel."',
     'Ele diz isso do jeito de quem acha graça de si mesmo por ter medo.',
-    '"Gente que assina papel é pior que gente com arma, moleque. Arma acaba. Papel não."'
+    '"Gente que assina papel é pior que gente com arma, {moleque|moleca}. Arma acaba. Papel não."'
   ],
   ef:{flag:'gente_que_assina_papel',
       presagio:'Gente que assina papel. Guarda a frase. Você vai conhecer uma delas pessoalmente.'},
@@ -745,7 +745,7 @@ c5_ficou_em_cima:{
     'Você não desce.',
     'Os três esperam uns vinte segundos, e depois um deles dá de ombros e eles continuam descendo a trilha com as caixas.',
     'Ninguém sobe atrás de você. Ninguém ameaça. Ninguém se importa o suficiente pra isso.',
-    'Deitado naquela saliência, você entende uma coisa desagradável: não ser levado a sério é a forma mais eficiente de te neutralizar, e não custa nada pra eles.'
+    'Deitad{o|a} naquela saliência, você entende uma coisa desagradável: não ser levado a sério é a forma mais eficiente de te neutralizar, e não custa nada pra eles.'
   ],
   ef:{flag:'nao_levado_a_serio',
       presagio:'Vai chegar um dia em que te levarem a sério vai ser exatamente o problema.'},
@@ -783,9 +783,9 @@ c5_ligou_antes:{
 c5_esperou_ivone:{
   texto:[
     'Seis horas é muito tempo.',
-    'Você come tudo o que tinha. Cochila duas vezes e acorda as duas assustado. Conta pedras. Conversa com o seu time em voz alta, o que é uma coisa que você começou a fazer essa semana sem perceber.',
+    'Você come tudo o que tinha. Cochila duas vezes e acorda as duas assustad{o|a}. Conta pedras. Conversa com o seu time em voz alta, o que é uma coisa que você começou a fazer essa semana sem perceber.',
     'Em algum momento, duas pessoas saem da caverna, olham a trilha, e voltam pra dentro.',
-    d=>d.flags.esperou_do_posto ? 'Elas não te veem, porque você está deitado numa saliência quatro metros acima da boca. Isso foi inteligente.' : 'Elas te veem sentado na pedra. Uma delas acena. Você acena de volta, porque o que mais dá pra fazer.',
+    d=>d.flags.esperou_do_posto ? 'Elas não te veem, porque você está deitad{o|a} numa saliência quatro metros acima da boca. Isso foi inteligente.' : 'Elas te veem sentado na pedra. Uma delas acena. Você acena de volta, porque o que mais dá pra fazer.',
     'A Dra. Cordell chega às sete e quarenta da noite com quatro pessoas, dois carros e uma câmera de ombro.',
     'A primeira coisa que ela faz é olhar a sua cara e perguntar se você comeu.'
   ],
@@ -857,7 +857,7 @@ c5_mostrou_folha:{
     'Ela lê. Lê de novo. Vira pro verso, que está em branco, e volta pra frente.',
     '"Isso não é contrabando", ela diz baixo, pra você e pra mais ninguém.',
     '"Como não? Tem gaiola ali."',
-    '"Contrabando esconde." Ela balança a folha. "Isso aqui tem numeração sequencial, moço. Numeração sequencial é pra auditoria. Isso é feito pra ser conferido depois."',
+    '"Contrabando esconde." Ela balança a folha. "Isso aqui tem numeração sequencial, {moço|moça}. Numeração sequencial é pra auditoria. Isso é feito pra ser conferido depois."',
     'Ela dobra a folha e põe no bolso interno do jaleco.',
     '"Eu passei dois anos achando que estava atrás de ladrão de fóssil."'
   ],
@@ -962,10 +962,10 @@ c5_filmou_tunel:{
 
 c5_a_camera:{
   texto:[
-    'Você fica encostado na parede olhando a câmera trabalhar.',
+    'Você fica encostad{o|a} na parede olhando a câmera trabalhar.',
     'O rapaz filma as gaiolas de três ângulos. Filma uma etiqueta de perto. Pede pra Dra. Cordell repetir uma frase porque a primeira vez saiu com eco.',
     'Ela repete. A segunda vez sai pior, mais ensaiada.',
-    'Você entende, ali encostado na parede fria, uma coisa que vai te acompanhar: existe a coisa que acontece, e existe a coisa que dá pra mostrar, e não são a mesma coisa, e a segunda é a que vira verdade.'
+    'Você entende, ali encostad{o|a} na parede fria, uma coisa que vai te acompanhar: existe a coisa que acontece, e existe a coisa que dá pra mostrar, e não são a mesma coisa, e a segunda é a que vira verdade.'
   ],
   ef:{flag:'licao_da_camera',
       presagio:'A coisa que acontece e a coisa que dá pra mostrar. Você vai ter que escolher entre as duas, e mais de uma vez.'},
@@ -986,15 +986,15 @@ c5_guardou_saida:{
   ef:{flag:['expos_operacao','guardou_a_boca'],
       rep:{eixo:'bom',delta:2,motivo:'Guardou a saída enquanto outros faziam o trabalho'}},
   escolhas:[
-    {texto:'Carregar o Paras você mesmo até o Centro.', vai:'c5_paras'},
+    {texto:'Carregar o Paras você mesm{o|a} até o Centro.', vai:'c5_paras'},
     {texto:'Descer junto com eles.', vai:'c5_imprensa'},
-    {texto:'Entrar agora, sozinho, pra ver o que ficou.', vai:'c5_camara_vazia'}
+    {texto:'Entrar agora, sozinh{o|a}, pra ver o que ficou.', vai:'c5_camara_vazia'}
   ]
 },
 
 c5_camara_vazia:{
   texto:[
-    'Você entra sozinho, depois de todo mundo, com a luz da lanterna já amarelando.',
+    'Você entra sozinh{o|a}, depois de todo mundo, com a luz da lanterna já amarelando.',
     'A câmara agora é um lugar completamente diferente: mesas vazias, gaiolas abertas no chão, refletores de obra apagados.',
     'Tem café pela metade numa caneca. Já frio.',
     'E tem, na parede dos fundos, um retângulo limpo na rocha do tamanho de uma porta — o lugar de onde tiraram um fóssil com serra, e a superfície é lisa como bancada de cozinha.',
@@ -1105,7 +1105,7 @@ c5_pegou_pedra:{
     'Você pega.',
     'É mais pesada do que o tamanho sugere e é morna, e a superfície tem a textura de vidro fosco.',
     'Não acontece nada. Nenhuma luz, nenhum som, nenhuma revelação.',
-    'Você fica de pé no meio de uma cratera no alto de uma montanha segurando uma pedra morna, cercado por trinta marcas de pé em círculo, e o que você sente é constrangimento.',
+    'Você fica de pé no meio de uma cratera no alto de uma montanha segurando uma pedra morna, cercad{o|a} por trinta marcas de pé em círculo, e o que você sente é constrangimento.',
     'Guarda na mochila. Ela fica morna lá dentro por horas.'
   ],
   ef:{itens:{'Moon Stone':1}, flag:'pegou_a_pedra_da_lua',
@@ -1217,7 +1217,7 @@ c5_entrada:{
 c5_cortou_cabo:{
   texto:[
     'Você não tem alicate. Você tem uma pedra e teimosia.',
-    'Leva dezoito minutos e no fim você consegue: o cabo abre, solta um estalo seco e uma faísca que te joga sentado, e lá dentro da caverna, muito longe, a luz que você nem sabia que existia apaga.',
+    'Leva dezoito minutos e no fim você consegue: o cabo abre, solta um estalo seco e uma faísca que te joga sentad{o|a}, e lá dentro da caverna, muito longe, a luz que você nem sabia que existia apaga.',
     'O escuro que vem depois é absoluto por três segundos, até você lembrar da lanterna.',
     'E aí começam as vozes. Adultas. Bravas. Vindo de dentro, ecoando de um jeito que não dá pra saber a distância.'
   ],
@@ -1257,7 +1257,7 @@ c5_saiu_correndo:{
     'Você corre pra fora e não é bonito.',
     'Tropeça duas vezes. Bate o ombro numa quina. Sai na luz do dia com o coração na garganta e senta na pedra de fora, respirando como quem correu muito mais do que correu.',
     'Ninguém vem atrás.',
-    'Você fica sentado lá fora por um tempo longo, com a boca preta da caverna a três metros, tentando decidir se você é covarde ou prudente, e a resposta honesta é que não dá pra saber a diferença de fora.'
+    'Você fica sentad{o|a} lá fora por um tempo longo, com a boca preta da caverna a três metros, tentando decidir se você é covarde ou prudente, e a resposta honesta é que não dá pra saber a diferença de fora.'
   ],
   ef:{flag:'fugiu_da_caverna'},
   escolhas:[
@@ -1591,7 +1591,7 @@ c5_nome_do_terno:{
   texto:[
     '"Me dá o nome do cara de terno."',
     'Otto ri sem nenhum humor.',
-    '"Eu não sei o nome dele, moleque. Ele não se apresenta."',
+    '"Eu não sei o nome dele, {moleque|moleca}. Ele não se apresenta."',
     'Ele pensa um pouco.',
     '"Ele usa um crachá. Não é crachá de Liga, é outro. Tem uma balança desenhada." Ele faz o gesto no ar. "E embaixo tem escrito uma coisa em latim ou sei lá o quê."',
     '"O que tá escrito?"',
@@ -1614,7 +1614,7 @@ c5_acabar_hoje:{
     'Otto olha pra você com uma paciência de professor cansado.',
     '"Aí amanhã abre outra."',
     'Ele aponta as gaiolas.',
-    '"Isso aqui não é o negócio, garoto. Isso aqui é um ponto de coleta. Tem ponto de coleta na Rota 25, tem na Zona Safári, tem um que eu ouvi falar em Seafoam que é pesado."',
+    '"Isso aqui não é o negócio, {garoto|garota}. Isso aqui é um ponto de coleta. Tem ponto de coleta na Rota 25, tem na Zona Safári, tem um que eu ouvi falar em Seafoam que é pesado."',
     'Ele bate na mesa de cavalete.',
     '"Isso aqui é uma mesa de cavalete e cinco pessoa ganhando por semana. Você acaba com isso, você acaba com uma mesa de cavalete."'
   ],
@@ -1634,9 +1634,9 @@ c5_onde_ficam:{
     '"Então me diz onde ficam os outros."',
     'Otto olha pros colegas. Os colegas estão trabalhando e não estão prestando atenção, o que já diz muito sobre o quanto você os assusta.',
     '"Por que eu diria?"',
-    'Você não tem resposta boa. Fica calado.',
+    'Você não tem resposta boa. Fica calad{o|a}.',
     'E o silêncio faz o trabalho, porque Otto continua:',
-    '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena bicho de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, moleque. Você não acredita, mas eu tenho."'
+    '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena bicho de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, {moleque|moleca}. Você não acredita, mas eu tenho."'
   ],
   ef:{flag:'sabe_do_envenenador', registrar:'Alguém envenena Pokémon de rua na Rota 25 e vende o que sobra.',
       npc:{nome:'Caçador Roque', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'},
@@ -1728,7 +1728,7 @@ c5_paras:{
     'Ele não se mexe. Não reage. Você fala com ele o caminho inteiro, coisas idiotas, sobre a estrada, sobre o tempo, sobre Pallet.',
     'Ele morre na segunda hora. Você percebe — dá pra perceber, o peso muda — e continua carregando mesmo assim, porque largar ele no meio do caminho é pior do que qualquer coisa.',
     'A enfermeira do Centro pega ele das suas mãos com cuidado, mesmo sabendo. Depois te serve um chá e não pergunta nada.',
-    'Você fica sentado na cadeira de plástico do Centro Pokémon de Pewter até o dia clarear.'
+    'Você fica sentad{o|a} na cadeira de plástico do Centro Pokémon de Pewter até o dia clarear.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Carregou um Pokémon moribundo por três horas'},
       hp:-4, causa:'Exaustão no Monte da Lua',
@@ -1885,7 +1885,7 @@ c5_falou_com_ivone:{
     'Ela fecha a porta do carro e abaixa o vidro só pela metade.',
     '"Eu sei." Ela fala sem raiva. "Essa é a justificativa boa. Eu te avisei sobre a justificativa boa."',
     'Uma pausa.',
-    '"E o pior é que ela pode até ser verdade." Ela liga o carro. "Nunca dá pra saber por dentro, moço. Só dá pra saber pelo que a gente faz depois."'
+    '"E o pior é que ela pode até ser verdade." Ela liga o carro. "Nunca dá pra saber por dentro, {moço|moça}. Só dá pra saber pelo que a gente faz depois."'
   ],
   ef:{npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Você foi atrás dela explicar. Ela disse que só dá pra saber pelo que se faz depois.'},
       flag:'so_pelo_que_vem_depois',

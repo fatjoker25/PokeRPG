@@ -380,7 +380,7 @@ function comoOlugarTeRecebe(){
 
   /* crachá pesado muda o tratamento antes da reputação */
   if (cargo && cargo.peso >= 5 && cidade)
-    return `Alguém te reconhece pelo cargo antes de reconhecer pelo rosto, e a frase que sai é sempre a mesma: "o senhor é o de..." e aí a pessoa não sabe como terminar.`;
+    return `Alguém te reconhece pelo cargo antes de reconhecer pelo rosto, e a frase que sai é sempre a mesma: "{o senhor|a senhora} é {o|a} de..." e aí a pessoa não sabe como terminar.`;
   if (cargo && cargo.peso >= 3 && cidade && Cargos.temBeneficio('guarita'))
     return 'O guarda da esquina te vê, confere o crachá de longe e volta pro que estava fazendo. Isso é o que passagem faz: te torna sem graça.';
 

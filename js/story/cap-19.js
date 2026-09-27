@@ -202,7 +202,7 @@ c19_ab_o_que_se_ouve:{
     d=>fala(d.jogador.nome, 'Porta?'),
     fala('Sra. Hazel', 'Porta pesada. De metal. Abre e fecha.'),
     'Ela separa um feijão ruim e joga pra esquerda com mais força do que precisava.',
-    fala('Sra. Hazel', 'Duas quilômetros de distância, menino. Pra eu ouvir daqui, aquela porta é grande.'),
+    fala('Sra. Hazel', 'Duas quilômetros de distância, {menino|menina}. Pra eu ouvir daqui, aquela porta é grande.'),
     fala('Sra. Hazel', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
   ],
   ef:{flag:'a_porta_das_tres_da_manha',
@@ -474,7 +474,7 @@ c19_trilha_de_bicho:{
 
 c19_esperou_o_bicho:{
   texto:[
-    'Você espera uma hora e quarenta encostado num tronco, e às onze e dez ele aparece.',
+    'Você espera uma hora e quarenta encostad{o|a} num tronco, e às onze e dez ele aparece.',
     'É um Persian silvestre, grande, com uma orelha rasgada de briga velha.',
     'Ele passa pelo buraco com a intimidade de quem faz isso todo dia, anda uns quinze metros para dentro do terreno e senta no círculo de mato pisado, olhando o galpão 3.',
     'Fica ali quarenta minutos, olhando trinta e poucos bichos atrás de um vidro que nunca viram um bicho de verdade.',
@@ -581,7 +581,7 @@ c19_cerca_mar:{
 
 c19_subiu_limpo:{
   texto:[
-    'Você sobe sem barulho nenhum e cai do outro lado agachado, e leva quatro segundos para entender que está dentro.',
+    'Você sobe sem barulho nenhum e cai do outro lado agachad{o|a}, e leva quatro segundos para entender que está dentro.',
     'De dentro, o lugar é ainda mais tranquilo do que de fora.',
     'A quinze metros, uma mulher de macacão está sentada num caixote virado, de costas para você, almoçando marmita às dez e meia da manhã, porque o turno dela começou às quatro.',
     'Ela não te vê. Você tem escolha.'
@@ -650,7 +650,7 @@ c19_nome_dela:{
     '"Pra quê?"',
     '"Pra eu saber a quem agradecer."',
     'Ela pensa um tempo comprido demais para uma pergunta tão simples.',
-    '"Thea." Ela põe a marmita debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que o senhor entenda por quê."',
+    '"Thea." Ela põe a marmita debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que {o senhor|a senhora} entenda por quê."',
     '"Eu entendo."',
     '"Então tá." Ela vai embora. "Galpão do fundo. A porta não tranca."'
   ],
@@ -677,7 +677,7 @@ c19_caiu:{
     'Você escorrega na pedra molhada e cai três metros dentro do terreno, do lado bom do barranco, o que é sorte.',
     'O barulho é grande. Duas pessoas de macacão aparecem em quarenta segundos.',
     'Eles não te agridem. Um deles pergunta se você quebrou alguma coisa. O outro já está falando no rádio pedindo a maca.',
-    'Você é atendido numa enfermaria com maca de verdade e material em dia, enfaixado por um rapaz de vinte e poucos anos que pede desculpa pela cerca ser perigosa ali.',
+    'Você é atendid{o|a} numa enfermaria com maca de verdade e material em dia, enfaixad{o|a} por um rapaz de vinte e poucos anos que pede desculpa pela cerca ser perigosa ali.',
     '"A gente já pediu tela mais alta três vezes", ele diz. "Não sai do orçamento."'
   ],
   ef:{hp:-6, causa:'Queda na cerca da Estação 4', flag:'caiu_na_estacao'},
@@ -723,7 +723,7 @@ c19_ivo_galpao:{
   escolhas:[
     {texto:'"Me leva até lá mesmo assim."', vai:'c19_ivo_leva'},
     {texto:'"Já que estou dentro, eu posso ver o resto?"', vai:'c19_pediu_dentro'},
-    {texto:'Ir sozinho.', vai:'c19_dentro'}
+    {texto:'Ir sozinh{o|a}.', vai:'c19_dentro'}
   ]
 },
 
@@ -732,9 +732,9 @@ c19_ivo_leva:{
     'Ele te leva até o corredor coberto e para a dez metros da porta de aço, e não dá mais um passo.',
     '"Daqui eu não passo."',
     'Ele enfia as mãos nos bolsos.',
-    '"Se alguém te perguntar, eu estava levando o senhor para a portaria e o senhor fugiu. Fala assim mesmo: fugiu. Eu não vou ser demitido por isso."',
+    '"Se alguém te perguntar, eu estava levando {o senhor|a senhora} para a portaria e {o senhor|a senhora} fugiu. Fala assim mesmo: fugiu. Eu não vou ser demitido por isso."',
     'Ele espera você entender que já acabou.',
-    '"Boa sorte. E se o senhor vomitar, tem uma torneira do lado de fora."'
+    '"Boa sorte. E se {o senhor|a senhora} vomitar, tem uma torneira do lado de fora."'
   ],
   ef:{flag:'ivo_te_levou',
       npc:{nome:'Janus', opiniao:3, memoria:'Te levou até dez metros da porta e ensinou o que dizer para protegê-lo.'},
@@ -779,7 +779,7 @@ c19_pediu_dentro:{
 c19_dentro_visto:{
   texto:[
     'Você entra, e um técnico te vê de longe e acena.',
-    'Acena. Porque você está dentro de uma área restrita e portanto deve ser autorizado, porque pessoas não autorizadas não estão dentro de áreas restritas.',
+    'Acena. Porque você está dentro de uma área restrita e portanto deve ser autorizad{o|a}, porque pessoas não autorizadas não estão dentro de áreas restritas.',
     'Você acena de volta.',
     'Essa é a falha de segurança mais eficaz que existe e não custou nada a ninguém.'
   ],
@@ -818,7 +818,7 @@ c19_motorista:{
   escolhas:[
     {texto:'"O que o senhor ouviu?"', vai:'c19_o_que_ele_ouviu'},
     {texto:'"Me deixa entrar com o senhor."', vai:'c19_pediu_carona'},
-    {texto:'Entrar sozinho, a pé, encostado na lateral.', vai:'c19_entrou_pelo_caminhao'}
+    {texto:'Entrar sozinh{o|a}, a pé, encostad{o|a} na lateral.', vai:'c19_entrou_pelo_caminhao'}
   ]
 },
 
@@ -835,7 +835,7 @@ c19_o_que_ele_ouviu:{
       registrar:'O Sr. Yves ouviu o barulho do galpão e acreditou na explicação porque precisava acreditar.'},
   escolhas:[
     {texto:'"Me deixa entrar com o senhor."', vai:'c19_pediu_carona'},
-    {texto:'Entrar sozinho.', vai:'c19_entrou_pelo_caminhao'}
+    {texto:'Entrar sozinh{o|a}.', vai:'c19_entrou_pelo_caminhao'}
   ]
 },
 
@@ -845,7 +845,7 @@ c19_pediu_carona:{
     'Ele olha para você por uns bons cinco segundos.',
     '"Não."',
     'E antes que você diga qualquer coisa, ele continua, sem raiva:',
-    '"Se o senhor entrar comigo e der problema, o problema é da transportadora e a transportadora sou eu com um caminhão financiado."',
+    '"Se {o senhor|a senhora} entrar comigo e der problema, o problema é da transportadora e a transportadora sou eu com um caminhão financiado."',
     'Ele sobe na cabine e fecha a porta. Depois abaixa o vidro.',
     '"Eu vou levar sete minutos pra manobrar ali atrás, e eu vou olhar pro outro lado o tempo inteiro, porque manobra exige."'
   ],
@@ -857,7 +857,7 @@ c19_pediu_carona:{
 
 c19_entrou_pelo_caminhao:{
   texto:[
-    'Você entra a pé, encostado na lateral do caminhão, andando no ritmo dele, e ninguém olha.',
+    'Você entra a pé, encostad{o|a} na lateral do caminhão, andando no ritmo dele, e ninguém olha.',
     'Ninguém olha porque ninguém aqui está esperando invasão.',
     'É uma estação de pesquisa numa rota litorânea. O sistema de segurança foi desenhado contra vandalismo de adolescente e contra bicho saindo, e não contra uma pessoa adulta andando devagar com cara de quem trabalha ali.'
   ],
@@ -869,7 +869,7 @@ c19_carroceria:{
   texto:[
     'Você sobe na carroceria e se enfia entre dois engradados de material de limpeza.',
     'O caminhão anda oitenta metros, para, e a descarga começa.',
-    'Duas pessoas tiram os engradados um por um, conversando sobre um jogo, e quando chegam nos seus, você está agachado atrás.',
+    'Duas pessoas tiram os engradados um por um, conversando sobre um jogo, e quando chegam nos seus, você está agachad{o|a} atrás.',
     'O rapaz que pega o engradado da frente olha direto para você.',
     'Ele pisca. Depois grita para o colega: "esse aqui vai pro almoxarifado, deixa que eu levo."',
     'E leva o engradado embora, sem olhar para trás.'
@@ -889,7 +889,7 @@ c19_esperou_o_rapaz:{
     '"Não."',
     '"Que pena." Ele se apoia na carroceria. "Eu esperava jornalista faz um ano."',
     '"Por quê?"',
-    '"Porque jornalista eu podia falar sem assinar nada." Ele olha o relógio. "Com o senhor eu não sei o que eu faço."',
+    '"Porque jornalista eu podia falar sem assinar nada." Ele olha o relógio. "Com {o senhor|a senhora} eu não sei o que eu faço."',
     'Ele pensa um pouco.',
     '"Galpão quatro. Porta de aço, no fundo. Não tranca e nunca trancou, e todo mundo aqui sabe, e é isso que estraga a gente."'
   ],
@@ -916,7 +916,7 @@ c19_pedir:{
   escolhas:[
     {texto:'Aceitar a visita.', vai:'c19_visita'},
     {texto:'"Antes: o senhor porteiro me deixa ver o livro de ocorrência?"', vai:'c19_livro_damiao'},
-    {texto:'"Eu prefiro entrar sozinho." E ir pela cerca.', vai:'c19_cerca_mar'}
+    {texto:'"Eu prefiro entrar sozinh{o|a}." E ir pela cerca.', vai:'c19_cerca_mar'}
   ]
 },
 
@@ -1003,7 +1003,7 @@ c19_os_outros_ovos:{
     'Ela vira duas fichas antes de responder, o que é a primeira hesitação dela.',
     '"Tem uma linha de material conservado, de acervo doado." Ela escolhe cada palavra. "Essa não é a minha área. Essa é do Dr. Hollis."',
     '"Acervo doado de onde?"',
-    '"Isso o senhor pergunta pra ele." Ela fecha a prancheta, e o sorriso volta inteiro. "Eu cuido de umidade e de temperatura. É o que eu sei fazer bem."',
+    '"Isso {o senhor|a senhora} pergunta pra ele." Ela fecha a prancheta, e o sorriso volta inteiro. "Eu cuido de umidade e de temperatura. É o que eu sei fazer bem."',
     'E é verdade. Ela cuida de umidade e de temperatura muito bem.'
   ],
   ef:{flag:'sabe_do_sena',
@@ -1022,7 +1022,7 @@ c19_os_quatro_por_cento:{
     '"E depois?"',
     '"Descarte de material biológico, com procedimento." Ela ajeita outra ficha. "Igual a hospital, igual a laboratório, igual a qualquer lugar que trabalha com vida."',
     'Ela olha para você.',
-    '"O senhor está pensando no galpão do fundo, né? Vamos até ele na hora certa. Está no roteiro."'
+    '"{O senhor|A senhora} está pensando no galpão do fundo, né? Vamos até ele na hora certa. Está no roteiro."'
   ],
   ef:{flag:'ouviu_dos_quatro_por_cento', instabilidade:1,
       registrar:'Kira diz que o galpão do fundo está no roteiro da visita.'},
@@ -1090,7 +1090,7 @@ c19_o_que_acontece_com_feijao:{
     'A Kira dá um passo à frente para responder por ela e a moça levanta a mão, sem drama nenhum, e a Kira para.',
     '"Se não atingir, ele não sai daqui." Ela olha o filhote. "E eu vou saber, porque eu preencho a coluna."',
     'Ela volta para a seringa.',
-    '"O senhor quer saber por que eu dou nome? É pra ter alguém pra quem pedir desculpa."'
+    '"{O senhor|A senhora} quer saber por que eu dou nome? É pra ter alguém pra quem pedir desculpa."'
   ],
   ef:{instabilidade:2, moral:-3,
       npc:{nome:'a moça do berçário', opiniao:2, memoria:'Dá nome aos filhotes para ter a quem pedir desculpa.'},
@@ -1102,7 +1102,7 @@ c19_quanto_tempo:{
   texto:[
     '"Quatro semanas no berçário, oito na adaptação, e aí avaliação." A Kira responde por todas. "Doze semanas do ovo à liberação, se tudo correr bem."',
     '"E se não correr?"',
-    '"Aí é mais tempo, ou é menos." Ela não desvia. "Menos é o que o senhor está pensando."',
+    '"Aí é mais tempo, ou é menos." Ela não desvia. "Menos é o que {o senhor|a senhora} está pensando."',
     'Ela caminha para a porta.',
     '"Eu vou te falar uma coisa que eu não deveria: eu prefiro quando o visitante pergunta. O que me dá medo é o que vem e acha tudo lindo e vai embora."'
   ],
@@ -1181,7 +1181,7 @@ c19_pergunta_galpao:{
   escolhas:[
     {texto:'"Eu quero entrar."', vai:'c19_quero_entrar'},
     {texto:'Ir até lá pelo roteiro.', vai:'c19_ponto_sete'},
-    {texto:'Sair do roteiro e ir sozinho.', vai:'c19_saiu_do_roteiro'}
+    {texto:'Sair do roteiro e ir sozinh{o|a}.', vai:'c19_saiu_do_roteiro'}
   ]
 },
 
@@ -1189,7 +1189,7 @@ c19_quero_entrar:{
   texto:[
     '"Eu quero entrar."',
     'Ela não diz não. Ela faz uma coisa pior: pensa.',
-    '"O senhor pode." Ela fala devagar. "A porta não tem tranca e eu não posso te impedir, porque eu não sou segurança."',
+    '"{O senhor|A senhora} pode." Ela fala devagar. "A porta não tem tranca e eu não posso te impedir, porque eu não sou segurança."',
     '"Então por que a senhora está com essa cara?"',
     '"Porque eu entrei uma vez." Ela endireita o jaleco. "No terceiro mês, porque eu achei que devia. E eu não recomendo, e eu não vou te impedir, e eu vou esperar do lado de fora."',
     'Ela vira e começa a andar para lá, e você vai atrás.'
@@ -1366,7 +1366,7 @@ c19_refeitorio:{
     'O refeitório tem seis mesas de fórmica, um bebedouro, uma televisão pequena e um mural com a lista do almoço da semana.',
     'Às onze e quarenta, tem nove pessoas comendo.',
     'A conversa é sobre um time de futebol, sobre uma reforma de banheiro e sobre uma moça chamada Elda, que teve nenê e mandou foto.',
-    'A foto está passando de mão em mão. Quando chega na sua, alguém te entrega naturalmente, porque você está sentado ali.',
+    'A foto está passando de mão em mão. Quando chega na sua, alguém te entrega naturalmente, porque você está sentad{o|a} ali.',
     'É uma criança de dois meses de olho fechado.'
   ],
   ef:{flag:'sentou_no_refeitorio', instabilidade:1,
@@ -1403,7 +1403,7 @@ c19_porque_se_oferece:{
     'Ele empurra o prato dois centímetros.',
     '"Tem gente que demora. Tem gente que fica falando com o bicho antes, que acha que está sendo bom." Ele balança a cabeça. "Falar antes é pior. Eu faço rápido e eu faço certo e depois eu lavo tudo."',
     '"E depois?"',
-    '"Depois eu vou pra casa e eu tomo banho duas vezes." Ele finalmente olha para você. "E eu jogo baralho com a minha filha e eu durmo. Eu durmo bem, e é isso que eu queria te dizer, porque o senhor veio aqui querendo que eu não durma."'
+    '"Depois eu vou pra casa e eu tomo banho duas vezes." Ele finalmente olha para você. "E eu jogo baralho com a minha filha e eu durmo. Eu durmo bem, e é isso que eu queria te dizer, porque {o senhor|a senhora} veio aqui querendo que eu não durma."'
   ],
   ef:{instabilidade:2, moral:-4,
       registrar:'Um voluntário do galpão 4 dorme bem e faz questão de te dizer isso.'},
@@ -1452,13 +1452,13 @@ c19_o_que_acontece_la:{
 
 c19_esperou_ele_falar:{
   texto:[
-    'Você não pergunta nada. Você fica sentado.',
+    'Você não pergunta nada. Você fica sentad{o|a}.',
     'Passam dois minutos inteiros, o que num refeitório vazio é muito tempo.',
     '"Catorze anteontem." Ele diz do nada. "Catorze na segunda. Catorze na sexta passada."',
     'Ele empilha o talher no prato.',
     '"E na semana que vem vai ter de novo, porque o lote quarenta e um C não vingou e a Fase II tem data."',
     'Ele levanta.',
-    '"O senhor não me perguntou nada. Lembra disso se te perguntarem."'
+    '"{O senhor|A senhora} não me perguntou nada. Lembra disso se te perguntarem."'
   ],
   ef:{flag:['sabe_do_catorze','sabe_do_lote_41c'], instabilidade:2,
       rep:{eixo:'bom',delta:1,motivo:'Ficou calado até que alguém quisesse falar'},
@@ -1495,7 +1495,7 @@ c19_zoologico_fechou:{
     'Ele bebe água.',
     '"Aqui o dinheiro não falta. É a primeira vez em dezoito anos que eu não preciso fazer vaquinha pra comprar ração."',
     'Ele volta a comer.',
-    '"O senhor entende o que isso faz com uma pessoa?"'
+    '"{O senhor|A senhora} entende o que isso faz com uma pessoa?"'
   ],
   ef:{instabilidade:1, moral:-2,
       registrar:'O zoológico de Celadon fechou por falta de dinheiro. Aqui o dinheiro não falta.'},
@@ -1882,11 +1882,11 @@ c19_fotografou_arquivo:{
 c19_sena:{
   texto:[
     'O Dr. Hollis está no galpão 2, de jaleco, anotando numa prancheta, e reconhece você antes de você se apresentar.',
-    '"Ah." Ele não corre, não chama ninguém, não parece nem um pouco surpreso. "O do andar 11."',
+    '"Ah." Ele não corre, não chama ninguém, não parece nem um pouco surpreso. "{O|A} do andar 11."',
     '"O senhor estava lá."',
     '"Eu era o terceiro na cadeia. Eu assinava o que o segundo aprovava." Ele continua anotando. "Quando lacraram, eu vim para cá com o projeto. Como quem muda de sala."',
     'Ele finalmente levanta a cabeça.',
-    '"O senhor quer saber o que eu acho de verdade? Eu acho que a gente estava errado no andar 11 e certo aqui."',
+    '"{O senhor|A senhora} quer saber o que eu acho de verdade? Eu acho que a gente estava errado no andar 11 e certo aqui."',
     '"Lá a gente tentou fazer uma mente. Aqui a gente faz população. Mente pergunta coisa. População não."'
   ],
   ef:{npc:{nome:'Dr. Hollis', opiniao:0, memoria:'Migrou do andar 11 para a Estação 4 como quem muda de sala.'},
@@ -1957,7 +1957,7 @@ c19_sena_entra:{
       registrar:'Hollis assina e não aplica. Ele mesmo chama isso de covardia.'},
   escolhas:[
     {texto:'"Então vem comigo lá dentro."', vai:'c19_sena_vem_comigo'},
-    {texto:'Ir ao galpão sozinho.', vai:'c19_galpao'},
+    {texto:'Ir ao galpão sozinh{o|a}.', vai:'c19_galpao'},
     {texto:'Atacar.', vai:'c19_luta_sena'}
   ]
 },
@@ -1978,7 +1978,7 @@ c19_sena_vem_comigo:{
       registrar:'Hollis ganhou sete discussões de quarenta e seis no conselho.'},
   escolhas:[
     {texto:'"Quais foram as sete?"', vai:'c19_as_sete'},
-    {texto:'Ir ao galpão sozinho.', vai:'c19_galpao'},
+    {texto:'Ir ao galpão sozinh{o|a}.', vai:'c19_galpao'},
     {texto:'Atacar.', vai:'c19_luta_sena'}
   ]
 },
@@ -2010,7 +2010,7 @@ c19_as_que_perdeu:{
     'No alto da folha, em letra pequena: as que eu não consegui.',
     '"Eu não sei por que eu faço isso", ele diz. "Não serve para nada e eu levo essa folha para casa todo fim de semana."',
     'Ele vira a prancheta de volta.',
-    '"Agora vai lá ver o galpão. É pra isso que o senhor veio."'
+    '"Agora vai lá ver o galpão. É pra isso que {o senhor|a senhora} veio."'
   ],
   ef:{flag:['viu_a_lista_do_sena'], instabilidade:2, moral:-2,
       npc:{nome:'Dr. Hollis', opiniao:3, memoria:'Te mostrou a lista das que ele não conseguiu salvar.'},
@@ -2028,7 +2028,7 @@ c19_pediu_a_folha:{
     '"Essa folha não prova nada. É letra minha numa folha de caderno."',
     '"Eu sei."',
     'Ele destaca a folha devagar, com cuidado para não rasgar na espiral, e entrega.',
-    '"Se isso sair em algum lugar, eu perco o registro e eu não trabalho mais." Ele solta a folha. "E eu estou te dando assim mesmo, e eu quero que o senhor saiba que eu pensei nisso antes."'
+    '"Se isso sair em algum lugar, eu perco o registro e eu não trabalho mais." Ele solta a folha. "E eu estou te dando assim mesmo, e eu quero que {o senhor|a senhora} saiba que eu pensei nisso antes."'
   ],
   ef:{flag:['tem_a_lista_do_sena','provas_do_viveiro'], itens:{'A lista das que ele não conseguiu':1},
       npc:{nome:'Dr. Hollis', opiniao:4, memoria:'Te deu a folha sabendo o que ela custa a ele.'},
@@ -2041,12 +2041,12 @@ c19_sena_filho:{
   texto:[
     '"O senhor tem filho?"',
     'Ele para e olha para você com uma desconfiança nova.',
-    '"Por que o senhor pergunta isso?"',
+    '"Por que {o senhor|a senhora} pergunta isso?"',
     '"Porque todo mundo aqui tem uma frase pronta e eu quero ouvir a que não é pronta."',
     'Ele pousa a caneta.',
     '"Eu tenho duas filhas e elas não sabem o que eu faço." Ele diz isso olhando a bancada. "Elas sabem que eu trabalho com bicho. A mais nova acha que eu sou veterinário e eu deixo."',
     'Ele pega a caneta de novo.',
-    '"É a resposta que o senhor queria?"'
+    '"É a resposta que {o senhor|a senhora} queria?"'
   ],
   ef:{instabilidade:1,
       npc:{nome:'Dr. Hollis', opiniao:1, memoria:'Deixa a filha mais nova acreditar que ele é veterinário.'},
@@ -2054,7 +2054,7 @@ c19_sena_filho:{
   escolhas:[
     {texto:'"E o galpão do fundo?"', vai:'c19_sena_galpao'},
     {texto:'"O senhor já viu um selvagem de perto?"', vai:'c19_sena_selvagem'},
-    {texto:'Ir ao galpão sozinho.', vai:'c19_galpao'}
+    {texto:'Ir ao galpão sozinh{o|a}.', vai:'c19_galpao'}
   ]
 },
 
@@ -2063,7 +2063,7 @@ c19_sena_substituto:{
     '"Quem assina no seu lugar quando o senhor não está?"',
     'Ele responde sem pensar. "Ninguém. Fica acumulado até eu voltar."',
     'Depois ouve o que disse.',
-    '"O senhor está perguntando se eu tirei férias."',
+    '"{O senhor|A senhora} está perguntando se eu tirei férias."',
     '"Estou."',
     'Ele confere a data no alto da prancheta, como se precisasse.',
     '"Não desde que isso abriu." Ele diz devagar. "Vinte e dois meses."',
@@ -2089,7 +2089,7 @@ c19_sena_selvagem:{
     '"E?"',
     '"E eu fiquei com medo e depois eu fiquei uma semana pensando nele." Ele pega a prancheta. "E aí eu fiz mestrado e nunca mais."',
     'Ele começa a andar para o outro lado do galpão.',
-    '"Vai ver o galpão, moço. Eu tenho pesagem às onze."'
+    '"Vai ver o galpão, {moço|moça}. Eu tenho pesagem às onze."'
   ],
   ef:{instabilidade:1, moral:-1,
       npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Viu um selvagem uma vez na vida, quando era estudante.'},
@@ -2111,8 +2111,8 @@ c19_venceu_sena:{
   texto:[
     'As unidades dele caem e ficam onde caíram, esperando.',
     'O Dr. Hollis recolhe uma por uma com o mesmo cuidado com que pousou a prancheta.',
-    '"O senhor sabe o que me incomoda?" Ele não parece abalado. "Que o senhor acha que isso foi uma vitória moral."',
-    '"O senhor derrotou quatro unidades de lote. A gente produz quatro unidades de lote em dezoito dias."',
+    '"{O senhor|A senhora} sabe o que me incomoda?" Ele não parece abalado. "Que {o senhor|a senhora} acha que isso foi uma vitória moral."',
+    '"{O senhor|A senhora} derrotou quatro unidades de lote. A gente produz quatro unidades de lote em dezoito dias."',
     'Ele guarda a última bola.',
     '"O galpão 4 fica no fim do corredor. A porta não está trancada. Nunca esteve."'
   ],
@@ -2215,7 +2215,7 @@ c19_o_canto:{
     'É uma caixa de transporte plástica, dessas de vinte litros, com furos laterais. Está vazia e está limpa.',
     'Dentro, no fundo, tem um pedaço de cobertor velho dobrado em quatro, do tipo que se põe para o bicho não deslizar no plástico.',
     'O cobertor está limpo. Alguém lavou.',
-    'Você fica com o pano na mão, parado, por um tempo que não consegue medir.'
+    'Você fica com o pano na mão, parad{o|a}, por um tempo que não consegue medir.'
   ],
   ef:{instabilidade:2, moral:-4,
       registrar:'No canto do galpão 4, uma caixa de transporte vazia e um cobertor lavado e dobrado.'},
@@ -2329,11 +2329,11 @@ c19_saida:{
   texto:[
     'Na saída da Estação 4 tem alguém encostada num carro no estacionamento, ao lado das bicicletas.',
     'Auditora Brill. Ela não faz nenhum movimento de te impedir.',
-    '"O senhor viu o galpão."',
+    '"{O senhor|A senhora} viu o galpão."',
     '"Vi."',
     'Ela assente devagar.',
     d=>d.flags.cracha_adnan
-      ? '"O crachá que o senhor usou é da Elda, que está de licença, e quem tirou da gaveta foi o Fabre." Ela olha o chão. "O sistema me avisou às nove e quarenta e um. Eu tinha quarenta e oito horas para reportar e eu reportei às nove e quarenta e quatro, porque se eu não reportasse eles descobririam de qualquer jeito e aí seríamos dois."'
+      ? '"O crachá que {o senhor|a senhora} usou é da Elda, que está de licença, e quem tirou da gaveta foi o Fabre." Ela olha o chão. "O sistema me avisou às nove e quarenta e um. Eu tinha quarenta e oito horas para reportar e eu reportei às nove e quarenta e quatro, porque se eu não reportasse eles descobririam de qualquer jeito e aí seríamos dois."'
       : '"Eu não vou te deter. Não tem crime. Isso é o mais difícil de explicar para quem chega até aqui: não tem crime."'
   ],
   ef:{npc:{nome:'Auditora Brill', memoria:'Te esperou no estacionamento depois que você viu o galpão do fundo.'}},
@@ -2375,7 +2375,7 @@ c19_mostrou_a_prancheta:{
     '"A senhora sabe de cabeça."',
     '"Eu sei de cabeça." Ela não desvia o olhar. "Eu fecho esse número todo mês e eu não escrevo em lugar nenhum além do relatório, porque eu tenho medo de escrever e alguém ver e se acostumar."',
     'Ela enfim olha para a prancheta na sua mão.',
-    '"Agora está na sua mão e o senhor vai ter que decidir se publica ou se se acostuma."'
+    '"Agora está na sua mão e {o senhor|a senhora} vai ter que decidir se publica ou se vai se acostumar."'
   ],
   ef:{flag:['sabe_o_total','provas_do_galpao4'], instabilidade:2,
       npc:{nome:'Auditora Brill', opiniao:3, memoria:'Te disse o número de cabeça: quatro mil cento e nove.'},
@@ -2449,7 +2449,7 @@ c19_leva_presidente:{
     '"Aberta?"',
     '"Art. 27. Qualquer interessado pode assistir e pedir a palavra." Ela fecha a porta e abaixa o vidro. "Em um ano e oito meses, nenhum interessado apareceu."',
     'Ela engata a marcha.',
-    '"Leve o que o senhor trouxe daí de dentro. Eles vão querer ver, e não é armadilha: eles vão querer ver de verdade, e é isso que o senhor vai achar mais difícil."'
+    '"Leve o que {o senhor|a senhora} trouxe daí de dentro. Eles vão querer ver, e não é armadilha: eles vão querer ver de verdade, e é isso que {o senhor|a senhora} vai achar mais difícil."'
   ],
   ef:{flag:['convite_conselho','endereco_presidente'],
       npc:{nome:'Auditora Brill', opiniao:5, memoria:'Te disse a data, a hora e o número da sala da reunião do conselho.'},

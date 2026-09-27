@@ -91,7 +91,7 @@ const GINASIOS = [
       : '"Você lê a água bem." Ela seca as mãos. "A maioria só bate. Você espera."'
   ],
   derrota:d=>[
-    'Você sai da piscina encharcado e derrotado, o que é uma combinação humilhante específica.',
+    'Você sai da piscina encharcad{o|a} e derrotad{o|a}, o que é uma combinação humilhante específica.',
     'Misty joga uma toalha na sua cara sem nenhuma delicadeza.',
     '"O problema não é o seu time. É que você tem pressa. Água não tem pressa."'
   ]
@@ -174,7 +174,7 @@ const GINASIOS = [
     d.flags.esvaziou_deposito ? '"E você já fez." Ela solta a sua mão. "Então eu te devo mais que uma insígnia e nós duas sabemos que eu não vou pagar."' : ''
   ],
   derrota:d=>[
-    'Você perde numa estufa, cercado de plantas, em silêncio.',
+    'Você perde numa estufa, cercad{o|a} de plantas, em silêncio.',
     'Erika não humilha e não consola. Ela volta a regar.',
     '"Você atacou o tempo todo. Contra grama, atacar o tempo todo é a maneira mais elegante de perder devagar."'
   ]
@@ -291,12 +291,12 @@ const GINASIOS = [
     'Blaine te entrega a insígnia sem cerimônia nenhuma.',
     d.flags.leu_caderno || d.flags.viu_os_doze
       ? '"Você vai pro norte." Não é pergunta. "Quando você encontrar ele, não peça desculpa pelo Fuji. Ele não quer isso." Uma pausa longa. "Só responde o que ele perguntar. Foi só isso que a gente não fez."'
-      : '"Você é rápido e eu sou velho. Não se engane achando que foi mais que isso." Ele sorri. "Mas é o suficiente, e o suficiente é o que existe."'
+      : '"Você é rápid{o|a} e eu sou velho. Não se engane achando que foi mais que isso." Ele sorri. "Mas é o suficiente, e o suficiente é o que existe."'
   ],
   derrota:d=>[
     'Você perde numa ilha com um vulcão ativo, dentro de um prédio com ar-condicionado quebrado.',
     'Blaine te dá água e espera você respirar.',
-    '"Você lutou contra o calor em vez de lutar contra o Pokémon. Todo mundo faz isso aqui. O calor não tem HP, garoto."'
+    '"Você lutou contra o calor em vez de lutar contra o Pokémon. Todo mundo faz isso aqui. O calor não tem HP, {garoto|garota}."'
   ]
 },
 
@@ -321,7 +321,7 @@ const GINASIOS = [
       ? '"E você andou em Celadon." Ele senta na borda da arena. "Aquela mulher do cassino. Sabe por que ela usa o número três? Porque o primeiro era o Giovanni, e o Giovanni foi preso, e a Rocket acabou de verdade." Uma pausa. "O que sobrou não é Rocket. É gente com planilha. É pior."'
       : '"Todo mundo que entra aqui espera encontrar outra pessoa." Ele senta na borda da arena. "A Rocket acabou. O Giovanni foi preso. Eu peguei um ginásio vazio porque ninguém queria, e agora ele é meu."',
     numInsignias() >= 7
-      ? '"Sete insígnias." Ele finalmente levanta. "Então você é sério. Vamos ver o quanto."'
+      ? '"Sete insígnias." Ele finalmente levanta. "Então você é séri{o|a}. Vamos ver o quanto."'
       : ''
   ],
   vitoria:d=>[

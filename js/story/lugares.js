@@ -114,7 +114,7 @@ celadon:[
   {chave:'ginasio_celadon', texto:[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. Do térreo dá pra ver o verde lá em cima.',
     'O elevador de serviço tem um botão sem número.'], descobre:'ginasio_celadon'},
-  {chave:'loja_celadon', texto:['O shopping tem sete andares e o quarto inteiro é de item de treinador. Você fica quinze minutos parado só olhando prateleira.'], descobre:'loja_celadon'},
+  {chave:'loja_celadon', texto:['O shopping tem sete andares e o quarto inteiro é de item de treinador. Você fica quinze minutos parad{o|a} só olhando prateleira.'], descobre:'loja_celadon'},
   {chave:'cl_cassino', texto:['O cassino mudou de nome duas vezes desde que a Rocket caiu. Agora se chama "Celadon Palace" e tem a mesma carpete.']}
 ],
 fuchsia:[
@@ -198,7 +198,7 @@ const ACHADOS_ROTA = [
   {amb:['floresta'], texto:['Fita laranja amarrada em cinco árvores em linha. Não é marcação de trilha — é marcação de outra coisa.']},
   {amb:['floresta'], texto:['Você acha uma clareira que não devia existir: dez metros de círculo sem uma única árvore, com o capim mais alto no meio.']},
   {amb:['campo'], texto:['Um espantalho de roupa boa. Ninguém veste espantalho com roupa boa.']},
-  {amb:['campo','floresta'], texto:['Uma colmeia caída, vazia, e o cheiro de mel ainda no ar. Você não é o primeiro a chegar aqui hoje.'], ef:{itens:{'Ração':1}}},
+  {amb:['campo','floresta'], texto:['Uma colmeia caída, vazia, e o cheiro de mel ainda no ar. Você não é {o primeiro|a primeira} a chegar aqui hoje.'], ef:{itens:{'Ração':1}}},
 
   /* ─── água ─── */
   {amb:['agua'], texto:['Na beira, uma garrafa fechada com um papel dentro. O papel está em branco dos dois lados.']},
@@ -212,7 +212,7 @@ const ACHADOS_ROTA = [
                             'Ela está acesa. Isso quer dizer que caiu hoje.'], ef:{itens:{'Lanterna':1}}},
   {amb:['caverna'], texto:['Um retângulo liso na parede da caverna, do tamanho de uma porta, cortado com serra.']},
   {amb:['montanha','caverna'], texto:['Uma máscara de pó de pedreira pendurada num prego batido na rocha, limpa, esperando alguém.'], ef:{itens:{'Máscara de pó':1}}},
-  {amb:['montanha'], texto:['Do alto dá pra ver quatro cidades ao mesmo tempo. Você fica parado mais tempo do que planejou.'], ef:{hp:3}},
+  {amb:['montanha'], texto:['Do alto dá pra ver quatro cidades ao mesmo tempo. Você fica parad{o|a} mais tempo do que planejou.'], ef:{hp:3}},
 
   /* ─── cemitério, cidade e ruína ─── */
   {amb:['cemiterio'], texto:['Uma flor amarela nascida sozinha entre duas pedras, longe de onde essa flor devia nascer.']},
@@ -275,9 +275,9 @@ const Descobertas = {
 const CONVERSAS = {
   pallet:[
     ['Uma senhora para de varrer só pra te encarar melhor.',
-     fala('a senhora do número 12', 'Você é filho de quem mesmo?', null, 'Ela sabe a resposta. É o jeito dela de puxar assunto.')],
+     fala('a senhora do número 12', 'Você é {filho|filha} de quem mesmo?', null, 'Ela sabe a resposta. É o jeito dela de puxar assunto.')],
     ['Um pescador conserta rede na varanda e fala sem levantar a cabeça.',
-     fala('o pescador', 'Ninguém sai daqui, sabia? Você é o terceiro em dez anos.')],
+     fala('o pescador', 'Ninguém sai daqui, sabia? Você é {o terceiro|a terceira} em dez anos.')],
     [fala('o padeiro', 'O Professor não recebe mais ninguém. Desde que aquele menino voltou de Cinnabar, ele não recebe mais ninguém.', 'baixo')],
     ['Duas crianças jogam bola contra o muro do laboratório.',
      fala('a menina da bola', 'Esse muro é o melhor muro de Pallet. Ele devolve RETO.', null, 'Ela explica isso com uma seriedade absoluta.')],
@@ -401,7 +401,7 @@ const CONVERSAS = {
     [fala('a moça do café', 'Eu trabalhei no cassino antes. Não quero falar disso.', 'baixo'),
      fala('a moça do café', 'Mas se você for: não joga na máquina do canto.')],
     {cond:d=>d.insignias.length>=5, texto:[
-     'O segurança do shopping te reconhece e te chama de "moço" de um jeito completamente diferente do que chamava antes. Você repara, e fica meio sem graça.']},
+     'O segurança do shopping te reconhece e te chama de "{moço|moça}" de um jeito completamente diferente do que chamava antes. Você repara, e fica meio sem graça.']},
     {cond:d=>d.flags.sabe_da_comissao, texto:[
      'A florista baixa a voz sem motivo aparente nenhum.',
      fala('a florista', 'Tem uns moços de camisa social perguntando de galpão nesta cidade. Não são da prefeitura.', 'baixo')]}
@@ -438,7 +438,7 @@ const CONVERSAS = {
      fala('o segurança do prédio', 'Continuam lá. Continuam brigados.')],
     {cond:d=>d.flags.sabe_da_silph, texto:[
      'O rapaz da banca de jornal dobra o jornal quando você chega e destrava assunto sozinho.',
-     fala('o rapaz da banca de jornal', 'O senhor também tá atrás do andar oito, né.', 'baixo')]},
+     fala('o rapaz da banca de jornal', '{O senhor|A senhora} também tá atrás do andar oito, né.', 'baixo')]},
     {cond:d=>d.reputacao.eixo==='bom'&&d.reputacao.bom>=5, texto:[
      'Uma mulher de crachá azul te para na calçada.',
      fala('a mulher de crachá azul', 'Eu li o seu nome em algum lugar.', null,
@@ -459,7 +459,7 @@ const CONVERSAS = {
     {cond:d=>d.insignias.length>=6, texto:[
      'O rapaz do píer olha o seu cinto e conta.',
      fala('o rapaz do píer', 'Seis.', null, 'Ele assobia.'),
-     fala('o rapaz do píer', 'Então o senhor vai pra Viridian depois daqui. E aí a gente vai ver notícia sua.')]},
+     fala('o rapaz do píer', 'Então {o senhor|a senhora} vai pra Viridian depois daqui. E aí a gente vai ver notícia sua.')]},
     {cond:d=>d.mundo&&d.mundo.instabilidade>=6, texto:[
      fala('o barqueiro', 'O mar tá diferente.', 'baixo', 'E ele não diz mais nada por um tempo comprido.'),
      fala('o barqueiro', 'Não é maré. Eu sei o que é maré.')]}
@@ -711,7 +711,7 @@ const Cidade = {
          'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
          fala('Dra. Cordell', 'Eu escrevi vinte e duas cartas.'),
          d=>fala(d.jogador.nome, 'Vinte e duas?'),
-         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque um moleque de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque {um moleque|uma moleca} de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
          fala('Dra. Cordell', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
          'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
        ]},

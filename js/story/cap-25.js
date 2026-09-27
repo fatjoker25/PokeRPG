@@ -272,7 +272,7 @@ c25_a_mulher_da_pasta:{
   escolhas:[
     {texto:'Assinar. Entrar com ela.', vai:'c25_com_advogada',
      ef:{flag:'entrou_com_advogada'}},
-    {texto:'Não assinar. Entrar sozinho.', vai:'c25_sozinho_na_sala',
+    {texto:'Não assinar. Entrar sozinh{o|a}.', vai:'c25_sozinho_na_sala',
      ef:{flag:'entrou_sozinho'}},
     {texto:'Avisar o Blue de que ele também tem direito.', vai:'c25_avisou_o_blue',
      cond:d=>!!d.npcs['Blue']}
@@ -304,7 +304,7 @@ c25_o_cracha_azul:{
     fala('o homem de crachá azul', 'A que está no timbre do telegrama.'),
     'O telegrama não tem timbre. O telegrama tem quatro linhas em maiúsculo e a palavra COMPARECIMENTO duas vezes.',
     'Você diz isso. Ele volta pro jornal.',
-    fala('o homem de crachá azul', 'Então o senhor vai descobrir às dez horas, junto comigo.', 'frio')
+    fala('o homem de crachá azul', 'Então {o senhor|a senhora} vai descobrir às dez horas, junto comigo.', 'frio')
   ],
   ef:{flag:'o_telegrama_nao_tem_timbre',
       rep:{eixo:'bom',delta:1,motivo:'Reparou que o telegrama não tinha timbre'},
@@ -488,7 +488,7 @@ c25_deixou_falarem:{
     'Eles falam por quarenta minutos: o convênio, os anexos, o Setor 7, a Estação 4, o lote 41-C, as onze ausências do terceiro signatário.',
     'Eles falam tudo que você descobriu, na ordem certa, com as datas certas, e sem você ter aberto a boca.',
     'Eles sabiam de tudo. Sabiam desde antes de você.',
-    fala('a mulher de crachá azul', 'Agora o senhor entende por que a gente convocou.'),
+    fala('a mulher de crachá azul', 'Agora {o senhor|a senhora} entende por que a gente convocou.'),
     fala('a mulher de crachá azul', 'A gente não precisa do que você sabe. A gente precisa que alguém de fora tenha sabido.', 'frio')
   ],
   ef:{flag:'eles_sabiam_de_tudo', moral:-4,
@@ -573,7 +573,7 @@ c25_exigiu_copia:{
     'A advogada de ofício, se ela estiver aí, fecha os olhos e assente uma vez só, como quem viu o aluno acertar.',
     fala('a mulher de crachá azul', 'A copiadora é no quarto andar.'),
     d=>fala(d.jogador.nome, 'Eu espero.'),
-    'Você espera. Uma hora e dez minutos, sentado na mesa comprida, com nove pessoas numa sala e ninguém falando nada.',
+    'Você espera. Uma hora e dez minutos, sentad{o|a} na mesa comprida, com nove pessoas numa sala e ninguém falando nada.',
     'A cópia volta carimbada, com protocolo e data, e a data é hoje.',
     fala('a mulher de crachá azul', 'Agora existem duas.', 'frio'),
     fala('a mulher de crachá azul', 'Uma comigo e uma com você. É assim que uma coisa deixa de sumir.')
@@ -711,7 +711,7 @@ c25_saiu_da_sala:{
       : 'No corredor não tem ninguém. Os quatro do lado de lá ficaram na sala.',
     d=>d.npcs['Blue']
       ? fala('Blue', 'Eu fiquei três horas sentado numa sala e não bati em ninguém. Anota isso.', 'riso')
-      : 'Você desce sozinho.',
+      : 'Você desce sozinh{o|a}.',
     'Na antessala, a planta que você regou continua molhada e vai continuar molhada por uns quatro dias, e depois não.'
   ],
   ef:{flag:'saiu_da_audiencia',

@@ -180,7 +180,7 @@ c16_ab_quem_nao_fala:{
     fala('Orso', 'Eu levo carga, levo gente, levo o que pagarem. Pra sudoeste eu não vou.'),
     d=>fala(d.jogador.nome, 'Por quanto?'),
     'Aí ele levanta a cabeça.',
-    fala('Orso', 'Menino, eu acabei de te dizer que tem um preço que eu não aceito. Você perguntou o preço.')
+    fala('Orso', '{Menino|Menina}, eu acabei de te dizer que tem um preço que eu não aceito. Você perguntou o preço.')
   ],
   ef:{flag:'sabe_da_ilha',
       npc:{nome:'Orso', opiniao:-1, viuVoce:'Você perguntou o preço depois de ele dizer que não tinha preço.'},
@@ -195,7 +195,7 @@ c16_ab_quem_nao_fala:{
 c16_ab_pediu_desculpa:{
   texto:[
     d=>fala(d.jogador.nome, 'Desculpa. Foi burrice.'),
-    'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parado, porque sair agora seria pior.',
+    'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parad{o|a}, porque sair agora seria pior.',
     fala('Orso', 'Eu levei quatro homens em noventa e sete. Dois dias, ida e volta, muito bem pago.'),
     fala('Orso', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
     'Ele para de costurar.',
@@ -267,7 +267,7 @@ c16_velho:{
     'Hoje ele conta pra você.',
     '"Tem uma ilha a sudoeste que não entra em mapa nenhum porque não tem nada nela. Pedra e mato. Nem água doce."',
     '"E por que ela não entra no mapa se ela existe?"',
-    '"Ela entra na carta náutica." Ele levanta um dedo. "Carta náutica é outra coisa, meu filho. Carta náutica tem que ter tudo que é pedra, porque pedra afunda barco."',
+    '"Ela entra na carta náutica." Ele levanta um dedo. "Carta náutica é outra coisa, {meu filho|minha filha}. Carta náutica tem que ter tudo que é pedra, porque pedra afunda barco."',
     '"Ela entra na carta como “recife alto sem nome”, e é por isso que ninguém sabe dela: porque quem lê carta náutica é pescador, e pescador não conta pra ninguém o que não dá peixe."',
     'Ele bebe.',
     '"Meu avô chamava de ilha da torre."',
@@ -305,7 +305,7 @@ c16_desde_quando:{
     '**"4/9/68 — luz, cor, 22h40 até 23h20. Meu pai viu junto. — Z. A."**',
     '**"19/11/74 — luz. Sozinho. Ninguém acreditou. — Z. A."**',
     '"Quarenta anos disso?"',
-    '"Sessenta e um, meu filho. Meu pai começou em trinta e nove e eu peguei em sessenta e um."',
+    '"Sessenta e um, {meu filho|minha filha}. Meu pai começou em trinta e nove e eu peguei em sessenta e um."',
     'Ele bate na caixa.',
     '"Vinte e três vezes anotadas em sessenta e um anos."'
   ],
@@ -421,7 +421,7 @@ c16_levou_a_caixa:{
     'Ele demora.',
     '"Isso aqui é do meu pai."',
     '"Eu sei."',
-    '"Isso aqui é a única coisa que sobrou do meu pai, meu filho, porque ele morreu no mar e a gente não achou e o enterro foi de caixão vazio."',
+    '"Isso aqui é a única coisa que sobrou do meu pai, {meu filho|minha filha}, porque ele morreu no mar e a gente não achou e o enterro foi de caixão vazio."',
     'Silêncio na mesa de dominó.',
     'E aí ele empurra a caixa na sua direção com os dois dedos.',
     '"Leva."',
@@ -475,7 +475,7 @@ c16_colonia_caixa:{
     {texto:'Contar isso pro Sr. Tanner.', vai:'c16_contou_que_ele_ia'},
     {texto:'"Me leva lá."', vai:'c16_travessia'},
     {texto:'Levar tudo à Dra. Cordell.', vai:'c16_ivone_caixa', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Ir direto pra ilha sozinho.', vai:'c16_travessia'}
+    {texto:'Ir direto pra ilha sozinh{o|a}.', vai:'c16_travessia'}
   ]
 },
 
@@ -507,7 +507,7 @@ c16_contou_que_ele_ia:{
     {texto:'"Então vamos os dois."', vai:'c16_travessia'},
     {texto:'"O senhor não precisa ir."', vai:'c16_nao_precisa_ir'},
     {texto:'Levar tudo à Dra. Cordell antes.', vai:'c16_ivone_caixa', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Ir sozinho.', vai:'c16_travessia'}
+    {texto:'Ir sozinh{o|a}.', vai:'c16_travessia'}
   ]
 },
 
@@ -521,7 +521,7 @@ c16_nao_precisa_ir:{
     'Ele olha o mar.',
     '"E agora eu sei que meu pai fez vinte e três."',
     'Ele começa a soltar a amarra.',
-    '"Sobe no barco, meu filho."'
+    '"Sobe no barco, {meu filho|minha filha}."'
   ],
   ef:{flag:'ze_vai_junto',
       npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Recusou ficar. Vai fazer a travessia que o pai fez vinte e três vezes.'},
@@ -557,7 +557,7 @@ c16_ivone_caixa:{
   escolhas:[
     {texto:'Devolver a caixa ao Sr. Tanner e ir pra ilha.', vai:'c16_travessia'},
     {texto:'"A senhora vem junto?"', vai:'c16_ivone_vem'},
-    {texto:'Ir pra ilha sozinho.', vai:'c16_travessia'},
+    {texto:'Ir pra ilha sozinh{o|a}.', vai:'c16_travessia'},
     {texto:'"Quem mais sabe disso?"', vai:'c16_quem_sabe'}
   ]
 },
@@ -585,7 +585,7 @@ c16_ivone_vem:{
     {texto:'Ir pra ilha.', vai:'c16_travessia'},
     {texto:'Devolver a caixa ao Sr. Tanner antes.', vai:'c16_contou_que_ele_ia'},
     {texto:'"Quem mais sabe disso?"', vai:'c16_quem_sabe'},
-    {texto:'Ir sozinho, sem o Sr. Tanner.', vai:'c16_travessia'}
+    {texto:'Ir sozinh{o|a}, sem o Sr. Tanner.', vai:'c16_travessia'}
   ]
 },
 
@@ -606,7 +606,7 @@ c16_quem_sabe:{
     '"O quê?"',
     '"Ela perguntou se a ilha tinha “janela de ocorrência regular”."',
     'Ele bate na mesa.',
-    '"Isso não é jeito de perguntar de uma luz no céu, meu filho. Isso é jeito de perguntar de um horário de ônibus."'
+    '"Isso não é jeito de perguntar de uma luz no céu, {meu filho|minha filha}. Isso é jeito de perguntar de um horário de ônibus."'
   ],
   ef:{flag:['outros_procuram_a_ilha','sabe_da_janela'],
       npc:{nome:'Sr. Tanner', opiniao:6, memoria:'Não contou nada aos dois de terno porque a moça perguntou de "janela de ocorrência regular".'},
@@ -643,7 +643,7 @@ c16_o_carro:{
     {texto:'"Me leva lá. Hoje."', vai:'c16_travessia'},
     {texto:'"Duas vezes por década desde quando?"', vai:'c16_desde_quando'},
     {texto:'Avisar a Dra. Cordell antes.', vai:'c16_ivone_caixa', cond:d=>!!d.flags.cartao_ivone},
-    {texto:'Ir hoje mesmo, sozinho se preciso.', vai:'c16_travessia'}
+    {texto:'Ir hoje mesmo, sozinh{o|a} se preciso.', vai:'c16_travessia'}
   ]
 },
 
@@ -918,7 +918,7 @@ c16_mais_no_fundo:{
     'A cisterna é a boca de uma escada, e alguém encheu ela de folha e terra em algum século, ou o tempo encheu.',
     'Você cava mais três degraus e para, porque cavar quatro metros de terra com as mãos é impossível e porque o ar lá embaixo já está ficando ruim.',
     'Você sobe.',
-    'E lá em cima, na luz, você fica sentado na borda da cisterna por um tempo bem longo pensando na diferença entre "não tem água doce nessa ilha" e "não tem mais".'
+    'E lá em cima, na luz, você fica sentad{o|a} na borda da cisterna por um tempo bem longo pensando na diferença entre "não tem água doce nessa ilha" e "não tem mais".'
   ],
   ef:{flag:['achou_a_escada_de_baixo','alguem_morou_aqui'],
       rep:{eixo:'bom',delta:6,motivo:'Cavou uma hora no fundo de uma cisterna'},
@@ -999,7 +999,7 @@ c16_ficou_com_o_ze:{
     'Às duas da manhã ele para de falar no meio de uma frase e olha a ilha.',
     '"Eu vou morrer em uns três anos."',
     '"O senhor não sabe disso."',
-    '"Eu sei." Ele ajeita o boné. "E tá tudo bem, meu filho, porque eu vi."',
+    '"Eu sei." Ele ajeita o boné. "E tá tudo bem, {meu filho|minha filha}, porque eu vi."',
     'Ele bate na borda do barco.',
     '"Eu vi e teve testemunha."',
     'E é essa a coisa que ele precisava a vida inteira: não ver. Ter testemunha.'
@@ -1054,7 +1054,7 @@ c16_deitou_na_depressao:{
     'Vê o céu.',
     'Três coisas grandes deitavam aqui, lado a lado, olhando o céu, esperando uma coisa que vem do céu.',
     'E hoje elas deitam numa praia de pedra em Kanto, lado a lado, com quatro metros entre elas, olhando o mar.',
-    'Você fica deitado ali um tempo e a coisa que você pensa é: elas mudaram o que estavam olhando.'
+    'Você fica deitad{o|a} ali um tempo e a coisa que você pensa é: elas mudaram o que estavam olhando.'
   ],
   ef:{flag:['deitou_na_depressao','entendeu_as_depressoes'],
       rep:{eixo:'bom',delta:5,motivo:'Deitou na depressão pra ver o que dava pra ver'},
@@ -1580,7 +1580,7 @@ c16_esperou_no_circulo:{
     'A luz não vem do céu.',
     'Essa é a coisa que ninguém nunca contou direito, e você entende por quê: porque quem viu da costa não podia ver.',
     'A luz sai da laje.',
-    'Sai do desgaste circular embaixo de você, sobe reta pelos duzentos metros e abre em leque no alto, e você está dentro dela, sentado, e não queima e não cega e não esquenta.',
+    'Sai do desgaste circular embaixo de você, sobe reta pelos duzentos metros e abre em leque no alto, e você está dentro dela, sentad{o|a}, e não queima e não cega e não esquenta.',
     'Tem cor. Todas.',
     'E dentro da luz, descendo por ela como quem desce por um corrimão, tem uma coisa de sete metros de envergadura.'
   ],
@@ -1599,13 +1599,13 @@ c16_esperou_no_circulo:{
 
 c16_ficou_parado:{
   texto:[
-    'Você fica absolutamente parado.',
+    'Você fica absolutamente parad{o|a}.',
     'Ele pousa no círculo, a dois metros de você, e o círculo é do tamanho exato dele, o que responde de uma vez a pergunta de quem gastou a pedra.',
     'Ele não te olha na primeira meia hora.',
     'Ele faz outra coisa: ele anda pelo alicerce inteiro, devagar, e para nas três depressões, uma por uma, e encosta o bico em cada uma delas.',
     'Uma. Duas. Três.',
     'E em cada uma ele fica uns quarenta segundos.',
-    'E aí você entende, sentado numa laje com uma coisa de sete metros de envergadura a dois metros de distância:',
+    'E aí você entende, sentad{o|a} numa laje com uma coisa de sete metros de envergadura a dois metros de distância:',
     'ele vem aqui a cada seis, sete ou oito anos, há trezentas e vinte e oito vezes contadas, pra encostar o bico em três buracos vazios.',
     'E depois ele te olha.'
   ],
@@ -1625,7 +1625,7 @@ c16_ficou_parado:{
 c16_eles_estao_vivos:{
   texto:[
     '"Eles estão vivos."',
-    'Você fala isso em voz alta, sentado numa laje de pedra, dentro de uma coluna de luz, pra uma coisa de sete metros de envergadura.',
+    'Você fala isso em voz alta, sentad{o|a} numa laje de pedra, dentro de uma coluna de luz, pra uma coisa de sete metros de envergadura.',
     'Ele não se move.',
     '"Os três. Eles estão numa praia de pedra no fim de uma ciclovia em Kanto, deitados lado a lado com quatro metros entre eles, olhando o mar."',
     d=>d.flags.contou_pros_caes ? '"Eu falei com eles. Um deles encostou a testa no meu ombro."' :
@@ -1657,7 +1657,7 @@ c16_eles_estao_vivos:{
 c16_falou_hooh:{
   texto:[
     'Você fala.',
-    'Não tem nada de solene: você fala rápido, atropelado, com a voz tremendo, sentado numa pedra fria com as mãos dormentes de frio, pra uma coisa que não pisca.',
+    'Não tem nada de solene: você fala rápido, atropelado, com a voz tremendo, sentad{o|a} numa pedra fria com as mãos dormentes de frio, pra uma coisa que não pisca.',
     'Você fala do armazém de Celadon e das quarenta e uma gaiolas com número de processo.',
     'Da reserva de Fuchsia e da planilha de mil novecentos e setenta e um.',
     'Do andar onze e dos doze tanques e da plaqueta que diz MATRIZ — VAGO.',
@@ -1714,13 +1714,13 @@ c16_nao_faz_nada:{
 c16_ajoelhou:{
   texto:[
     'Você ajoelha.',
-    'Não é decisão: seu joelho vai ao chão e você não decidiu nada, e depois você fica ajoelhado porque levantar seria pior.',
+    'Não é decisão: seu joelho vai ao chão e você não decidiu nada, e depois você fica ajoelhad{o|a} porque levantar seria pior.',
     'Ele olha.',
     'E aí ele faz a coisa que te desmonta: ele recua um passo.',
     'Uma coisa de sete metros de envergadura, num círculo que ela gastou na pedra ao longo de séculos, recua um passo porque uma pessoa ajoelhou.',
     'E depois abaixa a cabeça até o chão — até a pedra, literalmente encostando o bico na laje — e fica assim uns quatro segundos.',
     'E depois levanta e olha pra você e espera.',
-    'Você entende, ajoelhado, com as mãos na pedra fria: ele devolveu o gesto.',
+    'Você entende, ajoelhad{o|a}, com as mãos na pedra fria: ele devolveu o gesto.',
     'Ele não quer isso.',
     'Ele não sabe o que fazer com isso e devolveu, que é a coisa mais educada que dava pra fazer.',
     'Você levanta.',
@@ -1768,7 +1768,7 @@ c16_guardou_a_pena:{
     'Você guarda a pena na mochila, enrolada no cobertor, com cuidado.',
     'E ele vai embora.',
     'Não ofendido, não com pressa: ele sobe pela luz do mesmo jeito que desceu, e a luz apaga quando ele acaba de subir, e o alicerce fica escuro e frio e vazio de uma vez.',
-    'Você fica sozinho numa laje de doze metros com uma pena de quarenta centímetros na mochila.',
+    'Você fica sozinh{o|a} numa laje de doze metros com uma pena de quarenta centímetros na mochila.',
     'E a coisa que te incomoda pelas onze horas de travessia de volta é essa:',
     'você não tirou nada de ninguém. A pena caiu. Ele viu você pegar.',
     'E mesmo assim.',
@@ -1911,7 +1911,7 @@ c16_queimou_a_pena:{
 
 c16_contou_as_marcas:{
   texto:[
-    'Você conta as marcas de queimado na laje, deitado de bruços com a lanterna de lado, por uma hora e quarenta.',
+    'Você conta as marcas de queimado na laje, deitad{o|a} de bruços com a lanterna de lado, por uma hora e quarenta.',
     'Trinta e uma.',
     'Trinta e uma pessoas, ao longo de quem sabe quantos séculos, subiram essa ilha, receberam uma pena e queimaram ela na mesma laje.',
     'Uma a cada dez anos, mais ou menos, o que bate com a frequência das visitas.',
@@ -1980,9 +1980,9 @@ c16_pos_hooh:{
     'Ele sobe pela luz.',
     'A luz apaga quando ele acaba de subir, e o alicerce fica escuro e frio de uma vez, e é o silêncio mais completo que você já ouviu, porque não tem mato, não tem bicho, não tem estrada.',
     'Só vento e mar a sessenta metros abaixo.',
-    'E você fica de pé no meio de uma laje, no escuro, sozinho.',
+    'E você fica de pé no meio de uma laje, no escuro, sozinh{o|a}.',
     'Ele não lutou de verdade.',
-    'Você entende isso pelo que não aconteceu: a laje está inteira, o alicerce está inteiro, você está inteiro.',
+    'Você entende isso pelo que não aconteceu: a laje está inteira, o alicerce está inteiro, você está inteir{o|a}.',
     'Uma coisa de sete metros de envergadura passou vinte minutos com você e não quebrou nada.'
   ],
   ef:{executar:d=>{ const L=Estado.lend(250); if(L && L.ataquesSofridos>=2){ L.disposicao='hostil'; return [{tipo:'perigo', texto:'Ho-Oh não vai voltar enquanto você estiver em Kanto.'}]; } return []; },
@@ -2022,11 +2022,11 @@ c16_deitou_com_a_bola:{
   texto:[
     'Você deita numa das três depressões da laje com a bola na mão.',
     'Dali só se vê o céu, e o céu tem a coluna de luz atravessando ele, e a coluna está vazia.',
-    'Você fica deitado os quarenta minutos inteiros.',
-    'E na metade deles você percebe que está deitado num lugar gasto por um corpo que morreu aqui há séculos, com o responsável por trazer esse corpo de volta fechado numa esfera de dez centímetros na sua mão.',
+    'Você fica deitad{o|a} os quarenta minutos inteiros.',
+    'E na metade deles você percebe que está deitad{o|a} num lugar gasto por um corpo que morreu aqui há séculos, com o responsável por trazer esse corpo de volta fechado numa esfera de dez centímetros na sua mão.',
     'E que a três horas de mar tem uma praia de pedra com três lugares gastos, ocupados agora, esperando.',
     'A luz some no horário.',
-    'E você continua deitado.'
+    'E você continua deitad{o|a}.'
   ],
   ef:{flag:'deitou_com_a_bola',
       moral:-15, instabilidade:1,
@@ -2118,7 +2118,7 @@ c16_explicou_pro_ze:{
     {texto:'Mandar ele virar o barco.', vai:'c16_soltou_hooh'},
     {texto:'Soltar do barco mesmo.', vai:'c16_soltou_hooh'},
     {texto:'Não dizer mais nada.', vai:'c16_fim'},
-    {texto:'"Você tem razão." E ficar calado.', vai:'c16_fim'}
+    {texto:'"Você tem razão." E ficar calad{o|a}.', vai:'c16_fim'}
   ]
 },
 
@@ -2135,7 +2135,7 @@ c16_desceu_ilha:{
       return '"Não."\nEle assente devagar.\n"Da próxima."';
     },
     'A travessia de volta leva onze horas e ele dorme sentado com a mão no leme, acordando a cada vinte minutos pra corrigir o rumo, do mesmo jeito da ida.',
-    'Você fica acordado as onze horas inteiras.'
+    'Você fica acordad{o|a} as onze horas inteiras.'
   ],
   ef:{flag:'desceu_da_ilha'},
   escolhas:[{texto:'Voltar a Fuchsia.', vai:'c16_fim'}]

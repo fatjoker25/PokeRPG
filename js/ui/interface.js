@@ -31,7 +31,9 @@ const UI = {
   init(){ this.app = document.getElementById('app'); },
 
   /* ---------- helpers ---------- */
-  esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
+  /* Todo texto passa por aqui antes da tela, e é aqui que {o|a} vira a
+     forma do gênero de quem joga (ver concordaJogador, em motor.js). */
+  esc(s){ return concordaJogador(String(s==null?'':s)).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
   el(html){ const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; },
   /* Marca de brilhante. Fica do lado do nome, nunca dentro dele. */
   /* Depois do nome: o sexo e, se for o caso, o brilho. */
@@ -687,7 +689,7 @@ const UI = {
       const vivos = Estado.timeVivo();
       c.appendChild(this.el(`<div class="sussurro">${this.esc(cena.sacrificio.pergunta)} — essa escolha é permanente.</div>`));
       if (!vivos.length){
-        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.irPara('${cena.sacrificio.vai}')">Você não tem ninguém. Vai sozinho.</button>`));
+        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.irPara('${cena.sacrificio.vai}')">Você não tem ninguém. Vai sozinh{o|a}.</button>`));
       } else {
         vivos.forEach(p => {
           c.appendChild(this.el(`<button class="escolha perigo" onclick="Jogo.sacrificar('${p.uid}')">
@@ -2127,7 +2129,7 @@ const UI = {
 
     const trechos = [
       'A estrada é estrada: pedra solta, mato dos dois lados, e horas em que não acontece absolutamente nada.',
-      'Você anda atrás de uma família com carrinho por meio dia e depois eles param pra almoçar e você segue sozinho.',
+      'Você anda atrás de uma família com carrinho por meio dia e depois eles param pra almoçar e você segue sozinh{o|a}.',
       'Chove numa parte do caminho e não chove na outra, e dá pra ver a linha exata onde uma coisa vira a outra.',
       'Um caminhão de carga te dá carona por doze quilômetros e o motorista não fala nada a viagem inteira, e é confortável.',
       'Você dorme uma noite fora, num acostamento com outras quatro pessoas que também estão indo pra algum lugar.',
@@ -2796,7 +2798,7 @@ const UI = {
 
     if (info.tipo === 'curaJogador'){
       Estado.usarItem(nome); Estado.curarJogador(info.valor); Estado.salvar('auto');
-      this.modal('', `<p>Você se cuida sozinho, sentado em algum lugar que não é confortável.</p>
+      this.modal('', `<p>Você se cuida sozinh{o|a}, sentad{o|a} em algum lugar que não é confortável.</p>
         <p class="sussurro">HP ${Estado.j.hp}/${Estado.hpMaxJogador()}.</p>`, false, 'mochila');
       return;
     }
@@ -2979,7 +2981,7 @@ const UI = {
         </div>
         <div class="cartao-dados">
           <div class="cartao-nome">${this.esc(j.nome)}</div>
-          <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? 'Campeão de Kanto' : 'Treinador registrado'))}</div>
+          <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? '{Campeão|Campeã} de Kanto' : '{Treinador registrado|Treinadora registrada}'))}</div>
           <div class="cartao-sinais">${this.esc(Estado.descricaoFisica())}</div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
@@ -3340,7 +3342,8 @@ const UI = {
       <p class="sussurro">O campo livre lê o que você escreveu: se bate com uma saída que já existe, ele segue por ela; se não bate, o jogo improvisa e isso conta igual.</p>
       <h3>Criar o personagem</h3>
       ${L('Personalidade', 'texto livre — e ela vale como regra, veja Vínculo')}
-      ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav')}
+      ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
+      ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
       ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia')}
       ${L('Ritmo do combate', 'fiel (rápido e letal) ou prolongado (dano em 60%)')}`;
@@ -3382,6 +3385,7 @@ const UI = {
       ${L('Mochila', 'só o que serve em combate aparece')}
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
       ${L('Trocar', 'gasta o turno')}
+      ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
       <h3>Status</h3>
       ${L('Sono', 'perde turnos até acordar')} ${L('Paralisia', 'Vel. pela metade · 25% de perder a vez')}
       ${L('Queimadura', 'Atk em 75% · dano por turno')} ${L('Veneno', 'dano por turno')}

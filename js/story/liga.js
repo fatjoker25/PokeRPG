@@ -36,16 +36,16 @@ const ELITE4 = [
     '"A.J." Ele nem estende a mão. "Noventa e oito vitórias seguidas antes de eu fazer dezesseis anos. Depois disso eu parei de contar, porque contar vira vaidade."',
     '"Eu treinei do jeito errado quando era moleque. Muita gente me disse isso e todas elas tinham razão." Ele se alonga sem pressa.',
     '"Eu mudei o método. Não mudei o resultado."',
-    '"E antes que o senhor pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui há cinco meses. Eu varro o chão dele toda manhã e eu não me acho ele."',
+    '"E antes que {o senhor|a senhora} pergunte: o Bruno treinou nesta sala por dezenove anos e eu treino aqui há cinco meses. Eu varro o chão dele toda manhã e eu não me acho ele."',
     d=>d.cemiterio.length ? `"E eu sei o que aconteceu com ${nomeExib(d.cemiterio[0])}." Ele fala isso sem acusação nenhuma, o que é pior. "Eu também perdi um. Continua doendo depois de doze anos. É pra doer."` : '',
     d=>d.flags.sabe_da_pergunta
-      ? '"E o senhor já sabe do vale." Ele se alonga do mesmo jeito, sem mudar nada na voz. "Aqui dentro a gente não fala disso. Aqui dentro é chão de terra e é batalha, e por quarenta minutos eu consigo não pensar naquilo. Deixa eu ter os quarenta minutos."'
+      ? '"E {o senhor|a senhora} já sabe do vale." Ele se alonga do mesmo jeito, sem mudar nada na voz. "Aqui dentro a gente não fala disso. Aqui dentro é chão de terra e é batalha, e por quarenta minutos eu consigo não pensar naquilo. Deixa eu ter os quarenta minutos."'
       : (d.flags.conheceu_o_da_terceira ? '"A gente já se falou no vestiário." Ele assente uma vez. "Lá eu era um homem. Aqui eu sou a segunda porta. Não confunde as duas coisas."' : '')
   ],
   vitoria:d=>[
     'O Sandslash cai de lado e a sala vazia devolve o som três vezes.',
     'A.J. assente uma única vez e não fala nada por um tempo desconfortável.',
-    '"Você aguentou cansado." Ele abre a porta com o ombro. "Tem gente que só sabe vencer descansada. Vai. O Mandi detesta esperar e faz questão de avisar."'
+    '"Você aguentou cansad{o|a}." Ele abre a porta com o ombro. "Tem gente que só sabe vencer descansada. Vai. O Mandi detesta esperar e faz questão de avisar."'
   ]
 },
 {
@@ -75,7 +75,7 @@ const ELITE4 = [
     'A sala é alta, de pedra escura, com fogo em quatro bacias de metal que alguém acende todo dia de manhã e apaga todo dia à noite.',
     'O homem de capa está em pé no centro, e está em pé no centro desde as oito da manhã, como esteve ontem e anteontem.',
     '"Lance." Ele estende a mão, e a mão é firme e seca. "Da Elite dos Quatro. O que sobrou dela."',
-    '"Eu não vou falar dos outros três e eu peço que o senhor também não fale. Eles têm motivo, e motivo de gente cansada não é assunto de desafiante."',
+    '"Eu não vou falar dos outros três e eu peço que {o senhor|a senhora} também não fale. Eles têm motivo, e motivo de gente cansada não é assunto de desafiante."',
     d=>d.flags.liga_aliada || d.flags.sabe_do_norte
       ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "Então vamos ser rápidos e vamos ser sérios, porque o que está lá em cima é maior que esta sala, e eu tenho consciência disso."'
       : '"Eu venho todo dia. Não é disciplina, é que eu não saberia o que fazer com um dia em que eu não viesse."',
@@ -84,10 +84,10 @@ const ELITE4 = [
   vitoria:d=>[
     'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
     'Lance recolhe os cinco sem pressa nenhuma e fica um tempo comprido de costas para você.',
-    '"Em cinco meses o senhor é o primeiro que chega aqui." Ele finalmente se vira. "E o primeiro que passa."',
+    '"Em cinco meses {o senhor|a senhora} é {o primeiro|a primeira} que chega aqui." Ele finalmente se vira. "E o primeiro que passa."',
     'Ele vai até a parede do fundo e aperta um botão que você não tinha visto, e o que você achou que fosse parede começa a abrir.',
     '"A cadeira do Campeão está vaga no papel faz dois anos." Ele segura a porta. "No papel."',
-    '"Boa sorte. E, quando o senhor sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
+    '"Boa sorte. E, quando {o senhor|a senhora} sair de lá, seja lá como for, eu vou estar aqui amanhã às oito."'
   ]
 }
 ];
@@ -114,7 +114,7 @@ const CAMPEAO = {
     'Ele sobe a escada do poço e sai pela porta do corredor, e ninguém no Planalto Indigo o vê passar, porque ninguém no Planalto Indigo estava esperando que ele estivesse lá.',
     d.flags.sabe_do_norte || d.flags.liga_aliada
       ? 'Na porta, antes de sumir, ele para. Sem virar, ele levanta a mão e aponta para o norte.\nDepois vai embora.'
-      : 'Você fica sozinho num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.',
+      : 'Você fica sozinh{o|a} num salão vazio com uma claraboia, como campeão de Kanto, sem ninguém pra contar.',
 
     /* A entrega da Pokédex Nacional. Ela chega como papel, porque
        tudo importante nesta campanha chega como papel. */
@@ -124,7 +124,7 @@ const CAMPEAO = {
     'Uma auxiliar da Liga entra no salão com uma pasta e não olha pro chão nem pro teto, só pra você.',
     '"A Liga libera o registro nacional pra quem senta na cadeira." Ela entrega a pasta aberta na página certa. "São cem entradas novas. Todas vazias."',
     '"E a fronteira do norte?" — porque é o que você pergunta, e ela já estava esperando.',
-    '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "O senhor é a Liga agora. Autoriza quando quiser."'
+    '"A fronteira do norte pede autorização da Liga." Ela fecha a pasta. "{O senhor|A senhora} é a Liga agora. Autoriza quando quiser."'
   ],
   derrota:d=>[
     'Você perde. Não tem vergonha nisso: você perdeu para a pessoa que derrubou a Equipe Rocket sozinha aos onze anos.',

@@ -121,7 +121,7 @@ c15_ab_perguntou_o_caderninho:{
     fala('o homem da cabine', 'Estudo de reativação.'),
     d=>fala(d.jogador.nome, 'Com caderninho de bolso?'),
     'Ele apaga o cigarro no peitoril, o que estraga a faixa limpa que ele mesmo mantinha.',
-    fala('o homem da cabine', 'Olha, menino. Você não tá entendendo o que tá acontecendo aqui e é melhor assim.'),
+    fala('o homem da cabine', 'Olha, {menino|menina}. Você não tá entendendo o que tá acontecendo aqui e é melhor assim.'),
     'Ele sai. Não corre. Desce a rampa da cabine e entra numa caminhonete branca de cabine dupla que estava estacionada atrás do mato, fora do seu campo de visão, o tempo todo.'
   ],
   ef:{flag:['assustou_o_vigia','a_caminhonete_da_madrugada'],
@@ -295,7 +295,7 @@ c15_cabine:{
     'Ele anota.',
     '"Sete e dezoito. Treinador. Um."',
     'E aí ele fecha o caderno e olha pra você por cima do óculos.',
-    '"Você é o terceiro em dezenove dias. Em setembro passaram quarenta e um por dia."'
+    '"Você é {o terceiro|a terceira} em dezenove dias. Em setembro passaram quarenta e um por dia."'
   ],
   ef:{flag:'conheceu_otavio',
       npc:{nome:'Xavi', opiniao:1, memoria:'Anota tudo o que passa pela cabine de pedágio da ciclovia, com horário.'},
@@ -322,7 +322,7 @@ c15_porque_anota:{
     'Ele ri.',
     '"Porque em noventa e um eu mandei com um erro de propósito. Eu escrevi que tinha uma população de cento e vinte Lapras no trecho quatorze."',
     '"Lapras em capinzal?"',
-    '"Lapras em capinzal, meu jovem, a quatro quilômetros do mar, cento e vinte deles."',
+    '"Lapras em capinzal, {meu jovem|minha jovem}, a quatro quilômetros do mar, cento e vinte deles."',
     'Ele fecha o caderno.',
     '"Nove anos e ninguém nunca me ligou."'
   ],
@@ -369,7 +369,7 @@ c15_o_que_aconteceu:{
 
 c15_os_ultimos_meses:{
   texto:[
-    'Ele te dá o caderno e vai encher a garrafa térmica na bica, porque ele quer que você leia sozinho.',
+    'Ele te dá o caderno e vai encher a garrafa térmica na bica, porque ele quer que você leia sozinh{o|a}.',
     'Você lê uma hora e vinte.',
     'E a coisa aparece sozinha, sem você procurar, porque ele fez uma tabela boa:',
     'em julho, o trecho 18 — o mais ao sul, mais perto do mar de Cinnabar — zera.',
@@ -408,7 +408,7 @@ c15_mostrou_a_conta:{
     '"E?"',
     '"E ela me ouviu por quarenta minutos, anotou tudo, foi ótima, e no fim me disse a verdade: que migração de fauna não é competência da Liga, é da Comissão, e que a Comissão tem um canal de denúncia que é um formulário."',
     'Ele olha o caderno.',
-    '"Eu mando formulário pra Comissão desde oitenta e sete, meu jovem."'
+    '"Eu mando formulário pra Comissão desde oitenta e sete, {meu jovem|minha jovem}."'
   ],
   ef:{flag:['otavio_avisou','sabe_dos_dois_meses'],
       npc:{nome:'Xavi', opiniao:6, memoria:'Já tinha visto a frente em setembro e já tinha avisado a Liga e a Comissão.'},
@@ -462,7 +462,7 @@ c15_a_nair:{
     'Ele olha o relógio.',
     '"No trecho dezesseis, contando. Ela faz a manhã e eu faço a cabine, e às treze a gente troca."',
     '"Ela anda sozinha numa rota vazia com três coisas dessas passando?"',
-    '"Ela anda sozinha nessas rotas há trinta e um anos, meu jovem, e ela tem sessenta e três, e eu já tentei convencer ela de tudo na vida e nunca consegui de nada."',
+    '"Ela anda sozinha nessas rotas há trinta e um anos, {meu jovem|minha jovem}, e ela tem sessenta e três, e eu já tentei convencer ela de tudo na vida e nunca consegui de nada."',
     'Ele olha a estrada.',
     '"E ela diz uma coisa que eu não consigo rebater."',
     '"O quê?"',
@@ -488,7 +488,7 @@ c15_o_terceiro:{
   texto:[
     '"Quem é o terceiro?"',
     'Ele confere o caderno.',
-    '"Você é o terceiro. Em dezenove dias."',
+    '"Você é {o terceiro|a terceira}. Em dezenove dias."',
     '"E os outros dois?"',
     '"Uma moça de bicicleta no dia nove, que voltou em quarenta minutos e disse que tinha esquecido uma coisa."',
     'Ele vira a página.',
@@ -632,7 +632,7 @@ c15_quem_senta:{
     '"Ele acena." Xavi dá de ombros. "Ele nunca falou uma palavra comigo em quatro anos e ele acena todas as vezes."',
     '"Ele vem fazer o quê?"',
     'Xavi olha a estrada.',
-    '"Eu acho que ele vem olhar Cinnabar, meu jovem. Mesma coisa que os três."',
+    '"Eu acho que ele vem olhar Cinnabar, {meu jovem|minha jovem}. Mesma coisa que os três."',
     'Ele bebe o café.',
     '"E eu acho que os três vêm porque ele vem, ou que ele vem porque os três vêm, e eu não sei qual das duas e eu já pensei muito."'
   ],
@@ -660,7 +660,7 @@ c15_quando_ele_vem:{
     '"O quê?"',
     '"Nas doze vezes, os três passaram na madrugada seguinte."',
     'Ele fecha o caderno.',
-    '"Doze em doze, meu jovem. Isso não é coincidência, isso é agenda."',
+    '"Doze em doze, {meu jovem|minha jovem}. Isso não é coincidência, isso é agenda."',
     'Ele olha pra você.',
     '"E a última vez que ele veio foi anteontem."'
   ],
@@ -767,7 +767,7 @@ c15_nair:{
     '"E a senhora anota zero trinta e uma vezes?"',
     '"Eu anoto zero trinta e uma vezes, todo dia, há dois meses."',
     'Ela guarda a caneta no bolso da camisa.',
-    '"Porque zero é dado, meu filho. Zero é o dado mais importante que existe e é o único que ninguém tem paciência de coletar."'
+    '"Porque zero é dado, {meu filho|minha filha}. Zero é o dado mais importante que existe e é o único que ninguém tem paciência de coletar."'
   ],
   ef:{flag:'conheceu_nair',
       npc:{nome:'Ylva', opiniao:3, memoria:'Anota zero trinta e uma vezes por dia, há dois meses, porque zero é dado.'},
@@ -830,7 +830,7 @@ c15_nair_viu:{
     'Ela levanta da pedra.',
     '"E eu anotei: quatro e trinta e um, três indivíduos não identificados, sentido norte, um deles fez contato visual por dez segundos."',
     'Ela bate na prancheta.',
-    '"Isso é dado, meu filho."'
+    '"Isso é dado, {meu filho|minha filha}."'
   ],
   ef:{flag:['nair_viu','nair_fez_contato'],
       npc:{nome:'Ylva', opiniao:8, memoria:'Acendeu a lanterna para os três e anotou o contato visual de dez segundos como dado.'},
@@ -860,7 +860,7 @@ c15_qual_parou:{
     'Ela fecha a prancheta.',
     '"E eu vou te dizer uma coisa que eu não falo nem pro Xavi: eu fiquei feliz."',
     '"Feliz?"',
-    '"Sessenta e três anos, meu filho. Trinta e um contando as mesmas espécies nas mesmas rotas."',
+    '"Sessenta e três anos, {meu filho|minha filha}. Trinta e um contando as mesmas espécies nas mesmas rotas."',
     '"E numa madrugada de agosto passou uma coisa que não tem no livro e ela parou e olhou pra mim."',
     'Ela ajeita a mochila.',
     '"Eu voltei pra casa e chorei no banheiro pra ele não ver, e depois eu anotei direito."'
@@ -1065,7 +1065,7 @@ c15_avisou_os_dois:{
     'Xavi fecha o caderno.',
     '"Eles abrem o curral e no dia seguinte fazem o circuito inteiro."',
     'Ylva escreve na prancheta.',
-    '"Isso é ensaio e revisão, meu filho. É o que professor faz."'
+    '"Isso é ensaio e revisão, {meu filho|minha filha}. É o que professor faz."'
   ],
   ef:{flag:['juntou_os_dados','entendeu_o_treino'],
       npc:{nome:'Ylva', opiniao:9, memoria:'Cruzou as datas do curral com as passagens dos três e concluiu: ensaio e revisão.'},
@@ -1077,7 +1077,7 @@ c15_avisou_os_dois:{
     {texto:'Acampar no mirante e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Ir pro capinzal procurar o rastro.', vai:'c15_capinzal'},
     {texto:'Ficar com eles e esperar juntos.', vai:'c15_esperou_a_madrugada'},
-    {texto:'Ir até o mirante sozinho agora.', vai:'c15_mirante'}
+    {texto:'Ir até o mirante sozinh{o|a} agora.', vai:'c15_mirante'}
   ]
 },
 
@@ -1164,7 +1164,7 @@ c15_sentou_no_quarto:{
     'A pedra encaixa nas suas costas, e encaixa bem, porque ela foi polida por anos de umas costas encostando.',
     'Daqui, sentado, a vista é exatamente o mar e a ilha e mais nada: a falésia corta os dois lados, o capinzal corta atrás.',
     'É um lugar que só serve pra uma coisa.',
-    'Você fica sentado uma hora e quarenta.',
+    'Você fica sentad{o|a} uma hora e quarenta.',
     'E na primeira meia hora você fica pensando em quem senta aqui, e na segunda meia hora você para de pensar em quem senta aqui e começa a só olhar a ilha, e na última quarenta você não está pensando em nada.',
     'E aí você entende por que ele senta aqui.',
     'Não é vigília. É a única coisa que dá pra fazer quando não dá pra fazer nada.'
@@ -1281,10 +1281,10 @@ c15_deixou_passar:{
     'Você espera quarenta minutos depois de eles sumirem e só então sai do barranco.',
     'A rota está vazia. Vai continuar vazia.',
     'Você fez a coisa sensata: você é uma pessoa de quinze anos com uma mochila, e eles são três coisas de cinquenta e cinco níveis, e não existe nenhuma leitura em que sair do barranco melhorasse alguma coisa.',
-    'Você vai pensar nisso muitas vezes, e toda vez você vai concluir que fez certo, e toda vez isso não vai ajudar.'
+    'Você vai pensar nisso muitas vezes, e toda vez você vai concluir que fez cert{o|a}, e toda vez isso não vai ajudar.'
   ],
   ef:{flag:'evitou_os_caes', moral:-8,
-      presagio:'Toda vez você vai concluir que fez certo. E toda vez não vai ajudar.'},
+      presagio:'Toda vez você vai concluir que fez cert{o|a}. E toda vez não vai ajudar.'},
   escolhas:[
     {texto:'Voltar e esperar outra madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Ir contar pro Xavi e pra Ylva.', vai:'c15_avisou_os_dois'},
@@ -1431,14 +1431,14 @@ c15_soltou_caes:{
 c15_sentou_na_estrada:{
   texto:[
     'Você senta no chão.',
-    'É a coisa mais idiota que dá pra fazer e você faz porque em pé você está tremendo e sentado não dá pra ver tremer.',
+    'É a coisa mais idiota que dá pra fazer e você faz porque em pé você está tremendo e sentad{o|a} não dá pra ver tremer.',
     'Eles não reagem por uns vinte segundos.',
     'E aí Entei anda até uns quatro metros de você e deita.',
     'Não relaxado: deita com as patas dianteiras estendidas, a cabeça alta, do jeito que Arcanine deita quando decide que vai ficar um tempo.',
     'E depois Raikou faz o mesmo, do outro lado.',
     'E Suicune não deita. Suicune fica de pé e olha pro sul, e não muda de posição nenhuma vez.',
     'Os três te deram companhia e um deles continuou de guarda.',
-    'Você fica sentado no meio de uma ciclovia às quatro da manhã com dois lendários deitados e um de guarda, e você não sabe o que está acontecendo, e nada de ruim está acontecendo.'
+    'Você fica sentad{o|a} no meio de uma ciclovia às quatro da manhã com dois lendários deitados e um de guarda, e você não sabe o que está acontecendo, e nada de ruim está acontecendo.'
   ],
   ef:{flag:['sentou_com_os_caes','caes_te_toleram'],
       executar:d=>{ GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo'; }); return []; },
@@ -1784,7 +1784,7 @@ c15_foram_embora:{
     'Eles vão embora em fila, no mesmo passo, e o som some antes deles sumirem de vista, o que é ao contrário do que deveria.',
     'A estrada leva quase uma hora pra voltar a ter bicho.',
     'Quando volta, um Rattata sai do capim, olha pra você, e some de novo.',
-    'E é a coisa mais normal que aconteceu no seu dia, e você fica absurdamente feliz de ver um Rattata.'
+    'E é a coisa mais normal que aconteceu no seu dia, e você fica absurdamente feli{o|a} de ver um Rattata.'
   ],
   ef:{flag:'caes_foram_embora', moral:5},
   escolhas:[

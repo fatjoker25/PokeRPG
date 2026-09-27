@@ -100,7 +100,7 @@ c1e_de_madrugada:{
     'Você se veste no escuro pra não acordar ninguém e falha na terceira gaveta.',
     d=>fala(nomeCasa(), 'Ainda não amanheceu.', 'baixo', 'A voz vem do corredor, e não estava dormindo.'),
     d=>fala(d.jogador.nome, 'Eu quero ser o primeiro.'),
-    d=>fala(nomeCasa(), 'Você vai ser o primeiro. Ninguém mais nessa rua pediu.'),
+    d=>fala(nomeCasa(), 'Você vai ser {o primeiro|a primeira}. Ninguém mais nessa rua pediu.'),
     'Silêncio dos dois lados da porta.',
     d=>fala(nomeCasa(), 'Come alguma coisa antes. Eu não vou deixar você sair daqui em jejum pra pegar bicho.', 'baixo')
   ],
@@ -111,7 +111,7 @@ c1e_de_madrugada:{
      ef:{flag:'saiu_em_jejum', moral:-2}},
     {texto:'Sentar e comer direito, mesmo perdendo o primeiro lugar da fila.',
      vai:'c1e_a_praca', ef:{hp:4, flag:'comeu_antes_da_fila', moral:4}},
-    {texto:'Perguntar se ela lembra do dia em que ela pediu a dela.',
+    {texto:'Perguntar se {casa:ela|ele} lembra do dia em que {casa:ela|ele} pediu a {casa:dela|dele}.',
      vai:'c1e_a_pergunta_da_casa'}
   ]
 },
@@ -124,12 +124,12 @@ c1e_a_pergunta_da_casa:{
     d=>fala(nomeCasa(), 'Em setembro. Eu tinha dezesseis e o Célio era magro e tinha cabelo.', 'riso'),
     d=>fala(d.jogador.nome, 'E aí?'),
     d=>fala(nomeCasa(), 'E aí minha mãe adoeceu em outubro e eu cancelei em novembro, e em dezembro eu já estava trabalhando.'),
-    'Ela fala isso do jeito de quem conta uma coisa que já pensou até o fim, muitas vezes, e já parou de doer.',
+    '{casa:Ela|Ele} fala isso do jeito de quem conta uma coisa que já pensou até o fim, muitas vezes, e já parou de doer.',
     d=>fala(nomeCasa(), 'Não é história triste. É história comum. A cidade inteira tem uma dessas.', 'baixo'),
     d=>fala(nomeCasa(), 'Por isso eu acordei. Vai lá.')
   ],
   ef:{moral:6, flag:'sabe_da_bola_cancelada',
-      presagio:'Você vai passar a jornada inteira sem perguntar o nome da espécie que ela tinha pedido, e um dia vai perguntar.'},
+      presagio:'Você vai passar a jornada inteira sem perguntar o nome da espécie que {casa:ela|ele} tinha pedido, e um dia vai perguntar.'},
   escolhas:[
     {texto:'"Qual era?"', vai:'c1e_qual_era'},
     {texto:'Abraçar e sair.', vai:'c1e_a_praca', ef:{moral:6, flag:'abracou_antes_da_fila'}},
@@ -140,12 +140,12 @@ c1e_a_pergunta_da_casa:{
 c1e_qual_era:{
   texto:[
     d=>fala(d.jogador.nome, 'Qual era a sua?'),
-    'Ela fecha a porta um pouco. Não com raiva — do jeito de quem fecha pra não ter que mostrar a cara enquanto responde.',
+    '{casa:Ela|Ele} fecha a porta um pouco. Não com raiva — do jeito de quem fecha pra não ter que mostrar a cara enquanto responde.',
     d=>fala(nomeCasa(), 'Isso eu conto quando você voltar.'),
     d=>fala(nomeCasa(), 'É o tipo de coisa que serve pra fazer alguém voltar.', 'riso')
   ],
   ef:{flag:'divida_de_uma_pergunta', moral:4,
-      registrar:'Ela não disse qual espécie tinha pedido. Disse que conta quando você voltar.'},
+      registrar:'{casa:Ela|Ele} não disse qual espécie tinha pedido. Disse que conta quando você voltar.'},
   escolhas:[
     {texto:'"Então eu volto."', vai:'c1e_a_praca',
      ef:{flag:'promessa_voltar', moral:8}},
@@ -199,7 +199,7 @@ c1e_por_que_nao_acordou:{
     'A resposta vem sem pressa nenhuma, o que é pior.',
     d=>fala(nomeCasa(), 'Eu te chamei às sete. Te chamei às nove. Te chamei às onze.'),
     d=>fala(nomeCasa(), 'Na terceira vez você falou "já vou" com a cara no travesseiro e eu resolvi que essa parte era sua.', 'frio'),
-    'Ela estende a mochila com uma mão e abre a porta com a outra.',
+    '{casa:Ela|Ele} estende a mochila com uma mão e abre a porta com a outra.',
     d=>fala(nomeCasa(), 'Corre. E não briga comigo às onze e cinquenta e dois.')
   ],
   ef:{flag:'brigou_na_porta', moral:-2},
@@ -235,7 +235,7 @@ c1e_dois_guarda_chuvas:{
     'Você pega dois. O seu e o de cabo quebrado, que abre mas não trava, e que serve se a pessoa segurar a haste com a mão.',
     d=>fala(nomeCasa(), 'Pra quê dois?'),
     d=>fala(d.jogador.nome, 'Tem gente na praça desde cedo.'),
-    'Ela não responde. Só olha um pouco mais do que precisava e volta pra pia.'
+    '{casa:Ela|Ele} não responde. Só olha um pouco mais do que precisava e volta pra pia.'
   ],
   ef:{flag:'levou_dois_guarda_chuvas', moral:5,
       rep:{eixo:'bom', delta:1, motivo:'Levou um guarda-chuva a mais pra fila da entrega'}},
@@ -281,7 +281,7 @@ c1e_da_tempo:{
   ef:{moral:4},
   escolhas:[
     {texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'},
-    {texto:'"Obrigado por esperar."', vai:'c1e_o_caderno',
+    {texto:'"{Obrigado|Obrigada} por esperar."', vai:'c1e_o_caderno',
      ef:{flag:'agradeceu_o_goro', rep:{eixo:'bom', delta:1, motivo:'Agradeceu a quem não precisava ter esperado'}}}
   ]
 },
@@ -453,7 +453,7 @@ c1e_a_assinatura:{
   ],
   ef:{moral:8, flag:'viu_a_assinatura',
       npc:{nome:'Célio', opiniao:2, memoria:'Ficou quieto do lado enquanto você olhava a assinatura de casa no formulário.'},
-      presagio:'Em algum capítulo dessa jornada você vai assinar alguma coisa sozinho e vai lembrar de fevereiro.'},
+      presagio:'Em algum capítulo dessa jornada você vai assinar alguma coisa sozinh{o|a} e vai lembrar de fevereiro.'},
   escolhas:[
     {texto:'"Confere." E assinar embaixo.', vai:'c1e_abre_a_caixa'},
     {texto:'"Os que têm quem assine. E os outros?"', vai:'c1e_os_outros'}
@@ -607,7 +607,7 @@ c1e_chamou_alto:{
     'E o bicho, que é o único que tinha motivo pra se assustar, não se assusta: levanta a cabeça na sua direção como quem responde.',
     fala('Célio', 'Ó.'),
     fala('Célio', 'Atendeu de primeira. Isso não é sempre.', 'riso'),
-    'Você fica vermelho e não consegue parar de sorrir ao mesmo tempo, que é uma combinação que não deveria ser possível.'
+    'Você fica vermelh{o|a} e não consegue parar de sorrir ao mesmo tempo, que é uma combinação que não deveria ser possível.'
   ],
   ef:{moral:10, flag:'gritou_na_praca',
       presagio:'Você vai gritar esse nome de novo em situações muito piores que essa.'},
@@ -633,7 +633,7 @@ c1e_mais_alguma_coisa:{
       npc:{nome:'Célio', opiniao:5, memoria:'Te deu três conselhos e nenhum deles era sobre batalha.'},
       registrar:'Célio: licença hoje, comida de três em três horas, e ele já acha que você sabe o que está fazendo.'},
   escolhas:[
-    {texto:'"Obrigado." De verdade.', vai:'c1e_despedida_goro',
+    {texto:'"{Obrigado|Obrigada}." De verdade.', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Ouviu até o fim quem não precisava ter falado'}, moral:4}},
     {texto:'"Por que o senhor tá me falando isso?"', vai:'c1e_por_que_fala'}
   ]
@@ -653,7 +653,7 @@ c1e_por_que_fala:{
       npc:{nome:'Célio', opiniao:6, memoria:'Te contou por que ele fala com todo mundo desde 1991.'},
       presagio:'Você vai conhecer esse menino de Cerulean. Ele tem quarenta e poucos anos agora.'},
   escolhas:[
-    {texto:'"Obrigado."', vai:'c1e_despedida_goro',
+    {texto:'"{Obrigado|Obrigada}."', vai:'c1e_despedida_goro',
      ef:{rep:{eixo:'bom', delta:2, motivo:'Agradeceu os dois minutos de quem não devia nada'}}}
   ]
 },

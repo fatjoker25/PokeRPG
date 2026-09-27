@@ -96,7 +96,7 @@ c7_ab_ficou_na_esquina:{
       const nome = m && m.apelido ? m.apelido : (m && m.nome ? m.nome : 'o seu');
       return `Você fica pensando que ${nome} não teve nove pessoas. Teve você.`;
     },
-    'Lavender não tem música. Você repara nisso agora, parado numa esquina sem nada pra fazer, e quando repara não consegue mais deixar de reparar.'
+    'Lavender não tem música. Você repara nisso agora, parad{o|a} numa esquina sem nada pra fazer, e quando repara não consegue mais deixar de reparar.'
   ],
   ef:{flag:'nao_foi_no_cortejo', registrar:'Viu o cortejo passar e não foi junto.'},
   escolhas:[
@@ -133,7 +133,7 @@ c7_ab_encomenda:{
     'É uma menina de uns treze anos, sentada numa mochila, com uma caixa de papelão no colo amarrada com barbante. A caixa tem um nome escrito no barbante com caneta de retroprojetor: ELSA.',
     d=>{
       const r = Estado.nomeRep();
-      return `Ela levanta quando te vê e fala o seu nome inteiro, com sobrenome e tudo, do jeito de quem ensaiou. "${r}", ela acrescenta, como se precisasse confirmar que é você mesmo.`;
+      return `Ela levanta quando te vê e fala o seu nome inteiro, com sobrenome e tudo, do jeito de quem ensaiou. "${r}", ela acrescenta, como se precisasse confirmar que é você mesm{o|a}.`;
     },
     fala('Elsa', 'Me falaram que você ia passar por aqui essa semana.'),
     d=>fala(d.jogador.nome, 'Quem falou?'),
@@ -359,7 +359,7 @@ c7_marcenaria:{
     'Ele aponta duas prateleiras diferentes.',
     '"Essas aqui é pra hoje. Essas de cá é pra guardar." Ele limpa as mãos num pano. "Tem gente que compra antes. Treinador, principalmente. Compra do tamanho e leva na mochila."',
     'Você olha a prateleira "pra guardar".',
-    '"Isso não é mórbido, moço", ele diz, lendo sua cara. "É que quem tá em rota não tem onde comprar."'
+    '"Isso não é mórbido, {moço|moça}", ele diz, lendo sua cara. "É que quem tá em rota não tem onde comprar."'
   ],
   ef:{flag:'viu_as_urnas',
       presagio:'Tem gente que compra antes. Você vai entender por quê, e vai ser tarde demais pra voltar aqui.'},
@@ -511,7 +511,7 @@ c7_colheu:{
 
 c7_morro_ficou:{
   texto:[
-    'Você fica sentado no morro por quase uma hora com um maço de flor feia na mão.',
+    'Você fica sentad{o|a} no morro por quase uma hora com um maço de flor feia na mão.',
     'Daqui dá pra ver a cidade inteira e a torre e, além dela, a estrada que sai pro sul.',
     'Passa um enterro lá embaixo: seis pessoas andando devagar da rua principal até a base da torre, e uma delas carregando uma caixa pequena.',
     'Daqui não dá pra ouvir nada. Você assiste um enterro inteiro em silêncio absoluto, de um morro, a quinhentos metros.',
@@ -534,7 +534,7 @@ c7_voltou_flor:{
     '"Subi."',
     'Ela pega o maço da sua mão, desmancha o fio de capim, refaz o arranjo em quarenta segundos com uma técnica que você não consegue acompanhar, e amarra com barbante de verdade.',
     'Devolve.',
-    '"Não cobro." Ela já está no próximo arranjo. "E leva a boa notícia: você é o primeiro em dois anos."'
+    '"Não cobro." Ela já está no próximo arranjo. "E leva a boa notícia: você é {o primeiro|a primeira} em dois anos."'
   ],
   ef:{npc:{nome:'Moça da floricultura', opiniao:5, memoria:'Você subiu o morro pra colher a flor amarela. Primeiro em dois anos.'},
       flag:'tem_a_flor',
@@ -764,7 +764,7 @@ c7_subir_de_novo:{
      ef:{rep:{eixo:'bom',delta:2,motivo:'Acompanhou alguém que não conseguia entrar sozinha'}, flag:'acompanhou_a_senhora'}},
     {texto:'"Eu escrevo pra senhora."', vai:'c7_escreveu_por_ela'},
     {texto:'"A senhora consegue."', vai:'c7_base'},
-    {texto:'Se despedir e ir pra torre sozinho.', vai:'c7_base'}
+    {texto:'Se despedir e ir pra torre sozinh{o|a}.', vai:'c7_base'}
   ]
 },
 
@@ -873,7 +873,7 @@ c7_deixou_flor:{
   texto:[
     'Você põe o maço de flor amarela no chão, embaixo do canto onde estão os onze nomes.',
     'Não tem vaso, não tem nada. É só uma flor no chão de concreto encostada numa parede preta.',
-    'Você fica ali agachado por uns segundos e depois levanta e não olha pra trás.',
+    'Você fica ali agachad{o|a} por uns segundos e depois levanta e não olha pra trás.',
     'Duas horas depois, quando você descer, a flor ainda vai estar lá e vai ter mais duas do lado.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Deixou flor para mortos de quem não sabia o nome'},
@@ -909,7 +909,7 @@ c7_quantos_ela:{
     'Ela olha o mural, procurando, e aponta com o queixo em três lugares diferentes.',
     '"Três."',
     '"Sinto muito."',
-    '"Não sinta. Foi em quarenta anos." Ela ajeita o casaco. "Três em quarenta anos é uma vida boa, moço. Muito boa."',
+    '"Não sinta. Foi em quarenta anos." Ela ajeita o casaco. "Três em quarenta anos é uma vida boa, {moço|moça}. Muito boa."',
     'Ela olha pra você.',
     '"Você tem quantos? De bicho, digo."',
     d=>`"${d.time.length}."`,
@@ -1087,7 +1087,7 @@ c7_porque_pararam:{
     'Ele levanta o segundo dedo.',
     '"Duas: eu olhei aquilo todo dia por dois anos e agora não me faz mais nada."',
     'Ele abaixa a mão.',
-    '"E eu não sei qual das duas é, moço. Faz vinte e um anos que eu não sei qual das duas é."'
+    '"E eu não sei qual das duas é, {moço|moça}. Faz vinte e um anos que eu não sei qual das duas é."'
   ],
   ef:{flag:'as_duas_explicacoes',
       presagio:'Resolver e acostumar produzem exatamente o mesmo silêncio. Você não vai conseguir distinguir os dois de dentro.'},
@@ -1146,7 +1146,7 @@ c7_abre_por_ele:{
   texto:[
     '"Eu abro pro senhor."',
     'Ele te olha com um susto de verdade.',
-    '"Você não vai ver a minha porta, moço. Você vai ver a sua."',
+    '"Você não vai ver a minha porta, {moço|moça}. Você vai ver a sua."',
     '"Mas se eu vir a sua—"',
     '"Você não vai ver." Ele é categórico. "Vinte e três anos. Nunca duas pessoas viram a mesma coisa."',
     'Ele volta pras velas e, mais baixo, quase não pra você:',
@@ -1275,7 +1275,7 @@ c7_mostrou_ao_zelador:{
     'Ele olha por muito tempo sem tocar.',
     '"Guarda."',
     '"O senhor não quer—"',
-    '"Guarda." Ele é firme. "Eu varro escada, moço. Eu não sirvo pra isso."',
+    '"Guarda." Ele é firme. "Eu varro escada, {moço|moça}. Eu não sirvo pra isso."',
     'Ele volta pras velas, e as mãos dele estão tremendo um pouco, e ele repõe três velas seguidas que não precisavam.',
     'Depois, sem virar:',
     '"Se você achar ela, fala o nome dos onze em voz alta. Ela vai querer ouvir de alguém."'
@@ -1294,7 +1294,7 @@ c7_mostrou_ao_zelador:{
 
 c7_copiou_os_onze:{
   texto:[
-    'Você desce e copia os onze nomes no seu caderno, ajoelhado no chão do saguão, do mesmo jeito que ela escreveu.',
+    'Você desce e copia os onze nomes no seu caderno, ajoelhad{o|a} no chão do saguão, do mesmo jeito que ela escreveu.',
     'Leva vinte minutos porque a letra dela é apertada e alguns nomes estão borrados de dois anos de gente encostando.',
     'Onze nomes. Você lê em voz baixa uma vez pra conferir e não consegue ler os dois últimos sem parar.',
     'Quando você levanta, o zelador está parado na porta do saguão, olhando, e ele não diz nada e você não diz nada.'
@@ -1352,12 +1352,12 @@ c7_escutou:{
     d=>{
       const n = Object.keys(d.npcs);
       if (d.cemiterio.length) return 'Não é voz de gente.';
-      if (d.flags.ligou_pra_casa) return 'É a sua mãe. É exatamente o ritmo dela ao telefone, com aquela pausa antes de perguntar se você comeu.';
+      if (d.flags.ligou_pra_casa) return `É ${casaCompleto()}. É exatamente o ritmo {casa:dela|dele} ao telefone, com aquela pausa antes de perguntar se você comeu.`;
       if (n.includes('Ezra')) return 'É o Ezra. É o ritmo dele — as frases todas curtas e uma comprida no fim.';
       return 'É a sua mãe. Ou é o que você lembra do jeito dela falar, que não é a mesma coisa.';
     },
     'Não dá pra entender uma palavra. É só o formato.',
-    'E o formato é suficiente pra você ficar dois minutos parado num corredor gelado com a respiração saindo branca.'
+    'E o formato é suficiente pra você ficar dois minutos parad{o|a} num corredor gelado com a respiração saindo branca.'
   ],
   ef:{flag:'escutou_as_vozes', moral:-5,
       presagio:'Só o formato. Você vai reconhecer esse formato de novo numa outra escada, muito pior.'},
@@ -1477,12 +1477,12 @@ c7_chamou_zelador:{
     '"É."',
     '"Faz quatro dias."' ,
     'Ele fala isso e o rosto dele fica com uma culpa muito antiga.',
-    '"Eu não subo desde terça. Eu tenho sessenta e um anos, moço, e aquilo lá em cima não é Gastly."'
+    '"Eu não subo desde terça. Eu tenho sessenta e um anos, {moço|moça}, e aquilo lá em cima não é Gastly."'
   ],
   ef:{flag:'zelador_sabe_do_sexto',
       presagio:'Quatro dias. Alguma coisa está batendo osso em pedra há quatro dias e a cidade toda ouve e ninguém sobe.'},
   escolhas:[
-    {texto:'Subir de novo, sozinho.', vai:'c7_marowak'},
+    {texto:'Subir de novo, sozinh{o|a}.', vai:'c7_marowak'},
     {texto:'"Sobe comigo."', vai:'c7_subiu_com_zelador'},
     {texto:'"Ninguém chamou ninguém em quatro dias?"', vai:'c7_ninguem_chamou'},
     {texto:'Ir embora de Lavender.', vai:'c7_fim'}
@@ -1501,7 +1501,7 @@ c7_ninguem_chamou:{
   ef:{flag:'a_liga_nao_veio',
       presagio:'Quarta. Hoje é sábado. Você já conhece esse ritmo.'},
   escolhas:[
-    {texto:'Subir sozinho.', vai:'c7_marowak'},
+    {texto:'Subir sozinh{o|a}.', vai:'c7_marowak'},
     {texto:'"Sobe comigo."', vai:'c7_subiu_com_zelador'},
     {texto:'Ir embora.', vai:'c7_fim'}
   ]
@@ -1635,7 +1635,7 @@ c7_ficou_com_marowak:{
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Sentou no chão e esperou uma hora sem fazer nada'},
       flag:['acalmou_marowak','ficou_com_marowak'], moral:15,
-      npc:{nome:'Zelador da Torre', opiniao:5, memoria:'Você ficou uma hora sentado no chão do sexto andar com o Marowak. Ele conta isso pra todo mundo.'},
+      npc:{nome:'Zelador da Torre', opiniao:5, memoria:'Você ficou uma hora sentad{o|a} no chão do sexto andar com o Marowak. Ele conta isso pra todo mundo.'},
       registrar:'Ficou uma hora sentado com o Marowak e o Cubone depois que levaram o treinador.',
       presagio:'Você não fez nada por uma hora. Foi a coisa certa. Quase nunca é.'},
   escolhas:[
@@ -1865,7 +1865,7 @@ c7_acalmou_bem:{
     'Leva doze minutos pra andar cinco metros.',
     'Você não fala. Só continua indo, devagar, com as mãos abertas, parando toda vez que ele tensiona.',
     'A um metro, o Marowak abaixa o osso. Não solta. Só abaixa.',
-    'Você senta no chão frio ao lado dele — sentar é a parte importante, porque sentado você fica menor — e vocês dois ficam ali olhando o Cubone machucado.',
+    'Você senta no chão frio ao lado dele — sentar é a parte importante, porque sentad{o|a} você fica menor — e vocês dois ficam ali olhando o Cubone machucado.',
     'Depois de um tempo ele deixa você chegar no menor.',
     'O treinador acorda sozinho enquanto isso. Vê a cena. Não se mexe, porque entendeu o que está acontecendo, e fica quieto no chão por mais dez minutos pra não estragar.'
   ],
@@ -2042,7 +2042,7 @@ c7_devolveu_de_verdade:{
   texto:[
     'Você sobe de novo, e é a subida mais difícil das três, e não é por cansaço.',
     'No sétimo, você não devolve só o caderno.',
-    'Você tira uma coisa sua da mochila e põe no centro do círculo, e fala em voz alta, sozinho, numa sala vazia:',
+    'Você tira uma coisa sua da mochila e põe no centro do círculo, e fala em voz alta, sozinh{o|a}, numa sala vazia:',
     '"Desculpa."',
     'A temperatura volta ao normal.',
     'Não devagar. De uma vez, como quem desliga alguma coisa.'

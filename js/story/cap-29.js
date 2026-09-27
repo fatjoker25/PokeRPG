@@ -61,7 +61,7 @@ c29_o_vizinho:{
     d=>fala(d.jogador.nome, 'Por causa do quê?'),
     fala('Sra. Vale', 'Do barulho.'),
     'Ela para de regar.',
-    fala('Sra. Vale', 'Não é barulho de festa, meu filho. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
+    fala('Sra. Vale', 'Não é barulho de festa, {meu filho|minha filha}. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
     fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar cachorro de vizinho de o que quer que seja aquilo.', 'baixo')
   ],
   ef:{flag:['a_senhora_do_vaso','achou_o_portao_verde'],
@@ -195,7 +195,7 @@ c29_bateu:{
     fala('Dario', 'Traz?'),
     d=>fala(d.jogador.nome, 'Trago o quê?'),
     'Ele suspira, do jeito de quem já explicou isso hoje.',
-    fala('Dario', 'Bicho, moço. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
+    fala('Dario', 'Bicho, {moço|moça}. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} está do seu lado e ele olha ${pron(p).pro} ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
@@ -244,7 +244,7 @@ c29_dentro_verdade:{
     'E aí ele faz uma coisa que desmonta a cena inteira: ele dá de ombros e abre mais o portão.',
     fala('Dario', 'Tá na parede. Pode ver.'),
     d=>fala(d.jogador.nome, 'Assim?'),
-    fala('Dario', 'Moço, eu não tô escondendo nada. Eu tenho alvará.'),
+    fala('Dario', '{Moço|Moça}, eu não tô escondendo nada. Eu tenho alvará.'),
     'Ele aponta com o queixo pra uma moldura na parede da sala e tem mesmo um alvará ali, emitido, com brasão, dentro da validade.',
     fala('Dario', 'Compra e venda de espécimes, atividade licenciada, código quatro dois sete.'),
     'Ele toma o café.',
@@ -273,7 +273,7 @@ c29_o_que_e_recurso:{
     'Silêncio.',
     fala('Dario', 'Recurso é o que não vai pra criadouro.'),
     'Ele põe o copo de café na mesinha do sofá e fica com as duas mãos livres e não sabe o que fazer com elas.',
-    fala('Dario', 'Eu faço isso há seis anos e você é o primeiro que pergunta.'),
+    fala('Dario', 'Eu faço isso há seis anos e você é {o primeiro|a primeira} que pergunta.'),
     fala('Dario', 'E eu tô ouvindo a minha resposta agora, em voz alta, pela primeira vez.', 'baixo')
   ],
   ef:{flag:'a_coluna_recurso', moral:1,
@@ -337,7 +337,7 @@ c29_pegou_o_envelope:{
   texto:[
     'Você abre a gaveta e pega o envelope e fecha a gaveta e sai da sala antes dos quatro minutos.',
     'Do portão, antes de sair, você ouve a descarga.',
-    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinho, e isso é o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
+    'Ele calculou o tempo. Ele calculou o tempo de descarga pra você ter o tempo de decidir sozinh{o|a}, e isso é o tipo de cumplicidade que não deixa rastro e que nenhum processo vai conseguir provar.',
     'Na rua, com o envelope pardo na mão, você entende que acabou de receber uma prova de alguém que precisa poder jurar que não deu.'
   ],
   ef:{flag:['tem_o_envelope_do_malote','reika_precisa_de_papel'],
@@ -455,7 +455,7 @@ c29_abriu_todas:{
     'Eles ficam.',
     'Essa é a parte que você não tinha previsto: você abre trinta e uma gaiolas e trinta e uma criaturas continuam sentadas.',
     'O homem do portão aparece na porta do galpão no meio da segunda fileira e não avança.',
-    fala('Dario', 'Ah, moleque.'),
+    fala('Dario', 'Ah, {moleque|moleca}.'),
     'Ele não grita. Ele fala do jeito de quem viu um copo cair e sabe que não dá pra pegar.',
     fala('Dario', 'Você sabe que eu vou ter que pagar por cada um desses?'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
@@ -570,7 +570,7 @@ c29_passou_por_ele:{
 c29_de_madrugada:{
   texto:[
     'Terça, duas e dez da manhã. A rua de casa baixa não tem um poste funcionando e você já sabia disso.',
-    'Você está sentado no meio-fio do outro lado, encostado no poste da lâmpada quebrada, há uma hora e quarenta.',
+    'Você está sentad{o|a} no meio-fio do outro lado, encostad{o|a} no poste da lâmpada quebrada, há uma hora e quarenta.',
     'Às duas e dezoito entra o caminhão.',
     'Não é caminhão-baú: é caminhonete de cabine dupla com gaiola na caçamba, coberta com lona, com os vãos amarrados com corda de nylon amarela.',
     'Você já viu essa corda, num caminhão, numa zona industrial, em outra cidade.',
@@ -596,7 +596,7 @@ c29_a_placa:{
     'Você atravessa a rua e se agacha atrás do para-choque e limpa com o polegar, três dígitos por vez, e leva mais tempo do que devia.',
     'Anota no braço, a caneta, porque papel na mão tremendo não funciona.',
     'E quando você está levantando, a porta do motorista abre.',
-    'Você fica agachado.',
+    'Você fica agachad{o|a}.',
     'Ele desce, acende um cigarro, fuma metade encostado na lateral da caminhonete a um metro e meio da sua cabeça, e sobe de novo.',
     'Cinco minutos e quarenta.',
     'Você conta cada um.'
@@ -614,7 +614,7 @@ c29_seguiu_quem_saiu:{
   texto:[
     'Seguir veículo a pé é uma coisa que só funciona em duas situações: trânsito parado e cidade pequena.',
     'Cerulean, às três da manhã, é a segunda.',
-    'A caminhonete anda devagar porque a rua é de paralelepípedo e você anda rápido pela calçada, duas quadras atrás, encostado no muro.',
+    'A caminhonete anda devagar porque a rua é de paralelepípedo e você anda rápido pela calçada, duas quadras atrás, encostad{o|a} no muro.',
     'Ela atravessa a segunda ponte, pega a marginal do rio e para num posto de gasolina de vinte e quatro horas.',
     'O motorista desce, abastece, entra na conveniência e compra café e um salgado, e fica dez minutos conversando com o frentista do jeito de quem conversa com o mesmo frentista toda terça.',
     'Você entra na conveniência atrás dele e compra um salgado também, porque comprar um salgado é a coisa mais invisível que existe.',

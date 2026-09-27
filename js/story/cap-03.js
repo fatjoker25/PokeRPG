@@ -73,7 +73,7 @@ c3_ab_acampou:{
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} está acordad${pron(p).o}, sentad${pron(p).o}, olhando pro mato. Não está tens${pron(p).o}. Está esperando.`
-               : 'Você fica acordado olhando o mato até clarear.';
+               : 'Você fica acordad{o|a} olhando o mato até clarear.';
     },
     'Nada acontece. Amanhece às cinco e meia e a floresta é verde e comum de novo.'
   ],
@@ -225,7 +225,7 @@ c3_gritou_teo:{
 
 c3_ficou_parado:{
   texto:[
-    'Você fica parado. Dois minutos, talvez três.',
+    'Você fica parad{o|a}. Dois minutos, talvez três.',
     'A coisa do outro lado também fica parada, o que prova que é gente — bicho não espera desse jeito.',
     'Depois a pessoa se move. Não na sua direção: paralelo, contornando você, com bastante cuidado.',
     'Você ouve os passos passarem pelo seu lado a uns trinta metros e sumirem pra dentro.',
@@ -290,7 +290,7 @@ c3_que_cara:{
     {texto:'"Me leva onde ele tava."', vai:'c3_som'},
     {texto:'Tirar o Ezra da floresta antes de qualquer coisa.', vai:'c3_tirou_o_teo'},
     {texto:'Olhar em volta.', vai:'c3_olhou_em_volta'},
-    {texto:'"Fica aqui. Eu vou sozinho."', vai:'c3_som', ef:{flag:'deixou_teo_na_clareira'}}
+    {texto:'"Fica aqui. Eu vou sozinh{o|a}."', vai:'c3_som', ef:{flag:'deixou_teo_na_clareira'}}
   ]
 },
 
@@ -356,7 +356,7 @@ c3_tirou_o_teo:{
       npc:{nome:'Ezra', opiniao:6, memoria:'Você o tirou da Floresta de Viridian. Ele tinha decidido esperar amanhecer sentado.'},
       flag:'salvou_o_teo'},
   escolhas:[
-    {texto:'Voltar pra dentro sozinho.', vai:'c3_som'},
+    {texto:'Voltar pra dentro sozinh{o|a}.', vai:'c3_som'},
     {texto:'Ir pra Pewter com ele e deixar a floresta pra lá.', vai:'c3_fim_sem_ver',
      ef:{flag:'nao_viu_a_armadilha'}}
   ]
@@ -451,7 +451,7 @@ c3_esperar:{
   texto:[
     'Você sai da clareira, se encosta atrás de um tronco a uns vinte metros, e espera.',
     'O som fino continua o tempo todo. Você fica ouvindo o som fino por quarenta minutos.',
-    'Essa é uma das coisas mais difíceis que você vai fazer em toda a jornada, e você faz de propósito, e por um motivo que você mesmo ainda não sabe explicar.',
+    'Essa é uma das coisas mais difíceis que você vai fazer em toda a jornada, e você faz de propósito, e por um motivo que você mesm{o|a} ainda não sabe explicar.',
     'Aos quarenta e três minutos, eles chegam.',
     'Dois. Roupa boa demais pra mato. Um com rolo de fio de aço no ombro, sem disfarçar. Eles entram na clareira sem olhar em volta, porque não esperam ninguém aqui.',
     'E você vê o que eles fazem quando acham que não tem testemunha.'
@@ -507,7 +507,7 @@ c3_foi_embora_calado:{
 
 c3_soltar:{
   texto:[
-    'Você chega agachado, de lado, sem encarar — do jeito que se chega em bicho assustado e em gente assustada, que é o mesmo jeito.',
+    'Você chega agachad{o|a}, de lado, sem encarar — do jeito que se chega em bicho assustado e em gente assustada, que é o mesmo jeito.',
     'Leva quatro minutos pra chegar perto o suficiente pra tocar no fio.',
     'Ele te dá um choque. Não de ataque — de pânico. Queima a palma da mão e você não solta, porque soltar agora significa recomeçar os quatro minutos.',
     'O fio cede. O nó era bom, feito por quem sabe.',
@@ -690,7 +690,7 @@ c3_blefe_caderno:{
     'Mas ele não sabe que você conferiu.',
     'Os dois se olham por meio segundo, e meio segundo entre duas pessoas que trabalham juntas há anos é uma conversa inteira.',
     '"Tá com a mochila", diz o mais novo.',
-    '"Tô vendo." O mais velho não tira os olhos de você. "Garoto, devolve e vai embora e a gente esquece a manhã inteira."'
+    '"Tô vendo." O mais velho não tira os olhos de você. "{Garoto|Garota}, devolve e vai embora e a gente esquece a manhã inteira."'
   ],
   ef:{flag:'blefou_com_o_caderno'},
   escolhas:[
@@ -726,7 +726,7 @@ c3_devolveu_mochila:{
     '"Você leu?"',
     d=>d.flags.leu_o_caderno_do_cacador ? 'Você não responde nada, e o não responder responde.' : '"Não."',
     'Ele guarda o caderno no bolso interno, não na mochila.',
-    '"Vai embora, garoto."'
+    '"Vai embora, {garoto|garota}."'
   ],
   ef:{perdeItens:{'Great Ball':3},
       npc:{nome:'Caçador Roque', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
@@ -736,7 +736,7 @@ c3_devolveu_mochila:{
 c3_correu_com_mochila:{
   texto:[
     'Você corre com a mochila deles pelo mato fechado de uma floresta que você não conhece, perseguido por dois adultos que conhecem.',
-    'Dura oito minutos. Você ganha oito minutos porque eles não esperavam que você fosse burro o suficiente pra correr pra dentro em vez de pra fora.',
+    'Dura oito minutos. Você ganha oito minutos porque eles não esperavam que você fosse burr{o|a} o suficiente pra correr pra dentro em vez de pra fora.',
     'No nono minuto você acha a trilha marcada por acidente e corre nela por mais quinze.',
     'Quando para, não tem ninguém atrás de você. Tem uma mochila cara, três Great Balls, um caderno de trinta e uma páginas e um ponto na barriga que não passa.'
   ],
@@ -793,7 +793,7 @@ c3_perdeu_cacador:{
     '"Você é novo. Então eu vou te explicar uma vez."',
     'Ele fala baixo, quase gentil.',
     '"Essa floresta é grande e ninguém vem procurar ninguém aqui. Da próxima vez que você me ver, você olha pro chão e passa."',
-    'Ele pega o que quer da sua mochila. Não pega tudo — deixa o suficiente pra você chegar em Pewter, porque um morto na floresta dá trabalho e você vivo e calado não dá nenhum.',
+    'Ele pega o que quer da sua mochila. Não pega tudo — deixa o suficiente pra você chegar em Pewter, porque um morto na floresta dá trabalho e você viv{o|a} e calad{o|a} não dá nenhum.',
     'É aritmética. Tudo nele é aritmética.'
   ],
   ef:{dinheiro:-500, hp:-5, causa:'Espancamento na Floresta de Viridian',
@@ -861,7 +861,7 @@ c3_negociou:{
 
 c3_negociou_mal:{
   texto:[
-    '"Informação." Ele repete a palavra como se fosse engraçada. "Garoto, eu amarrei o bicho. Eu sei onde ele tá."',
+    '"Informação." Ele repete a palavra como se fosse engraçada. "{Garoto|Garota}, eu amarrei o bicho. Eu sei onde ele tá."',
     'Ele te dá uma nota pequena. Menos por pena e mais por achar graça.',
     '"Toma. Compra um lanche."',
     'A nota fica na sua mão por um tempo antes de você guardar.'
@@ -887,7 +887,7 @@ c3_fim:{
     'Você senta na pedra por um tempo antes de descer. As pernas pedem.',
     d=>{
       if (d.flags.ignorou_pikachu || d.flags.vendeu_para_cacadores)
-        return 'Alguma coisa ficou naquela floresta que era sua. Você não vai conseguir explicar o que foi, nem pra você mesmo, e vai tentar algumas vezes.';
+        return 'Alguma coisa ficou naquela floresta que era sua. Você não vai conseguir explicar o que foi, nem pra você mesm{o|a}, e vai tentar algumas vezes.';
       if (d.flags.pikachu_aliado)
         return 'O Pikachu senta na pedra do seu lado, ainda mancando um pouco, e olha Pewter lá embaixo com uma curiosidade que não combina com o que aconteceu com ele esta semana.';
       if (d.flags.salvou_o_teo)

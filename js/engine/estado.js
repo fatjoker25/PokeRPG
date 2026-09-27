@@ -59,14 +59,32 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    deixar em branco, a casa ganha alguém mesmo assim, porque
    "alguém lá embaixo" não é personagem, é neblina.
    ============================================================ */
-const NOMES_DE_CASA = ['Perla','Alma','Dalva','Elda','Flora','Hilda','Nora','Vera',
-                       'Aldo','Bruno','Dino','Marco','Otto','Vito'];
-const PARENTESCOS   = ['mãe','pai','avó','avô','tia','tio','irmã mais velha','irmão mais velho'];
+const NOMES_DE_CASA_F = ['Perla','Alma','Dalva','Elda','Flora','Hilda','Nora','Vera'];
+const NOMES_DE_CASA_M = ['Aldo','Bruno','Dino','Marco','Otto','Vito'];
+const NOMES_DE_CASA = NOMES_DE_CASA_F.concat(NOMES_DE_CASA_M);
+const PARENTESCOS_F = ['mãe','avó','tia','irmã mais velha'];
+const PARENTESCOS_M = ['pai','avô','tio','irmão mais velho'];
+const PARENTESCOS   = PARENTESCOS_F.concat(PARENTESCOS_M);
+/* O que o jogador deixou em branco é sorteado de um jeito que combina
+   com o que ele escreveu: nome de mulher não vira "seu tio". */
 function casaDaFicha(ficha){
-  const nome = (ficha && ficha.casaNome || '').trim() || Dados.escolher(NOMES_DE_CASA);
-  const quem = (ficha && ficha.casaQuem || '').trim() || Dados.escolher(PARENTESCOS);
+  let nome = (ficha && ficha.casaNome || '').trim();
+  let quem = (ficha && ficha.casaQuem || '').trim();
+  if (!quem){
+    const fem = nome ? !NOMES_DE_CASA_M.includes(nome) && !/o$/i.test(nome) : Math.random() < 0.5;
+    quem = Dados.escolher(fem ? PARENTESCOS_F : PARENTESCOS_M);
+  }
+  if (!nome) nome = Dados.escolher(parentescoEhMulher(quem) ? NOMES_DE_CASA_F : NOMES_DE_CASA_M);
   return {nome, quem};
 }
+/* Parentesco escrito à mão: mãe, avó, tia, irmã, madrinha, madrasta,
+   prima, vizinha… é mulher; o resto é homem. */
+function parentescoEhMulher(quem){
+  const q = String(quem || '').trim().toLowerCase();
+  if (/^(pai|avô|avo|tio|irmão|irmao|padrinho|padrasto|primo|vizinho|tutor|dono)\b/.test(q)) return false;
+  return true;
+}
+function casaEhMulher(){ return parentescoEhMulher(casaDe().quem); }
 /* Usados na escrita das cenas: nomeCasa() é "Perla", casaQuem() é "mãe",
    casaCompleto() é "Perla, sua mãe". Nunca devolvem vazio. */
 function casaDe(){

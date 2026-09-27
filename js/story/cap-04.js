@@ -282,10 +282,10 @@ c4_senhora_contou:{
     '"E você dormiu depois?"',
     'Você pensa na resposta por mais tempo do que a pergunta parecia pedir.',
     '"Pouco."',
-    '"Pois é." Ela faz que sim. "Guarda isso. O dia em que você dormir bem depois de uma coisa dessas, você olha pra si mesmo com atenção."'
+    '"Pois é." Ela faz que sim. "Guarda isso. O dia em que você dormir bem depois de uma coisa dessas, você olha pra si mesm{o|a} com atenção."'
   ],
   ef:{flag:'conselho_do_sono', npc:{nome:'Sra. Zelda', opiniao:4, memoria:'Você contou da floresta pra ela. Ela te disse pra reparar no dia em que você dormisse bem depois.'},
-      presagio:'Alguma noite dessa jornada você vai dormir muito bem, e vai lembrar disso e ficar acordado de novo.'},
+      presagio:'Alguma noite dessa jornada você vai dormir muito bem, e vai lembrar disso e ficar acordad{o|a} de novo.'},
   escolhas:[
     {texto:'"E se eu dormir bem?"', vai:'c4_senhora_dormir'},
     {texto:'Agradecer e levantar.', vai:'c4_rua'},
@@ -308,7 +308,7 @@ c4_senhora_dormir:{
 
 c4_recusou_pastel:{
   texto:[
-    '"Não, obrigado."',
+    '"Não, {obrigado|obrigada}."',
     'Ela dá de ombros e come as duas metades, sem nenhum ressentimento, porque velha de cidade pequena oferece por educação e não por necessidade de que aceitem.',
     '"Você é de onde?", ela pergunta de boca cheia, sem olhar pra você.',
     d=>`"${d.jogador.cidade}."`,
@@ -316,7 +316,7 @@ c4_recusou_pastel:{
     '"Uns dias."',
     '"Uns dias", ela repete, e no jeito que ela repete cabe uma cidade inteira que ela nunca vai ver.',
     'Vocês ficam quietos. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
-    'Você fica sentado um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão burra.',
+    'Você fica sentad{o|a} um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão burra.',
     '"Tem mais", ela diz, sem olhar. "Eu comprei três."'
   ],
   ef:{npc:{nome:'Sra. Zelda', opiniao:1, memoria:'Ofereceu pastel, você recusou, e ela comprou três de qualquer jeito.'}},
@@ -333,7 +333,7 @@ c4_senhora_teimosia:{
   texto:[
     '"Tudo bem, sério."',
     'Ela come o terceiro pastel devagar, na sua frente, sem nenhuma piedade.',
-    '"Você é teimoso."',
+    '"Você é teimos{o|a}."',
     '"Sou."',
     '"Isso é bom e é ruim, e você vai descobrir a proporção na estrada."',
     'Ela limpa a mão no papel e enrola tudo numa bola pequena.',
@@ -403,7 +403,7 @@ c4_senhora_comprar:{
     'Ela para de mexer na bolsa.',
     '"Por que você pergunta isso?"',
     '"Não sei. Perguntei."',
-    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só um menino de quinze anos fazendo pergunta de menino de quinze anos.',
+    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só {um menino de quinze anos fazendo pergunta de menino|uma menina de quinze anos fazendo pergunta de menina} de quinze anos.',
     '"Já quiseram", ela diz. "Duas vezes que eu saiba."',
     '"E?"',
     '"E o museu é municipal, então não vende. Aí eles perguntaram se dava pra emprestar as peças. Aí perguntaram se dava pra emprestar só duas. Aí perguntaram quanto custava o seguro."',
@@ -447,7 +447,7 @@ c4_senhora_orgulho:{
   texto:[
     '"A senhora tem orgulho daqui?"',
     'Ela ri alto, uma vez, e algumas pombas saem do chão.',
-    '"Que pergunta é essa, menino."',
+    '"Que pergunta é essa, {menino|menina}."',
     '"É uma pergunta."',
     '"Orgulho é palavra de gente que foi embora e voltou." Ela alisa a saia. "Quem nunca saiu não tem orgulho, tem costume."',
     'Você fica sem resposta, e ela percebe, e sossega o tom.',
@@ -624,7 +624,7 @@ c4_teo_nome:{
     {texto:'"Todo mundo faz isso. É o que é ter time."', vai:'c4_teo_todo_mundo_faz'},
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
-    {texto:'Ir andar sozinho.', vai:'c4_rua'}
+    {texto:'Ir andar sozinh{o|a}.', vai:'c4_rua'}
   ]
 },
 
@@ -694,7 +694,7 @@ c4_teo_promete_agora:{
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
-    {texto:'Ir andar sozinho.', vai:'c4_rua'}
+    {texto:'Ir andar sozinh{o|a}.', vai:'c4_rua'}
   ]
 },
 
@@ -717,7 +717,7 @@ c4_teo_treino:{
      ef:{flag:'teo_assiste', npc:{nome:'Ezra', opiniao:3, memoria:'Vocês combinaram de encarar o ginásio de Pewter juntos.'}}},
     {texto:'"Me conta como foi lá dentro."', vai:'c4_teo_relato'},
     {texto:'"Vem dar uma volta pela cidade comigo."', vai:'c4_teo_volta'},
-    {texto:'Encerrar por hoje e ir andar sozinho.', vai:'c4_rua'}
+    {texto:'Encerrar por hoje e ir andar sozinh{o|a}.', vai:'c4_rua'}
   ]
 },
 
@@ -732,7 +732,7 @@ c4_teo_combinado:{
   ef:{flag:'teo_assiste'},
   escolhas:[
     {texto:'"Vem dar uma volta pela cidade antes."', vai:'c4_teo_volta'},
-    {texto:'Ir andar sozinho.', vai:'c4_rua'},
+    {texto:'Ir andar sozinh{o|a}.', vai:'c4_rua'},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'}
   ]
 },
@@ -1189,7 +1189,7 @@ c4_setor_quatro:{
     '"Pararam." Ele fecha a marmita. "Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou."',
     '"Mas?"',
     'O mais novo — Falk — responde antes que o outro decida não responder:',
-    '"Mas o quatro é o que dá pedra. O dois e o três é entulho, moço. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo."',
+    '"Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo."',
     'O mais velho olha pra ele do jeito que se olha pra quem falou demais.',
     '"Ele é novo", diz o mais velho, pra você. "Fala o que pensa."',
     '"Isso é ruim?"',
@@ -1201,7 +1201,7 @@ c4_setor_quatro:{
       registrar:'O setor quatro é o único que dá pedra boa, e é justamente o que mandaram parar.',
       presagio:'"Aqui é." Guarde o tom com que ele disse isso.'},
   escolhas:[
-    {texto:'"Obrigado. Não vou repetir isso pra ninguém."', vai:'c4_rua2',
+    {texto:'"{Obrigado|Obrigada}. Não vou repetir isso pra ninguém."', vai:'c4_rua2',
      ef:{flag:'prometeu_silencio_pros_pedreiros', moral:2,
          rep:{eixo:'bom',delta:1,motivo:'Prometeu não repetir o que ouviu de quem podia se prejudicar'}}},
     {texto:'Ir pra pedreira ver o setor quatro.', vai:'c4_pedreira_caminho',
@@ -1306,7 +1306,7 @@ c4_ivone_seco:{
     'É um tipo específico de silêncio — o de quem já decidiu e não quer discutir a decisão com ninguém — e ela reconhece na hora, porque é o silêncio dela também.',
     '"Você é de poucas palavras ou tá com pressa?"',
     '"As duas."',
-    '"Respeito as duas." Ela cruza os braços. "Mas eu trabalho num museu vazio há onze anos, menino. Eu aprendi a falar com quem não pergunta."',
+    '"Respeito as duas." Ela cruza os braços. "Mas eu trabalho num museu vazio há onze anos, {menino|menina}. Eu aprendi a falar com quem não pergunta."',
     '"Tá bom", ela cede, e não tem cedência nenhuma nisso. "Eu falo mesmo assim."'
   ],
   ef:{npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Falou com você mesmo você não tendo perguntado nada.'}},
@@ -1480,7 +1480,7 @@ c4_ivone_porque_eu:{
 c4_ivone_pedido:{
   texto:[
     '"O que a senhora quer de mim?"',
-    '"Nada perigoso." Ela levanta as duas mãos. "Eu não sou doida de mandar um garoto de quinze anos enfrentar gente com serra."',
+    '"Nada perigoso." Ela levanta as duas mãos. "Eu não sou doida de mandar {um garoto|uma garota} de quinze anos enfrentar gente com serra."',
     'Ela tira do bolso do jaleco um cartão amassado. Não é cartão de visita profissional — é um pedaço de cartolina cortado à mão, com um número escrito à caneta.',
     '"Se você vir alguma coisa lá dentro — mesa, gerador, gaiola, buraco quadrado na parede — você me liga. Não liga pra Liga. Liga pra mim."',
     '"Qual a diferença?"',
@@ -1659,7 +1659,7 @@ c4_avisou_calha:{
     'Varian escuta com atenção total e no fim diz:',
     '"Eu sei."',
     'Uma pausa desconfortável.',
-    '"Eu tenho cinquenta e sete anos e um joelho que não sobe escada de ferro, moço. Eu sei faz três anos."'
+    '"Eu tenho cinquenta e sete anos e um joelho que não sobe escada de ferro, {moço|moça}. Eu sei faz três anos."'
   ],
   escolhas:[
     {texto:'"Então eu limpo."', vai:'c4_limpou_calha'},
@@ -1970,7 +1970,7 @@ c4_mandou_parar:{
   texto:[
     '"Para com isso."',
     '"Tá." Na hora. Sem discutir.',
-    'E aí, porque você fica calado, ele continua, e o que ele diz estraga o resto do seu dia:',
+    'E aí, porque você fica calad{o|a}, ele continua, e o que ele diz estraga o resto do seu dia:',
     '"Mas eu vou voltar. Não é ameaça não, é que eu vou voltar mesmo." Ele mostra o uniforme. "Eu ganho mil e cem por mês nesse buraco. Um Zubat é trinta. Dez Zubat é trezentos. Trezentos é a diferença entre a minha mãe tomar o remédio inteiro ou tomar metade."',
     'Ele espera você responder alguma coisa.',
     'Você não tem nenhuma resposta que caiba nisso.'
@@ -2163,14 +2163,14 @@ c4_venceu_rapaz:{
 c4_perdeu_rapaz:{
   texto:[
     'Você perde. Numa fenda, pra um rapaz de dezenove anos com um Geodude e nenhum treino.',
-    'Ele não comemora. Recolhe o Geodude, pega o saco de estopa e olha pra você sentado na pedra.',
+    'Ele não comemora. Recolhe o Geodude, pega o saco de estopa e olha pra você sentad{o|a} na pedra.',
     '"Cê tá bem?"',
     'Você faz que sim.',
     '"Então fica quieto que eu vou trabalhar."',
-    'E ele trabalha. Na sua frente. Você fica ali sentado até acabar, porque não tem mais nada a fazer, e isso é a pior parte do dia.'
+    'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, porque não tem mais nada a fazer, e isso é a pior parte do dia.'
   ],
   ef:{hp:-4, causa:'Derrota na fenda da pedreira', flag:'perdeu_na_fenda',
-      presagio:'Você vai lembrar dessa sensação: assistir sentado. Vai fazer de tudo pra não sentir de novo.'},
+      presagio:'Você vai lembrar dessa sensação: assistir sentad{o|a}. Vai fazer de tudo pra não sentir de novo.'},
   escolhas:[
     {texto:'"Quem é o cara de Cerulean?"', vai:'c4_comprador'},
     {texto:'Levantar e ir embora.', vai:'c4_fenda_saiu'}
@@ -2231,7 +2231,7 @@ c4_placa:{
     '"Foi bicho." Ele olha pro buraco. "Detonou a bancada nova e saiu um monte de coisa de dentro. Um Golbat bateu na cara de um operador a sessenta por hora. Perdeu o olho."',
     '"E o Golbat?"',
     'O guarda te olha como se a pergunta fosse de outro planeta.',
-    '"O Golbat morreu, moço. Bateu num capacete a sessenta por hora."'
+    '"O Golbat morreu, {moço|moça}. Bateu num capacete a sessenta por hora."'
   ],
   ef:{flag:'sabe_do_acidente', presagio:'Ninguém aqui é o vilão. É isso que vai ficar mais difícil de aceitar.'},
   escolhas:[
@@ -2282,7 +2282,7 @@ c4_contou_fenda:{
     {texto:'"E se for funcionário de vocês?"', vai:'c4_funcionario_da_pedreira'},
     {texto:'"Tem como avisar antes de detonar? Pros bichos."', vai:'c4_sugestao'},
     {texto:'Agradecer e voltar pra cidade.', vai:'c4_rua2'},
-    {texto:'Voltar na fenda e resolver você mesmo.', vai:'c4_fenda'}
+    {texto:'Voltar na fenda e resolver você mesm{o|a}.', vai:'c4_fenda'}
   ]
 },
 
@@ -2424,7 +2424,7 @@ c4_nilo_domingo:{
     'Ele demora.',
     '"Porque a primeira coisa que ela ia perguntar é se eu me arrependo." Ele bate o capacete na perna, duas vezes. "E eu não sei a resposta. Faz quatro anos que eu não sei a resposta."',
     '"Do que você ia se arrepender?"',
-    '"De ter voltado." Ele fala isso rápido, como quem tira um esparadrapo. "Eu voltei porque meu pai morreu e alguém tinha que trabalhar. Isso é motivo bom. Motivo bom é a pior coisa que existe, moço, porque não dá pra brigar com ele."',
+    '"De ter voltado." Ele fala isso rápido, como quem tira um esparadrapo. "Eu voltei porque meu pai morreu e alguém tinha que trabalhar. Isso é motivo bom. Motivo bom é a pior coisa que existe, {moço|moça}, porque não dá pra brigar com ele."',
     'A sirene toca lá embaixo. Três vezes.',
     '"Tenho que voltar."'
   ],
@@ -2524,7 +2524,7 @@ c4_fim:{
   texto:[
     'O Centro Pokémon de Pewter tem dez beliches e cheira a sabão. Você deita e o colchão é melhor do que você merece.',
     d=>{
-      if (d.flags.entregou_o_rapaz) return 'Você fica acordado pensando num formulário assinado. Não é culpa, exatamente. É a sensação de ter acertado uma coisa e estragado outra na mesma frase.';
+      if (d.flags.entregou_o_rapaz) return 'Você fica acordad{o|a} pensando num formulário assinado. Não é culpa, exatamente. É a sensação de ter acertado uma coisa e estragado outra na mesma frase.';
       if (d.flags.limpou_calha_anonimo) return 'Suas mãos ainda cheiram a folha podre. Ninguém sabe o que você fez hoje e isso te deixa numa paz esquisita.';
       if (d.flags.teo_ferido) return 'Ezra está num dos outros beliches, de costas. Você sabe qual, porque você contou os beliches quando entrou.';
       if (d.flags.teo_assiste) return 'Ezra está no beliche de baixo do outro lado, acordado, olhando o teto e fingindo que não está nervoso.';

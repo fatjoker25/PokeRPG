@@ -273,7 +273,7 @@ c21_os_quatro_novos:{
     'A Sra. Ada para de mexer nos formulários.',
     '"Dos últimos dois anos."',
     'Ela não diz onde. Ela olha para a escada, para cima, na direção da sala em que você tem reunião às catorze.',
-    '"O senhor vai perguntar lá em cima e eles vão te contar, porque eles contam." Ela volta aos formulários. "Eu só não quero ser eu a contar."',
+    '"{O senhor|A senhora} vai perguntar lá em cima e eles vão te contar, porque eles contam." Ela volta aos formulários. "Eu só não quero ser eu a contar."',
     'Você fica com essa frase por todo o resto da tarde.'
   ],
   ef:{flag:'sabe_dos_quatro_novos', instabilidade:1,
@@ -319,7 +319,7 @@ c21_mesa_da_manutencao:{
     'O mais velho se chama Sr. Quint e é eletricista do Planalto há dezenove anos.',
     '"Você é o de hoje das duas?" Ele aponta o teto com o garfo. "A sala quatro é a que a gente chama de sala das três cadeiras."',
     '"Por quê?"',
-    '"Porque quando é uma cadeira é bronca, quando é duas é acordo, e quando é três é oferta." Ele come. "Três cadeiras é bom, moço. Três cadeiras eles querem alguma coisa de você."'
+    '"Porque quando é uma cadeira é bronca, quando é duas é acordo, e quando é três é oferta." Ele come. "Três cadeiras é bom, {moço|moça}. Três cadeiras eles querem alguma coisa de você."'
   ],
   ef:{flag:'sabe_das_tres_cadeiras',
       npc:{nome:'Sr. Quint', opiniao:1, memoria:'Eletricista do Planalto. Te explicou o que significam três cadeiras.'},
@@ -350,7 +350,7 @@ c21_quatro_cadeiras:{
 c21_ja_viu_sair:{
   texto:[
     'Ele mastiga devagar antes de responder.',
-    '"Eu vi todo mundo sair de lá, moço, porque a sala quatro tem uma tomada que dá defeito e eu subo lá toda semana."',
+    '"Eu vi todo mundo sair de lá, {moço|moça}, porque a sala quatro tem uma tomada que dá defeito e eu subo lá toda semana."',
     'Ele põe o garfo na bandeja.',
     '"Tem os que saem assinando e os que saem sem assinar, e eu vou te dizer uma coisa que eu reparei em dezenove anos: dá para saber qual é pelo jeito de descer a escada."',
     '"E qual é o jeito?"',
@@ -420,9 +420,9 @@ c21_quintino:{
     'Você senta na borda a uns dois metros dele.',
     'Ele não vira a cabeça e não parece incomodado.',
     'Passam uns quarenta segundos assim.',
-    '"O senhor é o das duas horas."',
+    '"{O senhor|A senhora} é {o|a} das duas horas."',
     '"Sou."',
-    '"Então o senhor tem trinta minutos e uma escada." Ele continua olhando o poço. "Pergunta o que quiser. Eu tenho doze anos de tempo livre."'
+    '"Então {o senhor|a senhora} tem trinta minutos e uma escada." Ele continua olhando o poço. "Pergunta o que quiser. Eu tenho doze anos de tempo livre."'
   ],
   ef:{flag:'conheceu_quintino',
       npc:{nome:'Sr. Mervin', opiniao:1, memoria:'Campeão de 79. Senta na borda do poço há doze anos.'},
@@ -478,7 +478,7 @@ c21_quintino_foi:{
     'Ele olha o poço.',
     '"Em oitenta e um me falaram de uma coisa em Cinnabar e eu disse que ia pensar, e eu pensei, e eu não fui. E aí fizeram o que fizeram lá, e deu no que deu."',
     '"O senhor não podia saber."',
-    '"Eu não podia saber e eu não fui." Ele encolhe os ombros devagar. "As duas coisas são verdade e uma não desmancha a outra. O senhor vai aprender isso hoje, se ainda não aprendeu."'
+    '"Eu não podia saber e eu não fui." Ele encolhe os ombros devagar. "As duas coisas são verdade e uma não desmancha a outra. {O senhor|A senhora} vai aprender isso hoje, se ainda não aprendeu."'
   ],
   ef:{instabilidade:1, moral:-2,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Recusou a terceira oferta em 1981 e nunca se perdoou.'},
@@ -497,7 +497,7 @@ c21_quintino_valeu:{
     'Ele balança os pés.',
     '"Quatro meses de gente parando na rua e de carta chegando e de convite para inaugurar loja. Depois passou, e eu tinha vinte e três anos e nada para fazer no resto da vida."',
     '"E o que o senhor fez?"',
-    '"Elite 4 por vinte e dois anos, que é o mesmo trabalho todo dia." Ele coça o joelho. "O senhor está me perguntando a coisa errada. Me pergunta o que valeu."',
+    '"Elite 4 por vinte e dois anos, que é o mesmo trabalho todo dia." Ele coça o joelho. "{O senhor|A senhora} está me perguntando a coisa errada. Me pergunta o que valeu."',
     'Você pergunta o que valeu.',
     '"O caminho até aqui." Ele aponta o poço vazio com o queixo. "Isso aqui é a parte que acaba. O caminho é a parte que fica."'
   ],
@@ -520,7 +520,7 @@ c21_quintino_94:{
     '"O que aconteceu no norte em dezoito de agosto?"',
     '"Ninguém sabe." Ele fala isso sem nenhum mistério, com cansaço. "Acharam o acampamento montado. Equipamento no lugar. Comida na panela."',
     'Ele olha para você.',
-    '"E se o senhor está perguntando isso hoje, às treze e quarenta, quer dizer que eles vão te contar da quarta equipe lá em cima."'
+    '"E se {o senhor|a senhora} está perguntando isso hoje, às treze e quarenta, quer dizer que eles vão te contar da quarta equipe lá em cima."'
   ],
   ef:{flag:['sabe_do_94','sabe_do_acampamento'], instabilidade:1,
       registrar:'Em 18 de agosto de 1994, onze agentes sumiram no norte. Acharam o acampamento montado.'},
@@ -537,7 +537,7 @@ c21_quarta_equipe:{
     '"E agora?"',
     '"Agora mandaram três equipes em dois anos, e por isso é que faltam quatro nomes na placa lá de cima."',
     'Ele bate na pedra do lado dele, duas vezes, com a palma.',
-    '"E agora vão te oferecer a quarta, e o senhor vai ser uma pessoa só, e isso na cabeça deles é melhor, porque uma pessoa que some é uma pessoa e não uma equipe."'
+    '"E agora vão te oferecer a quarta, e {o senhor|a senhora} vai ser uma pessoa só, e isso na cabeça deles é melhor, porque uma pessoa que some é uma pessoa e não uma equipe."'
   ],
   ef:{flag:['sabe_das_tres_equipes','sabe_dos_quatro_novos'], instabilidade:1, moral:-2,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te avisou do que iam te oferecer antes de subirem.'},
@@ -553,7 +553,7 @@ c21_pisou_na_arena:{
     'Você desce a escadinha de ferro e pisa no chão da arena.',
     'É pedra lisa, fria, com marcas de queimado que ninguém tirou e com um ralo no centro para escorrer a água quando lavam.',
     'De baixo, o poço é muito maior do que de cima, e a luz vem de um único ponto do teto e cria uma sombra sua que anda junto.',
-    'Você fica no meio, sozinho, com o Sr. Mervin sentado na borda, e ninguém mais no prédio inteiro sabe que você está aqui.',
+    'Você fica no meio, sozinh{o|a}, com o Sr. Mervin sentado na borda, e ninguém mais no prédio inteiro sabe que você está aqui.',
     'E, por quatro ou cinco segundos, você é uma criança de novo, saindo de casa, achando que isto aqui era o ponto de chegada.'
   ],
   ef:{flag:'pisou_na_arena', moral:3,
@@ -585,7 +585,7 @@ c21_ficou_em_pe:{
   texto:[
     'Você fica em pé.',
     'A mulher do centro olha a cadeira, olha você, e não insiste.',
-    '"Como o senhor preferir."',
+    '"Como {o senhor|a senhora} preferir."',
     'O homem da direita, que é mais velho e tem uma pasta sanfonada em cima da mesa, olha para ela de um jeito que quer dizer alguma coisa que você não consegue ler.',
     'Ela abre a sua pasta assim mesmo.'
   ],
@@ -620,7 +620,7 @@ c21_bruna_voltou:{
     '"A senhora voltou do norte."',
     '"Voltei."',
     'A Conselheira Thistle abre a boca e o Sr. Waldo levanta a mão dois centímetros da mesa, e ela não fala.',
-    '"Eu voltei com cinco pessoas de seis", diz a Maren Kestrel. "E eu vou te contar o que aconteceu na hora certa, que é depois, porque se eu contar agora o senhor vai decidir com o estômago."',
+    '"Eu voltei com cinco pessoas de seis", diz a Maren Kestrel. "E eu vou te contar o que aconteceu na hora certa, que é depois, porque se eu contar agora {o senhor|a senhora} vai decidir com o estômago."',
     'Ela abre o caderno dela numa página em branco.',
     '"Eu decidi com o estômago em março e eu perdi uma pessoa."'
   ],
@@ -636,7 +636,7 @@ c21_bruna_voltou:{
 c21_porque_fiscalizacao:{
   texto:[
     'O Sr. Waldo responde sem esperar a Conselheira.',
-    '"Porque tudo o que for oferecido ao senhor hoje tem efeito jurídico e alguém tem que responder por isso depois."',
+    '"Porque tudo o que for oferecido {ao senhor|à senhora} hoje tem efeito jurídico e alguém tem que responder por isso depois."',
     'Ele abre a pasta sanfonada e mostra, sem entregar, uma folha datilografada com seis linhas riscadas a caneta.',
     '"Isto é a minha discordância por escrito sobre a terceira oferta. Eu protocolei na sexta-feira."',
     '"E mesmo assim vão me oferecer."',
@@ -685,8 +685,8 @@ c21_pasta:{
       if (via==='foragido') return '"E consta que existe uma operação de distribuição em Celadon que mudou de dono recentemente." Ela fecha a pasta. "Nós não temos prova. Nós temos certeza. As duas coisas são diferentes e só uma delas serve para processo."';
       if (via==='mercenario') return '"E consta que o seu nome aparece em três manifestos de carga que não deviam existir." Ela fecha a pasta. "Nós não vamos usar isso hoje."';
       if (via==='pesquisador') return '"E consta que metade do material que a Dra. Serizawa protocolou nos últimos meses passou pelas suas mãos primeiro." Ela fecha a pasta. "Isso é útil. Útil é uma palavra perigosa aqui."';
-      if (via==='heroi') return '"E consta uma lista de lugares em que o senhor apareceu logo antes de alguma coisa parar de funcionar." Ela fecha a pasta. "Sempre coisas que a gente queria que parassem de funcionar, e sempre sem mandado."';
-      return '"E consta que o senhor foi a muito lugar e não pediu nada a ninguém." Ela fecha a pasta.';
+      if (via==='heroi') return '"E consta uma lista de lugares em que {o senhor|a senhora} apareceu logo antes de alguma coisa parar de funcionar." Ela fecha a pasta. "Sempre coisas que a gente queria que parassem de funcionar, e sempre sem mandado."';
+      return '"E consta que {o senhor|a senhora} foi a muito lugar e não pediu nada a ninguém." Ela fecha a pasta.';
     },
     '"Eu vou fazer três perguntas. Não são pegadinha."'
   ],
@@ -701,7 +701,7 @@ c21_leu_a_propria_pasta:{
   texto:[
     '"Eu quero ler a minha pasta."',
     'O Sr. Waldo responde antes da Conselheira, e responde com a rapidez de quem esperava a pergunta.',
-    '"Pode." Ele empurra a pasta pela mesa. "O senhor é o titular do dado. Está na norma interna 14 e ninguém nunca pediu."',
+    '"Pode." Ele empurra a pasta pela mesa. "{O senhor|A senhora} é {o titular|a titular} do dado. Está na norma interna 14 e ninguém nunca pediu."',
     'São vinte e duas páginas.',
     'Relatórios de agentes de campo, recortes de jornal, um formulário de ocorrência de Pewter com a sua letra de quando você tinha quinze anos, e uma folha com uma linha do tempo dos seus últimos dois anos, com lacunas marcadas a lápis.',
     'As lacunas são exatamente os lugares onde você achou que ninguém estava olhando.'
@@ -719,7 +719,7 @@ c21_leu_a_propria_pasta:{
 c21_as_lacunas:{
   texto:[
     '"O que são as lacunas?"',
-    '"São os períodos em que a gente perdeu o senhor." A Conselheira Thistle responde sem constrangimento. "Quatro lacunas. A maior tem dezenove dias."',
+    '"São os períodos em que a gente perdeu {o senhor|a senhora}." A Conselheira Thistle responde sem constrangimento. "Quatro lacunas. A maior tem dezenove dias."',
     'Dezenove dias é exatamente o tempo que você levou entre uma coisa e outra que você preferiria que não estivesse escrita em lugar nenhum.',
     '"E vocês tentaram preencher?"',
     '"Tentamos e não conseguimos, e o Sr. Waldo determinou que ficasse a lápis e em branco em vez de ficar suposição a caneta." Ela olha para ele. "Isso, aqui dentro, é uma briga de dois anos que ele ganhou."'
@@ -737,7 +737,7 @@ c21_quem_escreveu:{
     '"Quem escreveu essa pasta?"',
     '"Onze pessoas diferentes." A Conselheira folheia o rodapé das páginas, onde tem matrícula e data. "Agente de campo, agente de campo, delegacia de Pewter, delegacia de Cerulean, uma professora de Pallet."',
     '"Uma professora de Pallet?"',
-    'Ela vira a página e lê: "manifestação espontânea de terceiro. Ela escreveu para a Liga por conta própria, há dois anos, dizendo que o senhor tinha saído de casa e pedindo que se alguém do serviço te encontrasse, avisasse a ela que estava tudo bem."',
+    'Ela vira a página e lê: "manifestação espontânea de terceiro. Ela escreveu para a Liga por conta própria, há dois anos, dizendo que {o senhor|a senhora} tinha saído de casa e pedindo que se alguém do serviço te encontrasse, avisasse a ela que estava tudo bem."',
     'A Conselheira Thistle levanta os olhos.',
     '"A carta está anexada e nunca foi respondida. Isso é falha nossa e eu vou responder esta semana."'
   ],
@@ -772,7 +772,7 @@ c21_leu_a_carta:{
 c21_copia_da_carta:{
   texto:[
     'O Sr. Waldo faz a cópia ele mesmo, numa máquina do corredor, e volta com a folha ainda quente e uma segunda folha.',
-    '"A segunda é o protocolo de recebimento, com data e carimbo." Ele entrega as duas. "Se um dia o senhor quiser provar que ela escreveu, a que vale é essa."',
+    '"A segunda é o protocolo de recebimento, com data e carimbo." Ele entrega as duas. "Se um dia {o senhor|a senhora} quiser provar que ela escreveu, a que vale é essa."',
     'Você dobra as duas juntas e guarda no bolso de dentro, contra o peito, e não é um gesto que você decidiu fazer.'
   ],
   ef:{itens:{'Cópia da carta da professora':1}, moral:2,
@@ -788,7 +788,7 @@ c21_vai_responder:{
     '"Eu respondo. Me dá o endereço."',
     'A Conselheira Thistle escreve o endereço num papel timbrado e entrega.',
     'É o endereço da escola, que você sabe de cor, e o número da sala, que você também sabe de cor.',
-    '"O senhor vai responder o quê?", pergunta a Maren Kestrel, do outro lado da mesa, e é a primeira coisa que ela diz desde que sentou.',
+    '"{O senhor|A senhora} vai responder o quê?", pergunta a Maren Kestrel, do outro lado da mesa, e é a primeira coisa que ela diz desde que sentou.',
     'Você fica um tempo sem responder.',
     '"Eu ainda não sei."',
     '"Boa resposta", ela diz, e escreve alguma coisa no caderno dela.'
@@ -801,7 +801,7 @@ c21_vai_responder:{
 
 c21_pergunta1:{
   texto:[
-    '"Primeira: por que o senhor saiu de casa?"',
+    '"Primeira: por que {o senhor|a senhora} saiu de casa?"',
     'A pergunta é feita sem nenhuma ironia e sem nenhum interesse aparente, do jeito que se pergunta a profissão de alguém num formulário.',
     'E é por isso que ela pega.'
   ],
@@ -819,7 +819,7 @@ c21_p1_objetivo:{
     'Você responde com a frase que você diz desde os quinze anos, do jeito que você diz.',
     'A Conselheira Thistle anota duas palavras. Duas.',
     'A Maren Kestrel anota bem mais que duas.',
-    '"E o senhor conseguiu?", pergunta a Maren.',
+    '"E {o senhor|a senhora} conseguiu?", pergunta a Maren.',
     d=>{
       if (d.insignias.length >= 6) return 'Você olha as insígnias no bolso e a resposta não vem, porque a pergunta não é sobre insígnia e vocês dois sabem disso.';
       if (d.cemiterio.length) return 'Você pensa em quem não voltou e a resposta não vem.';
@@ -834,7 +834,7 @@ c21_p1_esqueceu:{
   texto:[
     '"Eu já não lembro mais."',
     'A Conselheira Thistle levanta os olhos.',
-    '"O senhor lembra e não quer dizer, ou o senhor esqueceu mesmo?"',
+    '"{O senhor|A senhora} lembra e não quer dizer, ou {o senhor|a senhora} esqueceu mesmo?"',
     '"Eu esqueci mesmo."',
     'Ela anota, e o Sr. Waldo anota também, e é a primeira vez que ele anota alguma coisa.',
     '"Isso acontece com todo mundo que faz mais de dezoito meses de campo", diz ele, sem levantar a cabeça. "Está na literatura e ninguém aqui lê a literatura."'
@@ -870,7 +870,7 @@ c21_p1_ficar_era_pior:{
 
 c21_pergunta2:{
   texto:[
-    '"Segunda: de tudo que o senhor fez, o que refaria diferente?"',
+    '"Segunda: de tudo que {o senhor|a senhora} fez, o que refaria diferente?"',
     d=>{
       const d2=Estado.dados;
       if (d2.cemiterio.length) return `Ela não desvia o olhar. Você pensa em ${nomeExib(d2.cemiterio[0])} antes de conseguir pensar em qualquer outra coisa.`;
@@ -894,12 +894,12 @@ c21_pergunta2:{
 c21_p2_verdade:{
   texto:[
     'Você conta.',
-    'Leva quatro minutos e em nenhum momento alguém interrompe, e o pior é que você ouve a própria voz dizendo em voz alta coisas que você só tinha dito para si mesmo em barraca, no escuro.',
+    'Leva quatro minutos e em nenhum momento alguém interrompe, e o pior é que você ouve a própria voz dizendo em voz alta coisas que você só tinha dito para si mesm{o|a} em barraca, no escuro.',
     'Quando termina, a sala fica quieta.',
     'O Sr. Waldo é quem fala.',
-    '"Isso que o senhor acabou de contar não está na pasta." Ele bate na pasta sanfonada com dois dedos. "E eu não vou pôr."',
+    '"Isso que {o senhor|a senhora} acabou de contar não está na pasta." Ele bate na pasta sanfonada com dois dedos. "E eu não vou pôr."',
     '"Por quê?"',
-    '"Porque o senhor contou por vontade e a gente não achou. E se a gente passar a registrar o que as pessoas contam por vontade, elas param de contar."'
+    '"Porque {o senhor|a senhora} contou por vontade e a gente não achou. E se a gente passar a registrar o que as pessoas contam por vontade, elas param de contar."'
   ],
   ef:{instabilidade:1, moral:4,
       npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Decidiu não registrar o que você contou por vontade própria.'},
@@ -941,7 +941,7 @@ c21_p2_perguntado:{
     'O Sr. Waldo solta um som curto pelo nariz que, num homem daquele tamanho, é o equivalente a uma gargalhada.',
     '"Escreve isso inteiro", ele diz para a Conselheira. "Palavra por palavra."',
     'Ela escreve.',
-    '"O senhor acabou de resumir o relatório que eu protocolei na sexta em uma linha, e eu levei seis páginas."'
+    '"{O senhor|A senhora} acabou de resumir o relatório que eu protocolei na sexta em uma linha, e eu levei seis páginas."'
   ],
   ef:{flag:'perguntar_mais_fazer_menos', 
       npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Mandou anotar a sua resposta palavra por palavra.'},
@@ -952,7 +952,7 @@ c21_p2_perguntado:{
 
 c21_pergunta3:{
   texto:[
-    '"Terceira." Ela junta as mãos. "Existe alguma coisa em Kanto que só o senhor pode resolver?"',
+    '"Terceira." Ela junta as mãos. "Existe alguma coisa em Kanto que só {o senhor|a senhora} pode resolver?"',
     'A pergunta parece vaidosa até você perceber que não é: eles já sabem a resposta e querem ver se você sabe.'
   ],
   escolhas:[
@@ -967,7 +967,7 @@ c21_p3_norte:{
   texto:[
     '"Tem uma coisa no norte."',
     'Os três param ao mesmo tempo, e é a primeira reação sincronizada da reunião inteira.',
-    '"Como o senhor sabe do norte?", pergunta a Conselheira Thistle.',
+    '"Como {o senhor|a senhora} sabe do norte?", pergunta a Conselheira Thistle.',
     d=>{
       if (d.flags.sabe_do_94 || d.flags.sabe_das_tres_equipes) return 'Você conta do Sr. Mervin e da borda do poço. A Conselheira fecha os olhos por um segundo. O Sr. Waldo sorri com metade da boca.';
       if (d.flags.viu_a_placa) return 'Você conta da placa de bronze atrás da escada, dos quarenta e um nomes e dos onze de dezoito de agosto. Ninguém responde nada por uns bons quatro segundos.';
@@ -986,7 +986,7 @@ c21_p3_modestia:{
     'Ela fecha a caneta.',
     '"E das três equipes, uma não voltou inteira e duas não conseguem descrever o que viram."',
     'Ela olha para você.',
-    '"O senhor tem razão em tese e está errado em prática, e a diferença entre as duas coisas custou quatro nomes que ainda não estão na placa."'
+    '"{O senhor|A senhora} tem razão em tese e está errad{o|a} em prática, e a diferença entre as duas coisas custou quatro nomes que ainda não estão na placa."'
   ],
   escolhas:[{texto:'Ouvir as ofertas.', vai:'c21_ofertas'}]
 },
@@ -1019,7 +1019,7 @@ c21_p3_por_isso:{
   ],
   ef:{flag:['entendeu_a_oferta'], instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Disse em voz alta por que estavam te escolhendo'},
-      npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Você chegou sozinho ao item quatro da discordância dele.'},
+      npc:{nome:'Sr. Waldo', opiniao:3, memoria:'Você chegou sozinh{o|a} ao item quatro da discordância dele.'},
       registrar:'Uma pessoa de fora não custa vaga, não custa pensão e não entra na estatística.'},
   escolhas:[{texto:'Ouvir as ofertas.', vai:'c21_ofertas'}]
 },
@@ -1032,7 +1032,7 @@ c21_ofertas:{
     d=>{
       const via=Historia.via(); const rep=Estado.rep;
       if (rep.eixo==='bom' && rep.bom>=6) return '"A primeira é uma cadeira na Elite 4. A segunda é a diretoria de fiscalização da Liga, quando o Sr. Waldo se aposentar em dois anos."';
-      if (rep.eixo==='ruim' && rep.ruim>=5) return '"A primeira é um acordo: o senhor para, a gente arquiva. A segunda é trabalhar para nós fazendo o que o senhor já faz, só que com cobertura."';
+      if (rep.eixo==='ruim' && rep.ruim>=5) return '"A primeira é um acordo: {o senhor|a senhora} para, a gente arquiva. A segunda é trabalhar para nós fazendo o que {o senhor|a senhora} já faz, só que com cobertura."';
       if (via==='pesquisador') return '"A primeira é um cargo de pesquisa com verba própria. A segunda é testemunhar no processo que a Dra. Serizawa está montando, com proteção."';
       return '"A primeira é um cargo de instrutor aqui no Planalto. A segunda é um contrato de campo."';
     },
@@ -1076,7 +1076,7 @@ c21_quanto_foi:{
     'Depois acrescenta, sem que ninguém pergunte:',
     '"Duas famílias receberam em sessenta dias. Uma recebeu em sete meses porque faltou uma certidão. A quarta não recebeu porque a pessoa era prestadora de serviço e não servidora, e prestador não gera pensão."',
     'Ele fecha a pasta sanfonada.',
-    '"E é exatamente esse contrato que está na mesa do senhor agora, na folha da direita."'
+    '"E é exatamente esse contrato que está na mesa {do senhor|da senhora} agora, na folha da direita."'
   ],
   ef:{flag:['sabe_da_indenizacao'], instabilidade:1, moral:-2,
       rep:{eixo:'bom',delta:1,motivo:'Perguntou pelas famílias antes de perguntar pelo salário'},
@@ -1136,7 +1136,7 @@ c21_instrutora:{
     '"E a senhora continua treinando."',
     '"Eu continuo treinando." Ela pendura a corda. "Porque os dois que eu não treinei também não voltaram, e eu passei quatro anos achando que isso significava alguma coisa, e não significa nada."',
     'Ela se vira para você.',
-    '"Agora o senhor vai me perguntar o que eu ensino, e eu vou responder, e é uma coisa só."'
+    '"Agora {o senhor|a senhora} vai me perguntar o que eu ensino, e eu vou responder, e é uma coisa só."'
   ],
   ef:{flag:'conheceu_iracy',
       npc:{nome:'Sra. Greta Nettle', opiniao:1, memoria:'Instrutora do Planalto há mais de vinte anos. Treinou nove dos onze.'},
@@ -1154,8 +1154,8 @@ c21_o_que_ela_ensina:{
     'Ela pega um colchonete e endireita no canto.',
     '"Todo mundo que chega aqui já sabe lutar. Ninguém sabe voltar."',
     '"E como se ensina isso?"',
-    '"Com três coisas, e eu vou te dar de graça porque o senhor não é meu aluno e eu não tenho ninguém para dar." Ela levanta um dedo. "Um: marque a hora de sair. Não o horário, a hora. Escrito. Se passar, volta, mesmo sem ter feito nada."',
-    'Dois dedos. "Dois: nunca desça uma coisa que o senhor não sabe subir."',
+    '"Com três coisas, e eu vou te dar de graça porque {o senhor|a senhora} não é {meu aluno|minha aluna} e eu não tenho ninguém para dar." Ela levanta um dedo. "Um: marque a hora de sair. Não o horário, a hora. Escrito. Se passar, volta, mesmo sem ter feito nada."',
+    'Dois dedos. "Dois: nunca desça uma coisa que {o senhor|a senhora} não sabe subir."',
     'Três. "Três: se der vontade de ficar mais cinco minutos, é a hora de ir embora. Sempre. Sem exceção. Essa é a que mata."'
   ],
   ef:{flag:['aprendeu_a_voltar'], moral:3,
@@ -1176,7 +1176,7 @@ c21_iracy_no_seu_lugar:{
     'Ela senta no banco de madeira encostado no espelho.',
     '"E eu vou te dizer por que, e não é bonito: porque eu tenho sessenta e sete anos e eu treinei quarenta e um anos de gente para ir, e eu nunca fui."',
     'Ela apoia as mãos nos joelhos.',
-    '"Eu não estou te dando conselho. Eu estou te dizendo o que eu carrego. O senhor decide o que faz com isso."'
+    '"Eu não estou te dando conselho. Eu estou te dizendo o que eu carrego. {O senhor|A senhora} decide o que faz com isso."'
   ],
   ef:{instabilidade:1, moral:-1,
       npc:{nome:'Sra. Greta Nettle', opiniao:3, memoria:'Treinou 41 anos de gente para ir e nunca foi.'},
@@ -1188,9 +1188,9 @@ c21_cargo:{
   texto:[
     'Você assina.',
     'O cargo vem com sala, salário, crachá e uma frase que a Conselheira Thistle diz na saída, sem maldade nenhuma:',
-    '"O senhor vai descobrir em uns seis meses que um cargo aqui dentro resolve menos do que o senhor resolvia sozinho lá fora."',
+    '"{O senhor|A senhora} vai descobrir em uns seis meses que um cargo aqui dentro resolve menos do que {o senhor|a senhora} resolvia sozinh{o|a} lá fora."',
     '"Por que a senhora está me contratando, então?"',
-    '"Porque o que o senhor resolvia sozinho lá fora não escalava, e o que a gente faz aqui dentro escala mal, e ninguém achou nada melhor que isso ainda."'
+    '"Porque o que {o senhor|a senhora} resolvia sozinh{o|a} lá fora não escalava, e o que a gente faz aqui dentro escala mal, e ninguém achou nada melhor que isso ainda."'
   ],
   ef:{flag:'aceitou_cargo_liga',
       executar:d=>{ d.jogador.cargo = Estado.rep.eixo==='bom'&&Estado.rep.bom>=6 ? 'Elite 4' : 'Diretoria de Fiscalização da Liga';
@@ -1208,7 +1208,7 @@ c21_reabrir_94:{
   texto:[
     '"O meu primeiro ato é reabrir o caso de mil novecentos e noventa e quatro."',
     'O Sr. Waldo levanta a cabeça devagar.',
-    '"O senhor tem competência para isso a partir de amanhã, e o processo está no arquivo morto do subsolo, caixa vinte e dois." Ele fala isso decorado. "Eu sei porque eu subi ele quatro vezes em vinte e dois anos e ele desceu quatro vezes."',
+    '"{O senhor|A senhora} tem competência para isso a partir de amanhã, e o processo está no arquivo morto do subsolo, caixa vinte e dois." Ele fala isso decorado. "Eu sei porque eu subi ele quatro vezes em vinte e dois anos e ele desceu quatro vezes."',
     '"Por quê?"',
     '"Porque reabrir custa uma equipe de campo por seis meses, e toda vez que eu pedi, a equipe estava em outro lugar."',
     'Ele olha a Conselheira Thistle, e ela assente uma vez.',
@@ -1225,7 +1225,7 @@ c21_contrato:{
   texto:[
     'Você assina o contrato de campo.',
     'Ele te dá cobertura jurídica, acesso a informação da Liga e nenhuma autoridade formal.',
-    '"É o pior dos dois mundos", ela admite, deslizando a cópia para você. "O senhor continua fazendo tudo sozinho, só que agora com processo interno se fizer errado."',
+    '"É o pior dos dois mundos", ela admite, deslizando a cópia para você. "{O senhor|A senhora} continua fazendo tudo sozinh{o|a}, só que agora com processo interno se fizer errado."',
     '"E por que alguém assinaria isso?"',
     '"Porque assinou." Ela guarda a via dela.',
     d=>d.flags.mudou_o_contrato
@@ -1285,7 +1285,7 @@ c21_os_quatro_da_elite:{
     'Na cadeira da Lorelei senta uma moça de vinte e poucos que não treina tipo nenhum e sim a ficha do desafiante — a mais nova a sentar numa cadeira da Elite em quarenta anos, e a cadeira não é dela.',
     'Na cadeira do Bruno senta um homem que ganhou noventa e oito batalhas seguidas antes dos dezesseis anos, largou tudo aos trinta e três, foi da terceira equipe que subiu ao norte, e voltou, e desde então não fala sobre isso com ninguém.',
     'E a quarta é o Lance, que é o dono da própria placa, tem trinta e sete anos e nunca perdeu aqui dentro.',
-    '"E antes que o senhor pergunte: sim, os quatro sabem que o senhor vem. E sim, os quatro leram a sua pasta."'
+    '"E antes que {o senhor|a senhora} pergunte: sim, os quatro sabem que {o senhor|a senhora} vem. E sim, os quatro leram a sua pasta."'
   ],
   ef:{flag:['sabe_da_elite'],
       registrar:'Um da Elite 4 esteve na terceira equipe do norte e voltou.'},
@@ -1300,8 +1300,8 @@ c21_o_da_terceira_equipe:{
   texto:[
     'Ele está no vestiário da arena, sentado num banco de madeira, com as bolas alinhadas na frente dele em cima de uma toalha.',
     'Tem uns quarenta anos e mãos grandes, e não se levanta quando você entra.',
-    '"Eu sei quem é o senhor."',
-    '"E o senhor esteve lá."',
+    '"Eu sei quem é {o senhor|a senhora}."',
+    '"E {o senhor|a senhora} esteve lá."',
     'Ele pega uma das bolas e gira devagar entre os dedos.',
     '"Eu estive lá, eu voltei, e eu não falo sobre isso porque toda vez que eu tento, a frase não fecha."',
     '"Tenta comigo."',
@@ -1343,7 +1343,7 @@ c21_os_outros_cinco:{
     '"Como assim?"',
     '"Um pediu demissão e foi ser professor. Uma se separou. Um voltou a falar com o pai depois de nove anos." Ele conta nos dedos e no quarto para. "E eu entrei na Elite 4, que era uma coisa que eu tinha desistido aos trinta e três."',
     'Ele guarda as bolas no cinto.',
-    '"Seja lá o que ele perguntou, moço, a gente respondeu com sinceridade."'
+    '"Seja lá o que ele perguntou, {moço|moça}, a gente respondeu com sinceridade."'
   ],
   ef:{flag:['sabe_da_pergunta'], instabilidade:2, moral:2,
       registrar:'Quatro dos seis mudaram de vida em três meses depois do vale.'},
@@ -1396,14 +1396,14 @@ c21_venceu_elite:{
     'Tem um homem de setenta e poucos anos sentado na borda do poço que desce a escadinha devagar e aperta a sua mão com as duas dele.',
     '"Muita gente chega aqui", diz o Sr. Mervin. "Quase ninguém chega aqui com o time inteiro de pé e sem ter comprado nenhum deles."',
     d=>d.cemiterio.length
-      ? `Ele olha a lista que trouxeram. "O senhor perdeu ${d.cemiterio.length}. Isso conta. Vai contar para o senhor por muito tempo, e é bom que conte."`
-      : 'Ele olha a lista que trouxeram. "E o senhor não perdeu nenhum. Isso é mais raro que vencer."',
+      ? `Ele olha a lista que trouxeram. "{O senhor|A senhora} perdeu ${d.cemiterio.length}. Isso conta. Vai contar para {o senhor|a senhora} por muito tempo, e é bom que conte."`
+      : 'Ele olha a lista que trouxeram. "E {o senhor|a senhora} não perdeu nenhum. Isso é mais raro que vencer."',
     'Depois ele solta a sua mão e volta a subir a escadinha, devagar, e senta de novo na borda.',
-    'E fica lá, olhando, enquanto você fica sozinho no meio do poço.',
+    'E fica lá, olhando, enquanto você fica sozinh{o|a} no meio do poço.',
     'Não é solidão. É a diferença inteira entre setenta e nove e hoje.'
   ],
   ef:{flag:'venceu_a_elite',
-      executar:d=>{ d.jogador.cargo='Campeão de Kanto'; return [{tipo:'insignia', texto:'Você é Campeão de Kanto.'}]; },
+      executar:d=>{ d.jogador.cargo='{Campeão|Campeã} de Kanto'; return [{tipo:'insignia', texto:'Você é {Campeão|Campeã} de Kanto.'}]; },
       rep:{eixo:'bom',delta:3,motivo:'Venceu a Elite 4 do Planalto Indigo'},
       insignia:'Campeão de Kanto', dinheiro:50000,
       curaTime:true,
@@ -1418,7 +1418,7 @@ c21_venceu_elite:{
 c21_a_moldura:{
   texto:[
     'A moldura vazia na parede dos campeões é a trigésima.',
-    '"A foto se tira na segunda de manhã", diz a Sra. Ada, da recepção, já com o formulário na mão. "O senhor escolhe se é aqui em cima ou no poço."',
+    '"A foto se tira na segunda de manhã", diz a Sra. Ada, da recepção, já com o formulário na mão. "{O senhor|A senhora} escolhe se é aqui em cima ou no poço."',
     '"Dá para escolher outra coisa?"',
     'Ela levanta os olhos.',
     '"Como assim?"',
@@ -1440,7 +1440,7 @@ c21_sentou_na_borda:{
     'Você sobe a escadinha e senta na borda, a dois metros dele, com as pernas para dentro do poço.',
     'Ele não vira a cabeça.',
     'Passam uns quarenta segundos.',
-    '"Agora o senhor entendeu", ele diz.',
+    '"Agora {o senhor|a senhora} entendeu", ele diz.',
     '"Entendi."',
     'E ficam os dois assim, olhando um poço de pedra vazio, num prédio que fecha às dezoito, numa montanha, enquanto lá embaixo uma van entrega pão para o refeitório do dia seguinte.'
   ],
@@ -1457,7 +1457,7 @@ c21_perdeu_elite:{
     'Eles curam o seu time, te dão água e te deixam sentar na borda do poço o tempo que você precisar.',
     '"Volta", diz o Sr. Mervin. "Eu perdi quatro vezes antes de sentar desse lado."',
     '"Quatro?"',
-    '"Quatro, e a terceira foi feia." Ele coça o joelho. "Na quarta eu mudei uma coisa só e ganhei, e eu vou te contar qual foi se o senhor quiser ouvir."'
+    '"Quatro, e a terceira foi feia." Ele coça o joelho. "Na quarta eu mudei uma coisa só e ganhei, e eu vou te contar qual foi se {o senhor|a senhora} quiser ouvir."'
   ],
   ef:{curaTime:true, flag:'perdeu_a_elite', itens:{'Hyper Potion':3}},
   escolhas:[
@@ -1475,7 +1475,7 @@ c21_o_que_ele_mudou:{
     '"E na quarta?"',
     '"Na quarta eu abri com ele." Ele encolhe os ombros. "E o resto do time chegou inteiro no fim, e foi o resto do time que ganhou."',
     'Ele olha para você.',
-    '"Isso serve para muito mais coisa que luta, e o senhor vai levar uns dez anos para descobrir onde."'
+    '"Isso serve para muito mais coisa que luta, e {o senhor|a senhora} vai levar uns dez anos para descobrir onde."'
   ],
   ef:{flag:'conselho_do_quintino', moral:2,
       npc:{nome:'Sr. Mervin', opiniao:3, memoria:'Te contou o que mudou na quarta tentativa.'},
@@ -1627,9 +1627,9 @@ c21_vai_procurar_nogueira:{
     'Depois arranca uma folha do caderno e escreve alguma coisa e dobra e empurra pela mesa.',
     '"Isso é o que ele estava vestindo, a marca da bota e o número, e uma coisa que ele carregava no bolso de cima e que ele nunca tirava."',
     '"O que era?"',
-    '"Uma medalha de natação da filha." Ela solta a folha. "Se o senhor achar a medalha e não achar ele, eu quero a medalha."',
+    '"Uma medalha de natação da filha." Ela solta a folha. "Se {o senhor|a senhora} achar a medalha e não achar ele, eu quero a medalha."',
     'Ela abre o caderno e volta a escrever.',
-    '"E se o senhor achar ele, o senhor não precisa me trazer nada. É só descer e dizer o nome dele em voz alta na portaria, que eu ouço do terceiro andar."'
+    '"E se {o senhor|a senhora} achar ele, {o senhor|a senhora} não precisa me trazer nada. É só descer e dizer o nome dele em voz alta na portaria, que eu ouço do terceiro andar."'
   ],
   ef:{flag:['procura_o_nogueira'], itens:{'Bilhete da Maren sobre o Vernon':1}, moral:2,
       npc:{nome:'Maren Kestrel', opiniao:5, memoria:'Te pediu para achar a medalha de natação da filha do Vernon.'},
@@ -1669,7 +1669,7 @@ c21_so_olhar:{
     'O Sr. Waldo fecha os olhos e, pela primeira vez na tarde, sorri de verdade.',
     '"Isso resolve o meu item quatro." Ele já está escrevendo. "Missão de reconhecimento sem objetivo de intervenção. Isso existe na norma, é a classe D, e ninguém usa porque não dá prestígio."',
     '"E o que muda na prática?"',
-    '"Muda que se o senhor chegar lá e não fizer nada e voltar, o senhor cumpriu a missão." Ele levanta os olhos. "E isso, moço, é a diferença entre voltar e não voltar em oitenta por cento dos casos que eu vi em trinta e um anos."'
+    '"Muda que se {o senhor|a senhora} chegar lá e não fizer nada e voltar, {o senhor|a senhora} cumpriu a missão." Ele levanta os olhos. "E isso, {moço|moça}, é a diferença entre voltar e não voltar em oitenta por cento dos casos que eu vi em trinta e um anos."'
   ],
   ef:{flag:['missao_classe_d'], 
       rep:{eixo:'bom',delta:3,motivo:'Transformou a missão em reconhecimento sem intervenção'},
@@ -1685,7 +1685,7 @@ c21_escrevam_agora:{
     '"Isso leva uma hora."',
     '"Eu tenho uma hora."',
     'Eles levam uma hora e quarenta.',
-    'Você fica sentado naquela sala enquanto três pessoas discutem, riscam, reescrevem e brigam sobre o verbo de uma frase por doze minutos inteiros.',
+    'Você fica sentad{o|a} naquela sala enquanto três pessoas discutem, riscam, reescrevem e brigam sobre o verbo de uma frase por doze minutos inteiros.',
     'Às dezessete horas, o Sr. Waldo lê em voz alta o que escreveram, e é um parágrafo de quatro linhas, e as quatro linhas dizem uma coisa só: ir, observar, não intervir, voltar em cinco dias.',
     'E, no rodapé, uma linha que a Maren Kestrel pediu para incluir e que ninguém discutiu: a não observância do prazo de retorno não constitui falta.'
   ],
@@ -1722,12 +1722,12 @@ c21_devolveu:{
 c21_aceitou_norte:{
   texto:[
     'Eles te dão um mapa, coordenadas e uma caixa com quatro Ultra Balls e uma Master Ball.',
-    '"A Master Ball é da Liga. Está registrada." A Conselheira Thistle deixa isso no ar um segundo. "O que o senhor fizer com ela vai ser registrado também."',
+    '"A Master Ball é da Liga. Está registrada." A Conselheira Thistle deixa isso no ar um segundo. "O que {o senhor|a senhora} fizer com ela vai ser registrado também."',
     d=>d.flags.missao_classe_d
       ? 'E, em cima do mapa, a ordem de quatro linhas, assinada por três pessoas, dizendo que chegar e não fazer nada já cumpre a missão.'
       : 'E, em cima do mapa, nada. Nenhuma linha dizendo o que você deve fazer ao chegar.',
     'Na porta, ela diz a última coisa, e é a única frase do dia que não parece ensaiada:',
-    '"Se ele falar com o senhor — e ele fala — não minta. Ele sabe."'
+    '"Se ele falar com {o senhor|a senhora} — e ele fala — não minta. Ele sabe."'
   ],
   ef:{itens:{'Ultra Ball':4,'Master Ball':1,'Hyper Potion':3,'Full Heal':2},
       flag:'liga_aliada', rep:{eixo:'bom',delta:1,motivo:'Aceitou ir ao vale do norte'},
@@ -1744,12 +1744,12 @@ c21_aceitou_norte:{
 c21_despedida:{
   texto:[
     'Ele está na borda, onde estava às treze e trinta e onde vai estar amanhã.',
-    '"O senhor vai."',
+    '"{O senhor|A senhora} vai."',
     '"Vou."',
     'Ele assente devagar, três vezes, e não olha para você nenhuma vez durante a conversa inteira.',
-    '"Então eu vou te pedir uma coisa e o senhor pode dizer não."',
+    '"Então eu vou te pedir uma coisa e {o senhor|a senhora} pode dizer não."',
     'Ele tira do bolso um papel dobrado, velho, amarelado nas dobras, e entrega sem olhar.',
-    '"É o endereço de uma casa em Cinnabar que não existe mais, porque a ilha inteira não existe mais." Ele encolhe os ombros. "Eu carrego desde oitenta e um. Se o senhor voltar do norte, joga fora por mim. Eu não consigo."'
+    '"É o endereço de uma casa em Cinnabar que não existe mais, porque a ilha inteira não existe mais." Ele encolhe os ombros. "Eu carrego desde oitenta e um. Se {o senhor|a senhora} voltar do norte, joga fora por mim. Eu não consigo."'
   ],
   ef:{flag:['carrega_o_papel_do_quintino'], itens:{'Um papel dobrado desde 1981':1}, moral:3,
       npc:{nome:'Sr. Mervin', opiniao:5, memoria:'Te pediu para jogar fora, na volta, um papel que ele carrega desde 1981.'},
@@ -1763,7 +1763,7 @@ c21_recusou_norte:{
     '"Manda outra equipe."',
     '"Já mandamos três." Ela não se irrita. "A quarta seria enviar gente sabendo que eles não voltam. Eu não faço isso."',
     '"E mandar eu, a senhora faz?"',
-    '"Eu não estou te mandando. Eu estou te contando." Ela empurra o mapa pela mesa mesmo assim. "A diferença importa para mim, mesmo que não importe para o senhor."',
+    '"Eu não estou te mandando. Eu estou te contando." Ela empurra o mapa pela mesa mesmo assim. "A diferença importa para mim, mesmo que não importe para {o senhor|a senhora}."',
     'O Sr. Waldo olha o mapa em cima da mesa e olha para ela, e não diz nada, e o que ele não diz fica na sala.'
   ],
   ef:{flag:'recusou_norte'},
@@ -1780,9 +1780,9 @@ c21_acabou_de_fazer:{
     'A sala fica muito quieta.',
     'A Conselheira Thistle olha o mapa em cima da mesa, do lado de lá da linha invisível que separa contar de mandar.',
     'Ela puxa o mapa de volta.',
-    '"O senhor tem razão."',
+    '"{O senhor|A senhora} tem razão."',
     'E aí ela faz uma coisa que ninguém naquela mesa esperava: ela guarda o mapa na pasta e fecha.',
-    '"Está encerrado. Se o senhor quiser ir depois, o senhor volta aqui e pede, e eu dou. Mas não vai sair desta sala em cima de uma mesa."'
+    '"Está encerrado. Se {o senhor|a senhora} quiser ir depois, {o senhor|a senhora} volta aqui e pede, e eu dou. Mas não vai sair desta sala em cima de uma mesa."'
   ],
   ef:{flag:['nao_saiu_com_o_mapa'], 
       rep:{eixo:'bom',delta:3,motivo:'Não deixou que te empurrassem um mapa pela mesa'},

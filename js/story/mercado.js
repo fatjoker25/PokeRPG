@@ -256,7 +256,7 @@ const TROCAS = {
     quem:'a florista do térreo',
     onde:'na Rota 7, colhendo alguma coisa na beira da estrada com um balde',
     pede:29, da:{dex:32, nivel:[20,24], apelido:'Espeto', natureza:'Naughty'},
-    fala:'"Eu tenho macho, você tem fêmea. Eu não vou explicar melhor que isso, moço, eu tenho quarenta e três anos e eu trabalho com planta."',
+    fala:'"Eu tenho macho, você tem fêmea. Eu não vou explicar melhor que isso, {moço|moça}, eu tenho quarenta e três anos e eu trabalho com planta."',
     depois:'Ela põe o Nidoran♀ numa caixa de papelão com furo e um pratinho de água e sai carregando pelo corredor de serviço, falando com ela o caminho inteiro.',
     memoria:'Trocou o Nidoran♂ dela pelo seu Nidoran♀, na banca de flor.'
   }],

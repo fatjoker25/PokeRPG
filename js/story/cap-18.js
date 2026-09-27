@@ -170,7 +170,7 @@ c18_ab_a_secao_certa:{
     d=>fala(d.jogador.nome, 'E se não nasceu?'),
     'Ele para com o dedo no volume.',
     fala('o bibliotecário', 'Aí não existe.'),
-    fala('o bibliotecário', 'E se não existe e mesmo assim manda em alguma coisa, meu jovem, aí você tem um problema que não é de biblioteca.')
+    fala('o bibliotecário', 'E se não existe e mesmo assim manda em alguma coisa, {meu jovem|minha jovem}, aí você tem um problema que não é de biblioteca.')
   ],
   ef:{flag:'a_secao_tres_das_quintas',
       registrar:'Toda comissão, conselho ou fundação precisa nascer na seção 3 do diário oficial, publicada às quintas.'},
@@ -260,7 +260,7 @@ c18_ab_recusou_a_reika:{
     fala('Rhea Colman', 'Mas antes de eu ir: você reparou que a gente se encontrou três vezes em três cidades diferentes?'),
     d=>fala(d.jogador.nome, 'Reparei.'),
     fala('Rhea Colman', 'Eu não te procurei nenhuma dessas vezes.'),
-    'Ela vai embora e deixa a xícara no banco, e você fica sentado com essa frase.'
+    'Ela vai embora e deixa a xícara no banco, e você fica sentad{o|a} com essa frase.'
   ],
   ef:{flag:'recusou_a_reika',
       npc:{nome:'Rhea Colman', opiniao:0, viuVoce:'Você recusou ir ao cartório por ela.'},
@@ -446,7 +446,7 @@ c18_cartorio_padaria:{
 
 c18_belchior_associacao:{
   texto:[
-    '"Associação?" Ele faz que sim com a cabeça, devagar. "Associação é o melhor negócio do mundo, moço. Digo, moça. Digo — o senhor entendeu."',
+    '"Associação?" Ele faz que sim com a cabeça, devagar. "Associação é o melhor negócio do mundo, {moço. Digo, senhor. Digo — o senhor entendeu|moça. Digo, senhora. Digo — a senhora entendeu}."',
     '"Por quê?"',
     '"Porque não paga o que empresa paga, e porque ninguém desconfia de associação." Ele encolhe os ombros. "Meu cunhado tem uma. É de futebol de várzea e é de verdade, mas se não fosse, também dava."',
     'Ele volta a olhar o formulário dele.',
@@ -460,7 +460,7 @@ c18_cartorio_furou:{
   texto:[
     'Você vai direto ao balcão e diz que é urgente.',
     'A escrevente levanta os olhos por dois segundos, olha a fila, olha você de novo.',
-    '"Urgente aqui é um regime especial e custa quatro vezes mais e tem que ser pedido por advogado." Ela volta a digitar. "O senhor quer isso?"',
+    '"Urgente aqui é um regime especial e custa quatro vezes mais e tem que ser pedido por advogado." Ela volta a digitar. "{O senhor|A senhora} quer isso?"',
     '"Não."',
     '"Então são três pessoas na sua frente."',
     'Você volta para a cadeira de plástico. A família da padaria abre um pouco de espaço no banco, o que é uma gentileza que você não merecia.'
@@ -492,7 +492,7 @@ c18_quintela_ja_ouviu:{
   texto:[
     '"Eu ouço falar de tudo e não presto atenção em nada." Ela continua digitando. "Se eu prestasse atenção eu não dormia."',
     'Um silêncio.',
-    '"Mas se o senhor quer saber: passa gente aqui todo mês pedindo certidão de coisa que depois sai no jornal. Ninguém repara em cartório."',
+    '"Mas se {o senhor|a senhora} quer saber: passa gente aqui todo mês pedindo certidão de coisa que depois sai no jornal. Ninguém repara em cartório."',
     '"E a senhora repara?"',
     '"Eu reparo em quem paga em dinheiro." Ela aperta uma tecla. "Achei."'
   ],
@@ -501,7 +501,7 @@ c18_quintela_ja_ouviu:{
 
 c18_quintela_o_que_da:{
   texto:[
-    '"Tudo o que a lei manda publicar, e é mais coisa do que o senhor imagina."',
+    '"Tudo o que a lei manda publicar, e é mais coisa do que {o senhor|a senhora} imagina."',
     'Ela conta nos dedos sem parar de olhar a tela.',
     '"Estatuto. Alteração de estatuto. Ata de assembleia de fundação. Ata de eleição de diretoria. Endereço da sede. Nome, qualificação e endereço de quem assina."',
     '"Endereço de quem assina?"',
@@ -520,7 +520,7 @@ c18_quintela_achou:{
     'Associação civil sem fins lucrativos. Registro nº 11.402. Constituída há um ano e oito meses.',
     'Sede: Saffron, Rua do Comércio, 118, sala 704.',
     'Estatuto arquivado. Atas depositadas: 34.',
-    '"Trinta e quatro atas em um ano e oito meses." A Sra. Cybil fala isso quase com admiração. "Essa gente se reúne toda quinzena. Isso é raro, moço. Associação normal esquece de fazer assembleia."'
+    '"Trinta e quatro atas em um ano e oito meses." A Sra. Cybil fala isso quase com admiração. "Essa gente se reúne toda quinzena. Isso é raro, {moço|moça}. Associação normal esquece de fazer assembleia."'
   ],
   ef:{flag:['sabe_da_comissao','sabe_do_endereco_704'],
       rep:{eixo:'bom',delta:1,motivo:'Encontrou a Comissão num cartório, com um número de registro'},
@@ -585,9 +585,9 @@ c18_pedido_discreto:{
     'Ela para de digitar pela primeira vez e olha você de verdade.',
     '"Não."',
     'Não é ríspido. É só definitivo.',
-    '"O senhor pode pedir sem se identificar, porque é público e eu não sou obrigada a perguntar quem o senhor é. Mas o pedido fica no livro com data e hora, sempre, e é isso que faz o livro valer alguma coisa."',
+    '"{O senhor|A senhora} pode pedir sem se identificar, porque é público e eu não sou obrigada a perguntar quem {o senhor|a senhora} é. Mas o pedido fica no livro com data e hora, sempre, e é isso que faz o livro valer alguma coisa."',
     'Ela espera.',
-    '"Se o senhor quer uma coisa que não deixa rastro, o senhor veio no lugar errado. Aqui é só rastro."'
+    '"Se {o senhor|a senhora} quer uma coisa que não deixa rastro, {o senhor|a senhora} veio no lugar errado. Aqui é só rastro."'
   ],
   ef:{flag:'pedido_fica_no_livro',
       npc:{nome:'Sra. Cybil', opiniao:1, memoria:'Te explicou que cartório é feito de rastro e que isso é o valor dele.'},
@@ -649,7 +649,7 @@ c18_quintela_copia:{
 c18_saiu_sem_nada:{
   texto:[
     'Você agradece e sai sem pedir nada, o que a Sra. Cybil recebe com um aceno de cabeça e nenhuma curiosidade.',
-    'Na rua, você fica parado tempo demais no mesmo lugar.',
+    'Na rua, você fica parad{o|a} tempo demais no mesmo lugar.',
     'Você sabe o nome. Sabe o número do registro. Sabe o endereço.',
     'E não tem uma linha escrita para provar que sabe.'
   ],
@@ -667,7 +667,7 @@ c18_direto_na_704:{
     'No sétimo andar, a sala 704 tem uma placa de acrílico com a sigla CGRB em letra comum.',
     'A porta está aberta. Do lado de fora, numa mesinha, tem uma garrafa térmica de café, copos descartáveis e um saquinho de açúcar.',
     'Dá para ouvir gente conversando lá dentro, no tom de quem discute um item de pauta.',
-    'Você fica parado no corredor por um tempo que passa dos limites do razoável.'
+    'Você fica parad{o|a} no corredor por um tempo que passa dos limites do razoável.'
   ],
   ef:{flag:'viu_a_704', instabilidade:1,
       registrar:'Viu a sala 704 por fora. A porta estava aberta e tinha café na entrada.'},
@@ -720,7 +720,7 @@ c18_atendente_encomenda:{
     '"Sempre bicho?"',
     '"Sempre caixa com furo." Ele encolhe os ombros. "Eu não abro. Tem licença, tem nota, tem lacre. Meu trabalho é o lacre estar inteiro."',
     'Ele olha o relógio.',
-    '"Terça e sexta, moço. Se o senhor quiser ver, é só estar aqui às onze."'
+    '"Terça e sexta, {moço|moça}. Se {o senhor|a senhora} quiser ver, é só estar aqui às onze."'
   ],
   ef:{flag:'sabe_terca_e_sexta',
       registrar:'Sai carga viva para a Estação 4 toda terça e sexta, às 11h.'},
@@ -751,7 +751,7 @@ c18_entrou_cedo_demais:{
     'É uma sala de reunião com uma mesa oval, oito cadeiras e um quadro branco escrito com pauta em letra caprichada.',
     'Tem seis pessoas sentadas. Todas param de falar e olham para você sem nenhum susto.',
     'Uma mulher de tailleur cinza, na cabeceira, fecha a caneta.',
-    '"O senhor procura alguém?"',
+    '"{O senhor|A senhora} procura alguém?"',
     'E você percebe que não trouxe pergunta nenhuma. Você trouxe raiva, e raiva não é pergunta.'
   ],
   ef:{flag:'entrou_na_704_cedo',
@@ -769,9 +769,9 @@ c18_704_sei_o_que_fazem:{
   texto:[
     '"Eu sei o que vocês fazem."',
     'A mulher de tailleur não reage. Um homem de barba, na ponta da mesa, chega a parecer aliviado.',
-    '"Ótimo", ela diz. "Então o senhor sabe mais que a maior parte das pessoas que a gente tenta explicar."',
+    '"Ótimo", ela diz. "Então {o senhor|a senhora} sabe mais que a maior parte das pessoas que a gente tenta explicar."',
     'Ela puxa uma cadeira com o pé.',
-    '"Senta. A pauta de hoje é orçamento de viveiro e a gente está atrasado. Se o senhor souber mesmo, vai achar chato."',
+    '"Senta. A pauta de hoje é orçamento de viveiro e a gente está atrasado. Se {o senhor|a senhora} souber mesmo, vai achar chato."',
     'E é essa a coisa mais assustadora que já te disseram: senta.'
   ],
   ef:{flag:'foi_convidado_a_sentar', instabilidade:1,
@@ -786,7 +786,7 @@ c18_704_sei_o_que_fazem:{
 c18_704_sentou:{
   texto:[
     'Você senta.',
-    'Eles retomam a pauta como se você fosse um estagiário atrasado.',
+    'Eles retomam a pauta como se você fosse {um estagiário atrasado|uma estagiária atrasada}.',
     'Item 3: readequação do orçamento da Estação 4 em função do aumento do custo de ração.',
     'Item 4: prazo de entrega da Fase II.',
     'Item 5: descarte.',
@@ -807,7 +807,7 @@ c18_704_o_que_e_descarte:{
     'Quem responde é o homem de barba, e ele responde olhando para as mãos.',
     '"Unidade que não atinge parâmetro de viabilidade. Malformação, agressividade fora de faixa, doença que não compensa tratar."',
     '"Você mata."',
-    '"Eu sacrifico." Ele levanta os olhos. "E antes de o senhor dizer que é a mesma coisa: é a mesma coisa. Eu só uso a palavra que consta no regulamento, porque a palavra que consta no regulamento é a que me obriga a preencher um formulário para cada uma."',
+    '"Eu sacrifico." Ele levanta os olhos. "E antes de {o senhor|a senhora} dizer que é a mesma coisa: é a mesma coisa. Eu só uso a palavra que consta no regulamento, porque a palavra que consta no regulamento é a que me obriga a preencher um formulário para cada uma."',
     'Ele volta a olhar as mãos.',
     '"Eu preenchi quatrocentos e dezenove formulários."'
   ],
@@ -827,7 +827,7 @@ c18_704_nome_do_adnan:{
     '"Curador de quê?"',
     '"De acervo vivo." Ele ouve a própria frase e faz uma careta. "É o nome do cargo. Eu sei como soa."',
     'A presidente fecha a pasta.',
-    '"Curador Fabre vai te acompanhar até o elevador e responder o que o senhor quiser no caminho. Nós temos mais dois itens."',
+    '"Curador Fabre vai te acompanhar até o elevador e responder o que {o senhor|a senhora} quiser no caminho. Nós temos mais dois itens."',
     'Não é ameaça. É agenda.'
   ],
   ef:{flag:['conheceu_adnan','sabe_da_comissao'],
@@ -841,9 +841,9 @@ c18_704_anotou:{
     'Você anota tudo, em letra pequena, com a mão firme por teimosia.',
     'Sete páginas de caderno em quarenta minutos.',
     'Quando a reunião acaba, a presidente se levanta, guarda a caneta no bolso do paletó e diz, sem olhar para você:',
-    '"O senhor vai descobrir que o problema não é a gente esconder. É a gente não esconder e ninguém ler."',
+    '"{O senhor|A senhora} vai descobrir que o problema não é a gente esconder. É a gente não esconder e ninguém ler."',
     'Ela sai. Os outros saem atrás. Alguém recolhe a garrafa térmica do corredor.',
-    'Você fica sozinho numa sala de reunião com um quadro branco escrito PAUTA.'
+    'Você fica sozinh{o|a} numa sala de reunião com um quadro branco escrito PAUTA.'
   ],
   ef:{flag:['anotou_a_reuniao','sabe_da_comissao'], instabilidade:1,
       rep:{eixo:'bom',delta:1,motivo:'Assistiu calado e anotou tudo'},
@@ -891,9 +891,9 @@ c18_704_porque_deixam:{
   texto:[
     '"Por que vocês estão me deixando?"',
     'A presidente termina de escrever uma palavra antes de responder.',
-    '"Porque isso é público, porque o senhor pagaria um pokedólar a página por elas de qualquer jeito, e porque eu prefiro que o senhor leia o documento inteiro a que o senhor leia três linhas que alguém te vendeu."',
+    '"Porque isso é público, porque {o senhor|a senhora} pagaria um pokedólar a página por elas de qualquer jeito, e porque eu prefiro que {o senhor|a senhora} leia o documento inteiro a que {o senhor|a senhora} leia três linhas que alguém te vendeu."',
     'Ela levanta os olhos.',
-    '"E porque eu quero que o senhor volte aqui depois de ler. Aí a conversa presta."'
+    '"E porque eu quero que {o senhor|a senhora} volte aqui depois de ler. Aí a conversa presta."'
   ],
   ef:{flag:'convite_da_presidente',
       npc:{nome:'Rhea Colman', opiniao:1, memoria:'Te entregou as atas e pediu que você voltasse depois de ler.'},
@@ -904,9 +904,9 @@ c18_704_porque_deixam:{
 c18_704_quem_e:{
   texto:[
     '"Quem é a senhora?"',
-    '"Rhea Colman. Presidente do conselho." Ela responde como quem responde no telefone. "E o senhor?"',
+    '"Rhea Colman. Presidente do conselho." Ela responde como quem responde no telefone. "E {o senhor|a senhora}?"',
     'Você diz seu nome. Ela repete uma vez, baixo, guardando.',
-    '"Eu sei quem é o senhor." Ela não diz isso de um jeito ameaçador. Diz de um jeito administrativo. "Consta em três atas."',
+    '"Eu sei quem é {o senhor|a senhora}." Ela não diz isso de um jeito ameaçador. Diz de um jeito administrativo. "Consta em três atas."',
     'Três atas.',
     'Você entrou nessa sala achando que ia descobrir quem eles são e descobre que você já é um item de pauta.'
   ],
@@ -925,7 +925,7 @@ c18_704_em_quais:{
     'Ela não precisa consultar.',
     '"Vigésima segunda: deliberação sobre a conveniência de abordagem. Ficou vencida."',
     '"Vigésima nona: comunicação da Auditoria sobre interferência em operação de campo."',
-    '"Trigésima terceira: o senhor entrou como item de risco reputacional, e eu voto contra essa classificação toda vez."',
+    '"Trigésima terceira: {o senhor|a senhora} entrou como item de risco reputacional, e eu voto contra essa classificação toda vez."',
     '"Por quê?"',
     '"Porque risco reputacional é o nome que a gente dá quando tem medo de gente honesta." Ela fecha a caneta. "E eu não tenho."'
   ],
@@ -941,7 +941,7 @@ c18_704_em_quais:{
 
 c18_704_esperou:{
   texto:[
-    'Você fica em pé, calado, encostado no batente.',
+    'Você fica em pé, calad{o|a}, encostad{o|a} no batente.',
     'Leva quarenta segundos para eles voltarem a falar, e quando voltam, falam normal.',
     'Custo de ração. Reforma de telhado. Um problema com um fornecedor de incubadora que atrasou a entrega três vezes.',
     'Ninguém encena nada para você. Ninguém abaixa a voz.',
@@ -981,10 +981,10 @@ c18_ivone:{
     '"Eu não te falei porque eu não tinha prova, e falar sem prova é exatamente como eu perco processo." Ela puxa uma pasta da terceira pilha, sem procurar. "Comissão de Gestão de Risco Biológico de Kanto. Associação civil. Registrada. Legal."'
   ],
   ef:{flag:['sabe_da_comissao','ivone_sabia'],
-      npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Já conhecia a CGRB e esperou você chegar sozinho até lá.'},
+      npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Já conhecia a CGRB e esperou você chegar sozinh{o|a} até lá.'},
       registrar:'A Dra. Serizawa já conhecia a CGRB e tinha as atas havia seis meses.'},
   escolhas:[
-    {texto:'"Por que a senhora esperou eu chegar sozinho?"', vai:'c18_ivone_esperou'},
+    {texto:'"Por que a senhora esperou eu chegar sozinh{o|a}?"', vai:'c18_ivone_esperou'},
     {texto:'"O que tem na pasta?"', vai:'c18_ivone_pasta'},
     {texto:'"A senhora pode processá-los?"', vai:'c18_ivone_processo'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'}
@@ -1078,7 +1078,7 @@ c18_ivone_nao_sei_estomago:{
     '"Não sei."',
     '"Boa resposta." Ela fala sério. "Quem diz tenho na hora costuma sumir no terceiro mês."',
     'Ela escreve um nome e um telefone e dobra o papel antes de entregar.',
-    '"Guarda e não usa até saber. Livia Gale, jornal de Celadon. Quando o senhor souber, ela vai estar lá, porque ela está lá há vinte e dois anos."'
+    '"Guarda e não usa até saber. Livia Gale, jornal de Celadon. Quando {o senhor|a senhora} souber, ela vai estar lá, porque ela está lá há vinte e dois anos."'
   ],
   ef:{flag:'contato_isaura',
       npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Preferiu sua dúvida à sua certeza.'},
@@ -1154,7 +1154,7 @@ c18_terceira_nota:{
   texto:[
     '"Porque nota é laço." Ela mostra os dentes num quase-sorriso. "Se eu emito nota, eu existo. Se eu existo, eu declaro. Se eu declaro, eu tenho dono."',
     '"E eles fazem isso de propósito?"',
-    '"Eles fazem tudo de propósito, garoto." Ela chuta um saco de cimento para endireitar. "Eles não me compraram. Eles me legalizaram. Metade do meu movimento hoje é nota deles, e no dia em que eu falar demais, a nota vira o processo."',
+    '"Eles fazem tudo de propósito, {garoto|garota}." Ela chuta um saco de cimento para endireitar. "Eles não me compraram. Eles me legalizaram. Metade do meu movimento hoje é nota deles, e no dia em que eu falar demais, a nota vira o processo."',
     'Ela olha para o lado, para o Arlo, que continua não olhando para ninguém.',
     '"Eu já vi gente ser presa por gente pior. Eu nunca vi ser presa por gente mais organizada."'
   ],
@@ -1170,7 +1170,7 @@ c18_terceira_nota:{
 c18_terceira_tirar:{
   texto:[
     'Ela ri de verdade, a primeira vez que você a ouve rir.',
-    '"Me tirar." Ela seca o olho com o pulso. "Moço, eu tenho quarenta e um anos e catorze pessoas comendo do que eu faço. Eu não quero sair. Eu quero saber antes."',
+    '"Me tirar." Ela seca o olho com o pulso. "{Moço|Moça}, eu tenho quarenta e um anos e catorze pessoas comendo do que eu faço. Eu não quero sair. Eu quero saber antes."',
     '"Antes de quê?"',
     '"Antes de eles decidirem que eu também sou risco não gerenciado." Ela para de rir. "Está no estatuto deles. Art. 4º. Densidade, agressividade ou capacidade destrutiva não sujeita a controle institucional."',
     '"Isso é sobre bicho."',
@@ -1257,7 +1257,7 @@ c18_terceira_preco:{
   texto:[
     '"Me vende o que você tem sobre eles."',
     'Ela ri pelo nariz.',
-    '"Eu não tenho o que te vender, porque o que eu tenho é público." Ela aponta o teto com o queixo. "É associação registrada, garoto. Estatuto no cartório. Ata no cartório. Eu descobri isso pagando oito pokedólares e me senti uma idiota por um mês inteiro."',
+    '"Eu não tenho o que te vender, porque o que eu tenho é público." Ela aponta o teto com o queixo. "É associação registrada, {garoto|garota}. Estatuto no cartório. Ata no cartório. Eu descobri isso pagando oito pokedólares e me senti uma idiota por um mês inteiro."',
     '"Você me diria isso de graça?"',
     '"Eu acabei de dizer." Ela volta para o cimento. "Vai no cartório da Rua Onze. Pede por denominação. Leva dinheiro trocado, que a máquina deles não funciona."'
   ],
@@ -1274,9 +1274,9 @@ c18_hemeroteca:{
   texto:[
     'A hemeroteca fica no subsolo da biblioteca municipal de Saffron e cheira a papel e a desumidificador.',
     'O atendente tem uns setenta anos, se chama Sr. Arlo, e fica visivelmente feliz por alguém ter descido.',
-    '"Um ano e meio de jornal?" Ele bate as mãos uma na outra. "O senhor tem a tarde inteira?"',
+    '"Um ano e meio de jornal?" Ele bate as mãos uma na outra. "{O senhor|A senhora} tem a tarde inteira?"',
     '"Tenho."',
-    '"Então o senhor vai achar." Ele já está puxando as caixas. "Todo mundo que desce aqui acha. O problema é que quase ninguém desce."'
+    '"Então {o senhor|a senhora} vai achar." Ele já está puxando as caixas. "Todo mundo que desce aqui acha. O problema é que quase ninguém desce."'
   ],
   ef:{npc:{nome:'Sr. Arlo', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
       registrar:'Começou a varrer um ano e meio de jornal na hemeroteca de Saffron.'},
@@ -1309,7 +1309,7 @@ c18_hemero_legais:{
 c18_hemero_copia:{
   texto:[
     'O Sr. Arlo tira a cópia numa máquina antiga que esquenta a folha.',
-    '"O senhor é o segundo a pedir essa página."',
+    '"{O senhor|A senhora} é {o segundo|a segunda} a pedir essa página."',
     'Você congela.',
     '"Quem foi o primeiro?"',
     '"Uma advogada, faz uns seis meses. Baixinha, óculos, brava." Ele dá de ombros. "Pediu essa e mais quatro. Voltou três vezes."'
@@ -1318,7 +1318,7 @@ c18_hemero_copia:{
       registrar:'A Dra. Serizawa pediu a mesma página seis meses antes de você.'},
   escolhas:[
     {texto:'"Ela pediu mais o quê?"', vai:'c18_hemero_o_que_ela_pediu'},
-    {texto:'Continuar procurando sozinho.', vai:'c18_hemero_classificados'},
+    {texto:'Continuar procurando sozinh{o|a}.', vai:'c18_hemero_classificados'},
     {texto:'Ir falar com a Dra. Cordell.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Ir ao cartório.', vai:'c18_cartorio'}
   ]
@@ -1445,7 +1445,7 @@ c18_liga:{
     'Você faz o pedido no balcão, por escrito, no formulário certo, e a atendente protocola com carimbo e devolve a segunda via.',
     'Protocolo 4.881. Prazo de resposta: trinta dias.',
     '"Trinta dias?"',
-    '"Trinta dias." Ela já está olhando o próximo da fila. "Se o senhor quiser, pode perguntar informalmente ao setor técnico no terceiro andar. Informalmente eles falam hoje. Formalmente é trinta dias."'
+    '"Trinta dias." Ela já está olhando o próximo da fila. "Se {o senhor|a senhora} quiser, pode perguntar informalmente ao setor técnico no terceiro andar. Informalmente eles falam hoje. Formalmente é trinta dias."'
   ],
   ef:{flag:'protocolou_na_liga',
       registrar:'Protocolou pedido de informação na Liga. Protocolo 4.881, prazo de 30 dias.'},
@@ -1460,7 +1460,7 @@ c18_liga_tecnico:{
   texto:[
     'O setor técnico é uma sala com quatro mesas e três pessoas, uma delas comendo um sanduíche por cima de um relatório.',
     'Você diz a palavra comissão e as três param.',
-    '"CGRB", diz a do sanduíche, sem levantar os olhos. "É o que o senhor quer saber."',
+    '"CGRB", diz a do sanduíche, sem levantar os olhos. "É o que {o senhor|a senhora} quer saber."',
     '"É."',
     '"A gente tem convênio com eles." Ela dobra o papel do sanduíche. "Está publicado. Convênio de cooperação técnica, assinado pela diretoria anterior, renovado automaticamente."',
     'Ela finalmente olha para você.',
@@ -1672,7 +1672,7 @@ c18_quantos_formularios:{
 
 c18_fechou_estatuto:{
   texto:[
-    'Você fecha o calhamaço e apaga a luminária e fica deitado olhando o teto do quarto do Centro Pokémon.',
+    'Você fecha o calhamaço e apaga a luminária e fica deitad{o|a} olhando o teto do quarto do Centro Pokémon.',
     'Lá fora tem uma cidade inteira dormindo e nenhuma dessas pessoas sabe que existe um documento de dezoito páginas que decide, com quatro critérios objetivos, o que é uma coisa que vale a pena continuar viva.',
     'E o documento está num cartório, e custa um pokedólar a página.',
     'Você acende a luminária de novo.'
@@ -2108,7 +2108,7 @@ c18_indice_seafoam:{
     'Seafoam aparece duas vezes, as duas no Anexo I.',
     'Risco 02 — colônia insular, Seafoam, população estimada 1 a 3. Status: monitoramento passivo. Observação: acesso difícil, custo operacional elevado, prioridade baixa.',
     'Prioridade baixa.',
-    'Você fica um tempo aliviado antes de entender que alívio não é a palavra.',
+    'Você fica um tempo aliviad{o|a} antes de entender que alívio não é a palavra.',
     'Prioridade baixa quer dizer que está na lista. Quer dizer que alguém, numa reunião de quinta-feira, olhou para uma linha escrita Seafoam e disse: esse a gente deixa para depois.'
   ],
   ef:{flag:['viu_a_lista_de_riscos','sabe_do_risco02'], instabilidade:2,
@@ -2123,7 +2123,7 @@ c18_indice_seafoam:{
 c18_a_manha:{
   texto:[
     'A luz muda antes de você perceber que a noite acabou.',
-    'Você está sentado na cama com cento e quarenta páginas espalhadas em quatro pilhas e um lápis sem ponta, e não dormiu.',
+    'Você está sentad{o|a} na cama com cento e quarenta páginas espalhadas em quatro pilhas e um lápis sem ponta, e não dormiu.',
     'Do outro lado da janela, Saffron começa: ônibus, portão de loja subindo, alguém varrendo calçada.',
     'Você olha para as quatro pilhas e entende que a parte difícil não vai ser provar.',
     'A parte difícil vai ser convencer qualquer pessoa de que um documento chato importa.'
@@ -2140,9 +2140,9 @@ c18_auditora:{
     'Tem alguém sentada na cadeira do outro lado do quarto.',
     'Não arrombou nada. A porta está intacta e trancada por dentro.',
     'Ela tem uma chave, porque a Comissão tem contrato de manutenção com a rede de Centros Pokémon, porque é uma associação civil registrada, e contrato de manutenção dá chave.',
-    '"Auditora Brill." Ela mostra um crachá que é real, com foto, validade e número. "O senhor comprou material público. Eu não vim te acusar de nada."',
+    '"Auditora Brill." Ela mostra um crachá que é real, com foto, validade e número. "{O senhor|A senhora} comprou material público. Eu não vim te acusar de nada."',
     'Ela cruza as mãos no colo.',
-    '"Eu vim fazer uma pergunta e vou aceitar qualquer resposta, inclusive a que eu não quero. O que o senhor pretende fazer com isso?"'
+    '"Eu vim fazer uma pergunta e vou aceitar qualquer resposta, inclusive a que eu não quero. O que {o senhor|a senhora} pretende fazer com isso?"'
   ],
   ef:{npc:{nome:'Auditora Brill', opiniao:0, memoria:'Apareceu no seu quarto de Centro Pokémon com um crachá de verdade.'},
       flag:'conheceu_auditora'},
@@ -2162,7 +2162,7 @@ c18_pergunta_de_volta:{
     'Ela levanta as sobrancelhas, e por um segundo parece quase satisfeita.',
     '"Relatório." Ela tira um bloco do bolso interno. "Eu sou auditora. Eu faço relatório."',
     '"E o relatório diz o quê?"',
-    '"Depende do que o senhor responder." Ela destampa a caneta. "Se o senhor disser que vai publicar, eu escrevo que o senhor vai publicar, e o jurídico vai preparar uma resposta e a assessoria vai preparar uma nota. Se o senhor disser que não vai fazer nada, eu escrevo isso, e ninguém mais lê o meu relatório até o ano que vem."',
+    '"Depende do que {o senhor|a senhora} responder." Ela destampa a caneta. "Se {o senhor|a senhora} disser que vai publicar, eu escrevo que {o senhor|a senhora} vai publicar, e o jurídico vai preparar uma resposta e a assessoria vai preparar uma nota. Se {o senhor|a senhora} disser que não vai fazer nada, eu escrevo isso, e ninguém mais lê o meu relatório até o ano que vem."',
     '"E se eu mentir?"',
     '"Aí o relatório fica errado e o erro é meu." Ela dá de ombros. "Já aconteceu."'
   ],
@@ -2182,7 +2182,7 @@ c18_publicar:{
     '"Publicar. Tudo."',
     'Ela anota. Leva quatro segundos e ela anota tudo, inclusive a palavra tudo.',
     '"Certo." Ela guarda o bloco. "Então três coisas, e nenhuma delas é ameaça."',
-    '"Primeira: é material público, o senhor pode. Segunda: a gente vai emitir uma nota no mesmo dia, porque é o procedimento, e a nota vai dizer a verdade, que é o que a torna eficaz."',
+    '"Primeira: é material público, {o senhor|a senhora} pode. Segunda: a gente vai emitir uma nota no mesmo dia, porque é o procedimento, e a nota vai dizer a verdade, que é o que a torna eficaz."',
     '"E a terceira?"',
     '"A terceira é que nada vai acontecer." Ela se levanta e ajeita a bainha do casaco. "Vai sair na página sete do caderno de cidades e no dia seguinte vai ter outra coisa na página sete. Eu não estou te desanimando, eu estou te informando, porque eu já vi acontecer duas vezes."'
   ],
@@ -2203,7 +2203,7 @@ c18_os_outros_dois:{
     '"E depois?"',
     '"Depois a rádio mudou de dono, por motivo comercial mesmo, sem a nossa mão." Ela abre as palmas. "E ela continuou falando, e continua até hoje, e ninguém mais liga, e isso é a pior parte."',
     'Ela para na porta.',
-    '"Se o senhor for publicar, publica com nome e com documento e com alguém que aguente três anos. Sem isso é só barulho, e barulho a gente aprendeu a esperar passar."'
+    '"Se {o senhor|a senhora} for publicar, publica com nome e com documento e com alguém que aguente três anos. Sem isso é só barulho, e barulho a gente aprendeu a esperar passar."'
   ],
   ef:{flag:'sabe_dos_dois_anteriores',
       registrar:'Duas pessoas já publicaram sobre a CGRB. Uma em revista científica, outra numa rádio de Fuchsia.'},
@@ -2234,7 +2234,7 @@ c18_mulher_da_radio:{
 c18_procura_jornal:{
   texto:[
     'A redação do jornal de Celadon fica num sobrado com escada de madeira e cheiro de tinta.',
-    'Você é atendido por um repórter de vinte e poucos anos que escuta três minutos, olha o calhamaço e faz a única pergunta que ele foi treinado a fazer.',
+    'Você é atendid{o|a} por um repórter de vinte e poucos anos que escuta três minutos, olha o calhamaço e faz a única pergunta que ele foi treinado a fazer.',
     '"Tem foto?"',
     '"Tem ata."',
     '"Ata não é foto." Ele não está sendo cínico. Ele está sendo exato. "Eu levo isso para a editora e ela vai perguntar a mesma coisa, e eu vou ter que responder que não tem."',
@@ -2346,7 +2346,7 @@ c18_depois_da_materia:{
 c18_as_nove_cartas:{
   texto:[
     'São educadas. Isso é o pior.',
-    'Uma é de uma mãe de Saffron cujo filho foi mordido num parque e que pergunta, de verdade, o que o senhor propõe no lugar.',
+    'Uma é de uma mãe de Saffron cujo filho foi mordido num parque e que pergunta, de verdade, o que {o senhor|a senhora} propõe no lugar.',
     'Outra é de um produtor rural da Rota 6 que perdeu três anos de plantação e que diz, com todas as letras, que nunca ninguém veio.',
     'Outra é de um veterinário que explica, com termos técnicos, o que é eutanásia e pergunta se você sabe a diferença.',
     'Nenhuma delas é comprada. Nenhuma delas é burra.',
@@ -2367,7 +2367,7 @@ c18_respondeu_as_cartas:{
     'Você não tem resposta para a mãe do parque e escreve isso: eu não tenho resposta para a senhora, e a pessoa que tem resposta é exatamente quem eu estou denunciando, e é por isso que é difícil.',
     'Seis não respondem.',
     'Duas respondem agradecendo.',
-    'A mãe do parque responde com uma linha só: então o senhor pelo menos escuta.',
+    'A mãe do parque responde com uma linha só: então {o senhor|a senhora} pelo menos escuta.',
     'Você guarda essa.'
   ],
   ef:{flag:'respondeu_as_cartas', moral:4,
@@ -2451,7 +2451,7 @@ c18_prado_porque:{
     '"E aqui leem?"',
     '"Aqui leem." Ela diz isso com um orgulho que te dá nojo e que você entende ao mesmo tempo. "Aqui, quando eu escrevo que um procedimento foi feito errado, alguém é advertido na reunião seguinte, e consta em ata."',
     'Ela abre a porta.',
-    '"O senhor acha que eu trabalho para monstros. Eu trabalho para o único lugar onde o meu trabalho serve para alguma coisa. Foi assim que eles me pegaram e eu sei que foi assim."'
+    '"{O senhor|A senhora} acha que eu trabalho para monstros. Eu trabalho para o único lugar onde o meu trabalho serve para alguma coisa. Foi assim que eles me pegaram e eu sei que foi assim."'
   ],
   ef:{flag:'entendeu_a_prado', instabilidade:1,
       npc:{nome:'Auditora Brill', opiniao:2, memoria:'Te contou como foi pega.'},
@@ -2469,7 +2469,7 @@ c18_nada:{
     '"Certo."',
     'E é só isso. Nenhuma ameaça, nenhum alívio, nenhuma pergunta de confirmação.',
     'Ela vai até a porta e destranca.',
-    '"O senhor sabe que a gente não precisa que ninguém faça nada, né? A gente só precisa que ninguém faça nada."',
+    '"{O senhor|A senhora} sabe que a gente não precisa que ninguém faça nada, né? A gente só precisa que ninguém faça nada."',
     'A porta fecha.'
   ],
   ef:{flag:'disse_que_nao_faz_nada', instabilidade:1, moral:-4,
@@ -2484,7 +2484,7 @@ c18_nada:{
 
 c18_ficou_sentado:{
   texto:[
-    'Você fica sentado na cama por uma hora e quinze minutos, com cento e quarenta páginas ao redor.',
+    'Você fica sentad{o|a} na cama por uma hora e quinze minutos, com cento e quarenta páginas ao redor.',
     'Em algum momento você começa a empilhar. Em algum momento você para de empilhar.',
     'Você pensa em cada pessoa que te contou alguma coisa nos últimos meses sabendo o risco: o Sr. Dane, a mulher da rádio que você ainda não conhece, o velho da ilha, o rapaz do arquivo.',
     'Nenhum deles ganhou nada com isso.',
@@ -2504,12 +2504,12 @@ c18_correu_atras:{
     'Você alcança a Auditora Brill na calçada.',
     '"Eu menti."',
     'Ela para. Tira o bloco de novo. Abre na mesma página.',
-    '"Eu sei." Ela risca uma linha e escreve outra. "O senhor demorou quatro minutos. A média é dois dias."',
+    '"Eu sei." Ela risca uma linha e escreve outra. "{O senhor|A senhora} demorou quatro minutos. A média é dois dias."',
     '"A senhora sabia?"',
-    '"Eu sou auditora, moço. O meu trabalho inteiro é saber quando a resposta é boa demais." Ela fecha o bloco. "Agora está certo. Boa sorte, e eu digo isso sério, e isso também vai no relatório."'
+    '"Eu sou auditora, {moço|moça}. O meu trabalho inteiro é saber quando a resposta é boa demais." Ela fecha o bloco. "Agora está certo. Boa sorte, e eu digo isso sério, e isso também vai no relatório."'
   ],
   ef:{limpaFlag:'disse_que_nao_faz_nada', flag:'prado_respeita',
-      npc:{nome:'Auditora Brill', opiniao:3, memoria:'Você voltou em quatro minutos para desmentir a si mesmo.'},
+      npc:{nome:'Auditora Brill', opiniao:3, memoria:'Você voltou em quatro minutos para desmentir a si mesm{o|a}.'},
       rep:{eixo:'bom',delta:1,motivo:'Voltou para corrigir a própria mentira'},
       registrar:'Corrigiu a mentira na calçada. A auditora anotou.'},
   escolhas:[
@@ -2554,7 +2554,7 @@ c18_conversar:{
     'A Auditora Brill fecha o bloco.',
     '"A Presidente atende terça e quinta, das quatorze às dezesseis, com hora marcada."',
     'Você acha que é ironia. Não é.',
-    '"O senhor marca comigo agora ou marca lá embaixo com a secretária, e lá embaixo demora mais porque ela é meticulosa."',
+    '"{O senhor|A senhora} marca comigo agora ou marca lá embaixo com a secretária, e lá embaixo demora mais porque ela é meticulosa."',
     'Ela tira uma agenda de bolso.',
     '"Quinta que vem, quatorze e trinta. Anota."'
   ],
@@ -2598,7 +2598,7 @@ c18_venceu_auditora:{
     'Ela não saca outra bola. Ela senta de novo na cadeira e abre o bloco.',
     '"Agressão a auditor em exercício, com resistência." Ela escreve. "Isso não é crime, porque eu não sou autoridade pública. É só um fato que vai para o meu relatório."',
     'Ela levanta os olhos.',
-    '"E o relatório vai dizer que o senhor bate primeiro e pergunta depois, e no mês que vem, quando eu propuser que a gente converse com o senhor em vez de te classificar, eu vou perder essa votação por causa de hoje."',
+    '"E o relatório vai dizer que {o senhor|a senhora} bate primeiro e pergunta depois, e no mês que vem, quando eu propuser que a gente converse com {o senhor|a senhora} em vez de te classificar, eu vou perder essa votação por causa de hoje."',
     'Ela fecha o bloco e sai. Você fica com as mãos tremendo e sem nada resolvido.'
   ],
   ef:{flag:['bateu_na_auditora'], instabilidade:2, moral:-4,
@@ -2619,7 +2619,7 @@ c18_pediu_desculpa:{
     'Ela para. Considera. Tira o bloco.',
     '"Desculpa aceita e vai constar também." Ela escreve duas linhas. "Não porque eu seja boa pessoa. Porque relatório incompleto é relatório errado."',
     'Ela guarda o bloco.',
-    '"E porque das duas coisas que o senhor fez hoje, a segunda é a mais difícil."'
+    '"E porque das duas coisas que {o senhor|a senhora} fez hoje, a segunda é a mais difícil."'
   ],
   ef:{flag:'pediu_desculpa_prado', moral:3,
       npc:{nome:'Auditora Brill', opiniao:1, memoria:'Você desceu correndo para pedir desculpa.'},
@@ -2654,7 +2654,7 @@ c18_adnan:{
     'A lanchonete fica na esquina da Rua do Comércio e tem seis banquetas e um balcão de fórmica.',
     'O Curador Fabre tem uns cinquenta anos, camisa polo, tênis de caminhada e mãos de quem mexe com bicho: unha curta, um arranhão velho no antebraço.',
     'Ele pede um misto e um café e paga os dois antes de perguntar o que você quer.',
-    '"Eu vou te falar tudo o que o senhor perguntar", ele diz. "Isso não é generosidade. Está no meu contrato: transparência ativa. Eu sou obrigado."',
+    '"Eu vou te falar tudo o que {o senhor|a senhora} perguntar", ele diz. "Isso não é generosidade. Está no meu contrato: transparência ativa. Eu sou obrigado."',
     'Ele morde o misto.',
     '"E é ruim, porque quando eu falo tudo as pessoas param de acreditar que é ruim."'
   ],
@@ -2711,7 +2711,7 @@ c18_adnan_quantos:{
 
 c18_adnan_nao_absolve:{
   texto:[
-    '"Não." Ele concorda antes de você terminar. "Não absolve nada. Eu não estou pedindo absolvição, moço, eu estou te explicando o desenho."',
+    '"Não." Ele concorda antes de você terminar. "Não absolve nada. Eu não estou pedindo absolvição, {moço|moça}, eu estou te explicando o desenho."',
     'Ele limpa a boca.',
     '"Se eu sair hoje, amanhã tem outro curador, e o outro curador vai aceitar a rotação de assinatura porque é mais prático, e o número some."',
     '"Isso é o argumento mais velho do mundo."',
@@ -2734,7 +2734,7 @@ c18_adnan_sai_e_conta:{
     'É uma carta de demissão datilografada, com data em branco.',
     '"Eu carrego desde o oitavo mês. Eu não assino porque toda vez eu penso na mesma coisa: eu saio e vira o quê, uma entrevista? Um dia de jornal?"',
     'Ele dobra e guarda de volta.',
-    '"Se o senhor me der um motivo melhor que o que eu tenho, eu assino hoje. Eu falo sério."'
+    '"Se {o senhor|a senhora} me der um motivo melhor que o que eu tenho, eu assino hoje. Eu falo sério."'
   ],
   ef:{flag:['adnan_tem_a_carta'], instabilidade:1,
       npc:{nome:'Curador Fabre', opiniao:3, memoria:'Te mostrou a carta de demissão que carrega na carteira.'},
@@ -2751,9 +2751,9 @@ c18_adnan_fonte:{
   texto:[
     '"Você vai ser fonte com nome, e com nome eles não conseguem dizer que é boato."',
     'Ele pega a carta de novo. Olha para o campo da data.',
-    '"Com nome eu não trabalho mais com bicho nunca mais na vida." Ele fala isso sem drama. "Registro em conselho, moço. Eu viro o técnico que denunciou o empregador. Ninguém contrata."',
+    '"Com nome eu não trabalho mais com bicho nunca mais na vida." Ele fala isso sem drama. "Registro em conselho, {moço|moça}. Eu viro o técnico que denunciou o empregador. Ninguém contrata."',
     '"Eu sei."',
-    '"O senhor sabe e está pedindo do mesmo jeito." Ele ri curto. "Tudo bem. Eu gosto mais assim do que se o senhor fingisse que não custa nada."',
+    '"{O senhor|A senhora} sabe e está pedindo do mesmo jeito." Ele ri curto. "Tudo bem. Eu gosto mais assim do que se {o senhor|a senhora} fingisse que não custa nada."',
     'Ele preenche a data com a caneta do balcão.'
   ],
   ef:{flag:['adnan_assinou','adnan_e_fonte'], instabilidade:1,
@@ -2804,7 +2804,7 @@ c18_adnan_fase2:{
   texto:[
     '"A Fase II solta em quatro meses. Quatrocentos. Você votou contra e perdeu, e daqui a quatro meses a discussão acabou para sempre, porque não dá para recolher."',
     'Ele para de mexer no café.',
-    '"O senhor acabou de usar o meu argumento contra mim."',
+    '"{O senhor|A senhora} acabou de usar o meu argumento contra mim."',
     '"Eu usei o seu argumento porque ele é bom."',
     'Ele olha a carta dobrada.',
     '"Quatro meses." Ele repete o número duas vezes, baixinho, como quem confere uma conta. "Tudo bem. Tudo bem."',
@@ -2826,9 +2826,9 @@ c18_adnan_sem_motivo:{
     'Ele acena com a cabeça, devagar, e guarda a carta de volta na carteira.',
     '"Obrigado por não inventar um."',
     'Ele termina o café.',
-    '"O senhor é a primeira pessoa que não tentou me convencer com uma frase bonita. Todo mundo tenta a frase bonita e eu já ouvi todas."',
+    '"{O senhor|A senhora} é a primeira pessoa que não tentou me convencer com uma frase bonita. Todo mundo tenta a frase bonita e eu já ouvi todas."',
     'Ele paga a conta dos dois.',
-    '"Eu vou continuar lá dentro contando. Quando eu tiver motivo, eu assino. E se o senhor arrumar o motivo, me procura."'
+    '"Eu vou continuar lá dentro contando. Quando eu tiver motivo, eu assino. E se {o senhor|a senhora} arrumar o motivo, me procura."'
   ],
   ef:{flag:'adnan_espera_motivo',
       npc:{nome:'Curador Fabre', opiniao:3, memoria:'Você não inventou uma frase bonita para convencê-lo.'},
@@ -2843,10 +2843,10 @@ c18_adnan_fica_dentro:{
   texto:[
     '"Não assina. Fica lá dentro e me passa informação."',
     'Ele para com a xícara no meio do caminho.',
-    '"O senhor está me pedindo para virar o que eu passei dois anos me convencendo de que eu não sou."',
+    '"{O senhor|A senhora} está me pedindo para virar o que eu passei dois anos me convencendo de que eu não sou."',
     '"Estou."',
     'Ele pousa a xícara.',
-    '"Tudo bem." Ele diz isso e alguma coisa no rosto dele afrouxa. "Sabe por quê? Porque assim eu continuo contando, e o senhor passa a contar comigo. Dois contando é mais difícil de perder a conta."',
+    '"Tudo bem." Ele diz isso e alguma coisa no rosto dele afrouxa. "Sabe por quê? Porque assim eu continuo contando, e {o senhor|a senhora} passa a contar comigo. Dois contando é mais difícil de perder a conta."',
     'Ele escreve um número de telefone no guardanapo.',
     '"Nunca ligue antes das oito da noite. Depois das oito eu estou em casa e a casa é minha."'
   ],
@@ -2865,7 +2865,7 @@ c18_adnan_porque_entrou:{
     '"E aí?"',
     '"E aí o zoológico fechou, porque zoológico não dá dinheiro e ninguém quer pagar. Distribuíram os bichos e eu fui junto com três deles para um sítio particular em Fuchsia, e no sítio particular eu fiquei quatro meses vendo gente rica achar graça."',
     'Ele mexe o café que já acabou.',
-    '"Aí me ligaram. Salário melhor, registro em carteira, e a frase que me pegou foi: aqui o senhor vai decidir, não vai só executar."',
+    '"Aí me ligaram. Salário melhor, registro em carteira, e a frase que me pegou foi: aqui {o senhor|a senhora} vai decidir, não vai só executar."',
     'Ele sorri sem alegria.',
     '"Eu decidi uma vez e perdi por dez a um."'
   ],
@@ -2900,14 +2900,14 @@ c18_adnan_porque_continua:{
 
 c18_adnan_doutrina:{
   texto:[
-    '"O senhor pediu." Ele afasta o prato e fica sério de um jeito diferente.',
+    '"{O senhor|A senhora} pediu." Ele afasta o prato e fica sério de um jeito diferente.',
     COMISSAO.doutrina[0],
     COMISSAO.doutrina[1],
     COMISSAO.doutrina[2],
     COMISSAO.doutrina[3],
     COMISSAO.doutrina[4],
     'Ele para. Não tem triunfo nenhum na cara dele.',
-    '"O senhor tem resposta?"'
+    '"{O senhor|A senhora} tem resposta?"'
   ],
   ef:{flag:'ouviu_a_doutrina', instabilidade:1,
       registrar:'Ouviu o argumento inteiro da Comissão, dito por quem acredita nele.'},
@@ -2949,7 +2949,7 @@ c18_resposta_pessoa:{
     '"Explica."',
     '"A criança de onze anos resolveu uma vez, por acaso, e não é escalável, e se ela tivesse morrido no meio a gente estava perdido." Ele abre as mãos. "Estatuto não morre no meio. Estatuto continua."',
     'Ele junta as mãos de novo.',
-    '"E estatuto também não muda de ideia quando vê uma coisa bonita. É isso que o senhor está tentando dizer e o senhor está certo."'
+    '"E estatuto também não muda de ideia quando vê uma coisa bonita. É isso que {o senhor|a senhora} está tentando dizer e {o senhor|a senhora} está cert{o|a}."'
   ],
   ef:{instabilidade:1,
       npc:{nome:'Curador Fabre', opiniao:2, memoria:'Admitiu que estatuto não muda de ideia quando vê uma coisa bonita.'},
@@ -2991,7 +2991,7 @@ c18_adnan_vem_ver:{
     'Ele fica quieto.',
     '"Se eu for, eu não consigo mais assinar." Ele diz isso como constatação técnica. "É por isso que ninguém lá dentro vai a campo. Não é preguiça. É desenho."',
     'Ele bate na mesa uma vez, decidindo.',
-    '"Depois da Rota 21. Se o senhor voltar de lá, eu vou com o senhor onde o senhor quiser, e aí eu não assino mais nada."'
+    '"Depois da Rota 21. Se {o senhor|a senhora} voltar de lá, eu vou com {o senhor|a senhora} onde {o senhor|a senhora} quiser, e aí eu não assino mais nada."'
   ],
   ef:{flag:['adnan_promete_ir'], instabilidade:1,
       npc:{nome:'Curador Fabre', opiniao:4, memoria:'Prometeu ir a campo com você depois da Rota 21.'},
@@ -3006,7 +3006,7 @@ c18_sem_resposta:{
   texto:[
     '"Não tenho."',
     'Ele não comemora. Ele parece, pela primeira vez, decepcionado.',
-    '"Eu queria que o senhor tivesse."',
+    '"Eu queria que {o senhor|a senhora} tivesse."',
     'Ele empurra a xícara para a beirada do balcão, para o moço recolher.',
     '"Eu faço esse discurso há dois anos e eu já ganhei doze vezes e eu perdi zero. E cada vez que eu ganho eu fico um pouco pior."',
     'Ele levanta.',
@@ -3027,9 +3027,9 @@ c18_oferta:{
     'Ele já está de pé quando volta e senta de novo.',
     '"Eu vou fazer uma coisa que eu tenho que fazer e que eu odeio."',
     'Ele tira do bolso um envelope e põe no balcão sem empurrar.',
-    '"Proposta. Técnico de campo sênior, com registro, com salário, com plano de saúde. Está no meu contrato oferecer a quem tem perfil, e o senhor tem o melhor perfil que eu vi em dois anos."',
+    '"Proposta. Técnico de campo sênior, com registro, com salário, com plano de saúde. Está no meu contrato oferecer a quem tem perfil, e {o senhor|a senhora} tem o melhor perfil que eu vi em dois anos."',
     '"Vocês estão me contratando."',
-    '"Nós estamos te convidando, e a diferença entre as duas coisas é exatamente o que o senhor decidir agora."'
+    '"Nós estamos te convidando, e a diferença entre as duas coisas é exatamente o que {o senhor|a senhora} decidir agora."'
   ],
   ef:{flag:'recebeu_a_oferta',
       registrar:'A CGRB te ofereceu uma vaga de técnico de campo sênior.'},
@@ -3063,9 +3063,9 @@ c18_primeiro_servico:{
   texto:[
     '"Estação 4, Rota 21." Ele diz na hora, porque já estava escrito. "Apoio à Fase II. Três semanas."',
     '"O que eu vou fazer lá?"',
-    '"Contagem, pesagem e liberação." Ele engole. "E, se der um problema, o senhor vai preencher o formulário e eu vou assinar embaixo."',
+    '"Contagem, pesagem e liberação." Ele engole. "E, se der um problema, {o senhor|a senhora} vai preencher o formulário e eu vou assinar embaixo."',
     'Ele estende a mão.',
-    '"E se o senhor for o que eu acho que o senhor é, no fim das três semanas o senhor vai ter uma decisão para tomar, e eu não vou poder te ajudar."'
+    '"E se {o senhor|a senhora} for o que eu acho que {o senhor|a senhora} é, no fim das três semanas {o senhor|a senhora} vai ter uma decisão para tomar, e eu não vou poder te ajudar."'
   ],
   ef:{flag:['vai_pro_viveiro','sabe_da_rota21','sabe_da_estacao4'],
       registrar:'Primeiro serviço: Estação 4, Rota 21, apoio à Fase II, três semanas.'},
@@ -3078,9 +3078,9 @@ c18_era_teste:{
     'Ele guarda o carbono com cuidado.',
     '"Eu sei."',
     'Você fica sem chão por um segundo.',
-    '"O senhor acha que a gente não previu?" Ele não está debochando. "Está no meu relatório de recrutamento: candidatos de alto perfil frequentemente ingressam com intenção de obstrução. Recomenda-se contratar assim mesmo."',
+    '"{O senhor|A senhora} acha que a gente não previu?" Ele não está debochando. "Está no meu relatório de recrutamento: candidatos de alto perfil frequentemente ingressam com intenção de obstrução. Recomenda-se contratar assim mesmo."',
     '"Por quê?"',
-    '"Porque de dentro o senhor vai ver a planilha inteira, e quem vê a planilha inteira ou sai destruído ou concorda." Ele levanta. "E os dois servem pra gente."'
+    '"Porque de dentro {o senhor|a senhora} vai ver a planilha inteira, e quem vê a planilha inteira ou sai destruído ou concorda." Ele levanta. "E os dois servem pra gente."'
   ],
   ef:{flag:['trabalha_para_comissao','sabe_que_e_teste'], instabilidade:2,
       registrar:'A Comissão contrata de propósito quem entra para obstruir.'},
@@ -3094,9 +3094,9 @@ c18_recusou_a_oferta:{
   texto:[
     '"Não."',
     'Ele guarda o envelope no bolso, sem insistir, e paga a conta.',
-    '"Anotado. Eu vou escrever que o senhor recusou por convicção e não por preço, porque é o que eu acho e o relatório é meu."',
+    '"Anotado. Eu vou escrever que {o senhor|a senhora} recusou por convicção e não por preço, porque é o que eu acho e o relatório é meu."',
     'Na porta da lanchonete, ele para.',
-    '"Uma coisa. O senhor recusando não me irrita. O senhor recusando e indo embora, sim." Ele enfia as mãos no bolso. "Porque aí sobra eu, e eu perco por dez a um."'
+    '"Uma coisa. {O senhor|A senhora} recusando não me irrita. {O senhor|A senhora} recusando e indo embora, sim." Ele enfia as mãos no bolso. "Porque aí sobra eu, e eu perco por dez a um."'
   ],
   ef:{flag:'recusou_comissao',
       rep:{eixo:'bom',delta:1,motivo:'Recusou a vaga na Comissão'},
@@ -3122,7 +3122,7 @@ c18_rasgou:{
       registrar:'Rasgou a proposta da CGRB. Ele juntou os pedaços para anexar.'},
   escolhas:[
     {texto:'"Me leva no viveiro."', vai:'c18_pedido_viveiro'},
-    {texto:'Ir embora para a Rota 21 sozinho.', vai:'c18_fim'}
+    {texto:'Ir embora para a Rota 21 sozinh{o|a}.', vai:'c18_fim'}
   ]
 },
 
@@ -3152,7 +3152,7 @@ c18_pedido_viveiro:{
     'Ele deixa o dinheiro do lanche na fórmica e se levanta.',
     '"Estação 4. Depois da curva grande, do lado do mar. Tem cerca, tem placa e tem câmera, e nada disso é ilegal."',
     'Ele põe a cadeira no lugar, porque é o tipo de pessoa que põe a cadeira no lugar.',
-    '"Uma coisa só." Ele para. "Quando o senhor entrar, não olhe as incubadoras primeiro. Olhe o galpão do fundo. As incubadoras são o que a gente mostra para a imprensa."'
+    '"Uma coisa só." Ele para. "Quando {o senhor|a senhora} entrar, não olhe as incubadoras primeiro. Olhe o galpão do fundo. As incubadoras são o que a gente mostra para a imprensa."'
   ],
   ef:{flag:['sabe_da_rota21','sabe_do_galpao_do_fundo','vai_pro_viveiro','sabe_da_estacao4'],
       npc:{nome:'Curador Fabre', opiniao:3, memoria:'Te disse onde é a Estação 4 e o que olhar primeiro.'},
@@ -3170,7 +3170,7 @@ c18_porque_ajuda:{
     'Ele se vira.',
     '"Eu preciso que alguém de fora olhe, porque eu já não consigo. Eu vejo lote. Eu vejo motivo. Eu vejo data."',
     'Ele põe a mão no batente da porta.',
-    '"O senhor ainda vê bicho. Vai lá e olha enquanto o senhor ainda vê."'
+    '"{O senhor|A senhora} ainda vê bicho. Vai lá e olha enquanto {o senhor|a senhora} ainda vê."'
   ],
   ef:{flag:'entende_o_adnan', moral:3, instabilidade:1,
       npc:{nome:'Curador Fabre', opiniao:4, memoria:'Te mandou olhar enquanto você ainda vê bicho.'},

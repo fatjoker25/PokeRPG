@@ -42,7 +42,7 @@ c17_ab_no_quadro:{
   escolhas:[
     {texto:'Falar com a mulher que não achou o nome dela.', vai:'c17_ab_a_mulher_do_mural'},
     {texto:'Arrancar a folha e levar.', vai:'c17_ab_arrancou_a_folha'},
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
+    {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
     {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
   ]
 },
@@ -63,12 +63,12 @@ c17_ab_a_mulher_do_mural:{
     fala('a mulher do mural', 'Eu sou de Pewter.')
   ],
   ef:{flag:'o_criterio_administrativo',
-      npc:{nome:'a mulher do mural', opiniao:1, viuVoce:'Você foi o único a perguntar por que ela não estava na lista.'},
+      npc:{nome:'a mulher do mural', opiniao:1, viuVoce:'Você foi {o único|a única} a perguntar por que ela não estava na lista.'},
       registrar:'Vinte e dois dos 31 convocados são de Saffron, Celadon ou Vermilion. O critério é "administrativo".',
       presagio:'Convocação concentrada em três cidades é escolha, e escolha tem quem escolha.'},
   escolhas:[
     {texto:'Anotar os trinta e um nomes antes de sair.', vai:'c17_ab_arrancou_a_folha'},
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
+    {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
     {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
   ]
@@ -85,7 +85,7 @@ c17_ab_arrancou_a_folha:{
   ef:{flag:['tem_a_lista_dos_trinta_e_um','reika_precisa_de_papel'],
       registrar:'Está com a folha de convocação arrancada do mural: 31 nomes e o aviso dos postos desguarnecidos.'},
   escolhas:[
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
+    {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
     {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
   ]
@@ -113,7 +113,7 @@ c17_ab_sem_insignias:{
   escolhas:[
     {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
     {texto:'Perguntar quem assinou o carimbo.', vai:'c17_ab_o_carimbo'},
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
+    {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
     {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
   ]
 },
@@ -136,7 +136,7 @@ c17_ab_o_carimbo:{
       presagio:'Documento carimbado como interno não vale contra a Liga. Sempre coube a eles dizer que era rascunho.'},
   escolhas:[
     {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
+    {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
     {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
   ]
 },
@@ -180,7 +180,7 @@ c17_ab_quem_pos:{
     d=>fala(d.jogador.nome, 'Tá na etiqueta.'),
     fala('o rapaz do setor', 'Então alguém entrou no setor antes de mim e lacrou um malote.'),
     'Ele para. Você ouve ele respirando.',
-    fala('o rapaz do setor', 'Moço, eu vou desligar. E eu não vou falar disso com ninguém daqui.', 'baixo')
+    fala('o rapaz do setor', '{Moço|Moça}, eu vou desligar. E eu não vou falar disso com ninguém daqui.', 'baixo')
   ],
   ef:{flag:'alguem_lacrou_antes_do_turno',
       registrar:'O malote foi lacrado no Planalto vinte minutos antes de o responsável pelo turno chegar.'},
@@ -252,7 +252,7 @@ c17_envelope:{
     'Você lê três vezes e guarda pra depois, porque tem um garoto encostado no poste do lado de fora do Centro que está te esperando há pelo menos uma hora.',
     d=>{
       const t=d.npcs['Ezra'];
-      if (!t) return 'Ou tinha. Quando você sai, o poste está vazio e tem uma bituca de cigarro no chão que você não sabe de quem é. Você segue sozinho para a Rota 23.';
+      if (!t) return 'Ou tinha. Quando você sai, o poste está vazio e tem uma bituca de cigarro no chão que você não sabe de quem é. Você segue sozinh{o|a} para a Rota 23.';
       if (t.opiniao>=3) return '"Eu sabia que você ia passar por aqui." Ezra fala rápido demais, do jeito dele. "Cara, eu preciso te mostrar uma coisa e você vai achar que eu tô louco."';
       if (t.opiniao<=-2) return '"Não vim te cumprimentar." Ezra não estende a mão. "Vim porque não tem mais ninguém pra quem contar isso, e isso me irrita muito."';
       return '"Ô." Ezra enfia as mãos no bolso. "Eu preciso mostrar uma coisa pra alguém que não vai rir."';
@@ -264,7 +264,7 @@ c17_envelope:{
     {texto:'"Mostra."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler o envelope inteiro primeiro.', vai:'c17_leu_o_envelope'},
     {texto:'Ir direto para o Planalto. A Liga te chamou.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']},
-    {texto:'Seguir sozinho pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']}
+    {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']}
   ]
 },
 
@@ -548,7 +548,7 @@ c17_apagar:{
     'Na nona, a mão dele treme um pouco.',
     '"Isso era a coisa mais importante que já aconteceu comigo."',
     '"Eu sei."',
-    '"Você tá certo. Eu sei que você tá certo."',
+    '"Você tá cert{o|a}. Eu sei que você tá cert{o|a}."',
     'Ele guarda o Pokégear no bolso.',
     '"Mas isso era a coisa mais importante que já aconteceu comigo."',
     'E ele fala isso duas vezes porque ele precisa que fique claro que ele sabe as duas coisas ao mesmo tempo.'
@@ -743,7 +743,7 @@ c17_o_radio:{
     '"Quantos são vocês?"',
     d=>d.flags.teo_leva ? '"Dois."' : '"Um."',
     'Mais silêncio.',
-    '"Escuta aqui, garoto. Aqui é a central do Planalto. A gente tá com quatro pessoas onde devia ter quarenta e a gente não pode mandar ninguém."',
+    '"Escuta aqui, {garoto|garota}. Aqui é a central do Planalto. A gente tá com quatro pessoas onde devia ter quarenta e a gente não pode mandar ninguém."',
     '"Por quê?"',
     '"Isso eu não posso falar no rádio."',
     'Uma pausa.',
@@ -755,7 +755,7 @@ c17_o_radio:{
       rep:{eixo:'bom',delta:4,motivo:'Insistiu no rádio até alguém responder'},
       instabilidade:1,
       registrar:'A central do Planalto tem 4 pessoas onde deveria ter 40. A convocação foi enviada por sistema automático.',
-      presagio:'Um sistema automático que ninguém desligou. É assim que você foi chamado.'},
+      presagio:'Um sistema automático que ninguém desligou. É assim que você foi chamad{o|a}.'},
   escolhas:[
     {texto:'"O que tá acontecendo aí em cima?"', vai:'c17_o_que_acontece'},
     {texto:'Ir pra clareira.', vai:'c17_a_clareira'},
@@ -782,9 +782,9 @@ c17_o_que_acontece:{
     'A voz fica ainda mais baixa.',
     '"O Campeão vem todo dia, senta na cadeira dele, e fica lá o expediente inteiro numa sala onde não chega desafiante nenhum desde julho."',
     'Chiado.',
-    '"Garoto, eu tô com quatro pessoas aqui e uma delas sou eu, e a convocação que te mandaram foi um sistema."',
+    '"{Garoto|Garota}, eu tô com quatro pessoas aqui e uma delas sou eu, e a convocação que te mandaram foi um sistema."',
     '"E se eu subir?"',
-    '"Se você subir, você vai ser o primeiro em cinco meses."'
+    '"Se você subir, você vai ser {o primeiro|a primeira} em cinco meses."'
   ],
   ef:{flag:['sabe_da_elite','sabe_do_campeao'],
       rep:{eixo:'bom',delta:5,motivo:'Perguntou o que estava acontecendo e alguém respondeu'},
@@ -808,7 +808,7 @@ c17_o_nome_dele:{
     'Uma risada curta no rádio, distorcida pelo chiado.',
     '"Roland. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
     'Ele diz a matrícula sem você pedir.',
-    '"Anota a matrícula também, garoto."',
+    '"Anota a matrícula também, {garoto|garota}."',
     '"Por quê?"',
     'Pausa.',
     '"Porque eu falei uma coisa por rádio que eu não devia, e se alguém perguntar depois quem falou, eu quero que tenha resposta."',
@@ -840,7 +840,7 @@ c17_boca_do_caminho:{
     'Não tem catraca, não tem corrente, não tem cadeado.',
     'Só uma placa e uma fenda na rocha e quatro quilômetros de escuro lá dentro.',
     d=>d.flags.teo_leva ? 'Ezra para do seu lado e olha a placa.\nE depois olha a fenda.\nE depois a placa de novo.\n"Cara."\nEle não fala mais nada por um tempo bem longo.\n"Eu podia entrar."' :
-       'Você fica parado na frente da fenda uns dois minutos.'
+       'Você fica parad{o|a} na frente da fenda uns dois minutos.'
   ],
   ef:{flag:['viu_a_boca_do_caminho'],
       registrar:'A entrada do Caminho da Vitória está sem guarda, sem catraca e sem cadeado.',
@@ -1086,7 +1086,7 @@ c17_contou_pros_quatro:{
   texto:[
     '"Deixa eu te contar o que é a caixa postal onze."',
     'E você conta.',
-    'Quatro pessoas com um cooler e uma rede de pesca numa estrada de terra ouvem um garoto de quinze anos contar sobre um subsolo em Saffron com doze tanques, sobre um armazém em Celadon com quarenta e uma gaiolas, sobre uma reserva em Fuchsia com uma planilha de mil novecentos e setenta e um.',
+    'Quatro pessoas com um cooler e uma rede de pesca numa estrada de terra ouvem {um garoto|uma garota} de quinze anos contar sobre um subsolo em Saffron com doze tanques, sobre um armazém em Celadon com quarenta e uma gaiolas, sobre uma reserva em Fuchsia com uma planilha de mil novecentos e setenta e um.',
     'Leva vinte minutos.',
     'Ninguém interrompe.',
     'No fim, o de vinte e seis anos está sentado na cadeira dobrável com o recorte na mão e não olha pra cima.',
@@ -1307,7 +1307,7 @@ c17_sabotou_van:{
 c17_denunciou_van:{
   texto:[
     'Você volta ao posto vazio e denuncia pelo rádio.',
-    d=>d.flags.sabe_do_anselmo ? 'O Roland atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, garoto, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
+    d=>d.flags.sabe_do_anselmo ? 'O Roland atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, {garoto|garota}, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
        'A Liga responde em quatro horas, porque a Rota 23 é área de acesso controlado ao Planalto e ali eles têm jurisdição imediata, mesmo com os postos vazios.',
     'Os quatro são detidos por acampamento irregular em área restrita — não por caça, porque não dá pra provar caça.',
     'Multa e liberação em dois dias.',
@@ -1355,7 +1355,7 @@ c17_esperou_mew:{
   texto:[
     'Você senta no meio da clareira.',
     d=>d.flags.teo_leva ? 'Ezra senta a três metros e fica quieto, o que pra ele é um esforço físico visível. Ele mexe no cadarço quatro vezes na primeira meia hora e depois para.' :
-       'Você fica sozinho no meio de vinte metros de grama alta.',
+       'Você fica sozinh{o|a} no meio de vinte metros de grama alta.',
     'Duas horas.',
     'Duas horas de verdade: você tem formiga na perna aos quarenta minutos, e cãibra na panturrilha aos setenta, e aos cem você já está pensando em desistir e ficando só por teimosia.',
     'E aí, sem nenhum aviso e sem nenhum som, tem uma coisa pairando a um metro e dez do chão, a quatro metros de você.',
@@ -1379,7 +1379,7 @@ c17_esperou_mew:{
 
 c17_mew_brinca:{
   texto:[
-    'Você fica parado e ela se aproxima.',
+    'Você fica parad{o|a} e ela se aproxima.',
     'O que acontece nos vinte minutos seguintes é a coisa mais absurda da sua jornada inteira, e você passou por doze tanques, uma caverna de gelo e uma cratera de vulcão:',
     'Mew brinca.',
     'Ela copia.',
@@ -1550,7 +1550,7 @@ c17_deixou_mew:{
     'Não tem deslocamento. Não tem borrão. Não tem ar mexendo.',
     'Ela estava e não está.',
     d=>d.flags.teo_leva ? 'Ezra fica sentado mais uns dez minutos, sem falar nada.\nDepois:\n"Ninguém vai acreditar."\n"Não."\n"Ótimo."\nEle se levanta e bate a terra da calça.\n"Ótimo mesmo."' :
-       'Você fica sentado mais uns dez minutos, sozinho, no lugar mais comum do mundo: vinte metros de grama alta numa rota de Kanto.'
+       'Você fica sentad{o|a} mais uns dez minutos, sozinh{o|a}, no lugar mais comum do mundo: vinte metros de grama alta numa rota de Kanto.'
   ],
   ef:{flag:'deixou_mew_ir',
       rep:{eixo:'bom',delta:2,motivo:'Encontrou Mew e não pegou nada'},
@@ -1630,7 +1630,7 @@ c17_pediu_desculpa:{
     'Você fala isso em voz alta numa clareira vazia de vinte metros.',
     'Não acontece nada.',
     'Não tem resposta, não tem sinal, não tem vento mexendo a grama.',
-    'Você fica ali uns quinze minutos falando sozinho — e não é bonito, e você não fala nada de bonito: você fala coisa embolada, repetida, com frase começada e não terminada, do jeito que gente fala quando está pedindo desculpa de verdade e não em discurso.',
+    'Você fica ali uns quinze minutos falando sozinh{o|a} — e não é bonito, e você não fala nada de bonito: você fala coisa embolada, repetida, com frase começada e não terminada, do jeito que gente fala quando está pedindo desculpa de verdade e não em discurso.',
     d=>d.flags.teo_leva ? 'E o Ezra fica a três metros o tempo inteiro e não sai e não fala nada, e ficar é a única coisa que ele pode fazer, e ele faz.' : '',
     'E no fim você levanta e vai embora.',
     'E o pedido de desculpa não serviu pra ela.',
@@ -1741,7 +1741,7 @@ c17_quem_te_mandou:{
     '"Solicitação de quem?"',
     '"Do setor que solicitou."',
     'Ele bebe.',
-    '"Olha, moço. Eu tenho cinquenta e dois anos e eu faço aquisição há dezenove. Eu já comprei equipamento de ressonância, já comprei um prédio inteiro em Vermilion e já comprei uma coleção particular de fósseis de um viúvo em Pewter."',
+    '"Olha, {moço|moça}. Eu tenho cinquenta e dois anos e eu faço aquisição há dezenove. Eu já comprei equipamento de ressonância, já comprei um prédio inteiro em Vermilion e já comprei uma coleção particular de fósseis de um viúvo em Pewter."',
     'Ele põe a xícara na mesa.',
     '"Eu não pergunto o que a gente vai fazer com o que eu compro."',
     '"Nunca?"',

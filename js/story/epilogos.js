@@ -30,7 +30,7 @@ const EPILOGOS = [
   texto:[
     'A sua porta tem uma placa de bronze parafusada na altura dos olhos, e a fonte é a mesma dos outros três.',
     'A parte difícil não é ganhar. É a cara das pessoas depois.',
-    'Chega gente que treinou um ano inteiro pra te enfrentar, e você ganha, e elas descem o corredor em silêncio, e você fica sozinho numa sala ouvindo o passo delas sumir.',
+    'Chega gente que treinou um ano inteiro pra te enfrentar, e você ganha, e elas descem o corredor em silêncio, e você fica sozinh{o|a} numa sala ouvindo o passo delas sumir.',
     'Você começou a fazer uma coisa que ninguém ali fazia: desce atrás. Alcança na escada. Fala duas frases.',
     'Em quatro anos, seis das pessoas que perderam pra você voltaram. Três ganharam.',
     'Ninguém escreveu isso em regulamento nenhum, e é a única coisa que você mudou no Planalto.'
@@ -113,7 +113,7 @@ const EPILOGOS = [
     'Você passa os anos seguintes fazendo o que já fazia de graça, agora com número de processo: andar, olhar, anotar, e mandar de volta.',
     'A sua contribuição não é uma descoberta. É um método: você prova, em cento e sessenta páginas, que dado de campo colhido por uma pessoa que dorme no acostamento vale mais que dado de campo colhido por uma equipe que volta pro hotel.',
     'Metade da academia acha isso ofensivo. A outra metade começa a dormir no acostamento.',
-    'Em doze anos o jeito de fazer pesquisa de campo em Kanto mudou, e quase ninguém sabe que mudou por causa de um menino de quinze anos que catalogou noventa espécies a pé.'
+    'Em doze anos o jeito de fazer pesquisa de campo em Kanto mudou, e quase ninguém sabe que mudou por causa de {um menino|uma menina} de quinze anos que catalogou noventa espécies a pé.'
   ]
 },
 {
@@ -201,7 +201,7 @@ const EPILOGOS = [
   texto:[
     'Existe uma pasta com o seu nome numa sala de Saffron, e a pasta não é grossa, e é isso que te mantém livre: ninguém alocou orçamento pra te procurar de verdade.',
     'Você dorme em cidade pequena, paga em dinheiro e conhece o horário das guaritas de Kanto inteira de cor.',
-    'A liberdade é real e o preço também: você não volta pra casa há anos, e a pessoa que ficou lá não sabe se você está vivo, e você decidiu que não saber é melhor que saber.',
+    'A liberdade é real e o preço também: você não volta pra casa há anos, e a pessoa que ficou lá não sabe se você está viv{o|a}, e você decidiu que não saber é melhor que saber.',
     'Talvez seja. Você não tem como conferir.',
     'De vez em quando alguém te reconhece numa rodoviária e não fala nada, e você passa a semana inteira tentando decidir o que aquilo significou.'
   ]

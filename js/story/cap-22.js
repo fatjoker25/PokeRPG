@@ -149,7 +149,7 @@ c22_o_quadro:{
     'Trinta e um deles se inscreveram.',
     d=>`O seu está na chave quatro, escrito com a mesma caneta de todos os outros, com a sua cidade embaixo: ${d.jogador.cidade}.`,
     'Você não preencheu ficha nenhuma. Você não pagou inscrição nenhuma. Você chegou aqui hoje.',
-    fala('o funcionário da mesa', 'Inscrição paga e confirmada, moço. Tá tudo certo aqui no meu papel.'),
+    fala('o funcionário da mesa', 'Inscrição paga e confirmada, {moço|moça}. Tá tudo certo aqui no meu papel.'),
     fala('o funcionário da mesa', 'Paga por terceiro. Isso é normal, acontece direto, patrocínio de loja, de família, de ginásio.'),
     fala('o funcionário da mesa', 'Campo do pagador...', null, 'Ele corre o dedo pela coluna e para.'),
     fala('o funcionário da mesa', 'Em branco.', 'baixo')
@@ -171,7 +171,7 @@ c22_exigiu_o_nome:{
     fala('a supervisora', 'Dinheiro vivo, no balcão, três dias atrás. Quem paga em dinheiro não deixa nome.'),
     fala('a supervisora', 'Eu posso te dizer o que o rapaz do balcão lembrou: mulher, de terno, crachá azul pendurado no bolso.'),
     'Crachá azul. Décimo andar da Silph.',
-    fala('a supervisora', 'Isso não é ilegal, moço. É esquisito, e eu concordo que é esquisito, mas não é ilegal.')
+    fala('a supervisora', 'Isso não é ilegal, {moço|moça}. É esquisito, e eu concordo que é esquisito, mas não é ilegal.')
   ],
   ef:{flag:'pagou_uma_de_cracha_azul',
       rep:{eixo:'bom',delta:1,motivo:'Exigiu saber quem estava pagando por você'},

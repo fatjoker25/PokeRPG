@@ -35,7 +35,7 @@ c31_a_sede:{
     fala('Sra. Laurel', 'Vendedor?'),
     d=>fala(d.jogador.nome, 'Não.'),
     'Ela tira os óculos de leitura.',
-    fala('Sra. Laurel', 'Então o senhor é o terceiro tipo, que é o que vem reclamar de alguma coisa.'),
+    fala('Sra. Laurel', 'Então {o senhor|a senhora} é do terceiro tipo, que é o que vem reclamar de alguma coisa.'),
     fala('Sra. Laurel', 'Senta aí que eu faço um café.')
   ],
   ef:{flag:'achou_a_associacao',
@@ -108,7 +108,7 @@ c31_ele_viu_a_lista:{
     fala('Sr. Alder', 'Coisa curta. "Perguntou por carga." "Esteve no terminal." "Fotografou."'),
     'Ele põe os óculos de volta.',
     fala('Sr. Alder', 'E num tinha uma coisa que eu não esqueci: "acompanhar até sair da cidade".'),
-    fala('Sr. Alder', 'É uma lista de quem anda perguntando, moço.', 'baixo')
+    fala('Sr. Alder', 'É uma lista de quem anda perguntando, {moço|moça}.', 'baixo')
   ],
   ef:{flag:['o_que_tem_na_lista','sabe_do_lote_unico'],
       registrar:'A lista tem nome, idade, cidade e observações como "perguntou por carga" e "acompanhar até sair da cidade".',
@@ -170,7 +170,7 @@ c31_a_lista:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu posso ver a lista?'),
     'A secretária não hesita, e é isso que te desmonta.',
-    fala('Sra. Laurel', 'Pode. É documento da associação e o senhor pode pedir vista.'),
+    fala('Sra. Laurel', 'Pode. É documento da associação e {o senhor|a senhora} pode pedir vista.'),
     'Ela traz a última e põe na mesa, virada pra você, e senta do outro lado com o café dela.',
     'Quarenta e um nomes. Nome, idade, cidade de origem, observação.',
     d=>{
@@ -259,7 +259,7 @@ c31_pediu_o_rolo:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu posso levar o rolo do lixo?'),
     'Ela para de digitar.',
-    fala('Sra. Laurel', 'Ai, meu filho.'),
+    fala('Sra. Laurel', 'Ai, {meu filho|minha filha}.'),
     'Ela tira os óculos.',
     fala('Sra. Laurel', 'Você tinha que ter pegado.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
@@ -516,7 +516,7 @@ c31_cobrou_a_seguranca:{
   texto:[
     'Você volta na sede da associação e dessa vez tem gente: três lojistas e o presidente, que é um homem de uns cinquenta anos de camisa social azul-clara com o punho dobrado duas vezes.',
     'Ele é simpático. Ele é muito simpático, e ele é simpático do jeito que se é simpático com alguém que a gente pretende não levar a sério.',
-    fala('o presidente da associação', 'Rapaz, eu entendo a preocupação. Eu entendo mesmo.'),
+    fala('o presidente da associação', '{Rapaz|Moça}, eu entendo a preocupação. Eu entendo mesmo.'),
     fala('o presidente da associação', 'Mas o acompanhamento preventivo é um serviço contratado por vinte e duas lojas que foram assaltadas quarenta e uma vezes em dois anos.'),
     d=>fala(d.jogador.nome, 'E a menina de treze anos?'),
     'Ele abre as mãos.',
@@ -543,7 +543,7 @@ c31_o_convenio:{
     'E no lugar do nome da segunda parte, a sigla de cinco caracteres que você já viu num livro de destinos, num saco de ração, num carimbo de envelope e no cabeçalho de nove semanas de fax.',
     'O presidente lê a sigla em voz alta, devagar, soletrando, e fica claro que é a primeira vez que ele soletra aquilo.',
     fala('o presidente da associação', 'Isso é a... quem é isso?'),
-    'E a sala inteira olha pra você, porque você é o único ali que não perguntou.'
+    'E a sala inteira olha pra você, porque você é {o único|a única} ali que não perguntou.'
   ],
   ef:{flag:['o_convenio_da_associacao','sabe_o_nome_da_comissao','reika_precisa_de_papel'],
       rep:{eixo:'bom', delta:2, motivo:'Fez um presidente de associação comercial ler em voz alta, pela primeira vez, com quem ele assinou convênio.'},

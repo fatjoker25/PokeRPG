@@ -172,13 +172,13 @@ viridian:[
        fala('Nilo, o do posto', 'Nunca mais saiu. E não deixa ninguém encostar em bomba com defeito.', 'baixo'),
        'A usina abandonada fica a quatro cidades daqui.'
      ]},
-    {texto:'Pôr a mão no motor e achar você mesmo.',
+    {texto:'Pôr a mão no motor e achar você mesm{o|a}.',
      ef:{hp:-2, rep:{eixo:'bom',delta:1,motivo:'Pôs a mão no motor de um estranho'},
          registrar:'Queimou a mão no motor do carro atrás do posto de Viridian.'},
      resultado:[
        'Você põe a mão num lugar que está a noventa graus e tira muito rápido.',
        'Os quatro homens acham isso a coisa mais engraçada que aconteceu na semana deles.',
-       fala('o dono do carro', 'Era o terminal, moço. Era o terminal desde o começo.', 'riso')
+       fala('o dono do carro', 'Era o terminal, {moço|moça}. Era o terminal desde o começo.', 'riso')
      ]},
     {texto:'Deixar os quatro resolverem.', ef:{}, resultado:['Você segue. A discussão continua audível por dois quarteirões.']}
   ]
@@ -252,7 +252,7 @@ pewter:[
      resultado:[
        'Ele conta o dinheiro duas vezes, em silêncio, e na segunda as mãos tremem um pouco.',
        fala('o senhor do museu', 'Isso paga o andaime.'),
-       fala('o senhor do museu', 'Isso paga o andaime e sobra pro pedreiro de meio período. Moço.', 'baixo'),
+       fala('o senhor do museu', 'Isso paga o andaime e sobra pro pedreiro de meio período. {Moço|Moça}.', 'baixo'),
        'Seis meses depois, numa cidade completamente diferente, você vai ver uma foto de jornal da ala reaberta, e vai ter uma placa pequena com o seu nome escrito errado.'
      ]},
     {texto:'Perguntar se dá pra ver mesmo com a reforma.',
@@ -308,7 +308,7 @@ cerulean:[
          registrar:'Pediu pra enfrentar o sexto da ponte primeiro. Ele nunca tinha sido primeiro.'},
      resultado:[
        'Os cinco protestam. A tradição é a tradição.',
-       'Você não discute, só fica parado na frente do sexto e espera.',
+       'Você não discute, só fica parad{o|a} na frente do sexto e espera.',
        fala('o primeiro da ponte', '...tá. Uma vez.'),
        'O sexto luta contra você com o time inteiro dele descansado, pela primeira vez na vida dele, e é um combate completamente diferente do que teria sido no fim da fila.',
        fala('o sexto da ponte', 'Assim é muito melhor.', 'baixo')
@@ -366,7 +366,7 @@ cerulean:[
      resultado:[
        fala('o pescador da ponte', 'É sempre o mesmo. Moço novo, camisa de manga curta, prancheta.'),
        fala('o pescador da ponte', 'Da última vez eu perguntei o nome dele e ele falou que não podia dizer.'),
-       fala('o pescador da ponte', 'Técnico de prefeitura que não pode dizer o nome, moço. Pensa nisso.', 'frio')
+       fala('o pescador da ponte', 'Técnico de prefeitura que não pode dizer o nome, {moço|moça}. Pensa nisso.', 'frio')
      ]},
     {texto:'Olhar junto com os outros vinte e seguir.', ef:{},
      resultado:['Você olha a água verde por uns minutos, junto com vinte pessoas que fazem isso todo mês, e vai embora junto com elas.']}
@@ -382,7 +382,7 @@ vermilion:[
   texto:[
     'Duas mulheres carregam uma caixa de isopor entre as duas, param a cada dez metros e trocam de mão.',
     'Elas fazem isso todo dia e a cidade inteira sabe, e ninguém oferece ajuda porque elas já recusaram de todo mundo.',
-    fala('a mais velha das duas', 'A gente não precisa, moço.'),
+    fala('a mais velha das duas', 'A gente não precisa, {moço|moça}.'),
     fala('a mais nova das duas', 'A gente precisa, mãe.', 'baixo')
   ],
   escolhas:[
@@ -734,7 +734,7 @@ celadon:[
      resultado:[
        'Você explica a conta. Duas pessoas ouvem e uma sai da fila.',
        fala('o primeiro da fila da máquina', 'Eu sei disso.', 'baixo'),
-       fala('o primeiro da fila da máquina', 'Eu sei disso há uns dois anos, moço. Eu continuo na fila.'),
+       fala('o primeiro da fila da máquina', 'Eu sei disso há uns dois anos, {moço|moça}. Eu continuo na fila.'),
        'Ele não fala mais nada e você não tem o que responder.'
      ]},
     {texto:'Jogar.',
@@ -790,9 +790,9 @@ fuchsia:[
        'Ele volta em quatro minutos com uma folha datilografada que claramente alguém já tinha preparado antes, e que estava esperando alguém perguntar.',
        'Onze itens. Placa de horário é o número nove.',
        'O número um é: LAUDO DE ÓBITO DE ANIMAL EM CATIVEIRO — AGUARDANDO ASSINATURA.',
-       fala('o porteiro da reserva', 'Tem coisa esperando desde 95 nessa lista, moço.', 'baixo')
+       fala('o porteiro da reserva', 'Tem coisa esperando desde 95 nessa lista, {moço|moça}.', 'baixo')
      ]},
-    {texto:'Corrigir a placa você mesmo, com caneta, pela quinta vez.',
+    {texto:'Corrigir a placa você mesm{o|a}, com caneta, pela quinta vez.',
      ef:{moral:1, rep:{eixo:'bom',delta:1,motivo:'Corrigiu a placa pela quinta vez'},
          registrar:'Corrigiu a placa de horário da reserva de Fuchsia pela quinta vez, a caneta.'},
      resultado:[
@@ -962,7 +962,7 @@ cinnabar:[
        fala('a moça da vitrine', 'Ele saiu daqui em 1996 e foi pra Lavender e nunca mais voltou.'),
        d=>fala(d.jogador.nome, 'E por que a luz continua acesa?'),
        fala('a moça da vitrine', 'Porque ninguém desligou.', 'baixo'),
-       fala('a moça da vitrine', 'Não tem mistério nenhum, moço. Ninguém desligou e agora ninguém tem coragem de ser o primeiro.')
+       fala('a moça da vitrine', 'Não tem mistério nenhum, {moço|moça}. Ninguém desligou e agora ninguém tem coragem de ser o primeiro.')
      ]},
     {texto:'Ficar olhando a bancada por dez minutos, anotando o que tem em cima.',
      ef:{itens:{'Lista do que tem na bancada acesa':1},
@@ -999,7 +999,7 @@ cinnabar:[
        fala('o barqueiro', 'A temperatura. Meio grau, talvez menos.'),
        fala('o barqueiro', 'Meio grau não é nada pra ninguém. Pra peixe é tudo.'),
        fala('o barqueiro', 'Os peixes desceram. Tudo que comia peixe de superfície sumiu. E o que comia esses sumiu atrás.'),
-       fala('o barqueiro', 'Em três meses. Três meses, moço.', 'baixo'),
+       fala('o barqueiro', 'Em três meses. Três meses, {moço|moça}.', 'baixo'),
        'Ele olha pro vulcão. Você olha pro vulcão. Nenhum dos dois fala o que os dois estão pensando.'
      ]},
     {texto:'Perguntar se ele contou isso pra alguém.',
@@ -1131,7 +1131,7 @@ const EVENTOS_GERAIS = [
        'Você agacha. Ele não foge.',
        'Vocês dois ficam na altura um do outro por uns quarenta segundos, no meio de uma calçada, enquanto a cidade inteira passa em volta.',
        'Uma senhora te pergunta se você está passando mal.',
-       'Você diz que não e continua agachado.'
+       'Você diz que não e continua agachad{o|a}.'
      ]},
     {texto:'Perguntar na loja mais próxima se ele é de alguém.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou se o bicho da calçada tinha dono'},
@@ -1258,7 +1258,7 @@ campo:[
      ruim:{ef:{hp:-4, registrar:'Tentou levantar a cerca caída e não deu conta sozinho.'},
            resultado:[
              'Você levanta dois mourões e o terceiro te ensina que quinze metros de cerca é coisa de duas pessoas.',
-             'Você fica sentado no chão olhando a cerca meio de pé, que é pior do que cerca caída porque agora parece que alguém tentou.'
+             'Você fica sentad{o|a} no chão olhando a cerca meio de pé, que é pior do que cerca caída porque agora parece que alguém tentou.'
            ]}},
     {texto:'Ir até a caixa de correio e avisar quem mora ali.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Andou duzentos metros pra avisar de uma cerca que não era sua'},
@@ -1362,7 +1362,7 @@ campo:[
           resultado:[
             'Cinquenta e cinco minutos.',
             'E aí ela volta — pousa a quatro metros, anda o resto, e senta nos ovos sem olhar uma vez pra onde você está.',
-            'Ela sabia que você estava aí o tempo todo. Ela só estava esperando você provar que ia ficar quieto.'
+            'Ela sabia que você estava aí o tempo todo. Ela só estava esperando você provar que ia ficar quiet{o|a}.'
           ]},
      ruim:{ef:{registrar:'Não teve paciência de esperar o adulto do ninho.'},
            resultado:[
@@ -1469,7 +1469,7 @@ floresta:[
      ruim:{ef:{hp:-2, registrar:'Se perdeu seguindo uma fita na floresta.'},
            resultado:[
              'Você perde a fita na sexta árvore, acha de novo, perde na nona e não acha mais.',
-             'Leva quarenta minutos pra voltar pra trilha e você volta arranhado e sem nada.'
+             'Leva quarenta minutos pra voltar pra trilha e você volta arranhad{o|a} e sem nada.'
            ]}},
     {texto:'Cortar a fita toda e levar.',
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Arrancou a marcação de alguém sem saber pra que servia'},
@@ -1579,7 +1579,7 @@ floresta:[
          registrar:'Chamou alto a coisa que estava no mato fechado.'},
      resultado:[
        'Você grita.',
-       'O que acontece é que sai um Pidgeot de uma árvore que você nem sabia que tinha Pidgeot, a três metros da sua cabeça, e você cai sentado.',
+       'O que acontece é que sai um Pidgeot de uma árvore que você nem sabia que tinha Pidgeot, a três metros da sua cabeça, e você cai sentad{o|a}.',
        'A coisa grande do mato, seja lá o que fosse, foi embora no mesmo segundo pelo barulho.',
        'Você fica com um galho enfiado na panturrilha e com a certeza de que isso foi a coisa mais idiota da semana.'
      ]},
@@ -1612,7 +1612,7 @@ montanha:[
           ]},
      ruim:{ef:{hp:-5, registrar:'Tentou derrubar a pedra solta e ela derrubou você primeiro.'},
            resultado:[
-             'Ela se mexe uns dez centímetros e trava, e os dez centímetros levam junto o chão em que você estava apoiado.',
+             'Ela se mexe uns dez centímetros e trava, e os dez centímetros levam junto o chão em que você estava apoiad{o|a}.',
              'Você segura num galho que resolve segurar você de volta, o que é sorte e não competência.'
            ]}},
     {texto:'Avisar no próximo lugar que tiver gente.',
@@ -1643,12 +1643,12 @@ montanha:[
      bom:{ef:{hp:-1, moral:3, flag:'esperou_a_neblina',
               rep:{eixo:'bom',delta:1,motivo:'Parou na neblina em vez de insistir'}},
           resultado:[
-            'Você senta encostado numa pedra, com o time todo fora da bola, e espera.',
+            'Você senta encostad{o|a} numa pedra, com o time todo fora da bola, e espera.',
             'Abre em cinquenta minutos, de uma vez, como cortina.',
             'Você perde a luz e ganha a noite mais estrelada que já viu, e dorme ali mesmo sem ter planejado.'
           ]},
      ruim:{ef:{hp:-4, registrar:'Esperou a neblina passar e pegou frio.'},
-           resultado:['Não abre. Você fica duas horas sentado no frio e escurece do mesmo jeito.','Você desce no escuro, devagar, com lanterna, e chega tremendo.']}},
+           resultado:['Não abre. Você fica duas horas sentad{o|a} no frio e escurece do mesmo jeito.','Você desce no escuro, devagar, com lanterna, e chega tremendo.']}},
     {texto:'Seguir devagar, contando passo e marcando pedra.',
      teste:{status:'intelecto', dificuldade:7, nomeStatus:'Intelecto', eixo:'cuidado'},
      bom:{ef:{flag:'atravessou_a_neblina', rep:{eixo:'bom',delta:1,motivo:'Atravessou a neblina contando passo, sem improviso'},
@@ -1714,7 +1714,7 @@ montanha:[
        'Leva vinte minutos e a sua lombar vai lembrar disso amanhã.',
        'Você anda quarenta metros e a trilha acaba. Acaba mesmo — corte limpo, oito metros de vão, queda longa.',
        'Você volta. Você empurra a pedra de volta, que leva outros vinte minutos e dói muito mais.',
-       'E você fica um tempo sentado ao lado dela pensando na pessoa que carregou calço morro acima pra impedir exatamente o que você acabou de fazer.'
+       'E você fica um tempo sentad{o|a} ao lado dela pensando na pessoa que carregou calço morro acima pra impedir exatamente o que você acabou de fazer.'
      ]},
     {texto:'Escrever um aviso na pedra com o que você tiver.',
      cond:d=>!!d.flags.entendeu_a_pedra,
@@ -1803,14 +1803,14 @@ caverna:[
      resultado:['Você risca uma seta na parede com pedra e segue.','Se você precisar de água na volta, você sabe onde tem. É pouco, e um dia é tudo.']},
     {texto:'Apagar a lanterna um minuto e só escutar.',
      ef:{moral:3, flag:'escutou_no_escuro',
-         presagio:'Você vai repetir isso outras vezes nessa jornada, sempre sozinho, e nunca vai contar pra ninguém que faz isso.'},
+         presagio:'Você vai repetir isso outras vezes nessa jornada, sempre sozinh{o|a}, e nunca vai contar pra ninguém que faz isso.'},
      resultado:[
        'Escuro de caverna não é escuro de quarto. É um escuro que tem peso.',
        'No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.',
        d=>{
          const p = (Estado.dados.time || []).find(x => !x.morto);
          return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. ${pron(p).Ele} não gosta disso e ficou mesmo assim.`
-                  : 'Você fica sozinho no escuro por um minuto inteiro e aguenta.';
+                  : 'Você fica sozinh{o|a} no escuro por um minuto inteiro e aguenta.';
        },
        'Você acende de novo e os seis metros de sempre voltam a ser o mundo inteiro.'
      ]}
@@ -1928,7 +1928,7 @@ agua:[
             fala('o homem de colete', 'Ela vem. Ela sempre vem.'),
             fala('o homem de colete', 'O motor esquenta e tem que parar de hora em hora. Faz três anos assim.'),
             fala('o homem de colete', 'Eu escrevo essa placa todo dia e todo dia alguém me xinga por causa dela.', 'baixo'),
-            fala('o homem de colete', 'Você é o primeiro em umas duas semanas que pergunta em vez de reclamar.')
+            fala('o homem de colete', 'Você é {o primeiro|a primeira} em umas duas semanas que pergunta em vez de reclamar.')
           ]},
      ruim:{ef:{registrar:'Perguntou da balsa e levou a resposta padrão.'},
            resultado:[fala('o homem de colete', 'Tá na placa.'), 'E acabou.']}},
@@ -1942,7 +1942,7 @@ agua:[
             'Você atravessa em seis minutos e vê, do outro lado, as nove pessoas ainda sentadas no píer.'
           ]},
      ruim:{ef:{hp:-4, registrar:'Tentou atravessar a pé e voltou encharcado.'},
-           resultado:['A quarta pedra é mais funda do que as três primeiras.','Você volta encharcado da cintura pra baixo e senta no píer, e ninguém comenta, o que é pior.']}}
+           resultado:['A quarta pedra é mais funda do que as três primeiras.','Você volta encharcad{o|a} da cintura pra baixo e senta no píer, e ninguém comenta, o que é pior.']}}
   ]
 },
 {
@@ -1986,7 +1986,7 @@ agua:[
            resultado:[
              'Você desce, acha a rede em quinze segundos, e se enrola nela em dois.',
              'Você sai. Você sai porque tem sorte e não porque soube sair, e você sabe a diferença.',
-             'Você fica sentado na pedra por vinte minutos e não conta isso pra ninguém nunca.'
+             'Você fica sentad{o|a} na pedra por vinte minutos e não conta isso pra ninguém nunca.'
            ]}},
     {texto:'Deixar a boia na pedra, virada pra cima, pra quem procurar achar.',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Deixou a boia à vista em vez de levar'},

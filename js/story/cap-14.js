@@ -141,7 +141,7 @@ c14_ab_sem_passagem:{
 
 c14_ab_a_verdade_pro_velho:{
   texto:[
-    'Você conta. Conta o laboratório, conta o que te trouxe até aqui, conta a parte que faz você parecer ingênuo e conta a parte que faz você parecer perigoso.',
+    'Você conta. Conta o laboratório, conta o que te trouxe até aqui, conta a parte que faz você parecer ingênu{o|a} e conta a parte que faz você parecer perigoso.',
     'Leva uns seis minutos. Ele não interrompe e não olha pra você: olha pro mar, com a lata de óleo na mão.',
     'Quando você termina, ele mexe no boné.',
     fala('Amos', 'Cinco horas de combustível.'),
@@ -189,7 +189,7 @@ c14_ab_ofereceu_tudo:{
     'Ele olha a mão. Não pega.',
     fala('Amos', 'Guarda isso.'),
     d=>fala(d.jogador.nome, 'É sério. Pode levar tudo.'),
-    fala('Amos', 'Menino, se eu levar tudo o que você tem, você chega numa ilha sem ferry até sábado e sem um tostão.'),
+    fala('Amos', '{Menino|Menina}, se eu levar tudo o que você tem, você chega numa ilha sem ferry até sábado e sem um tostão.'),
     'Ele empurra a sua mão de volta com as costas da dele.',
     fala('Amos', 'Aí eu não te levei. Eu te abandonei mais longe.'),
     'Ele desce a rampa.',
@@ -215,7 +215,7 @@ c14_ab_a_cinza:{
     },
     'Na rua principal, um homem de uns quarenta anos está varrendo a calçada da loja dele e cumprimenta você com a cabeça.',
     d=>fala(d.jogador.nome, 'Isso é normal?'),
-    fala('o homem da vassoura', 'É vulcão, meu amigo. Vulcão solta cinza.'),
+    fala('o homem da vassoura', 'É vulcão, {meu amigo|minha amiga}. Vulcão solta cinza.'),
     d=>fala(d.jogador.nome, 'Mas ele não tá inativo?'),
     'Ele para de varrer.',
     fala('o homem da vassoura', 'Tá.'),
@@ -240,7 +240,7 @@ c14_ab_de_cracha:{
       const c = Cargos.principal();
       return `Você mostra o crachá de ${c ? c.nome : 'serviço'} porque parece a coisa certa a fazer, e ele vira o livro na sua direção sem você pedir.`;
     },
-    fala('o capitão do porto', 'Já que o senhor é do serviço: olha a página de doze dias atrás.'),
+    fala('o capitão do porto', 'Já que {o senhor|a senhora} é do serviço: olha a página de doze dias atrás.'),
     'Doze dias atrás, na coluna de entrada: um barco fretado, quatro pessoas, sem nome de passageiro.',
     'Na coluna de saída, no mesmo dia: o mesmo barco, três pessoas.',
     fala('o capitão do porto', 'Eu anotei quatro na entrada. Eu conto. É o meu trabalho contar.'),
@@ -344,7 +344,7 @@ c14_cidade:{
     'E a sexta, dita por um homem no bar, que é a que muda tudo:',
     '"Quem botou fogo foi de fora. Chegou no sábado e foi embora no sábado. Duas pessoas, num barco fretado, que não é barco daqui."',
     '"Como você sabe que não é daqui?"',
-    '"Porque barco daqui eu conheço pelo motor, moço. Setecentas pessoas. Eu conheço todos os motores."'
+    '"Porque barco daqui eu conheço pelo motor, {moço|moça}. Setecentas pessoas. Eu conheço todos os motores."'
   ],
   ef:{flag:['ouviu_as_versoes','sabe_do_barco_fretado'],
       rep:{eixo:'bom',delta:2,motivo:'Ouviu seis versões antes de acreditar em uma'},
@@ -542,7 +542,7 @@ c14_casa_do_fuji:{
 
 c14_esperou_na_casa:{
   texto:[
-    'Você espera do outro lado da rua, encostado num muro, por seis horas e vinte.',
+    'Você espera do outro lado da rua, encostad{o|a} num muro, por seis horas e vinte.',
     'Às dezoito e quarenta chega um homem de uns setenta anos, de bermuda, com uma sacola de pão e uma garrafa térmica.',
     'Ele abre o portão com chave própria, senta na cadeira de balanço, serve café numa xícara que estava ali em cima, e come pão.',
     'Não entra na casa.',
@@ -573,7 +573,7 @@ c14_blaine_na_varanda:{
     'Você entra, pega a cadeira da varanda que é a única, e ele fica de pé encostado na coluna.',
     '"Você é o que tá perguntando de caixa no porto."',
     '"Sou."',
-    '"Setecentas pessoas, meu filho."',
+    '"Setecentas pessoas, {meu filho|minha filha}."',
     'Ele bebe o café.',
     '"Eu sou o Bruno. No ginásio me chamam de Blaine porque o nome do meu avô era Blaine e eu achei bonito aos vinte e dois anos, e agora eu tenho setenta e dois e tô preso com ele."',
     'Ele olha a porta fechada da casa.',
@@ -600,7 +600,7 @@ c14_porque_nao_entra:{
     '"E isso é ruim?"',
     '"Isso é o contrário de ruim, e por isso é pior."',
     'Ele encosta a testa na coluna da varanda por um segundo e desencosta.',
-    '"Tem uma xícara de café na pia dele desde novembro de noventa e seis, meu filho. Com café dentro. Virou uma pedra preta."',
+    '"Tem uma xícara de café na pia dele desde novembro de noventa e seis, {meu filho|minha filha}. Com café dentro. Virou uma pedra preta."',
     '"E eu não lavo. E eu não deixo ninguém lavar. E eu pago o IPTU pra prefeitura não tomar e vender."',
     '"Faz quatro anos."',
     'Ele termina o café.',
@@ -637,7 +637,7 @@ c14_o_que_aconteceu_com_fuji:{
     '"E ele?"',
     '"Ele estava lá dentro."',
     'Silêncio comprido.',
-    '"E aí é a parte que eu não conto pra ninguém há quatro anos, meu filho, e eu vou contar porque você perguntou do enterro e ninguém pergunta do enterro."',
+    '"E aí é a parte que eu não conto pra ninguém há quatro anos, {meu filho|minha filha}, e eu vou contar porque você perguntou do enterro e ninguém pergunta do enterro."',
     '"Não acharam corpo."'
   ],
   ef:{flag:['sabe_do_nao','nao_acharam_corpo'],
@@ -664,7 +664,7 @@ c14_esta_vivo:{
     'Ele olha a xícara vazia.',
     '"Porque “não acharam corpo” é uma frase que não deixa a gente terminar."',
     '"Eu sei que ele morreu. Eu sei com a cabeça. Eu tenho setenta e dois anos e eu enterrei minha mulher e meus dois irmãos e eu sei muito bem como é."',
-    '"Mas enterro não é pro morto, meu filho. Enterro é pra gente poder parar."',
+    '"Mas enterro não é pro morto, {meu filho|minha filha}. Enterro é pra gente poder parar."',
     'Ele levanta com dificuldade.',
     '"E eu não tive."',
     'Ele pega a xícara e vai lavar na torneira do jardim, e vira ela no mesmo lugar de sempre.'
@@ -783,7 +783,7 @@ c14_o_sete_falso:{
     '"Eles levaram o sete?"',
     '"Levaram um caderno com sete escrito na lombada."',
     'Ele continua andando, e agora está andando mais rápido.',
-    '"Meu filho, o Amauri era o cara mais organizado que eu conheci na vida e o mais desconfiado depois de outubro de noventa e seis."',
+    '"{Meu filho|Minha filha}, o Amauri era o cara mais organizado que eu conheci na vida e o mais desconfiado depois de outubro de noventa e seis."',
     '"Ele trocou as lombadas."',
     '"Ele o quê?"',
     '"Ele passou uma tarde inteira trocando etiqueta de lombada em quarenta e um cadernos, em outubro, três semanas antes."',
@@ -818,7 +818,7 @@ c14_nunca_leu:{
     '"E depois eu botei tudo numa sala com porta de aço e não abri mais."',
     '"Por quê?"',
     'Ele empurra a porta.',
-    '"Porque o que tem no sete não é prova de crime, meu filho. É prova de amizade."',
+    '"Porque o que tem no sete não é prova de crime, {meu filho|minha filha}. É prova de amizade."',
     '"E eu não sei o que fazer com prova de amizade, e faz quatro anos que eu não sei, e você é a primeira pessoa que aparece nessa ilha perguntando do enterro em vez de perguntar do tanque."'
   ],
   ef:{flag:'blaine_leu_tudo',
@@ -842,7 +842,7 @@ c14_pode_parar:{
     'Ele olha a porta fechada da casa do amigo.',
     '"E o que derruba o projeto não é o que eles fizeram. É o que eles não podem ter feito."',
     '"Não entendi."',
-    '"O material de Cinnabar era de um instituto público. Federal. A propriedade nunca foi da Silph, meu filho, a Silph tinha contrato de pesquisa."',
+    '"O material de Cinnabar era de um instituto público. Federal. A propriedade nunca foi da Silph, {meu filho|minha filha}, a Silph tinha contrato de pesquisa."',
     '"E contrato de pesquisa de material biológico de instituto federal tem uma cláusula que eu li quarenta vezes em noventa e sete porque eu sou chato e advogado de ilha não faz nada."',
     '"Que cláusula?"',
     '"Devolução integral do acervo em caso de encerramento do vínculo."',
@@ -1053,7 +1053,7 @@ c14_dentro_da_casa:{
     'A sexta é uma Polaroid tremida de alguma coisa de pé dentro de um tanque, com as duas mãos encostadas no vidro por dentro.',
     'E embaixo dela, colada com fita, uma folha de caderno com quatro palavras:',
     '**"o que eu fiz"**',
-    'Você está sozinho, de madrugada, na casa de um homem que sumiu há quatro anos, e não tem ninguém pra dividir isso.'
+    'Você está sozinh{o|a}, de madrugada, na casa de um homem que sumiu há quatro anos, e não tem ninguém pra dividir isso.'
   ],
   ef:{flag:['entrou_na_casa_do_fuji','viu_a_polaroid'],
       rep:{eixo:'bom',delta:1,motivo:'Entrou pela janela'},
@@ -1304,7 +1304,7 @@ c14_entregar_prado:{
     'Ele para de empilhar.',
     '"As cinco daqui eu entrego na mão dela."',
     '"Você pode ser processado."',
-    '"Eu tenho setenta e dois anos, meu filho, e retenção de acervo público prescreve em cinco anos, e falta um ano e três meses."',
+    '"Eu tenho setenta e dois anos, {meu filho|minha filha}, e retenção de acervo público prescreve em cinco anos, e falta um ano e três meses."',
     'Ele volta a empilhar.',
     '"Eu prefiro entregar antes de prescrever. Prescrever é a Justiça dizendo que não importa mais. E importa."'
   ],
@@ -1432,7 +1432,7 @@ c14_nao_leu:{
   texto:[
     'Você fecha o caderno sem ler.',
     d=>d.flags.conheceu_blaine ? 'Blaine, da porta:\n"Por quê?"\n"Porque você disse que é carta."\nEle fica quieto um tempo bem longo.\n"É."' :
-       'É uma decisão esquisita e você não sabe explicar ela nem pra você mesmo, a não ser assim: aquele caderno estava aberto na mesma página há quatro anos e não era pra você.',
+       'É uma decisão esquisita e você não sabe explicar ela nem pra você mesm{o|a}, a não ser assim: aquele caderno estava aberto na mesma página há quatro anos e não era pra você.',
     'Você sai da sala e apaga a luz.'
   ],
   ef:{flag:'nao_leu_o_sete',
@@ -1478,7 +1478,7 @@ c14_desafio_blaine:{
     '"Regra da casa: se o teu bicho cair e tu quiser continuar, tu continua. Se eu vir que tu tá continuando por teimosia, eu paro a luta."',
     '"E como você sabe a diferença?"',
     'Ele entra na marcação.',
-    '"Setenta e dois anos, meu filho."',
+    '"Setenta e dois anos, {meu filho|minha filha}."',
     'Faz trinta e oito graus e a luz vem do buraco do teto e ninguém tem sombra.'
   ],
   ef:{flag:'vai_lutar_com_blaine'},
@@ -1619,7 +1619,7 @@ c14_as_maos:{
     'Pra dentro.',
     'Quem fez essas marcas estava debruçado sobre o poço, olhando pra baixo, apoiado com as duas mãos.',
     'E o concreto só marca assim com calor muito alto e contato muito curto.',
-    'Você fica agachado ali por um tempo longo, e depois faz a conta que não queria fazer:',
+    'Você fica agachad{o|a} ali por um tempo longo, e depois faz a conta que não queria fazer:',
     'o Dr. Fuji foi ao laboratório na noite do dia duzentos e cinquenta e um pra explicar a alguém o que ele era, e depois abrir o tanque.',
     'E as marcas das mãos dele estão na borda do poço, viradas pra baixo, com o tanque já vazio.',
     'Ele abriu.',
@@ -1705,7 +1705,7 @@ c14_pra_onde_ele_foi:{
     'Ele demora.',
     '"Não."',
     'Ele apoia as duas mãos na bengala.',
-    '"Eu tenho oitenta e um anos, meu filho, e eu vou morrer em uns cinco, e eu vou te contar porque eu não contei pra mais ninguém e tá ficando pesado."',
+    '"Eu tenho oitenta e um anos, {meu filho|minha filha}, e eu vou morrer em uns cinco, e eu vou te contar porque eu não contei pra mais ninguém e tá ficando pesado."',
     '"Tinha uma coisa andando do lado dele."',
     '"Do lado. Não atrás e não na frente. Do lado, no mesmo passo."',
     '"E os dois subiram a estrada da encosta às quatro e dez da manhã e eu fiquei na portaria e não segui."',
@@ -1739,7 +1739,7 @@ c14_correu_pro_blaine:{
     d=>d.flags.subiram_juntos ? '"E o Berto diz que os dois subiram a estrada da encosta."\n"Os dois?"\n"Os dois."\nEle se levanta da cadeira de balanço de uma vez, sem apoiar em nada, o que ele não faz há uns dez anos.' :
        'Ele levanta da cadeira sem apoiar em nada, o que ele não faz há uns dez anos.',
     '"Quarenta anos de ginásio dentro daquele vulcão."',
-    '"Quarenta anos, meu filho, e eu nunca subi até a cratera."'
+    '"Quarenta anos, {meu filho|minha filha}, e eu nunca subi até a cratera."'
   ],
   ef:{flag:['blaine_sabe_da_saida','blaine_vai_subir'],
       npc:{nome:'Blaine', opiniao:10, memoria:'Leu três vezes a linha da saída às 4h10 e levantou da cadeira sem apoiar.'},
@@ -1918,7 +1918,7 @@ c14_leu_pro_blaine:{
     'Blaine olha a mochila.',
     '"A mochila tá aqui."',
     '"Tá."',
-    '"E ele não desceu a estrada, porque se ele descesse a estrada alguém teria visto. Setecentas pessoas, meu filho."',
+    '"E ele não desceu a estrada, porque se ele descesse a estrada alguém teria visto. Setecentas pessoas, {meu filho|minha filha}."',
     'Ele põe os óculos de leitura no bolso da camisa, com muito cuidado.',
     '"Então é isso."',
     'E levanta.',
@@ -1995,7 +1995,7 @@ c14_escola:{
 
 c14_olhar:{
   texto:[
-    'Você fica parado.',
+    'Você fica parad{o|a}.',
     'Onze minutos. Ele fica parado onze minutos.',
     'O calor da cratera passa pelo meio de vocês dois em onda e deforma o ar, e ele fica com as bordas trêmulas, como coisa vista através de fogo de churrasqueira.',
     'Em algum momento você para de achar que está sendo avaliado e começa a achar que está sendo lembrado — como se ele estivesse arquivando o seu rosto pra usar depois.',
@@ -2207,7 +2207,7 @@ c14_selma_contou:{
     '"E depois?"',
     '"E depois pra mais ninguém, porque contar uma coisa dessas duas vezes e ouvir duas vezes que eu vi errado ia ser demais."',
     'Ela pega a xícara de volta e segura com as duas mãos.',
-    '"Você é o segundo."',
+    '"Você é {o segundo|a segunda}."',
     '"Segundo?"',
     '"O primeiro foi o Doutor Bruno, em noventa e sete."',
     'Ela olha a rua.',
