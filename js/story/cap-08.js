@@ -93,7 +93,7 @@ c8_ab_refrigerado:{
     'Nos primeiros quarenta minutos é suportável. Depois da primeira hora, as pontas dos dedos param de ter opinião sobre o que estão segurando.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} passa os quatro turnos do lado de fora do contêiner, sentado na doca, e não sai de lá.`
+      return p ? `${nomeExib(p)} passa os quatro turnos do lado de fora do contêiner, sentad${pron(p).o} na doca, e não sai de lá.`
                : 'Você faz as quatro horas sozinho e não é a pior coisa que já aconteceu essa semana.';
     },
     'No fim, o conferente conta quatrocentos na sua mão em notas usadas e você sai do galpão com o cheiro no cabelo.',
@@ -1101,11 +1101,11 @@ c8_a_caixa_do_menino:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu e explicou por quê.'}}},
     {texto:'Pagar os 400 que ele pediu.', vai:'c8_krabby_barato', cond:d=>d.jogador.dinheiro>=400,
      ef:{dinheiro:-400, rep:{eixo:'ruim',delta:2,motivo:'Levou vantagem sobre uma criança no cais'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:40, historia:'Comprado de uma criança por um sexto do que valia.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:40, historia:'Comprad{o} de uma criança por um sexto do que valia.'}},
          npc:{nome:'Menino do cais', opiniao:0, memoria:'Você comprou o Krabby dele por 400. Ele ficou feliz na hora.'}}},
     {texto:'Explicar o valor e não comprar.', vai:'c8_krabby_licao',
      ef:{rep:{eixo:'bom',delta:2,motivo:'Ensinou em vez de aproveitar'},
@@ -1133,7 +1133,7 @@ c8_porque_vender:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu e explicou por quê.'}}},
     {texto:'"Não compra passagem. Tem gente que embarca de graça e some."', vai:'c8_avisou_o_menino',
      cond:d=>!!d.flags.vagas_de_trabalho},
@@ -1162,7 +1162,7 @@ c8_avisou_o_menino:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}},
     {texto:'Dar oito mil pra ele comprar a passagem. (8.000 ₽)', vai:'c8_pagou_a_passagem_dele',
      cond:d=>d.jogador.dinheiro>=8000},
@@ -1295,7 +1295,7 @@ c8_a_carta_do_denis:{
     {texto:'"Mostra isso pra sua tia."', vai:'c8_mostra_pra_tia'},
     {texto:'Pagar o preço justo pelo Krabby — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}},
     {texto:'Ir pro cais.', vai:'c8_cais'}
   ]
@@ -1321,7 +1321,7 @@ c8_pegou_a_carta:{
     {texto:'Ir pro portão cinco às três e quarenta.', vai:'c8_portao_cinco', cond:d=>!!d.flags.portao_cinco},
     {texto:'Pagar o preço justo pelo Krabby — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}}
   ]
 },
@@ -1345,7 +1345,7 @@ c8_mostra_pra_tia:{
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Pagar o preço justo pelo Krabby — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}}
   ]
 },

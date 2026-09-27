@@ -99,7 +99,7 @@ c13_ab_o_frio:{
     'Na rua, o termômetro da farmácia marca onze graus e tem uma fila na frente da farmácia, e a fila é de gente comprando as mesmas duas coisas: meia e pomada.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está encostado na sua perna, o que ele não faz, e não sai de lá.`
+      return p ? `${nomeExib(p)} está encostad${pron(p).o} na sua perna, o que ${pron(p).ele} não faz, e não sai de lá.`
                : 'Você fica com as mãos nos bolsos e não tira, e é a primeira vez em meses que você faz isso.';
     },
     'A padaria está sem pão porque o padeiro não veio. A escola soltou os alunos. Um homem passa com um ventilador debaixo do braço, indo devolver.',

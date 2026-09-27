@@ -72,7 +72,7 @@ c3_ab_acampou:{
     'Você acorda exatamente nesses quinze segundos, sem saber por quê, e quando o barulho volta você entende que acordou porque ele tinha parado.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está acordado, sentado, olhando pro mato. Não está tenso. Está esperando.`
+      return p ? `${nomeExib(p)} está acordad${pron(p).o}, sentad${pron(p).o}, olhando pro mato. Não está tens${pron(p).o}. Está esperando.`
                : 'Você fica acordado olhando o mato até clarear.';
     },
     'Nada acontece. Amanhece às cinco e meia e a floresta é verde e comum de novo.'
@@ -551,7 +551,7 @@ c3_ficar:{
     'Depois some no mato.',
     'E volta em dez minutos. E te segue.'
   ],
-  ef:{umaVez:'c03_p1', pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você o soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando ele conseguir andar.'}},
+  ef:{umaVez:'c03_p1', pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você {o} soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando {ele} conseguir andar.'}},
       rep:{eixo:'bom',delta:2,motivo:'Esperou o Pokémon ferido se recuperar'},
       flag:'pikachu_aliado', registrar:'O Pikachu libertado passou a te seguir.'},
   escolhas:[{texto:'Seguir com ele.', vai:'c3_caçadores'}]
@@ -591,7 +591,7 @@ c3_capturar:{
     'Foi fácil demais. Isso devia significar alguma coisa e significa.'
   ],
   ef:{executar:d=>{
-        const p = criarPokemon(25, 12, {natureza:'Lonely', moral:15, historia:'Capturado enquanto estava preso e ferido. Não escolheu você.'});
+        const p = criarPokemon(25, 12, {natureza:'Lonely', moral:15, historia:'Capturad{o} enquanto estava pres{o} e ferid{o}. Não escolheu você.'});
         p.status = 'veneno'; p.hp = Math.max(1, Math.floor(p.hpMax*0.3));
         const onde = Estado.adicionar(p);
         Estado.registrar('Capturou o Pikachu enquanto ele estava preso e indefeso.');

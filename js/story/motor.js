@@ -201,15 +201,17 @@ const Historia = {
     if (ef.mataPrimeiro){
       const alvo = Estado.dados.time.find(p => estaVivo(p));
       if (alvo){
-        Estado.matar(alvo, ef.mataPrimeiro);
+        const par = Estado.matar(alvo, ef.mataPrimeiro);
         avisos.push({tipo:'morte', texto:`${nomeExib(alvo)} morreu. ${ef.mataPrimeiro}`});
+        if (par) avisos.push({tipo:'morte', texto:`${nomeExib(par)} fica cheirando o lugar onde ${nomeExib(alvo)} estava e não deixa ninguém chegar perto.`});
       }
     }
     if (ef.mataEscolhido && ef.uidAlvo){
       const alvo = Estado.dados.time.find(p => p.uid === ef.uidAlvo);
       if (alvo){
-        Estado.matar(alvo, ef.mataEscolhido);
+        const par = Estado.matar(alvo, ef.mataEscolhido);
         avisos.push({tipo:'morte', texto:`${nomeExib(alvo)} morreu. ${ef.mataEscolhido}`});
+        if (par) avisos.push({tipo:'morte', texto:`${nomeExib(par)} fica cheirando o lugar onde ${nomeExib(alvo)} estava e não deixa ninguém chegar perto.`});
       }
     }
     if (ef.moral){

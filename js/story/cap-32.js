@@ -412,7 +412,7 @@ c32_o_turno_da_noite:{
     'E, sem nada, dá pra ouvir.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está do seu lado e para de andar antes de você, e vira a cabeça pro galpão, e as orelhas dele fazem uma coisa que você já viu ele fazer duas vezes na vida.`
+      return p ? `${nomeExib(p)} está do seu lado e para de andar antes de você, e vira a cabeça pro galpão, e as orelhas ${pron(p).dele} fazem uma coisa que você já viu ${pron(p).ele} fazer duas vezes na vida.`
                : 'Você para de andar sem decidir parar.';
     },
     'Muita coisa viva no mesmo lugar, abafada por parede de alvenaria e por portão de aço, às onze da noite, numa rua de galpão em Saffron.',

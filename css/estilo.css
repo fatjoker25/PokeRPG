@@ -1623,6 +1623,11 @@ h3.cat-item{
 .dex-ficha .nota.alerta{color:var(--perigo, #ee1515);font-style:normal;font-weight:600}
 .dex-ficha .cat-item .fraco{font-weight:400;font-size:11.5px}
 
+/* ---- sexo: ♂ azul, ♀ vermelho-rosado, as cores dos jogos ---- */
+.sexo-marca{display:inline-block;margin-left:4px;font-size:.92em;line-height:1;font-weight:700}
+.sexo-m{color:#3a78d6}
+.sexo-f{color:#e0457b}
+
 /* ---- brilhantes: a mesma espécie com a cor errada ---- */
 .shiny-marca{
   display:inline-block;margin-left:5px;font-size:.85em;line-height:1;

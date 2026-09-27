@@ -261,6 +261,8 @@ const Captura = {
     const eventos = [];
     const ev = (t, txt) => eventos.push({tipo:t, texto:txt});
     const esp = DEX[p.dex];
+    /* o par fica, e vê o outro ir embora */
+    const par = parDe(p, Estado.dados.time);
     Estado.removerDoTime(p.uid);
     const i = Estado.dados.pc.findIndex(x => x.uid === p.uid);
     if (i >= 0) Estado.dados.pc.splice(i,1);
@@ -285,8 +287,12 @@ const Captura = {
       Estado.registrar(`Soltou ${esp.nome}.`);
       Estado.marcar('soltou_lendario_' + p.dex);
     } else {
-      ev('info', `${nomeExib(p)} foi solto. Ele olha para trás uma vez antes de sumir.`);
+      ev('info', `${nomeExib(p)} foi solt${pron(p).o}. ${pron(p).Ele} olha para trás uma vez antes de sumir.`);
       Estado.registrar(`Soltou ${nomeExib(p)}.`);
+      if (par){
+        par.moral = Math.max(0, (par.moral !== undefined ? par.moral : 70) - 10);
+        ev('info', `${nomeExib(par)} vai atrás até a beira do mato, para, e demora pra voltar pra você.`);
+      }
     }
     return eventos;
   }

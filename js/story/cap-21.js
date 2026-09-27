@@ -586,7 +586,7 @@ c21_acordados_ate_tarde:{
     'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do cachorro do quatorze.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ele sair.`
+      return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ${pron(p).ele} sair.`
                : 'O relógio da parede continua três minutos adiantado. Ninguém nunca acertou.';
     },
     'Você vai lembrar desta cozinha depois, em lugares muito piores do que esta cozinha.'
@@ -604,7 +604,7 @@ c21_dormiu_na_cama:{
     'Você acorda três vezes e na terceira desiste, pega o cobertor e deita no chão do quarto, do lado da mochila.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} deita colado em você e adormece em nove segundos, porque pra ele o chão é o chão em qualquer lugar do mundo.`
+      return p ? `${nomeExib(p)} deita colado em você e adormece em nove segundos, porque pra ${pron(p).ele} o chão é o chão em qualquer lugar do mundo.`
                : 'Você adormece no chão em quatro minutos.';
     },
     'É essa a parte que ninguém te conta: que a estrada entra em você e não sai mais, e que a sua própria cama vira um lugar que você visita.'

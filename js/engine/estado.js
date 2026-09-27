@@ -866,7 +866,9 @@ const Estado = {
     if (i >= 0) return this.dados.time.splice(i,1)[0];
     return null;
   },
+  /* Devolve o par que ficou, se tinha um no time: é ele que sente. */
   matar(p, causa){
+    const par = (typeof parDe === 'function') ? parDe(p, this.dados.time) : null;
     p.morto = true;
     p.hp = 0;
     p.causaMorte = causa;
@@ -874,6 +876,12 @@ const Estado = {
     this.removerDoTime(p.uid);
     this.dados.cemiterio.push(p);
     this.registrar(`${nomeExib(p)} morreu. Causa: ${causa}`);
+    if (par){
+      par.moral = Math.max(0, (par.moral !== undefined ? par.moral : 70) - 20);
+      par.luto = {uid:p.uid, nome:nomeExib(p), cap:this.dados.capitulo};
+      this.registrar(`${nomeExib(par)} perdeu ${nomeExib(p)}.`);
+    }
+    return par;
   },
   timeVivo(){ return this.dados.time.filter(p => estaVivo(p)); },
   primeiroApto(){ return this.dados.time.find(p => estaVivo(p)) || null; },
@@ -934,7 +942,7 @@ const Estado = {
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         p.naturezaVista = true;
         this.registrar(`Natureza de ${nomeExib(p)} percebida: ${p.natureza}.`);
-        avisos.push({tipo:'natureza', texto:`Você convive o bastante com ${nomeExib(p)} pra botar um nome no jeito dele: ${p.natureza}.`});
+        avisos.push({tipo:'natureza', texto:`Você convive o bastante com ${nomeExib(p)} pra botar um nome no jeito ${pron(p).dele}: ${p.natureza}.`});
       }
     });
     return avisos;

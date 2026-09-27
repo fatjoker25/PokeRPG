@@ -706,7 +706,7 @@ c1e_ficou_na_praca:{
     'O motor faz um barulho que não é de carro novo, e o barulho continua audível uns quinze segundos depois de o carro sumir.',
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
-      return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ele faz por conta própria.`
+      return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ${pron(p).ele} faz por conta própria.`
                : 'Ele sobe no banco do seu lado sem pedir licença.';
     },
     'A cidade começa a acordar em volta: a padaria abre, um cachorro late, alguém arrasta uma cadeira num quintal.',

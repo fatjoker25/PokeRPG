@@ -26,7 +26,7 @@ c28_ab_a_boca:{
     'Esta não empurra nada.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está atrás de você, a uns quatro metros, e não vai chegar mais perto. Não é medo: é a distância que ele escolheu, e ele vai manter essa distância a descida inteira.`
+      return p ? `${nomeExib(p)} está atrás de você, a uns quatro metros, e não vai chegar mais perto. Não é medo: é a distância que ${pron(p).ele} escolheu, e ${pron(p).ele} vai manter essa distância a descida inteira.`
                : 'Você está sozinho na boca de uma coisa que não respira.';
     },
     'Você entra.'

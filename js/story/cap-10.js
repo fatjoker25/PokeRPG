@@ -1698,7 +1698,7 @@ c10_conversa_longa:{
         return [{tipo:'mundo', texto:'Você passou uma noite conversando com uma Ave Lendária e não capturou nada.'}]; },
       rep:{eixo:'bom',delta:4,motivo:'Passou a noite inteira falando com quem ninguém falou'},
       moral:20, hp:-4, causa:'Uma noite inteira acordado no concreto',
-      umaVez:'c10_p1', pokemon:{dex:81, nivel:30, opcoes:{moral:45, historia:'Ficou depois que os outros foram embora. Foi o único que não voltou pro canto dele.'}},
+      umaVez:'c10_p1', pokemon:{dex:81, nivel:30, opcoes:{moral:45, historia:'Ficou depois que os outros foram embora. Foi {o} únic{o} que não voltou pro canto {dele}.'}},
       registrar:'Passou a noite conversando no galpão. Um Magnemite ficou.',
       presagio:'Um ficou. Ninguém te deu ele — ele ficou.'},
   escolhas:[
@@ -1750,9 +1750,9 @@ c10_coleta:{
         const avisos=[];
         for (let i=0;i<2;i++){
           const p = criarPokemon(Dados.escolher([100,81]), Dados.entre(28,34),
-            {moral:10, historia:'Recolhido do chão da usina enquanto olhava para Zapdos.'});
+            {moral:10, historia:'Recolhid{o} do chão da usina enquanto olhava para Zapdos.'});
           const onde = Estado.adicionar(p);
-          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhido. Ele não resistiu, o que é pior.${notaDestino(onde)}`});
+          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhid${pron(p).o}. ${pron(p).Ele} não resistiu, o que é pior.${notaDestino(onde)}`});
         }
         const L=Estado.lend(145); L.disposicao='hostil';
         avisos.push({tipo:'perigo', texto:'Zapdos parou de carregar. Ela te viu fazer isso.'});

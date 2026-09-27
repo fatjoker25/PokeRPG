@@ -23,6 +23,10 @@ const C1 = {
     const p = todos.find(x => x.uid === b.capturado) || (d.time || []).slice(-1)[0];
     return p ? nomeExib(p) : 'o que estava no capim';
   },
+  pegoP(d){
+    const b = this.briga(d), todos = [...(d.time || []), ...(d.pc || [])];
+    return todos.find(x => x.uid === b.capturado) || (d.time || []).slice(-1)[0] || null;
+  },
   /* Nome só se a Pokédex já registrou: o jogador não sabe o que era. */
   oOutro(d, maiuscula){
     const b = this.briga(d);
@@ -70,7 +74,7 @@ c1_acorda:{
       if (!p) return d.flags.espera_o_professor
         ? 'Você está sozinho no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com a bola.'
         : 'Você está sozinho no quarto, o que não era o plano.';
-      return `${nomeExib(p)} está aos pés da cama, acordado antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
+      return `${nomeExib(p)} está aos pés da cama, acordad${pron(p).o} antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },
     'Lá embaixo a panela bate na pia, o rádio toca baixo, e a voz que atravessa o assoalho é a mesma de todos os dias da sua vida.',
     d=>fala(nomeCasa(), `${d.jogador.nome.toUpperCase()}! Se o café esfriar eu não esquento de novo, e dessa vez eu falo sério!`, 'grita'),
@@ -78,7 +82,7 @@ c1_acorda:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Você tem quinze anos e hoje é o dia.';
-      return `${nomeExib(p)} levanta de uma vez, vai até a porta, volta, vai de novo. Ele entendeu antes de você que hoje é o dia.`;
+      return `${nomeExib(p)} levanta de uma vez, vai até a porta, volta, vai de novo. ${pron(p).Ele} entendeu antes de você que hoje é o dia.`;
     }
   ],
   escolhas:[
@@ -98,7 +102,7 @@ c1_chuva:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A mochila está no chão, arrumada desde ontem, encostada na parede que dá pro lado da chuva.';
-      return `${nomeExib(p)} está sentado na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
+      return `${nomeExib(p)} está sentad${pron(p).o} na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
     },
     'Lá embaixo a porta dos fundos abre e fecha duas vezes seguidas, que é o barulho de alguém decidindo se ainda vale a pena salvar a roupa do varal.',
     d=>fala(nomeCasa(), 'Chuva de março não dura! Isso aí limpa até as dez!', 'grita',
@@ -137,7 +141,7 @@ c1_janela_chuva:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A água desce no vidro em linhas que se encontram e viram uma linha só. Dá pra ficar olhando isso por muito tempo.';
-      return `${nomeExib(p)} não desgruda do vidro. De vez em quando ele encosta o focinho e o vidro embaça e ele tira, e o embaçado some, e ele encosta de novo.`;
+      return `${nomeExib(p)} não desgruda do vidro. De vez em quando ${pron(p).ele} encosta o focinho e o vidro embaça e ${pron(p).ele} tira, e o embaçado some, e ${pron(p).ele} encosta de novo.`;
     },
     'Duas gotas que descem separadas se encontram no meio do vidro e viram uma gota só, mais rápida, e chegam embaixo antes de todas as outras.',
     'Você fica uns bons dez minutos nisso e depois percebe que está adiando.'
@@ -157,7 +161,7 @@ c1_dormiu_demais:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A casa está silenciosa de um jeito que casa com gente dentro nunca fica.';
-      return `${nomeExib(p)} está acordado há horas, sentado ao lado da mochila, com a paciência de quem não tem relógio e não precisa de um.`;
+      return `${nomeExib(p)} está acordad${pron(p).o} há horas, sentad${pron(p).o} ao lado da mochila, com a paciência de quem não tem relógio e não precisa de um.`;
     },
     'Lá embaixo não tem barulho de panela, nem rádio, nem ninguém. A casa está do tamanho errado.',
     'Na mesa da cozinha, um prato com um pano por cima e um papel dobrado ao lado.'
@@ -247,7 +251,7 @@ c1_nao_dormiu:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Às quatro e meia passou um caminhão na estrada, e depois não passou mais nada.';
-      return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordado também. Não fez nada. Só ficou.`;
+      return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordad${pron(p).o} também. Não fez nada. Só ficou.`;
     },
     'Às seis e dez o Dodrio do vizinho grita as três cabeças ao mesmo tempo, como faz todo dia, e como todo dia ele erra a hora.',
     'Você senta na cama. Está cansado de um jeito que não vai passar com sono.'
@@ -336,7 +340,7 @@ c1_foi_sem_despedir:{
     'É mais fácil. É muito mais fácil, e é por isso que tanta gente faz assim.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ele pelo ombro sem falar nada.`
+      return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ${pron(p).ele} pelo ombro sem falar nada.`
                : 'Você olha pra trás uma vez, na placa, e depois não olha mais.';
     },
     'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
@@ -365,7 +369,7 @@ c1_no_telhado:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A telha esquenta com o corpo da gente e depois esfria de novo quando a gente muda de posição, e a noite inteira é isso.';
-      return `${nomeExib(p)} subiu junto, do jeito desengonçado de sempre, e dormiu encaixado entre você e a chaminé que não funciona.`;
+      return `${nomeExib(p)} subiu junto, do jeito desengonçado de sempre, e dormiu encaixad${pron(p).o} entre você e a chaminé que não funciona.`;
     },
     'Do telhado, às cinco e quarenta, dá pra ver a luz da cozinha acender antes de todas as outras da rua.',
     'É a sua casa acordando, e você está em cima dela, e é a última vez que essas duas coisas vão ser verdade ao mesmo tempo por muito tempo.'
@@ -479,9 +483,9 @@ c1_ficou_com_ele:{
         const especies = [19, 16, 10, 13, 21, 41, 52];       // os que vivem debaixo de carro
         const dex = Dados.escolher(especies);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:40});
-        p.historia = 'Passou a noite embaixo do carro da Sra. Perla. Já tinha sido devolvido antes.';
+        p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Já tinha sido devolvid{o} antes.', p);
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ${pron(p).ele} ainda não confia em ninguém.${notaDestino(onde)}`}];
       },
       registrar:'Ficou com o Pokémon da caixa.'},
   escolhas:[
@@ -571,7 +575,7 @@ c1_apagao:{
     d=>{
       const p = d.time[0];
       if (!p) return 'No escuro, a sua mochila está exatamente onde você deixou, o que é a única coisa confiável desta manhã.';
-      return `${nomeExib(p)} está em pé no meio do quarto, tenso, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
+      return `${nomeExib(p)} está em pé no meio do quarto, tens${pron(p).o}, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
     },
     d=>fala(nomeCasa(), 'É a rua toda! Não mexe no disjuntor que não é o disjuntor!', 'grita',
             'A voz vem lá de baixo, no escuro, com uma certeza que só quem já passou por isso tem.'),
@@ -782,7 +786,7 @@ c1_quintal:{
     'Você sai pelos fundos e senta no degrau do quintal, e a cozinha continua barulhenta do outro lado da porta, sem sentir a sua falta ainda.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} aparece trinta segundos depois, porque ele sempre aparece trinta segundos depois, e senta encostado na sua perna.`
+      return p ? `${nomeExib(p)} aparece trinta segundos depois, porque ${pron(p).ele} sempre aparece trinta segundos depois, e senta encostad${pron(p).o} na sua perna.`
                : 'O quintal tem uma corda de varal, um balde e um pé de alguma coisa que nunca deu fruta.';
     },
     'Dá pra ouvir a sua casa inteira rindo de uma coisa que você não ouviu.',
@@ -960,7 +964,7 @@ c1_esperou_ele:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Ninguém volta, porque não tinha ninguém pra voltar.';
-      return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquilo, como quem foi dar uma volta.`;
+      return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquil${pron(p).o}, como quem foi dar uma volta.`;
     },
     'Você não briga. Você não chega nem a levantar.',
     d=>fala(nomeCasa(), 'Esperar é a parte que ninguém conta que é a mais difícil.', 'baixo',
@@ -1032,7 +1036,7 @@ c1_cinco_minutos:{
     d=>{
       const p = d.time[0];
       if (!p) return 'O teto do quarto tem uma rachadura que você conhece melhor que o próprio rosto.';
-      return `${nomeExib(p)} sobe na cama, o que ele quase nunca faz, e se encaixa do seu lado num espaço que claramente não existe. Ele fica assim mesmo.`;
+      return `${nomeExib(p)} sobe na cama, o que ${pron(p).ele} quase nunca faz, e se encaixa do seu lado num espaço que claramente não existe. ${pron(p).Ele} fica assim mesmo.`;
     },
     'O teto tem uma rachadura em forma de rio que você olha desde os seis anos e que hoje você vai olhar pela última vez de dentro desta cama.',
     'Você não chora. Chega bem perto.'
@@ -1303,7 +1307,7 @@ c1_mudou_de_ideia_no_balcao:{
         Estado.usarItem('Caixa de ventilador com um bicho dentro');
         const dex = Dados.escolher([19, 16, 10, 13, 21, 41, 52]);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:45});
-        p.historia = 'Passou a noite embaixo do carro da Sra. Perla. Você deixou ele no balcão e voltou em quarenta segundos.';
+        p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Você deixou {ele} no balcão e voltou em quarenta segundos.', p);
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) é seu.${notaDestino(onde)}`}];
       },
@@ -1509,7 +1513,7 @@ c1_fila:{
     fala('a enfermeira', 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
     d=>{
       const p = d.time[0];
-      return p ? `Você coloca ${nomeExib(p)} na bancada. Ele não gosta da bancada. Fica quieto assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
+      return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
     fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
@@ -1715,10 +1719,10 @@ c1_fim_venceu:{
       const n = nomeExib(p);
       if (b.hpAliado >= 0.7) return C1.qual(d, [
         `${n} volta sem um arranhão e fareja o lugar onde ${C1.oOutro(d)} estava, pra conferir que foi mesmo.`,
-        `${n} fica encarando o buraco no mato, ainda armado, até entender que não vem mais ninguém.`
+        `${n} fica encarando o buraco no mato, ainda armad${pron(p).o}, até entender que não vem mais ninguém.`
       ]);
       if (b.hpAliado >= 0.3) return C1.qual(d, [
-        `${n} tem capim grudado no corpo e está poupando um lado ao pisar. Você se agacha e passa a mão devagar. Ele deixa.`,
+        `${n} tem capim grudado no corpo e está poupando um lado ao pisar. Você se agacha e passa a mão devagar. ${pron(p).Ele} deixa.`,
         `${n} senta, lambe um arranhão e olha pra você como quem pergunta se é sempre assim. Você não sabe.`
       ]);
       return C1.qual(d, [
@@ -1751,11 +1755,11 @@ c1_fim_pegou:{
         `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra bola.`
       ]);
     },
-    d=>d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora ele é seu. Ele não assinou nada.' : 'Não tem papel nenhum dizendo que ele é seu. Por enquanto, é só a bola na sua mão.',
+    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora {ele} é seu. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} é seu. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
     d=>{
       const b = C1.briga(d), p = C1.meu(d);
       if (!p) return 'Você guarda a bola no cinto e ela pesa mais do que as vazias.';
-      if (p.hp <= 0 || b.hpAliado <= 0) return `E ${nomeExib(p)} viu tudo deitado no capim, desmaiado atrás de você. Foi você quem terminou a briga. Você não sabe ainda se isso é bom.`;
+      if (p.hp <= 0 || b.hpAliado <= 0) return `E ${nomeExib(p)} viu tudo deitad${pron(p).o} no capim, desmaiad${pron(p).o} atrás de você. Foi você quem terminou a briga. Você não sabe ainda se isso é bom.`;
       return C1.qual(d, [
         `${nomeExib(p)} chega perto da bola e cheira. Eram dois há uma hora. Agora são três, e ninguém perguntou nada pra ninguém.`,
         `${nomeExib(p)} fica olhando pra bola no seu cinto com uma cara que você ainda não aprendeu a ler.`
@@ -1780,12 +1784,12 @@ c1_fim_perdeu:{
       const p = C1.meu(d);
       if (!p) return 'Você fica ali parado, sozinho no mato, com as mãos vazias.';
       return C1.qual(d, [
-        `${nomeExib(p)} está caído de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
+        `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
         `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhado. Está respirando. É a primeira coisa que você confere e a única que importa.`
       ]);
     },
     'Ninguém viu. Você repara que isso não ajuda em nada.',
-    d=>C1.meu(d) ? 'Você fica sentado com ele até ele abrir o olho. Leva um tempo. Você não sai dali antes.' : 'Depois de um tempo, você levanta.',
+    d=>C1.meu(d) ? concordar('Você fica sentado com {ele} até {ele} abrir o olho. Leva um tempo. Você não sai dali antes.', C1.meu(d)) : 'Depois de um tempo, você levanta.',
     d=>C1.estrada(d)
   ],
   fim:true, resumo:'A primeira briga acabou com o seu Pokémon no colo e o capim quieto.'
@@ -1811,10 +1815,10 @@ c1_fim_fugiu:{
     d=>{
       const p = C1.meu(d);
       if (!p) return 'Você recupera o fôlego apoiado no joelho.';
-      if (p.hp <= 0) return `${nomeExib(p)} ainda não acordou. Você ajeita ele no colo e anda mais devagar.`;
+      if (p.hp <= 0) return `${nomeExib(p)} ainda não acordou. Você ajeita ${pron(p).ele} no colo e anda mais devagar.`;
       return C1.qual(d, [
         `${nomeExib(p)} olha pra trás, pro mato, e depois pra você. Você não sabe se é alívio ou vontade de ter ficado.`,
-        `${nomeExib(p)} está inteiro. Você também. Por hoje você resolve que isso conta.`
+        `${nomeExib(p)} está inteir${pron(p).o}. Você também. Por hoje você resolve que isso conta.`
       ]);
     },
     d=>C1.estrada(d)

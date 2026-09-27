@@ -2634,7 +2634,7 @@ c9_consignou:{
   ef:{dinheiro:-12000, flag:['consignou_o_41','salvou_o_41'],
       itens:{'Recibo de consignação':1},
       rep:{eixo:'bom',delta:3,motivo:'Usou o sistema contra ele mesmo e pagou do próprio bolso'},
-      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:30, historia:'Lote 41. Você pagou doze mil numa sala de cassino para ele não ser vendido.'}},
+      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:30, historia:'Lote 41. Você pagou doze mil numa sala de cassino para {ele} não ser vendid{o}.'}},
       npc:{nome:'Auditora Brill', opiniao:4, memoria:'Você consignou doze mil do próprio bolso pelo lote 41.'},
       registrar:'Consignou 12.000 ₽ e tirou o lote 41 do leilão.',
       presagio:'Um de quarenta e um. Essa fração vai te perseguir.'},
@@ -2845,7 +2845,7 @@ c9_so_o_41:{
   ],
   ef:{flag:['tirou_o_41','salvou_o_41'],
       rep:{eixo:'bom',delta:2,motivo:'Tirou um do armazém com as próprias mãos'},
-      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:25, historia:'Processo 44.207. Você abriu a gaiola dele às onze e quarenta da noite e carregou ele os últimos vinte metros.'}},
+      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:25, historia:'Processo 44.207. Você abriu a gaiola {dele} às onze e quarenta da noite e carregou {ele} os últimos vinte metros.'}},
       moral:-5, instabilidade:1,
       registrar:'Tirou o Growlithe do processo 44.207 do armazém. Os outros quarenta ficaram.',
       presagio:'Quarenta ficaram. Essa é a conta que você vai refazer a vida inteira.'},
@@ -3001,7 +3001,7 @@ c9_comprou_um:{
       umaVez:'c09_p2',
       executar:d=>{
         const p = criarPokemon(Dados.escolher([123,127,113,115,131,143,137,142]), Dados.entre(26,34),
-          {moral:20, historia:'Comprado numa gaiola de armazém em Celadon, com nota fiscal. Tinha um número colado na bola.'});
+          {moral:20, historia:'Comprad{o} numa gaiola de armazém em Celadon, com nota fiscal. Tinha um número colado na bola.'});
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) saiu do armazém. Os outros quarenta não.${notaDestino(onde)}`}];
       },
@@ -3074,7 +3074,7 @@ c9_carregou_seis:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou até o fim, carregando quem não podia andar'},
       hp:-5, causa:'Exaustão em Celadon',
       flag:'carregou_os_seis',
-      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você o carregou numa manta de mudança, sozinho, às duas da manhã em Celadon.'}},
+      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você {o} carregou numa manta de mudança, sozinho, às duas da manhã em Celadon.'}},
       registrar:'Carregou os seis que não andavam. A polícia te encontrou no meio-fio.',
       presagio:'"Aconteceu isso aí." Ele viu as plaquetas e não fez nenhuma pergunta sobre elas.'},
   escolhas:[

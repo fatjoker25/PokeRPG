@@ -1409,7 +1409,7 @@ const Jogo = {
     const nivel = Math.max(3, (saiu ? saiu.nivel : 8) + Dados.entre(-4, 7));
     const recebido = criarPokemon(dex, nivel, {
       moral:35,
-      historia:'Recebido numa troca. Teve outro treinador antes de você.'
+      historia:'Recebid{o} numa troca. Teve outro treinador antes de você.'
     });
     Estado.adicionar(recebido);
     Estado.registrar(`Trocou ${saiu ? nomeExib(saiu) : '?'} por ${recebido.nome} Nv${recebido.nivel}.`);

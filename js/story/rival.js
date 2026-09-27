@@ -190,7 +190,7 @@ function falaRival(){
   if (arco === 'parceiro'){
     L.push('"EI!" Ezra atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome numa parada e eu gritei no meio do Centro Pokémon."');
     if (d.insignias.length) L.push(`"${d.insignias.filter(i=>i!=='Título de Campeão').length} insígnias. ${d.insignias.length>4?'CARA.':'Já?'}"`);
-    if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube do ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
+    if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube ${pron(d.cemiterio[0]).do} ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
     L.push(placar === 'perdendo'
       ? '"Eu perdi as últimas. Eu sei. Mas eu vim de novo, e eu vou vir de novo depois dessa."'
       : '"Bora? Bora. Eu tô pronto dessa vez, eu treinei de verdade."');

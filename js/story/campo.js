@@ -154,7 +154,7 @@ c7_o_subsolo:{
       const l = Campo.iluminar();
       if (!l.pode) return 'E escuro. Escuro de verdade: você desce quatro degraus, olha pra trás, e a porta lá em cima já é só um retângulo cinza. Sem luz nenhuma, descer isso é besteira, e você sabe.';
       return l.semPilha
-        ? `E escuro — mas ${nomeExib(l.quem)} desce na sua frente e a luz dele não pisca, não esquenta e não acaba, e isso muda completamente o que dá pra fazer aqui embaixo.`
+        ? `E escuro — mas ${nomeExib(l.quem)} desce na sua frente e a luz ${pron(l.quem).dele} não pisca, não esquenta e não acaba, e isso muda completamente o que dá pra fazer aqui embaixo.`
         : 'E escuro. A lanterna dá conta, com a luz amarelada de pilha meio gasta que ilumina três metros e faz o resto parecer mais fundo do que é.';
     }
   ],
@@ -175,7 +175,7 @@ c7_ossario:{
     d=>{
       const l = Campo.iluminar();
       return l.semPilha
-        ? `${nomeExib(l.quem)} para no meio da sala e a luz dele bate uniforme nas paredes, e é aí que você vê o que a lanterna não mostraria: a abóbada inteira é escrita.`
+        ? `${nomeExib(l.quem)} para no meio da sala e a luz ${pron(l.quem).dele} bate uniforme nas paredes, e é aí que você vê o que a lanterna não mostraria: a abóbada inteira é escrita.`
         : 'Você varre a parede com a lanterna em trechos de três metros e leva vinte minutos pra entender o que está vendo: a abóbada inteira é escrita.';
     },
     'Nomes. Riscados na pedra com prego, uns por cima dos outros, em camadas, séculos de gente entrando aqui e escrevendo o nome de quem enterrou.',

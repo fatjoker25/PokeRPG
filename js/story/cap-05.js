@@ -89,7 +89,7 @@ c5_ab_luto:{
     'A boca do Monte da Lua é mais baixa do que você imaginava — você tem que abaixar a cabeça pra entrar, e hoje abaixar a cabeça custa mais do que devia.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} para antes de você, na entrada, e espera. Não entra sozinho. Espera.`
+      return p ? `${nomeExib(p)} para antes de você, na entrada, e espera. Não entra sozinh${pron(p).o}. Espera.`
                : 'Você para na entrada e o vento morno que sai da caverna bate na sua cara como se estivesse te esperando.';
     },
     'Do lado de dentro o ar sai morno, o que é o contrário do que uma caverna devia fazer, e hoje você não tem paciência nenhuma pra coisas que fazem o contrário do que deviam.'

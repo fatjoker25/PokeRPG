@@ -2327,7 +2327,7 @@ c11_tirou_os_sete:{
       rep:{eixo:'bom',delta:4,motivo:'Não foi embora até os sete estarem na rua'},
       moral:15, hp:-3, causa:'Uma hora empurrando Ditto sedado',
       npc:{nome:'Funcionário da doca', opiniao:3, memoria:'Abriu o portão de pedestre para os sete Dittos saírem, e não disse nada.'},
-      umaVez:'c10-11_p1', pokemon:{dex:132, nivel:30, opcoes:{moral:40, historia:'Foi o único dos sete que não foi embora. Ficou na calçada esperando você terminar.'}},
+      umaVez:'c10-11_p1', pokemon:{dex:132, nivel:30, opcoes:{moral:40, historia:'Foi {o} únic{o} dos sete que não foi embora. Ficou na calçada esperando você terminar.'}},
       registrar:'Tirou os sete Dittos da doca. Um funcionário segurou o portão.',
       presagio:'Ele só abriu. Às vezes é isso que as pessoas conseguem fazer, e às vezes é o suficiente.'},
   escolhas:[

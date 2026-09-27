@@ -198,7 +198,7 @@ c29_bateu:{
     fala('Dario', 'Bicho, moço. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está do seu lado e ele olha pro ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
+      return p ? `${nomeExib(p)} está do seu lado e ele olha ${pron(p).pro} ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
                : 'Ele olha pros seus ombros procurando uma bola no cinto e não acha.';
     },
     fala('Dario', 'Tabela tá na parede. Entra ou não entra, mas decide aí que tá frio.')

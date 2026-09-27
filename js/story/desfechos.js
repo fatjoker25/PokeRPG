@@ -338,7 +338,7 @@ c21_ficar_de_vez:{
     'Não é preguiça. Você já arrumou e desarrumou ela duas vezes essa semana.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} dorme no tapete do corredor, que é um lugar que ele escolheu sozinho no segundo dia e do qual ele não saiu mais.`
+      return p ? `${nomeExib(p)} dorme no tapete do corredor, que é um lugar que ${pron(p).ele} escolheu sozinh${pron(p).o} no segundo dia e do qual ${pron(p).ele} não saiu mais.`
                : 'A casa tem um barulho de fundo que você tinha esquecido: geladeira, rua, alguém na cozinha.';
     },
     d=>fala(nomeCasa(), 'Você vai voltar quando?'),
@@ -372,7 +372,7 @@ c21_fim_ficou:{
     'As oito insígnias ficam na caixa de sapato. Você tira uma vez, no primeiro ano, pra mostrar pra alguém, e depois não tira mais — não por vergonha, por falta de ocasião.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar dele.`
+      return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar ${pron(p).dele}.`
                : 'O time envelhece com você, no quintal, e isso é uma frase que você não teria entendido aos quinze.';
     },
     'A parte que ninguém te avisa é esta: o que você viu não sai de você por ficar parado.',

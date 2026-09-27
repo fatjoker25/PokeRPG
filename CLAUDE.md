@@ -286,6 +286,30 @@ na mochila, como o Town Map dos jogos — ou, sem ele, pela parede do Centro
 Pokémon de qualquer cidade que tenha um (`Exploracao.temCentro`). O `town-map.png` do roteiro é o
 ícone do item, não um mapa.
 
+## Sexo do Pokémon
+Todo Pokémon ganha `genero` (`'m'`, `'f'` ou `null`) no `criarPokemon`,
+na proporção dos jogos (`chanceDeMacho`, em `js/engine/pokemon.js`). Save
+antigo sem o campo sorteia na primeira pergunta — por isso **leia sempre
+por `generoDe(p)`**, nunca `p.genero` direto.
+
+Sexo não mexe em atributo nem em temperamento: o temperamento é a
+natureza, e amarrar comportamento a sexo seria inventar estereótipo. O
+que ele muda é o **par** (mesma linha de evolução, sexos opostos, no
+mesmo time — `parDe`, `paresDoTime`): obediência, a luta quando o par
+cai, o luto quando o par morre (`Estado.matar` devolve o par) e a
+soltura. E muda como a história fala do bicho.
+
+**Texto que fala de Pokémon do jogador concorda com ele.** Nada de
+`ele`, `dele`, `sentado`, `confuso` fixo depois de `nomeExib(p)`:
+- em template, `pron(p)` dá `ele/ela`, `Ele/Ela`, `dele/dela`, `o/a`
+  (terminação), `do/da`, `pro/pra`: `` `${n} está sentad${pron(p).o}` ``;
+- em texto escrito antes de o bicho existir (a `historia` que a cena
+  passa pro `criarPokemon`), use as marcas `{o}`, `{ele}`, `{dele}`…,
+  que o `concordar()` resolve quando o sexo é sorteado.
+Sem sexo fica no masculino, que é o gênero da palavra "Pokémon". Selvagem
+que o texto chama de "o bicho" ou "o Rattata" também: concorda com o
+substantivo, não com o sexo.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.

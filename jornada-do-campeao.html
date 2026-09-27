@@ -1632,6 +1632,11 @@ h3.cat-item{
 .dex-ficha .nota.alerta{color:var(--perigo, #ee1515);font-style:normal;font-weight:600}
 .dex-ficha .cat-item .fraco{font-weight:400;font-size:11.5px}
 
+/* ---- sexo: ♂ azul, ♀ vermelho-rosado, as cores dos jogos ---- */
+.sexo-marca{display:inline-block;margin-left:4px;font-size:.92em;line-height:1;font-weight:700}
+.sexo-m{color:#3a78d6}
+.sexo-f{color:#e0457b}
+
 /* ---- brilhantes: a mesma espécie com a cor errada ---- */
 .shiny-marca{
   display:inline-block;margin-left:5px;font-size:.85em;line-height:1;
@@ -6197,6 +6202,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
   const shiny = (opcoes.shiny !== undefined) ? !!opcoes.shiny : rolarShiny();
   const ivs = opcoes.ivs || ivsAleatorios();
   const stats = calcularStats(esp.base, nivel, ivs, natureza);
+  const genero = opcoes.genero !== undefined ? opcoes.genero : sortearGenero(dexId);
   return {
     uid: 'p' + (_uidPokemon++) + '_' + Date.now().toString(36),
     dex: dexId,
@@ -6219,12 +6225,13 @@ function criarPokemon(dexId, nivel, opcoes={}){
     shiny,
     selvagem: !!opcoes.selvagem,
     morto: false,
-    historia: opcoes.historia || null,
+    historia: opcoes.historia ? concordar(opcoes.historia, genero) : null,
     capturadoEm: opcoes.capturadoEm || null,
     segurando: opcoes.segurando || null,   // item segurado
     faixaUsada: false,                     // Faixa Firme já salvou nesta batalha?
     convivencia: 0,                        // combates junto — leva à leitura da natureza
-    naturezaVista: !!opcoes.naturezaVista  // você sabe qual é o jeito dele?
+    naturezaVista: !!opcoes.naturezaVista, // você sabe qual é o jeito dele?
+    genero                                 // 'm' | 'f' | null
   };
 }
 
@@ -6258,21 +6265,113 @@ function naturezaVisivel(p){
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
-/* Sexo, que só o Attract pergunta. Sem sexo, só macho e só fêmea são os
-   dos jogos; nos outros, a proporção deles (a maioria é meio a meio, os
-   iniciais e os fósseis são 7 machos pra cada fêmea). Sorteado uma vez
-   e guardado no Pokémon. */
+/* ---------- SEXO ----------
+   A proporção é a dos jogos. Sem sexo, só macho e só fêmea são os de
+   Gold/Silver; os iniciais, os fósseis, Eevee e Togepi nascem 7 machos
+   pra cada fêmea; Growlithe, Abra, Machop e os bebês de fogo e raio são
+   3 pra 1; Clefairy, Vulpix, Jigglypuff e Snubbull são 1 pra 3. O resto
+   é meio a meio. Sorteado quando o Pokémon nasce e guardado nele.
+
+   Sexo não mexe em atributo nem em jeito — o jeito é a natureza. O que
+   ele muda é com quem o bicho se importa (o par, logo abaixo), o
+   Attract, e como a história fala dele. */
 const SEM_SEXO = new Set([81,82,100,101,120,121,132,137,144,145,146,150,151,201,233,243,244,245,249,250,251]);
 const SO_MACHO = new Set([32,33,34,106,107,128,236,237]);
 const SO_FEMEA = new Set([29,30,31,113,115,124,238,241,242]);
 const QUASE_MACHO = new Set([1,2,3,4,5,6,7,8,9,133,134,135,136,138,139,140,141,142,143,152,153,154,155,156,157,158,159,160,175,176,196,197]);
+const TRES_MACHOS = new Set([58,59,63,64,65,66,67,68,125,126,239,240]);
+const TRES_FEMEAS = new Set([35,36,37,38,39,40,173,174,209,210]);
+
+/* Chance de nascer macho, de 0 a 1. null = a espécie não tem sexo. */
+function chanceDeMacho(dex){
+  if (SEM_SEXO.has(dex)) return null;
+  if (SO_MACHO.has(dex)) return 1;
+  if (SO_FEMEA.has(dex)) return 0;
+  if (QUASE_MACHO.has(dex)) return 0.875;
+  if (TRES_MACHOS.has(dex)) return 0.75;
+  if (TRES_FEMEAS.has(dex)) return 0.25;
+  return 0.5;
+}
+function sortearGenero(dex){
+  const c = chanceDeMacho(dex);
+  if (c === null) return null;
+  return Math.random() < c ? 'm' : 'f';
+}
+/* Save antigo não tem o campo: sorteia na primeira vez que alguém pergunta. */
 function generoDe(p){
   if (!p) return null;
-  if (p.genero !== undefined) return p.genero;
-  const d = p.dex;
-  p.genero = SEM_SEXO.has(d) ? null : SO_MACHO.has(d) ? 'm' : SO_FEMEA.has(d) ? 'f'
-           : (Math.random() < (QUASE_MACHO.has(d) ? 0.875 : 0.5) ? 'm' : 'f');
+  if (p.genero === undefined) p.genero = sortearGenero(p.dex);
   return p.genero;
+}
+/* Como a Pokédex escreve a proporção da espécie. */
+function proporcaoGenero(dex){
+  const c = chanceDeMacho(dex);
+  if (c === null) return 'sem sexo';
+  if (c === 1) return 'só machos';
+  if (c === 0) return 'só fêmeas';
+  if (c === 0.5) return 'meio a meio';
+  if (c === 0.875) return '7 machos pra 1 fêmea';
+  if (c === 0.75) return '3 machos pra 1 fêmea';
+  return '1 macho pra 3 fêmeas';
+}
+function simboloGenero(p){
+  const g = generoDe(p);
+  return g === 'm' ? '♂' : g === 'f' ? '♀' : '';
+}
+
+/* Os pronomes dele. Quem não tem sexo fica no masculino, que é o
+   gênero da palavra "Pokémon" — o jeito como qualquer um falaria.
+   Uso: const g = pron(p); `${g.Ele} está sentad${g.o}`. */
+function pron(p){
+  const f = generoDe(p) === 'f';
+  return f
+    ? {ele:'ela', Ele:'Ela', dele:'dela', nele:'nela', o:'a', um:'uma', do:'da', ao:'à', pro:'pra', f:true}
+    : {ele:'ele', Ele:'Ele', dele:'dele', nele:'nele', o:'o', um:'um', do:'do', ao:'ao', pro:'pro', f:false};
+}
+
+/* Texto escrito antes de saber o sexo: {o}, {ele}, {Ele}, {dele}, {um}
+   viram a forma certa. Serve pra história de origem que o roteiro
+   passa pro criarPokemon ("Comprad{o} de um menino…"). Aceita o
+   Pokémon ou só o sexo. */
+function concordar(txt, quem){
+  if (typeof txt !== 'string') return txt;
+  const g = (quem && typeof quem === 'object') ? pron(quem) : pron({genero: quem || null});
+  return txt.replace(/\{(o|ele|Ele|dele|nele|um|do|ao|pro)\}/g, (_, k) => g[k]);
+}
+
+/* ---------- O PAR ----------
+   Dois do mesmo grupo (a mesma linha de evolução, com os dois Nidoran
+   contando como um grupo só), de sexo oposto, no mesmo time. Sem
+   sexo não forma par. Cada um tem no máximo um par: o primeiro que
+   aparecer na ordem do time. */
+/* O bebê de Johto não é forma anterior no DEX (quebraria o piso de
+   nível do adulto), então a ponte até a linha de Kanto vem daqui. */
+const BEBE_DE = {172:25, 173:35, 174:39, 238:124, 239:125, 240:126};
+function raizDaLinha(dex){
+  let d = BEBE_DE[dex] || dex, guarda = 0;
+  while (DEX[d] && DEX[d].preEvo && guarda++ < 5) d = DEX[d].preEvo;
+  return d === 32 ? 29 : d;       // Nidoran♂ e Nidoran♀ são um grupo
+}
+function formamPar(a, b){
+  if (!a || !b || a.uid === b.uid || a.morto || b.morto) return false;
+  const ga = generoDe(a), gb = generoDe(b);
+  if (!ga || !gb || ga === gb) return false;
+  return raizDaLinha(a.dex) === raizDaLinha(b.dex);
+}
+function parDe(p, lista){
+  if (!p) return null;
+  if (!lista && typeof Estado !== 'undefined' && Estado.dados) lista = Estado.dados.time;
+  return (lista || []).find(x => formamPar(p, x)) || null;
+}
+/* Todos os pares do time, sem repetir. */
+function paresDoTime(lista){
+  const vistos = new Set(), pares = [];
+  (lista || []).forEach(a => {
+    if (vistos.has(a.uid)) return;
+    const b = (lista || []).find(x => !vistos.has(x.uid) && formamPar(a, x));
+    if (b){ vistos.add(a.uid); vistos.add(b.uid); pares.push([a, b]); }
+  });
+  return pares;
 }
 
 /* A frase que o jogo mostra pra cada coisa que a experiência causou. */
@@ -7371,7 +7470,9 @@ const Estado = {
     if (i >= 0) return this.dados.time.splice(i,1)[0];
     return null;
   },
+  /* Devolve o par que ficou, se tinha um no time: é ele que sente. */
   matar(p, causa){
+    const par = (typeof parDe === 'function') ? parDe(p, this.dados.time) : null;
     p.morto = true;
     p.hp = 0;
     p.causaMorte = causa;
@@ -7379,6 +7480,12 @@ const Estado = {
     this.removerDoTime(p.uid);
     this.dados.cemiterio.push(p);
     this.registrar(`${nomeExib(p)} morreu. Causa: ${causa}`);
+    if (par){
+      par.moral = Math.max(0, (par.moral !== undefined ? par.moral : 70) - 20);
+      par.luto = {uid:p.uid, nome:nomeExib(p), cap:this.dados.capitulo};
+      this.registrar(`${nomeExib(par)} perdeu ${nomeExib(p)}.`);
+    }
+    return par;
   },
   timeVivo(){ return this.dados.time.filter(p => estaVivo(p)); },
   primeiroApto(){ return this.dados.time.find(p => estaVivo(p)) || null; },
@@ -7439,7 +7546,7 @@ const Estado = {
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         p.naturezaVista = true;
         this.registrar(`Natureza de ${nomeExib(p)} percebida: ${p.natureza}.`);
-        avisos.push({tipo:'natureza', texto:`Você convive o bastante com ${nomeExib(p)} pra botar um nome no jeito dele: ${p.natureza}.`});
+        avisos.push({tipo:'natureza', texto:`Você convive o bastante com ${nomeExib(p)} pra botar um nome no jeito ${pron(p).dele}: ${p.natureza}.`});
       }
     });
     return avisos;
@@ -7861,6 +7968,8 @@ const Captura = {
     const eventos = [];
     const ev = (t, txt) => eventos.push({tipo:t, texto:txt});
     const esp = DEX[p.dex];
+    /* o par fica, e vê o outro ir embora */
+    const par = parDe(p, Estado.dados.time);
     Estado.removerDoTime(p.uid);
     const i = Estado.dados.pc.findIndex(x => x.uid === p.uid);
     if (i >= 0) Estado.dados.pc.splice(i,1);
@@ -7885,8 +7994,12 @@ const Captura = {
       Estado.registrar(`Soltou ${esp.nome}.`);
       Estado.marcar('soltou_lendario_' + p.dex);
     } else {
-      ev('info', `${nomeExib(p)} foi solto. Ele olha para trás uma vez antes de sumir.`);
+      ev('info', `${nomeExib(p)} foi solt${pron(p).o}. ${pron(p).Ele} olha para trás uma vez antes de sumir.`);
       Estado.registrar(`Soltou ${nomeExib(p)}.`);
+      if (par){
+        par.moral = Math.max(0, (par.moral !== undefined ? par.moral : 70) - 10);
+        ev('info', `${nomeExib(par)} vai atrás até a beira do mato, para, e demora pra voltar pra você.`);
+      }
     }
     return eventos;
   }
@@ -7954,6 +8067,8 @@ const Batalha = {
     this.lados = {aliado:{reflexo:0, tela:0, nevoa:0, salva:0}, inimigo:{reflexo:0, tela:0, nevoa:0, salva:0}};
     /* chuva ou areia: dura cinco turnos, como na 2ª geração */
     this.clima = null;
+    /* quem viu o par cair nesta luta e ainda não entrou: uid → nome do par */
+    this.viuOParCair = {};
     /* A cena que vem depois quer saber se sobrou pra você. */
     this.hpJogadorInicio = (Estado.j && Estado.j.hp) || 0;
     this.leituraIntelecto = false;
@@ -8024,23 +8139,25 @@ const Batalha = {
     const est = lado === 'aliado' ? this.estAliado : this.estInimigo;
     const L = this.lados && this.lados[lado];
     if (!est) return [];
+    const p = lado === 'aliado' ? this.aliado : this.inimigo;
+    const o = pron(p).o;
     const m = [];
     const ROT = {atk:'ATK', def:'DEF', spa:'SPA', spd:'SPD', spe:'VEL', precisao:'PREC', evasao:'EVA'};
     for (const k of Object.keys(ROT)){
       const v = est[k] || 0;
       if (v) m.push({t:`${ROT[k]} ${v > 0 ? '+' : '−'}${Math.abs(v)}`, c: v > 0 ? 'alto' : 'baixo'});
     }
-    if (est.confuso > 0)     m.push({t:'Confuso', c:'estado'});
-    if (est.apaixonado)      m.push({t:'Apaixonado', c:'estado'});
-    if (est.presoTurnos > 0) m.push({t:'Preso', c:'estado'});
-    if (est.semente)         m.push({t:'Semeado', c:'estado'});
+    if (est.confuso > 0)     m.push({t:'Confus' + o, c:'estado'});
+    if (est.apaixonado)      m.push({t:'Apaixonad' + o, c:'estado'});
+    if (est.presoTurnos > 0) m.push({t:'Pres' + o, c:'estado'});
+    if (est.semente)         m.push({t:'Semead' + o, c:'estado'});
     if (est.maldito)         m.push({t:'Maldição', c:'estado'});
     if (est.pesadelo)        m.push({t:'Pesadelo', c:'estado'});
     if (est.desabilitado)    m.push({t:`${est.desabilitado.nome} travado`, c:'estado'});
     if (est.substituto > 0)  m.push({t:'Boneco', c:'bom'});
-    if (est.focado)          m.push({t:'Focado', c:'bom'});
-    if (est.identificado)    m.push({t:'Identificado', c:'estado'});
-    if (est.transformado)    m.push({t:'Transformado', c:'bom'});
+    if (est.focado)          m.push({t:'Focad' + o, c:'bom'});
+    if (est.identificado)    m.push({t:'Identificad' + o, c:'estado'});
+    if (est.transformado)    m.push({t:'Transformad' + o, c:'bom'});
     if (L){
       if (L.reflexo > 0) m.push({t:`Reflect ${L.reflexo}`, c:'campo'});
       if (L.tela > 0)    m.push({t:`Light Screen ${L.tela}`, c:'campo'});
@@ -8075,9 +8192,11 @@ const Batalha = {
        quem não te entende faz você repetir a ordem */
     const af = souAliado && typeof efeitosDeAfinidade === 'function'
       ? efeitosDeAfinidade(p) : {obediencia:0, grau:'neutro'};
-    const desobedienciaBase = souAliado
+    let desobedienciaBase = souAliado
       ? Math.max(0, (60 - moral) / 2 - insignias * 3 - carisma * 1.5 + af.obediencia)
       : 0;
+    /* com o par no mesmo time, ele briga mais perto de você: metade da recusa */
+    if (souAliado && desobedienciaBase > 0 && parDe(p)) desobedienciaBase /= 2;
 
     if (p.natureza === 'Brave' && g.c === 'esp' && Dados.chance(35))
       return {recusa:true, texto:`${nomeVisivel(p)} é Brave — recusa o golpe especial. Quer sentir o impacto.`};
@@ -8107,15 +8226,15 @@ const Batalha = {
       }
     }
     if (est.apaixonado && Dados.chance(50)){
-      this.ev('status', `${nomeVisivel(p)} está apaixonado e não consegue atacar.`, {travou:'apaixonado', lado:souAliado ? 'aliado' : 'inimigo'});
+      this.ev('status', `${nomeVisivel(p)} está apaixonad${pron(p).o} e não consegue atacar.`, {travou:'apaixonado', lado:souAliado ? 'aliado' : 'inimigo'});
       return false;
     }
     if (p.status === 'congelamento'){
       if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
-      else { this.ev('status', `${nomeVisivel(p)} está congelado e não consegue se mover.`); return false; }
+      else { this.ev('status', `${nomeVisivel(p)} está congelad${pron(p).o} e não consegue se mover.`); return false; }
     }
     if (p.status === 'paralisia' && Dados.chance(25)){
-      this.ev('status', `${nomeVisivel(p)} está paralisado! Não conseguiu se mover.`, {travou:'paralisia', lado:souAliado ? 'aliado' : 'inimigo'}); return false;
+      this.ev('status', `${nomeVisivel(p)} está paralisad${pron(p).o}! Não conseguiu se mover.`, {travou:'paralisia', lado:souAliado ? 'aliado' : 'inimigo'}); return false;
     }
     if (est.recarregando){
       est.recarregando = false;
@@ -8127,10 +8246,10 @@ const Batalha = {
       else if (Dados.chance(33)){
         const d = Math.max(1, Math.round(Dados.d10('Dano de confusão') * 4 * (p.stats.atk / Math.max(1,p.stats.def))));
         p.hp = Math.max(0, p.hp - d);
-        this.ev('dano', `${nomeVisivel(p)} está confuso e se machucou sozinho! (${d} de dano)`);
+        this.ev('dano', `${nomeVisivel(p)} está confus${pron(p).o} e se machucou sozinh${pron(p).o}! (${d} de dano)`);
         return false;
       } else {
-        this.ev('status', `${nomeVisivel(p)} está confuso...`);
+        this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}...`);
       }
     }
     return true;
@@ -8398,13 +8517,13 @@ const Batalha = {
     if (ef.recarga) estAtk.recarregando = true;
     if (ef.confundeSe && Dados.chance(50)){
       estAtk.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeVisivel(atacante)} ficou confuso pela própria fúria!`);
+      this.ev('status', `${nomeVisivel(atacante)} ficou confus${pron(atacante).o} pela própria fúria!`);
     }
     /* Wrap, Bind, Clamp, Fire Spin: prende de 2 a 5 turnos (2ª geração) */
     if (ef.preso && defensor.hp > 0 && !estDef.presoTurnos){
       estDef.presoTurnos = Dados.entre(2, 5);
       estDef.presoPor = nome;
-      this.ev('status', `${nomeVisivel(defensor)} ficou preso por ${nome}!`);
+      this.ev('status', `${nomeVisivel(defensor)} ficou pres${pron(defensor).o} por ${nome}!`);
     }
     if (ef.tipo && ef.chance && defensor.hp > 0 && Dados.chance(ef.chance)){
       if (ef.tipo === 'recuo'){
@@ -8455,9 +8574,9 @@ const Batalha = {
 
   confundir(p, est){
     if (this.salvaguarda(p)) return false;
-    if (est.confuso > 0){ this.ev('erro', `${nomeVisivel(p)} já está confuso.`); return false; }
+    if (est.confuso > 0){ this.ev('erro', `${nomeVisivel(p)} já está confus${pron(p).o}.`); return false; }
     est.confuso = Dados.entre(2, 5);
-    this.ev('status', `${nomeVisivel(p)} ficou confuso!`);
+    this.ev('status', `${nomeVisivel(p)} ficou confus${pron(p).o}!`);
     return true;
   },
 
@@ -8510,7 +8629,7 @@ const Batalha = {
       case 'foco':
         if (estAtk.focado) return falhou();
         estAtk.focado = true;
-        return this.ev('status', `${eu} está concentrado. Acerto crítico fica mais fácil.`);
+        return this.ev('status', `${eu} está concentrad${pron(atk).o}. Acerto crítico fica mais fácil.`);
 
       case 'substituto': {
         const custo = Math.floor(atk.hpMax / 4);
@@ -8552,7 +8671,7 @@ const Batalha = {
         if (def.nivel > atk.nivel && Dados.chance(50)) return falhou();
         if (selvagem){
           this.ev('fuga', this.ladoDe(atk) === 'aliado'
-            ? `${ele} é soprado pra longe. A batalha acabou.`
+            ? `${ele} é soprad${pron(def).o} pra longe. A batalha acabou.`
             : `${eu} te soprou pra fora da briga. A batalha acabou.`);
           return this.encerrar('fuga');
         }
@@ -8587,7 +8706,7 @@ const Batalha = {
       case 'semente':
         if (def.tipos.includes('Grama') || estDef.semente) return this.ev('erro', `Não teve efeito em ${ele}.`);
         estDef.semente = true;
-        return this.ev('status', `${ele} foi semeado! Vai perder HP todo turno pra quem plantou.`);
+        return this.ev('status', `${ele} foi semead${pron(def).o}! Vai perder HP todo turno pra quem plantou.`);
 
       case 'identificar':
         estDef.identificado = true;
@@ -8677,6 +8796,7 @@ const Batalha = {
       this.aliado = novo;
       this.estAliado = this.novoEstado();
       if (this.participantes) this.participantes.add(novo.uid);
+      this.entrouEmCampo(novo, this.estAliado);
       return;
     }
     if (!this.timeInimigo || !this.timeInimigo.length) return this.ev('erro', 'Mas não funcionou.');
@@ -8687,6 +8807,29 @@ const Batalha = {
     this.inimigo = novo;
     this.estInimigo = this.novoEstado();
     this.participantes = new Set([this.aliado.uid]);
+    this.entrouEmCampo(novo, this.estInimigo);
+  },
+
+  /* ---------- o par ----------
+     Quando um Pokémon cai e o par dele está no mesmo time, de pé, o par
+     viu. Na próxima vez que ele entrar nesta luta, entra com Ataque e
+     Sp. Atk um estágio acima. Vale pros dois lados: o time do treinador
+     também tem par. */
+  parViuCair(caido, time){
+    if (!this.viuOParCair) this.viuOParCair = {};
+    const par = parDe(caido, (time || []).filter(x => estaVivo(x)));
+    if (!par || this.viuOParCair[par.uid]) return;
+    this.viuOParCair[par.uid] = nomeVisivel(caido);
+  },
+  entrouEmCampo(p, est){
+    const nomePar = this.viuOParCair && this.viuOParCair[p.uid];
+    if (!nomePar) return;
+    delete this.viuOParCair[p.uid];
+    /* nome que você ainda não sabe continua sem nome */
+    const quem = nomePar === '???' ? 'o outro' : nomePar;
+    this.ev('status', `${nomeVisivel(p)} viu ${quem} cair e entra diferente.`);
+    this.mudarEstagio(p, est, 'atk', 1);
+    this.mudarEstagio(p, est, 'spa', 1);
   },
 
   /* ---------- fim de turno ---------- */
@@ -8858,7 +9001,7 @@ const Batalha = {
     if (acao.tipo === 'trocar'){
       if (this.estAliado.presoTurnos > 0 && estaVivo(this.aliado)){
         this.eventos = []; this.turno--;
-        this.ev('erro', `${nomeVisivel(this.aliado)} está preso por ${this.estAliado.presoPor} e não consegue voltar.`);
+        this.ev('erro', `${nomeVisivel(this.aliado)} está pres${pron(this.aliado).o} por ${this.estAliado.presoPor} e não consegue voltar.`);
         return {eventos:this.eventos, fim:null};
       }
       this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho();
@@ -8950,7 +9093,7 @@ const Batalha = {
     if (!info || !Estado.contaItem(nome)){ this.ev('erro', 'Você não tem esse item.'); return; }
     const alvo = Estado.dados.time.find(p => p.uid === alvoUid) || this.aliado;
     if (info.tipo === 'cura'){
-      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeVisivel(alvo)} está desmaiado — Potion não resolve.`); return; }
+      if (alvo.hp <= 0 && !alvo.morto){ this.ev('erro', `${nomeVisivel(alvo)} está desmaiad${pron(alvo).o} — Potion não resolve.`); return; }
       Estado.usarItem(nome);
       const antes = alvo.hp;
       alvo.hp = Math.min(alvo.hpMax, alvo.hp + info.valor);
@@ -8962,7 +9105,7 @@ const Batalha = {
         Estado.marcar('revive_nao_ressuscita');
         return;
       }
-      if (alvo.hp > 0){ this.ev('erro', `${nomeVisivel(alvo)} não está desmaiado.`); return; }
+      if (alvo.hp > 0){ this.ev('erro', `${nomeVisivel(alvo)} não está desmaiad${pron(alvo).o}.`); return; }
       Estado.usarItem(nome);
       alvo.hp = Math.floor(alvo.hpMax / 2);
       this.ev('cura', `${nomeVisivel(alvo)} voltou a si com ${alvo.hp} de HP.`);
@@ -9008,13 +9151,14 @@ const Batalha = {
     this.aliado = novo;
     this.estAliado = this.novoEstado();
     if (this.participantes) this.participantes.add(novo.uid);
+    this.entrouEmCampo(novo, this.estAliado);
   },
 
   /* ---------- fuga ---------- */
   tentarFugir(){
     if (!this.fuga){ this.ev('erro', 'Não dá para fugir daqui.'); return this.turnoInimigoSozinho(); }
     if (this.estAliado.presoTurnos > 0){
-      this.ev('erro', `${nomeVisivel(this.aliado)} está preso por ${this.estAliado.presoPor}. Não dá pra fugir.`);
+      this.ev('erro', `${nomeVisivel(this.aliado)} está pres${pron(this.aliado).o} por ${this.estAliado.presoPor}. Não dá pra fugir.`);
       return this.turnoInimigoSozinho();
     }
     const alvo = this.inimigo.stats.spe - this.aliado.stats.spe + 10;
@@ -9044,7 +9188,7 @@ const Batalha = {
   verificarFim(){
     if (this.inimigo.hp <= 0){
       this.ev('vitoria', this.tipo === 'selvagem'
-        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. Ele vai voltar.`
+        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. ${pron(this.inimigo).Ele} vai voltar.`
         : `${nomeVisivel(this.inimigo)} desmaiou!`);
       /* Como nos jogos: a experiência se divide por igual entre quem
          entrou contra esse adversário e ainda está de pé, e vale 1,5×
@@ -9074,6 +9218,7 @@ const Batalha = {
       }
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
+        this.parViuCair(this.inimigo, this.timeInimigo);
         const prox = this.timeInimigo.shift();
         if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
         this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
@@ -9082,6 +9227,7 @@ const Batalha = {
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
         this.participantes = new Set([this.aliado.uid]);
+        this.entrouEmCampo(prox, this.estInimigo);
         return {eventos:this.eventos, fim:null};
       }
       return this.encerrar('vitoria');
@@ -9089,6 +9235,7 @@ const Batalha = {
 
     if (this.aliado.hp <= 0){
       this.ev('derrota', `${nomeVisivel(this.aliado)} desmaiou.`);
+      this.parViuCair(this.aliado, Estado.dados.time);
       const reservas = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== this.aliado.uid);
       if (reservas.length){
         return {eventos:this.eventos, fim:null, precisaTrocar:true, reservas:reservas.map(p=>p.uid)};
@@ -9151,6 +9298,7 @@ const Batalha = {
         this.desfazerMudancas(this.aliado, this.estAliado);
         this.aliado = revivido;
         this.estAliado = this.novoEstado();
+        this.entrouEmCampo(revivido, this.estAliado);
         this.fase = 'normal';
         return {eventos:this.eventos, fim:null, voltouAoCombate:true};
       }
@@ -9423,15 +9571,17 @@ const Historia = {
     if (ef.mataPrimeiro){
       const alvo = Estado.dados.time.find(p => estaVivo(p));
       if (alvo){
-        Estado.matar(alvo, ef.mataPrimeiro);
+        const par = Estado.matar(alvo, ef.mataPrimeiro);
         avisos.push({tipo:'morte', texto:`${nomeExib(alvo)} morreu. ${ef.mataPrimeiro}`});
+        if (par) avisos.push({tipo:'morte', texto:`${nomeExib(par)} fica cheirando o lugar onde ${nomeExib(alvo)} estava e não deixa ninguém chegar perto.`});
       }
     }
     if (ef.mataEscolhido && ef.uidAlvo){
       const alvo = Estado.dados.time.find(p => p.uid === ef.uidAlvo);
       if (alvo){
-        Estado.matar(alvo, ef.mataEscolhido);
+        const par = Estado.matar(alvo, ef.mataEscolhido);
         avisos.push({tipo:'morte', texto:`${nomeExib(alvo)} morreu. ${ef.mataEscolhido}`});
+        if (par) avisos.push({tipo:'morte', texto:`${nomeExib(par)} fica cheirando o lugar onde ${nomeExib(alvo)} estava e não deixa ninguém chegar perto.`});
       }
     }
     if (ef.moral){
@@ -9875,7 +10025,7 @@ function falaRival(){
   if (arco === 'parceiro'){
     L.push('"EI!" Ezra atravessa a rua correndo e quase é atropelado por uma bicicleta. "Cara, eu vi o teu nome numa parada e eu gritei no meio do Centro Pokémon."');
     if (d.insignias.length) L.push(`"${d.insignias.filter(i=>i!=='Título de Campeão').length} insígnias. ${d.insignias.length>4?'CARA.':'Já?'}"`);
-    if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube do ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
+    if (d.cemiterio.length) L.push(`Ele fica sério de repente. "Eu soube ${pron(d.cemiterio[0]).do} ${nomeExib(d.cemiterio[0])}." Ele não sabe o que fazer com as mãos. "Desculpa. Eu não sei falar essas coisas."`);
     L.push(placar === 'perdendo'
       ? '"Eu perdi as últimas. Eu sei. Mas eu vim de novo, e eu vou vir de novo depois dessa."'
       : '"Bora? Bora. Eu tô pronto dessa vez, eu treinei de verdade."');
@@ -12371,7 +12521,7 @@ const Trocas = {
       {tipo:'eco', texto:t.depois}
     ];
     if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a bola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
-    avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. Ele não te escolheu e ainda não sabe o seu nome.`});
+    avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. ${pron(novo).Ele} não te escolheu e ainda não sabe o seu nome.`});
     Exploracao.tela(avisos);
   }
 };
@@ -14732,7 +14882,7 @@ campo:[
              d=>{
                const pior = piorNoEixo('paciencia');
                return pior.pokemon && pior.valor < 0
-                 ? `${nomeExib(pior.pokemon)} não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ele que espanta o que ia voltar.`
+                 ? `${nomeExib(pior.pokemon)} não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ${pron(pior.pokemon).ele} que espanta o que ia voltar.`
                  : 'Você mexe o pé, estala um galho, e o que quer que estivesse chegando muda de ideia a uns trinta metros.';
              },
              'Você vai embora sem saber se aqueles ovos têm mãe.'
@@ -15033,7 +15183,7 @@ montanha:[
             d=>{
               const m = melhorNoEixo('simpatia');
               return m.pokemon
-                ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ele está olhando pra trás o tempo todo.`
+                ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ${pron(m.pokemon).ele} está olhando pra trás o tempo todo.`
                 : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
             },
             'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
@@ -15171,7 +15321,7 @@ caverna:[
        'No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.',
        d=>{
          const p = (Estado.dados.time || []).find(x => !x.morto);
-         return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. Ele não gosta disso e ficou mesmo assim.`
+         return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. ${pron(p).Ele} não gosta disso e ficou mesmo assim.`
                   : 'Você fica sozinho no escuro por um minuto inteiro e aguenta.';
        },
        'Você acende de novo e os seis metros de sempre voltam a ser o mundo inteiro.'
@@ -15488,6 +15638,10 @@ const C1 = {
     const p = todos.find(x => x.uid === b.capturado) || (d.time || []).slice(-1)[0];
     return p ? nomeExib(p) : 'o que estava no capim';
   },
+  pegoP(d){
+    const b = this.briga(d), todos = [...(d.time || []), ...(d.pc || [])];
+    return todos.find(x => x.uid === b.capturado) || (d.time || []).slice(-1)[0] || null;
+  },
   /* Nome só se a Pokédex já registrou: o jogador não sabe o que era. */
   oOutro(d, maiuscula){
     const b = this.briga(d);
@@ -15535,7 +15689,7 @@ c1_acorda:{
       if (!p) return d.flags.espera_o_professor
         ? 'Você está sozinho no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com a bola.'
         : 'Você está sozinho no quarto, o que não era o plano.';
-      return `${nomeExib(p)} está aos pés da cama, acordado antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
+      return `${nomeExib(p)} está aos pés da cama, acordad${pron(p).o} antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },
     'Lá embaixo a panela bate na pia, o rádio toca baixo, e a voz que atravessa o assoalho é a mesma de todos os dias da sua vida.',
     d=>fala(nomeCasa(), `${d.jogador.nome.toUpperCase()}! Se o café esfriar eu não esquento de novo, e dessa vez eu falo sério!`, 'grita'),
@@ -15543,7 +15697,7 @@ c1_acorda:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Você tem quinze anos e hoje é o dia.';
-      return `${nomeExib(p)} levanta de uma vez, vai até a porta, volta, vai de novo. Ele entendeu antes de você que hoje é o dia.`;
+      return `${nomeExib(p)} levanta de uma vez, vai até a porta, volta, vai de novo. ${pron(p).Ele} entendeu antes de você que hoje é o dia.`;
     }
   ],
   escolhas:[
@@ -15563,7 +15717,7 @@ c1_chuva:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A mochila está no chão, arrumada desde ontem, encostada na parede que dá pro lado da chuva.';
-      return `${nomeExib(p)} está sentado na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
+      return `${nomeExib(p)} está sentad${pron(p).o} na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
     },
     'Lá embaixo a porta dos fundos abre e fecha duas vezes seguidas, que é o barulho de alguém decidindo se ainda vale a pena salvar a roupa do varal.',
     d=>fala(nomeCasa(), 'Chuva de março não dura! Isso aí limpa até as dez!', 'grita',
@@ -15602,7 +15756,7 @@ c1_janela_chuva:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A água desce no vidro em linhas que se encontram e viram uma linha só. Dá pra ficar olhando isso por muito tempo.';
-      return `${nomeExib(p)} não desgruda do vidro. De vez em quando ele encosta o focinho e o vidro embaça e ele tira, e o embaçado some, e ele encosta de novo.`;
+      return `${nomeExib(p)} não desgruda do vidro. De vez em quando ${pron(p).ele} encosta o focinho e o vidro embaça e ${pron(p).ele} tira, e o embaçado some, e ${pron(p).ele} encosta de novo.`;
     },
     'Duas gotas que descem separadas se encontram no meio do vidro e viram uma gota só, mais rápida, e chegam embaixo antes de todas as outras.',
     'Você fica uns bons dez minutos nisso e depois percebe que está adiando.'
@@ -15622,7 +15776,7 @@ c1_dormiu_demais:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A casa está silenciosa de um jeito que casa com gente dentro nunca fica.';
-      return `${nomeExib(p)} está acordado há horas, sentado ao lado da mochila, com a paciência de quem não tem relógio e não precisa de um.`;
+      return `${nomeExib(p)} está acordad${pron(p).o} há horas, sentad${pron(p).o} ao lado da mochila, com a paciência de quem não tem relógio e não precisa de um.`;
     },
     'Lá embaixo não tem barulho de panela, nem rádio, nem ninguém. A casa está do tamanho errado.',
     'Na mesa da cozinha, um prato com um pano por cima e um papel dobrado ao lado.'
@@ -15712,7 +15866,7 @@ c1_nao_dormiu:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Às quatro e meia passou um caminhão na estrada, e depois não passou mais nada.';
-      return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordado também. Não fez nada. Só ficou.`;
+      return `${nomeExib(p)} acordou às quatro e vinte, olhou você, entendeu na hora que você estava acordado, e ficou acordad${pron(p).o} também. Não fez nada. Só ficou.`;
     },
     'Às seis e dez o Dodrio do vizinho grita as três cabeças ao mesmo tempo, como faz todo dia, e como todo dia ele erra a hora.',
     'Você senta na cama. Está cansado de um jeito que não vai passar com sono.'
@@ -15801,7 +15955,7 @@ c1_foi_sem_despedir:{
     'É mais fácil. É muito mais fácil, e é por isso que tanta gente faz assim.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ele pelo ombro sem falar nada.`
+      return p ? `${nomeExib(p)} olha pra trás por vocês dois, três vezes, e na terceira você puxa ${pron(p).ele} pelo ombro sem falar nada.`
                : 'Você olha pra trás uma vez, na placa, e depois não olha mais.';
     },
     'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
@@ -15830,7 +15984,7 @@ c1_no_telhado:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A telha esquenta com o corpo da gente e depois esfria de novo quando a gente muda de posição, e a noite inteira é isso.';
-      return `${nomeExib(p)} subiu junto, do jeito desengonçado de sempre, e dormiu encaixado entre você e a chaminé que não funciona.`;
+      return `${nomeExib(p)} subiu junto, do jeito desengonçado de sempre, e dormiu encaixad${pron(p).o} entre você e a chaminé que não funciona.`;
     },
     'Do telhado, às cinco e quarenta, dá pra ver a luz da cozinha acender antes de todas as outras da rua.',
     'É a sua casa acordando, e você está em cima dela, e é a última vez que essas duas coisas vão ser verdade ao mesmo tempo por muito tempo.'
@@ -15944,9 +16098,9 @@ c1_ficou_com_ele:{
         const especies = [19, 16, 10, 13, 21, 41, 52];       // os que vivem debaixo de carro
         const dex = Dados.escolher(especies);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:40});
-        p.historia = 'Passou a noite embaixo do carro da Sra. Perla. Já tinha sido devolvido antes.';
+        p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Já tinha sido devolvid{o} antes.', p);
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ele ainda não confia em ninguém.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ${pron(p).ele} ainda não confia em ninguém.${notaDestino(onde)}`}];
       },
       registrar:'Ficou com o Pokémon da caixa.'},
   escolhas:[
@@ -16036,7 +16190,7 @@ c1_apagao:{
     d=>{
       const p = d.time[0];
       if (!p) return 'No escuro, a sua mochila está exatamente onde você deixou, o que é a única coisa confiável desta manhã.';
-      return `${nomeExib(p)} está em pé no meio do quarto, tenso, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
+      return `${nomeExib(p)} está em pé no meio do quarto, tens${pron(p).o}, olhando pro teto como se a escuridão fosse uma coisa que dá pra encarar.`;
     },
     d=>fala(nomeCasa(), 'É a rua toda! Não mexe no disjuntor que não é o disjuntor!', 'grita',
             'A voz vem lá de baixo, no escuro, com uma certeza que só quem já passou por isso tem.'),
@@ -16247,7 +16401,7 @@ c1_quintal:{
     'Você sai pelos fundos e senta no degrau do quintal, e a cozinha continua barulhenta do outro lado da porta, sem sentir a sua falta ainda.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} aparece trinta segundos depois, porque ele sempre aparece trinta segundos depois, e senta encostado na sua perna.`
+      return p ? `${nomeExib(p)} aparece trinta segundos depois, porque ${pron(p).ele} sempre aparece trinta segundos depois, e senta encostad${pron(p).o} na sua perna.`
                : 'O quintal tem uma corda de varal, um balde e um pé de alguma coisa que nunca deu fruta.';
     },
     'Dá pra ouvir a sua casa inteira rindo de uma coisa que você não ouviu.',
@@ -16425,7 +16579,7 @@ c1_esperou_ele:{
     d=>{
       const p = d.time[0];
       if (!p) return 'Ninguém volta, porque não tinha ninguém pra voltar.';
-      return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquilo, como quem foi dar uma volta.`;
+      return `Aos quarenta e um, ${nomeExib(p)} entra pelo buraco da cerca, tranquil${pron(p).o}, como quem foi dar uma volta.`;
     },
     'Você não briga. Você não chega nem a levantar.',
     d=>fala(nomeCasa(), 'Esperar é a parte que ninguém conta que é a mais difícil.', 'baixo',
@@ -16497,7 +16651,7 @@ c1_cinco_minutos:{
     d=>{
       const p = d.time[0];
       if (!p) return 'O teto do quarto tem uma rachadura que você conhece melhor que o próprio rosto.';
-      return `${nomeExib(p)} sobe na cama, o que ele quase nunca faz, e se encaixa do seu lado num espaço que claramente não existe. Ele fica assim mesmo.`;
+      return `${nomeExib(p)} sobe na cama, o que ${pron(p).ele} quase nunca faz, e se encaixa do seu lado num espaço que claramente não existe. ${pron(p).Ele} fica assim mesmo.`;
     },
     'O teto tem uma rachadura em forma de rio que você olha desde os seis anos e que hoje você vai olhar pela última vez de dentro desta cama.',
     'Você não chora. Chega bem perto.'
@@ -16768,7 +16922,7 @@ c1_mudou_de_ideia_no_balcao:{
         Estado.usarItem('Caixa de ventilador com um bicho dentro');
         const dex = Dados.escolher([19, 16, 10, 13, 21, 41, 52]);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:45});
-        p.historia = 'Passou a noite embaixo do carro da Sra. Perla. Você deixou ele no balcão e voltou em quarenta segundos.';
+        p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Você deixou {ele} no balcão e voltou em quarenta segundos.', p);
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) é seu.${notaDestino(onde)}`}];
       },
@@ -16974,7 +17128,7 @@ c1_fila:{
     fala('a enfermeira', 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
     d=>{
       const p = d.time[0];
-      return p ? `Você coloca ${nomeExib(p)} na bancada. Ele não gosta da bancada. Fica quieto assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
+      return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
     fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
@@ -17180,10 +17334,10 @@ c1_fim_venceu:{
       const n = nomeExib(p);
       if (b.hpAliado >= 0.7) return C1.qual(d, [
         `${n} volta sem um arranhão e fareja o lugar onde ${C1.oOutro(d)} estava, pra conferir que foi mesmo.`,
-        `${n} fica encarando o buraco no mato, ainda armado, até entender que não vem mais ninguém.`
+        `${n} fica encarando o buraco no mato, ainda armad${pron(p).o}, até entender que não vem mais ninguém.`
       ]);
       if (b.hpAliado >= 0.3) return C1.qual(d, [
-        `${n} tem capim grudado no corpo e está poupando um lado ao pisar. Você se agacha e passa a mão devagar. Ele deixa.`,
+        `${n} tem capim grudado no corpo e está poupando um lado ao pisar. Você se agacha e passa a mão devagar. ${pron(p).Ele} deixa.`,
         `${n} senta, lambe um arranhão e olha pra você como quem pergunta se é sempre assim. Você não sabe.`
       ]);
       return C1.qual(d, [
@@ -17216,11 +17370,11 @@ c1_fim_pegou:{
         `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra bola.`
       ]);
     },
-    d=>d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora ele é seu. Ele não assinou nada.' : 'Não tem papel nenhum dizendo que ele é seu. Por enquanto, é só a bola na sua mão.',
+    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora {ele} é seu. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} é seu. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
     d=>{
       const b = C1.briga(d), p = C1.meu(d);
       if (!p) return 'Você guarda a bola no cinto e ela pesa mais do que as vazias.';
-      if (p.hp <= 0 || b.hpAliado <= 0) return `E ${nomeExib(p)} viu tudo deitado no capim, desmaiado atrás de você. Foi você quem terminou a briga. Você não sabe ainda se isso é bom.`;
+      if (p.hp <= 0 || b.hpAliado <= 0) return `E ${nomeExib(p)} viu tudo deitad${pron(p).o} no capim, desmaiad${pron(p).o} atrás de você. Foi você quem terminou a briga. Você não sabe ainda se isso é bom.`;
       return C1.qual(d, [
         `${nomeExib(p)} chega perto da bola e cheira. Eram dois há uma hora. Agora são três, e ninguém perguntou nada pra ninguém.`,
         `${nomeExib(p)} fica olhando pra bola no seu cinto com uma cara que você ainda não aprendeu a ler.`
@@ -17245,12 +17399,12 @@ c1_fim_perdeu:{
       const p = C1.meu(d);
       if (!p) return 'Você fica ali parado, sozinho no mato, com as mãos vazias.';
       return C1.qual(d, [
-        `${nomeExib(p)} está caído de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
+        `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
         `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhado. Está respirando. É a primeira coisa que você confere e a única que importa.`
       ]);
     },
     'Ninguém viu. Você repara que isso não ajuda em nada.',
-    d=>C1.meu(d) ? 'Você fica sentado com ele até ele abrir o olho. Leva um tempo. Você não sai dali antes.' : 'Depois de um tempo, você levanta.',
+    d=>C1.meu(d) ? concordar('Você fica sentado com {ele} até {ele} abrir o olho. Leva um tempo. Você não sai dali antes.', C1.meu(d)) : 'Depois de um tempo, você levanta.',
     d=>C1.estrada(d)
   ],
   fim:true, resumo:'A primeira briga acabou com o seu Pokémon no colo e o capim quieto.'
@@ -17276,10 +17430,10 @@ c1_fim_fugiu:{
     d=>{
       const p = C1.meu(d);
       if (!p) return 'Você recupera o fôlego apoiado no joelho.';
-      if (p.hp <= 0) return `${nomeExib(p)} ainda não acordou. Você ajeita ele no colo e anda mais devagar.`;
+      if (p.hp <= 0) return `${nomeExib(p)} ainda não acordou. Você ajeita ${pron(p).ele} no colo e anda mais devagar.`;
       return C1.qual(d, [
         `${nomeExib(p)} olha pra trás, pro mato, e depois pra você. Você não sabe se é alívio ou vontade de ter ficado.`,
-        `${nomeExib(p)} está inteiro. Você também. Por hoje você resolve que isso conta.`
+        `${nomeExib(p)} está inteir${pron(p).o}. Você também. Por hoje você resolve que isso conta.`
       ]);
     },
     d=>C1.estrada(d)
@@ -18189,7 +18343,7 @@ c3_ab_acampou:{
     'Você acorda exatamente nesses quinze segundos, sem saber por quê, e quando o barulho volta você entende que acordou porque ele tinha parado.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está acordado, sentado, olhando pro mato. Não está tenso. Está esperando.`
+      return p ? `${nomeExib(p)} está acordad${pron(p).o}, sentad${pron(p).o}, olhando pro mato. Não está tens${pron(p).o}. Está esperando.`
                : 'Você fica acordado olhando o mato até clarear.';
     },
     'Nada acontece. Amanhece às cinco e meia e a floresta é verde e comum de novo.'
@@ -18668,7 +18822,7 @@ c3_ficar:{
     'Depois some no mato.',
     'E volta em dez minutos. E te segue.'
   ],
-  ef:{umaVez:'c03_p1', pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você o soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando ele conseguir andar.'}},
+  ef:{umaVez:'c03_p1', pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você {o} soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando {ele} conseguir andar.'}},
       rep:{eixo:'bom',delta:2,motivo:'Esperou o Pokémon ferido se recuperar'},
       flag:'pikachu_aliado', registrar:'O Pikachu libertado passou a te seguir.'},
   escolhas:[{texto:'Seguir com ele.', vai:'c3_caçadores'}]
@@ -18708,7 +18862,7 @@ c3_capturar:{
     'Foi fácil demais. Isso devia significar alguma coisa e significa.'
   ],
   ef:{executar:d=>{
-        const p = criarPokemon(25, 12, {natureza:'Lonely', moral:15, historia:'Capturado enquanto estava preso e ferido. Não escolheu você.'});
+        const p = criarPokemon(25, 12, {natureza:'Lonely', moral:15, historia:'Capturad{o} enquanto estava pres{o} e ferid{o}. Não escolheu você.'});
         p.status = 'veneno'; p.hp = Math.max(1, Math.floor(p.hpMax*0.3));
         const onde = Estado.adicionar(p);
         Estado.registrar('Capturou o Pikachu enquanto ele estava preso e indefeso.');
@@ -21656,7 +21810,7 @@ c5_ab_luto:{
     'A boca do Monte da Lua é mais baixa do que você imaginava — você tem que abaixar a cabeça pra entrar, e hoje abaixar a cabeça custa mais do que devia.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} para antes de você, na entrada, e espera. Não entra sozinho. Espera.`
+      return p ? `${nomeExib(p)} para antes de você, na entrada, e espera. Não entra sozinh${pron(p).o}. Espera.`
                : 'Você para na entrada e o vento morno que sai da caverna bate na sua cara como se estivesse te esperando.';
     },
     'Do lado de dentro o ar sai morno, o que é o contrário do que uma caverna devia fazer, e hoje você não tem paciência nenhuma pra coisas que fazem o contrário do que deviam.'
@@ -24497,9 +24651,9 @@ c6_comprou:{
   ef:{dinheiro:-3000, flag:'comprou_pokemon',
       executar:d=>{
         const dex = Dados.escolher([52,58,63,66,84,96,104,109,116,118]);
-        const p = criarPokemon(dex, Dados.entre(16,22), {moral:20, historia:'Comprado numa banca em Cerulean. Teve outro treinador antes de você.'});
+        const p = criarPokemon(dex, Dados.entre(16,22), {moral:20, historia:'Comprad{o} numa banca em Cerulean. Teve outro treinador antes de você.'});
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. Ele não te escolheu.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. ${pron(p).Ele} não te escolheu.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon em banca de rua'},
       presagio:'Ele vai levar semanas pra te obedecer, e meses pra te olhar. Isso não está escrito no papel dobrado em três.'},
@@ -24871,7 +25025,7 @@ c6_growlithe_centro:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Correu uma hora com uma caixa nos braços'},
       hp:-3, causa:'Corrida com a caixa até Cerulean',
       flag:'growlithe_salvo',
-      umaVez:'c06_p1', pokemon:{dex:58, nivel:18, opcoes:{moral:30, historia:'Tirado de uma caixa numerada num descampado, na estrada velha de Cerulean.'}},
+      umaVez:'c06_p1', pokemon:{dex:58, nivel:18, opcoes:{moral:30, historia:'Tirad{o} de uma caixa numerada num descampado, na estrada velha de Cerulean.'}},
       registrar:'O Growlithe da caixa sobreviveu.',
       presagio:'"Quem sedou sabia fazer." Tem profissional de saúde nisso.'},
   escolhas:[
@@ -27852,7 +28006,7 @@ c7_visao:{
       if (f.deixou_os_ovos_irem) return 'No quinto andar tem uma caixa plástica aberta no chão, com palha dentro, e a palha está se mexendo. Você fica olhando a palha se mexer. Ela não para de se mexer o tempo todo em que você está lá.';
       if (f.vendeu_um_do_time) return 'No quinto andar tem uma caixa forrada de veludo azul no chão, com seis espumas, e cinco delas estão vazias. Na sexta tem uma bola, e a plaquinha de acrílico na frente dela tem a sua letra.';
       if (f.vendeu_para_cacadores) return 'No quinto andar alguém conta dinheiro. Nota por nota, devagar, olhando pra você o tempo todo. Você conhece as mãos. São as suas.';
-      if (d.cemiterio.length) return `No quinto andar, ${nomeExib(d.cemiterio[0])} está esperando você no meio do corredor. Inteiro. Sem marca nenhuma. Ele não te ataca e não foge — só senta e espera, do jeito que esperava.`;
+      if (d.cemiterio.length) return `No quinto andar, ${nomeExib(d.cemiterio[0])} está esperando você no meio do corredor. Inteir${pron(d.cemiterio[0]).o}. Sem marca nenhuma. ${pron(d.cemiterio[0]).Ele} não te ataca e não foge — só senta e espera, do jeito que esperava.`;
       if (f.saiu_sem_despedir) return 'No quinto andar tem uma cortina de cozinha se mexendo, sem janela em volta, sem vento nenhum.';
       if (f.recusou_ivone) return 'No quinto andar tem um cartão de cartolina cortado à mão caído no chão, com um número escrito a caneta. Você não pega. Ele continua ali quando você passa de volta.';
       return 'No quinto andar não tem nada. Você anda o corredor inteiro e não tem nada, e de alguma forma isso é o mais perturbador que podia acontecer.';
@@ -28635,7 +28789,7 @@ c7_cubone:{
       : 'Ninguém autoriza nada. Você só leva.',
     'Vai levar semanas pra perna sarar. Vai levar mais tempo pro resto.'
   ],
-  ef:{umaVez:'c07_p1', pokemon:{dex:104, nivel:24, opcoes:{natureza:'Lonely', moral:25, historia:'Resgatado do sexto andar da Torre Pokémon de Lavender.'}},
+  ef:{umaVez:'c07_p1', pokemon:{dex:104, nivel:24, opcoes:{natureza:'Lonely', moral:25, historia:'Resgatad{o} do sexto andar da Torre Pokémon de Lavender.'}},
       rep:{eixo:'bom',delta:2,motivo:'Resgatou um Pokémon órfão na Torre'},
       flag:'salvou_cubone',
       presagio:'Ele não tem mais preferência nenhuma. Isso muda, e muda devagar, e depende quase inteiramente de você.'},
@@ -28768,7 +28922,7 @@ c8_ab_refrigerado:{
     'Nos primeiros quarenta minutos é suportável. Depois da primeira hora, as pontas dos dedos param de ter opinião sobre o que estão segurando.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} passa os quatro turnos do lado de fora do contêiner, sentado na doca, e não sai de lá.`
+      return p ? `${nomeExib(p)} passa os quatro turnos do lado de fora do contêiner, sentad${pron(p).o} na doca, e não sai de lá.`
                : 'Você faz as quatro horas sozinho e não é a pior coisa que já aconteceu essa semana.';
     },
     'No fim, o conferente conta quatrocentos na sua mão em notas usadas e você sai do galpão com o cheiro no cabelo.',
@@ -29776,11 +29930,11 @@ c8_a_caixa_do_menino:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu e explicou por quê.'}}},
     {texto:'Pagar os 400 que ele pediu.', vai:'c8_krabby_barato', cond:d=>d.jogador.dinheiro>=400,
      ef:{dinheiro:-400, rep:{eixo:'ruim',delta:2,motivo:'Levou vantagem sobre uma criança no cais'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:40, historia:'Comprado de uma criança por um sexto do que valia.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:40, historia:'Comprad{o} de uma criança por um sexto do que valia.'}},
          npc:{nome:'Menino do cais', opiniao:0, memoria:'Você comprou o Krabby dele por 400. Ele ficou feliz na hora.'}}},
     {texto:'Explicar o valor e não comprar.', vai:'c8_krabby_licao',
      ef:{rep:{eixo:'bom',delta:2,motivo:'Ensinou em vez de aproveitar'},
@@ -29808,7 +29962,7 @@ c8_porque_vender:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu e explicou por quê.'}}},
     {texto:'"Não compra passagem. Tem gente que embarca de graça e some."', vai:'c8_avisou_o_menino',
      cond:d=>!!d.flags.vagas_de_trabalho},
@@ -29837,7 +29991,7 @@ c8_avisou_o_menino:{
   escolhas:[
     {texto:'Pagar o preço justo — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo a quem não sabia o preço'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}},
     {texto:'Dar oito mil pra ele comprar a passagem. (8.000 ₽)', vai:'c8_pagou_a_passagem_dele',
      cond:d=>d.jogador.dinheiro>=8000},
@@ -29970,7 +30124,7 @@ c8_a_carta_do_denis:{
     {texto:'"Mostra isso pra sua tia."', vai:'c8_mostra_pra_tia'},
     {texto:'Pagar o preço justo pelo Krabby — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}},
     {texto:'Ir pro cais.', vai:'c8_cais'}
   ]
@@ -29996,7 +30150,7 @@ c8_pegou_a_carta:{
     {texto:'Ir pro portão cinco às três e quarenta.', vai:'c8_portao_cinco', cond:d=>!!d.flags.portao_cinco},
     {texto:'Pagar o preço justo pelo Krabby — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}}
   ]
 },
@@ -30020,7 +30174,7 @@ c8_mostra_pra_tia:{
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Pagar o preço justo pelo Krabby — 2.400 ₽.', vai:'c8_krabby_justo', cond:d=>d.jogador.dinheiro>=2400,
      ef:{dinheiro:-2400, rep:{eixo:'bom',delta:3,motivo:'Pagou o preço justo'},
-         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprado de um menino no cais de Vermilion pelo preço justo.'}},
+         umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:60, historia:'Comprad{o} de um menino no cais de Vermilion pelo preço justo.'}},
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}}
   ]
 },
@@ -35725,7 +35879,7 @@ c9_consignou:{
   ef:{dinheiro:-12000, flag:['consignou_o_41','salvou_o_41'],
       itens:{'Recibo de consignação':1},
       rep:{eixo:'bom',delta:3,motivo:'Usou o sistema contra ele mesmo e pagou do próprio bolso'},
-      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:30, historia:'Lote 41. Você pagou doze mil numa sala de cassino para ele não ser vendido.'}},
+      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:30, historia:'Lote 41. Você pagou doze mil numa sala de cassino para {ele} não ser vendid{o}.'}},
       npc:{nome:'Auditora Brill', opiniao:4, memoria:'Você consignou doze mil do próprio bolso pelo lote 41.'},
       registrar:'Consignou 12.000 ₽ e tirou o lote 41 do leilão.',
       presagio:'Um de quarenta e um. Essa fração vai te perseguir.'},
@@ -35936,7 +36090,7 @@ c9_so_o_41:{
   ],
   ef:{flag:['tirou_o_41','salvou_o_41'],
       rep:{eixo:'bom',delta:2,motivo:'Tirou um do armazém com as próprias mãos'},
-      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:25, historia:'Processo 44.207. Você abriu a gaiola dele às onze e quarenta da noite e carregou ele os últimos vinte metros.'}},
+      umaVez:'c09_p1', pokemon:{dex:58, nivel:28, opcoes:{moral:25, historia:'Processo 44.207. Você abriu a gaiola {dele} às onze e quarenta da noite e carregou {ele} os últimos vinte metros.'}},
       moral:-5, instabilidade:1,
       registrar:'Tirou o Growlithe do processo 44.207 do armazém. Os outros quarenta ficaram.',
       presagio:'Quarenta ficaram. Essa é a conta que você vai refazer a vida inteira.'},
@@ -36092,7 +36246,7 @@ c9_comprou_um:{
       umaVez:'c09_p2',
       executar:d=>{
         const p = criarPokemon(Dados.escolher([123,127,113,115,131,143,137,142]), Dados.entre(26,34),
-          {moral:20, historia:'Comprado numa gaiola de armazém em Celadon, com nota fiscal. Tinha um número colado na bola.'});
+          {moral:20, historia:'Comprad{o} numa gaiola de armazém em Celadon, com nota fiscal. Tinha um número colado na bola.'});
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) saiu do armazém. Os outros quarenta não.${notaDestino(onde)}`}];
       },
@@ -36165,7 +36319,7 @@ c9_carregou_seis:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou até o fim, carregando quem não podia andar'},
       hp:-5, causa:'Exaustão em Celadon',
       flag:'carregou_os_seis',
-      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você o carregou numa manta de mudança, sozinho, às duas da manhã em Celadon.'}},
+      umaVez:'c08-09_p4', pokemon:{dex:108, nivel:28, opcoes:{moral:55, historia:'Você {o} carregou numa manta de mudança, sozinho, às duas da manhã em Celadon.'}},
       registrar:'Carregou os seis que não andavam. A polícia te encontrou no meio-fio.',
       presagio:'"Aconteceu isso aí." Ele viu as plaquetas e não fez nenhuma pergunta sobre elas.'},
   escolhas:[
@@ -38222,7 +38376,7 @@ c10_conversa_longa:{
         return [{tipo:'mundo', texto:'Você passou uma noite conversando com uma Ave Lendária e não capturou nada.'}]; },
       rep:{eixo:'bom',delta:4,motivo:'Passou a noite inteira falando com quem ninguém falou'},
       moral:20, hp:-4, causa:'Uma noite inteira acordado no concreto',
-      umaVez:'c10_p1', pokemon:{dex:81, nivel:30, opcoes:{moral:45, historia:'Ficou depois que os outros foram embora. Foi o único que não voltou pro canto dele.'}},
+      umaVez:'c10_p1', pokemon:{dex:81, nivel:30, opcoes:{moral:45, historia:'Ficou depois que os outros foram embora. Foi {o} únic{o} que não voltou pro canto {dele}.'}},
       registrar:'Passou a noite conversando no galpão. Um Magnemite ficou.',
       presagio:'Um ficou. Ninguém te deu ele — ele ficou.'},
   escolhas:[
@@ -38274,9 +38428,9 @@ c10_coleta:{
         const avisos=[];
         for (let i=0;i<2;i++){
           const p = criarPokemon(Dados.escolher([100,81]), Dados.entre(28,34),
-            {moral:10, historia:'Recolhido do chão da usina enquanto olhava para Zapdos.'});
+            {moral:10, historia:'Recolhid{o} do chão da usina enquanto olhava para Zapdos.'});
           const onde = Estado.adicionar(p);
-          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhido. Ele não resistiu, o que é pior.${notaDestino(onde)}`});
+          avisos.push({tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) foi recolhid${pron(p).o}. ${pron(p).Ele} não resistiu, o que é pior.${notaDestino(onde)}`});
         }
         const L=Estado.lend(145); L.disposicao='hostil';
         avisos.push({tipo:'perigo', texto:'Zapdos parou de carregar. Ela te viu fazer isso.'});
@@ -41007,7 +41161,7 @@ c11_tirou_os_sete:{
       rep:{eixo:'bom',delta:4,motivo:'Não foi embora até os sete estarem na rua'},
       moral:15, hp:-3, causa:'Uma hora empurrando Ditto sedado',
       npc:{nome:'Funcionário da doca', opiniao:3, memoria:'Abriu o portão de pedestre para os sete Dittos saírem, e não disse nada.'},
-      umaVez:'c10-11_p1', pokemon:{dex:132, nivel:30, opcoes:{moral:40, historia:'Foi o único dos sete que não foi embora. Ficou na calçada esperando você terminar.'}},
+      umaVez:'c10-11_p1', pokemon:{dex:132, nivel:30, opcoes:{moral:40, historia:'Foi {o} únic{o} dos sete que não foi embora. Ficou na calçada esperando você terminar.'}},
       registrar:'Tirou os sete Dittos da doca. Um funcionário segurou o portão.',
       presagio:'Ele só abriu. Às vezes é isso que as pessoas conseguem fazer, e às vezes é o suficiente.'},
   escolhas:[
@@ -43220,6 +43374,13 @@ c12_triagem:{
     '"Separar por destino."',
     'Ela lava as mãos numa torneira de quintal enquanto explica, e a naturalidade é a parte difícil.',
     '"Categoria A: saudável, idade reprodutiva, espécie com demanda. Categoria B: saudável, fora do perfil. Categoria C: com problema clínico."',
+    d=>{
+      const p = d.time[0];
+      if (!p) return '';
+      const n = nomeExib(p), g = pron(p);
+      if (!generoDe(p)) return `Você olha ${g.pro} ${n} sem querer. Sem sexo, sem idade reprodutiva: pela ficha que ela recebeu, categoria B. É a primeira vez que uma coisa dessas te alivia.`;
+      return `Você olha ${g.pro} ${n} sem querer, e faz a conta sem querer: saudável, ${g.f ? 'fêmea' : 'macho'}, na idade. Pela ficha que ela recebeu, categoria A.`;
+    },
     '"E cada categoria vai pra onde?"',
     '"A, para receptor credenciado. B, para soltura em área externa. C, para tratamento."',
     '"E quantos por cento são A?"',
@@ -44551,7 +44712,7 @@ c12_tres_dias:{
   ef:{flag:['corrigiu_a_soltura','soltou_organizado'],
       rep:{eixo:'bom',delta:6,motivo:'Voltou e consertou a própria pressa'},
       moral:20, hp:-5, causa:'Três dias sem parar',
-      umaVez:'c12_p1', pokemon:{dex:115, nivel:32, opcoes:{moral:45, historia:'Voltou ao curral do setor 7 por fome, em três dias, e da segunda vez foi levado a quarenta e dois quilômetros.'}},
+      umaVez:'c12_p1', pokemon:{dex:115, nivel:32, opcoes:{moral:45, historia:'Voltou ao curral do setor 7 por fome, em três dias, e da segunda vez foi levad{o} a quarenta e dois quilômetros.'}},
       registrar:'Trinta e um voltaram por fome em três dias e foram levados a 42 km na segunda tentativa.',
       presagio:'Não é vitória, é correção. A maior parte do que se faz de bom é correção.'},
   escolhas:[
@@ -45058,7 +45219,7 @@ c13_ab_o_frio:{
     'Na rua, o termômetro da farmácia marca onze graus e tem uma fila na frente da farmácia, e a fila é de gente comprando as mesmas duas coisas: meia e pomada.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está encostado na sua perna, o que ele não faz, e não sai de lá.`
+      return p ? `${nomeExib(p)} está encostad${pron(p).o} na sua perna, o que ${pron(p).ele} não faz, e não sai de lá.`
                : 'Você fica com as mãos nos bolsos e não tira, e é a primeira vez em meses que você faz isso.';
     },
     'A padaria está sem pão porque o padeiro não veio. A escola soltou os alunos. Um homem passa com um ventilador debaixo do braço, indo devolver.',
@@ -47718,7 +47879,7 @@ c14_ab_a_cinza:{
     'Você desembarca e em quatro minutos tem cinza no ombro da sua roupa.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} espirra duas vezes seguidas e sacode a cabeça, e você limpa a cinza dele com a manga.`
+      return p ? `${nomeExib(p)} espirra duas vezes seguidas e sacode a cabeça, e você limpa a cinza ${pron(p).dele} com a manga.`
                : 'Você espirra duas vezes seguidas e ninguém repara, porque todo mundo aqui espirra.';
     },
     'Na rua principal, um homem de uns quarenta anos está varrendo a calçada da loja dele e cumprimenta você com a cabeça.',
@@ -59906,14 +60067,24 @@ c19_visita:{
 
 c19_de_onde_vem_os_ovos:{
   texto:[
-    '"De matriz própria e de coleta autorizada." Ela responde sem hesitar, porque a resposta é verdadeira.',
+    'Ela responde sem hesitar, porque a resposta é verdadeira: "De matriz própria e de coleta autorizada."',
     '"Coleta autorizada onde?"',
     '"Zona de amortecimento de Fuchsia, principalmente. A gente tem convênio."',
     'Ela mostra uma prancheta com a origem de cada bandeja.',
     'ZS-7. ZS-7. ZS-7. ZS-7.',
     d=>d.flags.provas_zona
       ? 'Você conhece essa sigla. Você viu ela escrita à mão num caderno de Fuchsia, ao lado de um número que não fechava.'
-      : 'Você não conhece a sigla e ela vai te acompanhar pelo resto do dia.'
+      : 'Você não conhece a sigla e ela vai te acompanhar pelo resto do dia.',
+    d=>{
+      /* ninguém explicou nada pra ele; o corredor explica */
+      const p = d.time[0];
+      if (!p) return '';
+      const n = nomeExib(p), g = pron(p), sx = generoDe(p);
+      if (!sx) return `${n} passa reto pelas câmaras enquanto você lê. Não tem nada neste galpão que se pareça com ${g.ele}.`;
+      return sx === 'f'
+        ? `Quando você levanta o olho da prancheta, ${n} está parada na frente de uma porta de vidro no fundo do corredor, onde tem uma fêmea deitada de lado numa baia com um número pintado na porta. As duas se olham por muito tempo.`
+        : `Quando você levanta o olho da prancheta, ${n} está parado na frente de uma porta de vidro no fundo do corredor, onde tem um macho sozinho numa baia com uma plaqueta: REPRODUTOR. Os dois se olham por muito tempo.`;
+    }
   ],
   ef:{flag:'viu_zs7',
       registrar:'Os ovos vêm da Zona Safári, sigla ZS-7, por convênio.'},
@@ -63700,7 +63871,7 @@ c21_acordados_ate_tarde:{
     'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do cachorro do quatorze.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ele sair.`
+      return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ${pron(p).ele} sair.`
                : 'O relógio da parede continua três minutos adiantado. Ninguém nunca acertou.';
     },
     'Você vai lembrar desta cozinha depois, em lugares muito piores do que esta cozinha.'
@@ -63718,7 +63889,7 @@ c21_dormiu_na_cama:{
     'Você acorda três vezes e na terceira desiste, pega o cobertor e deita no chão do quarto, do lado da mochila.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} deita colado em você e adormece em nove segundos, porque pra ele o chão é o chão em qualquer lugar do mundo.`
+      return p ? `${nomeExib(p)} deita colado em você e adormece em nove segundos, porque pra ${pron(p).ele} o chão é o chão em qualquer lugar do mundo.`
                : 'Você adormece no chão em quatro minutos.';
     },
     'É essa a parte que ninguém te conta: que a estrada entra em você e não sai mais, e que a sua própria cama vira um lugar que você visita.'
@@ -67955,7 +68126,7 @@ c27_ab_sozinho_mesmo:{
     'Você para às cinco da tarde porque a luz vai embora e monta o acampamento com as mãos que já não fecham direito.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} deita colado na sua perna e não sai de lá a noite inteira, e você acorda duas vezes só pra conferir que ele continua ali.`
+      return p ? `${nomeExib(p)} deita colado na sua perna e não sai de lá a noite inteira, e você acorda duas vezes só pra conferir que ${pron(p).ele} continua ali.`
                : 'Você deita e olha pro teto da barraca por um tempo comprido, e não tem ninguém pra conferir se continua ali.';
     },
     'De madrugada você acorda uma terceira vez, sem motivo.',
@@ -69145,7 +69316,7 @@ c28_ab_a_boca:{
     'Esta não empurra nada.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está atrás de você, a uns quatro metros, e não vai chegar mais perto. Não é medo: é a distância que ele escolheu, e ele vai manter essa distância a descida inteira.`
+      return p ? `${nomeExib(p)} está atrás de você, a uns quatro metros, e não vai chegar mais perto. Não é medo: é a distância que ${pron(p).ele} escolheu, e ${pron(p).ele} vai manter essa distância a descida inteira.`
                : 'Você está sozinho na boca de uma coisa que não respira.';
     },
     'Você entra.'
@@ -71369,7 +71540,7 @@ c29_bateu:{
     fala('Dario', 'Bicho, moço. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está do seu lado e ele olha pro ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
+      return p ? `${nomeExib(p)} está do seu lado e ele olha ${pron(p).pro} ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
                : 'Ele olha pros seus ombros procurando uma bola no cinto e não acha.';
     },
     fala('Dario', 'Tabela tá na parede. Entra ou não entra, mas decide aí que tá frio.')
@@ -73357,7 +73528,7 @@ c32_o_turno_da_noite:{
     'E, sem nada, dá pra ouvir.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está do seu lado e para de andar antes de você, e vira a cabeça pro galpão, e as orelhas dele fazem uma coisa que você já viu ele fazer duas vezes na vida.`
+      return p ? `${nomeExib(p)} está do seu lado e para de andar antes de você, e vira a cabeça pro galpão, e as orelhas ${pron(p).dele} fazem uma coisa que você já viu ${pron(p).ele} fazer duas vezes na vida.`
                : 'Você para de andar sem decidir parar.';
     },
     'Muita coisa viva no mesmo lugar, abafada por parede de alvenaria e por portão de aço, às onze da noite, numa rua de galpão em Saffron.',
@@ -74216,7 +74387,7 @@ c1e_ficou_na_praca:{
     'O motor faz um barulho que não é de carro novo, e o barulho continua audível uns quinze segundos depois de o carro sumir.',
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
-      return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ele faz por conta própria.`
+      return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ${pron(p).ele} faz por conta própria.`
                : 'Ele sobe no banco do seu lado sem pedir licença.';
     },
     'A cidade começa a acordar em volta: a padaria abre, um cachorro late, alguém arrasta uma cadeira num quintal.',
@@ -74575,7 +74746,7 @@ c21_ficar_de_vez:{
     'Não é preguiça. Você já arrumou e desarrumou ela duas vezes essa semana.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} dorme no tapete do corredor, que é um lugar que ele escolheu sozinho no segundo dia e do qual ele não saiu mais.`
+      return p ? `${nomeExib(p)} dorme no tapete do corredor, que é um lugar que ${pron(p).ele} escolheu sozinh${pron(p).o} no segundo dia e do qual ${pron(p).ele} não saiu mais.`
                : 'A casa tem um barulho de fundo que você tinha esquecido: geladeira, rua, alguém na cozinha.';
     },
     d=>fala(nomeCasa(), 'Você vai voltar quando?'),
@@ -74609,7 +74780,7 @@ c21_fim_ficou:{
     'As oito insígnias ficam na caixa de sapato. Você tira uma vez, no primeiro ano, pra mostrar pra alguém, e depois não tira mais — não por vergonha, por falta de ocasião.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar dele.`
+      return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar ${pron(p).dele}.`
                : 'O time envelhece com você, no quintal, e isso é uma frase que você não teria entendido aos quinze.';
     },
     'A parte que ninguém te avisa é esta: o que você viu não sai de você por ficar parado.',
@@ -75268,7 +75439,7 @@ c7_o_subsolo:{
       const l = Campo.iluminar();
       if (!l.pode) return 'E escuro. Escuro de verdade: você desce quatro degraus, olha pra trás, e a porta lá em cima já é só um retângulo cinza. Sem luz nenhuma, descer isso é besteira, e você sabe.';
       return l.semPilha
-        ? `E escuro — mas ${nomeExib(l.quem)} desce na sua frente e a luz dele não pisca, não esquenta e não acaba, e isso muda completamente o que dá pra fazer aqui embaixo.`
+        ? `E escuro — mas ${nomeExib(l.quem)} desce na sua frente e a luz ${pron(l.quem).dele} não pisca, não esquenta e não acaba, e isso muda completamente o que dá pra fazer aqui embaixo.`
         : 'E escuro. A lanterna dá conta, com a luz amarelada de pilha meio gasta que ilumina três metros e faz o resto parecer mais fundo do que é.';
     }
   ],
@@ -75289,7 +75460,7 @@ c7_ossario:{
     d=>{
       const l = Campo.iluminar();
       return l.semPilha
-        ? `${nomeExib(l.quem)} para no meio da sala e a luz dele bate uniforme nas paredes, e é aí que você vê o que a lanterna não mostraria: a abóbada inteira é escrita.`
+        ? `${nomeExib(l.quem)} para no meio da sala e a luz ${pron(l.quem).dele} bate uniforme nas paredes, e é aí que você vê o que a lanterna não mostraria: a abóbada inteira é escrita.`
         : 'Você varre a parede com a lanterna em trechos de três metros e leva vinte minutos pra entender o que está vendo: a abóbada inteira é escrita.';
     },
     'Nomes. Riscados na pedra com prego, uns por cima dos outros, em camadas, séculos de gente entrando aqui e escrevendo o nome de quem enterrou.',
@@ -75825,7 +75996,13 @@ const UI = {
   esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
   el(html){ const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; },
   /* Marca de brilhante. Fica do lado do nome, nunca dentro dele. */
-  shi(p){ return (p && p.shiny) ? '<span class="shiny-marca" title="Brilhante">✦</span>' : ''; },
+  /* Depois do nome: o sexo e, se for o caso, o brilho. */
+  shi(p){ return this.sexo(p) + ((p && p.shiny) ? '<span class="shiny-marca" title="Brilhante">✦</span>' : ''); },
+  sexo(p){
+    if (!p || !p.uid) return '';
+    const g = generoDe(p);
+    return g ? `<span class="sexo-marca sexo-${g}" title="${g === 'm' ? 'Macho' : 'Fêmea'}">${g === 'm' ? '♂' : '♀'}</span>` : '';
+  },
   limpar(){ this.app.innerHTML = ''; },
   add(html){ const e = this.el(html); if (e) this.app.appendChild(e); return e; },
   tom(t){ document.body.setAttribute('data-tom', t || 'leve'); },
@@ -77342,9 +77519,9 @@ const UI = {
           <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite(p, 'frente')}</div>
-        <div class="nota">Nível ${p.nivel} · ${this.esc(p.natureza)}</div>
+        <div class="nota">Nível ${p.nivel} · ${{m:'macho · ', f:'fêmea · '}[generoDe(p)] || 'sem sexo · '}${this.esc(p.natureza)}</div>
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
-        ${nat.agressiva ? '<div class="nota alerta">Temperamento agressivo: se o seu time cair, ele não recua.</div>' : ''}
+        ${nat.agressiva ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
 
         <h3 class="cat-item">Base da espécie <span class="fraco">· este exemplar</span></h3>
         ${par('HP', 'hp', p.stats.hp)}
@@ -77849,6 +78026,31 @@ const UI = {
         ? `${feridos} do seu time ${feridos === 1 ? 'está machucado' : 'estão machucados'} e ninguém reclama disso em voz alta.`
         : 'O time está inteiro.';
 
+    /* O time do jeito que ele está hoje: quem perdeu o par ainda
+       procura; quem tem o par por perto anda junto. A frase muda por
+       dia, não por clique. */
+    const doTime = (() => {
+      const dia = d.relogio.dia || 0;
+      const enlutado = d.time.find(p => !p.morto && p.luto && (d.capitulo - (p.luto.cap || 0)) <= 2);
+      if (enlutado){
+        const g = pron(enlutado);
+        return [
+          `${nomeExib(enlutado)} para na porta do Centro e olha pra trás, pra rua, procurando ${enlutado.luto.nome}.`,
+          `${nomeExib(enlutado)} come pouco e dorme no canto, virad${g.o} pra parede.`,
+          `${nomeExib(enlutado)} ainda se vira quando alguém abre uma bola perto ${g.dele}.`
+        ][dia % 3];
+      }
+      const pares = paresDoTime(d.time.filter(p => !p.morto));
+      if (!pares.length) return '';
+      const [a, b] = pares[dia % pares.length];
+      return [
+        `${nomeExib(a)} e ${nomeExib(b)} dormem encostados no banco da recepção, e ninguém da fila reclama.`,
+        `${nomeExib(a)} não entra no Centro enquanto ${nomeExib(b)} não entra junto.`,
+        `${nomeExib(a)} divide a ração com ${nomeExib(b)} sem ninguém mandar.`,
+        `Quando ${nomeExib(b)} fica pra trás, ${nomeExib(a)} para e espera.`
+      ][dia % 4];
+    })();
+
     /* A Liga só entra na lista quando ela já quer dizer alguma coisa */
     const sabeDaLiga = nInsig > 0 || !!d.flags.sabe_da_elite || !!d.flags.campeao_de_kanto;
 
@@ -77858,7 +78060,7 @@ const UI = {
         <div class="tit">${this.esc(onde)}</div>
         <div class="loc">${this.esc(per)} do dia ${d.relogio.dia} · ${nInsig} de 8 insígnias</div>
       </div>
-      <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p></div>
+      <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p>${doTime ? `<p>${this.esc(doTime)}</p>` : ''}</div>
 
       <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
@@ -78609,11 +78811,11 @@ const UI = {
     if (!p) return;
     let msg = '';
     if (info.tipo === 'cura'){
-      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiado. Potion não resolve isso.`;
+      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiad${pron(p).o}. Potion não resolve isso.`;
       else { Estado.usarItem(nome); const a = p.hp; p.hp = Math.min(p.hpMax, p.hp + info.valor);
              msg = `${nomeExib(p)} recuperou ${p.hp - a} de HP.`; }
     } else if (info.tipo === 'revive'){
-      if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiado.`;
+      if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiad${pron(p).o}.`;
       else { Estado.usarItem(nome); p.hp = Math.floor(p.hpMax/2); msg = `${nomeExib(p)} voltou a si com ${p.hp} de HP.`; }
     } else if (info.tipo === 'status'){
       Estado.usarItem(nome); p.status = null; p.statusTurnos = 0;
@@ -78869,6 +79071,7 @@ const UI = {
         <h3 class="cat-item">Ficha</h3>
         <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
         <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
+        <div class="linha"><span class="k">Sexo</span><span class="v">${this.esc(proporcaoGenero(dex))}</span></div>
         <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
           ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
           : 'forma final'}</span></div>
@@ -79329,6 +79532,7 @@ const UI = {
       <h3>Quando ele não faz o que você mandou</h3>
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
+      <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">25% de perder a vez · velocidade pela metade</span></div>
@@ -79413,6 +79617,16 @@ const UI = {
       <div class="linha"><span class="k">−2 a −4</span><span class="v">obedece pior · −1 nas perícias</span></div>
       <div class="linha"><span class="k">−5 ou menos</span><span class="v">obedece muito pior · −1 nas perícias</span></div>
       <p class="sussurro">Quem vai na frente é quem pesa nas perícias. O jogo não diz qual natureza combina com qual traço, e não avisa antes de uma tarefa que tipo de bicho ela pede: isso é pra reparar, não pra consultar.</p>
+      <h3>Sexo</h3>
+      <p class="sussurro">Todo Pokémon nasce macho (♂), fêmea (♀) ou sem sexo, na proporção dos jogos, e fica assim pra sempre — evoluir não muda. A ficha da espécie na Pokédex mostra a proporção. Sexo não mexe em atributo nem em jeito: o jeito é a natureza. A história fala dele como ele é, e algumas cenas reparam nisso.</p>
+      <div class="linha"><span class="k">Proporção</span><span class="v">meio a meio na maioria · 7♂ pra 1♀ nos iniciais, fósseis, Eevee, Togepi e Snorlax · 3♂ pra 1♀ em Growlithe, Abra, Machop, Elekid, Magby · 1♂ pra 3♀ em Clefairy, Vulpix, Jigglypuff, Snubbull</span></div>
+      <div class="linha"><span class="k">Sem sexo</span><span class="v">Magnemite, Voltorb, Staryu, Ditto, Porygon, Unown e os lendários</span></div>
+      <div class="linha"><span class="k">Attract</span><span class="v">só pega em sexo oposto · sem sexo não se apaixona nem apaixona</span></div>
+      <div class="linha"><span class="k">Par</span><span class="v">mesma linha de evolução (os dois Nidoran contam como uma) e sexos opostos, no mesmo time · cada um tem um par só</span></div>
+      <div class="linha"><span class="k">Par no time</span><span class="v">desobedece metade do que desobedeceria</span></div>
+      <div class="linha"><span class="k">Par cai na luta</span><span class="v">o outro entra com ATK +1 e SPA +1, uma vez por luta · vale pro time do adversário também</span></div>
+      <div class="linha"><span class="k">Par solto</span><span class="v">quem fica perde 10 de moral</span></div>
+      <div class="linha"><span class="k">Par morre</span><span class="v">quem fica perde 20 de moral</span></div>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `
@@ -81905,7 +82119,7 @@ const Jogo = {
     const nivel = Math.max(3, (saiu ? saiu.nivel : 8) + Dados.entre(-4, 7));
     const recebido = criarPokemon(dex, nivel, {
       moral:35,
-      historia:'Recebido numa troca. Teve outro treinador antes de você.'
+      historia:'Recebid{o} numa troca. Teve outro treinador antes de você.'
     });
     Estado.adicionar(recebido);
     Estado.registrar(`Trocou ${saiu ? nomeExib(saiu) : '?'} por ${recebido.nome} Nv${recebido.nivel}.`);

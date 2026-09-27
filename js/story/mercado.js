@@ -472,7 +472,7 @@ const Trocas = {
       {tipo:'eco', texto:t.depois}
     ];
     if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a bola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
-    avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. Ele não te escolheu e ainda não sabe o seu nome.`});
+    avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. ${pron(novo).Ele} não te escolheu e ainda não sabe o seu nome.`});
     Exploracao.tela(avisos);
   }
 };

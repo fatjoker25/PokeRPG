@@ -34,7 +34,13 @@ const UI = {
   esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
   el(html){ const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; },
   /* Marca de brilhante. Fica do lado do nome, nunca dentro dele. */
-  shi(p){ return (p && p.shiny) ? '<span class="shiny-marca" title="Brilhante">✦</span>' : ''; },
+  /* Depois do nome: o sexo e, se for o caso, o brilho. */
+  shi(p){ return this.sexo(p) + ((p && p.shiny) ? '<span class="shiny-marca" title="Brilhante">✦</span>' : ''); },
+  sexo(p){
+    if (!p || !p.uid) return '';
+    const g = generoDe(p);
+    return g ? `<span class="sexo-marca sexo-${g}" title="${g === 'm' ? 'Macho' : 'Fêmea'}">${g === 'm' ? '♂' : '♀'}</span>` : '';
+  },
   limpar(){ this.app.innerHTML = ''; },
   add(html){ const e = this.el(html); if (e) this.app.appendChild(e); return e; },
   tom(t){ document.body.setAttribute('data-tom', t || 'leve'); },
@@ -1551,9 +1557,9 @@ const UI = {
           <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite(p, 'frente')}</div>
-        <div class="nota">Nível ${p.nivel} · ${this.esc(p.natureza)}</div>
+        <div class="nota">Nível ${p.nivel} · ${{m:'macho · ', f:'fêmea · '}[generoDe(p)] || 'sem sexo · '}${this.esc(p.natureza)}</div>
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
-        ${nat.agressiva ? '<div class="nota alerta">Temperamento agressivo: se o seu time cair, ele não recua.</div>' : ''}
+        ${nat.agressiva ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
 
         <h3 class="cat-item">Base da espécie <span class="fraco">· este exemplar</span></h3>
         ${par('HP', 'hp', p.stats.hp)}
@@ -2058,6 +2064,31 @@ const UI = {
         ? `${feridos} do seu time ${feridos === 1 ? 'está machucado' : 'estão machucados'} e ninguém reclama disso em voz alta.`
         : 'O time está inteiro.';
 
+    /* O time do jeito que ele está hoje: quem perdeu o par ainda
+       procura; quem tem o par por perto anda junto. A frase muda por
+       dia, não por clique. */
+    const doTime = (() => {
+      const dia = d.relogio.dia || 0;
+      const enlutado = d.time.find(p => !p.morto && p.luto && (d.capitulo - (p.luto.cap || 0)) <= 2);
+      if (enlutado){
+        const g = pron(enlutado);
+        return [
+          `${nomeExib(enlutado)} para na porta do Centro e olha pra trás, pra rua, procurando ${enlutado.luto.nome}.`,
+          `${nomeExib(enlutado)} come pouco e dorme no canto, virad${g.o} pra parede.`,
+          `${nomeExib(enlutado)} ainda se vira quando alguém abre uma bola perto ${g.dele}.`
+        ][dia % 3];
+      }
+      const pares = paresDoTime(d.time.filter(p => !p.morto));
+      if (!pares.length) return '';
+      const [a, b] = pares[dia % pares.length];
+      return [
+        `${nomeExib(a)} e ${nomeExib(b)} dormem encostados no banco da recepção, e ninguém da fila reclama.`,
+        `${nomeExib(a)} não entra no Centro enquanto ${nomeExib(b)} não entra junto.`,
+        `${nomeExib(a)} divide a ração com ${nomeExib(b)} sem ninguém mandar.`,
+        `Quando ${nomeExib(b)} fica pra trás, ${nomeExib(a)} para e espera.`
+      ][dia % 4];
+    })();
+
     /* A Liga só entra na lista quando ela já quer dizer alguma coisa */
     const sabeDaLiga = nInsig > 0 || !!d.flags.sabe_da_elite || !!d.flags.campeao_de_kanto;
 
@@ -2067,7 +2098,7 @@ const UI = {
         <div class="tit">${this.esc(onde)}</div>
         <div class="loc">${this.esc(per)} do dia ${d.relogio.dia} · ${nInsig} de 8 insígnias</div>
       </div>
-      <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p></div>
+      <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p>${doTime ? `<p>${this.esc(doTime)}</p>` : ''}</div>
 
       <div id="escolhas" class="escolhas">
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
@@ -2818,11 +2849,11 @@ const UI = {
     if (!p) return;
     let msg = '';
     if (info.tipo === 'cura'){
-      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiado. Potion não resolve isso.`;
+      if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiad${pron(p).o}. Potion não resolve isso.`;
       else { Estado.usarItem(nome); const a = p.hp; p.hp = Math.min(p.hpMax, p.hp + info.valor);
              msg = `${nomeExib(p)} recuperou ${p.hp - a} de HP.`; }
     } else if (info.tipo === 'revive'){
-      if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiado.`;
+      if (p.hp > 0) msg = `${nomeExib(p)} não está desmaiad${pron(p).o}.`;
       else { Estado.usarItem(nome); p.hp = Math.floor(p.hpMax/2); msg = `${nomeExib(p)} voltou a si com ${p.hp} de HP.`; }
     } else if (info.tipo === 'status'){
       Estado.usarItem(nome); p.status = null; p.statusTurnos = 0;
@@ -3078,6 +3109,7 @@ const UI = {
         <h3 class="cat-item">Ficha</h3>
         <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
         <div class="linha"><span class="k">Taxa de captura</span><span class="v">${esp.captura} <span class="fraco">(quanto maior, mais fácil)</span></span></div>
+        <div class="linha"><span class="k">Sexo</span><span class="v">${this.esc(proporcaoGenero(dex))}</span></div>
         <div class="linha"><span class="k">Evolução</span><span class="v">${esp.evo
           ? this.esc(DEX[esp.evo].nome) + (esp.nivelEvo ? ' — nível ' + esp.nivelEvo : ' — por pedra ou troca')
           : 'forma final'}</span></div>
@@ -3538,6 +3570,7 @@ const UI = {
       <h3>Quando ele não faz o que você mandou</h3>
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
+      <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">25% de perder a vez · velocidade pela metade</span></div>
@@ -3622,6 +3655,16 @@ const UI = {
       <div class="linha"><span class="k">−2 a −4</span><span class="v">obedece pior · −1 nas perícias</span></div>
       <div class="linha"><span class="k">−5 ou menos</span><span class="v">obedece muito pior · −1 nas perícias</span></div>
       <p class="sussurro">Quem vai na frente é quem pesa nas perícias. O jogo não diz qual natureza combina com qual traço, e não avisa antes de uma tarefa que tipo de bicho ela pede: isso é pra reparar, não pra consultar.</p>
+      <h3>Sexo</h3>
+      <p class="sussurro">Todo Pokémon nasce macho (♂), fêmea (♀) ou sem sexo, na proporção dos jogos, e fica assim pra sempre — evoluir não muda. A ficha da espécie na Pokédex mostra a proporção. Sexo não mexe em atributo nem em jeito: o jeito é a natureza. A história fala dele como ele é, e algumas cenas reparam nisso.</p>
+      <div class="linha"><span class="k">Proporção</span><span class="v">meio a meio na maioria · 7♂ pra 1♀ nos iniciais, fósseis, Eevee, Togepi e Snorlax · 3♂ pra 1♀ em Growlithe, Abra, Machop, Elekid, Magby · 1♂ pra 3♀ em Clefairy, Vulpix, Jigglypuff, Snubbull</span></div>
+      <div class="linha"><span class="k">Sem sexo</span><span class="v">Magnemite, Voltorb, Staryu, Ditto, Porygon, Unown e os lendários</span></div>
+      <div class="linha"><span class="k">Attract</span><span class="v">só pega em sexo oposto · sem sexo não se apaixona nem apaixona</span></div>
+      <div class="linha"><span class="k">Par</span><span class="v">mesma linha de evolução (os dois Nidoran contam como uma) e sexos opostos, no mesmo time · cada um tem um par só</span></div>
+      <div class="linha"><span class="k">Par no time</span><span class="v">desobedece metade do que desobedeceria</span></div>
+      <div class="linha"><span class="k">Par cai na luta</span><span class="v">o outro entra com ATK +1 e SPA +1, uma vez por luta · vale pro time do adversário também</span></div>
+      <div class="linha"><span class="k">Par solto</span><span class="v">quem fica perde 10 de moral</span></div>
+      <div class="linha"><span class="k">Par morre</span><span class="v">quem fica perde 20 de moral</span></div>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `

@@ -1370,7 +1370,7 @@ campo:[
              d=>{
                const pior = piorNoEixo('paciencia');
                return pior.pokemon && pior.valor < 0
-                 ? `${nomeExib(pior.pokemon)} não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ele que espanta o que ia voltar.`
+                 ? `${nomeExib(pior.pokemon)} não aguenta nada: mexe, sai do lugar, volta, mexe de novo, e no fim é ${pron(pior.pokemon).ele} que espanta o que ia voltar.`
                  : 'Você mexe o pé, estala um galho, e o que quer que estivesse chegando muda de ideia a uns trinta metros.';
              },
              'Você vai embora sem saber se aqueles ovos têm mãe.'
@@ -1671,7 +1671,7 @@ montanha:[
             d=>{
               const m = melhorNoEixo('simpatia');
               return m.pokemon
-                ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ele está olhando pra trás o tempo todo.`
+                ? `${nomeExib(m.pokemon)} vai na frente e para toda vez que você fica pra trás, o que quer dizer que ${pron(m.pokemon).ele} está olhando pra trás o tempo todo.`
                 : 'Alguém do seu cinto vai na frente e para toda vez que você fica pra trás.';
             },
             'Vocês descem juntos. Você não manda nada nesse trecho — você segue.',
@@ -1809,7 +1809,7 @@ caverna:[
        'No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.',
        d=>{
          const p = (Estado.dados.time || []).find(x => !x.morto);
-         return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. Ele não gosta disso e ficou mesmo assim.`
+         return p ? `${nomeExib(p)} encosta na sua perna no meio do minuto e fica lá. ${pron(p).Ele} não gosta disso e ficou mesmo assim.`
                   : 'Você fica sozinho no escuro por um minuto inteiro e aguenta.';
        },
        'Você acende de novo e os seis metros de sempre voltam a ser o mundo inteiro.'

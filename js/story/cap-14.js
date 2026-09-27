@@ -210,7 +210,7 @@ c14_ab_a_cinza:{
     'Você desembarca e em quatro minutos tem cinza no ombro da sua roupa.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} espirra duas vezes seguidas e sacode a cabeça, e você limpa a cinza dele com a manga.`
+      return p ? `${nomeExib(p)} espirra duas vezes seguidas e sacode a cabeça, e você limpa a cinza ${pron(p).dele} com a manga.`
                : 'Você espirra duas vezes seguidas e ninguém repara, porque todo mundo aqui espirra.';
     },
     'Na rua principal, um homem de uns quarenta anos está varrendo a calçada da loja dele e cumprimenta você com a cabeça.',

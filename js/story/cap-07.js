@@ -1434,7 +1434,7 @@ c7_visao:{
       if (f.deixou_os_ovos_irem) return 'No quinto andar tem uma caixa plástica aberta no chão, com palha dentro, e a palha está se mexendo. Você fica olhando a palha se mexer. Ela não para de se mexer o tempo todo em que você está lá.';
       if (f.vendeu_um_do_time) return 'No quinto andar tem uma caixa forrada de veludo azul no chão, com seis espumas, e cinco delas estão vazias. Na sexta tem uma bola, e a plaquinha de acrílico na frente dela tem a sua letra.';
       if (f.vendeu_para_cacadores) return 'No quinto andar alguém conta dinheiro. Nota por nota, devagar, olhando pra você o tempo todo. Você conhece as mãos. São as suas.';
-      if (d.cemiterio.length) return `No quinto andar, ${nomeExib(d.cemiterio[0])} está esperando você no meio do corredor. Inteiro. Sem marca nenhuma. Ele não te ataca e não foge — só senta e espera, do jeito que esperava.`;
+      if (d.cemiterio.length) return `No quinto andar, ${nomeExib(d.cemiterio[0])} está esperando você no meio do corredor. Inteir${pron(d.cemiterio[0]).o}. Sem marca nenhuma. ${pron(d.cemiterio[0]).Ele} não te ataca e não foge — só senta e espera, do jeito que esperava.`;
       if (f.saiu_sem_despedir) return 'No quinto andar tem uma cortina de cozinha se mexendo, sem janela em volta, sem vento nenhum.';
       if (f.recusou_ivone) return 'No quinto andar tem um cartão de cartolina cortado à mão caído no chão, com um número escrito a caneta. Você não pega. Ele continua ali quando você passa de volta.';
       return 'No quinto andar não tem nada. Você anda o corredor inteiro e não tem nada, e de alguma forma isso é o mais perturbador que podia acontecer.';
@@ -2217,7 +2217,7 @@ c7_cubone:{
       : 'Ninguém autoriza nada. Você só leva.',
     'Vai levar semanas pra perna sarar. Vai levar mais tempo pro resto.'
   ],
-  ef:{umaVez:'c07_p1', pokemon:{dex:104, nivel:24, opcoes:{natureza:'Lonely', moral:25, historia:'Resgatado do sexto andar da Torre Pokémon de Lavender.'}},
+  ef:{umaVez:'c07_p1', pokemon:{dex:104, nivel:24, opcoes:{natureza:'Lonely', moral:25, historia:'Resgatad{o} do sexto andar da Torre Pokémon de Lavender.'}},
       rep:{eixo:'bom',delta:2,motivo:'Resgatou um Pokémon órfão na Torre'},
       flag:'salvou_cubone',
       presagio:'Ele não tem mais preferência nenhuma. Isso muda, e muda devagar, e depende quase inteiramente de você.'},

@@ -117,7 +117,7 @@ c27_ab_sozinho_mesmo:{
     'Você para às cinco da tarde porque a luz vai embora e monta o acampamento com as mãos que já não fecham direito.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} deita colado na sua perna e não sai de lá a noite inteira, e você acorda duas vezes só pra conferir que ele continua ali.`
+      return p ? `${nomeExib(p)} deita colado na sua perna e não sai de lá a noite inteira, e você acorda duas vezes só pra conferir que ${pron(p).ele} continua ali.`
                : 'Você deita e olha pro teto da barraca por um tempo comprido, e não tem ninguém pra conferir se continua ali.';
     },
     'De madrugada você acorda uma terceira vez, sem motivo.',

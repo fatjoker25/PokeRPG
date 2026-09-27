@@ -58,6 +58,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
   const shiny = (opcoes.shiny !== undefined) ? !!opcoes.shiny : rolarShiny();
   const ivs = opcoes.ivs || ivsAleatorios();
   const stats = calcularStats(esp.base, nivel, ivs, natureza);
+  const genero = opcoes.genero !== undefined ? opcoes.genero : sortearGenero(dexId);
   return {
     uid: 'p' + (_uidPokemon++) + '_' + Date.now().toString(36),
     dex: dexId,
@@ -80,12 +81,13 @@ function criarPokemon(dexId, nivel, opcoes={}){
     shiny,
     selvagem: !!opcoes.selvagem,
     morto: false,
-    historia: opcoes.historia || null,
+    historia: opcoes.historia ? concordar(opcoes.historia, genero) : null,
     capturadoEm: opcoes.capturadoEm || null,
     segurando: opcoes.segurando || null,   // item segurado
     faixaUsada: false,                     // Faixa Firme já salvou nesta batalha?
     convivencia: 0,                        // combates junto — leva à leitura da natureza
-    naturezaVista: !!opcoes.naturezaVista  // você sabe qual é o jeito dele?
+    naturezaVista: !!opcoes.naturezaVista, // você sabe qual é o jeito dele?
+    genero                                 // 'm' | 'f' | null
   };
 }
 
@@ -119,21 +121,113 @@ function naturezaVisivel(p){
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
-/* Sexo, que só o Attract pergunta. Sem sexo, só macho e só fêmea são os
-   dos jogos; nos outros, a proporção deles (a maioria é meio a meio, os
-   iniciais e os fósseis são 7 machos pra cada fêmea). Sorteado uma vez
-   e guardado no Pokémon. */
+/* ---------- SEXO ----------
+   A proporção é a dos jogos. Sem sexo, só macho e só fêmea são os de
+   Gold/Silver; os iniciais, os fósseis, Eevee e Togepi nascem 7 machos
+   pra cada fêmea; Growlithe, Abra, Machop e os bebês de fogo e raio são
+   3 pra 1; Clefairy, Vulpix, Jigglypuff e Snubbull são 1 pra 3. O resto
+   é meio a meio. Sorteado quando o Pokémon nasce e guardado nele.
+
+   Sexo não mexe em atributo nem em jeito — o jeito é a natureza. O que
+   ele muda é com quem o bicho se importa (o par, logo abaixo), o
+   Attract, e como a história fala dele. */
 const SEM_SEXO = new Set([81,82,100,101,120,121,132,137,144,145,146,150,151,201,233,243,244,245,249,250,251]);
 const SO_MACHO = new Set([32,33,34,106,107,128,236,237]);
 const SO_FEMEA = new Set([29,30,31,113,115,124,238,241,242]);
 const QUASE_MACHO = new Set([1,2,3,4,5,6,7,8,9,133,134,135,136,138,139,140,141,142,143,152,153,154,155,156,157,158,159,160,175,176,196,197]);
+const TRES_MACHOS = new Set([58,59,63,64,65,66,67,68,125,126,239,240]);
+const TRES_FEMEAS = new Set([35,36,37,38,39,40,173,174,209,210]);
+
+/* Chance de nascer macho, de 0 a 1. null = a espécie não tem sexo. */
+function chanceDeMacho(dex){
+  if (SEM_SEXO.has(dex)) return null;
+  if (SO_MACHO.has(dex)) return 1;
+  if (SO_FEMEA.has(dex)) return 0;
+  if (QUASE_MACHO.has(dex)) return 0.875;
+  if (TRES_MACHOS.has(dex)) return 0.75;
+  if (TRES_FEMEAS.has(dex)) return 0.25;
+  return 0.5;
+}
+function sortearGenero(dex){
+  const c = chanceDeMacho(dex);
+  if (c === null) return null;
+  return Math.random() < c ? 'm' : 'f';
+}
+/* Save antigo não tem o campo: sorteia na primeira vez que alguém pergunta. */
 function generoDe(p){
   if (!p) return null;
-  if (p.genero !== undefined) return p.genero;
-  const d = p.dex;
-  p.genero = SEM_SEXO.has(d) ? null : SO_MACHO.has(d) ? 'm' : SO_FEMEA.has(d) ? 'f'
-           : (Math.random() < (QUASE_MACHO.has(d) ? 0.875 : 0.5) ? 'm' : 'f');
+  if (p.genero === undefined) p.genero = sortearGenero(p.dex);
   return p.genero;
+}
+/* Como a Pokédex escreve a proporção da espécie. */
+function proporcaoGenero(dex){
+  const c = chanceDeMacho(dex);
+  if (c === null) return 'sem sexo';
+  if (c === 1) return 'só machos';
+  if (c === 0) return 'só fêmeas';
+  if (c === 0.5) return 'meio a meio';
+  if (c === 0.875) return '7 machos pra 1 fêmea';
+  if (c === 0.75) return '3 machos pra 1 fêmea';
+  return '1 macho pra 3 fêmeas';
+}
+function simboloGenero(p){
+  const g = generoDe(p);
+  return g === 'm' ? '♂' : g === 'f' ? '♀' : '';
+}
+
+/* Os pronomes dele. Quem não tem sexo fica no masculino, que é o
+   gênero da palavra "Pokémon" — o jeito como qualquer um falaria.
+   Uso: const g = pron(p); `${g.Ele} está sentad${g.o}`. */
+function pron(p){
+  const f = generoDe(p) === 'f';
+  return f
+    ? {ele:'ela', Ele:'Ela', dele:'dela', nele:'nela', o:'a', um:'uma', do:'da', ao:'à', pro:'pra', f:true}
+    : {ele:'ele', Ele:'Ele', dele:'dele', nele:'nele', o:'o', um:'um', do:'do', ao:'ao', pro:'pro', f:false};
+}
+
+/* Texto escrito antes de saber o sexo: {o}, {ele}, {Ele}, {dele}, {um}
+   viram a forma certa. Serve pra história de origem que o roteiro
+   passa pro criarPokemon ("Comprad{o} de um menino…"). Aceita o
+   Pokémon ou só o sexo. */
+function concordar(txt, quem){
+  if (typeof txt !== 'string') return txt;
+  const g = (quem && typeof quem === 'object') ? pron(quem) : pron({genero: quem || null});
+  return txt.replace(/\{(o|ele|Ele|dele|nele|um|do|ao|pro)\}/g, (_, k) => g[k]);
+}
+
+/* ---------- O PAR ----------
+   Dois do mesmo grupo (a mesma linha de evolução, com os dois Nidoran
+   contando como um grupo só), de sexo oposto, no mesmo time. Sem
+   sexo não forma par. Cada um tem no máximo um par: o primeiro que
+   aparecer na ordem do time. */
+/* O bebê de Johto não é forma anterior no DEX (quebraria o piso de
+   nível do adulto), então a ponte até a linha de Kanto vem daqui. */
+const BEBE_DE = {172:25, 173:35, 174:39, 238:124, 239:125, 240:126};
+function raizDaLinha(dex){
+  let d = BEBE_DE[dex] || dex, guarda = 0;
+  while (DEX[d] && DEX[d].preEvo && guarda++ < 5) d = DEX[d].preEvo;
+  return d === 32 ? 29 : d;       // Nidoran♂ e Nidoran♀ são um grupo
+}
+function formamPar(a, b){
+  if (!a || !b || a.uid === b.uid || a.morto || b.morto) return false;
+  const ga = generoDe(a), gb = generoDe(b);
+  if (!ga || !gb || ga === gb) return false;
+  return raizDaLinha(a.dex) === raizDaLinha(b.dex);
+}
+function parDe(p, lista){
+  if (!p) return null;
+  if (!lista && typeof Estado !== 'undefined' && Estado.dados) lista = Estado.dados.time;
+  return (lista || []).find(x => formamPar(p, x)) || null;
+}
+/* Todos os pares do time, sem repetir. */
+function paresDoTime(lista){
+  const vistos = new Set(), pares = [];
+  (lista || []).forEach(a => {
+    if (vistos.has(a.uid)) return;
+    const b = (lista || []).find(x => !vistos.has(x.uid) && formamPar(a, x));
+    if (b){ vistos.add(a.uid); vistos.add(b.uid); pares.push([a, b]); }
+  });
+  return pares;
 }
 
 /* A frase que o jogo mostra pra cada coisa que a experiência causou. */

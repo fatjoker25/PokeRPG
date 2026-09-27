@@ -970,14 +970,24 @@ c19_visita:{
 
 c19_de_onde_vem_os_ovos:{
   texto:[
-    '"De matriz própria e de coleta autorizada." Ela responde sem hesitar, porque a resposta é verdadeira.',
+    'Ela responde sem hesitar, porque a resposta é verdadeira: "De matriz própria e de coleta autorizada."',
     '"Coleta autorizada onde?"',
     '"Zona de amortecimento de Fuchsia, principalmente. A gente tem convênio."',
     'Ela mostra uma prancheta com a origem de cada bandeja.',
     'ZS-7. ZS-7. ZS-7. ZS-7.',
     d=>d.flags.provas_zona
       ? 'Você conhece essa sigla. Você viu ela escrita à mão num caderno de Fuchsia, ao lado de um número que não fechava.'
-      : 'Você não conhece a sigla e ela vai te acompanhar pelo resto do dia.'
+      : 'Você não conhece a sigla e ela vai te acompanhar pelo resto do dia.',
+    d=>{
+      /* ninguém explicou nada pra ele; o corredor explica */
+      const p = d.time[0];
+      if (!p) return '';
+      const n = nomeExib(p), g = pron(p), sx = generoDe(p);
+      if (!sx) return `${n} passa reto pelas câmaras enquanto você lê. Não tem nada neste galpão que se pareça com ${g.ele}.`;
+      return sx === 'f'
+        ? `Quando você levanta o olho da prancheta, ${n} está parada na frente de uma porta de vidro no fundo do corredor, onde tem uma fêmea deitada de lado numa baia com um número pintado na porta. As duas se olham por muito tempo.`
+        : `Quando você levanta o olho da prancheta, ${n} está parado na frente de uma porta de vidro no fundo do corredor, onde tem um macho sozinho numa baia com uma plaqueta: REPRODUTOR. Os dois se olham por muito tempo.`;
+    }
   ],
   ef:{flag:'viu_zs7',
       registrar:'Os ovos vêm da Zona Safári, sigla ZS-7, por convênio.'},

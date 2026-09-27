@@ -1198,6 +1198,13 @@ c12_triagem:{
     '"Separar por destino."',
     'Ela lava as mãos numa torneira de quintal enquanto explica, e a naturalidade é a parte difícil.',
     '"Categoria A: saudável, idade reprodutiva, espécie com demanda. Categoria B: saudável, fora do perfil. Categoria C: com problema clínico."',
+    d=>{
+      const p = d.time[0];
+      if (!p) return '';
+      const n = nomeExib(p), g = pron(p);
+      if (!generoDe(p)) return `Você olha ${g.pro} ${n} sem querer. Sem sexo, sem idade reprodutiva: pela ficha que ela recebeu, categoria B. É a primeira vez que uma coisa dessas te alivia.`;
+      return `Você olha ${g.pro} ${n} sem querer, e faz a conta sem querer: saudável, ${g.f ? 'fêmea' : 'macho'}, na idade. Pela ficha que ela recebeu, categoria A.`;
+    },
     '"E cada categoria vai pra onde?"',
     '"A, para receptor credenciado. B, para soltura em área externa. C, para tratamento."',
     '"E quantos por cento são A?"',
@@ -2529,7 +2536,7 @@ c12_tres_dias:{
   ef:{flag:['corrigiu_a_soltura','soltou_organizado'],
       rep:{eixo:'bom',delta:6,motivo:'Voltou e consertou a própria pressa'},
       moral:20, hp:-5, causa:'Três dias sem parar',
-      umaVez:'c12_p1', pokemon:{dex:115, nivel:32, opcoes:{moral:45, historia:'Voltou ao curral do setor 7 por fome, em três dias, e da segunda vez foi levado a quarenta e dois quilômetros.'}},
+      umaVez:'c12_p1', pokemon:{dex:115, nivel:32, opcoes:{moral:45, historia:'Voltou ao curral do setor 7 por fome, em três dias, e da segunda vez foi levad{o} a quarenta e dois quilômetros.'}},
       registrar:'Trinta e um voltaram por fome em três dias e foram levados a 42 km na segunda tentativa.',
       presagio:'Não é vitória, é correção. A maior parte do que se faz de bom é correção.'},
   escolhas:[
