@@ -54,7 +54,9 @@ const Exploracao = {
       <div class="escolhas">${afazeres}</div>
 
       <h3 class="com-mapa">Para onde ir
-        ${Estado.contaItem('Mapa de Kanto') ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button>` : ''}</h3>
+        ${Estado.contaItem('Mapa de Kanto')
+          ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button>`
+          : (this.temCentro(L) ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa('parede')">${imgItem('Mapa de Kanto')}Mapa do Centro</button>` : '')}</h3>
       <div class="escolhas">${vizinhos}</div>
     </div>`);
 
@@ -78,7 +80,11 @@ const Exploracao = {
     fuchsia:[104,128], rota16:[80,100], rota19:[92,146], seafoam:[70,148], cinnabar:[40,150],
     rota21:[40,138], ilha_sem_nome:[16,150]
   },
-  mapa(){
+  /* Todo Centro Pokémon tem um mapa da região na parede do saguão: quem
+     não comprou o dele olha o de lá. */
+  temCentro(L){ return !!(L && (L.lugares || []).includes('centro')); },
+
+  mapa(origem){
     const aqui = Estado.dados.local;
     const viz = new Set(Mundo.vizinhos());
     const pos = this.POS_MAPA;
@@ -117,7 +123,8 @@ const Exploracao = {
     });
     const L = Mundo.atual();
     UI.modal('', `<div class="mapa-kanto">
-      <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>você está em ${UI.esc(L.nome)}</span></div>
+      <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>${origem === 'parede'
+        ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está em ${UI.esc(L.nome)}`}</span></div>
       <svg viewBox="0 0 200 162" role="img" aria-label="Mapa de Kanto">
         <path class="mp-terra" d="M4 24 Q4 14 14 14 L184 14 Q194 14 194 24 L194 112 Q194 124 182 128 L130 134 Q112 138 96 136 L60 132 Q48 130 34 132 L10 130 Q4 128 4 118 Z"/>
         <path class="mp-ilha" d="M30 144 Q40 140 50 144 Q52 154 40 157 Q28 156 30 144 Z"/>

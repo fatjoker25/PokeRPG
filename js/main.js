@@ -137,10 +137,14 @@ const Jogo = {
       Estado.salvar('auto');
       return UI.telaCena(Historia.iniciarCapitulo(1), []);
     } else {
-      inicial = criarPokemon(parseInt(f.inicial,10), 5, {
-        moral:80, naturezaVista:true,
-        historia:'Entregue a você no dia em que a jornada começou.'
-      });
+      /* Em Pallet quem entrega é o Professor, na rua, na manhã em que
+         você sai de casa. Até lá o bicho não é seu: a manhã em casa
+         começa sem ele, como começa pra quem espera a perua. */
+      Estado.dados.entrega = {dex: parseInt(f.inicial, 10), pallet:true};
+      Estado.marcar('espera_o_professor');
+      Estado.registrar(`${Estado.j.nome} escolheu em fevereiro e vai buscar com o Professor, em Pallet.`);
+      Estado.salvar('auto');
+      return UI.telaCena(Historia.iniciarCapitulo(1), []);
     }
     Estado.adicionar(inicial);
     Estado.j.inicialDex = inicial.dex;          // Blue escolhe o contra do seu inicial
@@ -613,6 +617,12 @@ const Jogo = {
     const pend = [];
     this.avisarNumeros(pend);
     pend.forEach(a => avisos.push(a.texto));
+    /* e nenhuma termina sem o inicial: se o Professor ficou esperando
+       (rota que não passou pela rua), a bola chega pelo balcão */
+    if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_professor && typeof entregarDoProfessor === 'function'){
+      entregarDoProfessor(Estado.dados);
+      avisos.push('O Professor mandou a bola pelo balcão do Centro, com o seu nome na etiqueta.');
+    }
     if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
       Estado.ganharPokenav();
       avisos.push('Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');

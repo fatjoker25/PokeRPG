@@ -267,8 +267,9 @@ o prêmio; sem isso, paga `pagaPorNivel(classe) × nível do último Pokémon`
 (`premioCena`, em `main.js`), com a classe saindo do rosto em
 `treinadores.js`.
 
-O mapa desenhado (`Exploracao.mapa`) só abre com o item **Mapa de Kanto**
-na mochila, como o Town Map dos jogos. O `town-map.png` do roteiro é o
+O mapa desenhado (`Exploracao.mapa`) abre com o item **Mapa de Kanto**
+na mochila, como o Town Map dos jogos — ou, sem ele, pela parede do Centro
+Pokémon de qualquer cidade que tenha um (`Exploracao.temCentro`). O `town-map.png` do roteiro é o
 ícone do item, não um mapa.
 
 ## Como o projeto é montado

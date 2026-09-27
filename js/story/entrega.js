@@ -32,16 +32,65 @@ function entregarInicial(d){
   return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
 }
 
+/* Em Pallet a bola sai da mão do Professor, na rua, na manhã da saída */
+function entregarDoProfessor(d){
+  const dex = (d.entrega && d.entrega.dex) || 1;
+  const p = criarPokemon(dex, 5, {
+    moral: 80, naturezaVista: true,
+    historia: 'Entregue pelo Professor, na rua de Pallet, na manhã em que você saiu de casa.'
+  });
+  Estado.adicionar(p);
+  Estado.j.inicialDex = p.dex;
+  if (typeof iniciarRival === 'function') iniciarRival();
+  d.flags.espera_o_professor = false;
+  Estado.marcar('recebeu_do_professor');
+  Estado.registrar(`${Estado.j.nome} recebeu ${p.nome} das mãos do Professor, em Pallet.`);
+  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
+}
+
 (function(){
   const cap = CAPITULOS.find(c => c.num === 1);
   if (!cap) return;
 
   cap.entradas = (cap.entradas || []).concat(ABERTURAS_ENTREGA);
-  cap.inicio = d => (d && d.flags && d.flags.espera_o_assistente)
-    ? Dados.escolher(ABERTURAS_ENTREGA)
-    : Dados.escolher(ABERTURAS_C1);
+  /* "Ele sumiu" é a manhã em que o bicho da casa some: só existe pra
+     quem já tem um bicho em casa. Quem espera o Professor não tem. */
+  cap.inicio = d => {
+    if (d && d.flags && d.flags.espera_o_assistente) return Dados.escolher(ABERTURAS_ENTREGA);
+    const semBicho = d && ((d.flags && d.flags.espera_o_professor) || !(d.time || []).length);
+    return Dados.escolher(semBicho ? ABERTURAS_C1.filter(a => a !== 'c1_ele_sumiu') : ABERTURAS_C1);
+  };
+
+  /* Toda rota de casa pra rua passa por c1_rua ou c1_saida_pro_centro,
+     e as duas vêm antes do Centro — onde a licença pede o Pokémon na
+     bancada. É ali que o Professor te para. */
+  const professor = {se: d => !!(d.flags && d.flags.espera_o_professor), vai:'c1_professor'};
+  cap.desvios = Object.assign(cap.desvios || {}, {c1_rua:professor, c1_saida_pro_centro:professor});
 
   Object.assign(cap.cenas, {
+
+/* ─── PALLET: o Professor na rua ───────────────────────────── */
+c1_professor:{
+  texto:[
+    'Você não chega nem na esquina.',
+    'O Professor está parado no meio da rua, na frente do portão do laboratório, de jaleco por cima de uma camisa de dormir, com uma bola vermelha e branca numa mão e um caderno debaixo do braço.',
+    fala('o Professor', 'Eu disse oito horas.', null, 'Ele olha o relógio de pulso sem pressa nenhuma.'),
+    fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
+    d=>`A etiqueta colada na bola tem o seu nome escrito à mão, e embaixo, menor, com a mesma caneta: ${especieReservada(d)}.`,
+    d=>fala('o Professor', `${especieReservada(d)}. Você pediu em fevereiro e não mudou de ideia até hoje. Eu reparo nessas coisas.`),
+    'Ele te dá a bola. Não tem discurso, não tem fita, não tem foto. Só a bola passando de uma mão pra outra, no meio da rua, com um Pidgey olhando do fio.',
+    d=>{ const p = (d.time || []).slice(-1)[0];   // o último que entrou: quem ficou com o bicho da vizinha já tem um
+         return p ? `A bola abre na sua mão antes de você decidir abrir. ${nomeExib(p)} sai, olha primeiro pra ele, depois pra você, e fica olhando pra você.`
+                  : 'A bola pesa menos do que parecia.'; },
+    fala('o Professor', 'Ele vai atrás de você porque você é quem está na frente dele agora. O resto é com vocês dois.', 'baixo'),
+    'Ele anota alguma coisa no caderno, fecha, e volta pro laboratório sem se despedir, do jeito de quem vai estar lá quando você voltar.'
+  ],
+  ef:{executar:d => entregarDoProfessor(d)},
+  escolhas:[
+    {texto:'Seguir pela rua.', vai:'c1_rua', cond:d => d.desvioVolta !== 'c1_saida_pro_centro'},
+    {texto:'Seguir pro Centro.', vai:'c1_saida_pro_centro', cond:d => d.desvioVolta === 'c1_saida_pro_centro'}
+  ]
+},
 
 /* ─── ABERTURA 1: acordou antes de todo mundo ─────────────── */
 c1e_de_madrugada:{

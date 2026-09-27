@@ -33,6 +33,15 @@ const Historia = {
   ir(idCena, aplicarEfeitos){
     const cap = this.capAtual || this.capitulo(Estado.dados.capitulo);
     this.capAtual = cap;
+    /* Desvio declarado no capítulo: antes de entrar em certa cena, se a
+       condição valer, passa por outra primeiro (o Professor que te para
+       na rua). A cena de desvio sabe pra onde voltar por desvioVolta. */
+    const desvio = cap && cap.desvios && cap.desvios[idCena];
+    if (desvio){
+      let vale = false;
+      try { vale = !!desvio.se(Estado.dados); } catch (e) { vale = false; }
+      if (vale){ Estado.dados.desvioVolta = idCena; idCena = desvio.vai; }
+    }
     let cena = cap && cap.cenas[idCena];
     /* Save antigo pode apontar para uma cena que mudou de nome numa versão
        nova. Em vez de morrer numa tela em branco, o capítulo recomeça do

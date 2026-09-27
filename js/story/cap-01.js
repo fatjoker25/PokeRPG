@@ -67,7 +67,9 @@ c1_acorda:{
     'O quarto é o mesmo de sempre e hoje parece menor. A mochila está no chão, arrumada desde ontem, com a fivela de baixo que você nunca conseguiu consertar direito.',
     d=>{
       const p = d.time[0];
-      if (!p) return 'Você está sozinho no quarto, o que não era o plano.';
+      if (!p) return d.flags.espera_o_professor
+        ? 'Você está sozinho no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com a bola.'
+        : 'Você está sozinho no quarto, o que não era o plano.';
       return `${nomeExib(p)} está aos pés da cama, acordado antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },
     'Lá embaixo a panela bate na pia, o rádio toca baixo, e a voz que atravessa o assoalho é a mesma de todos os dias da sua vida.',

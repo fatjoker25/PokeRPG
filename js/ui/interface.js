@@ -226,7 +226,7 @@ const UI = {
         <button data-v="7">Squirtle</button>
         <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
-      <div class="sussurro" id="f-inicial-desc">Tradição: o Professor te entrega a bola na saída da cidade.</div>
+      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Em Pallet, o Professor te entrega a bola na rua, na manhã em que você sai de casa; em outra cidade, ele chega na perua do laboratório.</div>
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
@@ -256,7 +256,7 @@ const UI = {
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
         ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
-        : 'Tradição: o Professor te entrega a bola na saída da cidade.';
+        : 'Tradição: você não começa com ele. Em Pallet, o Professor te entrega a bola na rua, na manhã em que você sai de casa; em outra cidade, ele chega na perua do laboratório.';
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
@@ -3301,7 +3301,7 @@ const UI = {
       <h3>Criar o personagem</h3>
       ${L('Personalidade', 'texto livre — e ela vale como regra, veja Vínculo')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav')}
-      ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega · fora de Pallet: a perua do laboratório, uma vez por mês')}
+      ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
       ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia')}
       ${L('Ritmo do combate', 'fiel (rápido e letal) ou prolongado (dano em 60%)')}`;
 
@@ -3633,7 +3633,7 @@ const UI = {
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
       <h3>De onde vem o seu primeiro</h3>
-      <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor entrega na saída da cidade</span></div>
+      <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor entrega na rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
       <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica. Quem assina o formulário é quem é responsável por você, e a bola fica lacrada com o seu nome numa etiqueta até você aparecer. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
@@ -3702,7 +3702,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
-      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila · mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila, ou na parede de qualquer Centro Pokémon · mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
       <p class="sussurro">Não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
 
       <h3>Trocas</h3>

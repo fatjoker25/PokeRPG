@@ -19,6 +19,7 @@ for(const cap of CAPITULOS){
     c++;
     const alvos=[];
     (cena.escolhas||[]).forEach(o=>{ e++; if(o.vai) alvos.push(o.vai); });
+    if(cap.desvios && cap.desvios[id]) alvos.push(cap.desvios[id].vai);
     if(cena.batalha){ ['vitoria','derrota','fuga','captura','gameover'].forEach(k=>{ if(typeof cena.batalha[k]==='string') alvos.push(cena.batalha[k]); }); }
     if(cena.teste){ ['critico','sucesso','parcial','falha'].forEach(k=>{ if(typeof cena.teste[k]==='string') alvos.push(cena.teste[k]); }); }
     if(cena.sacrificio){ ['aceitou','recusou','vai'].forEach(k=>{ if(typeof cena.sacrificio[k]==='string') alvos.push(cena.sacrificio[k]); }); }
