@@ -224,7 +224,7 @@ function golpesAoEvoluir(p){
 function golpesParaRelembrar(p){
   const sabe = new Set(p.golpes.map(g => g.nome));
   const vistos = new Set(), saida = [];
-  for (const d of linhaDe(p.dex))
+  for (const d of fontesDeGolpe(p.dex))
     for (const [nv, nome] of ((typeof APRENDE !== 'undefined' && APRENDE[d]) || []))
       if (nv <= p.nivel && GOLPES[nome] && !sabe.has(nome) && !vistos.has(nome)){
         vistos.add(nome); saida.push({nome, nv});

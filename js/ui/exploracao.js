@@ -53,12 +53,79 @@ const Exploracao = {
       <h3>O que fazer</h3>
       <div class="escolhas">${afazeres}</div>
 
-      <h3>Para onde ir</h3>
+      <h3 class="com-mapa">Para onde ir
+        <button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button></h3>
       <div class="escolhas">${vizinhos}</div>
     </div>`);
 
     if (avisos && avisos.length) UI.avisos(avisos);
     UI.rolarTopo();
+  },
+
+  /* ---------- o mapa da região ----------
+     Desenhado, não fotografado: o town-map.png do roteiro é o ícone
+     30×30 do item, não um mapa. As posições seguem o Town Map de
+     FireRed/LeafGreen. O mapa só mostra o que você já sabe: lugar
+     visitado tem nome; o vizinho de um lugar visitado aparece como
+     estrada que existe, sem nome; o resto não aparece. */
+  POS_MAPA: {
+    pallet:[40,126], rota1:[40,108], viridian:[40,90], rota22:[25,90], rota23:[12,72],
+    caminho_vitoria:[12,54], planalto:[12,36], rota2:[40,75], floresta:[40,62], pewter:[40,46],
+    rota3:[60,46], monte_lua:[80,40], rota4:[100,46], cerulean:[120,46], rota24:[120,30],
+    norte:[146,28], rota9:[146,46], usina:[172,38], tunel_rocha:[172,56], lavender:[172,74],
+    rota5:[120,60], saffron:[120,74], rota6:[120,90], vermilion:[120,104], rota7:[100,74],
+    celadon:[80,74], rota8:[146,74], rota11:[146,104], rota12:[172,96], rota13:[160,120],
+    fuchsia:[104,128], rota16:[80,100], rota19:[92,146], seafoam:[70,148], cinnabar:[40,150],
+    rota21:[40,138], ilha_sem_nome:[16,150]
+  },
+  mapa(){
+    const aqui = Estado.dados.local;
+    const viz = new Set(Mundo.vizinhos());
+    const pos = this.POS_MAPA;
+    const sabe = id => Mundo.visitado(id) || id === aqui;
+    const conhecidos = new Set(Object.keys(LOCAIS).filter(sabe));
+    /* a estrada que sai de um lugar conhecido existe, mesmo sem nome */
+    const avistados = new Set();
+    for (const id of conhecidos) (LOCAIS[id].conexoes || []).forEach(v => { if (!conhecidos.has(v)) avistados.add(v); });
+    const mostra = id => pos[id] && (conhecidos.has(id) || avistados.has(id));
+
+    const linhas = [], feitas = new Set();
+    for (const id of Object.keys(LOCAIS)){
+      if (!mostra(id)) continue;
+      for (const v of (LOCAIS[id].conexoes || [])){
+        const k = [id, v].sort().join('|');
+        if (feitas.has(k) || !mostra(v) || !(conhecidos.has(id) || conhecidos.has(v))) continue;
+        feitas.add(k);
+        const [x1, y1] = pos[id], [x2, y2] = pos[v];
+        const firme = conhecidos.has(id) && conhecidos.has(v);
+        linhas.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="mp-via${firme ? '' : ' incerta'}"/>`);
+      }
+    }
+    const pontos = Object.keys(LOCAIS).filter(mostra).map(id => {
+      const L = LOCAIS[id], [x, y] = pos[id];
+      const conhecido = conhecidos.has(id);
+      const nome = conhecido ? L.nome : 'caminho que você ainda não fez';
+      const ir = viz.has(id);
+      const cls = `mp-no ${L.tipo}${conhecido ? '' : ' desconhecido'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}`;
+      const forma = L.tipo === 'cidade' ? `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="1.5"/>`
+                  : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
+                  : `<circle cx="${x}" cy="${y}" r="3"/>`;
+      const rotulo = conhecido && L.tipo !== 'rota'
+        ? `<text x="${x}" y="${y - 8}" text-anchor="middle">${UI.esc(L.nome.replace(/^Floresta de /, 'Fl. '))}</text>` : '';
+      const acao = ir ? ` onclick="UI.fecharModal(true);Exploracao.viajar('${id}')" role="button" tabindex="0"` : '';
+      return `<g class="${cls}"${acao}><title>${UI.esc(nome)}${ir ? ' — ir pra lá' : ''}</title>${forma}${rotulo}</g>`;
+    });
+    const L = Mundo.atual();
+    UI.modal('', `<div class="mapa-kanto">
+      <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>você está em ${UI.esc(L.nome)}</span></div>
+      <svg viewBox="0 0 200 162" role="img" aria-label="Mapa de Kanto">
+        <path class="mp-terra" d="M4 24 Q4 14 14 14 L184 14 Q194 14 194 24 L194 112 Q194 124 182 128 L130 134 Q112 138 96 136 L60 132 Q48 130 34 132 L10 130 Q4 128 4 118 Z"/>
+        <path class="mp-ilha" d="M30 144 Q40 140 50 144 Q52 154 40 157 Q28 156 30 144 Z"/>
+        <path class="mp-ilha" d="M62 142 Q72 140 78 146 Q76 154 68 154 Q60 152 62 142 Z"/>
+        ${linhas.join('')}${pontos.join('')}
+      </svg>
+      <p class="sussurro">Quadrado é cidade, ponto é rota, losango é lugar à parte. Toque num lugar vizinho pra ir.</p>
+    </div>`, false, 'mapa');
   },
 
   /* ---------- entrar no arco que espera neste lugar ---------- */

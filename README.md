@@ -405,14 +405,17 @@ Paralyze Heal e o disco de TM estão na pasta mas não aparecem: o jogo
 não tem esses itens (e não tem HM, por decisão de projeto). Great,
 Ultra e Master voam com o próprio ícone.
 
-Com sprites, cenários e ícones, o `build.py` embute 1299 arquivos.
+Com sprites, cenários, ícones, rostos de treinador, insígnias e gritos,
+o `build.py` embute 1.613 arquivos.
 
 ### Crédito das artes
 
 As artes de Pokémon são de Black/White (frente e costas) e de
 HeartGold/SoulSilver (ícones de equipe); os ícones de item vêm do
-repositório de sprites da PokeAPI; os cenários de batalha vêm dos
-fundos do
+repositório de sprites da PokeAPI, assim como os discos de TM, as oito
+insígnias de Kanto e o ícone do mapa; os gritos são a versão das
+primeiras gerações do repositório de gritos da PokeAPI; os cenários de
+batalha e os rostos de treinador vêm do
 [Pokémon Showdown](https://play.pokemonshowdown.com).
 Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um
 projeto de fã, sem fim comercial.

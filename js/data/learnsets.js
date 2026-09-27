@@ -284,10 +284,18 @@ function linhaDe(dexId){
 /* Os quatro golpes que esta espécie tem NESTE nível: os quatro
    últimos que ela aprendeu, como nos jogos. Repetido não conta
    duas vezes — a segunda vez só empurra o golpe para a frente. */
+/* De onde vêm os golpes de nível: a tabela da PRÓPRIA espécie, como nos
+   jogos — um Gyarados selvagem não chega com Splash, e um Butterfree não
+   aprende String Shot subindo de nível. A linha evolutiva só entra se a
+   espécie não tiver tabela nenhuma. */
+function fontesDeGolpe(dexId){
+  return (APRENDE[dexId] && APRENDE[dexId].length) ? [dexId] : linhaDe(dexId);
+}
+
 function golpesPorNivel(dexId, nivel){
   const ordem = [];
   let achou = false;
-  for (const d of linhaDe(dexId)){
+  for (const d of fontesDeGolpe(dexId)){
     const lista = APRENDE[d];
     if (!lista || !lista.length) continue;
     achou = true;
@@ -314,11 +322,11 @@ function assinaturaDe(dexId, nivel){
 }
 
 /* O que a espécie aprende exatamente NESTE nível — é o que o jogo
-   anuncia quando alguém sobe de nível. Inclui a forma anterior,
-   porque um Metapod que sobe ainda está aprendendo a ser Caterpie. */
+   anuncia quando alguém sobe de nível. Só a tabela dela: o que a forma
+   anterior aprendia ficou pra trás na evolução, como nos jogos. */
 function golpesDoNivel(dexId, nivel){
   const saida = [];
-  for (const d of linhaDe(dexId)){
+  for (const d of fontesDeGolpe(dexId)){
     for (const [nv, nome] of (APRENDE[d] || []))
       if (nv === nivel && !saida.includes(nome)) saida.push(nome);
   }

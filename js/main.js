@@ -325,12 +325,18 @@ const Jogo = {
     /* A leitura da Pokédex tem tela própria: varredura animada e ficha. */
     if (acao.tipo === 'pokedex') return UI.escaneamento();
     /* clique no meio do voo da bola: o turno já foi resolvido, espera */
-    if (this.animandoBola) return;
+    if (this.animandoBola || this.encenando) return;
     const r = Batalha.acao(acao);
 
-    const seguir = () => {
-      UI.escreverLog(r.eventos);
-      UI.atualizarArena();
+    /* O turno é tocado um evento por vez (golpe, dano, cura, condição);
+       só depois a arena se acerta com o fim do turno. */
+    const seguir = async () => {
+      this.encenando = true;
+      try {
+        await Efeitos.encenar(r.eventos);
+        const m = UI.atualizarArena();
+        if (m && m.trocouA) await Efeitos.entrada(Batalha.aliado);
+      } finally { this.encenando = false; }
       /* Golpe que não coube: a pergunta é na hora, na tela de batalha,
          antes de qualquer outra coisa — como nos jogos. */
       this.resolverGolpes('batalha', () => {

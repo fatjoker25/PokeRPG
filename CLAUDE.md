@@ -179,8 +179,9 @@ Firme é Focus Band porque sobrevive com 1 HP. Ferramenta que só existe aqui
 mesmo tamanho, pra coluna do nome não pular.
 
 O arremesso segue uma máquina de estados (`UI.animarArremesso`): arco de
-Bézier até o alto, sobre a cabeça → abre, o Pokémon vira máscara branca e
-some pra dentro → cai na vertical até a base → chacoalha 15° pra cada lado
+Bézier até o alto, sobre a cabeça → abre, um raio vermelho pega o Pokémon,
+ele fica vermelho com linha de aura (o recolher do anime) e encolhe pra
+dentro → cai na vertical até a base → chacoalha 15° pra cada lado
 com 0,5 s entre validações → brilho, ou abre e o sprite de frente volta.
 
 **A animação obedece ao dado, nunca o contrário.** `Captura.tentar` grava
@@ -206,20 +207,53 @@ Bola aberta, brilho e inclinação não têm arquivo: os endereços de
 byte a byte a bola fechada. A aberta é a fechada cortada ao meio, a
 inclinação é rotação e o brilho é desenhado.
 
+## O turno é encenado
+`Batalha.ev()` põe em **todo** evento uma foto dos dois lutadores e do
+treinador (`fotoA`, `fotoI`, `fotoJ`: uid, hp, hpMax, status). O motor
+continua resolvendo o turno inteiro de uma vez; `Efeitos.encenar`
+(`js/ui/efeitos.js`) toca a lista um evento por vez e anima o que mudou
+de uma foto pra outra: golpe (`lado` no evento), dano (pisca três vezes,
+barra desliza), cura (brilho verde), condição nova, troca de lutador. Só
+no fim a arena se redesenha com o estado final.
+
+Consequências:
+- **evento novo passa por `this.ev`**, nunca por `eventos.push` direto,
+  senão ele chega sem foto e a tela não sabe o que animar;
+- a arena não se redesenha no meio do turno; quem precisa (troca) chama
+  `UI.atualizarArena()` e repinta as barras com a foto do instante;
+- `atualizarArena` marca `.fixo` quem já estava lá, pra arte não "entrar"
+  de novo a cada turno.
+
+Os efeitos são **desenhados em CSS**: os endereços de efeito dos roteiros
+(fire_slash, water_beam, heal_sparkle, status_burn…) eram ícones de item
+da PokeAPI — Fire Stone, Water Stone, Potion, Burn Heal. Cor por cima do
+Pokémon é clone sem `.sprite`, pintado por filtro SVG que só lê o alfa
+(`Efeitos.filtroDeCor`), então silhueta continua silhueta.
+
+A abertura (`Efeitos.abertura`) é: treinador com rosto entra pela direita,
+recua pro fundo e **fica lá a luta inteira** (`.treinador-fundo`); depois a
+bola do seu sai do canto de baixo, abre, e ele nasce branco e ganha cor.
+Rosto de treinador mora em `js/data/treinadores.js` (Showdown, 80×80) —
+quem não tem equivalente honesto fica sem, e a abertura pula o treinador.
+
+Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
+o `build.py` embute junto com os sprites.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `jornada-do-campeao.html` e `artefato.html` (arquivo único
-  com os 1299 sprites, cenários e ícones embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+  com sprites, cenários, ícones, rostos, insígnias e gritos embutidos). Rodar depois de qualquer mudança em js/ ou css/.
 - Texto do jogo em português do Brasil. Comentário de código também.
 
 ## Onde as coisas ficam
 - `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
-  nomes, porte, arenas.
+  nomes, porte, arenas, treinadores.
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
 - `js/story/` — capítulos (`cap-01` a `cap-28`), lugares, mercado, eventos, motor.
-- `js/ui/interface.js` — todas as telas e modais.
+- `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o
+  turno encenado, a abertura e a entrada do seu Pokémon.
 
 ## Convenções de texto
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,

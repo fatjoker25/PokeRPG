@@ -561,7 +561,7 @@ const UI = {
         const repete = (ultimaBoca === f.quem);
         ultimaBoca = f.quem;
         return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}">
-          ${repete ? '' : `<div class="fala-quem">${this.esc(f.quem)}</div>`}
+          ${repete ? '' : `<div class="fala-quem">${this.retratoFala(f.quem)}${this.esc(f.quem)}</div>`}
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -604,7 +604,7 @@ const UI = {
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
         html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}">`
-              + (quem && !repete ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
+              + (quem && !repete ? `<div class="fala-quem">${lado === 'voce' ? '' : this.retratoFala(quem)}${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
@@ -759,14 +759,60 @@ const UI = {
       <div id="dados"></div>
       <div class="acoes-combate" id="acoes"></div>
     </div>`);
-    this.atualizarArena();
+    this._arenaUltima = null;
+    this.atualizarArena({entrando:true});
     this.escreverLog(Batalha.eventos);
     this.acoesCombate();
     this.rolarTopo();
+    /* o outro lado aparece, depois a sua bola; o menu espera os dois */
+    if (typeof Efeitos !== 'undefined') Efeitos.abertura();
   },
 
-  atualizarArena(){
+  /* rosto de quem fala, quando o jogo tem um (js/data/treinadores.js) */
+  retratoFala(quem){
+    const r = (typeof retratoDe === 'function') ? retratoDe(quem) : null;
+    return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
+  },
+
+  /* PAR, BRN, PSN… a etiqueta dos jogos, com a palavra no título */
+  etiquetaStatus(st){
+    const r = ROTULO_STATUS[st] || [String(st).slice(0, 3).toUpperCase(), st];
+    return `<span class="status-tag st-${this.esc(st)}" data-st="${this.esc(st)}" title="${this.esc(r[1])}">${r[0]}</span>`;
+  },
+
+  /* A sua vida, quando não sobrou ninguém entre você e o selvagem */
+  vidaJogadorHTML(){
+    const hp = Math.max(0, Estado.j.hp), max = Estado.hpMaxJogador();
+    const pct = Math.max(0, hp / max * 100);
+    const cls = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
+    return `<div class="vida-jogador" role="group" aria-label="Sua vida">
+      <div class="vj-nome"><span>${this.esc(Estado.j.nome || 'Você')}</span><span class="nv">treinador</span></div>
+      <div class="barra ${cls}"><i style="width:${pct}%"></i></div>
+      <div class="hp-num">${hp} / ${max} HP</div>
+    </div>`;
+  },
+  pintarVidaJogador(hp, suave){
+    const v = document.querySelector('#arena .vida-jogador');
+    if (!v){ if (Batalha.fase === 'ameaca') this.atualizarArena(); return; }
+    const max = Estado.hpMaxJogador(), pct = Math.max(0, hp / max * 100);
+    const barra = v.querySelector('.barra'), i = barra.querySelector('i');
+    if (!suave) i.style.transition = 'none';
+    i.style.width = pct + '%';
+    barra.classList.toggle('medio', pct <= 50 && pct > 22);
+    barra.classList.toggle('baixo', pct <= 22);
+    v.querySelector('.hp-num').textContent = `${Math.max(0, hp)} / ${max} HP`;
+  },
+
+  atualizarArena(op){
     const a = Batalha.aliado, i = Batalha.inimigo;
+    op = op || {};
+    /* Mesmo lutador de antes: a arte não entra de novo a cada turno.
+       Só quem acabou de chegar ganha a animação de surgir. */
+    const chave = p => p ? `${p.uid}:${p.dex}:${p.shiny ? 1 : 0}` : '';
+    const ult = this._arenaUltima || {};
+    const kA = chave(a), kI = chave(i);
+    const trocouA = !!ult.A && ult.A !== kA, trocouI = !!ult.I && ult.I !== kI;
+    const rosto = (Batalha.tipo === 'treinador' && typeof retratoDe === 'function') ? retratoDe(Batalha.treinador) : null;
     /* O fundo e as duas bases saem do lugar onde a briga acontece. */
     const cen = (typeof Arenas !== 'undefined') ? Arenas.atual() : null;
     const card = (p, cls, meu) => {
@@ -790,11 +836,17 @@ const UI = {
       const arte = imgSprite(p, meu ? 'costas' : 'frente', {oculto: !catalogado});
       /* A arte fica fora da ficha de propósito: é ela que deixa o
          cenário aparecer atrás do lutador, com a base sob os pés. */
-      return `<div class="lutador ${cls}">
-        <div class="arte">${arte}</div>
+      const fixo = (meu ? ult.A === kA : ult.I === kI) ? ' fixo' : '';
+      const entrando = op.entrando && (meu || rosto) ? ' por-entrar' : '';
+      /* quem te desafia fica atrás do próprio Pokémon a luta inteira */
+      const fundo = (!meu && rosto) ? `<img class="treinador-fundo" src="${rosto}" alt="${this.esc(Batalha.treinador)}" onerror="this.remove()">` : '';
+      const vida = (meu && Batalha.fase === 'ameaca') ? this.vidaJogadorHTML() : '';
+      return `<div class="lutador ${cls}${fixo}${entrando}">
+        <div class="arte">${fundo}${arte}</div>
         <div class="ficha">
+          ${vida}
           <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
-          <div style="margin-top:5px">${tipos}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
+          <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
           ${this.barraHP(p)}
           <div class="meta">${nat}</div>
           <div class="meta">${ficha}</div>
@@ -804,6 +856,11 @@ const UI = {
     };
     const el = document.getElementById('arena');
     el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
+    this._arenaUltima = {A:kA, I:kI};
+    if (typeof Efeitos !== 'undefined'){
+      const foto = p => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null} : null;
+      Efeitos.foto = {A:foto(a), I:foto(i), J:Estado.j ? Estado.j.hp : undefined};
+    }
     if (cen){
       el.className = 'arena arena-' + cen.arena;
       el.dataset.ambiente = cen.ambiente;
@@ -817,6 +874,7 @@ const UI = {
         el.style.removeProperty('--ar-fundo');
       }
     }
+    return {trocouA, trocouI};
   },
 
   /* ========================================================
@@ -2477,7 +2535,7 @@ const UI = {
     const d = Estado.dados;
     const carta = p => `<div class="carta ${p.morto?'morto':''}">
       <div class="t"><span class="com-icone">${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
-      <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status?`<span class="status-tag">${this.esc(p.status)}</span>`:''}</div>
+      <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p)}
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
         ? 'Natureza <b>' + this.esc(p.natureza) + '</b>'
@@ -2711,7 +2769,10 @@ const UI = {
         (typeof Cargos !== 'undefined' && Cargos.lista().length) ? ' (' + Cargos.lista().length + ')' : ''}</button></div>
       <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
       <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.filter(i=>i!=='Título de Campeão').length}/8</span></div>
-      ${d.insignias.length ? d.insignias.map(i=>`<div class="linha"><span class="k" style="padding-left:12px">${this.esc(i)}</span><span class="v">✓</span></div>`).join('') : ''}
+      ${d.insignias.length ? d.insignias.map(i => {
+        const g = GINASIOS.find(x => x.insignia === i), src = g && caminhoInsignia(g.id);
+        return `<div class="linha"><span class="k com-icone" style="padding-left:12px">${src ? `<img class="insignia-mini" src="${src}" alt="" onerror="this.remove()">` : ''}${this.esc(i)}</span><span class="v">✓</span></div>`;
+      }).join('') : ''}
       <h3>Reputação — ${this.esc(nivel.nome)} (${eixo}, nível ${val}/8)</h3>
       <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
       <p class="sussurro">${this.esc(nivel.ef)}</p>
@@ -2765,7 +2826,9 @@ const UI = {
       const nome = g.insignia.replace(/^Insígnia\s+/, '');
       const titulo = sabe ? `${this.esc(g.cidade)} · ${this.esc(g.lider)}` : 'Um ginásio que você ainda não encontrou';
       return `<div class="insignia-slot ${tem ? 'tem' : ''} ${sabe ? '' : 'oculta'}" title="${titulo}">
-        <span class="forma ins-${g.id}" style="--ins-cor:${sabe ? cor : 'transparent'}"></span>
+        ${tem && caminhoInsignia(g.id)
+          ? `<img class="insignia-img" src="${caminhoInsignia(g.id)}" alt="${this.esc(g.insignia)}" onerror="this.remove()">`
+          : `<span class="forma ins-${g.id}" style="--ins-cor:${sabe ? cor : 'transparent'}"></span>`}
         <span class="rot">${tem ? this.esc(nome) : '—'}</span>
         <span class="cid">${sabe ? this.esc(g.cidade) : '???'}</span>
       </div>`;
@@ -3375,16 +3438,24 @@ const UI = {
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
+      <h3>Condições</h3>
+      <div class="linha"><span class="k">PAR · paralisado</span><span class="v">25% de perder a vez · velocidade pela metade</span></div>
+      <div class="linha"><span class="k">BRN · queimado</span><span class="v">perde 1/16 do HP máximo no fim do turno</span></div>
+      <div class="linha"><span class="k">PSN · envenenado</span><span class="v">perde 1/8 do HP máximo no fim do turno (1/6 no grave)</span></div>
+      <div class="linha"><span class="k">SLP · dormindo</span><span class="v">1 a 3 turnos sem agir</span></div>
+      <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
+      <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · só pra quem derrubou</span></div>
       <div class="linha"><span class="k">Próximo nível</span><span class="v">nível³ × 0,08 + nível × 12 + 20</span></div>
-      <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a linha evolutiva aprende naquele nível</span></div>
+      <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a espécie aprende naquele nível, pela tabela dela</span></div>
+      <div class="linha"><span class="k">Selvagem e de treinador</span><span class="v">os quatro últimos golpes da tabela da espécie até o nível dele</span></div>
       <div class="linha"><span class="k">Já sabe quatro</span><span class="v">você escolhe qual esquecer, ou desiste do novo</span></div>
       <div class="linha"><span class="k">Evolução</span><span class="v">no fim da batalha, depois de Continuar · Parar adia pro próximo nível</span></div>
       <div class="linha"><span class="k">Relembrador de golpes</span><span class="v">Cerulean, Celadon e Planalto Indigo · 1.000 ₽ por golpe aprendido</span></div>
-      <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. O Relembrador ensina qualquer golpe de nível que a linha evolutiva já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
+      <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
       <h3>Fim da batalha</h3>
       <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do líder, dinheiro e captura que foi pro PC</span></div>
@@ -3522,6 +3593,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
       <p class="sussurro">Não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
 
       <h3>Trocas</h3>

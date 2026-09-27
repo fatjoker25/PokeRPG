@@ -31,6 +31,16 @@ if os.path.isdir(SPRITES_DIR):
             caminho = os.path.join(raiz, a).replace(os.sep, '/')
             dados = base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
             sprites[caminho] = 'data:image/png;base64,' + dados
+    # os gritos vão no mesmo dicionário: o jogo procura qualquer
+    # arquivo pelo caminho relativo, seja imagem ou som
+    if os.path.isdir('sons'):
+        for raiz, _, arqs in os.walk('sons'):
+            for a in sorted(arqs):
+                if not a.endswith('.ogg'):
+                    continue
+                caminho = os.path.join(raiz, a).replace(os.sep, '/')
+                dados = base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
+                sprites[caminho] = 'data:audio/ogg;base64,' + dados
     scripts.insert(0, '/* ===== sprites embutidos (' + str(len(sprites)) + ') ===== */\n'
                       'const SPRITES_DATA = ' + json.dumps(sprites, separators=(',', ':')) + ';')
     print(f'sprites embutidos: {len(sprites)} arquivos')

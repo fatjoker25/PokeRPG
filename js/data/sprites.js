@@ -98,11 +98,28 @@ const ITEM_SPRITE = {
   'Pedra do Trovão':'thunder_stone', 'Pedra da Folha':'leaf_stone', 'Pedra do Sol':'sun_stone',
   /* segurados — mesma ficha do item dos jogos */
   'Resto de Ração':'leftovers', 'Faixa Firme':'focus_band', 'Sino Calmante':'soothe_bell',
-  'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses'
+  'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses',
+  /* o mapa da região: o ícone do Town Map abre o mapa desenhado */
+  'Mapa de Kanto':'town_map'
 };
 
+/* Disco de TM: o ícone é o do tipo do golpe que ele ensina. O nome do
+   item carrega o golpe ("TM24 Thunderbolt"), então o tipo sai da tabela
+   de golpes e nenhuma lista de TM precisa ser mantida à mão. */
+const TM_ARQ_TIPO = {
+  'Normal':'normal', 'Fogo':'fire', 'Água':'water', 'Grama':'grass', 'Elétrico':'electric',
+  'Gelo':'ice', 'Lutador':'fighting', 'Venenoso':'poison', 'Terrestre':'ground', 'Voador':'flying',
+  'Psíquico':'psychic', 'Inseto':'bug', 'Pedra':'rock', 'Fantasma':'ghost', 'Dragão':'dragon',
+  'Metálico':'steel', 'Sombrio':'dark'
+};
+function arquivoTM(nome){
+  const m = /^(?:TM|MT)\s*\d+\s+(.+)$/i.exec(nome || '');
+  const g = m && typeof GOLPES !== 'undefined' ? GOLPES[m[1].trim()] : null;
+  return g && TM_ARQ_TIPO[g.t] ? 'tms/tm_' + TM_ARQ_TIPO[g.t] : null;
+}
+
 function caminhoItem(nome){
-  const arq = ITEM_SPRITE[nome];
+  const arq = ITEM_SPRITE[nome] || arquivoTM(nome);
   if (!arq) return null;
   const rel = SPRITES_BASE + ITENS_PASTA + arq + '.png';
   return SPRITES_EMBUTIDOS[rel] || rel;
@@ -126,6 +143,36 @@ function imgItem(nome, classe){
    animação; as outras usam o próprio ícone, que é a mesma bola vista
    do mesmo ângulo. Bola aberta não tem arquivo: o endereço dela não
    existe na origem, então a tela abre a fechada ao meio (ver CSS). */
+/* O grito de cada espécie, na versão das primeiras gerações (a da
+   PokeAPI, pasta legacy): combina com Kanto e pesa ~6 KB cada. */
+function caminhoGrito(dexId){
+  const rel = 'sons/gritos/' + dexId + '.ogg';
+  return SPRITES_EMBUTIDOS[rel] || rel;
+}
+function tocarGrito(dexId){
+  try {
+    if (!dexId || dexId > 251 || (typeof Estado !== 'undefined' && Estado.dados && Estado.dados.semSom)) return;
+    const a = new Audio(caminhoGrito(dexId));
+    a.volume = 0.45;
+    const r = a.play();
+    if (r && r.catch) r.catch(() => {});
+  } catch (e) { /* sem áudio: segue calado */ }
+}
+
+/* As oito insígnias de Kanto, pelo ginásio (não pelo líder: aqui quem
+   está em Viridian é o Blue). Arte da PokeAPI, sprites/badges/1..8 — o
+   endereço items/*-badge não existe lá. */
+const INSIGNIA_ARQ = {
+  pewter:'boulder', cerulean:'cascade', vermilion:'thunder', celadon:'rainbow',
+  fuchsia:'soul', saffron:'marsh', cinnabar:'volcano', viridian:'earth'
+};
+function caminhoInsignia(idGinasio){
+  const a = INSIGNIA_ARQ[idGinasio];
+  if (!a) return null;
+  const rel = SPRITES_BASE + 'badges/' + a + '_badge.png';
+  return SPRITES_EMBUTIDOS[rel] || rel;
+}
+
 function spriteDaBola(nome){
   if (nome === 'Poké Ball'){
     const rel = SPRITES_BASE + 'animations/pokeball/ball_closed.png';

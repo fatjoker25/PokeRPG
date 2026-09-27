@@ -33,6 +33,22 @@ for (const f of fora.map(x => x.slice(1, -1))){
   }
 }
 
+/* rostos, insígnias, discos de TM e gritos: arquivo que falta não quebra
+   nada — o rosto some, o grito não toca — e por isso mesmo é conferido */
+const tr = fs.readFileSync(path.join(raiz, 'js/data/treinadores.js'), 'utf8');
+const rostos = new Set([...tr.matchAll(/'((?:gym_leaders|elite|trainers|overworld)\/[a-z_]+)'/g)].map(m => m[1]));
+for (const r of rostos) if (!fs.existsSync(path.join(raiz, base, 'npcs', r + '.png'))) falhas.push(`rosto ${r}.png não existe em ${base}npcs/`);
+const ins = src.match(/const INSIGNIA_ARQ = \{([\s\S]*?)\};/);
+const insArq = ins ? [...ins[1].matchAll(/:'([a-z]+)'/g)].map(m => m[1]) : [];
+for (const a of insArq) if (!fs.existsSync(path.join(raiz, base, 'badges', a + '_badge.png'))) falhas.push(`insígnia ${a}_badge.png não existe`);
+const tms = src.match(/const TM_ARQ_TIPO = \{([\s\S]*?)\};/);
+const tmArq = tms ? [...tms[1].matchAll(/:'([a-z]+)'/g)].map(m => m[1]) : [];
+for (const a of tmArq) if (!fs.existsSync(path.join(raiz, base, 'items/tms', 'tm_' + a + '.png'))) falhas.push(`disco tm_${a}.png não existe`);
+let gritos = 0;
+for (let i = 1; i <= 251; i++) if (fs.existsSync(path.join(raiz, 'sons/gritos', i + '.ogg'))) gritos++;
+if (gritos < 251) falhas.push(`sons/gritos: ${gritos} de 251`);
+linhas.push(`  rostos ${rostos.size} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos}`);
+
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));
   process.exit(1);

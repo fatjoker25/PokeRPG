@@ -84,7 +84,18 @@ const Batalha = {
     return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
   },
 
-  ev(tipo, texto, extra){ this.eventos.push(Object.assign({tipo, texto}, extra||{})); },
+  /* Cada evento leva uma foto dos dois lutadores e do treinador naquele
+     instante. É dela que a tela tira o que animar — quem levou dano,
+     quem curou, quem ganhou condição, quem entrou — sem o motor
+     precisar saber que existe animação. */
+  ev(tipo, texto, extra){
+    const e = Object.assign({tipo, texto}, extra||{});
+    const foto = p => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null} : null;
+    e.fotoA = foto(this.aliado);
+    e.fotoI = foto(this.inimigo);
+    if (typeof Estado !== 'undefined' && Estado.j) e.fotoJ = Estado.j.hp;
+    this.eventos.push(e);
+  },
 
   /* ---------- utilidades ---------- */
   mult(est, chave){ return ESTAGIO_MULT[String(Math.max(-6, Math.min(6, est[chave])))] || 1; },
@@ -142,7 +153,7 @@ const Batalha = {
       else { this.ev('status', `${nomeVisivel(p)} está congelado e não consegue se mover.`); return false; }
     }
     if (p.status === 'paralisia' && Dados.chance(25)){
-      this.ev('status', `${nomeVisivel(p)} está paralisado! Não conseguiu se mover.`); return false;
+      this.ev('status', `${nomeVisivel(p)} está paralisado! Não conseguiu se mover.`, {travou:'paralisia', lado:souAliado ? 'aliado' : 'inimigo'}); return false;
     }
     if (est.recarregando){
       est.recarregando = false;
@@ -293,7 +304,7 @@ const Batalha = {
     }
     estAtk.carregando = null;
 
-    this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t});
+    this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t, lado:souAliado ? 'aliado' : 'inimigo'});
 
     if (!this.acertou(nome, estAtk, estDef)){
       this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
@@ -399,12 +410,12 @@ const Batalha = {
       const frac = p.statusGrave ? 6 : 8;
       const d = Math.max(1, Math.floor(p.hpMax / frac));
       p.hp = Math.max(0, p.hp - d);
-      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`);
+      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`, {causa:'veneno'});
     }
     if (p.status === 'queimadura'){
       const d = Math.max(1, Math.floor(p.hpMax / 16));
       p.hp = Math.max(0, p.hp - d);
-      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`);
+      this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`, {causa:'queimadura'});
     }
     /* item segurado: regeneração lenta */
     const seg = efeitoSegurado(p);
