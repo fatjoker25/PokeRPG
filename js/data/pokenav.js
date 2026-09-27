@@ -17,13 +17,13 @@ const CONTATOS = [
 /* ── casa e primeira rua ─────────────────────────────────── */
 {
   id:'casa', tipo:'figura', cidade:d=>d.jogador.cidade,
-  nome:d=>nomeCasa(), papel:d=>`a sua ${casaQuem()}`.replace('a sua pai','o seu pai').replace(/^a sua (avô|tio|irmão)/, 'o seu $1'),
+  nome:d=>nomeCasa(), papel:d=>`${artigoDe(casaQuem())} ${casaQuem()}`,
   automatico:true,
   oferece:['favor','prova','missao'],
   missao:{
-    rotulo:'Perguntar se ela precisa de alguma coisa',
+    rotulo:'Perguntar se {casa:ela|ele} precisa de alguma coisa',
     rotuloEntrega:'Ligar e dizer que está consertado',
-    dica:'Ela está esperando você em casa.',
+    dica:'{casa:Ela|Ele} está esperando você em casa.',
     pedido:[
       d=>fala(nomeCasa(), 'Eu não preciso de nada.'),
       'Pausa de quatro segundos, que nesta casa quer dizer o contrário.',
@@ -80,7 +80,7 @@ const CONTATOS = [
   }
 },
 {
-  id:'ushio', tipo:'figura', nome:'Sr. Ives', papel:'o velho da vassoura', cidade:'Pallet',
+  id:'ushio', tipo:'figura', nome:'Sr. Ives', papel:'o velho da vassoura', cidade:d=>d.jogador.cidade,
   requer:d=>!!(d.npcs['Sr. Ives'] && d.npcs['Sr. Ives'].opiniao >= 2),
   oferece:['favor','missao'],
   missao:{
@@ -136,8 +136,9 @@ const CONTATOS = [
         fala('Célio', 'Deixei um pacote pra você no balcão do Centro da última cidade que você passou. Tá no seu nome.')
       ];
     },
-    efeito:d=>{ Estado.darItem('Potion', 2); Estado.darItem('Ração', 1);
-      return [{tipo:'item', texto:'Recebeu 2× Potion e 1× Ração pelo correio da perua.'}]; }
+    /* o pacote fica no balcão: chega na próxima vez que você entrar num Centro */
+    efeito:d=>{ d.flags.pacote_celio = (d.flags.pacote_celio || 0) + 1;
+      return [{tipo:'info', texto:'Tem um pacote no seu nome esperando no balcão de um Centro Pokémon.'}]; }
   },
   prova:{
     rotulo:'Contar como ele está',
@@ -161,7 +162,7 @@ const CONTATOS = [
   }
 },
 {
-  id:'odete', tipo:'figura', nome:'Sra. Perla', papel:'a vizinha do dezoito', cidade:'Pallet',
+  id:'odete', tipo:'figura', nome:'Sra. Perla', papel:'a vizinha do dezoito', cidade:d=>d.jogador.cidade,
   requer:d=>!!d.npcs['Sra. Perla'],
   oferece:['favor','missao'],
   missao:{
@@ -724,6 +725,10 @@ function contatosDeRivaisExtras(){
 function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras()); }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 function textoContato(c, campo){
+  /* A agenda não descreve ninguém: quem é quem está na conversa em que
+     você conheceu a pessoa. Só a casa diz o parentesco, porque é assim
+     que se grava o número de casa. */
+  if (campo === 'papel' && c.id !== 'casa') return '';
   const v = c[campo];
   const t = typeof v === 'function' ? v(Estado.dados) : v;
   /* Contato gravado pela função ("Enfermeira do Centro") passa a aparecer

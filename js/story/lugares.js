@@ -567,8 +567,9 @@ const Cidade = {
       Estado.j.dinheiro -= preco;
       d.time.forEach(curarTotal);
       Estado.curarJogador(10);
+      const pac = this.retirarPacotes();
       Estado.salvar('auto');
-      return Exploracao.tela([
+      return Exploracao.tela([...pac,
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
         {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${preco} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
@@ -577,12 +578,22 @@ const Cidade = {
     }
     Estado.dados.time.forEach(curarTotal);
     Estado.curarJogador(10);
+    const pac = this.retirarPacotes();
     Estado.salvar('auto');
-    Exploracao.tela([
+    Exploracao.tela([...pac,
       {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
       {tipo:'info', texto:'No canto do saguão tem o terminal do sistema de armazenamento, ligado, com a tela de sempre esperando alguém.'},
       {tipo:'info', texto:'Amanhece.'}
     ]);
+  },
+
+  /* O que o Célio mandou pela perua espera no balcão de qualquer Centro. */
+  retirarPacotes(){
+    const d = Estado.dados, n = d.flags.pacote_celio || 0;
+    if (!n) return [];
+    d.flags.pacote_celio = 0;
+    Estado.darItem('Potion', 2 * n); Estado.darItem('Ração', n);
+    return [{tipo:'item', texto:`No balcão, ${n === 1 ? 'um pacote' : n + ' pacotes'} no seu nome, com a letra do Célio: ${2 * n}× Potion e ${n}× Ração.`}];
   },
 
   relembrar(uid, recado){

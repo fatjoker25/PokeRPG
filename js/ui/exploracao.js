@@ -178,7 +178,7 @@ const Exploracao = {
       const t = Dados.teste(Estado.j.status.intelecto, 5, 'Rota');
       const risco = {critico:10, sucesso:18, parcial:28, falha:40}[t.grau];
       if (Dados.chance(risco)){
-        const enc = sortearSelvagem(novo.ambiente, novo.nivel);
+        const enc = sortearSelvagem(novo.ambiente, novo.nivel, id);
         return this.encontro(enc, [Estado.conheceu(enc.dex)
           ? `No meio do caminho, um ${enc.nome} sai do mato e não desvia.`
           : 'No meio do caminho, um Pokémon sai do mato e não desvia.']);

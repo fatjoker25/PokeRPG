@@ -241,9 +241,12 @@ const UI = {
       <h3>Quem fica em casa</h3>
       <div class="dois">
         <div class="campo"><label>Nome</label>
-          <input id="f-casa-nome" maxlength="24" placeholder="Perla"></div>
+          <input id="f-casa-nome" maxlength="24" placeholder="Delia"></div>
         <div class="campo"><label>É sua/seu</label>
-          <input id="f-casa-quem" maxlength="24" placeholder="mãe"></div>
+          <select id="f-casa-quem">
+            <option value="">sortear</option>
+            ${PARENTESCOS_F.map((f, i) => `<option>${f}</option><option>${PARENTESCOS_M[i]}</option>`).join('')}
+          </select></div>
       </div>
       <div class="sussurro">É essa pessoa que te acorda, te empurra pela porta e vai ficar
         esperando notícia. Ela fala com você pelo nome dela — e você sabe de quem é a voz.</div>
@@ -567,7 +570,13 @@ const UI = {
 
   /* só o que de fato carrega texto escrito — nada de "carimbo" ou
      "crachá", que aparecem em cena de conversa e roubavam a fala */
-  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner)\b/i,
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|letra de (criança|imprensa|fôrma|forma))\b/i,
+  /* Papel também se reconhece pela descrição logo depois: "…" — com
+     uma foto colada, "…" — letra de imprensa. O travessão ali descreve
+     o papel, não quem falou. */
+  pareceEscrito(fala, depois){
+    return /^\s*[\u2014\u2013]\s*(com uma foto|sem foto|letra d|escrit|a caneta|a lápis|assinad|datilograf|impress)/i.test(depois || '');
+  },
 
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
@@ -588,11 +597,12 @@ const UI = {
            conversa e não como uma pessoa só falando sete vezes. */
         const meu = (meuNome && f.quem === meuNome) ? ' voce' : '';
         lado = meu ? 'voce' : 'npc';
-        /* três falas seguidas da mesma boca não repetem o nome três vezes */
+        /* balão sem nome parece conversa sem ninguém: toda fala leva o
+           nome, mesmo a segunda seguida da mesma boca (só o retrato some) */
         const repete = (ultimaBoca === f.quem);
         ultimaBoca = f.quem;
         return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}">
-          ${repete ? '' : `<div class="fala-quem">${this.retratoFala(f.quem)}${this.esc(f.quem)}</div>`}
+          <div class="fala-quem">${repete ? '' : this.retratoFala(f.quem)}${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -603,10 +613,14 @@ const UI = {
       /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
          são aspas de ironia ("análise jurídica") e ficam na narração. */
       const pedacos = this.partirFalas(t);
-      if (!pedacos) { pendente = t; ultimaBoca = null; return `<p>${this.esc(t)}</p>`; }
+      if (!pedacos){
+        pendente = t; ultimaBoca = null; return `<p>${this.esc(t)}</p>`;
+      }
 
       let html = '';
-      for (const pe of pedacos){
+      let papelNaLinha = false;
+      for (let k = 0; k < pedacos.length; k++){
+        const pe = pedacos[k];
         if (pe.tipo === 'narracao'){
           /* ", diz a atendente" é atribuição da fala anterior, não
              parágrafo novo: tira a vírgula que ficou órfã na frente. */
@@ -617,7 +631,12 @@ const UI = {
           continue;
         }
         /* o que está escrito numa placa não é alguém falando com você */
-        if (this._ESCRITO.test(pendente || '')){
+        const depois = pedacos[k + 1] && pedacos[k + 1].tipo === 'narracao' ? pedacos[k + 1].texto : '';
+        /* "AQUI TEM VULCÃO" e "PERIGO???": a segunda vem do mesmo papel
+           quando o que separa as duas é um "e" */
+        const mesmoPapel = papelNaLinha && (pendente || '').split(/\s+/).length <= 3;
+        if (this._ESCRITO.test(pendente || '') || mesmoPapel || this.pareceEscrito(pe.texto, depois)){
+          papelNaLinha = true;
           html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
           continue;
         }
@@ -635,7 +654,7 @@ const UI = {
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
         html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}">`
-              + (quem && !repete ? `<div class="fala-quem">${lado === 'voce' ? '' : this.retratoFala(quem)}${this.esc(quem)}</div>` : '')
+              + (quem ? `<div class="fala-quem">${lado === 'voce' || repete ? '' : this.retratoFala(quem)}${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
@@ -1692,7 +1711,7 @@ const UI = {
       <div class="cap-cabecalho chamando">
         <div class="num"><span class="nav-antena"></span> POKÉNAV · CHAMADA RECEBIDA</div>
         <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : 'Número desconhecido')}</div>
-        <div class="loc">${this.esc(contato ? textoContato(contato,'papel') : '')}</div>
+        <div class="loc">${this.esc(contato ? (textoContato(contato,'papel') || textoContato(contato,'cidade') || '') : '')}</div>
       </div>
       <div class="narrativa">${this.narrar(falas)}</div>
       <div id="avisos" class="avisos"></div>
@@ -1737,7 +1756,7 @@ const UI = {
       <div class="cap-cabecalho">
         <div class="num">PokéNav · chamada</div>
         <div class="tit">${this.esc(c ? textoContato(c,'nome') : 'Chamada')}</div>
-        <div class="loc">${this.esc(c ? textoContato(c,'papel') : '')}</div>
+        <div class="loc">${this.esc(c ? (textoContato(c,'papel') || textoContato(c,'cidade') || '') : '')}</div>
       </div>
       <div class="narrativa">${this.narrar(falas)}</div>
       <div id="avisos" class="avisos"></div>
@@ -3675,6 +3694,13 @@ const UI = {
       <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água +1 de poder · Fogo −1 de dano</span></div>
       <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo +1 de poder · Água −1 de dano · Solar Beam sem carregar</span></div>
       <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · 1 de dano no fim do turno, menos Pedra, Terrestre e Metálico · Pedra ganha +1 de Instinto</span></div>
+      <h3>Quem aparece onde</h3>
+      <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
+      <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
+      <div class="linha"><span class="k">Nunca no mato</span><span class="v">fóssil (só renasce no laboratório), lendário e Porygon</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 7 em 100 vêm 4 a 8 acima · 1 em 100 vem 10 a 16 acima</span></div>
+      <div class="linha"><span class="k">Forma</span><span class="v">só aparece quem pode existir naquele nível</span></div>
+      <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>

@@ -59,11 +59,12 @@ const CIDADES = ['Pallet','Viridian','Pewter','Cerulean','Vermilion','Lavender',
    deixar em branco, a casa ganha alguém mesmo assim, porque
    "alguém lá embaixo" não é personagem, é neblina.
    ============================================================ */
-const NOMES_DE_CASA_F = ['Perla','Alma','Dalva','Elda','Flora','Hilda','Nora','Vera'];
+/* Perla não entra: é a vizinha do dezoito, e as duas se falam */
+const NOMES_DE_CASA_F = ['Delia','Alma','Dalva','Elda','Flora','Hilda','Nora','Vera'];
 const NOMES_DE_CASA_M = ['Aldo','Bruno','Dino','Marco','Otto','Vito'];
 const NOMES_DE_CASA = NOMES_DE_CASA_F.concat(NOMES_DE_CASA_M);
-const PARENTESCOS_F = ['mãe','avó','tia','irmã mais velha'];
-const PARENTESCOS_M = ['pai','avô','tio','irmão mais velho'];
+const PARENTESCOS_F = ['mãe','avó','tia','irmã mais velha','madrinha'];
+const PARENTESCOS_M = ['pai','avô','tio','irmão mais velho','padrinho'];
 const PARENTESCOS   = PARENTESCOS_F.concat(PARENTESCOS_M);
 /* O que o jogador deixou em branco é sorteado de um jeito que combina
    com o que ele escreveu: nome de mulher não vira "seu tio". */
@@ -85,17 +86,23 @@ function parentescoEhMulher(quem){
   return true;
 }
 function casaEhMulher(){ return parentescoEhMulher(casaDe().quem); }
-/* Usados na escrita das cenas: nomeCasa() é "Perla", casaQuem() é "mãe",
-   casaCompleto() é "Perla, sua mãe". Nunca devolvem vazio. */
+/* Usados na escrita das cenas: nomeCasa() é "Delia", casaQuem() é "mãe",
+   casaCompleto() é "Delia, sua mãe". Nunca devolvem vazio. */
 function casaDe(){
   const c = (Estado.dados && Estado.dados.jogador && Estado.dados.jogador.casa) || null;
-  return c && c.nome ? c : {nome:'Perla', quem:'mãe'};
+  if (!(c && c.nome)) return {nome:'Delia', quem:'mãe'};
+  /* save de antes da lista: no campo do parentesco às vezes foi um nome
+     ("Sonia"), e o contato virava "a sua Sonia". O que não é parentesco
+     conhecido vira mãe ou pai, pelo nome. */
+  if (!PARENTESCOS.includes(c.quem) && !/^(madrinha|padrinho|madrasta|padrasto|prima|primo|vizinha|vizinho|tutora|tutor)$/i.test(c.quem || ''))
+    c.quem = (NOMES_DE_CASA_M.includes(c.nome) || /o$/i.test(c.nome)) ? 'pai' : 'mãe';
+  return c;
 }
 function nomeCasa(){ return casaDe().nome; }
 function casaQuem(){ return casaDe().quem; }
 function casaCompleto(){ const c = casaDe(); return `${c.nome}, ${artigoDe(c.quem)} ${c.quem}`; }
 function artigoDe(parentesco){
-  return /^(pai|avô|tio|irmão)/.test(parentesco) ? 'seu' : 'sua';
+  return parentescoEhMulher(parentesco) ? 'sua' : 'seu';
 }
 
 const ITENS_INFO = {

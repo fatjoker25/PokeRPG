@@ -181,7 +181,7 @@ c2_mural:{
     'Na parede da entrada, o mural de recados: uma placa de cortiça de dois metros por um, coberta de papel em três camadas.',
     'Você fica ali mais tempo do que pretendia.',
     '"Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa." — com uma foto colada, tirada de longe, meio tremida.',
-    d=>`"Meu filho saiu pra jornada em março. Se alguém vir, diz que a ${casaQuem() === 'pai' ? 'mãe' : casaQuem()} não tá brava." — sem foto e sem nome.`,
+    '"Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava." — sem foto e sem nome.',
     '"COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO." — letra de imprensa, sem telefone, só um horário e um lugar.',
     'E, escrito à mão com pressa e sublinhado três vezes, num pedaço de papel pardo:',
     '"NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE."'
@@ -194,7 +194,7 @@ c2_mural:{
     {texto:'Perguntar à atendente sobre o aviso da floresta.', vai:'c2_pergunta_floresta'},
     {texto:'Ler tudo e não mexer em nada.', vai:'c2_leu_tudo'},
     {texto:'Pregar um recado seu no mural, no espaço que sobrou.', vai:'c2_pregou_recado'},
-    {texto:'Ligar pra casa antes de qualquer coisa. Tem um cartaz de mãe aí.',
+    {texto:'Ligar pra casa antes de qualquer coisa. Aquele recado de mãe mexeu com você.',
      vai:'c2_ligou_por_causa_do_cartaz', cond:d=>Estado.temPokenav()},
     {texto:'Procurar no mural algum recado da sua cidade.', vai:'c2_recado_da_sua_cidade',
      cond:d=>!!d.flags.a_casa_estava_cheia || !!d.flags.viu_o_cartaz}
@@ -226,7 +226,7 @@ c2_ligou_por_causa_do_cartaz:{
     d=>fala(nomeCasa(), 'Alô?', null, 'A voz está normal. É só isso — está normal, e é isso que te desmonta um pouco.'),
     d=>fala(d.jogador.nome, 'Oi. É que eu vi um cartaz aqui e eu... nada. Oi.'),
     'Silêncio do outro lado por dois segundos.',
-    d=>fala(nomeCasa(), 'Você tá em Viridian já? Você saiu ontem, criatura.', 'riso'),
+    d=>fala(nomeCasa(), 'Você tá em Viridian já? Criatura, você mal saiu.', 'riso'),
     d=>fala(nomeCasa(), 'Tá comendo?'),
     '{casa:Ela|Ele} vai perguntar isso todas as vezes, pelos próximos nove meses, em qualquer circunstância, inclusive nas piores.'
   ],
@@ -245,13 +245,13 @@ c2_recado_da_sua_cidade:{
     'Você procura papel da sua cidade no mural e leva quatro minutos pra achar, porque está na terceira camada.',
     d=>`É um cartaz de ${d.jogador.cidade}, impresso em papel comum, com a foto ruim de uma licença.`,
     'É o seu.',
-    d=>fala('Sra. Perla', 'PARABÉNS', 'baixo', 'Escrito à mão embaixo da foto, com a mesma caneta dos outros dezenove.'),
-    'Ela foi de ônibus. Ela foi de ônibus até Viridian, achou o Centro Pokémon, pediu um percevejo na recepção e pregou isso aqui.',
+    'Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado da Sra. Perla, vizinha".',
+    'Ela ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
     'Você tem menos de vinte e quatro horas de estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
-      npc:{nome:'Sra. Perla', opiniao:3, memoria:'Pegou ônibus até Viridian pra pregar o seu cartaz no mural do Centro.'},
-      rep:{eixo:'bom',delta:2,motivo:'Alguém pegou ônibus pra pregar o seu nome numa cidade que não é a sua', rep:{notorio:true}},
+      npc:{nome:'Sra. Perla', opiniao:3, memoria:'Mandou pregar o seu cartaz no mural do Centro de Viridian, por telefone e fax.'},
+      rep:{eixo:'bom',delta:2,motivo:'Alguém mandou pregar o seu nome numa cidade que não é a sua', rep:{notorio:true}},
       registrar:'Achou o próprio cartaz na terceira camada do mural de Viridian.'},
   escolhas:[
     {texto:'Deixar onde está.', vai:'c2_pergunta_floresta'},

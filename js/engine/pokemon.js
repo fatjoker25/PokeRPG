@@ -487,33 +487,22 @@ function curarTotal(p){
 
 function estaVivo(p){ return !p.morto && p.hp > 0; }
 
-/* Encontro selvagem: espécie e nível TOTALMENTE aleatórios,
-   com o ambiente apenas enviesando a probabilidade. */
-function sortearSelvagem(ambiente='campo', nivelBase=8){
-  // nível: normalmente perto da faixa da área, mas com cauda longa (Lv30 na Rota 1 acontece)
+/* Encontro selvagem: a espécie sai da tabela do lugar (js/data/habitats.js)
+   e o nível fica perto do da área. Fora da curva existe, mas é raro:
+   um Rattata dez níveis acima do resto da rota é história pra contar,
+   não coisa de toda semana. */
+function sortearSelvagem(ambiente='campo', nivelBase=8, localId=null){
+  if (!localId && typeof Mundo !== 'undefined' && Mundo.id) { try { localId = Mundo.id(); } catch(e){} }
+  /* batalha de cena num canto que não é o do mapa (um porão, o mar):
+     vale o ambiente da cena, não a tabela de onde você está parado */
+  if (localId && typeof LOCAIS !== 'undefined' && LOCAIS[localId] && LOCAIS[localId].ambiente !== ambiente) localId = null;
   let nivel;
-  const r = Dados.d20('Nível do selvagem');
-  if (r === 20)      nivel = Dados.entre(nivelBase + 12, nivelBase + 28);
-  else if (r >= 17)  nivel = Dados.entre(nivelBase + 5, nivelBase + 12);
-  else if (r <= 2)   nivel = Math.max(2, Dados.entre(nivelBase - 6, nivelBase - 2));
-  else               nivel = Math.max(2, Dados.entre(nivelBase - 3, nivelBase + 4));
+  const r = Dados.entre(1, 100);
+  if (r === 100)     nivel = Dados.entre(nivelBase + 10, nivelBase + 16);   // 1 em 100
+  else if (r >= 93)  nivel = Dados.entre(nivelBase + 4, nivelBase + 8);     // 7 em 100
+  else if (r <= 5)   nivel = Math.max(2, Dados.entre(nivelBase - 5, nivelBase - 3));
+  else               nivel = Math.max(2, Dados.entre(nivelBase - 2, nivelBase + 2));
   nivel = Math.min(70, nivel);
-
-  /* Só entram no sorteio as espécies que podem existir neste nível.
-     Numa rota de nível 6 não se encontra Dodrio: encontra-se Doduo. */
-  const disponivel = (typeof poolSelvagem === 'function') ? poolSelvagem() : POOL_SELVAGEM;
-  const cabe = d => nivelMinimoDe(d) <= nivel;
-  const possiveis = disponivel.filter(cabe);
-  const pool = possiveis.length ? possiveis : disponivel.filter(d => nivelMinimoDe(d) <= 1 + nivel);
-  const base = pool.length ? pool : disponivel;
-
-  const tiposPref = VIES_AMBIENTE[ambiente] || [];
-  let dexId;
-  if (tiposPref.length && Dados.chance(65)){
-    const candidatos = base.filter(d => DEX[d].tipos.some(t => tiposPref.includes(t)));
-    dexId = Dados.escolher(candidatos.length ? candidatos : base);
-  } else {
-    dexId = Dados.escolher(base);   // qualquer um, em qualquer lugar
-  }
+  const dexId = sortearEspecie(localId, ambiente, nivel);
   return criarPokemon(dexId, nivel, {selvagem:true});
 }
