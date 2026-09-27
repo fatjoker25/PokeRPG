@@ -640,7 +640,23 @@ const Estado = {
     this.dados.log.push({cap:this.dados.capitulo, texto, dia:this.dados.relogio.dia});
     if (this.dados.log.length > 400) this.dados.log.shift();
   },
-  marcar(flag, valor=true){ this.dados.flags[flag] = valor; },
+  marcar(flag, valor=true){
+    const tinha = !!this.dados.flags[flag];
+    this.dados.flags[flag] = valor;
+    /* A Pokédex chega no capítulo 1, e o inicial chegou antes dela. Quem
+       já está com você entra no aparelho no dia em que ele é seu —
+       senão o seu próprio inicial ficava "???" na Pokédex. Os outros
+       iniciais continuam de fora até você encontrar um. */
+    if (flag === 'tem_pokedex' && valor && !tinha) this.catalogarQuemJaTenho();
+  },
+  catalogarQuemJaTenho(){
+    [...(this.dados.time || []), ...(this.dados.pc || [])].forEach(p => {
+      if (!p || p.dex == null) return;
+      this.catalogou(p.dex);
+      if (typeof registrarGolpeNaDex === 'function')
+        (p.golpes || []).forEach(g => registrarGolpeNaDex(p.dex, g.nome));
+    });
+  },
   tem(flag){ return !!this.dados.flags[flag]; },
 
   /* ============================================================
@@ -831,7 +847,11 @@ const Estado = {
     /* Bicho que entra pro seu time entra pra Pokédex. Você convive com
        ele: não faz sentido o aparelho não saber o que ele é só porque
        você não apontou a lente. Vale pra captura, troca e presente. */
-    if (p && p.dex != null) this.catalogou(p.dex);
+    if (p && p.dex != null){
+      this.catalogou(p.dex);
+      if (typeof registrarGolpeNaDex === 'function')
+        (p.golpes || []).forEach(g => registrarGolpeNaDex(p.dex, g.nome));
+    }
     if (this.dados.time.length < 6){ this.dados.time.push(p); return 'time'; }
     this.dados.pc.push(p); return 'pc';
   },

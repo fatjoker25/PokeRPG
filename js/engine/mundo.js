@@ -447,6 +447,8 @@ function afazeresDoLocal(){
     }
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
+    if (RELEMBRADOR[id]) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
+      sub:RELEMBRADOR[id].sub});
     if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
         sub:'E você tem dinheiro.'});
@@ -462,6 +464,7 @@ function afazeresDoLocal(){
   }
 
   if (id === 'planalto'){
+    lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes', sub:RELEMBRADOR.planalto.sub});
     lista.push({lugar:true, id:'liga', titulo:'A ala dos quatro',
       sub:'Um corredor com quatro portas seguidas. Ninguém explica o que tem atrás delas.'});
     lista.push({lugar:true, id:'torneio', titulo:'Arena aberta',

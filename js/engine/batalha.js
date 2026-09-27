@@ -38,6 +38,8 @@ const Batalha = {
     this.estAliado = this.novoEstado();
     this.estInimigo = this.novoEstado();
     this.pdexUsada = false;
+    /* A cena que vem depois quer saber se sobrou pra você. */
+    this.hpJogadorInicio = (Estado.j && Estado.j.hp) || 0;
     this.leituraIntelecto = false;
     if (Estado.viu(inimigo.dex)) this.ev('pokedex', 'A Pokédex vibra no bolso: espécie nova, ainda não catalogada.');
     if (inimigo.shiny){
@@ -651,8 +653,11 @@ const Batalha = {
       this.ev('exp', `${nomeVisivel(this.aliado)} ganhou ${ganho} de experiência.`);
       evs.forEach(e => {
         if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(this.aliado)} subiu para o nível ${e.nivel}!`);
-        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(this.aliado)} aprendeu ${e.golpe}!` + (e.esqueceu ? ` (esqueceu ${e.esqueceu})` : ''));
-        if (e.tipo === 'evolucao') this.ev('evolucao', `${e.de} evoluiu para ${e.para}!`);
+        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(this.aliado)} aprendeu ${e.golpe}!`);
+        /* não coube: a pergunta de qual esquecer vem logo depois, na tela */
+        if (e.tipo === 'querAprender')
+          this.ev('golpeNovo', `${nomeVisivel(this.aliado)} quer aprender ${e.golpe}, mas já sabe quatro golpes.`);
+        /* evolução não se anuncia no meio da luta: ela vem depois, na tela própria */
       });
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){

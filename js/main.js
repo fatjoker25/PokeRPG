@@ -1,6 +1,23 @@
 /* ============================================================
    JOGO — controle de fluxo
    ============================================================ */
+/* Prêmio de cada batalha, num lugar só. O log de fim de batalha mostra
+   o número ANTES de a tela de resultado pagar, e os dois têm que bater:
+   se cada lado fizesse a própria conta, um dia um diria 1.200 e o outro
+   pagaria 1.260. Mudou prêmio? Muda aqui, e a folha de regras junto. */
+function premioGinasio(g, fim){
+  const p = (g && g.premio) || {};
+  return p.dinheiro ? Math.round(p.dinheiro * ((fim && fim.bonusDinheiro) || 1)) : 0;
+}
+function premioRevanche(){ return 900 + 420 * numInsignias(); }
+function premioTorneio(t, venceu){
+  const pr = PREMIO_TORNEIO[t.rodada];
+  return venceu ? pr.dinheiro : Math.round(pr.dinheiro * 0.3);
+}
+const PERDA_RIVAL = 800;
+const PREMIO_RIVAL_PARCEIRO = 3000;
+const PREMIO_CAMPEAO = 80000;
+
 const Jogo = {
   subidosNoCap: [],
   cenaBatalha: null,
@@ -270,6 +287,7 @@ const Jogo = {
 
     const meu = Estado.primeiroApto();
     if (!meu){
+      Estado.dados.ultimaBatalha = {resultado:'semLuta'};
       return this.irPara(b.derrota || b.vitoria,
         [{tipo:'dano', texto:'Você não tem nenhum Pokémon em pé. Não dá para lutar.'}]);
     }
@@ -313,10 +331,14 @@ const Jogo = {
     const seguir = () => {
       UI.escreverLog(r.eventos);
       UI.atualizarArena();
-      if (r.precisaTrocar){ UI.trocaObrigatoria(r.reservas); return; }
-      if (r.fim) return this.finalizarBatalha(r.fim);
-      UI.acoesCombate();
-      Estado.salvar('auto');
+      /* Golpe que não coube: a pergunta é na hora, na tela de batalha,
+         antes de qualquer outra coisa — como nos jogos. */
+      this.resolverGolpes('batalha', () => {
+        if (r.precisaTrocar){ UI.trocaObrigatoria(r.reservas); return; }
+        if (r.fim) return this.fimDeBatalha(r.fim);
+        UI.acoesCombate();
+        Estado.salvar('auto');
+      });
     };
 
     /* Bola: primeiro a tela mostra o que aconteceu, depois o texto
@@ -328,12 +350,139 @@ const Jogo = {
     UI.animarArremesso(arremesso).then(() => { this.animandoBola = false; seguir(); });
   },
 
+  /* ============================================================
+     FIM DE BATALHA — a tela não fecha na hora
+     O log conta o resultado como nos jogos: quem venceu, a fala do
+     treinador, o dinheiro, e se a captura foi pro PC. Só o botão
+     Continuar leva adiante — e antes disso rodam as evoluções.
+     ============================================================ */
+  fimDeBatalha(fim){
+    const res = this.resumoFimDeBatalha(fim);
+    UI.escreverLog(res.linhas);
+    Estado.salvar('auto');
+    UI.mostrarContinuar(() => {
+      if (fim.resultado === 'gameover') return this.finalizarBatalha(fim);
+      this.resolverEvolucoes(() => this.finalizarBatalha(fim));
+    });
+  },
+
+  resumoFimDeBatalha(fim){
+    const linhas = [];
+    const nomeTrein = Batalha.treinador;
+    const L = (tipo, texto) => linhas.push({tipo, texto});
+    /* frase de derrota do treinador: a primeira fala do diálogo que a
+       tela seguinte mostraria — e ela passa a começar da segunda */
+    this.citacaoMostrada = false;
+    const citar = (falas) => {
+      const f = (falas || []).filter(Boolean)[0];
+      if (!f) return;
+      const t = (typeof f === 'string') ? f : (f.diz ? `${f.quem}: "${f.diz}"` : '');
+      if (t){ L('citacao', t); this.citacaoMostrada = true; }
+    };
+    const dinheiro = (v) => {
+      if (!v) return;
+      L('premio', v > 0 ? `Você recebeu ${v.toLocaleString('pt-BR')} ₽.` : `Você entregou ${(-v).toLocaleString('pt-BR')} ₽.`);
+    };
+    const venceu = fim.resultado === 'vitoria';
+
+    switch (fim.resultado){
+      case 'vitoria':
+        L('fim', nomeTrein ? `Você venceu ${nomeTrein}!` : 'Você venceu!');
+        break;
+      case 'captura': {
+        const p = fim.pokemon;
+        const noTime = p && (Estado.dados.time || []).some(x => x.uid === p.uid);
+        L('fim', 'Captura concluída!');
+        if (p && !noTime)
+          L('pc', `O seu time já tem seis. ${nomeExib(p)} foi enviado para o PC do Centro Pokémon.`);
+        break;
+      }
+      case 'derrota':
+        L('fimRuim', nomeTrein ? `${nomeTrein} venceu.` : 'Você perdeu essa.');
+        break;
+      case 'gameover':
+        L('fimRuim', 'Não sobrou ninguém em pé.');
+        break;
+      case 'fuga': case 'escapou':
+        L('fim', 'Você fugiu em segurança.');
+        break;
+      case 'encarou':
+        L('fim', 'Ele recuou.');
+        break;
+    }
+
+    /* o que cada tipo de batalha paga — pelas mesmas funções que pagam */
+    if (this.ginasioAtual){
+      const g = this.ginasioAtual;
+      citar(((venceu ? g.vitoria : g.derrota) || (() => []))(Estado.dados));
+      if (venceu) dinheiro(premioGinasio(g, fim));
+    } else if (this.revancheAtual){
+      if (venceu) dinheiro(premioRevanche());
+    } else if (this.torneioAtual){
+      if (fim.resultado !== 'gameover') dinheiro(premioTorneio(this.torneioAtual, venceu));
+    } else if (this.rivalAtual && !this.rivalAtual.extra){
+      if (venceu && this.rivalAtual.arco === 'parceiro') dinheiro(PREMIO_RIVAL_PARCEIRO);
+      if (fim.resultado === 'derrota') dinheiro(-Math.min(PERDA_RIVAL, Estado.j.dinheiro));
+    } else if (this.eliteAtual && this.eliteAtual.campeao && venceu){
+      dinheiro(PREMIO_CAMPEAO);
+    }
+    return {linhas};
+  },
+
+  /* ============================================================
+     PENDÊNCIAS — golpe que não coube e evolução que chegou
+     Ficam marcadas no próprio Pokémon (aprenderPendente, evoPendente)
+     por quem deu o XP, e são resolvidas aqui, no lugar certo: golpe
+     na hora, evolução depois da luta. Qualquer lugar que dá XP fora
+     de batalha passa por resolverPendencias antes da tela seguinte.
+     ============================================================ */
+  resolverGolpes(onde, aoFim){
+    const p = (Estado.dados.time || []).find(x => x.aprenderPendente && x.aprenderPendente.length);
+    if (!p) return aoFim();
+    const nome = p.aprenderPendente[0];
+    UI.perguntarGolpe(p, nome, onde, (i) => {
+      const esqueceu = aprenderNoLugar(p, nome, i);
+      const quem = nomeExib(p);
+      const linhas = esqueceu
+        ? [{tipo:'golpeNovo', texto:`1, 2 e… pronto! ${quem} esqueceu ${esqueceu}.`},
+           {tipo:'golpeNovo', texto:`E… ${quem} aprendeu ${nome}!`}]
+        : [{tipo:'info', texto:`${quem} não aprendeu ${nome}.`}];
+      if (onde === 'batalha') UI.escreverLog(linhas);
+      else UI.avisar && UI.avisar(linhas);
+      this.resolverGolpes(onde, aoFim);
+    });
+  },
+
+  resolverEvolucoes(aoFim){
+    const p = (Estado.dados.time || []).find(x => x.evoPendente && !x.morto);
+    if (!p) return aoFim();
+    const destino = p.evoPendente;
+    UI.telaEvolucao(p, destino, (evoluiu) => {
+      if (evoluiu){
+        evoluir(p, destino);
+        golpesAoEvoluir(p);
+        Estado.registrar(`${nomeExib(p)} evoluiu para ${p.nome}.`);
+      } else {
+        p.evoPendente = null;
+        p.evoCanceladaEm = p.nivel;
+      }
+      Estado.salvar('auto');
+      /* a forma nova pode ter golpe no nível atual — pergunta já */
+      this.resolverGolpes('modal', () => this.resolverEvolucoes(aoFim));
+    });
+  },
+
+  resolverPendencias(aoFim){
+    this.resolverGolpes('modal', () => this.resolverEvolucoes(aoFim));
+  },
+
   finalizarBatalha(fim){
     if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
     if (this.eliteAtual)    return this.resultadoElite(fim);
     if (this.torneioAtual)  return this.resultadoTorneio(fim);
     if (this.rivalAtual)    return this.resultadoRival(fim);
+    this.registrarBriga(fim);
     const b = this.cenaBatalha || {};
     const rotaFuga = b.fuga2 || (typeof b.fuga === 'string' ? b.fuga : null);
     let destino, aviso;
@@ -363,6 +512,22 @@ const Jogo = {
       return;
     }
     this.irPara(destino, [aviso].filter(Boolean));
+  },
+
+  /* Como a última briga de cena terminou. A cena seguinte lê isso pra
+     contar o que aconteceu de verdade, em vez de um texto só pra quatro
+     finais diferentes. */
+  registrarBriga(fim){
+    const B = Batalha, al = B.aliado, ini = B.inimigo;
+    Estado.dados.ultimaBatalha = {
+      resultado: fim.resultado,
+      dex: ini ? ini.dex : null,
+      turnos: B.turno || 0,
+      aliadoUid: al ? al.uid : null,
+      hpAliado: al && al.hpMax ? Math.max(0, al.hp) / al.hpMax : 0,
+      feriuVoce: !!(Estado.j && Estado.j.hp < (B.hpJogadorInicio || 0)),
+      capturado: fim.pokemon ? fim.pokemon.uid : null
+    };
   },
 
   /* ---------- fim de capítulo ---------- */
@@ -604,7 +769,7 @@ const Jogo = {
       const p = g.premio || {};
       if (p.dinheiro){
         const mult = (fim && fim.bonusDinheiro) || 1;
-        const val = Math.round(p.dinheiro * mult);
+        const val = premioGinasio(g, fim);
         Estado.j.dinheiro += val;
         avisos.push({tipo:'item', texto:`+${val} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
       }
@@ -785,7 +950,7 @@ const Jogo = {
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
     if (venceu){
-      const premio = 900 + 420 * numInsignias();
+      const premio = premioRevanche();
       Estado.j.dinheiro += premio;
       avisos.push({tipo:'item', texto:`+${premio} ₽`});
       const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
@@ -833,7 +998,7 @@ const Jogo = {
     const npc = Estado.dados.npcs['Ezra'];
 
     if (venceu){
-      if (arco === 'parceiro'){ Estado.j.dinheiro += 3000; avisos.push({tipo:'item', texto:'+3.000 ₽ — ele dividiu o que tinha no bolso.'}); }
+      if (arco === 'parceiro'){ Estado.j.dinheiro += PREMIO_RIVAL_PARCEIRO; avisos.push({tipo:'item', texto:`+${PREMIO_RIVAL_PARCEIRO.toLocaleString('pt-BR')} ₽ — ele dividiu o que tinha no bolso.`}); }
       if (arco === 'perseguidor'){
         Estado.lembrarNPC('Ezra', {opiniao:(npc?npc.opiniao:0)-1, memoria:'Tentou te parar e perdeu. Ajoelhou no chão e pediu para você parar.'});
         avisos.push({tipo:'dano', texto:'Ele pediu para você parar. Você venceu a batalha.'});
@@ -846,11 +1011,11 @@ const Jogo = {
         Estado.lembrarNPC('Ezra', {opiniao:(npc?npc.opiniao:0)+1, memoria:'Te venceu e mandou você voltar para casa.'});
         avisos.push({tipo:'info', texto:'Ele ficou entre você e o caminho.'});
       }
-      Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - 800);
-      avisos.push({tipo:'item', texto:'−800 ₽'});
+      Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - PERDA_RIVAL);
+      avisos.push({tipo:'item', texto:`−${PERDA_RIVAL} ₽`});
     }
     Estado.salvar('auto');
-    UI.telaResultadoRival(venceu, avisos);
+    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos));
   },
 
   resultadoRivalExtra(fim, id){
@@ -879,7 +1044,7 @@ const Jogo = {
       avisos.push({tipo:'item', texto:`−${perda} ₽`});
     }
     Estado.salvar('auto');
-    UI.telaResultadoRival(venceu, avisos, id);
+    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id));
   },
 
   seguirDepoisDoRival(){
@@ -981,7 +1146,7 @@ const Jogo = {
       Estado.marcar('campeao_de_kanto');
       Estado.j.cargo = 'Campeão de Kanto';
       Estado.dados.insignias.push('Título de Campeão');
-      Estado.j.dinheiro += 80000;
+      Estado.j.dinheiro += PREMIO_CAMPEAO;
       Estado.darItem('Master Ball', 1);
       Estado.darItem('Hyper Potion', 5);
       Estado.darItem('Full Heal', 5);
@@ -1070,7 +1235,7 @@ const Jogo = {
 
     if (!venceu){
       this.torneioAtual = null;
-      const consolo = Math.round(premio.dinheiro * 0.3);
+      const consolo = premioTorneio(t, false);
       Estado.j.dinheiro += consolo;
       avisos.push({tipo:'item', texto:`Premiação por participação: +${consolo} ₽`});
       Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
@@ -1086,8 +1251,9 @@ const Jogo = {
       });
     }
 
-    Estado.j.dinheiro += premio.dinheiro;
-    avisos.push({tipo:'item', texto:`+${premio.dinheiro} ₽`});
+    const ganhoTorneio = premioTorneio(t, true);
+    Estado.j.dinheiro += ganhoTorneio;
+    avisos.push({tipo:'item', texto:`+${ganhoTorneio} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     if (premio.rep){
       const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`, {rep:{notorio:true, peso:3}});

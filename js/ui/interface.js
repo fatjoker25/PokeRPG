@@ -1,6 +1,30 @@
 /* ============================================================
    INTERFACE
    ============================================================ */
+/* O vermelho do recolher: pinta só o alfa da imagem (a cor dela nunca
+   entra) e desenha em volta uma linha de aura borrada. Filtro SVG no
+   próprio documento, porque mask-image com arquivo local esbarra em
+   CORS no file:// e o efeito sumiria calado. */
+function garantirFiltroVermelho(){
+  if (document.getElementById('fx-vermelho')) return;
+  const caixa = document.createElement('div');
+  caixa.setAttribute('aria-hidden', 'true');
+  caixa.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+  caixa.innerHTML =
+    `<svg width="0" height="0"><filter id="fx-vermelho" x="-25%" y="-25%" width="150%" height="150%"
+        color-interpolation-filters="sRGB">
+      <feFlood flood-color="#e8242f" result="cor"/>
+      <feComposite in="cor" in2="SourceAlpha" operator="in" result="corpo"/>
+      <feMorphology in="SourceAlpha" operator="dilate" radius="3" result="gordo"/>
+      <feComposite in="gordo" in2="SourceAlpha" operator="out" result="contorno"/>
+      <feFlood flood-color="#ff8a80" result="cor2"/>
+      <feComposite in="cor2" in2="contorno" operator="in" result="linha"/>
+      <feGaussianBlur in="linha" stdDeviation="4" result="aura"/>
+      <feMerge><feMergeNode in="aura"/><feMergeNode in="aura"/><feMergeNode in="corpo"/><feMergeNode in="linha"/></feMerge>
+    </filter></svg>`;
+  document.body.appendChild(caixa);
+}
+
 const UI = {
   app:null, dadosRecentes:[],
 
@@ -802,9 +826,10 @@ const UI = {
 
        1 ARCO      ball_closed girando numa parábola de Bézier, do
                    treinador até um ponto no alto, sobre a cabeça
-       2 CAPTURA   abre lá em cima; o Pokémon vira uma máscara
-                   branca e some pra dentro, com opacidade caindo;
-                   a bola fecha e cai na vertical até a base
+       2 CAPTURA   abre lá em cima; um raio vermelho liga a bola ao
+                   Pokémon, ele fica vermelho com uma linha de aura
+                   em volta (o recolher do anime) e encolhe pra dentro
+                   junto com o raio; a bola fecha e cai até a base
        3 CHACOALHO 15° pra esquerda, centro, 15° pra direita, centro;
                    0,5 s de pausa entre uma validação e a outra
        4 FINAL     captura: bola quieta no chão e brilho em cima
@@ -821,9 +846,10 @@ const UI = {
      cortada ao meio, a inclinação é rotação e o brilho é desenhado.
 
      O sprite do alvo NUNCA recebe filter — o filter dele carrega a
-     silhueta. A máscara branca é um clone à parte, que começa com
-     brightness(0): a cor morre antes de virar branco, então nem uma
-     espécie não catalogada vaza a cor por ela.
+     silhueta. A máscara é um clone à parte. A branca começa com
+     brightness(0), e a vermelha é um filtro SVG que só lê o alfa da
+     imagem (feFlood dentro de SourceAlpha): nas duas a cor morre
+     antes, então nem espécie não catalogada vaza a cor por ela.
      ======================================================== */
   animarArremesso(anim){
     const arena = document.getElementById('arena');
@@ -857,13 +883,16 @@ const UI = {
            <img class="meia cima"  src="${src}" alt="">
          </div>
        </div>
-       <div class="feixe"></div>`;
+       <div class="feixe"></div>
+       <div class="raio"></div>`;
+    garantirFiltroVermelho();
     arena.appendChild(camada);
     const bola  = camada.querySelector('.bola-voo');
     const gira  = camada.querySelector('.gira');
     const cima  = camada.querySelector('.meia.cima');
     const baixo = camada.querySelector('.meia.baixo');
     const feixe = camada.querySelector('.feixe');
+    const raio  = camada.querySelector('.raio');
     const acoes = document.getElementById('acoes');
     if (acoes){ acoes.setAttribute('aria-busy', 'true'); acoes.classList.add('esperando'); }
 
@@ -900,17 +929,33 @@ const UI = {
        bola que devia estar com ele dentro. visibility ela não toca. */
     const esconderAlvo = () => { if (alvo) alvo.style.visibility = 'hidden'; };
 
-    /* 2 — some pra dentro: vira branco e encolhe até a bola */
+    /* 2 — o raio sai da bola aberta e pega o Pokémon pelo meio */
+    const bx = xt + TAM/2, by = yAlto + TAM/2;
+    const mx = T.left - A.left + T.width/2, my = T.top - A.top + T.height * 0.5;
+    const ang = Math.atan2(my - by, mx - bx) * 180 / Math.PI;
+    Object.assign(raio.style, {left:bx + 'px', top:(by - 3) + 'px',
+                               width:Math.hypot(mx - bx, my - by) + 'px'});
+    const esticar = (de, ate, ms) => tocar(raio,
+      [{opacity:1, transform:`rotate(${ang}deg) scaleX(${de})`},
+       {opacity:ate ? 1 : .6, transform:`rotate(${ang}deg) scaleX(${ate})`}], ms, {easing:'ease-out'});
+    /* 2 — fica vermelho, com a linha de aura, e encolhe até a bola */
     const sugar = async () => {
       if (!mascara) return;
-      await tocar(mascara, [{opacity:0}, {opacity:1}], 150);
+      mascara.classList.add('vermelha');
+      await esticar(0, 1, 170);
+      await tocar(mascara, [{opacity:0}, {opacity:1}], 240);
       esconderAlvo();
-      await tocar(mascara, [{transform:'scale(1)', opacity:1},
-                            {transform:'scale(.05)', opacity:0}], 380, {easing:'ease-in'});
+      await tocar(mascara, [{transform:'scale(1)'}, {transform:'scale(1.07)'}], 120);
+      await Promise.all([
+        tocar(mascara, [{transform:'scale(1.07)', opacity:1},
+                        {transform:'scale(.05)', opacity:.15}], 400, {easing:'ease-in'}),
+        esticar(1, 0, 400).then(() => tocar(raio, [{opacity:.6}, {opacity:0}], 60))
+      ]);
     };
     /* 4 fuga — o inverso: sai branco da bola e revela o sprite de frente */
     const soltar = async () => {
       if (!mascara || !alvo) return;
+      mascara.classList.remove('vermelha');
       await tocar(mascara, [{transform:'scale(.05)', opacity:0},
                             {transform:'scale(1)', opacity:1}], 320, {easing:'ease-out'});
       alvo.style.visibility = '';
@@ -1031,6 +1076,191 @@ const UI = {
     };
 
     return sequencia().catch(() => {}).then(fim);
+  },
+
+  /* ========================================================
+     GOLPE NOVO QUE NÃO COUBE — como nos jogos
+     Mostra o golpe novo e os quatro que ele sabe; o jogador clica no
+     que quer esquecer, ou desiste. Na batalha a pergunta ocupa o menu
+     de combate (a luta espera); fora dela, abre um modal que não fecha
+     sem resposta. Quem chama decide o que acontece depois.
+     ======================================================== */
+  cartaoGolpe(nome, pp){
+    const g = GOLPES[nome] || {};
+    const cat = {fis:'Físico', esp:'Especial', status:'Status'}[g.c] || '—';
+    const poder = (g.c === 'status' || !g.p) ? '—' : g.p;
+    const prec = g.a ? g.a + '%' : '—';
+    return `<span class="golpe-cartao">
+      <span class="gc-topo"><span class="gc-nome">${this.esc(nome)}</span>${g.t ? this.tipoTag(g.t) : ''}</span>
+      <span class="gc-num">${cat} · Poder ${poder} · Precisão ${prec} · PP ${pp || g.pp || '—'}</span>
+    </span>`;
+  },
+
+  perguntarGolpe(p, nome, onde, aoResponder){
+    this._respostaGolpe = {aoResponder, onde};
+    const quem = this.esc(nomeExib(p));
+    const html = `<div class="aprender">
+      <p class="aprender-pergunta"><b>${quem}</b> quer aprender <b>${this.esc(nome)}</b>.</p>
+      <p class="sussurro">Mas ${quem} já sabe quatro golpes. Esquecer um pra aprender ${this.esc(nome)}?</p>
+      <div class="aprender-novo"><span class="aprender-rot">novo</span>${this.cartaoGolpe(nome)}</div>
+      <div class="aprender-lista">${p.golpes.map((g, i) =>
+        `<button class="aprender-op" onclick="UI.responderGolpe(${i})">
+           ${this.cartaoGolpe(g.nome, `${g.pp}/${g.ppMax}`)}
+           <span class="aprender-acao">esquecer</span></button>`).join('')}</div>
+      <button class="btn aprender-nao" onclick="UI.responderGolpe(-1)">Não aprender ${this.esc(nome)}</button>
+    </div>`;
+    if (onde === 'batalha'){
+      const c = document.getElementById('acoes');
+      if (c){ c.className = 'acoes-combate livre'; c.innerHTML = html; return; }
+    }
+    this.modal('Golpe novo', html, true, 'aprender-modal');
+  },
+
+  responderGolpe(i){
+    const r = this._respostaGolpe;
+    this._respostaGolpe = null;
+    if (!r) return;
+    if (r.onde !== 'batalha') this.fecharModal(true);
+    r.aoResponder(i);
+  },
+
+  /* Fim de batalha: o menu vira um botão só. A tela não fecha sozinha. */
+  mostrarContinuar(fn){
+    this._aoContinuar = fn;
+    const c = document.getElementById('acoes');
+    if (!c) return fn();
+    c.className = 'acoes-combate livre';
+    c.innerHTML = `<button class="mb-btn continuar-batalha" onclick="UI.continuarBatalha()">
+      <span class="rot">Continuar</span></button>`;
+    setTimeout(() => { const b = c.querySelector('button'); if (b) b.focus(); }, 0);
+  },
+  continuarBatalha(){
+    const fn = this._aoContinuar;
+    this._aoContinuar = null;
+    if (fn) fn();
+  },
+
+  /* Recado curto que some sozinho: o que aconteceu fora da batalha
+     (golpe aprendido no treino, por exemplo). */
+  avisar(linhas){
+    let caixa = document.getElementById('recados');
+    if (!caixa){
+      caixa = this.el('<div id="recados" class="recados" aria-live="polite"></div>');
+      document.body.appendChild(caixa);
+    }
+    (linhas || []).forEach(l => {
+      const el = this.el(`<div class="recado ${this.esc(l.tipo || '')}">${this.esc(l.texto)}</div>`);
+      caixa.appendChild(el);
+      setTimeout(() => el.classList.add('saindo'), 3400);
+      setTimeout(() => el.remove(), 3900);
+    });
+  },
+
+  /* ========================================================
+     EVOLUÇÃO — a tela pequena, com a aura azul do anime
+     O Pokémon vira um vulto azul-claro, pisca entre a forma velha e
+     a nova cada vez mais rápido, clarão, e a forma nova aparece. Dá
+     pra parar no meio — como apertar B —, e aí ele tenta de novo no
+     próximo nível. Os vultos são clones sem a classe .sprite: o
+     filter deles é o do vulto, não o estado de silhueta da Pokédex.
+     ======================================================== */
+  telaEvolucao(p, destino, aoFim){
+    const antigo = nomeExib(p);
+    const novoNome = DEX[destino].nome;
+    const srcVelho = caminhoSprite(p.dex, 'frente', p.shiny);
+    const srcNovo  = caminhoSprite(destino, 'frente', p.shiny);
+    const bolhas = Array.from({length:16}, (_, i) =>
+      `<span class="evo-bolha" style="left:${(i*37)%100}%;animation-delay:${(i*0.23).toFixed(2)}s;animation-duration:${(2.2+(i%5)*0.35).toFixed(2)}s"></span>`).join('');
+    this.modal('', `<div class="evo">
+      <div class="evo-palco">
+        <div class="evo-aura"></div>
+        <div class="evo-bolhas">${bolhas}</div>
+        <img class="evo-cor velho" src="${srcVelho}" alt="">
+        <img class="evo-cor novo"  src="${srcNovo}"  alt="">
+        <img class="evo-vulto velho" src="${srcVelho}" alt="">
+        <img class="evo-vulto novo"  src="${srcNovo}"  alt="">
+        <div class="evo-clarao"></div>
+      </div>
+      <p class="evo-texto">O quê? <b>${this.esc(antigo)}</b> está evoluindo!</p>
+      <div class="evo-botoes">
+        <button class="btn" id="evo-parar">Parar</button>
+        <button class="btn destaque" id="evo-seguir" hidden>Continuar</button>
+      </div>
+    </div>`, true, 'evolucao');
+
+    const M = document.querySelector('.modal.evolucao') || document;
+    const $ = sel => M.querySelector(sel);
+    const cV = $('.evo-cor.velho'), cN = $('.evo-cor.novo');
+    const vV = $('.evo-vulto.velho'), vN = $('.evo-vulto.novo');
+    const aura = $('.evo-aura'), clarao = $('.evo-clarao'), texto = $('.evo-texto');
+    const parar = $('#evo-parar'), seguir = $('#evo-seguir');
+    const reduzido = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let parou = false, evoluiu = false;
+    parar.onclick = () => { parou = true; };
+    /* A animação grava o quadro final no style e se desfaz. Com fill
+       'forwards' ela ficava segurando a opacidade, e o mostrar() de
+       depois não escondia mais nada: o vulto velho nunca saía da tela
+       e terminava por cima da forma nova, que aparecia esbranquiçada. */
+    const tocar = (el, q, ms, ex) => {
+      const a = el.animate(q, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, ex||{}));
+      return a.finished.then(() => { try { a.commitStyles(); } catch(e){} a.cancel(); });
+    };
+    const esperar = ms => new Promise(r => setTimeout(r, ms));
+    const mostrar = (el, on) => { el.style.opacity = on ? '1' : '0'; };
+
+    const terminar = (ok) => {
+      evoluiu = ok;
+      parar.hidden = true;
+      seguir.hidden = false;
+      seguir.focus();
+      seguir.onclick = () => { this.fecharModal(true); aoFim(evoluiu); };
+    };
+    const desistir = async () => {
+      mostrar(vN, false);
+      await tocar(vV, [{opacity:1}, {opacity:0}], 380);
+      mostrar(cV, true);
+      tocar(aura, [{opacity:getComputedStyle(aura).opacity}, {opacity:0}], 500);
+      M.querySelector('.evo').classList.remove('evoluindo');
+      texto.innerHTML = `Hm? <b>${this.esc(antigo)}</b> parou de evoluir.`;
+      terminar(false);
+    };
+
+    if (reduzido){
+      mostrar(cV, false); mostrar(cN, true);
+      texto.innerHTML = `Parabéns! <b>${this.esc(antigo)}</b> evoluiu para <b>${this.esc(novoNome)}</b>!`;
+      terminar(true);
+      return;
+    }
+
+    (async () => {
+      M.querySelector('.evo').classList.add('evoluindo');
+      await tocar(aura, [{opacity:0, transform:'scale(.7)'}, {opacity:.75, transform:'scale(1)'}], 800);
+      if (parou) return desistir();
+      /* vira vulto azul */
+      mostrar(vV, true);
+      await tocar(vV, [{opacity:0}, {opacity:1}], 520);
+      mostrar(cV, false);
+      /* pisca entre a forma velha e a nova, cada vez mais rápido */
+      let ms = 520, lado = false;
+      while (ms > 55){
+        if (parou) return desistir();
+        lado = !lado;
+        mostrar(vV, !lado); mostrar(vN, lado);
+        await esperar(ms);
+        ms = Math.round(ms * 0.84);
+      }
+      if (parou) return desistir();
+      /* clarão, e a forma nova */
+      parar.hidden = true;
+      await tocar(clarao, [{opacity:0}, {opacity:1}], 260);
+      mostrar(vV, false); mostrar(vN, false); mostrar(cN, true);
+      tocar(aura, [{opacity:.75, transform:'scale(1)'}, {opacity:0, transform:'scale(1.35)'}], 900);
+      await tocar(clarao, [{opacity:1}, {opacity:0}], 700);
+      M.querySelector('.evo').classList.remove('evoluindo');
+      M.querySelector('.evo').classList.add('pronto');
+      texto.innerHTML = `Parabéns! <b>${this.esc(antigo)}</b> evoluiu para <b>${this.esc(novoNome)}</b>!`;
+      terminar(true);
+    })();
   },
 
   escreverLog(eventos){
@@ -1154,7 +1384,7 @@ const UI = {
     const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
     const linhasBolas = bolas.map(n =>
       `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join('');
+        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join('');
     const linhasItens = resto.map(n => {
       const info = ITENS_INFO[n] || {};
       if (info.tipo === 'curaJogador')
@@ -1631,7 +1861,7 @@ const UI = {
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma bola.</p>');
     this.modal('Qual bola?', bolas.map(n =>
       `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join(''));
+        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join(''));
   },
 
   menuItens(){
@@ -1904,7 +2134,9 @@ const UI = {
   telaResultadoGinasio(g, venceu, avisos){
     this.limpar();
     this.add(this.topo());
-    const falas = (venceu ? g.vitoria : g.derrota)(Estado.dados).filter(Boolean);
+    let falas = (venceu ? g.vitoria : g.derrota)(Estado.dados).filter(Boolean);
+    /* a primeira fala já saiu no log da batalha, como frase de derrota */
+    if (Jogo.citacaoMostrada){ falas = falas.slice(1); Jogo.citacaoMostrada = false; }
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">Ginásio de ${this.esc(g.cidade)}</div>
@@ -2310,7 +2542,7 @@ const UI = {
           <span class="corpo">
             <span class="nome">${this.esc(n)}</span>
             <span class="ficha">${this.esc(fichaItem(n))}</span>
-            ${info.desc ? `<span class="desc">${this.esc(descricaoItem(n))}</span>` : ''}
+            ${info.desc && info.tipo !== 'bola' ? `<span class="desc">${this.esc(descricaoItem(n))}</span>` : ''}
           </span>
           ${usavel ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
             onclick="UI.usarDaMochila('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
@@ -2691,9 +2923,40 @@ const UI = {
         ${Estado.brilhanteDe(dex) ? `<div class="linha"><span class="k">Anomalia cromática</span><span class="v brilho-v">✦ ${Estado.brilhanteDe(dex) === 'capturado' ? 'exemplar brilhante no seu registro' : 'um exemplar brilhante avistado'}</span></div>` : ''}
         <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
         <div class="linha"><span class="k">Resiste a</span><span class="v">${this.esc(this.resistencias(esp.tipos).join(', ') || '—')}</span></div>
+
+        ${this.dexGolpes(dex)}
       </div>
       <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
       true, 'pokedex');
+  },
+
+  /* Golpes da espécie: a lista de nível é a dos jogos, mas o nome só
+     aparece depois que um Pokémon dessa espécie aprendeu o golpe na
+     sua mão — o aparelho cadastra o que viu, não o que leu. O nível
+     fica à mostra, que é o espaço em branco pedindo pra ser preenchido. */
+  dexGolpes(dex){
+    const pd = Estado.pdex();
+    const sabidos = new Set(((pd.golpes || {})[dex]) || []);
+    const lista = (typeof APRENDE !== 'undefined' && APRENDE[dex]) || [];
+    if (!lista.length && !sabidos.size) return '';
+    const vistos = new Set();
+    const linhas = lista.map(([nv, nome]) => {
+      vistos.add(nome);
+      const g = GOLPES[nome] || {};
+      const tem = sabidos.has(nome);
+      return `<div class="dex-golpe ${tem ? 'tem' : 'falta'}">
+        <span class="nv">${nv <= 1 ? 'início' : 'Nv ' + nv}</span>
+        <span class="nm">${tem ? this.esc(nome) : '???'}</span>
+        <span class="tp">${tem && g.t ? this.tipoTag(g.t) : ''}</span>
+      </div>`;
+    }).join('');
+    /* golpe que a espécie sabe na sua mão mas não é da lista dela
+       (veio da forma anterior, ou do Relembrador) */
+    const fora = [...sabidos].filter(n => !vistos.has(n));
+    const nTem = lista.filter(([, n]) => sabidos.has(n)).length;
+    return `<h3 class="cat-item">Golpes <span class="fraco">· ${nTem} de ${lista.length} cadastrados</span></h3>
+      <div class="dex-golpes">${linhas}</div>
+      ${fora.length ? `<div class="nota">Também sabe na sua mão: ${fora.map(n => this.esc(n)).join(', ')}.</div>` : ''}`;
   },
 
   /* A ficha só cita tipo que o aparelho conhece: Sombrio e
@@ -3114,6 +3377,25 @@ const UI = {
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador.</p>
+      <h3>Nível, golpes e evolução</h3>
+      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · só pra quem derrubou</span></div>
+      <div class="linha"><span class="k">Próximo nível</span><span class="v">nível³ × 0,08 + nível × 12 + 20</span></div>
+      <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a linha evolutiva aprende naquele nível</span></div>
+      <div class="linha"><span class="k">Já sabe quatro</span><span class="v">você escolhe qual esquecer, ou desiste do novo</span></div>
+      <div class="linha"><span class="k">Evolução</span><span class="v">no fim da batalha, depois de Continuar · Parar adia pro próximo nível</span></div>
+      <div class="linha"><span class="k">Relembrador de golpes</span><span class="v">Cerulean, Celadon e Planalto Indigo · 1.000 ₽ por golpe aprendido</span></div>
+      <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. O Relembrador ensina qualquer golpe de nível que a linha evolutiva já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
+
+      <h3>Fim da batalha</h3>
+      <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do líder, dinheiro e captura que foi pro PC</span></div>
+      <div class="linha"><span class="k">Líder de ginásio</span><span class="v">prêmio do ginásio · revanche: 900 + 420 por insígnia</span></div>
+      <div class="linha"><span class="k">Torneio</span><span class="v">o prêmio da rodada · perdendo, 30% dele</span></div>
+      <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
+      <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
+      <div class="linha"><span class="k">Treinador de cena</span><span class="v">o que a história decidir — nem toda briga tem aposta</span></div>
+      <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
+      <p class="sussurro">A tela não fecha sozinha: nada anda até você apertar Continuar.</p>
+
       <h3>Vocês dois</h3>
       <p class="sussurro">A personalidade que você escreveu na ficha e a natureza de cada Pokémon são lidas nos mesmos cinco eixos: discrição, paciência, coragem, simpatia e cuidado. O encontro dos dois dá a afinidade, de −10 a +10, e a convivência amacia o desencontro com o tempo.</p>
       <div class="linha"><span class="k">+5 ou mais</span><span class="v">obedece muito mais fácil · crítico um ponto mais perto · +1 nas perícias</span></div>

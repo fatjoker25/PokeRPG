@@ -138,6 +138,7 @@ const Exploracao = {
     if (acao === 'credenciais') return UI.modalCredenciais();
     if (acao === 'doar')       return Cidade.doar();
     if (acao === 'loja')       return Cidade.loja();
+    if (acao === 'relembrar')  return Cidade.relembrar();
     if (acao === 'ginasio')    return Cidade.ginasio();
     if (acao === 'liga'){ Jogo.voltarDeGinasio = 'exploracao'; return Jogo.abrirLiga('exploracao'); }
     if (acao === 'torneio'){ Jogo.voltarDeGinasio = 'exploracao'; return Jogo.abrirLiga('exploracao'); }
@@ -202,11 +203,12 @@ const Exploracao = {
     const avisos = [{tipo:'info', texto:abertura}];
     eventos.forEach(e => {
       if (e.tipo === 'nivel') avisos.push({tipo:'info', texto:'Alguma coisa no time endureceu hoje.'});
-      if (e.tipo === 'evolucao') avisos.push({tipo:'pokemon', texto:`${e.de} virou ${e.para}.`});
       if (e.tipo === 'golpe') avisos.push({tipo:'info', texto:`Um deles acertou um movimento novo: ${e.golpe}.`});
     });
     Estado.salvar('auto');
-    this.tela(avisos.slice(0,5));
+    /* Golpe que não coube e evolução que chegou no treino: pergunta e
+       evolui antes de voltar pro mapa, que é quando os jogos fariam. */
+    Jogo.resolverPendencias(() => this.tela(avisos.slice(0,5)));
   },
 
   pescar(){

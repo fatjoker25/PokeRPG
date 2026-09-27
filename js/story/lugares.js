@@ -523,6 +523,30 @@ const Conversas = {
 /* ============================================================
    SERVIÇOS DA CIDADE
    ============================================================ */
+/* ============================================================
+   RELEMBRADOR DE GOLPES — Cerulean, Celadon e o Planalto
+   Faz o Pokémon lembrar de um golpe que a linha dele aprende até o
+   nível atual e que ficou pelo caminho (esquecido pra dar lugar a
+   outro, ou recusado quando subiu de nível). Nos jogos custa uma
+   Heart Scale; aqui, que não tem Heart Scale, cobra em dinheiro — e
+   só cobra se o golpe entrar. Mudou o preço? Folha de regras junto.
+   ============================================================ */
+const PRECO_RELEMBRAR = 1000;
+const RELEMBRADOR = {
+  cerulean:{
+    sub:'Uma sala nos fundos da escola de treinadores.',
+    ar:'Uma senhora de óculos de leitura atende numa sala dos fundos da escola de treinadores, entre caixas de apostila velha. Ela não ensina nada que o bicho não soube um dia. Ela só faz ele lembrar.'
+  },
+  celadon:{
+    sub:'Uma porta sem placa no terceiro andar da loja de departamentos.',
+    ar:'No terceiro andar da loja de departamentos tem uma porta sem placa entre o provador e o depósito. O homem lá dentro cobra caro, trabalha rápido e não pergunta o que aconteceu com o golpe.'
+  },
+  planalto:{
+    sub:'Uma treinadora aposentada, no saguão antes da ala dos quatro.',
+    ar:'No saguão antes da ala dos quatro, uma treinadora aposentada ocupa a mesma poltrona há anos. Ela diz que metade de quem chega até aqui esqueceu no caminho alguma coisa que ia precisar lá dentro.'
+  }
+};
+
 const Cidade = {
   centro(){
     Mundo.passar(1);
@@ -561,6 +585,62 @@ const Cidade = {
     ]);
   },
 
+  relembrar(uid, recado){
+    const R = RELEMBRADOR[Mundo.id()] || RELEMBRADOR.cerulean;
+    const d = Estado.dados;
+    const din = Estado.j.dinheiro;
+    const preco = PRECO_RELEMBRAR.toLocaleString('pt-BR');
+    const topo = `<p class="narrativa" style="margin:0 0 10px">${UI.esc(R.ar)}</p>
+      <p class="sussurro" style="margin:0 0 12px">Cada golpe: ${preco} ₽. Você tem ${din.toLocaleString('pt-BR')} ₽.</p>
+      ${recado ? `<p class="relembrar-recado">${UI.esc(recado)}</p>` : ''}`;
+
+    /* primeiro: quem vai lembrar */
+    const p = uid && d.time.find(x => x.uid === uid);
+    if (!p){
+      const linhas = d.time.map(x => {
+        const n = golpesParaRelembrar(x).length;
+        return `<button class="escolha com-item" ${n ? '' : 'disabled'}
+          onclick="Cidade.relembrar('${x.uid}')">${imgSprite(x, 'icone')}${UI.esc(nomeExib(x))} · Nv ${x.nivel}
+          <span class="pd">${n ? `${n} golpe${n === 1 ? '' : 's'} pra lembrar` : 'nada pra lembrar'}</span></button>`;
+      }).join('');
+      return UI.modal('Relembrador de Golpes', topo + (linhas || '<p class="nada">Você não tem ninguém com você.</p>'));
+    }
+
+    /* depois: qual golpe */
+    const lista = golpesParaRelembrar(p);
+    const linhas = lista.map(g => `<button class="aprender-op relembrar-op" ${din < PRECO_RELEMBRAR ? 'disabled' : ''}
+        onclick="Cidade.relembrarGolpe('${p.uid}', '${g.nome.replace(/'/g, "\\'")}')">
+        ${UI.cartaoGolpe(g.nome)}<span class="aprender-acao">${g.nv <= 1 ? 'início' : 'Nv ' + g.nv}</span></button>`).join('');
+    UI.modal(`${nomeExib(p)} · Nv ${p.nivel}`, topo +
+      (lista.length
+        ? `<div class="aprender-lista">${linhas}</div>` +
+          (din < PRECO_RELEMBRAR ? `<p class="sussurro" style="margin-top:10px">Falta dinheiro: são ${preco} ₽ por golpe.</p>` : '')
+        : '<p class="nada">Não tem nada que ele tenha esquecido.</p>') +
+      `<div style="margin-top:12px"><button class="btn" onclick="Cidade.relembrar()">Escolher outro</button></div>`);
+  },
+
+  relembrarGolpe(uid, nome){
+    const p = Estado.dados.time.find(x => x.uid === uid);
+    if (!p || Estado.j.dinheiro < PRECO_RELEMBRAR) return this.relembrar(uid);
+    const pagar = () => {
+      Estado.j.dinheiro -= PRECO_RELEMBRAR;
+      Estado.registrar(`${nomeExib(p)} relembrou ${nome} (${PRECO_RELEMBRAR} ₽).`);
+      Estado.salvar('auto');
+    };
+    if (p.golpes.length < 4){
+      p.golpes.push({nome, pp:GOLPES[nome].pp, ppMax:GOLPES[nome].pp});
+      registrarGolpeNaDex(p.dex, nome);
+      pagar();
+      return this.relembrar(uid, `${nomeExib(p)} lembrou de ${nome}.`);
+    }
+    UI.perguntarGolpe(p, nome, 'modal', (i) => {
+      if (i < 0) return this.relembrar(uid, 'Deixou pra outra hora. Não cobrou nada.');
+      const esqueceu = aprenderNoLugar(p, nome, i);
+      pagar();
+      this.relembrar(uid, `${nomeExib(p)} esqueceu ${esqueceu} e lembrou de ${nome}.`);
+    });
+  },
+
   loja(andar){
     const id = Mundo.id();
     const L = LOJAS[id];
@@ -593,7 +673,8 @@ const Cidade = {
 
     const linhas = lista.map(([n,p]) => {
       const caro = Estado.j.dinheiro < p;
-      const desc = descricaoItem(n);
+      /* Bola mostra só o número: a prosa em cima dela saiu a pedido. */
+      const desc = (ITENS_INFO[n] || {}).tipo === 'bola' ? fichaItem(n) : descricaoItem(n);
       const tenho = Estado.contaItem(n);
       return `<button class="item-linha compravel${caro ? ' caro' : ''}" ${caro ? 'disabled' : ''}
         onclick="Cidade.comprar('${n.replace(/'/g,"\\'")}',${p})">

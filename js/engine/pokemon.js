@@ -125,7 +125,17 @@ function expGanha(vencido, venceu){
   return Math.max(6, bruto);
 }
 
-/* Sobe de nível, recalcula stats, aprende golpes novos. Retorna eventos. */
+/* Sobe de nível e recalcula stats. Retorna eventos.
+
+   Como nos jogos, o motor não decide nada pelo jogador:
+   - aprende TODOS os golpes que a espécie aprende naquele nível, não só
+     o primeiro;
+   - se o golpe não cabe (já tem quatro), marca em p.aprenderPendente e
+     quem desenha pergunta qual esquecer — ou se desiste;
+   - não puxa golpe de nível anterior pra preencher buraco: nos jogos
+     isso não existe, e o Relembrador de Golpes está aí pra isso;
+   - evolução não acontece aqui dentro. Marca p.evoPendente e a tela
+     de evolução roda DEPOIS da luta, onde dá pra cancelar. */
 function ganharExp(p, qtd){
   const eventos = [];
   if (p.morto) return eventos;
@@ -136,69 +146,102 @@ function ganharExp(p, qtd){
     p.nivel++;
     const antes = p.stats;
     p.stats = calcularStats(DEX[p.dex].base, p.nivel, p.ivs, p.natureza);
-    p.hp += (p.stats.hp - antes.hp);
+    /* HP máximo sobe junto. Antes só o HP atual subia, e um Pokémon de
+       vida cheia passava a mostrar 51/49 depois de subir de nível. */
+    p.hpMax = p.stats.hp;
+    p.hp = Math.min(p.hpMax, p.hp + (p.stats.hp - antes.hp));
     p.expProx = expNecessaria(p.nivel);
     eventos.push({tipo:'nivel', nivel:p.nivel});
 
-    /* aprender golpe novo: primeiro o que a espécie aprende NESTE
-       nível, que é o que os jogos anunciam; se não houver, o que
-       falta do conjunto que ela já deveria ter. */
-    const atuais = p.golpes.map(g => g.nome);
-    let novo = null;
-    if (typeof golpesDoNivel === 'function'){
-      const doNivel = golpesDoNivel(p.dex, p.nivel).filter(n => !atuais.includes(n));
-      if (doNivel.length) novo = {nome:doNivel[0], pp:GOLPES[doNivel[0]].pp, ppMax:GOLPES[doNivel[0]].pp};
-    }
-    if (!novo){
-      const ideal = montarGolpes(p.dex, p.nivel);
-      novo = ideal.find(g => !atuais.includes(g.nome)) || null;
-    }
-    if (novo){
-      if (p.golpes.length < 4){
-        p.golpes.push({...novo});
-        eventos.push({tipo:'golpe', golpe:novo.nome});
-      } else {
-        // troca o golpe mais fraco se o novo for claramente melhor
-        const poder = (n) => GOLPES[n].c === 'status' ? 20 : (GOLPES[n].p || 45);
-        let iPior = 0;
-        p.golpes.forEach((g,i) => { if (poder(g.nome) < poder(p.golpes[iPior].nome)) iPior = i; });
-        if (poder(novo.nome) > poder(p.golpes[iPior].nome) + 15){
-          const velho = p.golpes[iPior].nome;
-          p.golpes[iPior] = {...novo};
-          eventos.push({tipo:'golpe', golpe:novo.nome, esqueceu:velho});
-        }
-      }
-    }
+    if (typeof golpesDoNivel === 'function')
+      for (const nome of golpesDoNivel(p.dex, p.nivel))
+        ofertarGolpe(p, nome).forEach(e => eventos.push(e));
 
-    // evolução por nível
-    const esp = DEX[p.dex];
-    if (esp.evo && esp.nivelEvo && p.nivel >= esp.nivelEvo){
-      const antigo = p.nome;
-      evoluir(p, esp.evo);
-      eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
-    }
-
-    /* O que a 2ª Geração pendurou em espécies antigas. Nada disso
-       acontece antes da Pokédex Nacional: até lá, um Golbat que
-       gosta de você continua sendo só um Golbat que gosta de você. */
-    if (typeof dexNacional === 'function' && dexNacional()){
-      const porAmizade = EVO_JOHTO_AMIZADE[p.dex];
-      if (porAmizade && p.moral >= 90){
-        /* Eevee é o único que olha o relógio: Espeon de dia, Umbreon de noite */
-        const destino = (p.dex === 133) ? (ehDeDia() ? 196 : 197) : porAmizade;
-        const antigo = p.nome;
-        evoluir(p, destino);
-        eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
-      }
-      const porNivelJohto = EVO_JOHTO_NIVEL[p.dex];
-      if (porNivelJohto && p.nivel >= 30){
-        const antigo = p.nome;
-        evoluir(p, porNivelJohto);
-        eventos.push({tipo:'evolucao', de:antigo, para:p.nome});
-      }
+    const destino = destinoDeEvolucao(p);
+    if (destino && !p.evoPendente){
+      p.evoPendente = destino;
+      eventos.push({tipo:'vaiEvoluir', para:DEX[destino].nome});
     }
   }
   return eventos;
+}
+
+/* Oferece um golpe: entra se tiver vaga; se não tiver, fica pendente
+   pra o jogador escolher. Golpe que ele já sabe não conta. */
+function ofertarGolpe(p, nome){
+  if (!GOLPES[nome] || p.golpes.some(g => g.nome === nome)) return [];
+  if (p.golpes.length < 4){
+    p.golpes.push({nome, pp:GOLPES[nome].pp, ppMax:GOLPES[nome].pp});
+    registrarGolpeNaDex(p.dex, nome);
+    return [{tipo:'golpe', golpe:nome}];
+  }
+  p.aprenderPendente = p.aprenderPendente || [];
+  if (!p.aprenderPendente.includes(nome)) p.aprenderPendente.push(nome);
+  return [{tipo:'querAprender', golpe:nome}];
+}
+
+/* Troca o golpe do índice i pelo novo. i < 0 = desistiu de aprender. */
+function aprenderNoLugar(p, nome, i){
+  p.aprenderPendente = (p.aprenderPendente || []).filter(n => n !== nome);
+  if (i < 0 || !GOLPES[nome]) return null;
+  const velho = p.golpes[i] ? p.golpes[i].nome : null;
+  p.golpes[i] = {nome, pp:GOLPES[nome].pp, ppMax:GOLPES[nome].pp};
+  registrarGolpeNaDex(p.dex, nome);
+  return velho;
+}
+
+/* Pra onde a espécie evolui agora, se evolui. Evolução cancelada volta
+   a tentar no nível seguinte, como apertar B nos jogos. */
+function destinoDeEvolucao(p){
+  if (p.evoCanceladaEm === p.nivel) return null;
+  const esp = DEX[p.dex];
+  if (esp.evo && esp.nivelEvo && p.nivel >= esp.nivelEvo) return esp.evo;
+  /* O que a 2ª Geração pendurou em espécies antigas. Nada disso
+     acontece antes da Pokédex Nacional: até lá, um Golbat que
+     gosta de você continua sendo só um Golbat que gosta de você. */
+  if (typeof dexNacional === 'function' && dexNacional()){
+    const porAmizade = EVO_JOHTO_AMIZADE[p.dex];
+    /* Eevee é o único que olha o relógio: Espeon de dia, Umbreon de noite */
+    if (porAmizade && p.moral >= 90) return (p.dex === 133) ? (ehDeDia() ? 196 : 197) : porAmizade;
+    const porNivelJohto = EVO_JOHTO_NIVEL[p.dex];
+    if (porNivelJohto && p.nivel >= 30) return porNivelJohto;
+  }
+  return null;
+}
+
+/* Depois de evoluir, a forma nova pode ter golpe no nível atual — só os
+   da espécie nova, que os da anterior já foram oferecidos na subida. */
+function golpesAoEvoluir(p){
+  const eventos = [];
+  for (const [nv, nome] of ((typeof APRENDE !== 'undefined' && APRENDE[p.dex]) || []))
+    if (nv === p.nivel) ofertarGolpe(p, nome).forEach(e => eventos.push(e));
+  return eventos;
+}
+
+/* O cardápio do Relembrador de Golpes: tudo o que a linha aprende por
+   nível até o nível atual, menos o que ele sabe agora. Inclui a forma
+   anterior, que é de onde vem o golpe que ficou pelo caminho. */
+function golpesParaRelembrar(p){
+  const sabe = new Set(p.golpes.map(g => g.nome));
+  const vistos = new Set(), saida = [];
+  for (const d of linhaDe(p.dex))
+    for (const [nv, nome] of ((typeof APRENDE !== 'undefined' && APRENDE[d]) || []))
+      if (nv <= p.nivel && GOLPES[nome] && !sabe.has(nome) && !vistos.has(nome)){
+        vistos.add(nome); saida.push({nome, nv});
+      }
+  return saida.sort((a, b) => a.nv - b.nv);
+}
+
+/* Pokédex: cada golpe que a espécie aprende na sua mão fica cadastrado. */
+function registrarGolpeNaDex(dex, nome){
+  if (typeof Estado === 'undefined' || !Estado.dados || !Estado.pdex) return;
+  /* sem o aparelho não tem cadastro: quando ele chega, registra o que
+     o time sabe naquele dia (Estado.catalogarQuemJaTenho) */
+  if (!Estado.dados.flags || !Estado.dados.flags.tem_pokedex) return;
+  const pd = Estado.pdex();
+  pd.golpes = pd.golpes || {};
+  const lista = pd.golpes[dex] = pd.golpes[dex] || [];
+  if (!lista.includes(nome)) lista.push(nome);
 }
 
 function evoluir(p, novoDex){
@@ -210,8 +253,15 @@ function evoluir(p, novoDex){
   p.hpMax = p.stats.hp;
   p.hp = Math.max(1, Math.round(p.hpMax * prop));
   p.moral = Math.min(100, p.moral + 5);
+  p.evoPendente = null;
+  p.evoCanceladaEm = null;
   /* Brilhante continua brilhante do outro lado — e abre o registro da nova forma. */
   if (p.shiny && typeof Estado !== 'undefined' && Estado.dados) Estado.pegouBrilhante(novoDex);
+  /* Evoluiu na sua mão: a forma nova entra catalogada, com os golpes que sabe. */
+  if (typeof Estado !== 'undefined' && Estado.dados && Estado.pdex){
+    Estado.pdex().catalogados[novoDex] = true;
+    p.golpes.forEach(g => registrarGolpeNaDex(novoDex, g.nome));
+  }
 }
 
 /* A forma que essa linha evolutiva tem NESTE nível.

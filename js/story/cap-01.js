@@ -8,6 +8,50 @@
 const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado',
                       'c1_vizinha','c1_apagao','c1_mala_trocada','c1_festa','c1_ele_sumiu'];
 
+/* O fim da primeira briga. Quatro cenas, uma por resultado, e dentro
+   de cada uma o texto sai do que aconteceu: quanto de vida sobrou, se
+   durou dois golpes ou dez, se sobrou pra você. A variante é sorteada
+   pelo uid do inicial, então recarregar não troca a cena. */
+const C1 = {
+  briga(d){ return d.ultimaBatalha || {}; },
+  meu(d){
+    const b = this.briga(d), todos = [...(d.time || []), ...(d.pc || [])];
+    return todos.find(p => p.uid === b.aliadoUid) || (d.time || [])[0] || null;
+  },
+  pego(d){
+    const b = this.briga(d), todos = [...(d.time || []), ...(d.pc || [])];
+    const p = todos.find(x => x.uid === b.capturado) || (d.time || []).slice(-1)[0];
+    return p ? nomeExib(p) : 'o que estava no capim';
+  },
+  /* Nome só se a Pokédex já registrou: o jogador não sabe o que era. */
+  oOutro(d, maiuscula){
+    const b = this.briga(d);
+    const t = b.dex && Estado.conheceu(b.dex) ? `o ${DEX[b.dex].nome}` : 'o bicho';
+    return maiuscula ? t[0].toUpperCase() + t.slice(1) : t;
+  },
+  semente(d){
+    const s = String(((d.time || [])[0] || {}).uid || d.jogador.nome);
+    let h = 7;
+    for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    return h;
+  },
+  qual(d, lista){ return lista[this.semente(d) % lista.length]; },
+  /* Primeira linha por faixa de vida: sobrou muito, sobrou metade, quase nada. */
+  abre(d, limpa, custou, porUmFio){
+    const b = this.briga(d);
+    const lista = b.hpAliado >= 0.7 ? limpa : b.hpAliado >= 0.3 ? custou : porUmFio;
+    return lista.map(l => typeof l === 'function' ? l(d) : l).join(' ');
+  },
+  /* O capítulo acaba numa coisa que se vê, não numa frase de efeito. */
+  estrada(d){
+    return this.qual(d, [
+      'A trilha continua mato adentro. Tem marca de pneu de bicicleta na terra, de alguém que passou antes de você hoje.',
+      'Mais pra frente o capim abaixa e dá pra ver a trilha fazendo a curva. Você não sabe o que tem depois dela.',
+      'Uma placa de madeira na beira da trilha, meio comida de cupim, aponta pra frente. O nome já não dá pra ler.'
+    ]);
+  }
+};
+
 CAPITULOS.push(
 
 {
@@ -1648,22 +1692,132 @@ c1_primeiro_encontro:{
     d=>d.flags.tem_licenca ? 'A mão vai sozinha para o cinto, onde tem cinco Poké Balls que há uma hora não existiam.' : 'A sua mão vai para o cinto e não acha nada, porque não tem nada.'
   ],
   batalha:{aleatorio:true, ambiente:'campo', nivelBase:4, tipo:'selvagem',
-           vitoria:'c1_fim', derrota:'c1_fim', fuga:'c1_fim', captura:'c1_fim', gameover:'gameover'}
+           vitoria:'c1_fim_venceu', derrota:'c1_fim_perdeu', fuga:'c1_fim_fugiu', captura:'c1_fim_pegou', gameover:'gameover'}
 },
 
-c1_fim:{
+c1_fim_venceu:{
   texto:[
-    'Você senta no chão quando acaba. As mãos tremem um pouco — a adrenalina indo embora, que é uma sensação nova e não é boa.',
-    'Não foi bonito. Ninguém viu. Mas aconteceu, e foi você que fez.',
+    d=>C1.abre(d, [
+      'Acabou rápido. Rápido o bastante pra você ficar parado com a mão ainda no ar, esperando a parte difícil que não veio.',
+      d=>`${C1.oOutro(d, true)} some no capim do mesmo jeito que apareceu, só que mais depressa.`
+    ], [
+      'Deu. Não do jeito que você imaginava deitado no quarto, porque do jeito que você imaginava ninguém se machucava.',
+      'Você só percebe que falou alto o tempo todo quando para. Não lembra de nenhuma palavra.'
+    ], [
+      'Você só percebe que prendeu a respiração quando solta.',
+      d=>`${C1.oOutro(d, true)} foi embora. Por pouco não foi você quem foi embora primeiro.`
+    ]),
     d=>{
-      const p = d.time[0];
-      return p ? `${nomeExib(p)} senta do seu lado, encostado, respirando rápido. Vocês dois nunca fizeram isso antes.` : 'Você está sozinho no capim.';
+      const b = C1.briga(d), p = C1.meu(d);
+      if (!p) return 'O capim volta a ficar quieto.';
+      const n = nomeExib(p);
+      if (b.hpAliado >= 0.7) return C1.qual(d, [
+        `${n} volta sem um arranhão e fareja o lugar onde ${C1.oOutro(d)} estava, pra conferir que foi mesmo.`,
+        `${n} fica encarando o buraco no mato, ainda armado, até entender que não vem mais ninguém.`
+      ]);
+      if (b.hpAliado >= 0.3) return C1.qual(d, [
+        `${n} tem capim grudado no corpo e está poupando um lado ao pisar. Você se agacha e passa a mão devagar. Ele deixa.`,
+        `${n} senta, lambe um arranhão e olha pra você como quem pergunta se é sempre assim. Você não sabe.`
+      ]);
+      return C1.qual(d, [
+        `${n} ganhou, mas está de lado no capim amassado, respirando curto, e só levanta a cabeça quando você chega perto.`,
+        `${n} dá dois passos na sua direção e desiste de dar o terceiro. Você vai até lá.`
+      ]);
     },
-    'O sol ainda está subindo.',
-    'Daqui pra frente, ninguém te diz mais pra onde ir. Você escolhe a rota, escolhe a hora, escolhe se vai parar numa cidade ou passar direto.',
-    'É isso que ninguém explica sobre sair de casa: não é que o mundo fica grande. É que ele fica com você.'
+    d=>{
+      const b = C1.briga(d);
+      if (b.turnos && b.turnos <= 2) return 'Você repassa na cabeça o que mandou fazer e não lembra de ter decidido nada. Saiu.';
+      if (b.hpAliado >= 0.7) return 'Metade do que deu certo foi ordem sua. A outra metade foi ele, que não esperou a ordem.';
+      if (b.hpAliado < 0.3) return 'Você fica agachado até a respiração dos dois acertar o mesmo ritmo.';
+      return 'Você conta o que mandou e o que ele levou, e a conta não fecha tão a seu favor quanto parecia enquanto acontecia.';
+    },
+    d=>C1.estrada(d)
   ],
-  fim:true, resumo:'Você saiu de casa, e agora Kanto inteira é uma escolha por vez.'
+  fim:true, resumo:'A primeira briga no capim, e vocês dois saíram andando.'
+},
+
+c1_fim_pegou:{
+  texto:[
+    d=>C1.qual(d, [
+      'A bola para de balançar. Você espera mais um pouco, porque não acredita, e ela continua parada.',
+      'O clique da trava é mais baixo do que você imaginava. Quase educado.'
+    ]),
+    d=>{
+      const n = C1.pego(d);
+      return C1.qual(d, [
+        `Você pega a bola do chão. Está morna. Dentro dela, ${n}, que dez minutos atrás estava cuidando da própria vida no capim.`,
+        `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra bola.`
+      ]);
+    },
+    d=>d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora ele é seu. Ele não assinou nada.' : 'Não tem papel nenhum dizendo que ele é seu. Por enquanto, é só a bola na sua mão.',
+    d=>{
+      const b = C1.briga(d), p = C1.meu(d);
+      if (!p) return 'Você guarda a bola no cinto e ela pesa mais do que as vazias.';
+      if (p.hp <= 0 || b.hpAliado <= 0) return `E ${nomeExib(p)} viu tudo deitado no capim, desmaiado atrás de você. Foi você quem terminou a briga. Você não sabe ainda se isso é bom.`;
+      return C1.qual(d, [
+        `${nomeExib(p)} chega perto da bola e cheira. Eram dois há uma hora. Agora são três, e ninguém perguntou nada pra ninguém.`,
+        `${nomeExib(p)} fica olhando pra bola no seu cinto com uma cara que você ainda não aprendeu a ler.`
+      ]);
+    },
+    d=>C1.estrada(d)
+  ],
+  fim:true, resumo:'Você saiu de casa com um Pokémon e chegou na primeira curva com dois.'
+},
+
+c1_fim_perdeu:{
+  texto:[
+    d=>{
+      const b = C1.briga(d);
+      if (b.resultado === 'semLuta') return 'Não tinha ninguém em pé pra mandar. O que estava no capim olha pra você, decide que você não vale o trabalho e vai embora.';
+      return C1.qual(d, [
+        `O capim para de mexer. ${C1.oOutro(d, true)} foi embora, e não foi porque você ganhou.`,
+        `${C1.oOutro(d, true)} ainda te encara por um tempo antes de sumir. Não parece bravo. Parece que perdeu o interesse.`
+      ]);
+    },
+    d=>{
+      const p = C1.meu(d);
+      if (!p) return 'Você fica ali parado, sozinho no mato, com as mãos vazias.';
+      return C1.qual(d, [
+        `${nomeExib(p)} está caído de lado. Você pega no colo, e pesa mais do que pesava ontem, do jeito que um corpo pesa quando não ajuda.`,
+        `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhado. Está respirando. É a primeira coisa que você confere e a única que importa.`
+      ]);
+    },
+    'Ninguém viu. Você repara que isso não ajuda em nada.',
+    d=>C1.meu(d) ? 'Você fica sentado com ele até ele abrir o olho. Leva um tempo. Você não sai dali antes.' : 'Depois de um tempo, você levanta.',
+    d=>C1.estrada(d)
+  ],
+  fim:true, resumo:'A primeira briga acabou com o seu Pokémon no colo e o capim quieto.'
+},
+
+c1_fim_fugiu:{
+  texto:[
+    d=>{
+      const b = C1.briga(d), p = C1.meu(d), n = p ? nomeExib(p) : '';
+      if (b.resultado === 'encarou') return `Você não sabe de onde tirou aquilo. Ficou parado, olhou ${C1.oOutro(d)} no olho, e foi ele quem piscou primeiro.`;
+      if (b.resultado === 'escapou') return p ? `Você corre com ${n} no colo, pelo meio do mato, sem olhar pra onde pisa.` : 'Você corre pelo meio do mato, sem olhar pra onde pisa.';
+      return p ? C1.qual(d, [
+        `Você corre primeiro e pensa depois. Quando pensa, já está na trilha, cinquenta metros adiante, com ${n} correndo do lado.`,
+        `Você chama ${n} de volta e sai de ré, devagar, sem dar as costas, até o capim fechar entre vocês e ele.`
+      ]) : 'Você sai dali o mais rápido que dá.';
+    },
+    d=>{
+      const b = C1.briga(d);
+      if (b.feriuVoce) return 'Tem um corte no seu braço que você não lembra de ter ganhado e que só começa a arder agora.';
+      if (b.resultado === 'encarou') return 'Suas pernas só começam a tremer depois que ele some. Antes, não tinham tempo.';
+      return 'Ninguém atrás. Só o capim balançando no lugar onde vocês estavam.';
+    },
+    d=>{
+      const p = C1.meu(d);
+      if (!p) return 'Você recupera o fôlego apoiado no joelho.';
+      if (p.hp <= 0) return `${nomeExib(p)} ainda não acordou. Você ajeita ele no colo e anda mais devagar.`;
+      return C1.qual(d, [
+        `${nomeExib(p)} olha pra trás, pro mato, e depois pra você. Você não sabe se é alívio ou vontade de ter ficado.`,
+        `${nomeExib(p)} está inteiro. Você também. Por hoje você resolve que isso conta.`
+      ]);
+    },
+    d=>C1.estrada(d)
+  ],
+  fim:true, resumo:'A primeira briga terminou sem vencedor, e os dois saíram dela inteiros.'
 }
 }}
 
