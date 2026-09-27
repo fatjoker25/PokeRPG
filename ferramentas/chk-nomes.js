@@ -17,8 +17,18 @@ for (const f of fs.readdirSync(dir).filter(x=>x.endsWith('.js'))){
 const temNome = q => /^(Sr\.|Sra\.|Dr\.|Dra\.|Líder|Tenente|Auditora|Curador|Conselheir|Contramestre|Capitão|Guia|Caçador|Guarda|Prof)/.test(q)
                   || (/^[A-ZÀ-Ý]/.test(q) && !/^(A |O |Os |As |Um |Uma )/.test(q));
 
+/* Quem já tem resposta escrita à mão em js/data/nomes.js não está
+   esquecido: tem nome fixo (NOMES_FIXOS), recusa (RECUSAM_O_NOME) ou é
+   cargo de propósito (CARGO_DE_PROPOSITO). */
+const nomesJs = fs.readFileSync(path.resolve(__dirname,'..','js','data','nomes.js'),'utf8');
+const bloco = nome => { const m = nomesJs.match(new RegExp('const ' + nome + ' = [\\[{]([\\s\\S]*?)\\n[\\]}];')); return m ? m[1] : ''; };
+const resolvidos = new Set();
+for (const n of ['NOMES_FIXOS','RECUSAM_O_NOME'])
+  for (const m of bloco(n).matchAll(/^\s*'([^']+)'\s*:/gm)) resolvidos.add(m[1]);
+for (const m of (nomesJs.match(/const CARGO_DE_PROPOSITO = \[([^\]]*)\]/) || ['',''])[1].matchAll(/'([^']+)'/g)) resolvidos.add(m[1]);
+
 const sem = Object.entries(conta)
-  .filter(([q,d]) => d.n >= LIMITE && !temNome(q))
+  .filter(([q,d]) => d.n >= LIMITE && !temNome(q) && !resolvidos.has(q))
   .sort((a,b)=>b[1].n-a[1].n);
 
 if (sem.length){
@@ -27,5 +37,5 @@ if (sem.length){
   console.log('\nNão é erro automático: pode ser recusa escrita de propósito.');
   console.log('Mas se ninguém escreveu a recusa, é personagem que o jogo esqueceu de apresentar.');
 } else {
-  console.log(`ninguém com ${LIMITE}+ falas ficou sem nome.`);
+  console.log(`ninguém com ${LIMITE}+ falas ficou sem nome (${resolvidos.size} com resposta escrita em nomes.js).`);
 }

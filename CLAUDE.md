@@ -56,6 +56,15 @@ mais personagem que o jogo esconde, é personagem que o jogador ainda não
 perguntou. Quem não deve dizer entra em `RECUSAM_O_NOME`, com a recusa
 escrita à mão — porque recusar é caracterização e não pode ser sorteada.
 
+Quem carrega cena e se arrisca ganha nome fixo em `NOMES_FIXOS`, e a
+cena em que a pessoa entra mostra o nome (crachá, placa, porta pintada)
+numa linha que chama `Nomes.apresentar(rotulo)` — dali em diante o balão
+usa o nome, e perguntar antes dá o mesmo nome, nunca um sorteado. Rótulo
+compartilhado por pessoas diferentes em capítulos diferentes ("a
+recepcionista") ganha rótulo próprio antes ("a recepcionista da Liga"),
+senão o nome de uma vira o de todas. Cargo que é função de cidade em
+cidade fica em `CARGO_DE_PROPOSITO`. `chk-nomes.js` lê as três listas.
+
 ## Não existe HM
 Nenhum Pokémon aprende "Corte" ou "Surf" aqui. O que existe:
 

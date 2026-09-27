@@ -20,17 +20,18 @@ c26_ab_a_van_do_pao:{
   texto:[
     'A van de entrega de pão sobe a estrada do Planalto às onze da manhã de terça, quinta e sábado, e hoje é terça.',
     'Você está a pé na curva dos últimos duzentos metros quando ela para do seu lado sozinha.',
-    fala('o entregador', 'Vai pro Planalto?'),
+    fala('o entregador de pão', 'Vai pro Planalto?'),
+    d=>{ Nomes.apresentar('o entregador de pão'); return 'Na porta da van, em letra de adesivo descascando: PADARIA DO PLANALTO — RUFO.'; },
     d=>fala(d.jogador.nome, 'Vou.'),
-    fala('o entregador', 'Sobe. É meio quilômetro e é tudo subida.'),
+    fala('o entregador de pão', 'Sobe. É meio quilômetro e é tudo subida.'),
     'Você sobe no banco do carona, entre uma caixa de pão de forma e uma caixa de pão francês, e o cheiro é a coisa mais fora de lugar do mês.',
-    fala('o entregador', 'Eu faço essa entrega há oito anos.'),
-    fala('o entregador', 'Sabe o que mudou?'),
+    fala('o entregador de pão', 'Eu faço essa entrega há oito anos.'),
+    fala('o entregador de pão', 'Sabe o que mudou?'),
     d=>fala(d.jogador.nome, 'O quê?'),
-    fala('o entregador', 'A quantidade de pão.'),
+    fala('o entregador de pão', 'A quantidade de pão.'),
     'Ele engata a segunda pra vencer a subida.',
-    fala('o entregador', 'Eu entregava oitenta pães. Hoje eu entrego duzentos e quarenta.'),
-    fala('o entregador', 'O Planalto não contratou ninguém. Eu perguntei na cozinha.', 'baixo')
+    fala('o entregador de pão', 'Eu entregava oitenta pães. Hoje eu entrego duzentos e quarenta.'),
+    fala('o entregador de pão', 'O Planalto não contratou ninguém. Eu perguntei na cozinha.', 'baixo')
   ],
   ef:{flag:'o_pao_triplicou',
       npc:{nome:'o entregador', opiniao:1, viuVoce:'Te deu carona nos últimos duzentos metros da subida.'},
@@ -46,14 +47,14 @@ c26_ab_a_van_do_pao:{
 
 c26_ab_quantos:{
   texto:[
-    fala('o entregador', 'Duzentos e quarenta pães dá pra umas cento e vinte pessoas no café e no jantar.'),
+    fala('o entregador de pão', 'Duzentos e quarenta pães dá pra umas cento e vinte pessoas no café e no jantar.'),
     'Ele entra no estacionamento e manobra de ré na doca de carga sem olhar pra trás, com a mão no encosto do banco.',
-    fala('o entregador', 'O Planalto tem quarenta e um funcionários. Tá na plaquinha do saguão, "nossa equipe".'),
+    fala('o entregador de pão', 'O Planalto tem quarenta e um funcionários. Tá na plaquinha do saguão, "nossa equipe".'),
     d=>fala(d.jogador.nome, 'Mais os desafiantes.'),
-    fala('o entregador', 'Em temporada, umas dez, quinze pessoas. Fora de temporada, nenhuma.'),
+    fala('o entregador de pão', 'Em temporada, umas dez, quinze pessoas. Fora de temporada, nenhuma.'),
     'Ele puxa o freio de mão.',
-    fala('o entregador', 'Em janeiro não tem desafiante nenhum. Janeiro é fechado.'),
-    fala('o entregador', 'Em janeiro eu entrego os mesmos duzentos e quarenta.')
+    fala('o entregador de pão', 'Em janeiro não tem desafiante nenhum. Janeiro é fechado.'),
+    fala('o entregador de pão', 'Em janeiro eu entrego os mesmos duzentos e quarenta.')
   ],
   ef:{flag:'cento_e_vinte_no_planalto',
       registrar:'O Planalto tem 41 funcionários e consome pão para 120 pessoas, inclusive em janeiro, quando fecha.'},

@@ -24,10 +24,11 @@ c25_ab_cedo_demais:{
     'Você chega às oito e doze pra uma audiência das dez, o que é uma hora e quarenta e oito minutos de erro de cálculo que você cometeu de propósito.',
     'O prédio está aberto. A antessala está vazia. As seis cadeiras de plástico estão todas livres e você escolhe a do canto, de frente pra porta.',
     'A planta precisa de água e o relógio de parede atrasa, e nas próximas uma hora e quarenta e oito você vai olhar pros dois muitas vezes.',
-    'Às oito e quarenta chega a recepcionista, que te vê sentado e não se assusta.',
-    fala('a recepcionista', 'Audiência das dez?'),
+    'Às oito e quarenta chega a recepcionista, que te vê sentad{o|a} e não se assusta.',
+    d=>{ Nomes.apresentar('a recepcionista da Liga'); return 'Ela vira pra frente a plaquinha de acrílico da mesa, como faz toda manhã: LENA.'; },
+    fala('a recepcionista da Liga', 'Audiência das dez?'),
     d=>fala(d.jogador.nome, 'Das dez.'),
-    fala('a recepcionista', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
+    fala('a recepcionista da Liga', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
     'Ela liga o computador e o computador leva quatro minutos pra ligar, e nos quatro minutos ela fica olhando pra tela preta.',
     'Duas pessoas esperando uma máquina, cada uma na sua.'
   ],
@@ -45,19 +46,19 @@ c25_ab_perguntou_a_recepcionista:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem convocou essa audiência?'),
     'Ela olha a tela, que agora já ligou.',
-    fala('a recepcionista', 'Aqui tá como "de ofício".'),
+    fala('a recepcionista da Liga', 'Aqui tá como "de ofício".'),
     d=>fala(d.jogador.nome, 'O que é "de ofício"?'),
-    fala('a recepcionista', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
+    fala('a recepcionista da Liga', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
     'Ela rola a tela.',
-    fala('a recepcionista', 'É raro. Eu tô aqui há nove anos e vi umas cinco.'),
+    fala('a recepcionista da Liga', 'É raro. Eu tô aqui há nove anos e vi umas cinco.'),
     d=>fala(d.jogador.nome, 'E as outras quatro?'),
     'Ela para de rolar.',
-    fala('a recepcionista', 'Foram todas no mesmo ano. Oitenta e nove.'),
+    fala('a recepcionista da Liga', 'Foram todas no mesmo ano. Oitenta e nove.'),
     'Ela olha pra você pela primeira vez desde que sentou.',
-    fala('a recepcionista', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
+    fala('a recepcionista da Liga', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
   ],
   ef:{flag:'audiencia_de_oficio',
-      npc:{nome:'a recepcionista', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
+      npc:{nome:'a recepcionista da Liga', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
       registrar:'A audiência foi convocada de ofício. As outras quatro da história da casa foram todas em 1989.',
       presagio:'Oitenta e nove. O mesmo ano do laboratório de Cinnabar e do CNPJ baixado da usina.'},
   escolhas:[
@@ -69,16 +70,16 @@ c25_ab_perguntou_a_recepcionista:{
 
 c25_ab_as_quatro_de_oitenta_e_nove:{
   texto:[
-    fala('a recepcionista', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
+    fala('a recepcionista da Liga', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
     'Ela junta as mãos no balcão.',
-    fala('a recepcionista', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
+    fala('a recepcionista da Liga', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
     d=>fala(d.jogador.nome, 'Como?'),
-    fala('a recepcionista', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
-    fala('a recepcionista', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
+    fala('a recepcionista da Liga', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
+    fala('a recepcionista da Liga', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
     d=>fala(d.jogador.nome, 'Quem?'),
     'Ela balança a cabeça.',
-    fala('a recepcionista', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
-    fala('a recepcionista', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
+    fala('a recepcionista da Liga', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
+    fala('a recepcionista da Liga', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
   ],
   ef:{flag:'a_mulher_que_agradecia_o_cafe',
       registrar:'Nas quatro audiências de ofício de 1989, a última a sair foi sempre a mesma mulher.',
@@ -99,7 +100,7 @@ c25_ab_em_cima_da_hora:{
       ? 'Blue está na terceira cadeira e levanta a sobrancelha pro seu estado, e não fala nada, o que da parte dele é um gesto de contenção heroico.'
       : 'Um rapaz da sua idade está na terceira cadeira e levanta a sobrancelha pro seu estado.',
     'Uma mulher de uns cinquenta com uma pasta de couro olha o relógio de parede, que atrasa, e depois o relógio de pulso dela, que não.',
-    fala('a recepcionista', 'A audiência é às dez. Os senhores podem entrar às dez.'),
+    fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.'),
     'São nove e cinquenta e oito. Você tem cento e vinte segundos pra parar de suar e não vai dar.'
   ],
   ef:{flag:['chegou_na_audiencia','chegou_em_cima_da_hora'], hp:-1,
@@ -223,7 +224,7 @@ c25_a_antessala:{
       ? 'Blue está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.'
       : 'Um rapaz da sua idade está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.',
     'Os outros dois você não conhece: uma mulher de uns cinquenta com uma pasta de couro e um homem de terno com um crachá azul.',
-    fala('a recepcionista', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
+    fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
          'Ela fala isso às nove e quarenta e cinco e volta a olhar a tela.')
   ],
   ef:{flag:'chegou_na_audiencia',

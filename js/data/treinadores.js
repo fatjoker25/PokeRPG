@@ -41,7 +41,9 @@ const RETRATO_POR_NOME = {
   'Segurança da Silph':'overworld/policial', 'Segurança da expedição':'overworld/policial',
   'Caçadores de recompensa':'trainers/roughneck', 'Auditora Brill':'trainers/office_worker_f',
   'Dr. Hollis':'trainers/scientist', 'a Presidente':'trainers/office_worker_f',
-  'o homem do portão':'trainers/gentleman'
+  'o homem do portão':'trainers/gentleman',
+  /* quem ganhou nome em cena e antes caía no retrato do cargo */
+  'Capitão Marlow':'trainers/sailor', 'Pike':'overworld/policial'
 };
 
 /* cargo → arquivo, pra quem fala sem nome. Só os que não deixam dúvida

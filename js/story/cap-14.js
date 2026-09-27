@@ -236,6 +236,7 @@ c14_ab_de_cracha:{
   texto:[
     'O porto de Cinnabar tem uma rampa só e um posto de capitania com um homem de camisa branca e um livro de bordo aberto.',
     'Ele registra quem entra e quem sai da ilha desde que existe capitania, que é desde mil novecentos e cinquenta e um.',
+    d=>{ Nomes.apresentar('o capitão do porto'); return 'Na porta do posto, embaixo de CAPITANIA, alguém pintou à mão um nome só: MARLOW.'; },
     d=>{
       const c = Cargos.principal();
       return `Você mostra o crachá de ${c ? c.nome : 'serviço'} porque parece a coisa certa a fazer, e ele vira o livro na sua direção sem você pedir.`;

@@ -4473,6 +4473,25 @@ const RECUSAM_O_NOME = {
   ]
 };
 
+/* Quem carrega cena e se arrisca tem nome escrito à mão, não sorteado.
+   A cena em que a pessoa entra apresenta o nome (Nomes.apresentar), e
+   perguntar antes disso dá o mesmo nome — nunca um sorteado que a cena
+   depois desmentiria. */
+const NOMES_FIXOS = {
+  'o capitão do porto':        'Capitão Marlow',
+  'a funcionária da guarita':  'Sra. Myrtle',
+  'o rapaz do protocolo':      'Tito',
+  'o guarda da primeira':      'Pike',
+  'o entregador de pão':       'Rufo',
+  'a recepcionista da Liga':   'Lena',
+  'a balconista da farmácia':  'Gina'
+};
+
+/* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
+   função que aparece em cidade atrás de cidade, não uma pessoa só
+   ("Cargo fica como cargo", no CLAUDE.md). O jogador ainda pode perguntar. */
+const CARGO_DE_PROPOSITO = ['a enfermeira', 'o barqueiro', 'a atendente'];
+
 /* como a pessoa responde, pelo que ela faz da vida. O primeiro que
    casar manda. */
 const JEITOS = [
@@ -4561,6 +4580,8 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
+  /* os nomes fixos daqui de cima */
+  'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
   'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle'
@@ -4631,7 +4652,7 @@ const Nomes = {
       (d.nomesRecusados = d.nomesRecusados || {})[r] = true;
       return {nome:null, linhas: RECUSAM_O_NOME[r]()};
     }
-    const nome = nomeSorteado(r);
+    const nome = NOMES_FIXOS[r] || nomeSorteado(r);
     this.sabidos()[r] = nome;
     const f = ehFeminino(r);
     const jeito = JEITOS.find(j => j.quando.test(r)) || JEITOS[JEITOS.length - 1];
@@ -4643,6 +4664,17 @@ const Nomes = {
     if (typeof Estado.lembrarNPC === 'function')
       Estado.lembrarNPC(r, {conhece:true, viuVoce:'Você perguntou o nome e ouviu a resposta.'});
     return {nome, linhas};
+  },
+
+  /* A cena apresenta a pessoa: dali em diante o balão usa o nome, aqui
+     e em qualquer cena depois. Chamado de dentro de uma linha de texto,
+     então tem que poder rodar de novo sem efeito. */
+  apresentar(rotulo){
+    const nome = NOMES_FIXOS[rotulo];
+    if (!nome || this.sabe(rotulo)) return nome || null;
+    this.sabidos()[rotulo] = nome;
+    if (typeof Estado.lembrarNPC === 'function') Estado.lembrarNPC(rotulo, {conhece:true});
+    return nome;
   },
 
   /* como o balão deve chamar essa pessoa agora */
@@ -5240,7 +5272,9 @@ const RETRATO_POR_NOME = {
   'Segurança da Silph':'overworld/policial', 'Segurança da expedição':'overworld/policial',
   'Caçadores de recompensa':'trainers/roughneck', 'Auditora Brill':'trainers/office_worker_f',
   'Dr. Hollis':'trainers/scientist', 'a Presidente':'trainers/office_worker_f',
-  'o homem do portão':'trainers/gentleman'
+  'o homem do portão':'trainers/gentleman',
+  /* quem ganhou nome em cena e antes caía no retrato do cargo */
+  'Capitão Marlow':'trainers/sailor', 'Pike':'overworld/policial'
 };
 
 /* cargo → arquivo, pra quem fala sem nome. Só os que não deixam dúvida
@@ -26832,6 +26866,7 @@ c7_ab_de_cracha:{
   texto:[
     'Tem um posto da prefeitura na entrada de Lavender que não existe em nenhuma outra cidade de Kanto: uma guarita de dois metros por dois com uma janelinha, e dentro dela uma mulher com um livro de registro.',
     'Não é fiscalização. É outra coisa.',
+    d=>{ Nomes.apresentar('a funcionária da guarita'); return 'Colada no vidro da janelinha, com durex amarelado, uma tira de papel escrita à mão: SRA. MYRTLE — PORTARIA.'; },
     fala('a funcionária da guarita', 'Bom dia. Veio visitar ou veio sepultar?'),
     'É a pergunta mais direta que alguém já te fez.',
     d=>{
@@ -33497,6 +33532,7 @@ c9_ab_de_cracha:{
       const c = Cargos.principal();
       return `A Prefeitura de Celadon tem um balcão de protocolo na entrada da cidade, e o rapaz do balcão vê o seu crachá de ${c ? c.nome : 'serviço'} e faz uma coisa que ninguém nunca fez com você: ele levanta.`;
     },
+    d=>{ Nomes.apresentar('o rapaz do protocolo'); return 'No crachá de plástico preso na camisa dele: TITO — PROTOCOLO.'; },
     fala('o rapaz do protocolo', 'Serviço? {O senhor|A senhora} quer dar entrada em alguma coisa?'),
     'Ele te chama de senhor. Você tem quinze anos.',
     d=>fala(d.jogador.nome, 'Eu não sei. O que dá pra dar entrada aqui?'),
@@ -47955,6 +47991,7 @@ c14_ab_de_cracha:{
   texto:[
     'O porto de Cinnabar tem uma rampa só e um posto de capitania com um homem de camisa branca e um livro de bordo aberto.',
     'Ele registra quem entra e quem sai da ilha desde que existe capitania, que é desde mil novecentos e cinquenta e um.',
+    d=>{ Nomes.apresentar('o capitão do porto'); return 'Na porta do posto, embaixo de CAPITANIA, alguém pintou à mão um nome só: MARLOW.'; },
     d=>{
       const c = Cargos.principal();
       return `Você mostra o crachá de ${c ? c.nome : 'serviço'} porque parece a coisa certa a fazer, e ele vira o livro na sua direção sem você pedir.`;
@@ -61809,16 +61846,16 @@ c20_ab_nao_sei_ainda:{
 c20_ab_a_farmacia:{
   texto:[
     'Tem uma farmácia no térreo do 118 e você entra nela porque está com dor de cabeça de verdade e porque a farmácia atrasa a subida em mais dez minutos.',
-    'A balconista tem uns trinta anos e um crachá com o nome dela e uma caneta presa no bolso do jaleco.',
+    d=>{ Nomes.apresentar('a balconista da farmácia'); return 'A balconista tem uns trinta anos, um crachá que diz GINA e uma caneta presa no bolso do jaleco.'; },
     'Você compra o analgésico mais barato e toma ali mesmo, com água do bebedouro.',
     d=>fala(d.jogador.nome, 'Você conhece o pessoal da 704?'),
-    fala('a balconista', 'Da reunião?'),
+    fala('a balconista da farmácia', 'Da reunião?'),
     'Ela nem levanta os olhos do caixa.',
-    fala('a balconista', 'Eles descem aqui de vez em quando. Uma delas compra remédio de pressão.'),
+    fala('a balconista da farmácia', 'Eles descem aqui de vez em quando. Uma delas compra remédio de pressão.'),
     d=>fala(d.jogador.nome, 'Você sabe o que eles fazem?'),
-    fala('a balconista', 'Reunião, ué.'),
+    fala('a balconista da farmácia', 'Reunião, ué.'),
     'E aí ela levanta os olhos, porque a pergunta foi estranha.',
-    fala('a balconista', 'Por quê? Eles devem alguma coisa pra você?'),
+    fala('a balconista da farmácia', 'Por quê? Eles devem alguma coisa pra você?'),
     'É a pergunta certa, feita pela pessoa errada, e ela é a primeira pessoa a fazer ela em voz alta.'
   ],
   ef:{dinheiro:-40, hp:2, flag:'a_farmacia_do_terreo',
@@ -61834,15 +61871,15 @@ c20_ab_devem:{
   texto:[
     d=>fala(d.jogador.nome, 'Devem.'),
     'Ela fecha a gaveta do caixa devagar.',
-    fala('a balconista', 'Então sobe e cobra.'),
+    fala('a balconista da farmácia', 'Então sobe e cobra.'),
     d=>fala(d.jogador.nome, 'É o que eu vim fazer.'),
-    fala('a balconista', 'Então por que você tá comprando analgésico?'),
+    fala('a balconista da farmácia', 'Então por que você tá comprando analgésico?'),
     'Você não tem resposta pra isso.',
     'Ela pega o troco e conta na sua mão, moeda por moeda, sem pressa.',
-    fala('a balconista', 'Meu pai trabalhou vinte e dois anos numa firma que devia pra ele. Ele nunca subiu cobrar.'),
-    fala('a balconista', 'Ele reclamava todo domingo no almoço, por vinte e dois anos.'),
+    fala('a balconista da farmácia', 'Meu pai trabalhou vinte e dois anos numa firma que devia pra ele. Ele nunca subiu cobrar.'),
+    fala('a balconista da farmácia', 'Ele reclamava todo domingo no almoço, por vinte e dois anos.'),
     'Ela fecha a sua mão em volta do troco com as duas mãos dela.',
-    fala('a balconista', 'Sobe.', 'baixo')
+    fala('a balconista da farmácia', 'Sobe.', 'baixo')
   ],
   ef:{flag:'a_balconista_mandou_subir', moral:1,
       npc:{nome:'a balconista', opiniao:2, viuVoce:'Fechou a sua mão em volta do troco e mandou você subir.'},
@@ -61854,16 +61891,16 @@ c20_ab_devem:{
 
 c20_ab_qual_delas:{
   texto:[
-    fala('a balconista', 'A da cabeceira. A que manda.'),
+    fala('a balconista da farmácia', 'A da cabeceira. A que manda.'),
     d=>fala(d.jogador.nome, 'Como você sabe que ela é a que manda?'),
-    fala('a balconista', 'Porque ela é a única que desce sozinha.'),
+    fala('a balconista da farmácia', 'Porque ela é a única que desce sozinha.'),
     'Ela arruma umas caixas no balcão.',
-    fala('a balconista', 'Os outros descem em dupla, em trio, conversando. Ela desce sozinha, compra, e sobe.'),
-    fala('a balconista', 'E uma vez ela esqueceu a receita aqui e eu subi pra devolver.'),
+    fala('a balconista da farmácia', 'Os outros descem em dupla, em trio, conversando. Ela desce sozinha, compra, e sobe.'),
+    fala('a balconista da farmácia', 'E uma vez ela esqueceu a receita aqui e eu subi pra devolver.'),
     d=>fala(d.jogador.nome, 'E?'),
-    fala('a balconista', 'E a porta tava aberta e eles tavam discutindo, e pararam quando eu bati.'),
+    fala('a balconista da farmácia', 'E a porta tava aberta e eles tavam discutindo, e pararam quando eu bati.'),
     'Ela dá de ombros.',
-    fala('a balconista', 'Eles discutem. Eu achei isso interessante. Eu achava que gente assim não discutia.')
+    fala('a balconista da farmácia', 'Eles discutem. Eu achei isso interessante. Eu achava que gente assim não discutia.')
   ],
   ef:{flag:'eles_discutem',
       registrar:'O conselho da 704 discute entre si. A presidente é a única que desce sozinha.',
@@ -65171,6 +65208,7 @@ c24_a_primeira:{
     'A Rota 23 sempre teve as sete guaritas. Elas estavam lá antes de você nascer, de pedra, com telhado de duas águas e nenhuma porta.',
     'A diferença é que agora elas têm gente dentro.',
     'Sete guaritas, sete pessoas de uniforme cinza que não é uniforme da Liga, e uma cancela de madeira pintada de branco e vermelho em cada uma.',
+    d=>{ Nomes.apresentar('o guarda da primeira'); return 'O da primeira tem PIKE bordado em cima do bolso, que é mais do que os outros seis têm.'; },
     fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
     'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
     fala('o guarda da primeira', 'Oito insígnias, licença válida, sem restrição.'),
@@ -65515,10 +65553,11 @@ c25_ab_cedo_demais:{
     'Você chega às oito e doze pra uma audiência das dez, o que é uma hora e quarenta e oito minutos de erro de cálculo que você cometeu de propósito.',
     'O prédio está aberto. A antessala está vazia. As seis cadeiras de plástico estão todas livres e você escolhe a do canto, de frente pra porta.',
     'A planta precisa de água e o relógio de parede atrasa, e nas próximas uma hora e quarenta e oito você vai olhar pros dois muitas vezes.',
-    'Às oito e quarenta chega a recepcionista, que te vê sentado e não se assusta.',
-    fala('a recepcionista', 'Audiência das dez?'),
+    'Às oito e quarenta chega a recepcionista, que te vê sentad{o|a} e não se assusta.',
+    d=>{ Nomes.apresentar('a recepcionista da Liga'); return 'Ela vira pra frente a plaquinha de acrílico da mesa, como faz toda manhã: LENA.'; },
+    fala('a recepcionista da Liga', 'Audiência das dez?'),
     d=>fala(d.jogador.nome, 'Das dez.'),
-    fala('a recepcionista', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
+    fala('a recepcionista da Liga', 'Tem café no fim do corredor. A máquina engole moeda mas devolve se você bater do lado.'),
     'Ela liga o computador e o computador leva quatro minutos pra ligar, e nos quatro minutos ela fica olhando pra tela preta.',
     'Duas pessoas esperando uma máquina, cada uma na sua.'
   ],
@@ -65536,19 +65575,19 @@ c25_ab_perguntou_a_recepcionista:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem convocou essa audiência?'),
     'Ela olha a tela, que agora já ligou.',
-    fala('a recepcionista', 'Aqui tá como "de ofício".'),
+    fala('a recepcionista da Liga', 'Aqui tá como "de ofício".'),
     d=>fala(d.jogador.nome, 'O que é "de ofício"?'),
-    fala('a recepcionista', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
+    fala('a recepcionista da Liga', 'É quando não tem parte pedindo. A casa convoca sozinha.'),
     'Ela rola a tela.',
-    fala('a recepcionista', 'É raro. Eu tô aqui há nove anos e vi umas cinco.'),
+    fala('a recepcionista da Liga', 'É raro. Eu tô aqui há nove anos e vi umas cinco.'),
     d=>fala(d.jogador.nome, 'E as outras quatro?'),
     'Ela para de rolar.',
-    fala('a recepcionista', 'Foram todas no mesmo ano. Oitenta e nove.'),
+    fala('a recepcionista da Liga', 'Foram todas no mesmo ano. Oitenta e nove.'),
     'Ela olha pra você pela primeira vez desde que sentou.',
-    fala('a recepcionista', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
+    fala('a recepcionista da Liga', 'Eu era estagiária. Eu servi o café das quatro.', 'baixo')
   ],
   ef:{flag:'audiencia_de_oficio',
-      npc:{nome:'a recepcionista', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
+      npc:{nome:'a recepcionista da Liga', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
       registrar:'A audiência foi convocada de ofício. As outras quatro da história da casa foram todas em 1989.',
       presagio:'Oitenta e nove. O mesmo ano do laboratório de Cinnabar e do CNPJ baixado da usina.'},
   escolhas:[
@@ -65560,16 +65599,16 @@ c25_ab_perguntou_a_recepcionista:{
 
 c25_ab_as_quatro_de_oitenta_e_nove:{
   texto:[
-    fala('a recepcionista', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
+    fala('a recepcionista da Liga', 'Eu tinha dezenove anos. Eu servia café e recolhia xícara.'),
     'Ela junta as mãos no balcão.',
-    fala('a recepcionista', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
+    fala('a recepcionista da Liga', 'Eu não lembro do que decidiram. Eu lembro de como eles saíam.'),
     d=>fala(d.jogador.nome, 'Como?'),
-    fala('a recepcionista', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
-    fala('a recepcionista', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
+    fala('a recepcionista da Liga', 'Rápido. As quatro. Nenhum deles ficou conversando no corredor.'),
+    fala('a recepcionista da Liga', 'E em todas as quatro, quem saiu por último foi a mesma pessoa. Sozinha, sempre uns dez minutos depois.'),
     d=>fala(d.jogador.nome, 'Quem?'),
     'Ela balança a cabeça.',
-    fala('a recepcionista', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
-    fala('a recepcionista', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
+    fala('a recepcionista da Liga', 'Uma mulher. Eu tinha dezenove anos e ela era a única que agradecia o café.'),
+    fala('a recepcionista da Liga', 'É a única coisa que eu lembro dela e eu lembro há onze anos.')
   ],
   ef:{flag:'a_mulher_que_agradecia_o_cafe',
       registrar:'Nas quatro audiências de ofício de 1989, a última a sair foi sempre a mesma mulher.',
@@ -65590,7 +65629,7 @@ c25_ab_em_cima_da_hora:{
       ? 'Blue está na terceira cadeira e levanta a sobrancelha pro seu estado, e não fala nada, o que da parte dele é um gesto de contenção heroico.'
       : 'Um rapaz da sua idade está na terceira cadeira e levanta a sobrancelha pro seu estado.',
     'Uma mulher de uns cinquenta com uma pasta de couro olha o relógio de parede, que atrasa, e depois o relógio de pulso dela, que não.',
-    fala('a recepcionista', 'A audiência é às dez. Os senhores podem entrar às dez.'),
+    fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.'),
     'São nove e cinquenta e oito. Você tem cento e vinte segundos pra parar de suar e não vai dar.'
   ],
   ef:{flag:['chegou_na_audiencia','chegou_em_cima_da_hora'], hp:-1,
@@ -65714,7 +65753,7 @@ c25_a_antessala:{
       ? 'Blue está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.'
       : 'Um rapaz da sua idade está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.',
     'Os outros dois você não conhece: uma mulher de uns cinquenta com uma pasta de couro e um homem de terno com um crachá azul.',
-    fala('a recepcionista', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
+    fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
          'Ela fala isso às nove e quarenta e cinco e volta a olhar a tela.')
   ],
   ef:{flag:'chegou_na_audiencia',
@@ -66254,17 +66293,18 @@ c26_ab_a_van_do_pao:{
   texto:[
     'A van de entrega de pão sobe a estrada do Planalto às onze da manhã de terça, quinta e sábado, e hoje é terça.',
     'Você está a pé na curva dos últimos duzentos metros quando ela para do seu lado sozinha.',
-    fala('o entregador', 'Vai pro Planalto?'),
+    fala('o entregador de pão', 'Vai pro Planalto?'),
+    d=>{ Nomes.apresentar('o entregador de pão'); return 'Na porta da van, em letra de adesivo descascando: PADARIA DO PLANALTO — RUFO.'; },
     d=>fala(d.jogador.nome, 'Vou.'),
-    fala('o entregador', 'Sobe. É meio quilômetro e é tudo subida.'),
+    fala('o entregador de pão', 'Sobe. É meio quilômetro e é tudo subida.'),
     'Você sobe no banco do carona, entre uma caixa de pão de forma e uma caixa de pão francês, e o cheiro é a coisa mais fora de lugar do mês.',
-    fala('o entregador', 'Eu faço essa entrega há oito anos.'),
-    fala('o entregador', 'Sabe o que mudou?'),
+    fala('o entregador de pão', 'Eu faço essa entrega há oito anos.'),
+    fala('o entregador de pão', 'Sabe o que mudou?'),
     d=>fala(d.jogador.nome, 'O quê?'),
-    fala('o entregador', 'A quantidade de pão.'),
+    fala('o entregador de pão', 'A quantidade de pão.'),
     'Ele engata a segunda pra vencer a subida.',
-    fala('o entregador', 'Eu entregava oitenta pães. Hoje eu entrego duzentos e quarenta.'),
-    fala('o entregador', 'O Planalto não contratou ninguém. Eu perguntei na cozinha.', 'baixo')
+    fala('o entregador de pão', 'Eu entregava oitenta pães. Hoje eu entrego duzentos e quarenta.'),
+    fala('o entregador de pão', 'O Planalto não contratou ninguém. Eu perguntei na cozinha.', 'baixo')
   ],
   ef:{flag:'o_pao_triplicou',
       npc:{nome:'o entregador', opiniao:1, viuVoce:'Te deu carona nos últimos duzentos metros da subida.'},
@@ -66280,14 +66320,14 @@ c26_ab_a_van_do_pao:{
 
 c26_ab_quantos:{
   texto:[
-    fala('o entregador', 'Duzentos e quarenta pães dá pra umas cento e vinte pessoas no café e no jantar.'),
+    fala('o entregador de pão', 'Duzentos e quarenta pães dá pra umas cento e vinte pessoas no café e no jantar.'),
     'Ele entra no estacionamento e manobra de ré na doca de carga sem olhar pra trás, com a mão no encosto do banco.',
-    fala('o entregador', 'O Planalto tem quarenta e um funcionários. Tá na plaquinha do saguão, "nossa equipe".'),
+    fala('o entregador de pão', 'O Planalto tem quarenta e um funcionários. Tá na plaquinha do saguão, "nossa equipe".'),
     d=>fala(d.jogador.nome, 'Mais os desafiantes.'),
-    fala('o entregador', 'Em temporada, umas dez, quinze pessoas. Fora de temporada, nenhuma.'),
+    fala('o entregador de pão', 'Em temporada, umas dez, quinze pessoas. Fora de temporada, nenhuma.'),
     'Ele puxa o freio de mão.',
-    fala('o entregador', 'Em janeiro não tem desafiante nenhum. Janeiro é fechado.'),
-    fala('o entregador', 'Em janeiro eu entrego os mesmos duzentos e quarenta.')
+    fala('o entregador de pão', 'Em janeiro não tem desafiante nenhum. Janeiro é fechado.'),
+    fala('o entregador de pão', 'Em janeiro eu entrego os mesmos duzentos e quarenta.')
   ],
   ef:{flag:'cento_e_vinte_no_planalto',
       registrar:'O Planalto tem 41 funcionários e consome pão para 120 pessoas, inclusive em janeiro, quando fecha.'},
@@ -72853,7 +72893,7 @@ c31_pediu_o_rolo:{
     fala('Sra. Laurel', 'Porque agora eu sei que você pegou, e eu não posso dizer que não sabia.'),
     'Ela suspira e põe os óculos de volta.',
     fala('Sra. Laurel', 'Leva. Eu não vou mentir se me perguntarem, e ninguém vai me perguntar, porque ninguém nesse prédio sabe o que é papel térmico.'),
-    fala('Sra. Laurel', 'E da próxima vez que alguém te deixar sozinho numa sala com uma cesta de lixo, entende o favor.', 'baixo')
+    fala('Sra. Laurel', 'E da próxima vez que alguém te deixar sozinh{o|a} numa sala com uma cesta de lixo, entende o favor.', 'baixo')
   ],
   ef:{flag:['tem_o_rolo_termico','reika_precisa_de_papel'],
       npc:{nome:'Sra. Laurel', opiniao:3, viuVoce:'Te deixou levar o rolo depois de você estragar o favor perguntando.'},
@@ -79478,7 +79518,8 @@ const UI = {
       <div class="linha"><span class="k">O que muda</span><span class="v">o balão passa a usar o nome — nessa cena e em todas depois</span></div>
       <div class="linha"><span class="k">Custa</span><span class="v">nada: não gasta dia, não muda reputação, não fecha escolha</span></div>
       <div class="linha"><span class="k">Nem todo mundo diz</span><span class="v">alguns recusam, e a recusa é sobre quem eles são</span></div>
-      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o guarda da primeira", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes.</p>
+      <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
+      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
@@ -79761,7 +79802,8 @@ const UI = {
       <div class="linha"><span class="k">O que muda</span><span class="v">o balão passa a usar o nome — nessa cena e em todas depois</span></div>
       <div class="linha"><span class="k">Custa</span><span class="v">nada: não gasta dia, não muda reputação, não fecha escolha</span></div>
       <div class="linha"><span class="k">Nem todo mundo diz</span><span class="v">alguns recusam, e a recusa é sobre quem eles são</span></div>
-      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o guarda da primeira", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes.</p>
+      <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
+      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>

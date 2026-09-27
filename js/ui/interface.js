@@ -3466,7 +3466,8 @@ const UI = {
       <div class="linha"><span class="k">O que muda</span><span class="v">o balão passa a usar o nome — nessa cena e em todas depois</span></div>
       <div class="linha"><span class="k">Custa</span><span class="v">nada: não gasta dia, não muda reputação, não fecha escolha</span></div>
       <div class="linha"><span class="k">Nem todo mundo diz</span><span class="v">alguns recusam, e a recusa é sobre quem eles são</span></div>
-      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o guarda da primeira", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes.</p>
+      <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
+      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
@@ -3749,7 +3750,8 @@ const UI = {
       <div class="linha"><span class="k">O que muda</span><span class="v">o balão passa a usar o nome — nessa cena e em todas depois</span></div>
       <div class="linha"><span class="k">Custa</span><span class="v">nada: não gasta dia, não muda reputação, não fecha escolha</span></div>
       <div class="linha"><span class="k">Nem todo mundo diz</span><span class="v">alguns recusam, e a recusa é sobre quem eles são</span></div>
-      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o guarda da primeira", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes.</p>
+      <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
+      <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>

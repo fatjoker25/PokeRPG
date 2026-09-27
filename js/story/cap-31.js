@@ -266,7 +266,7 @@ c31_pediu_o_rolo:{
     fala('Sra. Laurel', 'Porque agora eu sei que você pegou, e eu não posso dizer que não sabia.'),
     'Ela suspira e põe os óculos de volta.',
     fala('Sra. Laurel', 'Leva. Eu não vou mentir se me perguntarem, e ninguém vai me perguntar, porque ninguém nesse prédio sabe o que é papel térmico.'),
-    fala('Sra. Laurel', 'E da próxima vez que alguém te deixar sozinho numa sala com uma cesta de lixo, entende o favor.', 'baixo')
+    fala('Sra. Laurel', 'E da próxima vez que alguém te deixar sozinh{o|a} numa sala com uma cesta de lixo, entende o favor.', 'baixo')
   ],
   ef:{flag:['tem_o_rolo_termico','reika_precisa_de_papel'],
       npc:{nome:'Sra. Laurel', opiniao:3, viuVoce:'Te deixou levar o rolo depois de você estragar o favor perguntando.'},

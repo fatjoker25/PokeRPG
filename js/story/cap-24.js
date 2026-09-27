@@ -155,6 +155,7 @@ c24_a_primeira:{
     'A Rota 23 sempre teve as sete guaritas. Elas estavam lá antes de você nascer, de pedra, com telhado de duas águas e nenhuma porta.',
     'A diferença é que agora elas têm gente dentro.',
     'Sete guaritas, sete pessoas de uniforme cinza que não é uniforme da Liga, e uma cancela de madeira pintada de branco e vermelho em cada uma.',
+    d=>{ Nomes.apresentar('o guarda da primeira'); return 'O da primeira tem PIKE bordado em cima do bolso, que é mais do que os outros seis têm.'; },
     fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
     'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
     fala('o guarda da primeira', 'Oito insígnias, licença válida, sem restrição.'),

@@ -56,6 +56,25 @@ const RECUSAM_O_NOME = {
   ]
 };
 
+/* Quem carrega cena e se arrisca tem nome escrito à mão, não sorteado.
+   A cena em que a pessoa entra apresenta o nome (Nomes.apresentar), e
+   perguntar antes disso dá o mesmo nome — nunca um sorteado que a cena
+   depois desmentiria. */
+const NOMES_FIXOS = {
+  'o capitão do porto':        'Capitão Marlow',
+  'a funcionária da guarita':  'Sra. Myrtle',
+  'o rapaz do protocolo':      'Tito',
+  'o guarda da primeira':      'Pike',
+  'o entregador de pão':       'Rufo',
+  'a recepcionista da Liga':   'Lena',
+  'a balconista da farmácia':  'Gina'
+};
+
+/* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
+   função que aparece em cidade atrás de cidade, não uma pessoa só
+   ("Cargo fica como cargo", no CLAUDE.md). O jogador ainda pode perguntar. */
+const CARGO_DE_PROPOSITO = ['a enfermeira', 'o barqueiro', 'a atendente'];
+
 /* como a pessoa responde, pelo que ela faz da vida. O primeiro que
    casar manda. */
 const JEITOS = [
@@ -144,6 +163,8 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
+  /* os nomes fixos daqui de cima */
+  'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
   'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle'
@@ -214,7 +235,7 @@ const Nomes = {
       (d.nomesRecusados = d.nomesRecusados || {})[r] = true;
       return {nome:null, linhas: RECUSAM_O_NOME[r]()};
     }
-    const nome = nomeSorteado(r);
+    const nome = NOMES_FIXOS[r] || nomeSorteado(r);
     this.sabidos()[r] = nome;
     const f = ehFeminino(r);
     const jeito = JEITOS.find(j => j.quando.test(r)) || JEITOS[JEITOS.length - 1];
@@ -226,6 +247,17 @@ const Nomes = {
     if (typeof Estado.lembrarNPC === 'function')
       Estado.lembrarNPC(r, {conhece:true, viuVoce:'Você perguntou o nome e ouviu a resposta.'});
     return {nome, linhas};
+  },
+
+  /* A cena apresenta a pessoa: dali em diante o balão usa o nome, aqui
+     e em qualquer cena depois. Chamado de dentro de uma linha de texto,
+     então tem que poder rodar de novo sem efeito. */
+  apresentar(rotulo){
+    const nome = NOMES_FIXOS[rotulo];
+    if (!nome || this.sabe(rotulo)) return nome || null;
+    this.sabidos()[rotulo] = nome;
+    if (typeof Estado.lembrarNPC === 'function') Estado.lembrarNPC(rotulo, {conhece:true});
+    return nome;
   },
 
   /* como o balão deve chamar essa pessoa agora */

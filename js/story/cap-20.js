@@ -179,16 +179,16 @@ c20_ab_nao_sei_ainda:{
 c20_ab_a_farmacia:{
   texto:[
     'Tem uma farmácia no térreo do 118 e você entra nela porque está com dor de cabeça de verdade e porque a farmácia atrasa a subida em mais dez minutos.',
-    'A balconista tem uns trinta anos e um crachá com o nome dela e uma caneta presa no bolso do jaleco.',
+    d=>{ Nomes.apresentar('a balconista da farmácia'); return 'A balconista tem uns trinta anos, um crachá que diz GINA e uma caneta presa no bolso do jaleco.'; },
     'Você compra o analgésico mais barato e toma ali mesmo, com água do bebedouro.',
     d=>fala(d.jogador.nome, 'Você conhece o pessoal da 704?'),
-    fala('a balconista', 'Da reunião?'),
+    fala('a balconista da farmácia', 'Da reunião?'),
     'Ela nem levanta os olhos do caixa.',
-    fala('a balconista', 'Eles descem aqui de vez em quando. Uma delas compra remédio de pressão.'),
+    fala('a balconista da farmácia', 'Eles descem aqui de vez em quando. Uma delas compra remédio de pressão.'),
     d=>fala(d.jogador.nome, 'Você sabe o que eles fazem?'),
-    fala('a balconista', 'Reunião, ué.'),
+    fala('a balconista da farmácia', 'Reunião, ué.'),
     'E aí ela levanta os olhos, porque a pergunta foi estranha.',
-    fala('a balconista', 'Por quê? Eles devem alguma coisa pra você?'),
+    fala('a balconista da farmácia', 'Por quê? Eles devem alguma coisa pra você?'),
     'É a pergunta certa, feita pela pessoa errada, e ela é a primeira pessoa a fazer ela em voz alta.'
   ],
   ef:{dinheiro:-40, hp:2, flag:'a_farmacia_do_terreo',
@@ -204,15 +204,15 @@ c20_ab_devem:{
   texto:[
     d=>fala(d.jogador.nome, 'Devem.'),
     'Ela fecha a gaveta do caixa devagar.',
-    fala('a balconista', 'Então sobe e cobra.'),
+    fala('a balconista da farmácia', 'Então sobe e cobra.'),
     d=>fala(d.jogador.nome, 'É o que eu vim fazer.'),
-    fala('a balconista', 'Então por que você tá comprando analgésico?'),
+    fala('a balconista da farmácia', 'Então por que você tá comprando analgésico?'),
     'Você não tem resposta pra isso.',
     'Ela pega o troco e conta na sua mão, moeda por moeda, sem pressa.',
-    fala('a balconista', 'Meu pai trabalhou vinte e dois anos numa firma que devia pra ele. Ele nunca subiu cobrar.'),
-    fala('a balconista', 'Ele reclamava todo domingo no almoço, por vinte e dois anos.'),
+    fala('a balconista da farmácia', 'Meu pai trabalhou vinte e dois anos numa firma que devia pra ele. Ele nunca subiu cobrar.'),
+    fala('a balconista da farmácia', 'Ele reclamava todo domingo no almoço, por vinte e dois anos.'),
     'Ela fecha a sua mão em volta do troco com as duas mãos dela.',
-    fala('a balconista', 'Sobe.', 'baixo')
+    fala('a balconista da farmácia', 'Sobe.', 'baixo')
   ],
   ef:{flag:'a_balconista_mandou_subir', moral:1,
       npc:{nome:'a balconista', opiniao:2, viuVoce:'Fechou a sua mão em volta do troco e mandou você subir.'},
@@ -224,16 +224,16 @@ c20_ab_devem:{
 
 c20_ab_qual_delas:{
   texto:[
-    fala('a balconista', 'A da cabeceira. A que manda.'),
+    fala('a balconista da farmácia', 'A da cabeceira. A que manda.'),
     d=>fala(d.jogador.nome, 'Como você sabe que ela é a que manda?'),
-    fala('a balconista', 'Porque ela é a única que desce sozinha.'),
+    fala('a balconista da farmácia', 'Porque ela é a única que desce sozinha.'),
     'Ela arruma umas caixas no balcão.',
-    fala('a balconista', 'Os outros descem em dupla, em trio, conversando. Ela desce sozinha, compra, e sobe.'),
-    fala('a balconista', 'E uma vez ela esqueceu a receita aqui e eu subi pra devolver.'),
+    fala('a balconista da farmácia', 'Os outros descem em dupla, em trio, conversando. Ela desce sozinha, compra, e sobe.'),
+    fala('a balconista da farmácia', 'E uma vez ela esqueceu a receita aqui e eu subi pra devolver.'),
     d=>fala(d.jogador.nome, 'E?'),
-    fala('a balconista', 'E a porta tava aberta e eles tavam discutindo, e pararam quando eu bati.'),
+    fala('a balconista da farmácia', 'E a porta tava aberta e eles tavam discutindo, e pararam quando eu bati.'),
     'Ela dá de ombros.',
-    fala('a balconista', 'Eles discutem. Eu achei isso interessante. Eu achava que gente assim não discutia.')
+    fala('a balconista da farmácia', 'Eles discutem. Eu achei isso interessante. Eu achava que gente assim não discutia.')
   ],
   ef:{flag:'eles_discutem',
       registrar:'O conselho da 704 discute entre si. A presidente é a única que desce sozinha.',

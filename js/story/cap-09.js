@@ -202,6 +202,7 @@ c9_ab_de_cracha:{
       const c = Cargos.principal();
       return `A Prefeitura de Celadon tem um balcão de protocolo na entrada da cidade, e o rapaz do balcão vê o seu crachá de ${c ? c.nome : 'serviço'} e faz uma coisa que ninguém nunca fez com você: ele levanta.`;
     },
+    d=>{ Nomes.apresentar('o rapaz do protocolo'); return 'No crachá de plástico preso na camisa dele: TITO — PROTOCOLO.'; },
     fala('o rapaz do protocolo', 'Serviço? {O senhor|A senhora} quer dar entrada em alguma coisa?'),
     'Ele te chama de senhor. Você tem quinze anos.',
     d=>fala(d.jogador.nome, 'Eu não sei. O que dá pra dar entrada aqui?'),

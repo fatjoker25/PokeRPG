@@ -210,6 +210,7 @@ c7_ab_de_cracha:{
   texto:[
     'Tem um posto da prefeitura na entrada de Lavender que não existe em nenhuma outra cidade de Kanto: uma guarita de dois metros por dois com uma janelinha, e dentro dela uma mulher com um livro de registro.',
     'Não é fiscalização. É outra coisa.',
+    d=>{ Nomes.apresentar('a funcionária da guarita'); return 'Colada no vidro da janelinha, com durex amarelado, uma tira de papel escrita à mão: SRA. MYRTLE — PORTARIA.'; },
     fala('a funcionária da guarita', 'Bom dia. Veio visitar ou veio sepultar?'),
     'É a pergunta mais direta que alguém já te fez.',
     d=>{
