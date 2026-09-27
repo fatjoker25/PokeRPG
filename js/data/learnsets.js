@@ -271,6 +271,32 @@ for (const [dex, str] of Object.entries(APRENDE_RAW)){
   }).filter(([nv, nome]) => !isNaN(nv) && GOLPES[nome]);
 }
 
+/* Os golpes de Gold/Silver que chegaram com as TMs (Protect, Curse,
+   Sweet Scent, Snore…) também se aprendem por nível em algumas espécies.
+   Níveis da 2ª geração, do learnset de Gen 2 do Showdown (código 2L). */
+const APRENDE_G2_EXTRA = {
+  1:'25 Sweet Scent', 2:'29 Sweet Scent', 3:'29 Sweet Scent', 7:'28 Protect',
+  8:'31 Protect', 9:'31 Protect', 43:'7 Sweet Scent', 44:'7 Sweet Scent,1 Sweet Scent',
+  45:'1 Sweet Scent', 54:'31 Psych Up', 55:'31 Psych Up', 69:'30 Sweet Scent',
+  70:'33 Sweet Scent', 71:'1 Sweet Scent', 79:'1 Curse', 80:'1 Curse',
+  90:'25 Protect', 91:'1 Protect', 92:'16 Curse', 93:'16 Curse',
+  94:'16 Curse', 96:'43 Psych Up', 97:'55 Psych Up', 98:'34 Protect',
+  99:'38 Protect', 106:'41 Endure', 107:'44 Detect', 115:'37 Endure',
+  138:'37 Protect', 139:'37 Protect', 140:'37 Endure', 141:'37 Endure',
+  143:'36 Snore', 145:'37 Detect', 146:'37 Endure', 150:'33 Psych Up',
+  182:'1 Sweet Scent', 193:'25 Detect', 196:'42 Psych Up', 199:'1 Curse',
+  204:'1 Protect', 205:'1 Protect', 214:'12 Endure', 216:'43 Snore',
+  217:'49 Snore', 220:'19 Endure', 221:'19 Endure,1 Endure', 231:'41 Endure',
+  237:'43 Detect',
+};
+for (const [dex, str] of Object.entries(APRENDE_G2_EXTRA)){
+  const extra = str.split(',').map(t => { const i = t.indexOf(' '); return [parseInt(t.slice(0, i), 10), t.slice(i + 1)]; })
+                   .filter(([nv, nome]) => !isNaN(nv) && GOLPES[nome]);
+  const lista = (APRENDE[dex] || []).concat(extra);
+  lista.sort((a, b) => a[0] - b[0]);
+  APRENDE[dex] = lista;
+}
+
 /* A linha inteira, da forma base até esta. Ninguém esquece o que
    aprendeu antes de evoluir: sem isso, um Metapod entraria em
    combate só com Harden e não teria como atacar. */

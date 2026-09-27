@@ -2532,6 +2532,19 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 @keyframes solPulsa{50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.clima-camada{animation:none !important}}
 
+/* ---------- estágios e estados na ficha de HP (Batalha.marcas) ---------- */
+.marcas-luta{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px;margin-top:5px;min-height:0}
+.marcas-luta:empty{display:none}
+.marca-luta{font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:1px 7px;border-radius:10px;line-height:16px;white-space:nowrap;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--texto);
+  font-variant-numeric:tabular-nums;animation:surge .25s var(--mola) both}
+.marca-luta.baixo{background:rgba(221,84,66,.18);border-color:rgba(221,84,66,.5);color:#ffb7ac}
+.marca-luta.alto{background:rgba(80,200,120,.16);border-color:rgba(80,200,120,.5);color:#a6f0bf}
+.marca-luta.estado{background:rgba(170,120,230,.16);border-color:rgba(170,120,230,.5);color:#dcc6ff}
+.marca-luta.bom{background:rgba(90,170,240,.16);border-color:rgba(90,170,240,.5);color:#bfe0ff}
+.marca-luta.campo{background:rgba(240,200,90,.14);border-color:rgba(240,200,90,.5);color:#ffe7a6}
+.golpe-btn.travado{opacity:.5 !important;text-decoration:line-through}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -3091,9 +3104,9 @@ const GOLPES = {
   'Fire Spin':     {t:'Fogo',c:'esp',p:35,a:85,pp:15,nv:14,ef:{preso:true}},
 
   /* --- ÁGUA --- */
-  'Bubble':        {t:'Água',c:'esp',p:40,a:100,pp:30,nv:1},
+  'Bubble':        {t:'Água',c:'esp',p:40,a:100,pp:30,nv:1,ef:{baixa:'spe',chance:10}},
   'Water Gun':     {t:'Água',c:'esp',p:40,a:100,pp:25,nv:1},
-  'Bubble Beam':   {t:'Água',c:'esp',p:65,a:100,pp:20,nv:18,ef:{baixa:'spe'}},
+  'Bubble Beam':   {t:'Água',c:'esp',p:65,a:100,pp:20,nv:18,ef:{baixa:'spe',chance:10}},
   'Waterfall':     {t:'Água',c:'fis',p:80,a:100,pp:15,nv:28},
   'Surf':          {t:'Água',c:'esp',p:90,a:100,pp:15,nv:36},
   'Hydro Pump':    {t:'Água',c:'esp',p:110,a:80,pp:5,nv:46},
@@ -3117,7 +3130,7 @@ const GOLPES = {
   'Petal Dance':   {t:'Grama',c:'esp',p:120,a:100,pp:10,nv:42,ef:{confundeSe:true}},
 
   /* --- GELO --- */
-  'Aurora Beam':   {t:'Gelo',c:'esp',p:65,a:100,pp:20,nv:20,ef:{baixa:'atk'}},
+  'Aurora Beam':   {t:'Gelo',c:'esp',p:65,a:100,pp:20,nv:20,ef:{baixa:'atk',chance:10}},
   'Ice Punch':     {t:'Gelo',c:'fis',p:75,a:100,pp:15,nv:24,ef:{tipo:'congelamento',chance:10}},
   'Ice Beam':      {t:'Gelo',c:'esp',p:90,a:100,pp:10,nv:34,ef:{tipo:'congelamento',chance:10}},
   'Blizzard':      {t:'Gelo',c:'esp',p:110,a:70,pp:5,nv:46,ef:{tipo:'congelamento',chance:10}},
@@ -3132,7 +3145,7 @@ const GOLPES = {
 
   /* --- VENENOSO --- */
   'Poison Sting':  {t:'Venenoso',c:'fis',p:15,a:100,pp:35,nv:1,ef:{tipo:'veneno',chance:30}},
-  'Acid':          {t:'Venenoso',c:'esp',p:40,a:100,pp:30,nv:10,ef:{baixa:'def'}},
+  'Acid':          {t:'Venenoso',c:'esp',p:40,a:100,pp:30,nv:10,ef:{baixa:'def',chance:10}},
   'Smog':          {t:'Venenoso',c:'esp',p:30,a:70,pp:20,nv:8,ef:{tipo:'veneno',chance:40}},
   'Sludge':        {t:'Venenoso',c:'esp',p:65,a:100,pp:20,nv:24,ef:{tipo:'veneno',chance:30}},
   'Toxic':         {t:'Venenoso',c:'status',p:0,a:85,pp:10,nv:28,ef:{tipo:'veneno',chance:100,grave:true}},
@@ -3158,7 +3171,7 @@ const GOLPES = {
   'Psybeam':       {t:'Psíquico',c:'esp',p:65,a:100,pp:20,nv:20,ef:{tipo:'confusao',chance:10}},
   'Barrier':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:24,ef:{sobe:'def',forte:true}},
   'Amnesia':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:28,ef:{sobe:'spd',forte:true}},
-  'Psychic':       {t:'Psíquico',c:'esp',p:90,a:100,pp:10,nv:38,ef:{baixa:'spd'}},
+  'Psychic':       {t:'Psíquico',c:'esp',p:90,a:100,pp:10,nv:38,ef:{baixa:'spd',chance:10}},
   'Dream Eater':   {t:'Psíquico',c:'esp',p:100,a:100,pp:15,nv:42,ef:{drena:0.5,soDormindo:true}},
 
   /* --- INSETO --- */
@@ -3251,32 +3264,32 @@ const GOLPES = {
   'Growth':        {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'spa'}},
   'Sharpen':       {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'atk'}},
   'Meditate':      {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'atk'}},
-  'Focus Energy':  {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'atk'}},
+  'Focus Energy':  {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'foco'}},
   'Defense Curl':  {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
   'Withdraw':      {t:'Água',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
-  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def'}},
-  'Substitute':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{sobe:'def'}},
-  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{sobe:'spe'}},
-  'Conversion':    {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'def'}},
-  'Light Screen':  {t:'Psíquico',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'spd'}},
-  'Reflect':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def'}},
-  'Mist':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'spd'}},
+  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'evasao'}},
+  'Substitute':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'substituto'}},
+  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{sobe:'evasao'}},
+  'Conversion':    {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'conversao'}},
+  'Light Screen':  {t:'Psíquico',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'tela'}},
+  'Reflect':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'reflexo'}},
+  'Mist':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'nevoa'}},
   'Acid Armor':    {t:'Venenoso',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def',forte:true}},
   /* Haze zera as alterações dos dois lados; aqui derruba o ataque de quem está na frente */
-  'Haze':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{baixa:'atk'}},
+  'Haze':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'haze'}},
   'Smokescreen':   {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'precisao'}},
   /* Whirlwind e Roar tiram o adversário do lugar; sem troca forçada, tiram o ritmo */
-  'Whirlwind':     {t:'Normal',c:'status',p:0,a:85,pp:20,nv:1,ef:{baixa:'spe'}},
-  'Roar':          {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'spe'}},
+  'Whirlwind':     {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{acao:'soprar',prioridade:-1}},
+  'Roar':          {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{acao:'soprar',prioridade:-1}},
   /* Disable trava um golpe; o mais perto que este motor faz é a confusão */
-  'Disable':       {t:'Normal',c:'status',p:0,a:55,pp:20,nv:1,ef:{tipo:'confusao',chance:100}},
+  'Disable':       {t:'Normal',c:'status',p:0,a:55,pp:20,nv:1,ef:{acao:'desabilitar'}},
   'Lovely Kiss':   {t:'Normal',c:'status',p:0,a:75,pp:10,nv:1,ef:{tipo:'sono',chance:100}},
   /* Metronome sorteia um golpe; aqui ele sai sempre, e sai médio */
   'Metronome':     {t:'Normal',c:'esp',p:70,a:999,pp:10,nv:1},
   /* Transform copia o adversário; sem cópia, é a postura de quem imita */
-  'Transform':     {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{sobe:'atk'}},
-  'Teleport':      {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'spe'}},
-  'Mirror Move':   {t:'Voador',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'atk'}},
+  'Transform':     {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'transformar'}},
+  'Teleport':      {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'teleporte'}},
+  'Mirror Move':   {t:'Voador',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'espelho'}},
   'Splash':        {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1},
 
   /* --- LUTADOR --- */
@@ -3286,7 +3299,7 @@ const GOLPES = {
   'Counter':       {t:'Lutador',c:'fis',p:60,a:100,pp:20,nv:1},
 
   /* --- GRAMA --- */
-  'Leech Seed':    {t:'Grama',c:'status',p:0,a:90,pp:10,nv:1,ef:{tipo:'veneno',chance:100}},
+  'Leech Seed':    {t:'Grama',c:'status',p:0,a:90,pp:10,nv:1,ef:{acao:'semente'}},
   'Spore':         {t:'Grama',c:'status',p:0,a:999,pp:15,nv:1,ef:{tipo:'sono',chance:100}},
 
   /* --- VENENOSO --- */
@@ -3308,19 +3321,37 @@ const GOLPES = {
   /* Flail bate mais quanto menos HP sobra; aqui é só um golpe curto e forte */
   'Flail':         {t:'Normal',c:'fis',p:70,a:100,pp:15,nv:1},
   'Scary Face':    {t:'Normal',c:'status',p:0,a:90,pp:10,nv:1,ef:{baixa:'spe',forte:true}},
-  'Foresight':     {t:'Normal',c:'status',p:0,a:100,pp:40,nv:1,ef:{baixa:'precisao'}},
+  'Foresight':     {t:'Normal',c:'status',p:0,a:100,pp:40,nv:1,ef:{acao:'identificar'}},
   'Charm':         {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'atk',forte:true}},
-  'Swagger':       {t:'Normal',c:'status',p:0,a:90,pp:15,nv:1,ef:{tipo:'confusao',chance:100}},
+  'Swagger':       {t:'Normal',c:'status',p:0,a:90,pp:15,nv:1,ef:{acao:'fanfarra'}},
   'Spider Web':    {t:'Inseto',c:'status',p:0,a:999,pp:10,nv:1,ef:{baixa:'spe'}},
   'Cotton Spore':  {t:'Grama',c:'status',p:0,a:85,pp:40,nv:1,ef:{baixa:'spe',forte:true}},
   'Synthesis':     {t:'Grama',c:'status',p:0,a:999,pp:5,nv:1,ef:{cura:0.5}},
   'Softboiled':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{cura:0.5}},
-  'Safeguard':     {t:'Normal',c:'status',p:0,a:999,pp:25,nv:1,ef:{sobe:'spd'}},
+  'Safeguard':     {t:'Normal',c:'status',p:0,a:999,pp:25,nv:1,ef:{acao:'salvaguarda'}},
   'Mirror Coat':   {t:'Psíquico',c:'esp',p:60,a:100,pp:20,nv:1},
   /* Sandstorm e Rain Dance mudam o tempo; sem clima, o que sobra é o estorvo */
   'Sandstorm':     {t:'Pedra',c:'status',p:0,a:999,pp:10,nv:1,ef:{clima:'areia'}},
   'Rain Dance':    {t:'Água',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'chuva'}},
-  'Sunny Day':     {t:'Fogo',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'sol'}}
+  'Sunny Day':     {t:'Fogo',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'sol'}},
+
+  /* ── os de Gold/Silver com mecânica própria (os que as TMs ensinam) ── */
+  'Protect':       {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'proteger',prioridade:3}},
+  'Detect':        {t:'Lutador',c:'status',p:0,a:999,pp:5,nv:1,ef:{acao:'proteger',prioridade:3}},
+  'Endure':        {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'aguentar',prioridade:3}},
+  'Curse':         {t:'Fantasma',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'maldicao'}},
+  'Attract':       {t:'Normal',c:'status',p:0,a:100,pp:15,nv:1,ef:{acao:'atracao'}},
+  'Nightmare':     {t:'Fantasma',c:'status',p:0,a:100,pp:15,nv:1,ef:{acao:'pesadelo'}},
+  'Psych Up':      {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'copiar'}},
+  'Sweet Scent':   {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'evasao'}},
+  'Sleep Talk':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'sonambulo',soSeDormindo:true}},
+  'Snore':         {t:'Normal',c:'esp',p:40,a:100,pp:15,nv:1,ef:{soSeDormindo:true,tipo:'recuo',chance:30}},
+  'Return':        {t:'Normal',c:'fis',p:102,a:100,pp:20,nv:1,ef:{amizade:'retorno'}},
+  'Frustration':   {t:'Normal',c:'fis',p:102,a:100,pp:20,nv:1,ef:{amizade:'frustracao'}},
+  'Fury Cutter':   {t:'Inseto',c:'fis',p:10,a:95,pp:20,nv:1,ef:{corte:true}},
+  'Rock Smash':    {t:'Lutador',c:'fis',p:20,a:100,pp:15,nv:1,ef:{baixa:'def',chance:50}},
+  'Mud-Slap':      {t:'Terrestre',c:'esp',p:20,a:100,pp:10,nv:1,ef:{baixa:'precisao',chance:100}},
+  'Dynamic Punch': {t:'Lutador',c:'fis',p:100,a:50,pp:5,nv:1,ef:{tipo:'confusao',chance:100}}
 };
 
 /* Golpes por tipo, prontos para montar learnsets */
@@ -3718,6 +3749,32 @@ for (const [dex, str] of Object.entries(APRENDE_RAW)){
     const i = t.indexOf(' ');
     return [parseInt(t.slice(0, i), 10), t.slice(i + 1)];
   }).filter(([nv, nome]) => !isNaN(nv) && GOLPES[nome]);
+}
+
+/* Os golpes de Gold/Silver que chegaram com as TMs (Protect, Curse,
+   Sweet Scent, Snore…) também se aprendem por nível em algumas espécies.
+   Níveis da 2ª geração, do learnset de Gen 2 do Showdown (código 2L). */
+const APRENDE_G2_EXTRA = {
+  1:'25 Sweet Scent', 2:'29 Sweet Scent', 3:'29 Sweet Scent', 7:'28 Protect',
+  8:'31 Protect', 9:'31 Protect', 43:'7 Sweet Scent', 44:'7 Sweet Scent,1 Sweet Scent',
+  45:'1 Sweet Scent', 54:'31 Psych Up', 55:'31 Psych Up', 69:'30 Sweet Scent',
+  70:'33 Sweet Scent', 71:'1 Sweet Scent', 79:'1 Curse', 80:'1 Curse',
+  90:'25 Protect', 91:'1 Protect', 92:'16 Curse', 93:'16 Curse',
+  94:'16 Curse', 96:'43 Psych Up', 97:'55 Psych Up', 98:'34 Protect',
+  99:'38 Protect', 106:'41 Endure', 107:'44 Detect', 115:'37 Endure',
+  138:'37 Protect', 139:'37 Protect', 140:'37 Endure', 141:'37 Endure',
+  143:'36 Snore', 145:'37 Detect', 146:'37 Endure', 150:'33 Psych Up',
+  182:'1 Sweet Scent', 193:'25 Detect', 196:'42 Psych Up', 199:'1 Curse',
+  204:'1 Protect', 205:'1 Protect', 214:'12 Endure', 216:'43 Snore',
+  217:'49 Snore', 220:'19 Endure', 221:'19 Endure,1 Endure', 231:'41 Endure',
+  237:'43 Detect',
+};
+for (const [dex, str] of Object.entries(APRENDE_G2_EXTRA)){
+  const extra = str.split(',').map(t => { const i = t.indexOf(' '); return [parseInt(t.slice(0, i), 10), t.slice(i + 1)]; })
+                   .filter(([nv, nome]) => !isNaN(nv) && GOLPES[nome]);
+  const lista = (APRENDE[dex] || []).concat(extra);
+  lista.sort((a, b) => a[0] - b[0]);
+  APRENDE[dex] = lista;
 }
 
 /* A linha inteira, da forma base até esta. Ninguém esquece o que
@@ -6201,6 +6258,23 @@ function naturezaVisivel(p){
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
+/* Sexo, que só o Attract pergunta. Sem sexo, só macho e só fêmea são os
+   dos jogos; nos outros, a proporção deles (a maioria é meio a meio, os
+   iniciais e os fósseis são 7 machos pra cada fêmea). Sorteado uma vez
+   e guardado no Pokémon. */
+const SEM_SEXO = new Set([81,82,100,101,120,121,132,137,144,145,146,150,151,201,233,243,244,245,249,250,251]);
+const SO_MACHO = new Set([32,33,34,106,107,128,236,237]);
+const SO_FEMEA = new Set([29,30,31,113,115,124,238,241,242]);
+const QUASE_MACHO = new Set([1,2,3,4,5,6,7,8,9,133,134,135,136,138,139,140,141,142,143,152,153,154,155,156,157,158,159,160,175,176,196,197]);
+function generoDe(p){
+  if (!p) return null;
+  if (p.genero !== undefined) return p.genero;
+  const d = p.dex;
+  p.genero = SEM_SEXO.has(d) ? null : SO_MACHO.has(d) ? 'm' : SO_FEMEA.has(d) ? 'f'
+           : (Math.random() < (QUASE_MACHO.has(d) ? 0.875 : 0.5) ? 'm' : 'f');
+  return p.genero;
+}
+
 /* A frase que o jogo mostra pra cada coisa que a experiência causou. */
 function linhaDeExp(p, e){
   const n = nomeVisivel(p);
@@ -7827,6 +7901,11 @@ const Captura = {
    Crítico: 1d20 = 20 → ×1.5
    ============================================================ */
 
+/* precisão e evasão têm tabela própria nos jogos (de 1/3 a 3) */
+const PRECISAO_MULT = {'-6':0.33,'-5':0.36,'-4':0.43,'-3':0.5,'-2':0.6,'-1':0.75,'0':1,'1':1.33,'2':1.66,'3':2,'4':2.33,'5':2.66,'6':3};
+/* o nome de cada atributo na frase do log */
+const NOME_ESTAGIO = {atk:'o Ataque', def:'a Defesa', spa:'o Ataque Especial', spd:'a Defesa Especial',
+                      spe:'a Velocidade', precisao:'a precisão', evasao:'a evasão'};
 const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,'0':1,'1':1.5,'2':2,'3':2.5,'4':3,'5':3.5,'6':4};
 
 /* o que o jogo diz quando o tempo muda */
@@ -7870,6 +7949,9 @@ const Batalha = {
     /* quem enfrentou o adversário da vez: é entre eles que a experiência
        se divide, como nos jogos */
     this.participantes = new Set(aliado ? [aliado.uid] : []);
+    /* o que vale pro lado inteiro, e fica mesmo se trocar de Pokémon:
+       Reflect, Light Screen, Mist e Safeguard, cinco turnos cada */
+    this.lados = {aliado:{reflexo:0, tela:0, nevoa:0, salva:0}, inimigo:{reflexo:0, tela:0, nevoa:0, salva:0}};
     /* chuva ou areia: dura cinco turnos, como na 2ª geração */
     this.clima = null;
     /* A cena que vem depois quer saber se sobrou pra você. */
@@ -7902,7 +7984,11 @@ const Batalha = {
   },
 
   novoEstado(){
-    return {atk:0, def:0, spa:0, spd:0, spe:0, precisao:0, confuso:0, preso:0, carregando:null, recarregando:false};
+    return {atk:0, def:0, spa:0, spd:0, spe:0, precisao:0, evasao:0, confuso:0, carregando:null, recarregando:false,
+            /* estados que os golpes deixam: somem quando o Pokémon sai da luta */
+            presoTurnos:0, presoPor:null, semente:false, maldito:false, pesadelo:false, apaixonado:false,
+            desabilitado:null, substituto:0, focado:false, identificado:false, protegido:false,
+            aguentando:false, seguidas:0, cortes:0, ultimoGolpe:null, transformado:null, origTipos:null};
   },
 
   introPadrao(){
@@ -7924,11 +8010,44 @@ const Batalha = {
      precisar saber que existe animação. */
   ev(tipo, texto, extra){
     const e = Object.assign({tipo, texto}, extra||{});
-    const foto = p => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null} : null;
-    e.fotoA = foto(this.aliado);
-    e.fotoI = foto(this.inimigo);
+    const foto = (p, lado) => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null,
+                                   marcas:this.marcas(lado)} : null;
+    e.fotoA = foto(this.aliado, 'aliado');
+    e.fotoI = foto(this.inimigo, 'inimigo');
     if (typeof Estado !== 'undefined' && Estado.j) e.fotoJ = Estado.j.hp;
     this.eventos.push(e);
+  },
+
+  /* O que está valendo em cada lado agora: estágio que subiu ou caiu e
+     estado que um golpe deixou. É o que a ficha de HP mostra na luta. */
+  marcas(lado){
+    const est = lado === 'aliado' ? this.estAliado : this.estInimigo;
+    const L = this.lados && this.lados[lado];
+    if (!est) return [];
+    const m = [];
+    const ROT = {atk:'ATK', def:'DEF', spa:'SPA', spd:'SPD', spe:'VEL', precisao:'PREC', evasao:'EVA'};
+    for (const k of Object.keys(ROT)){
+      const v = est[k] || 0;
+      if (v) m.push({t:`${ROT[k]} ${v > 0 ? '+' : '−'}${Math.abs(v)}`, c: v > 0 ? 'alto' : 'baixo'});
+    }
+    if (est.confuso > 0)     m.push({t:'Confuso', c:'estado'});
+    if (est.apaixonado)      m.push({t:'Apaixonado', c:'estado'});
+    if (est.presoTurnos > 0) m.push({t:'Preso', c:'estado'});
+    if (est.semente)         m.push({t:'Semeado', c:'estado'});
+    if (est.maldito)         m.push({t:'Maldição', c:'estado'});
+    if (est.pesadelo)        m.push({t:'Pesadelo', c:'estado'});
+    if (est.desabilitado)    m.push({t:`${est.desabilitado.nome} travado`, c:'estado'});
+    if (est.substituto > 0)  m.push({t:'Boneco', c:'bom'});
+    if (est.focado)          m.push({t:'Focado', c:'bom'});
+    if (est.identificado)    m.push({t:'Identificado', c:'estado'});
+    if (est.transformado)    m.push({t:'Transformado', c:'bom'});
+    if (L){
+      if (L.reflexo > 0) m.push({t:`Reflect ${L.reflexo}`, c:'campo'});
+      if (L.tela > 0)    m.push({t:`Light Screen ${L.tela}`, c:'campo'});
+      if (L.nevoa > 0)   m.push({t:`Mist ${L.nevoa}`, c:'campo'});
+      if (L.salva > 0)   m.push({t:`Safeguard ${L.salva}`, c:'campo'});
+    }
+    return m;
   },
 
   /* ---------- utilidades ---------- */
@@ -7976,11 +8095,20 @@ const Batalha = {
   },
 
   /* ---------- pode agir? ---------- */
-  podeAgir(p, est, souAliado){
+  podeAgir(p, est, souAliado, golpeNome){
     if (p.status === 'sono'){
       p.statusTurnos--;
-      if (p.statusTurnos <= 0){ p.status = null; this.ev('status', `${nomeVisivel(p)} acordou!`); }
-      else { this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`); return false; }
+      if (p.statusTurnos <= 0){ p.status = null; est.pesadelo = false; this.ev('status', `${nomeVisivel(p)} acordou!`); }
+      else {
+        this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`);
+        /* Sleep Talk e Snore são os golpes de quem está dormindo */
+        if (golpeNome === 'Sleep Talk' || golpeNome === 'Snore') return true;
+        return false;
+      }
+    }
+    if (est.apaixonado && Dados.chance(50)){
+      this.ev('status', `${nomeVisivel(p)} está apaixonado e não consegue atacar.`, {travou:'apaixonado', lado:souAliado ? 'aliado' : 'inimigo'});
+      return false;
     }
     if (p.status === 'congelamento'){
       if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
@@ -8009,11 +8137,15 @@ const Batalha = {
   },
 
   /* ---------- dano ---------- */
-  calcularDano(atk, def, estAtk, estDef, golpeNome){
+  calcularDano(atk, def, estAtk, estDef, golpeNome, poder){
     const g = GOLPES[golpeNome];
+    const pw = poder || g.p;
     const res = {dano:0, critico:false, efic:1, msgs:[]};
 
-    res.efic = eficacia(g.t, def.tipos);
+    /* Foresight: Normal e Lutador passam a acertar Fantasma */
+    const tiposDef = (estDef.identificado && (g.t === 'Normal' || g.t === 'Lutador'))
+      ? def.tipos.filter(t => t !== 'Fantasma') : def.tipos;
+    res.efic = eficacia(g.t, tiposDef.length ? tiposDef : ['Normal']);
     if (res.efic === 0){
       res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
       return res;
@@ -8043,7 +8175,7 @@ const Batalha = {
     let total = 0;
     for (let i = 0; i < golpes; i++){
       const d10 = Dados.d10(`Dano de ${golpeNome}`);
-      total += Math.round(d10 * (g.p / 10) * razao);
+      total += Math.round(d10 * (pw / 10) * razao);
     }
     if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
 
@@ -8052,6 +8184,7 @@ const Batalha = {
     const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
     let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
     if (g.ef && g.ef.critico) limiteCrit -= 3;
+    if (estAtk.focado) limiteCrit -= 3;          // Focus Energy
     /* quem te entende acerta onde dói sem você apontar */
     if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk))
       limiteCrit -= efeitosDeAfinidade(atk).crit;
@@ -8071,6 +8204,12 @@ const Batalha = {
       if (g.t === fraco) total = Math.round(total * 0.5);
     }
     total = Math.round(total * res.efic);
+    /* Reflect corta o físico, Light Screen o especial — crítico atravessa */
+    const ladoDef = this.lados && this.lados[def === this.aliado ? 'aliado' : 'inimigo'];
+    if (ladoDef && !res.critico){
+      if (fisico && ladoDef.reflexo > 0) total = Math.round(total * 0.5);
+      if (!fisico && ladoDef.tela > 0)   total = Math.round(total * 0.5);
+    }
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
 
@@ -8091,7 +8230,11 @@ const Batalha = {
     const g = GOLPES[golpeNome];
     if (g.a >= 999) return true;
     let prec = g.a;
-    prec *= this.mult(estAtk, 'precisao');
+    /* precisão de quem ataca contra evasão de quem apanha; Foresight
+       anula a evasão que subiu */
+    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
+    const passo = Math.max(-6, Math.min(6, (estAtk.precisao || 0) - eva));
+    prec *= PRECISAO_MULT[String(passo)] || 1;
     const limite = Math.floor((100 - Math.min(100, prec)) / 5);
     const d = Dados.d20(`Precisão de ${golpeNome}`);
     return d > limite;
@@ -8111,36 +8254,51 @@ const Batalha = {
   },
 
   /* ---------- um golpe ---------- */
-  usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado){
-    const slot = atacante.golpes[indiceGolpe];
-    if (!slot){ this.ev('info', `${nomeVisivel(atacante)} não tem esse golpe.`); return; }
-    if (slot.pp <= 0){
-      this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
-      const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
-      defensor.hp = Math.max(0, defensor.hp - d);
-      atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
-      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
-      return;
+  /* nomeForcado: o golpe vem de fora do slot (Mirror Move, Sleep Talk) e
+     não gasta PP nem passa pela vontade da natureza. */
+  usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado){
+    let nome;
+    if (nomeForcado){
+      nome = nomeForcado;
+    } else {
+      const slot = atacante.golpes[indiceGolpe];
+      if (!slot){ this.ev('info', `${nomeVisivel(atacante)} não tem esse golpe.`); return; }
+      if (estAtk.desabilitado && estAtk.desabilitado.nome === slot.nome){
+        this.ev('erro', `${nomeVisivel(atacante)} não consegue usar ${slot.nome}: está desabilitado.`);
+        return;
+      }
+      if (slot.pp <= 0){
+        this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
+        const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
+        defensor.hp = Math.max(0, defensor.hp - d);
+        atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
+        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
+        return;
+      }
+      nome = slot.nome;
+      const v = this.vontade(atacante, nome, souAliado);
+      if (v){
+        this.ev('natureza', v.texto);
+        if (v.recusa) return;
+        if (v.outroGolpe){
+          const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe && g.pp > 0);
+          if (outros.length){ const alt = Dados.escolher(outros); nome = alt.nome; alt.pp--; }
+          else slot.pp--;
+        } else slot.pp--;
+      } else slot.pp--;
     }
 
-    let nome = slot.nome;
-    const v = this.vontade(atacante, nome, souAliado);
-    if (v){
-      this.ev('natureza', v.texto);
-      if (v.recusa) return;
-      if (v.outroGolpe){
-        const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe && g.pp > 0);
-        if (outros.length){ const alt = Dados.escolher(outros); nome = alt.nome; alt.pp--; }
-        else slot.pp--;
-      } else slot.pp--;
-    } else slot.pp--;
-
     const g = GOLPES[nome];
+    const ef = g.ef || {};
+    /* golpe que não é o mesmo de antes quebra a sequência de Protect e
+       de Fury Cutter */
+    if (ef.acao !== 'proteger' && ef.acao !== 'aguentar') estAtk.seguidas = 0;
+    if (!ef.corte) estAtk.cortes = 0;
 
     // golpes de carga (Dig, Fly, Solar Beam, Sky Attack)
     /* no sol, Solar Beam dispara sem carregar */
     const semCarga = nome === 'Solar Beam' && this.clima && this.clima.tipo === 'sol';
-    if (g.ef && g.ef.carga && estAtk.carregando !== nome && !semCarga){
+    if (ef.carga && estAtk.carregando !== nome && !semCarga){
       estAtk.carregando = nome;
       this.ev('info', `${nomeVisivel(atacante)} se prepara para ${nome}!`);
       return;
@@ -8148,9 +8306,24 @@ const Batalha = {
     estAtk.carregando = null;
 
     this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t, lado:souAliado ? 'aliado' : 'inimigo'});
+    if (nome !== 'Mirror Move') estAtk.ultimoGolpe = nome;
+
+    /* Snore e Sleep Talk só saem de quem está dormindo */
+    if (ef.soSeDormindo && atacante.status !== 'sono'){
+      this.ev('erro', 'Mas nada aconteceu.');
+      return;
+    }
+
+    /* Protect/Detect do outro lado: golpe mirado nele não passa */
+    if (estDef.protegido && this.miraNoOutro(g)){
+      this.ev('erro', `${nomeVisivel(defensor)} se protegeu!`);
+      estAtk.cortes = 0;
+      return;
+    }
 
     if (!this.acertou(nome, estAtk, estDef)){
       this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
+      estAtk.cortes = 0;
       return;
     }
 
@@ -8158,20 +8331,52 @@ const Batalha = {
       /* Splash e companhia não têm efeito nenhum — e é canônico que não
          tenham. O que não pode é o turno passar em branco, sem uma linha. */
       if (!g.ef){ this.ev('info', 'Mas nada aconteceu.'); return; }
+      /* o boneco segura o que é jogado em cima de quem está atrás dele */
+      if (estDef.substituto > 0 && this.miraNoOutro(g) && ef.acao !== 'soprar'){
+        this.ev('erro', `O boneco segurou. Não teve efeito em ${nomeVisivel(defensor)}.`);
+        return;
+      }
       this.efeitoStatus(atacante, defensor, estAtk, estDef, g, nome);
       return;
     }
 
-    if (g.ef && g.ef.soDormindo && defensor.status !== 'sono'){
+    if (ef.soDormindo && defensor.status !== 'sono'){
       this.ev('erro', `${nome} só funciona em alvos dormindo. Nada acontece.`);
       return;
     }
 
-    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome);
+    /* poder que muda: Fury Cutter dobra a cada acerto seguido (até 160);
+       Return e Frustration saem da amizade */
+    let poder = null;
+    if (ef.corte){
+      estAtk.cortes = Math.min(4, (estAtk.cortes || 0));
+      poder = g.p * Math.pow(2, estAtk.cortes);
+      estAtk.cortes++;
+    }
+    if (ef.amizade){
+      const amizade = Math.round(Math.max(0, Math.min(100, atacante.moral == null ? 70 : atacante.moral)) * 2.55);
+      poder = Math.max(1, Math.floor((ef.amizade === 'retorno' ? amizade : 255 - amizade) / 2.5));
+    }
+
+    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome, poder);
     r.msgs.forEach(m => this.ev('info', m));
     if (r.efic === 0) return;
 
-    if (this.aguentou(defensor, r.dano)){
+    /* o boneco apanha no lugar */
+    if (estDef.substituto > 0){
+      estDef.substituto = Math.max(0, estDef.substituto - r.dano);
+      this.ev('info', estDef.substituto > 0
+        ? `O boneco de ${nomeVisivel(defensor)} segurou o golpe.`
+        : `O boneco de ${nomeVisivel(defensor)} se desfez.`);
+      if (ef.recarga) estAtk.recarregando = true;
+      return;
+    }
+
+    if (estDef.aguentando && r.dano >= defensor.hp){
+      defensor.hp = 1;
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+      this.ev('cura', `${nomeVisivel(defensor)} aguentou firme! Fica de pé com 1 de HP.`);
+    } else if (this.aguentou(defensor, r.dano)){
       defensor.hp = 1;
       this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
       this.ev('cura', `A Faixa Firme segurou. ${nomeVisivel(defensor)} fica de pé com 1 de HP.`);
@@ -8180,40 +8385,94 @@ const Batalha = {
       this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
     }
 
-    if (g.ef && g.ef.drena){
-      const cura = Math.max(1, Math.round(r.dano * g.ef.drena));
+    if (ef.drena){
+      const cura = Math.max(1, Math.round(r.dano * ef.drena));
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + cura);
       this.ev('cura', `${nomeVisivel(atacante)} drenou ${cura} de HP.`);
     }
-    if (g.ef && g.ef.recuo){
-      const rec = Math.max(1, Math.round(r.dano * g.ef.recuo));
+    if (ef.recuo){
+      const rec = Math.max(1, Math.round(r.dano * ef.recuo));
       atacante.hp = Math.max(0, atacante.hp - rec);
       this.ev('dano', `${nomeVisivel(atacante)} sofreu ${rec} de recuo.`);
     }
-    if (g.ef && g.ef.recarga) estAtk.recarregando = true;
-    if (g.ef && g.ef.confundeSe && Dados.chance(50)){
+    if (ef.recarga) estAtk.recarregando = true;
+    if (ef.confundeSe && Dados.chance(50)){
       estAtk.confuso = Dados.entre(2,4);
       this.ev('status', `${nomeVisivel(atacante)} ficou confuso pela própria fúria!`);
     }
-    if (g.ef && g.ef.tipo && g.ef.chance && defensor.hp > 0 && Dados.chance(g.ef.chance)){
-      if (g.ef.tipo === 'confusao'){
-        estDef.confuso = Dados.entre(2,4);
-        this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
-      } else if (g.ef.tipo === 'recuo'){
+    /* Wrap, Bind, Clamp, Fire Spin: prende de 2 a 5 turnos (2ª geração) */
+    if (ef.preso && defensor.hp > 0 && !estDef.presoTurnos){
+      estDef.presoTurnos = Dados.entre(2, 5);
+      estDef.presoPor = nome;
+      this.ev('status', `${nomeVisivel(defensor)} ficou preso por ${nome}!`);
+    }
+    if (ef.tipo && ef.chance && defensor.hp > 0 && Dados.chance(ef.chance)){
+      if (ef.tipo === 'recuo'){
         estDef.recuou = true;
         this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
-      } else if (this.aplicarStatus(defensor, g.ef.tipo, g.ef.grave)){
-        this.ev('status', `${nomeVisivel(defensor)} está com ${g.ef.tipo}!`);
+      } else if (ef.tipo === 'confusao'){
+        this.confundir(defensor, estDef);
+      } else if (!this.salvaguarda(defensor) && this.aplicarStatus(defensor, ef.tipo, ef.grave)){
+        this.ev('status', `${nomeVisivel(defensor)} está com ${ef.tipo}!`);
       }
     }
-    if (g.ef && g.ef.baixa && defensor.hp > 0){
-      estDef[g.ef.baixa] = Math.max(-6, (estDef[g.ef.baixa]||0) - 1);
-      this.ev('status', `${g.ef.baixa.toUpperCase()} de ${nomeVisivel(defensor)} caiu!`);
+    /* efeito de atributo de golpe de dano: só na chance dos jogos */
+    if (ef.baixa && defensor.hp > 0 && Dados.chance(ef.chance || 100))
+      this.mudarEstagio(defensor, estDef, ef.baixa, -1, true);
+    if (ef.sobe && atacante.hp > 0 && Dados.chance(ef.chance || 100))
+      this.mudarEstagio(atacante, estAtk, ef.sobe, +1, false);
+  },
+
+  /* O golpe é jogado em cima do outro? (Protect e o boneco só param esses) */
+  miraNoOutro(g){
+    if (g.c !== 'status') return true;
+    const e = g.ef || {};
+    if (e.baixa || e.tipo) return true;
+    return ['semente', 'desabilitar', 'fanfarra', 'atracao', 'pesadelo', 'transformar', 'identificar', 'soprar'].includes(e.acao)
+;
+  },
+
+  /* muda um estágio, com o texto dos jogos; a Névoa segura queda que vem
+     do outro lado */
+  mudarEstagio(p, est, chave, delta, doOutro){
+    if (delta < 0 && doOutro && this.lados && this.lados[this.ladoDe(p)].nevoa > 0){
+      this.ev('erro', `A névoa protege ${nomeVisivel(p)}.`);
+      return false;
     }
+    const antes = est[chave] || 0;
+    const depois = Math.max(-6, Math.min(6, antes + delta));
+    const nomeStat = NOME_ESTAGIO[chave] || chave;
+    if (depois === antes){
+      this.ev('erro', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} não ${delta > 0 ? 'sobe' : 'desce'} mais.`);
+      return false;
+    }
+    est[chave] = depois;
+    const forte = Math.abs(delta) >= 2;
+    const verbo = delta > 0 ? (forte ? 'subiu muito' : 'subiu') : (forte ? 'caiu muito' : 'caiu');
+    this.ev('status', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} ${verbo}!`);
+    return true;
+  },
+
+  confundir(p, est){
+    if (this.salvaguarda(p)) return false;
+    if (est.confuso > 0){ this.ev('erro', `${nomeVisivel(p)} já está confuso.`); return false; }
+    est.confuso = Dados.entre(2, 5);
+    this.ev('status', `${nomeVisivel(p)} ficou confuso!`);
+    return true;
+  },
+
+  ladoDe(p){ return p === this.aliado ? 'aliado' : 'inimigo'; },
+  salvaguarda(p){
+    if (this.lados && this.lados[this.ladoDe(p)].salva > 0){
+      this.ev('erro', `O Safeguard protege ${nomeVisivel(p)}.`);
+      return true;
+    }
+    return false;
   },
 
   efeitoStatus(atacante, defensor, estAtk, estDef, g, nome){
     const e = g.ef || {};
+    if (e.acao) return this.acaoEspecial(e.acao, atacante, defensor, estAtk, estDef, nome);
     if (e.clima){
       if (this.clima && this.clima.tipo === e.clima){ this.ev('erro', 'Mas nada aconteceu.'); return; }
       this.clima = {tipo:e.clima, turnos:5};
@@ -8221,35 +8480,213 @@ const Batalha = {
       return;
     }
     if (e.cura){
+      if (atacante.hp >= atacante.hpMax){ this.ev('erro', `O HP de ${nomeVisivel(atacante)} já está cheio.`); return; }
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
       if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }
       this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
       return;
     }
-    if (e.sobe){
-      const q = e.forte ? 2 : 1;
-      estAtk[e.sobe] = Math.min(6, (estAtk[e.sobe]||0) + q);
-      this.ev('status', `${e.sobe.toUpperCase()} de ${nomeVisivel(atacante)} ${e.forte?'subiu MUITO':'subiu'}!`);
-      return;
-    }
-    if (e.baixa){
-      const q = e.forte ? 2 : 1;
-      estDef[e.baixa] = Math.max(-6, (estDef[e.baixa]||0) - q);
-      this.ev('status', `${e.baixa.toUpperCase()} de ${nomeVisivel(defensor)} ${e.forte?'despencou':'caiu'}!`);
-      return;
-    }
-    if (e.tipo === 'confusao'){
-      estDef.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
-      return;
-    }
+    if (e.sobe){ this.mudarEstagio(atacante, estAtk, e.sobe, e.forte ? 2 : 1, false); return; }
+    if (e.baixa){ this.mudarEstagio(defensor, estDef, e.baixa, e.forte ? -2 : -1, true); return; }
+    if (e.tipo === 'confusao'){ this.confundir(defensor, estDef); return; }
     if (e.tipo){
+      if (this.salvaguarda(defensor)) return;
       if (this.aplicarStatus(defensor, e.tipo, e.grave))
         this.ev('status', `${nomeVisivel(defensor)} está com ${e.tipo}${e.grave?' GRAVE':''}!`);
       else
         this.ev('erro', `Não teve efeito em ${nomeVisivel(defensor)}.`);
     }
+  },
+
+  /* ---------- golpes que não mexem em número: mexem na luta ---------- */
+  acaoEspecial(acao, atk, def, estAtk, estDef, nome){
+    const eu = nomeVisivel(atk), ele = nomeVisivel(def);
+    const meuLado = this.lados[this.ladoDe(atk)];
+    const falhou = () => { this.ev('erro', 'Mas não funcionou.'); };
+    const selvagem = this.tipo === 'selvagem' || this.tipo === 'lendario';
+    switch (acao){
+
+      case 'foco':
+        if (estAtk.focado) return falhou();
+        estAtk.focado = true;
+        return this.ev('status', `${eu} está concentrado. Acerto crítico fica mais fácil.`);
+
+      case 'substituto': {
+        const custo = Math.floor(atk.hpMax / 4);
+        if (estAtk.substituto > 0){ return this.ev('erro', `${eu} já tem um boneco na frente.`); }
+        if (atk.hp <= custo){ return this.ev('erro', `${eu} não tem HP pra fazer o boneco.`); }
+        atk.hp -= custo;
+        estAtk.substituto = custo + 1;
+        return this.ev('status', `${eu} gastou ${custo} de HP e pôs um boneco na frente.`);
+      }
+
+      case 'conversao': {
+        const tipos = [...new Set(atk.golpes.map(x => (GOLPES[x.nome] || {}).t).filter(t => t && !atk.tipos.includes(t)))];
+        if (!tipos.length) return falhou();
+        if (!estAtk.origTipos) estAtk.origTipos = atk.tipos.slice();
+        const t = Dados.escolher(tipos);
+        atk.tipos = [t];
+        return this.ev('status', `${eu} virou do tipo ${t}!`);
+      }
+
+      case 'reflexo': case 'tela': case 'nevoa': case 'salvaguarda': {
+        const chave = {reflexo:'reflexo', tela:'tela', nevoa:'nevoa', salvaguarda:'salva'}[acao];
+        if (meuLado[chave] > 0) return falhou();
+        meuLado[chave] = 5;
+        const txt = {
+          reflexo:'Uma parede de luz levanta: golpe físico passa pela metade.',
+          tela:'Uma tela de luz levanta: golpe especial passa pela metade.',
+          nevoa:'Uma névoa branca cobre o seu lado: ninguém baixa atributo de quem está nela.',
+          salvaguarda:'Um véu cobre o seu lado: nenhuma condição pega em quem está nele.'
+        }[acao];
+        return this.ev('status', txt.replace('o seu lado', this.ladoDe(atk) === 'aliado' ? 'o seu lado' : 'o lado de lá'));
+      }
+
+      case 'haze':
+        for (const est of [this.estAliado, this.estInimigo])
+          for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) est[k] = 0;
+        return this.ev('status', 'Uma névoa escura desfaz todas as mudanças de atributo dos dois lados.');
+
+      case 'soprar': {
+        if (def.nivel > atk.nivel && Dados.chance(50)) return falhou();
+        if (selvagem){
+          this.ev('fuga', this.ladoDe(atk) === 'aliado'
+            ? `${ele} é soprado pra longe. A batalha acabou.`
+            : `${eu} te soprou pra fora da briga. A batalha acabou.`);
+          return this.encerrar('fuga');
+        }
+        return this.trocaForcada(def);
+      }
+
+      case 'teleporte':
+        if (!selvagem) return falhou();
+        this.ev('fuga', this.ladoDe(atk) === 'aliado'
+          ? `${eu} te leva junto num piscar. Vocês saíram da briga.`
+          : `${eu} some num piscar. A batalha acabou.`);
+        return this.encerrar('fuga');
+
+      case 'desabilitar': {
+        const alvo = estDef.ultimoGolpe;
+        if (!alvo || estDef.desabilitado || !def.golpes.some(x => x.nome === alvo)) return falhou();
+        estDef.desabilitado = {nome:alvo, turnos:Dados.entre(2, 7)};
+        return this.ev('status', `${alvo} de ${ele} foi desabilitado!`);
+      }
+
+      case 'transformar':
+        if (estAtk.transformado || estDef.transformado) return falhou();
+        this.transformar(atk, def, estAtk, estDef);
+        return this.ev('status', `${eu} virou uma cópia de ${ele}!`, {transformou:true});
+
+      case 'espelho': {
+        const alvo = estDef.ultimoGolpe;
+        if (!alvo || alvo === 'Mirror Move' || !GOLPES[alvo]) return falhou();
+        return this.usarGolpe(atk, def, estAtk, estDef, -1, atk === this.aliado, alvo);
+      }
+
+      case 'semente':
+        if (def.tipos.includes('Grama') || estDef.semente) return this.ev('erro', `Não teve efeito em ${ele}.`);
+        estDef.semente = true;
+        return this.ev('status', `${ele} foi semeado! Vai perder HP todo turno pra quem plantou.`);
+
+      case 'identificar':
+        estDef.identificado = true;
+        estDef.evasao = Math.min(0, estDef.evasao || 0);
+        return this.ev('status', `${eu} identificou ${ele}. Esquiva e imunidade de Fantasma não valem mais.`);
+
+      case 'fanfarra':
+        this.mudarEstagio(def, estDef, 'atk', +2, false);
+        this.confundir(def, estDef);
+        return;
+
+      case 'proteger': case 'aguentar': {
+        const chance = 100 / Math.pow(2, estAtk.seguidas || 0);
+        if (!Dados.chance(chance)){ estAtk.seguidas = 0; return falhou(); }
+        estAtk.seguidas = (estAtk.seguidas || 0) + 1;
+        if (acao === 'proteger'){ estAtk.protegido = true; return this.ev('status', `${eu} se fechou numa defesa.`); }
+        estAtk.aguentando = true;
+        return this.ev('status', `${eu} firmou os pés pra aguentar.`);
+      }
+
+      case 'maldicao':
+        if (atk.tipos.includes('Fantasma')){
+          if (estDef.maldito) return falhou();
+          const custo = Math.floor(atk.hpMax / 2);
+          atk.hp = Math.max(0, atk.hp - custo);
+          estDef.maldito = true;
+          return this.ev('dano', `${eu} cortou metade do próprio HP e amaldiçoou ${ele}!`);
+        }
+        this.mudarEstagio(atk, estAtk, 'spe', -1, false);
+        this.mudarEstagio(atk, estAtk, 'atk', +1, false);
+        this.mudarEstagio(atk, estAtk, 'def', +1, false);
+        return;
+
+      case 'atracao': {
+        const a = generoDe(atk), b = generoDe(def);
+        if (!a || !b || a === b || estDef.apaixonado) return falhou();
+        estDef.apaixonado = true;
+        return this.ev('status', `${ele} se apaixonou por ${eu}!`);
+      }
+
+      case 'pesadelo':
+        if (def.status !== 'sono' || estDef.pesadelo) return falhou();
+        estDef.pesadelo = true;
+        return this.ev('status', `${ele} começou a ter um pesadelo!`);
+
+      case 'copiar':
+        for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) estAtk[k] = estDef[k] || 0;
+        return this.ev('status', `${eu} copiou as mudanças de atributo de ${ele}.`);
+
+      case 'sonambulo': {
+        const opcoes = atk.golpes.map(x => x.nome).filter(n => n !== 'Sleep Talk' && GOLPES[n] && !(GOLPES[n].ef || {}).carga);
+        if (!opcoes.length) return falhou();
+        return this.usarGolpe(atk, def, estAtk, estDef, -1, atk === this.aliado, Dados.escolher(opcoes));
+      }
+    }
+  },
+
+  /* Transform: vira a cópia do outro — tipos, atributos (menos HP),
+     golpes com 5 PP e estágios. Desfaz quando sai da luta. */
+  transformar(atk, def, estAtk, estDef){
+    estAtk.transformado = {tipos:atk.tipos.slice(), stats:Object.assign({}, atk.stats), golpes:atk.golpes};
+    atk.tipos = def.tipos.slice();
+    atk.stats = Object.assign({}, def.stats, {hp:atk.stats.hp});
+    atk.golpes = def.golpes.map(x => ({nome:x.nome, pp:5, ppMax:5}));
+    atk.transformadoEm = def.dex;
+    for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) estAtk[k] = estDef[k] || 0;
+  },
+  desfazerMudancas(p, est){
+    if (!p || !est) return;
+    if (est.transformado){
+      p.tipos = est.transformado.tipos; p.stats = est.transformado.stats; p.golpes = est.transformado.golpes;
+      delete p.transformadoEm;
+      est.transformado = null;
+    }
+    if (est.origTipos){ p.tipos = est.origTipos; est.origTipos = null; }
+  },
+
+  /* Roar e Whirlwind em batalha de treinador: o outro volta pra bola e
+     entra um qualquer do time. Sem ninguém pra entrar, não funciona. */
+  trocaForcada(def){
+    if (def === this.aliado){
+      const outros = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== def.uid);
+      if (!outros.length) return this.ev('erro', 'Mas não funcionou.');
+      const novo = Dados.escolher(outros);
+      this.desfazerMudancas(def, this.estAliado);
+      this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${nomeVisivel(novo)} entra no lugar!`);
+      this.aliado = novo;
+      this.estAliado = this.novoEstado();
+      if (this.participantes) this.participantes.add(novo.uid);
+      return;
+    }
+    if (!this.timeInimigo || !this.timeInimigo.length) return this.ev('erro', 'Mas não funcionou.');
+    const i = Dados.entre(0, this.timeInimigo.length - 1);
+    const novo = this.timeInimigo.splice(i, 1, def)[0];
+    this.desfazerMudancas(def, this.estInimigo);
+    this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${this.treinador || 'O treinador'} manda ${nomeVisivel(novo)}!`);
+    this.inimigo = novo;
+    this.estInimigo = this.novoEstado();
+    this.participantes = new Set([this.aliado.uid]);
   },
 
   /* ---------- fim de turno ---------- */
@@ -8266,6 +8703,33 @@ const Batalha = {
       p.hp = Math.max(0, p.hp - d);
       this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`, {causa:'queimadura'});
     }
+    /* o que os golpes deixaram grudado, na ordem dos jogos */
+    if (est){
+      const outro = p === this.aliado ? this.inimigo : this.aliado;
+      const tira = (frac, texto, causa) => {
+        if (p.hp <= 0) return 0;
+        const d = Math.max(1, Math.floor(p.hpMax / frac));
+        p.hp = Math.max(0, p.hp - d);
+        this.ev('dano', `${texto(d)} (${p.hp}/${p.hpMax})`, {causa});
+        return d;
+      };
+      if (est.semente && outro && outro.hp > 0){
+        const d = Math.min(p.hp, Math.max(1, Math.floor(p.hpMax / 8)));
+        p.hp = Math.max(0, p.hp - d);
+        outro.hp = Math.min(outro.hpMax, outro.hp + d);
+        this.ev('dano', `A semente suga ${d} de ${nomeVisivel(p)} pra ${nomeVisivel(outro)}. (${p.hp}/${p.hpMax})`, {causa:'semente'});
+      }
+      if (est.pesadelo && p.status === 'sono') tira(4, d => `${nomeVisivel(p)} se debate no pesadelo e perde ${d}.`, 'pesadelo');
+      if (est.maldito) tira(4, d => `A maldição corrói ${nomeVisivel(p)}: ${d} de dano.`, 'maldicao');
+      if (est.presoTurnos > 0 && p.hp > 0){
+        tira(16, d => `${nomeVisivel(p)} sofre ${d} de ${est.presoPor}.`, 'preso');
+        if (--est.presoTurnos <= 0){ this.ev('status', `${nomeVisivel(p)} se soltou de ${est.presoPor}.`); est.presoPor = null; }
+      }
+      if (est.desabilitado && --est.desabilitado.turnos <= 0){
+        this.ev('status', `${est.desabilitado.nome} de ${nomeVisivel(p)} voltou a funcionar.`);
+        est.desabilitado = null;
+      }
+    }
     /* item segurado: regeneração lenta */
     const seg = efeitoSegurado(p);
     if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
@@ -8278,7 +8742,21 @@ const Batalha = {
 
   /* Fim de turno do clima: a areia fere quem não é Pedra, Terrestre ou
      Metálico (1/8 do HP), e o clima acaba sozinho no quinto turno. */
+  /* Reflect, Light Screen, Mist e Safeguard contam os cinco turnos */
+  passarLados(){
+    const NOME = {reflexo:'Reflect', tela:'Light Screen', nevoa:'Mist', salva:'Safeguard'};
+    for (const lado of ['aliado', 'inimigo']){
+      const L = this.lados && this.lados[lado];
+      if (!L) continue;
+      for (const k of Object.keys(NOME)){
+        if (L[k] > 0 && --L[k] === 0)
+          this.ev('status', `${NOME[k]} ${lado === 'aliado' ? 'do seu lado' : 'do lado de lá'} acabou.`);
+      }
+    }
+  },
+
   passarClima(){
+    this.passarLados();
     if (!this.clima) return;
     if (this.clima.tipo === 'areia'){
       for (const p of [this.aliado, this.inimigo]){
@@ -8308,11 +8786,30 @@ const Batalha = {
 
   /* ---------- IA ---------- */
   iaEscolher(p, alvo, estP, estAlvo){
-    const disponiveis = p.golpes.map((g,i) => ({i, g})).filter(x => x.g.pp > 0);
+    const disponiveis = p.golpes.map((g,i) => ({i, g}))
+      .filter(x => x.g.pp > 0 && !(estP.desabilitado && estP.desabilitado.nome === x.g.nome));
     if (!disponiveis.length) return 0;
     const nat = NATUREZAS[p.natureza] || {};
     const pontuar = (x) => {
       const G = GOLPES[x.g.nome];
+      const E = G.ef || {};
+      /* o que não vai funcionar agora não se escolhe */
+      if (E.soSeDormindo && p.status !== 'sono') return 0;
+      if (p.status === 'sono' && (x.g.nome === 'Sleep Talk' || x.g.nome === 'Snore')) return 90;
+      if (E.soDormindo && alvo.status !== 'sono') return 0;
+      if (E.acao === 'pesadelo' && (alvo.status !== 'sono' || estAlvo.pesadelo)) return 0;
+      if (E.acao === 'semente' && (estAlvo.semente || alvo.tipos.includes('Grama'))) return 0;
+      if (E.acao === 'substituto' && (estP.substituto > 0 || p.hp <= p.hpMax / 4)) return 0;
+      if (E.acao === 'foco' && estP.focado) return 0;
+      if (E.acao === 'desabilitar' && (estAlvo.desabilitado || !estAlvo.ultimoGolpe)) return 0;
+      if (E.acao === 'atracao' && (estAlvo.apaixonado || !generoDe(p) || generoDe(p) === generoDe(alvo))) return 0;
+      if (['reflexo','tela','nevoa','salvaguarda'].includes(E.acao)){
+        const L = this.lados[p === this.aliado ? 'aliado' : 'inimigo'];
+        if (L[{reflexo:'reflexo', tela:'tela', nevoa:'nevoa', salvaguarda:'salva'}[E.acao]] > 0) return 0;
+      }
+      if ((E.acao === 'proteger' || E.acao === 'aguentar') && estP.seguidas > 0) return 3;
+      if (E.acao === 'transformar' && estP.transformado) return 0;
+      if (E.tipo === 'confusao' && G.c === 'status' && estAlvo.confuso > 0) return 0;
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
         if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
@@ -8340,6 +8837,8 @@ const Batalha = {
     this.eventos = [];
     if (!this.ativo) return {eventos:[], fim:this.fim};
     this.turno++;
+    /* Protect e Endure valem só pro turno em que foram usados */
+    for (const est of [this.estAliado, this.estInimigo]){ est.protegido = false; est.aguentando = false; }
 
     if (this.fase === 'ameaca') return this.acaoAmeaca(acao);
 
@@ -8356,7 +8855,14 @@ const Batalha = {
       return this.tentarCaptura(acao.nome);
     }
     if (acao.tipo === 'item')   { this.usarItemEmCombate(acao.nome, acao.alvoUid); return this.turnoInimigoSozinho(); }
-    if (acao.tipo === 'trocar') { this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho(); }
+    if (acao.tipo === 'trocar'){
+      if (this.estAliado.presoTurnos > 0 && estaVivo(this.aliado)){
+        this.eventos = []; this.turno--;
+        this.ev('erro', `${nomeVisivel(this.aliado)} está preso por ${this.estAliado.presoPor} e não consegue voltar.`);
+        return {eventos:this.eventos, fim:null};
+      }
+      this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho();
+    }
 
     // ordem por velocidade (prioridade primeiro)
     const gJog = GOLPES[this.aliado.golpes[acao.indice]?.nome || 'Tackle'];
@@ -8374,20 +8880,22 @@ const Batalha = {
     this.ev('turno', `— Turno ${this.turno} — (Vel ${vJ} vs ${vI})`);
 
     const agirJogador = () => {
-      if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
+      if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
       if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeVisivel(this.aliado)} está encolhido e não ataca.`); return; }
-      if (!this.podeAgir(this.aliado, this.estAliado, true)) return;
+      if (!this.podeAgir(this.aliado, this.estAliado, true, (this.aliado.golpes[acao.indice] || {}).nome)) return;
       this.usarGolpe(this.aliado, this.inimigo, this.estAliado, this.estInimigo, acao.indice, true);
     };
     const agirInimigo = () => {
-      if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
+      if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
       if (this.estInimigo.recuou){ this.estInimigo.recuou = false; this.ev('status', `${nomeVisivel(this.inimigo)} está encolhido e não ataca.`); return; }
-      if (!this.podeAgir(this.inimigo, this.estInimigo, false)) return;
+      if (!this.podeAgir(this.inimigo, this.estInimigo, false, (this.inimigo.golpes[iIA] || {}).nome)) return;
       this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, iIA, false);
     };
 
     if (jogadorPrimeiro){ agirJogador(); agirInimigo(); }
     else { agirInimigo(); agirJogador(); }
+    /* Roar, Whirlwind e Teleport podem acabar a luta no meio do turno */
+    if (!this.ativo) return {eventos:this.eventos, fim:this.fim};
 
     if (this.aliado.hp > 0 && this.inimigo.hp > 0){
       this.fimDeTurno(this.aliado, this.estAliado, 'aliado');
@@ -8424,10 +8932,11 @@ const Batalha = {
 
   turnoInimigoSozinho(){
     if (this.inimigo.hp > 0 && this.aliado.hp > 0){
-      if (this.podeAgir(this.inimigo, this.estInimigo, false)){
-        const i = this.iaEscolher(this.inimigo, this.aliado, this.estInimigo, this.estAliado);
+      const i = this.iaEscolher(this.inimigo, this.aliado, this.estInimigo, this.estAliado);
+      if (this.podeAgir(this.inimigo, this.estInimigo, false, (this.inimigo.golpes[i] || {}).nome)){
         this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, i, false);
       }
+      if (!this.ativo) return {eventos:this.eventos, fim:this.fim};
       this.fimDeTurno(this.aliado, this.estAliado);
       this.fimDeTurno(this.inimigo, this.estInimigo);
       this.passarClima();
@@ -8495,6 +9004,7 @@ const Batalha = {
     const novo = Estado.dados.time.find(p => p.uid === uid);
     if (!novo || !estaVivo(novo)){ this.ev('erro', 'Esse Pokémon não pode lutar.'); return; }
     this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
+    this.desfazerMudancas(this.aliado, this.estAliado);
     this.aliado = novo;
     this.estAliado = this.novoEstado();
     if (this.participantes) this.participantes.add(novo.uid);
@@ -8503,6 +9013,10 @@ const Batalha = {
   /* ---------- fuga ---------- */
   tentarFugir(){
     if (!this.fuga){ this.ev('erro', 'Não dá para fugir daqui.'); return this.turnoInimigoSozinho(); }
+    if (this.estAliado.presoTurnos > 0){
+      this.ev('erro', `${nomeVisivel(this.aliado)} está preso por ${this.estAliado.presoPor}. Não dá pra fugir.`);
+      return this.turnoInimigoSozinho();
+    }
     const alvo = this.inimigo.stats.spe - this.aliado.stats.spe + 10;
     const d = Dados.d20('Fuga');
     this.ev('info', `Fuga: 1d20 = ${d} — precisa ≥ ${alvo}`);
@@ -8564,6 +9078,7 @@ const Batalha = {
         if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
         this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
           prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
+        this.desfazerMudancas(this.inimigo, this.estInimigo);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
         this.participantes = new Set([this.aliado.uid]);
@@ -8633,6 +9148,7 @@ const Batalha = {
       const revivido = Estado.dados.time.find(p => estaVivo(p));
       if (revivido){
         this.ev('info', `${nomeVisivel(revivido)} se põe de pé entre você e ${nomeVisivel(this.inimigo)}.`);
+        this.desfazerMudancas(this.aliado, this.estAliado);
         this.aliado = revivido;
         this.estAliado = this.novoEstado();
         this.fase = 'normal';
@@ -8674,6 +9190,9 @@ const Batalha = {
   encerrar(resultado, extra){
     this.ativo = false;
     this.fase = 'normal';
+    /* Transform e Conversion não saem da luta com o Pokémon */
+    this.desfazerMudancas(this.aliado, this.estAliado);
+    this.desfazerMudancas(this.inimigo, this.estInimigo);
     /* efeitos de item segurado que só valem no fim */
     if (resultado === 'vitoria' && Estado.dados){
       (Estado.dados.time || []).forEach(p => {
@@ -11866,9 +12385,9 @@ const Trocas = {
    · 1ª geração (Red/Blue): 44 das 50. Seis ficam de fora porque o golpe
      não existe aqui (Razor Wind, Fissure, Mimic, Bide, Egg Bomb,
      Soft-Boiled), e o número fica vago.
-   · 2ª geração (Gold/Silver): só as que ensinam golpe que a 1ª não
-     ensina e que existe no jogo — 21 delas, com Sunny Day, Rain Dance e
-     Sandstorm entre elas. Os números se repetem entre as gerações (TM11 é
+   · 2ª geração (Gold/Silver): as 37 que ensinam golpe que a 1ª não
+     ensina — todas, com as mecânicas próprias delas (Protect, Curse,
+     Attract, Return…). As outras 13 repetem golpe da 1ª geração. Os números se repetem entre as gerações (TM11 é
      Bubble Beam numa e Sunny Day na outra), então a TM é identificada
      pela geração e pelo número, não só pelo número.
 
@@ -11888,99 +12407,103 @@ const TM_LISTA = [
   [1,28,'Dig'], [1,29,'Psychic'], [1,30,'Teleport'], [1,32,'Double Team'], [1,33,'Reflect'],
   [1,35,'Metronome'], [1,36,'Self-Destruct'], [1,38,'Fire Blast'], [1,39,'Swift'], [1,40,'Skull Bash'],
   [1,42,'Dream Eater'], [1,43,'Sky Attack'], [1,44,'Rest'], [1,45,'Thunder Wave'], [1,46,'Psywave'],
-  [1,47,'Explosion'], [1,48,'Rock Slide'], [1,49,'Tri Attack'], [1,50,'Substitute'], [2,2,'Headbutt'],
-  [2,4,'Rollout'], [2,5,'Roar'], [2,7,'Zap Cannon'], [2,10,'Hidden Power'], [2,11,'Sunny Day'],
-  [2,16,'Icy Wind'], [2,18,'Rain Dance'], [2,19,'Giga Drain'], [2,23,'Iron Tail'], [2,24,'Dragon Breath'],
-  [2,30,'Shadow Ball'], [2,33,'Ice Punch'], [2,34,'Swagger'], [2,36,'Sludge Bomb'], [2,37,'Sandstorm'],
-  [2,40,'Defense Curl'], [2,41,'Thunder Punch'], [2,46,'Thief'], [2,47,'Steel Wing'], [2,48,'Fire Punch'],
+  [1,47,'Explosion'], [1,48,'Rock Slide'], [1,49,'Tri Attack'], [1,50,'Substitute'], [2,1,'Dynamic Punch'],
+  [2,2,'Headbutt'], [2,3,'Curse'], [2,4,'Rollout'], [2,5,'Roar'], [2,7,'Zap Cannon'],
+  [2,8,'Rock Smash'], [2,9,'Psych Up'], [2,10,'Hidden Power'], [2,11,'Sunny Day'], [2,12,'Sweet Scent'],
+  [2,13,'Snore'], [2,16,'Icy Wind'], [2,17,'Protect'], [2,18,'Rain Dance'], [2,19,'Giga Drain'],
+  [2,20,'Endure'], [2,21,'Frustration'], [2,23,'Iron Tail'], [2,24,'Dragon Breath'], [2,27,'Return'],
+  [2,30,'Shadow Ball'], [2,31,'Mud-Slap'], [2,33,'Ice Punch'], [2,34,'Swagger'], [2,35,'Sleep Talk'],
+  [2,36,'Sludge Bomb'], [2,37,'Sandstorm'], [2,40,'Defense Curl'], [2,41,'Thunder Punch'], [2,43,'Detect'],
+  [2,45,'Attract'], [2,46,'Thief'], [2,47,'Steel Wing'], [2,48,'Fire Punch'], [2,49,'Fury Cutter'],
+  [2,50,'Nightmare'],
 ];
 
 /* número de dex → 'geração.número' das TMs que a espécie aprende */
 const TM_COMPAT = {
-1:'1.3,1.6,1.8,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.2,2.10,2.11,2.19,2.34,2.40', 2:'1.3,1.6,1.8,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.2,2.10,2.11,2.19,2.34,2.40', 3:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.2,2.5,2.10,2.11,2.19,2.34,2.40',
-4:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.23,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.23,2.24,2.34,2.40,2.48', 5:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.23,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.23,2.24,2.34,2.40,2.48', 6:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.23,1.26,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.5,2.10,2.11,2.23,2.24,2.34,2.37,2.40,2.47,2.48',
-7:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.28,1.32,1.33,1.40,1.44,1.50,2.2,2.4,2.10,2.16,2.18,2.23,2.33,2.34,2.40', 8:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.28,1.32,1.33,1.40,1.44,1.50,2.2,2.4,2.10,2.16,2.18,2.23,2.33,2.34,2.40', 9:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.33,1.40,1.44,1.50,2.2,2.4,2.5,2.10,2.16,2.18,2.23,2.33,2.34,2.40',
-10:'', 11:'', 12:'1.4,1.6,1.9,1.10,1.15,1.20,1.21,1.22,1.29,1.30,1.32,1.33,1.39,1.44,1.46,1.50,2.10,2.11,2.19,2.34',
-13:'', 14:'', 15:'1.3,1.6,1.9,1.10,1.15,1.20,1.21,1.32,1.33,1.39,1.40,1.44,1.50,2.10,2.11,2.19,2.34,2.36',
-16:'1.4,1.6,1.9,1.10,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.10,2.11,2.34,2.46,2.47', 17:'1.4,1.6,1.9,1.10,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.10,2.11,2.34,2.46,2.47', 18:'1.4,1.6,1.9,1.10,1.15,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.10,2.11,2.34,2.46,2.47',
-19:'1.6,1.8,1.9,1.10,1.11,1.12,1.14,1.20,1.24,1.25,1.28,1.32,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.16,2.23,2.30,2.34,2.40,2.46', 20:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.24,1.25,1.28,1.32,1.39,1.40,1.44,1.50,2.2,2.5,2.10,2.11,2.16,2.23,2.30,2.34,2.40,2.46', 21:'1.4,1.6,1.9,1.10,1.20,1.32,1.39,1.43,1.44,1.50,2.10,2.11,2.34,2.46,2.47',
-22:'1.4,1.6,1.9,1.10,1.15,1.20,1.32,1.39,1.43,1.44,1.50,2.10,2.11,2.34,2.46,2.47', 23:'1.6,1.8,1.9,1.10,1.20,1.21,1.26,1.28,1.32,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.19,2.34,2.36,2.46', 24:'1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.26,1.28,1.32,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.19,2.34,2.36,2.46',
-25:'1.1,1.5,1.6,1.8,1.9,1.10,1.16,1.17,1.19,1.20,1.24,1.25,1.32,1.33,1.39,1.40,1.44,1.45,1.50,2.2,2.4,2.7,2.10,2.18,2.23,2.34,2.40,2.41', 26:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.16,1.17,1.19,1.20,1.24,1.25,1.32,1.33,1.39,1.40,1.44,1.45,1.50,2.2,2.4,2.7,2.10,2.18,2.23,2.34,2.40,2.41,2.46', 27:'1.3,1.6,1.8,1.9,1.10,1.17,1.19,1.20,1.26,1.28,1.32,1.39,1.40,1.44,1.48,1.50,2.2,2.4,2.10,2.11,2.23,2.34,2.37,2.40,2.46',
-28:'1.3,1.6,1.8,1.9,1.10,1.15,1.17,1.19,1.20,1.26,1.28,1.32,1.39,1.40,1.44,1.48,1.50,2.2,2.4,2.10,2.11,2.23,2.34,2.37,2.40,2.46', 29:'1.6,1.8,1.9,1.10,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.10,2.11,2.18,2.23,2.34,2.40,2.46', 30:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.10,2.11,2.18,2.23,2.34,2.40,2.46',
-31:'1.1,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.33,1.38,1.40,1.44,1.48,1.50,2.2,2.5,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34,2.37,2.40,2.41,2.46,2.48', 32:'1.6,1.7,1.8,1.9,1.10,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.10,2.11,2.18,2.23,2.34,2.40,2.46', 33:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.10,2.11,2.18,2.23,2.34,2.40,2.46',
-34:'1.1,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.33,1.38,1.40,1.44,1.48,1.50,2.2,2.5,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34,2.37,2.40,2.41,2.46,2.48', 35:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.4,2.7,2.10,2.11,2.18,2.23,2.30,2.33,2.34,2.40,2.41,2.48', 36:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.4,2.7,2.10,2.11,2.18,2.23,2.30,2.33,2.34,2.40,2.41,2.48',
-37:'1.6,1.8,1.9,1.10,1.20,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.23,2.34', 38:'1.6,1.8,1.9,1.10,1.15,1.20,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.5,2.10,2.11,2.23,2.34', 39:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.4,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.40,2.41,2.48',
-40:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.4,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.40,2.41,2.48', 41:'1.4,1.6,1.9,1.10,1.20,1.21,1.32,1.39,1.44,1.50,2.10,2.11,2.19,2.34,2.46,2.47', 42:'1.4,1.6,1.9,1.10,1.15,1.20,1.21,1.32,1.39,1.44,1.50,2.10,2.11,2.19,2.34,2.46,2.47',
-43:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.10,2.11,2.19,2.34,2.36', 44:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.10,2.11,2.19,2.34,2.36', 45:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.10,2.11,2.19,2.34,2.36',
-46:'1.3,1.6,1.8,1.9,1.10,1.20,1.21,1.22,1.28,1.32,1.33,1.40,1.44,1.50,2.10,2.11,2.19,2.34,2.36,2.46', 47:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.28,1.32,1.33,1.40,1.44,1.50,2.10,2.11,2.19,2.34,2.36,2.46', 48:'1.6,1.9,1.10,1.20,1.21,1.22,1.29,1.32,1.33,1.39,1.44,1.46,1.50,2.10,2.11,2.19,2.34,2.36,2.46',
-49:'1.4,1.6,1.9,1.10,1.15,1.20,1.21,1.22,1.29,1.30,1.32,1.33,1.39,1.44,1.46,1.50,2.10,2.11,2.19,2.34,2.36,2.46', 50:'1.6,1.8,1.9,1.10,1.20,1.26,1.28,1.32,1.44,1.48,1.50,2.10,2.11,2.34,2.36,2.46', 51:'1.6,1.8,1.9,1.10,1.15,1.20,1.26,1.28,1.32,1.44,1.48,1.50,2.10,2.11,2.34,2.36,2.46',
-52:'1.6,1.8,1.9,1.10,1.11,1.12,1.16,1.20,1.24,1.25,1.32,1.39,1.40,1.42,1.44,1.50,2.2,2.7,2.10,2.11,2.16,2.23,2.30,2.34,2.40,2.46', 53:'1.6,1.8,1.9,1.10,1.11,1.12,1.15,1.16,1.20,1.24,1.25,1.32,1.39,1.40,1.42,1.44,1.50,2.2,2.5,2.7,2.10,2.11,2.16,2.23,2.30,2.34,2.40,2.46', 54:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.16,1.17,1.18,1.19,1.20,1.28,1.32,1.39,1.40,1.44,1.50,2.2,2.10,2.16,2.18,2.23,2.33,2.34',
-55:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.28,1.32,1.39,1.40,1.44,1.50,2.2,2.10,2.16,2.18,2.23,2.33,2.34', 56:'1.1,1.5,1.6,1.8,1.9,1.10,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.28,1.32,1.35,1.39,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.23,2.33,2.34,2.40,2.41,2.46,2.48', 57:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.28,1.32,1.35,1.39,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.23,2.33,2.34,2.40,2.41,2.46,2.48',
-58:'1.6,1.8,1.9,1.10,1.20,1.23,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.5,2.10,2.11,2.23,2.24,2.34', 59:'1.6,1.8,1.9,1.10,1.15,1.20,1.23,1.28,1.30,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.5,2.10,2.11,2.23,2.24,2.34', 60:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.29,1.32,1.40,1.44,1.46,1.50,2.2,2.10,2.16,2.18,2.34,2.40,2.46',
-61:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.26,1.29,1.32,1.35,1.40,1.44,1.46,1.50,2.2,2.10,2.16,2.18,2.33,2.34,2.40,2.46', 62:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.26,1.29,1.32,1.35,1.40,1.44,1.46,1.50,2.2,2.10,2.16,2.18,2.33,2.34,2.40,2.46', 63:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.41,2.46,2.48',
-64:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.28,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.41,2.46,2.48', 65:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.28,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.41,2.46,2.48', 66:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.38,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.33,2.34,2.41,2.46,2.48',
-67:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.38,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.33,2.34,2.41,2.46,2.48', 68:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.38,1.40,1.44,1.48,1.50,2.2,2.10,2.11,2.33,2.34,2.41,2.46,2.48', 69:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.10,2.11,2.19,2.34,2.36',
-70:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.10,2.11,2.19,2.34,2.36', 71:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.10,2.11,2.19,2.34,2.36', 72:'1.3,1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.21,1.32,1.33,1.40,1.44,1.50,2.10,2.16,2.18,2.19,2.34,2.36',
-73:'1.3,1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.21,1.32,1.33,1.40,1.44,1.50,2.10,2.16,2.18,2.19,2.34,2.36', 74:'1.1,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.36,1.38,1.44,1.47,1.48,1.50,2.2,2.4,2.10,2.11,2.34,2.37,2.40,2.48', 75:'1.1,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.36,1.38,1.44,1.47,1.48,1.50,2.2,2.4,2.10,2.11,2.34,2.37,2.40,2.48',
-76:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.36,1.38,1.44,1.47,1.48,1.50,2.2,2.4,2.5,2.10,2.11,2.34,2.37,2.40,2.48', 77:'1.6,1.7,1.8,1.9,1.10,1.20,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.23,2.34', 78:'1.6,1.7,1.8,1.9,1.10,1.15,1.20,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.23,2.34',
-79:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.16,1.20,1.26,1.28,1.29,1.30,1.32,1.33,1.38,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.34', 80:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.26,1.28,1.29,1.30,1.32,1.33,1.38,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34', 81:'1.6,1.9,1.10,1.20,1.24,1.25,1.30,1.32,1.33,1.39,1.44,1.45,1.50,2.4,2.7,2.10,2.18,2.34',
-82:'1.6,1.9,1.10,1.15,1.20,1.24,1.25,1.30,1.32,1.33,1.39,1.44,1.45,1.50,2.4,2.7,2.10,2.18,2.34', 83:'1.3,1.4,1.6,1.8,1.9,1.10,1.20,1.32,1.33,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.23,2.34,2.46,2.47', 84:'1.4,1.6,1.8,1.9,1.10,1.20,1.32,1.33,1.39,1.40,1.43,1.44,1.49,1.50,2.10,2.11,2.34,2.46,2.47',
-85:'1.4,1.6,1.8,1.9,1.10,1.15,1.20,1.32,1.33,1.39,1.40,1.43,1.44,1.49,1.50,2.10,2.11,2.34,2.46,2.47', 86:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.16,1.20,1.32,1.40,1.44,1.50,2.2,2.10,2.16,2.18,2.34', 87:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.20,1.32,1.40,1.44,1.50,2.2,2.10,2.16,2.18,2.34',
-88:'1.6,1.8,1.20,1.21,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.7,2.10,2.11,2.19,2.33,2.34,2.36,2.41,2.46,2.48', 89:'1.6,1.8,1.15,1.20,1.21,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.7,2.10,2.11,2.19,2.33,2.34,2.36,2.41,2.46,2.48', 90:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.30,1.32,1.33,1.36,1.39,1.44,1.47,1.49,1.50,2.10,2.16,2.18,2.34',
-91:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.30,1.32,1.33,1.36,1.39,1.44,1.47,1.49,1.50,2.10,2.16,2.18,2.34', 92:'1.6,1.20,1.21,1.24,1.25,1.29,1.32,1.36,1.42,1.44,1.46,1.47,1.50,2.7,2.10,2.11,2.18,2.19,2.30,2.34,2.46', 93:'1.6,1.20,1.21,1.24,1.25,1.29,1.32,1.36,1.42,1.44,1.46,1.47,1.50,2.7,2.10,2.11,2.18,2.19,2.30,2.34,2.46',
-94:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.21,1.24,1.25,1.29,1.32,1.35,1.36,1.40,1.42,1.44,1.46,1.47,1.50,2.2,2.7,2.10,2.11,2.18,2.19,2.30,2.33,2.34,2.41,2.46,2.48', 95:'1.6,1.8,1.9,1.10,1.20,1.26,1.28,1.32,1.36,1.40,1.44,1.47,1.48,1.50,2.2,2.5,2.10,2.11,2.23,2.34,2.37', 96:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.41,2.48',
-97:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.41,2.48', 98:'1.3,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.44,1.50,2.10,2.16,2.18,2.34,2.46', 99:'1.3,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.44,1.50,2.10,2.16,2.18,2.34,2.46',
-100:'1.6,1.9,1.20,1.24,1.25,1.30,1.32,1.33,1.36,1.39,1.44,1.45,1.47,1.50,2.2,2.4,2.7,2.10,2.18,2.34', 101:'1.6,1.9,1.15,1.20,1.24,1.25,1.30,1.32,1.33,1.36,1.39,1.40,1.44,1.45,1.47,1.50,2.2,2.4,2.7,2.10,2.18,2.34', 102:'1.6,1.9,1.10,1.20,1.22,1.29,1.30,1.32,1.33,1.36,1.42,1.44,1.46,1.47,1.50,2.4,2.10,2.11,2.19,2.34,2.36,2.46',
-103:'1.6,1.9,1.10,1.15,1.20,1.21,1.22,1.29,1.30,1.32,1.33,1.36,1.42,1.44,1.46,1.47,1.50,2.2,2.4,2.10,2.11,2.19,2.34,2.36,2.46', 104:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.38,1.40,1.44,1.50,2.2,2.10,2.11,2.16,2.23,2.34,2.37,2.41,2.46,2.48', 105:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.38,1.40,1.44,1.50,2.2,2.10,2.11,2.16,2.23,2.34,2.37,2.41,2.46,2.48',
-106:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.32,1.35,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.34,2.46', 107:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.32,1.35,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.33,2.34,2.41,2.46,2.48', 108:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.38,1.40,1.42,1.44,1.50,2.2,2.4,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34,2.37,2.40,2.41,2.46,2.48',
-109:'1.6,1.20,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.4,2.7,2.10,2.11,2.34,2.36,2.46', 110:'1.6,1.15,1.20,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.4,2.7,2.10,2.11,2.34,2.36,2.46', 111:'1.6,1.7,1.8,1.9,1.10,1.14,1.20,1.24,1.25,1.26,1.28,1.32,1.38,1.40,1.44,1.48,1.50,2.2,2.4,2.5,2.7,2.10,2.11,2.16,2.23,2.34,2.37',
-112:'1.1,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.28,1.32,1.38,1.40,1.44,1.48,1.50,2.2,2.4,2.5,2.7,2.10,2.11,2.16,2.23,2.34,2.37,2.41,2.48', 113:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.4,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.34,2.37,2.40', 114:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.40,1.44,1.50,2.2,2.10,2.11,2.19,2.34,2.36,2.46',
-115:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.38,1.40,1.44,1.48,1.50,2.2,2.5,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34,2.37,2.41,2.48', 116:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.39,1.40,1.44,1.50,2.2,2.10,2.16,2.18,2.24,2.34', 117:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.39,1.40,1.44,1.50,2.2,2.10,2.16,2.18,2.24,2.34',
-118:'1.6,1.7,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.39,1.40,1.44,1.50,2.10,2.16,2.18,2.34', 119:'1.6,1.7,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.39,1.40,1.44,1.50,2.10,2.16,2.18,2.34', 120:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.39,1.40,1.44,1.45,1.46,1.49,1.50,2.7,2.10,2.16,2.18,2.34',
-121:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.7,2.10,2.16,2.18,2.34', 122:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.50,2.2,2.7,2.10,2.11,2.30,2.33,2.34,2.41,2.46,2.48', 123:'1.3,1.6,1.9,1.10,1.15,1.20,1.32,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.34,2.46,2.47',
-124:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.46,1.50,2.2,2.10,2.16,2.18,2.30,2.33,2.34,2.46', 125:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.39,1.40,1.44,1.45,1.46,1.50,2.2,2.7,2.10,2.18,2.23,2.33,2.34,2.41,2.46,2.48', 126:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.35,1.38,1.40,1.44,1.46,1.50,2.2,2.10,2.11,2.23,2.34,2.41,2.46,2.48',
-127:'1.3,1.6,1.8,1.9,1.10,1.15,1.17,1.19,1.20,1.32,1.44,1.50,2.2,2.10,2.11,2.34,2.46', 128:'1.6,1.7,1.8,1.9,1.10,1.13,1.14,1.15,1.20,1.24,1.25,1.26,1.32,1.38,1.40,1.44,1.50,2.2,2.7,2.10,2.11,2.16,2.23,2.34', 129:'',
-130:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.40,1.44,1.50,2.2,2.5,2.7,2.10,2.16,2.18,2.24,2.34,2.37', 131:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.22,1.23,1.24,1.25,1.29,1.32,1.33,1.40,1.42,1.44,1.46,1.50,2.2,2.7,2.10,2.16,2.18,2.23,2.24,2.34', 132:'',
-133:'1.6,1.8,1.9,1.10,1.20,1.32,1.33,1.39,1.40,1.44,1.50,2.2,2.10,2.11,2.18,2.23,2.30,2.34', 134:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.33,1.39,1.40,1.44,1.50,2.2,2.5,2.10,2.11,2.16,2.18,2.23,2.30,2.34', 135:'1.6,1.8,1.9,1.10,1.15,1.20,1.24,1.25,1.32,1.33,1.39,1.40,1.44,1.45,1.50,2.2,2.5,2.7,2.10,2.11,2.18,2.23,2.30,2.34',
-136:'1.6,1.8,1.9,1.10,1.15,1.20,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.5,2.7,2.10,2.11,2.18,2.23,2.30,2.34', 137:'1.6,1.9,1.10,1.13,1.14,1.15,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.7,2.10,2.11,2.16,2.18,2.23,2.34,2.46', 138:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.33,1.44,1.50,2.2,2.4,2.10,2.16,2.18,2.34,2.37,2.46',
-139:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.19,1.20,1.32,1.33,1.40,1.44,1.50,2.2,2.4,2.10,2.16,2.18,2.34,2.37,2.46', 140:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.33,1.44,1.50,2.4,2.10,2.16,2.18,2.19,2.34,2.37,2.46', 141:'1.3,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.19,1.20,1.32,1.33,1.40,1.44,1.50,2.2,2.4,2.10,2.16,2.18,2.19,2.34,2.37,2.46',
-142:'1.4,1.6,1.9,1.10,1.15,1.20,1.23,1.26,1.32,1.33,1.38,1.39,1.43,1.44,1.50,2.2,2.5,2.10,2.18,2.23,2.24,2.34,2.37,2.47', 143:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.26,1.29,1.32,1.33,1.35,1.36,1.38,1.40,1.44,1.46,1.48,1.50,2.2,2.4,2.7,2.10,2.11,2.16,2.18,2.30,2.33,2.34,2.37,2.40,2.41,2.48', 144:'1.4,1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.5,2.10,2.11,2.16,2.18,2.34,2.37,2.47',
-145:'1.4,1.6,1.9,1.10,1.15,1.20,1.24,1.25,1.32,1.33,1.39,1.43,1.44,1.45,1.50,2.5,2.7,2.10,2.11,2.18,2.34,2.37,2.47', 146:'1.4,1.6,1.9,1.10,1.15,1.20,1.32,1.33,1.38,1.39,1.43,1.44,1.50,2.5,2.10,2.11,2.18,2.34,2.37,2.47', 147:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.39,1.40,1.44,1.45,1.50,2.2,2.7,2.10,2.16,2.18,2.23,2.24,2.34',
-148:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.39,1.40,1.44,1.45,1.50,2.2,2.7,2.10,2.16,2.18,2.23,2.24,2.34', 149:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.39,1.40,1.44,1.45,1.50,2.2,2.7,2.10,2.16,2.18,2.23,2.24,2.33,2.34,2.37,2.41,2.47,2.48', 150:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.36,1.38,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34,2.41,2.48',
-151:'1.1,1.3,1.4,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.21,1.22,1.23,1.24,1.25,1.26,1.28,1.29,1.30,1.32,1.33,1.35,1.36,1.38,1.39,1.40,1.42,1.43,1.44,1.45,1.46,1.47,1.48,1.49,1.50,2.2,2.4,2.5,2.7,2.10,2.11,2.16,2.18,2.19,2.23,2.24,2.30,2.33,2.34,2.36,2.37,2.40,2.41,2.46,2.47,2.48', 152:'1.6,1.22,1.32,1.44,2.2,2.10,2.11,2.19,2.23,2.34', 153:'1.6,1.22,1.32,1.44,2.2,2.10,2.11,2.19,2.23,2.34',
-154:'1.6,1.15,1.22,1.26,1.32,1.44,2.2,2.10,2.11,2.19,2.23,2.34', 155:'1.6,1.28,1.32,1.38,1.39,1.44,2.2,2.4,2.10,2.11,2.23,2.34,2.40', 156:'1.6,1.28,1.32,1.38,1.39,1.44,2.2,2.4,2.5,2.10,2.11,2.23,2.34,2.40',
-157:'1.6,1.15,1.26,1.28,1.32,1.38,1.39,1.44,2.2,2.4,2.5,2.10,2.11,2.23,2.34,2.40,2.41,2.48', 158:'1.6,1.14,1.28,1.32,1.44,2.2,2.10,2.16,2.18,2.23,2.33,2.34', 159:'1.6,1.14,1.28,1.32,1.44,2.2,2.5,2.10,2.16,2.18,2.23,2.33,2.34',
-160:'1.6,1.14,1.15,1.26,1.28,1.32,1.44,2.2,2.5,2.10,2.16,2.18,2.23,2.33,2.34', 161:'1.6,1.28,1.32,1.39,1.44,2.2,2.4,2.10,2.11,2.23,2.30,2.33,2.34,2.40,2.41,2.46,2.48', 162:'1.6,1.15,1.28,1.32,1.39,1.44,2.2,2.4,2.10,2.11,2.23,2.30,2.33,2.34,2.40,2.41,2.46,2.48',
-163:'1.6,1.32,1.39,1.42,1.44,2.10,2.11,2.34,2.46,2.47', 164:'1.6,1.15,1.32,1.39,1.42,1.44,2.10,2.11,2.34,2.46,2.47', 165:'1.6,1.22,1.28,1.32,1.39,1.44,2.2,2.4,2.10,2.11,2.19,2.33,2.34,2.41,2.46',
-166:'1.6,1.15,1.22,1.28,1.32,1.39,1.44,2.2,2.4,2.10,2.11,2.19,2.33,2.34,2.41,2.46', 167:'1.6,1.22,1.28,1.29,1.32,1.44,2.10,2.11,2.19,2.34,2.36,2.46', 168:'1.6,1.15,1.22,1.28,1.29,1.32,1.44,2.10,2.11,2.19,2.34,2.36,2.46',
-169:'1.6,1.15,1.32,1.39,1.44,2.10,2.11,2.19,2.34,2.46,2.47', 170:'1.6,1.25,1.32,1.44,2.7,2.10,2.18,2.34', 171:'1.6,1.15,1.25,1.32,1.44,2.7,2.10,2.18,2.34',
-172:'1.6,1.25,1.32,1.39,1.44,2.2,2.4,2.7,2.10,2.18,2.23,2.34,2.40', 173:'1.6,1.22,1.29,1.32,1.38,1.42,1.44,2.2,2.4,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.34,2.40', 174:'1.6,1.22,1.29,1.32,1.38,1.42,1.44,2.2,2.4,2.7,2.10,2.11,2.16,2.18,2.30,2.34,2.40',
-175:'1.6,1.22,1.29,1.32,1.38,1.39,1.42,1.44,2.2,2.4,2.7,2.10,2.11,2.18,2.30,2.34,2.40', 176:'1.6,1.15,1.22,1.29,1.32,1.38,1.39,1.42,1.44,2.2,2.4,2.7,2.10,2.11,2.18,2.30,2.34,2.40,2.47', 177:'1.6,1.22,1.29,1.32,1.39,1.42,1.44,2.10,2.11,2.19,2.34,2.46',
-178:'1.6,1.15,1.22,1.29,1.32,1.39,1.42,1.44,2.10,2.11,2.19,2.34,2.46', 179:'1.6,1.25,1.32,1.39,1.44,2.2,2.7,2.10,2.18,2.23,2.34,2.40', 180:'1.6,1.25,1.32,1.39,1.44,2.2,2.7,2.10,2.18,2.23,2.34,2.40,2.41,2.48',
-181:'1.6,1.15,1.25,1.32,1.39,1.44,2.2,2.7,2.10,2.18,2.23,2.34,2.40,2.41,2.48', 182:'1.6,1.15,1.22,1.32,1.44,2.10,2.11,2.19,2.34', 183:'1.6,1.14,1.32,1.39,1.44,2.2,2.4,2.10,2.16,2.18,2.23,2.33,2.34,2.40',
-184:'1.6,1.14,1.15,1.32,1.39,1.44,2.2,2.4,2.10,2.16,2.18,2.23,2.33,2.34,2.40', 185:'1.6,1.26,1.28,1.32,1.44,2.2,2.4,2.10,2.11,2.33,2.34,2.37,2.40,2.41,2.46,2.48', 186:'1.6,1.14,1.15,1.26,1.29,1.32,1.44,2.2,2.10,2.16,2.18,2.33,2.34,2.40,2.46',
-187:'1.6,1.22,1.32,1.44,2.2,2.10,2.11,2.19,2.34,2.40', 188:'1.6,1.22,1.32,1.44,2.2,2.10,2.11,2.19,2.34,2.40', 189:'1.6,1.15,1.22,1.32,1.44,2.2,2.10,2.11,2.19,2.34,2.40',
-190:'1.6,1.25,1.32,1.39,1.42,1.44,2.2,2.7,2.10,2.11,2.23,2.30,2.33,2.34,2.40,2.41,2.46,2.48', 191:'1.6,1.22,1.32,1.44,2.10,2.11,2.19,2.34,2.36', 192:'1.6,1.15,1.22,1.32,1.44,2.10,2.11,2.19,2.34,2.36',
-193:'1.6,1.22,1.32,1.39,1.44,2.2,2.10,2.11,2.19,2.34,2.46', 194:'1.6,1.26,1.28,1.32,1.44,2.2,2.4,2.10,2.18,2.23,2.33,2.34,2.36,2.37,2.40', 195:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.4,2.10,2.18,2.23,2.33,2.34,2.36,2.37,2.40',
-196:'1.6,1.15,1.29,1.32,1.39,1.42,1.44,2.2,2.7,2.10,2.11,2.18,2.23,2.30,2.34', 197:'1.6,1.15,1.29,1.32,1.39,1.42,1.44,2.2,2.7,2.10,2.11,2.18,2.23,2.30,2.34', 198:'1.6,1.32,1.39,1.42,1.44,2.10,2.11,2.16,2.30,2.34,2.46,2.47',
-199:'1.6,1.14,1.15,1.26,1.28,1.29,1.32,1.38,1.39,1.42,1.44,2.2,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34', 200:'1.6,1.25,1.29,1.32,1.39,1.42,1.44,2.2,2.7,2.10,2.11,2.18,2.30,2.34,2.40,2.46', 201:'',
-202:'', 203:'1.6,1.25,1.26,1.29,1.32,1.39,1.42,1.44,2.2,2.7,2.10,2.11,2.23,2.30,2.34,2.46', 204:'1.6,1.22,1.32,1.44,2.2,2.4,2.10,2.11,2.19,2.34,2.40',
-205:'1.6,1.15,1.22,1.32,1.44,2.2,2.4,2.10,2.11,2.19,2.34,2.37,2.40', 206:'1.6,1.22,1.25,1.28,1.32,1.42,1.44,2.2,2.4,2.7,2.10,2.11,2.18,2.23,2.34,2.40,2.46', 207:'1.6,1.32,1.39,1.44,2.2,2.10,2.11,2.23,2.34,2.36,2.37,2.46',
-208:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.4,2.5,2.10,2.11,2.23,2.24,2.34,2.37,2.40', 209:'1.6,1.25,1.32,1.44,2.2,2.5,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.36,2.40,2.41,2.46,2.48', 210:'1.6,1.15,1.25,1.32,1.44,2.2,2.5,2.7,2.10,2.11,2.18,2.30,2.33,2.34,2.36,2.40,2.41,2.46,2.48',
-211:'1.6,1.14,1.32,1.39,1.44,2.2,2.4,2.10,2.16,2.18,2.34,2.36,2.40', 212:'1.6,1.15,1.32,1.39,1.44,2.2,2.10,2.11,2.34,2.37,2.46,2.47', 213:'1.6,1.26,1.28,1.32,1.44,2.2,2.4,2.10,2.11,2.34,2.36,2.37,2.40',
-214:'1.6,1.26,1.32,1.44,2.2,2.10,2.11,2.34,2.46', 215:'1.6,1.14,1.28,1.32,1.39,1.42,1.44,2.2,2.10,2.16,2.18,2.23,2.30,2.33,2.34,2.40,2.46', 216:'1.6,1.26,1.28,1.32,1.39,1.44,2.2,2.4,2.5,2.7,2.10,2.11,2.33,2.34,2.40,2.41,2.46,2.48',
-217:'1.6,1.15,1.26,1.28,1.32,1.39,1.44,2.2,2.4,2.5,2.7,2.10,2.11,2.33,2.34,2.40,2.41,2.46,2.48', 218:'1.6,1.32,1.38,1.44,2.4,2.10,2.11,2.34,2.40', 219:'1.6,1.15,1.26,1.32,1.38,1.44,2.4,2.10,2.11,2.34,2.40',
-220:'1.6,1.14,1.26,1.32,1.44,2.2,2.5,2.10,2.16,2.18,2.34,2.40', 221:'1.6,1.14,1.15,1.26,1.32,1.44,2.2,2.5,2.10,2.16,2.18,2.34,2.40', 222:'1.6,1.26,1.29,1.32,1.44,2.2,2.4,2.10,2.11,2.18,2.34,2.37,2.40',
-223:'1.6,1.15,1.32,1.39,1.44,2.10,2.18,2.34,2.40,2.46', 224:'1.6,1.15,1.32,1.39,1.44,2.10,2.18,2.34,2.40,2.46', 225:'1.6,1.14,1.32,1.39,1.44,2.2,2.10,2.16,2.18,2.34,2.46',
-226:'1.6,1.14,1.32,1.39,1.44,2.2,2.10,2.16,2.18,2.34', 227:'1.6,1.32,1.39,1.44,2.10,2.11,2.34,2.37,2.46,2.47', 228:'1.6,1.22,1.32,1.38,1.39,1.42,1.44,2.2,2.5,2.10,2.11,2.23,2.30,2.34,2.36,2.46',
-229:'1.6,1.15,1.22,1.32,1.38,1.39,1.42,1.44,2.2,2.5,2.10,2.11,2.23,2.30,2.34,2.36,2.46', 230:'1.6,1.14,1.15,1.32,1.39,1.44,2.2,2.10,2.16,2.18,2.24,2.34', 231:'1.6,1.26,1.32,1.44,2.2,2.4,2.5,2.10,2.11,2.34,2.37,2.40',
-232:'1.6,1.15,1.26,1.32,1.44,2.2,2.4,2.5,2.10,2.11,2.34,2.37,2.40', 233:'1.6,1.14,1.15,1.25,1.29,1.32,1.39,1.42,1.44,2.7,2.10,2.11,2.16,2.18,2.23,2.34,2.40,2.46', 234:'1.6,1.26,1.29,1.32,1.39,1.42,1.44,2.2,2.5,2.10,2.11,2.18,2.34,2.46',
-235:'', 236:'1.6,1.32,1.39,1.44,2.2,2.10,2.11,2.34,2.46', 237:'1.6,1.28,1.32,1.39,1.44,2.2,2.10,2.11,2.34,2.46',
-238:'1.6,1.14,1.29,1.32,1.42,1.44,2.10,2.16,2.18,2.30,2.33,2.34,2.46', 239:'1.6,1.25,1.29,1.32,1.39,1.44,2.2,2.7,2.10,2.18,2.33,2.34,2.41,2.46,2.48', 240:'1.6,1.29,1.32,1.38,1.44,2.2,2.10,2.11,2.23,2.34,2.41,2.46,2.48',
-241:'1.6,1.14,1.15,1.25,1.26,1.32,1.44,2.2,2.4,2.7,2.10,2.11,2.16,2.18,2.23,2.30,2.33,2.34,2.37,2.40,2.41,2.48', 242:'1.6,1.14,1.15,1.22,1.25,1.29,1.32,1.38,1.42,1.44,2.2,2.4,2.7,2.10,2.11,2.16,2.18,2.30,2.34,2.37,2.40', 243:'1.6,1.15,1.25,1.28,1.32,1.39,1.44,2.2,2.5,2.7,2.10,2.11,2.18,2.23,2.34,2.37',
-244:'1.6,1.15,1.22,1.28,1.32,1.38,1.39,1.44,2.2,2.5,2.10,2.11,2.18,2.23,2.34,2.37', 245:'1.6,1.14,1.15,1.28,1.32,1.39,1.44,2.2,2.5,2.10,2.11,2.16,2.18,2.23,2.34,2.37', 246:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.10,2.11,2.18,2.34,2.37',
-247:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.10,2.11,2.18,2.34,2.37', 248:'1.6,1.15,1.26,1.28,1.32,1.38,1.44,2.2,2.5,2.10,2.11,2.18,2.23,2.24,2.34,2.37,2.48', 249:'1.6,1.14,1.15,1.25,1.26,1.29,1.32,1.39,1.42,1.44,2.2,2.5,2.7,2.10,2.11,2.16,2.18,2.19,2.23,2.24,2.30,2.34,2.37,2.47',
-250:'1.6,1.15,1.22,1.25,1.26,1.29,1.32,1.38,1.39,1.42,1.44,2.5,2.7,2.10,2.11,2.18,2.19,2.24,2.30,2.34,2.37,2.47', 251:'1.6,1.15,1.22,1.29,1.32,1.39,1.42,1.44,2.10,2.11,2.18,2.19,2.30,2.34,2.37,2.40',
+1:'1.3,1.6,1.8,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.2,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45,2.49', 2:'1.3,1.6,1.8,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.2,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45,2.49', 3:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.2,2.3,2.5,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45,2.49',
+4:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.23,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.24,2.27,2.31,2.34,2.35,2.40,2.45,2.48,2.49', 5:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.23,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.24,2.27,2.31,2.34,2.35,2.40,2.45,2.48,2.49', 6:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.23,1.26,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.24,2.27,2.31,2.34,2.35,2.37,2.40,2.45,2.47,2.48,2.49',
+7:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.28,1.32,1.33,1.40,1.44,1.50,2.1,2.2,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.45', 8:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.28,1.32,1.33,1.40,1.44,1.50,2.1,2.2,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.45', 9:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.33,1.40,1.44,1.50,2.1,2.2,2.3,2.4,2.5,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.45',
+10:'', 11:'', 12:'1.4,1.6,1.9,1.10,1.15,1.20,1.21,1.22,1.29,1.30,1.32,1.33,1.39,1.44,1.46,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.45,2.50',
+13:'', 14:'', 15:'1.3,1.6,1.9,1.10,1.15,1.20,1.21,1.32,1.33,1.39,1.40,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.49',
+16:'1.4,1.6,1.9,1.10,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47', 17:'1.4,1.6,1.9,1.10,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47', 18:'1.4,1.6,1.9,1.10,1.15,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47',
+19:'1.6,1.8,1.9,1.10,1.11,1.12,1.14,1.20,1.24,1.25,1.28,1.32,1.39,1.40,1.44,1.50,2.2,2.3,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.40,2.45,2.46', 20:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.24,1.25,1.28,1.32,1.39,1.40,1.44,1.50,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.40,2.45,2.46', 21:'1.4,1.6,1.9,1.10,1.20,1.32,1.39,1.43,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47',
+22:'1.4,1.6,1.9,1.10,1.15,1.20,1.32,1.39,1.43,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47', 23:'1.6,1.8,1.9,1.10,1.20,1.21,1.26,1.28,1.32,1.40,1.44,1.48,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46', 24:'1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.26,1.28,1.32,1.40,1.44,1.48,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46',
+25:'1.1,1.5,1.6,1.8,1.9,1.10,1.16,1.17,1.19,1.20,1.24,1.25,1.32,1.33,1.39,1.40,1.44,1.45,1.50,2.1,2.2,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.41,2.43,2.45', 26:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.16,1.17,1.19,1.20,1.24,1.25,1.32,1.33,1.39,1.40,1.44,1.45,1.50,2.1,2.2,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.41,2.43,2.45,2.46', 27:'1.3,1.6,1.8,1.9,1.10,1.17,1.19,1.20,1.26,1.28,1.32,1.39,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.40,2.43,2.45,2.46,2.49',
+28:'1.3,1.6,1.8,1.9,1.10,1.15,1.17,1.19,1.20,1.26,1.28,1.32,1.39,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.40,2.43,2.45,2.46,2.49', 29:'1.6,1.8,1.9,1.10,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45,2.46', 30:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45,2.46',
+31:'1.1,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.33,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.37,2.40,2.41,2.43,2.45,2.46,2.48,2.49', 32:'1.6,1.7,1.8,1.9,1.10,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45,2.46', 33:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.24,1.25,1.32,1.33,1.40,1.44,1.50,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45,2.46',
+34:'1.1,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.33,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.37,2.40,2.41,2.43,2.45,2.46,2.48,2.49', 35:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.4,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.48,2.50', 36:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.4,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.48,2.50',
+37:'1.6,1.8,1.9,1.10,1.20,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.34,2.35,2.45', 38:'1.6,1.8,1.9,1.10,1.15,1.20,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.5,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.34,2.35,2.45', 39:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.4,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.48,2.50',
+40:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.4,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.48,2.50', 41:'1.4,1.6,1.9,1.10,1.20,1.21,1.32,1.39,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.47', 42:'1.4,1.6,1.9,1.10,1.15,1.20,1.21,1.32,1.39,1.44,1.50,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.47',
+43:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45', 44:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45', 45:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45',
+46:'1.3,1.6,1.8,1.9,1.10,1.20,1.21,1.22,1.28,1.32,1.33,1.40,1.44,1.50,2.3,2.8,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46,2.49', 47:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.28,1.32,1.33,1.40,1.44,1.50,2.3,2.8,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46,2.49', 48:'1.6,1.9,1.10,1.20,1.21,1.22,1.29,1.32,1.33,1.39,1.44,1.46,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46',
+49:'1.4,1.6,1.9,1.10,1.15,1.20,1.21,1.22,1.29,1.30,1.32,1.33,1.39,1.44,1.46,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46', 50:'1.6,1.8,1.9,1.10,1.20,1.26,1.28,1.32,1.44,1.48,1.50,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.36,2.45,2.46', 51:'1.6,1.8,1.9,1.10,1.15,1.20,1.26,1.28,1.32,1.44,1.48,1.50,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.36,2.45,2.46',
+52:'1.6,1.8,1.9,1.10,1.11,1.12,1.16,1.20,1.24,1.25,1.32,1.39,1.40,1.42,1.44,1.50,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.40,2.43,2.45,2.46,2.50', 53:'1.6,1.8,1.9,1.10,1.11,1.12,1.15,1.16,1.20,1.24,1.25,1.32,1.39,1.40,1.42,1.44,1.50,2.2,2.3,2.5,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.40,2.43,2.45,2.46,2.50', 54:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.16,1.17,1.18,1.19,1.20,1.28,1.32,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.9,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.45',
+55:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.28,1.32,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.9,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.45,2.49', 56:'1.1,1.5,1.6,1.8,1.9,1.10,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.28,1.32,1.35,1.39,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.8,2.9,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.46,2.48', 57:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.28,1.32,1.35,1.39,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.8,2.9,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.46,2.48',
+58:'1.6,1.8,1.9,1.10,1.20,1.23,1.28,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.24,2.27,2.34,2.35,2.45', 59:'1.6,1.8,1.9,1.10,1.15,1.20,1.23,1.28,1.30,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.24,2.27,2.34,2.35,2.45', 60:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.29,1.32,1.40,1.44,1.46,1.50,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.40,2.45,2.46',
+61:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.26,1.29,1.32,1.35,1.40,1.44,1.46,1.50,2.2,2.3,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.40,2.43,2.45,2.46', 62:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.26,1.29,1.32,1.35,1.40,1.44,1.46,1.50,2.1,2.2,2.3,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.40,2.43,2.45,2.46', 63:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.33,2.34,2.35,2.41,2.45,2.46,2.48,2.50',
+64:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.28,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.33,2.34,2.35,2.41,2.45,2.46,2.48,2.50', 65:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.28,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.33,2.34,2.35,2.41,2.45,2.46,2.48,2.50', 66:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.41,2.43,2.45,2.46,2.48',
+67:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.41,2.43,2.45,2.46,2.48', 68:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.41,2.43,2.45,2.46,2.48', 69:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45',
+70:'1.3,1.6,1.9,1.10,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45', 71:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.33,1.44,1.50,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45', 72:'1.3,1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.21,1.32,1.33,1.40,1.44,1.50,2.3,2.10,2.13,2.16,2.17,2.18,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45',
+73:'1.3,1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.21,1.32,1.33,1.40,1.44,1.50,2.3,2.10,2.13,2.16,2.17,2.18,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45', 74:'1.1,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.36,1.38,1.44,1.47,1.48,1.50,2.1,2.2,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.40,2.45,2.48', 75:'1.1,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.36,1.38,1.44,1.47,1.48,1.50,2.1,2.2,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.40,2.45,2.48',
+76:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.35,1.36,1.38,1.44,1.47,1.48,1.50,2.1,2.2,2.3,2.4,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.40,2.45,2.48,2.49', 77:'1.6,1.7,1.8,1.9,1.10,1.20,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.34,2.35,2.45', 78:'1.6,1.7,1.8,1.9,1.10,1.15,1.20,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.34,2.35,2.45',
+79:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.16,1.20,1.26,1.28,1.29,1.30,1.32,1.33,1.38,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.45,2.50', 80:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.26,1.28,1.29,1.30,1.32,1.33,1.38,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.45,2.49,2.50', 81:'1.6,1.9,1.10,1.20,1.24,1.25,1.30,1.32,1.33,1.39,1.44,1.45,1.50,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.34,2.35',
+82:'1.6,1.9,1.10,1.15,1.20,1.24,1.25,1.30,1.32,1.33,1.39,1.44,1.45,1.50,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.34,2.35', 83:'1.3,1.4,1.6,1.8,1.9,1.10,1.20,1.32,1.33,1.39,1.40,1.44,1.50,2.2,2.3,2.9,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47', 84:'1.4,1.6,1.8,1.9,1.10,1.20,1.32,1.33,1.39,1.40,1.43,1.44,1.49,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.45,2.46,2.47',
+85:'1.4,1.6,1.8,1.9,1.10,1.15,1.20,1.32,1.33,1.39,1.40,1.43,1.44,1.49,1.50,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.45,2.46,2.47', 86:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.16,1.20,1.32,1.40,1.44,1.50,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45', 87:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.20,1.32,1.40,1.44,1.50,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45',
+88:'1.6,1.8,1.20,1.21,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.1,2.3,2.7,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.36,2.41,2.45,2.46,2.48', 89:'1.6,1.8,1.15,1.20,1.21,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.1,2.3,2.7,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.36,2.41,2.45,2.46,2.48', 90:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.30,1.32,1.33,1.36,1.39,1.44,1.47,1.49,1.50,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45',
+91:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.30,1.32,1.33,1.36,1.39,1.44,1.47,1.49,1.50,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45', 92:'1.6,1.20,1.21,1.24,1.25,1.29,1.32,1.36,1.42,1.44,1.46,1.47,1.50,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.19,2.20,2.21,2.27,2.30,2.34,2.35,2.45,2.46,2.50', 93:'1.6,1.20,1.21,1.24,1.25,1.29,1.32,1.36,1.42,1.44,1.46,1.47,1.50,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.19,2.20,2.21,2.27,2.30,2.34,2.35,2.45,2.46,2.50',
+94:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.21,1.24,1.25,1.29,1.32,1.35,1.36,1.40,1.42,1.44,1.46,1.47,1.50,2.1,2.2,2.3,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.19,2.20,2.21,2.27,2.30,2.33,2.34,2.35,2.41,2.45,2.46,2.48,2.50', 95:'1.6,1.8,1.9,1.10,1.20,1.26,1.28,1.32,1.36,1.40,1.44,1.47,1.48,1.50,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.45', 96:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.33,2.34,2.35,2.41,2.45,2.48,2.50',
+97:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.33,2.34,2.35,2.41,2.45,2.48,2.50', 98:'1.3,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.44,1.50,2.3,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.45,2.46,2.49', 99:'1.3,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.44,1.50,2.3,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.45,2.46,2.49',
+100:'1.6,1.9,1.20,1.24,1.25,1.30,1.32,1.33,1.36,1.39,1.44,1.45,1.47,1.50,2.2,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.34,2.35', 101:'1.6,1.9,1.15,1.20,1.24,1.25,1.30,1.32,1.33,1.36,1.39,1.40,1.44,1.45,1.47,1.50,2.2,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.34,2.35', 102:'1.6,1.9,1.10,1.20,1.22,1.29,1.30,1.32,1.33,1.36,1.42,1.44,1.46,1.47,1.50,2.3,2.4,2.9,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46,2.50',
+103:'1.6,1.9,1.10,1.15,1.20,1.21,1.22,1.29,1.30,1.32,1.33,1.36,1.42,1.44,1.46,1.47,1.50,2.2,2.3,2.4,2.9,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46,2.50', 104:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.38,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.41,2.43,2.45,2.46,2.48', 105:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.26,1.28,1.32,1.38,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.41,2.43,2.45,2.46,2.48',
+106:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.32,1.35,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46', 107:'1.1,1.5,1.6,1.8,1.9,1.10,1.17,1.18,1.19,1.20,1.32,1.35,1.39,1.40,1.44,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.41,2.43,2.45,2.46,2.48', 108:'1.1,1.3,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.38,1.40,1.42,1.44,1.50,2.1,2.2,2.3,2.4,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.37,2.40,2.41,2.45,2.46,2.48,2.50',
+109:'1.6,1.20,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.3,2.4,2.7,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46', 110:'1.6,1.15,1.20,1.24,1.25,1.32,1.36,1.38,1.44,1.47,1.50,2.3,2.4,2.7,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46', 111:'1.6,1.7,1.8,1.9,1.10,1.14,1.20,1.24,1.25,1.26,1.28,1.32,1.38,1.40,1.44,1.48,1.50,2.2,2.3,2.4,2.5,2.7,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.45',
+112:'1.1,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.28,1.32,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.4,2.5,2.7,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.41,2.45,2.48,2.49', 113:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.38,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.4,2.7,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.37,2.40,2.45', 114:'1.3,1.6,1.8,1.9,1.10,1.15,1.20,1.21,1.22,1.32,1.40,1.44,1.50,2.2,2.3,2.9,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46',
+115:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.24,1.25,1.26,1.32,1.38,1.40,1.44,1.48,1.50,2.1,2.2,2.3,2.5,2.7,2.8,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.37,2.41,2.45,2.48,2.49', 116:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.39,1.40,1.44,1.50,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.24,2.27,2.34,2.35,2.45', 117:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.39,1.40,1.44,1.50,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.24,2.27,2.34,2.35,2.45',
+118:'1.6,1.7,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.39,1.40,1.44,1.50,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45', 119:'1.6,1.7,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.39,1.40,1.44,1.50,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45', 120:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.39,1.40,1.44,1.45,1.46,1.49,1.50,2.3,2.7,2.9,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45',
+121:'1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.3,2.7,2.9,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45,2.50', 122:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.45,1.46,1.50,2.1,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.41,2.45,2.46,2.48,2.50', 123:'1.3,1.6,1.9,1.10,1.15,1.20,1.32,1.39,1.40,1.44,1.50,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.47,2.49',
+124:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.33,1.35,1.40,1.42,1.44,1.46,1.50,2.1,2.2,2.3,2.9,2.10,2.12,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.45,2.46,2.50', 125:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.39,1.40,1.44,1.45,1.46,1.50,2.1,2.2,2.3,2.7,2.8,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.41,2.43,2.45,2.46,2.48', 126:'1.1,1.5,1.6,1.8,1.9,1.10,1.15,1.17,1.18,1.19,1.20,1.29,1.30,1.32,1.35,1.38,1.40,1.44,1.46,1.50,2.1,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.41,2.43,2.45,2.46,2.48',
+127:'1.3,1.6,1.8,1.9,1.10,1.15,1.17,1.19,1.20,1.32,1.44,1.50,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.34,2.35,2.45,2.46,2.49', 128:'1.6,1.7,1.8,1.9,1.10,1.13,1.14,1.15,1.20,1.24,1.25,1.26,1.32,1.38,1.40,1.44,1.50,2.2,2.3,2.7,2.8,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.23,2.27,2.34,2.35,2.45', 129:'',
+130:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.40,1.44,1.50,2.2,2.3,2.5,2.7,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.24,2.27,2.34,2.35,2.37,2.45', 131:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.22,1.23,1.24,1.25,1.29,1.32,1.33,1.40,1.42,1.44,1.46,1.50,2.2,2.3,2.7,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.24,2.27,2.34,2.35,2.45,2.50', 132:'',
+133:'1.6,1.8,1.9,1.10,1.20,1.32,1.33,1.39,1.40,1.44,1.50,2.2,2.3,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.43,2.45', 134:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.33,1.39,1.40,1.44,1.50,2.2,2.3,2.5,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.43,2.45', 135:'1.6,1.8,1.9,1.10,1.15,1.20,1.24,1.25,1.32,1.33,1.39,1.40,1.44,1.45,1.50,2.2,2.3,2.5,2.7,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.43,2.45',
+136:'1.6,1.8,1.9,1.10,1.15,1.20,1.32,1.33,1.38,1.39,1.40,1.44,1.50,2.2,2.3,2.5,2.7,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.43,2.45', 137:'1.6,1.9,1.10,1.13,1.14,1.15,1.20,1.24,1.25,1.29,1.30,1.32,1.33,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.3,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.34,2.35,2.46,2.50', 138:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.33,1.44,1.50,2.2,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.37,2.45,2.46',
+139:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.19,1.20,1.32,1.33,1.40,1.44,1.50,2.2,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.37,2.45,2.46', 140:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.32,1.33,1.44,1.50,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.19,2.20,2.21,2.27,2.34,2.35,2.37,2.45,2.46', 141:'1.3,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.17,1.19,1.20,1.32,1.33,1.40,1.44,1.50,2.2,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.19,2.20,2.21,2.27,2.34,2.35,2.37,2.45,2.46,2.49',
+142:'1.4,1.6,1.9,1.10,1.15,1.20,1.23,1.26,1.32,1.33,1.38,1.39,1.43,1.44,1.50,2.2,2.3,2.5,2.8,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.24,2.27,2.34,2.35,2.37,2.43,2.45,2.47', 143:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.26,1.29,1.32,1.33,1.35,1.36,1.38,1.40,1.44,1.46,1.48,1.50,2.1,2.2,2.3,2.4,2.7,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.37,2.40,2.41,2.45,2.48', 144:'1.4,1.6,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.32,1.33,1.39,1.43,1.44,1.50,2.3,2.5,2.8,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.43,2.47',
+145:'1.4,1.6,1.9,1.10,1.15,1.20,1.24,1.25,1.32,1.33,1.39,1.43,1.44,1.45,1.50,2.3,2.5,2.7,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.43,2.47', 146:'1.4,1.6,1.9,1.10,1.15,1.20,1.32,1.33,1.38,1.39,1.43,1.44,1.50,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.43,2.47', 147:'1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.39,1.40,1.44,1.45,1.50,2.2,2.3,2.7,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.24,2.27,2.34,2.35,2.43,2.45',
+148:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.39,1.40,1.44,1.45,1.50,2.2,2.3,2.7,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.24,2.27,2.34,2.35,2.43,2.45', 149:'1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.20,1.23,1.24,1.25,1.32,1.33,1.38,1.39,1.40,1.44,1.45,1.50,2.1,2.2,2.3,2.7,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.24,2.27,2.31,2.33,2.34,2.35,2.37,2.41,2.43,2.45,2.47,2.48,2.49', 150:'1.1,1.5,1.6,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.22,1.24,1.25,1.29,1.30,1.32,1.33,1.35,1.36,1.38,1.39,1.40,1.42,1.44,1.45,1.46,1.49,1.50,2.1,2.2,2.3,2.7,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.41,2.43,2.48,2.50',
+151:'1.1,1.3,1.4,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,1.16,1.17,1.18,1.19,1.20,1.21,1.22,1.23,1.24,1.25,1.26,1.28,1.29,1.30,1.32,1.33,1.35,1.36,1.38,1.39,1.40,1.42,1.43,1.44,1.45,1.46,1.47,1.48,1.49,1.50,2.1,2.2,2.3,2.4,2.5,2.7,2.8,2.9,2.10,2.11,2.12,2.13,2.16,2.17,2.18,2.19,2.20,2.21,2.23,2.24,2.27,2.30,2.31,2.33,2.34,2.35,2.36,2.37,2.40,2.41,2.43,2.45,2.46,2.47,2.48,2.49,2.50', 152:'1.6,1.22,1.32,1.44,2.2,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.43,2.45', 153:'1.6,1.22,1.32,1.44,2.2,2.3,2.8,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.43,2.45,2.49',
+154:'1.6,1.15,1.22,1.26,1.32,1.44,2.2,2.3,2.8,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.43,2.45,2.49', 155:'1.6,1.28,1.32,1.38,1.39,1.44,2.2,2.3,2.4,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45', 156:'1.6,1.28,1.32,1.38,1.39,1.44,2.2,2.3,2.4,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45,2.49',
+157:'1.6,1.15,1.26,1.28,1.32,1.38,1.39,1.44,2.1,2.2,2.3,2.4,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.41,2.43,2.45,2.48,2.49', 158:'1.6,1.14,1.28,1.32,1.44,2.1,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.43,2.45', 159:'1.6,1.14,1.28,1.32,1.44,2.1,2.2,2.3,2.5,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.43,2.45,2.49',
+160:'1.6,1.14,1.15,1.26,1.28,1.32,1.44,2.1,2.2,2.3,2.5,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.43,2.45,2.49', 161:'1.6,1.28,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.46,2.48,2.49', 162:'1.6,1.15,1.28,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.46,2.48,2.49',
+163:'1.6,1.32,1.39,1.42,1.44,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47,2.50', 164:'1.6,1.15,1.32,1.39,1.42,1.44,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.47,2.50', 165:'1.6,1.22,1.28,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.33,2.34,2.35,2.41,2.45,2.46',
+166:'1.6,1.15,1.22,1.28,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.33,2.34,2.35,2.41,2.45,2.46', 167:'1.6,1.22,1.28,1.29,1.32,1.44,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46', 168:'1.6,1.15,1.22,1.28,1.29,1.32,1.44,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45,2.46',
+169:'1.6,1.15,1.32,1.39,1.44,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.47', 170:'1.6,1.25,1.32,1.44,2.3,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45', 171:'1.6,1.15,1.25,1.32,1.44,2.3,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.45',
+172:'1.6,1.25,1.32,1.39,1.44,2.2,2.3,2.4,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.43,2.45', 173:'1.6,1.22,1.29,1.32,1.38,1.42,1.44,2.2,2.3,2.4,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.40,2.43,2.45,2.50', 174:'1.6,1.22,1.29,1.32,1.38,1.42,1.44,2.2,2.3,2.4,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.34,2.35,2.40,2.43,2.45,2.50',
+175:'1.6,1.22,1.29,1.32,1.38,1.39,1.42,1.44,2.2,2.3,2.4,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.34,2.35,2.40,2.43,2.45', 176:'1.6,1.15,1.22,1.29,1.32,1.38,1.39,1.42,1.44,2.2,2.3,2.4,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.34,2.35,2.40,2.43,2.45,2.47', 177:'1.6,1.22,1.29,1.32,1.39,1.42,1.44,2.3,2.9,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.50',
+178:'1.6,1.15,1.22,1.29,1.32,1.39,1.42,1.44,2.3,2.9,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.50', 179:'1.6,1.25,1.32,1.39,1.44,2.2,2.3,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.34,2.35,2.40,2.45', 180:'1.6,1.25,1.32,1.39,1.44,2.1,2.2,2.3,2.7,2.8,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.34,2.35,2.40,2.41,2.45,2.48',
+181:'1.6,1.15,1.25,1.32,1.39,1.44,2.1,2.2,2.3,2.7,2.8,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.34,2.35,2.40,2.41,2.45,2.48', 182:'1.6,1.15,1.22,1.32,1.44,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.45', 183:'1.6,1.14,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.45',
+184:'1.6,1.14,1.15,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.40,2.45', 185:'1.6,1.26,1.28,1.32,1.44,2.1,2.2,2.3,2.4,2.8,2.9,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.37,2.40,2.41,2.45,2.46,2.48', 186:'1.6,1.14,1.15,1.26,1.29,1.32,1.44,2.1,2.2,2.3,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.40,2.43,2.45,2.46',
+187:'1.6,1.22,1.32,1.44,2.2,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.40,2.45', 188:'1.6,1.22,1.32,1.44,2.2,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.40,2.45', 189:'1.6,1.15,1.22,1.32,1.44,2.2,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.40,2.45',
+190:'1.6,1.25,1.32,1.39,1.42,1.44,2.1,2.2,2.3,2.7,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.41,2.43,2.45,2.46,2.48,2.49,2.50', 191:'1.6,1.22,1.32,1.44,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45', 192:'1.6,1.15,1.22,1.32,1.44,2.3,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.36,2.45',
+193:'1.6,1.22,1.32,1.39,1.44,2.2,2.3,2.10,2.11,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46', 194:'1.6,1.26,1.28,1.32,1.44,2.1,2.2,2.3,2.4,2.8,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.36,2.37,2.40,2.45', 195:'1.6,1.15,1.26,1.28,1.32,1.44,2.1,2.2,2.3,2.4,2.8,2.10,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.33,2.34,2.35,2.36,2.37,2.40,2.45',
+196:'1.6,1.15,1.29,1.32,1.39,1.42,1.44,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.43,2.45,2.50', 197:'1.6,1.15,1.29,1.32,1.39,1.42,1.44,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.43,2.45,2.50', 198:'1.6,1.32,1.39,1.42,1.44,2.3,2.9,2.10,2.11,2.13,2.16,2.17,2.20,2.21,2.27,2.30,2.31,2.34,2.35,2.43,2.45,2.46,2.47,2.50',
+199:'1.6,1.14,1.15,1.26,1.28,1.29,1.32,1.38,1.39,1.42,1.44,2.1,2.2,2.3,2.7,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.45,2.49,2.50', 200:'1.6,1.25,1.29,1.32,1.39,1.42,1.44,2.2,2.3,2.7,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.34,2.35,2.40,2.45,2.46,2.50', 201:'',
+202:'', 203:'1.6,1.25,1.26,1.29,1.32,1.39,1.42,1.44,2.2,2.3,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.45,2.46,2.50', 204:'1.6,1.22,1.32,1.44,2.2,2.3,2.4,2.8,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.40,2.45',
+205:'1.6,1.15,1.22,1.32,1.44,2.2,2.3,2.4,2.8,2.10,2.11,2.12,2.13,2.17,2.19,2.20,2.21,2.27,2.34,2.35,2.37,2.40,2.45', 206:'1.6,1.22,1.25,1.28,1.32,1.42,1.44,2.2,2.3,2.4,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.40,2.45,2.46,2.50', 207:'1.6,1.32,1.39,1.44,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.34,2.35,2.36,2.37,2.43,2.45,2.46,2.49',
+208:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.3,2.4,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.24,2.27,2.31,2.34,2.35,2.37,2.40,2.45', 209:'1.6,1.25,1.32,1.44,2.1,2.2,2.3,2.5,2.7,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.36,2.40,2.41,2.43,2.45,2.46,2.48', 210:'1.6,1.15,1.25,1.32,1.44,2.1,2.2,2.3,2.5,2.7,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.36,2.40,2.41,2.43,2.45,2.46,2.48',
+211:'1.6,1.14,1.32,1.39,1.44,2.2,2.3,2.4,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.34,2.35,2.36,2.40,2.45', 212:'1.6,1.15,1.32,1.39,1.44,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.34,2.35,2.37,2.43,2.45,2.46,2.47,2.49', 213:'1.6,1.26,1.28,1.32,1.44,2.2,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.36,2.37,2.40,2.45',
+214:'1.6,1.26,1.32,1.44,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.34,2.35,2.43,2.45,2.46,2.49', 215:'1.6,1.14,1.28,1.32,1.39,1.42,1.44,2.1,2.2,2.3,2.8,2.9,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.40,2.43,2.45,2.46,2.49,2.50', 216:'1.6,1.26,1.28,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.5,2.7,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.40,2.41,2.45,2.46,2.48,2.49',
+217:'1.6,1.15,1.26,1.28,1.32,1.39,1.44,2.1,2.2,2.3,2.4,2.5,2.7,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.40,2.41,2.45,2.46,2.48,2.49', 218:'1.6,1.32,1.38,1.44,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45', 219:'1.6,1.15,1.26,1.32,1.38,1.44,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45',
+220:'1.6,1.14,1.26,1.32,1.44,2.2,2.3,2.5,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.43,2.45', 221:'1.6,1.14,1.15,1.26,1.32,1.44,2.2,2.3,2.5,2.8,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.43,2.45', 222:'1.6,1.26,1.29,1.32,1.44,2.2,2.3,2.4,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.40,2.45',
+223:'1.6,1.15,1.32,1.39,1.44,2.3,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45,2.46', 224:'1.6,1.15,1.32,1.39,1.44,2.3,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.40,2.45,2.46', 225:'1.6,1.14,1.32,1.39,1.44,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46',
+226:'1.6,1.14,1.32,1.39,1.44,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.45', 227:'1.6,1.32,1.39,1.44,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.43,2.45,2.46,2.47', 228:'1.6,1.22,1.32,1.38,1.39,1.42,1.44,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.36,2.43,2.45,2.46,2.50',
+229:'1.6,1.15,1.22,1.32,1.38,1.39,1.42,1.44,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.30,2.31,2.34,2.35,2.36,2.43,2.45,2.46,2.50', 230:'1.6,1.14,1.15,1.32,1.39,1.44,2.2,2.3,2.10,2.13,2.16,2.17,2.18,2.20,2.21,2.24,2.27,2.34,2.35,2.45', 231:'1.6,1.26,1.32,1.44,2.2,2.3,2.4,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.40,2.45',
+232:'1.6,1.15,1.26,1.32,1.44,2.2,2.3,2.4,2.5,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.40,2.45', 233:'1.6,1.14,1.15,1.25,1.29,1.32,1.39,1.42,1.44,2.3,2.7,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.34,2.35,2.40,2.46,2.50', 234:'1.6,1.26,1.29,1.32,1.39,1.42,1.44,2.2,2.3,2.5,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46,2.50',
+235:'', 236:'1.6,1.32,1.39,1.44,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46', 237:'1.6,1.28,1.32,1.39,1.44,2.2,2.3,2.8,2.10,2.11,2.13,2.17,2.20,2.21,2.27,2.31,2.34,2.35,2.43,2.45,2.46',
+238:'1.6,1.14,1.29,1.32,1.42,1.44,2.1,2.3,2.9,2.10,2.12,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.33,2.34,2.35,2.45,2.46,2.50', 239:'1.6,1.25,1.29,1.32,1.39,1.44,2.1,2.2,2.3,2.7,2.10,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.33,2.34,2.35,2.41,2.43,2.45,2.46,2.48', 240:'1.6,1.29,1.32,1.38,1.44,2.1,2.2,2.3,2.10,2.11,2.13,2.17,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.41,2.43,2.45,2.46,2.48',
+241:'1.6,1.14,1.15,1.25,1.26,1.32,1.44,2.1,2.2,2.3,2.4,2.7,2.8,2.9,2.10,2.11,2.12,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.30,2.31,2.33,2.34,2.35,2.37,2.40,2.41,2.45,2.48', 242:'1.6,1.14,1.15,1.22,1.25,1.29,1.32,1.38,1.42,1.44,2.1,2.2,2.3,2.4,2.7,2.8,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.27,2.30,2.31,2.34,2.35,2.37,2.40,2.45', 243:'1.6,1.15,1.25,1.28,1.32,1.39,1.44,2.2,2.3,2.5,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.43',
+244:'1.6,1.15,1.22,1.28,1.32,1.38,1.39,1.44,2.2,2.3,2.5,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.43', 245:'1.6,1.14,1.15,1.28,1.32,1.39,1.44,2.2,2.3,2.5,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.20,2.21,2.23,2.27,2.31,2.34,2.35,2.37,2.43', 246:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.3,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.43,2.45',
+247:'1.6,1.15,1.26,1.28,1.32,1.44,2.2,2.3,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.27,2.31,2.34,2.35,2.37,2.43,2.45', 248:'1.6,1.15,1.26,1.28,1.32,1.38,1.44,2.1,2.2,2.3,2.5,2.8,2.10,2.11,2.13,2.17,2.18,2.20,2.21,2.23,2.24,2.27,2.31,2.34,2.35,2.37,2.43,2.45,2.48,2.49,2.50', 249:'1.6,1.14,1.15,1.25,1.26,1.29,1.32,1.39,1.42,1.44,2.2,2.3,2.5,2.7,2.8,2.9,2.10,2.11,2.13,2.16,2.17,2.18,2.19,2.20,2.21,2.23,2.24,2.27,2.30,2.31,2.34,2.35,2.37,2.43,2.47,2.50',
+250:'1.6,1.15,1.22,1.25,1.26,1.29,1.32,1.38,1.39,1.42,1.44,2.3,2.5,2.7,2.8,2.9,2.10,2.11,2.13,2.17,2.18,2.19,2.20,2.21,2.24,2.27,2.30,2.31,2.34,2.35,2.37,2.43,2.47,2.50', 251:'1.6,1.15,1.22,1.29,1.32,1.39,1.42,1.44,2.3,2.9,2.10,2.11,2.12,2.13,2.17,2.18,2.19,2.20,2.21,2.27,2.30,2.31,2.34,2.35,2.37,2.40,2.43,2.50',
 };
 
 function nomeDaTM(t){ return 'TM' + String(t[1]).padStart(2, '0') + ' ' + t[2]; }
@@ -76050,6 +76573,10 @@ const UI = {
     return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
   },
 
+  marcasHTML(lista){
+    return (lista || []).map(m => `<span class="marca-luta ${this.esc(m.c)}">${this.esc(m.t)}</span>`).join('');
+  },
+
   /* PAR, BRN, PSN… a etiqueta dos jogos, com a palavra no título */
   etiquetaStatus(st){
     const r = ROTULO_STATUS[st] || [String(st).slice(0, 3).toUpperCase(), st];
@@ -76109,7 +76636,9 @@ const UI = {
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
       /* O seu aparece de costas, como em qualquer combate; o do outro
          lado, de frente. Espécie não catalogada sai em silhueta. */
-      const arte = imgSprite(p, meu ? 'costas' : 'frente', {oculto: !catalogado});
+      /* Transform: a arte vira a do outro enquanto durar a luta */
+      const visto = p.transformadoEm ? Object.assign({}, p, {dex:p.transformadoEm}) : p;
+      const arte = imgSprite(visto, meu ? 'costas' : 'frente', {oculto: !catalogado});
       /* A arte fica fora da ficha de propósito: é ela que deixa o
          cenário aparecer atrás do lutador, com a base sob os pés. */
       const fixo = (meu ? ult.A === kA : ult.I === kI) ? ' fixo' : '';
@@ -76123,6 +76652,7 @@ const UI = {
           ${vida}
           <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
           <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
+          <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
           ${this.barraHP(p)}
           <div class="meta">${nat}</div>
           <div class="meta">${ficha}</div>
@@ -76700,7 +77230,8 @@ const UI = {
       // a dica de eficácia só existe se você souber contra o que está lutando
       const ef = conhecido ? eficacia(G.t, Batalha.inimigo.tipos) : 1;
       const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
-      grade.appendChild(this.el(`<button class="golpe-btn" ${g.pp<=0?'disabled':''} onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
+      const travado = Batalha.estAliado && Batalha.estAliado.desabilitado && Batalha.estAliado.desabilitado.nome === g.nome;
+      grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${g.pp<=0 || travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
         <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status':(G.p||'—')} · ${G.a>=999?'∞':G.a+'%'}</span></span>
         <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
     });
@@ -78806,6 +79337,37 @@ const UI = {
       <div class="linha"><span class="k">SLP · dormindo</span><span class="v">1 a 3 turnos sem agir</span></div>
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
       <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
+      <h3>Estágios de atributo</h3>
+      <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
+      <div class="linha"><span class="k">ATK, DEF, SPA, SPD, VEL</span><span class="v">×0,25 (−6) a ×4 (+6)</span></div>
+      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">×1/3 a ×3 · a precisão de quem ataca contra a evasão de quem apanha</span></div>
+      <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">só na chance dele: Aurora Beam 10%, Iron Tail 30%, Rock Smash 50%, Mud-Slap sempre</span></div>
+
+      <h3>Estados que os golpes deixam</h3>
+      <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · às vezes se fere sozinho</span></div>
+      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1/16 do HP por turno · não foge nem troca</span></div>
+      <div class="linha"><span class="k">Leech Seed</span><span class="v">1/8 do HP por turno vai pra quem plantou · Grama não pega</span></div>
+      <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: ATK +1, DEF +1, VEL −1</span></div>
+      <div class="linha"><span class="k">Nightmare</span><span class="v">só em quem dorme · 1/4 do HP por turno enquanto dormir</span></div>
+      <div class="linha"><span class="k">Attract</span><span class="v">só entre sexos opostos · 50% de não atacar no turno</span></div>
+      <div class="linha"><span class="k">Disable</span><span class="v">trava o último golpe do outro por 2 a 7 turnos</span></div>
+      <div class="linha"><span class="k">Substitute</span><span class="v">custa 1/4 do HP · o boneco apanha no lugar e segura golpe de status</span></div>
+      <div class="linha"><span class="k">Protect, Detect, Endure</span><span class="v">agem antes de tudo · Endure fica com 1 de HP · usar seguido: metade da chance a cada vez</span></div>
+      <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · metade do dano físico / especial · crítico atravessa</span></div>
+      <div class="linha"><span class="k">Mist / Safeguard</span><span class="v">5 turnos · ninguém baixa atributo / nenhuma condição pega, vindo do outro lado</span></div>
+      <div class="linha"><span class="k">Haze</span><span class="v">zera os estágios dos dois lados</span></div>
+      <div class="linha"><span class="k">Focus Energy</span><span class="v">crítico 3 pontos mais perto no d20</span></div>
+      <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
+      <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
+      <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
+      <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes com 5 PP e estágios · desfaz no fim</span></div>
+      <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
+      <div class="linha"><span class="k">Swagger</span><span class="v">ATK do outro +2 e confusão</span></div>
+      <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
+      <div class="linha"><span class="k">Fury Cutter</span><span class="v">dobra a cada acerto seguido, até 160</span></div>
+      <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 102 com moral 100 · 102 com moral 0</span></div>
+      <p class="sussurro">Esses estados somem quando o Pokémon sai da luta; Reflect, Light Screen, Mist e Safeguard ficam no lado inteiro até acabar o tempo.</p>
+
       <h3>Clima</h3>
       <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água ×1,5 · Fogo ×0,5</span></div>
       <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo ×1,5 · Água ×0,5 · Solar Beam sem carregar</span></div>
@@ -78826,7 +79388,7 @@ const UI = {
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
       <h3>TM</h3>
-      <div class="linha"><span class="k">Quais</span><span class="v">44 das 50 de Red/Blue e 21 de Gold/Silver, cada uma com o número dos jogos dela</span></div>
+      <div class="linha"><span class="k">Quais</span><span class="v">44 das 50 de Red/Blue e as 37 de Gold/Silver que não repetem golpe, cada uma com o número dos jogos dela</span></div>
       <div class="linha"><span class="k">Quem aprende</span><span class="v">a tabela de TM da espécie nos jogos de Game Boy</span></div>
       <div class="linha"><span class="k">Uso</span><span class="v">fora de batalha, pela mochila · some ao ensinar · desistiu, ela fica</span></div>
       <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio de seis líderes de ginásio</span></div>
@@ -79134,6 +79696,14 @@ const Efeitos = {
     const num = ficha.querySelector('.hp-num');
     if (num) num.textContent = `${foto.hp} / ${foto.hpMax} HP`;
     this.pintarStatus(lado, foto.status);
+    this.pintarMarcas(lado, foto);
+  },
+  pintarMarcas(lado, foto){
+    const a = this.arena();
+    const onde = a && a.querySelector(`.lutador.${lado} .ficha .marcas-luta`);
+    if (!onde || !foto || !foto.marcas) return;
+    const html = UI.marcasHTML(foto.marcas);
+    if (onde.innerHTML !== html) onde.innerHTML = html;
   },
   pintarStatus(lado, st){
     const a = this.arena();
@@ -79294,6 +79864,11 @@ const Efeitos = {
     }
     if (st === 'congelamento') return this.tingir(lado, COR_EFEITO.gelo, 520, 1, .6);
     if (st === 'areia') return Promise.all([this.tingir(lado, '#C8A060', 420, 2, .5), this.tremer(lado, 300, 3)]);
+    if (st === 'semente') return this.tingir(lado, '#6FCF4A', 460, 2, .55);
+    if (st === 'maldicao') return Promise.all([this.tingir(lado, '#4B2A6B', 500, 2, .65), this.tremer(lado, 300, 3)]);
+    if (st === 'pesadelo') return this.tingir(lado, '#2E2450', 520, 2, .6);
+    if (st === 'preso') return Promise.all([this.tingir(lado, '#C9722E', 420, 2, .5), this.tremer(lado, 320, 4)]);
+    if (st === 'apaixonado') return Promise.all([this.tingir(lado, '#FF7AB6', 420, 2, .55), this.anel(lado, '#FF7AB6')]);
     if (st === 'sono') return this.anel(lado, COR_EFEITO.sono);
   },
 
@@ -79321,6 +79896,9 @@ const Efeitos = {
       if (log){ log.appendChild(UI.el(`<div class="l ${UI.esc(e.tipo)}">${UI.esc(e.texto)}</div>`)); log.scrollTop = log.scrollHeight; }
       if (!anima){ ant = this.fotoDe(e, ant); continue; }
       try { await this.reagir(e, ant); } catch (err) { /* efeito quebrado não trava a luta */ }
+      /* estágios e estados mudam no meio do turno: a ficha acompanha */
+      if (e.fotoA && ant.A && e.fotoA.uid === ant.A.uid) this.pintarMarcas('aliado', e.fotoA);
+      if (e.fotoI && ant.I && e.fotoI.uid === ant.I.uid) this.pintarMarcas('inimigo', e.fotoI);
       ant = this.fotoDe(e, ant);
     }
     this.foto = ant;
@@ -79346,6 +79924,11 @@ const Efeitos = {
       return;
     }
     if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }
+    /* Transform: a arte troca na hora */
+    if (e.transformou){
+      UI.atualizarArena(); this.pintarHP('aliado', e.fotoA, false); this.pintarHP('inimigo', e.fotoI, false);
+      await this.esperar(450); return;
+    }
     if (e.clima !== undefined){ this.pintarClima(e.clima); await this.esperar(e.clima ? 700 : 300); return; }
     if (e.travou && e.lado){ await this.condicao(e.lado, e.travou, true); return; }
 

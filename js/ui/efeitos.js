@@ -140,6 +140,14 @@ const Efeitos = {
     const num = ficha.querySelector('.hp-num');
     if (num) num.textContent = `${foto.hp} / ${foto.hpMax} HP`;
     this.pintarStatus(lado, foto.status);
+    this.pintarMarcas(lado, foto);
+  },
+  pintarMarcas(lado, foto){
+    const a = this.arena();
+    const onde = a && a.querySelector(`.lutador.${lado} .ficha .marcas-luta`);
+    if (!onde || !foto || !foto.marcas) return;
+    const html = UI.marcasHTML(foto.marcas);
+    if (onde.innerHTML !== html) onde.innerHTML = html;
   },
   pintarStatus(lado, st){
     const a = this.arena();
@@ -300,6 +308,11 @@ const Efeitos = {
     }
     if (st === 'congelamento') return this.tingir(lado, COR_EFEITO.gelo, 520, 1, .6);
     if (st === 'areia') return Promise.all([this.tingir(lado, '#C8A060', 420, 2, .5), this.tremer(lado, 300, 3)]);
+    if (st === 'semente') return this.tingir(lado, '#6FCF4A', 460, 2, .55);
+    if (st === 'maldicao') return Promise.all([this.tingir(lado, '#4B2A6B', 500, 2, .65), this.tremer(lado, 300, 3)]);
+    if (st === 'pesadelo') return this.tingir(lado, '#2E2450', 520, 2, .6);
+    if (st === 'preso') return Promise.all([this.tingir(lado, '#C9722E', 420, 2, .5), this.tremer(lado, 320, 4)]);
+    if (st === 'apaixonado') return Promise.all([this.tingir(lado, '#FF7AB6', 420, 2, .55), this.anel(lado, '#FF7AB6')]);
     if (st === 'sono') return this.anel(lado, COR_EFEITO.sono);
   },
 
@@ -327,6 +340,9 @@ const Efeitos = {
       if (log){ log.appendChild(UI.el(`<div class="l ${UI.esc(e.tipo)}">${UI.esc(e.texto)}</div>`)); log.scrollTop = log.scrollHeight; }
       if (!anima){ ant = this.fotoDe(e, ant); continue; }
       try { await this.reagir(e, ant); } catch (err) { /* efeito quebrado não trava a luta */ }
+      /* estágios e estados mudam no meio do turno: a ficha acompanha */
+      if (e.fotoA && ant.A && e.fotoA.uid === ant.A.uid) this.pintarMarcas('aliado', e.fotoA);
+      if (e.fotoI && ant.I && e.fotoI.uid === ant.I.uid) this.pintarMarcas('inimigo', e.fotoI);
       ant = this.fotoDe(e, ant);
     }
     this.foto = ant;
@@ -352,6 +368,11 @@ const Efeitos = {
       return;
     }
     if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }
+    /* Transform: a arte troca na hora */
+    if (e.transformou){
+      UI.atualizarArena(); this.pintarHP('aliado', e.fotoA, false); this.pintarHP('inimigo', e.fotoI, false);
+      await this.esperar(450); return;
+    }
     if (e.clima !== undefined){ this.pintarClima(e.clima); await this.esperar(e.clima ? 700 : 300); return; }
     if (e.travou && e.lado){ await this.condicao(e.lado, e.travou, true); return; }
 

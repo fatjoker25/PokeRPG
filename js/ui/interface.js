@@ -782,6 +782,10 @@ const UI = {
     return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
   },
 
+  marcasHTML(lista){
+    return (lista || []).map(m => `<span class="marca-luta ${this.esc(m.c)}">${this.esc(m.t)}</span>`).join('');
+  },
+
   /* PAR, BRN, PSN… a etiqueta dos jogos, com a palavra no título */
   etiquetaStatus(st){
     const r = ROTULO_STATUS[st] || [String(st).slice(0, 3).toUpperCase(), st];
@@ -841,7 +845,9 @@ const UI = {
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
       /* O seu aparece de costas, como em qualquer combate; o do outro
          lado, de frente. Espécie não catalogada sai em silhueta. */
-      const arte = imgSprite(p, meu ? 'costas' : 'frente', {oculto: !catalogado});
+      /* Transform: a arte vira a do outro enquanto durar a luta */
+      const visto = p.transformadoEm ? Object.assign({}, p, {dex:p.transformadoEm}) : p;
+      const arte = imgSprite(visto, meu ? 'costas' : 'frente', {oculto: !catalogado});
       /* A arte fica fora da ficha de propósito: é ela que deixa o
          cenário aparecer atrás do lutador, com a base sob os pés. */
       const fixo = (meu ? ult.A === kA : ult.I === kI) ? ' fixo' : '';
@@ -855,6 +861,7 @@ const UI = {
           ${vida}
           <div class="nome"><span>${this.esc(nomeVisivel(p))}${this.shi(p)}</span><span class="nv">Nv ${p.nivel}</span></div>
           <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
+          <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
           ${this.barraHP(p)}
           <div class="meta">${nat}</div>
           <div class="meta">${ficha}</div>
@@ -1432,7 +1439,8 @@ const UI = {
       // a dica de eficácia só existe se você souber contra o que está lutando
       const ef = conhecido ? eficacia(G.t, Batalha.inimigo.tipos) : 1;
       const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
-      grade.appendChild(this.el(`<button class="golpe-btn" ${g.pp<=0?'disabled':''} onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
+      const travado = Batalha.estAliado && Batalha.estAliado.desabilitado && Batalha.estAliado.desabilitado.nome === g.nome;
+      grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${g.pp<=0 || travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
         <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status':(G.p||'—')} · ${G.a>=999?'∞':G.a+'%'}</span></span>
         <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
     });
@@ -3538,6 +3546,37 @@ const UI = {
       <div class="linha"><span class="k">SLP · dormindo</span><span class="v">1 a 3 turnos sem agir</span></div>
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
       <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
+      <h3>Estágios de atributo</h3>
+      <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
+      <div class="linha"><span class="k">ATK, DEF, SPA, SPD, VEL</span><span class="v">×0,25 (−6) a ×4 (+6)</span></div>
+      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">×1/3 a ×3 · a precisão de quem ataca contra a evasão de quem apanha</span></div>
+      <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">só na chance dele: Aurora Beam 10%, Iron Tail 30%, Rock Smash 50%, Mud-Slap sempre</span></div>
+
+      <h3>Estados que os golpes deixam</h3>
+      <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · às vezes se fere sozinho</span></div>
+      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1/16 do HP por turno · não foge nem troca</span></div>
+      <div class="linha"><span class="k">Leech Seed</span><span class="v">1/8 do HP por turno vai pra quem plantou · Grama não pega</span></div>
+      <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: ATK +1, DEF +1, VEL −1</span></div>
+      <div class="linha"><span class="k">Nightmare</span><span class="v">só em quem dorme · 1/4 do HP por turno enquanto dormir</span></div>
+      <div class="linha"><span class="k">Attract</span><span class="v">só entre sexos opostos · 50% de não atacar no turno</span></div>
+      <div class="linha"><span class="k">Disable</span><span class="v">trava o último golpe do outro por 2 a 7 turnos</span></div>
+      <div class="linha"><span class="k">Substitute</span><span class="v">custa 1/4 do HP · o boneco apanha no lugar e segura golpe de status</span></div>
+      <div class="linha"><span class="k">Protect, Detect, Endure</span><span class="v">agem antes de tudo · Endure fica com 1 de HP · usar seguido: metade da chance a cada vez</span></div>
+      <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · metade do dano físico / especial · crítico atravessa</span></div>
+      <div class="linha"><span class="k">Mist / Safeguard</span><span class="v">5 turnos · ninguém baixa atributo / nenhuma condição pega, vindo do outro lado</span></div>
+      <div class="linha"><span class="k">Haze</span><span class="v">zera os estágios dos dois lados</span></div>
+      <div class="linha"><span class="k">Focus Energy</span><span class="v">crítico 3 pontos mais perto no d20</span></div>
+      <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
+      <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
+      <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
+      <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes com 5 PP e estágios · desfaz no fim</span></div>
+      <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
+      <div class="linha"><span class="k">Swagger</span><span class="v">ATK do outro +2 e confusão</span></div>
+      <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
+      <div class="linha"><span class="k">Fury Cutter</span><span class="v">dobra a cada acerto seguido, até 160</span></div>
+      <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 102 com moral 100 · 102 com moral 0</span></div>
+      <p class="sussurro">Esses estados somem quando o Pokémon sai da luta; Reflect, Light Screen, Mist e Safeguard ficam no lado inteiro até acabar o tempo.</p>
+
       <h3>Clima</h3>
       <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água ×1,5 · Fogo ×0,5</span></div>
       <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo ×1,5 · Água ×0,5 · Solar Beam sem carregar</span></div>
@@ -3558,7 +3597,7 @@ const UI = {
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
       <h3>TM</h3>
-      <div class="linha"><span class="k">Quais</span><span class="v">44 das 50 de Red/Blue e 21 de Gold/Silver, cada uma com o número dos jogos dela</span></div>
+      <div class="linha"><span class="k">Quais</span><span class="v">44 das 50 de Red/Blue e as 37 de Gold/Silver que não repetem golpe, cada uma com o número dos jogos dela</span></div>
       <div class="linha"><span class="k">Quem aprende</span><span class="v">a tabela de TM da espécie nos jogos de Game Boy</span></div>
       <div class="linha"><span class="k">Uso</span><span class="v">fora de batalha, pela mochila · some ao ensinar · desistiu, ela fica</span></div>
       <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio de seis líderes de ginásio</span></div>

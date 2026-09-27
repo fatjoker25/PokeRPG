@@ -42,9 +42,9 @@ const GOLPES = {
   'Fire Spin':     {t:'Fogo',c:'esp',p:35,a:85,pp:15,nv:14,ef:{preso:true}},
 
   /* --- ÁGUA --- */
-  'Bubble':        {t:'Água',c:'esp',p:40,a:100,pp:30,nv:1},
+  'Bubble':        {t:'Água',c:'esp',p:40,a:100,pp:30,nv:1,ef:{baixa:'spe',chance:10}},
   'Water Gun':     {t:'Água',c:'esp',p:40,a:100,pp:25,nv:1},
-  'Bubble Beam':   {t:'Água',c:'esp',p:65,a:100,pp:20,nv:18,ef:{baixa:'spe'}},
+  'Bubble Beam':   {t:'Água',c:'esp',p:65,a:100,pp:20,nv:18,ef:{baixa:'spe',chance:10}},
   'Waterfall':     {t:'Água',c:'fis',p:80,a:100,pp:15,nv:28},
   'Surf':          {t:'Água',c:'esp',p:90,a:100,pp:15,nv:36},
   'Hydro Pump':    {t:'Água',c:'esp',p:110,a:80,pp:5,nv:46},
@@ -68,7 +68,7 @@ const GOLPES = {
   'Petal Dance':   {t:'Grama',c:'esp',p:120,a:100,pp:10,nv:42,ef:{confundeSe:true}},
 
   /* --- GELO --- */
-  'Aurora Beam':   {t:'Gelo',c:'esp',p:65,a:100,pp:20,nv:20,ef:{baixa:'atk'}},
+  'Aurora Beam':   {t:'Gelo',c:'esp',p:65,a:100,pp:20,nv:20,ef:{baixa:'atk',chance:10}},
   'Ice Punch':     {t:'Gelo',c:'fis',p:75,a:100,pp:15,nv:24,ef:{tipo:'congelamento',chance:10}},
   'Ice Beam':      {t:'Gelo',c:'esp',p:90,a:100,pp:10,nv:34,ef:{tipo:'congelamento',chance:10}},
   'Blizzard':      {t:'Gelo',c:'esp',p:110,a:70,pp:5,nv:46,ef:{tipo:'congelamento',chance:10}},
@@ -83,7 +83,7 @@ const GOLPES = {
 
   /* --- VENENOSO --- */
   'Poison Sting':  {t:'Venenoso',c:'fis',p:15,a:100,pp:35,nv:1,ef:{tipo:'veneno',chance:30}},
-  'Acid':          {t:'Venenoso',c:'esp',p:40,a:100,pp:30,nv:10,ef:{baixa:'def'}},
+  'Acid':          {t:'Venenoso',c:'esp',p:40,a:100,pp:30,nv:10,ef:{baixa:'def',chance:10}},
   'Smog':          {t:'Venenoso',c:'esp',p:30,a:70,pp:20,nv:8,ef:{tipo:'veneno',chance:40}},
   'Sludge':        {t:'Venenoso',c:'esp',p:65,a:100,pp:20,nv:24,ef:{tipo:'veneno',chance:30}},
   'Toxic':         {t:'Venenoso',c:'status',p:0,a:85,pp:10,nv:28,ef:{tipo:'veneno',chance:100,grave:true}},
@@ -109,7 +109,7 @@ const GOLPES = {
   'Psybeam':       {t:'Psíquico',c:'esp',p:65,a:100,pp:20,nv:20,ef:{tipo:'confusao',chance:10}},
   'Barrier':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:24,ef:{sobe:'def',forte:true}},
   'Amnesia':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:28,ef:{sobe:'spd',forte:true}},
-  'Psychic':       {t:'Psíquico',c:'esp',p:90,a:100,pp:10,nv:38,ef:{baixa:'spd'}},
+  'Psychic':       {t:'Psíquico',c:'esp',p:90,a:100,pp:10,nv:38,ef:{baixa:'spd',chance:10}},
   'Dream Eater':   {t:'Psíquico',c:'esp',p:100,a:100,pp:15,nv:42,ef:{drena:0.5,soDormindo:true}},
 
   /* --- INSETO --- */
@@ -202,32 +202,32 @@ const GOLPES = {
   'Growth':        {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'spa'}},
   'Sharpen':       {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'atk'}},
   'Meditate':      {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'atk'}},
-  'Focus Energy':  {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'atk'}},
+  'Focus Energy':  {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'foco'}},
   'Defense Curl':  {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
   'Withdraw':      {t:'Água',c:'status',p:0,a:999,pp:40,nv:1,ef:{sobe:'def'}},
-  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def'}},
-  'Substitute':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{sobe:'def'}},
-  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{sobe:'spe'}},
-  'Conversion':    {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'def'}},
-  'Light Screen':  {t:'Psíquico',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'spd'}},
-  'Reflect':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def'}},
-  'Mist':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{sobe:'spd'}},
+  'Minimize':      {t:'Normal',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'evasao'}},
+  'Substitute':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'substituto'}},
+  'Double Team':   {t:'Normal',c:'status',p:0,a:999,pp:15,nv:1,ef:{sobe:'evasao'}},
+  'Conversion':    {t:'Normal',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'conversao'}},
+  'Light Screen':  {t:'Psíquico',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'tela'}},
+  'Reflect':       {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'reflexo'}},
+  'Mist':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'nevoa'}},
   'Acid Armor':    {t:'Venenoso',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'def',forte:true}},
   /* Haze zera as alterações dos dois lados; aqui derruba o ataque de quem está na frente */
-  'Haze':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{baixa:'atk'}},
+  'Haze':          {t:'Gelo',c:'status',p:0,a:999,pp:30,nv:1,ef:{acao:'haze'}},
   'Smokescreen':   {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'precisao'}},
   /* Whirlwind e Roar tiram o adversário do lugar; sem troca forçada, tiram o ritmo */
-  'Whirlwind':     {t:'Normal',c:'status',p:0,a:85,pp:20,nv:1,ef:{baixa:'spe'}},
-  'Roar':          {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'spe'}},
+  'Whirlwind':     {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{acao:'soprar',prioridade:-1}},
+  'Roar':          {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{acao:'soprar',prioridade:-1}},
   /* Disable trava um golpe; o mais perto que este motor faz é a confusão */
-  'Disable':       {t:'Normal',c:'status',p:0,a:55,pp:20,nv:1,ef:{tipo:'confusao',chance:100}},
+  'Disable':       {t:'Normal',c:'status',p:0,a:55,pp:20,nv:1,ef:{acao:'desabilitar'}},
   'Lovely Kiss':   {t:'Normal',c:'status',p:0,a:75,pp:10,nv:1,ef:{tipo:'sono',chance:100}},
   /* Metronome sorteia um golpe; aqui ele sai sempre, e sai médio */
   'Metronome':     {t:'Normal',c:'esp',p:70,a:999,pp:10,nv:1},
   /* Transform copia o adversário; sem cópia, é a postura de quem imita */
-  'Transform':     {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{sobe:'atk'}},
-  'Teleport':      {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'spe'}},
-  'Mirror Move':   {t:'Voador',c:'status',p:0,a:999,pp:20,nv:1,ef:{sobe:'atk'}},
+  'Transform':     {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'transformar'}},
+  'Teleport':      {t:'Psíquico',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'teleporte'}},
+  'Mirror Move':   {t:'Voador',c:'status',p:0,a:999,pp:20,nv:1,ef:{acao:'espelho'}},
   'Splash':        {t:'Normal',c:'status',p:0,a:999,pp:40,nv:1},
 
   /* --- LUTADOR --- */
@@ -237,7 +237,7 @@ const GOLPES = {
   'Counter':       {t:'Lutador',c:'fis',p:60,a:100,pp:20,nv:1},
 
   /* --- GRAMA --- */
-  'Leech Seed':    {t:'Grama',c:'status',p:0,a:90,pp:10,nv:1,ef:{tipo:'veneno',chance:100}},
+  'Leech Seed':    {t:'Grama',c:'status',p:0,a:90,pp:10,nv:1,ef:{acao:'semente'}},
   'Spore':         {t:'Grama',c:'status',p:0,a:999,pp:15,nv:1,ef:{tipo:'sono',chance:100}},
 
   /* --- VENENOSO --- */
@@ -259,19 +259,37 @@ const GOLPES = {
   /* Flail bate mais quanto menos HP sobra; aqui é só um golpe curto e forte */
   'Flail':         {t:'Normal',c:'fis',p:70,a:100,pp:15,nv:1},
   'Scary Face':    {t:'Normal',c:'status',p:0,a:90,pp:10,nv:1,ef:{baixa:'spe',forte:true}},
-  'Foresight':     {t:'Normal',c:'status',p:0,a:100,pp:40,nv:1,ef:{baixa:'precisao'}},
+  'Foresight':     {t:'Normal',c:'status',p:0,a:100,pp:40,nv:1,ef:{acao:'identificar'}},
   'Charm':         {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'atk',forte:true}},
-  'Swagger':       {t:'Normal',c:'status',p:0,a:90,pp:15,nv:1,ef:{tipo:'confusao',chance:100}},
+  'Swagger':       {t:'Normal',c:'status',p:0,a:90,pp:15,nv:1,ef:{acao:'fanfarra'}},
   'Spider Web':    {t:'Inseto',c:'status',p:0,a:999,pp:10,nv:1,ef:{baixa:'spe'}},
   'Cotton Spore':  {t:'Grama',c:'status',p:0,a:85,pp:40,nv:1,ef:{baixa:'spe',forte:true}},
   'Synthesis':     {t:'Grama',c:'status',p:0,a:999,pp:5,nv:1,ef:{cura:0.5}},
   'Softboiled':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{cura:0.5}},
-  'Safeguard':     {t:'Normal',c:'status',p:0,a:999,pp:25,nv:1,ef:{sobe:'spd'}},
+  'Safeguard':     {t:'Normal',c:'status',p:0,a:999,pp:25,nv:1,ef:{acao:'salvaguarda'}},
   'Mirror Coat':   {t:'Psíquico',c:'esp',p:60,a:100,pp:20,nv:1},
   /* Sandstorm e Rain Dance mudam o tempo; sem clima, o que sobra é o estorvo */
   'Sandstorm':     {t:'Pedra',c:'status',p:0,a:999,pp:10,nv:1,ef:{clima:'areia'}},
   'Rain Dance':    {t:'Água',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'chuva'}},
-  'Sunny Day':     {t:'Fogo',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'sol'}}
+  'Sunny Day':     {t:'Fogo',c:'status',p:0,a:999,pp:5,nv:1,ef:{clima:'sol'}},
+
+  /* ── os de Gold/Silver com mecânica própria (os que as TMs ensinam) ── */
+  'Protect':       {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'proteger',prioridade:3}},
+  'Detect':        {t:'Lutador',c:'status',p:0,a:999,pp:5,nv:1,ef:{acao:'proteger',prioridade:3}},
+  'Endure':        {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'aguentar',prioridade:3}},
+  'Curse':         {t:'Fantasma',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'maldicao'}},
+  'Attract':       {t:'Normal',c:'status',p:0,a:100,pp:15,nv:1,ef:{acao:'atracao'}},
+  'Nightmare':     {t:'Fantasma',c:'status',p:0,a:100,pp:15,nv:1,ef:{acao:'pesadelo'}},
+  'Psych Up':      {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'copiar'}},
+  'Sweet Scent':   {t:'Normal',c:'status',p:0,a:100,pp:20,nv:1,ef:{baixa:'evasao'}},
+  'Sleep Talk':    {t:'Normal',c:'status',p:0,a:999,pp:10,nv:1,ef:{acao:'sonambulo',soSeDormindo:true}},
+  'Snore':         {t:'Normal',c:'esp',p:40,a:100,pp:15,nv:1,ef:{soSeDormindo:true,tipo:'recuo',chance:30}},
+  'Return':        {t:'Normal',c:'fis',p:102,a:100,pp:20,nv:1,ef:{amizade:'retorno'}},
+  'Frustration':   {t:'Normal',c:'fis',p:102,a:100,pp:20,nv:1,ef:{amizade:'frustracao'}},
+  'Fury Cutter':   {t:'Inseto',c:'fis',p:10,a:95,pp:20,nv:1,ef:{corte:true}},
+  'Rock Smash':    {t:'Lutador',c:'fis',p:20,a:100,pp:15,nv:1,ef:{baixa:'def',chance:50}},
+  'Mud-Slap':      {t:'Terrestre',c:'esp',p:20,a:100,pp:10,nv:1,ef:{baixa:'precisao',chance:100}},
+  'Dynamic Punch': {t:'Lutador',c:'fis',p:100,a:50,pp:5,nv:1,ef:{tipo:'confusao',chance:100}}
 };
 
 /* Golpes por tipo, prontos para montar learnsets */

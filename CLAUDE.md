@@ -237,6 +237,18 @@ bola do seu sai do canto de baixo, abre, e ele nasce branco e ganha cor.
 Rosto de treinador mora em `js/data/treinadores.js` (Showdown, 80×80) —
 quem não tem equivalente honesto fica sem, e a abertura pula o treinador.
 
+Golpe de status que faz outra coisa além de mexer em número tem
+`ef.acao` e mora em `Batalha.acaoEspecial` (Protect, Substitute, Reflect,
+Leech Seed, Transform, Roar…). Estado que o golpe deixa fica no `est` do
+lutador (`novoEstado`) e some quando ele sai; o que vale pro lado inteiro
+(Reflect, Light Screen, Mist, Safeguard) fica em `Batalha.lados`. Tudo
+isso aparece na ficha de HP por `Batalha.marcas(lado)`, que vai junto na
+foto de cada evento. Efeito secundário de golpe de dano só acontece na
+`ef.chance` dele — sem chance, é sempre.
+
+Golpe que acaba a luta (Roar, Whirlwind, Teleport) chama `encerrar` no
+meio do turno: o resto do turno tem que parar ali (`!this.ativo`).
+
 Clima (Rain Dance, Sandstorm) mora em `Batalha.clima` e dura cinco turnos;
 o evento que muda o clima leva `clima` e a camada é pintada **dentro da
 moldura de cada lutador**, nunca por cima da arena inteira — por cima, ela
@@ -247,7 +259,8 @@ o `build.py` embute junto com os sprites.
 
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
-não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). Os
+não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). São todas as
+de Gold/Silver que não repetem golpe da 1ª. Os
 números se repetem entre as gerações (TM11 é Bubble Beam e é Sunny Day),
 então a TM é **geração + número** (`'2.11'` em `TM_COMPAT`), nunca só o
 número. TM de golpe que não existe aqui fica vaga — o número não é

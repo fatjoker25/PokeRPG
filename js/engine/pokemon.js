@@ -119,6 +119,23 @@ function naturezaVisivel(p){
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
+/* Sexo, que só o Attract pergunta. Sem sexo, só macho e só fêmea são os
+   dos jogos; nos outros, a proporção deles (a maioria é meio a meio, os
+   iniciais e os fósseis são 7 machos pra cada fêmea). Sorteado uma vez
+   e guardado no Pokémon. */
+const SEM_SEXO = new Set([81,82,100,101,120,121,132,137,144,145,146,150,151,201,233,243,244,245,249,250,251]);
+const SO_MACHO = new Set([32,33,34,106,107,128,236,237]);
+const SO_FEMEA = new Set([29,30,31,113,115,124,238,241,242]);
+const QUASE_MACHO = new Set([1,2,3,4,5,6,7,8,9,133,134,135,136,138,139,140,141,142,143,152,153,154,155,156,157,158,159,160,175,176,196,197]);
+function generoDe(p){
+  if (!p) return null;
+  if (p.genero !== undefined) return p.genero;
+  const d = p.dex;
+  p.genero = SEM_SEXO.has(d) ? null : SO_MACHO.has(d) ? 'm' : SO_FEMEA.has(d) ? 'f'
+           : (Math.random() < (QUASE_MACHO.has(d) ? 0.875 : 0.5) ? 'm' : 'f');
+  return p.genero;
+}
+
 /* A frase que o jogo mostra pra cada coisa que a experiência causou. */
 function linhaDeExp(p, e){
   const n = nomeVisivel(p);

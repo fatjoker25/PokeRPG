@@ -5,6 +5,11 @@
    Crítico: 1d20 = 20 → ×1.5
    ============================================================ */
 
+/* precisão e evasão têm tabela própria nos jogos (de 1/3 a 3) */
+const PRECISAO_MULT = {'-6':0.33,'-5':0.36,'-4':0.43,'-3':0.5,'-2':0.6,'-1':0.75,'0':1,'1':1.33,'2':1.66,'3':2,'4':2.33,'5':2.66,'6':3};
+/* o nome de cada atributo na frase do log */
+const NOME_ESTAGIO = {atk:'o Ataque', def:'a Defesa', spa:'o Ataque Especial', spd:'a Defesa Especial',
+                      spe:'a Velocidade', precisao:'a precisão', evasao:'a evasão'};
 const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,'0':1,'1':1.5,'2':2,'3':2.5,'4':3,'5':3.5,'6':4};
 
 /* o que o jogo diz quando o tempo muda */
@@ -48,6 +53,9 @@ const Batalha = {
     /* quem enfrentou o adversário da vez: é entre eles que a experiência
        se divide, como nos jogos */
     this.participantes = new Set(aliado ? [aliado.uid] : []);
+    /* o que vale pro lado inteiro, e fica mesmo se trocar de Pokémon:
+       Reflect, Light Screen, Mist e Safeguard, cinco turnos cada */
+    this.lados = {aliado:{reflexo:0, tela:0, nevoa:0, salva:0}, inimigo:{reflexo:0, tela:0, nevoa:0, salva:0}};
     /* chuva ou areia: dura cinco turnos, como na 2ª geração */
     this.clima = null;
     /* A cena que vem depois quer saber se sobrou pra você. */
@@ -80,7 +88,11 @@ const Batalha = {
   },
 
   novoEstado(){
-    return {atk:0, def:0, spa:0, spd:0, spe:0, precisao:0, confuso:0, preso:0, carregando:null, recarregando:false};
+    return {atk:0, def:0, spa:0, spd:0, spe:0, precisao:0, evasao:0, confuso:0, carregando:null, recarregando:false,
+            /* estados que os golpes deixam: somem quando o Pokémon sai da luta */
+            presoTurnos:0, presoPor:null, semente:false, maldito:false, pesadelo:false, apaixonado:false,
+            desabilitado:null, substituto:0, focado:false, identificado:false, protegido:false,
+            aguentando:false, seguidas:0, cortes:0, ultimoGolpe:null, transformado:null, origTipos:null};
   },
 
   introPadrao(){
@@ -102,11 +114,44 @@ const Batalha = {
      precisar saber que existe animação. */
   ev(tipo, texto, extra){
     const e = Object.assign({tipo, texto}, extra||{});
-    const foto = p => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null} : null;
-    e.fotoA = foto(this.aliado);
-    e.fotoI = foto(this.inimigo);
+    const foto = (p, lado) => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null,
+                                   marcas:this.marcas(lado)} : null;
+    e.fotoA = foto(this.aliado, 'aliado');
+    e.fotoI = foto(this.inimigo, 'inimigo');
     if (typeof Estado !== 'undefined' && Estado.j) e.fotoJ = Estado.j.hp;
     this.eventos.push(e);
+  },
+
+  /* O que está valendo em cada lado agora: estágio que subiu ou caiu e
+     estado que um golpe deixou. É o que a ficha de HP mostra na luta. */
+  marcas(lado){
+    const est = lado === 'aliado' ? this.estAliado : this.estInimigo;
+    const L = this.lados && this.lados[lado];
+    if (!est) return [];
+    const m = [];
+    const ROT = {atk:'ATK', def:'DEF', spa:'SPA', spd:'SPD', spe:'VEL', precisao:'PREC', evasao:'EVA'};
+    for (const k of Object.keys(ROT)){
+      const v = est[k] || 0;
+      if (v) m.push({t:`${ROT[k]} ${v > 0 ? '+' : '−'}${Math.abs(v)}`, c: v > 0 ? 'alto' : 'baixo'});
+    }
+    if (est.confuso > 0)     m.push({t:'Confuso', c:'estado'});
+    if (est.apaixonado)      m.push({t:'Apaixonado', c:'estado'});
+    if (est.presoTurnos > 0) m.push({t:'Preso', c:'estado'});
+    if (est.semente)         m.push({t:'Semeado', c:'estado'});
+    if (est.maldito)         m.push({t:'Maldição', c:'estado'});
+    if (est.pesadelo)        m.push({t:'Pesadelo', c:'estado'});
+    if (est.desabilitado)    m.push({t:`${est.desabilitado.nome} travado`, c:'estado'});
+    if (est.substituto > 0)  m.push({t:'Boneco', c:'bom'});
+    if (est.focado)          m.push({t:'Focado', c:'bom'});
+    if (est.identificado)    m.push({t:'Identificado', c:'estado'});
+    if (est.transformado)    m.push({t:'Transformado', c:'bom'});
+    if (L){
+      if (L.reflexo > 0) m.push({t:`Reflect ${L.reflexo}`, c:'campo'});
+      if (L.tela > 0)    m.push({t:`Light Screen ${L.tela}`, c:'campo'});
+      if (L.nevoa > 0)   m.push({t:`Mist ${L.nevoa}`, c:'campo'});
+      if (L.salva > 0)   m.push({t:`Safeguard ${L.salva}`, c:'campo'});
+    }
+    return m;
   },
 
   /* ---------- utilidades ---------- */
@@ -154,11 +199,20 @@ const Batalha = {
   },
 
   /* ---------- pode agir? ---------- */
-  podeAgir(p, est, souAliado){
+  podeAgir(p, est, souAliado, golpeNome){
     if (p.status === 'sono'){
       p.statusTurnos--;
-      if (p.statusTurnos <= 0){ p.status = null; this.ev('status', `${nomeVisivel(p)} acordou!`); }
-      else { this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`); return false; }
+      if (p.statusTurnos <= 0){ p.status = null; est.pesadelo = false; this.ev('status', `${nomeVisivel(p)} acordou!`); }
+      else {
+        this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`);
+        /* Sleep Talk e Snore são os golpes de quem está dormindo */
+        if (golpeNome === 'Sleep Talk' || golpeNome === 'Snore') return true;
+        return false;
+      }
+    }
+    if (est.apaixonado && Dados.chance(50)){
+      this.ev('status', `${nomeVisivel(p)} está apaixonado e não consegue atacar.`, {travou:'apaixonado', lado:souAliado ? 'aliado' : 'inimigo'});
+      return false;
     }
     if (p.status === 'congelamento'){
       if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
@@ -187,11 +241,15 @@ const Batalha = {
   },
 
   /* ---------- dano ---------- */
-  calcularDano(atk, def, estAtk, estDef, golpeNome){
+  calcularDano(atk, def, estAtk, estDef, golpeNome, poder){
     const g = GOLPES[golpeNome];
+    const pw = poder || g.p;
     const res = {dano:0, critico:false, efic:1, msgs:[]};
 
-    res.efic = eficacia(g.t, def.tipos);
+    /* Foresight: Normal e Lutador passam a acertar Fantasma */
+    const tiposDef = (estDef.identificado && (g.t === 'Normal' || g.t === 'Lutador'))
+      ? def.tipos.filter(t => t !== 'Fantasma') : def.tipos;
+    res.efic = eficacia(g.t, tiposDef.length ? tiposDef : ['Normal']);
     if (res.efic === 0){
       res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
       return res;
@@ -221,7 +279,7 @@ const Batalha = {
     let total = 0;
     for (let i = 0; i < golpes; i++){
       const d10 = Dados.d10(`Dano de ${golpeNome}`);
-      total += Math.round(d10 * (g.p / 10) * razao);
+      total += Math.round(d10 * (pw / 10) * razao);
     }
     if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
 
@@ -230,6 +288,7 @@ const Batalha = {
     const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
     let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
     if (g.ef && g.ef.critico) limiteCrit -= 3;
+    if (estAtk.focado) limiteCrit -= 3;          // Focus Energy
     /* quem te entende acerta onde dói sem você apontar */
     if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk))
       limiteCrit -= efeitosDeAfinidade(atk).crit;
@@ -249,6 +308,12 @@ const Batalha = {
       if (g.t === fraco) total = Math.round(total * 0.5);
     }
     total = Math.round(total * res.efic);
+    /* Reflect corta o físico, Light Screen o especial — crítico atravessa */
+    const ladoDef = this.lados && this.lados[def === this.aliado ? 'aliado' : 'inimigo'];
+    if (ladoDef && !res.critico){
+      if (fisico && ladoDef.reflexo > 0) total = Math.round(total * 0.5);
+      if (!fisico && ladoDef.tela > 0)   total = Math.round(total * 0.5);
+    }
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
 
@@ -269,7 +334,11 @@ const Batalha = {
     const g = GOLPES[golpeNome];
     if (g.a >= 999) return true;
     let prec = g.a;
-    prec *= this.mult(estAtk, 'precisao');
+    /* precisão de quem ataca contra evasão de quem apanha; Foresight
+       anula a evasão que subiu */
+    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
+    const passo = Math.max(-6, Math.min(6, (estAtk.precisao || 0) - eva));
+    prec *= PRECISAO_MULT[String(passo)] || 1;
     const limite = Math.floor((100 - Math.min(100, prec)) / 5);
     const d = Dados.d20(`Precisão de ${golpeNome}`);
     return d > limite;
@@ -289,36 +358,51 @@ const Batalha = {
   },
 
   /* ---------- um golpe ---------- */
-  usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado){
-    const slot = atacante.golpes[indiceGolpe];
-    if (!slot){ this.ev('info', `${nomeVisivel(atacante)} não tem esse golpe.`); return; }
-    if (slot.pp <= 0){
-      this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
-      const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
-      defensor.hp = Math.max(0, defensor.hp - d);
-      atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
-      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
-      return;
+  /* nomeForcado: o golpe vem de fora do slot (Mirror Move, Sleep Talk) e
+     não gasta PP nem passa pela vontade da natureza. */
+  usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado){
+    let nome;
+    if (nomeForcado){
+      nome = nomeForcado;
+    } else {
+      const slot = atacante.golpes[indiceGolpe];
+      if (!slot){ this.ev('info', `${nomeVisivel(atacante)} não tem esse golpe.`); return; }
+      if (estAtk.desabilitado && estAtk.desabilitado.nome === slot.nome){
+        this.ev('erro', `${nomeVisivel(atacante)} não consegue usar ${slot.nome}: está desabilitado.`);
+        return;
+      }
+      if (slot.pp <= 0){
+        this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
+        const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
+        defensor.hp = Math.max(0, defensor.hp - d);
+        atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
+        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
+        return;
+      }
+      nome = slot.nome;
+      const v = this.vontade(atacante, nome, souAliado);
+      if (v){
+        this.ev('natureza', v.texto);
+        if (v.recusa) return;
+        if (v.outroGolpe){
+          const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe && g.pp > 0);
+          if (outros.length){ const alt = Dados.escolher(outros); nome = alt.nome; alt.pp--; }
+          else slot.pp--;
+        } else slot.pp--;
+      } else slot.pp--;
     }
 
-    let nome = slot.nome;
-    const v = this.vontade(atacante, nome, souAliado);
-    if (v){
-      this.ev('natureza', v.texto);
-      if (v.recusa) return;
-      if (v.outroGolpe){
-        const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe && g.pp > 0);
-        if (outros.length){ const alt = Dados.escolher(outros); nome = alt.nome; alt.pp--; }
-        else slot.pp--;
-      } else slot.pp--;
-    } else slot.pp--;
-
     const g = GOLPES[nome];
+    const ef = g.ef || {};
+    /* golpe que não é o mesmo de antes quebra a sequência de Protect e
+       de Fury Cutter */
+    if (ef.acao !== 'proteger' && ef.acao !== 'aguentar') estAtk.seguidas = 0;
+    if (!ef.corte) estAtk.cortes = 0;
 
     // golpes de carga (Dig, Fly, Solar Beam, Sky Attack)
     /* no sol, Solar Beam dispara sem carregar */
     const semCarga = nome === 'Solar Beam' && this.clima && this.clima.tipo === 'sol';
-    if (g.ef && g.ef.carga && estAtk.carregando !== nome && !semCarga){
+    if (ef.carga && estAtk.carregando !== nome && !semCarga){
       estAtk.carregando = nome;
       this.ev('info', `${nomeVisivel(atacante)} se prepara para ${nome}!`);
       return;
@@ -326,9 +410,24 @@ const Batalha = {
     estAtk.carregando = null;
 
     this.ev('golpe', `${nomeVisivel(atacante)} usou ${nome}!`, {golpe:nome, tipoGolpe:g.t, lado:souAliado ? 'aliado' : 'inimigo'});
+    if (nome !== 'Mirror Move') estAtk.ultimoGolpe = nome;
+
+    /* Snore e Sleep Talk só saem de quem está dormindo */
+    if (ef.soSeDormindo && atacante.status !== 'sono'){
+      this.ev('erro', 'Mas nada aconteceu.');
+      return;
+    }
+
+    /* Protect/Detect do outro lado: golpe mirado nele não passa */
+    if (estDef.protegido && this.miraNoOutro(g)){
+      this.ev('erro', `${nomeVisivel(defensor)} se protegeu!`);
+      estAtk.cortes = 0;
+      return;
+    }
 
     if (!this.acertou(nome, estAtk, estDef)){
       this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
+      estAtk.cortes = 0;
       return;
     }
 
@@ -336,20 +435,52 @@ const Batalha = {
       /* Splash e companhia não têm efeito nenhum — e é canônico que não
          tenham. O que não pode é o turno passar em branco, sem uma linha. */
       if (!g.ef){ this.ev('info', 'Mas nada aconteceu.'); return; }
+      /* o boneco segura o que é jogado em cima de quem está atrás dele */
+      if (estDef.substituto > 0 && this.miraNoOutro(g) && ef.acao !== 'soprar'){
+        this.ev('erro', `O boneco segurou. Não teve efeito em ${nomeVisivel(defensor)}.`);
+        return;
+      }
       this.efeitoStatus(atacante, defensor, estAtk, estDef, g, nome);
       return;
     }
 
-    if (g.ef && g.ef.soDormindo && defensor.status !== 'sono'){
+    if (ef.soDormindo && defensor.status !== 'sono'){
       this.ev('erro', `${nome} só funciona em alvos dormindo. Nada acontece.`);
       return;
     }
 
-    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome);
+    /* poder que muda: Fury Cutter dobra a cada acerto seguido (até 160);
+       Return e Frustration saem da amizade */
+    let poder = null;
+    if (ef.corte){
+      estAtk.cortes = Math.min(4, (estAtk.cortes || 0));
+      poder = g.p * Math.pow(2, estAtk.cortes);
+      estAtk.cortes++;
+    }
+    if (ef.amizade){
+      const amizade = Math.round(Math.max(0, Math.min(100, atacante.moral == null ? 70 : atacante.moral)) * 2.55);
+      poder = Math.max(1, Math.floor((ef.amizade === 'retorno' ? amizade : 255 - amizade) / 2.5));
+    }
+
+    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome, poder);
     r.msgs.forEach(m => this.ev('info', m));
     if (r.efic === 0) return;
 
-    if (this.aguentou(defensor, r.dano)){
+    /* o boneco apanha no lugar */
+    if (estDef.substituto > 0){
+      estDef.substituto = Math.max(0, estDef.substituto - r.dano);
+      this.ev('info', estDef.substituto > 0
+        ? `O boneco de ${nomeVisivel(defensor)} segurou o golpe.`
+        : `O boneco de ${nomeVisivel(defensor)} se desfez.`);
+      if (ef.recarga) estAtk.recarregando = true;
+      return;
+    }
+
+    if (estDef.aguentando && r.dano >= defensor.hp){
+      defensor.hp = 1;
+      this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
+      this.ev('cura', `${nomeVisivel(defensor)} aguentou firme! Fica de pé com 1 de HP.`);
+    } else if (this.aguentou(defensor, r.dano)){
       defensor.hp = 1;
       this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano.`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
       this.ev('cura', `A Faixa Firme segurou. ${nomeVisivel(defensor)} fica de pé com 1 de HP.`);
@@ -358,40 +489,94 @@ const Batalha = {
       this.ev('dano', `${nomeVisivel(defensor)} sofreu ${r.dano} de dano. (${defensor.hp}/${defensor.hpMax})`, {alvo:souAliado?'inimigo':'aliado', dano:r.dano});
     }
 
-    if (g.ef && g.ef.drena){
-      const cura = Math.max(1, Math.round(r.dano * g.ef.drena));
+    if (ef.drena){
+      const cura = Math.max(1, Math.round(r.dano * ef.drena));
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + cura);
       this.ev('cura', `${nomeVisivel(atacante)} drenou ${cura} de HP.`);
     }
-    if (g.ef && g.ef.recuo){
-      const rec = Math.max(1, Math.round(r.dano * g.ef.recuo));
+    if (ef.recuo){
+      const rec = Math.max(1, Math.round(r.dano * ef.recuo));
       atacante.hp = Math.max(0, atacante.hp - rec);
       this.ev('dano', `${nomeVisivel(atacante)} sofreu ${rec} de recuo.`);
     }
-    if (g.ef && g.ef.recarga) estAtk.recarregando = true;
-    if (g.ef && g.ef.confundeSe && Dados.chance(50)){
+    if (ef.recarga) estAtk.recarregando = true;
+    if (ef.confundeSe && Dados.chance(50)){
       estAtk.confuso = Dados.entre(2,4);
       this.ev('status', `${nomeVisivel(atacante)} ficou confuso pela própria fúria!`);
     }
-    if (g.ef && g.ef.tipo && g.ef.chance && defensor.hp > 0 && Dados.chance(g.ef.chance)){
-      if (g.ef.tipo === 'confusao'){
-        estDef.confuso = Dados.entre(2,4);
-        this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
-      } else if (g.ef.tipo === 'recuo'){
+    /* Wrap, Bind, Clamp, Fire Spin: prende de 2 a 5 turnos (2ª geração) */
+    if (ef.preso && defensor.hp > 0 && !estDef.presoTurnos){
+      estDef.presoTurnos = Dados.entre(2, 5);
+      estDef.presoPor = nome;
+      this.ev('status', `${nomeVisivel(defensor)} ficou preso por ${nome}!`);
+    }
+    if (ef.tipo && ef.chance && defensor.hp > 0 && Dados.chance(ef.chance)){
+      if (ef.tipo === 'recuo'){
         estDef.recuou = true;
         this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
-      } else if (this.aplicarStatus(defensor, g.ef.tipo, g.ef.grave)){
-        this.ev('status', `${nomeVisivel(defensor)} está com ${g.ef.tipo}!`);
+      } else if (ef.tipo === 'confusao'){
+        this.confundir(defensor, estDef);
+      } else if (!this.salvaguarda(defensor) && this.aplicarStatus(defensor, ef.tipo, ef.grave)){
+        this.ev('status', `${nomeVisivel(defensor)} está com ${ef.tipo}!`);
       }
     }
-    if (g.ef && g.ef.baixa && defensor.hp > 0){
-      estDef[g.ef.baixa] = Math.max(-6, (estDef[g.ef.baixa]||0) - 1);
-      this.ev('status', `${g.ef.baixa.toUpperCase()} de ${nomeVisivel(defensor)} caiu!`);
+    /* efeito de atributo de golpe de dano: só na chance dos jogos */
+    if (ef.baixa && defensor.hp > 0 && Dados.chance(ef.chance || 100))
+      this.mudarEstagio(defensor, estDef, ef.baixa, -1, true);
+    if (ef.sobe && atacante.hp > 0 && Dados.chance(ef.chance || 100))
+      this.mudarEstagio(atacante, estAtk, ef.sobe, +1, false);
+  },
+
+  /* O golpe é jogado em cima do outro? (Protect e o boneco só param esses) */
+  miraNoOutro(g){
+    if (g.c !== 'status') return true;
+    const e = g.ef || {};
+    if (e.baixa || e.tipo) return true;
+    return ['semente', 'desabilitar', 'fanfarra', 'atracao', 'pesadelo', 'transformar', 'identificar', 'soprar'].includes(e.acao)
+;
+  },
+
+  /* muda um estágio, com o texto dos jogos; a Névoa segura queda que vem
+     do outro lado */
+  mudarEstagio(p, est, chave, delta, doOutro){
+    if (delta < 0 && doOutro && this.lados && this.lados[this.ladoDe(p)].nevoa > 0){
+      this.ev('erro', `A névoa protege ${nomeVisivel(p)}.`);
+      return false;
     }
+    const antes = est[chave] || 0;
+    const depois = Math.max(-6, Math.min(6, antes + delta));
+    const nomeStat = NOME_ESTAGIO[chave] || chave;
+    if (depois === antes){
+      this.ev('erro', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} não ${delta > 0 ? 'sobe' : 'desce'} mais.`);
+      return false;
+    }
+    est[chave] = depois;
+    const forte = Math.abs(delta) >= 2;
+    const verbo = delta > 0 ? (forte ? 'subiu muito' : 'subiu') : (forte ? 'caiu muito' : 'caiu');
+    this.ev('status', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} ${verbo}!`);
+    return true;
+  },
+
+  confundir(p, est){
+    if (this.salvaguarda(p)) return false;
+    if (est.confuso > 0){ this.ev('erro', `${nomeVisivel(p)} já está confuso.`); return false; }
+    est.confuso = Dados.entre(2, 5);
+    this.ev('status', `${nomeVisivel(p)} ficou confuso!`);
+    return true;
+  },
+
+  ladoDe(p){ return p === this.aliado ? 'aliado' : 'inimigo'; },
+  salvaguarda(p){
+    if (this.lados && this.lados[this.ladoDe(p)].salva > 0){
+      this.ev('erro', `O Safeguard protege ${nomeVisivel(p)}.`);
+      return true;
+    }
+    return false;
   },
 
   efeitoStatus(atacante, defensor, estAtk, estDef, g, nome){
     const e = g.ef || {};
+    if (e.acao) return this.acaoEspecial(e.acao, atacante, defensor, estAtk, estDef, nome);
     if (e.clima){
       if (this.clima && this.clima.tipo === e.clima){ this.ev('erro', 'Mas nada aconteceu.'); return; }
       this.clima = {tipo:e.clima, turnos:5};
@@ -399,35 +584,213 @@ const Batalha = {
       return;
     }
     if (e.cura){
+      if (atacante.hp >= atacante.hpMax){ this.ev('erro', `O HP de ${nomeVisivel(atacante)} já está cheio.`); return; }
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
       if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }
       this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
       return;
     }
-    if (e.sobe){
-      const q = e.forte ? 2 : 1;
-      estAtk[e.sobe] = Math.min(6, (estAtk[e.sobe]||0) + q);
-      this.ev('status', `${e.sobe.toUpperCase()} de ${nomeVisivel(atacante)} ${e.forte?'subiu MUITO':'subiu'}!`);
-      return;
-    }
-    if (e.baixa){
-      const q = e.forte ? 2 : 1;
-      estDef[e.baixa] = Math.max(-6, (estDef[e.baixa]||0) - q);
-      this.ev('status', `${e.baixa.toUpperCase()} de ${nomeVisivel(defensor)} ${e.forte?'despencou':'caiu'}!`);
-      return;
-    }
-    if (e.tipo === 'confusao'){
-      estDef.confuso = Dados.entre(2,4);
-      this.ev('status', `${nomeVisivel(defensor)} ficou confuso!`);
-      return;
-    }
+    if (e.sobe){ this.mudarEstagio(atacante, estAtk, e.sobe, e.forte ? 2 : 1, false); return; }
+    if (e.baixa){ this.mudarEstagio(defensor, estDef, e.baixa, e.forte ? -2 : -1, true); return; }
+    if (e.tipo === 'confusao'){ this.confundir(defensor, estDef); return; }
     if (e.tipo){
+      if (this.salvaguarda(defensor)) return;
       if (this.aplicarStatus(defensor, e.tipo, e.grave))
         this.ev('status', `${nomeVisivel(defensor)} está com ${e.tipo}${e.grave?' GRAVE':''}!`);
       else
         this.ev('erro', `Não teve efeito em ${nomeVisivel(defensor)}.`);
     }
+  },
+
+  /* ---------- golpes que não mexem em número: mexem na luta ---------- */
+  acaoEspecial(acao, atk, def, estAtk, estDef, nome){
+    const eu = nomeVisivel(atk), ele = nomeVisivel(def);
+    const meuLado = this.lados[this.ladoDe(atk)];
+    const falhou = () => { this.ev('erro', 'Mas não funcionou.'); };
+    const selvagem = this.tipo === 'selvagem' || this.tipo === 'lendario';
+    switch (acao){
+
+      case 'foco':
+        if (estAtk.focado) return falhou();
+        estAtk.focado = true;
+        return this.ev('status', `${eu} está concentrado. Acerto crítico fica mais fácil.`);
+
+      case 'substituto': {
+        const custo = Math.floor(atk.hpMax / 4);
+        if (estAtk.substituto > 0){ return this.ev('erro', `${eu} já tem um boneco na frente.`); }
+        if (atk.hp <= custo){ return this.ev('erro', `${eu} não tem HP pra fazer o boneco.`); }
+        atk.hp -= custo;
+        estAtk.substituto = custo + 1;
+        return this.ev('status', `${eu} gastou ${custo} de HP e pôs um boneco na frente.`);
+      }
+
+      case 'conversao': {
+        const tipos = [...new Set(atk.golpes.map(x => (GOLPES[x.nome] || {}).t).filter(t => t && !atk.tipos.includes(t)))];
+        if (!tipos.length) return falhou();
+        if (!estAtk.origTipos) estAtk.origTipos = atk.tipos.slice();
+        const t = Dados.escolher(tipos);
+        atk.tipos = [t];
+        return this.ev('status', `${eu} virou do tipo ${t}!`);
+      }
+
+      case 'reflexo': case 'tela': case 'nevoa': case 'salvaguarda': {
+        const chave = {reflexo:'reflexo', tela:'tela', nevoa:'nevoa', salvaguarda:'salva'}[acao];
+        if (meuLado[chave] > 0) return falhou();
+        meuLado[chave] = 5;
+        const txt = {
+          reflexo:'Uma parede de luz levanta: golpe físico passa pela metade.',
+          tela:'Uma tela de luz levanta: golpe especial passa pela metade.',
+          nevoa:'Uma névoa branca cobre o seu lado: ninguém baixa atributo de quem está nela.',
+          salvaguarda:'Um véu cobre o seu lado: nenhuma condição pega em quem está nele.'
+        }[acao];
+        return this.ev('status', txt.replace('o seu lado', this.ladoDe(atk) === 'aliado' ? 'o seu lado' : 'o lado de lá'));
+      }
+
+      case 'haze':
+        for (const est of [this.estAliado, this.estInimigo])
+          for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) est[k] = 0;
+        return this.ev('status', 'Uma névoa escura desfaz todas as mudanças de atributo dos dois lados.');
+
+      case 'soprar': {
+        if (def.nivel > atk.nivel && Dados.chance(50)) return falhou();
+        if (selvagem){
+          this.ev('fuga', this.ladoDe(atk) === 'aliado'
+            ? `${ele} é soprado pra longe. A batalha acabou.`
+            : `${eu} te soprou pra fora da briga. A batalha acabou.`);
+          return this.encerrar('fuga');
+        }
+        return this.trocaForcada(def);
+      }
+
+      case 'teleporte':
+        if (!selvagem) return falhou();
+        this.ev('fuga', this.ladoDe(atk) === 'aliado'
+          ? `${eu} te leva junto num piscar. Vocês saíram da briga.`
+          : `${eu} some num piscar. A batalha acabou.`);
+        return this.encerrar('fuga');
+
+      case 'desabilitar': {
+        const alvo = estDef.ultimoGolpe;
+        if (!alvo || estDef.desabilitado || !def.golpes.some(x => x.nome === alvo)) return falhou();
+        estDef.desabilitado = {nome:alvo, turnos:Dados.entre(2, 7)};
+        return this.ev('status', `${alvo} de ${ele} foi desabilitado!`);
+      }
+
+      case 'transformar':
+        if (estAtk.transformado || estDef.transformado) return falhou();
+        this.transformar(atk, def, estAtk, estDef);
+        return this.ev('status', `${eu} virou uma cópia de ${ele}!`, {transformou:true});
+
+      case 'espelho': {
+        const alvo = estDef.ultimoGolpe;
+        if (!alvo || alvo === 'Mirror Move' || !GOLPES[alvo]) return falhou();
+        return this.usarGolpe(atk, def, estAtk, estDef, -1, atk === this.aliado, alvo);
+      }
+
+      case 'semente':
+        if (def.tipos.includes('Grama') || estDef.semente) return this.ev('erro', `Não teve efeito em ${ele}.`);
+        estDef.semente = true;
+        return this.ev('status', `${ele} foi semeado! Vai perder HP todo turno pra quem plantou.`);
+
+      case 'identificar':
+        estDef.identificado = true;
+        estDef.evasao = Math.min(0, estDef.evasao || 0);
+        return this.ev('status', `${eu} identificou ${ele}. Esquiva e imunidade de Fantasma não valem mais.`);
+
+      case 'fanfarra':
+        this.mudarEstagio(def, estDef, 'atk', +2, false);
+        this.confundir(def, estDef);
+        return;
+
+      case 'proteger': case 'aguentar': {
+        const chance = 100 / Math.pow(2, estAtk.seguidas || 0);
+        if (!Dados.chance(chance)){ estAtk.seguidas = 0; return falhou(); }
+        estAtk.seguidas = (estAtk.seguidas || 0) + 1;
+        if (acao === 'proteger'){ estAtk.protegido = true; return this.ev('status', `${eu} se fechou numa defesa.`); }
+        estAtk.aguentando = true;
+        return this.ev('status', `${eu} firmou os pés pra aguentar.`);
+      }
+
+      case 'maldicao':
+        if (atk.tipos.includes('Fantasma')){
+          if (estDef.maldito) return falhou();
+          const custo = Math.floor(atk.hpMax / 2);
+          atk.hp = Math.max(0, atk.hp - custo);
+          estDef.maldito = true;
+          return this.ev('dano', `${eu} cortou metade do próprio HP e amaldiçoou ${ele}!`);
+        }
+        this.mudarEstagio(atk, estAtk, 'spe', -1, false);
+        this.mudarEstagio(atk, estAtk, 'atk', +1, false);
+        this.mudarEstagio(atk, estAtk, 'def', +1, false);
+        return;
+
+      case 'atracao': {
+        const a = generoDe(atk), b = generoDe(def);
+        if (!a || !b || a === b || estDef.apaixonado) return falhou();
+        estDef.apaixonado = true;
+        return this.ev('status', `${ele} se apaixonou por ${eu}!`);
+      }
+
+      case 'pesadelo':
+        if (def.status !== 'sono' || estDef.pesadelo) return falhou();
+        estDef.pesadelo = true;
+        return this.ev('status', `${ele} começou a ter um pesadelo!`);
+
+      case 'copiar':
+        for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) estAtk[k] = estDef[k] || 0;
+        return this.ev('status', `${eu} copiou as mudanças de atributo de ${ele}.`);
+
+      case 'sonambulo': {
+        const opcoes = atk.golpes.map(x => x.nome).filter(n => n !== 'Sleep Talk' && GOLPES[n] && !(GOLPES[n].ef || {}).carga);
+        if (!opcoes.length) return falhou();
+        return this.usarGolpe(atk, def, estAtk, estDef, -1, atk === this.aliado, Dados.escolher(opcoes));
+      }
+    }
+  },
+
+  /* Transform: vira a cópia do outro — tipos, atributos (menos HP),
+     golpes com 5 PP e estágios. Desfaz quando sai da luta. */
+  transformar(atk, def, estAtk, estDef){
+    estAtk.transformado = {tipos:atk.tipos.slice(), stats:Object.assign({}, atk.stats), golpes:atk.golpes};
+    atk.tipos = def.tipos.slice();
+    atk.stats = Object.assign({}, def.stats, {hp:atk.stats.hp});
+    atk.golpes = def.golpes.map(x => ({nome:x.nome, pp:5, ppMax:5}));
+    atk.transformadoEm = def.dex;
+    for (const k of ['atk','def','spa','spd','spe','precisao','evasao']) estAtk[k] = estDef[k] || 0;
+  },
+  desfazerMudancas(p, est){
+    if (!p || !est) return;
+    if (est.transformado){
+      p.tipos = est.transformado.tipos; p.stats = est.transformado.stats; p.golpes = est.transformado.golpes;
+      delete p.transformadoEm;
+      est.transformado = null;
+    }
+    if (est.origTipos){ p.tipos = est.origTipos; est.origTipos = null; }
+  },
+
+  /* Roar e Whirlwind em batalha de treinador: o outro volta pra bola e
+     entra um qualquer do time. Sem ninguém pra entrar, não funciona. */
+  trocaForcada(def){
+    if (def === this.aliado){
+      const outros = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== def.uid);
+      if (!outros.length) return this.ev('erro', 'Mas não funcionou.');
+      const novo = Dados.escolher(outros);
+      this.desfazerMudancas(def, this.estAliado);
+      this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${nomeVisivel(novo)} entra no lugar!`);
+      this.aliado = novo;
+      this.estAliado = this.novoEstado();
+      if (this.participantes) this.participantes.add(novo.uid);
+      return;
+    }
+    if (!this.timeInimigo || !this.timeInimigo.length) return this.ev('erro', 'Mas não funcionou.');
+    const i = Dados.entre(0, this.timeInimigo.length - 1);
+    const novo = this.timeInimigo.splice(i, 1, def)[0];
+    this.desfazerMudancas(def, this.estInimigo);
+    this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${this.treinador || 'O treinador'} manda ${nomeVisivel(novo)}!`);
+    this.inimigo = novo;
+    this.estInimigo = this.novoEstado();
+    this.participantes = new Set([this.aliado.uid]);
   },
 
   /* ---------- fim de turno ---------- */
@@ -444,6 +807,33 @@ const Batalha = {
       p.hp = Math.max(0, p.hp - d);
       this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`, {causa:'queimadura'});
     }
+    /* o que os golpes deixaram grudado, na ordem dos jogos */
+    if (est){
+      const outro = p === this.aliado ? this.inimigo : this.aliado;
+      const tira = (frac, texto, causa) => {
+        if (p.hp <= 0) return 0;
+        const d = Math.max(1, Math.floor(p.hpMax / frac));
+        p.hp = Math.max(0, p.hp - d);
+        this.ev('dano', `${texto(d)} (${p.hp}/${p.hpMax})`, {causa});
+        return d;
+      };
+      if (est.semente && outro && outro.hp > 0){
+        const d = Math.min(p.hp, Math.max(1, Math.floor(p.hpMax / 8)));
+        p.hp = Math.max(0, p.hp - d);
+        outro.hp = Math.min(outro.hpMax, outro.hp + d);
+        this.ev('dano', `A semente suga ${d} de ${nomeVisivel(p)} pra ${nomeVisivel(outro)}. (${p.hp}/${p.hpMax})`, {causa:'semente'});
+      }
+      if (est.pesadelo && p.status === 'sono') tira(4, d => `${nomeVisivel(p)} se debate no pesadelo e perde ${d}.`, 'pesadelo');
+      if (est.maldito) tira(4, d => `A maldição corrói ${nomeVisivel(p)}: ${d} de dano.`, 'maldicao');
+      if (est.presoTurnos > 0 && p.hp > 0){
+        tira(16, d => `${nomeVisivel(p)} sofre ${d} de ${est.presoPor}.`, 'preso');
+        if (--est.presoTurnos <= 0){ this.ev('status', `${nomeVisivel(p)} se soltou de ${est.presoPor}.`); est.presoPor = null; }
+      }
+      if (est.desabilitado && --est.desabilitado.turnos <= 0){
+        this.ev('status', `${est.desabilitado.nome} de ${nomeVisivel(p)} voltou a funcionar.`);
+        est.desabilitado = null;
+      }
+    }
     /* item segurado: regeneração lenta */
     const seg = efeitoSegurado(p);
     if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
@@ -456,7 +846,21 @@ const Batalha = {
 
   /* Fim de turno do clima: a areia fere quem não é Pedra, Terrestre ou
      Metálico (1/8 do HP), e o clima acaba sozinho no quinto turno. */
+  /* Reflect, Light Screen, Mist e Safeguard contam os cinco turnos */
+  passarLados(){
+    const NOME = {reflexo:'Reflect', tela:'Light Screen', nevoa:'Mist', salva:'Safeguard'};
+    for (const lado of ['aliado', 'inimigo']){
+      const L = this.lados && this.lados[lado];
+      if (!L) continue;
+      for (const k of Object.keys(NOME)){
+        if (L[k] > 0 && --L[k] === 0)
+          this.ev('status', `${NOME[k]} ${lado === 'aliado' ? 'do seu lado' : 'do lado de lá'} acabou.`);
+      }
+    }
+  },
+
   passarClima(){
+    this.passarLados();
     if (!this.clima) return;
     if (this.clima.tipo === 'areia'){
       for (const p of [this.aliado, this.inimigo]){
@@ -486,11 +890,30 @@ const Batalha = {
 
   /* ---------- IA ---------- */
   iaEscolher(p, alvo, estP, estAlvo){
-    const disponiveis = p.golpes.map((g,i) => ({i, g})).filter(x => x.g.pp > 0);
+    const disponiveis = p.golpes.map((g,i) => ({i, g}))
+      .filter(x => x.g.pp > 0 && !(estP.desabilitado && estP.desabilitado.nome === x.g.nome));
     if (!disponiveis.length) return 0;
     const nat = NATUREZAS[p.natureza] || {};
     const pontuar = (x) => {
       const G = GOLPES[x.g.nome];
+      const E = G.ef || {};
+      /* o que não vai funcionar agora não se escolhe */
+      if (E.soSeDormindo && p.status !== 'sono') return 0;
+      if (p.status === 'sono' && (x.g.nome === 'Sleep Talk' || x.g.nome === 'Snore')) return 90;
+      if (E.soDormindo && alvo.status !== 'sono') return 0;
+      if (E.acao === 'pesadelo' && (alvo.status !== 'sono' || estAlvo.pesadelo)) return 0;
+      if (E.acao === 'semente' && (estAlvo.semente || alvo.tipos.includes('Grama'))) return 0;
+      if (E.acao === 'substituto' && (estP.substituto > 0 || p.hp <= p.hpMax / 4)) return 0;
+      if (E.acao === 'foco' && estP.focado) return 0;
+      if (E.acao === 'desabilitar' && (estAlvo.desabilitado || !estAlvo.ultimoGolpe)) return 0;
+      if (E.acao === 'atracao' && (estAlvo.apaixonado || !generoDe(p) || generoDe(p) === generoDe(alvo))) return 0;
+      if (['reflexo','tela','nevoa','salvaguarda'].includes(E.acao)){
+        const L = this.lados[p === this.aliado ? 'aliado' : 'inimigo'];
+        if (L[{reflexo:'reflexo', tela:'tela', nevoa:'nevoa', salvaguarda:'salva'}[E.acao]] > 0) return 0;
+      }
+      if ((E.acao === 'proteger' || E.acao === 'aguentar') && estP.seguidas > 0) return 3;
+      if (E.acao === 'transformar' && estP.transformado) return 0;
+      if (E.tipo === 'confusao' && G.c === 'status' && estAlvo.confuso > 0) return 0;
       if (G.c === 'status'){
         /* clima que já está valendo não se chama de novo */
         if (G.ef && G.ef.clima) return (this.clima && this.clima.tipo === G.ef.clima) ? 0 : 40;
@@ -518,6 +941,8 @@ const Batalha = {
     this.eventos = [];
     if (!this.ativo) return {eventos:[], fim:this.fim};
     this.turno++;
+    /* Protect e Endure valem só pro turno em que foram usados */
+    for (const est of [this.estAliado, this.estInimigo]){ est.protegido = false; est.aguentando = false; }
 
     if (this.fase === 'ameaca') return this.acaoAmeaca(acao);
 
@@ -534,7 +959,14 @@ const Batalha = {
       return this.tentarCaptura(acao.nome);
     }
     if (acao.tipo === 'item')   { this.usarItemEmCombate(acao.nome, acao.alvoUid); return this.turnoInimigoSozinho(); }
-    if (acao.tipo === 'trocar') { this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho(); }
+    if (acao.tipo === 'trocar'){
+      if (this.estAliado.presoTurnos > 0 && estaVivo(this.aliado)){
+        this.eventos = []; this.turno--;
+        this.ev('erro', `${nomeVisivel(this.aliado)} está preso por ${this.estAliado.presoPor} e não consegue voltar.`);
+        return {eventos:this.eventos, fim:null};
+      }
+      this.trocarPokemon(acao.uid); return this.turnoInimigoSozinho();
+    }
 
     // ordem por velocidade (prioridade primeiro)
     const gJog = GOLPES[this.aliado.golpes[acao.indice]?.nome || 'Tackle'];
@@ -552,20 +984,22 @@ const Batalha = {
     this.ev('turno', `— Turno ${this.turno} — (Vel ${vJ} vs ${vI})`);
 
     const agirJogador = () => {
-      if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
+      if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
       if (this.estAliado.recuou){ this.estAliado.recuou = false; this.ev('status', `${nomeVisivel(this.aliado)} está encolhido e não ataca.`); return; }
-      if (!this.podeAgir(this.aliado, this.estAliado, true)) return;
+      if (!this.podeAgir(this.aliado, this.estAliado, true, (this.aliado.golpes[acao.indice] || {}).nome)) return;
       this.usarGolpe(this.aliado, this.inimigo, this.estAliado, this.estInimigo, acao.indice, true);
     };
     const agirInimigo = () => {
-      if (this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
+      if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
       if (this.estInimigo.recuou){ this.estInimigo.recuou = false; this.ev('status', `${nomeVisivel(this.inimigo)} está encolhido e não ataca.`); return; }
-      if (!this.podeAgir(this.inimigo, this.estInimigo, false)) return;
+      if (!this.podeAgir(this.inimigo, this.estInimigo, false, (this.inimigo.golpes[iIA] || {}).nome)) return;
       this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, iIA, false);
     };
 
     if (jogadorPrimeiro){ agirJogador(); agirInimigo(); }
     else { agirInimigo(); agirJogador(); }
+    /* Roar, Whirlwind e Teleport podem acabar a luta no meio do turno */
+    if (!this.ativo) return {eventos:this.eventos, fim:this.fim};
 
     if (this.aliado.hp > 0 && this.inimigo.hp > 0){
       this.fimDeTurno(this.aliado, this.estAliado, 'aliado');
@@ -602,10 +1036,11 @@ const Batalha = {
 
   turnoInimigoSozinho(){
     if (this.inimigo.hp > 0 && this.aliado.hp > 0){
-      if (this.podeAgir(this.inimigo, this.estInimigo, false)){
-        const i = this.iaEscolher(this.inimigo, this.aliado, this.estInimigo, this.estAliado);
+      const i = this.iaEscolher(this.inimigo, this.aliado, this.estInimigo, this.estAliado);
+      if (this.podeAgir(this.inimigo, this.estInimigo, false, (this.inimigo.golpes[i] || {}).nome)){
         this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, i, false);
       }
+      if (!this.ativo) return {eventos:this.eventos, fim:this.fim};
       this.fimDeTurno(this.aliado, this.estAliado);
       this.fimDeTurno(this.inimigo, this.estInimigo);
       this.passarClima();
@@ -673,6 +1108,7 @@ const Batalha = {
     const novo = Estado.dados.time.find(p => p.uid === uid);
     if (!novo || !estaVivo(novo)){ this.ev('erro', 'Esse Pokémon não pode lutar.'); return; }
     this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
+    this.desfazerMudancas(this.aliado, this.estAliado);
     this.aliado = novo;
     this.estAliado = this.novoEstado();
     if (this.participantes) this.participantes.add(novo.uid);
@@ -681,6 +1117,10 @@ const Batalha = {
   /* ---------- fuga ---------- */
   tentarFugir(){
     if (!this.fuga){ this.ev('erro', 'Não dá para fugir daqui.'); return this.turnoInimigoSozinho(); }
+    if (this.estAliado.presoTurnos > 0){
+      this.ev('erro', `${nomeVisivel(this.aliado)} está preso por ${this.estAliado.presoPor}. Não dá pra fugir.`);
+      return this.turnoInimigoSozinho();
+    }
     const alvo = this.inimigo.stats.spe - this.aliado.stats.spe + 10;
     const d = Dados.d20('Fuga');
     this.ev('info', `Fuga: 1d20 = ${d} — precisa ≥ ${alvo}`);
@@ -742,6 +1182,7 @@ const Batalha = {
         if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
         this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
           prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
+        this.desfazerMudancas(this.inimigo, this.estInimigo);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
         this.participantes = new Set([this.aliado.uid]);
@@ -811,6 +1252,7 @@ const Batalha = {
       const revivido = Estado.dados.time.find(p => estaVivo(p));
       if (revivido){
         this.ev('info', `${nomeVisivel(revivido)} se põe de pé entre você e ${nomeVisivel(this.inimigo)}.`);
+        this.desfazerMudancas(this.aliado, this.estAliado);
         this.aliado = revivido;
         this.estAliado = this.novoEstado();
         this.fase = 'normal';
@@ -852,6 +1294,9 @@ const Batalha = {
   encerrar(resultado, extra){
     this.ativo = false;
     this.fase = 'normal';
+    /* Transform e Conversion não saem da luta com o Pokémon */
+    this.desfazerMudancas(this.aliado, this.estAliado);
+    this.desfazerMudancas(this.inimigo, this.estInimigo);
     /* efeitos de item segurado que só valem no fim */
     if (resultado === 'vitoria' && Estado.dados){
       (Estado.dados.time || []).forEach(p => {
