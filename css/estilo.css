@@ -1486,8 +1486,8 @@ h3.cat-item{
 }
 .lutador.aliado .arte:not(:empty)::after{width:112px;height:26px;bottom:-9px}
 .lutador.inimigo .arte:not(:empty)::after{width:86px;height:19px;bottom:-4px}
-.lutador .arte .sprite{position:relative;z-index:1}
 .lutador .arte .sprite{
+  position:relative;z-index:1;        /* por cima da base, que é o ::after */
   width:88px;height:88px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
 }
@@ -1669,8 +1669,9 @@ h3.cat-item{
 .dado.d10{clip-path:polygon(50% 0,100% 38%,50% 100%,0 38%)}
 .dado.d6 {border-radius:11px}
 .dado.d4 {clip-path:polygon(50% 4%,98% 96%,2% 96%)}
-.dado.d4 .face{transform:translateY(7px);font-size:16px}
-.dado.d4 .rot{bottom:1px;font-size:7.5px}
+/* o miolo do d4 (.face e .rot) é acertado lá embaixo, no bloco de
+   ajustes finos: escrever aqui também só criaria regra morta, porque
+   a de baixo ganha e a de cima nunca chega a valer */
 
 /* girando */
 .dado.girando{animation:tumbar .28s linear infinite;border-color:var(--destaque)}

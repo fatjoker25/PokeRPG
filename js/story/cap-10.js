@@ -275,7 +275,7 @@ c10_ab_a_via:{
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('o segundo homem', 'Porque quarenta megawatt-hora é energia de bairro. E não tem bairro lá dentro.')
   ],
-  ef:{flag:'tem_a_via_rosa', itens:{'Poção':1},
+  ef:{flag:'tem_a_via_rosa', itens:{'Potion':1},
       registrar:'Tem a via rosa do chamado da companhia energética, com o consumo da unidade 4.'},
   escolhas:[
     {texto:'Pedir pra eles abrirem o portão.', vai:'c10_portao'},

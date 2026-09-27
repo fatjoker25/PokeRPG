@@ -125,7 +125,7 @@ c13_ab_comprou_agasalho:{
     'Ela fala isso e olha pra fila atrás de você, que tem catorze pessoas comprando exatamente a mesma coisa.',
     fala('a balconista', 'Eu tô falando isso pra todo mundo desde as sete da manhã.', 'baixo')
   ],
-  ef:{dinheiro:-300, itens:{'Poção':1}, flag:'comprou_o_que_tinha',
+  ef:{dinheiro:-300, itens:{'Potion':1}, flag:'comprou_o_que_tinha',
       registrar:'Comprou meia, pomada e luva de borracha. A balconista avisou que não serve pro gelo.'},
   escolhas:[
     {texto:'Ir pro cais.', vai:'c13_cais'},

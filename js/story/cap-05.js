@@ -128,7 +128,7 @@ c5_ab_comprou:{
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('a senhora da barraca', 'Porque pilha acaba e vela avisa antes de acabar.')
   ],
-  ef:{dinheiro:-520, itens:{'Poção':1}, flag:'tem_a_vela_da_barraca',
+  ef:{dinheiro:-520, itens:{'Potion':1}, flag:'tem_a_vela_da_barraca',
       registrar:'Comprou pilhas na barraca da estrada e ganhou um toco de vela.'},
   escolhas:[
     {texto:'Seguir pra boca da caverna.', vai:'c5_boca'}

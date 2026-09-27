@@ -263,7 +263,7 @@ const CONTATOS = [
       fala('Brock', 'Eu quero ver um que você tenha levantado do chão. Do começo.', 'baixo'),
       fala('Brock', 'Me liga quando tiver. Eu sei diferenciar, então não tenta me enrolar.')
     ],
-    objetivo:d=>(d.time||[]).some(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terra') && p.nivel >= 25),
+    objetivo:d=>(d.time||[]).some(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terrestre') && p.nivel >= 25),
     entregue:[
       fala('Brock', 'Fala o nome e o nível.'),
       'Você fala. Do outro lado dá pra ouvir ele largando alguma coisa pesada em cima de uma bancada.',

@@ -1495,8 +1495,8 @@ h3.cat-item{
 }
 .lutador.aliado .arte:not(:empty)::after{width:112px;height:26px;bottom:-9px}
 .lutador.inimigo .arte:not(:empty)::after{width:86px;height:19px;bottom:-4px}
-.lutador .arte .sprite{position:relative;z-index:1}
 .lutador .arte .sprite{
+  position:relative;z-index:1;        /* por cima da base, que é o ::after */
   width:88px;height:88px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
 }
@@ -1678,8 +1678,9 @@ h3.cat-item{
 .dado.d10{clip-path:polygon(50% 0,100% 38%,50% 100%,0 38%)}
 .dado.d6 {border-radius:11px}
 .dado.d4 {clip-path:polygon(50% 4%,98% 96%,2% 96%)}
-.dado.d4 .face{transform:translateY(7px);font-size:16px}
-.dado.d4 .rot{bottom:1px;font-size:7.5px}
+/* o miolo do d4 (.face e .rot) é acertado lá embaixo, no bloco de
+   ajustes finos: escrever aqui também só criaria regra morta, porque
+   a de baixo ganha e a de cima nunca chega a valer */
 
 /* girando */
 .dado.girando{animation:tumbar .28s linear infinite;border-color:var(--destaque)}
@@ -9186,7 +9187,7 @@ const CONTATOS = [
       fala('Brock', 'Eu quero ver um que você tenha levantado do chão. Do começo.', 'baixo'),
       fala('Brock', 'Me liga quando tiver. Eu sei diferenciar, então não tenta me enrolar.')
     ],
-    objetivo:d=>(d.time||[]).some(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terra') && p.nivel >= 25),
+    objetivo:d=>(d.time||[]).some(p => !p.morto && (p.tipos||[]).some(t => t==='Pedra' || t==='Terrestre') && p.nivel >= 25),
     entregue:[
       fala('Brock', 'Fala o nome e o nível.'),
       'Você fala. Do outro lado dá pra ouvir ele largando alguma coisa pesada em cima de uma bancada.',
@@ -19945,7 +19946,7 @@ c5_ab_comprou:{
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('a senhora da barraca', 'Porque pilha acaba e vela avisa antes de acabar.')
   ],
-  ef:{dinheiro:-520, itens:{'Poção':1}, flag:'tem_a_vela_da_barraca',
+  ef:{dinheiro:-520, itens:{'Potion':1}, flag:'tem_a_vela_da_barraca',
       registrar:'Comprou pilhas na barraca da estrada e ganhou um toco de vela.'},
   escolhas:[
     {texto:'Seguir pra boca da caverna.', vai:'c5_boca'}
@@ -35049,7 +35050,7 @@ c10_ab_a_via:{
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('o segundo homem', 'Porque quarenta megawatt-hora é energia de bairro. E não tem bairro lá dentro.')
   ],
-  ef:{flag:'tem_a_via_rosa', itens:{'Poção':1},
+  ef:{flag:'tem_a_via_rosa', itens:{'Potion':1},
       registrar:'Tem a via rosa do chamado da companhia energética, com o consumo da unidade 4.'},
   escolhas:[
     {texto:'Pedir pra eles abrirem o portão.', vai:'c10_portao'},
@@ -43334,7 +43335,7 @@ c13_ab_comprou_agasalho:{
     'Ela fala isso e olha pra fila atrás de você, que tem catorze pessoas comprando exatamente a mesma coisa.',
     fala('a balconista', 'Eu tô falando isso pra todo mundo desde as sete da manhã.', 'baixo')
   ],
-  ef:{dinheiro:-300, itens:{'Poção':1}, flag:'comprou_o_que_tinha',
+  ef:{dinheiro:-300, itens:{'Potion':1}, flag:'comprou_o_que_tinha',
       registrar:'Comprou meia, pomada e luva de borracha. A balconista avisou que não serve pro gelo.'},
   escolhas:[
     {texto:'Ir pro cais.', vai:'c13_cais'},

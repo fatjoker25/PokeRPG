@@ -19,10 +19,21 @@ for (const f of fs.readdirSync(dir).filter(x=>x.endsWith('.js'))){
       for(const c of (j===i?m[1]:linhas[j])){ if(c==='{')prof++; else if(c==='}')prof--; }
       if(prof>0){ j++; buf+='\n'+(linhas[j]||''); }
     }
-    // pega só as chaves de primeiro nível
-    let nivel=0, chave='', esperando=true;
+    /* Pega só as chaves de primeiro nível — e PULA o conteúdo das
+       strings. Sem isso, um `registrar:'Anotou o horário e sentido do
+       caminhão: ...'` faz o varredor ler a prosa de dentro das aspas
+       como se fosse chave, e o validador passa a acusar sete chaves
+       inventadas que não existem. Validador que mente sempre é
+       validador que ninguém lê. */
+    let nivel=0, chave='', esperando=true, aspa=null;
     for(let k=0;k<buf.length;k++){
       const c=buf[k];
+      if(aspa){                              // dentro de string
+        if(c==='\\'){ k++; continue; }        // escape: pula o próximo
+        if(c===aspa) aspa=null;
+        continue;
+      }
+      if(c==="'"||c==='"'||c==='`'){ aspa=c; chave=''; esperando=false; continue; }
       if(c==='{'||c==='['||c==='(') nivel++;
       else if(c==='}'||c===']'||c===')') nivel--;
       else if(nivel===0){

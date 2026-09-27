@@ -19,7 +19,9 @@ const CANON_GIN = {
   fuchsia:  {lider:'Koga',    tipo:'Venenoso', insignia:'Insígnia Alma'},
   saffron:  {lider:'Sabrina', tipo:'Psíquico', insignia:'Insígnia Pântano'},
   cinnabar: {lider:'Blaine',  tipo:'Fogo',     insignia:'Insígnia Vulcão'},
-  viridian: {lider:'Blue',    tipo:'Terra',    insignia:'Insígnia Terra'}
+  /* Com o Blue sentado lá, Viridian não tem tipo único: o time dele é
+     variado. Terra era do Giovanni, que não está mais no cargo. */
+  viridian: {lider:'Blue',    tipo:'variado',  insignia:'Insígnia Terra'}
 };
 for (const g of GINASIOS){
   const c = CANON_GIN[g.id];
@@ -31,11 +33,20 @@ for (const g of GINASIOS){
 ok.push(GINASIOS.length + ' ginásios conferidos contra o cânone');
 
 /* 2. Elite dos Quatro */
+/* A história põe gente nova nas quatro cadeiras, e cada uma carrega no
+   campo `titular` o nome de quem estava antes. O que o cânone manda
+   conferir é a CADEIRA, não quem senta nela hoje: Giselle ocupa a de
+   Lorelei com time variado e Mandi a de Agatha com time venenoso, e
+   isso é o enredo, não desvio. O tipo só vale checar onde o titular
+   ainda está no cargo — se o Lance deixar de ser de Dragão, aí sim é
+   erro. */
 const CANON_E4 = [['Lorelei','Gelo'],['Bruno','Lutador'],['Agatha','Fantasma'],['Lance','Dragão']];
 CANON_E4.forEach(([nome, tipo]) => {
-  const m = (ELITE4||[]).find(e => String(e.nome).includes(nome));
-  if (!m) problemas.push('Elite 4 sem ' + nome);
-  else if (m.tipo && m.tipo !== tipo) problemas.push(`Elite 4 ${nome}: tipo "${m.tipo}" ≠ ${tipo}`);
+  const m = (ELITE4||[]).find(e => String(e.titular || e.nome).includes(nome));
+  if (!m){ problemas.push('Elite 4 sem a cadeira de ' + nome); return; }
+  const mesmaPessoa = String(m.nome).includes(nome);
+  if (mesmaPessoa && m.tipo && m.tipo !== tipo)
+    problemas.push(`Elite 4 ${nome}: tipo "${m.tipo}" ≠ ${tipo}`);
 });
 ok.push((ELITE4||[]).length + ' membros da Elite conferidos');
 
@@ -43,7 +54,8 @@ ok.push((ELITE4||[]).length + ' membros da Elite conferidos');
 const AMOSTRA = {1:['Grama','Venenoso'],4:['Fogo'],7:['Água'],25:['Elétrico'],
   94:['Fantasma','Venenoso'],130:['Água','Voador'],143:['Normal'],149:['Dragão','Voador'],
   6:['Fogo','Voador'],9:['Água'],3:['Grama','Venenoso'],65:['Psíquico'],68:['Lutador'],
-  112:['Terra','Pedra'],131:['Água','Gelo'],142:['Pedra','Voador'],150:['Psíquico'],151:['Psíquico']};
+  /* aqui o tipo se chama Terrestre, não Terra */
+  112:['Terrestre','Pedra'],131:['Água','Gelo'],142:['Pedra','Voador'],150:['Psíquico'],151:['Psíquico']};
 for (const dex in AMOSTRA){
   const p = DEX[dex]; if (!p){ problemas.push('DEX sem #'+dex); continue; }
   const a = (p.tipos||[]).join('/'), b = AMOSTRA[dex].join('/');
