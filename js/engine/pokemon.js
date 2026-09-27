@@ -119,6 +119,15 @@ function naturezaVisivel(p){
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
+/* A frase que o jogo mostra pra cada coisa que a experiência causou. */
+function linhaDeExp(p, e){
+  const n = nomeVisivel(p);
+  if (e.tipo === 'nivel') return `${n} subiu para o nível ${e.nivel}!`;
+  if (e.tipo === 'golpe') return `${n} aprendeu ${e.golpe}!`;
+  if (e.tipo === 'querAprender') return `${n} quer aprender ${e.golpe}, mas já sabe quatro golpes.`;
+  return null;
+}
+
 function expGanha(vencido, venceu){
   const esp = DEX[vencido.dex];
   const bruto = Math.floor((esp.total * vencido.nivel) / 22);

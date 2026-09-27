@@ -2491,6 +2491,7 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 @keyframes mpAqui{50%{stroke:#ffe066;stroke-width:3.4}}
 @media(prefers-reduced-motion:reduce){.mapa-kanto .mp-no.aqui rect,.mapa-kanto .mp-no.aqui circle{animation:none}}
 .insignia-mini{width:20px;height:20px;object-fit:contain;margin-right:6px;vertical-align:middle}
+.btn.mini.som.mudo{opacity:.6;text-decoration:line-through}
 
 </style>
 </head>
@@ -3894,9 +3895,13 @@ function caminhoGrito(dexId){
   const rel = 'sons/gritos/' + dexId + '.ogg';
   return SPRITES_EMBUTIDOS[rel] || rel;
 }
+/* Som é preferência do aparelho, não da partida: vale pra todo save. */
+function somLigado(){
+  try { return localStorage.getItem('jc-som') !== '0'; } catch (e) { return true; }
+}
 function tocarGrito(dexId){
   try {
-    if (!dexId || dexId > 251 || (typeof Estado !== 'undefined' && Estado.dados && Estado.dados.semSom)) return;
+    if (!dexId || dexId > 251 || !somLigado()) return;
     const a = new Audio(caminhoGrito(dexId));
     a.volume = 0.45;
     const r = a.play();
@@ -6126,6 +6131,15 @@ function naturezaVisivel(p){
 
 function expNecessaria(nivel){ return Math.floor(Math.pow(nivel, 3) * 0.08) + nivel * 12 + 20; }
 
+/* A frase que o jogo mostra pra cada coisa que a experiência causou. */
+function linhaDeExp(p, e){
+  const n = nomeVisivel(p);
+  if (e.tipo === 'nivel') return `${n} subiu para o nível ${e.nivel}!`;
+  if (e.tipo === 'golpe') return `${n} aprendeu ${e.golpe}!`;
+  if (e.tipo === 'querAprender') return `${n} quer aprender ${e.golpe}, mas já sabe quatro golpes.`;
+  return null;
+}
+
 function expGanha(vencido, venceu){
   const esp = DEX[vencido.dex];
   const bruto = Math.floor((esp.total * vencido.nivel) / 22);
@@ -7770,6 +7784,9 @@ const Batalha = {
     this.estAliado = this.novoEstado();
     this.estInimigo = this.novoEstado();
     this.pdexUsada = false;
+    /* quem enfrentou o adversário da vez: é entre eles que a experiência
+       se divide, como nos jogos */
+    this.participantes = new Set(aliado ? [aliado.uid] : []);
     /* A cena que vem depois quer saber se sobrou pra você. */
     this.hpJogadorInicio = (Estado.j && Estado.j.hp) || 0;
     this.leituraIntelecto = false;
@@ -8357,6 +8374,7 @@ const Batalha = {
     this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
     this.aliado = novo;
     this.estAliado = this.novoEstado();
+    if (this.participantes) this.participantes.add(novo.uid);
   },
 
   /* ---------- fuga ---------- */
@@ -8391,17 +8409,25 @@ const Batalha = {
       this.ev('vitoria', this.tipo === 'selvagem'
         ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. Ele vai voltar.`
         : `${nomeVisivel(this.inimigo)} desmaiou!`);
-      const ganho = expGanha(this.inimigo, this.aliado);
-      const evs = ganharExp(this.aliado, ganho);
-      this.ev('exp', `${nomeVisivel(this.aliado)} ganhou ${ganho} de experiência.`);
-      evs.forEach(e => {
-        if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(this.aliado)} subiu para o nível ${e.nivel}!`);
-        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(this.aliado)} aprendeu ${e.golpe}!`);
-        /* não coube: a pergunta de qual esquecer vem logo depois, na tela */
-        if (e.tipo === 'querAprender')
-          this.ev('golpeNovo', `${nomeVisivel(this.aliado)} quer aprender ${e.golpe}, mas já sabe quatro golpes.`);
-        /* evolução não se anuncia no meio da luta: ela vem depois, na tela própria */
-      });
+      /* Como nos jogos: a experiência se divide por igual entre quem
+         entrou contra esse adversário e ainda está de pé, e vale 1,5×
+         quando o Pokémon era de um treinador. */
+      const part = this.participantes || new Set([this.aliado.uid]);
+      const quem = (Estado.dados.time || []).filter(p => part.has(p.uid) && estaVivo(p));
+      const total = Math.floor(expGanha(this.inimigo, this.aliado) * (this.tipo === 'treinador' ? 1.5 : 1));
+      const cada = quem.length ? Math.max(1, Math.floor(total / quem.length)) : 0;
+      for (const p of quem){
+        const evs = ganharExp(p, cada);
+        this.ev('exp', `${nomeVisivel(p)} ganhou ${cada} de experiência.`);
+        evs.forEach(e => {
+          if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(p)} subiu para o nível ${e.nivel}!`);
+          if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(p)} aprendeu ${e.golpe}!`);
+          /* não coube: a pergunta de qual esquecer vem logo depois, na tela */
+          if (e.tipo === 'querAprender')
+            this.ev('golpeNovo', `${nomeVisivel(p)} quer aprender ${e.golpe}, mas já sabe quatro golpes.`);
+          /* evolução não se anuncia no meio da luta: ela vem depois, na tela própria */
+        });
+      }
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
         const prox = this.timeInimigo.shift();
@@ -8410,6 +8436,7 @@ const Batalha = {
           prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
+        this.participantes = new Set([this.aliado.uid]);
         return {eventos:this.eventos, fim:null};
       }
       return this.encerrar('vitoria');
@@ -18863,7 +18890,7 @@ c4_teo_treino:{
   ],
   ef:{executar:d=>{
         const av = [];
-        d.time.forEach(p=>{ const ev = ganharExp(p, 180); if (ev && ev.length) ev.forEach(x=>av.push({tipo:'info', texto:x})); });
+        d.time.forEach(p=>{ ganharExp(p, 180).forEach(x=>{ const l = linhaDeExp(p, x); if (l) av.push({tipo:'info', texto:l}); }); });
         return av.length ? av : [{tipo:'info', texto:'Vocês treinam até a luz ir embora. Alguma coisa assenta no jeito que o seu time te ouve.'}];
       },
       moral:8, npc:{nome:'Ezra', opiniao:3, memoria:'Vocês treinaram juntos no pátio do Centro de Pewter até escurecer.'},
@@ -75023,6 +75050,8 @@ const UI = {
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalTutorial()">Tutorial</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
+        <button class="btn mini som${somLigado() ? '' : ' mudo'}" onclick="UI.alternarSom(this)"
+          aria-pressed="${somLigado() ? 'false' : 'true'}" title="Gritos dos Pokémon">${somLigado() ? 'Som' : 'Mudo'}</button>
       </div>
     </div>`;
   },
@@ -75641,6 +75670,12 @@ const UI = {
     this.rolarTopo();
     /* o outro lado aparece, depois a sua bola; o menu espera os dois */
     if (typeof Efeitos !== 'undefined') Efeitos.abertura();
+  },
+
+  alternarSom(bt){
+    const liga = !somLigado();
+    try { localStorage.setItem('jc-som', liga ? '1' : '0'); } catch (e) {}
+    if (bt){ bt.textContent = liga ? 'Som' : 'Mudo'; bt.classList.toggle('mudo', !liga); bt.setAttribute('aria-pressed', liga ? 'false' : 'true'); }
   },
 
   /* rosto de quem fala, quando o jogo tem um (js/data/treinadores.js) */
@@ -77153,15 +77188,16 @@ const UI = {
     this.rolarTopo();
   },
 
-  telaResultadoRival(venceu, avisos, idExtra){
+  telaResultadoRival(venceu, avisos, idExtra, falasProntas){
     this.limpar();
     this.add(this.topo());
     const extra = idExtra ? defRival(idExtra) : null;
     const reg = extra ? (registroRival(idExtra) || {vitorias:0, derrotas:0}) : rival();
     const nome = extra ? extra.nome : rival().nome;
-    const falas = extra
+    /* quem chama calcula as falas antes do placar mudar */
+    const falas = falasProntas || (extra
       ? (venceu ? falaVitoriaRivalExtra(extra) : falaDerrotaRivalExtra(extra))
-      : (venceu ? falaVitoriaRival() : falaDerrotaRival());
+      : (venceu ? falaVitoriaRival() : falaDerrotaRival()));
     this.add(`<div class="painel">
       <div class="cap-cabecalho"${extra ? ` style="border-left-color:${extra.cor || 'var(--destaque)'}"` : ''}>
         <div class="num">${venceu ? 'Você venceu' : 'Ele venceu'}</div>
@@ -78323,7 +78359,8 @@ const UI = {
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
-      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · só pra quem derrubou</span></div>
+      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · ×1,5 se era de treinador</span></div>
+      <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
       <div class="linha"><span class="k">Próximo nível</span><span class="v">nível³ × 0,08 + nível × 12 + 20</span></div>
       <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a espécie aprende naquele nível, pela tabela dela</span></div>
       <div class="linha"><span class="k">Selvagem e de treinador</span><span class="v">os quatro últimos golpes da tabela da espécie até o nível dele</span></div>
@@ -78333,10 +78370,11 @@ const UI = {
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
       <h3>Fim da batalha</h3>
-      <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do líder, dinheiro e captura que foi pro PC</span></div>
+      <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do adversário, dinheiro e captura que foi pro PC</span></div>
       <div class="linha"><span class="k">Líder de ginásio</span><span class="v">prêmio do ginásio · revanche: 900 + 420 por insígnia</span></div>
       <div class="linha"><span class="k">Torneio</span><span class="v">o prêmio da rodada · perdendo, 30% dele</span></div>
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
+      <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
       <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">o que a história decidir — nem toda briga tem aposta</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
@@ -79382,6 +79420,23 @@ function premioTorneio(t, venceu){
   const pr = PREMIO_TORNEIO[t.rodada];
   return venceu ? pr.dinheiro : Math.round(pr.dinheiro * 0.3);
 }
+/* rival de estrada: perder pra ele custa isto */
+function perdaRivalExtra(id){ return id === 'vasco' ? 1200 : 700; }
+
+/* A primeira coisa que o adversário DIZ numa lista de falas: fala() com
+   dono, ou frase inteira entre aspas numa linha de narração. É o que o
+   log do fim de batalha cita, como a frase de derrota dos jogos. */
+function primeiraFala(linhas, quem){
+  for (const l0 of (linhas || [])){
+    const l = (typeof l0 === 'function') ? l0(Estado.dados) : l0;
+    if (!l) continue;
+    if (typeof l === 'object' && l.diz) return `${l.quem || quem}: "${l.diz}"`;
+    const m = /["\u201C]([^"\u201D]{3,}?[.!?\u2026])["\u201D]/.exec(String(l));
+    if (m) return `${quem}: "${m[1]}"`;
+  }
+  return null;
+}
+
 const PERDA_RIVAL = 800;
 const PREMIO_RIVAL_PARCEIRO = 3000;
 const PREMIO_CAMPEAO = 80000;
@@ -79491,6 +79546,14 @@ const Jogo = {
 
   /* ---------- navegação ---------- */
   irPara(id, avisos){
+    /* Experiência dada pela história (treino, semanas no Planalto) pode
+       deixar golpe pra decidir ou evolução pendente: resolve antes de
+       mostrar a cena, que é quando os jogos fariam. */
+    const pendente = (Estado.dados.time || []).some(p => (p.aprenderPendente && p.aprenderPendente.length) || (p.evoPendente && !p.morto));
+    if (pendente && !Batalha.ativo && !this._resolvendoCena){
+      this._resolvendoCena = true;
+      return this.resolverPendencias(() => { this._resolvendoCena = false; this.irPara(id, avisos); });
+    }
     const cena = Historia.ir(id, true);
     avisos = (avisos||[]).concat(Historia.avisosCena||[]);
     Estado.salvar('auto');
@@ -79795,10 +79858,30 @@ const Jogo = {
     } else if (this.torneioAtual){
       if (fim.resultado !== 'gameover') dinheiro(premioTorneio(this.torneioAtual, venceu));
     } else if (this.rivalAtual && !this.rivalAtual.extra){
+      /* as falas saem ANTES do placar mudar: o texto já soma o resultado
+         de agora ("${r.derrotas + 1}"), e a tela de resultado usa esta
+         mesma lista */
+      this.falasRival = (fim.resultado === 'gameover') ? null : (venceu ? falaVitoriaRival() : falaDerrotaRival());
+      const c = primeiraFala(this.falasRival, rival().nome);
+      if (c){ L('citacao', c); }
       if (venceu && this.rivalAtual.arco === 'parceiro') dinheiro(PREMIO_RIVAL_PARCEIRO);
       if (fim.resultado === 'derrota') dinheiro(-Math.min(PERDA_RIVAL, Estado.j.dinheiro));
-    } else if (this.eliteAtual && this.eliteAtual.campeao && venceu){
-      dinheiro(PREMIO_CAMPEAO);
+    } else if (this.rivalAtual && this.rivalAtual.extra){
+      const R = defRival(this.rivalAtual.extra);
+      this.falasRival = (fim.resultado === 'gameover') ? null : (venceu ? falaVitoriaRivalExtra(R) : falaDerrotaRivalExtra(R));
+      const c = primeiraFala(this.falasRival, R.nome);
+      if (c){ L('citacao', c); }
+      if (fim.resultado === 'derrota') dinheiro(-Math.min(perdaRivalExtra(R.id), Estado.j.dinheiro));
+    } else if (this.eliteAtual){
+      const e = this.eliteAtual;
+      const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+      const falas = venceu ? (alvo.vitoria && alvo.vitoria(Estado.dados))
+                           : (alvo.derrota && alvo.derrota(Estado.dados));
+      /* Red não fala, nunca falou: qualquer aspas no salão é de outra pessoa */
+      const c = e.campeao ? null : primeiraFala(falas, alvo.nome);
+      if (c){ L('citacao', c); }
+      else if (e.campeao && fim.resultado !== 'gameover') L('citacao', `${alvo.nome} não diz nada.`);
+      if (e.campeao && venceu) dinheiro(PREMIO_CAMPEAO);
     }
     return {linhas};
   },
@@ -80367,6 +80450,8 @@ const Jogo = {
     if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa batalha contra alguém que te conhece desde a Rota 1.');
 
     const venceu = fim.resultado === 'vitoria';
+    const falas = this.falasRival || (venceu ? falaVitoriaRival() : falaDerrotaRival());
+    this.falasRival = null;
     registrarResultadoRival(venceu);
     const avisos = [];
     const npc = Estado.dados.npcs['Ezra'];
@@ -80389,7 +80474,7 @@ const Jogo = {
       avisos.push({tipo:'item', texto:`−${PERDA_RIVAL} ₽`});
     }
     Estado.salvar('auto');
-    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos));
+    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, null, falas));
   },
 
   resultadoRivalExtra(fim, id){
@@ -80399,6 +80484,8 @@ const Jogo = {
       return UI.telaGameOver(`Você caiu numa batalha contra ${R.nome}, que virou seu rival por causa de uma escolha sua.`);
 
     const venceu = fim.resultado === 'vitoria';
+    const falas = this.falasRival || (venceu ? falaVitoriaRivalExtra(R) : falaDerrotaRivalExtra(R));
+    this.falasRival = null;
     registrarResultadoRivalExtra(id, venceu);
     const avisos = [];
     const npc = Estado.dados.npcs[R.npc];
@@ -80413,12 +80500,12 @@ const Jogo = {
       }
     } else {
       Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${registroRival(id).derrotas}×${registroRival(id).vitorias}.`});
-      const perda = id === 'vasco' ? 1200 : 700;
+      const perda = perdaRivalExtra(id);
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
       avisos.push({tipo:'item', texto:`−${perda} ₽`});
     }
     Estado.salvar('auto');
-    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id));
+    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id, falas));
   },
 
   seguirDepoisDoRival(){

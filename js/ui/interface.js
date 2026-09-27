@@ -148,6 +148,8 @@ const UI = {
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
         <button class="btn mini" onclick="UI.modalTutorial()">Tutorial</button>
         <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
+        <button class="btn mini som${somLigado() ? '' : ' mudo'}" onclick="UI.alternarSom(this)"
+          aria-pressed="${somLigado() ? 'false' : 'true'}" title="Gritos dos Pokémon">${somLigado() ? 'Som' : 'Mudo'}</button>
       </div>
     </div>`;
   },
@@ -766,6 +768,12 @@ const UI = {
     this.rolarTopo();
     /* o outro lado aparece, depois a sua bola; o menu espera os dois */
     if (typeof Efeitos !== 'undefined') Efeitos.abertura();
+  },
+
+  alternarSom(bt){
+    const liga = !somLigado();
+    try { localStorage.setItem('jc-som', liga ? '1' : '0'); } catch (e) {}
+    if (bt){ bt.textContent = liga ? 'Som' : 'Mudo'; bt.classList.toggle('mudo', !liga); bt.setAttribute('aria-pressed', liga ? 'false' : 'true'); }
   },
 
   /* rosto de quem fala, quando o jogo tem um (js/data/treinadores.js) */
@@ -2278,15 +2286,16 @@ const UI = {
     this.rolarTopo();
   },
 
-  telaResultadoRival(venceu, avisos, idExtra){
+  telaResultadoRival(venceu, avisos, idExtra, falasProntas){
     this.limpar();
     this.add(this.topo());
     const extra = idExtra ? defRival(idExtra) : null;
     const reg = extra ? (registroRival(idExtra) || {vitorias:0, derrotas:0}) : rival();
     const nome = extra ? extra.nome : rival().nome;
-    const falas = extra
+    /* quem chama calcula as falas antes do placar mudar */
+    const falas = falasProntas || (extra
       ? (venceu ? falaVitoriaRivalExtra(extra) : falaDerrotaRivalExtra(extra))
-      : (venceu ? falaVitoriaRival() : falaDerrotaRival());
+      : (venceu ? falaVitoriaRival() : falaDerrotaRival()));
     this.add(`<div class="painel">
       <div class="cap-cabecalho"${extra ? ` style="border-left-color:${extra.cor || 'var(--destaque)'}"` : ''}>
         <div class="num">${venceu ? 'Você venceu' : 'Ele venceu'}</div>
@@ -3448,7 +3457,8 @@ const UI = {
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
-      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · só pra quem derrubou</span></div>
+      <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · ×1,5 se era de treinador</span></div>
+      <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
       <div class="linha"><span class="k">Próximo nível</span><span class="v">nível³ × 0,08 + nível × 12 + 20</span></div>
       <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a espécie aprende naquele nível, pela tabela dela</span></div>
       <div class="linha"><span class="k">Selvagem e de treinador</span><span class="v">os quatro últimos golpes da tabela da espécie até o nível dele</span></div>
@@ -3458,10 +3468,11 @@ const UI = {
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
       <h3>Fim da batalha</h3>
-      <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do líder, dinheiro e captura que foi pro PC</span></div>
+      <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do adversário, dinheiro e captura que foi pro PC</span></div>
       <div class="linha"><span class="k">Líder de ginásio</span><span class="v">prêmio do ginásio · revanche: 900 + 420 por insígnia</span></div>
       <div class="linha"><span class="k">Torneio</span><span class="v">o prêmio da rodada · perdendo, 30% dele</span></div>
       <div class="linha"><span class="k">Rival da Rota 1</span><span class="v">perder custa 800 ₽ · às vezes ganhar rende 3.000</span></div>
+      <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
       <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">o que a história decidir — nem toda briga tem aposta</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>

@@ -14,6 +14,23 @@ function premioTorneio(t, venceu){
   const pr = PREMIO_TORNEIO[t.rodada];
   return venceu ? pr.dinheiro : Math.round(pr.dinheiro * 0.3);
 }
+/* rival de estrada: perder pra ele custa isto */
+function perdaRivalExtra(id){ return id === 'vasco' ? 1200 : 700; }
+
+/* A primeira coisa que o adversário DIZ numa lista de falas: fala() com
+   dono, ou frase inteira entre aspas numa linha de narração. É o que o
+   log do fim de batalha cita, como a frase de derrota dos jogos. */
+function primeiraFala(linhas, quem){
+  for (const l0 of (linhas || [])){
+    const l = (typeof l0 === 'function') ? l0(Estado.dados) : l0;
+    if (!l) continue;
+    if (typeof l === 'object' && l.diz) return `${l.quem || quem}: "${l.diz}"`;
+    const m = /["\u201C]([^"\u201D]{3,}?[.!?\u2026])["\u201D]/.exec(String(l));
+    if (m) return `${quem}: "${m[1]}"`;
+  }
+  return null;
+}
+
 const PERDA_RIVAL = 800;
 const PREMIO_RIVAL_PARCEIRO = 3000;
 const PREMIO_CAMPEAO = 80000;
@@ -123,6 +140,14 @@ const Jogo = {
 
   /* ---------- navegação ---------- */
   irPara(id, avisos){
+    /* Experiência dada pela história (treino, semanas no Planalto) pode
+       deixar golpe pra decidir ou evolução pendente: resolve antes de
+       mostrar a cena, que é quando os jogos fariam. */
+    const pendente = (Estado.dados.time || []).some(p => (p.aprenderPendente && p.aprenderPendente.length) || (p.evoPendente && !p.morto));
+    if (pendente && !Batalha.ativo && !this._resolvendoCena){
+      this._resolvendoCena = true;
+      return this.resolverPendencias(() => { this._resolvendoCena = false; this.irPara(id, avisos); });
+    }
     const cena = Historia.ir(id, true);
     avisos = (avisos||[]).concat(Historia.avisosCena||[]);
     Estado.salvar('auto');
@@ -427,10 +452,30 @@ const Jogo = {
     } else if (this.torneioAtual){
       if (fim.resultado !== 'gameover') dinheiro(premioTorneio(this.torneioAtual, venceu));
     } else if (this.rivalAtual && !this.rivalAtual.extra){
+      /* as falas saem ANTES do placar mudar: o texto já soma o resultado
+         de agora ("${r.derrotas + 1}"), e a tela de resultado usa esta
+         mesma lista */
+      this.falasRival = (fim.resultado === 'gameover') ? null : (venceu ? falaVitoriaRival() : falaDerrotaRival());
+      const c = primeiraFala(this.falasRival, rival().nome);
+      if (c){ L('citacao', c); }
       if (venceu && this.rivalAtual.arco === 'parceiro') dinheiro(PREMIO_RIVAL_PARCEIRO);
       if (fim.resultado === 'derrota') dinheiro(-Math.min(PERDA_RIVAL, Estado.j.dinheiro));
-    } else if (this.eliteAtual && this.eliteAtual.campeao && venceu){
-      dinheiro(PREMIO_CAMPEAO);
+    } else if (this.rivalAtual && this.rivalAtual.extra){
+      const R = defRival(this.rivalAtual.extra);
+      this.falasRival = (fim.resultado === 'gameover') ? null : (venceu ? falaVitoriaRivalExtra(R) : falaDerrotaRivalExtra(R));
+      const c = primeiraFala(this.falasRival, R.nome);
+      if (c){ L('citacao', c); }
+      if (fim.resultado === 'derrota') dinheiro(-Math.min(perdaRivalExtra(R.id), Estado.j.dinheiro));
+    } else if (this.eliteAtual){
+      const e = this.eliteAtual;
+      const alvo = e.campeao ? CAMPEAO : ELITE4[e.indice];
+      const falas = venceu ? (alvo.vitoria && alvo.vitoria(Estado.dados))
+                           : (alvo.derrota && alvo.derrota(Estado.dados));
+      /* Red não fala, nunca falou: qualquer aspas no salão é de outra pessoa */
+      const c = e.campeao ? null : primeiraFala(falas, alvo.nome);
+      if (c){ L('citacao', c); }
+      else if (e.campeao && fim.resultado !== 'gameover') L('citacao', `${alvo.nome} não diz nada.`);
+      if (e.campeao && venceu) dinheiro(PREMIO_CAMPEAO);
     }
     return {linhas};
   },
@@ -999,6 +1044,8 @@ const Jogo = {
     if (fim.resultado === 'gameover') return UI.telaGameOver('Você caiu numa batalha contra alguém que te conhece desde a Rota 1.');
 
     const venceu = fim.resultado === 'vitoria';
+    const falas = this.falasRival || (venceu ? falaVitoriaRival() : falaDerrotaRival());
+    this.falasRival = null;
     registrarResultadoRival(venceu);
     const avisos = [];
     const npc = Estado.dados.npcs['Ezra'];
@@ -1021,7 +1068,7 @@ const Jogo = {
       avisos.push({tipo:'item', texto:`−${PERDA_RIVAL} ₽`});
     }
     Estado.salvar('auto');
-    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos));
+    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, null, falas));
   },
 
   resultadoRivalExtra(fim, id){
@@ -1031,6 +1078,8 @@ const Jogo = {
       return UI.telaGameOver(`Você caiu numa batalha contra ${R.nome}, que virou seu rival por causa de uma escolha sua.`);
 
     const venceu = fim.resultado === 'vitoria';
+    const falas = this.falasRival || (venceu ? falaVitoriaRivalExtra(R) : falaDerrotaRivalExtra(R));
+    this.falasRival = null;
     registrarResultadoRivalExtra(id, venceu);
     const avisos = [];
     const npc = Estado.dados.npcs[R.npc];
@@ -1045,12 +1094,12 @@ const Jogo = {
       }
     } else {
       Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${registroRival(id).derrotas}×${registroRival(id).vitorias}.`});
-      const perda = id === 'vasco' ? 1200 : 700;
+      const perda = perdaRivalExtra(id);
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
       avisos.push({tipo:'item', texto:`−${perda} ₽`});
     }
     Estado.salvar('auto');
-    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id));
+    this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id, falas));
   },
 
   seguirDepoisDoRival(){

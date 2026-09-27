@@ -149,9 +149,13 @@ function caminhoGrito(dexId){
   const rel = 'sons/gritos/' + dexId + '.ogg';
   return SPRITES_EMBUTIDOS[rel] || rel;
 }
+/* Som é preferência do aparelho, não da partida: vale pra todo save. */
+function somLigado(){
+  try { return localStorage.getItem('jc-som') !== '0'; } catch (e) { return true; }
+}
 function tocarGrito(dexId){
   try {
-    if (!dexId || dexId > 251 || (typeof Estado !== 'undefined' && Estado.dados && Estado.dados.semSom)) return;
+    if (!dexId || dexId > 251 || !somLigado()) return;
     const a = new Audio(caminhoGrito(dexId));
     a.volume = 0.45;
     const r = a.play();

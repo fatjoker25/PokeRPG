@@ -38,6 +38,9 @@ const Batalha = {
     this.estAliado = this.novoEstado();
     this.estInimigo = this.novoEstado();
     this.pdexUsada = false;
+    /* quem enfrentou o adversário da vez: é entre eles que a experiência
+       se divide, como nos jogos */
+    this.participantes = new Set(aliado ? [aliado.uid] : []);
     /* A cena que vem depois quer saber se sobrou pra você. */
     this.hpJogadorInicio = (Estado.j && Estado.j.hp) || 0;
     this.leituraIntelecto = false;
@@ -625,6 +628,7 @@ const Batalha = {
     this.ev('info', `${nomeVisivel(this.aliado)} volta. Vai, ${nomeVisivel(novo)}!`);
     this.aliado = novo;
     this.estAliado = this.novoEstado();
+    if (this.participantes) this.participantes.add(novo.uid);
   },
 
   /* ---------- fuga ---------- */
@@ -659,17 +663,25 @@ const Batalha = {
       this.ev('vitoria', this.tipo === 'selvagem'
         ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. Ele vai voltar.`
         : `${nomeVisivel(this.inimigo)} desmaiou!`);
-      const ganho = expGanha(this.inimigo, this.aliado);
-      const evs = ganharExp(this.aliado, ganho);
-      this.ev('exp', `${nomeVisivel(this.aliado)} ganhou ${ganho} de experiência.`);
-      evs.forEach(e => {
-        if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(this.aliado)} subiu para o nível ${e.nivel}!`);
-        if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(this.aliado)} aprendeu ${e.golpe}!`);
-        /* não coube: a pergunta de qual esquecer vem logo depois, na tela */
-        if (e.tipo === 'querAprender')
-          this.ev('golpeNovo', `${nomeVisivel(this.aliado)} quer aprender ${e.golpe}, mas já sabe quatro golpes.`);
-        /* evolução não se anuncia no meio da luta: ela vem depois, na tela própria */
-      });
+      /* Como nos jogos: a experiência se divide por igual entre quem
+         entrou contra esse adversário e ainda está de pé, e vale 1,5×
+         quando o Pokémon era de um treinador. */
+      const part = this.participantes || new Set([this.aliado.uid]);
+      const quem = (Estado.dados.time || []).filter(p => part.has(p.uid) && estaVivo(p));
+      const total = Math.floor(expGanha(this.inimigo, this.aliado) * (this.tipo === 'treinador' ? 1.5 : 1));
+      const cada = quem.length ? Math.max(1, Math.floor(total / quem.length)) : 0;
+      for (const p of quem){
+        const evs = ganharExp(p, cada);
+        this.ev('exp', `${nomeVisivel(p)} ganhou ${cada} de experiência.`);
+        evs.forEach(e => {
+          if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(p)} subiu para o nível ${e.nivel}!`);
+          if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(p)} aprendeu ${e.golpe}!`);
+          /* não coube: a pergunta de qual esquecer vem logo depois, na tela */
+          if (e.tipo === 'querAprender')
+            this.ev('golpeNovo', `${nomeVisivel(p)} quer aprender ${e.golpe}, mas já sabe quatro golpes.`);
+          /* evolução não se anuncia no meio da luta: ela vem depois, na tela própria */
+        });
+      }
       // time adversário com mais Pokémon
       if (this.timeInimigo && this.timeInimigo.length){
         const prox = this.timeInimigo.shift();
@@ -678,6 +690,7 @@ const Batalha = {
           prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
+        this.participantes = new Set([this.aliado.uid]);
         return {eventos:this.eventos, fim:null};
       }
       return this.encerrar('vitoria');

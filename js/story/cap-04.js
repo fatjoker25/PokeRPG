@@ -707,7 +707,7 @@ c4_teo_treino:{
   ],
   ef:{executar:d=>{
         const av = [];
-        d.time.forEach(p=>{ const ev = ganharExp(p, 180); if (ev && ev.length) ev.forEach(x=>av.push({tipo:'info', texto:x})); });
+        d.time.forEach(p=>{ ganharExp(p, 180).forEach(x=>{ const l = linhaDeExp(p, x); if (l) av.push({tipo:'info', texto:l}); }); });
         return av.length ? av : [{tipo:'info', texto:'Vocês treinam até a luz ir embora. Alguma coisa assenta no jeito que o seu time te ouve.'}];
       },
       moral:8, npc:{nome:'Ezra', opiniao:3, memoria:'Vocês treinaram juntos no pátio do Centro de Pewter até escurecer.'},
