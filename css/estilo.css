@@ -2591,3 +2591,43 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .bilhete p{margin:0;font-size:13.5px;line-height:1.4;overflow-wrap:anywhere}
 .bilhete span{display:block;margin-top:7px;font-size:11px;font-style:italic;color:#6b5a44}
 @media (prefers-reduced-motion: reduce){ .bilhete{transform:none} }
+
+/* ============================================================
+   BATALHA NUMA TELA SÓ
+   No computador, log (com a bandeja embaixo) e ações lado a lado;
+   no celular, um embaixo do outro, com as ações logo depois do log.
+   ============================================================ */
+.combate-baixo{display:flex;flex-direction:column;gap:10px}
+.combate-registro{min-width:0}
+.log-combate .l.intro{color:var(--texto);font-style:italic;opacity:.85}
+@media (min-width:900px){
+  .combate-baixo{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+  .combate-baixo .log-combate{max-height:190px}
+}
+@media (max-width:899px){
+  /* ações primeiro que a bandeja: é o que se aperta */
+  .combate-baixo{display:grid}
+  .combate-baixo .acoes-combate{order:2}
+  .combate-baixo .combate-registro{order:1}
+}
+/* parada em uma linha só: motivo, faces, resultado */
+.parada{grid-template-columns:minmax(0,1fr) auto auto;padding:4px 9px;gap:2px 10px}
+.parada .p-faces{grid-column:auto;order:2;flex-wrap:nowrap;overflow:hidden}
+.parada .p-res{order:3}
+.parada .p-faces .f{width:17px;height:17px;font-size:10.5px}
+.paradas{gap:4px;margin-top:6px}
+@media (max-width:620px){
+  .parada{grid-template-columns:minmax(0,1fr) auto}
+  .parada .p-faces{grid-column:1 / -1;flex-wrap:wrap}
+}
+/* No celular a moldura de cada lutador fica mais baixa: a regra larga
+   de 176px vinha depois da do celular e ganhava, e a batalha pedia
+   quase duas telas de rolagem. */
+@media (max-width:620px){
+  .arena.com-cenario .lutador .arte,
+  .arena.arena-ginasio .lutador .arte{height:118px;margin-bottom:8px}
+  .arena.com-cenario .lutador .arte .sprite,
+  .arena.arena-ginasio .lutador .arte .sprite{width:92px;height:92px;margin-bottom:-22px}
+  .arena{gap:10px;padding:10px;margin-bottom:10px}
+  .lutador .ficha{padding:8px 11px 9px}
+}

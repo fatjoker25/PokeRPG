@@ -11,7 +11,7 @@ const EVENTOS_CIDADE = {
 pallet:[
 {
   id:'pal_cachorro_do_quatorze', umaVez:true, peso:3,
-  titulo:'O cachorro do quatorze',
+  titulo:'O Growlithe do quatorze',
   texto:[
     'Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.',
     'Uma mulher tenta empurrar com o pé, sem força nenhuma, do jeito de quem faz isso todo dia e já perdeu.',

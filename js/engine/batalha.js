@@ -431,7 +431,7 @@ const Batalha = {
       if (metade) d = Math.max(1, Math.floor(d / 2));
       total += d;
     }
-    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}`);
+    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}${suces.some(x => x === 0) ? ' (zero sucesso vale 1)' : ''} = ${total}`);
     if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
     if (res.critico) res.msgs.push('ACERTO CRÍTICO!');
     const txt = textoEficacia(res.efic);

@@ -2601,6 +2601,46 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .bilhete span{display:block;margin-top:7px;font-size:11px;font-style:italic;color:#6b5a44}
 @media (prefers-reduced-motion: reduce){ .bilhete{transform:none} }
 
+/* ============================================================
+   BATALHA NUMA TELA SÓ
+   No computador, log (com a bandeja embaixo) e ações lado a lado;
+   no celular, um embaixo do outro, com as ações logo depois do log.
+   ============================================================ */
+.combate-baixo{display:flex;flex-direction:column;gap:10px}
+.combate-registro{min-width:0}
+.log-combate .l.intro{color:var(--texto);font-style:italic;opacity:.85}
+@media (min-width:900px){
+  .combate-baixo{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}
+  .combate-baixo .log-combate{max-height:190px}
+}
+@media (max-width:899px){
+  /* ações primeiro que a bandeja: é o que se aperta */
+  .combate-baixo{display:grid}
+  .combate-baixo .acoes-combate{order:2}
+  .combate-baixo .combate-registro{order:1}
+}
+/* parada em uma linha só: motivo, faces, resultado */
+.parada{grid-template-columns:minmax(0,1fr) auto auto;padding:4px 9px;gap:2px 10px}
+.parada .p-faces{grid-column:auto;order:2;flex-wrap:nowrap;overflow:hidden}
+.parada .p-res{order:3}
+.parada .p-faces .f{width:17px;height:17px;font-size:10.5px}
+.paradas{gap:4px;margin-top:6px}
+@media (max-width:620px){
+  .parada{grid-template-columns:minmax(0,1fr) auto}
+  .parada .p-faces{grid-column:1 / -1;flex-wrap:wrap}
+}
+/* No celular a moldura de cada lutador fica mais baixa: a regra larga
+   de 176px vinha depois da do celular e ganhava, e a batalha pedia
+   quase duas telas de rolagem. */
+@media (max-width:620px){
+  .arena.com-cenario .lutador .arte,
+  .arena.arena-ginasio .lutador .arte{height:118px;margin-bottom:8px}
+  .arena.com-cenario .lutador .arte .sprite,
+  .arena.arena-ginasio .lutador .arte .sprite{width:92px;height:92px;margin-bottom:-22px}
+  .arena{gap:10px;padding:10px;margin-bottom:10px}
+  .lutador .ficha{padding:8px 11px 9px}
+}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -7766,10 +7806,21 @@ function mochilaAtual(){
     const c = corDaMochila(escolhida);
     if (c){ cor = c; nome = escolhida; return saida(); }
   }
+  let achou = false;
   for (const [n, q] of Object.entries(d.itens)){
     if (q <= 0) continue;
     const c = corDaMochila(n);
-    if (c){ cor = c; nome = n; }
+    if (c){ cor = c; nome = n; achou = true; }
+  }
+  /* Sem bolsa comprada: a que você descreveu na ficha ("uma mochila
+     preta", "bolsa verde musgo nas costas") é a que você carrega. */
+  if (!achou && d.jogador){
+    const texto = _semAcento([d.jogador.vestimenta, d.jogador.aparencia].filter(Boolean).join(' . '));
+    const m = texto.match(/\b(mochila|bolsa|sacola|mala|bornal)\s+([a-z]+(?:\s+[a-z]+)?)/);
+    if (m){
+      const c = corDaMochila(m[1] + ' ' + m[2]);
+      if (c){ cor = c; nome = m[1][0].toUpperCase() + m[1].slice(1) + ' ' + m[2]; }
+    }
   }
   return saida();
 }
@@ -9222,7 +9273,7 @@ const Batalha = {
       if (metade) d = Math.max(1, Math.floor(d / 2));
       total += d;
     }
-    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}`);
+    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}${suces.some(x => x === 0) ? ' (zero sucesso vale 1)' : ''} = ${total}`);
     if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
     if (res.critico) res.msgs.push('ACERTO CRÍTICO!');
     const txt = textoEficacia(res.efic);
@@ -14598,7 +14649,7 @@ const EVENTOS_CIDADE = {
 pallet:[
 {
   id:'pal_cachorro_do_quatorze', umaVez:true, peso:3,
-  titulo:'O cachorro do quatorze',
+  titulo:'O Growlithe do quatorze',
   texto:[
     'Tem um Growlithe velho deitado no meio da rua, na parte quente do asfalto, e ele não sai de lá por nada.',
     'Uma mulher tenta empurrar com o pé, sem força nenhuma, do jeito de quem faz isso todo dia e já perdeu.',
@@ -20327,7 +20378,7 @@ c4_ab_detonacao:{
     'Você chega em Pewter às onze e quarenta e sete da manhã e a cidade inteira para.',
     'Não é figura de linguagem: para mesmo. Quem está andando encosta, quem está no balcão apoia a mão, quem está de bicicleta põe o pé no chão.',
     'Doze horas em ponto: a detonação.',
-    'Você sente no peito antes de ouvir, e o vidro da loja mais próxima faz um som miúdo, e um cachorro late em algum quintal.',
+    'Você sente no peito antes de ouvir, e o vidro da loja mais próxima faz um som miúdo, e um Growlithe late em algum quintal.',
     'E aí, três segundos depois, a cidade volta a andar, toda ao mesmo tempo, como se ninguém tivesse parado.',
     'Ninguém comenta. Ninguém olha pra ninguém. É um ritual que eles nem sabem mais que fazem.',
     'Você é a única pessoa em Pewter que ficou parada quatro segundos a mais, olhando em volta.'
@@ -20993,7 +21044,7 @@ c4_teo_volta:{
   texto:[
     'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
     'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
-    '"Aquela casa ali tem um cachorro que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
+    '"Aquela casa ali tem um Growlithe que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
     '"Isso não é mapear a cidade."',
     '"É o melhor tipo de mapear a cidade."',
     'Vocês passam pela praça. A poeira cinza cobre tudo num tom só e o Ezra escreve o próprio nome no capô de um carro com o dedo, e depois apaga com a manga, envergonhado.',
@@ -24898,7 +24949,7 @@ c6_ab_quem_oferece:{
 c6_ab_cartaz:{
   texto:[
     'Tem um quadro de avisos na cabeceira da ponte sul, daqueles com vidro e cadeado, e é ali que Cerulean pendura o que a cidade precisa saber.',
-    'Aviso de dedetização. Horário da balsa. Um cachorro perdido com foto ruim.',
+    'Aviso de dedetização. Horário da balsa. Um Growlithe perdido com foto ruim.',
     d=>{
       const r = Estado.nomeRep();
       return `E uma folha impressa, colada por dentro do vidro, com um retrato falado que não é bom e com uma palavra que é: "${r}".`;
@@ -60318,7 +60369,7 @@ c19_ab_nao_e_normal:{
 
 c19_ab_a_vizinhanca:{
   texto:[
-    'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com galinha solta e cachorro de portão.',
+    'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com Doduo solto no quintal e Growlithe de portão.',
     'Você bate na primeira porque é a primeira.',
     'Atende uma mulher de uns sessenta anos com uma bacia de feijão no colo, e ela senta na varanda e continua catando o feijão a conversa inteira, e você senta no degrau.',
     'Ela se apresenta como Sra. Hazel antes de você perguntar qualquer coisa, porque é o que se faz quando um desconhecido bate na sua porta no meio do mato.',
@@ -60329,13 +60380,13 @@ c19_ab_a_vizinhanca:{
     fala('Sra. Hazel', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
     d=>fala(d.jogador.nome, 'E depois?'),
     'Ela para de catar.',
-    fala('Sra. Hazel', 'Depois o meu cachorro parou de dormir.')
+    fala('Sra. Hazel', 'Depois o meu Growlithe parou de dormir.')
   ],
   ef:{flag:'a_vizinhanca_da_estacao',
       npc:{nome:'Sra. Hazel', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
       registrar:'A Estação 4 foi instalada em 1994 num pasto comprado do Sr. Aoki.'},
   escolhas:[
-    {texto:'Perguntar do cachorro.', vai:'c19_ab_o_cachorro'},
+    {texto:'Perguntar do Growlithe.', vai:'c19_ab_o_cachorro'},
     {texto:'Perguntar o que se ouve da estação à noite.', vai:'c19_ab_o_que_se_ouve'},
     {texto:'Agradecer e ir dar a volta no perímetro.', vai:'c19_perimetro'}
   ]
@@ -60384,7 +60435,7 @@ c19_ab_o_que_se_ouve:{
       registrar:'De madrugada, entre três e quatro, uma porta de metal grande abre e fecha nove ou dez vezes na Estação 4.',
       presagio:'Entre três e quatro da manhã. Você já ouviu esse horário em outro lugar deste mapa.'},
   escolhas:[
-    {texto:'Perguntar do cachorro que não dorme.', vai:'c19_ab_o_cachorro'},
+    {texto:'Perguntar do Growlithe que não dorme.', vai:'c19_ab_o_cachorro'},
     {texto:'Ir dar a volta no perímetro.', vai:'c19_perimetro'},
     {texto:'Voltar às três da manhã.', vai:'c19_cerca_mar'}
   ]
@@ -64893,7 +64944,7 @@ c21_o_que_aconteceu_aqui:{
     'A pergunta pega {casa:ela desprevenida|ele desprevenido}, porque ninguém faz essa pergunta pra quem ficou.',
     d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, {menino|menina}.'),
     'E aí {casa:ela|ele} conta, por quarenta minutos, tudo que não aconteceu:',
-    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Vernon que casou. O cachorro do quatorze que morreu — aquele velho, você lembra dele.'),
+    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Vernon que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
     d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
@@ -64946,7 +64997,7 @@ c21_contou_da_convocacao:{
 c21_acordados_ate_tarde:{
   texto:[
     'Vocês ficam acordados até uma e meia da manhã na cozinha, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa depois das onze.',
-    'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do cachorro do quatorze.',
+    'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do Growlithe do quatorze.',
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} dorme debaixo da mesa a noite inteira e ninguém manda ${pron(p).ele} sair.`
@@ -69364,7 +69415,7 @@ c22_o_que_ele_ve:{
     'Ele aponta com o queixo.',
     '"Mas eu vejo o céu em cima dele, e eu vejo os bichos daqui de baixo, e é isso que eu ia te contar de qualquer jeito."',
     '"Que bichos?"',
-    '"Todos." Ele abre os braços. "Desde março que não sobe bicho nenhum acima da lomba. Nenhum. Nem passarinho, nem Rattata, nem bicho de rio."',
+    '"Todos." Ele abre os braços. "Desde março que não sobe bicho nenhum acima da lomba. Nenhum. Nem Pidgey, nem Rattata, nem bicho de rio."',
     'Ele deixa os braços caírem.',
     '"E não é medo, porque medo eles mostram. Eles chegam na lomba, param, ficam um tempo, e vão para o lado. Do jeito que a gente faz quando vê uma fita de isolamento."'
   ],
@@ -69510,7 +69561,7 @@ c22_acampou:{
     'Você acampa num ponto alto e passa a noite acordad{o|a} olhando o vale a dois quilômetros.',
     'Às duas da manhã, uma luz azul acende no fundo do vale e apaga. Uma vez só, e dura menos de um segundo.',
     'Às três e dez você percebe que está com fome e que não jantou, e que não sentiu fome antes disso, e que isso é estranho.',
-    'Às quatro e quarenta, alguma coisa cruza o céu acima do vale: grande, rápida, e reta demais para ser pássaro comum.',
+    'Às quatro e quarenta, alguma coisa cruza o céu acima do vale: grande, rápida, e reta demais para ser um Fearow.',
     'De manhã você desce sabendo três coisas a mais e com quatro horas a menos de sono.'
   ],
   ef:{flag:'observou_o_vale', hp:-2, causa:'Noite em claro no norte', instabilidade:1,
@@ -72453,7 +72504,7 @@ cenas:{
 c29_a_rua:{
   texto:[
     'Depois da segunda ponte, Cerulean muda de textura em menos de um quarteirão.',
-    'Some a banca, some a vitrine, some o barulho de água, e começa uma rua de casa baixa com muro alto e cachorro que late de dentro.',
+    'Some a banca, some a vitrine, some o barulho de água, e começa uma rua de casa baixa com muro alto e Growlithe que late de dentro.',
     'A casa do portão verde é a quarta. Não tem placa, não tem número visível e o portão é de chapa, com uma janelinha de correspondência que está vedada por dentro com fita.',
     'Do outro lado da rua tem um poste com uma lâmpada quebrada e um meio-fio onde dá pra sentar.',
     'Você senta.',
@@ -72485,7 +72536,7 @@ c29_o_vizinho:{
     fala('Sra. Vale', 'Do barulho.'),
     'Ela para de regar.',
     fala('Sra. Vale', 'Não é barulho de festa, {meu filho|minha filha}. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
-    fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar cachorro de vizinho de o que quer que seja aquilo.', 'baixo')
+    fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar Growlithe de vizinho de o que quer que seja aquilo.', 'baixo')
   ],
   ef:{flag:['a_senhora_do_vaso','achou_o_portao_verde'],
       npc:{nome:'Sra. Vale', opiniao:2, viuVoce:'Te contou das quatro ligações que ela fez e que ninguém atendeu.'},
@@ -75471,7 +75522,7 @@ c1e_ficou_na_praca:{
       return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ${pron(p).ele} faz por conta própria.`
                : 'Ele sobe no banco do seu lado sem pedir licença.';
     },
-    'A cidade começa a acordar em volta: a padaria abre, um cachorro late, alguém arrasta uma cadeira num quintal.',
+    'A cidade começa a acordar em volta: a padaria abre, um Growlithe late, alguém arrasta uma cadeira num quintal.',
     'Daqui a uma hora você sai daqui e não volta tão cedo. Agora não. Agora é só um banco de praça com duas coisas sentadas nele.'
   ],
   ef:{moral:6, flag:'ficou_no_banco_da_praca',
@@ -77853,15 +77904,19 @@ const UI = {
     this.modoBatalha = 'menu';
     this.limpar();
     this.add(this.topo());
-    if (introLinhas && introLinhas.length){
-      this.add(`<div class="painel"><div class="narrativa">${
-        introLinhas.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div></div>`);
-    }
-    this.add(`<div class="painel">
+    /* Tudo numa tela só: a introdução entra no topo do log (em vez de
+       um painel a mais em cima da arena), e no computador o log e as
+       ações ficam lado a lado, com a bandeja embaixo do log. */
+    const intro = (introLinhas || []).map(t => `<div class="l intro">${this.esc(txt(t))}</div>`).join('');
+    this.add(`<div class="painel painel-batalha">
       <div class="arena" id="arena"></div>
-      <div class="log-combate" id="log"></div>
-      <div id="dados"></div>
-      <div class="acoes-combate" id="acoes"></div>
+      <div class="combate-baixo">
+        <div class="combate-registro">
+          <div class="log-combate" id="log">${intro}</div>
+          <div id="dados"></div>
+        </div>
+        <div class="acoes-combate" id="acoes"></div>
+      </div>
     </div>`);
     this._arenaUltima = null;
     this.atualizarArena({entrando:true});
@@ -78532,7 +78587,7 @@ const UI = {
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
-        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo contra os dele' : 'daqui não se foge',
+        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo' : 'daqui não se foge',
              "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       ${dex}

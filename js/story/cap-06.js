@@ -124,7 +124,7 @@ c6_ab_quem_oferece:{
 c6_ab_cartaz:{
   texto:[
     'Tem um quadro de avisos na cabeceira da ponte sul, daqueles com vidro e cadeado, e é ali que Cerulean pendura o que a cidade precisa saber.',
-    'Aviso de dedetização. Horário da balsa. Um cachorro perdido com foto ruim.',
+    'Aviso de dedetização. Horário da balsa. Um Growlithe perdido com foto ruim.',
     d=>{
       const r = Estado.nomeRep();
       return `E uma folha impressa, colada por dentro do vidro, com um retrato falado que não é bom e com uma palavra que é: "${r}".`;

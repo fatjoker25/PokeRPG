@@ -30,7 +30,7 @@ cenas:{
 c29_a_rua:{
   texto:[
     'Depois da segunda ponte, Cerulean muda de textura em menos de um quarteirão.',
-    'Some a banca, some a vitrine, some o barulho de água, e começa uma rua de casa baixa com muro alto e cachorro que late de dentro.',
+    'Some a banca, some a vitrine, some o barulho de água, e começa uma rua de casa baixa com muro alto e Growlithe que late de dentro.',
     'A casa do portão verde é a quarta. Não tem placa, não tem número visível e o portão é de chapa, com uma janelinha de correspondência que está vedada por dentro com fita.',
     'Do outro lado da rua tem um poste com uma lâmpada quebrada e um meio-fio onde dá pra sentar.',
     'Você senta.',
@@ -62,7 +62,7 @@ c29_o_vizinho:{
     fala('Sra. Vale', 'Do barulho.'),
     'Ela para de regar.',
     fala('Sra. Vale', 'Não é barulho de festa, {meu filho|minha filha}. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
-    fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar cachorro de vizinho de o que quer que seja aquilo.', 'baixo')
+    fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar Growlithe de vizinho de o que quer que seja aquilo.', 'baixo')
   ],
   ef:{flag:['a_senhora_do_vaso','achou_o_portao_verde'],
       npc:{nome:'Sra. Vale', opiniao:2, viuVoce:'Te contou das quatro ligações que ela fez e que ninguém atendeu.'},

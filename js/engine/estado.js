@@ -412,10 +412,21 @@ function mochilaAtual(){
     const c = corDaMochila(escolhida);
     if (c){ cor = c; nome = escolhida; return saida(); }
   }
+  let achou = false;
   for (const [n, q] of Object.entries(d.itens)){
     if (q <= 0) continue;
     const c = corDaMochila(n);
-    if (c){ cor = c; nome = n; }
+    if (c){ cor = c; nome = n; achou = true; }
+  }
+  /* Sem bolsa comprada: a que você descreveu na ficha ("uma mochila
+     preta", "bolsa verde musgo nas costas") é a que você carrega. */
+  if (!achou && d.jogador){
+    const texto = _semAcento([d.jogador.vestimenta, d.jogador.aparencia].filter(Boolean).join(' . '));
+    const m = texto.match(/\b(mochila|bolsa|sacola|mala|bornal)\s+([a-z]+(?:\s+[a-z]+)?)/);
+    if (m){
+      const c = corDaMochila(m[1] + ' ' + m[2]);
+      if (c){ cor = c; nome = m[1][0].toUpperCase() + m[1].slice(1) + ' ' + m[2]; }
+    }
   }
   return saida();
 }

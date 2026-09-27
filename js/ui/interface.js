@@ -810,15 +810,19 @@ const UI = {
     this.modoBatalha = 'menu';
     this.limpar();
     this.add(this.topo());
-    if (introLinhas && introLinhas.length){
-      this.add(`<div class="painel"><div class="narrativa">${
-        introLinhas.map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div></div>`);
-    }
-    this.add(`<div class="painel">
+    /* Tudo numa tela só: a introdução entra no topo do log (em vez de
+       um painel a mais em cima da arena), e no computador o log e as
+       ações ficam lado a lado, com a bandeja embaixo do log. */
+    const intro = (introLinhas || []).map(t => `<div class="l intro">${this.esc(txt(t))}</div>`).join('');
+    this.add(`<div class="painel painel-batalha">
       <div class="arena" id="arena"></div>
-      <div class="log-combate" id="log"></div>
-      <div id="dados"></div>
-      <div class="acoes-combate" id="acoes"></div>
+      <div class="combate-baixo">
+        <div class="combate-registro">
+          <div class="log-combate" id="log">${intro}</div>
+          <div id="dados"></div>
+        </div>
+        <div class="acoes-combate" id="acoes"></div>
+      </div>
     </div>`);
     this._arenaUltima = null;
     this.atualizarArena({entrando:true});
@@ -1489,7 +1493,7 @@ const UI = {
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
-        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo contra os dele' : 'daqui não se foge',
+        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo' : 'daqui não se foge',
              "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       ${dex}

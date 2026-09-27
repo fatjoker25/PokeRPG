@@ -709,7 +709,7 @@ c1e_ficou_na_praca:{
       return p ? `${nomeExib(p)} sobe no banco do seu lado sem pedir licença, o que é a primeira coisa que ${pron(p).ele} faz por conta própria.`
                : 'Ele sobe no banco do seu lado sem pedir licença.';
     },
-    'A cidade começa a acordar em volta: a padaria abre, um cachorro late, alguém arrasta uma cadeira num quintal.',
+    'A cidade começa a acordar em volta: a padaria abre, um Growlithe late, alguém arrasta uma cadeira num quintal.',
     'Daqui a uma hora você sai daqui e não volta tão cedo. Agora não. Agora é só um banco de praça com duas coisas sentadas nele.'
   ],
   ef:{moral:6, flag:'ficou_no_banco_da_praca',

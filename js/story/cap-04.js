@@ -75,7 +75,7 @@ c4_ab_detonacao:{
     'Você chega em Pewter às onze e quarenta e sete da manhã e a cidade inteira para.',
     'Não é figura de linguagem: para mesmo. Quem está andando encosta, quem está no balcão apoia a mão, quem está de bicicleta põe o pé no chão.',
     'Doze horas em ponto: a detonação.',
-    'Você sente no peito antes de ouvir, e o vidro da loja mais próxima faz um som miúdo, e um cachorro late em algum quintal.',
+    'Você sente no peito antes de ouvir, e o vidro da loja mais próxima faz um som miúdo, e um Growlithe late em algum quintal.',
     'E aí, três segundos depois, a cidade volta a andar, toda ao mesmo tempo, como se ninguém tivesse parado.',
     'Ninguém comenta. Ninguém olha pra ninguém. É um ritual que eles nem sabem mais que fazem.',
     'Você é a única pessoa em Pewter que ficou parada quatro segundos a mais, olhando em volta.'
@@ -741,7 +741,7 @@ c4_teo_volta:{
   texto:[
     'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
     'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
-    '"Aquela casa ali tem um cachorro que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
+    '"Aquela casa ali tem um Growlithe que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
     '"Isso não é mapear a cidade."',
     '"É o melhor tipo de mapear a cidade."',
     'Vocês passam pela praça. A poeira cinza cobre tudo num tom só e o Ezra escreve o próprio nome no capô de um carro com o dedo, e depois apaga com a manga, envergonhado.',

@@ -143,7 +143,7 @@ c19_ab_nao_e_normal:{
 
 c19_ab_a_vizinhanca:{
   texto:[
-    'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com galinha solta e cachorro de portão.',
+    'A Estação 4 tem vizinho, o que você não esperava. A dois quilômetros da cerca tem quatro casas de sítio numa estrada de terra, com Doduo solto no quintal e Growlithe de portão.',
     'Você bate na primeira porque é a primeira.',
     'Atende uma mulher de uns sessenta anos com uma bacia de feijão no colo, e ela senta na varanda e continua catando o feijão a conversa inteira, e você senta no degrau.',
     'Ela se apresenta como Sra. Hazel antes de você perguntar qualquer coisa, porque é o que se faz quando um desconhecido bate na sua porta no meio do mato.',
@@ -154,13 +154,13 @@ c19_ab_a_vizinhanca:{
     fala('Sra. Hazel', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
     d=>fala(d.jogador.nome, 'E depois?'),
     'Ela para de catar.',
-    fala('Sra. Hazel', 'Depois o meu cachorro parou de dormir.')
+    fala('Sra. Hazel', 'Depois o meu Growlithe parou de dormir.')
   ],
   ef:{flag:'a_vizinhanca_da_estacao',
       npc:{nome:'Sra. Hazel', opiniao:1, viuVoce:'Te recebeu na varanda e falou da Estação 4.'},
       registrar:'A Estação 4 foi instalada em 1994 num pasto comprado do Sr. Aoki.'},
   escolhas:[
-    {texto:'Perguntar do cachorro.', vai:'c19_ab_o_cachorro'},
+    {texto:'Perguntar do Growlithe.', vai:'c19_ab_o_cachorro'},
     {texto:'Perguntar o que se ouve da estação à noite.', vai:'c19_ab_o_que_se_ouve'},
     {texto:'Agradecer e ir dar a volta no perímetro.', vai:'c19_perimetro'}
   ]
@@ -209,7 +209,7 @@ c19_ab_o_que_se_ouve:{
       registrar:'De madrugada, entre três e quatro, uma porta de metal grande abre e fecha nove ou dez vezes na Estação 4.',
       presagio:'Entre três e quatro da manhã. Você já ouviu esse horário em outro lugar deste mapa.'},
   escolhas:[
-    {texto:'Perguntar do cachorro que não dorme.', vai:'c19_ab_o_cachorro'},
+    {texto:'Perguntar do Growlithe que não dorme.', vai:'c19_ab_o_cachorro'},
     {texto:'Ir dar a volta no perímetro.', vai:'c19_perimetro'},
     {texto:'Voltar às três da manhã.', vai:'c19_cerca_mar'}
   ]

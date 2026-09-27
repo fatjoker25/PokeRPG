@@ -274,7 +274,7 @@ c22_o_que_ele_ve:{
     'Ele aponta com o queixo.',
     '"Mas eu vejo o céu em cima dele, e eu vejo os bichos daqui de baixo, e é isso que eu ia te contar de qualquer jeito."',
     '"Que bichos?"',
-    '"Todos." Ele abre os braços. "Desde março que não sobe bicho nenhum acima da lomba. Nenhum. Nem passarinho, nem Rattata, nem bicho de rio."',
+    '"Todos." Ele abre os braços. "Desde março que não sobe bicho nenhum acima da lomba. Nenhum. Nem Pidgey, nem Rattata, nem bicho de rio."',
     'Ele deixa os braços caírem.',
     '"E não é medo, porque medo eles mostram. Eles chegam na lomba, param, ficam um tempo, e vão para o lado. Do jeito que a gente faz quando vê uma fita de isolamento."'
   ],
@@ -420,7 +420,7 @@ c22_acampou:{
     'Você acampa num ponto alto e passa a noite acordad{o|a} olhando o vale a dois quilômetros.',
     'Às duas da manhã, uma luz azul acende no fundo do vale e apaga. Uma vez só, e dura menos de um segundo.',
     'Às três e dez você percebe que está com fome e que não jantou, e que não sentiu fome antes disso, e que isso é estranho.',
-    'Às quatro e quarenta, alguma coisa cruza o céu acima do vale: grande, rápida, e reta demais para ser pássaro comum.',
+    'Às quatro e quarenta, alguma coisa cruza o céu acima do vale: grande, rápida, e reta demais para ser um Fearow.',
     'De manhã você desce sabendo três coisas a mais e com quatro horas a menos de sono.'
   ],
   ef:{flag:'observou_o_vale', hp:-2, causa:'Noite em claro no norte', instabilidade:1,
