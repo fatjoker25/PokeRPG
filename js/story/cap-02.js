@@ -247,7 +247,7 @@ c2_recado_da_sua_cidade:{
     'É o seu.',
     'Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado da Sra. Perla, vizinha".',
     'Ela ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
-    'Você tem menos de vinte e quatro horas de estrada e já tem cartaz numa cidade que não é a sua.'
+    'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
       npc:{nome:'Sra. Perla', opiniao:3, memoria:'Mandou pregar o seu cartaz no mural do Centro de Viridian, por telefone e fax.'},
@@ -486,14 +486,14 @@ c2_pergunta_pedra:{
     'Ele finalmente te olha. "Achei que ia ser mais fácil."'
   ],
   ef:{flag:'teo_abriu_o_jogo',
-      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, no primeiro dia, que não sabia ir sozinho.'}},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, logo que se conheceram, que não sabia ir sozinho.'}},
   escolhas:[
     {texto:'"Ninguém sabe. A gente só vai."', vai:'c2_conversa',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a coisa certa para alguém com medo'},
          npc:{nome:'Ezra', opiniao:2, memoria:'Você disse que ninguém sabe ir sozinho.'}}},
     {texto:'"Então volta pra casa."', vai:'c2_mandou_voltar',
-     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir no primeiro dia'},
-         npc:{nome:'Ezra', opiniao:-3, memoria:'Você mandou ele voltar pra casa no primeiro dia.'}}},
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir antes de começar'},
+         npc:{nome:'Ezra', opiniao:-3, memoria:'Você mandou ele voltar pra casa antes de ele começar.'}}},
     {texto:'"Seu pai é um idiota."', vai:'c2_conversa',
      ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
     {texto:'Não dizer nada e esperar ele continuar.', vai:'c2_conversa',
@@ -536,7 +536,7 @@ c2_conversa:{
     '"Agora a gente luta?" ele pergunta, e é impossível dizer não.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Sentou e ouviu um estranho por quarenta minutos'},
-      npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no primeiro dia.'},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no dia em que se conheceram.'},
       flag:'teo_amigo', moral:5},
   escolhas:[{texto:'Lutar.', vai:'c2_batalha_teo'}]
 },

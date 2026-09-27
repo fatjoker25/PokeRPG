@@ -10561,8 +10561,14 @@ const Historia = {
       }
     }
     if (ef.moral){
-      Estado.dados.time.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + ef.moral)); });
-      avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
+      const vivos = Estado.dados.time.filter(p => !p.morto);
+      vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + ef.moral)); });
+      /* sem ninguém no cinto não tem "time" pra confiar em nada; com um
+         só, é ele, pelo nome */
+      if (vivos.length === 1)
+        avisos.push({tipo:'info', texto: ef.moral > 0 ? `${nomeExib(vivos[0])} confia mais em você.` : `${nomeExib(vivos[0])} te olha diferente agora.`});
+      else if (vivos.length)
+        avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
     if (ef.npc) Estado.lembrarNPC(ef.npc.nome, ef.npc);
     if (ef.insignia && !Estado.dados.insignias.includes(ef.insignia)){
@@ -17853,7 +17859,11 @@ c1_cozinha:{
     'Você senta. Come mais do que queria e menos do que colocaram no prato.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.` : 'O rádio na bancada fala de chuva no norte.';
+      if (!p) return 'O rádio na bancada fala de chuva no norte.';
+      /* o que chegou hoje na perua não tem "sempre" nesta casa ainda */
+      if (d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
+        return `${nomeExib(p)} ganha um pedaço por baixo da mesa. Faz uma hora que ${pron(p).ele} chegou, e a casa já achou um jeito de fazer isso parecer costume.`;
+      return `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.`;
     },
     d=>fala(nomeCasa(), 'E aí. Você já sabe pra onde vai?')
   ],
@@ -17930,7 +17940,7 @@ c1_silencio_mesa:{
 
 c1_despedida:{
   texto:[
-    d=>`Na porta, ${casaCompleto()} te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
+    d=>`Na porta, ${casaCompleto()}, te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
     d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
@@ -17959,8 +17969,13 @@ c1_despedida:{
 
 c1_rua:{
   texto:[
-    d=>`${d.jogador.cidade} de manhã cedo é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`,
-    'O ar está frio de um jeito que não vai durar mais de uma hora.',
+    d=>{
+      const grande = ['Saffron','Celadon'].includes(d.jogador.cidade);
+      const tarde = d.flags.recebeu_do_goro;
+      if (grande) return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é grande demais pra conhecer inteira, mas o seu quarteirão é pequeno de um jeito bom: gente que sabe o seu nome porque viu você aprender a andar.`;
+      return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`;
+    },
+    d=>d.flags.recebeu_do_goro ? 'O sol já está alto e a rua cheira a asfalto quente.' : 'O ar está frio de um jeito que não vai durar mais de uma hora.',
     'Um velho varre a calçada da própria casa, como faz há vinte anos. A vassoura para no meio do movimento quando você passa.',
     fala('Sr. Ives', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
     fala('Sr. Ives', 'Você me deve uma.')
@@ -18183,7 +18198,9 @@ c1_saida_pro_centro:{
     'Não dá pra sair por aí com um Pokémon. Tecnicamente, não dá.',
     d=>d.jogador.cidade === 'Pallet'
       ? 'O posto do Centro Pokémon de Pallet funciona numa sala dos fundos do mercado, três manhãs por semana. Hoje é uma delas.'
-      : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
+      : d.flags.recebeu_do_goro
+        ? `O Centro Pokémon de ${d.jogador.cidade} está na fila de depois do almoço. É meio-dia e meia.`
+        : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
     'Tem uma fila de três pessoas e todas as três têm a sua idade.'
   ],
   ef:{registrar:'Foi ao Centro Pokémon fazer o cadastro de treinador.'},
@@ -18257,11 +18274,15 @@ c1_fila:{
       return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
-    fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
-    fala('a enfermeira', 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+    d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
+      ? fala('a enfermeira', 'Tudo certo. Registro do laboratório de Pallet, com a data de hoje, nenhuma restrição.')
+      : fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
+    d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
+      ? fala('a enfermeira', d.flags.recebeu_do_goro ? 'Veio na perua hoje, né? O Célio ainda tá na praça?' : 'Saiu da mão do Professor hoje, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+      : fala('a enfermeira', 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
   ],
   escolhas:[
-    {texto:'"É. Desde antes de eu lembrar."', vai:'c1_registro',
+    {texto:d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor) ? '"Veio. Faz uma hora que é meu."' : '"É. Desde antes de eu lembrar."', vai:'c1_registro',
      ef:{moral:5, flag:'contou_a_historia_dele'}},
     {texto:'"É." E não explicar mais nada.', vai:'c1_registro'},
     {texto:'Perguntar o que acontece se ele tivesse registro anterior.', vai:'c1_registro_anterior'},
@@ -18409,9 +18430,14 @@ c1_saida:{
     },
     d=>{
       const p = d.time[0];
-      return p ? `Do seu lado, ${nomeExib(p)}, que nunca saiu desta cidade e que não faz ideia do que é uma rota, e que está indo do mesmo jeito.` : 'Do seu lado, ninguém.';
+      if (!p) return 'Do seu lado, ninguém.';
+      if (d.flags.recebeu_do_goro)
+        return `Do seu lado, ${nomeExib(p)}, que chegou numa caixa térmica hoje e já vai pra estrada de novo, sem fazer ideia do que é uma rota, do mesmo jeito.`;
+      return `Do seu lado, ${nomeExib(p)}, que nunca saiu desta cidade e que não faz ideia do que é uma rota, e que está indo do mesmo jeito.`;
     },
-    'Sete e cinquenta da manhã. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
+    d=>d.flags.recebeu_do_goro
+      ? 'Uma e pouco da tarde. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
+      : 'Sete e cinquenta da manhã. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
   ],
   escolhas:[
     {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'},
@@ -18821,7 +18847,7 @@ c2_recado_da_sua_cidade:{
     'É o seu.',
     'Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado da Sra. Perla, vizinha".',
     'Ela ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
-    'Você tem menos de vinte e quatro horas de estrada e já tem cartaz numa cidade que não é a sua.'
+    'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
       npc:{nome:'Sra. Perla', opiniao:3, memoria:'Mandou pregar o seu cartaz no mural do Centro de Viridian, por telefone e fax.'},
@@ -19060,14 +19086,14 @@ c2_pergunta_pedra:{
     'Ele finalmente te olha. "Achei que ia ser mais fácil."'
   ],
   ef:{flag:'teo_abriu_o_jogo',
-      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, no primeiro dia, que não sabia ir sozinho.'}},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou, logo que se conheceram, que não sabia ir sozinho.'}},
   escolhas:[
     {texto:'"Ninguém sabe. A gente só vai."', vai:'c2_conversa',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a coisa certa para alguém com medo'},
          npc:{nome:'Ezra', opiniao:2, memoria:'Você disse que ninguém sabe ir sozinho.'}}},
     {texto:'"Então volta pra casa."', vai:'c2_mandou_voltar',
-     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir no primeiro dia'},
-         npc:{nome:'Ezra', opiniao:-3, memoria:'Você mandou ele voltar pra casa no primeiro dia.'}}},
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou alguém desistir antes de começar'},
+         npc:{nome:'Ezra', opiniao:-3, memoria:'Você mandou ele voltar pra casa antes de ele começar.'}}},
     {texto:'"Seu pai é um idiota."', vai:'c2_conversa',
      ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você chamou o pai dele de idiota. Ele riu por quase um minuto.'}}},
     {texto:'Não dizer nada e esperar ele continuar.', vai:'c2_conversa',
@@ -19110,7 +19136,7 @@ c2_conversa:{
     '"Agora a gente luta?" ele pergunta, e é impossível dizer não.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Sentou e ouviu um estranho por quarenta minutos'},
-      npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no primeiro dia.'},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no dia em que se conheceram.'},
       flag:'teo_amigo', moral:5},
   escolhas:[{texto:'Lutar.', vai:'c2_batalha_teo'}]
 },
@@ -20853,7 +20879,7 @@ c4_teo_piada:{
     '"Duas vezes é pouco. Eu pretendo perder mais."',
     'Ele olha pra você com uma desconfiança genuína, procurando o deboche, e não acha.',
     '"Você tá falando sério?"',
-    '"Eu saí de casa faz três dias, Ezra. Eu perdi pra um Rattata na Rota 1 no primeiro dia."',
+    '"Eu mal saí de casa, Ezra. Eu perdi pra um Rattata logo no começo."',
     'Isso é mentira. Ele não precisa saber que é mentira. Ele endireita as costas uns três centímetros e fica evidente que os três centímetros vieram daí.',
     '"Então a gente é dois lixos", ele conclui, feliz.'
   ],
@@ -75214,7 +75240,7 @@ c1e_olhou_a_caixa:{
 c1e_o_caderno:{
   texto:[
     d=>`Ele passa o dedo pela coluna da página até achar, e acha rápido, porque a lista de ${d.jogador.cidade} deste mês tem três linhas.`,
-    d=>fala('Célio', `${d.jogador.nome}. Pedido em formulário de fevereiro, assinado por ${casaCompleto()}, porque você era menor de idade quando assinou e agora não é mais.`),
+    d=>fala('Célio', `${d.jogador.nome}. Pedido em formulário de fevereiro, assinado junto com ${casaCompleto()}, que responde por você.`),
     'Ele vira o caderno pra você e aponta uma linha com a caneta ainda amarrada no barbante.',
     d=>{
       const esp = especieReservada(d);
@@ -75413,7 +75439,7 @@ c1e_chamou_alto:{
   texto:[
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
-      return p ? fala(d.jogador.nome, `${(p.nome||'').toUpperCase()}!`, 'grita', 'Alto demais pra uma praça às sete da manhã.')
+      return p ? fala(d.jogador.nome, `${(p.nome||'').toUpperCase()}!`, 'grita', 'Alto demais pra uma praça no meio do dia.')
                : fala(d.jogador.nome, 'EI!', 'grita');
     },
     'A praça inteira olha. As pessoas da fila olham. Uma senhora na janela do segundo andar olha.',

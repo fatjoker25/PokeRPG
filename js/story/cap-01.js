@@ -1112,7 +1112,11 @@ c1_cozinha:{
     'Você senta. Come mais do que queria e menos do que colocaram no prato.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.` : 'O rádio na bancada fala de chuva no norte.';
+      if (!p) return 'O rádio na bancada fala de chuva no norte.';
+      /* o que chegou hoje na perua não tem "sempre" nesta casa ainda */
+      if (d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
+        return `${nomeExib(p)} ganha um pedaço por baixo da mesa. Faz uma hora que ${pron(p).ele} chegou, e a casa já achou um jeito de fazer isso parecer costume.`;
+      return `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.`;
     },
     d=>fala(nomeCasa(), 'E aí. Você já sabe pra onde vai?')
   ],
@@ -1189,7 +1193,7 @@ c1_silencio_mesa:{
 
 c1_despedida:{
   texto:[
-    d=>`Na porta, ${casaCompleto()} te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
+    d=>`Na porta, ${casaCompleto()}, te enfia um embrulho pequeno e um envelope na mão, nessa ordem, sem cerimônia.`,
     d=>fala(nomeCasa(), 'O embrulho é comida pra estrada. O envelope é dinheiro, não é muito, e não é pra gastar em besteira.'),
     'Você abre o envelope depois, já na rua, e descobre que é mais do que esta casa podia dar.',
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
@@ -1218,8 +1222,13 @@ c1_despedida:{
 
 c1_rua:{
   texto:[
-    d=>`${d.jogador.cidade} de manhã cedo é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`,
-    'O ar está frio de um jeito que não vai durar mais de uma hora.',
+    d=>{
+      const grande = ['Saffron','Celadon'].includes(d.jogador.cidade);
+      const tarde = d.flags.recebeu_do_goro;
+      if (grande) return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é grande demais pra conhecer inteira, mas o seu quarteirão é pequeno de um jeito bom: gente que sabe o seu nome porque viu você aprender a andar.`;
+      return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`;
+    },
+    d=>d.flags.recebeu_do_goro ? 'O sol já está alto e a rua cheira a asfalto quente.' : 'O ar está frio de um jeito que não vai durar mais de uma hora.',
     'Um velho varre a calçada da própria casa, como faz há vinte anos. A vassoura para no meio do movimento quando você passa.',
     fala('Sr. Ives', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
     fala('Sr. Ives', 'Você me deve uma.')
@@ -1442,7 +1451,9 @@ c1_saida_pro_centro:{
     'Não dá pra sair por aí com um Pokémon. Tecnicamente, não dá.',
     d=>d.jogador.cidade === 'Pallet'
       ? 'O posto do Centro Pokémon de Pallet funciona numa sala dos fundos do mercado, três manhãs por semana. Hoje é uma delas.'
-      : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
+      : d.flags.recebeu_do_goro
+        ? `O Centro Pokémon de ${d.jogador.cidade} está na fila de depois do almoço. É meio-dia e meia.`
+        : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
     'Tem uma fila de três pessoas e todas as três têm a sua idade.'
   ],
   ef:{registrar:'Foi ao Centro Pokémon fazer o cadastro de treinador.'},
@@ -1516,11 +1527,15 @@ c1_fila:{
       return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
-    fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
-    fala('a enfermeira', 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+    d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
+      ? fala('a enfermeira', 'Tudo certo. Registro do laboratório de Pallet, com a data de hoje, nenhuma restrição.')
+      : fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
+    d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
+      ? fala('a enfermeira', d.flags.recebeu_do_goro ? 'Veio na perua hoje, né? O Célio ainda tá na praça?' : 'Saiu da mão do Professor hoje, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+      : fala('a enfermeira', 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
   ],
   escolhas:[
-    {texto:'"É. Desde antes de eu lembrar."', vai:'c1_registro',
+    {texto:d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor) ? '"Veio. Faz uma hora que é meu."' : '"É. Desde antes de eu lembrar."', vai:'c1_registro',
      ef:{moral:5, flag:'contou_a_historia_dele'}},
     {texto:'"É." E não explicar mais nada.', vai:'c1_registro'},
     {texto:'Perguntar o que acontece se ele tivesse registro anterior.', vai:'c1_registro_anterior'},
@@ -1668,9 +1683,14 @@ c1_saida:{
     },
     d=>{
       const p = d.time[0];
-      return p ? `Do seu lado, ${nomeExib(p)}, que nunca saiu desta cidade e que não faz ideia do que é uma rota, e que está indo do mesmo jeito.` : 'Do seu lado, ninguém.';
+      if (!p) return 'Do seu lado, ninguém.';
+      if (d.flags.recebeu_do_goro)
+        return `Do seu lado, ${nomeExib(p)}, que chegou numa caixa térmica hoje e já vai pra estrada de novo, sem fazer ideia do que é uma rota, do mesmo jeito.`;
+      return `Do seu lado, ${nomeExib(p)}, que nunca saiu desta cidade e que não faz ideia do que é uma rota, e que está indo do mesmo jeito.`;
     },
-    'Sete e cinquenta da manhã. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
+    d=>d.flags.recebeu_do_goro
+      ? 'Uma e pouco da tarde. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
+      : 'Sete e cinquenta da manhã. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
   ],
   escolhas:[
     {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'},

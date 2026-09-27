@@ -550,7 +550,7 @@ c4_teo_piada:{
     '"Duas vezes é pouco. Eu pretendo perder mais."',
     'Ele olha pra você com uma desconfiança genuína, procurando o deboche, e não acha.',
     '"Você tá falando sério?"',
-    '"Eu saí de casa faz três dias, Ezra. Eu perdi pra um Rattata na Rota 1 no primeiro dia."',
+    '"Eu mal saí de casa, Ezra. Eu perdi pra um Rattata logo no começo."',
     'Isso é mentira. Ele não precisa saber que é mentira. Ele endireita as costas uns três centímetros e fica evidente que os três centímetros vieram daí.',
     '"Então a gente é dois lixos", ele conclui, feliz.'
   ],

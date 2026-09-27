@@ -215,8 +215,14 @@ const Historia = {
       }
     }
     if (ef.moral){
-      Estado.dados.time.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + ef.moral)); });
-      avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
+      const vivos = Estado.dados.time.filter(p => !p.morto);
+      vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + ef.moral)); });
+      /* sem ninguém no cinto não tem "time" pra confiar em nada; com um
+         só, é ele, pelo nome */
+      if (vivos.length === 1)
+        avisos.push({tipo:'info', texto: ef.moral > 0 ? `${nomeExib(vivos[0])} confia mais em você.` : `${nomeExib(vivos[0])} te olha diferente agora.`});
+      else if (vivos.length)
+        avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
     if (ef.npc) Estado.lembrarNPC(ef.npc.nome, ef.npc);
     if (ef.insignia && !Estado.dados.insignias.includes(ef.insignia)){

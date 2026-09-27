@@ -401,7 +401,7 @@ c1e_olhou_a_caixa:{
 c1e_o_caderno:{
   texto:[
     d=>`Ele passa o dedo pela coluna da página até achar, e acha rápido, porque a lista de ${d.jogador.cidade} deste mês tem três linhas.`,
-    d=>fala('Célio', `${d.jogador.nome}. Pedido em formulário de fevereiro, assinado por ${casaCompleto()}, porque você era menor de idade quando assinou e agora não é mais.`),
+    d=>fala('Célio', `${d.jogador.nome}. Pedido em formulário de fevereiro, assinado junto com ${casaCompleto()}, que responde por você.`),
     'Ele vira o caderno pra você e aponta uma linha com a caneta ainda amarrada no barbante.',
     d=>{
       const esp = especieReservada(d);
@@ -600,7 +600,7 @@ c1e_chamou_alto:{
   texto:[
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
-      return p ? fala(d.jogador.nome, `${(p.nome||'').toUpperCase()}!`, 'grita', 'Alto demais pra uma praça às sete da manhã.')
+      return p ? fala(d.jogador.nome, `${(p.nome||'').toUpperCase()}!`, 'grita', 'Alto demais pra uma praça no meio do dia.')
                : fala(d.jogador.nome, 'EI!', 'grita');
     },
     'A praça inteira olha. As pessoas da fila olham. Uma senhora na janela do segundo andar olha.',
