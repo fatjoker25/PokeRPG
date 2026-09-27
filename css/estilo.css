@@ -2479,6 +2479,9 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-no.vizinho rect,.mapa-kanto .mp-no.vizinho circle{stroke:#ffe066;stroke-width:1.8}
 .mapa-kanto .mp-no.vizinho:hover rect,.mapa-kanto .mp-no.vizinho:hover circle,
 .mapa-kanto .mp-no.vizinho:focus-visible rect,.mapa-kanto .mp-no.vizinho:focus-visible circle{fill:#ffe066}
+.mapa-kanto .mp-no.voo{cursor:pointer}
+.mapa-kanto .mp-no.voo rect{stroke:#f2c94c;stroke-width:2}
+.mapa-kanto .mp-no.voo:hover rect,.mapa-kanto .mp-no.voo:focus-visible rect{fill:#f2c94c}
 .mapa-kanto .mp-no.aqui rect,.mapa-kanto .mp-no.aqui circle{stroke:#fff;stroke-width:2.2;animation:mpAqui 1.2s ease-in-out infinite}
 @keyframes mpAqui{50%{stroke:#ffe066;stroke-width:3.4}}
 @media(prefers-reduced-motion:reduce){.mapa-kanto .mp-no.aqui rect,.mapa-kanto .mp-no.aqui circle{animation:none}}

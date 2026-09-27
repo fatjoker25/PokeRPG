@@ -62,7 +62,8 @@ Nenhum Pokémon aprende "Corte" ou "Surf" aqui. O que existe:
 - **machado** e **picareta** são objeto de mochila, comprados na ferragem;
 - **atravessar água** pede tipo Água de porte médio ou grande;
 - **voar** pede tipo Voador de porte grande que voe de verdade — Doduo,
-  Dodrio e Gyarados têm o tipo e não decolam, e estão em `NAO_DECOLA`;
+  Dodrio e Gyarados têm o tipo e não decolam, e estão em `NAO_DECOLA`. É
+  também o Fly do mapa: com ele, o mapa leva a qualquer cidade já pisada;
 - **forçar** pede porte grande, de qualquer tipo;
 - **iluminar** pede lanterna (gasta pilha) ou bicho que emita luz (não gasta).
 

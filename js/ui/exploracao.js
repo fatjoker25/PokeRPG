@@ -87,6 +87,9 @@ const Exploracao = {
   mapa(origem){
     const aqui = Estado.dados.local;
     const viz = new Set(Mundo.vizinhos());
+    /* Voar, sem HM: um Voador de porte grande que voe de verdade te leva
+       a qualquer cidade onde você já pisou. Sem ele, o mapa diz o que falta. */
+    const voo = (typeof Campo !== 'undefined' && Campo.voar) ? Campo.voar() : {pode:false};
     const pos = this.POS_MAPA;
     const sabe = id => Mundo.visitado(id) || id === aqui;
     const conhecidos = new Set(Object.keys(LOCAIS).filter(sabe));
@@ -112,14 +115,16 @@ const Exploracao = {
       const conhecido = conhecidos.has(id);
       const nome = conhecido ? L.nome : 'caminho que você ainda não fez';
       const ir = viz.has(id);
-      const cls = `mp-no ${L.tipo}${conhecido ? '' : ' desconhecido'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}`;
+      const voa = !ir && voo.pode && conhecido && L.tipo === 'cidade' && id !== aqui;
+      const cls = `mp-no ${L.tipo}${conhecido ? '' : ' desconhecido'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
       const forma = L.tipo === 'cidade' ? `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="1.5"/>`
                   : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
                   : `<circle cx="${x}" cy="${y}" r="3"/>`;
       const rotulo = conhecido && L.tipo !== 'rota'
         ? `<text x="${x}" y="${y - 8}" text-anchor="middle">${UI.esc(L.nome.replace(/^Floresta de /, 'Fl. '))}</text>` : '';
-      const acao = ir ? ` onclick="UI.fecharModal(true);Exploracao.viajar('${id}')" role="button" tabindex="0"` : '';
-      return `<g class="${cls}"${acao}><title>${UI.esc(nome)}${ir ? ' — ir pra lá' : ''}</title>${forma}${rotulo}</g>`;
+      const acao = ir ? ` onclick="UI.fecharModal(true);Exploracao.viajar('${id}')" role="button" tabindex="0"`
+                 : voa ? ` onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')" role="button" tabindex="0"` : '';
+      return `<g class="${cls}"${acao}><title>${UI.esc(nome)}${ir ? ' — ir pra lá' : voa ? ' — voar até lá' : ''}</title>${forma}${rotulo}</g>`;
     });
     const L = Mundo.atual();
     UI.modal('', `<div class="mapa-kanto">
@@ -132,7 +137,22 @@ const Exploracao = {
         ${linhas.join('')}${pontos.join('')}
       </svg>
       <p class="sussurro">Quadrado é cidade, ponto é rota, losango é lugar à parte. Toque num lugar vizinho pra ir.</p>
+      <p class="sussurro mapa-voo">${voo.pode
+        ? `Voar: ${UI.esc(nomeExib(voo.quem))} te leva a qualquer cidade onde você já pisou (as de borda dourada).`
+        : `Voar até uma cidade distante pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`}</p>
     </div>`, false, 'mapa');
+  },
+
+  /* Voo: sai daqui e desce na cidade escolhida, sem atravessar as rotas
+     do meio. Leva um período do dia, como qualquer viagem curta. */
+  voarPara(id){
+    const v = (typeof Campo !== 'undefined') ? Campo.voar() : {pode:false};
+    const L = LOCAIS[id];
+    if (!v.pode || !L || !Mundo.visitado(id)) return this.tela();
+    Mundo.viajar(id);
+    Estado.registrar(`Voou até ${L.nome} ${v.como || ''}.`.replace(/\s+\./, '.'));
+    Estado.salvar('auto');
+    this.tela([{tipo:'info', texto:`${nomeExib(v.quem)} pousa em ${L.nome}. As rotas do caminho passaram lá embaixo.`}]);
   },
 
   /* ---------- entrar no arco que espera neste lugar ---------- */
