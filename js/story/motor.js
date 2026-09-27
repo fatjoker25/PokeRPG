@@ -290,7 +290,9 @@ const Historia = {
     d.capitulosFechados.push(d.capitulo);
     Estado.j.pontos += 1;
     const avisos = Estado.tickLendarios();
-    Estado.dados.relogio.dia += Dados.entre(2,5);
+    /* o capítulo durou o que durou: a última manhã é uma manhã só, e
+       os outros levam um ou dois dias entre uma cena e outra */
+    if (d.capitulo > 1) Estado.dados.relogio.dia += Dados.entre(1,2);
     Estado.salvar('auto');
     return avisos;
   },

@@ -663,7 +663,9 @@ const Jogo = {
     if (d.capitulo === 1 && !d.flags.onibus_da_liga && !['Pallet','Viridian'].includes(d.jogador.cidade)){
       d.flags.onibus_da_liga = true;
       Mundo.viajar('viridian');
-      Mundo.passar(2);
+      /* sai na manhã seguinte, desce no fim da tarde */
+      Estado.dados.relogio.dia += 1;
+      Estado.dados.relogio.periodo = 'tarde';
       this.avisoOnibus = [
         {tipo:'info', texto: d.flags.tem_licenca
           ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'

@@ -205,7 +205,7 @@ c2_pregou_recado:{
   texto:[
     'Você pede um percevejo na recepção, arranca meia folha do caderno de alguém que deixou em cima da mesa, e escreve.',
     'Você escreve três versões na cabeça e a quarta no papel, que é a mais curta — o que já virou um hábito seu e você nem percebeu.',
-    d=>fala(d.jogador.nome, `${d.jogador.nome}, de ${d.jogador.cidade}. Saí dia desses. Se alguém daqui for pra lá, avisa que tá tudo bem.`, 'baixo'),
+    d=>`No papel, escrito à mão: "${d.jogador.nome}, de ${d.jogador.cidade}. Saí dia desses. Se alguém daqui for pra lá, avisa que tá tudo bem."`,
     'Você prega no único espaço que sobrou, embaixo à direita, meio torto, por cima do canto de um cartaz de 1994.',
     'Daqui a três meses vai ter mais duas camadas de papel por cima do seu. Ele vai continuar lá embaixo, do mesmo jeito.'
   ],
@@ -393,12 +393,13 @@ c2_arrancou_dnv:{
 
 c2_pergunta_floresta:{
   texto:[
-    '"O que tem na Floresta de Viridian à noite?"',
+    d=>fala(d.jogador.nome, 'O que tem na Floresta de Viridian à noite?'),
     'A atendente para o que está fazendo, o que já responde metade.',
-    '"Nada que a gente possa dizer oficialmente."',
-    '"E não oficialmente?"',
+    fala('a atendente', 'Nada que a gente possa dizer oficialmente.'),
+    d=>fala(d.jogador.nome, 'E não oficialmente?'),
     'Ela olha os lados, o que é engraçado num salão vazio.',
-    '"Quatro pessoas registraram ocorrência esse ano. Duas falaram de gente. Duas falaram de bicho." Ela baixa a voz. "As duas que falaram de gente descreveram a mesma pessoa."'
+    fala('a atendente', 'Quatro pessoas registraram ocorrência esse ano. Duas falaram de gente. Duas falaram de bicho.'),
+    fala('a atendente', 'As duas que falaram de gente descreveram a mesma pessoa.', 'baixo', 'Ela baixa a voz.')
   ],
   ef:{flag:['leu_aviso_floresta','sabe_das_ocorrencias'],
       registrar:'Quatro ocorrências na Floresta de Viridian este ano. Duas descreveram a mesma pessoa.'},
@@ -750,7 +751,9 @@ c2_encontro_pewter:{
     '"Combinado." Ele bate na sua mão com uma solenidade ridícula. "Não chega antes de mim."',
     '"Você vai sair amanhã cedo?"',
     '"Vou sair AGORA." Ele já está pegando a mochila. "Cara, eu tô nessa escada desde as seis da manhã."',
-    'E ele vai. Sai pela porta do Centro às três e meia da tarde, em direção a uma floresta que leva quatro horas pra atravessar.',
+    d=>d.flags.ensinou_o_pidgey
+      ? 'E ele vai. Sai pela porta do Centro com o céu já escurecendo, em direção a uma floresta que leva quatro horas pra atravessar.'
+      : 'E ele vai. Sai pela porta do Centro às três e meia da tarde, em direção a uma floresta que leva quatro horas pra atravessar.',
     'Você fica olhando a porta por um tempo.'
   ],
   ef:{flag:'teo_foi_pra_floresta'},

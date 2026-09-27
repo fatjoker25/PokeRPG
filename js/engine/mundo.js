@@ -30,7 +30,9 @@ viridian:{
   nome:'Viridian', tipo:'cidade', ambiente:'cidade', nivel:6, porte:'cidade pequena',
   conexoes:['rota1','rota2','rota22'],
   desc:[
-    'Viridian tem prédio de dois andares e semáforo. Para quem vem de Pallet, isso é uma metrópole.',
+    d=>['Pallet','Viridian'].includes(d.jogador.cidade)
+      ? 'Viridian tem prédio de dois andares e semáforo. Para quem vem de Pallet, isso é uma metrópole.'
+      : `Viridian tem prédio de dois andares e semáforo. Pra quem cresceu em ${d.jogador.cidade}, é uma cidade que ainda não terminou de crescer.`,
     'Tem um mural de recados na entrada do Centro Pokémon, cheio de bilhete de gente procurando gente.'
   ],
   lugares:['centro','loja']

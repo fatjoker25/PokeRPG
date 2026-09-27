@@ -1052,7 +1052,7 @@ c1_quarto:{
   texto:[
     'O quarto tem doze anos de coisa acumulada e você não vai levar quase nada.',
     'Na parede, um mapa de Kanto que você ganhou aos oito e preencheu de caneta com lugares onde nunca foi. Alguns nomes estão escritos errado.',
-    'Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto da sua mãe muito mais nova, com o cabelo diferente, rindo de uma coisa que ninguém registrou.',
+    d=>`Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto ${casaEhMulher() ? 'da' : 'do'} ${nomeCasa()} muito mais nov${casaEhMulher() ? 'a' : 'o'}, com o cabelo diferente, rindo de uma coisa que ninguém registrou.`,
     'Nada disso vai servir pra nada em Kanto. Você sabe disso e continua olhando.'
   ],
   escolhas:[
@@ -1781,7 +1781,7 @@ c1_fim_pegou:{
         `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra bola.`
       ]);
     },
-    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora {ele} é seu. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} é seu. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
+    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje diz que agora {ele} pertence a você. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} pertence a você. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
     d=>{
       const b = C1.briga(d), p = C1.meu(d);
       if (!p) return 'Você guarda a bola no cinto e ela pesa mais do que as vazias.';

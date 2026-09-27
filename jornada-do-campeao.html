@@ -6186,7 +6186,9 @@ viridian:{
   nome:'Viridian', tipo:'cidade', ambiente:'cidade', nivel:6, porte:'cidade pequena',
   conexoes:['rota1','rota2','rota22'],
   desc:[
-    'Viridian tem prédio de dois andares e semáforo. Para quem vem de Pallet, isso é uma metrópole.',
+    d=>['Pallet','Viridian'].includes(d.jogador.cidade)
+      ? 'Viridian tem prédio de dois andares e semáforo. Para quem vem de Pallet, isso é uma metrópole.'
+      : `Viridian tem prédio de dois andares e semáforo. Pra quem cresceu em ${d.jogador.cidade}, é uma cidade que ainda não terminou de crescer.`,
     'Tem um mural de recados na entrada do Centro Pokémon, cheio de bilhete de gente procurando gente.'
   ],
   lugares:['centro','loja']
@@ -10681,7 +10683,9 @@ const Historia = {
     d.capitulosFechados.push(d.capitulo);
     Estado.j.pontos += 1;
     const avisos = Estado.tickLendarios();
-    Estado.dados.relogio.dia += Dados.entre(2,5);
+    /* o capítulo durou o que durou: a última manhã é uma manhã só, e
+       os outros levam um ou dois dias entre uma cena e outra */
+    if (d.capitulo > 1) Estado.dados.relogio.dia += Dados.entre(1,2);
     Estado.salvar('auto');
     return avisos;
   },
@@ -17966,7 +17970,7 @@ c1_quarto:{
   texto:[
     'O quarto tem doze anos de coisa acumulada e você não vai levar quase nada.',
     'Na parede, um mapa de Kanto que você ganhou aos oito e preencheu de caneta com lugares onde nunca foi. Alguns nomes estão escritos errado.',
-    'Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto da sua mãe muito mais nova, com o cabelo diferente, rindo de uma coisa que ninguém registrou.',
+    d=>`Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto ${casaEhMulher() ? 'da' : 'do'} ${nomeCasa()} muito mais nov${casaEhMulher() ? 'a' : 'o'}, com o cabelo diferente, rindo de uma coisa que ninguém registrou.`,
     'Nada disso vai servir pra nada em Kanto. Você sabe disso e continua olhando.'
   ],
   escolhas:[
@@ -18695,7 +18699,7 @@ c1_fim_pegou:{
         `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra bola.`
       ]);
     },
-    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje de manhã diz que agora {ele} é seu. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} é seu. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
+    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje diz que agora {ele} pertence a você. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} pertence a você. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
     d=>{
       const b = C1.briga(d), p = C1.meu(d);
       if (!p) return 'Você guarda a bola no cinto e ela pesa mais do que as vazias.';
@@ -18978,7 +18982,7 @@ c2_pregou_recado:{
   texto:[
     'Você pede um percevejo na recepção, arranca meia folha do caderno de alguém que deixou em cima da mesa, e escreve.',
     'Você escreve três versões na cabeça e a quarta no papel, que é a mais curta — o que já virou um hábito seu e você nem percebeu.',
-    d=>fala(d.jogador.nome, `${d.jogador.nome}, de ${d.jogador.cidade}. Saí dia desses. Se alguém daqui for pra lá, avisa que tá tudo bem.`, 'baixo'),
+    d=>`No papel, escrito à mão: "${d.jogador.nome}, de ${d.jogador.cidade}. Saí dia desses. Se alguém daqui for pra lá, avisa que tá tudo bem."`,
     'Você prega no único espaço que sobrou, embaixo à direita, meio torto, por cima do canto de um cartaz de 1994.',
     'Daqui a três meses vai ter mais duas camadas de papel por cima do seu. Ele vai continuar lá embaixo, do mesmo jeito.'
   ],
@@ -19166,12 +19170,13 @@ c2_arrancou_dnv:{
 
 c2_pergunta_floresta:{
   texto:[
-    '"O que tem na Floresta de Viridian à noite?"',
+    d=>fala(d.jogador.nome, 'O que tem na Floresta de Viridian à noite?'),
     'A atendente para o que está fazendo, o que já responde metade.',
-    '"Nada que a gente possa dizer oficialmente."',
-    '"E não oficialmente?"',
+    fala('a atendente', 'Nada que a gente possa dizer oficialmente.'),
+    d=>fala(d.jogador.nome, 'E não oficialmente?'),
     'Ela olha os lados, o que é engraçado num salão vazio.',
-    '"Quatro pessoas registraram ocorrência esse ano. Duas falaram de gente. Duas falaram de bicho." Ela baixa a voz. "As duas que falaram de gente descreveram a mesma pessoa."'
+    fala('a atendente', 'Quatro pessoas registraram ocorrência esse ano. Duas falaram de gente. Duas falaram de bicho.'),
+    fala('a atendente', 'As duas que falaram de gente descreveram a mesma pessoa.', 'baixo', 'Ela baixa a voz.')
   ],
   ef:{flag:['leu_aviso_floresta','sabe_das_ocorrencias'],
       registrar:'Quatro ocorrências na Floresta de Viridian este ano. Duas descreveram a mesma pessoa.'},
@@ -19523,7 +19528,9 @@ c2_encontro_pewter:{
     '"Combinado." Ele bate na sua mão com uma solenidade ridícula. "Não chega antes de mim."',
     '"Você vai sair amanhã cedo?"',
     '"Vou sair AGORA." Ele já está pegando a mochila. "Cara, eu tô nessa escada desde as seis da manhã."',
-    'E ele vai. Sai pela porta do Centro às três e meia da tarde, em direção a uma floresta que leva quatro horas pra atravessar.',
+    d=>d.flags.ensinou_o_pidgey
+      ? 'E ele vai. Sai pela porta do Centro com o céu já escurecendo, em direção a uma floresta que leva quatro horas pra atravessar.'
+      : 'E ele vai. Sai pela porta do Centro às três e meia da tarde, em direção a uma floresta que leva quatro horas pra atravessar.',
     'Você fica olhando a porta por um tempo.'
   ],
   ef:{flag:'teo_foi_pra_floresta'},
@@ -75653,7 +75660,9 @@ c1e_agachou:{
       return p ? `${nomeExib(p)} chega perto do seu joelho, encosta, e sai de novo. Depois volta e encosta mais tempo.`
                : 'Ele chega perto do seu joelho e encosta.';
     },
-    'Atrás de você alguém da fila faz um barulho com a boca, do tipo que gente faz quando vê uma coisa fofa e se arrepende de ter feito barulho.',
+    d=>d.flags.quase_perdeu_a_perua
+      ? 'Do outro lado da praça, uma moça esperando o ônibus faz um barulho com a boca, do tipo que gente faz quando vê uma coisa fofa e se arrepende de ter feito barulho.'
+      : 'Atrás de você alguém da fila faz um barulho com a boca, do tipo que gente faz quando vê uma coisa fofa e se arrepende de ter feito barulho.',
     fala('Célio', 'Essa parte é sempre a melhor e eu vejo ela onze vezes por mês e não enjoei ainda.', 'riso')
   ],
   ef:{moral:8, flag:'agachou_na_praca'},
@@ -81864,7 +81873,7 @@ const Exploracao = {
         <div class="tit">${UI.esc(L.nome)}</div>
         <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}</div>
       </div>
-      <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(t)}</p>`).join('')}${
+      <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(txt(t))}</p>`).join('')}${
         (() => { const r = (typeof comoOlugarTeRecebe === 'function') ? comoOlugarTeRecebe() : null;
                  return r ? `<p class="recepcao">${UI.esc(r)}</p>` : ''; })()}</div>
       <div id="avisos" class="avisos"></div>
@@ -82910,7 +82919,9 @@ const Jogo = {
     if (d.capitulo === 1 && !d.flags.onibus_da_liga && !['Pallet','Viridian'].includes(d.jogador.cidade)){
       d.flags.onibus_da_liga = true;
       Mundo.viajar('viridian');
-      Mundo.passar(2);
+      /* sai na manhã seguinte, desce no fim da tarde */
+      Estado.dados.relogio.dia += 1;
+      Estado.dados.relogio.periodo = 'tarde';
       this.avisoOnibus = [
         {tipo:'info', texto: d.flags.tem_licenca
           ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'

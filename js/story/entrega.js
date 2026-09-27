@@ -622,7 +622,9 @@ c1e_agachou:{
       return p ? `${nomeExib(p)} chega perto do seu joelho, encosta, e sai de novo. Depois volta e encosta mais tempo.`
                : 'Ele chega perto do seu joelho e encosta.';
     },
-    'Atrás de você alguém da fila faz um barulho com a boca, do tipo que gente faz quando vê uma coisa fofa e se arrepende de ter feito barulho.',
+    d=>d.flags.quase_perdeu_a_perua
+      ? 'Do outro lado da praça, uma moça esperando o ônibus faz um barulho com a boca, do tipo que gente faz quando vê uma coisa fofa e se arrepende de ter feito barulho.'
+      : 'Atrás de você alguém da fila faz um barulho com a boca, do tipo que gente faz quando vê uma coisa fofa e se arrepende de ter feito barulho.',
     fala('Célio', 'Essa parte é sempre a melhor e eu vejo ela onze vezes por mês e não enjoei ainda.', 'riso')
   ],
   ef:{moral:8, flag:'agachou_na_praca'},
