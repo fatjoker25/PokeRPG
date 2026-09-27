@@ -1663,7 +1663,7 @@ c14_mesa_do_subsolo:{
     {texto:'Levar isso pro Blaine. Correndo.', vai:'c14_correu_pro_blaine'},
     {texto:'Procurar o vigia Berto.', vai:'c14_tokuda'},
     {texto:'Arrancar a folha e guardar.', vai:'c14_correu_pro_blaine'},
-    {texto:'Ficar ali sentado com isso um tempo.', vai:'c14_tokuda'}
+    {texto:'Ficar ali sentad{o|a} com isso um tempo.', vai:'c14_tokuda'}
   ]
 },
 
@@ -1789,7 +1789,7 @@ c14_vulcao:{
       registrar:'Encontrou Moltres na cratera do vulcão de Cinnabar.',
       presagio:'Ele já estava olhando antes de você chegar. Pensa em quanto tempo antes.'},
   escolhas:[
-    {texto:'Ficar parado. Só olhar.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a}. Só olhar.', vai:'c14_olhar'},
     {texto:'Procurar sinal de que alguém esteve aqui.', vai:'c14_procurou_sinal', cond:d=>!!d.flags.sabe_que_subiram || !!d.flags.fuji_saiu},
     {texto:'Oferecer comida e recuar devagar.', vai:'c14_comida', cond:d=>Estado.contaItem('Ração')>0},
     {texto:'Atacar. Uma chance dessas não se repete.', vai:'c14_luta_moltres'},
@@ -1819,7 +1819,7 @@ c14_procurou_sinal:{
       presagio:'Três pedras empilhadas. Alguém marcou. E não foi ele quem empilhou a terceira.'},
   escolhas:[
     {texto:'Olhar dentro da garrafa térmica.', vai:'c14_garrafa'},
-    {texto:'Ficar parado e olhar Moltres.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Levar a mochila.', vai:'c14_levou_a_mochila'},
     {texto:'Descer e contar pra ilha.', vai:'c14_desceu'}
   ]
@@ -1853,7 +1853,7 @@ c14_garrafa:{
   escolhas:[
     {texto:'Ler em voz alta pro Blaine.', vai:'c14_leu_pro_blaine', cond:d=>!!d.flags.blaine_vai_subir},
     {texto:'Guardar e descer.', vai:'c14_desceu'},
-    {texto:'Ficar parado e olhar Moltres.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Devolver a folha à garrafa e fechar.', vai:'c14_devolveu_a_folha'}
   ]
 },
@@ -1874,7 +1874,7 @@ c14_devolveu_a_folha:{
       registrar:'Devolveu a folha à garrafa térmica e deixou a mochila no abrigo.',
       presagio:'Você não é parte do combinado. Poucas pessoas entendem isso.'},
   escolhas:[
-    {texto:'Ficar parado e olhar Moltres.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Descer.', vai:'c14_desceu'},
     {texto:'Oferecer comida.', vai:'c14_comida', cond:d=>Estado.contaItem('Ração')>0},
     {texto:'Empilhar uma quarta pedra.', vai:'c14_quarta_pedra'}
@@ -1896,7 +1896,7 @@ c14_quarta_pedra:{
       registrar:'Empilhou uma quarta pedra no abrigo da cratera.',
       presagio:'Daqui a trinta anos alguém vai achar que é geologia. E tudo bem.'},
   escolhas:[
-    {texto:'Ficar parado e olhar Moltres.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Descer.', vai:'c14_desceu'},
     {texto:'Oferecer comida.', vai:'c14_comida', cond:d=>Estado.contaItem('Ração')>0},
     {texto:'Ficar até o sol nascer.', vai:'c14_olhar'}
@@ -1934,7 +1934,7 @@ c14_leu_pro_blaine:{
   escolhas:[
     {texto:'Empilhar uma quarta pedra.', vai:'c14_quarta_pedra'},
     {texto:'Devolver a folha à garrafa.', vai:'c14_devolveu_a_folha'},
-    {texto:'Ficar parado e olhar Moltres.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Descer com ele.', vai:'c14_desceu'}
   ]
 },
@@ -1953,7 +1953,7 @@ c14_levou_a_mochila:{
       presagio:'"Pra ilha. Não pra mim." Ele já pensou nisso.'},
   escolhas:[
     {texto:'Descer e entregar na escola.', vai:'c14_escola'},
-    {texto:'Ficar parado e olhar Moltres.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Descer.', vai:'c14_desceu'},
     {texto:'Devolver a mochila ao abrigo.', vai:'c14_devolveu_a_folha'}
   ]
@@ -2033,7 +2033,7 @@ c14_comida:{
       flag:'moltres_amigo', registrar:'Moltres aceitou comida de você e ficou passivo.'},
   escolhas:[
     {texto:'Procurar sinal de quem esteve aqui.', vai:'c14_procurou_sinal', cond:d=>!!d.flags.sabe_que_subiram || !!d.flags.fuji_saiu},
-    {texto:'Ficar parado e olhar.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar.', vai:'c14_olhar'},
     {texto:'Descer.', vai:'c14_desceu'},
     {texto:'Jogar a bola agora que ele desceu.', vai:'c14_luta_moltres'}
   ]
@@ -2089,7 +2089,7 @@ c14_capturou_moltres:{
   escolhas:[
     {texto:'Soltar. Agora, antes de descer.', vai:'c14_soltou_moltres'},
     {texto:'Descer com ele.', vai:'c14_fim', ef:{flag:'desceu_com_moltres', rep:{eixo:'ruim',delta:2,motivo:'Desceu o vulcão com uma Ave Lendária na mochila'}}},
-    {texto:'Ficar sentado na borda pensando.', vai:'c14_soltou_moltres'},
+    {texto:'Ficar sentad{o|a} na borda pensando.', vai:'c14_soltou_moltres'},
     {texto:'Procurar sinal de quem esteve aqui antes de descer.', vai:'c14_procurou_sinal', cond:d=>!!d.flags.sabe_que_subiram || !!d.flags.fuji_saiu}
   ]
 },
@@ -2111,7 +2111,7 @@ c14_soltou_moltres:{
       moral:10, instabilidade:-1,
       registrar:'Soltou Moltres na cratera. As fumarolas voltaram.'},
   escolhas:[
-    {texto:'Ficar parado e olhar.', vai:'c14_olhar'},
+    {texto:'Ficar parad{o|a} e olhar.', vai:'c14_olhar'},
     {texto:'Procurar sinal de quem esteve aqui.', vai:'c14_procurou_sinal', cond:d=>!!d.flags.sabe_que_subiram || !!d.flags.fuji_saiu},
     {texto:'Descer.', vai:'c14_desceu'},
     {texto:'Oferecer comida.', vai:'c14_comida', cond:d=>Estado.contaItem('Ração')>0}

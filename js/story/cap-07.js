@@ -1720,7 +1720,7 @@ c7_cubone_primeiro:{
   escolhas:[
     {texto:'Carregar o treinador agora.', vai:'c7_carregou_o_treinador'},
     {texto:'Gritar pro zelador subir.', vai:'c7_gritou_zelador'},
-    {texto:'Ficar sentado com os dois.', vai:'c7_ficou_com_marowak'},
+    {texto:'Ficar sentad{o|a} com os dois.', vai:'c7_ficou_com_marowak'},
     {texto:'Levar o Cubone com você.', vai:'c7_cubone'}
   ]
 },
@@ -1765,7 +1765,7 @@ c7_contou_pro_marowak:{
       presagio:'A coisa que fez parar foi alguém subir e sentar. Guarda isso: é quase sempre isso.'},
   escolhas:[
     {texto:'Levar o Cubone pro hospital.', vai:'c7_cubone'},
-    {texto:'Ficar sentado com os dois.', vai:'c7_ficou_com_marowak'},
+    {texto:'Ficar sentad{o|a} com os dois.', vai:'c7_ficou_com_marowak'},
     {texto:'Perguntar ao Marowak se ele quer descer.', vai:'c7_perguntou_ao_marowak'},
     {texto:'Descer e seguir viagem.', vai:'c7_fim'}
   ]
@@ -1954,7 +1954,7 @@ c7_escudo_resultado:{
     {texto:'Escrever o nome no mural.', vai:'c7_mural', cond:d=>d.cemiterio.length>0,
      ef:{rep:{eixo:'bom',delta:1,motivo:'Escreveu o nome de quem sacrificou'}, flag:'escreveu_mural'}},
     {texto:'Ir embora de Lavender agora.', vai:'c7_fim'},
-    {texto:'Ficar sentado no saguão.', vai:'c7_saguao_depois'}
+    {texto:'Ficar sentad{o|a} no saguão.', vai:'c7_saguao_depois'}
   ]
 },
 
@@ -2105,7 +2105,7 @@ c7_desceu_do_setimo:{
   ef:{flag:'desceu_inteiro'},
   escolhas:[
     {texto:'Sair da torre.', vai:'c7_fim'},
-    {texto:'Ficar sentado no saguão um pouco.', vai:'c7_saguao_depois'}
+    {texto:'Ficar sentad{o|a} no saguão um pouco.', vai:'c7_saguao_depois'}
   ]
 },
 

@@ -1022,7 +1022,7 @@ c17_replantou:{
     {texto:'Sentar no meio e esperar.', vai:'c17_esperou_mew'},
     {texto:'Ir embora sem esperar.', vai:'c17_foi_embora_clareira'},
     {texto:'Procurar as marcas de pneu.', vai:'c17_pneus', cond:d=>!!d.flags.tem_gente_atras_do_mew || !!d.flags.achou_os_pneus},
-    {texto:'Ficar sentado ao lado dela.', vai:'c17_esperou_mew'}
+    {texto:'Ficar sentad{o|a} ao lado dela.', vai:'c17_esperou_mew'}
   ]
 },
 
@@ -1370,7 +1370,7 @@ c17_esperou_mew:{
       registrar:'Mew apareceu na clareira da Rota 23, depois de duas horas.',
       presagio:'Ela não tem medo. Isso é o que mata mais bicho em Kanto.'},
   escolhas:[
-    {texto:'Ficar parado.', vai:'c17_mew_brinca'},
+    {texto:'Ficar parad{o|a}.', vai:'c17_mew_brinca'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
     {texto:'Avisar em voz alta que tem gente atrás dela.', vai:'c17_avisou_mew'},
     {texto:'Tentar capturar.', vai:'c17_captura_mew'}
@@ -1430,7 +1430,7 @@ c17_mew_mao:{
       presagio:'Um lugar onde nada nunca precisou de nome. Guarde — é o oposto de tudo que você fez.'},
   escolhas:[
     {texto:'Avisar que tem gente atrás dela.', vai:'c17_avisou_mew'},
-    {texto:'Ficar parado e ver o que ela faz.', vai:'c17_mew_brinca'},
+    {texto:'Ficar parad{o|a} e ver o que ela faz.', vai:'c17_mew_brinca'},
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
     {texto:'Capturar.', vai:'c17_captura_mew', ef:{flag:'traiu_mew', moral:-25, rep:{eixo:'ruim',delta:4,motivo:'Capturou Mew depois que ela te tocou'}}}
   ]
@@ -1456,7 +1456,7 @@ c17_avisou_mew:{
       presagio:'Ela mede o tempo em outra escala. Nessa escala, você não aconteceu.'},
   escolhas:[
     {texto:'"E isso não te incomoda?"', vai:'c17_nao_te_incomoda'},
-    {texto:'Ficar parado e ver o que ela faz.', vai:'c17_mew_brinca'},
+    {texto:'Ficar parad{o|a} e ver o que ela faz.', vai:'c17_mew_brinca'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'}
   ]
@@ -1484,7 +1484,7 @@ c17_nao_te_incomoda:{
       presagio:'Você vai entender aos vinte e poucos anos, numa conversa sobre coisa nenhuma.'},
   escolhas:[
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
-    {texto:'Ficar parado e ver o que mais ela faz.', vai:'c17_mew_brinca'},
+    {texto:'Ficar parad{o|a} e ver o que mais ela faz.', vai:'c17_mew_brinca'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
     {texto:'Anotar exatamente o que ela fez.', vai:'c17_anotou_o_gesto'}
   ]
@@ -1511,7 +1511,7 @@ c17_anotou_o_gesto:{
   escolhas:[
     {texto:'Mostrar o caderno pra ela.', vai:'c17_mostrou_o_caderno'},
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
-    {texto:'Ficar parado.', vai:'c17_mew_brinca'},
+    {texto:'Ficar parad{o|a}.', vai:'c17_mew_brinca'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'}
   ]
 },
@@ -1538,7 +1538,7 @@ c17_mostrou_o_caderno:{
   escolhas:[
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
-    {texto:'Ficar parado.', vai:'c17_mew_brinca'},
+    {texto:'Ficar parad{o|a}.', vai:'c17_mew_brinca'},
     {texto:'Ficar na clareira até escurecer.', vai:'c17_deixou_mew'}
   ]
 },
@@ -1669,7 +1669,7 @@ c17_capturou_mew:{
     {texto:'Soltar. Agora.', vai:'c17_soltou_mew'},
     {texto:'Ficar com ela.', vai:'c17_ficou_com_mew'},
     {texto:'Soltar e pedir desculpa.', vai:'c17_soltou_mew'},
-    {texto:'Ficar sentado com a bola na mão.', vai:'c17_soltou_mew'}
+    {texto:'Ficar sentad{o|a} com a bola na mão.', vai:'c17_soltou_mew'}
   ]
 },
 
@@ -1702,7 +1702,7 @@ c17_soltou_mew:{
     {texto:'Ir para o Planalto.', vai:'c17_fim'},
     {texto:'Pedir desculpa em voz alta.', vai:'c17_pediu_desculpa'},
     {texto:'Ficar até escurecer.', vai:'c17_ate_escurecer'},
-    {texto:'Ficar parado e ver o que ela faz.', vai:'c17_mew_brinca'}
+    {texto:'Ficar parad{o|a} e ver o que ela faz.', vai:'c17_mew_brinca'}
   ]
 },
 

@@ -254,7 +254,7 @@ c30_subiu_procurando:{
       registrar:'No livro de sepultamento do quinto andar há oito tiras de papel marcando exatamente os oito nomes da madrugada.',
       presagio:'Oito marcadores deixados no lugar. Eles vão voltar pra pegar mais.'},
   escolhas:[
-    {texto:'Ficar escondido no quinto andar e esperar.', vai:'c30_esperou_no_quinto'},
+    {texto:'Ficar escondid{o|a} no quinto andar e esperar.', vai:'c30_esperou_no_quinto'},
     {texto:'Levar as oito tiras.', vai:'c30_levou_as_tiras'},
     {texto:'Deixar tudo no lugar e sair.', vai:'c30_fim'}
   ]
@@ -270,7 +270,7 @@ c30_levou_as_tiras:{
   ef:{flag:'levou_as_tiras',
       registrar:'Levou as oito tiras que marcavam os nomes no livro de sepultamento.'},
   escolhas:[
-    {texto:'Pôr de volta e esperar escondido.', vai:'c30_esperou_no_quinto'},
+    {texto:'Pôr de volta e esperar escondid{o|a}.', vai:'c30_esperou_no_quinto'},
     {texto:'Levar mesmo assim e ir embora.', vai:'c30_fim'}
   ]
 },
@@ -290,7 +290,7 @@ c30_esperou_no_quinto:{
       registrar:'Esperou até as 2h41 no quinto andar. Alguém subiu.'},
   escolhas:[
     {texto:'Acender a lanterna na cara dele.', vai:'c30_acendeu'},
-    {texto:'Ficar quieto e ver o que ele faz.', vai:'c30_ficou_quieto'}
+    {texto:'Ficar quiet{o|a} e ver o que ele faz.', vai:'c30_ficou_quieto'}
   ]
 },
 

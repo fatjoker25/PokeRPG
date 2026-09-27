@@ -285,7 +285,7 @@ c21_pagou_a_janela:{
       registrar:'Voltou para pagar a janela. Ele não aceitou o dinheiro.'},
   escolhas:[
     {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio'},
-    {texto:'Pegar de volta e ficar sentado ali.', vai:'c21_silencio_no_degrau'}
+    {texto:'Pegar de volta e ficar sentad{o|a} ali.', vai:'c21_silencio_no_degrau'}
   ]
 },
 
@@ -298,7 +298,7 @@ c21_insistiu_ushio:{
   ef:{dinheiro:-2000, moral:3,
       npc:{nome:'Sr. Ives', opiniao:4, memoria:'Insistiu até ele aceitar o dinheiro da janela.'},
       registrar:'Insistiu e o Sr. Ives aceitou o dinheiro.'},
-  escolhas:[{texto:'Ficar sentado no degrau um pouco.', vai:'c21_silencio_no_degrau'}]
+  escolhas:[{texto:'Ficar sentad{o|a} no degrau um pouco.', vai:'c21_silencio_no_degrau'}]
 },
 
 c21_por_que_sentado:{

@@ -761,7 +761,7 @@ c18_entrou_cedo_demais:{
     {texto:'"Eu sei o que vocês fazem."', vai:'c18_704_sei_o_que_fazem'},
     {texto:'"Desculpa. Sala errada." E sair.', vai:'c18_704_saiu'},
     {texto:'"Quem é a senhora?"', vai:'c18_704_quem_e'},
-    {texto:'Ficar em pé, calado, e esperar.', vai:'c18_704_esperou'}
+    {texto:'Ficar em pé, calad{o|a}, e esperar.', vai:'c18_704_esperou'}
   ]
 },
 
@@ -2476,7 +2476,7 @@ c18_nada:{
       npc:{nome:'Auditora Brill', opiniao:0, memoria:'Você disse que não ia fazer nada. Ela anotou e foi embora.'},
       registrar:'Disse à Comissão que não ia fazer nada.'},
   escolhas:[
-    {texto:'Ficar sentado na cama com as quatro pilhas.', vai:'c18_ficou_sentado'},
+    {texto:'Ficar sentad{o|a} na cama com as quatro pilhas.', vai:'c18_ficou_sentado'},
     {texto:'Correr atrás dela e dizer que mentiu.', vai:'c18_correu_atras'},
     {texto:'Ir embora de Saffron hoje mesmo.', vai:'c18_foi_embora_de_saffron'}
   ]

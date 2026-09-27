@@ -218,7 +218,7 @@ c3_gritou_teo:{
   ef:{flag:'foi_ouvido_na_floresta'},
   escolhas:[
     {texto:'Ir na direção do galho.', vai:'c3_correu_atras'},
-    {texto:'Ficar absolutamente parado.', vai:'c3_ficou_parado'},
+    {texto:'Ficar absolutamente parad{o|a}.', vai:'c3_ficou_parado'},
     {texto:'Sair dali rápido e em silêncio.', vai:'c3_contornou'}
   ]
 },

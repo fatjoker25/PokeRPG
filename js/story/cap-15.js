@@ -84,7 +84,7 @@ c15_ab_a_cabine:{
       registrar:'Alguém senta na cabine de pedágio desativada olhando a ciclovia. Oito bitucas, três recentes.',
       presagio:'De dentro da cabine dá pra ver quem entra na ciclovia. É por isso que se senta ali.'},
   escolhas:[
-    {texto:'Ficar escondido na cabine e esperar quem senta.', vai:'c15_ab_esperou_na_cabine'},
+    {texto:'Ficar escondid{o|a} na cabine e esperar quem senta.', vai:'c15_ab_esperou_na_cabine'},
     {texto:'Andar a ciclovia agora, antes que a pessoa chegue.', vai:'c15_ciclovia'},
     {texto:'Procurar quem more por aqui e conheça a cabine.', vai:'c15_vilarejo'}
   ]
@@ -1188,7 +1188,7 @@ c15_esperou_a_madrugada:{
   texto:[
     'Você espera.',
     d=>d.flags.conheceu_nair && d.flags.conheceu_otavio ? 'A Ylva e o Xavi esperam com você, sentados em cadeirinha de praia dobrável que eles levam há trinta e um anos, com garrafa térmica e a prancheta no colo.\n"Se passarem, eu conto e você olha", ela diz. "Não adianta os dois olharem e ninguém contar."' :
-       'Sozinho, com o cobertor, encostado numa pedra, sem fogo, porque fogo se vê de longe.',
+       'Sozinh{o|a}, com o cobertor, encostad{o|a} numa pedra, sem fogo, porque fogo se vê de longe.',
     'Faz frio. Vento de sudeste. O mar bate embaixo.',
     'Às duas da manhã você já não sente os dedos do pé.',
     'Às três e quarenta, o chão avisa antes do som.',
@@ -1201,7 +1201,7 @@ c15_esperou_a_madrugada:{
       registrar:'Os três passaram às 3h40.',
       presagio:'Quarenta segundos. Decide agora.'},
   escolhas:[
-    {texto:'Ficar parado onde está.', vai:'c15_ficou'},
+    {texto:'Ficar parad{o|a} onde está.', vai:'c15_ficou'},
     {texto:'Sair do caminho e se esconder.', vai:'c15_escondeu'},
     {texto:'Acender a lanterna. Como a Ylva fez.', vai:'c15_acendeu_a_lanterna'},
     {texto:'Correr.', vai:'c15_correu'}
@@ -1362,7 +1362,7 @@ c15_ficou:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Não correu'}, flag:'encarou_os_caes',
       presagio:'De noventa pra zero. Eles pararam porque quiseram parar.'},
-  escolhas:[{texto:'Continuar parado.', vai:'c15_encontro'}]
+  escolhas:[{texto:'Continuar parad{o|a}.', vai:'c15_encontro'}]
 },
 
 c15_encontro:{
@@ -1421,7 +1421,7 @@ c15_soltou_caes:{
       flag:'devolveu_os_caes', registrar:'Soltou os cães capturados diante dos outros.',
       presagio:'O instinto de matilha não é uma chave que liga na hora. Dois minutos.'},
   escolhas:[
-    {texto:'Ficar parado até eles irem.', vai:'c15_foram_embora'},
+    {texto:'Ficar parad{o|a} até eles irem.', vai:'c15_foram_embora'},
     {texto:'Falar com eles.', vai:'c15_falou'},
     {texto:'Mostrar as mãos vazias.', vai:'c15_maos_vazias'},
     {texto:'Sentar no chão.', vai:'c15_sentou_na_estrada'}
@@ -1510,7 +1510,7 @@ c15_ja_fui_la:{
   escolhas:[
     {texto:'Ver eles irem.', vai:'c15_foram_embora'},
     {texto:'"Eu vou lá de novo. Se vocês quiserem."', vai:'c15_prometeu_caes'},
-    {texto:'Ficar sentado no asfalto um tempo.', vai:'c15_foram_embora'},
+    {texto:'Ficar sentad{o|a} no asfalto um tempo.', vai:'c15_foram_embora'},
     {texto:'Ir contar pro Xavi e pra Ylva.', vai:'c15_avisou_os_dois'}
   ]
 },

@@ -151,7 +151,7 @@ c23_por_que_esperou:{
       registrar:'Blue disse que só duas pessoas podiam ler aquilo com ele, e uma sumiu.'},
   escolhas:[
     {texto:'Ir atrás.', vai:'c23_subiu_com_blue'},
-    {texto:'Ficar. Deixar ele subir sozinho.', vai:'c23_deixou_subir_sozinho'}
+    {texto:'Ficar. Deixar ele subir sozinh{o|a}.', vai:'c23_deixou_subir_sozinho'}
   ]
 },
 

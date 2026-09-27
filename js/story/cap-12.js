@@ -1396,7 +1396,7 @@ c12_terca:{
     {texto:'Segurar. Ficar o dia inteiro.', vai:'c12_o_dia_inteiro'},
     {texto:'Ficar até as nove e ver o que ela disse.', vai:'c12_nove_da_manha'},
     {texto:'Sair agora, antes de começar.', vai:'c12_saiu_da_terca'},
-    {texto:'Fotografar tudo escondido.', vai:'c12_fotografou_zona', cond:d=>Estado.contaItem('Câmera descartável')>0}
+    {texto:'Fotografar tudo escondid{o|a}.', vai:'c12_fotografou_zona', cond:d=>Estado.contaItem('Câmera descartável')>0}
   ]
 },
 

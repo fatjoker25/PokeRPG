@@ -86,7 +86,7 @@ c1_acorda:{
     }
   ],
   escolhas:[
-    {texto:'Ficar deitado mais cinco minutos. Você tem o resto da vida pra ter pressa.', vai:'c1_cinco_minutos'},
+    {texto:'Ficar deitad{o|a} mais cinco minutos. Você tem o resto da vida pra ter pressa.', vai:'c1_cinco_minutos'},
     {texto:'Levantar e olhar as coisas do quarto uma última vez.', vai:'c1_quarto'},
     {texto:'Conferir a mochila de novo, pela quarta vez.', vai:'c1_mochila'},
     {texto:'Descer direto. Enrolar só piora.', vai:'c1_cozinha'}
@@ -130,7 +130,7 @@ c1_calha:{
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Consertou a calha antes de ir embora'},
       registrar:'Desentupiu a calha da casa antes de sair.'},
   escolhas:[
-    {texto:'Entrar e tomar café molhado mesmo.', vai:'c1_cozinha'},
+    {texto:'Entrar e tomar café molhad{o|a} mesmo.', vai:'c1_cozinha'},
     {texto:'Trocar de roupa primeiro e conferir a mochila.', vai:'c1_mochila'}
   ]
 },
@@ -394,7 +394,7 @@ c1_sol_no_telhado:{
   ef:{moral:3},
   escolhas:[
     {texto:'Responder e descer.', vai:'c1_cozinha'},
-    {texto:'Ficar quieto mais um minuto.', vai:'c1_mais_um_minuto'}
+    {texto:'Ficar quiet{o|a} mais um minuto.', vai:'c1_mais_um_minuto'}
   ]
 },
 

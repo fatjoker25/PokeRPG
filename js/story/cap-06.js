@@ -79,7 +79,7 @@ c6_ab_arrebentado:{
   ef:{curaTime:true, flag:'chegou_quebrado_em_cerulean',
       registrar:'Chegou a Cerulean direto pro Centro Pokémon, e não foi o único.'},
   escolhas:[
-    {texto:'Esperar sentado até terminarem o atendimento.', vai:'c6_ab_sala_de_espera'},
+    {texto:'Esperar sentad{o|a} até terminarem o atendimento.', vai:'c6_ab_sala_de_espera'},
     {texto:'Sair e ir pra ponte norte, onde tem gente reunida.', vai:'c6_ponte_norte'},
     {texto:'Sair e sentar na beira do rio.', vai:'c6_beira'}
   ]
@@ -303,7 +303,7 @@ c6_pescador:{
     {texto:'"Mudou de cor como?"', vai:'c6_rio_cor'},
     {texto:'"E ninguém fez nada?"', vai:'c6_rio_ninguem'},
     {texto:'"O senhor pesca aqui há quanto tempo?"', vai:'c6_bilac_tempo'},
-    {texto:'Ficar calado junto com ele.', vai:'c6_bilac_calado'}
+    {texto:'Ficar calad{o|a} junto com ele.', vai:'c6_bilac_calado'}
   ]
 },
 
@@ -1080,7 +1080,7 @@ c6_so_avaliar:{
   escolhas:[
     {texto:'Ir pra Rota 25.', vai:'c6_saida_norte'},
     {texto:'Voltar e vender mesmo assim.', vai:'c6_venda_feita', vendaTime:true},
-    {texto:'Ir pra beira do rio ficar quieto um tempo.', vai:'c6_beira'}
+    {texto:'Ir pra beira do rio ficar quiet{o|a} um tempo.', vai:'c6_beira'}
   ]
 },
 
@@ -1718,7 +1718,7 @@ c6_rota25:{
     {texto:'Ir ver.', vai:'c6_marta'},
     {texto:'Chamar de longe antes de chegar perto.', vai:'c6_chamou_marta'},
     {texto:'Seguir caminho. Não é da sua conta.', vai:'c6_seguiu_do_choro'},
-    {texto:'Ficar parado e escutar mais um pouco.', vai:'c6_escutou_choro'}
+    {texto:'Ficar parad{o|a} e escutar mais um pouco.', vai:'c6_escutou_choro'}
   ]
 },
 

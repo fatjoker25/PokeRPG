@@ -42,7 +42,7 @@ c2_ab_encharcado:{
   ],
   ef:{hp:-2, flag:'chegou_molhado_em_viridian', registrar:'Chegou a Viridian debaixo de chuva.'},
   escolhas:[
-    {texto:'Ir direto pro mural de recados, molhado mesmo.', vai:'c2_mural'},
+    {texto:'Ir direto pro mural de recados, molhad{o|a} mesmo.', vai:'c2_mural'},
     {texto:'Sentar e esperar secar antes de fazer qualquer coisa.', vai:'c2_ab_secando'},
     {texto:'Perguntar à atendente onde dá pra secar roupa.', vai:'c2_ab_secando'}
   ]

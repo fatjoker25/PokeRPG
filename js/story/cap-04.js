@@ -207,7 +207,7 @@ c4_senhora:{
   escolhas:[
     {texto:'"Ele tá bem?"', vai:'c4_senhora_filho'},
     {texto:'Agradecer o pastel e levantar.', vai:'c4_rua'},
-    {texto:'Ficar sentado mais um pouco sem dizer nada.', vai:'c4_senhora_silencio'},
+    {texto:'Ficar sentad{o|a} mais um pouco sem dizer nada.', vai:'c4_senhora_silencio'},
     {texto:'Contar pra ela de onde você veio.', vai:'c4_senhora_contou'}
   ]
 },
@@ -558,7 +558,7 @@ c4_teo_piada:{
     {texto:'"Me conta como foi lá dentro."', vai:'c4_teo_relato'},
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vou dar uma volta pela cidade. Vem?"', vai:'c4_teo_volta'},
-    {texto:'Deixar ele em paz e ir andar sozinho.', vai:'c4_rua'}
+    {texto:'Deixar ele em paz e ir andar sozinh{o|a}.', vai:'c4_rua'}
   ]
 },
 
@@ -852,7 +852,7 @@ c4_teo_ferido:{
     {texto:'Ir atrás dele e voltar atrás.', vai:'c4_teo_desculpa'},
     {texto:'Deixar. Você não falou nenhuma mentira.', vai:'c4_rua'},
     {texto:'Ir pra pedreira e não pensar nisso.', vai:'c4_pedreira_caminho'},
-    {texto:'Ficar sentado na escada por um tempo.', vai:'c4_teo_escada'}
+    {texto:'Ficar sentad{o|a} na escada por um tempo.', vai:'c4_teo_escada'}
   ]
 },
 
@@ -1525,7 +1525,7 @@ c4_ivone_e_se:{
       presagio:'Você vai se pegar montando uma justificativa boa, em algum lugar, e vai reconhecer o que está fazendo no meio da frase.'},
   escolhas:[
     {texto:'Guardar o cartão. "Se eu vir, eu ligo."', vai:'c4_ivone_aceitou'},
-    {texto:'Guardar o cartão calado.', vai:'c4_museu_saiu'},
+    {texto:'Guardar o cartão calad{o|a}.', vai:'c4_museu_saiu'},
     {texto:'Devolver o cartão.', vai:'c4_ivone_recusa'}
   ]
 },
@@ -1836,7 +1836,7 @@ c4_pedreira_borda:{
   ef:{flag:'achou_a_fenda', registrar:'Achou uma fenda fora da cerca da pedreira, com marca de bota fresca.'},
   escolhas:[
     {texto:'Entrar na fenda.', vai:'c4_fenda'},
-    {texto:'Esperar escondido pra ver quem vem.', vai:'c4_fenda_espera'},
+    {texto:'Esperar escondid{o|a} pra ver quem vem.', vai:'c4_fenda_espera'},
     {texto:'Voltar e contar no portão da pedreira.', vai:'c4_pedreira_portao', ef:{flag:'vai_contar_da_fenda'}},
     {texto:'Marcar o lugar na cabeça e ir embora.', vai:'c4_rua2'}
   ]
@@ -1868,7 +1868,7 @@ c4_soltou_zubat:{
   ],
   escolhas:[
     {texto:'Destruir as quatro armadilhas.', vai:'c4_destruiu_armadilhas'},
-    {texto:'Esperar escondido pelo dono.', vai:'c4_fenda_espera'},
+    {texto:'Esperar escondid{o|a} pelo dono.', vai:'c4_fenda_espera'},
     {texto:'Sair e contar no portão da pedreira.', vai:'c4_pedreira_portao', ef:{flag:'vai_contar_da_fenda'}},
     {texto:'Sair e ir embora.', vai:'c4_fenda_saiu'}
   ]
@@ -1886,7 +1886,7 @@ c4_destruiu_armadilhas:{
       flag:'destruiu_armadilhas_fenda',
       presagio:'Alguém vai voltar aqui e entender o recado. Recado tem resposta.'},
   escolhas:[
-    {texto:'Esperar escondido pra ver a resposta.', vai:'c4_fenda_espera'},
+    {texto:'Esperar escondid{o|a} pra ver a resposta.', vai:'c4_fenda_espera'},
     {texto:'Sair e contar no portão da pedreira.', vai:'c4_pedreira_portao', ef:{flag:'vai_contar_da_fenda'}},
     {texto:'Sair e ir embora.', vai:'c4_fenda_saiu'}
   ]
@@ -1921,7 +1921,7 @@ c4_gritou_pedra:{
     {texto:'Descer e falar de perto.', vai:'c4_encarou'},
     {texto:'"EU VOLTO AMANHÃ." E ir embora.', vai:'c4_fenda_saiu',
      ef:{flag:'ameacou_voltar', rep:{eixo:'bom',delta:1,motivo:'Deu um aviso em vez de uma surra'}}},
-    {texto:'Ficar calado e deixar ele ir embora assustado.', vai:'c4_fenda_saiu'}
+    {texto:'Ficar calad{o|a} e deixar ele ir embora assustado.', vai:'c4_fenda_saiu'}
   ]
 },
 

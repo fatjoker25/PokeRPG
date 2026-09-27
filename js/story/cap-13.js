@@ -1604,7 +1604,7 @@ c13_fundo:{
       registrar:'Encontrou Articuno no fundo das Seafoam, parado há dezenove semanas.',
       presagio:'Nenhuma coluna quebrou. Ele teve cuidado com um lugar que ele está destruindo.'},
   escolhas:[
-    {texto:'Ficar parado e observar.', vai:'c13_observar_articuno'},
+    {texto:'Ficar parad{o|a} e observar.', vai:'c13_observar_articuno'},
     {texto:'Chegar perto devagar.', vai:'c13_perto'},
     {texto:'Falar com ele em voz alta.', vai:'c13_perguntou_articuno'},
     {texto:'Atacar. Ele está enfraquecido.', vai:'c13_luta_articuno'},

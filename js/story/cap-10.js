@@ -915,7 +915,7 @@ c10_agenda_pro_eloi:{
     {texto:'"Você avisou. Só não teve quem lesse."', vai:'c10_consolou_eloi'},
     {texto:'"É. Você não avisou."', vai:'c10_foi_duro_com_eloi'},
     {texto:'Não dizer nada e voltar pra usina.', vai:'c10_galpao'},
-    {texto:'Ficar sentado com ele um tempo.', vai:'c10_sentou_com_eloi'}
+    {texto:'Ficar sentad{o|a} com ele um tempo.', vai:'c10_sentou_com_eloi'}
   ]
 },
 
@@ -939,7 +939,7 @@ c10_consolou_eloi:{
   escolhas:[
     {texto:'Voltar pra usina.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
-    {texto:'Ficar sentado com ele mais um pouco.', vai:'c10_sentou_com_eloi'},
+    {texto:'Ficar sentad{o|a} com ele mais um pouco.', vai:'c10_sentou_com_eloi'},
     {texto:'Ir embora de vez.', vai:'c10_foi_embora'}
   ]
 },
@@ -1563,7 +1563,7 @@ c10_galpao:{
       registrar:'Encontrou Zapdos no galpão de turbinas da usina.',
       presagio:'Vieram assistir. Ninguém prendeu ninguém aqui.'},
   escolhas:[
-    {texto:'Ficar parado e observar até ela terminar.', vai:'c10_observar_zapdos'},
+    {texto:'Ficar parad{o|a} e observar até ela terminar.', vai:'c10_observar_zapdos'},
     {texto:'Olhar embaixo da viga central. O X do croqui.', vai:'c10_viga_central', cond:d=>!!d.flags.tem_o_croqui || !!d.flags.sabe_do_nivaldo},
     {texto:'Falar. Em voz alta. Como o Teco fez.', vai:'c10_falou_com_zapdos'},
     {texto:'Sair de fininho. Não mexer com isso.', vai:'c10_saiu'},
@@ -1592,7 +1592,7 @@ c10_viga_central:{
       presagio:'Doze pontos de entrada. Doze marcas no chão. Ele não foi atingido — ele foi tocado.'},
   escolhas:[
     {texto:'Falar em voz alta. Perguntar o que aconteceu.', vai:'c10_falou_com_zapdos'},
-    {texto:'Ficar parado e observar até ela terminar.', vai:'c10_observar_zapdos'},
+    {texto:'Ficar parad{o|a} e observar até ela terminar.', vai:'c10_observar_zapdos'},
     {texto:'Sair. Você já viu demais.', vai:'c10_saiu'},
     {texto:'Atacar.', vai:'c10_zapdos'}
   ]
@@ -1618,7 +1618,7 @@ c10_falou_com_zapdos:{
       presagio:'Eles responderam. A partir daqui, tudo que você fizer aqui você faz sabendo.'},
   escolhas:[
     {texto:'"Por que?" Perguntar de novo.', vai:'c10_perguntou_porque'},
-    {texto:'Ficar parado e observar até ela terminar.', vai:'c10_observar_zapdos'},
+    {texto:'Ficar parad{o|a} e observar até ela terminar.', vai:'c10_observar_zapdos'},
     {texto:'Sair. Não é seu.', vai:'c10_saiu'},
     {texto:'Atacar mesmo assim.', vai:'c10_zapdos'}
   ]
@@ -1646,7 +1646,7 @@ c10_perguntou_porque:{
       presagio:'Onze anos de conversa. E você chegou hoje querendo resolver.'},
   escolhas:[
     {texto:'Responder. Com o que você tiver.', vai:'c10_respondeu'},
-    {texto:'Ficar parado e observar até ela terminar.', vai:'c10_observar_zapdos'},
+    {texto:'Ficar parad{o|a} e observar até ela terminar.', vai:'c10_observar_zapdos'},
     {texto:'Sair sem interromper.', vai:'c10_saiu'},
     {texto:'Atacar.', vai:'c10_zapdos'}
   ]
@@ -1835,7 +1835,7 @@ c10_comida_zapdos:{
       flag:'zapdos_desceu',
       presagio:'O gesto não significou nada e funcionou mesmo assim. Guarde a diferença.'},
   escolhas:[
-    {texto:'Ficar parado.', vai:'c10_observar_zapdos'},
+    {texto:'Ficar parad{o|a}.', vai:'c10_observar_zapdos'},
     {texto:'Falar com ela.', vai:'c10_falou_com_zapdos'},
     {texto:'Oferecer a bola aberta.', vai:'c10_convite'},
     {texto:'Aproveitar que ela desceu e jogar a bola.', vai:'c10_traicao_zapdos'}

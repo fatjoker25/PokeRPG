@@ -39,7 +39,7 @@ c22_ab_a_arquibancada:{
   escolhas:[
     {texto:'Descer e falar com o funcionário da mesa.', vai:'c22_o_quadro'},
     {texto:'Falar com os três da folha mimeografada.', vai:'c22_ab_os_tres_da_folha'},
-    {texto:'Ficar sentado e ver quem aparece.', vai:'c22_aceitou'}
+    {texto:'Ficar sentad{o|a} e ver quem aparece.', vai:'c22_aceitou'}
   ]
 },
 

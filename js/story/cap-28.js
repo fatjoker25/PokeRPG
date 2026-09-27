@@ -237,7 +237,7 @@ c23_chamou:{
       registrar:'Ele respondeu ao seu chamado do meio da descida.'},
   escolhas:[
     {texto:'"Por que você não sobe?"', vai:'c23_porque_nao_sobe'},
-    {texto:'Descer calado.', vai:'c23_a_camara'},
+    {texto:'Descer calad{o|a}.', vai:'c23_a_camara'},
     {texto:'Olhar as paredes enquanto desce.', vai:'c23_as_paredes'}
   ]
 },
@@ -1388,7 +1388,7 @@ c23_trinta_e_dois:{
   escolhas:[
     {texto:'"Por que eles deixaram?"', vai:'c23_final_trinta_e_dois'},
     {texto:'"O que eles estavam fazendo?"', vai:'c23_final_trinta_e_dois'},
-    {texto:'Ficar calado.', vai:'c23_final_trinta_e_dois'}
+    {texto:'Ficar calad{o|a}.', vai:'c23_final_trinta_e_dois'}
   ]
 },
 

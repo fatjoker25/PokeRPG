@@ -255,7 +255,7 @@ c5_escada:{
 c5_posto:{
   texto:[
     'Você sobe. A saliência é do tamanho de uma cama de solteiro e dá pra deitar.',
-    'Deitado, você vê exatamente uma coisa: a boca da caverna, de cima, com um ângulo que cobre quem entra e quem sai e não cobre nada mais.',
+    'Deitad{o|a}, você vê exatamente uma coisa: a boca da caverna, de cima, com um ângulo que cobre quem entra e quem sai e não cobre nada mais.',
     'Embaixo da lona tem um caderninho. Não é diário — é planilha. Datas, horas, e uma coluna com números pequenos.',
     '"14/03 — 06:40 — 3." "14/03 — 19:10 — 3." "17/03 — 05:55 — 4." "17/03 — 20:30 — 4."',
     'Alguém conta quantas pessoas entram e quantas saem. Todo dia. Há meses.'

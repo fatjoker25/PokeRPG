@@ -37,7 +37,7 @@ c25_ab_cedo_demais:{
   escolhas:[
     {texto:'Regar a planta, que precisa de água.', vai:'c25_regou_a_planta'},
     {texto:'Ir pegar café no fim do corredor.', vai:'c25_ab_o_corredor'},
-    {texto:'Ficar sentado até dar dez.', vai:'c25_esperou_dar_dez'},
+    {texto:'Ficar sentad{o|a} até dar dez.', vai:'c25_esperou_dar_dez'},
     {texto:'Perguntar à recepcionista quem convocou a audiência.', vai:'c25_ab_perguntou_a_recepcionista'}
   ]
 },
@@ -64,7 +64,7 @@ c25_ab_perguntou_a_recepcionista:{
   escolhas:[
     {texto:'Perguntar o que se decidiu nas quatro de oitenta e nove.', vai:'c25_ab_as_quatro_de_oitenta_e_nove'},
     {texto:'Regar a planta e esperar.', vai:'c25_regou_a_planta'},
-    {texto:'Ficar sentado até dar dez.', vai:'c25_esperou_dar_dez'}
+    {texto:'Ficar sentad{o|a} até dar dez.', vai:'c25_esperou_dar_dez'}
   ]
 },
 
@@ -86,7 +86,7 @@ c25_ab_as_quatro_de_oitenta_e_nove:{
       presagio:'Ela agradecia o café. Você já ouviu isso de outra mulher, num prédio da Rua do Comércio.'},
   escolhas:[
     {texto:'Regar a planta e esperar dar dez.', vai:'c25_regou_a_planta'},
-    {texto:'Ficar sentado até dar dez.', vai:'c25_esperou_dar_dez'},
+    {texto:'Ficar sentad{o|a} até dar dez.', vai:'c25_esperou_dar_dez'},
     {texto:'Ir pegar café no fim do corredor.', vai:'c25_ab_o_corredor'}
   ]
 },

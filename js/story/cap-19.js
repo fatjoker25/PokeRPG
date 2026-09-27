@@ -39,7 +39,7 @@ c19_ab_o_onibus:{
   escolhas:[
     {texto:'Perguntar aos dois do banco de trás.', vai:'c19_ab_os_dois_do_fundo'},
     {texto:'Falar com o rapaz novo da frente.', vai:'c19_ab_o_rapaz_novo'},
-    {texto:'Ficar quieto e descer com todo mundo na portaria.', vai:'c19_dentro'},
+    {texto:'Ficar quiet{o|a} e descer com todo mundo na portaria.', vai:'c19_dentro'},
     {texto:'Descer antes, na curva, e dar a volta no perímetro.', vai:'c19_perimetro'}
   ]
 },
@@ -795,7 +795,7 @@ c19_caminhao:{
     'Você tem entre três e quatro minutos.'
   ],
   escolhas:[
-    {texto:'Entrar a pé, encostado na lateral do caminhão.', vai:'c19_entrou_pelo_caminhao'},
+    {texto:'Entrar a pé, encostad{o|a} na lateral do caminhão.', vai:'c19_entrou_pelo_caminhao'},
     {texto:'Subir na carroceria e sair lá dentro.', vai:'c19_carroceria'},
     {texto:'Puxar assunto com o motorista.', vai:'c19_motorista'},
     {texto:'Desistir e ir pela cerca.', vai:'c19_cerca_mar'}

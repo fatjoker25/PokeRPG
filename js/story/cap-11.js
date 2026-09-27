@@ -2619,7 +2619,7 @@ c11_alarme:{
     {texto:'Esconder e esperar eles abrirem.', vai:'c11_esperou_11'},
     {texto:'Bater na porta agora, já que não tem mais o que perder.', vai:'c11_bateu_na_porta'},
     {texto:'Correr escada acima.', vai:'c11_desistiu'},
-    {texto:'Ficar parado e esperar chegarem.', vai:'c11_esperou_11'}
+    {texto:'Ficar parad{o|a} e esperar chegarem.', vai:'c11_esperou_11'}
   ]
 },
 
@@ -3267,7 +3267,7 @@ c11_esperou_chegarem:{
     {texto:'Sair.', vai:'c11_fim'},
     {texto:'"Me denuncia."', vai:'c11_fim', ef:{flag:'pediu_denuncia', rep:{eixo:'bom',delta:2,motivo:'Pediu para responder pelo que fez'}}},
     {texto:'"Escreve os nomes deles."', vai:'c11_escreve_os_nomes'},
-    {texto:'Não dizer nada e ficar sentado.', vai:'c11_fim'}
+    {texto:'Não dizer nada e ficar sentad{o|a}.', vai:'c11_fim'}
   ]
 },
 

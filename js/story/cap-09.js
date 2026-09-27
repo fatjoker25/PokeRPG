@@ -1105,7 +1105,7 @@ c9_hospital:{
   escolhas:[
     {texto:'"Como você tá?"', vai:'c9_como_voce_ta'},
     {texto:'Perguntar do Marowak.', vai:'c9_o_marowak_depois'},
-    {texto:'Ficar sentado sem falar muito.', vai:'c9_sentou_no_hospital'},
+    {texto:'Ficar sentad{o|a} sem falar muito.', vai:'c9_sentou_no_hospital'},
     {texto:'"Eu não sabia o seu nome até agora."', vai:'c9_o_nome_do_hideo'}
   ]
 },

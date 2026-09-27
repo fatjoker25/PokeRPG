@@ -831,7 +831,7 @@ c16_ze_viu_os_entalhes:{
     {texto:'Riscar a próxima marca junto com ele.', vai:'c16_riscou'},
     {texto:'Subir até o alicerce com ele.', vai:'c16_alicerce'},
     {texto:'Esperar a noite ali mesmo, no degrau.', vai:'c16_esperou_noite'},
-    {texto:'Deixar ele sozinho um tempo.', vai:'c16_alicerce'}
+    {texto:'Deixar ele sozinh{o|a} um tempo.', vai:'c16_alicerce'}
   ]
 },
 
@@ -1050,7 +1050,7 @@ c16_deitou_na_depressao:{
     'É rasa — uns seis centímetros — e é maior que você em todas as direções, e a pedra está fria.',
     'E dali, deitado, você vê o que quem deitava ali via:',
     'o céu, e mais nada. A parede do alicerce corta o horizonte inteiro.',
-    'Deitado numa dessas você não vê o mar, não vê Kanto, não vê o alicerce.',
+    'Deitad{o|a} numa dessas você não vê o mar, não vê Kanto, não vê o alicerce.',
     'Vê o céu.',
     'Três coisas grandes deitavam aqui, lado a lado, olhando o céu, esperando uma coisa que vem do céu.',
     'E hoje elas deitam numa praia de pedra em Kanto, lado a lado, com quatro metros entre elas, olhando o mar.',
@@ -1063,7 +1063,7 @@ c16_deitou_na_depressao:{
       presagio:'Elas mudaram o que estavam olhando. Depois de quanto tempo?'},
   escolhas:[
     {texto:'Esperar no centro do círculo.', vai:'c16_esperou_no_circulo'},
-    {texto:'Ficar deitado até acontecer alguma coisa.', vai:'c16_esperou_no_circulo'},
+    {texto:'Ficar deitad{o|a} até acontecer alguma coisa.', vai:'c16_esperou_no_circulo'},
     {texto:'Procurar as marcas de bota.', vai:'c16_botas', cond:d=>!!d.flags.outros_procuram_a_ilha || !!d.flags.outros_estiveram_la},
     {texto:'Descer.', vai:'c16_desceu_ilha'}
   ]
@@ -1590,7 +1590,7 @@ c16_esperou_no_circulo:{
       registrar:'A luz sai da laje, não do céu. Ho-Oh desceu por ela.',
       presagio:'A luz sai de baixo. Sessenta e um anos e ninguém podia saber disso da costa.'},
   escolhas:[
-    {texto:'Ficar parado. Absolutamente parado.', vai:'c16_ficou_parado'},
+    {texto:'Ficar parad{o|a}. Absolutamente parad{o|a}.', vai:'c16_ficou_parado'},
     {texto:'Ajoelhar.', vai:'c16_ajoelhou'},
     {texto:'Falar com ele.', vai:'c16_falou_hooh'},
     {texto:'Jogar a bola.', vai:'c16_captura_hooh'}
@@ -1735,7 +1735,7 @@ c16_ajoelhou:{
   escolhas:[
     {texto:'Falar com ele.', vai:'c16_falou_hooh'},
     {texto:'"Eles estão vivos."', vai:'c16_eles_estao_vivos', cond:d=>!!d.flags.viu_os_tres || !!d.flags.sabe_dos_tres},
-    {texto:'Ficar parado até ele ir.', vai:'c16_deixou_pena'},
+    {texto:'Ficar parad{o|a} até ele ir.', vai:'c16_deixou_pena'},
     {texto:'Pegar a pena que caiu.', vai:'c16_pegou_pena'}
   ]
 },
@@ -2066,7 +2066,7 @@ c16_soltou_hooh:{
     {texto:'Descer da ilha.', vai:'c16_desceu_ilha'},
     {texto:'"Eles estão vivos."', vai:'c16_eles_estao_vivos', cond:d=>!!d.flags.viu_os_tres || !!d.flags.sabe_dos_tres},
     {texto:'Falar com ele.', vai:'c16_falou_hooh'},
-    {texto:'Ficar parado e ver.', vai:'c16_ficou_parado'}
+    {texto:'Ficar parad{o|a} e ver.', vai:'c16_ficou_parado'}
   ]
 },
 

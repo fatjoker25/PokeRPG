@@ -616,7 +616,7 @@ c8_porque_nao_pega_leve:{
       presagio:'Uma insígnia dada por gentileza matou alguém. É por isso que a sua vai custar caro.'},
   escolhas:[
     {texto:'"Isso não foi culpa sua."', vai:'c8_nao_foi_culpa'},
-    {texto:'Ficar calado e sair.', vai:'c8_cais'},
+    {texto:'Ficar calad{o|a} e sair.', vai:'c8_cais'},
     {texto:'Ficar olhando ele trabalhar.', vai:'c8_olhou_surge'},
     {texto:'"Eu volto na quinta."', vai:'c8_cais'}
   ]
@@ -749,7 +749,7 @@ c8_mesa_do_fundo:{
   ef:{flag:'carga_viva'},
   escolhas:[
     {texto:'"Carga viva de quê?"', vai:'c8_carga_viva'},
-    {texto:'Ficar quieto e deixar eles decidirem se falam.', vai:'c8_deixou_falarem'},
+    {texto:'Ficar quiet{o|a} e deixar eles decidirem se falam.', vai:'c8_deixou_falarem'},
     {texto:'Pagar a mesa e ficar.', vai:'c8_pagou_a_mesa', cond:d=>d.jogador.dinheiro>=800,
      ef:{dinheiro:-800}},
     {texto:'Levantar e ir pro cais.', vai:'c8_cais'}
@@ -2842,7 +2842,7 @@ c8_o_nome_dele:{
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},
     {texto:'Procurar o capitão.', vai:'c8_capitao'},
-    {texto:'Ficar sentado um tempo.', vai:'c8_levou_a_ficha'}
+    {texto:'Ficar sentad{o|a} um tempo.', vai:'c8_levou_a_ficha'}
   ]
 },
 
@@ -3013,7 +3013,7 @@ c8_o_de_catorze:{
     {texto:'Dar os vinte mil pra ele. (20.000 ₽)', vai:'c8_deu_o_premio', cond:d=>d.jogador.dinheiro>=20000},
     {texto:'Dar o que você puder. (5.000 ₽)', vai:'c8_deu_um_pouco', cond:d=>d.jogador.dinheiro>=5000,
      ef:{dinheiro:-5000, rep:{eixo:'bom',delta:2,motivo:'Deu o que dava a um desconhecido de catorze anos'}}},
-    {texto:'Ficar sentado com ele sem dizer nada.', vai:'c8_ficou_sentado'},
+    {texto:'Ficar sentad{o|a} com ele sem dizer nada.', vai:'c8_ficou_sentado'},
     {texto:'"Foi mal." E ir embora.', vai:'c8_camarote'}
   ]
 },
@@ -3052,7 +3052,7 @@ c8_deu_um_pouco:{
       npc:{nome:'Garoto de Fuchsia', opiniao:6, memoria:'Você deu cinco mil dos dezoito que ele precisava. Ele ficou repetindo que agora faltava menos.'},
       presagio:'"Agora falta menos." Não fecha a conta. Muda o dia dele.'},
   escolhas:[
-    {texto:'Ficar sentado com ele.', vai:'c8_ficou_sentado'},
+    {texto:'Ficar sentad{o|a} com ele.', vai:'c8_ficou_sentado'},
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'}
   ]
@@ -4006,7 +4006,7 @@ c8_capitao:{
   ef:{flag:'falou_com_o_capitao', registrar:'O capitão do S.S. Anne sabe do camarote 40.'},
   escolhas:[
     {texto:'"E o senhor não faz nada?"', vai:'c8_nao_faz_nada'},
-    {texto:'Ficar calado e esperar ele continuar.', vai:'c8_ele_continuou'},
+    {texto:'Ficar calad{o|a} e esperar ele continuar.', vai:'c8_ele_continuou'},
     {texto:'Mostrar o que você tem.', vai:'c8_mostrou_ao_capitao',
      cond:d=>!!(d.flags.papel_com_brasao||d.flags.fotografou_o_porao||d.flags.tem_as_pastas_do_40||d.flags.tem_a_etiqueta)},
     {texto:'"Eu vou contar pra imprensa quando descer."', vai:'c8_ameacou_o_capitao'},
@@ -4155,7 +4155,7 @@ c8_diario_de_bordo:{
     {texto:'"Então registra."', vai:'c8_registrou_no_diario'},
     {texto:'"O senhor pode chamar a capitania também."', vai:'c8_capitania'},
     {texto:'"Me dá cópia do que o senhor comunicou."', vai:'c8_copia_do_capitao'},
-    {texto:'Deixar ele decidir sozinho.', vai:'c8_fim_navio'}
+    {texto:'Deixar ele decidir sozinh{o|a}.', vai:'c8_fim_navio'}
   ]
 },
 
