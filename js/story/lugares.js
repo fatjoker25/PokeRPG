@@ -597,6 +597,7 @@ const Cidade = {
       const tenho = Estado.contaItem(n);
       return `<button class="item-linha compravel${caro ? ' caro' : ''}" ${caro ? 'disabled' : ''}
         onclick="Cidade.comprar('${n.replace(/'/g,"\\'")}',${p})">
+        ${imgItem(n)}
         <span class="qtd">${p}</span>
         <span class="corpo">
           <span class="nome">${UI.esc(n)}${tenho ? ` <span class="fraco">(você tem ${tenho})</span>` : ''}</span>

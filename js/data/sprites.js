@@ -65,3 +65,71 @@ function imgSprite(p, vista, opcoes){
 function imgSpriteDex(dexId, vista, opcoes){
   return imgSprite({dex:dexId, nome:(DEX[dexId]||{}).nome}, vista, opcoes);
 }
+
+/* ============================================================
+   ITENS — ícone da mochila e bola do arremesso
+
+     sprites_nds/items/{arquivo}.png                ícone de item (30×30)
+     sprites_nds/animations/pokeball/ball_closed.png  Poké Ball do arremesso
+
+   O mapa vai do nome que o JOGO usa pro arquivo. Só entra item com
+   equivalente exato nos jogos — Resto de Ração é Leftovers porque a
+   ficha é a mesma (7% do HP por turno), Faixa Firme é Focus Band
+   porque sobrevive com 1 HP. Ferramenta que só existe aqui (Machado,
+   Picareta, Lanterna, Bandagem…) e papel de enredo ficam sem ícone:
+   inventar arte pra eles seria pior que deixar o espaço vazio.
+   ============================================================ */
+const ITENS_PASTA = 'items/';
+const ITEM_SPRITE = {
+  /* bolas */
+  'Poké Ball':'pokeball', 'Great Ball':'greatball',
+  'Ultra Ball':'ultraball', 'Master Ball':'masterball',
+  /* cura */
+  'Potion':'potion', 'Super Potion':'super_potion', 'Hyper Potion':'hyper_potion',
+  'Revive':'revive', 'Água Fresca':'fresh_water',
+  'Éter':'ether', 'Elixir':'elixir',
+  /* status */
+  'Antidote':'antidote', 'Full Heal':'full_heal',
+  /* campo */
+  'Repelente':'repel', 'Corda':'escape_rope', 'Mapa de Kanto':'town_map',
+  'Boneco':'poke_doll',
+  /* evolução */
+  'Moon Stone':'moon_stone', 'Pedra do Fogo':'fire_stone', 'Pedra da Água':'water_stone',
+  'Pedra do Trovão':'thunder_stone', 'Pedra da Folha':'leaf_stone', 'Pedra do Sol':'sun_stone',
+  /* segurados — mesma ficha do item dos jogos */
+  'Resto de Ração':'leftovers', 'Faixa Firme':'focus_band', 'Sino Calmante':'soothe_bell',
+  'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses'
+};
+
+function caminhoItem(nome){
+  const arq = ITEM_SPRITE[nome];
+  if (!arq) return null;
+  const rel = SPRITES_BASE + ITENS_PASTA + arq + '.png';
+  return SPRITES_EMBUTIDOS[rel] || rel;
+}
+
+/* Sem arte, devolve uma casa vazia do mesmo tamanho: a coluna dos
+   nomes não pode pular de linha pra linha só porque um item tem ícone
+   e o de baixo não. */
+function imgItem(nome, classe){
+  const src = caminhoItem(nome);
+  const c = 'item-icone' + (classe ? ' ' + classe : '');
+  if (!src) return `<span class="${c} sem-arte" aria-hidden="true"></span>`;
+  /* Sem loading="lazy": pra ícone de 30×30 ele não economiza nada — no
+     arquivo único a arte já está na memória — e só faz o ícone de baixo
+     da dobra aparecer atrasado quando a mochila rola. */
+  return `<img class="${c}" src="${src}" alt=""
+    onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${c} sem-arte'}))">`;
+}
+
+/* A bola que voa no arremesso. A Poké Ball usa o quadro da pasta de
+   animação; as outras usam o próprio ícone, que é a mesma bola vista
+   do mesmo ângulo. Bola aberta não tem arquivo: o endereço dela não
+   existe na origem, então a tela abre a fechada ao meio (ver CSS). */
+function spriteDaBola(nome){
+  if (nome === 'Poké Ball'){
+    const rel = SPRITES_BASE + 'animations/pokeball/ball_closed.png';
+    return SPRITES_EMBUTIDOS[rel] || rel;
+  }
+  return caminhoItem(nome) || caminhoItem('Poké Ball');
+}

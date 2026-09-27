@@ -795,6 +795,244 @@ const UI = {
     }
   },
 
+  /* ========================================================
+     ARREMESSO — a bola faz o que o dado decidiu
+
+     Máquina de estados (a mesma dos jogos de DS):
+
+       1 ARCO      ball_closed girando numa parábola de Bézier, do
+                   treinador até um ponto no alto, sobre a cabeça
+       2 CAPTURA   abre lá em cima; o Pokémon vira uma máscara
+                   branca e some pra dentro, com opacidade caindo;
+                   a bola fecha e cai na vertical até a base
+       3 CHACOALHO 15° pra esquerda, centro, 15° pra direita, centro;
+                   0,5 s de pausa entre uma validação e a outra
+       4 FINAL     captura: bola quieta no chão e brilho em cima
+                   fuga: abre, feixe de luz, e o sprite de frente volta
+
+     Lê Captura.ultimo: {bola, desfecho, sacudidas}. Nada é inventado
+     aqui — duas chacoalhadas no dado são duas na tela. Os três
+     desfechos que só lendário tem continuam: recusou (bate e cai
+     aberta), quebrou (racha no ar), rompeu (sai antes de chacoalhar).
+
+     Bola aberta e brilho não têm arquivo: os endereços de ball_open e
+     de sparkle não existem na origem, e tilt_left/tilt_right são o
+     mesmo byte a byte da bola fechada. Então a aberta é a fechada
+     cortada ao meio, a inclinação é rotação e o brilho é desenhado.
+
+     O sprite do alvo NUNCA recebe filter — o filter dele carrega a
+     silhueta. A máscara branca é um clone à parte, que começa com
+     brightness(0): a cor morre antes de virar branco, então nem uma
+     espécie não catalogada vaza a cor por ela.
+     ======================================================== */
+  animarArremesso(anim){
+    const arena = document.getElementById('arena');
+    const alvo = arena && arena.querySelector('.lutador.inimigo .arte .sprite');
+    if (!arena || !anim) return Promise.resolve();
+    const src = spriteDaBola(anim.bola);
+    const reduzido = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const A = arena.getBoundingClientRect();
+    const T = alvo ? alvo.getBoundingClientRect()
+                   : {left:A.right-160, top:A.top+40, width:100, height:100, bottom:A.top+140};
+    const artAli = arena.querySelector('.lutador.aliado .arte');
+    const S = artAli ? artAli.getBoundingClientRect()
+                     : {left:A.left+40, top:A.bottom-150, width:120, height:120};
+    const TAM = 36;
+    const GIRO = 720;             // volta inteira: pousa de pé
+    const x0 = S.left - A.left + S.width * 0.62 - TAM/2;
+    const y0 = S.top  - A.top  + S.height * 0.30 - TAM/2;
+    const xt = T.left - A.left + T.width/2 - TAM/2;
+    /* a arte ocupa ~23%..76% do quadro: a cabeça fica perto de 23% */
+    const yAlto = T.top - A.top + T.height * 0.08 - TAM/2;   // sobre a cabeça
+    const yPeito = T.top - A.top + T.height * 0.42 - TAM/2;  // onde a bola bate
+    const yChao = T.top - A.top + T.height * 0.76 - TAM + 4; // pé do bicho
+
+    const camada = document.createElement('div');
+    camada.className = 'arremesso';
+    camada.innerHTML =
+      `<div class="bola-voo" style="width:${TAM}px;height:${TAM}px">
+         <div class="gira">
+           <img class="meia baixo" src="${src}" alt="">
+           <img class="meia cima"  src="${src}" alt="">
+         </div>
+       </div>
+       <div class="feixe"></div>`;
+    arena.appendChild(camada);
+    const bola  = camada.querySelector('.bola-voo');
+    const gira  = camada.querySelector('.gira');
+    const cima  = camada.querySelector('.meia.cima');
+    const baixo = camada.querySelector('.meia.baixo');
+    const feixe = camada.querySelector('.feixe');
+    const acoes = document.getElementById('acoes');
+    if (acoes){ acoes.setAttribute('aria-busy', 'true'); acoes.classList.add('esperando'); }
+
+    /* a máscara branca: clone do sprite, sem classe de sprite */
+    let mascara = null;
+    if (alvo){
+      mascara = document.createElement('img');
+      mascara.className = 'mascara-branca';
+      mascara.src = alvo.currentSrc || alvo.src;
+      mascara.alt = '';
+      Object.assign(mascara.style, {
+        left:(T.left - A.left) + 'px', top:(T.top - A.top) + 'px',
+        width:T.width + 'px', height:T.height + 'px',
+        transformOrigin:`${xt + TAM/2 - (T.left - A.left)}px ${yAlto + TAM/2 - (T.top - A.top)}px`
+      });
+      camada.insertBefore(mascara, bola);
+    }
+
+    const pos = (x, y, g) => `translate(${x}px, ${y}px) rotate(${g || 0}deg)`;
+    const tocar = (el, quadros, ms, extra) =>
+      el.animate(quadros, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, extra || {})).finished;
+    const esperar = ms => new Promise(r => setTimeout(r, ms));
+    const abrir  = () => tocar(cima, [{transform:'rotate(0deg)'}, {transform:'rotate(-62deg)'}], 140);
+    const fechar = () => tocar(cima, [{transform:'rotate(-62deg)'}, {transform:'rotate(0deg)'}], 120);
+    const luz = (x, y) => {
+      feixe.style.left = (x + TAM/2) + 'px'; feixe.style.top = (y + TAM/2) + 'px';
+      return tocar(feixe, [{opacity:0, transform:'translate(-50%,-50%) scale(.2)'},
+                           {opacity:1, transform:'translate(-50%,-50%) scale(1)', offset:.35},
+                           {opacity:0, transform:'translate(-50%,-50%) scale(1.4)'}], 420);
+    };
+    /* visibility, e não opacity: o sprite entra com a animação
+       surgeSprite (fill both), e animação CSS ganha de estilo inline —
+       opacity 0 aqui era ignorado e o Pokémon ficava de pé ao lado da
+       bola que devia estar com ele dentro. visibility ela não toca. */
+    const esconderAlvo = () => { if (alvo) alvo.style.visibility = 'hidden'; };
+
+    /* 2 — some pra dentro: vira branco e encolhe até a bola */
+    const sugar = async () => {
+      if (!mascara) return;
+      await tocar(mascara, [{opacity:0}, {opacity:1}], 150);
+      esconderAlvo();
+      await tocar(mascara, [{transform:'scale(1)', opacity:1},
+                            {transform:'scale(.05)', opacity:0}], 380, {easing:'ease-in'});
+    };
+    /* 4 fuga — o inverso: sai branco da bola e revela o sprite de frente */
+    const soltar = async () => {
+      if (!mascara || !alvo) return;
+      await tocar(mascara, [{transform:'scale(.05)', opacity:0},
+                            {transform:'scale(1)', opacity:1}], 320, {easing:'ease-out'});
+      alvo.style.visibility = '';
+      await tocar(mascara, [{opacity:1}, {opacity:0}], 220);
+    };
+    /* 1 — parábola de Bézier quadrática, amostrada em quadros */
+    const arco = (x1, y1, ate) => {
+      const cx = (x0 + x1)/2, cy = Math.min(y0, y1) - 95;
+      const N = 16, quadros = [];
+      const corte = ate === 'meio' ? 0.55 : 1;
+      for (let i = 0; i <= N; i++){
+        const t = (i / N) * corte, u = 1 - t;
+        const x = u*u*x0 + 2*u*t*cx + t*t*x1;
+        const y = u*u*y0 + 2*u*t*cy + t*t*y1;
+        quadros.push({transform: pos(x, y, GIRO * t), offset: i / N});
+      }
+      return tocar(bola, quadros, ate === 'meio' ? 360 : 620, {easing:'linear'})
+        .then(() => quadros[quadros.length - 1]);
+    };
+    /* 3 — cai na vertical até a base, com um quique */
+    const cair = (deY) => tocar(bola, [
+      {transform: pos(xt, deY, GIRO)},
+      {transform: pos(xt, yChao, GIRO), offset:.72},
+      {transform: pos(xt, yChao - 9, GIRO), offset:.86},
+      {transform: pos(xt, yChao, GIRO)}], 400, {easing:'ease-in'});
+    /* 3 — esquerda, centro, direita, centro: pivô no pé da bola */
+    const chacoalhar = () => tocar(gira, [
+      {transform:'rotate(0deg)'},  {transform:'rotate(-15deg)', offset:.25},
+      {transform:'rotate(0deg)', offset:.5}, {transform:'rotate(15deg)', offset:.75},
+      {transform:'rotate(0deg)'}], 560);
+    /* 4 captura — brilho: estrelinhas saindo em volta da bola */
+    const brilhar = () => {
+      const cx = xt + TAM/2, cy = yChao + TAM*0.3;
+      const giros = [-90, -30, 30, 150, 210];
+      return Promise.all(giros.map((g, i) => {
+        const e = document.createElement('span');
+        e.className = 'brilho';
+        e.style.left = cx + 'px'; e.style.top = cy + 'px';
+        camada.appendChild(e);
+        const r = g * Math.PI / 180, d = 24 + (i % 2) * 6;
+        return tocar(e, [
+          {transform:'translate(-50%,-50%) scale(.3)', opacity:0},
+          {transform:`translate(calc(-50% + ${Math.cos(r)*d*.5}px), calc(-50% + ${Math.sin(r)*d*.5}px)) scale(1.1)`, opacity:1, offset:.35},
+          {transform:`translate(calc(-50% + ${Math.cos(r)*d}px), calc(-50% + ${Math.sin(r)*d}px)) scale(.6)`, opacity:0}
+        ], 680, {easing:'ease-out', delay:i * 40});
+      }));
+    };
+    const fim = () => {
+      if (acoes){ acoes.removeAttribute('aria-busy'); acoes.classList.remove('esperando'); }
+      camada.remove();
+    };
+
+    /* Sem movimento: um quadro parado da bola, e segue. */
+    if (reduzido){
+      bola.style.transform = pos(xt, anim.desfecho === 'captura' ? yChao : yAlto, GIRO);
+      return esperar(450).then(fim);
+    }
+
+    const sequencia = async () => {
+      /* quebrou — racha no alto do arco, antes de chegar */
+      if (anim.desfecho === 'quebrou'){
+        const q = await arco(xt, yAlto, 'meio');
+        const [, mx, my] = q.transform.match(/translate\(([-\d.]+)px, ([-\d.]+)px\)/) || [0, xt, yAlto];
+        camada.classList.add('rachou');
+        await Promise.all([
+          luz(+mx, +my),
+          tocar(cima,  [{transform:'translate(0,0) rotate(0)'},
+                        {transform:'translate(-18px,40px) rotate(-120deg)', opacity:0}], 520),
+          tocar(baixo, [{transform:'translate(0,0) rotate(0)'},
+                        {transform:'translate(20px,60px) rotate(140deg)', opacity:0}], 520)
+        ]);
+        return;
+      }
+
+      /* recusou — bate no peito e cai aberta, sem sugar nada */
+      if (anim.desfecho === 'recusou'){
+        await arco(xt, yPeito);
+        await tocar(bola, [{transform: pos(xt, yPeito, GIRO)},
+                           {transform: pos(xt - 34, yPeito - 26, GIRO + 70), offset:.35},
+                           {transform: pos(xt - 50, yChao, GIRO + 160)}], 480, {easing:'ease-in'});
+        await abrir();
+        await esperar(420);
+        return;
+      }
+
+      /* 1 arco até o alto, sobre a cabeça */
+      await arco(xt, yAlto);
+      /* 2 abre lá em cima, suga, fecha, cai na vertical */
+      await abrir();
+      await Promise.all([luz(xt, yAlto), sugar()]);
+      await fechar();
+      await cair(yAlto);
+
+      /* rompeu — o lendário sai antes da primeira chacoalhada */
+      if (anim.desfecho === 'rompeu'){
+        await esperar(160);
+        await abrir();
+        await Promise.all([luz(xt, yChao), soltar()]);
+        return;
+      }
+
+      /* 3 as chacoalhadas que o dado deu, com 0,5 s entre cada uma */
+      for (let i = 0; i < anim.sacudidas; i++){
+        await esperar(500);
+        await chacoalhar();
+      }
+
+      /* 4 */
+      if (anim.desfecho === 'captura'){
+        await esperar(260);
+        await brilhar();
+        await esperar(280);
+        return;
+      }
+      await esperar(300);
+      await abrir();
+      await Promise.all([luz(xt, yChao), soltar()]);
+    };
+
+    return sequencia().catch(() => {}).then(fim);
+  },
+
   escreverLog(eventos){
     const log = document.getElementById('log');
     if (!log) return;
@@ -915,15 +1153,15 @@ const UI = {
     const resto = nomes.filter(n => usavelEmBatalha(n));
     const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
     const linhasBolas = bolas.map(n =>
-      `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join('');
+      `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
+        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join('');
     const linhasItens = resto.map(n => {
       const info = ITENS_INFO[n] || {};
       if (info.tipo === 'curaJogador')
-        return `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
+        return `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
       return d.time.filter(p=>!p.morto).map(p =>
-        `<button class="escolha" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
-          ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
+        `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
+          ${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join('');
     const corpo =
       (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As bolas ficam no fundo da mochila: não se joga bola no Pokémon de outro treinador.</p>' : '') +
@@ -1392,8 +1630,8 @@ const UI = {
     const bolas = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma bola.</p>');
     this.modal('Qual bola?', bolas.map(n =>
-      `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join(''));
+      `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
+        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)} — ${this.esc(descricaoItem(n))}</span></button>`).join(''));
   },
 
   menuItens(){
@@ -1402,10 +1640,10 @@ const UI = {
     this.modal('Usar em quem?', itens.map(n => {
       const info = ITENS_INFO[n];
       if (info.tipo === 'curaJogador')
-        return `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
+        return `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
       return Estado.dados.time.filter(p=>!p.morto).map(p =>
-        `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
-          ${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))} (${p.hp}/${p.hpMax})</button>`).join('');
+        `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
+          ${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join(''));
   },
 
@@ -2067,6 +2305,7 @@ const UI = {
         const ebolsa = info.tipo === 'bolsa';
         const emUso = ebolsa && bolsa.nome === n;
         return `<div class="item-linha">
+          ${imgItem(n)}
           <span class="qtd">×${q}</span>
           <span class="corpo">
             <span class="nome">${this.esc(n)}</span>

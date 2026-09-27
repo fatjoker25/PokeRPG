@@ -2139,3 +2139,80 @@ h3.cat-item{
 
 /* Capacidade de campo que o time ainda não tem. */
 .linha .v.nao{ opacity:.55; font-style:italic; }
+
+/* ============================================================
+   ITENS — ícone da mochila, da loja e do combate
+   30×30 de origem, desenhado em pixel inteiro (sem borrar).
+   ============================================================ */
+.item-icone{
+  flex:0 0 auto;width:30px;height:30px;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+  align-self:center;
+}
+/* Item sem arte ganha a casa vazia do mesmo tamanho: a coluna do nome
+   não pode pular de linha pra linha. Um ponto discreto marca a casa. */
+.item-icone.sem-arte{
+  display:inline-block;border-radius:50%;
+  background:radial-gradient(circle, var(--borda-forte) 0 2px, transparent 2.5px);
+  opacity:.6;
+}
+/* No botão de escolha o texto é corrido ("Poké Ball ×5 — a bola
+   comum…"), então o ícone entra EM LINHA, antes do nome. Com o botão
+   em flex o nome virava item flexível e encolhia até quebrar em duas
+   linhas, espremido pela descrição. */
+.escolha.com-item .item-icone{
+  display:inline-block;vertical-align:middle;
+  width:26px;height:26px;margin:-6px 7px -4px -4px;
+}
+/* Na mochila a linha tem três andares (nome, ficha, descrição): o
+   ícone vai no andar do nome, ao lado do ×N, e não no meio da linha. */
+.item-linha .item-icone{align-self:flex-start;margin-top:-2px}
+
+/* ============================================================
+   ARREMESSO — camada por cima da arena, só durante o voo
+   ============================================================ */
+.arremesso{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
+.bola-voo{position:absolute;left:0;top:0;will-change:transform}
+/* A chacoalhada gira num invólucro à parte, com o pivô no pé da bola:
+   no voo a bola gira em volta do próprio centro, no chão ela balança
+   apoiada. Trocar o pivô no meio do movimento dava um tranco. */
+.bola-voo .gira{position:absolute;inset:0;transform-origin:50% 88%}
+/* A bola aberta não tem arquivo (o endereço não existe na origem):
+   é a fechada cortada ao meio, com a metade de cima girando na
+   dobradiça de trás. Mesma arte, dois recortes. */
+.bola-voo .meia{
+  position:absolute;inset:0;width:100%;height:100%;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.45));
+}
+.bola-voo .meia.cima {clip-path:inset(0 0 50% 0);transform-origin:12% 50%}
+.bola-voo .meia.baixo{clip-path:inset(50% 0 0 0)}
+/* A máscara branca: clone do sprite do alvo, NÃO é um .sprite. O
+   brightness(0) vem primeiro e apaga a cor inteira antes do invert
+   pintar de branco — então sai só o contorno, e o contorno uma espécie
+   não catalogada já mostra na silhueta. Não vaza cor nenhuma. */
+.arremesso .mascara-branca{
+  position:absolute;object-fit:contain;opacity:0;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+  filter:brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,.9));
+}
+/* O feixe de quando a bola abre: núcleo branco com anel vermelho.
+   Sem blend de tela — branco somado em cima de areia clara some, e o
+   anel escuro por fora é o que faz ele ler em qualquer cenário. */
+.arremesso .feixe{
+  position:absolute;width:132px;height:132px;border-radius:50%;opacity:0;
+  background:radial-gradient(circle,
+    #ffffff 0%, rgba(255,255,255,.96) 20%, rgba(255,214,214,.85) 34%,
+    rgba(235,64,64,.62) 50%, rgba(160,20,30,.28) 60%, transparent 70%);
+}
+/* O brilho de captura: estrela de quatro pontas desenhada (o arquivo
+   sparkle não existe na origem), cinco delas saindo em leque. */
+.arremesso .brilho{
+  position:absolute;width:10px;height:10px;opacity:0;
+  background:#fff7cf;
+  clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
+  filter:drop-shadow(0 0 3px rgba(255,236,150,.95));
+}
+/* enquanto a bola voa, o menu de combate não aceita outra ordem */
+.acoes-combate.esperando{pointer-events:none;opacity:.55;transition:opacity .15s}
+

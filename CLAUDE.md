@@ -170,12 +170,48 @@ tem que existir e estar completa, e o build não pode pular pasta em
 uso. Caminho pra pasta ausente não quebra nada — cada `<img>` se apaga
 sozinha — e é por ser silencioso que precisa de script.
 
+## Ícone de item e arremesso da bola
+Ícones em `sprites_nds/items/`, 30×30. `ITEM_SPRITE` (em `js/data/sprites.js`)
+vai do nome que **o jogo** usa pro arquivo, e só entra item com equivalente
+exato nos jogos — Resto de Ração é Leftovers porque a ficha é a mesma, Faixa
+Firme é Focus Band porque sobrevive com 1 HP. Ferramenta que só existe aqui
+(Machado, Picareta, Lanterna…) e papel de enredo ficam com a casa vazia do
+mesmo tamanho, pra coluna do nome não pular.
+
+O arremesso segue uma máquina de estados (`UI.animarArremesso`): arco de
+Bézier até o alto, sobre a cabeça → abre, o Pokémon vira máscara branca e
+some pra dentro → cai na vertical até a base → chacoalha 15° pra cada lado
+com 0,5 s entre validações → brilho, ou abre e o sprite de frente volta.
+
+**A animação obedece ao dado, nunca o contrário.** `Captura.tentar` grava
+em `Captura.ultimo` o desfecho e o número de chacoalhadas de cada uma das
+sete saídas (captura, escapou, rompeu, recusou, quebrou…), e a tela lê
+dali. Saída nova em `captura.js` tem que chamar `anima(...)`, senão a bola
+não voa.
+
+Três armadilhas que já aconteceram aqui:
+
+- **`opacity` inline não esconde o sprite.** Ele entra com a animação
+  `surgeSprite` (fill both), e animação CSS ganha de estilo inline: o
+  Pokémon ficava de pé ao lado da bola que devia estar com ele dentro. Use
+  `visibility`.
+- **A máscara branca é um clone, nunca o sprite.** O `filter` dela começa
+  com `brightness(0)`, que mata a cor antes do `invert` pintar de branco —
+  medido: saturação 0,04 na máscara isolada, com espécie não catalogada.
+- **Meia volta a mais e a bola pousa de cabeça pra baixo.** O giro do voo
+  termina em volta inteira (`GIRO = 720`).
+
+Bola aberta, brilho e inclinação não têm arquivo: os endereços de
+`ball_open` e `sparkle` dão 404 na origem, e `tilt_left`/`tilt_right` são
+byte a byte a bola fechada. A aberta é a fechada cortada ao meio, a
+inclinação é rotação e o brilho é desenhado.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
 - `python3 build.py` gera `jornada-do-campeao.html` e `artefato.html` (arquivo único
-  com os 1264 sprites e cenários embutidos). Rodar depois de qualquer mudança em js/ ou css/.
+  com os 1299 sprites, cenários e ícones embutidos). Rodar depois de qualquer mudança em js/ ou css/.
 - Texto do jogo em português do Brasil. Comentário de código também.
 
 ## Onde as coisas ficam

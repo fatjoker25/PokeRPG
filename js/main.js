@@ -306,14 +306,26 @@ const Jogo = {
   acaoBatalha(acao){
     /* A leitura da Pokédex tem tela própria: varredura animada e ficha. */
     if (acao.tipo === 'pokedex') return UI.escaneamento();
+    /* clique no meio do voo da bola: o turno já foi resolvido, espera */
+    if (this.animandoBola) return;
     const r = Batalha.acao(acao);
-    UI.escreverLog(r.eventos);
-    UI.atualizarArena();
 
-    if (r.precisaTrocar){ UI.trocaObrigatoria(r.reservas); return; }
-    if (r.fim) return this.finalizarBatalha(r.fim);
-    UI.acoesCombate();
-    Estado.salvar('auto');
+    const seguir = () => {
+      UI.escreverLog(r.eventos);
+      UI.atualizarArena();
+      if (r.precisaTrocar){ UI.trocaObrigatoria(r.reservas); return; }
+      if (r.fim) return this.finalizarBatalha(r.fim);
+      UI.acoesCombate();
+      Estado.salvar('auto');
+    };
+
+    /* Bola: primeiro a tela mostra o que aconteceu, depois o texto
+       explica. O contrário entregaria o desfecho antes da chacoalhada. */
+    const arremesso = (acao.tipo === 'bola' && typeof Captura !== 'undefined') ? Captura.ultimo : null;
+    if (typeof Captura !== 'undefined') Captura.ultimo = null;
+    if (!arremesso) return seguir();
+    this.animandoBola = true;
+    UI.animarArremesso(arremesso).then(() => { this.animandoBola = false; seguir(); });
   },
 
   finalizarBatalha(fim){

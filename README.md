@@ -391,13 +391,28 @@ do mapa. Ginásio, Elite dos Quatro e torneio não usam imagem: a quadra
 é desenhada em CSS. Sem a pasta, a arena cai num gradiente de reserva e
 o combate continua legível.
 
-Com sprites e cenários, o `build.py` embute 1264 arquivos.
+### Itens e arremesso
+
+```
+sprites_nds/items/{arquivo}.png                   ícone de item, 30×30
+sprites_nds/animations/pokeball/ball_closed.png   a Poké Ball do arremesso
+```
+
+O nome do arquivo segue a convenção em inglês (`pokeball`,
+`super_potion`, `full_heal`…); `ITEM_SPRITE`, em `js/data/sprites.js`,
+liga cada item do jogo ao seu. Safari Ball, Max Potion, Full Restore,
+Paralyze Heal e o disco de TM estão na pasta mas não aparecem: o jogo
+não tem esses itens (e não tem HM, por decisão de projeto). Great,
+Ultra e Master voam com o próprio ícone.
+
+Com sprites, cenários e ícones, o `build.py` embute 1299 arquivos.
 
 ### Crédito das artes
 
 As artes de Pokémon são de Black/White (frente e costas) e de
-HeartGold/SoulSilver (ícones de equipe); os cenários de batalha vêm
-dos fundos do
+HeartGold/SoulSilver (ícones de equipe); os ícones de item vêm do
+repositório de sprites da PokeAPI; os cenários de batalha vêm dos
+fundos do
 [Pokémon Showdown](https://play.pokemonshowdown.com).
 Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um
 projeto de fã, sem fim comercial.

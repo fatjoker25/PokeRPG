@@ -5,7 +5,17 @@
    Mewtwo e Ho-Oh: 1d20 antes de tudo — 1-5 a bola QUEBRA
    ============================================================ */
 const Captura = {
+  /* O que a tela precisa mostrar do último arremesso. Fica aqui, e não
+     no texto, porque a animação tem que obedecer ao dado: se a bola
+     balançou duas vezes e abriu, são duas chacoalhadas e depois abre —
+     não um genérico. Quem desenha lê isto e zera. */
+  ultimo: null,
+
   tentar(alvo, nomeBola, batalha){
+    this.ultimo = null;
+    const anima = (desfecho, sacudidas) => {
+      this.ultimo = {bola:nomeBola, desfecho, sacudidas:sacudidas || 0};
+    };
     const eventos = [];
     const ev = (t, txt) => eventos.push({tipo:t, texto:txt});
     const esp = DEX[alvo.dex];
@@ -23,6 +33,7 @@ const Captura = {
       Estado.marcar('bola_fraca_em_lendario');
       const L = Estado.lend(alvo.dex);
       L.ataquesSofridos++;
+      anima('recusou', 0);
       return {eventos, capturou:false};
     }
 
@@ -40,6 +51,7 @@ const Captura = {
         Estado.marcar('lendario_furioso_' + alvo.dex);
         Estado.registrar(`${esp.nome} quebrou uma ${nomeBola} e passou a te caçar.`);
         Estado.mudarRep('ruim', 1, `Provocou ${esp.nome}`);
+        anima('quebrou', 0);
         return {eventos, capturou:false, enfurecido:true};
       }
       ev('info', 'A bola aguenta. Por enquanto.');
@@ -49,6 +61,7 @@ const Captura = {
     if (nomeBola === 'Master Ball'){
       ev('captura', 'A Master Ball se fecha. Um clique. Só isso.');
       Estado.marcar('master_quase_sempre');
+      anima('captura', 0);
       return this.concluir(alvo, nomeBola, eventos);
     }
 
@@ -59,6 +72,7 @@ const Captura = {
       if (d <= 2){
         ev('captura', `Contra tudo que é provável, a bola para de tremer.`);
         Estado.marcar('ultra_prende_lendario');
+        anima('captura', 3);
         return this.concluir(alvo, nomeBola, eventos);
       }
       ev('erro', `${esp.nome} rompe a bola sem esforço aparente.`);
@@ -70,6 +84,8 @@ const Captura = {
         ev('perigo', `${esp.nome} decorou seu rosto. Agora é pessoal.`);
         Estado.registrar(`${esp.nome} tornou-se hostil por insistência.`);
       }
+      /* "rompe sem esforço": entra, e sai antes da primeira chacoalhada */
+      anima('rompeu', 0);
       return {eventos, capturou:false};
     }
 
@@ -98,9 +114,11 @@ const Captura = {
 
     if (sacudidas >= 3){
       ev('captura', 'CLIQUE.');
+      anima('captura', 3);
       return this.concluir(alvo, nomeBola, eventos);
     }
     ev('erro', `${alvo.nome} escapou da bola!`);
+    anima('escapou', sacudidas);
     return {eventos, capturou:false};
   },
 
