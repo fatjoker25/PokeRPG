@@ -1,16 +1,24 @@
 /* ============================================================
-   COMBATE — turnos por Velocidade, tipos, PP, status, dados
-   Dano: 1d10 × (poder ÷ 10), modificado por stats, tipo, STAB, crítico
-   Precisão: 1d20 > (100-precisão)/5
-   Crítico: 1d20 = 20 → ×1.5
+   COMBATE — regras do Pokérole 3.0, com o nível dos jogos
+   Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso.
+   Precisão: atributo + perícia do golpe; precisa de 1 sucesso,
+     menos a precisão baixa do golpe, a dor e a confusão.
+   Crítico: 3 sucessos além do necessário (2 com crítico alto) → +2 dados.
+   Dano: atributo + poder + 1 de STAB − Vitalidade (físico) ou
+     Instinto (especial); cada sucesso é 1 de dano. Zero sucesso = 1.
+     Fraqueza +1 por tipo, resistência −1 por tipo, imune = 0.
+   HP = HP base da espécie + Vitalidade.
+   Ordem: prioridade, depois iniciativa (1d6 na entrada + Destreza + Alerta).
    ============================================================ */
 
-/* precisão e evasão têm tabela própria nos jogos (de 1/3 a 3) */
-const PRECISAO_MULT = {'-6':0.33,'-5':0.36,'-4':0.43,'-3':0.5,'-2':0.6,'-1':0.75,'0':1,'1':1.33,'2':1.66,'3':2,'4':2.33,'5':2.66,'6':3};
 /* o nome de cada atributo na frase do log */
-const NOME_ESTAGIO = {atk:'o Ataque', def:'a Defesa', spa:'o Ataque Especial', spd:'a Defesa Especial',
-                      spe:'a Velocidade', precisao:'a precisão', evasao:'a evasão'};
-const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,'0':1,'1':1.5,'2':2,'3':2.5,'4':3,'5':3.5,'6':4};
+const NOME_ESTAGIO = {atk:'a Força', def:'a Vitalidade', spa:'o Especial', spd:'o Instinto',
+                      spe:'a Destreza', precisao:'a precisão', evasao:'a evasão'};
+/* estágio dos jogos (chave do golpe) → atributo do livro */
+const ATRIB_DO_ESTAGIO = {atk:'for', def:'vit', spa:'esp', spd:'ins', spe:'des'};
+const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'};
+/* Seismic Toss, Night Shade e Psywave: dados pelo posto */
+const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
 
 /* o que o jogo diz quando o tempo muda */
 const CLIMA_TEXTO = {
@@ -133,7 +141,7 @@ const Batalha = {
     const p = lado === 'aliado' ? this.aliado : this.inimigo;
     const o = pron(p).o;
     const m = [];
-    const ROT = {atk:'ATK', def:'DEF', spa:'SPA', spd:'SPD', spe:'VEL', precisao:'PREC', evasao:'EVA'};
+    const ROT = {atk:'FOR', def:'VIT', spa:'ESP', spd:'INS', spe:'DES', precisao:'PREC', evasao:'EVA'};
     for (const k of Object.keys(ROT)){
       const v = est[k] || 0;
       if (v) m.push({t:`${ROT[k]} ${v > 0 ? '+' : '−'}${Math.abs(v)}`, c: v > 0 ? 'alto' : 'baixo'});
@@ -158,16 +166,37 @@ const Batalha = {
     return m;
   },
 
-  /* ---------- utilidades ---------- */
-  mult(est, chave){ return ESTAGIO_MULT[String(Math.max(-6, Math.min(6, est[chave])))] || 1; },
-
-  statEfetivo(p, est, chave){
-    let v = p.stats[chave] * this.mult(est, chave);
-    if (chave === 'spe' && p.status === 'paralisia') v *= 0.5;
-    if (chave === 'atk' && p.status === 'queimadura') v *= 0.75;
+  /* ---------- atributos na luta ----------
+     O estágio que sobe ou cai (Growl, Swords Dance) soma direto no
+     atributo, um ponto por estágio, como no livro. Paralisia tira 2
+     de Destreza. Nenhum atributo fica abaixo de 1. */
+  attr(p, est, k){
+    let v = (p.stats[k] || 1) + ((est && est[ESTAGIO_DO_ATRIB[k]]) || 0);
+    if (k === 'des' && p.status === 'paralisia') v -= 2;
+    return Math.max(1, v);
+  },
+  /* atributo que entra numa parada: social e Vontade não moram na ficha */
+  valorAtrib(p, est, k){
+    if (k === 'soc') return socialDoNivel(p.nivel);
+    if (k === 'von') return this.attr(p, est, 'ins') + 2;
+    return this.attr(p, est, k);
+  },
+  /* o melhor atributo entre os que o golpe aceita ("Destreza/Força") */
+  melhorAtrib(p, est, lista, padrao){
+    const l = (lista && lista.length) ? lista : [padrao];
+    return l.reduce((m, k) => this.valorAtrib(p, est, k) > this.valorAtrib(p, est, m) ? k : m, l[0]);
+  },
+  /* dor: −1 sucesso na metade do HP, −2 com 1 de HP */
+  dor(p){
+    if (p.hp <= 1 && p.hpMax > 1) return 2;
+    return p.hp * 2 <= p.hpMax ? 1 : 0;
+  },
+  /* iniciativa: o d6 sai uma vez, na entrada; Destreza e Alerta somam
+     na hora, então paralisia e Agility mudam a ordem no meio da luta */
+  iniciativa(p, est){
+    if (est.ini6 == null) est.ini6 = Dados.d6(`Iniciativa de ${nomeVisivel(p)}`);
     const seg = efeitoSegurado(p);
-    if (seg && chave === 'spe' && seg.vel) v *= seg.vel;
-    return Math.max(1, Math.floor(v));
+    return est.ini6 + this.attr(p, est, 'des') + periciaDoNivel(p.nivel) + ((seg && seg.vel) || 0);
   },
 
   /* ---------- naturezas: o bicho tem vontade própria ---------- */
@@ -206,9 +235,13 @@ const Batalha = {
 
   /* ---------- pode agir? ---------- */
   podeAgir(p, est, souAliado, golpeNome){
+    est.penalConf = 0;
     if (p.status === 'sono'){
-      p.statusTurnos--;
-      if (p.statusTurnos <= 0){ p.status = null; est.pesadelo = false; this.ev('status', `${nomeVisivel(p)} acordou!`); }
+      /* dormindo: rola Instinto a cada vez, e acorda quando somar os
+         sucessos que faltam (5, pelo livro; o Rest deixa 2) */
+      const r = Dados.pool(this.attr(p, est, 'ins'), `${nomeVisivel(p)} tenta acordar`);
+      p.statusTurnos = (p.statusTurnos || 0) - r.suc;
+      if (p.statusTurnos <= 0){ p.status = null; p.statusTurnos = 0; est.pesadelo = false; this.ev('status', `${nomeVisivel(p)} acordou!`); }
       else {
         this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`);
         /* Sleep Talk e Snore são os golpes de quem está dormindo */
@@ -216,16 +249,9 @@ const Batalha = {
         return false;
       }
     }
-    if (est.apaixonado && Dados.chance(50)){
-      this.ev('status', `${nomeVisivel(p)} está apaixonad${pron(p).o} e não consegue atacar.`, {travou:'apaixonado', lado:souAliado ? 'aliado' : 'inimigo'});
-      return false;
-    }
     if (p.status === 'congelamento'){
       if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
       else { this.ev('status', `${nomeVisivel(p)} está congelad${pron(p).o} e não consegue se mover.`); return false; }
-    }
-    if (p.status === 'paralisia' && Dados.chance(25)){
-      this.ev('status', `${nomeVisivel(p)} está paralisad${pron(p).o}! Não conseguiu se mover.`, {travou:'paralisia', lado:souAliado ? 'aliado' : 'inimigo'}); return false;
     }
     if (est.recarregando){
       est.recarregando = false;
@@ -234,23 +260,77 @@ const Batalha = {
     if (est.confuso > 0){
       est.confuso--;
       if (est.confuso === 0) this.ev('status', `${nomeVisivel(p)} saiu da confusão.`);
-      else if (Dados.chance(33)){
-        const d = Math.max(1, Math.round(Dados.d10('Dano de confusão') * 4 * (p.stats.atk / Math.max(1,p.stats.def))));
-        p.hp = Math.max(0, p.hp - d);
-        this.ev('dano', `${nomeVisivel(p)} está confus${pron(p).o} e se machucou sozinh${pron(p).o}! (${d} de dano)`);
-        return false;
-      } else {
-        this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}...`);
+      else {
+        /* no começo da vez: 2 sucessos de Instinto e a confusão não pesa agora */
+        const r = Dados.pool(this.attr(p, est, 'ins'), `${nomeVisivel(p)} resiste à confusão`);
+        if (r.suc >= 2) this.ev('status', `${nomeVisivel(p)} balança a cabeça e se concentra.`);
+        else {
+          const posto = postoDoNivel(p.nivel);
+          est.penalConf = posto <= 2 ? 1 : posto <= 5 ? 2 : 3;
+          this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}...`);
+        }
       }
     }
     return true;
   },
 
-  /* ---------- dano ---------- */
-  calcularDano(atk, def, estAtk, estDef, golpeNome, poder){
+  /* ---------- precisão ----------
+     Parada = atributo + perícia do golpe. Precisa de 1 sucesso; a
+     precisão baixa do golpe, a dor e a confusão tiram sucessos, e o
+     estágio de precisão contra o de evasão soma ou tira. Três além do
+     necessário é crítico (dois, com crítico alto ou Focus Energy). */
+  rolarPrecisao(atk, def, estAtk, estDef, nome){
+    const g = GOLPES[nome];
+    const pr = PR_GOLPE[nome] || {};
+    const res = {acertou:true, critico:false, extra:0, rolou:false};
+    /* golpe no próprio corpo (Swords Dance, Recover) não erra */
+    if (g.c === 'status' && !this.miraNoOutro(g)) return res;
+    const k = this.melhorAtrib(atk, estAtk, pr.a, g.c === 'esp' ? 'esp' : 'des');
+    const atrib = this.valorAtrib(atk, estAtk, k);
+    const per = pr.h ? periciaDoNivel(atk.nivel) : 0;
+    const r = Dados.pool(atrib + per, `Precisão de ${nome}`);
+    res.rolou = true;
+    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
+    const passo = (estAtk.precisao || 0) - eva;
+    const menos = (pr.r || 0) + this.dor(atk) + (estAtk.penalConf || 0);
+    const liquido = r.suc + passo - menos;
+    res.extra = liquido - 1;
+    const nomeA = k === 'soc' ? 'Social' : k === 'von' ? 'Vontade' : SIGLA_ATRIB[k];
+    const partes = [`${nomeA} ${atrib}`];
+    if (per) partes.push(`${pr.h} ${per}`);
+    let conta = `${partes.join(' + ')} = ${atrib + per}d6 → ${r.suc}`;
+    if (pr.r) conta += ` − ${pr.r} precisão baixa`;
+    if (this.dor(atk)) conta += ` − ${this.dor(atk)} dor`;
+    if (estAtk.penalConf) conta += ` − ${estAtk.penalConf} confusão`;
+    if (passo) conta += ` ${passo > 0 ? '+' : '−'} ${Math.abs(passo)} estágio`;
+    this.ev('rolagem', `Precisão: ${conta}${liquido !== r.suc ? ` = ${Math.max(0, liquido)}` : ''}`);
+    /* não erra (Swift): acerta sempre, mas o dado ainda decide o crítico */
+    res.acertou = pr.nunca || g.a >= 999 ? true : liquido >= 1;
+    res.extra = liquido - 1;
+    if (g.c !== 'status'){
+      /* No livro, o Pokémon de posto alto gasta a sobra em ações extras
+         na mesma rodada. Aqui cada um age uma vez por turno, então a
+         sobra que vira crítico sobe com o posto: 3 no Iniciante e no
+         Novato, e um a mais por posto dali pra cima. */
+      let limite = 3 + Math.max(0, postoDoNivel(atk.nivel) - 1);
+      if (pr.crit || (g.ef && g.ef.critico)) limite--;
+      if (estAtk.focado) limite--;
+      /* quem te entende acerta onde dói sem você apontar */
+      if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk) && efeitosDeAfinidade(atk).crit > 0) limite--;
+      res.critico = res.acertou && (pr.semprecrit || res.extra >= Math.max(1, limite));
+    }
+    return res;
+  },
+
+  /* ---------- dano ----------
+     Cada acerto rola a sua parada; o golpe de ação dupla ou tripla
+     acerta duas ou três vezes, e o de ações sucessivas acerta uma vez
+     a mais por sucesso sobrando na precisão, até cinco. */
+  calcularDano(atk, def, estAtk, estDef, golpeNome, poder, prec){
     const g = GOLPES[golpeNome];
-    const pw = poder || g.p;
-    const res = {dano:0, critico:false, efic:1, msgs:[]};
+    const pr = PR_GOLPE[golpeNome] || {};
+    prec = prec || {critico:false, extra:0};
+    const res = {dano:0, critico:false, efic:1, msgs:[], contas:[]};
 
     /* Foresight: Normal e Lutador passam a acertar Fantasma */
     const tiposDef = (estDef.identificado && (g.t === 'Normal' || g.t === 'Lutador'))
@@ -260,106 +340,118 @@ const Batalha = {
       res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
       return res;
     }
+    /* fraqueza e resistência contam por tipo: ×2 é +1, ×4 é +2, ×½ é −1 */
+    const passos = Math.round(Math.log2(res.efic));
 
-    if (g.ef && g.ef.nivel){                      // Seismic Toss / Night Shade
-      res.dano = atk.nivel;
-      res.msgs.push(`Dano igual ao nível: ${res.dano}`);
+    if (pr.ohko || (g.ef && g.ef.fixo >= 200)){
+      res.dano = def.hp;
+      res.msgs.push('Um golpe só, e acabou.');
       return res;
     }
-    if (g.ef && g.ef.fixo){                       // Dragon Rage
-      res.dano = g.ef.fixo;
+    if (pr.fixo || (g.ef && g.ef.fixo)){           // Dragon Rage, Sonic Boom
+      res.dano = pr.fixo || 1;
       res.msgs.push(`Dano fixo: ${res.dano}`);
+      return res;
+    }
+    if (pr.posto || pr.metade || (g.ef && g.ef.nivel)){
+      /* Seismic Toss, Night Shade, Psywave: dados pelo posto de quem
+         usa; Super Fang: metade do HP que o outro ainda tem. Ignoram
+         a defesa. */
+      const n = pr.metade ? Math.min(10, Math.max(1, Math.floor(def.hp / 2)))
+                          : DADOS_POR_POSTO[postoDoNivel(atk.nivel)];
+      const r = Dados.pool(n, `Dano de ${golpeNome}`);
+      res.dano = Math.max(1, r.suc);
+      res.contas.push(`Dano: ${pr.metade ? 'metade do HP' : 'posto ' + nomePosto(atk.nivel)} = ${n}d6 → ${r.suc}`);
       return res;
     }
 
     const fisico = g.c === 'fis';
-    const a = this.statEfetivo(atk, estAtk, fisico ? 'atk' : 'spa');
-    const d = this.statEfetivo(def, estDef, fisico ? 'def' : 'spd');
-    /* A diferença entre um Machamp e um Chansey tem que aparecer.
-       A razão vem dos stats (que vêm da base da espécie) e a curva
-       abre um pouco a distância em vez de achatar tudo no meio. */
-    const bruta = a / Math.max(1, d);
-    const razao = Math.max(0.33, Math.min(3.2, Math.pow(bruta, 1.15)));
-
-    const golpes = (g.ef && g.ef.golpes) ? g.ef.golpes : 1;
-    let total = 0;
-    for (let i = 0; i < golpes; i++){
-      const d10 = Dados.d10(`Dano de ${golpeNome}`);
-      total += Math.round(d10 * (pw / 10) * razao);
-    }
-    if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
-
-    /* Primeira geração: quem é rápido critica mais. A chance sai da
-       velocidade base da espécie, não de um d20 igual para todos. */
-    const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
-    let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
-    if (g.ef && g.ef.critico) limiteCrit -= 3;
-    if (estAtk.focado) limiteCrit -= 3;          // Focus Energy
-    /* quem te entende acerta onde dói sem você apontar */
-    if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk))
-      limiteCrit -= efeitosDeAfinidade(atk).crit;
-    const dCrit = Dados.d20('Crítico');
-    if (dCrit >= limiteCrit){
-      res.critico = true;
-      total = Math.round(total * 1.5);
-      res.msgs.push('ACERTO CRÍTICO!');
-    }
-
-    if (atk.tipos.includes(g.t)) total = Math.round(total * 1.5);   // STAB
-    /* chuva: Água ×1,5 e Fogo ×0,5 · sol: o contrário */
+    const kAtk = this.melhorAtrib(atk, estAtk, pr.d, fisico ? 'for' : 'esp');
+    const aVal = this.valorAtrib(atk, estAtk, kAtk);
+    let pw = poder != null ? poder : (pr.p || Math.max(1, Math.round((g.p || 40) / 25)));
+    /* chuva: Água +1 de poder e Fogo −1 de dano · sol: o contrário */
+    let climaDano = 0;
     if (this.clima && (this.clima.tipo === 'chuva' || this.clima.tipo === 'sol')){
       const forte = this.clima.tipo === 'chuva' ? 'Água' : 'Fogo';
       const fraco = this.clima.tipo === 'chuva' ? 'Fogo' : 'Água';
-      if (g.t === forte) total = Math.round(total * 1.5);
-      if (g.t === fraco) total = Math.round(total * 0.5);
+      if (g.t === forte) pw++;
+      if (g.t === fraco) climaDano = -1;
     }
-    total = Math.round(total * res.efic);
-    /* Reflect corta o físico, Light Screen o especial — crítico atravessa */
-    const ladoDef = this.lados && this.lados[def === this.aliado ? 'aliado' : 'inimigo'];
-    if (ladoDef && !res.critico){
-      if (fisico && ladoDef.reflexo > 0) total = Math.round(total * 0.5);
-      if (!fisico && ladoDef.tela > 0)   total = Math.round(total * 0.5);
+    const stab = atk.tipos.includes(g.t) ? 1 : 0;
+    const segA = efeitoSegurado(atk);
+    const item = segA ? ((fisico && segA.fis) || (!fisico && segA.esp) || 0) : 0;
+
+    /* defesa: Vitalidade contra físico, Instinto contra especial.
+       Reflect e Light Screen somam 2 — o crítico passa por cima. */
+    let dVal = 0, dBase = 0, extraDef = '';
+    if (!pr.ign){
+      dVal = dBase = this.attr(def, estDef, fisico ? 'vit' : 'ins');
+      const ladoDef = this.lados && this.lados[def === this.aliado ? 'aliado' : 'inimigo'];
+      if (ladoDef && !prec.critico){
+        if (fisico && ladoDef.reflexo > 0){ dVal += 2; extraDef += ' + 2 Reflect'; }
+        if (!fisico && ladoDef.tela > 0) { dVal += 2; extraDef += ' + 2 Light Screen'; }
+      }
+      if (!fisico && this.clima && this.clima.tipo === 'areia' && def.tipos.includes('Pedra')){ dVal++; extraDef += ' + 1 areia'; }
+      const segD = efeitoSegurado(def);
+      if (segD && segD.defesa){ dVal += segD.defesa; extraDef += ` + ${segD.defesa} colete`; }
     }
+    const crit = prec.critico ? 2 : 0;
+    if (crit) res.critico = true;
+    const n = Math.max(0, aVal + pw + stab + crit + item - dVal);
+
+    let golpes = 1;
+    if (pr.dupla) golpes = 2;
+    else if (pr.tripla) golpes = 3;
+    else if (pr.suc) golpes = Math.max(1, Math.min(5, 1 + (prec.extra || 0)));
+    else if (!PR_GOLPE[golpeNome] && g.ef && g.ef.golpes) golpes = g.ef.golpes;
+
+    /* apaixonado: metade do dano, a menos que o Instinto segure (3 sucessos) */
+    let metade = false;
+    if (estAtk.apaixonado){
+      const r = Dados.pool(this.attr(atk, estAtk, 'ins'), `${nomeVisivel(atk)} resiste à paixão`);
+      if (r.suc < 3){ metade = true; res.msgs.push(`${nomeVisivel(atk)} está apaixonad${pron(atk).o} e bate sem vontade.`); }
+    }
+
+    const nomeA = SIGLA_ATRIB[kAtk];
+    let conta = `${nomeA} ${aVal} + poder ${pw}`;
+    if (stab) conta += ' + 1 STAB';
+    if (crit) conta += ' + 2 crítico';
+    if (item) conta += ` + ${item} item`;
+    if (pr.ign) conta += ' (ignora defesa)';
+    else conta += ` − ${fisico ? 'VIT' : 'INS'} ${dBase}${extraDef}`;
+    let total = 0;
+    const suces = [];
+    for (let i = 0; i < golpes; i++){
+      if (i > 0 && def.hp - total <= 0) { golpes = i; break; }
+      const r = Dados.pool(n, `Dano de ${golpeNome}${golpes > 1 ? ` (${i + 1})` : ''}`);
+      suces.push(r.suc);
+      let d;
+      if (r.suc === 0) d = 1;                       // zero sucesso: 1 de dano, e só
+      else d = Math.max(1, r.suc + passos + climaDano);
+      if (metade) d = Math.max(1, Math.floor(d / 2));
+      total += d;
+    }
+    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}`);
+    if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
+    if (res.critico) res.msgs.push('ACERTO CRÍTICO!');
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
-
-    const segA = efeitoSegurado(atk);
-    if (segA){
-      if (fisico && segA.fis) total = Math.round(total * segA.fis);
-      if (!fisico && segA.esp) total = Math.round(total * segA.esp);
-    }
-    const segD = efeitoSegurado(def);
-    if (segD && segD.defesa) total = Math.round(total * segD.defesa);
-
-    const cfg = (Estado.dados && Estado.dados.config) ? Estado.dados.config.danoMult : 1;
-    res.dano = Math.max(1, Math.round(total * (cfg || 1)));
+    res.dano = total;
     return res;
-  },
-
-  acertou(golpeNome, estAtk, estDef){
-    const g = GOLPES[golpeNome];
-    if (g.a >= 999) return true;
-    let prec = g.a;
-    /* precisão de quem ataca contra evasão de quem apanha; Foresight
-       anula a evasão que subiu */
-    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
-    const passo = Math.max(-6, Math.min(6, (estAtk.precisao || 0) - eva));
-    prec *= PRECISAO_MULT[String(passo)] || 1;
-    const limite = Math.floor((100 - Math.min(100, prec)) / 5);
-    const d = Dados.d20(`Precisão de ${golpeNome}`);
-    return d > limite;
   },
 
   aplicarStatus(alvo, tipoStatus, grave){
     if (tipoStatus === 'recuo') return false;
     if (alvo.status) return false;
-    if (tipoStatus === 'veneno' && alvo.tipos.includes('Venenoso')) return false;
+    if (tipoStatus === 'veneno' && (alvo.tipos.includes('Venenoso') || alvo.tipos.includes('Metálico'))) return false;
     if (tipoStatus === 'queimadura' && alvo.tipos.includes('Fogo')) return false;
     if (tipoStatus === 'congelamento' && alvo.tipos.includes('Gelo')) return false;
     if (tipoStatus === 'paralisia' && alvo.tipos.includes('Elétrico')) return false;
     alvo.status = tipoStatus;
     alvo.statusGrave = !!grave;
-    alvo.statusTurnos = tipoStatus === 'sono' ? Dados.entre(1,3) : 0;
+    /* sono: 5 sucessos de Instinto pra acordar, somados vez a vez */
+    alvo.statusTurnos = tipoStatus === 'sono' ? 5 : 0;
+    alvo.venenoRodadas = 0;
     return true;
   },
 
@@ -378,11 +470,15 @@ const Batalha = {
         return;
       }
       if (slot.pp <= 0){
+        /* Forcejar (Struggle): Força + 1 de poder, sem tipo, e 1 de volta */
         this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
-        const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
+        const n = Math.max(0, this.attr(atacante, estAtk, 'for') + 1 - this.attr(defensor, estDef, 'vit'));
+        const r = Dados.pool(n, 'Forcejar');
+        const d = Math.max(1, r.suc);
+        this.ev('rolagem', `Dano: FOR ${this.attr(atacante, estAtk, 'for')} + poder 1 − VIT ${this.attr(defensor, estDef, 'vit')} = ${n}d6 → ${r.suc}`);
         defensor.hp = Math.max(0, defensor.hp - d);
-        atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
-        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
+        atacante.hp = Math.max(0, atacante.hp - 1);
+        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`, {alvo:souAliado?'inimigo':'aliado', dano:d});
         return;
       }
       nome = slot.nome;
@@ -431,9 +527,15 @@ const Batalha = {
       return;
     }
 
-    if (!this.acertou(nome, estAtk, estDef)){
+    const prec = this.rolarPrecisao(atacante, defensor, estAtk, estDef, nome);
+    if (!prec.acertou){
       this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
       estAtk.cortes = 0;
+      /* confuso que falha a ação se machuca: 1 de dano */
+      if (estAtk.penalConf){
+        atacante.hp = Math.max(0, atacante.hp - 1);
+        this.ev('dano', `${nomeVisivel(atacante)} tropeça na própria confusão e se machuca. (${atacante.hp}/${atacante.hpMax})`, {alvo:souAliado?'aliado':'inimigo', dano:1});
+      }
       return;
     }
 
@@ -457,18 +559,22 @@ const Batalha = {
 
     /* poder que muda: Fury Cutter dobra a cada acerto seguido (até 160);
        Return e Frustration saem da amizade */
+    /* poder que muda: Fury Cutter ganha 1 a cada acerto seguido (até +4);
+       Return e Frustration saem da amizade, de 0 a 5 */
     let poder = null;
+    const prG = PR_GOLPE[nome] || {};
     if (ef.corte){
       estAtk.cortes = Math.min(4, (estAtk.cortes || 0));
-      poder = g.p * Math.pow(2, estAtk.cortes);
+      poder = (prG.p || 1) + estAtk.cortes;
       estAtk.cortes++;
     }
     if (ef.amizade){
-      const amizade = Math.round(Math.max(0, Math.min(100, atacante.moral == null ? 70 : atacante.moral)) * 2.55);
-      poder = Math.max(1, Math.floor((ef.amizade === 'retorno' ? amizade : 255 - amizade) / 2.5));
+      const amizade = Math.max(0, Math.min(100, atacante.moral == null ? 70 : atacante.moral));
+      poder = Math.round((ef.amizade === 'retorno' ? amizade : 100 - amizade) / 20);
     }
 
-    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome, poder);
+    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome, poder, prec);
+    r.contas.forEach(m => this.ev('rolagem', m));
     r.msgs.forEach(m => this.ev('info', m));
     if (r.efic === 0) return;
 
@@ -516,7 +622,7 @@ const Batalha = {
       estDef.presoPor = nome;
       this.ev('status', `${nomeVisivel(defensor)} ficou pres${pron(defensor).o} por ${nome}!`);
     }
-    if (ef.tipo && ef.chance && defensor.hp > 0 && Dados.chance(ef.chance)){
+    if (ef.tipo && ef.chance && defensor.hp > 0 && this.sorteEfeito(nome, ef.chance)){
       if (ef.tipo === 'recuo'){
         estDef.recuou = true;
         this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
@@ -527,10 +633,18 @@ const Batalha = {
       }
     }
     /* efeito de atributo de golpe de dano: só na chance dos jogos */
-    if (ef.baixa && defensor.hp > 0 && Dados.chance(ef.chance || 100))
+    if (ef.baixa && defensor.hp > 0 && this.sorteEfeito(nome, ef.chance || 100))
       this.mudarEstagio(defensor, estDef, ef.baixa, -1, true);
-    if (ef.sobe && atacante.hp > 0 && Dados.chance(ef.chance || 100))
+    if (ef.sobe && atacante.hp > 0 && this.sorteEfeito(nome, ef.chance || 100))
       this.mudarEstagio(atacante, estAtk, ef.sobe, +1, false);
+  },
+
+  /* Efeito secundário: com dados de chance do livro, qualquer 6 pega;
+     golpe sem essa ficha segue a chance dos jogos */
+  sorteEfeito(nome, pct){
+    const cd = (PR_GOLPE[nome] || {}).cd;
+    if (cd) return Dados.chanceDados(cd, `Chance de ${nome}`);
+    return Dados.chance(pct);
   },
 
   /* O golpe é jogado em cima do outro? (Protect e o boneco só param esses) */
@@ -593,7 +707,7 @@ const Batalha = {
       if (atacante.hp >= atacante.hpMax){ this.ev('erro', `O HP de ${nomeVisivel(atacante)} já está cheio.`); return; }
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
-      if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }
+      if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }   // Rest: 2 sucessos pra acordar
       this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
       return;
     }
@@ -623,7 +737,7 @@ const Batalha = {
         return this.ev('status', `${eu} está concentrad${pron(atk).o}. Acerto crítico fica mais fácil.`);
 
       case 'substituto': {
-        const custo = Math.floor(atk.hpMax / 4);
+        const custo = Math.max(1, Math.floor(atk.hpMax / 4));
         if (estAtk.substituto > 0){ return this.ev('erro', `${eu} já tem um boneco na frente.`); }
         if (atk.hp <= custo){ return this.ev('erro', `${eu} não tem HP pra fazer o boneco.`); }
         atk.hp -= custo;
@@ -721,7 +835,7 @@ const Batalha = {
       case 'maldicao':
         if (atk.tipos.includes('Fantasma')){
           if (estDef.maldito) return falhou();
-          const custo = Math.floor(atk.hpMax / 2);
+          const custo = Math.max(1, Math.floor(atk.hpMax / 2));
           atk.hp = Math.max(0, atk.hp - custo);
           estDef.maldito = true;
           return this.ev('dano', `${eu} cortou metade do próprio HP e amaldiçoou ${ele}!`);
@@ -803,8 +917,8 @@ const Batalha = {
 
   /* ---------- o par ----------
      Quando um Pokémon cai e o par dele está no mesmo time, de pé, o par
-     viu. Na próxima vez que ele entrar nesta luta, entra com Ataque e
-     Sp. Atk um estágio acima. Vale pros dois lados: o time do treinador
+     viu. Na próxima vez que ele entrar nesta luta, entra com Força e
+     Especial um ponto acima. Vale pros dois lados: o time do treinador
      também tem par. */
   parViuCair(caido, time){
     if (!this.viuOParCair) this.viuOParCair = {};
@@ -826,14 +940,16 @@ const Batalha = {
   /* ---------- fim de turno ---------- */
   fimDeTurno(p, est, quem){
     if (p.hp <= 0) return;
+    /* veneno: 2 por rodada; o grave (Toxic) sobe 2 a cada rodada.
+       queimadura: 1 por rodada. Números do livro. */
     if (p.status === 'veneno'){
-      const frac = p.statusGrave ? 6 : 8;
-      const d = Math.max(1, Math.floor(p.hpMax / frac));
+      p.venenoRodadas = (p.venenoRodadas || 0) + 1;
+      const d = p.statusGrave ? 2 * p.venenoRodadas : 2;
       p.hp = Math.max(0, p.hp - d);
       this.ev('dano', `${nomeVisivel(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`, {causa:'veneno'});
     }
     if (p.status === 'queimadura'){
-      const d = Math.max(1, Math.floor(p.hpMax / 16));
+      const d = 1;
       p.hp = Math.max(0, p.hp - d);
       this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`, {causa:'queimadura'});
     }
@@ -848,7 +964,7 @@ const Batalha = {
         return d;
       };
       if (est.semente && outro && outro.hp > 0){
-        const d = Math.min(p.hp, Math.max(1, Math.floor(p.hpMax / 8)));
+        const d = Math.min(p.hp, 1);
         p.hp = Math.max(0, p.hp - d);
         outro.hp = Math.min(outro.hpMax, outro.hp + d);
         this.ev('dano', `A semente suga ${d} de ${nomeVisivel(p)} pra ${nomeVisivel(outro)}. (${p.hp}/${p.hpMax})`, {causa:'semente'});
@@ -867,7 +983,7 @@ const Batalha = {
     /* item segurado: regeneração lenta */
     const seg = efeitoSegurado(p);
     if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
-      const c = Math.max(1, Math.round(p.hpMax * seg.regen));
+      const c = seg.regen;
       const antes = p.hp;
       p.hp = Math.min(p.hpMax, p.hp + c);
       this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
@@ -875,7 +991,7 @@ const Batalha = {
   },
 
   /* Fim de turno do clima: a areia fere quem não é Pedra, Terrestre ou
-     Metálico (1/8 do HP), e o clima acaba sozinho no quinto turno. */
+     Metálico (1 de dano), e o clima acaba sozinho no quinto turno. */
   /* Reflect, Light Screen, Mist e Safeguard contam os cinco turnos */
   passarLados(){
     const NOME = {reflexo:'Reflect', tela:'Light Screen', nevoa:'Mist', salva:'Safeguard'};
@@ -895,7 +1011,7 @@ const Batalha = {
     if (this.clima.tipo === 'areia'){
       for (const p of [this.aliado, this.inimigo]){
         if (!p || p.hp <= 0 || p.tipos.some(t => ['Pedra', 'Terrestre', 'Metálico'].includes(t))) continue;
-        const d = Math.max(1, Math.floor(p.hpMax / 8));
+        const d = 1;
         p.hp = Math.max(0, p.hp - d);
         this.ev('dano', `A areia fere ${nomeVisivel(p)}. (${p.hp}/${p.hpMax})`, {causa:'areia'});
       }
@@ -952,11 +1068,18 @@ const Batalha = {
       }
       const ef = eficacia(G.t, alvo.tipos);
       if (ef === 0) return 0;
+      /* quanto de dano ele espera: metade da parada, mais a fraqueza */
       const fis = G.c === 'fis';
-      const a = this.statEfetivo(p, estP, fis ? 'atk' : 'spa');
-      const d = this.statEfetivo(alvo, estAlvo, fis ? 'def' : 'spd');
-      let s = (G.p || 45) * ef * Math.min(2.2, a / Math.max(1,d)) * (G.a >= 999 ? 1 : G.a/100);
-      if (p.tipos.includes(G.t)) s *= 1.5;
+      const PR = PR_GOLPE[x.g.nome] || {};
+      const pw = PR.fixo ? 0 : (PR.p || Math.max(1, Math.round((G.p || 40) / 25)));
+      const a = this.valorAtrib(p, estP, this.melhorAtrib(p, estP, PR.d, fis ? 'for' : 'esp'));
+      const d = PR.ign ? 0 : this.attr(alvo, estAlvo, fis ? 'vit' : 'ins');
+      let s = PR.fixo ? PR.fixo
+            : (PR.posto || PR.metade) ? DADOS_POR_POSTO[postoDoNivel(p.nivel)] / 2
+            : Math.max(1, (a + pw + (p.tipos.includes(G.t) ? 1 : 0) - d) / 2 + Math.round(Math.log2(ef)));
+      s *= Math.max(0.2, 1 - (PR.r || 0) * 0.2);
+      if (PR.dupla) s *= 2; if (PR.tripla) s *= 3; if (PR.suc) s *= 1.6;
+      s *= 20;
       if (nat.agressiva) s *= 1.1;
       return s;
     };
@@ -1009,14 +1132,16 @@ const Batalha = {
     const gIA  = GOLPES[this.inimigo.golpes[iIA]?.nome || 'Tackle'];
     const prioJ = (gJog.ef && gJog.ef.prioridade) || 0;
     const prioI = (gIA.ef && gIA.ef.prioridade) || 0;
-    const vJ = this.statEfetivo(this.aliado, this.estAliado, 'spe');
-    const vI = this.statEfetivo(this.inimigo, this.estInimigo, 'spe');
+    const vJ = this.iniciativa(this.aliado, this.estAliado);
+    const vI = this.iniciativa(this.inimigo, this.estInimigo);
     let jogadorPrimeiro;
     if (prioJ !== prioI) jogadorPrimeiro = prioJ > prioI;
     else if (vJ !== vI)  jogadorPrimeiro = vJ > vI;
-    else                 jogadorPrimeiro = Dados.chance(50);
+    else                 jogadorPrimeiro = this.attr(this.aliado, this.estAliado, 'des') !== this.attr(this.inimigo, this.estInimigo, 'des')
+                           ? this.attr(this.aliado, this.estAliado, 'des') > this.attr(this.inimigo, this.estInimigo, 'des')
+                           : Dados.chance(50);
 
-    this.ev('turno', `— Turno ${this.turno} — (Vel ${vJ} vs ${vI})`);
+    this.ev('turno', `— Turno ${this.turno} — (Iniciativa ${vJ} vs ${vI})`);
 
     const agirJogador = () => {
       if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
@@ -1059,8 +1184,9 @@ const Batalha = {
     p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
     this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
-    this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
-    this.ev('pokedex', `Base da espécie: ${esp.base.hp}/${esp.base.atk}/${esp.base.def}/${esp.base.spa}/${esp.base.spd}/${esp.base.spe} — soma ${esp.total}.`);
+    this.ev('pokedex', `Posto ${nomePosto(p.nivel)} · HP ${p.hpMax} · FOR ${p.stats.for} · DES ${p.stats.des} · VIT ${p.stats.vit} · ESP ${p.stats.esp} · INS ${p.stats.ins}`);
+    const pr = PR_ESPECIE[p.dex];
+    if (pr) this.ev('pokedex', `Teto da espécie: FOR ${pr[6]} · DES ${pr[7]} · VIT ${pr[8]} · ESP ${pr[9]} · INS ${pr[10]} — HP base ${pr[0]}.`);
     if (p.shiny)
       this.ev('brilhante', 'Anomalia cromática confirmada. A Pokédex abre um campo que você nunca tinha visto abrir.');
     if ((NATUREZAS[p.natureza]||{}).agressiva)
@@ -1159,10 +1285,15 @@ const Batalha = {
       this.ev('erro', `${nomeVisivel(this.aliado)} está pres${pron(this.aliado).o} por ${this.estAliado.presoPor}. Não dá pra fugir.`);
       return this.turnoInimigoSozinho();
     }
-    const alvo = this.inimigo.stats.spe - this.aliado.stats.spe + 10;
-    const d = Dados.d20('Fuga');
-    this.ev('info', `Fuga: 1d20 = ${d} — precisa ≥ ${alvo}`);
-    if (d >= alvo){
+    /* Fugir: Destreza + Atletismo de quem está na frente, contra os do
+       selvagem. Empate é seu. */
+    const nJ = this.attr(this.aliado, this.estAliado, 'des') + periciaDoNivel(this.aliado.nivel);
+    const nI = this.attr(this.inimigo, this.estInimigo, 'des') + periciaDoNivel(this.inimigo.nivel);
+    const rJ = Dados.pool(nJ, 'Fuga'), rI = Dados.pool(nI, 'Perseguição');
+    const dorJ = this.dor(this.aliado);
+    const sucJ = Math.max(0, rJ.suc - dorJ);
+    this.ev('rolagem', `Fuga: DES + Atletismo = ${nJ}d6 → ${rJ.suc}${dorJ ? ` − ${dorJ} dor` : ''} · o selvagem: ${nI}d6 → ${rI.suc}`);
+    if (sucJ >= rI.suc){
       this.ev('fuga', 'Você conseguiu escapar!');
       return this.encerrar('fuga');
     }
@@ -1316,7 +1447,12 @@ const Batalha = {
   },
 
   golpeNoJogador(){
-    let dano = Math.max(1, Math.round((this.inimigo.stats.atk / 10) * Dados.d10('Dano no treinador')));
+    /* O treinador não tem Vitalidade de Pokémon: a parada é Força + 2,
+       e cada sucesso vale 3 de HP de gente. */
+    const nD = this.attr(this.inimigo, this.estInimigo, 'for') + 2;
+    const rD = Dados.pool(nD, 'Dano no treinador');
+    let dano = Math.max(1, rD.suc * 3);
+    this.ev('rolagem', `Dano: FOR + 2 = ${nD}d6 → ${rD.suc} × 3`);
     /* Quando sobra para o treinador, o corpo é que segura. */
     const t = Dados.teste(Estado.j.status.resistencia, 6, 'Resistência');
     const corte = {critico:0.45, sucesso:0.7, parcial:0.9, falha:1.15}[t.grau];

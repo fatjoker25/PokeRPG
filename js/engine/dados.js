@@ -18,6 +18,34 @@ const Dados = {
   d10(m){ return this.rolar(10, m); },
   d20(m){ return this.rolar(20, m); },
 
+  /* POKÉROLE: parada de d6. Cada 4, 5 ou 6 é um sucesso. A parada vai
+     inteira pra bandeja numa entrada só, com as faces, senão doze dados
+     de um golpe empurravam o resto pra fora. */
+  pool(n, motivo=''){
+    n = Math.max(0, Math.floor(n));
+    const faces = [];
+    for (let i = 0; i < n; i++) faces.push(Math.floor(Math.random() * 6) + 1);
+    const suc = faces.filter(v => v >= 4).length;
+    const reg = {dado:n + 'd6', valor:suc, motivo, faces:6, pool:faces};
+    this.historico.push(reg);
+    if (this.historico.length > 200) this.historico.shift();
+    if (typeof UI !== 'undefined' && UI.mostrarDado) UI.mostrarDado(reg);
+    return {n, faces, suc};
+  },
+
+  /* Dados de chance: o efeito acontece se algum der 6. */
+  chanceDados(n, motivo=''){
+    if (n <= 0) return false;
+    const faces = [];
+    for (let i = 0; i < n; i++) faces.push(Math.floor(Math.random() * 6) + 1);
+    const seis = faces.filter(v => v === 6).length;
+    const reg = {dado:n + 'd6', valor:seis, motivo, faces:6, pool:faces, chance:true};
+    this.historico.push(reg);
+    if (this.historico.length > 200) this.historico.shift();
+    if (typeof UI !== 'undefined' && UI.mostrarDado) UI.mostrarDado(reg);
+    return seis > 0;
+  },
+
   /* escolha aleatória simples (não entra no histórico) */
   escolher(arr){ return arr[Math.floor(Math.random() * arr.length)]; },
   entre(a, b){ return Math.floor(Math.random() * (b - a + 1)) + a; },

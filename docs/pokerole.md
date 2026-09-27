@@ -1,7 +1,9 @@
 # Pokérole — anotações pra quando for a hora
 
-Pedido do jogador: trocar a mecânica pela do **Pokérole**. Ficou pra depois
-de terminar a análise geral do jogo. Nada disto está no código ainda.
+Pedido do jogador: trocar a mecânica pela do **Pokérole**. **Feito no
+combate** (edição 3.0), com o nível dos jogos mantido e a ficha do
+treinador intacta — ver a seção "O combate é Pokérole" do CLAUDE.md e a
+folha de regras. O que segue ficou como registro de onde vieram os dados.
 
 ## Onde estão os dados
 
@@ -42,14 +44,13 @@ texto e `AddedEffects` estruturado (ex. queimadura com 1 dado de chance).
 **Natureza**: `Confidence` (número) e palavras-chave de temperamento —
 no Pokérole a natureza não mexe em atributo, mexe em confiança/vontade.
 
-## O que falta decidir com o jogador
+## O que foi decidido com o jogador
 
-1. Pokérole em tudo (combate + ficha do treinador com atributos e
-   perícias) ou só no combate?
-2. Edição: 2.0 ou 3.0? O PDF dele é de qual?
-3. A regra original de dado dele (d10) sai inteira ou fica em algum lugar?
-4. Nível dos jogos some e entra posto (Starter → Master), ou os dois
-   convivem?
+1. Só no combate; a ficha do treinador continua no d10.
+2. Edição 3.0 (o jogador não disse qual é o PDF dele; se for 2.0, os
+   números de veneno, queimadura e posto mudam um pouco).
+3. O d10 fica pra história, pra ficha e pros testes de cena.
+4. Os dois convivem: o nível dos jogos continua e vira posto e pontos.
 
 ## Estimativa dada
 

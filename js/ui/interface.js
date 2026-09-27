@@ -53,10 +53,16 @@ const UI = {
     if (this.dadosRecentes.length > 8) this.dadosRecentes.shift();
   },
   limparDados(){ this.dadosRecentes = []; },
+  /* os cinco atributos do Pokérole numa linha */
+  linhaAtrib(p){
+    return ATRIBUTOS.map(k => `${SIGLA_ATRIB[k]} ${p.stats[k]}`).join(' · ');
+  },
   /* ---------- DADOS: eles giram na tela e você pode girar de novo ---------- */
   htmlDados(){
     if (!this.dadosRecentes.length) return this.htmlBandeja();
-    const dados = this.dadosRecentes.map((d,k) => {
+    const soltos = this.dadosRecentes.filter(d => !d.pool);
+    const paradas = this.dadosRecentes.filter(d => d.pool);
+    const dados = soltos.map((d,k) => {
       const cls = d.valor === d.faces ? ' max' : (d.valor === 1 ? ' min' : '');
       return `<button class="dado d${d.faces}${cls}" data-v="${d.valor}" data-faces="${d.faces}"
         title="${this.esc(d.motivo||d.dado)} — clique para girar de novo"
@@ -65,11 +71,26 @@ const UI = {
         <span class="rot">d${d.faces}</span>
       </button>`;
     }).join('');
-    const motivos = this.dadosRecentes.map(d =>
+    const motivos = soltos.map(d =>
       `<span class="dado-legenda"><b>d${d.faces}</b> ${this.esc(d.motivo||'')} <b class="v">${d.valor}</b></span>`).join('');
+    /* Pokérole: a parada de d6 aparece inteira, com cada face; o que é
+       sucesso (4+, ou 6 no dado de chance) acende */
+    const htmlParadas = paradas.map((d, k) => {
+      const alvo = d.chance ? 6 : 4;
+      const faces = d.pool.length
+        ? d.pool.map((v, i) => `<i class="f${v >= alvo ? ' s' : ''}" style="animation-delay:${k*60 + i*25}ms">${v}</i>`).join('')
+        : '<span class="p-vazia">nenhum dado</span>';
+      const res = d.chance ? (d.valor ? 'pegou' : 'não pegou')
+                           : `${d.valor} sucesso${d.valor === 1 ? '' : 's'}`;
+      return `<div class="parada${d.valor ? ' deu' : ''}" title="${this.esc(d.motivo || '')}">
+        <span class="p-mot">${this.esc(d.motivo || '')} <b class="mono">${d.pool.length}d6</b></span>
+        <span class="p-res">${res}</span>
+        <span class="p-faces">${faces}</span></div>`;
+    }).join('');
     return `<div class="dados-area">
-      <div class="dados-linha">${dados}</div>
-      <div class="dados-legendas">${motivos}</div>
+      ${soltos.length ? `<div class="dados-linha">${dados}</div>
+      <div class="dados-legendas">${motivos}</div>` : ''}
+      ${paradas.length ? `<div class="paradas">${htmlParadas}</div>` : ''}
     </div>` + this.htmlBandeja();
   },
 
@@ -238,11 +259,11 @@ const UI = {
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
-        <button data-v="fiel" class="sel">Regra do dado (fiel)</button>
+        <button data-v="fiel" class="sel">Pokérole (do livro)</button>
         <button data-v="longo">Combate prolongado</button>
       </div>
       <div class="sussurro" id="f-ritmo-desc">
-        Fiel: dano = 1d10 × (poder ÷ 10), como nas suas regras. Rápido e letal.
+        Pokérole: parada de d6, HP do livro. Cada golpe pesa.
       </div>
 
       <div style="margin-top:26px;display:flex;gap:10px;flex-wrap:wrap">
@@ -268,8 +289,8 @@ const UI = {
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
-        ? 'Fiel: dano = 1d10 × (poder ÷ 10), como nas suas regras. Rápido e letal.'
-        : 'Prolongado: mesmo dado, dano reduzido a 60%. Combates duram mais turnos.';
+        ? 'Pokérole: parada de d6, HP do livro. Cada golpe pesa.'
+        : 'Prolongado: mesmo dado, HP base de cada espécie em dobro. Combates duram mais turnos.';
     });
   },
 
@@ -847,7 +868,7 @@ const UI = {
         ? `${this.esc(p.natureza)}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
         : 'natureza ?';
       const ficha = catalogado
-        ? `<span class="mono">ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</span>`
+        ? `<span class="mono">${this.linhaAtrib(p)}</span>`
         : (leuTipo ? '<span class="mono">tipo lido de olho · ficha não catalogada</span>'
                    : '<span class="mono">ficha não catalogada</span>');
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
@@ -878,6 +899,8 @@ const UI = {
       </div>`;
     };
     const el = document.getElementById('arena');
+    /* a tela já mudou (a luta acabou no meio da encenação): nada a pintar */
+    if (!el) return null;
     el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
     this._arenaUltima = {A:kA, I:kI};
     if (typeof Efeitos !== 'undefined'){
@@ -1172,14 +1195,31 @@ const UI = {
      de combate (a luta espera); fora dela, abre um modal que não fecha
      sem resposta. Quem chama decide o que acontece depois.
      ======================================================== */
+  /* A ficha do golpe no Pokérole, curta: poder e de onde sai a precisão */
+  resumoGolpe(nome){
+    const g = GOLPES[nome] || {}, pr = (typeof PR_GOLPE !== 'undefined' && PR_GOLPE[nome]) || {};
+    const sig = k => k === 'soc' ? 'Social' : k === 'von' ? 'Vontade' : SIGLA_ATRIB[k];
+    const partes = [];
+    if (g.c !== 'status'){
+      if (pr.fixo) partes.push(`dano fixo ${pr.fixo}`);
+      else if (pr.ohko) partes.push('nocaute');
+      else if (pr.posto) partes.push('dados pelo posto');
+      else if (pr.metade) partes.push('metade do HP dele');
+      else partes.push(`poder ${pr.p || Math.max(1, Math.round((g.p || 40) / 25))}`);
+    }
+    const aPrec = (pr.a || []).map(sig).join('/');
+    if (pr.nunca || g.a >= 999) partes.push(g.c === 'status' && !pr.a ? 'em si' : 'não erra');
+    else if (aPrec) partes.push(aPrec + (pr.h ? ' + ' + pr.h : ''));
+    if (pr.r) partes.push(`−${pr.r}`);
+    return partes.join(' · ');
+  },
+
   cartaoGolpe(nome, pp){
     const g = GOLPES[nome] || {};
     const cat = {fis:'Físico', esp:'Especial', status:'Status'}[g.c] || '—';
-    const poder = (g.c === 'status' || !g.p) ? '—' : g.p;
-    const prec = g.a ? g.a + '%' : '—';
     return `<span class="golpe-cartao">
       <span class="gc-topo"><span class="gc-nome">${this.esc(nome)}</span>${g.t ? this.tipoTag(g.t) : ''}</span>
-      <span class="gc-num">${cat} · Poder ${poder} · Precisão ${prec} · PP ${pp || g.pp || '—'}</span>
+      <span class="gc-num">${cat} · ${this.esc(this.resumoGolpe(nome))} · PP ${pp || g.pp || '—'}</span>
     </span>`;
   },
 
@@ -1418,7 +1458,7 @@ const UI = {
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
-        ${bt('fugir', 'Fugir', Batalha.fuga ? '1d20 contra a velocidade dele' : 'daqui não se foge',
+        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo contra os dele' : 'daqui não se foge',
              "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       ${dex}
@@ -1436,7 +1476,7 @@ const UI = {
       c.appendChild(this.el(`<div class="mb-linha centro">
         <button class="mb-btn lutar" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:0})">
           <span class="rot">Forcejar</span>
-          <span class="nota">1d10 × 3 de dano · ${this.esc(nomeExib(a))} se machuca no contragolpe</span></button></div>`));
+          <span class="nota">Força + 1 em d6 · ${this.esc(nomeExib(a))} perde 1 no contragolpe</span></button></div>`));
       c.appendChild(this.el(`<div class="mb-linha centro">
         <button class="mb-btn voltar" onclick="UI.voltarAoMenu()">
           <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
@@ -1449,7 +1489,7 @@ const UI = {
       const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
       const travado = Batalha.estAliado && Batalha.estAliado.desabilitado && Batalha.estAliado.desabilitado.nome === g.nome;
       grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${g.pp<=0 || travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
-        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status':(G.p||'—')} · ${G.a>=999?'∞':G.a+'%'}</span></span>
+        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status · ':''}${this.esc(this.resumoGolpe(g.nome))}</span></span>
         <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
     });
     c.appendChild(grade);
@@ -1540,15 +1580,15 @@ const UI = {
   },
 
   fichaEscaneada(p, esp, eventos){
-    const b = esp.base;
     const num = String(p.dex).padStart(3, '0');
     const nat = NATUREZAS[p.natureza] || {};
-    const maxBase = {hp:255, atk:190, def:230, spa:194, spd:230, spe:150};
-    const par = (rot, chave, vInd) => `<div class="base-linha dupla">
-      <span class="k">${rot}</span>
-      <span class="barrinha"><i style="width:${Math.min(100, Math.round(b[chave]/maxBase[chave]*100))}%"></i></span>
-      <span class="v mono">${b[chave]}</span>
-      <span class="ind mono">${vInd}</span></div>`;
+    /* a barra é o atributo contra o teto da espécie (de 1 a 10 no livro) */
+    const pr = PR_ESPECIE[p.dex] || [0,1,1,1,1,1,1,1,1,1,1];
+    const par = (k, i) => `<div class="base-linha dupla">
+      <span class="k">${NOME_ATRIB[k]}</span>
+      <span class="barrinha"><i style="width:${Math.min(100, Math.round(p.stats[k] / 10 * 100))}%"></i></span>
+      <span class="v mono">${p.stats[k]}</span>
+      <span class="ind mono">máx ${pr[6 + i]}</span></div>`;
 
     this.modal('', `<div class="pokedex-topo">
         <span class="pokedex-lente"></span>
@@ -1563,14 +1603,9 @@ const UI = {
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
         ${nat.agressiva ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
 
-        <h3 class="cat-item">Base da espécie <span class="fraco">· este exemplar</span></h3>
-        ${par('HP', 'hp', p.stats.hp)}
-        ${par('Ataque', 'atk', p.stats.atk)}
-        ${par('Defesa', 'def', p.stats.def)}
-        ${par('Sp. Atk', 'spa', p.stats.spa)}
-        ${par('Sp. Def', 'spd', p.stats.spd)}
-        ${par('Velocidade', 'spe', p.stats.spe)}
-        <div class="nota mono">Soma de base: ${esp.total}</div>
+        <h3 class="cat-item">Atributos <span class="fraco">· este exemplar, posto ${nomePosto(p.nivel)}</span></h3>
+        ${ATRIBUTOS.map(par).join('')}
+        <div class="nota mono">HP ${p.hpMax} = base ${p.hpMax - p.stats.vit} + Vitalidade ${p.stats.vit}</div>
 
         <h3 class="cat-item">Contra o seu time</h3>
         <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
@@ -2610,7 +2645,7 @@ const UI = {
       <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
         ${p.golpes.map(g=>`${this.esc(g.nome)} <span class="mono">${g.pp}/${g.ppMax}</span>`).join(' · ')}</div>
       <div class="sussurro" style="margin-top:6px">
-        ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</div>
+        ${nomePosto(p.nivel)} · ${this.linhaAtrib(p)}</div>
       ${p.historia ? `<div class="sussurro" style="margin-top:7px;font-style:italic">${this.esc(p.historia)}</div>` : ''}
     </div>`;
     const pc = d.pc.length ? `<h3>No PC (${d.pc.length})</h3><div class="grade">${d.pc.map(carta).join('')}</div>` : '';
@@ -3085,11 +3120,13 @@ const UI = {
         <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
         true, 'pokedex');
     }
-    const b = esp.base;
-    const linha = (k, v, max) => `<div class="base-linha">
-      <span class="k">${k}</span>
-      <span class="barrinha"><i style="width:${Math.min(100, Math.round(v/max*100))}%"></i></span>
-      <span class="v mono">${v}</span></div>`;
+    /* a espécie no Pokérole: de onde cada atributo parte e até onde vai */
+    const pr = PR_ESPECIE[dex] || [0,1,1,1,1,1,1,1,1,1,1];
+    const linha = (k, i) => `<div class="base-linha dupla">
+      <span class="k">${NOME_ATRIB[k]}</span>
+      <span class="barrinha faixa"><i style="left:${pr[1 + i] * 10}%;width:${(pr[6 + i] - pr[1 + i]) * 10}%"></i></span>
+      <span class="v mono">${pr[1 + i]}</span>
+      <span class="ind mono">até ${pr[6 + i]}</span></div>`;
     this.modal('', `<div class="pokedex-topo">
         <span class="pokedex-lente"></span>
         <span class="pokedex-luzes"><i></i><i></i><i></i></span>
@@ -3099,14 +3136,9 @@ const UI = {
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite({dex, nome:esp.nome, shiny: Estado.brilhanteDe(dex) === 'capturado'}, 'frente')}</div>
 
-        <h3 class="cat-item">Base</h3>
-        ${linha('HP', b.hp, 255)}
-        ${linha('Ataque', b.atk, 190)}
-        ${linha('Defesa', b.def, 230)}
-        ${linha('Sp. Atk', b.spa, 194)}
-        ${linha('Sp. Def', b.spd, 230)}
-        ${linha('Velocidade', b.spe, 150)}
-        <div class="nota mono">Soma de base: ${esp.total}</div>
+        <h3 class="cat-item">Atributos da espécie</h3>
+        ${ATRIBUTOS.map(linha).join('')}
+        <div class="nota mono">HP base ${pr[0]} · soma dos máximos ${pr.slice(6).reduce((a, b) => a + b, 0)}</div>
 
         <h3 class="cat-item">Ficha</h3>
         <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
@@ -3346,7 +3378,7 @@ const UI = {
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
       ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia')}
-      ${L('Ritmo do combate', 'fiel (rápido e letal) ou prolongado (dano em 60%)')}`;
+      ${L('Ritmo do combate', 'Pokérole (o HP do livro) ou prolongado (HP base em dobro)')}`;
 
     if (k === 'ficha') return `
       <h3>Os seis status</h3>
@@ -3369,16 +3401,15 @@ const UI = {
       <p class="sussurro">Os dois eixos se pagam: enquanto você deve de um lado, o que faz do outro serve primeiro pra quitar.</p>`;
 
     if (k === 'combate') return `
-      <h3>A conta</h3>
-      ${L('Dano', '1d10 × (poder ÷ 10) × (Atk ÷ Def)^1,15')}
-      ${L('Limite da razão', 'entre 0,33× e 3,2×')}
-      ${L('STAB', '×1,5 quando o tipo do golpe é o tipo dele')}
-      ${L('Eficácia', '0× / 0,5× / 2×')}
-      ${L('Crítico', '1d20 ≥ 20 − (Vel. base ÷ 40, até 3) → ×1,5')}
-      ${L('Precisão', '1d20 > (100 − precisão) ÷ 5')}
-      ${L('Ordem', 'por Velocidade · Quick Attack e afins têm prioridade')}
-      ${L('Fuga', '1d20 ≥ (Vel. do selvagem − a sua + 10)')}
-      ${L('Sem PP', 'Forcejar: 1d10 × 3, e 25% volta em você')}
+      <h3>A conta — Pokérole</h3>
+      ${L('Os dados', 'parada de d6 · cada 4, 5 ou 6 é um sucesso')}
+      ${L('Precisão', 'atributo + perícia · 1 sucesso acerta · dor e precisão baixa tiram')}
+      ${L('Dano', 'Força ou Especial + poder + 1 de STAB − Vitalidade ou Instinto · sucesso = 1 de dano')}
+      ${L('Tipo', '+1 por fraqueza · −1 por resistência · imune não sofre')}
+      ${L('Crítico', 'sobra de 3 sucessos na precisão (mais no posto alto) → +2 dados')}
+      ${L('Ordem', 'prioridade · depois 1d6 + Destreza + Alerta')}
+      ${L('Fuga', 'Destreza + Atletismo contra os do selvagem')}
+      ${L('Sem PP', 'Forcejar: Força + 1, e 1 volta em você')}
       <h3>Na sua vez</h3>
       ${L('Golpe', 'gasta PP · sem PP sobra Forcejar')}
       ${L('Bola', 'só em selvagem — não se joga bola no Pokémon de treinador')}
@@ -3387,15 +3418,15 @@ const UI = {
       ${L('Trocar', 'gasta o turno')}
       ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
       <h3>Status</h3>
-      ${L('Sono', 'perde turnos até acordar')} ${L('Paralisia', 'Vel. pela metade · 25% de perder a vez')}
-      ${L('Queimadura', 'Atk em 75% · dano por turno')} ${L('Veneno', 'dano por turno')}
-      ${L('Congelamento', '20% de descongelar por turno')} ${L('Confusão', '33% de se machucar sozinho')}`;
+      ${L('Sono', '5 sucessos de Instinto somados pra acordar')} ${L('Paralisia', '−2 de Destreza')}
+      ${L('Queimadura', '1 de dano por turno')} ${L('Veneno', '2 de dano por turno · o grave sobe 2 a cada turno')}
+      ${L('Congelamento', '20% de descongelar por turno')} ${L('Confusão', 'tira sucessos · errar tira 1 de HP')}`;
 
     if (k === 'natureza') {
-      const NOMES = {atk:'Ataque', def:'Defesa', spa:'At. Esp.', spd:'Def. Esp.', spe:'Velocidade'};
+      const NOMES = {atk:'Força', def:'Vitalidade', spa:'Especial', spd:'Instinto', spe:'Destreza'};
       const linhas = Object.keys(NATUREZAS).map(n => {
         const x = NATUREZAS[n];
-        const stats = x.mais ? `+10% ${NOMES[x.mais]} · −10% ${NOMES[x.menos]}` : 'sem alteração de status';
+        const stats = x.mais ? `pontos puxam pra ${NOMES[x.mais]} · fogem de ${NOMES[x.menos]}` : 'não puxa pra lado nenhum';
         return `<div class="tut-nat${x.agressiva ? ' agressiva' : ''}">
           <span class="tut-nat-nome">${n}</span>
           <span class="tut-nat-stat mono">${stats}</span>
@@ -3404,7 +3435,7 @@ const UI = {
       }).join('');
       return `
         <h3>As vinte e cinco naturezas</h3>
-        <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela mexe em dois status e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
+        <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela decide pra onde vão os pontos de atributo que ele ganha subindo de nível, e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
         <div class="tut-nats">${linhas}</div>
         <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>`;
     }
@@ -3543,7 +3574,7 @@ const UI = {
       ${L('Pokémon desmaiado', 'volta no Centro')}
       ${L('Pokémon morto', 'não volta nunca')}
       <h3>Quando o seu cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva, rola-se 1d20: com 10 ou mais ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. As naturezas agressivas estão marcadas na aba Naturezas.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva, rola-se 1d20: com 10 ou mais ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP. As naturezas agressivas estão marcadas na aba Naturezas.</p>
       <h3>O que não dá pra desfazer</h3>
       ${L('Salvar', 'automático — não existe voltar atrás')}
       ${L('Nova jornada', 'apaga a atual')}
@@ -3552,15 +3583,40 @@ const UI = {
 
   modalRegras(){
     this.modal('Regras do sistema', `
-      <h3>Combate</h3>
-      <div class="linha"><span class="k">Dano</span><span class="v">1d10 × (poder ÷ 10)</span></div>
-      <div class="linha"><span class="k">Crítico</span><span class="v">1d20 ≥ 20 − (Vel. base ÷ 40, até 3) → ×1,5</span></div>
-      <div class="linha"><span class="k">Precisão</span><span class="v">1d20 > (100 − precisão) ÷ 5</span></div>
-      <div class="linha"><span class="k">STAB</span><span class="v">×1,5</span></div>
-      <div class="linha"><span class="k">Eficácia de tipo</span><span class="v">0× / 0,5× / 2×</span></div>
-      <div class="linha"><span class="k">Fuga</span><span class="v">1d20 ≥ (Vel. selvagem − sua + 10)</span></div>
-      <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: 1d10 × 3 · você leva 25% de volta</span></div>
-      <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo, elevada a 1,15 e limitada entre 0,33× e 3,2×, senão os stats dos jogos não teriam efeito nenhum. Golpes de crítico alto tiram 3 do limite do d20. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
+      <h3>Combate — Pokérole</h3>
+      <p class="sussurro">O combate segue o Pokérole 3.0. Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso. A bandeja mostra cada parada com as faces, e o log mostra a conta.</p>
+      <div class="linha"><span class="k">Precisão</span><span class="v">atributo + perícia do golpe · precisa de 1 sucesso</span></div>
+      <div class="linha"><span class="k">Precisão baixa</span><span class="v">o golpe tira sucessos: Take Down 2, Sing 3, Horn Drill 5</span></div>
+      <div class="linha"><span class="k">Dor</span><span class="v">−1 sucesso com metade do HP ou menos · −2 com 1 de HP</span></div>
+      <div class="linha"><span class="k">Crítico</span><span class="v">3 sucessos além do necessário no Iniciante e no Novato · +1 por posto do Regular pra cima · crítico alto e Focus Energy tiram 1 · +2 dados de dano</span></div>
+      <div class="linha"><span class="k">Dano</span><span class="v">Força (físico) ou Especial + poder do golpe + 1 de STAB − Vitalidade (físico) ou Instinto (especial) · cada sucesso é 1 de dano</span></div>
+      <div class="linha"><span class="k">Zero sucesso</span><span class="v">1 de dano, e só</span></div>
+      <div class="linha"><span class="k">Tipo</span><span class="v">+1 por fraqueza · −1 por resistência · imune não sofre nada · golpe que acerta tira pelo menos 1</span></div>
+      <div class="linha"><span class="k">Ação dupla e tripla</span><span class="v">Double Kick, Triple Kick… cada acerto rola a sua parada</span></div>
+      <div class="linha"><span class="k">Ações sucessivas</span><span class="v">Fury Attack, Pin Missile… 1 acerto e mais 1 por sucesso sobrando na precisão, até 5</span></div>
+      <div class="linha"><span class="k">Pelo posto</span><span class="v">Seismic Toss, Night Shade, Psywave: 1, 2, 4, 6, 8 ou 10 dados pelo posto, ignorando a defesa</span></div>
+      <div class="linha"><span class="k">Dano fixo</span><span class="v">Dragon Rage 2 · Sonic Boom 1 · Super Fang: dados iguais à metade do HP que sobra, até 10</span></div>
+      <div class="linha"><span class="k">Efeito secundário</span><span class="v">dados de chance do livro: pega se algum d6 der 6 (Ember 1 dado, Body Slam 3)</span></div>
+      <div class="linha"><span class="k">Ordem</span><span class="v">prioridade primeiro · depois iniciativa: 1d6 na entrada + Destreza + Alerta</span></div>
+      <div class="linha"><span class="k">Fuga</span><span class="v">Destreza + Atletismo do seu contra os do selvagem · empate é seu</span></div>
+      <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: Força + 1 − Vitalidade · você leva 1 de volta</span></div>
+      <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe esquiva nem choque como reação: quem apanha não gasta a vez desviando.</p>
+
+      <h3>Atributos do Pokémon</h3>
+      <div class="linha"><span class="k">Força · FOR</span><span class="v">dano físico · precisão de golpe de impacto</span></div>
+      <div class="linha"><span class="k">Destreza · DES</span><span class="v">precisão da maioria dos golpes · iniciativa · fuga</span></div>
+      <div class="linha"><span class="k">Vitalidade · VIT</span><span class="v">desconta do dano físico · soma no HP</span></div>
+      <div class="linha"><span class="k">Especial · ESP</span><span class="v">dano especial · precisão de golpe de energia</span></div>
+      <div class="linha"><span class="k">Instinto · INS</span><span class="v">desconta do dano especial · acordar · resistir a confusão e paixão</span></div>
+      <div class="linha"><span class="k">HP</span><span class="v">HP base da espécie + Vitalidade · de 4 a uns 20</span></div>
+      <div class="linha"><span class="k">De onde partem</span><span class="v">o mínimo da espécie no livro · cada espécie tem um teto por atributo</span></div>
+      <div class="linha"><span class="k">Pontos por nível</span><span class="v">1 a cada 7 níveis, até 14 no nível 98</span></div>
+      <div class="linha"><span class="k">Pra onde vai o ponto</span><span class="v">pro atributo que a espécie mais usa, pesado pelos atributos base dos jogos · a natureza puxa ×1,3 pro que ela sobe e ×0,7 pro que ela desce · nunca passa do teto</span></div>
+      <div class="linha"><span class="k">Evoluir</span><span class="v">refaz a conta com o mínimo e o teto da forma nova</span></div>
+      <div class="linha"><span class="k">Posto</span><span class="v">Iniciante até o 9 · Novato 10 · Regular 20 · Avançado 35 · Especialista 50 · Ás 65 · Mestre 80 · Campeão 90</span></div>
+      <div class="linha"><span class="k">Perícias</span><span class="v">todas no teto do posto: 1 no Iniciante, até 5 do Especialista pra cima</span></div>
+      <div class="linha"><span class="k">Social e Vontade</span><span class="v">golpe de status que pede atributo social usa 1 + um ponto a cada três · Vontade é Instinto + 2</span></div>
+      <p class="sussurro">A Pokédex mostra, na ficha da espécie, de onde cada atributo parte e até onde vai; na ficha de um exemplar escaneado, onde ele está agora.</p>
 
       <h3>Onde a batalha acontece</h3>
       <p class="sussurro">O fundo do combate não é enfeite: ele sai do lugar. Cada ponto do mapa e cada capítulo têm um ambiente, e cada ambiente tem o seu cenário. Os nove ambientes escritos se agrupam em cinco arenas, que é o que decide o tipo de chão sob os pés. As duas bases embaixo dos lutadores seguem a arena — a sua fica maior e mais perto, a do outro lado menor e mais longe.</p>
@@ -3578,49 +3634,49 @@ const UI = {
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
-      <div class="linha"><span class="k">PAR · paralisado</span><span class="v">25% de perder a vez · velocidade pela metade</span></div>
-      <div class="linha"><span class="k">BRN · queimado</span><span class="v">perde 1/16 do HP máximo no fim do turno</span></div>
-      <div class="linha"><span class="k">PSN · envenenado</span><span class="v">perde 1/8 do HP máximo no fim do turno (1/6 no grave)</span></div>
-      <div class="linha"><span class="k">SLP · dormindo</span><span class="v">1 a 3 turnos sem agir</span></div>
+      <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
+      <div class="linha"><span class="k">BRN · queimado</span><span class="v">1 de dano no fim do turno</span></div>
+      <div class="linha"><span class="k">PSN · envenenado</span><span class="v">2 de dano no fim do turno · no grave, 2 a mais a cada turno (2, 4, 6…)</span></div>
+      <div class="linha"><span class="k">SLP · dormindo</span><span class="v">rola Instinto a cada vez · acorda quando somar 5 sucessos (Rest: 2)</span></div>
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
-      <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
+      <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso e Metálico não envenenam e Gelo não congela. O congelado é regra da casa: no livro ele só sai quebrando o gelo por fora, e numa luta de um contra um isso não acaba nunca.</p>
       <h3>Estágios de atributo</h3>
       <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
-      <div class="linha"><span class="k">ATK, DEF, SPA, SPD, VEL</span><span class="v">×0,25 (−6) a ×4 (+6)</span></div>
-      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">×1/3 a ×3 · a precisão de quem ataca contra a evasão de quem apanha</span></div>
-      <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">só na chance dele: Aurora Beam 10%, Iron Tail 30%, Rock Smash 50%, Mud-Slap sempre</span></div>
+      <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
+      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha</span></div>
+      <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 
       <h3>Estados que os golpes deixam</h3>
-      <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · às vezes se fere sozinho</span></div>
-      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1/16 do HP por turno · não foge nem troca</span></div>
-      <div class="linha"><span class="k">Leech Seed</span><span class="v">1/8 do HP por turno vai pra quem plantou · Grama não pega</span></div>
-      <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: ATK +1, DEF +1, VEL −1</span></div>
+      <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · no começo da vez, 2 sucessos de Instinto ignoram · senão −1 sucesso (−2 do Avançado ao Ás, −3 do Mestre pra cima), e golpe que erra tira 1 de quem usou</span></div>
+      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1 de dano por turno · não foge nem troca</span></div>
+      <div class="linha"><span class="k">Leech Seed</span><span class="v">1 de HP por turno vai pra quem plantou · Grama não pega</span></div>
+      <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: FOR +1, VIT +1, DES −1</span></div>
       <div class="linha"><span class="k">Nightmare</span><span class="v">só em quem dorme · 1/4 do HP por turno enquanto dormir</span></div>
-      <div class="linha"><span class="k">Attract</span><span class="v">só entre sexos opostos · 50% de não atacar no turno</span></div>
+      <div class="linha"><span class="k">Attract</span><span class="v">só entre sexos opostos · o apaixonado bate com metade do dano, a menos que tire 3 sucessos de Instinto</span></div>
       <div class="linha"><span class="k">Disable</span><span class="v">trava o último golpe do outro por 2 a 7 turnos</span></div>
       <div class="linha"><span class="k">Substitute</span><span class="v">custa 1/4 do HP · o boneco apanha no lugar e segura golpe de status</span></div>
       <div class="linha"><span class="k">Protect, Detect, Endure</span><span class="v">agem antes de tudo · Endure fica com 1 de HP · usar seguido: metade da chance a cada vez</span></div>
-      <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · metade do dano físico / especial · crítico atravessa</span></div>
+      <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · +2 de Vitalidade / Instinto contra dano · crítico atravessa</span></div>
       <div class="linha"><span class="k">Mist / Safeguard</span><span class="v">5 turnos · ninguém baixa atributo / nenhuma condição pega, vindo do outro lado</span></div>
       <div class="linha"><span class="k">Haze</span><span class="v">zera os estágios dos dois lados</span></div>
-      <div class="linha"><span class="k">Focus Energy</span><span class="v">crítico 3 pontos mais perto no d20</span></div>
+      <div class="linha"><span class="k">Focus Energy</span><span class="v">o crítico pede 1 sucesso a menos</span></div>
       <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
       <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
       <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
       <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes com 5 PP e estágios · desfaz no fim</span></div>
       <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
-      <div class="linha"><span class="k">Swagger</span><span class="v">ATK do outro +2 e confusão</span></div>
+      <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
-      <div class="linha"><span class="k">Fury Cutter</span><span class="v">dobra a cada acerto seguido, até 160</span></div>
-      <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 102 com moral 100 · 102 com moral 0</span></div>
+      <div class="linha"><span class="k">Fury Cutter</span><span class="v">+1 de poder a cada acerto seguido, até +4</span></div>
+      <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 5 com moral 100 · 5 com moral 0 (moral ÷ 20)</span></div>
       <p class="sussurro">Esses estados somem quando o Pokémon sai da luta; Reflect, Light Screen, Mist e Safeguard ficam no lado inteiro até acabar o tempo.</p>
 
       <h3>Clima</h3>
-      <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água ×1,5 · Fogo ×0,5</span></div>
-      <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo ×1,5 · Água ×0,5 · Solar Beam sem carregar</span></div>
-      <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · fere 1/8 do HP no fim do turno, menos Pedra, Terrestre e Metálico</span></div>
+      <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água +1 de poder · Fogo −1 de dano</span></div>
+      <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo +1 de poder · Água −1 de dano · Solar Beam sem carregar</span></div>
+      <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · 1 de dano no fim do turno, menos Pedra, Terrestre e Metálico · Pedra ganha +1 de Instinto</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · ×1,5 se era de treinador</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
@@ -3667,7 +3723,7 @@ const UI = {
       <div class="linha"><span class="k">Attract</span><span class="v">só pega em sexo oposto · sem sexo não se apaixona nem apaixona</span></div>
       <div class="linha"><span class="k">Par</span><span class="v">mesma linha de evolução (os dois Nidoran contam como uma) e sexos opostos, no mesmo time · cada um tem um par só</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">desobedece metade do que desobedeceria</span></div>
-      <div class="linha"><span class="k">Par cai na luta</span><span class="v">o outro entra com ATK +1 e SPA +1, uma vez por luta · vale pro time do adversário também</span></div>
+      <div class="linha"><span class="k">Par cai na luta</span><span class="v">o outro entra com FOR +1 e ESP +1, uma vez por luta · vale pro time do adversário também</span></div>
       <div class="linha"><span class="k">Par solto</span><span class="v">quem fica perde 10 de moral</span></div>
       <div class="linha"><span class="k">Par morre</span><span class="v">quem fica perde 20 de moral</span></div>
       <h3>Morte</h3>
@@ -3708,7 +3764,7 @@ const UI = {
       <h3>Brilhantes</h3>
       <div class="linha"><span class="k">Frequência</span><span class="v">cerca de 1 em 1000</span></div>
       <div class="linha"><span class="k">Sorte</span><span class="v">cada ponto aperta a conta — no máximo, 1 em 300</span></div>
-      <div class="linha"><span class="k">Status</span><span class="v">idênticos aos da espécie</span></div>
+      <div class="linha"><span class="k">Atributos</span><span class="v">idênticos aos da espécie</span></div>
       <p class="sussurro">A cor é a única diferença, e é a diferença inteira. Um brilhante avistado fica marcado na Pokédex mesmo que escape; capturado, a marca muda. Evoluir não tira a cor.</p>
 
       <h3>PokéNav</h3>

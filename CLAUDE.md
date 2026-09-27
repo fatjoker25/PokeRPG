@@ -266,6 +266,38 @@ cobria as fichas de HP.
 Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
 
+## O combate é Pokérole
+Desde a troca de mecânica o combate segue o **Pokérole 3.0**; a ficha do
+treinador e os testes de história continuam no d10. Os dois sistemas não
+se misturam: d10/d20 é gente e cena, parada de d6 é Pokémon brigando.
+
+- **Atributos** moram em `p.stats` com as chaves do livro: `for`, `des`,
+  `vit`, `esp`, `ins` e `hp`. As chaves dos jogos (`atk`, `def`, `spa`,
+  `spd`, `spe`) **não existem mais em `p.stats`**; continuam só como nome
+  de estágio no `est` da batalha e em `ef.sobe`/`ef.baixa` dos golpes,
+  traduzidas por `ATRIB_DO_ESTAGIO`. Save antigo é convertido na carga
+  (`atualizarAtributos`).
+- **Nível continua**: `calcularStats(dex, nível, ivs, natureza)` parte do
+  mínimo da espécie em `PR_ESPECIE`, dá um ponto a cada 7 níveis e manda
+  pro atributo de maior peso (atributo base dos jogos, natureza ×1,3/×0,7,
+  Vitalidade nunca abaixo da média), sem passar do teto. É determinístico.
+- **`js/data/pokerole.js` é gerado**, não se edita à mão:
+  `python3 ferramentas/gerar-pokerole.py <Pokerole-Data>/v3.0`. Golpe novo
+  em `GOLPES` precisa rodar o gerador; nome que difere do livro entra em
+  `RENOMEADOS` lá dentro.
+- Toda rolagem de combate passa por `Dados.pool(n, motivo)` ou
+  `Dados.chanceDados(n, motivo)`, que vão inteiras pra bandeja. A conta
+  aparece no log como evento `rolagem` — **número que decide o turno tem
+  que estar escrito ali**, senão o jogador não tem como conferir.
+- Dano de condição e de item é número fixo do livro (veneno 2, queimadura
+  1, Potion 2), não fração do HP: o HP vai de 4 a uns 20. O que continua
+  fração (Substitute, Curse, Recover) tem `Math.max(1, …)`.
+
+Duas adaptações, as duas escritas na folha de regras: o crítico pede mais
+sobra no posto alto (no livro a sobra vira ação extra na rodada, e aqui cada
+um age uma vez), e **não existe esquiva nem choque** — testado, derrubava o
+acerto pra 35%.
+
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
 não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). São todas as
@@ -350,7 +382,7 @@ Vocativo neutro ("cara") fica como está.
 
 ## Onde as coisas ficam
 - `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
-  nomes, porte, arenas, treinadores, tms.
+  nomes, porte, arenas, treinadores, tms, pokerole (gerado).
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
 - `js/story/` — capítulos (`cap-01` a `cap-28`), lugares, mercado, eventos, motor.
 - `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o

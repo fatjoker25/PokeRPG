@@ -209,12 +209,12 @@ devolve o anterior à mochila.
 
 | Item | Efeito |
 |---|---|
-| Resto de Ração | recupera 7% do HP máximo no fim de cada turno |
+| Resto de Ração | recupera 1 de HP no fim de cada turno |
 | Faixa Firme | uma vez por combate, sobrevive a um golpe fatal com 1 HP |
-| Punho de Ferro | +15% de dano em golpes físicos |
-| Óculos Grossos | +15% de dano em golpes especiais |
-| Colete de Couro | −12% de dano recebido |
-| Botina Leve | +12% de Velocidade para a ordem dos turnos |
+| Punho de Ferro | +1 dado de dano em golpes físicos |
+| Óculos Grossos | +1 dado de dano em golpes especiais |
+| Colete de Couro | +1 de Vitalidade e de Instinto contra dano |
+| Botina Leve | +2 de iniciativa pra ordem dos turnos |
 | Sino Calmante | +3 de moral ao fim de cada combate |
 | Amuleto de Moeda | +50% de dinheiro em vitórias contra treinador |
 
@@ -224,12 +224,14 @@ consumido.
 
 ## Dados
 
-Toda rolagem do combate vira um dado na tela, com o formato certo — d20, d10,
-d6, d4 — tombando ao entrar, com os números girando antes de assentar no valor.
-Embaixo de cada um, o motivo da rolagem. **Clicar num dado gira ele de novo**
-(o resultado não muda: já está registrado).
+Toda rolagem vira dado na tela. As da história e da ficha do treinador são
+d10 e d20, com o formato certo, tombando ao entrar; **clicar num dado gira ele
+de novo** (o resultado não muda: já está registrado). 20 natural acende verde,
+1 acende vermelho.
 
-20 natural acende verde. 1 acende vermelho.
+As do combate são **paradas de d6** do Pokérole: cada parada aparece inteira,
+com o motivo, todas as faces e o total de sucessos — o que deu 4, 5 ou 6
+acende. No dado de chance, o que acende é o 6.
 
 E tem uma **bandeja** com d20, d10, d6 e d4 pra girar por girar, que não afeta
 nada e existe só porque isso é um RPG de mesa.
@@ -244,25 +246,41 @@ O progresso é salvo automaticamente no `localStorage` do navegador.
 
 ## Sistema
 
-### Combate
-| Regra | Fórmula |
+### Combate — Pokérole 3.0
+O combate segue o [Pokérole](https://www.pokeroleproject.com) 3.0, com o
+nível dos jogos mantido e a ficha do treinador (d10) intacta. Tudo no combate
+é parada de d6, e cada 4, 5 ou 6 é um sucesso.
+
+| Regra | Como |
 |---|---|
-| Dano | `1d10 × (poder ÷ 10)` |
-| Crítico | `1d20 = 20` → ×1,5 |
-| Precisão | `1d20 > (100 − precisão) ÷ 5` |
-| STAB | ×1,5 |
-| Eficácia de tipo | 0× / 0,5× / 2× (tabela da 1ª Geração, 15 tipos) |
-| Fuga | `1d20 ≥ (Vel. selvagem − sua + 10)` |
+| Precisão | atributo + perícia do golpe · 1 sucesso acerta · precisão baixa e dor tiram sucessos |
+| Dano | Força ou Especial + poder + 1 de STAB − Vitalidade ou Instinto · cada sucesso é 1 de dano |
+| Zero sucesso | 1 de dano |
+| Tipo | +1 por fraqueza, −1 por resistência, imune não sofre |
+| Crítico | 3 sucessos além do necessário (mais no posto alto) → +2 dados |
+| HP | HP base da espécie + Vitalidade |
+| Ordem | prioridade, depois 1d6 + Destreza + Alerta |
+| Fuga | Destreza + Atletismo contra os do selvagem |
 
-Turnos são ordenados por **Velocidade**, com prioridade para golpes como Quick Attack. PP, condições de status (veneno, queimadura, paralisia, sono, congelamento), confusão e estágios de atributo funcionam como nos jogos.
+Cada espécie tem, no livro, um mínimo e um teto pra cada um dos cinco
+atributos (Força, Destreza, Vitalidade, Especial, Instinto). O Pokémon ganha
+um ponto a cada 7 níveis, até 14, e o ponto vai pro atributo que a espécie
+mais usa — pesado pelos atributos base dos jogos e puxado pela natureza.
+O nível vira posto (Iniciante, Novato, Regular, Avançado, Especialista, Ás,
+Mestre, Campeão), e o posto dá a perícia.
 
-**Extensão documentada:** o dano também é multiplicado pela razão Ataque/Defesa (limitada entre 0,45× e 2,2×) — sem isso os 6 stats clássicos não teriam efeito algum sobre o dano. No modo *Combate prolongado*, escolhido na criação de personagem, o dano final é multiplicado por 0,6 para alongar as batalhas; o modo *fiel* usa a regra pura.
+Duas adaptações pro jogo de um golpe por turno: o crítico pede mais sobra no
+posto alto (no livro essa sobra vira ação extra na rodada), e não existe
+esquiva nem choque como reação. No modo *Combate prolongado*, o HP base de
+cada espécie dobra. Os dados das espécies e dos golpes saem do
+[Pokerole-Data](https://github.com/Willowlark/Pokerole-Data), gerados por
+`ferramentas/gerar-pokerole.py`.
 
 ### Naturezas
-As 25 naturezas dão ±10% em atributos **e mudam o comportamento em combate**: um `Brave` recusa golpes especiais, um `Timid` hesita no corpo a corpo, um `Naughty` erra o alvo de propósito, um `Hasty` ataca antes da ordem. Moral baixa aumenta a desobediência.
+As 25 naturezas puxam os pontos de atributo pra um lado e empurram do outro **e mudam o comportamento em combate**: um `Brave` recusa golpes especiais, um `Timid` hesita no corpo a corpo, um `Naughty` erra o alvo de propósito, um `Hasty` ataca antes da ordem. Moral baixa aumenta a desobediência.
 
 ### Quando o seu Pokémon cai contra um selvagem
-Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se `1d20`: com **10+** ele ataca **você**. Dano = `(Ataque dele ÷ 10) × 1d10`. Naturezas passivas não atacam o treinador.
+Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se `1d20`: com **10+** ele ataca **você**. Dano = `Força dele + 2` em d6, e cada sucesso tira 3 do seu HP. Naturezas passivas não atacam o treinador.
 
 Você pode correr (`1d10 + Força ≥ 7`), encarar (`1d10 + Carisma`), usar item ou tentar a captura.
 
@@ -417,5 +435,8 @@ insígnias de Kanto e o ícone do mapa; os gritos são a versão das
 primeiras gerações do repositório de gritos da PokeAPI; os cenários de
 batalha e os rostos de treinador vêm do
 [Pokémon Showdown](https://play.pokemonshowdown.com).
+As regras de combate são do Pokérole (Pokérole Project), e os atributos
+das espécies e as fichas dos golpes vêm do Pokerole-Data, mantido pela
+comunidade.
 Pokémon é marca da Nintendo, Game Freak e Creatures Inc. Este é um
 projeto de fã, sem fim comercial.

@@ -2540,3 +2540,27 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .marca-luta.bom{background:rgba(90,170,240,.16);border-color:rgba(90,170,240,.5);color:#bfe0ff}
 .marca-luta.campo{background:rgba(240,200,90,.14);border-color:rgba(240,200,90,.5);color:#ffe7a6}
 .golpe-btn.travado{opacity:.5 !important;text-decoration:line-through}
+
+/* ============================================================
+   POKÉROLE — parada de d6 na bandeja e a conta no log
+   ============================================================ */
+.paradas{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.parada{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:center;
+  padding:6px 9px;border:1px solid var(--borda);border-radius:9px;background:var(--bg-2)}
+.parada .p-mot{font-size:11.5px;color:var(--texto-fraco);min-width:0;overflow-wrap:anywhere}
+.parada .p-mot b{color:var(--texto);font-weight:600;margin-left:4px}
+.parada .p-res{font-family:var(--mono);font-size:12px;color:var(--texto-fraco);text-align:right}
+.parada.deu .p-res{color:var(--bom);font-weight:600}
+.parada .p-faces{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px}
+.parada .p-faces .f{
+  font-style:normal;font-family:var(--mono);font-size:11.5px;font-weight:700;
+  width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--borda-forte, var(--borda));color:var(--texto-fraco);
+  animation:assentar .4s var(--mola) both
+}
+.parada .p-faces .f.s{border-color:var(--bom);color:var(--bom);background:color-mix(in srgb, var(--bom) 14%, transparent)}
+.parada .p-vazia{font-size:11px;color:var(--texto-fraco);font-style:italic}
+.log-combate .l.rolagem{color:var(--texto-fraco);font-family:var(--mono);font-size:11.5px;padding:1px 0 1px 10px}
+.barrinha.faixa{position:relative}
+.barrinha.faixa i{position:absolute;top:0}
+@media (prefers-reduced-motion: reduce){ .parada .p-faces .f{animation:none} }

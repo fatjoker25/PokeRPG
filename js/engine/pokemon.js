@@ -2,18 +2,80 @@
    POKÉMON — instâncias, stats por nível, experiência, evolução
    ============================================================ */
 
-/* Fórmula padrão dos jogos (IVs aleatórios, sem EVs) */
-function calcularStats(base, nivel, ivs, natureza){
+/* ============================================================
+   ATRIBUTOS DO POKÉROLE
+   Cinco atributos, cada um do mínimo da espécie ao máximo dela
+   (PR_ESPECIE): Força, Destreza, Vitalidade, Especial e Instinto.
+   O nível continua sendo o dos jogos; ele vira POSTO (o rank do
+   livro) e PONTOS de atributo, um a cada 7 níveis, até 14.
+
+   Quem decide pra onde vai o ponto é a espécie: um Machop põe em
+   Força, um Abra em Especial. O peso sai dos atributos base dos
+   jogos, a natureza puxa pra um lado e empurra do outro, e o IV
+   desempata. É determinístico: o mesmo bicho no mesmo nível tem
+   sempre os mesmos números, e evoluir redistribui do zero.
+   ============================================================ */
+const ATRIBUTOS = ['for', 'des', 'vit', 'esp', 'ins'];
+/* de qual atributo base dos jogos cada um tira o peso */
+const ATRIB_DO_JOGO = {for:'atk', des:'spe', vit:'def', esp:'spa', ins:'spd'};
+const NOME_ATRIB = {for:'Força', des:'Destreza', vit:'Vitalidade', esp:'Especial', ins:'Instinto'};
+const SIGLA_ATRIB = {for:'FOR', des:'DES', vit:'VIT', esp:'ESP', ins:'INS'};
+const POSTOS = ['Iniciante', 'Novato', 'Regular', 'Avançado', 'Especialista', 'Ás', 'Mestre', 'Campeão'];
+
+function postoDoNivel(nv){
+  return nv < 10 ? 0 : nv < 20 ? 1 : nv < 35 ? 2 : nv < 50 ? 3 : nv < 65 ? 4 : nv < 80 ? 5 : nv < 90 ? 6 : 7;
+}
+function nomePosto(nv){ return POSTOS[postoDoNivel(nv)]; }
+/* perícia: o teto do posto (1 no Iniciante, 5 do Especialista pra cima) */
+function periciaDoNivel(nv){ return Math.min(5, postoDoNivel(nv) + 1); }
+function pontosDoNivel(nv){ return Math.min(14, Math.floor(nv / 7)); }
+/* atributo social (Tough, Cool, Beauty, Clever, Cute do livro): um só
+   número, que cresce devagar com o posto */
+function socialDoNivel(nv){ return Math.min(5, 1 + Math.floor(pontosDoNivel(nv) / 3)); }
+
+function calcularStats(dexId, nivel, ivs, natureza){
+  const pr = PR_ESPECIE[dexId] || PR_ESPECIE[1];
+  const base = DEX[dexId] ? DEX[dexId].base : {atk:50, def:50, spa:50, spd:50, spe:50};
   const nat = NATUREZAS[natureza] || NATUREZAS['Hardy'];
-  const s = {};
-  s.hp = Math.floor(((2*base.hp + ivs.hp) * nivel) / 100) + nivel + 10;
-  for (const k of ['atk','def','spa','spd','spe']){
-    let v = Math.floor(((2*base[k] + ivs[k]) * nivel) / 100) + 5;
-    if (nat.mais === k)  v = Math.floor(v * 1.1);
-    if (nat.menos === k) v = Math.floor(v * 0.9);
-    s[k] = v;
+  const s = {}, teto = {}, peso = {};
+  ATRIBUTOS.forEach((k, i) => {
+    s[k] = pr[1 + i];
+    teto[k] = pr[6 + i];
+    const jogo = ATRIB_DO_JOGO[k];
+    let w = base[jogo] + ((ivs && ivs[jogo]) || 0) / 2;
+    if (nat.mais === jogo)  w *= 1.3;
+    if (nat.menos === jogo) w *= 0.7;
+    peso[k] = w;
+  });
+  /* Vitalidade é o HP: nenhuma espécie deixa ela de lado. O peso dela
+     é o maior entre a Defesa dos jogos e a média dos cinco. */
+  const media = ATRIBUTOS.reduce((t, k) => t + peso[k], 0) / ATRIBUTOS.length;
+  peso.vit = Math.max(peso.vit, media);
+  const dado = {for:0, des:0, vit:0, esp:0, ins:0};
+  for (let i = 0; i < pontosDoNivel(nivel); i++){
+    let melhor = null, nota = -1;
+    for (const k of ATRIBUTOS){
+      if (s[k] >= teto[k]) continue;
+      const n = peso[k] / (dado[k] + 1);
+      if (n > nota){ nota = n; melhor = k; }
+    }
+    if (!melhor) break;
+    s[melhor]++; dado[melhor]++;
   }
+  /* Combate prolongado (escolha da ficha): HP base em dobro */
+  let hpBase = pr[0];
+  try { if (Estado.dados && Estado.dados.config && Estado.dados.config.ritmo === 'longo') hpBase *= 2; } catch(e){}
+  s.hp = hpBase + s.vit;
   return s;
+}
+
+/* Save de antes do Pokérole guarda stats dos jogos (atk, def...). */
+function atualizarAtributos(p){
+  if (!p || !DEX[p.dex]) return;
+  const prop = p.hpMax ? p.hp / p.hpMax : 1;
+  p.stats = calcularStats(p.dex, p.nivel, p.ivs || {}, p.natureza);
+  p.hpMax = p.stats.hp;
+  p.hp = p.hp <= 0 ? 0 : Math.max(1, Math.min(p.hpMax, Math.round(p.hpMax * prop)));
 }
 
 function ivsAleatorios(){
@@ -57,7 +119,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
   const natureza = opcoes.natureza || Dados.escolher(NOMES_NATUREZAS);
   const shiny = (opcoes.shiny !== undefined) ? !!opcoes.shiny : rolarShiny();
   const ivs = opcoes.ivs || ivsAleatorios();
-  const stats = calcularStats(esp.base, nivel, ivs, natureza);
+  const stats = calcularStats(dexId, nivel, ivs, natureza);
   const genero = opcoes.genero !== undefined ? opcoes.genero : sortearGenero(dexId);
   return {
     uid: 'p' + (_uidPokemon++) + '_' + Date.now().toString(36),
@@ -265,7 +327,7 @@ function ganharExp(p, qtd){
     p.exp -= p.expProx;
     p.nivel++;
     const antes = p.stats;
-    p.stats = calcularStats(DEX[p.dex].base, p.nivel, p.ivs, p.natureza);
+    p.stats = calcularStats(p.dex, p.nivel, p.ivs, p.natureza);
     /* HP máximo sobe junto. Antes só o HP atual subia, e um Pokémon de
        vida cheia passava a mostrar 51/49 depois de subir de nível. */
     p.hpMax = p.stats.hp;
@@ -369,7 +431,7 @@ function evoluir(p, novoDex){
   p.dex = novoDex;
   p.nome = DEX[novoDex].nome;
   p.tipos = DEX[novoDex].tipos.slice();
-  p.stats = calcularStats(DEX[novoDex].base, p.nivel, p.ivs, p.natureza);
+  p.stats = calcularStats(novoDex, p.nivel, p.ivs, p.natureza);
   p.hpMax = p.stats.hp;
   p.hp = Math.max(1, Math.round(p.hpMax * prop));
   p.moral = Math.min(100, p.moral + 5);

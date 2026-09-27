@@ -97,7 +97,6 @@ const Jogo = {
     if (!f.vestimenta) f.vestimenta = 'roupa comum e um casaco';
 
     Estado.novo(f);
-    Estado.dados.config.danoMult = f.ritmo === 'longo' ? 0.6 : 1;
     Estado.dados.config.ritmo = f.ritmo;
 
     Mundo.iniciar(f.cidade);

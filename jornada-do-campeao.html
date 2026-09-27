@@ -2550,6 +2550,30 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .marca-luta.campo{background:rgba(240,200,90,.14);border-color:rgba(240,200,90,.5);color:#ffe7a6}
 .golpe-btn.travado{opacity:.5 !important;text-decoration:line-through}
 
+/* ============================================================
+   POKÉROLE — parada de d6 na bandeja e a conta no log
+   ============================================================ */
+.paradas{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.parada{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:center;
+  padding:6px 9px;border:1px solid var(--borda);border-radius:9px;background:var(--bg-2)}
+.parada .p-mot{font-size:11.5px;color:var(--texto-fraco);min-width:0;overflow-wrap:anywhere}
+.parada .p-mot b{color:var(--texto);font-weight:600;margin-left:4px}
+.parada .p-res{font-family:var(--mono);font-size:12px;color:var(--texto-fraco);text-align:right}
+.parada.deu .p-res{color:var(--bom);font-weight:600}
+.parada .p-faces{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px}
+.parada .p-faces .f{
+  font-style:normal;font-family:var(--mono);font-size:11.5px;font-weight:700;
+  width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--borda-forte, var(--borda));color:var(--texto-fraco);
+  animation:assentar .4s var(--mola) both
+}
+.parada .p-faces .f.s{border-color:var(--bom);color:var(--bom);background:color-mix(in srgb, var(--bom) 14%, transparent)}
+.parada .p-vazia{font-size:11px;color:var(--texto-fraco);font-style:italic}
+.log-combate .l.rolagem{color:var(--texto-fraco);font-family:var(--mono);font-size:11.5px;padding:1px 0 1px 10px}
+.barrinha.faixa{position:relative}
+.barrinha.faixa i{position:absolute;top:0}
+@media (prefers-reduced-motion: reduce){ .parada .p-faces .f{animation:none} }
+
 </style>
 </head>
 <body data-tom="leve">
@@ -3480,6 +3504,489 @@ function montarGolpes(dexId, nivel){
 
   return escolhidos.map(n => ({nome:n, pp:GOLPES[n].pp, ppMax:GOLPES[n].pp}));
 }
+
+
+/* ===== js/data/pokerole.js ===== */
+/* ============================================================
+   POKÉROLE 3.0 — atributos das espécies e dados dos golpes
+   Gerado por ferramentas/gerar-pokerole.py a partir de
+   github.com/Willowlark/Pokerole-Data (v3.0). Não editar à mão.
+
+   PR_ESPECIE[dex] = [HP base, FOR, DES, VIT, ESP, INS,
+                      máx FOR, máx DES, máx VIT, máx ESP, máx INS]
+   PR_GOLPE[nome]  = {p: poder (dados de dano), d: atributo do dano,
+     a: atributo da precisão, h: perícia da precisão, r: precisão baixa,
+     crit, ign (ignora defesa), nunca (não erra), dupla, tripla,
+     suc (ações sucessivas), fixo, ohko, metade, posto, cd (dados de chance)}
+   ============================================================ */
+const PR_ESPECIE = {
+  1:[3,2,2,2,2,2,4,4,4,4,4],
+  2:[4,2,2,2,2,2,4,4,4,5,5],
+  3:[5,2,2,2,3,3,5,5,5,6,6],
+  4:[3,2,2,1,2,2,4,4,3,4,4],
+  5:[4,2,2,2,2,2,4,5,4,5,4],
+  6:[5,2,3,2,3,2,5,6,5,6,5],
+  7:[3,2,1,2,2,2,4,3,4,4,4],
+  8:[4,2,2,2,2,2,4,4,5,4,5],
+  9:[5,2,2,3,2,3,5,5,6,5,6],
+  10:[3,1,2,1,1,1,3,4,3,3,3],
+  11:[4,1,1,2,1,1,3,3,4,3,3],
+  12:[5,2,2,2,2,2,4,5,4,5,5],
+  13:[3,1,2,1,1,1,3,4,3,3,3],
+  14:[4,1,1,2,1,1,3,3,4,3,3],
+  15:[5,2,2,2,2,2,5,5,4,4,5],
+  16:[3,2,2,1,1,1,4,4,3,3,3],
+  17:[4,2,2,2,2,2,4,5,4,4,4],
+  18:[5,2,3,2,2,2,5,6,5,5,5],
+  19:[3,2,2,1,1,1,4,5,3,3,3],
+  20:[4,2,3,2,2,2,5,6,4,4,5],
+  21:[3,2,2,1,1,1,4,5,3,3,3],
+  22:[4,2,3,2,2,2,5,6,4,4,4],
+  23:[3,2,2,1,1,2,4,4,3,3,4],
+  24:[5,3,2,2,2,2,6,5,5,4,5],
+  25:[4,2,2,1,2,2,4,5,3,4,4],
+  26:[5,2,3,2,3,2,5,6,4,6,5],
+  27:[3,2,1,2,1,1,5,3,5,3,3],
+  28:[5,3,2,3,2,2,6,4,6,4,4],
+  29:[3,2,1,2,1,1,4,3,4,3,3],
+  30:[4,2,2,2,2,2,4,4,4,4,4],
+  31:[5,3,2,2,2,2,6,5,5,5,5],
+  32:[3,2,2,1,1,1,4,4,3,3,3],
+  33:[4,2,2,2,2,2,5,4,4,4,4],
+  34:[5,3,2,2,2,2,6,5,5,5,5],
+  35:[4,2,1,2,2,2,4,3,4,4,4],
+  36:[6,2,2,2,3,2,5,4,5,6,5],
+  37:[3,1,2,1,2,2,3,4,3,4,4],
+  38:[5,2,3,2,2,3,5,6,5,5,6],
+  39:[6,2,1,1,2,1,4,3,3,4,3],
+  40:[7,2,2,2,2,2,5,4,4,5,4],
+  41:[3,2,2,1,1,1,4,4,3,3,3],
+  42:[5,2,2,2,2,2,5,5,5,4,5],
+  43:[3,2,1,2,2,2,4,3,4,5,4],
+  44:[4,2,1,2,2,2,4,3,5,5,5],
+  45:[5,2,2,2,3,2,5,4,5,6,5],
+  46:[3,2,1,2,2,2,5,3,4,4,4],
+  47:[4,3,1,2,2,2,6,3,5,5,5],
+  48:[4,2,1,2,2,2,4,3,4,4,4],
+  49:[5,2,3,2,3,2,4,6,5,6,5],
+  50:[3,2,2,1,1,2,4,5,3,3,4],
+  51:[4,3,3,2,2,2,6,6,4,4,5],
+  52:[3,2,2,1,1,1,4,5,3,3,3],
+  53:[4,2,3,2,2,2,5,6,4,4,4],
+  54:[3,2,2,2,2,2,4,4,4,4,4],
+  55:[5,2,2,2,3,2,5,5,5,6,5],
+  56:[3,2,2,1,1,2,5,5,3,3,4],
+  57:[4,3,3,2,2,2,6,6,4,4,5],
+  58:[3,2,2,2,2,2,5,5,4,5,4],
+  59:[6,3,3,2,3,2,6,6,5,6,5],
+  60:[3,2,2,1,1,1,4,5,3,3,3],
+  61:[4,2,2,2,2,2,4,5,4,4,4],
+  62:[5,3,2,3,2,2,6,5,6,5,5],
+  63:[3,1,2,1,3,2,3,5,2,6,4],
+  64:[4,1,3,1,3,2,3,6,3,7,5],
+  65:[5,2,3,2,3,3,4,7,4,7,6],
+  66:[3,2,1,2,1,1,5,3,4,3,3],
+  67:[5,3,2,2,2,2,6,4,5,4,4],
+  68:[5,3,2,2,2,2,7,4,5,4,5],
+  69:[3,2,1,1,2,1,5,3,3,5,3],
+  70:[4,2,2,2,2,2,5,4,4,5,4],
+  71:[5,3,2,2,3,2,6,5,4,6,5],
+  72:[3,1,2,1,2,3,3,5,3,4,6],
+  73:[5,2,3,2,2,3,5,6,4,5,7],
+  74:[3,2,1,3,1,1,5,3,6,3,3],
+  75:[4,3,1,3,2,2,6,3,6,4,4],
+  76:[5,4,2,3,2,2,8,4,7,4,4],
+  77:[3,2,2,2,2,2,5,5,4,4,4],
+  78:[4,3,3,2,2,2,6,6,5,5,5],
+  79:[3,2,1,2,1,1,4,2,4,3,3],
+  80:[6,2,1,3,3,2,4,3,6,6,5],
+  81:[3,2,2,2,2,2,4,5,4,4,4],
+  82:[4,2,2,3,3,2,4,5,6,7,5],
+  83:[4,2,2,2,2,2,5,4,4,4,4],
+  84:[3,2,2,2,1,1,5,5,4,3,3],
+  85:[4,3,3,2,2,2,6,6,5,4,4],
+  86:[3,2,2,2,2,2,4,4,4,4,5],
+  87:[5,2,2,2,2,3,5,5,5,5,6],
+  88:[3,2,1,2,1,2,5,3,4,3,4],
+  89:[5,3,2,2,2,3,6,4,5,4,6],
+  90:[3,2,1,3,2,1,4,3,6,4,3],
+  91:[4,3,2,4,2,2,6,5,9,5,4],
+  92:[3,1,2,1,3,1,3,5,3,6,3],
+  93:[4,2,3,2,3,2,4,6,4,6,4],
+  94:[5,2,3,2,3,2,4,6,4,7,5],
+  95:[8,2,2,4,1,2,4,5,8,3,4],
+  96:[3,2,1,2,1,2,4,3,4,3,5],
+  97:[5,2,2,2,2,3,5,4,5,5,6],
+  98:[3,3,2,2,1,1,6,4,5,3,3],
+  99:[4,3,2,3,2,2,7,5,6,4,4],
+  100:[3,1,3,2,2,2,3,6,4,4,4],
+  101:[4,2,4,2,2,2,4,8,5,5,5],
+  102:[3,1,1,2,2,2,3,3,5,4,4],
+  103:[6,3,2,2,3,2,6,4,5,7,5],
+  104:[3,2,1,3,2,2,4,3,6,4,4],
+  105:[4,2,2,3,2,2,5,4,6,4,5],
+  106:[4,3,2,2,1,3,7,5,4,3,6],
+  107:[4,3,2,3,1,3,6,4,6,3,6],
+  108:[5,2,1,2,2,2,4,3,5,4,5],
+  109:[3,2,1,3,2,2,4,3,6,4,4],
+  110:[4,2,2,3,2,2,5,4,7,5,5],
+  111:[3,2,1,3,1,1,5,3,6,3,3],
+  112:[6,3,1,3,2,2,7,3,7,4,4],
+  113:[12,1,2,1,1,3,2,4,2,3,6],
+  114:[3,2,2,3,3,1,4,4,6,6,3],
+  115:[6,3,2,2,1,2,6,5,5,3,5],
+  116:[3,2,2,2,2,1,4,4,5,5,3],
+  117:[4,2,2,3,3,2,4,5,6,6,4],
+  118:[3,2,2,2,1,2,4,4,4,3,4],
+  119:[5,3,2,2,2,2,6,4,4,4,5],
+  120:[3,2,2,2,2,2,4,5,4,5,4],
+  121:[4,2,3,2,3,2,5,6,5,6,5],
+  122:[4,2,2,2,3,3,4,5,4,6,7],
+  123:[5,3,3,2,2,2,6,6,5,4,5],
+  124:[4,2,3,1,3,3,4,6,3,6,6],
+  125:[4,2,3,2,3,2,5,6,4,6,5],
+  126:[4,3,2,2,3,2,6,5,4,6,5],
+  127:[4,3,2,3,2,2,7,5,6,4,5],
+  128:[5,3,3,3,1,2,6,6,6,3,5],
+  129:[3,1,2,2,1,1,2,5,4,2,3],
+  130:[7,3,2,2,2,3,7,5,5,4,6],
+  131:[7,2,2,2,2,3,5,4,5,5,6],
+  132:[4,2,2,2,2,2,4,4,4,4,4],
+  133:[3,2,2,2,2,2,4,4,4,4,4],
+  134:[7,2,2,2,3,3,4,4,5,6,6],
+  135:[4,2,3,2,3,3,4,7,4,6,6],
+  136:[4,3,2,2,3,3,7,4,4,6,6],
+  137:[4,2,1,2,2,2,4,3,5,5,5],
+  138:[3,1,1,3,2,2,3,3,6,5,4],
+  139:[5,2,2,3,3,2,4,4,7,6,5],
+  140:[3,2,2,2,2,2,5,4,5,4,4],
+  141:[4,3,2,3,2,2,6,5,6,4,5],
+  142:[5,3,3,2,2,2,6,7,4,4,5],
+  143:[8,3,1,2,2,3,6,3,4,4,6],
+  144:[5,5,5,6,6,7,5,5,6,6,7],
+  145:[5,5,6,5,7,5,5,6,5,7,5],
+  146:[5,6,5,5,7,5,6,5,5,7,5],
+  147:[3,2,2,2,2,2,4,4,4,4,4],
+  148:[5,2,2,2,2,2,5,5,4,5,5],
+  149:[6,3,2,3,3,3,7,5,6,6,6],
+  150:[6,6,7,5,8,5,6,7,5,8,5],
+  151:[6,6,6,6,6,6,6,6,6,6,6],
+  152:[3,2,2,2,2,2,4,4,4,4,4],
+  153:[4,2,2,2,2,2,4,4,5,4,5],
+  154:[5,2,2,3,2,3,5,5,6,5,6],
+  155:[3,2,2,1,2,2,4,4,3,4,4],
+  156:[4,2,2,2,2,2,4,5,4,5,4],
+  157:[5,2,3,2,3,2,5,6,5,6,5],
+  158:[3,2,1,2,1,2,4,3,4,3,4],
+  159:[4,2,2,2,2,2,5,4,5,4,4],
+  160:[5,3,2,3,2,2,6,5,6,5,5],
+  161:[3,2,1,1,1,2,4,3,3,3,4],
+  162:[5,2,3,2,2,2,5,6,4,4,5],
+  163:[3,1,1,1,2,2,3,3,3,4,4],
+  164:[6,2,2,2,2,3,5,5,4,5,6],
+  165:[3,1,2,1,1,2,3,4,3,3,5],
+  166:[4,2,2,2,2,3,4,5,4,4,6],
+  167:[3,2,1,1,1,1,4,3,3,3,3],
+  168:[5,2,1,2,2,2,5,3,5,4,5],
+  169:[5,2,3,2,2,2,5,7,5,5,5],
+  170:[3,1,2,1,2,2,3,4,3,4,4],
+  171:[7,2,2,2,2,2,4,4,4,5,5],
+  172:[3,1,2,1,1,1,3,4,2,3,3],
+  173:[3,1,1,1,2,2,3,2,3,4,4],
+  174:[4,1,1,1,1,1,3,2,2,3,3],
+  175:[3,1,1,2,1,2,3,3,4,3,4],
+  176:[4,1,1,2,2,3,3,3,5,5,6],
+  177:[3,2,2,2,2,2,4,5,4,5,4],
+  178:[4,2,3,2,3,2,5,6,5,6,5],
+  179:[3,1,1,1,2,2,3,3,3,4,4],
+  180:[4,2,2,2,2,2,4,4,4,5,4],
+  181:[5,2,2,2,3,2,5,4,5,6,5],
+  182:[5,2,2,3,2,3,5,4,6,5,6],
+  183:[5,1,1,2,1,2,3,3,4,3,4],
+  184:[6,2,2,2,2,2,4,4,5,4,5],
+  185:[5,3,1,3,1,2,6,3,6,3,4],
+  186:[5,2,2,2,3,3,5,5,5,6,6],
+  187:[3,1,2,1,1,2,3,4,3,3,4],
+  188:[4,2,2,2,2,2,4,5,4,4,4],
+  189:[5,2,3,2,2,3,4,6,5,4,6],
+  190:[3,2,2,2,1,2,5,5,4,3,4],
+  191:[3,1,1,1,1,1,3,3,3,3,3],
+  192:[5,2,1,2,3,2,5,3,4,6,5],
+  193:[4,2,3,2,2,2,4,6,4,5,4],
+  194:[3,2,1,2,1,1,4,2,4,3,3],
+  195:[6,2,1,3,2,2,5,3,6,4,4],
+  196:[4,2,3,2,3,3,4,6,4,7,6],
+  197:[6,2,2,3,2,3,4,4,6,4,7],
+  198:[3,2,2,1,2,1,5,5,3,5,3],
+  199:[6,2,1,2,3,3,5,3,5,6,6],
+  200:[3,2,2,2,2,2,4,5,4,5,5],
+  201:[4,2,2,2,2,2,5,4,4,5,4],
+  202:[9,1,1,3,1,3,3,3,6,3,6],
+  203:[5,2,2,2,2,2,5,5,4,5,4],
+  204:[3,2,1,2,1,1,4,2,5,3,3],
+  205:[5,2,1,3,2,2,5,3,7,4,4],
+  206:[6,2,2,2,2,2,5,4,5,4,4],
+  207:[3,2,2,3,1,2,5,5,6,3,4],
+  208:[9,2,1,5,2,2,5,3,10,4,4],
+  209:[3,2,1,2,1,1,5,3,4,3,3],
+  210:[5,3,2,2,2,2,7,4,5,4,4],
+  211:[4,3,2,2,2,2,6,5,5,4,4],
+  212:[5,3,2,3,2,2,7,4,6,4,5],
+  213:[4,1,1,5,1,5,2,2,10,2,10],
+  214:[5,3,2,2,1,3,7,5,5,3,6],
+  215:[3,3,3,2,1,2,6,6,4,3,5],
+  216:[3,2,1,2,2,2,5,3,4,4,4],
+  217:[5,3,2,2,2,2,7,4,5,5,5],
+  218:[3,1,1,1,2,1,3,3,3,5,3],
+  219:[4,2,1,3,2,2,4,3,7,5,5],
+  220:[3,2,2,1,1,1,4,4,3,3,3],
+  221:[6,3,2,2,2,2,6,4,5,4,4],
+  222:[4,2,1,3,2,3,4,3,6,4,6],
+  223:[3,2,2,1,2,1,4,4,3,4,3],
+  224:[5,3,2,2,3,2,6,4,5,6,5],
+  225:[4,2,2,2,2,2,4,5,4,4,4],
+  226:[5,1,2,2,2,3,3,5,5,5,7],
+  227:[4,2,2,3,1,2,5,5,7,3,5],
+  228:[3,2,2,1,2,2,4,4,3,5,4],
+  229:[5,2,3,2,3,2,5,6,4,6,5],
+  230:[5,3,2,3,3,3,6,5,6,6,6],
+  231:[3,2,1,2,1,1,4,3,4,3,3],
+  232:[5,3,2,3,2,2,7,4,7,4,4],
+  233:[5,2,2,2,3,3,5,4,5,6,6],
+  234:[5,3,2,2,2,2,6,5,4,5,4],
+  235:[4,1,3,2,1,3,3,6,4,3,6],
+  236:[3,1,1,1,1,1,3,3,3,3,3],
+  237:[4,3,2,3,1,3,6,5,6,3,6],
+  238:[3,1,2,1,2,2,3,4,2,5,4],
+  239:[3,2,3,1,2,2,4,6,3,4,4],
+  240:[3,2,2,1,2,2,5,5,3,5,4],
+  241:[6,2,3,3,1,2,5,6,6,3,5],
+  242:[12,1,2,1,2,3,2,4,2,5,7],
+  243:[5,5,7,5,6,6,5,7,5,6,6],
+  244:[6,6,6,5,6,5,6,6,5,6,5],
+  245:[6,5,5,7,5,6,5,5,7,5,6],
+  246:[3,2,1,2,2,2,4,3,4,4,4],
+  247:[4,2,2,2,2,2,5,4,5,4,5],
+  248:[6,3,2,3,3,3,7,5,6,6,6],
+  249:[6,5,6,7,5,8,5,6,7,5,8],
+  250:[6,7,5,5,6,8,7,5,5,6,8],
+  251:[6,6,6,6,6,6,6,6,6,6,6],
+};
+
+const PR_GOLPE = {
+  "Tackle":{"p":2,"d":["for"],"a":["des","for"],"h":"Atletismo"},
+  "Scratch":{"p":2,"d":["for"],"a":["des"],"h":"Briga"},
+  "Pound":{"p":2,"d":["for"],"a":["for"],"h":"Briga"},
+  "Quick Attack":{"p":2,"d":["for","des"],"a":["des"],"h":"Briga"},
+  "Bite":{"p":2,"d":["for"],"a":["for"],"h":"Briga","cd":3},
+  "Swift":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar","nunca":1},
+  "Headbutt":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":3},
+  "Mega Punch":{"p":3,"d":["for"],"a":["des"],"h":"Briga","r":1},
+  "Slam":{"p":3,"d":["for"],"a":["for"],"h":"Briga","r":1},
+  "Hyper Fang":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":1},
+  "Body Slam":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":3},
+  "Take Down":{"p":3,"d":["for"],"a":["for"],"h":"Briga","r":2},
+  "Mega Kick":{"p":5,"d":["for"],"a":["des"],"h":"Briga","r":2},
+  "Double-Edge":{"p":5,"d":["for"],"a":["for"],"h":"Briga"},
+  "Hyper Beam":{"p":6,"d":["esp"],"a":["esp"],"h":"Canalizar","r":1},
+  "Growl":{"p":0,"a":["soc"],"h":"Intimidação"},
+  "Tail Whip":{"p":0,"a":["soc"],"h":"Atuação"},
+  "Leer":{"p":0,"a":["soc"],"h":"Intimidação"},
+  "Screech":{"p":0,"a":["soc"],"h":"Atuação"},
+  "Harden":{"p":0,"a":["vit"],"h":"Natureza"},
+  "Swords Dance":{"p":0,"a":["soc"],"h":"Atuação"},
+  "Agility":{"p":0,"a":["des"],"h":"Atletismo"},
+  "Recover":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Rest":{"p":0,"a":["vit"],"h":"Natureza"},
+  "Sing":{"p":0,"a":["soc"],"h":"Atuação","r":3},
+  "Supersonic":{"p":0,"a":["soc"],"h":"Canalizar","r":3},
+  "Ember":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Fire Punch":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":1},
+  "Flamethrower":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Fire Blast":{"p":5,"d":["esp"],"a":["esp"],"h":"Canalizar","r":2,"cd":3},
+  "Fire Spin":{"p":2,"d":["esp"],"a":["esp"],"h":"Canalizar","r":2},
+  "Bubble":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Water Gun":{"p":2,"d":["esp"],"a":["des","esp"],"h":"Canalizar"},
+  "Bubble Beam":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Waterfall":{"p":3,"d":["for"],"a":["for"],"h":"Atletismo","cd":3},
+  "Surf":{"p":4,"d":["esp"],"a":["des"],"h":"Canalizar"},
+  "Hydro Pump":{"p":5,"d":["esp"],"a":["esp"],"h":"Canalizar","r":2},
+  "Thunder Shock":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Thunder Wave":{"p":0,"a":["ins"],"h":"Canalizar"},
+  "Thunder Punch":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":1},
+  "Thunderbolt":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Thunder":{"p":5,"d":["esp"],"a":["esp"],"h":"Canalizar","r":2,"cd":3},
+  "Absorb":{"p":1,"d":["esp"],"a":["vit"],"h":"Canalizar"},
+  "Vine Whip":{"p":2,"d":["for"],"a":["des"],"h":"Briga"},
+  "Mega Drain":{"p":2,"d":["esp"],"a":["vit"],"h":"Natureza"},
+  "Razor Leaf":{"p":2,"d":["for"],"a":["des"],"h":"Canalizar","crit":1},
+  "Sleep Powder":{"p":0,"a":["soc"],"h":"Natureza","r":3},
+  "Stun Spore":{"p":0,"a":["soc"],"h":"Natureza","r":3},
+  "Poison Powder":{"p":0,"a":["soc"],"h":"Natureza","r":3},
+  "Solar Beam":{"p":6,"d":["esp"],"a":["esp"],"h":"Canalizar"},
+  "Petal Dance":{"p":5,"d":["esp"],"a":["esp"],"h":"Atuação"},
+  "Aurora Beam":{"p":2,"d":["esp"],"a":["esp"],"h":"Canalizar","cd":1},
+  "Ice Punch":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":1},
+  "Ice Beam":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Blizzard":{"p":5,"d":["esp"],"a":["esp"],"h":"Canalizar","r":2,"nunca":1,"cd":1},
+  "Karate Chop":{"p":3,"d":["for"],"a":["des"],"h":"Briga","crit":1},
+  "Double Kick":{"p":2,"d":["for"],"a":["des"],"h":"Briga","dupla":1},
+  "Low Kick":{"p":1,"d":["for"],"a":["vit"],"h":"Briga"},
+  "Seismic Toss":{"p":0,"posto":true,"a":["for"],"h":"Atletismo","ign":1},
+  "Submission":{"p":3,"d":["for"],"a":["for"],"h":"Briga","r":2},
+  "Cross Chop":{"p":4,"d":["for"],"a":["des"],"h":"Briga","r":2,"crit":1},
+  "Poison Sting":{"p":1,"d":["for"],"a":["for"],"h":"Canalizar","cd":3},
+  "Acid":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Smog":{"p":1,"d":["esp"],"a":["esp"],"h":"Canalizar","r":2},
+  "Sludge":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar","cd":3},
+  "Toxic":{"p":0,"a":["esp"],"h":"Canalizar","r":2},
+  "Sand Attack":{"p":0,"a":["des"],"h":"Furtividade"},
+  "Bone Club":{"p":2,"d":["for"],"a":["for"],"h":"Briga","r":1,"cd":2},
+  "Dig":{"p":3,"d":["for"],"a":["des"],"h":"Furtividade"},
+  "Bonemerang":{"p":2,"d":["for"],"a":["for"],"h":"Canalizar","r":1,"dupla":1},
+  "Earthquake":{"p":4,"d":["for"],"a":["for"],"h":"Natureza"},
+  "Peck":{"p":2,"d":["for"],"a":["for"],"h":"Briga"},
+  "Gust":{"p":2,"d":["esp"],"a":["des"],"h":"Canalizar"},
+  "Wing Attack":{"p":2,"d":["for"],"a":["des"],"h":"Briga"},
+  "Drill Peck":{"p":3,"d":["for"],"a":["des"],"h":"Briga"},
+  "Fly":{"p":4,"d":["for"],"a":["des"],"h":"Atletismo"},
+  "Sky Attack":{"p":6,"d":["for"],"a":["for"],"h":"Briga","r":1,"crit":1,"cd":3},
+  "Confusion":{"p":2,"d":["esp"],"a":["ins"],"h":"Canalizar","cd":1},
+  "Hypnosis":{"p":0,"a":["soc"],"h":"Canalizar","r":3},
+  "Psybeam":{"p":2,"d":["esp"],"a":["ins"],"h":"Canalizar","cd":1},
+  "Barrier":{"p":0,"a":["esp"],"h":"Canalizar"},
+  "Amnesia":{"p":0,"a":["soc"],"h":"Alerta"},
+  "Psychic":{"p":3,"d":["esp"],"a":["ins"],"h":"Canalizar","cd":1},
+  "Dream Eater":{"p":4,"d":["esp"],"a":["ins"],"h":"Canalizar"},
+  "String Shot":{"p":0,"a":["des"],"h":"Canalizar"},
+  "Leech Life":{"p":3,"d":["for"],"a":["vit"],"h":"Briga"},
+  "Pin Missile":{"p":1,"d":["for"],"a":["des"],"h":"Canalizar","r":1,"suc":1},
+  "Twineedle":{"p":1,"d":["for"],"a":["for","des"],"h":"Briga","dupla":1,"cd":2},
+  "Rock Throw":{"p":2,"d":["for"],"a":["des","for"],"h":"Canalizar","r":1},
+  "Rock Slide":{"p":3,"d":["for"],"a":["for"],"h":"Canalizar","r":1,"cd":3},
+  "Lick":{"p":1,"d":["for"],"a":["ins"],"h":"Charme","cd":3},
+  "Night Shade":{"p":0,"posto":true,"a":["ins","esp"],"h":"Intimidação","ign":1},
+  "Confuse Ray":{"p":0,"a":["soc"],"h":"Charme"},
+  "Shadow Punch":{"p":2,"d":["for"],"a":["for"],"h":"Briga","nunca":1},
+  "Dragon Rage":{"p":0,"a":["des"],"h":"Canalizar","fixo":2},
+  "Dragon Claw":{"p":3,"d":["for"],"a":["des"],"h":"Briga"},
+  "Outrage":{"p":5,"d":["for"],"a":["for"],"h":"Briga"},
+  "Dragon Breath":{"p":2,"d":["esp"],"a":["esp"],"h":"Canalizar","cd":3},
+  "Pursuit":{"p":2,"d":["for"],"a":["des"],"h":"Atletismo"},
+  "Thief":{"p":2,"d":["for"],"a":["des"],"h":"Furtividade"},
+  "Faint Attack":{"p":2,"d":["for"],"a":["des"],"h":"Furtividade","nunca":1},
+  "Beat Up":{"p":2,"d":["for"],"a":["for"],"h":"Briga"},
+  "Crunch":{"p":3,"d":["for"],"a":["for"],"h":"Briga","cd":1},
+  "Metal Claw":{"p":2,"d":["for"],"a":["des"],"h":"Briga","r":1,"cd":1},
+  "Steel Wing":{"p":3,"d":["for"],"a":["des"],"h":"Briga","r":1,"cd":1},
+  "Iron Tail":{"p":4,"d":["for"],"a":["for"],"h":"Briga","r":3,"cd":3},
+  "Giga Drain":{"p":3,"d":["esp"],"a":["vit"],"h":"Natureza"},
+  "Icy Wind":{"p":2,"d":["esp"],"a":["esp"],"h":"Natureza"},
+  "Ancient Power":{"p":2,"d":["esp"],"a":["esp"],"h":"Canalizar","cd":1},
+  "Shadow Ball":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":1},
+  "Sludge Bomb":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":3},
+  "Zap Cannon":{"p":5,"d":["esp"],"a":["des"],"h":"Canalizar","r":4},
+  "Megahorn":{"p":5,"d":["for"],"a":["for"],"h":"Briga","r":2},
+  "Sacred Fire":{"p":4,"d":["for"],"a":["ins"],"h":"Canalizar","cd":5},
+  "Aeroblast":{"p":4,"d":["esp"],"a":["esp"],"h":"Canalizar","crit":1},
+  "Comet Punch":{"p":1,"d":["for"],"a":["des"],"h":"Briga","suc":1},
+  "Double Slap":{"p":1,"d":["for"],"a":["des"],"h":"Briga","r":1,"dupla":1,"suc":1},
+  "Fury Attack":{"p":1,"d":["for"],"a":["des"],"h":"Intimidação","r":1,"suc":1},
+  "Fury Swipes":{"p":1,"d":["for"],"a":["des"],"h":"Briga","r":1,"suc":1},
+  "Barrage":{"p":1,"d":["for"],"a":["des"],"h":"Canalizar","r":1,"suc":1},
+  "Spike Cannon":{"p":1,"d":["for"],"a":["des"],"h":"Briga","suc":1},
+  "Constrict":{"p":1,"d":["for"],"a":["for"],"h":"Briga","cd":1},
+  "Vice Grip":{"p":2,"d":["for"],"a":["for"],"h":"Briga"},
+  "Horn Attack":{"p":2,"d":["for"],"a":["for"],"h":"Briga"},
+  "Stomp":{"p":2,"d":["for"],"a":["for"],"h":"Briga","cd":3},
+  "Rage":{"p":1,"d":["for"],"a":["ins"],"h":"Briga"},
+  "Pay Day":{"p":2,"d":["for"],"a":["des"],"h":"Canalizar"},
+  "Dizzy Punch":{"p":3,"d":["for"],"a":["des","ins"],"h":"Briga","cd":2},
+  "Slash":{"p":3,"d":["for"],"a":["des"],"h":"Briga","crit":1},
+  "Thrash":{"p":5,"d":["for"],"a":["for"],"h":"Briga"},
+  "Skull Bash":{"p":5,"d":["for"],"a":["vit"],"h":"Furtividade"},
+  "Tri Attack":{"p":3,"d":["esp"],"a":["des"],"h":"Canalizar","cd":2},
+  "Wrap":{"p":1,"d":["for"],"a":["des"],"h":"Briga","r":1},
+  "Bind":{"p":1,"d":["for"],"a":["for"],"h":"Briga","r":1},
+  "Self-Destruct":{"p":8,"d":["for"],"a":["for"],"h":"Canalizar"},
+  "Explosion":{"p":10,"d":["for"],"a":["for"],"h":"Canalizar"},
+  "Horn Drill":{"p":0,"a":["for"],"h":"Briga","r":5,"ohko":1},
+  "Guillotine":{"p":0,"a":["for"],"h":"Briga","r":5,"ohko":1},
+  "Super Fang":{"p":0,"a":["for","des"],"h":"Briga","r":1,"ign":1,"metade":1},
+  "Sonic Boom":{"p":0,"a":["esp"],"h":"Furtividade","ign":1,"fixo":1},
+  "Growth":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Sharpen":{"p":0,"a":["for"],"h":"Atletismo"},
+  "Meditate":{"p":0,"a":["ins"],"h":"Canalizar"},
+  "Focus Energy":{"p":0,"a":["ins"],"h":"Canalizar","crit":1},
+  "Defense Curl":{"p":0,"a":["vit"],"h":"Briga"},
+  "Withdraw":{"p":0,"a":["vit"],"h":"Furtividade"},
+  "Minimize":{"p":0,"a":["esp"],"h":"Canalizar"},
+  "Substitute":{"p":0,"a":["vit"],"h":"Furtividade","fixo":2},
+  "Double Team":{"p":0,"a":["des"],"h":"Esquiva"},
+  "Conversion":{"p":0,"a":["von"],"h":"Canalizar"},
+  "Light Screen":{"p":0,"a":["esp"],"h":"Canalizar"},
+  "Reflect":{"p":0,"a":["esp"],"h":"Canalizar"},
+  "Mist":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Acid Armor":{"p":0,"a":["vit"],"h":"Natureza"},
+  "Haze":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Smokescreen":{"p":0,"a":["esp"],"h":"Furtividade"},
+  "Whirlwind":{"p":0,"a":["des","esp"],"h":"Natureza"},
+  "Roar":{"p":0,"a":["for"],"h":"Intimidação"},
+  "Disable":{"p":0,"a":["ins"],"h":"Canalizar"},
+  "Lovely Kiss":{"p":0},
+  "Metronome":{"p":0,"a":["ins"],"h":"Atuação"},
+  "Transform":{"p":0,"a":["von"],"h":"Canalizar"},
+  "Teleport":{"p":0,"a":["esp"],"h":"Canalizar"},
+  "Mirror Move":{"p":0,"a":["ins"],"h":"Atuação"},
+  "Splash":{"p":0,"a":["des"],"h":"Atletismo"},
+  "Rolling Kick":{"p":2,"d":["for"],"a":["des"],"h":"Atletismo","r":2,"cd":3},
+  "Jump Kick":{"p":4,"d":["for"],"a":["des"],"h":"Atletismo","r":1},
+  "High Jump Kick":{"p":5,"d":["for"],"a":["des"],"h":"Atletismo","r":2},
+  "Counter":{"p":0,"a":["ins"],"h":"Briga","ign":1},
+  "Leech Seed":{"p":0,"a":["esp"],"h":"Natureza","r":1},
+  "Spore":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Poison Gas":{"p":0,"a":["esp"],"h":"Canalizar","r":1},
+  "Glare":{"p":0,"a":["soc"],"h":"Intimidação","r":1},
+  "Clamp":{"p":2,"d":["for"],"a":["vit"],"h":"Briga","r":2},
+  "Crabhammer":{"p":3,"d":["for"],"a":["for"],"h":"Briga","r":1,"crit":1},
+  "Flame Wheel":{"p":2,"d":["for"],"a":["des"],"h":"Briga","cd":1},
+  "Spark":{"p":2,"d":["for"],"a":["des"],"h":"Atletismo","cd":3},
+  "Rollout":{"p":1,"d":["for"],"a":["des"],"h":"Atletismo","r":1,"suc":1},
+  "Rapid Spin":{"p":2,"d":["for"],"a":["des"],"h":"Briga"},
+  "Present":{"p":0,"a":["soc"],"h":"Charme","r":1},
+  "Psywave":{"p":0,"posto":true,"a":["ins"],"h":"Intimidação","ign":1},
+  "Hidden Power":{"p":3,"d":["esp"],"a":["esp"],"h":"Canalizar"},
+  "Flail":{"p":1,"d":["for"],"a":["vit"],"h":"Briga"},
+  "Scary Face":{"p":0,"a":["soc"],"h":"Intimidação"},
+  "Foresight":{"p":0,"a":["ins"],"h":"Alerta"},
+  "Charm":{"p":0,"a":["soc"],"h":"Charme"},
+  "Swagger":{"p":0,"a":["soc"],"h":"Intimidação"},
+  "Spider Web":{"p":0,"a":["ins"],"h":"Furtividade"},
+  "Cotton Spore":{"p":0,"a":["soc"],"h":"Natureza"},
+  "Synthesis":{"p":0,"a":["vit","ins"],"h":"Natureza"},
+  "Softboiled":{"p":0,"a":["ins"],"h":"Natureza"},
+  "Safeguard":{"p":0,"a":["esp"],"h":"Canalizar"},
+  "Mirror Coat":{"p":0,"a":["ins"],"h":"Canalizar","ign":1},
+  "Sandstorm":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Rain Dance":{"p":0,"a":["esp"],"h":"Atuação"},
+  "Sunny Day":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Protect":{"p":0,"a":["von"],"h":"Alerta"},
+  "Detect":{"p":0,"a":["ins"],"h":"Alerta"},
+  "Endure":{"p":0,"a":["von"],"h":"Canalizar"},
+  "Curse":{"p":0,"a":["von"],"h":"Furtividade"},
+  "Attract":{"p":0,"a":["soc"],"h":"Charme"},
+  "Nightmare":{"p":0,"a":["von"],"h":"Intimidação"},
+  "Psych Up":{"p":0,"a":["ins"],"h":"Canalizar"},
+  "Sweet Scent":{"p":0,"a":["esp"],"h":"Natureza"},
+  "Sleep Talk":{"p":0},
+  "Snore":{"p":2,"d":["esp"],"a":["ins"],"h":"Canalizar","cd":3},
+  "Return":{"p":1,"d":["for"],"a":["ins"],"h":"Briga"},
+  "Frustration":{"p":1,"d":["for"],"a":["des"],"h":"Briga"},
+  "Fury Cutter":{"p":1,"d":["for","des"],"a":["des"],"h":"Briga","suc":1},
+  "Rock Smash":{"p":2,"d":["for"],"a":["for"],"h":"Briga","cd":5},
+  "Mud-Slap":{"p":1,"d":["esp"],"a":["des"],"h":"Canalizar"},
+  "Dynamic Punch":{"p":4,"d":["for"],"a":["des"],"h":"Briga","r":3},
+};
 
 
 /* ===== js/data/learnsets.js ===== */
@@ -5353,6 +5860,34 @@ const Dados = {
   d10(m){ return this.rolar(10, m); },
   d20(m){ return this.rolar(20, m); },
 
+  /* POKÉROLE: parada de d6. Cada 4, 5 ou 6 é um sucesso. A parada vai
+     inteira pra bandeja numa entrada só, com as faces, senão doze dados
+     de um golpe empurravam o resto pra fora. */
+  pool(n, motivo=''){
+    n = Math.max(0, Math.floor(n));
+    const faces = [];
+    for (let i = 0; i < n; i++) faces.push(Math.floor(Math.random() * 6) + 1);
+    const suc = faces.filter(v => v >= 4).length;
+    const reg = {dado:n + 'd6', valor:suc, motivo, faces:6, pool:faces};
+    this.historico.push(reg);
+    if (this.historico.length > 200) this.historico.shift();
+    if (typeof UI !== 'undefined' && UI.mostrarDado) UI.mostrarDado(reg);
+    return {n, faces, suc};
+  },
+
+  /* Dados de chance: o efeito acontece se algum der 6. */
+  chanceDados(n, motivo=''){
+    if (n <= 0) return false;
+    const faces = [];
+    for (let i = 0; i < n; i++) faces.push(Math.floor(Math.random() * 6) + 1);
+    const seis = faces.filter(v => v === 6).length;
+    const reg = {dado:n + 'd6', valor:seis, motivo, faces:6, pool:faces, chance:true};
+    this.historico.push(reg);
+    if (this.historico.length > 200) this.historico.shift();
+    if (typeof UI !== 'undefined' && UI.mostrarDado) UI.mostrarDado(reg);
+    return seis > 0;
+  },
+
   /* escolha aleatória simples (não entra no histórico) */
   escolher(arr){ return arr[Math.floor(Math.random() * arr.length)]; },
   entre(a, b){ return Math.floor(Math.random() * (b - a + 1)) + a; },
@@ -6180,18 +6715,80 @@ const Entrada = {
    POKÉMON — instâncias, stats por nível, experiência, evolução
    ============================================================ */
 
-/* Fórmula padrão dos jogos (IVs aleatórios, sem EVs) */
-function calcularStats(base, nivel, ivs, natureza){
+/* ============================================================
+   ATRIBUTOS DO POKÉROLE
+   Cinco atributos, cada um do mínimo da espécie ao máximo dela
+   (PR_ESPECIE): Força, Destreza, Vitalidade, Especial e Instinto.
+   O nível continua sendo o dos jogos; ele vira POSTO (o rank do
+   livro) e PONTOS de atributo, um a cada 7 níveis, até 14.
+
+   Quem decide pra onde vai o ponto é a espécie: um Machop põe em
+   Força, um Abra em Especial. O peso sai dos atributos base dos
+   jogos, a natureza puxa pra um lado e empurra do outro, e o IV
+   desempata. É determinístico: o mesmo bicho no mesmo nível tem
+   sempre os mesmos números, e evoluir redistribui do zero.
+   ============================================================ */
+const ATRIBUTOS = ['for', 'des', 'vit', 'esp', 'ins'];
+/* de qual atributo base dos jogos cada um tira o peso */
+const ATRIB_DO_JOGO = {for:'atk', des:'spe', vit:'def', esp:'spa', ins:'spd'};
+const NOME_ATRIB = {for:'Força', des:'Destreza', vit:'Vitalidade', esp:'Especial', ins:'Instinto'};
+const SIGLA_ATRIB = {for:'FOR', des:'DES', vit:'VIT', esp:'ESP', ins:'INS'};
+const POSTOS = ['Iniciante', 'Novato', 'Regular', 'Avançado', 'Especialista', 'Ás', 'Mestre', 'Campeão'];
+
+function postoDoNivel(nv){
+  return nv < 10 ? 0 : nv < 20 ? 1 : nv < 35 ? 2 : nv < 50 ? 3 : nv < 65 ? 4 : nv < 80 ? 5 : nv < 90 ? 6 : 7;
+}
+function nomePosto(nv){ return POSTOS[postoDoNivel(nv)]; }
+/* perícia: o teto do posto (1 no Iniciante, 5 do Especialista pra cima) */
+function periciaDoNivel(nv){ return Math.min(5, postoDoNivel(nv) + 1); }
+function pontosDoNivel(nv){ return Math.min(14, Math.floor(nv / 7)); }
+/* atributo social (Tough, Cool, Beauty, Clever, Cute do livro): um só
+   número, que cresce devagar com o posto */
+function socialDoNivel(nv){ return Math.min(5, 1 + Math.floor(pontosDoNivel(nv) / 3)); }
+
+function calcularStats(dexId, nivel, ivs, natureza){
+  const pr = PR_ESPECIE[dexId] || PR_ESPECIE[1];
+  const base = DEX[dexId] ? DEX[dexId].base : {atk:50, def:50, spa:50, spd:50, spe:50};
   const nat = NATUREZAS[natureza] || NATUREZAS['Hardy'];
-  const s = {};
-  s.hp = Math.floor(((2*base.hp + ivs.hp) * nivel) / 100) + nivel + 10;
-  for (const k of ['atk','def','spa','spd','spe']){
-    let v = Math.floor(((2*base[k] + ivs[k]) * nivel) / 100) + 5;
-    if (nat.mais === k)  v = Math.floor(v * 1.1);
-    if (nat.menos === k) v = Math.floor(v * 0.9);
-    s[k] = v;
+  const s = {}, teto = {}, peso = {};
+  ATRIBUTOS.forEach((k, i) => {
+    s[k] = pr[1 + i];
+    teto[k] = pr[6 + i];
+    const jogo = ATRIB_DO_JOGO[k];
+    let w = base[jogo] + ((ivs && ivs[jogo]) || 0) / 2;
+    if (nat.mais === jogo)  w *= 1.3;
+    if (nat.menos === jogo) w *= 0.7;
+    peso[k] = w;
+  });
+  /* Vitalidade é o HP: nenhuma espécie deixa ela de lado. O peso dela
+     é o maior entre a Defesa dos jogos e a média dos cinco. */
+  const media = ATRIBUTOS.reduce((t, k) => t + peso[k], 0) / ATRIBUTOS.length;
+  peso.vit = Math.max(peso.vit, media);
+  const dado = {for:0, des:0, vit:0, esp:0, ins:0};
+  for (let i = 0; i < pontosDoNivel(nivel); i++){
+    let melhor = null, nota = -1;
+    for (const k of ATRIBUTOS){
+      if (s[k] >= teto[k]) continue;
+      const n = peso[k] / (dado[k] + 1);
+      if (n > nota){ nota = n; melhor = k; }
+    }
+    if (!melhor) break;
+    s[melhor]++; dado[melhor]++;
   }
+  /* Combate prolongado (escolha da ficha): HP base em dobro */
+  let hpBase = pr[0];
+  try { if (Estado.dados && Estado.dados.config && Estado.dados.config.ritmo === 'longo') hpBase *= 2; } catch(e){}
+  s.hp = hpBase + s.vit;
   return s;
+}
+
+/* Save de antes do Pokérole guarda stats dos jogos (atk, def...). */
+function atualizarAtributos(p){
+  if (!p || !DEX[p.dex]) return;
+  const prop = p.hpMax ? p.hp / p.hpMax : 1;
+  p.stats = calcularStats(p.dex, p.nivel, p.ivs || {}, p.natureza);
+  p.hpMax = p.stats.hp;
+  p.hp = p.hp <= 0 ? 0 : Math.max(1, Math.min(p.hpMax, Math.round(p.hpMax * prop)));
 }
 
 function ivsAleatorios(){
@@ -6235,7 +6832,7 @@ function criarPokemon(dexId, nivel, opcoes={}){
   const natureza = opcoes.natureza || Dados.escolher(NOMES_NATUREZAS);
   const shiny = (opcoes.shiny !== undefined) ? !!opcoes.shiny : rolarShiny();
   const ivs = opcoes.ivs || ivsAleatorios();
-  const stats = calcularStats(esp.base, nivel, ivs, natureza);
+  const stats = calcularStats(dexId, nivel, ivs, natureza);
   const genero = opcoes.genero !== undefined ? opcoes.genero : sortearGenero(dexId);
   return {
     uid: 'p' + (_uidPokemon++) + '_' + Date.now().toString(36),
@@ -6443,7 +7040,7 @@ function ganharExp(p, qtd){
     p.exp -= p.expProx;
     p.nivel++;
     const antes = p.stats;
-    p.stats = calcularStats(DEX[p.dex].base, p.nivel, p.ivs, p.natureza);
+    p.stats = calcularStats(p.dex, p.nivel, p.ivs, p.natureza);
     /* HP máximo sobe junto. Antes só o HP atual subia, e um Pokémon de
        vida cheia passava a mostrar 51/49 depois de subir de nível. */
     p.hpMax = p.stats.hp;
@@ -6547,7 +7144,7 @@ function evoluir(p, novoDex){
   p.dex = novoDex;
   p.nome = DEX[novoDex].nome;
   p.tipos = DEX[novoDex].tipos.slice();
-  p.stats = calcularStats(DEX[novoDex].base, p.nivel, p.ivs, p.natureza);
+  p.stats = calcularStats(novoDex, p.nivel, p.ivs, p.natureza);
   p.hpMax = p.stats.hp;
   p.hp = Math.max(1, Math.round(p.hpMax * prop));
   p.moral = Math.min(100, p.moral + 5);
@@ -6756,17 +7353,17 @@ const ITENS_INFO = {
                   sabido:{master_quase_sempre:'Ela não falha. Você já viu.'}},
 
   /* ─────────── cura ─────────── */
-  'Potion':      {tipo:'cura', valor:20, cat:'Recuperação',
-                  ficha:'+20 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+  'Potion':      {tipo:'cura', valor:2, cat:'Recuperação',
+                  ficha:'+2 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
                   desc:'Fecha corte e tira dor. Não faz milagre.'},
-  'Super Potion':{tipo:'cura', valor:50, cat:'Recuperação',
-                  ficha:'+50 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+  'Super Potion':{tipo:'cura', valor:4, cat:'Recuperação',
+                  ficha:'+4 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
                   desc:'A mesma coisa, mais forte e mais cara.'},
-  'Hyper Potion':{tipo:'cura', valor:120, cat:'Recuperação',
-                  ficha:'+120 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+  'Hyper Potion':{tipo:'cura', valor:14, cat:'Recuperação',
+                  ficha:'+14 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
                   desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
-  'Água Fresca': {tipo:'cura', valor:35, cat:'Recuperação',
-                  ficha:'+35 HP em um Pokémon · em combate gasta o turno',
+  'Água Fresca': {tipo:'cura', valor:4, cat:'Recuperação',
+                  ficha:'+4 HP em um Pokémon · em combate gasta o turno',
                   desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
   'Revive':      {tipo:'revive', cat:'Recuperação',
                   ficha:'Levanta um Pokémon desmaiado com HP máximo ÷ 2 · não age em morto',
@@ -6833,23 +7430,23 @@ const ITENS_INFO = {
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
   /* ─────────── segurados ─────────── */
-  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:0.07},
-                      ficha:'SEGURADO · recupera 7% do HP máximo no fim de cada turno',
+  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
+                      ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',
                       desc:'Um saquinho amarrado no cinto com o que sobra da ração boa. Some devagar.'},
   'Faixa Firme':     {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
                       ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
                       desc:'Faixa de algodão grossa amarrada no punho ou na pata. Não protege de nada. Aperta.'},
-  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1.15},
-                      ficha:'SEGURADO · +15% de dano em golpes físicos',
+  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1},
+                      ficha:'SEGURADO · +1 dado de dano em golpes físicos',
                       desc:'Um peso de chumbo costurado numa tira de couro. Pesa e cansa e funciona.'},
-  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1.15},
-                      ficha:'SEGURADO · +15% de dano em golpes especiais',
+  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1},
+                      ficha:'SEGURADO · +1 dado de dano em golpes especiais',
                       desc:'Lente de vidro grosso numa armação torta. Foi de alguém.'},
-  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:0.88},
-                      ficha:'SEGURADO · −12% de dano recebido',
+  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:1},
+                      ficha:'SEGURADO · +1 de Vitalidade e de Instinto contra dano',
                       desc:'Couro rachado, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
-  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:1.12},
-                      ficha:'SEGURADO · +12% de Velocidade para a ordem dos turnos',
+  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:2},
+                      ficha:'SEGURADO · +2 de iniciativa pra ordem dos turnos',
                       desc:'Sola fina, quase gasta. Quem usa isso não planeja apanhar.'},
   'Sino Calmante':   {tipo:'equipar', cat:'Segurado', efeito:{moral:3},
                       ficha:'SEGURADO · +3 de moral ao fim de cada combate',
@@ -7144,7 +7741,7 @@ const Estado = {
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}
       liga: {avisos:0, ordemDevolucao:false, detencao:false},
       mundo: {clima:'normal', instabilidade:0, eventos:[]},
-      config: {danoMult:1, ritmo:'fiel'},   // 'fiel' = 1d10×(poder÷10) puro
+      config: {ritmo:'fiel'},   // 'fiel' = HP do Pokérole · 'longo' = HP base em dobro
       via: 'neutro',          // heroi | mercenario | foragido | pesquisador
       viaAnterior: null,
       finaisVistos: [],
@@ -7727,6 +8324,10 @@ const Estado = {
       const raw = localStorage.getItem('pokerpg_save_' + slot);
       if (!raw) return false;
       this.dados = JSON.parse(raw);
+      /* save de antes do Pokérole: atributos dos jogos viram os do livro */
+      const d = this.dados;
+      for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || []))
+        if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
       return true;
     } catch(e){ return false; }
   },
@@ -8060,18 +8661,26 @@ const Captura = {
 
 /* ===== js/engine/batalha.js ===== */
 /* ============================================================
-   COMBATE — turnos por Velocidade, tipos, PP, status, dados
-   Dano: 1d10 × (poder ÷ 10), modificado por stats, tipo, STAB, crítico
-   Precisão: 1d20 > (100-precisão)/5
-   Crítico: 1d20 = 20 → ×1.5
+   COMBATE — regras do Pokérole 3.0, com o nível dos jogos
+   Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso.
+   Precisão: atributo + perícia do golpe; precisa de 1 sucesso,
+     menos a precisão baixa do golpe, a dor e a confusão.
+   Crítico: 3 sucessos além do necessário (2 com crítico alto) → +2 dados.
+   Dano: atributo + poder + 1 de STAB − Vitalidade (físico) ou
+     Instinto (especial); cada sucesso é 1 de dano. Zero sucesso = 1.
+     Fraqueza +1 por tipo, resistência −1 por tipo, imune = 0.
+   HP = HP base da espécie + Vitalidade.
+   Ordem: prioridade, depois iniciativa (1d6 na entrada + Destreza + Alerta).
    ============================================================ */
 
-/* precisão e evasão têm tabela própria nos jogos (de 1/3 a 3) */
-const PRECISAO_MULT = {'-6':0.33,'-5':0.36,'-4':0.43,'-3':0.5,'-2':0.6,'-1':0.75,'0':1,'1':1.33,'2':1.66,'3':2,'4':2.33,'5':2.66,'6':3};
 /* o nome de cada atributo na frase do log */
-const NOME_ESTAGIO = {atk:'o Ataque', def:'a Defesa', spa:'o Ataque Especial', spd:'a Defesa Especial',
-                      spe:'a Velocidade', precisao:'a precisão', evasao:'a evasão'};
-const ESTAGIO_MULT = {'-6':0.25,'-5':0.28,'-4':0.33,'-3':0.4,'-2':0.5,'-1':0.66,'0':1,'1':1.5,'2':2,'3':2.5,'4':3,'5':3.5,'6':4};
+const NOME_ESTAGIO = {atk:'a Força', def:'a Vitalidade', spa:'o Especial', spd:'o Instinto',
+                      spe:'a Destreza', precisao:'a precisão', evasao:'a evasão'};
+/* estágio dos jogos (chave do golpe) → atributo do livro */
+const ATRIB_DO_ESTAGIO = {atk:'for', def:'vit', spa:'esp', spd:'ins', spe:'des'};
+const ESTAGIO_DO_ATRIB = {for:'atk', vit:'def', esp:'spa', ins:'spd', des:'spe'};
+/* Seismic Toss, Night Shade e Psywave: dados pelo posto */
+const DADOS_POR_POSTO = [1, 2, 4, 6, 8, 10, 10, 10];
 
 /* o que o jogo diz quando o tempo muda */
 const CLIMA_TEXTO = {
@@ -8194,7 +8803,7 @@ const Batalha = {
     const p = lado === 'aliado' ? this.aliado : this.inimigo;
     const o = pron(p).o;
     const m = [];
-    const ROT = {atk:'ATK', def:'DEF', spa:'SPA', spd:'SPD', spe:'VEL', precisao:'PREC', evasao:'EVA'};
+    const ROT = {atk:'FOR', def:'VIT', spa:'ESP', spd:'INS', spe:'DES', precisao:'PREC', evasao:'EVA'};
     for (const k of Object.keys(ROT)){
       const v = est[k] || 0;
       if (v) m.push({t:`${ROT[k]} ${v > 0 ? '+' : '−'}${Math.abs(v)}`, c: v > 0 ? 'alto' : 'baixo'});
@@ -8219,16 +8828,37 @@ const Batalha = {
     return m;
   },
 
-  /* ---------- utilidades ---------- */
-  mult(est, chave){ return ESTAGIO_MULT[String(Math.max(-6, Math.min(6, est[chave])))] || 1; },
-
-  statEfetivo(p, est, chave){
-    let v = p.stats[chave] * this.mult(est, chave);
-    if (chave === 'spe' && p.status === 'paralisia') v *= 0.5;
-    if (chave === 'atk' && p.status === 'queimadura') v *= 0.75;
+  /* ---------- atributos na luta ----------
+     O estágio que sobe ou cai (Growl, Swords Dance) soma direto no
+     atributo, um ponto por estágio, como no livro. Paralisia tira 2
+     de Destreza. Nenhum atributo fica abaixo de 1. */
+  attr(p, est, k){
+    let v = (p.stats[k] || 1) + ((est && est[ESTAGIO_DO_ATRIB[k]]) || 0);
+    if (k === 'des' && p.status === 'paralisia') v -= 2;
+    return Math.max(1, v);
+  },
+  /* atributo que entra numa parada: social e Vontade não moram na ficha */
+  valorAtrib(p, est, k){
+    if (k === 'soc') return socialDoNivel(p.nivel);
+    if (k === 'von') return this.attr(p, est, 'ins') + 2;
+    return this.attr(p, est, k);
+  },
+  /* o melhor atributo entre os que o golpe aceita ("Destreza/Força") */
+  melhorAtrib(p, est, lista, padrao){
+    const l = (lista && lista.length) ? lista : [padrao];
+    return l.reduce((m, k) => this.valorAtrib(p, est, k) > this.valorAtrib(p, est, m) ? k : m, l[0]);
+  },
+  /* dor: −1 sucesso na metade do HP, −2 com 1 de HP */
+  dor(p){
+    if (p.hp <= 1 && p.hpMax > 1) return 2;
+    return p.hp * 2 <= p.hpMax ? 1 : 0;
+  },
+  /* iniciativa: o d6 sai uma vez, na entrada; Destreza e Alerta somam
+     na hora, então paralisia e Agility mudam a ordem no meio da luta */
+  iniciativa(p, est){
+    if (est.ini6 == null) est.ini6 = Dados.d6(`Iniciativa de ${nomeVisivel(p)}`);
     const seg = efeitoSegurado(p);
-    if (seg && chave === 'spe' && seg.vel) v *= seg.vel;
-    return Math.max(1, Math.floor(v));
+    return est.ini6 + this.attr(p, est, 'des') + periciaDoNivel(p.nivel) + ((seg && seg.vel) || 0);
   },
 
   /* ---------- naturezas: o bicho tem vontade própria ---------- */
@@ -8267,9 +8897,13 @@ const Batalha = {
 
   /* ---------- pode agir? ---------- */
   podeAgir(p, est, souAliado, golpeNome){
+    est.penalConf = 0;
     if (p.status === 'sono'){
-      p.statusTurnos--;
-      if (p.statusTurnos <= 0){ p.status = null; est.pesadelo = false; this.ev('status', `${nomeVisivel(p)} acordou!`); }
+      /* dormindo: rola Instinto a cada vez, e acorda quando somar os
+         sucessos que faltam (5, pelo livro; o Rest deixa 2) */
+      const r = Dados.pool(this.attr(p, est, 'ins'), `${nomeVisivel(p)} tenta acordar`);
+      p.statusTurnos = (p.statusTurnos || 0) - r.suc;
+      if (p.statusTurnos <= 0){ p.status = null; p.statusTurnos = 0; est.pesadelo = false; this.ev('status', `${nomeVisivel(p)} acordou!`); }
       else {
         this.ev('status', `${nomeVisivel(p)} está dormindo profundamente.`);
         /* Sleep Talk e Snore são os golpes de quem está dormindo */
@@ -8277,16 +8911,9 @@ const Batalha = {
         return false;
       }
     }
-    if (est.apaixonado && Dados.chance(50)){
-      this.ev('status', `${nomeVisivel(p)} está apaixonad${pron(p).o} e não consegue atacar.`, {travou:'apaixonado', lado:souAliado ? 'aliado' : 'inimigo'});
-      return false;
-    }
     if (p.status === 'congelamento'){
       if (Dados.chance(20)){ p.status = null; this.ev('status', `${nomeVisivel(p)} descongelou!`); }
       else { this.ev('status', `${nomeVisivel(p)} está congelad${pron(p).o} e não consegue se mover.`); return false; }
-    }
-    if (p.status === 'paralisia' && Dados.chance(25)){
-      this.ev('status', `${nomeVisivel(p)} está paralisad${pron(p).o}! Não conseguiu se mover.`, {travou:'paralisia', lado:souAliado ? 'aliado' : 'inimigo'}); return false;
     }
     if (est.recarregando){
       est.recarregando = false;
@@ -8295,23 +8922,77 @@ const Batalha = {
     if (est.confuso > 0){
       est.confuso--;
       if (est.confuso === 0) this.ev('status', `${nomeVisivel(p)} saiu da confusão.`);
-      else if (Dados.chance(33)){
-        const d = Math.max(1, Math.round(Dados.d10('Dano de confusão') * 4 * (p.stats.atk / Math.max(1,p.stats.def))));
-        p.hp = Math.max(0, p.hp - d);
-        this.ev('dano', `${nomeVisivel(p)} está confus${pron(p).o} e se machucou sozinh${pron(p).o}! (${d} de dano)`);
-        return false;
-      } else {
-        this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}...`);
+      else {
+        /* no começo da vez: 2 sucessos de Instinto e a confusão não pesa agora */
+        const r = Dados.pool(this.attr(p, est, 'ins'), `${nomeVisivel(p)} resiste à confusão`);
+        if (r.suc >= 2) this.ev('status', `${nomeVisivel(p)} balança a cabeça e se concentra.`);
+        else {
+          const posto = postoDoNivel(p.nivel);
+          est.penalConf = posto <= 2 ? 1 : posto <= 5 ? 2 : 3;
+          this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}...`);
+        }
       }
     }
     return true;
   },
 
-  /* ---------- dano ---------- */
-  calcularDano(atk, def, estAtk, estDef, golpeNome, poder){
+  /* ---------- precisão ----------
+     Parada = atributo + perícia do golpe. Precisa de 1 sucesso; a
+     precisão baixa do golpe, a dor e a confusão tiram sucessos, e o
+     estágio de precisão contra o de evasão soma ou tira. Três além do
+     necessário é crítico (dois, com crítico alto ou Focus Energy). */
+  rolarPrecisao(atk, def, estAtk, estDef, nome){
+    const g = GOLPES[nome];
+    const pr = PR_GOLPE[nome] || {};
+    const res = {acertou:true, critico:false, extra:0, rolou:false};
+    /* golpe no próprio corpo (Swords Dance, Recover) não erra */
+    if (g.c === 'status' && !this.miraNoOutro(g)) return res;
+    const k = this.melhorAtrib(atk, estAtk, pr.a, g.c === 'esp' ? 'esp' : 'des');
+    const atrib = this.valorAtrib(atk, estAtk, k);
+    const per = pr.h ? periciaDoNivel(atk.nivel) : 0;
+    const r = Dados.pool(atrib + per, `Precisão de ${nome}`);
+    res.rolou = true;
+    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
+    const passo = (estAtk.precisao || 0) - eva;
+    const menos = (pr.r || 0) + this.dor(atk) + (estAtk.penalConf || 0);
+    const liquido = r.suc + passo - menos;
+    res.extra = liquido - 1;
+    const nomeA = k === 'soc' ? 'Social' : k === 'von' ? 'Vontade' : SIGLA_ATRIB[k];
+    const partes = [`${nomeA} ${atrib}`];
+    if (per) partes.push(`${pr.h} ${per}`);
+    let conta = `${partes.join(' + ')} = ${atrib + per}d6 → ${r.suc}`;
+    if (pr.r) conta += ` − ${pr.r} precisão baixa`;
+    if (this.dor(atk)) conta += ` − ${this.dor(atk)} dor`;
+    if (estAtk.penalConf) conta += ` − ${estAtk.penalConf} confusão`;
+    if (passo) conta += ` ${passo > 0 ? '+' : '−'} ${Math.abs(passo)} estágio`;
+    this.ev('rolagem', `Precisão: ${conta}${liquido !== r.suc ? ` = ${Math.max(0, liquido)}` : ''}`);
+    /* não erra (Swift): acerta sempre, mas o dado ainda decide o crítico */
+    res.acertou = pr.nunca || g.a >= 999 ? true : liquido >= 1;
+    res.extra = liquido - 1;
+    if (g.c !== 'status'){
+      /* No livro, o Pokémon de posto alto gasta a sobra em ações extras
+         na mesma rodada. Aqui cada um age uma vez por turno, então a
+         sobra que vira crítico sobe com o posto: 3 no Iniciante e no
+         Novato, e um a mais por posto dali pra cima. */
+      let limite = 3 + Math.max(0, postoDoNivel(atk.nivel) - 1);
+      if (pr.crit || (g.ef && g.ef.critico)) limite--;
+      if (estAtk.focado) limite--;
+      /* quem te entende acerta onde dói sem você apontar */
+      if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk) && efeitosDeAfinidade(atk).crit > 0) limite--;
+      res.critico = res.acertou && (pr.semprecrit || res.extra >= Math.max(1, limite));
+    }
+    return res;
+  },
+
+  /* ---------- dano ----------
+     Cada acerto rola a sua parada; o golpe de ação dupla ou tripla
+     acerta duas ou três vezes, e o de ações sucessivas acerta uma vez
+     a mais por sucesso sobrando na precisão, até cinco. */
+  calcularDano(atk, def, estAtk, estDef, golpeNome, poder, prec){
     const g = GOLPES[golpeNome];
-    const pw = poder || g.p;
-    const res = {dano:0, critico:false, efic:1, msgs:[]};
+    const pr = PR_GOLPE[golpeNome] || {};
+    prec = prec || {critico:false, extra:0};
+    const res = {dano:0, critico:false, efic:1, msgs:[], contas:[]};
 
     /* Foresight: Normal e Lutador passam a acertar Fantasma */
     const tiposDef = (estDef.identificado && (g.t === 'Normal' || g.t === 'Lutador'))
@@ -8321,106 +9002,118 @@ const Batalha = {
       res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
       return res;
     }
+    /* fraqueza e resistência contam por tipo: ×2 é +1, ×4 é +2, ×½ é −1 */
+    const passos = Math.round(Math.log2(res.efic));
 
-    if (g.ef && g.ef.nivel){                      // Seismic Toss / Night Shade
-      res.dano = atk.nivel;
-      res.msgs.push(`Dano igual ao nível: ${res.dano}`);
+    if (pr.ohko || (g.ef && g.ef.fixo >= 200)){
+      res.dano = def.hp;
+      res.msgs.push('Um golpe só, e acabou.');
       return res;
     }
-    if (g.ef && g.ef.fixo){                       // Dragon Rage
-      res.dano = g.ef.fixo;
+    if (pr.fixo || (g.ef && g.ef.fixo)){           // Dragon Rage, Sonic Boom
+      res.dano = pr.fixo || 1;
       res.msgs.push(`Dano fixo: ${res.dano}`);
+      return res;
+    }
+    if (pr.posto || pr.metade || (g.ef && g.ef.nivel)){
+      /* Seismic Toss, Night Shade, Psywave: dados pelo posto de quem
+         usa; Super Fang: metade do HP que o outro ainda tem. Ignoram
+         a defesa. */
+      const n = pr.metade ? Math.min(10, Math.max(1, Math.floor(def.hp / 2)))
+                          : DADOS_POR_POSTO[postoDoNivel(atk.nivel)];
+      const r = Dados.pool(n, `Dano de ${golpeNome}`);
+      res.dano = Math.max(1, r.suc);
+      res.contas.push(`Dano: ${pr.metade ? 'metade do HP' : 'posto ' + nomePosto(atk.nivel)} = ${n}d6 → ${r.suc}`);
       return res;
     }
 
     const fisico = g.c === 'fis';
-    const a = this.statEfetivo(atk, estAtk, fisico ? 'atk' : 'spa');
-    const d = this.statEfetivo(def, estDef, fisico ? 'def' : 'spd');
-    /* A diferença entre um Machamp e um Chansey tem que aparecer.
-       A razão vem dos stats (que vêm da base da espécie) e a curva
-       abre um pouco a distância em vez de achatar tudo no meio. */
-    const bruta = a / Math.max(1, d);
-    const razao = Math.max(0.33, Math.min(3.2, Math.pow(bruta, 1.15)));
-
-    const golpes = (g.ef && g.ef.golpes) ? g.ef.golpes : 1;
-    let total = 0;
-    for (let i = 0; i < golpes; i++){
-      const d10 = Dados.d10(`Dano de ${golpeNome}`);
-      total += Math.round(d10 * (pw / 10) * razao);
-    }
-    if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
-
-    /* Primeira geração: quem é rápido critica mais. A chance sai da
-       velocidade base da espécie, não de um d20 igual para todos. */
-    const baseVel = (DEX[atk.dex] && DEX[atk.dex].base) ? DEX[atk.dex].base.spe : 50;
-    let limiteCrit = 20 - Math.max(0, Math.min(3, Math.floor(baseVel / 40)));  // 20 a 17 no d20
-    if (g.ef && g.ef.critico) limiteCrit -= 3;
-    if (estAtk.focado) limiteCrit -= 3;          // Focus Energy
-    /* quem te entende acerta onde dói sem você apontar */
-    if (typeof efeitosDeAfinidade === 'function' && _meuPokemon(atk))
-      limiteCrit -= efeitosDeAfinidade(atk).crit;
-    const dCrit = Dados.d20('Crítico');
-    if (dCrit >= limiteCrit){
-      res.critico = true;
-      total = Math.round(total * 1.5);
-      res.msgs.push('ACERTO CRÍTICO!');
-    }
-
-    if (atk.tipos.includes(g.t)) total = Math.round(total * 1.5);   // STAB
-    /* chuva: Água ×1,5 e Fogo ×0,5 · sol: o contrário */
+    const kAtk = this.melhorAtrib(atk, estAtk, pr.d, fisico ? 'for' : 'esp');
+    const aVal = this.valorAtrib(atk, estAtk, kAtk);
+    let pw = poder != null ? poder : (pr.p || Math.max(1, Math.round((g.p || 40) / 25)));
+    /* chuva: Água +1 de poder e Fogo −1 de dano · sol: o contrário */
+    let climaDano = 0;
     if (this.clima && (this.clima.tipo === 'chuva' || this.clima.tipo === 'sol')){
       const forte = this.clima.tipo === 'chuva' ? 'Água' : 'Fogo';
       const fraco = this.clima.tipo === 'chuva' ? 'Fogo' : 'Água';
-      if (g.t === forte) total = Math.round(total * 1.5);
-      if (g.t === fraco) total = Math.round(total * 0.5);
+      if (g.t === forte) pw++;
+      if (g.t === fraco) climaDano = -1;
     }
-    total = Math.round(total * res.efic);
-    /* Reflect corta o físico, Light Screen o especial — crítico atravessa */
-    const ladoDef = this.lados && this.lados[def === this.aliado ? 'aliado' : 'inimigo'];
-    if (ladoDef && !res.critico){
-      if (fisico && ladoDef.reflexo > 0) total = Math.round(total * 0.5);
-      if (!fisico && ladoDef.tela > 0)   total = Math.round(total * 0.5);
+    const stab = atk.tipos.includes(g.t) ? 1 : 0;
+    const segA = efeitoSegurado(atk);
+    const item = segA ? ((fisico && segA.fis) || (!fisico && segA.esp) || 0) : 0;
+
+    /* defesa: Vitalidade contra físico, Instinto contra especial.
+       Reflect e Light Screen somam 2 — o crítico passa por cima. */
+    let dVal = 0, dBase = 0, extraDef = '';
+    if (!pr.ign){
+      dVal = dBase = this.attr(def, estDef, fisico ? 'vit' : 'ins');
+      const ladoDef = this.lados && this.lados[def === this.aliado ? 'aliado' : 'inimigo'];
+      if (ladoDef && !prec.critico){
+        if (fisico && ladoDef.reflexo > 0){ dVal += 2; extraDef += ' + 2 Reflect'; }
+        if (!fisico && ladoDef.tela > 0) { dVal += 2; extraDef += ' + 2 Light Screen'; }
+      }
+      if (!fisico && this.clima && this.clima.tipo === 'areia' && def.tipos.includes('Pedra')){ dVal++; extraDef += ' + 1 areia'; }
+      const segD = efeitoSegurado(def);
+      if (segD && segD.defesa){ dVal += segD.defesa; extraDef += ` + ${segD.defesa} colete`; }
     }
+    const crit = prec.critico ? 2 : 0;
+    if (crit) res.critico = true;
+    const n = Math.max(0, aVal + pw + stab + crit + item - dVal);
+
+    let golpes = 1;
+    if (pr.dupla) golpes = 2;
+    else if (pr.tripla) golpes = 3;
+    else if (pr.suc) golpes = Math.max(1, Math.min(5, 1 + (prec.extra || 0)));
+    else if (!PR_GOLPE[golpeNome] && g.ef && g.ef.golpes) golpes = g.ef.golpes;
+
+    /* apaixonado: metade do dano, a menos que o Instinto segure (3 sucessos) */
+    let metade = false;
+    if (estAtk.apaixonado){
+      const r = Dados.pool(this.attr(atk, estAtk, 'ins'), `${nomeVisivel(atk)} resiste à paixão`);
+      if (r.suc < 3){ metade = true; res.msgs.push(`${nomeVisivel(atk)} está apaixonad${pron(atk).o} e bate sem vontade.`); }
+    }
+
+    const nomeA = SIGLA_ATRIB[kAtk];
+    let conta = `${nomeA} ${aVal} + poder ${pw}`;
+    if (stab) conta += ' + 1 STAB';
+    if (crit) conta += ' + 2 crítico';
+    if (item) conta += ` + ${item} item`;
+    if (pr.ign) conta += ' (ignora defesa)';
+    else conta += ` − ${fisico ? 'VIT' : 'INS'} ${dBase}${extraDef}`;
+    let total = 0;
+    const suces = [];
+    for (let i = 0; i < golpes; i++){
+      if (i > 0 && def.hp - total <= 0) { golpes = i; break; }
+      const r = Dados.pool(n, `Dano de ${golpeNome}${golpes > 1 ? ` (${i + 1})` : ''}`);
+      suces.push(r.suc);
+      let d;
+      if (r.suc === 0) d = 1;                       // zero sucesso: 1 de dano, e só
+      else d = Math.max(1, r.suc + passos + climaDano);
+      if (metade) d = Math.max(1, Math.floor(d / 2));
+      total += d;
+    }
+    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}`);
+    if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
+    if (res.critico) res.msgs.push('ACERTO CRÍTICO!');
     const txt = textoEficacia(res.efic);
     if (txt) res.msgs.push(txt);
-
-    const segA = efeitoSegurado(atk);
-    if (segA){
-      if (fisico && segA.fis) total = Math.round(total * segA.fis);
-      if (!fisico && segA.esp) total = Math.round(total * segA.esp);
-    }
-    const segD = efeitoSegurado(def);
-    if (segD && segD.defesa) total = Math.round(total * segD.defesa);
-
-    const cfg = (Estado.dados && Estado.dados.config) ? Estado.dados.config.danoMult : 1;
-    res.dano = Math.max(1, Math.round(total * (cfg || 1)));
+    res.dano = total;
     return res;
-  },
-
-  acertou(golpeNome, estAtk, estDef){
-    const g = GOLPES[golpeNome];
-    if (g.a >= 999) return true;
-    let prec = g.a;
-    /* precisão de quem ataca contra evasão de quem apanha; Foresight
-       anula a evasão que subiu */
-    const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
-    const passo = Math.max(-6, Math.min(6, (estAtk.precisao || 0) - eva));
-    prec *= PRECISAO_MULT[String(passo)] || 1;
-    const limite = Math.floor((100 - Math.min(100, prec)) / 5);
-    const d = Dados.d20(`Precisão de ${golpeNome}`);
-    return d > limite;
   },
 
   aplicarStatus(alvo, tipoStatus, grave){
     if (tipoStatus === 'recuo') return false;
     if (alvo.status) return false;
-    if (tipoStatus === 'veneno' && alvo.tipos.includes('Venenoso')) return false;
+    if (tipoStatus === 'veneno' && (alvo.tipos.includes('Venenoso') || alvo.tipos.includes('Metálico'))) return false;
     if (tipoStatus === 'queimadura' && alvo.tipos.includes('Fogo')) return false;
     if (tipoStatus === 'congelamento' && alvo.tipos.includes('Gelo')) return false;
     if (tipoStatus === 'paralisia' && alvo.tipos.includes('Elétrico')) return false;
     alvo.status = tipoStatus;
     alvo.statusGrave = !!grave;
-    alvo.statusTurnos = tipoStatus === 'sono' ? Dados.entre(1,3) : 0;
+    /* sono: 5 sucessos de Instinto pra acordar, somados vez a vez */
+    alvo.statusTurnos = tipoStatus === 'sono' ? 5 : 0;
+    alvo.venenoRodadas = 0;
     return true;
   },
 
@@ -8439,11 +9132,15 @@ const Batalha = {
         return;
       }
       if (slot.pp <= 0){
+        /* Forcejar (Struggle): Força + 1 de poder, sem tipo, e 1 de volta */
         this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
-        const d = Math.max(1, Math.round(Dados.d10('Forcejar') * 3));
+        const n = Math.max(0, this.attr(atacante, estAtk, 'for') + 1 - this.attr(defensor, estDef, 'vit'));
+        const r = Dados.pool(n, 'Forcejar');
+        const d = Math.max(1, r.suc);
+        this.ev('rolagem', `Dano: FOR ${this.attr(atacante, estAtk, 'for')} + poder 1 − VIT ${this.attr(defensor, estDef, 'vit')} = ${n}d6 → ${r.suc}`);
         defensor.hp = Math.max(0, defensor.hp - d);
-        atacante.hp = Math.max(0, atacante.hp - Math.round(d * 0.25));
-        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`);
+        atacante.hp = Math.max(0, atacante.hp - 1);
+        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`, {alvo:souAliado?'inimigo':'aliado', dano:d});
         return;
       }
       nome = slot.nome;
@@ -8492,9 +9189,15 @@ const Batalha = {
       return;
     }
 
-    if (!this.acertou(nome, estAtk, estDef)){
+    const prec = this.rolarPrecisao(atacante, defensor, estAtk, estDef, nome);
+    if (!prec.acertou){
       this.ev('erro', `${nomeVisivel(atacante)} errou o golpe!`);
       estAtk.cortes = 0;
+      /* confuso que falha a ação se machuca: 1 de dano */
+      if (estAtk.penalConf){
+        atacante.hp = Math.max(0, atacante.hp - 1);
+        this.ev('dano', `${nomeVisivel(atacante)} tropeça na própria confusão e se machuca. (${atacante.hp}/${atacante.hpMax})`, {alvo:souAliado?'aliado':'inimigo', dano:1});
+      }
       return;
     }
 
@@ -8518,18 +9221,22 @@ const Batalha = {
 
     /* poder que muda: Fury Cutter dobra a cada acerto seguido (até 160);
        Return e Frustration saem da amizade */
+    /* poder que muda: Fury Cutter ganha 1 a cada acerto seguido (até +4);
+       Return e Frustration saem da amizade, de 0 a 5 */
     let poder = null;
+    const prG = PR_GOLPE[nome] || {};
     if (ef.corte){
       estAtk.cortes = Math.min(4, (estAtk.cortes || 0));
-      poder = g.p * Math.pow(2, estAtk.cortes);
+      poder = (prG.p || 1) + estAtk.cortes;
       estAtk.cortes++;
     }
     if (ef.amizade){
-      const amizade = Math.round(Math.max(0, Math.min(100, atacante.moral == null ? 70 : atacante.moral)) * 2.55);
-      poder = Math.max(1, Math.floor((ef.amizade === 'retorno' ? amizade : 255 - amizade) / 2.5));
+      const amizade = Math.max(0, Math.min(100, atacante.moral == null ? 70 : atacante.moral));
+      poder = Math.round((ef.amizade === 'retorno' ? amizade : 100 - amizade) / 20);
     }
 
-    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome, poder);
+    const r = this.calcularDano(atacante, defensor, estAtk, estDef, nome, poder, prec);
+    r.contas.forEach(m => this.ev('rolagem', m));
     r.msgs.forEach(m => this.ev('info', m));
     if (r.efic === 0) return;
 
@@ -8577,7 +9284,7 @@ const Batalha = {
       estDef.presoPor = nome;
       this.ev('status', `${nomeVisivel(defensor)} ficou pres${pron(defensor).o} por ${nome}!`);
     }
-    if (ef.tipo && ef.chance && defensor.hp > 0 && Dados.chance(ef.chance)){
+    if (ef.tipo && ef.chance && defensor.hp > 0 && this.sorteEfeito(nome, ef.chance)){
       if (ef.tipo === 'recuo'){
         estDef.recuou = true;
         this.ev('status', `${nomeVisivel(defensor)} se encolheu de medo!`);
@@ -8588,10 +9295,18 @@ const Batalha = {
       }
     }
     /* efeito de atributo de golpe de dano: só na chance dos jogos */
-    if (ef.baixa && defensor.hp > 0 && Dados.chance(ef.chance || 100))
+    if (ef.baixa && defensor.hp > 0 && this.sorteEfeito(nome, ef.chance || 100))
       this.mudarEstagio(defensor, estDef, ef.baixa, -1, true);
-    if (ef.sobe && atacante.hp > 0 && Dados.chance(ef.chance || 100))
+    if (ef.sobe && atacante.hp > 0 && this.sorteEfeito(nome, ef.chance || 100))
       this.mudarEstagio(atacante, estAtk, ef.sobe, +1, false);
+  },
+
+  /* Efeito secundário: com dados de chance do livro, qualquer 6 pega;
+     golpe sem essa ficha segue a chance dos jogos */
+  sorteEfeito(nome, pct){
+    const cd = (PR_GOLPE[nome] || {}).cd;
+    if (cd) return Dados.chanceDados(cd, `Chance de ${nome}`);
+    return Dados.chance(pct);
   },
 
   /* O golpe é jogado em cima do outro? (Protect e o boneco só param esses) */
@@ -8654,7 +9369,7 @@ const Batalha = {
       if (atacante.hp >= atacante.hpMax){ this.ev('erro', `O HP de ${nomeVisivel(atacante)} já está cheio.`); return; }
       const antes = atacante.hp;
       atacante.hp = Math.min(atacante.hpMax, atacante.hp + Math.round(atacante.hpMax * e.cura));
-      if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }
+      if (e.dorme){ atacante.status = 'sono'; atacante.statusTurnos = 2; }   // Rest: 2 sucessos pra acordar
       this.ev('cura', `${nomeVisivel(atacante)} recuperou ${atacante.hp - antes} de HP.`);
       return;
     }
@@ -8684,7 +9399,7 @@ const Batalha = {
         return this.ev('status', `${eu} está concentrad${pron(atk).o}. Acerto crítico fica mais fácil.`);
 
       case 'substituto': {
-        const custo = Math.floor(atk.hpMax / 4);
+        const custo = Math.max(1, Math.floor(atk.hpMax / 4));
         if (estAtk.substituto > 0){ return this.ev('erro', `${eu} já tem um boneco na frente.`); }
         if (atk.hp <= custo){ return this.ev('erro', `${eu} não tem HP pra fazer o boneco.`); }
         atk.hp -= custo;
@@ -8782,7 +9497,7 @@ const Batalha = {
       case 'maldicao':
         if (atk.tipos.includes('Fantasma')){
           if (estDef.maldito) return falhou();
-          const custo = Math.floor(atk.hpMax / 2);
+          const custo = Math.max(1, Math.floor(atk.hpMax / 2));
           atk.hp = Math.max(0, atk.hp - custo);
           estDef.maldito = true;
           return this.ev('dano', `${eu} cortou metade do próprio HP e amaldiçoou ${ele}!`);
@@ -8864,8 +9579,8 @@ const Batalha = {
 
   /* ---------- o par ----------
      Quando um Pokémon cai e o par dele está no mesmo time, de pé, o par
-     viu. Na próxima vez que ele entrar nesta luta, entra com Ataque e
-     Sp. Atk um estágio acima. Vale pros dois lados: o time do treinador
+     viu. Na próxima vez que ele entrar nesta luta, entra com Força e
+     Especial um ponto acima. Vale pros dois lados: o time do treinador
      também tem par. */
   parViuCair(caido, time){
     if (!this.viuOParCair) this.viuOParCair = {};
@@ -8887,14 +9602,16 @@ const Batalha = {
   /* ---------- fim de turno ---------- */
   fimDeTurno(p, est, quem){
     if (p.hp <= 0) return;
+    /* veneno: 2 por rodada; o grave (Toxic) sobe 2 a cada rodada.
+       queimadura: 1 por rodada. Números do livro. */
     if (p.status === 'veneno'){
-      const frac = p.statusGrave ? 6 : 8;
-      const d = Math.max(1, Math.floor(p.hpMax / frac));
+      p.venenoRodadas = (p.venenoRodadas || 0) + 1;
+      const d = p.statusGrave ? 2 * p.venenoRodadas : 2;
       p.hp = Math.max(0, p.hp - d);
       this.ev('dano', `${nomeVisivel(p)} sofre ${d} pelo veneno. (${p.hp}/${p.hpMax})`, {causa:'veneno'});
     }
     if (p.status === 'queimadura'){
-      const d = Math.max(1, Math.floor(p.hpMax / 16));
+      const d = 1;
       p.hp = Math.max(0, p.hp - d);
       this.ev('dano', `${nomeVisivel(p)} sofre ${d} pela queimadura. (${p.hp}/${p.hpMax})`, {causa:'queimadura'});
     }
@@ -8909,7 +9626,7 @@ const Batalha = {
         return d;
       };
       if (est.semente && outro && outro.hp > 0){
-        const d = Math.min(p.hp, Math.max(1, Math.floor(p.hpMax / 8)));
+        const d = Math.min(p.hp, 1);
         p.hp = Math.max(0, p.hp - d);
         outro.hp = Math.min(outro.hpMax, outro.hp + d);
         this.ev('dano', `A semente suga ${d} de ${nomeVisivel(p)} pra ${nomeVisivel(outro)}. (${p.hp}/${p.hpMax})`, {causa:'semente'});
@@ -8928,7 +9645,7 @@ const Batalha = {
     /* item segurado: regeneração lenta */
     const seg = efeitoSegurado(p);
     if (seg && seg.regen && p.hp > 0 && p.hp < p.hpMax){
-      const c = Math.max(1, Math.round(p.hpMax * seg.regen));
+      const c = seg.regen;
       const antes = p.hp;
       p.hp = Math.min(p.hpMax, p.hp + c);
       this.ev('cura', `${nomeVisivel(p)} belisca o ${p.segurando} e recupera ${p.hp - antes}. (${p.hp}/${p.hpMax})`);
@@ -8936,7 +9653,7 @@ const Batalha = {
   },
 
   /* Fim de turno do clima: a areia fere quem não é Pedra, Terrestre ou
-     Metálico (1/8 do HP), e o clima acaba sozinho no quinto turno. */
+     Metálico (1 de dano), e o clima acaba sozinho no quinto turno. */
   /* Reflect, Light Screen, Mist e Safeguard contam os cinco turnos */
   passarLados(){
     const NOME = {reflexo:'Reflect', tela:'Light Screen', nevoa:'Mist', salva:'Safeguard'};
@@ -8956,7 +9673,7 @@ const Batalha = {
     if (this.clima.tipo === 'areia'){
       for (const p of [this.aliado, this.inimigo]){
         if (!p || p.hp <= 0 || p.tipos.some(t => ['Pedra', 'Terrestre', 'Metálico'].includes(t))) continue;
-        const d = Math.max(1, Math.floor(p.hpMax / 8));
+        const d = 1;
         p.hp = Math.max(0, p.hp - d);
         this.ev('dano', `A areia fere ${nomeVisivel(p)}. (${p.hp}/${p.hpMax})`, {causa:'areia'});
       }
@@ -9013,11 +9730,18 @@ const Batalha = {
       }
       const ef = eficacia(G.t, alvo.tipos);
       if (ef === 0) return 0;
+      /* quanto de dano ele espera: metade da parada, mais a fraqueza */
       const fis = G.c === 'fis';
-      const a = this.statEfetivo(p, estP, fis ? 'atk' : 'spa');
-      const d = this.statEfetivo(alvo, estAlvo, fis ? 'def' : 'spd');
-      let s = (G.p || 45) * ef * Math.min(2.2, a / Math.max(1,d)) * (G.a >= 999 ? 1 : G.a/100);
-      if (p.tipos.includes(G.t)) s *= 1.5;
+      const PR = PR_GOLPE[x.g.nome] || {};
+      const pw = PR.fixo ? 0 : (PR.p || Math.max(1, Math.round((G.p || 40) / 25)));
+      const a = this.valorAtrib(p, estP, this.melhorAtrib(p, estP, PR.d, fis ? 'for' : 'esp'));
+      const d = PR.ign ? 0 : this.attr(alvo, estAlvo, fis ? 'vit' : 'ins');
+      let s = PR.fixo ? PR.fixo
+            : (PR.posto || PR.metade) ? DADOS_POR_POSTO[postoDoNivel(p.nivel)] / 2
+            : Math.max(1, (a + pw + (p.tipos.includes(G.t) ? 1 : 0) - d) / 2 + Math.round(Math.log2(ef)));
+      s *= Math.max(0.2, 1 - (PR.r || 0) * 0.2);
+      if (PR.dupla) s *= 2; if (PR.tripla) s *= 3; if (PR.suc) s *= 1.6;
+      s *= 20;
       if (nat.agressiva) s *= 1.1;
       return s;
     };
@@ -9070,14 +9794,16 @@ const Batalha = {
     const gIA  = GOLPES[this.inimigo.golpes[iIA]?.nome || 'Tackle'];
     const prioJ = (gJog.ef && gJog.ef.prioridade) || 0;
     const prioI = (gIA.ef && gIA.ef.prioridade) || 0;
-    const vJ = this.statEfetivo(this.aliado, this.estAliado, 'spe');
-    const vI = this.statEfetivo(this.inimigo, this.estInimigo, 'spe');
+    const vJ = this.iniciativa(this.aliado, this.estAliado);
+    const vI = this.iniciativa(this.inimigo, this.estInimigo);
     let jogadorPrimeiro;
     if (prioJ !== prioI) jogadorPrimeiro = prioJ > prioI;
     else if (vJ !== vI)  jogadorPrimeiro = vJ > vI;
-    else                 jogadorPrimeiro = Dados.chance(50);
+    else                 jogadorPrimeiro = this.attr(this.aliado, this.estAliado, 'des') !== this.attr(this.inimigo, this.estInimigo, 'des')
+                           ? this.attr(this.aliado, this.estAliado, 'des') > this.attr(this.inimigo, this.estInimigo, 'des')
+                           : Dados.chance(50);
 
-    this.ev('turno', `— Turno ${this.turno} — (Vel ${vJ} vs ${vI})`);
+    this.ev('turno', `— Turno ${this.turno} — (Iniciativa ${vJ} vs ${vI})`);
 
     const agirJogador = () => {
       if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
@@ -9120,8 +9846,9 @@ const Batalha = {
     p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
     this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
     this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
-    this.ev('pokedex', `ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}`);
-    this.ev('pokedex', `Base da espécie: ${esp.base.hp}/${esp.base.atk}/${esp.base.def}/${esp.base.spa}/${esp.base.spd}/${esp.base.spe} — soma ${esp.total}.`);
+    this.ev('pokedex', `Posto ${nomePosto(p.nivel)} · HP ${p.hpMax} · FOR ${p.stats.for} · DES ${p.stats.des} · VIT ${p.stats.vit} · ESP ${p.stats.esp} · INS ${p.stats.ins}`);
+    const pr = PR_ESPECIE[p.dex];
+    if (pr) this.ev('pokedex', `Teto da espécie: FOR ${pr[6]} · DES ${pr[7]} · VIT ${pr[8]} · ESP ${pr[9]} · INS ${pr[10]} — HP base ${pr[0]}.`);
     if (p.shiny)
       this.ev('brilhante', 'Anomalia cromática confirmada. A Pokédex abre um campo que você nunca tinha visto abrir.');
     if ((NATUREZAS[p.natureza]||{}).agressiva)
@@ -9220,10 +9947,15 @@ const Batalha = {
       this.ev('erro', `${nomeVisivel(this.aliado)} está pres${pron(this.aliado).o} por ${this.estAliado.presoPor}. Não dá pra fugir.`);
       return this.turnoInimigoSozinho();
     }
-    const alvo = this.inimigo.stats.spe - this.aliado.stats.spe + 10;
-    const d = Dados.d20('Fuga');
-    this.ev('info', `Fuga: 1d20 = ${d} — precisa ≥ ${alvo}`);
-    if (d >= alvo){
+    /* Fugir: Destreza + Atletismo de quem está na frente, contra os do
+       selvagem. Empate é seu. */
+    const nJ = this.attr(this.aliado, this.estAliado, 'des') + periciaDoNivel(this.aliado.nivel);
+    const nI = this.attr(this.inimigo, this.estInimigo, 'des') + periciaDoNivel(this.inimigo.nivel);
+    const rJ = Dados.pool(nJ, 'Fuga'), rI = Dados.pool(nI, 'Perseguição');
+    const dorJ = this.dor(this.aliado);
+    const sucJ = Math.max(0, rJ.suc - dorJ);
+    this.ev('rolagem', `Fuga: DES + Atletismo = ${nJ}d6 → ${rJ.suc}${dorJ ? ` − ${dorJ} dor` : ''} · o selvagem: ${nI}d6 → ${rI.suc}`);
+    if (sucJ >= rI.suc){
       this.ev('fuga', 'Você conseguiu escapar!');
       return this.encerrar('fuga');
     }
@@ -9377,7 +10109,12 @@ const Batalha = {
   },
 
   golpeNoJogador(){
-    let dano = Math.max(1, Math.round((this.inimigo.stats.atk / 10) * Dados.d10('Dano no treinador')));
+    /* O treinador não tem Vitalidade de Pokémon: a parada é Força + 2,
+       e cada sucesso vale 3 de HP de gente. */
+    const nD = this.attr(this.inimigo, this.estInimigo, 'for') + 2;
+    const rD = Dados.pool(nD, 'Dano no treinador');
+    let dano = Math.max(1, rD.suc * 3);
+    this.ev('rolagem', `Dano: FOR + 2 = ${nD}d6 → ${rD.suc} × 3`);
     /* Quando sobra para o treinador, o corpo é que segura. */
     const t = Dados.teste(Estado.j.status.resistencia, 6, 'Resistência');
     const corte = {critico:0.45, sucesso:0.7, parcial:0.9, falha:1.15}[t.grau];
@@ -76105,10 +76842,16 @@ const UI = {
     if (this.dadosRecentes.length > 8) this.dadosRecentes.shift();
   },
   limparDados(){ this.dadosRecentes = []; },
+  /* os cinco atributos do Pokérole numa linha */
+  linhaAtrib(p){
+    return ATRIBUTOS.map(k => `${SIGLA_ATRIB[k]} ${p.stats[k]}`).join(' · ');
+  },
   /* ---------- DADOS: eles giram na tela e você pode girar de novo ---------- */
   htmlDados(){
     if (!this.dadosRecentes.length) return this.htmlBandeja();
-    const dados = this.dadosRecentes.map((d,k) => {
+    const soltos = this.dadosRecentes.filter(d => !d.pool);
+    const paradas = this.dadosRecentes.filter(d => d.pool);
+    const dados = soltos.map((d,k) => {
       const cls = d.valor === d.faces ? ' max' : (d.valor === 1 ? ' min' : '');
       return `<button class="dado d${d.faces}${cls}" data-v="${d.valor}" data-faces="${d.faces}"
         title="${this.esc(d.motivo||d.dado)} — clique para girar de novo"
@@ -76117,11 +76860,26 @@ const UI = {
         <span class="rot">d${d.faces}</span>
       </button>`;
     }).join('');
-    const motivos = this.dadosRecentes.map(d =>
+    const motivos = soltos.map(d =>
       `<span class="dado-legenda"><b>d${d.faces}</b> ${this.esc(d.motivo||'')} <b class="v">${d.valor}</b></span>`).join('');
+    /* Pokérole: a parada de d6 aparece inteira, com cada face; o que é
+       sucesso (4+, ou 6 no dado de chance) acende */
+    const htmlParadas = paradas.map((d, k) => {
+      const alvo = d.chance ? 6 : 4;
+      const faces = d.pool.length
+        ? d.pool.map((v, i) => `<i class="f${v >= alvo ? ' s' : ''}" style="animation-delay:${k*60 + i*25}ms">${v}</i>`).join('')
+        : '<span class="p-vazia">nenhum dado</span>';
+      const res = d.chance ? (d.valor ? 'pegou' : 'não pegou')
+                           : `${d.valor} sucesso${d.valor === 1 ? '' : 's'}`;
+      return `<div class="parada${d.valor ? ' deu' : ''}" title="${this.esc(d.motivo || '')}">
+        <span class="p-mot">${this.esc(d.motivo || '')} <b class="mono">${d.pool.length}d6</b></span>
+        <span class="p-res">${res}</span>
+        <span class="p-faces">${faces}</span></div>`;
+    }).join('');
     return `<div class="dados-area">
-      <div class="dados-linha">${dados}</div>
-      <div class="dados-legendas">${motivos}</div>
+      ${soltos.length ? `<div class="dados-linha">${dados}</div>
+      <div class="dados-legendas">${motivos}</div>` : ''}
+      ${paradas.length ? `<div class="paradas">${htmlParadas}</div>` : ''}
     </div>` + this.htmlBandeja();
   },
 
@@ -76290,11 +77048,11 @@ const UI = {
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
-        <button data-v="fiel" class="sel">Regra do dado (fiel)</button>
+        <button data-v="fiel" class="sel">Pokérole (do livro)</button>
         <button data-v="longo">Combate prolongado</button>
       </div>
       <div class="sussurro" id="f-ritmo-desc">
-        Fiel: dano = 1d10 × (poder ÷ 10), como nas suas regras. Rápido e letal.
+        Pokérole: parada de d6, HP do livro. Cada golpe pesa.
       </div>
 
       <div style="margin-top:26px;display:flex;gap:10px;flex-wrap:wrap">
@@ -76320,8 +77078,8 @@ const UI = {
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
-        ? 'Fiel: dano = 1d10 × (poder ÷ 10), como nas suas regras. Rápido e letal.'
-        : 'Prolongado: mesmo dado, dano reduzido a 60%. Combates duram mais turnos.';
+        ? 'Pokérole: parada de d6, HP do livro. Cada golpe pesa.'
+        : 'Prolongado: mesmo dado, HP base de cada espécie em dobro. Combates duram mais turnos.';
     });
   },
 
@@ -76899,7 +77657,7 @@ const UI = {
         ? `${this.esc(p.natureza)}${(NATUREZAS[p.natureza]||{}).agressiva?' · agressivo':''}`
         : 'natureza ?';
       const ficha = catalogado
-        ? `<span class="mono">ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</span>`
+        ? `<span class="mono">${this.linhaAtrib(p)}</span>`
         : (leuTipo ? '<span class="mono">tipo lido de olho · ficha não catalogada</span>'
                    : '<span class="mono">ficha não catalogada</span>');
       const seg = p.segurando ? `<div class="segurado-tag" title="${this.esc(fichaItem(p.segurando))}">segura ${this.esc(p.segurando)}</div>` : '';
@@ -76930,6 +77688,8 @@ const UI = {
       </div>`;
     };
     const el = document.getElementById('arena');
+    /* a tela já mudou (a luta acabou no meio da encenação): nada a pintar */
+    if (!el) return null;
     el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
     this._arenaUltima = {A:kA, I:kI};
     if (typeof Efeitos !== 'undefined'){
@@ -77224,14 +77984,31 @@ const UI = {
      de combate (a luta espera); fora dela, abre um modal que não fecha
      sem resposta. Quem chama decide o que acontece depois.
      ======================================================== */
+  /* A ficha do golpe no Pokérole, curta: poder e de onde sai a precisão */
+  resumoGolpe(nome){
+    const g = GOLPES[nome] || {}, pr = (typeof PR_GOLPE !== 'undefined' && PR_GOLPE[nome]) || {};
+    const sig = k => k === 'soc' ? 'Social' : k === 'von' ? 'Vontade' : SIGLA_ATRIB[k];
+    const partes = [];
+    if (g.c !== 'status'){
+      if (pr.fixo) partes.push(`dano fixo ${pr.fixo}`);
+      else if (pr.ohko) partes.push('nocaute');
+      else if (pr.posto) partes.push('dados pelo posto');
+      else if (pr.metade) partes.push('metade do HP dele');
+      else partes.push(`poder ${pr.p || Math.max(1, Math.round((g.p || 40) / 25))}`);
+    }
+    const aPrec = (pr.a || []).map(sig).join('/');
+    if (pr.nunca || g.a >= 999) partes.push(g.c === 'status' && !pr.a ? 'em si' : 'não erra');
+    else if (aPrec) partes.push(aPrec + (pr.h ? ' + ' + pr.h : ''));
+    if (pr.r) partes.push(`−${pr.r}`);
+    return partes.join(' · ');
+  },
+
   cartaoGolpe(nome, pp){
     const g = GOLPES[nome] || {};
     const cat = {fis:'Físico', esp:'Especial', status:'Status'}[g.c] || '—';
-    const poder = (g.c === 'status' || !g.p) ? '—' : g.p;
-    const prec = g.a ? g.a + '%' : '—';
     return `<span class="golpe-cartao">
       <span class="gc-topo"><span class="gc-nome">${this.esc(nome)}</span>${g.t ? this.tipoTag(g.t) : ''}</span>
-      <span class="gc-num">${cat} · Poder ${poder} · Precisão ${prec} · PP ${pp || g.pp || '—'}</span>
+      <span class="gc-num">${cat} · ${this.esc(this.resumoGolpe(nome))} · PP ${pp || g.pp || '—'}</span>
     </span>`;
   },
 
@@ -77470,7 +78247,7 @@ const UI = {
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
-        ${bt('fugir', 'Fugir', Batalha.fuga ? '1d20 contra a velocidade dele' : 'daqui não se foge',
+        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo contra os dele' : 'daqui não se foge',
              "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       ${dex}
@@ -77488,7 +78265,7 @@ const UI = {
       c.appendChild(this.el(`<div class="mb-linha centro">
         <button class="mb-btn lutar" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:0})">
           <span class="rot">Forcejar</span>
-          <span class="nota">1d10 × 3 de dano · ${this.esc(nomeExib(a))} se machuca no contragolpe</span></button></div>`));
+          <span class="nota">Força + 1 em d6 · ${this.esc(nomeExib(a))} perde 1 no contragolpe</span></button></div>`));
       c.appendChild(this.el(`<div class="mb-linha centro">
         <button class="mb-btn voltar" onclick="UI.voltarAoMenu()">
           <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
@@ -77501,7 +78278,7 @@ const UI = {
       const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
       const travado = Batalha.estAliado && Batalha.estAliado.desabilitado && Batalha.estAliado.desabilitado.nome === g.nome;
       grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${g.pp<=0 || travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
-        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status':(G.p||'—')} · ${G.a>=999?'∞':G.a+'%'}</span></span>
+        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status · ':''}${this.esc(this.resumoGolpe(g.nome))}</span></span>
         <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
     });
     c.appendChild(grade);
@@ -77592,15 +78369,15 @@ const UI = {
   },
 
   fichaEscaneada(p, esp, eventos){
-    const b = esp.base;
     const num = String(p.dex).padStart(3, '0');
     const nat = NATUREZAS[p.natureza] || {};
-    const maxBase = {hp:255, atk:190, def:230, spa:194, spd:230, spe:150};
-    const par = (rot, chave, vInd) => `<div class="base-linha dupla">
-      <span class="k">${rot}</span>
-      <span class="barrinha"><i style="width:${Math.min(100, Math.round(b[chave]/maxBase[chave]*100))}%"></i></span>
-      <span class="v mono">${b[chave]}</span>
-      <span class="ind mono">${vInd}</span></div>`;
+    /* a barra é o atributo contra o teto da espécie (de 1 a 10 no livro) */
+    const pr = PR_ESPECIE[p.dex] || [0,1,1,1,1,1,1,1,1,1,1];
+    const par = (k, i) => `<div class="base-linha dupla">
+      <span class="k">${NOME_ATRIB[k]}</span>
+      <span class="barrinha"><i style="width:${Math.min(100, Math.round(p.stats[k] / 10 * 100))}%"></i></span>
+      <span class="v mono">${p.stats[k]}</span>
+      <span class="ind mono">máx ${pr[6 + i]}</span></div>`;
 
     this.modal('', `<div class="pokedex-topo">
         <span class="pokedex-lente"></span>
@@ -77615,14 +78392,9 @@ const UI = {
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
         ${nat.agressiva ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
 
-        <h3 class="cat-item">Base da espécie <span class="fraco">· este exemplar</span></h3>
-        ${par('HP', 'hp', p.stats.hp)}
-        ${par('Ataque', 'atk', p.stats.atk)}
-        ${par('Defesa', 'def', p.stats.def)}
-        ${par('Sp. Atk', 'spa', p.stats.spa)}
-        ${par('Sp. Def', 'spd', p.stats.spd)}
-        ${par('Velocidade', 'spe', p.stats.spe)}
-        <div class="nota mono">Soma de base: ${esp.total}</div>
+        <h3 class="cat-item">Atributos <span class="fraco">· este exemplar, posto ${nomePosto(p.nivel)}</span></h3>
+        ${ATRIBUTOS.map(par).join('')}
+        <div class="nota mono">HP ${p.hpMax} = base ${p.hpMax - p.stats.vit} + Vitalidade ${p.stats.vit}</div>
 
         <h3 class="cat-item">Contra o seu time</h3>
         <div class="linha"><span class="k">Fraco contra</span><span class="v">${this.esc(this.fraquezas(esp.tipos).join(', ') || '—')}</span></div>
@@ -78662,7 +79434,7 @@ const UI = {
       <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
         ${p.golpes.map(g=>`${this.esc(g.nome)} <span class="mono">${g.pp}/${g.ppMax}</span>`).join(' · ')}</div>
       <div class="sussurro" style="margin-top:6px">
-        ATK ${p.stats.atk} · DEF ${p.stats.def} · SPA ${p.stats.spa} · SPD ${p.stats.spd} · VEL ${p.stats.spe}</div>
+        ${nomePosto(p.nivel)} · ${this.linhaAtrib(p)}</div>
       ${p.historia ? `<div class="sussurro" style="margin-top:7px;font-style:italic">${this.esc(p.historia)}</div>` : ''}
     </div>`;
     const pc = d.pc.length ? `<h3>No PC (${d.pc.length})</h3><div class="grade">${d.pc.map(carta).join('')}</div>` : '';
@@ -79137,11 +79909,13 @@ const UI = {
         <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
         true, 'pokedex');
     }
-    const b = esp.base;
-    const linha = (k, v, max) => `<div class="base-linha">
-      <span class="k">${k}</span>
-      <span class="barrinha"><i style="width:${Math.min(100, Math.round(v/max*100))}%"></i></span>
-      <span class="v mono">${v}</span></div>`;
+    /* a espécie no Pokérole: de onde cada atributo parte e até onde vai */
+    const pr = PR_ESPECIE[dex] || [0,1,1,1,1,1,1,1,1,1,1];
+    const linha = (k, i) => `<div class="base-linha dupla">
+      <span class="k">${NOME_ATRIB[k]}</span>
+      <span class="barrinha faixa"><i style="left:${pr[1 + i] * 10}%;width:${(pr[6 + i] - pr[1 + i]) * 10}%"></i></span>
+      <span class="v mono">${pr[1 + i]}</span>
+      <span class="ind mono">até ${pr[6 + i]}</span></div>`;
     this.modal('', `<div class="pokedex-topo">
         <span class="pokedex-lente"></span>
         <span class="pokedex-luzes"><i></i><i></i><i></i></span>
@@ -79151,14 +79925,9 @@ const UI = {
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite({dex, nome:esp.nome, shiny: Estado.brilhanteDe(dex) === 'capturado'}, 'frente')}</div>
 
-        <h3 class="cat-item">Base</h3>
-        ${linha('HP', b.hp, 255)}
-        ${linha('Ataque', b.atk, 190)}
-        ${linha('Defesa', b.def, 230)}
-        ${linha('Sp. Atk', b.spa, 194)}
-        ${linha('Sp. Def', b.spd, 230)}
-        ${linha('Velocidade', b.spe, 150)}
-        <div class="nota mono">Soma de base: ${esp.total}</div>
+        <h3 class="cat-item">Atributos da espécie</h3>
+        ${ATRIBUTOS.map(linha).join('')}
+        <div class="nota mono">HP base ${pr[0]} · soma dos máximos ${pr.slice(6).reduce((a, b) => a + b, 0)}</div>
 
         <h3 class="cat-item">Ficha</h3>
         <div class="linha"><span class="k">Tipos</span><span class="v">${this.esc(esp.tipos.join(' / '))}</span></div>
@@ -79398,7 +80167,7 @@ const UI = {
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
       ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia')}
-      ${L('Ritmo do combate', 'fiel (rápido e letal) ou prolongado (dano em 60%)')}`;
+      ${L('Ritmo do combate', 'Pokérole (o HP do livro) ou prolongado (HP base em dobro)')}`;
 
     if (k === 'ficha') return `
       <h3>Os seis status</h3>
@@ -79421,16 +80190,15 @@ const UI = {
       <p class="sussurro">Os dois eixos se pagam: enquanto você deve de um lado, o que faz do outro serve primeiro pra quitar.</p>`;
 
     if (k === 'combate') return `
-      <h3>A conta</h3>
-      ${L('Dano', '1d10 × (poder ÷ 10) × (Atk ÷ Def)^1,15')}
-      ${L('Limite da razão', 'entre 0,33× e 3,2×')}
-      ${L('STAB', '×1,5 quando o tipo do golpe é o tipo dele')}
-      ${L('Eficácia', '0× / 0,5× / 2×')}
-      ${L('Crítico', '1d20 ≥ 20 − (Vel. base ÷ 40, até 3) → ×1,5')}
-      ${L('Precisão', '1d20 > (100 − precisão) ÷ 5')}
-      ${L('Ordem', 'por Velocidade · Quick Attack e afins têm prioridade')}
-      ${L('Fuga', '1d20 ≥ (Vel. do selvagem − a sua + 10)')}
-      ${L('Sem PP', 'Forcejar: 1d10 × 3, e 25% volta em você')}
+      <h3>A conta — Pokérole</h3>
+      ${L('Os dados', 'parada de d6 · cada 4, 5 ou 6 é um sucesso')}
+      ${L('Precisão', 'atributo + perícia · 1 sucesso acerta · dor e precisão baixa tiram')}
+      ${L('Dano', 'Força ou Especial + poder + 1 de STAB − Vitalidade ou Instinto · sucesso = 1 de dano')}
+      ${L('Tipo', '+1 por fraqueza · −1 por resistência · imune não sofre')}
+      ${L('Crítico', 'sobra de 3 sucessos na precisão (mais no posto alto) → +2 dados')}
+      ${L('Ordem', 'prioridade · depois 1d6 + Destreza + Alerta')}
+      ${L('Fuga', 'Destreza + Atletismo contra os do selvagem')}
+      ${L('Sem PP', 'Forcejar: Força + 1, e 1 volta em você')}
       <h3>Na sua vez</h3>
       ${L('Golpe', 'gasta PP · sem PP sobra Forcejar')}
       ${L('Bola', 'só em selvagem — não se joga bola no Pokémon de treinador')}
@@ -79439,15 +80207,15 @@ const UI = {
       ${L('Trocar', 'gasta o turno')}
       ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
       <h3>Status</h3>
-      ${L('Sono', 'perde turnos até acordar')} ${L('Paralisia', 'Vel. pela metade · 25% de perder a vez')}
-      ${L('Queimadura', 'Atk em 75% · dano por turno')} ${L('Veneno', 'dano por turno')}
-      ${L('Congelamento', '20% de descongelar por turno')} ${L('Confusão', '33% de se machucar sozinho')}`;
+      ${L('Sono', '5 sucessos de Instinto somados pra acordar')} ${L('Paralisia', '−2 de Destreza')}
+      ${L('Queimadura', '1 de dano por turno')} ${L('Veneno', '2 de dano por turno · o grave sobe 2 a cada turno')}
+      ${L('Congelamento', '20% de descongelar por turno')} ${L('Confusão', 'tira sucessos · errar tira 1 de HP')}`;
 
     if (k === 'natureza') {
-      const NOMES = {atk:'Ataque', def:'Defesa', spa:'At. Esp.', spd:'Def. Esp.', spe:'Velocidade'};
+      const NOMES = {atk:'Força', def:'Vitalidade', spa:'Especial', spd:'Instinto', spe:'Destreza'};
       const linhas = Object.keys(NATUREZAS).map(n => {
         const x = NATUREZAS[n];
-        const stats = x.mais ? `+10% ${NOMES[x.mais]} · −10% ${NOMES[x.menos]}` : 'sem alteração de status';
+        const stats = x.mais ? `pontos puxam pra ${NOMES[x.mais]} · fogem de ${NOMES[x.menos]}` : 'não puxa pra lado nenhum';
         return `<div class="tut-nat${x.agressiva ? ' agressiva' : ''}">
           <span class="tut-nat-nome">${n}</span>
           <span class="tut-nat-stat mono">${stats}</span>
@@ -79456,7 +80224,7 @@ const UI = {
       }).join('');
       return `
         <h3>As vinte e cinco naturezas</h3>
-        <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela mexe em dois status e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
+        <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela decide pra onde vão os pontos de atributo que ele ganha subindo de nível, e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
         <div class="tut-nats">${linhas}</div>
         <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>`;
     }
@@ -79595,7 +80363,7 @@ const UI = {
       ${L('Pokémon desmaiado', 'volta no Centro')}
       ${L('Pokémon morto', 'não volta nunca')}
       <h3>Quando o seu cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva, rola-se 1d20: com 10 ou mais ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. As naturezas agressivas estão marcadas na aba Naturezas.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva, rola-se 1d20: com 10 ou mais ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP. As naturezas agressivas estão marcadas na aba Naturezas.</p>
       <h3>O que não dá pra desfazer</h3>
       ${L('Salvar', 'automático — não existe voltar atrás')}
       ${L('Nova jornada', 'apaga a atual')}
@@ -79604,15 +80372,40 @@ const UI = {
 
   modalRegras(){
     this.modal('Regras do sistema', `
-      <h3>Combate</h3>
-      <div class="linha"><span class="k">Dano</span><span class="v">1d10 × (poder ÷ 10)</span></div>
-      <div class="linha"><span class="k">Crítico</span><span class="v">1d20 ≥ 20 − (Vel. base ÷ 40, até 3) → ×1,5</span></div>
-      <div class="linha"><span class="k">Precisão</span><span class="v">1d20 > (100 − precisão) ÷ 5</span></div>
-      <div class="linha"><span class="k">STAB</span><span class="v">×1,5</span></div>
-      <div class="linha"><span class="k">Eficácia de tipo</span><span class="v">0× / 0,5× / 2×</span></div>
-      <div class="linha"><span class="k">Fuga</span><span class="v">1d20 ≥ (Vel. selvagem − sua + 10)</span></div>
-      <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: 1d10 × 3 · você leva 25% de volta</span></div>
-      <p class="sussurro">Extensão do sistema: o dano também é multiplicado pela razão entre o Ataque do atacante e a Defesa do alvo, elevada a 1,15 e limitada entre 0,33× e 3,2×, senão os stats dos jogos não teriam efeito nenhum. Golpes de crítico alto tiram 3 do limite do d20. Ordem dos turnos é por Velocidade, com prioridade para golpes como Quick Attack.</p>
+      <h3>Combate — Pokérole</h3>
+      <p class="sussurro">O combate segue o Pokérole 3.0. Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso. A bandeja mostra cada parada com as faces, e o log mostra a conta.</p>
+      <div class="linha"><span class="k">Precisão</span><span class="v">atributo + perícia do golpe · precisa de 1 sucesso</span></div>
+      <div class="linha"><span class="k">Precisão baixa</span><span class="v">o golpe tira sucessos: Take Down 2, Sing 3, Horn Drill 5</span></div>
+      <div class="linha"><span class="k">Dor</span><span class="v">−1 sucesso com metade do HP ou menos · −2 com 1 de HP</span></div>
+      <div class="linha"><span class="k">Crítico</span><span class="v">3 sucessos além do necessário no Iniciante e no Novato · +1 por posto do Regular pra cima · crítico alto e Focus Energy tiram 1 · +2 dados de dano</span></div>
+      <div class="linha"><span class="k">Dano</span><span class="v">Força (físico) ou Especial + poder do golpe + 1 de STAB − Vitalidade (físico) ou Instinto (especial) · cada sucesso é 1 de dano</span></div>
+      <div class="linha"><span class="k">Zero sucesso</span><span class="v">1 de dano, e só</span></div>
+      <div class="linha"><span class="k">Tipo</span><span class="v">+1 por fraqueza · −1 por resistência · imune não sofre nada · golpe que acerta tira pelo menos 1</span></div>
+      <div class="linha"><span class="k">Ação dupla e tripla</span><span class="v">Double Kick, Triple Kick… cada acerto rola a sua parada</span></div>
+      <div class="linha"><span class="k">Ações sucessivas</span><span class="v">Fury Attack, Pin Missile… 1 acerto e mais 1 por sucesso sobrando na precisão, até 5</span></div>
+      <div class="linha"><span class="k">Pelo posto</span><span class="v">Seismic Toss, Night Shade, Psywave: 1, 2, 4, 6, 8 ou 10 dados pelo posto, ignorando a defesa</span></div>
+      <div class="linha"><span class="k">Dano fixo</span><span class="v">Dragon Rage 2 · Sonic Boom 1 · Super Fang: dados iguais à metade do HP que sobra, até 10</span></div>
+      <div class="linha"><span class="k">Efeito secundário</span><span class="v">dados de chance do livro: pega se algum d6 der 6 (Ember 1 dado, Body Slam 3)</span></div>
+      <div class="linha"><span class="k">Ordem</span><span class="v">prioridade primeiro · depois iniciativa: 1d6 na entrada + Destreza + Alerta</span></div>
+      <div class="linha"><span class="k">Fuga</span><span class="v">Destreza + Atletismo do seu contra os do selvagem · empate é seu</span></div>
+      <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: Força + 1 − Vitalidade · você leva 1 de volta</span></div>
+      <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe esquiva nem choque como reação: quem apanha não gasta a vez desviando.</p>
+
+      <h3>Atributos do Pokémon</h3>
+      <div class="linha"><span class="k">Força · FOR</span><span class="v">dano físico · precisão de golpe de impacto</span></div>
+      <div class="linha"><span class="k">Destreza · DES</span><span class="v">precisão da maioria dos golpes · iniciativa · fuga</span></div>
+      <div class="linha"><span class="k">Vitalidade · VIT</span><span class="v">desconta do dano físico · soma no HP</span></div>
+      <div class="linha"><span class="k">Especial · ESP</span><span class="v">dano especial · precisão de golpe de energia</span></div>
+      <div class="linha"><span class="k">Instinto · INS</span><span class="v">desconta do dano especial · acordar · resistir a confusão e paixão</span></div>
+      <div class="linha"><span class="k">HP</span><span class="v">HP base da espécie + Vitalidade · de 4 a uns 20</span></div>
+      <div class="linha"><span class="k">De onde partem</span><span class="v">o mínimo da espécie no livro · cada espécie tem um teto por atributo</span></div>
+      <div class="linha"><span class="k">Pontos por nível</span><span class="v">1 a cada 7 níveis, até 14 no nível 98</span></div>
+      <div class="linha"><span class="k">Pra onde vai o ponto</span><span class="v">pro atributo que a espécie mais usa, pesado pelos atributos base dos jogos · a natureza puxa ×1,3 pro que ela sobe e ×0,7 pro que ela desce · nunca passa do teto</span></div>
+      <div class="linha"><span class="k">Evoluir</span><span class="v">refaz a conta com o mínimo e o teto da forma nova</span></div>
+      <div class="linha"><span class="k">Posto</span><span class="v">Iniciante até o 9 · Novato 10 · Regular 20 · Avançado 35 · Especialista 50 · Ás 65 · Mestre 80 · Campeão 90</span></div>
+      <div class="linha"><span class="k">Perícias</span><span class="v">todas no teto do posto: 1 no Iniciante, até 5 do Especialista pra cima</span></div>
+      <div class="linha"><span class="k">Social e Vontade</span><span class="v">golpe de status que pede atributo social usa 1 + um ponto a cada três · Vontade é Instinto + 2</span></div>
+      <p class="sussurro">A Pokédex mostra, na ficha da espécie, de onde cada atributo parte e até onde vai; na ficha de um exemplar escaneado, onde ele está agora.</p>
 
       <h3>Onde a batalha acontece</h3>
       <p class="sussurro">O fundo do combate não é enfeite: ele sai do lugar. Cada ponto do mapa e cada capítulo têm um ambiente, e cada ambiente tem o seu cenário. Os nove ambientes escritos se agrupam em cinco arenas, que é o que decide o tipo de chão sob os pés. As duas bases embaixo dos lutadores seguem a arena — a sua fica maior e mais perto, a do outro lado menor e mais longe.</p>
@@ -79630,49 +80423,49 @@ const UI = {
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
-      <div class="linha"><span class="k">PAR · paralisado</span><span class="v">25% de perder a vez · velocidade pela metade</span></div>
-      <div class="linha"><span class="k">BRN · queimado</span><span class="v">perde 1/16 do HP máximo no fim do turno</span></div>
-      <div class="linha"><span class="k">PSN · envenenado</span><span class="v">perde 1/8 do HP máximo no fim do turno (1/6 no grave)</span></div>
-      <div class="linha"><span class="k">SLP · dormindo</span><span class="v">1 a 3 turnos sem agir</span></div>
+      <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
+      <div class="linha"><span class="k">BRN · queimado</span><span class="v">1 de dano no fim do turno</span></div>
+      <div class="linha"><span class="k">PSN · envenenado</span><span class="v">2 de dano no fim do turno · no grave, 2 a mais a cada turno (2, 4, 6…)</span></div>
+      <div class="linha"><span class="k">SLP · dormindo</span><span class="v">rola Instinto a cada vez · acorda quando somar 5 sucessos (Rest: 2)</span></div>
       <div class="linha"><span class="k">FRZ · congelado</span><span class="v">20% por turno de descongelar</span></div>
-      <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso não envenena e Gelo não congela.</p>
+      <p class="sussurro">Tipo Elétrico não paralisa, Fogo não queima, Venenoso e Metálico não envenenam e Gelo não congela. O congelado é regra da casa: no livro ele só sai quebrando o gelo por fora, e numa luta de um contra um isso não acaba nunca.</p>
       <h3>Estágios de atributo</h3>
       <div class="linha"><span class="k">Faixa</span><span class="v">de −6 a +6 · aparece na ficha de HP durante a luta</span></div>
-      <div class="linha"><span class="k">ATK, DEF, SPA, SPD, VEL</span><span class="v">×0,25 (−6) a ×4 (+6)</span></div>
-      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">×1/3 a ×3 · a precisão de quem ataca contra a evasão de quem apanha</span></div>
-      <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">só na chance dele: Aurora Beam 10%, Iron Tail 30%, Rock Smash 50%, Mud-Slap sempre</span></div>
+      <div class="linha"><span class="k">FOR, VIT, ESP, INS, DES</span><span class="v">cada estágio é 1 ponto no atributo · nenhum fica abaixo de 1</span></div>
+      <div class="linha"><span class="k">Precisão e evasão</span><span class="v">cada estágio é 1 sucesso a mais ou a menos · a precisão de quem ataca contra a evasão de quem apanha</span></div>
+      <div class="linha"><span class="k">Efeito de golpe de dano</span><span class="v">nos dados de chance do livro · golpe sem essa ficha segue a chance dos jogos</span></div>
 
       <h3>Estados que os golpes deixam</h3>
-      <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · às vezes se fere sozinho</span></div>
-      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1/16 do HP por turno · não foge nem troca</span></div>
-      <div class="linha"><span class="k">Leech Seed</span><span class="v">1/8 do HP por turno vai pra quem plantou · Grama não pega</span></div>
-      <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: ATK +1, DEF +1, VEL −1</span></div>
+      <div class="linha"><span class="k">Confusão</span><span class="v">2 a 5 turnos · no começo da vez, 2 sucessos de Instinto ignoram · senão −1 sucesso (−2 do Avançado ao Ás, −3 do Mestre pra cima), e golpe que erra tira 1 de quem usou</span></div>
+      <div class="linha"><span class="k">Preso</span><span class="v">Wrap, Bind, Clamp, Fire Spin · 2 a 5 turnos · 1 de dano por turno · não foge nem troca</span></div>
+      <div class="linha"><span class="k">Leech Seed</span><span class="v">1 de HP por turno vai pra quem plantou · Grama não pega</span></div>
+      <div class="linha"><span class="k">Curse</span><span class="v">Fantasma: gasta metade do HP e o outro perde 1/4 por turno · outros: FOR +1, VIT +1, DES −1</span></div>
       <div class="linha"><span class="k">Nightmare</span><span class="v">só em quem dorme · 1/4 do HP por turno enquanto dormir</span></div>
-      <div class="linha"><span class="k">Attract</span><span class="v">só entre sexos opostos · 50% de não atacar no turno</span></div>
+      <div class="linha"><span class="k">Attract</span><span class="v">só entre sexos opostos · o apaixonado bate com metade do dano, a menos que tire 3 sucessos de Instinto</span></div>
       <div class="linha"><span class="k">Disable</span><span class="v">trava o último golpe do outro por 2 a 7 turnos</span></div>
       <div class="linha"><span class="k">Substitute</span><span class="v">custa 1/4 do HP · o boneco apanha no lugar e segura golpe de status</span></div>
       <div class="linha"><span class="k">Protect, Detect, Endure</span><span class="v">agem antes de tudo · Endure fica com 1 de HP · usar seguido: metade da chance a cada vez</span></div>
-      <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · metade do dano físico / especial · crítico atravessa</span></div>
+      <div class="linha"><span class="k">Reflect / Light Screen</span><span class="v">5 turnos pro lado inteiro · +2 de Vitalidade / Instinto contra dano · crítico atravessa</span></div>
       <div class="linha"><span class="k">Mist / Safeguard</span><span class="v">5 turnos · ninguém baixa atributo / nenhuma condição pega, vindo do outro lado</span></div>
       <div class="linha"><span class="k">Haze</span><span class="v">zera os estágios dos dois lados</span></div>
-      <div class="linha"><span class="k">Focus Energy</span><span class="v">crítico 3 pontos mais perto no d20</span></div>
+      <div class="linha"><span class="k">Focus Energy</span><span class="v">o crítico pede 1 sucesso a menos</span></div>
       <div class="linha"><span class="k">Foresight</span><span class="v">tira a evasão que subiu · Normal e Lutador passam a acertar Fantasma</span></div>
       <div class="linha"><span class="k">Roar, Whirlwind</span><span class="v">agem por último · em selvagem acabam a luta · em treinador trocam o Pokémon dele</span></div>
       <div class="linha"><span class="k">Teleport</span><span class="v">sai de luta contra selvagem</span></div>
       <div class="linha"><span class="k">Transform</span><span class="v">vira cópia do outro: tipos, atributos (menos HP), golpes com 5 PP e estágios · desfaz no fim</span></div>
       <div class="linha"><span class="k">Mirror Move · Psych Up · Conversion</span><span class="v">repete o último golpe do outro · copia os estágios dele · vira do tipo de um golpe seu</span></div>
-      <div class="linha"><span class="k">Swagger</span><span class="v">ATK do outro +2 e confusão</span></div>
+      <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
-      <div class="linha"><span class="k">Fury Cutter</span><span class="v">dobra a cada acerto seguido, até 160</span></div>
-      <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 102 com moral 100 · 102 com moral 0</span></div>
+      <div class="linha"><span class="k">Fury Cutter</span><span class="v">+1 de poder a cada acerto seguido, até +4</span></div>
+      <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 5 com moral 100 · 5 com moral 0 (moral ÷ 20)</span></div>
       <p class="sussurro">Esses estados somem quando o Pokémon sai da luta; Reflect, Light Screen, Mist e Safeguard ficam no lado inteiro até acabar o tempo.</p>
 
       <h3>Clima</h3>
-      <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água ×1,5 · Fogo ×0,5</span></div>
-      <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo ×1,5 · Água ×0,5 · Solar Beam sem carregar</span></div>
-      <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · fere 1/8 do HP no fim do turno, menos Pedra, Terrestre e Metálico</span></div>
+      <div class="linha"><span class="k">Rain Dance · chuva</span><span class="v">5 turnos · Água +1 de poder · Fogo −1 de dano</span></div>
+      <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo +1 de poder · Água −1 de dano · Solar Beam sem carregar</span></div>
+      <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · 1 de dano no fim do turno, menos Pedra, Terrestre e Metálico · Pedra ganha +1 de Instinto</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
-      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = (Ataque dele ÷ 10) × 1d10. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
+      <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
       <div class="linha"><span class="k">Experiência por nocaute</span><span class="v">total de base do vencido × nível dele ÷ 22 (mínimo 6) · ×1,5 se era de treinador</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
@@ -79719,7 +80512,7 @@ const UI = {
       <div class="linha"><span class="k">Attract</span><span class="v">só pega em sexo oposto · sem sexo não se apaixona nem apaixona</span></div>
       <div class="linha"><span class="k">Par</span><span class="v">mesma linha de evolução (os dois Nidoran contam como uma) e sexos opostos, no mesmo time · cada um tem um par só</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">desobedece metade do que desobedeceria</span></div>
-      <div class="linha"><span class="k">Par cai na luta</span><span class="v">o outro entra com ATK +1 e SPA +1, uma vez por luta · vale pro time do adversário também</span></div>
+      <div class="linha"><span class="k">Par cai na luta</span><span class="v">o outro entra com FOR +1 e ESP +1, uma vez por luta · vale pro time do adversário também</span></div>
       <div class="linha"><span class="k">Par solto</span><span class="v">quem fica perde 10 de moral</span></div>
       <div class="linha"><span class="k">Par morre</span><span class="v">quem fica perde 20 de moral</span></div>
       <h3>Morte</h3>
@@ -79760,7 +80553,7 @@ const UI = {
       <h3>Brilhantes</h3>
       <div class="linha"><span class="k">Frequência</span><span class="v">cerca de 1 em 1000</span></div>
       <div class="linha"><span class="k">Sorte</span><span class="v">cada ponto aperta a conta — no máximo, 1 em 300</span></div>
-      <div class="linha"><span class="k">Status</span><span class="v">idênticos aos da espécie</span></div>
+      <div class="linha"><span class="k">Atributos</span><span class="v">idênticos aos da espécie</span></div>
       <p class="sussurro">A cor é a única diferença, e é a diferença inteira. Um brilhante avistado fica marcado na Pokédex mesmo que escape; capturado, a marca muda. Evoluir não tira a cor.</p>
 
       <h3>PokéNav</h3>
@@ -80903,7 +81696,6 @@ const Jogo = {
     if (!f.vestimenta) f.vestimenta = 'roupa comum e um casaco';
 
     Estado.novo(f);
-    Estado.dados.config.danoMult = f.ritmo === 'longo' ? 0.6 : 1;
     Estado.dados.config.ritmo = f.ritmo;
 
     Mundo.iniciar(f.cidade);

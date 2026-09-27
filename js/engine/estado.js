@@ -118,17 +118,17 @@ const ITENS_INFO = {
                   sabido:{master_quase_sempre:'Ela não falha. Você já viu.'}},
 
   /* ─────────── cura ─────────── */
-  'Potion':      {tipo:'cura', valor:20, cat:'Recuperação',
-                  ficha:'+20 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+  'Potion':      {tipo:'cura', valor:2, cat:'Recuperação',
+                  ficha:'+2 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
                   desc:'Fecha corte e tira dor. Não faz milagre.'},
-  'Super Potion':{tipo:'cura', valor:50, cat:'Recuperação',
-                  ficha:'+50 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+  'Super Potion':{tipo:'cura', valor:4, cat:'Recuperação',
+                  ficha:'+4 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
                   desc:'A mesma coisa, mais forte e mais cara.'},
-  'Hyper Potion':{tipo:'cura', valor:120, cat:'Recuperação',
-                  ficha:'+120 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
+  'Hyper Potion':{tipo:'cura', valor:14, cat:'Recuperação',
+                  ficha:'+14 HP em um Pokémon · em combate gasta o turno · não age em desmaiado',
                   desc:'Do tipo que hospital usa. Ninguém carrega por acaso.'},
-  'Água Fresca': {tipo:'cura', valor:35, cat:'Recuperação',
-                  ficha:'+35 HP em um Pokémon · em combate gasta o turno',
+  'Água Fresca': {tipo:'cura', valor:4, cat:'Recuperação',
+                  ficha:'+4 HP em um Pokémon · em combate gasta o turno',
                   desc:'Garrafa de máquina. Funciona melhor que devia, e ninguém sabe explicar.'},
   'Revive':      {tipo:'revive', cat:'Recuperação',
                   ficha:'Levanta um Pokémon desmaiado com HP máximo ÷ 2 · não age em morto',
@@ -195,23 +195,23 @@ const ITENS_INFO = {
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
   /* ─────────── segurados ─────────── */
-  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:0.07},
-                      ficha:'SEGURADO · recupera 7% do HP máximo no fim de cada turno',
+  'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
+                      ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',
                       desc:'Um saquinho amarrado no cinto com o que sobra da ração boa. Some devagar.'},
   'Faixa Firme':     {tipo:'equipar', cat:'Segurado', efeito:{aguenta:true},
                       ficha:'SEGURADO · uma vez por combate, sobrevive a um golpe fatal com 1 HP',
                       desc:'Faixa de algodão grossa amarrada no punho ou na pata. Não protege de nada. Aperta.'},
-  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1.15},
-                      ficha:'SEGURADO · +15% de dano em golpes físicos',
+  'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1},
+                      ficha:'SEGURADO · +1 dado de dano em golpes físicos',
                       desc:'Um peso de chumbo costurado numa tira de couro. Pesa e cansa e funciona.'},
-  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1.15},
-                      ficha:'SEGURADO · +15% de dano em golpes especiais',
+  'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1},
+                      ficha:'SEGURADO · +1 dado de dano em golpes especiais',
                       desc:'Lente de vidro grosso numa armação torta. Foi de alguém.'},
-  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:0.88},
-                      ficha:'SEGURADO · −12% de dano recebido',
+  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:1},
+                      ficha:'SEGURADO · +1 de Vitalidade e de Instinto contra dano',
                       desc:'Couro rachado, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
-  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:1.12},
-                      ficha:'SEGURADO · +12% de Velocidade para a ordem dos turnos',
+  'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:2},
+                      ficha:'SEGURADO · +2 de iniciativa pra ordem dos turnos',
                       desc:'Sola fina, quase gasta. Quem usa isso não planeja apanhar.'},
   'Sino Calmante':   {tipo:'equipar', cat:'Segurado', efeito:{moral:3},
                       ficha:'SEGURADO · +3 de moral ao fim de cada combate',
@@ -506,7 +506,7 @@ const Estado = {
       lendarios: {},          // {dex:{estado:'livre|capturado|solto|morto', disposicao:'neutro|hostil|passivo|desconfiado', encontros:n}}
       liga: {avisos:0, ordemDevolucao:false, detencao:false},
       mundo: {clima:'normal', instabilidade:0, eventos:[]},
-      config: {danoMult:1, ritmo:'fiel'},   // 'fiel' = 1d10×(poder÷10) puro
+      config: {ritmo:'fiel'},   // 'fiel' = HP do Pokérole · 'longo' = HP base em dobro
       via: 'neutro',          // heroi | mercenario | foragido | pesquisador
       viaAnterior: null,
       finaisVistos: [],
@@ -1089,6 +1089,10 @@ const Estado = {
       const raw = localStorage.getItem('pokerpg_save_' + slot);
       if (!raw) return false;
       this.dados = JSON.parse(raw);
+      /* save de antes do Pokérole: atributos dos jogos viram os do livro */
+      const d = this.dados;
+      for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || []))
+        if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
       return true;
     } catch(e){ return false; }
   },
