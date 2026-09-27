@@ -2492,6 +2492,9 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 @media(prefers-reduced-motion:reduce){.mapa-kanto .mp-no.aqui rect,.mapa-kanto .mp-no.aqui circle{animation:none}}
 .insignia-mini{width:20px;height:20px;object-fit:contain;margin-right:6px;vertical-align:middle}
 .btn.mini.som.mudo{opacity:.6;text-decoration:line-through}
+/* TM: quem não aprende fica visível, apagado — ver a porta fechada */
+.escolha.tm-alvo .sprite-icone{vertical-align:middle;margin-right:6px}
+.escolha.tm-alvo.nao{opacity:.5 !important;cursor:not-allowed}   /* !important: a animação de entrada do botão fixa opacity */
 
 </style>
 </head>
@@ -6583,7 +6586,7 @@ const ITENS_INFO = {
                      desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
   'Isca':           {tipo:'ferramenta', cat:'Ferramenta', ficha:'+20 pontos percentuais de chance ao pescar · consumida no uso',
                      desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
-  'Mapa de Kanto':  {tipo:'ferramenta', cat:'Ferramenta', ficha:'Mostra o destino do próximo arco na bússola da tela de mundo',
+  'Mapa de Kanto':  {tipo:'mapa', cat:'Ferramenta', ficha:'Abre o mapa da região: onde você já pisou e as estradas que saem de lá',
                      desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'}
 };
 
@@ -10635,7 +10638,7 @@ const GINASIOS = [
     {min:6, especies:[117, 62, 87, 131, 121, 130], variacoes:[55,119,99,80]}    // Seadra, Poliwrath, Dewgong, Lapras, Starmie, Gyarados
   ],
   efeito:'Lojas de Kanto passam a te vender o estoque de trás do balcão.',
-  premio:{dinheiro:2400, itens:{'Super Potion':2,'Great Ball':3}, rep:1},
+  premio:{dinheiro:2400, itens:{'Super Potion':2,'Great Ball':3,'TM11 Bubble Beam':1}, rep:1},
 
   recusa:d=>{
     const lavou = Estado.rep.eixo==='bom' && Estado.rep.bom >= 4;
@@ -10680,7 +10683,7 @@ const GINASIOS = [
     {min:6, especies:[101, 82, 125, 135, 26], variacoes:[26,82,101,135]}         // + Jolteon, Raichu de ace
   ],
   efeito:'Você aprende a ler uma sala antes de entrar nela. (+1 Percepção)',
-  premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3}, rep:1, status:'percepcao'},
+  premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3,'TM24 Thunderbolt':1}, rep:1, status:'percepcao'},
 
   intro:d=>[
     'O ginásio de Vermilion é um galpão de manutenção portuária adaptado. Tem gerador, tem cabo no chão, tem cheiro de ozônio.',
@@ -10716,7 +10719,7 @@ const GINASIOS = [
     {min:6, especies:[45, 71, 114, 103, 3], variacoes:[47,103,114,45]}           // Vileplume, Victreebel, Tangela, Exeggutor, Venusaur
   ],
   efeito:'Você passa a reconhecer veneno, remédio e o que há entre os dois. (+1 Intelecto)',
-  premio:{dinheiro:4200, itens:{'Full Heal':3,'Hyper Potion':1}, rep:1, status:'intelecto'},
+  premio:{dinheiro:4200, itens:{'Full Heal':3,'Hyper Potion':1,'TM21 Mega Drain':1}, rep:1, status:'intelecto'},
 
   recusa:d=>{
     const lavou = Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5;
@@ -10763,7 +10766,7 @@ const GINASIOS = [
     {min:6, especies:[42, 110, 89, 49, 73, 94], variacoes:[49,89,73,94]}       // + Venomoth, Tentacruel, Gengar
   ],
   efeito:'Seu corpo aprende a aguentar o que devia derrubar. (+1 Resistência)',
-  premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1}, rep:1, status:'resistencia'},
+  premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1,'TM06 Toxic':1}, rep:1, status:'resistencia'},
 
   intro:d=>[
     'O ginásio de Fuchsia tem parede falsa, corredor cego e piso que range de propósito. Você leva onze minutos pra achar o líder num prédio de quarenta metros.',
@@ -10799,7 +10802,7 @@ const GINASIOS = [
     {min:6, especies:[64, 97, 122, 80, 121, 65], variacoes:[80,97,121,65]}      // + Slowbro, Starmie, Alakazam
   ],
   efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 Carisma)',
-  premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2}, rep:1, status:'carisma'},
+  premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2,'TM46 Psywave':1}, rep:1, status:'carisma'},
 
   recusa:d=>{
     if (d.flags.destruiu_o_11){
@@ -10847,7 +10850,7 @@ const GINASIOS = [
     {min:6, especies:[38, 78, 126, 136, 59, 6], variacoes:[38,78,126,136]}       // + Flareon, Arcanine, Charizard
   ],
   efeito:'Você passa a improvisar quando o plano falha. (+1 Sorte)',
-  premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2}, rep:1, status:'sorte'},
+  premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2,'TM38 Fire Blast':1}, rep:1, status:'sorte'},
 
   intro:d=>[
     'O ginásio de Cinnabar sobreviveu ao incêndio porque fica do outro lado da ilha. Blaine dá aula de física numa lousa quando você entra.',
@@ -11315,8 +11318,9 @@ const LOJAS = {
        ar:'Balcão de informações, guarda-volumes e um mapa dos andares em acrílico com uma seta que diz VOCÊ ESTÁ AQUI e está no andar errado.',
        itens:['Mapa de Kanto','Caderno de campo','Pilha','Câmera descartável']},
       {n:2, nome:'2º · Artigos de treinador',
-       ar:'Prateleira de bola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende.',
-       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca']},
+       ar:'Prateleira de bola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende. No fundo, um expositor giratório de discos de TM com um cadeado que ninguém lembra a senha.',
+       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca',
+              'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect']},
       {n:3, nome:'3º · Cuidados',
        ar:'Cheiro de farmácia. Tem uma funcionária de jaleco que explica a diferença entre Potion e Super Potion umas quarenta vezes por dia e não perdeu a paciência ainda.',
        itens:['Potion','Super Potion','Hyper Potion','Antidote','Full Heal','Revive','Bandagem','Éter','Elixir']},
@@ -11334,6 +11338,7 @@ const LOJAS = {
        itens:['Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']}
     ],
     itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
+           'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
            'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']
   },
@@ -11713,6 +11718,116 @@ const Trocas = {
     Exploracao.tela(avisos);
   }
 };
+
+
+/* ===== js/data/tms.js ===== */
+/* ============================================================
+   TM — MÁQUINAS TÉCNICAS
+   As cinquenta de Red/Blue, com o número dos jogos. Seis não entram
+   porque o golpe não existe aqui (Razor Wind, Fissure, Mimic, Bide,
+   Egg Bomb, Soft-Boiled): o número fica vago, como um furo na
+   prateleira, e não é reaproveitado por outro golpe.
+
+   Quem aprende o quê é a tabela dos jogos: TM de Gen 1 ou de Gen 2
+   no learnset da espécie (dados do Pokémon Showdown, mods gen1/gen2,
+   código 1M/2M). HM não existe neste jogo, então nada aqui é HM.
+
+   Como nos jogos da época, a TM some quando ensina. Se o Pokémon não
+   aprende, ou se você desiste na hora de esquecer um golpe, ela fica.
+   ============================================================ */
+const TM_LISTA = [
+  [1,'Mega Punch'], [3,'Swords Dance'], [4,'Whirlwind'], [5,'Mega Kick'], [6,'Toxic'], [7,'Horn Drill'],
+  [8,'Body Slam'], [9,'Take Down'], [10,'Double-Edge'], [11,'Bubble Beam'], [12,'Water Gun'], [13,'Ice Beam'],
+  [14,'Blizzard'], [15,'Hyper Beam'], [16,'Pay Day'], [17,'Submission'], [18,'Counter'], [19,'Seismic Toss'],
+  [20,'Rage'], [21,'Mega Drain'], [22,'Solar Beam'], [23,'Dragon Rage'], [24,'Thunderbolt'], [25,'Thunder'],
+  [26,'Earthquake'], [28,'Dig'], [29,'Psychic'], [30,'Teleport'], [32,'Double Team'], [33,'Reflect'],
+  [35,'Metronome'], [36,'Self-Destruct'], [38,'Fire Blast'], [39,'Swift'], [40,'Skull Bash'], [42,'Dream Eater'],
+  [43,'Sky Attack'], [44,'Rest'], [45,'Thunder Wave'], [46,'Psywave'], [47,'Explosion'], [48,'Rock Slide'],
+  [49,'Tri Attack'], [50,'Substitute'],
+];
+
+/* número de dex → números de TM que a espécie aprende */
+const TM_COMPAT = {
+1:'3,6,8,9,10,20,21,22,32,33,44,50', 2:'3,6,8,9,10,20,21,22,32,33,44,50', 3:'3,6,8,9,10,15,20,21,22,32,33,44,50', 4:'1,3,5,6,8,9,10,17,18,19,20,23,28,32,33,38,39,40,44,50', 5:'1,3,5,6,8,9,10,17,18,19,20,23,28,32,33,38,39,40,44,50', 6:'1,3,5,6,8,9,10,15,17,18,19,20,23,26,28,32,33,38,39,40,44,50',
+7:'1,5,6,8,9,10,11,12,13,14,17,18,19,20,28,32,33,40,44,50', 8:'1,5,6,8,9,10,11,12,13,14,17,18,19,20,28,32,33,40,44,50', 9:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,26,28,32,33,40,44,50', 10:'', 11:'', 12:'4,6,9,10,15,20,21,22,29,30,32,33,39,44,46,50',
+13:'', 14:'', 15:'3,6,9,10,15,20,21,32,33,39,40,44,50', 16:'4,6,9,10,20,32,33,39,43,44,50', 17:'4,6,9,10,20,32,33,39,43,44,50', 18:'4,6,9,10,15,20,32,33,39,43,44,50',
+19:'6,8,9,10,11,12,14,20,24,25,28,32,39,40,44,50', 20:'6,8,9,10,11,12,13,14,15,20,24,25,28,32,39,40,44,50', 21:'4,6,9,10,20,32,39,43,44,50', 22:'4,6,9,10,15,20,32,39,43,44,50', 23:'6,8,9,10,20,21,26,28,32,40,44,48,50', 24:'6,8,9,10,15,20,21,26,28,32,40,44,48,50',
+25:'1,5,6,8,9,10,16,17,19,20,24,25,32,33,39,40,44,45,50', 26:'1,5,6,8,9,10,15,16,17,19,20,24,25,32,33,39,40,44,45,50', 27:'3,6,8,9,10,17,19,20,26,28,32,39,40,44,48,50', 28:'3,6,8,9,10,15,17,19,20,26,28,32,39,40,44,48,50', 29:'6,8,9,10,14,20,24,25,32,33,40,44,50', 30:'6,7,8,9,10,11,12,13,14,20,24,25,32,33,40,44,50',
+31:'1,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,24,25,26,32,33,38,40,44,48,50', 32:'6,7,8,9,10,14,20,24,25,32,33,40,44,50', 33:'6,7,8,9,10,11,12,13,14,20,24,25,32,33,40,44,50', 34:'1,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,24,25,26,32,33,38,40,44,48,50', 35:'1,5,6,8,9,10,11,12,13,14,17,18,19,20,22,24,25,29,30,32,33,35,38,40,42,44,45,46,49,50', 36:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,22,24,25,29,30,32,33,35,38,40,42,44,45,46,49,50',
+37:'6,8,9,10,20,28,32,33,38,39,40,44,50', 38:'6,8,9,10,15,20,28,32,33,38,39,40,44,50', 39:'1,5,6,8,9,10,11,12,13,14,17,18,19,20,22,24,25,29,30,32,33,38,40,42,44,45,46,49,50', 40:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,22,24,25,29,30,32,33,38,40,42,44,45,46,49,50', 41:'4,6,9,10,20,21,32,39,44,50', 42:'4,6,9,10,15,20,21,32,39,44,50',
+43:'3,6,9,10,20,21,22,32,33,44,50', 44:'3,6,9,10,20,21,22,32,33,44,50', 45:'3,6,8,9,10,15,20,21,22,32,33,44,50', 46:'3,6,8,9,10,20,21,22,28,32,33,40,44,50', 47:'3,6,8,9,10,15,20,21,22,28,32,33,40,44,50', 48:'6,9,10,20,21,22,29,32,33,39,44,46,50',
+49:'4,6,9,10,15,20,21,22,29,30,32,33,39,44,46,50', 50:'6,8,9,10,20,26,28,32,44,48,50', 51:'6,8,9,10,15,20,26,28,32,44,48,50', 52:'6,8,9,10,11,12,16,20,24,25,32,39,40,42,44,50', 53:'6,8,9,10,11,12,15,16,20,24,25,32,39,40,42,44,50', 54:'1,5,6,8,9,10,11,12,13,14,16,17,18,19,20,28,32,39,40,44,50',
+55:'1,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,28,32,39,40,44,50', 56:'1,5,6,8,9,10,16,17,18,19,20,24,25,28,32,35,39,40,44,48,50', 57:'1,5,6,8,9,10,15,16,17,18,19,20,24,25,28,32,35,39,40,44,48,50', 58:'6,8,9,10,20,23,28,32,33,38,39,40,44,50', 59:'6,8,9,10,15,20,23,28,30,32,33,38,39,40,44,50', 60:'6,8,9,10,11,12,13,14,20,29,32,40,44,46,50',
+61:'1,5,6,8,9,10,11,12,13,14,17,18,19,20,26,29,32,35,40,44,46,50', 62:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,26,29,32,35,40,44,46,50', 63:'1,5,6,8,9,10,17,18,19,20,29,30,32,33,35,40,42,44,45,46,49,50', 64:'1,5,6,8,9,10,17,18,19,20,28,29,30,32,33,35,40,42,44,45,46,49,50', 65:'1,5,6,8,9,10,15,17,18,19,20,28,29,30,32,33,35,40,42,44,45,46,49,50', 66:'1,5,6,8,9,10,17,18,19,20,26,28,32,35,38,40,44,48,50',
+67:'1,5,6,8,9,10,17,18,19,20,26,28,32,35,38,40,44,48,50', 68:'1,5,6,8,9,10,15,17,18,19,20,26,28,32,35,38,40,44,48,50', 69:'3,6,9,10,20,21,22,32,33,44,50', 70:'3,6,9,10,20,21,22,32,33,44,50', 71:'3,6,8,9,10,15,20,21,22,32,33,44,50', 72:'3,6,9,10,11,12,13,14,20,21,32,33,40,44,50',
+73:'3,6,9,10,11,12,13,14,15,20,21,32,33,40,44,50', 74:'1,6,8,9,10,17,18,19,20,26,28,32,35,36,38,44,47,48,50', 75:'1,6,8,9,10,17,18,19,20,26,28,32,35,36,38,44,47,48,50', 76:'1,5,6,8,9,10,15,17,18,19,20,26,28,32,35,36,38,44,47,48,50', 77:'6,7,8,9,10,20,32,33,38,39,40,44,50', 78:'6,7,8,9,10,15,20,32,33,38,39,40,44,50',
+79:'6,8,9,10,11,12,13,14,16,20,26,28,29,30,32,33,38,39,40,42,44,45,46,49,50', 80:'1,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,26,28,29,30,32,33,38,39,40,42,44,45,46,49,50', 81:'6,9,10,20,24,25,30,32,33,39,44,45,50', 82:'6,9,10,15,20,24,25,30,32,33,39,44,45,50', 83:'3,4,6,8,9,10,20,32,33,39,40,44,50', 84:'4,6,8,9,10,20,32,33,39,40,43,44,49,50',
+85:'4,6,8,9,10,15,20,32,33,39,40,43,44,49,50', 86:'6,7,8,9,10,11,12,13,14,16,20,32,40,44,50', 87:'6,7,8,9,10,11,12,13,14,15,16,20,32,40,44,50', 88:'6,8,20,21,24,25,32,36,38,44,47,50', 89:'6,8,15,20,21,24,25,32,36,38,44,47,50', 90:'6,9,10,11,12,13,14,20,30,32,33,36,39,44,47,49,50',
+91:'6,9,10,11,12,13,14,15,20,30,32,33,36,39,44,47,49,50', 92:'6,20,21,24,25,29,32,36,42,44,46,47,50', 93:'6,20,21,24,25,29,32,36,42,44,46,47,50', 94:'1,5,6,8,9,10,15,17,18,19,20,21,24,25,29,32,35,36,40,42,44,46,47,50', 95:'6,8,9,10,20,26,28,32,36,40,44,47,48,50', 96:'1,5,6,8,9,10,17,18,19,20,29,30,32,33,35,40,42,44,45,46,49,50',
+97:'1,5,6,8,9,10,15,17,18,19,20,29,30,32,33,35,40,42,44,45,46,49,50', 98:'3,6,8,9,10,11,12,13,14,20,32,44,50', 99:'3,6,8,9,10,11,12,13,14,15,20,32,44,50', 100:'6,9,20,24,25,30,32,33,36,39,44,45,47,50', 101:'6,9,15,20,24,25,30,32,33,36,39,40,44,45,47,50', 102:'6,9,10,20,22,29,30,32,33,36,42,44,46,47,50',
+103:'6,9,10,15,20,21,22,29,30,32,33,36,42,44,46,47,50', 104:'1,5,6,8,9,10,11,12,13,14,17,18,19,20,26,28,32,38,40,44,50', 105:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,26,28,32,38,40,44,50', 106:'1,5,6,8,9,10,17,18,19,20,32,35,39,40,44,50', 107:'1,5,6,8,9,10,17,18,19,20,32,35,39,40,44,50', 108:'1,3,5,6,8,9,10,11,12,13,14,15,17,18,19,20,24,25,26,32,38,40,42,44,50',
+109:'6,20,24,25,32,36,38,44,47,50', 110:'6,15,20,24,25,32,36,38,44,47,50', 111:'6,7,8,9,10,14,20,24,25,26,28,32,38,40,44,48,50', 112:'1,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,24,25,26,28,32,38,40,44,48,50', 113:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,22,24,25,29,30,32,33,35,38,40,42,44,45,46,49,50', 114:'3,6,8,9,10,15,20,21,22,32,40,44,50',
+115:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,24,25,26,32,38,40,44,48,50', 116:'6,9,10,11,12,13,14,20,32,39,40,44,50', 117:'6,9,10,11,12,13,14,15,20,32,39,40,44,50', 118:'6,7,9,10,11,12,13,14,20,32,39,40,44,50', 119:'6,7,9,10,11,12,13,14,15,20,32,39,40,44,50', 120:'6,9,10,11,12,13,14,20,24,25,29,30,32,33,39,40,44,45,46,49,50',
+121:'6,9,10,11,12,13,14,15,20,24,25,29,30,32,33,39,40,42,44,45,46,49,50', 122:'1,5,6,8,9,10,15,17,18,19,20,22,24,25,29,30,32,33,35,40,42,44,45,46,50', 123:'3,6,9,10,15,20,32,39,40,44,50', 124:'1,5,6,8,9,10,11,12,13,14,15,17,18,19,20,29,30,32,33,35,40,42,44,46,50', 125:'1,5,6,8,9,10,15,17,18,19,20,24,25,29,30,32,33,35,39,40,44,45,46,50', 126:'1,5,6,8,9,10,15,17,18,19,20,29,30,32,35,38,40,44,46,50',
+127:'3,6,8,9,10,15,17,19,20,32,44,50', 128:'6,7,8,9,10,13,14,15,20,24,25,26,32,38,40,44,50', 129:'', 130:'6,8,9,10,11,12,13,14,15,20,23,24,25,32,33,38,40,44,50', 131:'6,7,8,9,10,11,12,13,14,15,20,22,23,24,25,29,32,33,40,42,44,46,50', 132:'',
+133:'6,8,9,10,20,32,33,39,40,44,50', 134:'6,8,9,10,11,12,13,14,15,20,32,33,39,40,44,50', 135:'6,8,9,10,15,20,24,25,32,33,39,40,44,45,50', 136:'6,8,9,10,15,20,32,33,38,39,40,44,50', 137:'6,9,10,13,14,15,20,24,25,29,30,32,33,39,40,42,44,45,46,49,50', 138:'6,8,9,10,11,12,13,14,20,32,33,44,50',
+139:'6,7,8,9,10,11,12,13,14,15,17,19,20,32,33,40,44,50', 140:'6,8,9,10,11,12,13,14,20,32,33,44,50', 141:'3,5,6,8,9,10,11,12,13,14,15,17,19,20,32,33,40,44,50', 142:'4,6,9,10,15,20,23,26,32,33,38,39,43,44,50', 143:'1,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,22,24,25,26,29,32,33,35,36,38,40,44,46,48,50', 144:'4,6,9,10,11,12,13,14,15,20,32,33,39,43,44,50',
+145:'4,6,9,10,15,20,24,25,32,33,39,43,44,45,50', 146:'4,6,9,10,15,20,32,33,38,39,43,44,50', 147:'6,8,9,10,11,12,13,14,20,23,24,25,32,33,38,39,40,44,45,50', 148:'6,7,8,9,10,11,12,13,14,20,23,24,25,32,33,38,39,40,44,45,50', 149:'6,7,8,9,10,11,12,13,14,15,20,23,24,25,32,33,38,39,40,44,45,50', 150:'1,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,22,24,25,29,30,32,33,35,36,38,39,40,42,44,45,46,49,50',
+151:'1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,28,29,30,32,33,35,36,38,39,40,42,43,44,45,46,47,48,49,50', 152:'6,22,32,44', 153:'6,22,32,44', 154:'6,15,22,26,32,44', 155:'6,28,32,38,39,44', 156:'6,28,32,38,39,44',
+157:'6,15,26,28,32,38,39,44', 158:'6,14,28,32,44', 159:'6,14,28,32,44', 160:'6,14,15,26,28,32,44', 161:'6,28,32,39,44', 162:'6,15,28,32,39,44',
+163:'6,32,39,42,44', 164:'6,15,32,39,42,44', 165:'6,22,28,32,39,44', 166:'6,15,22,28,32,39,44', 167:'6,22,28,29,32,44', 168:'6,15,22,28,29,32,44',
+169:'6,15,32,39,44', 170:'6,25,32,44', 171:'6,15,25,32,44', 172:'6,25,32,39,44', 173:'6,22,29,32,38,42,44', 174:'6,22,29,32,38,42,44',
+175:'6,22,29,32,38,39,42,44', 176:'6,15,22,29,32,38,39,42,44', 177:'6,22,29,32,39,42,44', 178:'6,15,22,29,32,39,42,44', 179:'6,25,32,39,44', 180:'6,25,32,39,44',
+181:'6,15,25,32,39,44', 182:'6,15,22,32,44', 183:'6,14,32,39,44', 184:'6,14,15,32,39,44', 185:'6,26,28,32,44', 186:'6,14,15,26,29,32,44',
+187:'6,22,32,44', 188:'6,22,32,44', 189:'6,15,22,32,44', 190:'6,25,32,39,42,44', 191:'6,22,32,44', 192:'6,15,22,32,44',
+193:'6,22,32,39,44', 194:'6,26,28,32,44', 195:'6,15,26,28,32,44', 196:'6,15,29,32,39,42,44', 197:'6,15,29,32,39,42,44', 198:'6,32,39,42,44',
+199:'6,14,15,26,28,29,32,38,39,42,44', 200:'6,25,29,32,39,42,44', 201:'', 202:'', 203:'6,25,26,29,32,39,42,44', 204:'6,22,32,44',
+205:'6,15,22,32,44', 206:'6,22,25,28,32,42,44', 207:'6,32,39,44', 208:'6,15,26,28,32,44', 209:'6,25,32,44', 210:'6,15,25,32,44',
+211:'6,14,32,39,44', 212:'6,15,32,39,44', 213:'6,26,28,32,44', 214:'6,26,32,44', 215:'6,14,28,32,39,42,44', 216:'6,26,28,32,39,44',
+217:'6,15,26,28,32,39,44', 218:'6,32,38,44', 219:'6,15,26,32,38,44', 220:'6,14,26,32,44', 221:'6,14,15,26,32,44', 222:'6,26,29,32,44',
+223:'6,15,32,39,44', 224:'6,15,32,39,44', 225:'6,14,32,39,44', 226:'6,14,32,39,44', 227:'6,32,39,44', 228:'6,22,32,38,39,42,44',
+229:'6,15,22,32,38,39,42,44', 230:'6,14,15,32,39,44', 231:'6,26,32,44', 232:'6,15,26,32,44', 233:'6,14,15,25,29,32,39,42,44', 234:'6,26,29,32,39,42,44',
+235:'', 236:'6,32,39,44', 237:'6,28,32,39,44', 238:'6,14,29,32,42,44', 239:'6,25,29,32,39,44', 240:'6,29,32,38,44',
+241:'6,14,15,25,26,32,44', 242:'6,14,15,22,25,29,32,38,42,44', 243:'6,15,25,28,32,39,44', 244:'6,15,22,28,32,38,39,44', 245:'6,14,15,28,32,39,44', 246:'6,15,26,28,32,44',
+247:'6,15,26,28,32,44', 248:'6,15,26,28,32,38,44', 249:'6,14,15,25,26,29,32,39,42,44', 250:'6,15,22,25,26,29,32,38,39,42,44', 251:'6,15,22,29,32,39,42,44',
+};
+
+function nomeDaTM(num){
+  const t = TM_LISTA.find(x => x[0] === num);
+  return t ? 'TM' + String(num).padStart(2, '0') + ' ' + t[1] : null;
+}
+/* 'TM24 Thunderbolt' → {num:24, golpe:'Thunderbolt'} */
+function tmDoItem(nome){
+  const m = /^TM(\d{2}) (.+)$/.exec(nome || '');
+  return m ? {num:+m[1], golpe:m[2]} : null;
+}
+function aprendeTM(p, nomeItem){
+  const t = tmDoItem(nomeItem);
+  if (!t || !p) return false;
+  return (TM_COMPAT[p.dex] || '').split(',').includes(String(t.num));
+}
+
+/* Cada TM vira item de mochila, com ficha no mesmo formato das outras */
+(function(){
+  const CAT = {fis:'físico', esp:'especial', status:'status'};
+  for (const [num, golpe] of TM_LISTA){
+    const g = GOLPES[golpe];
+    if (!g) continue;
+    const poder = (g.c === 'status' || !g.p) ? '' : ' · poder ' + g.p;
+    ITENS_INFO[nomeDaTM(num)] = {
+      tipo:'tm', cat:'Máquina', golpe, num,
+      ficha: 'Ensina ' + golpe + ' · ' + g.t + ' · ' + CAT[g.c] + poder + ' · some ao ensinar'
+    };
+  }
+})();
+
+/* Onde se compra: a Grande Loja de Celadon, como nos jogos, pelo preço
+   de lá. Os outros discos saem de líder de ginásio. */
+const TM_A_VENDA = {1:3000, 5:3000, 7:2000, 9:3000, 17:3000, 18:3000, 32:1000, 33:1000};
+for (const [num, preco] of Object.entries(TM_A_VENDA)){
+  const n = nomeDaTM(+num);
+  if (n) PRECO_BASE[n] = preco;
+}
 
 
 /* ===== js/story/lugares.js ===== */
@@ -77490,7 +77605,7 @@ const UI = {
         '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
         false, 'mochila');
 
-    const ORDEM = ['Captura','Recuperação','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
+    const ORDEM = ['Captura','Recuperação','Máquina','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
     const grupos = {};
     itens.forEach(([n,q]) => {
       const c = categoriaItem(n);
@@ -77500,7 +77615,8 @@ const UI = {
     const corpo = ORDEM.filter(c => grupos[c]).map(c => {
       const linhas = grupos[c].map(([n,q]) => {
         const info = ITENS_INFO[n] || {};
-        const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
+        const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos','tm'].includes(info.tipo)
+                        || (info.tipo === 'mapa' && Estado.dados.modo === 'mundo'))
                        && Estado.dados.modo !== 'batalha';
         const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
         const ebolsa = info.tipo === 'bolsa';
@@ -77533,6 +77649,47 @@ const UI = {
     Estado.dados.jogador.bolsa = nome;
     Estado.salvar('auto');
     this.modalItens();
+  },
+
+  /* ---------- TM ----------
+     Como nos jogos: a lista do time diz na hora quem aprende e quem não
+     aprende. Quem já sabe quatro golpes escolhe qual esquecer, e a TM só
+     some se o golpe ficar. */
+  ensinarTM(nome){
+    const info = ITENS_INFO[nome] || {};
+    const golpe = info.golpe;
+    const time = (Estado.dados.time || []).filter(p => !p.morto);
+    const linhas = time.map(p => {
+      const sabe = p.golpes.some(g => g.nome === golpe);
+      const pode = aprendeTM(p, nome);
+      const estado = sabe ? 'já sabe' : (pode ? 'aprende' : 'não aprende');
+      return `<button class="escolha com-item tm-alvo${pode && !sabe ? '' : ' nao'}" ${pode && !sabe ? '' : 'disabled'}
+        onclick="UI.ensinarTMa('${p.uid}','${nome.replace(/'/g, "\\'")}')">
+        ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))} <span class="pd">Nv ${p.nivel} · ${estado}</span></button>`;
+    }).join('');
+    this.modal(nome, `<div class="aprender-novo">${this.cartaoGolpe(golpe)}</div>
+      <p class="sussurro">Ensinar pra quem?</p>${linhas || '<p class="nada">Ninguém no time.</p>'}`, false, 'mochila');
+  },
+  ensinarTMa(uid, nome){
+    const p = (Estado.dados.time || []).find(x => x.uid === uid);
+    const golpe = (ITENS_INFO[nome] || {}).golpe;
+    if (!p || !golpe || !aprendeTM(p, nome) || !Estado.contaItem(nome)) return;
+    const quem = this.esc(nomeExib(p));
+    const pronto = (velho) => {
+      Estado.usarItem(nome);
+      Estado.registrar(`${nomeExib(p)} aprendeu ${golpe} com a ${nome}.`);
+      Estado.salvar('auto');
+      this.modal('', `${velho ? `<p>1, 2 e… pronto! ${quem} esqueceu <b>${this.esc(velho)}</b>.</p>` : ''}
+        <p>E… ${quem} aprendeu <b>${this.esc(golpe)}</b>!</p>`, false, 'mochila');
+    };
+    if (p.golpes.length < 4){ ofertarGolpe(p, golpe); return pronto(null); }
+    this.perguntarGolpe(p, golpe, 'modal', (i) => {
+      if (i < 0){
+        aprenderNoLugar(p, golpe, -1);
+        return this.modal('', `<p>${quem} não aprendeu ${this.esc(golpe)}.</p><p class="sussurro">A ${this.esc(nome)} continua na mochila.</p>`, false, 'mochila');
+      }
+      pronto(aprenderNoLugar(p, golpe, i));
+    });
   },
 
   /* ---------- EQUIPAR ---------- */
@@ -77574,6 +77731,8 @@ const UI = {
     const info = ITENS_INFO[nome] || {};
     const d = Estado.dados;
     if (!Estado.contaItem(nome)) return;
+    if (info.tipo === 'tm') return this.ensinarTM(nome);
+    if (info.tipo === 'mapa') return Exploracao.mapa();
 
     if (info.tipo === 'curaJogador'){
       Estado.usarItem(nome); Estado.curarJogador(info.valor); Estado.salvar('auto');
@@ -78369,6 +78528,12 @@ const UI = {
       <div class="linha"><span class="k">Relembrador de golpes</span><span class="v">Cerulean, Celadon e Planalto Indigo · 1.000 ₽ por golpe aprendido</span></div>
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
+      <h3>TM</h3>
+      <div class="linha"><span class="k">Quais</span><span class="v">as de Red/Blue, com o número dos jogos · 44 das 50 (seis golpes não existem aqui)</span></div>
+      <div class="linha"><span class="k">Quem aprende</span><span class="v">a tabela de TM da espécie nos jogos de Game Boy</span></div>
+      <div class="linha"><span class="k">Uso</span><span class="v">fora de batalha, pela mochila · some ao ensinar · desistiu, ela fica</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio de seis líderes de ginásio</span></div>
+
       <h3>Fim da batalha</h3>
       <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do adversário, dinheiro e captura que foi pro PC</span></div>
       <div class="linha"><span class="k">Líder de ginásio</span><span class="v">prêmio do ginásio · revanche: 900 + 420 por insígnia</span></div>
@@ -78506,7 +78671,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
-      <div class="linha"><span class="k">Mapa</span><span class="v">mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila · mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
       <p class="sussurro">Não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
 
       <h3>Trocas</h3>
@@ -79092,7 +79257,7 @@ const Exploracao = {
       <div class="escolhas">${afazeres}</div>
 
       <h3 class="com-mapa">Para onde ir
-        <button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button></h3>
+        ${Estado.contaItem('Mapa de Kanto') ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button>` : ''}</h3>
       <div class="escolhas">${vizinhos}</div>
     </div>`);
 

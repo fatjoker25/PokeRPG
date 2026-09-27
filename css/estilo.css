@@ -2483,3 +2483,6 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 @media(prefers-reduced-motion:reduce){.mapa-kanto .mp-no.aqui rect,.mapa-kanto .mp-no.aqui circle{animation:none}}
 .insignia-mini{width:20px;height:20px;object-fit:contain;margin-right:6px;vertical-align:middle}
 .btn.mini.som.mudo{opacity:.6;text-decoration:line-through}
+/* TM: quem não aprende fica visível, apagado — ver a porta fechada */
+.escolha.tm-alvo .sprite-icone{vertical-align:middle;margin-right:6px}
+.escolha.tm-alvo.nao{opacity:.5 !important;cursor:not-allowed}   /* !important: a animação de entrada do botão fixa opacity */

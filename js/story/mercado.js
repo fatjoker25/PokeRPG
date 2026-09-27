@@ -74,8 +74,9 @@ const LOJAS = {
        ar:'Balcão de informações, guarda-volumes e um mapa dos andares em acrílico com uma seta que diz VOCÊ ESTÁ AQUI e está no andar errado.',
        itens:['Mapa de Kanto','Caderno de campo','Pilha','Câmera descartável']},
       {n:2, nome:'2º · Artigos de treinador',
-       ar:'Prateleira de bola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende.',
-       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca']},
+       ar:'Prateleira de bola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende. No fundo, um expositor giratório de discos de TM com um cadeado que ninguém lembra a senha.',
+       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca',
+              'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect']},
       {n:3, nome:'3º · Cuidados',
        ar:'Cheiro de farmácia. Tem uma funcionária de jaleco que explica a diferença entre Potion e Super Potion umas quarenta vezes por dia e não perdeu a paciência ainda.',
        itens:['Potion','Super Potion','Hyper Potion','Antidote','Full Heal','Revive','Bandagem','Éter','Elixir']},
@@ -93,6 +94,7 @@ const LOJAS = {
        itens:['Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']}
     ],
     itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
+           'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
            'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']
   },

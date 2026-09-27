@@ -2588,7 +2588,7 @@ const UI = {
         '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
         false, 'mochila');
 
-    const ORDEM = ['Captura','Recuperação','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
+    const ORDEM = ['Captura','Recuperação','Máquina','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
     const grupos = {};
     itens.forEach(([n,q]) => {
       const c = categoriaItem(n);
@@ -2598,7 +2598,8 @@ const UI = {
     const corpo = ORDEM.filter(c => grupos[c]).map(c => {
       const linhas = grupos[c].map(([n,q]) => {
         const info = ITENS_INFO[n] || {};
-        const usavel = ['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos'].includes(info.tipo)
+        const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos','tm'].includes(info.tipo)
+                        || (info.tipo === 'mapa' && Estado.dados.modo === 'mundo'))
                        && Estado.dados.modo !== 'batalha';
         const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
         const ebolsa = info.tipo === 'bolsa';
@@ -2631,6 +2632,47 @@ const UI = {
     Estado.dados.jogador.bolsa = nome;
     Estado.salvar('auto');
     this.modalItens();
+  },
+
+  /* ---------- TM ----------
+     Como nos jogos: a lista do time diz na hora quem aprende e quem não
+     aprende. Quem já sabe quatro golpes escolhe qual esquecer, e a TM só
+     some se o golpe ficar. */
+  ensinarTM(nome){
+    const info = ITENS_INFO[nome] || {};
+    const golpe = info.golpe;
+    const time = (Estado.dados.time || []).filter(p => !p.morto);
+    const linhas = time.map(p => {
+      const sabe = p.golpes.some(g => g.nome === golpe);
+      const pode = aprendeTM(p, nome);
+      const estado = sabe ? 'já sabe' : (pode ? 'aprende' : 'não aprende');
+      return `<button class="escolha com-item tm-alvo${pode && !sabe ? '' : ' nao'}" ${pode && !sabe ? '' : 'disabled'}
+        onclick="UI.ensinarTMa('${p.uid}','${nome.replace(/'/g, "\\'")}')">
+        ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))} <span class="pd">Nv ${p.nivel} · ${estado}</span></button>`;
+    }).join('');
+    this.modal(nome, `<div class="aprender-novo">${this.cartaoGolpe(golpe)}</div>
+      <p class="sussurro">Ensinar pra quem?</p>${linhas || '<p class="nada">Ninguém no time.</p>'}`, false, 'mochila');
+  },
+  ensinarTMa(uid, nome){
+    const p = (Estado.dados.time || []).find(x => x.uid === uid);
+    const golpe = (ITENS_INFO[nome] || {}).golpe;
+    if (!p || !golpe || !aprendeTM(p, nome) || !Estado.contaItem(nome)) return;
+    const quem = this.esc(nomeExib(p));
+    const pronto = (velho) => {
+      Estado.usarItem(nome);
+      Estado.registrar(`${nomeExib(p)} aprendeu ${golpe} com a ${nome}.`);
+      Estado.salvar('auto');
+      this.modal('', `${velho ? `<p>1, 2 e… pronto! ${quem} esqueceu <b>${this.esc(velho)}</b>.</p>` : ''}
+        <p>E… ${quem} aprendeu <b>${this.esc(golpe)}</b>!</p>`, false, 'mochila');
+    };
+    if (p.golpes.length < 4){ ofertarGolpe(p, golpe); return pronto(null); }
+    this.perguntarGolpe(p, golpe, 'modal', (i) => {
+      if (i < 0){
+        aprenderNoLugar(p, golpe, -1);
+        return this.modal('', `<p>${quem} não aprendeu ${this.esc(golpe)}.</p><p class="sussurro">A ${this.esc(nome)} continua na mochila.</p>`, false, 'mochila');
+      }
+      pronto(aprenderNoLugar(p, golpe, i));
+    });
   },
 
   /* ---------- EQUIPAR ---------- */
@@ -2672,6 +2714,8 @@ const UI = {
     const info = ITENS_INFO[nome] || {};
     const d = Estado.dados;
     if (!Estado.contaItem(nome)) return;
+    if (info.tipo === 'tm') return this.ensinarTM(nome);
+    if (info.tipo === 'mapa') return Exploracao.mapa();
 
     if (info.tipo === 'curaJogador'){
       Estado.usarItem(nome); Estado.curarJogador(info.valor); Estado.salvar('auto');
@@ -3467,6 +3511,12 @@ const UI = {
       <div class="linha"><span class="k">Relembrador de golpes</span><span class="v">Cerulean, Celadon e Planalto Indigo · 1.000 ₽ por golpe aprendido</span></div>
       <p class="sussurro">A pergunta do golpe novo aparece na hora, na própria tela de batalha. A tabela é a da espécie atual, como nos jogos: o que a forma anterior aprendia fica pra trás na evolução. O Relembrador ensina qualquer golpe de nível que a espécie já passou e que ele não sabe mais, e só cobra quando o golpe fica. A Pokédex cadastra cada golpe que um Pokémon da espécie aprende com você; os outros aparecem como ???.</p>
 
+      <h3>TM</h3>
+      <div class="linha"><span class="k">Quais</span><span class="v">as de Red/Blue, com o número dos jogos · 44 das 50 (seis golpes não existem aqui)</span></div>
+      <div class="linha"><span class="k">Quem aprende</span><span class="v">a tabela de TM da espécie nos jogos de Game Boy</span></div>
+      <div class="linha"><span class="k">Uso</span><span class="v">fora de batalha, pela mochila · some ao ensinar · desistiu, ela fica</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio de seis líderes de ginásio</span></div>
+
       <h3>Fim da batalha</h3>
       <div class="linha"><span class="k">Log</span><span class="v">resultado, fala do adversário, dinheiro e captura que foi pro PC</span></div>
       <div class="linha"><span class="k">Líder de ginásio</span><span class="v">prêmio do ginásio · revanche: 900 + 420 por insígnia</span></div>
@@ -3604,7 +3654,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
-      <div class="linha"><span class="k">Mapa</span><span class="v">mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila · mostra onde você já pisou e as estradas que saem de lá · vai só pro vizinho</span></div>
       <p class="sussurro">Não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
 
       <h3>Trocas</h3>

@@ -54,7 +54,7 @@ const Exploracao = {
       <div class="escolhas">${afazeres}</div>
 
       <h3 class="com-mapa">Para onde ir
-        <button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button></h3>
+        ${Estado.contaItem('Mapa de Kanto') ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button>` : ''}</h3>
       <div class="escolhas">${vizinhos}</div>
     </div>`);
 

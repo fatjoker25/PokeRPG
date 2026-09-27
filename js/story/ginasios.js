@@ -63,7 +63,7 @@ const GINASIOS = [
     {min:6, especies:[117, 62, 87, 131, 121, 130], variacoes:[55,119,99,80]}    // Seadra, Poliwrath, Dewgong, Lapras, Starmie, Gyarados
   ],
   efeito:'Lojas de Kanto passam a te vender o estoque de trás do balcão.',
-  premio:{dinheiro:2400, itens:{'Super Potion':2,'Great Ball':3}, rep:1},
+  premio:{dinheiro:2400, itens:{'Super Potion':2,'Great Ball':3,'TM11 Bubble Beam':1}, rep:1},
 
   recusa:d=>{
     const lavou = Estado.rep.eixo==='bom' && Estado.rep.bom >= 4;
@@ -108,7 +108,7 @@ const GINASIOS = [
     {min:6, especies:[101, 82, 125, 135, 26], variacoes:[26,82,101,135]}         // + Jolteon, Raichu de ace
   ],
   efeito:'Você aprende a ler uma sala antes de entrar nela. (+1 Percepção)',
-  premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3}, rep:1, status:'percepcao'},
+  premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3,'TM24 Thunderbolt':1}, rep:1, status:'percepcao'},
 
   intro:d=>[
     'O ginásio de Vermilion é um galpão de manutenção portuária adaptado. Tem gerador, tem cabo no chão, tem cheiro de ozônio.',
@@ -144,7 +144,7 @@ const GINASIOS = [
     {min:6, especies:[45, 71, 114, 103, 3], variacoes:[47,103,114,45]}           // Vileplume, Victreebel, Tangela, Exeggutor, Venusaur
   ],
   efeito:'Você passa a reconhecer veneno, remédio e o que há entre os dois. (+1 Intelecto)',
-  premio:{dinheiro:4200, itens:{'Full Heal':3,'Hyper Potion':1}, rep:1, status:'intelecto'},
+  premio:{dinheiro:4200, itens:{'Full Heal':3,'Hyper Potion':1,'TM21 Mega Drain':1}, rep:1, status:'intelecto'},
 
   recusa:d=>{
     const lavou = Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5;
@@ -191,7 +191,7 @@ const GINASIOS = [
     {min:6, especies:[42, 110, 89, 49, 73, 94], variacoes:[49,89,73,94]}       // + Venomoth, Tentacruel, Gengar
   ],
   efeito:'Seu corpo aprende a aguentar o que devia derrubar. (+1 Resistência)',
-  premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1}, rep:1, status:'resistencia'},
+  premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1,'TM06 Toxic':1}, rep:1, status:'resistencia'},
 
   intro:d=>[
     'O ginásio de Fuchsia tem parede falsa, corredor cego e piso que range de propósito. Você leva onze minutos pra achar o líder num prédio de quarenta metros.',
@@ -227,7 +227,7 @@ const GINASIOS = [
     {min:6, especies:[64, 97, 122, 80, 121, 65], variacoes:[80,97,121,65]}      // + Slowbro, Starmie, Alakazam
   ],
   efeito:'Você aprende a falar com quem já decidiu não te ouvir. (+1 Carisma)',
-  premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2}, rep:1, status:'carisma'},
+  premio:{dinheiro:6000, itens:{'Full Heal':3,'Ultra Ball':2,'TM46 Psywave':1}, rep:1, status:'carisma'},
 
   recusa:d=>{
     if (d.flags.destruiu_o_11){
@@ -275,7 +275,7 @@ const GINASIOS = [
     {min:6, especies:[38, 78, 126, 136, 59, 6], variacoes:[38,78,126,136]}       // + Flareon, Arcanine, Charizard
   ],
   efeito:'Você passa a improvisar quando o plano falha. (+1 Sorte)',
-  premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2}, rep:1, status:'sorte'},
+  premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2,'TM38 Fire Blast':1}, rep:1, status:'sorte'},
 
   intro:d=>[
     'O ginásio de Cinnabar sobreviveu ao incêndio porque fica do outro lado da ilha. Blaine dá aula de física numa lousa quando você entra.',

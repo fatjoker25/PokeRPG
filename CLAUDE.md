@@ -239,6 +239,20 @@ quem não tem equivalente honesto fica sem, e a abertura pula o treinador.
 Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
 
+## TM e mapa
+As TMs são as de Red/Blue, com o número dos jogos (`js/data/tms.js`). Seis
+ficam de fora porque o golpe não existe aqui, e o número fica vago — não é
+reaproveitado. Quem aprende o quê (`TM_COMPAT`) saiu dos learnsets de Gen 1
+e 2 do Showdown (`data/mods/gen2/learnsets.ts`, códigos `1M`/`2M`); o
+`learnsets.js` do cliente do Showdown **não traz** Gen 1/2 e dá tabela vazia.
+Golpe novo que entrar em `GOLPES` e for TM de Gen 1 tem que voltar pra
+`TM_LISTA` no número dele. O ícone do disco sai do tipo do golpe
+(`arquivoTM`), então item TM novo não precisa de entrada em `ITEM_SPRITE`.
+
+O mapa desenhado (`Exploracao.mapa`) só abre com o item **Mapa de Kanto**
+na mochila, como o Town Map dos jogos. O `town-map.png` do roteiro é o
+ícone do item, não um mapa.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
@@ -249,7 +263,7 @@ o `build.py` embute junto com os sprites.
 
 ## Onde as coisas ficam
 - `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
-  nomes, porte, arenas, treinadores.
+  nomes, porte, arenas, treinadores, tms.
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
 - `js/story/` — capítulos (`cap-01` a `cap-28`), lugares, mercado, eventos, motor.
 - `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o
