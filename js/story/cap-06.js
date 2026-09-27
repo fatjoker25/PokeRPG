@@ -668,7 +668,7 @@ c6_moca_barraca:{
     '"Banca."',
     '"Banca de quê?"',
     'Aí ela levanta.',
-    '"De bicho." Ela vira o peixe. "É legalizado. Tem papel. Eu não gosto, mas é legalizado."',
+    '"De bicho." Ela vira o peixe. "Vender é proibido, então ele não vende: ele cobra o papel da transferência. Tem carimbo. Eu não gosto, mas tem carimbo."',
     'Ela serve o próximo da fila.',
     '"Eu não gosto e eu vendo peixe frito, então quem sou eu, né."'
   ],
@@ -701,11 +701,11 @@ c6_porque_nao_gosta:{
 c6_ponte_norte:{
   texto:[
     'Na ponte norte, um homem montou uma banca. Não é barraca — é uma mesa dobrável com toalha, e em cima da toalha uma caixa forrada de veludo azul com seis Poké Balls encaixadas em espuma.',
-    'Cada uma tem uma plaquinha de acrílico na frente, com espécie, nível e preço escritos à mão em letra caprichada.',
+    'Cada uma tem uma plaquinha de acrílico na frente, com espécie, nível e "taxa" escritos à mão em letra caprichada.',
     'Tem umas oito pessoas em volta. Duas crianças. Um casal discutindo baixinho se dá ou não dá.',
-    '"Todos legalizados", ele diz antes de você perguntar, porque ele já sabe qual é a sua cara. "Documentados. Quer ver o papel?"'
+    '"Aqui ninguém vende nada", ele diz antes de você perguntar, porque ele já sabe qual é a sua cara. "É taxa de transferência voluntária. Documentada. Quer ver o papel?"'
   ],
-  ef:{registrar:'A banca da ponte norte de Cerulean vende Pokémon com documentação.'},
+  ef:{registrar:'A banca da ponte norte de Cerulean não vende Pokémon, que é crime: cobra "taxa de transferência".'},
   escolhas:[
     {texto:'Ver os papéis.', vai:'c6_papeis'},
     {texto:'"Isso não é ilegal?"', vai:'c6_legal'},
@@ -748,7 +748,7 @@ c6_pidgey_barato:{
   ],
   ef:{flag:'entendeu_a_banca'},
   escolhas:[
-    {texto:'Comprar o Pidgey. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
+    {texto:'Pagar a taxa do Pidgey. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
     {texto:'Ver os papéis.', vai:'c6_papeis'},
     {texto:'"E o que acontece com o que não vende?"', vai:'c6_nao_vende'},
     {texto:'Passar reto.', vai:'c6_saida_norte'}
@@ -771,7 +771,7 @@ c6_nao_vende:{
   escolhas:[
     {texto:'"Quem compra lote?"', vai:'c6_quem_compra_lote'},
     {texto:'Ver os papéis.', vai:'c6_papeis'},
-    {texto:'Comprar o mais barato pra tirar um dali. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
+    {texto:'Pagar a taxa do mais barato pra tirar um dali. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
     {texto:'Passar reto.', vai:'c6_saida_norte'}
   ]
 },
@@ -823,7 +823,7 @@ c6_papeis:{
   ef:{flag:'viu_papeis'},
   escolhas:[
     {texto:'"O que faz um treinador desistir?"', vai:'c6_desistente'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'"Quanto você paga por um?"', vai:'c6_vender'},
     {texto:'Sair dessa conversa.', vai:'c6_saida_norte'}
   ]
@@ -843,7 +843,7 @@ c6_desistente:{
       presagio:'Cinco motivos. Anota. Em algum momento você vai testar quantos deles se aplicam a você.'},
   escolhas:[
     {texto:'"E eles voltam pra buscar?"', vai:'c6_voltam_buscar'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'"Quanto você paga por um?"', vai:'c6_vender'},
     {texto:'Sair.', vai:'c6_saida_norte'}
   ]
@@ -866,7 +866,7 @@ c6_voltam_buscar:{
       presagio:'Ele fechou a banca mais cedo e abriu no dia seguinte. É assim que todo mundo continua.'},
   escolhas:[
     {texto:'"Por que você continua fazendo isso?"', vai:'c6_porque_continua'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'Sair.', vai:'c6_saida_norte'},
     {texto:'"Quanto você paga por um?"', vai:'c6_vender'}
   ]
@@ -885,7 +885,7 @@ c6_porque_continua:{
       presagio:'"Eu só não sou o pior que tem." Você vai ouvir essa frase de gente cada vez mais assustadora.'},
   escolhas:[
     {texto:'"Quem é o pior que tem?"', vai:'c6_quem_compra_lote'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'Sair.', vai:'c6_saida_norte'}
   ]
 },
@@ -894,7 +894,7 @@ c6_legal:{
   texto:[
     '"Isso não é ilegal?"',
     'Ele acha graça de verdade — não é deboche, é alívio de ouvir uma pergunta fácil.',
-    '"{Rapaz|Moça}, a Liga cobra imposto disso. Tem formulário e tudo. Tem campo pra alíquota."',
+    '"Vender é. Dá cadeia." Ele bate no veludo. "Eu não vendo. Eu faço transferência voluntária, que é legal, e cobro a papelada, que também é. E a Liga cobra imposto da papelada. Tem formulário e tudo. Tem campo pra alíquota."',
     'Ele tira uma nota fiscal do bolso e balança.',
     '"Ilegal é o que acontece quando não tem banca. Aí o bicho vai pro porão de alguém em Celadon e ninguém carimba nada e ninguém sabe quantos foram."',
     'Ele não está errado. É por isso que incomoda.'
@@ -956,7 +956,7 @@ c6_comprou:{
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. ${pron(p).Ele} não te escolheu.${notaDestino(onde)}`}];
       },
-      rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon em banca de rua'},
+      rep:{eixo:'ruim',delta:1,motivo:'Pagou "taxa de transferência" por um Pokémon numa banca de rua'},
       presagio:'Ele vai levar semanas pra te obedecer, e meses pra te olhar. Isso não está escrito no papel dobrado em três.'},
   escolhas:[
     {texto:'Perguntar o nome do treinador anterior.', vai:'c6_nome_anterior'},

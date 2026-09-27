@@ -82,6 +82,10 @@ cerulean:[
     'O ginásio de Cerulean é uma piscina olímpica coberta, e dá pra ouvir o eco de fora.',
     'Tem um cartaz meio velho na porta: "DESAFIOS: MANHÃ E TARDE. NÃO ENTRE MOLHADO."'], descobre:'ginasio_cerulean'},
   {chave:'loja_cerulean', texto:['A loja fica na ponte sul e atende pelo balcão, sem ninguém entrar.'], descobre:'loja_cerulean'},
+  {chave:'relembrar_cerulean', texto:[
+    'Nos fundos da escola de treinadores tem uma sala com a porta encostada e caixas de apostila velha até o teto.',
+    'Uma senhora de óculos de leitura está lá dentro com um Slowpoke no colo, e o Slowpoke está fazendo um golpe que você não via ele fazer desde que era filhote.',
+    'Ela levanta os olhos. "Não ensino nada novo. Só faço lembrar."'], descobre:'relembrar_cerulean'},
   {chave:'c_ponte', texto:['Na ponte norte, alguém montou uma banca de veludo com seis Poké Balls e preço em plaquinha. Você olha por tempo demais e a pessoa te olha de volta.']}
 ],
 vermilion:[
@@ -114,6 +118,9 @@ celadon:[
   {chave:'ginasio_celadon', texto:[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. Do térreo dá pra ver o verde lá em cima.',
     'O elevador de serviço tem um botão sem número.'], descobre:'ginasio_celadon'},
+  {chave:'relembrar_celadon', texto:[
+    'No terceiro andar da loja de departamentos, entre o provador e o depósito, tem uma porta sem placa.',
+    'Sai de lá um treinador com um Machoke, e o Machoke faz no corredor um movimento que o dono fica olhando como quem vê um parente voltar.'], descobre:'relembrar_celadon'},
   {chave:'loja_celadon', texto:['O shopping tem sete andares e o quarto inteiro é de item de treinador. Você fica quinze minutos parad{o|a} só olhando prateleira.'], descobre:'loja_celadon'},
   {chave:'cl_cassino', texto:['O cassino mudou de nome duas vezes desde que a Rocket caiu. Agora se chama "Celadon Palace" e tem a mesma carpete.']}
 ],
@@ -547,8 +554,92 @@ const RELEMBRADOR = {
   }
 };
 
+/* ============================================================
+   MURAIS — o que cada cidade prega na parede do Centro
+   Recado de gente, aviso da prefeitura, anúncio de quem precisa.
+   Ninguém explica nada: é papel, e papel diz o que a pessoa quis.
+   ============================================================ */
+const MURAIS = {
+  pallet:[
+    {t:'Achado: um boné vermelho na cerca da Rota 1. Tá na portaria do laboratório.', nota:'letra de fôrma, a lápis'},
+    {t:'Aula de natação pra criança, sábado de manhã, na praia do outro lado do morro. Traga toalha.', nota:'com um desenho de Poliwag'},
+    {t:'O mercado abre às dez. Não adianta bater antes.', nota:'papel de embrulho, preso com dois percevejos'}
+  ],
+  viridian:[
+    {t:'Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa.', nota:'com uma foto colada, tirada de longe, meio tremida'},
+    {t:'Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava.', nota:'sem foto e sem nome'},
+    {t:'COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO.', nota:'letra de imprensa, sem telefone, só um horário e um lugar'},
+    {t:'NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE.', nota:'escrito à mão com pressa e sublinhado três vezes'}
+  ],
+  pewter:[
+    {t:'Museu: entrada franca na terça. Não encoste nos ossos.', nota:'impresso, com o carimbo do museu'},
+    {t:'Vendo corda de escalada, pouco uso. Motivo: joelho.', nota:'com o número de telefone rasgado em tirinhas, faltam quatro'},
+    {t:'O Monte da Lua não é passeio. Leve lanterna ou leve alguém que brilhe.', nota:'escrito com giz de cera, alguém corrigiu a ortografia'}
+  ],
+  cerulean:[
+    {t:'Casa de barco aluga vaga por semana. Tratar com o barqueiro da ponte sul.', nota:'plastificado'},
+    {t:'Achado: um Psyduck com dor de cabeça no chafariz. Continua lá. Ninguém sabe de quem é.', nota:'a caneta, com três pontos de exclamação'},
+    {t:'Vender Pokémon é crime. Denuncie.', nota:'cartaz oficial, com a parte de baixo arrancada'}
+  ],
+  vermilion:[
+    {t:'Estiva contrata por dia. Chegue às cinco.', nota:'datilografado, com a marca de um copo de café'},
+    {t:'Perdi um Shellder no píer 3. Se ele estiver fechado, é ele.', nota:'letra de criança'},
+    {t:'O navio atraca na lua cheia. Passagem só com reserva.', nota:'impresso, com o logotipo da companhia'}
+  ],
+  lavender:[
+    {t:'Missa pelos que se foram, domingo, na torre. Traga uma vela.', nota:'papel roxo, sem assinatura'},
+    {t:'Não deixe comida na porta da torre. Atrai o que não é pra atrair.', nota:'letra de gente velha, tremida'},
+    {t:'Cubone sozinho na Rota 8. Se alguém souber da mãe dele, fala com o Sr. Fuji.', nota:'escrito a caneta, com o nome sublinhado'}
+  ],
+  celadon:[
+    {t:'Loja de departamentos contrata para o natal. Currículo no quinto andar.', nota:'impresso, com borda dourada'},
+    {t:'Aulas de arranjo com Pokémon de planta. Terça e quinta, no ginásio. Vagas limitadas.', nota:'com uma flor seca colada no canto'},
+    {t:'Achado: um Eevee no estacionamento do shopping. Ele foi embora antes da gente ligar.', nota:'escrito à mão, meio apagado'}
+  ],
+  saffron:[
+    {t:'A Silph informa: visitas guiadas suspensas até segunda ordem.', nota:'papel timbrado, preso com fita adesiva nova'},
+    {t:'Dojô de luta: aula experimental grátis. Não traga Pokémon Psíquico, por favor.', nota:'letra grossa de pincel'},
+    {t:'Perdi o ônibus, perdi a carteira e perdi a paciência. Se achar qualquer um dos três, devolve.', nota:'a lápis'}
+  ],
+  fuchsia:[
+    {t:'Zona Safári: nada de briga lá dentro. O preço e as regras estão na guarita.', nota:'impresso, com o mapa da zona'},
+    {t:'Achei um dente de ouro na Zona Safári. Não é meu. Não é de ninguém que eu conheça.', nota:'escrito à mão, com um ponto de interrogação enorme'},
+    {t:'Não alimente os Slowpoke da praça. Eles não precisam, e depois não saem mais.', nota:'placa da prefeitura, colada por cima de outra'}
+  ],
+  cinnabar:[
+    {t:'Laboratório aceita fóssil para análise. Não garantimos resultado. Não devolvemos a pedra.', nota:'datilografado, com o carimbo do laboratório'},
+    {t:'Casa velha no alto do morro: não entre. O chão não é chão.', nota:'escrito a caneta vermelha'},
+    {t:'Balsa pra Seafoam só com o mar calmo. Hoje não.', nota:'giz na lousa, e embaixo, noutro dia, alguém escreveu "nem amanhã"'}
+  ],
+  planalto:[
+    {t:'Desafiante: a Liga não se responsabiliza por nada que aconteça depois da primeira porta.', nota:'impresso, com o selo da Liga'},
+    {t:'Quem voltar, conta. Quem não voltar, a gente conta por você.', nota:'escrito à mão por baixo, com várias assinaturas'}
+  ]
+};
+
 const Cidade = {
+  /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
+    const d = Estado.dados, L = Mundo.atual();
+    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Ler o mural de recados<br><span class="pd">Cortiça, percevejo e papel em três camadas.</span></button>` : '';
+    const cargos = (typeof Cargos !== 'undefined') ? (() => {
+      const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
+      return `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais<br><span class="pd">${
+        abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.` : 'Formulário, carimbo e fila.'}</span></button>`;
+    })() : '';
+    UI.modal(`Centro Pokémon de ${L.nome}`, `
+      <button class="escolha" onclick="UI.fecharModal(true);Cidade.atenderAqui()">Deixar o time com a enfermeira e dormir<br><span class="pd">${
+        (d.flags.tem_licenca || (typeof Cargos !== 'undefined' && Cargos.centroGratis())) ? 'Com licença, não paga.' : 'Sem licença, ela cobra.'}</span></button>
+      <button class="escolha" onclick="UI.fecharModal(true);UI.modalPC()">PC do saguão<br><span class="pd">${
+        d.pc.length ? `Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.` : 'O cinto leva seis; o resto fica aqui.'}</span></button>
+      ${cargos}
+      <button class="escolha" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">Olhar o mapa da parede<br><span class="pd">Kanto inteira, com o que você já conhece.</span></button>
+      ${mural}`, false, 'centro');
+  },
+
+  /* Cura o time e devolve o que aconteceu. Quem chama decide a tela:
+     o mapa da cidade, ou a cena do capítulo, que continua depois. */
+  atender(){
     Mundo.passar(1);
     const d = Estado.dados;
     const credenciado = !!d.flags.tem_licenca
@@ -559,32 +650,44 @@ const Cidade = {
       const feridos = d.time.filter(p => p.hp < p.hpMax || p.status).length;
       const preco = 300 + 250 * feridos;
       if (Estado.j.dinheiro < preco){
-        return Exploracao.tela([
+        return [
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
           {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${preco} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
-        ]);
+        ];
       }
       Estado.j.dinheiro -= preco;
       d.time.forEach(curarTotal);
       Estado.curarJogador(10);
       const pac = this.retirarPacotes();
       Estado.salvar('auto');
-      return Exploracao.tela([...pac,
+      return [
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
         {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${preco} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
-        {tipo:'info', texto:'Amanhece.'}
-      ]);
+        {tipo:'info', texto:'Amanhece.'}, ...pac
+      ];
     }
-    Estado.dados.time.forEach(curarTotal);
+    d.time.forEach(curarTotal);
     Estado.curarJogador(10);
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
-    Exploracao.tela([...pac,
+    return [
       {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
-      {tipo:'info', texto:'No canto do saguão tem o terminal do sistema de armazenamento, ligado, com a tela de sempre esperando alguém.'},
-      {tipo:'info', texto:'Amanhece.'}
-    ]);
+      {tipo:'info', texto:'Amanhece.'}, ...pac
+    ];
+  },
+  atenderAqui(){
+    const av = this.atender();
+    if (Estado.dados.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual, av);
+    return Exploracao.tela(av);
+  },
+
+  /* O mural de cada Centro: o que a cidade pendura na parede. */
+  mural(){
+    const m = MURAIS[Mundo.id()] || [];
+    UI.modal(`Mural do Centro de ${Mundo.atual().nome}`,
+      `<div class="mural">${m.map((x, i) => `<div class="bilhete b${i % 4}">
+        <p>${UI.esc(x.t)}</p>${x.nota ? `<span>${UI.esc(x.nota)}</span>` : ''}</div>`).join('')}</div>`, false, 'centro');
   },
 
   /* O que o Célio mandou pela perua espera no balcão de qualquer Centro. */

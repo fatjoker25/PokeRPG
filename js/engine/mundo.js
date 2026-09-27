@@ -430,24 +430,15 @@ function afazeresDoLocal(){
     lista.push({id:'conversar', titulo:'Conversar com os moradores',
       sub:'Gente de cidade pequena fala demais. Gente de cidade grande fala pouco e diz mais.'});
     if ((L.lugares||[]).includes('centro')){
+      /* O Centro é uma porta só: lá dentro tem a enfermeira, o PC, o
+         balcão de credenciais, o mapa na parede e o mural. */
       lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
-        sub:'Curar o time, dormir, usar o terminal.'});
-      lista.push({lugar:true, id:'pc', titulo:'PC do Centro',
-        sub: d.pc.length
-          ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
-          : 'Guardar e tirar Pokémon. O cinto leva seis.'});
-      if (typeof Cargos !== 'undefined'){
-        const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
-        const meus = Cargos.lista().length;
-        lista.push({lugar:true, id:'credenciais', titulo:'Balcão de credenciais',
-          sub: abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.`
-             : meus ? 'Renovar carimbo e conferir o que o seu crachá dá.'
-                    : 'Formulário, carimbo e fila. É assim que se vira alguma coisa em Kanto.'});
-      }
+        sub:'Enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados.'});
     }
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
-    if (RELEMBRADOR[id]) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
+    /* o Relembrador não tem placa: quem acha é quem anda pela cidade */
+    if (RELEMBRADOR[id] && tem('relembrar_'+id)) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
       sub:RELEMBRADOR[id].sub});
     if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',

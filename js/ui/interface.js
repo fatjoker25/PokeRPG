@@ -757,6 +757,11 @@ const UI = {
     visiveis.forEach(({e, i}) => {
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
     });
+    /* O capítulo acontece numa cidade com Centro: dá pra passar lá sem
+       largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
+    const aqui = Mundo.atual();
+    if (Estado.dados.capitulo > 1 && aqui && aqui.tipo === 'cidade' && (aqui.lugares || []).includes('centro'))
+      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Passar no Centro Pokémon de ${this.esc(aqui.nome)} e voltar</button>`));
 
     /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
        mostrou nada e virava um botão que convidava a clicar à toa. */
@@ -3705,6 +3710,11 @@ const UI = {
       <div class="linha"><span class="k">Chance</span><span class="v">(3 × HP máx − 2 × HP) ÷ (3 × HP máx) × taxa da espécie × bola × condição ÷ 255</span></div>
       <div class="linha"><span class="k">Condição</span><span class="v">dormindo ou congelado ×2 · outra condição ×1,5</span></div>
       <div class="linha"><span class="k">Sacudidas</span><span class="v">três, cada uma passa com a raiz cúbica da chance: as três juntas dão a chance que aparece no log</span></div>
+      <h3>Centro Pokémon</h3>
+      <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
+      <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça</span></div>
+      <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história</span></div>
+      <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade</span></div>
       <h3>Quem aparece onde</h3>
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>

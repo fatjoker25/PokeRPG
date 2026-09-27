@@ -2577,6 +2577,29 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 /* experiência: barra fina embaixo do HP, azul como nos jogos */
 .barra-exp{height:4px;border-radius:3px;background:#090c11;border:1px solid var(--borda);overflow:hidden;margin:3px 0 2px}
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
+/* atalho que não é escolha da história: fica mais apagado */
+.escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
+.escolha.utilitaria:hover{opacity:1}
+
+/* mural de recados do Centro: cortiça e papel preso com percevejo */
+.mural{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;
+  padding:16px;border-radius:10px;
+  background:#8a6440 radial-gradient(circle at 20% 30%, rgba(0,0,0,.12) 1px, transparent 2px) 0 0/9px 9px;
+  box-shadow:inset 0 0 0 6px #5c3f25, inset 0 0 24px rgba(0,0,0,.35);
+}
+.bilhete{
+  position:relative;padding:16px 12px 10px;background:#f4ecd8;color:#2c2419;
+  box-shadow:0 3px 8px rgba(0,0,0,.35);transform:rotate(-1.2deg);min-width:0;
+}
+.bilhete.b1{transform:rotate(1.4deg);background:#fdf6c9}
+.bilhete.b2{transform:rotate(-.5deg);background:#e9f0f4}
+.bilhete.b3{transform:rotate(.9deg)}
+.bilhete::before{content:'';position:absolute;top:5px;left:50%;width:9px;height:9px;margin-left:-4px;border-radius:50%;
+  background:#c0392b;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.bilhete p{margin:0;font-size:13.5px;line-height:1.4;overflow-wrap:anywhere}
+.bilhete span{display:block;margin-top:7px;font-size:11px;font-style:italic;color:#6b5a44}
+@media (prefers-reduced-motion: reduce){ .bilhete{transform:none} }
 
 </style>
 </head>
@@ -6486,24 +6509,15 @@ function afazeresDoLocal(){
     lista.push({id:'conversar', titulo:'Conversar com os moradores',
       sub:'Gente de cidade pequena fala demais. Gente de cidade grande fala pouco e diz mais.'});
     if ((L.lugares||[]).includes('centro')){
+      /* O Centro é uma porta só: lá dentro tem a enfermeira, o PC, o
+         balcão de credenciais, o mapa na parede e o mural. */
       lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
-        sub:'Curar o time, dormir, usar o terminal.'});
-      lista.push({lugar:true, id:'pc', titulo:'PC do Centro',
-        sub: d.pc.length
-          ? `Guardar e tirar Pokémon. Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.`
-          : 'Guardar e tirar Pokémon. O cinto leva seis.'});
-      if (typeof Cargos !== 'undefined'){
-        const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
-        const meus = Cargos.lista().length;
-        lista.push({lugar:true, id:'credenciais', titulo:'Balcão de credenciais',
-          sub: abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.`
-             : meus ? 'Renovar carimbo e conferir o que o seu crachá dá.'
-                    : 'Formulário, carimbo e fila. É assim que se vira alguma coisa em Kanto.'});
-      }
+        sub:'Enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados.'});
     }
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
-    if (RELEMBRADOR[id]) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
+    /* o Relembrador não tem placa: quem acha é quem anda pela cidade */
+    if (RELEMBRADOR[id] && tem('relembrar_'+id)) lista.push({lugar:true, id:'relembrar', titulo:'Relembrador de Golpes',
       sub:RELEMBRADOR[id].sub});
     if (typeof Cidade !== 'undefined' && Cidade.causas && Cidade.causas().length)
       lista.push({lugar:true, id:'doar', titulo:'Tem uma coisa aqui que falta dinheiro',
@@ -13735,6 +13749,10 @@ cerulean:[
     'O ginásio de Cerulean é uma piscina olímpica coberta, e dá pra ouvir o eco de fora.',
     'Tem um cartaz meio velho na porta: "DESAFIOS: MANHÃ E TARDE. NÃO ENTRE MOLHADO."'], descobre:'ginasio_cerulean'},
   {chave:'loja_cerulean', texto:['A loja fica na ponte sul e atende pelo balcão, sem ninguém entrar.'], descobre:'loja_cerulean'},
+  {chave:'relembrar_cerulean', texto:[
+    'Nos fundos da escola de treinadores tem uma sala com a porta encostada e caixas de apostila velha até o teto.',
+    'Uma senhora de óculos de leitura está lá dentro com um Slowpoke no colo, e o Slowpoke está fazendo um golpe que você não via ele fazer desde que era filhote.',
+    'Ela levanta os olhos. "Não ensino nada novo. Só faço lembrar."'], descobre:'relembrar_cerulean'},
   {chave:'c_ponte', texto:['Na ponte norte, alguém montou uma banca de veludo com seis Poké Balls e preço em plaquinha. Você olha por tempo demais e a pessoa te olha de volta.']}
 ],
 vermilion:[
@@ -13767,6 +13785,9 @@ celadon:[
   {chave:'ginasio_celadon', texto:[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. Do térreo dá pra ver o verde lá em cima.',
     'O elevador de serviço tem um botão sem número.'], descobre:'ginasio_celadon'},
+  {chave:'relembrar_celadon', texto:[
+    'No terceiro andar da loja de departamentos, entre o provador e o depósito, tem uma porta sem placa.',
+    'Sai de lá um treinador com um Machoke, e o Machoke faz no corredor um movimento que o dono fica olhando como quem vê um parente voltar.'], descobre:'relembrar_celadon'},
   {chave:'loja_celadon', texto:['O shopping tem sete andares e o quarto inteiro é de item de treinador. Você fica quinze minutos parad{o|a} só olhando prateleira.'], descobre:'loja_celadon'},
   {chave:'cl_cassino', texto:['O cassino mudou de nome duas vezes desde que a Rocket caiu. Agora se chama "Celadon Palace" e tem a mesma carpete.']}
 ],
@@ -14200,8 +14221,92 @@ const RELEMBRADOR = {
   }
 };
 
+/* ============================================================
+   MURAIS — o que cada cidade prega na parede do Centro
+   Recado de gente, aviso da prefeitura, anúncio de quem precisa.
+   Ninguém explica nada: é papel, e papel diz o que a pessoa quis.
+   ============================================================ */
+const MURAIS = {
+  pallet:[
+    {t:'Achado: um boné vermelho na cerca da Rota 1. Tá na portaria do laboratório.', nota:'letra de fôrma, a lápis'},
+    {t:'Aula de natação pra criança, sábado de manhã, na praia do outro lado do morro. Traga toalha.', nota:'com um desenho de Poliwag'},
+    {t:'O mercado abre às dez. Não adianta bater antes.', nota:'papel de embrulho, preso com dois percevejos'}
+  ],
+  viridian:[
+    {t:'Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa.', nota:'com uma foto colada, tirada de longe, meio tremida'},
+    {t:'Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava.', nota:'sem foto e sem nome'},
+    {t:'COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO.', nota:'letra de imprensa, sem telefone, só um horário e um lugar'},
+    {t:'NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE.', nota:'escrito à mão com pressa e sublinhado três vezes'}
+  ],
+  pewter:[
+    {t:'Museu: entrada franca na terça. Não encoste nos ossos.', nota:'impresso, com o carimbo do museu'},
+    {t:'Vendo corda de escalada, pouco uso. Motivo: joelho.', nota:'com o número de telefone rasgado em tirinhas, faltam quatro'},
+    {t:'O Monte da Lua não é passeio. Leve lanterna ou leve alguém que brilhe.', nota:'escrito com giz de cera, alguém corrigiu a ortografia'}
+  ],
+  cerulean:[
+    {t:'Casa de barco aluga vaga por semana. Tratar com o barqueiro da ponte sul.', nota:'plastificado'},
+    {t:'Achado: um Psyduck com dor de cabeça no chafariz. Continua lá. Ninguém sabe de quem é.', nota:'a caneta, com três pontos de exclamação'},
+    {t:'Vender Pokémon é crime. Denuncie.', nota:'cartaz oficial, com a parte de baixo arrancada'}
+  ],
+  vermilion:[
+    {t:'Estiva contrata por dia. Chegue às cinco.', nota:'datilografado, com a marca de um copo de café'},
+    {t:'Perdi um Shellder no píer 3. Se ele estiver fechado, é ele.', nota:'letra de criança'},
+    {t:'O navio atraca na lua cheia. Passagem só com reserva.', nota:'impresso, com o logotipo da companhia'}
+  ],
+  lavender:[
+    {t:'Missa pelos que se foram, domingo, na torre. Traga uma vela.', nota:'papel roxo, sem assinatura'},
+    {t:'Não deixe comida na porta da torre. Atrai o que não é pra atrair.', nota:'letra de gente velha, tremida'},
+    {t:'Cubone sozinho na Rota 8. Se alguém souber da mãe dele, fala com o Sr. Fuji.', nota:'escrito a caneta, com o nome sublinhado'}
+  ],
+  celadon:[
+    {t:'Loja de departamentos contrata para o natal. Currículo no quinto andar.', nota:'impresso, com borda dourada'},
+    {t:'Aulas de arranjo com Pokémon de planta. Terça e quinta, no ginásio. Vagas limitadas.', nota:'com uma flor seca colada no canto'},
+    {t:'Achado: um Eevee no estacionamento do shopping. Ele foi embora antes da gente ligar.', nota:'escrito à mão, meio apagado'}
+  ],
+  saffron:[
+    {t:'A Silph informa: visitas guiadas suspensas até segunda ordem.', nota:'papel timbrado, preso com fita adesiva nova'},
+    {t:'Dojô de luta: aula experimental grátis. Não traga Pokémon Psíquico, por favor.', nota:'letra grossa de pincel'},
+    {t:'Perdi o ônibus, perdi a carteira e perdi a paciência. Se achar qualquer um dos três, devolve.', nota:'a lápis'}
+  ],
+  fuchsia:[
+    {t:'Zona Safári: nada de briga lá dentro. O preço e as regras estão na guarita.', nota:'impresso, com o mapa da zona'},
+    {t:'Achei um dente de ouro na Zona Safári. Não é meu. Não é de ninguém que eu conheça.', nota:'escrito à mão, com um ponto de interrogação enorme'},
+    {t:'Não alimente os Slowpoke da praça. Eles não precisam, e depois não saem mais.', nota:'placa da prefeitura, colada por cima de outra'}
+  ],
+  cinnabar:[
+    {t:'Laboratório aceita fóssil para análise. Não garantimos resultado. Não devolvemos a pedra.', nota:'datilografado, com o carimbo do laboratório'},
+    {t:'Casa velha no alto do morro: não entre. O chão não é chão.', nota:'escrito a caneta vermelha'},
+    {t:'Balsa pra Seafoam só com o mar calmo. Hoje não.', nota:'giz na lousa, e embaixo, noutro dia, alguém escreveu "nem amanhã"'}
+  ],
+  planalto:[
+    {t:'Desafiante: a Liga não se responsabiliza por nada que aconteça depois da primeira porta.', nota:'impresso, com o selo da Liga'},
+    {t:'Quem voltar, conta. Quem não voltar, a gente conta por você.', nota:'escrito à mão por baixo, com várias assinaturas'}
+  ]
+};
+
 const Cidade = {
+  /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
+    const d = Estado.dados, L = Mundo.atual();
+    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Ler o mural de recados<br><span class="pd">Cortiça, percevejo e papel em três camadas.</span></button>` : '';
+    const cargos = (typeof Cargos !== 'undefined') ? (() => {
+      const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
+      return `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais<br><span class="pd">${
+        abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.` : 'Formulário, carimbo e fila.'}</span></button>`;
+    })() : '';
+    UI.modal(`Centro Pokémon de ${L.nome}`, `
+      <button class="escolha" onclick="UI.fecharModal(true);Cidade.atenderAqui()">Deixar o time com a enfermeira e dormir<br><span class="pd">${
+        (d.flags.tem_licenca || (typeof Cargos !== 'undefined' && Cargos.centroGratis())) ? 'Com licença, não paga.' : 'Sem licença, ela cobra.'}</span></button>
+      <button class="escolha" onclick="UI.fecharModal(true);UI.modalPC()">PC do saguão<br><span class="pd">${
+        d.pc.length ? `Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.` : 'O cinto leva seis; o resto fica aqui.'}</span></button>
+      ${cargos}
+      <button class="escolha" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">Olhar o mapa da parede<br><span class="pd">Kanto inteira, com o que você já conhece.</span></button>
+      ${mural}`, false, 'centro');
+  },
+
+  /* Cura o time e devolve o que aconteceu. Quem chama decide a tela:
+     o mapa da cidade, ou a cena do capítulo, que continua depois. */
+  atender(){
     Mundo.passar(1);
     const d = Estado.dados;
     const credenciado = !!d.flags.tem_licenca
@@ -14212,32 +14317,44 @@ const Cidade = {
       const feridos = d.time.filter(p => p.hp < p.hpMax || p.status).length;
       const preco = 300 + 250 * feridos;
       if (Estado.j.dinheiro < preco){
-        return Exploracao.tela([
+        return [
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
           {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${preco} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
-        ]);
+        ];
       }
       Estado.j.dinheiro -= preco;
       d.time.forEach(curarTotal);
       Estado.curarJogador(10);
       const pac = this.retirarPacotes();
       Estado.salvar('auto');
-      return Exploracao.tela([...pac,
+      return [
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
         {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${preco} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
-        {tipo:'info', texto:'Amanhece.'}
-      ]);
+        {tipo:'info', texto:'Amanhece.'}, ...pac
+      ];
     }
-    Estado.dados.time.forEach(curarTotal);
+    d.time.forEach(curarTotal);
     Estado.curarJogador(10);
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
-    Exploracao.tela([...pac,
+    return [
       {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
-      {tipo:'info', texto:'No canto do saguão tem o terminal do sistema de armazenamento, ligado, com a tela de sempre esperando alguém.'},
-      {tipo:'info', texto:'Amanhece.'}
-    ]);
+      {tipo:'info', texto:'Amanhece.'}, ...pac
+    ];
+  },
+  atenderAqui(){
+    const av = this.atender();
+    if (Estado.dados.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual, av);
+    return Exploracao.tela(av);
+  },
+
+  /* O mural de cada Centro: o que a cidade pendura na parede. */
+  mural(){
+    const m = MURAIS[Mundo.id()] || [];
+    UI.modal(`Mural do Centro de ${Mundo.atual().nome}`,
+      `<div class="mural">${m.map((x, i) => `<div class="bilhete b${i % 4}">
+        <p>${UI.esc(x.t)}</p>${x.nota ? `<span>${UI.esc(x.nota)}</span>` : ''}</div>`).join('')}</div>`, false, 'centro');
   },
 
   /* O que o Célio mandou pela perua espera no balcão de qualquer Centro. */
@@ -25325,7 +25442,7 @@ c6_moca_barraca:{
     '"Banca."',
     '"Banca de quê?"',
     'Aí ela levanta.',
-    '"De bicho." Ela vira o peixe. "É legalizado. Tem papel. Eu não gosto, mas é legalizado."',
+    '"De bicho." Ela vira o peixe. "Vender é proibido, então ele não vende: ele cobra o papel da transferência. Tem carimbo. Eu não gosto, mas tem carimbo."',
     'Ela serve o próximo da fila.',
     '"Eu não gosto e eu vendo peixe frito, então quem sou eu, né."'
   ],
@@ -25358,11 +25475,11 @@ c6_porque_nao_gosta:{
 c6_ponte_norte:{
   texto:[
     'Na ponte norte, um homem montou uma banca. Não é barraca — é uma mesa dobrável com toalha, e em cima da toalha uma caixa forrada de veludo azul com seis Poké Balls encaixadas em espuma.',
-    'Cada uma tem uma plaquinha de acrílico na frente, com espécie, nível e preço escritos à mão em letra caprichada.',
+    'Cada uma tem uma plaquinha de acrílico na frente, com espécie, nível e "taxa" escritos à mão em letra caprichada.',
     'Tem umas oito pessoas em volta. Duas crianças. Um casal discutindo baixinho se dá ou não dá.',
-    '"Todos legalizados", ele diz antes de você perguntar, porque ele já sabe qual é a sua cara. "Documentados. Quer ver o papel?"'
+    '"Aqui ninguém vende nada", ele diz antes de você perguntar, porque ele já sabe qual é a sua cara. "É taxa de transferência voluntária. Documentada. Quer ver o papel?"'
   ],
-  ef:{registrar:'A banca da ponte norte de Cerulean vende Pokémon com documentação.'},
+  ef:{registrar:'A banca da ponte norte de Cerulean não vende Pokémon, que é crime: cobra "taxa de transferência".'},
   escolhas:[
     {texto:'Ver os papéis.', vai:'c6_papeis'},
     {texto:'"Isso não é ilegal?"', vai:'c6_legal'},
@@ -25405,7 +25522,7 @@ c6_pidgey_barato:{
   ],
   ef:{flag:'entendeu_a_banca'},
   escolhas:[
-    {texto:'Comprar o Pidgey. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
+    {texto:'Pagar a taxa do Pidgey. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
     {texto:'Ver os papéis.', vai:'c6_papeis'},
     {texto:'"E o que acontece com o que não vende?"', vai:'c6_nao_vende'},
     {texto:'Passar reto.', vai:'c6_saida_norte'}
@@ -25428,7 +25545,7 @@ c6_nao_vende:{
   escolhas:[
     {texto:'"Quem compra lote?"', vai:'c6_quem_compra_lote'},
     {texto:'Ver os papéis.', vai:'c6_papeis'},
-    {texto:'Comprar o mais barato pra tirar um dali. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
+    {texto:'Pagar a taxa do mais barato pra tirar um dali. (400 ₽)', vai:'c6_comprou_pidgey', cond:d=>d.jogador.dinheiro>=400},
     {texto:'Passar reto.', vai:'c6_saida_norte'}
   ]
 },
@@ -25480,7 +25597,7 @@ c6_papeis:{
   ef:{flag:'viu_papeis'},
   escolhas:[
     {texto:'"O que faz um treinador desistir?"', vai:'c6_desistente'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'"Quanto você paga por um?"', vai:'c6_vender'},
     {texto:'Sair dessa conversa.', vai:'c6_saida_norte'}
   ]
@@ -25500,7 +25617,7 @@ c6_desistente:{
       presagio:'Cinco motivos. Anota. Em algum momento você vai testar quantos deles se aplicam a você.'},
   escolhas:[
     {texto:'"E eles voltam pra buscar?"', vai:'c6_voltam_buscar'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'"Quanto você paga por um?"', vai:'c6_vender'},
     {texto:'Sair.', vai:'c6_saida_norte'}
   ]
@@ -25523,7 +25640,7 @@ c6_voltam_buscar:{
       presagio:'Ele fechou a banca mais cedo e abriu no dia seguinte. É assim que todo mundo continua.'},
   escolhas:[
     {texto:'"Por que você continua fazendo isso?"', vai:'c6_porque_continua'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'Sair.', vai:'c6_saida_norte'},
     {texto:'"Quanto você paga por um?"', vai:'c6_vender'}
   ]
@@ -25542,7 +25659,7 @@ c6_porque_continua:{
       presagio:'"Eu só não sou o pior que tem." Você vai ouvir essa frase de gente cada vez mais assustadora.'},
   escolhas:[
     {texto:'"Quem é o pior que tem?"', vai:'c6_quem_compra_lote'},
-    {texto:'Comprar um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
+    {texto:'Pagar a taxa de um. (3.000 ₽)', vai:'c6_comprou', cond:d=>d.jogador.dinheiro>=3000},
     {texto:'Sair.', vai:'c6_saida_norte'}
   ]
 },
@@ -25551,7 +25668,7 @@ c6_legal:{
   texto:[
     '"Isso não é ilegal?"',
     'Ele acha graça de verdade — não é deboche, é alívio de ouvir uma pergunta fácil.',
-    '"{Rapaz|Moça}, a Liga cobra imposto disso. Tem formulário e tudo. Tem campo pra alíquota."',
+    '"Vender é. Dá cadeia." Ele bate no veludo. "Eu não vendo. Eu faço transferência voluntária, que é legal, e cobro a papelada, que também é. E a Liga cobra imposto da papelada. Tem formulário e tudo. Tem campo pra alíquota."',
     'Ele tira uma nota fiscal do bolso e balança.',
     '"Ilegal é o que acontece quando não tem banca. Aí o bicho vai pro porão de alguém em Celadon e ninguém carimba nada e ninguém sabe quantos foram."',
     'Ele não está errado. É por isso que incomoda.'
@@ -25613,7 +25730,7 @@ c6_comprou:{
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. ${pron(p).Ele} não te escolheu.${notaDestino(onde)}`}];
       },
-      rep:{eixo:'ruim',delta:1,motivo:'Comprou um Pokémon em banca de rua'},
+      rep:{eixo:'ruim',delta:1,motivo:'Pagou "taxa de transferência" por um Pokémon numa banca de rua'},
       presagio:'Ele vai levar semanas pra te obedecer, e meses pra te olhar. Isso não está escrito no papel dobrado em três.'},
   escolhas:[
     {texto:'Perguntar o nome do treinador anterior.', vai:'c6_nome_anterior'},
@@ -77683,6 +77800,11 @@ const UI = {
     visiveis.forEach(({e, i}) => {
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
     });
+    /* O capítulo acontece numa cidade com Centro: dá pra passar lá sem
+       largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
+    const aqui = Mundo.atual();
+    if (Estado.dados.capitulo > 1 && aqui && aqui.tipo === 'cidade' && (aqui.lugares || []).includes('centro'))
+      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Passar no Centro Pokémon de ${this.esc(aqui.nome)} e voltar</button>`));
 
     /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
        mostrou nada e virava um botão que convidava a clicar à toa. */
@@ -80631,6 +80753,11 @@ const UI = {
       <div class="linha"><span class="k">Chance</span><span class="v">(3 × HP máx − 2 × HP) ÷ (3 × HP máx) × taxa da espécie × bola × condição ÷ 255</span></div>
       <div class="linha"><span class="k">Condição</span><span class="v">dormindo ou congelado ×2 · outra condição ×1,5</span></div>
       <div class="linha"><span class="k">Sacudidas</span><span class="v">três, cada uma passa com a raiz cúbica da chance: as três juntas dão a chance que aparece no log</span></div>
+      <h3>Centro Pokémon</h3>
+      <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
+      <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça</span></div>
+      <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história</span></div>
+      <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade</span></div>
       <h3>Quem aparece onde</h3>
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
