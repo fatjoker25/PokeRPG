@@ -553,7 +553,7 @@ c1_chamou_de_dentro:{
   texto:[
     d=>`Você chama pra dentro e ${casaCompleto()} vem até a porta secando a mão no pano.`,
     'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
-    fala('Sra. Perla', 'E o menino sai hoje.'),
+    fala('Sra. Perla', 'E {o menino|a menina} sai hoje.'),
     d=>fala(nomeCasa(), 'Sai.'),
     'Um silêncio de quatro segundos que decide tudo.',
     d=>fala(nomeCasa(), 'Então deixa aqui. Eu cuido até ele achar dono.', null,
@@ -714,7 +714,7 @@ c1_festa:{
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
     d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
             '{casa:Ela|Ele} fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
-    d=>fala('Sra. Perla', 'Deixa o menino comer! DEIXA O MENINO COMER!', 'grita'),
+    d=>fala('Sra. Perla', 'Deixa {o menino|a menina} comer! DEIXA {O MENINO|A MENINA} COMER!', 'grita'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} sumiu debaixo da mesa no primeiro minuto e não vai sair de lá nem por bolo.`

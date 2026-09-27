@@ -607,7 +607,7 @@ c23_arma:{
 c23_nao_sei:{
   texto:[
     'Ele te olha por um tempo desconfortável.',
-    '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de um adolescente que disse não sei."',
+    '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
     '"Eles também não sabiam. A diferença é que eles escreveram outra coisa no relatório."',
     'Ele senta de novo na pedra. O ar na câmara fica um pouco menos pesado.',
     '"Pergunta certa: o que você veio fazer aqui?"'
@@ -1382,7 +1382,7 @@ c23_trinta_e_dois:{
     'Mewtwo escuta inteiro.',
     '"Eles sabiam que você estava lá."',
     '"Sabiam?"',
-    '"Claro que sabiam. Você é um garoto atrás de uma pedra." Ele quase — quase — acha graça. "Eles deixaram."'
+    '"Claro que sabiam. Você é {um garoto|uma garota} atrás de uma pedra." Ele quase — quase — acha graça. "Eles deixaram."'
   ],
   ef:{flag:'contou_da_cratera'},
   escolhas:[

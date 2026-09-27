@@ -385,7 +385,7 @@ c31_a_casa_da_kazu:{
     d=>fala(d.jogador.nome, 'Ela tirou foto?'),
     fala('a mãe da Cleo', 'Tirou. E o filme tá lá, e ela não quer que ninguém revele porque ela acha que é prova de alguma coisa.'),
     'Ela vira pra dentro de casa.',
-    fala('a mãe da Cleo', 'Cleo! Tem um menino aqui perguntando do teu caminhão!', 'grita')
+    fala('a mãe da Cleo', 'Cleo! Tem {um menino|uma menina} aqui perguntando do teu caminhão!', 'grita')
   ],
   ef:{flag:'achou_a_kazu',
       npc:{nome:'a mãe da Cleo', opiniao:1, viuVoce:'Te recebeu no portão e chamou a filha.'},

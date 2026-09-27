@@ -575,7 +575,7 @@ c17_descreveu:{
     'Ele para.',
     '"Ah."',
     'E aí ele descreve.',
-    'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra outro garoto de quinze anos que está anotando num caderno.',
+    'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra {outro garoto|uma garota} de quinze anos que está anotando num caderno.',
     'O tamanho: menor que um Meowth, com a cauda mais comprida que o corpo. A cor: rosa, mas rosa de pele e não de pelo. O som: nenhum. Nenhum som nenhuma vez.',
     'A grama embaixo dela não mexia.',
     'Ela pairava a um metro e dez do chão e ele sabe a altura porque ele é de um metro e setenta e ela batia no peito dele.',

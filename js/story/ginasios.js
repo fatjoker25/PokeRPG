@@ -68,7 +68,7 @@ const GINASIOS = [
   recusa:d=>{
     const lavou = Estado.rep.eixo==='bom' && Estado.rep.bom >= 4;
     if (lavou) return null;
-    if (d.flags.ignorou_marta) return '"Eu conheço a Sibyl." Misty não se levanta da beira da piscina. "Ela me contou de um treinador que passou reto. Não descreveu, mas eu não preciso de descrição."';
+    if (d.flags.ignorou_marta) return '"Eu conheço a Sibyl." Misty não se levanta da beira da piscina. "Ela me contou de {um treinador|uma treinadora} que passou reto. Não descreveu, mas eu não preciso de descrição."';
     if (d.flags.agrediu_envenenador) return '"Três pessoas estavam pescando a duzentos metros." Ela olha a água. "Elas vieram aqui contar. Eu não luto com quem resolve as coisas assim."';
     return null;
   },

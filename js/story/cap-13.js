@@ -253,7 +253,7 @@ c13_ab_falou_com_eles:{
   texto:[
     'Você atravessa o cais e senta na mureta do lado dos sessenta, e sentar do lado é diferente de chegar na frente.',
     'Leva uns dez minutos pra alguém falar com você.',
-    fala('o pescador de gorro', 'Você é o menino do leilão.'),
+    fala('o pescador de gorro', 'Você é {o menino|a menina} do leilão.'),
     d=>fala(d.jogador.nome, 'Eu não dei lance.'),
     fala('o pescador de gorro', 'Eu sei. Por isso eu tô falando com você.'),
     'Ele aponta com o queixo pros trinta e nove barcos amarrados.',

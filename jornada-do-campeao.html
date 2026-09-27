@@ -10930,7 +10930,7 @@ const CONTATOS = [
       fala('Koga', 'De novo.'),
       'Você lê de novo.',
       fala('Koga', 'Onze anos.', 'baixo'),
-      fala('Koga', 'Onze anos e um moleque com uma licença de um ano conseguiu em quantos meses? Não responde. Eu não quero saber.')
+      fala('Koga', 'Onze anos e {um moleque|uma moleca} com uma licença de um ano conseguiu em quantos meses? Não responde. Eu não quero saber.')
     ],
     recompensa:d=>{ Estado.darItem('Ultra Ball', 3); Estado.subirStatus('percepcao');
       return [{tipo:'item', texto:'Recebeu 3× Ultra Ball.'},
@@ -11532,7 +11532,7 @@ const GINASIOS = [
   recusa:d=>{
     const lavou = Estado.rep.eixo==='bom' && Estado.rep.bom >= 4;
     if (lavou) return null;
-    if (d.flags.ignorou_marta) return '"Eu conheço a Sibyl." Misty não se levanta da beira da piscina. "Ela me contou de um treinador que passou reto. Não descreveu, mas eu não preciso de descrição."';
+    if (d.flags.ignorou_marta) return '"Eu conheço a Sibyl." Misty não se levanta da beira da piscina. "Ela me contou de {um treinador|uma treinadora} que passou reto. Não descreveu, mas eu não preciso de descrição."';
     if (d.flags.agrediu_envenenador) return '"Três pessoas estavam pescando a duzentos metros." Ela olha a água. "Elas vieram aqui contar. Eu não luto com quem resolve as coisas assim."';
     return null;
   },
@@ -16252,7 +16252,7 @@ c1_chamou_de_dentro:{
   texto:[
     d=>`Você chama pra dentro e ${casaCompleto()} vem até a porta secando a mão no pano.`,
     'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
-    fala('Sra. Perla', 'E o menino sai hoje.'),
+    fala('Sra. Perla', 'E {o menino|a menina} sai hoje.'),
     d=>fala(nomeCasa(), 'Sai.'),
     'Um silêncio de quatro segundos que decide tudo.',
     d=>fala(nomeCasa(), 'Então deixa aqui. Eu cuido até ele achar dono.', null,
@@ -16413,7 +16413,7 @@ c1_festa:{
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
     d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
             '{casa:Ela|Ele} fala isso ao seu lado, sem tirar o sorriso da cara, e está claramente muito feliz.'),
-    d=>fala('Sra. Perla', 'Deixa o menino comer! DEIXA O MENINO COMER!', 'grita'),
+    d=>fala('Sra. Perla', 'Deixa {o menino|a menina} comer! DEIXA {O MENINO|A MENINA} COMER!', 'grita'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} sumiu debaixo da mesa no primeiro minuto e não vai sair de lá nem por bolo.`
@@ -24331,7 +24331,7 @@ c6_misty_porque:{
     '"Por que a senhora tá me ajudando?"',
     '"Eu não tô te ajudando." Ela pega a pasta. "Eu tô te usando."',
     'Ela diz isso sem nenhuma culpa.',
-    '"Eu sou líder de ginásio credenciada. Tudo que eu faço tem meu nome e meu número de credencial em cima. Você é um moleque de mochila que ninguém registra."',
+    '"Eu sou líder de ginásio credenciada. Tudo que eu faço tem meu nome e meu número de credencial em cima. Você é {um moleque|uma moleca} de mochila que ninguém registra."',
     'Ela para na porta da piscina.',
     '"Isso é uma vantagem enorme e é temporária. Aproveita enquanto ninguém sabe seu nome."'
   ],
@@ -25761,7 +25761,7 @@ c6_marta_acha:{
     'Sibyl demora muito.',
     '"Eu acho que eu ia fazer igual." Ela fala olhando pro chão. "Se fosse a minha filha com sete anos e a mão costurada, eu ia fazer igual e eu ia dormir bem."',
     'Ela levanta a cabeça.',
-    '"E aí um dia ia chegar um garoto na minha porta e eu ia ter que explicar."',
+    '"E aí um dia ia chegar {um garoto|uma garota} na minha porta e eu ia ter que explicar."',
     'Ela mexe o café que já acabou.',
     '"Eu não sei o que eu acho, {moço|moça}. Eu sei que o meu tá vivo no chão da minha sala e que outro não tá."'
   ],
@@ -45459,7 +45459,7 @@ c13_ab_falou_com_eles:{
   texto:[
     'Você atravessa o cais e senta na mureta do lado dos sessenta, e sentar do lado é diferente de chegar na frente.',
     'Leva uns dez minutos pra alguém falar com você.',
-    fala('o pescador de gorro', 'Você é o menino do leilão.'),
+    fala('o pescador de gorro', 'Você é {o menino|a menina} do leilão.'),
     d=>fala(d.jogador.nome, 'Eu não dei lance.'),
     fala('o pescador de gorro', 'Eu sei. Por isso eu tô falando com você.'),
     'Ele aponta com o queixo pros trinta e nove barcos amarrados.',
@@ -54604,7 +54604,7 @@ c17_descreveu:{
     'Ele para.',
     '"Ah."',
     'E aí ele descreve.',
-    'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra outro garoto de quinze anos que está anotando num caderno.',
+    'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra {outro garoto|uma garota} de quinze anos que está anotando num caderno.',
     'O tamanho: menor que um Meowth, com a cauda mais comprida que o corpo. A cor: rosa, mas rosa de pele e não de pelo. O som: nenhum. Nenhum som nenhuma vez.',
     'A grama embaixo dela não mexia.',
     'Ela pairava a um metro e dez do chão e ele sabe a altura porque ele é de um metro e setenta e ela batia no peito dele.',
@@ -69987,7 +69987,7 @@ c23_arma:{
 c23_nao_sei:{
   texto:[
     'Ele te olha por um tempo desconfortável.',
-    '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de um adolescente que disse não sei."',
+    '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
     '"Eles também não sabiam. A diferença é que eles escreveram outra coisa no relatório."',
     'Ele senta de novo na pedra. O ar na câmara fica um pouco menos pesado.',
     '"Pergunta certa: o que você veio fazer aqui?"'
@@ -70762,7 +70762,7 @@ c23_trinta_e_dois:{
     'Mewtwo escuta inteiro.',
     '"Eles sabiam que você estava lá."',
     '"Sabiam?"',
-    '"Claro que sabiam. Você é um garoto atrás de uma pedra." Ele quase — quase — acha graça. "Eles deixaram."'
+    '"Claro que sabiam. Você é {um garoto|uma garota} atrás de uma pedra." Ele quase — quase — acha graça. "Eles deixaram."'
   ],
   ef:{flag:'contou_da_cratera'},
   escolhas:[
@@ -73012,7 +73012,7 @@ c31_a_casa_da_kazu:{
     d=>fala(d.jogador.nome, 'Ela tirou foto?'),
     fala('a mãe da Cleo', 'Tirou. E o filme tá lá, e ela não quer que ninguém revele porque ela acha que é prova de alguma coisa.'),
     'Ela vira pra dentro de casa.',
-    fala('a mãe da Cleo', 'Cleo! Tem um menino aqui perguntando do teu caminhão!', 'grita')
+    fala('a mãe da Cleo', 'Cleo! Tem {um menino|uma menina} aqui perguntando do teu caminhão!', 'grita')
   ],
   ef:{flag:'achou_a_kazu',
       npc:{nome:'a mãe da Cleo', opiniao:1, viuVoce:'Te recebeu no portão e chamou a filha.'},

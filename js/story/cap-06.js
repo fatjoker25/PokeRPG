@@ -548,7 +548,7 @@ c6_misty_porque:{
     '"Por que a senhora tá me ajudando?"',
     '"Eu não tô te ajudando." Ela pega a pasta. "Eu tô te usando."',
     'Ela diz isso sem nenhuma culpa.',
-    '"Eu sou líder de ginásio credenciada. Tudo que eu faço tem meu nome e meu número de credencial em cima. Você é um moleque de mochila que ninguém registra."',
+    '"Eu sou líder de ginásio credenciada. Tudo que eu faço tem meu nome e meu número de credencial em cima. Você é {um moleque|uma moleca} de mochila que ninguém registra."',
     'Ela para na porta da piscina.',
     '"Isso é uma vantagem enorme e é temporária. Aproveita enquanto ninguém sabe seu nome."'
   ],
@@ -1978,7 +1978,7 @@ c6_marta_acha:{
     'Sibyl demora muito.',
     '"Eu acho que eu ia fazer igual." Ela fala olhando pro chão. "Se fosse a minha filha com sete anos e a mão costurada, eu ia fazer igual e eu ia dormir bem."',
     'Ela levanta a cabeça.',
-    '"E aí um dia ia chegar um garoto na minha porta e eu ia ter que explicar."',
+    '"E aí um dia ia chegar {um garoto|uma garota} na minha porta e eu ia ter que explicar."',
     'Ela mexe o café que já acabou.',
     '"Eu não sei o que eu acho, {moço|moça}. Eu sei que o meu tá vivo no chão da minha sala e que outro não tá."'
   ],

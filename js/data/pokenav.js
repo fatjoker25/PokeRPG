@@ -441,7 +441,7 @@ const CONTATOS = [
       fala('Koga', 'De novo.'),
       'Você lê de novo.',
       fala('Koga', 'Onze anos.', 'baixo'),
-      fala('Koga', 'Onze anos e um moleque com uma licença de um ano conseguiu em quantos meses? Não responde. Eu não quero saber.')
+      fala('Koga', 'Onze anos e {um moleque|uma moleca} com uma licença de um ano conseguiu em quantos meses? Não responde. Eu não quero saber.')
     ],
     recompensa:d=>{ Estado.darItem('Ultra Ball', 3); Estado.subirStatus('percepcao');
       return [{tipo:'item', texto:'Recebeu 3× Ultra Ball.'},
