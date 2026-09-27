@@ -483,7 +483,7 @@ const LOCAL_DO_CAPITULO = {
   10:'usina',    11:'saffron',  12:'fuchsia',  13:'cinnabar',
   14:'rota21',   15:'rota16',   16:'seafoam',  17:'celadon',
   18:'saffron',  19:'fuchsia',  20:'saffron',
-  21:'pallet',   22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
+  21:null,       22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
   26:'planalto', 27:'norte',    28:'pallet'
 };
 

@@ -354,6 +354,7 @@ c2_quem_cola:{
 },
 
 c2_nunca:{
+  falante:'a atendente',
   texto:[
     '"Nunca."',
     'Ela ri — cansada, mas ri.',
@@ -366,6 +367,7 @@ c2_nunca:{
 },
 
 c2_nao_sei_cartaz:{
+  falante:'a atendente',
   texto:[
     'Ela assente devagar, como quem recebeu a resposta que esperava.',
     '"É." Volta pro computador. "Também acho."',

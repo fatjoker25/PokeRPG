@@ -6602,7 +6602,7 @@ const LOCAL_DO_CAPITULO = {
   10:'usina',    11:'saffron',  12:'fuchsia',  13:'cinnabar',
   14:'rota21',   15:'rota16',   16:'seafoam',  17:'celadon',
   18:'saffron',  19:'fuchsia',  20:'saffron',
-  21:'pallet',   22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
+  21:null,       22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
   26:'planalto', 27:'norte',    28:'pallet'
 };
 
@@ -10571,7 +10571,8 @@ const Historia = {
       else if (vivos.length)
         avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
-    if (ef.npc) Estado.lembrarNPC(ef.npc.nome, ef.npc);
+    /* npc pode vir de função: o vizinho da rua muda com a cidade natal */
+    if (ef.npc){ const npc = typeof ef.npc === 'function' ? ef.npc(Estado.dados) : ef.npc; if (npc) Estado.lembrarNPC(npc.nome, npc); }
     if (ef.insignia && !Estado.dados.insignias.includes(ef.insignia)){
       Estado.dados.insignias.push(ef.insignia);
       avisos.push({tipo:'insignia', texto:`Você sai com a ${ef.insignia} no bolso. Ela pesa menos do que devia.`});
@@ -10579,7 +10580,7 @@ const Historia = {
     if (ef.curaTime){ Estado.dados.time.forEach(curarTotal); avisos.push({tipo:'cura', texto:'Seu time foi curado por completo.'}); }
     if (ef.instabilidade){ Estado.dados.mundo.instabilidade += ef.instabilidade; }
     if (ef.presagio){ (Array.isArray(ef.presagio)?ef.presagio:[ef.presagio]).forEach(t => avisos.push({tipo:'eco', texto:t})); }
-    if (ef.registrar) Estado.registrar(ef.registrar);
+    if (ef.registrar) Estado.registrar(typeof ef.registrar === 'function' ? ef.registrar(Estado.dados) : ef.registrar);
     if (ef.executar) { const extra = ef.executar(Estado.dados); if (Array.isArray(extra)) extra.forEach(a => avisos.push(a)); }
     return avisos;
   },
@@ -10610,7 +10611,9 @@ const Historia = {
     const cap = this.capitulo(n);
     const a = ANCORAS[n];
     if (!cap || !a) return null;
-    if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
+    /* a volta pra casa (capítulo 21) espera na SUA cidade, não em Pallet */
+    const local = typeof a.local === 'function' ? a.local(Estado.dados) : a.local;
+    if (local === '*' || local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
     return null;
   },
 
@@ -10619,7 +10622,9 @@ const Historia = {
     const n = this.proximoCapitulo(false);
     if (!n) return null;
     const a = ANCORAS[n];
-    return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
+    if (!a) return null;
+    const local = typeof a.local === 'function' ? a.local(Estado.dados) : a.local;
+    return {num:n, local, nome:(LOCAIS[local]||{}).nome};
   },
 
   /* Fim de capítulo: 1 ponto e consequências acumuladas do mundo.
@@ -11499,28 +11504,28 @@ const CONTATOS = [
   }
 },
 {
-  id:'ushio', tipo:'figura', nome:'Sr. Ives', papel:'o velho da vassoura', cidade:d=>d.jogador.cidade,
-  requer:d=>!!(d.npcs['Sr. Ives'] && d.npcs['Sr. Ives'].opiniao >= 2),
+  id:'ushio', tipo:'figura', nome:d=>vz().nome, papel:'', cidade:d=>d.jogador.cidade,
+  requer:d=>{ const n = d.npcs[vz().nome]; return !!(n && n.opiniao >= 2); },
   oferece:['favor','missao'],
   missao:{
-    rotulo:'Perguntar se ele precisa de alguma coisa',
+    rotulo:'Perguntar se precisa de alguma coisa',
     rotuloEntrega:'Ligar e contar da medalha',
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
-      fala('Sr. Ives', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
-      fala('Sr. Ives', 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
-      fala('Sr. Ives', 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
-      fala('Sr. Ives', 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
-      fala('Sr. Ives', 'Você anda por aí. Se aparecer, você vai saber que é.')
+      d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
+      d=>fala(vz().nome, 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      d=>fala(vz().nome, 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
+      d=>fala(vz().nome, 'Você anda por aí. Se aparecer, você vai saber que é.')
     ],
     objetivo:d=>Estado.contaItem('Medalha de natação da filha do Vernon') > 0,
     entregue:[
       d=>fala(d.jogador.nome, 'Eu achei.'),
       'Silêncio do outro lado por uns quatro segundos.',
-      fala('Sr. Ives', 'Não me diz onde.'),
-      fala('Sr. Ives', 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
-      fala('Sr. Ives', 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
-      fala('Sr. Ives', 'Ele vai querer conversar. Não fica.')
+      d=>fala(vz().nome, 'Não me diz onde.'),
+      d=>fala(vz().nome, 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
+      d=>fala(vz().nome, 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
+      d=>fala(vz().nome, 'Ele vai querer conversar. Não fica.')
     ],
     recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Vernon');
       Estado.subirStatus('carisma');
@@ -11529,12 +11534,12 @@ const CONTATOS = [
     marca:'devolveu_a_medalha'
   },
   favor:{
-    rotulo:'Perguntar o que ele ouviu falar',
+    rotulo:'Perguntar o que anda ouvindo',
     limite:99, esperaCap:2,
     texto:d=>[
-      fala('Sr. Ives', 'Eu varro calçada, {menino|menina}. Calçada é onde a cidade fala.'),
-      fala('Sr. Ives', 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
-      fala('Sr. Ives', 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
+      fala(vz().nome, `Eu fico aqui na frente de casa ${vz().fazer.replace(/^\S+/, m => m.replace(/r$/, 'ndo'))}, {menino|menina}. A frente de casa é onde a cidade fala.`),
+      d=>fala(vz().nome, 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
+      d=>fala(vz().nome, 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
     ],
     efeito:d=>{ Estado.subirStatus('percepcao'); return [{tipo:'rep', texto:'PERCEPÇÃO +1 — você passou a contar as saídas das salas.'}]; }
   }
@@ -12204,26 +12209,26 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && d.capitulo >= 5,
   peso:2,
   falas:d=>[
-    fala('Sr. Ives', 'Não é cobrança.'),
-    fala('Sr. Ives', 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
-    fala('Sr. Ives', 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
+    fala(vz().nome, 'Não é cobrança.'),
+    fala(vz().nome, 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
+    fala(vz().nome, 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
   ],
   escolhas:[
     {texto:'"Eu volto. Eu prometi e eu volto."',
      ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Repetiu a promessa no telefone quando podia ter mudado de assunto'}},
-     resultado:[fala('Sr. Ives', 'Eu sei.'), fala('Sr. Ives', 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
-    {texto:'Perguntar como vai o joelho dele.',
+     resultado:[d=>fala(vz().nome, 'Eu sei.'), d=>fala(vz().nome, 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
+    {texto:d=>`Perguntar como vai o joelho ${vz().dele}.`,
      ef:{moral:4, rep:{eixo:'bom',delta:2,motivo:'Perguntou do joelho em vez de falar da dívida'},
-         npc:{nome:'Sr. Ives', opiniao:3, memoria:'Você perguntou do joelho dele numa ligação em que ele ia falar de dívida.'}},
+         npc:d=>({nome:vz().nome, opiniao:3, memoria:`Você perguntou do joelho ${vz().dele} numa ligação em que ${vz().ele} ia falar de dívida.`})},
      resultado:[
        'Silêncio de uns quatro segundos.',
-       fala('Sr. Ives', 'Como é que você sabe do joelho?'),
-       fala('Sr. Ives', 'Eu não falei do joelho pra ninguém.', 'baixo'),
-       fala('Sr. Ives', 'Tá ruim. Tá ruim mesmo. Obrigado por perguntar.')
+       d=>fala(vz().nome, 'Como é que você sabe do joelho?'),
+       d=>fala(vz().nome, 'Eu não falei do joelho pra ninguém.', 'baixo'),
+       d=>fala(vz().nome, `Tá ruim. Tá ruim mesmo. ${vz().f ? 'Obrigada' : 'Obrigado'} por perguntar.`)
      ]},
-    {texto:'"Vende a caixa, seu Ives. Eu não mereço."',
-     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou o velho vender o que ele guardava pra você'}},
-     resultado:[fala('Sr. Ives', 'Não é sobre merecer.', 'frio'), fala('Sr. Ives', 'Boa viagem, {menino|menina}.')]}
+    {texto:d=>`"Vende a caixa, ${vz().trat}. Eu não mereço."`,
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou vender o que guardavam pra você'}},
+     resultado:[d=>fala(vz().nome, 'Não é sobre merecer.', 'frio'), d=>fala(vz().nome, 'Boa viagem, {menino|menina}.')]}
   ]
 },
 {
@@ -13749,7 +13754,7 @@ const ANCORAS = {
   18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},
   20: {local:'saffron',   chamada:'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. Segunda, 10h.'},
-  21: {local:'pallet',    chamada:'Faz tempo demais que você não vê a sua rua, e alguém ligou três vezes.'},
+  21: {local:()=>localDoCapitulo(1), chamada:'Faz tempo demais que você não vê a sua rua, e alguém ligou três vezes.'},
   22: {local:'planalto',  chamada:'A arena aberta tem chaveamento afixado e o seu nome está nele, e você não se inscreveu.'},
   23: {local:'viridian',  chamada:'O segundo andar do ginásio está aberto pela primeira vez em dois anos.'},
   24: {local:'rota23',    chamada:'Sete guaritas em fila, e a primeira já quer ver o seu cartão.'},
@@ -16745,6 +16750,123 @@ const Eventos = {
 const CAPITULOS = [];
 
 
+/* ===== js/story/vizinho.js ===== */
+/* ============================================================
+   O VIZINHO DA RUA — um por cidade natal
+   Toda cidade tem alguém que cuida da mesma coisa na frente de
+   casa há vinte anos e que lembra do estrago que você fez quando
+   era criança. Em Pallet é o Sr. Ives e a janela; em Cerulean é
+   a Dona Coral e a rede; em Cinnabar, o Sr. Basil e as telhas.
+   A forma da cena é a mesma (a dívida, os jeitos de acertar, a
+   volta no capítulo 21); a pessoa, o ofício e a história, não.
+
+   Campos: nome, f (mulher), trat (como você chama), coisa (do que
+   cuida), ferr (a ferramenta, com artigo), faz (o que faz agora),
+   fazer (infinitivo), divida (o que você quebrou, com artigo), como
+   (como quebrou), preco, conserto, trabalho (você fazendo o serviço
+   dela), sempre (como a coisa está quando você volta), parou (o que
+   o corpo não deixa mais fazer).
+   ============================================================ */
+const VIZINHOS = {
+  Pallet:{nome:'Sr. Ives', f:false, trat:'seu Ives', coisa:'calçada', ferr:'a vassoura',
+    faz:'varre a calçada da própria casa', fazer:'varrer a calçada',
+    divida:'a janela', como:'Você quebrou porque você chutou a bola.',
+    preco:'vinte pokedólares em 1989', conserto:'eu consertei no mesmo dia com um vidro que eu já tinha',
+    trabalho:'Você varre a calçada inteira. Leva doze minutos. Ela já estava varrida.',
+    sempre:'A calçada está varrida. Ela sempre está varrida.',
+    parou:'a calçada já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer'},
+  Viridian:{nome:'Dona Magnólia', f:true, trat:'dona Magnólia', coisa:'fileira de vasos', ferr:'o regador',
+    faz:'rega os vasos que ocupam metade da calçada', fazer:'regar os vasos',
+    divida:'o vaso da samambaia', como:'Você derrubou porque subiu no muro atrás de um Caterpie.',
+    preco:'doze pokedólares em 1990', conserto:'eu replantei a samambaia num balde, e ela gostou mais do balde',
+    trabalho:'Você rega os trinta e um vasos, um por um. Leva doze minutos. Ela tinha regado às seis.',
+    sempre:'Os vasos estão regados. Eles sempre estão regados.',
+    parou:'os vasos já tão regados desde as seis, e antes eu regava de novo às onze só pra ter o que fazer'},
+  Pewter:{nome:'Sr. Moss', f:false, trat:'seu Moss', coisa:'soleira de pedra', ferr:'a escova',
+    faz:'escova a soleira de pedra da porta de casa', fazer:'escovar a soleira',
+    divida:'a placa da porta', como:'Você riscou o seu nome inteiro nela com um prego.',
+    preco:'trinta pokedólares em 1988', conserto:'eu virei a placa do avesso, e o nome do outro lado ficou até melhor',
+    trabalho:'Você escova a soleira inteira de joelho. Leva doze minutos. Ela já estava limpa.',
+    sempre:'A soleira está escovada. Ela sempre está escovada.',
+    parou:'a soleira já tá escovada desde as seis, e antes eu escovava de novo às onze só pra ter o que fazer'},
+  Cerulean:{nome:'Dona Coral', f:true, trat:'dona Coral', coisa:'rede', ferr:'a agulha de rede',
+    faz:'remenda uma rede de pesca estendida na calçada', fazer:'remendar a rede',
+    divida:'a rede', como:'Você cortou pra soltar um Goldeen que tinha ficado preso.',
+    preco:'quinze pokedólares em 1990', conserto:'eu remendei na mesma noite, e aquele Goldeen merecia sair',
+    trabalho:'Você remenda um palmo de rede. Leva doze minutos e fica torto. A rede já estava remendada.',
+    sempre:'A rede está estendida e remendada. Ela sempre está remendada.',
+    parou:'a rede já tá remendada desde as seis, e antes eu remendava de novo às onze só pra ter o que fazer'},
+  Vermilion:{nome:'Sr. Hale', f:false, trat:'seu Hale', coisa:'bote virado', ferr:'a espátula',
+    faz:'raspa a tinta de um bote virado de cabeça pra baixo na calçada', fazer:'raspar o bote',
+    divida:'o remo', como:'Você usou de taco de beisebol e ele partiu no meio.',
+    preco:'dezoito pokedólares em 1989', conserto:'eu colei com resina, e ele rema melhor torto',
+    trabalho:'Você raspa o casco inteiro. Leva doze minutos. Ele já estava raspado.',
+    sempre:'O bote está raspado. Ele sempre está raspado.',
+    parou:'o bote já tá raspado desde as seis, e antes eu raspava de novo às onze só pra ter o que fazer'},
+  Lavender:{nome:'Dona Sálvia', f:true, trat:'dona Sálvia', coisa:'velas do portão', ferr:'a caixa de fósforo',
+    faz:'acende as velas do portão, uma por uma, como toda manhã', fazer:'acender as velas',
+    divida:'o sino de vento', como:'Você arrancou pra ver se ele tocava mais alto na mão.',
+    preco:'dez pokedólares em 1991', conserto:'eu pendurei de novo com barbante, e ele toca desafinado desde então',
+    trabalho:'Você acende as vinte e duas velas. Leva doze minutos. Estavam todas acesas.',
+    sempre:'As velas do portão estão acesas. Elas sempre estão acesas.',
+    parou:'as velas já tão acesas desde as seis, e antes eu trocava de novo às onze só pra ter o que fazer'},
+  Celadon:{nome:'Sr. Rudd', f:false, trat:'seu Rudd', coisa:'canteiro do prédio', ferr:'a mangueira',
+    faz:'rega o canteiro na frente do prédio', fazer:'regar o canteiro',
+    divida:'o canteiro de tulipas', como:'Você arrancou dezesseis bulbos procurando uma bola de brinquedo que tinha enterrado.',
+    preco:'vinte e cinco pokedólares em 1990', conserto:'eu replantei na primavera seguinte, e ninguém do prédio notou',
+    trabalho:'Você rega o canteiro inteiro. Leva doze minutos. A terra já estava molhada.',
+    sempre:'O canteiro está regado. Ele sempre está regado.',
+    parou:'o canteiro já tá regado desde as seis, e antes eu regava de novo às onze só pra ter o que fazer'},
+  Saffron:{nome:'Dona Hera', f:true, trat:'dona Hera', coisa:'vitrine da oficina', ferr:'o rodo',
+    faz:'lava a vitrine da oficina de conserto de rádio', fazer:'lavar a vitrine',
+    divida:'a vitrine', como:'Você rachou com uma bola de borracha que nem era sua.',
+    preco:'quarenta pokedólares em 1989', conserto:'eu pus uma fita por dentro, e a rachadura virou enfeite',
+    trabalho:'Você lava a vitrine inteira. Leva doze minutos. Ela já estava limpa.',
+    sempre:'A vitrine está limpa, com a rachadura de sempre. Ela sempre está limpa.',
+    parou:'a vitrine já tá limpa desde as seis, e antes eu lavava de novo às onze só pra ter o que fazer'},
+  Fuchsia:{nome:'Sr. Olin', f:false, trat:'seu Olin', coisa:'ração dos Slowpoke', ferr:'o saco de ração',
+    faz:'dá ração pros Slowpoke da praça, mesmo com a placa da prefeitura pedindo pra não dar', fazer:'dar ração pros Slowpoke',
+    divida:'o portão', como:'Você deixou aberto, e o meu Doduo passou dois dias no mato.',
+    preco:'doze pokedólares em 1990', conserto:'o Doduo voltou sozinho no terceiro dia, com mais fome que culpa',
+    trabalho:'Você dá a ração a onze Slowpoke. Leva doze minutos. Eles já tinham comido.',
+    sempre:'Os Slowpoke da praça estão alimentados. Eles sempre estão.',
+    parou:'os Slowpoke já comeram às seis, e antes eu dava de novo às onze só pra ter o que fazer'},
+  Cinnabar:{nome:'Sr. Basil', f:false, trat:'seu Basil', coisa:'escada', ferr:'o rastelo',
+    faz:'rastela a cinza do vulcão da escada de casa', fazer:'rastelar a escada',
+    divida:'a telha do quarto', como:'Você subiu no telhado pra ver o vulcão de perto e pisou onde não devia.',
+    preco:'vinte pokedólares em 1989', conserto:'eu troquei no mesmo dia, que aqui telha é o que não falta',
+    trabalho:'Você rastela a escada inteira. Leva doze minutos. Não tinha cinza.',
+    sempre:'A escada está sem cinza. Ela sempre está sem cinza.',
+    parou:'a escada já tá limpa desde as seis, e antes eu rastelava de novo às onze só pra ter o que fazer'},
+  Indigo:{nome:'Sr. Brenn', f:false, trat:'seu Brenn', coisa:'escadaria da pousada', ferr:'a vassoura',
+    faz:'varre a escadaria da pousada do planalto', fazer:'varrer a escadaria',
+    divida:'o letreiro', como:'Você acertou o P com uma pedra, e ficou escrito OUSADA.',
+    preco:'vinte pokedólares em 1990', conserto:'o letreiro ficou OUSADA dois anos e ninguém reclamou',
+    trabalho:'Você varre os quarenta degraus. Leva doze minutos. Estavam varridos.',
+    sempre:'A escadaria está varrida. Ela sempre está varrida.',
+    parou:'a escadaria já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer'}
+};
+
+/* O vizinho da sua cidade, com as palavras que mudam com o sexo dele.
+   Guarda o nome escolhido no save: mudar a tabela depois não troca a
+   pessoa de quem você já é devedor. */
+function vz(){
+  const d = (typeof Estado !== 'undefined' && Estado.dados) || null;
+  const cidade = d && d.jogador ? d.jogador.cidade : 'Pallet';
+  const v = Object.assign({}, VIZINHOS[cidade] || VIZINHOS.Pallet);
+  const F = v.f;
+  v.ele = F ? 'ela' : 'ele'; v.Ele = F ? 'Ela' : 'Ele';
+  v.dele = F ? 'dela' : 'dele'; v.o = F ? 'a' : 'o';
+  v.do = F ? 'da' : 'do';                     // "da Dona Coral"
+  v.velho = F ? 'Uma velha' : 'Um velho';
+  v.senhor = F ? 'A senhora' : 'O senhor';
+  v.Ferr = v.ferr[0].toUpperCase() + v.ferr.slice(1);
+  v.Divida = v.divida[0].toUpperCase() + v.divida.slice(1);
+  v.uma = /^a /.test(v.ferr) ? 'uma ' + v.ferr.slice(2) : /^o /.test(v.ferr) ? 'um ' + v.ferr.slice(2) : v.ferr;
+  return v;
+}
+
+
 /* ===== js/story/cap-01.js ===== */
 /* ============================================================
    CAPÍTULO 1 — A ÚLTIMA MANHÃ
@@ -17106,7 +17228,7 @@ c1_foi_sem_despedir:{
       }},
   escolhas:[
     {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -17729,13 +17851,13 @@ c1_pediu_ajuda:{
   texto:[
     'Você bate em três portas antes das sete da manhã, o que numa rua desta não é pedir ajuda: é convocar.',
     'Em oito minutos tem cinco pessoas na calçada, duas com lanterna que não precisa e uma com um Growlithe que claramente não sabe rastrear nada.',
-    d=>fala('Sr. Ives', 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
-            'Ele organiza a rua inteira em quarenta segundos, de vassoura na mão, e ninguém questiona.'),
+    d=>fala(vz().nome, 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
+            `${vz().Ele} organiza a rua inteira em quarenta segundos, com ${vz().ferr} na mão, e ninguém questiona.`),
     'Quem acha é uma criança de nove anos que nem foi chamada e que estava só olhando.',
     '{pk:Estava sentado|Estava sentada} em cima da placa da saída da cidade, olhando a estrada.'
   ],
   ef:{moral:6, flag:'ele_estava_na_placa',
-      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'},
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'}),
       rep:{eixo:'bom',delta:2,motivo:'Pediu ajuda em vez de resolver sozinh{o|a}'},
       registrar:'A rua inteira ajudou a procurar. Uma criança de nove anos achou.'},
   escolhas:[
@@ -17960,7 +18082,7 @@ c1_despedida:{
   escolhas:[
     {texto:'"Eu volto." Prometer.', vai:'c1_rua',
      ef:{flag:'promessa_voltar', moral:10, registrar:'Prometeu voltar para casa.'}},
-    {texto:'"Não dá pra prometer isso." Ser honesto.', vai:'c1_rua',
+    {texto:'"Não dá pra prometer isso." Ser honest{o|a}.', vai:'c1_rua',
      ef:{flag:'sem_promessa', registrar:'Recusou-se a prometer que voltaria.'}},
     {texto:'Abraçar e não falar nada.', vai:'c1_rua',
      ef:{flag:'abraco_calado', moral:10}},
@@ -17971,42 +18093,42 @@ c1_despedida:{
 c1_rua:{
   texto:[
     d=>{
-      const grande = ['Saffron','Celadon'].includes(d.jogador.cidade);
+      const grande = ['Saffron','Celadon','Vermilion','Cerulean'].includes(d.jogador.cidade);
       const tarde = d.flags.recebeu_do_goro;
       if (grande) return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é grande demais pra conhecer inteira, mas o seu quarteirão é pequeno de um jeito bom: gente que sabe o seu nome porque viu você aprender a andar.`;
       return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`;
     },
     d=>d.flags.recebeu_do_goro ? 'O sol já está alto e a rua cheira a asfalto quente.' : 'O ar está frio de um jeito que não vai durar mais de uma hora.',
-    'Um velho varre a calçada da própria casa, como faz há vinte anos. A vassoura para no meio do movimento quando você passa.',
-    fala('Sr. Ives', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
-    fala('Sr. Ives', 'Você me deve uma.')
+    d=>`${vz().velho} ${vz().faz}, como faz há vinte anos. ${vz().Ferr} para no meio do movimento quando você passa.`,
+    d=>fala(vz().nome, 'Ei. Ei! Você.', null, `${vz().Ferr} aponta pra você. Não tem hostilidade nenhuma no gesto.`),
+    d=>fala(vz().nome, 'Você me deve uma.')
   ],
-  ef:{npc:{nome:'Sr. Ives', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
+  ef:{npc:d=>({nome:vz().nome, opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'})},
   escolhas:[
-    {texto:'"Eu sei. A janela." Encarar o assunto.', vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
-    {texto:'"Deve nada, seu Ives." Fingir que esqueceu.', vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
+    {texto:d=>`"Eu sei. ${vz().Divida}." Encarar o assunto.`, vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
+    {texto:d=>`"Deve nada, ${vz().trat}." Fingir que esqueceu.`, vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
     {texto:'Perguntar quanto custa resolver isso hoje.', vai:'c1_divida_paga', cond:d=>d.jogador.dinheiro >= 800},
     {texto:'"Hoje não dá. Mas eu volto e resolvo."', vai:'c1_divida_adiada', ef:{flag:'adiou_divida'}},
-    {texto:'"O senhor organizou a rua inteira hoje de manhã. A gente tá quites."',
-     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs['Sr. Ives']},
-    {texto:'Oferecer a vassoura de volta: varrer a calçada agora, no lugar do dinheiro.',
+    {texto:d=>`"${vz().senhor} organizou a rua inteira hoje de manhã. A gente tá quites."`,
+     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs[vz().nome]},
+    {texto:d=>`Pegar ${vz().ferr}: ${vz().fazer} agora, no lugar do dinheiro.`,
      vai:'c1_varreu_no_lugar', cond:d=>!d.flags.varreu_a_calcada_do_ushio}
   ]
 },
 
 c1_divida_quites:{
   texto:[
-    d=>fala(d.jogador.nome, 'O senhor organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.'),
+    d=>fala(d.jogador.nome, `${vz().senhor} organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.`),
     d=>fala(d.jogador.nome, 'Eu acho que a gente tá quites.'),
-    'Ele fica olhando pra você por um tempo que passa do confortável, e depois olha pra vassoura, e depois pro chão.',
-    fala('Sr. Ives', 'Não é assim que funciona.'),
-    fala('Sr. Ives', 'Eu ajudei porque eu quis. Você quebrou porque você chutou. São coisas diferentes e você sabe disso.'),
-    'Ele tem razão, e você odeia que ele tenha razão às sete e meia da manhã.',
-    fala('Sr. Ives', 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
+    d=>`${vz().Ele} fica olhando pra você por um tempo que passa do confortável, e depois olha ${vz().ferr.replace(/^a /, 'pra ').replace(/^o /, 'pro ')}, e depois pro chão.`,
+    d=>fala(vz().nome, 'Não é assim que funciona.'),
+    d=>fala(vz().nome, `Eu ajudei porque eu quis. ${vz().como} São coisas diferentes e você sabe disso.`),
+    d=>`${vz().Ele} tem razão, e você odeia que ${vz().ele} tenha razão às sete e meia da manhã.`,
+    d=>fala(vz().nome, 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
   ],
   ef:{moral:4, flag:'quitou_na_lábia',
-      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Tentou quitar a janela com o favor da manhã. Ele riu e perdoou.'},
-      registrar:'Tentou quitar a dívida da janela com o favor da manhã. Funcionou, meio sem querer.'},
+      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Tentou quitar ${vz().divida} com o favor da manhã. ${vz().Ele} riu e perdoou.`}),
+      registrar:d=>`Tentou quitar a dívida d${vz().divida} com o favor da manhã. Funcionou, meio sem querer.`},
   escolhas:[
     {texto:'Insistir que a dívida continua de pé.', vai:'c1_divida_adiada'},
     {texto:'Aceitar e seguir.', vai:'c1_saida_pro_centro'}
@@ -18015,20 +18137,20 @@ c1_divida_quites:{
 
 c1_varreu_no_lugar:{
   texto:[
-    'Você tira a vassoura da mão dele sem pedir licença, o que é a única maneira de tirar uma vassoura da mão do Sr. Ives.',
-    'Você varre a calçada inteira. Leva doze minutos. Ela já estava varrida.',
-    'Ele reclama do jeito que você segura o cabo. Reclama do canto perto do portão. Reclama que você levanta poeira em vez de juntar.',
-    'Quando você devolve a vassoura, ele não fala nada da calçada.',
-    fala('Sr. Ives', 'A janela era vinte pokedólares em 1989.', 'baixo'),
-    fala('Sr. Ives', 'E doze minutos de calçada hoje vale mais do que vinte pokedólares. Vai embora, {menino|menina}, antes que eu fique bobo.')
+    d=>`Você tira ${vz().ferr} da mão ${vz().dele} sem pedir licença, o que é a única maneira de tirar ${vz().uma} da mão ${vz().do} ${vz().nome}.`,
+    d=>vz().trabalho,
+    d=>`${vz().Ele} reclama do jeito que você segura ${vz().ferr}. Reclama do canto que você pulou. Reclama de tudo, com o prazer de quem finalmente tem plateia.`,
+    d=>`Quando você devolve ${vz().ferr}, ${vz().ele} não fala nada do serviço.`,
+    d=>fala(vz().nome, `${vz().Divida} foi ${vz().preco}.`, 'baixo'),
+    d=>fala(vz().nome, 'E doze minutos de serviço hoje vale mais do que aquilo. Vai embora, {menino|menina}, antes que eu fique bob' + vz().o + '.')
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio', limpaFlag:'divida_pendente',
-      npc:{nome:'Sr. Ives', opiniao:5, memoria:'Pagou a janela varrendo a calçada no dia em que saiu de casa.'},
+      npc:d=>({nome:vz().nome, opiniao:5, memoria:`Pagou ${vz().divida} com doze minutos de ${vz().fazer} no dia em que saiu de casa.`}),
       rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
-      registrar:'Pagou a janela varrendo a calçada do Sr. Ives.'},
+      registrar:d=>`Pagou ${vz().divida} fazendo o serviço ${vz().do} ${vz().nome}.`},
   escolhas:[
     {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -18132,64 +18254,64 @@ c1_de_quem_era_o_numero:{
 
 c1_divida_assume:{
   texto:[
-    fala('Sr. Ives', 'A janela.', null, 'Ele repete a palavra e quase sorri. Quase.'),
-    fala('Sr. Ives', 'Doze anos e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
-    'Ele apoia a vassoura na parede e entra em casa. Demora o suficiente pra você achar que ele esqueceu que você existe.',
+    d=>fala(vz().nome, `${vz().Divida}.`, null, `${vz().Ele} repete a palavra e quase sorri. Quase.`),
+    d=>fala(vz().nome, 'Esse tempo todo e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
+    d=>`${vz().Ele} apoia ${vz().ferr} na parede e entra em casa. Demora o suficiente pra você achar que ${vz().ele} esqueceu que você existe.`,
     'Volta com uma caixa de metal amassada, do tipo que já foi de biscoito.',
-    fala('Sr. Ives', 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
+    d=>fala(vz().nome, 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
     'Dentro tem duas Great Balls e um frasco de Super Potion, tudo dentro da validade por pouco.'
   ],
   ef:{itens:{'Great Ball':2,'Super Potion':1},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida antiga no dia em que podia simplesmente ir embora'},
-      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
+      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Foi honesto sobre ${vz().divida}. Ganhou a caixa de metal.`})},
   escolhas:[
     {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
 c1_divida_nega:{
   texto:[
-    'O velho te olha por tempo demais. Depois abaixa a cabeça e volta a varrer.',
-    fala('Sr. Ives', 'Tá certo. Vai com Deus.', 'frio', 'Ele não levanta a cabeça uma vez sequer.'),
-    'Ele não vai esquecer. Gente que varre a mesma calçada há vinte anos não esquece nada — e essa cidade é pequena, e você vai voltar um dia.'
+    d=>`${vz().f ? 'A velha' : 'O velho'} te olha por tempo demais. Depois abaixa a cabeça e volta pro que estava fazendo.`,
+    d=>fala(vz().nome, 'Tá certo. Vai com Deus.', 'frio', `${vz().Ele} não levanta a cabeça uma vez sequer.`),
+    d=>`${vz().Ele} não vai esquecer. Gente que faz a mesma coisa na frente de casa há vinte anos não esquece nada — e você vai voltar um dia.`
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
-      npc:{nome:'Sr. Ives', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
+      npc:d=>({nome:vz().nome, opiniao:-3, memoria:`Mentiu sobre ${vz().divida}. ${vz().Ele} sabe.`})},
   escolhas:[
     {texto:'Seguir em frente.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
 c1_divida_paga:{
   texto:[
-    'Você tira o dinheiro do bolso antes que ele termine a frase. Ele olha a nota. Olha você. Olha a nota de novo.',
-    fala('Sr. Ives', 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
-    'Ele pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.',
+    d=>`Você tira o dinheiro do bolso antes que ${vz().ele} termine a frase. ${vz().Ele} olha a nota. Olha você. Olha a nota de novo.`,
+    d=>fala(vz().nome, 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
+    d=>`${vz().Ele} pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.`,
     'Você resolveu um problema e criou um assunto.'
   ],
-  ef:{dinheiro:-800, npc:{nome:'Sr. Ives', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
+  ef:{dinheiro:-800, npc:d=>({nome:vz().nome, opiniao:-1, memoria:`Pagou ${vz().divida} em dinheiro. Ficou estranho.`})},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
 c1_divida_adiada:{
   texto:[
     d=>fala(d.jogador.nome, 'Hoje não dá. Mas eu volto e resolvo.'),
-    'Ele para de varrer e te olha com atenção de verdade pela primeira vez na sua vida inteira.',
-    fala('Sr. Ives', 'Todo mundo que sai daqui fala que volta.', null, 'A vassoura encosta na parede.'),
-    fala('Sr. Ives', 'Você é {o primeiro|a primeira} que fala que volta pra pagar alguma coisa.'),
-    fala('Sr. Ives', 'Tá anotado. Aqui.', null, 'Ele bate duas vezes na própria testa.')
+    d=>`${vz().Ele} para e te olha com atenção de verdade pela primeira vez na sua vida inteira.`,
+    d=>fala(vz().nome, 'Todo mundo que sai daqui fala que volta.', null, `${vz().Ferr} encosta na parede.`),
+    d=>fala(vz().nome, 'Você é {o primeiro|a primeira} que fala que volta pra pagar alguma coisa.'),
+    d=>fala(vz().nome, 'Tá anotado. Aqui.', null, `${vz().Ele} bate duas vezes na própria testa.`)
   ],
   ef:{flag:'divida_pendente',
-      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:`Você prometeu voltar para pagar ${vz().divida}. ${vz().Ele} anotou.`}),
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -18957,6 +19079,7 @@ c2_quem_cola:{
 },
 
 c2_nunca:{
+  falante:'a atendente',
   texto:[
     '"Nunca."',
     'Ela ri — cansada, mas ri.',
@@ -18969,6 +19092,7 @@ c2_nunca:{
 },
 
 c2_nao_sei_cartaz:{
+  falante:'a atendente',
   texto:[
     'Ela assente devagar, como quem recebeu a resposta que esperava.',
     '"É." Volta pro computador. "Também acho."',
@@ -20878,6 +21002,7 @@ c4_teo:{
 },
 
 c4_teo_piada:{
+  falante:'Ezra',
   texto:[
     '"Duas vezes é pouco. Eu pretendo perder mais."',
     'Ele olha pra você com uma desconfiança genuína, procurando o deboche, e não acha.',
@@ -21488,16 +21613,16 @@ c4_rua2:{
     'A rua continua sendo a rua. A luz baixou um pouco e a poeira ficou dourada, o que quase compensa a poeira.',
     'Ainda tem o museu de letras faltando. Ainda tem a porta de metal no fim da rua. E ainda tem, longe, a cada vinte minutos, a detonação.',
     'Na calçada da padaria, dois homens de macacão cinza dividem uma marmita e uma conversa que você pega no meio:',
-    '"...e aí o cara do escritório falou que era pra parar o setor quatro."',
-    '"Parar por quê?"',
-    '"Sei lá. Falou que era estudo."',
+    fala('Falk', '...e aí o cara do escritório falou que era pra parar o setor quatro.'),
+    fala('o outro operário', 'Parar por quê?'),
+    fala('Falk', 'Sei lá. Falou que era estudo.'),
     'O outro raspa a marmita com o garfo.',
-    '"Estudo em pedreira é uma coisa só, Falk."',
-    '"É?"',
-    '"É alguém querendo comprar."',
+    fala('o outro operário', 'Estudo em pedreira é uma coisa só, Falk.'),
+    fala('Falk', 'É?'),
+    fala('o outro operário', 'É alguém querendo comprar.'),
     'Eles te veem parado e param de falar, do jeito educado e total com que gente de cidade pequena para de falar quando alguém de fora chega perto.',
-    '"Boa tarde", diz um.',
-    '"Boa tarde."',
+    fala('Falk', 'Boa tarde.'),
+    d=>fala(d.jogador.nome, 'Boa tarde.'),
     'E é o fim da conversa.'
   ],
   ef:{flag:'ouviu_do_setor_quatro',
@@ -22664,6 +22789,7 @@ c4_quanto_pagam:{
 },
 
 c4_entregou_rapaz:{
+  falante:'o guarda',
   texto:[
     'Você descreve: dezenove anos mais ou menos, uniforme grande demais, turno da tarde, saco de estopa no bolso de trás.',
     'O guarda escreve tudo. Sabe de quem é antes de você terminar — dá pra ver no rosto dele, no jeito que ele para de escrever por meio segundo e continua.',
@@ -23822,6 +23948,7 @@ c5_saida_secreta:{
 },
 
 c5_filmou_tunel:{
+  falante:'o rapaz da câmera',
   texto:[
     'O rapaz da câmera filma o túnel inteiro, andando de costas, com a luz batendo no trilho improvisado.',
     'No fim, do lado de fora, ele filma a marca de pneu e fala baixo:',
@@ -24112,10 +24239,10 @@ c5_escondeu:{
   texto:[
     'Você apaga a lanterna e se enfia atrás de uma coluna de rocha, e o escuro é tão completo que os seus olhos inventam formas.',
     'Duas pessoas passam com lanterna de cabeça, rápido, reclamando.',
-    '"É o disjuntor. É sempre o disjuntor."',
-    '"Não é o disjuntor, tá cortado. Olha aqui, ó. Cortado."',
+    fala('o homem da lanterna', 'É o disjuntor. É sempre o disjuntor.'),
+    fala('a mulher da lanterna', 'Não é o disjuntor, tá cortado. Olha aqui, ó. Cortado.'),
     'Silêncio. Uma das lanternas varre a caverna e passa a meio metro de você.',
-    '"Tem moleque aqui dentro."',
+    fala('a mulher da lanterna', 'Tem moleque aqui dentro.', 'baixo'),
     'E é isso: eles sabem, e não estão com medo, e agora você está numa caverna escura com duas pessoas que sabem.'
   ],
   ef:{flag:'sabem_que_voce_esta_aqui',
@@ -64473,7 +64600,7 @@ c21_ab_a_faixa:{
   texto:[
     d=>`Tem uma faixa atravessada na entrada de ${d.jogador.cidade}, amarrada de um poste ao outro, feita de lençol pintado com tinta látex.`,
     d=>`**BEM-VINDO(A) DE VOLTA, ${String(d.jogador.nome).toUpperCase()}**`,
-    'O "(A)" está lá porque quem pintou não quis errar, e isso é a coisa mais da sua cidade que existe.',
+    'O parêntese com o A está lá porque quem pintou não quis errar, e isso é a coisa mais da sua cidade que existe.',
     'Tem umas quarenta pessoas embaixo da faixa. Quarenta, numa cidade desse tamanho, é muita gente.',
     d=>{
       const p = d.time[0];
@@ -64490,7 +64617,7 @@ c21_ab_a_faixa:{
     {texto:'Abraçar quem te esperou e não falar nada.', vai:'c21_dentro_de_casa'},
     {texto:'Perguntar de quem foi a ideia da faixa.', vai:'c21_ab_de_quem_foi_a_ideia'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ives.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ives']}
+    {texto:d=>`Passar na porta ${vz().do} ${vz().nome}.`, vai:'c21_ushio', cond:d=>!!d.npcs[vz().nome]}
   ]
 },
 
@@ -64554,7 +64681,7 @@ c21_ab_ninguem_sabia:{
   escolhas:[
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ives.', vai:'c21_ushio', cond:d=>!!d.npcs['Sr. Ives']},
+    {texto:d=>`Passar na porta ${vz().do} ${vz().nome}.`, vai:'c21_ushio', cond:d=>!!d.npcs[vz().nome]},
     {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
     {texto:'Ligar pra casa do orelhão da esquina, a trinta metros de casa.', vai:'c21_orelhao', cond:d=>Estado.temPokenav()}
   ]
@@ -64578,8 +64705,8 @@ c21_chegada_em_casa:{
   escolhas:[
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
-    {texto:'Passar na calçada do Sr. Ives, que é onde se resolve coisa.', vai:'c21_ushio',
-     cond:d=>!!d.npcs['Sr. Ives']},
+    {texto:d=>`Passar na porta ${vz().do} ${vz().nome}, que é onde se resolve coisa.`, vai:'c21_ushio',
+     cond:d=>!!d.npcs[vz().nome]},
     {texto:'Ir ao Centro Pokémon antes de ver gente.', vai:'c21_centro_primeiro'},
     {texto:'Ligar pra casa do orelhão da esquina, mesmo estando a trinta metros.', vai:'c21_orelhao',
      cond:d=>Estado.temPokenav()},
@@ -64691,41 +64818,41 @@ c21_repos_os_cartazes:{
   ]
 },
 
-/* ── o Sr. Ives ──────────────────────────────────────────── */
+/* ── o vizinho da rua (vizinho.js) ──────────────────────────────────────────── */
 c21_ushio:{
   texto:[
-    'A calçada está varrida. Ela sempre está varrida.',
-    'O Sr. Ives está sentado no degrau, e não em pé com a vassoura, e é a primeira vez na sua vida que você vê ele sentado no degrau.',
-    fala('Sr. Ives', 'Demorou.', null, 'Ele não levanta.'),
-    fala('Sr. Ives', 'Senta aqui. Eu não subo mais em banquinho e você já é alto o suficiente pra isso não ser um problema seu.'),
+    d=>vz().sempre,
+    d=>`${vz().f ? 'A' : 'O'} ${vz().nome} está sentad${vz().o} no degrau, e não em pé com ${vz().ferr}, e é a primeira vez na sua vida que você vê ${vz().ele} sentad${vz().o} no degrau.`,
+    d=>fala(vz().nome, 'Demorou.', null, `${vz().Ele} não levanta.`),
+    d=>fala(vz().nome, 'Senta aqui. Eu não subo mais em banquinho e você já é grande o suficiente pra isso não ser um problema seu.'),
     d=>d.flags.divida_pendente
-      ? 'Você senta, e tem uma janela entre vocês dois que ninguém mencionou ainda.'
+      ? `Você senta, e tem ${vz().divida.replace(/^(a|o) /, m => m === 'a ' ? 'uma ' : 'um ')} entre vocês dois que ninguém mencionou ainda.`
       : 'Você senta.'
   ],
-  ef:{npc:{nome:'Sr. Ives', opiniao:1, memoria:'Estava sentado no degrau quando você voltou.'},
-      registrar:'O Sr. Ives estava sentado no degrau, e não em pé com a vassoura.'},
+  ef:{npc:d=>({nome:vz().nome, opiniao:1, memoria:'Estava sentad' + vz().o + ' no degrau quando você voltou.'}),
+      registrar:d=>`${vz().f ? 'A' : 'O'} ${vz().nome} estava sentad${vz().o} no degrau, e não em pé com ${vz().ferr}.`},
   escolhas:[
-    {texto:'Pagar a janela agora, com juros de oito anos.', vai:'c21_pagou_a_janela',
+    {texto:d=>`Pagar ${vz().divida} agora, com os juros de todos esses anos.`, vai:'c21_pagou_a_janela',
      cond:d=>!!d.flags.divida_pendente && d.jogador.dinheiro >= 2000},
-    {texto:'Perguntar por que ele está sentado.', vai:'c21_por_que_sentado'},
+    {texto:d=>`Perguntar por que ${vz().ele} está sentad${vz().o}.`, vai:'c21_por_que_sentado'},
     {texto:'Contar a viagem inteira, do começo.', vai:'c21_contou_tudo'},
-    {texto:'Ficar em silêncio junto. Ele não pediu conversa.', vai:'c21_silencio_no_degrau'}
+    {texto:d=>`Ficar em silêncio junto. ${vz().Ele} não pediu conversa.`, vai:'c21_silencio_no_degrau'}
   ]
 },
 
 c21_pagou_a_janela:{
   texto:[
     'Você põe o dinheiro no degrau entre vocês dois, com o peso de uma pedrinha em cima pra não voar.',
-    d=>fala(d.jogador.nome, 'Isso é a janela. E oito anos de juros que eu calculei mal, mas pra cima.'),
-    'Ele olha o dinheiro. Não pega.',
-    fala('Sr. Ives', 'A janela foi vinte pokedólares em 1989 e eu consertei no mesmo dia com um vidro que eu já tinha.'),
-    fala('Sr. Ives', 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
-    fala('Sr. Ives', 'Pega o dinheiro de volta e compra Potion, {menino|menina}. Todo mundo compra bola demais.', 'riso')
+    d=>fala(d.jogador.nome, `Isso é ${vz().divida}. E os juros desses anos todos, que eu calculei mal, mas pra cima.`),
+    d=>`${vz().Ele} olha o dinheiro. Não pega.`,
+    d=>fala(vz().nome, `${vz().Divida} foi ${vz().preco}, e ${vz().conserto}.`),
+    d=>fala(vz().nome, 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
+    d=>fala(vz().nome, 'Pega o dinheiro de volta e compra Potion, {menino|menina}. Todo mundo compra bola demais.', 'riso')
   ],
   ef:{limpaFlag:'divida_pendente', moral:5,
-      npc:{nome:'Sr. Ives', opiniao:5, memoria:'Você voltou pra pagar a janela. Ele nunca quis o dinheiro.'},
-      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de vinte pokedólares', rep:{notorio:true}},
-      registrar:'Voltou para pagar a janela. Ele não aceitou o dinheiro.'},
+      npc:d=>({nome:vz().nome, opiniao:5, memoria:`Você voltou pra pagar ${vz().divida}. ${vz().Ele} nunca quis o dinheiro.`}),
+      rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de criança', rep:{notorio:true}},
+      registrar:d=>`Voltou para pagar ${vz().divida}. ${vz().Ele} não aceitou o dinheiro.`},
   escolhas:[
     {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio'},
     {texto:'Pegar de volta e ficar sentad{o|a} ali.', vai:'c21_silencio_no_degrau'}
@@ -64734,30 +64861,30 @@ c21_pagou_a_janela:{
 
 c21_insistiu_ushio:{
   texto:[
-    'Você deixa o dinheiro no degrau e levanta, e ele deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.',
-    fala('Sr. Ives', 'Você é teimos{o|a} igual a quem te criou.', 'riso'),
-    fala('Sr. Ives', 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
+    d=>`Você deixa o dinheiro no degrau e levanta, e ${vz().ele} deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.`,
+    d=>fala(vz().nome, 'Você é teimos{o|a} igual a quem te criou.', 'riso'),
+    d=>fala(vz().nome, 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
   ],
   ef:{dinheiro:-2000, moral:3,
-      npc:{nome:'Sr. Ives', opiniao:4, memoria:'Insistiu até ele aceitar o dinheiro da janela.'},
-      registrar:'Insistiu e o Sr. Ives aceitou o dinheiro.'},
+      npc:d=>({nome:vz().nome, opiniao:4, memoria:`Insistiu até ${vz().ele} aceitar o dinheiro d${vz().divida}.`}),
+      registrar:d=>`Insistiu e ${vz().f ? 'a' : 'o'} ${vz().nome} aceitou o dinheiro.`},
   escolhas:[{texto:'Ficar sentad{o|a} no degrau um pouco.', vai:'c21_silencio_no_degrau'}]
 },
 
 c21_por_que_sentado:{
   texto:[
-    d=>fala(d.jogador.nome, 'Por que o senhor tá sentado?'),
-    'Ele demora pra responder de um jeito que já é a resposta.',
-    fala('Sr. Ives', 'Porque o joelho. E porque a calçada já tá varrida desde as seis, e antes eu varria de novo às onze só pra ter o que fazer.'),
-    fala('Sr. Ives', 'Aí eu parei de varrer de novo às onze. Foi ano passado.'),
-    fala('Sr. Ives', 'Não faz essa cara. Todo mundo para de varrer às onze uma hora.', 'riso')
+    d=>fala(d.jogador.nome, `Por que ${vz().senhor.toLowerCase()} tá sentad${vz().o}?`),
+    d=>`${vz().Ele} demora pra responder de um jeito que já é a resposta.`,
+    d=>fala(vz().nome, `Porque o joelho. E porque ${vz().parou}.`),
+    d=>fala(vz().nome, 'Aí eu parei de fazer de novo às onze. Foi ano passado.'),
+    d=>fala(vz().nome, 'Não faz essa cara. Todo mundo para de fazer de novo às onze uma hora.', 'riso')
   ],
   ef:{flag:'sabe_do_joelho_do_ushio',
-      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Te contou por que parou de varrer duas vezes por dia.'},
-      rep:{eixo:'bom',delta:1,motivo:'Perguntou uma coisa que ninguém pergunta a um velho'},
-      registrar:'O Sr. Ives parou de varrer a calçada duas vezes por dia. Foi ano passado.'},
+      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Te contou por que parou de ${vz().fazer} duas vezes por dia.`}),
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou uma coisa que ninguém pergunta a gente velha'},
+      registrar:d=>`${vz().f ? 'A' : 'O'} ${vz().nome} parou de ${vz().fazer} duas vezes por dia. Foi ano passado.`},
   escolhas:[
-    {texto:'Pegar a vassoura e varrer a calçada dele.', vai:'c21_varreu_a_calcada'},
+    {texto:d=>`Pegar ${vz().ferr} e ${vz().fazer} no lugar ${vz().dele}.`, vai:'c21_varreu_a_calcada'},
     {texto:'Contar a viagem inteira, do começo.', vai:'c21_contou_tudo'},
     {texto:'Ficar em silêncio junto.', vai:'c21_silencio_no_degrau'}
   ]
@@ -64765,21 +64892,21 @@ c21_por_que_sentado:{
 
 c21_varreu_a_calcada:{
   texto:[
-    'Você pega a vassoura antes que ele reclame e varre a calçada inteira, que já está varrida, e você sabe que está varrida.',
-    'Ele reclama assim mesmo. Ele reclama do jeito que você está segurando. Ele reclama do canto que você pulou.',
-    'Ele reclama de olho fechado, encostado na parede, no sol das quatro e meia.',
-    'Quando você termina, ele não fala nada sobre a calçada.',
-    fala('Sr. Ives', 'Na terça que vem eu não vou conseguir. Se você ainda estiver na cidade.', 'baixo',
-         'É a coisa mais perto de um pedido que esse homem já fez a alguém.')
+    d=>`Você pega ${vz().ferr} antes que ${vz().ele} reclame. ${vz().trabalho}`,
+    d=>`${vz().Ele} reclama assim mesmo. Reclama do jeito que você está segurando. Reclama do canto que você pulou.`,
+    d=>`${vz().Ele} reclama de olho fechado, encostad${vz().o} na parede, no sol das quatro e meia.`,
+    d=>`Quando você termina, ${vz().ele} não fala nada sobre o serviço.`,
+    d=>fala(vz().nome, 'Na terça que vem eu não vou conseguir. Se você ainda estiver na cidade.', 'baixo',
+         `É a coisa mais perto de um pedido que ${vz().f ? 'essa mulher' : 'esse homem'} já fez a alguém.`)
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio',
-      npc:{nome:'Sr. Ives', opiniao:6, memoria:'Varreu a calçada dele e ele pediu pra terça que vem.'},
-      rep:{eixo:'bom',delta:3,motivo:'Varreu a calçada de um velho com oito insígnias no bolso', rep:{notorio:true}},
-      registrar:'Varreu a calçada do Sr. Ives. Ele pediu pra terça que vem.'},
+      npc:d=>({nome:vz().nome, opiniao:6, memoria:`Você fez o serviço ${vz().dele} e ${vz().ele} pediu pra terça que vem.`}),
+      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com oito insígnias no bolso', rep:{notorio:true}},
+      registrar:d=>`Fez o serviço ${vz().do} ${vz().nome}. ${vz().Ele} pediu pra terça que vem.`},
   escolhas:[
     {texto:'"Eu estou." Prometer a terça.', vai:'c21_prometeu_a_terca',
      ef:{flag:'prometeu_a_terca', moral:4}},
-    {texto:'"Não vou estar." Ser honesto.', vai:'c21_nao_vai_estar',
+    {texto:'"Não vou estar." Ser honest{o|a}.', vai:'c21_nao_vai_estar',
      ef:{flag:'nao_prometeu_a_terca'}}
   ]
 },
@@ -64789,10 +64916,10 @@ c21_prometeu_a_terca:{
     d=>fala(d.jogador.nome, 'Eu estou.'),
     'Você não sabe se vai estar. Você tem uma convocação chegando, uma mesa comprida te esperando no Planalto e um vale no norte que ninguém desenhou.',
     'Mas você fala que está, e você fala sério na hora de falar, e essas duas coisas nem sempre são a mesma.',
-    fala('Sr. Ives', 'Então tá.', null, 'Ele anota na testa com dois dedos, como sempre.')
+    d=>fala(vz().nome, 'Então tá.', null, `${vz().Ele} anota na testa com dois dedos, como sempre.`)
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Prometeu uma terça-feira comum a um velho'},
-      registrar:'Prometeu voltar na terça pra varrer a calçada.'},
+      registrar:d=>`Prometeu voltar na terça pra ${vz().fazer}.`},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -64803,14 +64930,14 @@ c21_prometeu_a_terca:{
 c21_nao_vai_estar:{
   texto:[
     d=>fala(d.jogador.nome, 'Não vou estar. Me chamaram pro Planalto.'),
-    'Ele assente devagar, e não tem decepção na cara dele, o que é pior do que se tivesse.',
-    fala('Sr. Ives', 'Eu sei. Eu perguntei mesmo assim.'),
-    fala('Sr. Ives', 'Perguntar é de graça, {menino|menina}. E de vez em quando a resposta é sim.')
+    d=>`${vz().Ele} assente devagar, e não tem decepção na cara ${vz().dele}, o que é pior do que se tivesse.`,
+    d=>fala(vz().nome, 'Eu sei. Eu perguntei mesmo assim.'),
+    d=>fala(vz().nome, 'Perguntar é de graça, {menino|menina}. E de vez em quando a resposta é sim.')
   ],
   ef:{moral:2,
-      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'},
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'}),
       rep:{eixo:'bom',delta:1,motivo:'Preferiu a verdade à promessa fácil'},
-      registrar:'Foi honesto com o Sr. Ives sobre a terça.'},
+      registrar:d=>`Foi honesto com ${vz().f ? 'a' : 'o'} ${vz().nome} sobre a terça.`},
   escolhas:[
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -64821,18 +64948,18 @@ c21_nao_vai_estar:{
 c21_contou_tudo:{
   texto:[
     'Você conta tudo. Do começo. A Floresta, o Monte Lua, o navio, o galpão de Celadon, a usina, a Silph, a Estação 4, a sala 704.',
-    'Leva quarenta minutos e ele não interrompe uma vez.',
-    'Quando você termina, ele fica quieto por um tempo comprido.',
-    fala('Sr. Ives', 'Eu varri essa calçada todo dia durante esses meses todos.'),
-    fala('Sr. Ives', 'E enquanto eu varria, tinha isso tudo acontecendo. A mesma quarta-feira pra mim e pra você.'),
-    fala('Sr. Ives', 'É engraçado. Eu não sei se é bom ou ruim, mas é engraçado.', 'baixo')
+    d=>`Leva quarenta minutos e ${vz().ele} não interrompe uma vez.`,
+    d=>`Quando você termina, ${vz().ele} fica quiet${vz().o} por um tempo comprido.`,
+    d=>fala(vz().nome, `Eu fiz a mesma coisa aqui todo dia durante esses meses todos: ${vz().fazer}.`),
+    d=>fala(vz().nome, 'E enquanto isso, tinha isso tudo acontecendo. A mesma quarta-feira pra mim e pra você.'),
+    d=>fala(vz().nome, 'É engraçado. Eu não sei se é bom ou ruim, mas é engraçado.', 'baixo')
   ],
   ef:{moral:4,
-      npc:{nome:'Sr. Ives', opiniao:4, memoria:'Ouviu a sua viagem inteira sem interromper uma vez.'},
+      npc:d=>({nome:vz().nome, opiniao:4, memoria:'Ouviu a sua viagem inteira sem interromper uma vez.'}),
       rep:{eixo:'bom',delta:1,motivo:'Contou tudo a quem só queria ouvir'},
-      registrar:'Contou a viagem inteira pro Sr. Ives, do começo.'},
+      registrar:d=>`Contou a viagem inteira pr${vz().o} ${vz().nome}, do começo.`},
   escolhas:[
-    {texto:'Pegar a vassoura e varrer a calçada dele.', vai:'c21_varreu_a_calcada'},
+    {texto:d=>`Pegar ${vz().ferr} e ${vz().fazer} no lugar ${vz().dele}.`, vai:'c21_varreu_a_calcada'},
     {texto:'Ir pra casa.', vai:'c21_dentro_de_casa'}
   ]
 },
@@ -64845,7 +64972,7 @@ c21_silencio_no_degrau:{
     'Não é constrangedor em momento nenhum, e você percebe que isso é uma coisa rara, e que você não tem isso com quase ninguém.'
   ],
   ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Ficou vinte minutos em silêncio com quem não pediu conversa'},
-      registrar:'Ficou vinte minutos sentado em silêncio no degrau do Sr. Ives.'},
+      registrar:d=>`Ficou vinte minutos sentad{o|a} em silêncio no degrau ${vz().do} ${vz().nome}.`},
   escolhas:[
     {texto:'Levantar e ir pra casa.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro.', vai:'c21_a_rua', cond:d=>!d.flags.viu_o_cartaz},
@@ -64973,7 +65100,7 @@ c21_o_que_aconteceu_aqui:{
     'A pergunta pega {casa:ela desprevenida|ele desprevenido}, porque ninguém faz essa pergunta pra quem ficou.',
     d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, {menino|menina}.'),
     'E aí {casa:ela|ele} conta, por quarenta minutos, tudo que não aconteceu:',
-    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. A filha do Vernon que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
+    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. O neto do Vernon que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
     d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
@@ -77459,7 +77586,7 @@ const UI = {
     const nomeDoEf = ef => {
       if (!ef) return null;
       const n = ef.npc;
-      if (!n) return null;
+      if (!n || typeof n === 'function') return null;
       if (Array.isArray(n)) return n.length === 1 && n[0] && n[0].nome ? n[0].nome : null;
       return n.nome || null;
     };
@@ -77551,7 +77678,7 @@ const UI = {
       for (const cap of CAPITULOS)
         for (const id in (cap.cenas || {})){
           const ef = cap.cenas[id].ef;
-          if (!ef || !ef.npc) continue;
+          if (!ef || !ef.npc || typeof ef.npc === 'function') continue;
           const lista = Array.isArray(ef.npc) ? ef.npc : [ef.npc];
           lista.forEach(x => { if (x && x.nome) n.add(x.nome); });
         }
@@ -77699,7 +77826,7 @@ const UI = {
 
   /* só o que de fato carrega texto escrito — nada de "carimbo" ou
      "crachá", que aparecem em cena de conversa e roubavam a fala */
-  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|letra de (criança|imprensa|fôrma|forma))\b/i,
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|letra de (criança|imprensa|fôrma|forma))\b/i,
   /* Papel também se reconhece pela descrição logo depois: "…" — com
      uma foto colada, "…" — letra de imprensa. O travessão ali descreve
      o papel, não quem falou. */

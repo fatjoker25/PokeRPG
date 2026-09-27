@@ -358,7 +358,7 @@ c1_foi_sem_despedir:{
       }},
   escolhas:[
     {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -981,13 +981,13 @@ c1_pediu_ajuda:{
   texto:[
     'Você bate em três portas antes das sete da manhã, o que numa rua desta não é pedir ajuda: é convocar.',
     'Em oito minutos tem cinco pessoas na calçada, duas com lanterna que não precisa e uma com um Growlithe que claramente não sabe rastrear nada.',
-    d=>fala('Sr. Ives', 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
-            'Ele organiza a rua inteira em quarenta segundos, de vassoura na mão, e ninguém questiona.'),
+    d=>fala(vz().nome, 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
+            `${vz().Ele} organiza a rua inteira em quarenta segundos, com ${vz().ferr} na mão, e ninguém questiona.`),
     'Quem acha é uma criança de nove anos que nem foi chamada e que estava só olhando.',
     '{pk:Estava sentado|Estava sentada} em cima da placa da saída da cidade, olhando a estrada.'
   ],
   ef:{moral:6, flag:'ele_estava_na_placa',
-      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'},
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'}),
       rep:{eixo:'bom',delta:2,motivo:'Pediu ajuda em vez de resolver sozinh{o|a}'},
       registrar:'A rua inteira ajudou a procurar. Uma criança de nove anos achou.'},
   escolhas:[
@@ -1212,7 +1212,7 @@ c1_despedida:{
   escolhas:[
     {texto:'"Eu volto." Prometer.', vai:'c1_rua',
      ef:{flag:'promessa_voltar', moral:10, registrar:'Prometeu voltar para casa.'}},
-    {texto:'"Não dá pra prometer isso." Ser honesto.', vai:'c1_rua',
+    {texto:'"Não dá pra prometer isso." Ser honest{o|a}.', vai:'c1_rua',
      ef:{flag:'sem_promessa', registrar:'Recusou-se a prometer que voltaria.'}},
     {texto:'Abraçar e não falar nada.', vai:'c1_rua',
      ef:{flag:'abraco_calado', moral:10}},
@@ -1223,42 +1223,42 @@ c1_despedida:{
 c1_rua:{
   texto:[
     d=>{
-      const grande = ['Saffron','Celadon'].includes(d.jogador.cidade);
+      const grande = ['Saffron','Celadon','Vermilion','Cerulean'].includes(d.jogador.cidade);
       const tarde = d.flags.recebeu_do_goro;
       if (grande) return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é grande demais pra conhecer inteira, mas o seu quarteirão é pequeno de um jeito bom: gente que sabe o seu nome porque viu você aprender a andar.`;
       return `${d.jogador.cidade} ${tarde ? 'depois do almoço' : 'de manhã cedo'} é pequena de um jeito bom. Poucas ruas, um mercado que abre tarde, gente que sabe o seu nome porque viu você aprender a andar.`;
     },
     d=>d.flags.recebeu_do_goro ? 'O sol já está alto e a rua cheira a asfalto quente.' : 'O ar está frio de um jeito que não vai durar mais de uma hora.',
-    'Um velho varre a calçada da própria casa, como faz há vinte anos. A vassoura para no meio do movimento quando você passa.',
-    fala('Sr. Ives', 'Ei. Ei! Você.', null, 'A vassoura aponta pra você. Não tem hostilidade nenhuma no gesto.'),
-    fala('Sr. Ives', 'Você me deve uma.')
+    d=>`${vz().velho} ${vz().faz}, como faz há vinte anos. ${vz().Ferr} para no meio do movimento quando você passa.`,
+    d=>fala(vz().nome, 'Ei. Ei! Você.', null, `${vz().Ferr} aponta pra você. Não tem hostilidade nenhuma no gesto.`),
+    d=>fala(vz().nome, 'Você me deve uma.')
   ],
-  ef:{npc:{nome:'Sr. Ives', opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'}},
+  ef:{npc:d=>({nome:vz().nome, opiniao:0, memoria:'Cobrou uma dívida de infância no dia da partida.'})},
   escolhas:[
-    {texto:'"Eu sei. A janela." Encarar o assunto.', vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
-    {texto:'"Deve nada, seu Ives." Fingir que esqueceu.', vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
+    {texto:d=>`"Eu sei. ${vz().Divida}." Encarar o assunto.`, vai:'c1_divida_assume', ef:{flag:'assumiu_divida'}},
+    {texto:d=>`"Deve nada, ${vz().trat}." Fingir que esqueceu.`, vai:'c1_divida_nega', ef:{flag:'negou_divida'}},
     {texto:'Perguntar quanto custa resolver isso hoje.', vai:'c1_divida_paga', cond:d=>d.jogador.dinheiro >= 800},
     {texto:'"Hoje não dá. Mas eu volto e resolvo."', vai:'c1_divida_adiada', ef:{flag:'adiou_divida'}},
-    {texto:'"O senhor organizou a rua inteira hoje de manhã. A gente tá quites."',
-     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs['Sr. Ives']},
-    {texto:'Oferecer a vassoura de volta: varrer a calçada agora, no lugar do dinheiro.',
+    {texto:d=>`"${vz().senhor} organizou a rua inteira hoje de manhã. A gente tá quites."`,
+     vai:'c1_divida_quites', cond:d=>!!d.flags.ele_estava_na_placa && !!d.npcs[vz().nome]},
+    {texto:d=>`Pegar ${vz().ferr}: ${vz().fazer} agora, no lugar do dinheiro.`,
      vai:'c1_varreu_no_lugar', cond:d=>!d.flags.varreu_a_calcada_do_ushio}
   ]
 },
 
 c1_divida_quites:{
   texto:[
-    d=>fala(d.jogador.nome, 'O senhor organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.'),
+    d=>fala(d.jogador.nome, `${vz().senhor} organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.`),
     d=>fala(d.jogador.nome, 'Eu acho que a gente tá quites.'),
-    'Ele fica olhando pra você por um tempo que passa do confortável, e depois olha pra vassoura, e depois pro chão.',
-    fala('Sr. Ives', 'Não é assim que funciona.'),
-    fala('Sr. Ives', 'Eu ajudei porque eu quis. Você quebrou porque você chutou. São coisas diferentes e você sabe disso.'),
-    'Ele tem razão, e você odeia que ele tenha razão às sete e meia da manhã.',
-    fala('Sr. Ives', 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
+    d=>`${vz().Ele} fica olhando pra você por um tempo que passa do confortável, e depois olha ${vz().ferr.replace(/^a /, 'pra ').replace(/^o /, 'pro ')}, e depois pro chão.`,
+    d=>fala(vz().nome, 'Não é assim que funciona.'),
+    d=>fala(vz().nome, `Eu ajudei porque eu quis. ${vz().como} São coisas diferentes e você sabe disso.`),
+    d=>`${vz().Ele} tem razão, e você odeia que ${vz().ele} tenha razão às sete e meia da manhã.`,
+    d=>fala(vz().nome, 'Mas eu gostei da tentativa. Vai. Tá pago.', 'riso')
   ],
   ef:{moral:4, flag:'quitou_na_lábia',
-      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Tentou quitar a janela com o favor da manhã. Ele riu e perdoou.'},
-      registrar:'Tentou quitar a dívida da janela com o favor da manhã. Funcionou, meio sem querer.'},
+      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Tentou quitar ${vz().divida} com o favor da manhã. ${vz().Ele} riu e perdoou.`}),
+      registrar:d=>`Tentou quitar a dívida d${vz().divida} com o favor da manhã. Funcionou, meio sem querer.`},
   escolhas:[
     {texto:'Insistir que a dívida continua de pé.', vai:'c1_divida_adiada'},
     {texto:'Aceitar e seguir.', vai:'c1_saida_pro_centro'}
@@ -1267,20 +1267,20 @@ c1_divida_quites:{
 
 c1_varreu_no_lugar:{
   texto:[
-    'Você tira a vassoura da mão dele sem pedir licença, o que é a única maneira de tirar uma vassoura da mão do Sr. Ives.',
-    'Você varre a calçada inteira. Leva doze minutos. Ela já estava varrida.',
-    'Ele reclama do jeito que você segura o cabo. Reclama do canto perto do portão. Reclama que você levanta poeira em vez de juntar.',
-    'Quando você devolve a vassoura, ele não fala nada da calçada.',
-    fala('Sr. Ives', 'A janela era vinte pokedólares em 1989.', 'baixo'),
-    fala('Sr. Ives', 'E doze minutos de calçada hoje vale mais do que vinte pokedólares. Vai embora, {menino|menina}, antes que eu fique bobo.')
+    d=>`Você tira ${vz().ferr} da mão ${vz().dele} sem pedir licença, o que é a única maneira de tirar ${vz().uma} da mão ${vz().do} ${vz().nome}.`,
+    d=>vz().trabalho,
+    d=>`${vz().Ele} reclama do jeito que você segura ${vz().ferr}. Reclama do canto que você pulou. Reclama de tudo, com o prazer de quem finalmente tem plateia.`,
+    d=>`Quando você devolve ${vz().ferr}, ${vz().ele} não fala nada do serviço.`,
+    d=>fala(vz().nome, `${vz().Divida} foi ${vz().preco}.`, 'baixo'),
+    d=>fala(vz().nome, 'E doze minutos de serviço hoje vale mais do que aquilo. Vai embora, {menino|menina}, antes que eu fique bob' + vz().o + '.')
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio', limpaFlag:'divida_pendente',
-      npc:{nome:'Sr. Ives', opiniao:5, memoria:'Pagou a janela varrendo a calçada no dia em que saiu de casa.'},
+      npc:d=>({nome:vz().nome, opiniao:5, memoria:`Pagou ${vz().divida} com doze minutos de ${vz().fazer} no dia em que saiu de casa.`}),
       rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
-      registrar:'Pagou a janela varrendo a calçada do Sr. Ives.'},
+      registrar:d=>`Pagou ${vz().divida} fazendo o serviço ${vz().do} ${vz().nome}.`},
   escolhas:[
     {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -1384,64 +1384,64 @@ c1_de_quem_era_o_numero:{
 
 c1_divida_assume:{
   texto:[
-    fala('Sr. Ives', 'A janela.', null, 'Ele repete a palavra e quase sorri. Quase.'),
-    fala('Sr. Ives', 'Doze anos e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
-    'Ele apoia a vassoura na parede e entra em casa. Demora o suficiente pra você achar que ele esqueceu que você existe.',
+    d=>fala(vz().nome, `${vz().Divida}.`, null, `${vz().Ele} repete a palavra e quase sorri. Quase.`),
+    d=>fala(vz().nome, 'Esse tempo todo e você ainda lembra. Isso aí me diz mais de você do que qualquer insígnia vai dizer.'),
+    d=>`${vz().Ele} apoia ${vz().ferr} na parede e entra em casa. Demora o suficiente pra você achar que ${vz().ele} esqueceu que você existe.`,
     'Volta com uma caixa de metal amassada, do tipo que já foi de biscoito.',
-    fala('Sr. Ives', 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
+    d=>fala(vz().nome, 'Peguei isso de um treinador que passou aqui faz uns anos e nunca voltou pra buscar. Guardei achando que um dia ia aparecer alguém que merecesse.'),
     'Dentro tem duas Great Balls e um frasco de Super Potion, tudo dentro da validade por pouco.'
   ],
   ef:{itens:{'Great Ball':2,'Super Potion':1},
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida antiga no dia em que podia simplesmente ir embora'},
-      npc:{nome:'Sr. Ives', opiniao:3, memoria:'Foi honesto sobre a janela quebrada. Ganhou a caixa de metal.'}},
+      npc:d=>({nome:vz().nome, opiniao:3, memoria:`Foi honesto sobre ${vz().divida}. Ganhou a caixa de metal.`})},
   escolhas:[
     {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
 c1_divida_nega:{
   texto:[
-    'O velho te olha por tempo demais. Depois abaixa a cabeça e volta a varrer.',
-    fala('Sr. Ives', 'Tá certo. Vai com Deus.', 'frio', 'Ele não levanta a cabeça uma vez sequer.'),
-    'Ele não vai esquecer. Gente que varre a mesma calçada há vinte anos não esquece nada — e essa cidade é pequena, e você vai voltar um dia.'
+    d=>`${vz().f ? 'A velha' : 'O velho'} te olha por tempo demais. Depois abaixa a cabeça e volta pro que estava fazendo.`,
+    d=>fala(vz().nome, 'Tá certo. Vai com Deus.', 'frio', `${vz().Ele} não levanta a cabeça uma vez sequer.`),
+    d=>`${vz().Ele} não vai esquecer. Gente que faz a mesma coisa na frente de casa há vinte anos não esquece nada — e você vai voltar um dia.`
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},
-      npc:{nome:'Sr. Ives', opiniao:-3, memoria:'Mentiu sobre a janela. Ele sabe.'}},
+      npc:d=>({nome:vz().nome, opiniao:-3, memoria:`Mentiu sobre ${vz().divida}. ${vz().Ele} sabe.`})},
   escolhas:[
     {texto:'Seguir em frente.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
 c1_divida_paga:{
   texto:[
-    'Você tira o dinheiro do bolso antes que ele termine a frase. Ele olha a nota. Olha você. Olha a nota de novo.',
-    fala('Sr. Ives', 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
-    'Ele pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.',
+    d=>`Você tira o dinheiro do bolso antes que ${vz().ele} termine a frase. ${vz().Ele} olha a nota. Olha você. Olha a nota de novo.`,
+    d=>fala(vz().nome, 'Eu ia te dar uma coisa. Agora fica estranho.', 'baixo'),
+    d=>`${vz().Ele} pega o dinheiro mesmo assim, porque recusar seria mais estranho ainda. Não te dá nada.`,
     'Você resolveu um problema e criou um assunto.'
   ],
-  ef:{dinheiro:-800, npc:{nome:'Sr. Ives', opiniao:-1, memoria:'Pagou a janela em dinheiro. Ficou estranho.'}},
+  ef:{dinheiro:-800, npc:d=>({nome:vz().nome, opiniao:-1, memoria:`Pagou ${vz().divida} em dinheiro. Ficou estranho.`})},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
 c1_divida_adiada:{
   texto:[
     d=>fala(d.jogador.nome, 'Hoje não dá. Mas eu volto e resolvo.'),
-    'Ele para de varrer e te olha com atenção de verdade pela primeira vez na sua vida inteira.',
-    fala('Sr. Ives', 'Todo mundo que sai daqui fala que volta.', null, 'A vassoura encosta na parede.'),
-    fala('Sr. Ives', 'Você é {o primeiro|a primeira} que fala que volta pra pagar alguma coisa.'),
-    fala('Sr. Ives', 'Tá anotado. Aqui.', null, 'Ele bate duas vezes na própria testa.')
+    d=>`${vz().Ele} para e te olha com atenção de verdade pela primeira vez na sua vida inteira.`,
+    d=>fala(vz().nome, 'Todo mundo que sai daqui fala que volta.', null, `${vz().Ferr} encosta na parede.`),
+    d=>fala(vz().nome, 'Você é {o primeiro|a primeira} que fala que volta pra pagar alguma coisa.'),
+    d=>fala(vz().nome, 'Tá anotado. Aqui.', null, `${vz().Ele} bate duas vezes na própria testa.`)
   ],
   ef:{flag:'divida_pendente',
-      npc:{nome:'Sr. Ives', opiniao:2, memoria:'Você prometeu voltar para pagar a janela. Ele anotou.'},
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:`Você prometeu voltar para pagar ${vz().divida}. ${vz().Ele} anotou.`}),
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs['Sr. Ives']}
+    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 

@@ -224,7 +224,8 @@ const Historia = {
       else if (vivos.length)
         avisos.push({tipo:'info', texto: ef.moral > 0 ? 'O time confia mais em você.' : 'O time te olha diferente agora.'});
     }
-    if (ef.npc) Estado.lembrarNPC(ef.npc.nome, ef.npc);
+    /* npc pode vir de função: o vizinho da rua muda com a cidade natal */
+    if (ef.npc){ const npc = typeof ef.npc === 'function' ? ef.npc(Estado.dados) : ef.npc; if (npc) Estado.lembrarNPC(npc.nome, npc); }
     if (ef.insignia && !Estado.dados.insignias.includes(ef.insignia)){
       Estado.dados.insignias.push(ef.insignia);
       avisos.push({tipo:'insignia', texto:`Você sai com a ${ef.insignia} no bolso. Ela pesa menos do que devia.`});
@@ -232,7 +233,7 @@ const Historia = {
     if (ef.curaTime){ Estado.dados.time.forEach(curarTotal); avisos.push({tipo:'cura', texto:'Seu time foi curado por completo.'}); }
     if (ef.instabilidade){ Estado.dados.mundo.instabilidade += ef.instabilidade; }
     if (ef.presagio){ (Array.isArray(ef.presagio)?ef.presagio:[ef.presagio]).forEach(t => avisos.push({tipo:'eco', texto:t})); }
-    if (ef.registrar) Estado.registrar(ef.registrar);
+    if (ef.registrar) Estado.registrar(typeof ef.registrar === 'function' ? ef.registrar(Estado.dados) : ef.registrar);
     if (ef.executar) { const extra = ef.executar(Estado.dados); if (Array.isArray(extra)) extra.forEach(a => avisos.push(a)); }
     return avisos;
   },
@@ -263,7 +264,9 @@ const Historia = {
     const cap = this.capitulo(n);
     const a = ANCORAS[n];
     if (!cap || !a) return null;
-    if (a.local === '*' || a.local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
+    /* a volta pra casa (capítulo 21) espera na SUA cidade, não em Pallet */
+    const local = typeof a.local === 'function' ? a.local(Estado.dados) : a.local;
+    if (local === '*' || local === Mundo.id()) return {num:n, chamada:a.chamada, cap};
     return null;
   },
 
@@ -272,7 +275,9 @@ const Historia = {
     const n = this.proximoCapitulo(false);
     if (!n) return null;
     const a = ANCORAS[n];
-    return a ? {num:n, local:a.local, nome:(LOCAIS[a.local]||{}).nome} : null;
+    if (!a) return null;
+    const local = typeof a.local === 'function' ? a.local(Estado.dados) : a.local;
+    return {num:n, local, nome:(LOCAIS[local]||{}).nome};
   },
 
   /* Fim de capítulo: 1 ponto e consequências acumuladas do mundo.

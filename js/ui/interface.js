@@ -336,7 +336,7 @@ const UI = {
     const nomeDoEf = ef => {
       if (!ef) return null;
       const n = ef.npc;
-      if (!n) return null;
+      if (!n || typeof n === 'function') return null;
       if (Array.isArray(n)) return n.length === 1 && n[0] && n[0].nome ? n[0].nome : null;
       return n.nome || null;
     };
@@ -428,7 +428,7 @@ const UI = {
       for (const cap of CAPITULOS)
         for (const id in (cap.cenas || {})){
           const ef = cap.cenas[id].ef;
-          if (!ef || !ef.npc) continue;
+          if (!ef || !ef.npc || typeof ef.npc === 'function') continue;
           const lista = Array.isArray(ef.npc) ? ef.npc : [ef.npc];
           lista.forEach(x => { if (x && x.nome) n.add(x.nome); });
         }
@@ -576,7 +576,7 @@ const UI = {
 
   /* só o que de fato carrega texto escrito — nada de "carimbo" ou
      "crachá", que aparecem em cena de conversa e roubavam a fala */
-  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|letra de (criança|imprensa|fôrma|forma))\b/i,
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|letra de (criança|imprensa|fôrma|forma))\b/i,
   /* Papel também se reconhece pela descrição logo depois: "…" — com
      uma foto colada, "…" — letra de imprensa. O travessão ali descreve
      o papel, não quem falou. */

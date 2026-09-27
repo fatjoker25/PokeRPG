@@ -946,6 +946,7 @@ c5_saida_secreta:{
 },
 
 c5_filmou_tunel:{
+  falante:'o rapaz da câmera',
   texto:[
     'O rapaz da câmera filma o túnel inteiro, andando de costas, com a luz batendo no trilho improvisado.',
     'No fim, do lado de fora, ele filma a marca de pneu e fala baixo:',
@@ -1236,10 +1237,10 @@ c5_escondeu:{
   texto:[
     'Você apaga a lanterna e se enfia atrás de uma coluna de rocha, e o escuro é tão completo que os seus olhos inventam formas.',
     'Duas pessoas passam com lanterna de cabeça, rápido, reclamando.',
-    '"É o disjuntor. É sempre o disjuntor."',
-    '"Não é o disjuntor, tá cortado. Olha aqui, ó. Cortado."',
+    fala('o homem da lanterna', 'É o disjuntor. É sempre o disjuntor.'),
+    fala('a mulher da lanterna', 'Não é o disjuntor, tá cortado. Olha aqui, ó. Cortado.'),
     'Silêncio. Uma das lanternas varre a caverna e passa a meio metro de você.',
-    '"Tem moleque aqui dentro."',
+    fala('a mulher da lanterna', 'Tem moleque aqui dentro.', 'baixo'),
     'E é isso: eles sabem, e não estão com medo, e agora você está numa caverna escura com duas pessoas que sabem.'
   ],
   ef:{flag:'sabem_que_voce_esta_aqui',

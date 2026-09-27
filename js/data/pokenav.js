@@ -80,28 +80,28 @@ const CONTATOS = [
   }
 },
 {
-  id:'ushio', tipo:'figura', nome:'Sr. Ives', papel:'o velho da vassoura', cidade:d=>d.jogador.cidade,
-  requer:d=>!!(d.npcs['Sr. Ives'] && d.npcs['Sr. Ives'].opiniao >= 2),
+  id:'ushio', tipo:'figura', nome:d=>vz().nome, papel:'', cidade:d=>d.jogador.cidade,
+  requer:d=>{ const n = d.npcs[vz().nome]; return !!(n && n.opiniao >= 2); },
   oferece:['favor','missao'],
   missao:{
-    rotulo:'Perguntar se ele precisa de alguma coisa',
+    rotulo:'Perguntar se precisa de alguma coisa',
     rotuloEntrega:'Ligar e contar da medalha',
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
-      fala('Sr. Ives', 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
-      fala('Sr. Ives', 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
-      fala('Sr. Ives', 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
-      fala('Sr. Ives', 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
-      fala('Sr. Ives', 'Você anda por aí. Se aparecer, você vai saber que é.')
+      d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
+      d=>fala(vz().nome, 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      d=>fala(vz().nome, 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
+      d=>fala(vz().nome, 'Você anda por aí. Se aparecer, você vai saber que é.')
     ],
     objetivo:d=>Estado.contaItem('Medalha de natação da filha do Vernon') > 0,
     entregue:[
       d=>fala(d.jogador.nome, 'Eu achei.'),
       'Silêncio do outro lado por uns quatro segundos.',
-      fala('Sr. Ives', 'Não me diz onde.'),
-      fala('Sr. Ives', 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
-      fala('Sr. Ives', 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
-      fala('Sr. Ives', 'Ele vai querer conversar. Não fica.')
+      d=>fala(vz().nome, 'Não me diz onde.'),
+      d=>fala(vz().nome, 'Eu não quero saber onde estava, eu não quero saber quem tinha, eu não quero saber quanto custou.'),
+      d=>fala(vz().nome, 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
+      d=>fala(vz().nome, 'Ele vai querer conversar. Não fica.')
     ],
     recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Vernon');
       Estado.subirStatus('carisma');
@@ -110,12 +110,12 @@ const CONTATOS = [
     marca:'devolveu_a_medalha'
   },
   favor:{
-    rotulo:'Perguntar o que ele ouviu falar',
+    rotulo:'Perguntar o que anda ouvindo',
     limite:99, esperaCap:2,
     texto:d=>[
-      fala('Sr. Ives', 'Eu varro calçada, {menino|menina}. Calçada é onde a cidade fala.'),
-      fala('Sr. Ives', 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
-      fala('Sr. Ives', 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
+      fala(vz().nome, `Eu fico aqui na frente de casa ${vz().fazer.replace(/^\S+/, m => m.replace(/r$/, 'ndo'))}, {menino|menina}. A frente de casa é onde a cidade fala.`),
+      d=>fala(vz().nome, 'Passou gente aqui perguntando de você. Não era da Liga. Eu não dei linha nenhuma.'),
+      d=>fala(vz().nome, 'E olha: quando alguém te oferecer coisa demais de graça, conta quantas saídas tem a sala.')
     ],
     efeito:d=>{ Estado.subirStatus('percepcao'); return [{tipo:'rep', texto:'PERCEPÇÃO +1 — você passou a contar as saídas das salas.'}]; }
   }
@@ -785,26 +785,26 @@ const CHAMADAS = [
   cond:d=>Estado.temNumero('ushio') && !!d.flags.divida_pendente && d.capitulo >= 5,
   peso:2,
   falas:d=>[
-    fala('Sr. Ives', 'Não é cobrança.'),
-    fala('Sr. Ives', 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
-    fala('Sr. Ives', 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
+    fala(vz().nome, 'Não é cobrança.'),
+    fala(vz().nome, 'Eu sei que parece cobrança, ligar do nada, mas não é.'),
+    fala(vz().nome, 'É que eu tô com a caixa de metal aqui na mão e eu não sei mais o que eu tô guardando ela pra quê.', 'baixo')
   ],
   escolhas:[
     {texto:'"Eu volto. Eu prometi e eu volto."',
      ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Repetiu a promessa no telefone quando podia ter mudado de assunto'}},
-     resultado:[fala('Sr. Ives', 'Eu sei.'), fala('Sr. Ives', 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
-    {texto:'Perguntar como vai o joelho dele.',
+     resultado:[d=>fala(vz().nome, 'Eu sei.'), d=>fala(vz().nome, 'Eu ligo de novo daqui uns meses só pra te irritar.', 'riso')]},
+    {texto:d=>`Perguntar como vai o joelho ${vz().dele}.`,
      ef:{moral:4, rep:{eixo:'bom',delta:2,motivo:'Perguntou do joelho em vez de falar da dívida'},
-         npc:{nome:'Sr. Ives', opiniao:3, memoria:'Você perguntou do joelho dele numa ligação em que ele ia falar de dívida.'}},
+         npc:d=>({nome:vz().nome, opiniao:3, memoria:`Você perguntou do joelho ${vz().dele} numa ligação em que ${vz().ele} ia falar de dívida.`})},
      resultado:[
        'Silêncio de uns quatro segundos.',
-       fala('Sr. Ives', 'Como é que você sabe do joelho?'),
-       fala('Sr. Ives', 'Eu não falei do joelho pra ninguém.', 'baixo'),
-       fala('Sr. Ives', 'Tá ruim. Tá ruim mesmo. Obrigado por perguntar.')
+       d=>fala(vz().nome, 'Como é que você sabe do joelho?'),
+       d=>fala(vz().nome, 'Eu não falei do joelho pra ninguém.', 'baixo'),
+       d=>fala(vz().nome, `Tá ruim. Tá ruim mesmo. ${vz().f ? 'Obrigada' : 'Obrigado'} por perguntar.`)
      ]},
-    {texto:'"Vende a caixa, seu Ives. Eu não mereço."',
-     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou o velho vender o que ele guardava pra você'}},
-     resultado:[fala('Sr. Ives', 'Não é sobre merecer.', 'frio'), fala('Sr. Ives', 'Boa viagem, {menino|menina}.')]}
+    {texto:d=>`"Vende a caixa, ${vz().trat}. Eu não mereço."`,
+     ef:{rep:{eixo:'ruim',delta:1,motivo:'Mandou vender o que guardavam pra você'}},
+     resultado:[d=>fala(vz().nome, 'Não é sobre merecer.', 'frio'), d=>fala(vz().nome, 'Boa viagem, {menino|menina}.')]}
   ]
 },
 {

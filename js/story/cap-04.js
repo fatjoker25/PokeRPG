@@ -546,6 +546,7 @@ c4_teo:{
 },
 
 c4_teo_piada:{
+  falante:'Ezra',
   texto:[
     '"Duas vezes é pouco. Eu pretendo perder mais."',
     'Ele olha pra você com uma desconfiança genuína, procurando o deboche, e não acha.',
@@ -1156,16 +1157,16 @@ c4_rua2:{
     'A rua continua sendo a rua. A luz baixou um pouco e a poeira ficou dourada, o que quase compensa a poeira.',
     'Ainda tem o museu de letras faltando. Ainda tem a porta de metal no fim da rua. E ainda tem, longe, a cada vinte minutos, a detonação.',
     'Na calçada da padaria, dois homens de macacão cinza dividem uma marmita e uma conversa que você pega no meio:',
-    '"...e aí o cara do escritório falou que era pra parar o setor quatro."',
-    '"Parar por quê?"',
-    '"Sei lá. Falou que era estudo."',
+    fala('Falk', '...e aí o cara do escritório falou que era pra parar o setor quatro.'),
+    fala('o outro operário', 'Parar por quê?'),
+    fala('Falk', 'Sei lá. Falou que era estudo.'),
     'O outro raspa a marmita com o garfo.',
-    '"Estudo em pedreira é uma coisa só, Falk."',
-    '"É?"',
-    '"É alguém querendo comprar."',
+    fala('o outro operário', 'Estudo em pedreira é uma coisa só, Falk.'),
+    fala('Falk', 'É?'),
+    fala('o outro operário', 'É alguém querendo comprar.'),
     'Eles te veem parado e param de falar, do jeito educado e total com que gente de cidade pequena para de falar quando alguém de fora chega perto.',
-    '"Boa tarde", diz um.',
-    '"Boa tarde."',
+    fala('Falk', 'Boa tarde.'),
+    d=>fala(d.jogador.nome, 'Boa tarde.'),
     'E é o fim da conversa.'
   ],
   ef:{flag:'ouviu_do_setor_quatro',
@@ -2332,6 +2333,7 @@ c4_quanto_pagam:{
 },
 
 c4_entregou_rapaz:{
+  falante:'o guarda',
   texto:[
     'Você descreve: dezenove anos mais ou menos, uniforme grande demais, turno da tarde, saco de estopa no bolso de trás.',
     'O guarda escreve tudo. Sabe de quem é antes de você terminar — dá pra ver no rosto dele, no jeito que ele para de escrever por meio segundo e continua.',
