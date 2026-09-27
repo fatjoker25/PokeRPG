@@ -1376,9 +1376,10 @@ h3.cat-item{
 }
 .dex-cela .n{font-family:var(--mono);font-size:11px;color:var(--dex-txt-3, var(--texto-tenue));flex:0 0 auto}
 .dex-cela .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-.dex-cela.vis .nm{max-width:calc(100% - 44px)}
+/* o selo é item da linha, não sobreposição: por cima, ele comia o
+   fim do nome ("Bulbasau", "Pidgeott") em qualquer coluna estreita */
 .dex-cela .marca{
-  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  flex:0 0 auto;margin-left:auto;
   font-size:9px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--dex-txt-3, var(--texto-tenue));
   background:rgba(255,255,255,.85);padding:0 2px;border-radius:3px
@@ -2233,8 +2234,8 @@ h3.cat-item{
 /* O brilho de captura: estrela de quatro pontas desenhada (o arquivo
    sparkle não existe na origem), cinco delas saindo em leque. */
 .arremesso .brilho{
-  position:absolute;width:10px;height:10px;opacity:0;
-  background:#fff7cf;
+  position:absolute;width:16px;height:16px;opacity:0;
+  background:radial-gradient(circle,#ffffff 0 30%,#fff3a8 60%,#ffd84a 100%);
   clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
   filter:drop-shadow(0 0 3px rgba(255,236,150,.95));
 }

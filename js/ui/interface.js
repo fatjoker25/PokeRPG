@@ -1055,19 +1055,25 @@ const UI = {
     /* 4 captura — brilho: estrelinhas saindo em volta da bola */
     const brilhar = () => {
       const cx = xt + TAM/2, cy = yChao + TAM*0.3;
-      const giros = [-90, -30, 30, 150, 210];
-      return Promise.all(giros.map((g, i) => {
+      /* duas levas de estrelas, como nos jogos: a primeira abre em
+         leque por cima da bola, a segunda fecha o círculo por baixo.
+         Com 10 px e uma leva só ninguém percebia que tinha brilho. */
+      const leva = (giros, atraso) => giros.map((g, i) => {
         const e = document.createElement('span');
         e.className = 'brilho';
         e.style.left = cx + 'px'; e.style.top = cy + 'px';
         camada.appendChild(e);
-        const r = g * Math.PI / 180, d = 24 + (i % 2) * 6;
+        const r = g * Math.PI / 180, d = 34 + (i % 2) * 10;
         return tocar(e, [
-          {transform:'translate(-50%,-50%) scale(.3)', opacity:0},
-          {transform:`translate(calc(-50% + ${Math.cos(r)*d*.5}px), calc(-50% + ${Math.sin(r)*d*.5}px)) scale(1.1)`, opacity:1, offset:.35},
-          {transform:`translate(calc(-50% + ${Math.cos(r)*d}px), calc(-50% + ${Math.sin(r)*d}px)) scale(.6)`, opacity:0}
-        ], 680, {easing:'ease-out', delay:i * 40});
-      }));
+          {transform:'translate(-50%,-50%) scale(.3) rotate(0deg)', opacity:0},
+          {transform:`translate(calc(-50% + ${Math.cos(r)*d*.55}px), calc(-50% + ${Math.sin(r)*d*.55}px)) scale(1.25) rotate(45deg)`, opacity:1, offset:.35},
+          {transform:`translate(calc(-50% + ${Math.cos(r)*d}px), calc(-50% + ${Math.sin(r)*d}px)) scale(.5) rotate(90deg)`, opacity:0}
+        ], 820, {easing:'ease-out', delay:atraso + i * 45});
+      });
+      return Promise.all([
+        ...leva([-90, -45, -135, -20, -160], 0),
+        ...leva([0, 180, 30, 150, 90], 260)
+      ]);
     };
     const fim = () => {
       if (acoes){ acoes.removeAttribute('aria-busy'); acoes.classList.remove('esperando'); }
@@ -3067,10 +3073,12 @@ const UI = {
       </div>`;
     }).join('');
     /* golpe que a espécie sabe na sua mão mas não é da lista dela
-       (veio da forma anterior, ou do Relembrador) */
+       (veio de TM, ou da forma anterior antes de evoluir) */
     const fora = [...sabidos].filter(n => !vistos.has(n));
-    const nTem = lista.filter(([, n]) => sabidos.has(n)).length;
-    return `<h3 class="cat-item">Golpes <span class="fraco">· ${nTem} de ${lista.length} cadastrados</span></h3>
+    /* a tabela repete golpe (Ember no início e no 9): conta cada um uma vez */
+    const unicos = [...vistos];
+    const nTem = unicos.filter(n => sabidos.has(n)).length;
+    return `<h3 class="cat-item">Golpes <span class="fraco">· ${nTem} de ${unicos.length} cadastrados</span></h3>
       <div class="dex-golpes">${linhas}</div>
       ${fora.length ? `<div class="nota">Também sabe na sua mão: ${fora.map(n => this.esc(n)).join(', ')}.</div>` : ''}`;
   },
