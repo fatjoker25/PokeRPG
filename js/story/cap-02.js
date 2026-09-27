@@ -483,8 +483,8 @@ c2_pergunta_pedra:{
     '"Por que você tava esperando numa pedra?"',
     'Ele demora pra responder e a resposta é mais honesta do que a pergunta merecia.',
     '"Porque eu não sei ir sozinho." Ele olha o próprio tênis. "Tipo — eu sei andar. Eu não sei... ir."',
-    '"Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística."',
-    '"E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção."',
+    fala('Ezra', 'Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística.'),
+    fala('Ezra', 'E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção.'),
     'Ele finalmente te olha. "Achei que ia ser mais fácil."'
   ],
   ef:{flag:'teo_abriu_o_jogo',
@@ -535,7 +535,7 @@ c2_conversa:{
     'Ele te conta que trouxe comida pra dois "por precaução" e não sabe explicar precaução de quê. Que decorou o mapa inteiro e já se perdeu duas vezes. Que o Pidgey dele se chama Pidgey porque ele não conseguiu decidir um nome e agora é tarde.',
     'Você conta alguma coisa também. Não tudo. Mas alguma coisa.',
     'Em algum momento a atendente traz dois copos de água sem ninguém pedir.',
-    '"Agora a gente luta?" ele pergunta, e é impossível dizer não.'
+    fala('Ezra', 'Agora a gente luta?', null, 'Ele pergunta, e é impossível dizer não.')
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Sentou e ouviu um estranho por quarenta minutos'},
       npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no dia em que se conheceram.'},
@@ -562,7 +562,9 @@ c2_batalha_teo:{
     'O Pidgey sai e pousa no chão em vez de voar, o que é errado, e Ezra corrige ele em voz alta, e o Pidgey ignora.',
     'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
   ],
-  batalha:{dex:16, nivel:8, tipo:'treinador', treinador:'Ezra', fuga:false,
+  /* o Pidgey dele saiu de casa na mesma semana que o seu: um nível na
+     frente do seu melhor, nunca mais que nove */
+  batalha:{dex:16, nivel:d => Math.min(9, Math.max(6, Math.max(5, ...(d.time || []).map(p => p.nivel)) + 1)), tipo:'treinador', treinador:'Ezra', fuga:false,
            vitoria:'c2_pos_batalha', derrota:'c2_pos_derrota', gameover:'gameover'}
 },
 
@@ -570,7 +572,7 @@ c2_pos_derrota:{
   texto:[
     'O seu último Pokémon senta no chão de tinta descascada e não levanta.',
     'Ezra demora a entender que ganhou. Quando entende, não comemora — olha em volta primeiro, pra ver se teve gente vendo, e não teve.',
-    '"Ô." Ele se aproxima com a carteira já na mão, o que é exatamente o contrário do que se faz. "Regra é regra, mas eu não vou pegar dinheiro de quem saiu de casa hoje."',
+    '"Ô." Ele se aproxima com a carteira já na mão, o que é exatamente o contrário do que se faz. "Regra é regra, mas eu não vou pegar dinheiro de quem acabou de sair de casa."',
     'Ele guarda a carteira de novo. Fica evidente que ele ensaiou essa frase durante o combate inteiro e que ela saiu errada.',
     'A atendente aparece na porta dos fundos com dois frascos e não pergunta nada. Já viu isso mil vezes.'
   ],
@@ -815,7 +817,9 @@ c2_fim:{
       : 'Ninguém te avisou de nada. Talvez não tenha nada pra avisar.',
     'Depois daqui, o caminho é seu. Você decide quando entra, por onde, e se entra.'
   ],
-  fim:true, resumo:'Viridian ficou pra trás, e alguém entrou na floresta antes de você.'
+  fim:true, resumo:d => d.flags.entrou_com_teo
+    ? 'Viridian ficou pra trás, e vocês dois chegaram juntos na beira da floresta.'
+    : 'Viridian ficou pra trás, e alguém entrou na floresta antes de você.'
 }
 }}
 

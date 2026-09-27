@@ -314,7 +314,10 @@ const Jogo = {
                + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '');
     const aviso = [{tipo: (r.grau==='falha'?'dano':r.grau==='critico'?'rep':'info'),
       texto:`${soma} = ${r.total} contra ${t.dificuldade} — ${r.texto}.`}];
-    if (r.afinidade && r.afinidade.linha) aviso.push({tipo:'natureza', texto:r.afinidade.linha});
+    /* uma frase por bicho: se o temperamento já falou dele, a afinidade
+       não fala de novo (e não desdiz) */
+    const jaFalou = r.linhaTime && r.afinidade && r.afinidade.nome && r.linhaTime.includes(r.afinidade.nome);
+    if (r.afinidade && r.afinidade.linha && !jaFalou) aviso.push({tipo:'natureza', texto:r.afinidade.linha});
     if (r.linhaTime) aviso.push({tipo:'natureza', texto:r.linhaTime});
     this.irPara(destino, aviso);
   },

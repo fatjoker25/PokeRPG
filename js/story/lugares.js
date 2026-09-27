@@ -7,7 +7,7 @@
 const ANCORAS = {
   2:  {local:'viridian',  chamada:'Tem um mural de recados na entrada do Centro Pokémon.'},
   3:  {local:'floresta',  chamada:'Um som fino, repetido, vindo de dentro do mato fechado.'},
-  4:  {local:'pewter',    chamada:'Uma detonação a cada vinte minutos, e ninguém na rua levanta a cabeça.'},
+  4:  {local:'pewter',    chamada:'Uma detonação que faz o vidro das lojas tremer, e a rua inteira para sem ninguém levantar a cabeça.'},
   5:  {local:'monte_lua', chamada:'O cabo elétrico no chão da caverna leva a algum lugar.'},
   6:  {local:'cerulean',  chamada:'Na ponte norte tem gente reunida em volta de uma mesa com toalha.'},
   7:  {local:'lavender',  chamada:'Um som de osso batendo em pedra, três vezes, pausa, três vezes.'},

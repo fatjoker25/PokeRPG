@@ -265,5 +265,5 @@ const Nomes = {
 };
 
 /* o jogador escreveu alguma coisa que é "qual é o seu nome?" */
-const _PERGUNTA_NOME = /\b(qual|como)\b.{0,18}\b(seu|teu|o seu|o teu)?\s*nome\b|\bcomo\b.{0,12}\b(voc[êe]|tu)\b.{0,12}\bchama\b|\bqual\b.{0,10}\bgraça\b|\bme diz o (seu|teu) nome\b|\bseu nome\?/i;
+const _PERGUNTA_NOME = /\b(qual|como)\b.{0,18}\b(seu|teu|o seu|o teu)?\s*nome\b|\bcomo\b.{0,12}\b(voc[êe]|tu)(?![a-zà-ú]).{0,12}\bchama\b|\bqual\b.{0,10}\bgraça\b|\bme diz o (seu|teu) nome\b|\bseu nome\?/i;
 function perguntaDeNome(texto){ return _PERGUNTA_NOME.test(String(texto || '')); }

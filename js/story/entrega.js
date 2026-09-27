@@ -94,7 +94,9 @@ c1_professor:{
     'Você não chega nem na esquina.',
     'O Professor está parado no meio da rua, na frente do portão do laboratório, de jaleco por cima de uma camisa de dormir, com uma bandeja de metal nas mãos e três bolas vermelhas e brancas em cima dela.',
     fala('o Professor', 'Eu disse oito horas.', null, 'Ele olha o relógio de pulso por cima da bandeja, sem pressa nenhuma.'),
-    fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
+    d=>d.flags.dormiu_demais
+      ? fala('o Professor', 'São dez pras dez. Eu fiquei aqui mesmo assim, que bandeja não tem pressa.')
+      : fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
     'Cada bola tem uma tira de fita crepe colada no meio, com a letra dele: BULBASAUR, CHARMANDER, SQUIRTLE. Fora a fita, as três são iguais.',
     fala('o Professor', 'Escolhe. Aqui mesmo, na rua. No meu tempo era assim e ninguém morreu disso.')
   ],

@@ -582,10 +582,17 @@ const UI = {
     return /^\s*[\u2014\u2013]\s*(com uma foto|sem foto|letra d|escrit|a caneta|a lápis|assinad|datilograf|impress)/i.test(depois || '');
   },
 
+  /* Quem fala sozinho numa tela sem cena (o rival na estrada): toda
+     aspa é dele, e nenhuma vira fala sua por alternância. */
+  narrarMonologo(linhas, quem){
+    this.monologoDe = quem;
+    try { return this.narrar(linhas); } finally { this.monologoDe = null; }
+  },
+
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
     /* `falante` na cena manda em tudo: é o autor dizendo quem fala. */
-    const npc = this.falanteDaCena || this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
+    const npc = this.monologoDe || this.falanteDaCena || this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
     const suas = minhas || this.minhasFalasDaCena || null;
     const meuNome = (Estado.dados && Estado.j) ? Estado.j.nome : null;
     /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
@@ -645,7 +652,8 @@ const UI = {
           continue;
         }
         /* a frase que você acabou de escolher é sua, sem discussão */
-        if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
+        if (this.monologoDe) lado = 'npc';
+        else if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
         else if (primeira)
           lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
                : this.ladoDaFala(pendente, null, npc);
@@ -759,7 +767,7 @@ const UI = {
        largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
     const aqui = Mundo.atual();
     if (Estado.dados.capitulo > 1 && aqui && aqui.tipo === 'cidade' && (aqui.lugares || []).includes('centro'))
-      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Passar no Centro Pokémon de ${this.esc(aqui.nome)} e voltar</button>`));
+      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Ir ao balcão do Centro Pokémon e voltar</button>`));
 
     /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
        mostrou nada e virava um botão que convidava a clicar à toa. */
@@ -2080,7 +2088,7 @@ const UI = {
       <div class="cap-cabecalho">
         <div class="num">Encerramento</div>
         <div class="tit">${this.esc(cap.titulo)}</div>
-        <div class="loc">${this.esc(cap.cenas[Estado.dados.cena].resumo || '')}</div>
+        <div class="loc">${this.esc(txt(cap.cenas[Estado.dados.cena].resumo) || '')}</div>
       </div>
       <div id="avisos" class="avisos"></div>
       <h3>Pontos de progressão</h3>
@@ -2358,7 +2366,7 @@ const UI = {
         <div class="tit">${this.esc(r.nome)}</div>
         <div class="loc" style="color:${cor}">${this.esc(A.nome)} — ${this.esc(A.resumo)}</div>
       </div>
-      <div class="narrativa">${this.narrar(falaRival())}</div>
+      <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -2387,7 +2395,7 @@ const UI = {
         <div class="tit">${this.esc(R.nome)}</div>
         <div class="loc" style="color:${cor}">${this.esc(R.desde)} — ${this.esc(R.origem)}</div>
       </div>
-      <div class="narrativa">${this.narrar(falaRivalExtra(R))}</div>
+      <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Nolan' ? 'ele' : 'ele'}</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -3721,7 +3729,7 @@ const UI = {
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
       <div class="linha"><span class="k">Nunca no mato</span><span class="v">fóssil (só renasce no laboratório), lendário e Porygon</span></div>
-      <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 7 em 100 vêm 4 a 8 acima · 1 em 100 vem 10 a 16 acima</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 4 em 100 vêm 3 a 5 acima · 1 em 100 vem 8 a 12 acima</span></div>
       <div class="linha"><span class="k">Forma</span><span class="v">só aparece quem pode existir naquele nível</span></div>
       <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>

@@ -404,7 +404,7 @@ function afazeresDoLocal(){
   const tem = ch => Mundo.descobriu(ch);
 
   if (L.tipo === 'rota' || L.tipo === 'especial'){
-    lista.push({id:'procurar', titulo:'Procurar Pokémon no mato',
+    lista.push({id:'procurar', titulo:Arenas.terreno(L.ambiente).procurar,
       sub:'Andar devagar, prestar atenção no barulho, esperar um Pokémon se mexer.'});
     lista.push({id:'vasculhar', titulo:'Vasculhar a área',
       sub:'Olhar debaixo de coisa, seguir trilha que não é trilha, ver o que ninguém viu.'});

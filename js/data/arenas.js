@@ -48,7 +48,42 @@ const NOME_DA_ARENA = {
   ginasio: 'quadra de ginásio'
 };
 
+/* De onde o bicho sai e pra onde ele volta, em cada ambiente. Caverna
+   não tem mato e cidade não tem galho: o texto da procura, do encontro
+   e da fuga lê daqui. */
+const TERRENO = {
+  campo:    {procurar:'Procurar Pokémon no mato', sai:'do mato', volta:'para o mato',
+             andar:'Você anda devagar pelo mato alto, parando a cada poucos passos.',
+             fuga:'Você corre. O capim corta a canela, mas você escapa.'},
+  floresta: {procurar:'Procurar Pokémon no mato', sai:'do meio das árvores', volta:'para o mato',
+             andar:'Você anda devagar entre as árvores, parando a cada poucos passos.',
+             fuga:'Você corre. Os galhos cortam sua cara, mas você escapa.'},
+  caverna:  {procurar:'Procurar Pokémon nas galerias', sai:'do escuro', volta:'para o escuro',
+             andar:'Você anda devagar pela galeria, com a mão na parede, parando a cada poucos passos.',
+             fuga:'Você corre no escuro. Bate o ombro na pedra duas vezes, mas escapa.'},
+  montanha: {procurar:'Procurar Pokémon entre as pedras', sai:'de trás de uma pedra', volta:'por entre as pedras',
+             andar:'Você sobe devagar entre as pedras soltas, parando a cada poucos passos.',
+             fuga:'Você desce correndo. As pedras soltas quase te derrubam, mas você escapa.'},
+  agua:     {procurar:'Procurar Pokémon na beira da água', sai:'da água', volta:'para a água',
+             andar:'Você anda devagar pela beira da água, parando a cada poucos passos.',
+             fuga:'Você corre pela areia molhada e escapa.'},
+  vulcao:   {procurar:'Procurar Pokémon entre as rochas', sai:'de trás de uma rocha', volta:'por entre as rochas',
+             andar:'Você anda devagar entre as rochas quentes, parando a cada poucos passos.',
+             fuga:'Você corre pela rocha quente, com a sola do tênis amolecendo, e escapa.'},
+  cidade:   {procurar:'Procurar Pokémon pelos cantos', sai:'de um beco', volta:'por um beco',
+             andar:'Você anda devagar pelos cantos, olhando atrás de lata e debaixo de escada.',
+             fuga:'Você corre, vira duas esquinas e escapa.'},
+  ruina:    {procurar:'Procurar Pokémon nos escombros', sai:'dos escombros', volta:'para os escombros',
+             andar:'Você anda devagar entre os escombros, parando a cada poucos passos.',
+             fuga:'Você corre por cima dos escombros, rala a mão, mas escapa.'},
+  cemiterio:{procurar:'Procurar Pokémon entre as lápides', sai:'de trás de uma lápide', volta:'por entre as lápides',
+             andar:'Você anda devagar entre as lápides, parando a cada poucos passos.',
+             fuga:'Você corre entre as lápides sem olhar pra trás e escapa.'}
+};
+
 const Arenas = {
+  terreno(amb){ return TERRENO[amb || this.ambienteAtual()] || TERRENO.campo; },
+
   /* Ginásio, Elite e torneio são quadra oficial, doa a onde for. */
   ehQuadra(){
     return typeof Jogo !== 'undefined' &&

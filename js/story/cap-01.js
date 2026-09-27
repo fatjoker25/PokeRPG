@@ -1690,9 +1690,13 @@ c1_saida:{
         return `Do seu lado, ${nomeExib(p)}, que chegou numa caixa térmica hoje e já vai pra estrada de novo, sem fazer ideia do que é uma rota, do mesmo jeito.`;
       return `Do seu lado, ${nomeExib(p)}, que nunca saiu desta cidade e que não faz ideia do que é uma rota, e que está indo do mesmo jeito.`;
     },
-    d=>d.flags.recebeu_do_goro
-      ? 'Uma e pouco da tarde. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
-      : 'Sete e cinquenta da manhã. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
+    d=>{
+      const hora = d.flags.recebeu_do_goro ? 'Uma e pouco da tarde'
+                 : d.flags.dormiu_demais ? 'Dez e pouco da manhã'
+                 : d.flags.recebeu_do_professor ? 'Oito e meia da manhã'
+                 : 'Sete e cinquenta da manhã';
+      return `${hora}. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.`;
+    }
   ],
   escolhas:[
     {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'},

@@ -1199,7 +1199,13 @@ c5_entrada:{
   texto:[
     'Você entra.',
     'Três passos lá dentro e a sua respiração vira a coisa mais alta do mundo. A caverna engole o som de um jeito que você não estava preparado: você fala uma palavra pra testar e a palavra não volta.',
-    'A nove metros a luz do dia acaba. Você acende a lanterna e o cone dela parece minúsculo.',
+    d=>{
+      const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
+      if (!l.pode) return 'A nove metros a luz do dia acaba. Você não tem luz nenhuma: anda com a mão na parede, contando os passos, com o pé tateando antes de pisar.';
+      return l.semPilha
+        ? `A nove metros a luz do dia acaba, e ${nomeExib(l.quem)} vira a única luz do mundo, um círculo pequeno em volta de vocês.`
+        : 'A nove metros a luz do dia acaba. Você acende a lanterna e o cone dela parece minúsculo.';
+    },
     d=>d.flags.carregando_ovos ? 'A caixa nos seus braços está quente e isso, aqui dentro, é a única coisa boa.' : '',
     'E aí você vê o cabo.',
     'Cabo elétrico no chão. Grosso, industrial, preso na parede com abraçadeira nova. Seguindo pra dentro.',
@@ -1514,7 +1520,11 @@ c5_cabo:{
   texto:[
     'O cabo te leva por vinte minutos de caverna.',
     'Ele é uma companhia estranha: enquanto tem cabo no chão, tem outra pessoa no mundo. Você segue ele como quem segue um corrimão.',
-    'A caverna vai abrindo. O teto sobe. Em certo ponto você percebe que já não precisa de lanterna e que não sabe há quanto tempo.',
+    d=>{
+      const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
+      const luz = !l.pode ? 'já está enxergando de novo' : l.semPilha ? `já não precisa da luz ${pron(l.quem).do} ${nomeExib(l.quem)}` : 'já não precisa de lanterna';
+      return `A caverna vai abrindo. O teto sobe. Em certo ponto você percebe que ${luz} e que não sabe há quanto tempo.`;
+    },
     'Depois vira luz.',
     'Uma câmara natural, grande, com refletores de obra de canteiro montados nas paredes. Mesas de cavalete. Caixas plásticas azuis empilhadas com etiqueta.',
     'E gaiolas.'

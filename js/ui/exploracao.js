@@ -183,8 +183,8 @@ const Exploracao = {
       if (Dados.chance(risco)){
         const enc = sortearSelvagem(novo.ambiente, novo.nivel, id);
         return this.encontro(enc, [Estado.conheceu(enc.dex)
-          ? `No meio do caminho, um ${enc.nome} sai do mato e não desvia.`
-          : 'No meio do caminho, um Pokémon sai do mato e não desvia.']);
+          ? `No meio do caminho, um ${enc.nome} sai ${Arenas.terreno(novo.ambiente).sai} e não desvia.`
+          : `No meio do caminho, um Pokémon sai ${Arenas.terreno(novo.ambiente).sai} e não desvia.`]);
       }
     }
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
@@ -209,14 +209,14 @@ const Exploracao = {
       Mundo.passar(1);
       if (Exploracao.repelenteAtivo()){
         return this.tela([
-          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e o mato se afasta antes de você chegar.'},
+          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e tudo que é bicho se afasta antes de você chegar.'},
           {tipo:'eco', texto:'Funciona. É esse o problema de funcionar.'}
         ]);
       }
       if (Dados.chance(78)){
         const p = sortearSelvagem(L.ambiente, L.nivel);
         return this.encontro(p, [
-          'Você anda devagar pelo mato alto, parando a cada poucos passos.',
+          Arenas.terreno(L.ambiente).andar,
           'Leva um tempo. Sempre leva mais tempo do que parece que vai levar.'
         ]);
       }

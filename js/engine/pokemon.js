@@ -505,8 +505,8 @@ function sortearSelvagem(ambiente='campo', nivelBase=8, localId=null){
   if (localId && typeof LOCAIS !== 'undefined' && LOCAIS[localId] && LOCAIS[localId].ambiente !== ambiente) localId = null;
   let nivel;
   const r = Dados.entre(1, 100);
-  if (r === 100)     nivel = Dados.entre(nivelBase + 10, nivelBase + 16);   // 1 em 100
-  else if (r >= 93)  nivel = Dados.entre(nivelBase + 4, nivelBase + 8);     // 7 em 100
+  if (r === 100)     nivel = Dados.entre(nivelBase + 8, nivelBase + 12);    // 1 em 100
+  else if (r >= 96)  nivel = Dados.entre(nivelBase + 3, nivelBase + 5);     // 4 em 100
   else if (r <= 5)   nivel = Math.max(2, Dados.entre(nivelBase - 5, nivelBase - 3));
   else               nivel = Math.max(2, Dados.entre(nivelBase - 2, nivelBase + 2));
   nivel = Math.min(70, nivel);

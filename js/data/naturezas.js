@@ -132,7 +132,9 @@ function linhaDeTemperamento(eixo, m, p, mod){
      ele olha pro cinto. */
   const como = x => x.naturezaVista ? `${nomeExib(x)} (${x.natureza})` : nomeExib(x);
   if (m.valor <= 0 && p.valor < 0)
-    return `Ninguém no cinto serve pra isso, e ${como(p.pokemon)} é o pior deles.`;
+    return m.pokemon.uid === p.pokemon.uid
+      ? `${como(p.pokemon)} atrapalha.`
+      : `Ninguém no cinto ajuda, e ${como(p.pokemon)} atrapalha.`;
   const partes = [];
   if (m.valor > 0) partes.push(`${como(m.pokemon)} acompanha bem`);
   if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid) partes.push(`${como(p.pokemon)} atrapalha`);

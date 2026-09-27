@@ -200,7 +200,7 @@ c4_senhora:{
   texto:[
     'O pastel é de carne e está frio e é a melhor coisa que você comeu em dois dias.',
     'Vocês dois comem sem falar nada. Passa um caminhão. Passa um casal discutindo baixo. Passa o tempo.',
-    'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos também. Voltou com dezesseis."',
+    'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos. Voltou com dezesseis."',
     'Ela não continua. Você entende que não é pra perguntar, e não pergunta.'
   ],
   ef:{presagio:'Você vai ouvir essa mesma conta — quinze, dezesseis — mais três vezes nessa jornada, e na terceira vai ser sobre alguém que você conhece.'},
@@ -1183,24 +1183,24 @@ c4_rua2:{
 
 c4_setor_quatro:{
   texto:[
-    '"Desculpa. O que é o setor quatro?"',
+    d=>fala(d.jogador.nome, 'Desculpa. O que é o setor quatro?'),
     'Os dois se olham. É um olhar rápido e completo, desses que decidem uma coisa inteira sem ninguém falar.',
-    '"É uma parte da pedreira", diz o mais velho. "Tem seis setores. Quatro é o mais fundo."',
-    '"E pararam."',
-    '"Pararam." Ele fecha a marmita. "Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou."',
-    '"Mas?"',
+    fala('o outro operário', 'É uma parte da pedreira. Tem seis setores. Quatro é o mais fundo.', null, 'Quem responde é o mais velho.'),
+    d=>fala(d.jogador.nome, 'E pararam.'),
+    fala('o outro operário', 'Pararam. Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou.', null, 'Ele fecha a marmita.'),
+    d=>fala(d.jogador.nome, 'Mas?'),
     'O mais novo — Falk — responde antes que o outro decida não responder:',
-    '"Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo."',
+    fala('Falk', 'Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo.'),
     'O mais velho olha pra ele do jeito que se olha pra quem falou demais.',
-    '"Ele é novo", diz o mais velho, pra você. "Fala o que pensa."',
-    '"Isso é ruim?"',
-    '"Aqui é."'
+    fala('o outro operário', 'Ele é novo. Fala o que pensa.', null, 'Ele diz isso pra você, não pro Falk.'),
+    d=>fala(d.jogador.nome, 'Isso é ruim?'),
+    fala('o outro operário', 'Aqui é.', 'frio')
   ],
   ef:{flag:'sabe_do_setor_quatro', moral:2,
       npc:{nome:'Falk', opiniao:2, memoria:'Te contou, contra o conselho do colega, que o setor parado é justamente o que dá pedra.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou de frente uma coisa que a cidade evita'},
       registrar:'O setor quatro é o único que dá pedra boa, e é justamente o que mandaram parar.',
-      presagio:'"Aqui é." Guarde o tom com que ele disse isso.'},
+      presagio:'Guarde o tom com que o mais velho respondeu.'},
   escolhas:[
     {texto:'"{Obrigado|Obrigada}. Não vou repetir isso pra ninguém."', vai:'c4_rua2',
      ef:{flag:'prometeu_silencio_pros_pedreiros', moral:2,
@@ -2251,7 +2251,7 @@ c4_sugestao:{
     '"A sirene toca três vezes e todo mundo sai. Se a sirene tocasse antes, uns vinte minutos antes, e alguém batesse na parede da bancada—"',
     '"Aí eles saem antes." Ele completa devagar. "E não saem todos juntos no susto."',
     'Ele coça o queixo.',
-    '"Isso ia atrasar a operação em vinte minutos por detonação. São três detonação por turno." Ele faz a conta. "Uma hora por turno."',
+    '"Isso ia atrasar vinte minutos cada detonação. Com uma a cada vinte minutos, eu paro a pedreira pela metade." Ele faz a conta de novo, pra ter certeza. "Metade."',
     '"E um olho custa quanto?"',
     'Ele não responde. Mas ele anota alguma coisa num papel e enfia no bolso da camisa, e a anotação é sua.'
   ],

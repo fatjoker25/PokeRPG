@@ -4849,7 +4849,9 @@ function linhaDeTemperamento(eixo, m, p, mod){
      ele olha pro cinto. */
   const como = x => x.naturezaVista ? `${nomeExib(x)} (${x.natureza})` : nomeExib(x);
   if (m.valor <= 0 && p.valor < 0)
-    return `Ninguém no cinto serve pra isso, e ${como(p.pokemon)} é o pior deles.`;
+    return m.pokemon.uid === p.pokemon.uid
+      ? `${como(p.pokemon)} atrapalha.`
+      : `Ninguém no cinto ajuda, e ${como(p.pokemon)} atrapalha.`;
   const partes = [];
   if (m.valor > 0) partes.push(`${como(m.pokemon)} acompanha bem`);
   if (p.valor < 0 && p.pokemon.uid !== m.pokemon.uid) partes.push(`${como(p.pokemon)} atrapalha`);
@@ -5361,7 +5363,7 @@ const Nomes = {
 };
 
 /* o jogador escreveu alguma coisa que é "qual é o seu nome?" */
-const _PERGUNTA_NOME = /\b(qual|como)\b.{0,18}\b(seu|teu|o seu|o teu)?\s*nome\b|\bcomo\b.{0,12}\b(voc[êe]|tu)\b.{0,12}\bchama\b|\bqual\b.{0,10}\bgraça\b|\bme diz o (seu|teu) nome\b|\bseu nome\?/i;
+const _PERGUNTA_NOME = /\b(qual|como)\b.{0,18}\b(seu|teu|o seu|o teu)?\s*nome\b|\bcomo\b.{0,12}\b(voc[êe]|tu)(?![a-zà-ú]).{0,12}\bchama\b|\bqual\b.{0,10}\bgraça\b|\bme diz o (seu|teu) nome\b|\bseu nome\?/i;
 function perguntaDeNome(texto){ return _PERGUNTA_NOME.test(String(texto || '')); }
 
 
@@ -5849,7 +5851,42 @@ const NOME_DA_ARENA = {
   ginasio: 'quadra de ginásio'
 };
 
+/* De onde o bicho sai e pra onde ele volta, em cada ambiente. Caverna
+   não tem mato e cidade não tem galho: o texto da procura, do encontro
+   e da fuga lê daqui. */
+const TERRENO = {
+  campo:    {procurar:'Procurar Pokémon no mato', sai:'do mato', volta:'para o mato',
+             andar:'Você anda devagar pelo mato alto, parando a cada poucos passos.',
+             fuga:'Você corre. O capim corta a canela, mas você escapa.'},
+  floresta: {procurar:'Procurar Pokémon no mato', sai:'do meio das árvores', volta:'para o mato',
+             andar:'Você anda devagar entre as árvores, parando a cada poucos passos.',
+             fuga:'Você corre. Os galhos cortam sua cara, mas você escapa.'},
+  caverna:  {procurar:'Procurar Pokémon nas galerias', sai:'do escuro', volta:'para o escuro',
+             andar:'Você anda devagar pela galeria, com a mão na parede, parando a cada poucos passos.',
+             fuga:'Você corre no escuro. Bate o ombro na pedra duas vezes, mas escapa.'},
+  montanha: {procurar:'Procurar Pokémon entre as pedras', sai:'de trás de uma pedra', volta:'por entre as pedras',
+             andar:'Você sobe devagar entre as pedras soltas, parando a cada poucos passos.',
+             fuga:'Você desce correndo. As pedras soltas quase te derrubam, mas você escapa.'},
+  agua:     {procurar:'Procurar Pokémon na beira da água', sai:'da água', volta:'para a água',
+             andar:'Você anda devagar pela beira da água, parando a cada poucos passos.',
+             fuga:'Você corre pela areia molhada e escapa.'},
+  vulcao:   {procurar:'Procurar Pokémon entre as rochas', sai:'de trás de uma rocha', volta:'por entre as rochas',
+             andar:'Você anda devagar entre as rochas quentes, parando a cada poucos passos.',
+             fuga:'Você corre pela rocha quente, com a sola do tênis amolecendo, e escapa.'},
+  cidade:   {procurar:'Procurar Pokémon pelos cantos', sai:'de um beco', volta:'por um beco',
+             andar:'Você anda devagar pelos cantos, olhando atrás de lata e debaixo de escada.',
+             fuga:'Você corre, vira duas esquinas e escapa.'},
+  ruina:    {procurar:'Procurar Pokémon nos escombros', sai:'dos escombros', volta:'para os escombros',
+             andar:'Você anda devagar entre os escombros, parando a cada poucos passos.',
+             fuga:'Você corre por cima dos escombros, rala a mão, mas escapa.'},
+  cemiterio:{procurar:'Procurar Pokémon entre as lápides', sai:'de trás de uma lápide', volta:'por entre as lápides',
+             andar:'Você anda devagar entre as lápides, parando a cada poucos passos.',
+             fuga:'Você corre entre as lápides sem olhar pra trás e escapa.'}
+};
+
 const Arenas = {
+  terreno(amb){ return TERRENO[amb || this.ambienteAtual()] || TERRENO.campo; },
+
   /* Ginásio, Elite e torneio são quadra oficial, doa a onde for. */
   ehQuadra(){
     return typeof Jogo !== 'undefined' &&
@@ -6523,7 +6560,7 @@ function afazeresDoLocal(){
   const tem = ch => Mundo.descobriu(ch);
 
   if (L.tipo === 'rota' || L.tipo === 'especial'){
-    lista.push({id:'procurar', titulo:'Procurar Pokémon no mato',
+    lista.push({id:'procurar', titulo:Arenas.terreno(L.ambiente).procurar,
       sub:'Andar devagar, prestar atenção no barulho, esperar um Pokémon se mexer.'});
     lista.push({id:'vasculhar', titulo:'Vasculhar a área',
       sub:'Olhar debaixo de coisa, seguir trilha que não é trilha, ver o que ninguém viu.'});
@@ -7382,8 +7419,8 @@ function sortearSelvagem(ambiente='campo', nivelBase=8, localId=null){
   if (localId && typeof LOCAIS !== 'undefined' && LOCAIS[localId] && LOCAIS[localId].ambiente !== ambiente) localId = null;
   let nivel;
   const r = Dados.entre(1, 100);
-  if (r === 100)     nivel = Dados.entre(nivelBase + 10, nivelBase + 16);   // 1 em 100
-  else if (r >= 93)  nivel = Dados.entre(nivelBase + 4, nivelBase + 8);     // 7 em 100
+  if (r === 100)     nivel = Dados.entre(nivelBase + 8, nivelBase + 12);    // 1 em 100
+  else if (r >= 96)  nivel = Dados.entre(nivelBase + 3, nivelBase + 5);     // 4 em 100
   else if (r <= 5)   nivel = Math.max(2, Dados.entre(nivelBase - 5, nivelBase - 3));
   else               nivel = Math.max(2, Dados.entre(nivelBase - 2, nivelBase + 2));
   nivel = Math.min(70, nivel);
@@ -7477,7 +7514,8 @@ function casaDaFicha(ficha){
    prima, vizinha… é mulher; o resto é homem. */
 function parentescoEhMulher(quem){
   const q = String(quem || '').trim().toLowerCase();
-  if (/^(pai|avô|avo|tio|irmão|irmao|padrinho|padrasto|primo|vizinho|tutor|dono)\b/.test(q)) return false;
+  /* \b não serve: pra regex, o ô de "avô" não é letra e a borda some */
+  if (/^(pai|avô|avo|tio|irmão|irmao|padrinho|padrasto|primo|vizinho|tutor|dono)(?![a-zà-ú])/.test(q)) return false;
   return true;
 }
 function casaEhMulher(){ return parentescoEhMulher(casaDe().quem); }
@@ -8930,7 +8968,7 @@ const Batalha = {
         this.leituraIntelecto = true;
         this.ev('natureza', inimigo.nomeAnunciado
           ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
-          : `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
+          : `Você não sabe o nome, mas já viu desenho de um parecido e sabe o que ele é: ${inimigo.tipos.join('/')}.`);
         if (t.grau === 'critico'){
           inimigo.naturezaVista = true;
           this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
@@ -8948,6 +8986,12 @@ const Batalha = {
             aguentando:false, seguidas:0, cortes:0, ultimoGolpe:null, transformado:null, origTipos:null};
   },
 
+  /* o chão da briga: a arena fixada pela cena, senão o lugar */
+  terreno(){
+    if (typeof Arenas === 'undefined') return {sai:'do mato', volta:'para o mato', fuga:'Você corre e escapa.'};
+    return Arenas.terreno(TERRENO[this.arena] ? this.arena : null);
+  },
+
   introPadrao(){
     const i = this.inimigo;
     const conhece = Estado.conheceu(i.dex);
@@ -8955,7 +8999,7 @@ const Batalha = {
     if (this.tipo === 'selvagem'){
       return conhece
         ? `Um ${i.nome} selvagem (Nv ${i.nivel}${nat}) aparece!`
-        : `Um Pokémon sai do mato e para na sua frente (Nv ${i.nivel}). Você nunca viu um desses.`;
+        : `Um Pokémon sai ${this.terreno().sai} e para na sua frente (Nv ${i.nivel}). Você nunca viu um desses de perto.`;
     }
     if (this.tipo === 'lendario') return `${nomeVisivel(i)} encara você. O ar fica pesado.`;
     return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
@@ -10160,7 +10204,7 @@ const Batalha = {
   verificarFim(){
     if (this.inimigo.hp <= 0){
       this.ev('vitoria', this.tipo === 'selvagem'
-        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. ${pron(this.inimigo).Ele} vai voltar.`
+        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu ${this.terreno().volta}. ${pron(this.inimigo).Ele} vai voltar.`
         : `${nomeVisivel(this.inimigo)} desmaiou!`);
       /* Como nos jogos: a experiência se divide por igual entre quem
          entrou contra esse adversário e ainda está de pé, e vale 1,5×
@@ -10246,7 +10290,7 @@ const Batalha = {
       const total = d + Estado.j.status.forca;
       this.ev('info', `Fuga: 1d10(${d}) + Força(${Estado.j.status.forca}) = ${total} — precisa ≥ 7`);
       if (total >= 7){
-        this.ev('fuga', 'Você corre. Os galhos cortam sua cara, mas você escapa.');
+        this.ev('fuga', this.terreno().fuga);
         return this.encerrar('escapou');
       }
       this.ev('erro', 'Você tropeça. Ele te alcança.');
@@ -13737,7 +13781,7 @@ LOJAS.celadon.andares.find(a => a.n === 2).itens.push(...TM_JOHTO.map(nomeDaTM))
 const ANCORAS = {
   2:  {local:'viridian',  chamada:'Tem um mural de recados na entrada do Centro Pokémon.'},
   3:  {local:'floresta',  chamada:'Um som fino, repetido, vindo de dentro do mato fechado.'},
-  4:  {local:'pewter',    chamada:'Uma detonação a cada vinte minutos, e ninguém na rua levanta a cabeça.'},
+  4:  {local:'pewter',    chamada:'Uma detonação que faz o vidro das lojas tremer, e a rua inteira para sem ninguém levantar a cabeça.'},
   5:  {local:'monte_lua', chamada:'O cabo elétrico no chão da caverna leva a algum lugar.'},
   6:  {local:'cerulean',  chamada:'Na ponte norte tem gente reunida em volta de uma mesa com toalha.'},
   7:  {local:'lavender',  chamada:'Um som de osso batendo em pedra, três vezes, pausa, três vezes.'},
@@ -18560,9 +18604,13 @@ c1_saida:{
         return `Do seu lado, ${nomeExib(p)}, que chegou numa caixa térmica hoje e já vai pra estrada de novo, sem fazer ideia do que é uma rota, do mesmo jeito.`;
       return `Do seu lado, ${nomeExib(p)}, que nunca saiu desta cidade e que não faz ideia do que é uma rota, e que está indo do mesmo jeito.`;
     },
-    d=>d.flags.recebeu_do_goro
-      ? 'Uma e pouco da tarde. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
-      : 'Sete e cinquenta da manhã. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.'
+    d=>{
+      const hora = d.flags.recebeu_do_goro ? 'Uma e pouco da tarde'
+                 : d.flags.dormiu_demais ? 'Dez e pouco da manhã'
+                 : d.flags.recebeu_do_professor ? 'Oito e meia da manhã'
+                 : 'Sete e cinquenta da manhã';
+      return `${hora}. Você não andou nem uma hora de casa e já é outra pessoa, o que é ridículo e verdadeiro.`;
+    }
   ],
   escolhas:[
     {texto:'Entrar no mato.', vai:'c1_primeiro_encontro'},
@@ -19208,8 +19256,8 @@ c2_pergunta_pedra:{
     '"Por que você tava esperando numa pedra?"',
     'Ele demora pra responder e a resposta é mais honesta do que a pergunta merecia.',
     '"Porque eu não sei ir sozinho." Ele olha o próprio tênis. "Tipo — eu sei andar. Eu não sei... ir."',
-    '"Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística."',
-    '"E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção."',
+    fala('Ezra', 'Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística.'),
+    fala('Ezra', 'E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção.'),
     'Ele finalmente te olha. "Achei que ia ser mais fácil."'
   ],
   ef:{flag:'teo_abriu_o_jogo',
@@ -19260,7 +19308,7 @@ c2_conversa:{
     'Ele te conta que trouxe comida pra dois "por precaução" e não sabe explicar precaução de quê. Que decorou o mapa inteiro e já se perdeu duas vezes. Que o Pidgey dele se chama Pidgey porque ele não conseguiu decidir um nome e agora é tarde.',
     'Você conta alguma coisa também. Não tudo. Mas alguma coisa.',
     'Em algum momento a atendente traz dois copos de água sem ninguém pedir.',
-    '"Agora a gente luta?" ele pergunta, e é impossível dizer não.'
+    fala('Ezra', 'Agora a gente luta?', null, 'Ele pergunta, e é impossível dizer não.')
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Sentou e ouviu um estranho por quarenta minutos'},
       npc:{nome:'Ezra', opiniao:4, memoria:'Vocês sentaram na escada do Centro de Viridian e conversaram quarenta minutos no dia em que se conheceram.'},
@@ -19287,7 +19335,9 @@ c2_batalha_teo:{
     'O Pidgey sai e pousa no chão em vez de voar, o que é errado, e Ezra corrige ele em voz alta, e o Pidgey ignora.',
     'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
   ],
-  batalha:{dex:16, nivel:8, tipo:'treinador', treinador:'Ezra', fuga:false,
+  /* o Pidgey dele saiu de casa na mesma semana que o seu: um nível na
+     frente do seu melhor, nunca mais que nove */
+  batalha:{dex:16, nivel:d => Math.min(9, Math.max(6, Math.max(5, ...(d.time || []).map(p => p.nivel)) + 1)), tipo:'treinador', treinador:'Ezra', fuga:false,
            vitoria:'c2_pos_batalha', derrota:'c2_pos_derrota', gameover:'gameover'}
 },
 
@@ -19295,7 +19345,7 @@ c2_pos_derrota:{
   texto:[
     'O seu último Pokémon senta no chão de tinta descascada e não levanta.',
     'Ezra demora a entender que ganhou. Quando entende, não comemora — olha em volta primeiro, pra ver se teve gente vendo, e não teve.',
-    '"Ô." Ele se aproxima com a carteira já na mão, o que é exatamente o contrário do que se faz. "Regra é regra, mas eu não vou pegar dinheiro de quem saiu de casa hoje."',
+    '"Ô." Ele se aproxima com a carteira já na mão, o que é exatamente o contrário do que se faz. "Regra é regra, mas eu não vou pegar dinheiro de quem acabou de sair de casa."',
     'Ele guarda a carteira de novo. Fica evidente que ele ensaiou essa frase durante o combate inteiro e que ela saiu errada.',
     'A atendente aparece na porta dos fundos com dois frascos e não pergunta nada. Já viu isso mil vezes.'
   ],
@@ -19540,7 +19590,9 @@ c2_fim:{
       : 'Ninguém te avisou de nada. Talvez não tenha nada pra avisar.',
     'Depois daqui, o caminho é seu. Você decide quando entra, por onde, e se entra.'
   ],
-  fim:true, resumo:'Viridian ficou pra trás, e alguém entrou na floresta antes de você.'
+  fim:true, resumo:d => d.flags.entrou_com_teo
+    ? 'Viridian ficou pra trás, e vocês dois chegaram juntos na beira da floresta.'
+    : 'Viridian ficou pra trás, e alguém entrou na floresta antes de você.'
 }
 }}
 
@@ -19973,7 +20025,7 @@ c3_achou_cedo:{
     'Você vê antes de pisar: o chão à frente está errado.',
     'As folhas estão amassadas num rastro largo, e o rastro é fresco, e ele não é de arrasto de bicho — é de alguma coisa girando no mesmo lugar por muito tempo.',
     'Você contorna e chega por um ângulo de onde dá pra ver sem ser visto.',
-    'Cinquenta metros depois, você entende o que era o cheiro.'
+    'Cinquenta metros depois, você entende o que era o som.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Leu o chão antes de pisar nele'}},
   escolhas:[{texto:'Olhar.', vai:'c3_som'}]
@@ -20145,7 +20197,7 @@ c3_capturar:{
         p.status = 'veneno'; p.hp = Math.max(1, Math.floor(p.hpMax*0.3));
         const onde = Estado.adicionar(p);
         Estado.registrar('Capturou o Pikachu enquanto ele estava preso e indefeso.');
-        return [{tipo:'pokemon', texto:'Pikachu entrou no time. Ele está ferido, envenenado, e não olha para você.' + notaDestino(onde)}];
+        return [{tipo:'pokemon', texto:`Pikachu entrou no time. ${pron(p).Ele} está ferid${pron(p).o}, envenenad${pron(p).o}, e não olha para você.` + notaDestino(onde)}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Capturou um Pokémon indefeso numa armadilha'},
       flag:'pikachu_capturado_preso'},
@@ -20356,7 +20408,7 @@ c3_perdeu_cacador:{
 },
 
 c3_mentir:{
-  texto:['"Não vi nada."'],
+  texto:[d=>fala(d.jogador.nome, 'Não vi nada.')],
   teste:{status:'carisma', dificuldade:7, nomeStatus:'Carisma',
          critico:'c3_mentiu_bem', sucesso:'c3_mentiu_bem', parcial:'c3_mentiu_mal', falha:'c3_luta_cacador'}
 },
@@ -20656,7 +20708,7 @@ c4_senhora:{
   texto:[
     'O pastel é de carne e está frio e é a melhor coisa que você comeu em dois dias.',
     'Vocês dois comem sem falar nada. Passa um caminhão. Passa um casal discutindo baixo. Passa o tempo.',
-    'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos também. Voltou com dezesseis."',
+    'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos. Voltou com dezesseis."',
     'Ela não continua. Você entende que não é pra perguntar, e não pergunta.'
   ],
   ef:{presagio:'Você vai ouvir essa mesma conta — quinze, dezesseis — mais três vezes nessa jornada, e na terceira vai ser sobre alguém que você conhece.'},
@@ -21639,24 +21691,24 @@ c4_rua2:{
 
 c4_setor_quatro:{
   texto:[
-    '"Desculpa. O que é o setor quatro?"',
+    d=>fala(d.jogador.nome, 'Desculpa. O que é o setor quatro?'),
     'Os dois se olham. É um olhar rápido e completo, desses que decidem uma coisa inteira sem ninguém falar.',
-    '"É uma parte da pedreira", diz o mais velho. "Tem seis setores. Quatro é o mais fundo."',
-    '"E pararam."',
-    '"Pararam." Ele fecha a marmita. "Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou."',
-    '"Mas?"',
+    fala('o outro operário', 'É uma parte da pedreira. Tem seis setores. Quatro é o mais fundo.', null, 'Quem responde é o mais velho.'),
+    d=>fala(d.jogador.nome, 'E pararam.'),
+    fala('o outro operário', 'Pararam. Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou.', null, 'Ele fecha a marmita.'),
+    d=>fala(d.jogador.nome, 'Mas?'),
     'O mais novo — Falk — responde antes que o outro decida não responder:',
-    '"Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo."',
+    fala('Falk', 'Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo.'),
     'O mais velho olha pra ele do jeito que se olha pra quem falou demais.',
-    '"Ele é novo", diz o mais velho, pra você. "Fala o que pensa."',
-    '"Isso é ruim?"',
-    '"Aqui é."'
+    fala('o outro operário', 'Ele é novo. Fala o que pensa.', null, 'Ele diz isso pra você, não pro Falk.'),
+    d=>fala(d.jogador.nome, 'Isso é ruim?'),
+    fala('o outro operário', 'Aqui é.', 'frio')
   ],
   ef:{flag:'sabe_do_setor_quatro', moral:2,
       npc:{nome:'Falk', opiniao:2, memoria:'Te contou, contra o conselho do colega, que o setor parado é justamente o que dá pedra.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou de frente uma coisa que a cidade evita'},
       registrar:'O setor quatro é o único que dá pedra boa, e é justamente o que mandaram parar.',
-      presagio:'"Aqui é." Guarde o tom com que ele disse isso.'},
+      presagio:'Guarde o tom com que o mais velho respondeu.'},
   escolhas:[
     {texto:'"{Obrigado|Obrigada}. Não vou repetir isso pra ninguém."', vai:'c4_rua2',
      ef:{flag:'prometeu_silencio_pros_pedreiros', moral:2,
@@ -22707,7 +22759,7 @@ c4_sugestao:{
     '"A sirene toca três vezes e todo mundo sai. Se a sirene tocasse antes, uns vinte minutos antes, e alguém batesse na parede da bancada—"',
     '"Aí eles saem antes." Ele completa devagar. "E não saem todos juntos no susto."',
     'Ele coça o queixo.',
-    '"Isso ia atrasar a operação em vinte minutos por detonação. São três detonação por turno." Ele faz a conta. "Uma hora por turno."',
+    '"Isso ia atrasar vinte minutos cada detonação. Com uma a cada vinte minutos, eu paro a pedreira pela metade." Ele faz a conta de novo, pra ter certeza. "Metade."',
     '"E um olho custa quanto?"',
     'Ele não responde. Mas ele anota alguma coisa num papel e enfia no bolso da camisa, e a anotação é sua.'
   ],
@@ -24201,7 +24253,13 @@ c5_entrada:{
   texto:[
     'Você entra.',
     'Três passos lá dentro e a sua respiração vira a coisa mais alta do mundo. A caverna engole o som de um jeito que você não estava preparado: você fala uma palavra pra testar e a palavra não volta.',
-    'A nove metros a luz do dia acaba. Você acende a lanterna e o cone dela parece minúsculo.',
+    d=>{
+      const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
+      if (!l.pode) return 'A nove metros a luz do dia acaba. Você não tem luz nenhuma: anda com a mão na parede, contando os passos, com o pé tateando antes de pisar.';
+      return l.semPilha
+        ? `A nove metros a luz do dia acaba, e ${nomeExib(l.quem)} vira a única luz do mundo, um círculo pequeno em volta de vocês.`
+        : 'A nove metros a luz do dia acaba. Você acende a lanterna e o cone dela parece minúsculo.';
+    },
     d=>d.flags.carregando_ovos ? 'A caixa nos seus braços está quente e isso, aqui dentro, é a única coisa boa.' : '',
     'E aí você vê o cabo.',
     'Cabo elétrico no chão. Grosso, industrial, preso na parede com abraçadeira nova. Seguindo pra dentro.',
@@ -24516,7 +24574,11 @@ c5_cabo:{
   texto:[
     'O cabo te leva por vinte minutos de caverna.',
     'Ele é uma companhia estranha: enquanto tem cabo no chão, tem outra pessoa no mundo. Você segue ele como quem segue um corrimão.',
-    'A caverna vai abrindo. O teto sobe. Em certo ponto você percebe que já não precisa de lanterna e que não sabe há quanto tempo.',
+    d=>{
+      const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
+      const luz = !l.pode ? 'já está enxergando de novo' : l.semPilha ? `já não precisa da luz ${pron(l.quem).do} ${nomeExib(l.quem)}` : 'já não precisa de lanterna';
+      return `A caverna vai abrindo. O teto sobe. Em certo ponto você percebe que ${luz} e que não sabe há quanto tempo.`;
+    },
     'Depois vira luz.',
     'Uma câmara natural, grande, com refletores de obra de canteiro montados nas paredes. Mesas de cavalete. Caixas plásticas azuis empilhadas com etiqueta.',
     'E gaiolas.'
@@ -75063,7 +75125,9 @@ c1_professor:{
     'Você não chega nem na esquina.',
     'O Professor está parado no meio da rua, na frente do portão do laboratório, de jaleco por cima de uma camisa de dormir, com uma bandeja de metal nas mãos e três bolas vermelhas e brancas em cima dela.',
     fala('o Professor', 'Eu disse oito horas.', null, 'Ele olha o relógio de pulso por cima da bandeja, sem pressa nenhuma.'),
-    fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
+    d=>d.flags.dormiu_demais
+      ? fala('o Professor', 'São dez pras dez. Eu fiquei aqui mesmo assim, que bandeja não tem pressa.')
+      : fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
     'Cada bola tem uma tira de fita crepe colada no meio, com a letra dele: BULBASAUR, CHARMANDER, SQUIRTLE. Fora a fita, as três são iguais.',
     fala('o Professor', 'Escolhe. Aqui mesmo, na rua. No meu tempo era assim e ninguém morreu disso.')
   ],
@@ -77867,10 +77931,17 @@ const UI = {
     return /^\s*[\u2014\u2013]\s*(com uma foto|sem foto|letra d|escrit|a caneta|a lápis|assinad|datilograf|impress)/i.test(depois || '');
   },
 
+  /* Quem fala sozinho numa tela sem cena (o rival na estrada): toda
+     aspa é dele, e nenhuma vira fala sua por alternância. */
+  narrarMonologo(linhas, quem){
+    this.monologoDe = quem;
+    try { return this.narrar(linhas); } finally { this.monologoDe = null; }
+  },
+
   narrar(linhas, dono, minhas){
     const bruto = dono || this.npcDaCena || null;
     /* `falante` na cena manda em tudo: é o autor dizendo quem fala. */
-    const npc = this.falanteDaCena || this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
+    const npc = this.monologoDe || this.falanteDaCena || this.nomeConfiavel(bruto, linhas, this.npcEhProprio);
     const suas = minhas || this.minhasFalasDaCena || null;
     const meuNome = (Estado.dados && Estado.j) ? Estado.j.nome : null;
     /* `pendente` é a narração que veio IMEDIATAMENTE antes da próxima
@@ -77930,7 +78001,8 @@ const UI = {
           continue;
         }
         /* a frase que você acabou de escolher é sua, sem discussão */
-        if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
+        if (this.monologoDe) lado = 'npc';
+        else if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
         else if (primeira)
           lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
                : this.ladoDaFala(pendente, null, npc);
@@ -78044,7 +78116,7 @@ const UI = {
        largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
     const aqui = Mundo.atual();
     if (Estado.dados.capitulo > 1 && aqui && aqui.tipo === 'cidade' && (aqui.lugares || []).includes('centro'))
-      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Passar no Centro Pokémon de ${this.esc(aqui.nome)} e voltar</button>`));
+      c.appendChild(this.el(`<button class="escolha utilitaria" onclick="Cidade.centro()">Ir ao balcão do Centro Pokémon e voltar</button>`));
 
     /* Parar e olhar vale uma vez por cena: a segunda olhada nunca
        mostrou nada e virava um botão que convidava a clicar à toa. */
@@ -79365,7 +79437,7 @@ const UI = {
       <div class="cap-cabecalho">
         <div class="num">Encerramento</div>
         <div class="tit">${this.esc(cap.titulo)}</div>
-        <div class="loc">${this.esc(cap.cenas[Estado.dados.cena].resumo || '')}</div>
+        <div class="loc">${this.esc(txt(cap.cenas[Estado.dados.cena].resumo) || '')}</div>
       </div>
       <div id="avisos" class="avisos"></div>
       <h3>Pontos de progressão</h3>
@@ -79643,7 +79715,7 @@ const UI = {
         <div class="tit">${this.esc(r.nome)}</div>
         <div class="loc" style="color:${cor}">${this.esc(A.nome)} — ${this.esc(A.resumo)}</div>
       </div>
-      <div class="narrativa">${this.narrar(falaRival())}</div>
+      <div class="narrativa">${this.narrarMonologo(falaRival(), r.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${r.derrotas} × ${r.vitorias} ele</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -79672,7 +79744,7 @@ const UI = {
         <div class="tit">${this.esc(R.nome)}</div>
         <div class="loc" style="color:${cor}">${this.esc(R.desde)} — ${this.esc(R.origem)}</div>
       </div>
-      <div class="narrativa">${this.narrar(falaRivalExtra(R))}</div>
+      <div class="narrativa">${this.narrarMonologo(falaRivalExtra(R), R.nome)}</div>
       <div class="linha" style="margin-top:14px"><span class="k">Placar entre vocês</span>
         <span class="v">você ${reg.derrotas} × ${reg.vitorias} ${R.nome === 'Nolan' ? 'ele' : 'ele'}</span></div>
       <div class="linha"><span class="k">Time dele agora</span>
@@ -81006,7 +81078,7 @@ const UI = {
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
       <div class="linha"><span class="k">Nunca no mato</span><span class="v">fóssil (só renasce no laboratório), lendário e Porygon</span></div>
-      <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 7 em 100 vêm 4 a 8 acima · 1 em 100 vem 10 a 16 acima</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 4 em 100 vêm 3 a 5 acima · 1 em 100 vem 8 a 12 acima</span></div>
       <div class="linha"><span class="k">Forma</span><span class="v">só aparece quem pode existir naquele nível</span></div>
       <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
@@ -81936,8 +82008,8 @@ const Exploracao = {
       if (Dados.chance(risco)){
         const enc = sortearSelvagem(novo.ambiente, novo.nivel, id);
         return this.encontro(enc, [Estado.conheceu(enc.dex)
-          ? `No meio do caminho, um ${enc.nome} sai do mato e não desvia.`
-          : 'No meio do caminho, um Pokémon sai do mato e não desvia.']);
+          ? `No meio do caminho, um ${enc.nome} sai ${Arenas.terreno(novo.ambiente).sai} e não desvia.`
+          : `No meio do caminho, um Pokémon sai ${Arenas.terreno(novo.ambiente).sai} e não desvia.`]);
       }
     }
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
@@ -81962,14 +82034,14 @@ const Exploracao = {
       Mundo.passar(1);
       if (Exploracao.repelenteAtivo()){
         return this.tela([
-          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e o mato se afasta antes de você chegar.'},
+          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e tudo que é bicho se afasta antes de você chegar.'},
           {tipo:'eco', texto:'Funciona. É esse o problema de funcionar.'}
         ]);
       }
       if (Dados.chance(78)){
         const p = sortearSelvagem(L.ambiente, L.nivel);
         return this.encontro(p, [
-          'Você anda devagar pelo mato alto, parando a cada poucos passos.',
+          Arenas.terreno(L.ambiente).andar,
           'Leva um tempo. Sempre leva mais tempo do que parece que vai levar.'
         ]);
       }
@@ -82489,7 +82561,10 @@ const Jogo = {
                + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '');
     const aviso = [{tipo: (r.grau==='falha'?'dano':r.grau==='critico'?'rep':'info'),
       texto:`${soma} = ${r.total} contra ${t.dificuldade} — ${r.texto}.`}];
-    if (r.afinidade && r.afinidade.linha) aviso.push({tipo:'natureza', texto:r.afinidade.linha});
+    /* uma frase por bicho: se o temperamento já falou dele, a afinidade
+       não fala de novo (e não desdiz) */
+    const jaFalou = r.linhaTime && r.afinidade && r.afinidade.nome && r.linhaTime.includes(r.afinidade.nome);
+    if (r.afinidade && r.afinidade.linha && !jaFalou) aviso.push({tipo:'natureza', texto:r.afinidade.linha});
     if (r.linhaTime) aviso.push({tipo:'natureza', texto:r.linhaTime});
     this.irPara(destino, aviso);
   },

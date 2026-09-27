@@ -82,7 +82,8 @@ function casaDaFicha(ficha){
    prima, vizinha… é mulher; o resto é homem. */
 function parentescoEhMulher(quem){
   const q = String(quem || '').trim().toLowerCase();
-  if (/^(pai|avô|avo|tio|irmão|irmao|padrinho|padrasto|primo|vizinho|tutor|dono)\b/.test(q)) return false;
+  /* \b não serve: pra regex, o ô de "avô" não é letra e a borda some */
+  if (/^(pai|avô|avo|tio|irmão|irmao|padrinho|padrasto|primo|vizinho|tutor|dono)(?![a-zà-ú])/.test(q)) return false;
   return true;
 }
 function casaEhMulher(){ return parentescoEhMulher(casaDe().quem); }

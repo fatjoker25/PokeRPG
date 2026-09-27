@@ -423,7 +423,7 @@ c3_achou_cedo:{
     'Você vê antes de pisar: o chão à frente está errado.',
     'As folhas estão amassadas num rastro largo, e o rastro é fresco, e ele não é de arrasto de bicho — é de alguma coisa girando no mesmo lugar por muito tempo.',
     'Você contorna e chega por um ângulo de onde dá pra ver sem ser visto.',
-    'Cinquenta metros depois, você entende o que era o cheiro.'
+    'Cinquenta metros depois, você entende o que era o som.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Leu o chão antes de pisar nele'}},
   escolhas:[{texto:'Olhar.', vai:'c3_som'}]
@@ -595,7 +595,7 @@ c3_capturar:{
         p.status = 'veneno'; p.hp = Math.max(1, Math.floor(p.hpMax*0.3));
         const onde = Estado.adicionar(p);
         Estado.registrar('Capturou o Pikachu enquanto ele estava preso e indefeso.');
-        return [{tipo:'pokemon', texto:'Pikachu entrou no time. Ele está ferido, envenenado, e não olha para você.' + notaDestino(onde)}];
+        return [{tipo:'pokemon', texto:`Pikachu entrou no time. ${pron(p).Ele} está ferid${pron(p).o}, envenenad${pron(p).o}, e não olha para você.` + notaDestino(onde)}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Capturou um Pokémon indefeso numa armadilha'},
       flag:'pikachu_capturado_preso'},
@@ -806,7 +806,7 @@ c3_perdeu_cacador:{
 },
 
 c3_mentir:{
-  texto:['"Não vi nada."'],
+  texto:[d=>fala(d.jogador.nome, 'Não vi nada.')],
   teste:{status:'carisma', dificuldade:7, nomeStatus:'Carisma',
          critico:'c3_mentiu_bem', sucesso:'c3_mentiu_bem', parcial:'c3_mentiu_mal', falha:'c3_luta_cacador'}
 },

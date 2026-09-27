@@ -87,7 +87,7 @@ const Batalha = {
         this.leituraIntelecto = true;
         this.ev('natureza', inimigo.nomeAnunciado
           ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
-          : `Você já viu um parecido. Não sabe o nome, mas sabe o que ele é: ${inimigo.tipos.join('/')}.`);
+          : `Você não sabe o nome, mas já viu desenho de um parecido e sabe o que ele é: ${inimigo.tipos.join('/')}.`);
         if (t.grau === 'critico'){
           inimigo.naturezaVista = true;
           this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
@@ -105,6 +105,12 @@ const Batalha = {
             aguentando:false, seguidas:0, cortes:0, ultimoGolpe:null, transformado:null, origTipos:null};
   },
 
+  /* o chão da briga: a arena fixada pela cena, senão o lugar */
+  terreno(){
+    if (typeof Arenas === 'undefined') return {sai:'do mato', volta:'para o mato', fuga:'Você corre e escapa.'};
+    return Arenas.terreno(TERRENO[this.arena] ? this.arena : null);
+  },
+
   introPadrao(){
     const i = this.inimigo;
     const conhece = Estado.conheceu(i.dex);
@@ -112,7 +118,7 @@ const Batalha = {
     if (this.tipo === 'selvagem'){
       return conhece
         ? `Um ${i.nome} selvagem (Nv ${i.nivel}${nat}) aparece!`
-        : `Um Pokémon sai do mato e para na sua frente (Nv ${i.nivel}). Você nunca viu um desses.`;
+        : `Um Pokémon sai ${this.terreno().sai} e para na sua frente (Nv ${i.nivel}). Você nunca viu um desses de perto.`;
     }
     if (this.tipo === 'lendario') return `${nomeVisivel(i)} encara você. O ar fica pesado.`;
     return `${this.treinador || 'Um treinador'} enviou ${nomeVisivel(i)} (Nv ${i.nivel}${nat})!`;
@@ -1317,7 +1323,7 @@ const Batalha = {
   verificarFim(){
     if (this.inimigo.hp <= 0){
       this.ev('vitoria', this.tipo === 'selvagem'
-        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu para o mato. ${pron(this.inimigo).Ele} vai voltar.`
+        ? `${nomeVisivel(this.inimigo)} desmaiou e fugiu ${this.terreno().volta}. ${pron(this.inimigo).Ele} vai voltar.`
         : `${nomeVisivel(this.inimigo)} desmaiou!`);
       /* Como nos jogos: a experiência se divide por igual entre quem
          entrou contra esse adversário e ainda está de pé, e vale 1,5×
@@ -1403,7 +1409,7 @@ const Batalha = {
       const total = d + Estado.j.status.forca;
       this.ev('info', `Fuga: 1d10(${d}) + Força(${Estado.j.status.forca}) = ${total} — precisa ≥ 7`);
       if (total >= 7){
-        this.ev('fuga', 'Você corre. Os galhos cortam sua cara, mas você escapa.');
+        this.ev('fuga', this.terreno().fuga);
         return this.encerrar('escapou');
       }
       this.ev('erro', 'Você tropeça. Ele te alcança.');
