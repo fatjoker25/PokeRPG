@@ -259,12 +259,10 @@ const UI = {
 
       <h3>Pokémon inicial</h3>
       <div class="opcoes-radio" id="f-inicial" style="margin-bottom:10px">
-        <button data-v="1" class="sel">Bulbasaur</button>
-        <button data-v="4">Charmander</button>
-        <button data-v="7">Squirtle</button>
+        <button data-v="classico" class="sel">Um dos três clássicos</button>
         <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
-      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Em Pallet, o Professor te entrega a bola na rua, na manhã em que você sai de casa; em outra cidade, ele chega na perua do laboratório.</div>
+      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três bolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
@@ -294,7 +292,7 @@ const UI = {
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
         ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
-        : 'Tradição: você não começa com ele. Em Pallet, o Professor te entrega a bola na rua, na manhã em que você sai de casa; em outra cidade, ele chega na perua do laboratório.';
+        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três bolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
@@ -421,7 +419,7 @@ const UI = {
     if (typeof ELITE4  !== 'undefined') por(ELITE4);
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
-    ['Ezra','Carvalho','Professor Carvalho','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
+    ['Ezra','Oak','Professor Oak','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
      'Blue','Red','Fabre','Nadia','Vernon'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
@@ -3829,11 +3827,12 @@ const UI = {
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
       <h3>De onde vem o seu primeiro</h3>
-      <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor entrega na rua, na manhã em que você sai de casa</span></div>
+      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com as três bolas na sua frente · nenhuma vem escolhida</span></div>
+      <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor traz a bandeja pra rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
       <div class="linha"><span class="k">Nasceu longe de Pallet e Viridian</span><span class="v">a licença vem com a passagem do ônibus da Liga até Viridian, onde a estrada dos ginásios começa · sem licença, você paga a passagem</span></div>
-      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica. Quem assina o formulário é quem é responsável por você, e a bola fica lacrada com o seu nome numa etiqueta até você aparecer. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
+      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a bola que o laboratório separou te espera no balcão do Centro. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
       <div class="linha"><span class="k">Onde</span><span class="v">dez cidades · cada uma vende o que a cidade é</span></div>

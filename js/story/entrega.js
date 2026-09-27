@@ -10,15 +10,34 @@
 
 const ABERTURAS_ENTREGA = ['c1e_de_madrugada', 'c1e_quase_perdeu', 'c1e_chuva_na_praca'];
 
-/* nome bonito da espécie reservada, sem entregar a bola antes da hora */
+/* Os três de sempre. Ninguém escolhe no papel: a escolha é na frente
+   da caixa (ou da bandeja do Professor), na manhã da saída. */
+const INICIAIS_CLASSICOS = [1, 4, 7];
+
+function reservarInicial(d, dex){
+  d.entrega = Object.assign(d.entrega || {}, {dex});
+}
+/* quem nunca chegou a escolher (a bola veio pelo balcão) leva a que o
+   laboratório separou */
+function dexReservado(d){
+  if (!d.entrega) d.entrega = {};
+  if (!d.entrega.dex) d.entrega.dex = Dados.escolher(INICIAIS_CLASSICOS);
+  return d.entrega.dex;
+}
 function especieReservada(d){
-  const dex = (d.entrega && d.entrega.dex) || 1;
-  return (DEX[dex] || {}).nome || 'o seu';
+  return (DEX[dexReservado(d)] || {}).nome || 'o seu';
+}
+/* as três opções de escolha, uma por bola */
+function escolhasDeInicial(rotulo, vai, extra){
+  return INICIAIS_CLASSICOS.map(dex => Object.assign({
+    texto: rotulo(DEX[dex].nome), vai,
+    ef:{executar: d => { reservarInicial(d, dex); }}
+  }, extra || {}));
 }
 
 /* a bola sai da caixa e vira bicho */
 function entregarInicial(d){
-  const dex = (d.entrega && d.entrega.dex) || 1;
+  const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
     moral: 80, naturezaVista: true,
     historia: `Saiu da caixa térmica do Célio, em ${d.jogador.cidade}, numa manhã de ${['março','abril','maio','junho'][Dados.entre(0,3)]}.`
@@ -34,7 +53,7 @@ function entregarInicial(d){
 
 /* Em Pallet a bola sai da mão do Professor, na rua, na manhã da saída */
 function entregarDoProfessor(d){
-  const dex = (d.entrega && d.entrega.dex) || 1;
+  const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
     moral: 80, naturezaVista: true,
     historia: 'Entregue pelo Professor, na rua de Pallet, na manhã em que você saiu de casa.'
@@ -73,17 +92,29 @@ function entregarDoProfessor(d){
 c1_professor:{
   texto:[
     'Você não chega nem na esquina.',
-    'O Professor está parado no meio da rua, na frente do portão do laboratório, de jaleco por cima de uma camisa de dormir, com uma bola vermelha e branca numa mão e um caderno debaixo do braço.',
-    fala('o Professor', 'Eu disse oito horas.', null, 'Ele olha o relógio de pulso sem pressa nenhuma.'),
+    'O Professor está parado no meio da rua, na frente do portão do laboratório, de jaleco por cima de uma camisa de dormir, com uma bandeja de metal nas mãos e três bolas vermelhas e brancas em cima dela.',
+    fala('o Professor', 'Eu disse oito horas.', null, 'Ele olha o relógio de pulso por cima da bandeja, sem pressa nenhuma.'),
     fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
-    d=>`A etiqueta colada na bola tem o seu nome escrito à mão, e embaixo, menor, com a mesma caneta: ${especieReservada(d)}.`,
-    d=>fala('o Professor', `${especieReservada(d)}. Você pediu em fevereiro e não mudou de ideia até hoje. Eu reparo nessas coisas.`),
-    'Ele te dá a bola. Não tem discurso, não tem fita, não tem foto. Só a bola passando de uma mão pra outra, no meio da rua, com um Pidgey olhando do fio.',
+    'Cada bola tem uma tira de fita crepe colada no meio, com a letra dele: BULBASAUR, CHARMANDER, SQUIRTLE. Fora a fita, as três são iguais.',
+    fala('o Professor', 'Escolhe. Aqui mesmo, na rua. No meu tempo era assim e ninguém morreu disso.')
+  ],
+  escolhas: escolhasDeInicial(n => `Pegar a bola do ${n}.`, 'c1_professor_entrega')
+},
+
+c1_professor_entrega:{
+  texto:[
+    d=>`Você pega a bola do ${especieReservada(d)}. Ele não comenta a escolha. Tira um caderno do bolso do jaleco e escreve uma palavra só.`,
+    d=>{ const aposta = INICIAIS_CLASSICOS[String(d.jogador.nome).length % 3];
+         return aposta === dexReservado(d)
+           ? fala('o Professor', `Eu tinha apostado comigo mesmo que ia ser ${especieReservada(d)}. Eu reparo nessas coisas.`)
+           : fala('o Professor', `Eu tinha apostado comigo mesmo que ia ser ${DEX[aposta].nome}. Perdi. Faz quarenta anos que eu perco essa aposta.`, 'riso'); },
+    'Não tem discurso, não tem fita, não tem foto. Só a bola passando de uma mão pra outra, no meio da rua, com um Pidgey olhando do fio.',
     d=>{ const p = (d.time || []).slice(-1)[0];   // o último que entrou: quem ficou com o bicho da vizinha já tem um
          return p ? `A bola abre na sua mão antes de você decidir abrir. ${nomeExib(p)} sai, olha primeiro pra ele, depois pra você, e fica olhando pra você.`
                   : 'A bola pesa menos do que parecia.'; },
-    fala('o Professor', 'Ele vai atrás de você porque você é quem está na frente dele agora. O resto é com vocês dois.', 'baixo'),
-    'Ele anota alguma coisa no caderno, fecha, e volta pro laboratório sem se despedir, do jeito de quem vai estar lá quando você voltar.'
+    d=>{ const p = (d.time || []).slice(-1)[0];
+         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} vai atrás de você porque você é quem está na frente ${p ? pron(p).dele : 'dele'} agora. O resto é com vocês dois.`, 'baixo'); },
+    'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, do jeito de quem vai estar lá quando você voltar.'
   ],
   ef:{executar:d => entregarDoProfessor(d)},
   escolhas:[
@@ -118,7 +149,7 @@ c1e_de_madrugada:{
 
 c1e_a_pergunta_da_casa:{
   texto:[
-    d=>fala(d.jogador.nome, 'A senhora pediu uma? Quando tinha a minha idade.'),
+    d=>fala(d.jogador.nome, '{casa:A senhora|O senhor} pediu uma? Quando tinha a minha idade.'),
     'A porta do corredor abre o suficiente pra passar um rosto.',
     d=>fala(nomeCasa(), 'Pedi.'),
     d=>fala(nomeCasa(), 'Em setembro. Eu tinha dezesseis e o Célio era magro e tinha cabelo.', 'riso'),
@@ -262,7 +293,7 @@ c1e_a_praca:{
       registrar:'A perua do laboratório está na praça.'},
   escolhas:[
     {texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'},
-    {texto:'Perguntar se ele é o Professor Carvalho.', vai:'c1e_e_o_professor'},
+    {texto:'Perguntar se ele é o Professor Oak.', vai:'c1e_e_o_professor'},
     {texto:'Olhar a caixa térmica antes de responder.', vai:'c1e_olhou_a_caixa'},
     {texto:'Perguntar se ainda dá tempo.', vai:'c1e_da_tempo',
      cond:d=>!!d.flags.quase_perdeu_a_perua}
@@ -288,12 +319,12 @@ c1e_da_tempo:{
 
 c1e_e_o_professor:{
   texto:[
-    d=>fala(d.jogador.nome, 'O senhor é o Professor Carvalho?'),
+    d=>fala(d.jogador.nome, 'O senhor é o Professor Oak?'),
     'Ele ri sem tirar os olhos do caderno. É um riso curto, de piada velha.',
-    fala('Célio', 'O Carvalho tem setenta e um anos e não sai de Pallet desde que operou o joelho.'),
+    fala('Célio', 'O Oak tem setenta e um anos e não sai de Pallet desde que operou o joelho.'),
     fala('Célio', 'Eu sou o Célio. Eu dirijo.'),
     d=>fala(d.jogador.nome, 'Só dirige?'),
-    fala('Célio', 'Eu dirijo, eu carrego, eu anoto, eu ligo pras famílias, eu levo o que não foi retirado de volta e eu explico pro Carvalho por que não foi retirado.', 'riso'),
+    fala('Célio', 'Eu dirijo, eu carrego, eu anoto, eu ligo pras famílias, eu levo o que não foi retirado de volta e eu explico pro Oak por que não foi retirado.', 'riso'),
     fala('Célio', 'Então não. Eu não só dirijo. Mas na placa do carro tá escrito motorista, então eu digo motorista.'),
     'Ele finalmente olha pra cima.',
     fala('Célio', 'Nome.')
@@ -367,7 +398,7 @@ c1e_as_que_voltam:{
   texto:[
     d=>fala(d.jogador.nome, 'E as que voltam? Vão pra onde?'),
     fala('Célio', 'Voltam pro laboratório e esperam.'),
-    fala('Célio', 'Tem uma prateleira lá que o Carvalho chama de estoque e que todo mundo que trabalha lá chama de outra coisa.'),
+    fala('Célio', 'Tem uma prateleira lá que o Oak chama de estoque e que todo mundo que trabalha lá chama de outra coisa.'),
     d=>fala(d.jogador.nome, 'De quê?'),
     'Ele olha pra você medindo se vale a pena dizer.',
     fala('Célio', 'De "os que ninguém quis".', 'baixo'),
@@ -387,33 +418,30 @@ c1e_olhou_a_caixa:{
     'Ele espera você terminar de olhar.',
     fala('Célio', 'Três.'),
     d=>fala(d.jogador.nome, 'Três?'),
-    fala('Célio', 'Três bolas. Uma é sua, se você for quem eu acho que você é.'),
-    fala('Célio', 'As outras duas são de gente dessa cidade que pediu antes de você. Uma vem buscar hoje. A outra eu não sei.'),
+    fala('Célio', 'Três espécies. As mesmas três pra Kanto inteira, desde antes de você nascer.'),
+    fala('Célio', 'Quem tá na lista escolhe aqui, na frente da caixa. Papel nenhum escolhe bicho por ninguém.'),
     fala('Célio', 'Nome.')
   ],
   ef:{npc:{nome:'Célio', opiniao:1, memoria:'Deixou você olhar a caixa antes de falar qualquer coisa.'}},
   escolhas:[
     {texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'},
-    {texto:'"Como assim não sabe?"', vai:'c1e_nao_retirado'}
+    {texto:'"E quem tá na lista e não aparece?"', vai:'c1e_nao_retirado'}
   ]
 },
 
 c1e_o_caderno:{
   texto:[
     d=>`Ele passa o dedo pela coluna da página até achar, e acha rápido, porque a lista de ${d.jogador.cidade} deste mês tem três linhas.`,
-    d=>fala('Célio', `${d.jogador.nome}. Pedido em formulário de fevereiro, assinado junto com ${casaCompleto()}, que responde por você.`),
+    d=>fala('Célio', `${d.jogador.nome}. Inscrição de fevereiro, assinada junto com ${casaCompleto()}, que responde por você.`),
     'Ele vira o caderno pra você e aponta uma linha com a caneta ainda amarrada no barbante.',
-    d=>{
-      const esp = especieReservada(d);
-      return `A linha tem o seu nome, a data, e uma palavra escrita em letra de forma: ${esp.toUpperCase()}.`;
-    },
-    fala('Célio', 'Confere?'),
-    'É estranho ver uma escolha que você fez há meses virar uma linha numa lista de outra pessoa.'
+    'A linha tem o seu nome, a data, e uma coluna vazia no fim, com ESPÉCIE escrito no alto da página.',
+    fala('Célio', 'Essa eu preencho quando você escolher. O resto confere?'),
+    'É estranho ver o seu nome numa lista de outra pessoa, esperando uma palavra que ainda não existe.'
   ],
   ef:{flag:'conferiu_o_caderno'},
   escolhas:[
     {texto:'"Confere."', vai:'c1e_abre_a_caixa', ef:{flag:'confirmou_na_hora'}},
-    {texto:'"Dá pra trocar?"', vai:'c1e_da_pra_trocar'},
+    {texto:'"E se eu escolher errado?"', vai:'c1e_da_pra_trocar'},
     {texto:'"Quem assinou junto comigo?" Olhar a assinatura de perto.',
      vai:'c1e_a_assinatura'},
     {texto:'Assinar embaixo sem falar nada.', vai:'c1e_assinou_calado',
@@ -423,19 +451,18 @@ c1e_o_caderno:{
 
 c1e_da_pra_trocar:{
   texto:[
-    d=>fala(d.jogador.nome, 'Dá pra trocar?'),
+    d=>fala(d.jogador.nome, 'E se eu escolher errado?'),
     'Ele não parece surpreso. Parece um homem que ouve essa pergunta em toda cidade.',
-    fala('Célio', 'Dá pra cancelar. Trocar não dá.'),
-    fala('Célio', 'As três bolas dessa caixa têm nome. Se eu te der a do outro, o outro chega aqui às onze e eu tenho que explicar uma coisa que não tem explicação.'),
-    fala('Célio', 'Se você cancelar, eu escrevo NR, levo de volta e você entra na lista de novo no mês que vem. Aí você escolhe outra.'),
+    fala('Célio', 'Não tem errado. Tem o que você escolheu e o que você fez com isso depois.'),
+    fala('Célio', 'Já vi gente escolher pelo tipo, pela cor, pela letra da etiqueta. Uma menina em Lavender escolheu pelo barulho que a bola fazia chacoalhando.'),
+    fala('Célio', 'Dos três já saiu campeão e já saiu bicho de quintal. Depende de quem leva.'),
     'Uma pausa.',
-    fala('Célio', 'Mês que vem é dia quatro, e é chato, e eu não recomendo.', 'riso'),
-    d=>fala('Célio', `A que tá aqui escrita é ${especieReservada(d)}. Confere?`)
+    fala('Célio', 'E pensar demais atrasa a fila, e a fila é de gente que acordou cedo.', 'riso')
   ],
-  ef:{npc:{nome:'Célio', opiniao:1, memoria:'Explicou com paciência por que não dá pra trocar a bola de alguém pela de outro.'}},
+  ef:{npc:{nome:'Célio', opiniao:1, memoria:'Te disse que não tem escolha errada, tem o que você faz com ela depois.'}},
   escolhas:[
-    {texto:'"Confere."', vai:'c1e_abre_a_caixa'},
-    {texto:'"Então eu levo essa. Foi eu que escolhi em fevereiro."',
+    {texto:'"Então abre."', vai:'c1e_abre_a_caixa'},
+    {texto:'"Então eu escolho sem pensar muito."',
      vai:'c1e_abre_a_caixa', ef:{flag:'assumiu_a_escolha', moral:4}}
   ]
 },
@@ -493,11 +520,19 @@ c1e_assinou_calado:{
 c1e_abre_a_caixa:{
   texto:[
     'Ele corta a fita do fecho com a unha do polegar, de um jeito treinado que não estraga a fita inteira, porque a fita vai fechar a caixa de novo daqui a pouco.',
-    'Dentro tem espuma cinza recortada em três buracos redondos. Dois buracos estão cheios.',
-    'Ele tira a bola do buraco do meio com as duas mãos, não porque seja pesada, mas porque é assim que se pega uma coisa que é de outra pessoa.',
-    d=>`Tem uma etiqueta de papel presa no fecho com barbante. Na etiqueta está escrito o seu nome, a data de fevereiro, e ${especieReservada(d)}.`,
+    'Dentro tem espuma cinza recortada em três fileiras de buracos redondos, e em cima de cada fileira uma tira de fita crepe escrita a caneta: BULBASAUR, CHARMANDER, SQUIRTLE.',
+    'As bolas são iguais. Vermelhas e brancas, lacradas, sem janela. O que muda de uma fileira pra outra é a palavra na fita.',
+    fala('Célio', 'Escolhe.')
+  ],
+  escolhas: escolhasDeInicial(n => `A fileira do ${n}.`, 'c1e_escolheu')
+},
+
+c1e_escolheu:{
+  texto:[
+    'Ele tira a bola da fileira com as duas mãos, não porque seja pesada, mas porque é assim que se pega uma coisa que agora é de outra pessoa.',
+    d=>`Ele escreve ${especieReservada(d).toUpperCase()} na coluna vazia do caderno, em letra de forma, e amarra no fecho da bola uma etiqueta de papel com o seu nome e a data de hoje.`,
     fala('Célio', 'Olha só uma coisa antes.'),
-    fala('Célio', 'Isso aqui não é um prêmio e não é um presente. É um pedido que foi aprovado.'),
+    fala('Célio', 'Isso aqui não é um prêmio e não é um presente. É uma inscrição que foi aprovada.'),
     fala('Célio', 'Se em dois meses você decidir que não era isso, você devolve num Centro Pokémon e ninguém vai te chamar de nada. Eu levo de volta e escrevo o que tiver que escrever.'),
     fala('Célio', 'Mas se você for ficar, fica de verdade.', 'baixo')
   ],

@@ -72,7 +72,7 @@ c1_acorda:{
     d=>{
       const p = d.time[0];
       if (!p) return d.flags.espera_o_professor
-        ? 'Você está sozinh{o|a} no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com a bola.'
+        ? 'Você está sozinh{o|a} no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com as três bolas.'
         : 'Você está sozinh{o|a} no quarto, o que não era o plano.';
       return `${nomeExib(p)} está aos pés da cama, acordad${pron(p).o} antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },

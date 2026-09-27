@@ -24,7 +24,7 @@ const CARGOS = [
   resumo:'Quem anda com a Pokédex ligada e manda o que vê de volta.',
   beneficios:{loja:0.92, status:'percepcao'},
   fala:['O crachá chega pelo correio da perua, dentro de um envelope pardo com o seu nome escrito à mão.',
-        '"Vinte espécies", diz o bilhete junto. "Continua mandando. — Carvalho."',
+        '"Vinte espécies", diz o bilhete junto. "Continua mandando. — Oak."',
         'Tem um desconto de convênio que funciona em qualquer loja de Kanto e que ninguém nunca explicou direito.']
 },
 {
@@ -79,7 +79,7 @@ const CARGOS = [
         '"Use com vergonha. Quem usa sem vergonha eu cancelo em seis meses."']
 },
 {
-  id:'pesquisador', falante:'Professor Carvalho', nome:'{Pesquisador associado|Pesquisadora associada}', orgao:'Laboratório de Pallet', peso:3, cap:12,
+  id:'pesquisador', falante:'Professor Oak', nome:'{Pesquisador associado|Pesquisadora associada}', orgao:'Laboratório de Pallet', peso:3, cap:12,
   requer:d=>Estado.contagemDex().catalogados >= 90,
   resumo:'Noventa espécies andando. Ninguém faz isso de carro.',
   beneficios:{loja:0.85, status:'intelecto', renda:600},
@@ -129,7 +129,7 @@ const CARGOS = [
         '"A parte difícil não é ganhar", diz quem estava na porta antes de você. "É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois."']
 },
 {
-  id:'professor', falante:'Professor Carvalho', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
+  id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
   requer:d=>Estado.contagemDex().catalogados >= 140,
   veta:['rocket'],
   resumo:'A cadeira que entrega bola pra quem está saindo de casa.',

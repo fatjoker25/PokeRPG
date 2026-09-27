@@ -135,18 +135,18 @@ const Jogo = {
          laboratório manda alguém, uma vez por mês, com uma caixa
          térmica e um caderno. O bicho ainda não é seu — o capítulo 1
          começa na manhã da entrega. */
-      Estado.dados.entrega = {dex: parseInt(f.inicial, 10)};
+      Estado.dados.entrega = {};                 // a espécie se escolhe na frente da caixa
       Estado.marcar('espera_o_assistente');
-      Estado.registrar(`${Estado.j.nome} pediu em fevereiro e espera a perua do laboratório em ${Estado.j.cidade}.`);
+      Estado.registrar(`${Estado.j.nome} se inscreveu em fevereiro e espera a perua do laboratório em ${Estado.j.cidade}.`);
       Estado.salvar('auto');
       return UI.telaCena(Historia.iniciarCapitulo(1), []);
     } else {
       /* Em Pallet quem entrega é o Professor, na rua, na manhã em que
          você sai de casa. Até lá o bicho não é seu: a manhã em casa
          começa sem ele, como começa pra quem espera a perua. */
-      Estado.dados.entrega = {dex: parseInt(f.inicial, 10), pallet:true};
+      Estado.dados.entrega = {pallet:true};      // a espécie se escolhe na bandeja do Professor
       Estado.marcar('espera_o_professor');
-      Estado.registrar(`${Estado.j.nome} escolheu em fevereiro e vai buscar com o Professor, em Pallet.`);
+      Estado.registrar(`${Estado.j.nome} vai escolher o primeiro Pokémon na bandeja do Professor, em Pallet.`);
       Estado.salvar('auto');
       return UI.telaCena(Historia.iniciarCapitulo(1), []);
     }
@@ -625,6 +625,10 @@ const Jogo = {
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_professor && typeof entregarDoProfessor === 'function'){
       entregarDoProfessor(Estado.dados);
       avisos.push('O Professor mandou a bola pelo balcão do Centro, com o seu nome na etiqueta.');
+    }
+    if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_assistente && typeof entregarInicial === 'function'){
+      entregarInicial(Estado.dados);
+      avisos.push('O Célio deixou uma bola no balcão do Centro, com o seu nome na etiqueta.');
     }
     if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
       Estado.ganharPokenav();
