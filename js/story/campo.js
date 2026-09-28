@@ -362,7 +362,7 @@ c16_por_cima:{
 
 c16_chegou_voando:{
   texto:[
-    d=>`Noventa milhas ${Campo.voar().como}. Leva quase quatro horas e as quatro horas são a coisa mais silenciosa que já te aconteceu.`,
+    d=>`Noventa milhas ${Campo.voar().como || 'pelo ar'}. Leva quase quatro horas e as quatro horas são a coisa mais silenciosa que já te aconteceu.`,
     'Mar aberto visto de cima não tem escala: é a mesma superfície igual em todas as direções, e depois de uma hora você para de tentar medir distância porque não existe nada pra medir contra.',
     'A ilha aparece como uma mancha e vira pedra.',
     'E de cima você vê, antes de pousar, a coisa que quem chega de barco nunca vai ver:',
@@ -372,10 +372,10 @@ c16_chegou_voando:{
   ef:{flag:['chegou_voando_na_ilha','sabe_da_ilha','a_marca_na_pedra'],
       rep:{eixo:'bom', delta:3, motivo:'Chegou à ilha sem nome por cima, e viu de cima o que ninguém viu de baixo.'},
       registrar:'O alicerce da ilha é octogonal, com oito marcas circulares queimadas na rocha, uma por face.',
-      presagio:'Setenta centímetros de círculo queimado. Você já viu uma dessas marcas antes, numa pedra de praia.'},
+      presagio:d=>d.flags.viu_a_marca_da_ponta_sul ? 'Setenta centímetros de círculo queimado. Você já viu uma dessas marcas antes, numa pedra de praia.' : 'Oito círculos queimados, um por face. Do chão ninguém vê.'},
   escolhas:[
-    {texto:'Pousar no platô, em cima do desenho.', vai:'c16_velho'},
-    {texto:'Dar mais uma volta e contar as marcas de novo.', vai:'c16_velho'}
+    {texto:'Pousar no platô, em cima do desenho.', vai:'c16_alicerce'},
+    {texto:'Pousar e esperar a noite no meio do círculo.', vai:'c16_esperou_no_circulo'}
   ]
 }
 

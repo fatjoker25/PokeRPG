@@ -67,7 +67,8 @@ const NOMES_FIXOS = {
   'o guarda da primeira':      'Pike',
   'o entregador de pão':       'Rufo',
   'a recepcionista da Liga':   'Lena',
-  'a balconista da farmácia':  'Gina'
+  'a balconista da farmácia':  'Gina',
+  'Chefe da expedição':        'Dra. Sallow'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

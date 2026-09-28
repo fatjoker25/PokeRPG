@@ -50,7 +50,7 @@ c16_ab_o_dono_da_loja:{
     'Ele olha o ponto na carta onde o seu dedo está e demora a responder.',
     fala('o dono da loja', 'Essa carta aí eu vendi três vezes em dezoito anos.'),
     d=>fala(d.jogador.nome, 'Pra quem?'),
-    fala('o dono da loja', 'Uma pra um pesquisador em oitenta e nove. Uma pra uns caras de terno em noventa e sete.'),
+    fala('o dono da loja', 'Uma pra um pesquisador em oitenta e nove. Uma pra uns caras de terno em noventa e três.'),
     'Ele bate no balcão com o nó do dedo.',
     fala('o dono da loja', 'E uma pra você.'),
     d=>fala(d.jogador.nome, 'Caras de terno compram carta náutica?'),
@@ -61,12 +61,12 @@ c16_ab_o_dono_da_loja:{
   ],
   ef:{flag:'os_de_terno_compraram_carta',
       npc:{nome:'o dono da loja', opiniao:1, viuVoce:'Te vendeu a carta náutica do setor sudoeste.'},
-      registrar:'Em 1997, homens de terno compraram quatro cartas náuticas e dois GPS na loja de pesca de Fuchsia.',
-      presagio:'Noventa e sete. A mesma década em que a luz aparece duas vezes.'},
+      registrar:'Em 1993, homens de terno compraram quatro cartas náuticas e dois GPS na loja de pesca de Fuchsia.',
+      presagio:'Noventa e três. A mesma década em que a luz aparece duas vezes.'},
   escolhas:[
     {texto:'Ir pro cais procurar quem leve você.', vai:'c16_travessia'},
     {texto:'Procurar o velho do dominó.', vai:'c16_velho'},
-    {texto:'Procurar quem foi com os de terno em noventa e sete.', vai:'c16_ab_quem_nao_fala'}
+    {texto:'Procurar quem foi com os de terno em noventa e três.', vai:'c16_ab_quem_nao_fala'}
   ]
 },
 
@@ -158,7 +158,7 @@ c16_ab_a_ponta_sul:{
                : 'Você põe a mão na marca e a rocha está fria, o que de alguma forma é pior.';
     }
   ],
-  ef:{flag:'a_marca_na_pedra',
+  ef:{flag:['a_marca_na_pedra','viu_a_marca_da_ponta_sul'],
       registrar:'Na pedra grande da ponta sul há uma queimadura circular de 70 cm com a borda vitrificada.',
       presagio:'Mil e poucos graus, na beira do mar, e ninguém na cidade comentou.'},
   escolhas:[
@@ -170,12 +170,12 @@ c16_ab_a_ponta_sul:{
 c16_ab_quem_nao_fala:{
   texto:[
     'Tem um homem no cais de Fuchsia que todo mundo aponta e ninguém apresenta.',
-    'Cinquenta e poucos anos, barco médio, trabalha sozinho. Chama-se Orso — está pintado na popa, como em todo barco de dono — e a frase que dizem dele é sempre a mesma: "aquele ali foi em noventa e sete".',
+    'Cinquenta e poucos anos, barco médio, trabalha sozinho. Chama-se Orso — está pintado na popa, como em todo barco de dono — e a frase que dizem dele é sempre a mesma: "aquele ali foi em noventa e três".',
     'Ninguém completa a frase. Você tem que perguntar pra ele.',
     'Ele está remendando rede na proa e não levanta a cabeça quando você chega.',
     fala('Orso', 'Não.'),
     d=>fala(d.jogador.nome, 'Eu não perguntei nada.'),
-    fala('Orso', 'Você ia perguntar de noventa e sete.'),
+    fala('Orso', 'Você ia perguntar de noventa e três.'),
     'Ele passa a agulha de rede duas vezes antes de falar de novo.',
     fala('Orso', 'Eu levo carga, levo gente, levo o que pagarem. Pra sudoeste eu não vou.'),
     d=>fala(d.jogador.nome, 'Por quanto?'),
@@ -184,7 +184,7 @@ c16_ab_quem_nao_fala:{
   ],
   ef:{flag:'sabe_da_ilha',
       npc:{nome:'Orso', opiniao:-1, viuVoce:'Você perguntou o preço depois de ele dizer que não tinha preço.'},
-      registrar:'Um pescador de Fuchsia foi à ilha em 1997 e não volta lá por dinheiro nenhum.'},
+      registrar:'Um pescador de Fuchsia foi à ilha em 1993 e não volta lá por dinheiro nenhum.'},
   escolhas:[
     {texto:'Pedir desculpa e perguntar o que aconteceu.', vai:'c16_ab_pediu_desculpa'},
     {texto:'Insistir no dinheiro.', vai:'c16_ab_insistiu_no_dinheiro'},
@@ -196,7 +196,7 @@ c16_ab_pediu_desculpa:{
   texto:[
     d=>fala(d.jogador.nome, 'Desculpa. Foi burrice.'),
     'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parad{o|a}, porque sair agora seria pior.',
-    fala('Orso', 'Eu levei quatro homens em noventa e sete. Dois dias, ida e volta, muito bem pago.'),
+    fala('Orso', 'Eu levei quatro homens em noventa e três. Dois dias, ida e volta, muito bem pago.'),
     fala('Orso', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
     'Ele para de costurar.',
     fala('Orso', 'Na segunda noite apareceu a luz.'),
@@ -207,8 +207,8 @@ c16_ab_pediu_desculpa:{
     fala('Orso', 'E no outro dia eu levei três homens de volta.', 'baixo')
   ],
   ef:{flag:['sabe_da_ilha','tres_voltaram_de_quatro'],
-      npc:{nome:'Orso', opiniao:2, viuVoce:'Te contou de 1997 porque você pediu desculpa.'},
-      registrar:'Em 1997 ele levou quatro homens à ilha e trouxe três de volta. Na segunda noite houve luz colorida.',
+      npc:{nome:'Orso', opiniao:2, viuVoce:'Te contou de 1993 porque você pediu desculpa.'},
+      registrar:'Em 1993 ele levou quatro homens à ilha e trouxe três de volta. Na segunda noite houve luz colorida.',
       presagio:'Quatro entraram e três saíram. Você já ouviu essa conta antes, em outro porto.'},
   escolhas:[
     {texto:'Perguntar quem era o quarto.', vai:'c16_ab_quem_era_o_quarto'},
@@ -244,14 +244,14 @@ c16_ab_insistiu_no_dinheiro:{
     d=>fala(d.jogador.nome, 'Todo mundo tem preço.'),
     'Ele corta a linha da rede com o dente, devagar, e enrola a sobra no dedo.',
     fala('Orso', 'Todo mundo tem. Eu tinha.'),
-    fala('Orso', 'Em noventa e sete o meu preço foi o triplo da diária, e eu aceitei, e eu levei quatro homens pra lá.'),
+    fala('Orso', 'Em noventa e três o meu preço foi o triplo da diária, e eu aceitei, e eu levei quatro homens pra lá.'),
     'Ele levanta e amarra a rede na amurada, de costas pra você.',
     fala('Orso', 'Sai do meu barco.'),
     'Você desce. Do cais dá pra ver ele ainda de costas, parado, sem fazer nada com as mãos.'
   ],
-  ef:{flag:['sabe_da_ilha','quatro_homens_em_noventa_e_sete'],
+  ef:{flag:['sabe_da_ilha','quatro_homens_em_noventa_e_tres'],
       npc:{nome:'Orso', opiniao:-3, viuVoce:'Você insistiu no dinheiro depois do "não".'},
-      registrar:'Em 1997 ele levou quatro homens à ilha pelo triplo da diária. Não fala mais com você.'},
+      registrar:'Em 1993 ele levou quatro homens à ilha pelo triplo da diária. Não fala mais com você.'},
   escolhas:[
     {texto:'Procurar outro barco no cais.', vai:'c16_travessia'},
     {texto:'Procurar o velho do dominó.', vai:'c16_velho'}
@@ -260,9 +260,11 @@ c16_ab_insistiu_no_dinheiro:{
 
 
 c16_velho:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N','N','N','P','N','N','N','N'],
   texto:[
     'O pescador se chama Otis Tanner, tem oitenta e um anos e conta a mesma história há quarenta.',
-    'No cais o chamam de Seu Otis. Você vai chamá-lo de Sr. Tanner o capítulo inteiro, e na terceira vez ele vai reparar, e não vai corrigir.',
+    'No cais o chamam de Seu Otis. Você vai chamá-lo de Sr. Tanner, e na terceira vez ele vai reparar, e não vai corrigir.',
     'Ele conta ela no cais de Fuchsia, na mesa de dominó, pra quem pedir e pra quem não pedir, e todo mundo já ouviu, e todo mundo muda de assunto educadamente.',
     'Hoje ele conta pra você.',
     '"Tem uma ilha a sudoeste que não entra em mapa nenhum porque não tem nada nela. Pedra e mato. Nem água doce."',
@@ -293,6 +295,8 @@ c16_velho:{
 },
 
 c16_desde_quando:{
+  falante:'Sr. Tanner',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Duas vezes por década desde quando?"',
     'Ele para de mexer no copo.',
@@ -301,11 +305,11 @@ c16_desde_quando:{
     'Dentro tem papel.',
     'Muito papel: folha de caderno, verso de nota fiscal, guardanapo, e uns quarenta bilhetes em papel de pão.',
     'Cada um com uma data e uma linha.',
-    '**"12/3/61 — luz sobre a ilha da torre, 23h mais ou menos, uns 30 min. — O. Tanner"**',
-    '**"4/9/68 — luz, cor, 22h40 até 23h20. Meu pai viu junto. — Z. A."**',
-    '**"19/11/74 — luz. Sozinho. Ninguém acreditou. — Z. A."**',
+    '**"12/3/39 — luz sobre a ilha da torre, 23h mais ou menos, uns 30 min. — H. Tanner"**',
+    '**"4/9/65 — luz, cor, 22h40 até 23h20. Pai tava no mar. — O. Tanner"**',
+    '**"19/11/72 — luz. Sozinho. Ninguém acreditou. — O. Tanner"**',
     '"Quarenta anos disso?"',
-    '"Sessenta e um, {meu filho|minha filha}. Meu pai começou em trinta e nove e eu peguei em sessenta e um."',
+    '"Sessenta e um, {meu filho|minha filha}. Meu pai começou em trinta e nove e eu peguei em cinquenta e nove."',
     'Ele bate na caixa.',
     '"Vinte e três vezes anotadas em sessenta e um anos."'
   ],
@@ -323,26 +327,28 @@ c16_desde_quando:{
 },
 
 c16_o_padrao:{
+  falante:'Sr. Tanner',
+  vozes:['N','N'],
   texto:[
     'Você espalha os quarenta e poucos papéis na mesa de dominó e ordena por data, e o Sr. Tanner assiste sem ajudar, porque ele nunca ordenou.',
     'Ele guardou sessenta e um anos e nunca ordenou.',
     'Leva vinte minutos.',
     'E aí aparece.',
-    'Trinta e nove, quarenta e seis, cinquenta e três, sessenta e um, sessenta e oito, setenta e quatro, oitenta e um, oitenta e oito, noventa e seis.',
-    'Não é exatamente regular — varia de seis a oito anos — mas é um intervalo.',
-    'E a última é de noventa e seis.',
-    'Faz quatro anos.',
+    'As vinte e três noites não se espalham: caem sempre nos mesmos anos, duas ou três noites por ano.',
+    'Trinta e nove, quarenta e seis, cinquenta e três, cinquenta e nove, sessenta e cinco, setenta e dois, setenta e nove, oitenta e seis, noventa e três.',
+    'Não é exatamente regular — varia de seis a sete anos — mas é um intervalo.',
+    'E sobra um papel fora da conta: noventa e seis. Três anos depois do último, cedo demais pra série.',
     'Você faz a conta na margem de um papel de pão.',
-    'Se o intervalo for de seis, já passou. Se for de oito, é ano que vem.',
-    'Se for sete, é este ano.',
+    'Noventa e três mais seis, noventa e três mais sete.',
+    'Se a série vale, a próxima é agora. Este ano.',
     'O Sr. Tanner olha a tabela que você montou na mesa de dominó com quarenta papéis de pão e não fala nada por um tempo.',
-    '"Sessenta e um anos", ele diz. "Eu nunca botei em ordem."'
+    '"Sessenta e um anos." Ele demora. "Eu nunca botei em ordem."'
   ],
   ef:{flag:['achou_o_padrao','sabe_que_e_esse_ano'],
       npc:{nome:'Sr. Tanner', opiniao:8, memoria:'Guardou 61 anos de bilhetes e nunca os pôs em ordem, até você fazer isso numa mesa de dominó.'},
       rep:{eixo:'bom',delta:5,motivo:'Ordenou sessenta e um anos de papel de pão'},
       instabilidade:1,
-      registrar:'O arco-íris aparece a cada 6 a 8 anos. O último foi em 1996.',
+      registrar:'O arco-íris aparece a cada 6 ou 7 anos; o último da série foi em 1993, e em 1996 houve um fora da conta. Pela série, o próximo é este ano.',
       presagio:'Noventa e seis de novo. Guarde o ano — ele volta em toda cidade desde Saffron.'},
   escolhas:[
     {texto:'"Me leva lá. Agora."', vai:'c16_travessia'},
@@ -353,6 +359,8 @@ c16_o_padrao:{
 },
 
 c16_noventa_e_seis:{
+  falante:'Sr. Tanner',
+  vozes:['P','P','N','P','N','N','N'],
   texto:[
     '"O que aconteceu em noventa e seis?"',
     'Ele procura o papel de noventa e seis na pilha ordenada e acha, porque agora está em ordem.',
@@ -363,7 +371,7 @@ c16_noventa_e_seis:{
     '"Que bicho?"',
     '"Três."',
     'Ele bate no papel.',
-    '"Três bichos grandes nadando trinta quilômetros da ilha sem nome até a costa de Kanto, em fila, no dia seguinte ao arco-íris mais forte que eu vi na vida."',
+    '"Três bichos grandes nadando da ilha sem nome até a costa de Kanto, em fila, no dia seguinte ao arco-íris mais forte que eu vi na vida."',
     'Ele olha pra você.',
     '"E eu falei isso pra sete pessoas e as sete riram."',
     d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Você não ri.\nVocê conta o que você viu numa ciclovia, e o Sr. Tanner segura na beirada da mesa de dominó com as duas mãos.' : ''
@@ -373,7 +381,7 @@ c16_noventa_e_seis:{
       rep:{eixo:'bom',delta:6,motivo:'Ligou os três da ciclovia à ilha sem nome'},
       instabilidade:1,
       registrar:'Em 14/11/1996 os três atravessaram nadando da ilha sem nome até a costa de Kanto.',
-      presagio:'Catorze de novembro de noventa e seis. Dois dias depois de um homem subir um vulcão em Cinnabar.'},
+      presagio:d=>d.flags.sabe_que_subiram || d.flags.fuji_saiu ? 'Catorze de novembro de noventa e seis. Dois dias depois de um tanque se abrir em Cinnabar.' : 'Catorze de novembro de noventa e seis. Guarde a data.'},
   escolhas:[
     {texto:'"Me leva lá."', vai:'c16_travessia'},
     {texto:'"Quem mais sabe disso?"', vai:'c16_quem_sabe'},
@@ -383,11 +391,13 @@ c16_noventa_e_seis:{
 },
 
 c16_contou_pro_ze:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N'],
   texto:[
     'Você conta.',
     'Doze de novembro de noventa e seis, num subsolo de Cinnabar, um homem abriu um tanque e saiu às quatro e dez da manhã com uma coisa andando do lado dele, no mesmo passo.',
     'Treze de novembro, os dois subiram um vulcão e passaram a noite na borda da cratera.',
-    'Catorze de novembro, apareceu o arco-íris mais forte em sessenta e um anos sobre uma ilha a trinta quilômetros dali.',
+    'Catorze de novembro, apareceu o arco-íris mais forte que o Sr. Tanner já viu, sobre uma ilha no mar do sudoeste.',
     'E na manhã do quinze, três bichos grandes atravessaram nadando.',
     'O Sr. Tanner ouve tudo com as duas mãos na mesa.',
     'E no fim ele não fala nada por quase um minuto.',
@@ -400,7 +410,7 @@ c16_contou_pro_ze:{
   ],
   ef:{flag:['ze_entendeu','ligou_tudo'],
       npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Entendeu, com você, que a luz não é uma chegada — é alguém fazendo alguma coisa.'},
-      rep:{eixo:'bom',delta:6,motivo:'Juntou três capítulos numa mesa de dominó'},
+      rep:{eixo:'bom',delta:6,motivo:'Juntou Cinnabar, a ciclovia e a ilha numa mesa de dominó'},
       instabilidade:1, moral:15,
       registrar:'A luz sobre a ilha não é uma chegada: é alguém fazendo alguma coisa.',
       presagio:'Vinte e três vezes em sessenta e um anos, alguém fez alguma coisa naquela ilha.'},
@@ -413,6 +423,8 @@ c16_contou_pro_ze:{
 },
 
 c16_levou_a_caixa:{
+  falante:'Sr. Tanner',
+  vozes:['P','N','P','N','P','N','N','P','N','N','N'],
   texto:[
     '"Posso levar a caixa?"',
     'Ele olha a caixa de charuto amarrada com elástico.',
@@ -446,6 +458,8 @@ c16_levou_a_caixa:{
 },
 
 c16_colonia_caixa:{
+  falante:'Secretária da Colônia Z-14',
+  vozes:['N','P','N','N','N','N','P','N','N'],
   texto:[
     'Você leva a caixa à Colônia Z-14 e a secretária de sessenta e dois anos abre o elástico com um cuidado que você não esperava.',
     'Ela lê três bilhetes e para.',
@@ -453,13 +467,13 @@ c16_colonia_caixa:{
     '"A senhora conhece?"',
     '"Meu bem, eu tenho o livro de saída de embarcação de mil novecentos e trinta e nove."',
     'Ela vai ao armário e volta com o livro mais velho da pilha, com a capa descolando, e abre em março.',
-    'E ali está: **FERRAZ, J. A. — saída 12/03 — área declarada: recife alto SW**.',
+    'E ali está: **TANNER, H. — saída 12/03 — área declarada: recife alto SW**.',
     'A mesma data do primeiro bilhete.',
     '"Ele declarou o recife como área de pesca em trinta e nove."',
     'Ela vira mais páginas.',
     '"E em quarenta e seis. E em cinquenta e três."',
     'Ela levanta a cabeça.',
-    '"Meu bem, esse homem declarou saída pra ilha em todas as vinte e três datas da caixa."',
+    '"Meu bem, esse homem declarou saída pra ilha em todas as datas da caixa até setenta e nove. Dezenove saídas."',
     '"E isso quer dizer o quê?"',
     '"Que ele não via da costa."',
     'Ela fecha o livro.',
@@ -469,7 +483,7 @@ c16_colonia_caixa:{
       npc:{nome:'Secretária da Colônia Z-14', opiniao:8, memoria:'Cruzou a caixa de charuto com o livro de 1939 e descobriu que o velho Tanner ia à ilha.'},
       rep:{eixo:'bom',delta:6,motivo:'Cruzou a caixa com o livro de 1939'},
       instabilidade:1,
-      registrar:'O. Tanner declarou saída para a ilha em todas as 23 datas do arco-íris, desde 1939.',
+      registrar:'H. Tanner, o pai, declarou saída para a ilha em todas as datas do arco-íris de 1939 a 1979: dezenove saídas.',
       presagio:'Ele ia. Sessenta e um anos e o filho achava que era da costa.'},
   escolhas:[
     {texto:'Contar isso pro Sr. Tanner.', vai:'c16_contou_que_ele_ia'},
@@ -480,8 +494,10 @@ c16_colonia_caixa:{
 },
 
 c16_contou_que_ele_ia:{
+  falante:'Sr. Tanner',
+  vozes:['N','N','N','N','N'],
   texto:[
-    'Você volta ao cais com a caixa e com a fotocópia de três páginas do livro de mil novecentos e trinta e nove.',
+    'Você volta ao cais com a caixa e com a fotocópia das páginas dos livros de saída, de trinta e nove a setenta e nove.',
     'O Sr. Tanner lê a linha do nome do pai dele.',
     'E lê de novo.',
     'E depois ele faz uma coisa que ninguém no cais esperava, porque tem umas doze pessoas assistindo:',
@@ -512,6 +528,8 @@ c16_contou_que_ele_ia:{
 },
 
 c16_nao_precisa_ir:{
+  falante:'Sr. Tanner',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"O senhor não precisa ir."',
     'Ele guarda a folha xerocada no bolso e bate duas vezes em cima.',
@@ -519,12 +537,12 @@ c16_nao_precisa_ir:{
     '"Eu sei."',
     '"E eu tenho onze horas de travessia numa direção e onze na outra, e eu já fiz essa travessia duas vezes na vida e nas duas eu voltei sem ver nada."',
     'Ele olha o mar.',
-    '"E agora eu sei que meu pai fez vinte e três."',
+    '"E agora eu sei que meu pai fez dezenove."',
     'Ele começa a soltar a amarra.',
     '"Sobe no barco, {meu filho|minha filha}."'
   ],
   ef:{flag:'ze_vai_junto',
-      npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Recusou ficar. Vai fazer a travessia que o pai fez vinte e três vezes.'},
+      npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Recusou ficar. Vai fazer a travessia que o pai fez dezenove vezes.'},
       rep:{eixo:'bom',delta:3,motivo:'Ofereceu e aceitou o não'},
       moral:15,
       presagio:'Ele já fez duas e voltou sem ver nada. Essa é a terceira.'},
@@ -532,6 +550,8 @@ c16_nao_precisa_ir:{
 },
 
 c16_ivone_caixa:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     'A Dra. Cordell recebe a caixa de charuto numa mesa de lanchonete de rodoviária, porque é sempre numa mesa de lanchonete de rodoviária.',
     'Ela abre o elástico, tira os papéis, e a primeira coisa que ela faz é contar quantos são.',
@@ -563,12 +583,14 @@ c16_ivone_caixa:{
 },
 
 c16_ivone_vem:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N','N','N'],
   texto:[
     '"A senhora vem junto?"',
     'Ela ri e diz não antes de você terminar a pergunta.',
     '"Eu tenho cinquenta e oito anos, enjoo em barco parado e uma matéria pra fechar."',
     'Ela guarda a câmera.',
-    '"E eu vou te dizer uma coisa que eu levei trinta anos pra aprender, porque você é novo e ainda dá tempo."',
+    '"E eu vou te dizer uma coisa que eu levei trinta anos pra aprender, porque você é nov{o|a} e ainda dá tempo."',
     '"O quê?"',
     '"Eu não preciso ver."',
     'Ela bebe o café.',
@@ -590,6 +612,8 @@ c16_ivone_vem:{
 },
 
 c16_quem_sabe:{
+  falante:'Sr. Tanner',
+  vozes:['P','N','N','P','N','P','N','N','N','P','N','N'],
   texto:[
     '"Quem mais sabe disso?"',
     '"Todo pescador velho de Fuchsia sabe. Nenhum pescador novo acredita."',
@@ -622,6 +646,8 @@ c16_quem_sabe:{
 },
 
 c16_o_carro:{
+  falante:'Sr. Tanner',
+  vozes:['P','N','N','P','N'],
   texto:[
     '"Como era o carro?"',
     'Ele descreve com uma precisão que você já aprendeu a esperar de gente de cais: modelo, cor, ano aproximado, e o detalhe.',
@@ -723,6 +749,8 @@ c16_volta_de_barco:{
 },
 
 c16_procurou_o_barco:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N','N','N'],
   texto:[
     'Vocês procuram o barco da corda por mais quarenta minutos e não acham, porque não tem barco.',
     'A corda está amarrada na argola com um nó de pescador, cortada na ponta, com uns quatro metros de sobra na água.',
@@ -760,7 +788,7 @@ c16_subiu_a_escada:{
     'Você começa a contar as linhas.',
     'Vinte e três.',
     'Vinte e três linhas riscadas na lateral dos degraus dessa escada, e vinte e três bilhetes numa caixa de charuto no barco lá embaixo.',
-    d=>d.flags.tem_a_caixa_de_charuto ? 'E as duas contagens não podem ter a mesma origem, porque a caixa começa em trinta e nove e essa pedra está gasta há séculos.\nA não ser que a coisa aconteça a cada seis, sete ou oito anos, há muito mais tempo do que sessenta e um anos.\nVocê senta no degrau e faz a conta que dói: se for assim desde que cortaram essa escada, são centenas.' : ''
+    d=>d.flags.tem_a_caixa_de_charuto ? 'E as duas contagens não podem ter a mesma origem, porque a caixa começa em trinta e nove e essa pedra está gasta há séculos.\nA não ser que a coisa aconteça a cada seis ou sete anos, há muito mais tempo do que sessenta e um anos.\nVocê senta no degrau e faz a conta que dói: se for assim desde que cortaram essa escada, são centenas.' : ''
   ],
   ef:{flag:['contou_os_degraus','viu_os_entalhes'],
       rep:{eixo:'bom',delta:5,motivo:'Contou os degraus e reparou nos entalhes'},
@@ -787,13 +815,13 @@ c16_mais_entalhes:{
     'Sessenta e um grupos de cinco.',
     'Trezentos e cinco.',
     'Trezentas e cinco vezes, riscadas na lateral de uma escada de pedra, por gente que morreu antes de Kanto ter esse nome.',
-    'E as vinte e três mais novas são de pai e filho Tanner.',
+    'E as vinte e três mais novas batem, uma por uma, com a caixa de charuto.',
     'Eles continuaram a contagem de alguém.'
   ],
   ef:{flag:['contou_os_riscos','sabe_dos_trezentos_e_cinco'],
       rep:{eixo:'bom',delta:6,motivo:'Desceu e contou de novo'},
       instabilidade:2, moral:-8,
-      registrar:'Há 305 marcas antigas na escada, em grupos de cinco, mais as 23 dos Tanner.',
+      registrar:'Há 305 marcas antigas na escada, em grupos de cinco, mais as 23 novas.',
       presagio:'Eles continuaram a contagem de alguém. Sem saber que estavam continuando.'},
   escolhas:[
     {texto:'Chamar o Sr. Tanner pra ver.', vai:'c16_ze_viu_os_entalhes'},
@@ -804,14 +832,16 @@ c16_mais_entalhes:{
 },
 
 c16_ze_viu_os_entalhes:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N','N','N'],
   texto:[
     'Ele sobe. Leva quarenta minutos pra subir cinquenta degraus e não aceita ajuda em nenhum.',
     'Você mostra as vinte e três, e ele passa o dedo em cada uma, em ordem, subindo.',
     'E na décima nona ele para.',
     'Porque a décima nona é diferente das outras: é mais funda, feita com mais força, e tem uma coisa ao lado dela.',
     'Uma letra.',
-    '**Z**',
-    '"Setenta e nove", ele diz.',
+    '**O**',
+    '"Setenta e nove." Ele não tira o dedo da pedra.',
     '"O quê?"',
     '"A décima nona é setenta e nove. Treze de outubro."',
     'Ele senta no degrau.',
@@ -825,7 +855,7 @@ c16_ze_viu_os_entalhes:{
       npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Achou na escada a marca que o pai fez em 1979, com a inicial dele ao lado, antes de não voltar.'},
       rep:{eixo:'bom',delta:7,motivo:'Levou um velho até a marca que o pai dele deixou'},
       moral:25, instabilidade:1,
-      registrar:'Na escada, a marca de 13/10/1979 tem um Z riscado ao lado.',
+      registrar:'Na escada, a marca de 13/10/1979 tem um O riscado ao lado.',
       presagio:'Ele riscou o nome do filho antes de subir. Pensa no que ele esperava.'},
   escolhas:[
     {texto:'Riscar a próxima marca junto com ele.', vai:'c16_riscou'},
@@ -836,9 +866,11 @@ c16_ze_viu_os_entalhes:{
 },
 
 c16_riscou:{
+  falante:'Sr. Tanner',
+  vozes:['N','N','N'],
   texto:[
     'Você tira a faca e risca um traço na lateral do próximo degrau.',
-    d=>d.flags.achou_a_marca_do_pai ? 'O Sr. Tanner segura a sua mão antes de você terminar.\n"Deixa eu."\nE ele risca. Devagar, com a mão ruim, levando uns quatro minutos pra fazer três centímetros.\nE do lado ele risca uma letra.\nNão é Z.\nÉ F.\n"Tanner", ele diz. "Meu pai também era."' :
+    d=>d.flags.achou_a_marca_do_pai ? 'O Sr. Tanner segura a sua mão antes de você terminar.\n"Deixa eu."\nE ele risca. Devagar, com a mão ruim, levando uns quatro minutos pra fazer três centímetros.\nE do lado ele risca uma letra.\nNão é O.\nÉ H.\n"Hollis." Ele sopra o pó da pedra. "Agora ele também fica escrito."' :
        'Fica torto e raso e leva uns quatro minutos, porque riscar rocha com faca é muito mais difícil do que parece e é exatamente por isso que as marcas antigas importam.',
     'Você senta no degrau depois.',
     'Alguém vai subir essa escada daqui a cem anos e contar as marcas e a sua vai estar lá, no meio, sem nome e sem data, e vai entrar na conta.'
@@ -936,24 +968,25 @@ c16_mais_no_fundo:{
 c16_mostrou_a_placa:{
   texto:[
     'O Sr. Tanner segura a placa de bronze com as duas mãos e olha as sete linhas de traços por muito tempo.',
-    '"Isso é escrita?"',
-    '"Acho que é."',
-    '"De quem?"',
-    '"De quem morava aqui."',
+    fala('Sr. Tanner', 'Isso é escrita?'),
+    d=>fala(d.jogador.nome, 'Acho que é.'),
+    fala('Sr. Tanner', 'De quem?'),
+    d=>fala(d.jogador.nome, 'De quem morava aqui.'),
     'Ele vira a placa e lê as quatro palavras em letra de alfabeto.',
-    '"Eles voltaram. Nós ficamos."',
+    fala('Sr. Tanner', 'Eles voltaram. Nós ficamos.', 'baixo'),
     'Ele lê em voz alta três vezes.',
-    '"Eles quem?"',
-    d=>d.flags.sabe_dos_tres_nadando ? 'E você não responde, porque você já sabe, e porque falar em voz alta ia ser pior.\nMas ele chega sozinho: ele olha o mar na direção de Kanto, e depois a placa, e depois o mar.\n"Ah."\nSó isso. "Ah."' :
-       '"Eu não sei."',
+    fala('Sr. Tanner', 'Eles quem?'),
+    d=>d.flags.sabe_dos_tres_nadando ? 'E você não responde, porque você já sabe, e porque falar em voz alta ia ser pior.\nMas ele chega sozinho: ele olha o mar na direção de Kanto, e depois a placa, e depois o mar.' :
+       fala(d.jogador.nome, 'Eu não sei.'),
+    d=>d.flags.sabe_dos_tres_nadando ? fala('Sr. Tanner', 'Ah.', 'baixo') : '',
     'Ele devolve a placa.',
-    '"Guarda você. Eu já tenho a caixa."'
+    fala('Sr. Tanner', 'Guarda você. Eu já tenho a caixa.')
   ],
   ef:{flag:'ze_viu_a_placa',
       npc:{nome:'Sr. Tanner', opiniao:9, memoria:'Leu a placa de bronze três vezes em voz alta e entendeu sozinho.'},
       rep:{eixo:'bom',delta:3,motivo:'Mostrou a placa a quem tinha direito de ver primeiro'},
       moral:10,
-      presagio:'"Eles voltaram. Nós ficamos." Você vai reler isso no último capítulo.'},
+      presagio:'"Eles voltaram. Nós ficamos." Isso não sai da cabeça tão cedo.'},
   escolhas:[
     {texto:'Subir até o alicerce.', vai:'c16_alicerce'},
     {texto:'Esperar a noite.', vai:'c16_esperou_noite'},
@@ -992,6 +1025,8 @@ c16_esperou_noite:{
 },
 
 c16_ficou_com_o_ze:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você volta ao barco e fica.',
     'Ele não fala nada por uns dez minutos e depois fala sem parar por uma hora, o que é a coisa mais normal do mundo com alguém que passou quarenta anos sem ser acreditado.',
@@ -1035,7 +1070,7 @@ c16_alicerce:{
   ef:{flag:['viu_o_alicerce','viu_as_tres_depressoes'],
       instabilidade:1,
       registrar:'No alicerce há um desgaste circular central e três depressões rasas em volta, a quatro metros uma da outra.',
-      presagio:'Quatro metros entre elas. Você já mediu essa distância numa ciclovia.'},
+      presagio:d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Quatro metros entre elas. Você já viu essa distância numa ciclovia.' : 'Quatro metros entre elas. Guarde a medida.'},
   escolhas:[
     {texto:'Esperar no centro do círculo.', vai:'c16_esperou_no_circulo'},
     {texto:'Deitar numa das três depressões.', vai:'c16_deitou_na_depressao'},
@@ -1048,19 +1083,19 @@ c16_deitou_na_depressao:{
   texto:[
     'Você deita numa das três depressões da laje.',
     'É rasa — uns seis centímetros — e é maior que você em todas as direções, e a pedra está fria.',
-    'E dali, deitado, você vê o que quem deitava ali via:',
+    'E dali, deitad{o|a}, você vê o que quem deitava ali via:',
     'o céu, e mais nada. A parede do alicerce corta o horizonte inteiro.',
     'Deitad{o|a} numa dessas você não vê o mar, não vê Kanto, não vê o alicerce.',
     'Vê o céu.',
     'Três coisas grandes deitavam aqui, lado a lado, olhando o céu, esperando uma coisa que vem do céu.',
-    'E hoje elas deitam numa praia de pedra em Kanto, lado a lado, com quatro metros entre elas, olhando o mar.',
-    'Você fica deitad{o|a} ali um tempo e a coisa que você pensa é: elas mudaram o que estavam olhando.'
+    d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'E hoje elas deitam numa praia de pedra em Kanto, lado a lado, com quatro metros entre elas, olhando o mar.\nVocê fica deitad{o|a} ali um tempo e a coisa que você pensa é: elas mudaram o que estavam olhando.' :
+       'Você fica deitad{o|a} ali um tempo, olhando o que elas olhavam, e pensa em onde elas estão agora.'
   ],
   ef:{flag:['deitou_na_depressao','entendeu_as_depressoes'],
       rep:{eixo:'bom',delta:5,motivo:'Deitou na depressão pra ver o que dava pra ver'},
       moral:10, instabilidade:1,
-      registrar:'Das depressões do alicerce só se vê o céu. Na praia de Kanto, os três olham o mar.',
-      presagio:'Elas mudaram o que estavam olhando. Depois de quanto tempo?'},
+      registrar:'Das depressões do alicerce só se vê o céu.',
+      presagio:d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Elas mudaram o que estavam olhando. Depois de quanto tempo?' : 'Três coisas grandes esperavam aqui. Esperavam o quê?'},
   escolhas:[
     {texto:'Esperar no centro do círculo.', vai:'c16_esperou_no_circulo'},
     {texto:'Ficar deitad{o|a} até acontecer alguma coisa.', vai:'c16_esperou_no_circulo'},
@@ -1072,17 +1107,19 @@ c16_deitou_na_depressao:{
 /* ─────────────── A EQUIPE ─────────────── */
 
 c16_botas:{
+  falante:'Chefe da expedição',
+  vozes:['N','o outro da equipe'],
   texto:[
     'As marcas de bota levam pro outro lado do topo, descendo uns trinta metros pela face sul, até um platô que não dá pra ver do alicerce.',
     'E no platô tem um acampamento.',
     'Três barracas técnicas de lona branca, um gerador silencioso de bancada, quatro caixas plásticas empilhadas, uma antena de uns dois metros, e uma lona esticada em cima de tudo em camuflagem de cor de rocha.',
     'Quatro pessoas.',
     'Uma delas está sentada numa caixa com um caderno e uma câmera térmica apoiada no joelho, apontada pro alicerce.',
-    '"...o padrão é bianual com desvio, a gente perdeu duas janelas esperando o conselho aprovar a verba, e se perder essa a próxima é em dois mil e sete..."',
+    '"...o intervalo é de seis a sete anos, a gente perdeu duas janelas esperando o conselho aprovar a verba, e se perder essa a próxima é em dois mil e seis, sete..."',
     'Ela para de falar quando te vê.',
     'Um silêncio muito longo, em que ninguém corre, ninguém grita e ninguém pega nada.',
-    '"Você é o de Saffron", diz outro.',
-    'E não é pergunta.'
+    '"Você é {o|a} de Saffron."',
+    'Quem diz é outro, um homem de barba que não levantou da caixa. E não é pergunta.'
   ],
   ef:{flag:'achou_equipe_na_ilha',
       registrar:'Uma equipe com equipamento da Silph está acampada na face sul da ilha esperando a janela.',
@@ -1090,17 +1127,19 @@ c16_botas:{
   escolhas:[
     {texto:'"O que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
     {texto:'"Saiam da ilha."', vai:'c16_expulsou_equipe'},
-    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas'},
+    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas', cond:d=>!!d.flags.viu_a_caixa_de_charuto},
     {texto:'Atacar o acampamento.', vai:'c16_ataque_equipe'}
   ]
 },
 
 c16_quantas_janelas:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','P','N','P','N','P','N','N'],
   texto:[
     '"Quantas janelas vocês já perderam?"',
     'A mulher do caderno pisca duas vezes, porque não era a pergunta que ela esperava.',
     '"Duas."',
-    '"Oitenta e oito e noventa e seis."',
+    '"Noventa e três e noventa e seis."',
     'Ela abre o caderno.',
     '"Como você sabe as datas?"',
     '"Eu tenho quarenta e três bilhetes em papel de pão numa caixa de charuto."',
@@ -1112,23 +1151,25 @@ c16_quantas_janelas:{
     '"Trinta e nove a noventa e seis."',
     'Ela fecha os olhos por um segundo.',
     '"Cinquenta e sete anos de série temporal."',
-    'E aí ela diz a coisa mais honesta e mais assustadora do capítulo:',
+    'E aí ela diz a coisa mais honesta e mais assustadora da noite:',
     '"Eu daria o meu salário de um ano por essa caixa, e eu ganho muito bem, e eu não vou te oferecer dinheiro porque eu já entendi que você não vende."'
   ],
   ef:{flag:['sabe_das_janelas_perdidas','equipe_te_respeita'],
       npc:{nome:'Chefe da expedição', opiniao:2, memoria:'Descobriu que você tem 57 anos de série temporal numa caixa de charuto e não tentou comprar.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou quantas janelas em vez de ameaçar'},
-      registrar:'A expedição perdeu as janelas de 1988 e 1996 esperando verba.',
+      registrar:'A expedição perdeu as janelas de 1993 e 1996 esperando verba.',
       presagio:'Ela não ofereceu dinheiro. Isso é pior: ela vai oferecer outra coisa.'},
   escolhas:[
     {texto:'"O que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
     {texto:'"O que você me oferece, então?"', vai:'c16_o_que_oferece'},
     {texto:'"Saiam da ilha."', vai:'c16_expulsou_equipe'},
-    {texto:'"Vocês são do andar onze."', vai:'c16_pergunta_equipe'}
+    {texto:'"Vocês são do andar onze."', vai:'c16_pergunta_equipe', cond:d=>!!d.flags.sabe_do_andar_11 || !!d.flags.viu_os_doze}
   ]
 },
 
 c16_o_que_oferece:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','N','P','N','P','N','N'],
   texto:[
     '"O que você me oferece, então?"',
     'Ela senta de novo na caixa.',
@@ -1137,18 +1178,18 @@ c16_o_que_oferece:{
     '"Se a série temporal for real e verificável, ela é o dado mais importante de toda essa linha de pesquisa, e ela não é minha, e eu não vou publicar dado dos outros com o meu nome sozinho."',
     'Ela abre o caderno numa página em branco.',
     '"Eu preciso do nome de quem anotou."',
-    '"O nome é Tanner. O. Tanner e Z. A. Tanner. Pai e filho, pescadores de Fuchsia."',
+    '"O nome é Tanner. H. Tanner e O. Tanner. Pai e filho, pescadores de Fuchsia."',
     'Ela escreve.',
     'E escreve devagar, conferindo a grafia com você duas vezes, que é a segunda vez que alguém faz isso na sua frente neste mês.',
     '"E o velho tá vivo?"',
-    '"Tá no barco, a duzentos metros da costa."',
+    d=>d.flags.chegou_voando_na_ilha ? '"Tá em Fuchsia, na mesa de dominó."' : '"Tá no barco, a duzentos metros da costa."',
     'Ela fecha o caderno e olha o mar.',
     '"Quarenta e um anos de carreira e eu nunca coloquei um pescador como coautor."',
     'Pausa.',
     '"Isso diz mais sobre a minha carreira do que sobre pescador."'
   ],
   ef:{flag:['coautoria','equipe_aliada'],
-      npc:{nome:'Chefe da expedição', opiniao:6, memoria:'Anotou O. Tanner e Z. A. Tanner como coautores da série temporal.'},
+      npc:{nome:'Chefe da expedição', opiniao:6, memoria:'Anotou H. Tanner e O. Tanner como coautores da série temporal.'},
       rep:{eixo:'bom',delta:6,motivo:'Transformou uma caixa de charuto em coautoria'},
       moral:20,
       registrar:'A expedição vai creditar os Tanner como coautores da série temporal.',
@@ -1157,7 +1198,7 @@ c16_o_que_oferece:{
     {texto:'"E o que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
     {texto:'"Então vocês não levam pena nenhuma."', vai:'c16_sem_pena'},
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
-    {texto:'Buscar o Sr. Tanner pra ele ouvir isso.', vai:'c16_buscou_o_ze'}
+    {texto:'Buscar o Sr. Tanner pra ele ouvir isso.', vai:'c16_buscou_o_ze', cond:d=>!d.flags.chegou_voando_na_ilha}
   ]
 },
 
@@ -1166,15 +1207,15 @@ c16_buscou_o_ze:{
     'Você desce os cento e quatro degraus, rema até o barco, e traz o Sr. Tanner.',
     'Ele leva uma hora e dez pra subir e xinga durante quarenta minutos dela.',
     'No platô, a chefe da expedição levanta da caixa e faz uma coisa que nenhum dos outros três faz: ela estende a mão.',
-    '"Senhor Tanner?"',
-    '"Sr. Tanner."',
-    '"Doutora Mariko Odile, do Instituto de Biologia Comparada de Celadon."',
+    fala('Chefe da expedição', 'Senhor Tanner?'),
+    fala('Sr. Tanner', 'Otis.'),
+    d=>{ Nomes.apresentar('Chefe da expedição'); return fala('Chefe da expedição', 'Edith Sallow. Doutora, do Instituto de Biologia Comparada de Celadon.'); },
     'Ela pega o caderno.',
-    '"O senhor tem uma série de observação de cinquenta e sete anos e eu vou te pedir umas quarenta perguntas chatas sobre metodologia, e algumas vão parecer que eu tô desconfiando do senhor, e eu não tô. É assim que se faz."',
+    fala('Chefe da expedição', 'O senhor tem uma série de observação de cinquenta e sete anos e eu vou te pedir umas quarenta perguntas chatas sobre metodologia, e algumas vão parecer que eu tô desconfiando do senhor, e eu não tô. É assim que se faz.'),
     'Ele olha pra você.',
     'Depois olha pra ela.',
-    '"Pode perguntar."',
-    'Eles ficam três horas no platô, ela perguntando e ele respondendo, e no meio disso ela passa a chamar ele de senhor Tanner e ele passa a deixar.'
+    fala('Sr. Tanner', 'Pode perguntar.'),
+    'Eles ficam três horas no platô, ela perguntando e ele respondendo, e no meio disso ela volta a chamar ele de senhor Tanner e ele passa a deixar.'
   ],
   ef:{flag:['ze_virou_coautor','equipe_aliada'],
       npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Passou três horas respondendo perguntas de metodologia para uma doutora que o chamou de senhor Tanner.'},
@@ -1191,6 +1232,8 @@ c16_buscou_o_ze:{
 },
 
 c16_sem_pena:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','N','N','P','N','N','N'],
   texto:[
     '"Então vocês não levam pena nenhuma."',
     'Ela para de escrever.',
@@ -1221,6 +1264,8 @@ c16_sem_pena:{
 },
 
 c16_motivo_tecnico:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','P','P','N','P','N','N','N'],
   texto:[
     '"Contaminação da amostra por evento não controlado."',
     'Ela levanta a cabeça devagar.',
@@ -1248,13 +1293,15 @@ c16_motivo_tecnico:{
       presagio:'Você ganhou dois anos com uma frase de relatório. Anota o método.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
-    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze'},
+    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze', cond:d=>!d.flags.chegou_voando_na_ilha},
     {texto:'Esperar o evento junto com eles.', vai:'c16_esperou_no_circulo'},
-    {texto:'"E se eu estiver errado?"', vai:'c16_esperou_no_circulo'}
+    {texto:'"E se eu estiver errad{o|a}?"', vai:'c16_esperou_no_circulo'}
   ]
 },
 
 c16_motivo_moral:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','P','N','N','N','P','N','N'],
   texto:[
     '"Porque ele vai ver vocês fazendo."',
     'Ela não responde na hora.',
@@ -1282,13 +1329,15 @@ c16_motivo_moral:{
       presagio:'A primeira mentira da vida profissional dela, aos quarenta e um anos de carreira.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
-    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze'},
+    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze', cond:d=>!d.flags.chegou_voando_na_ilha},
     {texto:'"Não mente. Escreve a verdade técnica."', vai:'c16_motivo_tecnico'},
     {texto:'Esperar o evento com eles.', vai:'c16_esperou_no_circulo'}
   ]
 },
 
 c16_so_um_pedido:{
+  falante:'Chefe da expedição',
+  vozes:['P','P','N','P','N','P','N','N','N'],
   texto:[
     '"Não tenho motivo nenhum. Só um pedido."',
     'Ela espera.',
@@ -1308,7 +1357,7 @@ c16_so_um_pedido:{
   ef:{flag:'pediu_pra_equipe',
       npc:{nome:'Chefe da expedição', opiniao:4, memoria:'Ouviu um pedido sem argumento nenhum, e reparou que pedir era o que ninguém tinha tentado.'},
       rep:{eixo:'bom',delta:4,motivo:'Pediu, sem argumento, o que ninguém pede'},
-      presagio:'Pedir é a única coisa que ninguém tinha tentado. Vale pra esse capítulo e pros dois anteriores.'},
+      presagio:'Pedir é a única coisa que ninguém tinha tentado. Vale pra essa ilha e pra muita coisa antes dela.'},
   escolhas:[
     {texto:'"Contaminação da amostra por evento não controlado."', vai:'c16_motivo_tecnico'},
     {texto:'"Porque ele vai ver vocês fazendo."', vai:'c16_motivo_moral'},
@@ -1318,6 +1367,8 @@ c16_so_um_pedido:{
 },
 
 c16_pergunta_equipe:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','N','P','N','N','P','N','N'],
   texto:[
     '"O que vocês querem com ele?"',
     'A mulher do caderno responde, e responde com uma honestidade que te desarma:',
@@ -1340,21 +1391,23 @@ c16_pergunta_equipe:{
   ],
   ef:{flag:['entendeu_o_proximo_projeto','sabe_da_proxima_matriz'], instabilidade:2, moral:-12,
       registrar:'A Silph quer material genético de Ho-Oh para a próxima matriz. O projeto fracassou doze vezes.',
-      presagio:'"Nunca perguntei de quê." É a mesma frase da veterinária da reserva.'},
+      presagio:'"Nunca perguntei de quê." Você já ouviu essa frase de outra boca.'},
   escolhas:[
     {texto:'"Doze vezes. Eu vi as doze."', vai:'c16_eu_vi_as_doze', cond:d=>!!d.flags.viu_os_doze},
     {texto:'"Saiam da ilha."', vai:'c16_expulsou_equipe'},
-    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas'},
+    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas', cond:d=>!!d.flags.viu_a_caixa_de_charuto},
     {texto:'Atacar o acampamento.', vai:'c16_ataque_equipe'}
   ]
 },
 
 c16_eu_vi_as_doze:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','P','N','P','N','N','N'],
   texto:[
     '"Doze vezes. Eu vi as doze."',
     'Ela para.',
     '"Como assim você viu?"',
-    '"Subsolo quatro. Doze tanques, onze ocupados, o décimo segundo com uma plaqueta que diz MATRIZ — VAGO. Quadro branco na parede do fundo com a linha do tempo de três séries."',
+    '"Andar onze. Doze tanques, onze ocupados, o décimo segundo com uma plaqueta que diz MATRIZ — VAGO. Quadro branco na parede do fundo com a linha do tempo de três séries."',
     'Você continua, e não consegue parar, e nem quer:',
     '"E um rabisco no canto do quadro, escrito e apagado três vezes pela mesma pessoa, que diz “eles não falam porque ninguém pergunta”."',
     'Os quatro do acampamento estão olhando pra você.',
@@ -1367,14 +1420,14 @@ c16_eu_vi_as_doze:{
     'Ela levanta a cabeça.',
     '"Eles falam?"',
     'E aí você tem que dizer em voz alta, num platô de rocha no meio do mar, pra quatro cientistas:',
-    '"Seis querem sair. Cinco querem acabar."'
+    d=>d.flags.seis_e_cinco ? fala(d.jogador.nome, 'Seis querem sair. Cinco querem acabar.') : fala(d.jogador.nome, 'Eu não sei. Ninguém nunca perguntou pra eles.')
   ],
   ef:{flag:['contou_pra_equipe','equipe_quebrada'],
       npc:{nome:'Chefe da expedição', opiniao:7, memoria:'Descobriu com você que os onze tanques do andar 11 estão ocupados e que eles respondem.'},
       rep:{eixo:'bom',delta:8,motivo:'Contou aos que recebem tabela o que existe embaixo da tabela'},
       moral:15, instabilidade:1,
       registrar:'A equipe da expedição não sabia que os tanques do andar 11 estavam ocupados.',
-      presagio:'"Eu recebo tabela. Eu nunca desci." É como tudo funciona desde o capítulo nove.'},
+      presagio:'"Eu recebo tabela. Eu nunca desci." É assim que tudo funciona lá dentro.'},
   escolhas:[
     {texto:'"Então não coleta nada hoje."', vai:'c16_sem_pena'},
     {texto:'"Vai lá descer, então."', vai:'c16_va_descer'},
@@ -1384,6 +1437,8 @@ c16_eu_vi_as_doze:{
 },
 
 c16_va_descer:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','P','P','N','N','N'],
   texto:[
     '"Vai lá descer, então."',
     '"Como?"',
@@ -1405,22 +1460,25 @@ c16_va_descer:{
       rep:{eixo:'bom',delta:7,motivo:'Mandou um chefe de expedição descer'},
       moral:20, instabilidade:-1,
       registrar:'A expedição vai solicitar vistoria presencial ao andar 11 — para colecionar indeferimentos.',
-      presagio:'Oito meses de indeferimento por escrito valem mais que a vistoria. Todo mundo nessa história aprendeu isso sozinho.'},
+      presagio:'Oito meses de indeferimento por escrito valem mais que a vistoria. Todo mundo que você conheceu lá dentro aprendeu isso sozinho.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
-    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze'},
+    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze', cond:d=>!d.flags.chegou_voando_na_ilha},
     {texto:'"E hoje vocês não coletam."', vai:'c16_sem_pena'},
     {texto:'Esperar o evento com eles.', vai:'c16_esperou_no_circulo'}
   ]
 },
 
 c16_expulsou_equipe:{
+  vozes:['P'],
   texto:['"Saiam da ilha."'],
   teste:{status:'carisma', dificuldade:9, nomeStatus:'Carisma',
          critico:'c16_equipe_saiu', sucesso:'c16_equipe_saiu', parcial:'c16_equipe_ficou', falha:'c16_equipe_ficou'}
 },
 
 c16_equipe_saiu:{
+  falante:'Chefe da expedição',
+  vozes:['N','P','N','P','N'],
   texto:[
     'Você diz isso com uma autoridade que você não tem e que eles, por algum motivo, aceitam.',
     d=>Estado.rep.eixo==='bom'&&Estado.rep.bom>=5 ? 'Talvez seja a sua reputação. Metade de Kanto sabe o seu nome e a outra metade sabe a sua história, e as duas metades chegaram aqui antes de você.' :
@@ -1431,21 +1489,21 @@ c16_equipe_saiu:{
     'Ela para na argola de ferro com a corda na mão e olha pra você.',
     '"A gente volta na próxima janela."',
     '"Quando?"',
-    '"Se o intervalo for sete, dois mil e sete. Se for oito, dois mil e oito."',
+    '"Se o intervalo for seis, dois mil e seis. Se for sete, dois mil e sete."',
     'Ela amarra a corda no barco — não corta: amarra e desamarra, direito, sem pressa.',
-    '"Eu também", você responde.',
+    '"Eu também volto."',
     'Ela assente.',
     '"Eu sei."'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Expulsou uma expedição científica de uma ilha sem jurisdição'},
       flag:'expulsou_a_equipe', instabilidade:-1,
       npc:{nome:'Chefe da expedição', opiniao:1, memoria:'Saiu da ilha quando você mandou, e desamarrou a corda direito em vez de cortar.'},
-      registrar:'Expulsou a expedição da ilha sem nome. A próxima janela é em 2007 ou 2008.',
+      registrar:'Expulsou a expedição da ilha sem nome. A próxima janela é em 2006 ou 2007.',
       presagio:'Ela desamarrou em vez de cortar. Repare em quem corta e quem desamarra.'},
   escolhas:[
     {texto:'Esperar no círculo.', vai:'c16_esperou_no_circulo'},
     {texto:'Deitar numa das depressões.', vai:'c16_deitou_na_depressao'},
-    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze'},
+    {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze', cond:d=>!d.flags.chegou_voando_na_ilha},
     {texto:'Descer da ilha.', vai:'c16_desceu_ilha'}
   ]
 },
@@ -1463,7 +1521,7 @@ c16_equipe_ficou:{
       moral:-8,
       presagio:'O papel está do outro lado. Aprende a lidar com isso agora, porque vai acontecer de novo.'},
   escolhas:[
-    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas'},
+    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas', cond:d=>!!d.flags.viu_a_caixa_de_charuto},
     {texto:'"O que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
     {texto:'Ir pro círculo e esperar na frente deles.', vai:'c16_esperou_no_circulo'},
     {texto:'Atacar o acampamento.', vai:'c16_ataque_equipe'}
@@ -1482,6 +1540,8 @@ c16_ataque_equipe:{
 },
 
 c16_venceu_equipe:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','N','N','N'],
   texto:[
     'Você derruba a segurança e destrói o gerador, a câmera térmica e a antena.',
     'Eles não revidam.',
@@ -1510,6 +1570,8 @@ c16_venceu_equipe:{
 },
 
 c16_ajudou_a_recolher:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','P','N','N'],
   texto:[
     '"Desculpa."',
     'Você passa as quatro horas seguintes ajudando quatro cientistas a recolher os cacos do equipamento que você quebrou, num platô de rocha, no escuro, com lanterna de cabeça.',
@@ -1534,13 +1596,15 @@ c16_ajudou_a_recolher:{
       presagio:'"Quebrar era a única coisa que eu sabia como." Aprende outra.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
-    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas'},
+    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas', cond:d=>!!d.flags.viu_a_caixa_de_charuto},
     {texto:'Descer da ilha.', vai:'c16_desceu_ilha'},
     {texto:'Ficar e esperar o evento com eles.', vai:'c16_esperou_no_circulo'}
   ]
 },
 
 c16_perdeu_equipe:{
+  falante:'Chefe da expedição',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Você perde para a segurança de uma expedição científica.',
     'Eles te tratam bem depois — dão água, olham seus ferimentos com um kit de primeiros socorros de verdade, oferecem carona no barco deles e perguntam se você precisa ligar pra alguém.',
@@ -1563,7 +1627,7 @@ c16_perdeu_equipe:{
       registrar:'Perdeu para a segurança da expedição.',
       presagio:'"Eu sou muito chata em reunião desde então." É uma carreira inteira nessa frase.'},
   escolhas:[
-    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas'},
+    {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas', cond:d=>!!d.flags.viu_a_caixa_de_charuto},
     {texto:'"O que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
     {texto:'Descer da ilha.', vai:'c16_desceu_ilha'}
@@ -1608,14 +1672,14 @@ c16_ficou_parado:{
     'Uma. Duas. Três.',
     'E em cada uma ele fica uns quarenta segundos.',
     'E aí você entende, sentad{o|a} numa laje com uma coisa de sete metros de envergadura a dois metros de distância:',
-    'ele vem aqui a cada seis, sete ou oito anos, há trezentas e vinte e oito vezes contadas, pra encostar o bico em três buracos vazios.',
+    d=>d.flags.sabe_dos_trezentos_e_cinco ? 'ele vem aqui a cada seis ou sete anos, há trezentas e vinte e oito vezes contadas, pra encostar o bico em três buracos vazios.' : 'ele vem aqui a cada seis ou sete anos, há mais tempo do que alguém contou, pra encostar o bico em três buracos vazios.',
     'E depois ele te olha.'
   ],
   ef:{flag:['ficou_parado_hooh','entendeu_o_ritual'],
       rep:{eixo:'bom',delta:5,motivo:'Ficou parado e viu o ritual inteiro'},
       moral:15, instabilidade:1,
       registrar:'Ho-Oh encosta o bico nas três depressões vazias, uma por uma, quarenta segundos em cada.',
-      presagio:'Três buracos vazios. E os donos deles estão numa praia de pedra em Kanto olhando o mar.'},
+      presagio:d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Três buracos vazios. E os donos deles estão numa praia de pedra em Kanto olhando o mar.' : 'Três buracos vazios. Alguém devia estar neles.'},
   escolhas:[
     {texto:'"Eles estão vivos."', vai:'c16_eles_estao_vivos', cond:d=>!!d.flags.viu_os_tres || !!d.flags.sabe_dos_tres},
     {texto:'Falar com ele.', vai:'c16_falou_hooh'},
@@ -1625,6 +1689,7 @@ c16_ficou_parado:{
 },
 
 c16_eles_estao_vivos:{
+  vozes:['P','P','P'],
   texto:[
     '"Eles estão vivos."',
     'Você fala isso em voz alta, sentad{o|a} numa laje de pedra, dentro de uma coluna de luz, pra uma coisa de sete metros de envergadura.',
@@ -1638,16 +1703,16 @@ c16_eles_estao_vivos:{
     'Não em ondas, não em pulso: ela muda inteira, de uma vez, em todas as direções, e fica dourada por uns quatro segundos.',
     'E depois volta.',
     'E ele abaixa a cabeça até o nível da sua, que é uma distância enorme pra ele descer, e fica assim.',
-    'E você entende que está sendo ouvido pela primeira vez em duzentos anos por alguém que vem aqui a cada sete pra encostar o bico em três buracos.'
+    'E você entende que está sendo ouvid{o|a} pela primeira vez em duzentos anos por alguém que vem aqui a cada sete pra encostar o bico em três buracos.'
   ],
   ef:{flag:['contou_pra_hooh','hooh_aliado'],
       executar:d=>{ const L=Estado.lend(250); if(L){ L.disposicao='passivo'; L.aliado=true; }
         Estado.dados.mundo.instabilidade = Math.max(0, Estado.dados.mundo.instabilidade-3);
         return [{tipo:'mundo', texto:'Ho-Oh soube que os três estão vivos. A luz ficou dourada por quatro segundos.'}]; },
-      rep:{eixo:'bom',delta:8,motivo:'Contou a coisa que trezentas e vinte e oito visitas não descobriram'},
+      rep:{eixo:'bom',delta:8,motivo:'Contou a coisa que séculos de visita não descobriram'},
       moral:30, instabilidade:-2,
       registrar:'Contou a Ho-Oh que os três estão vivos em Kanto. A luz ficou dourada.',
-      presagio:'Trezentas e vinte e oito vezes encostando o bico em buraco vazio. E ninguém tinha contado.'},
+      presagio:'Séculos encostando o bico em buraco vazio. E ninguém tinha contado.'},
   escolhas:[
     {texto:'"Eles estão esperando uma coisa sair de Cinnabar."', vai:'c16_falou_hooh'},
     {texto:'Ficar em silêncio e deixar ele decidir.', vai:'c16_deixou_pena'},
@@ -1660,26 +1725,25 @@ c16_falou_hooh:{
   texto:[
     'Você fala.',
     'Não tem nada de solene: você fala rápido, atropelado, com a voz tremendo, sentad{o|a} numa pedra fria com as mãos dormentes de frio, pra uma coisa que não pisca.',
-    'Você fala do armazém de Celadon e das quarenta e uma gaiolas com número de processo.',
-    'Da reserva de Fuchsia e da planilha de mil novecentos e setenta e um.',
-    'Do andar onze e dos doze tanques e da plaqueta que diz MATRIZ — VAGO.',
-    'Do laboratório de Cinnabar e do caderno sete e do homem que subiu um vulcão com alguém do lado, no mesmo passo.',
-    'Da caixa de charuto com quarenta e três bilhetes em papel de pão.',
-    'E no fim, sem planejar, você fala da coisa que está aqui agora, nessa ilha, a trinta metros de distância, montando uma antena:',
-    '"E tem gente ali atrás querendo uma pena sua."',
-    'Ele vira a cabeça na direção do platô sul.',
-    'E fica olhando naquela direção por um tempo muito longo.',
-    'E depois volta pra você.',
-    'E abaixa a cabeça de um jeito que não é ameaça e não é submissão e que você só vai entender daqui a uns dois capítulos.'
+    'Você fala de onde veio e de tudo que viu no caminho.',
+    d=>d.flags.sabe_do_deposito ? 'Do armazém de Celadon e das gaiolas com número de processo.' : '',
+    d=>d.flags.sabe_da_planilha_71 ? 'Da reserva de Fuchsia e da planilha de mil novecentos e setenta e um.' : '',
+    d=>d.flags.viu_os_doze ? 'Do andar onze e dos doze tanques e da plaqueta que diz MATRIZ — VAGO.' : '',
+    d=>d.flags.sabe_que_subiram || d.flags.fuji_saiu ? 'Do laboratório de Cinnabar e do homem que subiu um vulcão com alguém do lado, no mesmo passo.' : '',
+    d=>d.flags.viu_a_caixa_de_charuto ? 'Da caixa de charuto com os bilhetes em papel de pão.' : '',
+    d=>d.flags.achou_equipe_na_ilha ? 'E no fim, sem planejar, você fala da coisa que está aqui agora, nessa ilha, a trinta metros de distância, montando uma antena:' : '',
+    d=>d.flags.achou_equipe_na_ilha ? fala(d.jogador.nome, 'E tem gente ali atrás querendo uma pena sua.') : '',
+    d=>d.flags.achou_equipe_na_ilha ? 'Ele vira a cabeça na direção do platô sul.\nE fica olhando naquela direção por um tempo muito longo.\nE depois volta pra você.' : 'Ele escuta tudo sem piscar.',
+    'E abaixa a cabeça de um jeito que não é ameaça e não é submissão e que você só vai entender bem mais tarde.'
   ],
   ef:{flag:['falou_com_hooh'],
       executar:d=>{ const L=Estado.lend(250); if(L && L.disposicao!=='hostil') L.disposicao='passivo'; return []; },
       rep:{eixo:'bom',delta:6,motivo:'Contou tudo em voz alta pra quem não tinha como responder'},
       moral:20,
-      registrar:'Contou tudo a Ho-Oh, inclusive que havia gente na ilha querendo uma pena dele.',
-      presagio:'Ele olhou pro platô sul. Você acabou de apontar quatro pessoas.'},
+      registrar:'Contou tudo a Ho-Oh em voz alta.',
+      presagio:d=>d.flags.achou_equipe_na_ilha ? 'Ele olhou pro platô sul. Você acabou de apontar quatro pessoas.' : 'Ele ouviu até o fim. Ninguém sabe o que ele faz com o que ouve.'},
   escolhas:[
-    {texto:'"Não faz nada com eles."', vai:'c16_nao_faz_nada'},
+    {texto:'"Não faz nada com eles."', vai:'c16_nao_faz_nada', cond:d=>!!d.flags.achou_equipe_na_ilha},
     {texto:'"Eles estão vivos." — falar dos três.', vai:'c16_eles_estao_vivos', cond:d=>!!d.flags.viu_os_tres || !!d.flags.sabe_dos_tres},
     {texto:'Ficar em silêncio.', vai:'c16_deixou_pena'},
     {texto:'Ajoelhar.', vai:'c16_ajoelhou'}
@@ -1693,7 +1757,7 @@ c16_nao_faz_nada:{
     'você acabou de pedir clemência a uma coisa lendária em nome de quatro cientistas que vieram arrancar uma pena dela.',
     'Ele olha pra você.',
     'E aí ele faz uma coisa pequena e absurda: ele encolhe um pouco o pescoço e mexe a cabeça de lado.',
-    'É um gesto que você já viu num Raikou numa ciclovia às quatro da manhã.',
+    d=>d.flags.viu_os_tres ? 'É um gesto que você já viu num Raikou numa ciclovia às quatro da manhã.' : 'É o gesto de bicho que ouviu o próprio nome e não sabe o que vem depois.',
     'Ele não entendeu a frase.',
     'Ele entendeu que você pediu, e que você pediu apontando pra eles, e que pedir apontando pra alguém é uma coisa que ele conhece.',
     'E ele não vai fazer nada com eles.',
@@ -1785,11 +1849,13 @@ c16_guardou_a_pena:{
     {texto:'Descer da ilha.', vai:'c16_desceu_ilha'},
     {texto:'Voltar e pôr a pena de volta no círculo.', vai:'c16_deixou_pena'},
     {texto:'Dar a pena pra expedição.', vai:'c16_deu_a_pena', cond:d=>!!d.flags.achou_equipe_na_ilha},
-    {texto:'Dar a pena pro Sr. Tanner.', vai:'c16_deu_pro_ze'}
+    {texto:'Dar a pena pro Sr. Tanner.', vai:'c16_deu_pro_ze', cond:d=>!d.flags.chegou_voando_na_ilha}
   ]
 },
 
 c16_deu_pro_ze:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você desce os cento e quatro degraus com a pena enrolada no cobertor e rema até o barco.',
     'E entrega.',
@@ -1798,7 +1864,7 @@ c16_deu_pro_ze:{
     'Ele olha por um tempo bem longo, com as mãos no colo.',
     '"Não."',
     '"Como não?"',
-    '"Meu pai foi vinte e três vezes e não trouxe nada."',
+    '"Meu pai foi dezenove vezes e não trouxe nada."',
     'Ele enrola o cobertor de volta, com cuidado, sem encostar na pena.',
     '"E eu sempre achei que era porque ele não conseguia."',
     'Ele empurra o cobertor pra você.',
@@ -1808,8 +1874,8 @@ c16_deu_pro_ze:{
       npc:{nome:'Sr. Tanner', opiniao:9, memoria:'Recusou pegar a pena. Entendeu que o pai nunca trouxe nada porque não quis.'},
       rep:{eixo:'bom',delta:3,motivo:'Ofereceu a pena a quem tinha mais direito que você'},
       moral:10,
-      registrar:'Sr. Tanner recusou a pena. O pai dele foi 23 vezes e nunca trouxe nada.',
-      presagio:'Ele não quis. Vinte e três vezes e ele não quis.'},
+      registrar:'Sr. Tanner recusou a pena. O pai dele foi dezenove vezes e nunca trouxe nada.',
+      presagio:'Ele não quis. Dezenove vezes e ele não quis.'},
   escolhas:[
     {texto:'Subir e devolver a pena ao círculo.', vai:'c16_deixou_pena'},
     {texto:'Ficar com ela.', vai:'c16_guardou_a_pena'},
@@ -1819,6 +1885,8 @@ c16_deu_pro_ze:{
 },
 
 c16_deu_a_pena:{
+  falante:'Chefe da expedição',
+  vozes:['N','P','N','P','N','N','N','P','N','N'],
   texto:[
     'Você desce até o platô sul com a pena na mão e entrega pra chefe da expedição.',
     'Ela não pega.',
@@ -1852,11 +1920,13 @@ c16_deu_a_pena:{
 },
 
 c16_insistiu:{
+  falante:'Chefe da expedição',
+  vozes:['P','N','P','N','P','N'],
   texto:[
     '"Fica com ela."',
     'Ela vira de volta e a cara dela mudou.',
     '"Por quê?"',
-    '"Porque se você não ficar, alguém vem em dois mil e sete e tira à força, e você é a melhor pessoa que vai vir nessa ilha."',
+    '"Porque se você não ficar, alguém vem na próxima janela e tira à força, e você é a melhor pessoa que vai vir nessa ilha."',
     'Ela ouve isso inteiro.',
     'E responde uma coisa que você não esperava:',
     '"Essa é a frase que me trouxe até aqui."',
@@ -1916,8 +1986,8 @@ c16_contou_as_marcas:{
     'Você conta as marcas de queimado na laje, deitad{o|a} de bruços com a lanterna de lado, por uma hora e quarenta.',
     'Trinta e uma.',
     'Trinta e uma pessoas, ao longo de quem sabe quantos séculos, subiram essa ilha, receberam uma pena e queimaram ela na mesma laje.',
-    'Uma a cada dez anos, mais ou menos, o que bate com a frequência das visitas.',
-    'Uma a cada duas ou três visitas, alguém queima.',
+    'Se a escada estiver certa, são trezentas e tantas visitas. Uma queimada a cada dez, mais ou menos.',
+    'Uma por geração, quase: sempre tem alguém que acha que é o primeiro.',
     'Você deita de costas na laje, do lado do seu risco novo, e olha o céu que é a única coisa que dá pra ver daqui de baixo.',
     'Trinta e uma pessoas antes de você acharam que estavam resolvendo.',
     'E ele continua vindo.'
@@ -1937,7 +2007,7 @@ c16_contou_as_marcas:{
 
 c16_deixou_pena:{
   texto:[
-    'Você põe a pena de volta no chão do círculo — ou nunca pega, ou volta pra pôr, e nos três casos o gesto é o mesmo.',
+    'Você põe a pena de volta no chão do círculo — ou nunca pega, ou volta pra pôr, e em todo caso o gesto é o mesmo.',
     'E recua até a borda da laje.',
     'Ele olha a pena no chão.',
     'Depois olha você.',
@@ -2006,7 +2076,7 @@ c16_capturou_hooh:{
     'Ela fica assim quarenta minutos, que é o tempo de sempre, e depois some, sozinha, no horário.',
     'A luz nunca foi ele.',
     'A luz é o lugar chamando.',
-    'E ela vai continuar chamando a cada seis, sete ou oito anos, pelo tempo que for, com o círculo vazio.',
+    'E ela vai continuar chamando a cada seis ou sete anos, pelo tempo que for, com o círculo vazio.',
     d=>d.flags.viu_as_tres_depressoes ? 'E as três depressões na laje vão continuar vazias, e agora tem uma quarta coisa que não vem.' : ''
   ],
   ef:{instabilidade:3, flag:'capturou_hooh', moral:-25,
@@ -2014,7 +2084,7 @@ c16_capturou_hooh:{
       presagio:'A luz é o lugar chamando. Vai continuar chamando.'},
   escolhas:[
     {texto:'Soltar. Agora, aqui.', vai:'c16_soltou_hooh'},
-    {texto:'Descer com ele.', vai:'c16_desceu_com_hooh'},
+    {texto:'Ir embora com ele.', vai:'c16_desceu_com_hooh'},
     {texto:'Ficar até a luz sumir e decidir depois.', vai:'c16_soltou_hooh'},
     {texto:'Deitar numa das depressões com a bola na mão.', vai:'c16_deitou_com_a_bola'}
   ]
@@ -2026,19 +2096,18 @@ c16_deitou_com_a_bola:{
     'Dali só se vê o céu, e o céu tem a coluna de luz atravessando ele, e a coluna está vazia.',
     'Você fica deitad{o|a} os quarenta minutos inteiros.',
     'E na metade deles você percebe que está deitad{o|a} num lugar gasto por um corpo que morreu aqui há séculos, com o responsável por trazer esse corpo de volta fechado numa esfera de dez centímetros na sua mão.',
-    'E que a três horas de mar tem uma praia de pedra com três lugares gastos, ocupados agora, esperando.',
+    d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'E que a onze horas de mar tem uma praia de pedra com três lugares gastos, ocupados agora, esperando.' : 'E que as três depressões do lado continuam vazias, esperando outra coisa que não vem.',
     'A luz some no horário.',
     'E você continua deitad{o|a}.'
   ],
   ef:{flag:'deitou_com_a_bola',
       moral:-15, instabilidade:1,
-      registrar:'Ficou deitado numa das depressões com Ho-Oh na mão até a luz sumir.',
-      presagio:'Três lugares gastos numa praia de pedra, ocupados, esperando.'},
+      registrar:'Ficou deitad{o|a} numa das depressões com Ho-Oh na mão até a luz sumir.',
+      presagio:'Três lugares gastos, esperando.'},
   escolhas:[
     {texto:'Soltar.', vai:'c16_soltou_hooh'},
-    {texto:'Descer com ele.', vai:'c16_desceu_com_hooh'},
-    {texto:'Ficar até amanhecer e soltar.', vai:'c16_soltou_hooh'},
-    {texto:'Descer da ilha.', vai:'c16_desceu_com_hooh'}
+    {texto:'Ir embora com ele.', vai:'c16_desceu_com_hooh'},
+    {texto:'Ficar até amanhecer e soltar.', vai:'c16_soltou_hooh'}
   ]
 },
 
@@ -2074,47 +2143,49 @@ c16_soltou_hooh:{
 
 c16_desceu_com_hooh:{
   texto:[
-    'Você desce os cento e quatro degraus com uma bola no cinto.',
-    'O Sr. Tanner está no barco com a luz de posição acesa e ele te vê chegar e a primeira coisa que ele pergunta é:',
-    '"Viu?"',
-    '"Vi."',
-    'E ele ri, e fica rindo por uns vinte segundos, e depois para de rir porque ele reparou na sua cara.',
-    '"Que foi?"',
-    'E você não responde.',
-    'E ele olha o seu cinto, e depois o seu rosto, e depois o seu cinto de novo.',
+    d=>d.flags.chegou_voando_na_ilha ? 'Você volta pelo ar com uma bola no cinto.\nQuatro horas de mar escuro, e a bola não pesa nada, e você sente o peso dela o caminho inteiro.\nEm Fuchsia, na mesa de dominó, o Sr. Tanner te vê atravessar o cais, olha o seu rosto e depois o seu cinto.' :
+       'Você desce os cento e quatro degraus com uma bola no cinto.\nO Sr. Tanner está no barco com a luz de posição acesa e ele te vê chegar e a primeira coisa que ele pergunta é:',
+    d=>d.flags.chegou_voando_na_ilha ? '' : fala('Sr. Tanner', 'Viu?'),
+    d=>d.flags.chegou_voando_na_ilha ? '' : fala(d.jogador.nome, 'Vi.'),
+    d=>d.flags.chegou_voando_na_ilha ? '' : 'E ele ri, e fica rindo por uns vinte segundos, e depois para de rir porque ele reparou na sua cara.',
+    d=>d.flags.chegou_voando_na_ilha ? '' : fala('Sr. Tanner', 'Que foi?'),
+    d=>d.flags.chegou_voando_na_ilha ? '' : 'E você não responde.\nE ele olha o seu cinto, e depois o seu rosto, e depois o seu cinto de novo.',
     'E ele não pergunta mais nada.',
-    'Onze horas de travessia de volta com um velho de oitenta e um anos que passou quarenta esperando ver, e que viu, e que agora não olha pra você.'
+    d=>d.flags.chegou_voando_na_ilha ? 'Um velho de oitenta e um anos que passou quarenta esperando ver, e que agora não olha pra você.' :
+       'Onze horas de travessia de volta com um velho de oitenta e um anos que passou quarenta esperando ver, e que viu, e que agora não olha pra você.'
   ],
   ef:{flag:'desceu_com_hooh',
       rep:{eixo:'ruim',delta:3,motivo:'Desceu da ilha com Ho-Oh no cinto'},
-      npc:{nome:'Sr. Tanner', opiniao:-4, memoria:'Reparou na bola no seu cinto e não perguntou mais nada nas onze horas de volta.'},
+      npc:{nome:'Sr. Tanner', opiniao:-4, memoria:'Reparou na bola no seu cinto e não perguntou mais nada.'},
       moral:-25, instabilidade:2,
       registrar:'Saiu da ilha com Ho-Oh capturado.',
-      presagio:'Ele não olha pra você. Onze horas.'},
+      presagio:'Ele não olha pra você.'},
   escolhas:[
-    {texto:'Soltar no meio da travessia.', vai:'c16_soltou_hooh'},
+    {texto:'Soltar no meio da travessia.', vai:'c16_soltou_hooh', cond:d=>!d.flags.chegou_voando_na_ilha},
     {texto:'Voltar pra ilha e soltar no círculo.', vai:'c16_soltou_hooh'},
     {texto:'Explicar pro Sr. Tanner.', vai:'c16_explicou_pro_ze'},
-    {texto:'Não dizer nada as onze horas.', vai:'c16_fim'}
+    {texto:'Não dizer nada.', vai:'c16_fim'}
   ]
 },
 
 c16_explicou_pro_ze:{
+  falante:'Sr. Tanner',
+  vozes:['N','N','N'],
   texto:[
     'Você tenta explicar.',
-    'Você fala de instabilidade, de gente que vem em dois mil e sete, de que é melhor estar com você do que com eles, de que você vai soltar depois, de que é temporário.',
+    'Você fala de instabilidade, de gente que vem na próxima janela, de que é melhor estar com você do que com eles, de que você vai soltar depois, de que é temporário.',
     'Ele ouve tudo.',
     'E no fim ele fala uma coisa só, sem raiva nenhuma, que é o que torna tudo pior:',
-    '"Meu pai foi vinte e três vezes."',
-    'Ele corrige o rumo.',
-    '"Eu fui três."',
+    '"Meu pai foi dezenove vezes."',
+    d=>d.flags.chegou_voando_na_ilha ? 'Ele mexe uma pedra do dominó.' : 'Ele corrige o rumo.',
+    d=>d.flags.chegou_voando_na_ilha ? '"Eu fui duas."' : '"Eu fui três."',
     'Ele olha o mar.',
     '"E você foi uma."'
   ],
   ef:{flag:'ze_falou_das_vezes',
-      npc:{nome:'Sr. Tanner', opiniao:-3, memoria:'Disse que o pai foi 23 vezes, ele foi 3 e você foi 1.'},
+      npc:{nome:'Sr. Tanner', opiniao:-3, memoria:'Disse quantas vezes o pai foi, quantas ele foi, e que você foi uma.'},
       moral:-15,
-      registrar:'"Meu pai foi vinte e três vezes. Eu fui três. E você foi uma."',
+      registrar:'"Meu pai foi dezenove vezes. E você foi uma."',
       presagio:'Ele contou as vezes. É a única coisa que ele podia contar.'},
   escolhas:[
     {texto:'Mandar ele virar o barco.', vai:'c16_soltou_hooh'},
@@ -2125,19 +2196,21 @@ c16_explicou_pro_ze:{
 },
 
 c16_desceu_ilha:{
+  falante:'Sr. Tanner',
+  vozes:['N','P','N','N'],
   texto:[
-    'Você desce os cento e quatro degraus.',
-    d=>d.flags.riscou_o_degrau ? 'Na metade você passa pela sua marca nova, que é a mais rasa e a mais torta de todas, e você encosta o dedo nela ao passar.' : '',
-    'O Sr. Tanner está no barco com a luz de posição acesa e a garrafa térmica vazia.',
-    '"Viu?"',
+    d=>d.flags.chegou_voando_na_ilha ? 'Você volta pro canto do platô onde pousou.' : 'Você desce os cento e quatro degraus.',
+    d=>d.flags.riscou_o_degrau && !d.flags.chegou_voando_na_ilha ? 'Na metade você passa pela sua marca nova, que é a mais rasa e a mais torta de todas, e você encosta o dedo nela ao passar.' : '',
+    d=>d.flags.chegou_voando_na_ilha ? 'A volta é pelo ar, quatro horas de mar escuro, e ninguém em Fuchsia sabe que você saiu.' : 'O Sr. Tanner está no barco com a luz de posição acesa e a garrafa térmica vazia.',
+    d=>d.flags.chegou_voando_na_ilha ? '' : '"Viu?"',
     d=>{
+      if (d.flags.chegou_voando_na_ilha) return '';
       if (d.flags.tem_a_pena || d.flags.pena_dada) return '"Vi."\nVocê mostra a pena.\nEle olha quarenta centímetros de vermelho e dourado por muito tempo e não encosta.\n"Meu pai ia gostar."';
       if (d.flags.viu_hooh) return '"Vi."\nEle bate na borda do barco duas vezes com a palma da mão.\n"Pronto. Agora tem dois."';
       if (d.flags.viu_o_arco_iris) return '"A luz eu vi. O resto não deu tempo."\nEle assente.\n"A luz já é."';
       return '"Não."\nEle assente devagar.\n"Da próxima."';
     },
-    'A travessia de volta leva onze horas e ele dorme sentado com a mão no leme, acordando a cada vinte minutos pra corrigir o rumo, do mesmo jeito da ida.',
-    'Você fica acordad{o|a} as onze horas inteiras.'
+    d=>d.flags.chegou_voando_na_ilha ? '' : 'A travessia de volta leva onze horas e ele dorme sentado com a mão no leme, acordando a cada vinte minutos pra corrigir o rumo, do mesmo jeito da ida.\nVocê fica acordad{o|a} as onze horas inteiras.'
   ],
   ef:{flag:'desceu_da_ilha'},
   escolhas:[{texto:'Voltar a Fuchsia.', vai:'c16_fim'}]
@@ -2157,15 +2230,14 @@ c16_fim:{
       if (d.flags.equipe_recusou_a_pena || d.flags.equipe_devolveu_a_pena) return 'E numa expedição que custou cento e sessenta mil, uma mulher de quarenta e um anos de carreira vai voltar sem amostra, de propósito, pela primeira vez.';
       if (d.flags.equipe_nao_coleta) return 'E um relatório vai ser escrito de um jeito que compra dois anos, e dois anos é o que existe entre uma coisa acontecer e não acontecer.';
       if (d.flags.destruiu_a_expedicao) return 'E um incidente vai prorrogar um projeto que ia fechar por falta de resultado, e você é o incidente.';
-      if (d.flags.expulsou_a_equipe) return 'E quatro pessoas voltaram sem nada e vão voltar em dois mil e sete, e a chefe delas desamarrou a corda em vez de cortar.';
+      if (d.flags.expulsou_a_equipe) return 'E quatro pessoas voltaram sem nada e vão voltar na próxima janela, e a chefe delas desamarrou a corda em vez de cortar.';
       return 'E em algum lugar, alguém está preenchendo um formulário de prorrogação de verba.';
     },
-    d=>d.flags.ze_virou_coautor ? 'E num artigo que vai sair daqui a dois anos numa revista que ninguém lê, o segundo nome da lista de autores vai ser Z. A. Tanner, pescador, Fuchsia.' :
+    d=>d.flags.ze_virou_coautor ? 'E num artigo que vai sair daqui a dois anos numa revista que ninguém lê, o segundo nome da lista de autores vai ser O. Tanner, pescador, Fuchsia, e o terceiro, H. Tanner, in memoriam.' :
        d.flags.tem_a_caixa_de_charuto ? 'E você está com uma caixa de charuto amarrada com elástico que tem sessenta e um anos dentro, e que não é sua, e que você prometeu não deixar numa caixa.' : '',
-    'Em Fuchsia, no cais, o Sr. Tanner amarra o barco e sobe os quatro degraus da rampa devagar, e vai direto pra mesa de dominó.',
-    'E senta.',
-    'E as pessoas da mesa perguntam onde ele esteve.',
-    'E ele começa a contar.'
+    d=>d.flags.chegou_voando_na_ilha ? 'Em Fuchsia, no cais, o Sr. Tanner está na mesa de dominó, contando a história pra quem não pediu.\nVocê senta do lado dele.\nE dessa vez, quando ele chega na parte da luz, alguém na mesa não muda de assunto.' :
+    d.flags.nao_foi_a_ilha ? 'Em Fuchsia, no cais, o Sr. Tanner continua na mesa de dominó.\nE continua contando.' :
+       'Em Fuchsia, no cais, o Sr. Tanner amarra o barco e sobe os quatro degraus da rampa devagar, e vai direto pra mesa de dominó.\nE senta.\nE as pessoas da mesa perguntam onde ele esteve.\nE ele começa a contar.'
   ],
   fim:true, resumo:'Capítulo 16 concluído — a ilha sem nome tinha três buracos vazios em cima.'
 
