@@ -84,7 +84,42 @@ const RETRATO_POR_NOME = {
   'a recepcionista da Liga':'trainers/league_staff_f', 'a recepcionista do Planalto':'trainers/league_staff_f',
   'o funcionário da mesa':'trainers/league_staff',
   'Sra. Greta Nettle':'trainers/veteran_f', 'o lutador da Elite 4':'trainers/black_belt',
-  'a mulher de jaleco':'trainers/scientist_f'
+  'a mulher de jaleco':'trainers/scientist_f',
+
+  /* segunda leva: o resto de quem carrega cena, pela classe que os jogos
+     dariam. Quem o texto deixa sem rosto de propósito continua sem: a
+     Terceira, a mulher de crachá azul, a voz do rádio e do telefone. */
+  'Homem da banca':'trainers/clerk', 'Sr. Mervin':'trainers/veteran', 'Rapaz da fenda':'trainers/worker',
+  'Sibyl':'trainers/pokefan_f', 'Filha da Sibyl':'trainers/lass', 'Maren Kestrel':'trainers/office_worker_f',
+  'Sra. Laurel':'trainers/madame', 'Moça da floricultura':'trainers/aroma_lady', 'Sr. Ulric':'trainers/veteran',
+  'o fumante':'trainers/worker', 'Ex-Silph':'trainers/office_worker', 'Sra. Hedda':'trainers/office_worker_f',
+  'Lorca':'trainers/sage', 'Vernon':'trainers/gentleman', 'o homem de sapato limpo':'trainers/gentleman',
+  'Revelador de Celadon':'trainers/clerk', 'Sra. Wren':'trainers/office_worker_f', 'Sra. Perla':'trainers/madame',
+  'Ivo':'trainers/sightseer', 'Dorian':'trainers/camper', 'o mais velho dos quatro':'trainers/worker',
+  'o voluntário sem nome':'trainers/worker', 'Sr. Bram':'trainers/clerk', 'Sra. Hazel':'trainers/madame',
+  'o magro de boné':'trainers/fisherman', 'Amos':'trainers/sailor', 'Sr. Alder':'trainers/owner',
+  'Varian':'trainers/clerk', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/office_worker_f',
+  'a mulher do fogo':'trainers/backpacker_f', 'Sr. Berto':'trainers/gentleman', 'Janus':'trainers/doctor',
+  'Sr. Yves':'trainers/cabbie', 'Sr. Quint':'trainers/worker', 'a mulher da locadora':'trainers/clerk_f',
+  'Lina':'trainers/office_worker_f', 'o gerente':'trainers/clerk_boss', 'a mulher da marmita':'trainers/cook',
+  'Rufo':'trainers/courier', 'Cleo':'trainers/schoolkid_f', 'a mãe da Cleo':'trainers/lady',
+  'o rapaz da caneta':'trainers/league_staff', 'Pipoqueiro da face sul':'trainers/chef',
+  'a mulher de tailleur':'trainers/office_worker_f', 'a senhora da barraca':'trainers/madame',
+  'o rapaz do posto':'trainers/pokemon_ranger', 'o homem de terno claro':'trainers/office_worker',
+  'a dona do armazém':'trainers/clerk_f', 'o homem do macacão':'trainers/worker',
+  'a funcionária da reserva':'trainers/pokemon_ranger_f', 'a mulher do baralho':'trainers/madame',
+  'Sr. Dunmore':'trainers/baker', 'Sr. Pell':'trainers/clerk', 'o rapaz da descarga':'trainers/worker',
+  'a moça do berçário':'trainers/pokemon_breeder_f', 'Livia Gale':'trainers/office_worker_f',
+  'a editora do jornal':'trainers/reporter', 'Falk':'trainers/worker', 'Sr. Delmar':'overworld/policial',
+  'Sr. Nolan':'trainers/worker', 'o cozinheiro':'trainers/chef', 'a supervisora':'trainers/league_staff_f',
+  'o conselheiro mais velho':'trainers/gentleman', 'Leo':'trainers/ace_trainer'
+};
+
+/* quem ficou em casa: o rosto sai do parentesco da ficha */
+const RETRATO_DA_CASA = {
+  'mãe':'trainers/mom', 'avó':'trainers/madame', 'tia':'trainers/lady', 'madrinha':'trainers/lady',
+  'irmã mais velha':'trainers/ace_trainer_f', 'pai':'trainers/office_worker', 'avô':'trainers/gentleman',
+  'tio':'trainers/office_worker', 'padrinho':'trainers/gentleman', 'irmão mais velho':'trainers/ace_trainer'
 };
 
 /* cargo → arquivo, pra quem fala sem nome. Só os que não deixam dúvida
@@ -100,7 +135,10 @@ const RETRATO_POR_CARGO = [
   [/^(o )?médico\b/i,                    'trainers/doctor'],
   [/^(a )?médica\b/i,                    'trainers/nurse'],
   [/^(o )?(estivador|conferente|operário|outro operário)\b/i, 'trainers/worker'],
-  [/^(a )?(escrevente|escrivã|secretária)\b/i, 'trainers/office_worker_f']
+  /* \b do JavaScript não conhece letra acentuada: "escrivã" nunca fechava */
+  [/^(a )?(escrevente|escrivã|secretária)(?=\s|$)/i, 'trainers/office_worker_f'],
+  [/^(o )?motorista(?=\s|$)/i,           'trainers/cabbie'],
+  [/^(o |a )?gerente(?=\s|$)/i,          'trainers/clerk_boss']
 ];
 
 function caminhoNPC(arq){
@@ -115,6 +153,10 @@ function classeDoTreinador(nome){
   if (!nome) return null;
   let n = String(nome).trim();
   if (RETRATO_POR_NOME[n]) return RETRATO_POR_NOME[n];
+  /* a pessoa de casa: pelo parentesco que a ficha escolheu */
+  if (typeof nomeCasa === 'function' && typeof casaDe === 'function'){
+    try { if (n === nomeCasa() && RETRATO_DA_CASA[casaDe().quem]) return RETRATO_DA_CASA[casaDe().quem]; } catch (e) {}
+  }
   n = n.replace(/^Líder\s+/, '').replace(/,\s*Líder de .*$/, '').trim();
   if (RETRATO_POR_NOME[n]) return RETRATO_POR_NOME[n];
   for (const [re, arq] of RETRATO_POR_CARGO) if (re.test(n)) return arq;
@@ -122,7 +164,13 @@ function classeDoTreinador(nome){
 }
 function retratoDe(nome){
   const c = classeDoTreinador(nome);
-  return c ? caminhoNPC(c) : null;
+  if (c) return caminhoNPC(c);
+  /* Pokémon que fala (Mewtwo, no fim): o rosto é o próprio sprite de frente */
+  if (typeof DEX !== 'undefined' && typeof caminhoSprite === 'function'){
+    const n = String(nome || '').trim();
+    for (const id in DEX) if (DEX[id].nome === n) return caminhoSprite(+id, 'frente');
+  }
+  return null;
 }
 
 /* Quanto cada classe paga por nível do último Pokémon dela quando perde —
