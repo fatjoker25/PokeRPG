@@ -81,7 +81,49 @@ const TERRENO = {
              fuga:'Você corre entre as lápides sem olhar pra trás e escapa.'}
 };
 
+/* O fundo da página, atrás do texto: um cenário por lugar do mapa.
+   É só ambiente — não muda regra nenhuma. Os mesmos nove fundos da
+   batalha, mais o campo cercado (Pallet, Rota 1, Fuchsia) e a
+   caverna de gelo das Seafoam. Cena de capítulo num canto que não é
+   o do mapa (a caverna embaixo de uma cidade) usa o ambiente do
+   capítulo. */
+const CENARIO_POR_LOCAL = {
+  pallet:'prado.png', rota1:'prado.png', viridian:'cidade.png', rota22:'montanha.png',
+  rota2:'floresta.png', floresta:'floresta.png', pewter:'montanha.png', rota3:'montanha.png',
+  monte_lua:'caverna.png', rota4:'campo.png', cerulean:'cidade.png', rota24:'agua.png',
+  rota9:'montanha.png', usina:'ruina.png', tunel_rocha:'caverna.png', lavender:'cemiterio.png',
+  rota5:'campo.png', saffron:'cidade.png', rota6:'campo.png', rota7:'campo.png', rota8:'campo.png',
+  vermilion:'agua.png', rota11:'campo.png', rota12:'agua.png', rota13:'campo.png',
+  celadon:'cidade.png', rota16:'campo.png', fuchsia:'prado.png', rota19:'agua.png',
+  seafoam:'gelo.png', cinnabar:'vulcao.png', rota21:'agua.png', rota23:'montanha.png',
+  caminho_vitoria:'caverna.png', planalto:'montanha.png', norte:'montanha.png',
+  ilha_sem_nome:'montanha.png'
+};
+
 const Arenas = {
+  /* caminho de um arquivo da pasta de cenários: embutido ou absoluto */
+  caminho(arq){
+    const rel = ARENAS_BASE + arq;
+    if (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) return SPRITES_EMBUTIDOS[rel];
+    try { return new URL(rel, document.baseURI).href; }
+    catch (e) { return rel; }
+  },
+
+  /* o fundo da página agora: o lugar do mapa, ou o chão do capítulo */
+  cenarioDaTela(){
+    const d = (typeof Estado !== 'undefined') ? Estado.dados : null;
+    if (!d || typeof Mundo === 'undefined') return null;
+    const id = Mundo.id();
+    let arq = CENARIO_POR_LOCAL[id] || null;
+    if (d.modo === 'cena' && typeof Historia !== 'undefined'){
+      const cap = Historia.capAtual || Historia.capitulo(d.capitulo);
+      const amb = cap && (typeof cap.ambiente === 'function' ? cap.ambiente(d) : cap.ambiente);
+      const doLugar = (typeof LOCAIS !== 'undefined' && LOCAIS[id]) ? LOCAIS[id].ambiente : null;
+      if (amb && (amb !== doLugar || !arq)) arq = FUNDO_POR_AMBIENTE[amb] || arq;
+    }
+    return arq ? this.caminho(arq) : null;
+  },
+
   terreno(amb){ return TERRENO[amb || this.ambienteAtual()] || TERRENO.campo; },
 
   /* Ginásio, Elite e torneio são quadra oficial, doa a onde for. */
@@ -115,15 +157,10 @@ const Arenas = {
   fundoDe(ambiente){
     const arq = FUNDO_POR_AMBIENTE[ambiente];
     if (!arq) return null;
-    const rel = ARENAS_BASE + arq;
-    if (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) {
-      return SPRITES_EMBUTIDOS[rel];
-    }
     /* Caminho absoluto de propósito: dentro de var() o navegador
        resolve URL relativa pela pasta do CSS, não pela da página, e
        o fundo sumiria calado. */
-    try { return new URL(rel, document.baseURI).href; }
-    catch (e) { return rel; }
+    return this.caminho(arq);
   },
 
   /* {arena, ambiente, nome, fundo} — a arena forçada pela cena ganha de tudo. */

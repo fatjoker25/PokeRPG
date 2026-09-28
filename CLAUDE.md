@@ -128,6 +128,14 @@ com o sprite** (sombra descolada do pé é bicho flutuando), e **no celular
 o recuo não se aplica** — empilhado não existe chão compartilhado, cada
 lutador tem a sua moldura e os dois pousam no pé dela.
 
+Fora da batalha, o **fundo da página** também é o lugar: `CENARIO_POR_LOCAL`
+(em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha,
+mais `prado.png` (Pallet, Rota 1, Fuchsia) e `gelo.png` (Seafoam). Em cena
+de capítulo cujo ambiente não é o do lugar, vale o do capítulo. É só
+estética, fica escurecido e puxado pro tom do capítulo, e entra por
+`UI.pintarCenario()`, chamado no `topo()` de toda tela. Lugar novo em
+`LOCAIS` precisa de entrada aqui também.
+
 Ambiente novo em capítulo ou em `LOCAIS` tem que entrar nos dois mapas junto,
 senão cai no fundo de reserva sem ninguém perceber. `ferramentas/chk-arenas.js`
 confere arena, imagem no disco, desenho no CSS e foco de enquadramento. Cena

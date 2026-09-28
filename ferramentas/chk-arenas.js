@@ -60,6 +60,22 @@ for (const amb of Object.keys(fundos)){
     falhas.push(`ambiente '${amb}' sem foco de enquadramento no CSS`);
 }
 
+/* o fundo da página: todo lugar do mapa tem cenário, e o arquivo existe */
+const cenario = {};
+arenas.match(/const CENARIO_POR_LOCAL = \{([\s\S]*?)\};/)[1]
+  .replace(/(\w+)\s*:\s*'([^']+)'/g, (_, l, f) => { cenario[l] = f; return ''; });
+const locais = [];
+{ const mundo = carrega('js/engine/mundo.js');
+  const blocoL = mundo.match(/const LOCAIS = \{([\s\S]*?)\n\};/)[1];
+  let m, re = /^(\w+)\s*:\s*\{/gm;
+  while ((m = re.exec(blocoL))) locais.push(m[1]); }
+for (const l of locais){
+  if (!cenario[l]) falhas.push(`lugar '${l}' sem cenário de fundo (CENARIO_POR_LOCAL)`);
+  else if (!fs.existsSync(path.join(raiz, base, cenario[l])))
+    falhas.push(`cenário de '${l}' aponta pra ${base}${cenario[l]}, que não está na pasta`);
+}
+for (const l of Object.keys(cenario)) if (!locais.includes(l)) falhas.push(`cenário para '${l}', que não é lugar do mapa`);
+
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));
   process.exit(1);
@@ -67,5 +83,5 @@ if (falhas.length){
 const porArena = {};
 for (const [amb, ar] of Object.entries(mapa)) (porArena[ar] = porArena[ar] || []).push(amb);
 console.log(`ok — ${usados.size} ambientes em ${nomes.size} arenas, ` +
-            `${Object.keys(fundos).length} fundos na pasta`);
+            `${Object.keys(fundos).length} fundos na pasta, ${locais.length} lugares com cenário`);
 for (const a of nomes) console.log(`  ${a}: ${(porArena[a] || ['(só por cima: ginásio, Elite, torneio)']).join(', ')}`);

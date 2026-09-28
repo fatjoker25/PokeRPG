@@ -160,8 +160,17 @@ const UI = {
   },
 
   /* ---------- barra superior ---------- */
+  /* o lugar onde você está, atrás de tudo */
+  pintarCenario(){
+    const url = (typeof Arenas !== 'undefined' && Arenas.cenarioDaTela) ? Arenas.cenarioDaTela() : null;
+    const b = document.body;
+    if (url){ b.style.setProperty('--cenario-lugar', `url("${url}")`); b.classList.add('com-cenario'); }
+    else { b.style.removeProperty('--cenario-lugar'); b.classList.remove('com-cenario'); }
+  },
+
   topo(){
     const d = Estado.dados;
+    this.pintarCenario();
     if (!d) return '';
     const rep = Estado.nomeRep();
     const cap = Historia.capitulo(d.capitulo);
