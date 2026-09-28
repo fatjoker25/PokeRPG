@@ -1626,7 +1626,7 @@ c21_ultima_pagina:{
 c21_quem_ficou:{
   texto:[
     'A Maren Kestrel fecha o caderno e responde ela mesma, porque é dela.',
-    '"Vernon. Quarenta e dois anos, dezenove de serviço, dois filhos."',
+    '"Vernon. Quarenta e dois anos, dezenove de serviço, duas filhas."',
     'Ela põe as duas mãos na mesa.',
     '"A gente desceu ao fundo do vale às onze. A gente subiu de volta às quatro e vinte da tarde. E no meio do caminho eu contei e a gente era cinco."',
     '"E ninguém viu nada?"',
@@ -1656,7 +1656,7 @@ c21_voltaram_procurar:{
     'Ela pega o caderno de novo e não abre.',
     '"E a gente ficou três dias e não achou mais nada, e no quarto dia o rádio mandou descer."'
   ],
-  ef:{instabilidade:2, moral:-2,
+  ef:{instabilidade:2, moral:-2, flag:'sabe_das_pegadas_do_vernon',
       registrar:'As pegadas do Vernon param inteiras, com o peso nos dois pés.'},
   escolhas:[
     {texto:'"Eu vou. E eu procuro ele."', vai:'c21_vai_procurar_nogueira'},

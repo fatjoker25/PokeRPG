@@ -64165,14 +64165,14 @@ c20_ab_a_banca:{
     d=>fala(d.jogador.nome, 'O senhor conhece o pessoal do sétimo andar?'),
     'Ele não pergunta por que você quer saber, o que é a gentileza dos jornaleiros.',
     fala('Sr. Bram', 'Sala 704? Conheço doze deles de vista.'),
-    fala('Sr. Bram', 'Eles vêm de quinze em quinze dias, sempre de manhã.'),
+    fala('Sr. Bram', 'Eles vêm toda segunda, sempre de manhã.'),
     'Ele dobra um jornal pra um cliente sem parar de falar.',
     fala('Sr. Bram', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
     fala('Sr. Bram', 'São gente normal, {moço|moça}. É isso que eu ia te falar antes de você perguntar.')
   ],
   ef:{flag:'o_jornaleiro_da_118',
       npc:{nome:'Sr. Bram', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
-      registrar:'O conselho da sala 704 se reúne de quinze em quinze dias, sempre de manhã.',
+      registrar:'O conselho da sala 704 se reúne toda segunda, sempre de manhã.',
       presagio:'"São gente normal." Ele disse isso antes de você perguntar como eles são.'},
   escolhas:[
     {texto:'Perguntar se ele sabe o que eles fazem.', vai:'c20_ab_o_que_eles_fazem'},
@@ -70511,7 +70511,7 @@ c21_ultima_pagina:{
 c21_quem_ficou:{
   texto:[
     'A Maren Kestrel fecha o caderno e responde ela mesma, porque é dela.',
-    '"Vernon. Quarenta e dois anos, dezenove de serviço, dois filhos."',
+    '"Vernon. Quarenta e dois anos, dezenove de serviço, duas filhas."',
     'Ela põe as duas mãos na mesa.',
     '"A gente desceu ao fundo do vale às onze. A gente subiu de volta às quatro e vinte da tarde. E no meio do caminho eu contei e a gente era cinco."',
     '"E ninguém viu nada?"',
@@ -70541,7 +70541,7 @@ c21_voltaram_procurar:{
     'Ela pega o caderno de novo e não abre.',
     '"E a gente ficou três dias e não achou mais nada, e no quarto dia o rádio mandou descer."'
   ],
-  ef:{instabilidade:2, moral:-2,
+  ef:{instabilidade:2, moral:-2, flag:'sabe_das_pegadas_do_vernon',
       registrar:'As pegadas do Vernon param inteiras, com o peso nos dois pés.'},
   escolhas:[
     {texto:'"Eu vou. E eu procuro ele."', vai:'c21_vai_procurar_nogueira'},
@@ -71811,7 +71811,7 @@ c22_contornou:{
     'A parede do fundo é lisa. Não é lisa de erosão: é lisa de uma coisa que derreteu e esfriou, com ondulações congeladas no meio do movimento.',
     'A abertura tem uns quatro metros de altura e é perfeitamente redonda na parte de cima.',
     'E do lado de dentro, a três ou quatro metros, o chão desce numa rampa lisa.',
-    'Sai um ar morno de lá, e você sente daqui de cima, a sessenta metros, o que não deveria ser possível.'
+    'Vem de lá um calor morno, sem vento nenhum, e você sente daqui de cima, a sessenta metros, o que não deveria ser possível.'
   ],
   ef:{flag:['viu_a_abertura_de_frente'], instabilidade:1,
       registrar:'A parede do fundo não foi cavada: foi derretida e esfriada. Sai ar morno da abertura.'},
@@ -72021,7 +72021,7 @@ c22_voltou:{
 
 c22_fim:{
   texto:[
-    'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno, o que está errado para essa altitude e para esse frio.',
+    'A boca da caverna é mais alta que uma casa e o ar parado na boca dela é morno, o que está errado para essa altitude e para esse frio.',
     'Lá dentro, a passagem desce. Muito.',
     'As paredes são lisas demais para serem naturais: não foram cavadas, foram derretidas e esfriadas, com ondulações paradas no meio do movimento.',
     d=>{
@@ -72067,7 +72067,7 @@ cenas:{
 
 c28_ab_a_boca:{
   texto:[
-    'A boca da caverna tem dois metros e meio de altura e quatro de largura e é perfeitamente regular, do jeito que boca de caverna não é.',
+    'A boca da caverna é mais alta que uma casa, redonda em cima e perfeitamente regular, do jeito que boca de caverna não é.',
     'Você fica parad{o|a} na frente dela por um tempo que não dá pra medir.',
     'Não sai vento. Você põe a mão na altura do peito, depois na altura do joelho, depois estende o braço pra dentro do escuro.',
     'Nada. O ar lá de dentro está tão parado quanto o de fora, e caverna não faz isso: caverna respira, porque a diferença de temperatura empurra o ar.',
@@ -72159,9 +72159,9 @@ c23_as_paredes:{
 c23_contou_a_parede:{
   texto:[
     'Você conta. Leva uma hora e quarenta minutos e você erra duas vezes e recomeça duas vezes.',
-    'Setecentos e trinta e um.',
+    'Setecentos e trinta e um riscos.',
     'Dois anos e um dia.',
-    'E aí você repara na coisa que faz o chão sair de baixo dos seus pés: os duzentos e quarenta e um primeiros grupos estão riscados de um jeito diferente dos outros.',
+    'E aí você repara na coisa que faz o chão sair de baixo dos seus pés: os duzentos e quarenta e um primeiros riscos foram feitos de um jeito diferente dos outros.',
     'Os duzentos e quarenta e um primeiros são pequenos, apertados, numa linha reta e organizada.',
     'Do duzentos e quarenta e dois em diante eles ficam maiores, tortos, e a linha desce.',
     'Ele continuou contando os dias depois de sair de lá. Ele continuou contando do mesmo jeito que contava lá dentro.'
@@ -72192,6 +72192,8 @@ c23_onde_comeca:{
 },
 
 c23_apoiou_a_mao:{
+  falante:'Mewtwo',
+  vozes:['N'],
   texto:[
     'Você apoia a mão na marca.',
     'Ela é muito maior que a sua e é morna como o resto da pedra, e por três ou quatro segundos não acontece absolutamente nada.',
@@ -72249,7 +72251,7 @@ c23_o_par_que_nao_volta:{
     'A trinta metros do fim, ele muda.',
     'A passada encurta e os pés ficam mais juntos, do jeito que fica quando alguém para de andar e passa a andar em direção a alguma coisa.',
     'E nos últimos dez metros tem só a marca de um par de botas parado, com o peso nos dois pés.',
-    'Exatamente como a Maren Kestrel descreveu, e a duzentos quilômetros dali.',
+    d=>d.flags.sabe_das_pegadas_do_vernon ? 'Exatamente como a Maren Kestrel descreveu, só que aqui embaixo.' : '',
     'A partir dali, nada. Nem pegada saindo, nem pegada voltando, nem arrasto.'
   ],
   ef:{flag:['achou_onde_ele_parou'], instabilidade:2,
@@ -72261,6 +72263,8 @@ c23_o_par_que_nao_volta:{
 },
 
 c23_chamou_o_nome:{
+  falante:'Mewtwo',
+  vozes:['P','N'],
   texto:[
     '"Vernon!"',
     'O nome bate na pedra lisa e volta duas vezes e some.',
@@ -72275,6 +72279,8 @@ c23_chamou_o_nome:{
 },
 
 c23_chamou:{
+  falante:'Mewtwo',
+  vozes:['P','N','N'],
   texto:[
     '"Tem alguém aí?"',
     'A pergunta sai mais fina do que você queria e bate na pedra.',
@@ -72310,6 +72316,8 @@ c23_porque_nao_sobe:{
 },
 
 c23_a_camara:{
+  falante:'Mewtwo',
+  vozes:['N'],
   texto:[
     'No fim da rampa, uma câmara. Grande demais para caber embaixo daquela montanha, o que é impossível, e você para de pensar nisso rápido porque pensar nisso não ajuda.',
     'O teto é abobadado e liso. O chão é liso. Não tem estalactite, não tem água, não tem raiz.',
@@ -72353,10 +72361,10 @@ c23_a_gaveta:{
     'A gaveta de cima da escrivaninha está aberta e tem uma coisa só dentro.',
     'É um caderno de capa dura, do mesmo modelo dos cadernos de campo do Instituto de Cinnabar, com o número 7 escrito na lombada a caneta.',
     'Está aberto na última página escrita.',
-    'A caligrafia é a mesma que você já viu numa gaveta refrigerada ou nunca viu, dependendo de onde você esteve.',
-    'Dia 241. Ele pediu para sair. Usou a palavra por favor. Encaminhei ao comitê. Não anotei na ficha oficial.',
+    d=>d.flags.leu_o_caderno_do_fuji || d.flags.achou_os_cadernos ? 'A caligrafia é a mesma do caderno seis, a do Dr. Fuji.' : 'A caligrafia é de alguém que escrevia todo dia no mesmo caderno, com a mesma caneta.',
+    '**Dia 241. Ele pediu para sair. Usou a palavra por favor. Encaminhei ao comitê. Não anotei na ficha oficial.**',
     'E, embaixo, numa letra que não é humana e que foi feita queimando o papel com precisão de agulha, uma linha só:',
-    'Eu li isso no dia 602. Obrigado.'
+    '**Eu li isso no dia 602. Obrigado.**'
   ],
   ef:{flag:['leu_caderno','achou_o_caderno_7_aqui'], instabilidade:2, moral:-2,
       registrar:'O caderno 7 está aqui, e ele escreveu uma linha embaixo da última anotação do Fuji.'},
@@ -72368,6 +72376,8 @@ c23_a_gaveta:{
 },
 
 c23_como_conseguiu:{
+  falante:'Mewtwo',
+  vozes:['N','N','P','N','N','P','N','N'],
   texto:[
     'Ele responde sem virar.',
     '"Eu fui buscar."',
@@ -72449,6 +72459,8 @@ c23_olhou_a_camara:{
 },
 
 c23_porque_pallet:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Por que Pallet?"',
     'Ele responde imediatamente, o que ele quase nunca faz.',
@@ -72466,10 +72478,12 @@ c23_porque_pallet:{
 },
 
 c23_procurou_o_homem:{
+  falante:'Mewtwo',
+  vozes:['o homem sentado'],
   texto:[
     'Você atravessa a câmara sem falar com ele e procura, e ele deixa, e não ajuda.',
     'Atrás do monte de coisas, num canto que não dá para ver da entrada da rampa, tem um homem sentado no chão, encostado na parede.',
-    'Está vivo. Está com as pernas cruzadas, as mãos no colo, e o casaco impermeável azul da Liga dobrado do lado, em cima de uma bota.',
+    'Está vivo. Está com as pernas cruzadas, as mãos no colo, e uma jaqueta de lã dobrada do lado, em cima de uma bota.',
     'Está magro e está limpo, o que é a coisa mais incompreensível de tudo.',
     'Ele levanta os olhos quando você chega e sorri de um jeito educado e distraído, como quem é interrompido lendo.',
     '"Oi."'
@@ -72485,9 +72499,11 @@ c23_procurou_o_homem:{
 },
 
 c23_nogueira_nome:{
+  falante:'Mewtwo',
+  vozes:['P','Vernon','Vernon','Vernon','Vernon'],
   texto:[
     '"Vernon?"',
-    'Ele demora uns bons quatro segundos para reconhecer o próprio sobrenome, e quando reconhece, a cara dele muda devagar, de dentro para fora.',
+    'Ele demora uns bons quatro segundos para reconhecer o próprio nome, e quando reconhece, a cara dele muda devagar, de dentro para fora.',
     '"Sou." Ele olha as próprias mãos. "Eu sou o Vernon."',
     'Ele repete uma vez baixinho, conferindo.',
     '"Faz quanto tempo?"',
@@ -72497,7 +72513,7 @@ c23_nogueira_nome:{
   ],
   ef:{flag:['nogueira_acordou'], instabilidade:1, moral:3,
       npc:{nome:'Vernon', opiniao:3, memoria:'Acordou quando você disse o sobrenome dele em voz alta.'},
-      registrar:'Ele reconheceu o próprio sobrenome depois de quatro segundos.'},
+      registrar:'Ele reconheceu o próprio nome depois de quatro segundos.'},
   escolhas:[
     {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
     {texto:'"Eu não sei. Eu vou descobrir e eu te conto."', vai:'c23_nogueira_vamos'},
@@ -72506,6 +72522,8 @@ c23_nogueira_nome:{
 },
 
 c23_deu_a_medalha:{
+  falante:'Mewtwo',
+  vozes:['Vernon','Vernon','Vernon','Vernon'],
   texto:[
     'Você tira a medalha de natação do bolso de dentro, com a fita azul e branca desbotada, e põe na mão dele.',
     'Ele olha a medalha por um tempo muito comprido sem fechar os dedos.',
@@ -72527,6 +72545,8 @@ c23_deu_a_medalha:{
 },
 
 c23_nogueira_vamos:{
+  falante:'Mewtwo',
+  vozes:['P','Vernon','N','Vernon','Vernon'],
   texto:[
     '"Vamos embora. Agora."',
     'Ele olha para a rampa, depois para a pedra no centro da câmara, depois para você.',
@@ -72535,7 +72555,7 @@ c23_nogueira_vamos:{
     'E da pedra, do outro lado da câmara, sem nenhuma pressa, vem a resposta que nem você nem ele pediram.',
     '"Você sempre pôde."',
     'O Vernon fecha os olhos.',
-    '"Eu sei", ele diz, em voz alta, para a câmara inteira. "Eu sei, e eu não conseguia, e isso não é culpa sua."'
+    '"Eu sei." Ele diz isso em voz alta, para a câmara inteira. "Eu sei, e eu não conseguia, e isso não é culpa sua."'
   ],
   ef:{flag:['nogueira_vai_descer'], instabilidade:1, moral:3,
       rep:{eixo:'bom',delta:3,motivo:'Disse em voz alta a um homem que era hora de ir'},
@@ -72547,10 +72567,12 @@ c23_nogueira_vamos:{
 },
 
 c23_sentou_com_nogueira:{
+  falante:'Mewtwo',
+  vozes:['P','Vernon','Vernon','P','Vernon','Vernon','Vernon'],
   texto:[
     'Você senta no chão do lado dele, encostad{o|a} na mesma parede, e por uns dois minutos ninguém fala.',
-    '"Ele fala com você?", você acaba perguntando.',
-    '"Todo dia." O Vernon ajeita o casaco dobrado. "De manhã e à noite. Eu sei que é de manhã e à noite porque ele me diz."',
+    '"Ele fala com você?" Você acaba perguntando.',
+    '"Todo dia." O Vernon ajeita a jaqueta dobrada. "De manhã e à noite. Eu sei que é de manhã e à noite porque ele me diz."',
     '"Sobre o quê?"',
     '"Sobre tudo." Ele encolhe os ombros. "Ele me pergunta coisa e eu respondo. Ele quer saber como é ter irmão, como é ficar bêbado, por que a gente chora em casamento."',
     'Ele olha para o outro lado da câmara.',
@@ -72566,11 +72588,13 @@ c23_sentou_com_nogueira:{
 },
 
 c23_nogueira_porque_fica:{
+  falante:'Mewtwo',
+  vozes:['P','Vernon','Vernon','Vernon'],
   texto:[
     '"E por que você não sobe?"',
     'Ele pensa muito antes de responder, e a resposta é pior do que qualquer coisa que você imaginou na subida.',
     '"Porque eu sou a única pessoa no mundo que conversa com ele."',
-    'Ele ajeita o casaco de novo, que já está ajeitado.',
+    'Ele ajeita a jaqueta de novo, que já está ajeitada.',
     '"Se eu subir, ele fica sozinho de novo, e ele já ficou sozinho dois anos, e ele é uma criança que sabe tudo."',
     'Ele olha para você.',
     '"Eu tenho duas filhas lá embaixo e eu sei o que isso me faz. Eu sei exatamente. E eu não consigo levantar."'
@@ -72585,6 +72609,8 @@ c23_nogueira_porque_fica:{
 },
 
 c23_prometeu_voltar_aqui:{
+  falante:'Mewtwo',
+  vozes:['P','Vernon','Vernon','P','N'],
   texto:[
     '"Eu volto. Eu volto toda semana, se for preciso."',
     'O Vernon olha para você com uma desconfiança profissional de dezenove anos de serviço.',
@@ -72594,14 +72620,14 @@ c23_prometeu_voltar_aqui:{
     '"E {o senhor|a senhora} está prometendo subir uma montanha toda semana pelo resto da vida."',
     '"Estou."',
     'E da pedra, do outro lado da câmara, com uma coisa na voz que você não consegue nomear:',
-    '"Ele está falando sério, Vernon."',
+    '"{Ele|Ela} está falando sério, Vernon."',
     'O Vernon fica muito quieto.',
-    'Depois começa a desdobrar o casaco.'
+    'Depois começa a desdobrar a jaqueta.'
   ],
   ef:{flag:['prometeu_voltar_aqui','nogueira_vai_descer'], moral:5,
       rep:{eixo:'bom',delta:4,motivo:'Prometeu voltar toda semana, e foi levado a sério'},
-      npc:{nome:'Vernon', opiniao:5, memoria:'Começou a desdobrar o casaco quando você prometeu voltar.'},
-      registrar:'Prometeu voltar toda semana. O Vernon começou a desdobrar o casaco.'},
+      npc:{nome:'Vernon', opiniao:5, memoria:'Começou a desdobrar a jaqueta quando você prometeu voltar.'},
+      registrar:'Prometeu voltar toda semana. O Vernon começou a desdobrar a jaqueta.'},
   escolhas:[
     {texto:'Subir com ele agora.', vai:'c23_final_nogueira'},
     {texto:'"Espera lá em cima. Eu preciso falar com ele."', vai:'c23_conversa'}
@@ -72609,8 +72635,10 @@ c23_prometeu_voltar_aqui:{
 },
 
 c23_conversa:{
+  falante:'Mewtwo',
+  vozes:['N','N','N','N','N'],
   texto:[
-    '"Eu estava esperando alguém. Você é o que apareceu."',
+    '"Eu estava esperando alguém. Você é {o que|a que} apareceu."',
     'Ele vira. O rosto não tem expressão que você saiba ler, e ainda assim você entende exatamente o que ele está sentindo, porque ele não te deu a opção de não entender.',
     d=>{
       const f=d.flags;
@@ -72636,6 +72664,8 @@ c23_conversa:{
 },
 
 c23_pessoa:{
+  falante:'Mewtwo',
+  vozes:['N','N','N','N'],
   texto:[
     'O silêncio dura muito.',
     '"Pessoa", ele repete. "Pessoas me construíram num tanque e escreveram sobre mim em terceira pessoa."',
@@ -72649,6 +72679,8 @@ c23_pessoa:{
 },
 
 c23_arma:{
+  falante:'Mewtwo',
+  vozes:['N','N','N','N'],
   texto:[
     'Ele não reage por quatro segundos. Depois a pedra em que ele estava sentado se parte ao meio, sem ele encostar nela.',
     '"Arma." A palavra chega na sua cabeça com peso físico. "Você sabe o que acontece com uma arma quando ela deixa de ser útil?"',
@@ -72661,6 +72693,8 @@ c23_arma:{
 },
 
 c23_nao_sei:{
+  falante:'Mewtwo',
+  vozes:['N','N','P','N'],
   texto:[
     'Ele te olha por um tempo desconfortável.',
     '"Não sei." Ele quase ri — não é riso, é a coisa mais próxima que ele tem. "Duzentos e quarenta e um dias de cientistas e a melhor resposta veio de {um|uma} adolescente que disse não sei."',
@@ -72675,13 +72709,15 @@ c23_nao_sei:{
 },
 
 c23_os_doze:{
+  falante:'Mewtwo',
+  vozes:['P','N','P','N','N','N','P'],
   texto:[
-    '"Você é o décimo segundo tanque. Tem um andar embaixo de um prédio em Saffron com doze tanques. Onze cheios. O décimo segundo tem uma placa que diz MATRIZ e está vazio."',
+    '"Você é o décimo segundo tanque. Tem um andar num prédio em Saffron com doze tanques. Onze cheios. O décimo segundo tem uma placa que diz MATRIZ e está vazio."',
     'A câmara fica absolutamente imóvel.',
     '"Continua."',
     '"Eles tentaram te refazer doze vezes. Nenhuma funcionou. Tem um quadro branco lá que diz por quê: eles acham que o problema é o tempo de fala."',
     '"Tempo de fala." Ele repete devagar. "O Fuji falou comigo duzentos e quarenta e um dias. Eles têm noventa."',
-    'E aí ele faz uma coisa que você não estava preparado pra ver: ele senta no chão. Não na pedra — no chão.',
+    'E aí ele faz uma coisa que você não estava preparad{o|a} pra ver: ele senta no chão. Não na pedra — no chão.',
     '"Eles estão vivos?"',
     d=>{
       const f=d.flags;
@@ -72705,6 +72741,8 @@ c23_os_doze:{
 },
 
 c23_bola_direto:{
+  falante:'Mewtwo',
+  vozes:['N','N'],
   texto:[
     'Você saca a bola no meio da frase dele.',
     'Ele para. Olha a bola. Olha você.',
@@ -72718,6 +72756,8 @@ c23_bola_direto:{
 },
 
 c23_escolha_final:{
+  falante:'Mewtwo',
+  vozes:['N'],
   texto:[
     'A câmara espera.',
     d=>{
@@ -72775,6 +72815,8 @@ c23_escolha_final:{
 /* ---------------- RAMOS FINAIS ---------------- */
 
 c23_libertar:{
+  falante:'Mewtwo',
+  vozes:['N','N','N','N','N'],
   texto:[
     '"Pela porta." Ele repete devagar. "Tem duas Aves Lendárias na porta."',
     '"Elas não me prendem. Elas avisam os outros se eu sair. Foi o acordo que elas fizeram entre si, sem me perguntar, porque ninguém nunca me pergunta nada."',
@@ -72791,6 +72833,7 @@ c23_libertar:{
 
 c23_pergunta_depois:{
   falante:'Mewtwo',
+  vozes:['N','N'],
   texto:[
     'É a primeira vez que ele demora pra responder.',
     '"Não sei." Uma pausa longa. "Essa foi a sua resposta também, e você achou que era pouco."',
@@ -72805,6 +72848,8 @@ c23_pergunta_depois:{
 },
 
 c23_entender:{
+  falante:'Mewtwo',
+  vozes:['N','N','N'],
   texto:[
     '"Entender." Ele processa a palavra. "Ninguém nunca veio até aqui pra isso."',
     'Vocês conversam. Não tem outro jeito de descrever: vocês conversam, sentados, por horas, numa câmara embaixo de uma montanha.',
@@ -72823,9 +72868,11 @@ c23_entender:{
 },
 
 c23_parar:{
+  falante:'Mewtwo',
+  vozes:['N','N','N','N','N'],
   texto:[
     '"Me parar." Ele considera isso com uma seriedade que dói. "Você pode tentar."',
-    '"Mas eu quero que você saiba uma coisa antes, porque você foi honesto comigo e eu vou ser honesto com você:"',
+    '"Mas eu quero que você saiba uma coisa antes, porque você foi {honesto|honesta} comigo e eu vou ser honesto com você:"',
     '"Eu não decidi nada ainda. Sobre o mundo, sobre as pessoas, sobre o que fazer com o que eu consigo fazer. Eu não decidi."',
     '"E o que acontecer nos próximos minutos vai decidir por mim."'
   ],
@@ -72838,6 +72885,8 @@ c23_parar:{
 },
 
 c23_socio:{
+  falante:'Mewtwo',
+  vozes:['P','P','N','N','N','N'],
   texto:[
     '"Eu tenho uma rede. Rotas, gente, depósito, comprador." Você fala rápido, do jeito de quem ensaiou. "Com você, ela deixa de ser rede e vira outra coisa."',
     'A câmara fica muito quieta.',
@@ -72858,6 +72907,8 @@ c23_socio:{
 },
 
 c23_tratado:{
+  falante:'Mewtwo',
+  vozes:['P','P','P','N','P','N','N','N'],
   texto:[
     d=>`"Eu sou ${d.jogador.cargo}. Isso me dá autoridade pra propor uma coisa que nunca existiu."`,
     '"Não é captura, não é prisão, não é soltura. É reconhecimento."',
@@ -72878,6 +72929,8 @@ c23_tratado:{
 },
 
 c23_pena:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você tira a pena da mochila. Ela tem quase um metro e pesa como papel, e na luz da câmara ela quebra a luz em todas as cores ao mesmo tempo.',
     'Mewtwo olha a pena.',
@@ -72897,6 +72950,8 @@ c23_pena:{
 },
 
 c23_inventario:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Quanto você vale?"',
     'A pergunta sai da sua boca e fica pendurada no ar de uma câmara embaixo de uma montanha.',
@@ -72940,7 +72995,7 @@ c23_perdeu:{
     'Seu time está do seu lado, todos curados. Todos. Curados por alguém que não é você.',
     'A caverna atrás de você está fechada — não bloqueada: fechada, a pedra derretida e esfriada num tampão liso.',
     'Na pedra, com a mesma letra queimada do caderno do Dr. Fuji, uma linha:',
-    '"VOCÊ RESPONDEU COM UMA BOLA. EU RESPONDI COM UMA PORTA."'
+    '**VOCÊ RESPONDEU COM UMA BOLA. EU RESPONDI COM UMA PORTA.**'
   ],
   ef:{executar:d=>{ d.time.forEach(curarTotal); const L=Estado.lend(150); L.disposicao='hostil'; L.estado='livre'; return []; },
       flag:'mewtwo_fechou_a_porta', instabilidade:2,
@@ -72966,11 +73021,13 @@ c23_capturou:{
 },
 
 c23_risco01:{
+  falante:'Mewtwo',
+  vozes:['P','N','P','P','P','N','P','P'],
   texto:[
     '"Você é o Risco 01."',
     'A câmara fica absolutamente imóvel.',
     '"Diz de novo."',
-    '"Existe uma associação civil registrada em Kanto chamada Comissão de Gestão de Risco Biológico. Ela tem estatuto, atas públicas e doze conselheiros."',
+    '"Existe uma associação civil registrada em Kanto chamada Comissão de Gestão de Risco Biológico. Ela tem estatuto, atas públicas e onze conselheiros."',
     '"No Art. 4º, §2º, o estatuto define como risco não gerenciado qualquer indivíduo classificado como lendário."',
     '"E nas atas você é um item. Você não tem nome lá. Você é Risco 01, e a linha diz: não localizado."',
     'Ele processa isso por muito tempo.',
@@ -72993,6 +73050,8 @@ c23_risco01:{
 },
 
 c23_mostrou_unidade:{
+  falante:'Mewtwo',
+  vozes:['N'],
   texto:[
     'Você solta a Unidade 01 na câmara.',
     'Ela sai da bola, fica de pé, e não faz mais nada. Não olha em volta. Não reage à caverna, ao frio, à altura do teto.',
@@ -73017,6 +73076,8 @@ c23_mostrou_unidade:{
 /* ══════════════ FINAIS ══════════════ */
 
 c23_final_risco01:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N','P','N'],
   texto:[
     '"Eu vim te avisar. Só isso."',
     'Ele assente devagar.',
@@ -73038,11 +73099,13 @@ c23_final_risco01:{
 },
 
 c23_final_sala704:{
+  falante:'Mewtwo',
+  vozes:['P','N','P'],
   texto:[
     '"Eles se reúnem toda segunda às dez. Sala 704."',
     'Mewtwo repete o número em voz alta, o que ele nunca faz.',
     '"Setecentos e quatro."',
-    '"Prédio comercial, dezesseis andares, farmácia no térreo. A reunião é aberta. Art. 27: qualquer interessado pode assistir e pedir a palavra."',
+    '"Prédio comercial, dezesseis andares, a sala no fim do corredor. A reunião é aberta. Art. 27: qualquer interessado pode assistir e pedir a palavra."',
     'Silêncio muito longo.',
     '"Qualquer interessado", ele repete.',
     'E, pela primeira vez desde que você entrou nesta caverna, você tem certeza absoluta do que ele vai fazer.'
@@ -73062,6 +73125,8 @@ c23_final_sala704:{
 },
 
 c23_final_quinta:{
+  falante:'Mewtwo',
+  vozes:['P','P','N','P','N','N','P','N','N'],
   texto:[
     '"Ela é sua. Faz o que você achar certo."',
     'Mewtwo olha a Unidade 01, que continua de pé no meio da câmara esperando uma ordem que ninguém vai dar.',
@@ -73085,6 +73150,8 @@ c23_final_quinta:{
 
 
 c23_final_libertacao:{
+  falante:'Mewtwo',
+  vozes:['N'],
   texto:[
     'Vocês sobem juntos. Quarenta minutos de subida, lado a lado, sem conversa nenhuma.',
     'No vale, as duas Aves estão nos postos. Elas veem ele sair. Veem você do lado.',
@@ -73104,6 +73171,7 @@ c23_final_libertacao:{
 
 c23_final_companhia:{
   falante:'Mewtwo',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Vem comigo. Não solto, não prendo — anda do meu lado."',
     'Ele considera isso por muito tempo.',
@@ -73140,6 +73208,7 @@ c23_final_compreensao:{
 
 c23_final_honestidade:{
   falante:'Mewtwo',
+  vozes:['P','N','N'],
   texto:[
     '"Não sei se consigo."',
     'Ele recebe isso melhor do que receberia uma promessa.',
@@ -73158,11 +73227,13 @@ c23_final_honestidade:{
 },
 
 c23_final_os_doze:{
+  falante:'Mewtwo',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Eles responderam quando eu perguntei."',
     'Mewtwo levanta do chão.',
     '"Eu vou lá."',
-    '"É embaixo de um prédio, no meio de uma cidade, com nove andares de gente em cima."',
+    '"É num prédio no meio de uma cidade, no décimo primeiro andar, com gente trabalhando em todos os outros."',
     '"Eu sei." Ele já está andando pra saída. "Eu passei duzentos e quarenta e um dias sendo medido por gente que não perguntava. Eles estão no dia sabe-se lá quantos."',
     'Na saída da caverna, ele para.',
     '"Você vem?"'
@@ -73180,6 +73251,8 @@ c23_final_os_doze:{
 },
 
 c23_final_matriz:{
+  falante:'Mewtwo',
+  vozes:['P','N','P','N','N','P','N'],
   texto:[
     '"Eu destruí tudo. Eu achei que era misericórdia."',
     'A câmara fica em silêncio por muito, muito tempo.',
@@ -73202,6 +73275,8 @@ c23_final_matriz:{
 },
 
 c23_final_o_decimo_segundo:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Eu tirei um de lá. Ele está aqui fora."',
     'A câmara inteira muda de pressão.',
@@ -73226,6 +73301,7 @@ c23_final_o_decimo_segundo:{
 
 c23_final_tratado:{
   falante:'Mewtwo',
+  vozes:['P','N','P'],
   texto:[
     '"O que você quiser que esteja."',
     'Ele para. Isso o desarma mais do que qualquer coisa que aconteceu nesta câmara.',
@@ -73247,6 +73323,7 @@ c23_final_tratado:{
 
 c23_final_tratado_frio:{
   falante:'Mewtwo',
+  vozes:['P','N','N'],
   texto:[
     '"O que a Liga aprovar."',
     'A temperatura da câmara não muda, mas alguma coisa muda.',
@@ -73266,10 +73343,11 @@ c23_final_tratado_frio:{
 
 c23_final_pena:{
   falante:'Mewtwo',
+  vozes:['N','N','N','N','N'],
   texto:[
     'Você estende a pena.',
     'Ele não pega com a mão. Ela levanta do seu braço e fica pairando entre vocês dois, girando devagar, quebrando a luz.',
-    '"Ele existe desde antes das cidades", ele repete. "E ele te deu isso pra você trazer até aqui."',
+    '"Ele existe desde antes das cidades." Ele repete a frase devagar. "E ele te deu isso pra você trazer até aqui."',
     'A pena gira mais um pouco.',
     '"Ele sabia." A voz na sua cabeça está estranha. "Ele sabia que existia alguma coisa embaixo dessa montanha e ele mandou uma pena."',
     'Ele finalmente fecha a mão em volta dela.',
@@ -73288,6 +73366,7 @@ c23_final_pena:{
 
 c23_final_socio:{
   falante:'Mewtwo',
+  vozes:['P','N','N'],
   texto:[
     '"Sim."',
     'Ele não te mata. Isso te surpreende, e a surpresa é a parte que vai te assombrar.',
@@ -73309,6 +73388,7 @@ c23_final_socio:{
 
 c23_final_inventario:{
   falante:'Mewtwo',
+  vozes:['P','N'],
   texto:[
     '"Eu sei quanto pagam. Eu já vendi coisa parecida."',
     'A câmara não esfria, não treme, não acende.',
@@ -73316,7 +73396,7 @@ c23_final_inventario:{
     '"Coisa parecida", ele repete.',
     'E aí faz a única coisa que podia ser pior do que atacar: ele te mostra. Não com palavra — com a memória, direto, sem tradução: a caixa de veludo, o depósito de Celadon, a doca da Silph, o curral do setor 7. Tudo o que você viu. Na sua cabeça, de uma vez, no tempo real que levou.',
     'Leva quatro minutos. Você fica de joelhos nos últimos dois.',
-    '"Agora você tem o número", ele diz. "Era esse."'
+    '"Agora você tem o número. Era esse."'
   ],
   final:{id:'inventario', titulo:'O NÚMERO', texto:[
     'Você sai da caverna sem nada e desce a montanha com uma coisa nova na cabeça, que é a memória completa e simultânea de tudo o que você viu e deixou passar.',
@@ -73368,12 +73448,13 @@ c23_final_entrega:{
 
 c23_final_arrependimento:{
   falante:'Mewtwo',
+  vozes:['N','N','N'],
   texto:[
     'Você abre a bola antes de chegar na superfície.',
     'Ele sai. Olha a bola no chão. Olha você.',
     '"Por quê?"',
     'Você responde alguma coisa que não sai direito, e ele entende mesmo assim, porque ele entende tudo.',
-    '"Isso não conserta", ele diz. "Mas conta."'
+    '"Isso não conserta." Uma pausa. "Mas conta."'
   ],
   final:{id:'arrependimento', titulo:'CONTA', texto:[
     'Mewtwo não te perdoa. Perdão não é uma categoria que ele use.',
@@ -73401,6 +73482,8 @@ c23_final_porta:{
 /* ---------------- RAMOS FINAIS NOVOS ---------------- */
 
 c23_carta:{
+  falante:'Mewtwo',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Você tira a carta — ou a cópia da carta — e estende no escuro.',
     'Ele não pega com a mão. O papel sai da sua mão sozinho, para no ar a meio metro, e vira.',
@@ -73422,9 +73505,10 @@ c23_carta:{
 
 c23_final_a_carta:{
   falante:'Mewtwo',
+  vozes:['N','N','N'],
   texto:[
     'Ele fica muito tempo em silêncio.',
-    '"Eu sei onde tem gente sendo conferida", ele diz finalmente. "Eu sinto. Eu sempre soube e eu achei que era comigo."',
+    '"Eu sei onde tem gente sendo conferida." Ele demora pra dizer isso. "Eu sinto. Eu sempre soube e eu achei que era comigo."',
     'Ele levanta.',
     '"Eu achei que o mundo inteiro era uma sala."'
   ],
@@ -73441,6 +73525,8 @@ c23_final_a_carta:{
 },
 
 c23_trinta_e_dois:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','N'],
   texto:[
     'Você conta da cratera. Da areia cinza. Da pedra morna do tamanho de uma cabeça.',
     'Dos trinta e dois em círculo, parados, em silêncio, por quarenta minutos, olhando uma pedra ficar azul.',
@@ -73460,8 +73546,9 @@ c23_trinta_e_dois:{
 
 c23_final_trinta_e_dois:{
   falante:'Mewtwo',
+  vozes:['N','N','P','N'],
   texto:[
-    '"Eu não sei o que eles estavam fazendo", ele diz. "Eu leio pessoas. Eu não leio isso."',
+    '"Eu não sei o que eles estavam fazendo. Eu leio pessoas. Eu não leio isso."',
     'Ele olha pro teto da câmara, onde não tem nada.',
     '"Existe uma coisa acontecendo em Kanto há muito mais tempo do que existe gente pra medir, e ela não precisa de mim, e não precisa de você, e não precisa da Comissão."',
     '"E isso te deixa melhor ou pior?"',
@@ -73480,6 +73567,8 @@ c23_final_trinta_e_dois:{
 },
 
 c23_a_porta_de_novo:{
+  falante:'Mewtwo',
+  vozes:['N','N'],
   texto:[
     'Você conta do zelador. Dos vinte e três anos repondo vela. Do irmão. Da porta fechada que os Gastly mostravam todo dia por dois anos.',
     'E da frase: "se eu abrir e não tiver nada, aí eu perco a porta também".',
@@ -73498,6 +73587,7 @@ c23_a_porta_de_novo:{
 
 c23_final_a_porta:{
   falante:'Mewtwo',
+  vozes:['N','N','N'],
   texto:[
     '"Porque enquanto eu não saio, o mundo lá fora continua sendo o que eu imagino."',
     'Ele diz isso com uma clareza que dói.',
@@ -73520,6 +73610,8 @@ c23_final_a_porta:{
 },
 
 c23_a_papelada:{
+  falante:'Mewtwo',
+  vozes:['N','P'],
   texto:[
     'Você tira tudo o que tem e põe no chão de pedra entre vocês dois.',
     'A guia com o brasão. A folha de controle do portão cinco. O estatuto grampeado com capa dura. A tampa de caixa com o número.',
@@ -73539,6 +73631,7 @@ c23_a_papelada:{
 
 c23_final_papelada:{
   falante:'Mewtwo',
+  vozes:['N','P','N','N','N','N'],
   texto:[
     'Quando acaba, ele fica muito quieto.',
     '"Isso é pior que caçada."',
@@ -73547,7 +73640,7 @@ c23_final_papelada:{
     'Ele levanta.',
     '"Quantas pessoas precisaram concordar pra essa frase existir?"',
     'Você não sabe.',
-    '"Eu sei", ele diz. "Onze. Está no cabeçalho."'
+    '"Eu sei. Onze. Está no cabeçalho."'
   ],
   final:{id:'papelada', titulo:'NUMERAÇÃO SEQUENCIAL', texto:[
     'O que Mewtwo faz nos meses seguintes não é ataque e não é fuga.',
@@ -73580,13 +73673,15 @@ c23_os_nomes:{
 },
 
 c23_final_os_nomes:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Eu não tenho nome", ele diz.',
     '"Você tem. Mewtwo."',
     '"Isso é um número com uma palavra na frente." Ele não está reclamando. É constatação. "Tinha um Mew. Eu sou o dois."',
     'Ele olha pra você por muito tempo.',
     '"Me dá um."',
-    'E é isso: no fim de tudo, numa caverna embaixo de uma montanha, a coisa mais poderosa de Kanto pede um nome pra um garoto de quinze anos.'
+    'E é isso: no fim de tudo, numa caverna embaixo de uma montanha, a coisa mais poderosa de Kanto pede um nome pra {um garoto|uma garota} de quinze anos.'
   ],
   final:{id:'os_nomes', titulo:'ALGUÉM TINHA QUE CONTINUAR SABENDO', texto:[
     'Você dá o nome. Qual foi não importa — importa que levou onze segundos e que você não pensou muito, porque pensar muito teria estragado.',
@@ -73602,6 +73697,8 @@ c23_final_os_nomes:{
 },
 
 c23_a_pagina:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','P','N'],
   texto:[
     '"Eu prometi voltar pra uma menina com um caderno."',
     '"Explica."',
@@ -73622,10 +73719,11 @@ c23_a_pagina:{
 
 c23_final_a_pagina:{
   falante:'Mewtwo',
+  vozes:['N','N','N'],
   texto:[
     fala('Mewtwo', 'Eu nunca prometi nada pra ninguém.'),
     d=>fala(d.jogador.nome, 'Ninguém nunca te pediu nada.'),
-    '"Ninguém nunca me pediu nada", ele concorda. "É diferente de ninguém nunca ter me dado nada. Eu não tinha reparado na diferença."',
+    '"Ninguém nunca me pediu nada." Ele concorda com a própria frase. "É diferente de ninguém nunca ter me dado nada. Eu não tinha reparado na diferença."',
     'Ele senta de novo no chão da câmara.',
     '"Vai. Antes que ela risque."'
   ],
@@ -73646,6 +73744,8 @@ c23_final_a_pagina:{
 },
 
 c23_a_troca:{
+  falante:'Mewtwo',
+  vozes:['P','N','P','P','N'],
   texto:[
     '"Você quer trocar?"',
     'É a pergunta mais idiota que já foi feita nessa caverna e você ouve ela sair da sua boca com horror.',
@@ -73666,6 +73766,7 @@ c23_a_troca:{
 
 c23_final_a_troca:{
   falante:'Mewtwo',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     d=>d.flags.ofereceu_a_si
       ? '"Você." Ele repete. "Você fica numa caverna embaixo de uma montanha e eu saio andando com a sua vida."'
@@ -73673,7 +73774,7 @@ c23_final_a_troca:{
         ? 'Você diz o nome do primeiro. O que dormia aos pés da sua cama antes de tudo isso começar.'
         : '"Nada." Ele repete. "É a primeira resposta honesta que eu ouço numa negociação."',
     'Ele demora muito.',
-    '"A troca não é o que você acha que é", ele diz enfim. "Eu li isso na cabeça de quatro pessoas que passaram por essa caverna."',
+    '"A troca não é o que você acha que é." Ele demora. "Eu li isso na cabeça de quatro pessoas que passaram por essa caverna."',
     '"O que é, então?"',
     '"É duas pessoas concordando que uma coisa viva pode mudar de dono."',
     'Uma pausa exata.',
@@ -73692,6 +73793,8 @@ c23_final_a_troca:{
 },
 
 c23_sentou:{
+  falante:'Mewtwo',
+  vozes:['N','N','N'],
   texto:[
     'Você não fala nada.',
     'Senta no chão de pedra da câmara, de pernas cruzadas, com as mãos no colo, e espera.',
@@ -73733,6 +73836,8 @@ c23_final_silencio:{
 },
 
 c23_ir_embora:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','P'],
   texto:[
     'Você vira as costas antes de ele terminar a frase.',
     'Não é medo e não é desprezo. É uma coisa muito mais simples: você entendeu, no meio da conversa, que não tem nada aqui pra você resolver.',
@@ -73815,6 +73920,8 @@ c23_final_nogueira:{
 },
 
 c23_a_resposta_dobrada:{
+  falante:'Mewtwo',
+  vozes:['P','N','P','N'],
   texto:[
     'Você tira do bolso o papel dobrado quarenta vezes e põe no chão de pedra, entre vocês dois.',
     '"Isso não é meu."',
@@ -73837,6 +73944,7 @@ c23_a_resposta_dobrada:{
 
 c23_final_resposta:{
   falante:'Mewtwo',
+  vozes:['N','N'],
   texto:[
     'O papel se dobra sozinho, nas mesmas quarenta dobras, e volta para a sua mão.',
     '"Diz para ele que não tem resposta certa."',
@@ -73856,6 +73964,8 @@ c23_final_resposta:{
 },
 
 c23_a_prancheta:{
+  falante:'Mewtwo',
+  vozes:['N','P','N'],
   texto:[
     'Você põe no chão de pedra o que trouxe do galpão do fundo.',
     'Trinta e nove páginas. Data, lote, anilha, motivo, responsável, assinatura.',
@@ -73879,6 +73989,7 @@ c23_a_prancheta:{
 
 c23_final_anilha:{
   falante:'Mewtwo',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Tem anilha. Quarenta e um C, zero sete. Anilha é número, mas é individual."',
     'Ele processa isso.',
@@ -73899,6 +74010,8 @@ c23_final_anilha:{
 },
 
 c23_a_lista_do_sena:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','P'],
   texto:[
     'Você tira a folha de caderno com a espiral rasgada, escrita à mão, três colunas de números de anilha, quase cheia.',
     'No alto, em letra pequena: as que eu não consegui.',
@@ -73921,6 +74034,7 @@ c23_a_lista_do_sena:{
 
 c23_final_alguem_conta:{
   falante:'Mewtwo',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Tem gente lá dentro que ainda conta."',
     'Ele demora.',
@@ -73944,6 +74058,8 @@ c23_final_alguem_conta:{
 },
 
 c23_a_chapa:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','N'],
   texto:[
     'Você tira a chapa de metal que arrancou do vidro do círculo, com a numeração SPH estampada e a borda derretida.',
     'Ele olha a chapa e a câmara inteira fica dois graus mais fria.',
@@ -73987,6 +74103,7 @@ c23_o_circulo_conversa:{
 
 c23_final_quarenta_segundos:{
   falante:'Mewtwo',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Eles montaram a jaula antes de falar com você."',
     '"Sim."',
@@ -74010,16 +74127,18 @@ c23_final_quarenta_segundos:{
 },
 
 c23_a_carta_da_professora:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','N'],
   texto:[
-    'Você tira a cópia da carta que uma professora escreveu à Liga há dois anos e que ninguém respondeu, e lê em voz alta na câmara.',
-    'Prezados senhores. Não sei se é aqui que se escreve isto.',
-    'Um aluno meu saiu de casa e não é fugido, ele avisou, e a mãe sabe.',
-    'Eu só queria pedir que se alguém do serviço dos senhores encontrar ele por aí, diga para ele que não precisa voltar com nada. Ele acha que precisa voltar com alguma coisa.',
+    'Você tira a cópia da carta que uma professora escreveu à Liga meses atrás e que ninguém respondeu, e lê em voz alta na câmara.',
+    '**Prezados senhores. Não sei se é aqui que se escreve isto.**',
+    '**{Um aluno meu|Uma aluna minha} saiu de casa e não {é fugido|é fugida}, {ele|ela} avisou, e em casa sabem.**',
+    '**Eu só queria pedir que, se alguém do serviço dos senhores {encontrar ele|encontrar ela} por aí, {diga para ele|diga para ela} que não precisa voltar com nada. {Ele|Ela} acha que precisa voltar com alguma coisa.**',
     'Você termina de ler e a sua própria voz soa estranha nesta pedra.',
     'Ele demora muito.',
     '"Ela escreveu isso para uma instituição."',
     '"Escreveu."',
-    '"E a instituição arquivou." Uma pausa. "E você leu dois anos depois, dentro de uma pasta com o seu nome, e a frase ainda estava certa."'
+    '"E a instituição arquivou." Uma pausa. "E você leu meses depois, dentro de uma pasta com o seu nome, e a frase ainda estava certa."'
   ],
   ef:{flag:'leu_a_carta_aqui', instabilidade:1, moral:3,
       rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta, numa caverna, a carta que ninguém respondeu'},
@@ -74032,6 +74151,7 @@ c23_a_carta_da_professora:{
 
 c23_final_nao_precisa:{
   falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Eu vim aqui achando que precisava voltar com alguma coisa."',
     'Ele desce da pedra e senta no chão, e isso ele só fez uma vez antes.',
@@ -74063,8 +74183,8 @@ c23_o_papel_do_quintino:{
     'É um endereço, escrito à caneta, numa letra jovem que envelheceu junto com o papel.',
     'Um bairro de Cinnabar, um número de casa, e embaixo, entre parênteses: perguntar pelo Dr. Fuji.',
     'Você fica um tempo com o papel na mão no meio de uma câmara embaixo de uma montanha.',
-    'Em 1981, alguém ofereceu a um campeão de vinte e três anos a chance de ir a Cinnabar ver o que estavam fazendo lá.',
-    'Ele guardou o endereço e não foi, e carregou o papel por trinta e cinco anos.'
+    'Em 1981, alguém ofereceu a um ex-campeão de cinquenta e cinco anos a chance de ir a Cinnabar ver o que estavam fazendo lá.',
+    'Ele guardou o endereço e não foi, e carregou o papel por dezenove anos.'
   ],
   ef:{flag:'abriu_o_papel_do_quintino', instabilidade:2, moral:-2,
       registrar:'O papel do Sr. Mervin era o endereço do Dr. Fuji, de 1981.'},
@@ -74075,6 +74195,8 @@ c23_o_papel_do_quintino:{
 },
 
 c23_mostrou_o_endereco:{
+  falante:'Mewtwo',
+  vozes:['N','P','N','N','N','P','N'],
   texto:[
     'Você mostra o papel.',
     'Ele lê o endereço e não diz nada por um tempo que passa de um minuto.',
@@ -74091,12 +74213,13 @@ c23_mostrou_o_endereco:{
       registrar:'Ele reconheceu o endereço: a casa do Dr. Fuji antes do instituto.'},
   escolhas:[
     {texto:'"Nada. Uma pessoa só não muda isso."', vai:'c23_final_o_papel'},
-    {texto:'"Não sei. Ele passou trinta e cinco anos achando que teria mudado tudo."', vai:'c23_final_o_papel'}
+    {texto:'"Não sei. Ele passou dezenove anos achando que teria mudado tudo."', vai:'c23_final_o_papel'}
   ]
 },
 
 c23_final_o_papel:{
   falante:'Mewtwo',
+  vozes:['N','P','N','N','N','P','N','N'],
   texto:[
     'Ele olha o papel no ar por mais um tempo.',
     '"Não joga fora."',
@@ -74105,7 +74228,7 @@ c23_final_o_papel:{
     'Uma pausa.',
     '"E diz que eu não teria gostado dele se ele tivesse ido em oitenta e um, porque em oitenta e um eu não existia, e ele teria visto um tanque vazio e ido embora tranquilo."',
     '"Isso não vai consolar ele."',
-    '"Não vai." Uma pausa muito longa. "Mas é verdade, e ele carregou trinta e cinco anos de mentira. Uma verdade é mais leve."'
+    '"Não vai." Uma pausa muito longa. "Mas é verdade, e ele carregou dezenove anos de mentira. Uma verdade é mais leve."'
   ],
   final:{id:'o_papel', titulo:'TRINTA E CINCO ANOS', texto:[
     'Você desce a montanha com um papel de 1981 no bolso e devolve numa borda de poço de pedra, dois andares abaixo do saguão do Planalto Indigo.',
@@ -74118,7 +74241,7 @@ c23_final_o_papel:{
     'No ano seguinte, aos setenta e quatro anos, o Sr. Mervin aceita o cargo de instrutor auxiliar, que foi criado para ele e que ele recusou onze vezes em doze anos.',
     'Ele não ensina a lutar. Ele ensina uma coisa só, e é a primeira aula de todo curso novo, e leva quinze minutos.',
     'A aula se chama: quando alguém te oferecer, vá.',
-    'E ele começa contando que uma vez ofereceram a ele e ele não foi, e que ele passou trinta e cinco anos carregando um endereço no bolso.',
+    'E ele começa contando que uma vez ofereceram a ele e ele não foi, e que ele passou dezenove anos carregando um endereço no bolso.',
     'Todo mundo que passou por essa aula foi ao lugar que ofereceram. Todos, sem exceção, até hoje.',
     'Isso está num levantamento interno que ninguém nunca publicou.'
   ]}

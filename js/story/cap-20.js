@@ -31,14 +31,14 @@ c20_ab_a_banca:{
     d=>fala(d.jogador.nome, 'O senhor conhece o pessoal do sétimo andar?'),
     'Ele não pergunta por que você quer saber, o que é a gentileza dos jornaleiros.',
     fala('Sr. Bram', 'Sala 704? Conheço doze deles de vista.'),
-    fala('Sr. Bram', 'Eles vêm de quinze em quinze dias, sempre de manhã.'),
+    fala('Sr. Bram', 'Eles vêm toda segunda, sempre de manhã.'),
     'Ele dobra um jornal pra um cliente sem parar de falar.',
     fala('Sr. Bram', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
     fala('Sr. Bram', 'São gente normal, {moço|moça}. É isso que eu ia te falar antes de você perguntar.')
   ],
   ef:{flag:'o_jornaleiro_da_118',
       npc:{nome:'Sr. Bram', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
-      registrar:'O conselho da sala 704 se reúne de quinze em quinze dias, sempre de manhã.',
+      registrar:'O conselho da sala 704 se reúne toda segunda, sempre de manhã.',
       presagio:'"São gente normal." Ele disse isso antes de você perguntar como eles são.'},
   escolhas:[
     {texto:'Perguntar se ele sabe o que eles fazem.', vai:'c20_ab_o_que_eles_fazem'},

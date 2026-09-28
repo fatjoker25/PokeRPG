@@ -1052,7 +1052,7 @@ c22_contornou:{
     'A parede do fundo é lisa. Não é lisa de erosão: é lisa de uma coisa que derreteu e esfriou, com ondulações congeladas no meio do movimento.',
     'A abertura tem uns quatro metros de altura e é perfeitamente redonda na parte de cima.',
     'E do lado de dentro, a três ou quatro metros, o chão desce numa rampa lisa.',
-    'Sai um ar morno de lá, e você sente daqui de cima, a sessenta metros, o que não deveria ser possível.'
+    'Vem de lá um calor morno, sem vento nenhum, e você sente daqui de cima, a sessenta metros, o que não deveria ser possível.'
   ],
   ef:{flag:['viu_a_abertura_de_frente'], instabilidade:1,
       registrar:'A parede do fundo não foi cavada: foi derretida e esfriada. Sai ar morno da abertura.'},
@@ -1262,7 +1262,7 @@ c22_voltou:{
 
 c22_fim:{
   texto:[
-    'A boca da caverna é mais alta que uma casa e o ar que sai dela é morno, o que está errado para essa altitude e para esse frio.',
+    'A boca da caverna é mais alta que uma casa e o ar parado na boca dela é morno, o que está errado para essa altitude e para esse frio.',
     'Lá dentro, a passagem desce. Muito.',
     'As paredes são lisas demais para serem naturais: não foram cavadas, foram derretidas e esfriadas, com ondulações paradas no meio do movimento.',
     d=>{
