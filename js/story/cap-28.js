@@ -1158,7 +1158,7 @@ c23_final_o_decimo_segundo:{
     '"Eu tirei um de lá. Ele está aqui fora."',
     'A câmara inteira muda de pressão.',
     '"Traz."',
-    'Você sobe, atravessa o vale entre duas Aves que não se movem, e desce de volta com uma coisa de vinte e cinco níveis que anda meio devagar.',
+    'Você sobe, atravessa o vale entre duas Aves que não se movem, e desce de volta com uma coisa pequena que anda meio devagar.',
     'O que acontece quando os dois se veem não tem descrição possível, porque não acontece em som e não acontece em imagem.',
     'Você fica na entrada da câmara por quase uma hora, sem entender nada, sentindo alguma coisa enorme acontecer a doze metros de você.',
     'Quando acaba, Mewtwo olha pra você.',

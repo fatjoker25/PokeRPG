@@ -414,7 +414,7 @@ c15_mostrou_a_conta:{
       npc:{nome:'Xavi', opiniao:6, memoria:'Já tinha visto a frente em setembro e já tinha avisado a Liga e a Comissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Mostrou a conta a quem já tinha feito ela'},
       registrar:'Xavi avisou a Liga em setembro. Migração de fauna não é competência da Liga.',
-      presagio:'Ele já tinha avisado. Todo mundo nesse jogo já avisou alguém.'},
+      presagio:'Ele já tinha avisado. Todo mundo nessa história já avisou alguém.'},
   escolhas:[
     {texto:'"E o que veio do sul?"', vai:'c15_o_que_veio_do_sul'},
     {texto:'"Onde está sua mulher?"', vai:'c15_a_nair'},
@@ -1280,7 +1280,7 @@ c15_deixou_passar:{
   texto:[
     'Você espera quarenta minutos depois de eles sumirem e só então sai do barranco.',
     'A rota está vazia. Vai continuar vazia.',
-    'Você fez a coisa sensata: você é uma pessoa de quinze anos com uma mochila, e eles são três coisas de cinquenta e cinco níveis, e não existe nenhuma leitura em que sair do barranco melhorasse alguma coisa.',
+    'Você fez a coisa sensata: você é uma pessoa de quinze anos com uma mochila, e eles são três coisas do tamanho de um carro, e não existe nenhuma leitura em que sair do barranco melhorasse alguma coisa.',
     'Você vai pensar nisso muitas vezes, e toda vez você vai concluir que fez cert{o|a}, e toda vez isso não vai ajudar.'
   ],
   ef:{flag:'evitou_os_caes', moral:-8,
@@ -1296,7 +1296,7 @@ c15_deixou_passar:{
 c15_seguiu:{
   texto:[
     'Você segue três lendários a pé.',
-    'É uma ideia ruim e você tem consciência plena disso a cada passo, e você continua, e essa é a definição de tudo o que você faz desde o capítulo um.',
+    'É uma ideia ruim e você tem consciência plena disso a cada passo, e você continua, e essa é a definição de tudo o que você faz desde que saiu de casa.',
     'Eles não andam rápido quando não estão correndo — andam em ritmo de patrulha, uns seis quilômetros por hora, e dá pra acompanhar de longe se você não tiver pressa e não fizer barulho.',
     'Você segue por quatro horas.',
     'Ao amanhecer, eles chegam num ponto alto do trecho dezoito, de onde se vê o mar e Cinnabar do outro lado.',
@@ -1798,7 +1798,7 @@ c15_foram_embora:{
 c15_fim:{
   texto:[
     d=>{
-      if (d.flags.contou_pros_caes) return 'Você contou a três coisas de cinquenta e cinco níveis, numa ciclovia às seis da manhã, que o tanque está vazio faz quatro anos. E uma delas encostou a testa no seu ombro.';
+      if (d.flags.contou_pros_caes) return 'Você contou a três coisas do tamanho de um carro, numa ciclovia às seis da manhã, que o tanque está vazio faz quatro anos. E uma delas encostou a testa no seu ombro.';
       if (d.flags.caes_caçam_voce) return 'Nos próximos dias, cada lugar por onde você passa amanhece com alguma coisa aberta. Nunca ninguém ferido. Sempre alguma coisa aberta.';
       if (d.flags.caes_vigiam_cinnabar || d.flags.caes_olham_cinnabar) return 'Três lendários olhando pra mesma ilha por quatro anos não é comportamento de caça nem de território. É comportamento de quem espera uma coisa sair de lá.';
       return 'Você não sabe o que eles estavam fazendo ali. Ninguém sabe. Esse é o ponto dos lendários — eles não explicam, e a gente inventa a explicação, e quase sempre a nossa é pior que a deles.';

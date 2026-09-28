@@ -1420,7 +1420,7 @@ c17_mew_mao:{
     'Nesses dois segundos você vê uma coisa que não é imagem e não é som e que você vai tentar descrever pelo resto da vida sem conseguir:',
     'é a sensação física de um lugar muito velho e muito quieto onde nada nunca precisou de nome.',
     'Não é bonito. Não é assustador.',
-    'É antigo de um jeito que faz tudo o que você fez em dezessete capítulos parecer uma coisa que aconteceu hoje de manhã.',
+    'É antigo de um jeito que faz tudo o que você fez desde que saiu de casa parecer uma coisa que aconteceu hoje de manhã.',
     'Depois ela recua.',
     'E você fica com a mão estendida por mais tempo do que devia.'
   ],

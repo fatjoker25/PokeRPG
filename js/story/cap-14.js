@@ -75,7 +75,7 @@ c14_ab_o_casal:{
 
 c14_ab_o_nome_do_filho:{
   texto:[
-    fala('a mulher do ferry', 'Kira. Kira Ishida.'),
+    fala('a mulher do ferry', 'Kieran. Kieran Ashby.'),
     'Ela fala o nome inteiro, com sobrenome, do jeito que se fala um nome que ninguém mais fala.',
     fala('a mulher do ferry', 'Ele era bioquímico. Vinte e nove anos.'),
     d=>fala(d.jogador.nome, 'E o que foi o acidente?'),
@@ -87,7 +87,7 @@ c14_ab_o_nome_do_filho:{
     fala('o homem do ferry', 'Hoje eu tenho cabeça e não tenho mais nada pra assinar.')
   ],
   ef:{flag:'kaoru_ishida',
-      registrar:'Kira Ishida, bioquímico, 29 anos, morreu no laboratório de Cinnabar em 1988. Caixão lacrado.',
+      registrar:'Kieran Ashby, bioquímico, 29 anos, morreu no laboratório de Cinnabar em 1988. Caixão lacrado.',
       presagio:'Caixão lacrado por exposição a reagente é decisão de quem não quer que se veja o corpo.'},
   escolhas:[
     {texto:'Desembarcar e ir direto ao laboratório.', vai:'c14_lab'},
@@ -141,7 +141,7 @@ c14_ab_sem_passagem:{
 
 c14_ab_a_verdade_pro_velho:{
   texto:[
-    'Você conta. Conta o laboratório, conta o que te trouxe até aqui, conta a parte que faz você parecer ingênu{o|a} e conta a parte que faz você parecer perigoso.',
+    'Você conta. Conta o laboratório, conta o que te trouxe até aqui, conta a parte que faz você parecer ingênu{o|a} e conta a parte que faz você parecer {perigoso|perigosa}.',
     'Leva uns seis minutos. Ele não interrompe e não olha pra você: olha pro mar, com a lata de óleo na mão.',
     'Quando você termina, ele mexe no boné.',
     fala('Amos', 'Cinco horas de combustível.'),
@@ -360,6 +360,8 @@ c14_cidade:{
 },
 
 c14_barco_fretado:{
+  falante:'o homem do bar',
+  vozes:['N','N','P','N'],
   texto:[
     'O homem do bar te leva até a rampa e aponta uma marca na madeira da defensa.',
     '"Ó. Encostaram aqui e não amarraram direito."',
@@ -367,20 +369,20 @@ c14_barco_fretado:{
     '"Isso é tinta de casco de fretado de Vermilion. Aqui a gente usa tinta cinza, que é mais barata e aguenta mais enxofre."',
     '"E tem registro de atracação?"',
     'Ele ri.',
-    '"Registro? Moço, aqui não tem capitania. Tem o Sr. Nolan, que anota quem usa o guincho porque ele cobra por uso."',
+    '"Registro? {Moço|Moça}, a capitania anota barco, não anota o que desce dele. Quem anota o que desce é o Sr. Nolan, que cobra por uso do guincho."',
     'Ele aponta um caderno pendurado num prego na parede do barracão do guincho.',
     'Um caderno espiral, pendurado num prego, com um lápis amarrado num barbante.',
     'Você folheia até sábado passado.',
     '**"sáb 14 — fretado azul — 2 pessoas — 40 min — pagou"**',
     'E embaixo, na mesma linha, na letra do Sr. Nolan:',
-    '**"levaram 4 caixa de papelão"**'
+    '**"trouxeram 2 galão. levaram nada"**'
   ],
   ef:{flag:['sabe_das_quatro_caixas','provas_cinnabar'],
       rep:{eixo:'bom',delta:4,motivo:'Achou o registro num caderno pendurado num prego'},
       registrar:'No sábado, duas pessoas de fora levaram quatro caixas de papelão de Cinnabar, num fretado de Vermilion.',
-      presagio:'Quatro caixas. Você já viu quatro caixas emparedadas num sétimo andar em Saffron.'},
+      presagio:'Dois galões, e não levaram nada. Ninguém traz galão pra buscar papel.'},
   escolhas:[
-    {texto:'"Quantas caixas ficaram?"', vai:'c14_quantas_ficaram'},
+    {texto:'"O que eles vieram buscar?"', vai:'c14_quantas_ficaram'},
     {texto:'Entrar no laboratório.', vai:'c14_lab'},
     {texto:'Procurar quem trabalhou lá.', vai:'c14_selma'},
     {texto:'Procurar o ginásio.', vai:'c14_ginasio'}
@@ -388,15 +390,16 @@ c14_barco_fretado:{
 },
 
 c14_quantas_ficaram:{
+  falante:'Sr. Nolan',
+  vozes:['P','o homem do bar','N','N','P','N','N'],
   texto:[
-    '"Quantas caixas ficaram?"',
+    '"O que eles vieram buscar?"',
     'O homem do bar franze a testa.',
-    '"Como assim ficaram? Eles levaram quatro."',
-    '"Eu sei. Quantas tinha no total?"',
+    '"Sei lá. Papel, dizem. O prédio era só papel e tanque."',
     'E aí o Sr. Nolan, que estava ouvindo encostado no barracão sem participar, fala pela primeira vez.',
-    '"Nove."',
+    '"Cinco caixas."',
     'Os dois olham pra ele.',
-    '"Nove", ele repete. "Eu sei porque em noventa e seis eu carreguei as nove no guincho. Quatro foram pro fretado e cinco voltaram pro prédio."',
+    '"Cinco", ele repete. "Eu sei porque em noventa e seis eu carreguei nove no guincho. Quatro foram pro fretado e cinco voltaram pro prédio."',
     '"Em noventa e seis?"',
     '"Em novembro de noventa e seis. Mesma coisa: barco de fora, duas pessoas, quarenta minutos."',
     'Ele cospe.',
@@ -443,6 +446,8 @@ c14_quem_escondeu:{
 },
 
 c14_selma:{
+  falante:'Sra. Wilma',
+  vozes:['N','N','P','N','N','P','N'],
   texto:[
     'Ela se chama Sra. Wilma, tem setenta e um anos, e trabalhou na limpeza do laboratório de mil novecentos e setenta e nove a mil novecentos e noventa e sete.',
     'Dezoito anos.',
@@ -457,7 +462,7 @@ c14_selma:{
     '"E aí?"',
     '"E aí um dia não tinha mais tanque, não tinha mais teto, e não tinha mais o Doutor Fuji."'
   ],
-  ef:{flag:'ouviu_historia_lab',
+  ef:{flag:['ouviu_historia_lab','conheceu_selma'],
       npc:{nome:'Sra. Wilma', opiniao:2, memoria:'Limpou o laboratório de Cinnabar por dezoito anos, até a linha de fita amarela no chão.'},
       registrar:'Havia um tanque no subsolo do laboratório. O que estava dentro cresceu demais para ele.',
       presagio:'Ela limpava até a fita e parava. Dezoito anos parando na fita.'},
@@ -470,6 +475,8 @@ c14_selma:{
 },
 
 c14_fuji_morreu:{
+  falante:'Sra. Wilma',
+  vozes:['P','N','P','N','N','N','P','N','N'],
   texto:[
     '"O senhor Fuji morreu?"',
     'Ela demora.',
@@ -498,15 +505,17 @@ c14_fuji_morreu:{
 },
 
 c14_quem_paga:{
+  falante:'Sra. Wilma',
+  vozes:['P','N','P','a funcionária da prefeitura'],
   texto:[
     '"Quem paga o IPTU?"',
     '"Vai na prefeitura e pergunta, meu bem. É público."',
     'A prefeitura de Cinnabar tem duas salas e funciona das oito às catorze.',
     'A funcionária do setor de tributos consulta a inscrição imobiliária, anota num papelzinho e vira o monitor pra você, porque ela não vê problema nenhum nisso e porque de fato não tem problema nenhum nisso.',
-    '**INSCRIÇÃO 2.117 — TITULAR: FUJI, A. — SITUAÇÃO: EM DIA — PAGAMENTO: DÉBITO AUTOMÁTICO — TITULAR DA CONTA: B. OYAMA**',
-    '"B. Oyama?"',
+    '**INSCRIÇÃO 2.117 — TITULAR: FUJI, A. — SITUAÇÃO: EM DIA — PAGAMENTO: DÉBITO AUTOMÁTICO — TITULAR DA CONTA: B. HOLLOWAY**',
+    '"B. Holloway?"',
     'Ela ri.',
-    '"Ah, esse é o Doutor Blaine. Blaine é como ele se chama no ginásio. O nome dele é Bruno Oyama e ele é o cara mais chato da ilha na fila do banco."'
+    '"Ah, esse é o Doutor Blaine. Blaine é como ele se chama no ginásio. O nome dele é Burke Holloway e ele é o cara mais chato da ilha na fila do banco."'
   ],
   ef:{flag:['blaine_paga_o_iptu','sabe_do_blaine'],
       rep:{eixo:'bom',delta:4,motivo:'Foi na prefeitura e perguntou'},
@@ -568,19 +577,21 @@ c14_esperou_na_casa:{
 },
 
 c14_blaine_na_varanda:{
+  falante:'Blaine',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Você atravessa a rua e para na calçada, do lado de fora do portão.',
     'Ele te vê chegar e não se assusta e não levanta.',
     'Serve café na xícara que estava virada e estende por cima do portão.',
     '"Senta. Tem outra cadeira lá dentro, mas eu não entro na casa."',
     'Você entra, pega a cadeira da varanda que é a única, e ele fica de pé encostado na coluna.',
-    '"Você é o que tá perguntando de caixa no porto."',
+    '"Você é {o|a} que tá perguntando de caixa no porto."',
     '"Sou."',
     '"Setecentas pessoas, {meu filho|minha filha}."',
     'Ele bebe o café.',
-    '"Eu sou o Bruno. No ginásio me chamam de Blaine porque o nome do meu avô era Blaine e eu achei bonito aos vinte e dois anos, e agora eu tenho setenta e dois e tô preso com ele."',
+    '"Eu sou o Burke. No ginásio me chamam de Blaine porque o nome do meu avô era Blaine e eu achei bonito aos vinte e dois anos, e agora eu tenho setenta e dois e tô preso com ele."',
     'Ele olha a porta fechada da casa.',
-    '"E o Amauri era meu amigo desde sessenta e nove."'
+    '"E o Ansel era meu amigo desde sessenta e nove."'
   ],
   ef:{flag:['conheceu_blaine','sabe_do_blaine'],
       npc:{nome:'Blaine', opiniao:2, memoria:'Te serviu café na varanda da casa do amigo dele e disse que não entra na casa.'},
@@ -596,6 +607,8 @@ c14_blaine_na_varanda:{
 },
 
 c14_porque_nao_entra:{
+  falante:'Blaine',
+  vozes:['P','N','P','N','N','N','N','N','N'],
   texto:[
     '"Por que você não entra na casa?"',
     'Ele demora tanto que você acha que não vai responder.',
@@ -625,6 +638,8 @@ c14_porque_nao_entra:{
 },
 
 c14_o_que_aconteceu_com_fuji:{
+  falante:'Blaine',
+  vozes:['P','N','P','N','N','N','N','N','P','N','N','N'],
   texto:[
     '"O que aconteceu com o Fuji?"',
     'Blaine senta no degrau da varanda, porque a única cadeira é sua e ele não vai te pedir pra levantar.',
@@ -658,6 +673,8 @@ c14_o_que_aconteceu_com_fuji:{
 },
 
 c14_esta_vivo:{
+  falante:'Blaine',
+  vozes:['P','N','N','P','N','N','N','N'],
   texto:[
     '"Você acha que ele tá vivo?"',
     '"Não."',
@@ -689,6 +706,8 @@ c14_esta_vivo:{
 /* ─────────────── AS CINCO CAIXAS ─────────────── */
 
 c14_falou_do_onze:{
+  falante:'Blaine',
+  vozes:['P','N','E','N','P','N','P','N','P','N','N'],
   texto:[
     '"Eu vi o andar onze da Silph."',
     'Blaine não se mexe.',
@@ -749,12 +768,14 @@ c14_nao_e_culpa:{
 },
 
 c14_as_cinco_caixas:{
+  falante:'Blaine',
+  vozes:['P','N','N','P','N','P','N','N','N'],
   texto:[
     '"O que tem nas cinco caixas?"',
     'Ele demora tanto que a rua escurece.',
     '"Caderno."',
     'Ele se levanta com dificuldade, apoiando na coluna.',
-    '"Nove caixas de arquivo, todas com caderno. O Amauri escrevia tudo à mão e numerava a lombada. Ele tinha quarenta e um cadernos de vinte e dois anos de trabalho nessa ilha."',
+    '"Nove caixas de arquivo, todas com caderno. O Ansel escrevia tudo à mão e numerava a lombada. Ele tinha quarenta e um cadernos de vinte e dois anos de trabalho nessa ilha."',
     '"E as quatro que saíram?"',
     '"Levaram os cadernos do projeto. Um ao nove, mais oito e nove que são de resultado."',
     '"E as cinco?"',
@@ -778,6 +799,8 @@ c14_as_cinco_caixas:{
 },
 
 c14_o_sete_falso:{
+  falante:'Blaine',
+  vozes:['P','N','P','N','N','P','N','N','N'],
   texto:[
     '"Espera. Em Saffron tem um formulário de retirada do caderno sete, de quatro de novembro de noventa e seis, pra análise jurídica."',
     'Blaine para de andar no meio da rua.',
@@ -786,7 +809,7 @@ c14_o_sete_falso:{
     '"Eles levaram o sete?"',
     '"Levaram um caderno com sete escrito na lombada."',
     'Ele continua andando, e agora está andando mais rápido.',
-    '"{Meu filho|Minha filha}, o Amauri era o cara mais organizado que eu conheci na vida e o mais desconfiado depois de outubro de noventa e seis."',
+    '"{Meu filho|Minha filha}, o Ansel era o cara mais organizado que eu conheci na vida e o mais desconfiado depois de outubro de noventa e seis."',
     '"Ele trocou as lombadas."',
     '"Ele o quê?"',
     '"Ele passou uma tarde inteira trocando etiqueta de lombada em quarenta e um cadernos, em outubro, três semanas antes."',
@@ -809,6 +832,8 @@ c14_o_sete_falso:{
 },
 
 c14_nunca_leu:{
+  falante:'Blaine',
+  vozes:['P','N','P','N','N','P','N','P','N','N'],
   texto:[
     '"Por que você nunca leu pra ninguém?"',
     'Ele para com a chave na fechadura.',
@@ -834,6 +859,8 @@ c14_nunca_leu:{
 },
 
 c14_pode_parar:{
+  falante:'Blaine',
+  vozes:['P','N','N','P','N','N','P','N','N','P','N','N','P','N'],
   texto:[
     '"A gente pode parar isso."',
     '"Como?"',
@@ -869,6 +896,8 @@ c14_pode_parar:{
 },
 
 c14_deixa_entrar:{
+  falante:'Blaine',
+  vozes:['P','N'],
   texto:[
     '"Me deixa entrar na casa."',
     'Ele olha pra você por muito tempo.',
@@ -925,8 +954,10 @@ c14_o_jornal:{
 },
 
 c14_blaine_entrou:{
+  falante:'Blaine',
+  vozes:['P','N','N','N'],
   texto:[
-    '"Bruno. Vem cá."',
+    '"Burke. Vem cá."',
     'Ele não vem.',
     'Você chama de novo e ele não vem, e aí você faz a única coisa que resta, que é sair, pegar ele pelo braço e puxar, e ele resiste dois passos e depois deixa.',
     'Ele entra na casa pela primeira vez em quatro anos.',
@@ -954,12 +985,14 @@ c14_blaine_entrou:{
 },
 
 c14_arrumou_a_casa:{
+  falante:'Blaine',
+  vozes:['N','N','N','N'],
   texto:[
     'Vocês passam a noite arrumando a casa.',
     'Não é uma cena bonita: é varrer, é tirar teia, é abrir janela, é encontrar comida de quatro anos numa despensa e jogar fora, é discutir sobre o que fazer com um par de sapatos.',
     'Às três da manhã, Blaine acha uma caixa de sapato em cima do armário do quarto com cento e poucas fotos soltas.',
     'Ele senta na cama e olha as cento e poucas, uma por uma, e comenta umas trinta em voz alta pra você, que não conhece ninguém em nenhuma delas.',
-    '"Esse aqui é o Amauri no dia que o barco dele afundou na rampa."',
+    '"Esse aqui é o Ansel no dia que o barco dele afundou na rampa."',
     '"Essa é a formatura dele. Olha esse bigode."',
     '"Essa aqui sou eu com cabelo."',
     'Às cinco da manhã ele guarda a caixa de volta em cima do armário, no mesmo lugar.',
@@ -1074,6 +1107,7 @@ c14_dentro_da_casa:{
 /* ─────────────── O GINÁSIO E O ACERVO ─────────────── */
 
 c14_ginasio:{
+  vozes:['E'],
   texto:[
     'O ginásio de Cinnabar não é um prédio. É uma porta.',
     'Uma porta de aço encaixada na rocha, na base do vulcão, no fim de uma escada de cimento de sessenta e dois degraus que alguém construiu nos anos setenta e que ninguém consertou desde então.',
@@ -1121,12 +1155,14 @@ c14_ginasio_por_dentro:{
 },
 
 c14_essa_pagina:{
+  falante:'Blaine',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Por que essa página?"',
     'Blaine continua na porta.',
     '"Porque é a última em que ele fala comigo."',
     '"Como assim com você?"',
-    '"O Amauri escrevia os cadernos pra ele mesmo, sempre. Relatório, observação, hipótese, tudo na terceira pessoa, do jeito certo."',
+    '"O Ansel escrevia os cadernos pra ele mesmo, sempre. Relatório, observação, hipótese, tudo na terceira pessoa, do jeito certo."',
     'Ele aponta a página com o queixo.',
     '"Menos essa."',
     '"Essa aí ele escreveu pra mim, e eu sei porque tem o meu nome, e porque ele nunca escreveu o meu nome em nenhum dos quarenta e um cadernos em vinte e dois anos."'
@@ -1148,7 +1184,7 @@ c14_caderno:{
     'O caderno tem sete na lombada, em etiqueta colada, e a etiqueta tem uma marca de cola antiga por baixo, de onde saiu outra.',
     'É o caderno 7 de verdade.',
     'Dias duzentos e quarenta e dois em diante.',
-    '**"Dia 242. Tiraram-me do projeto ontem às 15h20. Entreguei crachá, chave e as chaves do carro do instituto. Não entreguei os cadernos porque ninguém pediu os cadernos."**',
+    '**"Dia 242. Me tiraram do projeto ontem às 15h20. Entreguei crachá, chave e as chaves do carro do instituto. Não entreguei os cadernos porque ninguém pediu os cadernos."**',
     '**"Dia 243. Fui ao prédio à noite. O vigia é o Sr. Berto e ele me deixou entrar porque eu trabalho aqui há vinte e dois anos e ninguém avisou o Sr. Berto de nada."**',
     '**"Dia 243 (cont.). Falei com ele por quatro horas. Contei que eu tinha sido afastado. Contei que eu não ia mais poder vir. Ele perguntou por quê e eu disse a verdade, que é que eu disse não."**',
     '**"Ele perguntou não pra quê."**',
@@ -1160,7 +1196,7 @@ c14_caderno:{
   ef:{flag:['leu_caderno','leu_o_sete'], instabilidade:2, moral:-20,
       rep:{eixo:'bom',delta:3,motivo:'Leu o caderno sete'},
       registrar:'Caderno 7: em 243 dias, o Dr. Fuji nunca explicou a Mewtwo que aquilo era um experimento.',
-      presagio:'Ele achava que eram conversas. Segura essa frase, ela volta no último capítulo.'},
+      presagio:'Ele achava que eram conversas. Segura essa frase, ela volta.'},
   escolhas:[
     {texto:'Continuar lendo.', vai:'c14_caderno2'},
     {texto:'"Lê você." — pedir pro Blaine ler.', vai:'c14_blaine_leu_em_voz_alta', cond:d=>!!d.flags.conheceu_blaine},
@@ -1180,12 +1216,12 @@ c14_caderno2:{
     '**"Dia 246. Escrevi ao conselho pedindo audiência. Protocolo 11.409."**',
     '**"Dia 250. Indeferido. Motivo: requerente sem vínculo institucional."**',
     'E aí a letra muda: fica maior, mais espaçada, de quem escreveu com a mão inteira em vez de com os dedos.',
-    '**"Dia 251. Bruno: se você estiver lendo isso, foi porque aconteceu alguma coisa, e eu quero que você saiba que eu não fui lá me matar."**',
+    '**"Dia 251. Burke: se você estiver lendo isso, foi porque aconteceu alguma coisa, e eu quero que você saiba que eu não fui lá me matar."**',
     '**"Eu fui lá abrir o tanque."**',
     '**"Eu fui explicar pra ele o que ele é, que é a única coisa que ele pediu em duzentos e cinquenta e um dias e a única que eu devo."**',
     '**"E depois eu ia abrir."**',
     '**"Se der errado, não é culpa sua e não é culpa de ninguém dessa ilha, e por favor cuida da casa até a prefeitura tomar, que eu não quero que tomem no primeiro ano."**',
-    '**"Amauri."**',
+    '**"Ansel."**',
     'A página seguinte está em branco.',
     'E todas as outras, até o fim.'
   ],
@@ -1207,7 +1243,7 @@ c14_blaine_leu_em_voz_alta:{
     'Você pede pra ele ler em voz alta.',
     'Ele diz que não, e você não insiste, e ele fica na porta mais um tempo, e depois entra na sala pela primeira vez em quatro anos e senta na cadeira.',
     'E lê.',
-    'Ele lê as quatro páginas em voz alta, inteiras, pra um moleque de quinze anos numa sala de quatro por quatro dentro de um vulcão, e ele tropeça em três lugares.',
+    'Ele lê as quatro páginas em voz alta, inteiras, pra {um moleque|uma menina} de quinze anos numa sala de quatro por quatro dentro de um vulcão, e ele tropeça em três lugares.',
     'Na parte do "ele achava que eram conversas", ele para por quase um minuto.',
     'E na parte do "cuida da casa até a prefeitura tomar", ele lê muito rápido, quase atropelando, porque é a única forma de terminar a frase.',
     'Quando acaba, ele fecha o caderno e põe as duas mãos em cima.',
@@ -1230,6 +1266,8 @@ c14_blaine_leu_em_voz_alta:{
 },
 
 c14_publicar:{
+  falante:'Blaine',
+  vozes:['P','N','P','N','N','N','P','N','N','P','N','N'],
   texto:[
     '"Então a gente publica isso."',
     'Ele balança a cabeça.',
@@ -1269,7 +1307,7 @@ c14_devolver_acervo:{
     '"Extinto por decreto quer dizer que o patrimônio foi pra algum lugar. Sempre vai."',
     'Blaine olha pra você com uma cara nova.',
     '"Você tem quinze anos."',
-    '"Eu passei uma semana inteira numa junta comercial."',
+    '"Eu passei esse tempo todo lendo papel que ninguém lê."',
     'Ele ri.',
     'E aí ele vai até a estante, tira uma pasta de plástico com o Diário Oficial de novembro de noventa e seis dentro — porque ele guardou, porque ele é chato, porque advogado de ilha não faz nada —, e procura, e acha.',
     '**"Art. 4º. O acervo técnico e científico do Instituto ora extinto fica incorporado ao patrimônio da Comissão de Bem-Estar Pokémon, com obrigação de guarda e acesso público."**',
@@ -1333,7 +1371,7 @@ c14_entregar_comissao:{
     '"À Comissão que tem obrigação de guarda e acesso público escrita num decreto."',
     'Ele pensa.',
     '"Guarda e acesso público."',
-    '"Acesso público, Bruno. Se o acervo for incorporado formalmente, qualquer pessoa pode pedir vista. Qualquer pessoa. Inclusive jornalista, inclusive advogado de quem for processar, inclusive um moleque com caderno."',
+    '"Acesso público, Burke. Se o acervo for incorporado formalmente, qualquer pessoa pode pedir vista. Qualquer pessoa. Inclusive jornalista, inclusive advogado de quem for processar, inclusive {um moleque|uma menina} com caderno."',
     'Ele olha as cinco caixas por muito tempo.',
     '"Eu sempre achei que entregar era perder."',
     'Ele começa a empilhar.',
@@ -1354,6 +1392,8 @@ c14_entregar_comissao:{
 },
 
 c14_chamou_ivone_cinnabar:{
+  falante:'Dra. Cordell',
+  vozes:['N','Blaine','N','Blaine','N','N','N','Blaine','N'],
   texto:[
     'A Dra. Cordell chega no ferry de sábado, porque não tem outro jeito de chegar em Cinnabar.',
     'Ela passa dois dias na sala do ginásio lendo, com Blaine trazendo café e sem falar nada, e os dois velhos se dando bem de um jeito imediato e chato de assistir.',
@@ -1367,7 +1407,7 @@ c14_chamou_ivone_cinnabar:{
     'Ela tira os óculos.',
     '"E aí, quando eles responderem, o acervo vira público, e aí eu publico os cadernos como documento público e não como vazamento."',
     'Ela olha os dois.',
-    '"E aí ninguém pode dizer que eu roubei, ninguém pode dizer que o Bruno reteve, e ninguém pode dizer que o Amauri era um maluco que escrevia caderno."',
+    '"E aí ninguém pode dizer que eu roubei, ninguém pode dizer que o Burke reteve, e ninguém pode dizer que o Ansel era um maluco que escrevia caderno."',
     'Blaine olha pra ela por um tempo.',
     '"A senhora é bem pior que eu."',
     '"Eu sou muito pior que o senhor."'
@@ -1394,7 +1434,7 @@ c14_ficou_os_dois_dias:{
     'É a coisa mais chata que você já assistiu na vida.',
     'E em algum momento da madrugada de domingo você entende que é isso.',
     'Que é essa a coisa.',
-    'Que tudo que você viu em treze capítulos — o armazém, o pregão, a reserva, o andar onze — não vai ser desfeito por ninguém entrando em lugar nenhum de madrugada.',
+    'Que tudo que você viu desde que saiu de casa — o armazém, o pregão, a reserva, o andar onze — não vai ser desfeito por ninguém entrando em lugar nenhum de madrugada.',
     'Vai ser desfeito por dois velhos brigando sobre ordem de publicação numa sala de quatro por quatro dentro de um vulcão, com café ruim.',
     'E que isso é péssimo de assistir e é a única coisa que funciona.'
   ],
@@ -1402,7 +1442,7 @@ c14_ficou_os_dois_dias:{
       rep:{eixo:'bom',delta:4,motivo:'Ficou os dois dias e entendeu o que estava vendo'},
       moral:15, hp:2,
       registrar:'Passou dois dias assistindo dois velhos montarem o caso.',
-      presagio:'É péssimo de assistir e é a única coisa que funciona. Não esqueça isso no último capítulo.'},
+      presagio:'É péssimo de assistir e é a única coisa que funciona. Não esqueça isso quando chegar a sua vez.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
@@ -1416,13 +1456,13 @@ c14_pegou_caderno:{
     'Você põe o caderno 7 na mochila.',
     d=>d.flags.conheceu_blaine ? 'Blaine não impede. Ele olha a mochila fechar e diz uma coisa só:\n"Devolve."\n"Quando?"\n"Quando não precisar mais. Você vai saber."' :
        'Ninguém te vê pegar, e é justamente por isso que você fica com uma sensação ruim na garganta pelo resto do dia.',
-    'O caderno pesa oitocentos gramas e você vai sentir esses oitocentos gramas em cada capítulo daqui pra frente.'
+    'O caderno pesa oitocentos gramas e você vai sentir esses oitocentos gramas em cada cidade daqui pra frente.'
   ],
   ef:{flag:['pegou_caderno','tem_o_caderno_sete'],
       itens:{'Caderno 7 do Dr. Fuji':1},
       rep:{eixo:'bom',delta:2,motivo:'Ficou com o documento que explica tudo'},
       registrar:'Levou o caderno 7 do Dr. Fuji.',
-      presagio:'"Você vai saber." Guarde — vai ter um momento.'},
+      presagio:'Oitocentos gramas. Você vai saber a hora de tirar da mochila.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
@@ -1491,6 +1531,8 @@ c14_desafio_blaine:{
 },
 
 c14_venceu_blaine:{
+  falante:'Blaine',
+  vozes:['N','N','N','N','N'],
   texto:[
     'Você vence.',
     'Ele senta na beirada da marcação, com a toalha no pescoço, e demora pra recuperar o fôlego de um jeito que assusta um pouco.',
@@ -1517,6 +1559,8 @@ c14_venceu_blaine:{
 },
 
 c14_perdeu_blaine:{
+  falante:'Blaine',
+  vozes:['N','N','N','N'],
   texto:[
     'Você perde, e ele para no segundo em que dá pra parar, e não deixa passar disso.',
     '"Pronto. Chega."',
@@ -1568,7 +1612,7 @@ c14_lab:{
 
 c14_fotografou_lab:{
   texto:[
-    'Você fotografa o que um perito fotografaria, porque você já viu perito trabalhar num capítulo e prestou atenção.',
+    'Você fotografa o que um perito fotografaria, porque você já viu perito trabalhar e prestou atenção.',
     'As vidraças estufadas pra fora, em três ângulos. Os batentes tostados por dentro. O retângulo de cinza clara no ponto de origem. A régua da sua mochila do lado do retângulo, pra dar escala.',
     'E a fechadura da porta da ala leste, que está trancada por fora.',
     'Trancada por fora.',
@@ -1592,7 +1636,7 @@ c14_subsolo:{
   texto:[
     'O subsolo não queimou, porque concreto não queima.',
     'A escada desce nove metros e no fim tem um corredor com uma linha de fita amarela no chão, desbotada, com a borda descolando.',
-    'A fita que a Sra. Wilma nunca passou em dezoito anos.',
+    d=>d.flags.conheceu_selma ? 'A fita que a Sra. Wilma nunca passou em dezoito anos.' : 'A fita onde quem limpava esse prédio parava, todo dia, por anos.',
     'Você passa.',
     'A sala do tanque tem trinta metros por quinze e nove de pé-direito, e não tem tanque.',
     'Tem o buraco onde ele estava: um poço de concreto de quatro metros de diâmetro e três de profundidade, com a estrutura de fixação arrancada e o aço torcido pra fora.',
@@ -1606,7 +1650,7 @@ c14_subsolo:{
       instabilidade:2, moral:-12,
       rep:{eixo:'bom',delta:3,motivo:'Passou da fita amarela'},
       registrar:'No subsolo, o tanque foi arrancado de dentro para fora. Há duas marcas de mãos na borda do poço.',
-      presagio:'Marca de mão de gente adulta. Não de mão de Mewtwo.'},
+      presagio:'Marca de mão de gente adulta. De gente.'},
   escolhas:[
     {texto:'Olhar as marcas de perto.', vai:'c14_as_maos'},
     {texto:'Procurar o caderno na mesa da parede.', vai:'c14_mesa_do_subsolo'},
@@ -1629,7 +1673,7 @@ c14_as_maos:{
     'E depois ele se debruçou e olhou pra dentro.'
   ],
   ef:{flag:['entendeu_as_maos'],
-      rep:{eixo:'bom',delta:4,motivo:'Ficou agachado até entender'},
+      rep:{eixo:'bom',delta:4,motivo:'Ficou agachad{o|a} até entender'},
       moral:-18, instabilidade:1,
       registrar:'As marcas de mão na borda do poço são do Dr. Fuji, depois de abrir o tanque.',
       presagio:'Ele abriu, e depois olhou pra dentro. Guarde a ordem.'},
@@ -1670,6 +1714,8 @@ c14_mesa_do_subsolo:{
 },
 
 c14_tokuda:{
+  falante:'Sr. Berto',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Numa ilha de setecentas pessoas, achar o Sr. Berto leva quarenta minutos e três perguntas.',
     'Ele tem oitenta e um anos, mora com a filha, e está sentado na varanda vendo a rua, do jeito que velho de ilha faz.',
@@ -1699,6 +1745,8 @@ c14_tokuda:{
 },
 
 c14_pra_onde_ele_foi:{
+  falante:'Sr. Berto',
+  vozes:['P','N','P','N','N','N','N','N','N'],
   texto:[
     '"Pra onde ele foi?"',
     'O Sr. Berto aponta com a bengala.',
@@ -1730,6 +1778,8 @@ c14_pra_onde_ele_foi:{
 },
 
 c14_correu_pro_blaine:{
+  falante:'Blaine',
+  vozes:['N','P','N','N'],
   texto:[
     'Você atravessa Cinnabar correndo, que é uma coisa que ninguém faz em Cinnabar, e quatro pessoas te veem correr e uma delas grita perguntando se aconteceu alguma coisa.',
     'Você acha o Blaine na varanda da casa do Fuji, na cadeira de balanço, com a garrafa térmica.',
@@ -1952,7 +2002,7 @@ c14_levou_a_mochila:{
       itens:{'Mochila de lona do Dr. Fuji':1},
       rep:{eixo:'bom',delta:2,motivo:'Trouxe de volta o que estava numa borda de cratera'},
       registrar:'Levou a mochila do Dr. Fuji da borda da cratera.',
-      presagio:'"Pra ilha. Não pra mim." Ele já pensou nisso.'},
+      presagio:'A mochila é da ilha. Alguém aqui sabe onde ela fica.'},
   escolhas:[
     {texto:'Descer e entregar na escola.', vai:'c14_escola'},
     {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
@@ -1962,6 +2012,8 @@ c14_levou_a_mochila:{
 },
 
 c14_escola:{
+  falante:'a diretora da escola',
+  vozes:['N','P','N','N','P'],
   texto:[
     'A Escola Municipal de Cinnabar tem noventa e um alunos, três salas e uma sala de memória com uma vitrine de vidro e três coisas dentro: uma pedra-pomes grande, uma foto da inauguração em mil novecentos e sessenta e um, e um remo.',
     'A diretora tem trinta e poucos anos e estudou nessa escola.',
@@ -1975,7 +2027,7 @@ c14_escola:{
     d=>d.flags.leu_o_dia_252 ? '"Ele era. Ele explicou o que é uma escola pra uma coisa que nunca tinha visto uma."' : '"Pelo que eu li, era."',
     'Ela põe a mochila na vitrine, ao lado do remo, e fecha.',
     'E escreve numa etiqueta de papel, com caneta, e cola no vidro:',
-    '**"Mochila do Prof. Amauri Fuji, que dava aula de vulcão aqui."**',
+    '**"Mochila do Prof. Ansel Fuji, que dava aula de vulcão aqui."**',
     'Professor.',
     'Ela escreveu professor.'
   ],
@@ -2101,7 +2153,7 @@ c14_soltou_moltres:{
     'Você abre a bola na mesma pedra onde ele estava.',
     'Ele sai e não vai embora na hora. Fica na pedra, no mesmo lugar, na mesma posição, como se nada tivesse acontecido — e as fumarolas voltam a soltar vapor em menos de um minuto, uma por uma.',
     'E depois ele vira a cabeça e olha você.',
-    'E é um olhar diferente do de antes, e você vai passar uns capítulos tentando decidir se o que mudou foi pra melhor ou pra pior.'
+    'E é um olhar diferente do de antes, e você vai passar um bom tempo tentando decidir se o que mudou foi pra melhor ou pra pior.'
   ],
   ef:{flag:'soltou_moltres', limpaFlag:'capturou_moltres',
       executar:d=>{
@@ -2138,6 +2190,8 @@ c14_desceu:{
 },
 
 c14_fim:{
+  falante:'o homem de terno',
+  vozes:['N','N'],
   texto:[
     'No porto, o ferry de sábado está atrasado quarenta minutos e tem um homem de terno sentado no banco de espera.',
     'Só ele, e você, e o mar.',
@@ -2204,6 +2258,8 @@ c14_viu_o_tanque:{
 },
 
 c14_selma_contou:{
+  falante:'Sra. Wilma',
+  vozes:['P','N','P','N','N','P','N','N','P','N','P','N','N'],
   texto:[
     '"A senhora contou isso pra alguém?"',
     '"Contei pro meu marido em noventa e cinco e ele disse que eu tinha visto errado."',
@@ -2211,8 +2267,8 @@ c14_selma_contou:{
     '"E depois pra mais ninguém, porque contar uma coisa dessas duas vezes e ouvir duas vezes que eu vi errado ia ser demais."',
     'Ela pega a xícara de volta e segura com as duas mãos.',
     '"Você é {o segundo|a segunda}."',
-    '"Segundo?"',
-    '"O primeiro foi o Doutor Bruno, em noventa e sete."',
+    '"{Segundo|Segunda}?"',
+    '"O primeiro foi o Doutor Burke, em noventa e sete."',
     'Ela olha a rua.',
     '"Ele bateu aqui uma noite, sentou nesse degrau, e ficou umas duas horas me perguntando se eu tinha visto alguma coisa em todos aqueles anos de limpeza."',
     '"E a senhora contou?"',
@@ -2246,14 +2302,14 @@ c14_incendio_da_semana:{
     '"Que horas?"',
     '"Três e pouco da manhã de sábado. Eram dois homens e um carro alugado."',
     '"E a senhora chamou o bombeiro?"',
-    '"Cinnabar não tem bombeiro, meu bem. Tem uma brigada de sete voluntários e eu liguei pro João da brigada, e o João chegou em onze minutos, que é rápido."',
+    '"Cinnabar não tem bombeiro, meu bem. Tem uma brigada de sete voluntários e eu liguei pro Joel da brigada, e o Joel chegou em onze minutos, que é rápido."',
     'Ela ajeita a xícara.',
-    '"E os dois homens já tinham ido embora, e o fogo já tava só na ala leste, e o João entrou e apagou em quarenta minutos com mangueira de jardim porque a ala leste é pequena."',
+    '"E os dois homens já tinham ido embora, e o fogo já tava só na ala leste, e o Joel entrou e apagou em quarenta minutos com mangueira de jardim porque a ala leste é pequena."',
     'Ela olha pra você.',
     '"Eles não queriam queimar o prédio, meu bem. Eles queriam queimar uma sala."'
   ],
   ef:{flag:['selma_viu_o_incendio','sabe_que_foi_forjado'],
-      npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Viu os dois homens e o carro alugado às 3h de sábado, e chamou o João da brigada.'},
+      npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Viu os dois homens e o carro alugado às 3h de sábado, e chamou o Joel da brigada.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a quem mora do lado'},
       registrar:'Sra. Wilma viu dois homens e um carro alugado às 3h de sábado. O fogo foi contido em 40 minutos.',
       presagio:'Eles queriam queimar uma sala. E a sala não tinha o que eles procuravam.'},
@@ -2261,7 +2317,7 @@ c14_incendio_da_semana:{
     {texto:'"A senhora sabe o nome deles?"', vai:'c14_barco_fretado'},
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
     {texto:'Ir ao laboratório ver a ala leste.', vai:'c14_lab'},
-    {texto:'Ir procurar o João da brigada.', vai:'c14_lab'}
+    {texto:'Ir procurar o Joel da brigada.', vai:'c14_lab'}
   ]
 
 }

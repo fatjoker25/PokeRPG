@@ -2355,7 +2355,7 @@ c9_terceira_sim:{
 
 c9_e_legal:{
   falante:'A Terceira',
-  vozes:['P','N','E','N','N','N','N','N'],
+  vozes:['P','N','N','N','N','N','N'],
   texto:[
     '"Isso que vocês fazem é legal?"',
     'É a primeira vez na conversa que ela parece contente.',

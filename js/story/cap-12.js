@@ -1627,7 +1627,7 @@ c12_manejo:{
 
 c12_o_nico_te_procurou:{
   falante:'Diretor Quince',
-  vozes:['P','N','P','N','P','E','E','N','N','N'],
+  vozes:['P','N','P','N','P','N','N','N'],
   texto:[
     '"Um guia te procurou em março."',
     'Ele não pergunta qual guia.',

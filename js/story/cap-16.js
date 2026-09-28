@@ -343,7 +343,7 @@ c16_o_padrao:{
       rep:{eixo:'bom',delta:5,motivo:'Ordenou sessenta e um anos de papel de pão'},
       instabilidade:1,
       registrar:'O arco-íris aparece a cada 6 a 8 anos. O último foi em 1996.',
-      presagio:'Noventa e seis de novo. Guarde o ano — ele volta em todo capítulo desde Saffron.'},
+      presagio:'Noventa e seis de novo. Guarde o ano — ele volta em toda cidade desde Saffron.'},
   escolhas:[
     {texto:'"Me leva lá. Agora."', vai:'c16_travessia'},
     {texto:'"Quem mais sabe disso?"', vai:'c16_quem_sabe'},
@@ -1405,7 +1405,7 @@ c16_va_descer:{
       rep:{eixo:'bom',delta:7,motivo:'Mandou um chefe de expedição descer'},
       moral:20, instabilidade:-1,
       registrar:'A expedição vai solicitar vistoria presencial ao andar 11 — para colecionar indeferimentos.',
-      presagio:'Oito meses de indeferimento por escrito valem mais que a vistoria. Todo mundo nesse jogo aprendeu isso sozinho.'},
+      presagio:'Oito meses de indeferimento por escrito valem mais que a vistoria. Todo mundo nessa história aprendeu isso sozinho.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
     {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze'},
