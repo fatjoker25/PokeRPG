@@ -44456,12 +44456,14 @@ c12_ab_de_cracha:{
       return `A recepção da Zona Safári tem uma catraca pra visitante e uma porta lateral com interfone pra quem não é visitante, e o seu crachá de ${c ? c.nome : 'serviço'} te põe na porta lateral.`;
     },
     'Do lado de dentro não é a reserva. É um escritório: quatro mesas, dois computadores, um mapa mural de nove mil hectares com alfinete colorido.',
-    'Uma mulher de uns cinquenta anos levanta de uma das mesas e vem te receber com a mão estendida e o nome já pronto.',
-    fala('Auditora Brill', 'Brill. Auditoria de manejo.'),
+    d=>d.flags.conheceu_prado
+      ? 'A mulher que levanta de uma das mesas é a da prancheta do pregão de Celadon, e ela te reconhece antes de você reconhecer ela.'
+      : 'Uma mulher de uns cinquenta anos levanta de uma das mesas e vem te receber com a mão estendida e o nome já pronto.',
+    d=>fala('Auditora Brill', d.flags.conheceu_prado ? 'Brill. Hoje é auditoria de manejo.' : 'Brill. Auditoria de manejo.'),
     d=>fala(d.jogador.nome, 'Auditoria?'),
     fala('Auditora Brill', 'Eu chego antes de vocês e saio depois. É o serviço.'),
     'Ela olha o seu crachá, depois a sua cara, e faz a conta da sua idade em silêncio.',
-    fala('Auditora Brill', 'Você é novo. Quanto tempo de casa?'),
+    fala('Auditora Brill', 'Você é {novo|nova}. Quanto tempo de casa?'),
     'A resposta honesta é constrangedora e você dá ela mesmo assim.'
   ],
   ef:{flag:'conheceu_a_nishino',
@@ -44653,17 +44655,19 @@ c12_marido:{
 },
 
 c12_planilha_errada:{
+  falante:'Sr. Zane',
+  vozes:['P','N','P','N','N','N','P','P','N','P','N'],
   texto:[
     '"E se a planilha estiver errada?"',
     'Ele ri primeiro. Depois para de rir.',
     '"Como assim errada?"',
     '"Setenta e um. A reserva tinha o mesmo tamanho em setenta e um?"',
-    '"Tinha mais. Em setenta e um ia até o rio, e o rio hoje tá fora da cerca. Recuaram a cerca em oitenta e cinco por causa da estrada."',
+    '"Tinha menos. Em setenta e um ia só até o córrego. A fazenda da beira do rio entrou na reserva em oitenta e cinco, quando o dono morreu sem herdeiro."',
     'Silêncio.',
-    '"Então a área diminuiu e a conta não mudou."',
+    '"Então a área aumentou e a conta não mudou."',
     'Ele olha a televisão desligada.',
-    '"Se a área diminuiu e a conta não mudou, a conta tá dizendo que cabe mais gente do que cabe."',
-    '"Não." Você fala devagar, porque você mesm{o|a} está entendendo enquanto fala. "A conta tá dizendo que cabe menos. Se a planilha é de uma área maior e a área encolheu, a densidade real ficou maior que a planilha prevê. Aí todo ano a planilha acusa excedente."',
+    '"E isso quer dizer o quê?"',
+    '"Quer dizer que a conta acha que cabe menos do que cabe." Você fala devagar, porque você mesm{o|a} está entendendo enquanto fala. "O censo conta os bichos de nove mil hectares e a planilha divide pela área de setenta e um, que é menor. A densidade dá mais alta do que é. Aí todo ano a planilha acusa excedente."',
     '"Todo ano."',
     '"Todo ano."',
     'Sr. Zane fica muito quieto.',
@@ -44673,7 +44677,7 @@ c12_planilha_errada:{
       rep:{eixo:'bom',delta:5,motivo:'Desmontou trinta anos de política pública num fundo de padaria'},
       moral:-10, instabilidade:1,
       npc:{nome:'Sr. Zane', opiniao:5, memoria:'Descobriu com você que a planilha que justificou dezesseis anos de captura estava errada desde 1985.'},
-      registrar:'A cerca recuou em 1985 e a planilha de 1971 nunca foi refeita: o "excedente" é um erro de cálculo.',
+      registrar:'A reserva cresceu em 1985 e a planilha de 1971 nunca foi refeita: o "excedente" é um erro de cálculo.',
       presagio:'Todo ano acusa excedente. Todo ano. Não tem vilão nessa conta.'},
   escolhas:[
     {texto:'"Pra onde vai o excedente?"', vai:'c12_pra_onde_vai'},
@@ -44711,6 +44715,8 @@ c12_pra_onde_vai:{
 },
 
 c12_vandir_setor7:{
+  falante:'Sr. Zane',
+  vozes:['P','N','N','P','N','N','N','N'],
   texto:[
     '"Me fala do setor 7."',
     '"Setor 7 era pasto." Ele não hesita. "Pasto degradado de uma fazenda que virou reserva em sessenta e nove. A gente usava como área de manobra."',
@@ -44734,6 +44740,8 @@ c12_vandir_setor7:{
 },
 
 c12_quem_entra:{
+  falante:'Sr. Zane',
+  vozes:['P','N','P','N','P','N','P','N','N','N'],
   texto:[
     '"Quem entra e sai do setor 7, então?"',
     'Ele coça o joelho de novo, que é o gesto que ele faz quando está prestes a dizer uma coisa que não queria.',
@@ -44760,6 +44768,8 @@ c12_quem_entra:{
 },
 
 c12_vandir_soltura:{
+  falante:'Sr. Zane',
+  vozes:['P','N','P','N','P','N','N','N'],
   texto:[
     '"Você levaria a soltura de volta?"',
     'A pergunta pega ele num lugar que nenhuma outra pegou.',
@@ -44840,6 +44850,8 @@ c12_koga_reserva:{
 },
 
 c12_koga:{
+  falante:'Koga',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Koga te recebe na varanda dos fundos, sentado no chão de tábua, com chá e sem cerimônia nenhuma.',
     'Ele é mais velho do que as fotos sugerem e muito mais quieto.',
@@ -44862,7 +44874,7 @@ c12_koga:{
       registrar:'A retirada anual da Zona Safári subiu de 130 para 240 em seis anos.',
       presagio:'"Alguém está enchendo a reserva para poder esvaziar." Guarde as duas hipóteses.'},
   escolhas:[
-    {texto:'"A planilha é de 1971 e a cerca recuou em 85."', vai:'c12_koga_planilha', cond:d=>!!d.flags.entendeu_a_conta},
+    {texto:'"A planilha é de 1971 e a reserva cresceu em 85."', vai:'c12_koga_planilha', cond:d=>!!d.flags.entendeu_a_conta},
     {texto:'"Me dá o relatório."', vai:'c12_koga_relatorio'},
     {texto:'"Como assim enchendo a reserva?"', vai:'c12_enchendo'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c12_desafio_koga'}
@@ -44870,13 +44882,15 @@ c12_koga:{
 },
 
 c12_koga_planilha:{
+  falante:'Koga',
+  vozes:['P','N','P','N'],
   texto:[
-    '"A planilha é de setenta e um. E a cerca recuou até a estrada em oitenta e cinco."',
+    '"A planilha é de setenta e um. E a reserva ganhou a fazenda do rio em oitenta e cinco."',
     'Koga não se move por uns cinco segundos.',
     'Depois ele levanta, entra na casa, e volta com uma pasta de papel pardo amarrada com barbante — não um arquivo, uma pasta de verdade, dessas que gente que lê guarda.',
     'Ele abre no chão da varanda e procura, e acha, e vira pra você.',
     'É o anexo técnico do relatório. E na primeira página do anexo, no campo "área de referência", está escrito:',
-    '**9.840 ha (ref. levantamento 1971)**',
+    '**8.160 ha (ref. levantamento 1971)**',
     'E a reserva hoje tem nove mil.',
     'Oitocentos e quarenta hectares de diferença, usados numa conta de densidade populacional, todo ano, por quinze anos.',
     'Koga fecha a pasta com cuidado.',
@@ -44889,7 +44903,7 @@ c12_koga_planilha:{
       npc:{nome:'Koga', opiniao:7, memoria:'Você mostrou a ele o erro de área que ele não conferiu em vinte e três leituras.'},
       rep:{eixo:'bom',delta:6,motivo:'Provou documentalmente que o excedente é um erro de planilha'},
       instabilidade:1,
-      registrar:'O relatório usa área de referência de 9.840 ha; a reserva tem 9.000. O excedente é erro de cálculo.',
+      registrar:'O relatório usa área de referência de 8.160 ha; a reserva tem 9.000. O excedente é erro de cálculo.',
       presagio:'Oitocentos e quarenta hectares de diferença. Quinze anos. Ninguém confere a área.'},
   escolhas:[
     {texto:'"Então a gente derruba o relatório."', vai:'c12_derrubar_relatorio'},
@@ -44919,7 +44933,7 @@ c12_derrubar_relatorio:{
       rep:{eixo:'bom',delta:5,motivo:'Conseguiu que o caminho lento e o caminho rápido andassem juntos'},
       moral:12,
       registrar:'Koga convocou reunião extraordinária do conselho: onze dias.',
-      presagio:'"A gente é bem complementar." Anota — é a primeira vez no jogo que alguém divide tarefa com você de igual pra igual.'},
+      presagio:'"A gente é bem complementar." Anota — é a primeira vez na viagem que alguém divide tarefa com você de igual pra igual.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Pia antes.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -44929,6 +44943,8 @@ c12_derrubar_relatorio:{
 },
 
 c12_enchendo:{
+  falante:'Koga',
+  vozes:['P','N','N','P','N','N','P','N','P','N','N'],
   texto:[
     '"Como assim enchendo a reserva?"',
     '"Solturas."',
@@ -45013,7 +45029,7 @@ c12_procurou_o_nome:{
       rep:{eixo:'bom',delta:6,motivo:'Ligou a reserva de Fuchsia ao armazém de Celadon com um número de alvará'},
       instabilidade:2, moral:-10,
       registrar:'O receptor credenciado da Zona Safári é o Armazém Geral 7 de Celadon, alvará 3.318.',
-      presagio:'Alvará 3.318. A mesma placa de esmalte. O círculo fechou e ele tem quatro anos de idade.'},
+      presagio:'Alvará 3.318. A mesma placa de esmalte. O círculo fechou e ele tem três anos de idade.'},
   escolhas:[
     {texto:'"Então a gente descredencia."', vai:'c12_descredenciar'},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
@@ -45101,7 +45117,7 @@ c12_desafio_koga:{
 
 c12_passeio:{
   texto:[
-    'O guia tem vinte e dois anos, uniforme cáqui com o nome bordado — NICO — e um texto decorado que ele recita há quatro meses e que ainda não ficou automático, porque ele ainda olha pra ver se as pessoas estão gostando.',
+    'O guia tem vinte e dois anos, uniforme cáqui com o nome bordado — ORIN — e um texto decorado que ele recita há quatro meses e que ainda não ficou automático, porque ele ainda olha pra ver se as pessoas estão gostando.',
     'O grupo tem onze pessoas: um casal de idosos, uma família com duas crianças, três adolescentes e você.',
     'O passeio é honesto e bonito, e essa é a parte que complica tudo.',
     'Você vê Nidorino em bando, na borda de um capinzal, a uns quarenta metros. Vê um Kangaskhan com filhote, e o Orin faz todo mundo parar e falar baixo, e a criança de seis anos chora de emoção e o pai fica com vergonha e o Orin diz "pode chorar, eu chorei na primeira vez".',
@@ -45124,6 +45140,8 @@ c12_passeio:{
 },
 
 c12_ficou_pra_tras:{
+  falante:'Guia Orin',
+  vozes:['N','N'],
   texto:[
     'Você fica pra trás na curva e deixa o grupo seguir, e ninguém conta cabeça num passeio de onze pessoas até o fim.',
     'Você anda o trilho por setecentos metros.',
@@ -45132,7 +45150,7 @@ c12_ficou_pra_tras:{
     'É o Orin.',
     'Ele está branco e está ofegante de ter corrido setecentos metros, e a primeira coisa que ele faz não é te repreender.',
     'É te puxar pra trás de uma moita.',
-    '"Fica quieto", ele sussurra. "Tem plantão."'
+    '"Fica quiet{o|a}", ele sussurra. "Tem plantão."'
   ],
   ef:{flag:['quase_viu_o_setor7','nico_te_salvou'],
       npc:{nome:'Guia Orin', opiniao:3, memoria:'Correu setecentos metros para te puxar de trás de uma moita antes do plantão te ver.'},
@@ -45147,6 +45165,8 @@ c12_ficou_pra_tras:{
 },
 
 c12_guia_perguntado:{
+  falante:'Guia Orin',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Pra onde vai esse trilho?"',
     'Ele congela por um segundo e meio. Os outros dez turistas não percebem porque estão tirando foto de um Doduo.',
@@ -45171,6 +45191,8 @@ c12_guia_perguntado:{
 },
 
 c12_nico:{
+  falante:'Guia Orin',
+  vozes:['N','N','N','P','N','N','N'],
   texto:[
     'Você espera o Orin na saída dos funcionários, às dezoito e quarenta.',
     'Ele te vê e quase volta pra dentro, e não volta porque a porta já fechou atrás dele e reabrir daria mais na vista.',
@@ -45198,6 +45220,8 @@ c12_nico:{
 },
 
 c12_protegeu_nico:{
+  falante:'Guia Orin',
+  vozes:['P','N','P','N','N','N','N','N'],
   texto:[
     '"Eu não vou falar seu nome pra ninguém."',
     'Ele para de falar rápido pela primeira vez.',
@@ -45303,8 +45327,8 @@ c12_pediu_desculpa_nico:{
     'Você anda Fuchsia inteira à noite procurando e acha ele nos fundos da casa da tia, sentado num degrau, sem lanterna, no escuro.',
     '"Desculpa."',
     'Ele não olha pra cima.',
-    '"Você tava certo."',
-    '"Eu tava certo e eu não devia ter falado."',
+    '"Você tava cert{o|a}."',
+    '"Eu tava cert{o|a} e eu não devia ter falado."',
     'Ele ri sem nenhum humor.',
     '"Essas duas coisas juntas são a coisa mais adulta que alguém me falou esse ano, e você tem quinze anos, e isso me deixa muito mal."',
     'Ele dá um espaço no degrau com o quadril e você senta.',
@@ -45385,6 +45409,8 @@ c12_a_conta_da_yara:{
 },
 
 c12_triagem:{
+  falante:'Dra. Pia',
+  vozes:['P','N','N','P','N','P','N','P','P','N','P','N','P','N'],
   texto:[
     '"O que é triagem?"',
     '"Separar por destino."',
@@ -45646,6 +45672,8 @@ c12_o_dia_inteiro:{
 },
 
 c12_parou_a_triagem:{
+  falante:'Peão do setor 7',
+  vozes:['P','N','N','N'],
   texto:[
     'Você para.',
     'Larga o animal com cuidado na baia — você tem esse cuidado, mesmo agora — e fica de pé no meio do setor 7 e fala alto o suficiente pros cinco ouvirem.',
@@ -45674,9 +45702,11 @@ c12_parou_a_triagem:{
 },
 
 c12_arrumou_onde:{
+  falante:'Peão do setor 7',
+  vozes:['P','N','P','E','E','N','P'],
   texto:[
     '"Então anota. Eu arrumo onde."',
-    'Você tira o seu caderno da mochila — o caderno em que você anota tudo desde o capítulo um, o que tem a fita do registro de porta, o que tem os vinte e nove nomes, o que já viu coisa demais.',
+    'Você tira o seu caderno da mochila — o caderno em que você anota tudo desde que saiu de casa, o que já viu coisa demais.',
     'E arranca as folhas do meio, em branco, e dá pra ele.',
     'Ele olha as folhas.',
     '"Eu não escrevo bem."',
@@ -45752,12 +45782,14 @@ c12_diretor:{
   escolhas:[
     {texto:'"O que é área de manejo?"', vai:'c12_manejo'},
     {texto:'"O Orin te procurou em março."', vai:'c12_o_nico_te_procurou', cond:d=>!!d.flags.nico_falou},
-    {texto:'"A planilha é de 1971 e a cerca recuou em 85."', vai:'c12_planilha_pro_diretor', cond:d=>!!d.flags.entendeu_a_conta},
+    {texto:'"A planilha é de 1971 e a reserva cresceu em 85."', vai:'c12_planilha_pro_diretor', cond:d=>!!d.flags.entendeu_a_conta},
     {texto:'"Eu sei o que tem lá." Blefar.', vai:'c12_blefe_diretor'}
   ]
 },
 
 c12_manejo:{
+  falante:'Diretor Quince',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     'A cordialidade dele não some. Ela fica exatamente igual, e é isso que muda tudo.',
     '"Manejo é o controle populacional de uma reserva fechada."',
@@ -45782,6 +45814,8 @@ c12_manejo:{
 },
 
 c12_o_nico_te_procurou:{
+  falante:'Diretor Quince',
+  vozes:['P','N','P','N','P','E','E','N','N','N'],
   texto:[
     '"Um guia te procurou em março."',
     'Ele não pergunta qual guia.',
@@ -45795,7 +45829,7 @@ c12_o_nico_te_procurou:{
     'Assinado por ele.',
     'E grampeada atrás, a resposta, de vinte e oito de março, meia página:',
     '**"Indeferido. Matéria já apreciada na 41ª Reunião Ordinária."**',
-    '"Eu apurei", ele diz. "Eu apuro todo ano, desde noventa e sete. Eu tenho catorze desses."',
+    '"Eu apurei", ele diz. "Eu apuro desde noventa e sete, toda vez que alguém me procura. Eu tenho catorze desses."',
     'Ele fecha a pasta.',
     '"Eu só não conto pro rapaz, porque contar pro rapaz que eu tentei e não deu é pior do que ele achar que eu não liguei."'
   ],
@@ -45814,6 +45848,8 @@ c12_o_nico_te_procurou:{
 },
 
 c12_conta_pro_nico:{
+  falante:'Diretor Quince',
+  vozes:['P','N','P','N','P'],
   texto:[
     '"Conta pro Orin."',
     '"Pra quê?"',
@@ -45822,7 +45858,7 @@ c12_conta_pro_nico:{
     '"E se eu contar, ele descobre que o lugar onde ele trabalha é pior do que ele pensava. Ele pensava que era um homem. É uma estrutura."',
     '"Ele já sabe que é uma estrutura. Ele só acha que você faz parte dela de má vontade."',
     'Silêncio.',
-    'Ele levanta, abre a porta da sala, e chama a secretária pelo nome, e pede pra chamar o guia Nicolau.',
+    'Ele levanta, abre a porta da sala, e chama a secretária pelo nome, e pede pra chamar o guia Orin.',
     'Você sai antes do Orin chegar, porque essa conversa não é sua.',
     'Da janela do corredor você vê os dois na sala por dezenove minutos, e o diretor mostrando a pasta, e o Orin sentado com as duas mãos no rosto.'
   ],
@@ -45841,13 +45877,15 @@ c12_conta_pro_nico:{
 },
 
 c12_planilha_pro_diretor:{
+  falante:'Diretor Quince',
+  vozes:['P','N'],
   texto:[
-    '"A planilha é de setenta e um. E a cerca recuou até a estrada em oitenta e cinco."',
+    '"A planilha é de setenta e um. E a reserva ganhou a fazenda do rio em oitenta e cinco."',
     'A cordialidade some.',
     'Não vira raiva. Vira outra coisa: ele fica muito quieto e olha a planta baixa emoldurada atrás dele, sem virar o corpo, só os olhos.',
     'Depois ele levanta, tira a planta da parede — com cuidado, com as duas mãos, do jeito que se tira uma coisa que a gente mandou emoldurar — e põe em cima da mesa.',
     'No canto inferior direito da planta, em letra pequena de desenhista técnico:',
-    '**LEVANTAMENTO AEROFOTOGRAMÉTRICO — 1971 — 9.840 ha**',
+    '**LEVANTAMENTO AEROFOTOGRAMÉTRICO — 1971 — 8.160 ha**',
     'Está escrito ali. Na parede da sala dele. Há trinta e um anos. Do lado da cabeça dele, todo dia, em todas as fotos.',
     'Ele senta.',
     'E fica uns dois minutos sem falar nada, e você deixa.',
@@ -45902,6 +45940,8 @@ c12_suspende:{
 },
 
 c12_se_eu_abrir:{
+  falante:'Diretor Quince',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"E se eu abrir o curral hoje?"',
     'Ele põe a caneta na mesa.',
@@ -45931,6 +45971,8 @@ c12_se_eu_abrir:{
 },
 
 c12_pergunta_dificil:{
+  falante:'Diretor Quince',
+  vozes:['P','N','N','N','N','N','N','N'],
   texto:[
     '"E se a reserva fosse maior?"',
     'Ele para. É a primeira vez que ele para.',
@@ -46017,6 +46059,8 @@ c12_quem_e_linha_verde:{
 },
 
 c12_papelada:{
+  falante:'Diretor Quince',
+  vozes:['E','N'],
   texto:[
     'Ele te dá.',
     'Uma pasta de dezenove anos de ofícios, protocolos, respostas padrão e catorze pedidos de apuração indeferidos.',
@@ -46024,8 +46068,7 @@ c12_papelada:{
     'A última folha é de fevereiro deste ano: "Solicitação em análise."',
     '"Isso não me inocenta", ele diz, entregando a pasta com as duas mãos.',
     '"Isso só explica. Eu sei a diferença."',
-    'É a segunda vez nesta jornada que alguém te diz exatamente essa frase.',
-    'A primeira foi o capitão do S.S. Anne.',
+    d=>d.flags.tem_as_comunicacoes ? 'Um capitão de navio te disse quase isso, com outras palavras, numa ponte de comando.' : '',
     'Você começa a achar que é uma frase que as pessoas aprendem quando chegam numa certa idade dentro de uma certa estrutura.'
   ],
   ef:{flag:['pasta_do_diretor','provas_zona'],
@@ -46033,7 +46076,7 @@ c12_papelada:{
       rep:{eixo:'bom',delta:4,motivo:'Conseguiu dezenove anos de documentação da reserva'},
       npc:{nome:'Diretor Quince', opiniao:6, memoria:'Te entregou dezenove anos de papelada sabendo o que você ia fazer com ela.'},
       registrar:'Recebeu dezenove anos de ofícios sobre a Zona Safári.',
-      presagio:'"Isso só explica. Eu sei a diferença." Duas pessoas já te disseram isso.'},
+      presagio:'"Isso só explica. Eu sei a diferença." Guarde: mais gente vai te dizer isso.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
@@ -46043,6 +46086,8 @@ c12_papelada:{
 },
 
 c12_critico_do_receptor:{
+  falante:'Diretor Quince',
+  vozes:['P','N','N','P','N','N','P'],
   texto:[
     '"O receptor escreveu o critério de triagem."',
     'Ele para de mexer no papel.',
@@ -46054,7 +46099,6 @@ c12_critico_do_receptor:{
     '"Eu aprovei essa ficha em noventa e quatro porque ela veio com parecer favorável de um médico veterinário credenciado e porque eu não sou médico veterinário."',
     'Ele empurra a ficha de volta, devagar.',
     '"E a pergunta que eu não fiz em noventa e quatro é: por que o receptor tem departamento técnico?"',
-    '"Um armazém não tem departamento técnico", você diz.',
     '"Um armazém não tem departamento técnico."'
   ],
   ef:{flag:['diretor_viu_a_ficha'],
@@ -46072,6 +46116,8 @@ c12_critico_do_receptor:{
 },
 
 c12_confronto_diretor:{
+  falante:'Diretor Quince',
+  vozes:['P','N','N','P','N','N','N','N','N'],
   texto:[
     '"Isso tem outro nome."',
     '"Tem", ele concorda na hora. "Tem outro nome e o outro nome é mais honesto."',
@@ -46112,7 +46158,7 @@ c12_diretor_frio:{
     'Ele se senta.',
     '"Se soubesse, não estaria sentado na minha sala me contando. Quem sabe, vai lá."',
     'Ele toca um botão do telefone.',
-    '"Por favor, acompanhe nosso visitante até a saída."',
+    '"Por favor, acompanhe {nosso visitante|nossa visitante} até a saída."',
     'Você é acompanhad{o|a} até a saída. Educadamente, com um "obrigado pela visita" na porta.',
     'Até a saída da cidade.'
   ],
@@ -46130,6 +46176,8 @@ c12_diretor_frio:{
 /* ─────────────── O BAR, A CERCA E A NOITE ─────────────── */
 
 c12_bar:{
+  falante:'o guarda mais velho',
+  vozes:['P','N','o guarda mais novo','N','N','P','N'],
   texto:[
     'O bar de Fuchsia tem seis mesas, um freezer de sorvete que não tem sorvete, e é onde os guardas-parque bebem depois do turno.',
     'Você paga uma rodada. Isso compra vinte minutos de conversa e nada mais, e os vinte minutos começam na hora em que a garrafa chega.',
@@ -46137,7 +46185,7 @@ c12_bar:{
     'O mais velho ri sem alegria nenhuma.',
     '"Setor 7 é onde a gente aprende que não existe emprego limpo."',
     'Outro, mais novo, bate na mesa com a mão espalmada. "Fala menos."',
-    '"Fala menos por quê? O moleque já sabe. Todo mundo sabe."',
+    '"Fala menos por quê? {O moleque|A menina} já sabe. Todo mundo sabe."',
     'Ele vira o copo.',
     '"Fuchsia inteira sabe e Fuchsia inteira come do que sai de lá. A padaria, a escola, o posto. Cinquenta e dois por cento do orçamento desta cidade vem de repasse da reserva e a reserva só tem superávit por causa do setor 7."',
     '"Cinquenta e dois?"',
@@ -46155,7 +46203,7 @@ c12_bar:{
 },
 
 c12_quantos_ficam:{
-  falante:'Sr. Ulric',
+  falante:'o guarda mais velho',
   vozes:['P','N','P','N','N','P','N','N','P','N','N'],
   texto:[
     '"Quantos ficam no caminho?"',
@@ -46187,6 +46235,8 @@ c12_quantos_ficam:{
 },
 
 c12_ja_abriram:{
+  falante:'o guarda mais novo',
+  vozes:['P','N','P','N','N','P','N','P','N','o guarda mais velho','P','o guarda mais velho'],
   texto:[
     '"E ninguém nunca abriu aquele curral?"',
     'O mais novo responde antes do velho, o que é a primeira vez na conversa.',
@@ -46220,14 +46270,16 @@ c12_ja_abriram:{
 },
 
 c12_precisa_de_caminhao:{
+  falante:'o guarda mais velho',
+  vozes:['P','P','P','N','P','N','o guarda mais novo','o guarda mais novo'],
   texto:[
     '"Então eu preciso de caminhão."',
     'Os quatro olham pra você ao mesmo tempo.',
     '"Caminhão de soltura", você continua. "Com quem conheça os pontos. Pra levar longe o suficiente pra não voltar."',
     'O mais velho põe o copo na mesa com cuidado.',
-    '"A reserva tem dois caminhões de soltura parados no galpão de máquinas desde dois mil, quando cortaram a rubrica."',
+    '"A reserva tem dois caminhões de soltura parados no galpão de máquinas desde noventa e oito, quando cortaram a rubrica."',
     '"Funcionam?"',
-    '"Funcionavam em dois mil. Bateria descarregada, pneu vazio, e eu sei onde está a chave porque eu sou o guarda que confere o galpão de máquinas."',
+    '"Funcionavam em noventa e oito. Bateria descarregada, pneu vazio, e eu sei onde está a chave porque eu sou o guarda que confere o galpão de máquinas."',
     'Ele olha os outros três.',
     'O mais novo já está balançando a cabeça, mas balançando de um jeito que não é não — é o balanço de quem está fazendo conta.',
     '"Bateria a gente arruma", diz o mais novo. "Meu cunhado tem oficina."'
@@ -46247,6 +46299,8 @@ c12_precisa_de_caminhao:{
 },
 
 c12_guarda_leva:{
+  falante:'o guarda mais velho',
+  vozes:['P','N','o guarda mais novo','N','N','o guarda mais novo','N','o guarda mais novo','o guarda mais novo'],
   texto:[
     '"Algum de vocês me leva lá?"',
     'Silêncio na mesa. Longo. O suficiente pro dono do bar olhar.',
@@ -46409,7 +46463,7 @@ c12_anotou_o_caminhao:{
     'Você anota tudo: placa, horário, sentido, modelo, cor da lona e a marca do pneu.',
     'Três e vinte e dois. Sentido norte. Baú branco, lona verde, pneu recauchutado na esquerda traseira, com uma cicatriz de reparo que dá pra reconhecer de longe.',
     'É pouco.',
-    'E daqui a três capítulos vai ser exatamente o que faltava pra ligar uma coisa em outra, porque caminhão com pneu recauchutado reparado é caminhão que alguém consertou, e conserto tem nota, e nota tem CNPJ.'
+    'E um dia vai ser exatamente o que faltava pra ligar uma coisa em outra, porque caminhão com pneu recauchutado reparado é caminhão que alguém consertou, e conserto tem nota, e nota tem CNPJ.'
   ],
   ef:{flag:['placa_do_caminhao_zona','provas_zona'],
       rep:{eixo:'bom',delta:3,motivo:'Anotou quando não dava pra fazer mais nada'},
@@ -46456,7 +46510,7 @@ c12_noite_zona:{
        d.flags.tem_o_mapa_do_nico ? 'O mapa do Orin está no seu bolso, no verso de um folheto plastificado, e ele marcou os três plantões com X e a hora da ronda ao lado.' :
        d.flags.nico_junto ? 'Orin anda na sua frente e conhece cada curva, cada bebedouro e cada mourão. Ele não fala nada o caminho inteiro.' :
        d.flags.guarda_junto ? 'O guarda Kell anda na sua frente, bêbado e absolutamente seguro do caminho, e para duas vezes pra mijar e uma vez pra cuspir.' :
-       'Você anda sozinh{o|a}, guiado pelo trilho de carrinho, que brilha de leve no escuro porque metal polido brilha de leve no escuro.'
+       'Você anda sozinh{o|a}, guiad{o|a} pelo trilho de carrinho, que brilha de leve no escuro porque metal polido brilha de leve no escuro.'
   ],
   ef:{flag:'entrou_de_noite',
       presagio:'Aqui os bichos não foram ensinados a ter medo de gente. Repare no que isso implica.'},
@@ -46488,6 +46542,8 @@ c12_setor7:{
 },
 
 c12_plantao:{
+  falante:'Sr. Ulric',
+  vozes:['N','N','N'],
   texto:[
     'O plantão é um homem só, de setenta e um anos, numa cadeira de plástico encostada no contêiner de ferramentas, com um rádio ligado numa estação de Fuchsia e um copo de café.',
     'Sr. Ulric.',
@@ -46574,6 +46630,8 @@ c12_conversa_plantao:{
 },
 
 c12_jorge_ajuda:{
+  falante:'Sr. Ulric',
+  vozes:['P','N','P','N','P','N','N','N','N'],
   texto:[
     '"Então me ajuda a arrumar pra onde levar."',
     'Ele demora muito tempo pra responder, e no meio do tempo ele desliga o rádio, o que é a coisa mais séria que ele faz a noite inteira.',
@@ -46819,9 +46877,8 @@ c12_entregar:{
       if (d.flags.sabe_da_linha_verde) t.push('o mapa fundiário');
       if (d.flags.ligou_fuchsia_celadon) t.push('a ata da 41ª reunião');
       if (!t.length) return 'Você tem o que viu e mais nada, e o que você viu não é documento.';
-      return 'Você tem: ' + t.join(', ') + '.';
-    },
-    'É mais material do que a Liga juntou sobre a Zona Safári em vinte anos, e você juntou em três dias porque você perguntou às pessoas que estavam ali o tempo todo.'
+      return 'Você tem: ' + t.join(', ') + '.\nÉ mais material do que a Liga juntou sobre a Zona Safári em vinte anos, e você juntou em três dias porque você perguntou às pessoas que estavam ali o tempo todo.';
+    }
   ],
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
@@ -46919,6 +46976,8 @@ c12_ivone_zona:{
 },
 
 c12_liga_zona:{
+  falante:'a oficial da Liga',
+  vozes:['N','P','N','N','N','P','N'],
   texto:[
     'O posto da Liga mais próximo fica em Fuchsia mesmo, numa sala do prédio da prefeitura, e é uma mesa e um armário.',
     'O oficial é uma mulher de uns trinta e cinco anos que atende a região inteira sozinha.',
@@ -46978,6 +47037,8 @@ c12_barreira:{
 },
 
 c12_imprensa_zona:{
+  falante:'a editora do jornal',
+  vozes:['N','P','N','P','N','P','N','N','N'],
   texto:[
     'O jornal de Fuchsia tem três funcionários e sai duas vezes por semana, e fica numa sala com uma impressora do tamanho de um armário.',
     'A editora tem sessenta anos e é dona do jornal e escreve tudo.',
@@ -47011,7 +47072,7 @@ c12_imprensa_zona:{
 c12_saiu_a_edicao:{
   texto:[
     'Sai na quinta.',
-    'Manchete de primeira página, corpo setenta e dois, com o mapa fundiário reproduzido em meia página e um quadro comparativo de duas colunas: ÁREA DE REFERÊNCIA — 9.840 ha / ÁREA REAL — 9.000 ha.',
+    'Manchete de primeira página, corpo setenta e dois, com o mapa fundiário reproduzido em meia página e um quadro comparativo de duas colunas: ÁREA DE REFERÊNCIA — 8.160 ha / ÁREA REAL — 9.000 ha.',
     'O título é: **A CONTA ESTÁ ERRADA DESDE 1985**.',
     'Quatrocentos exemplares.',
     'Na sexta de manhã a padaria está cheia e o assunto é um só, e é um assunto de conta, e as pessoas estão discutindo hectare no balcão da padaria com pão de queijo na mão.',
@@ -47058,6 +47119,8 @@ c12_vendeu_zona:{
 },
 
 c12_devolveu_o_dinheiro:{
+  falante:'o contato da Terceira',
+  vozes:['N','P','N','N','P','N'],
   texto:[
     'Você volta ao contato e devolve os dezoito mil.',
     'Ele conta. Duas vezes. E depois liga pra alguém e fala baixo e desliga.',
@@ -47074,7 +47137,7 @@ c12_devolveu_o_dinheiro:{
       moral:5,
       npc:{nome:'A Terceira', opiniao:4, memoria:'Recusou receber de volta o pagamento pela rota do setor 7.'},
       registrar:'Tentou devolver o pagamento da Terceira. Ela recusou.',
-      presagio:'"Informação entregue não volta." Anota — vale pra tudo nesse jogo.'},
+      presagio:'"Informação entregue não volta." Anota — vale pra tudo daqui pra frente.'},
   escolhas:[
     {texto:'Voltar e abrir o curral.', vai:'c12_noite_zona'},
     {texto:'Levar tudo à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},
@@ -47120,7 +47183,7 @@ c12_fim:{
        'E o relatório de manejo do ano que vem vai pedir duzentos e noventa, porque a curva sobe.',
     'Você sai de Fuchsia pela estrada do sul, que corta a reserva por cinco quilômetros antes de sair dela.',
     'Nos cinco quilômetros, de dentro do ônibus, você vê mais Pokémon do que viu em todo o resto de Kanto somado.',
-    'Hawthorn de Nidorino na borda do capinzal. Um Kangaskhan com filhote, a uns quarenta metros da pista, que levanta a cabeça quando o ônibus passa e não sai do lugar.',
+    'Um bando de Nidorino na borda do capinzal. Um Kangaskhan com filhote, a uns quarenta metros da pista, que levanta a cabeça quando o ônibus passa e não sai do lugar.',
     'É lindo.',
     'Isso é o que ninguém te prepara pra sentir: é lindo, é bem cuidado, é a maior área protegida de Kanto, e nada disso é mentira.',
     'A próxima coisa no seu mapa é o mar.',
