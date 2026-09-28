@@ -5203,7 +5203,8 @@ const NOMES_FIXOS = {
   'a mulher da marmita':       'Thea Larkin',
   'o rapaz da enfermaria':     'Janus',
   'o colega da enfermaria':    'Pascal',
-  'a técnica de jaleco':       'Kira'
+  'a técnica de jaleco':       'Kira',
+  'a Presidente':              'Hester Colman'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
@@ -64163,7 +64164,7 @@ c20_ab_a_banca:{
     d=>fala(d.jogador.nome, 'O senhor conhece o pessoal do sétimo andar?'),
     'Ele não pergunta por que você quer saber, o que é a gentileza dos jornaleiros.',
     fala('Sr. Bram', 'Sala 704? Conheço doze deles de vista.'),
-    fala('Sr. Bram', 'Eles vêm uma vez por mês, numa terça, sempre de manhã.'),
+    fala('Sr. Bram', 'Eles vêm de quinze em quinze dias, sempre de manhã.'),
     'Ele dobra um jornal pra um cliente sem parar de falar.',
     fala('Sr. Bram', 'Compram revista, compram bala, um deles compra charuto e depois joga fora sem fumar. Eu vi ele jogar fora duas vezes.'),
     fala('Sr. Bram', 'São gente normal, {moço|moça}. É isso que eu ia te falar antes de você perguntar.')
@@ -64183,14 +64184,14 @@ c20_ab_o_que_eles_fazem:{
   texto:[
     fala('Sr. Bram', 'Sei lá. É uma sigla.'),
     'Ele coça a nuca.',
-    fala('Sr. Bram', 'Já perguntei uma vez, faz uns dez anos, pra uma delas. Ela falou que é gestão de recurso.'),
+    fala('Sr. Bram', 'Já perguntei uma vez, faz um ano e pouco, pra uma delas. Ela falou que é gestão de recurso.'),
     d=>fala(d.jogador.nome, 'Recurso de quê?'),
     fala('Sr. Bram', 'Foi exatamente o que eu perguntei.'),
-    'Ele ri, e é um riso curto de quem lembra de uma coisa engraçada de dez anos atrás.',
+    'Ele ri, e é um riso curto de quem lembra de uma coisa engraçada.',
     fala('Sr. Bram', 'Ela falou "recurso natural" e sorriu e comprou uma revista de palavra cruzada.'),
     'Ele volta a arrumar os jornais.',
     fala('Sr. Bram', 'E eu achei ótimo, porque recurso natural é árvore, é água. É coisa boa.', 'baixo'),
-    fala('Sr. Bram', 'Eu achei isso por dez anos.')
+    fala('Sr. Bram', 'Eu achei isso até você parar aqui.')
   ],
   ef:{flag:'recurso_natural',
       registrar:'Uma conselheira da 704 descreveu o trabalho como "gestão de recurso natural".',
@@ -64207,7 +64208,7 @@ c20_ab_a_mulher_da_cabeceira:{
     'Ele sabe de quem você está falando antes de você terminar.',
     fala('Sr. Bram', 'A presidente. Ela vem a pé.'),
     d=>fala(d.jogador.nome, 'A pé?'),
-    fala('Sr. Bram', 'A pé, de sacola de pano, todo mês. Ela mora a seis quadras.'),
+    fala('Sr. Bram', 'A pé, de sacola de pano, toda reunião. Ela mora a seis quadras.'),
     'Ele aponta com o queixo numa direção qualquer.',
     fala('Sr. Bram', 'Ela compra o mesmo jornal há não sei quantos anos e sempre paga contado e nunca pede troco arredondado.'),
     fala('Sr. Bram', 'Uma vez o filho dela ficou doente e ela me contou. Aí eu perguntei do menino no mês seguinte e ela ficou tão feliz que eu tinha lembrado que ela quase chorou.'),
@@ -64230,7 +64231,7 @@ c20_ab_sentou_na_banca:{
     'Você fica sentad{o|a} na esquina da Rua do Comércio por uns vinte minutos, olhando a porta do 118.',
     'Nesses vinte minutos entram no prédio: dois entregadores, uma mulher com uma criança de colo, um homem de terno com pasta, três adolescentes de uniforme escolar e um senhor com um saco de pão.',
     'Nenhum deles parece nada.',
-    'Você entende, sentad{o|a} num banquinho emprestado, a coisa mais difícil deste capítulo: você veio preparado pra um esconderijo e vai entrar numa reunião.',
+    'Você entende, sentad{o|a} num banquinho emprestado, a coisa mais difícil do dia: você veio preparad{o|a} pra um esconderijo e vai entrar numa reunião.',
     'E não existe treino pra isso.'
   ],
   ef:{flag:'sentou_na_banca', hp:2,
@@ -64378,13 +64379,16 @@ c20_ab_qual_delas:{
 
 
 c20_predio:{
+  falante:'a Presidente',
+  vozes:['N','N'],
   texto:[
     'Rua do Comércio, 118. Prédio comercial de dezesseis andares, com uma farmácia no térreo, uma banca de jornal na porta e um elevador que demora.',
     'No sétimo andar, o corredor tem carpete gasto, três portas e um extintor com a validade em dia.',
     'A sala 704 tem uma placa de acrílico com a sigla CGRB em letra comum.',
     'A porta está aberta. Do lado de fora, numa mesinha dobrável, tem uma garrafa térmica de café, copos descartáveis, um saquinho de açúcar e uma colher amarrada com barbante para não sumir.',
-    'Lá dentro, doze pessoas sentadas em volta de uma mesa oval, com pasta e caneta. Uma delas está falando sobre cronograma de liberação. A pauta está escrita num flip chart, em letra grande.',
+    'Lá dentro, onze pessoas sentadas em volta de uma mesa oval, com pasta e caneta. Uma delas está falando sobre cronograma de liberação. A pauta está escrita num flip chart, em letra grande.',
     'Eles param quando você entra. Não com susto: com a pausa educada de quem foi interrompido numa reunião.',
+    d=>{ if (d.flags.sabe_o_nome_da_presidente) Nomes.apresentar('a Presidente'); return ''; },
     '"Bom dia." A mulher na cabeceira tem cinquenta e poucos anos e um tailleur cinza sem nada de caro. "{O senhor|A senhora} é…?"'
   ],
   ef:{registrar:'Entrou na reunião ordinária do conselho da CGRB.'},
@@ -64435,6 +64439,8 @@ c20_item_quatro:{
 },
 
 c20_quem_paga_o_cafe:{
+  falante:'Sra. Hedda',
+  vozes:['N','N','P','N','N'],
   texto:[
     'A pergunta é dirigida a ninguém e é respondida por uma mulher de uns sessenta anos que está arrumando os copos.',
     '"Eu." Ela alinha a colher no barbante. "Eu compro e eu faço, e eu recebo de volta no mês seguinte por reembolso, com nota."',
@@ -64454,6 +64460,8 @@ c20_quem_paga_o_cafe:{
 },
 
 c20_bonfim_atas:{
+  falante:'Sra. Hedda',
+  vozes:['N','N','P','N','N','P','N','N'],
   texto:[
     '"Escrevi." Ela não tem orgulho nem vergonha nisso. "Trinta e quatro atas em um ano e oito meses, mais as alterações de estatuto."',
     '"A senhora lê o que escreve?"',
@@ -64473,6 +64481,8 @@ c20_bonfim_atas:{
 },
 
 c20_bonfim_livro:{
+  falante:'Sra. Hedda',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Ela para com a garrafa térmica na mão.',
     '"{O senhor|A senhora} leu o estatuto inteiro."',
@@ -64494,6 +64504,8 @@ c20_bonfim_livro:{
 },
 
 c20_pediu_o_livro:{
+  falante:'Sra. Hedda',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Me deixa ver o livro."',
     '"Não."',
@@ -64536,23 +64548,20 @@ c20_mesa:{
     'Nenhuma pessoa de uniforme. Um jaleco — o Dr. Hollis, que levanta os olhos e volta para a pasta. Um terno com crachá no bolso — o Curador Fabre, que não levanta os olhos nenhuma vez.',
     d=>{
       const L = [];
-      if (d.flags.liga_infiltrada || d.flags.liga_aliada) L.push('E, na terceira cadeira da direita, uma mulher que você conhece: a conselheira da Liga Pokémon que te mandou ao norte.');
+      L.push('E, na terceira cadeira da direita, uma mulher com o broche da Liga Pokémon na lapela, sentada à mesa de uma associação privada como quem senta à própria.');
       if (d.flags.sabe_da_terceira) L.push('Não tem ninguém de Celadon aqui. A Terceira vende para eles e não senta com eles, e agora isso faz muito sentido.');
       return L.join(' ');
     },
     'A mulher da cabeceira espera você terminar de olhar. Ela deixa você olhar, e isso é escolha dela.'
   ],
   ef:{executar:d=>{
-        if (d.flags.liga_infiltrada || d.flags.liga_aliada){
-          Estado.marcar('viu_a_liga_na_mesa');
-          return [{tipo:'liga', texto:'A conselheira da Liga que te equipou para o norte tem assento no conselho da Comissão.'}];
-        }
-        return [];
+        Estado.marcar('viu_a_liga_na_mesa');
+        return [{tipo:'liga', texto:'Uma diretora da Liga tem assento no conselho da Comissão.'}];
       }},
   escolhas:[
     {texto:'"Quem é cada um aqui?"', vai:'c20_quem_e_quem'},
     {texto:'"De quem é a cadeira vazia?"', vai:'c20_cadeira_vazia'},
-    {texto:'"Você." — apontando para a conselheira da Liga.', vai:'c20_conselheira', cond:d=>!!d.flags.viu_a_liga_na_mesa},
+    {texto:'"Você." — apontando para a mulher do broche da Liga.', vai:'c20_conselheira', cond:d=>!!d.flags.viu_a_liga_na_mesa},
     {texto:'Pedir a palavra, pelo Art. 27.', vai:'c20_palavra'},
     {texto:'Dizer o seu nome.', vai:'c20_nome'}
   ]
@@ -64563,7 +64572,7 @@ c20_quem_e_quem:{
     'A Presidente apresenta a mesa inteira, um por um, com cargo e formação, e leva dois minutos e meio.',
     'Bióloga, com doutorado. Veterinário, vinte e dois anos de clínica de grande porte. Engenheiro agrônomo. Advogada. Contador. Professor titular aposentado, que dormiu por três segundos no meio da apresentação dele mesmo.',
     'Dois servidores públicos licenciados. Uma ex-diretora de escola técnica. O Dr. Hollis. O Curador Fabre.',
-    'E ela: Hester Colman, ex-diretora de fiscalização da Liga por nove anos.',
+    d=>{ Nomes.apresentar('a Presidente'); return 'E ela: Hester Colman, ex-diretora de fiscalização da Liga por nove anos.'; },
     'Nenhum deles desvia o olhar quando o nome é dito. Todo mundo aqui está com o nome no cartório desde o primeiro dia.'
   ],
   ef:{flag:['viu_a_mesa_inteira','sabe_o_nome_da_presidente'],
@@ -64577,6 +64586,8 @@ c20_quem_e_quem:{
 },
 
 c20_o_professor:{
+  falante:'Sr. Tobias Dahl',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'O professor titular aposentado se chama Sr. Tobias Dahl e tem oitenta e um anos.',
     'Ele acorda quando ouve o próprio nome e responde antes de qualquer outra pessoa.',
@@ -64617,6 +64628,8 @@ c20_professor_art19:{
 },
 
 c20_o_veterinario:{
+  falante:'o veterinário do conselho',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"E o senhor? Como um veterinário assina isso?"',
     'Ele é magro, de camisa de manga curta, e responde com uma calma de quem já respondeu.',
@@ -64638,6 +64651,8 @@ c20_o_veterinario:{
 },
 
 c20_aumentar_os_41:{
+  falante:'o veterinário do conselho',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Dá para aumentar os quarenta e um?"',
     'Ele para com a mão na pasta.',
@@ -64659,6 +64674,8 @@ c20_aumentar_os_41:{
 },
 
 c20_cadeira_vazia:{
+  falante:'a Presidente',
+  vozes:['P','N','P','N','N','N','N','N'],
   texto:[
     '"De quem é a cadeira vazia?"',
     'A Presidente olha para a cadeira antes de responder, o que já é uma resposta.',
@@ -64681,6 +64698,8 @@ c20_cadeira_vazia:{
 },
 
 c20_onde_esta_alcina:{
+  falante:'a Presidente',
+  vozes:['N','N','P','N','N','N','N'],
   texto:[
     '"Dando aula." A Presidente responde na hora. "Escola técnica de Celadon, primeiro ano."',
     '"A senhora sabe de cor."',
@@ -64698,6 +64717,8 @@ c20_onde_esta_alcina:{
 },
 
 c20_foi_falar_com_alcina:{
+  falante:'Dra. Isolde Yarrow',
+  vozes:['N','N','N'],
   texto:[
     'Você desce, atravessa a cidade e pega o ônibus para Celadon, e chega na escola técnica no fim da última aula.',
     'A Dra. Isolde Yarrow tem uns quarenta anos, giz na manga e uma pilha de provas para corrigir.',
@@ -64718,6 +64739,8 @@ c20_foi_falar_com_alcina:{
 },
 
 c20_alcina_volta:{
+  falante:'Dra. Isolde Yarrow',
+  vozes:['P','N','P','N','P','N'],
   texto:[
     '"Volta comigo."',
     'Ela ri, e é uma risada curta e sem alegria.',
@@ -64738,6 +64761,8 @@ c20_alcina_volta:{
 },
 
 c20_alcina_da:{
+  falante:'Dra. Isolde Yarrow',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Me dá alguma coisa que eu possa usar."',
     'Ela pensa, e depois abre a bolsa e tira um caderno de espiral com capa de plástico.',
@@ -64756,19 +64781,21 @@ c20_alcina_da:{
 },
 
 c20_conselheira:{
+  falante:'Conselheira da Liga',
+  vozes:['P','N','N','P','N','P','N','N'],
   texto:[
     '"Você."',
-    'A conselheira da Liga não desvia o olhar e não parece constrangida.',
-    '"Eu tenho assento de observadora." Ela fala com a mesma calma da sala do Planalto. "Sem direito a voto. Consta na ata, e a ata é pública, e você leu."',
-    '"Você me mandou para o norte."',
-    '"Mandei."',
-    '"Para quê?"',
-    'Pela primeira vez em duas conversas, ela hesita.',
-    '"Porque eu queria que alguém de fora chegasse lá antes de nós." Ela olha a Presidente do outro lado da mesa. "E porque eu não podia ser eu."'
+    'A mulher do broche da Liga não desvia o olhar e não parece constrangida.',
+    '"Eu tenho assento de observadora." Ela fala com a calma de quem já ensaiou a frase. "Sem direito a voto. Consta na ata, e a ata é pública."',
+    '"Você é da Liga."',
+    '"Diretoria. Há dezesseis anos."',
+    '"E o que a Liga faz sentada aqui?"',
+    'Pela primeira vez, ela hesita.',
+    '"Olha." Ela olha a Presidente do outro lado da mesa. "Eu queria que alguém de fora olhasse também. E eu não podia ser eu."'
   ],
   ef:{flag:'conselheira_confrontada', instabilidade:1,
-      npc:{nome:'Conselheira da Liga', opiniao:1, memoria:'Admitiu, na frente do conselho, que te mandou ao norte para chegar antes deles.'},
-      registrar:'A conselheira da Liga te mandou ao norte para chegar antes da Comissão.'},
+      npc:{nome:'Conselheira da Liga', opiniao:1, memoria:'Admitiu, na frente do conselho, que queria alguém de fora olhando.'},
+      registrar:'Uma diretora da Liga senta no conselho da Comissão como observadora, e queria que alguém de fora olhasse.'},
   escolhas:[
     {texto:'"A Liga sabe que você senta aqui?"', vai:'c20_liga_sabe'},
     {texto:'"Então vote comigo."', vai:'c20_pediu_voto_dela'},
@@ -64783,9 +64810,9 @@ c20_liga_sabe:{
     '"A Liga sabe que você senta aqui?"',
     '"A Liga assinou o convênio que criou este assento." Ela abre a pasta e tira uma folha. "Cláusula nona. Publicada. Com a minha assinatura e a de mais três diretores."',
     'Ela desliza a folha pela mesa até você.',
-    '"O que a Liga não sabe é o que eu faço na cadeira, porque ninguém nunca me perguntou em três anos."',
+    '"O que a Liga não sabe é o que eu faço na cadeira, porque ninguém nunca me perguntou em dois anos."',
     '"E o que você faz?"',
-    '"Eu anoto." Ela guarda a folha de volta. "Eu tenho três anos de anotação de reunião de conselho de uma entidade privada, feita por uma diretora da Liga, e nunca ninguém pediu para ver."'
+    '"Eu anoto." Ela guarda a folha de volta. "Eu tenho dois anos de anotação de reunião de conselho de uma entidade privada, feita por uma diretora da Liga, e nunca ninguém pediu para ver."'
   ],
   ef:{flag:['sabe_do_assento_da_liga','liga_infiltrada'], instabilidade:1,
       registrar:'O assento de observadora da Liga foi criado pela cláusula nona do convênio.'},
@@ -64797,6 +64824,8 @@ c20_liga_sabe:{
 },
 
 c20_pediu_as_anotacoes:{
+  falante:'Conselheira da Liga',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Me dá as anotações."',
     'Ela olha a mesa inteira, devagar, e depois olha a Presidente, que não faz nenhum sinal em nenhuma direção.',
@@ -64816,6 +64845,8 @@ c20_pediu_as_anotacoes:{
 },
 
 c20_pediu_voto_dela:{
+  falante:'Conselheira da Liga',
+  vozes:['P','N','P','a Presidente','N','N'],
   texto:[
     '"Então vote comigo."',
     '"Eu não tenho voto."',
@@ -64853,6 +64884,8 @@ c20_nome:{
 },
 
 c20_nao_senta:{
+  falante:'a Presidente',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Eu não vou sentar."',
     '"Tudo bem." Ela não insiste. "{O senhor|A senhora} pode falar em pé. Alguns preferem."',
@@ -64869,6 +64902,8 @@ c20_nao_senta:{
 
 /* ── A palavra ──────────────────────────────────────────── */
 c20_palavra:{
+  falante:'a Presidente',
+  vozes:['P','N'],
   texto:[
     '"Art. 27. Eu quero a palavra."',
     'A Presidente olha para a Sra. Hedda, que confere o estatuto, assente, e anota na ata.',
@@ -64933,6 +64968,8 @@ c20_falou_das_pessoas:{
 },
 
 c20_uma_pergunta_so:{
+  falante:'a Presidente',
+  vozes:['P','P','P'],
   texto:[
     '"Eu não vou usar os cinco minutos."',
     'A Sra. Hedda levanta os olhos da ata.',
@@ -64968,6 +65005,8 @@ c20_leu_o_art19:{
 },
 
 c20_resposta:{
+  falante:'a Presidente',
+  vozes:['N','N','N','N','N','N','N','N','N','N','N'],
   texto:[
     '"Obrigada." Ela diz isso sem ironia nenhuma. "É a primeira manifestação presencial de interessado em um ano e oito meses. Vai constar na ata com o seu nome."',
     '"Agora eu vou responder, e eu peço que {o senhor|a senhora} me ouça com a mesma atenção, porque eu ouvi."',
@@ -64994,6 +65033,8 @@ c20_resposta:{
 },
 
 c20_fechar:{
+  falante:'a Presidente',
+  vozes:['P','N','N','P','N','P'],
   texto:[
     '"Eu fecharia. Hoje. E aceitaria o número."',
     '"O número são pessoas." A voz dela não muda. "Trinta e uma ocorrências graves por ano. Onze crianças em quatro anos."',
@@ -65012,6 +65053,8 @@ c20_fechar:{
 },
 
 c20_e_se_eu_estiver_errado:{
+  falante:'a Presidente',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se eu estiver errado?"',
     'Você diz isso na frente de onze pessoas que passaram dois anos tendo certeza.',
@@ -65031,6 +65074,8 @@ c20_e_se_eu_estiver_errado:{
 },
 
 c20_reforma:{
+  falante:'a Presidente',
+  vozes:['P','N','P','N','P','Curador Fabre','Curador Fabre'],
   texto:[
     '"Eu manteria os viveiros e acabaria com o Art. 19."',
     'A Presidente inclina a cabeça um grau.',
@@ -65052,6 +65097,8 @@ c20_reforma:{
 },
 
 c20_nao_autoriza:{
+  falante:'a Presidente',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Eu não sei. Mas isso não autoriza a senhora."',
     'A Presidente fica em silêncio por muito tempo.',
@@ -65072,6 +65119,8 @@ c20_nao_autoriza:{
 },
 
 c20_abrir_eleicao:{
+  falante:'a Presidente',
+  vozes:['P','N','P','N','N','P'],
   texto:[
     '"Então legitima. Abre para eleição."',
     '"Eleição entre quem?"',
@@ -65093,6 +65142,8 @@ c20_abrir_eleicao:{
 },
 
 c20_se_associou:{
+  falante:'a Presidente',
+  vozes:['P','Sra. Hedda','Sra. Hedda'],
   texto:[
     '"Eu quero me associar. Agora."',
     'A sala inteira olha para a advogada, que confere, e depois para a Sra. Hedda, que já está tirando uma folha de papel da pasta.',
@@ -65115,6 +65166,8 @@ c20_se_associou:{
 },
 
 c20_proxima_assembleia:{
+  falante:'a Presidente',
+  vozes:['Sra. Hedda','Sra. Hedda','N','N','P','N','N'],
   texto:[
     '"Assembleia geral ordinária é em março", diz a Sra. Hedda, sem consultar nada. "Extraordinária pode ser convocada por um quinto dos associados."',
     'Um quinto de catorze é três.',
@@ -65134,6 +65187,8 @@ c20_proxima_assembleia:{
 },
 
 c20_quem_elegeu:{
+  falante:'a Presidente',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"Eu perguntaria quem elegeu a senhora."',
     '"A assembleia de associados." Ela responde no mesmo segundo, porque a resposta existe.',
@@ -65155,6 +65210,8 @@ c20_quem_elegeu:{
 },
 
 c20_entraria_no_galpao:{
+  falante:'a Presidente',
+  vozes:['P','N','P','P','N','P'],
   texto:[
     '"Eu entraria no galpão uma vez por semana."',
     'A Presidente não entende no primeiro segundo.',
@@ -65176,6 +65233,8 @@ c20_entraria_no_galpao:{
 },
 
 c20_comecem_hoje:{
+  falante:'a Presidente',
+  vozes:['P','N','N'],
   texto:[
     '"Comecem hoje. Agora. A Rota 21 é a duas horas de carro e a reunião acaba às onze e quarenta."',
     'Ninguém responde.',
@@ -65195,6 +65254,8 @@ c20_comecem_hoje:{
 },
 
 c20_quantos_levantam:{
+  falante:'o veterinário do conselho',
+  vozes:['N'],
   texto:[
     'Levantam quatro.',
     'A Presidente. O Curador Fabre. A advogada que redigiu o Art. 19. E o Sr. Tobias Dahl, de oitenta e um anos, que leva quarenta segundos para levantar e não aceita ajuda de ninguém.',
@@ -65212,6 +65273,8 @@ c20_quantos_levantam:{
 },
 
 c20_foi_com_eles:{
+  falante:'Sr. Tobias Dahl',
+  vozes:['N'],
   texto:[
     'Duas horas de carro em silêncio quase completo. Na rodovia, o Sr. Dahl adormece com a cabeça no vidro.',
     'Na Estação 4, o Sr. Delmar abre o portão e não entende por que a Presidente veio numa segunda.',
@@ -65231,6 +65294,8 @@ c20_foi_com_eles:{
 },
 
 c20_concordar:{
+  falante:'a Presidente',
+  vozes:['P','P','N','N','N'],
   texto:[
     '"Eu faria exatamente o que a senhora faz."',
     'A sala fica quieta.',
@@ -65253,6 +65318,8 @@ c20_concordar:{
 },
 
 c20_aceitou_e_virou:{
+  falante:'a Presidente',
+  vozes:['P','N','N','N'],
   texto:[
     '"Eu aceito, e o meu primeiro voto é pela revogação do Art. 19."',
     'A Presidente não muda de expressão.',
@@ -65270,6 +65337,8 @@ c20_aceitou_e_virou:{
 },
 
 c20_mentiu_conselho:{
+  falante:'a Presidente',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Não. Eu menti para ver o que a senhora ia oferecer."',
     'A Presidente não se irrita. Ela parece, de todas as coisas possíveis, aliviada.',
@@ -65306,6 +65375,8 @@ c20_virou_conselheiro:{
 
 /* ── A votação ──────────────────────────────────────────── */
 c20_votacao:{
+  falante:'a Presidente',
+  vozes:['P','Sra. Hedda','N','N'],
   texto:[
     '"Eu quero votação."',
     'A Presidente olha para a Sra. Hedda, que confere o estatuto.',
@@ -65324,6 +65395,8 @@ c20_votacao:{
 },
 
 c20_materia_art19:{
+  falante:'a Presidente',
+  vozes:['P'],
   texto:[
     '"Revogação do Art. 19 e suspensão da Fase II até revisão do protocolo de descarte."',
     'A Sra. Hedda escreve a matéria e lê em voz alta, palavra por palavra, para conferência, como manda o procedimento.',
@@ -65336,6 +65409,8 @@ c20_materia_art19:{
 },
 
 c20_materia_livro:{
+  falante:'a Presidente',
+  vozes:['P','a advogada do conselho','Sra. Hedda','Sra. Hedda','N'],
   texto:[
     '"Exibição do livro de reuniões fechadas ao interessado, pelo Art. 27, §3º."',
     'A sala muda de temperatura. É a primeira vez na manhã inteira que alguém nessa mesa parece surpreso de verdade.',
@@ -65352,13 +65427,15 @@ c20_materia_livro:{
 },
 
 c20_materia_visita:{
+  falante:'a Presidente',
+  vozes:['P','a advogada do conselho','N','N'],
   texto:[
     '"Visita obrigatória de todo conselheiro ao galpão 4, uma vez por mês, com registro de presença em ata."',
     'É a matéria mais estranha que já foi submetida nessa mesa e todo mundo percebe isso ao mesmo tempo.',
     'Não muda protocolo. Não muda orçamento. Não salva nenhuma unidade.',
     'Só obriga onze pessoas a olhar.',
-    'A advogada da mesa diz, baixinho: "isso não tem efeito jurídico nenhum."',
-    'E a Presidente responde, mais baixinho ainda: "eu sei."',
+    'A advogada da mesa diz, baixinho: "Isso não tem efeito jurídico nenhum."',
+    'E a Presidente responde, mais baixinho ainda: "Eu sei."',
     '"Submeto."'
   ],
   ef:{flag:'materia_visita',
@@ -65367,6 +65444,8 @@ c20_materia_visita:{
 },
 
 c20_materia_edital:{
+  falante:'a Presidente',
+  vozes:['P','N','N'],
   texto:[
     '"Abertura de edital público de admissão de associados, pelo Art. 6º, com divulgação em jornal de circulação regional."',
     'A advogada fecha os olhos.',
@@ -65398,7 +65477,7 @@ c20_contagem:{
       if (d.flags.fez_a_pergunta_das_maos){ votos += 1; razoes.push('Uma conselheira que não levantou a mão quando você perguntou vota a favor, e diz que é por isso.'); }
       if (Estado.rep.eixo==='bom' && Estado.rep.bom>=6){ votos += 1; razoes.push('Um conselheiro vota a favor e diz o seu nome como justificativa, o que é constrangedor para todo mundo na sala, inclusive para você.'); }
       if (d.flags.conselheira_confrontada){ razoes.push('A conselheira da Liga não vota: assento de observadora, sem direito a voto. Ela fecha os olhos quando a contagem chega nela.'); }
-      if (d.flags.observadora_pode_falar){ razoes.push('A conselheira da Liga pede a palavra pela primeira vez em três anos e fala noventa segundos. Não muda voto nenhum, e muda a sala.'); }
+      if (d.flags.observadora_pode_falar){ razoes.push('A conselheira da Liga pede a palavra pela primeira vez em dois anos e fala noventa segundos. Não muda voto nenhum, e muda a sala.'); }
       if (Historia.via()==='mercenario' || Historia.via()==='foragido'){ votos -= 2; razoes.push('Um conselheiro lembra, em voz alta e com documento, de onde vem o seu dinheiro. Dois votos mudam de lado.'); }
       if (d.flags.atacou_o_conselho){ votos -= 3; razoes.push('Alguém lembra que você sacou uma bola dentro desta sala. Isso pesa mais que tudo o que você disse.'); }
       Estado.dados.votosComissao = Math.max(0, Math.min(11, votos));
@@ -65483,7 +65562,7 @@ c20_abriram_o_livro:{
     'A nona tem três linhas.',
     'Reunião fechada. Deliberação única: aprovada, por unanimidade, a continuidade do Projeto Matriz, com aporte do centro de custo 11, condicionada à localização do Risco 01.',
     'Condicionada à localização do Risco 01.',
-    'Tudo isso — a Fase II, a Fase III, o galpão, quatro mil e cento e nove — depende de eles acharem uma coisa que está solta em Kanto há dois anos.'
+    d=>d.flags.sabe_o_total ? 'Tudo isso — a Fase II, a Fase III, o galpão, quatro mil cento e nove — depende de eles acharem uma coisa que está solta em Kanto há quatro anos.' : 'Tudo isso — a Fase II, a Fase III, o galpão — depende de eles acharem uma coisa que está solta em Kanto há quatro anos.'
   ],
   ef:{flag:['leu_o_livro_fechado','sabe_da_fase3','sabe_do_risco01','provas_do_11'], instabilidade:2,
       rep:{eixo:'bom',delta:3,motivo:'Leu o livro que o estatuto dizia ser restrito'},
@@ -65497,10 +65576,12 @@ c20_abriram_o_livro:{
 },
 
 c20_se_eu_achar_primeiro:{
+  falante:'a Presidente',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"E se eu achar ele primeiro?"',
     'A Presidente fecha o livro devagar.',
-    '"Aí {o senhor|a senhora} vai ter na mão uma coisa que doze pessoas procuram há dois anos, e {o senhor|a senhora} vai ter que decidir sozinho o que fazer com ela." Ela empurra o livro de volta para a Sra. Hedda. "Que é exatamente a situação que esta associação foi criada para não existir."',
+    '"Aí {o senhor|a senhora} vai ter na mão uma coisa que doze pessoas procuram há dois anos, e {o senhor|a senhora} vai ter que decidir sozinh{o|a} o que fazer com ela." Ela empurra o livro de volta para a Sra. Hedda. "Que é exatamente a situação que esta associação foi criada para não existir."',
     'Ela olha para você por um tempo comprido.',
     '"E {o senhor|a senhora} vai fazer melhor do que nós, provavelmente, porque {o senhor|a senhora} vai ter olhado para ele na cara."',
     'Ela abre a pasta e volta para a pauta.',
@@ -65534,6 +65615,8 @@ c20_publicar_tudo:{
 },
 
 c20_pub_isaura:{
+  falante:'Livia Gale',
+  vozes:['N','N','N'],
   texto:[
     'Livia Gale lê tudo em silêncio por uma hora e vinte, com um lápis, marcando as páginas com tirinhas de papel.',
     'Quando termina, ela faz três perguntas.',
@@ -65548,6 +65631,8 @@ c20_pub_isaura:{
 },
 
 c20_pub_nadia:{
+  falante:'Nadia Arden',
+  vozes:['N'],
   texto:[
     'Nadia Arden tem um programa das seis da manhã numa rádio comunitária de Fuchsia e uma audiência de gente que está acordada às seis da manhã: pescador, motorista, guarda-parque, gente de plantão.',
     'Ela não pede prova, porque ela já sabe. Ela pede outra coisa.',
@@ -65564,13 +65649,15 @@ c20_pub_nadia:{
 },
 
 c20_pub_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','P','N','N','N','N'],
   texto:[
     'A Dra. Cordell lê o material em duas horas, sem falar, e depois faz uma coisa que você não esperava: ela chora de raiva por uns quinze segundos e depois continua trabalhando como se nada tivesse acontecido.',
     '"Agora dá." Ela puxa três folhas em branco. "Agora tem tipo penal."',
     '"Qual?"',
     '"Nenhum dos que eu procurei." Ela começa a escrever. "Falsidade ideológica em documento particular equiparado a público, no manifesto de resíduo. É pequeno, é feio, é o que pega."',
     'Ela escreve por quarenta minutos sem levantar a cabeça.',
-    '"Capone foi preso por imposto", ela diz, sem parar de escrever. "Eu não tenho vergonha nenhuma."'
+    '"Tem muito figurão que caiu por nota fiscal." Ela não para de escrever. "Eu não tenho vergonha nenhuma."'
   ],
   ef:{flag:['publicou','representacao_no_mp'],
       rep:{eixo:'bom',delta:3,motivo:'Levou o material a quem sabia o que fazer com ele'},
@@ -65580,6 +65667,8 @@ c20_pub_ivone:{
 },
 
 c20_pub_qualquer:{
+  falante:'o editor',
+  vozes:['N','N'],
   texto:[
     'Você bate em quatro redações em três dias.',
     'A primeira pergunta se tem foto. A segunda diz que precisa de posicionamento oficial e que vai pedir, e nunca pede. A terceira agenda e desmarca.',
@@ -65639,6 +65728,8 @@ c20_resultado_publicacao:{
 },
 
 c20_entrevista:{
+  falante:'a Presidente',
+  vozes:['N','N'],
   texto:[
     'A entrevista tem duas páginas e ela não erra uma vez.',
     'Ela confirma o número. Ela confirma o artigo. Ela confirma a existência do galpão e diz o nome da rua.',
@@ -65655,6 +65746,8 @@ c20_entrevista:{
 
 /* ── A luta ─────────────────────────────────────────────── */
 c20_luta_presidente:{
+  falante:'a Presidente',
+  vozes:['N','N'],
   texto:[
     'Você saca uma bola dentro de uma reunião de conselho.',
     'Onze pessoas saem da sala em ordem, sem correr, porque existe um procedimento para isso e eles treinaram.',
@@ -65672,7 +65765,7 @@ c20_luta_presidente:{
 
 c20_venceu_presidente:{
   falante:'a Presidente',
-  vozes:['N','N','N','N','N'],
+  vozes:['N','N','P','N','N'],
   texto:[
     'A Unidade 01 cai por último.',
     'Você olha ela caída no carpete de uma sala comercial e entende, com um atraso de quatro segundos, o que ela é.',
@@ -65695,6 +65788,8 @@ c20_venceu_presidente:{
 },
 
 c20_solta_aqui:{
+  falante:'a Presidente',
+  vozes:['P','N','P'],
   texto:[
     '"Solta ela aqui. Agora. Na minha frente."',
     'A Presidente olha para a bola na mão e depois para você.',
@@ -65718,6 +65813,8 @@ c20_solta_aqui:{
 },
 
 c20_levou_unidade01:{
+  falante:'a Presidente',
+  vozes:['N','N'],
   texto:[
     'Você tira a bola da mão dela. Ela não impede, e não impedir, aqui, é uma decisão dela.',
     '"Ela vai te obedecer", diz a Presidente. "É para isso que ela existe. {O senhor|A senhora} vai descobrir que isso é a pior parte."'
@@ -65736,6 +65833,8 @@ c20_levou_unidade01:{
 },
 
 c20_destruiu_unidade01:{
+  falante:'a Presidente',
+  vozes:['N','N','N'],
   texto:[
     'Você destrói a Unidade 01 na sala 704, no carpete, com a Presidente olhando.',
     'Ela não tenta impedir. Anota alguma coisa na pasta quando acaba.',
@@ -65750,6 +65849,8 @@ c20_destruiu_unidade01:{
 },
 
 c20_perdeu_presidente:{
+  falante:'a Presidente',
+  vozes:['N','N'],
   texto:[
     'Você perde numa sala comercial para uma mulher de tailleur cinza.',
     'Ela chama a enfermaria do prédio — o prédio tem enfermaria, no quarto andar, de um plano de saúde — e espera com você até chegarem.',
@@ -65766,11 +65867,13 @@ c20_perdeu_presidente:{
 },
 
 c20_voltou_depois:{
+  falante:'a Presidente',
+  vozes:['N','N'],
   texto:[
     'Você sobe de novo às onze e vinte, com o braço na tipoia que o enfermeiro do quarto andar fez.',
     'A reunião ainda está acontecendo. Item 6.',
     'Você fica na porta e não entra.',
-    'A Presidente te vê, para a frase no meio, e diz para a mesa: "suspendo por dois minutos."',
+    'A Presidente te vê, para a frase no meio, e diz para a mesa: "Suspendo por dois minutos."',
     'Depois olha para você.',
     '"{O senhor|A senhora} ainda pode pedir a palavra. O incidente não tira o seu direito, porque o estatuto não prevê isso, e eu não vou inventar."'
   ],
@@ -77295,12 +77398,12 @@ enxertarDesfecho(20, {
 
 c20_a_cadeira:{
   texto:[
-    'A mesa oval tem treze cadeiras e doze pessoas.',
+    'A mesa oval tem treze cadeiras e onze pessoas.',
     'Você contou duas vezes porque não acreditou na primeira.',
-    'A décima terceira está na ponta oposta à presidente, puxada pra trás uns vinte centímetros, do jeito de cadeira que alguém levantou e não empurrou de volta.',
+    'Uma das vazias tem uma pasta em cima. A outra, a décima terceira, está na ponta oposta à presidente, puxada pra trás uns vinte centímetros, do jeito de cadeira que alguém levantou e não empurrou de volta.',
     fala('a presidente', 'Aquela é a vaga de representação externa.'),
     'Ela diz isso sem você perguntar, o que quer dizer que ela viu você contando.',
-    fala('a presidente', 'Está vaga há três anos e dois meses.'),
+    fala('a presidente', 'Está vaga há um ano.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('a presidente', 'Porque o regimento diz que ela é preenchida por indicação de entidade da sociedade civil, e nenhuma entidade da sociedade civil indicou ninguém.'),
     'Ela junta as mãos em cima da pasta.',
@@ -77312,7 +77415,7 @@ c20_a_cadeira:{
       registrar:'A 13ª cadeira do conselho está vaga há três anos: representação externa, por indicação de entidade civil.',
       presagio:'Sete editais publicados e nenhuma indicação. O buraco na parede sempre esteve aberto.'},
   escolhas:[
-    {texto:'"Tenho." — e você tem, e é a coisa mais improvável do capítulo.', vai:'c20_fim_sentou',
+    {texto:'"Tenho." — e você tem, e é a coisa mais improvável do dia.', vai:'c20_fim_sentou',
      cond:d=>!!(d.flags.reika_te_abordou || d.flags.conheceu_a_nishino || d.flags.os_trinta_e_nove_juntos ||
                 d.flags.a_manifestacao_do_porto || (typeof Cargos!=='undefined' && Cargos.lista().length >= 2))},
     {texto:'"Não tenho." — e pedir a palavra pelo Art. 27 mesmo assim.', vai:'c20_palavra'},
@@ -77328,8 +77431,8 @@ c20_o_ultimo_da_cadeira:{
     fala('o conselheiro mais velho', 'Ela veio às treze primeiras reuniões. Não faltou uma.'),
     d=>fala(d.jogador.nome, 'E parou de vir por quê?'),
     'Ele mexe na caneta.',
-    fala('o conselheiro mais velho', 'Porque ela votou contra sete vezes e perdeu as sete por doze a um.'),
-    'A sala fica quieta e a quietude não é constrangida: é a quietude de doze pessoas que já pensaram nisso.',
+    fala('o conselheiro mais velho', 'Porque ela votou contra sete vezes e perdeu as sete por dez a um.'),
+    'A sala fica quieta e a quietude não é constrangida: é a quietude de onze pessoas que já pensaram nisso.',
     fala('o conselheiro mais velho', 'E na décima quarta reunião ela mandou uma carta dizendo que a cadeira dela servia pra fazer parecer que a gente ouvia alguém.'),
     fala('o conselheiro mais velho', 'A carta está anexa à ata. É pública. Custa oito pokedólares.', 'baixo')
   ],
@@ -77356,12 +77459,12 @@ c20_fim_sentou:{
     },
     'Você põe a carta de indicação na mesa oval e ela desliza uns quinze centímetros no verniz.',
     'A presidente lê. Passa pro conselheiro da esquerda, que lê, que passa adiante.',
-    'A carta dá a volta na mesa inteira, doze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
+    'A carta dá a volta na mesa inteira, onze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
     'A presidente é a última a receber de volta.',
     fala('a presidente', 'Está em ordem.'),
-    'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora do capítulo.',
+    'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora da manhã.',
     fala('a presidente', 'Secretária, registre em ata a posse do conselheiro de representação externa.'),
-    'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em três anos e dois meses.',
+    'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em um ano.',
     'Por você.'
   ],
   final:{id:'sentou_na_cadeira', titulo:'DOZE A UM', texto:[

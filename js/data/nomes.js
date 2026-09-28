@@ -76,7 +76,8 @@ const NOMES_FIXOS = {
   'a mulher da marmita':       'Thea Larkin',
   'o rapaz da enfermaria':     'Janus',
   'o colega da enfermaria':    'Pascal',
-  'a técnica de jaleco':       'Kira'
+  'a técnica de jaleco':       'Kira',
+  'a Presidente':              'Hester Colman'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

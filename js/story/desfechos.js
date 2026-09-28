@@ -232,12 +232,12 @@ enxertarDesfecho(20, {
 
 c20_a_cadeira:{
   texto:[
-    'A mesa oval tem treze cadeiras e doze pessoas.',
+    'A mesa oval tem treze cadeiras e onze pessoas.',
     'Você contou duas vezes porque não acreditou na primeira.',
-    'A décima terceira está na ponta oposta à presidente, puxada pra trás uns vinte centímetros, do jeito de cadeira que alguém levantou e não empurrou de volta.',
+    'Uma das vazias tem uma pasta em cima. A outra, a décima terceira, está na ponta oposta à presidente, puxada pra trás uns vinte centímetros, do jeito de cadeira que alguém levantou e não empurrou de volta.',
     fala('a presidente', 'Aquela é a vaga de representação externa.'),
     'Ela diz isso sem você perguntar, o que quer dizer que ela viu você contando.',
-    fala('a presidente', 'Está vaga há três anos e dois meses.'),
+    fala('a presidente', 'Está vaga há um ano.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('a presidente', 'Porque o regimento diz que ela é preenchida por indicação de entidade da sociedade civil, e nenhuma entidade da sociedade civil indicou ninguém.'),
     'Ela junta as mãos em cima da pasta.',
@@ -249,7 +249,7 @@ c20_a_cadeira:{
       registrar:'A 13ª cadeira do conselho está vaga há três anos: representação externa, por indicação de entidade civil.',
       presagio:'Sete editais publicados e nenhuma indicação. O buraco na parede sempre esteve aberto.'},
   escolhas:[
-    {texto:'"Tenho." — e você tem, e é a coisa mais improvável do capítulo.', vai:'c20_fim_sentou',
+    {texto:'"Tenho." — e você tem, e é a coisa mais improvável do dia.', vai:'c20_fim_sentou',
      cond:d=>!!(d.flags.reika_te_abordou || d.flags.conheceu_a_nishino || d.flags.os_trinta_e_nove_juntos ||
                 d.flags.a_manifestacao_do_porto || (typeof Cargos!=='undefined' && Cargos.lista().length >= 2))},
     {texto:'"Não tenho." — e pedir a palavra pelo Art. 27 mesmo assim.', vai:'c20_palavra'},
@@ -265,8 +265,8 @@ c20_o_ultimo_da_cadeira:{
     fala('o conselheiro mais velho', 'Ela veio às treze primeiras reuniões. Não faltou uma.'),
     d=>fala(d.jogador.nome, 'E parou de vir por quê?'),
     'Ele mexe na caneta.',
-    fala('o conselheiro mais velho', 'Porque ela votou contra sete vezes e perdeu as sete por doze a um.'),
-    'A sala fica quieta e a quietude não é constrangida: é a quietude de doze pessoas que já pensaram nisso.',
+    fala('o conselheiro mais velho', 'Porque ela votou contra sete vezes e perdeu as sete por dez a um.'),
+    'A sala fica quieta e a quietude não é constrangida: é a quietude de onze pessoas que já pensaram nisso.',
     fala('o conselheiro mais velho', 'E na décima quarta reunião ela mandou uma carta dizendo que a cadeira dela servia pra fazer parecer que a gente ouvia alguém.'),
     fala('o conselheiro mais velho', 'A carta está anexa à ata. É pública. Custa oito pokedólares.', 'baixo')
   ],
@@ -293,12 +293,12 @@ c20_fim_sentou:{
     },
     'Você põe a carta de indicação na mesa oval e ela desliza uns quinze centímetros no verniz.',
     'A presidente lê. Passa pro conselheiro da esquerda, que lê, que passa adiante.',
-    'A carta dá a volta na mesa inteira, doze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
+    'A carta dá a volta na mesa inteira, onze pessoas, e leva quatro minutos, e ninguém fala nada nos quatro minutos.',
     'A presidente é a última a receber de volta.',
     fala('a presidente', 'Está em ordem.'),
-    'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora do capítulo.',
+    'Ela diz isso sem nenhuma emoção e com uma precisão que é a coisa mais assustadora da manhã.',
     fala('a presidente', 'Secretária, registre em ata a posse do conselheiro de representação externa.'),
-    'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em três anos e dois meses.',
+    'E a cadeira vinte centímetros pra trás é puxada pra frente pela primeira vez em um ano.',
     'Por você.'
   ],
   final:{id:'sentou_na_cadeira', titulo:'DOZE A UM', texto:[
