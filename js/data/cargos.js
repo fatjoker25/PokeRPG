@@ -36,7 +36,7 @@ const CARGOS = [
   beneficios:{renda:500, guarita:true},
   fala:['Não é emprego. É um colete refletivo, um apito e um número de registro.',
         '"O colete não te dá autoridade nenhuma", explica o sargento, entregando o colete. "Ele dá passagem. As duas coisas se parecem e não são a mesma."',
-        'Meio salário mínimo por capítulo, pago em dinheiro, sem holerite.']
+        'Quinhentos por capítulo, pago em dinheiro, sem recibo.']
 },
 {
   id:'criador', falante:'a avaliadora', nome:'{Criador registrado|Criadora registrada}', orgao:'Associação de Criadores', peso:2, cap:6,

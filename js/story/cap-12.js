@@ -365,7 +365,7 @@ c12_fuchsia:{
     'É turismo. É bom turismo, inclusive: a reserva é linda, o folheto é bem-feito, o dinheiro fica na cidade.',
     'Na fachada da recepção tem um painel com uma frase em letra garrafal, dessas de placa de rodovia:',
     '**A CERCA EXISTE PARA MANTER VOCÊ FORA, NÃO ELES DENTRO.**',
-    'É uma frase bonita. Você vai passar o capítulo inteiro descobrindo o que ela quer dizer.',
+    'É uma frase bonita. Você vai passar a semana inteira descobrindo o que ela quer dizer.',
     d=>{
       const via = Historia.via();
       if (via==='mercenario'||via==='foragido') return 'E a sua entrega desta semana tem origem escrita na etiqueta, em caneta, no canto de baixo: **ZS-SETOR 7**. Você veio buscar na fonte, o que é uma frase que você não gostaria de estar pensando.';
@@ -446,7 +446,7 @@ c12_marido:{
     '"Captura de quê?"',
     '"De excedente." Ele fala a palavra do jeito que se fala palavra que a gente usou tanto que não significa mais nada. "A gente saía com rede, com bola, com carrinho, e trazia."',
     '"E a conta era feita como?"',
-    'E aí ele te dá a informação mais útil do capítulo, e dá porque ninguém nunca perguntou:',
+    'E aí ele te dá a informação mais útil da semana, e dá porque ninguém nunca perguntou:',
     '"Censo. Todo mês de março tem censo. Sobrevoo com helicóptero, contagem por setor, e uma planilha."',
     '"E a planilha diz quanto é demais."',
     '"A planilha diz quanto o setor suporta. Se tá acima, tira."',
@@ -600,7 +600,7 @@ c12_vandir_soltura:{
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a coisa certa ao homem certo'},
       moral:15,
       registrar:'Sr. Zane dirige o caminhão de soltura se você conseguir abrir o setor 7.',
-      presagio:'Ele tem o mapa na cabeça. Guarde — isso muda o final desse capítulo.'},
+      presagio:'Ele tem o mapa na cabeça. Guarde — isso muda como isso termina.'},
   escolhas:[
     {texto:'"Então me ajuda a abrir."', vai:'c12_vandir_setor7'},
     {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -822,7 +822,7 @@ c12_procurou_o_nome:{
   texto:[
     'Ele procura por duas horas e vinte.',
     'Você fica sentad{o|a} na varanda, e a filha dele traz chá duas vezes e não pergunta nada, e a segunda vez ela senta do seu lado e fica.',
-    'Às nove e quarenta da noite ele volta com uma folha xerocada e a mão um pouco trêmula, e é a única vez no capítulo em que Koga parece velho.',
+    'Às nove e quarenta da noite ele volta com uma folha xerocada e a mão um pouco trêmula, e é a única vez na semana em que Koga parece velho.',
     '**ATA DA 41ª REUNIÃO ORDINÁRIA — 14/08/1997 — ITEM 4: CREDENCIAMENTO DE RECEPTOR DE FAUNA EXCEDENTE**',
     '**DELIBERAÇÃO: APROVADO POR UNANIMIDADE**',
     '**RECEPTOR: ARMAZÉM GERAL 7 — CELADON — ALVARÁ MUNICIPAL 3.318**',
@@ -893,7 +893,7 @@ c12_koga_relatorio:{
       npc:{nome:'Koga', opiniao:6, memoria:'Te entregou a cópia pessoal dele do relatório de manejo, amarrada com barbante.'},
       rep:{eixo:'bom',delta:4,motivo:'Saiu com setenta e duas páginas que provam o erro'},
       registrar:'Recebeu de Koga a cópia do relatório de manejo com anexo técnico e censos.',
-      presagio:'"Conta errada é uma instituição fazendo de bom grado." Essa é a tese do capítulo.'},
+      presagio:'"Conta errada é uma instituição fazendo de bom grado." Essa é a tese de tudo o que você viu aqui.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -1421,7 +1421,7 @@ c12_terca:{
   ],
   ef:{flag:['entrou_no_setor7_de_dia','viu_o_curral'],
       registrar:'Entrou no setor 7 de dia, como auxiliar da médica, com crachá.',
-      presagio:'De dia é um expediente. Guarde a frase, é a tese do capítulo inteiro.'},
+      presagio:'De dia é um expediente. Guarde a frase, é a tese da reserva inteira.'},
   escolhas:[
     {texto:'Segurar. Ficar o dia inteiro.', vai:'c12_o_dia_inteiro'},
     {texto:'Ficar até as nove e ver o que ela disse.', vai:'c12_nove_da_manha'},
@@ -1463,7 +1463,7 @@ c12_o_dia_inteiro:{
     'Doze horas. Setenta e um bichos marcados. Oito formulários assinados.',
     'Na metade da tarde você já está fazendo direito: você aprendeu a segurar sem apertar, a virar a orelha sem torcer, a falar baixo do jeito que ajuda.',
     'Você fica bom nisso.',
-    'Essa é a parte que vai te acordar de noite nos próximos capítulos: você ficou bom nisso em seis horas.',
+    'Essa é a parte que vai te acordar de noite nas próximas semanas: você ficou bom nisso em seis horas.',
     'Às dezoito e quarenta a Dra. Pia tira a luva, senta no chão encostada na balança, e não fala nada por cinco minutos.',
     'Depois ela fala uma coisa só:',
     '"Todo mundo que entra aqui aguenta. Esse é o problema. Eu esperei oito anos por alguém que não aguentasse."',
@@ -1493,7 +1493,7 @@ c12_parou_a_triagem:{
     'Silêncio.',
     'O rádio continua tocando.',
     'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
-    'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora do capítulo:',
+    'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora da semana:',
     '"Eu sei."',
     '"Eu sei qual é a mãe de qual há quatro anos, {moço|moça}. Eu sei todas."',
     'Ele ajeita a luva.',
@@ -1854,7 +1854,7 @@ c12_quem_e_linha_verde:{
     d=>d.flags.ligou_fuchsia_celadon ? 'E você já sabe o que ele vai achar, e ele ainda não sabe, e você decide não estragar a viagem dele.' :
        d.flags.sabe_do_cartorio ? 'Junta comercial de Celadon. Você já esteve lá. Você sabe onde fica o balcão e sabe que a fila da manhã é menor.' :
        'Junta comercial de Celadon. Anota.',
-    '"Eu vou tirar quinze dias", ele diz, e é a primeira vez que ele sorri de verdade no capítulo inteiro. "Trinta e um anos e eu nunca tirei quinze dias seguidos."'
+    '"Eu vou tirar quinze dias", ele diz, e é a primeira vez que ele sorri de verdade na semana inteira. "Trinta e um anos e eu nunca tirei quinze dias seguidos."'
   ],
   ef:{flag:['diretor_vai_a_junta','sabe_do_cartorio'],
       npc:{nome:'Diretor Quince', opiniao:8, memoria:'Vai tirar quinze dias de férias acumuladas para ir à junta comercial de Celadon.'},
@@ -2236,7 +2236,7 @@ c12_esperou_caminhao:{
     'Às três e vinte da manhã, um caminhão baú sai do portão.',
     'Sem placa iluminada, sem logotipo, com a lona amarrada por cima da carroceria porque é baú com sobrecarga.',
     'E o som.',
-    'O som que sai daquele baú a três da manhã numa estrada vicinal é a coisa que você vai lembrar deste capítulo daqui a dez anos, e não é grito.',
+    'O som que sai daquele baú a três da manhã numa estrada vicinal é a coisa que você vai lembrar desta semana daqui a dez anos, e não é grito.',
     'É um som contínuo e baixo de muitas coisas se ajeitando num espaço pequeno.',
     'Você tem três segundos pra decidir.'
   ],
@@ -2504,7 +2504,7 @@ c12_amarrou:{
 c12_soltura_organizada:{
   texto:[
     'Leva quatro horas.',
-    'Não é uma cena de ação. É uma operação logística feita por gente cansada de madrugada, e é a coisa mais bonita desse capítulo exatamente por isso.',
+    'Não tem nada de ação nisso. É uma operação logística feita por gente cansada de madrugada, e é a coisa mais bonita da semana exatamente por isso.',
     'O galpão de máquinas abre com a chave que o Sr. Ulric assinou. Os dois caminhões de soltura estão lá, com pneu vazio e bateria morta e poeira de dois anos.',
     d=>d.flags.plano_de_soltura ? 'O cunhado do guarda mais novo chega às duas e vinte da manhã com uma caminhonete, duas baterias e um compressor, e não pergunta nada, e a única coisa que ele diz a noite inteira é "cabe mais dois de cada lado se você virar o de cima".' :
        'Você e quem estiver com você trocam a bateria de um deles com a bateria do gerador da obra, que é a única bateria de doze volts num raio de dez quilômetros.',
@@ -2626,7 +2626,7 @@ c12_sabotou:{
       rep:{eixo:'bom',delta:5,motivo:'Comprou seis a nove semanas com uma marreta'},
       instabilidade:1,
       registrar:'Destruiu o corredor de contenção e a balança: 6 a 9 semanas até nova licitação.',
-      presagio:'Você fez caber tudo o que ia acontecer devagar. É a jogada mais madura do capítulo.'},
+      presagio:'Você fez caber tudo o que ia acontecer devagar. É a jogada mais madura da semana.'},
   escolhas:[
     {texto:'Abrir o curral também.', vai:'c12_abriu_curral'},
     {texto:'Fotografar tudo e sair.', vai:'c12_fotografou_zona'},

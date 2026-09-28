@@ -1078,7 +1078,7 @@ c13_silencio_com_ryuzo:{
       npc:{nome:'Sr. Dane', opiniao:6, memoria:'Dividiu uma laranja com você em silêncio e mandou você ligar para casa.'},
       moral:12, hp:2,
       rep:{eixo:'bom',delta:1,motivo:'Ficou em silêncio com quem precisava de companhia'},
-      presagio:'"Liga hoje." Você vai lembrar disso em outro capítulo.'},
+      presagio:'"Liga hoje." Você vai lembrar disso em outro lugar.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c13_travessia'},
     {texto:'"Eu acho que eu sei o que é o gelo."', vai:'c13_contou_pro_ryuzo', cond:d=>!!d.flags.achou_o_filhote || !!d.flags.sabe_do_goro},

@@ -72,7 +72,7 @@ const GINASIOS = [
     if (d.flags.agrediu_envenenador) return '"Três pessoas estavam pescando a duzentos metros." Ela olha a água. "Elas vieram aqui contar. Eu não luto com quem resolve as coisas assim."';
     return null;
   },
-  comoDestravar:'Misty ouviu o que aconteceu na Rota 25. Faça o bastante do outro lado (reputação Boa nível 4) e ela abre a piscina.',
+  comoDestravar:'Misty ouviu o que aconteceu na Rota 25. Ela abre a piscina pra quem Kanto passar a contar de outro jeito.',
 
   intro:d=>[
     'O ginásio de Cerulean é uma piscina olímpica com uma passarela no meio. A acústica faz tudo ecoar duas vezes.',
@@ -155,7 +155,7 @@ const GINASIOS = [
       return '"Havia seres vivos naquele prédio quando você ateou fogo." Ela finalmente olha. "Eu passei a vida cuidando de coisa que não fala. Você queimou seis. Não."';
     return null;
   },
-  comoDestravar:'Erika não luta com quem lucra com aquilo. Faça o bastante do outro lado (reputação Boa nível 5) e ela abre a estufa.',
+  comoDestravar:'Erika não luta com quem lucra com aquilo. A estufa abre pra quem Kanto passar a contar de outro jeito.',
 
   intro:d=>[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. É úmido, quente e absurdamente silencioso pro andar de baixo.',

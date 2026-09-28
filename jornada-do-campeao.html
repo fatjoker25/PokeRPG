@@ -5597,7 +5597,7 @@ const CARGOS = [
   beneficios:{renda:500, guarita:true},
   fala:['Não é emprego. É um colete refletivo, um apito e um número de registro.',
         '"O colete não te dá autoridade nenhuma", explica o sargento, entregando o colete. "Ele dá passagem. As duas coisas se parecem e não são a mesma."',
-        'Meio salário mínimo por capítulo, pago em dinheiro, sem holerite.']
+        'Quinhentos por capítulo, pago em dinheiro, sem recibo.']
 },
 {
   id:'criador', falante:'a avaliadora', nome:'{Criador registrado|Criadora registrada}', orgao:'Associação de Criadores', peso:2, cap:6,
@@ -12623,7 +12623,7 @@ const GINASIOS = [
     if (d.flags.agrediu_envenenador) return '"Três pessoas estavam pescando a duzentos metros." Ela olha a água. "Elas vieram aqui contar. Eu não luto com quem resolve as coisas assim."';
     return null;
   },
-  comoDestravar:'Misty ouviu o que aconteceu na Rota 25. Faça o bastante do outro lado (reputação Boa nível 4) e ela abre a piscina.',
+  comoDestravar:'Misty ouviu o que aconteceu na Rota 25. Ela abre a piscina pra quem Kanto passar a contar de outro jeito.',
 
   intro:d=>[
     'O ginásio de Cerulean é uma piscina olímpica com uma passarela no meio. A acústica faz tudo ecoar duas vezes.',
@@ -12706,7 +12706,7 @@ const GINASIOS = [
       return '"Havia seres vivos naquele prédio quando você ateou fogo." Ela finalmente olha. "Eu passei a vida cuidando de coisa que não fala. Você queimou seis. Não."';
     return null;
   },
-  comoDestravar:'Erika não luta com quem lucra com aquilo. Faça o bastante do outro lado (reputação Boa nível 5) e ela abre a estufa.',
+  comoDestravar:'Erika não luta com quem lucra com aquilo. A estufa abre pra quem Kanto passar a contar de outro jeito.',
 
   intro:d=>[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. É úmido, quente e absurdamente silencioso pro andar de baixo.',
@@ -21305,7 +21305,7 @@ c4_teo_promete_agora:{
   ],
   ef:{moral:6, flag:'teo_prometeu',
       npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'},
-      presagio:'Guarde essa promessa. Vai chegar um capítulo em que ela vai ser cobrada, e não vai ser por você.'},
+      presagio:'Guarde essa promessa. Vai chegar um dia em que ela vai ser cobrada, e não vai ser por você.'},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
@@ -37594,7 +37594,7 @@ c9_nao_tenho_credencial:{
     '"Então {o senhor|a senhora} não pode dar lance." Ela olha a sua idade. "E {o senhor|a senhora} também não poderia, de qualquer forma."',
     'Mas ela não te tira. Ela dá um passo de lado e abre espaço na parede dos fundos.',
     '"Assistir é público. Sessão pública é pública."',
-    'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou um capítulo inteiro pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
+    'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou dias pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
     'O leiloeiro anuncia o lote 38. Uma senhora de tailleur levanta a plaquinha. Batido.',
     'Lote 39. Batido. Lote 40. Retirado por decisão judicial.',
     'Lote 41.'
@@ -39575,7 +39575,7 @@ c10_sentou_com_eloi:{
     'Perto das onze ele fala uma coisa só:',
     '"Meu pai também trabalhou nessa usina. Ele ajudou a construir, em cinquenta e oito."',
     '"Três gerações de uma família olhando pro mesmo prédio e nenhuma delas entendeu o que tem dentro."',
-    'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitos capítulos.'
+    'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitas semanas.'
   ],
   ef:{flag:'noite_com_eloi', moral:12, hp:3,
       npc:{nome:'Sr. Edric', opiniao:7, memoria:'Passaram quarenta minutos em silêncio na brita, tomando café com açúcar demais.'},
@@ -41063,7 +41063,7 @@ c11_ab_vigiou:{
   ],
   ef:{flag:'o_som_do_galpao', hp:-1,
       registrar:'Do galpão sem placa da zona norte de Saffron sai som de muita coisa viva no mesmo lugar.',
-      presagio:'Você já sabe o que tem ali dentro. O resto do capítulo é sobre o que fazer com isso.'},
+      presagio:'Você já sabe o que tem ali dentro. O resto é decidir o que fazer com isso.'},
   escolhas:[
     {texto:'Seguir pro centro e ir à Silph.', vai:'c11_recepcao'},
     {texto:'Seguir pro centro e ver o ginásio.', vai:'c11_ginasio'},
@@ -41347,7 +41347,7 @@ c11_sabrina_oque:{
   ef:{flag:'sabe_dos_doze',
       moral:-8,
       registrar:'São doze: onze mentes que se acham uma só, e um molde que nenhuma preenche.',
-      presagio:'Solidão sem nome. É essa a palavra que falta no laudo de todo mundo nesse capítulo.'},
+      presagio:'Solidão sem nome. É essa a palavra que falta no laudo de todo mundo nessa cidade.'},
   escolhas:[
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
     {texto:'"Há quanto tempo você ouve isso?"', vai:'c11_sabrina_quanto_tempo'},
@@ -41405,7 +41405,7 @@ c11_responde_com_ela:{
       rep:{eixo:'bom',delta:4,motivo:'Ficou na sala com alguém que estava sozinha há três semanas'},
       moral:15,
       registrar:'Sentou com Sabrina enquanto ela respondia aos onze. Os onze agradeceram.',
-      presagio:'Porque tinha mais alguém na sala. É essa a diferença que você faz nesse capítulo.'},
+      presagio:'Porque tinha mais alguém na sala. É essa a diferença que você faz nesse prédio.'},
   escolhas:[
     {texto:'"Me ajuda a entrar."', vai:'c11_sabrina_ajuda'},
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
@@ -41531,7 +41531,7 @@ c11_e_se_eu_nao_voltar:{
       moral:-5,
       npc:{nome:'Sabrina', opiniao:4, memoria:'Admitiu que tem medo de descobrir que não desceria para te buscar.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou a pergunta desconfortável'},
-      presagio:'Ela tem medo de descobrir que não desce. Lembre disso no fim do capítulo.'},
+      presagio:'Ela tem medo de descobrir que não desce. Lembre disso no fim.'},
   escolhas:[
     {texto:'"Tudo bem. Você já fez muito."', vai:'c11_sabrina_ajuda'},
     {texto:'"Vem até a porta. Só até a porta."', vai:'c11_sabrina_ate_a_porta'},
@@ -41611,7 +41611,7 @@ c11_sabrina_ajuda:{
       npc:{nome:'Sabrina', opiniao:5, memoria:'Te deu o crachá do zelador e uma âncora mental antes de você descer.'},
       rep:{eixo:'bom',delta:1,motivo:'Conseguiu a confiança da líder de Saffron'},
       registrar:'Recebeu de Sabrina o crachá do zelador e uma âncora mental.',
-      presagio:'Uma coisa idiota e muito específica. Você já viveu ela em algum capítulo.'},
+      presagio:'Uma coisa idiota e muito específica. Você já viveu ela em algum ponto da estrada.'},
   escolhas:[
     {texto:'Ir pra Silph pela recepção.', vai:'c11_recepcao'},
     {texto:'Ir pela doca de carga.', vai:'c11_doca'},
@@ -41793,7 +41793,7 @@ c11_estranho_no_predio:{
     '"Essa suja."'
   ],
   ef:{flag:['sabe_da_sala_vazia','sala_do_setimo'],
-      rep:{eixo:'bom',delta:2,motivo:'Perguntou mais uma vez e ganhou a melhor pista do capítulo'},
+      rep:{eixo:'bom',delta:2,motivo:'Perguntou mais uma vez e ganhou a melhor pista do dia'},
       instabilidade:1,
       registrar:'No 7º andar há uma sala vazia e trancada que suja toda semana, com marca de pé no pó.',
       presagio:'Marca de pé no pó de uma sala trancada e vazia. Alguém anda ali.'},
@@ -41831,7 +41831,7 @@ c11_cida_topou:{
       npc:{nome:'Sra. Odile (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém arriscou a aposentadoria por você'},
       registrar:'Sra. Odile te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
-      presagio:'"De alguém abrindo por dentro." Anota — essa é a solução do capítulo.'},
+      presagio:'"De alguém abrindo por dentro." Anota — essa é a saída.'},
   escolhas:[
     {texto:'Entrar pela recepção com o crachá verde.', vai:'c11_recepcao'},
     {texto:'Entrar pela porta de serviço às seis da manhã.', vai:'c11_porta_de_servico'},
@@ -41928,7 +41928,7 @@ c11_seguiu_o_orcamento:{
       rep:{eixo:'bom',delta:3,motivo:'Esperou oito minutos em silêncio e recebeu o nome anterior da rubrica'},
       npc:{nome:'Homem do orçamento', opiniao:1, memoria:'Te contou que a rubrica se chamava "Recuperação de acervo — Cinnabar" antes de 1996.'},
       registrar:'A rubrica era "Recuperação de acervo — Cinnabar" e virou "dispositivo de contenção" em 1996, triplicando de valor.',
-      presagio:'Cinnabar. O laboratório da ilha. Guarde — o capítulo dele vem.'},
+      presagio:'Cinnabar. O laboratório da ilha. Guarde — a vez dele vem.'},
   escolhas:[
     {texto:'Ir pra doca de carga.', vai:'c11_doca'},
     {texto:'Falar com a do crachá azul.', vai:'c11_cracha_azul'},
@@ -42415,7 +42415,7 @@ c11_reagiu_seguranca:{
   texto:[
     'Você reage no saguão de uma empresa, sob quatro câmeras, num piso de granito polido, na frente de doze funcionários voltando do almoço.',
     'Isso não é uma batalha Pokémon.',
-    'É uma ocorrência policial com registro audiovisual, e a diferença entre as duas coisas é a que vai definir os seus próximos capítulos.'
+    'É uma ocorrência policial com registro audiovisual, e a diferença entre as duas coisas é a que vai definir as suas próximas semanas.'
   ],
   batalha:{dex:82, nivel:36, tipo:'treinador', treinador:'Segurança da Silph', fuga:true,
            timeExtra:[{dex:57, nivel:36}],
@@ -42682,7 +42682,7 @@ c11_anotou_placas:{
     'Você anota as quatro placas no caderno, e o modelo, e a cor.',
     'Um sedã prata de meia-idade com cadeirinha de bebê no banco de trás. Uma perua com adesivo de faculdade no vidro. Um carro popular com uma pasta no banco do carona. E um utilitário com o para-choque amassado e uma caixa de papelão no porta-malas, aberta, com pastas dentro.',
     'Quatro pessoas. Uma tem filho pequeno. Uma faz pós-graduação.',
-    'É a coisa mais desconcertante do capítulo até aqui: você veio procurar monstro e achou estacionamento.',
+    'É a coisa mais desconcertante da semana até aqui: você veio procurar monstro e achou estacionamento.',
     'A caixa aberta no porta-malas do utilitário tem um lombo de pasta virado pra cima e dá pra ler, se você chegar perto do vidro:',
     '**PROJ. 11 — SÉRIE 3 — ENCERRAMENTO**'
   ],
@@ -42716,7 +42716,7 @@ c11_abriu_o_porta_malas:{
       rep:{eixo:'bom',delta:4,motivo:'Abriu o porta-malas e leu a data'},
       moral:-15, instabilidade:2,
       registrar:'A série 3 será descontinuada em nove dias. Onze exemplares com cognição parcial.',
-      presagio:'Nove dias. Agora tudo que você fizer nesse capítulo tem prazo.'},
+      presagio:'Nove dias. Agora tudo que você fizer daqui pra frente tem prazo.'},
   escolhas:[
     {texto:'Levar a pasta e descer.', vai:'c11_escada'},
     {texto:'Levar a pasta e sair do prédio.', vai:'c11_saiu_com_a_foto'},
@@ -43007,7 +43007,7 @@ c11_doca:{
     'Nenhum dos dois assina nada. Nenhum dos dois olha a etiqueta. Um deles está no meio de uma conversa sobre a Liga e não interrompe pra carregar.',
     d=>{
       const via = Historia.via();
-      if (via==='mercenario'||via==='foragido') return 'Você conhece essa caixa. Você provavelmente ajudou a carregar uma igual em algum lugar, em algum capítulo, sem perguntar o que tinha dentro.';
+      if (via==='mercenario'||via==='foragido') return 'Você conhece essa caixa. Você provavelmente ajudou a carregar uma igual em algum lugar, em algum ponto da estrada, sem perguntar o que tinha dentro.';
       if (d.flags.sabe_dos_setecentos) return 'Setecentos e vinte e oito. Esta é a caixa setecentos e vinte e nove até setecentos e trinta e cinco.';
       return 'Sete unidades por semana, segundo a mulher do crachá azul. Sete dentro daquela caixa.';
     }
@@ -43054,11 +43054,11 @@ c11_levou_a_caixa:{
     'Ela é grande, branca, absurdamente visível, e você atravessa Saffron às vinte e uma horas carregando uma caixa de material biológico de um metro e meio.',
     'Ninguém te para.',
     'Três pessoas olham. Uma delas segura a porta do prédio pra você porque você está com as mãos ocupadas.',
-    'É a coisa mais engraçada e mais deprimente do capítulo: você roubou uma prova federal e o que a cidade fez foi segurar a porta.'
+    'É a coisa mais engraçada e mais deprimente da semana: você roubou uma prova federal e o que a cidade fez foi segurar a porta.'
   ],
   ef:{flag:['tem_a_caixa_de_cinnabar','provas_do_11'],
       itens:{'Caixa carimbada de Cinnabar':1},
-      rep:{eixo:'bom',delta:3,motivo:'Saiu com a prova física mais indesmentível do capítulo'},
+      rep:{eixo:'bom',delta:3,motivo:'Saiu com a prova física mais indesmentível da semana'},
       registrar:'Levou uma caixa vazia carimbada do Instituto de Cinnabar.',
       presagio:'Alguém segurou a porta. Guarde essa piada; você vai precisar dela mais tarde.'},
   escolhas:[
@@ -43326,7 +43326,7 @@ c11_leu_o_caderno:{
       rep:{eixo:'bom',delta:4,motivo:'Leu os duzentos e quarenta e um dias'},
       moral:-15, instabilidade:1,
       registrar:'O caderno 6 do Dr. Fuji: 241 dias de conversa. O caderno 7 não está na caixa.',
-      presagio:'"Pra que exista em algum lugar que eu sabia." Você já ouviu essa frase nesse capítulo.'},
+      presagio:'"Pra que exista em algum lugar que eu sabia." Você já ouviu essa frase nessa cidade.'},
   escolhas:[
     {texto:'Descer para o andar 11 com o caderno.', vai:'c11_escada'},
     {texto:'Procurar o caderno 7 nas outras caixas.', vai:'c11_caderno_sete'},
@@ -43579,7 +43579,7 @@ c11_perguntou:{
     'Não é uma resposta em palavra. É uma pressão atrás dos seus olhos, e uma sensação que você reconhece imediatamente porque toda pessoa viva reconhece:',
     'o alívio de alguém que passou muito tempo esperando ser chamado.',
     'Onze pressões. Uma depois da outra, em ordem, do primeiro tanque ao décimo primeiro, com um intervalo igual entre elas, como quem confere presença.',
-    d=>d.flags.ancora_mental ? 'E aí alguma coisa começa a puxar você pra dentro daquilo, e você lembra — de um jeito absurdo e nítido e completamente inútil — do cheiro da cozinha da sua casa numa manhã de capítulo um. A âncora da Sabrina. Você volta.' :
+    d=>d.flags.ancora_mental ? 'E aí alguma coisa começa a puxar você pra dentro daquilo, e você lembra — de um jeito absurdo e nítido e completamente inútil — do cheiro da cozinha da sua casa na manhã em que você saiu. A âncora da Sabrina. Você volta.' :
        'E aí alguma coisa começa a puxar você pra dentro daquilo e você não tem absolutamente nada pra se segurar.',
     d=>d.flags.reis_desce_com_voce ? 'A Dra. Sorrel está com as duas mãos na boca e não está respirando direito, e ela trabalha aqui há nove anos e é a primeira vez que ela vê isso, porque é a primeira vez que alguém perguntou.' : ''
   ],
@@ -44182,7 +44182,7 @@ c11_desistiu:{
 c11_fim:{
   texto:[
     'Saffron continua funcionando.',
-    'Esse é o detalhe que não sai da sua cabeça, e vai continuar não saindo por muitos capítulos.',
+    'Esse é o detalhe que não sai da sua cabeça, e vai continuar não saindo por muito tempo.',
     'Quarenta metros abaixo do chão tem onze tanques. Quarenta metros acima deles tem gente discutindo planilha de suprimentos com placa de acrílico na parede. E trinta metros acima dessa gente tem gente comprando jantar.',
     'Nenhuma dessas camadas sabe da outra, ou sabe e não olha, e a cidade funciona perfeitamente assim, com transporte público pontual e coleta de lixo três vezes por semana.',
     d=>{
@@ -44576,7 +44576,7 @@ c12_fuchsia:{
     'É turismo. É bom turismo, inclusive: a reserva é linda, o folheto é bem-feito, o dinheiro fica na cidade.',
     'Na fachada da recepção tem um painel com uma frase em letra garrafal, dessas de placa de rodovia:',
     '**A CERCA EXISTE PARA MANTER VOCÊ FORA, NÃO ELES DENTRO.**',
-    'É uma frase bonita. Você vai passar o capítulo inteiro descobrindo o que ela quer dizer.',
+    'É uma frase bonita. Você vai passar a semana inteira descobrindo o que ela quer dizer.',
     d=>{
       const via = Historia.via();
       if (via==='mercenario'||via==='foragido') return 'E a sua entrega desta semana tem origem escrita na etiqueta, em caneta, no canto de baixo: **ZS-SETOR 7**. Você veio buscar na fonte, o que é uma frase que você não gostaria de estar pensando.';
@@ -44657,7 +44657,7 @@ c12_marido:{
     '"Captura de quê?"',
     '"De excedente." Ele fala a palavra do jeito que se fala palavra que a gente usou tanto que não significa mais nada. "A gente saía com rede, com bola, com carrinho, e trazia."',
     '"E a conta era feita como?"',
-    'E aí ele te dá a informação mais útil do capítulo, e dá porque ninguém nunca perguntou:',
+    'E aí ele te dá a informação mais útil da semana, e dá porque ninguém nunca perguntou:',
     '"Censo. Todo mês de março tem censo. Sobrevoo com helicóptero, contagem por setor, e uma planilha."',
     '"E a planilha diz quanto é demais."',
     '"A planilha diz quanto o setor suporta. Se tá acima, tira."',
@@ -44811,7 +44811,7 @@ c12_vandir_soltura:{
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a coisa certa ao homem certo'},
       moral:15,
       registrar:'Sr. Zane dirige o caminhão de soltura se você conseguir abrir o setor 7.',
-      presagio:'Ele tem o mapa na cabeça. Guarde — isso muda o final desse capítulo.'},
+      presagio:'Ele tem o mapa na cabeça. Guarde — isso muda como isso termina.'},
   escolhas:[
     {texto:'"Então me ajuda a abrir."', vai:'c12_vandir_setor7'},
     {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -45033,7 +45033,7 @@ c12_procurou_o_nome:{
   texto:[
     'Ele procura por duas horas e vinte.',
     'Você fica sentad{o|a} na varanda, e a filha dele traz chá duas vezes e não pergunta nada, e a segunda vez ela senta do seu lado e fica.',
-    'Às nove e quarenta da noite ele volta com uma folha xerocada e a mão um pouco trêmula, e é a única vez no capítulo em que Koga parece velho.',
+    'Às nove e quarenta da noite ele volta com uma folha xerocada e a mão um pouco trêmula, e é a única vez na semana em que Koga parece velho.',
     '**ATA DA 41ª REUNIÃO ORDINÁRIA — 14/08/1997 — ITEM 4: CREDENCIAMENTO DE RECEPTOR DE FAUNA EXCEDENTE**',
     '**DELIBERAÇÃO: APROVADO POR UNANIMIDADE**',
     '**RECEPTOR: ARMAZÉM GERAL 7 — CELADON — ALVARÁ MUNICIPAL 3.318**',
@@ -45104,7 +45104,7 @@ c12_koga_relatorio:{
       npc:{nome:'Koga', opiniao:6, memoria:'Te entregou a cópia pessoal dele do relatório de manejo, amarrada com barbante.'},
       rep:{eixo:'bom',delta:4,motivo:'Saiu com setenta e duas páginas que provam o erro'},
       registrar:'Recebeu de Koga a cópia do relatório de manejo com anexo técnico e censos.',
-      presagio:'"Conta errada é uma instituição fazendo de bom grado." Essa é a tese do capítulo.'},
+      presagio:'"Conta errada é uma instituição fazendo de bom grado." Essa é a tese de tudo o que você viu aqui.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -45632,7 +45632,7 @@ c12_terca:{
   ],
   ef:{flag:['entrou_no_setor7_de_dia','viu_o_curral'],
       registrar:'Entrou no setor 7 de dia, como auxiliar da médica, com crachá.',
-      presagio:'De dia é um expediente. Guarde a frase, é a tese do capítulo inteiro.'},
+      presagio:'De dia é um expediente. Guarde a frase, é a tese da reserva inteira.'},
   escolhas:[
     {texto:'Segurar. Ficar o dia inteiro.', vai:'c12_o_dia_inteiro'},
     {texto:'Ficar até as nove e ver o que ela disse.', vai:'c12_nove_da_manha'},
@@ -45674,7 +45674,7 @@ c12_o_dia_inteiro:{
     'Doze horas. Setenta e um bichos marcados. Oito formulários assinados.',
     'Na metade da tarde você já está fazendo direito: você aprendeu a segurar sem apertar, a virar a orelha sem torcer, a falar baixo do jeito que ajuda.',
     'Você fica bom nisso.',
-    'Essa é a parte que vai te acordar de noite nos próximos capítulos: você ficou bom nisso em seis horas.',
+    'Essa é a parte que vai te acordar de noite nas próximas semanas: você ficou bom nisso em seis horas.',
     'Às dezoito e quarenta a Dra. Pia tira a luva, senta no chão encostada na balança, e não fala nada por cinco minutos.',
     'Depois ela fala uma coisa só:',
     '"Todo mundo que entra aqui aguenta. Esse é o problema. Eu esperei oito anos por alguém que não aguentasse."',
@@ -45704,7 +45704,7 @@ c12_parou_a_triagem:{
     'Silêncio.',
     'O rádio continua tocando.',
     'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
-    'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora do capítulo:',
+    'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora da semana:',
     '"Eu sei."',
     '"Eu sei qual é a mãe de qual há quatro anos, {moço|moça}. Eu sei todas."',
     'Ele ajeita a luva.',
@@ -46065,7 +46065,7 @@ c12_quem_e_linha_verde:{
     d=>d.flags.ligou_fuchsia_celadon ? 'E você já sabe o que ele vai achar, e ele ainda não sabe, e você decide não estragar a viagem dele.' :
        d.flags.sabe_do_cartorio ? 'Junta comercial de Celadon. Você já esteve lá. Você sabe onde fica o balcão e sabe que a fila da manhã é menor.' :
        'Junta comercial de Celadon. Anota.',
-    '"Eu vou tirar quinze dias", ele diz, e é a primeira vez que ele sorri de verdade no capítulo inteiro. "Trinta e um anos e eu nunca tirei quinze dias seguidos."'
+    '"Eu vou tirar quinze dias", ele diz, e é a primeira vez que ele sorri de verdade na semana inteira. "Trinta e um anos e eu nunca tirei quinze dias seguidos."'
   ],
   ef:{flag:['diretor_vai_a_junta','sabe_do_cartorio'],
       npc:{nome:'Diretor Quince', opiniao:8, memoria:'Vai tirar quinze dias de férias acumuladas para ir à junta comercial de Celadon.'},
@@ -46447,7 +46447,7 @@ c12_esperou_caminhao:{
     'Às três e vinte da manhã, um caminhão baú sai do portão.',
     'Sem placa iluminada, sem logotipo, com a lona amarrada por cima da carroceria porque é baú com sobrecarga.',
     'E o som.',
-    'O som que sai daquele baú a três da manhã numa estrada vicinal é a coisa que você vai lembrar deste capítulo daqui a dez anos, e não é grito.',
+    'O som que sai daquele baú a três da manhã numa estrada vicinal é a coisa que você vai lembrar desta semana daqui a dez anos, e não é grito.',
     'É um som contínuo e baixo de muitas coisas se ajeitando num espaço pequeno.',
     'Você tem três segundos pra decidir.'
   ],
@@ -46715,7 +46715,7 @@ c12_amarrou:{
 c12_soltura_organizada:{
   texto:[
     'Leva quatro horas.',
-    'Não é uma cena de ação. É uma operação logística feita por gente cansada de madrugada, e é a coisa mais bonita desse capítulo exatamente por isso.',
+    'Não tem nada de ação nisso. É uma operação logística feita por gente cansada de madrugada, e é a coisa mais bonita da semana exatamente por isso.',
     'O galpão de máquinas abre com a chave que o Sr. Ulric assinou. Os dois caminhões de soltura estão lá, com pneu vazio e bateria morta e poeira de dois anos.',
     d=>d.flags.plano_de_soltura ? 'O cunhado do guarda mais novo chega às duas e vinte da manhã com uma caminhonete, duas baterias e um compressor, e não pergunta nada, e a única coisa que ele diz a noite inteira é "cabe mais dois de cada lado se você virar o de cima".' :
        'Você e quem estiver com você trocam a bateria de um deles com a bateria do gerador da obra, que é a única bateria de doze volts num raio de dez quilômetros.',
@@ -46837,7 +46837,7 @@ c12_sabotou:{
       rep:{eixo:'bom',delta:5,motivo:'Comprou seis a nove semanas com uma marreta'},
       instabilidade:1,
       registrar:'Destruiu o corredor de contenção e a balança: 6 a 9 semanas até nova licitação.',
-      presagio:'Você fez caber tudo o que ia acontecer devagar. É a jogada mais madura do capítulo.'},
+      presagio:'Você fez caber tudo o que ia acontecer devagar. É a jogada mais madura da semana.'},
   escolhas:[
     {texto:'Abrir o curral também.', vai:'c12_abriu_curral'},
     {texto:'Fotografar tudo e sair.', vai:'c12_fotografou_zona'},
@@ -48302,7 +48302,7 @@ c13_silencio_com_ryuzo:{
       npc:{nome:'Sr. Dane', opiniao:6, memoria:'Dividiu uma laranja com você em silêncio e mandou você ligar para casa.'},
       moral:12, hp:2,
       rep:{eixo:'bom',delta:1,motivo:'Ficou em silêncio com quem precisava de companhia'},
-      presagio:'"Liga hoje." Você vai lembrar disso em outro capítulo.'},
+      presagio:'"Liga hoje." Você vai lembrar disso em outro lugar.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c13_travessia'},
     {texto:'"Eu acho que eu sei o que é o gelo."', vai:'c13_contou_pro_ryuzo', cond:d=>!!d.flags.achou_o_filhote || !!d.flags.sabe_do_goro},
@@ -50857,7 +50857,7 @@ c14_levou_o_jornal:{
     'Você dobra o jornal na página seis e leva, com os óculos dentro, porque separar os dois parece errado.',
     'Na rua, Blaine te vê saindo com o jornal debaixo do braço e não pergunta nada.',
     'Você não mostra.',
-    'Você vai mostrar depois, num momento melhor, e "um momento melhor" é uma coisa que você vai passar três capítulos procurando e que não existe.'
+    'Você vai mostrar depois, num momento melhor, e "um momento melhor" é uma coisa que você vai passar semanas procurando e que não existe.'
   ],
   ef:{flag:['tem_o_jornal','provas_cinnabar'],
       itens:{'Jornal de 11/11/96 e um par de óculos':1},
@@ -51314,7 +51314,7 @@ c14_queimou:{
     'Sem esse caderno, o que fizeram com ele nunca aconteceu oficialmente.',
     'E o que ele fez, também não.',
     'Você acabou de apagar a única vez em que alguém escreveu, de próprio punho, "ele pediu para sair" e "eu fui lá pedir desculpa".',
-    d=>d.flags.conheceu_blaine ? 'Blaine assiste da porta e não impede, e não fala nada, e quando acaba ele vira e sobe os quarenta metros de corredor sozinho.\nE você nunca mais fala com ele nesse capítulo.' : ''
+    d=>d.flags.conheceu_blaine ? 'Blaine assiste da porta e não impede, e não fala nada, e quando acaba ele vira e sobe os quarenta metros de corredor sozinho.\nE você nunca mais fala com ele nessa ilha.' : ''
   ],
   ef:{flag:['queimou_caderno'], instabilidade:2, moral:-20,
       rep:{eixo:'ruim',delta:3,motivo:'Destruiu a única prova do que fizeram em Cinnabar'},
@@ -51332,7 +51332,7 @@ c14_queimou:{
 c14_desafio_blaine:{
   texto:[
     'Quinta, catorze horas.',
-    'Ele não faz nenhuma concessão por você ter passado a semana com ele. Isso, de um jeito esquisito, é o maior elogio do capítulo.',
+    'Ele não faz nenhuma concessão por você ter passado a semana com ele. Isso, de um jeito esquisito, é o maior elogio da semana.',
     '"Regra da casa: se o teu bicho cair e tu quiser continuar, tu continua. Se eu vir que tu tá continuando por teimosia, eu paro a luta."',
     '"E como você sabe a diferença?"',
     'Ele entra na marcação.',
@@ -52098,7 +52098,7 @@ c14_selma_contou:{
       rep:{eixo:'bom',delta:4,motivo:'Perguntou se ela tinha contado'},
       moral:-8,
       registrar:'Blaine ouviu de Sra. Wilma em 1997 sobre o aceno. "Então ele conhecia mais gente do que a gente achava."',
-      presagio:'Ele conhecia mais gente do que a gente achava. Some as pessoas desse capítulo.'},
+      presagio:'Ele conhecia mais gente do que a gente achava. Some as pessoas dessa ilha.'},
   escolhas:[
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
     {texto:'"E o incêndio de semana passada?"', vai:'c14_incendio_da_semana'},
@@ -54102,7 +54102,7 @@ c16_ab_onde_achou:{
     fala('Nina', 'Vidro de garrafa que o mar lixa. Fica fosco e fica bonito.'),
     'Ela puxa um potinho de plástico de dentro da bolsa e mostra: uns quarenta cacos de vidro verde e âmbar, lixados pelo mar, bonitos mesmo.',
     fala('Nina', 'A pena tava junto do vidro. Em cima da linha da maré.'),
-    'E aí ela fala a frase que muda a cena:',
+    'E aí ela fala a frase que muda a conversa:',
     fala('Nina', 'Ele achou em três de agosto e a gente enterrou ele dia sete.'),
     fala('Nina', 'Meu pai falou que a pena deu azar. Eu acho que ela só tava lá.', 'baixo')
   ],
@@ -77099,7 +77099,7 @@ c1e_a_assinatura:{
   ],
   ef:{moral:8, flag:'viu_a_assinatura',
       npc:{nome:'Célio', opiniao:2, memoria:'Ficou quieto do lado enquanto você olhava a assinatura de casa no formulário.'},
-      presagio:'Em algum capítulo dessa jornada você vai assinar alguma coisa sozinh{o|a} e vai lembrar de fevereiro.'},
+      presagio:'Em algum ponto dessa jornada você vai assinar alguma coisa sozinh{o|a} e vai lembrar de fevereiro.'},
   escolhas:[
     {texto:'"Confere." E assinar embaixo.', vai:'c1e_abre_a_caixa'},
     {texto:'"Os que têm quem assine. E os outros?"', vai:'c1e_os_outros'}
@@ -82809,6 +82809,7 @@ const UI = {
       <div class="linha"><span class="k">Ginásio, Liga, conselho</span><span class="v">vale muito mais e não tem teto</span></div>
       <div class="linha"><span class="k">Teto por capítulo</span><span class="v">o que passa dele conta por 15%</span></div>
       <div class="linha"><span class="k">O mesmo feito</span><span class="v">conta uma vez por capítulo</span></div>
+      <div class="linha"><span class="k">Líder que recusa</span><span class="v">Misty volta a aceitar o desafio com reputação Boa 4, Erika com Boa 5, Sabrina com Boa 6</span></div>
       <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Cada capítulo tem um teto: fazer tudo o que dá num capítulo rende mais que fazer metade, mas não rende o dobro, porque Kanto só fala de você na medida em que te viu. Ginásio e Liga passam por cima do teto — isso é notícia em qualquer altura. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
 
       <h3>O que você sabe</h3>

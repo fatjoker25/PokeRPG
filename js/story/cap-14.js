@@ -1042,7 +1042,7 @@ c14_levou_o_jornal:{
     'Você dobra o jornal na página seis e leva, com os óculos dentro, porque separar os dois parece errado.',
     'Na rua, Blaine te vê saindo com o jornal debaixo do braço e não pergunta nada.',
     'Você não mostra.',
-    'Você vai mostrar depois, num momento melhor, e "um momento melhor" é uma coisa que você vai passar três capítulos procurando e que não existe.'
+    'Você vai mostrar depois, num momento melhor, e "um momento melhor" é uma coisa que você vai passar semanas procurando e que não existe.'
   ],
   ef:{flag:['tem_o_jornal','provas_cinnabar'],
       itens:{'Jornal de 11/11/96 e um par de óculos':1},
@@ -1499,7 +1499,7 @@ c14_queimou:{
     'Sem esse caderno, o que fizeram com ele nunca aconteceu oficialmente.',
     'E o que ele fez, também não.',
     'Você acabou de apagar a única vez em que alguém escreveu, de próprio punho, "ele pediu para sair" e "eu fui lá pedir desculpa".',
-    d=>d.flags.conheceu_blaine ? 'Blaine assiste da porta e não impede, e não fala nada, e quando acaba ele vira e sobe os quarenta metros de corredor sozinho.\nE você nunca mais fala com ele nesse capítulo.' : ''
+    d=>d.flags.conheceu_blaine ? 'Blaine assiste da porta e não impede, e não fala nada, e quando acaba ele vira e sobe os quarenta metros de corredor sozinho.\nE você nunca mais fala com ele nessa ilha.' : ''
   ],
   ef:{flag:['queimou_caderno'], instabilidade:2, moral:-20,
       rep:{eixo:'ruim',delta:3,motivo:'Destruiu a única prova do que fizeram em Cinnabar'},
@@ -1517,7 +1517,7 @@ c14_queimou:{
 c14_desafio_blaine:{
   texto:[
     'Quinta, catorze horas.',
-    'Ele não faz nenhuma concessão por você ter passado a semana com ele. Isso, de um jeito esquisito, é o maior elogio do capítulo.',
+    'Ele não faz nenhuma concessão por você ter passado a semana com ele. Isso, de um jeito esquisito, é o maior elogio da semana.',
     '"Regra da casa: se o teu bicho cair e tu quiser continuar, tu continua. Se eu vir que tu tá continuando por teimosia, eu paro a luta."',
     '"E como você sabe a diferença?"',
     'Ele entra na marcação.',
@@ -2283,7 +2283,7 @@ c14_selma_contou:{
       rep:{eixo:'bom',delta:4,motivo:'Perguntou se ela tinha contado'},
       moral:-8,
       registrar:'Blaine ouviu de Sra. Wilma em 1997 sobre o aceno. "Então ele conhecia mais gente do que a gente achava."',
-      presagio:'Ele conhecia mais gente do que a gente achava. Some as pessoas desse capítulo.'},
+      presagio:'Ele conhecia mais gente do que a gente achava. Some as pessoas dessa ilha.'},
   escolhas:[
     {texto:'"O senhor Fuji morreu?"', vai:'c14_fuji_morreu'},
     {texto:'"E o incêndio de semana passada?"', vai:'c14_incendio_da_semana'},

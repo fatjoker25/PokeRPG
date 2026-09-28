@@ -482,7 +482,7 @@ c1e_a_assinatura:{
   ],
   ef:{moral:8, flag:'viu_a_assinatura',
       npc:{nome:'Célio', opiniao:2, memoria:'Ficou quieto do lado enquanto você olhava a assinatura de casa no formulário.'},
-      presagio:'Em algum capítulo dessa jornada você vai assinar alguma coisa sozinh{o|a} e vai lembrar de fevereiro.'},
+      presagio:'Em algum ponto dessa jornada você vai assinar alguma coisa sozinh{o|a} e vai lembrar de fevereiro.'},
   escolhas:[
     {texto:'"Confere." E assinar embaixo.', vai:'c1e_abre_a_caixa'},
     {texto:'"Os que têm quem assine. E os outros?"', vai:'c1e_os_outros'}

@@ -2592,7 +2592,7 @@ c9_nao_tenho_credencial:{
     '"Então {o senhor|a senhora} não pode dar lance." Ela olha a sua idade. "E {o senhor|a senhora} também não poderia, de qualquer forma."',
     'Mas ela não te tira. Ela dá um passo de lado e abre espaço na parede dos fundos.',
     '"Assistir é público. Sessão pública é pública."',
-    'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou um capítulo inteiro pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
+    'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou dias pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
     'O leiloeiro anuncia o lote 38. Uma senhora de tailleur levanta a plaquinha. Batido.',
     'Lote 39. Batido. Lote 40. Retirado por decisão judicial.',
     'Lote 41.'

@@ -296,7 +296,7 @@ c11_ab_vigiou:{
   ],
   ef:{flag:'o_som_do_galpao', hp:-1,
       registrar:'Do galpão sem placa da zona norte de Saffron sai som de muita coisa viva no mesmo lugar.',
-      presagio:'Você já sabe o que tem ali dentro. O resto do capítulo é sobre o que fazer com isso.'},
+      presagio:'Você já sabe o que tem ali dentro. O resto é decidir o que fazer com isso.'},
   escolhas:[
     {texto:'Seguir pro centro e ir à Silph.', vai:'c11_recepcao'},
     {texto:'Seguir pro centro e ver o ginásio.', vai:'c11_ginasio'},
@@ -580,7 +580,7 @@ c11_sabrina_oque:{
   ef:{flag:'sabe_dos_doze',
       moral:-8,
       registrar:'São doze: onze mentes que se acham uma só, e um molde que nenhuma preenche.',
-      presagio:'Solidão sem nome. É essa a palavra que falta no laudo de todo mundo nesse capítulo.'},
+      presagio:'Solidão sem nome. É essa a palavra que falta no laudo de todo mundo nessa cidade.'},
   escolhas:[
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
     {texto:'"Há quanto tempo você ouve isso?"', vai:'c11_sabrina_quanto_tempo'},
@@ -638,7 +638,7 @@ c11_responde_com_ela:{
       rep:{eixo:'bom',delta:4,motivo:'Ficou na sala com alguém que estava sozinha há três semanas'},
       moral:15,
       registrar:'Sentou com Sabrina enquanto ela respondia aos onze. Os onze agradeceram.',
-      presagio:'Porque tinha mais alguém na sala. É essa a diferença que você faz nesse capítulo.'},
+      presagio:'Porque tinha mais alguém na sala. É essa a diferença que você faz nesse prédio.'},
   escolhas:[
     {texto:'"Me ajuda a entrar."', vai:'c11_sabrina_ajuda'},
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
@@ -764,7 +764,7 @@ c11_e_se_eu_nao_voltar:{
       moral:-5,
       npc:{nome:'Sabrina', opiniao:4, memoria:'Admitiu que tem medo de descobrir que não desceria para te buscar.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou a pergunta desconfortável'},
-      presagio:'Ela tem medo de descobrir que não desce. Lembre disso no fim do capítulo.'},
+      presagio:'Ela tem medo de descobrir que não desce. Lembre disso no fim.'},
   escolhas:[
     {texto:'"Tudo bem. Você já fez muito."', vai:'c11_sabrina_ajuda'},
     {texto:'"Vem até a porta. Só até a porta."', vai:'c11_sabrina_ate_a_porta'},
@@ -844,7 +844,7 @@ c11_sabrina_ajuda:{
       npc:{nome:'Sabrina', opiniao:5, memoria:'Te deu o crachá do zelador e uma âncora mental antes de você descer.'},
       rep:{eixo:'bom',delta:1,motivo:'Conseguiu a confiança da líder de Saffron'},
       registrar:'Recebeu de Sabrina o crachá do zelador e uma âncora mental.',
-      presagio:'Uma coisa idiota e muito específica. Você já viveu ela em algum capítulo.'},
+      presagio:'Uma coisa idiota e muito específica. Você já viveu ela em algum ponto da estrada.'},
   escolhas:[
     {texto:'Ir pra Silph pela recepção.', vai:'c11_recepcao'},
     {texto:'Ir pela doca de carga.', vai:'c11_doca'},
@@ -1026,7 +1026,7 @@ c11_estranho_no_predio:{
     '"Essa suja."'
   ],
   ef:{flag:['sabe_da_sala_vazia','sala_do_setimo'],
-      rep:{eixo:'bom',delta:2,motivo:'Perguntou mais uma vez e ganhou a melhor pista do capítulo'},
+      rep:{eixo:'bom',delta:2,motivo:'Perguntou mais uma vez e ganhou a melhor pista do dia'},
       instabilidade:1,
       registrar:'No 7º andar há uma sala vazia e trancada que suja toda semana, com marca de pé no pó.',
       presagio:'Marca de pé no pó de uma sala trancada e vazia. Alguém anda ali.'},
@@ -1064,7 +1064,7 @@ c11_cida_topou:{
       npc:{nome:'Sra. Odile (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém arriscou a aposentadoria por você'},
       registrar:'Sra. Odile te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
-      presagio:'"De alguém abrindo por dentro." Anota — essa é a solução do capítulo.'},
+      presagio:'"De alguém abrindo por dentro." Anota — essa é a saída.'},
   escolhas:[
     {texto:'Entrar pela recepção com o crachá verde.', vai:'c11_recepcao'},
     {texto:'Entrar pela porta de serviço às seis da manhã.', vai:'c11_porta_de_servico'},
@@ -1161,7 +1161,7 @@ c11_seguiu_o_orcamento:{
       rep:{eixo:'bom',delta:3,motivo:'Esperou oito minutos em silêncio e recebeu o nome anterior da rubrica'},
       npc:{nome:'Homem do orçamento', opiniao:1, memoria:'Te contou que a rubrica se chamava "Recuperação de acervo — Cinnabar" antes de 1996.'},
       registrar:'A rubrica era "Recuperação de acervo — Cinnabar" e virou "dispositivo de contenção" em 1996, triplicando de valor.',
-      presagio:'Cinnabar. O laboratório da ilha. Guarde — o capítulo dele vem.'},
+      presagio:'Cinnabar. O laboratório da ilha. Guarde — a vez dele vem.'},
   escolhas:[
     {texto:'Ir pra doca de carga.', vai:'c11_doca'},
     {texto:'Falar com a do crachá azul.', vai:'c11_cracha_azul'},
@@ -1648,7 +1648,7 @@ c11_reagiu_seguranca:{
   texto:[
     'Você reage no saguão de uma empresa, sob quatro câmeras, num piso de granito polido, na frente de doze funcionários voltando do almoço.',
     'Isso não é uma batalha Pokémon.',
-    'É uma ocorrência policial com registro audiovisual, e a diferença entre as duas coisas é a que vai definir os seus próximos capítulos.'
+    'É uma ocorrência policial com registro audiovisual, e a diferença entre as duas coisas é a que vai definir as suas próximas semanas.'
   ],
   batalha:{dex:82, nivel:36, tipo:'treinador', treinador:'Segurança da Silph', fuga:true,
            timeExtra:[{dex:57, nivel:36}],
@@ -1915,7 +1915,7 @@ c11_anotou_placas:{
     'Você anota as quatro placas no caderno, e o modelo, e a cor.',
     'Um sedã prata de meia-idade com cadeirinha de bebê no banco de trás. Uma perua com adesivo de faculdade no vidro. Um carro popular com uma pasta no banco do carona. E um utilitário com o para-choque amassado e uma caixa de papelão no porta-malas, aberta, com pastas dentro.',
     'Quatro pessoas. Uma tem filho pequeno. Uma faz pós-graduação.',
-    'É a coisa mais desconcertante do capítulo até aqui: você veio procurar monstro e achou estacionamento.',
+    'É a coisa mais desconcertante da semana até aqui: você veio procurar monstro e achou estacionamento.',
     'A caixa aberta no porta-malas do utilitário tem um lombo de pasta virado pra cima e dá pra ler, se você chegar perto do vidro:',
     '**PROJ. 11 — SÉRIE 3 — ENCERRAMENTO**'
   ],
@@ -1949,7 +1949,7 @@ c11_abriu_o_porta_malas:{
       rep:{eixo:'bom',delta:4,motivo:'Abriu o porta-malas e leu a data'},
       moral:-15, instabilidade:2,
       registrar:'A série 3 será descontinuada em nove dias. Onze exemplares com cognição parcial.',
-      presagio:'Nove dias. Agora tudo que você fizer nesse capítulo tem prazo.'},
+      presagio:'Nove dias. Agora tudo que você fizer daqui pra frente tem prazo.'},
   escolhas:[
     {texto:'Levar a pasta e descer.', vai:'c11_escada'},
     {texto:'Levar a pasta e sair do prédio.', vai:'c11_saiu_com_a_foto'},
@@ -2240,7 +2240,7 @@ c11_doca:{
     'Nenhum dos dois assina nada. Nenhum dos dois olha a etiqueta. Um deles está no meio de uma conversa sobre a Liga e não interrompe pra carregar.',
     d=>{
       const via = Historia.via();
-      if (via==='mercenario'||via==='foragido') return 'Você conhece essa caixa. Você provavelmente ajudou a carregar uma igual em algum lugar, em algum capítulo, sem perguntar o que tinha dentro.';
+      if (via==='mercenario'||via==='foragido') return 'Você conhece essa caixa. Você provavelmente ajudou a carregar uma igual em algum lugar, em algum ponto da estrada, sem perguntar o que tinha dentro.';
       if (d.flags.sabe_dos_setecentos) return 'Setecentos e vinte e oito. Esta é a caixa setecentos e vinte e nove até setecentos e trinta e cinco.';
       return 'Sete unidades por semana, segundo a mulher do crachá azul. Sete dentro daquela caixa.';
     }
@@ -2287,11 +2287,11 @@ c11_levou_a_caixa:{
     'Ela é grande, branca, absurdamente visível, e você atravessa Saffron às vinte e uma horas carregando uma caixa de material biológico de um metro e meio.',
     'Ninguém te para.',
     'Três pessoas olham. Uma delas segura a porta do prédio pra você porque você está com as mãos ocupadas.',
-    'É a coisa mais engraçada e mais deprimente do capítulo: você roubou uma prova federal e o que a cidade fez foi segurar a porta.'
+    'É a coisa mais engraçada e mais deprimente da semana: você roubou uma prova federal e o que a cidade fez foi segurar a porta.'
   ],
   ef:{flag:['tem_a_caixa_de_cinnabar','provas_do_11'],
       itens:{'Caixa carimbada de Cinnabar':1},
-      rep:{eixo:'bom',delta:3,motivo:'Saiu com a prova física mais indesmentível do capítulo'},
+      rep:{eixo:'bom',delta:3,motivo:'Saiu com a prova física mais indesmentível da semana'},
       registrar:'Levou uma caixa vazia carimbada do Instituto de Cinnabar.',
       presagio:'Alguém segurou a porta. Guarde essa piada; você vai precisar dela mais tarde.'},
   escolhas:[
@@ -2559,7 +2559,7 @@ c11_leu_o_caderno:{
       rep:{eixo:'bom',delta:4,motivo:'Leu os duzentos e quarenta e um dias'},
       moral:-15, instabilidade:1,
       registrar:'O caderno 6 do Dr. Fuji: 241 dias de conversa. O caderno 7 não está na caixa.',
-      presagio:'"Pra que exista em algum lugar que eu sabia." Você já ouviu essa frase nesse capítulo.'},
+      presagio:'"Pra que exista em algum lugar que eu sabia." Você já ouviu essa frase nessa cidade.'},
   escolhas:[
     {texto:'Descer para o andar 11 com o caderno.', vai:'c11_escada'},
     {texto:'Procurar o caderno 7 nas outras caixas.', vai:'c11_caderno_sete'},
@@ -2812,7 +2812,7 @@ c11_perguntou:{
     'Não é uma resposta em palavra. É uma pressão atrás dos seus olhos, e uma sensação que você reconhece imediatamente porque toda pessoa viva reconhece:',
     'o alívio de alguém que passou muito tempo esperando ser chamado.',
     'Onze pressões. Uma depois da outra, em ordem, do primeiro tanque ao décimo primeiro, com um intervalo igual entre elas, como quem confere presença.',
-    d=>d.flags.ancora_mental ? 'E aí alguma coisa começa a puxar você pra dentro daquilo, e você lembra — de um jeito absurdo e nítido e completamente inútil — do cheiro da cozinha da sua casa numa manhã de capítulo um. A âncora da Sabrina. Você volta.' :
+    d=>d.flags.ancora_mental ? 'E aí alguma coisa começa a puxar você pra dentro daquilo, e você lembra — de um jeito absurdo e nítido e completamente inútil — do cheiro da cozinha da sua casa na manhã em que você saiu. A âncora da Sabrina. Você volta.' :
        'E aí alguma coisa começa a puxar você pra dentro daquilo e você não tem absolutamente nada pra se segurar.',
     d=>d.flags.reis_desce_com_voce ? 'A Dra. Sorrel está com as duas mãos na boca e não está respirando direito, e ela trabalha aqui há nove anos e é a primeira vez que ela vê isso, porque é a primeira vez que alguém perguntou.' : ''
   ],
@@ -3415,7 +3415,7 @@ c11_desistiu:{
 c11_fim:{
   texto:[
     'Saffron continua funcionando.',
-    'Esse é o detalhe que não sai da sua cabeça, e vai continuar não saindo por muitos capítulos.',
+    'Esse é o detalhe que não sai da sua cabeça, e vai continuar não saindo por muito tempo.',
     'Quarenta metros abaixo do chão tem onze tanques. Quarenta metros acima deles tem gente discutindo planilha de suprimentos com placa de acrílico na parede. E trinta metros acima dessa gente tem gente comprando jantar.',
     'Nenhuma dessas camadas sabe da outra, ou sabe e não olha, e a cidade funciona perfeitamente assim, com transporte público pontual e coleta de lixo três vezes por semana.',
     d=>{

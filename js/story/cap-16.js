@@ -104,7 +104,7 @@ c16_ab_onde_achou:{
     fala('Nina', 'Vidro de garrafa que o mar lixa. Fica fosco e fica bonito.'),
     'Ela puxa um potinho de plástico de dentro da bolsa e mostra: uns quarenta cacos de vidro verde e âmbar, lixados pelo mar, bonitos mesmo.',
     fala('Nina', 'A pena tava junto do vidro. Em cima da linha da maré.'),
-    'E aí ela fala a frase que muda a cena:',
+    'E aí ela fala a frase que muda a conversa:',
     fala('Nina', 'Ele achou em três de agosto e a gente enterrou ele dia sete.'),
     fala('Nina', 'Meu pai falou que a pena deu azar. Eu acho que ela só tava lá.', 'baixo')
   ],

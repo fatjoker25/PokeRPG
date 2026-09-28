@@ -691,7 +691,7 @@ c4_teo_promete_agora:{
   ],
   ef:{moral:6, flag:'teo_prometeu',
       npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'},
-      presagio:'Guarde essa promessa. Vai chegar um capítulo em que ela vai ser cobrada, e não vai ser por você.'},
+      presagio:'Guarde essa promessa. Vai chegar um dia em que ela vai ser cobrada, e não vai ser por você.'},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},

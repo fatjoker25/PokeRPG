@@ -1016,7 +1016,7 @@ c10_sentou_com_eloi:{
     'Perto das onze ele fala uma coisa só:',
     '"Meu pai também trabalhou nessa usina. Ele ajudou a construir, em cinquenta e oito."',
     '"Três gerações de uma família olhando pro mesmo prédio e nenhuma delas entendeu o que tem dentro."',
-    'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitos capítulos.'
+    'E depois vocês voltam a não falar nada, e é confortável, e é a coisa mais calma que aconteceu com você em muitas semanas.'
   ],
   ef:{flag:'noite_com_eloi', moral:12, hp:3,
       npc:{nome:'Sr. Edric', opiniao:7, memoria:'Passaram quarenta minutos em silêncio na brita, tomando café com açúcar demais.'},
