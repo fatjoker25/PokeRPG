@@ -56,7 +56,7 @@ const ELITE4 = [
     'A sala tem iluminação de palco. Refletor, fumaça de máquina, e uma música que começa quando você entra.',
     '"MANDI!" Ele abre os braços para uma plateia que não existe. "O ESPANTOSO!"',
     'Depois baixa os braços e fala em tom normal, o que é muito mais assustador:',
-    '"Todo mundo acha que eu sou palhaço. Eu fui vice-campeão da Conferência Indigo, e eu virei palhaço de propósito, porque desafiante nervoso erra mais do que desafiante assustado."',
+    '"Todo mundo acha que eu sou palhaço. Eu fui vice-campeão da Conferência do Planalto Indigo, e eu virei palhaço de propósito, porque desafiante nervoso erra mais do que desafiante assustado."',
     '"A cadeira lá fora é da Agatha. Ela tem oitenta e poucos anos e sentava ali entre os desafiantes pra fumar." Ele dá de ombros. "Eu não sento na cadeira dela. Eu só não deixo tirarem."',
     '"Agora você sabe de tudo. E vai errar mesmo assim."'
   ],

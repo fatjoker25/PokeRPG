@@ -1,6 +1,6 @@
 /* ============================================================
    SIMULADOR DE FORÇA DOS VETERANOS
-   Luta cada veterano (e o convite dele, e as rodadas da Copa) com o
+   Luta cada veterano (e o convite dele, e as rodadas da Conferência) com o
    motor de batalha do jogo, contra times do tamanho e do nível que o
    jogador teria ali: no nível do lugar +2 (de passagem), +6 (treinado)
    e +10 (preparado de propósito). Veterano tem que ser desafio de
@@ -117,16 +117,16 @@ for (const v of VETERANOS){
   console.log(`${v.id.padEnd(9)} ${c.local.padEnd(16)} vitória ${r.vit}% · caídos ${r.cai} · níveis ${r.amostra.join('/')}`);
 }
 
-console.log('\n--- Copa dos Veteranos, time de 6 ---');
+console.log('\n--- Conferência do Planalto Indigo, time de 6 ---');
 d.insignias = INS.slice(0, 8); d.flags.campeao_de_kanto = true;
 for (const nv of [60, 66, 72]){
   const linha = [0, 1, 2].map(rod => {
-    const ids = rod === 2 ? ['greer'] : VETERANOS.filter(v => v.copa && !v.final).map(v => v.id);
+    const ids = rod === 2 ? ['greer'] : VETERANOS.filter(v => v.conferencia && !v.final).map(v => v.id);
     const r = medir(nv, 'planalto', 6, () => {
       const v = veterano(ids[Dados.entre(0, ids.length - 1)]);
-      return timeDeLinhas(v.times, Math.max(PISO_COPA[rod], nivelDeReferencia() + ACIMA_COPA + rod), 6, v.golpes, 95);
+      return timeDeLinhas(v.times, Math.max(PISO_CONFERENCIA[rod], nivelDeReferencia() + ACIMA_CONFERENCIA + rod), 6, v.golpes, 95);
     });
-    return `${PREMIO_COPA[rod].rodada} ${r.vit}% (${r.cai})`;
+    return `${PREMIO_CONFERENCIA[rod].rodada} ${r.vit}% (${r.cai})`;
   });
   console.log(`jogador nv ${nv}: ${linha.join(' · ')}`);
 }

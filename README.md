@@ -14,7 +14,7 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**32 capítulos · 2.820 cenas · 8.442 escolhas · 49 finais e 20 epílogos · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 65 treinadores de estrada · 12 veteranos e a Copa dos Veteranos · 60 contatos no PokéNav · 10 lojas e 19 trocas.**
+**32 capítulos · 2.820 cenas · 8.442 escolhas · 49 finais e 20 epílogos · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 65 treinadores de estrada · 12 veteranos e a Conferência do Planalto Indigo · 60 contatos no PokéNav · 10 lojas e 19 trocas.**
 
 São 28 capítulos na linha principal e 4 **condicionais**, que só acontecem se você fez (ou deixou de fazer) uma coisa específica antes — e que entram no meio da jornada, logo depois do capítulo que os dispara.
 
@@ -84,7 +84,7 @@ Acessíveis pelo botão **Liga** na barra do topo.
 
 **Torneio Aberto** — chaveamento de oito, três rodadas, repetível o ano inteiro, inscrição de 2.000 ₽. Os adversários saem da sua própria campanha: Ezra, o Caçador Roque, a Fenna da Silph e o guia Orin entram no chaveamento se existirem na sua história — e o Ezra tem falas diferentes conforme a opinião dele sobre você. Veterano que você venceu também pode cair no seu chaveamento.
 
-**Copa dos Veteranos** — só depois da cadeira do Campeão. Três rodadas contra veteranos com time de seis, primeiro os que você já venceu na estrada, e na final sempre a Greer, dona de três Copas. Inscrição de 5.000 ₽ (ou por conta do Lorne, se ele ligar), 12.000 / 25.000 / 60.000 ₽ de prêmio, e a primeira Copa vem com uma Master Ball no fundo do troféu.
+**Conferência do Planalto Indigo** — só depois da cadeira do Campeão. Três rodadas contra veteranos com time de seis, primeiro os que você já venceu na estrada, e na final sempre a Greer, dona de três Conferências. Inscrição de 5.000 ₽ (ou por conta do Lorne, se ele ligar), 12.000 / 25.000 / 60.000 ₽ de prêmio, e a primeira Conferência vem com uma Master Ball no fundo do troféu.
 
 ### Os oito ginásios
 
@@ -344,7 +344,7 @@ js/story/estrada.js      treinadores de estrada: escalões, times e brigas
 js/story/estrada-dados.js os 65 treinadores, rota por rota
 js/story/ginasios.js     os 8 líderes, escala de time, falas e travas
 js/story/liga.js         Elite 4, o Campeão e o Torneio Aberto
-js/story/veteranos.js    os 12 veteranos, os convites deles e a Copa dos Veteranos
+js/story/veteranos.js    os 12 veteranos, os convites deles e a Conferência do Planalto Indigo
 js/story/comissao.js     a CGRB: estatuto, doutrina, gente e unidades
 js/story/rival.js        Ezra e os rivais de estrada: arcos, time adaptativo e falas
 js/ui/interface.js       telas
@@ -365,7 +365,7 @@ Dezenove deles passam o número na primeira vez que perdem, e viram contato no P
 
 **12 veteranos**, gente com mais estrada que você, cada um num lugar que importa: o Harlan no fundo do Monte da Lua, a Rhoda no cais de pesca de Vermilion, a Odessa na casa de chá de Lavender, o Conrad no salão de luta de Saffron, a Talia na cerca da reserva de Fuchsia, o Wendell na lagoa de gelo de Seafoam, a Maxine na encosta do vulcão de Cinnabar, o Lorne no Caminho da Vitória e a Greer, depois do título, no campo dos fundos do Planalto. Ninguém te para: você vai atrás. O nível deles é o do lugar + 9 — de passagem é briga de verdade, e voltar mais forte vale a pena, porque o time não cresce (quando você passa desse nível, eles acompanham os seus três mais fortes). A IA deles quase não erra a escolha do golpe, e o golpe mais fraco de cada Pokémon vem trocado por uma TM do dono.
 
-Vencer rende três vezes o prêmio da classe, uma TM que não se compra (Rock Slide, Ice Beam, Shadow Ball, Dynamic Punch, Earthquake, Blizzard, Hyper Beam, Psychic…) e um item que o veterano carrega — até uma Master Ball, a da Greer. Perder não custa nada. Quem perde pra você passa o número, e três dias depois liga com um convite: tirar uma turma de explosivo do Túnel da Rocha, um barco que pesca com rede de choque, um colecionador de Pokémon em vitrine, o exame de faixa de uma aluna, um Lapras preso no gelo, uma vigília na Torre, a inscrição na Copa.
+Vencer rende três vezes o prêmio da classe, uma TM que não se compra (Rock Slide, Ice Beam, Shadow Ball, Dynamic Punch, Earthquake, Blizzard, Hyper Beam, Psychic…) e um item que o veterano carrega — até uma Master Ball, a da Greer. Perder não custa nada. Quem perde pra você passa o número, e três dias depois liga com um convite: tirar uma turma de explosivo do Túnel da Rocha, um barco que pesca com rede de choque, um colecionador de Pokémon em vitrine, o exame de faixa de uma aluna, um Lapras preso no gelo, uma vigília na Torre, a inscrição na Conferência.
 
 ## PokéNav
 

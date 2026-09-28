@@ -66,7 +66,7 @@ const Jogo = {
   encontroRival: null,
   estradaAtual: null,
   veteranoAtual: null,
-  copaAtual: null,
+  conferenciaAtual: null,
   depoisDaEstrada: null,
   capDepoisDaViagem: null,
   destinoDaViagem: null,
@@ -501,9 +501,9 @@ const Jogo = {
         const c = Veteranos.citacao(venceu);
         if (c && fim.resultado !== 'gameover') L('citacao', c);
         if (venceu) dinheiro(Veteranos.premioDe(v));
-      } else if (a.tipo === 'copa' && fim.resultado !== 'gameover'){
+      } else if (a.tipo === 'conferencia' && fim.resultado !== 'gameover'){
         L('citacao', `${v.nome}: ${txt(venceu ? v.perde : v.vence)}`);
-        dinheiro(Copa.premio(venceu));
+        dinheiro(Conferencia.premio(venceu));
       }
     } else if (this.estradaAtual){
       const c = Estrada.citacao(venceu);
@@ -574,7 +574,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
-    if (this.veteranoAtual) return this.veteranoAtual.tipo === 'copa' ? Copa.resultado(fim) : Veteranos.resultado(fim);
+    if (this.veteranoAtual) return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
     if (this.estradaAtual)  return Estrada.resultado(fim);
     if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);

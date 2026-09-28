@@ -159,7 +159,7 @@ const Estrada = {
     r.encontros++;
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null;
-    Jogo.veteranoAtual = null; Jogo.copaAtual = null;
+    Jogo.veteranoAtual = null; Jogo.conferenciaAtual = null;
     Jogo.estradaAtual = {id, escalao: escalaoEstradaDe(numInsignias())};
     Jogo.batalhaLivre = true;
     UI.limparDados();

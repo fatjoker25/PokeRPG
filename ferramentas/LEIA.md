@@ -18,7 +18,7 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `chk-campo.js` | o sistema de cortar/atravessar/voar/forçar/iluminar: quantas espécies servem pra cada coisa e se as portas apontam pra cena que existe |
 | `chk-caminho.js` | menor caminho da entrada até o fim de cada capítulo, e quanto do capítulo dá pra alcançar de uma entrada só |
 | `sim-estrada.js` | força dos treinadores de estrada, lugar por lugar, com o motor de batalha do jogo |
-| `sim-veteranos.js` | força dos veteranos, dos convites e das três rodadas da Copa dos Veteranos |
+| `sim-veteranos.js` | força dos veteranos, dos convites e das três rodadas da Conferência do Planalto Indigo |
 
 Rodar todos:
 

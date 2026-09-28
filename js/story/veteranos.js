@@ -8,11 +8,11 @@
    Ninguém te para: você vai atrás. O time é inteiro, o nível fica
    acima do seu, e eles erram pouco. Quem vence leva um prêmio que
    não se compra, o número do PokéNav, e dias depois o telefone toca
-   com um convite. Os que vão à Copa dos Veteranos te esperam lá
+   com um convite. Os que vão à Conferência do Planalto Indigo te esperam lá
    depois que você senta na cadeira do Campeão.
 
    O motor mora aqui junto com os dados, porque os dois só fazem
-   sentido juntos. A Copa fica no fim do arquivo.
+   sentido juntos. A Conferência fica no fim do arquivo.
    ============================================================ */
 
 /* O nível do veterano é o do lugar + PISO_VETERANO, fixo: de passagem
@@ -21,8 +21,8 @@
    ACIMA_VETERANO) — senão voltar no fim do jogo virava passeio. */
 const PISO_VETERANO = 9;
 const ACIMA_VETERANO = 0;
-/* na Copa, acima dos seus três mais fortes, mais a rodada */
-const ACIMA_COPA = 2;
+/* na Conferência, acima dos seus três mais fortes, mais a rodada */
+const ACIMA_CONFERENCIA = 2;
 /* chance, em %, de a IA escolher o segundo melhor golpe (o normal é 22) */
 const ERRO_IA_VETERANO = 8;
 /* o prêmio é o da classe × nível do último Pokémon, vezes isto */
@@ -33,7 +33,7 @@ const TAM_VETERANO = [3, 3, 4, 4, 5, 5, 6, 6, 6];
 
 const VETERANOS = [
 {
-  id:'harlan', local:'monte_lua', insignias:1, copa:true,
+  id:'harlan', local:'monte_lua', insignias:1, conferencia:true,
   classe:'Montanhista', arq:'hiker', artigo:'um', nome:'Harlan',
   porta:{titulo:'Seguir a luz de lanterna que vem do fundo da caverna',
          sub:'Alguém acampa lá embaixo, onde a trilha marcada acaba.'},
@@ -95,7 +95,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'morgan', local:'cerulean', insignias:2, copa:false,
+  id:'morgan', local:'cerulean', insignias:2, conferencia:false,
   classe:'Treinador Ás', arq:'ace_trainer', artigo:'um', nome:'Morgan',
   porta:{titulo:'Ver quem treina sozinho debaixo da ponte velha',
          sub:'Seis bolas enfileiradas na beira do rio, e ninguém em volta.'},
@@ -158,7 +158,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'rhoda', local:'vermilion', insignias:3, copa:true, f:true,
+  id:'rhoda', local:'vermilion', insignias:3, conferencia:true, f:true,
   classe:'Veterana', arq:'veteran_f', artigo:'uma', nome:'Rhoda',
   porta:{titulo:'Falar com a mulher que treina no fim do cais de pesca',
          sub:'O cais de pesca, não o de carga. Ela está lá desde antes de a maré baixar.'},
@@ -219,7 +219,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'odessa', local:'lavender', insignias:4, copa:false, f:true,
+  id:'odessa', local:'lavender', insignias:4, conferencia:false, f:true,
   classe:'Médium', arq:'medium', artigo:'uma', nome:'Odessa',
   porta:{titulo:'Subir a escada da casa de chá, onde uma mulher joga cartas sozinha',
          sub:'A mesa dela tem duas xícaras. Uma é pra quem sobe.'},
@@ -282,7 +282,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'corinne', local:'celadon', insignias:4, copa:false, f:true,
+  id:'corinne', local:'celadon', insignias:4, conferencia:false, f:true,
   classe:'Dama', arq:'lady', artigo:'uma', nome:'Corinne',
   porta:{titulo:'Aceitar o convite para o chá no jardim do terraço',
          sub:'Um cartão de papel grosso, deixado no balcão do Centro com o seu nome.'},
@@ -345,7 +345,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'conrad', local:'saffron', insignias:5, copa:true,
+  id:'conrad', local:'saffron', insignias:5, conferencia:true,
   classe:'Faixa-Preta', arq:'black_belt', artigo:'um', nome:'Conrad',
   porta:{titulo:'Entrar no salão de luta da rua de trás',
          sub:'A porta está aberta e dá pra ouvir alguém contando golpe em voz alta.'},
@@ -404,7 +404,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'quinn', local:'rota16', insignias:5, copa:true,
+  id:'quinn', local:'rota16', insignias:5, conferencia:true,
   classe:'Motoqueiro', arq:'biker', artigo:'um', nome:'Quinn',
   porta:{titulo:'Parar no posto onde as motos ficam de noite',
          sub:'Uma fila de motos, e uma delas tem o banco rasgado com fita.'},
@@ -463,7 +463,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'talia', local:'fuchsia', insignias:5, copa:true, f:true,
+  id:'talia', local:'fuchsia', insignias:5, conferencia:true, f:true,
   classe:'Guarda-Parque', arq:'pokemon_ranger_f', artigo:'uma', nome:'Talia',
   porta:{titulo:'Ir até a guarita da cerca, onde a guarda-parque almoça',
          sub:'A guarita fica no fim da estrada de terra, onde a cerca da reserva faz curva.'},
@@ -524,7 +524,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'wendell', local:'seafoam', insignias:6, copa:true,
+  id:'wendell', local:'seafoam', insignias:6, conferencia:true,
   classe:'Mergulhador', arq:'scuba_diver', artigo:'um', nome:'Wendell',
   porta:{titulo:'Descer até a lagoa de gelo onde alguém mergulha',
          sub:'Tem uma roupa de mergulho estendida numa pedra, dura de gelo.'},
@@ -581,7 +581,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'maxine', local:'cinnabar', insignias:7, copa:true, f:true,
+  id:'maxine', local:'cinnabar', insignias:7, conferencia:true, f:true,
   classe:'Cientista', arq:'scientist_f', artigo:'uma', nome:'Maxine',
   porta:{titulo:'Seguir o fio de sensor até a barraca na encosta do vulcão',
          sub:'Tem uma barraca de lona laranja e três aparelhos apitando fora de ritmo.'},
@@ -637,7 +637,7 @@ const VETERANOS = [
   }
 },
 {
-  id:'lorne', local:'caminho_vitoria', insignias:8, copa:true,
+  id:'lorne', local:'caminho_vitoria', insignias:8, conferencia:true,
   classe:'Domador de Dragões', arq:'dragon_tamer', artigo:'um', nome:'Lorne',
   porta:{titulo:'Ir até a fogueira no salão alto do Caminho',
          sub:'Tem fogo aceso num lugar onde não entra vento.'},
@@ -664,29 +664,29 @@ const VETERANOS = [
     cond:d=>!!d.flags.campeao_de_kanto,
     falas:[
       fala('Lorne', 'Lorne, do Caminho. Eu soube da cadeira.'),
-      fala('Lorne', 'Todo ano, na arena do Planalto, tem a Copa dos Veteranos. Não é da Liga. É nossa. Quem luta lá é quem ficou na estrada tempo demais pra caber em torneio aberto.'),
+      fala('Lorne', 'Todo ano, depois que a Elite fecha a temporada, a arena recebe a Conferência do Planalto Indigo. Quem luta lá é quem ficou na estrada tempo demais pra caber em torneio aberto.'),
       fala('Lorne', 'Eu nunca inscrevi ninguém. Eu queria inscrever você.')
     ],
     aceita:'"Pode inscrever."',
     combinado:[fala('Lorne', 'Já está. A inscrição dessa vez fica por minha conta. Na próxima você paga, como todo mundo.')],
     recusa:'"Eu já tive Liga demais."',
-    recusado:[fala('Lorne', 'Entendo. A Copa acontece todo ano. Eu também.')]
+    recusado:[fala('Lorne', 'Entendo. A Conferência acontece todo ano. Eu também.')]
   },
   convite:{
     local:'planalto', titulo:'Aceitar a inscrição que Lorne pagou',
-    sub:'A Copa dos Veteranos, na arena do Planalto.',
+    sub:'A Conferência do Planalto Indigo, na arena central.',
     cena:[
       'No balcão da arena tem um envelope com o seu nome escrito com letra de quem aprendeu a escrever faz muito tempo.',
-      'Dentro, o recibo da inscrição da Copa dos Veteranos, pago em dinheiro, e um bilhete.',
+      'Dentro, o recibo da inscrição da Conferência do Planalto Indigo, pago em dinheiro, e um bilhete.',
       '**NÃO É PRESENTE. É APOSTA. — L.**'
     ],
     botao:'Guardar o recibo',
-    fim:['O recibo vale uma inscrição na Copa. A atendente carimba e devolve sem perguntar nada.'],
-    recompensa:d=>{ d.flags.copa_paga = true; return [{tipo:'item', texto:'Inscrição da Copa dos Veteranos paga.'}]; }
+    fim:['O recibo vale uma inscrição na Conferência. A atendente carimba e devolve sem perguntar nada.'],
+    recompensa:d=>{ d.flags.conferencia_paga = true; return [{tipo:'item', texto:'Inscrição da Conferência do Planalto Indigo paga.'}]; }
   }
 },
 {
-  id:'greer', local:'planalto', insignias:8, campeao:true, copa:true, final:true, f:true,
+  id:'greer', local:'planalto', insignias:8, campeao:true, conferencia:true, final:true, f:true,
   classe:'Treinadora Ás', arq:'ace_trainer_f', artigo:'uma', nome:'Greer',
   porta:{titulo:'Ir ao campo de treino dos fundos, atrás da arena',
          sub:'Ninguém usa esse campo. Ontem alguém usou.'},
@@ -697,7 +697,7 @@ const VETERANOS = [
   apresenta:[
     'O campo de treino dos fundos tem a grama queimada em círculos, e uma mulher de uns trinta anos sentada no alambrado, balançando as pernas.',
     fala('Greer', 'Então é você. A cadeira.'),
-    fala('Greer', 'Greer. Três Copas dos Veteranos. Nunca subi pra Elite dos Quatro, e nunca quis. Eu gosto de lutar, não de ficar sentada esperando luta.'),
+    fala('Greer', 'Greer. Três vezes campeã da Conferência. Nunca subi pra Elite dos Quatro, e nunca quis. Eu gosto de lutar, não de ficar sentada esperando luta.'),
     fala('Greer', 'Eu fiquei curiosa com quem ganhou do Red. Eu fiquei curiosa com isso o mês inteiro.'),
     fala('Greer', 'Não é pela cadeira. É pela curiosidade.')
   ],
@@ -706,7 +706,7 @@ const VETERANOS = [
   perde:'"Ah. Agora eu entendi o Red."',
   depois:[
     'Greer está no alambrado, balançando as pernas, olhando o campo.',
-    fala('Greer', 'Eu te vejo na Copa. Não vou ficar curiosa lá. Vou ficar é com raiva.', 'riso')
+    fala('Greer', 'Eu te vejo na Conferência. Não vou ficar curiosa lá. Vou ficar é com raiva.', 'riso')
   ],
   torneio:'"Torneio aberto? Eu vim assistir. Me inscreveram de brincadeira."',
   chamada:{
@@ -901,7 +901,7 @@ const Veteranos = {
     time.forEach(x => { x.nomeAnunciado = true; });
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null;
-    Jogo.copaAtual = atual.copa ? Jogo.copaAtual : null;
+    Jogo.conferenciaAtual = atual.conferencia ? Jogo.conferenciaAtual : null;
     Jogo.veteranoAtual = atual;
     Jogo.batalhaLivre = true;
     UI.limparDados();
@@ -1096,30 +1096,30 @@ if (typeof RIVAIS_TORNEIO !== 'undefined') VETERANOS.forEach(v => {
    COPA DOS VETERANOS
    Depois da cadeira do Campeão. Três rodadas na arena do Planalto,
    contra quem ficou na estrada tempo demais pra caber em torneio
-   aberto. A final é sempre contra a dona de três Copas.
+   aberto. A final é sempre contra a dona de três Conferências.
    ============================================================ */
-const INSCRICAO_COPA = 5000;
-const PREMIO_COPA = [
+const INSCRICAO_CONFERENCIA = 5000;
+const PREMIO_CONFERENCIA = [
   {rodada:'Quartas',   dinheiro:12000, rep:1, itens:{'Hyper Potion':3}},
   {rodada:'Semifinal', dinheiro:25000, rep:1, itens:{'Full Heal':3, 'Revive':2}},
   {rodada:'Final',     dinheiro:60000, rep:3, itens:{'PP Up':3, 'Elixir':2}}
 ];
-/* piso de nível da Copa, rodada a rodada */
-const PISO_COPA = [66, 68, 72];
+/* piso de nível da Conferência, rodada a rodada */
+const PISO_CONFERENCIA = [66, 68, 72];
 
-function statusCopa(){
+function statusConferencia(){
   const d = Estado.dados;
   if (!d.flags.campeao_de_kanto) return {estado:'trancado', texto:'Só pra quem sentou na cadeira do Campeão'};
-  if (d.flags.copa_paga) return {estado:'disponivel', texto:'Inscrição paga por Lorne'};
-  if (d.jogador.dinheiro < INSCRICAO_COPA) return {estado:'sem_dinheiro', texto:`Inscrição: ${INSCRICAO_COPA.toLocaleString('pt-BR')} ₽ (você tem ${d.jogador.dinheiro.toLocaleString('pt-BR')})`};
-  return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_COPA.toLocaleString('pt-BR')} ₽`};
+  if (d.flags.conferencia_paga) return {estado:'disponivel', texto:'Inscrição paga por Lorne'};
+  if (d.jogador.dinheiro < INSCRICAO_CONFERENCIA) return {estado:'sem_dinheiro', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽ (você tem ${d.jogador.dinheiro.toLocaleString('pt-BR')})`};
+  return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_CONFERENCIA.toLocaleString('pt-BR')} ₽`};
 }
 
 /* Dois adversários antes da final: primeiro quem você já venceu na
    estrada (eles vêm atrás de revanche), o resto sorteado. */
-function montarCopa(){
+function montarConferencia(){
   const final = VETERANOS.find(v => v.final);
-  const pool = VETERANOS.filter(v => v.copa && !v.final);
+  const pool = VETERANOS.filter(v => v.conferencia && !v.final);
   const conhecidos = pool.filter(v => Veteranos.venceu(v.id));
   const outros = pool.filter(v => !Veteranos.venceu(v.id));
   const escolhe = lista => lista.splice(Dados.entre(0, lista.length - 1), 1)[0];
@@ -1129,63 +1129,63 @@ function montarCopa(){
   return lados;
 }
 
-const Copa = {
+const Conferencia = {
   iniciar(){
-    const st = statusCopa();
+    const st = statusConferencia();
     if (st.estado !== 'disponivel') return UI.telaLiga();
-    if (!Estado.primeiroApto()) return UI.modal('Copa', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
+    if (!Estado.primeiroApto()) return UI.modal('Conferência', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de se inscrever.</p>');
     const d = Estado.dados;
-    if (d.flags.copa_paga) d.flags.copa_paga = false;
-    else d.jogador.dinheiro -= INSCRICAO_COPA;
-    Jogo.copaAtual = {rodada:0, adversarios:montarCopa()};
-    Estado.registrar('Inscreveu-se na Copa dos Veteranos.');
+    if (d.flags.conferencia_paga) d.flags.conferencia_paga = false;
+    else d.jogador.dinheiro -= INSCRICAO_CONFERENCIA;
+    Jogo.conferenciaAtual = {rodada:0, adversarios:montarConferencia()};
+    Estado.registrar('Inscreveu-se na Conferência do Planalto Indigo.');
     Estado.salvar('auto');
-    UI.telaCopa();
+    UI.telaConferencia();
   },
 
   lutar(){
-    const c = Jogo.copaAtual;
+    const c = Jogo.conferenciaAtual;
     if (!c) return UI.telaLiga();
     const v = veterano(c.adversarios[c.rodada]);
     if (!Estado.primeiroApto()) return this.resultado({resultado:'derrota'});
-    const nivel = Math.max(PISO_COPA[c.rodada], nivelDeReferencia() + ACIMA_COPA + c.rodada);
+    const nivel = Math.max(PISO_CONFERENCIA[c.rodada], nivelDeReferencia() + ACIMA_CONFERENCIA + c.rodada);
     const time = timeDeLinhas(v.times, nivel, 6, v.golpes, 95);
-    Veteranos.iniciarLuta(nomeDeLuta(v), time, {id:v.id, tipo:'copa', copa:true});
+    Veteranos.iniciarLuta(nomeDeLuta(v), time, {id:v.id, tipo:'conferencia', conferencia:true});
     const conhece = Veteranos.registro(v.id).conheceu;
-    UI.telaBatalha([`${PREMIO_COPA[c.rodada].rodada} — ${nomeDeLuta(v)}`,
+    UI.telaBatalha([`${PREMIO_CONFERENCIA[c.rodada].rodada} — ${nomeDeLuta(v)}`,
       conhece ? `${v.nome}: ${txt(v.torneio)}` : `${v.nome} entra pelo túnel do outro lado. Você nunca viu essa pessoa e a arquibancada inteira sabe o nome dela.`]);
     Veteranos.registro(v.id).conheceu = true;
   },
 
   premio(venceu){
-    const c = Jogo.copaAtual;
+    const c = Jogo.conferenciaAtual;
     if (!c) return 0;
-    const pr = PREMIO_COPA[c.rodada];
+    const pr = PREMIO_CONFERENCIA[c.rodada];
     return venceu ? pr.dinheiro : Math.round(pr.dinheiro * 0.2);
   },
 
   resultado(fim){
-    const c = Jogo.copaAtual;
+    const c = Jogo.conferenciaAtual;
     Jogo.veteranoAtual = null;
     Jogo.batalhaLivre = false;
-    if (fim.resultado === 'gameover'){ Jogo.copaAtual = null; return UI.telaGameOver('Você caiu na arena do Planalto, na frente de quatrocentas pessoas.'); }
+    if (fim.resultado === 'gameover'){ Jogo.conferenciaAtual = null; return UI.telaGameOver('Você caiu na arena do Planalto, na frente de quatrocentas pessoas.'); }
     const v = veterano(c.adversarios[c.rodada]);
-    const pr = PREMIO_COPA[c.rodada];
+    const pr = PREMIO_CONFERENCIA[c.rodada];
     const venceu = fim.resultado === 'vitoria';
     const avisos = [];
     const valor = this.premio(venceu);
     Estado.j.dinheiro += valor;
 
     if (!venceu){
-      Jogo.copaAtual = null;
+      Jogo.conferenciaAtual = null;
       avisos.push({tipo:'item', texto:`Premiação por participação: +${valor.toLocaleString('pt-BR')} ₽`});
-      Estado.registrar(`Eliminado da Copa dos Veteranos por ${v.nome} nas ${pr.rodada}.`);
+      Estado.registrar(`Eliminado da Conferência do Planalto Indigo por ${v.nome} nas ${pr.rodada}.`);
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
-        titulo:'Eliminado', sub:`Copa dos Veteranos · ${pr.rodada}`,
+        titulo:'Eliminado', sub:`Conferência do Planalto Indigo · ${pr.rodada}`,
         falas:[`${nomeDeLuta(v)}: ${txt(v.vence)}`,
-          'Na Copa ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
-          'A Copa é todo ano. Eles vão estar aqui.'],
+          'Na Conferência ninguém vaia quem perde. Quem está na arquibancada já perdeu pra todo mundo que está na arena.',
+          'A Conferência é todo ano. Eles vão estar aqui.'],
         avisos, venceu:false
       }));
     }
@@ -1193,47 +1193,47 @@ const Copa = {
     avisos.push({tipo:'item', texto:`+${valor.toLocaleString('pt-BR')} ₽`});
     for (const [n, q] of Object.entries(pr.itens || {})){ Estado.darItem(n, q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     if (pr.rep){
-      const m = Estado.mudarRep('bom', pr.rep, `Avançou nas ${pr.rodada} da Copa dos Veteranos`, {rep:{notorio:true, peso:3}});
+      const m = Estado.mudarRep('bom', pr.rep, `Avançou nas ${pr.rodada} da Conferência do Planalto Indigo`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
     }
     c.rodada++;
     if (c.rodada >= c.adversarios.length){
-      Jogo.copaAtual = null;
+      Jogo.conferenciaAtual = null;
       const d = Estado.dados;
-      d.copasVencidas = (d.copasVencidas || 0) + 1;
-      if (d.copasVencidas === 1){
+      d.conferenciasVencidas = (d.conferenciasVencidas || 0) + 1;
+      if (d.conferenciasVencidas === 1){
         Estado.darItem('Master Ball', 1);
-        avisos.push({tipo:'item', texto:'A primeira Copa vem com uma Master Ball no fundo do troféu.'});
+        avisos.push({tipo:'item', texto:'A primeira Conferência vem com uma Master Ball no fundo do troféu.'});
       }
-      Estado.marcar('venceu_copa');
-      Estado.registrar(`Venceu a Copa dos Veteranos (${d.copasVencidas}ª vez).`);
+      Estado.marcar('venceu_conferencia');
+      Estado.registrar(`Venceu a Conferência do Planalto Indigo (${d.conferenciasVencidas}ª vez).`);
       Estado.salvar('auto');
       return Jogo.resolverPendencias(() => UI.telaResultadoLiga({
-        titulo:'{CAMPEÃO|CAMPEÃ} DA COPA', sub:`Copa dos Veteranos · ${d.copasVencidas}º título`,
+        titulo:'{CAMPEÃO|CAMPEÃ} DA CONFERÊNCIA', sub:`Conferência do Planalto Indigo · ${d.conferenciasVencidas}º título`,
         falas:[`${nomeDeLuta(v)}: ${txt(v.perde)}`,
-          'A arquibancada da Copa não levanta pra quem ganha. Ela levanta pra quem aguentou as três.',
+          'A arquibancada da Conferência não levanta pra quem ganha. Ela levanta pra quem aguentou as três.',
           'Hoje ela levanta.',
-          d.copasVencidas === 1 ? 'No vestiário, alguém escreveu o seu nome a giz na parede, embaixo de outros quarenta e poucos. O de cima é o da Greer, três vezes.' : 'O seu nome na parede do vestiário ganhou mais um risco do lado.'],
+          d.conferenciasVencidas === 1 ? 'No vestiário, alguém escreveu o seu nome a giz na parede, embaixo de outros quarenta e poucos. O de cima é o da Greer, três vezes.' : 'O seu nome na parede do vestiário ganhou mais um risco do lado.'],
         avisos, venceu:true
       }));
     }
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => UI.telaResultadoLiga({
-      titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Copa dos Veteranos · ${pr.rodada} vencida`,
+      titulo:`${v.nome} derrotad${v.f ? 'a' : 'o'}`, sub:`Conferência do Planalto Indigo · ${pr.rodada} vencida`,
       falas:[`${nomeDeLuta(v)}: ${txt(v.perde)}`,
-        `Próxima: ${PREMIO_COPA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
+        `Próxima: ${PREMIO_CONFERENCIA[c.rodada].rodada}, contra ${nomeDeLuta(veterano(c.adversarios[c.rodada]))}.`,
         'Vinte minutos entre as lutas. Dá pra curar o time.'],
-      avisos, venceu:true, copa:true
+      avisos, venceu:true, conferencia:true
     }));
   },
 
   curar(){
     Estado.dados.time.forEach(curarTotal);
     Estado.salvar('auto');
-    UI.telaCopa();
+    UI.telaConferencia();
   },
   desistir(){
-    Jogo.copaAtual = null;
+    Jogo.conferenciaAtual = null;
     UI.telaLiga();
   }
 };

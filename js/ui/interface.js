@@ -2559,16 +2559,16 @@ const UI = {
           </div>
         </div>
         ${d.flags.campeao_de_kanto ? (() => {
-          const co = statusCopa();
+          const co = statusConferencia();
           return `<div class="carta ginasio">
-          <div class="t"><span>Copa dos Veteranos</span><span class="fraco">${d.copasVencidas ? this.esc(d.copasVencidas + '× {campeão|campeã}') : ''}</span></div>
+          <div class="t"><span>Conferência do Planalto Indigo</span><span class="fraco">${d.conferenciasVencidas ? this.esc(d.conferenciasVencidas + '× {campeão|campeã}') : ''}</span></div>
           <div class="fraco" style="margin-bottom:8px">Três rodadas, times inteiros, e ninguém do outro lado com menos estrada que você.</div>
-          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_COPA[0].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_COPA[1].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
-          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_COPA[2].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_CONFERENCIA[0].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_CONFERENCIA[1].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_CONFERENCIA[2].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
           <div class="rodape">
             <span class="fraco">${this.esc(co.texto)}</span>
-            ${co.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Copa.iniciar()">Inscrever-se</button>` : ''}
+            ${co.estado==='disponivel' ? `<button class="btn destaque mini" onclick="Conferencia.iniciar()">Inscrever-se</button>` : ''}
           </div>
         </div>`; })() : ''}
       </div>
@@ -2611,33 +2611,33 @@ const UI = {
     this.rolarTopo();
   },
 
-  telaCopa(){
-    const c = Jogo.copaAtual;
+  telaConferencia(){
+    const c = Jogo.conferenciaAtual;
     if (!c) return this.telaLiga();
     this.limpar();
     this.add(this.topo());
-    /* o time você só vê na arena: na Copa ninguém mostra antes */
+    /* o time você só vê na arena: na Conferência ninguém mostra antes */
     const chave = c.adversarios.map((id, i) => {
       const v = veterano(id);
       const conhece = Veteranos.registro(id).conheceu;
       const est = i < c.rodada ? '✓ vencido' : (i === c.rodada ? 'agora' : 'aguardando');
       const cor = i < c.rodada ? 'var(--bom)' : (i === c.rodada ? 'var(--destaque)' : 'var(--texto-fraco)');
-      return `<div class="linha"><span class="k">${PREMIO_COPA[i].rodada} · ${this.esc(nomeDeLuta(v))}
+      return `<div class="linha"><span class="k">${PREMIO_CONFERENCIA[i].rodada} · ${this.esc(nomeDeLuta(v))}
         <span class="fraco">${conhece ? this.esc((LOCAIS[v.local] || {}).nome || '') : 'nunca se viram'}</span></span>
         <span class="v" style="color:${cor}">${est}</span></div>`;
     }).join('');
     const adv = veterano(c.adversarios[c.rodada]);
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
-        <div class="num">Copa dos Veteranos</div>
-        <div class="tit">${this.esc(PREMIO_COPA[c.rodada].rodada)}</div>
+        <div class="num">Conferência do Planalto Indigo</div>
+        <div class="tit">${this.esc(PREMIO_CONFERENCIA[c.rodada].rodada)}</div>
         <div class="loc">Arena do Planalto Indigo</div>
       </div>
       ${chave}
       <div id="escolhas" class="escolhas" style="margin-top:20px">
-        <button class="escolha" onclick="Copa.lutar()">Entrar na arena — ${this.esc(nomeDeLuta(adv))}</button>
-        <button class="escolha" onclick="Copa.curar()">Usar os vinte minutos para curar o time</button>
-        <button class="escolha" onclick="Copa.desistir()">Desistir da Copa</button>
+        <button class="escolha" onclick="Conferencia.lutar()">Entrar na arena — ${this.esc(nomeDeLuta(adv))}</button>
+        <button class="escolha" onclick="Conferencia.curar()">Usar os vinte minutos para curar o time</button>
+        <button class="escolha" onclick="Conferencia.desistir()">Desistir da Conferência</button>
       </div>
     </div>`);
     this.rolarTopo();
@@ -2678,7 +2678,7 @@ const UI = {
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
         ${o.torneio ? `<button class="escolha" onclick="UI.telaTorneio()">Voltar ao chaveamento</button>` : ''}
-        ${o.copa ? `<button class="escolha" onclick="UI.telaCopa()">Voltar ao chaveamento</button>` : ''}
+        ${o.conferencia ? `<button class="escolha" onclick="UI.telaConferencia()">Voltar ao chaveamento</button>` : ''}
         ${!o.venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time</button>` : ''}
         <button class="escolha" onclick="UI.telaLiga()">Voltar à Liga</button>
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
@@ -3901,12 +3901,12 @@ const UI = {
       <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
       <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
 
-      <h3>Copa dos Veteranos</h3>
+      <h3>Conferência do Planalto Indigo</h3>
       <div class="linha"><span class="k">Quem entra</span><span class="v">só quem sentou na cadeira do Campeão · inscrição de 5.000 ₽</span></div>
-      <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas · dois veteranos, primeiro os que você já venceu, e na final sempre a dona de três Copas</span></div>
+      <div class="linha"><span class="k">Chaveamento</span><span class="v">três rodadas · dois veteranos, primeiro os que você já venceu, e na final sempre a dona de três Conferências</span></div>
       <div class="linha"><span class="k">Nível</span><span class="v">a média dos seus três mais fortes + 2 + a rodada, nunca abaixo de 66, 68 e 72 · time de 6</span></div>
       <div class="linha"><span class="k">Entre as rodadas</span><span class="v">dá pra curar o time</span></div>
-      <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a primeira Copa vem com uma Master Ball</span></div>
+      <div class="linha"><span class="k">Prêmio</span><span class="v">12.000, 25.000 e 60.000 ₽, com itens · perdendo, 20% do prêmio da rodada · a primeira Conferência vem com uma Master Ball</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
@@ -3941,7 +3941,7 @@ const UI = {
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
       <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3 · perdendo, nada</span></div>
-      <div class="linha"><span class="k">Copa dos Veteranos</span><span class="v">o prêmio da rodada · perdendo, 20% dele</span></div>
+      <div class="linha"><span class="k">Conferência do Planalto Indigo</span><span class="v">o prêmio da rodada · perdendo, 20% dele</span></div>
       <div class="linha"><span class="k">Valor por classe</span><span class="v">o de Red/Blue: 10 (Bug Catcher) a 99 (líder e Elite) · sem classe, 20</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
       <p class="sussurro">A tela não fecha sozinha: nada anda até você apertar Continuar.</p>
