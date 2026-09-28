@@ -62,7 +62,7 @@ viridian:[
 ],
 pewter:[
   {chave:'troca_pewter', texto:[
-    'No portão de funcionários da pedreira, no fim do turno da tarde, um homem de capacete pergunta se você é treinador.',
+    'No portão de funcionários da pedreira, no fim do turno da tarde, um homem de capacete pergunta se você é {treinador|treinadora}.',
     '"Você tem Graveler?" Ele fala isso antes de dizer bom dia.'], descobre:'troca_pewter'},
   {chave:'p_placa', texto:['Uma placa na entrada da cidade: DIAS SEM ACIDENTE — 12. O 12 foi repintado por cima de um número maior.']},
   {chave:'ginasio_pewter', texto:[

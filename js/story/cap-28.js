@@ -2002,7 +2002,7 @@ c23_final_nao_precisa:{
     'Ela não pergunta onde você esteve, nem o que você fez, nem se você virou campeão.',
     'Ela pergunta se você comeu.',
     'Você fica na sala dela até a última aula, sentad{o|a} numa carteira que é pequena demais para você agora, ouvindo ela ensinar sílaba a vinte e três crianças de sete anos.',
-    'Uma delas, no fim, pergunta se você é treinador.',
+    'Uma delas, no fim, pergunta se você é {treinador|treinadora}.',
     'Você diz que é, e ela pergunta o que tem de mais legal em ser, e você pensa muito antes de responder, e a resposta que sai não é a que você esperava:',
     '"Conhecer gente."'
   ]}

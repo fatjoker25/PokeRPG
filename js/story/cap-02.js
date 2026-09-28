@@ -87,7 +87,7 @@ c2_ab_trabalho:{
     fala('a atendente', 'Tem sempre. A pergunta é se você quer o que tem.'),
     fala('a atendente', 'O mercado precisa de gente pra descarregar às cinco da manhã. Paga oitocentos, em dinheiro, e acaba às oito.'),
     d=>fala(d.jogador.nome, 'Cinco da manhã.'),
-    fala('a atendente', 'Você é treinador. Achei que acordar cedo fosse parte.'),
+    fala('a atendente', 'Você é {treinador|treinadora}. Achei que acordar cedo fosse parte.'),
     'Ela anota um endereço num pedaço de papel de receituário e empurra pelo balcão.',
     fala('a atendente', 'Se for, fala que eu mandei. Se não for, tudo bem, e o papel não vale nada mesmo.')
   ],
@@ -466,7 +466,7 @@ c2_teo:{
     '"E ninguém passou?"',
     '"Passaram três. Duas eram adultas e uma me ignorou." Ele diz isso sem nenhuma autopiedade, o que é impressionante. "Aí eu vim pra cá, porque no Centro pelo menos tem gente."',
     'Ele já está com a mão no cinto. Não é ameaça — é ansiedade.',
-    '"Você é treinador, né? Tipo, de verdade, com licença e tudo?"'
+    '"Você é {treinador|treinadora}, né? Tipo, de verdade, com licença e tudo?"'
   ],
   ef:{npc:{nome:'Ezra', opiniao:1, memoria:'Esperou numa pedra na Rota 1 desde as seis da manhã. Você foi a primeira pessoa que falou com ele.'},
       registrar:'Conheceu Ezra no Centro Pokémon de Viridian.'},

@@ -69,7 +69,7 @@ pallet:[
      resultado:[
        'Você aponta o pé de apoio dele, que está longe demais da bola, e ele muda sem discutir.',
        'Ele acerta na primeira. E na segunda. E aí ele acerta doze seguidas e fica sem graça.',
-       fala('o menino do muro', 'Você é treinador?'),
+       fala('o menino do muro', 'Você é {treinador|treinadora}?'),
        fala('o menino do muro', 'Eu vou ser. Eu já sei qual eu vou escolher e tudo.')
      ]},
     {texto:'Jogar com ele.',
