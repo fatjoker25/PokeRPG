@@ -408,6 +408,16 @@ seguinte. Quem tem `numero` vira contato do PokéNav na primeira derrota
 Nome de treinador de estrada sai do sorteio de nomes (`NOMES_DA_HISTORIA`) e
 ganha rosto pela classe (`arq`).
 
+A força foi **medida**, não chutada: `node ferramentas/sim-estrada.js`
+luta cada treinador contra times do tamanho e nível de cada fase, e compara
+com selvagens e líderes. O alvo é o jogador no nível da rota + 2 vencer
+~90% (líder fica mais difícil que isso), perdendo 1 a 3 Pokémon por luta.
+Três coisas que o simulador pegou: time de seis no fim do jogo (24% no
+Caminho da Vitória), nível subindo +1 por Pokémon na fila, e evolução por
+pedra/troca cedo demais (Arcanine no 22). Daí `TAM_ESTRADA`, o time em 2
+níveis e `pisoNaEstrada`. E o jogador simulado **ataca**: com a IA do
+inimigo nos dois lados, o seu Pokémon passava a luta dando Growl.
+
 Contato de gente da história entra por `opiniaoDe(rótulo)`, que acha a
 pessoa pelo rótulo ou pelo nome perguntado, e sempre depois do capítulo em
 que ela aparece.

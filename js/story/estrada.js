@@ -21,6 +21,14 @@ const ESCALOES_ESTRADA = [
   {min:6, base:34}
 ];
 
+/* Quantos Pokémon cada escalão leva, no máximo. Treinador de estrada
+   é um degrau abaixo do líder: ele te para sem você escolher, e uma rota
+   tem até quatro — se cada um levasse seis, atravessar uma rota do fim
+   do jogo derrubava o time inteiro (medido: 24% de vitória no Caminho
+   da Vitória com time de seis no nível da rota). Quem tem dif 3 (os do
+   Caminho da Vitória) leva um a mais. */
+const TAM_ESTRADA = [2, 3, 3, 3];
+
 /* chance, em %, de um treinador da rota te parar em cada situação */
 const CHANCE_TREINADOR = {chegar:30, procurar:20, vasculhar:22, treinar:25, viagem:35};
 /* chance de um selvagem surgir sem você procurar */
@@ -43,9 +51,14 @@ function timeEstrada(t, nForcado, extra){
   const k = escalaoEstradaDe(n);
   const esc = ESCALOES_ESTRADA[k];
   const L = LOCAIS[t.local] || {nivel:5};
-  const base = Math.max(esc.base + (n - esc.min) * 2, L.nivel - 3) + (t.dif || 0) + (extra || 0);
+  const base = Math.max(esc.base + (n - esc.min) * 2, L.nivel - 4) + (t.dif || 0) + (extra || 0);
 
-  const especies = (t.times[k] || t.times[t.times.length - 1]).slice();
+  let especies = (t.times[k] || t.times[t.times.length - 1]).slice();
+  /* o time fica com os últimos da lista, que é onde mora o forte */
+  /* sem insígnia nenhuma o jogador pode ter um Pokémon só: um contra um,
+     como os primeiros treinadores dos jogos */
+  const cabe = (n === 0 ? 1 : TAM_ESTRADA[k]) + ((t.dif || 0) >= 3 ? 1 : 0);
+  if (especies.length > cabe) especies = especies.slice(especies.length - cabe);
   const pool = (t.reserva || []).filter(x => !especies.includes(x));
   for (let i = 0; i < especies.length - 1 && pool.length; i++){
     if (Dados.chance(40)) especies[i] = pool.splice(Dados.entre(0, pool.length - 1), 1)[0];
@@ -54,16 +67,45 @@ function timeEstrada(t, nForcado, extra){
   const time = [];
   especies.forEach((dex, i) => {
     const ultimo = i === especies.length - 1;
-    const nv = Math.max(3, Math.min(70, base + i + (ultimo ? 1 : 0) + Dados.entre(-1, 0)));
+    /* o time inteiro cabe em dois níveis: do base ao base + 2, no último */
+    const passo = especies.length > 1 ? Math.round(i * 2 / (especies.length - 1)) : 0;
+    const nv = Math.max(3, Math.min(70, base + passo + Dados.entre(-1, 0)));
     /* a lista pede a linha, o nível escolhe a forma: Pidgey no escalão
        de baixo, Pidgeot no de cima, pela mesma entrada */
-    let forma = formaAteONivel(finalDaLinha(dex), nv);
+    let forma = formaDaEstrada(finalDaLinha(dex), nv);
     /* duas formas da mesma linha que colapsaram no mesmo estágio viram uma só */
     if (usados.has(forma) && !ultimo) return;
     usados.add(forma);
     time.push(criarPokemon(forma, nv, {moral: t.moral || 70}));
   });
   return time;
+}
+
+/* Pedra, troca e amizade não têm nível nos jogos: o piso geral do
+   projeto (18) serve pro bicho do jogador, mas num treinador de estrada
+   dava Arcanine no 22 e Alakazam no 21 — medido, a Rota 7 caía pra 57%
+   de vitória. Aqui essas formas só aparecem a partir de 30 (pedra) e 36
+   (troca e amizade), como nos treinadores de rota dos jogos. */
+const PISO_ESTRADA_PEDRA = 30, PISO_ESTRADA_TROCA = 36;
+const EVO_TROCA_OU_AMIZADE = new Set([65, 68, 76, 94, 186, 199, 208, 212, 230, 233, 169, 176, 196, 197, 242, 182, 192]);
+function evoluiPorPedra(dex){
+  if (typeof PEDRAS === 'undefined') return false;
+  return Object.values(PEDRAS).some(t => Object.values(t).includes(dex));
+}
+function pisoNaEstrada(dex){
+  const base = (typeof nivelMinimoDe === 'function') ? nivelMinimoDe(dex) : ((DEX[dex] || {}).nivelMin || 1);
+  if (EVO_TROCA_OU_AMIZADE.has(dex)) return Math.max(base, PISO_ESTRADA_TROCA);
+  if (evoluiPorPedra(dex)) return Math.max(base, PISO_ESTRADA_PEDRA);
+  return base;
+}
+/* formaAteONivel com o piso da estrada */
+function formaDaEstrada(dexFinal, nivel){
+  const linha = [];
+  let d = dexFinal, guarda = 0;
+  while (d && guarda++ < 5){ linha.unshift(d); d = DEX[d] ? DEX[d].preEvo : 0; }
+  let escolhido = linha[0];
+  for (const x of linha.slice(1)){ if (pisoNaEstrada(x) <= nivel) escolhido = x; else break; }
+  return escolhido;
 }
 
 /* a última forma da linha, andando pelo campo evo */

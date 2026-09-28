@@ -3813,8 +3813,9 @@ const UI = {
       <h3>Quem treina na estrada</h3>
       <div class="linha"><span class="k">Onde</span><span class="v">65 treinadores em 23 rotas e lugares, de 1 a 4 por lugar</span></div>
       <div class="linha"><span class="k">Quatro times</span><span class="v">um por escalão de insígnias: 0–1, 2–3, 4–5 e 6–8 · parte do time é sorteada a cada luta (40% por lugar, menos o último)</span></div>
-      <div class="linha"><span class="k">Nível</span><span class="v">o maior entre o do escalão (5, 14, 24 e 34, +2 por insígnia além do mínimo) e o do lugar − 3 · +1 por Pokémon na fila, o último +1 · alguns treinadores vêm mais pesados</span></div>
-      <div class="linha"><span class="k">Forma</span><span class="v">o nível escolhe: o mesmo treinador leva Pidgey no começo e Pidgeot no fim</span></div>
+      <div class="linha"><span class="k">Tamanho do time</span><span class="v">sem insígnia, 1 Pokémon · depois, até 2, 3, 3 e 3 por escalão · os três do Caminho da Vitória levam um a mais</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o maior entre o do escalão (5, 14, 24 e 34, +2 por insígnia além do mínimo) e o do lugar − 4 · o time inteiro cabe em 2 níveis, o último no topo · alguns treinadores vêm mais pesados</span></div>
+      <div class="linha"><span class="k">Forma</span><span class="v">o nível escolhe: o mesmo treinador leva Pidgey no começo e Pidgeot no fim · quem evolui por pedra só aparece a partir do nível 30, por troca ou amizade a partir do 36</span></div>
       <div class="linha"><span class="k">Vencido</span><span class="v">não te para de novo até você subir de escalão · aí volta com o time novo</span></div>
       <div class="linha"><span class="k">Ir atrás</span><span class="v">na rota, dá pra procurar quem ainda não lutou com você neste escalão</span></div>
       <div class="linha"><span class="k">Fuga</span><span class="v">não existe: na estrada, quem cruza o olhar luta</span></div>
