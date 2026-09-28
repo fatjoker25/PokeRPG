@@ -357,6 +357,31 @@ na mochila, como o Town Map dos jogos — ou, sem ele, pela parede do Centro
 Pokémon de qualquer cidade que tenha um (`Exploracao.temCentro`). O `town-map.png` do roteiro é o
 ícone do item, não um mapa.
 
+## A estrada não pede licença
+Andar por rota é estar sujeito a ela: entrar numa rota, sair dela, vasculhar,
+treinar, acampar e a viagem entre capítulos podem virar briga sem o jogador
+escolher. As chances moram no topo de `js/story/estrada.js`
+(`CHANCE_TREINADOR`, `CHANCE_SELVAGEM_SURGE`) e estão na folha de regras.
+Repelente segura selvagem, não gente.
+
+Briga que interrompe outra coisa segue a outra coisa depois: quem a começou
+põe o que vem a seguir em `Jogo.depoisDaEstrada`, e o fim de briga livre
+passa por `Jogo.seguirDaEstrada`. Viagem entre capítulos para no máximo uma
+vez, num trecho de rota do caminho, e entra no capítulo depois.
+
+Os **treinadores de estrada** (`js/story/estrada-dados.js`) funcionam como os
+líderes: quatro times, um por escalão de insígnias (0–1, 2–3, 4–5, 6–8), com
+parte sorteada da `reserva`. O time lista a **linha**, não a forma — o nível
+escolhe (`finalDaLinha` + `formaAteONivel`). Vencido num escalão, só volta no
+seguinte. Quem tem `numero` vira contato do PokéNav na primeira derrota
+(`contatosDaEstrada`), com a fala entre aspas virando balão com o nome dele.
+Nome de treinador de estrada sai do sorteio de nomes (`NOMES_DA_HISTORIA`) e
+ganha rosto pela classe (`arq`).
+
+Contato de gente da história entra por `opiniaoDe(rótulo)`, que acha a
+pessoa pelo rótulo ou pelo nome perguntado, e sempre depois do capítulo em
+que ela aparece.
+
 ## Sexo do Pokémon
 Todo Pokémon ganha `genero` (`'m'`, `'f'` ou `null`) no `criarPokemon`,
 na proporção dos jogos (`chanceDeMacho`, em `js/engine/pokemon.js`). Save
@@ -414,7 +439,8 @@ Vocativo neutro ("cara") fica como está.
 - `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
   nomes, porte, arenas, treinadores, tms, pokerole (gerado).
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
-- `js/story/` — capítulos (`cap-01` a `cap-28`), lugares, mercado, eventos, motor.
+- `js/story/` — capítulos (`cap-01` a `cap-32`), lugares, mercado, eventos, motor,
+  estrada (treinadores de rota e o que surge nela).
 - `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o
   turno encenado, a abertura e a entrada do seu Pokémon.
 

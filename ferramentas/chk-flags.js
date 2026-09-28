@@ -11,11 +11,13 @@ for(const d of dirs){
   if(!fs.existsSync(p)) continue;
   for(const f of fs.readdirSync(p).filter(x=>x.endsWith('.js'))){
     const t=fs.readFileSync(path.join(p,f),'utf8');
-    // escritas: flag:'x' / flag:['x','y'] / marcar('x')
+    // escritas: flag:'x' / flag:['x','y'] / marcar('x') / marca:'x'
     for(const m of t.matchAll(/\bflag\s*:\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
     for(const m of t.matchAll(/\bflag\s*:\s*\[([^\]]+)\]/g))
       for(const q of m[1].matchAll(/'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,q[1],f);
     for(const m of t.matchAll(/\bmarcar\s*\(\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
+    // missão e ligação do PokéNav: marca:'x' vira Estado.marcar('x') na entrega
+    for(const m of t.matchAll(/\bmarca\s*:\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
     for(const m of t.matchAll(/\bflags\.([a-zà-ÿ0-9_]+)\s*=/g)) poe(escritas,m[1],f);
     for(const m of t.matchAll(/\blimpaFlag\s*:\s*'([a-zà-ÿ0-9_]+)'/g)) poe(escritas,m[1],f);
     // leituras: d.flags.x / flags['x'] / Estado.tem('x')

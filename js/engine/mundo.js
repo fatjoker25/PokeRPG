@@ -408,6 +408,11 @@ function afazeresDoLocal(){
   if (L.tipo === 'rota' || L.tipo === 'especial'){
     lista.push({id:'procurar', titulo:Arenas.terreno(L.ambiente).procurar,
       sub:'Andar devagar, prestar atenção no barulho, esperar um Pokémon se mexer.'});
+    /* gente treinando na rota: some quando você vence todos do
+       escalão, e volta quando você sobe de escalão */
+    if (typeof Estrada !== 'undefined' && Estrada.pendentes(id).length)
+      lista.push({id:'desafiar', titulo:'Ir atrás de quem está treinando aqui',
+        sub:'Na estrada, quem cruza o olhar luta. Quem perde paga.'});
     lista.push({id:'vasculhar', titulo:'Vasculhar a área',
       sub:'Olhar debaixo de coisa, seguir trilha que não é trilha, ver o que ninguém viu.'});
     lista.push({id:'treinar', titulo:'Treinar o time',
@@ -498,6 +503,17 @@ function localDoCapitulo(n){
     return mapa[Estado.dados.jogador.cidade] || 'pallet';
   }
   return id;
+}
+
+/* "na Rota 1", "no Monte da Lua", "nas Ilhas Seafoam": a preposição
+   concorda com o nome do lugar, que o texto não sabe de antemão. */
+function emLocal(id){
+  const L = LOCAIS[id]; if (!L) return 'na estrada';
+  const n = L.nome;
+  if (/^(Ilhas)\b/.test(n)) return 'nas ' + n;
+  if (/^(Monte|Túnel|Caminho|Planalto|Norte)\b/.test(n)) return 'no ' + n;
+  if (/^A /.test(n)) return 'n' + n.charAt(0).toLowerCase() + n.slice(1);
+  return 'na ' + n;
 }
 
 /* Caminho mais curto pelo mapa de verdade, em número de trechos.

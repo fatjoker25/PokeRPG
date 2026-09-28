@@ -1994,6 +1994,11 @@ h3.cat-item{
 .nav-inicial.treinador{background:#c0392b}
 .nav-inicial.figura{background:#2f7d5c}
 .nav-inicial.grande{width:40px;height:40px;font-size:19px}
+/* rosto de treinador (80×80) recortado no círculo: o busto fica no alto do quadro */
+.nav-inicial.com-rosto{background:#e8eef6;overflow:hidden;box-shadow:0 0 0 1.5px var(--nav-linha) inset}
+.nav-inicial.com-rosto{position:relative}
+.nav-inicial.com-rosto img{position:absolute;max-width:none;width:210%;height:auto;left:-55%;top:-12%;image-rendering:pixelated}
+.nav-inicial.grande.com-rosto{width:48px;height:48px}
 .nav-linha-txt{display:flex;flex-direction:column;min-width:0;flex:1}
 .nav-nome{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nav-papel{font-size:11px;color:var(--nav-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

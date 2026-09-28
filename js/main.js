@@ -64,6 +64,8 @@ const Jogo = {
   torneioAtual: null,
   rivalAtual: null,
   encontroRival: null,
+  estradaAtual: null,
+  depoisDaEstrada: null,
   capDepoisDaViagem: null,
   destinoDaViagem: null,
   proxCapPendente: null,
@@ -491,6 +493,11 @@ const Jogo = {
       const c = primeiraFala(this.falasRival, R.nome);
       if (c){ L('citacao', c); }
       if (fim.resultado === 'derrota') dinheiro(-Math.min(perdaRivalExtra(R.id), Estado.j.dinheiro));
+    } else if (this.estradaAtual){
+      const c = Estrada.citacao(venceu);
+      if (c && fim.resultado !== 'gameover') L('citacao', c);
+      if (venceu) dinheiro(Estrada.premio());
+      else if (fim.resultado === 'derrota') dinheiro(-Estrada.perda());
     } else if (this.cenaBatalha && Batalha.tipo === 'treinador' && !this.eliteAtual){
       if (venceu) dinheiro(premioCena(this.cenaBatalha).valor);
     } else if (this.eliteAtual){
@@ -555,6 +562,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
+    if (this.estradaAtual)  return Estrada.resultado(fim);
     if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
     if (this.eliteAtual)    return this.resultadoElite(fim);
@@ -593,10 +601,19 @@ const Jogo = {
       const avisos = [aviso].filter(Boolean);
       Estado.salvar('auto');
       this.batalhaLivre = false;
-      Exploracao.tela(avisos);
+      this.seguirDaEstrada(avisos);
       return;
     }
     this.irPara(destino, [aviso].filter(Boolean));
+  },
+
+  /* Depois de uma briga que não é de cena (selvagem que surgiu, gente
+     da estrada): volta pro mapa, ou segue a viagem que ela interrompeu. */
+  seguirDaEstrada(avisos){
+    const depois = this.depoisDaEstrada;
+    this.depoisDaEstrada = null;
+    if (depois) return depois(avisos);
+    Exploracao.tela(avisos);
   },
 
   /* Como a última briga de cena terminou. A cena seguinte lê isso pra
@@ -739,8 +756,38 @@ const Jogo = {
       Estado.registrar(caminho.length > 2
         ? `Viajou até ${(LOCAIS[destino]||{}).nome || destino}, passando por ${caminho.slice(1,-1).map(x=>(LOCAIS[x]||{}).nome||x).join(', ')}.`
         : `Viajou até ${(LOCAIS[destino]||{}).nome || destino}.`);
+      /* Quem anda pela rota topa com o que vive nela. Uma parada por
+         viagem, no máximo, num trecho de estrada do caminho: você não
+         escolhe, só acontece. Depois da briga, a viagem continua. */
+      const trechos = caminho.filter(id => LOCAIS[id] && LOCAIS[id].tipo !== 'cidade');
+      if (trechos.length && this.pararNaEstrada(Dados.escolher(trechos), () => this.entrarNoCapitulo(prox), destino)) return;
     }
     this.entrarNoCapitulo(prox);
+  },
+
+  /* A estrada te para: gente que treina ali, ou um selvagem que sai do
+     mato. Devolve true se parou (a tela é da batalha). `seguir` roda
+     depois da briga; `destino`, se houver, é onde você termina. */
+  pararNaEstrada(trecho, seguir, destino){
+    const L = LOCAIS[trecho];
+    if (!L || !Estado.primeiroApto()) return false;
+    const voltar = () => { if (destino) Estado.dados.local = destino; };
+    const continuar = (avisos) => { voltar(); Estado.salvar('auto'); seguir(avisos); };
+    const antes = Estado.dados.local;
+    Estado.dados.local = trecho;
+    if (Estrada.talvez('viagem', trecho)){ this.depoisDaEstrada = continuar; return true; }
+    const t = Dados.teste(Estado.j.status.intelecto, 5, 'Rota');
+    const risco = {critico:15, sucesso:25, parcial:35, falha:45}[t.grau];
+    if (!Exploracao.repelenteAtivo() && Dados.chance(risco)){
+      const enc = sortearSelvagem(L.ambiente, L.nivel, trecho);
+      this.depoisDaEstrada = continuar;
+      Exploracao.encontro(enc, [Estado.conheceu(enc.dex)
+        ? `No meio da viagem, ${emLocal(trecho)}, um ${enc.nome} sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`
+        : `No meio da viagem, ${emLocal(trecho)}, um Pokémon sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`]);
+      return true;
+    }
+    Estado.dados.local = antes;
+    return false;
   },
 
   entrarNoCapitulo(prox){
@@ -1036,6 +1083,13 @@ const Jogo = {
       time = timeRival().map(p => { p.nivel += 2; return p; });
     } else if (c.id === 'nadia' && typeof timeDaNadia === 'function'){
       time = timeDaNadia();
+    } else if (c.estrada){
+      const t = treinadorEstrada(c.estrada);
+      if (!t) return;
+      time = timeEstrada(t, Math.min(8, numInsignias() + 2), 2);
+      nome = nomeDeLuta(t);
+    } else if (typeof c.timeRevanche === 'function'){
+      time = c.timeRevanche(Estado.dados);
     }
     if (!time || !time.length) return;
     time.forEach(x => { x.nomeAnunciado = true; });

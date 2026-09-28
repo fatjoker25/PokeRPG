@@ -28,7 +28,7 @@ const RETRATO_POR_NOME = {
   'Ezra':'trainers/rival', 'Otto':'trainers/roughneck', 'Caçador Roque':'trainers/roughneck',
   'Lior':'trainers/camper', 'Nolan':'trainers/sailor', 'o garoto de Fuchsia':'trainers/youngster',
   'Garoto de Fuchsia':'trainers/youngster', 'Menino do cais':'trainers/sailor',
-  'Nadia':'trainers/veteran_f',
+  'Nadia':'trainers/veteran_f', 'Nadia Arden':'trainers/veteran_f',
   /* torneio */
   'Fenna, da Silph':'trainers/scientist_f', 'Guia Orin':'trainers/pokemon_ranger',
   'Ás do Planalto':'trainers/dragon_tamer', 'Veterana de Saffron':'trainers/psychic_f',
@@ -43,16 +43,64 @@ const RETRATO_POR_NOME = {
   'Dr. Hollis':'trainers/scientist', 'a Presidente':'trainers/office_worker_f',
   'o homem do portão':'trainers/gentleman',
   /* quem ganhou nome em cena e antes caía no retrato do cargo */
-  'Capitão Marlow':'trainers/sailor', 'Pike':'overworld/policial'
+  'Capitão Marlow':'trainers/sailor', 'Pike':'overworld/policial',
+
+  /* gente da história, pela classe que os jogos dariam pra ela. Quem
+     trabalha de jaleco é cientista; quem vive de vara, pescador; quem
+     guarda a Torre é o zelador. Rosto de propósito ausente continua
+     ausente: a Terceira, a mulher de crachá azul, a voz do rádio. */
+  'Surge':'gym_leaders/lt_surge', 'Tenente Surge':'gym_leaders/lt_surge', 'Fenna':'trainers/scientist_f',
+  'Dra. Cordell':'trainers/scientist_f', 'Dra. Sallow':'trainers/scientist_f', 'Chefe da expedição':'trainers/scientist_f',
+  'Dra. Sorrel':'trainers/scientist_f', 'Kira':'trainers/scientist_f', 'Dra. Isolde Yarrow':'trainers/scientist_f',
+  'Técnica da Liga':'trainers/scientist_f', 'Comprador de jaleco':'trainers/scientist',
+  'Curador Fabre':'trainers/gentleman', 'Fabre':'trainers/gentleman', 'Diretor Quince':'trainers/gentleman',
+  'Sr. Tobias Dahl':'trainers/gentleman',
+  'Hester Colman':'trainers/office_worker_f', 'a presidente':'trainers/office_worker_f',
+  'Conselheira Edda Thistle':'trainers/office_worker_f', 'Sra. Cybil':'trainers/office_worker_f',
+  'Secretária da Colônia Z-14':'trainers/office_worker_f', 'a mulher da pasta':'trainers/office_worker_f',
+  'a mulher da pasta de vinil':'trainers/office_worker_f', 'Conselheira da Liga':'trainers/office_worker_f',
+  'a conselheira da Liga':'trainers/office_worker_f', 'a mulher do broche da Liga':'trainers/office_worker_f',
+  'Sr. Waldo':'trainers/office_worker', 'o homem de camisa social':'trainers/office_worker',
+  'Zelador da Torre':'trainers/caretaker',
+  'Sr. Edric':'trainers/fisherman', 'Sr. Tanner':'trainers/fisherman', 'Sr. Dane':'trainers/fisherman',
+  'Tobin':'trainers/fisherman', 'Sr. Cosmo':'trainers/fisherman',
+  'Célio':'trainers/courier', 'Capitão do Anne':'trainers/sailor', 'Contramestre Varo':'trainers/sailor',
+  'Orso':'trainers/sailor', 'Marinheiro do turno':'trainers/sailor',
+  'Sra. Zelda':'trainers/madame', 'Senhora do Growlithe':'trainers/madame', 'Sra. Wilma':'trainers/madame',
+  'Sra. Odile':'trainers/maid', 'Sr. Ives':'trainers/janitor',
+  'Lojista de Celadon':'trainers/clerk', 'Tito':'trainers/clerk', 'a moça da junta':'trainers/clerk_f',
+  'Gina':'trainers/clerk_f',
+  'Rhea Ashford':'trainers/reporter', 'Dra. Pia':'trainers/nurse', 'o médico do conselho':'trainers/doctor',
+  'Sr. Emory Poplar':'trainers/pokemon_ranger', 'o guia do colete verde':'trainers/pokemon_ranger',
+  'Xavi':'trainers/backpacker', 'Ylva':'trainers/backpacker_f', 'Enzo':'trainers/hiker',
+  'Elias':'trainers/ace_trainer', 'Ulla':'trainers/schoolkid_f', 'Filha do Koga':'trainers/janine',
+  'Sr. Zane':'trainers/baker', 'Cozinheira do Anne':'trainers/cook', 'a dona da fritura':'trainers/cook',
+  'a moça do bolinho frito':'trainers/cook', 'Dono da pousada':'trainers/owner',
+  'Dono do curral':'trainers/rancher', 'Gus':'trainers/cabbie', 'o motorista da van':'trainers/cabbie',
+  'Conferente do porto':'trainers/worker', 'Estivador velho':'trainers/worker', 'Sr. Holt':'trainers/worker',
+  'Carregador da Rota 25':'trainers/worker', 'Marceneiro de Lavender':'trainers/worker',
+  'o rapaz do galpão':'trainers/worker', 'o encarregado':'trainers/worker',
+  'Lena':'trainers/league_staff_f', 'Sra. Ada':'trainers/league_staff_f', 'a moça das licenças':'trainers/league_staff_f',
+  'a recepcionista da Liga':'trainers/league_staff_f', 'a recepcionista do Planalto':'trainers/league_staff_f',
+  'o funcionário da mesa':'trainers/league_staff',
+  'Sra. Greta Nettle':'trainers/veteran_f', 'o lutador da Elite 4':'trainers/black_belt',
+  'a mulher de jaleco':'trainers/scientist_f'
 };
 
 /* cargo → arquivo, pra quem fala sem nome. Só os que não deixam dúvida
    de quem é: enfermeira é enfermeira, guarda (ele) é guarda. */
 const RETRATO_POR_CARGO = [
   [/^(a )?enfermeira\b/i,                'overworld/nurse_joy'],
-  [/^(o )?(guarda|policial)\b/i,         'overworld/policial'],
-  [/^(o )?(barqueiro|capitão do porto)/i,'trainers/sailor'],
-  [/^(o )?pescador\b/i,                  'trainers/fisherman']
+  [/^(a )?atendente( do Centro| de Viridian)?$/i, 'overworld/nurse_joy'],
+  [/^(o )?(\S+ )?(guarda|policial)\b/i,  'overworld/policial'],
+  [/^(o )?oficial\b/i,                   'overworld/policial'],
+  [/^(o )?(barqueiro|capitão do porto|marinheiro)/i,'trainers/sailor'],
+  [/^(o )?pescador\b/i,                  'trainers/fisherman'],
+  [/^(a |o )?repórter\b/i,               'trainers/reporter'],
+  [/^(o )?médico\b/i,                    'trainers/doctor'],
+  [/^(a )?médica\b/i,                    'trainers/nurse'],
+  [/^(o )?(estivador|conferente|operário|outro operário)\b/i, 'trainers/worker'],
+  [/^(a )?(escrevente|escrivã|secretária)\b/i, 'trainers/office_worker_f']
 ];
 
 function caminhoNPC(arq){
@@ -91,7 +139,19 @@ const PAGA_POR_CLASSE = {
   'trainers/camper':20, 'trainers/pokemon_breeder':40, 'trainers/psychic_f':10,
   'trainers/fisherman':35, 'trainers/backpacker':25, 'trainers/dragon_tamer':40,
   'trainers/pokemon_ranger':35, 'trainers/schoolkid':25,
-  'overworld/nurse_joy':20, 'overworld/policial':50
+  'overworld/nurse_joy':20, 'overworld/policial':50,
+  /* as classes que os treinadores de rota trouxeram, pela mesma tabela */
+  'trainers/picnicker':20, 'trainers/swimmer':5, 'trainers/swimmer_f':5, 'trainers/biker':20,
+  'trainers/bird_keeper':25, 'trainers/black_belt':25, 'trainers/battle_girl':25, 'trainers/beauty':70,
+  'trainers/burglar':90, 'trainers/gambler':70, 'trainers/juggler':35, 'trainers/pokemaniac':50,
+  'trainers/super_nerd':25, 'trainers/medium':30, 'trainers/psychic':10, 'trainers/sage':25,
+  'trainers/firebreather':50, 'trainers/guitarist':30, 'trainers/cyclist':20, 'trainers/cyclist_f':20,
+  'trainers/tuber':4, 'trainers/tuber_f':4, 'trainers/twins':20, 'trainers/lady':80, 'trainers/rich_boy':80,
+  'trainers/pokefan':50, 'trainers/pokefan_f':50, 'trainers/ruin_maniac':50, 'trainers/veteran':70,
+  'trainers/pokemon_breeder_f':40, 'trainers/pokemon_ranger_f':35, 'trainers/backpacker_f':25,
+  'trainers/schoolkid_f':25, 'trainers/scuba_diver':30, 'trainers/golfer':40, 'trainers/dancer':30,
+  'trainers/punk_guy':30, 'trainers/punk_girl':30, 'trainers/sightseer':30, 'trainers/sightseer_f':30,
+  'trainers/artist':30, 'trainers/rancher':40, 'trainers/cook':30
 };
 const PAGA_PADRAO = 20;
 function pagaPorNivel(nome){

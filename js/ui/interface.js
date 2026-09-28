@@ -1866,7 +1866,7 @@ const UI = {
     const linha = c => {
       const reg = Estado.nav().contatos[c.id] || {};
       return `<button class="nav-contato${c.id===this.navSel?' sel':''}" onclick="UI.modalNav('${c.id}')">
-        <span class="nav-inicial ${c.tipo === 'treinador' ? 'treinador' : 'figura'}">${this.esc(textoContato(c,'nome').slice(0,1))}</span>
+        ${this.navRosto(c)}
         <span class="nav-linha-txt">
           <span class="nav-nome">${this.esc(textoContato(c,'nome'))}</span>
           <span class="nav-papel">${this.esc(textoContato(c,'papel'))}</span>
@@ -1929,7 +1929,7 @@ const UI = {
 
     return `
       <div class="nav-ficha-cab">
-        <span class="nav-inicial grande ${c.tipo === 'treinador' ? 'treinador' : 'figura'}">${this.esc(textoContato(c,'nome').slice(0,1))}</span>
+        ${this.navRosto(c, true)}
         <span>
           <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
           <span class="nav-ficha-papel">${this.esc(textoContato(c,'papel'))}</span>
@@ -1938,6 +1938,17 @@ const UI = {
       <div class="nav-servicos">${botoes || '<span class="nav-nota">Nada a pedir agora.</span>'}</div>
       ${hist.length ? `<div class="nav-hist">${hist.map(l =>
         `<span>cap ${l.cap} · ${this.esc(l.servico)}</span>`).join('')}</div>` : ''}`;
+  },
+
+  /* o rosto de quem está na agenda, quando o jogo tem um; sem rosto,
+     a inicial do nome na bolinha colorida */
+  navRosto(c, grande){
+    const nome = textoContato(c, 'nome');
+    const r = (typeof retratoDe === 'function') ? (retratoDe(nome) || retratoDe(c.nome && typeof c.nome === 'string' ? c.nome : '')) : null;
+    const cls = `nav-inicial${grande ? ' grande' : ''} ${c.tipo === 'treinador' ? 'treinador' : 'figura'}`;
+    return r
+      ? `<span class="${cls} com-rosto"><img src="${r}" alt="" onerror="this.parentNode.classList.remove('com-rosto');this.replaceWith(document.createTextNode('${this.esc(nome.slice(0,1))}'))"></span>`
+      : `<span class="${cls}">${this.esc(nome.slice(0,1))}</span>`;
   },
 
   navGravar(id){
@@ -3788,6 +3799,25 @@ const UI = {
       <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 4 em 100 vêm 3 a 5 acima · 1 em 100 vem 8 a 12 acima</span></div>
       <div class="linha"><span class="k">Forma</span><span class="v">só aparece quem pode existir naquele nível</span></div>
       <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
+
+      <h3>Andar pela rota</h3>
+      <div class="linha"><span class="k">Entrar ou sair de uma rota</span><span class="v">30% de um treinador dali te parar · se não, teste de Intelecto (dif. 5) e um selvagem sai do mato: 15% no crítico, 25% no sucesso, 35% no parcial, 45% na falha</span></div>
+      <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">uma parada no máximo, num trecho de estrada do caminho: 35% de treinador, e senão a mesma conta do selvagem · depois da briga a viagem continua</span></div>
+      <div class="linha"><span class="k">Procurar Pokémon</span><span class="v">20% de ser um treinador em vez de um selvagem</span></div>
+      <div class="linha"><span class="k">Vasculhar</span><span class="v">22% de treinador · 15% de selvagem que estava debaixo do que você mexeu</span></div>
+      <div class="linha"><span class="k">Treinar</span><span class="v">25% de treinador · 12% de selvagem atraído pelo barulho · a briga vira o treino do dia</span></div>
+      <div class="linha"><span class="k">Acampar</span><span class="v">18% de selvagem mexendo na mochila de noite</span></div>
+      <div class="linha"><span class="k">Repelente</span><span class="v">segura o selvagem · não segura gente</span></div>
+      <p class="sussurro">Você não escolhe: acontece. Com o time inteiro caído, ninguém te para.</p>
+
+      <h3>Quem treina na estrada</h3>
+      <div class="linha"><span class="k">Onde</span><span class="v">65 treinadores em 23 rotas e lugares, de 1 a 4 por lugar</span></div>
+      <div class="linha"><span class="k">Quatro times</span><span class="v">um por escalão de insígnias: 0–1, 2–3, 4–5 e 6–8 · parte do time é sorteada a cada luta (40% por lugar, menos o último)</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o maior entre o do escalão (5, 14, 24 e 34, +2 por insígnia além do mínimo) e o do lugar − 3 · +1 por Pokémon na fila, o último +1 · alguns treinadores vêm mais pesados</span></div>
+      <div class="linha"><span class="k">Forma</span><span class="v">o nível escolhe: o mesmo treinador leva Pidgey no começo e Pidgeot no fim</span></div>
+      <div class="linha"><span class="k">Vencido</span><span class="v">não te para de novo até você subir de escalão · aí volta com o time novo</span></div>
+      <div class="linha"><span class="k">Ir atrás</span><span class="v">na rota, dá pra procurar quem ainda não lutou com você neste escalão</span></div>
+      <div class="linha"><span class="k">Fuga</span><span class="v">não existe: na estrada, quem cruza o olhar luta</span></div>
       <h3>Quando o seu Pokémon cai contra um selvagem</h3>
       <p class="sussurro">Se o selvagem tem natureza agressiva (Naughty, Brave, Adamant, Hasty, Impish, Jolly, Naive, Lonely, Rash), rola-se 1d20: com 10+ ele ataca VOCÊ. Dano = Força dele + 2 em d6, e cada sucesso tira 3 do seu HP, que é HP de gente e não de Pokémon. Naturezas passivas não atacam o treinador. A sua barra de vida aparece na arena enquanto isso durar.</p>
       <h3>Nível, golpes e evolução</h3>
@@ -3820,6 +3850,7 @@ const UI = {
       <div class="linha"><span class="k">Rival que você fez na estrada</span><span class="v">perder custa 700 ₽, ou 1.200</span></div>
       <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
+      <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
       <div class="linha"><span class="k">Valor por classe</span><span class="v">o de Red/Blue: 10 (Bug Catcher) a 99 (líder e Elite) · sem classe, 20</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
       <p class="sussurro">A tela não fecha sozinha: nada anda até você apertar Continuar.</p>
@@ -3889,6 +3920,8 @@ const UI = {
       <div class="linha"><span class="k">Favor</span><span class="v">tem limite de vezes e espera de capítulos</span></div>
       <div class="linha"><span class="k">Missão</span><span class="v">pedir · cumprir no mundo · ligar de volta pra entregar</span></div>
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
+      <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
+      <div class="linha"><span class="k">Gente da história</span><span class="v">quem gostou de você o bastante passa o número depois do capítulo em que vocês se conheceram</span></div>
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
       <h3>De onde vem o seu primeiro</h3>

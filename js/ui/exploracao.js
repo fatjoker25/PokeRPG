@@ -170,24 +170,55 @@ const Exploracao = {
 
   /* ---------- viagem ---------- */
   viajar(id){
+    const de = Mundo.id();
+    const velho = Mundo.atual();
     const novo = Mundo.viajar(id);
     Estado.salvar('auto');
     const primeiraVez = !Estado.dados.visitados['__v_'+id];
     Estado.dados.visitados['__v_'+id] = true;
-    const avisos = [];
-    // algo acontece no caminho, de vez em quando — quem sabe ler a
-    // estrada escolhe melhor a hora de passar e topa com menos coisa
-    if (novo.tipo !== 'cidade'){
+    /* Andar por rota é estar sujeito a ela: quem treina ali te para, e
+       o que vive no mato sai sem pedir licença. Vale entrando numa rota
+       e saindo dela — o trecho andado é o mesmo. Quem sabe ler a
+       estrada escolhe melhor a hora de passar e topa com menos coisa. */
+    const naRota = novo.tipo !== 'cidade' ? id : (velho && velho.tipo !== 'cidade' ? de : null);
+    if (naRota){
+      const L = LOCAIS[naRota];
+      const onde = naRota === id ? null : naRota;
+      /* saindo de uma rota pra cidade, a luta acontece ainda na rota
+         e você chega depois dela */
+      const chegar = (avisos) => { if (onde) Estado.dados.local = id; Estado.salvar('auto'); this.tela(avisos); };
+      if (onde) Estado.dados.local = onde;
+      if (Estrada.talvez('chegar', naRota)){ Jogo.depoisDaEstrada = chegar; return; }
       const t = Dados.teste(Estado.j.status.intelecto, 5, 'Rota');
-      const risco = {critico:10, sucesso:18, parcial:28, falha:40}[t.grau];
-      if (Dados.chance(risco)){
-        const enc = sortearSelvagem(novo.ambiente, novo.nivel, id);
+      const risco = {critico:15, sucesso:25, parcial:35, falha:45}[t.grau];
+      if (!this.repelenteAtivo() && Dados.chance(risco)){
+        const enc = sortearSelvagem(L.ambiente, L.nivel, naRota);
+        Jogo.depoisDaEstrada = chegar;
         return this.encontro(enc, [Estado.conheceu(enc.dex)
-          ? `No meio do caminho, um ${enc.nome} sai ${Arenas.terreno(novo.ambiente).sai} e não desvia.`
-          : `No meio do caminho, um Pokémon sai ${Arenas.terreno(novo.ambiente).sai} e não desvia.`]);
+          ? `No meio do caminho, um ${enc.nome} sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`
+          : `No meio do caminho, um Pokémon sai ${Arenas.terreno(L.ambiente).sai} e não desvia.`]);
       }
+      if (onde) Estado.dados.local = id;
     }
     this.tela(primeiraVez ? [{tipo:'info', texto:'Você nunca esteve aqui.'}] : null);
+  },
+
+  /* Um selvagem que aparece enquanto você faz outra coisa. Repelente
+     segura; gente da estrada, não. Devolve true se a tela virou briga. */
+  surge(situacao){
+    const L = Mundo.atual();
+    if (L.tipo === 'cidade') return false;
+    if (Estrada.talvez(situacao)) return true;
+    const ch = CHANCE_SELVAGEM_SURGE[situacao] || 0;
+    if (!ch || this.repelenteAtivo() || !Dados.chance(ch)) return false;
+    const p = sortearSelvagem(L.ambiente, L.nivel);
+    const intro = {
+      vasculhar:'Você levanta uma pedra, afasta um galho, e o que estava debaixo não gosta nada disso.',
+      treinar:'O barulho do treino chama atenção de quem mora ali, e um deles vem tirar satisfação.',
+      acampar:'No meio da noite, alguma coisa mexe na mochila. Quando você acende a luz, ela não foge.'
+    }[situacao] || 'Um Pokémon sai do mato sem ninguém chamar.';
+    this.encontro(p, [intro]);
+    return true;
   },
 
   /* ---------- ações ---------- */
@@ -205,8 +236,16 @@ const Exploracao = {
 
     if (acao === 'troca'){ return Trocas.tela(); }
 
+    if (acao === 'desafiar'){
+      const pend = Estrada.pendentes();
+      if (!pend.length) return this.tela([{tipo:'info', texto:'Quem treinava por aqui já lutou com você. Com mais insígnias, eles voltam a querer.'}]);
+      Mundo.passar(1);
+      return Estrada.desafiar(Dados.escolher(pend).id, 'procurar');
+    }
+
     if (acao === 'procurar'){
       Mundo.passar(1);
+      if (Estrada.talvez('procurar')) return;
       if (Exploracao.repelenteAtivo()){
         return this.tela([
           {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e tudo que é bicho se afasta antes de você chegar.'},
@@ -245,6 +284,7 @@ const Exploracao = {
   vasculhar(){
     const L = Mundo.atual();
     Mundo.passar(1);
+    if (this.surge('vasculhar')) return;
     /* estrada também tem situação acontecendo, e nela o temperamento
        do seu time pesa mais do que em cidade */
     if (typeof Eventos !== 'undefined' && Dados.chance(40)){
@@ -292,6 +332,9 @@ const Exploracao = {
     const aprendem = vivos.filter(p => p.nivel < teto);
     if (!aprendem.length)
       return this.tela([{tipo:'info', texto:'Não tem mais o que aprender aqui. O que vive neste mato não desafia o seu time: pra render, só lugar mais difícil.'}]);
+    /* treino em rota é barulho, e barulho chama gente e bicho: se
+       alguém aparece, a luta é o treino do dia */
+    if (this.surge('treinar')){ d.treinoDia = d.relogio.dia; Mundo.passar(1); return; }
     d.treinoDia = d.relogio.dia;
     Mundo.passar(2);
     /* Treinar é dar ordem o dia inteiro. Quem sabe mandar rende mais,
@@ -352,6 +395,7 @@ const Exploracao = {
 
   acampar(){
     Mundo.passar(1);
+    if (this.surge('acampar')) return;
     /* Dormir no chão é um teste de corpo. Resistência decide quanto
        do dia seguinte você recupera de verdade. */
     const t = Dados.teste(Estado.j.status.resistencia, 5, 'Resistência');

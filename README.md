@@ -6,15 +6,17 @@ O universo é Kanto **dois anos depois** de Red desmontar a Equipe Rocket. Nele:
 
 - Red **não** capturou Mewtwo — ele continua solto.
 - Red capturou as três Aves Lendárias e **as soltou**.
-- Só existem Pokémon de **1ª Geração**.
-- Os únicos lendários de Kanto são: **Mew, Mewtwo, Moltres, Zapdos, Articuno, Entei, Raikou, Suicune e Ho-Oh**.
+- A Pokédex vai até **Johto**: 251 espécies. As de Johto aparecem aos poucos, conforme a história abre a região.
+- Os lendários são **Articuno, Zapdos, Moltres, Mewtwo, Mew, o trio lendário (Raikou, Entei, Suicune), Lugia, Ho-Oh e Celebi** — nenhum aparece em encontro aleatório.
 - Você tem **15 anos** e está saindo de casa pela primeira vez.
 
 A campanha começa leve e vai escurecendo capítulo a capítulo — a própria paleta da interface acompanha o tom.
 
 ## A campanha
 
-**23 capítulos · 2.173 cenas · 6.797 escolhas · 36 finais · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 10 lojas e 9 trocas, uma por cidade.**
+**32 capítulos · 2.820 cenas · 8.442 escolhas · 49 finais e 20 epílogos · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 65 treinadores de estrada · 48 contatos no PokéNav · 10 lojas e 19 trocas.**
+
+São 28 capítulos na linha principal e 4 **condicionais**, que só acontecem se você fez (ou deixou de fazer) uma coisa específica antes — e que entram no meio da jornada, logo depois do capítulo que os dispara.
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -38,13 +40,25 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 | 18 | Atas | muito sombrio |
 | 19 | O Viveiro | muito sombrio |
 | 20 | A Presidente | muito sombrio |
-| 21 | O Que Te Oferecem | muito sombrio |
-| 22 | O Vale | muito sombrio |
-| 23 | Eu Perguntei Primeiro | final |
+| 21 | A Rua de Onde Você Saiu | sombrio |
+| 22 | O Chaveamento | sombrio |
+| 23 | O Segundo Andar | muito sombrio |
+| 24 | Sete Guaritas | muito sombrio |
+| 25 | Segunda, Dez Horas | muito sombrio |
+| 26 | O Que Te Oferecem | muito sombrio |
+| 27 | O Vale | muito sombrio |
+| 28 | Eu Perguntei Primeiro | final |
+
+| # | Condicional | Pode vir depois do | Tom |
+|---|---|---|---|
+| 29 | O Portão Verde | capítulo 6 | sombrio |
+| 30 | As Onze Linhas | capítulo 7 | muito sombrio |
+| 31 | Quem Assina o Fax | capítulo 9 | muito sombrio |
+| 32 | O Galpão da Zona Norte | capítulo 11 | muito sombrio |
 
 ### A Comissão
 
-O antagonista da segunda metade da campanha não é uma gangue. É a **Comissão de Gestão de Risco Biológico de Kanto — CGRB**: uma associação civil registrada em cartório, com estatuto público, atas públicas e linha orçamentária. As atas custam oito reais.
+O antagonista da segunda metade da campanha não é uma gangue. É a **Comissão de Gestão de Risco Biológico de Kanto — CGRB**: uma associação civil registrada em cartório, com estatuto público, atas públicas e linha orçamentária. As atas custam oito pokedólares.
 
 Ela foi fundada quatro meses depois da queda da Equipe Rocket, por uma ex-diretora de fiscalização da Liga que assinou setenta e um relatórios sobre risco populacional e viu nenhum virar política pública.
 
@@ -68,7 +82,7 @@ Acessíveis pelo botão **Liga** na barra do topo.
 
 **O Campeão** — a cadeira está vaga há dois anos, desde que Red desapareceu. Lance assina os documentos e não usa o título. Quem vence Lance encontra Red no salão do fundo, com Pikachu no nível 81. Red não fala em nenhum momento, porque Red nunca falou.
 
-**Torneio Aberto** — chaveamento de oito, três rodadas, repetível o ano inteiro, inscrição de 2.000 ₽. Os adversários saem da sua própria campanha: Téo, o Caçador Vasco, a Marina da Silph e o guia Nico entram no chaveamento se existirem na sua história — e o Téo tem falas diferentes conforme a opinião dele sobre você.
+**Torneio Aberto** — chaveamento de oito, três rodadas, repetível o ano inteiro, inscrição de 2.000 ₽. Os adversários saem da sua própria campanha: Ezra, o Caçador Roque, a Fenna da Silph e o guia Orin entram no chaveamento se existirem na sua história — e o Ezra tem falas diferentes conforme a opinião dele sobre você.
 
 ### Os oito ginásios
 
@@ -106,11 +120,11 @@ Cada insígnia também reduz a desobediência do time em 3 pontos — com as oit
 
 **Viridian só abre com sete insígnias**, e quem está lá é **Blue**. O ginásio ficou lacrado dois anos depois que a Rocket foi desmontada e Giovanni, preso — ninguém queria o lugar. Blue reabriu, repintou e colocou uma placa na porta que diz só "SETE INSÍGNIAS". O ace dele é o inicial que vence o seu, e ele foi campeão por catorze minutos antes de Red entrar pela porta.
 
-**Líderes recusam luta.** Erika não enfrenta quem lucra com o tráfico de Celadon; Sabrina não fica na mesma sala de quem destruiu o andar 11; Misty lembra de quem passou reto pela Marta na Rota 25. Toda recusa tem saída — pela reputação, que lava o eixo contrário, exatamente como as regras do sistema definem.
+**Líderes recusam luta.** Erika não enfrenta quem lucra com o tráfico de Celadon; Sabrina não fica na mesma sala de quem destruiu o andar 11; Misty lembra de quem passou reto pela Sibyl na Rota 25. Toda recusa tem saída — pela reputação, que lava o eixo contrário, exatamente como as regras do sistema definem.
 
 ### O rival
 
-Téo, o garoto da pedra na Rota 1. O inicial dele é **o que vence o seu** — e ele não é um obstáculo fixo: o time, o tom e o arco mudam conforme o que você faz.
+Ezra, o garoto da pedra na Rota 1. O inicial dele é **o que vence o seu** — e ele não é um obstáculo fixo: o time, o tom e o arco mudam conforme o que você faz.
 
 Ele aparece na estrada entre os capítulos 5, 9, 13, 17 e 21, e entra no chaveamento do Torneio Aberto com o time real dele.
 
@@ -142,9 +156,9 @@ A rota altera texto, escolhas disponíveis e cenas inteiras em oito capítulos d
 
 ### Os finais
 
-Todos são alcançados no capítulo 23, e o que abre cada um é o que você fez nos vinte e dois anteriores: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
+A maior parte se alcança no capítulo 28 — alguns chegam antes, em capítulos onde a jornada pode acabar —, e o que abre cada um é o que você fez até ali: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
 
-O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 36 você já encontrou pela tela inicial.
+O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 49 você já encontrou pela tela inicial. Depois do final, um dos 20 epílogos conta o que aconteceu com quem ficou.
 
 ## Mercado, itens e trocas
 
@@ -166,17 +180,17 @@ bolas se recebem no Centro Pokémon, e todo o resto se compra, se acha ou algué
 | Saffron | conveniência de prédio comercial, tudo com nota | +30% |
 | Cinnabar | uma casa com vitrine; às vezes falta tudo | +25% |
 
-São **33 itens**, incluindo as cinco pedras evolutivas (usáveis pela mochila),
+São **46 itens** de mochila, fora TMs e enredo, incluindo as cinco pedras evolutivas (usáveis pela mochila),
 Éter, Elixir, Boneco, Repelente e o ferramental de cada região — máscara de pó,
 bota de borracha, cobertor térmico, câmera descartável, caderno de campo.
 Algumas provas da campanha se tiram com a câmera descartável.
 
-**Nove trocas, uma por cidade.** Cada uma tem quem, onde, por que, e o que
+**Dezenove trocas**, em cidade e em rota. Cada uma tem quem, onde, por que, e o que
 acontece depois — e as quatro evoluções por troca de Gen 1 funcionam: o Graveler
 que você dá vira Golem do outro lado, e o Haunter do sétimo andar da Torre de
 Lavender vira Gengar no segundo em que a bola encosta na sua mão.
 
-As rotas têm **38 achados diferentes**, filtrados pelo ambiente: o que se
+As rotas têm **47 achados diferentes**, filtrados pelo ambiente: o que se
 encontra numa caverna não é o que se encontra na beira de um rio.
 
 ## O que você sabe, e o que você não sabe
@@ -191,7 +205,7 @@ O jogo distingue o que existe do que o **jogador** pode saber.
 | Ficha de combate do adversário | `tipo ?`, `ficha não catalogada` |
 | Natureza de qualquer um | `???` até ser descoberta |
 
-A **Pokédex** lista as 155 entradas numeradas desde a primeira tela: `001 ???`,
+A **Pokédex** lista as 251 entradas numeradas desde a primeira tela: `001 ???`,
 `002 ???`. O número acende quando você vê um exemplar e a ficha abre quando
 você aponta a Pokédex nele durante um combate — de graça, sem gastar o turno,
 uma vez por batalha. A ficha traz base com barra por atributo, soma, taxa de
@@ -213,7 +227,7 @@ devolve o anterior à mochila.
 | Faixa Firme | uma vez por combate, sobrevive a um golpe fatal com 1 HP |
 | Punho de Ferro | +1 dado de dano em golpes físicos |
 | Óculos Grossos | +1 dado de dano em golpes especiais |
-| Colete de Couro | +1 de Vitalidade e de Instinto contra dano |
+| Colete de Lona | +1 de Vitalidade e de Instinto contra dano |
 | Botina Leve | +2 de iniciativa pra ordem dos turnos |
 | Sino Calmante | +3 de moral ao fim de cada combate |
 | Amuleto de Moeda | +50% de dinheiro em vitórias contra treinador |
@@ -309,9 +323,12 @@ Status do treinador: Força, Percepção, Intelecto, Carisma, Sorte, Resistênci
 ```
 index.html
 css/estilo.css           paleta que escurece conforme o tom do capítulo
-js/data/types.js         15 tipos + tabela de eficácia da 1ª Geração
-js/data/pokedex.js       os 151 + cães lendários + Ho-Oh, com stats e evoluções
-js/data/golpes.js        97 golpes e o gerador de movesets por espécie/nível
+js/data/types.js         17 tipos + tabela de eficácia
+js/data/pokedex.js       as 251 espécies de Kanto e Johto, com evoluções
+js/data/golpes.js        212 golpes e o gerador de movesets por espécie/nível
+js/data/pokerole.js      atributos e golpes do Pokérole (gerado)
+js/data/pokenav.js       a agenda: contatos, favores, missões e chamadas
+js/data/treinadores.js   rosto de quem fala e quanto cada classe paga
 js/data/naturezas.js     25 naturezas com efeito mecânico e comportamental
 js/engine/dados.js       todas as rolagens, registradas e exibidas
 js/engine/pokemon.js     instâncias, stats por nível, exp, evolução, encontros
@@ -320,27 +337,41 @@ js/engine/batalha.js     combate completo
 js/engine/captura.js     captura e consequências em cascata dos lendários
 js/story/motor.js        cenas, efeitos, rotas divergentes e progressão
 js/story/capitulos.js    registro da campanha
-js/story/cap-*.js        os 23 capítulos
+js/story/cap-*.js        os 32 capítulos (29 a 32 são condicionais)
+js/story/estrada.js      treinadores de estrada: escalões, times e brigas
+js/story/estrada-dados.js os 65 treinadores, rota por rota
 js/story/ginasios.js     os 8 líderes, escala de time, falas e travas
 js/story/liga.js         Elite 4, o Campeão e o Torneio Aberto
 js/story/comissao.js     a CGRB: estatuto, doutrina, gente e unidades
-js/story/rival.js        Téo: arcos, time adaptativo e falas
+js/story/rival.js        Ezra e os rivais de estrada: arcos, time adaptativo e falas
 js/ui/interface.js       telas
+js/ui/exploracao.js      o mapa, as ações de rota e o que surge nelas
+js/ui/efeitos.js         o turno encenado e a abertura da batalha
 js/main.js               fluxo do jogo
 ```
 
-## Encontros aleatórios
+## A estrada
 
-Espécie e nível são **totalmente aleatórios**. O ambiente apenas enviesa a probabilidade — um Pokémon de nível 30 pode aparecer na Rota 1 (`1d20 = 20` na rolagem de nível). Lendários nunca aparecem em encontro aleatório: só em evento narrativo.
+**Você não escolhe quando encontra.** Entrar numa rota, sair dela, vasculhar, treinar, acampar — e até a viagem entre um capítulo e outro — podem virar briga sem você pedir: um selvagem sai do mato, ou alguém que treina ali te vê e vem com a bola na mão. Um bom teste de Intelecto escolhe melhor a hora de passar; repelente segura bicho, mas não segura gente.
+
+Cada lugar tem a sua lista de espécies, com o comum e o raro, e o nível é o da área com uma folga pra cima e pra baixo — 1 em 100 vem bem acima. Lendários nunca aparecem em encontro aleatório: só em evento narrativo.
+
+**65 treinadores de estrada**, de 1 a 4 por rota, com o rosto da classe deles (Garoto, Montanhista, Pescador, Médium, Motoqueiro, Treinadora Ás…). Como os líderes, cada um tem **quatro times**, um por escalão de insígnias (0–1, 2–3, 4–5, 6–8), e sorteia parte dele a cada luta. O nível sai do escalão ou do lugar, o que for maior, e a forma sai do nível: o Joey da Rota 1 leva Rattata no começo e Raticate no fim. Quem você vence só volta a te parar quando você sobe de escalão. Perdendo, você paga a ele o que ele te pagaria.
+
+Dezenove deles passam o número na primeira vez que perdem, e viram contato no PokéNav — com revanche, favor, notícia, e às vezes ligando primeiro.
+
+## PokéNav
+
+**48 contatos**, espalhados pela jornada inteira: a casa, o vizinho, os oito líderes, os rivais, os treinadores de estrada que passaram o número, e gente da história que gostou de você o bastante — o pescador de Cerulean, o zelador da Torre, a médica de Fuchsia, a repórter de Saffron, a instrutora do Planalto. Cada um serve pra uma coisa: revanche, favor (com limite e espera), missão (pedir, cumprir no mundo, ligar de volta) ou só dar notícia. A agenda mostra o rosto de quem tem um.
 
 
 ## Continuidade
 
 O mundo lembra de tudo, e isso é mecânico, não decorativo:
 
-- **NPCs têm memória individual** — cada um guarda uma opinião numérica e as cenas em que você apareceu. Téo, a Dra. Ivone, o Caçador Vasco, o Capitão do S.S. Anne, a Terceira, Sabrina, Sr. Furtado e outros reagem ao que você fez com eles muitos capítulos antes.
+- **NPCs têm memória individual** — cada um guarda uma opinião numérica e as cenas em que você apareceu. Ezra, a Dra. Cordell, o Caçador Roque, o Capitão Marlow, a Terceira, Sabrina, o Curador Fabre e outros reagem ao que você fez com eles muitos capítulos antes.
 - **O cemitério é permanente.** Quem morre por escolha sua aparece na ficha até o fim, com a causa escrita, e é citado na Torre de Lavender e na entrevista da Liga.
-- **A instabilidade de Kanto** é um número que sobe quando você captura lendários ou quebra equilíbrios, e ela muda o clima descrito nas rotas, o que a Liga fala com você e o que você vê no capítulo 19.
+- **A instabilidade de Kanto** é um número que sobe quando você captura lendários ou quebra equilíbrios, e ela muda o clima descrito nas rotas, o que a Liga fala com você e o que você vê mais adiante.
 - **A Liga escala em três estágios** e emite ordem de detenção por conta própria se você insistir.
 - **A reputação nunca zera.** Ações contrárias lavam o eixo oposto antes de subir o seu — e os NPCs continuam citando as duas metades da frase.
 
@@ -424,7 +455,7 @@ não tem esses itens (e não tem HM, por decisão de projeto). Great,
 Ultra e Master voam com o próprio ícone.
 
 Com sprites, cenários, ícones, rostos de treinador, insígnias e gritos,
-o `build.py` embute 1.613 arquivos.
+o `build.py` embute 1.686 arquivos.
 
 ### Crédito das artes
 

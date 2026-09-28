@@ -658,6 +658,245 @@ const CONTATOS = [
   }
 },
 
+/* ── gente da estrada que a história deixou na agenda ──────
+   Quem gostou de você o bastante passa o número. A condição é a
+   opinião dela (o que você fez na cena), e a pessoa só entra depois
+   do capítulo em que vocês se conheceram — o número é dado na
+   despedida, não no meio da conversa. */
+{
+  id:'cosmo', tipo:'figura', nome:'Sr. Cosmo', papel:'', cidade:'Cerulean',
+  requer:d=>opiniaoDe('Sr. Cosmo') >= 3 && d.capitulo > 6,
+  oferece:['prova','missao'],
+  prova:{
+    rotulo:'Perguntar se ele pegou alguma coisa',
+    esperaCap:2,
+    texto:[
+      fala('Sr. Cosmo', 'Não.'),
+      'Um silêncio comprido, do tipo que tem água correndo no fundo.',
+      fala('Sr. Cosmo', 'Mas o rio tá da cor certa essa semana. Isso eu anoto.', 'baixo')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Ligou pra um pescador que não pega nada só pra perguntar'}
+  },
+  missao:{
+    rotulo:'Perguntar se ele quer alguma coisa do rio',
+    rotuloEntrega:'Contar que você viu um Goldeen',
+    dica:'Um Goldeen. Ele quer saber se ainda tem.',
+    pedido:[
+      fala('Sr. Cosmo', 'Quatro anos e eu nunca vi um Goldeen nesse rio. Meu pai via todo dia.'),
+      fala('Sr. Cosmo', 'Eu não quero pegar. Eu quero saber se ainda tem.'),
+      fala('Sr. Cosmo', 'Se você vir um, em qualquer água de Kanto, me conta. Só isso.', 'baixo')
+    ],
+    objetivo:d=>Estado.conheceu(118) || Estado.conheceu(119),
+    entregue:[
+      fala('Sr. Cosmo', 'Viu?'),
+      d=>fala(d.jogador.nome, 'Vi. Com o chifre e tudo.'),
+      fala('Sr. Cosmo', 'Então ainda tem.'),
+      'Você ouve ele largar alguma coisa no chão, devagar.',
+      fala('Sr. Cosmo', 'Amanhã eu venho mais cedo.', 'baixo')
+    ],
+    recompensa:d=>{ Estado.darItem('Isca', 5); Estado.darItem('Super Potion', 2);
+      return [{tipo:'item', texto:'Ele manda pelo Centro 5× Isca e 2× Super Potion. "Isca boa. Não funciona comigo, mas é boa."'}]; },
+    rep:{eixo:'bom', delta:2, motivo:'Contou a um pescador velho que o bicho do pai dele ainda existe'},
+    marca:'cosmo_soube_do_goldeen'
+  }
+},
+{
+  id:'zelador', tipo:'figura', nome:'Zelador da Torre', falaComo:'Zelador da Torre', papel:'', cidade:'Lavender',
+  requer:d=>opiniaoDe('Zelador da Torre') >= 4 && d.capitulo > 7,
+  oferece:['favor','prova'],
+  favor:{
+    rotulo:'Perguntar como está a Torre',
+    limite:3, esperaCap:3,
+    texto:[
+      fala('Zelador da Torre', 'Vela nova no sexto andar. Todo dia.'),
+      fala('Zelador da Torre', 'Tá quieto lá em cima. Quieto de verdade, não aquele quieto de antes.', 'baixo'),
+      fala('Zelador da Torre', 'Deixei uma coisa pra você no Centro daqui. O povo que sobe esquece remédio no banco da entrada, e eu guardo pra quem precisa.')
+    ],
+    efeito:d=>{ Estado.darItem('Full Heal', 1); Estado.darItem('Revive', 1);
+      return [{tipo:'item', texto:'No balcão do Centro: 1× Full Heal e 1× Revive, embrulhados em papel de vela.'}]; }
+  },
+  prova:{
+    rotulo:'Contar onde você está',
+    texto:d=>[
+      fala('Zelador da Torre', `${d.insignias.filter(i=>i!=='Título de Campeão').length} insígnias. Eu vou contar pro pessoal da pousada.`),
+      fala('Zelador da Torre', 'Eles não te conhecem. Eu conto mesmo assim.', 'riso')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Deu notícia a quem repõe vela na Torre de Lavender'}
+  }
+},
+{
+  id:'elias', tipo:'figura', nome:'Elias', papel:'', cidade:'Celadon',
+  requer:d=>opiniaoDe('Elias') >= 6 && d.capitulo > 9,
+  oferece:['prova','favor'],
+  prova:{
+    rotulo:'Perguntar como ele está',
+    esperaCap:2,
+    texto:[
+      fala('Elias', 'Cara! Tô bem. Tô bem de verdade, não bem de hospital.'),
+      fala('Elias', 'Tô ajudando no Centro de Celadon, na recepção. Dá pra ver gente chegando com o time machucado e saber o que fazer.'),
+      fala('Elias', 'Torre eu não subo mais. Mas escada de Centro eu subo.', 'riso')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Ligou pra saber de quem tirou da Torre'}
+  },
+  favor:{
+    rotulo:'Pedir uma ajuda do balcão do Centro',
+    limite:2, esperaCap:3,
+    texto:[
+      fala('Elias', 'Ajuda? Pra você? Sempre.'),
+      fala('Elias', 'O Centro dá o remédio de quem esquece de buscar. Eu separei os seus.')
+    ],
+    efeito:d=>{ Estado.darItem('Hyper Potion', 2);
+      return [{tipo:'item', texto:'Chegou 2× Hyper Potion no seu nome, com um bilhete: "Tô te devendo pra sempre. — E."'}]; }
+  }
+},
+{
+  id:'edric', tipo:'figura', nome:'Sr. Edric', papel:'', cidade:'Rota 10',
+  requer:d=>opiniaoDe('Sr. Edric') >= 5 && d.capitulo > 10,
+  oferece:['prova','favor'],
+  prova:{
+    rotulo:'Perguntar se ele foi no primeiro sábado',
+    esperaCap:2,
+    texto:[
+      fala('Sr. Edric', 'Fui. Cadeira de praia, garrafa térmica, de frente pro portão.'),
+      fala('Sr. Edric', 'Alguém tem que estar olhando. Eu te disse pra ser o exagerado, lembra?'),
+      fala('Sr. Edric', 'Eu tô sendo também.', 'riso')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Não deixou quem vigia a usina vigiar sozinho'}
+  },
+  favor:{
+    rotulo:'Pedir o croqui dele de novo',
+    limite:1,
+    texto:[
+      fala('Sr. Edric', 'O croqui? Eu fiz uma cópia pra você. À mão, como o primeiro.'),
+      fala('Sr. Edric', 'Não é da usina. É do resto da serra. Quem anda por lá precisa mais de mapa do que quem entra no portão.')
+    ],
+    efeito:d=>{ Estado.subirStatus('intelecto');
+      return [{tipo:'rep', texto:'INTELECTO +1 — você passou a ler encosta como quem lê planta de casa.'}]; }
+  }
+},
+{
+  id:'rhea', tipo:'figura', nome:'Rhea Ashford', papel:'', cidade:'Saffron',
+  requer:d=>opiniaoDe('Rhea Ashford') >= 2 && d.capitulo > 11,
+  oferece:['prova','favor'],
+  prova:{
+    rotulo:'Contar uma coisa que você viu',
+    esperaCap:2,
+    texto:[
+      fala('Rhea Ashford', 'Fala. Eu tô com o gravador desligado, pode falar.'),
+      'Você conta. Ela não interrompe e você ouve a caneta correndo.',
+      fala('Rhea Ashford', 'Isso não sai amanhã. Isso sai quando eu tiver a segunda fonte.'),
+      fala('Rhea Ashford', 'Mas sai.', 'baixo')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Contou o que viu pra quem escreve'}
+  },
+  favor:{
+    rotulo:'Perguntar o que ela anda ouvindo',
+    limite:3, esperaCap:3,
+    texto:[
+      fala('Rhea Ashford', 'Ouvindo? Muita coisa. Publicando, pouca.'),
+      fala('Rhea Ashford', 'Um conselho de quem entrevista gente todo dia: quem fala demais no primeiro minuto tá escondendo o segundo.')
+    ],
+    efeito:d=>{ Estado.subirStatus('percepcao');
+      return [{tipo:'rep', texto:'PERCEPÇÃO +1 — você passou a reparar no segundo minuto das conversas.'}]; }
+  }
+},
+{
+  id:'pia', tipo:'figura', nome:'Dra. Pia', papel:'', cidade:'Fuchsia',
+  requer:d=>opiniaoDe('Dra. Pia') >= 5 && d.capitulo > 12,
+  oferece:['favor','prova'],
+  favor:{
+    rotulo:'Pedir remédio pro time',
+    limite:3, esperaCap:2,
+    texto:[
+      fala('Dra. Pia', 'Descreve.'),
+      'Você descreve. Ela faz duas perguntas curtas e certeiras.',
+      fala('Dra. Pia', 'Nada grave. Mas eu mando o que eu mandaria pra qualquer paciente meu, e você não discute.')
+    ],
+    efeito:d=>{ Estado.darItem('Full Heal', 2); Estado.darItem('Hyper Potion', 1);
+      return [{tipo:'item', texto:'Chegou no Centro, com receita dobrada em quatro: 2× Full Heal e 1× Hyper Potion.'}]; }
+  },
+  prova:{
+    rotulo:'Contar como o time está',
+    texto:d=>{
+      const vivos = Estado.timeVivo().length;
+      return [
+        fala('Dra. Pia', `${vivos} de pé. Bom.`),
+        fala('Dra. Pia', 'Eu anoto. Eu anoto todo mundo agora, no campo de observação.', 'baixo')
+      ];
+    },
+    rep:{eixo:'bom', delta:1, motivo:'Manteve a médica de Fuchsia sabendo do time'}
+  }
+},
+{
+  id:'wilma', tipo:'figura', nome:'Sra. Wilma', papel:'', cidade:'Cinnabar',
+  requer:d=>opiniaoDe('Sra. Wilma') >= 5 && d.capitulo > 14,
+  oferece:['prova','favor'],
+  prova:{
+    rotulo:'Ligar pra conversar',
+    esperaCap:2,
+    texto:[
+      fala('Sra. Wilma', 'Você ligou pra velha de Cinnabar? Senta, senta. Quer dizer, você não tá aqui. Mas senta.', 'riso'),
+      fala('Sra. Wilma', 'Aqui tá igual. O vulcão dorme, a maré sobe, o laboratório continua fechado.'),
+      fala('Sra. Wilma', 'Dezoito anos limpando aquele chão e eu ainda acordo na hora de ir.', 'baixo')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Ligou pra uma senhora de Cinnabar só pra conversar'}
+  },
+  favor:{
+    rotulo:'Perguntar se ela precisa de alguma coisa',
+    limite:2, esperaCap:3,
+    texto:[
+      fala('Sra. Wilma', 'Eu? Não. Você é que precisa comer.'),
+      fala('Sra. Wilma', 'Mandei um bolo pro Centro. E um dinheirinho dentro, que você não vai recusar porque eu já mandei.')
+    ],
+    efeito:d=>{ Estado.j.dinheiro += 1500; Estado.curarJogador(10);
+      return [{tipo:'item', texto:'+1500 ₽, dobrados dentro de um guardanapo, e um bolo de fubá que dura dois dias.'}]; }
+  }
+},
+{
+  id:'xavi', tipo:'figura', nome:'Xavi', papel:'', cidade:'Rota 16',
+  requer:d=>opiniaoDe('Xavi') >= 4 && d.capitulo > 15,
+  oferece:['prova','favor'],
+  prova:{
+    rotulo:'Contar quantas espécies você registrou',
+    esperaCap:2,
+    texto:d=>[
+      fala('Xavi', 'Espera. Deixa eu pegar a caneta.'),
+      fala('Xavi', `${Estado.contagemDex().catalogados}. Anotado, com data e hora.`),
+      fala('Xavi', 'A Ylva vai perguntar se foi você mesm{o|a} que viu tudo isso ou se você leu em algum lugar. Ela pergunta isso de todo mundo.', 'riso')
+    ],
+    rep:{eixo:'bom', delta:1, motivo:'Mandou a sua contagem pra quem conta a fauna das rotas'}
+  },
+  favor:{
+    rotulo:'Perguntar o que passou pela cabine',
+    limite:3, esperaCap:3,
+    texto:[
+      fala('Xavi', 'Passou pouca gente e muito bicho. Semana boa.'),
+      fala('Xavi', 'A Ylva achou repelente jogado no trecho 17, lacrado ainda. A gente não usa. Vai pra você.')
+    ],
+    efeito:d=>{ Estado.darItem('Repelente', 2);
+      return [{tipo:'item', texto:'Ele manda 2× Repelente pelo Centro, com a data em que foram achados escrita na tampa.'}]; }
+  }
+},
+{
+  id:'greta', tipo:'treinador', nome:'Sra. Greta Nettle', papel:'', cidade:'Planalto Indigo',
+  requer:d=>opiniaoDe('Sra. Greta Nettle') >= 3 && d.capitulo > 26,
+  oferece:['revanche','favor'],
+  timeRevanche:d=>{
+    const nv = Math.max(50, Math.round(Estado.timeVivo().reduce((a,p)=>a+p.nivel,0) / Math.max(1, Estado.timeVivo().length)) + 2);
+    return [62, 91, 94, 112, 130, 143].map((dex, i) => criarPokemon(dex, nv + (i === 5 ? 2 : 0), {}));
+  },
+  favor:{
+    rotulo:'Pedir mais uma regra',
+    limite:3, esperaCap:2,
+    texto:[
+      fala('Sra. Greta Nettle', 'Mais uma? Tá. Quem só ganha não sabe o que fazer quando perde. Perde de propósito, de vez em quando, no treino.'),
+      fala('Sra. Greta Nettle', 'Quarenta e um anos ensinando isso e eu nunca segui. Segue você.', 'baixo')
+    ],
+    efeito:d=>{ Estado.dados.time.forEach(p=>{ if(!p.morto) p.moral = Math.min(100,(p.moral||50)+4); });
+      return [{tipo:'info', texto:'O time inteiro subiu 4 de moral. Ela tem esse efeito até pelo telefone.'}]; }
+  }
+},
+
 /* ── rivais ──────────────────────────────────────────────── */
 {
   id:'teo', tipo:'treinador', nome:'Ezra', papel:'o seu rival', cidade:'estrada',
@@ -722,7 +961,35 @@ function contatosDeRivaisExtras(){
   }));
 }
 
-function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras()); }
+/* A opinião de alguém da história, pelo rótulo da cena ou pelo nome que
+   o jogador perguntou depois: lembrarNPC junta os dois no nome real. */
+function opiniaoDe(rotulo){
+  const d = Estado.dados;
+  let n = d.npcs[rotulo];
+  if (!n && typeof Nomes !== 'undefined' && Nomes.sabe && Nomes.sabe(rotulo)) n = d.npcs[Nomes.nomeDe(rotulo)];
+  return n ? (n.opiniao || 0) : -99;
+}
+
+/* Quem treina na estrada e perdeu pra você passa o número (estrada-dados.js).
+   A fala entre aspas vira balão com o nome dele. */
+function contatosDaEstrada(){
+  if (typeof TREINADORES_ESTRADA === 'undefined') return [];
+  const falas = (t, lista) => d => (typeof lista === 'function' ? lista(d) : lista).map(x =>
+    (typeof x === 'string' && /^"[^"]*"$/.test(x)) ? fala(t.nome, x.slice(1, -1)) : x);
+  return TREINADORES_ESTRADA.filter(t => t.numero).map(t => {
+    const c = {id:'rt_' + t.id, tipo:'treinador', nome:t.nome, papel:'',
+      cidade:(LOCAIS[t.local] || {}).nome || 'estrada', estrada:t.id,
+      requer:d=>Estrada.deuNumero(t.id), oferece:t.numero.oferece || ['revanche']};
+    ['favor','prova'].forEach(k => {
+      const def = t.numero[k];
+      if (def) c[k] = Object.assign({}, def, {texto: falas(t, def.texto)});
+    });
+    if (c.prova && !c.prova.rep) c.prova.rep = {eixo:'bom', delta:1, motivo:`Manteve contato com ${t.nome}, da estrada`};
+    return c;
+  });
+}
+
+function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras(), contatosDaEstrada()); }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 function textoContato(c, campo){
   /* A agenda não descreve ninguém: quem é quem está na conversa em que
@@ -925,6 +1192,99 @@ const CHAMADAS = [
   ]
 }
 ];
+
+/* ── chamadas da estrada e da gente nova da agenda ─────────── */
+CHAMADAS.push(
+{
+  id:'cha_joey_rattata',
+  de:'rt_joey',
+  cond:d=>Estado.temNumero('rt_joey') && numInsignias() >= 2,
+  peso:3,
+  falas:d=>[
+    fala('Joey', 'Alô? É o Joey! Da Rota 1!', 'grita'),
+    fala('Joey', 'Eu tava pensando aqui. O meu Rattata. Ele tá entre os melhores Rattata que existem.'),
+    fala('Joey', 'Só isso. Eu queria que você soubesse.')
+  ],
+  escolhas:[
+    {texto:'"Eu sei, Joey. Eu lembro."',
+     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Deixou o Joey falar do Rattata dele'}},
+     resultado:[fala('Joey', 'Sabia que você ia entender!', 'grita'), fala('Joey', 'Vem pra Rota 1 que ele te mostra.')]},
+    {texto:'"Quantos Rattata você já viu na vida, Joey?"',
+     resultado:[fala('Joey', 'Uns... quatro?'), 'Silêncio.', fala('Joey', 'Entre os quatro, ele é o melhor. Isso é fato.', 'baixo')]}
+  ]
+},
+{
+  id:'cha_kelsey_rio',
+  de:'rt_kelsey',
+  cond:d=>Estado.temNumero('rt_kelsey') && d.capitulo >= 9,
+  peso:2,
+  falas:d=>[
+    fala('Kelsey', 'O rio subiu! Eu falei que eu sabia antes. Eu sabia.'),
+    fala('Kelsey', 'A ponte norte ficou fechada meio dia. Os da fila da ponte ficaram sem ter com quem lutar e vieram lutar comigo.', 'riso')
+  ],
+  escolhas:[
+    {texto:'"E você ganhou de todos?"',
+     resultado:[fala('Kelsey', 'De quase todos. O Timmy tá ficando bom. Não conta pra ele.')]},
+    {texto:'Perguntar se alguém se machucou com a cheia.',
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou da cheia antes de perguntar da luta'}},
+     resultado:[fala('Kelsey', 'Ninguém. Só uma cabana de pescador que já tava torta.'), fala('Kelsey', 'Obrigada por perguntar. Quase ninguém pergunta.', 'baixo')]}
+  ]
+},
+{
+  id:'cha_cosmo_manha',
+  de:'cosmo',
+  cond:d=>Estado.temNumero('cosmo') && !!d.flags.cosmo_soube_do_goldeen,
+  peso:2,
+  falas:d=>[
+    fala('Sr. Cosmo', 'Peguei.'),
+    'Você espera o resto da frase. Não vem.',
+    fala('Sr. Cosmo', 'Um Goldeen. Pequeno. Soltei na hora.'),
+    fala('Sr. Cosmo', 'Quatro anos.', 'baixo')
+  ],
+  escolhas:[
+    {texto:'"Quatro anos e soltou?"',
+     resultado:[fala('Sr. Cosmo', 'Eu não queria pegar. Eu queria saber se ainda tinha.'), fala('Sr. Cosmo', 'Tem.')]},
+    {texto:'Ficar em silêncio com ele, na linha.',
+     ef:{moral:3, rep:{eixo:'bom',delta:1,motivo:'Ficou em silêncio com um pescador velho pelo telefone'}},
+     resultado:['Vocês ficam um minuto sem falar nada. Do lado de lá tem rio correndo.', fala('Sr. Cosmo', 'Pronto. Era isso.')]}
+  ]
+},
+{
+  id:'cha_rolando_subida',
+  de:'rt_rolando',
+  cond:d=>Estado.temNumero('rt_rolando') && numInsignias() >= 8,
+  peso:2,
+  falas:d=>[
+    fala('Rolando', 'Posto de controle da Rota 23, guarda informal falando.', 'riso'),
+    fala('Rolando', 'Tá subindo quando? Eu quero estar no posto na hora. Alguém tem que ver você passar.')
+  ],
+  escolhas:[
+    {texto:'"Logo. Fica no posto."',
+     ef:{moral:3},
+     resultado:[fala('Rolando', 'Fico. Sempre fico.')]},
+    {texto:'"Ainda não sei se eu subo."',
+     resultado:[fala('Rolando', 'Justo. Quem sobe sem saber volta no meio do Caminho.'), fala('Rolando', 'Quando souber, eu tô aqui.')]}
+  ]
+},
+{
+  id:'cha_pia_terca',
+  de:'pia',
+  cond:d=>Estado.temNumero('pia') && d.capitulo >= 14,
+  peso:2,
+  falas:d=>[
+    fala('Dra. Pia', 'Terça-feira. Eu atendi, preenchi, e escrevi no campo de observação.'),
+    fala('Dra. Pia', 'Ninguém me ligou pra reclamar. Eu esperava que ligassem.', 'baixo'),
+    fala('Dra. Pia', 'Eu queria que alguém soubesse que eu escrevi.')
+  ],
+  escolhas:[
+    {texto:'"Eu sei. Obrigad{o|a}."',
+     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Foi quem soube, quando alguém precisava que alguém soubesse'}},
+     resultado:[fala('Dra. Pia', 'Não agradece. Eu que agradeço.'), fala('Dra. Pia', 'Semana que vem eu escrevo de novo.')]},
+    {texto:'"E se ligarem?"',
+     resultado:[fala('Dra. Pia', 'Aí eu atendo e escrevo isso também.', 'frio')]}
+  ]
+}
+);
 
 const Chamadas = {
   atendidas(){
