@@ -264,6 +264,12 @@ Consequências:
 - `atualizarArena` marca `.fixo` quem já estava lá, pra arte não "entrar"
   de novo a cada turno.
 
+Cada tipo tem o seu desenho (`Efeitos.porTipo`): golpe físico avança
+antes e o efeito do tipo acontece no alvo; especial sai de quem usou.
+Golpe de raio (`…Beam`) é feixe da cor do tipo, e `GOLPES_DE_CHAO`
+sacode a arena inteira. Tipo novo sem entrada cai nas garras (físico) ou
+na esfera da cor do tipo (especial) — funciona, mas fica genérico.
+
 Os efeitos são **desenhados em CSS**: os endereços de efeito dos roteiros
 (fire_slash, water_beam, heal_sparkle, status_burn…) eram ícones de item
 da PokeAPI — Fire Stone, Water Stone, Potion, Burn Heal. Cor por cima do

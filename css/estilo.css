@@ -2403,6 +2403,28 @@ h3.cat-item{
   background:radial-gradient(circle at 35% 35%,#f3b8f3 0 18%,#AA00AA 55%,#5a005a 100%)}
 .fx-clarao{width:124px;height:124px;border-radius:50%;
   background:radial-gradient(circle,#fff 0 22%,rgba(255,255,255,.85) 38%,rgba(210,230,255,.4) 56%,transparent 70%)}
+.fx-garra.escura{background:linear-gradient(180deg,#2a1f33,#4b3a5c 70%,transparent);box-shadow:0 0 6px rgba(40,20,60,.9)}
+.fx-folha{width:14px;height:9px;background:linear-gradient(135deg,#b6f07a,#3fa33a 60%,#1f6b24);
+  border-radius:0 100% 0 100%;filter:drop-shadow(0 0 2px rgba(60,140,40,.8))}
+.fx-chicote{width:96px;height:4px;border-radius:3px;background:linear-gradient(90deg,transparent,#5fc24a 20%,#2e8a2a 80%,transparent);
+  transform-origin:50% 50%;box-shadow:0 0 5px rgba(80,200,70,.8)}
+.fx-cristal{width:12px;height:12px;background:linear-gradient(135deg,#ffffff,#bdf1ff 45%,#6fd0ff);
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);filter:drop-shadow(0 0 4px #9fe8ff)}
+.fx-impacto{width:78px;height:78px;
+  clip-path:polygon(50% 0,60% 32%,95% 20%,70% 48%,100% 62%,64% 66%,72% 100%,50% 74%,26% 100%,34% 66%,0 62%,30% 48%,5% 20%,40% 32%)}
+.fx-poeira{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle,rgba(214,176,110,.95),rgba(160,120,60,.6) 60%,transparent 72%)}
+.fx-vento{width:70px;height:10px;border-radius:50%;border-top:3px solid rgba(255,255,255,.95);
+  filter:drop-shadow(0 0 3px rgba(200,225,255,.9))}
+.fx-ferrao{width:16px;height:4px;border-radius:2px;background:linear-gradient(90deg,transparent,#d8f07a 40%,#8aa820);
+  box-shadow:0 0 4px rgba(170,200,40,.9)}
+.fx-pedra{width:18px;height:16px;background:linear-gradient(135deg,#d9c39a,#9a7d4e 55%,#6b5332);
+  clip-path:polygon(20% 0,80% 8%,100% 50%,78% 100%,18% 92%,0 44%)}
+.fx-sombra{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,rgba(80,50,130,.95),rgba(40,20,70,.7) 55%,transparent 72%)}
+.fx-dragao{width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle,#e8e4ff 0 20%,#8a7dff 45%,#4a2ab8 68%,transparent 72%);filter:drop-shadow(0 0 5px rgba(110,90,255,.9))}
+.fx-lamina{width:92px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,#ffffff 30%,#c9d2de 70%,transparent);
+  box-shadow:0 0 6px rgba(230,240,255,.95)}
+.fx-feixe{height:14px;border-radius:7px;transform-origin:0 50%}
 .fx-estrela{width:10px;height:10px;background:#fff7cf;
   clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
   filter:drop-shadow(0 0 3px rgba(255,236,150,.95))}
