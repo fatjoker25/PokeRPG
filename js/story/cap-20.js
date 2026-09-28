@@ -1514,7 +1514,7 @@ c20_entrevista:{
     '"Eu me arrependo de ter feito sozinha."',
     'A última pergunta é sobre você. Ela responde com o seu nome inteiro, correto, e diz que você pediu a palavra pelo Art. 27 e que foi a primeira pessoa a fazer isso.',
     'Depois acrescenta uma frase que o jornal põe em destaque, num quadradinho, em corpo maior:',
-    '"Eu gostaria que tivesse sido em 2019, e não gostaria que tivesse sido uma criança."'
+    '"Eu gostaria que tivesse sido em oitenta e nove, e não gostaria que tivesse sido uma criança."'
   ],
   ef:{flag:'leu_a_entrevista', instabilidade:1, moral:-2,
       registrar:'A Presidente deu entrevista, confirmou tudo e disse que se arrepende de ter feito sozinha.'},

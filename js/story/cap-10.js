@@ -99,7 +99,7 @@ c10_ab_o_operador:{
     'Ele aponta a cadeira vazia do lado, que também é de praça, e que também claramente foi levada de uma praça.',
     'Você senta porque não sentar seria pior.',
     fala('Sr. Holt', 'Eu trabalhei lá dentro por vinte e seis anos. Operador de sala de controle.'),
-    fala('Sr. Holt', 'Fecharam em oitenta e sete. Pagaram todo mundo direitinho, com carta e tudo.'),
+    fala('Sr. Holt', 'Fecharam em oitenta e nove. Pagaram todo mundo direitinho, com carta e tudo.'),
     fala('Sr. Holt', 'Só que ninguém desmontou nada.', 'baixo')
   ],
   ef:{flag:'conheceu_o_operador',
@@ -144,7 +144,7 @@ c10_ab_a_sala:{
     'Ele fica quieto uns cinco segundos.',
     fala('Sr. Holt', 'Eu fui lá em noventa e quatro. Pulei a cerca, que naquela época dava pra pular.'),
     fala('Sr. Holt', 'A parede tava acesa.'),
-    fala('Sr. Holt', 'Toda acesa. Doze metros. Numa usina sem energia há sete anos.', 'baixo')
+    fala('Sr. Holt', 'Toda acesa. Doze metros. Numa usina sem energia há cinco anos.', 'baixo')
   ],
   ef:{flag:'o_painel_aceso',
       registrar:'Em 1994 o painel sinótico da sala de controle estava todo aceso, numa usina sem energia.',
@@ -162,15 +162,15 @@ c10_ab_o_arame:{
     fala('Sr. Holt', 'Você já foi lá?'),
     d=>fala(d.jogador.nome, 'Ainda não. Me falaram.'),
     'Mentira boba e ele deixa passar.',
-    fala('Sr. Holt', 'Foi assim desde o começo. Setenta e seis, quando construíram.'),
+    fala('Sr. Holt', 'Foi assim desde o começo. Cinquenta e oito, quando construíram.'),
     fala('Sr. Holt', 'A gente perguntou. O engenheiro falou que era "norma de instalação de alta tensão".'),
     fala('Sr. Holt', 'Eu trabalhei em mais duas usinas depois. Em nenhuma das duas o arame era pra dentro.'),
     'Ele volta a balançar a cadeira, e o rangido volta, e o rangido agora incomoda.',
     fala('Sr. Holt', 'Então ou era norma e as outras duas tavam erradas, ou não era norma.')
   ],
   ef:{flag:'o_arame_desde_setenta_e_seis',
-      registrar:'O arame inclinado pra dentro está lá desde a construção, em 1976. Não é norma.',
-      presagio:'Se a cerca foi feita assim em 1976, o que ela segura já estava previsto em 1976.'},
+      registrar:'O arame inclinado pra dentro está lá desde a construção, em 1958. Não é norma.',
+      presagio:'Se a cerca foi feita assim em 1958, o que ela segura já estava previsto em 1958.'},
   escolhas:[
     {texto:'Seguir pra usina.', vai:'c10_rota'},
     {texto:'Perguntar o que tem na sala de controle.', vai:'c10_ab_a_sala'}
@@ -186,7 +186,7 @@ c10_ab_o_aparelho:{
     'A agenda de contatos abre sozinha e fecha sozinha. Uma ligação disca sem número e cai.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} está com as orelhas pra trás desde a curva e não olha pra frente: olha pro lado, pro fundo do vale, e você segue o olhar e não tem nada no fundo do vale além da usina.`
+      return p ? `${nomeExib(p)} está tens${pron(p).o} desde a curva e não olha pra frente: olha pro lado, pro fundo do vale, e você segue o olhar e não tem nada no fundo do vale além da usina.`
                : 'Os pelos do seu braço estão em pé e não tem vento nenhum.';
     },
     'A trezentos metros, o aparelho desliga. Não descarrega: desliga, com a bateria em setenta e um por cento.'
@@ -247,7 +247,7 @@ c10_ab_o_chamado:{
     'O homem do macacão abre a porta da caminhonete e tira uma prancheta, e a prancheta tem três vias de papel carbono.',
     fala('o homem do macacão', 'Consumo. A unidade 4 tá puxando carga.'),
     d=>fala(d.jogador.nome, 'Puxando? Ela não gera?'),
-    fala('o homem do macacão', 'Gerava. Desde oitenta e sete ela não gera nada.'),
+    fala('o homem do macacão', 'Gerava. Desde oitenta e nove ela não gera nada.'),
     'Ele vira a via de cima da prancheta.',
     fala('o homem do macacão', 'Agora ela consome. Quarenta megawatt-hora por mês, faturado pra ninguém, num CNPJ que foi baixado em oitenta e nove.'),
     fala('o homem do macacão', 'A gente abriu chamado em maio, em julho e em setembro.'),
@@ -334,6 +334,8 @@ c10_rota:{
 },
 
 c10_quem_sabe:{
+  falante:'o homem do boné',
+  vozes:['N','N'],
   texto:[
     'A Rota 10 tem três coisas: a usina, a entrada do Túnel de Rocha, e um açude onde pescador de Lavender vem nos fins de semana.',
     'No açude tem quatro pessoas. Três não querem conversa.',
@@ -378,6 +380,8 @@ c10_eloi:{
 },
 
 c10_morreu_alguem:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N','N'],
   texto:[
     '"Morreu."',
     'Ele arruma a vara que não está pescando nada.',
@@ -402,6 +406,8 @@ c10_morreu_alguem:{
 },
 
 c10_o_corpo:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N','N'],
   texto:[
     '"Acharam no chão do galpão, embaixo da viga central."',
     '"E aqui é onde eu paro de contar pra maioria das pessoas, porque a maioria das pessoas faz uma cara e eu não gosto da cara."',
@@ -424,6 +430,8 @@ c10_o_corpo:{
 },
 
 c10_porque_nao_desmontaram:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N'],
   texto:[
     '"Porque desmontar dá processo."',
     'Ele ri sem nenhum humor.',
@@ -445,6 +453,8 @@ c10_porque_nao_desmontaram:{
 },
 
 c10_o_zumbido:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N'],
   texto:[
     '"O zumbido é sessenta hertz."',
     'Ele diz isso com a precisão de quem mediu.',
@@ -466,6 +476,8 @@ c10_o_zumbido:{
 },
 
 c10_porque_ele_vem:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N'],
   texto:[
     '"Uma vez por mês. Primeiro sábado."',
     '"Eu venho, sento aqui, olho, e volto pra casa."',
@@ -488,6 +500,8 @@ c10_porque_ele_vem:{
 },
 
 c10_ja_entrou:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N','N'],
   texto:[
     '"Uma vez. Quatro anos atrás."',
     '"Cheguei até a porta do galpão. Abri. Olhei."',
@@ -510,6 +524,8 @@ c10_ja_entrou:{
 },
 
 c10_esperando_o_que:{
+  falante:'Sr. Edric',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Esperando o quê?"',
     'Ele pensa muito tempo. É a primeira pergunta que ele não tem resposta pronta.',
@@ -531,6 +547,8 @@ c10_esperando_o_que:{
 },
 
 c10_discordou_do_eloi:{
+  falante:'Sr. Edric',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Acho que você tá errado."',
     'Ele levanta uma sobrancelha, sem ofensa nenhuma. "Diz."',
@@ -555,6 +573,8 @@ c10_discordou_do_eloi:{
 },
 
 c10_planta:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N'],
   texto:[
     '"Planta eu não tenho. Mas eu tenho isso."',
     'Ele tira do bolso do colete um papel dobrado em quatro, amarelado, com vinco branco de tanto ser dobrado.',
@@ -582,6 +602,8 @@ c10_planta:{
 },
 
 c10_convidou_eloi:{
+  falante:'Sr. Edric',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Vem comigo."',
     'Ele olha pra você um tempo desconfortável.',
@@ -609,6 +631,8 @@ c10_convidou_eloi:{
 /* ─────────────── O PERÍMETRO ─────────────── */
 
 c10_tunel:{
+  falante:'a mulher do fogo',
+  vozes:['N','N','P','N','N'],
   texto:[
     'A boca do Túnel de Rocha fica a oitocentos metros da usina, e é um buraco na encosta com uma placa de madeira: TRAVESSIA — LEVE LANTERNA.',
     'Tem seis pessoas acampadas na entrada. Não vão entrar: estão esperando amanhecer, porque o túnel é escuro o suficiente para ser escuro de dia.',
@@ -631,6 +655,8 @@ c10_tunel:{
 },
 
 c10_alguem_entrou:{
+  falante:'a mulher do fogo',
+  vozes:['N','N','N','N','N','N'],
   texto:[
     '"Já."',
     'Ela conta nos dedos, sem drama, como quem lista compras.',
@@ -738,6 +764,8 @@ c10_anotou_ciclo:{
 },
 
 c10_mostrou_a_conta:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N'],
   texto:[
     'Sr. Edric lê a página três vezes sem dizer nada.',
     'Depois pega o lápis da sua mão e refaz a conta na margem, do jeito dele, com casas decimais.',
@@ -763,6 +791,8 @@ c10_mostrou_a_conta:{
 },
 
 c10_avisou_o_tunel:{
+  falante:'a mulher do fogo',
+  vozes:['N','N','uma das acampadas'],
   texto:[
     'Você volta ao acampamento da boca do túnel com o caderno.',
     'Eles ouvem. Eles acreditam — essa é a parte que desmonta você: ninguém pede prova, ninguém ri, ninguém diz que você está exagerando.',
@@ -787,7 +817,7 @@ c10_avisou_o_tunel:{
 c10_foi_embora:{
   texto:[
     'Você desce a encosta no sentido contrário.',
-    'É uma decisão defensável. Você não é técnico, não é fiscal, não é bombeiro, e não tem nenhuma obrigação com uma usina que a companhia abandonou há onze anos.',
+    'É uma decisão defensável. Você não é {técnico|técnica}, não é fiscal, não é {bombeiro|bombeira}, e não tem nenhuma obrigação com uma usina que a companhia abandonou há onze anos.',
     'Três dias depois, a Rota 10 é interditada por "instabilidade elétrica". Sai no rodapé do jornal de Lavender.',
     'Duas pessoas ficaram feridas. Uma delas é um rapaz de dezenove anos que atravessava a rota de bicicleta.',
     'Você não tinha obrigação nenhuma.',
@@ -808,6 +838,7 @@ c10_foi_embora:{
 /* ─────────────── DENTRO ─────────────── */
 
 c10_portao:{
+  vozes:['E'],
   texto:[
     'O portão principal é de tubo e tela, com uma corrente e um cadeado de latão que enferrujou aberto — literalmente aberto, travado na posição destravada, enferrujado assim.',
     'Alguém abriu esse cadeado uma vez e nunca mais fechou, e a ferrugem escolheu esse formato.',
@@ -849,6 +880,7 @@ c10_sala_controle:{
 },
 
 c10_agenda:{
+  vozes:['E','E','E','E','E'],
   texto:[
     'A agenda de mesa é de uso coletivo — todo turno anotava o que precisava passar pro próximo.',
     'Fevereiro é normal e chato: "trocar lâmpada do corredor", "vem o pessoal da caldeira quinta", "aniversário do Wilson, vaquinha".',
@@ -895,6 +927,8 @@ c10_levou_a_agenda:{
 },
 
 c10_agenda_pro_eloi:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N'],
   texto:[
     'Você atravessa o pátio de volta e sai pelo portão, e o Sr. Edric está exatamente onde disse que ficaria.',
     'Você entrega a agenda.',
@@ -902,7 +936,7 @@ c10_agenda_pro_eloi:{
     'Depois abre em março e lê, com o dedo, linha por linha, e nas anotações dos dias cinco, seis e sete ele começa a balançar a cabeça devagar.',
     '"Essa letra é a minha."',
     'Pausa longa.',
-    '"Cinco, seis e sete de março sou eu. Eu que escrevi “não tá normal”. Eu que escrevi “não vou espantar mais, dá dó”."',
+    '"Cinco, seis e sete de março sou eu. Eu que escrevi ‘não tá normal’. Eu que escrevi ‘não vou espantar mais, dá dó’."',
     '"Eu passei onze anos achando que eu tinha avisado e que ninguém me ouviu."',
     'Ele fecha a agenda.',
     '"Eu escrevi numa agenda de mesa. Eu não avisei ninguém. Eu escrevi numa agenda."'
@@ -922,6 +956,8 @@ c10_agenda_pro_eloi:{
 },
 
 c10_consolou_eloi:{
+  falante:'Sr. Edric',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Você avisou. Só não teve quem lesse."',
     'Ele balança a cabeça, e é um não.',
@@ -947,6 +983,8 @@ c10_consolou_eloi:{
 },
 
 c10_foi_duro_com_eloi:{
+  falante:'Sr. Edric',
+  vozes:['P','N','N','N'],
   texto:[
     '"É. Você não avisou."',
     'Ele não se defende. Não pisca. Não desvia.',
@@ -969,6 +1007,8 @@ c10_foi_duro_com_eloi:{
 },
 
 c10_sentou_com_eloi:{
+  falante:'Sr. Edric',
+  vozes:['N','N'],
   texto:[
     'Você senta na brita do lado da cadeira de praia e não fala nada, e ele também não.',
     'Ficam assim uns quarenta minutos, com a usina zumbindo a trezentos metros e o açude fazendo barulho de açude atrás.',
@@ -1034,6 +1074,8 @@ c10_guardou_registro:{
 },
 
 c10_registro_pro_eloi:{
+  falante:'Sr. Edric',
+  vozes:['N','N','N','N','N','N'],
   texto:[
     'Você atravessa o pátio e mostra a fita pro velho, que pega ela com as duas mãos e lê com o braço esticado porque esqueceu o óculos.',
     '"Cinco e trinta e um."',
@@ -1087,7 +1129,7 @@ c10_vestiario:{
     'Um chuveiro que pinga numa usina sem água encanada há onze anos.',
     'Vinte e nove armários estão abertos e vazios — a companhia mandou o pessoal esvaziar quando fechou, e o pessoal esvaziou.',
     'Três estão fechados com cadeado.',
-    'No 14 tem uma etiqueta de fita crepe com um nome escrito a caneta, já quase apagado: **NIVALDO R.**'
+    'No 14 tem uma etiqueta de fita crepe com um nome escrito a caneta, já quase apagado: **NAOKI V.**'
   ],
   ef:{flag:'achou_o_armario',
       registrar:'No vestiário da usina, o armário 14 ainda está trancado com o nome do Naoki.',
@@ -1130,7 +1172,7 @@ c10_pegou_a_foto:{
     'Você descola a foto da porta do armário com cuidado, porque a fita adesiva de onze anos rasga o papel se você tiver pressa.',
     'Ela sai inteira.',
     'Você põe entre as páginas do caderno, do outro lado da fita do registro de porta.',
-    'Não é seu. Não é pra você. Você não sabe nem o sobrenome dele direito — a etiqueta diz NIVALDO R.',
+    'Não é seu. Não é pra você. Você não sabe nem o sobrenome dele direito — a etiqueta diz NAOKI V.',
     'Mas "mãe — 71" escrito atrás de uma foto quer dizer que em algum lugar existe ou existiu uma mulher que não sabe que o filho dela guardava a foto dela no armário.',
     'E isso é uma coisa que dá pra devolver.'
   ],
@@ -1236,6 +1278,7 @@ c10_almoxarifado:{
 },
 
 c10_caderno_da_mochila:{
+  vozes:['E','E'],
   texto:[
     'O caderno é de matemática, quadriculado, e não tem conta nenhuma.',
     'Tem lista.',
@@ -1299,7 +1342,7 @@ c10_subestacao:{
   ],
   ef:{flag:['viu_a_subestacao','viu_o_t3'],
       registrar:'Os quatro transformadores estão energizados. O T3 tem quatro amassados redondos com tinta derretida.',
-      presagio:'T3. Foi pro T3 que os bichos ficavam virados em 6 de março.'},
+      presagio:'T3. Quatro amassados num só, e nenhum nos outros três.'},
   escolhas:[
     {texto:'Medir com o multímetro.', vai:'c10_mediu', cond:d=>Estado.contaItem('Multímetro')>0},
     {texto:'Seguir as marcas de queimadura no chão.', vai:'c10_marcas'},
@@ -1503,7 +1546,7 @@ c10_religou:{
     'Você empurra a alavanca de volta antes de pensar.',
     'A seccionadora fecha com o mesmo estouro surdo e o zumbido volta em menos de um segundo — e volta mais alto do que estava.',
     'O grito para no meio.',
-    'Você fica parad{o|a} com as duas mãos na alavanca, ofegante, numa subestação escura, e a coisa que você acabou de fazer é pedir desculpa pra um bicho de cinquenta níveis usando a única língua que vocês dois falam.',
+    'Você fica parad{o|a} com as duas mãos na alavanca, ofegante, numa subestação escura, e a coisa que você acabou de fazer é pedir desculpa pra um bicho que come corrente elétrica usando a única língua que vocês dois falam.',
     'Do outro lado do pátio, silêncio.',
     'Depois de uns quarenta segundos, um estalo baixo. Duas vezes.',
     'E o zumbido assenta de volta na frequência de antes.'
@@ -1602,7 +1645,7 @@ c10_viga_central:{
 
 c10_falou_com_zapdos:{
   texto:[
-    'Você se sente ridículo por quatro segundos inteiros. Depois fala, em voz alta, num galpão de trezentos metros com quarenta bichos parados:',
+    'Você se sente ridícul{o|a} por quatro segundos inteiros. Depois fala, em voz alta, num galpão de trezentos metros com quarenta bichos parados:',
     '"Vocês estão presos aqui?"',
     'O eco devolve a pergunta duas vezes e some.',
     'Nada acontece por uns vinte segundos.',
@@ -1693,7 +1736,8 @@ c10_conversa_longa:{
     'Às cinco e quarenta — cinco e quarenta, o mesmo horário — ela desce da viga.',
     'Anda pelo chão como uma ave comum, entre os que sobraram, que abrem espaço.',
     'Passa a três metros de você. Vira a cabeça. Olha.',
-    'E sai pelo buraco do teto, e o galpão inteiro escurece de uma vez, e é de manhã.'
+    'E sai pelo buraco do teto, e o galpão inteiro escurece de uma vez, e é de manhã.',
+    'No chão, perto do seu pé, um Magnemite não voltou pro canto dele. Está virado pra você.'
   ],
   ef:{flag:['noite_no_galpao','respeitou_zapdos'],
       executar:d=>{ const L=Estado.lend(145); if(L.disposicao!=='hostil') L.disposicao='passivo';
@@ -1992,6 +2036,7 @@ c10_depois:{
 },
 
 c10_contou:{
+  vozes:['um deles','um deles'],
   texto:[
     'Você conta. Sem enfeitar, sem arredondar, inclusive as partes em que você fica mal na fita.',
     'Quem está ouvindo reage de um jeito que você não esperava: ninguém duvida. Nem por um segundo.',
@@ -2004,7 +2049,7 @@ c10_contou:{
       rep:{eixo:'bom',delta:2,motivo:'Contou a verdade sobre o que viu na usina'},
       moral:10,
       registrar:'Contou publicamente o que viu na usina.',
-      presagio:'"Não foi castigo." Repare em quantos anos essa frase custou.'},
+      presagio:'"A gente só não tinha quem falasse." Repare em quantos anos essa frase custou.'},
   escolhas:[
     {texto:'Seguir para Saffron.', vai:'c10_fim'},
     {texto:'Ficar mais um dia e ajudar a interditar a rota.', vai:'c10_interditou'},
@@ -2033,6 +2078,7 @@ c10_contou_pouco:{
 },
 
 c10_mentiu:{
+  vozes:['P'],
   texto:[
     '"Não tinha nada lá."',
     'Eles aceitam. Ou fingem aceitar, o que num contexto desses dá exatamente no mesmo.',
@@ -2079,6 +2125,8 @@ c10_interditou:{
 },
 
 c10_lavender:{
+  falante:'Sra. Vesna',
+  vozes:['N','P','N','N'],
   texto:[
     'Você volta a Lavender só pra isso. São seis horas de estrada pra entregar uma foto três por quatro.',
     'A casa da rua de trás do cemitério tem portão verde e uma campainha que não funciona, então você bate palma no portão, do jeito antigo.',
@@ -2089,7 +2137,7 @@ c10_lavender:{
     'A janela não fecha. Ela também não abre mais.',
     'Você põe a foto no degrau, embaixo de uma pedra pra não voar, e recua até a calçada.',
     'Ela desce. Pega. Olha.',
-    'E aí ela faz uma coisa que você não estava preparado pra ver: ela vira a foto e lê o que está escrito atrás, "mãe — 71", e fica ali no degrau lendo duas palavras e um número por um tempo muito longo.',
+    'E aí ela faz uma coisa que você não estava preparad{o|a} pra ver: ela vira a foto e lê o que está escrito atrás, "mãe — 71", e fica ali no degrau lendo duas palavras e um número por um tempo muito longo.',
     '"Ele tinha vinte e seis", ela diz, pra você ou pra ninguém. "Vinte e seis e guardava foto da mãe no armário."',
     'E entra e fecha a porta, e você vai embora, e nenhum dos dois disse obrigado nem de nada.'
   ],

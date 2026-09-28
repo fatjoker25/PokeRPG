@@ -815,7 +815,7 @@ const Cidade = {
     return [
       {id:'museu', cidade:'pewter', valor:12000,
        nome:'O telhado do museu de Pewter',
-       linha:'Lona de 2015, relatório numa gaveta, e uma pessoa passando pano sozinha há onze anos.',
+       linha:'Lona de 1994, relatório numa gaveta, e uma pessoa passando pano sozinha há onze anos.',
        requer:d=>!!d.flags.sabe_da_lona_do_museu || !!d.visitados.pewter,
        rep:3, marca:'pagou_o_telhado',
        texto:[

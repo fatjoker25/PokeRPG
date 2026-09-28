@@ -3820,7 +3820,7 @@ c8_porque_nao_postou:{
     'Silêncio.',
     '"Eu escrevi uma parte."',
     'Ele olha as próprias mãos.',
-    '"A parte da triagem foi minha. Em dois mil e vinte e dois. Eu achei que era pra proteger eles de pedido de dinheiro de família."'
+    '"A parte da triagem foi minha. Faz três anos. Eu achei que era pra proteger eles de pedido de dinheiro de família."'
   ],
   ef:{flag:'ele_escreveu_a_triagem',
       registrar:'O homem do camarote 40 escreveu a regra de triagem de correspondência que reteve as cartas.',
@@ -3900,7 +3900,7 @@ c8_socorro_com_porta_aberta:{
 c8_corredor_servico:{
   texto:[
     'O corredor de serviço do convés três corre paralelo ao dos camarotes, do outro lado da antepara, e serve pra copa, rouparia e manutenção.',
-    d=>d.flags.tem_a_chave ? 'A chave de latão que a Rina perdeu em dois mil e dezenove abre a porta no primeiro giro.'
+    d=>d.flags.tem_a_chave ? 'A chave de latão que a Rina perdeu dois verões atrás abre a porta no primeiro giro.'
        : d.flags.janela_das_23h ? 'A porta está destrancada, porque são 23h07 e a troca de turno da copa vai até 23h20.'
        : 'A porta está trancada. Você espera dezoito minutos encostad{o|a} na parede e uma copeira sai empurrando um carrinho e você segura a porta pra ela, e ela agradece, e você entra.',
     'Lá dentro é estreito, quente e cheio de cano.',

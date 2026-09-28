@@ -1484,7 +1484,7 @@ c9_busca_sena:{
   ef:{flag:['a_sucessao_de_fato','sabe_de_sena'],
       rep:{eixo:'bom',delta:3,motivo:'Descobriu que o laboratório de Cinnabar nunca fechou de verdade'},
       registrar:'O laboratório de Cinnabar foi baixado em 1989 e reaberto em Saffron em 1990, com o mesmo quadro.',
-      presagio:'Não fechou. Mudou de CNPJ. Tem trinta e seis anos de continuidade escondidos numa troca de número.'},
+      presagio:'Não fechou. Mudou de CNPJ. Tem décadas de continuidade escondidas numa troca de número.'},
   escolhas:[
     {texto:'Pedir a certidão da de Saffron. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
      ef:{dinheiro:-80}},
@@ -2049,7 +2049,7 @@ c9_perguntou_do_botao:{
       rep:{eixo:'bom',delta:2,motivo:'Perguntou do botão que todo mundo vê e ninguém aperta'},
       npc:{nome:'Líder Erika', opiniao:4, memoria:'Te contou que o subsolo de carga liga o shopping, o cassino e o depósito.'},
       registrar:'O subsolo de carga liga shopping, cassino e depósito. Mesmo lote, planta de 1979.',
-      presagio:'Mesmo lote. Um ginásio de Liga e um depósito de custódia, no mesmo lote, por um erro de planta de quarenta e sete anos.'},
+      presagio:'Mesmo lote. Um ginásio de Liga e um depósito de custódia, no mesmo lote, por um erro de planta de vinte e um anos.'},
   escolhas:[
     {texto:'Descer pelo botão sem número.', vai:'c9_botao'},
     {texto:'Ir ao depósito pela rua.', vai:'c9_deposito'},

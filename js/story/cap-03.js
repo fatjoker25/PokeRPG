@@ -50,13 +50,13 @@ c3_ab_de_noite:{
 c3_ab_a_placa:{
   texto:[
     'O primeiro aviso é padrão: espécies de inseto, risco de picada, procure o Centro em caso de reação.',
-    'O segundo é mais específico e por isso mais desconfortável: "A sinalização da trilha foi refeita em 2019. Marcações anteriores a essa data não são confiáveis."',
+    'O segundo é mais específico e por isso mais desconfortável: "A sinalização da trilha foi refeita em 1994. Marcações anteriores a essa data não são confiáveis."',
     'Dois mil e dezenove. Você olha a placa de novo e a placa é claramente mais velha que isso.',
     'Quer dizer que em algum lugar aí dentro tem marcação antiga que continua parecendo marcação, e ninguém tirou.',
     'O terceiro aviso é o escrito à mão.'
   ],
   ef:{flag:'sabe_das_marcacoes_velhas',
-      registrar:'Tem marcação de trilha anterior a 2019 na floresta, e ninguém tirou.',
+      registrar:'Tem marcação de trilha anterior a 1994 na floresta, e ninguém tirou.',
       presagio:'Marcação que não é confiável é pior que marcação nenhuma, porque você segue.'},
   escolhas:[
     {texto:'Acampar aqui fora e entrar de manhã.', vai:'c3_ab_acampou', ef:{hp:3}},

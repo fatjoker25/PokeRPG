@@ -380,7 +380,7 @@ c4_senhora_cidade:{
 c4_senhora_museu_cai:{
   texto:[
     '"Caindo aos pedaços como assim?"',
-    '"Como assim literal." Ela levanta dois dedos. "Goteira na sala dois. Vitrine trincada na sala um. E o telhado dos fundos, que eles cobriram com lona em dois mil e quinze e a lona tá lá até hoje."',
+    '"Como assim literal." Ela levanta dois dedos. "Goteira na sala dois. Vitrine trincada na sala um. E o telhado dos fundos, que eles cobriram com lona em noventa e quatro e a lona tá lá até hoje."',
     '"E a prefeitura?"',
     '"A prefeitura mandou um engenheiro. O engenheiro fez um relatório. O relatório tá numa gaveta e a lona tá no telhado, e as duas coisas vão continuar exatamente onde estão."',
     'Ela fala isso sem raiva nenhuma, que é pior do que se tivesse raiva.',
@@ -389,7 +389,7 @@ c4_senhora_museu_cai:{
     '"Respondeu uma vez, em noventa e oito." Ela ri sem alegria. "Pediu mais informações."'
   ],
   ef:{flag:'sabe_da_lona_do_museu',
-      presagio:'Uma lona de 2015 ainda no telhado em 2027. Alguém vai te oferecer dinheiro por aquele museu e você vai lembrar dessa lona.'},
+      presagio:'Uma lona de seis anos ainda no telhado. Alguém vai te oferecer dinheiro por aquele museu e você vai lembrar dessa lona.'},
   escolhas:[
     {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
     {texto:'"E se alguém quisesse comprar o museu?"', vai:'c4_senhora_comprar'},

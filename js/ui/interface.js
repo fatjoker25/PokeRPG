@@ -471,7 +471,11 @@ const UI = {
   /* Quebra uma linha em pedaços de narração e de fala. Devolve null
      quando não há fala nenhuma, pra linha seguir sendo parágrafo. */
   partirFalas(texto){
-    const re = /[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g;
+    /* aspas dentro de aspas: “achado atípico” dentro de "..." vira
+       ‘achado atípico’, senão a curva fecha a fala no meio da frase */
+    if (texto.indexOf('"') !== -1)
+      texto = texto.replace(/"([^"]*)"/g, (m, d) => '"' + d.replace(/“/g, '‘').replace(/”/g, '’') + '"');
+    const re =/[\u201C\"]([^\u201C\u201D\"]+)[\u201D\"]/g;
     /* quantas aspas dessa linha terminam em pontuação: se pelo menos
        uma termina, a linha é diálogo e as outras também são fala */
     const pontuadas = (texto.match(/[\u201C\"][^\u201C\u201D\"]+[.?!\u2026\u2014,:;)][\u201D\"]/g) || []).length;
