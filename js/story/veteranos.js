@@ -530,7 +530,7 @@ const VETERANOS = [
          sub:'Tem uma roupa de mergulho estendida numa pedra, dura de gelo.'},
   onde:'na lagoa de gelo',
   times:[220, 215, 124, 90, 86, 131],
-  golpes:['Blizzard', 'Surf', 'Icy Wind'],
+  golpes:['Blizzard', 'Ice Beam', 'Icy Wind'],
   premio:{'TM14 Blizzard':1, 'Faixa Firme':1},
   apresenta:[
     'A lagoa de dentro das ilhas é verde-escura, com uma crosta de gelo nas bordas, e tem um homem saindo dela de roupa de borracha como se fosse agosto.',
@@ -1017,9 +1017,9 @@ const Veteranos = {
     }
 
     if (venceu){
-      const valor = this.premioDe(v);
+      const valor = this.premioAgora(v);
       Estado.j.dinheiro += valor;
-      avisos.push({tipo:'item', texto:`Você venceu ${nomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽`});
+      avisos.push({tipo:'item', texto: valor ? `Você venceu ${nomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽` : `Você venceu ${nomeDeLuta(v)}.`});
       if (!r.vitorias){
         for (const [n, q] of Object.entries(v.premio || {})){
           Estado.darItem(n, q);
@@ -1040,6 +1040,9 @@ const Veteranos = {
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => Exploracao.tela(avisos));
   },
+  /* só a primeira vitória paga: depois, lutar de novo no lugar é pelo
+     gosto (a revanche que paga é a do PokéNav, que tem espera) */
+  premioAgora(v){ return this.registro(v.id).vitorias ? 0 : this.premioDe(v); },
   premioDe(v){
     const nivel = (Batalha.inimigo && Batalha.inimigo.nivel) || 1;
     return Math.round(pagaPorNivel(nomeDeLuta(v)) * nivel * PAGA_VETERANO * (Batalha.bonusDinheiro || 1));

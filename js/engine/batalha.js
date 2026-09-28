@@ -1312,7 +1312,8 @@ const Batalha = {
   /* ---------- captura ---------- */
   tentarCaptura(nomeBola){
     const r = Captura.tentar(this.inimigo, nomeBola, this);
-    r.eventos.forEach(e => this.eventos.push(e));
+    /* pelo ev, pra cada evento da bola levar a foto dos lutadores */
+    r.eventos.forEach(e => this.ev(e.tipo, e.texto, e));
     if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:nomeBola});
     if (r.enfurecido){
       this.ev('perigo', `${nomeVisivel(this.inimigo)} está FURIOSO. Isso não vai acabar bem.`);
@@ -1423,7 +1424,8 @@ const Batalha = {
         return {eventos:this.eventos, fim:null};
       }
       const r = Captura.tentar(this.inimigo, acao.nome, this);
-      r.eventos.forEach(e => this.eventos.push(e));
+      /* pelo ev, pra cada evento da bola levar a foto dos lutadores */
+    r.eventos.forEach(e => this.ev(e.tipo, e.texto, e));
       if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:acao.nome});
       return this.golpeNoJogador();
     }

@@ -495,6 +495,9 @@ function paletaMochila(cor){
   };
 }
 
+/* depois da história, quanto vale um capítulo de espera no PokéNav */
+const DIAS_POR_CAPITULO_NAV = 7;
+
 const Estado = {
   dados: null,
 
@@ -840,8 +843,18 @@ const Estado = {
     if (u.vezes >= limite)
       return {ok:false, motivo:'Já deu o que tinha pra dar. Pedir de novo seria outra coisa.'};
     const espera = def.esperaCap === undefined ? 1 : def.esperaCap;
+    /* Depois do último capítulo o número do capítulo não anda mais, e a
+       espera em capítulos virava uso único: aí cada capítulo vale
+       DIAS_POR_CAPITULO_NAV dias de relógio. */
+    const acabou = typeof Historia !== 'undefined' && !Historia.proximoCapitulo(false);
+    if (acabou && u.ultimoDia != null){
+      const faltaDias = (u.ultimoDia + espera * DIAS_POR_CAPITULO_NAV) - this.dados.relogio.dia;
+      if (faltaDias > 0)
+        return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${faltaDias} dia${faltaDias===1?'':'s'}.`};
+      return {ok:true};
+    }
     const falta = (u.ultimoCap + espera) - this.dados.capitulo;
-    if (falta > 0)
+    if (falta > 0 && !acabou)
       return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${falta} capítulo${falta===1?'':'s'}.`};
     return {ok:true};
   },
@@ -850,7 +863,7 @@ const Estado = {
     const reg = nav.contatos[id];
     if (!reg) return;
     const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
-    u.vezes++; u.ultimoCap = this.dados.capitulo;
+    u.vezes++; u.ultimoCap = this.dados.capitulo; u.ultimoDia = this.dados.relogio.dia;
     reg.usos[servico] = u;
     nav.ligacoes.push({id, servico, cap:this.dados.capitulo, dia:this.dados.relogio.dia});
     if (nav.ligacoes.length > 60) nav.ligacoes.shift();
@@ -1135,7 +1148,7 @@ const Estado = {
         if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
       /* nomes que mudaram depois que o save foi gravado: o item e a
          pessoa continuam os mesmos, só o nome na tela é outro */
-      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona'};
+      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela'};
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;

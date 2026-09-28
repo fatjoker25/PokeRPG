@@ -3723,6 +3723,7 @@ const UI = {
       <p class="sussurro">Só entra número que te deram. Quando alguém te dá o dele, aparece pra gravar — e número não gravado não some, fica esperando.</p>
       ${L('Revanche', 'o mesmo adversário, com o time subido junto com você')}
       ${L('Favor', 'tem limite de vezes e espera de capítulos')}
+      ${L('Depois do último capítulo', 'cada capítulo de espera vira 7 dias')}
       ${L('Missão', 'pedir · cumprir no mundo · ligar de volta pra entregar')}
       ${L('Notícia', 'não rende nada material — muda o que a pessoa pensa de você')}
       <p class="sussurro">Missão entregue não se pede de novo e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro: atender custa tempo e não atender custa outra coisa.</p>
@@ -3897,6 +3898,7 @@ const UI = {
       <div class="linha"><span class="k">Escolha do golpe</span><span class="v">todo adversário pega o segundo melhor golpe 22% das vezes · veterano, 8%</span></div>
       <div class="linha"><span class="k">Prêmio</span><span class="v">valor da classe × nível do último Pokémon × 3 · na primeira vitória, uma TM e um item que o veterano carrega</span></div>
       <div class="linha"><span class="k">Perder</span><span class="v">não custa dinheiro · ele continua lá</span></div>
+      <div class="linha"><span class="k">Lutar de novo no lugar</span><span class="v">depois da primeira vitória, só pelo gosto: não paga dinheiro · a revanche que paga é a do PokéNav</span></div>
       <div class="linha"><span class="k">Depois de vencer</span><span class="v">dá o número do PokéNav · revanche com time de 6 e +2 níveis · três dias depois ele pode ligar com um convite</span></div>
       <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
       <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
@@ -3940,7 +3942,7 @@ const UI = {
       <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
-      <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3 · perdendo, nada</span></div>
+      <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3, só na primeira vitória · perdendo, nada</span></div>
       <div class="linha"><span class="k">Conferência do Planalto Indigo</span><span class="v">o prêmio da rodada · perdendo, 20% dele</span></div>
       <div class="linha"><span class="k">Valor por classe</span><span class="v">o de Red/Blue: 10 (Bug Catcher) a 99 (líder e Elite) · sem classe, 20</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
@@ -4009,6 +4011,7 @@ const UI = {
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">o mesmo adversário, com o time subido junto com você</span></div>
       <div class="linha"><span class="k">Favor</span><span class="v">tem limite de vezes e espera de capítulos</span></div>
+      <div class="linha"><span class="k">Depois do último capítulo</span><span class="v">cada capítulo de espera vira 7 dias</span></div>
       <div class="linha"><span class="k">Missão</span><span class="v">pedir · cumprir no mundo · ligar de volta pra entregar</span></div>
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>

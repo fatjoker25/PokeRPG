@@ -1184,7 +1184,7 @@ c13_chamou_ivone:{
   texto:[
     'A Dra. Cordell chega de ônibus em nove horas, com duas pessoas e uma câmera, do jeito de sempre.',
     'Mas dessa vez ela chega com uma terceira coisa: uma médica de Pokémon selvagem, de Cerulean, de quarenta anos, que ela conhece de um caso de oito anos atrás.',
-    'A médica olha a asa por vinte minutos, com o Articuno pequeno deitado numa mesa de inox emprestada do peixeiro, e no fim ela fala coisas que ninguém em Fuchsia sabia dizer:',
+    'A médica olha a asa por vinte minutos, com o Articuno pequeno deitado numa mesa de inox emprestada da banca de alga do cais, e no fim ela fala coisas que ninguém em Fuchsia sabia dizer:',
     '"Fratura cominutiva do úmero, consolidada viciosamente."',
     '"O que quer dizer?"',
     '"Que colou torto porque ninguém imobilizou direito nas primeiras duas semanas."',
@@ -1306,14 +1306,14 @@ c13_mandou_avisar:{
     '"Eu volto depois de amanhã às oito."',
     'Ele engata.',
     '"E depois no outro dia, e no outro. Eu tenho setenta e quatro anos e oito da manhã não é problema meu."',
-    'Ele te deixa na borda do gelo com uma garrafa de água, meia laranja e um cobertor de lã que estava embaixo do banco, e dá meia-volta.',
+    'Ele te deixa na borda do gelo com uma garrafa de água, meia laranja e um cobertor de flanela que estava embaixo do banco, e dá meia-volta.',
     'A cem metros ele para o motor, vira, e grita:',
     '"Se o mar subir, sobe na rocha, não corre pra ilha! Rocha alta, não ilha!"',
     'E vai.',
     'E em Fuchsia, naquela tarde, trinta e nove barcos são puxados pra terra pela primeira vez em dezenove semanas, porque um velho de setenta e quatro anos chegou no cais e disse uma frase.'
   ],
   ef:{flag:['avisou_o_cais','ryuzo_avisou'],
-      itens:{'Cobertor de lã':1},
+      itens:{'Cobertor de flanela':1},
       npc:{nome:'Sr. Dane', opiniao:9, memoria:'Te deixou na borda do gelo com um cobertor e voltou para tirar a frota de Fuchsia da água.'},
       rep:{eixo:'bom',delta:6,motivo:'Mandou avisar a cidade antes de tentar qualquer coisa'},
       moral:15, instabilidade:-1,
@@ -1421,7 +1421,7 @@ c13_salvou_dewgong:{
   texto:[
     'Você carrega um Dewgong de cento e vinte quilos por cento e setenta metros de caverna congelada.',
     'Não dá. Fisicamente não dá, e você sabe disso aos vinte metros.',
-    'Você faz mesmo assim, arrastando os últimos setenta pelo gelo, com ele deitado no cobertor de lã usado como trenó.',
+    'Você faz mesmo assim, arrastando os últimos setenta pelo gelo, com ele deitado no cobertor de flanela usado como trenó.',
     'Sr. Dane vê você chegar de longe e não faz uma pergunta. Só abre a tampa do tanque de vivo, que é um tanque de Magikarp de duzentos litros e não de Dewgong, e que não vai caber.',
     'Ele cabe até a metade. A outra metade fica pra fora, coberta com o cobertor molhado, e o Sr. Dane vira a proa pra Fuchsia com o motor no talo.',
     'O Dewgong acorda três dias depois num aquário municipal e vive.',
@@ -1515,12 +1515,12 @@ c13_deixou_o_filhote:{
   texto:[
     'Você não tem tanque, não tem ração marinha, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
     'Você sabe disso e é verdade e continua sendo a coisa mais difícil que você fez hoje.',
-    'Você tira o cobertor de lã da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
+    'Você tira o cobertor de flanela da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
     'Nos primeiros vinte metros de volta você não olha pra trás. Nos vinte seguintes, olha.',
     'Ele não se mexeu.'
   ],
   ef:{flag:'deixou_o_filhote', moral:-2,
-      registrar:'Deixou o Seel filhote na caverna com um cobertor de lã.',
+      registrar:'Deixou o Seel filhote na caverna com um cobertor de flanela.',
       presagio:'Você vai carregar esse por um tempo, e não vai ter ninguém pra quem contar.'},
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
@@ -2344,7 +2344,7 @@ c13_mergulhou:{
     'Você não acha nada.',
     'Você quase não volta.',
     'Sr. Dane te tira da água na entrada da caverna, sozinho, com setenta e quatro anos, puxando pela alça da mochila e xingando.',
-    '"Besteira", ele diz, enrolando você no cobertor de lã. "Besteira bonita, mas besteira."',
+    '"Besteira", ele diz, enrolando você no cobertor de flanela. "Besteira bonita, mas besteira."',
     'E depois, mais baixo, com você tremendo no fundo do barco:',
     '"Meu filho também fez uma besteira bonita."'
   ],

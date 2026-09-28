@@ -8162,6 +8162,9 @@ function paletaMochila(cor){
   };
 }
 
+/* depois da história, quanto vale um capítulo de espera no PokéNav */
+const DIAS_POR_CAPITULO_NAV = 7;
+
 const Estado = {
   dados: null,
 
@@ -8507,8 +8510,18 @@ const Estado = {
     if (u.vezes >= limite)
       return {ok:false, motivo:'Já deu o que tinha pra dar. Pedir de novo seria outra coisa.'};
     const espera = def.esperaCap === undefined ? 1 : def.esperaCap;
+    /* Depois do último capítulo o número do capítulo não anda mais, e a
+       espera em capítulos virava uso único: aí cada capítulo vale
+       DIAS_POR_CAPITULO_NAV dias de relógio. */
+    const acabou = typeof Historia !== 'undefined' && !Historia.proximoCapitulo(false);
+    if (acabou && u.ultimoDia != null){
+      const faltaDias = (u.ultimoDia + espera * DIAS_POR_CAPITULO_NAV) - this.dados.relogio.dia;
+      if (faltaDias > 0)
+        return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${faltaDias} dia${faltaDias===1?'':'s'}.`};
+      return {ok:true};
+    }
     const falta = (u.ultimoCap + espera) - this.dados.capitulo;
-    if (falta > 0)
+    if (falta > 0 && !acabou)
       return {ok:false, motivo:`Vocês falaram faz pouco. Deixa passar ${falta} capítulo${falta===1?'':'s'}.`};
     return {ok:true};
   },
@@ -8517,7 +8530,7 @@ const Estado = {
     const reg = nav.contatos[id];
     if (!reg) return;
     const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
-    u.vezes++; u.ultimoCap = this.dados.capitulo;
+    u.vezes++; u.ultimoCap = this.dados.capitulo; u.ultimoDia = this.dados.relogio.dia;
     reg.usos[servico] = u;
     nav.ligacoes.push({id, servico, cap:this.dados.capitulo, dia:this.dados.relogio.dia});
     if (nav.ligacoes.length > 60) nav.ligacoes.shift();
@@ -8802,7 +8815,7 @@ const Estado = {
         if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
       /* nomes que mudaram depois que o save foi gravado: o item e a
          pessoa continuam os mesmos, só o nome na tela é outro */
-      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona'};
+      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela'};
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;
@@ -10461,7 +10474,8 @@ const Batalha = {
   /* ---------- captura ---------- */
   tentarCaptura(nomeBola){
     const r = Captura.tentar(this.inimigo, nomeBola, this);
-    r.eventos.forEach(e => this.eventos.push(e));
+    /* pelo ev, pra cada evento da bola levar a foto dos lutadores */
+    r.eventos.forEach(e => this.ev(e.tipo, e.texto, e));
     if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:nomeBola});
     if (r.enfurecido){
       this.ev('perigo', `${nomeVisivel(this.inimigo)} está FURIOSO. Isso não vai acabar bem.`);
@@ -10572,7 +10586,8 @@ const Batalha = {
         return {eventos:this.eventos, fim:null};
       }
       const r = Captura.tentar(this.inimigo, acao.nome, this);
-      r.eventos.forEach(e => this.eventos.push(e));
+      /* pelo ev, pra cada evento da bola levar a foto dos lutadores */
+    r.eventos.forEach(e => this.ev(e.tipo, e.texto, e));
       if (r.capturou) return this.encerrar('captura', {pokemon:this.inimigo, bola:acao.nome});
       return this.golpeNoJogador();
     }
@@ -15804,7 +15819,7 @@ const VETERANOS = [
          sub:'Tem uma roupa de mergulho estendida numa pedra, dura de gelo.'},
   onde:'na lagoa de gelo',
   times:[220, 215, 124, 90, 86, 131],
-  golpes:['Blizzard', 'Surf', 'Icy Wind'],
+  golpes:['Blizzard', 'Ice Beam', 'Icy Wind'],
   premio:{'TM14 Blizzard':1, 'Faixa Firme':1},
   apresenta:[
     'A lagoa de dentro das ilhas é verde-escura, com uma crosta de gelo nas bordas, e tem um homem saindo dela de roupa de borracha como se fosse agosto.',
@@ -16291,9 +16306,9 @@ const Veteranos = {
     }
 
     if (venceu){
-      const valor = this.premioDe(v);
+      const valor = this.premioAgora(v);
       Estado.j.dinheiro += valor;
-      avisos.push({tipo:'item', texto:`Você venceu ${nomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽`});
+      avisos.push({tipo:'item', texto: valor ? `Você venceu ${nomeDeLuta(v)}. +${valor.toLocaleString('pt-BR')} ₽` : `Você venceu ${nomeDeLuta(v)}.`});
       if (!r.vitorias){
         for (const [n, q] of Object.entries(v.premio || {})){
           Estado.darItem(n, q);
@@ -16314,6 +16329,9 @@ const Veteranos = {
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => Exploracao.tela(avisos));
   },
+  /* só a primeira vitória paga: depois, lutar de novo no lugar é pelo
+     gosto (a revanche que paga é a do PokéNav, que tem espera) */
+  premioAgora(v){ return this.registro(v.id).vitorias ? 0 : this.premioDe(v); },
   premioDe(v){
     const nivel = (Batalha.inimigo && Batalha.inimigo.nivel) || 1;
     return Math.round(pagaPorNivel(nomeDeLuta(v)) * nivel * PAGA_VETERANO * (Batalha.bonusDinheiro || 1));
@@ -51047,7 +51065,7 @@ c13_chamou_ivone:{
   texto:[
     'A Dra. Cordell chega de ônibus em nove horas, com duas pessoas e uma câmera, do jeito de sempre.',
     'Mas dessa vez ela chega com uma terceira coisa: uma médica de Pokémon selvagem, de Cerulean, de quarenta anos, que ela conhece de um caso de oito anos atrás.',
-    'A médica olha a asa por vinte minutos, com o Articuno pequeno deitado numa mesa de inox emprestada do peixeiro, e no fim ela fala coisas que ninguém em Fuchsia sabia dizer:',
+    'A médica olha a asa por vinte minutos, com o Articuno pequeno deitado numa mesa de inox emprestada da banca de alga do cais, e no fim ela fala coisas que ninguém em Fuchsia sabia dizer:',
     '"Fratura cominutiva do úmero, consolidada viciosamente."',
     '"O que quer dizer?"',
     '"Que colou torto porque ninguém imobilizou direito nas primeiras duas semanas."',
@@ -51169,14 +51187,14 @@ c13_mandou_avisar:{
     '"Eu volto depois de amanhã às oito."',
     'Ele engata.',
     '"E depois no outro dia, e no outro. Eu tenho setenta e quatro anos e oito da manhã não é problema meu."',
-    'Ele te deixa na borda do gelo com uma garrafa de água, meia laranja e um cobertor de lã que estava embaixo do banco, e dá meia-volta.',
+    'Ele te deixa na borda do gelo com uma garrafa de água, meia laranja e um cobertor de flanela que estava embaixo do banco, e dá meia-volta.',
     'A cem metros ele para o motor, vira, e grita:',
     '"Se o mar subir, sobe na rocha, não corre pra ilha! Rocha alta, não ilha!"',
     'E vai.',
     'E em Fuchsia, naquela tarde, trinta e nove barcos são puxados pra terra pela primeira vez em dezenove semanas, porque um velho de setenta e quatro anos chegou no cais e disse uma frase.'
   ],
   ef:{flag:['avisou_o_cais','ryuzo_avisou'],
-      itens:{'Cobertor de lã':1},
+      itens:{'Cobertor de flanela':1},
       npc:{nome:'Sr. Dane', opiniao:9, memoria:'Te deixou na borda do gelo com um cobertor e voltou para tirar a frota de Fuchsia da água.'},
       rep:{eixo:'bom',delta:6,motivo:'Mandou avisar a cidade antes de tentar qualquer coisa'},
       moral:15, instabilidade:-1,
@@ -51284,7 +51302,7 @@ c13_salvou_dewgong:{
   texto:[
     'Você carrega um Dewgong de cento e vinte quilos por cento e setenta metros de caverna congelada.',
     'Não dá. Fisicamente não dá, e você sabe disso aos vinte metros.',
-    'Você faz mesmo assim, arrastando os últimos setenta pelo gelo, com ele deitado no cobertor de lã usado como trenó.',
+    'Você faz mesmo assim, arrastando os últimos setenta pelo gelo, com ele deitado no cobertor de flanela usado como trenó.',
     'Sr. Dane vê você chegar de longe e não faz uma pergunta. Só abre a tampa do tanque de vivo, que é um tanque de Magikarp de duzentos litros e não de Dewgong, e que não vai caber.',
     'Ele cabe até a metade. A outra metade fica pra fora, coberta com o cobertor molhado, e o Sr. Dane vira a proa pra Fuchsia com o motor no talo.',
     'O Dewgong acorda três dias depois num aquário municipal e vive.',
@@ -51378,12 +51396,12 @@ c13_deixou_o_filhote:{
   texto:[
     'Você não tem tanque, não tem ração marinha, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
     'Você sabe disso e é verdade e continua sendo a coisa mais difícil que você fez hoje.',
-    'Você tira o cobertor de lã da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
+    'Você tira o cobertor de flanela da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
     'Nos primeiros vinte metros de volta você não olha pra trás. Nos vinte seguintes, olha.',
     'Ele não se mexeu.'
   ],
   ef:{flag:'deixou_o_filhote', moral:-2,
-      registrar:'Deixou o Seel filhote na caverna com um cobertor de lã.',
+      registrar:'Deixou o Seel filhote na caverna com um cobertor de flanela.',
       presagio:'Você vai carregar esse por um tempo, e não vai ter ninguém pra quem contar.'},
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
@@ -52207,7 +52225,7 @@ c13_mergulhou:{
     'Você não acha nada.',
     'Você quase não volta.',
     'Sr. Dane te tira da água na entrada da caverna, sozinho, com setenta e quatro anos, puxando pela alça da mochila e xingando.',
-    '"Besteira", ele diz, enrolando você no cobertor de lã. "Besteira bonita, mas besteira."',
+    '"Besteira", ele diz, enrolando você no cobertor de flanela. "Besteira bonita, mas besteira."',
     'E depois, mais baixo, com você tremendo no fundo do barco:',
     '"Meu filho também fez uma besteira bonita."'
   ],
@@ -85309,6 +85327,7 @@ const UI = {
       <p class="sussurro">Só entra número que te deram. Quando alguém te dá o dele, aparece pra gravar — e número não gravado não some, fica esperando.</p>
       ${L('Revanche', 'o mesmo adversário, com o time subido junto com você')}
       ${L('Favor', 'tem limite de vezes e espera de capítulos')}
+      ${L('Depois do último capítulo', 'cada capítulo de espera vira 7 dias')}
       ${L('Missão', 'pedir · cumprir no mundo · ligar de volta pra entregar')}
       ${L('Notícia', 'não rende nada material — muda o que a pessoa pensa de você')}
       <p class="sussurro">Missão entregue não se pede de novo e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro: atender custa tempo e não atender custa outra coisa.</p>
@@ -85483,6 +85502,7 @@ const UI = {
       <div class="linha"><span class="k">Escolha do golpe</span><span class="v">todo adversário pega o segundo melhor golpe 22% das vezes · veterano, 8%</span></div>
       <div class="linha"><span class="k">Prêmio</span><span class="v">valor da classe × nível do último Pokémon × 3 · na primeira vitória, uma TM e um item que o veterano carrega</span></div>
       <div class="linha"><span class="k">Perder</span><span class="v">não custa dinheiro · ele continua lá</span></div>
+      <div class="linha"><span class="k">Lutar de novo no lugar</span><span class="v">depois da primeira vitória, só pelo gosto: não paga dinheiro · a revanche que paga é a do PokéNav</span></div>
       <div class="linha"><span class="k">Depois de vencer</span><span class="v">dá o número do PokéNav · revanche com time de 6 e +2 níveis · três dias depois ele pode ligar com um convite</span></div>
       <div class="linha"><span class="k">Convite</span><span class="v">aceito na chamada, vira um lugar pra ir no mapa · uma luta, um treino ou outra coisa · perdendo a luta, o convite continua de pé</span></div>
       <div class="linha"><span class="k">Torneio Aberto</span><span class="v">veterano que você venceu pode cair no seu chaveamento, com 3 Pokémon</span></div>
@@ -85526,7 +85546,7 @@ const UI = {
       <div class="linha"><span class="k">Campeão</span><span class="v">80.000 ₽</span></div>
       <div class="linha"><span class="k">Treinador de cena</span><span class="v">valor da classe × nível do último Pokémon dele · se a cena já te paga, é esse o prêmio</span></div>
       <div class="linha"><span class="k">Treinador de estrada</span><span class="v">a mesma conta · perdendo, você paga a ele o que ele te pagaria</span></div>
-      <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3 · perdendo, nada</span></div>
+      <div class="linha"><span class="k">Veterano</span><span class="v">a mesma conta × 3, só na primeira vitória · perdendo, nada</span></div>
       <div class="linha"><span class="k">Conferência do Planalto Indigo</span><span class="v">o prêmio da rodada · perdendo, 20% dele</span></div>
       <div class="linha"><span class="k">Valor por classe</span><span class="v">o de Red/Blue: 10 (Bug Catcher) a 99 (líder e Elite) · sem classe, 20</span></div>
       <div class="linha"><span class="k">Captura com o time cheio</span><span class="v">vai direto pro PC</span></div>
@@ -85595,6 +85615,7 @@ const UI = {
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">o mesmo adversário, com o time subido junto com você</span></div>
       <div class="linha"><span class="k">Favor</span><span class="v">tem limite de vezes e espera de capítulos</span></div>
+      <div class="linha"><span class="k">Depois do último capítulo</span><span class="v">cada capítulo de espera vira 7 dias</span></div>
       <div class="linha"><span class="k">Missão</span><span class="v">pedir · cumprir no mundo · ligar de volta pra entregar</span></div>
       <div class="linha"><span class="k">Notícia</span><span class="v">não rende nada material · muda o que a pessoa pensa de você</span></div>
       <div class="linha"><span class="k">Gente da estrada</span><span class="v">19 dos treinadores de rota passam o número na primeira vez que perdem pra você · a revanche vem com o time de quem tem duas insígnias a mais, e +2 de nível</span></div>
@@ -98907,7 +98928,7 @@ const Jogo = {
       if (a.tipo === 'desafio'){
         const c = Veteranos.citacao(venceu);
         if (c && fim.resultado !== 'gameover') L('citacao', c);
-        if (venceu) dinheiro(Veteranos.premioDe(v));
+        if (venceu) dinheiro(Veteranos.premioAgora(v));
       } else if (a.tipo === 'conferencia' && fim.resultado !== 'gameover'){
         L('citacao', `${v.nome}: ${txt(venceu ? v.perde : v.vence)}`);
         dinheiro(Conferencia.premio(venceu));

@@ -500,7 +500,7 @@ const Jogo = {
       if (a.tipo === 'desafio'){
         const c = Veteranos.citacao(venceu);
         if (c && fim.resultado !== 'gameover') L('citacao', c);
-        if (venceu) dinheiro(Veteranos.premioDe(v));
+        if (venceu) dinheiro(Veteranos.premioAgora(v));
       } else if (a.tipo === 'conferencia' && fim.resultado !== 'gameover'){
         L('citacao', `${v.nome}: ${txt(venceu ? v.perde : v.vence)}`);
         dinheiro(Conferencia.premio(venceu));
