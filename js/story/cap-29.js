@@ -57,7 +57,7 @@ c29_o_vizinho:{
     d=>fala(d.jogador.nome, 'Não.'),
     fala('Sra. Vale', 'Pena.'),
     'Ela move o regador pro vaso seguinte.',
-    fala('Sra. Vale', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pra zoonoses e pra delegacia.'),
+    fala('Sra. Vale', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pro controle de bichos e pra delegacia.'),
     d=>fala(d.jogador.nome, 'Por causa do quê?'),
     fala('Sra. Vale', 'Do barulho.'),
     'Ela para de regar.',
@@ -78,9 +78,9 @@ c29_o_vizinho:{
 c29_as_quatro_ligacoes:{
   texto:[
     fala('Sra. Vale', 'Anotei todas. Eu anoto tudo, é o meu defeito.'),
-    'Ela entra em casa e volta com uma agenda de capa de couro sintético, dessas de banco, e abre numa página marcada com um elástico.',
-    fala('Sra. Vale', 'Prefeitura: "não é competência, é zoonoses".'),
-    fala('Sra. Vale', 'Zoonoses: "zoonoses trata de animal doméstico, Pokémon é outra pasta".'),
+    'Ela entra em casa e volta com uma agenda de capa de plástico, dessas de banco, e abre numa página marcada com um elástico.',
+    fala('Sra. Vale', 'Prefeitura: "não é competência, é o controle de bichos".'),
+    fala('Sra. Vale', 'Controle de bichos: "a gente trata de bicho de rua, Pokémon de criação é outra pasta".'),
     fala('Sra. Vale', 'Delegacia: "sem flagrante não tem ocorrência, a senhora pode registrar um boletim informativo".'),
     d=>fala(d.jogador.nome, 'E a quarta?'),
     'Ela vira a página.',
@@ -170,7 +170,7 @@ c29_os_fundos:{
 c29_pegou_o_saco:{
   texto:[
     'Você tira um dos sacos dobrados de cima do latão e abre.',
-    'É saco de ração de granja, cinquenta por setenta, com impressão em três cores e — na lateral, onde ninguém olha — uma etiqueta de expedição colada.',
+    'É saco de ração de criadouro, cinquenta por setenta, com impressão em três cores e — na lateral, onde ninguém olha — uma etiqueta de expedição colada.',
     'A etiqueta tem: número de lote, data, o nome de uma distribuidora de Celadon, e um campo de destinatário preenchido à máquina.',
     'O destinatário não é um nome de pessoa e não é um nome de empresa.',
     'É uma sigla de cinco caracteres, batida à máquina, sem nenhum nome por perto.',
@@ -378,7 +378,7 @@ c29_nao_entrou:{
     'Você sai andando e não olha pra trás, e o portão fecha atrás de você com o barulho de chapa que chapa faz.',
     'Na esquina você para.',
     'Não tem nada de heroico em não entrar. Você não salvou nada e não impediu nada, e amanhã é terça.',
-    'Mas você sabe onde é a casa, sabe que abre com três toques, e sabe que a vizinha da esquerda anota tudo numa agenda de capa de couro sintético.',
+    'Mas você sabe onde é a casa, sabe que abre com três toques, e sabe que a vizinha da esquerda anota tudo numa agenda de capa de plástico.',
     'Isso é mais do que você tinha ontem.'
   ],
   ef:{flag:'nao_entrou_no_portao_verde',
@@ -631,7 +631,7 @@ c29_seguiu_quem_saiu:{
 
 c29_o_frentista:{
   texto:[
-    'A conversa é sobre futebol por sete minutos e sobre o preço do diesel por dois, e no último minuto é sobre outra coisa.',
+    'A conversa é sobre a Liga por sete minutos e sobre o preço do diesel por dois, e no último minuto é sobre outra coisa.',
     fala('o motorista', 'Semana que vem eu não venho terça.'),
     fala('o frentista', 'Férias?'),
     fala('o motorista', 'Que férias. Mudou a rota.'),

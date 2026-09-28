@@ -188,13 +188,13 @@ c18_ab_ensina_a_procurar:{
     'Você aprende também uma coisa que não estava no plano dele ensinar.',
     fala('o bibliotecário', 'Se o nome não estiver no índice, tenta o índice do semestre seguinte.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
-    fala('o bibliotecário', 'Porque tem gente que publica em dezembro, entre o Natal e o ano novo, e cai no índice do semestre seguinte por erro de fechamento.'),
+    fala('o bibliotecário', 'Porque tem gente que publica na última semana de dezembro, e cai no índice do semestre seguinte por erro de fechamento.'),
     'Ele arruma os volumes na mesa, alinhados.',
-    fala('o bibliotecário', 'Quem quer publicar sem ninguém ver, publica entre o Natal e o ano novo.', 'baixo')
+    fala('o bibliotecário', 'Quem quer publicar sem ninguém ver, publica na última semana do ano.', 'baixo')
   ],
   ef:{flag:['aprendeu_a_ler_diario','a_secao_tres_das_quintas'],
       npc:{nome:'o bibliotecário', opiniao:4, viuVoce:'Passou uma hora e dez te ensinando a ler diário oficial.'},
-      registrar:'Quem publica um ato sem querer ser visto publica entre o Natal e o ano novo.',
+      registrar:'Quem publica um ato sem querer ser visto publica na última semana do ano.',
       presagio:'Procure entre vinte e cinco de dezembro e primeiro de janeiro.'},
   escolhas:[
     {texto:'Procurar na hemeroteca com o que você aprendeu.', vai:'c18_hemeroteca'},
@@ -452,7 +452,7 @@ c18_belchior_associacao:{
   texto:[
     '"Associação?" Ele faz que sim com a cabeça, devagar. "Associação é o melhor negócio do mundo, {moço. Digo, senhor. Digo — o senhor entendeu|moça. Digo, senhora. Digo — a senhora entendeu}."',
     '"Por quê?"',
-    '"Porque não paga o que empresa paga, e porque ninguém desconfia de associação." Ele encolhe os ombros. "Meu cunhado tem uma. É de futebol de várzea e é de verdade, mas se não fosse, também dava."',
+    '"Porque não paga o que empresa paga, e porque ninguém desconfia de associação." Ele encolhe os ombros. "Meu cunhado tem uma. É de batalha de bairro e é de verdade, mas se não fosse, também dava."',
     'Ele volta a olhar o formulário dele.',
     '"O que dá trabalho é o objeto social. Tem que escrever bonito. Depois disso é só assembleia e ata."'
   ],
@@ -572,12 +572,12 @@ c18_os_onze_nomes:{
     'Ela imprime a lista numa matricial que chia.',
     'Você lê os onze nomes e não conhece nenhum, o que é decepcionante por meio segundo e assustador logo depois.',
     'Porque ao lado de cada nome tem a qualificação profissional, e as qualificações você conhece muito bem.',
-    'Bióloga. Veterinário. Engenheiro agrônomo. Advogada. Ex-diretora de fiscalização. Professor titular aposentado. Auditor. Duas pessoas qualificadas apenas como servidor público licenciado.',
+    'Bióloga. Médico de Pokémon. Engenheiro agrônomo. Advogada. Ex-diretora de fiscalização. Professor titular aposentado. Auditor. Duas pessoas qualificadas apenas como servidor público licenciado.',
     'Nenhum criminoso. Nenhum químico maluco. Nenhum uniforme.',
     'Um corpo técnico.'
   ],
   ef:{flag:'viu_os_onze_fundadores', instabilidade:1,
-      registrar:'Os onze fundadores da CGRB são técnicos: bióloga, veterinário, agrônomo, advogada, auditor, servidores licenciados.'},
+      registrar:'Os onze fundadores da CGRB são técnicos: bióloga, médico de Pokémon, agrônomo, advogada, auditor, servidores licenciados.'},
   escolhas:[
     {texto:'"Quero cópia de tudo."', vai:'c18_quintela_copia'},
     {texto:'Perguntar se algum deles já esteve na Liga.', vai:'c18_algum_da_liga'}
@@ -1151,7 +1151,7 @@ c18_ivone_processo:{
     '"A senhora pode processá-los?"',
     '"Por quê?"',
     'Você abre a boca e não sai nada, porque você não sabe por quê. Você sabe que é errado. Você não sabe qual artigo.',
-    '"Exato." Ela nem parece satisfeita com isso. "Maus-tratos exige ato de crueldade contra animal identificado, e eles têm parecer veterinário para cada sacrifício. Crime ambiental exige dano a espécie protegida, e eles soltam espécie nativa. Associação criminosa exige fim ilícito, e o fim deles está escrito no estatuto e é lícito."',
+    '"Exato." Ela nem parece satisfeita com isso. "Maus-tratos exige ato de crueldade contra Pokémon identificado, e eles têm parecer médico para cada sacrifício. Crime ambiental exige dano a espécie protegida, e eles soltam espécie nativa. Associação criminosa exige fim ilícito, e o fim deles está escrito no estatuto e é lícito."',
     'Ela levanta três dedos e vai abaixando um por um.',
     '"A gente tentou os três com o advogado. Não protocolou nenhum, porque perder abre precedente, e precedente perdido vale mais para eles que a vitória valeria para nós."'
   ],
@@ -1236,9 +1236,9 @@ c18_terceira_tirar:{
 c18_terceira_compra:{
   texto:[
     'Ela conta no dedo, sem esforço nenhum de memória.',
-    '"Gaiola de transporte, modelo grande, oito por mês. Rede de contenção. Ração de alto teor, que eu compro de fora porque aqui não tem. Anestésico veterinário, que é controlado, e eles me mandam a receita antes de pedir."',
+    '"Gaiola de transporte, modelo grande, oito por mês. Rede de contenção. Ração de alto teor, que eu compro de fora porque aqui não tem. Anestésico para Pokémon, que é controlado, e eles me mandam a receita antes de pedir."',
     '"Mandam a receita antes."',
-    '"Antes. Com carimbo de veterinário e número de conselho." Ela olha para você. "Sabe o que é isso? É gente que não quer que eu tenha problema. Eu não sei lidar com isso."',
+    '"Antes. Com carimbo de médico de Pokémon e número de conselho." Ela olha para você. "Sabe o que é isso? É gente que não quer que eu tenha problema. Eu não sei lidar com isso."',
     'Ela cospe de novo.',
     '"Bandido que te protege é dono."'
   ],
@@ -1399,7 +1399,7 @@ c18_hemero_o_que_ela_pediu:{
 c18_hemero_falecimento:{
   texto:[
     'A nota é de três linhas, paga, no formato mais barato.',
-    'HAROLD COLMAN, 59. Falecido em decorrência de ferimentos. Deixa esposa. Missa de sétimo dia na Paróquia de Saffron.',
+    'HAROLD COLMAN, 59. Falecido em decorrência de ferimentos. Deixa esposa. Vigília de sétimo dia em Saffron.',
     'Em decorrência de ferimentos.',
     'Você vira a página e, na coluna do lado, na mesma edição, tem uma nota de duas linhas sobre um homem ferido por um bando de Mankey num parque público de Saffron.',
     'A nota não dá o nome do homem. Não precisava.'
@@ -1479,7 +1479,7 @@ c18_hemero_fauna:{
 c18_hemero_social:{
   texto:[
     'As notas sociais são inúteis para tudo, menos para uma coisa: elas publicam foto.',
-    'Numa coluna sobre um jantar beneficente de uma clínica veterinária, você acha uma mesa de oito pessoas com legenda completa.',
+    'Numa coluna sobre um jantar beneficente de uma clínica de Pokémon, você acha uma mesa de oito pessoas com legenda completa.',
     'Quatro dos nomes da legenda são nomes que você vai reconhecer depois, quando vir a lista de fundadores.',
     'Na foto, todos estão rindo. Uma mulher de tailleur cinza está olhando para o lado, para fora do quadro, com uma cara de quem está calculando o custo por cabeça do jantar.'
   ],
@@ -1710,7 +1710,7 @@ c18_art19:{
 c18_regulamento:{
   texto:[
     'O regulamento interno é o Anexo III, seis páginas, e é o documento mais bem escrito do calhamaço.',
-    'Ele define parâmetro de viabilidade em quatro critérios objetivos, exige parecer de veterinário registrado, exige dupla assinatura e exige formulário individual numerado.',
+    'Ele define parâmetro de viabilidade em quatro critérios objetivos, exige parecer de médico de Pokémon registrado, exige dupla assinatura e exige formulário individual numerado.',
     'Exige também — e isso te faz parar — que o formulário registre a data, a hora e o método, e que seja arquivado por dez anos.',
     'Eles guardam por dez anos o papel de cada bicho que mataram.',
     'Não por medo. Por método.'
@@ -1807,7 +1807,7 @@ c18_voto_vencido:{
 c18_outros_votos_adnan:{
   texto:[
     'Ele tem sete votos vencidos em trinta e quatro atas, e você lê os sete.',
-    'Contra a ampliação da meta. Contra a redução do prazo de observação. Contra a dispensa de parecer veterinário em lote. Contra a compra de uma incubadora mais barata.',
+    'Contra a ampliação da meta. Contra a redução do prazo de observação. Contra a dispensa de parecer médico em lote. Contra a compra de uma incubadora mais barata.',
     'E um, na 28ª, que não é contra nada: requer que conste em ata que o curador solicitou, pela terceira vez, a revisão dos critérios do Art. 19.',
     'Pela terceira vez.',
     'Você fecha o bloco. Existe um homem que pediu três vezes e perdeu três vezes e continuou indo às reuniões.'
@@ -1981,7 +1981,7 @@ c18_tres_empresas:{
 
 c18_centro_de_custo:{
   texto:[
-    'O plano de contas tem doze centros de custo e onze deles têm nome descritivo: administração, campo, veterinária, transporte, comunicação.',
+    'O plano de contas tem doze centros de custo e onze deles têm nome descritivo: administração, campo, saúde, transporte, comunicação.',
     'O décimo segundo se chama apenas 11.',
     'Onze não é nome. Onze é o que sobra quando alguém decidiu não escrever o nome.',
     'A dotação do centro de custo 11 é a segunda maior do orçamento inteiro.',
@@ -2016,10 +2016,10 @@ c18_art33:{
 c18_anexo_fornecedores:{
   texto:[
     'Trinta e um fornecedores, com nome, endereço e objeto.',
-    'Ração. Medicamento veterinário. Material de construção. Manutenção predial. Vigilância.',
+    'Ração. Medicamento para Pokémon. Material de construção. Manutenção predial. Vigilância.',
     'E, na décima nona linha, uma empresa de material de construção de Celadon cujo endereço você conhece, porque você esteve lá.',
     d=>d.flags.conheceu_terceira
-      ? 'É o galpão da Terceira, registrado com nome de gente, com CNPJ e tudo.'
+      ? 'É o galpão da Terceira, registrado com nome de gente, com registro comercial e tudo.'
       : 'O objeto declarado é gaiola de transporte, rede de contenção e material de contenção diverso.',
     'Está tudo no papel. Está tudo com nota.'
   ],
@@ -2052,10 +2052,10 @@ c18_vigilancia:{
 c18_anexo_pessoal:{
   texto:[
     'Quarenta e sete pessoas. Nome, cargo, carga horária, data de admissão.',
-    'Nove veterinários. Quatro biólogos. Dezenove técnicos de viveiro. Seis motoristas. Um secretário. Um contador. Uma auditora de campo. Um curador. Cinco em vigilância, terceirizados.',
+    'Nove médicos de Pokémon. Quatro biólogos. Dezenove técnicos de viveiro. Seis motoristas. Um secretário. Um contador. Uma auditora de campo. Um curador. Cinco em vigilância, terceirizados.',
     'Auditora de Campo: M. Brill.',
     'Curador: J. Fabre. Admitido no segundo mês de existência da Comissão. O primeiro contratado depois do contador.',
-    'Você fica com essa informação: antes de qualquer veterinário, antes de qualquer técnico, eles contrataram um curador.'
+    'Você fica com essa informação: antes de qualquer médico, antes de qualquer técnico, eles contrataram um curador.'
   ],
   ef:{flag:['conhece_o_nome_adnan','conhece_o_nome_prado'],
       registrar:'47 funcionários. Fabre foi o primeiro contratado depois do contador.'},
@@ -2352,9 +2352,9 @@ c18_isaura:{
 c18_publica_art19:{
   texto:[
     'Sai na quinta, no caderno de cidades, página cinco, com três colunas.',
-    'O título é: ASSOCIAÇÃO REGISTRADA PREVÊ DESCARTE DE ANIMAIS EM ESTATUTO PÚBLICO.',
+    'O título é: ASSOCIAÇÃO REGISTRADA PREVÊ DESCARTE DE POKÉMON EM ESTATUTO PÚBLICO.',
     'A matéria é boa. É sóbria, é checada, cita o número do registro e o número do artigo, e traz a resposta da Comissão em dois parágrafos no fim.',
-    'A resposta da Comissão diz que o documento é público, que o procedimento tem parecer veterinário e que a entidade está à disposição para esclarecimentos.',
+    'A resposta da Comissão diz que o documento é público, que o procedimento tem parecer médico e que a entidade está à disposição para esclarecimentos.',
     'E é verdade. É por isso que funciona.'
   ],
   ef:{flag:['publicou','publicou_art19'], instabilidade:1,
@@ -2369,7 +2369,7 @@ c18_publica_lista:{
     'A da esquerda diz Risco 01, Risco 02, Risco 03.',
     'A da direita, porque a Livia fez questão, diz os nomes.',
     'É a primeira vez em toda a história de Kanto que um jornal imprime, lado a lado, o número que uma instituição deu a um bicho e o nome que as pessoas dão a ele.',
-    'Três leitores escrevem cartas na semana seguinte. Duas são elogios. Uma é de um veterinário dizendo que a tabela está tecnicamente correta e perguntando qual é o problema.'
+    'Três leitores escrevem cartas na semana seguinte. Duas são elogios. Uma é de um médico de Pokémon dizendo que a tabela está tecnicamente correta e perguntando qual é o problema.'
   ],
   ef:{flag:['publicou','publicou_a_lista'], instabilidade:2,
       rep:{eixo:'bom',delta:2,motivo:'Fez um jornal imprimir os nomes ao lado dos números'},
@@ -2430,8 +2430,8 @@ c18_as_nove_cartas:{
     'São educadas. Isso é o pior.',
     'Uma é de uma mãe de Saffron cujo filho foi mordido num parque e que pergunta, de verdade, o que {o senhor|a senhora} propõe no lugar.',
     'Outra é de um produtor rural da Rota 6 que perdeu três anos de plantação e que diz, com todas as letras, que nunca ninguém veio.',
-    'Outra é de um veterinário que explica, com termos técnicos, o que é eutanásia e pergunta se você sabe a diferença.',
-    'Nenhuma delas é comprada. Nenhuma delas é burra.',
+    'Outra é de um médico de Pokémon que explica, com termos técnicos, o que é eutanásia e pergunta se você sabe a diferença.',
+    'Nenhuma delas é comprada. Nenhuma delas é estúpida.',
     'Você fica com as nove cartas na mão e entende, tarde, que não estava brigando com uma organização. Você estava brigando com um problema que existe.'
   ],
   ef:{flag:'leu_as_nove_cartas', instabilidade:1, moral:-3,

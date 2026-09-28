@@ -292,7 +292,7 @@ c11_ab_vigiou:{
     'Um homem sai pela porta social, fuma um cigarro inteiro olhando pro chão e volta.',
     'Um carro de passeio preto encosta, alguém desce, entra pela porta social sem bater, e o carro vai embora sem ele.',
     'E, na última meia hora, começa a sair som de dentro do galpão. Não é máquina.',
-    'É um som de muita coisa viva no mesmo lugar, abafado por parede de alvenaria, que é um som que você já ouviu num canil e que aqui está errado em escala.'
+    'É um som de muita coisa viva no mesmo lugar, abafado por parede de alvenaria, que é um som que você já ouviu num viveiro e que aqui está errado em escala.'
   ],
   ef:{flag:'o_som_do_galpao', hp:-1,
       registrar:'Do galpão sem placa da zona norte de Saffron sai som de muita coisa viva no mesmo lugar.',
@@ -2100,7 +2100,7 @@ c11_escreve_os_nomes:{
     'Ela pega o caderno da sua mão, apoia no capô do carro, e escreve.',
     'Leva onze minutos, porque ela para entre alguns.',
     'Quando devolve, tem vinte e nove nomes numa página e meia, em letra de médico, com um numerozinho de série do lado de cada um.',
-    'Nenhum nome é científico. São nomes de gente: nomes curtos, nomes de avô, um apelido de time de futebol, dois repetidos com número romano porque ela ficou sem ideia na série dois.',
+    'Nenhum nome é científico. São nomes de gente: nomes curtos, nomes de avô, um apelido de treinador famoso, dois repetidos com número romano porque ela ficou sem ideia na série dois.',
     '"Pronto." Ela fecha a caneta. "Agora existe."'
   ],
   ef:{flag:['tem_os_nomes','reis_aliada'],
@@ -2237,7 +2237,7 @@ c11_doca:{
     'Às dezenove e dois, um caminhão sem identificação nenhuma encosta de ré na vaga do meio. Placa suja. Motorista não desce.',
     'A carga é uma só: uma caixa branca de plástico rígido, de um metro e meio por sessenta, com quatro travas de pressão e uma etiqueta laranja de material biológico.',
     'Dois funcionários descem pra buscar com um carrinho hidráulico.',
-    'Nenhum dos dois assina nada. Nenhum dos dois olha a etiqueta. Um deles está no meio de uma conversa sobre futebol e não interrompe pra carregar.',
+    'Nenhum dos dois assina nada. Nenhum dos dois olha a etiqueta. Um deles está no meio de uma conversa sobre a Liga e não interrompe pra carregar.',
     d=>{
       const via = Historia.via();
       if (via==='mercenario'||via==='foragido') return 'Você conhece essa caixa. Você provavelmente ajudou a carregar uma igual em algum lugar, em algum capítulo, sem perguntar o que tinha dentro.';
@@ -2264,7 +2264,7 @@ c11_seguiu_o_caminhao:{
     'E no chão dela, encaixadas nas canaletas, tem quatro caixas brancas iguais à que ele acabou de entregar — vazias, empilhadas, prontas pra devolver.',
     'Cada uma tem uma etiqueta antiga por baixo da nova, mal raspada.',
     'Você levanta a ponta de uma etiqueta velha com a unha.',
-    'Embaixo tem um carimbo em tinta desbotada: **INSTITUTO DE PESQUISA CINNABAR — PROPRIEDADE DA UNIÃO — NÃO DESVIAR**.',
+    'Embaixo tem um carimbo em tinta desbotada: **INSTITUTO DE PESQUISA CINNABAR — PROPRIEDADE DE KANTO — NÃO DESVIAR**.',
     'A caixa é do laboratório de Cinnabar. Todas as quatro são.',
     'Alguém está entregando material biológico em Saffron dentro de caixas que pertencem, por carimbo, a um instituto público que pegou fogo em oitenta e nove.'
   ],
@@ -2272,7 +2272,7 @@ c11_seguiu_o_caminhao:{
       rep:{eixo:'bom',delta:4,motivo:'Seguiu o caminhão em vez de entrar no prédio'},
       instabilidade:1,
       registrar:'As caixas brancas da Silph são material carimbado do Instituto de Pesquisa de Cinnabar.',
-      presagio:'Propriedade da União. Não desviar. E estão desviando desde oitenta e nove.'},
+      presagio:'Propriedade de Kanto. Não desviar. E estão desviando desde oitenta e nove.'},
   escolhas:[
     {texto:'Levar uma caixa vazia como prova.', vai:'c11_levou_a_caixa'},
     {texto:'Voltar e entrar pela doca.', vai:'c11_doca'},
@@ -2310,7 +2310,7 @@ c11_entregador:{
 
 c11_abriu_caixa_silph:{
   texto:[
-    'Você abre as quatro travas de pressão na doca, com dois funcionários a dez metros de distância discutindo futebol.',
+    'Você abre as quatro travas de pressão na doca, com dois funcionários a dez metros de distância discutindo a Liga.',
     'A tampa solta um sopro frio.',
     'Dentro, em berço de espuma cortada sob medida: um Ditto. Vivo, sedado, com um monitor adesivo colado no dorso e um fio fino saindo dele até um conector na parede da caixa.',
     'E, embaixo dele, separados por mais espuma, mais quatro. Depois mais dois.',
@@ -2337,7 +2337,7 @@ c11_fotografou_a_caixa:{
   texto:[
     'Você fotografa a caixa aberta: os sete berços de espuma, os sete monitores, os sete fios, a etiqueta laranja, o carimbo da nota presa na tampa com fita.',
     'Seis fotos.',
-    'Depois fecha as quatro travas com cuidado, na ordem, do jeito que estavam, e sai da plataforma antes dos dois funcionários terminarem de discutir futebol.',
+    'Depois fecha as quatro travas com cuidado, na ordem, do jeito que estavam, e sai da plataforma antes dos dois funcionários terminarem de discutir a Liga.',
     'A caixa sobe. Os sete sobem.',
     'Você fica na rua com seis fotos, e as seis fotos vão durar mais do que os sete.'
   ],

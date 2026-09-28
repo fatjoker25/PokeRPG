@@ -112,7 +112,7 @@ c20_ab_o_elevador:{
   texto:[
     'O elevador do 118 é de 1971 e demora, e a demora dele é parte da arquitetura do prédio: todo mundo que vai ao sétimo andar passa um minuto e quarenta parado no saguão.',
     'Você passa esse minuto e quarenta com outras três pessoas.',
-    'Uma mulher com uma pasta de couro. Um homem com um saquinho de padaria. Uma moça com uma pilha de papel e uma caneta atrás da orelha.',
+    'Uma mulher com uma pasta de vinil. Um homem com um saquinho de padaria. Uma moça com uma pilha de papel e uma caneta atrás da orelha.',
     'O elevador chega. Vocês quatro entram. A mulher da pasta aperta o sete sem perguntar a ninguém, e quando ela aperta o sete, o homem do saquinho de padaria não aperta nada.',
     'Nem a moça do papel.',
     'Três dos quatro vão pro sétimo andar. Só você não apertou nada.',
@@ -140,7 +140,7 @@ c20_ab_disse_setimo:{
     fala('a moça do papel', 'A pauta de hoje é chata, aviso desde já. Cronograma de liberação e aprovação de ata.'),
     'O elevador passa pelo quarto andar.',
     fala('a moça do papel', 'Mas tem café na porta. O café é bom. É a única coisa que a gente faz bem por unanimidade.'),
-    'A mulher da pasta de couro dá um riso curto pelo nariz.',
+    'A mulher da pasta de vinil dá um riso curto pelo nariz.',
     'O elevador chega no sétimo e a porta abre e é um corredor com carpete gasto.'
   ],
   ef:{flag:'foi_recebido_como_visita',
@@ -157,7 +157,7 @@ c20_ab_nao_sei_ainda:{
     d=>fala(d.jogador.nome, 'Eu não sei ainda.'),
     'Os três olham pra você ao mesmo tempo, e é o homem do saquinho de padaria que fala, e ele fala com a boca cheia de uma coisa que ele acabou de comer.',
     fala('o homem do saquinho', 'Melhor resposta que eu já ouvi nesse elevador.'),
-    'A mulher da pasta de couro não acha graça. Ela te olha do jeito que se olha um problema de agenda.',
+    'A mulher da pasta de vinil não acha graça. Ela te olha do jeito que se olha um problema de agenda.',
     fala('a mulher da pasta', 'Você é jornalista?'),
     d=>fala(d.jogador.nome, 'Não.'),
     fala('a mulher da pasta', 'Advogado de alguma parte?'),
@@ -167,8 +167,8 @@ c20_ab_nao_sei_ainda:{
     'Ela não diz qual é a terceira coisa. A porta abre no sétimo.'
   ],
   ef:{flag:'a_terceira_coisa',
-      npc:{nome:'a mulher da pasta de couro', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
-      registrar:'A mulher da pasta de couro te classificou como "a terceira coisa".',
+      npc:{nome:'a mulher da pasta de vinil', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
+      registrar:'A mulher da pasta de vinil te classificou como "a terceira coisa".',
       presagio:'Ela tem uma lista de três tipos de gente que sobe nesse elevador. Duas ela sabe lidar.'},
   escolhas:[
     {texto:'Entrar na sala atrás deles.', vai:'c20_predio'},
@@ -437,7 +437,7 @@ c20_mesa:{
 c20_quem_e_quem:{
   texto:[
     'A Presidente apresenta a mesa inteira, um por um, com cargo e formação, e leva dois minutos e meio.',
-    'Bióloga, com doutorado. Veterinário, vinte e dois anos de clínica de grande porte. Engenheiro agrônomo. Advogada. Contador. Professor titular aposentado, que dormiu por três segundos no meio da apresentação dele mesmo.',
+    'Bióloga, com doutorado. Médico de Pokémon, vinte e dois anos de clínica de Pokémon grande. Engenheiro agrônomo. Advogada. Contador. Professor titular aposentado, que dormiu por três segundos no meio da apresentação dele mesmo.',
     'Dois servidores públicos licenciados. Uma ex-diretora de escola técnica. O Dr. Hollis. O Curador Fabre.',
     d=>{ Nomes.apresentar('a Presidente'); return 'E ela: Hester Colman, ex-diretora de fiscalização da Liga por nove anos.'; },
     'Nenhum deles desvia o olhar quando o nome é dito. Todo mundo aqui está com o nome no cartório desde o primeiro dia.'
@@ -447,7 +447,7 @@ c20_quem_e_quem:{
   escolhas:[
     {texto:'"E o professor que dormiu?"', vai:'c20_o_professor'},
     {texto:'"De quem é a cadeira vazia?"', vai:'c20_cadeira_vazia'},
-    {texto:'"E o veterinário? Como ele assina isso?"', vai:'c20_o_veterinario'},
+    {texto:'"E o médico de Pokémon? Como ele assina isso?"', vai:'c20_o_veterinario'},
     {texto:'Pedir a palavra.', vai:'c20_palavra'}
   ]
 },
@@ -489,16 +489,16 @@ c20_professor_art19:{
       registrar:'O Sr. Dahl votou a favor do Art. 19 porque achou que já era tarde.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
-    {texto:'"E o veterinário?"', vai:'c20_o_veterinario'},
+    {texto:'"E o médico?"', vai:'c20_o_veterinario'},
     {texto:'"De quem é a cadeira vazia?"', vai:'c20_cadeira_vazia'}
   ]
 },
 
 c20_o_veterinario:{
-  falante:'o veterinário do conselho',
+  falante:'o médico do conselho',
   vozes:['P','N','N','P','N','N'],
   texto:[
-    '"E o senhor? Como um veterinário assina isso?"',
+    '"E o senhor? Como um médico de Pokémon assina isso?"',
     'Ele é magro, de camisa de manga curta, e responde com uma calma de quem já respondeu.',
     '"Eu assino porque se eu não assinar assina outro, e o outro assina sem exame." Ele abre a pasta. "Eu exijo exame. Eu exijo laudo. Eu reprovei quarenta e um pedidos de descarte em dois anos."',
     '"E aprovou quantos?"',
@@ -508,8 +508,8 @@ c20_o_veterinario:{
     '"{O senhor|A senhora} queria que eu dissesse um número menor. Eu não vou dizer um número menor."'
   ],
   ef:{flag:'ouviu_o_veterinario', instabilidade:1,
-      npc:{nome:'o veterinário do conselho', opiniao:1, memoria:'Reprovou 41 pedidos de descarte e aprovou todos os outros.'},
-      registrar:'O veterinário do conselho reprovou 41 descartes em dois anos e aprovou todos os outros.'},
+      npc:{nome:'o médico do conselho', opiniao:1, memoria:'Reprovou 41 pedidos de descarte e aprovou todos os outros.'},
+      registrar:'O médico de Pokémon do conselho reprovou 41 descartes em dois anos e aprovou todos os outros.'},
   escolhas:[
     {texto:'"E dá para aumentar os quarenta e um?"', vai:'c20_aumentar_os_41'},
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
@@ -518,7 +518,7 @@ c20_o_veterinario:{
 },
 
 c20_aumentar_os_41:{
-  falante:'o veterinário do conselho',
+  falante:'o médico do conselho',
   vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Dá para aumentar os quarenta e um?"',
@@ -528,12 +528,12 @@ c20_aumentar_os_41:{
     'Ele olha a Presidente.',
     '"Isso o Dr. Hollis já pediu três vezes."',
     '"E por que não passou?"',
-    '"Porque quem pede é ele e ele é técnico e não tem voto." O veterinário fecha a pasta. "Eu tenho voto e nunca propus. Isso é meu e é agora."'
+    '"Porque quem pede é ele e ele é técnico e não tem voto." O médico fecha a pasta. "Eu tenho voto e nunca propus. Isso é meu e é agora."'
   ],
   ef:{flag:['veterinario_vai_propor'], instabilidade:1,
-      npc:{nome:'o veterinário do conselho', opiniao:3, memoria:'Percebeu, na sua frente, que nunca usou o voto que tem.'},
+      npc:{nome:'o médico do conselho', opiniao:3, memoria:'Percebeu, na sua frente, que nunca usou o voto que tem.'},
       rep:{eixo:'bom',delta:2,motivo:'Fez um conselheiro perceber que nunca usou o próprio voto'},
-      registrar:'O veterinário do conselho vai propor a revisão dos critérios do Art. 19.'},
+      registrar:'O médico de Pokémon do conselho vai propor a revisão dos critérios do Art. 19.'},
   escolhas:[
     {texto:'Pedir a palavra.', vai:'c20_palavra'},
     {texto:'"De quem é a cadeira vazia?"', vai:'c20_cadeira_vazia'}
@@ -958,7 +958,7 @@ c20_reforma:{
       npc:{nome:'Curador Fabre', opiniao:3, memoria:'Falou na mesa pela primeira vez depois da sua proposta.'}},
   escolhas:[
     {texto:'Pedir votação. Pelo estatuto.', vai:'c20_votacao'},
-    {texto:'"E o senhor, doutor? O senhor é veterinário."', vai:'c20_o_veterinario'},
+    {texto:'"E o senhor, doutor? O senhor é médico de Pokémon."', vai:'c20_o_veterinario'},
     {texto:'Sair. Você plantou o que dava.', vai:'c20_saiu_sala'}
   ]
 },
@@ -1020,7 +1020,7 @@ c20_se_associou:{
     'O Curador Fabre assina primeiro. A Dra. Isolde Yarrow assinaria se estivesse aqui.',
     d=>d.flags.alcina_volta
       ? 'A Dra. Yarrow, que voltou hoje, assina em segundo, e a caneta dela falha na primeira letra.'
-      : 'A segunda assinatura demora quatro minutos e vem do veterinário, que assina sem olhar para ninguém.'
+      : 'A segunda assinatura demora quatro minutos e vem do médico, que assina sem olhar para ninguém.'
   ],
   ef:{flag:['virou_associado'], instabilidade:1,
       rep:{eixo:'bom',delta:3,motivo:'Entrou na associação pela porta da frente, para votar dentro dela'},
@@ -1121,12 +1121,12 @@ c20_comecem_hoje:{
 },
 
 c20_quantos_levantam:{
-  falante:'o veterinário do conselho',
+  falante:'o médico do conselho',
   vozes:['N'],
   texto:[
     'Levantam quatro.',
     'A Presidente. O Curador Fabre. A advogada que redigiu o Art. 19. E o Sr. Tobias Dahl, de oitenta e um anos, que leva quarenta segundos para levantar e não aceita ajuda de ninguém.',
-    'O veterinário fica sentado, e diz por quê, em voz alta, para a ata:',
+    'O médico fica sentado, e diz por quê, em voz alta, para a ata:',
     '"Eu vou na quinta. Hoje eu tenho cirurgia às duas e é de um bicho de verdade, e eu não vou desmarcar por simbolismo."',
     'Sete ficam. Quatro vão.',
     'A Sra. Hedda escreve tudo, os nomes dos quatro e os nomes dos sete, porque ata é ata.'
@@ -1338,7 +1338,7 @@ c20_contagem:{
       if (d.flags.provas_do_viveiro || d.flags.provas_do_11){ votos += 1; razoes.push('Uma conselheira que passou a sessão inteira olhando o que você trouxe vota a favor.'); }
       if (d.flags.desarmou_presidente || d.flags.defendeu_reforma){ votos += 1; razoes.push('Uma conselheira diz, antes de votar, que a sua proposta é a primeira que não é um discurso.'); }
       if (d.flags.publicou_as_atas || d.flags.publicou){ votos += 1; razoes.push('Um conselheiro que passou dezenove dias sendo perguntado sobre isso em jantar de família vota a favor.'); }
-      if (d.flags.veterinario_vai_propor){ votos += 1; razoes.push('O veterinário vota a favor e pede que conste que ele mesmo vai propor a revisão dos critérios na próxima sessão.'); }
+      if (d.flags.veterinario_vai_propor){ votos += 1; razoes.push('O médico vota a favor e pede que conste que ele mesmo vai propor a revisão dos critérios na próxima sessão.'); }
       if (d.flags.levou_o_conselho_ao_galpao || d.flags.quatro_foram){ votos += 2; razoes.push('Os que foram ao galpão votam juntos, e o Sr. Dahl vota levantando a bengala em vez da mão, porque o ombro dele não sobe.'); }
       if (d.flags.alcina_volta){ votos += 1; razoes.push('A Dra. Yarrow, de volta à cadeira que ficou vazia desde março, vota a favor sem dizer uma palavra.'); }
       if (d.flags.fez_a_pergunta_das_maos){ votos += 1; razoes.push('Uma conselheira que não levantou a mão quando você perguntou vota a favor, e diz que é por isso.'); }

@@ -1432,7 +1432,7 @@ c17_esperou_mew:{
     d=>d.flags.teo_leva ? 'Ezra senta a três metros e fica quieto, o que pra ele é um esforço físico visível. Ele mexe no cadarço quatro vezes na primeira meia hora e depois para.' :
        'Você fica sozinh{o|a} no meio de vinte metros de grama alta.',
     'Duas horas.',
-    'Duas horas de verdade: você tem formiga na perna aos quarenta minutos, e cãibra na panturrilha aos setenta, e aos cem você já está pensando em desistir e ficando só por teimosia.',
+    'Duas horas de verdade: você tem dormência na perna aos quarenta minutos, e cãibra na panturrilha aos setenta, e aos cem você já está pensando em desistir e ficando só por teimosia.',
     'E aí, sem nenhum aviso e sem nenhum som, tem uma coisa pairando a um metro e dez do chão, a quatro metros de você.',
     'Mew é menor do que qualquer foto sugere.',
     'É do tamanho de um Meowth. A cauda é mais comprida que o corpo inteiro e fica parada no ar, sem enrolar, sem balançar.',

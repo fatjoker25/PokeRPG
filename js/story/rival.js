@@ -396,13 +396,13 @@ const RIVAIS_EXTRA = [
     if (arco === 'devedor') return [
       'Ele está te esperando, e dá pra ver pelo chão em volta dos pés dele que está há um tempo.',
       'O Rapidash está atrás, inteiro, com a perna traseira direita marcada de cirurgia antiga.',
-      '"Nove anos." Ele fala isso sem contexto nenhum, e você demora a entender. "O veterinário disse nove anos. Ele tem nove anos agora por sua causa."',
+      '"Nove anos." Ele fala isso sem contexto nenhum, e você demora a entender. "O médico de Pokémon disse nove anos. Ele tem nove anos agora por sua causa."',
       '"Eu não consigo te pagar. Eu fiz a conta de quanto eu ganharia por ano e não fecha até os trinta."',
       `"Então eu vou fazer isso." Ele solta a primeira bola. "Eu vou te dar uma luta boa toda vez que eu te encontrar, pelo resto da vida. É o que eu tenho."`
     ];
     if (arco === 'quase') return [
       'Ele te reconhece e demora um segundo a mais do que o normal para decidir o que fazer com a cara.',
-      '"Deu certo." Ele diz. "Deu certo com atraso de cinco meses e o veterinário falou que atrasar teve custo, mas deu."',
+      '"Deu certo." Ele diz. "Deu certo com atraso de cinco meses e o médico de Pokémon falou que atrasar teve custo, mas deu."',
       'O Rapidash manca. Não muito. O bastante.',
       `"Eu não sei o que eu te devo." Ele fala isso honesto, sem acusar. "Você me deu cinco. Faltavam treze. Eu passei cinco meses juntando treze."`,
       '"Então luta comigo e a gente descobre junto."'

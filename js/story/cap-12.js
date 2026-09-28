@@ -29,7 +29,7 @@ c12_ab_ciclovia:{
     'A ciclovia da Rota 17 é a obra pública mais bonita de Kanto e a mais inútil: dezenove quilômetros de asfalto liso descendo um morro, com guarda-corpo dos dois lados, e nenhuma cidade no fim que precise dela.',
     'Você desce a pé porque não tem bicicleta, e descer dezenove quilômetros a pé num asfalto feito pra bicicleta é uma humilhação lenta.',
     'Passam por você catorze ciclistas. Onze são turistas de capacete colorido. Três não são.',
-    'Os três não usam capacete, vão em fila, e o terceiro leva uma caixa térmica amarrada no bagageiro com aranha elástica.',
+    'Os três não usam capacete, vão em fila, e o terceiro leva uma caixa térmica amarrada no bagageiro com extensor elástico.',
     'Caixa térmica branca, sem identificação, do tamanho de uma caixa de feira.',
     'Eles não desaceleram pra te ultrapassar. Um dos três olha pra você de cima a baixo sem virar a cabeça.',
     'No fim da descida, Fuchsia aparece de uma vez, e a cerca da Zona Safári aparece junto: alambrado de três metros que sai da cidade e some na curva do horizonte.'
@@ -158,7 +158,7 @@ c12_ab_sem_os_quinhentos:{
     d=>`Você tem ${Number(d.jogador.dinheiro).toLocaleString('pt-BR')} ₽.`,
     'Você fica na frente do painel o tempo suficiente pra a moça da bilheteria entender, e ela entende, e faz uma coisa gentil: olha pro lado e finge conferir uma papelada.',
     'Do lado de fora tem um banco de concreto de frente pra cerca, e nesse banco tem um homem de uns quarenta anos com um binóculo velho pendurado no pescoço.',
-    'O binóculo tem uma fita de couro com o nome gravado a fogo, do jeito que se marcava ferramenta de trabalho: IVO.',
+    'O binóculo tem uma fita de lona com o nome gravado a fogo, do jeito que se marcava ferramenta de trabalho: IVO.',
     fala('Ivo', 'Também não vai pagar?'),
     d=>fala(d.jogador.nome, 'Também não vou pagar.'),
     fala('Ivo', 'Senta. Daqui dá pra ver quase a mesma coisa.'),
@@ -296,7 +296,7 @@ c12_ab_o_que_ela_audita:{
     d=>fala(d.jogador.nome, 'Não fecha por quanto?'),
     fala('Auditora Brill', 'Por quatrocentos e doze.'),
     'Ela diz o número devagar, como quem já disse esse número pra muita gente que não reagiu.',
-    fala('Auditora Brill', 'Quatrocentos e doze animais que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
+    fala('Auditora Brill', 'Quatrocentos e doze bichos que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
     fala('Auditora Brill', 'Eu escrevi isso em três relatórios. Os três foram arquivados como "divergência metodológica".')
   ],
   ef:{flag:['quatrocentos_e_doze','sabe_do_lote_unico'],
@@ -429,7 +429,7 @@ c12_manejo_padaria:{
       rep:{eixo:'bom',delta:2,motivo:'Fez uma pergunta que a cidade inteira não fazia'},
       npc:{nome:'Dona da padaria', opiniao:2, memoria:'Percebeu, falando com você, que nunca perguntou para onde levam o excedente.'},
       registrar:'Ninguém em Fuchsia sabe para onde vai o "excedente" da reserva.',
-      presagio:'Ela nunca perguntou em dezesseis anos de casamento. Não é burrice — é conveniência.'},
+      presagio:'Ela nunca perguntou em dezesseis anos de casamento. Não é descuido — é conveniência.'},
   escolhas:[
     {texto:'"Seu marido pode me contar?"', vai:'c12_marido'},
     {texto:'Ir falar com o diretor.', vai:'c12_diretor'},
@@ -563,14 +563,14 @@ c12_quem_entra:{
     '"E o que mais?"',
     '"Tem uma van branca que entra toda terça de manhã e sai toda terça de tarde."',
     '"Van de quê?"',
-    '"Da veterinária." Ele fala isso como se fosse óbvio. "A doutora Pia. Ela atende a reserva há uns oito anos, mora em Fuchsia mesmo, casa da rua da escola."',
+    '"Da médica de Pokémon." Ele fala isso como se fosse óbvio. "A doutora Pia. Ela atende a reserva há uns oito anos, mora em Fuchsia mesmo, casa da rua da escola."',
     'Ele olha pra você com uma cara nova.',
     '"Ela entra no setor 7 toda terça, {moço|moça}. Toda terça, há dois anos, num setor que tá fechado pra recuperação ambiental."'
   ],
   ef:{flag:['sabe_da_yara','endereco_yara'],
       rep:{eixo:'bom',delta:3,motivo:'Achou a pessoa que entra no setor fechado toda semana'},
-      registrar:'A Dra. Pia, veterinária da reserva, entra no setor 7 toda terça-feira há dois anos.',
-      presagio:'Toda terça. Uma veterinária. Num lugar onde supostamente só se planta grama.'},
+      registrar:'A Dra. Pia, médica de Pokémon da reserva, entra no setor 7 toda terça-feira há dois anos.',
+      presagio:'Toda terça. Uma médica de Pokémon. Num lugar onde supostamente só se planta grama.'},
   escolhas:[
     {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara'},
     {texto:'Ir falar com o diretor primeiro.', vai:'c12_diretor'},
@@ -825,7 +825,7 @@ c12_procurou_o_nome:{
     'Às nove e quarenta da noite ele volta com uma folha xerocada e a mão um pouco trêmula, e é a única vez no capítulo em que Koga parece velho.',
     '**ATA DA 41ª REUNIÃO ORDINÁRIA — 14/08/1997 — ITEM 4: CREDENCIAMENTO DE RECEPTOR DE FAUNA EXCEDENTE**',
     '**DELIBERAÇÃO: APROVADO POR UNANIMIDADE**',
-    '**RECEPTOR: ARMAZÉM GERAL 7 LTDA — CELADON — ALVARÁ MUNICIPAL 3.318**',
+    '**RECEPTOR: ARMAZÉM GERAL 7 — CELADON — ALVARÁ MUNICIPAL 3.318**',
     'Você lê o número do alvará três vezes.',
     'Três mil trezentos e dezoito.',
     'É o número da placa de esmalte parafusada na parede de um galpão cinza com portão de enrolar azul, numa zona de serviço de Celadon, onde você contou quarenta e uma gaiolas.',
@@ -925,7 +925,7 @@ c12_desafio_koga:{
   ]
 },
 
-/* ─────────────── O PASSEIO, A VETERINÁRIA E O DIRETOR ─────────────── */
+/* ─────────────── O PASSEIO, A MÉDICA E O DIRETOR ─────────────── */
 
 c12_passeio:{
   texto:[
@@ -1172,12 +1172,12 @@ c12_yara:{
     'E ela responde na hora, sem hesitar, porque pra ela não é segredo:',
     '"Marcação e triagem."',
     '"Marcação?"',
-    '"Brinco. Brinco auricular numerado, de plástico, amarelo." Ela mostra um, no bolso do avental, porque ela anda com eles. "Todo animal que entra no setor de triagem recebe um número antes de sair."',
+    '"Brinco. Brinco auricular numerado, de plástico, amarelo." Ela mostra um, no bolso do avental, porque ela anda com eles. "Todo bicho que entra no setor de triagem recebe um número antes de sair."',
     'Ela termina o curativo.',
     '"Eu marco entre cinquenta e oitenta por terça."'
   ],
   ef:{flag:['conheceu_yara','sabe_do_brinco'],
-      npc:{nome:'Dra. Pia', opiniao:1, memoria:'Veterinária contratada da reserva; marca de 50 a 80 animais por terça-feira.'},
+      npc:{nome:'Dra. Pia', opiniao:1, memoria:'Médica de Pokémon contratada da reserva; marca de 50 a 80 bichos por terça-feira.'},
       registrar:'A Dra. Pia faz marcação e triagem no setor 7 todas as terças: 50 a 80 por dia.',
       presagio:'Ela anda com brinco no bolso do avental. Isso é rotina, não crime.'},
   escolhas:[
@@ -1240,7 +1240,7 @@ c12_triagem:{
     '"E quantos por cento são A?"',
     'Ela fecha a torneira.',
     '"Uns noventa."',
-    '"Noventa por cento dos animais de uma reserva são saudáveis, em idade reprodutiva e de espécie com demanda?"',
+    '"Noventa por cento dos bichos de uma reserva são saudáveis, em idade reprodutiva e de espécie com demanda?"',
     'Ela seca as mãos no avental por muito mais tempo do que uma mão leva pra secar.',
     '"A triagem é feita por quem?", você pergunta.',
     '"Por mim."',
@@ -1270,7 +1270,7 @@ c12_ficha_tecnica:{
     'Ela entra em casa e volta com uma pasta plástica de quatro furos.',
     'A ficha técnica tem seis páginas, é datilografada, tem timbre, e o timbre é de uma empresa.',
     'Você vira pra última página e lá está o rodapé, em corpo oito:',
-    '**Elaborado por: Departamento Técnico — Armazém Geral 7 Ltda. — Celadon**',
+    '**Elaborado por: Departamento Técnico — Armazém Geral 7 — Celadon**',
     d=>d.flags.ligou_fuchsia_celadon ? 'O mesmo alvará. A mesma empresa que sete conselheiros credenciaram em quarenta minutos em noventa e sete.' :
        d.flags.sabe_do_deposito ? 'Você conhece esse nome. Você esteve naquele galpão. Você contou quarenta e uma gaiolas lá dentro.' :
        'Um armazém em Celadon escreveu o manual médico de uma reserva federal em Fuchsia.',
@@ -1282,7 +1282,7 @@ c12_ficha_tecnica:{
       npc:{nome:'Dra. Pia', opiniao:6, memoria:'Te entregou a ficha técnica e viu, com você, de quem era o timbre.'},
       rep:{eixo:'bom',delta:5,motivo:'Achou o documento que liga o comprador ao critério'},
       moral:-10,
-      registrar:'A ficha técnica de triagem da reserva foi elaborada pelo Armazém Geral 7 Ltda., de Celadon.',
+      registrar:'A ficha técnica de triagem da reserva foi elaborada pelo Armazém Geral 7, de Celadon.',
       presagio:'Oito anos usando uma régua que o comprador fez. E ela é boa no que faz.'},
   escolhas:[
     {texto:'"Para de assinar."', vai:'c12_yara_para'},
@@ -1299,12 +1299,12 @@ c12_yara_pra_onde:{
     '"Isso é um endereço?"',
     'Ela abre a boca e fecha.',
     '"Isso é um campo de formulário."',
-    'E aí ela faz a coisa que faz dela uma boa veterinária e uma pessoa que dormiu mal por oito anos:',
+    'E aí ela faz a coisa que faz dela uma boa médica e uma pessoa que dormiu mal por oito anos:',
     'ela vai buscar os formulários.',
     'Volta com uma caixa de papelão e senta no chão do quintal com você e abre.',
     'Centenas de vias amarelas, em ordem, presas com clipe por mês.',
     'Todas com o campo DESTINO preenchido com a mesma frase carimbada: **RECEPTOR CREDENCIADO — CONF. ATA 41/1997**.',
-    'Nenhuma com endereço. Nenhuma com nome. Nenhuma com CNPJ.',
+    'Nenhuma com endereço. Nenhuma com nome. Nenhuma com registro comercial.',
     'Oito anos de via amarela apontando pra uma ata que ela nunca leu.'
   ],
   ef:{flag:['viu_as_vias','sabe_da_ata_41'],
@@ -1350,7 +1350,7 @@ c12_formularios:{
 c12_yara_para:{
   texto:[
     '"Para de assinar."',
-    '"Se eu parar de assinar, eles contratam outro veterinário."',
+    '"Se eu parar de assinar, eles contratam outro médico de Pokémon."',
     '"Provavelmente."',
     '"E o outro não vai fazer curativo em Pidgey de graça no quintal."',
     '"Provavelmente não."',
@@ -1396,7 +1396,7 @@ c12_yara_leva:{
   ef:{flag:['vai_com_a_yara','sabe_do_setor7'],
       npc:{nome:'Dra. Pia', opiniao:6, memoria:'Te credenciou como auxiliar dela para a terça no setor 7.'},
       rep:{eixo:'bom',delta:3,motivo:'Vai entrar pela porta da frente, de dia, com crachá'},
-      registrar:'Vai entrar no setor 7 como auxiliar da veterinária, terça às 6h30.',
+      registrar:'Vai entrar no setor 7 como auxiliar da médica, terça às 6h30.',
       presagio:'"Você vai entender às nove da manhã." Ela não estava sendo dramática.'},
   escolhas:[
     {texto:'Ir na terça, como auxiliar.', vai:'c12_terca'},
@@ -1412,7 +1412,7 @@ c12_terca:{
     'É assim que se entra num lugar: com crachá, de manhã, de van.',
     'O setor 7 de dia é pior do que de noite, e você vai levar anos pra explicar por quê.',
     'De noite seria clandestino. De dia é um expediente.',
-    'Tem café numa garrafa térmica em cima de uma caixa. Tem rádio tocando baixinho numa estação de Fuchsia. Tem dois rapazes de luva conversando sobre o final de semana enquanto passam animal do corredor de contenção pra baia de triagem.',
+    'Tem café numa garrafa térmica em cima de uma caixa. Tem rádio tocando baixinho numa estação de Fuchsia. Tem dois rapazes de luva conversando sobre o final de semana enquanto passam bicho do corredor de contenção pra baia de triagem.',
     'Tem uma balança. Tem uma prancheta. Tem uma caixa de brincos amarelos numerados.',
     'E tem fila.',
     'A Dra. Pia calça a luva, liga a lanterna de cabeça, e olha pra você.',
@@ -1420,7 +1420,7 @@ c12_terca:{
     'São seis e quarenta e dois da manhã.'
   ],
   ef:{flag:['entrou_no_setor7_de_dia','viu_o_curral'],
-      registrar:'Entrou no setor 7 de dia, como auxiliar da veterinária, com crachá.',
+      registrar:'Entrou no setor 7 de dia, como auxiliar da médica, com crachá.',
       presagio:'De dia é um expediente. Guarde a frase, é a tese do capítulo inteiro.'},
   escolhas:[
     {texto:'Segurar. Ficar o dia inteiro.', vai:'c12_o_dia_inteiro'},
@@ -1434,7 +1434,7 @@ c12_nove_da_manha:{
   texto:[
     'Às nove da manhã você entende.',
     'Não tem crueldade. Isso é o que ninguém te prepara pra ver.',
-    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Pia é rápida e boa e o brinco leva menos de um segundo e o animal reage mais ao susto do que à dor.',
+    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Pia é rápida e boa e o brinco leva menos de um segundo e o bicho reage mais ao susto do que à dor.',
     'Ninguém grita com ninguém. Ninguém chuta nada.',
     'E às nove da manhã chega o lote da baia 3, e a baia 3 é a baia dos filhotes, e a triagem de filhote é por peso, porque filhote abaixo de um peso não é “apto para transporte”.',
     'E aí você vê o que acontece com os que não são aptos.',
@@ -1460,7 +1460,7 @@ c12_nove_da_manha:{
 c12_o_dia_inteiro:{
   texto:[
     'Você fica o dia inteiro.',
-    'Doze horas. Setenta e um animais marcados. Oito formulários assinados.',
+    'Doze horas. Setenta e um bichos marcados. Oito formulários assinados.',
     'Na metade da tarde você já está fazendo direito: você aprendeu a segurar sem apertar, a virar a orelha sem torcer, a falar baixo do jeito que ajuda.',
     'Você fica bom nisso.',
     'Essa é a parte que vai te acordar de noite nos próximos capítulos: você ficou bom nisso em seis horas.',
@@ -1488,7 +1488,7 @@ c12_parou_a_triagem:{
   vozes:['P','N','N','N'],
   texto:[
     'Você para.',
-    'Larga o animal com cuidado na baia — você tem esse cuidado, mesmo agora — e fica de pé no meio do setor 7 e fala alto o suficiente pros cinco ouvirem.',
+    'Larga o bicho com cuidado na baia — você tem esse cuidado, mesmo agora — e fica de pé no meio do setor 7 e fala alto o suficiente pros cinco ouvirem.',
     '"A mãe desse aqui saiu às sete e quarenta."',
     'Silêncio.',
     'O rádio continua tocando.',
@@ -1908,7 +1908,7 @@ c12_critico_do_receptor:{
     'Ele lê. Tira o óculos, limpa no paletó, põe de volta, lê de novo.',
     '"Eu aprovei essa ficha."',
     '"Eu sei."',
-    '"Eu aprovei essa ficha em noventa e quatro porque ela veio com parecer favorável de um médico veterinário credenciado e porque eu não sou médico veterinário."',
+    '"Eu aprovei essa ficha em noventa e quatro porque ela veio com parecer favorável de um médico de Pokémon credenciado e porque eu não sou médico de Pokémon."',
     'Ele empurra a ficha de volta, devagar.',
     '"E a pergunta que eu não fiz em noventa e quatro é: por que o receptor tem departamento técnico?"',
     '"Um armazém não tem departamento técnico."'
@@ -2215,7 +2215,7 @@ c12_quem_recebeu:{
     'A rubrica é de três letras. O carimbo é da direção da reserva.',
     fala('a funcionária da reserva', 'É o diretor.'),
     d=>fala(d.jogador.nome, 'Ele recebeu asfalto de alguém que não quis dizer o nome e assinou.'),
-    fala('a funcionária da reserva', 'Ele recebeu, assinou e mandou arquivar em doações diversas, que é a pasta onde vai camiseta de evento e cesta de Natal.'),
+    fala('a funcionária da reserva', 'Ele recebeu, assinou e mandou arquivar em doações diversas, que é a pasta onde vai camiseta de evento e cesta de fim de ano.'),
     'Ela fecha a pasta.',
     fala('a funcionária da reserva', 'Eu trabalho aqui há nove anos e essa é a única folha dessa pasta que eu já reli.', 'baixo')
   ],
@@ -2232,7 +2232,7 @@ c12_quem_recebeu:{
 
 c12_esperou_caminhao:{
   texto:[
-    'Você espera cinco horas e quarenta na beira do asfalto, deitad{o|a} no capim, com formiga.',
+    'Você espera cinco horas e quarenta na beira do asfalto, deitad{o|a} no capim, com Weedle passando.',
     'Às três e vinte da manhã, um caminhão baú sai do portão.',
     'Sem placa iluminada, sem logotipo, com a lona amarrada por cima da carroceria porque é baú com sobrecarga.',
     'E o som.',
@@ -2253,7 +2253,7 @@ c12_esperou_caminhao:{
 c12_ficou_parado:{
   texto:[
     'Você não se mexe.',
-    'O caminhão passa a vinte metros de você e você fica deitad{o|a} no capim, com formiga no braço, sem fazer absolutamente nada.',
+    'O caminhão passa a vinte metros de você e você fica deitad{o|a} no capim, com um Weedle no braço, sem fazer absolutamente nada.',
     'Dois minutos depois ele já é uma luz vermelha na curva. Quatro minutos depois não é nada.',
     'Você levanta às quatro e dez da manhã, com o corpo dormente de um lado, e anda de volta pra cidade.',
     'Você não fez nada errado. Não tinha nada que você pudesse fazer com um caminhão em movimento numa estrada vicinal.',
@@ -2275,12 +2275,12 @@ c12_anotou_o_caminhao:{
     'Você anota tudo: placa, horário, sentido, modelo, cor da lona e a marca do pneu.',
     'Três e vinte e dois. Sentido norte. Baú branco, lona verde, pneu recauchutado na esquerda traseira, com uma cicatriz de reparo que dá pra reconhecer de longe.',
     'É pouco.',
-    'E um dia vai ser exatamente o que faltava pra ligar uma coisa em outra, porque caminhão com pneu recauchutado reparado é caminhão que alguém consertou, e conserto tem nota, e nota tem CNPJ.'
+    'E um dia vai ser exatamente o que faltava pra ligar uma coisa em outra, porque caminhão com pneu recauchutado reparado é caminhão que alguém consertou, e conserto tem nota, e nota tem registro comercial.'
   ],
   ef:{flag:['placa_do_caminhao_zona','provas_zona'],
       rep:{eixo:'bom',delta:3,motivo:'Anotou quando não dava pra fazer mais nada'},
       registrar:'Anotou placa, horário e a marca do pneu recauchutado do caminhão do setor 7.',
-      presagio:'Conserto tem nota. Nota tem CNPJ. Guarde o pneu.'},
+      presagio:'Conserto tem nota. Nota tem registro comercial. Guarde o pneu.'},
   escolhas:[
     {texto:'Entrar pelo portão.', vai:'c12_setor7'},
     {texto:'Seguir o caminhão a pé enquanto der.', vai:'c12_seguiu_caminhao_zona'},
@@ -2295,7 +2295,7 @@ c12_seguiu_caminhao_zona:{
     'Lá, a carga é transferida.',
     'Do baú sem placa pra outro caminhão, e esse segundo tem placa, tem logotipo de transportadora, tem adesivo de rastreamento via satélite, e o motorista assina uma nota fiscal em duas vias apoiada no capô.',
     'É aqui que a coisa deixa de ser crime e vira logística.',
-    'A transferência leva quarenta minutos e os dois motoristas conversam sobre futebol e um deles come um sanduíche em pé.',
+    'A transferência leva quarenta minutos e os dois motoristas conversam sobre a Liga e um deles come um sanduíche em pé.',
     'Você fotografa tudo: os dois caminhões, as duas placas, a nota no capô, o rosto de quem assina, o adesivo de rastreamento.',
     'Nove fotos.'
   ],
@@ -2335,12 +2335,12 @@ c12_setor7:{
     'É uma clareira de três hectares, cercada por dentro com tela de dois metros e meio, com iluminação de obra em quatro postes de refletor e um gerador que você ouve a cem metros.',
     'No centro: um curral.',
     'Não é gaiola. É curral — estrutura de tubo galvanizado, com brete, corredor de contenção, balança de passagem e rampa de embarque.',
-    'Exatamente como se faz com gado, porque foi feito por quem faz com gado, porque a firma que instalou é a mesma que instala em fazenda e o catálogo é o mesmo.',
+    'Exatamente como se faz com rebanho de Tauros, porque foi feito por quem faz com rebanho de Tauros, porque a firma que instalou é a mesma que instala em fazenda e o catálogo é o mesmo.',
     'Está cheio.',
     'Você tenta contar e desiste na casa dos oitenta.',
     'E o som — o som é a coisa.',
     'Não é pânico. Pânico você reconheceria.',
-    'É o som de animal que já se cansou de ter pânico, que é um som mais baixo, mais regular, e infinitamente pior.'
+    'É o som de bicho que já se cansou de ter pânico, que é um som mais baixo, mais regular, e infinitamente pior.'
   ],
   ef:{flag:'viu_o_curral', instabilidade:1, moral:-15,
       registrar:'Encontrou o curral do setor 7 da Zona Safári. Mais de oitenta.',
@@ -2614,7 +2614,7 @@ c12_tres_dias:{
 c12_sabotou:{
   texto:[
     'Você destrói o corredor de contenção.',
-    'É trabalho braçal e leva uma hora e quarenta: você tira os pinos de travamento das seções de tubo com uma marreta encontrada no contêiner, e sem os pinos a estrutura não fica de pé, e sem a estrutura não existe corredor, e sem corredor ninguém embarca oitenta e sete animais em caminhão.',
+    'É trabalho braçal e leva uma hora e quarenta: você tira os pinos de travamento das seções de tubo com uma marreta encontrada no contêiner, e sem os pinos a estrutura não fica de pé, e sem a estrutura não existe corredor, e sem corredor ninguém embarca oitenta e sete bichos em caminhão.',
     'Você também quebra a célula de carga da balança de passagem, que é uma peça pequena e cara, e a marreta resolve.',
     'Isso não solta ninguém.',
     'Isso compra tempo: seis a nove semanas, entre orçamento, licitação e instalação, porque a firma é de fora e a reserva compra por licitação.',
@@ -2830,7 +2830,7 @@ c12_barreira:{
     'O motorista liga pra alguém.',
     'Às oito e cinquenta chega um advogado de Celadon de carro.',
     'Às onze e quarenta a carga é desembarcada ali mesmo, na beira da estrada, em recinto provisório, por decisão de fiscalização.',
-    'E às catorze horas, oitenta e sete animais que iam pra Celadon estão numa área de pastagem cercada no quilômetro quatro, com água, sob custódia da Liga, porque ninguém tem guia pra nenhum deles.',
+    'E às catorze horas, oitenta e sete bichos que iam pra Celadon estão numa área de pastagem cercada no quilômetro quatro, com água, sob custódia da Liga, porque ninguém tem guia pra nenhum deles.',
     'Ninguém nunca teve guia pra nenhum deles.',
     'Quinze anos.'
   ],

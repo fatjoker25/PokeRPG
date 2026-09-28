@@ -485,20 +485,20 @@ c14_fuji_morreu:{
     '"Não teve enterro."',
     'Ela põe a xícara no muro.',
     '"Numa ilha de setecentas pessoas, meu bem, todo mundo vai em todo enterro. É a coisa que a gente faz aqui. Morreu, vai todo mundo, e depois tem café na casa da família."',
-    '"O Doutor Fuji trabalhou nessa ilha vinte e dois anos e não teve enterro, não teve missa de sétimo dia, não teve nada."',
+    '"O Doutor Fuji trabalhou nessa ilha vinte e dois anos e não teve enterro, não teve vigília de sétimo dia, não teve nada."',
     '"E a casa dele?"',
-    '"A casa dele tá lá. Fechada. O IPTU tá pago."',
+    '"A casa dele tá lá. Fechada. O imposto da casa tá pago."',
     'Ela olha pra você.',
-    '"Tem gente que paga o IPTU dele. E não sou eu, e não é a prefeitura."'
+    '"Tem gente que paga o imposto da casa dele. E não sou eu, e não é a prefeitura."'
   ],
   ef:{flag:['sabe_do_iptu','fuji_sem_enterro'],
       rep:{eixo:'bom',delta:4,motivo:'Perguntou pelo enterro'},
-      npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o IPTU da casa dele.'},
-      registrar:'O Dr. Fuji não teve enterro. Alguém paga o IPTU da casa dele até hoje.',
+      npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o imposto da casa dele.'},
+      registrar:'O Dr. Fuji não teve enterro. Alguém paga o imposto da casa dele até hoje.',
       presagio:'Numa ilha de setecentas pessoas todo mundo vai em todo enterro. Menos nesse.'},
   escolhas:[
     {texto:'"Onde é a casa dele?"', vai:'c14_casa_do_fuji'},
-    {texto:'"Quem paga o IPTU?"', vai:'c14_quem_paga'},
+    {texto:'"Quem paga o imposto da casa?"', vai:'c14_quem_paga'},
     {texto:'"E o incêndio de semana passada?"', vai:'c14_incendio_da_semana'},
     {texto:'Ir ao laboratório.', vai:'c14_lab'}
   ]
@@ -508,7 +508,7 @@ c14_quem_paga:{
   falante:'Sra. Wilma',
   vozes:['P','N','P','a funcionária da prefeitura'],
   texto:[
-    '"Quem paga o IPTU?"',
+    '"Quem paga o imposto da casa?"',
     '"Vai na prefeitura e pergunta, meu bem. É público."',
     'A prefeitura de Cinnabar tem duas salas e funciona das oito às catorze.',
     'A funcionária do setor de tributos consulta a inscrição imobiliária, anota num papelzinho e vira o monitor pra você, porque ela não vê problema nenhum nisso e porque de fato não tem problema nenhum nisso.',
@@ -519,8 +519,8 @@ c14_quem_paga:{
   ],
   ef:{flag:['blaine_paga_o_iptu','sabe_do_blaine'],
       rep:{eixo:'bom',delta:4,motivo:'Foi na prefeitura e perguntou'},
-      registrar:'Blaine paga, por débito automático, o IPTU da casa do Dr. Fuji há anos.',
-      presagio:'Ele paga há anos. Ninguém paga IPTU de morto por acaso.'},
+      registrar:'Blaine paga, por débito automático, o imposto da casa do Dr. Fuji há anos.',
+      presagio:'Ele paga há anos. Ninguém paga imposto de casa de morto por acaso.'},
   escolhas:[
     {texto:'Ir ao ginásio.', vai:'c14_ginasio'},
     {texto:'Ir à casa do Fuji.', vai:'c14_casa_do_fuji'},
@@ -617,14 +617,14 @@ c14_porque_nao_entra:{
     '"Isso é o contrário de ruim, e por isso é pior."',
     'Ele encosta a testa na coluna da varanda por um segundo e desencosta.',
     '"Tem uma xícara de café na pia dele desde novembro de noventa e seis, {meu filho|minha filha}. Com café dentro. Virou uma pedra preta."',
-    '"E eu não lavo. E eu não deixo ninguém lavar. E eu pago o IPTU pra prefeitura não tomar e vender."',
+    '"E eu não lavo. E eu não deixo ninguém lavar. E eu pago o imposto da casa pra prefeitura não tomar e vender."',
     '"Faz quatro anos."',
     'Ele termina o café.',
     '"E eu sei exatamente o que isso é, tá? Eu tenho setenta e dois anos e eu não sou bobo. Isso é eu não aceitar."',
     '"E eu vou continuar não aceitando, porque a alternativa é aceitar, e eu não quero."'
   ],
   ef:{flag:'blaine_falou_da_casa',
-      npc:{nome:'Blaine', opiniao:5, memoria:'Te explicou por que não entra na casa e por que paga o IPTU há quatro anos.'},
+      npc:{nome:'Blaine', opiniao:5, memoria:'Te explicou por que não entra na casa e por que paga o imposto da casa há quatro anos.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou e ouviu a resposta inteira'},
       moral:-5,
       registrar:'Blaine mantém a casa do Fuji intacta desde novembro de 1996.',

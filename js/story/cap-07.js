@@ -1594,7 +1594,7 @@ c7_foi_no_treinador:{
   texto:[
     'Você anda direto pro corpo caído, e o Marowak não te impede — ele se desloca de lado pra continuar entre o Cubone e você, mas não ataca.',
     'Você ajoelha ao lado do treinador.',
-    'É um rapaz de uns vinte anos. Está respirando. Tem um galo grande na têmpora e uma cor de pele que você não sabe nomear mas que o seu corpo entende na hora.',
+    'É um rapaz de uns vinte anos. Está respirando. Tem um calombo grande na têmpora e uma cor de pele que você não sabe nomear mas que o seu corpo entende na hora.',
     'E tem um frasco de remédio aberto no chão, ao lado da mão dele, com comprimidos espalhados.',
     'Ele não apanhou do Marowak. Ele passou mal e caiu, e derrubou o frasco, e o Marowak ficou.',
     'Quatro dias de osso batendo em pedra, três vezes, pausa, três vezes.',
@@ -1635,7 +1635,7 @@ c7_gritou_zelador:{
       ? 'O zelador já está no topo da escada. Ele viu tudo. Ele desce pra chamar ambulância mais rápido do que um homem de sessenta e um anos devia descer escada.'
       : 'Leva sete minutos até o zelador chegar. Ele sobe seis andares em sete minutos aos sessenta e um anos, e chega sem conseguir falar.',
     'Ele olha a cena e entende em dois segundos o que você levou dois minutos pra entender.',
-    '"Ah, meu Deus." Ele se ajoelha. "Ah, meu Deus, ele tava chamando."',
+    '"Ah, não." Ele se ajoelha. "Ah, não, ele tava chamando."',
     'Ele desce de novo pra ligar. A ambulância de Lavender leva onze minutos porque a cidade é pequena e o hospital é o de Celadon, mas tem uma van.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou ajuda em vez de resolver sozinho'},

@@ -16,7 +16,7 @@ const PRECO_BASE = {
   'Pedra da Folha':4000, 'Moon Stone':6000, 'Pedra do Sol':6000,
   /* segurados */
   'Resto de Ração':2800, 'Faixa Firme':3200, 'Punho de Ferro':2600,
-  'Óculos Grossos':2600, 'Colete de Couro':2400, 'Botina Leve':2200,
+  'Óculos Grossos':2600, 'Colete de Lona':2400, 'Botina Leve':2200,
   'Sino Calmante':1800, 'Amuleto de Moeda':3600, 'Exp. Share':3000, 'PP Up':9800,
   /* bolsas */
   'Mochila Preta':1400, 'Mochila Vermelha':1300, 'Mochila Azul':1200, 'Mochila Verde':1200,
@@ -45,7 +45,7 @@ const LOJAS = {
     nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Couro','Mochila Marrom']
+    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
@@ -87,7 +87,7 @@ const LOJAS = {
        itens:['Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha','Pedra do Sol']},
       {n:5, nome:'5º · Equipamento',
        ar:'Item segurado, um por Pokémon, cada um numa caixinha com a ficha técnica impressa em letra de máquina.',
-       itens:['Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda','Exp. Share']},
+       itens:['Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Lona','Botina Leve','Sino Calmante','Amuleto de Moeda','Exp. Share']},
       {n:6, nome:'6º · Lanchonete',
        ar:'Mesa de fórmica, máquina de refrigerante e a melhor vista de Celadon, que não é grande coisa mas é de graça.',
        itens:['Água Fresca','Ração','Cantil','Cobertor térmico']},
@@ -98,7 +98,7 @@ const LOJAS = {
     itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
            'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
-           'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Couro','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada','PP Up','Exp. Share']
+           'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Lona','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada','PP Up','Exp. Share']
   },
   fuchsia: {
     nome:'Posto da Zona Safári',
@@ -289,11 +289,11 @@ const TROCAS = {
   }],
   rota19: [{
     id:'rota19_1', requer:d=>numInsignias() >= 6,
-    quem:'a veterinária da reserva',
+    quem:'a médica de Pokémon da reserva',
     onde:'na beira da Rota 19, lavando material numa bacia, com a camionete aberta',
     pede:115, da:{dex:127, nivel:[32,36], apelido:'Alicate', natureza:'Adamant'},
     fala:'"Esse Pinsir entra em qualquer briga que acontecer num raio de cinquenta metros. Qualquer uma. Inclusive as minhas."\n"E a Kangaskhan?"\n"Kangaskhan separa briga. Você não imagina o que isso vale aqui dentro."',
-    depois:'A Kangaskhan atravessa o pátio do setor 3 e três brigas param sozinhas antes de ela chegar perto, e a veterinária fica olhando aquilo com uma cara de quem acabou de ganhar na loteria.',
+    depois:'A Kangaskhan atravessa o pátio do setor 3 e três brigas param sozinhas antes de ela chegar perto, e a médica fica olhando aquilo com uma cara de quem acabou de ganhar na loteria.',
     memoria:'Trocou o Pinsir da reserva pela sua Kangaskhan. Kangaskhan separa briga.'
   }],
   caminho_vitoria: [{

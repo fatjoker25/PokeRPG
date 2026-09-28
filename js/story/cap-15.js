@@ -353,7 +353,7 @@ c15_o_que_aconteceu:{
     '"Morreram?"',
     '"Não. Foram embora. Tem diferença e a diferença é a única coisa importante desse assunto."',
     'Ele bate no caderno.',
-    '"Se morressem, a gente achava. Bicho morto fica. Tem urubu, tem cheiro, tem osso."',
+    '"Se morressem, a gente achava. Bicho morto fica. Tem Murkrow, tem cheiro, tem osso."',
     '"A gente andou os vinte e dois quilômetros da ciclovia e mais os trechos de mato em oito dias, eu e a Ylva, e a gente achou dois bichos mortos, que é o número normal, que é atropelamento."',
     '"Então eles andaram."',
     '"Eles andaram. E andaram todos pro mesmo lado, que é o que me tira o sono."',
@@ -826,7 +826,7 @@ c15_nair_viu:{
     '"A senhora viu os três."',
     '"Quatro vezes."',
     'Ela senta numa pedra e tira o chapéu.',
-    '"Primeira vez em agosto, no dezessete, às quatro e vinte da manhã. Eu tava contando morcego, que é coisa de madrugada."',
+    '"Primeira vez em agosto, no dezessete, às quatro e vinte da manhã. Eu tava contando Zubat, que é coisa de madrugada."',
     '"E?"',
     '"E eles passaram a uns sessenta metros e eu me agachei atrás de um cupinzeiro e fiquei lá até clarear."',
     '"E nas outras três?"',
@@ -1438,9 +1438,9 @@ c15_soltou_caes:{
         Estado.dados.mundo.instabilidade = Math.max(0, Estado.dados.mundo.instabilidade-3);
         return avisos;
       },
-      rep:{eixo:'bom',delta:4,motivo:'Devolveu um Cão Lendário à matilha, na frente dela'},
+      rep:{eixo:'bom',delta:4,motivo:'Devolveu um Lendário do trio à matilha, na frente dela'},
       moral:15,
-      flag:'devolveu_os_caes', registrar:'Soltou os cães capturados diante dos outros.',
+      flag:'devolveu_os_caes', registrar:'Soltou os lendários capturados diante dos outros.',
       presagio:'O instinto de matilha não é uma chave que liga na hora. Dois minutos.'},
   escolhas:[
     {texto:'Ficar parad{o|a} até eles irem.', vai:'c15_foram_embora'},
@@ -1590,7 +1590,7 @@ c15_falou:{
   vozes:['P'],
   texto:[
     '"Vocês estão olhando pra Cinnabar."',
-    'Você diz isso em voz alta, numa estrada vazia, às quatro da manhã, para três animais lendários.',
+    'Você diz isso em voz alta, numa estrada vazia, às quatro da manhã, para três Pokémon lendários.',
     'Raikou vira a cabeça de lado.',
     'Um gesto tão de Growlithe de rua, tão comum, tão de bicho que não entendeu a frase mas entendeu que teve frase, que quebra alguma coisa na sua cabeça.',
     'Eles não entendem palavra.',
@@ -1602,7 +1602,7 @@ c15_falou:{
       executar:d=>{ GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo'; }); return []; },
       rep:{eixo:'bom',delta:4,motivo:'Falou com três lendários como quem fala com alguém'},
       moral:10,
-      registrar:'Falou com os três cães. Suicune olhou para Cinnabar junto com você.',
+      registrar:'Falou com os três lendários. Suicune olhou para Cinnabar junto com você.',
       presagio:'Direção do olhar é uma língua que todo bicho fala. É a única que vocês dois têm.'},
   escolhas:[
     {texto:'"Eu vou lá."', vai:'c15_prometeu_caes'},
@@ -1682,7 +1682,7 @@ c15_pos_cao:{
         GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); L.ataquesSofridos++; if(L.ataquesSofridos>=2) L.disposicao='hostil'; });
         return [{tipo:'mundo', texto:'Os três se afastaram. Eles decidiram alguma coisa sobre você.'}];
       },
-      rep:{eixo:'ruim',delta:2,motivo:'Atacou os Cães Lendários na rota 18'}, moral:-10},
+      rep:{eixo:'ruim',delta:2,motivo:'Atacou o trio lendário na rota 18'}, moral:-10},
   escolhas:[
     {texto:'Tentar de novo com outro.', vai:'c15_luta_cao'},
     {texto:'Parar e mostrar as mãos vazias.', vai:'c15_maos_vazias'},
@@ -1720,7 +1720,7 @@ c15_capturou_cao:{
     'Você acabou de ser marcad{o|a} de um jeito que não sai.'
   ],
   ef:{instabilidade:2, flag:'marcado_pelos_caes', moral:-15,
-      registrar:'Capturou um Cão Lendário. Os outros dois deram três voltas em torno de você antes de sumir.',
+      registrar:'Capturou um Lendário do trio. Os outros dois deram três voltas em torno de você antes de sumir.',
       presagio:'Três voltas. Eles fizeram um perímetro em volta de você.'},
   escolhas:[
     {texto:'Soltar imediatamente.', vai:'c15_soltou_caes'},
@@ -1732,7 +1732,7 @@ c15_capturou_cao:{
 
 c15_ficou_com_cao:{
   texto:[
-    'Você segue viagem com um Cão Lendário no cinto.',
+    'Você segue viagem com um Lendário do trio no cinto.',
     'Nos dias seguintes, três coisas acontecem em ordem.',
     'Primeiro, você começa a ouvir passos à noite, sempre a uma distância que não dá pra confirmar, sempre parando quando você para.',
     'Segundo, Pokémon selvagens param de aparecer nas rotas onde você anda. Todos. Como se avisassem uns aos outros com dois dias de antecedência.',
@@ -1743,9 +1743,9 @@ c15_ficou_com_cao:{
     'Eles vão andar na sua frente abrindo coisa até você entender.'
   ],
   ef:{flag:'caes_caçam_voce', instabilidade:2, moral:-20,
-      rep:{eixo:'ruim',delta:3,motivo:'Manteve um Cão Lendário e os outros começaram a destruir propriedades'},
+      rep:{eixo:'ruim',delta:3,motivo:'Manteve um Lendário do trio e os outros começaram a destruir propriedades'},
       executar:d=>{ GRUPO_CAES.forEach(x=>{const L=Estado.lend(x); if(L.estado!=='capturado'){L.disposicao='hostil';L.caçandoVoce=true;}}); return []; },
-      registrar:'Os cães passaram a abrir currais no seu rastro.',
+      registrar:'Os três lendários passaram a abrir currais no seu rastro.',
       presagio:'Eles vão abrir coisa até você entender. Eles são bons em abrir coisa.'},
   escolhas:[
     {texto:'Voltar e soltar.', vai:'c15_soltou_caes'},

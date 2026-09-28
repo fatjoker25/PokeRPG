@@ -384,7 +384,7 @@ c9_onde_e_o_leilao:{
     '"Onde é o leilão?"',
     '"Não é aberto."',
     'Ele diz isso sem nenhum constrangimento.',
-    '"É por credenciamento. Você precisa de CNPJ, inscrição e habilitação prévia." Ele aponta uma placa na parede que você não tinha visto: um certificado emplacado, com brasão. "A gente tem."',
+    '"É por credenciamento. Você precisa de registro comercial, inscrição e habilitação prévia." Ele aponta uma placa na parede que você não tinha visto: um certificado emplacado, com brasão. "A gente tem."',
     'Você chega mais perto do certificado.',
     'É um documento bonito, com papel bom, moldura e vidro.',
     'E no alto, impresso em relevo, um brasão com uma balança.'
@@ -701,7 +701,7 @@ c9_pendencias:{
     {texto:'Revelar o filme da câmera.', vai:'c9_revelar', cond:d=>!!d.flags.fotografou_o_porao || !!d.flags.fotografou_o_certificado},
     {texto:'Procurar a filha da Sibyl.', vai:'c9_filha_marta', cond:d=>!!d.flags.a_filha_da_marta},
     {texto:'Ir ao hospital ver o Elias.', vai:'c9_hospital', cond:d=>!!d.flags.conhece_o_hideo || !!d.flags.salvou_treinador_torre},
-    {texto:'Tirar certidão do CNPJ na junta comercial.', vai:'c9_junta', cond:d=>!!d.flags.cnpj_de_saffron || !!d.flags.sabe_do_cartorio}
+    {texto:'Tirar certidão do registro comercial na junta comercial.', vai:'c9_junta', cond:d=>!!d.flags.cnpj_de_saffron || !!d.flags.sabe_do_cartorio}
   ]
 },
 
@@ -935,16 +935,16 @@ c9_verdade_pra_filha:{
     '"Sofreu. Mas ela ficou com ele o tempo todo."',
     'Ela fecha os olhos.',
     '"O tempo todo?"',
-    '"O tempo todo. Ela falava com ele. Falava de coisa boba, tipo que tinha comprado o de peixe e não o de carne."',
+    '"O tempo todo. Ela falava com ele. Falava de coisa boba, tipo que tinha comprado o de alga e não o de queijo."',
     'E aí ela chora num café de shopping às três da tarde, de crachá, e duas pessoas olham e desviam.',
     'Depois ela limpa a cara com guardanapo de papel e diz:',
-    '"Ela sempre compra o de sardinha."',
+    '"Ela sempre compra o de alga."',
     'E ri. Chorando.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Contou a verdade inteira, com o detalhe que a tornava suportável'},
       flag:'contou_a_verdade_a_filha',
-      npc:{nome:'Filha da Sibyl', opiniao:6, memoria:'Você contou como o Duque morreu, com o detalhe da sardinha.'},
-      presagio:'O detalhe da sardinha foi o que salvou a conversa. Guarda esse método.'},
+      npc:{nome:'Filha da Sibyl', opiniao:6, memoria:'Você contou como o Duque morreu, com o detalhe da alga.'},
+      presagio:'O detalhe da alga foi o que salvou a conversa. Guarda esse método.'},
   escolhas:[
     {texto:'"Liga pra ela."', vai:'c9_liga_pra_ela'},
     {texto:'Ficar em silêncio com ela.', vai:'c9_silencio_no_cafe'},
@@ -989,7 +989,7 @@ c9_nao_respondeu_filha:{
 c9_liga_pra_ela:{
   texto:[
     '"Liga pra ela."',
-    '"Eu ligo no Natal."',
+    '"Eu ligo no fim do ano."',
     '"Liga hoje."',
     'Ela olha a caneca.',
     '"Você tem quinze anos."',
@@ -1384,7 +1384,7 @@ c9_junta:{
     'Você sobe a pé, pega senha, e espera uma hora e quarenta.',
     'O balcão é uma moça de uns trinta anos com uma pilha de processo do lado.',
     '"Pois não?"',
-    '"Eu queria certidão simplificada de um CNPJ."',
+    '"Eu queria certidão simplificada de um registro comercial."',
     'Ela olha pra você. Você tem quinze anos e uma mochila de rota.',
     '"Oito pokedólares a página. Você tem o número?"'
   ],
@@ -1479,12 +1479,12 @@ c9_busca_sena:{
     'Ela aponta a tela com a caneta.',
     '"Olha a data."',
     'Baixada em 89. Constituída em 90.',
-    '"Isso é comum", ela diz. "É o que a gente chama de sucessão de fato. Fecha aqui e abre ali com outro CNPJ e o mesmo quadro."'
+    '"Isso é comum", ela diz. "É o que a gente chama de sucessão de fato. Fecha aqui e abre ali com outro registro comercial e o mesmo quadro."'
   ],
   ef:{flag:['a_sucessao_de_fato','sabe_de_sena'],
       rep:{eixo:'bom',delta:3,motivo:'Descobriu que o laboratório de Cinnabar nunca fechou de verdade'},
       registrar:'O laboratório de Cinnabar foi baixado em 1989 e reaberto em Saffron em 1990, com o mesmo quadro.',
-      presagio:'Não fechou. Mudou de CNPJ. Tem décadas de continuidade escondidas numa troca de número.'},
+      presagio:'Não fechou. Mudou de registro comercial. Tem décadas de continuidade escondidas numa troca de número.'},
   escolhas:[
     {texto:'Pedir a certidão da de Saffron. (80 ₽)', vai:'c9_certidao', cond:d=>d.jogador.dinheiro>=80,
      ef:{dinheiro:-80}},
@@ -1505,7 +1505,7 @@ c9_busca_adnan:{
     '"Conselho de onze."',
     'Ela vira a tela um pouco mais.',
     'Os onze nomes estão ali, listados em ordem alfabética, num registro público de acesso livre, com taxa de oito pokedólares a página.',
-    'Onze nomes completos, com CPF parcialmente mascarado.'
+    'Onze nomes completos, com número de documento parcialmente mascarado.'
   ],
   ef:{flag:['os_onze_nomes_da_comissao','papel_com_brasao','sabe_da_comissao'],
       rep:{eixo:'bom',delta:4,motivo:'Encontrou os onze nomes num registro público'},
@@ -1676,7 +1676,7 @@ c9_anotou_junta:{
   vozes:['N','P'],
   texto:[
     'Você copia tudo no caderno de campo, em pé no balcão, com a moça esperando.',
-    'Nomes, datas, CNPJs, endereços.',
+    'Nomes, datas, registros comerciais, endereços.',
     'Leva vinte e dois minutos e ela não reclama uma vez.',
     'No fim ela diz: "Certidão é melhor. Anotação não vale nada num processo."',
     '"Eu não tenho processo."',
@@ -1697,7 +1697,7 @@ c9_copiou_os_onze_da_junta:{
   texto:[
     'Você copia os onze nomes à mão, no caderno de campo, olhando uma tela de computador girada meio grau.',
     'Leva doze minutos porque dois deles são compridos.',
-    'Onze nomes completos. Pessoas. Com sobrenome, com CPF mascarado, com data de ingresso no conselho.',
+    'Onze nomes completos. Pessoas. Com sobrenome, com número de documento mascarado, com data de ingresso no conselho.',
     'Sete técnicos. Dois juristas. Um representante de federação esportiva. Uma presidência.',
     'Quando você fecha o caderno, a moça da junta gira a tela de volta e não comenta nada.'
   ],
@@ -2288,7 +2288,7 @@ c9_desistiu:{
 
 c9_cassino:{
   texto:[
-    'O Rocket Game Corner mudou de nome duas vezes desde que a Rocket caiu. Agora se chama Celadon Palace, tem letreiro novo, alvará novo, CNPJ novo — e o mesmo carpete.',
+    'O Rocket Game Corner mudou de nome duas vezes desde que a Rocket caiu. Agora se chama Celadon Palace, tem letreiro novo, alvará novo, registro comercial novo — e o mesmo carpete.',
     'É um carpete vermelho com desenho geométrico dourado, gasto em faixa no meio de cada corredor, do jeito que carpete gasta quando dez mil pessoas andam exatamente no mesmo lugar por dez anos.',
     'Você entra às oito da noite. Tem umas cento e vinte pessoas no salão, a maioria com mais de sessenta anos, a maioria sozinha.',
     'Slot, roleta, e um canto de mesa de carta onde ninguém conversa.',
@@ -2366,13 +2366,13 @@ c9_e_legal:{
     '"Custódia é onde ele fica enquanto o processo corre. Processo demora. Bicho não pode ficar em sala de repartição, então a Comissão contrata depósito particular credenciado."',
     '"Alienação é o que a lei manda fazer quando o processo acaba e ninguém reclamou: leiloar, e o dinheiro vai pro erário."',
     'Ela encosta a caneta no guardanapo.',
-    '"Eu não roubo bicho de ninguém. Eu tenho o depósito credenciado, eu opero o leilão, e eu tenho comprador. Três contratos. Três CNPJs. Tudo com nota."',
+    '"Eu não roubo bicho de ninguém. Eu tenho o depósito credenciado, eu opero o leilão, e eu tenho comprador. Três contratos. Três registros comerciais. Tudo com nota."',
     '"O crime, se você quiser achar um, é muito mais chato do que você queria."'
   ],
   ef:{flag:['entendeu_o_esquema','sabe_da_alienacao'],
       rep:{eixo:'bom',delta:1,motivo:'Perguntou como funciona antes de decidir o que fazer'},
       registrar:'O esquema de Celadon é legal no papel: recolhimento, custódia credenciada e alienação em leilão.',
-      presagio:'Três contratos, três CNPJs, tudo com nota. É por isso que ninguém prendeu ninguém.'},
+      presagio:'Três contratos, três registros comerciais, tudo com nota. É por isso que ninguém prendeu ninguém.'},
   escolhas:[
     {texto:'"Então quem decide o recolhimento?"', vai:'c9_proposta_terceira'},
     {texto:'"Quem é o Colman?"', vai:'c9_proposta_terceira', cond:d=>!!d.flags.sabe_do_renno},
@@ -2515,7 +2515,7 @@ c9_via_pesquisador:{
       presagio:'Cento e oitenta recolhimentos por ano, assinados por uma pessoa. Some isso com o que você viu na junta.'},
   escolhas:[
     {texto:'Ir ao armazém primeiro.', vai:'c9_deposito'},
-    {texto:'Ir à junta comercial ver de quem são os CNPJs.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}},
+    {texto:'Ir à junta comercial ver de quem são os registros comerciais.', vai:'c9_junta', ef:{flag:'sabe_do_cartorio'}},
     {texto:'Ir ao leilão. Comprador é o que ela disse que importa.', vai:'c9_cassino_por_baixo'},
     {texto:'Ir direto pra Saffron com o guardanapo.', vai:'c9_fim', ef:{flag:'pulou_deposito'}}
   ]
@@ -2639,7 +2639,7 @@ c9_prado_conversa:{
     'Ela te leva pro corredor de azulejo, fora da sala, e fecha a porta dupla atrás de vocês.',
     'Longe do pregão ela envelhece uns cinco anos de uma vez.',
     '"Eu presido vinte e seis sessões por ano. Cada sessão tem entre trinta e cinquenta lotes."',
-    '"Faz a conta: mil e duzentos animais por ano passam por essa prancheta, e eu leio o processo inteiro de uns quarenta."',
+    '"Faz a conta: mil e duzentos bichos por ano passam por essa prancheta, e eu leio o processo inteiro de uns quarenta."',
     '"Não é desculpa. É a descrição do serviço."',
     'Ela olha a porta.',
     '"E quem assina o recolhimento não é a Comissão inteira. É o fiscal da área. Em Kanto central, de oitenta e nove pra cá, quase tudo tem a mesma assinatura."',
@@ -2671,7 +2671,7 @@ c9_prado_te_da_o_processo:{
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? '"Letra de pessoa com a mão ruim, escrita devagar, com data. O número do processo eu mesma ponho." Ela dobra a folha. "Isso é documento."'
       : '"Os outros mil e duzentos estão dentro da lei", ela diz. "E é exatamente por isso que eu durmo mal."',
-    'Ela abre a bolsa de couro gasta e tira um bloco de formulários carbonados.',
+    'Ela abre a bolsa de lona gasta e tira um bloco de formulários carbonados.',
     'Preenche um na sua frente, apoiada na parede de azulejo, em letra de servidora — pequena, reta, sem enfeite.',
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? '**SUSPENSÃO DE ALIENAÇÃO — LOTE 41 — PROC. 44.207 — MOTIVO: MANIFESTAÇÃO SUPERVENIENTE DO TUTOR**'
@@ -3104,7 +3104,7 @@ c9_comprador_ok:{
 c9_comprou_um:{
   texto:[
     'Você paga e eles te entregam uma bola com um adesivo numerado e uma via de recibo.',
-    'O recibo tem CNPJ, tem descrição do bem, tem imposto destacado.',
+    'O recibo tem registro comercial, tem descrição do bem, tem imposto destacado.',
     'Você sai andando entre as outras quarenta gaiolas com a sua na mão e o recibo no bolso.',
     'Salvar um é melhor que salvar nenhum. Essa frase é verdadeira e não ajuda absolutamente nada agora.'
   ],
@@ -3243,7 +3243,7 @@ c9_documentou:{
     'O alvará na parede de fora. A placa de esmalte com o número.',
     'Depois sai sem tocar em nada. Sem soltar ninguém.',
     'Essa é a decisão mais fria que você já tomou, e você sabe exatamente por que tomou: uma noite de caos fecha um armazém e eles abrem outro em trinta dias.',
-    'Trinta e uma páginas de destino, com CNPJ e número de processo, fecham uma rede.',
+    'Trinta e uma páginas de destino, com registro comercial e número de processo, fecham uma rede.',
     'Você fica com isso na consciência do jeito que se fica com uma escolha certa que parece errada.'
   ],
   ef:{flag:['provas_deposito','escolha_fria'],
@@ -3405,7 +3405,7 @@ c9_ivone:{
     'Fica parada tempo demais. O café esfria.',
     '"Isso não é contrabando de bicho." Ela fecha o caderno. "Isso é fornecimento."',
     '"Contrabando é eventual. Fornecimento é contínuo, tem previsão de volume, e tem contrato."',
-    '"E fornecimento tem cliente. E cliente com sigla e número de andar tem CNPJ."'
+    '"E fornecimento tem cliente. E cliente com sigla e número de andar tem registro comercial."'
   ],
   ef:{flag:['ivone_sabe','sabe_da_silph'],
       rep:{eixo:'bom',delta:2,motivo:'Entregou a rede de Celadon a quem faz alguma coisa com isso'},

@@ -249,13 +249,13 @@ c10_ab_o_chamado:{
     d=>fala(d.jogador.nome, 'Puxando? Ela não gera?'),
     fala('o homem do macacão', 'Gerava. Desde oitenta e nove ela não gera nada.'),
     'Ele vira a via de cima da prancheta.',
-    fala('o homem do macacão', 'Agora ela consome. Quarenta megawatt-hora por mês, faturado pra ninguém, num CNPJ que foi baixado em oitenta e nove.'),
+    fala('o homem do macacão', 'Agora ela consome. Quarenta megawatt-hora por mês, faturado pra ninguém, num registro comercial que foi baixado em oitenta e nove.'),
     fala('o homem do macacão', 'A gente abriu chamado em maio, em julho e em setembro.'),
     d=>fala(d.jogador.nome, 'E?'),
     fala('o segundo homem', 'E todo mês alguém fecha o chamado como "improcedente" e a gente não sabe quem é esse alguém.', 'baixo')
   ],
   ef:{flag:['usina_consome','sabe_do_armazem'],
-      registrar:'A usina consome 40 MWh por mês, faturados para um CNPJ baixado em 1989. Três chamados fechados como improcedentes.',
+      registrar:'A usina consome 40 MWh por mês, faturados para um registro comercial baixado em 1989. Três chamados fechados como improcedentes.',
       presagio:'Alguém com acesso ao sistema da companhia fecha esses chamados todo mês.'},
   escolhas:[
     {texto:'Pedir uma via do chamado.', vai:'c10_ab_a_via'},
@@ -718,7 +718,7 @@ c10_buraco:{
 c10_observar:{
   texto:[
     'Você sobe a encosta oeste e deita no mato seco com vista pro pátio inteiro.',
-    'Espera quatro horas. É chato de um jeito que histórias não costumam contar: você tem cãibra, formiga, e o sol de lado.',
+    'Espera quatro horas. É chato de um jeito que histórias não costumam contar: você tem cãibra, dormência, e o sol de lado.',
     'Às dezoito e trinta e quatro, o zumbido sobe de tom. Não mais alto — mais agudo.',
     'Às dezoito e quarenta, com o céu ainda claro e limpo em todas as direções, um raio cai dentro do pátio da usina.',
     'Não vem de nuvem. Não tem nuvem. Ele desce reto de um céu azul-acinzentado de fim de tarde e acerta a estrutura do galpão, e o estouro chega em você um segundo e meio depois.',
@@ -1145,7 +1145,7 @@ c10_vestiario:{
 c10_armario_14:{
   texto:[
     'O cadeado é pequeno e a chapa do armário é fina. Não é difícil. É só desagradável.',
-    'Dentro: um uniforme azul dobrado no fundo, uma caneca com o escudo de um time de futebol, uma bota de segurança número quarenta e dois com o cadarço ainda amarrado do jeito que se deixa pra calçar rápido, e um espelhinho colado na porta.',
+    'Dentro: um uniforme azul dobrado no fundo, uma caneca com o escudo de um ginásio, uma bota de segurança número quarenta e dois com o cadarço ainda amarrado do jeito que se deixa pra calçar rápido, e um espelhinho colado na porta.',
     'Colada do lado do espelhinho, uma foto pequena, três por quatro, de uma mulher de uns cinquenta anos.',
     'Atrás da foto, escrito a caneta: **mãe — 71**.',
     'E pendurado no gancho, um rádio comunicador da companhia, daqueles de ombro, com a bateria conectada.',
@@ -1196,7 +1196,7 @@ c10_foto_pro_eloi:{
     'Ele olha por três segundos e diz o nome inteiro sem hesitar:',
     '"Sra. Vesna. Mora em Lavender, rua de trás do cemitério, casa com portão verde."',
     '"Ela ainda tá viva?"',
-    '"Tava em maio. Eu levo panetone todo Natal e ela não abre a porta, mas o panetone some do degrau, então ela tá."',
+    '"Tava em maio. Eu levo bolo de frutas todo fim de ano e ela não abre a porta, mas o bolo some do degrau, então ela tá."',
     'Ele devolve a foto com as duas mãos.',
     '"Leva você. De mim ela não aceita nada há onze anos, porque eu sou da companhia e pra ela a companhia matou o filho dela."',
     'Pausa.',
@@ -1206,7 +1206,7 @@ c10_foto_pro_eloi:{
       npc:{nome:'Sr. Edric', opiniao:5, memoria:'Te deu o endereço da mãe do Naoki em Lavender e não quis entregar a foto ele mesmo.'},
       moral:5,
       registrar:'Sra. Vesna, mãe do Naoki, mora em Lavender, na rua de trás do cemitério.',
-      presagio:'O panetone some do degrau. Ela está viva e não abre a porta.'},
+      presagio:'O bolo de frutas some do degrau. Ela está viva e não abre a porta.'},
   escolhas:[
     {texto:'Voltar e entrar no galpão.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
@@ -1430,7 +1430,7 @@ c10_base_t3:{
     'Tem penas.',
     'Penas amarelas, rígidas, de uns vinte centímetros, empilhadas no fundo do poço de contenção numa camada de talvez trinta centímetros de espessura, prensadas pelo próprio peso nas camadas de baixo.',
     'Trinta centímetros de penas leva anos pra acumular.',
-    'Você pega uma. Ela é pesada demais pra ser pena — pesa como se fosse de metal, e é morna, e quando você fecha a mão em volta dela a sua palma formiga.',
+    'Você pega uma. Ela é pesada demais pra ser pena — pesa como se fosse de metal, e é morna, e quando você fecha a mão em volta dela a sua palma arrepia.',
     'Isso não é ninho. Ninho fica em cima.',
     'Isso é o chão de um lugar onde alguma coisa dorme faz muito tempo.'
   ],
@@ -1498,7 +1498,7 @@ c10_imovel:{
 
 c10_saiu_de_lado:{
   texto:[
-    'Você levanta devagar, de lado, sem tirar o olho dela e sem encarar direto, que é o que se faz com animal grande.',
+    'Você levanta devagar, de lado, sem tirar o olho dela e sem encarar direto, que é o que se faz com bicho grande.',
     'Ela acompanha com a cabeça. Não ataca.',
     'Você recua vinte metros de costas e só então vira, e nas costas vem um som que não é grito nem trovão: é um estalo baixo, curto, duas vezes.',
     'Você vai passar semanas tentando decidir se aquilo foi ameaça ou tchau.'
@@ -2103,7 +2103,7 @@ c10_mentiu:{
 c10_interditou:{
   texto:[
     'Você fica mais um dia.',
-    'Não acontece nada heroico: você ajuda a carregar quatro cavaletes de madeira e um rolo de fita zebrada da casa do Sr. Edric até a curva da Rota 10, e vocês fecham os dois acessos ao vale.',
+    'Não acontece nada heroico: você ajuda a carregar quatro cavaletes de madeira e um rolo de fita listrada da casa do Sr. Edric até a curva da Rota 10, e vocês fecham os dois acessos ao vale.',
     'Depois ele prega uma placa de compensado, escrita a tinta, com a letra de um homem que passou dezenove anos preenchendo formulário:',
     '**ÁREA COM RISCO ELÉTRICO — NÃO ENTRE — AVISO REGISTRADO NA COMPANHIA, PROTOCOLO 88.412**',
     'O protocolo existe. Ele ligou de manhã e deixou registrado.',
@@ -2165,7 +2165,7 @@ c10_contou_pro_eloi_da_foto:{
     '"E leu o que tinha atrás?"',
     '"Leu."',
     'Ele põe o boné.',
-    '"Onze anos eu deixo panetone nesse degrau e nunca vi ela descer."',
+    '"Onze anos eu deixo bolo de frutas nesse degrau e nunca vi ela descer."',
     'Ele senta na cadeira de praia, de frente pra usina, como todo primeiro sábado.',
     '"Vai pra Saffron, {garoto|garota}. Você tá indo bem e eu não sou de dizer isso."'
   ],

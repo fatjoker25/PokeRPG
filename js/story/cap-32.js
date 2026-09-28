@@ -38,7 +38,7 @@ c32_a_rua_de_galpao:{
   ],
   ef:{flag:'a_caixa_de_correio',
       registrar:'A caixa de correio do galpão sem placa está cheia. Nove envelopes, um deles conta de energia.',
-      presagio:'Conta de energia tem titular, endereço e CNPJ impressos na frente.'},
+      presagio:'Conta de energia tem titular, endereço e registro comercial impressos na frente.'},
   escolhas:[
     {texto:'Abrir a conta de energia.', vai:'c32_a_conta_de_energia'},
     {texto:'Pôr tudo de volta e observar o galpão.', vai:'c32_observou'},
@@ -51,7 +51,7 @@ c32_a_conta_de_energia:{
   texto:[
     'Você abre a conta de energia num galpão de rua industrial em Saffron, o que é violação de correspondência, e você sabe que é.',
     'A conta tem três informações que valem alguma coisa.',
-    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras e um Ltda. no fim, que você nunca viu em nenhum papel desta jornada.',
+    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras, que você nunca viu em nenhum papel desta jornada.',
     'A segunda: o consumo. Dezenove mil e quatrocentos quilowatt-hora no mês.',
     'Isso é consumo de uma fábrica. Não é consumo de um galpão de armazenagem, que gasta luz e mais nada.',
     'A terceira é a que fecha: a classificação tarifária.',
@@ -60,7 +60,7 @@ c32_a_conta_de_energia:{
     'Ninguém climatiza caixa.'
   ],
   ef:{flag:['a_conta_de_energia','reika_precisa_de_papel','sabe_do_lote_unico'],
-      registrar:'O galpão consome 19.400 kWh/mês em climatização contínua, no nome de uma Ltda. de quatro palavras.',
+      registrar:'O galpão consome 19.400 kWh/mês em climatização contínua, no nome de uma empresa de quatro palavras.',
       presagio:'Climatização contínua é o que se paga por coisa que estraga. Ou por coisa que sente frio.'},
   escolhas:[
     {texto:'Guardar a conta e observar o galpão.', vai:'c32_observou'},
@@ -73,10 +73,10 @@ c32_a_lanchonete:{
   texto:[
     'Toda rua de galpão de Kanto tem uma lanchonete, porque quatro ruas de galpão dão umas quatrocentas pessoas e quatrocentas pessoas almoçam.',
     'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.',
-    'Você senta no balcão e pede o prato do dia, que custa oito e vem com arroz, feijão, uma carne e salada de repolho.',
+    'Você senta no balcão e pede o prato do dia, que custa oito e vem com arroz, feijão, um ovo frito e salada de repolho.',
     'Na mesa do fundo tem quatro homens de macacão azul da oficina de empilhadeira e eles falam alto porque trabalham com máquina e ficaram com o hábito.',
     'Você aprende o nome de dois deles sem precisar perguntar, do jeito que se aprende nome em mesa de lanchonete: porque eles se chamam o tempo todo. O mais velho é o Otto. O de boné é o Rico.',
-    'Você ouve quarenta minutos de conversa sobre: futebol, um colega que se aposentou, o preço do aluguel em Saffron, e — nos últimos seis minutos — o galpão da 3.',
+    'Você ouve quarenta minutos de conversa sobre: a Liga, um colega que se aposentou, o preço do aluguel em Saffron, e — nos últimos seis minutos — o galpão da 3.',
     fala('o homem de macacão', 'Aquilo ali é laboratório.'),
     fala('Rico', 'Laboratório nada. É armazém.'),
     fala('o homem de macacão', 'Armazém com ar-condicionado central, Rico?'),
@@ -101,17 +101,17 @@ c32_os_quatro_mecanicos:{
     fala('o homem de macacão', 'Você é de onde?'),
     d=>fala(d.jogador.nome, 'De passagem.'),
     'Eles se olham, e é o Otto, que não tinha falado ainda, que responde.',
-    fala('Otto', 'Cheiro de canil, {moço|moça}. De canil grande.'),
+    fala('Otto', 'Cheiro de viveiro, {moço|moça}. De viveiro grande.'),
     fala('Otto', 'Toda sexta, de manhã cedo, quando eles abrem o portão pra carregar.'),
     d=>fala(d.jogador.nome, 'Carregar o quê?'),
     fala('Otto', 'Caixa branca. Fechada. Do tamanho de uma caixa de feira.'),
     'Ele volta pro prato.',
-    fala('Otto', 'Eu trabalho nessa rua há vinte e seis anos e eu já vi galpão de tudo. De pneu, de tecido, de azulejo, de frango congelado.'),
+    fala('Otto', 'Eu trabalho nessa rua há vinte e seis anos e eu já vi galpão de tudo. De pneu, de tecido, de azulejo, de polpa de fruta congelada.'),
     fala('Otto', 'Aquele é o primeiro que eu não sei dizer o que é, e eu paro em frente dele todo dia às sete da manhã.', 'baixo')
   ],
   ef:{flag:['carregam_na_sexta','sabe_do_lote_unico'],
       npc:{nome:'Otto', opiniao:1, viuVoce:'Te contou do cheiro e das caixas brancas da sexta-feira.'},
-      registrar:'Toda sexta de manhã o galpão abre e carrega caixas brancas fechadas. Sai cheiro de canil grande.'},
+      registrar:'Toda sexta de manhã o galpão abre e carrega caixas brancas fechadas. Sai cheiro de viveiro grande.'},
   escolhas:[
     {texto:'Perguntar que horas exatamente.', vai:'c32_que_horas'},
     {texto:'Ir observar o galpão agora.', vai:'c32_observou'},

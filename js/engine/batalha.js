@@ -1446,7 +1446,7 @@ const Batalha = {
         this.ev('info', `Você não desvia o olhar. ${nomeVisivel(this.inimigo)} hesita — e recua para o mato.`);
         return this.encerrar('encarou');
       }
-      this.ev('erro', 'Encarar um animal assustado nunca foi um bom plano.');
+      this.ev('erro', 'Encarar um bicho assustado nunca foi um bom plano.');
       return this.golpeNoJogador();
     }
     return this.golpeNoJogador();

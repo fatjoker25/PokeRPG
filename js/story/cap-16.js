@@ -194,7 +194,7 @@ c16_ab_quem_nao_fala:{
 
 c16_ab_pediu_desculpa:{
   texto:[
-    d=>fala(d.jogador.nome, 'Desculpa. Foi burrice.'),
+    d=>fala(d.jogador.nome, 'Desculpa. Foi besteira.'),
     'Ele volta pra rede. Passa a agulha umas seis vezes. Você fica parad{o|a}, porque sair agora seria pior.',
     fala('Orso', 'Eu levei quatro homens em noventa e três. Dois dias, ida e volta, muito bem pago.'),
     fala('Orso', 'Eles desceram na ilha com equipamento e eu fiquei no barco, fundeado, porque foi o combinado.'),
@@ -270,7 +270,7 @@ c16_velho:{
     '"Tem uma ilha a sudoeste que não entra em mapa nenhum porque não tem nada nela. Pedra e mato. Nem água doce."',
     '"E por que ela não entra no mapa se ela existe?"',
     '"Ela entra na carta náutica." Ele levanta um dedo. "Carta náutica é outra coisa, {meu filho|minha filha}. Carta náutica tem que ter tudo que é pedra, porque pedra afunda barco."',
-    '"Ela entra na carta como “recife alto sem nome”, e é por isso que ninguém sabe dela: porque quem lê carta náutica é pescador, e pescador não conta pra ninguém o que não dá peixe."',
+    '"Ela entra na carta como “recife alto sem nome”, e é por isso que ninguém sabe dela: porque quem lê carta náutica é pescador, e pescador não conta pra ninguém o que não enche rede."',
     'Ele bebe.',
     '"Meu avô chamava de ilha da torre."',
     '"Tem torre?"',
@@ -698,7 +698,7 @@ c16_nao_foi:{
 
 c16_travessia:{
   texto:[
-    'A travessia leva onze horas num barco de pesca de sete metros com motor de quarenta cavalos e um toldo de lona.',
+    'A travessia leva onze horas num barco de pesca de sete metros com motor forte e um toldo de lona.',
     'Onze horas é muito tempo.',
     'Nas três primeiras vocês conversam. Nas três seguintes o Sr. Tanner dorme sentado com a mão no leme e acorda a cada vinte minutos pra corrigir o rumo, e depois dorme de novo, e isso é a coisa mais tranquilizadora que já aconteceu com você num barco.',
     'Nas cinco últimas ninguém fala nada e o sol desce.',
@@ -917,8 +917,8 @@ c16_dentro_da_cisterna:{
     'A cisterna tem uns quatro metros de profundidade e está seca há muito tempo.',
     'No fundo tem folha, terra, e coisa.',
     'Você desce com a corda do barco.',
-    'No fundo de uma cisterna seca numa ilha a onze horas da costa tem: cacos de cerâmica vidrada, dois cabos de ferramenta de madeira apodrecida, uma placa de metal do tamanho de uma mão, e ossos de peixe.',
-    'Muito osso de peixe.',
+    'No fundo de uma cisterna seca numa ilha a onze horas da costa tem: cacos de cerâmica vidrada, dois cabos de ferramenta de madeira apodrecida, uma placa de metal do tamanho de uma mão, e espinhas de Magikarp.',
+    'Muita espinha de Magikarp.',
     'A placa de metal é de bronze, oxidada verde, e tem coisa gravada de um lado.',
     'Você limpa com a manga.',
     'Não é escrita que você conheça. São sete linhas de traços verticais de alturas diferentes, agrupados, com espaço regular entre os grupos.',
@@ -1641,7 +1641,7 @@ c16_esperou_no_circulo:{
     'Você senta no centro do desgaste circular, no meio da laje de doze metros, no topo de uma ilha sem nome a onze horas da costa.',
     'E espera.',
     'Uma hora. Três. Cinco.',
-    'Faz frio e venta e a pedra é dura e você não tem nada pra fazer, e é a coisa mais parecida com rezar que você já fez na vida sem nunca ter rezado.',
+    'Faz frio e venta e a pedra é dura e você não tem nada pra fazer, e é a coisa mais parecida com fazer um pedido que você já fez na vida sem nunca ter pedido nada.',
     'Às onze e dez começa.',
     'A luz não vem do céu.',
     'Essa é a coisa que ninguém nunca contou direito, e você entende por quê: porque quem viu da costa não podia ver.',

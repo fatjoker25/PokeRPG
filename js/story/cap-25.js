@@ -99,7 +99,7 @@ c25_ab_em_cima_da_hora:{
     d=>d.npcs['Blue']
       ? 'Blue está na terceira cadeira e levanta a sobrancelha pro seu estado, e não fala nada, o que da parte dele é um gesto de contenção heroico.'
       : 'Um rapaz da sua idade está na terceira cadeira e levanta a sobrancelha pro seu estado.',
-    'Uma mulher de uns cinquenta com uma pasta de couro olha o relógio de parede, que atrasa, e depois o relógio de pulso dela, que não.',
+    'Uma mulher de uns cinquenta com uma pasta de vinil olha o relógio de parede, que atrasa, e depois o relógio de pulso dela, que não.',
     'Um homem de terno, com um crachá azul, não levanta os olhos do jornal.',
     fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.'),
     'São nove e cinquenta e oito. Você tem cento e vinte segundos pra parar de suar e não vai dar.'
@@ -108,7 +108,7 @@ c25_ab_em_cima_da_hora:{
       registrar:'Chegou na audiência às 9h57, sem fôlego.'},
   escolhas:[
     {texto:'Falar com o Blue.', vai:'c25_falou_com_blue', cond:d=>!!d.npcs['Blue']},
-    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Perguntar à mulher da pasta de vinil quem ela é.', vai:'c25_a_mulher_da_pasta'},
     {texto:'Perguntar ao homem de crachá azul quem convocou.', vai:'c25_o_cracha_azul'},
     {texto:'Sentar, respirar, e esperar dar dez.', vai:'c25_esperou_dar_dez'}
   ]
@@ -142,11 +142,11 @@ c25_ab_a_van_de_perto:{
     'A traseira está a quarenta centímetros da parede de serviço, que é a distância de quem descarrega direto na porta.',
     'No chão, entre a van e a parede, tem palha. Palha de embalagem, dessas de transporte.',
     'Você pega um punhado e cheira, o que é uma coisa que você aprendeu a fazer nos últimos meses e que você não fazia antes.',
-    'Cheira a animal.',
+    'Cheira a bicho.',
     'E a nove minutos daqui, no terceiro andar, tem uma audiência de ofício às dez.'
   ],
   ef:{flag:['a_palha_da_van','chegou_na_audiencia'],
-      registrar:'Havia palha de transporte com cheiro de animal entre a van e a parede de serviço.',
+      registrar:'Havia palha de transporte com cheiro de bicho entre a van e a parede de serviço.',
       presagio:'Descarregaram alguma coisa viva no prédio da audiência, na manhã da audiência.'},
   escolhas:[
     {texto:'Subir correndo pra antessala.', vai:'c25_a_antessala'},
@@ -224,7 +224,7 @@ c25_a_antessala:{
     d=>d.npcs['Blue']
       ? 'Blue está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.'
       : 'Um rapaz da sua idade está na terceira cadeira, de braços cruzados, olhando o relógio que atrasa como se fosse culpa dele.',
-    'Os outros dois você não conhece: uma mulher de uns cinquenta com uma pasta de couro e um homem de terno com um crachá azul.',
+    'Os outros dois você não conhece: uma mulher de uns cinquenta com uma pasta de vinil e um homem de terno com um crachá azul.',
     fala('a recepcionista da Liga', 'A audiência é às dez. Os senhores podem entrar às dez.', null,
          'Ela fala isso às nove e quarenta e cinco e volta a olhar a tela.')
   ],
@@ -232,7 +232,7 @@ c25_a_antessala:{
       registrar:'Chegou na antessala da audiência. Quatro pessoas, seis cadeiras.'},
   escolhas:[
     {texto:'Falar com o Blue.', vai:'c25_falou_com_blue', cond:d=>!!d.npcs['Blue']},
-    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Perguntar à mulher da pasta de vinil quem ela é.', vai:'c25_a_mulher_da_pasta'},
     {texto:'Perguntar ao homem de crachá azul quem convocou.', vai:'c25_o_cracha_azul'},
     {texto:'Ficar em silêncio e esperar dar dez.', vai:'c25_esperou_dar_dez'},
     {texto:'Regar a planta, que precisa de água.', vai:'c25_regou_a_planta'}
@@ -245,11 +245,11 @@ c25_regou_a_planta:{
     'A terra absorve tudo em três segundos, o que quer dizer que ela está seca há semanas.',
     'Você enche de novo. E de novo. Quatro copos.',
     'A recepcionista olha por cima da tela na metade do terceiro copo e não fala nada.',
-    'No quarto copo, a mulher da pasta de couro solta uma risada curta pelo nariz.',
+    'No quarto copo, a mulher da pasta de vinil solta uma risada curta pelo nariz.',
     fala('a mulher da pasta', 'Onze meses. Onze meses que eu venho nessa sala e ninguém nunca regou essa planta.')
   ],
   ef:{moral:3, flag:'regou_a_planta',
-      npc:{nome:'Mulher da pasta de couro', opiniao:2, memoria:'Te viu regar a planta da antessala com quatro copos.'},
+      npc:{nome:'Mulher da pasta de vinil', opiniao:2, memoria:'Te viu regar a planta da antessala com quatro copos.'},
       rep:{eixo:'bom',delta:1,motivo:'Regou a planta da antessala antes da própria audiência'},
       registrar:'Regou a planta da antessala. Ninguém tinha regado em onze meses.'},
   escolhas:[
@@ -264,7 +264,7 @@ c25_a_mulher_da_pasta:{
     fala('a mulher da pasta', 'Onze meses e quatro dias. Eu sou advogada de ofício.'),
     fala('a mulher da pasta', 'Eu represento pessoas que são convocadas por uma comissão que tecnicamente não existe, numa sala que tecnicamente é de audiência administrativa.'),
     fala('a mulher da pasta', 'Você tem direito a mim. Ninguém te disse isso no telegrama porque o telegrama tem quatro linhas.'),
-    'Ela abre a pasta de couro e tira uma folha, e a folha é um formulário de constituição de defesa com o campo do nome em branco.',
+    'Ela abre a pasta de vinil e tira uma folha, e a folha é um formulário de constituição de defesa com o campo do nome em branco.',
     fala('a mulher da pasta', 'Custa nada. Eu sou paga pelo Estado e eu sou paga mal, e nas duas coisas eu tenho certeza.', 'riso')
   ],
   ef:{flag:'conheceu_a_advogada',
@@ -288,7 +288,7 @@ c25_avisou_o_blue:{
     fala('Blue', 'Eu ia entrar sozinho.', 'baixo'),
     fala('Blue', 'Eu ia entrar sozinho porque eu achei que pedir ajuda ia parecer que eu tinha alguma coisa pra esconder.'),
     fala('Blue', 'É exatamente assim que eles querem que a gente pense, né.', 'frio'),
-    'Ele assina. Você assina. A mulher da pasta de couro abre um sorriso que ela estava segurando há onze meses.'
+    'Ele assina. Você assina. A mulher da pasta de vinil abre um sorriso que ela estava segurando há onze meses.'
   ],
   ef:{flag:'entrou_com_advogada', moral:4,
       npc:{nome:'Blue', opiniao:4, memoria:'Você avisou ele do direito à defesa. Ele ia entrar sozinho.'},
@@ -312,7 +312,7 @@ c25_o_cracha_azul:{
       rep:{eixo:'bom',delta:1,motivo:'Reparou que o telegrama não tinha timbre'},
       registrar:'O telegrama da convocação não tem timbre de comissão nenhuma.'},
   escolhas:[
-    {texto:'Perguntar à mulher da pasta de couro.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Perguntar à mulher da pasta de vinil.', vai:'c25_a_mulher_da_pasta'},
     {texto:'Sentar e esperar.', vai:'c25_esperou_dar_dez'}
   ]
 },
@@ -329,7 +329,7 @@ c25_falou_com_blue:{
   ef:{npc:{nome:'Blue', opiniao:2, memoria:'Sentou ao lado dele na antessala.'},
       registrar:'Blue: "a gente é o assunto".'},
   escolhas:[
-    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'},
+    {texto:'Perguntar à mulher da pasta de vinil quem ela é.', vai:'c25_a_mulher_da_pasta'},
     {texto:'Combinar o que falar e o que não falar lá dentro.', vai:'c25_combinaram'},
     {texto:'Esperar dar dez em silêncio.', vai:'c25_esperou_dar_dez'}
   ]
@@ -352,7 +352,7 @@ c25_combinaram:{
       registrar:'Combinou com o Blue os nomes que não seriam ditos na audiência.'},
   escolhas:[
     {texto:'Entrar quando chamarem.', vai:'c25_esperou_dar_dez'},
-    {texto:'Perguntar à mulher da pasta de couro quem ela é.', vai:'c25_a_mulher_da_pasta'}
+    {texto:'Perguntar à mulher da pasta de vinil quem ela é.', vai:'c25_a_mulher_da_pasta'}
   ]
 },
 
@@ -377,7 +377,7 @@ c25_pediu_na_porta:{
     'A mulher de crachá azul não muda de expressão nem um grau.',
     fala('a mulher de crachá azul', 'É direito seu.'),
     fala('a mulher de crachá azul', 'É direito seu e você é a terceira pessoa em onze meses a pedir, e as outras duas pediram depois de sentar.', 'frio'),
-    'A advogada de ofício levanta e pega a pasta de couro em quatro segundos, como quem esperava há onze meses.'
+    'A advogada de ofício levanta e pega a pasta de vinil em quatro segundos, como quem esperava há onze meses.'
   ],
   ef:{flag:'entrou_com_advogada', moral:3,
       rep:{eixo:'bom',delta:2,motivo:'Pediu na porta o que quase ninguém pede'},
@@ -509,7 +509,7 @@ c25_deixou_falarem:{
 
 c25_a_advogada_fala:{
   texto:[
-    'A advogada de ofício abre a pasta de couro e fala por doze minutos sem consultar uma anotação.',
+    'A advogada de ofício abre a pasta de vinil e fala por doze minutos sem consultar uma anotação.',
     'Ela lista: o que é obrigação de informar, o que é prazo prescricional, o que é dever de apuração de ofício, o que acontece quando um órgão convoca sem timbre.',
     'Ela usa a palavra "nulidade" quatro vezes.',
     'Do lado de lá da mesa, os dois homens de terno olham um pro outro na terceira.',
@@ -668,8 +668,8 @@ c25_nao_assinou:{
     fala('a mulher de crachá azul', 'Posso perguntar por quê?'),
     d=>fala(d.jogador.nome, 'Porque vocês preencheram a minha qualificação antes de eu entrar.'),
     'Ela olha a folha. Ela vê o campo preenchido à máquina. Ela fecha os olhos por um segundo.',
-    fala('a mulher de crachá azul', 'Isso foi burrice nossa.'),
-    fala('a mulher de crachá azul', 'Não foi má-fé, foi burrice, e as duas coisas produzem exatamente este resultado.', 'baixo')
+    fala('a mulher de crachá azul', 'Isso foi besteira nossa.'),
+    fala('a mulher de crachá azul', 'Não foi má-fé, foi besteira, e as duas coisas produzem exatamente este resultado.', 'baixo')
   ],
   ef:{flag:'recusou_a_convocacao_da_liga',
       rep:{eixo:'bom',delta:2,motivo:'Recusou uma convocação com o campo preenchido de antemão'},

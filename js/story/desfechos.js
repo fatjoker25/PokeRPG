@@ -603,7 +603,7 @@ enxertarDesfecho(25, {
 
 c25_o_acordo:{
   texto:[
-    'A mulher da pasta de couro te chama no corredor, longe da porta da sala, e fala baixo.',
+    'A mulher da pasta de vinil te chama no corredor, longe da porta da sala, e fala baixo.',
     d=>d.flags.conheceu_a_advogada
       ? 'Dessa vez ela não fala como advogada de ofício. Fala como quem traz um recado e não diz de quem.'
       : 'Ela não se apresenta e não precisa: você já entendeu quem ela é pela maneira como a recepcionista parou de digitar quando ela passou.',
@@ -611,7 +611,7 @@ c25_o_acordo:{
     fala('a mulher da pasta', 'Existe um termo de ajustamento. Já está redigido. Falta uma assinatura e não é a minha.'),
     d=>fala(d.jogador.nome, 'Ajustamento de quê?'),
     fala('a mulher da pasta', 'De conduta. Da Comissão.'),
-    'Ela abre a pasta de couro e mostra o documento, sem entregar, virado na sua direção.',
+    'Ela abre a pasta de vinil e mostra o documento, sem entregar, virado na sua direção.',
     fala('a mulher da pasta', 'Quatro compromissos. Cessação do programa continuado em cento e oitenta dias. Auditoria externa anual. Publicidade das atas. E devolução dos espécimes identificáveis.'),
     'É mais do que você conseguiria numa vida inteira de requerimentos.',
     fala('a mulher da pasta', 'E uma cláusula final: quitação recíproca. Ninguém processa ninguém, nada do que passou é apurado, e os arquivos anteriores a este ano são incinerados como parte do saneamento.'),
@@ -639,7 +639,7 @@ c25_quantos_arquivos:{
     fala('a mulher da pasta', 'Eu vou te dizer uma coisa que eu não deveria dizer e que você vai usar contra mim ou não.'),
     fala('a mulher da pasta', 'Nesses quarenta e um anos tem nome de gente que já morreu e de gente que hoje é respeitável.'),
     fala('a mulher da pasta', 'A cláusula de incineração não é sobre a comissão. É sobre eles.'),
-    'Ela endireita a pasta de couro debaixo do braço.',
+    'Ela endireita a pasta de vinil debaixo do braço.',
     fala('a mulher da pasta', 'E é por isso que o termo existe, e é por isso que ele é tão bom pro seu lado.', 'frio')
   ],
   ef:{flag:'quarenta_e_um_anos_de_arquivo',
@@ -653,7 +653,7 @@ c25_quantos_arquivos:{
 
 c25_fim_assinou_o_termo:{
   texto:[
-    'Você assina na antessala, em cima da pasta de couro dela, com a planta que precisa de água a meio metro do seu cotovelo.',
+    'Você assina na antessala, em cima da pasta de vinil dela, com a planta que precisa de água a meio metro do seu cotovelo.',
     'Duas vias. Rubrica em cada folha. Leva três minutos.',
     'Às dez e trinta e um a audiência é aberta e a presidente da mesa registra em ata a celebração de termo de ajustamento de conduta e a extinção do feito.',
     'A sessão dura mais quatro minutos.',
@@ -665,7 +665,7 @@ c25_fim_assinou_o_termo:{
     'O programa continuado é encerrado no dia cento e setenta e sete, três dias antes do prazo, porque encerrar antes do prazo é melhor pra ata.',
     'A auditoria externa acontece todo ano, com relatório público, e o primeiro relatório é devastador e ninguém pode fazer nada com ele porque a quitação é recíproca.',
     'As atas passam a ser publicadas. Quatrocentas e onze pessoas se cadastram para recebê-las no primeiro ano. No quinto ano, são onze mil.',
-    'E mil novecentos e quarenta e dois espécimes identificáveis são devolvidos, ao longo de dois anos, com acompanhamento veterinário e registro fotográfico, e você acompanha a devolução do primeiro lote porque te convidam e porque você vai.',
+    'E mil novecentos e quarenta e dois espécimes identificáveis são devolvidos, ao longo de dois anos, com acompanhamento médico e registro fotográfico, e você acompanha a devolução do primeiro lote porque te convidam e porque você vai.',
     'Você vê mil novecentas e quarenta e duas criaturas voltarem pra algum lugar por causa de uma assinatura sua.',
     'E também: quarenta e um anos de arquivo queimam num incinerador industrial em Celadon, num sábado, com laudo de destruição assinado por três pessoas.',
     'Você não sabe o que tinha lá dentro. Ninguém nunca vai saber.',
@@ -681,7 +681,7 @@ c25_fim_recusou_o_termo:{
     d=>fala(d.jogador.nome, 'Entendo.'),
     fala('a mulher da pasta', 'E que o processo vai durar anos e você vai ter mais de vinte quando acabar.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
-    'Ela fecha a pasta de couro e o fecho faz um estalo seco no corredor vazio.',
+    'Ela fecha a pasta de vinil e o fecho faz um estalo seco no corredor vazio.',
     fala('a mulher da pasta', 'Então você está escolhendo o arquivo em vez dos bichos.'),
     'E essa frase é exata, e é injusta, e é exata.',
     d=>fala(d.jogador.nome, 'Eu tô escolhendo que ninguém decida isso numa antessala em nove minutos.'),
@@ -705,7 +705,7 @@ c25_fim_recusou_o_termo:{
 }
 
 }, [
-  {de:'c25_esperou_dar_dez', para:'c25_o_acordo', texto:'Atender a mulher da pasta de couro, que te chamou no corredor.'},
+  {de:'c25_esperou_dar_dez', para:'c25_o_acordo', texto:'Atender a mulher da pasta de vinil, que te chamou no corredor.'},
   {de:'c25_a_mulher_da_pasta', para:'c25_o_acordo', texto:'Sair pro corredor com ela.'},
   {de:'c25_ab_em_cima_da_hora', para:'c25_o_acordo', texto:'Aceitar o chamado da mulher da pasta, no corredor.'}
 ]);

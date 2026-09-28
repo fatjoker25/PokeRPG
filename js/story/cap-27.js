@@ -24,7 +24,7 @@ c27_ab_o_posto_fechado:{
   texto:[
     'O posto velho da estrada de baixo, o de antes do posto florestal da Rota 10, é uma casa de madeira com um mastro sem bandeira.',
     'Está fechado.',
-    'Não é "fechado hoje": tem um cadeado com ferrugem de meses e uma janela com teia de aranha por dentro, e na porta um aviso de papel que a chuva comeu e do qual sobra uma linha:',
+    'Não é "fechado hoje": tem um cadeado com ferrugem de meses e uma janela com teia de Spinarak por dentro, e na porta um aviso de papel que a chuva comeu e do qual sobra uma linha:',
     '**"...atendimento transferido para a unidade de Cerulean."**',
     'Cerulean fica a quatro dias daqui.',
     'No degrau do posto tem um caderno de capa dura amarrado num barbante preso ao corrimão, do jeito que se prende caneta em banco.',
@@ -61,9 +61,9 @@ c27_ab_assinou_o_caderno:{
 
 c27_ab_a_mula:{
   texto:[
-    'Na última vila antes da estrada acabar tem um homem que aluga mula, e o nome dele está numa placa de madeira pregada no mourão do curral: ENZO — ALUGA-SE.',
-    'Mil e duzentos por dois dias, e ele sobe junto, porque ele não aluga a mula: ele aluga a mula com ele.',
-    fala('Enzo', 'Eu subo até a pedra. Da pedra pra cima a mula não vai e eu também não.'),
+    'Na última vila antes da estrada acabar tem um homem que aluga Tauros de carga, e o nome dele está numa placa de madeira pregada no mourão do curral: ENZO — ALUGA-SE.',
+    'Mil e duzentos por dois dias, e ele sobe junto, porque ele não aluga o Tauros: ele aluga o Tauros com ele.',
+    fala('Enzo', 'Eu subo até a pedra. Da pedra pra cima o Tauros não vai e eu também não.'),
     d=>fala(d.jogador.nome, 'Por que você não vai?'),
     fala('Enzo', 'Porque eu tenho quarenta e nove anos e dois filhos.'),
     'Ele afivela a cilha com o joelho apoiado na barriga do bicho.',
@@ -76,7 +76,7 @@ c27_ab_a_mula:{
   ],
   ef:{dinheiro:-1200, flag:['subiu_de_mula','a_caverna_sem_vento'],
       npc:{nome:'Enzo', opiniao:1, viuVoce:'Subiu com você até a pedra, pelo preço combinado.'},
-      registrar:'Alugou mula e guia até a pedra. Ele subiu em 1988 com uma equipe da universidade.',
+      registrar:'Alugou Tauros de carga e guia até a pedra. Ele subiu em 1988 com uma equipe da universidade.',
       presagio:'Caverna sem vento não tem outra saída. Ou não é caverna.'},
   escolhas:[
     {texto:'Perguntar o que aconteceu com a equipe de oitenta e oito.', vai:'c27_ab_a_equipe_de_oitenta_e_oito'},
@@ -88,11 +88,11 @@ c27_ab_a_mula:{
 c27_ab_a_equipe_de_oitenta_e_oito:{
   texto:[
     fala('Enzo', 'Eram seis. Quatro professores e dois alunos.'),
-    'Ele puxa a mula pela rédea e começa a andar, e você anda do lado, e é assim que a conversa vai acontecer.',
+    'Ele puxa o Tauros pela rédea e começa a andar, e você anda do lado, e é assim que a conversa vai acontecer.',
     fala('Enzo', 'Ficaram onze dias. Eu subi três vezes levando mantimento.'),
     d=>fala(d.jogador.nome, 'E depois?'),
     fala('Enzo', 'Na quarta vez eu subi e não tinha mais ninguém.'),
-    'A mula bufa. Ele afrouxa a rédea.',
+    'O Tauros bufa. Ele afrouxa a rédea.',
     fala('Enzo', 'O acampamento tava montado. Barraca em pé, fogareiro, mantimento da terceira viagem intacto.'),
     fala('Enzo', 'Eu desci e avisei. Vieram uns quinze, da Liga e da polícia, subiram no dia seguinte.'),
     d=>fala(d.jogador.nome, 'Acharam?'),
@@ -200,7 +200,7 @@ c22_conversa_com_eles:{
   texto:[
     '"Converso."',
     'Ele enche uma caneca de café de um bule que está sempre em cima do fogão.',
-    '"Eles são educados e falam normal, de tudo. De futebol, de comida, de chuva." Ele estende a caneca para você. "Só tem uma coisa."',
+    '"Eles são educados e falam normal, de tudo. Da Liga, de comida, de chuva." Ele estende a caneca para você. "Só tem uma coisa."',
     '"Qual?"',
     '"Se eu pergunto quanto tempo faz que eles estão lá, eles erram sempre para menos." Ele sopra o café dele. "Já perguntei nove vezes. A resposta mais alta foi duas semanas."',
     'Ele bebe.',

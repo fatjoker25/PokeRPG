@@ -198,7 +198,7 @@ c4_praca:{
 
 c4_senhora:{
   texto:[
-    'O pastel é de carne e está frio e é a melhor coisa que você comeu em dois dias.',
+    'O pastel é de queijo e está frio e é a melhor coisa que você comeu em dois dias.',
     'Vocês dois comem sem falar nada. Passa um caminhão. Passa um casal discutindo baixo. Passa o tempo.',
     'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos. Voltou com dezesseis."',
     'Ela não continua. Você entende que não é pra perguntar, e não pergunta.'
@@ -265,7 +265,7 @@ c4_senhora_silencio:{
   texto:[
     'Você fica. Não fala nada, ela não fala nada.',
     'Dá pra ficar quinze minutos sentado num banco ao lado de uma desconhecida sem dizer uma palavra, e não ser estranho. Você não sabia disso.',
-    'Quando ela levanta, põe a mão no seu ombro de leve, do jeito rápido de quem não quer que vire cena, e vai embora pela rua da igreja.'
+    'Quando ela levanta, põe a mão no seu ombro de leve, do jeito rápido de quem não quer que vire cena, e vai embora pela rua da praça.'
   ],
   ef:{hp:2, npc:{nome:'Sra. Zelda', opiniao:3, memoria:'Ficou sentada em silêncio com você na praça e gostou disso.'}},
   escolhas:[
@@ -316,7 +316,7 @@ c4_recusou_pastel:{
     '"Uns dias."',
     '"Uns dias", ela repete, e no jeito que ela repete cabe uma cidade inteira que ela nunca vai ver.',
     'Vocês ficam quietos. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
-    'Você fica sentad{o|a} um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão burra.',
+    'Você fica sentad{o|a} um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão estúpida.',
     '"Tem mais", ela diz, sem olhar. "Eu comprei três."'
   ],
   ef:{npc:{nome:'Sra. Zelda', opiniao:1, memoria:'Ofereceu pastel, você recusou, e ela comprou três de qualquer jeito.'}},
@@ -615,7 +615,7 @@ c4_teo_nome:{
     '"E aí você virou treinador e ele virou time."',
     '"É." Ezra olha pro Pidgey e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
     'Ele percebe que falou sério e conserta imediatamente, porque é o Ezra:',
-    '"Enfim. Ele adora. Ele é burro."'
+    '"Enfim. Ele adora. Ele é bobo."'
   ],
   ef:{hp:2, moral:4, flag:'sabe_do_pico',
       npc:{nome:'Ezra', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'},
@@ -1074,7 +1074,7 @@ c4_menina_dado:{
   texto:[
     '"Você devia anotar. É o dado mais importante."',
     '"Eu sei que é o mais importante." Ela fecha o caderno com as duas mãos. "Por isso eu não anoto."',
-    'Ela levanta, sacode a poeira do short, e vai embora pela rua da igreja sem se despedir.',
+    'Ela levanta, sacode a poeira do short, e vai embora pela rua da praça sem se despedir.',
     'Você fica com a impressão bem clara de ter estragado alguma coisa que não era sua.'
   ],
   ef:{npc:{nome:'Ulla', opiniao:-2, memoria:'Você insistiu para ela anotar quantos morreram. Ela foi embora.'}},
@@ -1446,7 +1446,7 @@ c4_ivone_compradores:{
 c4_ivone_cinnabar:{
   texto:[
     '"Fechou no papel como?"',
-    '"Como fecham as coisas." Ela dá de ombros. "Encerra o CNPJ, demite o quadro, publica no diário oficial. E o prédio continua com luz acesa."',
+    '"Como fecham as coisas." Ela dá de ombros. "Encerra o registro comercial, demite o quadro, publica no diário oficial. E o prédio continua com luz acesa."',
     '"A senhora viu a luz acesa?"',
     '"Eu vi a conta de energia." Ela quase sorri. "Isso é público, sabia? Consumo de unidade consumidora é público. Deu pra ver que o laboratório desativado de Cinnabar gastou, em outubro, mais energia que o museu inteiro em um ano."',
     'Ela olha pro balde no canto da sala.',
@@ -2448,7 +2448,7 @@ c4_nilo_conselho:{
     'Lior põe o capacete. Aperta a jugular.',
     '"Você tem quantos anos?"',
     '"Quinze."',
-    '"Meu Deus." Ele ri, dessa vez de verdade. "Tá certo. Domingo eu falo."',
+    '"Caramba." Ele ri, dessa vez de verdade. "Tá certo. Domingo eu falo."',
     'Ele volta pro buraco. Você não vai ficar sabendo se ele falou.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Fez alguém prometer uma conversa difícil'},

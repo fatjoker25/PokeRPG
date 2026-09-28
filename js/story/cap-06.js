@@ -145,7 +145,7 @@ c6_ab_cartaz:{
 c6_ab_quebrou_o_vidro:{
   texto:[
     'Você quebra o vidro com o cotovelo enrolado na manga, que é o jeito certo, e arranca a folha, que é o jeito errado de resolver o problema.',
-    'O barulho de vidro numa ponte de pedra viaja. Três pessoas olham. Um homem numa banca de peixe grita alguma coisa que você não ouve porque já está andando.',
+    'O barulho de vidro numa ponte de pedra viaja. Três pessoas olham. Um homem numa banca de alga seca grita alguma coisa que você não ouve porque já está andando.',
     'A folha na sua mão é uma folha. Tem mais quatro iguais em quatro quadros de avisos dessa cidade e você não sabe onde ficam os outros quatro.',
     'Você amassa e joga no rio, e o papel boia, o que é a pior coisa que papel pode fazer nessa situação.'
   ],
@@ -246,7 +246,7 @@ c6_chegada:{
       if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=4) return 'Uma mulher puxa a criança pra perto quando você passa na ponte. O lojista te acompanha com os olhos do balcão até a porta.';
       return 'Ninguém aqui faz ideia de quem você é, e depois do Monte da Lua isso é quase um presente.';
     },
-    'A cidade cheira a água doce e a peixe frito, nessa ordem, e as duas coisas vêm da mesma direção.'
+    'A cidade cheira a água doce e a bolinho de alga frito, nessa ordem, e as duas coisas vêm da mesma direção.'
   ],
   ef:{registrar:'Chegou a Cerulean.'},
   escolhas:[
@@ -295,7 +295,7 @@ c6_pescador:{
   texto:[
     'O senhor da vara de bambu não se incomoda de ter companhia. Ele aponta a pedra do lado como quem oferece cadeira.',
     '"Não tá pegando nada", ele avisa, com orgulho.',
-    '"Tem peixe?"',
+    '"Tem Magikarp aí?"',
     '"Tem. Tem muito." Ele ajeita a linha. "Eu é que não pego."',
     'Ele fica calado um tempo e depois diz, do nada:',
     '"O rio mudou de cor duas vezes esse mês."'
@@ -356,7 +356,7 @@ c6_quem_e_a_pessoa:{
     'Ele fala o nome do jeito que se fala o nome de quem se conhece desde criança.',
     '"Ela é o quê, da prefeitura?"',
     'Sr. Cosmo ri com a garganta.',
-    '"Ela é a do ginásio, {moço|moça}." Ele põe a vara no ombro. "E ela é a única pessoa nessa cidade que já processou uma empresa por causa de peixe morto. Duas vezes."'
+    '"Ela é a do ginásio, {moço|moça}." Ele põe a vara no ombro. "E ela é a única pessoa nessa cidade que já processou uma empresa por causa de Magikarp morto. Duas vezes."'
   ],
   ef:{flag:'sabe_da_misty',
       executar:d=>{ Mundo.descobrir('ginasio_cerulean'); Mundo.descobrir('achou_ginasio_cerulean'); return [{tipo:'eco', texto:'Agora você sabe onde fica o prédio da piscina coberta.'}]; },
@@ -493,7 +493,7 @@ c6_quem_respondeu:{
   texto:[
     '"O que aconteceu com quem respondeu?"',
     'Misty demora a responder e a demora é a resposta.',
-    '"Eu conheço um criador em Fuchsia que respondeu." Ela fala devagar. "Ele mandou os documentos todos, direitinho, com laudo veterinário e tudo, porque ele achou que era fiscalização."',
+    '"Eu conheço um criador em Fuchsia que respondeu." Ela fala devagar. "Ele mandou os documentos todos, direitinho, com laudo médico e tudo, porque ele achou que era fiscalização."',
     '"E?"',
     '"E eles agradeceram muito educadamente, arquivaram, e três meses depois voltaram com uma decisão."',
     'Ela olha pra água.',
@@ -656,7 +656,7 @@ c6_bilac_calado:{
 
 c6_peixe:{
   texto:[
-    'A barraca de peixe frito fica na cabeceira da ponte sul e tem fila às cinco da tarde.',
+    'A barraca de bolinho de alga fica na cabeceira da ponte sul e tem fila às cinco da tarde.',
     'A moça serve num papel pardo, com farinha e limão, e cobra pouco.',
     'Você come em pé, encostad{o|a} no parapeito, e é a primeira comida quente desde Pewter.',
     'Do lado, dois estivadores discutem sobre um navio. Atrás, uma família inteira come em silêncio.',
@@ -672,16 +672,16 @@ c6_peixe:{
 },
 
 c6_moca_barraca:{
-  falante:'a moça do peixe frito',
+  falante:'a moça do bolinho frito',
   texto:[
     '"O que é aquilo lá na ponte norte?"',
     'A moça não levanta a cabeça da frigideira.',
     '"Banca."',
     '"Banca de quê?"',
     'Aí ela levanta.',
-    '"De bicho." Ela vira o peixe. "Vender é proibido, então ele não vende: ele cobra o papel da transferência. Tem carimbo. Eu não gosto, mas tem carimbo."',
+    '"De bicho." Ela vira o bolinho. "Vender é proibido, então ele não vende: ele cobra o papel da transferência. Tem carimbo. Eu não gosto, mas tem carimbo."',
     'Ela serve o próximo da fila.',
-    '"Eu não gosto e eu vendo peixe frito, então quem sou eu, né."'
+    '"Eu não gosto e eu vendo bolinho frito, então quem sou eu, né."'
   ],
   ef:{flag:'sabe_da_banca'},
   escolhas:[
@@ -692,14 +692,14 @@ c6_moca_barraca:{
 },
 
 c6_porque_nao_gosta:{
-  falante:'a moça do peixe frito',
+  falante:'a moça do bolinho frito',
   vozes:['P','N','N'],
   texto:[
     '"Por que a senhora não gosta?"',
-    'Ela pensa enquanto tira o peixe do óleo.',
+    'Ela pensa enquanto tira o bolinho do óleo.',
     '"Porque tem preço na plaquinha."',
     'Ela embrulha no papel pardo.',
-    '"Peixe tem preço na plaquinha. Peixe tá morto. Aquilo ali tá vivo e tem preço na plaquinha, e eu não sei explicar melhor que isso, {moço|moça}, mas é isso."'
+    '"Bolinho tem preço na plaquinha. Bolinho não sente nada. Aquilo ali tá vivo e tem preço na plaquinha, e eu não sei explicar melhor que isso, {moço|moça}, mas é isso."'
   ],
   ef:{flag:'preco_na_plaquinha',
       presagio:'Preço na plaquinha numa coisa viva. Você vai ver isso com cifras muito maiores.'},
@@ -738,7 +738,7 @@ c6_plaquinhas:{
     '"PSYDUCK — Nv 16 — 2.900"',
     '"NIDORAN♀ — Nv 14 — 2.200"',
     'E a sexta, na ponta, com a letra menor: "PIDGEY — Nv 9 — 400"',
-    'Quatrocentos. Você olha pro preço do peixe frito na sua mão e faz uma conta que preferia não ter feito.'
+    'Quatrocentos. Você olha pro preço do bolinho frito na sua mão e faz uma conta que preferia não ter feito.'
   ],
   ef:{flag:'leu_as_plaquinhas',
       presagio:'Quatrocentos. Alguém, em algum lugar, decidiu que esse número era justo.'},
@@ -1306,7 +1306,7 @@ c6_interrompeu:{
     {texto:'"Abre as caixas."', vai:'c6_abre_as_caixas'},
     {texto:'Batalhar.', vai:'c6_luta_van'},
     {texto:'"Eu só quero saber pra onde vai."', vai:'c6_pra_onde_vai'},
-    {texto:'Voltar pra vala. Foi burrice.', vai:'c6_so_olhou'}
+    {texto:'Voltar pra vala. Foi besteira.', vai:'c6_so_olhou'}
   ]
 },
 
@@ -1500,13 +1500,13 @@ c6_pra_onde_vai:{
     '"E depois?"',
     '"Não tem depois pra mim." Ele abre a porta da van. "Eu levo até o depósito. No depósito tem gente que recebe. Essa gente tem crachá e chefe e a gente não conversa."',
     'Ele entra.',
-    '"Olha, {garoto|garota}. Eu dirijo. Faz onze anos que eu dirijo. Antes eu levava peixe congelado."',
+    '"Olha, {garoto|garota}. Eu dirijo. Faz onze anos que eu dirijo. Antes eu levava polpa de fruta congelada."',
     'Ele fecha a porta e fala pela janela:',
-    '"Peixe congelado era pior. Cheirava."'
+    '"Polpa congelada era pior. Pingava."'
   ],
   ef:{flag:['destinacao_saffron','motorista_de_onze_anos'],
       registrar:'A van leva a carga para um depósito em Saffron.',
-      presagio:'"Peixe congelado era pior. Cheirava." Ele não estava sendo cínico. É esse o problema.'},
+      presagio:'"Polpa congelada era pior. Pingava." Ele não estava sendo cínico. É esse o problema.'},
   escolhas:[
     {texto:'Pegar a caixa de papel e correr.', vai:'c6_roubou_papel'},
     {texto:'Pegar a caixa dos vivos e correr.', vai:'c6_roubou_growlithe'},
@@ -1975,12 +1975,12 @@ c6_a_foto:{
     'Ela mexe o café.',
     '"Ela saiu de casa aos quinze, igual você." Uma pausa exata. "Faz três anos."',
     '"E ela—"',
-    '"Ela liga no Natal." Sibyl sorri um sorriso pequeno e verdadeiro. "Ela tá bem. Ela tá em Celadon e ela tá bem e ela não volta."',
+    '"Ela liga no fim do ano." Sibyl sorri um sorriso pequeno e verdadeiro. "Ela tá bem. Ela tá em Celadon e ela tá bem e ela não volta."',
     'Ela bebe o café.',
     '"E tá tudo certo. Foi pra isso que eu criei. Só que a casa fica muito grande."'
   ],
   ef:{flag:'a_filha_da_marta',
-      npc:{nome:'Sibyl', opiniao:4, memoria:'Te contou da filha que saiu aos quinze e liga no Natal.'},
+      npc:{nome:'Sibyl', opiniao:4, memoria:'Te contou da filha que saiu aos quinze e liga no fim do ano.'},
       presagio:'A casa fica muito grande. Pensa na sua, e em quem ficou nela.'},
   escolhas:[
     {texto:d=>`"Eu ligo pra ${casaEhMulher() ? 'minha' : 'meu'} ${casaQuem()} hoje."`, vai:'c6_ligou_pra_casa',
@@ -2184,7 +2184,7 @@ c6_ficou:{
   texto:[
     'Você senta na grama. Não fala nada, porque não tem nada.',
     'Leva quarenta minutos.',
-    'Sibyl segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de peixe e não o de carne.',
+    'Sibyl segura a cabeça dele o tempo todo e fala com ele o tempo todo, coisas idiotas e específicas: que amanhã tem sol, que o rio tá cheio, que ela comprou o de alga e não o de queijo.',
     'No fim ela põe a mão nos olhos dele, que já estão fechados, e deixa lá.',
     'Depois ela olha pra você.',
     '"Obrigada por não ter ido embora."'
@@ -2813,7 +2813,7 @@ c6_a_menina:{
     'Ela tem sete anos e uma cicatriz irregular no dorso da mão direita, que ela esconde no bolso quando percebe que você olhou.',
     'Você não explica nada sobre natureza. Você não consegue.',
     'Você pergunta o nome dela. Ela fala. Você pergunta o nome do quintal — porque quintal de criança sempre tem nome — e ela ri e fala que quintal não tem nome, e depois fala que ele tem sim, e fala o nome.',
-    'Vocês conversam onze minutos sobre uma tartaruga de brinquedo.',
+    'Vocês conversam onze minutos sobre um Squirtle de pelúcia.',
     'No fim ela pergunta se você tem Pokémon. Você mostra um. Ela recua meio passo e depois não recua mais.',
     'Ela não encosta. Mas ela fica.'
   ],
@@ -2831,7 +2831,7 @@ c6_a_menina:{
 c6_mais_com_a_menina:{
   texto:[
     'Você fica mais quarenta minutos.',
-    'Ela mostra o quintal inteiro da varanda, apontando, sem descer. Mostra onde foi. Mostra a cerca. Mostra onde a tartaruga de brinquedo mora.',
+    'Ela mostra o quintal inteiro da varanda, apontando, sem descer. Mostra onde foi. Mostra a cerca. Mostra onde o Squirtle de pelúcia mora.',
     'Em algum momento ela desce dois degraus.',
     'Em outro momento, o seu Pokémon deita no chão do quintal, de lado, do jeito que eles deitam, e ela olha isso por muito tempo.',
     'Ela não desce mais. Mas ela ficou na varanda quarenta minutos com um Pokémon no quintal dela.',

@@ -72,7 +72,7 @@ c13_ab_o_bar_falou:{
 c13_ab_o_pai_dela:{
   texto:[
     'Ela joga uma carta antes de responder.',
-    fala('a mulher do baralho', 'Voltou. Com peixe e com três dedos a menos.'),
+    fala('a mulher do baralho', 'Voltou. Com a rede cheia e com três dedos a menos.'),
     fala('a mulher do baralho', 'Congelamento. Cortaram no posto, sem anestesia boa, em sessenta e três.'),
     'Outra carta.',
     fala('a mulher do baralho', 'Ele nunca reclamou dos dedos. Reclamava de outra coisa.'),
@@ -306,7 +306,7 @@ c13_quando_comecou:{
     'Um deles — magro, de boné — ri.',
     '"Porque no dia quatro de junho a água baixou três graus de um dia pro outro."',
     '"Três graus em um dia?"',
-    '"Três graus em um dia. Todo barco daqui tem termômetro de fundo, {moço|moça}, porque peixe segue temperatura. A gente anota todo dia desde sempre, é o caderno de bordo."',
+    '"Três graus em um dia. Todo barco daqui tem termômetro de fundo, {moço|moça}, porque cardume de Magikarp segue temperatura. A gente anota todo dia desde sempre, é o caderno de bordo."',
     'Ele bate no bolso da camisa.',
     '"Três de junho: dezenove e meio. Quatro de junho: dezesseis e meio."',
     '"E depois?"',
@@ -430,7 +430,7 @@ c13_saidas_espuma:{
     'as saídas para a quebra das Seafoam são sempre entre vinte e duas e duas da manhã, e os retornos sempre entre nove e onze.',
     'Todas as outras áreas declaradas têm saída entre três e cinco da manhã, que é o horário normal de pesca.',
     'Você pergunta pra secretária e ela responde de cara, com a naturalidade de quem nunca precisou esconder:',
-    '"Ah, arrasto de fundo na quebra é de noite porque o peixe da quebra sobe de noite."',
+    '"Ah, arrasto de fundo na quebra é de noite porque o cardume da quebra sobe de noite."',
     'Pausa.',
     '"E porque arrasto de fundo é proibido num raio de seis milhas das ilhas, meu bem, e fiscal não trabalha de madrugada."',
     'Ela diz isso e volta a mexer no arquivo.',
@@ -512,13 +512,13 @@ c13_outro_livro:{
     'Você procura as sete.',
     'Quatro são de pessoas físicas de Fuchsia, com nome e endereço na rua do cais.',
     'Três são da mesma pessoa jurídica.',
-    '**PESCA E ARMAZENAGEM LINHA VERDE LTDA.**',
+    '**PESCA E ARMAZENAGEM LINHA VERDE**',
     d=>d.flags.sabe_da_linha_verde ? 'Linha Verde. As quatro fazendas do lado do setor 7 da Zona Safári, compradas entre noventa e cinco e noventa e sete, são da Agropecuária Linha Verde S/A.' :
        'Você não conhece esse nome ainda. Anota do mesmo jeito, porque nome de empresa que aparece três vezes numa lista de sete é nome que reaparece.',
     'A secretária lê por cima do seu ombro.',
     '"Essa aí eu conheço. Eles compraram a fábrica de gelo em noventa e oito."',
     '"Fábrica de gelo?"',
-    '"A fábrica de gelo do cais, meu bem. Todo barco compra gelo pra conservar peixe."',
+    '"A fábrica de gelo do cais, meu bem. Todo barco compra gelo pra conservar o que vem na rede."',
     'Ela ajeita os óculos.',
     '"Eles são donos de três barcos e da fábrica que vende gelo pros outros trinta e nove."'
   ],
@@ -547,7 +547,7 @@ c13_fabrica_de_gelo:{
     'Ela fecha o armário.',
     '"E aí é a parte esquisita, meu bem, que eu nunca contei pra ninguém porque nunca ninguém perguntou."',
     '"Qual?"',
-    '"Eles não venderam o galpão. Eles não venderam a máquina. Eles pagaram o IPTU de agosto e setembro e a conta de luz continua no nome deles, e eu sei porque a conta de luz do cais vem toda junta e passa por aqui."',
+    '"Eles não venderam o galpão. Eles não venderam a máquina. Eles pagaram o imposto do galpão de agosto e setembro e a conta de luz continua no nome deles, e eu sei porque a conta de luz do cais vem toda junta e passa por aqui."',
     '"Uma fábrica de gelo fechada, sem funcionário, consumindo luz."',
     '"Consumindo luz."',
     'Ela olha pra você.',
@@ -665,7 +665,7 @@ c13_camara_fria:{
     'E no chão, sobre uma cama improvisada de rede de pesca dobrada muitas vezes, tem um Articuno.',
     'Pequeno. Menor do que devia. Com a asa esquerda enfaixada com atadura de bicho grande e esparadrapo.',
     'Ele está vivo. Ele levanta a cabeça quando a porta abre.',
-    'E tem dois baldes ao lado dele, um com água e outro com peixe cortado, e uma cadeira de plástico encostada na parede, virada pra ele.',
+    'E tem dois baldes ao lado dele, um com água e outro com ração marinha, e uma cadeira de plástico encostada na parede, virada pra ele.',
     'Uma cadeira de plástico.',
     'Alguém senta aqui.'
   ],
@@ -776,13 +776,13 @@ c13_a_parte_dificil:{
     '"Qual parte você não sabe resolver?"',
     '"Devolver."',
     'Ele levanta e vai até a janela.',
-    '"Ela não pode voar. A asa quebrou em dois lugares e o veterinário do Amos disse que ossifica mal e que sem voar ela não sobrevive um dia lá."',
+    '"Ela não pode voar. A asa quebrou em dois lugares e o médico de Pokémon do Amos disse que ossifica mal e que sem voar ela não sobrevive um dia lá."',
     '"E se eu devolver, eu tenho que devolver onde eu peguei, que é a quebra das Seafoam, que é seis milhas de área proibida pra arrasto e que eu declarei que eu tava pescando."',
     '"Eu declarei no livro da colônia, {moço|moça}. Tá escrito. Eu escrevi de próprio punho “quebra das Seafoam” às vinte e três e dez do dia três de junho."',
     '"E se eu chegar lá com ela, eu tô confessando arrasto em área proibida com dano a espécime protegido, que é três a cinco anos e perda da embarcação."',
     'Ele volta pra poltrona.',
     '"E eu tenho dívida de motor de quarenta e dois mil, e a embarcação é a garantia."',
-    '"Então eu botei ela numa câmara fria que eu aluguei do meu cunhado por trezentos por mês, e eu levo peixe três vezes por semana, e faz dezenove semanas."',
+    '"Então eu botei ela numa câmara fria que eu aluguei do meu cunhado por trezentos por mês, e eu levo ração marinha três vezes por semana, e faz dezenove semanas."',
     '"E o mar tá congelando por minha causa e eu não sei o que fazer."'
   ],
   ef:{flag:['entendeu_o_goro','sabe_do_impasse'],
@@ -790,7 +790,7 @@ c13_a_parte_dificil:{
       rep:{eixo:'bom',delta:3,motivo:'Entendeu o nó em vez de cortar'},
       moral:-10,
       registrar:'Tobin não devolve o Articuno porque devolver é confessar arrasto em área proibida.',
-      presagio:'Dezenove semanas. Ele levou peixe três vezes por semana durante dezenove semanas.'},
+      presagio:'Dezenove semanas. Ele levou ração marinha três vezes por semana durante dezenove semanas.'},
   escolhas:[
     {texto:'"Eu devolvo por você."', vai:'c13_eu_devolvo'},
     {texto:'"A gente devolve junto e eu falo com a Liga."', vai:'c13_juntos'},
@@ -841,7 +841,7 @@ c13_ele_sabe:{
     'Ele ri sem alegria.',
     '"Oito mil pra escrever “origem indeterminada”."',
     '"E você sabe a origem."',
-    '"Eu sei a origem, e a origem tá num galpão a seiscentos metros daqui comendo peixe cortado que eu compro com o dinheiro que eu não tenho."',
+    '"Eu sei a origem, e a origem tá num galpão a seiscentos metros daqui comendo ração marinha que eu compro com o dinheiro que eu não tenho."',
     'Ele encosta a cabeça na poltrona.',
     '"Trezentos e onze famílias, {moço|moça}. Trezentos e onze. Eu conheço o nome de quase todo mundo."',
     '"E por que você não conta?"',
@@ -947,7 +947,7 @@ c13_registro_97:{
   texto:[
     'A secretária não precisa procurar. Ela sabe o ano e sabe o mês e vai direto.',
     'Ela abre o livro de 1997 em novembro e vira pra você sem falar nada.',
-    '**ESTRELA-DO-MAR — mestre: B. Dane — saída 12/11, 04h20 — área declarada: canal sul — retorno: —**',
+    '**STARYU — mestre: B. Dane — saída 12/11, 04h20 — área declarada: canal sul — retorno: —**',
     'O campo de retorno está em branco.',
     'E abaixo dele, na coluna de observação, com uma letra que não é a de quem preencheu a linha:',
     '**"emb. retornou 13/11 às 22h com o mestre. tripulante 1 não retornou. B. Dane Filho, 26 anos."**',
@@ -973,7 +973,7 @@ c13_registro_97:{
 
 c13_ryuzo:{
   texto:[
-    'Ele está sentado num caixote ao lado de um barco azul de doze pés com o nome pintado à mão na proa: **ESTRELA-DO-MAR**.',
+    'Ele está sentado num caixote ao lado de um barco azul de doze pés com o nome pintado à mão na proa: **STARYU**.',
     'A tinta do nome foi retocada muitas vezes, e as camadas se veem na borda das letras.',
     'Ele tem setenta e quatro anos, um boné sem logotipo nenhum, e está consertando um cabo de amarração que não precisa de conserto.',
     'No cais o chamam de Amos. Na colônia, no livro de saída de embarcação e na única placa de rua que esta cidade tem com nome de pescador, ele é Dane.',
@@ -1154,7 +1154,7 @@ c13_avisou_a_colonia:{
   texto:[
     'Você sobe na mesa de dominó.',
     'Literalmente: você sobe numa mesa de plástico no meio de um cais com sessenta pessoas paradas e fala alto.',
-    'Você conta tudo. O quatro de junho, a rede, o bote, a câmara fria, as dezenove semanas de peixe cortado, a asa que não abre.',
+    'Você conta tudo. O quatro de junho, a rede, o bote, a câmara fria, as dezenove semanas de ração marinha, a asa que não abre.',
     'Você não diz o nome do Tobin.',
     'Não adianta: quatro pessoas dizem o nome antes de você terminar a segunda frase, e uma delas grita.',
     'E aí acontece uma coisa que você não previu e que vai te ensinar uma coisa sobre cidade pequena que você vai carregar:',
@@ -1179,12 +1179,12 @@ c13_avisou_a_colonia:{
 },
 
 c13_chamou_ivone:{
-  falante:'a veterinária de Cerulean',
+  falante:'a médica de Cerulean',
   vozes:['N','P','N','N','P','N','N'],
   texto:[
     'A Dra. Cordell chega de ônibus em nove horas, com duas pessoas e uma câmera, do jeito de sempre.',
-    'Mas dessa vez ela chega com uma terceira coisa: uma médica veterinária de fauna silvestre de Cerulean, de quarenta anos, que ela conhece de um caso de oito anos atrás.',
-    'A veterinária olha a asa por vinte minutos, com o Articuno pequeno deitado numa mesa de inox emprestada do peixeiro, e no fim ela fala coisas que ninguém em Fuchsia sabia dizer:',
+    'Mas dessa vez ela chega com uma terceira coisa: uma médica de Pokémon selvagem, de Cerulean, de quarenta anos, que ela conhece de um caso de oito anos atrás.',
+    'A médica olha a asa por vinte minutos, com o Articuno pequeno deitado numa mesa de inox emprestada do peixeiro, e no fim ela fala coisas que ninguém em Fuchsia sabia dizer:',
     '"Fratura cominutiva do úmero, consolidada viciosamente."',
     '"O que quer dizer?"',
     '"Que colou torto porque ninguém imobilizou direito nas primeiras duas semanas."',
@@ -1196,10 +1196,10 @@ c13_chamou_ivone:{
     '"E antes disso alguém tem que explicar pro que congelou duzentos quilômetros de mar que a gente vai levar o filho dele pra doze horas de distância."'
   ],
   ef:{flag:['ivone_veio','sabe_da_cirurgia'],
-      npc:{nome:'Dra. Cordell', opiniao:8, memoria:'Trouxe uma veterinária de fauna silvestre de Cerulean para avaliar a asa.'},
+      npc:{nome:'Dra. Cordell', opiniao:8, memoria:'Trouxe uma médica de Pokémon selvagem de Cerulean para avaliar a asa.'},
       rep:{eixo:'bom',delta:5,motivo:'Chamou quem sabia, e quem sabia trouxe quem sabia mais'},
       registrar:'A asa consolidou torta. Cirurgia em Cerulean dá 40% de chance de voltar a voar.',
-      presagio:'Alguém tem que explicar pra ele. Essa é a parte que nenhuma veterinária resolve.'},
+      presagio:'Alguém tem que explicar pra ele. Essa é a parte que nenhuma médica resolve.'},
   escolhas:[
     {texto:'Ir explicar. Levar o pequeno junto, para ele ver.', vai:'c13_os_tres'},
     {texto:'Ir sozinh{o|a} explicar primeiro, sem levar ele.', vai:'c13_travessia'},
@@ -1211,7 +1211,7 @@ c13_chamou_ivone:{
 c13_travessia:{
   texto:[
     'Vocês saem às cinco da manhã.',
-    'O barco tem doze pés, motor de popa de quinze cavalos e um banco de madeira que o pai dele lixou em mil novecentos e cinquenta e três.',
+    'O barco tem doze pés, motor de popa pequeno e um banco de madeira que o pai dele lixou em mil novecentos e cinquenta e três.',
     'A primeira hora é normal. Mar de dois pés, vento de través, e o Sr. Dane cantarolando alguma coisa antiga sem letra.',
     'Na segunda hora a temperatura cai.',
     'Não gradualmente. Tem uma linha na água — dá pra ver, é uma faixa mais escura de uns cem metros de largura — e quando o barco cruza essa linha, o ar muda de uma vez.',
@@ -1359,7 +1359,7 @@ c13_ilha:{
     'A boca da caverna tem uns nove metros de altura e a maré está congelada exatamente na metade do ciclo, com a linha de maré alta marcada na rocha e o gelo parado quatro metros abaixo dela.',
     'Dentro, as paredes são de gelo transparente.',
     'E tem coisa dentro.',
-    'Peixe. Muito peixe, em cardume, parado na posição exata em que estava nadando, todos virados pro mesmo lado.',
+    'Magikarp. Muito Magikarp, em cardume, parado na posição exata em que estava nadando, todos virados pro mesmo lado.',
     'Tentacool, uns quinze, a um metro e meio de profundidade no gelo.',
     'E a três metros da parede, de olhos abertos, na horizontal, um Dewgong inteiro.'
   ],
@@ -1422,7 +1422,7 @@ c13_salvou_dewgong:{
     'Você carrega um Dewgong de cento e vinte quilos por cento e setenta metros de caverna congelada.',
     'Não dá. Fisicamente não dá, e você sabe disso aos vinte metros.',
     'Você faz mesmo assim, arrastando os últimos setenta pelo gelo, com ele deitado no cobertor de lã usado como trenó.',
-    'Sr. Dane vê você chegar de longe e não faz uma pergunta. Só abre a tampa do tanque de vivo, que é um tanque de peixe de duzentos litros e não de Dewgong, e que não vai caber.',
+    'Sr. Dane vê você chegar de longe e não faz uma pergunta. Só abre a tampa do tanque de vivo, que é um tanque de Magikarp de duzentos litros e não de Dewgong, e que não vai caber.',
     'Ele cabe até a metade. A outra metade fica pra fora, coberta com o cobertor molhado, e o Sr. Dane vira a proa pra Fuchsia com o motor no talo.',
     'O Dewgong acorda três dias depois num aquário municipal e vive.',
     'E dezenove semanas de gelo continuam exatamente iguais atrás de vocês.'
@@ -1513,7 +1513,7 @@ c13_salvou_o_filhote:{
 
 c13_deixou_o_filhote:{
   texto:[
-    'Você não tem tanque, não tem peixe, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
+    'Você não tem tanque, não tem ração marinha, não tem como manter um filhote de Seel vivo por três horas de travessia e mais um dia depois disso.',
     'Você sabe disso e é verdade e continua sendo a coisa mais difícil que você fez hoje.',
     'Você tira o cobertor de lã da mochila e deixa com ele na reentrância, que não resolve nada e que você faz mesmo assim.',
     'Nos primeiros vinte metros de volta você não olha pra trás. Nos vinte seguintes, olha.',
@@ -1807,7 +1807,7 @@ c13_eu_sei_onde:{
     'Ele para. Fecha os olhos. E o gelo volta.',
     'Quatro segundos de descontrole em dezenove semanas de controle, e ele mesmo corta.',
     'E depois olha pra você e espera.',
-    d=>d.flags.achou_o_filhote ? '"Ele tá numa câmara fria. Tem um homem que leva peixe pra ele três vezes por semana desde junho."' :
+    d=>d.flags.achou_o_filhote ? '"Ele tá numa câmara fria. Tem um homem que leva ração marinha pra ele três vezes por semana desde junho."' :
        '"Tem um homem em Fuchsia que sabe. Eu vou trazer ele de volta."',
     'Silêncio.',
     'E depois — e essa é a parte que você não vai conseguir contar direito pra ninguém pelo resto da vida — ele abaixa a cabeça.',
@@ -1855,7 +1855,7 @@ c13_voltar_buscar:{
 c13_os_tres:{
   texto:[
     'Vocês vão os três. Quatro, contando quem está na caixa.',
-    'O Articuno pequeno viaja num caixote de peixe forrado com a rede dobrada que era a cama dele, com gelo picado por baixo, porque o Tobin descobriu em julho que ele fica mais calmo com frio.',
+    'O Articuno pequeno viaja num caixote de gelo forrado com a rede dobrada que era a cama dele, com gelo picado por baixo, porque o Tobin descobriu em julho que ele fica mais calmo com frio.',
     'O barco tem doze pés e agora tem quatro ocupantes e a borda livre é de vinte centímetros, e o Sr. Dane vai a meia força as três horas inteiras, e nenhum dos dois velhos reclama de nada.',
     'O Tobin não fala nas três horas.',
     'Na última meia hora, quando a linha reta do gelo aparece no horizonte, ele fala uma frase só, pra ninguém:',
@@ -1867,7 +1867,7 @@ c13_os_tres:{
       npc:{nome:'Tobin', opiniao:8, memoria:'Foi de barco devolver o Articuno e ensaiou "eu trouxe" a viagem inteira.'},
       rep:{eixo:'bom',delta:5,motivo:'Levou junto quem precisava estar lá'},
       moral:15,
-      registrar:'Foram os três às Seafoam com o Articuno pequeno num caixote de peixe.',
+      registrar:'Foram os três às Seafoam com o Articuno pequeno num caixote de gelo.',
       presagio:'Ele está ensaiando. Dezenove semanas ensaiando.'},
   escolhas:[
     {texto:'Entrar na caverna com ele.', vai:'c13_devolveu'},
@@ -1887,7 +1887,7 @@ c13_goro_sozinho:{
     '"Sozinho."',
     'Ele fica um tempo parado com o caixote nos braços, na borda do gelo, com setenta e quatro anos de Sr. Dane atrás dele no barco e você do lado.',
     'E vai.',
-    'Você vê ele andando os duzentos metros de gelo com um caixote de peixe nos braços, sozinho, sem lanterna, e ele anda devagar porque ele não quer sacudir.',
+    'Você vê ele andando os duzentos metros de gelo com um caixote de gelo nos braços, sozinho, sem lanterna, e ele anda devagar porque ele não quer sacudir.',
     'Some na boca da caverna.',
     'Demora quarenta e três minutos.',
     'E aí a ilha inteira range.',
@@ -1967,7 +1967,7 @@ c13_rocha_alta:{
 c13_ficou_e_viu:{
   texto:[
     'Você fica.',
-    'É burrice. É burrice completa e você sabe enquanto faz.',
+    'É besteira. É besteira completa e você sabe enquanto faz.',
     'Mas você fica e vê os dois se encontrarem no meio de uma câmara desabando, e o grande desce do pilar e não voa — ele desce andando, e chega devagar, e encosta a cabeça na cabeça do pequeno e fica assim.',
     'Fica assim uns quatro segundos com o teto caindo em volta e sem se importar com o teto caindo em volta.',
     'Depois ele pega o pequeno com as garras, com um cuidado absurdo pro tamanho dele, e sobe pelo furo do teto.',
@@ -1977,7 +1977,7 @@ c13_ficou_e_viu:{
   ],
   ef:{flag:['ficou_e_viu','devolveu_o_filhote'],
       hp:-14, causa:'Ficou na caverna quando ela caiu',
-      rep:{eixo:'bom',delta:3,motivo:'Ficou para ver, o que foi burrice e foi humano'},
+      rep:{eixo:'bom',delta:3,motivo:'Ficou para ver, o que foi besteira e foi humano'},
       moral:25, instabilidade:-1,
       registrar:'Ficou na câmara e viu os dois se encontrarem. Quase não saiu.',
       presagio:'Dois metros é tudo. Você não controlou nenhum dos dois.'},
@@ -2043,8 +2043,8 @@ c13_comboio:{
 c13_levou_o_filhote:{
   texto:[
     'Você tira o Articuno pequeno da câmara fria sem falar com ninguém.',
-    'Ele não resiste, porque ele não tem como resistir, e ele é mais leve do que parece e cabe numa caixa de peixe.',
-    'E enquanto você carrega ele pelos seiscentos metros até o cais, você passa por sete pessoas e nenhuma pergunta nada, porque na cidade toda o normal é ver alguém carregando caixa de peixe.',
+    'Ele não resiste, porque ele não tem como resistir, e ele é mais leve do que parece e cabe numa caixa de gelo.',
+    'E enquanto você carrega ele pelos seiscentos metros até o cais, você passa por sete pessoas e nenhuma pergunta nada, porque na cidade toda o normal é ver alguém carregando caixa de gelo.',
     'A parte ruim vem depois: você não avisou o Tobin.',
     'Ele vai chegar na quarta às dezesseis e vinte com dois baldes e vai abrir a porta da câmara fria e não vai ter ninguém.',
     'E ele vai achar que morreu, ou que levaram, ou que a Liga veio.',
@@ -2124,7 +2124,7 @@ c13_juntos:{
     '"Você é {péssimo|péssima} em convencer gente, {moço|moça}."',
     '"Eu sei."',
     'Ele levanta da poltrona com dificuldade e pega a chave do cadeado no prego da parede.',
-    '"Eu tenho dívida de motor de quarenta e dois mil e dezenove semanas de peixe cortado, que dá mais uns oito."',
+    '"Eu tenho dívida de motor de quarenta e dois mil e dezenove semanas de ração marinha, que dá mais uns oito."',
     'Ele põe a chave no bolso.',
     '"Cinquenta mil e o mar parado. Já tá ruim demais pra piorar."'
   ],
@@ -2180,7 +2180,7 @@ c13_voce_fez_certo:{
     '"Você não sabe disso."',
     '"Eu sei uma parte. Você cortou a rede pra não virar o barco com um menino de quinze anos a bordo, e depois você pulou na água de madrugada com cinquenta e oito anos pra pegar de volta o que você tinha derrubado."',
     'Você aponta os baldes.',
-    '"E depois você levou peixe cortado três vezes por semana durante dezenove semanas com dinheiro que você não tem, pra uma coisa que não te agradece, escondid{o|a} de uma cidade inteira."',
+    '"E depois você levou ração marinha três vezes por semana durante dezenove semanas com dinheiro que você não tem, pra uma coisa que não te agradece, escondid{o|a} de uma cidade inteira."',
     'Ele não olha pra você.',
     '"Isso não apaga o arrasto."',
     '"Não apaga."',
@@ -2209,7 +2209,7 @@ c13_buscar_ajuda:{
     d=>{
       if (d.flags.cartao_ivone) return 'A Dra. Cordell chega em dois dias com uma equipe de resgate de fauna marinha e equipamento de corte térmico emprestado de uma usina.';
       if (Estado.rep.eixo==='bom' && Estado.rep.bom>=5) return 'Você pede ajuda no cais e — pela primeira vez na jornada — a sua reputação faz o trabalho sozinha: onze pessoas aparecem. Onze, num cais onde ninguém te devia nada.';
-      return 'Você pede ajuda em Fuchsia e duas pessoas aparecem: o Sr. Dane e um veterinário aposentado que mora na rua do cais e que foi por curiosidade.';
+      return 'Você pede ajuda em Fuchsia e duas pessoas aparecem: o Sr. Dane e um médico de Pokémon aposentado que mora na rua do cais e que foi por curiosidade.';
     },
     'A operação leva um dia e meio.',
     d=>d.flags.achou_o_filhote || d.flags.sabe_do_goro
@@ -2344,9 +2344,9 @@ c13_mergulhou:{
     'Você não acha nada.',
     'Você quase não volta.',
     'Sr. Dane te tira da água na entrada da caverna, sozinho, com setenta e quatro anos, puxando pela alça da mochila e xingando.',
-    '"Burrice", ele diz, enrolando você no cobertor de lã. "Burrice bonita, mas burrice."',
+    '"Besteira", ele diz, enrolando você no cobertor de lã. "Besteira bonita, mas besteira."',
     'E depois, mais baixo, com você tremendo no fundo do barco:',
-    '"Meu filho também fez uma burrice bonita."'
+    '"Meu filho também fez uma besteira bonita."'
   ],
   ef:{hp:-14, causa:'Mergulho em água de dois graus nas Seafoam',
       rep:{eixo:'bom',delta:1,motivo:'Arriscou a própria vida tentando consertar o próprio erro'},
@@ -2354,7 +2354,7 @@ c13_mergulhou:{
       moral:-10,
       npc:{nome:'Sr. Dane', opiniao:5, memoria:'Te tirou da água gelada sozinho, aos setenta e quatro anos, e falou do filho.'},
       registrar:'Mergulhou na água de dois graus. Sr. Dane te tirou.',
-      presagio:'"Meu filho também fez uma burrice bonita." Ele nunca tinha dito isso pra ninguém.'},
+      presagio:'"Meu filho também fez uma besteira bonita." Ele nunca tinha dito isso pra ninguém.'},
   escolhas:[
     {texto:'Voltar para Fuchsia.', vai:'c13_fim'},
     {texto:'Voltar amanhã e procurar direito.', vai:'c13_cais'},
@@ -2559,7 +2559,7 @@ c13_quem_sai_mais:{
     'A secretária ri e faz a conta de cabeça, porque ela já fez essa conta sozinha em algum momento da vida por puro tédio.',
     '"O Terra Boa. Duzentas e quarenta saídas em dois anos."',
     '"Isso é muito?"',
-    '"Isso é uma saída a cada três dias, meu bem, todo santo dia do ano, com chuva e com sol e com defeso."',
+    '"Isso é uma saída a cada três dias, meu bem, todo dia do ano, com chuva e com sol e com defeso."',
     'Ela para de rir.',
     '"Com defeso."',
     'Ela vira o livro do ano passado e procura com o dedo e acha, e mostra pra você: as datas de defeso estão carimbadas no topo da página, em vermelho, e embaixo delas tem quatro linhas do Terra Boa.',

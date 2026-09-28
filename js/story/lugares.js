@@ -231,9 +231,9 @@ const ACHADOS_ROTA = [
   {texto:['Amarrado num galho, na altura do peito, um saquinho de pano com ração boa dentro e um nó que alguém deu com muito cuidado.',
           'O nó é de quem amarrou pra não perder e perdeu assim mesmo.'], ef:{itens:{'Resto de Ração':1}}},
   {texto:['Uma faixa de algodão grossa, suja de terra, no meio da trilha. Tem marca de nó nas duas pontas.'], ef:{itens:{'Faixa Firme':1}}},
-  {amb:['montanha','caverna'], texto:['Um peso de chumbo costurado numa tira de couro, encostado numa pedra. Pesa muito mais do que parece.'], ef:{itens:{'Punho de Ferro':1}}},
+  {amb:['montanha','caverna'], texto:['Um peso de chumbo costurado numa tira de lona, encostado numa pedra. Pesa muito mais do que parece.'], ef:{itens:{'Punho de Ferro':1}}},
   {amb:['cidade','especial'], texto:['Numa mureta, um par de óculos de lente grossa com a armação torta, esperando um dono que não voltou.'], ef:{itens:{'Óculos Grossos':1}}},
-  {amb:['campo','floresta'], texto:['Um colete de couro rachado pendurado numa cerca, com remendo nas costas e a fivela ainda boa.'], ef:{itens:{'Colete de Couro':1}}},
+  {amb:['campo','floresta'], texto:['Um colete de lona rachado pendurado numa cerca, com remendo nas costas e a fivela ainda boa.'], ef:{itens:{'Colete de Lona':1}}},
   {texto:['Um sino de latão do tamanho de uma unha, no chão, com o barbante arrebentado.',
           'Você balança sem querer e o som é ridículo e você balança de novo de propósito.'], ef:{itens:{'Sino Calmante':1}}},
   {amb:['agua','cidade'], texto:['Uma moeda antiga furada no meio, pendurada num barbante, presa numa fresta de calçada.'], ef:{itens:{'Amuleto de Moeda':1}}},
@@ -356,7 +356,7 @@ const CONVERSAS = {
   ],
   vermilion:[
     [fala('o estivador', 'Porto é assim. Chega coisa, sai coisa, e ninguém pergunta.', null, 'Ele não para de trabalhar em momento nenhum.')],
-    [fala('a vendedora de peixe frito', 'Navio grande atraca quinta. Aí a cidade enche de gente que nunca dormiu no chão.')],
+    [fala('a vendedora de bolinho frito', 'Navio grande atraca quinta. Aí a cidade enche de gente que nunca dormiu no chão.')],
     ['Um garoto do cais aponta o ginásio com o queixo.',
      fala('o garoto do cais', 'O líder daqui foi soldado. De verdade! Antes disso tudo.')],
     ['Um marinheiro aposentado descreve a Rota 21 pra um grupo de turistas com uma precisão que ninguém pediu e que todo mundo agradece.'],
@@ -423,7 +423,7 @@ const CONVERSAS = {
     ['Uma criança explica pra outra, com total autoridade, que a Zona Safári tem um bicho que ninguém nunca pegou. Ela não sabe qual. Isso não atrapalha em nada a história.'],
     [fala('o atendente do posto', 'Poké Ball não funciona lá dentro. Só as de lá. Não é golpe, é regra.'),
      fala('o atendente do posto', 'Eu explico isso quarenta vezes por dia. Quarenta.')],
-    ['Um veterinário sai da reserva com a manga da camisa rasgada e conversa normalmente com você sobre o clima.'],
+    ['Um médico de Pokémon sai da reserva com a manga da camisa rasgada e conversa normalmente com você sobre o clima.'],
     [fala('o dono do bar', 'Aqui a gente chama a cerca de cerca. Em Saffron eles chamam de área de manejo.'),
      fala('o dono do bar', 'É a mesma cerca.')],
     ['Uma placa na entrada da reserva lista os horários. Alguém corrigiu o horário de domingo com caneta, e a correção também já está velha.'],
@@ -485,7 +485,7 @@ const CONVERSAS_ROTA = [
   ['"Você tem Repelente sobrando?" Dois treinadores jovens dividem o último de um frasco entre os dois, o que não é como Repelente funciona.'],
   ['Um entregador com uma caixa amarrada nas costas anda mais rápido que você sem parecer estar com pressa.'],
   ['Uma senhora com um Meowth no ombro pergunta as horas e depois fica conversando por dez minutos sem olhar o relógio nenhuma vez.'],
-  ['Dois guardas da Liga passam a cavalo de Rapidash e cumprimentam com a cabeça. Nenhum dos dois diminui o passo.']
+  ['Dois guardas da Liga passam montados em Rapidash e cumprimentam com a cabeça. Nenhum dos dois diminui o passo.']
 ];
 
 /* Uma conversa pode vir condicionada ao estado: {cond, texto}.
@@ -587,12 +587,12 @@ const MURAIS = {
     {t:'O navio atraca na lua cheia. Passagem só com reserva.', nota:'impresso, com o logotipo da companhia'}
   ],
   lavender:[
-    {t:'Missa pelos que se foram, domingo, na torre. Traga uma vela.', nota:'papel roxo, sem assinatura'},
+    {t:'Vigília pelos que se foram, domingo, na torre. Traga uma vela.', nota:'papel roxo, sem assinatura'},
     {t:'Não deixe comida na porta da torre. Atrai o que não é pra atrair.', nota:'letra de gente velha, tremida'},
     {t:'Cubone sozinho na Rota 8. Se alguém souber da mãe dele, fala com o Sr. Fuji.', nota:'escrito a caneta, com o nome sublinhado'}
   ],
   celadon:[
-    {t:'Loja de departamentos contrata para o natal. Currículo no quinto andar.', nota:'impresso, com borda dourada'},
+    {t:'Loja de departamentos contrata para o fim de ano. Currículo no quinto andar.', nota:'impresso, com borda dourada'},
     {t:'Aulas de arranjo com Pokémon de planta. Terça e quinta, no ginásio. Vagas limitadas.', nota:'com uma flor seca colada no canto'},
     {t:'Achado: um Eevee no estacionamento do shopping. Ele foi embora antes da gente ligar.', nota:'escrito à mão, meio apagado'}
   ],

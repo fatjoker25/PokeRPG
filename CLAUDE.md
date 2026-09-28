@@ -65,6 +65,28 @@ recepcionista") ganha rótulo próprio antes ("a recepcionista da Liga"),
 senão o nome de uma vira o de todas. Cargo que é função de cidade em
 cidade fica em `CARGO_DE_PROPOSITO`. `chk-nomes.js` lê as três listas.
 
+## Nada do mundo real
+O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de
+cachorro, gato, peixe, gado, mula, cavalo, urubu, morcego. Onde o texto
+precisa de um, entra o Pokémon que ocupa aquele lugar (Tauros de carga,
+cardume de Magikarp, Murkrow, Zubat, Miltank no pasto), e o genérico é
+"bicho". O trio Raikou/Entei/Suicune é o **trio lendário**, nunca "cães".
+
+O mesmo vale pro que só existe no nosso mundo:
+- comida de bicho real: peixe, carne, sardinha, frango viram alga, queijo,
+  ovo, polpa de fruta, ração marinha;
+- material de bicho real: couro vira lona ou vinil;
+- profissão e órgão: médico de Pokémon (não veterinário), controle de
+  bichos (não zoonoses), registro comercial (não CNPJ), número de documento
+  (não CPF), imposto da casa (não IPTU), Kanto (não União); sem "Ltda.";
+- religião, festa e esporte reais: sem Deus, missa, igreja, padre, Natal,
+  futebol — a conversa de bar é sobre a Liga, a vigília é na Torre.
+
+Expressão que carrega bicho no meio também sai: "burrice" é besteira,
+"pé de cabra" é alavanca, "galo na testa" é calombo, "motor de quarenta
+cavalos" é motor forte. Item que muda de nome ganha conversão em
+`Estado.carregar`, senão some da mochila de quem já tinha.
+
 ## Não existe HM
 Nenhum Pokémon aprende "Corte" ou "Surf" aqui. O que existe:
 

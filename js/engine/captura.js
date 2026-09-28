@@ -172,7 +172,7 @@ const Captura = {
       ev('mundo', 'Ninguém viu. Ainda assim, o mundo sentiu — e o mundo conta depois.');
     }
 
-    // --- Cães Lendários
+    // --- Trio lendário
     if (GRUPO_CAES.includes(dex)){
       const outros = GRUPO_CAES.filter(d => d !== dex);
       const presos = GRUPO_CAES.filter(d => Estado.lend(d).estado === 'capturado');
@@ -181,9 +181,9 @@ const Captura = {
         if (o.estado !== 'capturado'){ o.disposicao = 'hostil'; o.caçandoVoce = true; }
       });
       ev('mundo', `Em algum lugar de Kanto, ${outros.map(d=>DEX[d].nome).join(' e ')} param de correr ao mesmo tempo. E mudam de direção — na sua.`);
-      Estado.registrar(`Cães lendários começaram a caçar você.`);
+      Estado.registrar(`O trio lendário começou a caçar você.`);
       if (presos.length === 2){
-        ev('mundo', 'O terceiro cão não vai só te caçar. Vai abrir caminho até você, pelo meio do que estiver na frente.');
+        ev('mundo', 'O terceiro do trio não vai só te caçar. Vai abrir caminho até você, pelo meio do que estiver na frente.');
         Estado.dados.mundo.instabilidade += 2;
       }
       if (presos.length === 3){

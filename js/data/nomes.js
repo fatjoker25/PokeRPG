@@ -33,10 +33,10 @@ const RECUSAM_O_NOME = {
     fala('a mulher da pasta', 'Meu nome está na procuração, que é pública.'),
     fala('a mulher da pasta', 'Se {o senhor|a senhora} quiser, protocola um pedido de vista.', 'frio')
   ],
-  'a mulher da pasta de couro': () => [
+  'a mulher da pasta de vinil': () => [
     'Ela ajeita a pasta debaixo do braço.',
-    fala('a mulher da pasta de couro', 'Eu não vim aqui como pessoa.'),
-    fala('a mulher da pasta de couro', 'Vim como parte.', 'frio')
+    fala('a mulher da pasta de vinil', 'Eu não vim aqui como pessoa.'),
+    fala('a mulher da pasta de vinil', 'Vim como parte.', 'frio')
   ],
   'a mulher de crachá azul': () => [
     'Ela vira o crachá com dois dedos, e o crachá tem foto, número e nenhum nome.',

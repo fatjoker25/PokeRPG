@@ -89,7 +89,7 @@ c8_ab_trabalho:{
 
 c8_ab_refrigerado:{
   texto:[
-    'Quatro horas dentro de um contêiner a dois graus, tirando caixa de peixe de um lado e pondo do outro.',
+    'Quatro horas dentro de um contêiner a dois graus, tirando caixa de alga de um lado e pondo do outro.',
     'Nos primeiros quarenta minutos é suportável. Depois da primeira hora, as pontas dos dedos param de ter opinião sobre o que estão segurando.',
     d=>{
       const p = d.time[0];
@@ -1083,7 +1083,7 @@ c8_pediu_trabalho:{
 c8_fritura:{
   texto:[
     'A fritura do porto é uma janela numa parede com três banquinhos na calçada.',
-    'Peixe, mandioca e um molho que a dona não explica. Custa pouco e é excelente.',
+    'Bolinho de alga, mandioca e um molho que a dona não explica. Custa pouco e é excelente.',
     'Você come em pé olhando o cais três, onde um navio do tamanho de um quarteirão está acendendo as luzes do salão uma fileira por vez.',
     'Do banquinho do lado, um menino de uns dez anos come batata com a mão e tem uma caixa de isopor entre os pés.',
     'A caixa se mexe.'
@@ -1235,7 +1235,7 @@ c8_atras_do_menino:{
     'A dona da fritura está olhando pra você com uma expressão que você não sabe ler.',
     '"Você deu oito mil pro Nolan."',
     '"É o nome dele?"',
-    '"É." Ela vira o peixe. "Ele vende Krabby na minha porta faz três ano."',
+    '"É." Ela vira o bolinho. "Ele vende Krabby na minha porta faz três ano."',
     'Ela serve outra porção e empurra pra você sem cobrar.',
     '"A mãe dele embarcou nesse navio há quatro ano. Pra trabalhar. Ela mandou uma carta de Cinnabar."'
   ],
@@ -1257,7 +1257,7 @@ c8_vai_atras_dela:{
     '"Ele vai atrás dela."',
     'A dona da fritura não responde na hora.',
     '"Vai."',
-    'Ela vira o peixe.',
+    'Ela vira o bolinho.',
     '"E eu passei três ano torcendo pra ele não juntar o dinheiro."',
     'Ela olha pra você pela primeira vez, direto.',
     '"E você juntou pra ele numa tarde."'
@@ -1304,7 +1304,7 @@ c8_vai_junto:{
     'Ela olha pra você por uns cinco segundos e depois faz uma coisa que ninguém fez com você nessa jornada: ela escreve o seu nome num papel.',
     '"Como você chama?"',
     'Você fala. Ela escreve num pedaço de papel de embrulho e prende com ímã na parede da fritura, entre as contas a pagar.',
-    '"Pronto." Ela volta pro peixe. "Agora tem registro."'
+    '"Pronto." Ela volta pro bolinho. "Agora tem registro."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Prometeu acompanhar quem você empurrou'},
       flag:'nome_na_parede_da_fritura',
@@ -1376,7 +1376,7 @@ c8_mostra_pra_tia:{
     'Ele dobra a carta em oito de novo, com uma precisão de quem dobra essa carta há um ano.',
     '"Ela já viu."',
     'Ele guarda no bolso de trás.',
-    '"Ela leu e falou: graças a Deus ele tá bem."',
+    '"Ela leu e falou: que alívio, ele tá bem."',
     'Ele olha pro navio.',
     '"Ela não virou o papel."'
   ],
@@ -1416,7 +1416,7 @@ c8_krabby_barato:{
     'Ele te entrega a caixa de isopor e sai correndo, feliz, com quatrocentos no bolso.',
     'Você fica olhando ele ir embora.',
     'Não foi crime. Foi só o tipo de coisa que, depois, você não conta pra ninguém.',
-    'A dona da fritura viu. Ela não diz nada. Ela vira o peixe e não diz nada, e você paga a conta e ela não diz nada.'
+    'A dona da fritura viu. Ela não diz nada. Ela vira o bolinho e não diz nada, e você paga a conta e ela não diz nada.'
   ],
   ef:{presagio:'Ela não disse nada. Você vai lembrar do silêncio dela por muito mais tempo do que de qualquer bronca.'},
   escolhas:[
@@ -1783,7 +1783,7 @@ c8_seguiu_caminhao:{
 
 c8_falou_com_conferente:{
   texto:[
-    'Você anda até o conferente no meio do pátio às quatro da manhã, o que é uma das coisas mais burras que você já fez.',
+    'Você anda até o conferente no meio do pátio às quatro da manhã, o que é uma das coisas mais estúpidas que você já fez.',
     'Ele leva um susto de verdade.',
     '"O que você tá fazendo aqui?"',
     '"Tem coisa viva nesse contêiner."',
@@ -1830,27 +1830,27 @@ c8_voltou_no_conferente:{
     'De manhã você procura o conferente da prancheta e mostra o que anotou.',
     'Ele lê o número do contêiner. Lê o número do lacre.',
     'E aí ele faz uma coisa que você não esperava: entra no sistema, num terminal velho de tela verde no escritório do pátio, e digita.',
-    '"KTU 409 118-2." Ele lê a tela. "Carga geral. Peças de reposição náutica. Destinatário: um CNPJ de Saffron."',
-    'Ele copia o CNPJ num papel e te dá, sem você pedir.',
+    '"KTU 409 118-2." Ele lê a tela. "Carga geral. Peças de reposição náutica. Destinatário: um registro comercial de Saffron."',
+    'Ele copia o registro comercial num papel e te dá, sem você pedir.',
     '"Eu não te dei isso."',
     '"Não deu."',
     '"E, {garoto|garota}." Ele desliga a tela. "Peça de reposição náutica não faz barulho na lombada."'
   ],
   ef:{flag:['cnpj_de_saffron','destinacao_saffron'],
-      npc:{nome:'Conferente do porto', opiniao:4, memoria:'Puxou o contêiner no sistema e te deu o CNPJ do destinatário em Saffron.'},
+      npc:{nome:'Conferente do porto', opiniao:4, memoria:'Puxou o contêiner no sistema e te deu o registro comercial do destinatário em Saffron.'},
       rep:{eixo:'bom',delta:2,motivo:'Levou um número a quem tinha o sistema'},
-      registrar:'O contêiner KTU 409 118-2 vai para um CNPJ de Saffron, declarado como peças náuticas.',
-      presagio:'Um CNPJ. Empresa tem endereço, sócio e contrato social. Tudo público.'},
+      registrar:'O contêiner KTU 409 118-2 vai para um registro comercial de Saffron, declarado como peças náuticas.',
+      presagio:'Um registro comercial. Empresa tem endereço, sócio e contrato social. Tudo público.'},
   escolhas:[
     {texto:'Ir embarcar no navio.', vai:'c8_cais'},
-    {texto:'"Como eu descubro de quem é esse CNPJ?"', vai:'c8_como_descubro'},
+    {texto:'"Como eu descubro de quem é esse registro comercial?"', vai:'c8_como_descubro'},
     {texto:'Ir pro cais e entrar pelo torneio.', vai:'c8_noite_porto'}
   ]
 },
 
 c8_como_descubro:{
   texto:[
-    '"Como eu descubro de quem é esse CNPJ?"',
+    '"Como eu descubro de quem é esse registro comercial?"',
     '"Cartório." Ele fala sem pensar. "Ou junta comercial. Contrato social é público."',
     'Ele guarda o barbante da caneta.',
     '"Você vai em cartório, pede certidão simplificada, paga uns oito pokedólares a página e sai com o nome dos sócio."',
@@ -1858,7 +1858,7 @@ c8_como_descubro:{
     '"É legal, é barato e ninguém faz." Ele dá de ombros. "Todo mundo acha que segredo de empresa é segredo. Empresa é a coisa mais pública que existe, {garoto|garota}. O que é secreto é gente."'
   ],
   ef:{flag:'sabe_do_cartorio',
-      registrar:'Certidão simplificada em cartório revela os sócios de um CNPJ. É legal, barato e ninguém faz.',
+      registrar:'Certidão simplificada em cartório revela os sócios de um registro comercial. É legal, barato e ninguém faz.',
       presagio:'Cartório da rua Dez, em Saffron, abre até as cinco e cobra oito pokedólares a cópia.'},
   escolhas:[
     {texto:'Ir embarcar.', vai:'c8_cais'},
@@ -1889,7 +1889,7 @@ c8_clandestino:{
     'Tem três jeitos de entrar num navio sem passagem.',
     'O primeiro é a passarela de serviço, que tem gente.',
     'O segundo é o cabo de amarração, que é filme.',
-    'O terceiro você encontra na terceira volta pelo cais: a escotilha de carga do convés inferior, aberta pra ventilação, com uma escada de gato do lado de fora do casco.',
+    'O terceiro você encontra na terceira volta pelo cais: a escotilha de carga do convés inferior, aberta pra ventilação, com uma escada de marinheiro do lado de fora do casco.',
     'Passa das onze da noite quando você tenta.',
     d=>d.flags.janela_das_23h ? 'E o guardanapo dizia: das 23h às 23h20. Você olha o relógio. São 23h04.' : ''
   ],
@@ -2704,7 +2704,7 @@ c8_o_sapato:{
   vozes:['N','N','N'],
   texto:[
     'Você olha pra baixo antes de responder qualquer coisa.',
-    'Sapato social preto. Solado de couro. Limpo de um jeito que não existe num navio de porto.',
+    'Sapato social preto. Solado de borracha. Limpo de um jeito que não existe num navio de porto.',
     d=>d.flags.sapato_limpo
       ? 'Você já ouviu sobre esse sapato duas vezes. De um caçador numa caverna e de um conferente num pátio.'
       : 'Você não sabe por que reparou nisso.',
@@ -2729,7 +2729,7 @@ c8_sobre_o_que:{
     '"Sobre o quê?"',
     '"Sobre você."',
     'Ele responde na hora e sem nenhum jogo, o que é desarmante.',
-    '"Eu trabalho numa fundação que cuida de bem-estar de espécimes. A gente acompanha treinadores promissores. Bolsa, equipamento, cobertura veterinária."',
+    '"Eu trabalho numa fundação que cuida de bem-estar de espécimes. A gente acompanha treinadores promissores. Bolsa, equipamento, cobertura médica."',
     'Ele não entrega cartão. Ele não insiste.',
     '"Dez minutos numa mesa daquele canto, com o salão inteiro olhando. Não tem nada de sigiloso nisso."',
     'E ele está certo: não tem. É a coisa mais pública do mundo.',
@@ -2801,7 +2801,7 @@ c8_a_conversa:{
   texto:[
     'A mesa fica no canto do salão, com vista pro mar preto, e o salão inteiro consegue ver vocês dois — o que, você entende depois, é o ponto.',
     'Ele fala por nove minutos.',
-    'Bolsa mensal. Equipamento. Cobertura veterinária pro time inteiro. Acesso a instalações de recuperação em quatro cidades. Nada de exclusividade, nada de contrato de imagem, nada de obrigação de resultado.',
+    'Bolsa mensal. Equipamento. cobertura médica pro time inteiro. Acesso a instalações de recuperação em quatro cidades. Nada de exclusividade, nada de contrato de imagem, nada de obrigação de resultado.',
     'É uma proposta boa. É uma proposta absurdamente boa e você fica com vergonha de quanto ela é boa.',
     '"E o que vocês ganham?"',
     '"Dado."',
@@ -3016,7 +3016,7 @@ c8_quatro_mil:{
     'Ele responde de pé, já indo.',
     '"Em Kanto tem por volta de nove mil treinadores licenciados ativos."',
     'Ele faz a conta na sua frente com uma delicadeza brutal.',
-    '"Quase metade, {garoto|garota}. Quase metade preenche a ficha todo mês, por vontade própria, porque a bolsa é boa e a cobertura veterinária é real."',
+    '"Quase metade, {garoto|garota}. Quase metade preenche a ficha todo mês, por vontade própria, porque a bolsa é boa e a cobertura médica é real."',
     'Ele vai.',
     '"E a média deles é o que vai virar a referência."'
   ],
@@ -3217,8 +3217,8 @@ c8_escutou_caixa:{
 c8_etiquetas:{
   texto:[
     'As etiquetas são adesivas, impressas, com código de barras.',
-    'REMETENTE: um CNPJ.',
-    'DESTINATÁRIO: um CNPJ.',
+    'REMETENTE: um registro comercial.',
+    'DESTINATÁRIO: um registro comercial.',
     'CONTEÚDO DECLARADO: "MATERIAL BIOLÓGICO — TRANSPORTE AUTORIZADO".',
     'Material biológico. Transporte autorizado.',
     'E no canto inferior direito, impresso junto com o resto, pequeno e limpo: um brasão com uma balança, e embaixo, em corpo seis, uma inscrição que você lê três vezes pra ter certeza:',
@@ -3239,7 +3239,7 @@ c8_etiquetas:{
 c8_arrancou_etiqueta:{
   texto:[
     'Você descola a etiqueta com a unha. Ela sai inteira, o que é sorte, e o adesivo continua pegajoso, então você cola na última página do seu caderno.',
-    'Agora tem, no seu caderno, um código de barras, dois CNPJs, um número de guia e um brasão.',
+    'Agora tem, no seu caderno, um código de barras, dois registros comerciais, um número de guia e um brasão.',
     'E uma caixa no porão de um navio sem etiqueta nenhuma, o que alguém vai notar.'
   ],
   ef:{presagio:'Uma caixa sem etiqueta. Alguém vai conferir e vai faltar uma etiqueta.'},
@@ -3373,7 +3373,7 @@ c8_enfermaria:{
     'Ela olha o que você trouxe e não faz uma única pergunta.',
     'Trabalha por quarenta minutos em silêncio.',
     d=>d.flags.levou_o_da_terceira || d.flags.soltou_do_porao
-      ? '"Sedativo veterinário", ela diz por fim, sem levantar a cabeça. "Dose de contenção prolongada. Não é ilegal. É o que se usa em transporte de longa distância autorizado."' : '',
+      ? '"Sedativo de uso em Pokémon", ela diz por fim, sem levantar a cabeça. "Dose de contenção prolongada. Não é ilegal. É o que se usa em transporte de longa distância autorizado."' : '',
     d=>d.flags.o_garoto_da_enfermaria
       ? 'Na segunda maca tem um garoto de dezesseis anos dormindo, com soro no braço. É o que faltou no torneio.' : '',
     'Ela lava as mãos.',
@@ -4248,7 +4248,7 @@ c8_quem_e_responsavel:{
     '"O conferente confere lacre, número e peso, e está em ordem."',
     '"O contramestre contrata registrado, e está em ordem."',
     '"A companhia loca espaço de carga a um terceiro com documentação válida, e está em ordem."',
-    '"A fundação tem estatuto publicado, CNPJ e autorização de transporte, e está em ordem."',
+    '"A fundação tem estatuto publicado, registro comercial e autorização de transporte, e está em ordem."',
     '"E os garotos assinaram termo de vaga de trabalho por vontade própria, e está em ordem."',
     'Ele abre as mãos.',
     '"Não tem nenhuma peça errada. A máquina inteira está errada e não tem nenhuma peça errada."'

@@ -399,11 +399,11 @@ vermilion:[
      ]},
     {texto:'Perguntar o que tem na caixa.',
      ef:{flag:'sabe_da_caixa_de_gelo',
-         registrar:'A caixa de gelo do porto leva o peixe que não passa na balança da cooperativa.'},
+         registrar:'A caixa de gelo do porto leva o que vem na rede e não passa na balança da cooperativa.'},
      resultado:[
-       fala('a mais nova das duas', 'Peixe que não passa na balança da cooperativa.'),
-       fala('a mais nova das duas', 'Peixe bom, mas fora do tamanho. A cooperativa não compra e manda devolver ao mar.'),
-       fala('a mais velha das duas', 'Devolver ao mar peixe morto. É isso que eles mandam.', 'frio'),
+       fala('a mais nova das duas', 'O que vem na rede e não passa na balança da cooperativa.'),
+       fala('a mais nova das duas', 'Coisa boa, mas fora do tamanho. A cooperativa não compra e manda devolver ao mar.'),
+       fala('a mais velha das duas', 'Devolver ao mar coisa morta. É isso que eles mandam.', 'frio'),
        fala('a mais nova das duas', 'A gente carrega na mão pra vender na peixaria pequena. Dá metade do preço e dá pra comer.')
      ]},
     {texto:'Comprar a caixa inteira pelo preço da cooperativa.',
@@ -783,13 +783,13 @@ fuchsia:[
      ef:{itens:{'Lista do que depende do diretor de área':1},
          flag:'lista_do_diretor_de_area',
          rep:{eixo:'bom',delta:3,motivo:'Puxou o fio de uma placa de horário até uma lista inteira', rep:{notorio:true}},
-         registrar:'O cargo vago de diretor de área trava onze coisas na reserva, incluindo laudo de óbito de animal.'},
+         registrar:'O cargo vago de diretor de área trava onze coisas na reserva, incluindo laudo de óbito de Pokémon.'},
      resultado:[
        'Ele para. Ele olha pra você de um jeito diferente.',
        fala('o porteiro da reserva', 'Espera aqui.'),
        'Ele volta em quatro minutos com uma folha datilografada que claramente alguém já tinha preparado antes, e que estava esperando alguém perguntar.',
        'Onze itens. Placa de horário é o número nove.',
-       'O número um é: LAUDO DE ÓBITO DE ANIMAL EM CATIVEIRO — AGUARDANDO ASSINATURA.',
+       'O número um é: LAUDO DE ÓBITO DE POKÉMON EM CATIVEIRO — AGUARDANDO ASSINATURA.',
        fala('o porteiro da reserva', 'Tem coisa esperando desde 95 nessa lista, {moço|moça}.', 'baixo')
      ]},
     {texto:'Corrigir a placa você mesm{o|a}, com caneta, pela quinta vez.',
@@ -920,7 +920,7 @@ saffron:[
        fala('a mulher de terno', 'Catorze o quê?'),
        d=>fala(d.jogador.nome, 'Catorze "não". Eu contei.'),
        'Ela fica em silêncio dois segundos e aí ri alto, no meio da calçada, de um jeito que claramente não estava no roteiro do dia dela.',
-       fala('a mulher de terno', 'Catorze. Meu Deus.', 'riso'),
+       fala('a mulher de terno', 'Catorze. Caramba.', 'riso'),
        fala('a mulher de terno', 'E eu vou ter que dizer mais uns quarenta hoje.')
      ]},
     {texto:'Seguir andando.', ef:{},
@@ -994,11 +994,11 @@ cinnabar:[
     {texto:'Sentar no píer e perguntar o que mudou exatamente.',
      ef:{flag:'o_que_o_barqueiro_notou',
          rep:{eixo:'bom',delta:2,motivo:'Sentou no píer e ouviu quem trabalha na água há quarenta anos'},
-         registrar:'O barqueiro de Cinnabar: a água esquentou meio grau e os peixes desceram.'},
+         registrar:'O barqueiro de Cinnabar: a água esquentou meio grau e os cardumes de Magikarp desceram.'},
      resultado:[
        fala('o barqueiro', 'A temperatura. Meio grau, talvez menos.'),
-       fala('o barqueiro', 'Meio grau não é nada pra ninguém. Pra peixe é tudo.'),
-       fala('o barqueiro', 'Os peixes desceram. Tudo que comia peixe de superfície sumiu. E o que comia esses sumiu atrás.'),
+       fala('o barqueiro', 'Meio grau não é nada pra ninguém. Pra Magikarp é tudo.'),
+       fala('o barqueiro', 'Os Magikarp desceram. Tudo que caçava Magikarp na superfície sumiu. E o que comia esses sumiu atrás.'),
        fala('o barqueiro', 'Em três meses. Três meses, {moço|moça}.', 'baixo'),
        'Ele olha pro vulcão. Você olha pro vulcão. Nenhum dos dois fala o que os dois estão pensando.'
      ]},
@@ -1138,7 +1138,7 @@ const EVENTOS_GERAIS = [
          registrar:'Perguntou na loja se o Pokémon da calçada era de alguém. Era, e não era.'},
      resultado:[
        fala('a moça da loja', 'É da rua.'),
-       fala('a moça da loja', 'Não é de ninguém e é de todo mundo. A gente dá comida, o veterinário olha de vez em quando, e ele dorme onde quer.'),
+       fala('a moça da loja', 'Não é de ninguém e é de todo mundo. A gente dá comida, o médico de Pokémon olha de vez em quando, e ele dorme onde quer.'),
        fala('a moça da loja', 'Se você levar ele eu não vou impedir. Mas ele não vai querer ir.')
      ]},
     {texto:'Dar comida.',
@@ -1270,21 +1270,21 @@ campo:[
        'Ele agradece, pega o chapéu e vai andando pra lá com uma marreta, no ritmo de quem tem setenta anos e vinte anos de cerca caindo.',
        fala('o senhor da casa', 'Obrigado por vir falar. A maioria passa.', 'baixo')
      ]},
-    {texto:'Tocar o gado de volta pro pasto antes de qualquer coisa.',
+    {texto:'Tocar as Miltank de volta pro pasto antes de qualquer coisa.',
      teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
-     bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tocou o gado de volta antes que desse acidente na estrada'},
+     bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tocou as Miltank de volta antes que desse acidente na estrada'},
               registrar:'Tocou seis Miltank de volta pro pasto sozinho.'},
           resultado:[
             'Você abre os braços e anda devagar em semicírculo, que é a coisa certa e você não sabe como sabe.',
             'As seis voltam. A quinta olha pra você de um jeito que dá pra ler como ingratidão.',
             'Você ainda vai ter que resolver a cerca, mas pelo menos não vai ter Miltank na pista.'
           ]},
-     ruim:{ef:{hp:-3, registrar:'Tentou tocar o gado e levou um encontrão.'},
+     ruim:{ef:{hp:-3, registrar:'Tentou tocar as Miltank e levou um encontrão.'},
            resultado:[
              'A terceira decide que você é o problema e vem na sua direção com a cabeça baixa.',
              'Você sai de perto mais rápido do que gostaria de admitir e elas continuam exatamente onde queriam estar.'
            ]}},
-    {texto:'Não é sua cerca, não é seu gado, não é sua estrada.',
+    {texto:'Não é sua cerca, não é seu rebanho, não é sua estrada.',
      ef:{},
      resultado:['Você passa.','Uns oitocentos metros adiante você ouve uma buzina longa atrás de você e não olha pra trás.']}
   ]
@@ -1575,7 +1575,7 @@ floresta:[
            ]}},
     {texto:'Chamar. Alto. Ver o que acontece.',
      ef:{hp:-3, flag:'chamou_no_mato',
-         rep:{eixo:'bom',delta:1,motivo:'Chamou alto uma coisa grande no mato, o que é burrice e é coragem'},
+         rep:{eixo:'bom',delta:1,motivo:'Chamou alto uma coisa grande no mato, o que é besteira e é coragem'},
          registrar:'Chamou alto a coisa que estava no mato fechado.'},
      resultado:[
        'Você grita.',

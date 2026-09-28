@@ -262,7 +262,7 @@ c30_subiu_procurando:{
 
 c30_levou_as_tiras:{
   texto:[
-    'Você tira as oito tiras do livro e guarda, e imediatamente entende que acabou de fazer uma coisa burra.',
+    'Você tira as oito tiras do livro e guarda, e imediatamente entende que acabou de fazer uma coisa estúpida.',
     'Sem as tiras, o livro volta a ser um livro de sepultamento comum e quem voltar não vai saber que alguém descobriu.',
     'Com as tiras na sua mão, você tem oito pedaços de papel de caderno rasgados que não provam absolutamente nada pra ninguém.',
     'Você fica olhando os oito pedaços na palma da mão no quinto andar de uma torre e considera seriamente pôr de volta.'

@@ -123,7 +123,7 @@ c5_ab_sem_pilha:{
 c5_ab_comprou:{
   texto:[
     'Você paga. Ela conta as moedas duas vezes, porque é o jeito dela, não porque desconfia de você.',
-    'Ela entrega o par de pilhas e mais uma coisa que você não comprou: um toco de vela de sete centímetros, desses de igreja.',
+    'Ela entrega o par de pilhas e mais uma coisa que você não comprou: um toco de vela de sete centímetros, desses de vigília.',
     fala('a senhora da barraca', 'Esse é de graça.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('a senhora da barraca', 'Porque pilha acaba e vela avisa antes de acabar.')
@@ -238,7 +238,7 @@ c5_escada:{
   texto:[
     'A escada é de madeira roliça amarrada com arame, feita à mão, do tipo que se faz numa tarde.',
     'Ela encosta na parede e termina numa saliência a uns quatro metros. Da saliência não sai caminho nenhum.',
-    'Mas na saliência tem coisa: dois pregos batidos na rocha, uma lona verde dobrada, e uma lata de sardinha vazia, enferrujada por fora e limpa por dentro.',
+    'Mas na saliência tem coisa: dois pregos batidos na rocha, uma lona verde dobrada, e uma lata de feijão vazia, enferrujada por fora e limpa por dentro.',
     'Alguém dormiu aqui em cima. Alguém que queria ver a boca da caverna sem ser visto da boca da caverna.'
   ],
   ef:{flag:'achou_o_posto', registrar:'Alguém montou um posto de observação sobre a entrada do Monte da Lua.',
@@ -292,7 +292,7 @@ c5_espera_posto:{
     'Uma hora e quarenta.',
     'E então sai gente.',
     'Três pessoas. Roupa de trabalho comum, botina, luva. Uma carrega uma caixa plástica com tampa. Outra carrega duas.',
-    'Eles não olham pra cima. Descem a trilha conversando sobre futebol.',
+    'Eles não olham pra cima. Descem a trilha conversando sobre a Liga.',
     'A caixa de cima, na pilha de duas, está com a tampa mal encaixada. Dá pra ver que dentro tem palha. E dá pra ver a palha se mexendo.'
   ],
   ef:{flag:'viu_a_saida', registrar:'Viu três pessoas saírem do Monte da Lua com caixas. Dentro de uma delas tinha coisa viva.',
@@ -548,7 +548,7 @@ c5_venceu_trio:{
 
 c5_barrou:{
   texto:[
-    'Você atravessa na frente deles na trilha, de braços abertos, que é a coisa mais burra e mais humana que dá pra fazer.',
+    'Você atravessa na frente deles na trilha, de braços abertos, que é a coisa mais estúpida e mais humana que dá pra fazer.',
     'Os três param.',
     'E aí acontece uma coisa que você não previu: eles esperam.',
     'Ficam ali, parados, com as caixas, olhando você de braços abertos numa trilha de terra.',
@@ -677,7 +677,7 @@ c5_perdeu_trio:{
     'Você perde.',
     'Eles não te machucam. Isso é importante e é pior do que se machucassem: o da aliança dá um tapinha no seu ombro, do jeito de quem consola um sobrinho.',
     '"Treina mais." Ele pega a caixa. "Sério, {moleque|moleca}. Treina mais."',
-    'Eles descem a trilha conversando sobre futebol de novo, e você fica sentad{o|a} na terra com o time desmaiado e uma humilhação que não tem nome.'
+    'Eles descem a trilha conversando sobre a Liga de novo, e você fica sentad{o|a} na terra com o time desmaiado e uma humilhação que não tem nome.'
   ],
   ef:{flag:['perdeu_pro_trio','deixou_os_ovos_irem'], hp:-3, causa:'Derrota na trilha do Monte da Lua',
       presagio:'"Treina mais." Você vai treinar. Vai treinar muito. E vai lembrar de onde veio a vontade.'},
@@ -1070,7 +1070,7 @@ c5_fora:{
 c5_latas:{
   texto:[
     'Vinte e duas latas. Você conta porque não tem mais nada pra fazer com essa informação.',
-    'Sardinha, milho, salsicha. Todas abertas com faca, não com abridor. Todas empilhadas — empilhadas, não jogadas —, o que quer dizer que a pessoa ficou tempo o bastante pra criar um sistema.',
+    'Feijão, milho, ervilha. Todas abertas com faca, não com abridor. Todas empilhadas — empilhadas, não jogadas —, o que quer dizer que a pessoa ficou tempo o bastante pra criar um sistema.',
     'Embaixo de uma pedra tem um pedaço de papelão com escrita a caneta, quase apagada pelo sereno.',
     '"DIA 31. ELES TROCAM O TURNO ÀS 6 E ÀS 18. O DA MANHÃ É O QUE CONTA AS CAIXAS."',
     'Não tem assinatura. O papelão é velho de meses.'
@@ -1453,10 +1453,10 @@ c5_virar_alguem:{
     'Ela ri. Depois para de rir, porque a ideia é menos idiota do que ela gostaria.',
     '"Oito insígnias te dão credencial de Liga." Ela pensa em voz alta. "Credencial de Liga te dá legitimação pra pedir vista de processo administrativo. Você virava parte interessada."',
     'Ela bate na pasta com dois dedos.',
-    '"É o plano mais lento e mais burro que eu já ouvi. E é o único que eu ouvi."'
+    '"É o plano mais lento e mais bobo que eu já ouvi. E é o único que eu ouvi."'
   ],
   ef:{flag:'plano_das_insignias',
-      npc:{nome:'Dra. Cordell', opiniao:5, memoria:'Você propôs ganhar as oito insígnias pra ter legitimidade de pedir vista do processo. Ela chamou de burro e não discordou.'},
+      npc:{nome:'Dra. Cordell', opiniao:5, memoria:'Você propôs ganhar as oito insígnias pra ter legitimidade de pedir vista do processo. Ela chamou de bobo e não discordou.'},
       rep:{eixo:'bom',delta:1,motivo:'Encontrou um motivo maior para uma jornada comum'},
       registrar:'As oito insígnias deixaram de ser esporte: viraram credencial.',
       presagio:'A partir de hoje cada insígnia tem um segundo motivo, e o segundo motivo é o verdadeiro.'},

@@ -493,7 +493,7 @@ c1e_os_outros:{
   texto:[
     d=>fala(d.jogador.nome, 'E os outros? Os que não têm quem assine.'),
     'Ele mexe no barbante da caneta.',
-    fala('Célio', 'Assina um tutor. Assina um diretor de escola. Assina o padre, já vi.'),
+    fala('Célio', 'Assina um tutor. Assina um diretor de escola. Assina o líder de ginásio, já vi.'),
     fala('Célio', 'Uma vez em Saffron assinou uma enfermeira que tinha conhecido o menino naquela semana.'),
     fala('Célio', 'O papel não pergunta se a pessoa te ama. Pergunta se ela é responsável por você.', 'baixo'),
     fala('Célio', 'São coisas diferentes e às vezes é a mesma pessoa e às vezes não é.'),

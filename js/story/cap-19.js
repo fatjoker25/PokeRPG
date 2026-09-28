@@ -174,7 +174,7 @@ c19_ab_o_cachorro:{
     d=>fala(d.jogador.nome, 'Virado pra estação.'),
     fala('Sra. Hazel', 'Virado pra estação.'),
     'O Growlithe não pisca. Não é que ele não pisque nunca: é que ele pisca do jeito de quem não quer perder nada de vista.',
-    fala('Sra. Hazel', 'Levei no veterinário duas vezes. Os dois falaram que ele tá ótimo.'),
+    fala('Sra. Hazel', 'Levei no médico de Pokémon duas vezes. Os dois falaram que ele tá ótimo.'),
     fala('Sra. Hazel', 'Ele tá ótimo. Ele só não dorme.', 'baixo'),
     d=>{
       const p = d.time[0];
@@ -312,7 +312,7 @@ c19_placa:{
     'ÁREA DE PESQUISA — ACESSO RESTRITO. Comissão de Gestão de Risco Biológico de Kanto — CGRB. Licença ambiental 2.117. Registro 11.402.',
     'Embaixo, em corpo menor: Visitas monitoradas às quintas-feiras, das 14h às 16h, mediante agendamento prévio. Telefone.',
     'E, no rodapé, uma linha que você lê três vezes.',
-    'Em caso de encontro com animal fora do perímetro, ligue para este número. Não tente capturar.'
+    'Em caso de encontro com Pokémon fora do perímetro, ligue para este número. Não tente capturar.'
   ],
   ef:{flag:['sabe_da_visita','sabe_do_telefone_da_estacao'],
       registrar:'A Estação 4 faz visita monitorada às quintas, das 14h às 16h.'},
@@ -1233,7 +1233,7 @@ c19_ponto_sete:{
   texto:[
     'O roteiro leva vinte e dois minutos até o ponto sete, passando pelo refeitório, pela oficina e pela área de pesagem.',
     'No ponto sete, a Kira para a três metros da porta de aço, de costas para ela, e faz a apresentação da prática de frente para você.',
-    'Ela fala dois minutos e meio sobre parâmetros de viabilidade, parecer veterinário, dupla assinatura e arquivo de dez anos.',
+    'Ela fala dois minutos e meio sobre parâmetros de viabilidade, parecer médico, dupla assinatura e arquivo de dez anos.',
     'Ela fala tudo certo. Ela não olha para trás uma vez sequer.',
     'Quando termina, diz: "encerramos no refeitório, tem café", e espera.'
   ],
@@ -1291,7 +1291,7 @@ c19_saiu_do_roteiro:{
 
 c19_foi_embora:{
   texto:[
-    'Você toma o café no refeitório, com a Kira e mais quatro pessoas que estão no intervalo, e a conversa é sobre um time de futebol e sobre o preço do ovo.',
+    'Você toma o café no refeitório, com a Kira e mais quatro pessoas que estão no intervalo, e a conversa é sobre um ginásio e sobre o preço do ovo.',
     'Na saída, ela te dá um folheto impresso em papel bom.',
     'Tem um gráfico de sobrevivência, uma foto de um filhote no colo de alguém e a frase conservação de segunda geração.',
     'Você lê esse folheto umas quinze vezes nos dias seguintes, sempre parando na mesma linha, que é a legenda da foto: cada um deles é contado, um por um.'
@@ -1395,7 +1395,7 @@ c19_refeitorio:{
   texto:[
     'O refeitório tem seis mesas de fórmica, um bebedouro, uma televisão pequena e um mural com a lista do almoço da semana.',
     'Às onze e quarenta, tem nove pessoas comendo.',
-    'A conversa é sobre um time de futebol, sobre uma reforma de banheiro e sobre uma moça chamada Elda, que teve nenê e mandou foto.',
+    'A conversa é sobre um ginásio, sobre uma reforma de banheiro e sobre uma moça chamada Elda, que teve nenê e mandou foto.',
     'A foto está passando de mão em mão. Quando chega na sua, alguém te entrega naturalmente, porque você está sentad{o|a} ali.',
     'É uma criança de dois meses de olho fechado.'
   ],
@@ -1549,7 +1549,7 @@ c19_so_ouviu:{
   texto:[
     'Você fica quarenta minutos ouvindo nove pessoas almoçarem.',
     'Ninguém fala do trabalho. É isso que você leva do refeitório: em quarenta minutos, ninguém falou uma palavra sobre o que faz aqui.',
-    'Falaram de futebol, de reforma, de nenê, de um Growlithe que sumiu na vila e apareceu, de preço de ração.',
+    'Falaram da Liga, de reforma, de nenê, de um Growlithe que sumiu na vila e apareceu, de preço de ração.',
     'Em qualquer outro lugar, isso seria normal. Em qualquer outro lugar, gente não fala de trabalho no almoço.',
     'Mas você fica com a sensação de ter assistido a um acordo silencioso que ninguém precisou combinar.'
   ],
@@ -2096,12 +2096,12 @@ c19_sena_filho:{
     '"Por que {o senhor|a senhora} pergunta isso?"',
     '"Porque todo mundo aqui tem uma frase pronta e eu quero ouvir a que não é pronta."',
     'Ele pousa a caneta.',
-    '"Eu tenho duas filhas e elas não sabem o que eu faço." Ele diz isso olhando a bancada. "Elas sabem que eu trabalho com bicho. A mais nova acha que eu sou veterinário e eu deixo."',
+    '"Eu tenho duas filhas e elas não sabem o que eu faço." Ele diz isso olhando a bancada. "Elas sabem que eu trabalho com bicho. A mais nova acha que eu sou médico de Pokémon e eu deixo."',
     'Ele pega a caneta de novo.',
     '"É a resposta que {o senhor|a senhora} queria?"'
   ],
   ef:{instabilidade:1,
-      npc:{nome:'Dr. Hollis', opiniao:1, memoria:'Deixa a filha mais nova acreditar que ele é veterinário.'},
+      npc:{nome:'Dr. Hollis', opiniao:1, memoria:'Deixa a filha mais nova acreditar que ele é médico de Pokémon.'},
       registrar:'As filhas do Dr. Hollis não sabem o que ele faz.'},
   escolhas:[
     {texto:'"E o galpão do fundo?"', vai:'c19_sena_galpao'},

@@ -736,7 +736,7 @@ c3_devolveu_mochila:{
 c3_correu_com_mochila:{
   texto:[
     'Você corre com a mochila deles pelo mato fechado de uma floresta que você não conhece, perseguido por dois adultos que conhecem.',
-    'Dura oito minutos. Você ganha oito minutos porque eles não esperavam que você fosse burr{o|a} o suficiente pra correr pra dentro em vez de pra fora.',
+    'Dura oito minutos. Você ganha oito minutos porque eles não esperavam que você fosse doid{o|a} o suficiente pra correr pra dentro em vez de pra fora.',
     'No nono minuto você acha a trilha marcada por acidente e corre nela por mais quinze.',
     'Quando para, não tem ninguém atrás de você. Tem uma mochila cara, três Great Balls, um caderno de trinta e uma páginas e um ponto na barriga que não passa.'
   ],

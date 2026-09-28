@@ -101,7 +101,7 @@ c5_a_pedra:{
       const q = Campo.quebrar();
       return q.pode
         ? 'A picareta entra na argamassa velha como colher em bolo. Vinte minutos de trabalho e um buraco do tamanho de um ombro.'
-        : 'Você empurra, chuta e tenta com o pé de cabra que não tem. Alvenaria velha cede — mas cede pra quem trouxe ferramenta, e você não trouxe.';
+        : 'Você empurra, chuta e tenta com a alavanca que não tem. Alvenaria velha cede — mas cede pra quem trouxe ferramenta, e você não trouxe.';
     }
   ],
   ef:{flag:'a_parede_de_alvenaria',

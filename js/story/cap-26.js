@@ -308,7 +308,7 @@ c21_refeitorio:{
   texto:[
     'O refeitório do Planalto fica no subsolo e é igual a refeitório de qualquer lugar grande: bandeja, fila, um cartaz sobre desperdício e uma televisão sem som.',
     'Quem come aqui não é Elite 4. É gente de manutenção, de arquivo, da cozinha, do setor de licenças.',
-    'Você senta numa ponta de mesa com uma bandeja de arroz, feijão, um bife fino e beterraba.',
+    'Você senta numa ponta de mesa com uma bandeja de arroz, feijão, uma omelete e beterraba.',
     'Na mesa do lado, três pessoas de macacão discutem se a caldeira do bloco C aguenta mais um inverno.'
   ],
   escolhas:[

@@ -211,13 +211,13 @@ const ITENS_INFO = {
                       desc:'Faixa de algodão grossa amarrada no punho ou na pata. Não protege de nada. Aperta.'},
   'Punho de Ferro':  {tipo:'equipar', cat:'Segurado', efeito:{fis:1},
                       ficha:'SEGURADO · +1 dado de dano em golpes físicos',
-                      desc:'Um peso de chumbo costurado numa tira de couro. Pesa e cansa e funciona.'},
+                      desc:'Um peso de chumbo costurado numa tira de lona. Pesa e cansa e funciona.'},
   'Óculos Grossos':  {tipo:'equipar', cat:'Segurado', efeito:{esp:1},
                       ficha:'SEGURADO · +1 dado de dano em golpes especiais',
                       desc:'Lente de vidro grosso numa armação torta. Foi de alguém.'},
-  'Colete de Couro': {tipo:'equipar', cat:'Segurado', efeito:{defesa:1},
+  'Colete de Lona': {tipo:'equipar', cat:'Segurado', efeito:{defesa:1},
                       ficha:'SEGURADO · +1 de Vitalidade e de Instinto contra dano',
-                      desc:'Couro rachado, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
+                      desc:'Lona rachada, fivela de metal, remendo nas costas. Já levou pancada por outro.'},
   'Botina Leve':     {tipo:'equipar', cat:'Segurado', efeito:{vel:2},
                       ficha:'SEGURADO · +2 de iniciativa pra ordem dos turnos',
                       desc:'Sola fina, quase gasta. Quem usa isso não planeja apanhar.'},
@@ -266,7 +266,7 @@ const BOLSAS_VENDIDAS = {
   'Mochila Azul':     'Azul de uniforme, costura dupla no fundo. Sobra de um lote encomendado por uma escola que fechou.',
   'Mochila Verde':    'Verde de mato, com bolso lateral pra cantil. Cheira a barraca guardada úmida e ninguém consegue tirar.',
   'Mochila Amarela':  'Amarela de estrada, com faixa refletiva na aba. Quem acampa perto de rodovia compra essa e nenhuma outra.',
-  'Mochila Marrom':   'Couro curtido, fivela de latão, e pesa vazia. Dura trinta anos e os trinta aparecem nela.',
+  'Mochila Marrom':   'Lona grossa e encerada, fivela de latão, e pesa vazia. Dura trinta anos e os trinta aparecem nela.',
   'Mochila Laranja':  'Laranja de resgate, costurada pra abrir com uma mão só. Veio de um lote de brigada de incêndio.',
   'Bolsa Roxa':       'Roxa escura, de tecido acetinado que marca o dedo. Vendida como bolsa de cidade e usada como mochila mesmo assim.',
   'Bolsa Branca':     'Branca de algodão cru, que suja no primeiro dia e não desbota nunca mais.',
@@ -1112,6 +1112,18 @@ const Estado = {
       const d = this.dados;
       for (const p of [].concat(d.time || [], d.pc || [], d.cemiterio || []))
         if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
+      /* nomes que mudaram depois que o save foi gravado: o item e a
+         pessoa continuam os mesmos, só o nome na tela é outro */
+      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona'};
+      for (const [velho, novo] of Object.entries(ITEM_NOVO)){
+        if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
+        for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;
+      }
+      const NPC_NOVO = {'a mulher da pasta de couro':'a mulher da pasta de vinil', 'Mulher da pasta de couro':'Mulher da pasta de vinil',
+                        'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
+                        'Sr. Roland Poplar':'Sr. Emory Poplar'};
+      for (const [velho, novo] of Object.entries(NPC_NOVO))
+        if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; delete d.npcs[velho]; }
       return true;
     } catch(e){ return false; }
   },

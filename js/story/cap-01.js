@@ -1403,7 +1403,7 @@ c1_divida_assume:{
 c1_divida_nega:{
   texto:[
     d=>`${vz().f ? 'A velha' : 'O velho'} te olha por tempo demais. Depois abaixa a cabeça e volta pro que estava fazendo.`,
-    d=>fala(vz().nome, 'Tá certo. Vai com Deus.', 'frio', `${vz().Ele} não levanta a cabeça uma vez sequer.`),
+    d=>fala(vz().nome, 'Tá certo. Vai com cuidado.', 'frio', `${vz().Ele} não levanta a cabeça uma vez sequer.`),
     d=>`${vz().Ele} não vai esquecer. Gente que faz a mesma coisa na frente de casa há vinte anos não esquece nada — e você vai voltar um dia.`
   ],
   ef:{rep:{eixo:'ruim',delta:1,motivo:'Negou uma dívida na própria cidade'},

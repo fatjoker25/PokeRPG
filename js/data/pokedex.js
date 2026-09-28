@@ -155,7 +155,7 @@ const DEX_RAW = [
 [149,'Dragonite',['Dragão','Voador'],91,134,95,100,100,80,0,0],
 [150,'Mewtwo',['Psíquico'],106,110,90,154,90,130,0,0],
 [151,'Mew',['Psíquico'],100,100,100,100,100,100,0,0],
-/* Cães Lendários e Ho-Oh — existem em Kanto por decreto do universo desta campanha */
+/* O trio lendário (Raikou, Entei, Suicune) e Ho-Oh — existem em Kanto por decreto do universo desta campanha */
 [243,'Raikou',['Elétrico'],90,85,75,115,100,115,0,0],
 [244,'Entei',['Fogo'],115,115,85,90,75,100,0,0],
 [245,'Suicune',['Água'],100,75,115,90,115,85,0,0],
@@ -166,7 +166,7 @@ const DEX_RAW = [
    JOHTO — registros 152 a 251
    Entram na tabela desde o começo porque a Pokédex Nacional é
    um upgrade de software, não um catálogo novo: o aparelho já
-   sabe ler tudo, só não te mostra antes da hora. Os três cães,
+   sabe ler tudo, só não te mostra antes da hora. Os três do trio lendário,
    o Ho-Oh e, por tabela, o Lugia e o Celebi já tinham entrada
    acima porque a história de Kanto passa por eles.
 
