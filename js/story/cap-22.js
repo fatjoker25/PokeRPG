@@ -101,14 +101,16 @@ c22_ab_os_sete:{
     'Ele dobra a folha no meio.',
     fala('o rapaz da caneta', 'Sabe o que me incomoda? Os vinte e cinco também têm cidade escrita embaixo.'),
     d=>fala(d.jogador.nome, 'E daí?'),
-    fala('o rapaz da caneta', 'E daí que eu conheço treinador de Fuchsia, de Cinnabar, de Lavender. Eu viajo.'),
-    fala('o rapaz da caneta', 'Nenhum dos vinte e cinco é de Fuchsia, Cinnabar ou Lavender.'),
+    fala('o rapaz da caneta', 'E daí que eu conheço treinador de Saffron, de Celadon, de Vermilion. Eu viajo.'),
+    fala('o rapaz da caneta', 'Dezoito dos vinte e cinco são dessas três cidades, e eu não conheço nenhum.'),
     'Ele guarda a folha no bolso de trás.',
-    fala('o rapaz da caneta', 'Trinta e dois inscritos e nenhum das três cidades mais longe da capital.', 'baixo')
+    fala('o rapaz da caneta', 'Dezoito desconhecidos das três cidades maiores, no mesmo chaveamento.', 'baixo')
   ],
   ef:{flag:'o_chaveamento_e_de_tres_cidades',
-      registrar:'Nenhum dos 32 inscritos é de Fuchsia, Cinnabar ou Lavender.',
-      presagio:'É o mesmo recorte da lista de convocação. As mesmas três cidades, de novo.'},
+      registrar:'Dezoito dos 25 inscritos desconhecidos são de Saffron, Celadon ou Vermilion.',
+      presagio:d=>d.flags.o_criterio_administrativo
+        ? 'É o mesmo recorte da lista de convocação. As mesmas três cidades, de novo.'
+        : 'Dezoito estranhos das mesmas três cidades não é sorteio. É lista.'},
   escolhas:[
     {texto:'Ir até a mesa perguntar quem pagou.', vai:'c22_o_quadro'},
     {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
@@ -122,7 +124,7 @@ c22_ab_o_recibo:{
     d=>fala(d.jogador.nome, 'Eu queria me inscrever no aberto.'),
     fala('o funcionário da mesa', 'Nome?'),
     'Você diz. Ele corre o dedo pela coluna e para.',
-    fala('o funcionário da mesa', 'Você já tá inscrito.'),
+    fala('o funcionário da mesa', 'Você já tá inscrit{o|a}.'),
     d=>fala(d.jogador.nome, 'Não tô.'),
     fala('o funcionário da mesa', 'Tá sim, ó: chave quatro. Inscrição paga e confirmada.'),
     'Ele vira o livro na sua direção pra te mostrar, com a boa vontade de quem acha que está resolvendo um mal-entendido.',
@@ -170,12 +172,12 @@ c22_exigiu_o_nome:{
     'Você exige, e o funcionário da mesa te leva à supervisora, e a supervisora abre uma pasta e vira a pasta pra você ver.',
     fala('a supervisora', 'Dinheiro vivo, no balcão, três dias atrás. Quem paga em dinheiro não deixa nome.'),
     fala('a supervisora', 'Eu posso te dizer o que o rapaz do balcão lembrou: mulher, de terno, crachá azul pendurado no bolso.'),
-    'Crachá azul. Décimo andar da Silph.',
+    d=>d.flags.sabe_dos_crachas ? 'Crachá azul. Na Silph, é o crachá que sobe até o décimo andar.' : 'Crachá azul. Você guarda o detalhe.',
     fala('a supervisora', 'Isso não é ilegal, {moço|moça}. É esquisito, e eu concordo que é esquisito, mas não é ilegal.')
   ],
   ef:{flag:'pagou_uma_de_cracha_azul',
       rep:{eixo:'bom',delta:1,motivo:'Exigiu saber quem estava pagando por você'},
-      registrar:'Quem pagou a inscrição era uma mulher de crachá azul da Silph.'},
+      registrar:'Quem pagou a inscrição era uma mulher de terno, de crachá azul.'},
   escolhas:[
     {texto:'Aceitar a vaga sabendo de onde veio.', vai:'c22_aceitou'},
     {texto:'Recusar justamente por isso.', vai:'c22_recusou_a_vaga'},
@@ -364,7 +366,7 @@ c22_perdeu_a_final:{
   texto:[
     'Você perde. O Arcanine dela não cai, e em algum ponto do combate você entende que não vai cair, e continua tentando mesmo assim, que é a única coisa decente a fazer.',
     'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
-    fala('Nadia', 'Você é bom. Você vai ser muito melhor.'),
+    fala('Nadia', 'Você é {bom|boa}. Você vai ser muito melhor.'),
     fala('Nadia', 'Eu levei vinte e dois anos pra voltar pra essa arena. Você chegou aqui em quanto tempo?'),
     d=>fala(d.jogador.nome, 'Uns meses.'),
     fala('Nadia', 'Então não faz essa cara.', 'riso')
@@ -382,7 +384,7 @@ c22_perdeu_a_final:{
 
 c22_trocou_numero:{
   texto:[
-    'Vocês trocam número no meio da arena, com a arquibandada esvaziando, com o locutor já falando de outra coisa.',
+    'Vocês trocam número no meio da arena, com a arquibancada esvaziando, com o locutor já falando de outra coisa.',
     fala('Nadia', 'Eu não sei usar isso direito. A minha filha que configurou.'),
     fala('Nadia', 'Se eu ligar errado e desligar na sua cara, não leva a mal. Liga de volta.', 'riso')
   ],
@@ -394,12 +396,12 @@ c22_trocou_numero:{
 
 c22_foi_embora:{
   texto:[
-    'Você desce a estrada do Planalto no fim da tarde com a arquibandada esvaziando atrás de você e o quadro de cortiça já sem nome nenhum.',
+    'Você desce a estrada do Planalto no fim da tarde com a arquibancada esvaziando atrás de você e o quadro de cortiça já sem nome nenhum.',
     d=>d.flags.viu_a_mulher_do_cracha_azul || d.flags.pagou_uma_de_cracha_azul
       ? 'A vaga que alguém comprou pra você já foi usada. Quem comprou vai cobrar, e você já sabe que vai, e já sabe mais ou menos quando.'
       : 'Alguém pagou a sua inscrição e nunca apareceu, e isso vai ficar guardado num canto da sua cabeça pelo resto da estrada.',
     'Na descida você passa por uma placa nova, de madeira, que não estava aqui na sua última subida.',
-    'ROTA 23 — CONTROLE DE ACESSO. SETE POSTOS. TENHA O CARTÃO EM MÃOS.'
+    '**ROTA 23 — CONTROLE DE ACESSO. SETE POSTOS. TENHA O CARTÃO EM MÃOS.**'
   ],
   ef:{flag:'viu_a_placa_da_rota23',
       registrar:'Viu a placa nova do controle de acesso da Rota 23.'},

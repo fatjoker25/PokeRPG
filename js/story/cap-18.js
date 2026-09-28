@@ -2292,14 +2292,14 @@ c18_os_outros_dois:{
 
 c18_mulher_da_radio:{
   texto:[
-    '"Nadia Arden." A Auditora Brill escreve o nome num pedaço do próprio bloco e destaca. "Rádio comunitária de Fuchsia, programa das seis da manhã."',
+    '"Maeve Corwin." A Auditora Brill escreve o nome num pedaço do próprio bloco e destaca. "Rádio comunitária de Fuchsia, programa das seis da manhã."',
     '"A senhora está me dando uma testemunha."',
     '"Eu estou te dando um nome público de uma pessoa que fala na rádio toda manhã." Ela entrega o papel. "Se isso é te dar uma testemunha, o problema não é meu."',
     'Ela fecha a porta com cuidado ao sair, do jeito que a gente fecha porta de quarto de gente que dormiu mal.'
   ],
-  ef:{flag:'contato_nadia', itens:{'Papel com o nome de Nadia Arden':1},
+  ef:{flag:'contato_nadia', itens:{'Papel com o nome de Maeve Corwin':1},
       npc:{nome:'Auditora Brill', opiniao:2, memoria:'Te deu o nome da mulher da rádio de Fuchsia.'},
-      registrar:'Nadia Arden, rádio comunitária de Fuchsia, programa das 6h.'},
+      registrar:'Maeve Corwin, rádio comunitária de Fuchsia, programa das 6h.'},
   escolhas:[
     {texto:'Ir atrás da Livia Gale.', vai:'c18_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Procurar um jornal.', vai:'c18_procura_jornal', cond:d=>!d.flags.contato_isaura},

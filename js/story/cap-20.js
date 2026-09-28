@@ -1475,7 +1475,7 @@ c20_publicar_tudo:{
   ef:{flag:'vai_publicar'},
   escolhas:[
     {texto:'Livia Gale, jornal de Celadon.', vai:'c20_pub_isaura', cond:d=>!!d.flags.contato_isaura},
-    {texto:'Nadia Arden, rádio comunitária de Fuchsia.', vai:'c20_pub_nadia', cond:d=>!!d.flags.contato_nadia},
+    {texto:'Maeve Corwin, rádio comunitária de Fuchsia.', vai:'c20_pub_nadia', cond:d=>!!d.flags.contato_nadia},
     {texto:'A Dra. Cordell, e pelo caminho do Ministério Público.', vai:'c20_pub_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Qualquer redação que aceite.', vai:'c20_pub_qualquer'}
   ]
@@ -1498,10 +1498,10 @@ c20_pub_isaura:{
 },
 
 c20_pub_nadia:{
-  falante:'Nadia Arden',
+  falante:'Maeve Corwin',
   vozes:['N'],
   texto:[
-    'Nadia Arden tem um programa das seis da manhã numa rádio comunitária de Fuchsia e uma audiência de gente que está acordada às seis da manhã: pescador, motorista, guarda-parque, gente de plantão.',
+    'Maeve Corwin tem um programa das seis da manhã numa rádio comunitária de Fuchsia e uma audiência de gente que está acordada às seis da manhã: pescador, motorista, guarda-parque, gente de plantão.',
     'Ela não pede prova, porque ela já sabe. Ela pede outra coisa.',
     '"Você fala ao vivo?"',
     'Você fala ao vivo, das seis e dez às sete, sem corte, respondendo telefonema.',
@@ -1510,7 +1510,7 @@ c20_pub_nadia:{
   ],
   ef:{flag:['publicou','falou_na_radio'],
       rep:{eixo:'bom',delta:3,motivo:'Falou ao vivo, sem corte, e atendeu telefonema'},
-      npc:{nome:'Nadia Arden', opiniao:3, memoria:'Te pôs no ar ao vivo por cinquenta minutos.'},
+      npc:{nome:'Maeve Corwin', opiniao:3, memoria:'Te pôs no ar ao vivo por cinquenta minutos.'},
       registrar:'Falou cinquenta minutos ao vivo na rádio de Fuchsia. Uma funcionária ligou e confirmou.'},
   escolhas:[{texto:'Ver o que acontece.', vai:'c20_resultado_publicacao'}]
 },
