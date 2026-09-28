@@ -53,7 +53,7 @@ c24_ab_quem_voltou:{
     fala('Leo', 'Não sobe hoje.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('Leo', 'Porque eles têm uma lista e eu tava nela.'),
-    'Ele abre o cartão de treinador na mão e olha pra ele.',
+    'Ele olha o cartão aberto na mão como quem confere se ainda é o dele.',
     fala('Leo', 'Oito insígnias. Licença em dia. Sem ocorrência.'),
     fala('Leo', 'O cara passou o leitor, a máquina apitou uma vez, e ele olhou uma segunda tela que eu não vi.'),
     fala('Leo', 'E falou "hoje não".'),
@@ -158,7 +158,7 @@ c24_a_primeira:{
     d=>{ Nomes.apresentar('o guarda da primeira'); return 'O da primeira tem PIKE bordado em cima do bolso, que é mais do que os outros seis têm.'; },
     fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
     'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
-    fala('o guarda da primeira', 'Oito insígnias, licença válida, sem restrição.'),
+    d=>fala('o guarda da primeira', `${(n => n === 0 ? 'Nenhuma insígnia' : n === 1 ? 'Uma insígnia' : c21_ext(n).replace(/^./, c => c.toUpperCase()) + ' insígnias')(c21_ins(d))}, licença válida, sem restrição.`),
     fala('o guarda da primeira', 'Passa na segunda que eles conferem de novo.', 'frio')
   ],
   ef:{flag:'entrou_nas_guaritas',
@@ -281,11 +281,12 @@ c24_voltou_pra_estrada:{
   texto:[
     'Você desce os trinta metros de mato de volta, entra na estrada antes da segunda guarita, e passa pelas seis que faltavam na ordem.',
     'Leva uma hora e quarenta. Cada uma confere uma coisa diferente e nenhuma explica o quê.',
-    'Na sétima, a mulher de uniforme cinza olha o seu cartão e o histórico de passagem e franze a testa.',
-    fala('a guarda da sétima', '{O senhor|A senhora} entrou pela primeira e reapareceu na segunda quarenta minutos depois.'),
-    fala('a guarda da sétima', 'Isso é sete minutos de caminhada.'),
+    'Na sétima, o guarda de uniforme cinza olha o seu cartão e o histórico de passagem e franze a testa.',
+    fala('o guarda da sétima', '{O senhor|A senhora} entrou pela primeira e reapareceu na segunda quarenta minutos depois.'),
+    fala('o guarda da sétima', 'Isso é sete minutos de caminhada.'),
     d=>fala(d.jogador.nome, 'Eu me perdi.'),
-    fala('a guarda da sétima', 'Aqui não tem onde se perder.', 'frio', 'Ela escreve alguma coisa. Ela escreve mais do que caberia em "se perdeu".')
+    fala('o guarda da sétima', 'Aqui não tem onde se perder.', 'frio', 'Ele escreve alguma coisa. Ele escreve mais do que caberia em "se perdeu".'),
+    'E levanta a cancela.'
   ],
   ef:{flag:'anotado_na_setima',
       registrar:'A sétima guarita anotou os quarenta minutos que você sumiu.'},
@@ -317,7 +318,7 @@ c24_exigiu_o_visor:{
     'Você pede pra ver, e ele diz que não pode, e você pede de novo, e ele olha pros lados e vira o visor dez graus.',
     'Dez graus é o suficiente.',
     fala('o visor', 'ACOMP. ATIVO — ORIGEM: 704 — NÍVEL: 2 — REVISÃO: TRIMESTRAL', 'frio'),
-    'Sala 704. Sétimo andar. Prédio comercial com farmácia no térreo.',
+    'Sala 704. Sétimo andar. Você conhece o corredor.',
     'Nível 2. Existe nível 1 e existem níveis acima de 2.',
     fala('o guarda da terceira', '{O senhor|A senhora} não viu isso.', 'baixo'),
     fala('o guarda da terceira', 'Eu tenho filho. Passa.')
@@ -353,8 +354,8 @@ c24_desde_quando:{
     d=>fala(d.jogador.nome, 'Desde quando eu tenho isso?'),
     'Ele digita. Espera. Lê.',
     fala('o guarda da terceira', 'Data de abertura...', null, 'Ele para e confere de novo, porque o número parece errado.'),
-    d=>fala('o guarda da terceira', `Três semanas depois da sua primeira licença. {O senhor|A senhora} tinha... ${d.insignias.length ? 'nenhuma insígnia ainda' : 'nada ainda'}.`),
-    'Três semanas. Você ainda estava na Floresta de Viridian errando o caminho marcado.',
+    fala('o guarda da terceira', 'Três semanas depois da sua primeira licença. {O senhor|A senhora} mal tinha saído de casa.'),
+    'Três semanas. Você ainda estava aprendendo a dobrar o mapa.',
     fala('o guarda da terceira', 'Passa, {moço|moça}. Por favor.', 'baixo')
   ],
   ef:{flag:'sabe_desde_quando_te_seguem', moral:-3,
@@ -453,17 +454,21 @@ c24_esperou:{
 
 c24_chegou_no_planalto:{
   texto:[
-    'Sexta guarita: leitor, apita, passa. A guarda deseja boa sorte e parece estar falando sério.',
-    'Sétima guarita: a máquina não apita. Ela faz um som diferente, mais grave, uma nota só.',
-    'O guarda da sétima olha o visor, olha você, e levanta a cancela sem falar nada — e é a única das sete que levanta a cancela antes de devolver o cartão.',
+    d=>d.flags.contornou_as_guaritas ? '' : 'Sexta guarita: leitor, apita, passa. A guarda deseja boa sorte e parece estar falando sério.',
+    d=>d.flags.contornou_as_guaritas ? '' : 'Sétima guarita: a máquina não apita. Ela faz um som diferente, mais grave, uma nota só.',
+    d=>d.flags.contornou_as_guaritas ? '' : 'O guarda da sétima olha o visor, olha você, e levanta a cancela sem falar nada — e é a única das sete que levanta a cancela antes de devolver o cartão.',
     'Do outro lado das sete guaritas a estrada sobe mais quatro quilômetros e vira à direita, e do alto da curva dá pra ver o Planalto Indigo inteiro.',
     d=>d.flags.bateu_no_vidro_do_carro || d.flags.esperou_o_carro
       ? 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Chegou primeiro.'
       : 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Você não sabe há quanto tempo.',
-    'Segunda, dez horas. Sala com mesa comprida, quatro cadeiras.'
+    d=>d.flags.sabe_da_convocacao || d.flags.falou_com_o_cracha_azul
+      ? 'Segunda, dez horas. Sala com mesa comprida, quatro cadeiras.'
+      : 'Segunda, dez horas. É o que diz a convocação, e ela não diz mais nada.'
   ],
   ef:{flag:'chegou_pro_planalto',
-      registrar:'Passou as sete guaritas. A sétima levantou a cancela antes de devolver o cartão.'},
+      registrar:d=>d.flags.contornou_as_guaritas
+        ? 'Passou pelas sete guaritas da Rota 23.'
+        : 'Passou as sete guaritas. A sétima levantou a cancela antes de devolver o cartão.'},
   fim:true
 }
 

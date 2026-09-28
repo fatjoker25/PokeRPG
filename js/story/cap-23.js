@@ -588,7 +588,7 @@ c23_desceu:{
     fala('Blue', 'Sala com mesa comprida, quatro cadeiras. Uma é minha, uma é sua.'),
     d=>fala(d.jogador.nome, 'E as outras duas?'),
     fala('Blue', 'Pois é.', 'frio'),
-    'Antes da Rota 23 tem sete guaritas novas, e cada uma delas quer ver o seu cartão.'
+    'Na Rota 23, as sete guaritas velhas de pedra voltaram a ter gente dentro, e cada uma delas quer ver o seu cartão.'
   ],
   ef:{flag:'sabe_da_convocacao', registrar:'A convocação é na segunda. Mesa comprida, quatro cadeiras.'},
   fim:true
