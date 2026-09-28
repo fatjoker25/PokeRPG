@@ -423,13 +423,34 @@ function mochilaAtual(){
      preta", "bolsa verde musgo nas costas") é a que você carrega. */
   if (!achou && d.jogador){
     const texto = _semAcento([d.jogador.vestimenta, d.jogador.aparencia].filter(Boolean).join(' . '));
-    const m = texto.match(/\b(mochila|bolsa|sacola|mala|bornal)\s+([a-z]+(?:\s+[a-z]+)?)/);
-    if (m){
-      const c = corDaMochila(m[1] + ' ' + m[2]);
-      if (c){ cor = c; nome = m[1][0].toUpperCase() + m[1].slice(1) + ' ' + m[2]; }
-    }
+    const lida = corNaDescricao(texto);
+    if (lida){ cor = lida.cor; nome = lida.nome; }
   }
   return saida();
+}
+
+/* A cor da bolsa numa descrição livre. A cor não vem sempre colada no
+   nome: "mochila velha vermelha", "bolsa de lado cinza", "mochila
+   azul-marinho". Procura nas palavras seguintes até a frase mudar de
+   assunto (vírgula, ponto, " e ", " com "), pra não pegar a cor do
+   casaco que vem depois. */
+function corNaDescricao(texto){
+  const t = _semAcento(texto).replace(/-/g, ' ');
+  const re = /\b(mochila|bolsa|sacola|mala|bornal)\b([^,.;]*)/g;
+  let m;
+  while ((m = re.exec(t))){
+    const trecho = m[2].split(/\s(?:e|com|mas|que)\s/)[0];
+    const palavras = trecho.trim().split(/\s+/).filter(Boolean).slice(0, 5);
+    for (let i = 0; i < palavras.length; i++){
+      const duas = palavras[i] + ' ' + (palavras[i + 1] || '');
+      const achada = CORES_MOCHILA[duas] ? duas : (CORES_MOCHILA[palavras[i]] ? palavras[i] : null);
+      if (achada){
+        const tipo = m[1][0].toUpperCase() + m[1].slice(1);
+        return {cor: CORES_MOCHILA[achada], nome: tipo + ' ' + achada};
+      }
+    }
+  }
+  return null;
 }
 
 /* --- mistura de cor, para tirar as sombras e o forro da cor lida --- */
