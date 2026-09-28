@@ -232,7 +232,14 @@ const Historia = {
     }
     if (ef.curaTime){ Estado.dados.time.forEach(curarTotal); avisos.push({tipo:'cura', texto:'Seu time foi curado por completo.'}); }
     if (ef.instabilidade){ Estado.dados.mundo.instabilidade += ef.instabilidade; }
-    if (ef.presagio){ (Array.isArray(ef.presagio)?ef.presagio:[ef.presagio]).forEach(t => avisos.push({tipo:'eco', texto:t})); }
+    if (ef.presagio){
+      /* presságio pode depender do caminho: função recebe os dados e
+         devolve o texto, ou vazio pra não dizer nada */
+      (Array.isArray(ef.presagio)?ef.presagio:[ef.presagio]).forEach(t => {
+        const txt = typeof t === 'function' ? t(Estado.dados) : t;
+        if (txt) avisos.push({tipo:'eco', texto:txt});
+      });
+    }
     if (ef.registrar) Estado.registrar(typeof ef.registrar === 'function' ? ef.registrar(Estado.dados) : ef.registrar);
     if (ef.executar) { const extra = ef.executar(Estado.dados); if (Array.isArray(extra)) extra.forEach(a => avisos.push(a)); }
     return avisos;

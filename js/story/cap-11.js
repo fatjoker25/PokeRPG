@@ -54,7 +54,7 @@ c11_ab_se_inscreveu:{
       return `Você dita o nome e a data, e quando fala o número de insígnias — ${ins} — o rapaz para de escrever por meio segundo.`;
     },
     'Ele escreve mesmo assim, porque a lista é por ordem de chegada e não por mérito, e isso foi combinado.',
-    fala('Milo', 'Você é o vinte e três.'),
+    fala('Milo', 'Você é {o|a} vinte e três.'),
     d=>fala(d.jogador.nome, 'Tem vinte e dois na frente? Eu só vejo sete barracas.'),
     fala('Milo', 'Quinze desistiram.'),
     'Ele fecha o caderno com o dedo no meio, marcando a página.',
@@ -381,6 +381,8 @@ c11_quarteirao:{
 },
 
 c11_parede_cega:{
+  falante:'Pipoqueiro da face sul',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Você senta num dos três bancos onde ninguém senta, de frente pro jardim de pedra, e olha cento e vinte metros de concreto.',
     'Depois de meia hora aparece um velho com um carrinho de pipoca que estaciona na esquina e claramente já entendeu que aquele é o pior ponto de Saffron e continua vindo mesmo assim.',
@@ -459,6 +461,8 @@ c11_marca_da_porta:{
 /* ─────────────── O GINÁSIO FECHADO ─────────────── */
 
 c11_ginasio:{
+  falante:'o rapaz das sete insígnias',
+  vozes:['N','N','P','N','N','Sabrina'],
   texto:[
     'O ginásio de Saffron é um prédio baixo e sem janela, encaixado entre dois arranha-céus como se tivesse sido esquecido ali antes deles.',
     'Na calçada tem sete treinadores acampados, com barraca de camping, fogareiro e uma escala de revezamento escrita a giz no muro: quem fica de dia, quem fica de noite.',
@@ -485,6 +489,7 @@ c11_ginasio:{
 },
 
 c11_acampados:{
+  vozes:['um acampado','outra acampada','a garota da barraca','a garota da barraca','o acampado mais novo'],
   texto:[
     'Você senta com eles na calçada e eles te dão café de garrafa térmica, porque acampamento de calçada é uma república.',
     'Em vinte minutos você tem mais informação do que a Liga tem.',
@@ -509,6 +514,8 @@ c11_acampados:{
 },
 
 c11_porque_eu:{
+  falante:'Sabrina',
+  vozes:['P','N','N','N'],
   texto:[
     'Você fala em voz alta, na calçada, na frente de sete pessoas, olhando pra uma porta fechada:',
     '"Por que eu e não eles?"',
@@ -528,6 +535,8 @@ c11_porque_eu:{
 },
 
 c11_sabrina:{
+  falante:'Sabrina',
+  vozes:['N','N','N','N','N','N'],
   texto:[
     'A arena de Saffron é um quadrado de piso emborrachado com marcação branca, arquibancada pra cento e vinte pessoas, e uma iluminação de galpão esportivo que está toda acesa pra uma pessoa só.',
     'Sabrina está sentada no chão do centro da arena, de pernas cruzadas, de olhos abertos, e não se levanta quando você entra.',
@@ -554,6 +563,8 @@ c11_sabrina:{
 },
 
 c11_sabrina_oque:{
+  falante:'Sabrina',
+  vozes:['N','N','N','N','N','N','N'],
   texto:[
     '"Doze."',
     'Ela diz o número devagar, do jeito que se diz número que se contou muitas vezes.',
@@ -579,6 +590,8 @@ c11_sabrina_oque:{
 },
 
 c11_eles_sabem:{
+  falante:'Sabrina',
+  vozes:['P','N','P','N','N','N','P','N','N'],
   texto:[
     '"Eles sabem que você está ouvindo?"',
     'Ela demora tanto pra responder que você acha que ela não vai.',
@@ -605,6 +618,8 @@ c11_eles_sabem:{
 },
 
 c11_responde_com_ela:{
+  falante:'Sabrina',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Então responde. Uma última vez, comigo aqui."',
     'Ela olha pra você como se você tivesse proposto uma coisa fisicamente impossível, e depois entende que você está propondo companhia, não coragem.',
@@ -646,7 +661,7 @@ c11_silencio_com_sabrina:{
   ef:{flag:'silencio_com_sabrina',
       npc:{nome:'Sabrina', opiniao:5, memoria:'Dividiu pão de forma com você em silêncio no chão da arena.'},
       moral:12, hp:3,
-      rep:{eixo:'bom',delta:1,motivo:'Ficou quieto com quem precisava de silêncio'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou quiet{o|a} com quem precisava de silêncio'},
       presagio:'Você não estava pensando em nada. Guarde a sensação — vai precisar dela lá embaixo.'},
   escolhas:[
     {texto:'"Me ajuda a entrar."', vai:'c11_sabrina_ajuda'},
@@ -657,6 +672,8 @@ c11_silencio_com_sabrina:{
 },
 
 c11_sabrina_quanto_tempo:{
+  falante:'Sabrina',
+  vozes:['P','N','N','N','N','N','N','N'],
   texto:[
     '"Há quanto tempo você ouve isso?"',
     '"Vinte e três dias. Com essa gramática quebrada, vinte e três."',
@@ -681,20 +698,22 @@ c11_sabrina_quanto_tempo:{
 },
 
 c11_noventa_e_seis_bate:{
+  falante:'Sabrina',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"A porta da face sul foi tapada em noventa e seis."',
     'Ela para de mexer na garrafa.',
     '"Que porta?"',
     'Você conta: três metros, duas folhas, caminhão-baú branco, ambulância, fechada com bloco e rebocada por cima, tinta um tom mais clara, rachadura que solta ar frio.',
     'Ela ouve tudo sem interromper e depois faz uma coisa esquisita: ela ri. Uma vez, curto, sem nenhuma alegria.',
-    '"Eu passei sete anos achando que era um sintoma meu."',
-    '"Sete anos de médico, de exame, de gente me dizendo pra dormir melhor, e a resposta era uma porta que um pipoqueiro viu fecharem."',
+    '"Eu passei quatro anos achando que era um sintoma meu."',
+    '"Quatro anos de médico, de exame, de gente me dizendo pra dormir melhor, e a resposta era uma porta que um pipoqueiro viu fecharem."',
     'Ela levanta pela primeira vez.',
     '"Se fecharam a porta de acesso em noventa e seis e o zumbido mudou em noventa e seis, então o que está lá embaixo hoje entrou antes de noventa e seis."',
     '"E nunca mais saiu."'
   ],
   ef:{flag:['entrou_antes_de_96','sabrina_aliada'],
-      npc:{nome:'Sabrina', opiniao:7, memoria:'Você resolveu em dois minutos uma coisa que ela levou sete anos achando que era sintoma dela.'},
+      npc:{nome:'Sabrina', opiniao:7, memoria:'Você resolveu em dois minutos uma coisa que ela levou quatro anos achando que era sintoma dela.'},
       rep:{eixo:'bom',delta:4,motivo:'Juntou o pipoqueiro e a líder de ginásio'},
       instabilidade:1,
       registrar:'O que está no andar 11 entrou antes de 1996 e nunca saiu.',
@@ -708,6 +727,8 @@ c11_noventa_e_seis_bate:{
 },
 
 c11_sabrina_porque:{
+  falante:'Sabrina',
+  vozes:['P','N','N','N','N','N','N'],
   texto:[
     '"Por que você não entra você mesma?"',
     '"Porque se eu entrar, eu escuto de perto."',
@@ -716,8 +737,8 @@ c11_sabrina_porque:{
     '"Se eu chegar a dez metros dos doze, eu viro a décima terceira."',
     '"Não porque eles vão me atacar. Porque eles vão me cumprimentar de perto, e eu vou responder de perto, e a três semanas de distância eu já perdi duas vezes a noção de qual pensamento é meu."',
     'Ela olha as próprias mãos.',
-    '"Você não é psíquico. Você é surdo pra isso."',
-    '"É a sua melhor qualidade hoje. Provavelmente é a única vez na vida em que ser surdo pra alguma coisa vai ser a sua melhor qualidade, então aproveita."'
+    '"Você não é {psíquico|psíquica}. Você é {surdo|surda} pra isso."',
+    '"É a sua melhor qualidade hoje. Provavelmente é a única vez na vida em que ser {surdo|surda} pra alguma coisa vai ser a sua melhor qualidade, então aproveita."'
   ],
   ef:{flag:'sabe_porque_sabrina_nao_entra'},
   escolhas:[
@@ -729,9 +750,11 @@ c11_sabrina_porque:{
 },
 
 c11_e_se_eu_nao_voltar:{
+  falante:'Sabrina',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se eu não voltar?"',
-    'Ela não te tranquiliza. É a segunda pessoa nesse jogo que não te tranquiliza e as duas são as que mais te ajudaram.',
+    'Ela não te tranquiliza. É a segunda pessoa nessa viagem que não te tranquiliza e as duas são as que mais te ajudaram.',
     '"Aí eu vou saber na hora exata em que acontecer, porque eu vou estar ouvindo, e eu vou ter que decidir se eu desço."',
     '"E eu não sei o que eu vou decidir. Eu queria poder te dizer que eu desço."',
     'Ela pega o cobertor dobrado e desdobra, e dobra de novo, o que é uma coisa que gente faz com as mãos quando não sabe o que fazer com as mãos.',
@@ -751,6 +774,8 @@ c11_e_se_eu_nao_voltar:{
 },
 
 c11_nao_desce:{
+  falante:'Sabrina',
+  vozes:['P','N','N','N'],
   texto:[
     '"Então não desce. Eu não ia querer."',
     'Ela levanta a cabeça devagar.',
@@ -774,11 +799,13 @@ c11_nao_desce:{
 },
 
 c11_vim_desafiar:{
+  falante:'Sabrina',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Me deixa desafiar o ginásio."',
     'Ela ri de verdade dessa vez, e a risada é boa e dura dois segundos.',
     '"Tem sete pessoas na minha calçada há dezenove dias e você entra aqui, ouve tudo isso, e ainda pede insígnia."',
-    '"Eu tenho sete ginásios."',
+    d=>{ const n = (d.insignias || []).length; return n ? `"Eu tenho ${n} insígnia${n===1?'':'s'}."` : '"Eu não tenho nenhuma."'; },
     '"Eu sei quantos você tem. Eu sei sem perguntar, o que é chato, e eu peço desculpa por isso."',
     'Ela olha a arena vazia.',
     '"Não hoje. Eu não consigo separar, e se eu não consigo separar eu não consigo lutar sem te machucar de um jeito que não sai."',
@@ -798,6 +825,8 @@ c11_vim_desafiar:{
 },
 
 c11_sabrina_ajuda:{
+  falante:'Sabrina',
+  vozes:['N','N','N','P','N','P','N'],
   texto:[
     'Ela levanta e vai até um armário de metal no canto da arena, desses de vestiário, e tira duas coisas.',
     'A primeira é um crachá. Crachá de manutenção da Silph, vencido em noventa e sete, com foto de um homem de sessenta anos e o nome apagado pelo atrito do bolso.',
@@ -863,7 +892,7 @@ c11_funcionarios:{
     'O que não é normal é que ninguém fala do prédio.',
     'Gente de escritório reclama do prédio. Do ar-condicionado, do elevador, do café, da faxina, da cadeira. É o assunto universal de escritório do mundo inteiro.',
     'Quarenta pessoas em fila, quarenta e cinco minutos, zero reclamação predial.',
-    'Uma mulher de uns trinta anos, sozinha, come em pé olhando o Pokégear, encostada na grade. Crachá azul.',
+    'Uma mulher de uns trinta anos, sozinha, come em pé olhando o Pokégear, encostada na grade. Crachá azul, com o nome em letra de forma: **FENNA**.',
     'Todos os outros são brancos.'
   ],
   ef:{flag:'viu_a_fila',
@@ -926,6 +955,8 @@ c11_seguiu_as_tres:{
 },
 
 c11_terceirizado:{
+  falante:'Sra. Odile',
+  vozes:['N'],
   texto:[
     'Você procura a entrada de serviço, e a entrada de serviço é sempre a mesma coisa em todo prédio de todo lugar do mundo: uma porta lateral, sem placa, ao lado da lixeira.',
     'Às seis da manhã saem quatorze pessoas de uniforme verde-água com o nome de uma empresa que não é a Silph: **LIMPTOTAL SERVIÇOS**.',
@@ -933,8 +964,8 @@ c11_terceirizado:{
     'Elas têm um crachá verde.',
     'E crachá verde abre tudo.',
     'Porque alguém tem que limpar tudo, e ninguém faz um crachá especial de faxina por andar, porque isso dobra o custo do contrato.',
-    'Você espera na esquina e fala com a última a sair, uma senhora de uns sessenta anos com sacola de pano.',
-    'Ela te ouve inteiro antes de responder, o que é raro.',
+    'Você espera na esquina e fala com a última a sair, uma senhora de uns sessenta anos com sacola de pano e o nome bordado no bolso do uniforme: **ODILE**.',
+    'Ela te ouve inteir{o|a} antes de responder, o que é raro.',
     '"O subsolo quatro a gente não limpa."'
   ],
   ef:{flag:['achou_as_terceirizadas','sabe_do_cracha_verde'],
@@ -951,6 +982,8 @@ c11_terceirizado:{
 },
 
 c11_quem_limpa:{
+  falante:'Sra. Odile',
+  vozes:['P','N','P','N','N','N','N','N'],
   texto:[
     '"Quem limpa o subsolo quatro, então?"',
     '"Eles."',
@@ -978,6 +1011,8 @@ c11_quem_limpa:{
 },
 
 c11_estranho_no_predio:{
+  falante:'Sra. Odile',
+  vozes:['P','N','N','N','P','N','N','N','N'],
   texto:[
     '"Tem mais alguma coisa estranha?"',
     'Ela ri. "Tem a sala vazia."',
@@ -1010,6 +1045,8 @@ c11_pediu_o_cracha:{
 },
 
 c11_cida_topou:{
+  falante:'Sra. Odile',
+  vozes:['N','P','N','N','N','P','N'],
   texto:[
     'Ela olha o crachá verde pendurado no pescoço dela por um tempo.',
     '"Eu me aposento em quatorze meses."',
@@ -1037,6 +1074,8 @@ c11_cida_topou:{
 },
 
 c11_cida_meio:{
+  falante:'Sra. Odile',
+  vozes:['N','N','P','N'],
   texto:[
     '"Não."',
     'Ela ajeita a sacola e começa a andar, e depois para.',
@@ -1058,6 +1097,8 @@ c11_cida_meio:{
 },
 
 c11_cida_nao:{
+  falante:'Sra. Odile',
+  vozes:['N','N'],
   texto:[
     '"Não."',
     'Sem explicação, sem raiva, sem desculpa.',
@@ -1076,6 +1117,8 @@ c11_cida_nao:{
 },
 
 c11_bar:{
+  falante:'o homem do bar',
+  vozes:['N','N','N','N'],
   texto:[
     'O bar fica na esquina de trás e se chama Ponto Certo, e às seis e meia da tarde ele recebe a primeira leva de crachás pendurados no pescoço.',
     'Você senta no balcão com um refrigerante e ouve.',
@@ -1100,6 +1143,8 @@ c11_bar:{
 },
 
 c11_seguiu_o_orcamento:{
+  falante:'o homem do bar',
+  vozes:['N','P','N','N','N','N'],
   texto:[
     'Você sai atrás dele e alcança no ponto de ônibus.',
     'Ele te vê chegando e a cara dele muda antes de você falar qualquer coisa, e ele fala primeiro:',
@@ -1126,6 +1171,8 @@ c11_seguiu_o_orcamento:{
 },
 
 c11_cracha_azul:{
+  falante:'Fenna',
+  vozes:['N','N','N','N','N','N','N','N'],
   texto:[
     'Ela te ouve sem olhar, do jeito que se ouve pedinte em semáforo.',
     'Quando você diz "andar onze", ela levanta a cabeça.',
@@ -1154,6 +1201,8 @@ c11_cracha_azul:{
 },
 
 c11_o_que_ela_assina:{
+  falante:'Fenna',
+  vozes:['P','N','N','N','N','N','P','N','N','N'],
   texto:[
     '"O que você assina, exatamente?"',
     'Ela hesita, e depois tira o Pokégear do bolso e abre a foto de uma tela de sistema — ela fotografa o sistema, o que quer dizer que ela já vinha juntando material sozinha faz tempo.',
@@ -1181,6 +1230,8 @@ c11_o_que_ela_assina:{
 },
 
 c11_fotos_do_sistema:{
+  falante:'Fenna',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Me manda as fotos do sistema."',
     '"Eu não posso mandar nada de mim pra você."',
@@ -1208,6 +1259,8 @@ c11_fotos_do_sistema:{
 },
 
 c11_devolveu_as_folhas:{
+  falante:'Fenna',
+  vozes:['N','P','N','P','N','P','N','P','N'],
   texto:[
     'Você devolve o envelope no dia seguinte, no mesmo lugar, do mesmo jeito.',
     'Ela para de andar, o que ela não tinha feito nem na primeira vez.',
@@ -1240,6 +1293,8 @@ c11_devolveu_as_folhas:{
 },
 
 c11_requisicao:{
+  falante:'Fenna',
+  vozes:['P','N','P','N','P','N','N','P','N','N'],
   texto:[
     '"Assina uma requisição pra mim."',
     '"Uma requisição de quê?"',
@@ -1249,7 +1304,7 @@ c11_requisicao:{
     '"Existe?"',
     '"Existe o formulário de “verificação física de lote”. Ninguém usa há anos porque ninguém quer descer, mas ele existe no sistema e ele é assinado pelo nono andar."',
     'Ela ri, e é uma risada meio histérica de quem não dorme direito.',
-    '"Eu posso te credenciar como técnico auxiliar de verificação."',
+    '"Eu posso te credenciar como {técnico|técnica} auxiliar de verificação."',
     '"E eles vão aceitar?"',
     '"Eles vão aceitar porque está no sistema e porque ninguém vai conferir, exatamente do mesmo jeito que eu assinei setecentas e vinte e oito vezes uma coisa que eu nunca vi."',
     'Ela olha pro chão.',
@@ -1257,9 +1312,9 @@ c11_requisicao:{
   ],
   ef:{flag:['tem_credencial_de_verificacao','dentro_da_silph'],
       itens:{'Crachá de verificação física':1},
-      npc:{nome:'Fenna (crachá azul)', opiniao:9, memoria:'Te credenciou como técnico auxiliar de verificação física de lote.'},
+      npc:{nome:'Fenna (crachá azul)', opiniao:9, memoria:'Te credenciou como {técnico|técnica} auxiliar de verificação física de lote.'},
       rep:{eixo:'bom',delta:4,motivo:'Entrou pelo mesmo buraco que fazia o sistema funcionar'},
-      registrar:'Foi credenciado no sistema da Silph como técnico auxiliar de verificação física de lote.',
+      registrar:'Foi credenciad{o|a} no sistema da Silph como {técnico|técnica} auxiliar de verificação física de lote.',
       presagio:'É o mesmo buraco. Só que agora ele é nosso. Frase perigosa e correta.'},
   escolhas:[
     {texto:'Entrar pela recepção com a credencial.', vai:'c11_recepcao'},
@@ -1270,6 +1325,8 @@ c11_requisicao:{
 },
 
 c11_protegeu_marina:{
+  falante:'Fenna',
+  vozes:['P','N','P'],
   texto:[
     '"{Obrigado|Obrigada}. Some daqui."',
     'Ela pisca.',
@@ -1295,6 +1352,7 @@ c11_protegeu_marina:{
 },
 
 c11_envelope:{
+  vozes:['E','E'],
   texto:[
     'Dentro do envelope tem três coisas.',
     'Uma: um crachá de visitante da Silph, em branco, desses que a recepção imprime na hora — mas com o chip já gravado.',
@@ -1328,6 +1386,8 @@ c11_marina_leva:{
 },
 
 c11_marina_topa:{
+  falante:'Fenna',
+  vozes:['N','N','N','P','N'],
   texto:[
     '"Uma vez."',
     'Ela já está andando antes de terminar a frase, e você tem que correr dois passos pra alcançar.',
@@ -1354,6 +1414,8 @@ c11_marina_topa:{
 },
 
 c11_marina_meio:{
+  falante:'Fenna',
+  vozes:['N','N'],
   texto:[
     '"Não."',
     'Ela pega a bolsa.',
@@ -1375,7 +1437,7 @@ c11_marina_meio:{
 },
 
 c11_marina_nao:{
-  falante:'Fenna (crachá azul)',
+  falante:'Fenna',
   vozes:['N','N'],
   texto:[
     '"Não."',
@@ -1403,7 +1465,7 @@ c11_recepcao:{
     'Dois seguranças. Um na porta giratória, um no fundo, perto do elevador.',
     d=>{
       if (d.flags.entrou_com_marina) return 'Fenna já te passou. Você está do lado de dentro, com um crachá de visitante e uns quinze minutos de plausibilidade antes de alguém perguntar com quem você tem reunião.';
-      if (d.flags.tem_credencial_de_verificacao) return 'Você tem uma credencial de técnico auxiliar de verificação física de lote, emitida pelo nono andar, válida, no sistema. A catraca abre sem hesitar e o segurança do fundo nem levanta a cabeça.';
+      if (d.flags.tem_credencial_de_verificacao) return 'Você tem uma credencial de {técnico|técnica} auxiliar de verificação física de lote, emitida pelo nono andar, válida, no sistema. A catraca abre sem hesitar e o segurança do fundo nem levanta a cabeça.';
       if (d.flags.tem_cracha_visitante) return 'O crachá que veio no envelope tem o chip gravado e a catraca não sabe a diferença entre um crachá gravado por um funcionário e um crachá gravado pela recepção.';
       if (d.flags.tem_cracha_verde) return 'O crachá verde da Sra. Odile abre a catraca no primeiro toque, e o segurança do fundo te olha por meio segundo e desvia. Uniforme de faxina é o melhor camuflado de prédio comercial: ninguém olha duas vezes para quem limpa.';
       if (d.flags.crachas_sabrina) return 'O crachá do zelador é vencido faz três anos, mas a catraca da Silph lê o chip, não a data. Ela abre.';
@@ -1505,6 +1567,8 @@ c11_imprensa_no_balcao:{
 },
 
 c11_quem_escreveu:{
+  falante:'a assessora',
+  vozes:['P','N','P','N','P','N','N','P'],
   texto:[
     d=>fala(d.jogador.nome, 'Quem escreveu essa frase pra você?'),
     'Pela primeira vez o sorriso treinado falha por um oitavo de segundo, e um oitavo de segundo é muito.',
@@ -1531,6 +1595,7 @@ c11_quem_escreveu:{
 },
 
 c11_inventar:{
+  vozes:['P'],
   texto:[
     '"Eu tenho reunião no nono andar. Verificação física de lote."',
     'Você escolhe as palavras com cuidado, porque você já ouviu essas palavras de alguém que trabalha lá, e palavra de dentro é o melhor documento falso que existe.'
@@ -1540,6 +1605,7 @@ c11_inventar:{
 },
 
 c11_entrou_blefe:{
+  vozes:['a recepcionista'],
   texto:[
     'Você usou as palavras exatas, na ordem exata, com a segurança de quem já falou isso cem vezes.',
     'A recepcionista digita. Franze a testa por meio segundo — o meio segundo mais longo da sua vida — e depois a impressora cospe um crachá de visitante com a sua foto tirada por uma câmera que você não viu.',
@@ -1560,6 +1626,7 @@ c11_entrou_blefe:{
 },
 
 c11_barrado:{
+  vozes:['um dos seguranças'],
   texto:[
     'Ela sorri, digita, e o sorriso não muda nem um milímetro enquanto ela aperta um botão embaixo do balcão.',
     'Nenhum alarme toca. Nenhuma luz acende. Ela continua sorrindo e te oferece uma poltrona.',
@@ -1716,10 +1783,12 @@ c11_voltou_o_ar:{
 },
 
 c11_viu_quem_desce:{
+  falante:'a mulher de jaleco',
+  vozes:['N'],
   texto:[
     'Você se enfia atrás do quadro de disjuntores e espera.',
     'Quatro minutos.',
-    'Desce uma mulher de jaleco, sozinha, de uns quarenta anos, com crachá que você não consegue ler e uma xícara de café na mão.',
+    'Desce uma mulher de jaleco, sozinha, de uns cinquenta anos, com crachá que você não consegue ler e uma xícara de café na mão.',
     'Ela olha a tela, resmunga, ajeita o valor de volta pra oito sem nenhuma surpresa, e escreve alguma coisa numa prancheta pendurada ao lado do painel.',
     'Depois ela para.',
     'Fica olhando a tela mais uns dez segundos.',
@@ -1864,6 +1933,7 @@ c11_anotou_placas:{
 },
 
 c11_abriu_o_porta_malas:{
+  vozes:['E'],
   texto:[
     'O porta-malas não está trancado, porque ninguém tranca porta-malas dentro da própria garagem da própria empresa.',
     'Dentro da caixa de papelão tem seis pastas.',
@@ -1889,6 +1959,8 @@ c11_abriu_o_porta_malas:{
 },
 
 c11_esperou_garagem:{
+  falante:'a mulher de jaleco',
+  vozes:['N'],
   texto:[
     'Você espera entre dois carros do nível 3 por uma hora e quarenta.',
     'Às dezenove e dez a porta corta-fogo abre e sai uma mulher de jaleco por cima da roupa comum, com uma pasta embaixo do braço e uma xícara de café que ela claramente esqueceu que estava segurando.',
@@ -1910,6 +1982,8 @@ c11_esperou_garagem:{
 },
 
 c11_mentiu_pra_reis:{
+  falante:'a mulher de jaleco',
+  vozes:['P','N','N','N'],
   texto:[
     '"Nenhuma."',
     'Ela olha o porta-malas aberto, a caixa aberta, a pasta de cima fora de ordem.',
@@ -1935,10 +2009,12 @@ c11_mentiu_pra_reis:{
 },
 
 c11_dra_reis:{
+  falante:'Dra. Sorrel',
+  vozes:['N','N','P','N','N','P','N','P','N'],
   texto:[
     'Ela se apresenta como Sorrel, sem primeiro nome, do jeito que gente de laboratório se apresenta.',
     'E faz uma coisa que desmonta completamente o que você esperava de um vilão de empresa: ela senta no capô do próprio carro e conversa com você por quarenta minutos.',
-    '"Eu entrei nesse projeto em noventa e quatro. Eu tinha vinte e nove anos e achei que era a maior sorte da minha vida."',
+    '"Eu entrei nesse projeto em noventa e um. Eu tinha quarenta e dois anos e achei que era a maior sorte da minha vida."',
     '"O material veio do arquivo morto de Cinnabar. Amostra congelada, degradada, de um projeto que já tinha dado certo uma vez."',
     '"Já tinha dado certo?"',
     '"Uma vez." Ela olha o chão da garagem. "E depois fugiu, e depois matou muita gente, e a empresa que financiou aquilo faliu, e todo mundo aprendeu a lição errada."',
@@ -1962,6 +2038,8 @@ c11_dra_reis:{
 },
 
 c11_porque_continua:{
+  falante:'Dra. Sorrel',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Por que você continua?"',
     'Ela demora.',
@@ -1993,11 +2071,11 @@ c11_dia_dezenove:{
     '"Como?"',
     '"Sedação profunda por via do próprio tanque, redução térmica controlada, e depois incineração em unidade licenciada fora de Saffron."',
     'Ela olha pra você.',
-    '"Eu vou estar lá. Eu estou em todas. Eu estive nas onze da série um e nas nove da série dois."',
+    '"Eu vou estar lá. Eu estou em todas. Eu estive nas nove da série um e nas nove da série dois."',
     '"Por quê?"',
     '"Porque eu não vou deixar um estagiário fazer isso sozinho num sábado."',
     'Ela termina o café frio de uma vez, com nojo.',
-    '"Eu tenho vinte e nove assinaturas dessas. Eu sei o nome que eu dei pra cada um deles e eu nunca escrevi nenhum em lugar nenhum, porque eles não têm nome no sistema, e nome em caderno particular dá problema em auditoria."'
+    '"Eu tenho dezoito assinaturas dessas. E eu sei o nome que eu dei pra cada um, os dezoito e os onze de agora, e eu nunca escrevi nenhum em lugar nenhum, porque eles não têm nome no sistema, e nome em caderno particular dá problema em auditoria."'
   ],
   ef:{flag:['sabe_como_e_o_encerramento','reis_deu_nome'],
       moral:-18, instabilidade:1,
@@ -2041,6 +2119,8 @@ c11_escreve_os_nomes:{
 },
 
 c11_reis_ja_perguntou:{
+  falante:'Dra. Sorrel',
+  vozes:['P','N','P','N','P','N','N','N','N'],
   texto:[
     '"Você já perguntou alguma coisa pra eles?"',
     'A pergunta pega ela de um jeito que nenhuma outra pegou.',
@@ -2071,6 +2151,8 @@ c11_reis_ja_perguntou:{
 },
 
 c11_nao_assina:{
+  falante:'Dra. Sorrel',
+  vozes:['P','N','P','N','N','N','N','P','N','N','P','N'],
   texto:[
     '"Então não assina."',
     '"Se eu não assinar, assina o Bertoldo do jurídico, que nunca desceu lá, e aí é no sábado, com estagiário, e ninguém fala com eles antes."',
@@ -2103,6 +2185,8 @@ c11_nao_assina:{
 },
 
 c11_reis_deixa:{
+  falante:'Dra. Sorrel',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"Me deixa descer."',
     'Ela pensa por um tempo que parece muito longo pra uma decisão de vida inteira.',
@@ -2131,7 +2215,7 @@ c11_reis_desce:{
     '"Eu não posso ouvir a resposta."',
     'Silêncio.',
     '"E se a resposta for que eles querem viver?"',
-    'Vocês dois ficam ali, no nível 3 de uma garagem, com o motor de exaustão ligado e ninguém mais no andar.',
+    'Vocês {dois|duas} ficam ali, no nível 3 de uma garagem, com o motor de exaustão ligado e ninguém mais no andar.',
     'Depois ela pega as chaves, tranca o carro, e anda na direção da porta corta-fogo.',
     '"Vem."'
   ],
@@ -2568,7 +2652,7 @@ c11_escada:{
     'Você desce mais um lance e a temperatura cai — não um pouco, cai de verdade, uns dez graus em um lance de escada, e o corrimão de metal fica frio na mão.',
     'No patamar seguinte tem uma porta de aço com fechadura biométrica, batente de vedação de borracha e uma folha A4 impressa em fonte padrão, colada com fita crepe:',
     '**ANDAR 11 — ACESSO RESTRITO — NÍVEL 3**',
-    'Fita crepe. Numa porta de três milhões por mês.'
+    'Fita crepe. Numa porta de três milhões.'
   ],
   ef:{flag:'chegou_no_11', registrar:'Chegou à porta do andar 11 da Silph.',
       presagio:'Fita crepe. Ninguém nunca imaginou que alguém chegaria até aqui.'},
@@ -2582,13 +2666,15 @@ c11_escada:{
 },
 
 c11_bateu_na_porta:{
+  falante:'a mulher de jaleco',
+  vozes:['N'],
   texto:[
     'Você bate.',
     'Três batidas numa porta de aço de quarenta milímetros, quatro andares abaixo do chão de Saffron.',
     'Você fica com a mão fechada no ar depois da terceira, porque bater numa porta é uma coisa tão ridícula de fazer naquele contexto que a sua própria mão não sabe o que fazer depois.',
     'Nove segundos.',
     'E a porta abre.',
-    'Do outro lado tem uma mulher de jaleco de uns quarenta anos, com uma xícara de café, que olha pra você com uma expressão que não é susto nem raiva.',
+    'Do outro lado tem uma mulher de jaleco de uns cinquenta anos, com uma xícara de café, que olha pra você com uma expressão que não é susto nem raiva.',
     'É cansaço.',
     '"Ah", ela diz.',
     'E depois: "Entra logo, que aqui não pode ficar aberto."'
@@ -2627,6 +2713,8 @@ c11_alarme:{
 },
 
 c11_esperou_11:{
+  falante:'a mulher de jaleco',
+  vozes:['N','N','N'],
   texto:[
     'Você sobe meio lance e senta no patamar de cima, agachad{o|a} atrás do corrimão, e espera.',
     'Duas horas e meia.',
@@ -2656,6 +2744,7 @@ c11_esperou_11:{
 /* ─────────────── O ANDAR 11 ─────────────── */
 
 c11_onze:{
+  vozes:['E'],
   texto:[
     'O andar 11 é branco, iluminado e absolutamente silencioso.',
     'Não é silencioso de vazio — é silencioso de tratado: forro acústico, piso emborrachado, borracha nos batentes. Alguém pagou caro pra esse lugar não fazer barulho.',
@@ -2689,7 +2778,7 @@ c11_quadro:{
   texto:[
     'O quadro tem uma linha do tempo escrita em quatro letras diferentes ao longo de seis anos.',
     '**"Aquisição do material — Cinnabar, arquivo morto. 11/96."**',
-    '**"Primeira série (11): falha estrutural. Descontinuada 03/98."**',
+    '**"Primeira série (9): falha estrutural. Descontinuada 03/98."**',
     '**"Segunda série (9): viável, sem cognição. Descontinuada 07/99."**',
     '**"Terceira série (11): cognição parcial, sem vontade. Em avaliação."**',
     'E embaixo, numa letra mais nova e mais apertada:',
@@ -2702,7 +2791,7 @@ c11_quadro:{
   ef:{flag:'leu_o_quadro',
       rep:{eixo:'bom',delta:2,motivo:'Leu o quadro inteiro antes de decidir'},
       registrar:'O quadro do andar 11: três séries, 90 dias de prazo, e "eles não falam porque ninguém pergunta".',
-      presagio:'Trinta e uma vidas em três séries e uma frase apagada três vezes.'},
+      presagio:'Vinte e nove vidas em três séries e uma frase apagada três vezes.'},
   escolhas:[
     {texto:'Perguntar alguma coisa. Em voz alta.', vai:'c11_perguntou'},
     {texto:'Abrir os tanques.', vai:'c11_abrir_tanques'},
@@ -2712,8 +2801,9 @@ c11_quadro:{
 },
 
 c11_perguntou:{
+  vozes:['P'],
   texto:[
-    'Você se sente ridículo por três segundos inteiros.',
+    'Você se sente ridícul{o|a} por três segundos inteiros.',
     'Depois fala, em voz alta, numa sala branca de oito graus com onze corpos em tanques:',
     '"Vocês estão aí?"',
     'O forro acústico come o eco. A sua voz morre a meio metro da sua boca e isso te faz sentir mais idiota ainda.',
@@ -2850,6 +2940,7 @@ c11_voltou_pelos_cinco:{
 },
 
 c11_prometeu_voltar:{
+  vozes:['P'],
   texto:[
     '"Eu volto."',
     'Você diz isso em voz alta numa sala branca de oito graus, para onze coisas em tanques, e não tem a menor ideia de como vai cumprir.',
@@ -2991,8 +3082,10 @@ c11_fotografou_11:{
 },
 
 c11_entregou_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','N','N'],
   texto:[
-    'A Dra. Cordell olha as fotos em silêncio absoluto, sentada numa lanchonete de rodoviária que já virou o escritório de vocês dois.',
+    'A Dra. Cordell olha as fotos em silêncio absoluto, sentada numa lanchonete de rodoviária que já virou o escritório de vocês {dois|duas}.',
     'Na foto do quadro branco — a do "241 dias" — ela tira os óculos e esfrega os olhos por muito tempo.',
     '"Eu conheci o Fuji."',
     'Ela diz isso do nada, com os óculos na mão.',
@@ -3089,7 +3182,7 @@ c11_entregou_sabrina:{
       npc:{nome:'Sabrina', opiniao:9, memoria:'Reabriu o ginásio depois que você confirmou o que ela ouvia.'},
       flag:'sabrina_aliada', moral:12,
       registrar:'Sabrina reabriu o ginásio de Saffron.',
-      presagio:'"Fala pra ele que eu também." Duas coisas com medo uma da outra, na mesma sala.'},
+      presagio:d=>(d.flags.tirou_os_seis || d.flags.tem_uma_copia) ? '"Fala pra ele que eu também." Duas coisas com medo uma da outra, na mesma sala.' : d.flags.falou_com_os_doze ? 'Onze coisas sentiram alívio ao mesmo tempo, e ela sentiu daqui, a dois quarteirões.' : '"É a única coisa que ninguém tentou." Ela não pediu pra você voltar. Ela deixou marcado.'},
   escolhas:[
     {texto:'Desafiar o ginásio agora.', vai:'c11_desafio_sabrina', cond:d=>!!d.flags.sabrina_promete_insignia},
     {texto:'Sair de Saffron.', vai:'c11_fim'},
@@ -3187,7 +3280,7 @@ c11_venceu_sabrina:{
     'Ela diz isso pro teto.',
     '"Quatro minutos e dezenove segundos, e eu consegui separar o tempo inteiro, porque eu tinha que prestar atenção em você."',
     'Ela ri.',
-    '"Era isso. Era só ter o que fazer. Nove anos de treino de concentração e a resposta era ter o que fazer."',
+    '"Era isso. Era só ter o que fazer. Onze anos de treino de concentração e a resposta era ter o que fazer."',
     'Ela levanta e te entrega a insígnia — de bolso de moletom, sem cerimônia, meio amassada.'
   ],
   ef:{insignia:'Insígnia Pântano', flag:['venceu_sabrina','ginasio_saffron'],
@@ -3204,6 +3297,8 @@ c11_venceu_sabrina:{
 },
 
 c11_perdeu_sabrina:{
+  falante:'Sabrina',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você perde, e perde feio, e ela para no segundo em que percebe que acabou.',
     'Ela atravessa a arena e chega perto antes dos seus Pokémon terminarem de cair, o que líder de ginásio nenhum faz.',
@@ -3250,6 +3345,8 @@ c11_destruir:{
 },
 
 c11_esperou_chegarem:{
+  falante:'Dra. Sorrel',
+  vozes:['N','N','N'],
   texto:[
     'Você senta no chão molhad{o|a} do andar 11, entre acrílico quebrado, e espera.',
     'Chegam em dezoito minutos: dois seguranças e a Dra. Sorrel.',
