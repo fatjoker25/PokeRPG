@@ -87,63 +87,128 @@ const Exploracao = {
      não comprou o dele olha o de lá. */
   temCentro(L){ return !!(L && (L.lugares || []).includes('centro')); },
 
+  /* O mapa é completo, como o Town Map dos jogos e o da parede do
+     Centro: toda cidade e toda rota de Kanto, com nome. O que não está
+     em mapa nenhum (a ilha sem nome, o norte da Rota 10, a travessia
+     da Rota 21) só aparece depois que você descobre. Tocar num lugar
+     abre a ficha dele embaixo; ir e voar são botões da ficha. */
+  mapaVisivel(id){
+    const L = LOCAIS[id];
+    return !!(L && this.POS_MAPA[id] && (!L.oculto || Mundo.descobriu('local_' + id) || Mundo.visitado(id)));
+  },
+
+  /* o nome inteiro está na ficha; no desenho vai o que cabe */
+  rotuloMapa(L){
+    if (L.tipo !== 'rota') return L.nome.replace(/^Ilhas? /, '').replace(/^Planalto Indigo$/, 'Planalto')
+      .replace(/^Usina Abandonada$/, 'Usina').replace(/^A ilha sem nome$/, 'ilha sem nome').replace(/^Norte da Rota 10$/, 'Norte');
+    const n = /^Rota (\d+)/.exec(L.nome);
+    return n ? n[1] : L.nome.replace(/^Monte da /, 'Mt. ').replace(/^Túnel da Rocha$/, 'Túnel')
+      .replace(/^Caminho da Vitória$/, 'C. Vitória').replace(/^Floresta de Viridian$/, 'Floresta');
+  },
+  /* rota cujo número à direita cairia em cima do nome de uma cidade */
+  ROTULO_A_ESQUERDA: new Set(['rota5','rota6','floresta','tunel_rocha','rota12','rota13']),
+
   mapa(origem){
     const aqui = Estado.dados.local;
-    const viz = new Set(Mundo.vizinhos());
     /* Voar, sem HM: um Voador de porte grande que voe de verdade te leva
        a qualquer cidade onde você já pisou. Sem ele, o mapa diz o que falta. */
     const voo = (typeof Campo !== 'undefined' && Campo.voar) ? Campo.voar() : {pode:false};
+    this._voo = voo;
     const pos = this.POS_MAPA;
-    const sabe = id => Mundo.visitado(id) || id === aqui;
-    const conhecidos = new Set(Object.keys(LOCAIS).filter(sabe));
-    /* a estrada que sai de um lugar conhecido existe, mesmo sem nome */
-    const avistados = new Set();
-    for (const id of conhecidos) (LOCAIS[id].conexoes || []).forEach(v => { if (!conhecidos.has(v)) avistados.add(v); });
-    const mostra = id => pos[id] && (conhecidos.has(id) || avistados.has(id));
+    const mostra = id => this.mapaVisivel(id);
 
     const linhas = [], feitas = new Set();
     for (const id of Object.keys(LOCAIS)){
       if (!mostra(id)) continue;
       for (const v of (LOCAIS[id].conexoes || [])){
         const k = [id, v].sort().join('|');
-        if (feitas.has(k) || !mostra(v) || !(conhecidos.has(id) || conhecidos.has(v))) continue;
+        if (feitas.has(k) || !mostra(v)) continue;
         feitas.add(k);
         const [x1, y1] = pos[id], [x2, y2] = pos[v];
-        const firme = conhecidos.has(id) && conhecidos.has(v);
-        linhas.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="mp-via${firme ? '' : ' incerta'}"/>`);
+        const andada = Mundo.visitado(id) && Mundo.visitado(v);
+        linhas.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="mp-via${andada ? ' andada' : ''}"/>`);
       }
     }
+    const viz = new Set(Mundo.vizinhos());
     const pontos = Object.keys(LOCAIS).filter(mostra).map(id => {
       const L = LOCAIS[id], [x, y] = pos[id];
-      const conhecido = conhecidos.has(id);
-      const nome = conhecido ? L.nome : 'caminho que você ainda não fez';
+      const pisou = Mundo.visitado(id) || id === aqui;
       const ir = viz.has(id);
-      const voa = !ir && voo.pode && conhecido && L.tipo === 'cidade' && id !== aqui;
-      const cls = `mp-no ${L.tipo}${conhecido ? '' : ' desconhecido'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
+      const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui;
+      const cls = `mp-no ${L.tipo}${pisou ? '' : ' nao-pisado'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
       const forma = L.tipo === 'cidade' ? `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="1.5"/>`
                   : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
-                  : `<circle cx="${x}" cy="${y}" r="3"/>`;
-      const rotulo = conhecido && L.tipo !== 'rota'
-        ? `<text x="${x}" y="${y - 8}" text-anchor="middle">${UI.esc(L.nome.replace(/^Floresta de /, 'Fl. '))}</text>` : '';
-      const acao = ir ? ` onclick="UI.fecharModal(true);Exploracao.viajar('${id}')" role="button" tabindex="0"`
-                 : voa ? ` onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')" role="button" tabindex="0"` : '';
-      return `<g class="${cls}"${acao}><title>${UI.esc(nome)}${ir ? ' — ir pra lá' : voa ? ' — voar até lá' : ''}</title>${forma}${rotulo}</g>`;
+                  : `<circle cx="${x}" cy="${y}" r="3.2"/>`;
+      const rot = this.rotuloMapa(L);
+      const esq = this.ROTULO_A_ESQUERDA.has(id);
+      /* perto da borda o nome não centraliza, senão sai do quadro */
+      const ancora = x < 30 ? 'start' : x > 170 ? 'end' : 'middle';
+      const rotulo = L.tipo === 'rota'
+        ? `<text class="mp-rota" x="${esq ? x - 5 : x + 5}" y="${y + 2.2}" text-anchor="${esq ? 'end' : 'start'}">${UI.esc(rot)}</text>`
+        : `<text x="${ancora === 'start' ? x - 6 : ancora === 'end' ? x + 6 : x}" y="${y - 8}" text-anchor="${ancora}">${UI.esc(rot)}</text>`;
+      return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}')"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Exploracao.mapaInfo('${id}')}"
+        role="button" tabindex="0" aria-label="${UI.esc(L.nome)}"><title>${UI.esc(L.nome)}</title>${forma}${rotulo}</g>`;
     });
     const L = Mundo.atual();
     UI.modal('', `<div class="mapa-kanto">
       <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>${origem === 'parede'
-        ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está em ${UI.esc(L.nome)}`}</span></div>
+        ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está ${UI.esc(emLocal(aqui))}`}</span></div>
       <svg viewBox="0 0 200 162" role="img" aria-label="Mapa de Kanto">
         <path class="mp-terra" d="M4 24 Q4 14 14 14 L184 14 Q194 14 194 24 L194 112 Q194 124 182 128 L130 134 Q112 138 96 136 L60 132 Q48 130 34 132 L10 130 Q4 128 4 118 Z"/>
         <path class="mp-ilha" d="M30 144 Q40 140 50 144 Q52 154 40 157 Q28 156 30 144 Z"/>
         <path class="mp-ilha" d="M62 142 Q72 140 78 146 Q76 154 68 154 Q60 152 62 142 Z"/>
         ${linhas.join('')}${pontos.join('')}
       </svg>
-      <p class="sussurro">Quadrado é cidade, ponto é rota, losango é lugar à parte. Toque num lugar vizinho pra ir.</p>
-      <p class="sussurro mapa-voo">${voo.pode
-        ? `Voar: ${UI.esc(nomeExib(voo.quem))} te leva a qualquer cidade onde você já pisou (as de borda dourada).`
-        : `Voar até uma cidade distante pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`}</p>
+      <div class="mapa-legenda">
+        <span><i class="lg cidade"></i>cidade</span><span><i class="lg rota"></i>rota</span>
+        <span><i class="lg especial"></i>lugar à parte</span><span><i class="lg nao-pisado"></i>onde você nunca foi</span>
+      </div>
+      <div id="mapa-info" class="mapa-info" aria-live="polite"></div>
     </div>`, false, 'mapa');
+    this.mapaInfo(aqui);
+  },
+
+  /* a ficha do lugar tocado no mapa: o que é, o que liga, se você já
+     foi e, quando dá, o botão de ir ou de voar */
+  mapaInfo(id){
+    const box = document.getElementById('mapa-info');
+    const L = LOCAIS[id];
+    if (!box || !L) return;
+    document.querySelectorAll('.mapa-kanto .mp-no.sel').forEach(g => g.classList.remove('sel'));
+    const g = document.querySelector(`.mapa-kanto .mp-no[data-id="${id}"]`);
+    if (g) g.classList.add('sel');
+
+    const aqui = Estado.dados.local;
+    const pisou = Mundo.visitado(id) || id === aqui;
+    const voo = this._voo || {pode:false};
+    const ir = Mundo.vizinhos().includes(id);
+    const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui;
+    const tipo = L.tipo === 'cidade' ? (L.porte || 'cidade') : L.tipo === 'rota' ? 'rota' : 'lugar à parte';
+    const liga = (L.conexoes || []).filter(v => this.mapaVisivel(v)).map(v => LOCAIS[v].nome);
+    /* o que o mapa de parede diria: o Centro tem placa. Loja e ginásio
+       não têm — só aparecem aqui depois que você acha andando. */
+    const tem = [];
+    if ((L.lugares || []).includes('centro')) tem.push('Centro Pokémon');
+    if ((L.lugares || []).includes('loja') && Mundo.descobriu('loja_' + id)) tem.push('loja');
+    if (Mundo.descobriu('ginasio_' + id)) tem.push('ginásio');
+    const desc = pisou && L.desc && L.desc.length ? txt(L.desc[0]) : null;
+    const botao = id === aqui
+      ? `<span class="mapa-aqui">Você está aqui.</span>`
+      : ir ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.viajar('${id}')">${pisou ? 'Ir para ' : 'Seguir o caminho até '}${UI.esc(L.nome)}</button>`
+      : voa ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">Voar até ${UI.esc(L.nome)}</button>`
+      : `<span class="mapa-longe">${L.tipo === 'cidade' && pisou
+          ? `Longe daqui. Voar até lá pede ${UI.esc(voo.falta || 'um Pokémon voador de grande porte')}.`
+          : 'Longe daqui: dá pra chegar andando pelas rotas do caminho.'}</span>`;
+    box.innerHTML = `
+      <div class="mi-cab"><b>${UI.esc(L.nome)}</b><span>${UI.esc(tipo)}${L.perigosa ? ' · dizem que é perigoso' : ''}</span></div>
+      ${desc ? `<p class="mi-desc">${UI.esc(desc)}</p>` : `<p class="mi-desc fraco">${pisou ? '' : 'Você nunca foi lá.'}</p>`}
+      <div class="mi-linhas">
+        ${liga.length ? `<div><span class="k">Liga com</span> ${UI.esc(liga.join(', '))}</div>` : ''}
+        ${tem.length ? `<div><span class="k">Tem</span> ${UI.esc(tem.join(', '))}</div>` : ''}
+        ${pisou && id !== aqui ? '<div><span class="k">Você</span> já esteve aqui</div>' : ''}
+      </div>
+      <div class="mi-acao">${botao}</div>`;
   },
 
   /* Voo: sai daqui e desce na cidade escolhida, sem atravessar as rotas

@@ -3997,7 +3997,8 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
-      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila, ou na parede de qualquer Centro Pokémon · mostra onde você já pisou e as estradas que saem de lá · anda pro vizinho</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
+      <div class="linha"><span class="k">Tocar num lugar</span><span class="v">mostra o que ele é, com o que liga, se tem Centro e se você já foi · loja e ginásio só aparecem depois que você acha andando · vizinho: botão de ir · cidade longe onde você já pisou: botão de voar, se der</span></div>
       <div class="linha"><span class="k">Voar pelo mapa</span><span class="v">com um Voador de grande porte que voe de verdade · até qualquer cidade onde você já pisou · um período do dia</span></div>
       <p class="sussurro">Entre um capítulo e outro não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Voar pelo mapa só vale andando pelo mundo, entre cidades que você já conhece. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
 

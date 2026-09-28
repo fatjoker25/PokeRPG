@@ -2479,7 +2479,31 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 .mapa-kanto .mp-terra{fill:#7fb069;stroke:#4f7d43;stroke-width:1.2}
 .mapa-kanto .mp-ilha{fill:#9cc07e;stroke:#4f7d43;stroke-width:1}
 .mapa-kanto .mp-via{stroke:#e8d8a8;stroke-width:3;stroke-linecap:round}
-.mapa-kanto .mp-via.incerta{stroke-dasharray:2 3;opacity:.7}
+.mapa-kanto .mp-via{opacity:.55}
+.mapa-kanto .mp-via.andada{opacity:1}
+.mapa-kanto .mp-no{cursor:pointer;outline:none}
+.mapa-kanto .mp-no.nao-pisado rect,.mapa-kanto .mp-no.nao-pisado circle{opacity:.55}
+.mapa-kanto .mp-no.nao-pisado text{opacity:.75}
+.mapa-kanto .mp-no text.mp-rota{font:700 4.6px system-ui,sans-serif}
+.mapa-kanto .mp-no:hover rect,.mapa-kanto .mp-no:hover circle,
+.mapa-kanto .mp-no:focus-visible rect,.mapa-kanto .mp-no:focus-visible circle{stroke:#10202e;stroke-width:1.6}
+.mapa-kanto .mp-no.sel rect,.mapa-kanto .mp-no.sel circle{stroke:#10202e;stroke-width:2.2;opacity:1}
+.mapa-legenda{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px 0;font-size:12px;color:var(--texto-fraco)}
+.mapa-legenda .lg{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border:1px solid #5a4a2a;background:#f4efe0}
+.mapa-legenda .lg.cidade{background:#e2463a;border-color:#fff;border-radius:2px}
+.mapa-legenda .lg.rota{border-radius:50%}
+.mapa-legenda .lg.especial{background:#f2c94c;transform:rotate(45deg) scale(.85)}
+.mapa-legenda .lg.nao-pisado{opacity:.5;border-radius:50%}
+.mapa-info{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);min-height:92px}
+.mapa-info .mi-cab{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.mapa-info .mi-cab b{font-size:16px}
+.mapa-info .mi-cab span{color:var(--texto-fraco);font-size:12.5px}
+.mapa-info .mi-desc{margin:6px 0;font-size:13.5px;line-height:1.45}
+.mapa-info .mi-desc.fraco{color:var(--texto-fraco);font-style:italic}
+.mapa-info .mi-linhas{display:flex;flex-direction:column;gap:3px;font-size:13px}
+.mapa-info .mi-linhas .k{display:inline-block;min-width:70px;color:var(--texto-fraco);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
+.mapa-info .mi-acao{margin-top:9px}
+.mapa-info .mapa-aqui,.mapa-info .mapa-longe{font-size:13px;color:var(--texto-fraco);font-style:italic}
 .mapa-kanto .mp-no rect,.mapa-kanto .mp-no circle{fill:#f4efe0;stroke:#5a4a2a;stroke-width:1}
 .mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff}
 .mapa-kanto .mp-no.especial rect{fill:#f2c94c}
