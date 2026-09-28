@@ -5290,7 +5290,7 @@ function _formal(rotulo){ return /senhora|senhor|velh|dona d|dono d|capit[ãa]o|
    pessoas com o mesmo nome na mesma jornada confunde, e roubar o nome
    de um personagem escrito é pior ainda. */
 const NOMES_DA_HISTORIA = new Set([
-  'Amos','Aldous','Lena','Emory','Poplar','Nell','Rufo','Quint','Mervin','Edda','Waldo','Maren','Maeve','Corwin','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
+  'Amos','Aldous','Lena','Maude','Brandt','Tolliver','Aske','Ingram','Ebbs','Orme','Fenn','Emory','Poplar','Nell','Rufo','Quint','Mervin','Edda','Waldo','Maren','Maeve','Corwin','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
   'Arden','Hart','Tanner','Tobin','Kieran','Ashby','Burke','Holloway','Ansel',
@@ -17262,7 +17262,7 @@ c1_nao_dormiu:{
     'Você senta na cama. Está cansad{o|a} de um jeito que não vai passar com sono.'
   ],
   ef:{flag:'nao_dormiu', hp:-2, causa:'Noite em claro antes de sair de casa',
-      registrar:'Passou a última noite em casa acordado.'},
+      registrar:'Passou a última noite em casa acordad{o|a}.'},
   escolhas:[
     {texto:'Tentar dormir mais quarenta minutos.', vai:'c1_quarenta_minutos'},
     {texto:'Levantar e olhar o quarto com calma, já que dá tempo.', vai:'c1_quarto'},
@@ -74359,7 +74359,7 @@ c29_as_quatro_ligacoes:{
 c29_pediu_a_agenda:{
   texto:[
     d=>fala(d.jogador.nome, 'A senhora me empresta essa agenda?'),
-    'Ela segura a agenda com as duas mãos e você já viu esse gesto antes, num banco em frente a uma cerca em Fuchsia.',
+    'Ela segura a agenda com as duas mãos, do jeito de quem já perdeu um caderno uma vez e não vai perder outro.',
     fala('Sra. Vale', 'Eu copio pra você.'),
     d=>fala(d.jogador.nome, 'A senhora não precisa.'),
     fala('Sra. Vale', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
@@ -74427,7 +74427,7 @@ c29_pegou_o_saco:{
     'É saco de ração de granja, cinquenta por setenta, com impressão em três cores e — na lateral, onde ninguém olha — uma etiqueta de expedição colada.',
     'A etiqueta tem: número de lote, data, o nome de uma distribuidora de Celadon, e um campo de destinatário preenchido à máquina.',
     'O destinatário não é um nome de pessoa e não é um nome de empresa.',
-    'É uma sigla de cinco caracteres que você já viu escrita à mão num livro de destinos.',
+    'É uma sigla de cinco caracteres, batida à máquina, sem nenhum nome por perto.',
     'Você dobra o saco em oito e enfia dentro da mochila, e ele não cabe direito, e você força.'
   ],
   ef:{flag:['tem_o_saco_de_racao','reika_precisa_de_papel','sabe_do_lote_unico'],
@@ -74691,14 +74691,14 @@ c29_abriu_a_tranca:{
     'Você puxa a tranca e ela corre fácil, porque tranca de porta usada corre fácil.',
     'A porta abre pra fora e a luz do quintal entra no galpão pela primeira vez no dia.',
     'Trinta e uma gaiolas. Quatro fileiras. Corredor no meio. Ralo no centro do piso.',
-    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do capítulo:',
+    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do dia:',
     'abrir trinta e uma gaiolas leva mais de doze segundos.'
   ],
   ef:{flag:'a_porta_aberta_do_galpao'},
   escolhas:[
     {texto:'Abrir todas. Que dê o que der.', vai:'c29_abriu_todas'},
     {texto:'Abrir as que der e correr.', vai:'c29_abriu_as_que_deu'},
-    {texto:'Fechar a porta e sair sem ser visto.', vai:'c29_fechou_a_porta'}
+    {texto:'Fechar a porta e sair sem ser vist{o|a}.', vai:'c29_fechou_a_porta'}
   ]
 },
 
@@ -74827,7 +74827,7 @@ c29_de_madrugada:{
     'Você está sentad{o|a} no meio-fio do outro lado, encostad{o|a} no poste da lâmpada quebrada, há uma hora e quarenta.',
     'Às duas e dezoito entra o caminhão.',
     'Não é caminhão-baú: é caminhonete de cabine dupla com gaiola na caçamba, coberta com lona, com os vãos amarrados com corda de nylon amarela.',
-    'Você já viu essa corda, num caminhão, numa zona industrial, em outra cidade.',
+    d=>d.flags.caminhao_gaiola_terca_quinta_sabado ? 'Terça, quinta e sábado, de madrugada: é o caminhão-gaiola que o rapaz do posto viu passar na ponte.' : 'Corda amarela, nó de quem amarra isso toda semana.',
     'O portão verde abre inteiro, o que ele não faz de dia, e a caminhonete entra de ré.',
     'A descarga leva dezoito minutos e é silenciosa de um jeito que custa treino: ninguém fala, ninguém bate gaiola, ninguém acende luz de fora.',
     'Às duas e trinta e seis o portão fecha e a rua volta a ser uma rua.'
@@ -75018,8 +75018,8 @@ c30_a_lista_dos_onze:{
     'Você lê as onze duas vezes e na segunda leitura vê a coisa que não dá pra desver.',
     'Os quatro nomes do primeiro mês são nomes comuns de Kanto: sobrenome de três sílabas, nome de duas.',
     'Os sete do segundo mês também.',
-    'Mas as oito linhas de madrugada têm todas a mesma estrutura de nome: dois caracteres, ponto, sobrenome.',
-    '**H. Sawada. K. Torii. M. Anzai. Y. Ihara. T. Ebina. R. Okuda. S. Fuse. N. Dahl.**',
+    'Mas as oito linhas de madrugada têm todas a mesma estrutura de nome: uma inicial, ponto, sobrenome.',
+    '**H. Brandt. K. Tolliver. M. Aske. Y. Ingram. T. Ebbs. R. Orme. S. Fenn. N. Dahl.**',
     'Ninguém assina o próprio nome assim num livro de guarita.',
     'Gente assina assim em formulário de trabalho.'
   ],
@@ -75058,7 +75058,7 @@ c30_o_que_ela_vai_fazer:{
 
 c30_o_rapaz_de_vinte_e_seis:{
   texto:[
-    'O nome na linha de madrugada é Nico Hart, e Nico Hart está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
+    'O nome na linha dele é Nico Hart, e Nico Hart está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
     'É uma casa geminada de fachada azul na terceira rua a partir da praça.',
     'Quem atende é ele mesmo. Vinte e seis anos, camiseta de time, chinelo, e a cara de quem acordou faz vinte minutos.',
     d=>fala(d.jogador.nome, 'Você subiu a Torre Pokémon no dia dezessete?'),
@@ -75215,7 +75215,7 @@ c30_esperou_no_quinto:{
   texto:[
     'O quinto andar da Torre Pokémon tem uma sala lateral com cadeira empilhada e vassoura, que é onde o zelador guarda coisa, e a porta não tranca.',
     'Você espera ali das seis da tarde às duas e quarenta da manhã.',
-    'Oito horas e quarenta minutos sentado no escuro em cima de uma cadeira empilhada.',
+    'Oito horas e quarenta minutos sentad{o|a} no escuro em cima de uma cadeira empilhada.',
     'A torre de noite não tem nada de sobrenatural e é pior por isso: é concreto, é frio, e o eco devolve o seu próprio movimento com meio segundo de atraso, e depois de duas horas você começa a se assustar consigo mesm{o|a}.',
     'Às duas e quarenta e um, alguém sobe.',
     'Passo de sapato de sola dura. Uma pessoa. Lanterna.',
@@ -75277,7 +75277,7 @@ c30_acendeu:{
     fala('Lorca', 'Pesquisa de campo.'),
     d=>fala(d.jogador.nome, 'Às duas e quarenta da manhã.'),
     fala('Lorca', 'A torre é pública vinte e quatro horas. Está na placa.'),
-    'E está mesmo. É a coisa mais irritante do capítulo: ele não está fazendo nada de ilegal neste exato momento.',
+    'E está mesmo. É a coisa mais irritante da noite: ele não está fazendo nada de ilegal neste exato momento.',
     fala('Lorca', 'Você é quem? Da prefeitura?'),
     'E aí ele te reconhece, e dá pra ver o momento em que reconhece, e a cara dele muda pra uma coisa muito pior que medo: alívio.',
     fala('Lorca', 'Ah. É você.', 'baixo')
@@ -75371,7 +75371,7 @@ c30_desceu_atras:{
     'Descer sete andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
     'O passo dele chega até você com meio segundo de atraso e você anda no atraso dele.',
     'Na base da torre ele sai e atravessa a praça e entra num carro estacionado na rua lateral, e o carro parte, e você anota a placa na palma da mão com a caneta.',
-    'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda o capítulo.',
+    'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda a noite.',
     'Tem uma segunda pessoa encostada na parede lateral da torre, na sombra, que estava ali o tempo todo e que não estava esperando o carro.',
     'Estava esperando você descer.'
   ],
@@ -75478,7 +75478,7 @@ c31_a_sede:{
   texto:[
     'A Associação Comercial da Avenida Cinco funciona no sobrado de uma loja de tecido e tem uma placa de bronze do tamanho de uma folha de caderno, gasta no canto de baixo de tanto ser limpa.',
     'Lá em cima é uma sala só: quatro mesas, um bebedouro, um quadro com o retrato de doze presidentes anteriores, e um aparelho de fax numa mesinha separada, no canto, com uma cesta embaixo.',
-    'Quem atende é uma mulher de uns sessenta anos que é a secretária da associação há vinte e dois, e que tem uma placa de mesa de acrílico com o nome: EDITH LAUREL — SECRETARIA EXECUTIVA.',
+    'Quem atende é uma mulher de uns sessenta anos que é a secretária da associação há vinte e dois, e que tem uma placa de mesa de acrílico com o nome: MAUDE LAUREL — SECRETARIA EXECUTIVA.',
     fala('Sra. Laurel', 'Associado?'),
     d=>fala(d.jogador.nome, 'Não.'),
     fala('Sra. Laurel', 'Vendedor?'),
@@ -75539,7 +75539,7 @@ c31_a_ata_da_assembleia:{
   ],
   ef:{flag:['a_ata_da_associacao','reika_precisa_de_papel','sabe_do_lote_unico'],
       registrar:'A ata da associação registra que a lista é fornecida por "entidade conveniada", sem nomear qual.',
-      presagio:'Entidade conveniada. A mesma palavra que aparece num quadro de prestação de contas de banco.'},
+      presagio:'Entidade conveniada. Quem não quer ser nomeado assina como categoria.'},
   escolhas:[
     {texto:'Ir até a sede da associação com a ata.', vai:'c31_a_sede'},
     {texto:'Perguntar se ele já viu a lista.', vai:'c31_ele_viu_a_lista'}
@@ -75665,7 +75665,7 @@ c31_a_copia_da_lista:{
   texto:[
     'Ela tira a cópia na copiadora da sala, que é uma máquina de mesa que faz barulho de secador, e carimba com o carimbo da associação.',
     fala('Sra. Laurel', 'Confere com o original. É a fórmula.'),
-    'Ela assina embaixo do carimbo, com o nome completo e o cargo, em letra de quem assina cinquenta coisas por dia: **Edith Laurel, Secretária Executiva**.',
+    'Ela assina embaixo do carimbo, com o nome completo e o cargo, em letra de quem assina cinquenta coisas por dia: **Maude Laurel, Secretária Executiva**.',
     d=>fala(d.jogador.nome, 'A senhora não tem medo?'),
     'Ela guarda a caneta no porta-lápis, de pé, com a ponta pra cima.',
     fala('Sra. Laurel', 'Eu tenho sessenta e um anos e vinte e dois de associação e um contrato que não me deixa ser demitida sem justa causa.'),
@@ -75760,7 +75760,7 @@ c31_o_que_tem_no_rolo:{
     'Nove listas. Nove cabeçalhos.',
     'E o cabeçalho é o mesmo nas nove: um número de origem, uma data, uma hora, e um nome de aparelho, que é aquele nome que a pessoa cadastra no fax e que ninguém nunca troca.',
     'O nome do aparelho é uma sigla de cinco caracteres.',
-    'Você já viu essa sigla escrita à mão num livro de destinos.'
+    d=>d.flags.livro_de_destinos ? 'Você já viu essa sigla escrita à mão num livro de destinos.' : 'Cinco caracteres, e nenhum deles é uma palavra.'
   ],
   ef:{flag:['leu_o_rolo','sabe_o_nome_da_comissao','sabe_do_lote_unico'],
       npc:{nome:'o revelador', opiniao:2, viuVoce:'Leu com você nove semanas de fax num rolo térmico usado.'},
@@ -75856,7 +75856,7 @@ c31_avisou_a_mae:{
     fala('a mãe da Cleo', 'Ela tem treze anos e um aparelho nos dentes e dorme com a luz do corredor acesa.'),
     'Ela solta o pano de prato.',
     fala('a mãe da Cleo', 'Onde é essa associação?'),
-    'E é assim que você descobre uma coisa sobre o capítulo: você passou três dias juntando papel e a mãe da Cleo vai resolver isso numa tarde.'
+    'E é assim que você descobre uma coisa sobre esses três dias: você passou três dias juntando papel e a mãe da Cleo vai resolver isso numa tarde.'
   ],
   ef:{flag:['a_mae_vai_na_associacao','sabe_do_lote_unico'], moral:2,
       rep:{eixo:'bom', delta:2, motivo:'Avisou a mãe de uma menina de treze anos que o nome dela estava numa lista de acompanhamento.'},
@@ -75925,7 +75925,7 @@ c31_copiou_o_caderno:{
     'Ela fica com o caderno nas duas mãos e não sabe o que fazer com a cara.',
     fala('Cleo', 'Todo mundo que eu mostrei falou pra eu parar.'),
     d=>fala(d.jogador.nome, 'Eu também vou falar. Só não agora.'),
-    'Ela ri, e é a primeira coisa de treze anos que ela faz na cena inteira.'
+    'Ela ri, e é a primeira coisa de treze anos que ela faz na conversa inteira.'
   ],
   ef:{flag:['copia_do_caderno_da_kazu','reika_precisa_de_papel'], moral:1,
       npc:{nome:'Cleo', opiniao:5, viuVoce:'Você copiou o caderno e devolveu em vez de levar.'},
@@ -75971,7 +75971,7 @@ c31_cobrou_a_seguranca:{
     'Ele abre as mãos.',
     fala('o presidente da associação', 'Eu não faço a lista. A lista vem da entidade conveniada.'),
     d=>fala(d.jogador.nome, 'Qual entidade?'),
-    'E aí ele faz uma coisa que resume o capítulo: ele olha pra secretária.',
+    'E aí ele faz uma coisa que resume a tarde: ele olha pra secretária.',
     'E a secretária, que está sentada na mesa dela há vinte e dois anos, responde antes dele:',
     fala('Sra. Laurel', 'Está no convênio, doutor. Eu pego pro senhor.', 'baixo')
   ],
@@ -75989,7 +75989,15 @@ c31_o_convenio:{
     'O presidente lê a primeira página pela primeira vez na vida dele, o que dá pra ver pelo jeito que ele acompanha com o dedo.',
     'Na cláusula primeira, o objeto: "fornecimento de relação de acompanhamento preventivo".',
     'No preâmbulo, as partes.',
-    'E no lugar do nome da segunda parte, a sigla de cinco caracteres que você já viu num livro de destinos, num saco de ração, num carimbo de envelope e no cabeçalho de nove semanas de fax.',
+    d=>{
+      const onde = [];
+      if (d.flags.livro_de_destinos) onde.push('num livro de destinos');
+      if (d.flags.tem_o_saco_de_racao) onde.push('num saco de ração');
+      if (d.flags.leu_o_rolo) onde.push('no cabeçalho de nove semanas de fax');
+      return onde.length
+        ? `E no lugar do nome da segunda parte, a sigla de cinco caracteres que você já viu ${onde.length > 1 ? onde.slice(0, -1).join(', ') + ' e ' + onde[onde.length - 1] : onde[0]}.`
+        : 'E no lugar do nome da segunda parte, uma sigla de cinco caracteres, sem nome nenhum por extenso.';
+    },
     'O presidente lê a sigla em voz alta, devagar, soletrando, e fica claro que é a primeira vez que ele soletra aquilo.',
     fala('o presidente da associação', 'Isso é a... quem é isso?'),
     'E a sala inteira olha pra você, porque você é {o único|a única} ali que não perguntou.'
@@ -76154,7 +76162,7 @@ c32_que_horas:{
     'Ele aponta o próprio pulso com o garfo.',
     fala('Otto', 'Porque eu entro às sete e eu passo em frente às seis e quarenta e cinco, e já tá acontecendo, e já acabou quando eu volto do café às sete e dez.'),
     'Ele come mais um pouco.',
-    fala('Otto', 'Trinta minutos. Todo sexta. Faz uns três anos.'),
+    fala('Otto', 'Trinta minutos. Toda sexta. Faz uns três anos.'),
     fala('Rico', 'Quatro, Otto. Começou quando a empilhadeira nova chegou.'),
     fala('Otto', 'Quatro, então.'),
     'Quatro anos de trinta minutos toda sexta-feira, a cinquenta metros de uma oficina com vinte e seis anos de rua.',
@@ -76393,11 +76401,13 @@ c32_a_junta:{
     'Capital social: baixo. Quadro societário: duas pessoas físicas, com nome e documento.',
     'E na última linha, onde vai o administrador designado, tem um nome que não é nenhum dos dois sócios.',
     'É uma administradora contratada, também pessoa jurídica.',
-    'E o nome dela é a sigla de cinco caracteres.'
+    d=>d.flags.livro_de_destinos || d.flags.tem_o_saco_de_racao || d.flags.leu_o_rolo
+      ? 'E o nome dela é a sigla de cinco caracteres que você já conhece.'
+      : 'E o nome dela é uma sigla de cinco caracteres, sem nenhuma palavra por extenso.'
   ],
   ef:{dinheiro:-12, flag:['a_certidao_da_junta','sabe_o_nome_da_comissao','reika_precisa_de_papel','sabe_do_lote_unico'],
       registrar:'A certidão da junta: armazenagem de material biológico com climatização, administrada pela sigla.',
-      presagio:'Dois sócios que ninguém conhece e uma administradora que aparece em todo papel desta jornada.'},
+      presagio:'Dois sócios que ninguém conhece e uma administradora que não tem nome, só letras.'},
   escolhas:[
     {texto:'Pedir também a ficha dos dois sócios.', vai:'c32_os_dois_socios'},
     {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
@@ -76496,7 +76506,9 @@ c32_a_sexta:{
   ],
   ef:{flag:['viu_o_carregamento','sabe_do_lote_unico'], moral:-2,
       registrar:'Quarenta e uma caixas brancas carregadas em 26 minutos, numa manhã de sexta, na Industrial 3.',
-      presagio:'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'},
+      presagio:d=>d.flags.as_quarenta_e_uma_empresas
+        ? 'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'
+        : 'Quarenta e uma caixas em vinte e seis minutos, passadas de mão em mão como quem já fez isso muitas vezes.'},
   escolhas:[
     {texto:'Seguir o caminhão-baú.', vai:'c32_seguiu_o_bau'},
     {texto:'Ir falar com o Otto.', vai:'c32_o_mecanico_de_novo'},
@@ -76525,7 +76537,7 @@ c32_o_mecanico_de_novo:{
     'Você atravessa a rua e ele te oferece o copo de café antes de você falar, e você aceita porque recusar seria grosseria.',
     fala('Otto', 'Quarenta e uma.'),
     d=>fala(d.jogador.nome, 'Você conta?'),
-    fala('Otto', 'Todo sexta, há quatro anos.'),
+    fala('Otto', 'Toda sexta, há quatro anos.'),
     'Ele toma o café dele do outro copo.',
     fala('Otto', 'Tem semana de trinta e seis. Tem semana de cinquenta e dois. A média é quarenta e uma.'),
     d=>fala(d.jogador.nome, 'Você anota?'),

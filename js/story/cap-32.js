@@ -126,7 +126,7 @@ c32_que_horas:{
     'Ele aponta o próprio pulso com o garfo.',
     fala('Otto', 'Porque eu entro às sete e eu passo em frente às seis e quarenta e cinco, e já tá acontecendo, e já acabou quando eu volto do café às sete e dez.'),
     'Ele come mais um pouco.',
-    fala('Otto', 'Trinta minutos. Todo sexta. Faz uns três anos.'),
+    fala('Otto', 'Trinta minutos. Toda sexta. Faz uns três anos.'),
     fala('Rico', 'Quatro, Otto. Começou quando a empilhadeira nova chegou.'),
     fala('Otto', 'Quatro, então.'),
     'Quatro anos de trinta minutos toda sexta-feira, a cinquenta metros de uma oficina com vinte e seis anos de rua.',
@@ -365,11 +365,13 @@ c32_a_junta:{
     'Capital social: baixo. Quadro societário: duas pessoas físicas, com nome e documento.',
     'E na última linha, onde vai o administrador designado, tem um nome que não é nenhum dos dois sócios.',
     'É uma administradora contratada, também pessoa jurídica.',
-    'E o nome dela é a sigla de cinco caracteres.'
+    d=>d.flags.livro_de_destinos || d.flags.tem_o_saco_de_racao || d.flags.leu_o_rolo
+      ? 'E o nome dela é a sigla de cinco caracteres que você já conhece.'
+      : 'E o nome dela é uma sigla de cinco caracteres, sem nenhuma palavra por extenso.'
   ],
   ef:{dinheiro:-12, flag:['a_certidao_da_junta','sabe_o_nome_da_comissao','reika_precisa_de_papel','sabe_do_lote_unico'],
       registrar:'A certidão da junta: armazenagem de material biológico com climatização, administrada pela sigla.',
-      presagio:'Dois sócios que ninguém conhece e uma administradora que aparece em todo papel desta jornada.'},
+      presagio:'Dois sócios que ninguém conhece e uma administradora que não tem nome, só letras.'},
   escolhas:[
     {texto:'Pedir também a ficha dos dois sócios.', vai:'c32_os_dois_socios'},
     {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
@@ -468,7 +470,9 @@ c32_a_sexta:{
   ],
   ef:{flag:['viu_o_carregamento','sabe_do_lote_unico'], moral:-2,
       registrar:'Quarenta e uma caixas brancas carregadas em 26 minutos, numa manhã de sexta, na Industrial 3.',
-      presagio:'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'},
+      presagio:d=>d.flags.as_quarenta_e_uma_empresas
+        ? 'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'
+        : 'Quarenta e uma caixas em vinte e seis minutos, passadas de mão em mão como quem já fez isso muitas vezes.'},
   escolhas:[
     {texto:'Seguir o caminhão-baú.', vai:'c32_seguiu_o_bau'},
     {texto:'Ir falar com o Otto.', vai:'c32_o_mecanico_de_novo'},
@@ -497,7 +501,7 @@ c32_o_mecanico_de_novo:{
     'Você atravessa a rua e ele te oferece o copo de café antes de você falar, e você aceita porque recusar seria grosseria.',
     fala('Otto', 'Quarenta e uma.'),
     d=>fala(d.jogador.nome, 'Você conta?'),
-    fala('Otto', 'Todo sexta, há quatro anos.'),
+    fala('Otto', 'Toda sexta, há quatro anos.'),
     'Ele toma o café dele do outro copo.',
     fala('Otto', 'Tem semana de trinta e seis. Tem semana de cinquenta e dois. A média é quarenta e uma.'),
     d=>fala(d.jogador.nome, 'Você anota?'),

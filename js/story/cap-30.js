@@ -82,8 +82,8 @@ c30_a_lista_dos_onze:{
     'Você lê as onze duas vezes e na segunda leitura vê a coisa que não dá pra desver.',
     'Os quatro nomes do primeiro mês são nomes comuns de Kanto: sobrenome de três sílabas, nome de duas.',
     'Os sete do segundo mês também.',
-    'Mas as oito linhas de madrugada têm todas a mesma estrutura de nome: dois caracteres, ponto, sobrenome.',
-    '**H. Sawada. K. Torii. M. Anzai. Y. Ihara. T. Ebina. R. Okuda. S. Fuse. N. Dahl.**',
+    'Mas as oito linhas de madrugada têm todas a mesma estrutura de nome: uma inicial, ponto, sobrenome.',
+    '**H. Brandt. K. Tolliver. M. Aske. Y. Ingram. T. Ebbs. R. Orme. S. Fenn. N. Dahl.**',
     'Ninguém assina o próprio nome assim num livro de guarita.',
     'Gente assina assim em formulário de trabalho.'
   ],
@@ -122,7 +122,7 @@ c30_o_que_ela_vai_fazer:{
 
 c30_o_rapaz_de_vinte_e_seis:{
   texto:[
-    'O nome na linha de madrugada é Nico Hart, e Nico Hart está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
+    'O nome na linha dele é Nico Hart, e Nico Hart está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
     'É uma casa geminada de fachada azul na terceira rua a partir da praça.',
     'Quem atende é ele mesmo. Vinte e seis anos, camiseta de time, chinelo, e a cara de quem acordou faz vinte minutos.',
     d=>fala(d.jogador.nome, 'Você subiu a Torre Pokémon no dia dezessete?'),
@@ -279,7 +279,7 @@ c30_esperou_no_quinto:{
   texto:[
     'O quinto andar da Torre Pokémon tem uma sala lateral com cadeira empilhada e vassoura, que é onde o zelador guarda coisa, e a porta não tranca.',
     'Você espera ali das seis da tarde às duas e quarenta da manhã.',
-    'Oito horas e quarenta minutos sentado no escuro em cima de uma cadeira empilhada.',
+    'Oito horas e quarenta minutos sentad{o|a} no escuro em cima de uma cadeira empilhada.',
     'A torre de noite não tem nada de sobrenatural e é pior por isso: é concreto, é frio, e o eco devolve o seu próprio movimento com meio segundo de atraso, e depois de duas horas você começa a se assustar consigo mesm{o|a}.',
     'Às duas e quarenta e um, alguém sobe.',
     'Passo de sapato de sola dura. Uma pessoa. Lanterna.',
@@ -341,7 +341,7 @@ c30_acendeu:{
     fala('Lorca', 'Pesquisa de campo.'),
     d=>fala(d.jogador.nome, 'Às duas e quarenta da manhã.'),
     fala('Lorca', 'A torre é pública vinte e quatro horas. Está na placa.'),
-    'E está mesmo. É a coisa mais irritante do capítulo: ele não está fazendo nada de ilegal neste exato momento.',
+    'E está mesmo. É a coisa mais irritante da noite: ele não está fazendo nada de ilegal neste exato momento.',
     fala('Lorca', 'Você é quem? Da prefeitura?'),
     'E aí ele te reconhece, e dá pra ver o momento em que reconhece, e a cara dele muda pra uma coisa muito pior que medo: alívio.',
     fala('Lorca', 'Ah. É você.', 'baixo')
@@ -435,7 +435,7 @@ c30_desceu_atras:{
     'Descer sete andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
     'O passo dele chega até você com meio segundo de atraso e você anda no atraso dele.',
     'Na base da torre ele sai e atravessa a praça e entra num carro estacionado na rua lateral, e o carro parte, e você anota a placa na palma da mão com a caneta.',
-    'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda o capítulo.',
+    'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda a noite.',
     'Tem uma segunda pessoa encostada na parede lateral da torre, na sombra, que estava ali o tempo todo e que não estava esperando o carro.',
     'Estava esperando você descer.'
   ],

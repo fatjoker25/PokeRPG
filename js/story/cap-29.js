@@ -105,7 +105,7 @@ c29_as_quatro_ligacoes:{
 c29_pediu_a_agenda:{
   texto:[
     d=>fala(d.jogador.nome, 'A senhora me empresta essa agenda?'),
-    'Ela segura a agenda com as duas mãos e você já viu esse gesto antes, num banco em frente a uma cerca em Fuchsia.',
+    'Ela segura a agenda com as duas mãos, do jeito de quem já perdeu um caderno uma vez e não vai perder outro.',
     fala('Sra. Vale', 'Eu copio pra você.'),
     d=>fala(d.jogador.nome, 'A senhora não precisa.'),
     fala('Sra. Vale', 'Preciso sim, porque eu não vou te dar a minha agenda e você não vai sair daqui sem nada.'),
@@ -173,7 +173,7 @@ c29_pegou_o_saco:{
     'É saco de ração de granja, cinquenta por setenta, com impressão em três cores e — na lateral, onde ninguém olha — uma etiqueta de expedição colada.',
     'A etiqueta tem: número de lote, data, o nome de uma distribuidora de Celadon, e um campo de destinatário preenchido à máquina.',
     'O destinatário não é um nome de pessoa e não é um nome de empresa.',
-    'É uma sigla de cinco caracteres que você já viu escrita à mão num livro de destinos.',
+    'É uma sigla de cinco caracteres, batida à máquina, sem nenhum nome por perto.',
     'Você dobra o saco em oito e enfia dentro da mochila, e ele não cabe direito, e você força.'
   ],
   ef:{flag:['tem_o_saco_de_racao','reika_precisa_de_papel','sabe_do_lote_unico'],
@@ -437,14 +437,14 @@ c29_abriu_a_tranca:{
     'Você puxa a tranca e ela corre fácil, porque tranca de porta usada corre fácil.',
     'A porta abre pra fora e a luz do quintal entra no galpão pela primeira vez no dia.',
     'Trinta e uma gaiolas. Quatro fileiras. Corredor no meio. Ralo no centro do piso.',
-    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do capítulo:',
+    'E aí você ouve o portão da frente e passos no corredor lateral da casa, e você tem uns doze segundos pra decidir a coisa mais difícil do dia:',
     'abrir trinta e uma gaiolas leva mais de doze segundos.'
   ],
   ef:{flag:'a_porta_aberta_do_galpao'},
   escolhas:[
     {texto:'Abrir todas. Que dê o que der.', vai:'c29_abriu_todas'},
     {texto:'Abrir as que der e correr.', vai:'c29_abriu_as_que_deu'},
-    {texto:'Fechar a porta e sair sem ser visto.', vai:'c29_fechou_a_porta'}
+    {texto:'Fechar a porta e sair sem ser vist{o|a}.', vai:'c29_fechou_a_porta'}
   ]
 },
 
@@ -573,7 +573,7 @@ c29_de_madrugada:{
     'Você está sentad{o|a} no meio-fio do outro lado, encostad{o|a} no poste da lâmpada quebrada, há uma hora e quarenta.',
     'Às duas e dezoito entra o caminhão.',
     'Não é caminhão-baú: é caminhonete de cabine dupla com gaiola na caçamba, coberta com lona, com os vãos amarrados com corda de nylon amarela.',
-    'Você já viu essa corda, num caminhão, numa zona industrial, em outra cidade.',
+    d=>d.flags.caminhao_gaiola_terca_quinta_sabado ? 'Terça, quinta e sábado, de madrugada: é o caminhão-gaiola que o rapaz do posto viu passar na ponte.' : 'Corda amarela, nó de quem amarra isso toda semana.',
     'O portão verde abre inteiro, o que ele não faz de dia, e a caminhonete entra de ré.',
     'A descarga leva dezoito minutos e é silenciosa de um jeito que custa treino: ninguém fala, ninguém bate gaiola, ninguém acende luz de fora.',
     'Às duas e trinta e seis o portão fecha e a rua volta a ser uma rua.'

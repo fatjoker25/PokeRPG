@@ -257,7 +257,7 @@ c1_nao_dormiu:{
     'Você senta na cama. Está cansad{o|a} de um jeito que não vai passar com sono.'
   ],
   ef:{flag:'nao_dormiu', hp:-2, causa:'Noite em claro antes de sair de casa',
-      registrar:'Passou a última noite em casa acordado.'},
+      registrar:'Passou a última noite em casa acordad{o|a}.'},
   escolhas:[
     {texto:'Tentar dormir mais quarenta minutos.', vai:'c1_quarenta_minutos'},
     {texto:'Levantar e olhar o quarto com calma, já que dá tempo.', vai:'c1_quarto'},

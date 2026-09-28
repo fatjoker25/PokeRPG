@@ -29,7 +29,7 @@ c31_a_sede:{
   texto:[
     'A Associação Comercial da Avenida Cinco funciona no sobrado de uma loja de tecido e tem uma placa de bronze do tamanho de uma folha de caderno, gasta no canto de baixo de tanto ser limpa.',
     'Lá em cima é uma sala só: quatro mesas, um bebedouro, um quadro com o retrato de doze presidentes anteriores, e um aparelho de fax numa mesinha separada, no canto, com uma cesta embaixo.',
-    'Quem atende é uma mulher de uns sessenta anos que é a secretária da associação há vinte e dois, e que tem uma placa de mesa de acrílico com o nome: EDITH LAUREL — SECRETARIA EXECUTIVA.',
+    'Quem atende é uma mulher de uns sessenta anos que é a secretária da associação há vinte e dois, e que tem uma placa de mesa de acrílico com o nome: MAUDE LAUREL — SECRETARIA EXECUTIVA.',
     fala('Sra. Laurel', 'Associado?'),
     d=>fala(d.jogador.nome, 'Não.'),
     fala('Sra. Laurel', 'Vendedor?'),
@@ -90,7 +90,7 @@ c31_a_ata_da_assembleia:{
   ],
   ef:{flag:['a_ata_da_associacao','reika_precisa_de_papel','sabe_do_lote_unico'],
       registrar:'A ata da associação registra que a lista é fornecida por "entidade conveniada", sem nomear qual.',
-      presagio:'Entidade conveniada. A mesma palavra que aparece num quadro de prestação de contas de banco.'},
+      presagio:'Entidade conveniada. Quem não quer ser nomeado assina como categoria.'},
   escolhas:[
     {texto:'Ir até a sede da associação com a ata.', vai:'c31_a_sede'},
     {texto:'Perguntar se ele já viu a lista.', vai:'c31_ele_viu_a_lista'}
@@ -216,7 +216,7 @@ c31_a_copia_da_lista:{
   texto:[
     'Ela tira a cópia na copiadora da sala, que é uma máquina de mesa que faz barulho de secador, e carimba com o carimbo da associação.',
     fala('Sra. Laurel', 'Confere com o original. É a fórmula.'),
-    'Ela assina embaixo do carimbo, com o nome completo e o cargo, em letra de quem assina cinquenta coisas por dia: **Edith Laurel, Secretária Executiva**.',
+    'Ela assina embaixo do carimbo, com o nome completo e o cargo, em letra de quem assina cinquenta coisas por dia: **Maude Laurel, Secretária Executiva**.',
     d=>fala(d.jogador.nome, 'A senhora não tem medo?'),
     'Ela guarda a caneta no porta-lápis, de pé, com a ponta pra cima.',
     fala('Sra. Laurel', 'Eu tenho sessenta e um anos e vinte e dois de associação e um contrato que não me deixa ser demitida sem justa causa.'),
@@ -311,7 +311,7 @@ c31_o_que_tem_no_rolo:{
     'Nove listas. Nove cabeçalhos.',
     'E o cabeçalho é o mesmo nas nove: um número de origem, uma data, uma hora, e um nome de aparelho, que é aquele nome que a pessoa cadastra no fax e que ninguém nunca troca.',
     'O nome do aparelho é uma sigla de cinco caracteres.',
-    'Você já viu essa sigla escrita à mão num livro de destinos.'
+    d=>d.flags.livro_de_destinos ? 'Você já viu essa sigla escrita à mão num livro de destinos.' : 'Cinco caracteres, e nenhum deles é uma palavra.'
   ],
   ef:{flag:['leu_o_rolo','sabe_o_nome_da_comissao','sabe_do_lote_unico'],
       npc:{nome:'o revelador', opiniao:2, viuVoce:'Leu com você nove semanas de fax num rolo térmico usado.'},
@@ -407,7 +407,7 @@ c31_avisou_a_mae:{
     fala('a mãe da Cleo', 'Ela tem treze anos e um aparelho nos dentes e dorme com a luz do corredor acesa.'),
     'Ela solta o pano de prato.',
     fala('a mãe da Cleo', 'Onde é essa associação?'),
-    'E é assim que você descobre uma coisa sobre o capítulo: você passou três dias juntando papel e a mãe da Cleo vai resolver isso numa tarde.'
+    'E é assim que você descobre uma coisa sobre esses três dias: você passou três dias juntando papel e a mãe da Cleo vai resolver isso numa tarde.'
   ],
   ef:{flag:['a_mae_vai_na_associacao','sabe_do_lote_unico'], moral:2,
       rep:{eixo:'bom', delta:2, motivo:'Avisou a mãe de uma menina de treze anos que o nome dela estava numa lista de acompanhamento.'},
@@ -476,7 +476,7 @@ c31_copiou_o_caderno:{
     'Ela fica com o caderno nas duas mãos e não sabe o que fazer com a cara.',
     fala('Cleo', 'Todo mundo que eu mostrei falou pra eu parar.'),
     d=>fala(d.jogador.nome, 'Eu também vou falar. Só não agora.'),
-    'Ela ri, e é a primeira coisa de treze anos que ela faz na cena inteira.'
+    'Ela ri, e é a primeira coisa de treze anos que ela faz na conversa inteira.'
   ],
   ef:{flag:['copia_do_caderno_da_kazu','reika_precisa_de_papel'], moral:1,
       npc:{nome:'Cleo', opiniao:5, viuVoce:'Você copiou o caderno e devolveu em vez de levar.'},
@@ -522,7 +522,7 @@ c31_cobrou_a_seguranca:{
     'Ele abre as mãos.',
     fala('o presidente da associação', 'Eu não faço a lista. A lista vem da entidade conveniada.'),
     d=>fala(d.jogador.nome, 'Qual entidade?'),
-    'E aí ele faz uma coisa que resume o capítulo: ele olha pra secretária.',
+    'E aí ele faz uma coisa que resume a tarde: ele olha pra secretária.',
     'E a secretária, que está sentada na mesa dela há vinte e dois anos, responde antes dele:',
     fala('Sra. Laurel', 'Está no convênio, doutor. Eu pego pro senhor.', 'baixo')
   ],
@@ -540,7 +540,15 @@ c31_o_convenio:{
     'O presidente lê a primeira página pela primeira vez na vida dele, o que dá pra ver pelo jeito que ele acompanha com o dedo.',
     'Na cláusula primeira, o objeto: "fornecimento de relação de acompanhamento preventivo".',
     'No preâmbulo, as partes.',
-    'E no lugar do nome da segunda parte, a sigla de cinco caracteres que você já viu num livro de destinos, num saco de ração, num carimbo de envelope e no cabeçalho de nove semanas de fax.',
+    d=>{
+      const onde = [];
+      if (d.flags.livro_de_destinos) onde.push('num livro de destinos');
+      if (d.flags.tem_o_saco_de_racao) onde.push('num saco de ração');
+      if (d.flags.leu_o_rolo) onde.push('no cabeçalho de nove semanas de fax');
+      return onde.length
+        ? `E no lugar do nome da segunda parte, a sigla de cinco caracteres que você já viu ${onde.length > 1 ? onde.slice(0, -1).join(', ') + ' e ' + onde[onde.length - 1] : onde[0]}.`
+        : 'E no lugar do nome da segunda parte, uma sigla de cinco caracteres, sem nome nenhum por extenso.';
+    },
     'O presidente lê a sigla em voz alta, devagar, soletrando, e fica claro que é a primeira vez que ele soletra aquilo.',
     fala('o presidente da associação', 'Isso é a... quem é isso?'),
     'E a sala inteira olha pra você, porque você é {o único|a única} ali que não perguntou.'
