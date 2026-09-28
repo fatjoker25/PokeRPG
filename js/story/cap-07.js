@@ -1705,7 +1705,7 @@ c7_levou_os_dois:{
       flag:['salvou_treinador_torre','conhece_o_hideo'],
       npc:{nome:'Elias', opiniao:8, memoria:'Você o tirou do sexto andar da Torre de Lavender depois de quatro dias caído. Ele não esquece.'},
       registrar:'Levou o treinador, o Marowak e o Cubone até o hospital de Celadon.',
-      presagio:'Elias, vinte e dois anos. Você vai reencontrar ele, e não vai ser num hospital.'},
+      presagio:'Elias, vinte e dois anos. Guarda esse nome.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c7_fim'},
     {texto:'Ficar até ele ter alta.', vai:'c7_ficou_ate_alta'}

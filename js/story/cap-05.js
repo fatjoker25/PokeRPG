@@ -109,7 +109,7 @@ c5_ab_sem_pilha:{
     d=>fala(d.jogador.nome, `Quinhentos e vinte?`),
     fala('a senhora da barraca', 'Você tá vendo outra barraca aqui?'),
     'Ela não diz isso com maldade. Diz com a serenidade de quem entendeu a economia do lugar antes de você.',
-    d=>`Você tem ${d.jogador.dinheiro} ₽ e uma caverna pela frente.`,
+    d=>`Você tem ${Number(d.jogador.dinheiro).toLocaleString('pt-BR')} ₽ e uma caverna pela frente.`,
     fala('a senhora da barraca', 'Tem gente que entra sem. Eu não julgo. Só vendo.', 'baixo')
   ],
   ef:{registrar:'A barraca antes do Monte da Lua vende pilha a 520 ₽ o par.'},

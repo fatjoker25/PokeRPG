@@ -188,7 +188,7 @@ c13_ab_o_leilao:{
     fala('um dos seis', 'Quatro e quinhentos.'),
     fala('outro dos seis', 'Cinco.'),
     'Os seis não são pescadores. São três jornalistas, um homem de terno que está muito mal vestido pra um cais, e dois que você não consegue classificar.',
-    d=>`Você tem ${d.jogador.dinheiro} ₽ e uma decisão que não é sobre dinheiro.`,
+    d=>`Você tem ${Number(d.jogador.dinheiro).toLocaleString('pt-BR')} ₽ e uma decisão que não é sobre dinheiro.`,
     'Do outro lado do cais, sessenta pescadores olham o leilão sem dar um lance nenhum, porque nenhum deles tem cinco mil e porque todos eles sabem o que tem lá fora.',
     'Um deles cospe na água.'
   ],

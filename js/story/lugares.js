@@ -869,7 +869,7 @@ const Cidade = {
         <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
           <span class="cargo-peso mono">${c.valor} ₽</span></div>
         <div class="cargo-resumo">${UI.esc(c.linha)}</div>
-        ${caro ? `<div class="cargo-motivo">Você tem ${Estado.j.dinheiro} ₽.</div>`
+        ${caro ? `<div class="cargo-motivo">Você tem ${Number(Estado.j.dinheiro).toLocaleString('pt-BR')} ₽.</div>`
                : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
       </div>`;
     }).join('');

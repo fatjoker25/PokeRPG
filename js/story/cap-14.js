@@ -116,7 +116,7 @@ c14_ab_a_ilha_crescendo:{
 c14_ab_sem_passagem:{
   texto:[
     'A passagem do ferry pra Cinnabar custa seiscentos e é a única linha regular, e a bilheteria é uma janelinha de madeira num galpão do porto de Fuchsia.',
-    d=>`Você tem ${d.jogador.dinheiro} ₽, e o homem da janelinha olha a sua mão aberta com o dinheiro e não diz nada, porque não é ele que faz o preço.`,
+    d=>`Você tem ${Number(d.jogador.dinheiro).toLocaleString('pt-BR')} ₽, e o homem da janelinha olha a sua mão aberta com o dinheiro e não diz nada, porque não é ele que faz o preço.`,
     'Você fica no galpão. Sai o ferry das sete. O galpão esvazia.',
     'Às oito e pouco entra um homem de setenta e quatro anos com um boné de pano desbotado e uma lata de óleo na mão, e ele vai até a janelinha e não compra passagem: ele reclama de alguma coisa sobre taxa de atracação, e reclama com intimidade.',
     d=>d.flags.sabe_do_ryuzo
