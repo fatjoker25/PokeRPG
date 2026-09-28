@@ -422,6 +422,35 @@ Contato de gente da história entra por `opiniaoDe(rótulo)`, que acha a
 pessoa pelo rótulo ou pelo nome perguntado, e sempre depois do capítulo em
 que ela aparece.
 
+## Veteranos e a Copa
+Os **veteranos** (`js/story/veteranos.js`, dados e motor juntos) são o
+contrário do treinador de estrada: ninguém te para, você vai atrás pela
+lista do lugar (`Veteranos.afazeres`, chamado no fim de
+`afazeresDoLocal`). Três números mandam na força e estão na folha de
+regras: `PISO_VETERANO` (lugar + 9, fixo), `ACIMA_VETERANO` (quando você
+passa do piso, ele acompanha os seus três mais fortes) e
+`ERRO_IA_VETERANO` (8%, contra os 22% de todo mundo — é o `erroIA` do
+`Batalha.iniciar`). O tamanho do time é **fixo por veterano**, pelas
+insígnias que o lugar pede: se crescesse com as suas, voltar mais forte
+não adiantaria.
+
+`Jogo.veteranoAtual` tem três tipos — `desafio`, `convite` e `copa` — e
+o `finalizarBatalha` olha ele antes de tudo. O convite nasce da chamada
+(`CHAMADAS`, três dias depois da vitória), vira a flag
+`convite_vt_<id>` e aparece como lugar pra ir no mapa até ser cumprido;
+perder a luta do convite não apaga o convite. Veterano novo precisa de
+`premio` com uma TM (a folha de regras promete isso), de `convite` e,
+se for à Copa, de `copa:true`. A final da Copa é sempre quem tem
+`final:true`.
+
+`node ferramentas/sim-veteranos.js` mede cada um de passagem (lugar + 2),
+treinado (+6) e preparado (+10), os convites e as rodadas da Copa. O
+jogador simulado é ingênuo — time sorteado da área, sem item nem troca
+— então o número é o piso: de passagem fica entre 2% e 55%, preparado
+entre 22% e 85%. Espécie cuja evolução é por troca com item (Onix,
+Scyther) entra na lista **pela forma final** (208, 212): `finalDaLinha`
+não acha o Steelix saindo do Onix.
+
 ## Sexo do Pokémon
 Todo Pokémon ganha `genero` (`'m'`, `'f'` ou `null`) no `criarPokemon`,
 na proporção dos jogos (`chanceDeMacho`, em `js/engine/pokemon.js`). Save

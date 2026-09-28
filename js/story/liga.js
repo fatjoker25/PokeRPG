@@ -164,6 +164,11 @@ function adversarioTorneio(rival, nivelAlvo){
   if (rival.nome === 'Ezra' && Estado.dados.rival){
     return {nome:'Ezra', fala: rival.fala, time: timeRival()};
   }
+  // veterano vencido entra com as linhas do time dele, três Pokémon
+  if (rival.veterano && typeof veterano === 'function'){
+    const v = veterano(rival.veterano);
+    return {nome: rival.nome, fala: rival.fala, time: timeDeLinhas(v.times, nivelAlvo + 1, 3, v.golpes, 85)};
+  }
   const pool = poolSelvagem().filter(d => {
     const p = DEX[d];
     return p.tipos.some(t => rival.tipos.includes(t)) && p.total >= 380 && !p.evo;

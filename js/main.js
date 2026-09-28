@@ -65,6 +65,8 @@ const Jogo = {
   rivalAtual: null,
   encontroRival: null,
   estradaAtual: null,
+  veteranoAtual: null,
+  copaAtual: null,
   depoisDaEstrada: null,
   capDepoisDaViagem: null,
   destinoDaViagem: null,
@@ -493,6 +495,16 @@ const Jogo = {
       const c = primeiraFala(this.falasRival, R.nome);
       if (c){ L('citacao', c); }
       if (fim.resultado === 'derrota') dinheiro(-Math.min(perdaRivalExtra(R.id), Estado.j.dinheiro));
+    } else if (this.veteranoAtual){
+      const a = this.veteranoAtual, v = veterano(a.id);
+      if (a.tipo === 'desafio'){
+        const c = Veteranos.citacao(venceu);
+        if (c && fim.resultado !== 'gameover') L('citacao', c);
+        if (venceu) dinheiro(Veteranos.premioDe(v));
+      } else if (a.tipo === 'copa' && fim.resultado !== 'gameover'){
+        L('citacao', `${v.nome}: ${txt(venceu ? v.perde : v.vence)}`);
+        dinheiro(Copa.premio(venceu));
+      }
     } else if (this.estradaAtual){
       const c = Estrada.citacao(venceu);
       if (c && fim.resultado !== 'gameover') L('citacao', c);
@@ -562,6 +574,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
+    if (this.veteranoAtual) return this.veteranoAtual.tipo === 'copa' ? Copa.resultado(fim) : Veteranos.resultado(fim);
     if (this.estradaAtual)  return Estrada.resultado(fim);
     if (this.revancheAtual) return this.resultadoRevanche(fim);
     if (this.ginasioAtual)  return this.resultadoGinasio(fim);
@@ -1096,13 +1109,14 @@ const Jogo = {
 
     this.revancheAtual = {id:c.id, nome};
     this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
-    this.rivalAtual = null; this.cenaBatalha = null;
+    this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null;
     Estado.marcarLigacao(c.id, 'revanche');
     Estado.registrar(`Marcou revanche com ${nome}.`);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome,
       timeInimigo: time.slice(1), revelarNatureza:true,
+      erroIA: c.veterano ? ERRO_IA_VETERANO : undefined,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     UI.telaBatalha([

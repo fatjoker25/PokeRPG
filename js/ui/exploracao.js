@@ -300,6 +300,8 @@ const Exploracao = {
     const d = Estado.dados;
 
     if (acao === 'troca'){ return Trocas.tela(); }
+    if (acao.startsWith('vet_'))  return Veteranos.abordar(acao.slice(4));
+    if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
 
     if (acao === 'desafiar'){
       const pend = Estrada.pendentes();

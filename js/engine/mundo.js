@@ -470,6 +470,8 @@ function afazeresDoLocal(){
       sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.'});
   }
 
+  /* veteranos: quem mora aqui e o convite que um deles te fez */
+  if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
   return lista;
 }
 

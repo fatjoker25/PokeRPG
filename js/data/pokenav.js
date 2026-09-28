@@ -989,7 +989,10 @@ function contatosDaEstrada(){
   });
 }
 
-function todosContatos(){ return CONTATOS.concat(contatosDeRivaisExtras(), contatosDaEstrada()); }
+function todosContatos(){
+  return CONTATOS.concat(contatosDeRivaisExtras(), contatosDaEstrada(),
+    typeof contatosVeteranos === 'function' ? contatosVeteranos() : []);
+}
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 function textoContato(c, campo){
   /* A agenda não descreve ninguém: quem é quem está na conversa em que

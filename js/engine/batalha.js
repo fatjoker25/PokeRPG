@@ -44,6 +44,8 @@ const Batalha = {
     this.fase = 'normal';
     this.bonusDinheiro = 1;
     this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
+    /* quanto a IA erra a escolha do golpe, em %: veterano erra menos */
+    this.erroIA = (opts.erroIA != null) ? opts.erroIA : 22;
     if (this.revelaNatureza && inimigo){ inimigo.naturezaVista = true; inimigo.nomeAnunciado = true; }
     if (this.revelaNatureza && opts.timeInimigo) opts.timeInimigo.forEach(p => { p.nomeAnunciado = true; });
     if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
@@ -1091,7 +1093,7 @@ const Batalha = {
     };
     disponiveis.sort((a,b) => pontuar(b) - pontuar(a));
     // não é uma máquina perfeita: às vezes erra a escolha
-    if (disponiveis.length > 1 && Dados.chance(22)) return disponiveis[1].i;
+    if (disponiveis.length > 1 && Dados.chance(this.erroIA != null ? this.erroIA : 22)) return disponiveis[1].i;
     return disponiveis[0].i;
   },
 
