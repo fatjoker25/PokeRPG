@@ -65947,7 +65947,7 @@ c20_fim:{
 
 /* ===== js/story/cap-21.js ===== */
 /* ------------------------------------------------------------
-   ABERTURAS — voltar pra casa depois de oito insígnias não é
+   ABERTURAS — voltar pra casa depois da estrada não é
    uma cena só. Depende de quem você virou e de quem soube.
    ------------------------------------------------------------ */
 const C21_ABERTURAS = ['c21_chegada_em_casa', 'c21_ab_a_faixa', 'c21_ab_de_madrugada', 'c21_ab_ninguem_sabia'];
@@ -65956,6 +65956,9 @@ function c21_cabe(id, d){
   if (id === 'c21_ab_de_madrugada') return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 4 || d.via === 'foragido';
   return true;
 }
+/* Quantas insígnias você trouxe: a Liga convoca até quem não tem as oito. */
+function c21_ins(d){ return d.insignias.filter(i => i !== 'Título de Campeão').length; }
+function c21_ext(n){ return ['nenhuma','uma','duas','três','quatro','cinco','seis','sete','oito'][n] || String(n); }
 function c21_abertura(d){
   const cand = C21_ABERTURAS.filter(id => c21_cabe(id, d));
   return Dados.escolher(cand);
@@ -65963,7 +65966,7 @@ function c21_abertura(d){
 
 /* ============================================================
    CAPÍTULO 21 — A RUA DE ONDE VOCÊ SAIU
-   Pallet. Você tem oito insígnias, um telefone cheio de números
+   A cidade de onde você saiu. Você tem insígnias, um telefone cheio de números
    e uma rua que continuou existindo sem você o tempo todo.
    ============================================================ */
 CAPITULOS.push(
@@ -66029,7 +66032,7 @@ c21_ab_de_madrugada:{
     'A luz da cozinha está acesa.',
     d=>`A luz da cozinha está acesa às três e quarenta da manhã, e isso quer dizer que ${nomeCasa()} não está dormindo, e isso quer dizer que faz tempo que não dorme.`,
     'Você fica na calçada do outro lado por onze minutos.',
-    'Onze minutos é muito tempo pra ficar parado olhando a própria casa.'
+    'Onze minutos é muito tempo pra ficar parad{o|a} olhando a própria casa.'
   ],
   ef:{flag:['voltou_pra_casa','chegou_de_madrugada'],
       registrar:'Chegou em casa às 3h40 da manhã, pela estrada velha, e ficou onze minutos na calçada de frente.'},
@@ -66079,7 +66082,7 @@ c21_chegada_em_casa:{
             'A voz vem da terceira casa antes mesmo de você ver quem é.'),
     d=>fala(nomeCasa(), 'Três! E o aparelho é meu, eu sei que ele toca!')
   ],
-  ef:{flag:'voltou_pra_casa', registrar:'Voltou para a cidade de onde saiu, com oito insígnias.'},
+  ef:{flag:'voltou_pra_casa', registrar:d=>{ const n = c21_ins(d); return n ? `Voltou para a cidade de onde saiu, com ${c21_ext(n)} insígnia${n > 1 ? 's' : ''}.` : 'Voltou para a cidade de onde saiu.'; }},
   escolhas:[
     {texto:'Ir direto pra casa, sem parar em lugar nenhum.', vai:'c21_dentro_de_casa'},
     {texto:'Andar a rua inteira primeiro, devagar.', vai:'c21_a_rua'},
@@ -66096,7 +66099,7 @@ c21_chegada_em_casa:{
 c21_a_rua:{
   texto:[
     'Você anda a rua inteira com a mochila no ombro, devagar, do jeito que só se anda numa rua que a gente conhece de cor.',
-    'O muro do laboratório continua devolvendo a bola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.',
+    'O muro da escola continua devolvendo a bola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.',
     'A casa do número oito pintou de azul. A do quatorze não pintou de nada há mais tempo ainda.',
     'E tem uma coisa que você não esperava: tem um cartaz seu no poste.',
     'É pequeno, é impresso em papel comum, tem uma foto ruim da sua licença e a palavra PARABÉNS escrita à mão embaixo.'
@@ -66204,7 +66207,7 @@ c21_ushio:{
     d=>fala(vz().nome, 'Demorou.', null, `${vz().Ele} não levanta.`),
     d=>fala(vz().nome, 'Senta aqui. Eu não subo mais em banquinho e você já é grande o suficiente pra isso não ser um problema seu.'),
     d=>d.flags.divida_pendente
-      ? `Você senta, e tem ${vz().divida.replace(/^(a|o) /, m => m === 'a ' ? 'uma ' : 'um ')} entre vocês dois que ninguém mencionou ainda.`
+      ? `Você senta, e tem ${vz().divida.replace(/^(a|o) /, m => m === 'a ' ? 'uma ' : 'um ')} entre vocês ${vz().f ? '{dois|duas}' : 'dois'} que ninguém mencionou ainda.`
       : 'Você senta.'
   ],
   ef:{npc:d=>({nome:vz().nome, opiniao:1, memoria:'Estava sentad' + vz().o + ' no degrau quando você voltou.'}),
@@ -66220,7 +66223,7 @@ c21_ushio:{
 
 c21_pagou_a_janela:{
   texto:[
-    'Você põe o dinheiro no degrau entre vocês dois, com o peso de uma pedrinha em cima pra não voar.',
+    d=>`Você põe o dinheiro no degrau entre vocês ${vz().f ? '{dois|duas}' : 'dois'}, com o peso de uma pedrinha em cima pra não voar.`,
     d=>fala(d.jogador.nome, `Isso é ${vz().divida}. E os juros desses anos todos, que eu calculei mal, mas pra cima.`),
     d=>`${vz().Ele} olha o dinheiro. Não pega.`,
     d=>fala(vz().nome, `${vz().Divida} foi ${vz().preco}, e ${vz().conserto}.`),
@@ -66239,7 +66242,7 @@ c21_pagou_a_janela:{
 
 c21_insistiu_ushio:{
   texto:[
-    d=>`Você deixa o dinheiro no degrau e levanta, e ${vz().ele} deixa o dinheiro no degrau também, e vocês dois ficam olhando o dinheiro no degrau.`,
+    d=>`Você deixa o dinheiro no degrau e levanta, e ${vz().ele} deixa o dinheiro no degrau também, e vocês ${vz().f ? '{dois|duas}' : 'dois'} ficam olhando o dinheiro no degrau.`,
     d=>fala(vz().nome, 'Você é teimos{o|a} igual a quem te criou.', 'riso'),
     d=>fala(vz().nome, 'Tá. Eu pego. E eu vou gastar em coisa que não presta, só pra você aprender.')
   ],
@@ -66279,7 +66282,7 @@ c21_varreu_a_calcada:{
   ],
   ef:{moral:6, flag:'varreu_a_calcada_do_ushio',
       npc:d=>({nome:vz().nome, opiniao:6, memoria:`Você fez o serviço ${vz().dele} e ${vz().ele} pediu pra terça que vem.`}),
-      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com oito insígnias no bolso', rep:{notorio:true}},
+      rep:{eixo:'bom',delta:3,motivo:'Fez o serviço de gente velha da rua com as insígnias no bolso', rep:{notorio:true}},
       registrar:d=>`Fez o serviço ${vz().do} ${vz().nome}. ${vz().Ele} pediu pra terça que vem.`},
   escolhas:[
     {texto:'"Eu estou." Prometer a terça.', vai:'c21_prometeu_a_terca',
@@ -66292,7 +66295,7 @@ c21_varreu_a_calcada:{
 c21_prometeu_a_terca:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu estou.'),
-    'Você não sabe se vai estar. Você tem uma convocação chegando, uma mesa comprida te esperando no Planalto e um vale no norte que ninguém desenhou.',
+    'Você não sabe se vai estar. Você tem uma convocação do Planalto no bolso e nenhuma ideia do que vem depois dela.',
     'Mas você fala que está, e você fala sério na hora de falar, e essas duas coisas nem sempre são a mesma.',
     d=>fala(vz().nome, 'Então tá.', null, `${vz().Ele} anota na testa com dois dedos, como sempre.`)
   ],
@@ -66313,7 +66316,7 @@ c21_nao_vai_estar:{
     d=>fala(vz().nome, 'Perguntar é de graça, {menino|menina}. E de vez em quando a resposta é sim.')
   ],
   ef:{moral:2,
-      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Você foi honesto sobre a terça em vez de prometer.'}),
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Você foi honest{o|a} sobre a terça em vez de prometer.'}),
       rep:{eixo:'bom',delta:1,motivo:'Preferiu a verdade à promessa fácil'},
       registrar:d=>`Foi honesto com ${vz().f ? 'a' : 'o'} ${vz().nome} sobre a terça.`},
   escolhas:[
@@ -66325,7 +66328,7 @@ c21_nao_vai_estar:{
 
 c21_contou_tudo:{
   texto:[
-    'Você conta tudo. Do começo. A Floresta, o Monte Lua, o navio, o galpão de Celadon, a usina, a Silph, a Estação 4, a sala 704.',
+    'Você conta tudo. Do começo, na ordem em que aconteceu, sem pular as partes que não te deixam bem.',
     d=>`Leva quarenta minutos e ${vz().ele} não interrompe uma vez.`,
     d=>`Quando você termina, ${vz().ele} fica quiet${vz().o} por um tempo comprido.`,
     d=>fala(vz().nome, `Eu fiz a mesma coisa aqui todo dia durante esses meses todos: ${vz().fazer}.`),
@@ -66344,7 +66347,7 @@ c21_contou_tudo:{
 
 c21_silencio_no_degrau:{
   texto:[
-    'Vocês dois ficam sentados no degrau e não falam nada por uns bons vinte minutos.',
+    d=>`${vz().f ? '{Vocês dois ficam sentados|Vocês duas ficam sentadas}' : 'Vocês dois ficam sentados'} no degrau e não falam nada por uns bons vinte minutos.`,
     'Passa um carro. Passa a mesma criança duas vezes, na mesma direção, sem explicação.',
     'O sol desce o suficiente pra sair da calçada e subir na parede.',
     'Não é constrangedor em momento nenhum, e você percebe que isso é uma coisa rara, e que você não tem isso com quase ninguém.'
@@ -66364,12 +66367,14 @@ c21_centro_primeiro:{
     d=>`O posto do Centro Pokémon ${d.jogador.cidade === 'Pallet' ? 'continua funcionando numa sala dos fundos do mercado' : 'abriu um prédio novo de dois andares'}, e a enfermeira do balcão é outra.`,
     'A de antes foi transferida. A nova tem vinte e poucos anos e uma prancheta igual.',
     fala('a enfermeira nova', 'Cartão, por favor.'),
-    'Você entrega o cartão e ela passa o leitor, e o leitor apita, e ela para.',
-    fala('a enfermeira nova', 'Oito.', 'baixo'),
-    fala('a enfermeira nova', 'Desculpa. É que a gente vê muito cartão e quase nunca vê oito.')
+    d=>c21_ins(d) >= 6 ? 'Você entrega o cartão e ela passa o leitor, e o leitor apita, e ela para.'
+                       : 'Você entrega o cartão e ela passa o leitor, e o leitor apita, e ela devolve sem olhar.',
+    d=>c21_ins(d) >= 6 ? fala('a enfermeira nova', c21_ext(c21_ins(d)).replace(/^./, c => c.toUpperCase()) + '.', 'baixo') : '',
+    d=>c21_ins(d) >= 6 ? fala('a enfermeira nova', `Desculpa. É que a gente vê muito cartão e quase nunca vê ${c21_ext(c21_ins(d))}.`)
+                       : fala('a enfermeira nova', 'Pode deixar o time na bandeja.')
   ],
   ef:{flag:'a_enfermeira_nova',
-      npc:{nome:'Enfermeira nova', opiniao:2, memoria:'Passou o seu cartão e viu oito insígnias pela primeira vez.'},
+      npc:{nome:'Enfermeira nova', opiniao:2, memoria:'Passou o seu cartão no balcão do Centro da sua cidade.'},
       registrar:'A enfermeira do balcão é outra. A de antes foi transferida.'},
   escolhas:[
     {texto:'Perguntar pra onde a outra foi.', vai:'c21_pra_onde_ela_foi'},
@@ -66447,7 +66452,7 @@ c21_dentro_de_casa:{
   ef:{moral:6, flag:'entrou_no_quarto_de_novo',
       registrar:'Entrou no próprio quarto depois de meses. Não tinham mexido em nada.'},
   escolhas:[
-    {texto:'Mostrar as oito insígnias uma por uma.', vai:'c21_mostrou_as_oito'},
+    {texto:d=>`Mostrar as ${c21_ext(c21_ins(d))} insígnias uma por uma.`, vai:'c21_mostrou_as_oito', cond:d=>c21_ins(d) >= 2},
     {texto:'Falar da convocação do Planalto agora, antes de esquentar.', vai:'c21_contou_da_convocacao'},
     {texto:'Perguntar o que aconteceu aqui enquanto você não estava.', vai:'c21_o_que_aconteceu_aqui'},
     {texto:'Não falar de nada. Dormir na sua cama, que é o que você veio fazer.', vai:'c21_dormiu_na_cama'}
@@ -66456,7 +66461,7 @@ c21_dentro_de_casa:{
 
 c21_mostrou_as_oito:{
   texto:[
-    'Você abre o cartão em cima da mesa da cozinha e conta as oito, uma por uma, com cidade e nome de líder.',
+    d=>`Você abre o cartão em cima da mesa da cozinha e conta as ${c21_ext(c21_ins(d))}, uma por uma, com cidade e nome de líder.`,
     d=>fala(nomeCasa(), 'Repete.'),
     'Você repete.',
     d=>fala(nomeCasa(), 'Repete de novo. Devagar. Eu quero decorar a ordem.', 'baixo'),
@@ -66464,8 +66469,8 @@ c21_mostrou_as_oito:{
     '{casa:Ela|Ele} vai contar essa lista pra rua inteira. {casa:Ela|Ele} vai errar a ordem. Ninguém vai corrigir.'
   ],
   ef:{moral:8, flag:'mostrou_as_insignias_em_casa',
-      rep:{eixo:'bom',delta:2,motivo:'Contou as oito insígnias em casa, três vezes, devagar'},
-      registrar:'Mostrou as oito insígnias em casa. Repetiu três vezes.'},
+      rep:{eixo:'bom',delta:2,motivo:'Contou as insígnias em casa, três vezes, devagar'},
+      registrar:'Mostrou as insígnias em casa. Repetiu três vezes.'},
   escolhas:[
     {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
     {texto:'Deixar pra amanhã e dormir.', vai:'c21_dormiu_na_cama'}
@@ -66478,7 +66483,7 @@ c21_o_que_aconteceu_aqui:{
     'A pergunta pega {casa:ela desprevenida|ele desprevenido}, porque ninguém faz essa pergunta pra quem ficou.',
     d=>fala(nomeCasa(), 'Aqui? Aqui não acontece nada, {menino|menina}.'),
     'E aí {casa:ela|ele} conta, por quarenta minutos, tudo que não aconteceu:',
-    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. O neto do Vernon que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
+    d=>fala(nomeCasa(), 'O telhado dos fundos. A conta de luz que veio errada duas vezes. O neto do Sr. Aldous que casou. O Growlithe do quatorze que morreu — aquele velho, você lembra dele.'),
     d=>fala(nomeCasa(), 'A Perla imprimindo cartaz. Eu falei pra ela não fazer isso. Ela fez vinte.', 'riso'),
     'Não aconteceu nada, e levou quarenta minutos pra contar.'
   ],
@@ -66501,7 +66506,7 @@ c21_o_telhado:{
     'Você desce quando termina. O telhado não vai mais pingar neste inverno.'
   ],
   ef:{dinheiro:-600, moral:6, flag:'consertou_o_telhado',
-      rep:{eixo:'bom',delta:2,motivo:'Consertou o telhado da casa com oito insígnias no bolso'},
+      rep:{eixo:'bom',delta:2,motivo:'Consertou o telhado da casa com as insígnias no bolso'},
       registrar:'Consertou as três telhas do telhado dos fundos.'},
   escolhas:[
     {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
@@ -66511,13 +66516,13 @@ c21_o_telhado:{
 
 c21_contou_da_convocacao:{
   texto:[
-    'Você põe o telegrama em cima da mesa e empurra.',
-    'É um papel amarelo com quatro linhas em maiúsculo, timbrado, e a palavra COMPARECIMENTO aparece duas vezes.',
+    'Você põe a carta da Liga em cima da mesa e empurra.',
+    'Papel bom, timbre em relevo, dobra em três, e a palavra COMPARECIMENTO aparece duas vezes.',
     d=>fala(nomeCasa(), 'Isso é ruim?'),
     d=>fala(d.jogador.nome, 'Eu não sei.'),
     d=>fala(nomeCasa(), 'Você sabe alguma coisa?'),
     d=>fala(d.jogador.nome, 'Eu sei que eles não convocam quem não incomoda.'),
-    '{casa:Ela|Ele} lê o papel amarelo mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
+    '{casa:Ela|Ele} lê a carta mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
     d=>fala(nomeCasa(), 'Come antes de ir. Só isso que eu tenho pra falar sobre isso.', 'baixo')
   ],
   ef:{flag:'contou_da_convocacao_em_casa', moral:3,
@@ -66530,7 +66535,7 @@ c21_contou_da_convocacao:{
 
 c21_acordados_ate_tarde:{
   texto:[
-    'Vocês ficam acordados até uma e meia da manhã na cozinha, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa depois das onze.',
+    'Vocês ficam na cozinha até uma e meia da manhã, com a luz de cima apagada e a do fogão acesa, que é como esta casa conversa depois das onze.',
     'Não falam da convocação de novo. Falam de bobagem: de quando você caiu da bicicleta, do primo que virou treinador em 1989, do nome do Growlithe do quatorze.',
     d=>{
       const p = d.time[0];
@@ -66540,7 +66545,7 @@ c21_acordados_ate_tarde:{
     'Você vai lembrar desta cozinha depois, em lugares muito piores do que esta cozinha.'
   ],
   ef:{moral:9, flag:'a_noite_na_cozinha', hp:4,
-      rep:{eixo:'bom',delta:1,motivo:'Ficou acordado até uma e meia por conversa de bobagem'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou acordad{o|a} até uma e meia por conversa de bobagem'},
       registrar:'Ficou até uma e meia da manhã na cozinha, com a luz do fogão.'},
   escolhas:[{texto:'Dormir.', vai:'c21_dormiu_na_cama'}]
 },
@@ -66583,8 +66588,8 @@ c21_saida_de_casa:{
     d=>fala(nomeCasa(), 'Vai.', null, 'Nada de discurso. Nada de "volta". {casa:Ela|Ele} já disse isso uma vez e não repete.'),
     'Na porta, {casa:ela|ele} enfia alguma coisa no bolso de fora da sua mochila, do jeito que {casa:ela|ele} faz, sem avisar o que é.',
     'Você só vai descobrir depois, na estrada, e é uma foto três por quatro da sua licença — daquelas vinte que a Sra. Perla imprimiu — com uma coisa escrita atrás.',
-    d=>fala(nomeCasa(), 'pra você lembrar da cara que você tinha quando saiu', 'baixo',
-            'Escrito a lápis, na letra que você conhece desde que aprendeu a ler.')
+    'Escrito a lápis, na letra que você conhece desde que aprendeu a ler:',
+    '**pra você lembrar da cara que você tinha quando saiu**'
   ],
   ef:{itens:{'Foto três por quatro com um bilhete atrás':1}, moral:6,
       flag:'saiu_de_casa_a_segunda_vez',
@@ -79151,7 +79156,7 @@ const UI = {
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Ezra','Oak','Professor Oak','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Fabre','Nadia','Vernon'].forEach(x => n.add(x));
+     'Blue','Red','Fabre','Nadia','Vernon','Aldous'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)

@@ -431,7 +431,7 @@ const UI = {
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Ezra','Oak','Professor Oak','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Fabre','Nadia','Vernon'].forEach(x => n.add(x));
+     'Blue','Red','Fabre','Nadia','Vernon','Aldous'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)
