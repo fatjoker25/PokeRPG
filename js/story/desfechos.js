@@ -48,18 +48,18 @@ c18_entregar_tudo:{
                 .filter(f => d.flags[f]).length;
       return `São ${n} documentos com carimbo, assinatura ou brasão, juntados em cidades que não se falam.`;
     },
-    'Rhea Colman lê tudo em silêncio por quarenta minutos e não faz uma anotação, porque anotar atrapalha a primeira leitura.',
-    fala('Rhea Colman', 'Você entende o que acontece se eu publicar isso.'),
+    'Rhea Ashford lê tudo em silêncio por quarenta minutos e não faz uma anotação, porque anotar atrapalha a primeira leitura.',
+    fala('Rhea Ashford', 'Você entende o que acontece se eu publicar isso.'),
     d=>fala(d.jogador.nome, 'Não.'),
-    fala('Rhea Colman', 'Nem eu. É por isso que eu perguntei.'),
+    fala('Rhea Ashford', 'Nem eu. É por isso que eu perguntei.'),
     'Ela empilha os documentos e bate na mesa pra alinhar, do jeito que todo mundo que lida com papel faz.',
-    fala('Rhea Colman', 'Se eu publicar, você vira fonte. Fonte tem nome, endereço e uma vida que continua depois da matéria.'),
-    fala('Rhea Colman', 'Se eu não publicar, isso aqui envelhece na minha gaveta e daqui a quatro anos é história antiga.'),
+    fala('Rhea Ashford', 'Se eu publicar, você vira fonte. Fonte tem nome, endereço e uma vida que continua depois da matéria.'),
+    fala('Rhea Ashford', 'Se eu não publicar, isso aqui envelhece na minha gaveta e daqui a quatro anos é história antiga.'),
     'Ela põe a mão em cima da pilha.',
-    fala('Rhea Colman', 'Eu não vou decidir por você.')
+    fala('Rhea Ashford', 'Eu não vou decidir por você.')
   ],
   ef:{flag:'entregou_tudo_pra_imprensa',
-      registrar:'Entregou toda a documentação a Rhea Colman.'},
+      registrar:'Entregou toda a documentação a Rhea Ashford.'},
   escolhas:[
     {texto:'"Publica." — e sair de cena.', vai:'c18_fim_publicou'},
     {texto:'"Publica, e põe o meu nome."', vai:'c18_fim_com_nome'},
@@ -70,12 +70,12 @@ c18_entregar_tudo:{
 c18_fim_publicou:{
   texto:[
     d=>fala(d.jogador.nome, 'Publica.'),
-    fala('Rhea Colman', 'E o seu nome?'),
+    fala('Rhea Ashford', 'E o seu nome?'),
     d=>fala(d.jogador.nome, 'Não põe.'),
     'Ela assente uma vez e guarda a pilha na pasta de papelão e fecha o elástico, e o elástico faz um estalo pequeno.',
-    fala('Rhea Colman', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu em três cidades.'),
+    fala('Rhea Ashford', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu em três cidades.'),
     'Ela levanta.',
-    fala('Rhea Colman', 'Isso não é frieza. É o jeito de você continuar tendo uma vida.'),
+    fala('Rhea Ashford', 'Isso não é frieza. É o jeito de você continuar tendo uma vida.'),
     'Ela vai embora pela praça e você fica sentad{o|a} no banco.',
     'E é aqui que a sua parte acaba, num banco de praça em Saffron, às quatro da tarde de uma quarta-feira, sem ninguém por perto pra ver.'
   ],
@@ -98,14 +98,14 @@ c18_fim_com_nome:{
   texto:[
     d=>fala(d.jogador.nome, 'Publica, e põe o meu nome.'),
     'Ela para com a mão na pasta.',
-    fala('Rhea Colman', 'Você tem quinze anos.'),
+    fala('Rhea Ashford', 'Você tem quinze anos.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
-    fala('Rhea Colman', 'Fonte identificada de quinze anos vira o assunto. Aí a matéria deixa de ser sobre o lote e passa a ser sobre você.'),
+    fala('Rhea Ashford', 'Fonte identificada de quinze anos vira o assunto. Aí a matéria deixa de ser sobre o lote e passa a ser sobre você.'),
     d=>fala(d.jogador.nome, 'Então que seja sobre mim, se é isso que faz alguém ler.'),
     'Ela fica olhando pra você por um tempo comprido e você aguenta o olhar, o que é mais difícil do que parece.',
-    fala('Rhea Colman', 'Tá.'),
+    fala('Rhea Ashford', 'Tá.'),
     'Ela tira o gravador da bolsa, apoia na mesa do banco de praça, e aperta o botão vermelho.',
-    fala('Rhea Colman', 'Diz seu nome inteiro e sua idade pra fita.')
+    fala('Rhea Ashford', 'Diz seu nome inteiro e sua idade pra fita.')
   ],
   final:{id:'publicou_com_nome', titulo:'FONTE IDENTIFICADA, QUINZE ANOS', texto:[
     'A matéria sai numa terça e o seu nome está no terceiro parágrafo.',

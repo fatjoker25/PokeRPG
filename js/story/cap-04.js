@@ -1287,7 +1287,7 @@ c4_ivone_desconfiado:{
   texto:[
     '"Por que a senhora quer saber?"',
     'Ela gosta da pergunta. Dá pra ver.',
-    '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Meu nome é Cordell Barcelos. Eu sou paleontóloga e eu trabalhava aqui até três meses atrás."',
+    '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Meu nome é Ivy Cordell. Eu sou paleontóloga e eu trabalhava aqui até três meses atrás."',
     '"Trabalhava?"',
     '"O museu não tem verba pra dois funcionários. Sobrou o que abre a porta." Ela dá de ombros, e o dar de ombros é a parte mais triste. "Eu continuo vindo. Não tenho pra onde mais ir com isso na cabeça."'
   ],

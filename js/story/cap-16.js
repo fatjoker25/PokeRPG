@@ -588,13 +588,13 @@ c16_ivone_vem:{
   texto:[
     '"A senhora vem junto?"',
     'Ela ri e diz não antes de você terminar a pergunta.',
-    '"Eu tenho cinquenta e oito anos, enjoo em barco parado e uma matéria pra fechar."',
+    '"Eu tenho cinquenta e oito anos, enjoo em barco parado e um relatório pra fechar."',
     'Ela guarda a câmera.',
     '"E eu vou te dizer uma coisa que eu levei trinta anos pra aprender, porque você é nov{o|a} e ainda dá tempo."',
     '"O quê?"',
     '"Eu não preciso ver."',
     'Ela bebe o café.',
-    '"Metade dos jornalistas que eu conheci se perderam porque queriam estar lá. Querer estar lá é vaidade, meu bem, e vaidade é ruim de checar."',
+    '"Metade dos pesquisadores que eu conheci se perderam porque queriam estar lá. Querer estar lá é vaidade, meu bem, e vaidade é ruim de checar."',
     '"Eu preciso que alguém tenha estado lá e me conte, e que a conta bata com o papel."',
     'Ela paga o café dos dois.',
     '"Vai você. Eu confiro."'

@@ -689,7 +689,7 @@ c21_pasta:{
       const via = Historia.via();
       if (via==='foragido') return '"E consta que existe uma operação de distribuição em Celadon que mudou de dono recentemente." Ela fecha a pasta. "Nós não temos prova. Nós temos certeza. As duas coisas são diferentes e só uma delas serve para processo."';
       if (via==='mercenario') return '"E consta que o seu nome aparece em três manifestos de carga que não deviam existir." Ela fecha a pasta. "Nós não vamos usar isso hoje."';
-      if (via==='pesquisador') return '"E consta que metade do material que a Dra. Serizawa protocolou nos últimos meses passou pelas suas mãos primeiro." Ela fecha a pasta. "Isso é útil. Útil é uma palavra perigosa aqui."';
+      if (via==='pesquisador') return '"E consta que metade do material que a Dra. Cordell protocolou nos últimos meses passou pelas suas mãos primeiro." Ela fecha a pasta. "Isso é útil. Útil é uma palavra perigosa aqui."';
       if (via==='heroi') return '"E consta uma lista de lugares em que {o senhor|a senhora} apareceu logo antes de alguma coisa parar de funcionar." Ela fecha a pasta. "Sempre coisas que a gente queria que parassem de funcionar, e sempre sem mandado."';
       return '"E consta que {o senhor|a senhora} foi a muito lugar e não pediu nada a ninguém." Ela fecha a pasta.';
     },
@@ -1042,7 +1042,7 @@ c21_ofertas:{
       const via=Historia.via(); const rep=Estado.rep;
       if (rep.eixo==='bom' && rep.bom>=6) return '"A primeira é uma cadeira na Elite 4. A segunda é a diretoria de fiscalização da Liga, quando o Sr. Waldo se aposentar em dois anos."';
       if (rep.eixo==='ruim' && rep.ruim>=5) return '"A primeira é um acordo: {o senhor|a senhora} para, a gente arquiva. A segunda é trabalhar para nós fazendo o que {o senhor|a senhora} já faz, só que com cobertura."';
-      if (via==='pesquisador') return '"A primeira é um cargo de pesquisa com verba própria. A segunda é testemunhar no processo que a Dra. Serizawa está montando, com proteção."';
+      if (via==='pesquisador') return '"A primeira é um cargo de pesquisa com verba própria. A segunda é testemunhar no processo que a Dra. Cordell está montando, com proteção."';
       return '"A primeira é um cargo de instrutor aqui no Planalto. A segunda é um contrato de campo."';
     },
     'Ela tira a mão da terceira folha e a terceira folha continua onde estava, de cabeça para baixo.',

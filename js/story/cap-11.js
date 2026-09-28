@@ -162,17 +162,17 @@ c11_ab_a_porta_de_aco:{
 c11_ab_entrevista:{
   texto:[
     'Tem uma mulher esperando você na entrada sul de Saffron com um gravador de fita na mão e um crachá de imprensa pendurado no pescoço, e ela não finge que estava de passagem.',
-    fala('Rhea Colman', 'Rhea Colman, Correio de Kanto. Você tem dez minutos?'),
+    fala('Rhea Ashford', 'Rhea Ashford, Correio de Kanto. Você tem dez minutos?'),
     d=>fala(d.jogador.nome, 'Pra quê?'),
-    fala('Rhea Colman', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
+    fala('Rhea Ashford', 'Pra uma pergunta. Eu só uso dez minutos porque ninguém aceita quando eu falo "uma pergunta".'),
     'Ela aperta o botão do gravador sem esperar resposta, que é um jeito de já ter começado.',
-    fala('Rhea Colman', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
+    fala('Rhea Ashford', 'Você já entrou em seis cidades desse mapa. Em quantas delas você viu Pokémon sendo transportado em gaiola?'),
     'A pergunta é específica demais pra ser a primeira pergunta de uma entrevista.',
     'Ela não está te entrevistando. Ela está conferindo uma coisa que já escreveu.'
   ],
   ef:{flag:'reika_te_abordou',
-      npc:{nome:'Rhea Colman', opiniao:0, viuVoce:'Te abordou na entrada sul de Saffron com um gravador ligado.'},
-      registrar:'Rhea Colman, do Correio de Kanto, te esperava na entrada de Saffron.'},
+      npc:{nome:'Rhea Ashford', opiniao:0, viuVoce:'Te abordou na entrada sul de Saffron com um gravador ligado.'},
+      registrar:'Rhea Ashford, do Correio de Kanto, te esperava na entrada de Saffron.'},
   escolhas:[
     {texto:'Responder a verdade.', vai:'c11_ab_respondeu'},
     {texto:'Perguntar o que ela já tem escrito.', vai:'c11_ab_o_que_ela_tem'},
@@ -184,17 +184,17 @@ c11_ab_respondeu:{
   texto:[
     'Você conta o que viu, cidade por cidade, e ela não interrompe nenhuma vez, e o gravador roda.',
     'Quando você termina ela desliga a fita, tira do gravador, e guarda no bolso interno do casaco, não na bolsa.',
-    fala('Rhea Colman', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
+    fala('Rhea Ashford', 'Você é a quarta pessoa a me dizer isso e a primeira que não pediu pra não ser identificada.'),
     d=>fala(d.jogador.nome, 'Devia pedir?'),
-    fala('Rhea Colman', 'Provavelmente.'),
+    fala('Rhea Ashford', 'Provavelmente.'),
     'Ela tira um cartão e escreve um número atrás, à caneta, e o número não é o número impresso na frente.',
-    fala('Rhea Colman', 'Esse aqui é meu, não da redação.'),
-    fala('Rhea Colman', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
+    fala('Rhea Ashford', 'Esse aqui é meu, não da redação.'),
+    fala('Rhea Ashford', 'Se um dia sair uma matéria minha sobre isso, foi porque juntou. Se não sair, foi porque não deixaram.', 'baixo')
   ],
   ef:{flag:'falou_com_a_imprensa',
       rep:{eixo:'bom', delta:2, motivo:'Falou com a imprensa sobre o transporte em gaiola, com nome e sobrenome.', notorio:true},
-      npc:{nome:'Rhea Colman', opiniao:2, viuVoce:'Você deu o depoimento inteiro com o gravador ligado.'},
-      registrar:'Deu um depoimento gravado a Rhea Colman sobre o transporte em gaiola.',
+      npc:{nome:'Rhea Ashford', opiniao:2, viuVoce:'Você deu o depoimento inteiro com o gravador ligado.'},
+      registrar:'Deu um depoimento gravado a Rhea Ashford sobre o transporte em gaiola.',
       presagio:'Depoimento com nome é coragem e é endereço.'},
   escolhas:[
     {texto:'Perguntar o que ela já tem escrito.', vai:'c11_ab_o_que_ela_tem'},
@@ -206,16 +206,16 @@ c11_ab_respondeu:{
 c11_ab_o_que_ela_tem:{
   texto:[
     'Ela pensa se responde. Dá pra ver ela pensando.',
-    fala('Rhea Colman', 'Quarenta e uma páginas e nenhum documento.'),
+    fala('Rhea Ashford', 'Quarenta e uma páginas e nenhum documento.'),
     d=>fala(d.jogador.nome, 'E isso é pouco?'),
-    fala('Rhea Colman', 'Isso é zero. Depoimento sem papel não publica.'),
+    fala('Rhea Ashford', 'Isso é zero. Depoimento sem papel não publica.'),
     'Ela guarda o gravador na bolsa.',
-    fala('Rhea Colman', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
-    fala('Rhea Colman', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
-    fala('Rhea Colman', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
+    fala('Rhea Ashford', 'Eu preciso de uma nota fiscal, um manifesto de carga, um livro de registro. Qualquer coisa com carimbo.'),
+    fala('Rhea Ashford', 'Sabe o que é engraçado? Todo mundo acha que jornalista precisa de segredo.'),
+    fala('Rhea Ashford', 'Eu preciso de burocracia. Segredo não vale nada. Carimbo vale tudo.')
   ],
   ef:{flag:'reika_precisa_de_papel',
-      registrar:'Rhea Colman tem 41 páginas de depoimento e nenhum documento. Ela precisa de papel com carimbo.'},
+      registrar:'Rhea Ashford tem 41 páginas de depoimento e nenhum documento. Ela precisa de papel com carimbo.'},
   escolhas:[
     {texto:'Responder a pergunta dela com o gravador ligado.', vai:'c11_ab_respondeu'},
     {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
@@ -227,17 +227,17 @@ c11_ab_desliga:{
   texto:[
     d=>fala(d.jogador.nome, 'Desliga isso.'),
     'Ela desliga na hora, sem discutir, o que te desarma mais do que se ela tivesse discutido.',
-    fala('Rhea Colman', 'Desligado.'),
+    fala('Rhea Ashford', 'Desligado.'),
     'Ela põe o gravador na bolsa e fecha a bolsa.',
-    fala('Rhea Colman', 'Agora é conversa. Conversa eu não publico.'),
+    fala('Rhea Ashford', 'Agora é conversa. Conversa eu não publico.'),
     d=>fala(d.jogador.nome, 'E eu tenho que acreditar nisso por quê?'),
-    fala('Rhea Colman', 'Por nada. Você não tem.'),
+    fala('Rhea Ashford', 'Por nada. Você não tem.'),
     'Ela dá o cartão mesmo assim, com o número da redação, sem o número escrito atrás.',
-    fala('Rhea Colman', 'Quando você mudar de ideia, o gravador continua na bolsa.')
+    fala('Rhea Ashford', 'Quando você mudar de ideia, o gravador continua na bolsa.')
   ],
   ef:{flag:'recusou_a_imprensa',
-      npc:{nome:'Rhea Colman', opiniao:-1, viuVoce:'Você mandou ela desligar o gravador.'},
-      registrar:'Recusou dar depoimento a Rhea Colman.'},
+      npc:{nome:'Rhea Ashford', opiniao:-1, viuVoce:'Você mandou ela desligar o gravador.'},
+      registrar:'Recusou dar depoimento a Rhea Ashford.'},
   escolhas:[
     {texto:'Seguir pra Silph.', vai:'c11_recepcao'},
     {texto:'Seguir pro ginásio fechado.', vai:'c11_ginasio'},

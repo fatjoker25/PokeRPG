@@ -1507,7 +1507,7 @@ c23_final_papelada:{
     'Em quatro meses, cópias autenticadas de mil cento e oitenta e quatro guias de remessa chegam, por via postal, a onze endereços residenciais.',
     'Cada envelope contém apenas os documentos assinados por aquela pessoa. Nada mais. Sem bilhete, sem ameaça, sem exigência.',
     'Sete dos onze pedem exoneração em seis semanas. Dois adoecem. Um processa a Comissão e ganha.',
-    'O décimo primeiro, a Presidente Rhea Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
+    'O décimo primeiro, a Presidente Hester Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
     'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
     'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
     'Você ensinou isso a Kanto inteiro sem nunca ter subido num palco.'

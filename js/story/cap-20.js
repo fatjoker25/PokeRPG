@@ -431,7 +431,7 @@ c20_quem_e_quem:{
     'A Presidente apresenta a mesa inteira, um por um, com cargo e formação, e leva dois minutos e meio.',
     'Bióloga, com doutorado. Veterinário, vinte e dois anos de clínica de grande porte. Engenheiro agrônomo. Advogada. Contador. Professor titular aposentado, que dormiu por três segundos no meio da apresentação dele mesmo.',
     'Dois servidores públicos licenciados. Uma ex-diretora de escola técnica. O Dr. Hollis. O Curador Fabre.',
-    'E ela: Rhea Colman, ex-diretora de fiscalização da Liga por nove anos.',
+    'E ela: Hester Colman, ex-diretora de fiscalização da Liga por nove anos.',
     'Nenhum deles desvia o olhar quando o nome é dito. Todo mundo aqui está com o nome no cartório desde o primeiro dia.'
   ],
   ef:{flag:['viu_a_mesa_inteira','sabe_o_nome_da_presidente'],
@@ -889,7 +889,7 @@ c20_e_se_eu_estiver_errado:{
     '"É isso que ninguém entende sobre esta sala. Aqui dentro não tem ninguém confortável. Tem gente que escolheu de que lado ia ficar mal."'
   ],
   ef:{flag:'perguntou_se_estava_errado', instabilidade:1, moral:3,
-      npc:{nome:'Rhea Colman', opiniao:3, memoria:'Você perguntou, na frente da mesa, e se estivesse errad{o|a}.'},
+      npc:{nome:'Hester Colman', opiniao:3, memoria:'Você perguntou, na frente da mesa, e se estivesse errad{o|a}.'},
       rep:{eixo:'bom',delta:2,motivo:'Admitiu dúvida numa sala cheia de certezas'},
       registrar:'Perguntou em voz alta se estava errado, na frente do conselho.'},
   escolhas:[
@@ -993,7 +993,7 @@ c20_proxima_assembleia:{
     '"Se eu fechar, eu deixo de ser o que eu escrevi que eu era." Ela olha a Sra. Hedda. "Registra a proposta."'
   ],
   ef:{flag:['sabe_da_assembleia'], 
-      npc:{nome:'Rhea Colman', opiniao:2, memoria:'Registrou a sua proposta de associado sabendo o que isso abre.'},
+      npc:{nome:'Hester Colman', opiniao:2, memoria:'Registrou a sua proposta de associado sabendo o que isso abre.'},
       registrar:'Assembleia extraordinária pode ser convocada por três associados.'},
   escolhas:[
     {texto:'Pedir votação agora mesmo.', vai:'c20_votacao'},
@@ -1055,7 +1055,7 @@ c20_comecem_hoje:{
   ],
   ef:{flag:['conselho_vai_ao_galpao'], instabilidade:1,
       rep:{eixo:'bom',delta:4,motivo:'Fez um conselho inteiro sair da sala e ir ver'},
-      npc:{nome:'Rhea Colman', opiniao:3, memoria:'Levantou da mesa e foi ao galpão no meio de uma reunião.'},
+      npc:{nome:'Hester Colman', opiniao:3, memoria:'Levantou da mesa e foi ao galpão no meio de uma reunião.'},
       registrar:'A Presidente levantou da reunião para ir à Estação 4. Quem quisesse ia junto.'},
   escolhas:[
     {texto:'Ver quantos levantam.', vai:'c20_quantos_levantam'}
@@ -1244,7 +1244,7 @@ c20_materia_edital:{
     '"Submeto." Ela põe as duas mãos na mesa. "E eu quero que conste em ata que fui eu que submeti."'
   ],
   ef:{flag:'materia_edital', instabilidade:1,
-      npc:{nome:'Rhea Colman', opiniao:3, memoria:'Submeteu à votação a matéria que pode tirar o conselho dela.'},
+      npc:{nome:'Hester Colman', opiniao:3, memoria:'Submeteu à votação a matéria que pode tirar o conselho dela.'},
       registrar:'Matéria em votação: edital público de admissão de associados.'},
   escolhas:[{texto:'Ouvir a votação.', vai:'c20_contagem'}]
 },
@@ -1375,7 +1375,7 @@ c20_se_eu_achar_primeiro:{
     '"Item quatro."'
   ],
   ef:{flag:['sabe_do_risco01'], instabilidade:1,
-      npc:{nome:'Rhea Colman', opiniao:2, memoria:'Admitiu que você faria melhor por ter olhado na cara.'},
+      npc:{nome:'Hester Colman', opiniao:2, memoria:'Admitiu que você faria melhor por ter olhado na cara.'},
       registrar:'A Presidente sabe que você pode achar o Risco 01 antes deles.'},
   escolhas:[
     {texto:'Sair da sala.', vai:'c20_saiu_sala'},
@@ -1396,7 +1396,7 @@ c20_publicar_tudo:{
   escolhas:[
     {texto:'Livia Gale, jornal de Celadon.', vai:'c20_pub_isaura', cond:d=>!!d.flags.contato_isaura},
     {texto:'Nadia Arden, rádio comunitária de Fuchsia.', vai:'c20_pub_nadia', cond:d=>!!d.flags.contato_nadia},
-    {texto:'A Dra. Cordell Serizawa, e pelo caminho do Ministério Público.', vai:'c20_pub_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'A Dra. Cordell, e pelo caminho do Ministério Público.', vai:'c20_pub_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Qualquer redação que aceite.', vai:'c20_pub_qualquer'}
   ]
 },
@@ -1433,7 +1433,7 @@ c20_pub_nadia:{
 
 c20_pub_ivone:{
   texto:[
-    'A Dra. Serizawa lê o material em duas horas, sem falar, e depois faz uma coisa que você não esperava: ela chora de raiva por uns quinze segundos e depois continua trabalhando como se nada tivesse acontecido.',
+    'A Dra. Cordell lê o material em duas horas, sem falar, e depois faz uma coisa que você não esperava: ela chora de raiva por uns quinze segundos e depois continua trabalhando como se nada tivesse acontecido.',
     '"Agora dá." Ela puxa três folhas em branco. "Agora tem tipo penal."',
     '"Qual?"',
     '"Nenhum dos que eu procurei." Ela começa a escrever. "Falsidade ideológica em documento particular equiparado a público, no manifesto de resíduo. É pequeno, é feio, é o que pega."',
@@ -1443,7 +1443,7 @@ c20_pub_ivone:{
   ef:{flag:['publicou','representacao_no_mp'],
       rep:{eixo:'bom',delta:3,motivo:'Levou o material a quem sabia o que fazer com ele'},
       npc:{nome:'Dra. Cordell', opiniao:4, memoria:'Achou o tipo penal que procurava havia seis meses.'},
-      registrar:'A Dra. Serizawa protocolou representação no Ministério Público.'},
+      registrar:'A Dra. Cordell protocolou representação no Ministério Público.'},
   escolhas:[{texto:'Ver o que acontece.', vai:'c20_resultado_publicacao'}]
 },
 
@@ -1473,7 +1473,7 @@ c20_resultado_publicacao:{
       return 'Sem prova material, a Comissão responde citando o próprio estatuto e o endereço do cartório. Em três semanas o assunto morre outra vez.';
     },
     d=>d.flags.representacao_no_mp
-      ? 'A representação da Dra. Serizawa entra no meio disso e muda o ritmo de tudo: com inquérito aberto, a nota de esclarecimento deixa de ser resposta suficiente.'
+      ? 'A representação da Dra. Cordell entra no meio disso e muda o ritmo de tudo: com inquérito aberto, a nota de esclarecimento deixa de ser resposta suficiente.'
       : 'A Comissão continua atendendo chamado de ataque em área urbana durante toda a repercussão, e continua sendo mais rápida que a Liga, e isso sai em nenhum jornal.',
     'E a Presidente concede entrevista. Ela concede todas as entrevistas que pedem, sempre, sem exceção, e responde tudo, e é por isso que é difícil.'
   ],
@@ -1575,7 +1575,7 @@ c20_solta_aqui:{
     'A Presidente olha por todo esse tempo e, no fim, senta na cadeira dela e apoia a testa nas duas mãos.'
   ],
   ef:{flag:['mostrou_a_unidade01'], instabilidade:2, moral:2,
-      npc:{nome:'Rhea Colman', opiniao:2, memoria:'Ficou quarenta segundos olhando a Unidade 01 parada, esperando.'},
+      npc:{nome:'Hester Colman', opiniao:2, memoria:'Ficou quarenta segundos olhando a Unidade 01 parada, esperando.'},
       rep:{eixo:'bom',delta:2,motivo:'Fez alguém olhar para o que fez sem estar lutando'},
       registrar:'A Unidade 01 ficou quarenta segundos parada no carpete, esperando ordem.'},
   escolhas:[
@@ -1643,7 +1643,7 @@ c20_voltou_depois:{
     '"{O senhor|A senhora} ainda pode pedir a palavra. O incidente não tira o seu direito, porque o estatuto não prevê isso, e eu não vou inventar."'
   ],
   ef:{flag:'voltou_com_tipoia', moral:2,
-      npc:{nome:'Rhea Colman', opiniao:2, memoria:'Suspendeu a sessão por dois minutos quando você voltou.'},
+      npc:{nome:'Hester Colman', opiniao:2, memoria:'Suspendeu a sessão por dois minutos quando você voltou.'},
       rep:{eixo:'bom',delta:1,motivo:'Voltou depois de perder'},
       registrar:'Voltou à sala 704 depois de perder e ainda tinha direito à palavra.'},
   escolhas:[

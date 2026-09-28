@@ -34,7 +34,7 @@ c18_ab_a_fila_do_banco:{
     'É uma folha de papel almaço datilografada, pendurada porque a lei obriga a pendurar, num lugar onde todo mundo fica quarenta minutos parado sem nada pra ler.',
     'Você lê porque não tem nada pra fazer.',
     'Tem quatorze linhas. Nome do convenente, objeto, valor.',
-    'E na décima primeira linha, entre um convênio de merenda e um de pavimentação, está uma sigla que você já viu escrita à mão num livro de destinos e numa etiqueta de caixa térmica.'
+    'E na décima primeira linha, entre um convênio de merenda e um de pavimentação, está uma sigla que você já viu antes, escrita à mão, em papel que não era pra você ler.'
   ],
   ef:{flag:'viu_a_sigla_no_quadro',
       registrar:'A sigla apareceu num quadro de prestação de contas pendurado numa agência bancária de Saffron.',
@@ -204,21 +204,21 @@ c18_ab_ensina_a_procurar:{
 
 c18_ab_a_reporter:{
   texto:[
-    'Rhea Colman te encontra primeiro, o que é a função dela.',
+    'Rhea Ashford te encontra primeiro, o que é a função dela.',
     'Ela está sentada num banco de praça em Saffron com uma pasta de papelão no colo e duas xícaras de café, e uma delas é sua antes de você sentar.',
-    fala('Rhea Colman', 'Eu tenho quarenta e uma páginas e nenhum documento. Você lembra.'),
+    fala('Rhea Ashford', 'Eu tenho quarenta e uma páginas e nenhum documento. Você lembra.'),
     d=>fala(d.jogador.nome, 'Lembro.'),
-    fala('Rhea Colman', 'Agora eu tenho quarenta e uma páginas e um nome.'),
+    fala('Rhea Ashford', 'Agora eu tenho quarenta e uma páginas e um nome.'),
     'Ela abre a pasta e tira uma folha com uma única linha datilografada no meio, e o resto em branco, o que é um jeito teatral de mostrar uma coisa e ela sabe disso.',
-    fala('Rhea Colman', 'Esse nome apareceu em três lugares diferentes nas minhas quarenta e uma páginas e eu levei nove meses pra ver que era o mesmo.'),
+    fala('Rhea Ashford', 'Esse nome apareceu em três lugares diferentes nas minhas quarenta e uma páginas e eu levei nove meses pra ver que era o mesmo.'),
     d=>fala(d.jogador.nome, 'E o que você quer de mim?'),
-    fala('Rhea Colman', 'Eu quero que você vá ao cartório e peça a ficha.'),
+    fala('Rhea Ashford', 'Eu quero que você vá ao cartório e peça a ficha.'),
     d=>fala(d.jogador.nome, 'Por que eu?'),
-    fala('Rhea Colman', 'Porque se eu pedir, em quarenta minutos alguém sabe que o Correio de Kanto pediu.')
+    fala('Rhea Ashford', 'Porque se eu pedir, em quarenta minutos alguém sabe que o Correio de Kanto pediu.')
   ],
   ef:{flag:['reika_te_deu_o_nome','sabe_o_nome_da_comissao'],
-      npc:{nome:'Rhea Colman', opiniao:3, viuVoce:'Te entregou o nome e pediu que você fosse ao cartório no lugar dela.'},
-      registrar:'Rhea Colman te entregou o nome e pediu que você pedisse a ficha no cartório.',
+      npc:{nome:'Rhea Ashford', opiniao:3, viuVoce:'Te entregou o nome e pediu que você fosse ao cartório no lugar dela.'},
+      registrar:'Rhea Ashford te entregou o nome e pediu que você pedisse a ficha no cartório.',
       presagio:'Ela não pode pedir. Isso diz o tamanho de quem está do outro lado.'},
   escolhas:[
     {texto:'Ir ao cartório pedir a ficha.', vai:'c18_cartorio'},
@@ -230,15 +230,15 @@ c18_ab_a_reporter:{
 c18_ab_as_tres_vezes:{
   texto:[
     'Ela abre a pasta na mesa do banco e mostra as três, com marcador amarelo em cada uma.',
-    fala('Rhea Colman', 'Um: ata de reunião da Liga, oitenta e nove, "manifestação da comissão sobre o pleito".'),
-    fala('Rhea Colman', 'Dois: nota de rodapé de um relatório de auditoria da Zona Safári. Rodapé, tamanho seis.'),
-    fala('Rhea Colman', 'Três: uma procuração juntada num processo trabalhista de um ex-funcionário da Silph.'),
+    fala('Rhea Ashford', 'Um: ata de reunião da Liga, oitenta e nove, "manifestação da comissão sobre o pleito".'),
+    fala('Rhea Ashford', 'Dois: nota de rodapé de um relatório de auditoria da Zona Safári. Rodapé, tamanho seis.'),
+    fala('Rhea Ashford', 'Três: uma procuração juntada num processo trabalhista de um ex-funcionário da Silph.'),
     'Ela alinha as três folhas.',
-    fala('Rhea Colman', 'Liga, reserva ambiental e empresa privada. Três mundos que não se falam.'),
+    fala('Rhea Ashford', 'Liga, reserva ambiental e empresa privada. Três mundos que não se falam.'),
     d=>fala(d.jogador.nome, 'E o mesmo nome nos três.'),
-    fala('Rhea Colman', 'O mesmo nome nos três, e nos três aparece como se todo mundo já soubesse quem é.'),
+    fala('Rhea Ashford', 'O mesmo nome nos três, e nos três aparece como se todo mundo já soubesse quem é.'),
     'Ela fecha a pasta.',
-    fala('Rhea Colman', 'Ninguém explica o que é. Todo mundo cita.')
+    fala('Rhea Ashford', 'Ninguém explica o que é. Todo mundo cita.')
   ],
   ef:{flag:['as_tres_citacoes','sabe_o_nome_da_comissao'],
       registrar:'O mesmo nome aparece em ata da Liga, rodapé de auditoria da Zona Safári e procuração num processo da Silph.'},
@@ -251,20 +251,20 @@ c18_ab_as_tres_vezes:{
 
 c18_ab_recusou_a_reika:{
   texto:[
-    d=>fala(d.jogador.nome, 'Não. Eu não sou o seu estagiário.'),
+    d=>fala(d.jogador.nome, 'Não. Eu não sou {o seu estagiário|a sua estagiária}.'),
     'Ela recebe isso melhor do que você esperava. Toma um gole do café e concorda com a cabeça.',
-    fala('Rhea Colman', 'Justo.'),
+    fala('Rhea Ashford', 'Justo.'),
     'Ela guarda a folha de volta na pasta e fecha o elástico.',
-    fala('Rhea Colman', 'Eu vou pedir eu mesma, então. Provavelmente não vai dar em nada e eu vou queimar o nome.'),
+    fala('Rhea Ashford', 'Eu vou pedir eu mesma, então. Provavelmente não vai dar em nada e eu vou queimar o nome.'),
     'Ela levanta.',
-    fala('Rhea Colman', 'Mas antes de eu ir: você reparou que a gente se encontrou três vezes em três cidades diferentes?'),
+    fala('Rhea Ashford', 'Mas antes de eu ir: você reparou que a gente se encontrou três vezes em três cidades diferentes?'),
     d=>fala(d.jogador.nome, 'Reparei.'),
-    fala('Rhea Colman', 'Eu não te procurei nenhuma dessas vezes.'),
+    fala('Rhea Ashford', 'Eu não te procurei nenhuma dessas vezes.'),
     'Ela vai embora e deixa a xícara no banco, e você fica sentad{o|a} com essa frase.'
   ],
   ef:{flag:'recusou_a_reika',
-      npc:{nome:'Rhea Colman', opiniao:0, viuVoce:'Você recusou ir ao cartório por ela.'},
-      registrar:'Recusou ajudar Rhea Colman. Ela não te procurou em nenhum dos três encontros.',
+      npc:{nome:'Rhea Ashford', opiniao:0, viuVoce:'Você recusou ir ao cartório por ela.'},
+      registrar:'Recusou ajudar Rhea Ashford. Ela não te procurou em nenhum dos três encontros.',
       presagio:'Se nenhum dos dois procurou o outro, os dois estão sendo postos no mesmo lugar.'},
   escolhas:[
     {texto:'Ir ao cartório mesmo assim, por conta própria.', vai:'c18_cartorio'},
@@ -277,7 +277,7 @@ c18_ab_de_cracha:{
   texto:[
     d=>{
       const c = Cargos.principal();
-      return `Ser ${c ? c.nome : 'do serviço'} dá acesso a uma coisa que você descobriu tarde demais e que muda o capítulo inteiro: o sistema de consulta.`;
+      return `Ser ${c ? c.nome : 'do serviço'} dá acesso a uma coisa que você descobriu tarde demais e que muda tudo: o sistema de consulta.`;
     },
     'É um terminal de tela verde numa sala sem janela, com um teclado de membrana e uma etiqueta colada no monitor com a senha escrita à caneta, o que é ilegal e é universal.',
     'O sistema consulta três bases: pessoa jurídica, convênio público e processo administrativo.',
@@ -296,7 +296,7 @@ c18_ab_de_cracha:{
 
 c18_ab_buscou_a_sigla:{
   texto:[
-    'Você digita a sigla que viu no livro de destinos e aperta a tecla.',
+    'Você digita a sigla que já viu escrita à mão pelo caminho e aperta a tecla.',
     'O terminal pensa por onze segundos, que é muito tempo pra um terminal.',
     '**NENHUM REGISTRO ENCONTRADO NA BASE DE PESSOA JURÍDICA.**',
     'Você tenta na base de convênio.',
@@ -375,7 +375,7 @@ c18_fio:{
   ef:{registrar:'Decidiu procurar o nome da organização em vez de procurar o esconderijo dela.'},
   escolhas:[
     {texto:'Ir ao cartório de registro de pessoas jurídicas de Saffron.', vai:'c18_cartorio'},
-    {texto:'Procurar a Dra. Cordell. Ela é advogada e advogada sabe onde se procura nome.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
+    {texto:'Procurar a Dra. Cordell. Pesquisadora sabe onde se procura nome.', vai:'c18_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Procurar a Terceira. Quem vende sabe para quem vendeu.', vai:'c18_terceira', cond:d=>!!d.flags.conheceu_terceira},
     {texto:'Ir à hemeroteca. Um ano e meio de jornal velho e paciência.', vai:'c18_hemeroteca'},
     {texto:'Ir à Liga e perguntar oficialmente.', vai:'c18_liga'}
@@ -428,8 +428,10 @@ c18_cartorio_tabela:{
 },
 
 c18_cartorio_padaria:{
+  falante:'Sr. Dunmore',
+  vozes:['N','N','P','N','N'],
   texto:[
-    'O homem que está abrindo a padaria se chama Sr. Beniya e está no quinto dia de burocracia.',
+    'O homem que está abrindo a padaria se chama Sr. Dunmore e está no quinto dia de burocracia.',
     '"Quinto." Ele levanta cinco dedos. "Eu já vim aqui cinco vezes por causa de uma palavra no objeto social. Uma palavra."',
     '"Qual?"',
     '"Fabricação. Eu pus fabricação e comercialização. Aí é indústria e comércio, e aí muda tudo." Ele ri sem alegria nenhuma. "Eu vou pôr só comércio e vou fabricar do mesmo jeito, porque ninguém vem conferir."',
@@ -437,7 +439,7 @@ c18_cartorio_padaria:{
     'Você guarda a frase. Ninguém vem conferir. Deve ser a coisa mais importante que você vai ouvir hoje e você ainda não sabe.'
   ],
   ef:{flag:'ninguem_vem_conferir',
-      registrar:'O Sr. Beniya, da padaria: o que está escrito no papel e o que se faz são coisas diferentes, porque ninguém vem conferir.'},
+      registrar:'O Sr. Dunmore, da padaria: o que está escrito no papel e o que se faz são coisas diferentes, porque ninguém vem conferir.'},
   escolhas:[
     {texto:'Perguntar se ele já ouviu falar em associação sem fins lucrativos.', vai:'c18_belchior_associacao'},
     {texto:'Desejar sorte e voltar para a fila.', vai:'c18_cartorio_fila'}
@@ -445,6 +447,8 @@ c18_cartorio_padaria:{
 },
 
 c18_belchior_associacao:{
+  falante:'Sr. Dunmore',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Associação?" Ele faz que sim com a cabeça, devagar. "Associação é o melhor negócio do mundo, {moço. Digo, senhor. Digo — o senhor entendeu|moça. Digo, senhora. Digo — a senhora entendeu}."',
     '"Por quê?"',
@@ -457,6 +461,8 @@ c18_belchior_associacao:{
 },
 
 c18_cartorio_furou:{
+  falante:'a escrevente',
+  vozes:['N','N','P','N'],
   texto:[
     'Você vai direto ao balcão e diz que é urgente.',
     'A escrevente levanta os olhos por dois segundos, olha a fila, olha você de novo.',
@@ -473,9 +479,11 @@ c18_cartorio_furou:{
 },
 
 c18_cartorio_fila:{
+  falante:'a escrevente',
+  vozes:['N'],
   texto:[
     'Dezesseis e cinquenta e um. A padaria termina e sai com quatro pessoas e uma pasta.',
-    'A escrevente se chama Sra. Cybil, e isso está numa plaquinha de acrílico que ela mesma deve ter mandado fazer, porque é mais bonita que o resto do balcão.',
+    d=>{ Nomes.apresentar('a escrevente'); return 'A escrevente se chama Sra. Cybil, e isso está numa plaquinha de acrílico que ela mesma deve ter mandado fazer, porque é mais bonita que o resto do balcão.'; },
     '"Pois não."',
     'Você explica o que quer sem saber direito o que quer: uma comissão, um conselho, alguma coisa registrada em Kanto há mais ou menos dois anos, relacionada a risco, a fauna, a controle.',
     'Ela não faz cara de nada. Ela digita.'
@@ -489,6 +497,8 @@ c18_cartorio_fila:{
 },
 
 c18_quintela_ja_ouviu:{
+  falante:'Sra. Cybil',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     '"Eu ouço falar de tudo e não presto atenção em nada." Ela continua digitando. "Se eu prestasse atenção eu não dormia."',
     'Um silêncio.',
@@ -500,6 +510,8 @@ c18_quintela_ja_ouviu:{
 },
 
 c18_quintela_o_que_da:{
+  falante:'Sra. Cybil',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Tudo o que a lei manda publicar, e é mais coisa do que {o senhor|a senhora} imagina."',
     'Ela conta nos dedos sem parar de olhar a tela.',
@@ -514,6 +526,8 @@ c18_quintela_o_que_da:{
 },
 
 c18_quintela_achou:{
+  falante:'Sra. Cybil',
+  vozes:['N','N'],
   texto:[
     'Ela vira o monitor quarenta e cinco graus para você. A tela é verde sobre preto e a fonte é horrível.',
     'COMISSÃO DE GESTÃO DE RISCO BIOLÓGICO DE KANTO — CGRB',
@@ -534,16 +548,18 @@ c18_quintela_achou:{
 },
 
 c18_quem_assina:{
+  falante:'Sra. Cybil',
+  vozes:['N','N','N'],
   texto:[
     'Ela rola a tela.',
-    '"Presidente do conselho: Rhea Colman. Endereço na própria sede."',
+    '"Presidente do conselho: Hester Colman. Endereço na própria sede."',
     '"Conselho fiscal: três nomes. Um deles é escritório de contabilidade."',
     '"E tem uma lista de fundadores com onze assinaturas."',
     'Onze.',
     'Você já ouviu esse número em outro lugar, e não gostou dele lá.'
   ],
   ef:{flag:['sabe_o_nome_da_presidente','onze_fundadores'],
-      registrar:'Presidente do conselho: Rhea Colman. Onze fundadores assinaram a ata de constituição.'},
+      registrar:'Presidente do conselho: Hester Colman. Onze fundadores assinaram a ata de constituição.'},
   escolhas:[
     {texto:'"Os onze nomes, por favor."', vai:'c18_os_onze_nomes'},
     {texto:'"Quero cópia de tudo."', vai:'c18_quintela_copia'},
@@ -569,6 +585,8 @@ c18_os_onze_nomes:{
 },
 
 c18_algum_da_liga:{
+  falante:'Sra. Cybil',
+  vozes:['N','N','P','N','N'],
   texto:[
     '"Eu não sei o que é a Liga para efeito de registro." A Sra. Cybil é literal do jeito que só quem trabalha com papel é. "Aqui diz ex-diretora de fiscalização. Não diz de onde."',
     '"E a senhora acha que é de onde?"',
@@ -581,6 +599,8 @@ c18_algum_da_liga:{
 },
 
 c18_pedido_discreto:{
+  falante:'Sra. Cybil',
+  vozes:['N','N','N'],
   texto:[
     'Ela para de digitar pela primeira vez e olha você de verdade.',
     '"Não."',
@@ -629,6 +649,8 @@ c18_voltou_amanha:{
 },
 
 c18_quintela_copia:{
+  falante:'Sra. Cybil',
+  vozes:['N'],
   texto:[
     'Ela digita, confere, e anuncia o total como quem anuncia o preço do pão.',
     '"Estatuto e trinta e quatro atas. Cento e quarenta páginas. Um pokedólar a página, mais a certidão."',
@@ -748,6 +770,8 @@ c18_contou_mais:{
 },
 
 c18_entrou_cedo_demais:{
+  falante:'a mulher de tailleur',
+  vozes:['N'],
   texto:[
     'Você empurra a porta e entra.',
     'É uma sala de reunião com uma mesa oval, oito cadeiras e um quadro branco escrito com pauta em letra caprichada.',
@@ -757,7 +781,7 @@ c18_entrou_cedo_demais:{
     'E você percebe que não trouxe pergunta nenhuma. Você trouxe raiva, e raiva não é pergunta.'
   ],
   ef:{flag:'entrou_na_704_cedo',
-      npc:{nome:'Rhea Colman', opiniao:0, memoria:'Você entrou na sala de reunião sem saber o que perguntar.'},
+      npc:{nome:'Hester Colman', opiniao:0, memoria:'Você entrou na sala de reunião sem saber o que perguntar.'},
       registrar:'Entrou na sala 704 no meio de uma reunião.'},
   escolhas:[
     {texto:'"Eu sei o que vocês fazem."', vai:'c18_704_sei_o_que_fazem'},
@@ -768,6 +792,8 @@ c18_entrou_cedo_demais:{
 },
 
 c18_704_sei_o_que_fazem:{
+  falante:'a mulher de tailleur',
+  vozes:['P','N','N'],
   texto:[
     '"Eu sei o que vocês fazem."',
     'A mulher de tailleur não reage. Um homem de barba, na ponta da mesa, chega a parecer aliviado.',
@@ -804,6 +830,8 @@ c18_704_sentou:{
 },
 
 c18_704_o_que_e_descarte:{
+  falante:'o homem de barba',
+  vozes:['N','P','N','N','N'],
   texto:[
     'A pergunta cai na mesa e não faz barulho nenhum.',
     'Quem responde é o homem de barba, e ele responde olhando para as mãos.',
@@ -824,8 +852,10 @@ c18_704_o_que_e_descarte:{
 },
 
 c18_704_nome_do_adnan:{
+  falante:'o homem de barba',
+  vozes:['N','N','P','N','N','a mulher de tailleur'],
   texto:[
-    '"Fabre." Ele estende a mão por cima da mesa e você aperta sem querer apertar. "Curador."',
+    d=>{ Nomes.apresentar('o homem de barba'); return '"Fabre." Ele estende a mão por cima da mesa e você aperta sem querer apertar. "Curador."'; },
     '"Curador de quê?"',
     '"De acervo vivo." Ele ouve a própria frase e faz uma careta. "É o nome do cargo. Eu sei como soa."',
     'A presidente fecha a pasta.',
@@ -839,6 +869,8 @@ c18_704_nome_do_adnan:{
 },
 
 c18_704_anotou:{
+  falante:'a mulher de tailleur',
+  vozes:['N'],
   texto:[
     'Você anota tudo, em letra pequena, com a mão firme por teimosia.',
     'Sete páginas de caderno em quarenta minutos.',
@@ -873,6 +905,8 @@ c18_copiou_a_pauta:{
 },
 
 c18_704_pediu_atas:{
+  falante:'a mulher de tailleur',
+  vozes:['P','N','N'],
   texto:[
     '"Eu quero as atas."',
     'A presidente aponta a parede com a caneta, e na parede tem um armário de aço com porta de vidro, cheio de pastas com etiqueta.',
@@ -890,6 +924,8 @@ c18_704_pediu_atas:{
 },
 
 c18_704_porque_deixam:{
+  falante:'a mulher de tailleur',
+  vozes:['P','N','N'],
   texto:[
     '"Por que vocês estão me deixando?"',
     'A presidente termina de escrever uma palavra antes de responder.',
@@ -898,22 +934,24 @@ c18_704_porque_deixam:{
     '"E porque eu quero que {o senhor|a senhora} volte aqui depois de ler. Aí a conversa presta."'
   ],
   ef:{flag:'convite_da_presidente',
-      npc:{nome:'Rhea Colman', opiniao:1, memoria:'Te entregou as atas e pediu que você voltasse depois de ler.'},
+      npc:{nome:'Hester Colman', opiniao:1, memoria:'Te entregou as atas e pediu que você voltasse depois de ler.'},
       registrar:'A presidente quer conversar depois que você ler tudo.'},
   escolhas:[{texto:'Sair com o calhamaço.', vai:'c18_leitura'}]
 },
 
 c18_704_quem_e:{
+  falante:'a mulher de tailleur',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Quem é a senhora?"',
-    '"Rhea Colman. Presidente do conselho." Ela responde como quem responde no telefone. "E {o senhor|a senhora}?"',
+    d=>{ Nomes.apresentar('a mulher de tailleur'); return '"Hester Colman. Presidente do conselho." Ela responde como quem responde no telefone. "E {o senhor|a senhora}?"'; },
     'Você diz seu nome. Ela repete uma vez, baixo, guardando.',
     '"Eu sei quem é {o senhor|a senhora}." Ela não diz isso de um jeito ameaçador. Diz de um jeito administrativo. "Consta em três atas."',
     'Três atas.',
     'Você entrou nessa sala achando que ia descobrir quem eles são e descobre que você já é um item de pauta.'
   ],
   ef:{flag:['sabe_o_nome_da_presidente','voce_esta_nas_atas'], instabilidade:1,
-      npc:{nome:'Rhea Colman', opiniao:0, memoria:'Te informou que você consta em três atas.'},
+      npc:{nome:'Hester Colman', opiniao:0, memoria:'Te informou que você consta em três atas.'},
       registrar:'Você aparece em três atas da CGRB.'},
   escolhas:[
     {texto:'"Em quais?"', vai:'c18_704_em_quais'},
@@ -923,6 +961,8 @@ c18_704_quem_e:{
 },
 
 c18_704_em_quais:{
+  falante:'a mulher de tailleur',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     'Ela não precisa consultar.',
     '"Vigésima segunda: deliberação sobre a conveniência de abordagem. Ficou vencida."',
@@ -932,7 +972,7 @@ c18_704_em_quais:{
     '"Porque risco reputacional é o nome que a gente dá quando tem medo de gente honesta." Ela fecha a caneta. "E eu não tenho."'
   ],
   ef:{flag:'presidente_te_defende', instabilidade:1,
-      npc:{nome:'Rhea Colman', opiniao:2, memoria:'Vota contra te classificarem como risco reputacional.'},
+      npc:{nome:'Hester Colman', opiniao:2, memoria:'Vota contra te classificarem como risco reputacional.'},
       registrar:'A presidente vota contra te tratarem como risco reputacional.'},
   escolhas:[
     {texto:'"Eu quero as atas."', vai:'c18_704_pediu_atas'},
@@ -975,16 +1015,18 @@ c18_704_saiu:{
 
 /* ── Dra. Cordell ─────────────────────────────────────────── */
 c18_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','P','N','N'],
   texto:[
-    'O escritório da Dra. Cordell Serizawa fica sobre uma loja de tecidos e tem duas salas, uma secretária e uma pilha de processos que chega na altura da janela.',
-    'Ela ouve você por quatro minutos sem interromper, o que é a coisa mais rara que um advogado faz.',
+    'A Dra. Cordell agora trabalha numa sala emprestada sobre uma loja de tecidos, com uma mesa, um arquivo de aço e uma pilha de pastas que chega na altura da janela.',
+    'Ela ouve você por quatro minutos sem interromper, o que é a coisa mais rara que alguém com doutorado faz.',
     '"CGRB." Ela diz a sigla antes de você terminar. "Eu sei o que é."',
     '"A senhora sabe e não me falou?"',
-    '"Eu não te falei porque eu não tinha prova, e falar sem prova é exatamente como eu perco processo." Ela puxa uma pasta da terceira pilha, sem procurar. "Comissão de Gestão de Risco Biológico de Kanto. Associação civil. Registrada. Legal."'
+    '"Eu não te falei porque eu não tinha prova, e falar sem prova é exatamente como a gente perde a matéria." Ela puxa uma pasta da terceira pilha, sem procurar. "Comissão de Gestão de Risco Biológico de Kanto. Associação civil. Registrada. Legal."'
   ],
   ef:{flag:['sabe_da_comissao','ivone_sabia'],
       npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Já conhecia a CGRB e esperou você chegar sozinh{o|a} até lá.'},
-      registrar:'A Dra. Serizawa já conhecia a CGRB e tinha as atas havia seis meses.'},
+      registrar:'A Dra. Cordell já conhecia a CGRB e tinha as atas havia seis meses.'},
   escolhas:[
     {texto:'"Por que a senhora esperou eu chegar sozinh{o|a}?"', vai:'c18_ivone_esperou'},
     {texto:'"O que tem na pasta?"', vai:'c18_ivone_pasta'},
@@ -997,7 +1039,7 @@ c18_ivone_esperou:{
   texto:[
     '"Porque informação que a gente recebe vale menos que informação que a gente acha."',
     'Ela tira os óculos e limpa com a barra da blusa, o que faz pior.',
-    '"Eu já entreguei coisa pronta para testemunha. A testemunha repete bonito na primeira audiência e desmonta na segunda, porque ela nunca soube de verdade, ela só decorou."',
+    '"Eu já vi advogado entregar coisa pronta pra testemunha. A testemunha repete bonito na primeira audiência e desmonta na segunda, porque ela nunca soube de verdade, ela só decorou."',
     '"E eu?"',
     '"Você andou de Celadon a Cinnabar atrás disso. Você não vai desmontar." Ela põe os óculos de volta. "Agora senta, porque a parte ruim é longa."'
   ],
@@ -1010,16 +1052,18 @@ c18_ivone_esperou:{
 },
 
 c18_ivone_pasta:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N'],
   texto:[
     'A pasta tem três coisas.',
     'Uma: uma cópia do estatuto, com o Art. 19 marcado de amarelo e um ponto de interrogação a lápis na margem.',
-    'Duas: um parecer que ela mesma escreveu e não protocolou em lugar nenhum, com uma frase sublinhada duas vezes — não há, no ordenamento, dispositivo que proíba expressamente o que descrevem.',
+    'Duas: um parecer que um advogado amigo dela escreveu e não protocolou em lugar nenhum, com uma frase sublinhada duas vezes — não há, no ordenamento, dispositivo que proíba expressamente o que descrevem.',
     'Três: uma lista de doze nomes, com telefone, e ao lado de quatro deles a palavra morto.',
     '"Os quatro morreram de quê?"',
     '"De coisa de gente." Ela fecha a pasta. "Infarto, câncer, um acidente de carro e uma queda. Eu conferi todos. É isso que me deixa acordada."'
   ],
   ef:{flag:['viu_a_pasta_da_ivone','sabe_do_art19'], instabilidade:1,
-      registrar:'A Dra. Serizawa tem um parecer não protocolado e uma lista de doze nomes, quatro deles mortos de causas comuns.'},
+      registrar:'A Dra. Cordell tem um parecer não protocolado e uma lista de doze nomes, quatro deles mortos de causas comuns.'},
   escolhas:[
     {texto:'"Nenhum deles foi morto por eles?"', vai:'c18_ivone_nenhum_morto'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'},
@@ -1031,12 +1075,12 @@ c18_ivone_nenhum_morto:{
   texto:[
     '"Não." Ela fala isso com um cansaço que não é fingido. "E é pior."',
     '"Como é pior?"',
-    '"Porque se eles matassem gente, eu ganhava. Homicídio eu sei processar, eu faço isso há dezenove anos." Ela bate na pasta com dois dedos. "Eles não matam gente. Eles fazem uma coisa que não tem nome no código, e o que não tem nome eu não sei pedir ao juiz."',
+    '"Porque se eles matassem gente, a gente ganhava. Homicídio qualquer promotor sabe processar." Ela bate na pasta com dois dedos. "Eles não matam gente. Eles fazem uma coisa que não tem nome no código, e o que não tem nome ninguém sabe pedir ao juiz."',
     'Ela olha a janela.',
-    '"Eu passei seis meses tentando achar o nome. Eu não achei."'
+    '"Eu passei seis meses, com dois advogados, tentando achar o nome. A gente não achou."'
   ],
   ef:{flag:'nao_tem_nome_no_codigo', instabilidade:1,
-      registrar:'O que a CGRB faz não tem tipo penal. A Dra. Serizawa procurou seis meses e não achou.'},
+      registrar:'O que a CGRB faz não tem tipo penal. A Dra. Cordell procurou seis meses e não achou.'},
   escolhas:[
     {texto:'"E se a gente não usar tribunal?"', vai:'c18_ivone_sem_tribunal'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'},
@@ -1096,21 +1140,23 @@ c18_ivone_desanimo:{
     '"O que tem na quarenta?"',
     '"O Art. 19." Ela se recosta. "E eu quero ver a sua cara."'
   ],
-  ef:{registrar:'A Dra. Serizawa te proibiu de desanimar antes da página quarenta.'},
+  ef:{registrar:'A Dra. Cordell te proibiu de desanimar antes da página quarenta.'},
   escolhas:[{texto:'Pegar o calhamaço.', vai:'c18_ivone_da_as_atas'}]
 },
 
 c18_ivone_processo:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"A senhora pode processá-los?"',
     '"Por quê?"',
     'Você abre a boca e não sai nada, porque você não sabe por quê. Você sabe que é errado. Você não sabe qual artigo.',
     '"Exato." Ela nem parece satisfeita com isso. "Maus-tratos exige ato de crueldade contra animal identificado, e eles têm parecer veterinário para cada sacrifício. Crime ambiental exige dano a espécie protegida, e eles soltam espécie nativa. Associação criminosa exige fim ilícito, e o fim deles está escrito no estatuto e é lícito."',
     'Ela levanta três dedos e vai abaixando um por um.',
-    '"Eu tentei os três. Eu não protocolei nenhum, porque perder abre precedente, e precedente perdido vale mais para eles que a vitória valeria para nós."'
+    '"A gente tentou os três com o advogado. Não protocolou nenhum, porque perder abre precedente, e precedente perdido vale mais para eles que a vitória valeria para nós."'
   ],
   ef:{flag:'sabe_que_nao_da_processo', instabilidade:1,
-      registrar:'Maus-tratos, crime ambiental e associação criminosa: nenhum encaixa. A Dra. Serizawa não protocolou para não criar precedente.'},
+      registrar:'Maus-tratos, crime ambiental e associação criminosa: nenhum encaixa. A Dra. Cordell e o advogado não protocolaram para não criar precedente.'},
   escolhas:[
     {texto:'"E se a gente não usar tribunal?"', vai:'c18_ivone_sem_tribunal'},
     {texto:'"Me dá as atas."', vai:'c18_ivone_da_as_atas'},
@@ -1128,14 +1174,14 @@ c18_ivone_da_as_atas:{
   ],
   ef:{flag:['tem_as_atas','tem_o_estatuto'],
       npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Te emprestou a cópia anotada dela.'},
-      registrar:'A Dra. Serizawa te emprestou a cópia anotada das atas.'},
+      registrar:'A Dra. Cordell te emprestou a cópia anotada das atas.'},
   escolhas:[{texto:'Ler.', vai:'c18_leitura'}]
 },
 
 /* ── A Terceira ─────────────────────────────────────────── */
 c18_terceira:{
   texto:[
-    'A Terceira atende num galpão de material de construção que é de verdade um galpão de material de construção, com areia, cimento e um funcionário chamado Arlo que não olha para ninguém.',
+    'A Terceira atende num galpão de material de construção que é de verdade um galpão de material de construção, com areia, cimento e um funcionário chamado Ned que não olha para ninguém.',
     'Ela ouve a sigla e faz uma careta de quem mordeu limão.',
     '"Comissão." Ela sopra o ar. "Eles são o pior tipo de cliente."',
     '"Por quê? Pagam mal?"',
@@ -1157,7 +1203,7 @@ c18_terceira_nota:{
     '"Porque nota é laço." Ela mostra os dentes num quase-sorriso. "Se eu emito nota, eu existo. Se eu existo, eu declaro. Se eu declaro, eu tenho dono."',
     '"E eles fazem isso de propósito?"',
     '"Eles fazem tudo de propósito, {garoto|garota}." Ela chuta um saco de cimento para endireitar. "Eles não me compraram. Eles me legalizaram. Metade do meu movimento hoje é nota deles, e no dia em que eu falar demais, a nota vira o processo."',
-    'Ela olha para o lado, para o Arlo, que continua não olhando para ninguém.',
+    'Ela olha para o lado, para o Ned, que continua não olhando para ninguém.',
     '"Eu já vi gente ser presa por gente pior. Eu nunca vi ser presa por gente mais organizada."'
   ],
   ef:{flag:'terceira_esta_presa', instabilidade:1,
@@ -1241,7 +1287,7 @@ c18_terceira_segunda_via:{
   texto:[
     'Ela hesita pela primeira vez desde que você a conheceu.',
     '"Se eu te der uma segunda via e ela aparecer em algum lugar, eu sei de onde saiu e eles também."',
-    'Ela olha para o Arlo. O Arlo continua não olhando para ninguém.',
+    'Ela olha para o Ned. O Ned continua não olhando para ninguém.',
     '"Eu te dou uma." Ela separa uma folha. "Uma de dezenove meses atrás, de quando eles ainda erravam. Nessa aqui o campo destinatário está preenchido à mão."',
     'Você lê o campo. Diz: Estação 4 — via Instituto de Cinnabar.',
     '"Eles não usam mais esse caminho", ela diz. "Então essa aqui não me mata."'
@@ -1273,14 +1319,16 @@ c18_terceira_preco:{
 
 /* ── Hemeroteca ─────────────────────────────────────────── */
 c18_hemeroteca:{
+  falante:'Sr. Pell',
+  vozes:['N','N','P','N','N'],
   texto:[
     'A hemeroteca fica no subsolo da biblioteca municipal de Saffron e cheira a papel e a desumidificador.',
-    'O atendente tem uns setenta anos, se chama Sr. Arlo, e fica visivelmente feliz por alguém ter descido.',
+    'O atendente tem uns setenta anos, se chama Sr. Pell, e fica visivelmente feliz por alguém ter descido.',
     '"Um ano e meio de jornal?" Ele bate as mãos uma na outra. "{O senhor|A senhora} tem a tarde inteira?"',
     '"Tenho."',
     '"Então {o senhor|a senhora} vai achar." Ele já está puxando as caixas. "Todo mundo que desce aqui acha. O problema é que quase ninguém desce."'
   ],
-  ef:{npc:{nome:'Sr. Arlo', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
+  ef:{npc:{nome:'Sr. Pell', opiniao:1, memoria:'Atendente da hemeroteca. Feliz por alguém ter descido.'},
       registrar:'Começou a varrer um ano e meio de jornal na hemeroteca de Saffron.'},
   escolhas:[
     {texto:'Procurar por notícia sobre fauna e controle.', vai:'c18_hemero_fauna'},
@@ -1309,15 +1357,17 @@ c18_hemero_legais:{
 },
 
 c18_hemero_copia:{
+  falante:'Sr. Pell',
+  vozes:['N','P','N','N'],
   texto:[
-    'O Sr. Arlo tira a cópia numa máquina antiga que esquenta a folha.',
+    'O Sr. Pell tira a cópia numa máquina antiga que esquenta a folha.',
     '"{O senhor|A senhora} é {o segundo|a segunda} a pedir essa página."',
     'Você congela.',
     '"Quem foi o primeiro?"',
-    '"Uma advogada, faz uns seis meses. Baixinha, óculos, brava." Ele dá de ombros. "Pediu essa e mais quatro. Voltou três vezes."'
+    '"Uma doutora, faz uns seis meses. Baixinha, óculos, brava." Ele dá de ombros. "Pediu essa e mais quatro. Voltou três vezes."'
   ],
   ef:{flag:['tem_recorte_constituicao','ivone_esteve_aqui'], itens:{'Recorte da constituição da CGRB':1},
-      registrar:'A Dra. Serizawa pediu a mesma página seis meses antes de você.'},
+      registrar:'A Dra. Cordell pediu a mesma página seis meses antes de você.'},
   escolhas:[
     {texto:'"Ela pediu mais o quê?"', vai:'c18_hemero_o_que_ela_pediu'},
     {texto:'Continuar procurando sozinh{o|a}.', vai:'c18_hemero_classificados'},
@@ -1327,18 +1377,18 @@ c18_hemero_copia:{
 },
 
 c18_hemero_o_que_ela_pediu:{
-  falante:'Sr. Arlo',
+  falante:'Sr. Pell',
   vozes:['P','N'],
   texto:[
-    'O Sr. Arlo tem um caderno de pedidos, porque é de uma geração que anota.',
+    'O Sr. Pell tem um caderno de pedidos, porque é de uma geração que anota.',
     'Ele acha a página e vira para você.',
     'Quatro recortes: a constituição da CGRB; uma nota de falecimento; um anúncio de vaga para técnico de viveiro; e uma reportagem de meia página sobre a reintrodução de Rattata em área urbana de Celadon, assinada por Livia Gale.',
     '"A nota de falecimento é de quem?"',
-    'Ele confere. "Hélio Colman. Cinquenta e nove anos. Faz dois anos e dois meses."',
+    'Ele confere. "Harold Colman. Cinquenta e nove anos. Faz dois anos e dois meses."',
     'Colman.'
   ],
   ef:{flag:['sabe_do_helio','contato_isaura'], instabilidade:1,
-      registrar:'Hélio Colman morreu quatro meses antes da fundação da CGRB. A presidente se chama Rhea Colman.'},
+      registrar:'Harold Colman morreu quatro meses antes da fundação da CGRB. A presidente se chama Hester Colman.'},
   escolhas:[
     {texto:'Pedir a nota de falecimento.', vai:'c18_hemero_falecimento'},
     {texto:'Pedir o anúncio de vaga.', vai:'c18_hemero_classificados'},
@@ -1349,7 +1399,7 @@ c18_hemero_o_que_ela_pediu:{
 c18_hemero_falecimento:{
   texto:[
     'A nota é de três linhas, paga, no formato mais barato.',
-    'HÉLIO RENNÓ, 59. Falecido em decorrência de ferimentos. Deixa esposa. Missa de sétimo dia na Paróquia de Saffron.',
+    'HAROLD COLMAN, 59. Falecido em decorrência de ferimentos. Deixa esposa. Missa de sétimo dia na Paróquia de Saffron.',
     'Em decorrência de ferimentos.',
     'Você vira a página e, na coluna do lado, na mesma edição, tem uma nota de duas linhas sobre um homem ferido por um bando de Mankey num parque público de Saffron.',
     'A nota não dá o nome do homem. Não precisava.'
@@ -1463,6 +1513,8 @@ c18_liga:{
 },
 
 c18_liga_tecnico:{
+  falante:'Técnica da Liga',
+  vozes:['N','P','N','N','N'],
   texto:[
     'O setor técnico é uma sala com quatro mesas e três pessoas, uma delas comendo um sanduíche por cima de um relatório.',
     'Você diz a palavra comissão e as três param.',
@@ -1600,7 +1652,12 @@ c18_art4_2:{
     COMISSAO.estatuto[2],
     'Incluem-se, para todos os efeitos, os indivíduos classificados como lendários.',
     'Para todos os efeitos.',
-    'Você já esteve na frente de três deles. Você já teve um olhando para você de um jeito que você não vai conseguir explicar para ninguém pelo resto da vida.',
+    d=>{
+      const n = Object.values(d.lendarios || {}).filter(l => l && l.encontros > 0).length;
+      if (!n) return 'Você nunca esteve na frente de um deles. E mesmo assim eles já estão numerados.';
+      if (n === 1) return 'Você já esteve na frente de um deles. Você já teve um olhando para você de um jeito que você não vai conseguir explicar para ninguém pelo resto da vida.';
+      return 'Você já esteve na frente de mais de um deles. Você já teve um olhando para você de um jeito que você não vai conseguir explicar para ninguém pelo resto da vida.';
+    },
     'E aqui está: um parágrafo segundo, num artigo quarto, num estatuto de dezoito páginas, arquivado num cartório do quarto andar, ao lado de uma escola de datilografia.'
   ],
   ef:{flag:'sabe_do_paragrafo_segundo', instabilidade:2,
@@ -1788,10 +1845,13 @@ c18_risco_02:{
     'Risco 02 — colônia insular, Seafoam, população estimada 1 a 3.',
     'Risco 03 — indivíduo migratório, avistamentos esparsos, não confirmado.',
     'Risco 04 — ninho subterrâneo, Rota 23, acesso restrito.',
-    'A lista continua até o Risco 09, e você conhece pessoalmente seis deles.'
+    d=>{
+      const n = Object.values(d.lendarios || {}).filter(l => l && l.encontros > 0).length;
+      return n ? 'A lista continua até o Risco 09, e mais de uma linha descreve uma coisa que você já viu com os próprios olhos.' : 'A lista continua até o Risco 09, cada linha com um número e uma localização, e nenhuma com nome.';
+    }
   ],
   ef:{flag:['viu_a_lista_de_riscos','sabe_da_lista_09'], instabilidade:2,
-      registrar:'Anexo I: nove riscos numerados. Você conhece seis deles de perto.'},
+      registrar:'Anexo I: nove riscos numerados, com número e localização.'},
   escolhas:[
     {texto:'Copiar a tabela inteira no seu caderno.', vai:'c18_copiou_a_tabela'},
     {texto:'Procurar o que é matriz original.', vai:'c18_matriz_original'},
@@ -1802,10 +1862,10 @@ c18_risco_02:{
 c18_copiou_a_tabela:{
   texto:[
     'Você copia os nove, com as colunas, do jeito que está.',
-    'E, sem pensar direito, escreve ao lado de cada um o nome que você usa.',
+    'E, sem pensar direito, escreve ao lado de cada um que você reconhece o nome que você usa.',
     'Quando termina, olha para as duas colunas: a deles e a sua.',
     'A deles diz colônia insular, população estimada 1 a 3.',
-    'A sua diz o nome de uma coisa que você viu dormir.'
+    'A sua, onde tem alguma coisa escrita, diz o nome de um bicho.'
   ],
   ef:{flag:'tem_a_lista_copiada', itens:{'Cópia da tabela de riscos':1}, instabilidade:1,
       rep:{eixo:'bom',delta:1,motivo:'Escreveu o nome deles ao lado do número deles'},
@@ -1853,7 +1913,7 @@ c18_item_44:{
 
 c18_seu_nome_nas_atas:{
   texto:[
-    'Você procura o seu próprio nome, se sentindo ridículo, e acha.',
+    'Você procura o seu próprio nome, se sentindo ridícul{o|a}, e acha.',
     'Três vezes.',
     '22ª: deliberação sobre a conveniência de abordagem do indivíduo citado. Rejeitada, 7 a 4.',
     '29ª: comunicação da Auditoria de Campo sobre interferência em operação. Sem deliberação.',
@@ -2013,7 +2073,7 @@ c18_anexo_campo:{
     'Estação 2 — Rota 11, em manutenção.',
     'Estação 3 — Zona de amortecimento de Fuchsia, em operação.',
     'Estação 4 — Rota 21, em operação, Fase II.',
-    'A Rota 21 é um trecho de litoral de doze quilômetros com uma curva grande e uma praia de pedra. Você já passou por ali. Não tinha nada.'
+    'A Rota 21 é um trecho de litoral de doze quilômetros com uma curva grande e uma praia de pedra. Quem passa por ali de barco não vê nada.'
   ],
   ef:{flag:['sabe_da_rota21','sabe_da_estacao4'],
       registrar:'Quatro estações. A Estação 4, na Rota 21, é onde roda a Fase II.'},
@@ -2087,7 +2147,7 @@ c18_indice_safari:{
     'Safári aparece sete vezes, sempre como Estação 3 — zona de amortecimento.',
     'Uma delas traz o número de uma ata de terceiro: ata 41/1997 do conselho gestor da reserva, autorizando manejo de excedente por entidade credenciada.',
     'Mil novecentos e noventa e sete.',
-    'A Comissão existe há um ano e oito meses e está usando uma autorização de dezenove anos atrás que nunca foi revogada porque ninguém leu.',
+    'A Comissão existe há um ano e oito meses e está usando uma autorização de noventa e sete que nunca foi revogada porque ninguém leu.',
     'O papel não expirou. O papel nunca expira. É isso que o papel faz.'
   ],
   ef:{flag:['sabe_da_ata_41','provas_zona'], instabilidade:1,
@@ -2190,6 +2250,8 @@ c18_pergunta_de_volta:{
 },
 
 c18_publicar:{
+  falante:'Auditora Brill',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Publicar. Tudo."',
     'Ela anota. Leva quatro segundos e ela anota tudo, inclusive a palavra tudo.',
@@ -2266,6 +2328,8 @@ c18_procura_jornal:{
 },
 
 c18_isaura:{
+  falante:'Livia Gale',
+  vozes:['N','N','N','P','N'],
   texto:[
     'Livia Gale tem vinte e dois anos de redação e uma mesa com quatro pilhas e nenhum enfeite.',
     'Ela lê por quarenta minutos sem falar com você, o que é a coisa mais educada que alguém fez por você em meses.',
@@ -2329,6 +2393,8 @@ c18_publica_419:{
 },
 
 c18_ela_decide:{
+  falante:'Livia Gale',
+  vozes:['P'],
   texto:[
     '"A senhora decide."',
     'Ela não agradece e não comemora. Ela puxa a quarta pilha para o lado e abre espaço na mesa, que é o jeito dela de dizer que aceitou.',
@@ -2425,6 +2491,8 @@ c18_ex_funcionaria:{
 },
 
 c18_desistiu_do_jornal:{
+  falante:'o repórter',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Você pega o calhamaço de volta e desce a escada de madeira com ele debaixo do braço.',
     'Na calçada, o repórter de vinte e poucos anos alcança você.',
@@ -2502,7 +2570,7 @@ c18_ficou_sentado:{
   texto:[
     'Você fica sentad{o|a} na cama por uma hora e quinze minutos, com cento e quarenta páginas ao redor.',
     'Em algum momento você começa a empilhar. Em algum momento você para de empilhar.',
-    'Você pensa em cada pessoa que te contou alguma coisa nos últimos meses sabendo o risco: o Sr. Dane, a mulher da rádio que você ainda não conhece, o velho da ilha, o rapaz do arquivo.',
+    'Você pensa em cada pessoa que te contou alguma coisa nos últimos meses sabendo o risco, e em cada uma que pediu pra não ter o nome anotado.',
     'Nenhum deles ganhou nada com isso.',
     'Você levanta.'
   ],
@@ -2565,6 +2633,8 @@ c18_voltou:{
 },
 
 c18_conversar:{
+  falante:'Auditora Brill',
+  vozes:['P','N','N','N'],
   texto:[
     '"Eu quero conversar com quem manda."',
     'A Auditora Brill fecha o bloco.',
@@ -2764,6 +2834,8 @@ c18_adnan_sai_e_conta:{
 },
 
 c18_adnan_fonte:{
+  falante:'Curador Fabre',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Você vai ser fonte com nome, e com nome eles não conseguem dizer que é boato."',
     'Ele pega a carta de novo. Olha para o campo da data.',
@@ -2817,6 +2889,8 @@ c18_nona_foto:{
 },
 
 c18_adnan_fase2:{
+  falante:'Curador Fabre',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"A Fase II solta em quatro meses. Quatrocentos. Você votou contra e perdeu, e daqui a quatro meses a discussão acabou para sempre, porque não dá para recolher."',
     'Ele para de mexer no café.',
@@ -2881,7 +2955,7 @@ c18_adnan_porque_entrou:{
     '"E aí?"',
     '"E aí o zoológico fechou, porque zoológico não dá dinheiro e ninguém quer pagar. Distribuíram os bichos e eu fui junto com três deles para um sítio particular em Fuchsia, e no sítio particular eu fiquei quatro meses vendo gente rica achar graça."',
     'Ele mexe o café que já acabou.',
-    '"Aí me ligaram. Salário melhor, registro em carteira, e a frase que me pegou foi: aqui {o senhor|a senhora} vai decidir, não vai só executar."',
+    '"Aí me ligaram. Salário melhor, registro em carteira, e a frase que me pegou foi: aqui o senhor vai decidir, não vai só executar."',
     'Ele sorri sem alegria.',
     '"Eu decidi uma vez e perdi por dez a um."'
   ],
@@ -2915,6 +2989,8 @@ c18_adnan_porque_continua:{
 },
 
 c18_adnan_doutrina:{
+  falante:'Curador Fabre',
+  vozes:['N','N','N','N','N','N','N','N','N','N'],
   texto:[
     '"{O senhor|A senhora} pediu." Ele afasta o prato e fica sério de um jeito diferente.',
     COMISSAO.doutrina[0],
@@ -2936,6 +3012,8 @@ c18_adnan_doutrina:{
 },
 
 c18_resposta_quem_decide:{
+  falante:'Curador Fabre',
+  vozes:['P','N','P','N','P','N','N'],
   texto:[
     '"Quem decide quem é risco?"',
     '"O conselho, por maioria, em reunião com quórum, e consta em ata." Ele responde na hora, porque a resposta existe.',
@@ -2959,6 +3037,8 @@ c18_resposta_quem_decide:{
 },
 
 c18_resposta_pessoa:{
+  falante:'Curador Fabre',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"A criança de onze anos era uma pessoa. Vocês são um estatuto."',
     '"Sim." Ele concorda sem hesitar. "E é essa a nossa vantagem e é esse o nosso problema."',
@@ -2978,12 +3058,16 @@ c18_resposta_pessoa:{
 },
 
 c18_resposta_numero:{
+  falante:'Curador Fabre',
+  vozes:['P','P','P','N','P','P','N','N'],
   texto:[
     '"Vocês numeraram eles."',
     'Ele não entende no primeiro segundo. No segundo, entende, e a cara dele muda.',
     '"Risco 01. Risco 02." Você continua. "Eu vi a tabela. Nove linhas."',
     '"É classificação de prioridade operacional."',
-    '"Eu sei o que é. Eu vi um deles dormir." Você fala baixo, porque não precisa falar alto. "Eu vi de perto, respirando, e ele tem um jeito de virar a cabeça."',
+    d=>Object.values(d.lendarios || {}).some(l => l && l.encontros > 0)
+      ? '"Eu sei o que é. Eu vi um deles de perto." Você fala baixo, porque não precisa falar alto. "Respirando. E ele tem um jeito de virar a cabeça."'
+      : '"Eu sei o que é." Você fala baixo, porque não precisa falar alto. "E sei que cada linha dessas respira em algum lugar."',
     'Ele olha o balcão por um tempo comprido.',
     '"Eu nunca vi nenhum dos nove", ele diz. "Essa é a coisa mais desonesta do meu trabalho."'
   ],
@@ -2999,6 +3083,8 @@ c18_resposta_numero:{
 },
 
 c18_adnan_vem_ver:{
+  falante:'Curador Fabre',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Vem ver comigo."',
     'Ele ri sem querer, uma risada curta de susto.',
@@ -3076,6 +3162,8 @@ c18_entrou_na_comissao:{
 },
 
 c18_primeiro_servico:{
+  falante:'Curador Fabre',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Estação 4, Rota 21." Ele diz na hora, porque já estava escrito. "Apoio à Fase II. Três semanas."',
     '"O que eu vou fazer lá?"',
@@ -3089,6 +3177,8 @@ c18_primeiro_servico:{
 },
 
 c18_era_teste:{
+  falante:'Curador Fabre',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Eu assinei para entrar, não para servir."',
     'Ele guarda o carbono com cuidado.',
@@ -3107,6 +3197,8 @@ c18_era_teste:{
 },
 
 c18_recusou_a_oferta:{
+  falante:'Curador Fabre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Não."',
     'Ele guarda o envelope no bolso, sem insistir, e paga a conta.',

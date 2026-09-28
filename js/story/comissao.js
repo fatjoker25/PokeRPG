@@ -21,7 +21,7 @@ const COMISSAO = {
 
   /* O argumento deles, dito em voz alta. É bom. É esse o problema. */
   doutrina:[
-    '"Em dois anos, Kanto quase acabou duas vezes."',
+    '"Em poucos anos, Kanto quase acabou duas vezes."',
     '"Na primeira, uma organização criminosa controlou uma corporação, uma cidade e metade das rotas, e quem resolveu isso foi uma criança de onze anos. Sozinha. Por acaso."',
     '"Na segunda, um indivíduo fabricado em laboratório saiu andando de Cinnabar e ninguém — ninguém — sabe onde ele está nem o que ele quer."',
     '"A resposta institucional a essas duas coisas foi emitir notas de esclarecimento."',
@@ -39,7 +39,7 @@ const COMISSAO = {
 /* ── Pessoas ─────────────────────────────────────────────── */
 const GENTE_COMISSAO = {
   presidente:{
-    nome:'a Presidente', nomeReal:'Rhea Colman', cargo:'Presidente do Conselho',
+    nome:'a Presidente', nomeReal:'Hester Colman', cargo:'Presidente do Conselho',
     descricao:'Cinquenta e poucos anos, tailleur cinza, fala baixo e nunca repete uma frase. Foi diretora de fiscalização da Liga por nove anos antes de pedir demissão para fundar a Comissão.'
   },
   curador:{

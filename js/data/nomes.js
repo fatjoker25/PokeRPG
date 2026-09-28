@@ -10,7 +10,7 @@
    você, em qualquer cena, e a partir daí o balão passa a usar o
    nome — nessa cena e em todas as outras.
 
-   Quem tem nome escrito na história (Ezra, Rhea Colman, Sr. Fuji)
+   Quem tem nome escrito na história (Ezra, Rhea Ashford, Sr. Fuji)
    não entra aqui: já tem nome. Quem é papel e não pessoa (a folha,
    a página do caderno) também não.
 
@@ -69,7 +69,10 @@ const NOMES_FIXOS = {
   'a recepcionista da Liga':   'Lena',
   'a balconista da farmácia':  'Gina',
   'Chefe da expedição':        'Dra. Sallow',
-  'a voz do rádio':            'Roland'
+  'a voz do rádio':            'Roland',
+  'a escrevente':              'Sra. Cybil',
+  'o homem de barba':          'Curador Fabre',
+  'a mulher de tailleur':      'Hester Colman'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
@@ -154,7 +157,7 @@ function _formal(rotulo){ return /senhora|senhor|velh|dona d|dono d|capit[ãa]o|
    pessoas com o mesmo nome na mesma jornada confunde, e roubar o nome
    de um personagem escrito é pior ainda. */
 const NOMES_DA_HISTORIA = new Set([
-  'Amos','Brill','Cleo','Colman','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
+  'Amos','Ashford','Dunmore','Ivy','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
   'Arden','Hart','Tanner','Tobin','Kieran','Ashby','Burke','Holloway','Ansel',
