@@ -1625,7 +1625,7 @@ c8_quem_assina:{
 
 c8_anotou_lacre:{
   texto:[
-    'Você anota no caderno, com a lanterna do Pokégear por baixo da jaqueta pra não vazar luz:',
+    'Você anota no caderno, com a lanterna do PokéNav por baixo da jaqueta pra não vazar luz:',
     'Contêiner: KTU 409 118-2. Lacre azul nº 77451. Caminhão: placa coberta com papelão e fita.',
     'Placa coberta com papelão e fita.',
     'Dentro de um porto. Passando por um portão. Com um lacre oficial e um número de contêiner válido.',

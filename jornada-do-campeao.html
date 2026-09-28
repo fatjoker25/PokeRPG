@@ -28450,7 +28450,7 @@ c7_cidade:{
 
 c7_marcenaria:{
   texto:[
-    'O marceneiro tem umas sessenta anos e serragem no braço até o cotovelo.',
+    'O marceneiro tem uns sessenta anos e serragem no braço até o cotovelo.',
     'Ele te vê entrar e não pergunta o que você quer, porque ele já sabe as duas possibilidades.',
     '"Pra hoje ou pra guardar?"',
     '"Como assim?"',
@@ -28526,6 +28526,8 @@ c7_urna_depois:{
 },
 
 c7_flores:{
+  falante:'Moça da floricultura',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'A floricultura não tem rosa, não tem buquê de festa, não tem nada com fita colorida.',
     'Tem crisântemo branco, lírio e uma flor pequena e amarela que você não conhece.',
@@ -28595,7 +28597,7 @@ c7_colheu:{
     'Vinte e cinco minutos de subida por um morro de capim alto atrás da torre, com a cidade ficando pequena embaixo.',
     'A flor amarela está em todo lugar. É uma flor feia, na verdade: caule fino, pétala irregular, nada de especial.',
     'Você colhe umas quinze e faz um maço com um fio de capim porque não tem barbante.',
-    'Lá de cima, sentado no capim com o maço na mão, dá pra ver a torre inteira de lado.',
+    'Lá de cima, sentad{o|a} no capim com o maço na mão, dá pra ver a torre inteira de lado.',
     'Dá pra ver que ela tem sete andares e que só os três primeiros têm janela.'
   ],
   ef:{flag:['tem_a_flor','colheu_a_flor','viu_a_torre_de_lado'],
@@ -28627,6 +28629,8 @@ c7_morro_ficou:{
 },
 
 c7_voltou_flor:{
+  falante:'Moça da floricultura',
+  vozes:['N','P','N','N'],
   texto:[
     'Você volta na floricultura com o maço feito com fio de capim.',
     'A moça olha, e olha mais um pouco, e não diz nada por um tempo desconfortável.',
@@ -28734,6 +28738,8 @@ c7_cidade2:{
 },
 
 c7_pousada:{
+  falante:'Dono da pousada',
+  vozes:['N','P','N','N'],
   texto:[
     'A pousada de Lavender fica em cima de uma das floriculturas e tem seis quartos.',
     'O dono é um homem de uns trinta e cinco anos com olheiras permanentes.',
@@ -28752,6 +28758,8 @@ c7_pousada:{
 },
 
 c7_quarto_cinco:{
+  falante:'Dono da pousada',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O que tem no quarto cinco?"',
     '"Gente."',
@@ -28870,6 +28878,8 @@ c7_subir_de_novo:{
 },
 
 c7_foi_com_ela:{
+  falante:'Senhora do Growlithe',
+  vozes:['N','N'],
   texto:[
     'Vocês dois andam da pousada até a base da torre. São quatrocentos metros e levam onze minutos porque ela anda devagar.',
     'Na porta ela para.',
@@ -28987,6 +28997,8 @@ c7_deixou_flor:{
 },
 
 c7_mural:{
+  falante:'a senhora do mural',
+  vozes:['N'],
   texto:[
     'O giz range.',
     'Você escreve devagar, com a letra melhor que consegue, o que é pior do que se escrevesse rápido.',
@@ -29005,6 +29017,8 @@ c7_mural:{
 },
 
 c7_quantos_ela:{
+  falante:'a senhora do mural',
+  vozes:['P','N','P','N','N','N','P','N'],
   texto:[
     '"E a senhora escreveu quantos?"',
     'Ela olha o mural, procurando, e aponta com o queixo em três lugares diferentes.',
@@ -29013,7 +29027,7 @@ c7_quantos_ela:{
     '"Não sinta. Foi em quarenta anos." Ela ajeita o casaco. "Três em quarenta anos é uma vida boa, {moço|moça}. Muito boa."',
     'Ela olha pra você.',
     '"Você tem quantos? De bicho, digo."',
-    d=>`"${d.time.length}."`,
+    d=>`"${['Nenhum','Um','Dois','Três','Quatro','Cinco','Seis'][d.time.length] || d.time.length}."`,
     '"Então você tem muito giz pela frente."'
   ],
   ef:{flag:'muito_giz_pela_frente',
@@ -29028,8 +29042,8 @@ c7_quantos_ela:{
 c7_zelador:{
   texto:[
     'O zelador da torre é um homem magro de uns sessenta anos com as mãos manchadas de incenso e um molho de chaves que ele não usa, porque a torre não tranca.',
-    'Ele está repondo vela numa nicho do primeiro andar quando você chega.',
-    '"Você é treinador." Ele olha o seu cinto sem interromper o que está fazendo. "Sobe se quiser. Aqui não proíbe ninguém."',
+    'Ele está repondo vela num nicho do primeiro andar quando você chega.',
+    '"Você é {treinador|treinadora}." Ele olha o seu cinto sem interromper o que está fazendo. "Sobe se quiser. Aqui não proíbe ninguém."',
     'Ele acende o pavio novo com o toco do velho.',
     '"Mas escuta uma coisa antes."'
   ],
@@ -29244,6 +29258,8 @@ c7_porque_nunca_abriu:{
 },
 
 c7_abre_por_ele:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Eu abro pro senhor."',
     'Ele te olha com um susto de verdade.',
@@ -29283,6 +29299,8 @@ c7_historia_zelador:{
 },
 
 c7_os_onze:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','P','N','N','P','N'],
   texto:[
     '"Quem escreveu os onze nomes? Lá embaixo, no canto, perto do chão."',
     'O zelador para de mexer nas velas de vez.',
@@ -29455,7 +29473,7 @@ c7_escutou:{
       if (d.cemiterio.length) return 'Não é voz de gente.';
       if (d.flags.ligou_pra_casa) return `É ${casaCompleto()}. É exatamente o ritmo {casa:dela|dele} ao telefone, com aquela pausa antes de perguntar se você comeu.`;
       if (n.includes('Ezra')) return 'É o Ezra. É o ritmo dele — as frases todas curtas e uma comprida no fim.';
-      return 'É a sua mãe. Ou é o que você lembra do jeito dela falar, que não é a mesma coisa.';
+      return `É ${casaCompleto()}. Ou é o que você lembra do jeito {casa:dela|dele} falar, que não é a mesma coisa.`;
     },
     'Não dá pra entender uma palavra. É só o formato.',
     'E o formato é suficiente pra você ficar dois minutos parad{o|a} num corredor gelado com a respiração saindo branca.'
@@ -29764,7 +29782,7 @@ c7_perguntou_ao_marowak:{
   escolhas:[
     {texto:'Levar o Cubone com você.', vai:'c7_cubone'},
     {texto:'Deixar os dois na base e seguir viagem.', vai:'c7_fim'},
-    {texto:'Levar os dois até o hospital de Celadon.', vai:'c7_levou_os_dois'}
+    {texto:'Levar os dois até o hospital de Celadon.', vai:'c7_levou_os_dois', cond:d=>!d.flags.treinador_morreu_torre}
   ]
 },
 
@@ -29828,7 +29846,7 @@ c7_cubone_primeiro:{
 c7_carregou_o_treinador:{
   texto:[
     'Você carrega o treinador escada abaixo. Seis andares.',
-    'Ele pesa mais que o Vaporeon, mais que o Paras, mais que qualquer coisa que você já carregou, e escada em espiral é a pior geometria possível pra carregar gente.',
+    'Ele pesa mais que qualquer coisa que você já carregou, e escada em espiral é a pior geometria possível pra carregar gente.',
     'Você para duas vezes. Na segunda você senta no degrau com ele em cima de você e fica assim por dois minutos.',
     d=>d.flags.zelador_subiu_junto ? 'O zelador desce na frente iluminando os degraus com uma vela, e é a coisa mais inútil e mais necessária do mundo.' : '',
     'No saguão, o zelador chama a van. Ela leva onze minutos.',
@@ -29926,6 +29944,8 @@ c7_voltou_pelo_marowak:{
 },
 
 c7_contou_a_verdade:{
+  falante:'Elias',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você conta tudo. Sem melhorar nada.',
     'Que você achou que era ameaça. Que você atacou. Que ele estava chamando há quatro dias e você atacou.',
@@ -30119,6 +30139,8 @@ c7_deixou_no_centro:{
 },
 
 c7_pegou_do_circulo:{
+  falante:'Zelador da Torre',
+  vozes:['N'],
   texto:[
     'Você pega o caderno molhado.',
     'A temperatura da sala cai e não volta.',
@@ -30179,7 +30201,7 @@ c7_sentou_no_circulo:{
     'Você senta na borda do círculo, de pernas cruzadas, numa sala vazia sem janela no alto de uma torre.',
     'Fica quarenta minutos.',
     'Não acontece nada de sobrenatural. Não tem voz, não tem frio, não tem aparição.',
-    'O que acontece é que você pensa. Por quarenta minutos seguidos, sem Pokégear, sem gente, sem nada acontecendo, você pensa em tudo o que aconteceu desde que você saiu de casa.',
+    'O que acontece é que você pensa. Por quarenta minutos seguidos, sem PokéNav, sem gente, sem nada acontecendo, você pensa em tudo o que aconteceu desde que você saiu de casa.',
     'E em algum momento você percebe que está contando. Contando coisas que você fez, uma por uma, como quem confere.',
     'Talvez seja isso o sétimo andar. Talvez não tenha nada aqui e seja só o único lugar de Kanto onde ninguém te interrompe.'
   ],
@@ -30227,6 +30249,8 @@ c7_saguao_depois:{
 },
 
 c7_a_menina_do_mural:{
+  falante:'Menina do mural',
+  vozes:['P','P','N','N','N','P','N','N'],
   texto:[
     'Você alcança ela na rua.',
     '"Ô."',
@@ -30290,6 +30314,7 @@ c7_ajuda:{
 },
 
 c7_mural_do_treinador:{
+  vozes:['E'],
   texto:[
     'Você desce e pergunta o nome dele pro zelador, que confere na carteira que estava no bolso do rapaz.',
     'Elias. Vinte e dois anos.',
@@ -31983,7 +32008,7 @@ c8_quem_assina:{
 
 c8_anotou_lacre:{
   texto:[
-    'Você anota no caderno, com a lanterna do Pokégear por baixo da jaqueta pra não vazar luz:',
+    'Você anota no caderno, com a lanterna do PokéNav por baixo da jaqueta pra não vazar luz:',
     'Contêiner: KTU 409 118-2. Lacre azul nº 77451. Caminhão: placa coberta com papelão e fita.',
     'Placa coberta com papelão e fita.',
     'Dentro de um porto. Passando por um portão. Com um lacre oficial e um número de contêiner válido.',
