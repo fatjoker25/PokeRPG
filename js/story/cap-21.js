@@ -11,6 +11,8 @@ function c21_cabe(id, d){
 /* Quantas insígnias você trouxe: a Liga convoca até quem não tem as oito. */
 function c21_ins(d){ return d.insignias.filter(i => i !== 'Título de Campeão').length; }
 function c21_ext(n){ return ['nenhuma','uma','duas','três','quatro','cinco','seis','sete','oito'][n] || String(n); }
+/* 'nenhuma insígnia', 'uma insígnia', 'três insígnias' */
+function c21_insignias(d){ const n = c21_ins(d); return c21_ext(n) + (n > 1 ? ' insígnias' : ' insígnia'); }
 function c21_abertura(d){
   const cand = C21_ABERTURAS.filter(id => c21_cabe(id, d));
   return Dados.escolher(cand);
@@ -347,7 +349,7 @@ c21_varreu_a_calcada:{
 c21_prometeu_a_terca:{
   texto:[
     d=>fala(d.jogador.nome, 'Eu estou.'),
-    'Você não sabe se vai estar. Você tem uma convocação do Planalto no bolso e nenhuma ideia do que vem depois dela.',
+    'Você não sabe se vai estar. Você tem uma carta da Liga e um telegrama no bolso, e nenhuma ideia do que vem depois deles.',
     'Mas você fala que está, e você fala sério na hora de falar, e essas duas coisas nem sempre são a mesma.',
     d=>fala(vz().nome, 'Então tá.', null, `${vz().Ele} anota na testa com dois dedos, como sempre.`)
   ],
@@ -505,7 +507,7 @@ c21_dentro_de_casa:{
       registrar:'Entrou no próprio quarto depois de meses. Não tinham mexido em nada.'},
   escolhas:[
     {texto:d=>`Mostrar as ${c21_ext(c21_ins(d))} insígnias uma por uma.`, vai:'c21_mostrou_as_oito', cond:d=>c21_ins(d) >= 2},
-    {texto:'Falar da convocação do Planalto agora, antes de esquentar.', vai:'c21_contou_da_convocacao'},
+    {texto:'Mostrar o telegrama agora, antes de esquentar.', vai:'c21_contou_da_convocacao'},
     {texto:'Perguntar o que aconteceu aqui enquanto você não estava.', vai:'c21_o_que_aconteceu_aqui'},
     {texto:'Não falar de nada. Dormir na sua cama, que é o que você veio fazer.', vai:'c21_dormiu_na_cama'}
   ]
@@ -524,7 +526,7 @@ c21_mostrou_as_oito:{
       rep:{eixo:'bom',delta:2,motivo:'Contou as insígnias em casa, três vezes, devagar'},
       registrar:'Mostrou as insígnias em casa. Repetiu três vezes.'},
   escolhas:[
-    {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
+    {texto:'Mostrar o telegrama.', vai:'c21_contou_da_convocacao'},
     {texto:'Deixar pra amanhã e dormir.', vai:'c21_dormiu_na_cama'}
   ]
 },
@@ -544,7 +546,7 @@ c21_o_que_aconteceu_aqui:{
       registrar:'Perguntou o que aconteceu em casa. Levou quarenta minutos de nada.'},
   escolhas:[
     {texto:'Subir no telhado dos fundos e olhar o que precisa.', vai:'c21_o_telhado'},
-    {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
+    {texto:'Mostrar o telegrama.', vai:'c21_contou_da_convocacao'},
     {texto:'Dormir.', vai:'c21_dormiu_na_cama'}
   ]
 },
@@ -561,24 +563,24 @@ c21_o_telhado:{
       rep:{eixo:'bom',delta:2,motivo:'Consertou o telhado da casa com as insígnias no bolso'},
       registrar:'Consertou as três telhas do telhado dos fundos.'},
   escolhas:[
-    {texto:'Falar da convocação do Planalto.', vai:'c21_contou_da_convocacao'},
+    {texto:'Mostrar o telegrama.', vai:'c21_contou_da_convocacao'},
     {texto:'Tomar banho e dormir.', vai:'c21_dormiu_na_cama'}
   ]
 },
 
 c21_contou_da_convocacao:{
   texto:[
-    'Você põe a carta da Liga em cima da mesa e empurra.',
-    'Papel bom, timbre em relevo, dobra em três, e a palavra COMPARECIMENTO aparece duas vezes.',
+    'Você põe o telegrama em cima da mesa e empurra.',
+    'É um papel amarelo com quatro linhas em maiúsculo, sem timbre nenhum, e a palavra COMPARECIMENTO aparece duas vezes.',
     d=>fala(nomeCasa(), 'Isso é ruim?'),
     d=>fala(d.jogador.nome, 'Eu não sei.'),
     d=>fala(nomeCasa(), 'Você sabe alguma coisa?'),
     d=>fala(d.jogador.nome, 'Eu sei que eles não convocam quem não incomoda.'),
-    '{casa:Ela|Ele} lê a carta mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
+    '{casa:Ela|Ele} lê o telegrama mais duas vezes, do começo, os dois lados, inclusive o lado sem nada escrito.',
     d=>fala(nomeCasa(), 'Come antes de ir. Só isso que eu tenho pra falar sobre isso.', 'baixo')
   ],
   ef:{flag:'contou_da_convocacao_em_casa', moral:3,
-      registrar:'Mostrou a convocação do Planalto em casa.'},
+      registrar:'Mostrou em casa o telegrama que te convoca pra segunda.'},
   escolhas:[
     {texto:'Dormir na sua cama.', vai:'c21_dormiu_na_cama'},
     {texto:'Ficar acordad{o|a} na cozinha com {casa:ela|ele} até tarde.', vai:'c21_acordados_ate_tarde'}

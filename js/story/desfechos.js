@@ -603,8 +603,10 @@ enxertarDesfecho(25, {
 
 c25_o_acordo:{
   texto:[
-    'A mulher da pasta de couro te chama no corredor às dez e vinte e três, no meio da audiência, durante um intervalo que ninguém pediu.',
-    'Ela não se apresenta e não precisa: você já entendeu quem ela é pela maneira como a recepcionista parou de digitar quando ela passou.',
+    'A mulher da pasta de couro te chama no corredor, longe da porta da sala, e fala baixo.',
+    d=>d.flags.conheceu_a_advogada
+      ? 'Dessa vez ela não fala como advogada de ofício. Fala como quem traz um recado e não diz de quem.'
+      : 'Ela não se apresenta e não precisa: você já entendeu quem ela é pela maneira como a recepcionista parou de digitar quando ela passou.',
     fala('a mulher da pasta', 'Eu vou ser breve porque a gente tem nove minutos.'),
     fala('a mulher da pasta', 'Existe um termo de ajustamento. Já está redigido. Falta uma assinatura e não é a minha.'),
     d=>fala(d.jogador.nome, 'Ajustamento de quê?'),
@@ -653,7 +655,7 @@ c25_fim_assinou_o_termo:{
   texto:[
     'Você assina na antessala, em cima da pasta de couro dela, com a planta que precisa de água a meio metro do seu cotovelo.',
     'Duas vias. Rubrica em cada folha. Leva três minutos.',
-    'Às dez e trinta e um a audiência é retomada e a presidente da mesa registra em ata a celebração de termo de ajustamento de conduta e a extinção do feito.',
+    'Às dez e trinta e um a audiência é aberta e a presidente da mesa registra em ata a celebração de termo de ajustamento de conduta e a extinção do feito.',
     'A sessão dura mais quatro minutos.',
     'Você sai do prédio às dez e quarenta e três da manhã de uma segunda-feira, com uma via carimbada na mochila, tendo conseguido em cinquenta e nove minutos mais do que qualquer pessoa conseguiu em quarenta e um anos.',
     'E leva quatro quarteirões pra entender por que você não está bem.'
@@ -677,7 +679,7 @@ c25_fim_recusou_o_termo:{
     d=>fala(d.jogador.nome, 'Não.'),
     fala('a mulher da pasta', 'Você entende que sem a sua assinatura não existe prazo de cento e oitenta dias.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
-    fala('a mulher da pasta', 'E que o processo vai durar anos e você vai ter quase vinte quando acabar.'),
+    fala('a mulher da pasta', 'E que o processo vai durar anos e você vai ter mais de vinte quando acabar.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
     'Ela fecha a pasta de couro e o fecho faz um estalo seco no corredor vazio.',
     fala('a mulher da pasta', 'Então você está escolhendo o arquivo em vez dos bichos.'),
@@ -685,7 +687,7 @@ c25_fim_recusou_o_termo:{
     d=>fala(d.jogador.nome, 'Eu tô escolhendo que ninguém decida isso numa antessala em nove minutos.'),
     'Ela olha pra você por dois segundos.',
     fala('a mulher da pasta', 'Tá.'),
-    'E volta pra sala de audiência, e a audiência é retomada às dez e trinta e um, e o feito não é extinto.'
+    'E volta pra sala de audiência, e a audiência é aberta às dez e trinta e um, e o feito não é extinto.'
   ],
   final:{id:'recusou_o_termo', titulo:'SEIS ANOS', texto:[
     'O processo dura seis anos e dois meses.',

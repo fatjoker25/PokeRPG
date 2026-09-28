@@ -158,7 +158,7 @@ c24_a_primeira:{
     d=>{ Nomes.apresentar('o guarda da primeira'); return 'O da primeira tem PIKE bordado em cima do bolso, que é mais do que os outros seis têm.'; },
     fala('o guarda da primeira', 'Cartão de treinador, por favor.'),
     'Você entrega. Ele passa o leitor. A máquina apita uma vez.',
-    d=>fala('o guarda da primeira', `${(n => n === 0 ? 'Nenhuma insígnia' : n === 1 ? 'Uma insígnia' : c21_ext(n).replace(/^./, c => c.toUpperCase()) + ' insígnias')(c21_ins(d))}, licença válida, sem restrição.`),
+    d=>fala('o guarda da primeira', `${c21_insignias(d).replace(/^./, c => c.toUpperCase())}, licença válida, sem restrição.`),
     fala('o guarda da primeira', 'Passa na segunda que eles conferem de novo.', 'frio')
   ],
   ef:{flag:'entrou_nas_guaritas',
@@ -412,7 +412,7 @@ c24_bateu_no_vidro:{
     'O vidro de trás desce vinte centímetros.',
     fala('a mulher de crachá azul', 'Você é a primeira pessoa que bate no vidro.', null, 'Dá pra ver só os olhos dela e parte da boca.'),
     fala('a mulher de crachá azul', 'Em três anos fazendo isso, ninguém nunca bateu no vidro. Todo mundo passa reto e olha pelo canto.'),
-    fala('a mulher de crachá azul', 'Segunda, dez horas, Planalto. Eu vou estar na sala.'),
+    fala('a mulher de crachá azul', 'Segunda, dez horas, Saffron. Eu vou estar na sala.'),
     fala('a mulher de crachá azul', 'Eu vim aqui só pra ter certeza de que você ia subir essa estrada. Agora eu tenho.', 'frio'),
     'O vidro sobe. O carro liga. Eles vão embora na direção de Saffron e não olham pra trás.'
   ],
@@ -443,7 +443,7 @@ c24_esperou:{
     'Aos cinquenta e dois minutos, o vidro de trás desce vinte centímetros.',
     fala('a mulher de crachá azul', 'Você venceu.', 'riso'),
     fala('a mulher de crachá azul', 'Eu tenho uma reunião às três e você acabou de gastar cinquenta minutos meus, e eu não consigo nem ficar brava.'),
-    fala('a mulher de crachá azul', 'Segunda, dez horas, Planalto. Sobe a estrada.', 'frio')
+    fala('a mulher de crachá azul', 'Segunda, dez horas, Saffron. Agora sobe a estrada.', 'frio')
   ],
   ef:{flag:'esperou_o_carro', moral:4,
       npc:{nome:'Mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
