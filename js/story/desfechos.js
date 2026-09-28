@@ -719,7 +719,7 @@ enxertarDesfecho(26, {
 
 c26_aceitou_o_posto:{
   texto:[
-    'A sala tem uma mesa comprida, oito cadeiras e uma janela com o vidro trincado remendado com fita, que você viu de fora quando chegou.',
+    'A sala tem uma mesa comprida, oito cadeiras e uma janela com o vidro trincado remendado com fita.',
     'Sentadas, quatro pessoas. Uma delas é da Liga, uma é da Comissão, e as outras duas você não consegue classificar, o que provavelmente é o ponto.',
     fala('a conselheira da Liga', 'Vamos ser diretos, porque {o senhor|a senhora} já perdeu bastante tempo com gente que não foi direta.'),
     'Ela empurra uma pasta fina pela mesa.',
@@ -751,7 +751,7 @@ c26_quem_criou_o_cargo:{
     fala('o homem sem crachá', 'Da Liga com a Comissão.'),
     'Você olha pra conselheira da Liga, que não desvia.',
     d=>fala(d.jogador.nome, 'A Liga e a Comissão assinam resolução conjunta?'),
-    'Silêncio de uns quatro segundos, e é o silêncio mais informativo do capítulo.',
+    'Silêncio de uns quatro segundos, e é o silêncio mais informativo da tarde.',
     fala('a conselheira da Liga', 'Desde mil novecentos e sessenta e dois.'),
     'Ela diz isso sem nenhum constrangimento, e é aí que você entende que ela nunca achou que isso fosse segredo.',
     fala('a conselheira da Liga', '{O senhor|A senhora} passou meses procurando uma conspiração e o que existe é um convênio. Está publicado.', 'baixo')
@@ -801,7 +801,7 @@ c26_fim_recusou:{
     fala('a conselheira da Liga', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
     d=>fala(d.jogador.nome, 'Tô.'),
     'Ela assente uma vez, e é um gesto de quem registra, não de quem concorda.',
-    'O homem sem crachá, que não falou desde o começo, é o único que fala quando você já está na porta:',
+    d=>d.flags.resolucao_conjunta_desde_sessenta_e_dois ? 'O homem sem crachá é o único que fala quando você já está na porta:' : 'O homem sem crachá, que não falou desde o começo, é o único que fala quando você já está na porta:',
     fala('o homem sem crachá', 'Pra constar: eu achei que você ia aceitar.'),
     d=>fala(d.jogador.nome, 'Por quê?'),
     fala('o homem sem crachá', 'Porque eu aceitei.', 'baixo')
