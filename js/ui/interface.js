@@ -2732,7 +2732,8 @@ const UI = {
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
       <div style="margin-top:34px">
-        <button class="btn destaque" onclick="Jogo.novo()">Nova jornada</button>
+        ${final.continua ? '<button class="btn destaque" onclick="Jogo.continuarPelaEstrada()">Continuar pela estrada</button>' : ''}
+        <button class="btn${final.continua ? '' : ' destaque'}" onclick="Jogo.novo()">Nova jornada</button>
         <button class="btn" onclick="UI.modalDiario()">Ler o diário completo</button>
         <button class="btn" onclick="UI.modalRota()">Ver a rota que você percorreu</button>
       </div>

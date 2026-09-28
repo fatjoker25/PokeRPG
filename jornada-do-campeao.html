@@ -22985,8 +22985,9 @@ c3_arrependeu_captura:{
     'Mas ele está do lado de fora, e isso é diferente de estar do lado de dentro, mesmo que não pareça.'
   ],
   ef:{executar:d=>{
-        const p = d.time.find(x=>x.dex===25);
-        if (p){ Estado.removerDoTime(p.uid); }
+        /* o time cheio mandou ele pro PC: é de lá que ele sai */
+        const p = d.time.find(x=>x.dex===25) || d.pc.find(x=>x.dex===25);
+        if (p){ Estado.removerDoTime(p.uid); const i = d.pc.findIndex(x=>x.uid===p.uid); if (i>=0) d.pc.splice(i,1); }
         return [];
       },
       rep:{eixo:'bom',delta:1,motivo:'Desfez a própria captura'},
@@ -23003,35 +23004,45 @@ c3_mochila:{
     'Dentro: comida velha, um mapa rabiscado com marcação a caneta em seis pontos da floresta, três Great Balls e um caderno de capa dura.',
     'O caderno tem uma lista. Data, lugar, espécie — e do lado de cada linha, um preço.',
     'A última linha é de hoje. Espécie: Pikachu. Preço: em branco.',
-    'O Pikachu continua girando na estaca atrás de você enquanto você lê.'
+    d=>d.flags.pikachu_capturado_preso
+      ? 'A estaca está vazia atrás de você, com o fio solto no chão. O Pikachu da última linha está na bola presa no seu cinto.'
+      : 'O Pikachu continua girando na estaca atrás de você enquanto você lê.'
   ],
   ef:{itens:{'Great Ball':3}, dinheiro:600, flag:['pegou_mochila_cacador','provas_da_floresta'],
       registrar:'Pegou a mochila do caçador, com o caderno de preços dentro.'},
   escolhas:[
-    {texto:'Largar tudo e soltar o Pikachu.', vai:'c3_soltar',
+    {texto:'Largar tudo e soltar o Pikachu.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso,
      ef:{rep:{eixo:'bom',delta:1,motivo:'Largou o que achou para soltar o que estava preso'}}},
-    {texto:'Levar o caderno e soltar o Pikachu.', vai:'c3_soltar',
+    {texto:'Levar o caderno e soltar o Pikachu.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso,
      ef:{flag:'levou_o_caderno_do_cacador'}},
-    {texto:'Levar tudo e ir embora.', vai:'c3_caçadores',
+    {texto:'Levar tudo e ir embora.', vai:'c3_caçadores', cond:d=>!d.flags.pikachu_capturado_preso,
      ef:{rep:{eixo:'ruim',delta:2,motivo:'Saqueou e deixou um Pokémon preso para trás'}, flag:'ignorou_pikachu'}},
+    {texto:'Abrir a bola e soltar o Pikachu de volta.', vai:'c3_arrependeu_captura', cond:d=>!!d.flags.pikachu_capturado_preso && !d.flags.soltou_o_pikachu_de_volta},
+    {texto:'Levar tudo e seguir.', vai:'c3_caçadores', cond:d=>!!d.flags.pikachu_capturado_preso},
     {texto:'Ler o caderno inteiro antes de decidir.', vai:'c3_caderno_inteiro'}
   ]
 },
 
 c3_caderno_inteiro:{
   texto:[
-    'Você senta no chão da clareira, com o som fino a três metros, e lê trinta e uma páginas.',
+    d=>d.flags.pikachu_capturado_preso
+      ? 'Você senta no chão da clareira, do lado da estaca vazia, e lê trinta e uma páginas.'
+      : 'Você senta no chão da clareira, com o som fino a três metros, e lê trinta e uma páginas.',
     'Dois anos de lista. Cento e poucas linhas.',
     'Os preços sobem com o tempo. Os lugares mudam: começa na Rota 2, vai pra floresta, e nas últimas páginas aparecem nomes que você não conhece — "MT LUA", "ZS-7", "SPH".',
     'E, na contracapa, a mesma letra escreveu um endereço em Celadon e um horário: depois das 23h.',
-    'Você fecha o caderno e o som fino continua.'
+    d=>d.flags.pikachu_capturado_preso
+      ? 'Você fecha o caderno. A clareira está em silêncio, e o silêncio é por sua causa.'
+      : 'Você fecha o caderno e o som fino continua.'
   ],
   ef:{flag:['leu_o_caderno_do_cacador','provas_da_floresta','endereco_celadon_cedo'],
       rep:{eixo:'bom',delta:1,motivo:'Leu as trinta e uma páginas em vez de só pegar as bolas'},
       registrar:'Leu o caderno do caçador: dois anos de lista, com Monte da Lua, ZS-7, SPH e um endereço em Celadon.'},
   escolhas:[
-    {texto:'Soltar o Pikachu agora.', vai:'c3_soltar'},
-    {texto:'Esperar os donos voltarem.', vai:'c3_esperar'}
+    {texto:'Soltar o Pikachu agora.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso},
+    {texto:'Esperar os donos voltarem.', vai:'c3_esperar', cond:d=>!d.flags.pikachu_capturado_preso},
+    {texto:'Abrir a bola e soltar o Pikachu de volta.', vai:'c3_arrependeu_captura', cond:d=>!!d.flags.pikachu_capturado_preso && !d.flags.soltou_o_pikachu_de_volta},
+    {texto:'Guardar o caderno e seguir.', vai:'c3_caçadores', cond:d=>!!d.flags.pikachu_capturado_preso}
   ]
 },
 
@@ -84342,7 +84353,8 @@ const UI = {
         <p class="sussurro">Escolhas diferentes levam a finais diferentes. A campanha tem ${totalFinais}.</p>
       </div>
       <div style="margin-top:34px">
-        <button class="btn destaque" onclick="Jogo.novo()">Nova jornada</button>
+        ${final.continua ? '<button class="btn destaque" onclick="Jogo.continuarPelaEstrada()">Continuar pela estrada</button>' : ''}
+        <button class="btn${final.continua ? '' : ' destaque'}" onclick="Jogo.novo()">Nova jornada</button>
         <button class="btn" onclick="UI.modalDiario()">Ler o diário completo</button>
         <button class="btn" onclick="UI.modalRota()">Ver a rota que você percorreu</button>
       </div>
@@ -99149,11 +99161,20 @@ const Jogo = {
     Exploracao.tela(av || undefined);
   },
 
+  /* depois do último capítulo: de volta ao mapa, sem capítulo na frente */
+  continuarPelaEstrada(){
+    Estado.dados.modo = 'mundo';
+    Estado.salvar('auto');
+    Exploracao.tela();
+  },
+
   avancarCapitulo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
     const prox = Historia.proximoCapitulo(true);
     if (!prox){
-      return UI.telaFinal({titulo:'A JORNADA CONTINUA', texto:[
+      /* não é final: é o fim do que está escrito. O mundo continua aberto
+         (Liga, veteranos, Conferência, revanche), então a tela tem porta de volta */
+      return UI.telaFinal({titulo:'A JORNADA CONTINUA', continua:true, texto:[
         'Você chegou ao fim do que está escrito. O resto é estrada.',
         'Kanto continua exatamente do jeito que você deixou — e essa é a parte que importa.'
       ]});

@@ -715,11 +715,20 @@ const Jogo = {
     Exploracao.tela(av || undefined);
   },
 
+  /* depois do último capítulo: de volta ao mapa, sem capítulo na frente */
+  continuarPelaEstrada(){
+    Estado.dados.modo = 'mundo';
+    Estado.salvar('auto');
+    Exploracao.tela();
+  },
+
   avancarCapitulo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
     const prox = Historia.proximoCapitulo(true);
     if (!prox){
-      return UI.telaFinal({titulo:'A JORNADA CONTINUA', texto:[
+      /* não é final: é o fim do que está escrito. O mundo continua aberto
+         (Liga, veteranos, Conferência, revanche), então a tela tem porta de volta */
+      return UI.telaFinal({titulo:'A JORNADA CONTINUA', continua:true, texto:[
         'Você chegou ao fim do que está escrito. O resto é estrada.',
         'Kanto continua exatamente do jeito que você deixou — e essa é a parte que importa.'
       ]});
