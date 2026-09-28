@@ -73,6 +73,7 @@ const NOMES_FIXOS = {
   'a escrevente':              'Sra. Cybil',
   'o homem de barba':          'Curador Fabre',
   'a mulher de tailleur':      'Hester Colman',
+  'a mulher de trinta':        'Tessa Rue',
   'a mulher da marmita':       'Thea Larkin',
   'o rapaz da enfermaria':     'Janus',
   'o colega da enfermaria':    'Pascal',
@@ -176,6 +177,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   /* os nomes fixos daqui de cima */
   'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
+  'Tessa','Rue',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
   'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle'

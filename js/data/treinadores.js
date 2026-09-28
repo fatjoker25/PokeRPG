@@ -112,7 +112,7 @@ const RETRATO_POR_NOME = {
   'a moça do berçário':'trainers/pokemon_breeder_f', 'Livia Gale':'trainers/office_worker_f',
   'a editora do jornal':'trainers/reporter', 'Falk':'trainers/worker', 'Sr. Delmar':'overworld/policial',
   'Sr. Nolan':'trainers/worker', 'o cozinheiro':'trainers/chef', 'a supervisora':'trainers/league_staff_f',
-  'o conselheiro mais velho':'trainers/gentleman', 'Leo':'trainers/ace_trainer'
+  'o conselheiro mais velho':'trainers/gentleman', 'Leo':'trainers/ace_trainer', 'Tessa Rue':'trainers/pokemon_ranger_f', 'a mulher de trinta':'trainers/pokemon_ranger_f'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

@@ -708,7 +708,11 @@ c22_achou_equipe:{
     'Estão sentados numa depressão de pedra a quatrocentos metros do acampamento, os três, virados para o vale.',
     'Eles te veem chegar e não reagem muito. Um deles acena devagar.',
     d=>fala(d.jogador.nome, 'Faz quanto tempo que vocês estão aqui?'),
-    fala('a mulher de trinta', 'Não sei. Uma semana?', null, 'Quem responde é uma mulher de uns trinta, e os outros dois assentem.'),
+    /* o nome dela está na jaqueta da Liga: é a primeira coisa que tem
+       nome naquela pedra, e é o que a equipe esqueceu de usar */
+    d=>{ Nomes.apresentar('a mulher de trinta');
+         return 'Quem se vira pra responder é uma mulher de uns trinta anos, com a jaqueta da Liga fechada até o pescoço e uma fita de nome costurada no peito, desbotada de sol: **TESSA RUE · EQUIPE 3**.'; },
+    fala('a mulher de trinta', 'Não sei. Uma semana?', null, 'Os outros dois assentem.'),
     fala('a mulher de trinta', 'É. Parecia menos.'),
     'Eles não estão feridos, não estão drogados e não estão presos. Eles estão esperando, e não sabem dizer o quê, e quando você pergunta eles ficam sinceramente confusos com a pergunta.'
   ],
