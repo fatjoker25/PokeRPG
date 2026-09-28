@@ -464,7 +464,8 @@ HeartGold/SoulSilver (ícones de equipe); os ícones de item vêm do
 repositório de sprites da PokeAPI, assim como os discos de TM, as oito
 insígnias de Kanto e o ícone do mapa; os gritos são a versão das
 primeiras gerações do repositório de gritos da PokeAPI; os cenários de
-batalha (que também fazem o fundo de cada lugar) e os rostos de treinador vêm do
+batalha (que também fazem o fundo de cada lugar), os rostos de treinador e as
+imagens de efeito dos golpes vêm do
 [Pokémon Showdown](https://play.pokemonshowdown.com).
 As regras de combate são do Pokérole (Pokérole Project), e os atributos
 das espécies e as fichas dos golpes vêm do Pokerole-Data, mantido pela

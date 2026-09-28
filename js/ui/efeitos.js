@@ -29,6 +29,51 @@ const COR_EFEITO = {
 
 /* golpe que sacode o chão: a arena inteira treme */
 const GOLPES_DE_CHAO = new Set(['Earthquake', 'Magnitude', 'Fissure', 'Bulldoze']);
+/* golpe de raio: sai como feixe */
+const GOLPES_DE_RAIO = /Beam$|^Solar Beam$|^Psybeam$|^Hyper Beam$|^Swift$|^Tri Attack$/;
+/* golpe físico que é arremesso: sai como projétil do tipo */
+const PROJETEIS_FISICOS = /^(Razor Leaf|Rock Throw|Rock Slide|Pin Missile|Twineedle|Egg Bomb|Barrage|Spike Cannon|Sky Attack|Icicle Spear|Bullet Seed)$/;
+/* golpe de status que levanta proteção */
+const BARREIRAS = new Set(['Protect','Detect','Reflect','Light Screen','Barrier','Withdraw','Harden',
+  'Defense Curl','Acid Armor','Safeguard','Mist','Substitute','Iron Defense']);
+
+/* o projétil de cada tipo no golpe especial: imagem, quantos saem em
+   fila, tamanho, se gira, e o que estoura no alvo no fim */
+const FX_TIPO = {
+  Normal:     {img:'special_beam', n:1, tam:50},
+  Fogo:       {img:'special_fire', n:6, tam:26, fim:'special_fire_burst'},
+  'Água':     {img:'special_water', n:2, tam:54},
+  Grama:      {img:['special_grass', 'special_grass_2'], n:7, tam:26, gira:true},
+  'Elétrico': {img:'special_electric', n:1, tam:54, fim:'special_electric_bolt'},
+  Gelo:       {img:'special_ice_shard', n:5, tam:30, fim:'special_ice'},
+  Lutador:    {img:'physical_punch', n:1, tam:44, fim:'physical_tackle'},
+  Venenoso:   {img:'special_poison', n:3, tam:46, arco:-30},
+  Terrestre:  {img:'special_ground', n:3, tam:52},
+  Voador:     {img:'special_flying', n:3, tam:44},
+  'Psíquico': {img:'special_psychic', n:1, tam:64},
+  Inseto:     {img:'special_bug', n:5, tam:24, gira:true},
+  Pedra:      {img:['special_rock', 'special_rock_2', 'special_rock_3'], n:4, tam:28, cai:true},
+  Fantasma:   {img:'special_ghost', n:1, tam:64},
+  'Dragão':   {img:'special_dragon', n:7, tam:28, arco:-18},
+  Sombrio:    {img:'special_dark', n:1, tam:64},
+  'Metálico': {img:'special_steel', n:3, tam:32, gira:true}
+};
+
+/* como um golpe físico bate, pelo nome */
+function jeitoDeBater(nome){
+  if (/Bone/.test(nome)) return 'osso';
+  if (/Bite|Crunch|Fang/.test(nome)) return 'mordida';
+  if (/Kick|Stomp/.test(nome)) return 'chute';
+  if (/Punch|Chop|Submission|Seismic|Karate|Mach|Dynamic|Cross|Comet|Dizzy|Counter|Vital/.test(nome)) return 'soco';
+  if (/Slash|Cut|Scratch|Claw|Swipe|Cutter|Fury Attack/.test(nome)) return 'corte';
+  return 'investida';
+}
+
+/* caminho da imagem de efeito, trocado por data URI no arquivo único */
+function fxGolpe(arq){
+  const rel = SPRITES_BASE + 'animations/moves/' + arq + '.png';
+  return (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) || rel;
+}
 
 const ROTULO_STATUS = {
   paralisia:['PAR', 'paralisado'], queimadura:['BRN', 'queimado'], veneno:['PSN', 'envenenado'],
@@ -163,46 +208,67 @@ const Efeitos = {
   },
 
   /* ---------- golpes ----------
-     Cada tipo tem o seu desenho. Golpe de corpo (físico) avança antes e
-     o efeito do tipo acontece no alvo; golpe à distância (especial) sai
-     de quem usou e chega em quem recebe. Golpe de raio é um feixe da cor
-     do tipo, e o que sacode o chão sacode a arena inteira. */
+     As imagens são as de efeito de golpe do Pokémon Showdown, em
+     sprites_nds/animations/moves/ (os endereços do roteiro eram ícones
+     de item da PokeAPI: pedras evolutivas, X Attack, discos de TM).
+
+     Físico: o atacante avança 15 px, o golpe acontece no alvo pelo
+     jeito de bater (corte, soco, chute, mordida, osso, investida) e ele
+     volta. Especial: o atacante brilha 0,2 s na cor do tipo, o projétil
+     do tipo viaja até o alvo, e o alvo pisca em branco. Status: quem
+     sobe atributo solta partículas subindo; quem baixa, descendo. */
   async golpe(lado, nome){
     const g = GOLPES[nome] || {};
     const outro = lado === 'aliado' ? 'inimigo' : 'aliado';
-    const ef = g.ef || {};
-    if (g.c === 'status'){
-      /* golpe que sobe o próprio atributo abre o anel em quem usou */
-      const quem = (ef.sobe || ef.cura) ? lado : outro;
-      return this.anel(quem, COR_TIPO[g.t] || '#d8d8ff');
-    }
-    const fis = g.c === 'fis';
-    if (GOLPES_DE_CHAO.has(nome)) return this.terremoto(outro);
-    if (/Beam$|^Solar Beam$|^Psybeam$/.test(nome)) return this.feixe(lado, outro, COR_TIPO[g.t] || '#fff', g.t);
-    if (fis) await this.avancar(lado, outro);
-    const f = this.porTipo[g.t];
-    if (f) return f.call(this, lado, outro, fis);
-    return fis ? this.garras(outro) : this.orbe(lado, outro, COR_TIPO[g.t] || '#ffffff');
+    if (g.c === 'status') return this.golpeStatus(lado, outro, nome, g);
+    if (GOLPES_DE_CHAO.has(nome)) return this.terremoto(lado, outro);
+    /* físico que é arremesso (folha, pedra, ferrão) viaja como projétil */
+    if (g.c === 'fis' && !PROJETEIS_FISICOS.test(nome)) return this.golpeFisico(lado, outro, nome, g);
+    return this.golpeEspecial(lado, outro, nome, g);
   },
 
-  porTipo: {
-    Fogo(l, o){ return this.brasas(l, o); },
-    'Água'(l, o){ return this.jato(o); },
-    'Elétrico'(l, o){ return this.faisca(o); },
-    Normal(l, o, fis){ return fis ? Promise.all([this.garras(o), this.estrelas(o, '#fff7cf')]) : this.orbe(l, o, '#ffffff', true); },
-    Grama(l, o, fis){ return this.folhas(l, o, fis); },
-    Gelo(l, o){ return this.cristais(o); },
-    Lutador(l, o){ return this.impacto(o, '#ffb24a'); },
-    Venenoso(l, o, fis){ return this.veneno(l, o, fis); },
-    Terrestre(l, o){ return this.poeira(o, true); },
-    Voador(l, o, fis){ return fis ? Promise.all([this.estrelas(o, '#eef4ff'), this.vento(o, 1)]) : this.vento(o, 3); },
-    'Psíquico'(l, o){ return this.psiquico(o); },
-    Inseto(l, o){ return this.ferroes(l, o); },
-    Pedra(l, o){ return this.pedras(o); },
-    Fantasma(l, o){ return this.sombra(o); },
-    'Dragão'(l, o){ return this.dragao(l, o); },
-    Sombrio(l, o){ return Promise.all([this.garras(o, true), this.tingir(o, '#2a1f33', 420, 2, .7)]); },
-    'Metálico'(l, o){ return this.metal(o); }
+  /* imagem de efeito solta na camada, centrada em (x, y) */
+  fxImg(arq, x, y, tam, estilo){
+    const c = this.camada();
+    if (!c) return null;
+    const e = document.createElement('img');
+    e.className = 'fx fx-img';
+    e.src = fxGolpe(arq); e.alt = '';
+    e.onerror = () => e.remove();
+    Object.assign(e.style, {left:x + 'px', top:y + 'px', width:tam + 'px'}, estilo || {});
+    c.appendChild(e);
+    return e;
+  },
+  /* aparece no lugar, cresce um pouco e some */
+  estalo(arq, x, y, tam, ms, extra){
+    const e = this.fxImg(arq, x, y, tam, extra && extra.estilo);
+    const rot = (extra && extra.rot) || 0;
+    return this.soltar(e, [
+      {transform:`translate(-50%,-50%) rotate(${rot}deg) scale(.4)`, opacity:0},
+      {transform:`translate(-50%,-50%) rotate(${rot}deg) scale(1)`, opacity:1, offset:.3},
+      {transform:`translate(-50%,-50%) rotate(${rot}deg) scale(1.08)`, opacity:1, offset:.7},
+      {transform:`translate(-50%,-50%) rotate(${rot}deg) scale(1.2)`, opacity:0}], ms || 360, {delay:(extra && extra.delay) || 0});
+  },
+  /* de um ponto a outro, em linha (ou girando) */
+  voar(arq, de, para, tam, ms, extra){
+    const x = extra || {};
+    const e = this.fxImg(arq, de.x, de.y, tam);
+    const dx = para.x - de.x, dy = para.y - de.y;
+    const g0 = x.gira ? 0 : (x.ang || 0), g1 = x.gira ? 540 : (x.ang || 0);
+    const arco = x.arco || 0;
+    const q = [{transform:`translate(-50%,-50%) rotate(${g0}deg) scale(.7)`, opacity:0},
+               {transform:`translate(-50%,-50%) rotate(${g0}deg) scale(1)`, opacity:1, offset:.12}];
+    if (arco) q.push({transform:`translate(calc(-50% + ${dx / 2}px), calc(-50% + ${dy / 2 + arco}px)) rotate(${(g0 + g1) / 2}deg)`, opacity:1, offset:.5});
+    q.push({transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${g1}deg) scale(1)`, opacity:1, offset:.88},
+           {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${g1}deg) scale(1.3)`, opacity:0});
+    return this.soltar(e, q, ms || 420, {delay:x.delay || 0, easing:'linear'});
+  },
+  /* a tela inteira sacode: investida e golpe de chão */
+  sacudirTela(ms, amp){
+    const a = this.arena(), q = [];
+    for (let i = 0; i < 8; i++) q.push({transform:`translate(${i % 2 ? amp : -amp}px, ${i % 3 ? 2 : -2}px)`});
+    q.push({transform:'translate(0,0)'});
+    return this.tocar(a, q, ms || 360, {easing:'linear'});
   },
 
   /* corpo a corpo: avança 15 px na direção do alvo e volta */
@@ -214,285 +280,121 @@ const Efeitos = {
     await this.tocar(s, [{transform:'translate(0,0)'}, {transform:`translate(${dx}px,${dy}px)`},
                          {transform:'translate(0,0)'}], 260, {easing:'ease-in-out'});
   },
-  /* três riscos de garra no alvo (escuros no golpe Sombrio) */
-  async garras(outro, escura){
-    const u = this.alvo(outro);
-    if (!u) return;
-    await Promise.all([-12, 0, 12].map((d, i) => {
-      const e = this.particula('fx-garra' + (escura ? ' escura' : ''), u.cx + d - 4, u.cy - 22);
-      return this.soltar(e, [{transform:'rotate(28deg) scaleY(0)', opacity:1},
-                             {transform:'rotate(28deg) scaleY(1)', opacity:1, offset:.55},
-                             {transform:'rotate(28deg) scaleY(1)', opacity:0}], 300, {delay:i * 45});
-    }));
-  },
-  /* compatibilidade: quem chamava investida continua chamando */
-  async investida(lado, outro){ await this.avancar(lado, outro); return this.garras(outro); },
 
-  /* estrelinhas de impacto espirrando do ponto atingido */
-  estrelas(outro, cor){
-    const u = this.alvo(outro);
-    if (!u) return Promise.resolve();
-    return Promise.all([0, 1, 2, 3, 4].map(i => {
-      const ang = (i / 5) * Math.PI * 2 + .4, r = 30;
-      const e = this.particula('fx-estrela', u.cx, u.cy, {background:cor});
-      return this.soltar(e, [{transform:'translate(-50%,-50%) scale(.4)', opacity:1},
-        {transform:`translate(calc(-50% + ${Math.cos(ang) * r}px), calc(-50% + ${Math.sin(ang) * r}px)) scale(1.3)`, opacity:0}],
-        380, {delay:i * 20});
-    }));
-  },
-  /* explosão de impacto: estrela grande que abre e some, e o alvo sacode */
-  impacto(outro, cor){
-    const u = this.alvo(outro);
-    if (!u) return Promise.resolve();
-    const e = this.particula('fx-impacto', u.cx, u.cy, {background:`radial-gradient(circle,#fff 0 25%,${cor} 55%,transparent 70%)`});
-    return Promise.all([
-      this.soltar(e, [{transform:'translate(-50%,-50%) scale(.2) rotate(0deg)', opacity:1},
-                      {transform:'translate(-50%,-50%) scale(1.1) rotate(20deg)', opacity:1, offset:.45},
-                      {transform:'translate(-50%,-50%) scale(1.4) rotate(30deg)', opacity:0}], 380),
-      this.tremer(outro, 380, 8), this.estrelas(outro, cor)]);
+  async golpeFisico(lado, outro, nome, g){
+    const u = this.alvo(outro), t = this.alvo(lado);
+    if (!u || !t) return;
+    await this.avancar(lado, outro);
+    const jeito = jeitoDeBater(nome);
+    const passos = [];
+    if (jeito === 'corte'){
+      const garra = /Scratch|Claw|Swipe/.test(nome);
+      /* o traço é escuro: contorno claro, senão some em cima de silhueta */
+      const claro = {filter:'drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px rgba(255,255,255,.8))'};
+      passos.push(this.estalo(garra ? 'physical_scratch' : 'physical_slash', u.cx + 8, u.cy - 4, 60, 320, {estilo:claro}),
+                  this.estalo(garra ? 'physical_scratch_2' : 'physical_slash_2', u.cx - 8, u.cy + 4, 60, 320, {delay:110, estilo:claro}));
+    } else if (jeito === 'soco' || jeito === 'chute'){
+      passos.push(this.estalo('physical_tackle', u.cx, u.cy, 88, 360, {estilo:{opacity:.8}}),
+                  this.estalo(jeito === 'soco' ? 'physical_punch' : 'physical_kick', u.cx, u.cy, 50, 380),
+                  this.tremer(outro, 380, 7));
+    } else if (jeito === 'mordida'){
+      const cima = this.fxImg('physical_bite_top', u.cx, u.cy - 34, 84), baixo = this.fxImg('physical_bite_bottom', u.cx, u.cy + 34, 84);
+      const fecha = (e, dy) => this.soltar(e, [{transform:'translate(-50%,-50%)', opacity:0},
+        {transform:'translate(-50%,-50%)', opacity:1, offset:.25},
+        {transform:`translate(-50%, calc(-50% + ${dy}px))`, opacity:1, offset:.6},
+        {transform:`translate(-50%, calc(-50% + ${dy}px))`, opacity:0}], 380, {easing:'ease-in'});
+      passos.push(fecha(cima, 22), fecha(baixo, -22), this.esperar(220).then(() => this.tremer(outro, 280, 5)));
+    } else if (jeito === 'osso'){
+      passos.push(this.voar('physical_bone', {x:t.cx, y:t.cy}, {x:u.cx, y:u.cy}, 34, 420, {gira:true}),
+                  this.esperar(380).then(() => this.estalo('physical_tackle', u.cx, u.cy, 70, 300)));
+    } else {
+      /* investida: impacto no alvo e a tela treme */
+      passos.push(this.estalo('physical_tackle', u.cx, u.cy, 92, 360), this.sacudirTela(340, 5), this.tremer(outro, 340, 6));
+    }
+    /* o tipo aparece no golpe de corpo também: Fire Punch pega fogo */
+    const fx = FX_TIPO[g.t];
+    if (g.t !== 'Normal' && fx){
+      const arq = fx.fim || (Array.isArray(fx.img) ? fx.img[0] : fx.img);
+      passos.push(this.esperar(140).then(() => Promise.all([
+        this.estalo(arq, u.cx, u.cy, Math.min(64, (fx.tam || 30) * 1.4), 380),
+        this.tingir(outro, COR_TIPO[g.t] || '#fff', 360, 2, .45)])));
+    }
+    await Promise.all(passos);
   },
 
-  /* grama: folhas girando do atacante ao alvo; no corpo a corpo, o
-     chicote cruza o alvo e as folhas espirram dele */
-  async folhas(lado, outro, fis){
+  async golpeEspecial(lado, outro, nome, g){
     const t = this.alvo(lado), u = this.alvo(outro);
     if (!t || !u) return;
-    const voo = [];
-    if (fis){
-      [0, 1].forEach(i => {
-        const e = this.particula('fx-chicote', u.cx, u.cy);
-        voo.push(this.soltar(e, [{transform:`translate(-50%,-50%) rotate(${i ? 35 : -35}deg) scaleX(0)`, opacity:1},
-                                 {transform:`translate(-50%,-50%) rotate(${i ? 35 : -35}deg) scaleX(1)`, opacity:1, offset:.5},
-                                 {transform:`translate(-50%,-50%) rotate(${i ? 35 : -35}deg) scaleX(1)`, opacity:0}], 320, {delay:i * 120}));
-      });
-    }
-    for (let i = 0; i < (fis ? 4 : 7); i++){
-      const de = fis ? u : t, y0 = (i % 3 - 1) * 14;
-      const e = this.particula('fx-folha', de.cx, de.cy + y0);
-      const dx = fis ? (i % 2 ? 1 : -1) * (30 + i * 6) : u.cx - t.cx, dy = fis ? -20 - i * 6 : u.cy - t.cy - y0;
-      voo.push(this.soltar(e, [
-        {transform:'translate(-50%,-50%) rotate(0deg) scale(.7)', opacity:0},
-        {transform:'translate(-50%,-50%) rotate(120deg) scale(1)', opacity:1, offset:.15},
-        {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${540 + i * 40}deg) scale(1)`, opacity:1, offset:.88},
-        {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${600 + i * 40}deg) scale(.6)`, opacity:0}
-      ], 520, {delay:i * 55, easing:'ease-in'}));
-    }
-    await Promise.all([...voo, this.esperar(fis ? 200 : 420).then(() => this.tingir(outro, '#4CC44C', 360, 2, .55))]);
-  },
-
-  /* gelo: cristais vindo de todos os lados e fechando no alvo, que fica azul */
-  async cristais(outro){
-    const u = this.alvo(outro);
-    if (!u) return;
-    const c = [0, 1, 2, 3, 4, 5].map(i => {
-      const ang = (i / 6) * Math.PI * 2, r = 58;
-      const e = this.particula('fx-cristal', u.cx + Math.cos(ang) * r, u.cy + Math.sin(ang) * r);
-      return this.soltar(e, [{transform:`translate(-50%,-50%) rotate(${i * 60}deg) scale(.5)`, opacity:0},
-        {transform:`translate(-50%,-50%) rotate(${i * 60 + 45}deg) scale(1)`, opacity:1, offset:.3},
-        {transform:`translate(calc(-50% + ${-Math.cos(ang) * r}px), calc(-50% + ${-Math.sin(ang) * r}px)) rotate(${i * 60 + 90}deg) scale(.8)`, opacity:1, offset:.85},
-        {transform:`translate(calc(-50% + ${-Math.cos(ang) * r}px), calc(-50% + ${-Math.sin(ang) * r}px)) scale(1.5)`, opacity:0}],
-        480, {delay:i * 35, easing:'ease-in'});
-    });
-    await Promise.all([...c, this.esperar(380).then(() => this.tingir(outro, COR_EFEITO.gelo, 460, 1, .75))]);
-  },
-
-  /* veneno: gotas roxas em arco até o alvo (ou borbulhando nele) */
-  async veneno(lado, outro, fis){
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const p = [];
-    for (let i = 0; i < 5; i++){
-      if (fis){
-        const e = this.particula('fx-bolha', u.cx - 22 + i * 11, u.cy + (i % 2) * 10);
-        p.push(this.soltar(e, [{transform:'translate(-50%,-50%) scale(.3)', opacity:0},
-          {transform:'translate(-50%,-50%) scale(1.2)', opacity:1, offset:.4},
-          {transform:'translate(-50%,calc(-50% - 24px)) scale(.8)', opacity:0}], 520, {delay:i * 50}));
-      } else {
-        const e = this.particula('fx-bolha', t.cx, t.cy);
-        const dx = u.cx - t.cx, dy = u.cy - t.cy, arco = -40 - i * 6;
-        p.push(this.soltar(e, [{transform:'translate(-50%,-50%) scale(.6)', opacity:0},
-          {transform:`translate(calc(-50% + ${dx * .5}px), calc(-50% + ${dy * .5 + arco}px)) scale(1.2)`, opacity:1, offset:.5},
-          {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1.4)`, opacity:1, offset:.92},
-          {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(2)`, opacity:0}], 520, {delay:i * 60, easing:'linear'}));
+    const cor = COR_TIPO[g.t] || '#ffffff';
+    /* 1. quem usa brilha na cor do tipo por 0,2 s */
+    await this.tingir(lado, cor, 200, 1, .7);
+    const fx = FX_TIPO[g.t] || FX_TIPO.Normal;
+    const de = {x:t.cx, y:t.cy}, para = {x:u.cx, y:u.cy};
+    const imgs = Array.isArray(fx.img) ? fx.img : [fx.img];
+    const viagem = [];
+    /* 2. o projétil viaja até o alvo */
+    if (GOLPES_DE_RAIO.test(nome)){
+      /* feixe: uma fila cerrada do projétil do tipo, rápida */
+      const arq = g.t === 'Normal' ? 'special_beam' : imgs[0];
+      for (let i = 0; i < 12; i++) viagem.push(this.voar(arq, de, para, fx.tam > 40 ? 40 : fx.tam + 6, 300, {delay:i * 28}));
+    } else if (fx.cai){
+      /* pedra cai de cima do alvo, não vem do atacante */
+      for (let i = 0; i < fx.n; i++){
+        const x = u.cx - 24 + i * 16;
+        viagem.push(this.voar(imgs[i % imgs.length], {x, y:u.topo - 70}, {x, y:u.cy}, fx.tam, 400, {delay:i * 90, gira:true}));
+      }
+    } else {
+      for (let i = 0; i < fx.n; i++){
+        const oy = fx.n > 1 ? (i % 3 - 1) * 12 : 0;
+        viagem.push(this.voar(imgs[i % imgs.length], {x:de.x, y:de.y + oy}, {x:para.x, y:para.y - oy}, fx.tam,
+          fx.n > 1 ? 440 : 480, {delay:i * 60, gira:fx.gira, arco:fx.arco || 0}));
       }
     }
-    await Promise.all([...p, this.esperar(360).then(() => this.tingir(outro, COR_EFEITO.veneno, 420, 2, .55))]);
+    await Promise.all(viagem);
+    /* 3. o alvo pisca em branco por dois quadros, com o fecho do tipo */
+    const fecho = fx.fim ? this.estalo(fx.fim, u.cx, g.t === 'Elétrico' ? u.cy - 10 : u.cy, g.t === 'Elétrico' ? 46 : 70, 420) : Promise.resolve();
+    await Promise.all([fecho, this.tingir(outro, '#ffffff', 140, 2, .95)]);
   },
 
-  /* terra: nuvem de poeira no pé do alvo; `chao` sacode a arena */
-  async poeira(outro, chao){
-    const u = this.alvo(outro);
-    if (!u) return;
-    const p = [0, 1, 2, 3, 4, 5].map(i => {
-      const e = this.particula('fx-poeira', u.cx - 30 + i * 12, u.pe);
-      return this.soltar(e, [{transform:'translate(-50%,-50%) scale(.3)', opacity:.9},
-        {transform:`translate(calc(-50% + ${(i - 2.5) * 6}px), calc(-50% - ${14 + (i % 3) * 8}px)) scale(1.4)`, opacity:0}], 560, {delay:i * 30});
-    });
-    const sacode = chao ? this.tremer(outro, 420, 7) : Promise.resolve();
-    await Promise.all([...p, sacode, this.tingir(outro, '#b0863a', 420, 1, .45)]);
-  },
-  /* Earthquake e parentes: o chão inteiro treme, e os dois sentem */
-  async terremoto(outro){
-    const a = this.arena();
-    const q = [];
-    for (let i = 0; i < 8; i++) q.push({transform:`translate(${i % 2 ? 6 : -6}px, ${i % 3 ? 2 : -2}px)`});
-    q.push({transform:'translate(0,0)'});
-    await Promise.all([this.tocar(a, q, 620, {easing:'linear'}), this.poeira(outro, false)]);
-  },
-
-  /* vento: lâminas de ar cortando o alvo na horizontal */
-  vento(outro, n){
-    const u = this.alvo(outro);
-    if (!u) return Promise.resolve();
-    return Promise.all(Array.from({length:n}, (_, i) => {
-      const y = u.cy - 18 + i * 18;
-      const e = this.particula('fx-vento', u.cx - 70, y);
-      return this.soltar(e, [{transform:'translate(-50%,-50%) scaleX(.3)', opacity:0},
-        {transform:'translate(-50%,-50%) scaleX(1)', opacity:1, offset:.3},
-        {transform:'translate(calc(-50% + 140px),-50%) scaleX(1)', opacity:0}], 420, {delay:i * 90, easing:'ease-in'});
-    }).concat([this.tremer(outro, 300, 4)]));
-  },
-
-  /* psíquico: anéis rosa pulsando para dentro, e o alvo ondula */
-  async psiquico(outro){
-    const u = this.alvo(outro), s = this.sprite(outro);
-    if (!u) return;
-    const an = [0, 1, 2].map(i => {
-      const e = this.particula('fx-anel', u.cx, u.cy, {borderColor:'#ff6fae', boxShadow:'0 0 12px #ff6fae'});
-      return this.soltar(e, [{transform:'translate(-50%,-50%) scale(1.5)', opacity:0},
-        {transform:'translate(-50%,-50%) scale(1)', opacity:.95, offset:.4},
-        {transform:'translate(-50%,-50%) scale(.2)', opacity:0}], 520, {delay:i * 140});
-    });
-    const onda = this.tocar(s, [{transform:'skewX(0)'}, {transform:'skewX(10deg)'}, {transform:'skewX(-10deg)'},
-      {transform:'skewX(6deg)'}, {transform:'skewX(0)'}], 620, {easing:'ease-in-out'});
-    await Promise.all([...an, onda, this.tingir(outro, '#ff6fae', 560, 2, .5)]);
-  },
-
-  /* inseto: ferrões rápidos em rajada até o alvo */
-  async ferroes(lado, outro){
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const dx = u.cx - t.cx, dy = u.cy - t.cy, ang = Math.atan2(dy, dx) * 180 / Math.PI;
-    const f = [0, 1, 2, 3, 4].map(i => {
-      const oy = (i % 3 - 1) * 10;
-      const e = this.particula('fx-ferrao', t.cx, t.cy + oy);
-      return this.soltar(e, [{transform:`translate(-50%,-50%) rotate(${ang}deg)`, opacity:0},
-        {transform:`translate(-50%,-50%) rotate(${ang}deg)`, opacity:1, offset:.1},
-        {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy - oy}px)) rotate(${ang}deg)`, opacity:1, offset:.9},
-        {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy - oy}px)) rotate(${ang}deg)`, opacity:0}], 300, {delay:i * 70, easing:'linear'});
-    });
-    await Promise.all([...f, this.esperar(260).then(() => Promise.all([this.tremer(outro, 320, 4), this.tingir(outro, '#9cc02a', 320, 2, .5)]))]);
-  },
-
-  /* pedra: pedras caindo de cima no alvo, e ele sacode */
-  async pedras(outro){
-    const u = this.alvo(outro);
-    if (!u) return;
-    const p = [-22, 4, 22, -6].map((dx, i) => {
-      const e = this.particula('fx-pedra', u.cx + dx, u.topo - 60);
-      return this.soltar(e, [{transform:'translate(-50%,-50%) rotate(0deg)', opacity:0},
-        {transform:'translate(-50%,-50%) rotate(40deg)', opacity:1, offset:.15},
-        {transform:`translate(-50%, calc(-50% + ${u.cy - u.topo + 60}px)) rotate(160deg)`, opacity:1, offset:.8},
-        {transform:`translate(-50%, calc(-50% + ${u.cy - u.topo + 50}px)) rotate(180deg) scale(.6)`, opacity:0}], 460, {delay:i * 90, easing:'ease-in'});
-    });
-    await Promise.all([...p, this.esperar(400).then(() => Promise.all([this.tremer(outro, 380, 7), this.poeira(outro, false)]))]);
-  },
-
-  /* fantasma: sombra roxa subindo em volta do alvo, que some pela metade */
-  async sombra(outro){
-    const u = this.alvo(outro), s = this.sprite(outro);
-    if (!u) return;
-    const p = [0, 1, 2, 3, 4].map(i => {
-      const e = this.particula('fx-sombra', u.cx - 26 + i * 13, u.pe);
-      return this.soltar(e, [{transform:'translate(-50%,-50%) scale(.5)', opacity:0},
-        {transform:'translate(-50%,calc(-50% - 20px)) scale(1.2)', opacity:.85, offset:.4},
-        {transform:`translate(-50%,calc(-50% - ${u.h * .5}px)) scale(1.6)`, opacity:0}], 700, {delay:i * 70});
-    });
-    const some = this.tocar(s, [{opacity:1}, {opacity:.35}, {opacity:1}], 700, {easing:'ease-in-out'});
-    await Promise.all([...p, some, this.tingir(outro, '#3a2a6a', 640, 1, .6)]);
-  },
-
-  /* dragão: chama azul-violeta viajando em onda até o alvo */
-  async dragao(lado, outro){
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const dx = u.cx - t.cx, dy = u.cy - t.cy;
-    const v = [0, 1, 2, 3, 4, 5, 6].map(i => {
-      const e = this.particula('fx-dragao', t.cx, t.cy);
-      const q = [];
-      for (let k = 0; k <= 4; k++){
-        const f = k / 4, onda = Math.sin(f * Math.PI * 2 + i * .6) * 16;
-        q.push({transform:`translate(calc(-50% + ${dx * f}px), calc(-50% + ${dy * f + onda}px)) scale(${.6 + f * .8})`, opacity:k === 0 || k === 4 ? 0 : 1});
-      }
-      return this.soltar(e, q, 560, {delay:i * 50, easing:'linear'});
-    });
-    await Promise.all([...v, this.esperar(480).then(() => this.tingir(outro, '#6a5cff', 420, 2, .6))]);
-  },
-
-  /* metálico: lâmina prateada cruzando o alvo e um brilho */
-  async metal(outro){
-    const u = this.alvo(outro);
-    if (!u) return;
-    const l = [0, 1].map(i => {
-      const e = this.particula('fx-lamina', u.cx, u.cy);
-      return this.soltar(e, [{transform:`translate(-50%,-50%) rotate(${i ? -40 : 40}deg) scaleX(0)`, opacity:1},
-        {transform:`translate(-50%,-50%) rotate(${i ? -40 : 40}deg) scaleX(1)`, opacity:1, offset:.5},
-        {transform:`translate(-50%,-50%) rotate(${i ? -40 : 40}deg) scaleX(1.1)`, opacity:0}], 320, {delay:i * 110});
-    });
-    await Promise.all([...l, this.estrelas(outro, '#e8eef6'), this.tingir(outro, '#d8dee8', 360, 2, .6)]);
-  },
-
-  /* raio: feixe reto da cor do tipo, do atacante ao alvo */
-  async feixe(lado, outro, cor, tipo){
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const dx = u.cx - t.cx, dy = u.cy - t.cy;
-    const comp = Math.hypot(dx, dy), ang = Math.atan2(dy, dx) * 180 / Math.PI;
-    const e = this.particula('fx-feixe', t.cx, t.cy, {width:comp + 'px',
-      background:`linear-gradient(180deg, transparent, ${cor} 30%, #fff 50%, ${cor} 70%, transparent)`,
-      boxShadow:`0 0 12px ${cor}`, transform:`translate(0,-50%) rotate(${ang}deg)`});
-    const f = this.soltar(e, [{transform:`translate(0,-50%) rotate(${ang}deg) scaleX(0)`, opacity:1},
-      {transform:`translate(0,-50%) rotate(${ang}deg) scaleX(1)`, opacity:1, offset:.35},
-      {transform:`translate(0,-50%) rotate(${ang}deg) scaleX(1) scaleY(1.4)`, opacity:1, offset:.75},
-      {transform:`translate(0,-50%) rotate(${ang}deg) scaleX(1) scaleY(.2)`, opacity:0}], 640, {easing:'ease-out'});
-    const reacao = tipo === 'Gelo' ? this.tingir(outro, COR_EFEITO.gelo, 500, 1, .7)
-                 : Promise.all([this.tremer(outro, 400, 6), this.tingir(outro, cor, 460, 2, .55)]);
-    await Promise.all([f, this.esperar(220).then(() => reacao)]);
-  },
-
-  /* fogo: brasas repetidas em linha reta, do atacante ao alvo, e um
-     clarão vermelho no alvo quando chegam */
-  async brasas(lado, outro){
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const voo = [];
-    for (let i = 0; i < 6; i++){
-      const e = this.particula('fx-brasa', t.cx, t.cy);
-      voo.push(this.soltar(e, [
-        {transform:'translate(-50%,-50%) scale(.6)', opacity:0},
-        {transform:'translate(-50%,-50%) scale(1)', opacity:1, offset:.15},
-        {transform:`translate(calc(-50% + ${u.cx - t.cx}px), calc(-50% + ${u.cy - t.cy}px)) scale(1.2)`, opacity:1, offset:.9},
-        {transform:`translate(calc(-50% + ${u.cx - t.cx}px), calc(-50% + ${u.cy - t.cy}px)) scale(1.6)`, opacity:0}
-      ], 420, {delay:i * 70, easing:'linear'}));
+  async golpeStatus(lado, outro, nome, g){
+    const ef = g.ef || {};
+    const eu = this.alvo(lado), ele = this.alvo(outro);
+    if (!eu || !ele) return;
+    const passos = [];
+    if (BARREIRAS.has(nome) || ['proteger', 'reflexo', 'tela', 'salvaguarda', 'substituto', 'nevoa'].includes(ef.acao)){
+      passos.push(this.estalo('status_barrier', eu.cx, eu.cy, 70, 620, {estilo:{opacity:.85}}), this.anel(lado, COR_TIPO[g.t] || '#d8d8ff'));
     }
-    await this.esperar(420);
-    await Promise.all([...voo, this.tingir(outro, COR_EFEITO.fogo, 360, 2, .65)]);
+    if (/^(Leer|Glare|Scary Face|Mean Look)$/.test(nome)) passos.push(this.estalo('status_stare', ele.cx, ele.topo + 10, 84, 520));
+    if (/^(Attract|Charm|Sweet Kiss|Lovely Kiss)$/.test(nome)) passos.push(this.subir(outro, 'status_heart', 5, 22, false));
+    if (/^(String Shot|Spider Web)$/.test(nome)) passos.push(this.estalo('status_web', ele.cx, ele.cy, 90, 620));
+    if (nome === 'Swords Dance') passos.push(this.estalo('status_sword', eu.cx, eu.cy - 10, 30, 520, {rot:0}), this.estalo('status_sword', eu.cx, eu.cy - 10, 30, 520, {rot:90, delay:120}));
+    if (ef.sobe) passos.push(this.subir(lado, 'stat_boost', 6, 22, false, '#6fe0ff'));
+    if (ef.baixa) passos.push(this.subir(outro, 'stat_drop', 6, 18, true, '#ff7a3a'));
+    if (ef.cura) passos.push(this.cura(lado));
+    if (!passos.length) passos.push(this.anel(ef.sobe || ef.cura ? lado : outro, COR_TIPO[g.t] || '#d8d8ff'));
+    await Promise.all(passos);
   },
-
-  /* água: jato que cresce de 0 a 100% no centro do alvo, com ondulação */
-  async jato(outro){
+  /* partículas subindo (atributo que sobe) ou descendo (que cai) */
+  subir(lado, arq, n, tam, desce, brilho){
+    const u = this.alvo(lado);
+    if (!u) return Promise.resolve();
+    const tinta = brilho ? this.tingir(lado, brilho, 520, 1, .35) : Promise.resolve();
+    return Promise.all([tinta, ...Array.from({length:n}, (_, i) => {
+      const x = u.cx - 30 + (i * 13) % 60;
+      const y0 = desce ? u.topo : u.pe - 4, y1 = desce ? u.pe : u.topo;
+      const e = this.fxImg(arq, x, y0, tam, brilho ? {filter:`drop-shadow(0 0 5px ${brilho})`} : null);
+      return this.soltar(e, [{transform:'translate(-50%,-50%) scale(.6)', opacity:0},
+        {transform:'translate(-50%,-50%) scale(1)', opacity:1, offset:.25},
+        {transform:`translate(-50%, calc(-50% + ${y1 - y0}px)) scale(.8)`, opacity:0}], 640, {delay:i * 70});
+    })]);
+  },
+  /* Earthquake e parentes: o chão inteiro treme, e sobe lama no alvo */
+  async terremoto(lado, outro){
     const u = this.alvo(outro);
-    if (!u) return;
-    const e = this.particula('fx-agua', u.cx, u.cy);
-    const ondas = [0, 1, 2].map(i => {
-      const o = this.particula('fx-onda', u.cx, u.cy);
-      return this.soltar(o, [{transform:'translate(-50%,-50%) scale(.2)', opacity:.9},
-                             {transform:'translate(-50%,-50%) scale(1.5)', opacity:0}], 520, {delay:180 + i * 120});
-    });
-    await Promise.all([this.soltar(e, [
-      {transform:'translate(-50%,-50%) scale(0)', opacity:.95},
-      {transform:'translate(-50%,-50%) scale(1)', opacity:.95, offset:.55},
-      {transform:'translate(-50%,-50%) scale(1.05)', opacity:0}], 560), ...ondas]);
+    await Promise.all([this.sacudirTela(620, 6),
+      u ? this.estalo('special_ground', u.cx, u.pe - 6, 96, 620) : Promise.resolve(),
+      this.tremer(outro, 620, 6)]);
+    await this.tingir(outro, '#ffffff', 140, 2, .95);
   },
 
   /* elétrico: faísca piscando em amarelo em cima do alvo, e ele treme */
@@ -518,19 +420,6 @@ const Efeitos = {
                              {transform:'translate(-50%,-50%) scale(1.25)', opacity:0}], 620, {delay:i * 160});
     });
     await Promise.all(an);
-  },
-
-  /* especial de outros tipos: uma esfera da cor do tipo, do atacante ao alvo */
-  async orbe(lado, outro, cor, clarao){
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const e = this.particula('fx-orbe', t.cx, t.cy, {background:`radial-gradient(circle, #fff 0 22%, ${cor} 48%, transparent 72%)`});
-    await this.soltar(e, [
-      {transform:'translate(-50%,-50%) scale(.5)', opacity:0},
-      {transform:'translate(-50%,-50%) scale(1)', opacity:1, offset:.2},
-      {transform:`translate(calc(-50% + ${u.cx - t.cx}px), calc(-50% + ${u.cy - t.cy}px)) scale(1.1)`, opacity:1, offset:.85},
-      {transform:`translate(calc(-50% + ${u.cx - t.cx}px), calc(-50% + ${u.cy - t.cy}px)) scale(2)`, opacity:0}], 460, {easing:'ease-in'});
-    if (clarao) await this.estrelas(outro, '#ffffff');
   },
 
   /* ---------- cura: brilho verde subindo e tinta verde clara ---------- */

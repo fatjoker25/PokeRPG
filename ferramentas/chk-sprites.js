@@ -47,7 +47,11 @@ for (const a of tmArq) if (!fs.existsSync(path.join(raiz, base, 'items/tms', 'tm
 let gritos = 0;
 for (let i = 1; i <= 251; i++) if (fs.existsSync(path.join(raiz, 'sons/gritos', i + '.ogg'))) gritos++;
 if (gritos < 251) falhas.push(`sons/gritos: ${gritos} de 251`);
-linhas.push(`  rostos ${rostos.size} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos}`);
+/* imagens de efeito de golpe: todo nome citado em efeitos.js tem arquivo */
+const fxSrc = fs.readFileSync(path.join(raiz, 'js/ui/efeitos.js'), 'utf8');
+const fxArq = [...new Set([...fxSrc.matchAll(/'((?:physical|special|stat|status)_[a-z_0-9]+)'/g)].map(m => m[1]))];
+for (const a of fxArq) if (!fs.existsSync(path.join(raiz, base, 'animations/moves', a + '.png'))) falhas.push(`efeito ${a}.png não existe em animations/moves/`);
+linhas.push(`  rostos ${rostos.size} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length}`);
 
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));

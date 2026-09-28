@@ -264,15 +264,23 @@ Consequências:
 - `atualizarArena` marca `.fixo` quem já estava lá, pra arte não "entrar"
   de novo a cada turno.
 
-Cada tipo tem o seu desenho (`Efeitos.porTipo`): golpe físico avança
-antes e o efeito do tipo acontece no alvo; especial sai de quem usou.
-Golpe de raio (`…Beam`) é feixe da cor do tipo, e `GOLPES_DE_CHAO`
-sacode a arena inteira. Tipo novo sem entrada cai nas garras (físico) ou
-na esfera da cor do tipo (especial) — funciona, mas fica genérico.
+Golpe é **imagem de efeito do Showdown** (`sprites_nds/animations/moves/`,
+`play.pokemonshowdown.com/fx/`), com os nomes de arquivo do roteiro
+(`physical_scratch`, `special_fire`, `stat_boost`…). Os endereços dos
+roteiros eram **ícones de item da PokeAPI** — Fire Stone, X Attack, disco
+de TM, Potion — e isso já aconteceu três vezes: link de
+`sprites/items/` nunca é animação. Confere a imagem antes de usar.
 
-Os efeitos são **desenhados em CSS**: os endereços de efeito dos roteiros
-(fire_slash, water_beam, heal_sparkle, status_burn…) eram ícones de item
-da PokeAPI — Fire Stone, Water Stone, Potion, Burn Heal. Cor por cima do
+A rotina (`Efeitos.golpe`): físico avança 15 px e bate pelo jeito
+(`jeitoDeBater`: corte, soco, chute, mordida, osso, investida com a tela
+tremendo), mais o estalo do tipo se não for Normal; especial faz quem usou
+brilhar 0,2 s na cor do tipo, o projétil de `FX_TIPO` viaja e o alvo pisca
+branco; status solta `stat_boost` subindo em quem sobe e `stat_drop`
+descendo em quem cai. Físico que é arremesso (`PROJETEIS_FISICOS`) vai
+como projétil; raio (`GOLPES_DE_RAIO`) é fila cerrada; `GOLPES_DE_CHAO`
+sacode a arena. Tipo novo precisa de entrada em `FX_TIPO`.
+
+Condição, cura e clima continuam **desenhados em CSS**. Cor por cima do
 Pokémon é clone sem `.sprite`, pintado por filtro SVG que só lê o alfa
 (`Efeitos.filtroDeCor`), então silhueta continua silhueta.
 
