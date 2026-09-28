@@ -155,7 +155,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Amos','Brill','Cleo','Colman','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
-  'Arden','Hart','Tanner',
+  'Arden','Hart','Tanner','Tobin',
   /* o resto do elenco escrito, que só aparece em npc:{} e narração */
   'Ada','Arlo','Beatrix','Berto','Cosmo','Cybil','Dahl','Delmar','Dorian','Edda','Edric',
   'Elias','Falk','Fenna','Fenwick','Gale','Greta','Hedda','Hedda','Hollis','Isolde','Janus',
