@@ -43,7 +43,7 @@ c17_ab_no_quadro:{
     {texto:'Falar com a mulher que não achou o nome dela.', vai:'c17_ab_a_mulher_do_mural'},
     {texto:'Arrancar a folha e levar.', vai:'c17_ab_arrancou_a_folha'},
     {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
@@ -69,7 +69,7 @@ c17_ab_a_mulher_do_mural:{
   escolhas:[
     {texto:'Anotar os trinta e um nomes antes de sair.', vai:'c17_ab_arrancou_a_folha'},
     {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']},
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
   ]
 },
@@ -86,7 +86,7 @@ c17_ab_arrancou_a_folha:{
       registrar:'Está com a folha de convocação arrancada do mural: 31 nomes e o aviso dos postos desguarnecidos.'},
   escolhas:[
     {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']},
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler o envelope que a atendente separou pra você.', vai:'c17_envelope'}
   ]
 },
@@ -116,7 +116,7 @@ c17_ab_sem_insignias:{
     {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
     {texto:'Perguntar quem assinou o carimbo.', vai:'c17_ab_o_carimbo'},
     {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
@@ -139,7 +139,7 @@ c17_ab_o_carimbo:{
   escolhas:[
     {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
     {texto:'Seguir sozinh{o|a} pela Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
@@ -164,7 +164,7 @@ c17_ab_de_cracha:{
     {texto:'Ler a convocação normal também.', vai:'c17_leu_o_envelope'},
     {texto:'Tentar descobrir quem pôs o bilhete no malote.', vai:'c17_ab_quem_pos'},
     {texto:'Subir a Rota 23 com isso na cabeça.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
@@ -188,7 +188,7 @@ c17_ab_quem_pos:{
       registrar:'O malote foi lacrado no Planalto vinte minutos antes de o responsável pelo turno chegar.'},
   escolhas:[
     {texto:'Subir a Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']},
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler a convocação normal antes.', vai:'c17_leu_o_envelope'}
   ]
 },
@@ -215,7 +215,7 @@ c17_ab_o_oficial:{
     {texto:'Perguntar quem mandou ele te esperar aqui.', vai:'c17_ab_quem_mandou'},
     {texto:'Ler o envelope inteiro, inclusive a segunda folha.', vai:'c17_leu_o_envelope'},
     {texto:'Subir a Rota 23 sem dizer nada.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
@@ -240,12 +240,33 @@ c17_ab_quem_mandou:{
   escolhas:[
     {texto:'Ler o envelope inteiro.', vai:'c17_leu_o_envelope'},
     {texto:'Subir a Rota 23.', vai:'c17_rota23', cond:d=>!d.npcs['Ezra']},
-    {texto:'Ir direto para o Planalto.', vai:'c17_pulou', cond:d=>!!d.npcs['Ezra']}
+    {texto:'Sair do Centro.', vai:'c17_ezra_na_porta', cond:d=>!!d.npcs['Ezra']}
   ]
 },
 
 
+c17_ezra_na_porta:{
+  falante:'Ezra',
+  vozes:['N','N'],
+  texto:[
+    'Do lado de fora do Centro, encostado no poste, tem um garoto que está te esperando há pelo menos uma hora.',
+    d=>{
+      const t=d.npcs['Ezra'] || {};
+      if (t.opiniao>=3) return '"Eu sabia que você ia passar por aqui." Ezra fala rápido demais, do jeito dele. "Cara, eu preciso te mostrar uma coisa e você vai achar que eu tô louco."';
+      if (t.opiniao<=-2) return '"Não vim te cumprimentar." Ezra não estende a mão. "Vim porque não tem mais ninguém pra quem contar isso, e isso me irrita muito."';
+      return '"Ô." Ezra enfia as mãos no bolso. "Eu preciso mostrar uma coisa pra alguém que não vai rir."';
+    }
+  ],
+  escolhas:[
+    {texto:'"Mostra."', vai:'c17_teo_mostra'},
+    {texto:'Ir direto para o Planalto. A Liga te chamou.', vai:'c17_pulou'},
+    {texto:'Ler o envelope inteiro primeiro.', vai:'c17_leu_o_envelope'}
+  ]
+},
+
 c17_envelope:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     'O envelope tem timbre em relevo e chega na sua mão num Centro Pokémon, entregue pela atendente, que já estava com ele separado atrás do balcão há três dias.',
     'Papel de gramatura alta, dobra em três, e uma frase:',
@@ -284,7 +305,7 @@ c17_leu_o_envelope:{
   ef:{flag:['leu_o_anexo','sabe_dos_postos_vazios'],
       rep:{eixo:'bom',delta:2,motivo:'Leu a segunda folha'},
       registrar:'Os postos de controle das rotas 22 e 23 estão desguarnecidos por "reestruturação administrativa".',
-      presagio:'Reestruturação administrativa. Guarde — o próximo capítulo é sobre isso.'},
+      presagio:'Reestruturação administrativa. Guarde a expressão.'},
   escolhas:[
     {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ir pra Rota 23.', vai:'c17_rota23'},
@@ -294,6 +315,8 @@ c17_leu_o_envelope:{
 },
 
 c17_perguntou_no_centro:{
+  falante:'a atendente do Centro',
+  vozes:['N','P','N','N','P','N'],
   texto:[
     'A atendente do Centro tem uns trinta anos e já respondeu essa pergunta hoje.',
     '"Eu não sei, e eu já perguntei."',
@@ -306,13 +329,13 @@ c17_perguntou_no_centro:{
     '"Eu conheço três dos servidores dos postos. Dois foram pra Viridian e um tirou licença."',
     '"E pra que tem gente indo pra Viridian?"',
     'Ela olha pros lados num Centro Pokémon vazio.',
-    '"Ninguém me disse. Mas o ginásio de Viridian tá fechado há oito meses e alguém tá indo trabalhar lá."'
+    '"Ninguém me disse. Mas o ginásio de Viridian vive de porta fechada, e alguém tá indo trabalhar lá."'
   ],
   ef:{flag:['sabe_de_viridian','sabe_dos_postos_vazios'],
-      npc:{nome:'Atendente do Centro', opiniao:3, memoria:'Te mostrou o comunicado de suspensão de plantão e contou que servidores foram realocados para Viridian.'},
+      npc:{nome:'a atendente do Centro', opiniao:3, memoria:'Te mostrou o comunicado de suspensão de plantão e contou que servidores foram realocados para Viridian.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou o que significava e conferiu no mural'},
-      registrar:'Servidores dos postos 22 e 23 foram realocados para Viridian, cujo ginásio está fechado há oito meses.',
-      presagio:'Viridian. O ginásio fechado há oito meses. Guarde os dois.'},
+      registrar:'Servidores dos postos 22 e 23 foram realocados para Viridian, onde o ginásio vive de porta fechada.',
+      presagio:'Viridian. Um ginásio de porta fechada e gente indo trabalhar lá. Guarde os dois.'},
   escolhas:[
     {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ir pra Rota 23.', vai:'c17_rota23'},
@@ -322,6 +345,8 @@ c17_perguntou_no_centro:{
 },
 
 c17_pulou:{
+  falante:'Ezra',
+  vozes:['P','N','N'],
   texto:[
     '"A Liga me chamou."',
     'Ezra assente devagar.',
@@ -345,6 +370,8 @@ c17_pulou:{
 },
 
 c17_voltou_no_teo:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','P','N','N'],
   texto:[
     'Você corre três quarteirões e alcança ele na esquina.',
     '"Mostra."',
@@ -368,10 +395,12 @@ c17_voltou_no_teo:{
 },
 
 c17_teo_mostra:{
+  falante:'Ezra',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     'Ele mostra uma foto no Pokégear. Está tremida e é de longe.',
     'É uma clareira. No meio dela, pairando a um metro do chão, tem uma coisa pequena, rosa, com cauda comprida.',
-    '"Isso é um borrão", você diz.',
+    '"Isso é um borrão."',
     '"Eu sei."',
     'Ele passa pra próxima. E pra próxima.',
     'São nove.',
@@ -437,7 +466,7 @@ c17_convidou_teo:{
     '"Eu sei. Vem como acompanhante."',
     'Ele abre a boca e fecha.',
     '"Pode?"',
-    '"Não sei. Tá escrito que eu me apresento com as insígnias em mãos. Não tá escrito que eu me apresento sozinho."',
+    '"Não sei. Tá escrito que eu me apresento com as insígnias em mãos. Não tá escrito que eu me apresento sozinh{o|a}."',
     'Ele ri — uma risada curta e feia, dessas de quem está tentando não fazer outra coisa com o rosto.',
     '"Cara."',
     'Ele passa a mão no cabelo.',
@@ -449,7 +478,7 @@ c17_convidou_teo:{
       rep:{eixo:'bom',delta:4,motivo:'Convidou quem não podia entrar'},
       moral:15,
       registrar:'Ezra vai ao Planalto Indigo com você, como acompanhante.',
-      presagio:'"Não tá escrito que eu me apresento sozinho." Você está aprendendo a ler regulamento.'},
+      presagio:'"Não tá escrito que eu me apresento sozinh{o|a}." Você está aprendendo a ler regulamento.'},
   escolhas:[
     {texto:'"Agora me leva na clareira."', vai:'c17_rota23', ef:{flag:'teo_leva'}},
     {texto:'"Quem mais viu isso?"', vai:'c17_quem_viu'},
@@ -459,6 +488,8 @@ c17_convidou_teo:{
 },
 
 c17_quem_viu:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Quem mais viu isso?"',
     'Ezra fica branco.',
@@ -486,6 +517,8 @@ c17_quem_viu:{
 },
 
 c17_nao_foi_merda:{
+  falante:'Ezra',
+  vozes:['P','N','P','P','N','P','P','N','P'],
   texto:[
     '"Não foi merda."',
     '"Foi."',
@@ -543,9 +576,11 @@ c17_as_tres_pessoas:{
 },
 
 c17_apagar:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Apaga essas fotos."',
-    'Ele apaga as nove na sua frente, uma por uma, e o Pokégear pergunta "apagar?" nove vezes e ele responde nove vezes.',
+    'Ele apaga as nove na sua frente, uma por uma, e o Pokégear pergunta **apagar?** nove vezes, e ele responde nove vezes.',
     'Na sétima — a que ela está olhando pra câmera — ele para uns três segundos antes de confirmar.',
     'Na nona, a mão dele treme um pouco.',
     '"Isso era a coisa mais importante que já aconteceu comigo."',
@@ -695,7 +730,7 @@ c17_rota23:{
     'Isso não está vazio há semanas.',
     'Isso está vazio há dias.',
     d=>d.flags.teo_leva ? 'Ezra vai na frente. Ele fez esse caminho três vezes desde terça e ele não acha nenhum dos postos estranho, porque ele nunca viu eles ocupados.' :
-       'Você encontra o desvio por acaso, o que é impossível, e você sabe que é impossível.'
+       'No meio do mato, do lado sudeste, tem um desvio que não estava lá quando você olhou da primeira vez. Não é trilha de gente e não é trilha de bicho.'
   ],
   ef:{flag:['entrou_na_rota_23','postos_vazios_ha_dias'],
       registrar:'Os quatro postos de controle da Rota 23 estão vazios há dias, não semanas.',
@@ -734,16 +769,18 @@ c17_o_posto:{
 },
 
 c17_o_radio:{
+  falante:'a voz do rádio',
+  vozes:['P','N','P','N','P','N','P','N','N','P','N'],
   texto:[
     'Você aperta o botão do rádio.',
     '"Alô? Posto vinte e três."',
     'Chiado.',
     'Você tenta mais três vezes e na quarta uma voz responde, e responde tão rápido que dá pra ouvir que tinha alguém do outro lado sentado esperando.',
     '"Posto vinte e três? Osmar?"',
-    '"Não. Eu sou um desafiante. O posto tá vazio."',
+    '"Não. Eu sou {um desafiante|uma desafiante}. O posto tá vazio."',
     'Silêncio de uns quatro segundos.',
     '"Quantos são vocês?"',
-    d=>d.flags.teo_leva ? '"Dois."' : '"Um."',
+    d=>d.flags.teo_leva ? '"Dois."' : '"{Um|Uma}."',
     'Mais silêncio.',
     '"Escuta aqui, {garoto|garota}. Aqui é a central do Planalto. A gente tá com quatro pessoas onde devia ter quarenta e a gente não pode mandar ninguém."',
     '"Por quê?"',
@@ -767,6 +804,8 @@ c17_o_radio:{
 },
 
 c17_o_que_acontece:{
+  falante:'a voz do rádio',
+  vozes:['P','N','N','P','N','N','P','N','N','N','P','N'],
   texto:[
     '"O que tá acontecendo aí em cima?"',
     'Chiado.',
@@ -802,13 +841,15 @@ c17_o_que_acontece:{
 },
 
 c17_o_nome_dele:{
+  falante:'a voz do rádio',
+  vozes:['P','N','P','N','N','P','N'],
   texto:[
     '"Qual é o seu nome?"',
     'Chiado.',
     '"Por quê?"',
     '"Porque eu tô anotando tudo num caderno desde o dia em que saí de casa e eu aprendi que nome importa."',
     'Uma risada curta no rádio, distorcida pelo chiado.',
-    '"Roland. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
+    d=>{ Nomes.apresentar('a voz do rádio'); return '"Roland. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."'; },
     'Ele diz a matrícula sem você pedir.',
     '"Anota a matrícula também, {garoto|garota}."',
     '"Por quê?"',
@@ -832,6 +873,8 @@ c17_o_nome_dele:{
 },
 
 c17_boca_do_caminho:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     'Você sobe os últimos dois quilômetros da Rota 23 até onde ela acaba.',
     'E ela acaba numa coisa que não é porta e que funciona como porta: uma fenda na parede de rocha, de uns quatro metros de largura, com uma escada de pedra que sobe pra dentro do escuro.',
@@ -850,12 +893,14 @@ c17_boca_do_caminho:{
   escolhas:[
     {texto:'"Podia. E não vai."', vai:'c17_nao_vai', cond:d=>!!d.flags.teo_leva},
     {texto:'Ir pra clareira antes.', vai:'c17_a_clareira'},
-    {texto:'Entrar agora.', vai:'c17_fim'},
+    {texto:'Entrar agora.', vai:'c17_fim', cond:d=>(d.insignias||[]).length>=8},
     {texto:'Voltar e procurar marca de pneu.', vai:'c17_pneus_na_trilha'}
   ]
 },
 
 c17_nao_vai:{
+  falante:'Ezra',
+  vozes:['P','N','P','P','N','P','N','P','N','P','N'],
   texto:[
     '"Podia. E não vai."',
     'Ele vira pra você.',
@@ -879,10 +924,10 @@ c17_nao_vai:{
       rep:{eixo:'bom',delta:5,motivo:'Convenceu alguém a não atravessar uma porta aberta'},
       moral:20,
       registrar:'Ezra decidiu buscar as outras quatro insígnias em vez de atravessar a entrada desguarnecida.',
-      presagio:'"Aí a placa não vale mais nada pra mais ninguém." É essa a tese de dezessete capítulos.'},
+      presagio:'"Aí a placa não vale mais nada pra mais ninguém." Tudo que você juntou até aqui diz a mesma coisa.'},
   escolhas:[
     {texto:'Ir pra clareira com ele.', vai:'c17_a_clareira'},
-    {texto:'Entrar você, que tem as oito.', vai:'c17_fim'},
+    {texto:'Entrar você, que tem as oito.', vai:'c17_fim', cond:d=>(d.insignias||[]).length>=8},
     {texto:'Voltar os dois pela rota.', vai:'c17_a_clareira'},
     {texto:'Ficar mais um pouco olhando a fenda.', vai:'c17_a_clareira'}
   ]
@@ -916,7 +961,7 @@ c17_a_clareira:{
     'É redonda. Redonda de verdade — uns vinte metros de diâmetro, com a borda regular, num mato que não faz nada regular.',
     'A grama de dentro é mais alta e mais verde que a de fora.',
     'E não tem árvore caída, não tem toca, não tem trilha de bicho, não tem formigueiro, não tem cupinzeiro, não tem osso.',
-    'Você já andou muito mato nesses dezessete capítulos e você sabe o que tem em vinte metros de mato: tem osso, tem casca roída, tem penugem, tem merda de bicho.',
+    'Você já andou muito mato desde que saiu de casa e você sabe o que tem em vinte metros de mato: tem osso, tem casca roída, tem penugem, tem merda de bicho.',
     'Aqui não tem nada.',
     'É um lugar onde nada acontece há muito tempo.',
     d=>d.flags.tem_gente_atras_do_mew || d.flags.achou_os_pneus ? 'E tem marca de pneu na entrada do mato, a uns cem metros. De ontem.' : 'E não tem marca de ninguém além da sua.'
@@ -933,7 +978,7 @@ c17_a_clareira:{
 
 c17_as_plantas:{
   texto:[
-    'Você entra e agacha e olha as plantas de perto, porque você passou um capítulo inteiro andando com uma mulher que conta espécie há trinta e um anos e alguma coisa pegou.',
+    d=>d.flags.conheceu_nair ? 'Você entra e agacha e olha as plantas de perto, porque você passou dias andando com uma mulher que conta bicho na ciclovia há trinta e um anos e alguma coisa pegou.' : 'Você entra e agacha e olha as plantas de perto.',
     'E a clareira fica muito pior.',
     'Tem samambaia de encosta úmida ao lado de capim de terreno seco.',
     'Tem um pé de café — café, arbusto de cultivo, que não existe em mato nativo — de um metro e vinte, carregado.',
@@ -942,8 +987,7 @@ c17_as_plantas:{
     'Nenhuma dessas plantas deveria estar a menos de duzentos quilômetros das outras.',
     'Todas estão saudáveis.',
     'E o pé de goiaba tem fruta caída apodrecendo embaixo dele, o que quer dizer que ninguém come.',
-    'Você já viu esse pé de goiaba antes.',
-    'Não esse. Um igual, numa rota vazia, com uma mulher de sessenta e três anos anotando zero.'
+    d=>d.flags.conheceu_nair ? 'Você já viu esse pé de goiaba antes.\nNão esse. Um igual, numa ciclovia vazia, com a Ylva anotando zero na prancheta.' : ''
   ],
   ef:{flag:['viu_as_plantas','entendeu_a_clareira'],
       rep:{eixo:'bom',delta:5,motivo:'Agachou e olhou as plantas'},
@@ -987,7 +1031,7 @@ c17_contou_as_especies:{
 
 c17_levou_a_muda:{
   texto:[
-    'Você tira a muda com um pouco de terra em volta e enrola num saco plástico, do jeito que a Dra. Pia ensinou sem saber que estava ensinando.',
+    'Você tira a muda com a terra junto, pra raiz não sentir, e enrola num saco plástico.',
     'E fica com ela na mão.',
     'Uma planta extinta, viva, numa mão de quinze anos, no meio de um mato da Rota 23.',
     'E aí você pensa, e é um pensamento ruim:',
@@ -1007,13 +1051,15 @@ c17_levou_a_muda:{
 },
 
 c17_replantou:{
+  falante:'Ezra',
+  vozes:['N','P','N','P','N'],
   texto:[
     'Você replanta.',
     'Cava o buraco com as mãos, põe a muda, aperta a terra em volta, e rega com a água da sua garrafa.',
     'Leva dez minutos e é a coisa mais idiota que dá pra fazer com uma descoberta científica de primeira grandeza.',
     'Você senta ao lado dela depois, com as mãos sujas.',
     d=>d.flags.teo_leva ? 'Ezra senta do seu lado.\n"O que era aquilo?"\n"Uma planta que não existe mais."\n"E você replantou."\n"Eu replantei."\nEle assente devagar.\n"Beleza."' :
-       'E fica ali, sozinho, no meio de vinte metros de grama alta, com as mãos sujas de terra.'
+       'E fica ali, sozinh{o|a}, no meio de vinte metros de grama alta, com as mãos sujas de terra.'
   ],
   ef:{flag:['replantou_a_muda'], perdeItens:{'Muda de flor branca':1},
       rep:{eixo:'bom',delta:5,motivo:'Replantou uma descoberta científica de primeira grandeza'},
@@ -1029,13 +1075,15 @@ c17_replantou:{
 },
 
 c17_pneus:{
+  falante:'o mais velho dos quatro',
+  vozes:['o mais velho dos quatro','o mais novo dos quatro','o mais velho dos quatro','o mais novo dos quatro','o mais velho dos quatro'],
   texto:[
     'As marcas levam a uma estrada de terra a oitocentos metros da clareira, onde tem uma van parada e quatro pessoas montando alguma coisa.',
-    'Não é a equipe da Silph. Não é a expedição da ilha.',
+    'Não é gente de empresa. Não tem crachá, não tem caminhão, não tem ninguém de terno.',
     'Estes são diferentes: mais jovens, equipamento mais barato, e mais animados — do jeito errado.',
     'Uma rede de nylon de pesca esticada entre duas árvores. Um cooler. Duas cadeiras dobráveis. Um rádio tocando música.',
     '"...se a gente pegar, a gente não vende pra empresa nenhuma, a gente vende pra comissão, que é quem paga mais..."',
-    '"Comissão?", pergunta um deles. "Que comissão?"',
+    '"Comissão? Que comissão?" Quem pergunta é o mais novo dos quatro.',
     '"Sei lá, cara. Foi o nome que tava no anúncio."',
     '"E tinha telefone?"',
     '"Tinha uma caixa postal."',
@@ -1046,7 +1094,7 @@ c17_pneus:{
   ],
   ef:{flag:['achou_os_caçadores_de_mew','sabe_do_anuncio'],
       registrar:'Quatro pessoas acamparam perto da clareira com uma rede de pesca, atrás de uma recompensa anunciada por uma "comissão".',
-      presagio:'Uma caixa postal. É esse o endereço da coisa que você persegue há dezessete capítulos.'},
+      presagio:'Uma caixa postal. É esse o endereço de quem está pagando.'},
   escolhas:[
     {texto:'"Que anúncio?" — aparecer e perguntar.', vai:'c17_que_anuncio'},
     {texto:'Sabotar a van e sair.', vai:'c17_sabotou_van'},
@@ -1056,6 +1104,8 @@ c17_pneus:{
 },
 
 c17_que_anuncio:{
+  falante:'o mais velho dos quatro',
+  vozes:['P','N','P'],
   texto:[
     'Você sai do mato e aparece.',
     'Os quatro levam um susto e um deles derruba o cooler, e por uns dez segundos é a cena menos ameaçadora que você já viu.',
@@ -1085,10 +1135,19 @@ c17_que_anuncio:{
 },
 
 c17_contou_pros_quatro:{
+  falante:'o mais velho dos quatro',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Deixa eu te contar o que é a caixa postal onze."',
     'E você conta.',
-    'Quatro pessoas com um cooler e uma rede de pesca numa estrada de terra ouvem {um garoto|uma garota} de quinze anos contar sobre um subsolo em Saffron com doze tanques, sobre um armazém em Celadon com quarenta e uma gaiolas, sobre uma reserva em Fuchsia com uma planilha de mil novecentos e setenta e um.',
+    d=>{
+      const o = [];
+      if (d.flags.viu_os_doze) o.push('um andar da Silph em Saffron com doze tanques');
+      if (d.flags.sabe_do_deposito) o.push('um armazém em Celadon com gaiolas numeradas');
+      if (d.flags.sabe_da_planilha_71) o.push('uma reserva em Fuchsia com uma planilha de mil novecentos e setenta e um');
+      const tudo = o.length ? 'sobre ' + (o.length > 1 ? o.slice(0,-1).join(', sobre ') + ' e sobre ' + o[o.length-1] : o[0]) : 'sobre tudo que você viu desde que saiu de casa';
+      return `Quatro pessoas com um cooler e uma rede de pesca numa estrada de terra ouvem {um garoto|uma garota} de quinze anos contar ${tudo}.`;
+    },
     'Leva vinte minutos.',
     'Ninguém interrompe.',
     'No fim, o de vinte e seis anos está sentado na cadeira dobrável com o recorte na mão e não olha pra cima.',
@@ -1115,6 +1174,8 @@ c17_contou_pros_quatro:{
 },
 
 c17_desmontaram:{
+  falante:'o mais velho dos quatro',
+  vozes:['P','N','P','N','P','N','P','N'],
   texto:[
     '"Desmonta e vai embora."',
     'Eles desmontam.',
@@ -1123,7 +1184,7 @@ c17_desmontaram:{
     '"Se a gente não pegar, outro pega."',
     '"Provavelmente."',
     '"E aí?"',
-    'Você pensa na frase antes de falar, porque essa frase você já ouviu numa ilha e ela é perigosa.',
+    d=>d.flags.equipe_devolveu_a_pena ? 'Você pensa na frase antes de falar, porque essa frase você já ouviu numa ilha e ela é perigosa.' : 'Você pensa na frase antes de falar, porque ela é perigosa.',
     '"E aí não vai ter sido você."',
     'Ele fecha o bagageiro.',
     'E fica com a mão em cima dele por uns cinco segundos.',
@@ -1147,6 +1208,8 @@ c17_desmontaram:{
 },
 
 c17_testemunhas:{
+  falante:'o mais velho dos quatro',
+  vozes:['P','N','P','N','P','N','P','a mulher dos quatro','a mulher dos quatro','a mulher dos quatro'],
   texto:[
     '"Vocês podem ganhar mais contando isso."',
     '"Contando pra quem?"',
@@ -1180,6 +1243,8 @@ c17_testemunhas:{
 },
 
 c17_anotou_os_nomes:{
+  falante:'o mais novo dos quatro',
+  vozes:['N'],
   texto:[
     'Você anota os quatro nomes, os quatro endereços, os quatro telefones, e o nome e a data do jornal.',
     'E depois você faz uma coisa que a Dra. Cordell fez na sua frente e que ficou:',
@@ -1206,6 +1271,8 @@ c17_anotou_os_nomes:{
 },
 
 c17_pegou_o_recorte:{
+  falante:'o mais velho dos quatro',
+  vozes:['P','N','P','N'],
   texto:[
     '"Me dá esse recorte."',
     'Ele olha o papel dobrado na mão.',
@@ -1242,9 +1309,11 @@ c17_luta_cacadores_mew:{
 },
 
 c17_venceu_cacadores:{
+  falante:'o mais velho dos quatro',
+  vozes:['N','P'],
   texto:[
     'Você derruba os três times e o quarto nem solta bola.',
-    '"A gente só queria..." começa um.',
+    '"A gente só queria..." É o mais velho dos quatro.',
     '"Eu sei o que vocês queriam."',
     'Eles recolhem os Pokémon caídos e guardam o cooler e enrolam a rede em silêncio, e a mulher de quarenta e um anos não olha pra você uma vez.',
     'Eles vão embora na van.',
@@ -1252,7 +1321,7 @@ c17_venceu_cacadores:{
     'E vão.',
     'E da próxima eles vão vir com mais gente e vão vir sabendo que tem alguém defendendo, o que muda tudo pra pior.'
   ],
-  ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores de recompensa sozinho'},
+  ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores de recompensa sozinh{o|a}'},
       flag:'espantou_cacadores_mew', moral:-5,
       registrar:'Espantou os quatro caçadores. Eles vão voltar.',
       presagio:'Da próxima eles vêm sabendo que tem alguém defendendo.'},
@@ -1267,7 +1336,7 @@ c17_venceu_cacadores:{
 c17_perdeu_cacadores:{
   texto:[
     'Quatro contra um é quatro contra um.',
-    'Eles te deixam sentado na estrada de terra, pegam o que quiserem da sua mochila — e pegam pouco, o que é pior, porque quer dizer que eles não são ladrões, só estão com pressa —, e seguem pra clareira.',
+    'Eles te deixam sentad{o|a} na estrada de terra, pegam o que quiserem da sua mochila — e pegam pouco, o que é pior, porque quer dizer que eles não são ladrões, só estão com pressa —, e seguem pra clareira.',
     'Você chega lá depois deles.',
     'E a clareira está vazia.',
     'Completamente vazia — e a grama alta do meio está pisada em círculo, como se quatro pessoas tivessem procurado alguma coisa ali por horas.',
@@ -1307,6 +1376,8 @@ c17_sabotou_van:{
 },
 
 c17_denunciou_van:{
+  falante:'a voz do rádio',
+  vozes:['N','P','N','P','N','N','N','P','N'],
   texto:[
     'Você volta ao posto vazio e denuncia pelo rádio.',
     d=>d.flags.sabe_do_anselmo ? 'O Roland atende na primeira chamada.\n"Já?"\n"Já."\n"Quantos?"\n"Quatro, numa van, estrada de manutenção, quilômetro seis."\nChiado.\n"Eu tenho quatro pessoas aqui, {garoto|garota}, e uma delas sou eu, e outra é o motorista."\nMais chiado.\n"Vai dar uma hora e quarenta."' :
@@ -1329,6 +1400,8 @@ c17_denunciou_van:{
 },
 
 c17_foi_embora_clareira:{
+  falante:'Ezra',
+  vozes:['N','P','N'],
   texto:[
     'Você chega na borda da clareira, olha o meio dela, e não entra.',
     d=>d.flags.teo_leva ? 'Ezra te olha sem entender.\n"Você não vai nem..."\n"Não."\nEle demora uns dez segundos, e acompanha você de volta, e não pergunta mais nada no caminho inteiro.\nE na metade do caminho ele fala uma coisa só: "Tá certo."' :
@@ -1374,7 +1447,7 @@ c17_esperou_mew:{
   escolhas:[
     {texto:'Ficar parad{o|a}.', vai:'c17_mew_brinca'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
-    {texto:'Avisar em voz alta que tem gente atrás dela.', vai:'c17_avisou_mew'},
+    {texto:'Avisar em voz alta que tem gente atrás dela.', vai:'c17_avisou_mew', cond:d=>!!d.flags.tem_gente_atras_do_mew || !!d.flags.achou_os_pneus},
     {texto:'Tentar capturar.', vai:'c17_captura_mew'}
   ]
 },
@@ -1382,7 +1455,7 @@ c17_esperou_mew:{
 c17_mew_brinca:{
   texto:[
     'Você fica parad{o|a} e ela se aproxima.',
-    'O que acontece nos vinte minutos seguintes é a coisa mais absurda da sua jornada inteira, e você passou por doze tanques, uma caverna de gelo e uma cratera de vulcão:',
+    'O que acontece nos vinte minutos seguintes é a coisa mais absurda da sua jornada inteira, e a sua jornada não foi pouca coisa:',
     'Mew brinca.',
     'Ela copia.',
     'Você coça o nariz, ela coça o nariz. Você cruza os braços, ela cruza os braços — com as patinhas, do jeito errado, porque as patinhas dela não cruzam direito, e ela tenta três vezes até ficar mais ou menos.',
@@ -1391,7 +1464,7 @@ c17_mew_brinca:{
     'Ela levanta a sua mochila do chão sem tocar nela, olha por baixo, e coloca de volta no lugar exato — no lugar exato, com o vinco da grama batendo.',
     'Ela tira a sua boné da sua cabeça e põe na dela e a boné cai porque a cabeça dela é pequena demais, e ela olha a boné no chão com uma cara de quem foi enganada.',
     d=>d.flags.teo_leva ? 'Ezra está chorando a três metros e nem percebeu que está.' :
-       'Você percebe, em algum momento, que está sorrindo de um jeito que você não sorri desde o capítulo dois.',
+       'Você percebe, em algum momento, que está sorrindo de um jeito que você não sorri desde que saiu de casa.',
     'Ela não está te avaliando. Ela nunca esteve.',
     'Ela só achou você interessante por vinte minutos, do jeito que criança acha uma poça interessante.'
   ],
@@ -1402,7 +1475,7 @@ c17_mew_brinca:{
       registrar:'Mew brincou com você por vinte minutos na clareira.',
       presagio:'Do jeito que criança acha uma poça interessante. Sem nenhum peso.'},
   escolhas:[
-    {texto:'Avisar que tem gente atrás dela.', vai:'c17_avisou_mew'},
+    {texto:'Avisar que tem gente atrás dela.', vai:'c17_avisou_mew', cond:d=>!!d.flags.tem_gente_atras_do_mew || !!d.flags.achou_os_pneus},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
     {texto:'Tentar capturar agora, que ela confia.', vai:'c17_captura_mew',
@@ -1431,7 +1504,7 @@ c17_mew_mao:{
       registrar:'Mew encostou a testa na sua mão por dois segundos.',
       presagio:'Um lugar onde nada nunca precisou de nome. Guarde — é o oposto de tudo que você fez.'},
   escolhas:[
-    {texto:'Avisar que tem gente atrás dela.', vai:'c17_avisou_mew'},
+    {texto:'Avisar que tem gente atrás dela.', vai:'c17_avisou_mew', cond:d=>!!d.flags.tem_gente_atras_do_mew || !!d.flags.achou_os_pneus},
     {texto:'Ficar parad{o|a} e ver o que ela faz.', vai:'c17_mew_brinca'},
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
     {texto:'Capturar.', vai:'c17_captura_mew', ef:{flag:'traiu_mew', moral:-25, rep:{eixo:'ruim',delta:4,motivo:'Capturou Mew depois que ela te tocou'}}}
@@ -1439,11 +1512,12 @@ c17_mew_mao:{
 },
 
 c17_avisou_mew:{
+  vozes:['P'],
   texto:[
     '"Tem gente te procurando."',
     'Você diz isso em voz alta numa clareira, pra uma criatura que provavelmente entende tudo e provavelmente não liga.',
     'Ela inclina a cabeça.',
-    'E aí faz uma coisa desconcertante: ela sobe uns três metros, olha na direção exata da estrada de terra onde estavam as marcas de pneu — a direção exata, não uma direção qualquer — e volta.',
+    d=>d.flags.achou_os_pneus ? 'E aí faz uma coisa desconcertante: ela sobe uns três metros, olha na direção exata da estrada de terra onde estavam as marcas de pneu — a direção exata, não uma direção qualquer — e volta.' : 'E aí faz uma coisa desconcertante: ela sobe uns três metros, olha pra um ponto do mato, sempre o mesmo, e volta.',
     'Ela já sabia.',
     'Ela sabia antes de você chegar, provavelmente antes deles chegarem.',
     'Ela só não considera isso um problema.',
@@ -1496,7 +1570,7 @@ c17_anotou_o_gesto:{
   texto:[
     'Você tira o caderno e anota exatamente o que ela fez, na ordem, com os detalhes:',
     'pousou com as quatro patas. Cavou com a dianteira direita. Dez centímetros. Tapou com a mesma pata. Olhou. Repetiu três vezes. Intervalo de uns quatro segundos entre uma e outra.',
-    'Você anota sem interpretar, porque você aprendeu num quintal de Fuchsia e numa cabine de pedágio que interpretar é a parte que a gente faz depois e errado.',
+    'Você anota sem interpretar, porque você aprendeu no caminho que interpretar é a parte que a gente faz depois e errado.',
     'Ela assiste você escrever.',
     'Ela paira a um metro do caderno e olha o lápis se mexer, e a cauda dela fica parada no ar.',
     'E quando você termina de escrever e levanta a cabeça, ela está muito mais perto do que estava.',
@@ -1546,6 +1620,8 @@ c17_mostrou_o_caderno:{
 },
 
 c17_deixou_mew:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Ela vai embora do jeito que chegou: sem aviso, sem som, sem transição.',
     'Num instante está a quatro metros. No seguinte, a clareira tem vinte metros de grama alta e mais nada.',
@@ -1577,7 +1653,7 @@ c17_ate_escurecer:{
     'a clareira não é um lugar onde tem coisa demais.',
     'É um lugar de onde tudo saiu, porque ela é o jardim de alguém, e jardim é um lugar onde não deixam bicho entrar.',
     'Quarenta e uma espécies de planta e nenhuma de bicho.',
-    'É a coisa mais solitária que você já viu, e ela foi construída de propósito, por uma coisa que esteve aqui antes de tudo, e que passa a tarde brincando com um garoto que apareceu porque se perdeu.'
+    d=>d.flags.viu_as_fotos ? 'É a coisa mais solitária que você já viu, e ela foi construída de propósito, por uma coisa que esteve aqui antes de tudo, e que passa a tarde brincando com um garoto que apareceu porque se perdeu.' : 'É a coisa mais solitária que você já viu, e ela foi construída de propósito, por uma coisa que esteve aqui antes de tudo e que ainda acha graça em quem aparece.'
   ],
   ef:{flag:['ficou_ate_escurecer','entendeu_o_jardim'],
       rep:{eixo:'bom',delta:4,motivo:'Ficou até escurecer e entendeu o que era'},
@@ -1627,6 +1703,7 @@ c17_pos_mew:{
 },
 
 c17_pediu_desculpa:{
+  vozes:['P'],
   texto:[
     '"Desculpa."',
     'Você fala isso em voz alta numa clareira vazia de vinte metros.',
@@ -1709,6 +1786,8 @@ c17_soltou_mew:{
 },
 
 c17_ficou_com_mew:{
+  falante:'Comprador de jaleco',
+  vozes:['N'],
   texto:[
     'Você segue com Mew no cinto.',
     'Nos dias seguintes, nada acontece.',
@@ -1792,7 +1871,7 @@ c17_pergunta_de_novo:{
       rep:{eixo:'bom',delta:6,motivo:'Mandou um comprador de dezenove anos de casa perguntar por escrito'},
       moral:15,
       registrar:'A solicitação de aquisição da empresa tem campo de justificativa, nunca preenchido.',
-      presagio:'Campo de justificativa nunca preenchido. É a quinta vez que a resposta é um campo de formulário.'},
+      presagio:'Campo de justificativa nunca preenchido. De novo a resposta é um campo de formulário.'},
   escolhas:[
     {texto:'"Preenche o seu."', vai:'c17_recusou_cientistas'},
     {texto:'Voltar à clareira e soltar.', vai:'c17_soltou_mew'},
@@ -1806,7 +1885,7 @@ c17_recusou_cientistas:{
     '"Não."',
     'Ele assente, levanta, e vai embora sem insistir uma única vez.',
     'Isso devia te tranquilizar.',
-    'Não tranquiliza, porque gente que não insiste é gente que tem outro plano, e você já viu isso em Celadon e em Saffron e numa ilha sem nome.',
+    'Não tranquiliza, porque gente que não insiste é gente que tem outro plano, e você já viu isso mais de uma vez nessa estrada.',
     'Três dias depois, num Centro Pokémon diferente, tem uma mulher de terno na mesa ao lado.',
     'Ela não fala com você.',
     'Ela só senta na mesa ao lado, todo dia, por quatro dias, em quatro Centros diferentes.',
@@ -1827,6 +1906,8 @@ c17_recusou_cientistas:{
 },
 
 c17_vendeu_mew:{
+  falante:'Comprador de jaleco',
+  vozes:['N'],
   texto:[
     'Ele escreve um número num guardanapo e empurra pela mesa.',
     'O número tem dígitos suficientes pra comprar uma casa em Celadon, e ainda sobra pra comprar outra.',
@@ -1859,6 +1940,8 @@ c17_vendeu_mew:{
 },
 
 c17_foi_atras:{
+  falante:'Comprador de jaleco',
+  vozes:['P','N','P','N','N'],
   texto:[
     'Você corre atrás do carro.',
     'Você corre atrás de um carro num estacionamento às seis e quarenta e sete da manhã, com duzentos mil no bolso, e você alcança ele na saída porque tem uma cancela.',
@@ -1888,6 +1971,8 @@ c17_foi_atras:{
 },
 
 c17_contou_pra_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','N','N','P','N'],
   texto:[
     'Você liga pra Dra. Cordell de um orelhão, às sete e dez da manhã, e conta.',
     'Tudo: a clareira, os vinte minutos, a bola, o guardanapo, o estacionamento, a maleta com controle de temperatura, os duzentos mil.',
@@ -1938,7 +2023,7 @@ c17_fim:{
     d=>d.flags.teo_vai_junto ? 'E o Ezra sobe do seu lado, com quatro insígnias e um crachá de acompanhante que ninguém conferiu, falando sem parar nos primeiros oitocentos metros e calado no resto.' :
        d.flags.teo_vai_pegar_as_quatro ? 'E lá embaixo, na base da rocha, tem um garoto de quinze anos voltando pela Rota 23 pra pegar quatro insígnias que ele podia ter pulado hoje de manhã.' : '',
     'A subida leva o dia inteiro.',
-    'E nos quatro quilômetros de escuro por dentro da montanha você não encontra ninguém, o que é a informação mais importante do capítulo:',
+    'E nos quatro quilômetros de escuro por dentro da montanha você não encontra ninguém, o que é a informação mais importante do dia:',
     'o Caminho da Vitória, na semana em que a Liga convoca desafiantes, está vazio.'
   ],
   fim:true, resumo:'Capítulo 17 concluído — Mew não precisava de você, e a Liga precisa.'

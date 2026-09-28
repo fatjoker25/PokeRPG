@@ -709,7 +709,11 @@ const UI = {
         }
         primeira = false; pendente = null;
 
-        const quem = lado === 'voce' ? meuNome : (outro || npc);
+        /* quem já disse o nome (ou teve o nome perguntado) aparece com ele,
+           mesmo quando o balão veio do `falante` da cena */
+        const rotulo = outro || npc;
+        const quem = lado === 'voce' ? meuNome
+                   : (rotulo && typeof Nomes !== 'undefined' ? Nomes.comoChamar(rotulo) : rotulo);
         const meu = lado === 'voce' ? ' voce' : '';
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;

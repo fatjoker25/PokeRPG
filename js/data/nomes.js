@@ -68,7 +68,8 @@ const NOMES_FIXOS = {
   'o entregador de pão':       'Rufo',
   'a recepcionista da Liga':   'Lena',
   'a balconista da farmácia':  'Gina',
-  'Chefe da expedição':        'Dra. Sallow'
+  'Chefe da expedição':        'Dra. Sallow',
+  'a voz do rádio':            'Roland'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
