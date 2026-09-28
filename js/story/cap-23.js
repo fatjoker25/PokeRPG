@@ -99,7 +99,7 @@ c23_ab_de_cracha:{
 
 c23_a_escada:{
   texto:[
-    'O ginásio de Viridian tem uma escada no fundo à direita, atrás de um biombo, e em dois anos você nunca viu ninguém subir por ela.',
+    'O ginásio de Viridian tem uma escada no fundo à direita, atrás de um biombo, e ninguém que você conhece já viu alguém subir por ela.',
     'Hoje o biombo está encostado na parede e a escada está à vista, com a fita de isolamento arrancada e enrolada num canto do degrau.',
     fala('Blue', 'Eu abri hoje de manhã.', null, 'Ele está sentado na linha pintada do chão, de costas pra escada, que é uma posição muito específica de quem não quer olhar pra uma coisa.'),
     fala('Blue', 'A Liga me deu esse ginásio com o segundo andar lacrado e um papel dizendo "arquivo do titular anterior, não mexer".'),
@@ -151,7 +151,7 @@ c23_por_que_esperou:{
       registrar:'Blue disse que só duas pessoas podiam ler aquilo com ele, e uma sumiu.'},
   escolhas:[
     {texto:'Ir atrás.', vai:'c23_subiu_com_blue'},
-    {texto:'Ficar. Deixar ele subir sozinh{o|a}.', vai:'c23_deixou_subir_sozinho'}
+    {texto:'Ficar. Deixar ele subir sozinho.', vai:'c23_deixou_subir_sozinho'}
   ]
 },
 
@@ -192,7 +192,7 @@ c23_deixou_subir_sozinho:{
 c23_subiu_com_blue:{
   texto:[
     'A escada tem dezenove degraus e range em sete deles.',
-    'A sala é do tamanho que ele disse: dez por seis, arquivo de aço do chão ao teto, quatro corredores de pasta.',
+    d=>`A sala é ${d.flags.sabe_o_que_tem_em_cima ? 'do tamanho que ele disse' : 'uma sala de arquivo'}: dez por seis, arquivo de aço do chão ao teto, quatro corredores de pasta.`,
     'A luz é de lâmpada fluorescente e demora quatro segundos pra estabilizar, e nesses quatro segundos a sala pisca e fica igual a si mesma três vezes.',
     'A mesa do meio tem uma cadeira só, virada pra parede.',
     fala('Blue', 'Corredor A é ginásio. Corredor B é Liga. Corredor C é pessoal dele.'),
@@ -211,9 +211,12 @@ c23_subiu_com_blue:{
 
 c23_a_sala:{
   texto:[
-    'Você sobe sozinh{o|a} os dezenove degraus e a sala é exatamente como ele descreveu, o que de alguma forma é pior.',
+    d=>d.flags.sabe_o_que_tem_em_cima
+      ? 'Você sobe sozinh{o|a} os dezenove degraus e a sala é exatamente como ele descreveu, o que de alguma forma é pior.'
+      : 'Você sobe sozinh{o|a} os dezenove degraus, e a luz fluorescente demora quatro segundos pra decidir acender.',
     'Quatro corredores de aço. Uma mesa. Uma cadeira virada pra parede.'
   ],
+  ef:{flag:'subiu_no_segundo_andar'},
   escolhas:[
     {texto:'Procurar o seu nome no corredor D.', vai:'c23_procurou_o_proprio_nome'},
     {texto:'Ler o corredor C.', vai:'c23_corredor_c'},
@@ -260,8 +263,8 @@ c23_corredor_b:{
     'Tem onze anos de correspondência entre o ginásio de Viridian e a Liga Pokémon, e a correspondência é absolutamente normal até 1994.',
     'Em 1994 ela muda de tom. Vira mais curta. Vira só confirmação de recebimento, sem assunto.',
     'Em 1995 tem uma pasta fina com quatro folhas e um título escrito à máquina: CONVÊNIO DE MANEJO — GRUPO DE RESGATE BIOLÓGICO.',
-    'É o mesmo convênio que você já viu antes, com a mesma assinatura ilegível no canto — mas esta cópia tem uma coisa que as outras não tinham.',
-    'Esta cópia tem a segunda página.'
+    'Assinatura ilegível no canto, carimbo por cima. Convênio assim costuma sair publicado com uma página só, a das assinaturas.',
+    'Esta cópia tem a segunda.'
   ],
   ef:{flag:'achou_a_segunda_pagina',
       itens:{'Segunda página do convênio':1},
@@ -315,9 +318,9 @@ c23_a_outra_foto:{
     d=>fala(d.jogador.nome, 'E a outra?'),
     'Ele pega a caixa da sua mão e acha em quatro segundos, o que quer dizer que ele já achou antes hoje.',
     'É uma foto de laboratório, de uns vinte anos atrás, com quatro pessoas de jaleco em frente a uma bancada.',
-    'Três delas você não conhece.',
-    'A quarta é o Dr. Fuji, muito mais novo, sem barba, com a mão no ombro do homem ao lado.',
-    'O homem ao lado é o titular anterior deste ginásio.',
+    'Embaixo de cada rosto tem um nome escrito a caneta. Três deles não te dizem nada.',
+    'O quarto diz Fuji. Ele está com a mão no ombro do homem ao lado, e o homem ao lado não tem nome escrito embaixo.',
+    fala('Blue', 'Esse é o titular anterior deste ginásio.', 'baixo', 'Ele põe o dedo no homem sem nome.'),
     fala('Blue', 'Eu não sabia que eles se conheciam.', 'frio'),
     fala('Blue', 'Eu acho que ninguém sabia. Acho que era pra ninguém saber.')
   ],
@@ -336,14 +339,14 @@ c23_procurou_o_proprio_nome:{
     d=>`A etiqueta tem o seu nome completo, a sua cidade, e a data: a data é de três semanas depois de você sair de casa.`,
     'A pasta tem dezenove folhas.',
     'Folha 1: cópia da sua ficha de licença, com a foto ruim.',
-    'Folha 2 a 9: relatório de cada ginásio que você desafiou, com data, resultado e uma linha de observação escrita à mão.',
-    'Folha 10 em diante: você não leu ainda.'
+    'Depois, um relatório por ginásio que você desafiou, com data, resultado e uma linha de observação escrita à mão.',
+    'O resto você não leu ainda.'
   ],
   ef:{flag:'achou_a_propria_pasta',
       registrar:'Achou a própria pasta no corredor D. Dezenove folhas, aberta três semanas depois de você sair de casa.'},
   escolhas:[
-    {texto:'Ler as folhas 10 em diante.', vai:'c23_folha_dez'},
-    {texto:'Ler a linha de observação de cada ginásio.', vai:'c23_as_observacoes'},
+    {texto:'Ler o resto da pasta.', vai:'c23_folha_dez'},
+    {texto:'Ler a linha de observação de cada ginásio.', vai:'c23_as_observacoes', cond:d=>c21_ins(d) >= 1},
     {texto:'Procurar outros nomes que você conhece.', vai:'c23_outros_nomes'},
     {texto:'Fechar a pasta e queimar o corredor inteiro.', vai:'c23_queimar'}
   ]
@@ -351,18 +354,24 @@ c23_procurou_o_proprio_nome:{
 
 c23_as_observacoes:{
   texto:[
-    'Oito ginásios, oito linhas, escritas à mão por oito pessoas diferentes, e todas mandadas pro mesmo arquivo.',
-    fala('a observação de Pewter', 'Não desiste. Devia desistir, e não desiste. Anotado como resistência, não como talento.'),
-    fala('a observação de Cerulean', 'Lê o adversário. Erra a leitura e insiste no erro. Vai aprender ou vai morrer.'),
-    fala('a observação de Vermilion', 'Trata o time como gente. Isso é uma vantagem tática que ninguém sabe medir.'),
-    fala('a observação de Viridian', 'Recomendo observação continuada. — B.'),
-    'A última é do Blue. Ele escreveu isso sobre você e mandou pra este arquivo, e ele está em pé ao seu lado neste momento.'
+    d=>{ const n = c21_ins(d);
+         return n > 1 ? `${c21_ext(n).replace(/^./, c => c.toUpperCase())} ginásios, ${c21_ext(n)} linhas, cada uma escrita à mão por quem te recebeu, e todas mandadas pro mesmo arquivo.`
+                      : 'Um ginásio, uma linha, escrita à mão por quem te recebeu e mandada pra este arquivo.'; },
+    d=>d.insignias.includes('Insígnia Pedra')   ? '**Pewter — Não desiste. Devia desistir, e não desiste. Anotado como resistência, não como talento.**' : '',
+    d=>d.insignias.includes('Insígnia Cascata') ? '**Cerulean — Lê o adversário. Erra a leitura e insiste no erro. Vai aprender ou vai morrer.**' : '',
+    d=>d.insignias.includes('Insígnia Trovão')  ? '**Vermilion — Trata o time como gente. Isso é uma vantagem tática que ninguém sabe medir.**' : '',
+    d=>d.insignias.includes('Insígnia Terra')   ? '**Viridian — Recomendo observação continuada. — B.**' : '',
+    d=>d.insignias.includes('Insígnia Terra')
+      ? 'A última é do Blue. Ele escreveu isso sobre você e mandou pra este arquivo, e ele está em pé ao seu lado neste momento.'
+      : 'Nenhuma linha é elogio e nenhuma é crítica. É tudo medida.'
   ],
   ef:{flag:'leu_as_observacoes',
-      registrar:'Leu as observações dos oito líderes sobre você. A última é do Blue.'},
+      registrar:d=>d.insignias.includes('Insígnia Terra')
+        ? 'Leu as observações dos líderes sobre você. A de Viridian é do Blue.'
+        : 'Leu as observações dos líderes sobre você.'},
   escolhas:[
-    {texto:'"Você escreveu isso."', vai:'c23_cobrou_o_blue'},
-    {texto:'Não falar nada e ler as folhas 10 em diante.', vai:'c23_folha_dez'}
+    {texto:'"Você escreveu isso."', vai:'c23_cobrou_o_blue', cond:d=>d.insignias.includes('Insígnia Terra')},
+    {texto:'Não falar nada e ler o resto da pasta.', vai:'c23_folha_dez'}
   ]
 },
 
@@ -379,21 +388,28 @@ c23_cobrou_o_blue:{
       npc:{nome:'Blue', opiniao:3, memoria:'Admitiu que escreveu sobre você sem saber pra onde ia.'},
       rep:{eixo:'bom',delta:1,motivo:'Cobrou na cara em vez de guardar'},
       registrar:'Blue escreveu "recomendo observação continuada" sem saber para onde ia.'},
-  escolhas:[{texto:'Ler as folhas 10 em diante.', vai:'c23_folha_dez'}]
+  escolhas:[{texto:'Ler o resto da pasta.', vai:'c23_folha_dez'}]
 },
 
 c23_folha_dez:{
   texto:[
-    'Folha 10 em diante não é sobre ginásio.',
-    'Folha 10: a data em que você entrou na Silph. Folha 11: a data em que você entrou na Estação 4. Folha 12: a sala 704, com o horário de entrada e de saída.',
-    'Folha 13 a 18: nomes de pessoas com quem você falou, em ordem cronológica, com cidade e uma marca ao lado de alguns.',
+    'O resto não é sobre ginásio.',
+    d=>{
+      const L = [];
+      if (d.flags.dentro_da_silph) L.push('a data em que você entrou na Silph');
+      if (['entrou_na_estacao','entrou_pelo_buraco','entrou_limpo','entrou_acenando','entrou_com_caminhao','entrou_na_carroceria']
+            .some(f => d.flags[f])) L.push('a data em que você entrou na Estação 4');
+      L.push('a sala 704, com o horário de entrada e de saída');
+      return (L.length > 1 ? 'Uma folha por lugar: ' : 'Uma folha só pra isso: ') + (L.length > 1 ? L.slice(0, -1).join('; ') + '; e ' + L[L.length - 1] : L[0]) + '.';
+    },
+    'Depois, seis folhas de nomes de pessoas com quem você falou, em ordem cronológica, com cidade e uma marca ao lado de alguns.',
     d=>{
       const n = Object.keys(d.npcs||{}).length;
       return n ? `Você conta as marcas. São ${Math.min(n, 9)} pessoas marcadas, e você conhece todas elas pelo primeiro nome.`
                : 'As marcas estão nos nomes de quem falou com você mais de uma vez.';
     },
-    'Folha 19 é a última e tem uma frase só, datilografada, sem assinatura:',
-    fala('a folha 19', 'RECOMENDAÇÃO: CONVOCAR. ELE JÁ SABE DEMAIS PARA SER IGNORADO E AINDA POUCO PARA SER PERIGOSO.', 'frio')
+    'A folha 19 é a última e tem uma frase só, datilografada, sem assinatura:',
+    '**RECOMENDAÇÃO: CONVOCAR. {ELE|ELA} JÁ SABE DEMAIS PARA SER IGNORAD{O|A} E AINDA POUCO PARA SER PERIGOS{O|A}.**'
   ],
   ef:{flag:'leu_a_folha_dezenove', moral:-4,
       itens:{'Folha 19 — recomendação de convocação':1},
@@ -410,9 +426,9 @@ c23_folha_dez:{
 c23_outros_nomes:{
   texto:[
     'Você percorre o corredor D procurando nome conhecido e acha mais rápido do que gostaria.',
-    'Tem pasta da Nadia Arden, de Lavender, com duas folhas: a licença de 1979 e a de agora.',
+    d=>d.npcs && d.npcs['Nadia Arden'] ? 'Tem pasta da Nadia Arden, de Lavender, com duas folhas: a licença de 1979 e a de agora.' : '',
     'Tem pasta do Dr. Fuji, com noventa e uma folhas, a mais grossa do corredor.',
-    'Tem pasta da enfermeira do Centro, com três folhas, a última datada de seis meses atrás — o pedido de exoneração dela.',
+    d=>d.flags.a_enfermeira_voltou_pra_estrada ? 'Tem pasta da enfermeira do Centro da sua cidade, com três folhas, a última datada de poucas semanas atrás: o pedido de exoneração dela.' : '',
     'Tem pasta com o nome do Blue, e ele tira do seu alcance antes de você tocar.',
     fala('Blue', 'Essa não.', 'frio'),
     'E, no fim do corredor, uma pasta com uma etiqueta de três letras e nada mais escrito nela.'
@@ -430,9 +446,9 @@ c23_a_pasta_de_tres_letras:{
     'A etiqueta diz RED.',
     'A pasta tem uma folha.',
     'A folha é um formulário de encerramento de acompanhamento, datado de dois anos atrás, e tem três campos preenchidos:',
-    fala('o formulário', 'MOTIVO DO ENCERRAMENTO: paradeiro desconhecido.'),
-    fala('o formulário', 'ÚLTIMA LOCALIZAÇÃO CONFIRMADA: acima da Rota 10. Altitude estimada 2.400 m.'),
-    fala('o formulário', 'OBSERVAÇÃO: não recomendamos continuar a busca. Ele não está perdido.', 'frio'),
+    '**MOTIVO DO ENCERRAMENTO: paradeiro desconhecido.**',
+    '**ÚLTIMA LOCALIZAÇÃO CONFIRMADA: acima da Rota 10. Altitude estimada 2.400 m.**',
+    '**OBSERVAÇÃO: não recomendamos continuar a busca. Ele não está perdido.**',
     'Blue lê por cima do seu ombro e não fala nada por um tempo muito longo.',
     fala('Blue', 'Acima da Rota 10.', 'baixo'),
     fala('Blue', 'Eu subi lá duas vezes. Eu subi lá DUAS VEZES e não tinha nada.', 'grita')
@@ -538,7 +554,7 @@ c23_queimar:{
       rep:{eixo:'ruim',delta:1,motivo:'Quis queimar a única prova que existia'},
       registrar:'Pensou em queimar o arquivo. Blue impediu.'},
   escolhas:[
-    {texto:'Ler as folhas 10 em diante.', vai:'c23_folha_dez'},
+    {texto:'Ler o resto da pasta.', vai:'c23_folha_dez'},
     {texto:'Procurar outros nomes.', vai:'c23_outros_nomes'},
     {texto:'Descer sem ler mais nada.', vai:'c23_desceu'}
   ]
@@ -549,7 +565,7 @@ c23_abriu_a_pasta:{
     'Você abre a pasta em cima do balcão do ginásio, na frente dele, e lê as dezenove folhas em pé.',
     'Leva vinte minutos. Ele não sai do lado.',
     'A última folha tem uma frase datilografada, sem assinatura:',
-    fala('a folha 19', 'RECOMENDAÇÃO: CONVOCAR. ELE JÁ SABE DEMAIS PARA SER IGNORADO E AINDA POUCO PARA SER PERIGOSO.', 'frio'),
+    '**RECOMENDAÇÃO: CONVOCAR. {ELE|ELA} JÁ SABE DEMAIS PARA SER IGNORAD{O|A} E AINDA POUCO PARA SER PERIGOS{O|A}.**',
     fala('Blue', 'A minha tem a mesma frase.', 'baixo'),
     fala('Blue', 'Palavra por palavra. Eu conferi três vezes.')
   ],

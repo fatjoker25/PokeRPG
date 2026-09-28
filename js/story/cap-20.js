@@ -38,7 +38,7 @@ c20_ab_a_banca:{
   ],
   ef:{flag:'o_jornaleiro_da_118',
       npc:{nome:'Sr. Bram', opiniao:1, viuVoce:'Te contou do pessoal da 704 antes de você subir.'},
-      registrar:'O conselho da sala 704 se reúne uma vez por mês, numa terça de manhã, há anos.',
+      registrar:'O conselho da sala 704 se reúne de quinze em quinze dias, sempre de manhã.',
       presagio:'"São gente normal." Ele disse isso antes de você perguntar como eles são.'},
   escolhas:[
     {texto:'Perguntar se ele sabe o que eles fazem.', vai:'c20_ab_o_que_eles_fazem'},

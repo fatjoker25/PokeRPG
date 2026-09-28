@@ -437,8 +437,12 @@ c23_ficar_com_o_ginasio:{
     'Ele pega uma folha dobrada do bolso de trás e desdobra. É um formulário da Liga, já preenchido, com um campo em branco.',
     fala('Blue', 'Eu preenchi o resto. Falta o nome.'),
     d=>fala(d.jogador.nome, 'Por que eu?'),
-    fala('Blue', 'Porque você subiu a escada.'),
-    fala('Blue', 'E porque eu levei dois anos pra subir, e você levou um dia, e isso responde a sua pergunta melhor do que eu conseguiria.', 'frio')
+    d=>d.flags.subiu_no_segundo_andar
+      ? fala('Blue', 'Porque você subiu a escada.')
+      : fala('Blue', 'Porque você entrou aqui hoje sem pedir licença.'),
+    d=>d.flags.subiu_no_segundo_andar
+      ? fala('Blue', 'E porque eu levei dois anos pra subir, e você levou um dia, e isso responde a sua pergunta melhor do que eu conseguiria.', 'frio')
+      : fala('Blue', 'E porque eu levei dois anos pra entrar aqui sem pedir licença a ninguém. Isso responde a sua pergunta melhor do que eu conseguiria.', 'frio')
   ],
   ef:{flag:'blue_ofereceu_o_ginasio',
       npc:{nome:'Blue', opiniao:4, memoria:'Te ofereceu o ginásio de Viridian com o formulário já preenchido.'},
