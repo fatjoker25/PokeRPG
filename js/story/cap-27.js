@@ -22,7 +22,7 @@ cenas:{
 
 c27_ab_o_posto_fechado:{
   texto:[
-    'O posto florestal do norte de Kanto é uma casa de madeira com um mastro sem bandeira, e é o último lugar com telhado antes da pedra.',
+    'O posto velho da estrada de baixo, o de antes do posto florestal da Rota 10, é uma casa de madeira com um mastro sem bandeira.',
     'Está fechado.',
     'Não é "fechado hoje": tem um cadeado com ferrugem de meses e uma janela com teia de aranha por dentro, e na porta um aviso de papel que a chuva comeu e do qual sobra uma linha:',
     '**"...atendimento transferido para a unidade de Cerulean."**',
@@ -33,7 +33,7 @@ c27_ab_o_posto_fechado:{
     'Você lê as últimas dez linhas e nenhuma tem a coluna de descida preenchida.'
   ],
   ef:{flag:'o_posto_fechado',
-      registrar:'O posto florestal do norte está fechado há meses. O livro improvisado tem dez subidas sem descida.',
+      registrar:'O posto velho da estrada de baixo está fechado há meses. O livro improvisado tem dez subidas sem descida.',
       presagio:'Dez sem descida pode ser gente que desceu por outro lado. Pode.'},
   escolhas:[
     {texto:'Assinar o caderno antes de subir.', vai:'c27_ab_assinou_o_caderno'},
@@ -94,7 +94,7 @@ c27_ab_a_equipe_de_oitenta_e_oito:{
     fala('Enzo', 'Na quarta vez eu subi e não tinha mais ninguém.'),
     'A mula bufa. Ele afrouxa a rédea.',
     fala('Enzo', 'O acampamento tava montado. Barraca em pé, fogareiro, mantimento da terceira viagem intacto.'),
-    fala('Enzo', 'Eu desci e avisei. Vieram uns quinze, da Liga e da polícia, procuraram nove dias.'),
+    fala('Enzo', 'Eu desci e avisei. Vieram uns quinze, da Liga e da polícia, subiram no dia seguinte.'),
     d=>fala(d.jogador.nome, 'Acharam?'),
     fala('Enzo', 'Acharam os seis. Todos vivos, todos em lugares diferentes da montanha, todos em três dias.'),
     'Ele para de andar.',
@@ -121,7 +121,7 @@ c27_ab_sozinho_mesmo:{
                : 'Você deita e olha pro teto da barraca por um tempo comprido, e não tem ninguém pra conferir se continua ali.';
     },
     'De madrugada você acorda uma terceira vez, sem motivo.',
-    'E fica deitado escutando, e o que você escuta é: nada.',
+    'E fica deitad{o|a} escutando, e o que você escuta é: nada.',
     'Nada mesmo. Nenhum bicho, nenhum vento, nenhuma folha.',
     'Você está a mil e duzentos metros de altitude numa mata fechada e não tem um único som.'
   ],
@@ -159,16 +159,16 @@ c22_subida:{
 c22_posto:{
   texto:[
     'O posto florestal da Rota 10 é uma casa de madeira com antena, um gerador e uma caixa d água em cima de quatro pernas.',
-    'Quem atende é um homem de uns cinquenta anos de camisa cáqui desbotada, que se apresenta como Sr. Roland Poplar e que está sozinho aqui há dois anos e meio.',
+    'Quem atende é um homem de uns cinquenta anos de camisa cáqui desbotada, que se apresenta como Sr. Emory Poplar e que está sozinho aqui há dois anos e meio.',
     '"{O senhor|A senhora} vai subir." Não é pergunta. "Assina o livro."',
     'O livro fica num prego, do lado da porta. É um caderno de capa dura com uma coluna de nomes, uma de datas de subida e uma de datas de descida.',
-    'Você passa o dedo pela terceira coluna e conta quatro linhas em branco.'
+    'Você passa o dedo pela terceira coluna e conta seis linhas em branco.'
   ],
   ef:{flag:'assinou_o_livro',
-      npc:{nome:'Sr. Roland Poplar', opiniao:1, memoria:'Guarda do posto florestal da Rota 10, sozinho há dois anos e meio.'},
+      npc:{nome:'Sr. Emory Poplar', opiniao:1, memoria:'Guarda do posto florestal da Rota 10, sozinho há dois anos e meio.'},
       registrar:'Assinou o livro do posto florestal. Quatro linhas sem data de descida.'},
   escolhas:[
-    {texto:'Perguntar quem são as quatro linhas em branco.', vai:'c22_as_quatro_linhas'},
+    {texto:'Perguntar quem são as seis linhas em branco.', vai:'c22_as_quatro_linhas'},
     {texto:'Perguntar o que ele vê daqui.', vai:'c22_o_que_ele_ve'},
     {texto:'Perguntar se ele já subiu.', vai:'c22_ele_ja_subiu'},
     {texto:'Assinar e subir.', vai:'c22_primeiro_dia'}
@@ -178,12 +178,14 @@ c22_posto:{
 c22_as_quatro_linhas:{
   texto:[
     'Ele não precisa olhar o livro.',
-    '"Vernon, em março." Ele conta com o queixo. "E três de agora, de quatro meses atrás."',
-    '"Três? Eles voltaram. A Liga disse que a terceira equipe voltou inteira."',
+    fala('Sr. Emory Poplar', 'Duas da primeira equipe, faz dezoito meses.', null, 'Ele conta com o queixo.'),
+    fala('Sr. Emory Poplar', 'Vernon, em março. E três de agora, de quatro meses atrás.'),
+    d=>fala(d.jogador.nome, 'Três? Eles voltaram. A Liga disse que a terceira equipe voltou inteira.'),
     'Ele olha para você com uma paciência de quem já explicou isso.',
-    '"Voltaram seis do vale e desceram três daqui." Ele bate no livro com o dedo. "Três ficaram. Montaram acampamento lá em cima, num ponto que dá para ver daqui com binóculo, e estão lá até hoje."',
-    '"Até hoje?"',
-    '"Até hoje. Eu levo comida de quinze em quinze dias e eles agradecem e comem."'
+    fala('Sr. Emory Poplar', 'Voltaram seis do vale e desceram três daqui.', null, 'Ele bate no livro com o dedo.'),
+    fala('Sr. Emory Poplar', 'Três ficaram. Montaram acampamento lá em cima, num ponto que dá para ver daqui com binóculo, e estão lá até hoje.'),
+    d=>fala(d.jogador.nome, 'Até hoje?'),
+    fala('Sr. Emory Poplar', 'Até hoje. Eu levo comida de quinze em quinze dias e eles agradecem e comem.')
   ],
   ef:{flag:['tres_ficaram','achou_o_acampamento_existe'], instabilidade:1,
       registrar:'Três da terceira equipe nunca desceram. Estão acampados lá em cima há quatro meses.'},
@@ -224,7 +226,7 @@ c22_porque_nao_desce:{
     'Desculpe o incômodo. Eu preciso estar lá quando ele perguntar de novo.'
   ],
   ef:{flag:['sabe_do_bilhete'], instabilidade:2, moral:-2,
-      npc:{nome:'Sr. Roland Poplar', opiniao:2, memoria:'Já trouxe um deles para baixo e ele subiu de novo na manhã seguinte.'},
+      npc:{nome:'Sr. Emory Poplar', opiniao:2, memoria:'Já trouxe um deles para baixo e ele subiu de novo na manhã seguinte.'},
       registrar:'Eu preciso estar lá quando ele perguntar de novo.'},
   escolhas:[
     {texto:'"O senhor já subiu até o vale?"', vai:'c22_ele_ja_subiu'},
@@ -260,7 +262,7 @@ c22_pediu_binoculo:{
     'Você pendura a correia rachada no pescoço e promete voltar com ele, e é a primeira promessa que você faz nesta subida.'
   ],
   ef:{flag:'tem_o_binoculo', itens:{'Binóculo do pai do Sr. Poplar':1},
-      npc:{nome:'Sr. Roland Poplar', opiniao:3, memoria:'Te emprestou o binóculo do pai dele.'},
+      npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Te emprestou o binóculo do pai dele.'},
       registrar:'Pegou emprestado o binóculo do pai do Sr. Poplar, com promessa de devolver.'},
   escolhas:[
     {texto:'"O que o senhor vê daqui?"', vai:'c22_o_que_ele_ve'},
@@ -283,7 +285,7 @@ c22_o_que_ele_ve:{
   escolhas:[
     {texto:'Subir.', vai:'c22_primeiro_dia'},
     {texto:'"Me empresta o binóculo."', vai:'c22_pediu_binoculo'},
-    {texto:'Perguntar das quatro linhas em branco.', vai:'c22_as_quatro_linhas'}
+    {texto:'Perguntar das seis linhas em branco.', vai:'c22_as_quatro_linhas'}
   ]
 },
 
@@ -376,16 +378,16 @@ c22_quem_repinta:{
     'O Sr. Poplar diz isso sem nenhum floreio, do jeito que se diz que a gente varre a própria calçada.',
     '"De ano em ano, no aniversário. Com tinta de esmalte, que aguenta."',
     '"E a frase?"',
-    '"A frase foi ideia minha e eu apanhei por isso." Ele enche a caneca. "A Liga mandou um ofício pedindo que eu retirasse, porque é impróprio. Eu respondi que a cruz é minha, que a tinta é minha, e que o terreno é da União."',
+    '"A frase foi ideia minha e eu apanhei por isso." Ele enche a caneca. "A Liga mandou um ofício pedindo que eu retirasse, porque é impróprio. Eu respondi que a cruz é minha, que a tinta é minha, e que o terreno é público."',
     'Ele bebe.',
     '"Eu botei porque ela voltou. Eles mandaram três equipes e falam das que não voltaram, e ninguém nunca escreveu em lugar nenhum que essa aqui voltou."'
   ],
   ef:{flag:['ela_voltou'], moral:3,
-      npc:{nome:'Sr. Roland Poplar', opiniao:3, memoria:'Repinta a cruz todo ano e brigou com a Liga pela frase.'},
+      npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Repinta a cruz todo ano e brigou com a Liga pela frase.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou quem cuidava da cruz'},
       registrar:'O Sr. Poplar repinta a cruz todo ano e escreveu ELA VOLTOU contra um ofício da Liga.'},
   escolhas:[
-    {texto:'Perguntar das quatro linhas em branco.', vai:'c22_as_quatro_linhas'},
+    {texto:'Perguntar das seis linhas em branco.', vai:'c22_as_quatro_linhas'},
     {texto:'Subir.', vai:'c22_primeiro_dia'}
   ]
 },
@@ -394,7 +396,7 @@ c22_primeiro_dia:{
   texto:[
     'O primeiro dia é só cansaço.',
     'Pedra, subida, vento, e a mesma vista virando devagar à sua esquerda.',
-    'Às quatro da tarde você passa a lomba que o Sr. Poplar apontou, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.',
+    d=>`Às quatro da tarde você passa ${d.flags.sabe_da_lomba ? 'a lomba que o Sr. Poplar apontou' : 'uma lomba de pedra'}, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.`,
     'Não tem bicho.',
     'Nenhum. Nem inseto, nem Pidgey, nem barulho de coisa pequena fugindo do lado da trilha.',
     d=>{
@@ -435,7 +437,7 @@ c22_acampou:{
 c22_andou_mais:{
   texto:[
     'Você anda duas horas a mais e para às seis e vinte, quando a luz acaba de vez.',
-    'Monta sozinho, come sem fome e deita.',
+    'Monta sozinh{o|a}, come sem fome e deita.',
     'E aí acontece uma coisa pequena e horrível: você acorda às onze e quarenta da noite achando que dormiu a noite inteira, e você dormiu quarenta minutos.',
     'Você confere o relógio três vezes.',
     'Depois disso não dorme mais.'
@@ -493,7 +495,7 @@ c22_terceira_equipe:{
     'Tem café numa térmica que ainda está morna.',
     'Não tem ninguém.',
     'Num caderno em cima da mesa dobrável, a última anotação, com letra tranquila:',
-    'Dia 4. Ele nos deixou entrar. Vamos descer amanhã. O R. quer voltar e avisar; nós três queremos descer. Decidimos no par ou ímpar. Ganhou descer.'
+    '**Dia 4. Ele nos deixou entrar. Vamos descer amanhã. O R. quer voltar e avisar; nós três queremos descer. Decidimos no par ou ímpar. Ganhou descer.**'
   ],
   ef:{flag:'achou_o_acampamento',
       registrar:'Encontrou o acampamento intacto da terceira equipe. Ninguém.'},
@@ -509,10 +511,10 @@ c22_terceira_equipe:{
 c22_pegou_caderno_equipe:{
   texto:[
     'Você folheia para trás.',
-    'Dia 1. Chegamos. O vale tem dois guardas. Não são hostis. Não nos impedem.',
-    'Dia 2. Eles não estão impedindo a gente de entrar. Eles estão impedindo alguma coisa de sair. Isso muda o cálculo inteiro.',
-    'Dia 3. Ouvimos uma voz. Não com o ouvido. Ela perguntou o que a gente queria e ninguém soube responder e ela não insistiu.',
-    'Dia 4. Ele nos deixou entrar.',
+    '**Dia 1. Chegamos. O vale tem dois guardas. Não são hostis. Não nos impedem.**',
+    '**Dia 2. Eles não estão impedindo a gente de entrar. Eles estão impedindo alguma coisa de sair. Isso muda o cálculo inteiro.**',
+    '**Dia 3. Ouvimos uma voz. Não com o ouvido. Ela perguntou o que a gente queria e ninguém soube responder e ela não insistiu.**',
+    '**Dia 4. Ele nos deixou entrar.**',
     'Depois disso são páginas em branco. Vinte e duas folhas, todas em branco, e na última, no canto inferior, quase invisível, um risco de lápis que alguém fez sem querer ao apoiar a mão.'
   ],
   ef:{flag:['leu_caderno_equipe','caderno_da_equipe'],
@@ -532,7 +534,7 @@ c22_contra_a_luz:{
     'Nas dezenove primeiras não tem nada.',
     'Na vigésima tem: a marca de pressão de uma escrita que foi feita numa folha que depois foi arrancada.',
     'Dá para ler quatro palavras inteiras e o formato do resto.',
-    'AINDA NÃO SEI RESPONDER.',
+    '**AINDA NÃO SEI RESPONDER.**',
     'E, embaixo, na linha seguinte, uma palavra só, escrita com muita força: AMANHÃ.'
   ],
   ef:{flag:['leu_a_marca_no_papel'], instabilidade:2,
@@ -567,7 +569,7 @@ c22_ligou_o_radio:{
   texto:[
     'O rádio liga no primeiro clique, com pilha nova, e pega uma emissora com muito chiado.',
     'É o programa das seis da manhã de uma rádio comunitária de Fuchsia, e a locutora está lendo pedidos de emprego de ouvintes.',
-    'Você fica ouvindo dois minutos inteiros, no meio da pedra, a duzentos quilômetros de Fuchsia, sozinho, num acampamento vazio.',
+    'Você fica ouvindo dois minutos inteiros, no meio da pedra, a duzentos quilômetros de Fuchsia, sozinh{o|a}, num acampamento vazio.',
     d=>d.flags.contato_nadia
       ? 'E você reconhece a voz.'
       : 'É a voz de uma mulher que fala devagar e lê nome completo e endereço de cada um.',
@@ -602,7 +604,7 @@ c22_o_livro:{
     'É um romance policial de banca, com a lombada quebrada e o preço a lápis na primeira página.',
     'A página 140 está marcada com um bilhete de ônibus.',
     'No verso do bilhete, escrito a caneta, com a letra apertada de quem escreve em cima do joelho:',
-    'Se eu não voltar: a senha do cofre é o aniversário da Ivete. Não deixem a minha mãe assinar nada sem advogado. E digam a ela que eu não estava com medo, porque eu não estou.',
+    'Se eu não voltar: a senha do cofre é o aniversário da Nell. Não deixem a minha mãe assinar nada sem advogado. E digam a ela que eu não estava com medo, porque eu não estou.',
     'Não tem assinatura e não tem data.',
     'Você põe o bilhete de volta na página 140 e fecha o livro com cuidado, e depois fica um tempo com a mão em cima da capa.'
   ],
@@ -649,7 +651,7 @@ c22_o_equipamento:{
     'Cordas. Ganchos. Um teodolito de campanha. Dois medidores que você não reconhece. Uma caixa de baterias.',
     'E um deles, um aparelho do tamanho de um livro com uma agulha e um mostrador, está ligado e continua marcando.',
     'A agulha está encostada no fim da escala e tem uma fita adesiva colada no vidro com uma anotação a caneta.',
-    'Desde dia 2. Não é defeito. Trocamos o aparelho.'
+    '**Desde dia 2. Não é defeito. Trocamos o aparelho.**'
   ],
   ef:{flag:['viu_o_aparelho'], instabilidade:2,
       registrar:'Um medidor da terceira equipe está com a agulha no fim da escala desde o dia 2. Não é defeito.'},
@@ -705,9 +707,9 @@ c22_achou_equipe:{
     'Você acha os três. Vivos.',
     'Estão sentados numa depressão de pedra a quatrocentos metros do acampamento, os três, virados para o vale.',
     'Eles te veem chegar e não reagem muito. Um deles acena devagar.',
-    '"Já faz quanto tempo?", pergunta uma mulher de uns trinta.',
-    '"Que vocês estão aqui? Não sei. Uma semana?"',
-    'Ela assente. "É. Parecia menos."',
+    d=>fala(d.jogador.nome, 'Faz quanto tempo que vocês estão aqui?'),
+    fala('a mulher de trinta', 'Não sei. Uma semana?', null, 'Quem responde é uma mulher de uns trinta, e os outros dois assentem.'),
+    fala('a mulher de trinta', 'É. Parecia menos.'),
     'Eles não estão feridos, não estão drogados e não estão presos. Eles estão esperando, e não sabem dizer o quê, e quando você pergunta eles ficam sinceramente confusos com a pergunta.'
   ],
   ef:{flag:'achou_a_equipe',
@@ -724,13 +726,13 @@ c22_achou_equipe:{
 
 c22_faz_quatro_meses:{
   texto:[
-    '"Faz quatro meses."',
+    d=>fala(d.jogador.nome, 'Faz quatro meses.'),
     'Os três olham para você e a mulher de trinta ri, de leve, do jeito que se ri de uma piada que não é boa.',
-    '"Não faz."',
+    fala('a mulher de trinta', 'Não faz.'),
     'Você tira o caderno, mostra a data de hoje, mostra a anotação do dia 4 que está no caderno deles.',
     'Eles conferem. Os três, um por um, com cuidado.',
     'E aí acontece uma coisa lenta e horrível: o rosto dos três muda ao mesmo tempo e nenhum deles fala nada por uns quarenta segundos.',
-    '"Quatro meses", diz o mais novo, e a voz dele sai errada.'
+    fala('o mais novo', 'Quatro meses.', 'baixo', 'A voz dele sai errada.')
   ],
   ef:{flag:['contou_o_tempo_pra_equipe'], instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Mostrou a data a três pessoas que tinham perdido a conta'},
@@ -767,14 +769,14 @@ c22_desceu_os_dois:{
     'Você desce os dois até o posto florestal, e leva sete horas, e ninguém fala quase nada no caminho.',
     'No posto, o Sr. Poplar não faz nenhuma pergunta. Ele põe café, tira dois cobertores do armário e escreve duas datas na terceira coluna do livro.',
     'Depois acompanha você até a porta.',
-    '"{O senhor|A senhora} vai subir de novo."',
-    '"Vou."',
-    'Ele assente. "Então eu escrevo a sua data de subida outra vez, porque tem que constar."',
+    fala('Sr. Emory Poplar', '{O senhor|A senhora} vai subir de novo.'),
+    d=>fala(d.jogador.nome, 'Vou.'),
+    fala('Sr. Emory Poplar', 'Então eu escrevo a sua data de subida outra vez, porque tem que constar.', null, 'Ele assente.'),
     'E escreve.'
   ],
   ef:{flag:['desceu_dois'], hp:-4, causa:'Sete horas de descida e a subida de volta',
       rep:{eixo:'bom',delta:3,motivo:'Desceu duas pessoas e subiu de novo'},
-      npc:{nome:'Sr. Roland Poplar', opiniao:3, memoria:'Escreveu a sua data de subida duas vezes no mesmo livro.'},
+      npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Escreveu a sua data de subida duas vezes no mesmo livro.'},
       registrar:'Desceu dois da terceira equipe até o posto e subiu de novo.'},
   escolhas:[
     {texto:'Subir e ir ao vale.', vai:'c22_encontro'},
@@ -787,12 +789,13 @@ c22_o_que_ficou:{
     'Ele está exatamente onde estava, na mesma depressão de pedra, na mesma posição.',
     'Você senta ao lado dele sem pedir licença.',
     'Passam uns bons dois minutos.',
-    '"Eles chegaram bem?"',
-    '"Chegaram."',
+    fala('o que ficou', 'Eles chegaram bem?'),
+    d=>fala(d.jogador.nome, 'Chegaram.'),
     'Ele assente.',
-    '"Eu sei o que {o senhor|a senhora} está pensando e está cert{o|a}." Ele não tira os olhos do vale. "Eu sei que estou esperando uma coisa que talvez não venha, e que quatro meses é muito, e que a minha filha faz aniversário em novembro."',
+    fala('o que ficou', 'Eu sei o que {o senhor|a senhora} está pensando e está cert{o|a}.', null, 'Ele não tira os olhos do vale.'),
+    fala('o que ficou', 'Eu sei que estou esperando uma coisa que talvez não venha, e que quatro meses é muito, e que a minha filha faz aniversário em novembro.'),
     'Ele encolhe os ombros.',
-    '"E mesmo assim eu não consigo descer sem responder. É assim que é. Eu não sei explicar melhor e eu já tentei muito."'
+    fala('o que ficou', 'E mesmo assim eu não consigo descer sem responder. É assim que é. Eu não sei explicar melhor e eu já tentei muito.')
   ],
   ef:{flag:['falou_com_o_que_ficou'], instabilidade:1, moral:-1,
       npc:{nome:'o que ficou', opiniao:2, memoria:'Não consegue descer sem responder, e sabe disso.'},
@@ -806,13 +809,14 @@ c22_o_que_ficou:{
 
 c22_respondo_por_voce:{
   texto:[
-    '"Então eu respondo por você."',
+    d=>fala(d.jogador.nome, 'Então eu respondo por você.'),
     'Ele vira a cabeça pela primeira vez.',
-    '"O senhor não pode responder por mim."',
-    '"Eu posso descer e perguntar se ele ainda quer a resposta."',
+    fala('o que ficou', '{O senhor|A senhora} não pode responder por mim.'),
+    d=>fala(d.jogador.nome, 'Eu posso descer e perguntar se ele ainda quer a resposta.'),
     'Ele fica quieto muito tempo.',
     'Depois tira do bolso um papel dobrado, pequeno, gasto nas dobras de tanto abrir e fechar.',
-    '"Então leva isso." Ele entrega. "Eu escrevi no dia dez e eu reescrevi quarenta vezes e essa é a versão que eu não mudo há três semanas."'
+    fala('o que ficou', 'Então leva isso.', null, 'Ele entrega.'),
+    fala('o que ficou', 'Eu escrevi no dia dez e eu reescrevi quarenta vezes e essa é a versão que eu não mudo há três semanas.')
   ],
   ef:{flag:['leva_a_resposta_dele','vai_responder'],
       itens:{'A resposta dobrada quarenta vezes':1}, moral:3,
@@ -829,7 +833,7 @@ c22_leu_a_resposta:{
   texto:[
     'Você abre no caminho, o que provavelmente é errado.',
     'O papel tem uma linha só, escrita com muito cuidado, com a letra endireitada de quem quis que ficasse bonito.',
-    'Eu queria que a minha filha não tivesse medo de bicho grande.',
+    '**Eu queria que a minha filha não tivesse medo de bicho grande.**',
     'Você lê três vezes.',
     'Não é bonito, não é profundo e não é o que a Liga chamaria de objetivo de missão.',
     'É só verdade, e levou quatro meses e quarenta versões para chegar nessa forma.'
@@ -862,7 +866,8 @@ c22_sentou_com_eles:{
     'Não acontece nada.',
     'Passam vinte minutos, e depois quarenta, e a certa altura você percebe que parou de pensar e que isso é agradável, e é exatamente aí que você se levanta de um pulo.',
     'A mulher de trinta te olha de baixo.',
-    '"É." Ela não parece surpresa. "É assim mesmo. No começo a gente levanta."'
+    fala('a mulher de trinta', 'É.', null, 'Ela não parece surpresa.'),
+    fala('a mulher de trinta', 'É assim mesmo. No começo a gente levanta.')
   ],
   ef:{flag:'sentou_com_a_equipe', instabilidade:2, moral:-2,
       registrar:'Sentou com eles e levou quarenta minutos para perceber que tinha parado de pensar.'},
@@ -876,14 +881,15 @@ c22_sentou_com_eles:{
 c22_o_que_ouviram:{
   texto:[
     'Os três respondem ao mesmo tempo e dizem a mesma coisa com palavras diferentes:',
-    '"Ele perguntou o que a gente queria."',
-    '"E vocês responderam o quê?"',
+    fala('os três', 'Ele perguntou o que a gente queria.'),
+    d=>fala(d.jogador.nome, 'E vocês responderam o quê?'),
     'Silêncio longo. A mulher de trinta finalmente fala:',
-    '"A gente respondeu com o objetivo da missão. Avaliação de risco." Ela ri sem alegria. "A gente respondeu com o formulário."',
-    '"E ele?"',
-    '"Ele parou de falar com a gente. Faz cinco dias."',
+    fala('a mulher de trinta', 'A gente respondeu com o objetivo da missão. Avaliação de risco.', null, 'Ela ri sem alegria.'),
+    fala('a mulher de trinta', 'A gente respondeu com o formulário.'),
+    d=>fala(d.jogador.nome, 'E ele?'),
+    fala('a mulher de trinta', 'Ele parou de falar com a gente. Faz cinco dias.'),
     'Ela olha para o vale.',
-    '"A gente está esperando ele perguntar de novo. Para responder direito."'
+    fala('a mulher de trinta', 'A gente está esperando ele perguntar de novo. Para responder direito.')
   ],
   ef:{flag:'sabe_da_pergunta',
       registrar:'Ele perguntou o que eles queriam. Eles responderam com o formulário.'},
@@ -898,13 +904,13 @@ c22_o_que_ouviram:{
 
 c22_o_que_responderiam:{
   texto:[
-    '"E o que vocês responderiam agora?"',
+    d=>fala(d.jogador.nome, 'E o que vocês responderiam agora?'),
     'É a primeira vez em cinco dias, ou em quatro meses, que alguém faz essa pergunta em voz alta para eles.',
     'A mulher de trinta abre a boca e fecha.',
     'O mais novo diz "eu queria" e para no meio, e tenta de novo, e para no mesmo lugar.',
     'O terceiro não tenta.',
     'E aí a mulher de trinta diz uma coisa que muda a temperatura da pedra:',
-    '"Eu acho que ninguém aqui sabe o que quer, e é por isso que a gente está sentado numa pedra há cinco dias, e eu acho que isso não tem nada a ver com ele."'
+    fala('a mulher de trinta', 'Eu acho que ninguém aqui sabe o que quer, e é por isso que a gente está sentado numa pedra há cinco dias, e eu acho que isso não tem nada a ver com ele.')
   ],
   ef:{flag:['a_pergunta_e_deles'], instabilidade:1, moral:2,
       rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta que destravou três pessoas'},
@@ -919,8 +925,9 @@ c22_o_que_responderiam:{
 c22_tirou_equipe:{
   texto:[
     'Você levanta os três pelo braço, um por um. Eles não resistem: vão, com a mesma docilidade com que estavam sentados.',
-    'A duzentos metros do acampamento, um deles para de repente e olha para trás.',
-    '"Espera." A voz dele muda completamente. "Espera, o que —"',
+    'A duzentos metros do acampamento, o mais novo para de repente e olha para trás.',
+    fala('o mais novo', 'Espera.', null, 'A voz dele muda completamente.'),
+    fala('o mais novo', 'Espera, o que —'),
     'E aí eles todos acordam, ao mesmo tempo, e o pânico chega de uma vez em três pessoas adultas.',
     'Vocês levam quatro horas para descer até o posto da Rota 10. Nenhum dos três fala nada no caminho.',
     'No posto, o Sr. Poplar olha os três, olha você, e vai pôr água no fogo sem dizer uma palavra.'
@@ -940,9 +947,10 @@ c22_acordados:{
     'Acordados, no posto, com café na mão, eles contam tudo em vinte minutos e contam igual.',
     'Dia 3, à tarde, no fundo do vale. Não foi uma voz: foi uma pergunta que já estava na cabeça quando eles perceberam.',
     'O que vocês querem.',
-    '"E a gente respondeu com o formulário", diz a mulher de trinta, e agora ela cobre os olhos com a mão. "A gente respondeu avaliação de risco para uma coisa que perguntou o que a gente queria."',
+    fala('a mulher de trinta', 'E a gente respondeu com o formulário.', null, 'Agora ela cobre os olhos com a mão.'),
+    fala('a mulher de trinta', 'A gente respondeu avaliação de risco para uma coisa que perguntou o que a gente queria.'),
     'O mais novo fala baixo, olhando a caneca.',
-    '"E ele não ficou bravo. Foi pior. Ele acreditou na gente."'
+    fala('o mais novo', 'E ele não ficou bravo. Foi pior. Ele acreditou na gente.', 'baixo')
   ],
   ef:{flag:['sabe_da_pergunta','ele_acreditou'], instabilidade:1, moral:-2,
       rep:{eixo:'bom',delta:1,motivo:'Esperou eles acordarem para perguntar'},
@@ -1058,7 +1066,7 @@ c22_contornou:{
 
 c22_o_circulo:{
   texto:[
-    'O caderninho da lata falava de um círculo, e o círculo existe.',
+    d=>d.flags.achou_a_lata ? 'O caderninho da lata falava de um círculo, e o círculo existe.' : 'No chão do vale tem um círculo.',
     'Fica a uns cinquenta metros da abertura, no chão de cascalho, e só dá para ver de cima: é uma área de uns doze metros de diâmetro onde o cascalho está vitrificado.',
     'Não é queimado. É vidro. Areia que virou vidro e esfriou, com bolhas paradas dentro.',
     'No meio do círculo tem uma depressão rasa, do tamanho de um corpo grande deitado.',
