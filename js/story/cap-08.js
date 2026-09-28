@@ -479,6 +479,8 @@ c8_peso:{
 },
 
 c8_lembra_do_terno:{
+  falante:'Conferente do porto',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Que cara de terno? Você lembra?"',
     '"Lembro do sapato."',
@@ -537,6 +539,8 @@ c8_galpao:{
 },
 
 c8_quem_ta_dentro:{
+  falante:'o rapaz do galpão',
+  vozes:['P','N','N','N','P','N','N','P','N'],
   texto:[
     '"Quem tá lá dentro?"',
     '"O Surge."',
@@ -1016,7 +1020,7 @@ c8_nao_pegou_chave:{
     'Ela pega a chave de volta devagar.',
     'E aí ela faz uma coisa: guarda a chave, pega um guardanapo, e escreve uma coisa nele com o lápis de conta do bar.',
     'Empurra o guardanapo.',
-    'Está escrito: "CONVÉS 3 — PORTA DE SERVIÇO FICA DESTRANCADA DAS 23H ÀS 23H20 (TROCA DE TURNO DA COPA)."',
+    'Está escrito à mão: "CONVÉS 3 — PORTA DE SERVIÇO FICA DESTRANCADA DAS 23H ÀS 23H20 (TROCA DE TURNO DA COPA)."',
     '"Guardanapo some", ela diz. "Chave não some."'
   ],
   ef:{flag:'janela_das_23h',
@@ -1040,7 +1044,7 @@ c8_pediu_trabalho:{
     'Ela para de rir.',
     '"Tá." Ela escreve um nome num guardanapo. "Fala pro contramestre que a Rina mandou. Turno começa às seis. Oito hora."',
     'Ela devolve o lápis pro balcão.',
-    '"E, garoto: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
+    '"E, {garoto|garota}: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
   ],
   ef:{flag:'indicacao_da_neusa',
       npc:{nome:'Cozinheira do Anne', opiniao:3, memoria:'Te indicou para o turno de cozinha do S.S. Anne.'},
@@ -1219,6 +1223,8 @@ c8_atras_do_menino:{
 },
 
 c8_vai_atras_dela:{
+  falante:'a dona da fritura',
+  vozes:['P','N','N','N'],
   texto:[
     '"Ele vai atrás dela."',
     'A dona da fritura não responde na hora.',
@@ -1403,6 +1409,8 @@ c8_pagou_diferenca:{
 },
 
 c8_krabby_licao:{
+  falante:'Menino do cais',
+  vozes:['P','N','N','P'],
   texto:[
     '"Dois mil e quatrocentos?"',
     'Ele olha a caixa de isopor de um jeito completamente novo.',
@@ -1459,6 +1467,8 @@ c8_noite_porto:{
 },
 
 c8_premio:{
+  falante:'a mulher da tripulação',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Quanto paga o primeiro lugar?"',
     '"Vinte mil."',
@@ -1498,6 +1508,8 @@ c8_quem_aposta:{
 },
 
 c8_por_que_faltou:{
+  falante:'a mulher da tripulação',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Por que faltou um?"',
     'Ela hesita meio segundo. É o suficiente.',
@@ -1519,6 +1531,8 @@ c8_por_que_faltou:{
 },
 
 c8_recusou_torneio:{
+  falante:'a mulher da tripulação',
+  vozes:['P','N'],
   texto:[
     '"Não."',
     'Ela não insiste. Faz que sim, vira, e sobe a passarela.',
@@ -2058,6 +2072,7 @@ c8_carga_meio:{
 },
 
 c8_carga_ruim:{
+  falante:'o contramestre',
   texto:[
     'Você não aguenta.',
     'Na quarta hora, o contramestre te manda parar antes que você se machuque de verdade. Não tem deboche nenhum no jeito dele.',
@@ -2120,6 +2135,8 @@ c8_cozinha:{
 },
 
 c8_bandejas_do_40:{
+  falante:'o cozinheiro',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Quem monta as bandeja do quarenta?"',
     'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e isso é mais eloquente que qualquer resposta.',
@@ -2188,7 +2205,7 @@ c8_conferiu_de_novo:{
     'Você faz o serviço do camarote 40 por três dias.',
     'Todo dia: quatro bandejas. Três com talher, uma sem.',
     'No segundo dia você põe, sem falar com ninguém, um bilhete embaixo da quarta bandeja.',
-    'Está escrito: "VOCÊ TÁ BEM?"',
+    'Está escrito à mão: "VOCÊ TÁ BEM?"',
     'No terceiro dia, quando você recolhe, o bilhete voltou.',
     'Do outro lado, escrito com o dedo molhado em molho, quase ilegível, uma palavra:',
     '"NAO"'
@@ -2209,7 +2226,7 @@ c8_segundo_bilhete:{
   texto:[
     'Você manda outro. "QUAL SEU NOME?"',
     'Volta no dia seguinte, com o mesmo molho, num guardanapo em vez do bilhete, porque o bilhete não voltou.',
-    'Está escrito: "DORIAN"',
+    'Está escrito à mão: "DORIAN"',
     d=>d.flags.a_carta_do_denis || d.flags.copiou_a_carta
       ? 'Você senta no chão do corredor de serviço com um guardanapo na mão e fica um tempo sem conseguir respirar direito.'
       : 'Você não conhece nenhum Dorian. Mas agora tem um nome, e nome é tudo.',
@@ -2960,6 +2977,8 @@ c8_rasgou:{
 },
 
 c8_escreveu_rescisao:{
+  falante:'o homem de camisa social',
+  vozes:['N'],
   texto:[
     'Você escreve à mão, num papel de carta do camarote de outra pessoa, às duas da manhã, com uma caneta emprestada da recepção.',
     'Sete linhas. Você refaz três vezes porque erra o nome comprido da fundação.',
@@ -3199,6 +3218,8 @@ c8_abriu_caixa:{
 },
 
 c8_soltou_caixas:{
+  falante:'Marinheiro do turno',
+  vozes:['N'],
   texto:[
     'Você tira os três e sobe pelo corredor de serviço carregando um por vez, três viagens, com o coração na garganta.',
     'No convés de popa, de madrugada, com vento de mar, você abre e deixa sair.',
@@ -3246,6 +3267,8 @@ c8_o_marinheiro:{
 },
 
 c8_porque_nunca_abriu_nav:{
+  falante:'Marinheiro do turno',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Por que você nunca abriu?"',
     'Ele demora.',
@@ -3295,6 +3318,8 @@ c8_enfermaria:{
 },
 
 c8_o_garoto_da_maca:{
+  falante:'Enfermeira do Anne',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O que aconteceu com ele?"',
     'A enfermeira olha a segunda maca.',
@@ -3452,6 +3477,8 @@ c8_bateu_no_40:{
 },
 
 c8_a_bandeja_falsa:{
+  falante:'o homem de camisa social',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Eu trouxe a bandeja."',
     'Ele olha as suas mãos vazias.',
@@ -3473,6 +3500,8 @@ c8_a_bandeja_falsa:{
 },
 
 c8_quem_ta_no_banheiro:{
+  falante:'o homem de camisa social',
+  vozes:['P','N','P','N'],
   texto:[
     '"Quem tá no banheiro?"',
     'A cara dele não muda nem um milímetro.',
@@ -3596,6 +3625,8 @@ c8_entrou_no_40:{
 },
 
 c8_podem_levantar:{
+  falante:'o homem de camisa social',
+  vozes:['P','N'],
   texto:[
     '"Vocês podem levantar."',
     'Nenhum dos dois levanta.',
@@ -3643,6 +3674,8 @@ c8_a_carta_de_volta:{
 },
 
 c8_encarou_o_do_40:{
+  falante:'o homem de camisa social',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Você vira pro homem de camisa social.',
     'Ele está parado no meio do camarote com as mãos à mostra, calmo, sem nenhuma intenção de correr ou de reagir.',
@@ -3650,7 +3683,7 @@ c8_encarou_o_do_40:{
     '"Eles estavam trancados num banheiro."',
     '"A porta estava encostada com uma cadeira porque a maçaneta está quebrada."',
     'Ele olha você nos olhos sem piscar.',
-    '"E, garoto: eu sei que você não acredita. Mas quando isso virar processo — e vai virar —, vai ter um termo assinado, um laudo de maçaneta e a sua palavra."',
+    '"E, {garoto|garota}: eu sei que você não acredita. Mas quando isso virar processo — e vai virar —, vai ter um termo assinado, um laudo de maçaneta e a sua palavra."',
     'Ele senta na cama.',
     '"Chama quem você quiser. Eu espero."'
   ],
@@ -3881,6 +3914,8 @@ c8_amigo_do_cais:{
 },
 
 c8_quantos_sao_no_40:{
+  falante:'Dorian',
+  vozes:['P','N','N','P','N','N','P','N'],
   texto:[
     '"Quantos são?"',
     '"Dois."',
@@ -3904,6 +3939,8 @@ c8_quantos_sao_no_40:{
 },
 
 c8_vai_tirar:{
+  falante:'Dorian',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Eu vou tirar vocês daí."',
     'Silêncio.',
@@ -3928,6 +3965,8 @@ c8_vai_tirar:{
 },
 
 c8_comigo:{
+  falante:'Dorian',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Comigo."',
     'Você fala isso através de um duto de ventilação, agachad{o|a} num corredor de serviço, com quinze anos, sem plano nenhum.',

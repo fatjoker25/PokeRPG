@@ -350,6 +350,8 @@ c13_quatro_de_junho:{
 },
 
 c13_domino:{
+  falante:'os pescadores',
+  vozes:['N'],
   texto:[
     'Você senta no quarto lugar da mesa de dominó, que está vago, e ninguém reclama porque num cais parado a mesa aceita qualquer um.',
     'Você joga três partidas e perde três e ouve mais em uma hora do que conseguiria em uma semana de perguntas.',
@@ -895,6 +897,8 @@ c13_procurar_barco:{
 },
 
 c13_porque_riem:{
+  falante:'o magro de boné',
+  vozes:['P','N','P','N','N','N','N','P','N','N'],
   texto:[
     '"Por que vocês riem?"',
     'O riso morre.',

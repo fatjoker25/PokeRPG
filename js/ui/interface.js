@@ -563,6 +563,9 @@ const UI = {
     if (novo) return novo;                                  // quem entrou agora é quem fala
     if (!npc) return null;
     const curto = npc.split(' ').filter(x => x.length > 3).pop() || npc;
+    /* "Homem das tigelas": rótulo de cargo não é nome, e "tigelas" numa
+       fala não quer dizer que estão falando dele */
+    if (!/^[A-ZÀ-Ú]/.test(curto)) return npc;
     for (const linha of (linhas || [])){
       if (typeof linha === 'function') continue;
       const t = (linha && linha.diz != null) ? String(linha.diz) : String(linha || '');
@@ -574,7 +577,7 @@ const UI = {
 
   /* só o que de fato carrega texto escrito — nada de "carimbo" ou
      "crachá", que aparecem em cena de conversa e roubavam a fala */
-  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|letra de (criança|imprensa|fôrma|forma))\b/i,
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|está escrito|escrito assim|escreve no seu caderno|letra de (criança|imprensa|fôrma|forma))\b/i,
   /* Papel também se reconhece pela descrição logo depois: "…" — com
      uma foto colada, "…" — letra de imprensa. O travessão ali descreve
      o papel, não quem falou. */
@@ -599,6 +602,11 @@ const UI = {
        fala. Duas falas coladas, sem narração no meio, são uma troca:
        a vez passa pro outro. */
     let pendente = null, primeira = true, lado = null, ultimaBoca = null;
+    /* `vozes` na cena: o autor diz, aspa por aspa, quem fala — 'P' é
+       você, 'N' é o falante da cena, qualquer outro texto é o nome de
+       uma terceira pessoa. Manda mais que qualquer adivinhação. */
+    const vozes = this.monologoDe ? null : this.vozesDaCena;
+    let voz = 0;
 
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
@@ -620,6 +628,15 @@ const UI = {
       }
       const t = txt(bruto);
       if (!t) return '';
+
+      /* **PLACA, BILHETE, CABEÇALHO**: linha inteira em negrito é coisa
+         escrita. Aspas dentro dela são do papel, não de alguém falando. */
+      const bloco = /^\s*\*\*([\s\S]*?)\*\*\s*$/.exec(t);
+      if (bloco && !/\*\*/.test(bloco[1])){
+        const dentro = bloco[1].trim().replace(/^["\u201C]([\s\S]*)["\u201D]$/, '\u201C$1\u201D');
+        pendente = t; ultimaBoca = null;
+        return `<p class="escrito">${this.esc(dentro)}</p>`;
+      }
 
       /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
          são aspas de ironia ("análise jurídica") e ficam na narração. */
@@ -651,17 +668,30 @@ const UI = {
           html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
           continue;
         }
+        let outro = null;
         /* a frase que você acabou de escolher é sua, sem discussão */
-        if (this.monologoDe) lado = 'npc';
+        if (vozes && voz < vozes.length){
+          const v = vozes[voz++];
+          lado = v === 'P' ? 'voce' : 'npc';
+          if (v !== 'P' && v !== 'N') outro = v;
+        }
+        else if (this.monologoDe) lado = 'npc';
         else if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
         else if (primeira)
           lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
                : this.ladoDaFala(pendente, null, npc);
         else if (pendente !== null) lado = this.ladoDaFala(pendente, lado, npc);
         else lado = (lado === 'voce') ? 'npc' : 'voce';
+        /* '"Eu sei", ele diz.' — a atribuição vem depois da aspa e manda
+           mais que a alternância: "ele diz" nunca é você falando */
+        if (!outro && !(vozes && voz <= vozes.length && voz > 0) && !this.monologoDe && !(this.falaDoJogador && pe.texto === this.falaDoJogador)){
+          const verbo = '(diz|disse|repete|concorda|pergunta|responde|fala|completa|continua|murmura|insiste|corrige|acrescenta|emenda)';
+          if (new RegExp('^[,;]?\\s*(ele|ela)\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'npc';
+          else if (new RegExp('^[,;]?\\s*você\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'voce';
+        }
         primeira = false; pendente = null;
 
-        const quem = lado === 'voce' ? meuNome : npc;
+        const quem = lado === 'voce' ? meuNome : (outro || npc);
         const meu = lado === 'voce' ? ' voce' : '';
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
@@ -670,7 +700,9 @@ const UI = {
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
-    }).filter(Boolean).join('');
+    }).filter(Boolean).join('')
+      /* **trecho** no meio da frase: o crachá, o número do processo */
+      .replace(/\*\*([^*<>]+?)\*\*/g, '<strong>$1</strong>');
   },
 
   /* ========================================================
@@ -688,8 +720,10 @@ const UI = {
     this.npcDaCena = mapa.dono[Estado.dados.cena] || null;
     this.npcEhProprio = !!mapa.proprio[Estado.dados.cena];
     this.falanteDaCena = cena.falante || null;
+    this.vozesDaCena = cena.vozes || null;
     this.minhasFalasDaCena = (mapa.minhas[Estado.dados.cena]) || null;
     const paras = this.narrar(cena.texto);
+    this.vozesDaCena = null;      // vale só pro texto da própria cena
 
     const html = `<div class="painel">
       <div class="cap-cabecalho">
@@ -720,7 +754,7 @@ const UI = {
         return;
       }
       if (a.tipo === 'eco'){
-        c.appendChild(this.el(`<div class="eco">— "${this.esc(txt(a.texto))}"</div>`));
+        c.appendChild(this.el(`<div class="eco">${this.esc(txt(a.texto))}</div>`));
         return;
       }
       c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}">${this.esc(txt(a.texto))}</div>`));
@@ -3336,7 +3370,7 @@ const UI = {
   telaDoacao(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = null;
+    this.falanteDaCena = null; this.vozesDaCena = null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -3358,7 +3392,7 @@ const UI = {
   telaCargo(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = c.falante || null;
+    this.falanteDaCena = c.falante || null; this.vozesDaCena = c.vozes || null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">

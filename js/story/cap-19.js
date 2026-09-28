@@ -1451,6 +1451,8 @@ c19_o_que_acontece_la:{
 },
 
 c19_esperou_ele_falar:{
+  falante:'o voluntário sem nome',
+  vozes:['N','N','N','N'],
   texto:[
     'Você não pergunta nada. Você fica sentad{o|a}.',
     'Passam dois minutos inteiros, o que num refeitório vazio é muito tempo.',
@@ -1488,6 +1490,8 @@ c19_ha_quanto_tempo:{
 },
 
 c19_zoologico_fechou:{
+  falante:'o voluntário sem nome',
+  vozes:['N','N','P','N','N','N','N'],
   texto:[
     '"Porque acabou o dinheiro." Ele dá de ombros, e o dar de ombros é mais pesado que qualquer discurso. "Município cortou, a bilheteria não pagava a ração, e no fim a gente estava comprando ração com vaquinha entre funcionário."',
     '"E os bichos?"',

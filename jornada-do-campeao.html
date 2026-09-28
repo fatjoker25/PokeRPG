@@ -7083,7 +7083,10 @@ function nomeVisivel(p){
            || (d.pc || []).some(x => x.uid === p.uid)
            || (d.cemiterio || []).some(x => x.uid === p.uid);
   if (meu) return nomeExib(p);
-  if (Estado.conheceu(p.dex)) return nomeExib(p);
+  /* Pidgey contra Pidgey: o log precisa dizer qual dos dois caiu */
+  const doOutroLado = n => (typeof Batalha !== 'undefined' && Batalha.ativo && Batalha.aliado &&
+    nomeExib(Batalha.aliado) === n) ? `${n} ${Batalha.tipo === 'selvagem' ? 'selvagem' : 'adversári' + pron(p).o}` : n;
+  if (Estado.conheceu(p.dex)) return doOutroLado(nomeExib(p));
   /* Líder de ginásio grita o nome do próprio Pokémon ao soltar a bola.
      Ouvir o nome não preenche a Pokédex: para isso ainda é preciso escanear. */
   if (p.nomeAnunciado) return nomeExib(p);
@@ -20278,7 +20281,7 @@ c3_caçadores:{
     'Dois homens vêm pela trilha em sentido contrário.',
     'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
-    d=>d.flags.pegou_mochila_cacador ? '"Essa mochila é minha", ele diz. Sem levantar a voz nenhum tom.' :
+    d=>d.flags.pegou_mochila_cacador ? fala('Caçador Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.') :
        (d.flags.pikachu_aliado || d.flags.pikachu_capturado_preso ? '"Cadê o amarelo." Não é pergunta.' :
         '"Viu alguma coisa aí atrás?" Ele sorri. O sorriso não sobe até os olhos.')
   ],
@@ -25396,6 +25399,7 @@ c6_contou_bilac:{
 },
 
 c6_quem_e_a_pessoa:{
+  falante:'Sr. Cosmo',
   texto:[
     '"Quem é a pessoa?"',
     '"A Misty."',
@@ -25712,6 +25716,7 @@ c6_peixe:{
 },
 
 c6_moca_barraca:{
+  falante:'a moça do peixe frito',
   texto:[
     '"O que é aquilo lá na ponte norte?"',
     'A moça não levanta a cabeça da frigideira.',
@@ -25772,7 +25777,7 @@ c6_plaquinhas:{
     '"MACHOP — Nv 20 — 5.200"',
     '"PSYDUCK — Nv 16 — 2.900"',
     '"NIDORAN♀ — Nv 14 — 2.200"',
-    'E a sexta, na ponta, com a letra menor: "PIDGEY — Nv 9 — 400."',
+    'E a sexta, na ponta, com a letra menor: "PIDGEY — Nv 9 — 400"',
     'Quatrocentos. Você olha pro preço do peixe frito na sua mão e faz uma conta que preferia não ter feito.'
   ],
   ef:{flag:'leu_as_plaquinhas',
@@ -25941,6 +25946,7 @@ c6_porque_continua:{
 },
 
 c6_legal:{
+  falante:'Homem da banca',
   texto:[
     '"Isso não é ilegal?"',
     'Ele acha graça de verdade — não é deboche, é alívio de ouvir uma pergunta fácil.',
@@ -26069,6 +26075,7 @@ c6_o_que_esta_a_venda:{
 },
 
 c6_amanha_volto:{
+  falante:'Homem da banca',
   texto:[
     '"Amanhã eu volto."',
     '"Volta." Ele ajeita a espuma vazia. "Eu tô aqui das nove às cinco, menos sexta."',
@@ -26152,6 +26159,7 @@ c6_venda_feita:{
 },
 
 c6_comprar_de_volta:{
+  falante:'Homem da banca',
   texto:[
     'Você volta.',
     'Ele te vê chegando e já sabe, e o rosto dele fica com uma expressão que você só vai entender depois: é pena.',
@@ -27733,6 +27741,7 @@ c6_quinze_tigelas:{
 },
 
 c6_luta_veneno:{
+  falante:'Homem das tigelas',
   texto:[
     '"Você quer brigar por causa de bicho de rua."',
     'Ele limpa a mão no jeans e tira uma bola do bolso do casaco, e a bola é velha e arranhada e claramente não é comprada.',
@@ -28216,6 +28225,7 @@ c7_chegada:{
 },
 
 c7_a_musica:{
+  falante:'a mulher da varanda',
   texto:[
     'Você pergunta pra primeira pessoa, uma mulher regando vaso numa varanda baixa.',
     'Ela para de regar.',
@@ -28236,9 +28246,10 @@ c7_a_musica:{
 },
 
 c7_quando_parou:{
+  falante:'a mulher da varanda',
   texto:[
     '"Quando foi que parou?"',
-    'Ela pensa com a regador na mão.',
+    'Ela pensa com o regador na mão.',
     '"Eu acho que nunca teve."',
     'Ela mexe as folhas de uma samambaia, procurando bicho.',
     '"Meu pai era daqui. O pai dele era daqui. A torre é de mil oitocentos e alguma coisa." Ela dá de ombros. "Talvez a gente nunca tenha ligado rádio nessa rua desde que rádio existe."',
@@ -28374,6 +28385,7 @@ c7_flores:{
 },
 
 c7_a_amarela:{
+  falante:'Moça da floricultura',
   texto:[
     '"Por que a amarela?"',
     '"Porque ela é a única que cresce aqui." Ela corta um caule. "As outras vêm de caminhão de Celadon. A amarela nasce sozinha no morro atrás da torre."',
@@ -28395,6 +28407,7 @@ c7_a_amarela:{
 },
 
 c7_morro:{
+  falante:'Moça da floricultura',
   texto:[
     '"Onde é o morro atrás da torre?"',
     'Ela te olha como se você tivesse dito uma bobagem, e depois entende, e depois acha graça.',
@@ -28506,6 +28519,7 @@ c7_o_que_tem:{
 },
 
 c7_ela_subiu:{
+  falante:'Moça da floricultura',
   texto:[
     '"E a senhora subiu?"',
     '"Uma vez. Com dezesseis anos, com dois amigos, de brincadeira."',
@@ -30660,6 +30674,8 @@ c8_peso:{
 },
 
 c8_lembra_do_terno:{
+  falante:'Conferente do porto',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Que cara de terno? Você lembra?"',
     '"Lembro do sapato."',
@@ -30718,6 +30734,8 @@ c8_galpao:{
 },
 
 c8_quem_ta_dentro:{
+  falante:'o rapaz do galpão',
+  vozes:['P','N','N','N','P','N','N','P','N'],
   texto:[
     '"Quem tá lá dentro?"',
     '"O Surge."',
@@ -31197,7 +31215,7 @@ c8_nao_pegou_chave:{
     'Ela pega a chave de volta devagar.',
     'E aí ela faz uma coisa: guarda a chave, pega um guardanapo, e escreve uma coisa nele com o lápis de conta do bar.',
     'Empurra o guardanapo.',
-    'Está escrito: "CONVÉS 3 — PORTA DE SERVIÇO FICA DESTRANCADA DAS 23H ÀS 23H20 (TROCA DE TURNO DA COPA)."',
+    'Está escrito à mão: "CONVÉS 3 — PORTA DE SERVIÇO FICA DESTRANCADA DAS 23H ÀS 23H20 (TROCA DE TURNO DA COPA)."',
     '"Guardanapo some", ela diz. "Chave não some."'
   ],
   ef:{flag:'janela_das_23h',
@@ -31221,7 +31239,7 @@ c8_pediu_trabalho:{
     'Ela para de rir.',
     '"Tá." Ela escreve um nome num guardanapo. "Fala pro contramestre que a Rina mandou. Turno começa às seis. Oito hora."',
     'Ela devolve o lápis pro balcão.',
-    '"E, garoto: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
+    '"E, {garoto|garota}: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
   ],
   ef:{flag:'indicacao_da_neusa',
       npc:{nome:'Cozinheira do Anne', opiniao:3, memoria:'Te indicou para o turno de cozinha do S.S. Anne.'},
@@ -31400,6 +31418,8 @@ c8_atras_do_menino:{
 },
 
 c8_vai_atras_dela:{
+  falante:'a dona da fritura',
+  vozes:['P','N','N','N'],
   texto:[
     '"Ele vai atrás dela."',
     'A dona da fritura não responde na hora.',
@@ -31584,6 +31604,8 @@ c8_pagou_diferenca:{
 },
 
 c8_krabby_licao:{
+  falante:'Menino do cais',
+  vozes:['P','N','N','P'],
   texto:[
     '"Dois mil e quatrocentos?"',
     'Ele olha a caixa de isopor de um jeito completamente novo.',
@@ -31640,6 +31662,8 @@ c8_noite_porto:{
 },
 
 c8_premio:{
+  falante:'a mulher da tripulação',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Quanto paga o primeiro lugar?"',
     '"Vinte mil."',
@@ -31679,6 +31703,8 @@ c8_quem_aposta:{
 },
 
 c8_por_que_faltou:{
+  falante:'a mulher da tripulação',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Por que faltou um?"',
     'Ela hesita meio segundo. É o suficiente.',
@@ -31700,6 +31726,8 @@ c8_por_que_faltou:{
 },
 
 c8_recusou_torneio:{
+  falante:'a mulher da tripulação',
+  vozes:['P','N'],
   texto:[
     '"Não."',
     'Ela não insiste. Faz que sim, vira, e sobe a passarela.',
@@ -32239,6 +32267,7 @@ c8_carga_meio:{
 },
 
 c8_carga_ruim:{
+  falante:'o contramestre',
   texto:[
     'Você não aguenta.',
     'Na quarta hora, o contramestre te manda parar antes que você se machuque de verdade. Não tem deboche nenhum no jeito dele.',
@@ -32301,6 +32330,8 @@ c8_cozinha:{
 },
 
 c8_bandejas_do_40:{
+  falante:'o cozinheiro',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Quem monta as bandeja do quarenta?"',
     'A cozinha inteira não para, mas três pessoas olham pra você ao mesmo tempo, e isso é mais eloquente que qualquer resposta.',
@@ -32369,7 +32400,7 @@ c8_conferiu_de_novo:{
     'Você faz o serviço do camarote 40 por três dias.',
     'Todo dia: quatro bandejas. Três com talher, uma sem.',
     'No segundo dia você põe, sem falar com ninguém, um bilhete embaixo da quarta bandeja.',
-    'Está escrito: "VOCÊ TÁ BEM?"',
+    'Está escrito à mão: "VOCÊ TÁ BEM?"',
     'No terceiro dia, quando você recolhe, o bilhete voltou.',
     'Do outro lado, escrito com o dedo molhado em molho, quase ilegível, uma palavra:',
     '"NAO"'
@@ -32390,7 +32421,7 @@ c8_segundo_bilhete:{
   texto:[
     'Você manda outro. "QUAL SEU NOME?"',
     'Volta no dia seguinte, com o mesmo molho, num guardanapo em vez do bilhete, porque o bilhete não voltou.',
-    'Está escrito: "DORIAN"',
+    'Está escrito à mão: "DORIAN"',
     d=>d.flags.a_carta_do_denis || d.flags.copiou_a_carta
       ? 'Você senta no chão do corredor de serviço com um guardanapo na mão e fica um tempo sem conseguir respirar direito.'
       : 'Você não conhece nenhum Dorian. Mas agora tem um nome, e nome é tudo.',
@@ -33141,6 +33172,8 @@ c8_rasgou:{
 },
 
 c8_escreveu_rescisao:{
+  falante:'o homem de camisa social',
+  vozes:['N'],
   texto:[
     'Você escreve à mão, num papel de carta do camarote de outra pessoa, às duas da manhã, com uma caneta emprestada da recepção.',
     'Sete linhas. Você refaz três vezes porque erra o nome comprido da fundação.',
@@ -33380,6 +33413,8 @@ c8_abriu_caixa:{
 },
 
 c8_soltou_caixas:{
+  falante:'Marinheiro do turno',
+  vozes:['N'],
   texto:[
     'Você tira os três e sobe pelo corredor de serviço carregando um por vez, três viagens, com o coração na garganta.',
     'No convés de popa, de madrugada, com vento de mar, você abre e deixa sair.',
@@ -33427,6 +33462,8 @@ c8_o_marinheiro:{
 },
 
 c8_porque_nunca_abriu_nav:{
+  falante:'Marinheiro do turno',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Por que você nunca abriu?"',
     'Ele demora.',
@@ -33476,6 +33513,8 @@ c8_enfermaria:{
 },
 
 c8_o_garoto_da_maca:{
+  falante:'Enfermeira do Anne',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O que aconteceu com ele?"',
     'A enfermeira olha a segunda maca.',
@@ -33633,6 +33672,8 @@ c8_bateu_no_40:{
 },
 
 c8_a_bandeja_falsa:{
+  falante:'o homem de camisa social',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Eu trouxe a bandeja."',
     'Ele olha as suas mãos vazias.',
@@ -33654,6 +33695,8 @@ c8_a_bandeja_falsa:{
 },
 
 c8_quem_ta_no_banheiro:{
+  falante:'o homem de camisa social',
+  vozes:['P','N','P','N'],
   texto:[
     '"Quem tá no banheiro?"',
     'A cara dele não muda nem um milímetro.',
@@ -33777,6 +33820,8 @@ c8_entrou_no_40:{
 },
 
 c8_podem_levantar:{
+  falante:'o homem de camisa social',
+  vozes:['P','N'],
   texto:[
     '"Vocês podem levantar."',
     'Nenhum dos dois levanta.',
@@ -33824,6 +33869,8 @@ c8_a_carta_de_volta:{
 },
 
 c8_encarou_o_do_40:{
+  falante:'o homem de camisa social',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Você vira pro homem de camisa social.',
     'Ele está parado no meio do camarote com as mãos à mostra, calmo, sem nenhuma intenção de correr ou de reagir.',
@@ -33831,7 +33878,7 @@ c8_encarou_o_do_40:{
     '"Eles estavam trancados num banheiro."',
     '"A porta estava encostada com uma cadeira porque a maçaneta está quebrada."',
     'Ele olha você nos olhos sem piscar.',
-    '"E, garoto: eu sei que você não acredita. Mas quando isso virar processo — e vai virar —, vai ter um termo assinado, um laudo de maçaneta e a sua palavra."',
+    '"E, {garoto|garota}: eu sei que você não acredita. Mas quando isso virar processo — e vai virar —, vai ter um termo assinado, um laudo de maçaneta e a sua palavra."',
     'Ele senta na cama.',
     '"Chama quem você quiser. Eu espero."'
   ],
@@ -34062,6 +34109,8 @@ c8_amigo_do_cais:{
 },
 
 c8_quantos_sao_no_40:{
+  falante:'Dorian',
+  vozes:['P','N','N','P','N','N','P','N'],
   texto:[
     '"Quantos são?"',
     '"Dois."',
@@ -34085,6 +34134,8 @@ c8_quantos_sao_no_40:{
 },
 
 c8_vai_tirar:{
+  falante:'Dorian',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Eu vou tirar vocês daí."',
     'Silêncio.',
@@ -34109,6 +34160,8 @@ c8_vai_tirar:{
 },
 
 c8_comigo:{
+  falante:'Dorian',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Comigo."',
     'Você fala isso através de um duto de ventilação, agachad{o|a} num corredor de serviço, com quinze anos, sem plano nenhum.',
@@ -34928,6 +34981,8 @@ c9_compra_se:{
 },
 
 c9_quem_traz:{
+  falante:'Lojista de Celadon',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Quem traz mais de quatro?"',
     'Ele sorri de um jeito profissional e absolutamente vazio.',
@@ -35038,6 +35093,8 @@ c9_qual_e_o_lugar:{
 },
 
 c9_fotografou_certificado:{
+  falante:'Lojista de Celadon',
+  vozes:['N','N'],
   texto:[
     'Você tira a câmera da mochila e fotografa o certificado emoldurado na parede, de frente, com flash.',
     'O flash estoura na loja inteira.',
@@ -35101,6 +35158,8 @@ c9_quem_e_renno:{
 },
 
 c9_compram_de_onde:{
+  falante:'Lojista de Celadon',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Vocês compram de onde?"',
     '"De quem traz."',
@@ -35355,6 +35414,8 @@ c9_revelou_rapido:{
 },
 
 c9_por_quanto_tempo:{
+  falante:'Revelador de Celadon',
+  vozes:['P','N','N','N'],
   texto:[
     '"O senhor guarda por quanto tempo?"',
     '"Até você vir buscar."',
@@ -35396,6 +35457,8 @@ c9_revelou_quinta:{
 },
 
 c9_como_era_o_moco:{
+  falante:'Revelador de Celadon',
+  vozes:['P','N','N','N'],
   texto:[
     '"Como era o moço?"',
     '"Educado."',
@@ -35478,6 +35541,8 @@ c9_o_duque_morreu:{
 },
 
 c9_mentiu_pra_filha:{
+  falante:'Filha da Sibyl',
+  vozes:['P','N','N'],
   texto:[
     '"Não."',
     'Ela faz que sim várias vezes, rápido, e bebe o café frio.',
@@ -35931,6 +35996,8 @@ c9_sentou_no_hospital:{
 },
 
 c9_junta:{
+  falante:'a moça da junta',
+  vozes:['N','P','N'],
   texto:[
     'A junta comercial de Celadon fica no terceiro andar de um prédio público com elevador quebrado.',
     'Você sobe a pé, pega senha, e espera uma hora e quarenta.',
@@ -35951,6 +36018,8 @@ c9_junta:{
 },
 
 c9_e_publico:{
+  falante:'a moça da junta',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Isso é público mesmo?"',
     '"É."',
@@ -35959,7 +36028,7 @@ c9_e_publico:{
     'Ela carimba alguma coisa.',
     '"A única coisa que a gente não fornece é dado pessoal de pessoa física fora do quadro societário."',
     'Ela levanta a cabeça pela primeira vez.',
-    '"E olha, moço: ninguém vem aqui. Eu atendo umas quatro pessoa por dia, e três são contador."'
+    '"E olha, {moço|moça}: ninguém vem aqui. Eu atendo umas quatro pessoa por dia, e três são contador."'
   ],
   ef:{flag:'ninguem_vem_aqui',
       presagio:'Quatro pessoas por dia, três contadores. O segredo mais bem guardado de Kanto é uma coisa que está aberta das nove às cinco.'},
@@ -35972,6 +36041,8 @@ c9_e_publico:{
 },
 
 c9_por_nome:{
+  falante:'a moça da junta',
+  vozes:['P','N','N','N'],
   texto:[
     '"Dá pra buscar por nome de sócio?"',
     'Ela para de carimbar.',
@@ -36188,7 +36259,7 @@ c9_leu_as_certidoes:{
     'Você senta num banco de praça de Celadon e lê trinta e duas páginas de certidão comercial.',
     'Leva três horas e quarenta minutos e é a coisa mais chata que você já fez na vida.',
     'E no meio da página vinte e sete tem uma linha que muda tudo.',
-    'É uma alteração contratual de dois anos e meio atrás, e o objeto dela é a inclusão de uma nova atividade econômica secundária na empresa de logística:',
+    'É uma alteração contratual de dois anos e meio atrás, e o objeto dela é a inclusão de uma nova atividade econômica secundária na empresa de logística. Está escrito assim:',
     '"Guarda e conservação de espécimes biológicos vivos, para fins de custódia administrativa."',
     'Você lê três vezes.',
     'Alguém foi num cartório, pagou uma taxa, e registrou oficialmente que a empresa passa a guardar bicho vivo apreendido.',
@@ -36331,6 +36402,8 @@ c9_comprou_no_shopping:{
 },
 
 c9_as_pedras:{
+  falante:'o vendedor da vitrine',
+  vozes:['N','N','N'],
   texto:[
     'Ele abre a vitrine com uma chave que fica pendurada no crachá dele.',
     'Quatro pedras em suporte de veludo, com etiqueta de preço que custa mais do que tudo que você já teve junto.',
@@ -36516,6 +36589,8 @@ c9_responde_erika:{
 },
 
 c9_a_sabrina:{
+  falante:'Líder Erika',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O que aconteceu com a Sabrina?"',
     'Erika para de podar e fica um tempo sem responder.',
@@ -36838,6 +36913,8 @@ c9_cassino:{
 },
 
 c9_quem_terceira:{
+  falante:'A Terceira',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Quem é você?"',
     '"Terceira." Ela solta a fumaça pro lado, longe do seu rosto, que é uma delicadeza estranha vinda de quem acabou de acender um cigarro num salão fechado.',
@@ -36857,6 +36934,8 @@ c9_quem_terceira:{
 },
 
 c9_terceira_sim:{
+  falante:'A Terceira',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Você é a Terceira."',
     'Ela não nega, não confirma, não muda de expressão. A brasa do cigarro sobe um centímetro.',
@@ -37167,6 +37246,8 @@ c9_prado_conversa:{
 },
 
 c9_prado_te_da_o_processo:{
+  falante:'Auditora Brill',
+  vozes:['P','N','N','N'],
   texto:[
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? 'Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, do jeito de quem confere número.'
@@ -37902,6 +37983,8 @@ c9_ivone:{
 },
 
 c9_ivone_44207:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"E o processo quarenta e quatro mil duzentos e sete?"',
     'Ela abre a pasta dela e procura, e acha, porque ela tem esse número anotado desde Pewter.',
@@ -37925,6 +38008,8 @@ c9_ivone_44207:{
 },
 
 c9_liga_celadon:{
+  falante:'o oficial da Liga',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     'O posto da Liga em Celadon fica no terceiro andar de um prédio comercial, entre um consultório de fisioterapia e uma escola de informática, e fecha às dezoito horas.',
     'Tem quatro cadeiras de plástico na recepção e um cartaz desbotado de campanha de adoção de 1993.',
@@ -38384,6 +38469,8 @@ c10_quem_sabe:{
 },
 
 c10_eloi:{
+  falante:'Sr. Edric',
+  vozes:['N','N','P','N','P','N','N','N'],
   texto:[
     'Você senta na brita do lado da cadeira de praia dele.',
     '"Edric. Elói Edric." Ele estende a mão sem levantar da cadeira. "Trabalhei ali dezenove anos, na sala de controle. Saí quando fecharam."',
@@ -38966,7 +39053,7 @@ c10_consolou_eloi:{
       npc:{nome:'Sr. Edric', opiniao:8, memoria:'Te disse, com a agenda no colo, para ser o exagerado.'},
       rep:{eixo:'bom',delta:2,motivo:'Ficou para ouvir a parte difícil'},
       registrar:'"Vai lá dentro e seja o exagerado."',
-      presagio:'Seja o exagerado. Anota. Isso vale pro resto do jogo.'},
+      presagio:'Seja o exagerado. Anota. Isso vale pro resto da jornada.'},
   escolhas:[
     {texto:'Voltar pra usina.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
@@ -39999,6 +40086,8 @@ c10_saiu:{
 /* ─────────────── O PORTÃO, NA SAÍDA ─────────────── */
 
 c10_depois:{
+  falante:'Sr. Edric',
+  vozes:['N'],
   texto:[
     'No portão da usina tem alguém esperando.',
     d=>{
@@ -42625,8 +42714,8 @@ c11_abriu_a_parede:{
     '**INSTITUTO DE PESQUISA CINNABAR — CAIXA 4 DE 9 — TRANSFERIDA 11/96**',
     'Quatro caixas de nove.',
     'Você abre a de cima e ela está cheia de cadernos. Cadernos comuns, de capa dura, de um só punho, numerados na lombada.',
-    'O de cima é o caderno 6 e a primeira linha da primeira página é:',
-    '"Dia 1. Ele piscou hoje e eu chorei, o que é pouco científico e eu vou anotar assim mesmo. — A.F."'
+    'O de cima é o caderno 6, e na primeira linha da primeira página está escrito:',
+    '**"Dia 1. Ele piscou hoje e eu chorei, o que é pouco científico e eu vou anotar assim mesmo. — A.F."**'
   ],
   ef:{flag:['achou_os_cadernos','sabe_do_fuji','provas_do_11'],
       itens:{'Caderno 6 do Dr. Fuji':1},
@@ -42647,12 +42736,12 @@ c11_leu_o_caderno:{
     'Você senta no vão, atrás da parede quebrada, e lê o caderno 6 inteiro em quarenta minutos, o que é rápido demais e você sabe.',
     'Não tem fórmula. Não tem gráfico. Não tem número.',
     'Tem uma pessoa anotando conversas.',
-    '"Dia 47. Perguntei o que ele queria e ele demorou dois dias pra responder. A resposta foi: saber o que é fora."',
-    '"Dia 88. Ele me perguntou se eu tinha medo dele. Eu menti. Ele soube."',
-    '"Dia 134. Ele perguntou por que ele. Eu não tinha resposta e disse que não tinha resposta, e ele ficou quieto três dias, e no quarto dia ele disse que preferia isso a uma resposta inventada."',
-    '"Dia 203. O conselho quer resultado. Eu disse que o resultado é esse, que ele fala comigo, que isso é o resultado. Eles perguntaram o que ele faz. Eu disse que ele pergunta. Eles perguntaram de novo o que ele FAZ."',
+    '**"Dia 47. Perguntei o que ele queria e ele demorou dois dias pra responder. A resposta foi: saber o que é fora."**',
+    '**"Dia 88. Ele me perguntou se eu tinha medo dele. Eu menti. Ele soube."**',
+    '**"Dia 134. Ele perguntou por que ele. Eu não tinha resposta e disse que não tinha resposta, e ele ficou quieto três dias, e no quarto dia ele disse que preferia isso a uma resposta inventada."**',
+    '**"Dia 203. O conselho quer resultado. Eu disse que o resultado é esse, que ele fala comigo, que isso é o resultado. Eles perguntaram o que ele faz. Eu disse que ele pergunta. Eles perguntaram de novo o que ele FAZ."**',
     'E a última página do caderno 6:',
-    '"Dia 241. Eu vou dizer não. Amanhã, na reunião, eu vou dizer não, e eles vão me tirar do projeto, e eu não sei o que vai acontecer com ele depois, e eu estou escrevendo isso aqui pra que exista em algum lugar que eu sabia exatamente o que eu estava fazendo."',
+    '**"Dia 241. Eu vou dizer não. Amanhã, na reunião, eu vou dizer não, e eles vão me tirar do projeto, e eu não sei o que vai acontecer com ele depois, e eu estou escrevendo isso aqui pra que exista em algum lugar que eu sabia exatamente o que eu estava fazendo."**',
     'O caderno 7 não está na caixa.'
   ],
   ef:{flag:['leu_o_caderno_do_fuji','sabe_dos_241'],
@@ -43227,6 +43316,8 @@ c11_entregou_liga:{
 },
 
 c11_quarta_vez:{
+  falante:'o oficial mais novo',
+  vozes:['N','P','N','N','P','N','P','N','N','N'],
   texto:[
     'Você pergunta uma quarta vez, e dessa vez você pergunta pra pessoa certa: o oficial mais novo da equipe, no estacionamento, sozinho, guardando caixa no porta-malas.',
     'Ele olha pros lados de um jeito que responde antes de ele falar.',
@@ -43913,6 +44004,8 @@ c12_fuchsia:{
 },
 
 c12_cidade:{
+  falante:'a dona da padaria',
+  vozes:['N'],
   texto:[
     'Você anda Fuchsia inteira em uma hora e quarenta, porque Fuchsia inteira dá uma hora e quarenta.',
     'A cidade vive da reserva de um jeito que não é sutil.',
@@ -44023,12 +44116,14 @@ c12_planilha_errada:{
 },
 
 c12_pra_onde_vai:{
+  falante:'Sr. Zane',
+  vozes:['P','N','P','P','N','N'],
   texto:[
     '"Pra onde vai o excedente?"',
     'Ele demora.',
     '"Nos meus primeiros anos ia pra soltura. A gente levava de caminhão pro norte, pra Rota 14, e soltava, e voltava."',
     '"E depois?"',
-    '"Depois a Rota 14 encheu, aí a gente levava mais longe. Aí a gente levava até Cerulean. Aí um ano o supervisor disse que não ia ter mais caminhão pra soltura porque era caro, e que a partir dali a retirada ia ser “entregue a receptor credenciado”."',
+    fala('Sr. Zane', 'Depois a Rota 14 encheu, aí a gente levava mais longe. Aí a gente levava até Cerulean. Aí um ano o supervisor disse que não ia ter mais caminhão pra soltura porque era caro, e que a partir dali a retirada ia ser “entregue a receptor credenciado”.'),
     '"E o que é receptor credenciado?"',
     '"Eu perguntei uma vez."',
     'Ele olha pra você.',
@@ -45492,6 +45587,8 @@ c12_bar:{
 },
 
 c12_quantos_ficam:{
+  falante:'Sr. Ulric',
+  vozes:['P','N','P','N','N','P','N','N','P','N','N'],
   texto:[
     '"Quantos ficam no caminho?"',
     'A mesa fica quieta.',
@@ -46823,6 +46920,8 @@ c13_quatro_de_junho:{
 },
 
 c13_domino:{
+  falante:'os pescadores',
+  vozes:['N'],
   texto:[
     'Você senta no quarto lugar da mesa de dominó, que está vago, e ninguém reclama porque num cais parado a mesa aceita qualquer um.',
     'Você joga três partidas e perde três e ouve mais em uma hora do que conseguiria em uma semana de perguntas.',
@@ -47368,6 +47467,8 @@ c13_procurar_barco:{
 },
 
 c13_porque_riem:{
+  falante:'o magro de boné',
+  vozes:['P','N','P','N','N','N','N','P','N','N'],
   texto:[
     '"Por que vocês riem?"',
     'O riso morre.',
@@ -49439,6 +49540,8 @@ c14_quantas_ficaram:{
 },
 
 c14_quem_escondeu:{
+  falante:'Sr. Nolan',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Quem escondeu as cinco?"',
     'Os dois ficam quietos.',
@@ -52336,7 +52439,7 @@ c15_o_que_foi:{
       moral:-5,
       executar:d=>{ Estado.lend(245).encontros++; return []; },
       registrar:'Suicune arranca os mourões do curral com a boca, sem olhar para quem está lá.',
-      presagio:'"É pior saber." Guarde a frase. Metade do jogo é sobre ela.'},
+      presagio:'"É pior saber." Guarde a frase. Metade da jornada é sobre ela.'},
   escolhas:[
     {texto:'"Eles não estão roubando. Estão abrindo."', vai:'c15_estao_abrindo'},
     {texto:'"Posso ajudar a recolocar?"', vai:'c15_ajudou_o_curral'},
@@ -57962,6 +58065,8 @@ c18_seguiu_a_caixa:{
 },
 
 c18_atendente_encomenda:{
+  falante:'o atendente da encomenda',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Rota 21?" O atendente nem consulta. "Terça e sexta. Sempre os mesmos."',
     '"Sempre bicho?"',
@@ -58572,6 +58677,8 @@ c18_hemero_copia:{
 },
 
 c18_hemero_o_que_ela_pediu:{
+  falante:'Sr. Arlo',
+  vozes:['P','N'],
   texto:[
     'O Sr. Arlo tem um caderno de pedidos, porque é de uma geração que anota.',
     'Ele acha a página e vira para você.',
@@ -58687,6 +58794,8 @@ c18_hemero_social:{
 
 /* ── Liga ───────────────────────────────────────────────── */
 c18_liga:{
+  falante:'a atendente da Liga',
+  vozes:['P','N','N'],
   texto:[
     'A sede regional da Liga em Saffron atende das nove às quinze, com uma hora de almoço que na prática é uma e meia.',
     'Você faz o pedido no balcão, por escrito, no formulário certo, e a atendente protocola com carimbo e devolve a segunda via.',
@@ -58725,6 +58834,8 @@ c18_liga_tecnico:{
 },
 
 c18_liga_porque_contra:{
+  falante:'Técnica da Liga',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     '"Porque eles resolvem."',
     'Ela vê a sua cara e levanta a mão antes que você fale.',
@@ -58742,6 +58853,8 @@ c18_liga_porque_contra:{
 },
 
 c18_liga_quem_assinou:{
+  falante:'Técnica da Liga',
+  vozes:['N','N','P','N'],
   texto:[
     '"A diretoria anterior." Ela diz isso com um cuidado que não passa despercebido. "A diretora de fiscalização assinou pela Liga."',
     '"E ela está onde hoje?"',
@@ -58759,6 +58872,8 @@ c18_liga_quem_assinou:{
 },
 
 c18_liga_copia_convenio:{
+  falante:'Técnica da Liga',
+  vozes:['N','N'],
   texto:[
     'Ela tira a cópia ela mesma, na máquina do corredor, e volta com onze páginas ainda quentes.',
     '"Isso é público, então eu não estou fazendo nada."',
@@ -59445,6 +59560,8 @@ c18_publicar:{
 },
 
 c18_os_outros_dois:{
+  falante:'Auditora Brill',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Um professor e uma servidora." Ela responde na hora, sem consultar. "Ele publicou um artigo em revista científica, que é o lugar onde as coisas vão morrer em paz. Ela publicou numa rádio de Fuchsia, e foi melhor: durou onze dias."',
     '"E depois?"',
@@ -59479,6 +59596,8 @@ c18_mulher_da_radio:{
 },
 
 c18_procura_jornal:{
+  falante:'o repórter',
+  vozes:['N','P','N','N','N'],
   texto:[
     'A redação do jornal de Celadon fica num sobrado com escada de madeira e cheiro de tinta.',
     'Você é atendid{o|a} por um repórter de vinte e poucos anos que escuta três minutos, olha o calhamaço e faz a única pergunta que ele foi treinado a fazer.',
@@ -61902,6 +62021,8 @@ c19_o_que_acontece_la:{
 },
 
 c19_esperou_ele_falar:{
+  falante:'o voluntário sem nome',
+  vozes:['N','N','N','N'],
   texto:[
     'Você não pergunta nada. Você fica sentad{o|a}.',
     'Passam dois minutos inteiros, o que num refeitório vazio é muito tempo.',
@@ -61939,6 +62060,8 @@ c19_ha_quanto_tempo:{
 },
 
 c19_zoologico_fechou:{
+  falante:'o voluntário sem nome',
+  vozes:['N','N','P','N','N','N','N'],
   texto:[
     '"Porque acabou o dinheiro." Ele dá de ombros, e o dar de ombros é mais pesado que qualquer discurso. "Município cortou, a bilheteria não pagava a ração, e no fim a gente estava comprando ração com vaquinha entre funcionário."',
     '"E os bichos?"',
@@ -63399,6 +63522,8 @@ c20_o_professor:{
 },
 
 c20_professor_art19:{
+  falante:'Sr. Tobias Dahl',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Ele leva um tempo, e quando fala, fala para a mesa e não para você.',
     '"Eu votei a favor."',
@@ -63577,6 +63702,8 @@ c20_conselheira:{
 },
 
 c20_liga_sabe:{
+  falante:'Conselheira da Liga',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"A Liga sabe que você senta aqui?"',
     '"A Liga assinou o convênio que criou este assento." Ela abre a pasta e tira uma folha. "Cláusula nona. Publicada. Com a minha assinatura e a de mais três diretores."',
@@ -63631,6 +63758,8 @@ c20_pediu_voto_dela:{
 },
 
 c20_nome:{
+  falante:'a Presidente',
+  vozes:['N','N','N'],
   texto:[
     'Você diz o seu nome.',
     'Metade da mesa reage. A Presidente, não.',
@@ -67904,6 +68033,8 @@ c21_ja_viu_sair:{
 },
 
 c21_o_que_acontece_em_cima:{
+  falante:'a moça das licenças',
+  vozes:['N','P','N','N'],
   texto:[
     'Você pergunta a uma moça do setor de licenças, que está comendo sozinha com um livro aberto ao lado da bandeja.',
     'Ela marca a página com o dedo antes de responder.',
@@ -67923,6 +68054,8 @@ c21_o_que_acontece_em_cima:{
 },
 
 c21_quem_e_quintino:{
+  falante:'a moça das licenças',
+  vozes:['N','N','P','N','N','P','N','N'],
   texto:[
     '"Foi campeão em setenta e nove." Ela fecha o livro no dedo. "Depois foi Elite 4 por vinte e dois anos e depois virou uma coisa que não tem cargo."',
     '"Que coisa?"',
@@ -67944,7 +68077,7 @@ c21_pediu_a_arena:{
     '"Treze e vinte e cinco. Dá."',
     'Ela te dá um crachá de visitante com barbante e aponta a escada de serviço.',
     'A arena da Elite 4 fica dois andares abaixo do saguão e é um poço de pedra com iluminação vinda de cima.',
-    'Não tem plateia. Nunca teve. É outra coisa que os jogos não contam.',
+    'Não tem plateia. Nunca teve. É outra coisa que quem conta a história da Liga deixa de fora.',
     'E, na borda do poço, com as pernas para dentro, tem um homem de setenta e poucos anos sentado, sozinho, olhando o chão vazio.'
   ],
   ef:{flag:'viu_a_arena',
@@ -68464,6 +68597,8 @@ c21_p2_nada:{
 },
 
 c21_p2_mais_cedo:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Eu teria feito mais cedo."',
     '"Feito o quê mais cedo?", pergunta a Conselheira, e é a primeira vez que ela faz uma pergunta de acompanhamento.',
@@ -68492,6 +68627,8 @@ c21_p2_perguntado:{
 },
 
 c21_pergunta3:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['N','N'],
   texto:[
     '"Terceira." Ela junta as mãos. "Existe alguma coisa em Kanto que só {o senhor|a senhora} pode resolver?"',
     'A pergunta parece vaidosa até você perceber que não é: eles já sabem a resposta e querem ver se você sabe.'
@@ -68651,6 +68788,8 @@ c21_mudem_o_contrato:{
 },
 
 c21_quem_teve_antes:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Quem teve esse cargo antes de mim?"',
     'A Conselheira Thistle consulta uma folha.',
@@ -68802,11 +68941,13 @@ c21_pediu_a_bruna:{
 
 /* ── A Elite 4 ──────────────────────────────────────────── */
 c21_desafio_elite:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N'],
   texto:[
     '"Eu não vim para ser contratado."',
     'A Conselheira Thistle ri — a primeira reação humana da reunião inteira. "Ótimo. Também tem isso."',
     'A arena da Elite 4 fica dois andares abaixo e é um poço de pedra com iluminação vinda de cima.',
-    'Não tem plateia. Nunca teve. É outra coisa que os jogos não contam.',
+    'Não tem plateia. Nunca teve. É outra coisa que quem conta a história da Liga deixa de fora.',
     d=>d.flags.conheceu_quintino
       ? 'E, na borda, com as pernas para dentro, o Sr. Mervin continua sentado, exatamente onde estava às treze e trinta.'
       : 'Na borda, com as pernas para dentro, tem um homem de setenta e poucos anos sentado sozinho, que ninguém apresenta.'
@@ -68877,6 +69018,8 @@ c21_a_frase_que_nao_fecha:{
 },
 
 c21_os_outros_cinco:{
+  falante:'o lutador da Elite 4',
+  vozes:['N','N','P','N','N','P','N','N','N'],
   texto:[
     '"A gente comparou, na volta, no ônibus." Ele alinha a bola na toalha. "Todo mundo lembra de ter sido perguntado alguma coisa."',
     '"E ninguém lembra o quê."',
@@ -69062,6 +69205,8 @@ c21_norte_conversa:{
 },
 
 c21_as_tres_equipes:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['N','N','N','P','Sr. Waldo','Sr. Waldo'],
   texto:[
     'A Conselheira abre a terceira pasta, que é grossa.',
     '"Primeira equipe, quatro pessoas, dezoito meses atrás. Subiram, chegaram, voltaram em dois dias. Relatório de três páginas dizendo que não encontraram nada."',
@@ -69104,6 +69249,8 @@ c21_relatorio_22:{
 },
 
 c21_ultima_pagina:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['N','N'],
   texto:[
     'A última página é diferente das outras vinte e uma.',
     'É manuscrita, não datilografada, e tem uma frase só, completa, terminada com ponto final.',
@@ -69143,6 +69290,8 @@ c21_quem_ficou:{
 },
 
 c21_voltaram_procurar:{
+  falante:'Maren Kestrel',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Voltamos no mesmo dia, às seis e dez, com lanterna."',
     'Ela fala rápido, porque é a parte que ela ensaiou.',
@@ -69220,6 +69369,8 @@ c21_so_olhar:{
 },
 
 c21_escrevam_agora:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N','P'],
   texto:[
     '"Então escrevam. Agora. Eu espero."',
     'A Conselheira Thistle olha o relógio. São quinze e vinte.',
@@ -71381,11 +71532,12 @@ c23_libertar:{
 },
 
 c23_pergunta_depois:{
+  falante:'Mewtwo',
   texto:[
     'É a primeira vez que ele demora pra responder.',
     '"Não sei." Uma pausa longa. "Essa foi a sua resposta também, e você achou que era pouco."',
-    '"Eu não tenho plano. Eu tenho duzentos e quarenta e um dias de sala fechada e dois anos de caverna, e nenhuma ideia do que uma coisa como eu faz num lugar como esse."',
-    '"Mas eu quero descobrir do lado de fora."'
+    fala('Mewtwo', 'Eu não tenho plano. Eu tenho duzentos e quarenta e um dias de sala fechada e dois anos de caverna, e nenhuma ideia do que uma coisa como eu faz num lugar como esse.'),
+    fala('Mewtwo', 'Mas eu quero descobrir do lado de fora.')
   ],
   escolhas:[
     {texto:'"Então vamos."', vai:'c23_final_libertacao'},
@@ -71693,6 +71845,7 @@ c23_final_libertacao:{
 },
 
 c23_final_companhia:{
+  falante:'Mewtwo',
   texto:[
     '"Vem comigo. Não solto, não prendo — anda do meu lado."',
     'Ele considera isso por muito tempo.',
@@ -71728,6 +71881,7 @@ c23_final_compreensao:{
 },
 
 c23_final_honestidade:{
+  falante:'Mewtwo',
   texto:[
     '"Não sei se consigo."',
     'Ele recebe isso melhor do que receberia uma promessa.',
@@ -71813,6 +71967,7 @@ c23_final_o_decimo_segundo:{
 },
 
 c23_final_tratado:{
+  falante:'Mewtwo',
   texto:[
     '"O que você quiser que esteja."',
     'Ele para. Isso o desarma mais do que qualquer coisa que aconteceu nesta câmara.',
@@ -71833,6 +71988,7 @@ c23_final_tratado:{
 },
 
 c23_final_tratado_frio:{
+  falante:'Mewtwo',
   texto:[
     '"O que a Liga aprovar."',
     'A temperatura da câmara não muda, mas alguma coisa muda.',
@@ -71851,6 +72007,7 @@ c23_final_tratado_frio:{
 },
 
 c23_final_pena:{
+  falante:'Mewtwo',
   texto:[
     'Você estende a pena.',
     'Ele não pega com a mão. Ela levanta do seu braço e fica pairando entre vocês dois, girando devagar, quebrando a luz.',
@@ -71872,12 +72029,13 @@ c23_final_pena:{
 },
 
 c23_final_socio:{
+  falante:'Mewtwo',
   texto:[
     '"Sim."',
     'Ele não te mata. Isso te surpreende, e a surpresa é a parte que vai te assombrar.',
     '"Você sabe qual é a pior parte?" A voz está absolutamente calma. "Eu considerei."',
-    '"Por dois segundos inteiros, eu considerei. Porque eu não tenho nada, e você me ofereceu alguma coisa, e é a primeira vez que alguém me oferece qualquer coisa."',
-    '"Sai."'
+    fala('Mewtwo', 'Por dois segundos inteiros, eu considerei. Porque eu não tenho nada, e você me ofereceu alguma coisa, e é a primeira vez que alguém me oferece qualquer coisa.'),
+    fala('Mewtwo', 'Sai.', 'frio')
   ],
   final:{id:'socio', titulo:'DOIS SEGUNDOS', texto:[
     'Você sobe do vale e volta pra Celadon e toca a rede por mais quatro anos.',
@@ -71892,6 +72050,7 @@ c23_final_socio:{
 },
 
 c23_final_inventario:{
+  falante:'Mewtwo',
   texto:[
     '"Eu sei quanto pagam. Eu já vendi coisa parecida."',
     'A câmara não esfria, não treme, não acende.',
@@ -71950,6 +72109,7 @@ c23_final_entrega:{
 },
 
 c23_final_arrependimento:{
+  falante:'Mewtwo',
   texto:[
     'Você abre a bola antes de chegar na superfície.',
     'Ele sai. Olha a bola no chão. Olha você.',
@@ -72003,6 +72163,7 @@ c23_carta:{
 },
 
 c23_final_a_carta:{
+  falante:'Mewtwo',
   texto:[
     'Ele fica muito tempo em silêncio.',
     '"Eu sei onde tem gente sendo conferida", ele diz finalmente. "Eu sinto. Eu sempre soube e eu achei que era comigo."',
@@ -72040,6 +72201,7 @@ c23_trinta_e_dois:{
 },
 
 c23_final_trinta_e_dois:{
+  falante:'Mewtwo',
   texto:[
     '"Eu não sei o que eles estavam fazendo", ele diz. "Eu leio pessoas. Eu não leio isso."',
     'Ele olha pro teto da câmara, onde não tem nada.',
@@ -72077,6 +72239,7 @@ c23_a_porta_de_novo:{
 },
 
 c23_final_a_porta:{
+  falante:'Mewtwo',
   texto:[
     '"Porque enquanto eu não saio, o mundo lá fora continua sendo o que eu imagino."',
     'Ele diz isso com uma clareza que dói.',
@@ -72117,6 +72280,7 @@ c23_a_papelada:{
 },
 
 c23_final_papelada:{
+  falante:'Mewtwo',
   texto:[
     'Quando acaba, ele fica muito quieto.',
     '"Isso é pior que caçada."',
@@ -72199,9 +72363,10 @@ c23_a_pagina:{
 },
 
 c23_final_a_pagina:{
+  falante:'Mewtwo',
   texto:[
-    '"Eu nunca prometi nada pra ninguém", ele diz.',
-    '"Ninguém nunca te pediu nada."',
+    fala('Mewtwo', 'Eu nunca prometi nada pra ninguém.'),
+    d=>fala(d.jogador.nome, 'Ninguém nunca te pediu nada.'),
     '"Ninguém nunca me pediu nada", ele concorda. "É diferente de ninguém nunca ter me dado nada. Eu não tinha reparado na diferença."',
     'Ele senta de novo no chão da câmara.',
     '"Vai. Antes que ela risque."'
@@ -72242,6 +72407,7 @@ c23_a_troca:{
 },
 
 c23_final_a_troca:{
+  falante:'Mewtwo',
   texto:[
     d=>d.flags.ofereceu_a_si
       ? '"Você." Ele repete. "Você fica numa caverna embaixo de uma montanha e eu saio andando com a sua vida."'
@@ -72412,6 +72578,7 @@ c23_a_resposta_dobrada:{
 },
 
 c23_final_resposta:{
+  falante:'Mewtwo',
   texto:[
     'O papel se dobra sozinho, nas mesmas quarenta dobras, e volta para a sua mão.',
     '"Diz para ele que não tem resposta certa."',
@@ -72453,6 +72620,7 @@ c23_a_prancheta:{
 },
 
 c23_final_anilha:{
+  falante:'Mewtwo',
   texto:[
     '"Tem anilha. Quarenta e um C, zero sete. Anilha é número, mas é individual."',
     'Ele processa isso.',
@@ -72494,6 +72662,7 @@ c23_a_lista_do_sena:{
 },
 
 c23_final_alguem_conta:{
+  falante:'Mewtwo',
   texto:[
     '"Tem gente lá dentro que ainda conta."',
     'Ele demora.',
@@ -72557,6 +72726,7 @@ c23_o_circulo_conversa:{
 },
 
 c23_final_quarenta_segundos:{
+  falante:'Mewtwo',
   texto:[
     '"Eles montaram a jaula antes de falar com você."',
     '"Sim."',
@@ -72601,6 +72771,7 @@ c23_a_carta_da_professora:{
 },
 
 c23_final_nao_precisa:{
+  falante:'Mewtwo',
   texto:[
     '"Eu vim aqui achando que precisava voltar com alguma coisa."',
     'Ele desce da pedra e senta no chão, e isso ele só fez uma vez antes.',
@@ -72665,6 +72836,7 @@ c23_mostrou_o_endereco:{
 },
 
 c23_final_o_papel:{
+  falante:'Mewtwo',
   texto:[
     'Ele olha o papel no ar por mais um tempo.',
     '"Não joga fora."',
@@ -74524,7 +74696,7 @@ c32_a_conta_de_energia:{
   texto:[
     'Você abre a conta de energia num galpão de rua industrial em Saffron, o que é violação de correspondência, e você sabe que é.',
     'A conta tem três informações que valem alguma coisa.',
-    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras e um "Ltda." no fim, que você nunca viu em nenhum papel desta jornada.',
+    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras e um Ltda. no fim, que você nunca viu em nenhum papel desta jornada.',
     'A segunda: o consumo. Dezenove mil e quatrocentos quilowatt-hora no mês.',
     'Isso é consumo de uma fábrica. Não é consumo de um galpão de armazenagem, que gasta luz e mais nada.',
     'A terceira é a que fecha: a classificação tarifária.',
@@ -77921,6 +78093,9 @@ const UI = {
     if (novo) return novo;                                  // quem entrou agora é quem fala
     if (!npc) return null;
     const curto = npc.split(' ').filter(x => x.length > 3).pop() || npc;
+    /* "Homem das tigelas": rótulo de cargo não é nome, e "tigelas" numa
+       fala não quer dizer que estão falando dele */
+    if (!/^[A-ZÀ-Ú]/.test(curto)) return npc;
     for (const linha of (linhas || [])){
       if (typeof linha === 'function') continue;
       const t = (linha && linha.diz != null) ? String(linha.diz) : String(linha || '');
@@ -77932,7 +78107,7 @@ const UI = {
 
   /* só o que de fato carrega texto escrito — nada de "carimbo" ou
      "crachá", que aparecem em cena de conversa e roubavam a fala */
-  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|letra de (criança|imprensa|fôrma|forma))\b/i,
+  _ESCRITO: /\b(placa|cartaz|letreiro|plaquinha|pichação|manchete|mural|painel|outdoor|banner|escrito à mão|escrita a caneta|está escrito|escrito assim|escreve no seu caderno|letra de (criança|imprensa|fôrma|forma))\b/i,
   /* Papel também se reconhece pela descrição logo depois: "…" — com
      uma foto colada, "…" — letra de imprensa. O travessão ali descreve
      o papel, não quem falou. */
@@ -77957,6 +78132,11 @@ const UI = {
        fala. Duas falas coladas, sem narração no meio, são uma troca:
        a vez passa pro outro. */
     let pendente = null, primeira = true, lado = null, ultimaBoca = null;
+    /* `vozes` na cena: o autor diz, aspa por aspa, quem fala — 'P' é
+       você, 'N' é o falante da cena, qualquer outro texto é o nome de
+       uma terceira pessoa. Manda mais que qualquer adivinhação. */
+    const vozes = this.monologoDe ? null : this.vozesDaCena;
+    let voz = 0;
 
     return (linhas||[]).map(bruto => {
       const f = (typeof falaDe === 'function') ? falaDe(bruto) : null;
@@ -77978,6 +78158,15 @@ const UI = {
       }
       const t = txt(bruto);
       if (!t) return '';
+
+      /* **PLACA, BILHETE, CABEÇALHO**: linha inteira em negrito é coisa
+         escrita. Aspas dentro dela são do papel, não de alguém falando. */
+      const bloco = /^\s*\*\*([\s\S]*?)\*\*\s*$/.exec(t);
+      if (bloco && !/\*\*/.test(bloco[1])){
+        const dentro = bloco[1].trim().replace(/^["\u201C]([\s\S]*)["\u201D]$/, '\u201C$1\u201D');
+        pendente = t; ultimaBoca = null;
+        return `<p class="escrito">${this.esc(dentro)}</p>`;
+      }
 
       /* Trecho entre aspas é fala. Aspas curtas sem pontuação final
          são aspas de ironia ("análise jurídica") e ficam na narração. */
@@ -78009,17 +78198,30 @@ const UI = {
           html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
           continue;
         }
+        let outro = null;
         /* a frase que você acabou de escolher é sua, sem discussão */
-        if (this.monologoDe) lado = 'npc';
+        if (vozes && voz < vozes.length){
+          const v = vozes[voz++];
+          lado = v === 'P' ? 'voce' : 'npc';
+          if (v !== 'P' && v !== 'N') outro = v;
+        }
+        else if (this.monologoDe) lado = 'npc';
         else if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
         else if (primeira)
           lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
                : this.ladoDaFala(pendente, null, npc);
         else if (pendente !== null) lado = this.ladoDaFala(pendente, lado, npc);
         else lado = (lado === 'voce') ? 'npc' : 'voce';
+        /* '"Eu sei", ele diz.' — a atribuição vem depois da aspa e manda
+           mais que a alternância: "ele diz" nunca é você falando */
+        if (!outro && !(vozes && voz <= vozes.length && voz > 0) && !this.monologoDe && !(this.falaDoJogador && pe.texto === this.falaDoJogador)){
+          const verbo = '(diz|disse|repete|concorda|pergunta|responde|fala|completa|continua|murmura|insiste|corrige|acrescenta|emenda)';
+          if (new RegExp('^[,;]?\\s*(ele|ela)\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'npc';
+          else if (new RegExp('^[,;]?\\s*você\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'voce';
+        }
         primeira = false; pendente = null;
 
-        const quem = lado === 'voce' ? meuNome : npc;
+        const quem = lado === 'voce' ? meuNome : (outro || npc);
         const meu = lado === 'voce' ? ' voce' : '';
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
@@ -78028,7 +78230,9 @@ const UI = {
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
-    }).filter(Boolean).join('');
+    }).filter(Boolean).join('')
+      /* **trecho** no meio da frase: o crachá, o número do processo */
+      .replace(/\*\*([^*<>]+?)\*\*/g, '<strong>$1</strong>');
   },
 
   /* ========================================================
@@ -78046,8 +78250,10 @@ const UI = {
     this.npcDaCena = mapa.dono[Estado.dados.cena] || null;
     this.npcEhProprio = !!mapa.proprio[Estado.dados.cena];
     this.falanteDaCena = cena.falante || null;
+    this.vozesDaCena = cena.vozes || null;
     this.minhasFalasDaCena = (mapa.minhas[Estado.dados.cena]) || null;
     const paras = this.narrar(cena.texto);
+    this.vozesDaCena = null;      // vale só pro texto da própria cena
 
     const html = `<div class="painel">
       <div class="cap-cabecalho">
@@ -78078,7 +78284,7 @@ const UI = {
         return;
       }
       if (a.tipo === 'eco'){
-        c.appendChild(this.el(`<div class="eco">— "${this.esc(txt(a.texto))}"</div>`));
+        c.appendChild(this.el(`<div class="eco">${this.esc(txt(a.texto))}</div>`));
         return;
       }
       c.appendChild(this.el(`<div class="aviso ${this.esc(a.tipo||'info')}">${this.esc(txt(a.texto))}</div>`));
@@ -80694,7 +80900,7 @@ const UI = {
   telaDoacao(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = null;
+    this.falanteDaCena = null; this.vozesDaCena = null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">
@@ -80716,7 +80922,7 @@ const UI = {
   telaCargo(c, avisos){
     this.fecharModal(true);   // o balcão fica por cima da tela se não fechar
     this.npcDaCena = null; this.minhasFalasDaCena = null;
-    this.falanteDaCena = c.falante || null;
+    this.falanteDaCena = c.falante || null; this.vozesDaCena = c.vozes || null;
     this.limpar();
     this.add(this.topo());
     this.add(`<div class="painel">

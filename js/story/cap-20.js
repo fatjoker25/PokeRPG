@@ -465,6 +465,8 @@ c20_o_professor:{
 },
 
 c20_professor_art19:{
+  falante:'Sr. Tobias Dahl',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Ele leva um tempo, e quando fala, fala para a mesa e não para você.',
     '"Eu votei a favor."',
@@ -643,6 +645,8 @@ c20_conselheira:{
 },
 
 c20_liga_sabe:{
+  falante:'Conselheira da Liga',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"A Liga sabe que você senta aqui?"',
     '"A Liga assinou o convênio que criou este assento." Ela abre a pasta e tira uma folha. "Cláusula nona. Publicada. Com a minha assinatura e a de mais três diretores."',
@@ -697,6 +701,8 @@ c20_pediu_voto_dela:{
 },
 
 c20_nome:{
+  falante:'a Presidente',
+  vozes:['N','N','N'],
   texto:[
     'Você diz o seu nome.',
     'Metade da mesa reage. A Presidente, não.',

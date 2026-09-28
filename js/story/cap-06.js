@@ -346,6 +346,7 @@ c6_contou_bilac:{
 },
 
 c6_quem_e_a_pessoa:{
+  falante:'Sr. Cosmo',
   texto:[
     '"Quem é a pessoa?"',
     '"A Misty."',
@@ -662,6 +663,7 @@ c6_peixe:{
 },
 
 c6_moca_barraca:{
+  falante:'a moça do peixe frito',
   texto:[
     '"O que é aquilo lá na ponte norte?"',
     'A moça não levanta a cabeça da frigideira.',
@@ -722,7 +724,7 @@ c6_plaquinhas:{
     '"MACHOP — Nv 20 — 5.200"',
     '"PSYDUCK — Nv 16 — 2.900"',
     '"NIDORAN♀ — Nv 14 — 2.200"',
-    'E a sexta, na ponta, com a letra menor: "PIDGEY — Nv 9 — 400."',
+    'E a sexta, na ponta, com a letra menor: "PIDGEY — Nv 9 — 400"',
     'Quatrocentos. Você olha pro preço do peixe frito na sua mão e faz uma conta que preferia não ter feito.'
   ],
   ef:{flag:'leu_as_plaquinhas',
@@ -891,6 +893,7 @@ c6_porque_continua:{
 },
 
 c6_legal:{
+  falante:'Homem da banca',
   texto:[
     '"Isso não é ilegal?"',
     'Ele acha graça de verdade — não é deboche, é alívio de ouvir uma pergunta fácil.',
@@ -1019,6 +1022,7 @@ c6_o_que_esta_a_venda:{
 },
 
 c6_amanha_volto:{
+  falante:'Homem da banca',
   texto:[
     '"Amanhã eu volto."',
     '"Volta." Ele ajeita a espuma vazia. "Eu tô aqui das nove às cinco, menos sexta."',
@@ -1102,6 +1106,7 @@ c6_venda_feita:{
 },
 
 c6_comprar_de_volta:{
+  falante:'Homem da banca',
   texto:[
     'Você volta.',
     'Ele te vê chegando e já sabe, e o rosto dele fica com uma expressão que você só vai entender depois: é pena.',
@@ -2683,6 +2688,7 @@ c6_quinze_tigelas:{
 },
 
 c6_luta_veneno:{
+  falante:'Homem das tigelas',
   texto:[
     '"Você quer brigar por causa de bicho de rua."',
     'Ele limpa a mão no jeans e tira uma bola do bolso do casaco, e a bola é velha e arranhada e claramente não é comprada.',

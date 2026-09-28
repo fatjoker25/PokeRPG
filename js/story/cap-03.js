@@ -669,7 +669,7 @@ c3_caçadores:{
     'Dois homens vêm pela trilha em sentido contrário.',
     'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
-    d=>d.flags.pegou_mochila_cacador ? '"Essa mochila é minha", ele diz. Sem levantar a voz nenhum tom.' :
+    d=>d.flags.pegou_mochila_cacador ? fala('Caçador Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.') :
        (d.flags.pikachu_aliado || d.flags.pikachu_capturado_preso ? '"Cadê o amarelo." Não é pergunta.' :
         '"Viu alguma coisa aí atrás?" Ele sorri. O sorriso não sobe até os olhos.')
   ],

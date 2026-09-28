@@ -1042,7 +1042,7 @@ c15_o_que_foi:{
       moral:-5,
       executar:d=>{ Estado.lend(245).encontros++; return []; },
       registrar:'Suicune arranca os mourões do curral com a boca, sem olhar para quem está lá.',
-      presagio:'"É pior saber." Guarde a frase. Metade do jogo é sobre ela.'},
+      presagio:'"É pior saber." Guarde a frase. Metade da jornada é sobre ela.'},
   escolhas:[
     {texto:'"Eles não estão roubando. Estão abrindo."', vai:'c15_estao_abrindo'},
     {texto:'"Posso ajudar a recolocar?"', vai:'c15_ajudou_o_curral'},

@@ -393,3 +393,14 @@ Vocativo neutro ("cara") fica como está.
   `frio`. Frase inteira entre aspas numa linha de narração também vira balão sozinha.
 - Aspas de ironia ("análise jurídica") continuam narração porque não terminam em
   pontuação — se for fala, termina a frase dentro das aspas.
+- Quem fala numa aspa sem `fala()` é adivinhado, e a adivinhação alterna entre você
+  e o outro. `"…", ele diz` / `"…" Ele concorda` manda no lado (ele/ela é o outro,
+  você é você). Cena de conversa comprida ganha `falante:'…'` e, se precisar,
+  `vozes:['P','N',…]` — uma letra por aspa, na ordem: `P` é o jogador, `N` o
+  falante, qualquer outro texto é o nome de uma terceira pessoa. Balão sem nome
+  é bug: o script `anonimos` do scratchpad (ou `render.js`) acha.
+- Linha inteira entre `**…**` é coisa escrita (placa, bilhete, cabeçalho) e sai
+  como papel, mesmo com aspas dentro; `**trecho**` no meio da frase é negrito.
+  Nunca aparece asterisco na tela.
+- Presságio (`ef.presagio`) sai em itálico sem aspas em volta: se ele cita uma
+  fala, as aspas são dele.

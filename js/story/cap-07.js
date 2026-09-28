@@ -293,6 +293,7 @@ c7_chegada:{
 },
 
 c7_a_musica:{
+  falante:'a mulher da varanda',
   texto:[
     'Você pergunta pra primeira pessoa, uma mulher regando vaso numa varanda baixa.',
     'Ela para de regar.',
@@ -313,9 +314,10 @@ c7_a_musica:{
 },
 
 c7_quando_parou:{
+  falante:'a mulher da varanda',
   texto:[
     '"Quando foi que parou?"',
-    'Ela pensa com a regador na mão.',
+    'Ela pensa com o regador na mão.',
     '"Eu acho que nunca teve."',
     'Ela mexe as folhas de uma samambaia, procurando bicho.',
     '"Meu pai era daqui. O pai dele era daqui. A torre é de mil oitocentos e alguma coisa." Ela dá de ombros. "Talvez a gente nunca tenha ligado rádio nessa rua desde que rádio existe."',
@@ -451,6 +453,7 @@ c7_flores:{
 },
 
 c7_a_amarela:{
+  falante:'Moça da floricultura',
   texto:[
     '"Por que a amarela?"',
     '"Porque ela é a única que cresce aqui." Ela corta um caule. "As outras vêm de caminhão de Celadon. A amarela nasce sozinha no morro atrás da torre."',
@@ -472,6 +475,7 @@ c7_a_amarela:{
 },
 
 c7_morro:{
+  falante:'Moça da floricultura',
   texto:[
     '"Onde é o morro atrás da torre?"',
     'Ela te olha como se você tivesse dito uma bobagem, e depois entende, e depois acha graça.',
@@ -583,6 +587,7 @@ c7_o_que_tem:{
 },
 
 c7_ela_subiu:{
+  falante:'Moça da floricultura',
   texto:[
     '"E a senhora subiu?"',
     '"Uma vez. Com dezesseis anos, com dois amigos, de brincadeira."',

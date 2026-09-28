@@ -715,6 +715,8 @@ c18_seguiu_a_caixa:{
 },
 
 c18_atendente_encomenda:{
+  falante:'o atendente da encomenda',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Rota 21?" O atendente nem consulta. "Terça e sexta. Sempre os mesmos."',
     '"Sempre bicho?"',
@@ -1325,6 +1327,8 @@ c18_hemero_copia:{
 },
 
 c18_hemero_o_que_ela_pediu:{
+  falante:'Sr. Arlo',
+  vozes:['P','N'],
   texto:[
     'O Sr. Arlo tem um caderno de pedidos, porque é de uma geração que anota.',
     'Ele acha a página e vira para você.',
@@ -1440,6 +1444,8 @@ c18_hemero_social:{
 
 /* ── Liga ───────────────────────────────────────────────── */
 c18_liga:{
+  falante:'a atendente da Liga',
+  vozes:['P','N','N'],
   texto:[
     'A sede regional da Liga em Saffron atende das nove às quinze, com uma hora de almoço que na prática é uma e meia.',
     'Você faz o pedido no balcão, por escrito, no formulário certo, e a atendente protocola com carimbo e devolve a segunda via.',
@@ -1478,6 +1484,8 @@ c18_liga_tecnico:{
 },
 
 c18_liga_porque_contra:{
+  falante:'Técnica da Liga',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     '"Porque eles resolvem."',
     'Ela vê a sua cara e levanta a mão antes que você fale.',
@@ -1495,6 +1503,8 @@ c18_liga_porque_contra:{
 },
 
 c18_liga_quem_assinou:{
+  falante:'Técnica da Liga',
+  vozes:['N','N','P','N'],
   texto:[
     '"A diretoria anterior." Ela diz isso com um cuidado que não passa despercebido. "A diretora de fiscalização assinou pela Liga."',
     '"E ela está onde hoje?"',
@@ -1512,6 +1522,8 @@ c18_liga_quem_assinou:{
 },
 
 c18_liga_copia_convenio:{
+  falante:'Técnica da Liga',
+  vozes:['N','N'],
   texto:[
     'Ela tira a cópia ela mesma, na máquina do corredor, e volta com onze páginas ainda quentes.',
     '"Isso é público, então eu não estou fazendo nada."',
@@ -2198,6 +2210,8 @@ c18_publicar:{
 },
 
 c18_os_outros_dois:{
+  falante:'Auditora Brill',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Um professor e uma servidora." Ela responde na hora, sem consultar. "Ele publicou um artigo em revista científica, que é o lugar onde as coisas vão morrer em paz. Ela publicou numa rádio de Fuchsia, e foi melhor: durou onze dias."',
     '"E depois?"',
@@ -2232,6 +2246,8 @@ c18_mulher_da_radio:{
 },
 
 c18_procura_jornal:{
+  falante:'o repórter',
+  vozes:['N','P','N','N','N'],
   texto:[
     'A redação do jornal de Celadon fica num sobrado com escada de madeira e cheiro de tinta.',
     'Você é atendid{o|a} por um repórter de vinte e poucos anos que escuta três minutos, olha o calhamaço e faz a única pergunta que ele foi treinado a fazer.',

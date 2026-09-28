@@ -51,7 +51,7 @@ c32_a_conta_de_energia:{
   texto:[
     'Você abre a conta de energia num galpão de rua industrial em Saffron, o que é violação de correspondência, e você sabe que é.',
     'A conta tem três informações que valem alguma coisa.',
-    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras e um "Ltda." no fim, que você nunca viu em nenhum papel desta jornada.',
+    'A primeira: o titular. Não é pessoa física e não é a sigla. É uma razão social com quatro palavras e um Ltda. no fim, que você nunca viu em nenhum papel desta jornada.',
     'A segunda: o consumo. Dezenove mil e quatrocentos quilowatt-hora no mês.',
     'Isso é consumo de uma fábrica. Não é consumo de um galpão de armazenagem, que gasta luz e mais nada.',
     'A terceira é a que fecha: a classificação tarifária.',

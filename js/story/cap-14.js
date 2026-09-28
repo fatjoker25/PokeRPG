@@ -417,6 +417,8 @@ c14_quantas_ficaram:{
 },
 
 c14_quem_escondeu:{
+  falante:'Sr. Nolan',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Quem escondeu as cinco?"',
     'Os dois ficam quietos.',

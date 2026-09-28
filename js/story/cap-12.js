@@ -384,6 +384,8 @@ c12_fuchsia:{
 },
 
 c12_cidade:{
+  falante:'a dona da padaria',
+  vozes:['N'],
   texto:[
     'Você anda Fuchsia inteira em uma hora e quarenta, porque Fuchsia inteira dá uma hora e quarenta.',
     'A cidade vive da reserva de um jeito que não é sutil.',
@@ -494,12 +496,14 @@ c12_planilha_errada:{
 },
 
 c12_pra_onde_vai:{
+  falante:'Sr. Zane',
+  vozes:['P','N','P','P','N','N'],
   texto:[
     '"Pra onde vai o excedente?"',
     'Ele demora.',
     '"Nos meus primeiros anos ia pra soltura. A gente levava de caminhão pro norte, pra Rota 14, e soltava, e voltava."',
     '"E depois?"',
-    '"Depois a Rota 14 encheu, aí a gente levava mais longe. Aí a gente levava até Cerulean. Aí um ano o supervisor disse que não ia ter mais caminhão pra soltura porque era caro, e que a partir dali a retirada ia ser “entregue a receptor credenciado”."',
+    fala('Sr. Zane', 'Depois a Rota 14 encheu, aí a gente levava mais longe. Aí a gente levava até Cerulean. Aí um ano o supervisor disse que não ia ter mais caminhão pra soltura porque era caro, e que a partir dali a retirada ia ser “entregue a receptor credenciado”.'),
     '"E o que é receptor credenciado?"',
     '"Eu perguntei uma vez."',
     'Ele olha pra você.',
@@ -1963,6 +1967,8 @@ c12_bar:{
 },
 
 c12_quantos_ficam:{
+  falante:'Sr. Ulric',
+  vozes:['P','N','P','N','N','P','N','N','P','N','N'],
   texto:[
     '"Quantos ficam no caminho?"',
     'A mesa fica quieta.',

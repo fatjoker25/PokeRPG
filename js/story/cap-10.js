@@ -353,6 +353,8 @@ c10_quem_sabe:{
 },
 
 c10_eloi:{
+  falante:'Sr. Edric',
+  vozes:['N','N','P','N','P','N','N','N'],
   texto:[
     'Você senta na brita do lado da cadeira de praia dele.',
     '"Edric. Elói Edric." Ele estende a mão sem levantar da cadeira. "Trabalhei ali dezenove anos, na sala de controle. Saí quando fecharam."',
@@ -935,7 +937,7 @@ c10_consolou_eloi:{
       npc:{nome:'Sr. Edric', opiniao:8, memoria:'Te disse, com a agenda no colo, para ser o exagerado.'},
       rep:{eixo:'bom',delta:2,motivo:'Ficou para ouvir a parte difícil'},
       registrar:'"Vai lá dentro e seja o exagerado."',
-      presagio:'Seja o exagerado. Anota. Isso vale pro resto do jogo.'},
+      presagio:'Seja o exagerado. Anota. Isso vale pro resto da jornada.'},
   escolhas:[
     {texto:'Voltar pra usina.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
@@ -1968,6 +1970,8 @@ c10_saiu:{
 /* ─────────────── O PORTÃO, NA SAÍDA ─────────────── */
 
 c10_depois:{
+  falante:'Sr. Edric',
+  vozes:['N'],
   texto:[
     'No portão da usina tem alguém esperando.',
     d=>{

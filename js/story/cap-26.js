@@ -364,6 +364,8 @@ c21_ja_viu_sair:{
 },
 
 c21_o_que_acontece_em_cima:{
+  falante:'a moça das licenças',
+  vozes:['N','P','N','N'],
   texto:[
     'Você pergunta a uma moça do setor de licenças, que está comendo sozinha com um livro aberto ao lado da bandeja.',
     'Ela marca a página com o dedo antes de responder.',
@@ -383,6 +385,8 @@ c21_o_que_acontece_em_cima:{
 },
 
 c21_quem_e_quintino:{
+  falante:'a moça das licenças',
+  vozes:['N','N','P','N','N','P','N','N'],
   texto:[
     '"Foi campeão em setenta e nove." Ela fecha o livro no dedo. "Depois foi Elite 4 por vinte e dois anos e depois virou uma coisa que não tem cargo."',
     '"Que coisa?"',
@@ -404,7 +408,7 @@ c21_pediu_a_arena:{
     '"Treze e vinte e cinco. Dá."',
     'Ela te dá um crachá de visitante com barbante e aponta a escada de serviço.',
     'A arena da Elite 4 fica dois andares abaixo do saguão e é um poço de pedra com iluminação vinda de cima.',
-    'Não tem plateia. Nunca teve. É outra coisa que os jogos não contam.',
+    'Não tem plateia. Nunca teve. É outra coisa que quem conta a história da Liga deixa de fora.',
     'E, na borda do poço, com as pernas para dentro, tem um homem de setenta e poucos anos sentado, sozinho, olhando o chão vazio.'
   ],
   ef:{flag:'viu_a_arena',
@@ -924,6 +928,8 @@ c21_p2_nada:{
 },
 
 c21_p2_mais_cedo:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Eu teria feito mais cedo."',
     '"Feito o quê mais cedo?", pergunta a Conselheira, e é a primeira vez que ela faz uma pergunta de acompanhamento.',
@@ -952,6 +958,8 @@ c21_p2_perguntado:{
 },
 
 c21_pergunta3:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['N','N'],
   texto:[
     '"Terceira." Ela junta as mãos. "Existe alguma coisa em Kanto que só {o senhor|a senhora} pode resolver?"',
     'A pergunta parece vaidosa até você perceber que não é: eles já sabem a resposta e querem ver se você sabe.'
@@ -1111,6 +1119,8 @@ c21_mudem_o_contrato:{
 },
 
 c21_quem_teve_antes:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Quem teve esse cargo antes de mim?"',
     'A Conselheira Thistle consulta uma folha.',
@@ -1262,11 +1272,13 @@ c21_pediu_a_bruna:{
 
 /* ── A Elite 4 ──────────────────────────────────────────── */
 c21_desafio_elite:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N'],
   texto:[
     '"Eu não vim para ser contratado."',
     'A Conselheira Thistle ri — a primeira reação humana da reunião inteira. "Ótimo. Também tem isso."',
     'A arena da Elite 4 fica dois andares abaixo e é um poço de pedra com iluminação vinda de cima.',
-    'Não tem plateia. Nunca teve. É outra coisa que os jogos não contam.',
+    'Não tem plateia. Nunca teve. É outra coisa que quem conta a história da Liga deixa de fora.',
     d=>d.flags.conheceu_quintino
       ? 'E, na borda, com as pernas para dentro, o Sr. Mervin continua sentado, exatamente onde estava às treze e trinta.'
       : 'Na borda, com as pernas para dentro, tem um homem de setenta e poucos anos sentado sozinho, que ninguém apresenta.'
@@ -1337,6 +1349,8 @@ c21_a_frase_que_nao_fecha:{
 },
 
 c21_os_outros_cinco:{
+  falante:'o lutador da Elite 4',
+  vozes:['N','N','P','N','N','P','N','N','N'],
   texto:[
     '"A gente comparou, na volta, no ônibus." Ele alinha a bola na toalha. "Todo mundo lembra de ter sido perguntado alguma coisa."',
     '"E ninguém lembra o quê."',
@@ -1522,6 +1536,8 @@ c21_norte_conversa:{
 },
 
 c21_as_tres_equipes:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['N','N','N','P','Sr. Waldo','Sr. Waldo'],
   texto:[
     'A Conselheira abre a terceira pasta, que é grossa.',
     '"Primeira equipe, quatro pessoas, dezoito meses atrás. Subiram, chegaram, voltaram em dois dias. Relatório de três páginas dizendo que não encontraram nada."',
@@ -1564,6 +1580,8 @@ c21_relatorio_22:{
 },
 
 c21_ultima_pagina:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['N','N'],
   texto:[
     'A última página é diferente das outras vinte e uma.',
     'É manuscrita, não datilografada, e tem uma frase só, completa, terminada com ponto final.',
@@ -1603,6 +1621,8 @@ c21_quem_ficou:{
 },
 
 c21_voltaram_procurar:{
+  falante:'Maren Kestrel',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Voltamos no mesmo dia, às seis e dez, com lanterna."',
     'Ela fala rápido, porque é a parte que ela ensaiou.',
@@ -1680,6 +1700,8 @@ c21_so_olhar:{
 },
 
 c21_escrevam_agora:{
+  falante:'Conselheira Edda Thistle',
+  vozes:['P','N','P'],
   texto:[
     '"Então escrevam. Agora. Eu espero."',
     'A Conselheira Thistle olha o relógio. São quinze e vinte.',

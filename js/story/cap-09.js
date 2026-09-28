@@ -331,6 +331,8 @@ c9_compra_se:{
 },
 
 c9_quem_traz:{
+  falante:'Lojista de Celadon',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Quem traz mais de quatro?"',
     'Ele sorri de um jeito profissional e absolutamente vazio.',
@@ -441,6 +443,8 @@ c9_qual_e_o_lugar:{
 },
 
 c9_fotografou_certificado:{
+  falante:'Lojista de Celadon',
+  vozes:['N','N'],
   texto:[
     'Você tira a câmera da mochila e fotografa o certificado emoldurado na parede, de frente, com flash.',
     'O flash estoura na loja inteira.',
@@ -504,6 +508,8 @@ c9_quem_e_renno:{
 },
 
 c9_compram_de_onde:{
+  falante:'Lojista de Celadon',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Vocês compram de onde?"',
     '"De quem traz."',
@@ -758,6 +764,8 @@ c9_revelou_rapido:{
 },
 
 c9_por_quanto_tempo:{
+  falante:'Revelador de Celadon',
+  vozes:['P','N','N','N'],
   texto:[
     '"O senhor guarda por quanto tempo?"',
     '"Até você vir buscar."',
@@ -799,6 +807,8 @@ c9_revelou_quinta:{
 },
 
 c9_como_era_o_moco:{
+  falante:'Revelador de Celadon',
+  vozes:['P','N','N','N'],
   texto:[
     '"Como era o moço?"',
     '"Educado."',
@@ -881,6 +891,8 @@ c9_o_duque_morreu:{
 },
 
 c9_mentiu_pra_filha:{
+  falante:'Filha da Sibyl',
+  vozes:['P','N','N'],
   texto:[
     '"Não."',
     'Ela faz que sim várias vezes, rápido, e bebe o café frio.',
@@ -1334,6 +1346,8 @@ c9_sentou_no_hospital:{
 },
 
 c9_junta:{
+  falante:'a moça da junta',
+  vozes:['N','P','N'],
   texto:[
     'A junta comercial de Celadon fica no terceiro andar de um prédio público com elevador quebrado.',
     'Você sobe a pé, pega senha, e espera uma hora e quarenta.',
@@ -1354,6 +1368,8 @@ c9_junta:{
 },
 
 c9_e_publico:{
+  falante:'a moça da junta',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Isso é público mesmo?"',
     '"É."',
@@ -1362,7 +1378,7 @@ c9_e_publico:{
     'Ela carimba alguma coisa.',
     '"A única coisa que a gente não fornece é dado pessoal de pessoa física fora do quadro societário."',
     'Ela levanta a cabeça pela primeira vez.',
-    '"E olha, moço: ninguém vem aqui. Eu atendo umas quatro pessoa por dia, e três são contador."'
+    '"E olha, {moço|moça}: ninguém vem aqui. Eu atendo umas quatro pessoa por dia, e três são contador."'
   ],
   ef:{flag:'ninguem_vem_aqui',
       presagio:'Quatro pessoas por dia, três contadores. O segredo mais bem guardado de Kanto é uma coisa que está aberta das nove às cinco.'},
@@ -1375,6 +1391,8 @@ c9_e_publico:{
 },
 
 c9_por_nome:{
+  falante:'a moça da junta',
+  vozes:['P','N','N','N'],
   texto:[
     '"Dá pra buscar por nome de sócio?"',
     'Ela para de carimbar.',
@@ -1591,7 +1609,7 @@ c9_leu_as_certidoes:{
     'Você senta num banco de praça de Celadon e lê trinta e duas páginas de certidão comercial.',
     'Leva três horas e quarenta minutos e é a coisa mais chata que você já fez na vida.',
     'E no meio da página vinte e sete tem uma linha que muda tudo.',
-    'É uma alteração contratual de dois anos e meio atrás, e o objeto dela é a inclusão de uma nova atividade econômica secundária na empresa de logística:',
+    'É uma alteração contratual de dois anos e meio atrás, e o objeto dela é a inclusão de uma nova atividade econômica secundária na empresa de logística. Está escrito assim:',
     '"Guarda e conservação de espécimes biológicos vivos, para fins de custódia administrativa."',
     'Você lê três vezes.',
     'Alguém foi num cartório, pagou uma taxa, e registrou oficialmente que a empresa passa a guardar bicho vivo apreendido.',
@@ -1734,6 +1752,8 @@ c9_comprou_no_shopping:{
 },
 
 c9_as_pedras:{
+  falante:'o vendedor da vitrine',
+  vozes:['N','N','N'],
   texto:[
     'Ele abre a vitrine com uma chave que fica pendurada no crachá dele.',
     'Quatro pedras em suporte de veludo, com etiqueta de preço que custa mais do que tudo que você já teve junto.',
@@ -1919,6 +1939,8 @@ c9_responde_erika:{
 },
 
 c9_a_sabrina:{
+  falante:'Líder Erika',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O que aconteceu com a Sabrina?"',
     'Erika para de podar e fica um tempo sem responder.',
@@ -2241,6 +2263,8 @@ c9_cassino:{
 },
 
 c9_quem_terceira:{
+  falante:'A Terceira',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Quem é você?"',
     '"Terceira." Ela solta a fumaça pro lado, longe do seu rosto, que é uma delicadeza estranha vinda de quem acabou de acender um cigarro num salão fechado.',
@@ -2260,6 +2284,8 @@ c9_quem_terceira:{
 },
 
 c9_terceira_sim:{
+  falante:'A Terceira',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Você é a Terceira."',
     'Ela não nega, não confirma, não muda de expressão. A brasa do cigarro sobe um centímetro.',
@@ -2570,6 +2596,8 @@ c9_prado_conversa:{
 },
 
 c9_prado_te_da_o_processo:{
+  falante:'Auditora Brill',
+  vozes:['P','N','N','N'],
   texto:[
     d=>d.flags.copia_do_hideo || d.flags.hideo_escreveu
       ? 'Você entrega a folha. Ela lê duas vezes, a segunda com o dedo acompanhando a linha, do jeito de quem confere número.'
@@ -3305,6 +3333,8 @@ c9_ivone:{
 },
 
 c9_ivone_44207:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"E o processo quarenta e quatro mil duzentos e sete?"',
     'Ela abre a pasta dela e procura, e acha, porque ela tem esse número anotado desde Pewter.',
@@ -3328,6 +3358,8 @@ c9_ivone_44207:{
 },
 
 c9_liga_celadon:{
+  falante:'o oficial da Liga',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     'O posto da Liga em Celadon fica no terceiro andar de um prédio comercial, entre um consultório de fisioterapia e uma escola de informática, e fecha às dezoito horas.',
     'Tem quatro cadeiras de plástico na recepção e um cartaz desbotado de campanha de adoção de 1993.',

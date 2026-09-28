@@ -734,11 +734,12 @@ c23_libertar:{
 },
 
 c23_pergunta_depois:{
+  falante:'Mewtwo',
   texto:[
     'É a primeira vez que ele demora pra responder.',
     '"Não sei." Uma pausa longa. "Essa foi a sua resposta também, e você achou que era pouco."',
-    '"Eu não tenho plano. Eu tenho duzentos e quarenta e um dias de sala fechada e dois anos de caverna, e nenhuma ideia do que uma coisa como eu faz num lugar como esse."',
-    '"Mas eu quero descobrir do lado de fora."'
+    fala('Mewtwo', 'Eu não tenho plano. Eu tenho duzentos e quarenta e um dias de sala fechada e dois anos de caverna, e nenhuma ideia do que uma coisa como eu faz num lugar como esse.'),
+    fala('Mewtwo', 'Mas eu quero descobrir do lado de fora.')
   ],
   escolhas:[
     {texto:'"Então vamos."', vai:'c23_final_libertacao'},
@@ -1046,6 +1047,7 @@ c23_final_libertacao:{
 },
 
 c23_final_companhia:{
+  falante:'Mewtwo',
   texto:[
     '"Vem comigo. Não solto, não prendo — anda do meu lado."',
     'Ele considera isso por muito tempo.',
@@ -1081,6 +1083,7 @@ c23_final_compreensao:{
 },
 
 c23_final_honestidade:{
+  falante:'Mewtwo',
   texto:[
     '"Não sei se consigo."',
     'Ele recebe isso melhor do que receberia uma promessa.',
@@ -1166,6 +1169,7 @@ c23_final_o_decimo_segundo:{
 },
 
 c23_final_tratado:{
+  falante:'Mewtwo',
   texto:[
     '"O que você quiser que esteja."',
     'Ele para. Isso o desarma mais do que qualquer coisa que aconteceu nesta câmara.',
@@ -1186,6 +1190,7 @@ c23_final_tratado:{
 },
 
 c23_final_tratado_frio:{
+  falante:'Mewtwo',
   texto:[
     '"O que a Liga aprovar."',
     'A temperatura da câmara não muda, mas alguma coisa muda.',
@@ -1204,6 +1209,7 @@ c23_final_tratado_frio:{
 },
 
 c23_final_pena:{
+  falante:'Mewtwo',
   texto:[
     'Você estende a pena.',
     'Ele não pega com a mão. Ela levanta do seu braço e fica pairando entre vocês dois, girando devagar, quebrando a luz.',
@@ -1225,12 +1231,13 @@ c23_final_pena:{
 },
 
 c23_final_socio:{
+  falante:'Mewtwo',
   texto:[
     '"Sim."',
     'Ele não te mata. Isso te surpreende, e a surpresa é a parte que vai te assombrar.',
     '"Você sabe qual é a pior parte?" A voz está absolutamente calma. "Eu considerei."',
-    '"Por dois segundos inteiros, eu considerei. Porque eu não tenho nada, e você me ofereceu alguma coisa, e é a primeira vez que alguém me oferece qualquer coisa."',
-    '"Sai."'
+    fala('Mewtwo', 'Por dois segundos inteiros, eu considerei. Porque eu não tenho nada, e você me ofereceu alguma coisa, e é a primeira vez que alguém me oferece qualquer coisa.'),
+    fala('Mewtwo', 'Sai.', 'frio')
   ],
   final:{id:'socio', titulo:'DOIS SEGUNDOS', texto:[
     'Você sobe do vale e volta pra Celadon e toca a rede por mais quatro anos.',
@@ -1245,6 +1252,7 @@ c23_final_socio:{
 },
 
 c23_final_inventario:{
+  falante:'Mewtwo',
   texto:[
     '"Eu sei quanto pagam. Eu já vendi coisa parecida."',
     'A câmara não esfria, não treme, não acende.',
@@ -1303,6 +1311,7 @@ c23_final_entrega:{
 },
 
 c23_final_arrependimento:{
+  falante:'Mewtwo',
   texto:[
     'Você abre a bola antes de chegar na superfície.',
     'Ele sai. Olha a bola no chão. Olha você.',
@@ -1356,6 +1365,7 @@ c23_carta:{
 },
 
 c23_final_a_carta:{
+  falante:'Mewtwo',
   texto:[
     'Ele fica muito tempo em silêncio.',
     '"Eu sei onde tem gente sendo conferida", ele diz finalmente. "Eu sinto. Eu sempre soube e eu achei que era comigo."',
@@ -1393,6 +1403,7 @@ c23_trinta_e_dois:{
 },
 
 c23_final_trinta_e_dois:{
+  falante:'Mewtwo',
   texto:[
     '"Eu não sei o que eles estavam fazendo", ele diz. "Eu leio pessoas. Eu não leio isso."',
     'Ele olha pro teto da câmara, onde não tem nada.',
@@ -1430,6 +1441,7 @@ c23_a_porta_de_novo:{
 },
 
 c23_final_a_porta:{
+  falante:'Mewtwo',
   texto:[
     '"Porque enquanto eu não saio, o mundo lá fora continua sendo o que eu imagino."',
     'Ele diz isso com uma clareza que dói.',
@@ -1470,6 +1482,7 @@ c23_a_papelada:{
 },
 
 c23_final_papelada:{
+  falante:'Mewtwo',
   texto:[
     'Quando acaba, ele fica muito quieto.',
     '"Isso é pior que caçada."',
@@ -1552,9 +1565,10 @@ c23_a_pagina:{
 },
 
 c23_final_a_pagina:{
+  falante:'Mewtwo',
   texto:[
-    '"Eu nunca prometi nada pra ninguém", ele diz.',
-    '"Ninguém nunca te pediu nada."',
+    fala('Mewtwo', 'Eu nunca prometi nada pra ninguém.'),
+    d=>fala(d.jogador.nome, 'Ninguém nunca te pediu nada.'),
     '"Ninguém nunca me pediu nada", ele concorda. "É diferente de ninguém nunca ter me dado nada. Eu não tinha reparado na diferença."',
     'Ele senta de novo no chão da câmara.',
     '"Vai. Antes que ela risque."'
@@ -1595,6 +1609,7 @@ c23_a_troca:{
 },
 
 c23_final_a_troca:{
+  falante:'Mewtwo',
   texto:[
     d=>d.flags.ofereceu_a_si
       ? '"Você." Ele repete. "Você fica numa caverna embaixo de uma montanha e eu saio andando com a sua vida."'
@@ -1765,6 +1780,7 @@ c23_a_resposta_dobrada:{
 },
 
 c23_final_resposta:{
+  falante:'Mewtwo',
   texto:[
     'O papel se dobra sozinho, nas mesmas quarenta dobras, e volta para a sua mão.',
     '"Diz para ele que não tem resposta certa."',
@@ -1806,6 +1822,7 @@ c23_a_prancheta:{
 },
 
 c23_final_anilha:{
+  falante:'Mewtwo',
   texto:[
     '"Tem anilha. Quarenta e um C, zero sete. Anilha é número, mas é individual."',
     'Ele processa isso.',
@@ -1847,6 +1864,7 @@ c23_a_lista_do_sena:{
 },
 
 c23_final_alguem_conta:{
+  falante:'Mewtwo',
   texto:[
     '"Tem gente lá dentro que ainda conta."',
     'Ele demora.',
@@ -1910,6 +1928,7 @@ c23_o_circulo_conversa:{
 },
 
 c23_final_quarenta_segundos:{
+  falante:'Mewtwo',
   texto:[
     '"Eles montaram a jaula antes de falar com você."',
     '"Sim."',
@@ -1954,6 +1973,7 @@ c23_a_carta_da_professora:{
 },
 
 c23_final_nao_precisa:{
+  falante:'Mewtwo',
   texto:[
     '"Eu vim aqui achando que precisava voltar com alguma coisa."',
     'Ele desce da pedra e senta no chão, e isso ele só fez uma vez antes.',
@@ -2018,6 +2038,7 @@ c23_mostrou_o_endereco:{
 },
 
 c23_final_o_papel:{
+  falante:'Mewtwo',
   texto:[
     'Ele olha o papel no ar por mais um tempo.',
     '"Não joga fora."',

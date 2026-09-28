@@ -2438,8 +2438,8 @@ c11_abriu_a_parede:{
     '**INSTITUTO DE PESQUISA CINNABAR — CAIXA 4 DE 9 — TRANSFERIDA 11/96**',
     'Quatro caixas de nove.',
     'Você abre a de cima e ela está cheia de cadernos. Cadernos comuns, de capa dura, de um só punho, numerados na lombada.',
-    'O de cima é o caderno 6 e a primeira linha da primeira página é:',
-    '"Dia 1. Ele piscou hoje e eu chorei, o que é pouco científico e eu vou anotar assim mesmo. — A.F."'
+    'O de cima é o caderno 6, e na primeira linha da primeira página está escrito:',
+    '**"Dia 1. Ele piscou hoje e eu chorei, o que é pouco científico e eu vou anotar assim mesmo. — A.F."**'
   ],
   ef:{flag:['achou_os_cadernos','sabe_do_fuji','provas_do_11'],
       itens:{'Caderno 6 do Dr. Fuji':1},
@@ -2460,12 +2460,12 @@ c11_leu_o_caderno:{
     'Você senta no vão, atrás da parede quebrada, e lê o caderno 6 inteiro em quarenta minutos, o que é rápido demais e você sabe.',
     'Não tem fórmula. Não tem gráfico. Não tem número.',
     'Tem uma pessoa anotando conversas.',
-    '"Dia 47. Perguntei o que ele queria e ele demorou dois dias pra responder. A resposta foi: saber o que é fora."',
-    '"Dia 88. Ele me perguntou se eu tinha medo dele. Eu menti. Ele soube."',
-    '"Dia 134. Ele perguntou por que ele. Eu não tinha resposta e disse que não tinha resposta, e ele ficou quieto três dias, e no quarto dia ele disse que preferia isso a uma resposta inventada."',
-    '"Dia 203. O conselho quer resultado. Eu disse que o resultado é esse, que ele fala comigo, que isso é o resultado. Eles perguntaram o que ele faz. Eu disse que ele pergunta. Eles perguntaram de novo o que ele FAZ."',
+    '**"Dia 47. Perguntei o que ele queria e ele demorou dois dias pra responder. A resposta foi: saber o que é fora."**',
+    '**"Dia 88. Ele me perguntou se eu tinha medo dele. Eu menti. Ele soube."**',
+    '**"Dia 134. Ele perguntou por que ele. Eu não tinha resposta e disse que não tinha resposta, e ele ficou quieto três dias, e no quarto dia ele disse que preferia isso a uma resposta inventada."**',
+    '**"Dia 203. O conselho quer resultado. Eu disse que o resultado é esse, que ele fala comigo, que isso é o resultado. Eles perguntaram o que ele faz. Eu disse que ele pergunta. Eles perguntaram de novo o que ele FAZ."**',
     'E a última página do caderno 6:',
-    '"Dia 241. Eu vou dizer não. Amanhã, na reunião, eu vou dizer não, e eles vão me tirar do projeto, e eu não sei o que vai acontecer com ele depois, e eu estou escrevendo isso aqui pra que exista em algum lugar que eu sabia exatamente o que eu estava fazendo."',
+    '**"Dia 241. Eu vou dizer não. Amanhã, na reunião, eu vou dizer não, e eles vão me tirar do projeto, e eu não sei o que vai acontecer com ele depois, e eu estou escrevendo isso aqui pra que exista em algum lugar que eu sabia exatamente o que eu estava fazendo."**',
     'O caderno 7 não está na caixa.'
   ],
   ef:{flag:['leu_o_caderno_do_fuji','sabe_dos_241'],
@@ -3040,6 +3040,8 @@ c11_entregou_liga:{
 },
 
 c11_quarta_vez:{
+  falante:'o oficial mais novo',
+  vozes:['N','P','N','N','P','N','P','N','N','N'],
   texto:[
     'Você pergunta uma quarta vez, e dessa vez você pergunta pra pessoa certa: o oficial mais novo da equipe, no estacionamento, sozinho, guardando caixa no porta-malas.',
     'Ele olha pros lados de um jeito que responde antes de ele falar.',

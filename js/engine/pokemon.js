@@ -167,7 +167,10 @@ function nomeVisivel(p){
            || (d.pc || []).some(x => x.uid === p.uid)
            || (d.cemiterio || []).some(x => x.uid === p.uid);
   if (meu) return nomeExib(p);
-  if (Estado.conheceu(p.dex)) return nomeExib(p);
+  /* Pidgey contra Pidgey: o log precisa dizer qual dos dois caiu */
+  const doOutroLado = n => (typeof Batalha !== 'undefined' && Batalha.ativo && Batalha.aliado &&
+    nomeExib(Batalha.aliado) === n) ? `${n} ${Batalha.tipo === 'selvagem' ? 'selvagem' : 'adversári' + pron(p).o}` : n;
+  if (Estado.conheceu(p.dex)) return doOutroLado(nomeExib(p));
   /* Líder de ginásio grita o nome do próprio Pokémon ao soltar a bola.
      Ouvir o nome não preenche a Pokédex: para isso ainda é preciso escanear. */
   if (p.nomeAnunciado) return nomeExib(p);
