@@ -83172,7 +83172,7 @@ const UI = {
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
         ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + ' tipo(s) de bola · ' : ''}${itens} item(ns)` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
+        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + (bolas === 1 ? ' tipo de bola · ' : ' tipos de bola · ') : ''}${itens} ${itens === 1 ? 'item' : 'itens'}` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
@@ -83780,7 +83780,7 @@ const UI = {
       </div>
       <div id="avisos" class="avisos"></div>
       <h3>Pontos de progressão</h3>
-      <p class="sussurro">Você tem <b id="pts">${j.pontos}</b> ponto(s). Máximo de +1 por status neste capítulo.</p>
+      <p class="sussurro">Você tem <b id="pts">${j.pontos}</b> <span id="pts-p">${j.pontos === 1 ? 'ponto' : 'pontos'}</span>. Máximo de +1 por status neste capítulo.</p>
       <div id="status-lista">${linhas}</div>
       <div style="margin-top:22px">
         <button class="btn destaque" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
@@ -83795,6 +83795,8 @@ const UI = {
     const j = Estado.j;
     const p = document.getElementById('pts');
     if (p) p.textContent = j.pontos;
+    const pp = document.getElementById('pts-p');
+    if (pp) pp.textContent = j.pontos === 1 ? 'ponto' : 'pontos';
     Object.keys(j.status).forEach(k => {
       const b = document.getElementById('up-'+k);
       if (b) b.disabled = j.pontos <= 0 || j.status[k] >= 10 || (Jogo.subidosNoCap||[]).includes(k);
