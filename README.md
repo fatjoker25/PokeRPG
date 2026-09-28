@@ -467,6 +467,9 @@ primeiras gerações do repositório de gritos da PokeAPI; os cenários de
 batalha (que também fazem o fundo de cada lugar), os rostos de treinador e as
 imagens de efeito dos golpes vêm do
 [Pokémon Showdown](https://play.pokemonshowdown.com).
+As animações dos golpes são as do cliente do Pokémon Showdown
+(`battle-animations-moves.ts`, CC0; o motor delas é MIT), geradas por
+`ferramentas/gerar-golpes-showdown.js`.
 As regras de combate são do Pokérole (Pokérole Project), e os atributos
 das espécies e as fichas dos golpes vêm do Pokerole-Data, mantido pela
 comunidade.

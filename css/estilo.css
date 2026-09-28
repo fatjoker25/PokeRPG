@@ -2394,6 +2394,11 @@ h3.cat-item{
 .fx-clarao{width:124px;height:124px;border-radius:50%;
   background:radial-gradient(circle,#fff 0 22%,rgba(255,255,255,.85) 38%,rgba(210,230,255,.4) 56%,transparent 70%)}
 .fx-img{height:auto;image-rendering:auto;transform:translate(-50%,-50%)}
+/* efeito do Showdown: caixa já posicionada pela cena, sem centralizar */
+.fx-sd{position:absolute;pointer-events:none;object-fit:fill;will-change:left,top,width,height,opacity}
+/* fundo de golpe (céu escuro, flash branco): atrás dos lutadores */
+.arena > .sd-fundo{position:absolute;top:0;left:0;right:0;z-index:0;pointer-events:none;opacity:0;border-radius:inherit}
+.lutador .arte > .sd-fundo{position:absolute;inset:-12px -14px 0;z-index:0;pointer-events:none;opacity:0;border-radius:var(--raio-sm)}
 .fx-estrela{width:10px;height:10px;background:#fff7cf;
   clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
   filter:drop-shadow(0 0 3px rgba(255,236,150,.95))}

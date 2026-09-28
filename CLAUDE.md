@@ -264,21 +264,37 @@ Consequências:
 - `atualizarArena` marca `.fixo` quem já estava lá, pra arte não "entrar"
   de novo a cada turno.
 
-Golpe é **imagem de efeito do Showdown** (`sprites_nds/animations/moves/`,
-`play.pokemonshowdown.com/fx/`), com os nomes de arquivo do roteiro
+Golpe é **a animação do próprio Showdown**. `js/data/golpes-showdown.js`
+é gerado por `node ferramentas/gerar-golpes-showdown.js <pasta dos .ts>`
+(`battle-animations-moves.ts`, CC0, e `battle-animations.ts`, MIT, do
+`pokemon-showdown-client`), com os 212 golpes de `GOLPES` e o que eles
+chamam por dentro; as imagens ficam em `sprites_nds/animations/showdown/`.
+Golpe novo em `GOLPES` pede rodar o gerador de novo. Quem toca é
+`CenaShowdown` (`js/ui/cena-showdown.js`): uma cena de mentira anota
+`showEffect`, `backgroundEffect`, `anim` e `delay`, e depois tudo roda com
+Web Animations. Quatro coisas que já morderam aqui:
+- **posição**: a profundidade `z` anda pela linha entre os centros dos
+  nossos dois lutadores, e `x`/`y`/tamanho crescem pelo tamanho do
+  sprite — pela distância, os efeitos saíam enormes e o pulo do Tackle
+  saía pelo teto da arena. A altura ainda é limitada pelo céu que a
+  arena tem acima do bicho de lá;
+- **fundo** (céu escuro do Thunder, roxo do Psychic) cobre só o cenário,
+  nunca as fichas de HP; empilhado, vai dentro da moldura de cada um;
+- **cópia de sprite** (rastro do Quick Attack) leva o `filter` do sprite:
+  sem isso a silhueta vira bicho colorido e entrega a espécie;
+- **quem ataca fica por cima** durante a cena, senão no celular ele passa
+  por trás do cartão do outro.
+
+Golpe que o Showdown deixa vazio (Earthquake, Reflect, Substitute…) cai na
+animação nossa, em `Efeitos.golpe`: imagens de efeito do Showdown em
+`sprites_nds/animations/moves/`, com os nomes de arquivo do roteiro
 (`physical_scratch`, `special_fire`, `stat_boost`…). Os endereços dos
 roteiros eram **ícones de item da PokeAPI** — Fire Stone, X Attack, disco
 de TM, Potion — e isso já aconteceu três vezes: link de
 `sprites/items/` nunca é animação. Confere a imagem antes de usar.
-
-A rotina (`Efeitos.golpe`): físico avança 15 px e bate pelo jeito
-(`jeitoDeBater`: corte, soco, chute, mordida, osso, investida com a tela
-tremendo), mais o estalo do tipo se não for Normal; especial faz quem usou
-brilhar 0,2 s na cor do tipo, o projétil de `FX_TIPO` viaja e o alvo pisca
-branco; status solta `stat_boost` subindo em quem sobe e `stat_drop`
-descendo em quem cai. Físico que é arremesso (`PROJETEIS_FISICOS`) vai
-como projétil; raio (`GOLPES_DE_RAIO`) é fila cerrada; `GOLPES_DE_CHAO`
-sacode a arena. Tipo novo precisa de entrada em `FX_TIPO`.
+Essa animação nossa: físico avança 15 px e bate pelo jeito
+(`jeitoDeBater`), especial brilha 0,2 s na cor do tipo e o projétil de
+`FX_TIPO` viaja, status solta `stat_boost`/`stat_drop`.
 
 Condição, cura e clima continuam **desenhados em CSS**. Cor por cima do
 Pokémon é clone sem `.sprite`, pintado por filtro SVG que só lê o alfa

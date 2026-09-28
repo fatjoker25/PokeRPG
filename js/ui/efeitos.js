@@ -220,6 +220,9 @@ const Efeitos = {
   async golpe(lado, nome){
     const g = GOLPES[nome] || {};
     const outro = lado === 'aliado' ? 'inimigo' : 'aliado';
+    /* a animação do próprio golpe, a do Showdown; sem ela, a nossa */
+    const sd = (typeof CenaShowdown !== 'undefined') ? CenaShowdown.tocar(nome, lado) : null;
+    if (sd) return sd;
     if (g.c === 'status') return this.golpeStatus(lado, outro, nome, g);
     if (GOLPES_DE_CHAO.has(nome)) return this.terremoto(lado, outro);
     /* físico que é arremesso (folha, pedra, ferrão) viaja como projétil */
