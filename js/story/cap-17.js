@@ -92,6 +92,8 @@ c17_ab_arrancou_a_folha:{
 },
 
 c17_ab_sem_insignias:{
+  falante:'a atendente do Centro',
+  vozes:['E','P','P','N','P','N'],
   texto:[
     d=>{
       const n = (d.insignias || []).length;
@@ -804,7 +806,7 @@ c17_o_nome_dele:{
     '"Qual é o seu nome?"',
     'Chiado.',
     '"Por quê?"',
-    '"Porque eu tô anotando tudo num caderno desde o primeiro capítulo e eu aprendi que nome importa."',
+    '"Porque eu tô anotando tudo num caderno desde o dia em que saí de casa e eu aprendi que nome importa."',
     'Uma risada curta no rádio, distorcida pelo chiado.',
     '"Roland. Central de comunicação do Planalto Indigo, vinte e três anos de casa, matrícula quatro mil cento e nove."',
     'Ele diz a matrícula sem você pedir.',

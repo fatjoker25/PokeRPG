@@ -1269,7 +1269,7 @@ c14_devolver_acervo:{
     '"Extinto por decreto quer dizer que o patrimônio foi pra algum lugar. Sempre vai."',
     'Blaine olha pra você com uma cara nova.',
     '"Você tem quinze anos."',
-    '"Eu passei um capítulo inteiro numa junta comercial."',
+    '"Eu passei uma semana inteira numa junta comercial."',
     'Ele ri.',
     'E aí ele vai até a estante, tira uma pasta de plástico com o Diário Oficial de novembro de noventa e seis dentro — porque ele guardou, porque ele é chato, porque advogado de ilha não faz nada —, e procura, e acha.',
     '**"Art. 4º. O acervo técnico e científico do Instituto ora extinto fica incorporado ao patrimônio da Comissão de Bem-Estar Pokémon, com obrigação de guarda e acesso público."**',

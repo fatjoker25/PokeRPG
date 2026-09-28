@@ -1298,7 +1298,8 @@ c11_envelope:{
   texto:[
     'Dentro do envelope tem três coisas.',
     'Uma: um crachá de visitante da Silph, em branco, desses que a recepção imprime na hora — mas com o chip já gravado.',
-    'Duas: um papel com um horário e uma frase. **"Quinta 19h. A porta de baixo fica aberta 11 segundos. Conta."**',
+    'Duas: um papel com um horário e uma frase.',
+    '**"Quinta 19h. A porta de baixo fica aberta 11 segundos. Conta."**',
     'Três: um post-it amarelo colado no papel, com uma letra apressada:',
     '"não me procura mais. eu tenho filho de 4 anos. desculpa. eu fiz o que dava."',
     'Você lê o post-it três vezes.',
@@ -1374,6 +1375,8 @@ c11_marina_meio:{
 },
 
 c11_marina_nao:{
+  falante:'Fenna (crachá azul)',
+  vozes:['N','N'],
   texto:[
     '"Não."',
     'Ela levanta e ajeita a bolsa.',
@@ -2928,7 +2931,7 @@ c11_deixou_escolher:{
     'Ele escolheu.',
     'A primeira escolha da vida dele foi ficar com os outros três, e ele tomou essa decisão em menos de dois minutos, e ninguém nunca vai saber disso porque ninguém além de você estava lá.',
     'Você sai sozinh{o|a}.',
-    'E essa imagem vai te acompanhar até o último capítulo desse jogo.'
+    'E essa imagem vai te acompanhar até o fim dessa jornada.'
   ],
   ef:{flag:['deixou_a_copia','divida_com_os_doze'],
       rep:{eixo:'bom',delta:4,motivo:'Deu a alguém a primeira escolha da vida dele'},

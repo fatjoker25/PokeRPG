@@ -160,6 +160,8 @@ c23_apoiou_a_mao:{
 },
 
 c23_respondeu_descendo:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Descendo."',
     'A palavra bate na pedra e volta, e depois disso fica um silêncio de uns bons dez segundos.',
@@ -243,6 +245,8 @@ c23_chamou:{
 },
 
 c23_porque_nao_sobe:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Por que você não sobe?"',
     'Dessa vez ele demora.',
@@ -336,6 +340,8 @@ c23_como_conseguiu:{
 },
 
 c23_a_primeira_coisa:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"E qual foi a primeira?"',
     'Ele vira a cabeça uns poucos graus, o suficiente para você ver o perfil.',
@@ -355,6 +361,8 @@ c23_a_primeira_coisa:{
 },
 
 c23_porque_trouxe:{
+  falante:'Mewtwo',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Por que você trouxe tudo isso?"',
     'Ele fica quieto tanto tempo que você acha que não vai responder.',
@@ -1905,6 +1913,8 @@ c23_a_chapa:{
 },
 
 c23_o_circulo_conversa:{
+  falante:'Mewtwo',
+  vozes:['N','N','P','N','N','N','P','N','N'],
   texto:[
     'Ele demora tanto para responder que você chega a achar que não vai.',
     '"Eles vieram me buscar no primeiro ano."',

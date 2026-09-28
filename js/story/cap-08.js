@@ -1903,6 +1903,8 @@ c8_procurou_uniforme:{
 },
 
 c8_pego:{
+  falante:'o segurança do navio',
+  vozes:['N','N'],
   texto:[
     'Você é pego antes de passar da escotilha. Dois seguranças, sem conversa.',
     'Eles não chamam a polícia. Levam você pra uma sala do convés inferior com uma mesa e duas cadeiras, revistam sua mochila item por item, e tiram o que acharem que compensa o incômodo.',
@@ -2091,6 +2093,8 @@ c8_carga_ruim:{
 },
 
 c8_contou_os_adolescentes:{
+  falante:'o carregador',
+  vozes:['N','N'],
   texto:[
     'Você conta.',
     'Dezenove. Dezenove pessoas de menos de vinte anos carregando caixa naquele corredor, no mesmo turno.',
@@ -2636,6 +2640,8 @@ c8_ganhou_torneio:{
 },
 
 c8_o_sapato:{
+  falante:'o homem de sapato limpo',
+  vozes:['N','N','N'],
   texto:[
     'Você olha pra baixo antes de responder qualquer coisa.',
     'Sapato social preto. Solado de couro. Limpo de um jeito que não existe num navio de porto.',
@@ -2657,6 +2663,8 @@ c8_o_sapato:{
 },
 
 c8_sobre_o_que:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Sobre o quê?"',
     '"Sobre você."',
@@ -2679,6 +2687,8 @@ c8_sobre_o_que:{
 },
 
 c8_que_fundacao:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N'],
   texto:[
     '"Que fundação?"',
     'Ele diz o nome. É comprido, sério e completamente esquecível — três substantivos abstratos e uma preposição.',
@@ -2701,6 +2711,8 @@ c8_que_fundacao:{
 },
 
 c8_encarou_a_fundacao:{
+  falante:'o homem de sapato limpo',
+  vozes:['N','N','N','P','N'],
   texto:[
     'Você fala.',
     'E ele escuta inteiro, sem interromper, com uma atenção genuína e sem nenhum sinal de desconforto, e quando você acaba ele faz que sim três vezes.',
@@ -2724,6 +2736,8 @@ c8_encarou_a_fundacao:{
 },
 
 c8_a_conversa:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N'],
   texto:[
     'A mesa fica no canto do salão, com vista pro mar preto, e o salão inteiro consegue ver vocês dois — o que, você entende depois, é o ponto.',
     'Ele fala por nove minutos.',

@@ -624,6 +624,8 @@ c9_vendeu_em_celadon:{
 },
 
 c9_comprar_de_volta_celadon:{
+  falante:'o homem de polo azul',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você volta em dez minutos.',
     'Ele te vê entrar e o rosto dele fica com uma expressão que você não sabe ler.',
@@ -2686,6 +2688,8 @@ c9_blefe:{
 },
 
 c9_blefe_credencial_ok:{
+  falante:'a recepcionista do leilão',
+  vozes:['N'],
   texto:[
     'Funciona, e funciona pelo pior motivo possível: ela acredita que existe um adulto.',
     '"Ah. Então {o senhor|a senhora} aguarda aqui na lateral que eu confiro quando ele subir."',
@@ -2887,6 +2891,8 @@ c9_so_o_41:{
 },
 
 c9_dentro_visto:{
+  falante:'o encarregado',
+  vozes:['N','N'],
   texto:[
     'Você entra, e na terceira fileira de gaiolas alguém acende a luz do corredor.',
     'Não tem grito. Tem uma voz calma de quem trabalha aqui e está resolvendo mais uma coisa do turno.',
@@ -2951,6 +2957,8 @@ c9_blefe_rede:{
 },
 
 c9_blefe_ok:{
+  falante:'o encarregado',
+  vozes:['N','N','N'],
   texto:[
     'Funciona. Funciona porque ninguém ali quer ser a pessoa que barrou alguém que a chefe mandou.',
     '"Ela podia avisar." O mais velho já está voltando pro que estava fazendo, que é conferir uma prancheta contra uma prateleira. "Fica longe da fileira C, tá com bicho novo e eles mordem."',
@@ -3221,6 +3229,8 @@ c9_luta_deposito:{
 },
 
 c9_venceu_deposito:{
+  falante:'o encarregado',
+  vozes:['N','N'],
   texto:[
     'Três times inteiros e você continua de pé.',
     'O encarregado senta numa caixa plástica virada e não tenta mais nada.',

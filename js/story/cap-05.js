@@ -306,6 +306,8 @@ c5_espera_posto:{
 },
 
 c5_gritou_trio:{
+  falante:'o da aliança',
+  vozes:['P','N'],
   texto:[
     '"O QUE TEM NA CAIXA?"',
     'Os três param. Procuram. Um deles acha você em cima da saliência, aponta, e os outros dois olham.',
@@ -322,6 +324,8 @@ c5_gritou_trio:{
 },
 
 c5_desceu_trio:{
+  falante:'o da aliança',
+  vozes:['N','N','N','N'],
   texto:[
     'Você desce a escada de madeira de costas, degrau por degrau, sentindo os três olhando suas costas o caminho inteiro.',
     'No chão, de perto, eles são absolutamente comuns. Um deles tem uma aliança. Outro tem um curativo no polegar.',
@@ -341,6 +345,8 @@ c5_desceu_trio:{
 },
 
 c5_poe_de_volta:{
+  falante:'o da aliança',
+  vozes:['P','N','N','N'],
   texto:[
     '"Põe de volta."',
     'O da aliança fecha a tampa com o joelho, sem pressa.',
@@ -376,6 +382,8 @@ c5_anotou_trio:{
 },
 
 c5_carregar_caixa:{
+  falante:'o da aliança',
+  vozes:['P','N','N','P','N'],
   texto:[
     '"Então me leva junto. Eu carrego uma caixa."',
     'Os três se olham. O da aliança ri primeiro, e os outros dois riem depois dele, o que diz quem manda.',
@@ -410,6 +418,8 @@ c5_de_graca:{
 },
 
 c5_cobrou:{
+  falante:'o da aliança',
+  vozes:['P','N','P'],
   texto:[
     '"Quinhentos."',
     'O da aliança assobia.',
@@ -451,6 +461,8 @@ c5_memorizou_van:{
 },
 
 c5_mais_trabalho:{
+  falante:'o da aliança',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Tem mais trabalho?"',
     'O da aliança bate a porta lateral da van.',
@@ -501,6 +513,8 @@ c5_devolveu_trezentos:{
 },
 
 c5_luta_trio:{
+  falante:'o da aliança',
+  vozes:['N'],
   texto:[
     'Você solta a bola antes de pensar direito.',
     'Os três param. O da aliança suspira fundo, do jeito de quem vai ter que fazer hora extra.',
@@ -513,6 +527,8 @@ c5_luta_trio:{
 },
 
 c5_venceu_trio:{
+  falante:'o da aliança',
+  vozes:['N','N'],
   texto:[
     'Você ganha. Os outros dois não entram — eles ficam com as caixas e olham.',
     'O da aliança recolhe o time e limpa a boca com as costas da mão.',
@@ -705,6 +721,8 @@ c5_seguiu_van:{
 },
 
 c5_comprar_ovos:{
+  falante:'o da aliança',
+  vozes:['P','P','P','N'],
   texto:[
     '"Quanto vocês querem pelos seis?"',
     'Silêncio. Os três se olham.',
@@ -724,6 +742,8 @@ c5_comprar_ovos:{
 },
 
 c5_quem_manda:{
+  falante:'o da aliança',
+  vozes:['P','N','N'],
   texto:[
     '"Quem manda?"',
     'O da aliança levanta a caixa e não responde na hora. Responde na quarta passada, já de costas, já descendo:',

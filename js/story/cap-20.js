@@ -1539,6 +1539,8 @@ c20_luta_presidente:{
 },
 
 c20_venceu_presidente:{
+  falante:'a Presidente',
+  vozes:['N','N','N','N','N'],
   texto:[
     'A Unidade 01 cai por último.',
     'Você olha ela caída no carpete de uma sala comercial e entende, com um atraso de quatro segundos, o que ela é.',

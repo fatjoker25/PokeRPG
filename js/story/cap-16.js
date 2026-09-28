@@ -1451,11 +1451,13 @@ c16_equipe_saiu:{
 },
 
 c16_equipe_ficou:{
+  falante:'o mais velho da equipe',
+  vozes:['N','N'],
   texto:[
     '"Com todo respeito", diz o mais velho, sem largar a chave de fenda, "essa ilha não é de ninguém, a gente tem autorização de pesquisa protocolada, e você tem quinze anos."',
     'Ele volta ao trabalho.',
     'Ele não está errado em nenhum dos três pontos.',
-    'E é exatamente isso que enraivece: você passou dezesseis capítulos aprendendo que estar certo no papel é o que decide, e agora o papel está do outro lado.'
+    'E é exatamente isso que enraivece: você passou a jornada inteira aprendendo que estar certo no papel é o que decide, e agora o papel está do outro lado.'
   ],
   ef:{flag:'equipe_ficou',
       moral:-8,

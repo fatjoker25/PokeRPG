@@ -595,6 +595,8 @@ c19_subiu_limpo:{
 },
 
 c19_mulher_da_marmita:{
+  falante:'a mulher da marmita',
+  vozes:['N','N','N'],
   texto:[
     'Você diz bom dia e ela leva um susto que derruba metade do arroz.',
     'Depois olha você de cima a baixo, olha a cerca, olha você de novo, e a conclusão dela é imediata e errada.',
@@ -611,6 +613,8 @@ c19_mulher_da_marmita:{
 },
 
 c19_porque_cheia:{
+  falante:'a mulher da marmita',
+  vozes:['N','N','P','N'],
   texto:[
     '"Porque teve lote grande." Ela fala de boca cheia, sem nenhum peso. "Quarenta e um C. Veio tudo errado."',
     '"Errado como?"',

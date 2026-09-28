@@ -290,6 +290,8 @@ c6_beira_2:{
 },
 
 c6_pescador:{
+  falante:'Sr. Cosmo',
+  vozes:['P','N','N','N'],
   texto:[
     'O senhor da vara de bambu não se incomoda de ter companhia. Ele aponta a pedra do lado como quem oferece cadeira.',
     '"Não tá pegando nada", ele avisa, com orgulho.',
@@ -347,6 +349,7 @@ c6_contou_bilac:{
 
 c6_quem_e_a_pessoa:{
   falante:'Sr. Cosmo',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Quem é a pessoa?"',
     '"A Misty."',
@@ -366,6 +369,8 @@ c6_quem_e_a_pessoa:{
 },
 
 c6_misty_processos:{
+  falante:'Sr. Cosmo',
+  vozes:['P','N','N','P','N','N','P','N','N'],
   texto:[
     '"Duas vezes? Como foi?"',
     '"A primeira foi uma tinturaria. Ela tinha dezenove anos e entrou com ação sozinha." Ele começa a andar e você acompanha. "Perdeu. Perdeu feio, e pagou custa."',
@@ -463,6 +468,8 @@ c6_misty_folha:{
 },
 
 c6_misty_oficio:{
+  falante:'Líder Misty',
+  vozes:['P','E','P','N','N','N'],
   texto:[
     '"Que ofício?"',
     'Ela abre a pasta de plástico, folheia, e tira uma folha timbrada.',
@@ -611,6 +618,8 @@ c6_rio_ninguem:{
 },
 
 c6_bilac_tempo:{
+  falante:'Sr. Cosmo',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"O senhor pesca aqui há quanto tempo?"',
     '"Quatro anos."',
@@ -683,6 +692,8 @@ c6_moca_barraca:{
 },
 
 c6_porque_nao_gosta:{
+  falante:'a moça do peixe frito',
+  vozes:['P','N','N'],
   texto:[
     '"Por que a senhora não gosta?"',
     'Ela pensa enquanto tira o peixe do óleo.',
@@ -701,6 +712,8 @@ c6_porque_nao_gosta:{
 /* ─────────────── A BANCA ─────────────── */
 
 c6_ponte_norte:{
+  falante:'Homem da banca',
+  vozes:['N','N'],
   texto:[
     'Na ponte norte, um homem montou uma banca. Não é barraca — é uma mesa dobrável com toalha, e em cima da toalha uma caixa forrada de veludo azul com seis Poké Balls encaixadas em espuma.',
     'Cada uma tem uma plaquinha de acrílico na frente, com espécie, nível e "taxa" escritos à mão em letra caprichada.',
@@ -738,6 +751,8 @@ c6_plaquinhas:{
 },
 
 c6_pidgey_barato:{
+  falante:'Homem da banca',
+  vozes:['P','N','N','P'],
   texto:[
     '"Por que esse é tão barato?"',
     'O homem da banca não fica constrangido. Ele responde com a naturalidade de quem já respondeu isso quatrocentas vezes.',
@@ -779,6 +794,8 @@ c6_nao_vende:{
 },
 
 c6_quem_compra_lote:{
+  falante:'Homem da banca',
+  vozes:['P','N','N'],
   texto:[
     '"Quem compra lote?"',
     'O homem da banca fecha a caixa de veludo. Só isso: fecha a caixa.',
@@ -814,6 +831,8 @@ c6_seguiu_banca:{
 },
 
 c6_papeis:{
+  falante:'Homem da banca',
+  vozes:['E','N','N'],
   texto:[
     'Os papéis são reais. É isso que estraga tudo.',
     'Carimbo da Liga, registro numérico, campo de espécie, campo de nível, campo de procedência. Tudo preenchido a máquina.',
@@ -832,6 +851,8 @@ c6_papeis:{
 },
 
 c6_desistente:{
+  falante:'Homem da banca',
+  vozes:['P','N','N','N','N','N','N'],
   texto:[
     '"O que faz um treinador desistir?"',
     'Ele guarda os papéis na pasta com uma calma que te irrita.',
@@ -852,6 +873,8 @@ c6_desistente:{
 },
 
 c6_voltam_buscar:{
+  falante:'Homem da banca',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"E eles voltam pra buscar?"',
     'Silêncio de dois segundos.',
@@ -930,6 +953,8 @@ c6_quem_carimba:{
 },
 
 c6_quem_mais:{
+  falante:'Homem da banca',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Quem mais perguntou?"',
     '"Uma mulher de jaleco." Ele nem pensa. "Ano passado. Ficou uma hora aqui fazendo pergunta e anotando num caderninho com elástico."',
@@ -989,6 +1014,8 @@ c6_comprou_pidgey:{
 },
 
 c6_os_seis:{
+  falante:'Homem da banca',
+  vozes:['P','N','N','N'],
   texto:[
     '"Quanto custa comprar os seis?"',
     'Ele faz a conta na calculadora de bolso, embora saiba de cabeça.',
@@ -1007,6 +1034,8 @@ c6_os_seis:{
 },
 
 c6_o_que_esta_a_venda:{
+  falante:'Homem da banca',
+  vozes:['P','N','N','P','N'],
   texto:[
     '"Então o que tá à venda?"',
     'Ele guarda a calculadora.',
@@ -1263,6 +1292,7 @@ c6_espera_van:{
 },
 
 c6_interrompeu:{
+  falante:'o motorista da van',
   texto:[
     'Você sai da vala e anda até o descampado no escuro, e o cascalho debaixo do seu pé faz um barulho absurdo.',
     'As três pessoas param.',
@@ -1281,6 +1311,8 @@ c6_interrompeu:{
 },
 
 c6_abre_as_caixas:{
+  falante:'o motorista da van',
+  vozes:['P','N','N'],
   texto:[
     '"Abre as caixas."',
     'O motorista olha os dois que vieram do mato. Os dois dão de ombros.',
@@ -1302,6 +1334,8 @@ c6_abre_as_caixas:{
 },
 
 c6_roubou_growlithe:{
+  falante:'o motorista da van',
+  vozes:['N'],
   texto:[
     'Você pega a caixa do Growlithe com as duas mãos e corre pro mato.',
     'Eles não correm atrás. Você ouve o motorista dizer, alto, sem pressa: "Deixa."',
@@ -1380,6 +1414,7 @@ c6_roubou_papel:{
 },
 
 c6_leu_estatuto:{
+  vozes:['E','E','E','E'],
   texto:[
     'Você lê com lanterna, deitad{o|a} no mato, às seis da manhã, com a mão tremendo de frio.',
     '"Art. 1º — A guarda de um ser vivo não é direito adquirido, mas concessão condicionada à idoneidade do guardião."',
@@ -1436,6 +1471,8 @@ c6_escondeu_estatuto:{
 },
 
 c6_saiu_do_caminho:{
+  falante:'o motorista da van',
+  vozes:['N'],
   texto:[
     'Você sai do caminho.',
     'Eles carregam as quatro caixas, fecham a porta lateral, e a van sai devagar porque a estrada é ruim.',
@@ -1454,6 +1491,8 @@ c6_saiu_do_caminho:{
 },
 
 c6_pra_onde_vai:{
+  falante:'o motorista da van',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Eu só quero saber pra onde vai."',
     'O motorista pensa nisso com uma seriedade que te pega de surpresa.',
@@ -1477,6 +1516,8 @@ c6_pra_onde_vai:{
 },
 
 c6_luta_van:{
+  falante:'o motorista da van',
+  vozes:['N','N'],
   texto:[
     'Você solta a bola no cascalho.',
     'O motorista suspira. Não é medo e não é raiva: é o suspiro de quem vai se atrasar.',
@@ -1488,6 +1529,8 @@ c6_luta_van:{
 },
 
 c6_venceu_van:{
+  falante:'o motorista da van',
+  vozes:['N','N'],
   texto:[
     'Você ganha. Os três ficam parados no cascalho, e você fica parad{o|a} no cascalho, e as quatro caixas continuam exatamente onde estavam.',
     'O motorista recolhe o time e limpa a mão na calça.',
@@ -1505,6 +1548,8 @@ c6_venceu_van:{
 },
 
 c6_perdeu_van:{
+  falante:'o motorista da van',
+  vozes:['N','N'],
   texto:[
     'Você perde.',
     'Ninguém encosta em você. O motorista recolhe a bola, olha o relógio, e pergunta se você tem como voltar pra cidade sozinh{o|a}.',
@@ -1621,6 +1666,8 @@ c6_pagou_carregador:{
 },
 
 c6_quem_recebe:{
+  falante:'Carregador da Rota 25',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Me fala quem recebe no depósito."',
     '"Eu nunca entrei no depósito." Ele ajeita a marmita no bagageiro. "Eu vou até o cascalho e volto. Quem entra é o motorista."',
@@ -1742,6 +1789,8 @@ c6_escutou_choro:{
 },
 
 c6_chamou_marta:{
+  falante:'Sibyl',
+  vozes:['P','P','N','N','N'],
   texto:[
     '"Ô!" Você grita da trilha. "Tá tudo bem aí?"',
     'O choro para na hora, do jeito que para quem foi pego.',
@@ -1880,6 +1929,8 @@ c6_curou:{
 },
 
 c6_marta_agua:{
+  falante:'Sibyl',
+  vozes:['P','N','N','N'],
   texto:[
     'Vocês ficam os três na beira da água: você, ela, e um Vaporeon fraco demais pra entrar no rio que está a meio metro dele.',
     'Ela conta que trabalha no supermercado da ponte sul, turno da tarde, há nove anos.',
@@ -1932,7 +1983,7 @@ c6_a_foto:{
       npc:{nome:'Sibyl', opiniao:4, memoria:'Te contou da filha que saiu aos quinze e liga no Natal.'},
       presagio:'A casa fica muito grande. Pensa na sua, e em quem ficou nela.'},
   escolhas:[
-    {texto:'"Eu ligo pra minha mãe hoje."', vai:'c6_ligou_pra_casa',
+    {texto:d=>`"Eu ligo pra ${casaEhMulher() ? 'minha' : 'meu'} ${casaQuem()} hoje."`, vai:'c6_ligou_pra_casa',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Lembrou de quem ficou'}, flag:'ligou_pra_casa'}},
     {texto:'"Quem faz isso? O veneno."', vai:'c6_marta_conta'},
     {texto:'Agradecer e ir pra rota.', vai:'c6_veneno'}
@@ -1942,7 +1993,7 @@ c6_a_foto:{
 c6_ligou_pra_casa:{
   texto:[
     'Você liga do telefone público da ponte sul, às nove da noite, com uma pilha de moedas em cima do aparelho.',
-    'Sua mãe atende no primeiro toque, o que quer dizer que ela estava perto do telefone, o que quer dizer muita coisa.',
+    d=>`${nomeCasa()} atende no primeiro toque, o que quer dizer que {casa:ela|ele} estava perto do telefone, o que quer dizer muita coisa.`,
     'A conversa é péssima. É constrangida, cheia de "e aí", com você mentindo por omissão sobre uma caverna e uma vala.',
     'Dura quatorze minutos e vocês dois dizem quase nada.',
     'Quando desliga, você fica com a mão no gancho por um tempo, e é o melhor que você se sente desde que saiu de casa.'
@@ -1957,6 +2008,8 @@ c6_ligou_pra_casa:{
 },
 
 c6_marta_conta:{
+  falante:'Sibyl',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Quem faz isso? O veneno."',
     'Sibyl fica dura.',
@@ -1978,6 +2031,8 @@ c6_marta_conta:{
 },
 
 c6_marta_acha:{
+  falante:'Sibyl',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"E a senhora, acha o quê?"',
     'Sibyl demora muito.',
@@ -2047,6 +2102,8 @@ c6_correu_ok:{
 },
 
 c6_sentou_centro:{
+  falante:'a enfermeira do Centro de Cerulean',
+  vozes:['N','P','N','P','N'],
   texto:[
     'Você senta no chão da recepção do Centro Pokémon, de costas pra parede, com as pernas esticadas, sem nenhuma dignidade.',
     'A enfermeira passa duas vezes e na terceira traz um copo de água e senta no chão do seu lado, o que enfermeira de Centro Pokémon não faz.',
@@ -2216,6 +2273,8 @@ c6_veneno:{
 },
 
 c6_a_filha:{
+  falante:'Homem das tigelas',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Me conta o que aconteceu com a sua filha."',
     'Ele para de encher a tigela.',
@@ -2382,6 +2441,8 @@ c6_quem_mora_aqui:{
 },
 
 c6_vai_falar_com_ela:{
+  falante:'Homem das tigelas',
+  vozes:['P','N','P','N','P','P'],
   texto:[
     '"Vai falar com ela."',
     '"Eu não posso."',
@@ -2402,6 +2463,8 @@ c6_vai_falar_com_ela:{
 },
 
 c6_juntos:{
+  falante:'Homem das tigelas',
+  vozes:['P','a filha dele','N'],
   texto:[
     '"A gente vira junto."',
     'E vocês viram.',
@@ -2465,7 +2528,7 @@ c6_tentou_tirar:{
     'Quatro horas e quarenta minutos.',
     'Você pega sete. Sete Rattata e um Zubat, com as bolas que você tinha, gastando quase tudo.',
     'Tem mais. Tem muito mais — você vê pelo menos vinte só nesse trecho, e a rota tem seis quilômetros.',
-    'No fim, sentado na trilha, sem bola, com o time cansado, você olha o homem das tigelas do outro lado da curva.',
+    'No fim, sentad{o|a} na trilha, sem bola, com o time cansado, você olha o homem das tigelas do outro lado da curva.',
     'Ele não riu. Em nenhum momento das quatro horas e quarenta ele riu de você.',
     'Ele senta na trilha a uns dez metros e diz: "Eu vou parar de encher."',
     '"Por quê?"',
@@ -2545,6 +2608,8 @@ c6_tigelas:{
 },
 
 c6_recolheu_racao:{
+  falante:'Homem das tigelas',
+  vozes:['N','P'],
   texto:[
     'Você percebe no meio do caminho e volta.',
     'Recolher ração envenenada espalhada no mato com as mãos é uma tarefa humilhante e você faz por duas horas, de quatro, catando grão por grão do capim.',
@@ -2609,6 +2674,8 @@ c6_ficou_depois:{
 },
 
 c6_ajudou_levantar:{
+  falante:'Homem das tigelas',
+  vozes:['P','N','P','N'],
   texto:[
     'Você estende a mão. Ele olha a sua mão por um tempo horrível e pega.',
     'Você ajuda ele a sentar na beira da trilha. Ele cospe. Tem sangue.',
@@ -2699,6 +2766,8 @@ c6_luta_veneno:{
 },
 
 c6_venceu_veneno:{
+  falante:'Homem das tigelas',
+  vozes:['N','N'],
   texto:[
     'Ele recolhe o Weezing e senta na grama, derrotado de um jeito mais profundo que o placar.',
     '"Minha filha tem sete anos", ele diz pro chão. "Um Rattata mordeu ela no quintal. Sete ponto na mão. Ela não sai mais sozinha."',
@@ -2717,6 +2786,8 @@ c6_venceu_veneno:{
 },
 
 c6_nao_vira_problema:{
+  falante:'Homem das tigelas',
+  vozes:['P','N','N','N'],
   texto:[
     '"O problema da sua filha não vira problema deles."',
     'Ele levanta a cabeça devagar.',
@@ -2797,6 +2868,8 @@ c6_pai_depois:{
 },
 
 c6_recuou_do_desafio:{
+  falante:'Homem das tigelas',
+  vozes:['P','N'],
   texto:[
     '"Não."',
     'Ele faz que sim, sem triunfo nenhum.',
@@ -2832,6 +2905,8 @@ c6_perdeu_veneno:{
 },
 
 c6_liga_veneno:{
+  falante:'o oficial da Liga',
+  vozes:['N'],
   texto:[
     'Você liga e fica.',
     'Duas horas e quarenta na beira da trilha, olhando ele encher tigela e ele olhando você. Em certo momento ele oferece água da garrafa dele e você recusa e depois aceita.',
@@ -2853,7 +2928,9 @@ c6_fim:{
   texto:[
     'A Rota 25 termina num mirante sobre o mar. Uma plataforma de madeira velha em cima de uma pedra, com o parapeito faltando um pedaço.',
     'De lá dá pra ver a curva da costa inteira e, muito longe, quase na linha do horizonte, a silhueta de uma ilha.',
-    'O vento vem do mar e é salgado e é a primeira vez que você sente cheiro de mar na vida.',
+    d=>['Pallet','Vermilion','Cinnabar','Fuchsia'].includes(d.jogador.cidade)
+      ? 'O vento vem do mar e é salgado, e é o primeiro cheiro de casa desde que você saiu.'
+      : 'O vento vem do mar e é salgado e é a primeira vez que você sente cheiro de mar na vida.',
     d=>{
       if (d.flags.agrediu_envenenador) return 'Você percebe que não pensou uma vez no homem desde que saiu de lá. Isso deveria incomodar mais do que incomoda.';
       if (d.flags.ignorou_marta) return 'Você percebe que não lembra do rosto da mulher. Só do som.';

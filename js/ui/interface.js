@@ -370,11 +370,13 @@ const UI = {
           /* pra frente */
           if (ehDono(id) && !ehDono(alvo) && !novos[alvo] && !nomeDoEf(cap.cenas[alvo].ef))
             novos[alvo] = dono[id];
-          /* pra trás: só quando não há dúvida — se as saídas da cena
-             levam a gente diferente, ela não herda de ninguém */
-          if (ehDono(alvo) && !ehDono(id) && !nomeDoEf(c.ef)){
-            if (novos[id] === undefined) novos[id] = dono[alvo];
-            else if (novos[id] !== dono[alvo]) novos[id] = null;
+          /* pra trás: só quando não há dúvida — TODA saída da cena leva
+             à mesma pessoa. Uma opção "contar pra Misty" no meio de uma
+             conversa com o motorista não faz da cena uma cena da Misty. */
+          if (!ehDono(id) && !nomeDoEf(c.ef) && novos[id] === undefined){
+            const saidas = (c.escolhas || []).map(x => x && x.vai).filter(v => v && cap.cenas[v]);
+            const quem = saidas.length && saidas.every(v => ehDono(v) && dono[v] === dono[saidas[0]]) ? dono[saidas[0]] : null;
+            if (quem) novos[id] = quem;
           }
         }
       }
@@ -672,7 +674,10 @@ const UI = {
         /* "AQUI TEM VULCÃO" e "PERIGO???": a segunda vem do mesmo papel
            quando o que separa as duas é um "e" */
         const mesmoPapel = papelNaLinha && (pendente || '').split(/\s+/).length <= 3;
-        if (this._ESCRITO.test(pendente || '') || mesmoPapel || this.pareceEscrito(pe.texto, depois)){
+        /* com `vozes`, o autor já disse o que cada aspa é: 'E' é papel */
+        const vozAqui = (vozes && voz < vozes.length) ? vozes[voz] : null;
+        if (vozAqui === 'E' || (!vozAqui && (this._ESCRITO.test(pendente || '') || mesmoPapel || this.pareceEscrito(pe.texto, depois)))){
+          if (vozAqui === 'E') voz++;
           papelNaLinha = true;
           html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
           continue;
