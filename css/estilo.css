@@ -2685,3 +2685,7 @@ body.com-cenario .topo{
   backdrop-filter:blur(4px);
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
+
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
+.escolha:disabled:hover{transform:none}

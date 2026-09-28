@@ -2695,6 +2695,10 @@ body.com-cenario .topo{
 }
 @media (prefers-reduced-motion: reduce){ body.com-cenario::before{animation:none} }
 
+/* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
+.escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
+.escolha:disabled:hover{transform:none}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -14387,6 +14391,36 @@ function statusGinasio(g){
     if (r) return {estado:'recusado', texto:'O líder se recusa a lutar com você', fala:r};
   }
   return {estado:'disponivel', texto: deCasa && !numInsignias() ? 'O ginásio da sua cidade' : 'Disponível'};
+}
+
+/* ============================================================
+   O QUE A ESTRADA COBRA EM INSÍGNIAS
+   Alguns capítulos só começam com um mínimo de insígnias, e as guaritas
+   da Rota 23 só deixam subir pro Caminho da Vitória com as oito, como
+   nos jogos. Sem isso dava pra chegar ao fim da história sem entrar num
+   ginásio, e o time chegava a cada área uns quatro níveis abaixo dela.
+
+   Mas a estrada só cobra o que o mundo deixa você ter. Misty, Erika e
+   Sabrina podem se recusar a lutar com você pelo resto do jogo, e Blue
+   só abre com sete: se nenhum ginásio que falta está aberto pra você,
+   a porta abre com o que você tem. Ninguém fica preso no meio do jogo.
+   ============================================================ */
+const INSIGNIAS_DO_CAPITULO = {6:1, 8:2, 10:3, 12:4, 14:5, 17:6, 22:8};
+const INSIGNIAS_DA_PASSAGEM = {'rota23>caminho_vitoria':8, 'caminho_vitoria>rota23':0};
+
+function ginasioAoAlcance(){
+  return GINASIOS.some(g => statusGinasio(g).estado === 'disponivel');
+}
+/* null se pode passar; senão {pedidas, tem} */
+function faltaInsignias(pedidas){
+  const tem = numInsignias();
+  if (!pedidas || tem >= pedidas || !ginasioAoAlcance()) return null;
+  return {pedidas, tem};
+}
+function travaDoCapitulo(n){ return faltaInsignias(INSIGNIAS_DO_CAPITULO[n]); }
+function travaDaPassagem(de, para){ return faltaInsignias(INSIGNIAS_DA_PASSAGEM[de + '>' + para]); }
+function textoTrava(t){
+  return `Isso espera quem tem ${t.pedidas} insígnia${t.pedidas === 1 ? '' : 's'}. Você tem ${t.tem}.`;
 }
 
 function insigniasConquistadas(){
@@ -85678,6 +85712,19 @@ const UI = {
       <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
       <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
+      <h3>Insígnias que a estrada cobra</h3>
+      <div class="linha"><span class="k">Capítulo 6, Cerulean</span><span class="v">1 insígnia</span></div>
+      <div class="linha"><span class="k">Capítulo 8, Vermilion</span><span class="v">2</span></div>
+      <div class="linha"><span class="k">Capítulo 10, a Usina</span><span class="v">3</span></div>
+      <div class="linha"><span class="k">Capítulo 12, Fuchsia</span><span class="v">4</span></div>
+      <div class="linha"><span class="k">Capítulo 14, Cinnabar</span><span class="v">5</span></div>
+      <div class="linha"><span class="k">Capítulo 17, Rota 23</span><span class="v">6</span></div>
+      <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
+      <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
+      <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · a Parada não segue</span></div>
+      <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
+      <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia pela lista de qualquer lugar, na ordem que você quiser.</p>
+
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
       <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
@@ -97928,6 +97975,7 @@ const Exploracao = {
     const L = Mundo.atual();
     const d = Estado.dados;
     const arco = Historia.arcoAqui();
+    const travaArco = arco ? travaDoCapitulo(arco.num) : null;
 
     /* Lugar e ação não são a mesma coisa e não merecem o mesmo botão:
        lugar é porta que você abre, ação é tempo que você gasta. */
@@ -97943,9 +97991,12 @@ const Exploracao = {
     const vizinhos = Mundo.vizinhos().map(id => {
       const v = LOCAIS[id];
       const conhecido = Mundo.visitado(id);
-      return `<button class="escolha" onclick="Exploracao.viajar('${id}')">
+      /* passagem que cobra insígnia aparece fechada, dizendo o que falta */
+      const trava = travaDaPassagem(Mundo.id(), id);
+      return `<button class="escolha" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
         ${conhecido ? 'Ir para ' + UI.esc(v.nome) : 'Seguir o caminho — ' + UI.esc(v.nome)}
-        <br><span class="pd">${conhecido ? UI.esc(v.tipo === 'cidade' ? v.porte || 'cidade' : 'rota') : 'você nunca foi lá'}${v.perigosa ? ' · dizem que é perigoso' : ''}</span></button>`;
+        <br><span class="pd">${trava ? UI.esc(textoTrava(trava))
+          : (conhecido ? UI.esc(v.tipo === 'cidade' ? v.porte || 'cidade' : 'rota') : 'você nunca foi lá') + (v.perigosa ? ' · dizem que é perigoso' : '')}</span></button>`;
     }).join('');
 
     UI.add(`<div class="painel">
@@ -97961,8 +98012,8 @@ const Exploracao = {
 
       ${arco ? `<h3>Aqui</h3>
         <div id="escolhas" class="escolhas">
-          <button class="escolha" style="border-color:var(--destaque)" onclick="Exploracao.entrarNoArco()">
-            ${UI.esc(arco.chamada)}<br><span class="pd">Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.</span></button>
+          <button class="escolha" style="border-color:var(--destaque)" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
+            ${UI.esc(arco.chamada)}<br><span class="pd">${travaArco ? UI.esc(textoTrava(travaArco)) : 'Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.'}</span></button>
         </div>` : ''}
 
       ${lugares ? `<h3>Onde entrar</h3>
@@ -98110,6 +98161,7 @@ const Exploracao = {
     const desc = pisou && L.desc && L.desc.length ? txt(L.desc[0]) : null;
     const botao = id === aqui
       ? `<span class="mapa-aqui">Você está aqui.</span>`
+      : ir && travaDaPassagem(aqui, id) ? `<span class="mapa-longe">${UI.esc(textoTrava(travaDaPassagem(aqui, id)))}</span>`
       : ir ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.viajar('${id}')">${pisou ? 'Ir para ' : 'Seguir o caminho até '}${UI.esc(L.nome)}</button>`
       : voa ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">Voar até ${UI.esc(L.nome)}</button>`
       : `<span class="mapa-longe">${L.tipo === 'cidade' && pisou
@@ -98141,7 +98193,7 @@ const Exploracao = {
   /* ---------- entrar no arco que espera neste lugar ---------- */
   entrarNoArco(){
     const arco = Historia.arcoAqui();
-    if (!arco) return this.tela();
+    if (!arco || travaDoCapitulo(arco.num)) return this.tela();
     Estado.dados.modo = 'cena';
     const cena = Historia.iniciarCapitulo(arco.num);
     Estado.salvar('auto');
@@ -98151,6 +98203,7 @@ const Exploracao = {
   /* ---------- viagem ---------- */
   viajar(id){
     const de = Mundo.id();
+    if (travaDaPassagem(de, id)) return this.tela();
     const velho = Mundo.atual();
     const novo = Mundo.viajar(id);
     Estado.salvar('auto');
@@ -99194,6 +99247,13 @@ const Jogo = {
   /* O capítulo seguinte acontece em algum lugar. Se você não está
      nele, existe estrada no meio — e a estrada é contada. */
   viajarParaCapitulo(prox){
+    /* capítulo que cobra insígnia espera: a Parada volta pro lugar onde
+       você está, dizendo o que falta */
+    const trava = travaDoCapitulo(prox);
+    if (trava){
+      Estado.salvar('auto');
+      return Exploracao.tela([{tipo:'info', texto:`O próximo capítulo ainda não começa. ${textoTrava(trava)}`}]);
+    }
     const destino = localDoCapitulo(prox);
     const aqui = Estado.dados.local;
     if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);

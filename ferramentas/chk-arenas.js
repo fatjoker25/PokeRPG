@@ -84,4 +84,4 @@ const porArena = {};
 for (const [amb, ar] of Object.entries(mapa)) (porArena[ar] = porArena[ar] || []).push(amb);
 console.log(`ok — ${usados.size} ambientes em ${nomes.size} arenas, ` +
             `${Object.keys(fundos).length} fundos na pasta, ${locais.length} lugares com cenário`);
-for (const a of nomes) console.log(`  ${a}: ${(porArena[a] || ['(só por cima: ginásio, Elite, torneio)']).join(', ')}`);
+for (const a of nomes) console.log(`  ${a}: ${(porArena[a] || ['(só por cima: ginásio, Elite, torneio, Conferência)']).join(', ')}`);

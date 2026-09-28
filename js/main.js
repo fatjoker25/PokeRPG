@@ -746,6 +746,13 @@ const Jogo = {
   /* O capítulo seguinte acontece em algum lugar. Se você não está
      nele, existe estrada no meio — e a estrada é contada. */
   viajarParaCapitulo(prox){
+    /* capítulo que cobra insígnia espera: a Parada volta pro lugar onde
+       você está, dizendo o que falta */
+    const trava = travaDoCapitulo(prox);
+    if (trava){
+      Estado.salvar('auto');
+      return Exploracao.tela([{tipo:'info', texto:`O próximo capítulo ainda não começa. ${textoTrava(trava)}`}]);
+    }
     const destino = localDoCapitulo(prox);
     const aqui = Estado.dados.local;
     if (!destino || destino === aqui) return this.entrarNoCapitulo(prox);

@@ -13,6 +13,7 @@ const Exploracao = {
     const L = Mundo.atual();
     const d = Estado.dados;
     const arco = Historia.arcoAqui();
+    const travaArco = arco ? travaDoCapitulo(arco.num) : null;
 
     /* Lugar e ação não são a mesma coisa e não merecem o mesmo botão:
        lugar é porta que você abre, ação é tempo que você gasta. */
@@ -28,9 +29,12 @@ const Exploracao = {
     const vizinhos = Mundo.vizinhos().map(id => {
       const v = LOCAIS[id];
       const conhecido = Mundo.visitado(id);
-      return `<button class="escolha" onclick="Exploracao.viajar('${id}')">
+      /* passagem que cobra insígnia aparece fechada, dizendo o que falta */
+      const trava = travaDaPassagem(Mundo.id(), id);
+      return `<button class="escolha" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
         ${conhecido ? 'Ir para ' + UI.esc(v.nome) : 'Seguir o caminho — ' + UI.esc(v.nome)}
-        <br><span class="pd">${conhecido ? UI.esc(v.tipo === 'cidade' ? v.porte || 'cidade' : 'rota') : 'você nunca foi lá'}${v.perigosa ? ' · dizem que é perigoso' : ''}</span></button>`;
+        <br><span class="pd">${trava ? UI.esc(textoTrava(trava))
+          : (conhecido ? UI.esc(v.tipo === 'cidade' ? v.porte || 'cidade' : 'rota') : 'você nunca foi lá') + (v.perigosa ? ' · dizem que é perigoso' : '')}</span></button>`;
     }).join('');
 
     UI.add(`<div class="painel">
@@ -46,8 +50,8 @@ const Exploracao = {
 
       ${arco ? `<h3>Aqui</h3>
         <div id="escolhas" class="escolhas">
-          <button class="escolha" style="border-color:var(--destaque)" onclick="Exploracao.entrarNoArco()">
-            ${UI.esc(arco.chamada)}<br><span class="pd">Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.</span></button>
+          <button class="escolha" style="border-color:var(--destaque)" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
+            ${UI.esc(arco.chamada)}<br><span class="pd">${travaArco ? UI.esc(textoTrava(travaArco)) : 'Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.'}</span></button>
         </div>` : ''}
 
       ${lugares ? `<h3>Onde entrar</h3>
@@ -195,6 +199,7 @@ const Exploracao = {
     const desc = pisou && L.desc && L.desc.length ? txt(L.desc[0]) : null;
     const botao = id === aqui
       ? `<span class="mapa-aqui">Você está aqui.</span>`
+      : ir && travaDaPassagem(aqui, id) ? `<span class="mapa-longe">${UI.esc(textoTrava(travaDaPassagem(aqui, id)))}</span>`
       : ir ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.viajar('${id}')">${pisou ? 'Ir para ' : 'Seguir o caminho até '}${UI.esc(L.nome)}</button>`
       : voa ? `<button class="btn" onclick="UI.fecharModal(true);Exploracao.voarPara('${id}')">Voar até ${UI.esc(L.nome)}</button>`
       : `<span class="mapa-longe">${L.tipo === 'cidade' && pisou
@@ -226,7 +231,7 @@ const Exploracao = {
   /* ---------- entrar no arco que espera neste lugar ---------- */
   entrarNoArco(){
     const arco = Historia.arcoAqui();
-    if (!arco) return this.tela();
+    if (!arco || travaDoCapitulo(arco.num)) return this.tela();
     Estado.dados.modo = 'cena';
     const cena = Historia.iniciarCapitulo(arco.num);
     Estado.salvar('auto');
@@ -236,6 +241,7 @@ const Exploracao = {
   /* ---------- viagem ---------- */
   viajar(id){
     const de = Mundo.id();
+    if (travaDaPassagem(de, id)) return this.tela();
     const velho = Mundo.atual();
     const novo = Mundo.viajar(id);
     Estado.salvar('auto');

@@ -4057,6 +4057,19 @@ const UI = {
       <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
       <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
+      <h3>Insígnias que a estrada cobra</h3>
+      <div class="linha"><span class="k">Capítulo 6, Cerulean</span><span class="v">1 insígnia</span></div>
+      <div class="linha"><span class="k">Capítulo 8, Vermilion</span><span class="v">2</span></div>
+      <div class="linha"><span class="k">Capítulo 10, a Usina</span><span class="v">3</span></div>
+      <div class="linha"><span class="k">Capítulo 12, Fuchsia</span><span class="v">4</span></div>
+      <div class="linha"><span class="k">Capítulo 14, Cinnabar</span><span class="v">5</span></div>
+      <div class="linha"><span class="k">Capítulo 17, Rota 23</span><span class="v">6</span></div>
+      <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
+      <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
+      <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · a Parada não segue</span></div>
+      <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
+      <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia pela lista de qualquer lugar, na ordem que você quiser.</p>
+
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
       <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>

@@ -88,6 +88,8 @@ Acessíveis pelo botão **Liga** na barra do topo.
 
 ### Os oito ginásios
 
+**A estrada cobra insígnias.** Alguns capítulos só começam com um mínimo delas: 1 em Cerulean (capítulo 6), 2 em Vermilion, 3 na Usina, 4 em Fuchsia, 5 em Cinnabar, 6 na Rota 23 e 8 no Planalto Indigo (capítulo 22). As guaritas da Rota 23 não deixam subir pro Caminho da Vitória com menos de oito, como nos jogos. Enquanto falta, o capítulo aparece no lugar, fechado, dizendo quantas faltam. E a estrada só cobra o que o mundo deixa ter: se todo ginásio que falta se recusa a lutar com você, a porta abre com o que você tem.
+
 Acessíveis a qualquer momento pelo botão **Ginásios** na barra do topo. **A ordem é livre**: o ginásio da sua cidade natal está aberto desde o primeiro dia e os demais a partir do capítulo 2. A numeração abaixo é só de referência — não é uma ordem obrigatória.
 
 Cada líder **adapta o time inteiro ao seu progresso**, e não é só nível: é a composição. Com poucas insígnias ele traz Pokémon não evoluídos e um time curto; com muitas, a linha evolutiva completa e o ace.

@@ -423,6 +423,19 @@ Contato de gente da história entra por `opiniaoDe(rótulo)`, que acha a
 pessoa pelo rótulo ou pelo nome perguntado, e sempre depois do capítulo em
 que ela aparece.
 
+## A estrada cobra insígnias
+`INSIGNIAS_DO_CAPITULO` e `INSIGNIAS_DA_PASSAGEM` (em `js/story/ginasios.js`)
+dizem quantas insígnias um capítulo pede pra começar e quantas uma passagem
+pede pra atravessar (as guaritas da Rota 23). Quem lê é `travaDoCapitulo(n)`
+e `travaDaPassagem(de, para)`, que devolvem `null` ou `{pedidas, tem}` — e a
+tela mostra a porta fechada com `textoTrava`, nunca esconde.
+
+A regra que não pode quebrar: **ninguém fica preso**. Misty, Erika e Sabrina
+podem recusar o jogador pelo resto do jogo, e Blue só abre com sete. Se
+nenhum ginásio que falta está `disponivel`, `faltaInsignias` libera com o
+que o jogador tem. Trava nova passa por essas funções, não por `requer` no
+capítulo — `requer` pula o capítulo em vez de esperar.
+
 ## Veteranos e a Conferência
 Os **veteranos** (`js/story/veteranos.js`, dados e motor juntos) são o
 contrário do treinador de estrada: ninguém te para, você vai atrás pela

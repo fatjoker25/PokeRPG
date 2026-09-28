@@ -426,6 +426,36 @@ function statusGinasio(g){
   return {estado:'disponivel', texto: deCasa && !numInsignias() ? 'O ginásio da sua cidade' : 'Disponível'};
 }
 
+/* ============================================================
+   O QUE A ESTRADA COBRA EM INSÍGNIAS
+   Alguns capítulos só começam com um mínimo de insígnias, e as guaritas
+   da Rota 23 só deixam subir pro Caminho da Vitória com as oito, como
+   nos jogos. Sem isso dava pra chegar ao fim da história sem entrar num
+   ginásio, e o time chegava a cada área uns quatro níveis abaixo dela.
+
+   Mas a estrada só cobra o que o mundo deixa você ter. Misty, Erika e
+   Sabrina podem se recusar a lutar com você pelo resto do jogo, e Blue
+   só abre com sete: se nenhum ginásio que falta está aberto pra você,
+   a porta abre com o que você tem. Ninguém fica preso no meio do jogo.
+   ============================================================ */
+const INSIGNIAS_DO_CAPITULO = {6:1, 8:2, 10:3, 12:4, 14:5, 17:6, 22:8};
+const INSIGNIAS_DA_PASSAGEM = {'rota23>caminho_vitoria':8, 'caminho_vitoria>rota23':0};
+
+function ginasioAoAlcance(){
+  return GINASIOS.some(g => statusGinasio(g).estado === 'disponivel');
+}
+/* null se pode passar; senão {pedidas, tem} */
+function faltaInsignias(pedidas){
+  const tem = numInsignias();
+  if (!pedidas || tem >= pedidas || !ginasioAoAlcance()) return null;
+  return {pedidas, tem};
+}
+function travaDoCapitulo(n){ return faltaInsignias(INSIGNIAS_DO_CAPITULO[n]); }
+function travaDaPassagem(de, para){ return faltaInsignias(INSIGNIAS_DA_PASSAGEM[de + '>' + para]); }
+function textoTrava(t){
+  return `Isso espera quem tem ${t.pedidas} insígnia${t.pedidas === 1 ? '' : 's'}. Você tem ${t.tem}.`;
+}
+
 function insigniasConquistadas(){
   return GINASIOS.filter(g => Estado.dados.insignias.includes(g.insignia)).length;
 }
