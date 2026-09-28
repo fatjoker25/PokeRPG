@@ -145,7 +145,7 @@ enxertarDesfecho(19, {
 c19_ficar_dentro:{
   texto:[
     'O contrato está na mesa do setor de pessoal, com a cláusula de sigilo no verso da segunda folha, e tem uma caneta em cima dele.',
-    'Você já leu a cláusula. Você leu ela num ônibus, em voz alta, pra um rapaz de vinte e dois anos que tinha pedido demissão do outro emprego na semana anterior.',
+    d=>d.flags.a_clausula_do_contrato ? 'Você já conhece a cláusula. Um rapaz de vinte e dois anos leu ela em voz alta num ônibus, e foi ficando mais devagar conforme lia.' : 'Você lê a cláusula duas vezes antes de tocar na caneta.',
     'A mulher do setor de pessoal tem uns quarenta e cinco anos e não está te pressionando. Ela está mexendo numa planilha e te deixando ler.',
     fala('a mulher do pessoal', 'Sem pressa. Tem gente que leva dois dias.'),
     d=>fala(d.jogador.nome, 'Tem gente que não assina?'),
@@ -153,7 +153,7 @@ c19_ficar_dentro:{
     fala('a mulher do pessoal', 'Tem. Uns três por ano.'),
     fala('a mulher do pessoal', 'E eu levo os três até o portão e eu fico contente pelos três, e eu não sei explicar isso pra você e nem pra mim.'),
     'Ela volta pra planilha.',
-    fala('a mulher do pessoal', 'Eu tô aqui há onze anos.', 'baixo')
+    fala('a mulher do pessoal', 'Eu tô aqui desde que abriu.', 'baixo')
   ],
   ef:{flag:'o_contrato_na_mesa',
       registrar:'O contrato da Estação 4 está na sua frente, com a caneta em cima.'},
@@ -167,7 +167,7 @@ c19_ficar_dentro:{
 c19_fim_assinou:{
   texto:[
     'Você assina as duas vias e rubrica as quatro páginas e ela carimba, e leva menos de dois minutos.',
-    fala('a mulher do pessoal', 'Bem-vindo. Armário quarenta e um. A chave fica na portaria e você devolve todo dia.'),
+    fala('a mulher do pessoal', '{Bem-vindo|Bem-vinda}. Armário quarenta e um. A chave fica na portaria e você devolve todo dia.'),
     'Você desce pro setor de baixo às treze e dez, de macacão, com um crachá que abre a porta.',
     'É limpo. É muito limpo: piso epóxi, luz boa, temperatura certa, e trezentas e onze baias numeradas em ordem.',
     'Nada está errado. Tudo está em ordem.',
@@ -197,13 +197,13 @@ c19_fim_nao_assinou:{
     fala('a mulher do pessoal', 'Quatro esse ano.'),
     'E na catraca ela para, e destrava, e segura a catraca aberta com o quadril, e não te deixa passar ainda.',
     fala('a mulher do pessoal', 'Ó. Quando você contar isso pra alguém — e você vai contar.'),
-    fala('a mulher do pessoal', 'Conta que aqui dentro tem gente. Tem duzentas e quarenta pessoas com filho e prestação e almoço marcado.', 'baixo'),
+    fala('a mulher do pessoal', 'Conta que aqui dentro tem gente. Tem quarenta e tantas pessoas com filho e prestação e almoço marcado.', 'baixo'),
     fala('a mulher do pessoal', 'Não é um monstro. É um emprego. É pior.'),
     'Ela solta a catraca.'
   ],
   final:{id:'saiu_pelo_portao', titulo:'É UM EMPREGO. É PIOR.', texto:[
     'Você sai da Estação 4 às onze e quarenta da manhã, a pé, e anda os quatro quilômetros até a estrada porque o ônibus fretado só volta às dezoito.',
-    'Nos quatro quilômetros você entende que não tem nada na sua mochila. Nenhum documento, nenhuma foto, nenhum lote numerado. Só uma frase dita numa catraca por uma mulher que trabalha lá há onze anos.',
+    'Nos quatro quilômetros você entende que não tem nada na sua mochila. Nenhum documento, nenhuma foto, nenhum lote numerado. Só uma frase dita numa catraca por uma mulher que trabalha lá desde que abriu.',
     'Você conta essa frase, nos anos seguintes, pra todo mundo que quer ouvir.',
     'Conta numa mesa de bar em Fuchsia, conta num Centro Pokémon em Celadon, conta pra dois repórteres e pra uma auditora e pra um rapaz de vinte e dois anos que você encontra por acaso dois anos depois e que te reconhece do ônibus.',
     'A frase viaja melhor que documento, porque documento precisa de carimbo e frase só precisa de alguém que tenha estado lá.',

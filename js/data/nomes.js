@@ -72,7 +72,11 @@ const NOMES_FIXOS = {
   'a voz do rádio':            'Roland',
   'a escrevente':              'Sra. Cybil',
   'o homem de barba':          'Curador Fabre',
-  'a mulher de tailleur':      'Hester Colman'
+  'a mulher de tailleur':      'Hester Colman',
+  'a mulher da marmita':       'Thea Larkin',
+  'o rapaz da enfermaria':     'Janus',
+  'o colega da enfermaria':    'Pascal',
+  'a técnica de jaleco':       'Kira'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
@@ -157,7 +161,7 @@ function _formal(rotulo){ return /senhora|senhor|velh|dona d|dono d|capit[ãa]o|
    pessoas com o mesmo nome na mesma jornada confunde, e roubar o nome
    de um personagem escrito é pior ainda. */
 const NOMES_DA_HISTORIA = new Set([
-  'Amos','Ashford','Dunmore','Ivy','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
+  'Amos','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
   'Arden','Hart','Tanner','Tobin','Kieran','Ashby','Burke','Holloway','Ansel',

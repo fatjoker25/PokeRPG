@@ -53,8 +53,8 @@ c19_ab_os_dois_do_fundo:{
     d=>fala(d.jogador.nome, 'Todo mundo sai em sete, oito meses?'),
     fala('a mulher do banco de trás', 'Do setor de baixo, sai.'),
     'O ônibus pega um buraco e todo mundo balança junto.',
-    fala('a mulher do banco de trás', 'Eu sou do administrativo. Eu tô lá há quatro anos.'),
-    fala('o homem do banco de trás', 'Eu sou da manutenção. Seis.'),
+    fala('a mulher do banco de trás', 'Eu sou do administrativo. Eu tô lá desde que abriu. Dois anos.'),
+    fala('o homem do banco de trás', 'Eu sou da manutenção. Também desde o começo.'),
     d=>fala(d.jogador.nome, 'E quem é do setor de baixo?'),
     'Eles se olham, e é o homem que responde dessa vez.',
     fala('o homem do banco de trás', 'Gente que a gente conhece três meses e depois não conhece mais.', 'baixo')
@@ -73,8 +73,8 @@ c19_ab_o_que_tem_embaixo:{
   texto:[
     'A mulher do administrativo olha pra frente do ônibus antes de responder, pra conferir quem pode ouvir.',
     fala('a mulher do banco de trás', 'Eu nunca desci.'),
-    d=>fala(d.jogador.nome, 'Em quatro anos?'),
-    fala('a mulher do banco de trás', 'Em quatro anos. Meu crachá não abre e eu nunca pedi que abrisse.'),
+    d=>fala(d.jogador.nome, 'Em dois anos?'),
+    fala('a mulher do banco de trás', 'Em dois anos. Meu crachá não abre e eu nunca pedi que abrisse.'),
     'O homem da manutenção mexe na alça da bolsa de ferramenta.',
     fala('o homem do banco de trás', 'Eu desci duas vezes. Conserto de bomba.'),
     'Ele para. O ônibus entra numa estrada de terra e o barulho muda.',
@@ -147,9 +147,9 @@ c19_ab_a_vizinhanca:{
     'Você bate na primeira porque é a primeira.',
     'Atende uma mulher de uns sessenta anos com uma bacia de feijão no colo, e ela senta na varanda e continua catando o feijão a conversa inteira, e você senta no degrau.',
     'Ela se apresenta como Sra. Hazel antes de você perguntar qualquer coisa, porque é o que se faz quando um desconhecido bate na sua porta no meio do mato.',
-    fala('Sra. Hazel', 'A estação? Chegou em noventa e quatro.'),
+    fala('Sra. Hazel', 'A estação? Chegou faz uns dois anos.'),
     d=>fala(d.jogador.nome, 'E antes?'),
-    fala('Sra. Hazel', 'Antes era pasto. Do Sr. Aoki, que vendeu e foi embora pra Celadon e morreu lá.'),
+    fala('Sra. Hazel', 'Antes era pasto. Do Sr. Merrick, que vendeu e foi embora pra Celadon e morreu lá.'),
     'Feijão bom pra direita, feijão ruim pra esquerda.',
     fala('Sra. Hazel', 'No começo foi bom. Deu emprego, asfaltaram três quilômetros, puseram poste.'),
     d=>fala(d.jogador.nome, 'E depois?'),
@@ -202,12 +202,12 @@ c19_ab_o_que_se_ouve:{
     d=>fala(d.jogador.nome, 'Porta?'),
     fala('Sra. Hazel', 'Porta pesada. De metal. Abre e fecha.'),
     'Ela separa um feijão ruim e joga pra esquerda com mais força do que precisava.',
-    fala('Sra. Hazel', 'Duas quilômetros de distância, {menino|menina}. Pra eu ouvir daqui, aquela porta é grande.'),
+    fala('Sra. Hazel', 'Dois quilômetros de distância, {menino|menina}. Pra eu ouvir daqui, aquela porta é grande.'),
     fala('Sra. Hazel', 'E ela abre e fecha umas nove, dez vezes, sempre entre três e quatro.')
   ],
   ef:{flag:'a_porta_das_tres_da_manha',
       registrar:'De madrugada, entre três e quatro, uma porta de metal grande abre e fecha nove ou dez vezes na Estação 4.',
-      presagio:'Entre três e quatro da manhã. Você já ouviu esse horário em outro lugar deste mapa.'},
+      presagio:'Entre três e quatro da manhã. É a hora de quem não quer ser visto.'},
   escolhas:[
     {texto:'Perguntar do Growlithe que não dorme.', vai:'c19_ab_o_cachorro'},
     {texto:'Ir dar a volta no perímetro.', vai:'c19_perimetro'},
@@ -620,7 +620,7 @@ c19_porque_cheia:{
     '"Errado como?"',
     'Ela para de mastigar e olha para você com a primeira desconfiança do dia.',
     '"Você é da Sanear ou você é do quê?"',
-    'E aí vocês dois ficam se olhando por uns três segundos que duram muito mais que três segundos.'
+    'E aí vocês {dois|duas} ficam se olhando por uns três segundos que duram muito mais que três segundos.'
   ],
   ef:{flag:'sabe_do_lote_41c'},
   escolhas:[
@@ -631,9 +631,11 @@ c19_porque_cheia:{
 },
 
 c19_ela_conta:{
+  falante:'a mulher da marmita',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Ela tampa a marmita e olha para os lados sem nenhum disfarce, do jeito que gente que nunca precisou disfarçar olha para os lados.',
-    '"O quarenta e um C foi um lote de duzentos. Deu problema de bico, de pata, deu de tudo."',
+    '"O quarenta e um C foi um lote de duzentos. Deu problema de dente, de pata, deu de tudo."',
     '"E aí?"',
     '"E aí não passou. Catorze na segunda, catorze na quarta, catorze ontem." Ela conta nos dedos e a conta a incomoda. "Eles gostam de catorze porque é o que cabe na caçamba sem passar do peso."',
     'Ela pega a marmita e levanta.',
@@ -649,12 +651,14 @@ c19_ela_conta:{
 },
 
 c19_nome_dela:{
+  falante:'a mulher da marmita',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Ela para.',
     '"Pra quê?"',
     '"Pra eu saber a quem agradecer."',
     'Ela pensa um tempo comprido demais para uma pergunta tão simples.',
-    '"Thea." Ela põe a marmita debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que {o senhor|a senhora} entenda por quê."',
+    d=>{ Nomes.apresentar('a mulher da marmita'); return '"Thea." Ela põe a marmita debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que {o senhor|a senhora} entenda por quê."'; },
     '"Eu entendo."',
     '"Então tá." Ela vai embora. "Galpão do fundo. A porta não tranca."'
   ],
@@ -677,12 +681,14 @@ c19_mentiu_sanear:{
 },
 
 c19_caiu:{
+  falante:'o rapaz da enfermaria',
+  vozes:['N','N'],
   texto:[
     'Você escorrega na pedra molhada e cai três metros dentro do terreno, do lado bom do barranco, o que é sorte.',
     'O barulho é grande. Duas pessoas de macacão aparecem em quarenta segundos.',
     'Eles não te agridem. Um deles pergunta se você quebrou alguma coisa. O outro já está falando no rádio pedindo a maca.',
     'Você é atendid{o|a} numa enfermaria com maca de verdade e material em dia, enfaixad{o|a} por um rapaz de vinte e poucos anos que pede desculpa pela cerca ser perigosa ali.',
-    '"A gente já pediu tela mais alta três vezes", ele diz. "Não sai do orçamento."'
+    '"A gente já pediu tela mais alta três vezes." Ele prende a faixa. "Não sai do orçamento."'
   ],
   ef:{hp:-6, causa:'Queda na cerca da Estação 4', flag:'caiu_na_estacao'},
   escolhas:[
@@ -693,8 +699,10 @@ c19_caiu:{
 },
 
 c19_ivo:{
+  falante:'o rapaz da enfermaria',
+  vozes:['N','N','P','N','N'],
   texto:[
-    '"Janus." Ele termina a atadura e prende com esparadrapo. "Eu sou auxiliar. Faço enfermaria de gente e enfermaria de bicho, o que dá quase o mesmo trabalho."',
+    d=>{ Nomes.apresentar('o rapaz da enfermaria'); return '"Janus." Ele termina a atadura e prende com esparadrapo. "Eu sou auxiliar. Faço enfermaria de gente e enfermaria de bicho, o que dá quase o mesmo trabalho."'; },
     '"Vocês machucam muita gente aqui?"',
     '"Vinte e quatro dias sem acidente." Ele aponta o quadro da parede, que tem o mesmo giz da guarita. "E agora eu vou ter que zerar por sua causa, e o pessoal vai me odiar."',
     'Ele diz isso rindo. É uma piada de gente que trabalha junto.',
@@ -767,11 +775,13 @@ c19_escoltado:{
 },
 
 c19_pediu_dentro:{
+  falante:'o colega da enfermaria',
+  vozes:['P','N','N','N'],
   texto:[
     '"Já que eu estou dentro, eu posso ver?"',
     'O rapaz da enfermaria olha para o colega. O colega dá de ombros.',
-    '"Tem que ser com acompanhante", diz o colega. "Regra é regra. Mas acompanhante sou eu, então tá."',
-    'Ele se chama Pascal, é técnico do galpão 2, tem uma caneta no bolso e três canetas na prancheta.',
+    '"Tem que ser com acompanhante." Quem fala é o colega. "Regra é regra. Mas acompanhante sou eu, então tá."',
+    d=>{ Nomes.apresentar('o colega da enfermaria'); return 'Ele se chama Pascal, é técnico do galpão 2, tem uma caneta no bolso e três canetas na prancheta.'; },
     '"Só não me faz perder o horário da pesagem das onze."'
   ],
   ef:{flag:'tem_acompanhante',
@@ -870,12 +880,14 @@ c19_entrou_pelo_caminhao:{
 },
 
 c19_carroceria:{
+  falante:'o rapaz da descarga',
+  vozes:['N'],
   texto:[
     'Você sobe na carroceria e se enfia entre dois engradados de material de limpeza.',
     'O caminhão anda oitenta metros, para, e a descarga começa.',
     'Duas pessoas tiram os engradados um por um, conversando sobre um jogo, e quando chegam nos seus, você está agachad{o|a} atrás.',
     'O rapaz que pega o engradado da frente olha direto para você.',
-    'Ele pisca. Depois grita para o colega: "esse aqui vai pro almoxarifado, deixa que eu levo."',
+    'Ele pisca. Depois grita para o colega: "Esse aqui vai pro almoxarifado, deixa que eu levo."',
     'E leva o engradado embora, sem olhar para trás.'
   ],
   ef:{flag:['entrou_na_carroceria','alguem_te_viu_e_deixou'], instabilidade:1,
@@ -905,11 +917,13 @@ c19_esperou_o_rapaz:{
 
 /* ── A visita monitorada ────────────────────────────────── */
 c19_pedir:{
+  falante:'a técnica de jaleco',
+  vozes:['N','N','P','N'],
   texto:[
     'Você bate na portaria e pede para ver.',
     'O porteiro se chama Sr. Delmar, tem uma televisão pequena ligada sem som e um livro de ocorrência aberto.',
     'Ele liga para alguém. Alguém liga para outro alguém. Em onze minutos, uma técnica de jaleco vem até o portão a pé, sorrindo de um jeito que é profissional e verdadeiro ao mesmo tempo.',
-    '"A gente faz visita monitorada às quintas, das duas às quatro." Ela estende a mão. "Kira. Posso agendar?"',
+    d=>{ Nomes.apresentar('a técnica de jaleco'); return '"A gente faz visita monitorada às quintas, das duas às quatro." Ela estende a mão. "Kira. Posso agendar?"'; },
     '"Hoje é quinta."',
     'O sorriso não cai, mas atrasa meio segundo.',
     '"Então venha. Sério. A gente tem orgulho do que faz aqui."'
@@ -925,8 +939,10 @@ c19_pedir:{
 },
 
 c19_livro_damiao:{
+  falante:'a técnica de jaleco',
+  vozes:['N'],
   texto:[
-    'O Sr. Delmar olha para a Kira. A Kira dá de ombros: "é público para quem consta."',
+    'O Sr. Delmar olha para a Kira. A Kira dá de ombros: "É público para quem consta."',
     'Ele vira o livro.',
     'Três meses de ocorrências. Queda de energia. Portão emperrado. Um Persian entrando pelo trecho leste, seis vezes, sempre por volta das onze.',
     'E, catorze linhas atrás: veículo da Sanear recusou coleta por excesso de peso. Orientado a Administração.',
@@ -1037,12 +1053,14 @@ c19_os_quatro_por_cento:{
 },
 
 c19_esta_no_roteiro:{
+  falante:'a técnica de jaleco',
+  vozes:['N','N'],
   texto:[
     'Ela tira uma folha dobrada do bolso do jaleco e mostra.',
     'ROTEIRO DE VISITA MONITORADA. Sete pontos, numerados, com tempo estimado de cada um.',
     'O ponto sete diz: Unidade de processamento de material não viável — apresentação da prática, sem entrada.',
     'Sem entrada.',
-    '"A gente mostra a porta e explica", ela diz. "Ninguém entra, nem a gente, sem necessidade."'
+    '"A gente mostra a porta e explica." Ela dobra a folha. "Ninguém entra, nem a gente, sem necessidade."'
   ],
   ef:{flag:['viu_o_roteiro','sabe_do_galpao_do_fundo'], instabilidade:1,
       registrar:'O roteiro de visita tem sete pontos. O sétimo é o galpão do fundo, sem entrada.'},
@@ -1134,6 +1152,8 @@ c19_visita_g3:{
 },
 
 c19_porque_o_rattata:{
+  falante:'a técnica de jaleco',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'A Kira olha por um tempo antes de responder, e quando responde é técnica e é honesta.',
     '"Estereotipia." Ela fala a palavra e depois traduz sozinha. "É movimento repetitivo sem função, de bicho em espaço fechado. Dá em zoológico, dá em criadouro, dá aqui."',
@@ -1153,6 +1173,8 @@ c19_porque_o_rattata:{
 },
 
 c19_contou_os_repetidos:{
+  falante:'a técnica de jaleco',
+  vozes:['N'],
   texto:[
     'Você conta.',
     'Trinta e quatro lá dentro. Quatro repetindo movimento sem função: o Rattata da parede, dois Nidoran andando em oito no mesmo canto e um Spearow que abre e fecha a asa a cada sete segundos.',
@@ -1225,6 +1247,8 @@ c19_ponto_sete:{
 },
 
 c19_nao_olhou:{
+  falante:'a técnica de jaleco',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"A senhora não olhou para trás nenhuma vez."',
     'Ela fica parada por uns quatro segundos.',
@@ -1246,12 +1270,14 @@ c19_nao_olhou:{
 },
 
 c19_saiu_do_roteiro:{
+  falante:'a técnica de jaleco',
+  vozes:['N','N','N'],
   texto:[
     'Você sai do roteiro no meio de uma frase e anda em direção ao galpão do fundo.',
     'A Kira não corre atrás. Ela fica parada onde estava e diz, alto o bastante para você ouvir e baixo o bastante para não ser um grito:',
     '"Eu não vou chamar ninguém."',
     'Você para e olha para trás.',
-    '"Eu não vou chamar ninguém", ela repete, "porque eu não sou obrigada a chamar e porque eu já pensei nisso antes de hoje."'
+    '"Eu não vou chamar ninguém." Ela repete, mais baixo. "Eu não sou obrigada a chamar, e eu já pensei nisso antes de hoje."'
   ],
   ef:{flag:['marlene_te_deixou'],
       npc:{nome:'Kira', opiniao:3, memoria:'Deixou você sair do roteiro e disse em voz alta que não ia chamar ninguém.'},
@@ -1384,6 +1410,8 @@ c19_refeitorio:{
 },
 
 c19_assunto_no_almoco:{
+  falante:'o voluntário sem nome',
+  vozes:['N'],
   texto:[
     'Você diz a palavra galpão quatro e a mesa não fica em silêncio, que é o que você esperava.',
     'A mesa muda de assunto. É diferente. É mais rápido e mais suave.',
@@ -1402,6 +1430,8 @@ c19_assunto_no_almoco:{
 },
 
 c19_porque_se_oferece:{
+  falante:'o voluntário sem nome',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     '"Porque eu faço rápido."',
     'Ele empurra o prato dois centímetros.',
@@ -1476,6 +1506,8 @@ c19_esperou_ele_falar:{
 },
 
 c19_ha_quanto_tempo:{
+  falante:'o homem do zoológico',
+  vozes:['N','N','P','N','N'],
   texto:[
     'A pergunta é fácil e todo mundo responde.',
     'Um ano e dois. Um ano e sete. Onze meses. Dois anos, desde a abertura. Quatro meses.',
@@ -1494,7 +1526,7 @@ c19_ha_quanto_tempo:{
 },
 
 c19_zoologico_fechou:{
-  falante:'o voluntário sem nome',
+  falante:'o homem do zoológico',
   vozes:['N','N','P','N','N','N','N'],
   texto:[
     '"Porque acabou o dinheiro." Ele dá de ombros, e o dar de ombros é mais pesado que qualquer discurso. "Município cortou, a bilheteria não pagava a ração, e no fim a gente estava comprando ração com vaquinha entre funcionário."',
@@ -1766,7 +1798,7 @@ c19_leu_as_etiquetas:{
     'Você lê as etiquetas por quarenta minutos, gaveta por gaveta, como quem lê uma lista telefônica atrás de um sobrenome.',
     'A origem ZS-7 é de longe a maior: dezenove anos de coleta, com data mais antiga de dezenove anos atrás e a mais nova de três meses.',
     'SPH-11 tem data de corte: tudo para no mesmo mês, e o mês é aquele mês.',
-    'IL-SN tem sete gavetas e data de dois anos atrás, o que é anterior à sua expedição e anterior à Comissão.',
+    d=>d.flags.chegou_na_ilha ? 'IL-SN tem sete gavetas e data de dois anos atrás, o que é anterior à sua ida à ilha e anterior à Comissão.' : 'IL-SN tem sete gavetas e data de dois anos atrás, o que é anterior à Comissão.',
     'E tem uma origem que aparece só três vezes, com etiqueta velha e escrita à máquina, não impressa: CIN-88.',
     'Oitenta e oito. Cinnabar, oitenta e oito.'
   ],
@@ -1820,7 +1852,7 @@ c19_destruiu_arquivo:{
     'Você desliga a refrigeração e abre todas as gavetas.',
     'Leva quatro minutos. Depois disso a temperatura sobe sozinha e em duas horas não existe mais nada de aproveitável ali.',
     'O alarme de temperatura dispara em noventa segundos, e é um bipe fino e educado, e ninguém vem correndo, porque alarme de temperatura dispara toda semana por queda de energia.',
-    'Você destruiu dezenove anos de coleta do setor 7, o material do andar 11 e sete gavetas de uma ilha que não está em mapa nenhum.',
+    d=>d.flags.sabe_da_ilha ? 'Você destruiu dezenove anos de coleta do setor 7, o material do andar 11 e sete gavetas de uma ilha que não está em mapa nenhum.' : 'Você destruiu dezenove anos de coleta do setor 7, o material do andar 11 e sete gavetas de uma origem que você nem sabe qual é.',
     'Você também destruiu as únicas amostras que existiam de duas linhagens que a Zona Safári perdeu há quatro anos, e que não existem mais em lugar nenhum do mundo.',
     'As duas coisas são verdade. Você vai ter que decidir com qual delas dorme.'
   ],
@@ -1873,7 +1905,7 @@ c19_fotografou_arquivo:{
   texto:[
     'Você fotografa as etiquetas, as gavetas, a sala inteira e a MATRIZ 01 com os dois cadeados fechados, para que ninguém possa dizer que você mexeu.',
     'Trinta e uma fotos.',
-    'É prova de que a origem do material é o setor 7, é Celadon, é a Silph e é uma ilha sem nome. É a cadeia inteira num arquivo só.',
+    d=>d.flags.sabe_da_ilha ? 'É prova de que a origem do material é o setor 7, é Celadon, é a Silph e é uma ilha sem nome. É a cadeia inteira num arquivo só.' : 'É prova de que a origem do material é o setor 7, é Celadon, é a Silph e é mais um lugar que você ainda não sabe qual é. É a cadeia inteira num arquivo só.',
     'E você deixa tudo exatamente onde estava, porque prova mexida é prova contestada.'
   ],
   ef:{flag:['provas_do_viveiro','escolha_fria'],
@@ -1888,11 +1920,15 @@ c19_fotografou_arquivo:{
 
 /* ── Dr. Hollis ───────────────────────────────────────────── */
 c19_sena:{
+  falante:'Dr. Hollis',
+  vozes:['N','N','P','N','N','N','N'],
   texto:[
     'O Dr. Hollis está no galpão 2, de jaleco, anotando numa prancheta, e reconhece você antes de você se apresentar.',
-    '"Ah." Ele não corre, não chama ninguém, não parece nem um pouco surpreso. "{O|A} do andar 11."',
-    '"O senhor estava lá."',
-    '"Eu era o terceiro na cadeia. Eu assinava o que o segundo aprovava." Ele continua anotando. "Quando lacraram, eu vim para cá com o projeto. Como quem muda de sala."',
+    d=>d.flags.chegou_no_11 || d.flags.viu_os_doze
+      ? '"Ah." Ele não corre, não chama ninguém, não parece nem um pouco surpreso. "{O|A} do andar 11."'
+      : '"Ah." Ele não corre, não chama ninguém, não parece nem um pouco surpreso. "{O|A} que anda lendo as nossas atas."',
+    d=>d.flags.chegou_no_11 || d.flags.viu_os_doze ? '"O senhor estava lá."' : '"O senhor me conhece?"',
+    '"Eu era do andar 11 da Silph. O terceiro na cadeia. Eu assinava o que o segundo aprovava." Ele continua anotando. "Quando lacraram, eu vim para cá com o projeto. Como quem muda de sala."',
     'Ele finalmente levanta a cabeça.',
     '"{O senhor|A senhora} quer saber o que eu acho de verdade? Eu acho que a gente estava errado no andar 11 e certo aqui."',
     '"Lá a gente tentou fazer uma mente. Aqui a gente faz população. Mente pergunta coisa. População não."'
@@ -1922,7 +1958,7 @@ c19_sena_galpao:{
   ef:{flag:['sabe_do_descarte','entendeu_o_galpao4'], instabilidade:2,
       registrar:'31% não atingem viabilidade. Para soltar 400, descartam 180.'},
   escolhas:[
-    {texto:'"Trinta e um é o número da natureza também."', vai:'c19_sena_trinta_e_um'},
+    {texto:'"Trinta e um é o número da natureza também."', vai:'c19_sena_trinta_e_um', cond:d=>!!d.flags.viu_as_incubadoras},
     {texto:'"O senhor entra lá?"', vai:'c19_sena_entra'},
     {texto:'Ir ao galpão do fundo.', vai:'c19_galpao'},
     {texto:'Atacar.', vai:'c19_luta_sena'}
@@ -1930,6 +1966,8 @@ c19_sena_galpao:{
 },
 
 c19_sena_trinta_e_um:{
+  falante:'Dr. Hollis',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"Trinta e um por cento é a taxa de sobrevivência lá fora. A senhora da visita disse."',
     'Ele para a caneta.',
@@ -1971,6 +2009,8 @@ c19_sena_entra:{
 },
 
 c19_sena_vem_comigo:{
+  falante:'Dr. Hollis',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Vem comigo lá dentro."',
     'Ele põe a prancheta na bancada com cuidado, do jeito que põe as coisas.',
@@ -1979,7 +2019,7 @@ c19_sena_vem_comigo:{
     '"Por quê?"',
     '"Porque se eu entrar uma vez eu vou ter que entrar sempre, e se eu entrar sempre eu vou parar de assinar, e se eu parar de assinar alguém assina no meu lugar."',
     'Ele pega a prancheta de volta.',
-    '"E essa pessoa não vai discutir com o conselho sobre fratura exposta em reunião de duas horas. Eu já perdi trinta e nove dessas discussões e eu ganhei sete."'
+    '"E essa pessoa não vai discutir com o conselho sobre cegueira de um olho em reunião de duas horas. Eu já perdi trinta e nove dessas discussões e eu ganhei sete."'
   ],
   ef:{flag:'sena_ganhou_sete', instabilidade:1,
       npc:{nome:'Dr. Hollis', opiniao:2, memoria:'Perdeu 39 discussões no conselho e ganhou 7.'},
@@ -1992,13 +2032,15 @@ c19_sena_vem_comigo:{
 },
 
 c19_as_sete:{
+  falante:'Dr. Hollis',
+  vozes:['N','N'],
   texto:[
     'Ele lista as sete sem consultar nada, com data.',
-    'Fratura exposta com prognóstico de recuperação. Subpeso em filhote de menos de trinta dias. Comportamento agressivo em fêmea gestante. Cegueira unilateral. Estereotipia leve com melhora em quatro semanas. Sopro cardíaco assintomático. Perda parcial de audição.',
+    'Membro amputado com adaptação comprovada. Subpeso em filhote de menos de trinta dias. Comportamento agressivo em fêmea gestante. Cegueira unilateral. Estereotipia leve com melhora em quatro semanas. Sopro cardíaco assintomático. Perda parcial de audição.',
     'Sete parâmetros que deixaram de ser motivo de descarte por causa de sete discussões dele.',
     'Você faz a conta sem querer: quantos por ano, quantos em dois anos.',
     'Ele vê você fazendo a conta.',
-    '"Cento e quatro", ele diz. "Cento e quatro estão vivas por causa dessas sete brigas. Eu conto essas também."'
+    '"Cento e quatro." Ele não levanta a cabeça. "Cento e quatro estão vivas por causa dessas sete brigas. Eu conto essas também."'
   ],
   ef:{flag:['sena_conta_as_vivas'], instabilidade:1, moral:-2,
       npc:{nome:'Dr. Hollis', opiniao:3, memoria:'Conta as 104 que estão vivas por causa das brigas que ganhou.'},
@@ -2011,12 +2053,14 @@ c19_as_sete:{
 },
 
 c19_as_que_perdeu:{
+  falante:'Dr. Hollis',
+  vozes:['P','N','N','N'],
   texto:[
     '"E as que o senhor perdeu?"',
     'Ele não responde.',
     'Ele vira a prancheta e mostra a última folha, que não é planilha: é uma lista escrita à mão, com números de anilha, três colunas, quase cheia.',
     'No alto da folha, em letra pequena: as que eu não consegui.',
-    '"Eu não sei por que eu faço isso", ele diz. "Não serve para nada e eu levo essa folha para casa todo fim de semana."',
+    '"Eu não sei por que eu faço isso." Ele passa o dedo na folha. "Não serve para nada e eu levo essa folha para casa todo fim de semana."',
     'Ele vira a prancheta de volta.',
     '"Agora vai lá ver o galpão. É pra isso que {o senhor|a senhora} veio."'
   ],
@@ -2116,6 +2160,8 @@ c19_luta_sena:{
 },
 
 c19_venceu_sena:{
+  falante:'Dr. Hollis',
+  vozes:['N','N','N','N'],
   texto:[
     'As unidades dele caem e ficam onde caíram, esperando.',
     'O Dr. Hollis recolhe uma por uma com o mesmo cuidado com que pousou a prancheta.',
@@ -2131,10 +2177,12 @@ c19_venceu_sena:{
 },
 
 c19_perdeu_sena:{
+  falante:'Dr. Hollis',
+  vozes:['N','N'],
   texto:[
     'Você perde, e ele não comemora, e chama a enfermaria para o seu time.',
     'Enquanto os seus Pokémon são atendidos por uma equipe competente e educada, o Dr. Hollis volta a anotar na prancheta.',
-    '"A porta do galpão 4 nunca esteve trancada", ele diz, sem levantar a cabeça. "Vai lá. Sério. Eu prefiro que as pessoas vejam."'
+    '"A porta do galpão 4 nunca esteve trancada." Ele não levanta a cabeça. "Vai lá. Sério. Eu prefiro que as pessoas vejam."'
   ],
   ef:{hp:-4, causa:'Derrota no viveiro', curaTime:true},
   escolhas:[{texto:'Ir ao galpão do fundo.', vai:'c19_galpao'}]
@@ -2237,7 +2285,7 @@ c19_o_canto:{
 
 c19_levou_o_cobertor:{
   texto:[
-    'Você dobra o cobertor e leva, e não sabe explicar por quê, e não vai saber explicar depois, e vai ser perguntado.',
+    'Você dobra o cobertor e leva, e não sabe explicar por quê, e não vai saber explicar depois, e vai ser perguntad{o|a}.',
     'Não é prova. Não tem número, não tem data, não tem assinatura.',
     'É um pedaço de cobertor que alguém lavou e dobrou em quatro para o próximo não deslizar no plástico.'
   ],
@@ -2305,7 +2353,7 @@ c19_destruiu_galpao:{
 c19_saiu_galpao:{
   texto:[
     'Você sai do galpão 4 depois de quarenta segundos lá dentro e senta no chão do corredor coberto, de costas para a parede.',
-    'Passa um técnico. Ele te vê sentado ali, entende exatamente de onde você saiu, e não diz nada.',
+    'Passa um técnico. Ele te vê sentad{o|a} ali, entende exatamente de onde você saiu, e não diz nada.',
     'Ele volta dois minutos depois com um copo de água, põe no chão do seu lado, e continua o turno dele.',
     'Você fica com o copo na mão por muito tempo sem beber.'
   ],
@@ -2375,10 +2423,12 @@ c19_prado_entrou:{
 },
 
 c19_mostrou_a_prancheta:{
+  falante:'Auditora Brill',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Você mostra o que trouxe e pergunta quanto dá.',
     'Ela olha sem tocar.',
-    '"Quatro mil cento e nove", ela diz. "Até anteontem."',
+    '"Quatro mil cento e nove." Ela não pisca. "Até anteontem."',
     'Você não tinha perguntado o total. Você tinha perguntado quanto dá.',
     '"A senhora sabe de cabeça."',
     '"Eu sei de cabeça." Ela não desvia o olhar. "Eu fecho esse número todo mês e eu não escrevo em lugar nenhum além do relatório, porque eu tenho medo de escrever e alguém ver e se acostumar."',
@@ -2396,14 +2446,16 @@ c19_mostrou_a_prancheta:{
 },
 
 c19_pergunta_prado:{
+  falante:'Auditora Brill',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Como a senhora dorme?"',
     'Ela demora muito para responder, e a demora é a resposta.',
     '"Eu tenho uma filha de seis anos." Ela abre a porta do carro e não entra. "Há quatro anos um Rhyhorn entrou num quintal em Fuchsia e matou um menino de nove."',
-    '"Eu fui na ocorrência. Eu era da Liga na época."',
+    '"Eu fui na ocorrência. Eu fazia auditoria pra seguradora na época."',
     '"E aí a senhora entrou nisso."',
     '"E aí eu entrei nisso." Ela entra no carro. "Eu não estou te dizendo que estou certa. Eu estou te dizendo por quê, que é diferente, e eu sei a diferença."',
-    'É a terceira vez nesta jornada que alguém te diz exatamente essa frase.'
+    'Você já ouviu essa frase antes, de outra boca.'
   ],
   ef:{flag:'prado_explicou',
       npc:{nome:'Auditora Brill', opiniao:4, memoria:'Te contou do menino de nove anos em Fuchsia.'},
@@ -2416,6 +2468,8 @@ c19_pergunta_prado:{
 },
 
 c19_teria_salvo:{
+  falante:'Auditora Brill',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"O menino teria sido salvo por um viveiro?"',
     'Ela fica com a mão na chave sem virar.',
@@ -2436,12 +2490,14 @@ c19_teria_salvo:{
 },
 
 c19_passou_direto:{
+  falante:'Auditora Brill',
+  vozes:['N','N','N'],
   texto:[
     'Você passa por ela sem falar nada e ela não te segura.',
     'Vinte metros adiante, ela diz, alto o bastante para você ouvir e sem levantar a voz:',
     '"Segunda-feira, dez horas, sala setecentos e quatro. Reunião ordinária do conselho. É aberta, e está no estatuto, Art. 27."',
     'Você não para de andar.',
-    '"Em um ano e oito meses", ela continua, atrás de você, "nenhum interessado apareceu."'
+    '"Em um ano e oito meses." Ela continua, atrás de você. "Nenhum interessado apareceu."'
   ],
   ef:{flag:['convite_conselho','endereco_presidente'],
       npc:{nome:'Auditora Brill', opiniao:2, memoria:'Te deu o endereço da reunião enquanto você ia embora sem falar.'},
