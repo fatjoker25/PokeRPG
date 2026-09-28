@@ -232,6 +232,6 @@ function statusElite4(){
 function statusTorneio(){
   const d = Estado.dados;
   if (d.capitulo < 2) return {estado:'trancado', texto:'Volte quando tiver estrada'};
-  if (d.jogador.dinheiro < INSCRICAO_TORNEIO) return {estado:'sem_dinheiro', texto:`Inscrição: ${INSCRICAO_TORNEIO} ₽ (você tem ${d.jogador.dinheiro})`};
-  return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_TORNEIO} ₽`};
+  if (d.jogador.dinheiro < INSCRICAO_TORNEIO) return {estado:'sem_dinheiro', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽ (você tem ${fmtDin(d.jogador.dinheiro)})`};
+  return {estado:'disponivel', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽`};
 }

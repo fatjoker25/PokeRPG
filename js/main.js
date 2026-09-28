@@ -944,7 +944,7 @@ const Jogo = {
         const mult = (fim && fim.bonusDinheiro) || 1;
         const val = premioGinasio(g, fim);
         Estado.j.dinheiro += val;
-        avisos.push({tipo:'item', texto:`+${val} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
+        avisos.push({tipo:'item', texto:`+${fmtDin(val)} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
       }
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
       if (p.rep){
@@ -1133,7 +1133,7 @@ const Jogo = {
     if (venceu){
       const premio = premioRevanche();
       Estado.j.dinheiro += premio;
-      avisos.push({tipo:'item', texto:`+${premio} ₽`});
+      avisos.push({tipo:'item', texto:`+${fmtDin(premio)} ₽`});
       const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
       Estado.registrar(`Venceu a revanche contra ${rev.nome}.`);
@@ -1195,7 +1195,7 @@ const Jogo = {
         avisos.push({tipo:'info', texto:'Ele ficou entre você e o caminho.'});
       }
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - PERDA_RIVAL);
-      avisos.push({tipo:'item', texto:`−${PERDA_RIVAL} ₽`});
+      avisos.push({tipo:'item', texto:`−${fmtDin(PERDA_RIVAL)} ₽`});
     }
     Estado.salvar('auto');
     this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, null, falas));
@@ -1226,7 +1226,7 @@ const Jogo = {
       Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${registroRival(id).derrotas}×${registroRival(id).vitorias}.`});
       const perda = perdaRivalExtra(id);
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
-      avisos.push({tipo:'item', texto:`−${perda} ₽`});
+      avisos.push({tipo:'item', texto:`−${fmtDin(perda)} ₽`});
     }
     Estado.salvar('auto');
     this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id, falas));
@@ -1422,7 +1422,7 @@ const Jogo = {
       this.torneioAtual = null;
       const consolo = premioTorneio(t, false);
       Estado.j.dinheiro += consolo;
-      avisos.push({tipo:'item', texto:`Premiação por participação: +${consolo} ₽`});
+      avisos.push({tipo:'item', texto:`Premiação por participação: +${fmtDin(consolo)} ₽`});
       Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
@@ -1438,7 +1438,7 @@ const Jogo = {
 
     const ganhoTorneio = premioTorneio(t, true);
     Estado.j.dinheiro += ganhoTorneio;
-    avisos.push({tipo:'item', texto:`+${ganhoTorneio} ₽`});
+    avisos.push({tipo:'item', texto:`+${fmtDin(ganhoTorneio)} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     if (premio.rep){
       const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`, {rep:{notorio:true, peso:3}});
@@ -1523,7 +1523,7 @@ const Jogo = {
     UI.modal('Vender quem?', time.map(p => {
       const preco = Math.round((DEX[p.dex].total * p.nivel) / 6);
       return `<button class="escolha" onclick="Jogo.efetuarVenda('${p.uid}',${preco},'${escolha.vai}')">
-        ${UI.esc(nomeExib(p))} — Nv ${p.nivel} · <b>${preco} ₽</b></button>`;
+        ${UI.esc(nomeExib(p))} — Nv ${p.nivel} · <b>${fmtDin(preco)} ₽</b></button>`;
     }).join('') + '<p class="sussurro" style="margin-top:12px">Ele vai para a caixa de veludo. Isso é permanente.</p>');
   },
 
@@ -1533,12 +1533,12 @@ const Jogo = {
     const lendario = p.lendario;
     Estado.removerDoTime(uid);
     Estado.j.dinheiro += preco;
-    Estado.registrar(`Vendeu ${nomeExib(p)} por ${preco} ₽.`);
+    Estado.registrar(`Vendeu ${nomeExib(p)} por ${fmtDin(preco)} ₽.`);
     const avisos = Historia.aplicar({
       rep:{eixo:'ruim', delta: lendario ? 4 : 2, motivo:`Vendeu ${nomeExib(p)} numa banca de rua`},
       moral:-15
     });
-    avisos.unshift({tipo:'item', texto:`+${preco} ₽`});
+    avisos.unshift({tipo:'item', texto:`+${fmtDin(preco)} ₽`});
     UI.fecharModal();
     this.irPara(destino, avisos);
   }

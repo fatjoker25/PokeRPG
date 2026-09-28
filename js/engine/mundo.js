@@ -507,11 +507,13 @@ function localDoCapitulo(n){
   return id;
 }
 
-/* "na Rota 1", "no Monte da Lua", "nas Ilhas Seafoam": a preposição
+/* "na Rota 1", "no Monte da Lua", "nas Ilhas Seafoam", "em Celadon": a preposição
    concorda com o nome do lugar, que o texto não sabe de antemão. */
 function emLocal(id){
   const L = LOCAIS[id]; if (!L) return 'na estrada';
   const n = L.nome;
+  if (/^Ilha /.test(n)) return 'na ' + n;
+  if (L.tipo === 'cidade') return 'em ' + n;   // em Celadon, em Pallet
   if (/^(Ilhas)\b/.test(n)) return 'nas ' + n;
   if (/^(Monte|Túnel|Caminho|Planalto|Norte)\b/.test(n)) return 'no ' + n;
   if (/^A /.test(n)) return 'n' + n.charAt(0).toLowerCase() + n.slice(1);

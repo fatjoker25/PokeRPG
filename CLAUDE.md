@@ -121,7 +121,8 @@ Nove ambientes, nove cenários, cinco arenas. O mapa das duas coisas está em
 - `agua` → água;
 - `caverna`, `montanha`, `vulcao` → rocha;
 - `cidade`, `ruina`, `cemiterio` → piso duro;
-- ginásio, Elite dos Quatro e torneio entram **por cima de tudo**, na quadra.
+- ginásio, Elite dos Quatro, torneio e Conferência entram **por cima de tudo**,
+  na quadra (`Arenas.ehQuadra`); luta marcada em arena passa `arena:'ginasio'`.
 
 A quadra é a única arena sem imagem — fundo de ginásio livre não existe pra
 baixar — então ela é pintada em CSS: arquibancada, refletor, linha de fundo

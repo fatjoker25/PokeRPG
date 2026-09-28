@@ -495,6 +495,9 @@ function paletaMochila(cor){
   };
 }
 
+/* dinheiro sempre com ponto de milhar: 23.400 ₽, nunca 23400 ₽ */
+function fmtDin(n){ return Number(n || 0).toLocaleString('pt-BR'); }
+
 /* depois da história, quanto vale um capítulo de espera no PokéNav */
 const DIAS_POR_CAPITULO_NAV = 7;
 

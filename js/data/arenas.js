@@ -126,10 +126,10 @@ const Arenas = {
 
   terreno(amb){ return TERRENO[amb || this.ambienteAtual()] || TERRENO.campo; },
 
-  /* Ginásio, Elite e torneio são quadra oficial, doa a onde for. */
+  /* Ginásio, Elite, torneio e Conferência são quadra oficial, doa a onde for. */
   ehQuadra(){
     return typeof Jogo !== 'undefined' &&
-      !!(Jogo.ginasioAtual || Jogo.eliteAtual || Jogo.torneioAtual);
+      !!(Jogo.ginasioAtual || Jogo.eliteAtual || Jogo.torneioAtual || Jogo.conferenciaAtual);
   },
 
   /* Encontro livre olha o mapa; batalha de cena olha o capítulo. */

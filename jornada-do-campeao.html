@@ -5795,7 +5795,7 @@ const Cargos = {
     const avisos = [];
     const b = c.beneficios || {};
     if (b.status && Estado.subirStatus) { Estado.subirStatus(b.status); avisos.push({tipo:'rep', texto:b.status.toUpperCase() + ' +1.'}); }
-    if (b.renda) avisos.push({tipo:'item', texto:`${b.renda} ₽ por capítulo — quem tem dois postos recebe o maior, não os dois.`});
+    if (b.renda) avisos.push({tipo:'item', texto:`${fmtDin(b.renda)} ₽ por capítulo — quem tem dois postos recebe o maior, não os dois.`});
     if (b.loja) avisos.push({tipo:'info', texto:`Desconto de ${Math.round((1 - b.loja) * 100)}% em qualquer loja de Kanto.`});
     if (b.centro) avisos.push({tipo:'cura', texto:'Atendimento sem custo em qualquer Centro.'});
     if (c.aviso) avisos.push({tipo:'dano', texto:c.aviso});
@@ -5842,7 +5842,7 @@ const Cargos = {
     const avisos = [];
     if (b.renda){
       Estado.j.dinheiro += b.renda;
-      avisos.push({tipo:'item', texto:`+${b.renda} ₽ — o que os seus postos pagam por capítulo.`});
+      avisos.push({tipo:'item', texto:`+${fmtDin(b.renda)} ₽ — o que os seus postos pagam por capítulo.`});
     }
     if (b.moral){
       (Estado.dados.time || []).forEach(p => { if (!p.morto) p.moral = Math.min(100, (p.moral || 50) + b.moral); });
@@ -5996,10 +5996,10 @@ const Arenas = {
 
   terreno(amb){ return TERRENO[amb || this.ambienteAtual()] || TERRENO.campo; },
 
-  /* Ginásio, Elite e torneio são quadra oficial, doa a onde for. */
+  /* Ginásio, Elite, torneio e Conferência são quadra oficial, doa a onde for. */
   ehQuadra(){
     return typeof Jogo !== 'undefined' &&
-      !!(Jogo.ginasioAtual || Jogo.eliteAtual || Jogo.torneioAtual);
+      !!(Jogo.ginasioAtual || Jogo.eliteAtual || Jogo.torneioAtual || Jogo.conferenciaAtual);
   },
 
   /* Encontro livre olha o mapa; batalha de cena olha o capítulo. */
@@ -6875,11 +6875,13 @@ function localDoCapitulo(n){
   return id;
 }
 
-/* "na Rota 1", "no Monte da Lua", "nas Ilhas Seafoam": a preposição
+/* "na Rota 1", "no Monte da Lua", "nas Ilhas Seafoam", "em Celadon": a preposição
    concorda com o nome do lugar, que o texto não sabe de antemão. */
 function emLocal(id){
   const L = LOCAIS[id]; if (!L) return 'na estrada';
   const n = L.nome;
+  if (/^Ilha /.test(n)) return 'na ' + n;
+  if (L.tipo === 'cidade') return 'em ' + n;   // em Celadon, em Pallet
   if (/^(Ilhas)\b/.test(n)) return 'nas ' + n;
   if (/^(Monte|Túnel|Caminho|Planalto|Norte)\b/.test(n)) return 'no ' + n;
   if (/^A /.test(n)) return 'n' + n.charAt(0).toLowerCase() + n.slice(1);
@@ -8161,6 +8163,9 @@ function paletaMochila(cor){
     '--moch-btn-txt':luminancia(escuro) > .5 ? '#1b1c20' : '#f4f1ea'
   };
 }
+
+/* dinheiro sempre com ponto de milhar: 23.400 ₽, nunca 23400 ₽ */
+function fmtDin(n){ return Number(n || 0).toLocaleString('pt-BR'); }
 
 /* depois da história, quanto vale um capítulo de espera no PokéNav */
 const DIAS_POR_CAPITULO_NAV = 7;
@@ -10852,7 +10857,7 @@ const Historia = {
     }
     if (ef.dinheiro){
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro + ef.dinheiro);
-      Estado.registrar(`${ef.dinheiro>0?'+':''}${ef.dinheiro} ₽ (total: ${Estado.j.dinheiro} ₽)`);
+      Estado.registrar(`${ef.dinheiro>0?'+':''}${fmtDin(ef.dinheiro)} ₽ (total: ${fmtDin(Estado.j.dinheiro)} ₽)`);
     }
     if (ef.hp){
       if (ef.hp < 0){
@@ -11974,7 +11979,7 @@ const Estrada = {
         avisos.push({tipo:'item', texto:`Você venceu ${nomeDeLuta(t)}. +${v.toLocaleString('pt-BR')} ₽`});
         if (!r.vencidos.includes(atual.escalao)) r.vencidos.push(atual.escalao);
         r.vitorias++;
-        Estado.registrar(`Venceu ${nomeDeLuta(t)} em ${(LOCAIS[t.local] || {}).nome || t.local}.`);
+        Estado.registrar(`Venceu ${nomeDeLuta(t)} ${emLocal(t.local)}.`);
         /* quem tem número passa na primeira vez que perde pra você */
         if (t.numero && !r.numero && Estado.temPokenav()){
           r.numero = true;
@@ -14624,8 +14629,8 @@ function statusElite4(){
 function statusTorneio(){
   const d = Estado.dados;
   if (d.capitulo < 2) return {estado:'trancado', texto:'Volte quando tiver estrada'};
-  if (d.jogador.dinheiro < INSCRICAO_TORNEIO) return {estado:'sem_dinheiro', texto:`Inscrição: ${INSCRICAO_TORNEIO} ₽ (você tem ${d.jogador.dinheiro})`};
-  return {estado:'disponivel', texto:`Inscrição: ${INSCRICAO_TORNEIO} ₽`};
+  if (d.jogador.dinheiro < INSCRICAO_TORNEIO) return {estado:'sem_dinheiro', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽ (você tem ${fmtDin(d.jogador.dinheiro)})`};
+  return {estado:'disponivel', texto:`Inscrição: ${fmtDin(INSCRICAO_TORNEIO)} ₽`};
 }
 
 
@@ -16018,7 +16023,7 @@ const VETERANOS = [
       fala('Greer', 'Sem desculpa. Nem minha, nem sua.')
     ],
     botao:'Entrar na arena',
-    luta:{veterano:'greer', acima:3},
+    luta:{veterano:'greer', acima:3}, quadra:true,
     fim:[
       'A arena demora pra entender que acabou. Depois ela entende de uma vez.',
       fala('Greer', 'Pronto. Agora ninguém fala mais nada.'),
@@ -16200,7 +16205,7 @@ const Veteranos = {
       return;
     }
     Batalha.iniciar(meu, time[0], {
-      tipo:'treinador', fuga:false, treinador:nome,
+      tipo:'treinador', fuga:false, treinador:nome, arena: atual.arena || null,
       timeInimigo: time.slice(1), revelarNatureza:true, erroIA:ERRO_IA_VETERANO,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
@@ -16246,7 +16251,8 @@ const Veteranos = {
         const nv = Math.min(85, Math.max(((LOCAIS[c.local] || {}).nivel || 20) + 2, nivelDeReferencia() + (L.acima || 0)));
         time = timeDeLinhas(L.times, nv, Math.min(L.times.length, this.tamanho(v) + 1), v.golpes, 70);
       }
-      this.iniciarLuta(nome, time, {id, tipo:'convite'});
+      /* luta marcada em arena (a exibição da Greer) é na quadra */
+      this.iniciarLuta(nome, time, {id, tipo:'convite', arena: c.quadra ? 'ginasio' : null});
       return UI.telaBatalha([`${nome} quer lutar!`]);
     }
     /* convite sem luta: acontece e pronto */
@@ -16798,7 +16804,7 @@ const Descobertas = {
     if (lista.length && Dados.chance(soCidade ? 75 : 55)){
       const a = Dados.escolher(lista);
       Mundo.descobrir('achou_' + a.chave);
-      Estado.registrar(`Descobriu em ${local.nome}: ${a.texto[0].slice(0,60)}…`);
+      Estado.registrar(`Descobriu ${emLocal(id)}: ${a.texto[0].slice(0,60)}…`);
       return a;
     }
     if (!soCidade && Dados.chance(52)){
@@ -17186,7 +17192,7 @@ const Cidade = {
       if (Estado.j.dinheiro < preco){
         return [
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
-          {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${preco} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
+          {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${fmtDin(preco)} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
         ];
       }
       Estado.j.dinheiro -= preco;
@@ -17196,7 +17202,7 @@ const Cidade = {
       Estado.salvar('auto');
       return [
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
-        {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${preco} ₽, porque sem licença você é cliente e não treinador.`},
+        {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${fmtDin(preco)} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
         {tipo:'info', texto:'Amanhece.'}, ...pac
       ];
@@ -17239,7 +17245,7 @@ const Cidade = {
     const din = Estado.j.dinheiro;
     const preco = PRECO_RELEMBRAR.toLocaleString('pt-BR');
     const topo = `<p class="narrativa" style="margin:0 0 10px">${UI.esc(R.ar)}</p>
-      <p class="sussurro" style="margin:0 0 12px">Cada golpe: ${preco} ₽. Você tem ${din.toLocaleString('pt-BR')} ₽.</p>
+      <p class="sussurro" style="margin:0 0 12px">Cada golpe: ${fmtDin(preco)} ₽. Você tem ${din.toLocaleString('pt-BR')} ₽.</p>
       ${recado ? `<p class="relembrar-recado">${UI.esc(recado)}</p>` : ''}`;
 
     /* primeiro: quem vai lembrar */
@@ -17262,7 +17268,7 @@ const Cidade = {
     UI.modal(`${nomeExib(p)} · Nv ${p.nivel}`, topo +
       (lista.length
         ? `<div class="aprender-lista">${linhas}</div>` +
-          (din < PRECO_RELEMBRAR ? `<p class="sussurro" style="margin-top:10px">Falta dinheiro: são ${preco} ₽ por golpe.</p>` : '')
+          (din < PRECO_RELEMBRAR ? `<p class="sussurro" style="margin-top:10px">Falta dinheiro: são ${fmtDin(preco)} ₽ por golpe.</p>` : '')
         : '<p class="nada">Não tem nada que ele tenha esquecido.</p>') +
       `<div style="margin-top:12px"><button class="btn" onclick="Cidade.relembrar()">Escolher outro</button></div>`);
   },
@@ -17272,7 +17278,7 @@ const Cidade = {
     if (!p || Estado.j.dinheiro < PRECO_RELEMBRAR) return this.relembrar(uid);
     const pagar = () => {
       Estado.j.dinheiro -= PRECO_RELEMBRAR;
-      Estado.registrar(`${nomeExib(p)} relembrou ${nome} (${PRECO_RELEMBRAR} ₽).`);
+      Estado.registrar(`${nomeExib(p)} relembrou ${nome} (${fmtDin(PRECO_RELEMBRAR)} ₽).`);
       Estado.salvar('auto');
     };
     if (p.golpes.length < 4){
@@ -17313,7 +17319,7 @@ const Cidade = {
     }
 
     const topo = `<div class="mochila-topo">
-      <span class="grana">${Estado.j.dinheiro} ₽</span>
+      <span class="grana">${fmtDin(Estado.j.dinheiro)} ₽</span>
       <span class="peso">${UI.esc(L.nome)}${sub ? ' · ' + sub : ''}</span>
     </div>
     ${abas}
@@ -17401,7 +17407,7 @@ const Cidade = {
       const caro = Estado.j.dinheiro < c.valor;
       return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
         <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
-          <span class="cargo-peso mono">${c.valor} ₽</span></div>
+          <span class="cargo-peso mono">${fmtDin(c.valor)} ₽</span></div>
         <div class="cargo-resumo">${UI.esc(c.linha)}</div>
         ${caro ? `<div class="cargo-motivo">Você tem ${Number(Estado.j.dinheiro).toLocaleString('pt-BR')} ₽.</div>`
                : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
@@ -17419,9 +17425,9 @@ const Cidade = {
        vai em ef.rep.notorio, que é onde mudarRep procura */
     const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.toLowerCase(),
                               {rep:{notorio:true}});
-    Estado.registrar(`Pagou ${c.valor} ₽ por: ${c.nome}.`);
+    Estado.registrar(`Pagou ${fmtDin(c.valor)} ₽ por: ${c.nome}.`);
     Estado.salvar('auto');
-    const avisos = [{tipo:'item', texto:`−${c.valor} ₽.`}];
+    const avisos = [{tipo:'item', texto:`−${fmtDin(c.valor)} ₽.`}];
     if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     UI.telaDoacao(c, avisos);
   },
@@ -21599,7 +21605,7 @@ c2_ab_secando:{
 
 c2_ab_sem_troco:{
   texto:[
-    d=>`Você conta o dinheiro antes de entrar em Viridian, sentad{o|a} na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${d.jogador.dinheiro} ₽.`,
+    d=>`Você conta o dinheiro antes de entrar em Viridian, sentad{o|a} na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${fmtDin(d.jogador.dinheiro)} ₽.`,
     'Não é pouco de passar fome. É pouco de fazer conta: se comprar isso, não compra aquilo.',
     'Viridian é a primeira cidade de verdade que você vê, e cidade de verdade tem uma coisa que a sua não tinha — vitrine.',
     'Você passa por três delas no caminho do Centro e não entra em nenhuma, e isso custa um esforço que você não esperava que custasse.',
@@ -81783,7 +81789,7 @@ const UI = {
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
           ${this.esc(d.relogio.periodo || 'manhã')} do dia ${d.relogio.dia} ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${d.jogador.dinheiro} ₽</div>
+          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
       </div>
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
@@ -84153,9 +84159,9 @@ const UI = {
         <div class="carta ginasio">
           <div class="t"><span>Torneio Aberto</span><span class="fraco">${d.torneiosVencidos ? d.torneiosVencidos+'× campeão' : ''}</span></div>
           <div class="fraco" style="margin-bottom:8px">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra — e os adversários saem da sua própria história.</div>
-          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_TORNEIO[0].dinheiro} ₽</span></div>
-          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_TORNEIO[1].dinheiro} ₽</span></div>
-          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_TORNEIO[2].dinheiro} ₽</span></div>
+          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_TORNEIO[0].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_TORNEIO[1].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_TORNEIO[2].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
           <div class="linha"><span class="k">Nível dos adversários</span><span class="v">~${nivelDoJogador()}</span></div>
           <div class="rodape">
             <span class="fraco">${this.esc(tor.texto)}</span>
@@ -84799,7 +84805,7 @@ const UI = {
           <div class="cartao-sinais">${this.esc(Estado.descricaoFisica())}</div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
-          <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${j.dinheiro} ₽</span></div>
+          <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${fmtDin(j.dinheiro)} ₽</span></div>
           <div class="cartao-linha"><span class="k">Pokédex</span><span class="v mono">${c.catalogados} catalogados · ${c.vistos} vistos</span></div>
           <div class="cartao-linha"><span class="k">Time</span><span class="v">${d.time.length} em mãos${d.pc.length ? ' · ' + d.pc.length + ' no PC' : ''}</span></div>
           ${d.cemiterio.length ? `<div class="cartao-linha"><span class="k">Não voltaram</span><span class="v perdas">${d.cemiterio.length}</span></div>` : ''}
@@ -85033,7 +85039,7 @@ const UI = {
 
     const ben = b => {
       const L = [];
-      if (b.renda) L.push(`${b.renda} ₽ por capítulo`);
+      if (b.renda) L.push(`${fmtDin(b.renda)} ₽ por capítulo`);
       if (b.loja) L.push(`${Math.round((1 - b.loja) * 100)}% de desconto nas lojas`);
       if (b.centro) L.push('Centro Pokémon sem custo');
       if (b.status) L.push(b.status.charAt(0).toUpperCase() + b.status.slice(1) + ' +1');
@@ -85079,7 +85085,7 @@ const UI = {
     this.add(this.topo());
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
-        <div class="num">${c.valor} ₽</div>
+        <div class="num">${fmtDin(c.valor)} ₽</div>
         <div class="tit">${this.esc(c.nome)}</div>
         <div class="loc">${this.esc(c.linha)}</div>
       </div>
@@ -85404,7 +85410,7 @@ const UI = {
       <div class="linha"><span class="k">Água</span><span class="v">mar, rio, doca e ponte</span></div>
       <div class="linha"><span class="k">Rocha</span><span class="v">caverna · montanha · vulcão</span></div>
       <div class="linha"><span class="k">Piso duro</span><span class="v">cidade · ruína · cemitério</span></div>
-      <div class="linha"><span class="k">Quadra</span><span class="v">ginásio, Elite dos Quatro e torneio, em qualquer lugar</span></div>
+      <div class="linha"><span class="k">Quadra</span><span class="v">ginásio, Elite dos Quatro, torneio e Conferência, em qualquer lugar · a exibição marcada na arena central também</span></div>
       <p class="sussurro">Quadra ganha de tudo: se é desafio de líder, Elite ou torneio, o chão é piso oficial, não importa a cidade. Encontro livre no mapa usa o ambiente do ponto onde você está; batalha de cena usa o ambiente do capítulo. Uma cena pode fixar a arena quando a briga acontece num canto que o ambiente do capítulo não descreve.</p>
       <p class="sussurro">Praia e mar são o cenário de água; a ruína é o mato seco que tomou conta da usina; o cemitério é a pedra da torre na luz errada. A quadra é a única arena sem cenário fotografado: ela é desenhada, com arquibancada, refletor e o círculo do meio.</p>
 
@@ -99372,7 +99378,7 @@ const Jogo = {
         const mult = (fim && fim.bonusDinheiro) || 1;
         const val = premioGinasio(g, fim);
         Estado.j.dinheiro += val;
-        avisos.push({tipo:'item', texto:`+${val} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
+        avisos.push({tipo:'item', texto:`+${fmtDin(val)} ₽${mult > 1 ? ' (Amuleto de Moeda)' : ''}`});
       }
       if (p.itens) for (const [n,q] of Object.entries(p.itens)){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
       if (p.rep){
@@ -99561,7 +99567,7 @@ const Jogo = {
     if (venceu){
       const premio = premioRevanche();
       Estado.j.dinheiro += premio;
-      avisos.push({tipo:'item', texto:`+${premio} ₽`});
+      avisos.push({tipo:'item', texto:`+${fmtDin(premio)} ₽`});
       const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
       Estado.registrar(`Venceu a revanche contra ${rev.nome}.`);
@@ -99623,7 +99629,7 @@ const Jogo = {
         avisos.push({tipo:'info', texto:'Ele ficou entre você e o caminho.'});
       }
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - PERDA_RIVAL);
-      avisos.push({tipo:'item', texto:`−${PERDA_RIVAL} ₽`});
+      avisos.push({tipo:'item', texto:`−${fmtDin(PERDA_RIVAL)} ₽`});
     }
     Estado.salvar('auto');
     this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, null, falas));
@@ -99654,7 +99660,7 @@ const Jogo = {
       Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${registroRival(id).derrotas}×${registroRival(id).vitorias}.`});
       const perda = perdaRivalExtra(id);
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
-      avisos.push({tipo:'item', texto:`−${perda} ₽`});
+      avisos.push({tipo:'item', texto:`−${fmtDin(perda)} ₽`});
     }
     Estado.salvar('auto');
     this.resolverPendencias(() => UI.telaResultadoRival(venceu, avisos, id, falas));
@@ -99850,7 +99856,7 @@ const Jogo = {
       this.torneioAtual = null;
       const consolo = premioTorneio(t, false);
       Estado.j.dinheiro += consolo;
-      avisos.push({tipo:'item', texto:`Premiação por participação: +${consolo} ₽`});
+      avisos.push({tipo:'item', texto:`Premiação por participação: +${fmtDin(consolo)} ₽`});
       Estado.registrar(`Eliminado do torneio por ${adv.nome} nas ${premio.rodada}.`);
       Estado.salvar('auto');
       return UI.telaResultadoLiga({
@@ -99866,7 +99872,7 @@ const Jogo = {
 
     const ganhoTorneio = premioTorneio(t, true);
     Estado.j.dinheiro += ganhoTorneio;
-    avisos.push({tipo:'item', texto:`+${ganhoTorneio} ₽`});
+    avisos.push({tipo:'item', texto:`+${fmtDin(ganhoTorneio)} ₽`});
     for (const [n,q] of Object.entries(premio.itens||{})){ Estado.darItem(n,q); avisos.push({tipo:'item', texto:`Recebeu ${q}× ${n}.`}); }
     if (premio.rep){
       const r = Estado.mudarRep('bom', premio.rep, `Avançou na ${premio.rodada} do Torneio da Liga`, {rep:{notorio:true, peso:3}});
@@ -99951,7 +99957,7 @@ const Jogo = {
     UI.modal('Vender quem?', time.map(p => {
       const preco = Math.round((DEX[p.dex].total * p.nivel) / 6);
       return `<button class="escolha" onclick="Jogo.efetuarVenda('${p.uid}',${preco},'${escolha.vai}')">
-        ${UI.esc(nomeExib(p))} — Nv ${p.nivel} · <b>${preco} ₽</b></button>`;
+        ${UI.esc(nomeExib(p))} — Nv ${p.nivel} · <b>${fmtDin(preco)} ₽</b></button>`;
     }).join('') + '<p class="sussurro" style="margin-top:12px">Ele vai para a caixa de veludo. Isso é permanente.</p>');
   },
 
@@ -99961,12 +99967,12 @@ const Jogo = {
     const lendario = p.lendario;
     Estado.removerDoTime(uid);
     Estado.j.dinheiro += preco;
-    Estado.registrar(`Vendeu ${nomeExib(p)} por ${preco} ₽.`);
+    Estado.registrar(`Vendeu ${nomeExib(p)} por ${fmtDin(preco)} ₽.`);
     const avisos = Historia.aplicar({
       rep:{eixo:'ruim', delta: lendario ? 4 : 2, motivo:`Vendeu ${nomeExib(p)} numa banca de rua`},
       moral:-15
     });
-    avisos.unshift({tipo:'item', texto:`+${preco} ₽`});
+    avisos.unshift({tipo:'item', texto:`+${fmtDin(preco)} ₽`});
     UI.fecharModal();
     this.irPara(destino, avisos);
   }

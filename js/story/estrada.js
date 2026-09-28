@@ -212,7 +212,7 @@ const Estrada = {
         avisos.push({tipo:'item', texto:`Você venceu ${nomeDeLuta(t)}. +${v.toLocaleString('pt-BR')} ₽`});
         if (!r.vencidos.includes(atual.escalao)) r.vencidos.push(atual.escalao);
         r.vitorias++;
-        Estado.registrar(`Venceu ${nomeDeLuta(t)} em ${(LOCAIS[t.local] || {}).nome || t.local}.`);
+        Estado.registrar(`Venceu ${nomeDeLuta(t)} ${emLocal(t.local)}.`);
         /* quem tem número passa na primeira vez que perde pra você */
         if (t.numero && !r.numero && Estado.temPokenav()){
           r.numero = true;

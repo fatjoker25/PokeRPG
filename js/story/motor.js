@@ -176,7 +176,7 @@ const Historia = {
     }
     if (ef.dinheiro){
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro + ef.dinheiro);
-      Estado.registrar(`${ef.dinheiro>0?'+':''}${ef.dinheiro} ₽ (total: ${Estado.j.dinheiro} ₽)`);
+      Estado.registrar(`${ef.dinheiro>0?'+':''}${fmtDin(ef.dinheiro)} ₽ (total: ${fmtDin(Estado.j.dinheiro)} ₽)`);
     }
     if (ef.hp){
       if (ef.hp < 0){

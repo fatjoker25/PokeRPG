@@ -66,7 +66,7 @@ c2_ab_secando:{
 
 c2_ab_sem_troco:{
   texto:[
-    d=>`Você conta o dinheiro antes de entrar em Viridian, sentad{o|a} na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${d.jogador.dinheiro} ₽.`,
+    d=>`Você conta o dinheiro antes de entrar em Viridian, sentad{o|a} na guia, porque contar dinheiro na frente dos outros é uma coisa que a estrada ensina a não fazer. Dá ${fmtDin(d.jogador.dinheiro)} ₽.`,
     'Não é pouco de passar fome. É pouco de fazer conta: se comprar isso, não compra aquilo.',
     'Viridian é a primeira cidade de verdade que você vê, e cidade de verdade tem uma coisa que a sua não tinha — vitrine.',
     'Você passa por três delas no caminho do Centro e não entra em nenhuma, e isso custa um esforço que você não esperava que custasse.',

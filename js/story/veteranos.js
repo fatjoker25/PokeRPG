@@ -729,7 +729,7 @@ const VETERANOS = [
       fala('Greer', 'Sem desculpa. Nem minha, nem sua.')
     ],
     botao:'Entrar na arena',
-    luta:{veterano:'greer', acima:3},
+    luta:{veterano:'greer', acima:3}, quadra:true,
     fim:[
       'A arena demora pra entender que acabou. Depois ela entende de uma vez.',
       fala('Greer', 'Pronto. Agora ninguém fala mais nada.'),
@@ -911,7 +911,7 @@ const Veteranos = {
       return;
     }
     Batalha.iniciar(meu, time[0], {
-      tipo:'treinador', fuga:false, treinador:nome,
+      tipo:'treinador', fuga:false, treinador:nome, arena: atual.arena || null,
       timeInimigo: time.slice(1), revelarNatureza:true, erroIA:ERRO_IA_VETERANO,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
@@ -957,7 +957,8 @@ const Veteranos = {
         const nv = Math.min(85, Math.max(((LOCAIS[c.local] || {}).nivel || 20) + 2, nivelDeReferencia() + (L.acima || 0)));
         time = timeDeLinhas(L.times, nv, Math.min(L.times.length, this.tamanho(v) + 1), v.golpes, 70);
       }
-      this.iniciarLuta(nome, time, {id, tipo:'convite'});
+      /* luta marcada em arena (a exibição da Greer) é na quadra */
+      this.iniciarLuta(nome, time, {id, tipo:'convite', arena: c.quadra ? 'ginasio' : null});
       return UI.telaBatalha([`${nome} quer lutar!`]);
     }
     /* convite sem luta: acontece e pronto */

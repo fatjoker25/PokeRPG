@@ -207,7 +207,7 @@ const Cargos = {
     const avisos = [];
     const b = c.beneficios || {};
     if (b.status && Estado.subirStatus) { Estado.subirStatus(b.status); avisos.push({tipo:'rep', texto:b.status.toUpperCase() + ' +1.'}); }
-    if (b.renda) avisos.push({tipo:'item', texto:`${b.renda} ₽ por capítulo — quem tem dois postos recebe o maior, não os dois.`});
+    if (b.renda) avisos.push({tipo:'item', texto:`${fmtDin(b.renda)} ₽ por capítulo — quem tem dois postos recebe o maior, não os dois.`});
     if (b.loja) avisos.push({tipo:'info', texto:`Desconto de ${Math.round((1 - b.loja) * 100)}% em qualquer loja de Kanto.`});
     if (b.centro) avisos.push({tipo:'cura', texto:'Atendimento sem custo em qualquer Centro.'});
     if (c.aviso) avisos.push({tipo:'dano', texto:c.aviso});
@@ -254,7 +254,7 @@ const Cargos = {
     const avisos = [];
     if (b.renda){
       Estado.j.dinheiro += b.renda;
-      avisos.push({tipo:'item', texto:`+${b.renda} ₽ — o que os seus postos pagam por capítulo.`});
+      avisos.push({tipo:'item', texto:`+${fmtDin(b.renda)} ₽ — o que os seus postos pagam por capítulo.`});
     }
     if (b.moral){
       (Estado.dados.time || []).forEach(p => { if (!p.morto) p.moral = Math.min(100, (p.moral || 50) + b.moral); });

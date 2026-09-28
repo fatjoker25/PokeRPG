@@ -179,7 +179,7 @@ const UI = {
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
           ${this.esc(d.relogio.periodo || 'manhã')} do dia ${d.relogio.dia} ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${d.jogador.dinheiro} ₽</div>
+          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
       </div>
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
@@ -2549,9 +2549,9 @@ const UI = {
         <div class="carta ginasio">
           <div class="t"><span>Torneio Aberto</span><span class="fraco">${d.torneiosVencidos ? d.torneiosVencidos+'× campeão' : ''}</span></div>
           <div class="fraco" style="margin-bottom:8px">Chaveamento de oito, três rodadas, o ano inteiro. Qualquer um entra — e os adversários saem da sua própria história.</div>
-          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_TORNEIO[0].dinheiro} ₽</span></div>
-          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_TORNEIO[1].dinheiro} ₽</span></div>
-          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_TORNEIO[2].dinheiro} ₽</span></div>
+          <div class="linha"><span class="k">Quartas</span><span class="v">${PREMIO_TORNEIO[0].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Semifinal</span><span class="v">${PREMIO_TORNEIO[1].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
+          <div class="linha"><span class="k">Final</span><span class="v">${PREMIO_TORNEIO[2].dinheiro.toLocaleString('pt-BR')} ₽</span></div>
           <div class="linha"><span class="k">Nível dos adversários</span><span class="v">~${nivelDoJogador()}</span></div>
           <div class="rodape">
             <span class="fraco">${this.esc(tor.texto)}</span>
@@ -3195,7 +3195,7 @@ const UI = {
           <div class="cartao-sinais">${this.esc(Estado.descricaoFisica())}</div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
-          <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${j.dinheiro} ₽</span></div>
+          <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${fmtDin(j.dinheiro)} ₽</span></div>
           <div class="cartao-linha"><span class="k">Pokédex</span><span class="v mono">${c.catalogados} catalogados · ${c.vistos} vistos</span></div>
           <div class="cartao-linha"><span class="k">Time</span><span class="v">${d.time.length} em mãos${d.pc.length ? ' · ' + d.pc.length + ' no PC' : ''}</span></div>
           ${d.cemiterio.length ? `<div class="cartao-linha"><span class="k">Não voltaram</span><span class="v perdas">${d.cemiterio.length}</span></div>` : ''}
@@ -3429,7 +3429,7 @@ const UI = {
 
     const ben = b => {
       const L = [];
-      if (b.renda) L.push(`${b.renda} ₽ por capítulo`);
+      if (b.renda) L.push(`${fmtDin(b.renda)} ₽ por capítulo`);
       if (b.loja) L.push(`${Math.round((1 - b.loja) * 100)}% de desconto nas lojas`);
       if (b.centro) L.push('Centro Pokémon sem custo');
       if (b.status) L.push(b.status.charAt(0).toUpperCase() + b.status.slice(1) + ' +1');
@@ -3475,7 +3475,7 @@ const UI = {
     this.add(this.topo());
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
-        <div class="num">${c.valor} ₽</div>
+        <div class="num">${fmtDin(c.valor)} ₽</div>
         <div class="tit">${this.esc(c.nome)}</div>
         <div class="loc">${this.esc(c.linha)}</div>
       </div>
@@ -3800,7 +3800,7 @@ const UI = {
       <div class="linha"><span class="k">Água</span><span class="v">mar, rio, doca e ponte</span></div>
       <div class="linha"><span class="k">Rocha</span><span class="v">caverna · montanha · vulcão</span></div>
       <div class="linha"><span class="k">Piso duro</span><span class="v">cidade · ruína · cemitério</span></div>
-      <div class="linha"><span class="k">Quadra</span><span class="v">ginásio, Elite dos Quatro e torneio, em qualquer lugar</span></div>
+      <div class="linha"><span class="k">Quadra</span><span class="v">ginásio, Elite dos Quatro, torneio e Conferência, em qualquer lugar · a exibição marcada na arena central também</span></div>
       <p class="sussurro">Quadra ganha de tudo: se é desafio de líder, Elite ou torneio, o chão é piso oficial, não importa a cidade. Encontro livre no mapa usa o ambiente do ponto onde você está; batalha de cena usa o ambiente do capítulo. Uma cena pode fixar a arena quando a briga acontece num canto que o ambiente do capítulo não descreve.</p>
       <p class="sussurro">Praia e mar são o cenário de água; a ruína é o mato seco que tomou conta da usina; o cemitério é a pedra da torre na luz errada. A quadra é a única arena sem cenário fotografado: ela é desenhada, com arquibancada, refletor e o círculo do meio.</p>
 

@@ -264,7 +264,7 @@ const Descobertas = {
     if (lista.length && Dados.chance(soCidade ? 75 : 55)){
       const a = Dados.escolher(lista);
       Mundo.descobrir('achou_' + a.chave);
-      Estado.registrar(`Descobriu em ${local.nome}: ${a.texto[0].slice(0,60)}…`);
+      Estado.registrar(`Descobriu ${emLocal(id)}: ${a.texto[0].slice(0,60)}…`);
       return a;
     }
     if (!soCidade && Dados.chance(52)){
@@ -652,7 +652,7 @@ const Cidade = {
       if (Estado.j.dinheiro < preco){
         return [
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
-          {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${preco} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
+          {tipo:'dano', texto:`Você não tem número nenhum. Sem licença é ${fmtDin(preco)} ₽, e você tem ${Estado.j.dinheiro}. Ela não discute: só empurra a ficha de volta pelo balcão.`}
         ];
       }
       Estado.j.dinheiro -= preco;
@@ -662,7 +662,7 @@ const Cidade = {
       Estado.salvar('auto');
       return [
         {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
-        {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${preco} ₽, porque sem licença você é cliente e não treinador.`},
+        {tipo:'dano', texto:`Você não tem número nenhum. Ela atende do mesmo jeito — e cobra ${fmtDin(preco)} ₽, porque sem licença você é cliente e não treinador.`},
         {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
         {tipo:'info', texto:'Amanhece.'}, ...pac
       ];
@@ -705,7 +705,7 @@ const Cidade = {
     const din = Estado.j.dinheiro;
     const preco = PRECO_RELEMBRAR.toLocaleString('pt-BR');
     const topo = `<p class="narrativa" style="margin:0 0 10px">${UI.esc(R.ar)}</p>
-      <p class="sussurro" style="margin:0 0 12px">Cada golpe: ${preco} ₽. Você tem ${din.toLocaleString('pt-BR')} ₽.</p>
+      <p class="sussurro" style="margin:0 0 12px">Cada golpe: ${fmtDin(preco)} ₽. Você tem ${din.toLocaleString('pt-BR')} ₽.</p>
       ${recado ? `<p class="relembrar-recado">${UI.esc(recado)}</p>` : ''}`;
 
     /* primeiro: quem vai lembrar */
@@ -728,7 +728,7 @@ const Cidade = {
     UI.modal(`${nomeExib(p)} · Nv ${p.nivel}`, topo +
       (lista.length
         ? `<div class="aprender-lista">${linhas}</div>` +
-          (din < PRECO_RELEMBRAR ? `<p class="sussurro" style="margin-top:10px">Falta dinheiro: são ${preco} ₽ por golpe.</p>` : '')
+          (din < PRECO_RELEMBRAR ? `<p class="sussurro" style="margin-top:10px">Falta dinheiro: são ${fmtDin(preco)} ₽ por golpe.</p>` : '')
         : '<p class="nada">Não tem nada que ele tenha esquecido.</p>') +
       `<div style="margin-top:12px"><button class="btn" onclick="Cidade.relembrar()">Escolher outro</button></div>`);
   },
@@ -738,7 +738,7 @@ const Cidade = {
     if (!p || Estado.j.dinheiro < PRECO_RELEMBRAR) return this.relembrar(uid);
     const pagar = () => {
       Estado.j.dinheiro -= PRECO_RELEMBRAR;
-      Estado.registrar(`${nomeExib(p)} relembrou ${nome} (${PRECO_RELEMBRAR} ₽).`);
+      Estado.registrar(`${nomeExib(p)} relembrou ${nome} (${fmtDin(PRECO_RELEMBRAR)} ₽).`);
       Estado.salvar('auto');
     };
     if (p.golpes.length < 4){
@@ -779,7 +779,7 @@ const Cidade = {
     }
 
     const topo = `<div class="mochila-topo">
-      <span class="grana">${Estado.j.dinheiro} ₽</span>
+      <span class="grana">${fmtDin(Estado.j.dinheiro)} ₽</span>
       <span class="peso">${UI.esc(L.nome)}${sub ? ' · ' + sub : ''}</span>
     </div>
     ${abas}
@@ -867,7 +867,7 @@ const Cidade = {
       const caro = Estado.j.dinheiro < c.valor;
       return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
         <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
-          <span class="cargo-peso mono">${c.valor} ₽</span></div>
+          <span class="cargo-peso mono">${fmtDin(c.valor)} ₽</span></div>
         <div class="cargo-resumo">${UI.esc(c.linha)}</div>
         ${caro ? `<div class="cargo-motivo">Você tem ${Number(Estado.j.dinheiro).toLocaleString('pt-BR')} ₽.</div>`
                : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
@@ -885,9 +885,9 @@ const Cidade = {
        vai em ef.rep.notorio, que é onde mudarRep procura */
     const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.toLowerCase(),
                               {rep:{notorio:true}});
-    Estado.registrar(`Pagou ${c.valor} ₽ por: ${c.nome}.`);
+    Estado.registrar(`Pagou ${fmtDin(c.valor)} ₽ por: ${c.nome}.`);
     Estado.salvar('auto');
-    const avisos = [{tipo:'item', texto:`−${c.valor} ₽.`}];
+    const avisos = [{tipo:'item', texto:`−${fmtDin(c.valor)} ₽.`}];
     if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     UI.telaDoacao(c, avisos);
   },
