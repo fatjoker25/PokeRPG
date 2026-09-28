@@ -52317,6 +52317,8 @@ c15_ab_a_caminhonete:{
 },
 
 c15_ab_de_cracha:{
+  falante:'Lina',
+  vozes:['E','N'],
   texto:[
     'A ciclovia das rotas 14 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
     d=>{
@@ -52369,7 +52371,7 @@ c15_ab_copia_das_onze:{
     fala('Lina', 'Porque sem carimbo é fotocópia e com carimbo é documento.'),
     'Ela empilha, bate na mesa pra alinhar, e entrega.',
     fala('Lina', 'Eu trabalho aqui há sete anos e é a primeira vez que alguém vem pedir esse livro.'),
-    fala('Lina', 'Eu reli as onze ontem à noite, depois que você marcou de vir.'),
+    fala('Lina', 'Eu reli as onze enquanto a máquina esquentava.'),
     fala('Lina', 'Onze pessoas diferentes escreveram a mesma coisa e ninguém foi lá ver.', 'baixo')
   ],
   ef:{flag:['copia_das_onze_ocorrencias','reika_precisa_de_papel'],
@@ -52413,9 +52415,9 @@ c15_cabine:{
     '"Bom dia. Você é o quê?"',
     '"Como assim?"',
     '"Você é ciclista, pesquisador, turista ou treinador? São os quatro que passam aqui."',
-    '"Treinador."',
+    '"{Treinador|Treinadora}."',
     'Ele anota.',
-    '"Sete e dezoito. Treinador. Um."',
+    '"Sete e dezoito. {Treinador|Treinadora}. Um."',
     'E aí ele fecha o caderno e olha pra você por cima do óculos.',
     '"Você é {o terceiro|a terceira} em dezenove dias. Em setembro passaram quarenta e um por dia."'
   ],
@@ -52432,6 +52434,8 @@ c15_cabine:{
 },
 
 c15_porque_anota:{
+  falante:'Xavi',
+  vozes:['P','N','P','N','P','N','P','N','N'],
   texto:[
     '"Por que você anota?"',
     '"Porque eu e minha mulher fazemos levantamento de fauna dessas rotas desde mil novecentos e oitenta e sete."',
@@ -52462,6 +52466,8 @@ c15_porque_anota:{
 },
 
 c15_o_que_aconteceu:{
+  falante:'Xavi',
+  vozes:['P','N','P','N','N','N','P','N','P','N'],
   texto:[
     '"O que aconteceu com os bichos?"',
     'Ele não hesita.',
@@ -52500,7 +52506,7 @@ c15_os_ultimos_meses:{
     'Em outubro, o 15, e o 14 está pela metade.',
     'Não é um esvaziamento: é uma frente.',
     'Uma linha se movendo de sul pra norte a uma velocidade de mais ou menos um trecho por mês, empurrando tudo na frente dela.',
-    'Você pega o lápis do caderno e faz a conta na margem, do jeito que você aprendeu a fazer numa encosta olhando uma usina.',
+    d=>d.flags.mediu_o_ciclo ? 'Você pega o lápis do caderno e faz a conta na margem, do jeito que você aprendeu a fazer numa encosta olhando uma usina.' : 'Você pega o lápis do caderno e faz a conta na margem.',
     'Um trecho por mês. Faltam dois trechos até Fuchsia.',
     'Dois meses.'
   ],
@@ -52508,7 +52514,7 @@ c15_os_ultimos_meses:{
       rep:{eixo:'bom',delta:5,motivo:'Leu treze anos de tabela e achou a frente'},
       instabilidade:1,
       registrar:'A fauna some de sul para norte, um trecho por mês. Faltam dois trechos até Fuchsia.',
-      presagio:'Dois meses. Você já fez essa conta antes, numa encosta, e ela deu quarenta e um dias.'},
+      presagio:d=>d.flags.mediu_o_ciclo ? 'Dois meses. Você já fez essa conta antes, numa encosta, e ela deu quarenta e um dias.' : 'Dois meses. Conta de frente que avança não erra.'},
   escolhas:[
     {texto:'"E o que veio do sul?"', vai:'c15_o_que_veio_do_sul'},
     {texto:'Mostrar a conta pro Xavi.', vai:'c15_mostrou_a_conta'},
@@ -52635,6 +52641,8 @@ c15_o_terceiro:{
 },
 
 c15_o_trajeto:{
+  falante:'Xavi',
+  vozes:['P','P','N'],
   texto:[
     '"Qual é o trajeto deles?"',
     'Xavi tira do bolso um mapa da ciclovia dobrado em oito — um mapa turístico, desses que a prefeitura de Fuchsia imprime, com desenho de Doduo no canto.',
@@ -52721,7 +52729,7 @@ c15_mirante:{
 c15_quarta_marca:{
   texto:[
     'Você procura uma quarta.',
-    'Não tem motivo bom pra procurar. Você procura porque três é um número que sempre te deixa desconfiado desde que você contou doze tanques e onze ocupados.',
+    'Não tem motivo bom pra procurar. Você procura porque três é um número que ultimamente te deixa desconfiad{o|a}.',
     'Leva quarenta minutos, e você acha.',
     'Não na mureta. No chão, a quatro metros dela, no canto do mirante, embaixo do banco de concreto.',
     'É uma marca de bota.',
@@ -52877,6 +52885,8 @@ c15_segundo_bilhete:{
 },
 
 c15_nair:{
+  falante:'Ylva',
+  vozes:['P','N','P','N','N'],
   texto:[
     'Você acha a Ylva no trecho dezesseis, às dez e vinte da manhã, parada no acostamento com uma prancheta.',
     'Ela tem sessenta e três anos, chapéu de aba larga, calça de caminhada e uma bota que já foi reformada duas vezes.',
@@ -52968,6 +52978,8 @@ c15_nair_viu:{
 },
 
 c15_qual_parou:{
+  falante:'Ylva',
+  vozes:['P','N','P','N','N','N','P','N','N','N'],
   texto:[
     '"Qual deles parou?"',
     'Ela vira a prancheta e procura, e acha, porque ela desenha.',
@@ -53003,6 +53015,8 @@ c15_qual_parou:{
 },
 
 c15_contou_o_nome:{
+  falante:'Ylva',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Ele se chama Suicune."',
     'Ela para de andar.',
@@ -53058,6 +53072,8 @@ c15_nair_medo:{
 },
 
 c15_vilarejo:{
+  falante:'Dono do curral',
+  vozes:['N','N','P','N','N'],
   texto:[
     'O vilarejo da rota 17 tem dezenove casas, um armazém e um curral comunitário onde as famílias guardam os Tauros de tração.',
     'O curral está destruído.',
@@ -53084,6 +53100,8 @@ c15_vilarejo:{
 },
 
 c15_ajudou_o_curral:{
+  falante:'Dono do curral',
+  vozes:['P','N','N','N','N','P','N','N'],
   texto:[
     '"Posso ajudar a recolocar?"',
     'Ele para, olha você, olha a pá.',
@@ -53115,6 +53133,8 @@ c15_ajudou_o_curral:{
 },
 
 c15_estao_abrindo:{
+  falante:'Dono do curral',
+  vozes:['P','N','P','P','N','P','N'],
   texto:[
     '"Eles não estão roubando. Estão abrindo."',
     'Ele encosta a pá no mourão.',
@@ -53134,7 +53154,7 @@ c15_estao_abrindo:{
       rep:{eixo:'bom',delta:5,motivo:'Disse em voz alta a coisa que estava montando'},
       instabilidade:1,
       registrar:'Os três estão praticando abrir estruturas. O alvo é Cinnabar.',
-      presagio:'Eles estão treinando pra abrir. E você acabou de ler o caderno de quem escreveu "ele pediu para sair".'},
+      presagio:d=>d.flags.leu_o_fim_do_sete ? 'Eles estão treinando pra abrir. E você acabou de ler o caderno de quem escreveu "ele pediu pra sair".' : 'Eles estão treinando pra abrir. Falta saber o quê.'},
   escolhas:[
     {texto:'Acampar e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Ir até o mirante do trecho 18.', vai:'c15_mirante'},
@@ -53174,6 +53194,8 @@ c15_o_que_foi:{
 },
 
 c15_avisou_os_dois:{
+  falante:'Ylva',
+  vozes:['N','Xavi','N','Xavi','N','Xavi','Xavi','N'],
   texto:[
     'Você volta à cabine de pedágio às seis da tarde, quando Xavi e Ylva trocam de turno, e conta tudo junto pros dois.',
     'A frente de um trecho por mês. O circuito de trinta e quatro quilômetros. O mirante com as três marcas gastas. O curral aberto três vezes sem nada sair.',
@@ -53221,7 +53243,7 @@ c15_capinzal:{
       rep:{eixo:'bom',delta:4,motivo:'Entrou no capinzal e seguiu três quilômetros de capim deitado'},
       instabilidade:1,
       registrar:'Na trilha dos três há também a pegada de uma bota, no meio das outras.',
-      presagio:'No meio. Não atrás. Você já ouviu essa descrição em Cinnabar.'},
+      presagio:d=>d.flags.sabe_que_subiram ? 'No meio. Não atrás. Você já ouviu essa descrição em Cinnabar.' : 'No meio. Não atrás. Alguém anda com eles.'},
   escolhas:[
     {texto:'Seguir a trilha até o fim.', vai:'c15_seguiu_a_trilha'},
     {texto:'Medir e desenhar a pegada de bota.', vai:'c15_desenhou_a_bota'},
@@ -53284,7 +53306,7 @@ c15_sentou_no_quarto:{
   texto:[
     'Você senta no quarto lugar.',
     'A pedra encaixa nas suas costas, e encaixa bem, porque ela foi polida por anos de umas costas encostando.',
-    'Daqui, sentado, a vista é exatamente o mar e a ilha e mais nada: a falésia corta os dois lados, o capinzal corta atrás.',
+    'Daqui, sentad{o|a}, a vista é exatamente o mar e a ilha e mais nada: a falésia corta os dois lados, o capinzal corta atrás.',
     'É um lugar que só serve pra uma coisa.',
     'Você fica sentad{o|a} uma hora e quarenta.',
     'E na primeira meia hora você fica pensando em quem senta aqui, e na segunda meia hora você para de pensar em quem senta aqui e começa a só olhar a ilha, e na última quarenta você não está pensando em nada.',
@@ -53325,14 +53347,14 @@ c15_esperou_a_madrugada:{
   escolhas:[
     {texto:'Ficar parad{o|a} onde está.', vai:'c15_ficou'},
     {texto:'Sair do caminho e se esconder.', vai:'c15_escondeu'},
-    {texto:'Acender a lanterna. Como a Ylva fez.', vai:'c15_acendeu_a_lanterna'},
+    {texto:'Acender a lanterna e apontar pro chão.', vai:'c15_acendeu_a_lanterna'},
     {texto:'Correr.', vai:'c15_correu'}
   ]
 },
 
 c15_acendeu_a_lanterna:{
   texto:[
-    'Você acende a lanterna e aponta pro chão a três metros da sua frente, que é o que a Ylva fez, porque apontar na cara é ameaça e apontar no chão é aviso.',
+    d=>d.flags.conheceu_nair ? 'Você acende a lanterna e aponta pro chão a três metros da sua frente, que é o que a Ylva fez, porque apontar na cara é ameaça e apontar no chão é aviso.' : 'Você acende a lanterna e aponta pro chão a três metros da sua frente, porque apontar na cara é ameaça e apontar no chão é aviso.',
     'Quarenta segundos.',
     'Trinta.',
     'A dez segundos, o som muda: de galope pra galope mais curto, que é como bicho grande desacelera.',
@@ -53605,6 +53627,7 @@ c15_ate_amanhecer:{
 },
 
 c15_ja_fui_la:{
+  vozes:['P','P','P'],
   texto:[
     '"Eu já fui lá."',
     'Os três levantam ao mesmo tempo.',
@@ -53686,6 +53709,7 @@ c15_comida_caes:{
 },
 
 c15_falou:{
+  vozes:['P'],
   texto:[
     '"Vocês estão olhando pra Cinnabar."',
     'Você diz isso em voz alta, numa estrada vazia, às quatro da manhã, para três animais lendários.',
@@ -53815,7 +53839,7 @@ c15_capturou_cao:{
     'E aí os dois saem correndo — não para longe. Em volta.',
     'Um círculo de duzentos metros de raio, em velocidade máxima, em torno de você, e o chão vibra o círculo inteiro, e a única coisa que existe no mundo por noventa segundos é o som de duas coisas correndo em volta de você.',
     'Eles dão três voltas e vão embora.',
-    'Você acabou de ser marcado de um jeito que não sai.'
+    'Você acabou de ser marcad{o|a} de um jeito que não sai.'
   ],
   ef:{instabilidade:2, flag:'marcado_pelos_caes', moral:-15,
       registrar:'Capturou um Cão Lendário. Os outros dois deram três voltas em torno de você antes de sumir.',
@@ -53854,6 +53878,8 @@ c15_ficou_com_cao:{
 },
 
 c15_contou_pro_dono:{
+  falante:'Dono do curral',
+  vozes:['P','N'],
   texto:[
     '"Foi por minha causa."',
     'Ele para de cavar.',
@@ -53906,7 +53932,7 @@ c15_foram_embora:{
     'Eles vão embora em fila, no mesmo passo, e o som some antes deles sumirem de vista, o que é ao contrário do que deveria.',
     'A estrada leva quase uma hora pra voltar a ter bicho.',
     'Quando volta, um Rattata sai do capim, olha pra você, e some de novo.',
-    'E é a coisa mais normal que aconteceu no seu dia, e você fica absurdamente feli{o|a} de ver um Rattata.'
+    'E é a coisa mais normal que aconteceu no seu dia, e você fica absurdamente feliz de ver um Rattata.'
   ],
   ef:{flag:'caes_foram_embora', moral:5},
   escolhas:[
@@ -53918,6 +53944,8 @@ c15_foram_embora:{
 },
 
 c15_fim:{
+  falante:'o velho pescador',
+  vozes:['N','N'],
   texto:[
     d=>{
       if (d.flags.contou_pros_caes) return 'Você contou a três coisas do tamanho de um carro, numa ciclovia às seis da manhã, que o tanque está vazio faz quatro anos. E uma delas encostou a testa no seu ombro.';
