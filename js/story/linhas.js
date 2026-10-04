@@ -559,6 +559,508 @@ foragido:[
 ]
 };
 
+/* ============================================================
+   A SEGUNDA METADE — do capítulo 18 em diante
+   Cada linha continua de onde parou, e o que você escolheu nas
+   primeiras cenas muda o que as pessoas dela fazem agora.
+   ============================================================ */
+const MAIS_CENAS_DE_LINHA = {
+
+lei:[
+{
+  cap:18, titulo:'O depósito', quem:'o sargento de Viridian',
+  texto:d => [
+    `O depósito da polícia de Saffron guarda Pokémon apreendido até alguém decidir o que fazer com eles. O livro de entrada tem onze nomes este mês. A baia tem oito Pokémon.`,
+    fala('o sargento de Viridian', `Me mandaram conferir. Me mandaram conferir porque acham que fui eu.`, 'baixo'),
+    d.flags.ln_lei_copia
+      ? `Você lembra da foto no fundo do PokéNav, da folha que não devia estar grampeada. O nome do dono da criação de Ponyta aparece três vezes no livro de saída.`
+      : `No livro de saída, três retiradas com a mesma letra e nenhum carimbo.`
+  ],
+  escolhas:[
+    {texto:`Conferir o livro com ele, de noite, folha por folha.`,
+     ef:{flag:'ln_lei_investigou', rep:{eixo:'bom', delta:2, motivo:'Passou a noite conferindo o livro do depósito com quem estava sob suspeita'}},
+     resultado:[`Às três da manhã vocês têm as três assinaturas lado a lado. Nenhuma é a dele.`,
+       fala('o sargento de Viridian', `Obrigado. Não pelo que achou. Por ter vindo.`)]},
+    {texto:`Levar o que você sabe direto à delegada.`,
+     ef:{flag:'ln_lei_delegada', rep:{eixo:'bom', delta:1, motivo:'Levou à delegada o que viu no depósito'}},
+     resultado:[fala('a delegada de Saffron', `Você pulou o seu sargento.`), fala('a delegada de Saffron', `Fez certo. Ele ia te mandar fazer isso, e ia ficar com vergonha de mandar.`)]},
+    {texto:`Ficar fora disso.`,
+     ef:{flag:'ln_lei_fora'},
+     resultado:[fala('o sargento de Viridian', `Tá. Eu entendo.`), `Ele não entende, e os dois sabem.`]}
+  ]
+},
+{
+  cap:22, titulo:'A ordem', quem:'o sargento de Viridian',
+  texto:d => [
+    `Chega uma ordem com carimbo azul: desocupar o acampamento de treinadores sem licença que cresceu debaixo da ponte da rota. Até o meio-dia.`,
+    `São vinte e poucas barracas. Tem criança. Tem um Snorlax dormindo atravessado na entrada, que ninguém vai mover até meio-dia nenhum.`,
+    fala('o sargento de Viridian', d.flags.ln_lei_jeito ? `Você resolveu um Tauros na estrada sem regulamento nenhum. Resolve isso.` : `O regulamento diz como. Não diz com que cara.`)
+  ],
+  escolhas:[
+    {texto:`Cumprir a ordem, devagar, barraca por barraca, ajudando a carregar.`,
+     ef:{flag:'ln_lei_cumpriu', rep:{eixo:'bom', delta:1, motivo:'Cumpriu uma ordem dura com as mãos ocupadas ajudando'}},
+     resultado:[`Leva até as quatro da tarde. O meio-dia passou e ninguém reclamou, porque todo mundo estava carregando alguma coisa.`]},
+    {texto:`Avisar o acampamento na véspera, e chegar no horário com o lugar já vazio.`,
+     ef:{flag:'ln_lei_avisou', rep:{eixo:'bom', delta:2, motivo:'Avisou antes de cumprir a ordem'}},
+     resultado:[`De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, COLETE".`]},
+    {texto:`Devolver a ordem sem cumprir.`,
+     ef:{flag:'ln_lei_recusou_ordem', rep:{eixo:'ruim', delta:1, motivo:'Recusou uma ordem com carimbo azul'}},
+     resultado:[fala('o sargento de Viridian', `Isso vai pra sua ficha.`), fala('o sargento de Viridian', `Vai pra minha também. Eu assino embaixo de você.`, 'baixo')]}
+  ]
+},
+{
+  cap:26, titulo:'O apito', quem:'o sargento de Viridian',
+  texto:d => [
+    `Holt te espera na guarita de Viridian, a primeira, sem colete.`,
+    fala('o sargento de Viridian', `Trinta e um anos. Me aposentaram ontem, com bolo.`),
+    d.flags.ln_lei_investigou
+      ? fala('o sargento de Viridian', `Se não fosse aquela noite do livro, tinham me aposentado de outro jeito. Sem bolo.`, 'baixo')
+      : fala('o sargento de Viridian', `Ninguém nunca soube direito quem tirou os Pokémon do depósito. Eu fiquei com essa.`, 'baixo'),
+    `Ele estende o apito de metal, amassado de um lado.`
+  ],
+  escolhas:[
+    {texto:`Aceitar o apito.`,
+     ef:{flag:'ln_lei_apito', itens:{'Apito da patrulha':1}, rep:{eixo:'bom', delta:1, motivo:'Ficou com o apito de quem te ensinou a guarita'}},
+     resultado:[fala('o sargento de Viridian', `Não sopra à toa. Ele tem um som só, e todo mundo da patrulha conhece.`)]},
+    {texto:`Pedir que ele fique com o apito e venha tomar café na guarita de vez em quando.`,
+     ef:{flag:'ln_lei_cafe', moral:2},
+     resultado:[`Ele ri pela primeira vez desde que você conhece ele.`, fala('o sargento de Viridian', `Café de guarita é horrível. Eu venho.`, 'riso')]}
+  ]
+}
+],
+
+rocket:[
+{
+  cap:20, titulo:'O armazém', quem:'a voz do outro lado',
+  texto:d => [
+    `Te entregam um uniforme preto sem letra nenhuma e uma chave de armazém, perto do porto.`,
+    `Dentro, gaiola em cima de gaiola. Growlithe, Ponyta, um Lapras filhote numa caixa d'água rasa demais.`,
+    d.flags.ln_rocket_duplo
+      ? `O PokéNav vibra no bolso com o número do policial do café. Uma mensagem só: "Foto."`
+      : fala('a voz do outro lado', `Você vigia até amanhã. Ninguém entra, ninguém sai, nada sai.`, 'frio')
+  ],
+  escolhas:[
+    {texto:`Fotografar as gaiolas e mandar pro policial.`,
+     ef:{flag:'ln_rocket_foto', rep:{eixo:'bom', delta:2, motivo:'Mandou à polícia as fotos do armazém'}},
+     resultado:[`Doze fotos. O PokéNav mostra "entregue" e depois mais nada a noite inteira.`]},
+    {texto:`Trocar a água do Lapras e vigiar como mandaram.`,
+     ef:{flag:'ln_rocket_vigiou', dinheiro:1200, rep:{eixo:'ruim', delta:1, motivo:'Vigiou o armazém'}},
+     resultado:[`O Lapras te olha a noite inteira por cima da borda da caixa. De manhã, alguém leva todas as gaiolas e te paga na porta.`]},
+    {texto:`Abrir a caixa do Lapras e deixar ele ir pelo cais.`,
+     ef:{flag:'ln_rocket_lapras', moral:3, rep:{eixo:'bom', delta:2, motivo:'Soltou um Lapras filhote do armazém'}},
+     resultado:[`Ele escorrega da plataforma pra água sem barulho nenhum. Lá fora, mais longe do que devia dar pra ouvir, um canto curto.`]}
+  ]
+},
+{
+  cap:24, titulo:'A lista', quem:'a voz do outro lado',
+  texto:d => [
+    d.flags.ln_rocket_lapras || d.flags.ln_rocket_soltou
+      ? fala('a voz do outro lado', `Coisas somem quando você está de turno. A gente reparou.`, 'frio')
+      : fala('a voz do outro lado', `Você tem sido correto. Correto é raro.`),
+    fala('a voz do outro lado', `Queremos a lista de contatos do seu PokéNav. Só nome e número. É assim que a gente confia.`)
+  ],
+  escolhas:[
+    {texto:`Mandar a lista.`,
+     ef:{flag:'ln_rocket_lista', rep:{eixo:'ruim', delta:2, motivo:'Entregou a lista de contatos do PokéNav'}},
+     resultado:[`Você manda. Por uma semana, toda ligação que você recebe começa com um segundo de silêncio a mais.`]},
+    {texto:`Mandar uma lista inventada.`,
+     ef:{flag:'ln_rocket_lista_falsa'},
+     resultado:[`Quarenta nomes de rua de Celadon e números que não existem. A voz demora dois dias pra ligar de novo.`]},
+    {texto:`Recusar.`,
+     ef:{flag:'ln_rocket_recusou_lista', rep:{eixo:'bom', delta:1, motivo:'Recusou entregar quem confia em você'}},
+     resultado:[fala('a voz do outro lado', `Anotado.`), `É a terceira vez que você ouve essa palavra dela, e é a primeira que ela soa cansada.`]}
+  ]
+},
+{
+  cap:27, titulo:'A voz tem rosto', quem:'a voz do outro lado',
+  texto:d => [
+    `Uma mulher de casaco cinza se senta na sua frente na lanchonete da estação e pede dois cafés. Você reconhece a voz no "dois".`,
+    fala('a voz do outro lado', `Eu comecei como você. Contando gente no Centro de Vermilion.`),
+    fala('a voz do outro lado', `Vim ver se você vai terminar como eu.`, 'baixo')
+  ],
+  escolhas:[
+    {texto:`Perguntar por que ela nunca saiu.`,
+     ef:{flag:'ln_rocket_perguntou'},
+     resultado:[fala('a voz do outro lado', `Porque ninguém sai. A gente só para de ligar. Eu nunca parei.`), `Ela paga os dois cafés e deixa o dela inteiro.`]},
+    {texto:`Dizer que entregou tudo à polícia e que ela tem dez minutos.`,
+     ef:{flag:'ln_rocket_denunciou', rep:{eixo:'bom', delta:2, motivo:'Deu dez minutos a quem te recrutou'}, executar:d => { if (typeof Cargos !== 'undefined' && Cargos.tem('rocket')) Cargos.largar('rocket'); return []; }},
+     resultado:[`Ela olha o relógio de parede. Levanta. Na porta, se vira.`, fala('a voz do outro lado', `Dez minutos é mais do que me deram.`)]},
+    {texto:`Pedir um lugar mais alto.`,
+     ef:{flag:'ln_rocket_subiu', dinheiro:2500, rep:{eixo:'ruim', delta:3, motivo:'Pediu pra subir'}},
+     resultado:[fala('a voz do outro lado', `Então é assim que termina.`), `Ela empurra o café dela pra você e vai embora.`]}
+  ]
+}
+],
+
+ciencia:[
+{
+  cap:18, titulo:'O estagiário', quem:'o estagiário do laboratório',
+  texto:d => [
+    `O laboratório te manda um estagiário de catorze anos, com caderno novo e caneta de quatro cores.`,
+    fala('o estagiário do laboratório', `O Professor disse que você anota direito e que era pra eu aprender com você.`),
+    d.flags.ln_ciencia_nota_boa ? `Você lembra das sete voltas do Pidgey.` : `Você lembra que, da primeira vez, escreveu o que sentiu.`
+  ],
+  escolhas:[
+    {texto:`Ensinar a anotar hora e lugar antes de qualquer coisa.`,
+     ef:{flag:'ln_ciencia_ensinou', rep:{eixo:'bom', delta:1, motivo:'Ensinou um estagiário a anotar'}},
+     resultado:[`No fim da semana o caderno dele tem uma coluna de hora em cada página, e ele usa as quatro cores pra separar dia, tarde, noite e "não sei".`]},
+    {texto:`Deixar ele olhar sozinho e anotar do jeito dele.`,
+     ef:{flag:'ln_ciencia_soltou_estagiario', moral:1},
+     resultado:[`Ele volta com um desenho de Oddish andando de noite que ninguém no laboratório tinha. Sem hora. Com a lua.`]}
+  ]
+},
+{
+  cap:23, titulo:'A cor errada', quem:'Professor Oak',
+  texto:d => [
+    `No fundo de uma trilha você vê um Pokémon de uma cor que não é a dele. A Pokédex apita duas vezes e escreve: ANOMALIA CROMÁTICA.`,
+    `Ninguém mais viu. O lugar é pequeno, e quem souber vai vir com Pokébola.`,
+    fala('Professor Oak', d.flags.ln_ciencia_corrigiu ? `Você já me corrigiu uma vez. Me diz onde, que eu confio no seu mapa.` : `Se você souber de alguma coisa rara, me fala primeiro. Primeiro.`)
+  ],
+  escolhas:[
+    {texto:`Mandar o lugar só pro Professor, com pedido de sigilo.`,
+     ef:{flag:'ln_ciencia_anomalia_oak', rep:{eixo:'bom', delta:1, motivo:'Mandou o lugar da anomalia só pro laboratório'}},
+     resultado:[fala('Professor Oak', `Sigilo. Eu sei guardar. Guardo coisa sua faz tempo.`)]},
+    {texto:`Não contar pra ninguém. O lugar é dele.`,
+     ef:{flag:'ln_ciencia_anomalia_segredo', moral:2},
+     resultado:[`Você apaga o registro da Pokédex com o dedo, devagar, e anota no caderno só "trilha, de manhã, bonito".`]},
+    {texto:`Vender o lugar pra um colecionador.`,
+     ef:{flag:'ln_ciencia_anomalia_vendeu', dinheiro:3000, rep:{eixo:'ruim', delta:2, motivo:'Vendeu o lugar de uma anomalia cromática'}},
+     resultado:[`Três mil. Uma semana depois a trilha tem placa, guarita e fila.`]}
+  ]
+},
+{
+  cap:27, titulo:'A terceira edição', quem:'Professor Oak',
+  texto:d => [
+    fala('Professor Oak', `Terceira edição do livro. Tem um capítulo inteiro que é seu. Eu quero o seu nome na capa, do lado do meu.`),
+    d.flags.ln_ciencia_vendeu || d.flags.ln_ciencia_anomalia_vendeu
+      ? `Você pensa na metade da pele de Ekans que foi pro colecionador. Ou na trilha com fila. Ele não sabe. Ou sabe e não diz.`
+      : `Você pensa em todas as páginas de hora e lugar que ele leu sem reclamar.`
+  ],
+  escolhas:[
+    {texto:`Aceitar o nome na capa.`,
+     ef:{flag:'ln_ciencia_capa', rep:{eixo:'bom', delta:2, motivo:'Assinou um livro com o Professor Oak'}},
+     resultado:[fala('Professor Oak', `Ótimo. Agora você vai receber carta de gente dizendo que está errado. É a melhor parte.`, 'riso')]},
+    {texto:`Pedir que ponha o nome do seu time nos agradecimentos em vez do seu na capa.`,
+     ef:{flag:'ln_ciencia_agradecimentos', moral:3},
+     resultado:[d => { const p = (d.time || [])[0]; return p ? `Na última página, em letra pequena: "E ${nomeExib(p)}, que viu primeiro."` : 'Na última página, em letra pequena: "E ao time, que viu primeiro."'; }]}
+  ]
+}
+],
+
+imprensa:[
+{
+  cap:19, titulo:'A carta do advogado', quem:'a editora do Jornal',
+  texto:d => [
+    d.flags.ln_imprensa_publicou
+      ? `Chega um envelope com timbre de escritório: o criador da matéria processa o Jornal pela segunda parte.`
+      : `Chega um envelope sem timbre: a filha do criador manda uma foto dos Pokémon gordos e do cercado pintado de novo.`,
+    fala('a editora do Jornal', d.flags.ln_imprensa_publicou ? `A gente tem tudo documentado. Você foi lá ver, não foi?` : `Você segurou a matéria e ganhou uma foto. Às vezes é isso que se ganha.`)
+  ],
+  escolhas:[
+    {texto:d => d.flags.ln_imprensa_publicou ? `Depor a favor do Jornal, com o que você viu.` : `Pendurar a foto na parede da redação.`,
+     ef:{flag:'ln_imprensa_depos', rep:{eixo:'bom', delta:1, motivo:'Sustentou o que escreveu'}},
+     resultado:[d => d.flags.ln_imprensa_publicou ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.` : `Fica do lado da janela. A editora endireita o quadro toda vez que passa.`]},
+    {texto:`Escrever uma nota sobre o que mudou desde a matéria.`,
+     ef:{flag:'ln_imprensa_nota', rep:{eixo:'bom', delta:1, motivo:'Voltou à história pra contar o que mudou'}},
+     resultado:[`Quatro linhas na página seis. A filha do criador recorta e cola na porta da criação.`]}
+  ]
+},
+{
+  cap:23, titulo:'A coluna', quem:'a editora do Jornal',
+  texto:d => [
+    fala('a editora do Jornal', `Uma coluna toda sexta, com o seu nome em cima. Você escolhe o assunto. Escolhe direito, porque não dá pra trocar.`)
+  ],
+  escolhas:[
+    {texto:`A estrada: quem anda, quem para, quem não volta.`,
+     ef:{flag:'ln_imprensa_coluna_estrada', rep:{eixo:'bom', delta:1, motivo:'Ganhou coluna sobre a estrada'}},
+     resultado:[`Na terceira sexta chega carta de uma treinadora de Lavender dizendo que leu em voz alta pro time.`]},
+    {texto:`Os Centros: quem atende, quem espera, o que se ouve no balcão.`,
+     ef:{flag:'ln_imprensa_coluna_centros', rep:{eixo:'bom', delta:1, motivo:'Ganhou coluna sobre os Centros'}},
+     resultado:[`As enfermeiras de três cidades começam a guardar histórias pra te contar quando você passa.`]},
+    {texto:`Quem ninguém escuta.`,
+     ef:{flag:'ln_imprensa_coluna_ninguem', rep:{eixo:'bom', delta:2, motivo:'Ganhou coluna sobre quem ninguém escuta'}},
+     resultado:[fala('a editora do Jornal', `Essa vai dar trabalho.`), fala('a editora do Jornal', `Boa.`)]}
+  ]
+},
+{
+  cap:27, titulo:'Do outro lado da entrevista', quem:'a editora do Jornal',
+  texto:d => [
+    `Um jornal de Saffron quer fazer uma matéria sobre você. Mandaram um repórter de vinte anos com o gravador ainda na caixa.`,
+    fala('a editora do Jornal', `Agora você sabe como é. Seja melhor com ele do que foram com você.`)
+  ],
+  escolhas:[
+    {texto:`Dar a entrevista e responder tudo.`,
+     ef:{flag:'ln_imprensa_entrevista', rep:{eixo:'bom', delta:1, motivo:'Deu entrevista sem fugir de pergunta'}},
+     resultado:[`Ele esquece de ligar o gravador nos primeiros dez minutos. Você espera ele perceber e começa de novo.`]},
+    {texto:d => `Mandar ele falar com ${nomeCasa()} primeiro.`,
+     ef:{flag:'ln_imprensa_mandou_casa', moral:2},
+     resultado:[d => `A matéria sai com uma foto da porta da sua casa e uma frase de ${nomeCasa()} em destaque. Você nunca vai saber como ele conseguiu essa frase.`]}
+  ]
+}
+],
+
+criacao:[
+{
+  cap:18, titulo:'O primeiro laudo', quem:'a avaliadora da Associação',
+  texto:d => [
+    `Uma criadora de Celadon pede um laudo seu pra vender uma ninhada de Eevee. Paga bem e manda foto bonita.`,
+    fala('a avaliadora da Associação', d.flags.ln_criacao_selo ? `O carimbo é seu. Eu não assino por você.` : `Sem selo, a sua assinatura vale como opinião. Opinião boa vale muito.`)
+  ],
+  escolhas:[
+    {texto:`Ir até Celadon ver a ninhada antes de assinar.`,
+     ef:{flag:'ln_criacao_visitou', rep:{eixo:'bom', delta:2, motivo:'Foi ver a ninhada antes de assinar o laudo'}},
+     resultado:[`Os Eevee estão ótimos. A mãe deles também, o que é a parte que ninguém pergunta e que você pergunta.`]},
+    {texto:`Assinar pela foto.`,
+     ef:{flag:'ln_criacao_assinou_foto', dinheiro:900, rep:{eixo:'ruim', delta:1, motivo:'Assinou um laudo pela foto'}},
+     resultado:[`Novecentos. A foto é bonita mesmo.`]}
+  ]
+},
+{
+  cap:22, titulo:'O Growlithe da feira', quem:'a avaliadora da Associação',
+  texto:d => [
+    d.flags.ln_criacao_comprou
+      ? `O Growlithe que ficou com a enfermeira, lá da feira, cresceu. Ela te manda foto dele dormindo em cima do balcão do Centro.`
+      : `A feira daquela vez fechou. Ninguém sabe pra onde foram os filhotes.`,
+    fala('a avaliadora da Associação', `A Associação quer escrever uma regra pra feira. Querem que alguém que viu escreva.`)
+  ],
+  escolhas:[
+    {texto:`Escrever a regra: nenhum Pokémon vendido em caixa de fruta, nunca.`,
+     ef:{flag:'ln_criacao_regra', rep:{eixo:'bom', delta:2, motivo:'Escreveu a regra da feira'}},
+     resultado:[`A regra tem uma linha. Leva quatro reuniões pra ser aprovada exatamente como você escreveu.`]},
+    {texto:`Dizer que regra não resolve, e ir pra feira toda semana.`,
+     ef:{flag:'ln_criacao_feira', moral:2, rep:{eixo:'bom', delta:1, motivo:'Passou a ir à feira toda semana'}},
+     resultado:[`Na terceira semana os vendedores já guardam as caixas de fruta quando te veem chegando.`]}
+  ]
+},
+{
+  cap:26, titulo:'A prancheta', quem:'a avaliadora da Associação',
+  texto:d => [
+    fala('a avaliadora da Associação', `Vou parar. O joelho não agacha mais na altura de um Pokémon, e avaliadora que não agacha avalia errado.`),
+    `Ela estende a prancheta. O elástico está velho e a prancheta, lisa de tanto uso.`
+  ],
+  escolhas:[
+    {texto:`Aceitar a prancheta e o lugar dela.`,
+     ef:{flag:'ln_criacao_prancheta', itens:{'Prancheta da Associação':1}, rep:{eixo:'bom', delta:2, motivo:'Ficou com a prancheta da avaliadora'}},
+     resultado:[d => fala('a avaliadora da Associação', d.flags.ln_criacao_mostrou ? `Você me mostrou o problema primeiro, lá no começo. Faz isso com todo mundo.` : `Agacha. Sempre. O resto você aprende.`)]},
+    {texto:`Recusar e indicar alguém que você viu trabalhar.`,
+     ef:{flag:'ln_criacao_indicou', rep:{eixo:'bom', delta:1, motivo:'Indicou outra pessoa pro lugar da avaliadora'}},
+     resultado:[`Ela anota o nome que você deu e sublinha duas vezes.`]}
+  ]
+}
+],
+
+liga:[
+{
+  cap:28, titulo:'O último dia de aula', quem:'a coordenadora da quadra',
+  texto:d => [
+    `Na quadra de treino, um rapaz de licença nova na mão te espera com um Butterfree no ombro.`,
+    d.flags.ln_liga_cuidar
+      ? `É o menino do Caterpie, da turma da manhã. Ele ainda vê se a folha está fresca antes de deixar o Butterfree comer.`
+      : `É o menino do Caterpie, da turma da manhã. Ele ainda grita "superefetivo" quando acerta.`,
+    fala('a coordenadora da quadra', `Ele pediu pra lutar com você antes de sair em jornada. Só isso.`)
+  ],
+  escolhas:[
+    {texto:`Lutar a sério.`,
+     ef:{flag:'ln_liga_serio', rep:{eixo:'bom', delta:1, motivo:'Lutou a sério com quem aprendeu com você'}},
+     resultado:[`Ele perde em três turnos e levanta a mão pra apertar a sua antes de recolher o Butterfree.`]},
+    {texto:`Deixar ele ganhar.`,
+     ef:{flag:'ln_liga_deixou_ganhar', moral:2},
+     resultado:[`Ele percebe. Não fala nada. Na saída da quadra ele se vira e diz que da próxima vez você não vai precisar deixar.`]}
+  ]
+}
+],
+
+heroi:[
+{
+  cap:18, titulo:'O cansaço', quem:'a mulher do mercado',
+  texto:d => [
+    `Você chega na cidade com o corpo pesado e o time dormindo no cinto. Na entrada já tem alguém esperando, de novo.`,
+    fala('a mulher do mercado', `Desculpa. Eu sei que você acabou de chegar. É o telhado do mercado, e chove hoje à noite.`)
+  ],
+  escolhas:[
+    {texto:`Subir no telhado assim mesmo.`,
+     ef:{flag:'ln_heroi_telhado', rep:{eixo:'bom', delta:1, motivo:'Consertou um telhado cansado'}},
+     resultado:[`Você termina com chuva caindo nas costas. Dorme no chão do mercado, em cima de uma pilha de saco de ração.`]},
+    {texto:`Dizer que hoje não, e indicar quem pode ajudar.`,
+     ef:{flag:'ln_heroi_descansou', moral:2},
+     resultado:[`Ela não fica brava. Você dorme dez horas, e acorda sem saber se fez certo. Fez.`]}
+  ]
+},
+{
+  cap:22, titulo:'A placa', quem:'o prefeito da vila',
+  texto:d => [
+    `A vila quer pregar uma placa com o seu nome na praça. Já mandaram fazer. Só falta você deixar.`,
+    fala('o prefeito da vila', d.flags.ln_heroi_tudo ? `Você fez três coisas num dia aqui. A gente não esquece.` : `Você ajudou quando ninguém ajudava. A gente não esquece.`)
+  ],
+  escolhas:[
+    {texto:`Deixar.`,
+     ef:{flag:'ln_heroi_placa', rep:{eixo:'bom', delta:1, motivo:'Ganhou uma placa na praça'}},
+     resultado:[`A placa é de bronze e a letra é torta. Dois dias depois tem uma flor do lado dela, e ninguém admite ter posto.`]},
+    {texto:`Pedir que a placa tenha o nome do seu time, não o seu.`,
+     ef:{flag:'ln_heroi_placa_time', moral:3},
+     resultado:[d => { const p = (d.time || [])[0]; return p ? `A placa sai com o nome de ${nomeExib(p)} em letra maior que a dos outros. Você não pediu isso. Você também não reclama.` : 'A placa sai com o nome de cada um do time.'; }]}
+  ]
+},
+{
+  cap:26, titulo:'Quem ajuda quem', quem:'o menino do Caterpie',
+  texto:d => [
+    `O seu Pokémon cai num barranco na beira da rota, e você não alcança.`,
+    `Alguém alcança: um rapaz com um Butterfree, que desce pela raiz como quem já fez isso muitas vezes.`,
+    fala('o menino do Caterpie', d.flags.ln_heroi_conselho ? `Faz o que tiver na sua frente. Depois o próximo. Você que falou.` : `Seja melhor. Você que falou. Tô tentando.`)
+  ],
+  escolhas:[
+    {texto:`Agradecer e deixar ele te ajudar a subir.`,
+     ef:{flag:'ln_heroi_ajudado', moral:3, rep:{eixo:'bom', delta:1, motivo:'Deixou alguém te ajudar'}},
+     resultado:[`É estranho ser {o|a} de baixo do barranco. É bom também.`]}
+  ]
+}
+],
+
+mercenario:[
+{
+  cap:18, titulo:'O caderninho preto', quem:'o intermediário',
+  texto:d => [
+    d.flags.ln_merc_mentiu
+      ? fala('o intermediário', `O treinador velho da casa sem cortina. Você disse que não achou. Eu fui lá. Ele estava em casa.`)
+      : fala('o intermediário', `Serviço novo. Tem gente que vai querer Moon Stone sem passar pela loja. Você leva.`),
+    `O caderninho preto está aberto na mesa, numa página com o seu nome.`
+  ],
+  escolhas:[
+    {texto:d => d.flags.ln_merc_mentiu ? `Dizer a verdade: você não quis cobrar.` : `Aceitar o serviço.`,
+     ef:{flag:'ln_merc_verdade', dinheiro:600},
+     resultado:[d => d.flags.ln_merc_mentiu ? fala('o intermediário', `Eu sei. Ele pagou do mesmo jeito, pra mim, no dia seguinte. E pediu pra te agradecer.`) : `As pedras chegam embrulhadas em jornal velho. Ninguém confere.`]},
+    {texto:`Fechar o caderninho e ir embora.`,
+     ef:{flag:'ln_merc_fechou'},
+     resultado:[fala('o intermediário', `Fecha. Eu tenho cópia.`)]}
+  ]
+},
+{
+  cap:22, titulo:'Concorrência', quem:'o intermediário',
+  texto:d => [
+    `Tem um mercenário novo na região cobrando metade do seu preço e fazendo o serviço pela metade.`,
+    fala('o intermediário', d.flags.ln_merc_dobro ? `Você cobra o dobro desde o primeiro dia. Agora alguém cobra a metade. O mercado te achou.` : `Alguém está cobrando metade. O mercado é assim.`)
+  ],
+  escolhas:[
+    {texto:`Baixar o preço.`,
+     ef:{flag:'ln_merc_baixou', dinheiro:-300},
+     resultado:[`Você perde dinheiro por três semanas e o outro desiste na quarta.`]},
+    {texto:`Propor sociedade ao novato.`,
+     ef:{flag:'ln_merc_socio', dinheiro:800},
+     resultado:[`Ele aceita na hora. Tem dezessete anos e um Machop que obedece melhor do que ele.`]},
+    {texto:`Deixar o serviço ruim dele falar por si.`,
+     ef:{flag:'ln_merc_esperou'},
+     resultado:[`Em um mês, os clientes voltam pedindo desculpa. Você cobra o mesmo de antes.`]}
+  ]
+},
+{
+  cap:26, titulo:'O chapéu', quem:'o intermediário',
+  texto:d => [
+    fala('o intermediário', `Vou parar. Comprei uma casa na praia com uma rede e um Slowpoke que veio junto com a casa.`),
+    `Ele empurra o caderninho preto pela mesa.`,
+    fala('o intermediário', d.flags.ln_merc_recusou ? `Você é a única pessoa que recusou o serviço grande. É por isso que eu tô te dando isso.` : `Tem tudo aqui. Quem paga, quanto, e quem não paga.`)
+  ],
+  escolhas:[
+    {texto:`Ficar com o caderninho.`,
+     ef:{flag:'ln_merc_caderninho', dinheiro:1500, rep:{eixo:'ruim', delta:1, motivo:'Herdou o caderninho do intermediário'}},
+     resultado:[`É mais pesado do que parece. Tem nome de gente que você cumprimenta na rua.`]},
+    {texto:`Queimar o caderninho na frente dele.`,
+     ef:{flag:'ln_merc_queimou', rep:{eixo:'bom', delta:2, motivo:'Queimou o caderninho preto'}},
+     resultado:[`Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.`, fala('o intermediário', `Fica melhor em você.`, 'riso')]}
+  ]
+}
+],
+
+foragido:[
+{
+  cap:18, titulo:'A carta na pensão', quem:'a dona da pensão',
+  texto:d => [
+    fala('a dona da pensão', `Chegou isso. Pro seu nome de verdade, que eu não sabia que era esse.`),
+    d => `A letra no envelope é de ${nomeCasa()}.`
+  ],
+  escolhas:[
+    {texto:`Ler e responder na mesma noite.`,
+     ef:{flag:'ln_foragido_respondeu', moral:2},
+     resultado:[d => `Três páginas. Você não conta onde está. Conta de cada um do time, pelo nome, e pergunta se a porta de casa ainda emperra.`]},
+    {texto:`Guardar a carta fechada.`,
+     ef:{flag:'ln_foragido_guardou'},
+     resultado:[`Ela fica no fundo da mochila, ainda colada, junto do caderno.`]}
+  ]
+},
+{
+  cap:22, titulo:'O guarda que sabe', quem:'o guarda da ponte',
+  texto:d => [
+    `Na ponte, um guarda pede a sua licença, lê, olha pra você, lê de novo.`,
+    fala('o guarda da ponte', d.flags.ln_foragido_encarou ? `Me contaram de alguém que não pagou pra ninguém ficar quieto numa estação. Parecido com você.` : `Tem um papel com um desenho parecido com você no posto.`)
+  ],
+  escolhas:[
+    {texto:`Esperar o que ele vai fazer.`,
+     ef:{flag:'ln_foragido_esperou'},
+     resultado:[`Ele devolve a licença.`, fala('o guarda da ponte', `O desenho errou o nariz.`), `Você passa.`]},
+    {texto:`Contar a sua versão, inteira.`,
+     ef:{flag:'ln_foragido_contou_guarda', rep:{eixo:'bom', delta:1, motivo:'Contou a sua versão a um guarda'}},
+     resultado:[`Ele escuta em pé, sem anotar. No fim, tira o papel do bolso, dobra em quatro e joga no rio.`]}
+  ]
+},
+{
+  cap:26, titulo:'O depoimento', quem:'a dona da pensão',
+  texto:d => [
+    `Abre uma chance de você depor e acabar com o papel do poste de uma vez. Precisa ir até Saffron, entrar pela porta da frente e contar tudo.`,
+    fala('a dona da pensão', d.flags.ln_foragido_contou ? `Eu ouvi a sua história no primeiro dia. Ela aguenta um juiz.` : `Eu nunca perguntei a sua história. Agora acho que você devia contar.`)
+  ],
+  escolhas:[
+    {texto:`Ir a Saffron e depor.`,
+     ef:{flag:'ln_foragido_depos', rep:{eixo:'bom', delta:3, motivo:'Entrou pela porta da frente e contou tudo'}},
+     resultado:[`Leva a manhã inteira. Na saída, o poste da esquina está sem papel nenhum.`]},
+    {texto:`Continuar como está.`,
+     ef:{flag:'ln_foragido_continuou'},
+     resultado:[`Você paga mais um mês adiantado na pensão. A dona pega o dinheiro e, dessa vez, não conta.`]}
+  ]
+}
+]
+};
+for (const k in MAIS_CENAS_DE_LINHA) (CENAS_DE_LINHA[k] = CENAS_DE_LINHA[k] || []).push(...MAIS_CENAS_DE_LINHA[k]);
+
+/* O epílogo fecha a sua linha: uma frase por lado onde você viveu
+   alguma coisa, a partir do que você escolheu lá. */
+function rodapeDaLinha(d){
+  const f = d.flags || {}, L = [];
+  const viveu = k => ((d.linhas || {})[k] || 0) > 0;
+  if (viveu('lei')){
+    if (f.ln_lei_apito) L.push('O apito de Holt fica numa gaveta. Você nunca soprou. Uma vez quase soprou.');
+    else if (f.ln_lei_cafe) L.push('Holt aparece na guarita de Viridian toda terça, reclama do café e fica duas horas.');
+    else if (f.ln_lei_corrigiu) L.push('Em algum arquivo de Viridian tem um relatório com uma frase riscada à mão, e a letra é a sua.');
+    else L.push('O colete da Patrulha ficou dobrado num armário, e você sabe exatamente qual.');
+  }
+  if (viveu('rocket')){
+    if (f.ln_rocket_denunciou || f.ln_rocket_foto) L.push('Tem um armazém no porto de Vermilion com o portão soldado. Quem soldou sabe quem mandou as fotos.');
+    else if (f.ln_rocket_subiu || f.ln_rocket_dentro) L.push('O aparelho do envelope ainda toca às vezes. Você ainda atende.');
+    else L.push('Um número sem nome continua salvo no seu PokéNav. Você nunca apagou e nunca ligou.');
+  }
+  if (viveu('ciencia')){
+    if (f.ln_ciencia_capa) L.push('A terceira edição do livro do Professor tem dois nomes na capa. O seu está escrito menor, por escolha sua.');
+    else if (f.ln_ciencia_agradecimentos) L.push('Na última página do livro do Professor, em letra pequena, tem o nome do seu time.');
+    else L.push('O laboratório de Pallet guarda uma caixa com as suas notas de campo. Ninguém jogou nenhuma fora.');
+  }
+  if (viveu('imprensa')){
+    if (f.ln_imprensa_coluna_ninguem) L.push('A sua coluna de sexta continua saindo. Ainda dá trabalho.');
+    else if (f.ln_imprensa_segurou) L.push('Uma criação perto de Fuchsia tem uma matéria de quatro linhas colada na porta.');
+    else L.push('Hazel Moss guarda o seu crachá numa gaveta da redação, com bilhete ou sem.');
+  }
+  if (viveu('criacao')){
+    if (f.ln_criacao_prancheta) L.push('A prancheta da Associação agora é sua. O elástico é novo. A prancheta, não.');
+    else if (f.ln_criacao_regra) L.push('Na feira de Kanto não se vende Pokémon em caixa de fruta. A regra tem uma linha, e é sua.');
+    else L.push('Os Pokémon que passaram pela sua mão não sabem o que é selo. Eles sabem quem agachava pra falar com eles.');
+  }
+  if (viveu('liga')){
+    if (f.ln_liga_regra) L.push('O torneio de Kanto confere item na pata desde o dia em que você mandou tirar um.');
+    else L.push('A cadeira da quadra de treino ainda tem o seu agasalho pendurado.');
+  }
+  if (viveu('heroi')) L.push(f.ln_heroi_ajudado ? 'Um rapaz com um Butterfree ajuda gente na estrada. Ele diz que aprendeu com alguém.' : 'Na entrada de uma cidade pequena, de vez em quando, alguém ainda espera por você.');
+  if (viveu('mercenario')) L.push(f.ln_merc_queimou ? 'Um chapéu velho fica pendurado no prego da porta. Às vezes você usa.' : 'O caderninho preto continua aberto em alguma mesa, numa página com o seu nome.');
+  if (viveu('foragido')) L.push(f.ln_foragido_depos ? 'O poste da esquina da pensão está sem papel faz tempo. Dona Briar ainda não pergunta nome.' : 'Você ainda escolhe a rua de trás sem pensar, mesmo quando não precisa mais.');
+  return L;
+}
+
 /* Quando você sai de uma linha, ela reage. Uma vez por saída. */
 const VIRADAS_DE_LINHA = {
   lei:{quem:'o sargento de Viridian', texto:d => [

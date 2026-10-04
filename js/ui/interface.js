@@ -219,7 +219,7 @@ const UI = {
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
           <span class="relogio">${this.esc(Relogio.texto())}</span> ·
-          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
+          HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
       </div>
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
@@ -854,6 +854,9 @@ const UI = {
     if (cena.teste){
       const t = cena.teste;
       c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste()">Rolar ${this.esc(t.nomeStatus||t.status)} — 1d10 + ${Estado.j.status[t.status]} (dificuldade ${t.dificuldade})</button>`));
+      /* Forçar o destino, do lado do treinador: 1 de Vontade, +2 no d10 */
+      if (Estado.vontadeJogador() > 0)
+        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste(true)">Rolar gastando 1 de Vontade — 1d10 + ${Estado.j.status[t.status]} + 2</button>`));
       return;
     }
     if (cena.sacrificio){
@@ -1053,7 +1056,7 @@ const UI = {
           <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
           <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
           ${this.barraHP(p)}
-          ${meu ? this.linhaVontade(p) : ''}
+          ${(meu || Batalha.vontadeIA) ? this.linhaVontade(p) : ''}
           ${meu ? this.barraExp(p) : ''}
           <div class="meta">${nat}</div>
           <div class="meta">${ficha}</div>
@@ -4067,6 +4070,12 @@ const UI = {
       <div class="linha"><span class="k">Aguentar a dor</span><span class="v">ignora uma penalidade de dor até o fim da luta · não ocupa o turno (Power Through the Pain)</span></div>
       <div class="linha"><span class="k">Zerou</span><span class="v">quem gasta toda a Vontade numa luta desmaia quando ela acaba</span></div>
       <div class="linha"><span class="k">Recupera</span><span class="v">toda no Centro e em casa · +2 num dia de treino · +1 por vitória, pra quem está de pé</span></div>
+      <div class="linha"><span class="k">Do outro lado</span><span class="v">líder, Elite dos Quatro, rival, torneio e veterano também têm Vontade (Instinto + 2) e gastam: Esquivar quando estão com metade do HP ou menos, Forçar o destino quando o golpe é impreciso ou a dor já pesa · nunca o último ponto · selvagem e treinador de estrada não gastam</span></div>
+      <h3>Vontade do treinador</h3>
+      <div class="linha"><span class="k">Quanto</span><span class="v">2 + Resistência · aparece no topo da tela, do lado do HP</span></div>
+      <div class="linha"><span class="k">Gastar</span><span class="v">num teste de cena, rolar gastando 1 de Vontade: +2 no total do d10 (o Forçar o destino do livro, levado pro d10)</span></div>
+      <div class="linha"><span class="k">Zerou</span><span class="v">quando a cena acaba você desaba e perde metade do HP que tinha (no livro, desmaia; aqui isso não vira fim de jogo)</span></div>
+      <div class="linha"><span class="k">Recupera</span><span class="v">toda no Centro e em casa · +2 num dia de treino</span></div>
 
       <h3>Atributos do Pokémon</h3>
       <div class="linha"><span class="k">Força · FOR</span><span class="v">dano físico · precisão de golpe de impacto</span></div>
@@ -4168,6 +4177,7 @@ const UI = {
       <div class="linha"><span class="k">A sua linha</span><span class="v">o lado em que você está: o posto de maior peso (Patrulha e Polícia são a Lei, o envelope sem timbre é a Rocket, o Laboratório é a Ciência, o Jornal, a Associação de Criadores, a Liga) ou, sem posto, a via (herói, mercenário, foragido)</span></div>
       <div class="linha"><span class="k">Cenas da linha</span><span class="v">na virada de capítulo, quem é do seu lado te acha: no máximo uma cena por capítulo, em ordem, e cada uma lembra o que você escolheu na anterior · mexem em reputação, dinheiro e moral como qualquer escolha</span></div>
       <div class="linha"><span class="k">Trocar de linha</span><span class="v">a linha que você deixou reage uma vez · a nova começa do começo</span></div>
+      <div class="linha"><span class="k">No fim</span><span class="v">o epílogo fecha cada linha em que você viveu alguma coisa, pelo que você escolheu nela</span></div>
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
       <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
 

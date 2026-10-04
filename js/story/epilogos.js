@@ -280,6 +280,9 @@ function rodapeDaJornada(){
   if ((d.cargos || []).length >= 3)
     L.push(`Você acumulou ${d.cargos.length} credenciais diferentes, o que em Kanto é quase uma acusação.`);
 
+  /* a sua linha fecha aqui (js/story/linhas.js) */
+  if (typeof rodapeDaLinha === 'function') rodapeDaLinha(d).forEach(l => L.push(l));
+
   const presos = Estado.lendariosCapturados();
   if (presos.length) L.push('E tem uma Pokébola no seu cinto que nunca devia ter sido lacrada, e você sabe disso desde o dia em que lacrou.');
   return L;

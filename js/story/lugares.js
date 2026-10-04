@@ -682,6 +682,7 @@ const Cidade = {
       Estado.j.dinheiro -= preco;
       d.time.forEach(curarTotal);
       Estado.curarJogador(10);
+      Estado.recuperarVontadeJogador();
       const pac = this.retirarPacotes();
       Estado.salvar('auto');
       return [
@@ -693,6 +694,7 @@ const Cidade = {
     }
     d.time.forEach(curarTotal);
     Estado.curarJogador(10);
+    Estado.recuperarVontadeJogador();
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
     return [
@@ -727,6 +729,7 @@ const Cidade = {
     Mundo.passar(2);
     d.time.forEach(curarTotal);
     Estado.curarJogador(30);
+    Estado.recuperarVontadeJogador();
     const n = nomeCasa();
     const frases = [
       `${n} põe mais um prato na mesa sem perguntar se você vai ficar.`,

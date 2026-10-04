@@ -427,7 +427,16 @@ sucesso na precisão), Arriscar (rerrola um dado que falhou), Esquivar
 por turno, armado antes do golpe (`Batalha.gastarVontade`, válido em
 `vontadeDoTurno()`) — e Aguentar a dor (`Batalha.semDor`, a luta inteira).
 Quem zera numa luta desmaia no `encerrar`. `curarTotal` enche, treino
-devolve 2, vitória 1. O dado é **d6 com sucesso em 4+**; o pedido de
+devolve 2, vitória 1. **Adversário de peso também gasta**: batalha com
+`vontadeIA:true` (líder, Elite, rival, torneio, veterano e revanche de
+líder/veterano) chama `iaGastarVontade` no começo do turno — Esquivar na
+metade do HP, Forçar o destino com golpe impreciso ou dor, nunca o último
+ponto; o gasto vive em `vontadeInimigo` só naquele turno. Os simuladores
+fazem o jogador gastar com o mesmo critério: medido assim, líder caiu
+4 pontos na média (80% → 76%) e veterano ficou na mesma faixa.
+**O treinador também tem Vontade** (`Estado.vontadeJogador()`, 2 +
+Resistência): nos testes de cena, "rolar gastando 1 de Vontade" dá +2 no
+d10; zerar custa metade do HP (adaptação: no livro desmaia). O dado é **d6 com sucesso em 4+**; o pedido de
 trocar por d10 com sucesso em 6+ já apareceu e foi recusado, porque isso
 é Storyteller, não Pokérole. Toda parada vai pro log com as faces
 (`facesDe(r)`).
@@ -539,8 +548,8 @@ se for à Conferência, de `conferencia:true`. A final da Conferência é sempre
 `node ferramentas/sim-veteranos.js` mede cada um de passagem (lugar + 2),
 treinado (+6) e preparado (+10), os convites e as rodadas da Conferência. O
 jogador simulado é ingênuo — time sorteado da área, sem item nem troca
-— então o número é o piso: de passagem fica entre 2% e 55%, preparado
-entre 22% e 85%. Espécie cuja evolução é por troca com item (Onix,
+— então o número é o piso: de passagem fica entre 0% e 58%, preparado
+entre 10% e 90% (com veterano e jogador gastando Vontade). Espécie cuja evolução é por troca com item (Onix,
 Scyther) entra na lista **pela forma final** (208, 212): `finalDaLinha`
 não acha o Steelix saindo do Onix.
 
@@ -594,7 +603,10 @@ Vocativo neutro ("cara") fica como está.
 peso (`LINHA_DO_CARGO`) ou, sem posto, a via (`LINHA_DA_VIA`). Na virada
 de capítulo (`entrarNoCapitulo`), `Linhas.talvez` mostra a próxima cena
 da linha (`CENAS_DE_LINHA`, em ordem, `cap` mínimo, uma por capítulo),
-e cada cena lê as flags `ln_*` da anterior. Trocou de linha: a antiga
+e cada cena lê as flags `ln_*` da anterior (seis por linha, do capítulo 3
+ao 28; a segunda metade está em `MAIS_CENAS_DE_LINHA`). A frase que abre
+o capítulo (`avisosDeRumo`) sai da linha, e o epílogo fecha cada linha
+vivida em `rodapeDaLinha`. Trocou de linha: a antiga
 reage uma vez (`VIRADAS_DE_LINHA`) e a nova começa do começo. Linha nova
 ou cena nova entra ali; quem acompanha a linha inteira tem nome em
 `NOMES_FIXOS` (Holt, Hazel Moss, Sra. Linden, Coordenadora Maple, Dona

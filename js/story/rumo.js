@@ -122,6 +122,37 @@ const LINHAS_DA_VIA = {
     'Alguém da cidade pergunta se você é "{o|a} da Pokédex". Você é.',
     'Primeiro você olha o que vive aqui. Depois o resto.'
   ],
+  /* as linhas de posto (js/story/linhas.js) */
+  lei:[
+    'Você repara primeiro na guarita, depois em quem está de pé na esquina sem motivo. O colete ensina a olhar nessa ordem.',
+    'Um guarda da cidade te cumprimenta com dois dedos na aba do boné. Entre gente de patrulha é assim.',
+    'Alguém pergunta onde fica a delegacia. Você sabe, e sabe também qual porta fica aberta de noite.'
+  ],
+  rocket:[
+    'O aparelho do envelope está no bolso de dentro. Pesa mais do que o tamanho dele.',
+    'Você conta as pessoas no Centro sem querer. Virou costume, e o costume tem dono.',
+    'Na parede da estação tem uma letra R pichada pequena, perto do chão. Você não tinha reparado nessas antes.'
+  ],
+  ciencia:[
+    'Você anota a hora e o lugar antes de qualquer outra coisa. O caderno já tem mais página escrita do que em branco.',
+    'Alguém da cidade pergunta se você é "{o|a} da Pokédex". Você é.',
+    'Primeiro você olha o que vive aqui. Depois o resto.'
+  ],
+  imprensa:[
+    'Você lê a placa da entrada inteira, inclusive a parte pequena. Jornal ensina isso.',
+    'Tem uma banca de jornal na praça, e o Jornal de Fuchsia está pendurado de cabeça pra baixo. Você endireita.',
+    'Alguém conta uma história na fila do Centro e você já está pensando no título.'
+  ],
+  criacao:[
+    'Você olha primeiro o pelo, a pata e o olho de cada Pokémon da rua. Depois a cara do dono.',
+    'Tem um cercado na saída da cidade, e você já sabe, de longe, que a água está velha.',
+    'Uma criança te mostra o Pokémon dela, e você se agacha antes de olhar. É assim que se olha.'
+  ],
+  liga:[
+    'Duas crianças te reconhecem do agasalho da Liga e param de brincar pra ver você passar.',
+    'Você confere sem querer o que cada treinador da rua leva na pata do Pokémon.',
+    'A Liga tem cartaz em toda cidade. Você conhece quem fez a foto.'
+  ],
   neutro:[
     'Mais uma cidade, mais uma estrada. Ninguém sabe ainda o que esperar de você.',
     'Você ainda é só mais {um treinador|uma treinadora} de passagem. Isso tem as suas vantagens.'
@@ -141,11 +172,14 @@ function avisosDeRumo(){
   if (!d || d.capitulo < 2) return [];
   const r = rumoDe(d);
   const via = d.via || 'neutro';
+  /* a linha manda (posto de maior peso, ou a via); sem linha, a via */
+  const lin = (typeof linhaAtual === 'function' && linhaAtual(d)) || null;
+  const chave = lin && LINHAS_DA_VIA[lin] ? lin : (via === 'pesquisador' ? 'pesquisador' : via);
   const out = [];
   if (d.viaAnterior && d.viaAnterior !== via && !d.flags['viu_virada_' + via]){
     d.flags['viu_virada_' + via] = true;
     out.push({tipo:'info', texto:`O jeito que te olham mudou. Antes você era ${NOME_VIA[d.viaAnterior] || 'outra coisa'}; agora é ${NOME_VIA[via] || via}.`});
-  } else out.push({tipo:'info', texto:Dados.escolher(LINHAS_DA_VIA[via] || LINHAS_DA_VIA.neutro)});
+  } else out.push({tipo:'info', texto:Dados.escolher(LINHAS_DA_VIA[chave] || LINHAS_DA_VIA.neutro)});
   const m = LINHAS_DA_META[r.meta];
   if (m) out.push({tipo:'eco', texto:m(d)});
   const g = bonusDeGosto();

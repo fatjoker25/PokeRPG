@@ -61,14 +61,20 @@ function timeJogador(nivel, localId){
   }
   return t;
 }
+/* líder gasta Vontade como no jogo; treinador de estrada e selvagem não */
+let VONTADE_IA = false;
 /* luta inteira, os dois lados pela IA do jogo */
 function lutar(meuTime, inimigos, tipo){
   d.time = meuTime;
-  Batalha.iniciar(meuTime[0], inimigos[0], {tipo, fuga:false, treinador:'Sim', timeInimigo:inimigos.slice(1)});
+  Batalha.iniciar(meuTime[0], inimigos[0], {tipo, fuga:false, treinador:'Sim', timeInimigo:inimigos.slice(1), vontadeIA:VONTADE_IA});
   let turnos = 0, r;
   while (Batalha.ativo && turnos < 80){
     turnos++;
     const i = escolhaJogador();
+    /* o jogador simulado também tem Vontade e gasta com o mesmo critério
+       da IA: esquiva na metade do HP. Sem isso, a medição só via um lado
+       gastando. */
+    { const a = Batalha.aliado; if (a && a.hp * 2 <= a.hpMax && vontadeDe(a) >= 2 && Dados.chance(45) && Batalha.podeGastarVontade('esquiva')) Batalha.gastarVontade('esquiva'); }
     r = Batalha.acao({tipo:'golpe', indice:i});
     if (r && r.precisaTrocar) Batalha.acao({tipo:'trocar', uid:r.reservas[0]});
     if (Batalha.fase === 'ameaca') break;
@@ -117,6 +123,7 @@ for (const loc of ['rota1','floresta','monte_lua','rota24','rota9','rota8','rota
   const s = medir(() => [sortearSelvagem(L.ambiente, L.nivel, loc)], L.nivel + 2, loc, 'selvagem');
   console.log(`selvagem ${loc.padEnd(12)} nv ${L.nivel}: vitória ${s.vit}% · HP que sobra ${s.hp}%`);
 }
+VONTADE_IA = true;
 for (const g of GINASIOS){
   for (const n of [0, 2, 4, 6]){
     d.insignias = INS.slice(0, n);

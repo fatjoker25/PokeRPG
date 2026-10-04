@@ -64,10 +64,14 @@ function timeJogador(nivel, localId, tam){
 function lutar(meuTime, fazInimigos, tipo){
   d.time = meuTime;
   const inimigos = fazInimigos();
-  Batalha.iniciar(meuTime[0], inimigos[0], {tipo, fuga:false, treinador:'Sim', timeInimigo:inimigos.slice(1), erroIA:ERRO_IA_VETERANO});
+  Batalha.iniciar(meuTime[0], inimigos[0], {tipo, fuga:false, treinador:'Sim', timeInimigo:inimigos.slice(1), erroIA:ERRO_IA_VETERANO, vontadeIA:true});
   let turnos = 0, r;
   while (Batalha.ativo && turnos < 120){
     turnos++;
+    /* o jogador simulado também tem Vontade e gasta com o mesmo critério
+       da IA: esquiva na metade do HP. Sem isso, a medição só via um lado
+       gastando. */
+    { const a = Batalha.aliado; if (a && a.hp * 2 <= a.hpMax && vontadeDe(a) >= 2 && Dados.chance(45) && Batalha.podeGastarVontade('esquiva')) Batalha.gastarVontade('esquiva'); }
     r = Batalha.acao({tipo:'golpe', indice:escolhaJogador()});
     if (r && r.precisaTrocar) Batalha.acao({tipo:'trocar', uid:r.reservas[0]});
     if (Batalha.fase === 'ameaca') break;

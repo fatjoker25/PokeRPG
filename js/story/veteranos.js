@@ -912,7 +912,7 @@ const Veteranos = {
     }
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome, arena: atual.arena || null,
-      timeInimigo: time.slice(1), revelarNatureza:true, erroIA:ERRO_IA_VETERANO,
+      timeInimigo: time.slice(1), revelarNatureza:true, erroIA:ERRO_IA_VETERANO, vontadeIA:true,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
   },

@@ -64,6 +64,9 @@ const Batalha = {
        quem gastou valem a luta inteira */
     this.vontadeArmada = null; this.vontadeTurno = -1;
     this.semDor = {}; this.gastaram = {};
+    /* adversário de peso também gasta Vontade (líder, Elite, veterano,
+       rival, torneio); o gasto dele vale só o turno em que é feito */
+    this.vontadeIA = !!opts.vontadeIA; this.vontadeInimigo = null;
     this.aoTerminar = opts.aoTerminar || null;
     this.contexto = opts.contexto || null;
     /* Cena pode fixar a arena quando o ambiente do capítulo não
@@ -243,6 +246,24 @@ const Batalha = {
     else { this.vontadeArmada = uso; this.vontadeTurno = this.turno + 1; }
     return `${nomeVisivel(a)} gasta 1 de Vontade — ${USOS_DE_VONTADE[uso]}. (${a.vontade}/${vontadeMaxDe(a)})`;
   },
+  /* A IA gasta Vontade com critério e nunca o último ponto: esquiva
+     quando está na metade do HP; força o destino quando o golpe é
+     impreciso ou a dor já tira sucesso. */
+  iaGastarVontade(iGolpe){
+    this.vontadeInimigo = null;
+    const p = this.inimigo;
+    if (!this.vontadeIA || !p || !estaVivo(p) || this.fase !== 'normal' || vontadeDe(p) < 2) return;
+    const nome = (p.golpes[iGolpe] || {}).nome;
+    const g = GOLPES[nome] || {}, pr = PR_GOLPE[nome] || {};
+    let uso = null;
+    if (p.hp * 2 <= p.hpMax && Dados.chance(45)) uso = 'esquiva';
+    else if (g.c !== 'status' && ((pr.r || 0) >= 1 || this.dor(p) >= 1) && Dados.chance(50)) uso = 'destino';
+    if (!uso) return;
+    p.vontade = vontadeDe(p) - 1;
+    this.vontadeInimigo = uso;
+    this.ev('status', `${nomeVisivel(p)} gasta 1 de Vontade — ${USOS_DE_VONTADE[uso]}. (${p.vontade}/${vontadeMaxDe(p)})`);
+  },
+
   /* Esquivar: Destreza + Evasão contra os sucessos da precisão do outro.
      Empatou, saiu da frente. */
   esquivou(p, est, contra){
@@ -359,14 +380,14 @@ const Batalha = {
     res.rolou = true; res.k = k;
     /* Vontade armada pra este turno: Arriscar rerrola um dado que
        falhou; Forçar o destino soma um sucesso */
-    const usoV = atk === this.aliado ? this.vontadeDoTurno() : null;
+    const usoV = atk === this.aliado ? this.vontadeDoTurno() : (atk === this.inimigo ? this.vontadeInimigo : null);
     let arriscou = '';
     if (usoV === 'chances' && r.suc < r.n){
       const rr = Dados.pool(1, 'Arriscar (Vontade)');
       arriscou = ` · Arriscar: um dado que falhou volta ${rr.faces[0]}`;
       r.suc += rr.suc;
     }
-    if (usoV === 'chances' || usoV === 'destino') this.vontadeArmada = null;
+    if (usoV === 'chances' || usoV === 'destino'){ if (atk === this.aliado) this.vontadeArmada = null; else this.vontadeInimigo = null; }
     const destino = usoV === 'destino' ? 1 : 0;
     const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
     const passo = (estAtk.precisao || 0) - eva;
@@ -639,6 +660,11 @@ const Batalha = {
     if (!souAliado && defensor === this.aliado && this.vontadeDoTurno() === 'esquiva'
         && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
       this.vontadeArmada = null;
+      if (this.esquivou(defensor, estDef, prec.sucessos)){ estAtk.cortes = 0; return; }
+    }
+    if (souAliado && defensor === this.inimigo && this.vontadeInimigo === 'esquiva'
+        && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
+      this.vontadeInimigo = null;
       if (this.esquivou(defensor, estDef, prec.sucessos)){ estAtk.cortes = 0; return; }
     }
 
@@ -1246,6 +1272,7 @@ const Batalha = {
                            : Dados.chance(50);
 
     this.ev('turno', `— Turno ${this.turno} — (Iniciativa ${vJ} vs ${vI})`);
+    this.iaGastarVontade(iIA);
 
     const agirJogador = () => {
       if (!this.ativo || this.aliado.hp <= 0 || this.inimigo.hp <= 0) return;
@@ -1301,6 +1328,7 @@ const Batalha = {
   turnoInimigoSozinho(){
     if (this.inimigo.hp > 0 && this.aliado.hp > 0){
       const i = this.iaEscolher(this.inimigo, this.aliado, this.estInimigo, this.estAliado);
+      this.iaGastarVontade(i);
       if (this.podeAgir(this.inimigo, this.estInimigo, false, (this.inimigo.golpes[i] || {}).nome)){
         this.usarGolpe(this.inimigo, this.aliado, this.estInimigo, this.estAliado, i, false);
       }

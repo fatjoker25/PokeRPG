@@ -306,16 +306,20 @@ const Jogo = {
   },
 
   /* ---------- teste de perícia ---------- */
-  rolarTeste(){
+  rolarTeste(comVontade){
     const t = Historia.cenaAtual.teste;
     UI.limparDados();
+    /* Vontade do treinador: 1 ponto, +2 no total (Forçar o destino) */
+    const vont = comVontade && Estado.vontadeJogador() > 0 ? 2 : 0;
+    if (vont) Estado.j.vontade = Estado.vontadeJogador() - 1;
+    const valor = Estado.j.status[t.status] + vont;
     /* o cinto conta: quem está com você pesa no teste, e quem te
        entende pesa mais ainda */
     const eixo = t.eixo || (typeof EIXO_DO_STATUS !== 'undefined' ? EIXO_DO_STATUS[t.status] : null);
-    const r = eixo ? Dados.testeComTime(Estado.j.status[t.status], t.dificuldade, t.nomeStatus, eixo)
-                   : Dados.teste(Estado.j.status[t.status], t.dificuldade, t.nomeStatus);
+    const r = eixo ? Dados.testeComTime(valor, t.dificuldade, t.nomeStatus, eixo)
+                   : Dados.teste(valor, t.dificuldade, t.nomeStatus);
     const destino = t[r.grau] || t.falha || t.parcial;
-    const soma = `1d10(${r.dado}) + ${t.nomeStatus||t.status}(${r.bonus})`
+    const soma = `1d10(${r.dado}) + ${t.nomeStatus||t.status}(${r.bonus - vont})` + (vont ? ' + 2 (Vontade)' : '')
                + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '')
                + (r.gosto ? (r.gosto > 0 ? ' + 1 (gosto)' : ' − 1 (desgosto)') : '');
     const aviso = [{tipo: (r.grau==='falha'?'dano':r.grau==='critico'?'rep':'info'),
@@ -325,6 +329,12 @@ const Jogo = {
     const jaFalou = r.linhaTime && r.afinidade && r.afinidade.nome && r.linhaTime.includes(r.afinidade.nome);
     if (r.afinidade && r.afinidade.linha && !jaFalou) aviso.push({tipo:'natureza', texto:r.afinidade.linha});
     if (r.linhaTime) aviso.push({tipo:'natureza', texto:r.linhaTime});
+    /* gastou a última: o corpo cobra quando a cena acaba */
+    if (vont && Estado.vontadeJogador() === 0){
+      const perde = Math.floor(Estado.j.hp / 2);
+      Estado.j.hp -= perde;
+      aviso.push({tipo:'dano', texto:`Você gastou toda a vontade que tinha. Quando a cena acaba, as pernas não seguram e você senta no chão até o mundo parar de girar. −${perde} HP.`});
+    }
     this.irPara(destino, aviso);
   },
 
@@ -879,6 +889,7 @@ const Jogo = {
   hubCentro(){
     Estado.dados.time.forEach(curarTotal);
     Estado.curarJogador(8);
+    Estado.recuperarVontadeJogador();
     Estado.dados.relogio.dia++;
     Estado.salvar('auto');
     UI.telaHub();
@@ -951,7 +962,7 @@ const Jogo = {
     Estado.registrar(`Desafiou ${g.lider} no Ginásio de ${g.cidade}.`);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
-      tipo:'treinador', fuga:false, treinador:`Líder ${g.lider}`,
+      tipo:'treinador', fuga:false, treinador:`Líder ${g.lider}`, vontadeIA:true,
       timeInimigo: time.slice(1),
       revelarNatureza: true,   // líder e nome grande falam do próprio time
       introducao: `${g.lider} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
@@ -1166,6 +1177,7 @@ const Jogo = {
       tipo:'treinador', fuga:false, treinador:nome,
       timeInimigo: time.slice(1), revelarNatureza:true,
       erroIA: c.veterano ? ERRO_IA_VETERANO : undefined,
+      vontadeIA: !!(c.veterano || c.ginasio),
       arena: c.ginasio ? 'ginasio' : undefined,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
@@ -1211,7 +1223,7 @@ const Jogo = {
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
-      tipo:'treinador', fuga:false, treinador:nome,
+      tipo:'treinador', fuga:false, treinador:nome, vontadeIA:true,
       timeInimigo: time.slice(1),
       introducao: `${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
@@ -1344,7 +1356,7 @@ const Jogo = {
     this.cenaBatalha = null; this.ginasioAtual = null; this.torneioAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
-      tipo:'treinador', fuga:false,
+      tipo:'treinador', fuga:false, vontadeIA:true,
       treinador: e.campeao ? 'Red' : alvo.nome,
       timeInimigo: time.slice(1),
       revelarNatureza: true,   // líder e nome grande falam do próprio time
@@ -1453,7 +1465,7 @@ const Jogo = {
     this.cenaBatalha = null; this.ginasioAtual = null; this.eliteAtual = null;
     UI.limparDados();
     Batalha.iniciar(meu, adv.time[0], {
-      tipo:'treinador', fuga:false, treinador: adv.nome,
+      tipo:'treinador', fuga:false, treinador: adv.nome, vontadeIA:true,
       timeInimigo: adv.time.slice(1),
       revelarNatureza: true,   // líder e nome grande falam do próprio time
       introducao: `${adv.nome} enviou ${nomeVisivel(adv.time[0])} (Nv ${adv.time[0].nivel})!`

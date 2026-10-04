@@ -1039,6 +1039,18 @@ const Estado = {
 
   /* ---------- JOGADOR ---------- */
   hpMaxJogador(){ return 30 + (this.j.status.resistencia - 1) * 2; },
+  /* Vontade do treinador (Will): 2 + Resistência. Gasta-se nos testes de
+     d10 das cenas; save antigo começa cheio. */
+  vontadeMaxJogador(){ return 2 + ((this.j && this.j.status && this.j.status.resistencia) || 1); },
+  vontadeJogador(){
+    if (!this.j) return 0;
+    if (this.j.vontade == null) this.j.vontade = this.vontadeMaxJogador();
+    return Math.max(0, Math.min(this.j.vontade, this.vontadeMaxJogador()));
+  },
+  recuperarVontadeJogador(n){
+    if (!this.j) return;
+    this.j.vontade = Math.min(this.vontadeMaxJogador(), this.vontadeJogador() + (n == null ? 99 : n));
+  },
   ferir(qtd, causa){
     this.j.hp = Math.max(0, this.j.hp - qtd);
     if (causa) this.j.ferimentos.push({causa, qtd, cap:this.dados.capitulo});
