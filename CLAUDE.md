@@ -286,6 +286,13 @@ Bola aberta, brilho e inclinação não têm arquivo: os endereços de
 `ball_open` e `sparkle` dão 404 na origem, e `tilt_left`/`tilt_right` são
 byte a byte a bola fechada. A aberta é a fechada cortada ao meio, a
 inclinação é rotação e o brilho é desenhado.
+Ela abre **pela costura**: as duas cascas se afastam na vertical, na
+mesma medida (`ABRE_CASCA`), e o clarão sai da fenda do meio; nada gira.
+Capturou, a ficha de lá ganha `.capturado` (corpo e sombra somem e não
+voltam no redesenho) e a bola pisca três vezes e some. Quem mede a arte
+pra máscara branca espera ela carregar (`Efeitos.spritePronto`): GIF
+sem carregar tem o tamanho do quadro inteiro, e a máscara saía gigante.
+A sombra (`.arte::after`) some com HP zero (`.sem-sombra`, `.caido`).
 
 ## O turno é encenado
 `Batalha.ev()` põe em **todo** evento uma foto dos dois lutadores e do
