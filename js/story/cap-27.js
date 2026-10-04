@@ -125,7 +125,7 @@ c27_ab_sozinho_mesmo:{
     'Você está a mil e duzentos metros de altitude numa mata fechada e não tem um único som.'
   ],
   ef:{flag:'a_noite_sem_som', hp:-2,
-      registrar:'Passou a primeira noite da subida sozinho. De madrugada, silêncio absoluto.',
+      registrar:'Passou a primeira noite da subida sozinh{o|a}. De madrugada, silêncio absoluto.',
       presagio:'Mata sem som é mata que se calou. E mata se cala por alguma coisa.'},
   escolhas:[
     {texto:'Levantar e seguir de madrugada mesmo.', vai:'c22_primeiro_dia'},

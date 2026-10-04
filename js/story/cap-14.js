@@ -1086,7 +1086,7 @@ c14_dentro_da_casa:{
   ef:{flag:['entrou_na_casa_do_fuji','viu_a_polaroid'],
       rep:{eixo:'bom',delta:1,motivo:'Entrou pela janela'},
       moral:-15, instabilidade:1,
-      registrar:'Entrou sozinho na casa do Fuji e achou a Polaroid do tanque.'},
+      registrar:'Entrou sozinh{o|a} na casa do Fuji e achou a Polaroid do tanque.'},
   escolhas:[
     {texto:'Ler o jornal aberto na mesa.', vai:'c14_o_jornal'},
     {texto:'Pegar a Polaroid.', vai:'c14_pegou_a_polaroid'},
@@ -2040,7 +2040,7 @@ c14_olhar:{
       rep:{eixo:'bom',delta:2,motivo:'Encontrou um lendário e não tentou pegá-lo'},
       moral:8,
       flag:'respeitou_moltres',
-      registrar:'Ficou onze minutos parado olhando Moltres e ele foi embora.',
+      registrar:'Ficou onze minutos parad{o|a} olhando Moltres e ele foi embora.',
       presagio:'Ele olhou o abrigo. Ele viu tudo o que aconteceu ali em quatro anos.'},
   escolhas:[
     {texto:'Procurar sinal de quem esteve aqui.', vai:'c14_procurou_sinal', cond:d=>!!d.flags.sabe_que_subiram || !!d.flags.fuji_saiu},

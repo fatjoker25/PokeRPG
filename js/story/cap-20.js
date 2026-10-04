@@ -292,7 +292,7 @@ c20_item_quatro:{
     'Discutem logística: quantos veículos, quantos dias, em que ordem por espécie, e se liberam de manhã ou no fim da tarde.',
     'Uma voz de homem defende o fim da tarde, porque de manhã tem movimento na estrada e unidade nova não sabe atravessar.',
     'Ninguém ri disso. Todo mundo anota.',
-    'E é aí que você entende uma coisa que não estava preparado para entender: eles estão tentando fazer direito.',
+    'E é aí que você entende uma coisa que não estava preparad{o|a} para entender: eles estão tentando fazer direito.',
     'Não bem. Direito. São coisas diferentes e ninguém nessa sala confunde as duas.'
   ],
   ef:{instabilidade:1, moral:-2,

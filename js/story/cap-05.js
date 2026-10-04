@@ -795,7 +795,7 @@ c5_esperou_ivone:{
     'Seis horas é muito tempo.',
     'Você come tudo o que tinha. Cochila duas vezes e acorda as duas assustad{o|a}. Conta pedras. Conversa com o seu time em voz alta, o que é uma coisa que você começou a fazer essa semana sem perceber.',
     'Em algum momento, duas pessoas saem da caverna, olham a trilha, e voltam pra dentro.',
-    d=>d.flags.esperou_do_posto ? 'Elas não te veem, porque você está deitad{o|a} numa saliência quatro metros acima da boca. Isso foi inteligente.' : 'Elas te veem sentado na pedra. Uma delas acena. Você acena de volta, porque o que mais dá pra fazer.',
+    d=>d.flags.esperou_do_posto ? 'Elas não te veem, porque você está deitad{o|a} numa saliência quatro metros acima da boca. Isso foi inteligente.' : 'Elas te veem sentad{o|a} na pedra. Uma delas acena. Você acena de volta, porque o que mais dá pra fazer.',
     'A Dra. Cordell chega às sete e quarenta da noite com quatro pessoas, dois carros e uma câmera de ombro.',
     'A primeira coisa que ela faz é olhar a sua cara e perguntar se você comeu.'
   ],
@@ -1201,7 +1201,7 @@ c5_derrubou_escada:{
 c5_entrada:{
   texto:[
     'Você entra.',
-    'Três passos lá dentro e a sua respiração vira a coisa mais alta do mundo. A caverna engole o som de um jeito que você não estava preparado: você fala uma palavra pra testar e a palavra não volta.',
+    'Três passos lá dentro e a sua respiração vira a coisa mais alta do mundo. A caverna engole o som de um jeito que você não estava preparad{o|a}: você fala uma palavra pra testar e a palavra não volta.',
     d=>{
       const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
       if (!l.pode) return 'A nove metros a luz do dia acaba. Você não tem luz nenhuma: anda com a mão na parede, contando os passos, com o pé tateando antes de pisar.';
@@ -1809,7 +1809,7 @@ c5_aceitou:{
     'A mão dele é seca e firme. O acordo leva onze segundos.',
     'Você carrega duas caixas até um caminhão numa estrada de terra a quatro quilômetros da caverna. Não olha dentro. Isso é a parte importante: não olhar dentro.',
     'O dinheiro é bom. É bom de um jeito que assusta, porque você percebe na hora quanto tempo ia levar pra juntar isso ganhando batalha.',
-    'No caminho de volta, sozinho, você faz a conta. Quatro caixas por semana dá vinte e quatro mil por mês. Você faz essa conta três vezes.'
+    'No caminho de volta, sozinh{o|a}, você faz a conta. Quatro caixas por semana dá vinte e quatro mil por mês. Você faz essa conta três vezes.'
   ],
   ef:{dinheiro:4000, itens:{'Ultra Ball':2},
       rep:{eixo:'ruim',delta:3,motivo:'Trabalhou para traficantes de Pokémon'},

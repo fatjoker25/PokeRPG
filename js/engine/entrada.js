@@ -181,7 +181,7 @@ const Entrada = {
                'Não aparece nenhuma revelação. Aparece detalhe, que é melhor e mais lento.'],
         rep:null},
       furtividade:{
-        texto:['Você se mexe devagar, encostado, sem fazer barulho.',
+        texto:['Você se mexe devagar, encostad{o|a}, sem fazer barulho.',
                'Funciona. Por enquanto funciona.'],
         rep:null},
       furto:{

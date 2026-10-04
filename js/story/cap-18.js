@@ -622,7 +622,7 @@ c18_so_estatuto:{
   texto:[
     'Ela imprime o estatuto: dezoito páginas.',
     'Você paga, dobra em três e enfia no bolso de dentro.',
-    'Na calçada, encostado no poste, você lê o Art. 1º e o Art. 4º e fecha os olhos por um instante.',
+    'Na calçada, encostad{o|a} no poste, você lê o Art. 1º e o Art. 4º e fecha os olhos por um instante.',
     'Dezoito páginas te dizem o que eles são. Cento e vinte e duas páginas de ata te diriam o que eles fizeram.',
     'Você olha para o relógio. Dezessete e dois. A porta do cartório já fechou.'
   ],

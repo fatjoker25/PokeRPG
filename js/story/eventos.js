@@ -468,7 +468,7 @@ vermilion:[
     {texto:'Sentar no chão e olhar junto.',
      ef:{moral:3, hp:2, flag:'viu_o_por_do_sol_de_vermilion',
          rep:{eixo:'bom',delta:1,motivo:'Parou o dia pra ver um pôr do sol com quem convidou'},
-         registrar:'Viu o pôr do sol de Vermilion sentado no chão da guarita, com o guarda.'},
+         registrar:'Viu o pôr do sol de Vermilion sentad{o|a} no chão da guarita, com o guarda.'},
      resultado:[
        'Vocês dois ficam onze minutos em silêncio absoluto.',
        'O sol entra na água num ângulo que faz o porto inteiro ficar laranja por uns quarenta segundos, inclusive os guindastes, inclusive a ferrugem.',
@@ -1063,7 +1063,7 @@ cinnabar:[
      ]},
     {texto:'Ficar olhando a água junto, sem falar nada.',
      ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Ficou olhando a água junto com quem precisava de companhia'},
-         registrar:'Ficou sentado no píer de Cinnabar olhando a água com o barqueiro.'},
+         registrar:'Ficou sentad{o|a} no píer de Cinnabar olhando a água com o barqueiro.'},
      resultado:[
        'Vocês dois ficam ali uns vinte minutos e não falam mais nada.',
        'A água está exatamente igual a qualquer outra água pra você.',
@@ -1365,13 +1365,13 @@ campo:[
     {texto:'Levantar os mourões e escorar com pedra, do jeito que der.',
      teste:{status:'forca', dificuldade:6, nomeStatus:'Força', eixo:'coragem'},
      bom:{ef:{hp:-2, rep:{eixo:'bom',delta:2,motivo:'Levantou a cerca de um estranho sem esperar ninguém'},
-              flag:'levantou_a_cerca', registrar:'Levantou sozinho quinze metros de cerca caída numa estrada.'},
+              flag:'levantou_a_cerca', registrar:'Levantou sozinh{o|a} quinze metros de cerca caída numa estrada.'},
           resultado:[
             'Leva quase uma hora e você acaba com as duas mãos em carne viva de segurar arame.',
             'Não fica bonito. Fica de pé, que é o que a cerca precisa ser.',
             'As seis Miltank param de andar na direção da estrada e voltam a fazer a única coisa que Miltank faz.'
           ]},
-     ruim:{ef:{hp:-4, registrar:'Tentou levantar a cerca caída e não deu conta sozinho.'},
+     ruim:{ef:{hp:-4, registrar:'Tentou levantar a cerca caída e não deu conta sozinh{o|a}.'},
            resultado:[
              'Você levanta dois mourões e o terceiro te ensina que quinze metros de cerca é coisa de duas pessoas.',
              'Você fica sentad{o|a} no chão olhando a cerca meio de pé, que é pior do que cerca caída porque agora parece que alguém tentou.'
@@ -1389,7 +1389,7 @@ campo:[
     {texto:'Tocar as Miltank de volta pro pasto antes de qualquer coisa.',
      teste:{status:'carisma', dificuldade:6, nomeStatus:'Carisma', eixo:'simpatia'},
      bom:{ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tocou as Miltank de volta antes que desse acidente na estrada'},
-              registrar:'Tocou seis Miltank de volta pro pasto sozinho.'},
+              registrar:'Tocou seis Miltank de volta pro pasto sozinh{o|a}.'},
           resultado:[
             'Você abre os braços e anda devagar em semicírculo, que é a coisa certa e você não sabe como sabe.',
             'As seis voltam. A quinta olha pra você de um jeito que dá pra ler como ingratidão.',
@@ -1675,7 +1675,7 @@ floresta:[
     {texto:'Parar completamente e deixar ela decidir.',
      teste:{status:'resistencia', dificuldade:6, nomeStatus:'Resistência', eixo:'paciencia'},
      bom:{ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou parado até o Pokémon decidir'},
-              flag:'deixou_ela_decidir', registrar:'Ficou parado no mato fechado até o Pokémon decidir o que fazer.'},
+              flag:'deixou_ela_decidir', registrar:'Ficou parad{o|a} no mato fechado até o Pokémon decidir o que fazer.'},
           resultado:[
             'Você para. Completamente. Você para de um jeito que dói nas pernas depois de três minutos.',
             'Seis minutos.',
@@ -1683,7 +1683,7 @@ floresta:[
             'Ela olha pra você no meio da travessia. Não é ameaça e não é curiosidade. É outra coisa, pra qual não tem palavra.',
             'E some do outro lado.'
           ]},
-     ruim:{ef:{hp:-1, registrar:'Não aguentou ficar parado no mato fechado.'},
+     ruim:{ef:{hp:-1, registrar:'Não aguentou ficar parad{o|a} no mato fechado.'},
            resultado:[
              'Você aguenta noventa segundos.',
              'No nonagésimo primeiro você muda o peso de pé, e o mato explode pro lado contrário, e acabou.',
@@ -2056,7 +2056,7 @@ agua:[
             'Tem marca de pé no limo. Muita marca de pé no limo.',
             'Você atravessa em seis minutos e vê, do outro lado, as nove pessoas ainda sentadas no píer.'
           ]},
-     ruim:{ef:{hp:-4, registrar:'Tentou atravessar a pé e voltou encharcado.'},
+     ruim:{ef:{hp:-4, registrar:'Tentou atravessar a pé e voltou encharcad{o|a}.'},
            resultado:['A quarta pedra é mais funda do que as três primeiras.','Você volta encharcad{o|a} da cintura pra baixo e senta no píer, e ninguém comenta, o que é pior.']}}
   ]
 },

@@ -413,7 +413,7 @@ c25_sozinho_na_sala:{
     fala('a mulher de crachá azul', 'Nós convocamos vocês porque vocês dois juntaram, em alguns meses, mais papel sobre isso do que a Liga juntou em quatro anos.', 'frio')
   ],
   ef:{flag:'a_audiencia_comecou',
-      registrar:'Entrou sozinho na sala. Três cadeiras vazias do seu lado.'},
+      registrar:'Entrou sozinh{o|a} na sala. Três cadeiras vazias do seu lado.'},
   escolhas:[
     {texto:'Perguntar de quem é a cadeira vazia.', vai:'c25_a_cadeira_vazia'},
     {texto:'Pôr tudo que você tem em cima da mesa, agora.', vai:'c25_pos_tudo_na_mesa'},

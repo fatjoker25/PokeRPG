@@ -2157,7 +2157,7 @@ c23_mostrou_o_endereco:{
     'Uma pausa.',
     '"Quem te deu isso?"',
     '"Um homem que não foi."',
-    'E aí ele faz a pergunta que você não estava preparado para responder:',
+    'E aí ele faz a pergunta que você não estava preparad{o|a} para responder:',
     '"E se ele tivesse ido, o que ele teria feito?"'
   ],
   ef:{flag:'mostrou_o_endereco', instabilidade:1,

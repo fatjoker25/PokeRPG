@@ -1227,7 +1227,7 @@ c6_esconderijo:{
     'Você acha o lugar em vinte minutos: uma vala de drenagem a uns quarenta metros do retângulo de concreto, com mato alto na borda.',
     'Dá pra deitar. Dá pra ver o descampado inteiro. Não dá pra ser visto, a não ser que alguém venha justamente até a vala.',
     'Se hoje é quinta, você tem uma noite pra esperar. Se hoje é sexta, você tem até as cinco da manhã.',
-    'De qualquer jeito, é muito tempo deitado numa vala, e você não trouxe água suficiente.'
+    'De qualquer jeito, é muito tempo deitad{o|a} numa vala, e você não trouxe água suficiente.'
   ],
   ef:{flag:'achou_a_vala'},
   escolhas:[

@@ -448,7 +448,7 @@ c24_esperou:{
   ef:{flag:'esperou_o_carro', moral:4,
       npc:{nome:'Mulher de crachá azul', opiniao:3, memoria:'Sentou numa pedra e esperou cinquenta e dois minutos até ela abrir o vidro.'},
       rep:{eixo:'bom',delta:3,motivo:'Sentou numa pedra e ganhou no tempo', rep:{notorio:true}},
-      registrar:'Esperou cinquenta e dois minutos sentado numa pedra até o vidro descer.'},
+      registrar:'Esperou cinquenta e dois minutos sentad{o|a} numa pedra até o vidro descer.'},
   escolhas:[{texto:'Subir a estrada.', vai:'c24_chegou_no_planalto'}]
 },
 

@@ -1645,7 +1645,7 @@ c7_ficou_com_marowak:{
   ef:{rep:{eixo:'bom',delta:4,motivo:'Sentou no chão e esperou uma hora sem fazer nada'},
       flag:['acalmou_marowak','ficou_com_marowak'], moral:15,
       npc:{nome:'Zelador da Torre', opiniao:5, memoria:'Você ficou uma hora sentad{o|a} no chão do sexto andar com o Marowak. Ele conta isso pra todo mundo.'},
-      registrar:'Ficou uma hora sentado com o Marowak e o Cubone depois que levaram o treinador.',
+      registrar:'Ficou uma hora sentad{o|a} com o Marowak e o Cubone depois que levaram o treinador.',
       presagio:'Você não fez nada por uma hora. Foi a coisa certa. Quase nunca é.'},
   escolhas:[
     {texto:'Levar o Cubone com você.', vai:'c7_cubone'},

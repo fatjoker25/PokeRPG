@@ -570,7 +570,7 @@ c21_pisou_na_arena:{
   ],
   ef:{flag:'pisou_na_arena', moral:3,
       rep:{eixo:'bom',delta:1,motivo:'Desceu ao poço sozinho, sem ninguém para ver'},
-      registrar:'Pisou no chão da arena da Elite 4 sozinho, antes da reunião.'},
+      registrar:'Pisou no chão da arena da Elite 4 sozinh{o|a}, antes da reunião.'},
   escolhas:[
     {texto:'Subir para a reunião.', vai:'c21_esperou_na_porta'},
     {texto:'Voltar à borda e conversar mais.', vai:'c21_quintino'}

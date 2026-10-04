@@ -153,7 +153,9 @@ const Aniversario = {
     /* quem ficou em casa: pelo PokéNav, ou por carta no Centro */
     const deCasa = falaDaCasa('aniversario', d);
     if (Estado.temPokenav()){
-      falas.push(`O PokéNav toca antes das sete. É ${nomeCasa()}.`);
+      falas.push(atrasado
+        ? `No PokéNav tem uma chamada perdida de ${nomeCasa()}, de ${h.mes === n.mes && h.dia - n.dia === 1 ? 'ontem' : 'uns dias atrás'}, e você liga de volta.`
+        : `O PokéNav toca antes das sete. É ${nomeCasa()}.`);
       deCasa.forEach(f => falas.push(f));
     } else {
       falas.push(`No balcão do Centro mais próximo tem um envelope no seu nome, com a letra de ${nomeCasa()}.`);

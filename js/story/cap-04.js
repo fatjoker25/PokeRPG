@@ -1153,7 +1153,7 @@ c4_rua2:{
     fala('o outro operário', 'Estudo em pedreira é uma coisa só, Falk.'),
     fala('Falk', 'É?'),
     fala('o outro operário', 'É alguém querendo comprar.'),
-    'Eles te veem parado e param de falar, do jeito educado e total com que gente de cidade pequena para de falar quando alguém de fora chega perto.',
+    'Eles te veem parad{o|a} e param de falar, do jeito educado e total com que gente de cidade pequena para de falar quando alguém de fora chega perto.',
     fala('Falk', 'Boa tarde.'),
     d=>fala(d.jogador.nome, 'Boa tarde.'),
     'E é o fim da conversa.'
