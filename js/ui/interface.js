@@ -859,6 +859,7 @@ const UI = {
     const paras = this.narrar(typeof Reencontros !== 'undefined'
       ? Reencontros.prefaciar(cena.texto, Estado.dados.capitulo + ':' + Estado.dados.cena) : cena.texto);
     this.vozesDaCena = null;      // vale só pro texto da própria cena
+    if (typeof Jogo !== 'undefined' && Jogo.tocarAdiada) Jogo.tocarAdiada();
 
     const html = `<div class="painel">
       <div class="cap-cabecalho">
@@ -2025,6 +2026,8 @@ const UI = {
 
   /* O telefone tocando: você atende ou não, e não atender custa. */
   telaChamada(c){
+    /* toca no meio da luta: espera ela acabar e toca depois */
+    if (emLuta()){ Jogo.chamadaAdiada = c; return; }
     const contato = contatoPorId(c.de);
     const falas = (typeof c.falas === 'function' ? c.falas(Estado.dados) : c.falas) || [];
     const opcoes = (c.escolhas || []).map((o, i) => ({o, i}))
@@ -2056,6 +2059,7 @@ const UI = {
   /* mensagens que chegam juntas (o aniversário): uma conversa só, no aparelho */
   navMensagens(titulo, falas, avisos){
     if (!Estado.temPokenav()) return;
+    if (emLuta()) return;
     this.navTela(null, titulo, 'mensagens', `
       <div class="nav-conversa narrativa">${this.narrar(falas)}</div>
       <div id="avisos-nav" class="avisos"></div>
@@ -2167,7 +2171,7 @@ const UI = {
       prova:(c.prova && c.prova.rotulo) || 'Dar notícia'
     };
     const botoes = (c.oferece||[]).map(serv => {
-      const r = Estado.podeLigar(c.id, serv);
+      const r = emLuta() ? {ok:false, motivo:'No meio da luta não dá pra ligar.'} : Estado.podeLigar(c.id, serv);
       return `<div class="nav-servico">
         <button class="btn" ${r.ok ? `onclick="UI.navLigar('${c.id}','${serv}')"` : 'disabled'}>${this.esc(ROTULO[serv]||serv)}</button>
         ${r.ok ? '' : `<span class="nav-nota">${this.esc(r.motivo)}</span>`}
@@ -3050,8 +3054,8 @@ const UI = {
         const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos','tm'].includes(info.tipo)
                         || info.tipo === 'ppUp'
                         || (info.tipo === 'mapa' && Estado.dados.modo === 'mundo'))
-                       && Estado.dados.modo !== 'batalha';
-        const equipavel = info.tipo === 'equipar' && Estado.dados.modo !== 'batalha';
+                       && !emLuta();
+        const equipavel = info.tipo === 'equipar' && !emLuta();
         const ebolsa = info.tipo === 'bolsa';
         const emUso = ebolsa && bolsa.nome === n;
         return `<div class="item-linha">
@@ -3194,6 +3198,8 @@ const UI = {
     const info = ITENS_INFO[nome] || {};
     const d = Estado.dados;
     if (!Estado.contaItem(nome)) return;
+    /* na luta, item se usa pelo Bag, gastando o turno; a mochila do topo só mostra */
+    if (emLuta()) return this.modal('', '<p>No meio da luta, item se usa pelo Bag.</p>', false, 'mochila');
     if (info.tipo === 'tm') return this.ensinarTM(nome);
     if (info.tipo === 'ppUp') return this.escolherPPUp(nome);
     if (info.tipo === 'mapa') return Exploracao.mapa('mochila');
@@ -4384,6 +4390,7 @@ const UI = {
 
       <h3>PokéNav</h3>
       <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
+      <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pelo Bag, gastando o turno</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
       <div class="linha"><span class="k">Ligação que você faz</span><span class="v">acontece dentro do PokéNav, por cima do que você estava fazendo · desligar volta pra agenda</span></div>

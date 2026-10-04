@@ -4,6 +4,10 @@
    vai, quando vai, e o que faz enquanto está lá.
    ============================================================ */
 
+/* Está numa luta agora? O modo da tela não diz (a luta abre por cima
+   do mapa ou da cena); quem diz é a própria batalha. */
+function emLuta(){ return typeof Batalha !== 'undefined' && !!Batalha.ativo; }
+
 const PERIODOS = ['madrugada','manhã','tarde','noite'];
 const INICIO_PERIODO = {madrugada:0, 'manhã':6, tarde:12, noite:18};
 function periodoDaHora(h){ return PERIODOS[Math.floor(((h % 24) + 24) % 24 / 6)]; }
@@ -34,7 +38,7 @@ const Relogio = {
     this._t = setInterval(() => {
       if (typeof document !== 'undefined' && document.hidden) return;
       const d = Estado.dados;
-      if (!d || !d.relogio || d.modo === 'batalha') return;
+      if (!d || !d.relogio || emLuta()) return;
       this.avancar(1);
       if (typeof UI !== 'undefined' && UI.pintarRelogio) UI.pintarRelogio();
     }, this.MS_POR_HORA);

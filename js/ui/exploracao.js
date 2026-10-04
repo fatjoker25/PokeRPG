@@ -7,6 +7,7 @@ const Exploracao = {
     /* a viagem de ônibus do fim do capítulo 1 aparece na primeira tela
        de mapa, mesmo que o rival tenha aparecido antes dela */
     if (!avisos && typeof Jogo !== 'undefined' && Jogo.avisoOnibus){ avisos = Jogo.avisoOnibus; Jogo.avisoOnibus = null; }
+    if (typeof Jogo !== 'undefined' && Jogo.tocarAdiada) Jogo.tocarAdiada();
     /* o aniversário chega na primeira tela de mapa do dia */
     if (typeof Aniversario !== 'undefined' && Aniversario.pendente()) return Aniversario.festejar();
     Estado.dados.modo = 'mundo';

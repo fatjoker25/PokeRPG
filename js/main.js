@@ -1038,9 +1038,18 @@ const Jogo = {
     UI.atualizarTopo();
   },
 
+  /* a chamada que tocou no meio da luta toca agora, por cima da tela */
+  tocarAdiada(){
+    const c = this.chamadaAdiada;
+    if (!c || emLuta()) return;
+    this.chamadaAdiada = null;
+    setTimeout(() => UI.telaChamada(c), 120);
+  },
+
   ligarPara(id, servico){
     const c = contatoPorId(id);
     if (!c) return;
+    if (emLuta()) return UI.modal('PokéNav', '<p class="nada">No meio da luta não dá pra ligar.</p>');
     const r = Estado.podeLigar(id, servico);
     if (!r.ok) return UI.modal('PokéNav', `<p class="nada">${UI.esc(r.motivo)}</p>`);
 
