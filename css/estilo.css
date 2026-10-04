@@ -216,26 +216,29 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    O balão tem o nome em cima e um bico apontando pra ele, como
    quadrinho. Narração continua sendo parágrafo solto.
    ============================================================ */
+/* cada pessoa da cena tem a sua cor (--fala-cor, posta pelo narrar):
+   duas meninas conversando não saem mais com o mesmo balão */
 .narrativa .fala{
+  --cor-balao:var(--fala-cor, var(--destaque));
   position:relative;
   margin:0 0 12px 12px;
   padding:9px 13px 10px;
   max-width:70ch;
-  border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda));
-  border-left:3px solid var(--destaque);
+  border:1px solid color-mix(in srgb, var(--cor-balao) 40%, var(--borda));
+  border-left:3px solid var(--cor-balao);
   border-radius:4px 10px 10px 4px;
   background:linear-gradient(180deg,
-    color-mix(in srgb, var(--destaque) 9%, var(--bg-2)),
-    color-mix(in srgb, var(--destaque) 4%, var(--bg-2)));
+    color-mix(in srgb, var(--cor-balao) 9%, var(--bg-2)),
+    color-mix(in srgb, var(--cor-balao) 4%, var(--bg-2)));
   animation:fala-entra .42s var(--suave) both;
 }
 .narrativa .fala::before{
   content:'';position:absolute;left:-9px;top:14px;
-  border:5px solid transparent;border-right-color:var(--destaque);
+  border:5px solid transparent;border-right-color:var(--cor-balao);
 }
 .narrativa .fala-quem{
   font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--destaque);margin-bottom:3px;
+  color:var(--cor-balao);margin-bottom:3px;
 }
 .narrativa .fala-diz{margin:0;max-width:none;animation:none}
 /* fala sem nome: a gente sabe que é fala, só não sabe de quem */

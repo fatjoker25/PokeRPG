@@ -41,6 +41,9 @@ function varsCartao(k){
   return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
 }
 
+/* cores de balão: distintas entre si e legíveis nos dois fundos */
+const CORES_DE_FALA = ['#e0a33a', '#5aa9e6', '#e36f8f', '#b18cf0', '#4cc3c3', '#d6c341', '#c9d1dc', '#e86a4a'];   // sem verde: verde é o seu balão
+
 const UI = {
   app:null, dadosRecentes:[],
 
@@ -645,6 +648,20 @@ const UI = {
        fala. Duas falas coladas, sem narração no meio, são uma troca:
        a vez passa pro outro. */
     let pendente = null, primeira = true, lado = null, ultimaBoca = null;
+    /* cor por pessoa: sai do nome, e se outra pessoa da mesma tela já
+       usa aquela cor, pega a próxima livre */
+    const coresUsadas = new Map();
+    const corDe = (quem) => {
+      if (!quem || quem === meuNome) return '';
+      if (coresUsadas.has(quem)) return coresUsadas.get(quem);
+      const usadas = new Set(coresUsadas.values());
+      let h = 0; for (const ch of String(quem)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+      let k = h % CORES_DE_FALA.length, n = 0;
+      while (usadas.has(CORES_DE_FALA[k]) && n++ < CORES_DE_FALA.length) k = (k + 1) % CORES_DE_FALA.length;
+      coresUsadas.set(quem, CORES_DE_FALA[k]);
+      return CORES_DE_FALA[k];
+    };
+    const estiloCor = (quem) => { const c = corDe(quem); return c ? ` style="--fala-cor:${c}"` : ''; };
     /* `vozes` na cena: o autor diz, aspa por aspa, quem fala — 'P' é
        você, 'N' é o falante da cena, qualquer outro texto é o nome de
        uma terceira pessoa. Manda mais que qualquer adivinhação. */
@@ -663,7 +680,7 @@ const UI = {
            nome, mesmo a segunda seguida da mesma boca (só o retrato some) */
         const repete = (ultimaBoca === f.quem);
         ultimaBoca = f.quem;
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}">
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(f.quem)}>
           <div class="fala-quem">${repete ? '' : this.retratoFala(f.quem)}${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
@@ -745,7 +762,7 @@ const UI = {
         const meu = lado === 'voce' ? ' voce' : '';
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}">`
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(quem)}>`
               + (quem ? `<div class="fala-quem">${lado === 'voce' || repete ? '' : this.retratoFala(quem)}${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }

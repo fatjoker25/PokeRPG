@@ -225,26 +225,29 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
    O balão tem o nome em cima e um bico apontando pra ele, como
    quadrinho. Narração continua sendo parágrafo solto.
    ============================================================ */
+/* cada pessoa da cena tem a sua cor (--fala-cor, posta pelo narrar):
+   duas meninas conversando não saem mais com o mesmo balão */
 .narrativa .fala{
+  --cor-balao:var(--fala-cor, var(--destaque));
   position:relative;
   margin:0 0 12px 12px;
   padding:9px 13px 10px;
   max-width:70ch;
-  border:1px solid color-mix(in srgb, var(--destaque) 40%, var(--borda));
-  border-left:3px solid var(--destaque);
+  border:1px solid color-mix(in srgb, var(--cor-balao) 40%, var(--borda));
+  border-left:3px solid var(--cor-balao);
   border-radius:4px 10px 10px 4px;
   background:linear-gradient(180deg,
-    color-mix(in srgb, var(--destaque) 9%, var(--bg-2)),
-    color-mix(in srgb, var(--destaque) 4%, var(--bg-2)));
+    color-mix(in srgb, var(--cor-balao) 9%, var(--bg-2)),
+    color-mix(in srgb, var(--cor-balao) 4%, var(--bg-2)));
   animation:fala-entra .42s var(--suave) both;
 }
 .narrativa .fala::before{
   content:'';position:absolute;left:-9px;top:14px;
-  border:5px solid transparent;border-right-color:var(--destaque);
+  border:5px solid transparent;border-right-color:var(--cor-balao);
 }
 .narrativa .fala-quem{
   font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--destaque);margin-bottom:3px;
+  color:var(--cor-balao);margin-bottom:3px;
 }
 .narrativa .fala-diz{margin:0;max-width:none;animation:none}
 /* fala sem nome: a gente sabe que é fala, só não sabe de quem */
@@ -19494,7 +19497,7 @@ floresta:[
   texto:[
     'Uma árvore caiu de través na trilha e não caiu hoje: já tem cogumelo no tronco e já tem trilha nova contornando por baixo.',
     'Só que a trilha nova passa rente a um barranco e dá pra ver, pela terra solta, que já escorregou gente ali.',
-    'Do outro lado tem duas crianças de mochila parando pra decidir por onde passar.'
+    'Do outro lado tem duas meninas, uma de mochila amarela e outra de mochila verde, parando pra decidir por onde passar.'
   ],
   escolhas:[
     {texto:'Passar primeiro e mostrar onde pisar.',
@@ -19503,8 +19506,8 @@ floresta:[
      resultado:[
        'Você passa devagar, marcando pé por pé, e fala em voz alta onde a terra está firme.',
        'As duas passam atrás de você imitando exatamente, o que é ao mesmo tempo bonito e assustador.',
-       fala('a menina da mochila', 'Você é guia?'),
-       fala('a menina da mochila', 'Não, ele só é grande.', null, 'A outra responde antes de você.')
+       fala('a menina da mochila amarela', 'Você é guia?'),
+       fala('a menina da mochila verde', 'Não, {ele|ela} só é grande.', null, 'A outra responde antes de você.')
      ]},
     {texto:'Abrir passagem por cima do tronco, com machado de mão e paciência.',
      teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
@@ -82209,6 +82212,9 @@ function varsCartao(k){
   return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
 }
 
+/* cores de balão: distintas entre si e legíveis nos dois fundos */
+const CORES_DE_FALA = ['#e0a33a', '#5aa9e6', '#e36f8f', '#b18cf0', '#4cc3c3', '#d6c341', '#c9d1dc', '#e86a4a'];   // sem verde: verde é o seu balão
+
 const UI = {
   app:null, dadosRecentes:[],
 
@@ -82813,6 +82819,20 @@ const UI = {
        fala. Duas falas coladas, sem narração no meio, são uma troca:
        a vez passa pro outro. */
     let pendente = null, primeira = true, lado = null, ultimaBoca = null;
+    /* cor por pessoa: sai do nome, e se outra pessoa da mesma tela já
+       usa aquela cor, pega a próxima livre */
+    const coresUsadas = new Map();
+    const corDe = (quem) => {
+      if (!quem || quem === meuNome) return '';
+      if (coresUsadas.has(quem)) return coresUsadas.get(quem);
+      const usadas = new Set(coresUsadas.values());
+      let h = 0; for (const ch of String(quem)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+      let k = h % CORES_DE_FALA.length, n = 0;
+      while (usadas.has(CORES_DE_FALA[k]) && n++ < CORES_DE_FALA.length) k = (k + 1) % CORES_DE_FALA.length;
+      coresUsadas.set(quem, CORES_DE_FALA[k]);
+      return CORES_DE_FALA[k];
+    };
+    const estiloCor = (quem) => { const c = corDe(quem); return c ? ` style="--fala-cor:${c}"` : ''; };
     /* `vozes` na cena: o autor diz, aspa por aspa, quem fala — 'P' é
        você, 'N' é o falante da cena, qualquer outro texto é o nome de
        uma terceira pessoa. Manda mais que qualquer adivinhação. */
@@ -82831,7 +82851,7 @@ const UI = {
            nome, mesmo a segunda seguida da mesma boca (só o retrato some) */
         const repete = (ultimaBoca === f.quem);
         ultimaBoca = f.quem;
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}">
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(f.quem)}>
           <div class="fala-quem">${repete ? '' : this.retratoFala(f.quem)}${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
@@ -82913,7 +82933,7 @@ const UI = {
         const meu = lado === 'voce' ? ' voce' : '';
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}">`
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(quem)}>`
               + (quem ? `<div class="fala-quem">${lado === 'voce' || repete ? '' : this.retratoFala(quem)}${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }

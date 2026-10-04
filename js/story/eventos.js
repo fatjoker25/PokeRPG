@@ -1503,7 +1503,7 @@ floresta:[
   texto:[
     'Uma árvore caiu de través na trilha e não caiu hoje: já tem cogumelo no tronco e já tem trilha nova contornando por baixo.',
     'Só que a trilha nova passa rente a um barranco e dá pra ver, pela terra solta, que já escorregou gente ali.',
-    'Do outro lado tem duas crianças de mochila parando pra decidir por onde passar.'
+    'Do outro lado tem duas meninas, uma de mochila amarela e outra de mochila verde, parando pra decidir por onde passar.'
   ],
   escolhas:[
     {texto:'Passar primeiro e mostrar onde pisar.',
@@ -1512,8 +1512,8 @@ floresta:[
      resultado:[
        'Você passa devagar, marcando pé por pé, e fala em voz alta onde a terra está firme.',
        'As duas passam atrás de você imitando exatamente, o que é ao mesmo tempo bonito e assustador.',
-       fala('a menina da mochila', 'Você é guia?'),
-       fala('a menina da mochila', 'Não, ele só é grande.', null, 'A outra responde antes de você.')
+       fala('a menina da mochila amarela', 'Você é guia?'),
+       fala('a menina da mochila verde', 'Não, {ele|ela} só é grande.', null, 'A outra responde antes de você.')
      ]},
     {texto:'Abrir passagem por cima do tronco, com machado de mão e paciência.',
      teste:{status:'forca', dificuldade:7, nomeStatus:'Força', eixo:'paciencia'},
