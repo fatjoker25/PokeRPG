@@ -535,48 +535,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   opacity:.5;background:var(--ar-textura, none);
 }
 .arena > *{position:relative;z-index:1}
-@media(max-width:620px){
-  .arena{grid-template-columns:1fr;padding:9px}
-  /* Empilhado, os dois lutadores ficam um embaixo do outro, e uma
-     faixa única deixaria o segundo brigando no escuro. Esticar a
-     mesma imagem pela arena inteira também não serve: numa caixa
-     alta e estreita o `cover` amplia tanto que sobra uma folha de
-     palmeira no lugar do mar. Então cada lutador ganha o cenário
-     atrás de si, no mesmo enquadramento do modo largo. */
-  .arena.com-cenario{--ar-faixa:0; padding-top:9px}
-  .arena.com-cenario::before{display:none}
-  .arena.com-cenario::after{
-    height:100%;
-    background:linear-gradient(180deg, rgba(8,10,14,.18) 0%, rgba(8,10,14,.4) 100%);
-  }
-  .arena.com-cenario .lutador.aliado .arte .sprite,
-  .arena.arena-ginasio .lutador.aliado .arte .sprite{
-    width:104px;height:104px;margin-bottom:-25px;
-  }
-  /* Empilhado não existe chão compartilhado: cada um tem a sua cena,
-     então o recuo de profundidade não quer dizer nada aqui e só
-     apertaria a caixa. Os dois pousam no pé da própria moldura. */
-  .arena.com-cenario .lutador.inimigo .arte,
-  .arena.arena-ginasio .lutador.inimigo .arte{padding-bottom:0}
-  .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
-  .arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{bottom:-2px}
-  .arena.com-cenario .lutador .arte{
-    height:120px;margin-bottom:10px;border-radius:var(--raio-sm);
-    background-image:var(--ar-fundo);
-    background-size:cover;background-repeat:no-repeat;
-    background-position:center var(--ar-foco);
-    image-rendering:pixelated;
-    box-shadow:inset 0 -34px 40px -24px rgba(8,10,14,.95),
-               inset 0 0 0 1px rgba(255,255,255,.05);
-  }
-  .arena.com-cenario[data-ambiente="cemiterio"] .lutador .arte{
-    filter:saturate(.55) hue-rotate(-24deg) brightness(.86)
-  }
-  /* a quadra é gradiente, então estica bem numa caixa alta */
-  .arena.arena-ginasio{--ar-faixa:100%; padding-top:9px}
-  .arena.arena-ginasio::after{height:100%}
-  .arena.arena-ginasio .lutador .arte{height:120px;margin-bottom:10px}
-}
+/* (o empilhado do celular mora depois das regras-base da arena, mais abaixo) */
 
 /* --- grama: rota aberta, mato alto no horizonte --- */
 .arena-grama{
@@ -1533,6 +1492,52 @@ h3.cat-item{
   .lutador .arte{height:84px}
   .lutador .arte .sprite{width:88px;height:88px}
 }
+/* Celular, arena empilhada. Mora DEPOIS das regras-base da arena de
+   propósito: os seletores têm o mesmo peso, e com o bloco antes delas
+   as de computador ganhavam calado — o seu não encolhia e o de lá
+   continuava recuado, flutuando no meio da própria moldura. */
+@media(max-width:620px){
+  .arena{grid-template-columns:1fr;padding:9px}
+  /* Empilhado, os dois lutadores ficam um embaixo do outro, e uma
+     faixa única deixaria o segundo brigando no escuro. Esticar a
+     mesma imagem pela arena inteira também não serve: numa caixa
+     alta e estreita o `cover` amplia tanto que sobra uma folha de
+     palmeira no lugar do mar. Então cada lutador ganha o cenário
+     atrás de si, no mesmo enquadramento do modo largo. */
+  .arena.com-cenario{--ar-faixa:0; padding-top:9px}
+  .arena.com-cenario::before{display:none}
+  .arena.com-cenario::after{
+    height:100%;
+    background:linear-gradient(180deg, rgba(8,10,14,.18) 0%, rgba(8,10,14,.4) 100%);
+  }
+  .arena.com-cenario .lutador.aliado .arte .sprite,
+  .arena.arena-ginasio .lutador.aliado .arte .sprite{
+    width:104px;height:104px;margin-bottom:-25px;
+  }
+  /* Empilhado não existe chão compartilhado: cada um tem a sua cena,
+     então o recuo de profundidade não quer dizer nada aqui e só
+     apertaria a caixa. Os dois pousam no pé da própria moldura. */
+  .arena.com-cenario .lutador.inimigo .arte,
+  .arena.arena-ginasio .lutador.inimigo .arte{padding-bottom:0}
+  .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
+  .arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{bottom:-2px}
+  .arena.com-cenario .lutador .arte{
+    height:120px;margin-bottom:10px;border-radius:var(--raio-sm);
+    background-image:var(--ar-fundo);
+    background-size:cover;background-repeat:no-repeat;
+    background-position:center var(--ar-foco);
+    image-rendering:pixelated;
+    box-shadow:inset 0 -34px 40px -24px rgba(8,10,14,.95),
+               inset 0 0 0 1px rgba(255,255,255,.05);
+  }
+  .arena.com-cenario[data-ambiente="cemiterio"] .lutador .arte{
+    filter:saturate(.55) hue-rotate(-24deg) brightness(.86)
+  }
+  /* a quadra é gradiente, então estica bem numa caixa alta */
+  .arena.arena-ginasio{--ar-faixa:100%; padding-top:9px}
+  .arena.arena-ginasio::after{height:100%}
+  .arena.arena-ginasio .lutador .arte{height:120px;margin-bottom:10px}
+}
 
 /* ícone de equipe: ao lado do nome, em lista e em carta */
 .sprite-icone{width:40px;height:30px;object-fit:contain;flex:0 0 auto}
@@ -2430,6 +2435,8 @@ h3.cat-item{
 .lutador.fixo .arte .sprite{animation:none}
 /* antes da abertura: ninguém à vista, a ficha do seu fora */
 .lutador.por-entrar .arte .sprite{visibility:hidden}
+/* a GIF de Black/White termina no pé: a escala gira na borda de baixo */
+.lutador .arte .sprite.ani{transform-origin:50% 100%}
 /* quem desmaiou não volta a aparecer quando a arena se redesenha */
 .lutador.caido .arte .sprite{visibility:hidden}
 .lutador.aliado.por-entrar .ficha,
@@ -4712,6 +4719,21 @@ function golpesDoNivel(dexId, nivel){
    desenha maior — senão o bicho encolhe na tela sem ter encolhido.
    Os números estão medidos, não chutados; ver CLAUDE.md.
 
+   Em movimento são as de Black/White animadas, da PokeAPI
+   (sprites/pokemon/versions/generation-v/black-white/animated/):
+
+     sprites_nds/battle/front_ani/{id}.gif          frente animada
+     sprites_nds/battle/front_ani_shiny/{id}.gif    frente animada brilhante
+     sprites_nds/battle/back_ani/{id}.gif           costas animada
+     sprites_nds/battle/back_ani_shiny/{id}.gif     costas animada brilhante
+
+   Essas vêm recortadas no tamanho do bicho (Bulbasaur 37×38, Lugia
+   153×94) e com o pé na borda de baixo: todo mundo na mesma escala de
+   pixel, como no jogo. `ajustarSpriteAni` desenha cada uma na escala
+   que o CSS dá ao quadro de 96 px da arte parada, então o tamanho na
+   tela não muda. Sem a GIF (arquivo único, que não as embute por
+   peso), a <img> cai sozinha na arte parada.
+
    Nada aqui é obrigatório: se a pasta não estiver do lado do jogo,
    cada <img> se apaga sozinha e a tela volta a ser a de antes.
    No arquivo único, o build troca cada caminho por um data URI e
@@ -4724,7 +4746,11 @@ const SPRITES_PASTA = {
   frente:       'battle/front_full/',
   frenteShiny:  'battle/front_full_shiny/',
   costas:       'battle/back_full/',
-  costasShiny:  'battle/back_full_shiny/'
+  costasShiny:  'battle/back_full_shiny/',
+  frenteAni:      'battle/front_ani/',
+  frenteAniShiny: 'battle/front_ani_shiny/',
+  costasAni:      'battle/back_ani/',
+  costasAniShiny: 'battle/back_ani_shiny/'
 };
 
 /* Preenchido pelo build.py no arquivo único. Vazio no modo pasta. */
@@ -4738,21 +4764,74 @@ function caminhoSprite(dexId, vista, shiny){
   return SPRITES_EMBUTIDOS[rel] || rel;
 }
 
+/* A GIF animada de Black/White, ou null quando ela não vai carregar:
+   no arquivo único só existe o que foi embutido, e pedir o resto seria
+   um erro de rede por Pokémon antes de cair na arte parada. */
+function caminhoSpriteAni(dexId, vista, shiny){
+  if (vista !== 'frente' && vista !== 'costas') return null;
+  const rel = SPRITES_BASE + SPRITES_PASTA[vista + 'Ani' + (shiny ? 'Shiny' : '')] + dexId + '.gif';
+  if (Object.keys(SPRITES_EMBUTIDOS).length) return SPRITES_EMBUTIDOS[rel] || null;
+  return rel;
+}
+
 /* O <img> pronto, já sabendo se aquele bicho é brilhante.
-   oculto: a espécie ainda não foi catalogada — sai em silhueta. */
+   oculto: a espécie ainda não foi catalogada — sai em silhueta.
+   estatico: força a arte parada (tela que compara duas artes). */
 function imgSprite(p, vista, opcoes){
   if (!p || !p.dex) return '';
   const o = opcoes || {};
-  const src = caminhoSprite(p.dex, vista, p.shiny);
+  const parado = caminhoSprite(p.dex, vista, p.shiny);
+  const ani = o.estatico ? null : caminhoSpriteAni(p.dex, vista, p.shiny);
   const classes = ['sprite', 'sprite-' + vista];
+  if (ani) classes.push('ani');
   if (o.oculto) classes.push('silhueta');
   if (p.shiny && !o.oculto) classes.push('sprite-brilho');
   if (o.classe) classes.push(o.classe);
   const alt = o.oculto ? 'Espécie não catalogada' : (p.nome || '');
-  /* onerror: sem a pasta de sprites, a imagem some e o layout fecha */
-  return `<img class="${classes.join(' ')}" src="${src}" alt="${alt}" loading="lazy"
+  /* onerror: sem a GIF, a arte parada; sem a pasta, a imagem some e o
+     layout fecha */
+  if (ani) return `<img class="${classes.join(' ')}" src="${ani}" data-parado="${parado}" alt="${alt}" loading="lazy"
+    onload="ajustarSpriteAni(this)" onerror="spriteParado(this)">`;
+  return `<img class="${classes.join(' ')}" src="${parado}" alt="${alt}" loading="lazy"
     onerror="this.remove()">`;
 }
+
+/* A GIF vem no tamanho do bicho, sem a folga do quadro de 96 px da
+   arte parada. Escala única: o que o CSS dá ao quadro dividido por 96
+   — Bulbasaur sai pequeno e Lugia grande, como no jogo. E o pé, que na
+   arte parada fica a 76% do quadro, aqui é a borda de baixo: a margem
+   ganha os 24% que sobravam, pra ele pousar na mesma linha (na arena;
+   fora dela a arte é centralizada e a margem fica como está). */
+function ajustarSpriteAni(img){
+  if (!img.classList.contains('ani') || !img.naturalWidth) return;
+  img.style.width = img.style.height = img.style.marginBottom = '';
+  const cs = getComputedStyle(img);
+  const quadro = parseFloat(cs.width) || 96;
+  const k = quadro / 96;
+  img.dataset.quadro = quadro;
+  img.style.width = (img.naturalWidth * k).toFixed(1) + 'px';
+  img.style.height = (img.naturalHeight * k).toFixed(1) + 'px';
+  /* só na arena o pé importa (é ele que pousa na base); Pokédex, PC e
+     sumário centralizam a arte, e lá a margem só a tiraria do meio */
+  if (img.closest('.lutador .arte'))
+    img.style.marginBottom = ((parseFloat(cs.marginBottom) || 0) + quadro * .24).toFixed(1) + 'px';
+}
+function spriteParado(img){
+  const p = img.dataset.parado;
+  if (!p || img.src.endsWith(p) || img.getAttribute('src') === p){ img.remove(); return; }
+  img.classList.remove('ani');
+  img.style.width = img.style.height = img.style.marginBottom = '';
+  img.removeAttribute('onload');
+  img.onerror = () => img.remove();
+  img.src = p;
+  /* sem a GIF o repouso volta a ser o do animador */
+  const lut = img.closest && img.closest('.lutador');
+  if (lut && typeof AnimadorSprite !== 'undefined')
+    AnimadorSprite.repouso(lut.classList.contains('aliado') ? 'aliado' : 'inimigo');
+}
+/* onde fica o pé, em fração da altura da caixa: a arte parada tem 24%
+   de folga embaixo; a GIF termina no pé */
+function peDoSprite(img){ return img && img.classList.contains('ani') ? 1 : .76; }
 
 /* Versão por número da Pokédex, para telas que não têm instância */
 function imgSpriteDex(dexId, vista, opcoes){
@@ -97903,7 +97982,10 @@ const CenaShowdown = {
     /* as duas âncoras: o centro de cada lutador na nossa arena; e o
        tamanho — o de lá tem 96 px no Showdown (escala 1 em z=200) */
     this._Q0 = {x:qEu.cx, y:qEu.cy}; this._Q1 = {x:qEle.cx, y:qEle.cy};
-    this._k = Math.max(0.35, Math.min(1.6, qEle.h / 96));
+    /* px nossos por px da arte do de lá: a parada tem quadro de 96, a
+       GIF animada tem o tamanho dela (é a mesma que o Showdown usa) */
+    const sEle = Efeitos.sprite('inimigo');
+    this._k = Math.max(0.35, Math.min(1.6, qEle.h / ((sEle && sEle.naturalHeight) || 96)));
     /* altura: no Showdown o de lá tem 135 px de céu acima do centro; aqui
        tem o que a arena der — pulo e voo sobem na mesma proporção */
     const ceu = qEle.cy - 6;   /* alvo() já é relativo à arena */
@@ -98002,9 +98084,9 @@ const CenaShowdown = {
         const p = this.posSD(L, s.sp), c = mapa(p.cx, p.cy);
         return {dx: c.x - mRep.x, dy: c.y - mRep.y, s: p.w / repouso.w, op: L.opacity === undefined ? 1 : L.opacity, top:p.top};
       };
-      /* o sprite escala em volta do pé (transform-origin 50% 76%) e a
-         conta do Showdown é pelo centro: a diferença é 26% da altura */
-      const pe = el.offsetHeight * .26;
+      /* o sprite escala em volta do pé (transform-origin no pé) e a
+         conta do Showdown é pelo centro: a diferença vai até o pé */
+      const pe = el.offsetHeight * (peDoSprite(el) - .5);
       const tr = (q) => ({transform:`translate(${q.dx.toFixed(1)}px, ${(q.dy - (1 - q.s) * pe).toFixed(1)}px) scale(${q.s.toFixed(3)})`, opacity:q.op});
       const quadros = [Object.assign(tr({dx:0, dy:0, s:1, op:1}), {offset:0})];
       for (const g of s.segs){
@@ -98151,6 +98233,9 @@ const Efeitos = {
     const r = s ? s.getBoundingClientRect()
                 : (a.querySelector(`.lutador.${lado} .arte`) || a).getBoundingClientRect();
     const x = r.left - A.left, y = r.top - A.top;
+    /* GIF de Black/White: recortada no bicho, do topo ao pé */
+    if (s && s.classList.contains('ani'))
+      return {x, y, w:r.width, h:r.height, cx: x + r.width / 2, cy: y + r.height * 0.5, pe: y + r.height, topo: y};
     return {x, y, w:r.width, h:r.height,
             cx: x + r.width / 2, cy: y + r.height * 0.52, pe: y + r.height * 0.76,
             topo: y + r.height * 0.24};
@@ -98696,7 +98781,7 @@ const Efeitos = {
     m.className = 'fx-tinta';
     m.src = s.currentSrc || s.src; m.alt = '';
     Object.assign(m.style, {left:t.x + 'px', top:t.y + 'px', width:t.w + 'px', height:t.h + 'px',
-      filter:this.filtroDeCor('#FFFFFF'), transformOrigin:`50% 76%`});
+      filter:this.filtroDeCor('#FFFFFF'), transformOrigin:`50% ${peDoSprite(s) * 100}%`});
     c.appendChild(m);
     await this.tocar(m, [{transform:'scale(0)', opacity:1}, {transform:'scale(1)', opacity:1}], 380,
                      {easing:'cubic-bezier(.2,1.3,.5,1)', fill:'forwards'});
@@ -98934,6 +99019,8 @@ const AnimadorSprite = {
     this.limparLoop(lado);
     if (!s || !p) return;
     this.marcar(lado, ESTADOS_SPRITE.IDLE);
+    /* GIF de Black/White: o repouso é o dela, nada por cima */
+    if (s.classList.contains('ani')) return;
     this.tocarQuadros(s, p, lado);
     if (this.reduzido()) return;
     const r = this.ritmo(p);
@@ -99043,7 +99130,7 @@ const AnimadorSprite = {
     this.marcar(lado, ESTADOS_SPRITE.FAINT);
     if (!s) return Promise.resolve();
     if (this.reduzido()){ s.style.visibility = 'hidden'; return Promise.resolve(); }
-    const H = s.offsetHeight || 100, PE = H * .2, D = H * .8;
+    const H = s.offsetHeight || 100, PE = H * (1 - peDoSprite(s)) * .85, D = H * .8;
     return this.mover(s, {x:0, y:0, sx:1, sy:1, a:1, clip:PE}, {x:0, y:D, sx:1, sy:1, a:0, clip:PE + D},
                       650, 'easeIn', {fill:'forwards', passos:16});
   },

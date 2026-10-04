@@ -19,6 +19,21 @@
    desenha maior — senão o bicho encolhe na tela sem ter encolhido.
    Os números estão medidos, não chutados; ver CLAUDE.md.
 
+   Em movimento são as de Black/White animadas, da PokeAPI
+   (sprites/pokemon/versions/generation-v/black-white/animated/):
+
+     sprites_nds/battle/front_ani/{id}.gif          frente animada
+     sprites_nds/battle/front_ani_shiny/{id}.gif    frente animada brilhante
+     sprites_nds/battle/back_ani/{id}.gif           costas animada
+     sprites_nds/battle/back_ani_shiny/{id}.gif     costas animada brilhante
+
+   Essas vêm recortadas no tamanho do bicho (Bulbasaur 37×38, Lugia
+   153×94) e com o pé na borda de baixo: todo mundo na mesma escala de
+   pixel, como no jogo. `ajustarSpriteAni` desenha cada uma na escala
+   que o CSS dá ao quadro de 96 px da arte parada, então o tamanho na
+   tela não muda. Sem a GIF (arquivo único, que não as embute por
+   peso), a <img> cai sozinha na arte parada.
+
    Nada aqui é obrigatório: se a pasta não estiver do lado do jogo,
    cada <img> se apaga sozinha e a tela volta a ser a de antes.
    No arquivo único, o build troca cada caminho por um data URI e
@@ -31,7 +46,11 @@ const SPRITES_PASTA = {
   frente:       'battle/front_full/',
   frenteShiny:  'battle/front_full_shiny/',
   costas:       'battle/back_full/',
-  costasShiny:  'battle/back_full_shiny/'
+  costasShiny:  'battle/back_full_shiny/',
+  frenteAni:      'battle/front_ani/',
+  frenteAniShiny: 'battle/front_ani_shiny/',
+  costasAni:      'battle/back_ani/',
+  costasAniShiny: 'battle/back_ani_shiny/'
 };
 
 /* Preenchido pelo build.py no arquivo único. Vazio no modo pasta. */
@@ -45,21 +64,74 @@ function caminhoSprite(dexId, vista, shiny){
   return SPRITES_EMBUTIDOS[rel] || rel;
 }
 
+/* A GIF animada de Black/White, ou null quando ela não vai carregar:
+   no arquivo único só existe o que foi embutido, e pedir o resto seria
+   um erro de rede por Pokémon antes de cair na arte parada. */
+function caminhoSpriteAni(dexId, vista, shiny){
+  if (vista !== 'frente' && vista !== 'costas') return null;
+  const rel = SPRITES_BASE + SPRITES_PASTA[vista + 'Ani' + (shiny ? 'Shiny' : '')] + dexId + '.gif';
+  if (Object.keys(SPRITES_EMBUTIDOS).length) return SPRITES_EMBUTIDOS[rel] || null;
+  return rel;
+}
+
 /* O <img> pronto, já sabendo se aquele bicho é brilhante.
-   oculto: a espécie ainda não foi catalogada — sai em silhueta. */
+   oculto: a espécie ainda não foi catalogada — sai em silhueta.
+   estatico: força a arte parada (tela que compara duas artes). */
 function imgSprite(p, vista, opcoes){
   if (!p || !p.dex) return '';
   const o = opcoes || {};
-  const src = caminhoSprite(p.dex, vista, p.shiny);
+  const parado = caminhoSprite(p.dex, vista, p.shiny);
+  const ani = o.estatico ? null : caminhoSpriteAni(p.dex, vista, p.shiny);
   const classes = ['sprite', 'sprite-' + vista];
+  if (ani) classes.push('ani');
   if (o.oculto) classes.push('silhueta');
   if (p.shiny && !o.oculto) classes.push('sprite-brilho');
   if (o.classe) classes.push(o.classe);
   const alt = o.oculto ? 'Espécie não catalogada' : (p.nome || '');
-  /* onerror: sem a pasta de sprites, a imagem some e o layout fecha */
-  return `<img class="${classes.join(' ')}" src="${src}" alt="${alt}" loading="lazy"
+  /* onerror: sem a GIF, a arte parada; sem a pasta, a imagem some e o
+     layout fecha */
+  if (ani) return `<img class="${classes.join(' ')}" src="${ani}" data-parado="${parado}" alt="${alt}" loading="lazy"
+    onload="ajustarSpriteAni(this)" onerror="spriteParado(this)">`;
+  return `<img class="${classes.join(' ')}" src="${parado}" alt="${alt}" loading="lazy"
     onerror="this.remove()">`;
 }
+
+/* A GIF vem no tamanho do bicho, sem a folga do quadro de 96 px da
+   arte parada. Escala única: o que o CSS dá ao quadro dividido por 96
+   — Bulbasaur sai pequeno e Lugia grande, como no jogo. E o pé, que na
+   arte parada fica a 76% do quadro, aqui é a borda de baixo: a margem
+   ganha os 24% que sobravam, pra ele pousar na mesma linha (na arena;
+   fora dela a arte é centralizada e a margem fica como está). */
+function ajustarSpriteAni(img){
+  if (!img.classList.contains('ani') || !img.naturalWidth) return;
+  img.style.width = img.style.height = img.style.marginBottom = '';
+  const cs = getComputedStyle(img);
+  const quadro = parseFloat(cs.width) || 96;
+  const k = quadro / 96;
+  img.dataset.quadro = quadro;
+  img.style.width = (img.naturalWidth * k).toFixed(1) + 'px';
+  img.style.height = (img.naturalHeight * k).toFixed(1) + 'px';
+  /* só na arena o pé importa (é ele que pousa na base); Pokédex, PC e
+     sumário centralizam a arte, e lá a margem só a tiraria do meio */
+  if (img.closest('.lutador .arte'))
+    img.style.marginBottom = ((parseFloat(cs.marginBottom) || 0) + quadro * .24).toFixed(1) + 'px';
+}
+function spriteParado(img){
+  const p = img.dataset.parado;
+  if (!p || img.src.endsWith(p) || img.getAttribute('src') === p){ img.remove(); return; }
+  img.classList.remove('ani');
+  img.style.width = img.style.height = img.style.marginBottom = '';
+  img.removeAttribute('onload');
+  img.onerror = () => img.remove();
+  img.src = p;
+  /* sem a GIF o repouso volta a ser o do animador */
+  const lut = img.closest && img.closest('.lutador');
+  if (lut && typeof AnimadorSprite !== 'undefined')
+    AnimadorSprite.repouso(lut.classList.contains('aliado') ? 'aliado' : 'inimigo');
+}
+/* onde fica o pé, em fração da altura da caixa: a arte parada tem 24%
+   de folga embaixo; a GIF termina no pé */
+function peDoSprite(img){ return img && img.classList.contains('ani') ? 1 : .76; }
 
 /* Versão por número da Pokédex, para telas que não têm instância */
 function imgSpriteDex(dexId, vista, opcoes){

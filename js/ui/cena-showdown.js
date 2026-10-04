@@ -149,7 +149,10 @@ const CenaShowdown = {
     /* as duas âncoras: o centro de cada lutador na nossa arena; e o
        tamanho — o de lá tem 96 px no Showdown (escala 1 em z=200) */
     this._Q0 = {x:qEu.cx, y:qEu.cy}; this._Q1 = {x:qEle.cx, y:qEle.cy};
-    this._k = Math.max(0.35, Math.min(1.6, qEle.h / 96));
+    /* px nossos por px da arte do de lá: a parada tem quadro de 96, a
+       GIF animada tem o tamanho dela (é a mesma que o Showdown usa) */
+    const sEle = Efeitos.sprite('inimigo');
+    this._k = Math.max(0.35, Math.min(1.6, qEle.h / ((sEle && sEle.naturalHeight) || 96)));
     /* altura: no Showdown o de lá tem 135 px de céu acima do centro; aqui
        tem o que a arena der — pulo e voo sobem na mesma proporção */
     const ceu = qEle.cy - 6;   /* alvo() já é relativo à arena */
@@ -248,9 +251,9 @@ const CenaShowdown = {
         const p = this.posSD(L, s.sp), c = mapa(p.cx, p.cy);
         return {dx: c.x - mRep.x, dy: c.y - mRep.y, s: p.w / repouso.w, op: L.opacity === undefined ? 1 : L.opacity, top:p.top};
       };
-      /* o sprite escala em volta do pé (transform-origin 50% 76%) e a
-         conta do Showdown é pelo centro: a diferença é 26% da altura */
-      const pe = el.offsetHeight * .26;
+      /* o sprite escala em volta do pé (transform-origin no pé) e a
+         conta do Showdown é pelo centro: a diferença vai até o pé */
+      const pe = el.offsetHeight * (peDoSprite(el) - .5);
       const tr = (q) => ({transform:`translate(${q.dx.toFixed(1)}px, ${(q.dy - (1 - q.s) * pe).toFixed(1)}px) scale(${q.s.toFixed(3)})`, opacity:q.op});
       const quadros = [Object.assign(tr({dx:0, dy:0, s:1, op:1}), {offset:0})];
       for (const g of s.segs){

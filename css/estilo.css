@@ -526,48 +526,7 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
   opacity:.5;background:var(--ar-textura, none);
 }
 .arena > *{position:relative;z-index:1}
-@media(max-width:620px){
-  .arena{grid-template-columns:1fr;padding:9px}
-  /* Empilhado, os dois lutadores ficam um embaixo do outro, e uma
-     faixa única deixaria o segundo brigando no escuro. Esticar a
-     mesma imagem pela arena inteira também não serve: numa caixa
-     alta e estreita o `cover` amplia tanto que sobra uma folha de
-     palmeira no lugar do mar. Então cada lutador ganha o cenário
-     atrás de si, no mesmo enquadramento do modo largo. */
-  .arena.com-cenario{--ar-faixa:0; padding-top:9px}
-  .arena.com-cenario::before{display:none}
-  .arena.com-cenario::after{
-    height:100%;
-    background:linear-gradient(180deg, rgba(8,10,14,.18) 0%, rgba(8,10,14,.4) 100%);
-  }
-  .arena.com-cenario .lutador.aliado .arte .sprite,
-  .arena.arena-ginasio .lutador.aliado .arte .sprite{
-    width:104px;height:104px;margin-bottom:-25px;
-  }
-  /* Empilhado não existe chão compartilhado: cada um tem a sua cena,
-     então o recuo de profundidade não quer dizer nada aqui e só
-     apertaria a caixa. Os dois pousam no pé da própria moldura. */
-  .arena.com-cenario .lutador.inimigo .arte,
-  .arena.arena-ginasio .lutador.inimigo .arte{padding-bottom:0}
-  .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
-  .arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{bottom:-2px}
-  .arena.com-cenario .lutador .arte{
-    height:120px;margin-bottom:10px;border-radius:var(--raio-sm);
-    background-image:var(--ar-fundo);
-    background-size:cover;background-repeat:no-repeat;
-    background-position:center var(--ar-foco);
-    image-rendering:pixelated;
-    box-shadow:inset 0 -34px 40px -24px rgba(8,10,14,.95),
-               inset 0 0 0 1px rgba(255,255,255,.05);
-  }
-  .arena.com-cenario[data-ambiente="cemiterio"] .lutador .arte{
-    filter:saturate(.55) hue-rotate(-24deg) brightness(.86)
-  }
-  /* a quadra é gradiente, então estica bem numa caixa alta */
-  .arena.arena-ginasio{--ar-faixa:100%; padding-top:9px}
-  .arena.arena-ginasio::after{height:100%}
-  .arena.arena-ginasio .lutador .arte{height:120px;margin-bottom:10px}
-}
+/* (o empilhado do celular mora depois das regras-base da arena, mais abaixo) */
 
 /* --- grama: rota aberta, mato alto no horizonte --- */
 .arena-grama{
@@ -1524,6 +1483,52 @@ h3.cat-item{
   .lutador .arte{height:84px}
   .lutador .arte .sprite{width:88px;height:88px}
 }
+/* Celular, arena empilhada. Mora DEPOIS das regras-base da arena de
+   propósito: os seletores têm o mesmo peso, e com o bloco antes delas
+   as de computador ganhavam calado — o seu não encolhia e o de lá
+   continuava recuado, flutuando no meio da própria moldura. */
+@media(max-width:620px){
+  .arena{grid-template-columns:1fr;padding:9px}
+  /* Empilhado, os dois lutadores ficam um embaixo do outro, e uma
+     faixa única deixaria o segundo brigando no escuro. Esticar a
+     mesma imagem pela arena inteira também não serve: numa caixa
+     alta e estreita o `cover` amplia tanto que sobra uma folha de
+     palmeira no lugar do mar. Então cada lutador ganha o cenário
+     atrás de si, no mesmo enquadramento do modo largo. */
+  .arena.com-cenario{--ar-faixa:0; padding-top:9px}
+  .arena.com-cenario::before{display:none}
+  .arena.com-cenario::after{
+    height:100%;
+    background:linear-gradient(180deg, rgba(8,10,14,.18) 0%, rgba(8,10,14,.4) 100%);
+  }
+  .arena.com-cenario .lutador.aliado .arte .sprite,
+  .arena.arena-ginasio .lutador.aliado .arte .sprite{
+    width:104px;height:104px;margin-bottom:-25px;
+  }
+  /* Empilhado não existe chão compartilhado: cada um tem a sua cena,
+     então o recuo de profundidade não quer dizer nada aqui e só
+     apertaria a caixa. Os dois pousam no pé da própria moldura. */
+  .arena.com-cenario .lutador.inimigo .arte,
+  .arena.arena-ginasio .lutador.inimigo .arte{padding-bottom:0}
+  .arena.com-cenario .lutador.inimigo .arte:not(:empty)::after,
+  .arena.arena-ginasio .lutador.inimigo .arte:not(:empty)::after{bottom:-2px}
+  .arena.com-cenario .lutador .arte{
+    height:120px;margin-bottom:10px;border-radius:var(--raio-sm);
+    background-image:var(--ar-fundo);
+    background-size:cover;background-repeat:no-repeat;
+    background-position:center var(--ar-foco);
+    image-rendering:pixelated;
+    box-shadow:inset 0 -34px 40px -24px rgba(8,10,14,.95),
+               inset 0 0 0 1px rgba(255,255,255,.05);
+  }
+  .arena.com-cenario[data-ambiente="cemiterio"] .lutador .arte{
+    filter:saturate(.55) hue-rotate(-24deg) brightness(.86)
+  }
+  /* a quadra é gradiente, então estica bem numa caixa alta */
+  .arena.arena-ginasio{--ar-faixa:100%; padding-top:9px}
+  .arena.arena-ginasio::after{height:100%}
+  .arena.arena-ginasio .lutador .arte{height:120px;margin-bottom:10px}
+}
 
 /* ícone de equipe: ao lado do nome, em lista e em carta */
 .sprite-icone{width:40px;height:30px;object-fit:contain;flex:0 0 auto}
@@ -2421,6 +2426,8 @@ h3.cat-item{
 .lutador.fixo .arte .sprite{animation:none}
 /* antes da abertura: ninguém à vista, a ficha do seu fora */
 .lutador.por-entrar .arte .sprite{visibility:hidden}
+/* a GIF de Black/White termina no pé: a escala gira na borda de baixo */
+.lutador .arte .sprite.ani{transform-origin:50% 100%}
 /* quem desmaiou não volta a aparecer quando a arena se redesenha */
 .lutador.caido .arte .sprite{visibility:hidden}
 .lutador.aliado.por-entrar .ficha,

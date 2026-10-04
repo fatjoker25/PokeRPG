@@ -109,6 +109,9 @@ const Efeitos = {
     const r = s ? s.getBoundingClientRect()
                 : (a.querySelector(`.lutador.${lado} .arte`) || a).getBoundingClientRect();
     const x = r.left - A.left, y = r.top - A.top;
+    /* GIF de Black/White: recortada no bicho, do topo ao pé */
+    if (s && s.classList.contains('ani'))
+      return {x, y, w:r.width, h:r.height, cx: x + r.width / 2, cy: y + r.height * 0.5, pe: y + r.height, topo: y};
     return {x, y, w:r.width, h:r.height,
             cx: x + r.width / 2, cy: y + r.height * 0.52, pe: y + r.height * 0.76,
             topo: y + r.height * 0.24};
@@ -654,7 +657,7 @@ const Efeitos = {
     m.className = 'fx-tinta';
     m.src = s.currentSrc || s.src; m.alt = '';
     Object.assign(m.style, {left:t.x + 'px', top:t.y + 'px', width:t.w + 'px', height:t.h + 'px',
-      filter:this.filtroDeCor('#FFFFFF'), transformOrigin:`50% 76%`});
+      filter:this.filtroDeCor('#FFFFFF'), transformOrigin:`50% ${peDoSprite(s) * 100}%`});
     c.appendChild(m);
     await this.tocar(m, [{transform:'scale(0)', opacity:1}, {transform:'scale(1)', opacity:1}], 380,
                      {easing:'cubic-bezier(.2,1.3,.5,1)', fill:'forwards'});

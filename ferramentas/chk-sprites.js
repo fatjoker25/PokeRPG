@@ -16,9 +16,11 @@ const linhas = [];
 for (const [vista, pasta] of Object.entries(pastas)){
   const dir = path.join(raiz, base, pasta);
   if (!fs.existsSync(dir)){ falhas.push(`vista '${vista}' aponta pra ${base}${pasta}, que não existe`); continue; }
-  const pngs = fs.readdirSync(dir).filter(f => /^\d+\.png$/.test(f));
+  /* as animadas de Black/White são GIF; as paradas, PNG */
+  const ext = /Ani/.test(vista) ? '.gif' : '.png';
+  const pngs = fs.readdirSync(dir).filter(f => new RegExp('^\\d+\\' + ext + '$').test(f));
   const faltam = [];
-  for (let i = 1; i <= 251; i++) if (!pngs.includes(i + '.png')) faltam.push(i);
+  for (let i = 1; i <= 251; i++) if (!pngs.includes(i + ext)) faltam.push(i);
   if (faltam.length) falhas.push(`${base}${pasta}: faltam ${faltam.length} (ex.: ${faltam.slice(0,5).join(', ')})`);
   linhas.push(`  ${vista.padEnd(12)} ${base}${pasta}  ${pngs.length} arquivos`);
 }

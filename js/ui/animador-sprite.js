@@ -153,6 +153,8 @@ const AnimadorSprite = {
     this.limparLoop(lado);
     if (!s || !p) return;
     this.marcar(lado, ESTADOS_SPRITE.IDLE);
+    /* GIF de Black/White: o repouso é o dela, nada por cima */
+    if (s.classList.contains('ani')) return;
     this.tocarQuadros(s, p, lado);
     if (this.reduzido()) return;
     const r = this.ritmo(p);
@@ -262,7 +264,7 @@ const AnimadorSprite = {
     this.marcar(lado, ESTADOS_SPRITE.FAINT);
     if (!s) return Promise.resolve();
     if (this.reduzido()){ s.style.visibility = 'hidden'; return Promise.resolve(); }
-    const H = s.offsetHeight || 100, PE = H * .2, D = H * .8;
+    const H = s.offsetHeight || 100, PE = H * (1 - peDoSprite(s)) * .85, D = H * .8;
     return this.mover(s, {x:0, y:0, sx:1, sy:1, a:1, clip:PE}, {x:0, y:D, sx:1, sy:1, a:0, clip:PE + D},
                       650, 'easeIn', {fill:'forwards', passos:16});
   },

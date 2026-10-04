@@ -468,7 +468,8 @@ o `build.py` embute 1.686 arquivos.
 
 ### Crédito das artes
 
-As artes de Pokémon são de Black/White (frente e costas) e de
+As artes de Pokémon são de Black/White (frente e costas, paradas e as
+animadas, estas do repositório de sprites da PokeAPI) e de
 HeartGold/SoulSilver (ícones de equipe); os ícones de item vêm do
 repositório de sprites da PokeAPI, assim como os discos de TM, as oito
 insígnias de Kanto e o ícone do mapa; os gritos são a versão das

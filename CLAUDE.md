@@ -182,6 +182,20 @@ Frente e costas são Black/White, em `battle/front_full/`,
 enquadram de perto e cortam nas bordas. Os **ícones de equipe**
 continuam HG/SS: ícone é outra arte, não a mesma imagem reduzida.
 
+**Em movimento, são as GIFs animadas de Black/White da PokeAPI**
+(`battle/front_ani/`, `back_ani/` e os `_shiny`), em batalha, Pokédex,
+PC e sumário. Elas vêm recortadas no tamanho do bicho e com o pé na
+borda de baixo — todo mundo na mesma escala de pixel, Bulbasaur pequeno
+e Lugia enorme, como no jogo. `ajustarSpriteAni` desenha cada uma na
+escala que o CSS dá ao quadro de 96 px da arte parada (`.ani`), e na
+arena soma à margem os 24% que a arte parada tinha embaixo do pé.
+Quem mede a arte pergunta `peDoSprite(img)` (76% na parada, 100% na
+GIF) — `Efeitos.alvo`, a cena do Showdown e o desmaio já perguntam.
+Com GIF o repouso é o da própria GIF: o `AnimadorSprite` não respira
+por cima. Sem a GIF a `<img>` cai sozinha na arte parada
+(`spriteParado`). **O arquivo único não embute as GIFs** (34 MB, e ele
+vai pro git a cada build): lá a arte é a parada.
+
 Duas consequências que mordem e já estão no CSS. Os dois números
 foram **medidos** pelo canvas nas 251 espécies, não chutados:
 
