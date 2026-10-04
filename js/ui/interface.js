@@ -248,6 +248,8 @@ const UI = {
   topo(){
     const d = Estado.dados;
     this.pintarCenario();
+    /* a trilha segue a tela: luta, rota, cidade, caverna */
+    if (typeof Som !== 'undefined') setTimeout(() => Som.aplicarMusica(), 0);
     if (!d) return '';
     const rep = Estado.nomeRep();
     const cap = Historia.capitulo(d.capitulo);
@@ -1055,6 +1057,31 @@ const UI = {
       <button class="escolha" onclick="UI.fecharModal(true)">Continuar lutando</button>`, true);
   },
 
+  /* Som: quatro barras, o mudo e o tema da trilha */
+  ajustesDeSom(){
+    if (typeof Som === 'undefined') return '';
+    const p = Som.pref();
+    const barra = (k, nome) => `<label class="som-linha" for="som-${k}"><span>${nome}</span>
+        <input type="range" id="som-${k}" min="0" max="100" step="5" value="${Math.round(p[k] * 100)}"
+          oninput="Som.ajustar('${k}', this.value / 100);this.nextElementSibling.textContent=this.value+'%'">
+        <span class="som-pct">${Math.round(p[k] * 100)}%</span></label>`;
+    return `<div class="ajuste-som">
+      <h3>Som</h3>
+      <label class="som-mudo" for="som-mudo"><input type="checkbox" id="som-mudo" ${p.mudo ? 'checked' : ''}
+        onchange="Som.ajustar('mudo', this.checked)"> Mudo</label>
+      ${barra('geral', 'Geral')}${barra('efeitos', 'Efeitos')}${barra('gritos', 'Gritos')}${barra('musica', 'Música')}
+      <label class="som-linha" for="som-tema"><span>Trilha</span>
+        <select id="som-tema" onchange="Som.ajustar('tema', this.value)">
+          ${TEMAS_DE_MUSICA.map(t => `<option value="${t.id}"${t.id === p.tema ? ' selected' : ''}>${this.esc(t.nome)}</option>`).join('')}
+        </select></label>
+      <p class="sussurro">Os temas de arquivo tocam o que estiver em sons/musica/&lt;tema&gt;/ (batalha, rota, cidade e caverna, .ogg ou .mp3). Sem o arquivo, toca a sintetizada.</p>
+      <div class="som-testes">
+        <button class="btn mini" onclick="Som.efeito('pokedex')">Testar efeito</button>
+        <button class="btn mini" onclick="tocarGrito(25)">Testar grito</button>
+      </div>
+    </div>`;
+  },
+
   alternarSom(bt){
     const liga = !somLigado();
     try { localStorage.setItem('jc-som', liga ? '1' : '0'); } catch (e) {}
@@ -1310,7 +1337,7 @@ const UI = {
     /* Abre no meio, como nos jogos de DS: a metade de cima sobe e
        tomba pra trás, a de baixo desce um pouco, e a luz sai da fenda. */
     const fenda = camada.querySelector('.fenda');
-    const abrir  = () => abrirBola(cima, baixo, fenda, 160);
+    const abrir  = () => { if (typeof Som !== 'undefined') Som.efeito('abrir'); return abrirBola(cima, baixo, fenda, 160); };
     const fechar = () => fecharBola(cima, baixo, fenda, 130);
     const luz = (x, y) => {
       feixe.style.left = (x + TAM/2) + 'px'; feixe.style.top = (y + TAM/2) + 'px';
@@ -1417,6 +1444,7 @@ const UI = {
       return esperar(450).then(fim);
     }
 
+    if (typeof Som !== 'undefined') Som.efeito('arremesso');
     const sequencia = async () => {
       /* quebrou — racha no alto do arco, antes de chegar */
       if (anim.desfecho === 'quebrou'){
@@ -1470,6 +1498,7 @@ const UI = {
       if (anim.desfecho === 'captura'){
         /* fica dentro: a ficha do lado de lá não volta a mostrar ele */
         if (lutAlvo) lutAlvo.classList.add('capturado');
+        if (typeof Som !== 'undefined') Som.efeito('clique');
         await esperar(260);
         await brilhar();
         /* a bola pisca três vezes e some, como quem vai pro bolso */
@@ -1901,6 +1930,7 @@ const UI = {
   escaneamento(){
     const alvo = Batalha.inimigo;
     if (Jogo.encenando || Jogo.animandoBola) return;
+    if (typeof Som !== 'undefined') Som.efeito('scan');
     const jaTinha = Estado.conheceu(alvo.dex);
     const r = Batalha.acao({tipo:'pokedex'});
     const erro = (r.eventos || []).find(e => e.tipo === 'erro');
@@ -3131,8 +3161,7 @@ const UI = {
       </div>
       <button class="escolha" onclick="UI.modalRegras()">Regras</button>
       <button class="escolha" onclick="UI.modalTutorial()">Tutorial</button>
-      <button class="escolha som${somLigado() ? '' : ' mudo'}" onclick="UI.alternarSom(this);UI.modalAjustes()"
-        aria-pressed="${somLigado() ? 'false' : 'true'}">${somLigado() ? 'Som: ligado (gritos dos Pokémon)' : 'Som: desligado'}</button>`);
+      ${this.ajustesDeSom()}`);
   },
 
   modalItens(){
@@ -3393,6 +3422,7 @@ const UI = {
       msg = `Todos os golpes de ${nomeExib(p)} recuperaram um pouco.`;
     }
     Estado.salvar('auto');
+    if (typeof Som !== 'undefined') Som.efeito('item');
     /* a barra sai de onde estava e anda até onde ficou, como na luta */
     const mudou = p.hp !== hpAntes;
     const linha = mudou ? `<div class="time-lista">${this.escolherDoTime(() => '', x => x.uid === p.uid)}</div>` : '';
@@ -3626,6 +3656,7 @@ const UI = {
   },
 
   modalPokedex(){
+    if (typeof Som !== 'undefined' && !(document.querySelector('#modal .modal.pokedex'))) Som.efeito('pokedex');
     const c = Estado.contagemDex();
     const pd = Estado.pdex();
     /* Antes do upgrade, o aparelho mostra Kanto e os lendários que

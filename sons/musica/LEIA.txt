@@ -1,0 +1,16 @@
+Trilha por tema (Ajustes > Som > Trilha)
+
+O jogo não traz música dos jogos: ela não é nossa pra distribuir, e a
+PokeAPI só tem sprite e grito. Pra ouvir um tema, ponha os arquivos numa
+pasta com o nome do tema, ao lado do jogo:
+
+  sons/musica/bw/   -> Black/White
+  sons/musica/rby/  -> Red/Blue
+  sons/musica/gsc/  -> Gold/Silver
+
+Dentro de cada pasta, quatro arquivos (.ogg ou .mp3):
+
+  batalha.ogg   rota.ogg   cidade.ogg   caverna.ogg
+
+O jogo escolhe pelo que está na tela: luta, rota, cidade ou caverna.
+Arquivo que faltar cai na trilha sintetizada, sem erro.

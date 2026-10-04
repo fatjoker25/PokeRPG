@@ -1062,6 +1062,7 @@ const Cidade = {
   },
   confirmarCompra(nome, preco){
     if (Estado.j.dinheiro < preco) return this.loja(this._andar || 0, this._qual || undefined);
+    if (typeof Som !== 'undefined') Som.efeito('compra');
     Estado.j.dinheiro -= preco;
     Estado.darItem(nome, 1);
     Estado.salvar('auto');

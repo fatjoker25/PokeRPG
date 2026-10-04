@@ -388,6 +388,7 @@ const Jogo = {
     if (acao.tipo === 'pokedex') return UI.escaneamento();
     /* clique no meio do voo da bola: o turno já foi resolvido, espera */
     if (this.animandoBola || this.encenando) return;
+    if (acao.tipo === 'item' && typeof Som !== 'undefined') Som.efeito('item');
     const r = Batalha.acao(acao);
     /* o turno já está decidido: salva antes de animar, senão recarregar
        no meio da animação devolvia o turno de antes, pra rolar de novo */

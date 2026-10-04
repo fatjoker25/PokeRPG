@@ -49,6 +49,9 @@ if os.path.isdir(SPRITES_DIR):
     # arquivo pelo caminho relativo, seja imagem ou som
     if os.path.isdir('sons'):
         for raiz, _, arqs in os.walk('sons'):
+            # a trilha é de quem joga, fica do lado do arquivo, nunca dentro
+            if raiz.replace(os.sep, '/').startswith('sons/musica'):
+                continue
             for a in sorted(arqs):
                 if not a.endswith('.ogg'):
                     continue

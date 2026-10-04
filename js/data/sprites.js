@@ -225,13 +225,16 @@ function caminhoGrito(dexId){
 }
 /* Som é preferência do aparelho, não da partida: vale pra todo save. */
 function somLigado(){
+  if (typeof Som !== 'undefined') return !Som.pref().mudo;
   try { return localStorage.getItem('jc-som') !== '0'; } catch (e) { return true; }
 }
 function tocarGrito(dexId){
   try {
     if (!dexId || dexId > 251 || !somLigado()) return;
+    const vol = (typeof Som !== 'undefined') ? Som.volume('gritos') * 0.6 : 0.45;
+    if (!vol) return;
     const a = new Audio(caminhoGrito(dexId));
-    a.volume = 0.45;
+    a.volume = Math.min(1, vol);
     const r = a.play();
     if (r && r.catch) r.catch(() => {});
   } catch (e) { /* sem áudio: segue calado */ }

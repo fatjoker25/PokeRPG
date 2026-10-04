@@ -408,6 +408,17 @@ cobria as fichas de HP.
 Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
 
+Som mora em `js/ui/som.js` (`Som`): volumes geral, efeitos, gritos e
+música, e o mudo, em `localStorage` ('jc-audio'), lidos por
+`Som.volume(canal)` — `tocarGrito` e `somLigado` passam por ali. Efeito
+sonoro é sintetizado (`Som.EFEITOS`: pokedex, scan, arremesso, abrir,
+clique, item, compra) e entra por `Som.efeito(nome)` no ponto em que a
+coisa acontece. A trilha segue a tela (`Som.contexto`: batalha, rota,
+cidade, caverna) e é trocada no `topo()`. Música dos jogos **não entra
+no repositório**: os temas de arquivo leem `sons/musica/<tema>/`, que o
+`build.py` deixa de fora do arquivo único, e sem o arquivo cai na
+sintetizada.
+
 ## O combate é Pokérole
 Desde a troca de mecânica o combate segue o **Pokérole 3.0**; a ficha do
 treinador e os testes de história continuam no d10. Os dois sistemas não
