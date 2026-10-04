@@ -1164,7 +1164,9 @@ const UI = {
       const fundo = (!meu && rosto) ? `<img class="treinador-fundo" src="${rosto}" alt="${this.esc(Batalha.treinador)}" onerror="this.remove()">` : '';
       const vida = (meu && Batalha.fase === 'ameaca') ? this.vidaJogadorHTML() : '';
       const caido = p.hp <= 0 ? ' caido' : '';
-      return `<div class="lutador ${cls}${fixo}${entrando}${caido}">
+      /* o capturado está na bola: a ficha fica, o corpo não volta */
+      const preso = (!meu && p.capturadoEm) ? ' capturado' : '';
+      return `<div class="lutador ${cls}${fixo}${entrando}${caido}${preso}">
         <div class="arte">${fundo}${arte}${Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : ''}</div>
         <div class="ficha">
           ${vida}
@@ -1319,7 +1321,8 @@ const UI = {
        surgeSprite (fill both), e animação CSS ganha de estilo inline —
        opacity 0 aqui era ignorado e o Pokémon ficava de pé ao lado da
        bola que devia estar com ele dentro. visibility ela não toca. */
-    const esconderAlvo = () => { if (alvo) alvo.style.visibility = 'hidden'; };
+    const lutAlvo = alvo && alvo.closest('.lutador');
+    const esconderAlvo = () => { if (alvo) alvo.style.visibility = 'hidden'; if (lutAlvo) lutAlvo.classList.add('sem-sombra'); };
 
     /* 2 — o raio sai da bola aberta e pega o Pokémon pelo meio */
     const bx = xt + TAM/2, by = yAlto + TAM/2;
@@ -1351,6 +1354,7 @@ const UI = {
       await tocar(mascara, [{transform:'scale(.05)', opacity:0},
                             {transform:'scale(1)', opacity:1}], 320, {easing:'ease-out'});
       alvo.style.visibility = '';
+      if (lutAlvo) lutAlvo.classList.remove('sem-sombra');
       await tocar(mascara, [{opacity:1}, {opacity:0}], 220);
     };
     /* 1 — parábola de Bézier quadrática, amostrada em quadros */
@@ -1463,9 +1467,17 @@ const UI = {
 
       /* 4 */
       if (anim.desfecho === 'captura'){
+        /* fica dentro: a ficha do lado de lá não volta a mostrar ele */
+        if (lutAlvo) lutAlvo.classList.add('capturado');
         await esperar(260);
         await brilhar();
-        await esperar(280);
+        /* a bola pisca três vezes e some, como quem vai pro bolso */
+        /* o degrau vai em cada quadro, nunca no tempo inteiro */
+        const D = 'steps(1, end)';
+        await tocar(bola, [{opacity:1, easing:D}, {opacity:.25, offset:.17, easing:D}, {opacity:1, offset:.33, easing:D},
+                           {opacity:.25, offset:.5, easing:D}, {opacity:1, offset:.67, easing:D}, {opacity:.25, offset:.83, easing:D},
+                           {opacity:1}], 720, {easing:'linear', fill:'none'});
+        await tocar(bola, [{opacity:1, filter:'brightness(1)'}, {opacity:0, filter:'brightness(2.2)'}], 380, {easing:'ease-in'});
         return;
       }
       await esperar(300);

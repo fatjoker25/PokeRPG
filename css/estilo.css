@@ -2939,3 +2939,8 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .modal.so-x{padding:12px 10px 10px}
   .modal.so-x .abas-mochila{margin-bottom:6px}
 }
+
+/* sombra: some quando o HP zera, quando a bola recolhe e com o capturado */
+.lutador .arte::after{transition:opacity .35s ease}
+.lutador.caido .arte::after,.lutador.sem-sombra .arte::after,.lutador.capturado .arte::after{opacity:0!important}
+.lutador.capturado .arte .sprite{visibility:hidden!important}

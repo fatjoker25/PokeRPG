@@ -263,6 +263,8 @@ const AnimadorSprite = {
     this.limparLoop(lado);
     this.marcar(lado, ESTADOS_SPRITE.FAINT);
     if (!s) return Promise.resolve();
+    /* HP zerou: a sombra sai junto com o corpo */
+    const lut = s.closest('.lutador'); if (lut) lut.classList.add('sem-sombra');
     if (this.reduzido()){ s.style.visibility = 'hidden'; return Promise.resolve(); }
     const H = s.offsetHeight || 100, PE = H * (1 - peDoSprite(s)) * .85, D = H * .8;
     return this.mover(s, {x:0, y:0, sx:1, sy:1, a:1, clip:PE}, {x:0, y:D, sx:1, sy:1, a:0, clip:PE + D},
@@ -279,7 +281,7 @@ const AnimadorSprite = {
     this.limparLoop(lado);
     if (!s) return Promise.resolve();
     const lut = s.closest('.lutador');
-    if (lut) lut.classList.add('fixo');                /* sem o surgeSprite do CSS por baixo */
+    if (lut){ lut.classList.add('fixo'); lut.classList.remove('sem-sombra'); }   /* sem o surgeSprite do CSS por baixo */
     /* o que ficou preso do recolher ou do desmaio (fill forwards) sai antes */
     s.getAnimations().forEach(x => x.cancel());
     s.style.visibility = '';

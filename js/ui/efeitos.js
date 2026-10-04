@@ -117,6 +117,19 @@ const Efeitos = {
             topo: y + r.height * 0.24};
   },
 
+  /* espera a arte carregar e ganhar o tamanho dela (ajustarSpriteAni) */
+  async spritePronto(s){
+    if (!s) return;
+    if (!s.complete || !s.naturalWidth){
+      await new Promise(r => {
+        const t = setTimeout(r, 1500);
+        s.addEventListener('load', () => { clearTimeout(t); r(); }, {once:true});
+        s.addEventListener('error', () => { clearTimeout(t); r(); }, {once:true});
+      });
+    }
+    if (s.classList.contains('ani') && typeof ajustarSpriteAni === 'function') ajustarSpriteAni(s);
+  },
+
   /* partícula solta na camada, já no lugar; some sozinha no fim */
   particula(cls, x, y, estilo){
     const c = this.camada();
@@ -647,6 +660,9 @@ const Efeitos = {
     lut.classList.remove('por-entrar');
     const c = this.camada();
     const A = arena.getBoundingClientRect();
+    /* A GIF ainda carregando tem o tamanho do quadro inteiro, não o do
+       Pokémon: medir antes dava uma máscara gigante no nascimento. */
+    await this.spritePronto(s);
     const t = this.alvo(lado);
     const TAM = 30;
     const bola = spriteDaBola(nomeBola);

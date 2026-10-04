@@ -268,17 +268,24 @@ function spriteDaBola(nome){
 /* A Pokébola abre no meio, como nos jogos de DS: a metade de cima sobe
    e tomba pra trás na dobradiça, a de baixo assenta, e entre as duas
    aparece a fenda de luz. Serve pro arremesso e pra entrada. */
+/* Abre pela costura: as duas cascas se afastam na vertical, a de cima
+   sobe e a de baixo desce na mesma medida, e o clarão sai do meio,
+   onde fica a fenda. Fechar é o mesmo ao contrário. */
+const ABRE_CASCA = '30%';
 function abrirBola(cima, baixo, fenda, ms){
-  const o = {duration:ms || 150, fill:'forwards', easing:'cubic-bezier(.3,1.4,.5,1)'};
-  const p = [cima.animate([{transform:'translateY(0) rotateX(0deg)'}, {transform:'translateY(-34%) rotateX(62deg)'}], o).finished];
-  if (baixo) p.push(baixo.animate([{transform:'translateY(0)'}, {transform:'translateY(9%)'}], o).finished);
-  if (fenda) p.push(fenda.animate([{opacity:0, transform:'scaleX(.2)'}, {opacity:1, transform:'scaleX(1)'}], o).finished);
+  const o = {duration:ms || 150, fill:'forwards', easing:'cubic-bezier(.3,1.35,.5,1)'};
+  const p = [cima.animate([{transform:'translateY(0)'}, {transform:`translateY(-${ABRE_CASCA})`}], o).finished];
+  if (baixo) p.push(baixo.animate([{transform:'translateY(0)'}, {transform:`translateY(${ABRE_CASCA})`}], o).finished);
+  if (fenda) p.push(fenda.animate([
+    {opacity:0, transform:'scale(.2, .4)'},
+    {opacity:1, transform:'scale(1.35, 3.4)', offset:.5},
+    {opacity:.95, transform:'scale(1.05, 2.2)'}], Object.assign({}, o, {duration:(ms || 150) * 1.6, easing:'ease-out'})).finished);
   return Promise.all(p);
 }
 function fecharBola(cima, baixo, fenda, ms){
   const o = {duration:ms || 130, fill:'forwards', easing:'ease-in'};
-  const p = [cima.animate([{transform:'translateY(-34%) rotateX(62deg)'}, {transform:'translateY(0) rotateX(0deg)'}], o).finished];
-  if (baixo) p.push(baixo.animate([{transform:'translateY(9%)'}, {transform:'translateY(0)'}], o).finished);
-  if (fenda) p.push(fenda.animate([{opacity:1}, {opacity:0}], o).finished);
+  const p = [cima.animate([{transform:`translateY(-${ABRE_CASCA})`}, {transform:'translateY(0)'}], o).finished];
+  if (baixo) p.push(baixo.animate([{transform:`translateY(${ABRE_CASCA})`}, {transform:'translateY(0)'}], o).finished);
+  if (fenda) p.push(fenda.animate([{opacity:.95, transform:'scale(1.05, 2.2)'}, {opacity:0, transform:'scale(.6, .4)'}], o).finished);
   return Promise.all(p);
 }
