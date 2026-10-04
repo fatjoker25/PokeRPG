@@ -702,6 +702,9 @@ const Cidade = {
   /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
     const d = Estado.dados, L = Mundo.atual();
+    /* quem saiu de Pallet tem licença e Pokédex, mas o cartão só sai
+       numa máquina de Centro: a primeira é a de Viridian */
+    if (Mundo.id() === 'viridian' && d.flags.tem_licenca && !d.flags.tem_cartao) return this.cartaoDeViridian();
     const mural = muralDoCentro(Mundo.id()).length ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
     const cargos = (typeof Cargos !== 'undefined')
       ? `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais</button>` : '';
@@ -711,6 +714,25 @@ const Cidade = {
       ${cargos}
       <button class="escolha" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">Mapa da parede</button>
       ${mural}`, false, 'centro');
+  },
+
+  cartaoDeViridian(){
+    UI.telaConversa({num:'Viridian', titulo:'Centro Pokémon de Viridian', loc:'o balcão',
+      falas:[
+        'A enfermeira do balcão de Viridian olha a sua licença, olha o carimbo de Pallet, e já está puxando uma gaveta.',
+        fala('a enfermeira de Viridian', 'Pallet. Sem cartão, né? Lá não tem a máquina. Todo mundo de Pallet passa aqui primeiro.'),
+        'A máquina do fundo engole um cartão em branco, pensa um tempo que parece longo demais, e devolve com a sua foto da licença impressa no canto.',
+        fala('a enfermeira de Viridian', 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.'),
+        fala('a enfermeira de Viridian', 'E agora sim: bem-vind{o|a} à estrada.', 'riso')
+      ],
+      botoes:[{texto:'Guardar o cartão', acao:'Cidade.receberCartao()'}]});
+  },
+  receberCartao(){
+    Estado.marcar('tem_cartao');
+    Estado.registrar('Recebeu o cartão de treinador no Centro Pokémon de Viridian.');
+    Estado.salvar('auto');
+    Exploracao.tela([{tipo:'item', texto:'Cartão de treinador na mochila. Ele aparece na aba Cartão.'}]);
+    setTimeout(() => this.centro(), 50);
   },
 
   /* Cura o time e devolve o que aconteceu. Quem chama decide a tela:

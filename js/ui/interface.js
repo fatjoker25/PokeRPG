@@ -3888,6 +3888,7 @@ const UI = {
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
+      ${L('Pokédex e cartão', 'fora de Pallet, os dois saem do Centro da sua cidade, no cadastro · em Pallet, a Pokédex sai da mão do Professor, no laboratório, e o cartão só no Centro de Viridian, que é o primeiro do caminho')}
       ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia · sai da tabela de inicial: 1d6 escolhe a coluna (1–4, o que vive na sua cidade natal; 5–6, o que combina com o jeito que você escreveu) e 1d6 a linha')}
       ${L('Ritmo do combate', 'Pokérole (o HP do livro) ou prolongado (HP base em dobro)')}`;
 
@@ -4266,6 +4267,7 @@ const UI = {
       <div class="linha"><span class="k">Nascimento</span><span class="v">a ficha pede dia, mês e ano · a jornada começa entre 10 e 20 anos, contados no dia em que ela começa</span></div>
       <div class="linha"><span class="k">Idade</span><span class="v">sai da data de nascimento e da data do jogo (a jornada começa em março de 2010) · sobe sozinha no aniversário · aparece na Ficha e no Cartão de Treinador</span></div>
       <div class="linha"><span class="k">Aniversário</span><span class="v">na primeira tela de mapa do dia: quem ficou em casa liga (ou manda carta, sem PokéNav), quem te conhece bem manda parabéns · +1.000 ₽, 2× Super Potion e +5 de moral no time inteiro · uma vez por ano</span></div>
+      <div class="linha"><span class="k">Lembrança</span><span class="v">o que a história conta da sua infância conta a partir dos 3 anos: as coisas de casa têm, no máximo, a sua idade menos três</span></div>
       <div class="linha"><span class="k">Responsável</span><span class="v">a licença pede assinatura de responsável abaixo dos 16</span></div>
       <div class="linha"><span class="k">16 anos</span><span class="v">estiva do cais de Vermilion (5h às 11h, paga por Força) · Guarda de rota · Repórter</span></div>
       <div class="linha"><span class="k">18 anos</span><span class="v">cassino de Celadon (aposta pela Sorte) · Polícia, Auditoria, Comissão, Instrutor, Líder de ginásio, Elite, Professor e Conselho · algumas cenas tratam você como adulto</span></div>

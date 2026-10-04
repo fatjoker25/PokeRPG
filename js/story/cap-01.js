@@ -6,6 +6,10 @@
 
 /* Pallet não tem Centro Pokémon: o posto de lá é o laboratório. */
 function oPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'o laboratório do Professor' : 'o Centro Pokémon'; }
+/* quem atende o cadastro: em Pallet é a assistente do Professor, na
+   mesa do lado da porta do laboratório; no resto, a enfermeira do Centro */
+function cadastra(d){ return (d || Estado.dados).jogador.cidade === 'Pallet' ? 'a assistente do Professor' : 'a enfermeira'; }
+function Cadastra(d){ const c = cadastra(d); return c.charAt(0).toUpperCase() + c.slice(1); }
 function aoPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'ao laboratório do Professor' : 'ao Centro Pokémon'; }
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
@@ -697,12 +701,12 @@ c1_nao_perguntou:{
 c1_bolso_de_dentro:{
   texto:[
     'Você vira a mochila e abre o bolso de dentro, o que ninguém abre porque ninguém lembra que existe.',
-    'Tem um mapa de Kanto de nove anos atrás, dobrado errado, com quatro rotas marcadas a caneta e uma quinta rasurada.',
+    'Tem um mapa de Kanto de {idade-3} anos atrás, dobrado errado, com quatro rotas marcadas a caneta e uma quinta rasurada.',
     'Tem meio pacote de biscoito que virou pó.',
     'E tem um bilhete de ônibus de Viridian para Pewter, sem data, nunca usado.',
     'Alguém comprou uma passagem e não foi.'
   ],
-  ef:{itens:{'Mapa de nove anos atrás':1}, flag:'achou_o_bilhete_de_onibus',
+  ef:{itens:{'Mapa velho de Kanto':1}, flag:'achou_o_bilhete_de_onibus',
       rep:{eixo:'bom',delta:1,motivo:'Olhou onde ninguém olha'},
       registrar:'Achou um mapa antigo e uma passagem nunca usada no bolso de dentro.'},
   escolhas:[
@@ -1055,7 +1059,7 @@ c1_cinco_minutos:{
 
 c1_quarto:{
   texto:[
-    'O quarto tem doze anos de coisa acumulada e você não vai levar quase nada.',
+    'O quarto tem {idade-3} anos de coisa acumulada e você não vai levar quase nada.',
     'Na parede, um mapa de Kanto que você ganhou aos oito e preencheu de caneta com lugares onde nunca foi. Alguns nomes estão escritos errado.',
     d=>`Na estante, um caderno de desenho que para na página quatorze. Uma medalha de uma corrida da escola que você não ganhou, e sim terminou. Uma foto ${casaEhMulher() ? 'da' : 'do'} ${nomeCasa()} muito mais nov${casaEhMulher() ? 'a' : 'o'}, com o cabelo diferente, rindo de uma coisa que ninguém registrou.`,
     'Nada disso vai servir pra nada em Kanto. Você sabe disso e continua olhando.'
@@ -1288,13 +1292,13 @@ c1_varreu_no_lugar:{
 
 c1_entregou_a_caixa:{
   texto:[
-    'Você põe a caixa de ventilador no balcão antes de entrar na fila, e a enfermeira olha a caixa, olha você, e não pergunta nada.',
+    d=>`Você põe a caixa de ventilador no balcão antes de entrar na fila, e ${cadastra(d)} olha a caixa, olha você, e não pergunta nada.`,
     'Ela levanta o pano de prato com dois dedos.',
-    fala('a enfermeira', 'Ah.'),
-    fala('a enfermeira', 'Terceiro esse mês. Sempre em caixa, sempre com pano de prato por cima, sempre trazido por outra pessoa.'),
+    d=>fala(cadastra(d), 'Ah.'),
+    d=>fala(cadastra(d), 'Terceiro esse mês. Sempre em caixa, sempre com pano de prato por cima, sempre trazido por outra pessoa.'),
     d=>fala(d.jogador.nome, 'E o que acontece com eles?'),
-    fala('a enfermeira', 'A gente cuida até alguém querer. Às vezes alguém quer.'),
-    fala('a enfermeira', 'Se você mudar de ideia nos próximos dez minutos, ele ainda tá aqui.', 'baixo')
+    d=>fala(cadastra(d), 'A gente cuida até alguém querer. Às vezes alguém quer.'),
+    d=>fala(cadastra(d), 'Se você mudar de ideia nos próximos dez minutos, ele ainda tá aqui.', 'baixo')
   ],
   ef:{flag:'entregou_a_caixa_no_centro',
       registrar:'Entregou a caixa da Sra. Perla no Centro. Era o terceiro do mês.'},
@@ -1307,10 +1311,10 @@ c1_entregou_a_caixa:{
 
 c1_mudou_de_ideia_no_balcao:{
   texto:[
-    'Você pega a caixa de volta do balcão antes dos dez minutos e a enfermeira nem finge surpresa.',
-    fala('a enfermeira', 'Quarenta segundos. É o recorde do mês.', 'riso'),
+    d=>`Você pega a caixa de volta do balcão antes dos dez minutos e ${cadastra(d)} nem finge surpresa.`,
+    d=>fala(cadastra(d), 'Quarenta segundos. É o recorde do mês.', 'riso'),
     'Ela puxa uma ficha, preenche em trinta segundos e empurra pra você assinar.',
-    fala('a enfermeira', 'Vamos registrar ele no seu nome junto com a sua licença, que aí você só faz fila uma vez.')
+    d=>fala(cadastra(d), 'Vamos registrar ele no seu nome junto com a sua licença, que aí você só faz fila uma vez.')
   ],
   ef:{flag:'ficou_com_o_bicho', moral:5,
       rep:{eixo:'bom',delta:2,motivo:'Voltou ao balcão em quarenta segundos para ficar com ele'},
@@ -1334,9 +1338,9 @@ c1_quantos_ninguem_quis:{
   texto:[
     d=>fala(d.jogador.nome, 'Quantos deles ninguém nunca quis?'),
     'Ela para de mexer na prancheta.',
-    fala('a enfermeira', 'Essa é uma pergunta muito ruim pra sete e quarenta da manhã.'),
-    fala('a enfermeira', 'Dos que passaram por este balcão nos três anos que eu estou aqui: a maioria.'),
-    fala('a enfermeira', 'A maioria vai pro abrigo de Lavender, que tem onze e cabe dezoito.', 'baixo'),
+    d=>fala(cadastra(d), 'Essa é uma pergunta muito ruim pra sete e quarenta da manhã.'),
+    d=>fala(cadastra(d), 'Dos que passaram por este balcão nos três anos que eu estou aqui: a maioria.'),
+    d=>fala(cadastra(d), 'A maioria vai pro abrigo de Lavender, que tem onze e cabe dezoito.', 'baixo'),
     'Lavender. Você vai acabar em Lavender uma hora, todo mundo acaba, e agora você vai chegar lá sabendo disso.'
   ],
   ef:{flag:'sabe_do_abrigo_de_lavender',
@@ -1350,18 +1354,18 @@ c1_quantos_ninguem_quis:{
 
 c1_carregou_o_nav:{
   texto:[
-    'Você pergunta se dá pra carregar e a enfermeira aponta uma tomada atrás do balcão com quatro aparelhos já ligados nela.',
-    fala('a enfermeira', 'Todo Centro tem. É serviço obrigatório e ninguém sabe.'),
+    d=>`Você pergunta se dá pra carregar e ${cadastra(d)} aponta uma tomada atrás do balcão com quatro aparelhos já ligados nela.`,
+    d=>fala(cadastra(d), 'Todo Centro tem. É serviço obrigatório e ninguém sabe.'),
     'Enquanto carrega, você mexe no aparelho pela primeira vez com calma.',
     d=>fala(nomeCasa(), 'CASA', 'baixo', 'É o único número gravado. Está escrito em maiúsculo, o que quer dizer que foi {casa:ela|ele} que digitou.'),
-    'Tem também, na memória, três chamadas não atendidas de nove anos atrás, para um número que não existe mais.',
+    'Tem também, na memória, três chamadas não atendidas de {idade-3} anos atrás, para um número que não existe mais.',
     'Você não apaga.'
   ],
   ef:{flag:'viu_as_chamadas_antigas', moral:2,
       rep:{eixo:'bom',delta:1,motivo:'Mexeu no aparelho com calma antes de precisar dele'},
-      registrar:'O PokéNav tem três chamadas não atendidas de nove anos atrás, para um número que não existe mais.'},
+      registrar:'O PokéNav tem três chamadas não atendidas de {idade-3} anos atrás, para um número que não existe mais.'},
   escolhas:[
-    {texto:'Perguntar à enfermeira se dá pra descobrir de quem era o número.', vai:'c1_de_quem_era_o_numero'},
+    {texto:d=>`Perguntar ${d.jogador.cidade === 'Pallet' ? 'à assistente do Professor' : 'à enfermeira'} se dá pra descobrir de quem era o número.`, vai:'c1_de_quem_era_o_numero'},
     {texto:'Entrar na fila.', vai:'c1_fila'}
   ]
 },
@@ -1369,13 +1373,13 @@ c1_carregou_o_nav:{
 c1_de_quem_era_o_numero:{
   texto:[
     'Ela digita o número no terminal do balcão e espera, e o terminal responde em quatro segundos.',
-    fala('a enfermeira', 'Linha cancelada em 1989. Titular…', null, 'Ela para de ler em voz alta.'),
-    fala('a enfermeira', 'Titular com o mesmo sobrenome que o seu.', 'baixo'),
+    d=>fala(cadastra(d), 'Linha cancelada em 1989. Titular…', null, 'Ela para de ler em voz alta.'),
+    d=>fala(cadastra(d), 'Titular com o mesmo sobrenome que o seu.', 'baixo'),
     'Ela vira a tela pra você e não é uma tela que explique muita coisa: é um nome, uma data de cancelamento e um campo de motivo em branco.',
     'Você fecha o aparelho e põe no bolso e entra na fila, e leva exatamente onze minutos pra conseguir prestar atenção em outra coisa.'
   ],
   ef:{flag:'o_numero_de_1989', moral:-2,
-      rep:{eixo:'bom',delta:1,motivo:'Puxou um fio de nove anos atrás numa fila de balcão'},
+      rep:{eixo:'bom',delta:1,motivo:'Puxou um fio de {idade-3} anos atrás numa fila de balcão'},
       registrar:'O número das chamadas antigas foi cancelado em 1989. O titular tinha o seu sobrenome.'},
   escolhas:[
     {texto:'Entrar na fila.', vai:'c1_fila'},
@@ -1506,11 +1510,11 @@ c1_terceiro_explica:{
 
 c1_pergunta_recepcao:{
   texto:[
-    'A enfermeira do balcão tem uns trinta anos e a paciência exata de quem explica a mesma coisa quatro vezes por dia desde 1993.',
-    fala('a enfermeira', 'Documento com foto, um Pokémon registrado no seu nome, e a assinatura de um responsável se você tiver menos de dezesseis.'),
+    d=>`${Cadastra(d)} do balcão tem uns trinta anos e a paciência exata de quem explica a mesma coisa quatro vezes por dia desde 1993.`,
+    d=>fala(cadastra(d), 'Documento com foto, um Pokémon registrado no seu nome, e a assinatura de um responsável se você tiver menos de dezesseis.'),
     d=>fala(d.jogador.nome, 'E se eu não tiver responsável?'),
-    fala('a enfermeira', 'Aí tem um formulário.', null, 'Ela já está puxando a gaveta antes de terminar a frase.'),
-    fala('a enfermeira', 'Tem sempre um formulário.')
+    d=>fala(cadastra(d), 'Aí tem um formulário.', null, 'Ela já está puxando a gaveta antes de terminar a frase.'),
+    d=>fala(cadastra(d), 'Tem sempre um formulário.')
   ],
   ef:{flag:'perguntou_antes'},
   escolhas:[
@@ -1522,19 +1526,19 @@ c1_pergunta_recepcao:{
 c1_fila:{
   texto:[
     'A fila leva quarenta minutos porque a máquina de foto quebrou e voltou a funcionar duas vezes.',
-    'Quando chega a sua vez, a enfermeira empurra uma prancheta pela bancada com dois dedos.',
-    fala('a enfermeira', 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
+    d=>`Quando chega a sua vez, ${cadastra(d)} empurra uma prancheta pela bancada com dois dedos.`,
+    d=>fala(cadastra(d), 'Nome completo, cidade, idade. Assina embaixo. E coloca ele aqui em cima, por favor.'),
     d=>{
       const p = d.time[0];
       return p ? `Você coloca ${nomeExib(p)} na bancada. ${pron(p).Ele} não gosta da bancada. Fica quiet${pron(p).o} assim mesmo, porque é você que está pedindo.` : 'Você não tem nenhum Pokémon para colocar na bancada, e isso é um problema imediato.';
     },
     'Ela passa um leitor por cima dele. A máquina apita uma vez, seca.',
     d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
-      ? fala('a enfermeira', 'Tudo certo. Registro do laboratório de Pallet, com a data de hoje, nenhuma restrição.')
-      : fala('a enfermeira', 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
+      ? fala(cadastra(d), 'Tudo certo. Registro do laboratório de Pallet, com a data de hoje, nenhuma restrição.')
+      : fala(cadastra(d), 'Tudo certo. Nenhum registro anterior, nenhum chip de criador, nenhuma restrição.'),
     d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor)
-      ? fala('a enfermeira', d.flags.recebeu_do_goro ? 'Veio na perua hoje, né? O Célio ainda tá na praça?' : 'Saiu da mão do Professor hoje, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
-      : fala('a enfermeira', 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+      ? fala(cadastra(d), d.flags.recebeu_do_goro ? 'Veio na perua hoje, né? O Célio ainda tá na praça?' : 'Saiu da mão do Professor hoje, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
+      : fala(cadastra(d), 'Ele é de casa mesmo, né?', null, 'Ela levanta os olhos da prancheta pela primeira vez.')
   ],
   escolhas:[
     {texto:d=>(d.flags.recebeu_do_goro || d.flags.recebeu_do_professor) ? '"Veio. Faz uma hora que é meu."' : '"É. Desde antes de eu lembrar."', vai:'c1_registro',
@@ -1548,9 +1552,9 @@ c1_fila:{
 c1_registro_anterior:{
   texto:[
     d=>fala(d.jogador.nome, 'O que acontece se ele tivesse registro anterior?'),
-    'A enfermeira não levanta os olhos da prancheta.',
-    fala('a enfermeira', 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta o seu dia ia ser muito, muito diferente.', 'frio'),
-    fala('a enfermeira', 'Boa sorte que não é o caso.', null, 'O carimbo desce com força.')
+    d=>`${Cadastra(d)} não levanta os olhos da prancheta.`,
+    d=>fala(cadastra(d), 'Aí eu teria que chamar o oficial de plantão. E o oficial ia perguntar como ele chegou em você. E você ia responder. E a partir da sua resposta o seu dia ia ser muito, muito diferente.', 'frio'),
+    d=>fala(cadastra(d), 'Boa sorte que não é o caso.', null, 'O carimbo desce com força.')
   ],
   ef:{flag:'sabe_do_registro_anterior'},
   escolhas:[{texto:'Assinar.', vai:'c1_registro'}]
@@ -1560,11 +1564,11 @@ c1_porque_importa:{
   texto:[
     d=>fala(d.jogador.nome, 'Por que isso importa?'),
     'Aí ela para. E olha pra você de verdade.',
-    fala('a enfermeira', 'Porque tem gente vendendo Pokémon em banca de rua a duas cidades daqui. Com nota fiscal e tudo.'),
-    fala('a enfermeira', 'E porque metade do que aparece nesta bancada não veio de casa nenhuma.', null, 'Ela volta ao carimbo.'),
+    d=>fala(cadastra(d), 'Porque tem gente vendendo Pokémon em banca de rua a duas cidades daqui. Com nota fiscal e tudo.'),
+    d=>fala(cadastra(d), 'E porque metade do que aparece nesta bancada não veio de casa nenhuma.', null, 'Ela volta ao carimbo.'),
     d=>fala(d.jogador.nome, 'E a senhora registra mesmo assim?'),
-    fala('a enfermeira', 'Eu registro o que a máquina deixa registrar.', 'frio', 'Carimbo.'),
-    fala('a enfermeira', 'O resto não é o meu balcão.')
+    d=>fala(cadastra(d), 'Eu registro o que a máquina deixa registrar.', 'frio', 'Carimbo.'),
+    d=>fala(cadastra(d), 'O resto não é o meu balcão.')
   ],
   ef:{flag:'ouviu_sobre_as_bancas',
       rep:{eixo:'bom',delta:1,motivo:'Fez a pergunta certa numa fila de balcão'}},
@@ -1575,17 +1579,28 @@ c1_registro:{
   texto:[
     'Você assina. A caneta é daquelas presas no balcão por um barbante.',
     'A impressora do fundo trabalha por quase um minuto inteiro e para.',
-    'A enfermeira separa as coisas na bancada, uma por uma, e diz o nome de cada uma como se fosse a primeira vez na vida dela — e é, provavelmente, a quinta vez hoje.',
-    fala('a enfermeira', 'Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade.'),
-    fala('a enfermeira', 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.'),
-    fala('a enfermeira', 'Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar. Se você devolver com menos de vinte registros, eles vão te ligar.'),
-    fala('a enfermeira', 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.'),
+    d=>`${Cadastra(d)} separa as coisas na bancada, uma por uma, e diz o nome de cada uma como se fosse a primeira vez na vida dela — e é, provavelmente, a quinta vez hoje.`,
+    d=>fala(cadastra(d), 'Licença de treinador. Válida um ano, renovável no Centro de qualquer cidade.'),
+    d=>d.jogador.cidade === 'Pallet'
+      ? fala(cadastra(d), 'Cartão de treinador eu não tenho como fazer: a máquina do cartão é do Centro. O primeiro Centro do caminho é o de Viridian. Passa lá e pede.')
+      : fala(cadastra(d), 'Cartão de treinador. Ele guarda as suas insígnias e o seu histórico. Não perde. Não perde mesmo.'),
+    d=>d.jogador.cidade === 'Pallet'
+      ? 'A porta do laboratório abre atrás dela. O Professor atravessa a sala sem pressa, com um aparelho vermelho na mão, e põe na mesa na sua frente como quem devolve uma coisa emprestada.'
+      : fala(cadastra(d), 'Pokédex. Ela é emprestada, não é sua. Registra o que você encontrar. Se você devolver com menos de vinte registros, eles vão te ligar.'),
+    d=>d.jogador.cidade === 'Pallet'
+      ? fala('o Professor', 'A Pokédex. Ela não é sua, é do laboratório, e é por isso que eu entrego em mão. Registra o que encontrar. Eu leio tudo.')
+      : '',
+    d=>fala(cadastra(d), 'Kit inicial: cinco Poké Balls e dois frascos de Potion. É o que a Liga paga. O resto você compra.'),
     d=>['Pallet','Viridian'].includes(d.jogador.cidade) ? ''
-      : fala('a enfermeira', 'E a passagem do ônibus até Viridian, que é onde começa a estrada dos ginásios. Grampeada aí atrás. Não perde essa também.')
+      : fala(cadastra(d), 'E a passagem do ônibus até Viridian, que é onde começa a estrada dos ginásios. Grampeada aí atrás. Não perde essa também.')
   ],
-  ef:{flag:['tem_licenca','tem_pokedex','tem_cartao'],
+  ef:{flag:['tem_licenca','tem_pokedex'],
       itens:{'Poké Ball':5,'Potion':2},
-      registrar:'Licenciado como treinador. Recebeu Pokédex, cartão e kit inicial.'},
+      /* em Pallet o cartão sai no Centro de Viridian (Cidade.centro) */
+      executar:d=>{ if (d.jogador.cidade !== 'Pallet') Estado.marcar('tem_cartao'); },
+      registrar:d=>d.jogador.cidade === 'Pallet'
+        ? 'Licenciado como treinador. Recebeu a Pokédex da mão do Professor e o kit inicial. O cartão fica pro Centro de Viridian.'
+        : 'Licenciado como treinador. Recebeu Pokédex, cartão e kit inicial.'},
   escolhas:[
     {texto:'Perguntar o que ela faria no seu lugar.', vai:'c1_conselho'},
     {texto:'Perguntar sobre a Pokédex.', vai:'c1_pokedex'},
@@ -1598,10 +1613,10 @@ c1_conselho:{
   texto:[
     d=>fala(d.jogador.nome, 'O que a senhora faria no meu lugar?'),
     'Ela fecha a prancheta e pensa de verdade — o que é bem mais do que a pergunta merecia.',
-    fala('a enfermeira', 'Eu andaria devagar.', null, 'Ela diz isso como quem já viu muita gente andar rápido.'),
-    fala('a enfermeira', 'Todo mundo que chega neste balcão quer chegar em algum lugar. Quase ninguém repara no caminho. E o caminho é onde tudo acontece.'),
-    fala('a enfermeira', 'E outra coisa.', null, 'Ela empurra a Pokédex na sua direção.'),
-    fala('a enfermeira', 'Fala com as pessoas. Não com treinador — com as pessoas. Quem mora nos lugares sabe de tudo, e nunca ninguém pergunta.')
+    d=>fala(cadastra(d), 'Eu andaria devagar.', null, 'Ela diz isso como quem já viu muita gente andar rápido.'),
+    d=>fala(cadastra(d), 'Todo mundo que chega neste balcão quer chegar em algum lugar. Quase ninguém repara no caminho. E o caminho é onde tudo acontece.'),
+    d=>fala(cadastra(d), 'E outra coisa.', null, 'Ela empurra a Pokédex na sua direção.'),
+    d=>fala(cadastra(d), 'Fala com as pessoas. Não com treinador — com as pessoas. Quem mora nos lugares sabe de tudo, e nunca ninguém pergunta.')
   ],
   ef:{flag:'conselho_da_enfermeira',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou conselho a quem ninguém pergunta nada'}},
@@ -1615,14 +1630,14 @@ c1_ela_foi:{
   texto:[
     d=>fala(d.jogador.nome, 'A senhora também foi treinadora?'),
     'Pausa curta demais pra ser hesitação e longa demais pra ser nada.',
-    fala('a enfermeira', 'Fui. Cheguei em seis insígnias.', null, 'Ela ajeita a prancheta que já estava ajeitada.'),
+    d=>fala(cadastra(d), 'Fui. Cheguei em seis insígnias.', null, 'Ela ajeita a prancheta que já estava ajeitada.'),
     d=>fala(d.jogador.nome, 'E aí?'),
-    fala('a enfermeira', 'E aí o meu Rapidash morreu numa rota de madrugada, e eu não tinha Potion, porque eu tinha gastado tudo em Poké Ball.', 'baixo',
+    d=>fala(cadastra(d), 'E aí o meu Rapidash morreu numa rota de madrugada, e eu não tinha Potion, porque eu tinha gastado tudo em Poké Ball.', 'baixo',
          'Ela sorri. O sorriso é completamente normal, e é essa a parte ruim.'),
-    fala('a enfermeira', 'Compra Potion. Sempre mais Potion do que Pokébola. Ninguém nunca escuta isso.')
+    d=>fala(cadastra(d), 'Compra Potion. Sempre mais Potion do que Pokébola. Ninguém nunca escuta isso.')
   ],
   ef:{flag:'historia_da_enfermeira', itens:{'Potion':1},
-      npc:{nome:'Enfermeira do Centro', opiniao:3, memoria:'Te contou por que parou de ser treinadora. Chegou em seis insígnias.'},
+      npc:d=>({nome:d.jogador.cidade === 'Pallet' ? 'Assistente do Professor' : 'Enfermeira do Centro', opiniao:3, memoria:'Te contou por que parou de ser treinadora. Chegou em seis insígnias.'}),
       rep:{eixo:'bom',delta:1,motivo:'Escutou a história de alguém que ninguém escuta'}},
   escolhas:[
     {texto:'Perguntar sobre a Pokédex.', vai:'c1_pokedex'},
@@ -1633,11 +1648,11 @@ c1_ela_foi:{
 c1_pokedex:{
   texto:[
     'A Pokédex é menor e mais pesada do que parece nas fotos. A tela tem um risco na diagonal que já estava lá.',
-    fala('a enfermeira', 'É de segunda mão.', null, 'Ela confirma sem você ter perguntado nada.'),
-    fala('a enfermeira', 'Todas são. A primeira leva de aparelho novo foi pro Professor e pros três que ele escolheu, faz uns anos.'),
+    d=>fala(cadastra(d), 'É de segunda mão.', null, 'Ela confirma sem você ter perguntado nada.'),
+    d=>fala(cadastra(d), 'Todas são. A primeira leva de aparelho novo foi pro Professor e pros três que ele escolheu, faz uns anos.'),
     d=>fala(d.jogador.nome, 'E funcionou?'),
-    fala('a enfermeira', 'Um deles derrubou a Equipe Rocket sozinho e sumiu.', null, 'Ela dá de ombros.'),
-    fala('a enfermeira', 'Então sim. Mais ou menos.'),
+    d=>fala(cadastra(d), 'Um deles derrubou a Equipe Rocket sozinho e sumiu.', null, 'Ela dá de ombros.'),
+    d=>fala(cadastra(d), 'Então sim. Mais ou menos.'),
     'Você segura na mão uma versão gasta do mesmo aparelho.'
   ],
   ef:{flag:'sabe_do_red'},
@@ -1650,11 +1665,11 @@ c1_pokedex:{
 c1_quem_sumiu:{
   texto:[
     d=>fala(d.jogador.nome, 'Quem sumiu?'),
-    fala('a enfermeira', 'O Red.', null, 'Ela fala o nome do jeito que se fala nome de parente distante que deu certo.'),
-    fala('a enfermeira', 'Terminou o que tinha pra terminar e foi embora. Ninguém sabe pra onde.'),
+    d=>fala(cadastra(d), 'O Red.', null, 'Ela fala o nome do jeito que se fala nome de parente distante que deu certo.'),
+    d=>fala(cadastra(d), 'Terminou o que tinha pra terminar e foi embora. Ninguém sabe pra onde.'),
     d=>fala(d.jogador.nome, 'E a Liga?'),
-    fala('a enfermeira', 'A cadeira de Campeão tá vaga faz dois anos.', null, 'E aí ela finalmente sorri de verdade.'),
-    fala('a enfermeira', 'Então, tecnicamente, tá aberta.'),
+    d=>fala(cadastra(d), 'A cadeira de Campeão tá vaga faz dois anos.', null, 'E aí ela finalmente sorri de verdade.'),
+    d=>fala(cadastra(d), 'Então, tecnicamente, tá aberta.'),
     'Ela diz isso pra você de um jeito muito específico, e você entende que ela diz isso pra todo mundo que passa por esse balcão, e que ela acerta uma vez a cada mil.'
   ],
   ef:{flag:'sabe_da_cadeira_vaga'},

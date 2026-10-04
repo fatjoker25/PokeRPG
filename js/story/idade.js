@@ -93,7 +93,11 @@ function marcasDeIdade(s){
   try { id = idadeJogador(); sai = idadeDeSaida(); menor = id < MAIORIDADE; } catch(e){}
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
   /* os números primeiro: {menor:…} pode ter {idade} dentro */
+  /* lembrança: "faz {idade-3} anos" é a primeira coisa de que se lembra
+     (a regra das memórias: idade − 3, nunca menos de um) */
   return s.replace(/\{idade\+(\d+)\}/g, (_, k) => porExtenso(id + (+k)))
+          .replace(/\{Idade-(\d+)\}/g, (_, k) => cap(porExtenso(Math.max(1, id - (+k)))))
+          .replace(/\{idade-(\d+)\}/g, (_, k) => porExtenso(Math.max(1, id - (+k))))
           .replace(/\{IDADE\}/g, () => porExtenso(id).toUpperCase())
           .replace(/\{Idade\}/g, () => cap(porExtenso(id)))
           .replace(/\{idade\}/g, () => porExtenso(id))

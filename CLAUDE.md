@@ -674,7 +674,10 @@ data ganha uma sorteada que dá a idade que ele tinha.
 
 **Texto nunca escreve a idade do jogador à mão.** "Você tem quinze
 anos" virou `{idade}`; com maiúscula `{Idade}`, em título `{IDADE}`,
-daqui a N anos `{idade+N}`, a idade com que saiu de casa `{saida}`. Cena
+daqui a N anos `{idade+N}`, a idade com que saiu de casa `{saida}`. Lembrança da
+infância conta pra trás a partir da idade − 3 (`{idade-3}`, a primeira
+coisa de que se lembra): "o mapa de {idade-3} anos atrás", nunca "nove
+anos atrás" escrito à mão. Cena
 que só faz sentido com menor de idade escreve as duas versões em
 `{menor:se menor|se maior}` (dentro só cabem as marcas de número) ou
 pergunta `ehMenor()`. `Estado.registrar` congela a idade do dia, pra o
@@ -736,6 +739,10 @@ de graça, `Cidade.casa`) e, pra quem nasceu longe de Pallet e Viridian,
 a **rodoviária** com o ônibus da Liga, uma vez, opcional (`Cidade.onibus`).
 **Pallet não tem Centro nem loja**: o cadastro de treinador lá é no
 laboratório, e cena de Pallet que fala em Centro usa `oPostoDaCidade(d)`.
+Quem atende é `cadastra(d)` (a assistente do Professor em Pallet, a
+enfermeira no resto); em Pallet a Pokédex sai da mão do Professor e o
+cartão não sai — ele vem na primeira ida ao Centro de Viridian
+(`Cidade.cartaoDeViridian`).
 
 Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 `casaQuem()`, `{casa:ela|ele}` — nunca "sua mãe" escrito à mão.

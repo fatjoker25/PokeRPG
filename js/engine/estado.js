@@ -1186,7 +1186,8 @@ const Estado = {
       /* nomes que mudaram depois que o save foi gravado: o item e a
          pessoa continuam os mesmos, só o nome na tela é outro */
       const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela',
-        'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro'};
+        'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro',
+        'Mapa de nove anos atrás':'Mapa velho de Kanto'};
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;

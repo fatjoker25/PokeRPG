@@ -221,6 +221,7 @@ const ROSTO_POR_NOME_SOLTO = {
   'A Terceira':'trainers/veteran_f', 'a Terceira':'trainers/veteran_f', 'Thea Larkin':'trainers/worker',
   'o Professor':'trainers/scientist',
   'Rico':'trainers/worker', 'Maeve Corwin':'trainers/reporter', 'quem te atendeu':'trainers/league_staff',
+  'a assistente do Professor':'trainers/scientist_f', 'a enfermeira de Viridian':'overworld/nurse_joy',
   'outro dos seis':'trainers/fisherman', 'os pescadores':'trainers/fisherman', 'os três':'trainers/pokefan'
 };
 const ROSTO_POR_PALAVRA = [
