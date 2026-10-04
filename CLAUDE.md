@@ -436,6 +436,12 @@ nenhum ginásio que falta está `disponivel`, `faltaInsignias` libera com o
 que o jogador tem. Trava nova passa por essas funções, não por `requer` no
 capítulo — `requer` pula o capítulo em vez de esperar.
 
+O líder também acompanha a estrada: `pisoDoGinasio()` põe o time no
+mínimo em `nivelArea` do capítulo atual − `ABAIXO_DA_AREA` (8). Sem
+isso, quem deixava Misty pra depois achava ela no 17 num capítulo de
+área 30. Ginásio se desafia na porta, na cidade (`Cidade.ginasio`); a
+lista de ginásios não existe mais e não volta.
+
 ## Veteranos e a Conferência
 Os **veteranos** (`js/story/veteranos.js`, dados e motor juntos) são o
 contrário do treinador de estrada: ninguém te para, você vai atrás pela

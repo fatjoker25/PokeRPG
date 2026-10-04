@@ -900,11 +900,6 @@ const Jogo = {
   },
 
   /* ---------- GINÁSIOS ---------- */
-  abrirGinasios(de){
-    this.voltarDeGinasio = de || 'hub';
-    UI.telaGinasios();
-  },
-
   voltarDosGinasios(){
     if (this.voltarDeGinasio === 'exploracao') return Exploracao.tela();
     if (this.voltarDeGinasio === 'cena' && Historia.cenaAtual){
@@ -920,7 +915,7 @@ const Jogo = {
     const g = ginasioPorId(id);
     if (!g) return;
     const st = statusGinasio(g);
-    if (st.estado !== 'disponivel') return UI.telaGinasios();
+    if (st.estado !== 'disponivel') return this.voltarDosGinasios();
 
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Ginásio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de desafiar um líder.</p>');

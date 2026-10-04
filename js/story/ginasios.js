@@ -364,6 +364,19 @@ function escalaoDe(g, n){
   return alvo;
 }
 
+/* O líder também não fica pra trás da estrada: quem deixa um ginásio pra
+   depois encontra o líder no nível do capítulo em que está, menos
+   ABAIXO_DA_AREA. Sem isso, a insígnia que o capítulo seguinte pede era
+   de 6 a 13 níveis mais fraca que a luta de história daquele ponto
+   (Misty no 17 pra um capítulo de área 30), e não preparava ninguém. */
+const ABAIXO_DA_AREA = 8;
+function pisoDoGinasio(){
+  const d = Estado.dados;
+  if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return 0;
+  const cap = Historia.capitulo(d.capitulo);
+  return cap && cap.nivelArea ? cap.nivelArea - ABAIXO_DA_AREA : 0;
+}
+
 function timeGinasio(g, nForcado){
   // ginásio ainda trancado mostra o time do momento em que ele abre
   const n = (nForcado !== undefined) ? nForcado
@@ -371,7 +384,7 @@ function timeGinasio(g, nForcado){
   const esc = escalaoDe(g, n);
   let faixa = ESCALOES_NIVEL[0];
   for (const f of ESCALOES_NIVEL) if (n >= f.min) faixa = f;
-  const base = faixa.base + (g.dificuldade || 0) + (n - faixa.min) * 3;
+  const base = Math.max(faixa.base + (g.dificuldade || 0) + (n - faixa.min) * 3, pisoDoGinasio());
 
   // o líder não repete o mesmo time: parte dos slots varia a cada desafio
   const especies = esc.especies.slice();

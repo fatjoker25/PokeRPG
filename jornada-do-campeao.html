@@ -14331,6 +14331,19 @@ function escalaoDe(g, n){
   return alvo;
 }
 
+/* O líder também não fica pra trás da estrada: quem deixa um ginásio pra
+   depois encontra o líder no nível do capítulo em que está, menos
+   ABAIXO_DA_AREA. Sem isso, a insígnia que o capítulo seguinte pede era
+   de 6 a 13 níveis mais fraca que a luta de história daquele ponto
+   (Misty no 17 pra um capítulo de área 30), e não preparava ninguém. */
+const ABAIXO_DA_AREA = 8;
+function pisoDoGinasio(){
+  const d = Estado.dados;
+  if (!d || d.capitulo < 2 || typeof Historia === 'undefined') return 0;
+  const cap = Historia.capitulo(d.capitulo);
+  return cap && cap.nivelArea ? cap.nivelArea - ABAIXO_DA_AREA : 0;
+}
+
 function timeGinasio(g, nForcado){
   // ginásio ainda trancado mostra o time do momento em que ele abre
   const n = (nForcado !== undefined) ? nForcado
@@ -14338,7 +14351,7 @@ function timeGinasio(g, nForcado){
   const esc = escalaoDe(g, n);
   let faixa = ESCALOES_NIVEL[0];
   for (const f of ESCALOES_NIVEL) if (n >= f.min) faixa = f;
-  const base = faixa.base + (g.dificuldade || 0) + (n - faixa.min) * 3;
+  const base = Math.max(faixa.base + (g.dificuldade || 0) + (n - faixa.min) * 3, pisoDoGinasio());
 
   // o líder não repete o mesmo time: parte dos slots varia a cada desafio
   const especies = esc.especies.slice();
@@ -83906,7 +83919,6 @@ const UI = {
         <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
         <button class="escolha" onclick="UI.modalPC()">PC do Centro — guardar e tirar Pokémon${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
         <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
-        <button class="escolha" onclick="Jogo.abrirGinasios('hub')">Ginásios — desafiar líderes de Kanto</button>
         ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon — Elite 4 e Torneio Aberto</button>' : ''}
         <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota — encontro selvagem aleatório</button>
         ${d.time.length > 1 ? '<button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>' : ''}
@@ -83976,74 +83988,6 @@ const UI = {
   /* ========================================================
      GINÁSIOS
      ======================================================== */
-  telaGinasios(){
-    this.limpar();
-    this.add(this.topo());
-    const d = Estado.dados;
-    const n = d.insignias.length;
-
-    /* O que a ficha de um ginásio mostra depende do que você já sabe.
-       Nome, cidade, tipo e insígnia são conhecimento público em Kanto:
-       está no pôster do Centro Pokémon. O time de dentro, não — isso
-       você descobre pisando na cidade e entrando lá. */
-    const cartao = g => {
-      const st = statusGinasio(g);
-      const cor = {conquistado:'var(--bom)', disponivel:'var(--destaque)',
-                   recusado:'var(--ruim)', trancado:'var(--texto-fraco)', distante:'var(--texto-fraco)'}[st.estado];
-      const rotulo = st.estado === 'conquistado' ? '✓ conquistada' : st.texto;
-
-      const conquistado = st.estado === 'conquistado';
-      const esteve = conquistado || (typeof Mundo !== 'undefined' && Mundo.visitado(g.id));
-      const enfrentou = conquistado || !!d.flags['enfrentou_' + g.id];
-
-      /* faixa de nível: quem esteve na cidade ouve falar; quem lutou sabe */
-      const linhaNivel = enfrentou
-        ? `${this.esc(g.insignia)} · níveis ${faixaGinasio(g)}`
-        : esteve
-          ? `${this.esc(g.insignia)} · dizem que o time anda pelo nível ${Math.round(nivelGinasio(g))}`
-          : `${this.esc(g.insignia)}`;
-
-      /* o time só depois de ver o time */
-      const linhaTime = enfrentou
-        ? `<div class="fraco" style="margin-bottom:8px;line-height:1.5">${this.esc(timeGinasio(g).map(x=>`${DEX[x.dex].nome} Nv${x.nivel}`).join(' · '))}</div>`
-        : esteve
-          ? `<div class="sussurro" style="margin-bottom:8px">Você passou na porta. Não viu quem está lá dentro.</div>`
-          : `<div class="sussurro" style="margin-bottom:8px">Você nunca esteve em ${this.esc(g.cidade)}.</div>`;
-
-      return `<div class="carta ginasio" style="border-color:${conquistado?'var(--bom)':'var(--borda)'}">
-        <div class="t"><span>${this.esc(g.lider)} <span class="cidade">· ${this.esc(g.cidade)}</span></span>
-          ${g.tipo === 'variado' ? '<span class="tipo-tag" style="background:#8a8f98">Variado</span>' : this.tipoTag(g.tipo)}</div>
-        <div class="fraco" style="margin-bottom:6px">${linhaNivel}</div>
-        ${linhaTime}
-        ${st.fala ? `<div class="aviso dano" style="margin-bottom:8px">${this.esc(st.fala)}</div>` : ''}
-        ${st.estado==='recusado' && g.comoDestravar
-          ? `<div class="sussurro" style="margin:0 0 8px">${this.esc(g.comoDestravar)}</div>` : ''}
-        ${conquistado && g.efeito ? `<div class="fraco" style="color:var(--bom)">${this.esc(g.efeito)}</div>` : ''}
-        <div class="rodape">
-          <span style="color:${cor};font-size:12.5px">${this.esc(rotulo)}</span>
-          ${st.estado === 'disponivel'
-            ? `<button class="btn destaque mini" onclick="Jogo.desafiarGinasio('${g.id}')">Desafiar</button>` : ''}
-        </div>
-      </div>`;
-    };
-
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">Liga Pokémon</div>
-        <div class="tit">Os Oito Ginásios</div>
-        <div class="loc">${n} de 8 insígnias</div>
-      </div>
-      <p class="sussurro">Ordem livre: comece por onde quiser. Cada líder adapta o <b>time inteiro</b> ao seu progresso — com poucas insígnias ele traz Pokémon não evoluídos e um time curto; com muitas, a linha completa e o ace. Nenhum ginásio vira passeio nem muro, seja qual for a ordem. Blue só recebe quem tem sete.</p>
-
-      <div class="grade" style="margin-top:14px">${GINASIOS.map(cartao).join('')}</div>
-      <div style="margin-top:20px">
-        <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
-        <button class="btn" onclick="Jogo.hubCentro()">Curar o time</button>
-      </div>
-    </div>`);
-    this.rolarTopo();
-  },
-
   telaResultadoGinasio(g, venceu, avisos){
     this.limpar();
     this.add(this.topo());
@@ -84060,7 +84004,6 @@ const UI = {
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
-        <button class="escolha" onclick="Jogo.abrirGinasios('${this.esc(Jogo.voltarDeGinasio)}')">Voltar aos ginásios</button>
         <button class="escolha" onclick="Jogo.voltarDosGinasios()">Continuar a jornada</button>
       </div>
     </div>`);
@@ -84232,7 +84175,6 @@ const UI = {
 
       <div style="margin-top:20px">
         <button class="btn" onclick="Jogo.voltarDosGinasios()">Voltar</button>
-        <button class="btn" onclick="Jogo.abrirGinasios('${this.esc(Jogo.voltarDeGinasio)}')">Ginásios</button>
         <button class="btn" onclick="Jogo.hubCentro()">Curar o time</button>
       </div>
     </div>`);
@@ -85722,8 +85664,9 @@ const UI = {
       <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
       <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
       <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · a Parada não segue</span></div>
+      <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
-      <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia pela lista de qualquer lugar, na ordem que você quiser.</p>
+      <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
@@ -99401,11 +99344,6 @@ const Jogo = {
   },
 
   /* ---------- GINÁSIOS ---------- */
-  abrirGinasios(de){
-    this.voltarDeGinasio = de || 'hub';
-    UI.telaGinasios();
-  },
-
   voltarDosGinasios(){
     if (this.voltarDeGinasio === 'exploracao') return Exploracao.tela();
     if (this.voltarDeGinasio === 'cena' && Historia.cenaAtual){
@@ -99421,7 +99359,7 @@ const Jogo = {
     const g = ginasioPorId(id);
     if (!g) return;
     const st = statusGinasio(g);
-    if (st.estado !== 'disponivel') return UI.telaGinasios();
+    if (st.estado !== 'disponivel') return this.voltarDosGinasios();
 
     const meu = Estado.primeiroApto();
     if (!meu) return UI.modal('Ginásio', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de desafiar um líder.</p>');
