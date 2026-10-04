@@ -623,6 +623,16 @@ aniversário e cena de linha que começa no aparelho ("O PokéNav apita…",
 `Linhas.ehLigacao`). Abre por cima da tela, que não muda; guardar o
 aparelho só fecha e repinta o topo. Nada de ligação em `UI.limpar()`.
 
+## A luta não acaba no recarregar
+`Estado.salvar` chama `LutaSalva.anotar` (`js/engine/luta-salva.js`): com
+luta ativa, ou com resultado esperando o Continuar (`Jogo.fimPendente`),
+o save leva a foto da batalha e do contexto (ginásio por id, cena por
+capítulo e cena, o resto como dado). `Jogo.continuar` retoma antes de
+tudo. Campo novo em `Batalha` entra sozinho na foto, desde que seja dado
+— função não viaja. Contexto novo em `Jogo` entra em `LutaSalva.CONTEXTOS`.
+Contra treinador a saída é o **Forfeit** (`Batalha.desistir`): derrota,
+multa e moral (`MULTA_FORFEIT_POR_NIVEL`, `MORAL_FORFEIT`).
+
 ## Idade de quem joga
 A ficha pede a **data de nascimento**, e a idade é calculada, nunca
 guardada: `idadeJogador()` (em `js/story/idade.js`) lê o nascimento e a

@@ -37,6 +37,10 @@ const CLIMA_TEXTO = {
   sol:{comeca:'O sol fica forte de repente.', acaba:'O sol volta ao normal.'}
 };
 
+/* Forfeit: multa por nível de quem está em campo do lado de lá, e moral perdida no time */
+const MULTA_FORFEIT_POR_NIVEL = 60;
+const MORAL_FORFEIT = 5;
+
 const Batalha = {
   ativo:false, aliado:null, inimigo:null, tipo:'selvagem',
   turno:0, fuga:true, eventos:[], fim:null, fase:'normal',
@@ -1232,6 +1236,7 @@ const Batalha = {
     // ações que não gastam o turno de golpe
     if (acao.tipo === 'pokedex') return this.escanear();
     if (acao.tipo === 'fugir')  return this.tentarFugir();
+    if (acao.tipo === 'desistir') return this.desistir();
     if (acao.tipo === 'bola'){
       if (this.tipo === 'treinador'){
         this.eventos = [];
@@ -1610,6 +1615,26 @@ const Batalha = {
       return this.encerrar('gameover');
     }
     return {eventos:this.eventos, fim:null, ameaca:true};
+  },
+
+  /* Forfeit: a fuga de quem luta contra treinador. Conta como derrota
+     (com tudo que a derrota já custa ali) e cobra por cima: multa de
+     arena pelo nível de quem está em campo do lado de lá, e o time
+     inteiro perde moral por ter visto você desistir. */
+  desistir(){
+    if (this.tipo !== 'treinador'){
+      this.turno--;
+      this.ev('erro', 'Contra selvagem não tem a quem se render: é fugir.');
+      return {eventos:this.eventos, fim:null};
+    }
+    const nv = (this.inimigo && this.inimigo.nivel) || 5;
+    const multa = Math.min(Estado.j.dinheiro, nv * MULTA_FORFEIT_POR_NIVEL);
+    Estado.j.dinheiro -= multa;
+    (Estado.dados.time || []).forEach(p => { if (!p.morto) p.moral = Math.max(0, (p.moral || 0) - MORAL_FORFEIT); });
+    this.ev('info', `Você levanta a mão e desiste. ${this.treinador || 'O treinador'} recolhe o Pokémon devagar, sem comemorar.`);
+    this.ev('perigo', multa ? `Forfeit: derrota, e ${fmtDin(multa)} ₽ de multa de arena. O time viu você jogar a toalha.` : 'Forfeit: derrota. O time viu você jogar a toalha.');
+    Estado.registrar(`Desistiu da luta contra ${this.treinador || 'um treinador'}.`);
+    return this.encerrar('derrota', {desistiu:true});
   },
 
   encerrar(resultado, extra){

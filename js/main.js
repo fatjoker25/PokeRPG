@@ -88,6 +88,8 @@ const Jogo = {
 
   continuar(){
     if (!Estado.carregar('auto')) return UI.telaInicial();
+    /* recarregou no meio da luta: volta pra ela */
+    if (Estado.dados.lutaSalva && typeof LutaSalva !== 'undefined' && LutaSalva.retomar()) return;
     if (Estado.dados.modo === 'mundo' || !Estado.dados.cena){
       return Exploracao.tela([{tipo:'info', texto:'Você retoma o caminho de onde parou.'}]);
     }
@@ -400,6 +402,10 @@ const Jogo = {
     /* clique no meio do voo da bola: o turno já foi resolvido, espera */
     if (this.animandoBola || this.encenando) return;
     const r = Batalha.acao(acao);
+    /* o turno já está decidido: salva antes de animar, senão recarregar
+       no meio da animação devolvia o turno de antes, pra rolar de novo */
+    if (r.fim) this.fimPendente = r.fim;
+    Estado.salvar('auto');
 
     /* O turno é tocado um evento por vez (golpe, dano, cura, condição);
        só depois a arena se acerta com o fim do turno. */
@@ -438,6 +444,8 @@ const Jogo = {
   fimDeBatalha(fim){
     const res = this.resumoFimDeBatalha(fim);
     UI.escreverLog(res.linhas);
+    /* até o Continuar, o resultado viaja no save junto com a luta */
+    this.fimPendente = fim;
     Estado.salvar('auto');
     UI.mostrarContinuar(() => {
       if (fim.resultado === 'gameover') return this.finalizarBatalha(fim);
@@ -621,6 +629,7 @@ const Jogo = {
   },
 
   finalizarBatalha(fim){
+    this.fimPendente = null;
     if (this.veteranoAtual) return this.veteranoAtual.tipo === 'conferencia' ? Conferencia.resultado(fim) : Veteranos.resultado(fim);
     if (this.estradaAtual)  return Estrada.resultado(fim);
     if (this.revancheAtual) return this.resultadoRevanche(fim);

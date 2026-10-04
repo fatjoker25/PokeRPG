@@ -1167,6 +1167,8 @@ const Estado = {
 
   /* ---------- SAVE / LOAD ---------- */
   salvar(slot='auto'){
+    /* luta em andamento vai junto (js/engine/luta-salva.js) */
+    if (typeof LutaSalva !== 'undefined') LutaSalva.anotar(this.dados);
     try {
       localStorage.setItem('pokerpg_save_' + slot, JSON.stringify(this.dados));
       return true;

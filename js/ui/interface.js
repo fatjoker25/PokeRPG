@@ -1040,6 +1040,14 @@ const UI = {
     const bt = document.getElementById('moldura-salvar'); if (bt){ bt.disabled = true; bt.textContent = 'Salvo'; }
   },
 
+  /* Forfeit pede confirmação: é derrota, e custa */
+  confirmarForfeit(){
+    if (!Batalha.ativo || Batalha.tipo !== 'treinador') return;
+    this.modal('Forfeit', `<p>Desistir desta luta? Conta como derrota.</p>
+      <button class="escolha" onclick="UI.fecharModal(true);Jogo.acaoBatalha({tipo:'desistir'})">Desistir</button>
+      <button class="escolha" onclick="UI.fecharModal(true)">Continuar lutando</button>`, true);
+  },
+
   alternarSom(bt){
     const liga = !somLigado();
     try { localStorage.setItem('jc-som', liga ? '1' : '0'); } catch (e) {}
@@ -1711,7 +1719,9 @@ const UI = {
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
-        ${bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo' : 'daqui não se foge',
+        ${Batalha.tipo === 'treinador'
+          ? bt('desistir', 'Forfeit', '', 'UI.confirmarForfeit()')
+          : bt('fugir', 'Fugir', Batalha.fuga ? 'Destreza + Atletismo' : 'daqui não se foge',
              "Jogo.acaoBatalha({tipo:'fugir'})", !Batalha.fuga)}
       </div>
       ${dex}
@@ -4390,6 +4400,8 @@ const UI = {
 
       <h3>PokéNav</h3>
       <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
+      <div class="linha"><span class="k">Forfeit</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
+      <div class="linha"><span class="k">Recarregar</span><span class="v">a luta continua de onde parou, no mesmo turno · recarregar na tela do Continuar mostra o mesmo resultado de novo</span></div>
       <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pelo Bag, gastando o turno</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
