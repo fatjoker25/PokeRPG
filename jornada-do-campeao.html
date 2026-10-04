@@ -2807,6 +2807,15 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .tut-passos li::marker{color:var(--destaque);font-weight:700}
 .exemplo-regra{margin:8px 0 12px;padding:10px 12px;border-radius:8px;border:1px dashed var(--borda);background:rgba(255,255,255,.03);font-size:13.5px;line-height:1.55}
 
+/* treino: as barras de XP de quem treinou enchendo, fora da luta */
+.xp-treino{display:flex;flex-direction:column;gap:6px;margin-top:8px;padding:8px 10px;border:1px solid var(--borda);border-radius:var(--raio-sm)}
+.xp-linha{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:8px;row-gap:3px}
+.xp-linha .barra-exp{grid-column:1 / -1;margin:0}
+.xp-linha .xp-nome{font-size:.86rem}
+.xp-linha .nv{color:var(--texto-fraco);font-size:.75rem}
+.xp-linha.subiu .barra-exp i{background:#e8f4ff;box-shadow:0 0 8px #5fb4ff}
+.xp-linha.subiu .nv{color:#5fb4ff}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -86400,6 +86409,55 @@ const UI = {
     this.modal('', `${linha}<p>${this.esc(msg)}</p>`, false, 'mochila');
     if (mudou) this.animarBarraDoTime(p, hpAntes);
   },
+  /* Fora da luta, o XP ganho (treino) aparece como na luta: a barra de
+     cada um sai de onde estava, enche, e a cada nível vai ao fim, pisca,
+     zera e continua. */
+  barrasDeXP(antes){
+    const caixa = document.getElementById('avisos');
+    if (!caixa || !antes || !antes.length) return;
+    const time = Estado.dados.time;
+    const linhas = antes.map(a => ({a, p:time.find(x => x.uid === a.uid)})).filter(x => x.p && !x.p.morto);
+    if (!linhas.length) return;
+    const bloco = this.el(`<div class="xp-treino">${linhas.map(({a, p}) => `
+      <div class="xp-linha" data-uid="${p.uid}">
+        <span class="time-icone">${imgSprite(p, 'icone')}</span>
+        <span class="xp-nome">${this.esc(nomeExib(p))} <span class="mono nv">Nv ${a.nivel}</span></span>
+        <div class="barra-exp"><i style="width:${Math.round(a.exp / a.expProx * 100)}%"></i></div>
+      </div>`).join('')}</div>`);
+    caixa.appendChild(bloco);
+    const reduz = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    linhas.forEach(({a, p}, k) => {
+      const lin = bloco.querySelector(`.xp-linha[data-uid="${p.uid}"]`);
+      const i = lin.querySelector('.barra-exp i'), nv = lin.querySelector('.nv');
+      /* os trechos: até o fim de cada nível subido, e o que sobrou no último */
+      const trechos = [];
+      let pct = a.exp / a.expProx * 100;
+      for (let n = a.nivel; n < p.nivel; n++){ trechos.push({de:pct, para:100, nivel:n + 1}); pct = 0; }
+      trechos.push({de:pct, para:p.expProx ? p.exp / p.expProx * 100 : 100, nivel:null});
+      if (reduz){ i.style.width = trechos[trechos.length - 1].para + '%'; nv.textContent = 'Nv ' + p.nivel; return; }
+      const tocar = (t) => new Promise(ok => {
+        const ms = 300 + Math.abs(t.para - t.de) * 7, t0 = performance.now();
+        const passo = agora => {
+          const q = Math.min(1, (agora - t0) / ms), e = 1 - Math.pow(1 - q, 2);
+          i.style.width = (t.de + (t.para - t.de) * e).toFixed(1) + '%';
+          if (q < 1) requestAnimationFrame(passo); else ok();
+        };
+        requestAnimationFrame(passo);
+      });
+      (async () => {
+        await new Promise(z => setTimeout(z, 250 + k * 120));
+        for (const t of trechos){
+          await tocar(t);
+          if (t.nivel){
+            lin.classList.add('subiu'); nv.textContent = 'Nv ' + t.nivel;
+            await new Promise(z => setTimeout(z, 260));
+            lin.classList.remove('subiu'); i.style.width = '0%';
+          }
+        }
+      })();
+    });
+  },
+
   /* barra de HP de uma linha do time indo de `de` até o HP atual */
   animarBarraDoTime(p, de){
     const caixa = document.querySelector('#modal .time-lista .time-linha');
@@ -100620,6 +100678,8 @@ const Exploracao = {
     const fator = {critico:1.6, sucesso:1.25, parcial:1, falha:0.6}[t.grau];
     const ganho = Math.round((40 + L.nivel * 9) * fator);
     const eventos = [];
+    /* de onde cada barra de XP sai, pra tela mostrar ela enchendo */
+    const xpAntes = aprendem.map(p => ({uid:p.uid, nivel:p.nivel, exp:p.exp, expProx:p.expProx}));
     aprendem.forEach(p => {
       const acima = Math.max(0, p.nivel - L.nivel);
       let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6));
@@ -100647,7 +100707,7 @@ const Exploracao = {
     Estado.salvar('auto');
     /* Golpe que não coube e evolução que chegou no treino: pergunta e
        evolui antes de voltar pro mapa, que é quando os jogos fariam. */
-    Jogo.resolverPendencias(() => this.tela(avisos.slice(0,5)));
+    Jogo.resolverPendencias(() => { this.tela(avisos.slice(0,5)); UI.barrasDeXP(xpAntes); });
   },
 
   pescar(){

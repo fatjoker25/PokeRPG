@@ -3243,6 +3243,55 @@ const UI = {
     this.modal('', `${linha}<p>${this.esc(msg)}</p>`, false, 'mochila');
     if (mudou) this.animarBarraDoTime(p, hpAntes);
   },
+  /* Fora da luta, o XP ganho (treino) aparece como na luta: a barra de
+     cada um sai de onde estava, enche, e a cada nível vai ao fim, pisca,
+     zera e continua. */
+  barrasDeXP(antes){
+    const caixa = document.getElementById('avisos');
+    if (!caixa || !antes || !antes.length) return;
+    const time = Estado.dados.time;
+    const linhas = antes.map(a => ({a, p:time.find(x => x.uid === a.uid)})).filter(x => x.p && !x.p.morto);
+    if (!linhas.length) return;
+    const bloco = this.el(`<div class="xp-treino">${linhas.map(({a, p}) => `
+      <div class="xp-linha" data-uid="${p.uid}">
+        <span class="time-icone">${imgSprite(p, 'icone')}</span>
+        <span class="xp-nome">${this.esc(nomeExib(p))} <span class="mono nv">Nv ${a.nivel}</span></span>
+        <div class="barra-exp"><i style="width:${Math.round(a.exp / a.expProx * 100)}%"></i></div>
+      </div>`).join('')}</div>`);
+    caixa.appendChild(bloco);
+    const reduz = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    linhas.forEach(({a, p}, k) => {
+      const lin = bloco.querySelector(`.xp-linha[data-uid="${p.uid}"]`);
+      const i = lin.querySelector('.barra-exp i'), nv = lin.querySelector('.nv');
+      /* os trechos: até o fim de cada nível subido, e o que sobrou no último */
+      const trechos = [];
+      let pct = a.exp / a.expProx * 100;
+      for (let n = a.nivel; n < p.nivel; n++){ trechos.push({de:pct, para:100, nivel:n + 1}); pct = 0; }
+      trechos.push({de:pct, para:p.expProx ? p.exp / p.expProx * 100 : 100, nivel:null});
+      if (reduz){ i.style.width = trechos[trechos.length - 1].para + '%'; nv.textContent = 'Nv ' + p.nivel; return; }
+      const tocar = (t) => new Promise(ok => {
+        const ms = 300 + Math.abs(t.para - t.de) * 7, t0 = performance.now();
+        const passo = agora => {
+          const q = Math.min(1, (agora - t0) / ms), e = 1 - Math.pow(1 - q, 2);
+          i.style.width = (t.de + (t.para - t.de) * e).toFixed(1) + '%';
+          if (q < 1) requestAnimationFrame(passo); else ok();
+        };
+        requestAnimationFrame(passo);
+      });
+      (async () => {
+        await new Promise(z => setTimeout(z, 250 + k * 120));
+        for (const t of trechos){
+          await tocar(t);
+          if (t.nivel){
+            lin.classList.add('subiu'); nv.textContent = 'Nv ' + t.nivel;
+            await new Promise(z => setTimeout(z, 260));
+            lin.classList.remove('subiu'); i.style.width = '0%';
+          }
+        }
+      })();
+    });
+  },
+
   /* barra de HP de uma linha do time indo de `de` até o HP atual */
   animarBarraDoTime(p, de){
     const caixa = document.querySelector('#modal .time-lista .time-linha');

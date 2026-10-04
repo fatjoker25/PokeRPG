@@ -2797,3 +2797,12 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .tut-passos{margin:0 0 10px;padding-left:22px;display:flex;flex-direction:column;gap:8px;line-height:1.5}
 .tut-passos li::marker{color:var(--destaque);font-weight:700}
 .exemplo-regra{margin:8px 0 12px;padding:10px 12px;border-radius:8px;border:1px dashed var(--borda);background:rgba(255,255,255,.03);font-size:13.5px;line-height:1.55}
+
+/* treino: as barras de XP de quem treinou enchendo, fora da luta */
+.xp-treino{display:flex;flex-direction:column;gap:6px;margin-top:8px;padding:8px 10px;border:1px solid var(--borda);border-radius:var(--raio-sm)}
+.xp-linha{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:8px;row-gap:3px}
+.xp-linha .barra-exp{grid-column:1 / -1;margin:0}
+.xp-linha .xp-nome{font-size:.86rem}
+.xp-linha .nv{color:var(--texto-fraco);font-size:.75rem}
+.xp-linha.subiu .barra-exp i{background:#e8f4ff;box-shadow:0 0 8px #5fb4ff}
+.xp-linha.subiu .nv{color:#5fb4ff}

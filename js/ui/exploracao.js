@@ -425,6 +425,8 @@ const Exploracao = {
     const fator = {critico:1.6, sucesso:1.25, parcial:1, falha:0.6}[t.grau];
     const ganho = Math.round((40 + L.nivel * 9) * fator);
     const eventos = [];
+    /* de onde cada barra de XP sai, pra tela mostrar ela enchendo */
+    const xpAntes = aprendem.map(p => ({uid:p.uid, nivel:p.nivel, exp:p.exp, expProx:p.expProx}));
     aprendem.forEach(p => {
       const acima = Math.max(0, p.nivel - L.nivel);
       let q = Math.round(ganho * Math.max(0.2, 1 - acima / 6));
@@ -452,7 +454,7 @@ const Exploracao = {
     Estado.salvar('auto');
     /* Golpe que não coube e evolução que chegou no treino: pergunta e
        evolui antes de voltar pro mapa, que é quando os jogos fariam. */
-    Jogo.resolverPendencias(() => this.tela(avisos.slice(0,5)));
+    Jogo.resolverPendencias(() => { this.tela(avisos.slice(0,5)); UI.barrasDeXP(xpAntes); });
   },
 
   pescar(){
