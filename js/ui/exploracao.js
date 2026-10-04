@@ -59,9 +59,8 @@ const Exploracao = {
       <div class="escolhas">${afazeres}</div>
 
       <h3 class="com-mapa">Para onde ir
-        ${Estado.contaItem('Mapa de Kanto')
-          ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa()">${imgItem('Mapa de Kanto')}Mapa</button>`
-          : (this.temCentro(L) ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa('parede')">${imgItem('Mapa de Kanto')}Mapa do Centro</button>` : '')}</h3>
+        ${!Estado.contaItem('Mapa de Kanto') && this.temCentro(L)
+          ? `<button class="btn mini abre-mapa" onclick="Exploracao.mapa('parede')">${imgItem('Mapa de Kanto')}Mapa do Centro</button>` : ''}</h3>
       <div class="escolhas">${vizinhos}</div>
     </div>`);
 
@@ -153,7 +152,7 @@ const Exploracao = {
         role="button" tabindex="0" aria-label="${UI.esc(L.nome)}"><title>${UI.esc(L.nome)}</title>${forma}${rotulo}</g>`;
     });
     const L = Mundo.atual();
-    UI.modal('', `<div class="mapa-kanto">
+    UI.modal('', (origem === 'mochila' ? UI.abasMochila('mapa') : '') + `<div class="mapa-kanto">
       <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>${origem === 'parede'
         ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está ${UI.esc(emLocal(aqui))}`}</span></div>
       <svg viewBox="0 0 200 162" role="img" aria-label="Mapa de Kanto">

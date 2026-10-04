@@ -171,6 +171,26 @@ const Efeitos = {
     return this.tocar(s, q, 480, {easing:'steps(1, end)'});
   },
 
+  /* ---------- barra de experiência que enche ----------
+     Sobe até onde chegou; se encheu no meio, vai até o fim, pisca,
+     zera e continua — uma vez por nível. Só a do seu lutador aparece. */
+  async encherXP(xp){
+    const a = this.arena();
+    const al = Batalha.aliado;
+    if (!a || !al || al.uid !== xp.uid) return this.esperar(120);
+    const i = a.querySelector('.lutador.aliado .ficha .barra-exp i');
+    if (!i) return this.esperar(120);
+    const ir = async (pct, ms) => { i.style.transition = `width ${ms}ms linear`; i.style.width = pct + '%'; await this.esperar(ms + 30); };
+    i.style.transition = 'none'; i.style.width = xp.de + '%'; void i.offsetWidth;
+    for (let k = 0; k < Math.min(xp.encheu || 0, 3); k++){
+      await ir(100, 420);
+      i.parentNode.classList.add('cheia'); await this.esperar(160); i.parentNode.classList.remove('cheia');
+      i.style.transition = 'none'; i.style.width = '0%'; void i.offsetWidth;
+    }
+    await ir(xp.para, 520);
+    i.style.transition = '';
+  },
+
   /* ---------- barra de HP que desliza ---------- */
   pintarHP(lado, foto, suave){
     const a = this.arena();
@@ -528,6 +548,7 @@ const Efeitos = {
       return;
     }
     if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }
+    if (e.xp){ await this.encherXP(e.xp); return; }
     /* Transform: a arte troca na hora */
     if (e.transformou){
       UI.atualizarArena(); this.pintarHP('aliado', e.fotoA, false); this.pintarHP('inimigo', e.fotoI, false);
@@ -598,9 +619,11 @@ const Efeitos = {
     const voo = document.createElement('div');
     voo.className = 'bola-voo entrada';
     voo.style.width = voo.style.height = TAM + 'px';
-    voo.innerHTML = `<div class="gira"><img class="meia baixo" src="${bola}" alt=""><img class="meia cima" src="${bola}" alt=""></div>`;
+    voo.innerHTML = `<div class="gira"><img class="meia baixo" src="${bola}" alt=""><span class="fenda"></span><img class="meia cima" src="${bola}" alt=""></div>`;
     c.appendChild(voo);
     const cima = voo.querySelector('.meia.cima');
+    const baixo = voo.querySelector('.meia.baixo');
+    const fenda = voo.querySelector('.fenda');
 
     /* 1 — parábola do canto de baixo à esquerda até a base */
     const x0 = 4, y0 = A.height - TAM - 4;
@@ -615,7 +638,7 @@ const Efeitos = {
     await this.tocar(voo, quadros, 540, {easing:'linear', fill:'forwards'});
 
     /* 2 — abre e solta o clarão */
-    await this.tocar(cima, [{transform:'rotate(0deg)'}, {transform:'rotate(-62deg)'}], 120, {fill:'forwards'});
+    await abrirBola(cima, baixo, fenda, 150);
     const clarao = this.particula('fx-clarao', t.cx, t.pe - 10);
     const luz = this.soltar(clarao, [{transform:'translate(-50%,-50%) scale(.2)', opacity:0},
       {transform:'translate(-50%,-50%) scale(1)', opacity:1, offset:.35},

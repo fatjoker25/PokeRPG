@@ -25,6 +25,22 @@ function garantirFiltroVermelho(){
   document.body.appendChild(caixa);
 }
 
+/* Cor do Cartão de Treinador: o jogador escolhe. [clara, base, escura, nome] */
+const CORES_CARTAO = {
+  azul:    ['#5b96d6', '#2f6fb5', '#1d4373', 'Azul'],
+  vermelho:['#e0675c', '#c0392b', '#7d2219', 'Vermelho'],
+  verde:   ['#6cc08a', '#2e8b57', '#1b5435', 'Verde'],
+  roxo:    ['#a487d6', '#6f4bb0', '#432b70', 'Roxo'],
+  laranja: ['#f2a65a', '#d9752b', '#8a4517', 'Laranja'],
+  rosa:    ['#f093b8', '#d0578a', '#843056', 'Rosa'],
+  dourado: ['#e7cd6e', '#c49a2c', '#7a5c14', 'Dourado'],
+  grafite: ['#7d8794', '#4a525d', '#262b31', 'Grafite']
+};
+function varsCartao(k){
+  const c = CORES_CARTAO[k] || CORES_CARTAO.azul;
+  return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
+}
+
 const UI = {
   app:null, dadosRecentes:[],
 
@@ -189,17 +205,11 @@ const UI = {
       </div>
       <div class="topo-acoes">
         <button class="btn mini" onclick="UI.modalTime()">Time</button>
-        <button class="btn mini" onclick="UI.modalItens()">Mochila</button>
-        ${(d.flags.tem_cartao && d.flags.tem_pokedex) ? '<button class="btn mini" onclick="UI.modalCartao()">Cartão</button>' : ''}
+        <button class="btn mini${Estado.temPokenav() && Estado.numerosDisponiveis().length ? ' pisca' : ''}" onclick="UI.modalItens()">Mochila${
+          Estado.temPokenav() && Estado.numerosDisponiveis().length ? ' <b>' + Estado.numerosDisponiveis().length + '</b>' : ''}</button>
         <button class="btn mini" onclick="UI.modalFicha()">Ficha</button>
-        ${d.flags.tem_pokedex ? '<button class="btn mini" onclick="UI.modalPokedex()">Pokédex</button>' : ''}
-        ${Estado.temPokenav() ? `<button class="btn mini${Estado.numerosDisponiveis().length ? ' pisca' : ''}" onclick="UI.modalNav()">PokéNav${
-          Estado.numerosDisponiveis().length ? ' <b>' + Estado.numerosDisponiveis().length + '</b>' : ''}</button>` : ''}
         <button class="btn mini" onclick="UI.modalDiario()">Diário</button>
-        <button class="btn mini" onclick="UI.modalTutorial()">Tutorial</button>
-        <button class="btn mini" onclick="UI.modalRegras()">Regras</button>
-        <button class="btn mini som${somLigado() ? '' : ' mudo'}" onclick="UI.alternarSom(this)"
-          aria-pressed="${somLigado() ? 'false' : 'true'}" title="Gritos dos Pokémon">${somLigado() ? 'Som' : 'Mudo'}</button>
+        <button class="btn mini" onclick="UI.modalAjustes()">Ajustes</button>
       </div>
     </div>`;
   },
@@ -1087,6 +1097,7 @@ const UI = {
       `<div class="bola-voo" style="width:${TAM}px;height:${TAM}px">
          <div class="gira">
            <img class="meia baixo" src="${src}" alt="">
+           <span class="fenda"></span>
            <img class="meia cima"  src="${src}" alt="">
          </div>
        </div>
@@ -1122,8 +1133,11 @@ const UI = {
     const tocar = (el, quadros, ms, extra) =>
       el.animate(quadros, Object.assign({duration:ms, fill:'forwards', easing:'ease-in-out'}, extra || {})).finished;
     const esperar = ms => new Promise(r => setTimeout(r, ms));
-    const abrir  = () => tocar(cima, [{transform:'rotate(0deg)'}, {transform:'rotate(-62deg)'}], 140);
-    const fechar = () => tocar(cima, [{transform:'rotate(-62deg)'}, {transform:'rotate(0deg)'}], 120);
+    /* Abre no meio, como nos jogos de DS: a metade de cima sobe e
+       tomba pra trás, a de baixo desce um pouco, e a luz sai da fenda. */
+    const fenda = camada.querySelector('.fenda');
+    const abrir  = () => abrirBola(cima, baixo, fenda, 160);
+    const fechar = () => fecharBola(cima, baixo, fenda, 130);
     const luz = (x, y) => {
       feixe.style.left = (x + TAM/2) + 'px'; feixe.style.top = (y + TAM/2) + 'px';
       return tocar(feixe, [{opacity:0, transform:'translate(-50%,-50%) scale(.2)'},
@@ -1621,9 +1635,8 @@ const UI = {
       const info = ITENS_INFO[n] || {};
       if (info.tipo === 'curaJogador')
         return `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
-      return d.time.filter(p=>!p.morto).map(p =>
-        `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}',alvoUid:'${p.uid}'})">
-          ${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
+      return `<button class="escolha com-item" onclick="UI.bagEmQuem('${n.replace(/'/g, "\\'")}')">
+          ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`;
     }).join('');
     const corpo =
       (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As Pokébolas ficam no fundo da mochila: não se joga Pokébola no Pokémon de outro treinador.</p>' : '') +
@@ -1632,6 +1645,29 @@ const UI = {
       (guardados > 0 ? `<p class="sussurro" style="margin:10px 0 0">${guardados} ${guardados === 1 ? 'objeto fica guardado' : 'objetos ficam guardados'} — papel, crachá e afins não servem de nada aqui.</p>` : '');
     this.modal('Mochila', (linhasBolas || linhasItens) ? corpo
       : corpo + '<p class="nada">Nada que sirva agora.</p>');
+  },
+
+  /* Lista do time pra escolher quem recebe: ícone, nome e HP. */
+  escolherDoTime(acao, filtro){
+    const d = Estado.dados;
+    const alvos = d.time.filter(p => !p.morto && (!filtro || filtro(p)));
+    return alvos.map(p => {
+      const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
+      const faixa = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
+      return `<button class="time-linha${p.hp <= 0 ? ' caido' : ''}" onclick="${acao(p)}">
+        <span class="time-icone">${imgSprite(p, 'icone')}</span>
+        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.status ? ' ' + this.etiquetaStatus(p.status) : ''}</span>
+        <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${p.hp}/${p.hpMax}</span></span>
+      </button>`;
+    }).join('');
+  },
+
+  /* Bag na batalha: escolhe o item, depois quem recebe */
+  bagEmQuem(n){
+    const lista = this.escolherDoTime(p =>
+      `UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n.replace(/'/g, "\\'")}',alvoUid:'${p.uid}'})`);
+    this.modal(n, `<div class="time-lista">${lista}</div>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.menuBag()">Voltar</button></div>`, true);
   },
 
   /* ========================================================
@@ -1898,7 +1934,7 @@ const UI = {
           <b>gravar</b></button>`).join('')}
       </div>` : '';
 
-    this.modal('', `
+    this.modal('', this.abasMochila('nav') + `
       <div class="nav-topo">
         <span class="nav-antena"></span>
         <span class="nav-marca">POKÉNAV</span>
@@ -2743,36 +2779,110 @@ const UI = {
     setTimeout(() => m.remove(), 200);
   },
 
+  /* O time: só nome e HP. Tocar num abre o que dá pra fazer com ele. */
   modalTime(){
     const d = Estado.dados;
-    const carta = p => `<div class="carta ${p.morto?'morto':''}">
+    const linha = (p, i) => {
+      const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
+      const cls = p.morto ? ' morto' : (p.hp <= 0 ? ' caido' : '');
+      const faixa = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
+      return `<button class="time-linha${cls}" onclick="UI.timeAcoes('${p.uid}')">
+        <span class="time-icone">${imgSprite(p, 'icone')}</span>
+        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.segurando ? `<span class="time-segura" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}</span>
+        <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${p.morto ? 'morto' : `${p.hp}/${p.hpMax}`}</span></span>
+      </button>`;
+    };
+    const cem = d.cemiterio.length
+      ? `<h3>Não voltaram</h3><div class="time-lista">${d.cemiterio.map(p => `<button class="time-linha morto" onclick="UI.sumario('${p.uid}')">
+          <span class="time-icone">${imgSprite(p, 'icone')}</span><span class="time-nome">${this.esc(nomeExib(p))}</span>
+          <span class="time-hp"><span class="hp-num">${this.esc(p.causaMorte || '')}</span></span></button>`).join('')}</div>` : '';
+    this.modal('Seu time',
+      (d.time.length ? `<div class="time-lista">${d.time.map(linha).join('')}</div>` : '<p class="nada">Você não tem nenhum Pokémon.</p>') +
+      (d.pc.length ? `<p class="sussurro" style="margin-top:10px">No PC: ${d.pc.length}.</p>` : '') + cem);
+  },
+
+  timeAcoes(uid){
+    const d = Estado.dados;
+    const p = d.time.find(x => x.uid === uid);
+    if (!p) return this.modalTime();
+    const temEquipavel = Object.entries(d.itens).some(([n, q]) => q > 0 && (ITENS_INFO[n] || {}).tipo === 'equipar');
+    this.modal(nomeExib(p), `<div class="time-cab">${imgSprite(p, 'icone')}<span>${this.esc(nomeExib(p))}${this.shi(p)} · Nv ${p.nivel}</span>
+        ${p.segurando ? `<span class="time-segura">${imgItem(p.segurando)}${this.esc(p.segurando)}</span>` : ''}</div>
+      <button class="escolha" onclick="UI.sumario('${uid}')">Sumário</button>
+      ${d.time.length > 1 ? `<button class="escolha" onclick="UI.moverNoTime('${uid}')">Mover</button>` : ''}
+      ${p.morto ? '' : (p.segurando
+        ? `<button class="escolha" onclick="UI.tirarItem('${uid}')">Retirar item</button>`
+        : `<button class="escolha" ${temEquipavel ? `onclick="UI.menuEquipar('${uid}')"` : 'disabled'}>Dar item</button>`)}
+      <button class="escolha" onclick="UI.modalTime()">Voltar</button>`, true);
+  },
+
+  /* trocar de lugar: o primeiro da lista é quem entra na briga */
+  moverNoTime(uid, alvo){
+    const d = Estado.dados;
+    const i = d.time.findIndex(x => x.uid === uid);
+    if (i < 0) return this.modalTime();
+    if (alvo != null){
+      const j = d.time.findIndex(x => x.uid === alvo);
+      if (j >= 0){ const t = d.time[i]; d.time[i] = d.time[j]; d.time[j] = t; Estado.salvar('auto'); }
+      return this.modalTime();
+    }
+    const p = d.time[i];
+    this.modal(`Mover ${nomeExib(p)}`, `<p class="sussurro" style="margin:0 0 10px">Trocar de lugar com:</p>` +
+      d.time.map((x, k) => x.uid === uid ? '' : `<button class="escolha com-item" onclick="UI.moverNoTime('${uid}','${x.uid}')">
+        ${imgSprite(x, 'icone')}${k + 1}º · ${this.esc(nomeExib(x))}</button>`).join('') +
+      `<button class="escolha" onclick="UI.timeAcoes('${uid}')">Voltar</button>`, true);
+  },
+
+  /* a ficha inteira de um Pokémon */
+  sumario(uid){
+    const d = Estado.dados;
+    const p = d.time.find(x => x.uid === uid) || d.pc.find(x => x.uid === uid) || d.cemiterio.find(x => x.uid === uid);
+    if (!p) return this.modalTime();
+    const noTime = d.time.some(x => x.uid === uid);
+    this.modal('', `<div class="carta sumario ${p.morto?'morto':''}">
       <div class="t"><span class="com-icone">${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
+      <div class="sumario-arte">${imgSprite(p, 'frente')}</div>
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p) + this.barraExp(p)}
-      <div class="sussurro" style="margin-top:7px">${p.naturezaVista
-        ? 'Natureza <b>' + this.esc(p.natureza) + '</b>'
-        : 'Natureza <b>???</b> — você ainda não conviveu o bastante.'}</div>
-      <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ' + pron(p).ele + ' pode desobedecer':''}</div>
+      <div class="sussurro" style="margin-top:7px">Natureza <b>${p.naturezaVista ? this.esc(p.natureza) : '???'}</b></div>
+      <div class="sussurro">Moral ${p.moral}/100</div>
       ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
           return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
-      ${p.morto ? '' : `<div class="segurado-linha">
-        ${p.segurando
-          ? `<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
-             <span class="fraco">${this.esc(fichaItem(p.segurando))}</span>
-             <button class="btn mini" onclick="UI.tirarItem('${p.uid}')">tirar</button>`
-          : `<span class="fraco">mão livre</span>
-             <button class="btn mini" onclick="UI.menuEquipar('${p.uid}')">equipar</button>`}
-      </div>`}
+      ${p.morto ? '' : `<div class="segurado-linha">${p.segurando
+          ? `${imgItem(p.segurando)}<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
+             <span class="fraco">${this.esc(fichaItem(p.segurando))}</span>`
+          : '<span class="fraco">mão livre</span>'}</div>`}
       <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
         ${p.golpes.map(g=>`${this.esc(g.nome)} <span class="mono">${g.pp}/${g.ppMax}</span>`).join(' · ')}</div>
-      <div class="sussurro" style="margin-top:6px">
-        ${nomePosto(p.nivel)} · ${this.linhaAtrib(p)}</div>
+      <div class="sussurro" style="margin-top:6px">${nomePosto(p.nivel)} · ${this.linhaAtrib(p)}</div>
       ${p.historia ? `<div class="sussurro" style="margin-top:7px;font-style:italic">${this.esc(p.historia)}</div>` : ''}
-    </div>`;
-    const pc = d.pc.length ? `<h3>No PC (${d.pc.length})</h3><div class="grade">${d.pc.map(carta).join('')}</div>` : '';
-    const cem = d.cemiterio.length ? `<h3>Cemitério — permanente</h3><div class="grade">${d.cemiterio.map(carta).join('')}</div>` : '';
-    this.modal('Seu time',
-      (d.time.length ? `<div class="grade">${d.time.map(carta).join('')}</div>` : '<p class="nada">Você não tem nenhum Pokémon.</p>') + pc + cem);
+    </div>
+    <div style="margin-top:12px"><button class="btn" onclick="${noTime ? `UI.timeAcoes('${uid}')` : 'UI.modalTime()'}">Voltar</button></div>`, true);
+  },
+
+  /* A mochila em abas: os aparelhos moram dentro dela. */
+  abasMochila(atual){
+    const d = Estado.dados;
+    const novos = Estado.temPokenav() ? Estado.numerosDisponiveis().length : 0;
+    const abas = [
+      ['itens', 'Itens', 'UI.modalItens()', true],
+      ['pokedex', 'Pokédex', 'UI.modalPokedex()', !!d.flags.tem_pokedex],
+      ['nav', 'PokéNav' + (novos ? ` <b>${novos}</b>` : ''), 'UI.modalNav()', Estado.temPokenav()],
+      ['cartao', 'Cartão', 'UI.modalCartao()', !!(d.flags.tem_cartao && d.flags.tem_pokedex)],
+      ['mapa', 'Mapa', "Exploracao.mapa('mochila')", Estado.contaItem('Mapa de Kanto') > 0]
+    ].filter(a => a[3]);
+    if (abas.length < 2) return '';
+    return `<nav class="abas-mochila" aria-label="Mochila">${abas.map(([id, rot, acao]) =>
+      `<button class="aba${id === atual ? ' sel' : ''}" ${id === atual ? 'aria-current="page"' : `onclick="${acao}"`}>${rot}</button>`).join('')}</nav>`;
+  },
+
+  /* Ajustes: o que não é do jogo, e sim de quem joga. */
+  modalAjustes(){
+    this.modal('Ajustes', `
+      <button class="escolha" onclick="UI.modalRegras()">Regras</button>
+      <button class="escolha" onclick="UI.modalTutorial()">Tutorial</button>
+      <button class="escolha som${somLigado() ? '' : ' mudo'}" onclick="UI.alternarSom(this);UI.modalAjustes()"
+        aria-pressed="${somLigado() ? 'false' : 'true'}">${somLigado() ? 'Som: ligado (gritos dos Pokémon)' : 'Som: desligado'}</button>`);
   },
 
   modalItens(){
@@ -2780,7 +2890,7 @@ const UI = {
     const itens = Object.entries(d.itens).filter(([,q]) => q > 0);
     const total = itens.reduce((a,[,q]) => a + q, 0);
     const bolsa = mochilaAtual();
-    const topo = `<div class="mochila-topo">
+    const topo = this.abasMochila('itens') + `<div class="mochila-topo">
       <span class="fecho"></span>
       <span class="bolsa-nome">${this.esc(bolsa.rotulo)}</span>
       <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
@@ -2940,7 +3050,7 @@ const UI = {
     const p = Estado.desequipar(uid);
     Estado.salvar('auto');
     if (!p) return;
-    this.modalTime();
+    this.timeAcoes(uid);
   },
 
   /* usar item fora de combate: pedra evolutiva, cura, PP, repelente */
@@ -2950,7 +3060,7 @@ const UI = {
     if (!Estado.contaItem(nome)) return;
     if (info.tipo === 'tm') return this.ensinarTM(nome);
     if (info.tipo === 'ppUp') return this.escolherPPUp(nome);
-    if (info.tipo === 'mapa') return Exploracao.mapa();
+    if (info.tipo === 'mapa') return Exploracao.mapa('mochila');
 
     if (info.tipo === 'curaJogador'){
       Estado.usarItem(nome); Estado.curarJogador(info.valor); Estado.salvar('auto');
@@ -2976,13 +3086,11 @@ const UI = {
           ${this.esc(nomeExib(p))} <span class="pd">vira ${this.esc(DEX[tabela[p.dex]].nome)} — e não volta</span></button>`).join(''),
         false, 'mochila');
     }
-    /* cura, revive, status, moral, pp: escolher alvo */
-    const alvos = d.time.filter(p => !p.morto);
-    if (!alvos.length) return this.modal('', '<p class="nada">Não tem em quem usar.</p>', false, 'mochila');
-    this.modal('Em quem?', alvos.map(p =>
-      `<button class="escolha" onclick="UI.aplicarItemFora('${nome.replace(/'/g,"\\'")}','${p.uid}')">
-        ${this.esc(nomeExib(p))} <span class="pd">${p.hp}/${p.hpMax} HP${p.status?` · ${this.esc(p.status)}`:''}</span></button>`).join(''),
-      false, 'mochila');
+    /* cura, revive, status, moral, pp: abre o time e você toca em quem */
+    const lista = this.escolherDoTime(p => `UI.aplicarItemFora('${nome.replace(/'/g,"\\'")}','${p.uid}')`);
+    if (!lista) return this.modal('', '<p class="nada">Não tem em quem usar.</p>', false, 'mochila');
+    this.modal(nome, `<div class="time-lista">${lista}</div>
+      <div style="margin-top:12px"><button class="btn" onclick="UI.modalItens()">Voltar</button></div>`, true, 'mochila');
   },
 
   aplicarPedra(nome, uid){
@@ -3093,6 +3201,13 @@ const UI = {
   /* ========================================================
      CARTÃO DE TREINADOR
      ======================================================== */
+  corDoCartao(k){
+    if (!CORES_CARTAO[k]) return;
+    Estado.j.corCartao = k;
+    Estado.salvar('auto');
+    this.modalCartao();
+  },
+
   modalCartao(){
     const d = Estado.dados;
     if (!d.flags.tem_cartao || !d.flags.tem_pokedex) return this.modalFicha();
@@ -3114,31 +3229,29 @@ const UI = {
       const nome = g.insignia.replace(/^Insígnia\s+/, '');
       const titulo = sabe ? `${this.esc(g.cidade)} · ${this.esc(g.lider)}` : 'Um ginásio que você ainda não encontrou';
       return `<div class="insignia-slot ${tem ? 'tem' : ''} ${sabe ? '' : 'oculta'}" title="${titulo}">
-        ${tem && caminhoInsignia(g.id)
-          ? `<img class="insignia-img" src="${caminhoInsignia(g.id)}" alt="${this.esc(g.insignia)}" onerror="this.remove()">`
+        ${caminhoInsignia(g.id)
+          ? `<img class="insignia-img${tem ? '' : ' vaga'}" src="${caminhoInsignia(g.id)}" alt="${this.esc(g.insignia)}" onerror="this.remove()">`
           : `<span class="forma ins-${g.id}" style="--ins-cor:${sabe ? cor : 'transparent'}"></span>`}
-        <span class="rot">${tem ? this.esc(nome) : '—'}</span>
+        <span class="rot">${tem || sabe ? this.esc(nome) : '—'}</span>
         <span class="cid">${sabe ? this.esc(g.cidade) : '???'}</span>
       </div>`;
     }).join('');
 
     const nInsig = d.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
 
-    this.modal('', `
+    this.modal('', this.abasMochila('cartao') + `
       <div class="cartao-topo">
         <span class="cartao-sigla">REGISTRO DE TREINADOR</span>
         <span class="cartao-id">Nº ${id}</span>
       </div>
 
       <div class="cartao-corpo">
-        <div class="cartao-retrato" title="${this.esc(Estado.descricaoFisica())}">
+        <div class="cartao-retrato">
           <span class="silhueta" aria-hidden="true"></span>
-          <span class="rodape-retrato">${this.esc(j.genero)}, ${j.idade}</span>
         </div>
         <div class="cartao-dados">
           <div class="cartao-nome">${this.esc(j.nome)}</div>
           <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? '{Campeão|Campeã} de Kanto' : '{Treinador registrado|Treinadora registrada}'))}</div>
-          <div class="cartao-sinais">${this.esc(Estado.descricaoFisica())}</div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
           <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${fmtDin(j.dinheiro)} ₽</span></div>
@@ -3162,9 +3275,13 @@ const UI = {
       </div>
 
       <div class="cartao-pe">
+        <div class="cartao-cores" role="group" aria-label="Cor do cartão">
+          ${Object.entries(CORES_CARTAO).map(([k, c]) => `<button class="cartao-cor${(j.corCartao || 'azul') === k ? ' sel' : ''}"
+            style="background:${c[1]}" title="${this.esc(c[3])}" aria-label="${this.esc(c[3])}" onclick="UI.corDoCartao('${k}')"></button>`).join('')}
+        </div>
         <button class="btn mini" onclick="UI.modalFicha()">Ficha completa</button>
       </div>
-    `, false, 'cartao');
+    `, false, 'cartao', varsCartao(j.corCartao));
   },
 
   modalPokedex(){
@@ -3216,10 +3333,8 @@ const UI = {
          </div>`
       : '';
 
-    this.modal('', cabeca + faixas +
-      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos e atributos do indivíduo. Temperamento ela não lê.${
-        nacional ? ' A carta de atualização abriu os cem registros de Johto.' : ''}</p>
-       <div class="dex-grade">${celas}</div>`, false, 'pokedex');
+    this.modal('', this.abasMochila('pokedex') + cabeca + faixas +
+      `<div class="dex-grade">${celas}</div>`, false, 'pokedex');
   },
 
   /* ficha técnica de um registro */
@@ -3236,7 +3351,6 @@ const UI = {
           <div class="cab"><span class="num">#${num}</span><span class="nomeg">${this.esc(esp.nome)}</span></div>
           <div class="dex-arte">${imgSpriteDex(dex, 'frente', {oculto:true})}</div>
           <div class="nota">Avistado. A Pokédex guardou o número e o nome e mais nada.</div>
-          <div class="nota">Para abrir a ficha: aponte a Pokédex nele durante um combate. Custa nada — não gasta o turno.</div>
         </div>
         <div style="margin-top:12px"><button class="btn" onclick="UI.modalPokedex()">Voltar à lista</button></div>`,
         true, 'pokedex');
@@ -4057,7 +4171,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
-      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto na mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto, na aba Mapa da mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
       <div class="linha"><span class="k">Tocar num lugar</span><span class="v">mostra o que ele é, com o que liga, se tem Centro e se você já foi · loja e ginásio só aparecem depois que você acha andando · vizinho: botão de ir · cidade longe onde você já pisou: botão de voar, se der</span></div>
       <div class="linha"><span class="k">Voar pelo mapa</span><span class="v">com um Voador de grande porte que voe de verdade · até qualquer cidade onde você já pisou · um período do dia</span></div>
       <p class="sussurro">Entre um capítulo e outro não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Voar pelo mapa só vale andando pelo mundo, entre cidades que você já conhece. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>

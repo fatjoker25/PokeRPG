@@ -1361,8 +1361,13 @@ const Batalha = {
       if (quem.length) quem.forEach(p => ganhos.set(p, Math.max(1, Math.floor(metade / quem.length))));
       if (donos.length) donos.forEach(p => ganhos.set(p, (ganhos.get(p) || 0) + Math.max(1, Math.floor((total - metade) / donos.length))));
       for (const [p, cada] of ganhos){
+        /* a barra de experiência anda na tela: o evento leva de onde
+           ela saiu, aonde chegou e quantas vezes encheu no meio */
+        const pctDe = p.expProx ? Math.min(100, p.exp / p.expProx * 100) : 0, nvDe = p.nivel;
         const evs = ganharExp(p, cada);
-        this.ev('exp', `${nomeVisivel(p)} ganhou ${cada} de experiência.`);
+        const pctPara = p.expProx ? Math.min(100, p.exp / p.expProx * 100) : 100;
+        this.ev('exp', `${nomeVisivel(p)} ganhou ${cada} de experiência.`,
+          {xp:{uid:p.uid, de:pctDe, para:pctPara, encheu:p.nivel - nvDe}});
         evs.forEach(e => {
           if (e.tipo === 'nivel') this.ev('nivel', `${nomeVisivel(p)} subiu para o nível ${e.nivel}!`);
           if (e.tipo === 'golpe') this.ev('golpeNovo', `${nomeVisivel(p)} aprendeu ${e.golpe}!`);
