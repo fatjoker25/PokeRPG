@@ -63,14 +63,30 @@ const Relogio = {
    coisa no mural marca por dia do mês ou por dia da semana.
    ============================================================ */
 const Calendario = {
+  /* A jornada começa no dia em que a perua do laboratório passa pela
+     sua cidade (DIA_DA_PERUA, em agenda.js): é o dia da entrega no
+     capítulo 1. Pallet, dia 1. Fica guardado no relógio. */
+  inicio(){
+    const d = typeof Estado !== 'undefined' && Estado.dados;
+    if (!d || !d.relogio) return 1;
+    if (d.relogio.inicio == null){
+      const nome = d.jogador && d.jogador.cidade;
+      const id = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === nome);
+      d.relogio.inicio = (typeof DIA_DA_PERUA !== 'undefined' && DIA_DA_PERUA[id]) || 1;
+    }
+    return d.relogio.inicio;
+  },
   MESES: ['março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro','janeiro','fevereiro'],
   DIAS:  [31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 28],
   SEMANA: ['segunda','terça','quarta','quinta','sexta','sábado','domingo'],
   SEMANA_CURTA: ['seg','ter','qua','qui','sex','sáb','dom'],
+  /* `dia` é o dia da jornada; a data conta a partir de 1º de março,
+     uma segunda, somando o dia em que a jornada começou */
   de(dia){
-    let resto = Math.max(1, dia || 1) - 1, m = 0;
+    const abs = Math.max(1, dia || 1) - 1 + this.inicio() - 1;
+    let resto = abs, m = 0;
     while (resto >= this.DIAS[m % 12]){ resto -= this.DIAS[m % 12]; m++; }
-    const s = (Math.max(1, dia || 1) - 1) % 7;
+    const s = abs % 7;
     return {diaMes: resto + 1, mes: m % 12, mesNome: this.MESES[m % 12],
             semanaIdx: s, semana: this.SEMANA[s], semanaCurta: this.SEMANA_CURTA[s]};
   },

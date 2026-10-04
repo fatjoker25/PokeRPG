@@ -689,9 +689,9 @@ c1e_despedida_goro:{
   texto:[
     'Ele guarda o caderno numa sacola de pano, dobra o banquinho, fecha o portamalas e bate duas vezes na lataria, que deve ser mania.',
     d=>{
-      const DIA = {Pallet:1, Viridian:2, Pewter:4, Cerulean:6, Vermilion:8,
-                   Lavender:10, Celadon:12, Saffron:14, Fuchsia:15, Cinnabar:16};
-      const q = DIA[d.jogador.cidade] || 4;
+      /* a mesma volta do mural e do PokéNav (agenda.js) */
+      const id = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === d.jogador.cidade);
+      const q = DIA_DA_PERUA[id] || 4;
       return fala('Célio', `Eu volto dia ${q} do mês que vem. Aqui é sempre dia ${q}. Se você ainda estiver na cidade, aparece. Se não estiver, é porque a estrada tá boa.`, 'riso');
     },
     'Ele abre a porta do motorista e para antes de entrar.',

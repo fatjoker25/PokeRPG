@@ -4104,7 +4104,7 @@ const UI = {
       <div class="linha"><span class="k">Período</span><span class="v">madrugada 0h–5h · manhã 6h–11h · tarde 12h–17h · noite 18h–23h</span></div>
       <div class="linha"><span class="k">Sem Relógio</span><span class="v">você só sabe o período, pelo céu · hora, data e dia da semana não aparecem em lugar nenhum</span></div>
       <div class="linha"><span class="k">Com Relógio</span><span class="v">item de mochila (Viridian, Vermilion, Saffron e Celadon) · o alto da tela mostra dia da semana, data e hora</span></div>
-      <div class="linha"><span class="k">Calendário</span><span class="v">o primeiro dia da jornada é segunda, 1º de março · os meses têm o tamanho de verdade</span></div>
+      <div class="linha"><span class="k">Calendário</span><span class="v">1º de março é uma segunda · a jornada começa no dia em que a perua do laboratório passa pela sua cidade (Pallet, dia 1) · os meses têm o tamanho de verdade</span></div>
       <div class="linha"><span class="k">Dia marcado</span><span class="v">algumas coisas só acontecem num dia do mês ou da semana, numa faixa de hora e num lugar · quem marca anuncia no mural do Centro · na hora certa, aparece na lista do lugar · cada uma, uma vez por data</span></div>
       <div class="linha"><span class="k">Fazer coisa</span><span class="v">vasculhar, procurar, pescar, andar, conversar e esperar levam o dia pro começo do próximo período · treinar, dois</span></div>
       <div class="linha"><span class="k">Acampar</span><span class="v">só de noite ou de madrugada · acorda às 6h</span></div>

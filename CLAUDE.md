@@ -540,7 +540,9 @@ lista de ginásios não existe mais e não volta.
 Sem o item **Relógio** o jogador só vê o período (manhã, tarde…): o
 `Relogio.texto()` e o `cabecalho()` escondem hora e data. Com ele, dia
 da semana, data e hora. O calendário (`Calendario`, em `mundo.js`)
-começa numa segunda, 1º de março, com mês de tamanho de verdade.
+conta a partir de segunda, 1º de março, com mês de tamanho de verdade,
+e a jornada começa no dia da perua na cidade natal (`Calendario.inicio`),
+que é o dia da entrega no capítulo 1.
 
 Coisa com dia e hora marcados mora em `js/story/agenda.js` (`AGENDA`):
 `local`, `quando()`, `anuncio` (vai pro mural da cidade em `mural`, por
