@@ -19242,7 +19242,7 @@ const EVENTOS_ROTA = {
 
 campo:[
 {
-  id:'rot_cerca_caida', peso:2,
+  id:'rot_cerca_caida', peso:2, ambientes:['campo'],
   titulo:'A cerca caída',
   texto:[
     'Uns quinze metros de cerca estão no chão, derrubados por peso e não por vento: os mourões saíram inteiros, com terra na ponta.',
@@ -19294,7 +19294,7 @@ campo:[
   ]
 },
 {
-  id:'rot_bicicleta_quebrada', peso:2,
+  id:'rot_bicicleta_quebrada', peso:2, ambientes:['campo','floresta','montanha'],
   titulo:'Alguém empurrando bicicleta',
   texto:[
     'Tem uma pessoa de uns vinte anos empurrando uma bicicleta há tempo suficiente pra ter desistido de ficar brava.',
@@ -19336,7 +19336,7 @@ campo:[
   ]
 },
 {
-  id:'rot_ninho_no_chao', peso:3,
+  id:'rot_ninho_no_chao', peso:3, ambientes:['campo','floresta'],
   titulo:'Um ninho no chão da trilha',
   texto:[
     'Tem um ninho no chão, a meio metro da trilha, com três ovos e nenhum adulto por perto.',
@@ -19395,7 +19395,7 @@ campo:[
   ]
 },
 {
-  id:'rot_o_acampamento_vazio', peso:2,
+  id:'rot_o_acampamento_vazio', peso:2, ambientes:['campo','floresta','montanha'],
   titulo:'Um acampamento sem ninguém',
   texto:[
     'Tem uma barraca armada a trinta metros da trilha, fechada, com uma panela apoiada em duas pedras e cinza fria embaixo.',
@@ -20019,7 +20019,11 @@ const Eventos = {
   banco(id){
     const L = LOCAIS[id] || {};
     if (L.tipo === 'cidade') return (EVENTOS_CIDADE[id] || []).concat(EVENTOS_GERAIS);
-    return (EVENTOS_ROTA[L.ambiente] || []).concat(EVENTOS_ROTA.campo || []);
+    /* evento de campo só vai pra onde ele faz sentido: cercado de
+       Miltank não existe dentro da Floresta de Viridian */
+    const amb = L.ambiente || 'campo';
+    const deCampo = amb === 'campo' ? [] : (EVENTOS_ROTA.campo || []).filter(ev => (ev.ambientes || ['campo']).includes(amb));
+    return (EVENTOS_ROTA[amb] || []).concat(deCampo);
   },
 
   disponiveis(id){
@@ -20579,6 +20583,76 @@ function linhaDaCasaSobreGosto(d){
   const r = rumoDe(d);
   if (!r.gostos.texto) return '';
   return `Do lado do prato tem um bilhete com a letra de ${nomeCasa()}: "Pra quem gosta de ${r.gostos.texto.split(/[,;]/)[0].trim()}." Ninguém comenta.`;
+}
+
+/* ============================================================
+   VASCULHAR — o que se acha olhando com atenção, por ambiente
+   Achado de verdade (item pequeno), rastro de quem vive ali (a
+   espécie entra como vista na Pokédex) ou só o lugar contando
+   alguma coisa. Muda com o lugar e com a hora.
+   ============================================================ */
+const ACHADOS_VASCULHAR = {
+  campo:[
+    {t:'Debaixo de uma moita, uma Poké Ball fechada e vazia, com o lacre ainda inteiro. Alguém deixou cair correndo.', item:['Poké Ball', 1]},
+    {t:'Na beira da trilha, um frasco de Potion pela metade, tampado. Serve.', item:['Potion', 1]},
+    {t:'Penas espalhadas num círculo e um tufo de pelo marrom. Teve briga aqui de manhã cedo.', rastro:[16, 19, 21]},
+    {t:'Pegadas pequenas e fundas, em linha reta, cortando o capim. Quem passou estava com pressa.', rastro:[19, 29, 32]},
+    {t:'Uma pilha de pilhas usadas e uma que ainda funciona, no pé de um poste.', item:['Pilha', 1]},
+    {t:'O capim está deitado num redondo perfeito, morno ainda. Alguma coisa dormiu aqui e acabou de sair.'}
+  ],
+  floresta:[
+    {t:'Um casulo vazio grudado na casca, rachado no meio. Quem saiu daí já está voando.', rastro:[11, 14, 12, 15]},
+    {t:'Teia grossa entre dois troncos, com orvalho preso em cada fio. Melhor dar a volta.', rastro:[167, 13]},
+    {t:'No oco de uma árvore, alguém escondeu uma Antidote embrulhada num pano. Esqueceram de voltar.', item:['Antidote', 1]},
+    {t:'Fezes de Pokémon cheias de semente, e um caminho de broto nascendo atrás delas.', rastro:[43, 69]},
+    {t:'Uma faísca no meio do mato e cheiro de ar queimado. Algum elétrico mora perto.', rastro:[25]},
+    {t:'Um isqueiro de pescador e uma Isca dentro de um saquinho, debaixo de uma raiz.', item:['Isca', 1]}
+  ],
+  montanha:[
+    {t:'Pedra rolada recente, ainda com a terra úmida embaixo. Alguém grande passou rolando.', rastro:[74, 75, 95]},
+    {t:'Uma corda velha amarrada num grampo de escalada, firme ainda. Você leva.', item:['Corda', 1]},
+    {t:'Penas grandes presas num arbusto de espinho, lá em cima. Aqui voa coisa grande.', rastro:[21, 22, 17]},
+    {t:'Uma lanterna com a lente rachada, que acende quando você bate nela.', item:['Lanterna', 1]},
+    {t:'Marcas de garra na parede de pedra, na altura do seu joelho. Muitas.', rastro:[27, 28, 56]}
+  ],
+  caverna:[
+    {t:'Um morcego de pedra — não, um Zubat dormindo de cabeça pra baixo — e mais trinta em volta. Você sai devagar.', rastro:[41, 42]},
+    {t:'Uma pedra lisa e redonda que brilha pouquinho quando você cobre com a mão. Fica com você.', item:['Moon Stone', 1], raro:true},
+    {t:'Restos de fogueira e uma Pokébola rachada. Alguém acampou aqui e saiu sem ela.', item:['Poké Ball', 1]},
+    {t:'Uma trilha de cogumelos na parede úmida, comidos pela metade.', rastro:[46, 47]},
+    {t:'Pilha nova dentro de uma lanterna esquecida no chão.', item:['Pilha', 2]}
+  ],
+  agua:[
+    {t:'A maré deixou uma garrafa na areia com um Potion dentro, inteiro. Quem jogou no mar queria que alguém achasse.', item:['Potion', 1]},
+    {t:'Bolhas subindo num ponto só, sempre no mesmo lugar. Tem coisa respirando ali embaixo.', rastro:[129, 60, 118, 72]},
+    {t:'Conchas abertas em fileira, comidas por alguém de garra.', rastro:[98, 90]},
+    {t:'Uma isca de pesca enroscada nas pedras, ainda boa.', item:['Isca', 1]},
+    {t:'Uma pena azul enorme boiando, e mais nada. Nem sinal de quem largou.', raro:true}
+  ]
+};
+ACHADOS_VASCULHAR.cidade = ACHADOS_VASCULHAR.campo;
+ACHADOS_VASCULHAR.ruina = ACHADOS_VASCULHAR.campo;
+ACHADOS_VASCULHAR.cemiterio = ACHADOS_VASCULHAR.caverna;
+ACHADOS_VASCULHAR.vulcao = ACHADOS_VASCULHAR.montanha;
+
+/* devolve os avisos do achado (e já aplica item e Pokédex) */
+function achadoDeVasculhar(ambiente, sortudo, soRastro){
+  const lista = (ACHADOS_VASCULHAR[ambiente] || ACHADOS_VASCULHAR.campo)
+    .filter(a => (!a.raro || sortudo) && (!soRastro || !a.item));
+  const a = Dados.escolher(lista);
+  const av = [{tipo:'info', texto:a.t}];
+  if (a.item){ Estado.darItem(a.item[0], a.item[1]); av.push({tipo:'item', texto:`Achou ${a.item[1]}× ${a.item[0]}.`}); }
+  if (a.rastro){
+    const daqui = (ENCONTROS[Mundo.id()] || []).map(x => x[0]);
+    const quem = a.rastro.find(x => daqui.includes(x)) || a.rastro[0];
+    const pd = Estado.pdex();
+    if (DEX[quem] && !pd.vistos[quem] && Estado.dados.flags.tem_pokedex){
+      pd.vistos[quem] = true;
+      av.push({tipo:'pokedex', texto:`Pelo rastro, a Pokédex acende um número novo: ${String(quem).padStart(3, '0')}.`});
+    }
+  }
+  if (ehNoite()) av.push({tipo:'eco', texto:'Com lanterna, de noite, tudo parece mais perto do que está.'});
+  return av;
 }
 
 
@@ -86088,6 +86162,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">uma parada no máximo, num trecho de estrada do caminho: 35% de treinador, e senão a mesma conta do selvagem · depois da briga a viagem continua</span></div>
       <div class="linha"><span class="k">Procurar Pokémon</span><span class="v">20% de ser um treinador em vez de um selvagem</span></div>
       <div class="linha"><span class="k">Vasculhar</span><span class="v">22% de treinador · 15% de selvagem que estava debaixo do que você mexeu</span></div>
+      <div class="linha"><span class="k">O que se acha vasculhando</span><span class="v">40% de alguma coisa acontecendo ali (o que acontece depende do tipo de lugar) · senão, teste de Percepção (dif. 5): no sucesso, lugar escondido ou achado do ambiente (item pequeno, ou rastro que acende a espécie na Pokédex), e com Sorte crítica, coisa rara · no parcial, só o rastro</span></div>
       <div class="linha"><span class="k">Treinar</span><span class="v">25% de treinador · 12% de selvagem atraído pelo barulho · a briga vira o treino do dia</span></div>
       <div class="linha"><span class="k">Acampar</span><span class="v">18% de selvagem mexendo na mochila de noite</span></div>
       <div class="linha"><span class="k">Repelente</span><span class="v">segura o selvagem · não segura gente</span></div>
@@ -98934,11 +99009,14 @@ const Exploracao = {
         if (achado.ef) Historia.aplicar(achado.ef);
         if (achado.descobre) Mundo.descobrir(achado.descobre);
       } else {
-        texto = ['Você vasculha a área inteira com método e acha o que sobra quando alguém já passou antes: nada de valor e muita informação sobre quem passou.'];
+        Estado.salvar('auto');
+        return this.tela(achadoDeVasculhar(L.ambiente, sorte.grau === 'critico'));
       }
     } else if (t.grau === 'parcial'){
-      texto = ['Você acha rastro, pegada e lixo, e nada disso vira coisa nenhuma hoje.',
-               'Mas agora você conhece esse pedaço de chão melhor do que conhecia.'];
+      /* parcial: só o rastro, sem achado */
+      const av = achadoDeVasculhar(L.ambiente, false, true);
+      Estado.salvar('auto');
+      return this.tela(av.length ? av : [{tipo:'info', texto:'Você acha rastro e pegada, e nada disso vira coisa nenhuma hoje.'}]);
     } else {
       texto = ['Você passa um período procurando no lugar errado.',
                'Quando percebe, já escureceu um pouco e você está com fome.'];

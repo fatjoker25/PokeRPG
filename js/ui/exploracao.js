@@ -383,11 +383,14 @@ const Exploracao = {
         if (achado.ef) Historia.aplicar(achado.ef);
         if (achado.descobre) Mundo.descobrir(achado.descobre);
       } else {
-        texto = ['Você vasculha a área inteira com método e acha o que sobra quando alguém já passou antes: nada de valor e muita informação sobre quem passou.'];
+        Estado.salvar('auto');
+        return this.tela(achadoDeVasculhar(L.ambiente, sorte.grau === 'critico'));
       }
     } else if (t.grau === 'parcial'){
-      texto = ['Você acha rastro, pegada e lixo, e nada disso vira coisa nenhuma hoje.',
-               'Mas agora você conhece esse pedaço de chão melhor do que conhecia.'];
+      /* parcial: só o rastro, sem achado */
+      const av = achadoDeVasculhar(L.ambiente, false, true);
+      Estado.salvar('auto');
+      return this.tela(av.length ? av : [{tipo:'info', texto:'Você acha rastro e pegada, e nada disso vira coisa nenhuma hoje.'}]);
     } else {
       texto = ['Você passa um período procurando no lugar errado.',
                'Quando percebe, já escureceu um pouco e você está com fome.'];

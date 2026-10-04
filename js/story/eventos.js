@@ -1251,7 +1251,7 @@ const EVENTOS_ROTA = {
 
 campo:[
 {
-  id:'rot_cerca_caida', peso:2,
+  id:'rot_cerca_caida', peso:2, ambientes:['campo'],
   titulo:'A cerca caída',
   texto:[
     'Uns quinze metros de cerca estão no chão, derrubados por peso e não por vento: os mourões saíram inteiros, com terra na ponta.',
@@ -1303,7 +1303,7 @@ campo:[
   ]
 },
 {
-  id:'rot_bicicleta_quebrada', peso:2,
+  id:'rot_bicicleta_quebrada', peso:2, ambientes:['campo','floresta','montanha'],
   titulo:'Alguém empurrando bicicleta',
   texto:[
     'Tem uma pessoa de uns vinte anos empurrando uma bicicleta há tempo suficiente pra ter desistido de ficar brava.',
@@ -1345,7 +1345,7 @@ campo:[
   ]
 },
 {
-  id:'rot_ninho_no_chao', peso:3,
+  id:'rot_ninho_no_chao', peso:3, ambientes:['campo','floresta'],
   titulo:'Um ninho no chão da trilha',
   texto:[
     'Tem um ninho no chão, a meio metro da trilha, com três ovos e nenhum adulto por perto.',
@@ -1404,7 +1404,7 @@ campo:[
   ]
 },
 {
-  id:'rot_o_acampamento_vazio', peso:2,
+  id:'rot_o_acampamento_vazio', peso:2, ambientes:['campo','floresta','montanha'],
   titulo:'Um acampamento sem ninguém',
   texto:[
     'Tem uma barraca armada a trinta metros da trilha, fechada, com uma panela apoiada em duas pedras e cinza fria embaixo.',
@@ -2028,7 +2028,11 @@ const Eventos = {
   banco(id){
     const L = LOCAIS[id] || {};
     if (L.tipo === 'cidade') return (EVENTOS_CIDADE[id] || []).concat(EVENTOS_GERAIS);
-    return (EVENTOS_ROTA[L.ambiente] || []).concat(EVENTOS_ROTA.campo || []);
+    /* evento de campo só vai pra onde ele faz sentido: cercado de
+       Miltank não existe dentro da Floresta de Viridian */
+    const amb = L.ambiente || 'campo';
+    const deCampo = amb === 'campo' ? [] : (EVENTOS_ROTA.campo || []).filter(ev => (ev.ambientes || ['campo']).includes(amb));
+    return (EVENTOS_ROTA[amb] || []).concat(deCampo);
   },
 
   disponiveis(id){
