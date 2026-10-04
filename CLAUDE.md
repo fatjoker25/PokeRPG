@@ -524,6 +524,21 @@ isso, quem deixava Misty pra depois achava ela no 17 num capítulo de
 área 30. Ginásio se desafia na porta, na cidade (`Cidade.ginasio`); a
 lista de ginásios não existe mais e não volta.
 
+## Relógio e dia marcado
+Sem o item **Relógio** o jogador só vê o período (manhã, tarde…): o
+`Relogio.texto()` e o `cabecalho()` escondem hora e data. Com ele, dia
+da semana, data e hora. O calendário (`Calendario`, em `mundo.js`)
+começa numa segunda, 1º de março, com mês de tamanho de verdade.
+
+Coisa com dia e hora marcados mora em `js/story/agenda.js` (`AGENDA`):
+`local`, `quando()`, `anuncio` (vai pro mural da cidade em `mural`, por
+`muralDoCentro`), `titulo` e `fazer()`. Aparece na lista do lugar só na
+janela, uma vez por data. A volta da perua do Célio é `DIA_DA_PERUA` —
+mural, praça (`ger_a_perua`) e PokéNav leem dali; dia novo entra ali, não
+em três lugares. Papel de mural que vira evento sai de `MURAIS`, senão
+aparece duas vezes. As janelas casam com os períodos de 6 h, porque fazer
+coisa pula de período em período (`Esperar a hora passar` existe pra isso).
+
 ## Veteranos e a Conferência
 Os **veteranos** (`js/story/veteranos.js`, dados e motor juntos) são o
 contrário do treinador de estrada: ninguém te para, você vai atrás pela

@@ -255,6 +255,8 @@ const ITENS_INFO = {
                      desc:'Capa dura, elástico, papel que aguenta sereno. É o que gente séria usa.'},
   'Isca':           {tipo:'ferramenta', cat:'Ferramenta', ficha:'+20 pontos percentuais de chance ao pescar · consumida no uso',
                      desc:'Massa de farinha e coisa que cheira mal. Quem pesca sério faz a própria.'},
+  'Relógio':        {tipo:'ferramenta', cat:'Ferramenta', ficha:'Mostra o dia da semana, a data e a hora no alto da tela',
+                     desc:'De pulso, de ponteiro, com o dia do mês numa janelinha. Atrasa dois minutos por semana.'},
   'Mapa de Kanto':  {tipo:'mapa', cat:'Ferramenta', ficha:'Abre o mapa da região: onde você já pisou e as estradas que saem de lá',
                      desc:'Dobrado em dezesseis. As estradas estão certas e os tempos estão otimistas.'}
 };

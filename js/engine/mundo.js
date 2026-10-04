@@ -39,10 +39,44 @@ const Relogio = {
       if (typeof UI !== 'undefined' && UI.pintarRelogio) UI.pintarRelogio();
     }, this.MS_POR_HORA);
   },
+  /* Sem Relógio na mochila você sabe o que o céu diz: manhã, tarde,
+     noite, madrugada. Hora e data só pra quem comprou um. */
+  tem(){ return typeof Estado !== 'undefined' && Estado.contaItem && Estado.contaItem('Relógio') > 0; },
   texto(){
     const r = Estado.dados.relogio; sincronizarHora(r);
-    return `${String(r.hora).padStart(2, '0')}h · ${r.periodo} do dia ${r.dia}`;
+    if (!this.tem()) return r.periodo;
+    const c = Calendario.de(r.dia);
+    return `${c.semanaCurta}, ${c.diaMes} de ${c.mesNome} · ${String(r.hora).padStart(2, '0')}h`;
+  },
+  /* o cabeçalho do lugar: o mesmo, por extenso */
+  cabecalho(){
+    const r = Estado.dados.relogio; sincronizarHora(r);
+    if (!this.tem()) return r.periodo;
+    const c = Calendario.de(r.dia);
+    return `${c.semana}, ${c.diaMes} de ${c.mesNome} · ${String(r.hora).padStart(2, '0')}h`;
   }
+};
+
+/* ============================================================
+   CALENDÁRIO — o dia 1 da jornada é uma segunda, 1º de março.
+   Mês com o tamanho de verdade; a semana anda junto. Quem marca
+   coisa no mural marca por dia do mês ou por dia da semana.
+   ============================================================ */
+const Calendario = {
+  MESES: ['março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro','janeiro','fevereiro'],
+  DIAS:  [31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 28],
+  SEMANA: ['segunda','terça','quarta','quinta','sexta','sábado','domingo'],
+  SEMANA_CURTA: ['seg','ter','qua','qui','sex','sáb','dom'],
+  de(dia){
+    let resto = Math.max(1, dia || 1) - 1, m = 0;
+    while (resto >= this.DIAS[m % 12]){ resto -= this.DIAS[m % 12]; m++; }
+    const s = (Math.max(1, dia || 1) - 1) % 7;
+    return {diaMes: resto + 1, mes: m % 12, mesNome: this.MESES[m % 12],
+            semanaIdx: s, semana: this.SEMANA[s], semanaCurta: this.SEMANA_CURTA[s]};
+  },
+  hoje(){ return this.de(Estado.dados.relogio.dia); },
+  diaDoMes(){ return this.hoje().diaMes; },
+  diaDaSemana(){ return this.hoje().semana; }
 };
 
 const LOCAIS = {
@@ -548,6 +582,10 @@ function afazeresDoLocal(){
 
   /* veteranos: quem mora aqui e o convite que um deles te fez */
   if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
+  /* o que tem dia e hora marcados, se for agora */
+  if (typeof Agenda !== 'undefined') Agenda.afazeres(id).forEach(x => lista.push(x));
+  /* deixar o tempo passar: é assim que se chega na hora marcada */
+  lista.push({id:'esperar', titulo:'Esperar a hora passar'});
   return lista;
 }
 

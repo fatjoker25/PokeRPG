@@ -1060,12 +1060,10 @@ const EVENTOS_GERAIS = [
   /* A volta dele é fixa e ele não atrasa: cada cidade tem o seu dia
      do mês, e a perua só está aqui se hoje for o dia daqui. */
   cond:d=>{
-    const DIA_DA_CIDADE = {pallet:1, viridian:2, pewter:4, cerulean:6, vermilion:8,
-                           lavender:10, celadon:12, saffron:14, fuchsia:15, cinnabar:16};
-    const quando = DIA_DA_CIDADE[Mundo.id()];
+    const quando = DIA_DA_PERUA[Mundo.id()];
     if (!quando) return false;
-    const hoje = (((d.relogio && d.relogio.dia) || 1) - 1) % 30 + 1;
-    return Math.abs(hoje - quando) <= 1;
+    sincronizarHora(d.relogio);
+    return Calendario.diaDoMes() === quando && d.relogio.hora >= 6 && d.relogio.hora <= 17;
   },
   titulo:'A perua na praça',
   texto:[
@@ -1078,7 +1076,7 @@ const EVENTOS_GERAIS = [
       if (!conheceOCelio(d)) return '';
       const p = (d.time || []).find(x => x.dex === (d.jogador.inicialDex || 0)) || (d.time || [])[0];
       return fala('Célio', p
-        ? `${d.jogador.nome}! E ${p.apelido ? 'o ' + p.apelido : 'o ' + p.nome}, olha só. Tá ${p.nivel >= 16 ? 'enorme' : 'crescendo'}. Eu falei que ia dar certo.`
+        ? `${d.jogador.nome}! E ${pron(p).o} ${p.apelido || p.nome}, olha só. Tá ${p.nivel >= 16 ? 'enorme' : 'crescendo'}. Eu falei que ia dar certo.`
         : `${d.jogador.nome}! Eu lembro de você. Lembro de todo mundo.`, 'riso');
     },
     'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'

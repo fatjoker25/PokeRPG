@@ -37,7 +37,7 @@ const Exploracao = {
 
     UI.add(`<div class="painel">
       <div class="cap-cabecalho">
-        <div class="num">${UI.esc(d.relogio.periodo)} · dia ${d.relogio.dia}</div>
+        <div class="num">${UI.esc(Relogio.cabecalho())}</div>
         <div class="tit">${UI.esc(L.nome)}</div>
         <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}</div>
       </div>
@@ -308,6 +308,8 @@ const Exploracao = {
     if (acao.startsWith('vet_'))  return Veteranos.abordar(acao.slice(4));
     if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
     if (acao.startsWith('rev_'))  return Jogo.lutarRevanche(acao.slice(4));
+    if (acao.startsWith('ag_'))   return Agenda.fazer(acao.slice(3));
+    if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){
       const x = Cargos.lugaresEm(Mundo.id())[+acao.slice(6)];
       return x ? UI.modalCredenciais(x.lugar) : this.tela();
@@ -477,6 +479,19 @@ const Exploracao = {
     }
     Estado.salvar('auto');
     this.tela([{tipo:'info', texto:'Você pesca um período inteiro e não fisga nada. Pescador de verdade diz que isso também é pescar.'}]);
+  },
+
+  /* sentar e esperar um período: na rota, quem passa pode parar */
+  esperar(){
+    const L = Mundo.atual();
+    Mundo.passar(1);
+    if (this.surge('esperar')) return;
+    Estado.salvar('auto');
+    const r = Estado.dados.relogio;
+    const fala = L.tipo === 'cidade'
+      ? Dados.escolher(['Você senta num banco da praça e deixa a cidade passar.', 'Você encosta numa parede na sombra e conta quem entra e quem sai do Centro.', 'Você fica olhando a rua até a luz mudar de lado.'])
+      : Dados.escolher(['Você senta numa pedra e deixa o tempo andar sozinho.', 'Você deita no chão com a mochila de travesseiro e fica ouvindo o lugar.', 'O time se espalha em volta. Ninguém tem pressa.']);
+    this.tela([{tipo:'info', texto:fala}, {tipo:'eco', texto:`Agora é ${r.periodo}.`}]);
   },
 
   acampar(){

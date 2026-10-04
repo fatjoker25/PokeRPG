@@ -589,7 +589,6 @@ const MURAIS = {
     {t:'NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE.', nota:'escrito à mão com pressa e sublinhado três vezes'}
   ],
   pewter:[
-    {t:'Museu: entrada franca na terça. Não encoste nos ossos.', nota:'impresso, com o carimbo do museu'},
     {t:'Vendo corda de escalada, pouco uso. Motivo: joelho.', nota:'com o número de telefone rasgado em tirinhas, faltam quatro'},
     {t:'O Monte da Lua não é passeio. Leve lanterna ou leve alguém que brilhe.', nota:'escrito com giz de cera, alguém corrigiu a ortografia'}
   ],
@@ -604,7 +603,6 @@ const MURAIS = {
     {t:'O navio atraca na lua cheia. Passagem só com reserva.', nota:'impresso, com o logotipo da companhia'}
   ],
   lavender:[
-    {t:'Vigília pelos que se foram, domingo, na torre. Traga uma vela.', nota:'papel roxo, sem assinatura'},
     {t:'Não deixe comida na porta da torre. Atrai o que não é pra atrair.', nota:'letra de gente velha, tremida'},
     {t:'Cubone sozinho na Rota 8. Se alguém souber da mãe dele, fala com o Sr. Fuji.', nota:'escrito a caneta, com o nome sublinhado'}
   ],
@@ -650,7 +648,7 @@ const Cidade = {
   /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
     const d = Estado.dados, L = Mundo.atual();
-    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
+    const mural = muralDoCentro(Mundo.id()).length ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
     const cargos = (typeof Cargos !== 'undefined')
       ? `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais</button>` : '';
     UI.modal(`Centro Pokémon de ${L.nome}`, `
@@ -711,7 +709,7 @@ const Cidade = {
   /* O mural de cada Centro: o que a cidade pendura na parede. Você vê
      os papéis de longe e escolhe qual ler; ler é chegar perto de um. */
   mural(i){
-    const m = MURAIS[Mundo.id()] || [];
+    const m = muralDoCentro(Mundo.id());
     const titulo = `Mural do Centro de ${Mundo.atual().nome}`;
     if (i == null || !m[i]){
       return UI.modal(titulo, `<div class="mural">${m.map((x, k) => `<button class="bilhete b${k % 4} fechado" onclick="Cidade.mural(${k})">
@@ -831,8 +829,12 @@ const Cidade = {
     });
   },
 
-  loja(andar){
-    const id = Mundo.id();
+  loja(andar, qual){
+    /* sem argumento é a loja da cidade; com `qual`, outro balcão
+       (o bazar de domingo) que segue aberto entre uma compra e outra */
+    if (andar === undefined && qual === undefined) this._qual = null;
+    if (qual) this._qual = qual;
+    const id = this._qual || Mundo.id();
     const L = LOJAS[id];
     const catalogo = catalogoDaCidade(id);
     if (!catalogo.length)
@@ -973,7 +975,7 @@ const Cidade = {
     Estado.j.dinheiro -= preco;
     Estado.darItem(nome, 1);
     Estado.salvar('auto');
-    this.loja(this._andar);
+    this.loja(this._andar || 0, this._qual || undefined);
   },
 
   ginasio(){

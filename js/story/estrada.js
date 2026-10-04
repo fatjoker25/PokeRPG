@@ -30,9 +30,9 @@ const ESCALOES_ESTRADA = [
 const TAM_ESTRADA = [2, 3, 3, 3];
 
 /* chance, em %, de um treinador da rota te parar em cada situação */
-const CHANCE_TREINADOR = {chegar:30, procurar:20, vasculhar:22, treinar:25, viagem:35};
+const CHANCE_TREINADOR = {chegar:30, procurar:20, vasculhar:22, treinar:25, viagem:35, esperar:15};
 /* chance de um selvagem surgir sem você procurar */
-const CHANCE_SELVAGEM_SURGE = {vasculhar:15, treinar:12, acampar:18, pescar:0};
+const CHANCE_SELVAGEM_SURGE = {vasculhar:15, treinar:12, acampar:18, pescar:0, esperar:10};
 
 function escalaoEstradaDe(n){
   let i = 0;

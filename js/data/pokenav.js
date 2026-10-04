@@ -128,10 +128,16 @@ const CONTATOS = [
     rotulo:'Perguntar onde ele está este mês',
     limite:99, esperaCap:2,
     texto:d=>{
-      const paradas = ['Viridian','Pewter','Cerulean','Vermilion','Lavender','Celadon','Saffron','Fuchsia','Cinnabar'];
-      const onde = paradas[(d.capitulo + 3) % paradas.length];
+      /* a mesma volta da praça (DIA_DA_PERUA, em agenda.js) */
+      const w = ondeEstaAPerua();
+      const nome = w.onde ? (LOCAIS[w.onde] || {}).nome : null;
+      const onde = w.parado ? 'Em Pallet, lavando a perua. Semana de folga, se ninguém ligar.'
+        : w.voltando ? 'Na estrada, voltando pra Pallet. Liga de novo que eu tô dirigindo.'
+        : w.hoje ? `Hoje? Hoje eu tô em ${nome}, na praça, até as cinco.`
+        : w.proximo ? `Saí de ${nome} faz pouco. Dia ${w.proximo.dia} eu tô em ${(LOCAIS[w.proximo.onde] || {}).nome}.`
+        : `Saí de ${nome} faz pouco.`;
       return [
-        fala('Célio', 'Hoje? Hoje eu tô em ' + onde + '. Amanhã cedo eu saio.'),
+        fala('Célio', onde),
         fala('Célio', 'Se você tiver por perto aparece, que eu sempre tenho coisa sobrando na caixa. Coisa boa não, mas sobrando.', 'riso'),
         fala('Célio', 'Deixei um pacote pra você no balcão do Centro da última cidade que você passou. Tá no seu nome.')
       ];

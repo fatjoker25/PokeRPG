@@ -4099,10 +4099,14 @@ const UI = {
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
       <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
 
-      <h3>Relógio</h3>
+      <h3>Relógio e calendário</h3>
       <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto · parado durante a luta e com a janela fora de foco</span></div>
       <div class="linha"><span class="k">Período</span><span class="v">madrugada 0h–5h · manhã 6h–11h · tarde 12h–17h · noite 18h–23h</span></div>
-      <div class="linha"><span class="k">Fazer coisa</span><span class="v">vasculhar, procurar, pescar, andar, conversar levam o dia pro começo do próximo período · treinar, dois</span></div>
+      <div class="linha"><span class="k">Sem Relógio</span><span class="v">você só sabe o período, pelo céu · hora, data e dia da semana não aparecem em lugar nenhum</span></div>
+      <div class="linha"><span class="k">Com Relógio</span><span class="v">item de mochila (Viridian, Vermilion, Saffron e Celadon) · o alto da tela mostra dia da semana, data e hora</span></div>
+      <div class="linha"><span class="k">Calendário</span><span class="v">o primeiro dia da jornada é segunda, 1º de março · os meses têm o tamanho de verdade</span></div>
+      <div class="linha"><span class="k">Dia marcado</span><span class="v">algumas coisas só acontecem num dia do mês ou da semana, numa faixa de hora e num lugar · quem marca anuncia no mural do Centro · na hora certa, aparece na lista do lugar · cada uma, uma vez por data</span></div>
+      <div class="linha"><span class="k">Fazer coisa</span><span class="v">vasculhar, procurar, pescar, andar, conversar e esperar levam o dia pro começo do próximo período · treinar, dois</span></div>
       <div class="linha"><span class="k">Acampar</span><span class="v">só de noite ou de madrugada · acorda às 6h</span></div>
 
       <h3>Andar pela rota</h3>
@@ -4113,6 +4117,7 @@ const UI = {
       <div class="linha"><span class="k">O que se acha vasculhando</span><span class="v">40% de alguma coisa acontecendo ali (o que acontece depende do tipo de lugar) · senão, teste de Percepção (dif. 5): no sucesso, lugar escondido ou achado do ambiente (item pequeno, ou rastro que acende a espécie na Pokédex), e com Sorte crítica, coisa rara · no parcial, só o rastro</span></div>
       <div class="linha"><span class="k">Treinar</span><span class="v">25% de treinador · 12% de selvagem atraído pelo barulho · a briga vira o treino do dia</span></div>
       <div class="linha"><span class="k">Acampar</span><span class="v">18% de selvagem mexendo na mochila de noite</span></div>
+      <div class="linha"><span class="k">Esperar</span><span class="v">15% de treinador · 10% de selvagem</span></div>
       <div class="linha"><span class="k">Repelente</span><span class="v">segura o selvagem · não segura gente</span></div>
       <p class="sussurro">Você não escolhe: acontece. Com o time inteiro caído, ninguém te para.</p>
 
