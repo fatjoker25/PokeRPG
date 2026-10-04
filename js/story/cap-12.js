@@ -729,7 +729,7 @@ c12_derrubar_relatorio:{
     '"Onze dias."',
     '"Onze dias." Ele te olha. "Eu faço a parte que leva onze dias. Alguém tem que fazer a parte de hoje à noite."',
     'E ele diz isso sem nenhum peso, sem nenhuma insinuação heroica, do jeito que se distribui tarefa.',
-    '"Eu tenho sessenta e dois anos e um assento em conselho. Você tem quinze anos e nada a perder num regimento."',
+    '"Eu tenho sessenta e dois anos e um assento em conselho. Você tem {idade} anos e nada a perder num regimento."',
     '"A gente é bem complementar."'
   ],
   ef:{flag:['koga_convoca','koga_aliado'],
@@ -1128,7 +1128,7 @@ c12_pediu_desculpa_nico:{
     '"Você tava cert{o|a}."',
     '"Eu tava cert{o|a} e eu não devia ter falado."',
     'Ele ri sem nenhum humor.',
-    '"Essas duas coisas juntas são a coisa mais adulta que alguém me falou esse ano, e você tem quinze anos, e isso me deixa muito mal."',
+    '"Essas duas coisas juntas são a coisa mais adulta que alguém me falou esse ano, e você tem {idade} anos, e isso me deixa muito mal."',
     'Ele dá um espaço no degrau com o quadril e você senta.',
     'Ficam ali um tempo.',
     'Depois ele entra em casa e volta com o folheto plastificado e uma caneta, e desenha o mapa, e não fala mais nada enquanto desenha.'
@@ -1350,7 +1350,7 @@ c12_yara_para:{
     '"Isso muda alguma coisa?"',
     '"Isso não muda nada e fica registrado em cento e poucos documentos que passam por três setores."',
     'Ela olha pra você.',
-    '"Você tem quinze anos e eu tenho quarenta e cinco, e a gente acabou de descobrir junto que a minha arma é o campo de observação."'
+    '"Você tem {idade} anos e eu tenho quarenta e cinco, e a gente acabou de descobrir junto que a minha arma é o campo de observação."'
   ],
   ef:{flag:['yara_vai_registrar','yara_aliada'],
       npc:{nome:'Dra. Pia', opiniao:8, memoria:'Vai escrever no campo de observação de cada formulário que o critério é do receptor.'},

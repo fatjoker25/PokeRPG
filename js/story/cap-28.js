@@ -1544,7 +1544,7 @@ c23_final_a_porta:{
     'Ele diz isso com uma clareza que dói.',
     '"E o que eu imagino é pior do que ele é, ou melhor do que ele é, e nos dois casos é meu."',
     'Ele olha pra você.',
-    '"Você tem quinze anos e você atravessou Kanto inteiro e você ainda não entendeu que ninguém sai de casa por coragem. Sai porque um dia a casa fica insuportável."'
+    '"Você tem {idade} anos e você atravessou Kanto inteiro e você ainda não entendeu que ninguém sai de casa por coragem. Sai porque um dia a casa fica insuportável."'
   ],
   final:{id:'a_porta', titulo:'VINTE E TRÊS ANOS', texto:[
     'Você desce a montanha sem nada.',
@@ -1632,7 +1632,7 @@ c23_final_os_nomes:{
     '"Isso é um número com uma palavra na frente." Ele não está reclamando. É constatação. "Tinha um Mew. Eu sou o dois."',
     'Ele olha pra você por muito tempo.',
     '"Me dá um."',
-    'E é isso: no fim de tudo, numa caverna embaixo de uma montanha, a coisa mais poderosa de Kanto pede um nome pra {um garoto|uma garota} de quinze anos.'
+    'E é isso: no fim de tudo, numa caverna embaixo de uma montanha, a coisa mais poderosa de Kanto pede um nome pra {um garoto|uma garota} de {idade} anos.'
   ],
   final:{id:'os_nomes', titulo:'ALGUÉM TINHA QUE CONTINUAR SABENDO', texto:[
     'Você dá o nome. Qual foi não importa — importa que levou onze segundos e que você não pensou muito, porque pensar muito teria estragado.',
@@ -1737,7 +1737,7 @@ c23_final_a_troca:{
     'Não vira militância, não vira discurso, não vira nada que dê pra escrever num cartaz. Você só para, e quando alguém oferece você diz que não, e quando perguntam por quê você dá de ombros e muda de assunto, porque a explicação envolve uma caverna e você não vai contar da caverna.',
     'Em Cerulean tem uma professora de natação que até hoje não entende por que você recusou um Seel.',
     'Em Pewter tem um homem da pedreira que conta pra todo mundo que já ofereceu um Machoke pra você e que você falou que não.',
-    'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por {um garoto|uma garota} de quinze anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
+    'E numa caverna do norte de Kanto tem alguém que nunca vai saber que uma pergunta idiota, feita por {um garoto|uma garota} de {idade} anos sem saber o que estava fazendo, mudou uma coisa pequena e permanente no mundo.',
     'Foi a coisa mais barata que você fez na vida. Não custou nada.',
     'Isso não desconta.'
   ]}
@@ -1797,7 +1797,7 @@ c23_ir_embora:{
     '"Vou."',
     '"Por quê?"',
     'E você para na escada e responde de costas, o que é covarde e é verdade:',
-    '"Porque eu tenho quinze anos."'
+    '"Porque eu tenho {idade} anos."'
   ],
   ef:{flag:'foi_embora_da_caverna'},
   escolhas:[
@@ -1814,17 +1814,17 @@ c23_final_ir_embora:{
     'As duas Aves Lendárias estão paradas na entrada. Nenhuma das duas olha pra você.',
     'Você desce a montanha.'
   ],
-  final:{id:'ir_embora', titulo:'PORQUE EU TENHO QUINZE ANOS', texto:[
+  final:{id:'ir_embora', titulo:'PORQUE EU TENHO {IDADE} ANOS', texto:[
     'Você volta pra estrada e a jornada continua, e ela é boa.',
     'Você ganha as insígnias que faltavam. Perde duas vezes pro mesmo líder e ganha na terceira. Chega ao Planalto Indigo num dia de chuva com um time que te obedece por afeto e não por medo.',
     'Você não vira campeão. Ou vira — isso depende de coisas que ainda não aconteceram quando essa história acaba.',
     'A Comissão continua existindo e continua mandando ofício, e você continua sem ter poder nenhum sobre isso.',
     'E uma vez por ano, mais ou menos, você pensa numa caverna no norte e numa conversa que você interrompeu no meio pra ir embora.',
     'E toda vez você chega na mesma conclusão, que é a conclusão certa e que não conforta nada:',
-    'você tinha quinze anos, e ninguém devia ter deixado aquilo na sua mão, e o fato de você ter ido embora é a coisa mais saudável que aconteceu nessa história inteira.',
+    'você tinha {idade} anos, e ninguém devia ter deixado aquilo na sua mão, e o fato de você ter ido embora é a coisa mais saudável que aconteceu nessa história inteira.',
     'Quem devia ter resolvido isso eram os adultos.',
     'Eles sabiam. Eles tinham o endereço, o número do processo e a data da reunião.',
-    'Eles só não tinham quinze anos.'
+    'Eles só não tinham {idade} anos.'
   ]}
 },
 

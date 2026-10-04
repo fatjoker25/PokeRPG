@@ -1233,7 +1233,7 @@ c14_blaine_leu_em_voz_alta:{
     'Você pede pra ele ler em voz alta.',
     'Ele diz que não, e você não insiste, e ele fica na porta mais um tempo, e depois entra na sala pela primeira vez em quatro anos e senta na cadeira.',
     'E lê.',
-    'Ele lê as quatro páginas em voz alta, inteiras, pra {um moleque|uma menina} de quinze anos numa sala de quatro por quatro dentro de um vulcão, e ele tropeça em três lugares.',
+    'Ele lê as quatro páginas em voz alta, inteiras, pra {um moleque|uma menina} de {idade} anos numa sala de quatro por quatro dentro de um vulcão, e ele tropeça em três lugares.',
     'Na parte do "ele achava que eram conversas", ele para por quase um minuto.',
     'E na parte do "cuida da casa até a prefeitura tomar", ele lê muito rápido, quase atropelando, porque é a única forma de terminar a frase.',
     'Quando acaba, ele fecha o caderno e põe as duas mãos em cima.',

@@ -66,7 +66,7 @@ function molduraSalva(){
 function aplicarMoldura(id){
   const v = id && id !== 'azul' ? id : null;
   [document.documentElement, document.body].forEach(el => {
-    if (!el) return;
+    if (!el || typeof el.setAttribute !== 'function') return;
     if (v) el.setAttribute('data-moldura', v); else el.removeAttribute('data-moldura');
   });
 }
@@ -274,7 +274,7 @@ const UI = {
       <h2 style="font-size:30px;margin:12px 0 6px;color:var(--destaque);font-weight:300;letter-spacing:.06em">JORNADA DO CAMPEÃO</h2>
       <p style="color:var(--texto-fraco);max-width:520px;margin:0 auto 8px">
         A cadeira de Campeão está vazia há dois anos e a Liga não explica direito por quê.
-        Você tem quinze anos e vai sair de casa hoje.
+        E hoje você sai de casa.
       </p>
       <p class="sussurro" style="max-width:520px;margin:0 auto 30px">
         Escolhas são permanentes. O mundo lembra. Se o seu HP chegar a zero, acabou de verdade.
@@ -305,6 +305,14 @@ const UI = {
           <button data-v="Homem" class="sel">Homem</button>
           <button data-v="Mulher">Mulher</button>
         </div></div>
+      <div class="campo"><label>Data de nascimento</label>
+        <div class="data-nasc">
+          <select id="f-nasc-dia" aria-label="Dia">${Array.from({length:31}, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}</select>
+          <select id="f-nasc-mes" aria-label="Mês">${MESES_DO_ANO.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('')}</select>
+          <select id="f-nasc-ano" aria-label="Ano">${Array.from({length:IDADE_SAIDA_MAX - IDADE_SAIDA_MIN + 2}, (_, i) => ANO_DO_JOGO - IDADE_SAIDA_MAX - 1 + i)
+              .map(a => `<option value="${a}">${a}</option>`).join('')}</select>
+        </div>
+        <div class="sussurro" id="f-nasc-idade"></div></div>
       <div class="campo"><label>Características físicas</label>
         <textarea id="f-aparencia" maxlength="240" placeholder="Altura, cabelo, olhos, cicatriz, o que for."></textarea></div>
       <div class="campo"><label>Personalidade (2 a 3 traços)</label>
@@ -369,6 +377,21 @@ const UI = {
       });
     };
     grupo('f-genero');
+    /* começa em alguém que sai de casa com quinze anos; a idade de saída
+       aparece embaixo e muda com a data e com a cidade (o dia da perua) */
+    const pD = document.getElementById('f-nasc-dia'), pM = document.getElementById('f-nasc-mes'), pA = document.getElementById('f-nasc-ano');
+    pD.value = String(Dados.entre(1, 28)); pM.value = String(Dados.entre(4, 12)); pA.value = String(ANO_DO_JOGO - 16);
+    const mostrarIdade = () => {
+      const f = this.lerCriacao();
+      const i = idadeNaSaidaDaFicha(f);
+      const el = document.getElementById('f-nasc-idade');
+      const fora = i < IDADE_SAIDA_MIN || i > IDADE_SAIDA_MAX;
+      el.textContent = fora ? `A jornada começa entre ${IDADE_SAIDA_MIN} e ${IDADE_SAIDA_MAX} anos. Com essa data você sairia com ${i}.`
+                            : `Você sai de casa com ${i} anos.`;
+      el.classList.toggle('erro-campo', fora);
+    };
+    [pD, pM, pA, document.getElementById('f-cidade')].forEach(x => x.addEventListener('change', mostrarIdade));
+    mostrarIdade();
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
         ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
@@ -390,6 +413,8 @@ const UI = {
       cidade:document.getElementById('f-cidade').value, objetivo:v('f-objetivo'),
       gosta:v('f-gosta'), naoGosta:v('f-nao-gosta'),
       inicial:sel('f-inicial'), ritmo:sel('f-ritmo'),
+      nascimento:{dia:+document.getElementById('f-nasc-dia').value, mes:+document.getElementById('f-nasc-mes').value,
+                  ano:+document.getElementById('f-nasc-ano').value},
       casaNome: (v('f-casa-nome') || '').trim(),
       casaQuem: (v('f-casa-quem') || '').trim()
     };
@@ -3327,7 +3352,8 @@ const UI = {
     const npcs = Object.values(d.npcs);
     const lend = Object.values(d.lendarios);
     this.modal('Ficha do treinador', `
-      <div class="linha"><span class="k">Nome</span><span class="v">${this.esc(j.nome)} (${this.esc(j.genero)}, ${j.idade})</span></div>
+      <div class="linha"><span class="k">Nome</span><span class="v">${this.esc(j.nome)} (${this.esc(j.genero)}, ${idadeJogador()} anos)</span></div>
+      <div class="linha"><span class="k">Nascimento</span><span class="v">${this.esc(textoNascimento(nascimentoDe()))}</span></div>
       <div class="linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
       <div class="linha"><span class="k">Objetivo</span><span class="v">${this.esc(j.objetivo)}</span></div>
       ${(() => { const r = rumoDe(); const m = METAS.find(x => x.id === r.meta);
@@ -3426,6 +3452,7 @@ const UI = {
         <div class="cartao-dados">
           <div class="cartao-nome">${this.esc(j.nome)}</div>
           <div class="cartao-titulo">${this.esc(j.cargo || (campeao ? '{Campeão|Campeã} de Kanto' : '{Treinador registrado|Treinadora registrada}'))}</div>
+          <div class="cartao-linha"><span class="k">Idade</span><span class="v">${idadeJogador()} anos</span></div>
           <div class="cartao-linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
           <div class="cartao-linha"><span class="k">Na estrada há</span><span class="v">${d.relogio.dia} ${d.relogio.dia === 1 ? 'dia' : 'dias'}</span></div>
           <div class="cartao-linha grana"><span class="k">Dinheiro</span><span class="v mono">${fmtDin(j.dinheiro)} ₽</span></div>
@@ -3962,7 +3989,8 @@ const UI = {
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
-      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <div class="linha"><span class="k">Idade</span><span class="v">Guarda de rota e Repórter pedem 16 · Policial, Investigador, Perito da Comissão, Instrutor, Líder, Elite, Professor e Conselheiro pedem 18</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">18 anos · 3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
@@ -4165,6 +4193,15 @@ const UI = {
       <div class="linha"><span class="k">No fim</span><span class="v">o epílogo fecha cada linha em que você viveu alguma coisa, pelo que você escolheu nela</span></div>
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
       <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
+
+      <h3>Idade e aniversário</h3>
+      <div class="linha"><span class="k">Nascimento</span><span class="v">a ficha pede dia, mês e ano · a jornada começa entre 10 e 20 anos, contados no dia em que ela começa</span></div>
+      <div class="linha"><span class="k">Idade</span><span class="v">sai da data de nascimento e da data do jogo (a jornada começa em março de 2010) · sobe sozinha no aniversário · aparece na Ficha e no Cartão de Treinador</span></div>
+      <div class="linha"><span class="k">Aniversário</span><span class="v">na primeira tela de mapa do dia: quem ficou em casa liga (ou manda carta, sem PokéNav), quem te conhece bem manda parabéns · +1.000 ₽, 2× Super Potion e +5 de moral no time inteiro · uma vez por ano</span></div>
+      <div class="linha"><span class="k">Responsável</span><span class="v">a licença pede assinatura de responsável abaixo dos 16</span></div>
+      <div class="linha"><span class="k">16 anos</span><span class="v">estiva do cais de Vermilion (5h às 11h, paga por Força) · Guarda de rota · Repórter</span></div>
+      <div class="linha"><span class="k">18 anos</span><span class="v">cassino de Celadon (aposta pela Sorte) · Polícia, Auditoria, Comissão, Instrutor, Líder de ginásio, Elite, Professor e Conselho · algumas cenas tratam você como adulto</span></div>
+      <p class="sussurro">Abaixo da idade, a porta aparece fechada e diz quantos anos pede.</p>
 
       <h3>Relógio e calendário</h3>
       <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto · parado durante a luta e com a janela fora de foco</span></div>
@@ -4416,7 +4453,8 @@ const UI = {
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
       <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
       <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
-      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <div class="linha"><span class="k">Idade</span><span class="v">Guarda de rota e Repórter pedem 16 · Policial, Investigador, Perito da Comissão, Instrutor, Líder, Elite, Professor e Conselheiro pedem 18</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">18 anos · 3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>

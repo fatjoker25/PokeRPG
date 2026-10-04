@@ -204,7 +204,7 @@ c9_ab_de_cracha:{
     },
     d=>{ Nomes.apresentar('o rapaz do protocolo'); return 'No crachá de plástico preso na camisa dele: TITO — PROTOCOLO.'; },
     fala('o rapaz do protocolo', 'Serviço? {O senhor|A senhora} quer dar entrada em alguma coisa?'),
-    'Ele te chama de {senhor|senhora}. Você tem quinze anos.',
+    'Ele te chama de {senhor|senhora}. Você tem {idade} anos.',
     d=>fala(d.jogador.nome, 'Eu não sei. O que dá pra dar entrada aqui?'),
     fala('o rapaz do protocolo', 'Tudo. Licença, denúncia, pedido de vista, requerimento de informação.'),
     'Ele empurra uma pasta de formulários pela bancada, e a pasta tem quatro centímetros de espessura.',
@@ -410,7 +410,7 @@ c9_proximo_leilao:{
     '"E onde é?"',
     '"Isso eu não digo." Ele fecha a agenda. "Não por sigilo. Porque endereço de leilão muda toda vez e chega no terminal do Centro dois dias antes."',
     'Ele apoia as duas mãos no balcão de vidro.',
-    '"Olha, eu vou ser honesto com você porque você tem quinze anos e eu tenho um filho dessa idade."',
+    '"Olha, eu vou ser honesto com você porque você tem {idade} anos e eu tenho um filho {menor:dessa idade|pouco mais novo}."',
     '"Se você acha que tem alguma coisa errada nisso, o lugar de reclamar não é aqui. Eu sou lojista. Eu compro com nota."'
   ],
   ef:{flag:['leilao_quinta','sabe_do_leilao'],
@@ -1371,7 +1371,7 @@ c9_junta:{
     'O balcão é uma moça de uns trinta anos com uma pilha de processo do lado.',
     '"Pois não?"',
     '"Eu queria certidão simplificada de um registro comercial."',
-    'Ela olha pra você. Você tem quinze anos e uma mochila de rota.',
+    'Ela olha pra você. Você tem {idade} anos e uma mochila de rota.',
     '"Oito pokedólares a página. Você tem o número?"'
   ],
   ef:{flag:'achou_a_junta'},
@@ -2375,7 +2375,7 @@ c9_proposta_terceira:{
       if (d.flags.trabalhou_rocket) return '"E você já carregou caixa pra mim uma vez, no Monte da Lua. Você só não sabia que era pra mim. Não fica com essa cara — todo mundo carregou caixa pra alguém."';
       if (d.flags.destruiu_operacao || d.flags.expos_operacao) return '"E você já me custou uma operação inteira no Monte da Lua. Eu sei exatamente quem você é. Estou falando com você mesmo assim — isso devia te dizer alguma coisa sobre o tamanho disso aqui."';
       if (d.flags.carregou_os_seis || d.flags.esvaziou_deposito) return '"E você tem histórico de carregar Pokémon no colo. Isso é caráter, e caráter é caro, e eu pago caro."';
-      return '"E você chegou até aqui sozinh{o|a}, com quinze anos, com uma mochila e um bloco de anotação. Isso é currículo."';
+      return '"E você chegou até aqui sozinh{o|a}, com {idade} anos, com uma mochila e um bloco de anotação. Isso é currículo."';
     },
     '"Eu tenho três coisas pra te oferecer. Escolhe uma, ou escolhe nenhuma e a gente se despede sem drama. Eu não ameaço criança. Dá muito trabalho e não resolve."'
   ],
@@ -2569,7 +2569,7 @@ c9_nao_tenho_credencial:{
   texto:[
     '"Não tenho."',
     'A mulher da prancheta — o crachá diz **AUDITORA M. BRILL · COMISSÃO DE BEM-ESTAR** — não se altera nem meio grau.',
-    '"Então {o senhor|a senhora} não pode dar lance." Ela olha a sua idade. "E {o senhor|a senhora} também não poderia, de qualquer forma."',
+    '"Então {o senhor|a senhora} não pode dar lance." {menor:Ela olha a sua idade. "E também não poderia, de qualquer forma."|Ela olha o seu crachá, que não existe. "Sem credenciamento, não."}',
     'Mas ela não te tira. Ela dá um passo de lado e abre espaço na parede dos fundos.',
     '"Assistir é público. Sessão pública é pública."',
     'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou dias pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
@@ -2625,7 +2625,7 @@ c9_prado_conversa:{
     '"E quem assina o recolhimento não é a Comissão inteira. É o fiscal da área. Em Kanto central, de oitenta e nove pra cá, quase tudo tem a mesma assinatura."',
     d=>d.flags.sabe_do_renno ? '"Você já sabe o nome." Ela não diz. Você já sabe o nome.' :
        'Ela não diz o nome. Escreve num canto de papel, dobra, e te entrega.',
-    '"Se o tutor do 41 nunca soube do edital, isso muda tudo. Mas eu não posso suspender uma alienação porque {um menino|uma menina} de quinze anos me contou uma história no corredor."',
+    '"Se o tutor do 41 nunca soube do edital, isso muda tudo. Mas eu não posso suspender uma alienação porque {um menino|uma menina} de {idade} anos me contou uma história no corredor."',
     '"Eu posso suspender se ele escrever. Com a letra dele, e com o número do processo, e com a data."'
   ],
   ef:{flag:['prado_te_ouviu','sabe_do_renno','prado_quer_documento'],
@@ -2682,7 +2682,7 @@ c9_prado_te_da_o_processo:{
 c9_arrematou_o_41:{
   texto:[
     '"Eu quero dar lance no 41."',
-    'A Auditora Brill explica, sem ironia nenhuma, que menor não arremata. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você porque você tem quinze anos.',
+    'A Auditora Brill explica, sem ironia nenhuma, que {menor:menor não arremata|quem não é credenciado não arremata}. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você {menor:porque você tem {idade} anos|no meio de uma sessão aberta, porque o edital fecha o credenciamento na véspera}.',
     'E aí ela diz a coisa que resolve: "Mas {o senhor|a senhora} pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
     '"Quanto?"',
     '"Avaliação do 41: doze mil."',
@@ -3041,7 +3041,7 @@ c9_blefe_comprador:{
   vozes:['P','N','N'],
   texto:[
     '"Eu vim comprar."',
-    'O mais velho te mede da cabeça ao pé — roupa de rota, mochila surrada, bota de barro, quinze anos.',
+    'O mais velho te mede da cabeça ao pé — roupa de rota, mochila surrada, bota de barro, {idade} anos.',
     '"Comprar."',
     'Ele não ri, o que é pior.',
     '"Com quê?"'
@@ -3508,7 +3508,7 @@ c9_fim:{
     d=>{
       if (d.flags.lote_41_suspenso || d.flags.tirou_o_41 || d.flags.consignou_o_41) return 'Uma linha de uma planilha administrativa de Kanto está diferente por sua causa. Uma.';
       if (d.flags.esvaziou_deposito) return 'Vinte e nove chegaram na rua. Você não vai saber o que aconteceu com nenhum deles, e vai pensar nisso em cidades que ainda nem conhece.';
-      if (d.flags.provas_deposito || d.flags.livro_de_destinos) return 'Você está carregando papel em vez de resultado, e papel demora, e você tem quinze anos e nenhuma paciência. Vai ter que aprender.';
+      if (d.flags.provas_deposito || d.flags.livro_de_destinos) return 'Você está carregando papel em vez de resultado, e papel demora, e você tem {idade} anos e nenhuma paciência. Vai ter que aprender.';
       return 'Nenhuma linha de nenhuma planilha de Kanto está diferente por você ter passado por Celadon. Ainda.';
     },
     d=>d.flags.sabe_do_andar_11 || d.flags.sabe_da_silph

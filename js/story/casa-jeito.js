@@ -25,6 +25,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Claro que sabe. Você sempre soube das coisas antes de mim.', 'riso'),
     ligacao: d => fala(nomeCasa(), 'Contei pra rua inteira que você ia ligar. Aí ninguém ligou, então liguei eu.', 'riso'),
+    aniversario: [
+      d => fala(nomeCasa(), `${cap1(porExtenso(idadeJogador(d)))} anos! Eu contei pra padaria, pro carteiro e pra vizinha do lado. A vizinha já sabia.`, 'riso'),
+      d => fala(nomeCasa(), 'Liga de noite que eu quero contar pra você o que todo mundo mandou dizer.')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Endireita essa mochila. Treinador desta casa sai de cabeça erguida.'),
       d => fala(nomeCasa(), 'E quando alguém perguntar de onde você é, fala o nome da rua inteiro.', 'riso')
@@ -47,6 +51,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Sabe nada. Mas tá bonito o jeito que você falou, vou fingir que acredito.', 'riso'),
     ligacao: d => fala(nomeCasa(), 'Aqui é da Liga Pokémon, você foi desclassificad{o|a} por saudade. Brincadeira. Sou eu.', 'riso'),
+    aniversario: [
+      d => fala(nomeCasa(), 'Atenção, atenção: aqui fala a central de aniversários de Kanto. Parabéns. Fim do comunicado.', 'riso'),
+      d => fala(nomeCasa(), 'Tá. Agora sério: feliz aniversário. Eu fiz o bolo mesmo assim e comi a sua fatia.', 'riso')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Regra da casa: se ganhar insígnia, liga. Se perder, liga também, que eu conto piada.', 'riso'),
       d => fala(nomeCasa(), 'Agora vai, antes que eu invente outra regra.')
@@ -69,6 +77,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Ótimo. Então não esquece a garrafa d\'água, que plano nenhum funciona com sede.'),
     ligacao: d => fala(nomeCasa(), 'Liguei no horário que a tarifa é mais barata. Tenho uns minutos.'),
+    aniversario: [
+      d => fala(nomeCasa(), 'Parabéns. Mandei dinheiro pro Centro mais perto de onde você disse que ia estar. Usa com comida.'),
+      d => fala(nomeCasa(), 'E lava a roupa. Aniversário não é desculpa.')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Potion no bolso de fora, dinheiro no de dentro. Nunca o contrário.'),
       d => fala(nomeCasa(), 'Liga domingo. Pode ser curto. Curto e sempre é melhor que longo e nunca.')
@@ -91,6 +103,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Sabe nada. Eu também dizia isso. Vai saber lá.', 'riso'),
     ligacao: d => fala(nomeCasa(), 'Primeira semana fora é a mais comprida. Eu lembro da minha.'),
+    aniversario: [
+      d => fala(nomeCasa(), 'Feliz aniversário. Eu passei o meu de ' + porExtenso(idadeJogador(d)) + ' anos num Centro de Celadon, comendo bolacha de máquina.', 'baixo'),
+      d => fala(nomeCasa(), 'Foi um dos melhores da minha vida. Espero que o seu seja também.')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Vai lá e faz a parte que eu não fiz.', null, 'Bate duas vezes no seu ombro, do jeito que se faz na quadra antes de entrar.'),
       d => fala(nomeCasa(), 'E me traz a primeira insígnia pra eu ver de perto. Só pra ver.')
@@ -113,6 +129,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Sabe? Que bom. Então me conta depois, quando chegar lá.'),
     ligacao: d => fala(nomeCasa(), 'Olhei o mapa da parede hoje cedo e fiquei tentando adivinhar em qual pedacinho você estava.'),
+    aniversario: [
+      d => fala(nomeCasa(), 'Feliz aniversário! Eu acendi uma vela na janela, virada pro lado que eu acho que você tá.', 'baixo'),
+      d => fala(nomeCasa(), 'Se você olhar pro céu hoje à noite, eu também tô olhando.')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Olha pro céu de vez em quando. É o mesmo daqui, e eu vou estar olhando também.'),
       d => fala(nomeCasa(), 'Agora vai. O dia tá bonito demais pra ficar em porta.')
@@ -135,6 +155,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Hm. Tá bom.', null, '{casa:Ela|Ele} não acreditou, e decidiu que hoje não vai implicar.'),
     ligacao: d => fala(nomeCasa(), 'Liguei pra saber se o número funciona. Funciona.'),
+    aniversario: [
+      d => fala(nomeCasa(), 'Parabéns.'),
+      d => fala(nomeCasa(), 'Tô orgulhos{casa:a|o}. Pronto, falei. Não vou repetir.', 'baixo')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Liga quando chegar em Viridian. Não precisa falar muito. Fala que chegou.'),
       d => fala(nomeCasa(), 'Vai.', null, 'E fica na porta até você virar a esquina, de braço cruzado, que é como esta casa abraça em público.')
@@ -157,6 +181,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Que bom, porque eu não sei nem onde deixei a chave.', 'riso'),
     ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
+    aniversario: [
+      d => fala(nomeCasa(), 'FELIZ ANIVERSÁRIO! Ai, desculpa, tava no viva-voz. Feliz aniversário.', 'grita'),
+      d => fala(nomeCasa(), 'Eu mandei um presente pelo correio e acho que escrevi o endereço de Pallet errado, então se chegar um pacote estranho em algum lugar, é seu.', 'riso')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Tem tudo? Tem. Eu acho. Tem a Pokébola? Tem o… tem. Tem tudo.', 'riso'),
       d => fala(nomeCasa(), 'Vai, que se eu continuar conferindo você só sai amanhã.', 'riso')
@@ -179,6 +207,10 @@ const JEITOS_DA_CASA = {
     ],
     mentira: d => fala(nomeCasa(), 'Tá bom.', null, 'Um sorriso pequeno, de quem não precisa de resposta nenhuma pra ficar tranquil{casa:a|o}.'),
     ligacao: d => fala(nomeCasa(), 'Sem pressa. Só queria ouvir sua voz um pouco.', 'baixo'),
+    aniversario: [
+      d => fala(nomeCasa(), 'Feliz aniversário. Não precisa falar muito, eu só queria ser a primeira voz do seu dia.', 'baixo'),
+      d => fala(nomeCasa(), 'Cuida de você. E deixa o time cuidar de você também, hoje.')
+    ],
     adeus: [
       d => fala(nomeCasa(), 'Vai com calma e volta quando quiser. A porta é sua.'),
       d => fala(nomeCasa(), 'Eu tô aqui. Isso não muda.')

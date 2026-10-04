@@ -225,13 +225,13 @@ c19_ab_o_anuncio:{
     fala('a voz do telefone', 'Estação 4, bom dia.'),
     d=>fala(d.jogador.nome, 'É sobre o anúncio.'),
     fala('a voz do telefone', 'Idade?'),
-    d=>fala(d.jogador.nome, 'Quinze.'),
+    d=>fala(d.jogador.nome, '{Idade}.'),
     'Pausa de um segundo. Você espera o não.',
     fala('a voz do telefone', 'Você pode vir amanhã às seis e dez? Tem ônibus da rodoviária.')
   ],
   ef:{flag:'respondeu_o_anuncio',
-      registrar:'A Estação 4 contrata auxiliar de campo sem experiência, aos quinze anos, sem hesitar.',
-      presagio:'Ela não pestanejou com quinze anos. Um emprego que aceita qualquer idade não é um emprego difícil de preencher — é um emprego difícil de manter preenchido.'},
+      registrar:'A Estação 4 contrata auxiliar de campo sem experiência, aos {idade} anos, sem hesitar.',
+      presagio:'Ela não pestanejou com {idade} anos{menor:| e nenhuma experiência}. Um emprego que aceita qualquer idade não é um emprego difícil de preencher — é um emprego difícil de manter preenchido.'},
   escolhas:[
     {texto:'Ir amanhã, no ônibus das seis e dez.', vai:'c19_ab_o_onibus'},
     {texto:'Perguntar o que faz um auxiliar de campo.', vai:'c19_ab_o_que_faz'},

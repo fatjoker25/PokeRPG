@@ -7,6 +7,8 @@ const Exploracao = {
     /* a viagem de ônibus do fim do capítulo 1 aparece na primeira tela
        de mapa, mesmo que o rival tenha aparecido antes dela */
     if (!avisos && typeof Jogo !== 'undefined' && Jogo.avisoOnibus){ avisos = Jogo.avisoOnibus; Jogo.avisoOnibus = null; }
+    /* o aniversário chega na primeira tela de mapa do dia */
+    if (typeof Aniversario !== 'undefined' && Aniversario.pendente()) return Aniversario.festejar();
     Estado.dados.modo = 'mundo';
     UI.limpar();
     UI.add(UI.topo());
@@ -309,6 +311,7 @@ const Exploracao = {
     if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
     if (acao.startsWith('rev_'))  return Jogo.lutarRevanche(acao.slice(4));
     if (acao.startsWith('ag_'))   return Agenda.fazer(acao.slice(3));
+    if (acao.startsWith('idade_')) return PortasDaIdade.fazer(acao.slice(6));
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){
       const x = Cargos.lugaresEm(Mundo.id())[+acao.slice(6)];

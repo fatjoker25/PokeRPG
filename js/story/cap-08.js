@@ -75,8 +75,8 @@ c8_ab_trabalho:{
     'Descarga de contêiner refrigerado, 400 ₽ por turno de quatro horas. Limpeza de casco, 700 ₽ e você trabalha pendurado. Conferência de carga, 900 ₽ e precisa saber ler rápido.',
     'O homem da prancheta te mede de cima a baixo sem nenhuma grosseria, do jeito que se mede um saco pra saber se cabe.',
     fala('o conferente', 'Idade?'),
-    d=>fala(d.jogador.nome, 'Quinze.'),
-    fala('o conferente', 'Então não é limpeza de casco. Pendurado só com dezoito.'),
+    d=>fala(d.jogador.nome, '{Idade}.'),
+    fala('o conferente', '{menor:Então não é limpeza de casco. Pendurado só com dezoito.|Dezoito feitos, então podia ir pro casco. Mas o casco hoje tá completo.}'),
     'Ele escreve o seu nome numa lista de doze e a lista de doze é o turno das duas.'
   ],
   ef:{flag:'pegou_turno_no_cais', registrar:'Se inscreveu para um turno de trabalho no cais de Vermilion.'},
@@ -752,7 +752,7 @@ c8_mesa_do_fundo:{
   falante:'Estivador velho',
   vozes:['N','P'],
   texto:[
-    'Você senta na mesa do fundo sem ser convidad{o|a}, o que é uma coisa que só funciona com quinze anos.',
+    'Você senta na mesa do fundo sem ser convidad{o|a}, o que é uma coisa que só funciona com {idade} anos.',
     'São dois estivadores. O mais velho te olha e ri.',
     '"Ô."',
     '"Levam o quê?"',
@@ -904,7 +904,7 @@ c8_nunca_reportaram:{
 
 c8_pagou_a_mesa:{
   texto:[
-    'Você paga a mesa. Não é muito dinheiro e é muito mais do que eles esperavam de {um garoto|uma garota} de quinze anos.',
+    'Você paga a mesa. Não é muito dinheiro e é muito mais do que eles esperavam de {um garoto|uma garota} de {idade} anos.',
     'O estivador velho fica genuinamente sem graça, o que num homem daquele tamanho é engraçado.',
     '"Não precisava."',
     '"Precisava."',
@@ -2309,8 +2309,8 @@ c8_perguntou_o_que_tem:{
     '"Quatro bandeja pra dois hóspede."',
     'Ele olha pra você por uns três segundos e volta pro livro.',
     '"Você tem quantos anos?"',
-    '"Quinze."',
-    '"Quinze." Ele vira a página. "Então você ainda vai fazer muita pergunta e um dia você vai parar. Eu parei aos trinta e um."',
+    '"{Idade}."',
+    '"{Idade}." Ele vira a página. "Então você ainda vai fazer muita pergunta e um dia você vai parar. Eu parei aos trinta e um."',
     'Ele não olha mais pra você.',
     '"Traz a água amanhã também."'
   ],
@@ -2330,7 +2330,7 @@ c8_perguntou_o_que_tem:{
 c8_bordo:{
   texto:[
     'O salão do S.S. Anne tem lustre.',
-    'Lustre. Num navio. Você fica parad{o|a} na porta olhando um lustre balançar de leve com o marulho e entende, de uma vez, que existem dois Kantos e você passou quinze anos num deles.',
+    'Lustre. Num navio. Você fica parad{o|a} na porta olhando um lustre balançar de leve com o marulho e entende, de uma vez, que existem dois Kantos e você passou {idade} anos num deles.',
     'Tem gente de trinta cidades diferentes aqui, e a maioria delas nunca dormiu no chão de uma rota. Tem piano ao vivo. Tem gente de gravata às onze da noite por vontade própria.',
     d=>{
       if (d.flags.uniforme_tripulacao) return 'De uniforme, você é invisível. Ninguém olha para tripulação — não por desprezo, é mais simples que desprezo: tripulação não é gente que se olha. Dá pra andar por quase tudo.';
@@ -2443,7 +2443,7 @@ c8_quanto_valho:{
     '"E quanto eu valho?"',
     'Pela primeira vez ela olha pra você como pessoa.',
     '"Você tem quantos anos?"',
-    '"Quinze."',
+    '"{Idade}."',
     'Ela faz uma careta muito rápida, de nojo, e não é de você.',
     '"Não entra nessa arena."',
     '"Por quê?"',
@@ -2656,7 +2656,7 @@ c8_ganhou_torneio:{
     'A terceira é contra a mulher de vinte e cinco anos, e ela aperta a sua mão no fim e diz "bom, hein" de um jeito que vale mais que o prêmio.',
     'O locutor fala o seu nome no microfone, errado, e o salão bate palma por uns oito segundos e volta a conversar.',
     'Vinte mil pokedólares. Em dinheiro, num envelope, numa bandeja.',
-    'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem quinze anos e nunca viu vinte mil pokedólares —, um homem de terno para do seu lado e espera você terminar de contar.',
+    'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem {idade} anos e nunca viu vinte mil pokedólares —, um homem de terno para do seu lado e espera você terminar de contar.',
     '"Parabéns", ele diz. "Sério. Foi bonito de assistir."',
     'Ele espera.',
     '"Você tem dez minutos? Eu queria conversar."'
@@ -3612,7 +3612,7 @@ c8_levou_testemunha:{
   vozes:['P','N'],
   texto:[
     '"Só vem comigo até a porta. Dois minutos."',
-    'E ele vem. Um homem de uns sessenta anos, de pijama, com uma revista na mão, andando descalço num corredor carpetado atrás de {um garoto|uma garota} de quinze anos.',
+    'E ele vem. Um homem de uns sessenta anos, de pijama, com uma revista na mão, andando descalço num corredor carpetado atrás de {um garoto|uma garota} de {idade} anos.',
     'Você bate no 40.',
     'O homem de camisa social abre, vê os dois, e o rosto dele faz uma coisa muito rápida que só dura um quarto de segundo.',
     'E o vizinho de pijama olha por cima do ombro dele e vê a mesa com pastas, as duas camas feitas, e a cadeira encostada na maçaneta do banheiro.',
@@ -3654,7 +3654,7 @@ c8_o_senhor_conduziu:{
 c8_entrou_no_40:{
   texto:[
     'Você empurra.',
-    'Ele não te bate — ele tenta segurar a porta, e você tem quinze anos e sessenta quilos e uma quantidade absurda de raiva acumulada desde uma floresta, e a porta abre.',
+    'Ele não te bate — ele tenta segurar a porta, e você tem {idade} anos e sessenta quilos e uma quantidade absurda de raiva acumulada desde uma floresta, e a porta abre.',
     'O camarote tem duas camas feitas, uma mesa com onze pastas empilhadas e etiquetadas, um notebook aberto com uma planilha, e a terceira porta com a cadeira.',
     'Você tira a cadeira.',
     'Dentro do banheiro tem dois adolescentes sentados no chão, entre a privada e o box, e um deles é mais novo que você.',
@@ -3773,7 +3773,7 @@ c8_porque_nao_postou:{
   texto:[
     '"Por que você não postou as cartas?"',
     'Pela primeira vez na conversa inteira, ele demora.',
-    '"Porque correspondência de menor sob acompanhamento passa por triagem."',
+    '"Porque correspondência de {menor:menor|treinador} sob acompanhamento passa por triagem."',
     '"Isso é regra de quê?"',
     '"Do protocolo interno."',
     '"Quem escreveu o protocolo interno?"',
@@ -4027,10 +4027,10 @@ c8_comigo:{
   vozes:['P','N','P','N','N'],
   texto:[
     '"Comigo."',
-    'Você fala isso através de um duto de ventilação, agachad{o|a} num corredor de serviço, com quinze anos, sem plano nenhum.',
+    'Você fala isso através de um duto de ventilação, agachad{o|a} num corredor de serviço, com {idade} anos, sem plano nenhum.',
     'Silêncio muito longo.',
     '"Você tem quantos anos?"',
-    '"Quinze."',
+    '"{Idade}."',
     'E o Dorian ri. Ri de verdade, do outro lado, um riso curto e sem nenhuma maldade.',
     '"Cara."',
     'Pausa.',
@@ -4375,7 +4375,7 @@ c8_ele_decidiu:{
     '"O senhor decide. Eu não tenho o direito de pedir isso."',
     'Ele para.',
     'Fica olhando o radar que não mostra nada por uns bons vinte segundos.',
-    '"Você tem quinze anos e acabou de ser mais cuidados{o|a} comigo do que a minha companhia foi em trinta anos."',
+    '"Você tem {idade} anos e acabou de ser mais cuidados{o|a} comigo do que a minha companhia foi em trinta anos."',
     'Ele pega o diário de bordo da bancada.',
     '"Eu vou registrar. Registrar eu faço sozinho e ninguém pode mandar eu não fazer."',
     'Ele abre na página do dia.',
@@ -4433,7 +4433,7 @@ c8_chantageou_o_capitao:{
     '"Isso é chantagem."',
     d=>fala(d.jogador.nome, 'É.'),
     'Ele põe a caneca na bancada com muito cuidado, do jeito de quem está se controlando e sabe que está.',
-    '"Você tem quinze anos e acabou de me chantagear na minha própria ponte."',
+    '"Você tem {idade} anos e acabou de me chantagear na minha própria ponte."',
     'Uma pausa comprida.',
     '"E funcionou, que é a parte que eu vou ter que pensar a respeito pelo resto da vida."'
   ],

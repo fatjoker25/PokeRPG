@@ -2852,3 +2852,9 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
 .ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}
+
+/* data de nascimento na ficha */
+.data-nasc{display:grid;grid-template-columns:70px 1fr 90px;gap:8px}
+.data-nasc select{width:100%}
+#f-nasc-idade{margin-top:6px}
+#f-nasc-idade.erro-campo{color:var(--ruim)}

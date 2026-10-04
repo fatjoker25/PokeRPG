@@ -1847,7 +1847,7 @@ c21_fim:{
   texto:[
     'Você desce do Planalto Indigo no fim da tarde.',
     d=>{
-      if (d.jogador.cargo) return `Você desce como ${d.jogador.cargo}, o que é uma frase que a sua versão de quinze anos saindo de casa não teria acreditado.`;
+      if (d.jogador.cargo) return `Você desce como ${d.jogador.cargo}, o que é uma frase que a sua versão de {saida} anos saindo de casa não teria acreditado.`;
       if (d.flags.deixou_o_mapa) return 'Você desce sem nada nas mãos e sem nada assinado, do jeito que subiu.';
       return 'Você desce com um mapa no bolso e coordenadas de um lugar onde três equipes entraram.';
     },

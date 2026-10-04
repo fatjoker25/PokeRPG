@@ -530,7 +530,7 @@ c25_pra_que_eu_vim:{
     d=>fala(d.jogador.nome, 'Então pra que eu vim?'),
     fala('a mulher de crachá azul', 'Porque papel de comissão apodrece na gaveta e pessoa não apodrece.'),
     fala('a mulher de crachá azul', 'Em quatro anos eu vi dezessete relatórios completos, bem escritos, com prova, sumirem por decurso de prazo.'),
-    fala('a mulher de crachá azul', 'Nenhum deles tinha uma pessoa de quinze anos com uma licença de treinador e uma cidade inteira sabendo o nome {dele|dela}.'),
+    fala('a mulher de crachá azul', 'Nenhum deles tinha uma pessoa de {idade} anos com uma licença de treinador e uma cidade inteira sabendo o nome {dele|dela}.'),
     fala('a mulher de crachá azul', 'Eu não preciso do seu papel. Eu preciso que você exista e que você tenha visto.', 'baixo'),
     'E aí ela empurra uma folha pela mesa comprida, e a folha para exatamente na sua frente.'
   ],

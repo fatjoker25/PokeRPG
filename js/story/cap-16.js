@@ -1340,7 +1340,7 @@ c16_so_um_pedido:{
     '"Não."',
     '"Nem eu, exatamente. Uns cento e sessenta mil."',
     'Ela senta na caixa.',
-    '"E você chega aqui com quinze anos, sem crachá, sem autorização e sem argumento, e pede."',
+    '"E você chega aqui com {idade} anos, sem crachá, sem autorização e sem argumento, e pede."',
     'Silêncio comprido.',
     '"E o pior é que pedir é a única coisa que ninguém tinha tentado."'
   ],
@@ -1501,7 +1501,7 @@ c16_equipe_ficou:{
   falante:'o mais velho da equipe',
   vozes:['N','N'],
   texto:[
-    '"Com todo respeito", diz o mais velho, sem largar a chave de fenda, "essa ilha não é de ninguém, a gente tem autorização de pesquisa protocolada, e você tem quinze anos."',
+    '"Com todo respeito", diz o mais velho, sem largar a chave de fenda, "essa ilha não é de ninguém, a gente tem autorização de pesquisa protocolada, e você tem {idade} anos."',
     'Ele volta ao trabalho.',
     'Ele não está errado em nenhum dos três pontos.',
     'E é exatamente isso que enraivece: você passou a jornada inteira aprendendo que estar certo no papel é o que decide, e agora o papel está do outro lado.'

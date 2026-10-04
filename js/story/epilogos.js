@@ -17,7 +17,7 @@ const EPILOGOS = [
   id:'ep_conselheiro', peso:60, titulo:'A CADEIRA DESCONFORTÁVEL',
   requer:d=>Cargos.tem('conselheiro'),
   texto:[
-    'Você tem dezesseis anos e uma plaquinha de latão com o seu nome numa cadeira que foi feita desconfortável de propósito.',
+    'Você tem {idade+1} anos e uma plaquinha de latão com o seu nome numa cadeira que foi feita desconfortável de propósito.',
     'A primeira coisa que você descobre é que ninguém ali é vilão. São onze pessoas cansadas com pautas longas demais e prazos que ninguém cumpre, e é por isso que demora dois anos pra mudar qualquer coisa.',
     'A segunda coisa você descobre em abril: um parágrafo que você escreveu numa quarta-feira à tarde vira regra em Pewter, em Fuchsia e numa ilha que você nunca visitou, de uma vez, sem você estar lá.',
     'Você nunca mais bate numa porta pedindo pra alguém fazer alguma coisa. Agora batem na sua.',
@@ -113,7 +113,7 @@ const EPILOGOS = [
     'Você passa os anos seguintes fazendo o que já fazia de graça, agora com número de processo: andar, olhar, anotar, e mandar de volta.',
     'A sua contribuição não é uma descoberta. É um método: você prova, em cento e sessenta páginas, que dado de campo colhido por uma pessoa que dorme no acostamento vale mais que dado de campo colhido por uma equipe que volta pro hotel.',
     'Metade da academia acha isso ofensivo. A outra metade começa a dormir no acostamento.',
-    'Em doze anos o jeito de fazer pesquisa de campo em Kanto mudou, e quase ninguém sabe que mudou por causa de {um menino|uma menina} de quinze anos que catalogou noventa espécies a pé.'
+    'Em doze anos o jeito de fazer pesquisa de campo em Kanto mudou, e quase ninguém sabe que mudou por causa de {um menino|uma menina} de {saida} anos que catalogou noventa espécies a pé.'
   ]
 },
 {

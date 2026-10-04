@@ -1945,7 +1945,7 @@ c6_a_foto:{
     'Sibyl olha a estante como se tivesse esquecido que a foto existia.',
     '"Minha filha."',
     'Ela mexe o café.',
-    '"Ela saiu de casa aos quinze, igual você." Uma pausa exata. "Faz três anos."',
+    d=>d && typeof idadeDeSaida === 'function' && idadeDeSaida(d) === 15 ? '"Ela saiu de casa aos quinze, igual você." Uma pausa exata. "Faz três anos."' : '"Ela saiu de casa aos quinze." Uma pausa exata. "Faz três anos."',
     '"E ela—"',
     '"Ela liga no fim do ano." Sibyl sorri um sorriso pequeno e verdadeiro. "Ela tá bem. Ela tá em Celadon e ela tá bem e ela não volta."',
     'Ela bebe o café.',
@@ -2411,7 +2411,7 @@ c6_vai_falar_com_ela:{
     '"Eu não posso."',
     '"Pode."',
     '"O que eu vou dizer?"',
-    '"Sei lá." Você dá de ombros, porque é verdade. "Você é adulto. Eu tenho quinze anos."',
+    '"Sei lá." Você dá de ombros, porque é verdade. "Você é adulto. Eu tenho {idade} anos."',
     'Ele fica um tempo quieto.',
     'Três semanas depois — você não vai estar aqui pra ver — um homem vai subir dezoito degraus de escada externa em cima de uma oficina com um pacote de café na mão e vai levar quarenta minutos pra tocar a campainha.',
     'Ela vai abrir. E as duas metades da Rota 25 vão continuar comprando na mesma padaria, e uma delas vai ter falado com a outra.'
@@ -2622,7 +2622,7 @@ c6_ficou_depois:{
     'Os três pescadores chegam em quatro minutos. Um deles ajuda ele a sentar. Outro olha pra você com uma cara que você nunca tinha recebido de um adulto.',
     'Ninguém grita. É pior: eles te tratam com uma educação cuidadosa, do jeito que se trata alguém de quem se tem um pouco de medo.',
     'Os oficiais chegam em quarenta minutos. Você conta tudo, sem inventar nada.',
-    'Um deles escreve o seu nome no formulário e pergunta a idade, e quando você diz quinze ele para de escrever por um segundo e depois continua.'
+    'Um deles escreve o seu nome no formulário e pergunta a idade, e quando você diz {idade} {menor:ele para de escrever por um segundo e depois continua.|ele anota sem levantar os olhos.}'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Ficou e assumiu'},
       flag:'assumiu_a_agressao'},

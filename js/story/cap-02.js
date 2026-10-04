@@ -356,7 +356,7 @@ c2_nunca:{
   texto:[
     '"Nunca."',
     'Ela ri — cansada, mas ri.',
-    '"É fácil falar com quinze anos."',
+    '"É fácil falar com {idade} anos."',
     '"É."',
     '"Mas é bom ouvir." Ela volta pro computador. "Boa jornada. E olha: guarda esse telefone do Growlithe. A mulher liga aqui toda terça."'
   ],

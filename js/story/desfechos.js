@@ -98,22 +98,22 @@ c18_fim_com_nome:{
   texto:[
     d=>fala(d.jogador.nome, 'Publica, e põe o meu nome.'),
     'Ela para com a mão na pasta.',
-    fala('Rhea Ashford', 'Você tem quinze anos.'),
+    fala('Rhea Ashford', 'Você tem {idade} anos.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
-    fala('Rhea Ashford', 'Fonte identificada de quinze anos vira o assunto. Aí a matéria deixa de ser sobre o lote e passa a ser sobre você.'),
+    fala('Rhea Ashford', 'Fonte identificada de {idade} anos vira o assunto. Aí a matéria deixa de ser sobre o lote e passa a ser sobre você.'),
     d=>fala(d.jogador.nome, 'Então que seja sobre mim, se é isso que faz alguém ler.'),
     'Ela fica olhando pra você por um tempo comprido e você aguenta o olhar, o que é mais difícil do que parece.',
     fala('Rhea Ashford', 'Tá.'),
     'Ela tira o gravador da bolsa, apoia na mesa do banco de praça, e aperta o botão vermelho.',
     fala('Rhea Ashford', 'Diz seu nome inteiro e sua idade pra fita.')
   ],
-  final:{id:'publicou_com_nome', titulo:'FONTE IDENTIFICADA, QUINZE ANOS', texto:[
+  final:{id:'publicou_com_nome', titulo:'FONTE IDENTIFICADA, {IDADE} ANOS', texto:[
     'A matéria sai numa terça e o seu nome está no terceiro parágrafo.',
     'Rhea tinha razão sobre tudo. Em quatro dias a história deixa de ser sobre o lote e passa a ser sobre você: a idade, a cidade onde você nasceu, a foto do cartão de treinador, a opinião de gente que nunca te viu sobre o que você devia ou não devia ter feito.',
-    'Três programas de rádio discutem se um menor de idade pode ser fonte. Nenhum deles discute o convênio.',
+    'Três programas de rádio discutem se {menor:um menor de idade|alguém de {idade} anos sem cargo nenhum} pode ser fonte. Nenhum deles discute o convênio.',
     'E aí, na segunda semana, acontece a coisa que Rhea não tinha previsto.',
     'Uma auditora de manejo em Fuchsia dá entrevista com o nome dela. Depois um gerente de agência bancária em Saffron. Depois um conferente do porto de Vermilion, um capitão de porto em Cinnabar, uma funcionária de guarita em Lavender e o superintendente de uma concessão rodoviária, que pede demissão no mesmo dia.',
-    'Seis pessoas adultas, com emprego e família, dizem o próprio nome em voz alta porque um garoto de quinze anos disse primeiro.',
+    'Seis pessoas adultas, com emprego e família, dizem o próprio nome em voz alta porque {um garoto|uma garota} de {idade} anos disse primeiro.',
     'A CPI ouve os seis. A CPI não te ouve: você é menor e depõe a portas fechadas, em quarenta minutos, num sábado.',
     'A lei que sai dois anos depois leva o número 9.431 e não leva o nome de ninguém.',
     'Mas em Fuchsia, na parede de uma sala de auditoria de manejo, tem uma cópia da primeira página daquela terça-feira presa com fita adesiva.',
@@ -373,7 +373,7 @@ c21_fim_ficou:{
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} vive mais dez anos e morre no tapete do corredor, que continuou sendo o lugar ${pron(p).dele}.`
-               : 'O time envelhece com você, no quintal, e isso é uma frase que você não teria entendido aos quinze.';
+               : 'O time envelhece com você, no quintal, e isso é uma frase que você não teria entendido aos {saida}.';
     },
     'A parte que ninguém te avisa é esta: o que você viu não sai de você por ficar parad{o|a}.',
     'Em algum momento do terceiro ano, um caminhão-gaiola passa na estrada da sua cidade, de madrugada, e você acorda com o barulho.',
@@ -668,7 +668,7 @@ c25_fim_assinou_o_termo:{
     'Você vê mil novecentas e quarenta e duas criaturas voltarem pra algum lugar por causa de uma assinatura sua.',
     'E também: quarenta e um anos de arquivo queimam num incinerador industrial em Celadon, num sábado, com laudo de destruição assinado por três pessoas.',
     'Você não sabe o que tinha lá dentro. Ninguém nunca vai saber.',
-    'Essa é a conta que você fez aos quinze anos em cinquenta e nove minutos, em pé numa antessala, com uma planta seca do lado.',
+    'Essa é a conta que você fez aos {idade} anos em cinquenta e nove minutos, em pé numa antessala, com uma planta seca do lado.',
     'Você refaz essa conta a vida inteira e ela dá o mesmo resultado todas as vezes, e você continua refazendo.'
   ]}
 },
@@ -691,7 +691,7 @@ c25_fim_recusou_o_termo:{
   final:{id:'recusou_o_termo', titulo:'SEIS ANOS', texto:[
     'O processo dura seis anos e dois meses.',
     'Não tem nada de emocionante em seis anos de processo. Tem prazo, tem juntada, tem perícia, tem três mudanças de relator e um período de catorze meses em que absolutamente nada acontece.',
-    'Você tem quinze anos quando recusa e vinte e um quando sai a decisão.',
+    'Você tem {idade} anos quando recusa e {idade+6} quando sai a decisão.',
     'Nesses seis anos o programa continuado continua funcionando. Essa é a parte que você carrega: mil novecentos e quarenta e dois espécimes identificáveis, que teriam voltado em dois anos, não voltam.',
     'Muitos não existem mais quando a decisão sai.',
     'E os quarenta e um anos de arquivo não queimam.',
@@ -794,7 +794,7 @@ c26_fim_recusou:{
     fala('a conselheira da Liga', 'Não é uma oferta que se repete.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'Ela fecha a pasta fina.',
-    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por um menor de idade.'),
+    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por {menor:um menor de idade|alguém sem cargo nenhum}.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
     fala('a conselheira da Liga', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
     d=>fala(d.jogador.nome, 'Tô.'),

@@ -606,6 +606,29 @@ Sem sexo fica no masculino, que é o gênero da palavra "Pokémon". Selvagem
 que o texto chama de "o bicho" ou "o Rattata" também: concorda com o
 substantivo, não com o sexo.
 
+## Idade de quem joga
+A ficha pede a **data de nascimento**, e a idade é calculada, nunca
+guardada: `idadeJogador()` (em `js/story/idade.js`) lê o nascimento e a
+data do jogo (o calendário tem ano: começa em março de 2010, que caiu
+numa segunda). A jornada começa entre 10 e 20 anos. Save antigo sem
+data ganha uma sorteada que dá a idade que ele tinha.
+
+**Texto nunca escreve a idade do jogador à mão.** "Você tem quinze
+anos" virou `{idade}`; com maiúscula `{Idade}`, em título `{IDADE}`,
+daqui a N anos `{idade+N}`, a idade com que saiu de casa `{saida}`. Cena
+que só faz sentido com menor de idade escreve as duas versões em
+`{menor:se menor|se maior}` (dentro só cabem as marcas de número) ou
+pergunta `ehMenor()`. `Estado.registrar` congela a idade do dia, pra o
+diário não mudar depois do aniversário. Personagem que **não é** o
+jogador e tem quinze anos (o rival, a filha da Sibyl) continua escrito.
+
+A idade abre porta (`PORTAS_DA_IDADE`, a estiva de Vermilion aos 16 e o
+cassino de Celadon aos 18) e posto (`idadeMin` em `cargos.js`, que entra
+sozinho na lista de pedidos). Aniversário é `Aniversario`, na primeira
+tela de mapa do dia, uma vez por ano: quem ficou em casa (`aniversario`
+nos oito jeitos de `casa-jeito.js`), o Célio, quem tem opinião 4+ e o
+rival. Tudo isso está na folha de regras.
+
 ## Gênero de quem joga
 A ficha pergunta Homem ou Mulher, e **o texto inteiro concorda**. Frase
 que fala do jogador escreve as duas formas numa marca, **forma de Homem

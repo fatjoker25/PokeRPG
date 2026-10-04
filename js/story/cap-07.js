@@ -725,7 +725,7 @@ c7_cafe_senhora:{
     'Ela fala isso e o rosto dela desmonta por dois segundos e depois volta, do jeito que rosto de gente adulta faz.',
     '"Desculpa."',
     '"Não precisa."',
-    '"Precisa sim", ela diz, e sorri. "Você tem quinze anos e tá tomando café com uma velha chorando. Isso não é coisa de férias."'
+    '"Precisa sim", ela diz, e sorri. "Você tem {idade} anos e tá tomando café com uma velha chorando. Isso não é coisa de férias."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Sentou pra tomar café com uma desconhecida de luto'},
       hp:3, npc:{nome:'Senhora do Growlithe', opiniao:4, memoria:'Tomou café com você na copa da pousada na manhã seguinte ao enterro.'},
@@ -1524,7 +1524,7 @@ c7_subiu_com_zelador:{
     'Ele leva quatorze minutos pra subir seis andares, parando duas vezes, com a mão no corrimão.',
     'No quinto andar ele não olha pros lados nenhuma vez. Anda o corredor inteiro olhando o próprio pé.',
     'No topo da escada do sexto, ele para e põe a mão no seu ombro.',
-    '"Se der errado, você desce e me deixa." Ele fala sem drama. "Sério. Você tem quinze anos e eu tenho sessenta e um e isso é aritmética."'
+    '"Se der errado, você desce e me deixa." Ele fala sem drama. "Sério. Você tem {idade} anos e eu tenho sessenta e um e isso é aritmética."'
   ],
   ef:{flag:'zelador_subiu_junto',
       npc:{nome:'Zelador da Torre', opiniao:6, memoria:'Subiu ao sexto andar com você depois de quatro dias sem subir.'},

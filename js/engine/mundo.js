@@ -87,7 +87,9 @@ const Calendario = {
     let resto = abs, m = 0;
     while (resto >= this.DIAS[m % 12]){ resto -= this.DIAS[m % 12]; m++; }
     const s = abs % 7;
-    return {diaMes: resto + 1, mes: m % 12, mesNome: this.MESES[m % 12],
+    /* m conta meses desde março de 2010: janeiro vira o ano */
+    const ano = (typeof ANO_DO_JOGO !== 'undefined' ? ANO_DO_JOGO : 2010) + Math.floor((m + 2) / 12);
+    return {diaMes: resto + 1, mes: m % 12, mesNome: this.MESES[m % 12], ano,
             semanaIdx: s, semana: this.SEMANA[s], semanaCurta: this.SEMANA_CURTA[s]};
   },
   hoje(){ return this.de(Estado.dados.relogio.dia); },
@@ -598,6 +600,8 @@ function afazeresDoLocal(){
 
   /* veteranos: quem mora aqui e o convite que um deles te fez */
   if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
+  /* porta que a idade abre (ou mostra fechada) */
+  if (typeof PortasDaIdade !== 'undefined') PortasDaIdade.afazeres(id).forEach(x => lista.push(x));
   /* o que tem dia e hora marcados, se for agora */
   if (typeof Agenda !== 'undefined') Agenda.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */

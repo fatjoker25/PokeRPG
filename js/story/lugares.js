@@ -903,7 +903,7 @@ const Cidade = {
          'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
          fala('Dra. Cordell', 'Eu escrevi vinte e duas cartas.'),
          d=>fala(d.jogador.nome, 'Vinte e duas?'),
-         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque {um moleque|uma moleca} de quinze anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
+         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque {um moleque|uma moleca} de {idade} anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
          fala('Dra. Cordell', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
          'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
        ]},

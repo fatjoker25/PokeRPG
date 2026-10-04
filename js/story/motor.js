@@ -103,7 +103,7 @@ const Historia = {
   resumo(){
     const d = Estado.dados, j = d.jogador;
     const linhas = [];
-    linhas.push(`${j.nome}, ${j.idade} anos, de ${j.cidade}. ${j.personalidade}.`);
+    linhas.push(`${j.nome}, ${typeof idadeJogador === 'function' ? idadeJogador() : j.idade} anos, de ${j.cidade}. ${j.personalidade}.`);
     linhas.push(`Reputação: ${Estado.nomeRep()} (eixo ${d.reputacao.eixo}). HP ${j.hp}/${Estado.hpMaxJogador()}.`);
     if (d.time.length) linhas.push(`Time: ${d.time.map(p => `${nomeExib(p)} Nv${p.nivel}${p.hp<=0?' (desmaiado)':''}`).join(', ')}.`);
     if (d.cemiterio.length) linhas.push(`Mortos: ${d.cemiterio.map(p => `${nomeExib(p)} (${p.causaMorte})`).join(', ')}. Isso não some.`);
@@ -337,7 +337,10 @@ const Historia = {
    diário e o que foi guardado antes também saem certos.
    ============================================================ */
 function concordaJogador(s){
-  if (typeof s !== 'string' || s.indexOf('|') < 0 || s.indexOf('{') < 0) return s;
+  if (typeof s !== 'string' || s.indexOf('{') < 0) return s;
+  /* idade antes de tudo: {menor:A|B} senão seria lido como forma de Homem */
+  if (typeof marcasDeIdade === 'function') s = marcasDeIdade(s);
+  if (s.indexOf('|') < 0) return s;
   let fem = false;
   try { fem = !!(Estado.dados && Estado.j && /^mulher/i.test(Estado.j.genero || '')); } catch(e){}
   /* A pessoa que ficou em casa tem a marca dela, {casa:ela|ele}, com a

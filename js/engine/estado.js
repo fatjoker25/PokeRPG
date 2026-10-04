@@ -523,7 +523,8 @@ const Estado = {
         objetivo: ficha.objetivo,
         gosta: ficha.gosta || '',
         naoGosta: ficha.naoGosta || '',
-        idade: 15,
+        idade: ficha.idade || 15,
+        nascimento: ficha.nascimento || null,
         hp: 30, hpMax: 30,
         status: {forca:1, percepcao:1, intelecto:1, carisma:1, sorte:1, resistencia:1},
         pontos: 0,
@@ -583,7 +584,7 @@ const Estado = {
     const j = this.j;
     const fisico = this.descricaoFisica() || 'nada que chame atenção';
     if (this.rep.eixo === 'ruim' && this.rep.ruim >= 3)
-      return `Perguntam por alguém de ${j.idade} anos, ${fisico}. Perguntam baixo.`;
+      return `Perguntam por alguém de ${typeof idadeJogador === 'function' ? idadeJogador() : j.idade} anos, ${fisico}. Perguntam baixo.`;
     if (this.rep.eixo === 'bom' && this.rep.bom >= 4)
       return `A descrição que corre de você é curta e certeira: ${fisico}. E o nome vem junto agora.`;
     return `Se alguém tivesse que te descrever, diria: ${fisico}.`;
@@ -712,6 +713,8 @@ const Estado = {
 
   /* ---------- MEMÓRIA ---------- */
   registrar(texto){
+    /* a idade fica a do dia em que aconteceu */
+    if (typeof marcasDeIdade === 'function') texto = marcasDeIdade(texto);
     this.dados.log.push({cap:this.dados.capitulo, texto, dia:this.dados.relogio.dia});
     if (this.dados.log.length > 400) this.dados.log.shift();
   },

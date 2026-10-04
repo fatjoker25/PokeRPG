@@ -606,7 +606,7 @@ c17_descreveu:{
     'Ele para.',
     '"Ah."',
     'E aí ele descreve.',
-    'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra {outro garoto|uma garota} de quinze anos que está anotando num caderno.',
+    'Por quarenta minutos, na calçada de um Centro Pokémon, um garoto de quinze anos descreve dois minutos da vida dele pra {um garoto|uma garota} de {idade} anos que está anotando num caderno.',
     'O tamanho: menor que um Meowth, com a cauda mais comprida que o corpo. A cor: rosa, mas rosa de pele e não de pelo. O som: nenhum. Nenhum som nenhuma vez.',
     'A grama embaixo dela não mexia.',
     'Ela pairava a um metro e dez do chão e ele sabe a altura porque ele é de um metro e setenta e ela batia no peito dele.',
@@ -1024,7 +1024,7 @@ c17_levou_a_muda:{
   texto:[
     'Você tira a muda com a terra junto, pra raiz não sentir, e enrola num saco plástico.',
     'E fica com ela na mão.',
-    'Uma planta extinta, viva, numa mão de quinze anos, no meio de um mato da Rota 23.',
+    'Uma planta extinta, viva, numa mão de {idade} anos, no meio de um mato da Rota 23.',
     'E aí você pensa, e é um pensamento ruim:',
     'se você levar isso pra qualquer pessoa em Kanto que saiba o que é, essa clareira vira um sítio de pesquisa em três semanas.',
     'E se você não levar, ela continua sendo vinte metros de mato que ninguém acha.',
@@ -1137,7 +1137,7 @@ c17_contou_pros_quatro:{
       if (d.flags.sabe_do_deposito) o.push('um armazém em Celadon com gaiolas numeradas');
       if (d.flags.sabe_da_planilha_71) o.push('uma reserva em Fuchsia com uma planilha de mil novecentos e setenta e um');
       const tudo = o.length ? 'sobre ' + (o.length > 1 ? o.slice(0,-1).join(', sobre ') + ' e sobre ' + o[o.length-1] : o[0]) : 'sobre tudo que você viu desde que saiu de casa';
-      return `Quatro pessoas com um cooler e uma rede de pesca numa estrada de terra ouvem {um garoto|uma garota} de quinze anos contar ${tudo}.`;
+      return `Quatro pessoas com um cooler e uma rede de pesca numa estrada de terra ouvem {um garoto|uma garota} de {idade} anos contar ${tudo}.`;
     },
     'Leva vinte minutos.',
     'Ninguém interrompe.',
@@ -1842,7 +1842,7 @@ c17_pergunta_de_novo:{
     '"No sistema deles. Por escrito."',
     'Ele solta um ar pelo nariz que é quase riso.',
     '"Você tem quinze anos."',
-    '"Eu tenho quinze anos e eu já vi uns quatro adultos descobrirem que a arma deles era um campo de formulário."',
+    '"Eu tenho {idade} anos e eu já vi uns quatro adultos descobrirem que a arma deles era um campo de formulário."',
     'Ele pega a maleta.',
     'E antes de sair ele fala, sem virar:',
     '"Solicitação de aquisição tem campo de justificativa."',

@@ -296,7 +296,7 @@ c4_senhora_dormir:{
     '"E se eu dormir bem?"',
     '"Aí não quer dizer que você virou ruim." Ela pensa. "Quer dizer que você acostumou. E acostumar é o caminho, entende? Ninguém vira ruim de uma vez. Vira de acostumar."',
     'Ela levanta. Sacode a saia.',
-    '"Mas você tem quinze anos e tá filosofando com velha na praça, então você ainda tá bem."'
+    '"Mas você tem {idade} anos e tá filosofando com velha na praça, então você ainda tá bem."'
   ],
   escolhas:[
     {texto:'Ir andar pela cidade.', vai:'c4_rua'},
@@ -400,7 +400,7 @@ c4_senhora_comprar:{
     'Ela para de mexer na bolsa.',
     '"Por que você pergunta isso?"',
     '"Não sei. Perguntei."',
-    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só {um menino de quinze anos fazendo pergunta de menino|uma menina de quinze anos fazendo pergunta de menina} de quinze anos.',
+    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só {alguém de {idade} anos fazendo pergunta de menino|alguém de {idade} anos fazendo pergunta de menina} de quinze anos.',
     '"Já quiseram", ela diz. "Duas vezes que eu saiba."',
     '"E?"',
     '"E o museu é municipal, então não vende. Aí eles perguntaram se dava pra emprestar as peças. Aí perguntaram se dava pra emprestar só duas. Aí perguntaram quanto custava o seguro."',
@@ -1446,7 +1446,7 @@ c4_ivone_cinnabar:{
 
 c4_ivone_porque_eu:{
   texto:[
-    '"Por que a senhora tá me contando isso? Eu tenho quinze anos."',
+    '"Por que a senhora tá me contando isso? Eu tenho {idade} anos."',
     '"Porque você vai passar por lá." Simples assim. "E eu não vou."',
     'Ela fecha o caderno pela última vez.',
     '"Eu já contei isso pra onze treinadores nesse museu. Nenhum voltou pra me falar nada. Você provavelmente também não vai."',
@@ -1465,7 +1465,7 @@ c4_ivone_porque_eu:{
 c4_ivone_pedido:{
   texto:[
     '"O que a senhora quer de mim?"',
-    '"Nada perigoso." Ela levanta as duas mãos. "Eu não sou doida de mandar {um garoto|uma garota} de quinze anos enfrentar gente com serra."',
+    '"Nada perigoso." Ela levanta as duas mãos. "Eu não sou doida de mandar {um garoto|uma garota} de {idade} anos enfrentar gente com serra."',
     'Ela tira do bolso do jaleco um cartão amassado. Não é cartão de visita profissional — é um pedaço de cartolina cortado à mão, com um número escrito à caneta.',
     '"Se você vir alguma coisa lá dentro — mesa, gerador, gaiola, buraco quadrado na parede — você me liga. Não liga pra Liga. Liga pra mim."',
     '"Qual a diferença?"',
@@ -2037,7 +2037,7 @@ c4_atras_do_rapaz:{
     'Você sobe atrás dele e alcança na estrada.',
     '"Pois é o quê?"',
     'Ele para, surpreso de verdade que você tenha vindo.',
-    '"Pois é que você tem quinze anos e tá aqui em cima decidindo o que justifica." Ele não está sendo agressivo. É pior: ele está sendo paciente. "Daqui a cinco anos você vai ter uma conta pra pagar e a conta não vai te perguntar o que justifica."',
+    '"Pois é que você tem {idade} anos e tá aqui em cima decidindo o que justifica." Ele não está sendo agressivo. É pior: ele está sendo paciente. "Daqui a cinco anos você vai ter uma conta pra pagar e a conta não vai te perguntar o que justifica."',
     '"E aí eu viro você?"',
     '"E aí você descobre." Ele ajeita o capacete. "Eu torço que não."'
   ],

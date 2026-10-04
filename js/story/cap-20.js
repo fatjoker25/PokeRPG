@@ -1170,7 +1170,7 @@ c20_concordar:{
     'Ela olha para a Sra. Hedda. "Registra."',
     'Depois para você.',
     '"Tem uma cadeira vaga nesta mesa desde março. Ela é de conselheiro titular, com direito a voto."',
-    '"{O senhor|A senhora} tem quinze anos, o que é um problema jurídico que eu resolvo em três semanas."'
+    '"{menor:A sua idade é|A falta de cargo é} um problema jurídico que eu resolvo em três semanas."'
   ],
   ef:{flag:'aceitou_cadeira_conselho',
       rep:{eixo:'ruim',delta:3,motivo:'Aceitou uma cadeira no conselho da Comissão'},

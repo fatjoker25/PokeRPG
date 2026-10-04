@@ -1291,7 +1291,7 @@ c15_deixou_passar:{
   texto:[
     'Você espera quarenta minutos depois de eles sumirem e só então sai do barranco.',
     'A rota está vazia. Vai continuar vazia.',
-    'Você fez a coisa sensata: você é uma pessoa de quinze anos com uma mochila, e eles são três coisas do tamanho de um carro, e não existe nenhuma leitura em que sair do barranco melhorasse alguma coisa.',
+    'Você fez a coisa sensata: você é uma pessoa de {idade} anos com uma mochila, e eles são três coisas do tamanho de um carro, e não existe nenhuma leitura em que sair do barranco melhorasse alguma coisa.',
     'Você vai pensar nisso muitas vezes, e toda vez você vai concluir que fez cert{o|a}, e toda vez isso não vai ajudar.'
   ],
   ef:{flag:'evitou_os_caes', moral:-8},

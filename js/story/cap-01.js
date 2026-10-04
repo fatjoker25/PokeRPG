@@ -85,7 +85,7 @@ c1_acorda:{
     '{casa:Ela|Ele} fala sério todo dia. Nunca foi sério nenhum dia. Hoje talvez seja.',
     d=>{
       const p = d.time[0];
-      if (!p) return 'Você tem quinze anos e hoje é o dia.';
+      if (!p) return 'Você tem {idade} anos e hoje é o dia.';
       return `${nomeExib(p)} levanta de uma vez, vai até a porta, volta, vai de novo. ${pron(p).Ele} entendeu antes de você que hoje é o dia.`;
     }
   ],
