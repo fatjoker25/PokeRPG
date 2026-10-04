@@ -12,6 +12,8 @@
 const CARGOS = [
 {
   id:'treinador', falante:'a atendente', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
+  onde:'centro', lugar:'Centro Pokémon',
+  pede:[{t:'Pedir no balcão de qualquer Centro', ok:d=>true}],
   requer:d=>!!d.flags.tem_licenca,
   resumo:'A licença anual. Sem ela você é uma pessoa andando com um Pokémon.',
   beneficios:{centro:true},
@@ -20,6 +22,8 @@ const CARGOS = [
 },
 {
   id:'auxiliar', nome:'Auxiliar de campo', orgao:'Laboratório de Pallet', peso:1, cap:2,
+  onde:'pallet', lugar:'Laboratório do Professor',
+  pede:[{t:'20 espécies catalogadas', ok:d=>Estado.contagemDex().catalogados >= 20}],
   requer:d=>Estado.contagemDex().catalogados >= 20,
   resumo:'Quem anda com a Pokédex ligada e manda o que vê de volta.',
   beneficios:{loja:0.92, status:'percepcao'},
@@ -29,6 +33,8 @@ const CARGOS = [
 },
 {
   id:'guarda_rota', falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
+  onde:'viridian', lugar:'Posto da Patrulha de Kanto',
+  pede:[{t:'2 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 2}, {t:'reputação boa: Familiar ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   veta:['rocket'],
@@ -39,7 +45,23 @@ const CARGOS = [
         'Quinhentos por capítulo, pago em dinheiro, sem recibo.']
 },
 {
+  id:'policial', falante:'a delegada', nome:'Policial de Kanto', orgao:'Polícia de Kanto', peso:3, cap:6,
+  onde:'saffron', lugar:'Delegacia de Saffron',
+  pede:[{t:'3 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 3},
+        {t:'reputação boa: Reconhecido ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
+        {t:'alguém da polícia que te conheça: ter sido Guarda de rota', ok:d=>Cargos.tem('guarda_rota')}],
+  requer:d=>true,
+  veta:['rocket'],
+  resumo:'Distintivo, apito e uma ronda por semana. Quem chama a polícia agora pode estar chamando você.',
+  beneficios:{renda:800, centro:true, guarita:true, status:'forca'},
+  fala:['A delegacia de Saffron tem um balcão comprido e um Growlithe dormindo atrás dele, em cima de um tapete com o brasão da polícia.',
+        '"O sargento de Viridian falou de você", diz a delegada, já carimbando. "Ele não fala bem de ninguém. Falou de você."',
+        '"Distintivo não é licença pra brigar. É licença pra chegar primeiro."']
+},
+{
   id:'criador', falante:'a avaliadora', nome:'{Criador registrado|Criadora registrada}', orgao:'Associação de Criadores', peso:2, cap:6,
+  onde:'cerulean', lugar:'Associação de Criadores',
+  pede:[{t:'4 Pokémon no time', ok:d=>d.time.length >= 4}, {t:'o time inteiro com moral 70 ou mais', ok:d=>d.time.filter(p=>!p.morto).every(p=>(p.moral||0) >= 70)}],
   requer:d=>d.time.length >= 4 && d.time.filter(p=>!p.morto).every(p=>(p.moral||0) >= 70),
   resumo:'Quem é avaliado pelo time que leva, não pelo que ganha.',
   beneficios:{loja:0.95, moral:3},
@@ -49,6 +71,8 @@ const CARGOS = [
 },
 {
   id:'reporter', falante:'a editora', nome:'Repórter {credenciado|credenciada}', orgao:'Jornal de Fuchsia', peso:2, cap:7,
+  onde:'fuchsia', lugar:'Redação do Jornal de Fuchsia',
+  pede:[{t:'40 descobertas pelo mapa', ok:d=>Object.keys(d.descobertas || {}).length >= 40}],
   requer:d=>Object.keys(d.descobertas || {}).length >= 40,
   resumo:'Crachá de imprensa. Entra onde tem fila e sai com o nome anotado.',
   beneficios:{renda:400, status:'intelecto', fila:true},
@@ -58,8 +82,10 @@ const CARGOS = [
 },
 {
   id:'rocket', falante:'a voz do outro lado', nome:'Informante', orgao:'sem timbre', peso:3, cap:8,
+  onde:'vermilion', lugar:'Armários do porto',
+  pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3}],
   requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3,
-  veta:['guarda_rota','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
+  veta:['guarda_rota','policial','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
   beneficios:{renda:1200, loja:0.75, repRuim:1},
   fala:['Não tem crachá, não tem contrato e não tem aperto de mão.',
@@ -69,6 +95,8 @@ const CARGOS = [
 },
 {
   id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
+  onde:'saffron', lugar:'Auditoria da Liga',
+  pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: Respeitado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
          && d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
   veta:['rocket'],
@@ -80,6 +108,8 @@ const CARGOS = [
 },
 {
   id:'pesquisador', falante:'Professor Oak', nome:'{Pesquisador associado|Pesquisadora associada}', orgao:'Laboratório de Pallet', peso:3, cap:12,
+  onde:'pallet', lugar:'Laboratório do Professor',
+  pede:[{t:'90 espécies catalogadas', ok:d=>Estado.contagemDex().catalogados >= 90}],
   requer:d=>Estado.contagemDex().catalogados >= 90,
   resumo:'Noventa espécies andando. Ninguém faz isso de carro.',
   beneficios:{loja:0.85, status:'intelecto', renda:600},
@@ -89,6 +119,8 @@ const CARGOS = [
 },
 {
   id:'comissao', falante:'a secretária', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
+  onde:'saffron', lugar:'Comissão de Gestão de Risco',
+  pede:[{t:'6 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6}, {t:'ser conhecid{o|a} como herói ou como pesquisador', ok:d=>['heroi','pesquisador'].includes(d.via || 'neutro')}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6
          && ['heroi','pesquisador'].includes(d.via || 'neutro'),
   veta:['rocket'],
@@ -100,6 +132,8 @@ const CARGOS = [
 },
 {
   id:'instrutor', falante:'o coordenador', nome:'{Instrutor|Instrutora} do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
+  onde:'planalto', lugar:'Sala dos instrutores',
+  pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8,
   veta:['rocket'],
   resumo:'Ensina quem chega. Salário, sala e um crachá que abre tudo do Planalto.',
@@ -110,6 +144,8 @@ const CARGOS = [
 },
 {
   id:'lider', falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  onde:'planalto', lugar:'Secretaria da Liga',
+  pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: Famoso ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
          && d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5,
   veta:['rocket'],
@@ -121,6 +157,8 @@ const CARGOS = [
 },
 {
   id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
+  onde:'planalto', lugar:'Secretaria da Liga',
+  pede:[{t:'ter vencido a Elite dos Quatro', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite}],
   requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite,
   veta:['rocket'],
   resumo:'Uma das quatro portas. Você passa a ser a parede de alguém.',
@@ -130,6 +168,8 @@ const CARGOS = [
 },
 {
   id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
+  onde:'pallet', lugar:'Laboratório do Professor',
+  pede:[{t:'140 espécies catalogadas', ok:d=>Estado.contagemDex().catalogados >= 140}],
   requer:d=>Estado.contagemDex().catalogados >= 140,
   veta:['rocket'],
   resumo:'A cadeira que entrega Pokébola pra quem está saindo de casa.',
@@ -140,6 +180,8 @@ const CARGOS = [
 },
 {
   id:'conselheiro', falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
+  onde:'celadon', lugar:'Prefeitura de Celadon',
+  pede:[{t:'Campeão de Kanto ou oito insígnias', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias}, {t:'reputação boa: Admirado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6
          && (!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias),
   veta:['rocket'],
@@ -194,7 +236,7 @@ const Cargos = {
     if (v) return {ok:false, motivo:'Não com ' + v.nome + ' no bolso.'};
     if (d.capitulo < c.cap) return {ok:false, motivo:'Ainda não é hora disso.'};
     let pode = false;
-    try { pode = !!c.requer(d); } catch(e){ pode = false; }
+    try { pode = !!c.requer(d) && this.pedidos(c).every(x => x.ok); } catch(e){ pode = false; }
     if (!pode) return {ok:false, motivo:'Você ainda não preenche o que eles pedem.'};
     return {ok:true};
   },
@@ -265,6 +307,23 @@ const Cargos = {
       if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
     }
     return avisos;
+  },
+
+  /* o que cada lugar pede, item por item, com o que você já tem marcado */
+  pedidos(c){
+    const d = Estado.dados;
+    return (c.pede || []).map(x => { let ok = false; try { ok = !!x.ok(d); } catch(e){} return {t:x.t, ok}; });
+  },
+  /* os lugares de credencial de uma cidade (o Centro fica de fora: é o balcão) */
+  lugaresEm(localId){
+    const d = Estado.dados;
+    const vistos = {};
+    CARGOS.forEach(c => {
+      if (c.onde !== localId || this.tem(c.id) || d.capitulo < c.cap - 1) return;
+      if (this.vetadoPor(c.id)) return;
+      (vistos[c.lugar] = vistos[c.lugar] || []).push(c);
+    });
+    return Object.entries(vistos).map(([lugar, cargos]) => ({lugar, cargos}));
   },
 
   /* o que o balcão mostra */

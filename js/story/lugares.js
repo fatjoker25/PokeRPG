@@ -627,18 +627,13 @@ const Cidade = {
   centro(){
     const d = Estado.dados, L = Mundo.atual();
     const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
-    const cargos = (typeof Cargos !== 'undefined') ? (() => {
-      const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
-      return `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais<br><span class="pd">${
-        abertos ? `${abertos} posto${abertos===1?'':'s'} aceitando o seu nome hoje.` : 'Formulário, carimbo e fila.'}</span></button>`;
-    })() : '';
+    const cargos = (typeof Cargos !== 'undefined')
+      ? `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais</button>` : '';
     UI.modal(`Centro Pokémon de ${L.nome}`, `
-      <button class="escolha" onclick="UI.fecharModal(true);Cidade.atenderAqui()">Deixar o time com a enfermeira e dormir<br><span class="pd">${
-        (d.flags.tem_licenca || (typeof Cargos !== 'undefined' && Cargos.centroGratis())) ? 'Com licença, não paga.' : 'Sem licença, ela cobra.'}</span></button>
-      <button class="escolha" onclick="UI.fecharModal(true);UI.modalPC()">PC do saguão<br><span class="pd">${
-        d.pc.length ? `Você tem ${d.pc.length} guardado${d.pc.length===1?'':'s'}.` : 'O cinto leva seis; o resto fica aqui.'}</span></button>
+      <button class="escolha" onclick="UI.fecharModal(true);Cidade.atenderAqui()">Deixar o time com a enfermeira e dormir</button>
+      <button class="escolha" onclick="UI.fecharModal(true);UI.modalPC()">PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</button>
       ${cargos}
-      <button class="escolha" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">Olhar o mapa da parede<br><span class="pd">Kanto inteira, com o que você já conhece.</span></button>
+      <button class="escolha" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">Mapa da parede</button>
       ${mural}`, false, 'centro');
   },
 

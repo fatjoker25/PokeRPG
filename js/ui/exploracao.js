@@ -308,6 +308,10 @@ const Exploracao = {
     if (acao.startsWith('vet_'))  return Veteranos.abordar(acao.slice(4));
     if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
     if (acao.startsWith('rev_'))  return Jogo.lutarRevanche(acao.slice(4));
+    if (acao.startsWith('posto_')){
+      const x = Cargos.lugaresEm(Mundo.id())[+acao.slice(6)];
+      return x ? UI.modalCredenciais(x.lugar) : this.tela();
+    }
 
     if (acao === 'desafiar'){
       const pend = Estrada.pendentes();

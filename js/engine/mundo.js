@@ -508,6 +508,9 @@ function afazeresDoLocal(){
     if (Estado.j && L.nome === Estado.j.cidade && !['Pallet','Viridian'].includes(Estado.j.cidade)
         && !d.flags.onibus_da_liga && d.capitulo <= 3)
       lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus da Liga pra Viridian'});
+    /* credencial se pega no lugar dela, não no Centro */
+    if (typeof Cargos !== 'undefined') Cargos.lugaresEm(id).forEach((x, i) =>
+      lista.push({lugar:true, id:'posto_' + i, titulo:x.lugar}));
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
     /* o Relembrador não tem placa: quem acha é quem anda pela cidade */

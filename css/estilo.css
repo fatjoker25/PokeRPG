@@ -2766,3 +2766,6 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .apelido input{width:min(260px,100%);padding:9px 12px;border-radius:8px;border:1px solid var(--borda);background:var(--fundo, #0f1620);color:var(--texto);font:inherit;font-size:16px;text-align:center}
 .apelido input:focus{outline:2px solid var(--destaque);outline-offset:1px}
 .apelido-botoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.cargo-pede{list-style:none;margin:8px 0 0;padding:0;font-size:12.5px;display:flex;flex-direction:column;gap:3px}
+.cargo-pede .ok{color:var(--bom)}
+.cargo-pede .falta{color:var(--texto-fraco)}

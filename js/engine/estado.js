@@ -28,7 +28,8 @@ const NIVEIS_RUIM = [
    Um nível só muda quando o que você fez foi grande o bastante
    para ser contado, ou aconteceu na frente de quem conta.
    ============================================================ */
-const LIMIARES_REP = [0, 28, 88, 198, 352, 550, 792, 1100];
+/* subir de fama custa: ~30% mais que antes do pedido de deixar mais difícil */
+const LIMIARES_REP = [0, 36, 114, 257, 458, 715, 1030, 1430];
 
 /* Gente que, quando está na cena, faz a história correr sozinha.
    Fazer alguma coisa na frente de um deles vale o dobro. */

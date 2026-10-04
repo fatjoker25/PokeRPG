@@ -5,6 +5,12 @@
    escolha, consequência e memória — e alguns cobram depois.
    ============================================================ */
 
+/* Quem já te conhece te reconhece: pela entrega, pelo número ou pela memória. */
+function conheceOCelio(d){
+  return !!(d.flags.numero_do_goro || d.flags.recebeu_do_goro || (typeof Estado !== 'undefined' && Estado.temNumero && Estado.temNumero('goro'))
+            || (d.npcs && d.npcs['Célio']));
+}
+
 const EVENTOS_CIDADE = {
 
 /* ─────────────── PALLET ─────────────── */
@@ -1065,9 +1071,16 @@ const EVENTOS_GERAIS = [
   texto:[
     'Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.',
     'Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
-    d=>!!d.flags.numero_do_goro
+    d=>conheceOCelio(d)
       ? 'Célio está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
       : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.',
+    d=>{
+      if (!conheceOCelio(d)) return '';
+      const p = (d.time || []).find(x => x.dex === (d.jogador.inicialDex || 0)) || (d.time || [])[0];
+      return fala('Célio', p
+        ? `${d.jogador.nome}! E ${p.apelido ? 'o ' + p.apelido : 'o ' + p.nome}, olha só. Tá ${p.nivel >= 16 ? 'enorme' : 'crescendo'}. Eu falei que ia dar certo.`
+        : `${d.jogador.nome}! Eu lembro de você. Lembro de todo mundo.`, 'riso');
+    },
     'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
   ],
   escolhas:[
@@ -1099,7 +1112,7 @@ const EVENTOS_GERAIS = [
        fala('Célio', 'Foto saiu ótima, por sinal.', 'riso')
      ]},
     {texto:'Anotar o número dele antes de seguir.',
-     cond:d=>!d.flags.numero_do_goro,
+     cond:d=>!d.flags.numero_do_goro && !Estado.temNumero('goro'),
      ef:{flag:'numero_do_goro',
          npc:{nome:'Célio', opiniao:1, memoria:'Te deu o número na praça, do jeito que dá pra todo mundo.'},
          registrar:'Anotou o número de Célio, da perua do laboratório.'},

@@ -328,6 +328,53 @@ const TROCAS = {
   }]
 };
 
+/* quem já trocou com você e quer trocar de novo */
+const FALAS_DE_TROCA_NOVA = [
+  'Você de novo! Eu tava torcendo pra você passar.',
+  'Tenho outra. Juro que essa é boa.',
+  'Eu fiquei pensando na última troca a semana inteira. Vamos fazer mais uma?',
+  'Olha quem voltou. Senta aí, que eu tenho proposta.',
+  'Troca boa é igual conversa boa: a segunda é melhor que a primeira.'
+];
+
+/* Quem troca com você passa o número: dá pra ligar e perguntar como
+   está o Pokémon que foi com ela. */
+function contatosDasTrocas(){
+  if (typeof TROCAS === 'undefined') return [];
+  const lista = [];
+  for (const grupo of Object.values(TROCAS)){
+    for (const t of (Array.isArray(grupo) ? grupo : [grupo])){
+      const nome = t.quem.split(',')[0].trim();
+      lista.push({
+        id:'tr_' + t.id, tipo:'figura', nome:nome.charAt(0).toUpperCase() + nome.slice(1), papel:'',
+        cidade:d => { const f = (d.trocasFeitas || {})[t.id]; return f && LOCAIS[f.cidade] ? LOCAIS[f.cidade].nome : ''; },
+        requer:d => Trocas.jaFez(t.id),
+        oferece:['prova'],
+        prova:{
+          rotulo:'Perguntar como ele está',
+          esperaCap:0, limite:99,
+          texto:d => {
+            const f = (d.trocasFeitas || {})[t.id] || {};
+            const dex = f.ultimoDeu || f.deu;
+            const esp = DEX[dex] ? DEX[dex].nome : 'Pokémon';
+            return Dados.escolher(COMO_ESTA_O_TROCADO).map(l => fala(nome, l.replace(/\{p\}/g, esp)));
+          },
+          rep:{eixo:'bom', delta:1, motivo:`Ligou pra saber do Pokémon que trocou com ${nome}`}
+        }
+      });
+    }
+  }
+  return lista;
+}
+const COMO_ESTA_O_TROCADO = [
+  ['O {p}? Tá ótimo. Dorme em cima da geladeira e ninguém tem coragem de tirar.', 'Obrigad{o|a} por ligar. Sério.'],
+  ['Ele comeu o almoço do meu irmão hoje. O {p}, não o meu irmão.', 'Tá feliz. Dá pra ver.'],
+  ['O {p} aprendeu a abrir a porta do quintal. Eu ainda não sei como.', 'Tá bem demais.'],
+  ['Levei o {p} no Centro pra um check-up. A enfermeira disse que tá forte.', 'Você cuidou bem dele antes. Ela percebeu.'],
+  ['Ele sente falta de você um pouquinho. Fica olhando a estrada de tarde.', 'Mas brinca o dia inteiro. Fica tranquil{o|a}.'],
+  ['O {p} tá treinando com as crianças da rua. Já ganhou duas lutinhas.', 'Eu fico na torcida, igual criança.']
+];
+
 const Trocas = {
   /* Uma cidade pode ter mais de uma troca, e uma troca pode estar
      trancada por progresso. daCidade devolve só as que existem hoje. */
@@ -338,7 +385,32 @@ const Trocas = {
       try { return !x.requer || x.requer(Estado.dados); } catch(e){ return false; }
     });
   },
-  disponiveis(id){ return this.lista(id).filter(t => !this.jaFez(t.id)); },
+  disponiveis(id){ return this.lista(id).filter(t => !this.jaFez(t.id) || this.oferta(t)); },
+
+  /* Depois da primeira troca, a pessoa continua trocando: um pedido novo
+     por dia, sorteado entre os Pokémon comuns — o que ela quer é comum
+     por aqui, o que ela oferece é comum noutro canto de Kanto. */
+  oferta(t){
+    if (!this.jaFez(t.id)) return null;
+    const d = Estado.dados;
+    d.trocasExtra = d.trocasExtra || {};
+    let o = d.trocasExtra[t.id];
+    if (o && o.pronta) return o;
+    const ultimo = o ? o.dia : (d.trocasFeitas[t.id] || {}).dia;
+    if (ultimo != null && d.relogio.dia <= ultimo) return null;
+    const cidade = (d.trocasFeitas[t.id] || {}).cidade || Mundo.id();
+    const comuns = id => (ENCONTROS[id] || []).filter(([x, peso]) => peso >= 10 && DEX[x] && !DEX[x].lendario
+      && !FOSSEIS.includes(x) && !DEX[x].preEvo).map(([x]) => x);
+    const aqui = comuns(cidade);
+    const outros = Object.keys(ENCONTROS).filter(k => k !== cidade).flatMap(comuns).filter(x => !aqui.includes(x));
+    if (!aqui.length || !outros.length) return null;
+    const pede = Dados.escolher(aqui);
+    const da = Dados.escolher(outros.filter(x => x !== pede));
+    const nv = (LOCAIS[cidade] || {nivel:10}).nivel;
+    o = {pronta:true, n:(o ? o.n : 0) + 1, pede, da:{dex:da, nivel:[Math.max(3, nv - 3), nv + 3]}, dia:d.relogio.dia};
+    d.trocasExtra[t.id] = o;
+    return o;
+  },
   daCidade(id){ return this.disponiveis(id)[0] || this.lista(id)[0] || null; },
   porId(tid){
     for (const lista of Object.values(TROCAS))
@@ -365,7 +437,7 @@ const Trocas = {
     if (!abertas.length){
       if (feitas.length)
         return Exploracao.tela(feitas.map(t => ({tipo:'info',
-          texto:`${t.quem} te vê de longe e levanta a mão. A troca já foi feita, e ela foi boa para os dois.`})));
+          texto:`${t.quem} te vê de longe e levanta a mão. Hoje não tem troca; amanhã, quem sabe.`})));
       return Exploracao.tela([{tipo:'info', texto:'Ninguém aqui está querendo trocar nada hoje.'}]);
     }
 
@@ -383,10 +455,9 @@ const Trocas = {
         <div id="avisos" class="avisos"></div>
         <div id="escolhas" class="escolhas">
           ${abertas.map(x => {
-            const tenho = this.candidatos(x).length;
+            const of = this.jaFez(x.id) ? (this.oferta(x) || x) : x;
             return `<button class="escolha" onclick="Trocas.tela('${x.id}')">
-              ${UI.esc(x.quem)} — quer um ${UI.esc(DEX[x.pede].nome)}, oferece um ${UI.esc(DEX[x.da.dex].nome)}
-              <br><span class="pd">${UI.esc(x.onde)}${tenho ? ' · você tem o que ele quer' : ''}</span></button>`;
+              ${UI.esc(x.quem)} — quer um ${UI.esc(DEX[of.pede].nome)}, oferece um ${UI.esc(DEX[of.da.dex].nome)}</button>`;
           }).join('')}
           ${feitas.map(x => `<button class="escolha" disabled>
             ${UI.esc(x.quem)} — já trocado<br><span class="pd">${UI.esc(x.memoria)}</span></button>`).join('')}
@@ -396,11 +467,13 @@ const Trocas = {
       return;
     }
 
-    if (this.jaFez(t.id))
-      return Exploracao.tela([{tipo:'info', texto:`${t.quem} te vê de longe e levanta a mão. A troca já foi feita, e ela foi boa para os dois.`}]);
+    const extra = this.jaFez(t.id) ? this.oferta(t) : null;
+    if (this.jaFez(t.id) && !extra)
+      return Exploracao.tela([{tipo:'info', texto:`${t.quem} te vê de longe e levanta a mão. Hoje não tem troca; amanhã, quem sabe.`}]);
 
-    const esp = DEX[t.da.dex], pedido = DEX[t.pede];
-    const meus = this.candidatos(t);
+    const of = extra || t;
+    const esp = DEX[of.da.dex], pedido = DEX[of.pede];
+    const meus = Estado.dados.time.filter(p => p.dex === of.pede && !p.morto);
     const lista = meus.length
       ? meus.map(p => `<button class="escolha" onclick="Trocas.fazer('${p.uid}','${t.id}')">
           Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel})
@@ -416,10 +489,12 @@ const Trocas = {
         <div class="loc">${UI.esc(t.onde)}</div>
       </div>
       <div class="narrativa">
-        ${UI.narrar(t.fala.split('\n').map((l, i) =>
-          i % 2 === 0 ? {quem:t.quem, diz:l.replace(/^"|"$/g,'')}
-                      : {quem:Estado.j.nome, diz:l.replace(/^"|"$/g,'')}))}
-        <p class="sussurro">Ele quer um ${UI.esc(pedido.nome)}. Ele oferece um ${UI.esc(esp.nome)}${t.da.apelido?` chamado ${UI.esc(t.da.apelido)}`:''}.</p>
+        ${extra
+          ? UI.narrarMonologo([`"${Dados.escolher(FALAS_DE_TROCA_NOVA)}"`, `"Eu tô atrás de um ${pedido.nome}. Em troca, eu tenho um ${esp.nome}."`], t.quem)
+          : UI.narrar(t.fala.split('\n').map((l, i) =>
+            i % 2 === 0 ? {quem:t.quem, diz:l.replace(/^"|"$/g,'')}
+                        : {quem:Estado.j.nome, diz:l.replace(/^"|"$/g,'')}))}
+        <p class="sussurro">Quer um ${UI.esc(pedido.nome)}. Oferece um ${UI.esc(esp.nome)}${!extra && t.da.apelido?` chamado ${UI.esc(t.da.apelido)}`:''}.</p>
       </div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas">
@@ -436,21 +511,27 @@ const Trocas = {
     const d = Estado.dados;
     const meu = d.time.find(p => p.uid === uid);
     if (!t || !meu) return;
-    if (this.jaFez(t.id)) return;
+    const extra = this.jaFez(t.id) ? this.oferta(t) : null;
+    if (this.jaFez(t.id) && !extra) return;
+    const of = extra || t;
+    if (meu.dex !== of.pede) return;
 
     /* sai o seu */
     d.time = d.time.filter(p => p.uid !== uid);
     d.trocasFeitas = d.trocasFeitas || {};
-    d.trocasFeitas[t.id] = {cidade:id, deu:meu.dex, recebeu:t.da.dex, dia:d.relogio.dia};
+    if (extra){
+      extra.pronta = false; extra.dia = d.relogio.dia; extra.deu = meu.dex;
+      d.trocasFeitas[t.id].ultimoDeu = meu.dex;
+    } else d.trocasFeitas[t.id] = {cidade:id, deu:meu.dex, recebeu:t.da.dex, dia:d.relogio.dia};
 
     /* entra o dele */
-    const nivel = Dados.entre(t.da.nivel[0], t.da.nivel[1]);
-    let dexNovo = t.da.dex;
+    const nivel = Dados.entre(of.da.nivel[0], of.da.nivel[1]);
+    let dexNovo = of.da.dex;
     let virou = null;
-    if (t.trocaEvolui && evoluiPorTroca(dexNovo)){ virou = DEX[dexNovo].nome; dexNovo = evoluiPorTroca(dexNovo); }
+    if (!extra && t.trocaEvolui && evoluiPorTroca(dexNovo)){ virou = DEX[dexNovo].nome; dexNovo = evoluiPorTroca(dexNovo); }
     const novo = criarPokemon(dexNovo, nivel, {
-      natureza: t.da.natureza,
-      apelido: t.da.apelido,
+      natureza: extra ? undefined : t.da.natureza,
+      apelido: extra ? null : t.da.apelido,
       moral: 45,
       historia: `Veio de uma troca em ${LOCAIS[id].nome}, com ${t.quem}.`
     });
@@ -463,8 +544,9 @@ const Trocas = {
 
     const avisos = [
       {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}) entrou para o seu time.`},
-      {tipo:'eco', texto:t.depois}
+      {tipo:'eco', texto:extra ? `${t.quem} recebe o ${meu.nome} com as duas mãos e fala o nome dele baixinho, como quem decora.` : t.depois}
     ];
+    if (typeof Jogo !== 'undefined' && Jogo.avisarNumeros) Jogo.avisarNumeros(avisos);
     if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a Pokébola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
     avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. ${pron(novo).Ele} não te escolheu e ainda não sabe o seu nome.`});
     Exploracao.tela(avisos);

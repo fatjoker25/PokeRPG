@@ -991,7 +991,8 @@ function contatosDaEstrada(){
 
 function todosContatos(){
   return CONTATOS.concat(contatosDeRivaisExtras(), contatosDaEstrada(),
-    typeof contatosVeteranos === 'function' ? contatosVeteranos() : []);
+    typeof contatosVeteranos === 'function' ? contatosVeteranos() : [],
+    typeof contatosDasTrocas === 'function' ? contatosDasTrocas() : []);
 }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
 function textoContato(c, campo){

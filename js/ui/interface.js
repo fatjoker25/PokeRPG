@@ -3510,18 +3510,22 @@ const UI = {
   /* ========================================================
      CREDENCIAIS — o balcão onde se assume posto
      ======================================================== */
-  modalCredenciais(){
+  modalCredenciais(lugar){
+    /* No balcão do Centro só se pega a licença de treinador. O resto
+       se pega no lugar de cada um (delegacia, redação, laboratório…),
+       e cada lugar diz o que pede. */
     const quadro = Cargos.quadro();
-    const meus = quadro.filter(x => x.tem);
-    const abertos = quadro.filter(x => !x.tem && x.ok);
-    const fechados = quadro.filter(x => !x.tem && !x.ok);
+    const daqui = x => lugar ? x.cargo.lugar === lugar && x.cargo.onde === Mundo.id() : x.cargo.onde === 'centro';
+    const meus = lugar ? quadro.filter(x => x.tem && daqui(x)) : quadro.filter(x => x.tem);
+    const abertos = quadro.filter(x => !x.tem && x.ok && daqui(x));
+    const fechados = quadro.filter(x => !x.tem && !x.ok && daqui(x) && !x.cedo);
 
     const ben = b => {
       const L = [];
       if (b.renda) L.push(`${fmtDin(b.renda)} ₽ por capítulo`);
       if (b.loja) L.push(`${Math.round((1 - b.loja) * 100)}% de desconto nas lojas`);
       if (b.centro) L.push('Centro Pokémon sem custo');
-      if (b.status) L.push(b.status.charAt(0).toUpperCase() + b.status.slice(1) + ' +1');
+      if (b.status) L.push(({forca:'Força',percepcao:'Percepção',intelecto:'Intelecto',carisma:'Carisma',sorte:'Sorte',resistencia:'Resistência'}[b.status] || b.status) + ' +1');
       if (b.moral) L.push(`+${b.moral} de moral no time por capítulo`);
       if (b.guarita) L.push('passa em guarita e cerca');
       if (b.fila) L.push('entra onde tem fila');
@@ -3546,14 +3550,13 @@ const UI = {
     const corpo =
       (meus.length ? `<h3>No seu bolso</h3>` + meus.map(x => cartao(x,
         `<button class="btn mini" onclick="Jogo.largarCargo('${x.cargo.id}')">largar</button>`)).join('') : '') +
-      `<h3>Aberto pra você</h3>` +
-      (abertos.length ? abertos.map(x => cartao(x,
-        `<button class="btn destaque" onclick="Jogo.assumirCargo('${x.cargo.id}')">Assumir</button>`)).join('')
-        : '<p class="nada">Nada hoje. Volte quando tiver mais estrada.</p>') +
-      `<h3>Fora do seu alcance</h3>` +
-      fechados.map(x => cartao(x, `<div class="cargo-motivo">${this.esc(x.cedo ? 'Cedo demais.' : x.motivo)}</div>`)).join('');
+      (abertos.length ? `<h3>Aberto pra você</h3>` + abertos.map(x => cartao(x,
+        `<button class="btn destaque" onclick="Jogo.assumirCargo('${x.cargo.id}')">Assumir</button>`)).join('') : '') +
+      (fechados.length ? `<h3>Ainda não</h3>` : '') +
+      fechados.map(x => cartao(x, `<ul class="cargo-pede">${Cargos.pedidos(x.cargo).map(p =>
+        `<li class="${p.ok ? 'ok' : 'falta'}">${p.ok ? '✓' : '✗'} ${this.esc(p.t)}</li>`).join('')}</ul>`)).join('');
 
-    this.modal('Credenciais', corpo, false, 'credencial');
+    this.modal(lugar || 'Credenciais', corpo, false, 'credencial');
   },
 
   telaDoacao(c, avisos){
@@ -3658,7 +3661,7 @@ const UI = {
       ${L('1 a 3', 'fracasso')} ${L('4 a 6', 'parcial')} ${L('7 a 9', 'sucesso')} ${L('10+', 'crítico')}
       <p class="sussurro">Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho. O que o cinto soma está na aba Vínculo.</p>
       <h3>Reputação</h3>
-      ${L('Como sobe', 'por pontos, não por ato — oito pontos pro primeiro degrau')}
+      ${L('Como sobe', 'por pontos, não por ato · degraus em 36, 114, 257, 458, 715, 1.030 e 1.430 pontos · um ato vale 1, 3, 6, 10… conforme o tamanho')}
       ${L('Diante de quem manda', 'vale o dobro')}
       ${L('Ginásio, Liga, conselho', 'passa por cima do teto do capítulo')}
       ${L('O mesmo feito', 'conta uma vez por capítulo')}
@@ -3794,8 +3797,10 @@ const UI = {
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
-      <div class="linha"><span class="k">Onde se assume</span><span class="v">balcão de credenciais, no Centro Pokémon</span></div>
-      <p class="sussurro">Catorze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
+      <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
       ${L('Viagem', 'um dia por trecho do caminho real — não existe teleporte')}
@@ -3817,10 +3822,10 @@ const UI = {
       ${L('Notícia', 'não rende nada material — muda o que a pessoa pensa de você')}
       <p class="sussurro">Missão entregue não se pede de novo e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro: atender custa tempo e não atender custa outra coisa.</p>
       <h3>Cargos</h3>
-      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo, onde você entra, como as pessoas te recebem e com que epílogo a sua história termina. O balcão de credenciais fica no Centro Pokémon, e o Cartão de Treinador tem um atalho.</p>
+      <p class="sussurro">Kanto tem postos, e posto é papel assinado: muda o que você paga, o que você recebe todo capítulo, onde você entra, como as pessoas te recebem e com que epílogo a sua história termina. Cada posto se pega no lugar dele — delegacia, redação, laboratório, Planalto —, e o lugar diz o que pede.</p>
       ${L('Peso 1 · cedo', 'Treinador licenciado · Auxiliar de campo')}
       ${L('Peso 2 · meio', 'Guarda de rota · Criador registrado · Repórter credenciado')}
-      ${L('Peso 3 · tarde', 'Informante · Investigador de campo · Pesquisador associado')}
+      ${L('Peso 3 · tarde', 'Informante · Policial · Investigador de campo · Pesquisador associado')}
       ${L('Peso 4 · muito tarde', 'Perito da Comissão · Instrutor do Planalto')}
       ${L('Peso 5 · fim', 'Líder de ginásio · Elite dos Quatro · Professor · Conselheiro')}
       ${L('Salário', 'quem tem dois postos recebe o maior, não a soma')}
@@ -4094,6 +4099,7 @@ const UI = {
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
+      <div class="linha"><span class="k">Troca de novo</span><span class="v">quem já trocou com você troca outra vez, uma por dia: pede um Pokémon comum daquele lugar e oferece um comum de outro canto de Kanto, no nível do lugar ± 3 · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
       <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
@@ -4202,8 +4208,10 @@ const UI = {
       <h3>Cargos</h3>
       <div class="linha"><span class="k">O que dá</span><span class="v">renda por capítulo · desconto de loja · Centro sem custo · passagem · status</span></div>
       <div class="linha"><span class="k">Salário</span><span class="v">o maior entre os seus postos, não a soma</span></div>
-      <div class="linha"><span class="k">Onde se assume</span><span class="v">balcão de credenciais, no Centro Pokémon</span></div>
-      <p class="sussurro">Catorze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
+      <div class="linha"><span class="k">Onde se assume</span><span class="v">no lugar de cada um: licença de treinador no balcão do Centro · Auxiliar, Pesquisador e Professor no laboratório de Pallet · Guarda de rota no posto da Patrulha, em Viridian · Criador na Associação, em Cerulean · Repórter na redação, em Fuchsia · Policial na delegacia, Investigador na Auditoria e Perito na Comissão, em Saffron · Conselheiro na prefeitura de Celadon · Instrutor, Líder e Elite no Planalto · o envelope sem timbre, nos armários do porto de Vermilion</span></div>
+      <div class="linha"><span class="k">O que cada um pede</span><span class="v">a lista aparece no lugar, com ✓ no que você já tem e ✗ no que falta</span></div>
+      <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
+      <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
       <h3>Estrada e tempo</h3>
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
