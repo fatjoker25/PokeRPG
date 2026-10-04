@@ -383,6 +383,7 @@ const COMO_ESTA_O_TROCADO = [
   ['O {p} tá treinando com as crianças da rua. Já ganhou duas lutinhas.', 'Eu fico na torcida, igual criança.']
 ];
 
+const TROCAS_POR_DIA = 3;
 const Trocas = {
   /* Uma cidade pode ter mais de uma troca, e uma troca pode estar
      trancada por progresso. daCidade devolve só as que existem hoje. */
@@ -395,9 +396,11 @@ const Trocas = {
   },
   disponiveis(id){ return this.lista(id).filter(t => !this.jaFez(t.id) || this.oferta(t)); },
 
-  /* Depois da primeira troca, a pessoa continua trocando: um pedido novo
-     por dia, sorteado entre os Pokémon comuns — o que ela quer é comum
-     por aqui, o que ela oferece é comum noutro canto de Kanto. */
+  /* A primeira troca de cada pessoa é a da história, fixa. Depois dela
+     a pessoa vira gente comum que troca: até três pedidos por dia,
+     sorteados entre os Pokémon comuns — o que ela quer é comum por
+     aqui, o que ela oferece é comum noutro canto de Kanto. Fechou uma,
+     as outras do dia somem. */
   oferta(t){
     if (!this.jaFez(t.id)) return null;
     const d = Estado.dados;
@@ -412,13 +415,22 @@ const Trocas = {
     const aqui = comuns(cidade);
     const outros = Object.keys(ENCONTROS).filter(k => k !== cidade).flatMap(comuns).filter(x => !aqui.includes(x));
     if (!aqui.length || !outros.length) return null;
-    const pede = Dados.escolher(aqui);
-    const da = Dados.escolher(outros.filter(x => x !== pede));
     const nv = (LOCAIS[cidade] || {nivel:10}).nivel;
-    o = {pronta:true, n:(o ? o.n : 0) + 1, pede, da:{dex:da, nivel:[Math.max(3, nv - 3), nv + 3]}, dia:d.relogio.dia};
+    const opcoes = [], usados = new Set();
+    for (let k = 0; k < 12 && opcoes.length < TROCAS_POR_DIA; k++){
+      const pede = Dados.escolher(aqui);
+      const da = Dados.escolher(outros.filter(x => x !== pede));
+      if (!da || usados.has(pede + '>' + da) || opcoes.some(x => x.pede === pede)) continue;
+      usados.add(pede + '>' + da);
+      opcoes.push({pede, da:{dex:da, nivel:[Math.max(3, nv - 3), nv + 3]}});
+    }
+    if (!opcoes.length) return null;
+    o = Object.assign({pronta:true, n:(o ? o.n : 0) + 1, dia:d.relogio.dia, opcoes}, opcoes[0]);
     d.trocasExtra[t.id] = o;
     return o;
   },
+  /* save de antes das três: a oferta única vira lista de uma */
+  opcoesDe(o){ return o ? (o.opcoes && o.opcoes.length ? o.opcoes : [{pede:o.pede, da:o.da}]) : []; },
   daCidade(id){ return this.disponiveis(id)[0] || this.lista(id)[0] || null; },
   porId(tid){
     for (const lista of Object.values(TROCAS))
@@ -463,9 +475,11 @@ const Trocas = {
         <div id="avisos" class="avisos"></div>
         <div id="escolhas" class="escolhas">
           ${abertas.map(x => {
-            const of = this.jaFez(x.id) ? (this.oferta(x) || x) : x;
+            const ex = this.jaFez(x.id) ? this.oferta(x) : null;
+            const resumo = ex ? `${this.opcoesDe(ex).length} troca${this.opcoesDe(ex).length > 1 ? 's' : ''} pra hoje`
+                              : `quer um ${UI.esc(DEX[x.pede].nome)}, oferece um ${UI.esc(DEX[x.da.dex].nome)}`;
             return `<button class="escolha" onclick="Trocas.tela('${x.id}')">
-              ${UI.esc(x.quem)} — quer um ${UI.esc(DEX[of.pede].nome)}, oferece um ${UI.esc(DEX[of.da.dex].nome)}</button>`;
+              ${UI.esc(x.quem)} — ${resumo}</button>`;
           }).join('')}
           ${feitas.map(x => `<button class="escolha" disabled>
             ${UI.esc(x.quem)} — já trocado<br><span class="pd">${UI.esc(x.memoria)}</span></button>`).join('')}
@@ -481,12 +495,18 @@ const Trocas = {
 
     const of = extra || t;
     const esp = DEX[of.da.dex], pedido = DEX[of.pede];
-    const meus = Estado.dados.time.filter(p => p.dex === of.pede && !p.morto);
-    const lista = meus.length
-      ? meus.map(p => `<button class="escolha" onclick="Trocas.fazer('${p.uid}','${t.id}')">
-          Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel})
-          <br><span class="pd">Isso não tem desfazer.</span></button>`).join('')
-      : `<p class="nada">Você não tem nenhum ${UI.esc(pedido.nome)}. ${UI.esc(t.quem)} diz que espera.</p>`;
+    const botoes = (op, i) => {
+      const meus = Estado.dados.time.filter(p => p.dex === op.pede && !p.morto);
+      return meus.length
+        ? meus.map(p => `<button class="escolha" onclick="Trocas.fazer('${p.uid}','${t.id}',${i})">
+            Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel}) por um ${UI.esc(DEX[op.da.dex].nome)}
+            <br><span class="pd">Isso não tem desfazer.</span></button>`).join('')
+        : `<button class="escolha" disabled>Quer um ${UI.esc(DEX[op.pede].nome)}, dá um ${UI.esc(DEX[op.da.dex].nome)}
+            <br><span class="pd">Você não tem nenhum ${UI.esc(DEX[op.pede].nome)} no time.</span></button>`;
+    };
+    const lista = extra
+      ? this.opcoesDe(extra).map(botoes).join('')
+      : botoes(t, 0);
 
     UI.limpar();
     UI.add(UI.topo());
@@ -498,11 +518,14 @@ const Trocas = {
       </div>
       <div class="narrativa">
         ${extra
-          ? UI.narrarMonologo([`"${Dados.escolher(FALAS_DE_TROCA_NOVA)}"`, `"Eu tô atrás de um ${pedido.nome}. Em troca, eu tenho um ${esp.nome}."`], t.quem)
+          ? UI.narrarMonologo([`"${Dados.escolher(FALAS_DE_TROCA_NOVA)}"`,
+              this.opcoesDe(extra).length > 1
+                ? `"Hoje eu tenho ${this.opcoesDe(extra).length === 2 ? 'duas' : 'três'} coisas. Escolhe uma, que as outras eu levo pra casa."`
+                : `"Eu tô atrás de um ${pedido.nome}. Em troca, eu tenho um ${esp.nome}."`], t.quem)
           : UI.narrar(t.fala.split('\n').map((l, i) =>
             i % 2 === 0 ? {quem:t.quem, diz:l.replace(/^"|"$/g,'')}
                         : {quem:Estado.j.nome, diz:l.replace(/^"|"$/g,'')}))}
-        <p class="sussurro">Quer um ${UI.esc(pedido.nome)}. Oferece um ${UI.esc(esp.nome)}${!extra && t.da.apelido?` chamado ${UI.esc(t.da.apelido)}`:''}.</p>
+        ${extra ? '' : `<p class="sussurro">Quer um ${UI.esc(pedido.nome)}. Oferece um ${UI.esc(esp.nome)}${t.da.apelido?` chamado ${UI.esc(t.da.apelido)}`:''}.</p>`}
       </div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas">
@@ -513,7 +536,7 @@ const Trocas = {
     </div>`);
   },
 
-  fazer(uid, tid){
+  fazer(uid, tid, qual){
     const id = Mundo.id();
     const t = tid ? this.porId(tid) : this.daCidade(id);
     const d = Estado.dados;
@@ -521,7 +544,7 @@ const Trocas = {
     if (!t || !meu) return;
     const extra = this.jaFez(t.id) ? this.oferta(t) : null;
     if (this.jaFez(t.id) && !extra) return;
-    const of = extra || t;
+    const of = extra ? (this.opcoesDe(extra)[qual || 0] || this.opcoesDe(extra)[0]) : t;
     if (meu.dex !== of.pede) return;
 
     /* sai o seu */

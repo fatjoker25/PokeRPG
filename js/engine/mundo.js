@@ -32,17 +32,35 @@ const Relogio = {
     while (r.hora >= 24){ r.hora -= 24; r.dia++; }
     r.periodo = periodoDaHora(r.hora);
     if (typeof Fome !== 'undefined') Fome.passar();
+    /* hora que pula (acampar, viajar) zera os minutos e a luz acompanha */
+    if (h !== 1 || !this._t) this._marca = Date.now();
+    if (typeof Luz !== 'undefined') Luz.aplicar();
   },
-  /* um minuto aberto é uma hora; fora de foco e no meio da luta, para */
+  /* um minuto aberto é uma hora; fora de foco e no meio da luta, para.
+     Entre uma hora e outra o relógio conta os minutos de verdade (um
+     segundo real, um minuto de Kanto), e a luz anda junto com ele. */
+  _marca: 0, _parado: 0,
   iniciar(){
     if (this._t) return;
+    this._marca = Date.now();
+    const PASSO = 5000;
     this._t = setInterval(() => {
-      if (typeof document !== 'undefined' && document.hidden) return;
       const d = Estado.dados;
-      if (!d || !d.relogio || emLuta()) return;
-      this.avancar(1);
+      const parado = (typeof document !== 'undefined' && document.hidden) || !d || !d.relogio || emLuta();
+      /* parado, o relógio não anda: a marca empurra junto */
+      if (parado){ this._marca += PASSO; return; }
+      if (Date.now() - this._marca >= this.MS_POR_HORA){
+        this._marca += this.MS_POR_HORA;
+        this.avancar(1);
+      }
       if (typeof UI !== 'undefined' && UI.pintarRelogio) UI.pintarRelogio();
-    }, this.MS_POR_HORA);
+      Luz.aplicar();
+    }, PASSO);
+  },
+  /* minutos passados da hora cheia, pelo relógio de verdade */
+  minutos(){
+    if (!this._t || !this._marca) return 0;
+    return Math.max(0, Math.min(59, Math.floor((Date.now() - this._marca) / this.MS_POR_HORA * 60)));
   },
   /* Sem Relógio na mochila você sabe o que o céu diz: manhã, tarde,
      noite, madrugada. Hora e data só pra quem comprou um. */
@@ -51,14 +69,60 @@ const Relogio = {
     const r = Estado.dados.relogio; sincronizarHora(r);
     if (!this.tem()) return r.periodo;
     const c = Calendario.de(r.dia);
-    return `${c.semanaCurta}, ${c.diaMes} de ${c.mesNome} · ${String(r.hora).padStart(2, '0')}h`;
+    return `${c.semanaCurta}, ${c.diaMes} de ${c.mesNome} · ${String(r.hora).padStart(2, '0')}:${String(this.minutos()).padStart(2, '0')}`;
   },
   /* o cabeçalho do lugar: o mesmo, por extenso */
   cabecalho(){
     const r = Estado.dados.relogio; sincronizarHora(r);
     if (!this.tem()) return r.periodo;
     const c = Calendario.de(r.dia);
-    return `${c.semana}, ${c.diaMes} de ${c.mesNome} · ${String(r.hora).padStart(2, '0')}h`;
+    return `${c.semana}, ${c.diaMes} de ${c.mesNome} · ${String(r.hora).padStart(2, '0')}:${String(this.minutos()).padStart(2, '0')}`;
+  }
+};
+
+/* ============================================================
+   LUZ — o céu do cenário segue o relógio
+   A cor que multiplica o cenário (da página e da arena) e o quanto
+   ele escurece saem da hora com os minutos, interpolados entre os
+   pontos abaixo. Caverna e ginásio não têm céu e não mudam.
+   ============================================================ */
+const LUZ_DO_DIA = [
+  /* hora, cor que multiplica (r,g,b), brilho */
+  [0,  [ 92, 112, 190], .62],
+  [4,  [ 98, 116, 192], .64],
+  [5.5,[210, 160, 170], .80],
+  [7,  [255, 214, 186], .94],
+  [9,  [255, 255, 255], 1],
+  [16, [255, 255, 255], 1],
+  [17.5,[255, 196, 140], .95],
+  [19, [196, 128, 150], .80],
+  [20.5,[ 98, 116, 192], .66],
+  [24, [ 92, 112, 190], .62]
+];
+const Luz = {
+  agora(){
+    const r = Estado.dados && Estado.dados.relogio;
+    if (!r) return null;
+    sincronizarHora(r);
+    return r.hora + Relogio.minutos() / 60;
+  },
+  /* cor e brilho na hora h (0–24) */
+  em(h){
+    let i = 0;
+    while (i < LUZ_DO_DIA.length - 2 && LUZ_DO_DIA[i + 1][0] <= h) i++;
+    const [h0, c0, b0] = LUZ_DO_DIA[i], [h1, c1, b1] = LUZ_DO_DIA[i + 1];
+    const k = h1 > h0 ? Math.max(0, Math.min(1, (h - h0) / (h1 - h0))) : 0;
+    const cor = c0.map((v, j) => Math.round(v + (c1[j] - v) * k));
+    return {cor, brilho: +(b0 + (b1 - b0) * k).toFixed(3)};
+  },
+  aplicar(){
+    if (typeof document === 'undefined' || !document.documentElement) return;
+    const h = this.agora();
+    if (h == null) return;
+    const l = this.em(h);
+    const raiz = document.documentElement.style;
+    raiz.setProperty('--luz-cor', `rgb(${l.cor.join(',')})`);
+    raiz.setProperty('--luz-brilho', l.brilho);
   }
 };
 

@@ -396,13 +396,21 @@ function dexNacional(){
   try { return !!(Estado.dados && Estado.dados.flags.dex_nacional); } catch(e){ return false; }
 }
 
-/* A lista que a Pokédex mostra agora. Os lendários de Johto que a
-   história de Kanto atravessa ficam visíveis desde sempre. */
-const DEX_KANTO_IDS = Object.values(DEX).filter(p => p.dex <= 151).map(p => p.dex)
-  .concat([243,244,245,250]).sort((a,b) => a-b);
+/* A lista que a Pokédex mostra agora. A de Kanto são os 150; o 151
+   (Mew) e os lendários de Johto que a história de Kanto atravessa só
+   entram na lista depois que a Pokédex registra um deles — antes
+   disso, nem a casa vazia existe, que casa vazia já é notícia. */
+const DEX_KANTO_IDS = Object.values(DEX).filter(p => p.dex <= 150).map(p => p.dex).sort((a,b) => a-b);
+const DEX_KANTO_SO_REGISTRADO = [151, 243, 244, 245, 250];
 const DEX_NACIONAL_IDS = Object.values(DEX).map(p => p.dex).sort((a,b) => a-b);
 
-function registroAtivo(){ return dexNacional() ? DEX_NACIONAL_IDS : DEX_KANTO_IDS; }
+function idsKanto(){
+  let pd = null;
+  try { pd = Estado.pdex(); } catch(e){}
+  const tem = d => !!(pd && ((pd.catalogados || {})[d] || (pd.vistos || {})[d]));
+  return DEX_KANTO_IDS.concat(DEX_KANTO_SO_REGISTRADO.filter(tem)).sort((a,b) => a-b);
+}
+function registroAtivo(){ return dexNacional() ? DEX_NACIONAL_IDS : idsKanto(); }
 
 /* Viés de ambiente — aumenta a chance, mas QUALQUER um pode aparecer */
 const VIES_AMBIENTE = {

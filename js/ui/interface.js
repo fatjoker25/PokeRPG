@@ -242,6 +242,7 @@ const UI = {
     const b = document.body;
     if (url){ b.style.setProperty('--cenario-lugar', `url("${url}")`); b.classList.add('com-cenario'); }
     else { b.style.removeProperty('--cenario-lugar'); b.classList.remove('com-cenario'); }
+    if (typeof Luz !== 'undefined') Luz.aplicar();
   },
 
   topo(){
@@ -3668,7 +3669,7 @@ const UI = {
 
     const faixas = nacional
       ? `<div class="dex-faixas">
-           <span><b>Kanto</b> ${DEX_KANTO_IDS.filter(d => pd.catalogados[d]).length}/${DEX_KANTO_IDS.length}</span>
+           <span><b>Kanto</b> ${DEX_KANTO_IDS.concat(pd.catalogados[151] || pd.vistos[151] ? [151] : []).filter(d => pd.catalogados[d]).length}/${DEX_KANTO_IDS.length + (pd.catalogados[151] || pd.vistos[151] ? 1 : 0)}</span>
            <span><b>Johto</b> ${DEX_NACIONAL_IDS.filter(d => d > 151 && pd.catalogados[d]).length}/${DEX_NACIONAL_IDS.filter(d => d > 151).length}</span>
          </div>`
       : '';
@@ -4359,7 +4360,8 @@ const UI = {
       <p class="sussurro">Abaixo da idade, a porta aparece fechada e diz quantos anos pede.</p>
 
       <h3>Relógio e calendário</h3>
-      <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto · parado durante a luta e com a janela fora de foco</span></div>
+      <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto, e um segundo é um minuto · parado durante a luta e com a janela fora de foco</span></div>
+      <div class="linha"><span class="k">Luz</span><span class="v">o céu do cenário segue o relógio, minuto a minuto: madrugada azul e escura, amanhecer rosado, dia claro, pôr do sol laranja · caverna, vulcão e ginásio não mudam</span></div>
       <div class="linha"><span class="k">Período</span><span class="v">madrugada 0h–5h · manhã 6h–11h · tarde 12h–17h · noite 18h–23h</span></div>
       <div class="linha"><span class="k">Sem Relógio</span><span class="v">você só sabe o período, pelo céu · hora, data e dia da semana não aparecem em lugar nenhum</span></div>
       <div class="linha"><span class="k">Com Relógio</span><span class="v">item de mochila (Viridian, Vermilion, Saffron e Celadon) · o alto da tela mostra dia da semana, data e hora</span></div>
@@ -4499,7 +4501,7 @@ const UI = {
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
-      <div class="linha"><span class="k">Troca de novo</span><span class="v">quem já trocou com você troca outra vez, uma por dia: pede um Pokémon comum daquele lugar e oferece um comum de outro canto de Kanto, no nível do lugar ± 3 · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
+      <div class="linha"><span class="k">Troca de novo</span><span class="v">a primeira troca de cada pessoa é a da história, sempre a mesma · depois ela troca de novo: até 3 propostas sorteadas por dia, cada uma pedindo um Pokémon comum daquele lugar e oferecendo um comum de outro canto de Kanto, no nível do lugar ± 3 · fechou uma, as outras do dia somem · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
       <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
@@ -4507,6 +4509,7 @@ const UI = {
       <div class="linha"><span class="k">Ordem do time</span><span class="v">em Seu time, segure meio segundo num Pokémon e arraste · o primeiro da lista é quem entra na briga</span></div>
       <div class="linha"><span class="k">Na luta</span><span class="v">Time e Mochila do alto da tela ficam trancados: troca e item são pela barra de ações, e gastam o turno · as Pokébolas na ficha mostram quem de cada lado ainda está de pé</span></div>
       <div class="linha"><span class="k">Comprar</span><span class="v">a loja pergunta antes de cobrar</span></div>
+      <div class="linha"><span class="k">Pokédex de Kanto</span><span class="v">150 casas · o 151 e os lendários de Johto que cruzam Kanto só ganham casa depois que a Pokédex registra um deles · a Nacional mostra os 251</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
       <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só com Percepção 3 ou mais: aí você lê pelo jeito que eles se mexem, sem dado, quando entram. A Pokédex lê espécie, tipo e atributos, não temperamento, e treinador nenhum entrega o temperamento do próprio time.</p>
       <p class="sussurro">O tipo de quem está do outro lado fica escondido até a espécie estar catalogada. Sem Pokédex, só Percepção 4 e Intelecto 4 juntos leem o tipo de um desconhecido. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>

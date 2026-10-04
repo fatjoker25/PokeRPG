@@ -482,6 +482,16 @@ Treino e acampamento gastam Ração; o treino ainda pede
 `TREINO_ESPERA_MIN` minutos reais entre um e outro, porque acampar pula a
 noite do jogo e o treino era por dia do jogo.
 
+## Trocas
+A primeira troca de cada pessoa (`TROCAS`, em `mercado.js`) é a da
+história, fixa. Depois ela vira gente que troca: `Trocas.oferta` sorteia
+até `TROCAS_POR_DIA` (3) propostas por dia, e fechar uma some com as
+outras. Leia as propostas por `Trocas.opcoesDe(o)` — save velho tem uma
+só, sem lista.
+
+A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
+de Johto entram por `idsKanto()` só depois de vistos ou catalogados.
+
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
 não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). São todas as
@@ -579,6 +589,13 @@ Líder tem quatro falas: `intro` (o desafio), `vitoria` (ele perdeu),
 `Cidade.ginasio`).
 
 ## Relógio e dia marcado
+O relógio conta minuto (um segundo real) entre uma hora e outra
+(`Relogio.minutos`, `_marca`), e a **luz** anda junto: `Luz` (em
+`mundo.js`) interpola `LUZ_DO_DIA` e põe `--luz-cor` (multiplica o
+cenário) e `--luz-brilho` na raiz; o cenário da página e o da arena
+leem as duas. Caverna, vulcão e quadra não têm céu. Hora que pula
+(acampar, viajar) zera os minutos e repinta a luz na hora.
+
 Sem o item **Relógio** o jogador só vê o período (manhã, tarde…): o
 `Relogio.texto()` e o `cabecalho()` escondem hora e data. Com ele, dia
 da semana, data e hora. O calendário (`Calendario`, em `mundo.js`)

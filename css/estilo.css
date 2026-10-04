@@ -2697,9 +2697,13 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
    camada fixa: rolar a página não arrasta o cenário. */
 body.com-cenario::before{
   content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
-  background:var(--cenario-lugar) center 58% / cover no-repeat;
+  /* a luz do relógio (Luz, em mundo.js): uma cor que multiplica e um brilho */
+  background:linear-gradient(var(--luz-cor, #fff), var(--luz-cor, #fff)) center / cover no-repeat,
+             var(--cenario-lugar) center 58% / cover no-repeat;
+  background-blend-mode:multiply, normal;
   image-rendering:pixelated;
-  filter:saturate(.9) brightness(.7);
+  filter:saturate(.9) brightness(calc(.7 * var(--luz-brilho, 1)));
+  transition:filter 5s linear;
   animation:cenarioEntra .8s var(--suave) both;
 }
 @keyframes cenarioEntra{from{opacity:0}to{opacity:1}}
@@ -2944,3 +2948,13 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 .lutador .arte::after{transition:opacity .35s ease}
 .lutador.caido .arte::after,.lutador.sem-sombra .arte::after,.lutador.capturado .arte::after{opacity:0!important}
 .lutador.capturado .arte .sprite{visibility:hidden!important}
+
+/* a arena com céu também segue o relógio; caverna e quadra não têm céu */
+.arena.com-cenario::before{
+  background-image:linear-gradient(var(--luz-cor, #fff), var(--luz-cor, #fff)), var(--ar-fundo);
+  background-blend-mode:multiply, normal;
+  filter:brightness(var(--luz-brilho, 1));
+  transition:filter 5s linear;
+}
+.arena.com-cenario[data-ambiente="caverna"]::before,
+.arena.com-cenario[data-ambiente="vulcao"]::before{background-image:var(--ar-fundo);filter:none}
