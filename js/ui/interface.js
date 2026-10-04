@@ -1615,7 +1615,7 @@ const UI = {
     const resto = nomes.filter(n => usavelEmBatalha(n));
     const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
     const linhasBolas = bolas.map(n =>
-      `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'Pokébola',nome:'${n}'})">
+      `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
         ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join('');
     const linhasItens = resto.map(n => {
       const info = ITENS_INFO[n] || {};
@@ -2105,7 +2105,7 @@ const UI = {
     const bolas = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
     if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma Pokébola.</p>');
     this.modal('Qual Pokébola?', bolas.map(n =>
-      `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'Pokébola',nome:'${n}'})">
+      `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
         ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join(''));
   },
 
