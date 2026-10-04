@@ -384,16 +384,15 @@ const Exploracao = {
         if (achado.descobre) Mundo.descobrir(achado.descobre);
       } else {
         Estado.salvar('auto');
-        return this.tela(achadoDeVasculhar(L.ambiente, sorte.grau === 'critico'));
+        return this.tela(achadoDeVasculhar(L.ambiente, sorte.grau === 'critico', false, Mundo.id()));
       }
     } else if (t.grau === 'parcial'){
       /* parcial: só o rastro, sem achado */
-      const av = achadoDeVasculhar(L.ambiente, false, true);
+      const av = achadoDeVasculhar(L.ambiente, false, true, Mundo.id());
       Estado.salvar('auto');
       return this.tela(av.length ? av : [{tipo:'info', texto:'Você acha rastro e pegada, e nada disso vira coisa nenhuma hoje.'}]);
     } else {
-      texto = ['Você passa um período procurando no lugar errado.',
-               'Quando percebe, já escureceu um pouco e você está com fome.'];
+      texto = [falhaDeVasculhar(L.ambiente)];
     }
     Estado.salvar('auto');
     this.tela(texto.map(x => ({tipo:'info', texto:x})));
@@ -481,6 +480,7 @@ const Exploracao = {
   },
 
   acampar(){
+    const L = Mundo.atual();
     if (!ehNoite())
       return this.tela([{tipo:'info', texto:'Ainda está claro. Acampar é pra quando escurece.'}]);
     /* dorme até o sol: acorda às seis */
@@ -495,13 +495,10 @@ const Exploracao = {
     Estado.dados.time.forEach(p => { if (!p.morto) p.hp = Math.min(p.hpMax, p.hp + Math.ceil(p.hpMax * prop)); });
     Estado.curarJogador(meu);
     Estado.salvar('auto');
-    const texto = {
-      critico:'Vocês param, e por algum motivo essa noite funciona: o fogo pega de primeira, o chão não incomoda, e você acorda antes do sol sem estar cansad{o|a}.',
-      sucesso:'Vocês param. Fogo pequeno, comida ruim, chão duro. Ninguém dorme direito e todo mundo melhora um pouco.',
-      parcial:'Vocês param. Você acorda três vezes e uma delas é por nada.',
-      falha:'Vocês param, e a noite é ruim. Frio pelas costas, raiz nas costelas, e de manhã você está pior do que deitou.'
-    }[t.grau];
-    this.tela([{tipo:'cura', texto}]);
+    /* monta, a noite, acorda: o lugar muda o acampamento, e o time
+       aparece na noite pelo nome */
+    const linhas = textoDoAcampamento(L.ambiente, t.grau);
+    this.tela(linhas.map((texto, i) => ({tipo: i === linhas.length - 1 ? 'cura' : 'info', texto})));
   },
 
   andar(){

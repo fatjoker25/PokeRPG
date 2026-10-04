@@ -642,7 +642,9 @@ Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
   nomes, porte, arenas, treinadores, tms, pokerole (gerado).
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
 - `js/story/` — capítulos (`cap-01` a `cap-32`), lugares, mercado, eventos, motor,
-  estrada (treinadores de rota e o que surge nela).
+  estrada (treinadores de rota e o que surge nela), vasculhar (achado,
+  falha e acampamento por ambiente e por lugar — texto novo de rota entra
+  com o ambiente dele, senão aparece cerca no mar e tronco na caverna).
 - `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o
   turno encenado, a abertura e a entrada do seu Pokémon.
 
