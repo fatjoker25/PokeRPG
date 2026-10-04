@@ -1,16 +1,21 @@
-Trilha por tema (Ajustes > Som > Trilha)
+Trilha (Ajustes > Som > Trilha)
 
-O jogo não traz música dos jogos: ela não é nossa pra distribuir, e a
-PokeAPI só tem sprite e grito. Pra ouvir um tema, ponha os arquivos numa
-pasta com o nome do tema, ao lado do jogo:
+Luta: cada tema toca as faixas de batalha do Pokémon Showdown, que já
+estão em sons/musica/showdown/ (uma por tipo de luta: selvagem,
+treinador, rival, líder de ginásio, Elite e torneio).
 
-  sons/musica/bw/   -> Black/White
-  sons/musica/rby/  -> Red/Blue
-  sons/musica/gsc/  -> Gold/Silver
+Rota, cidade e caverna: o Showdown não tem essas músicas. Pra ouvir,
+ponha os arquivos na pasta do tema, ao lado do jogo:
 
-Dentro de cada pasta, quatro arquivos (.ogg, .mp3 ou .m4a — o formato da loja do iTunes):
+  sons/musica/bw/     -> Black/White
+  sons/musica/hgss/   -> HeartGold/SoulSilver
+  sons/musica/dpp/    -> Diamond/Pearl
+  sons/musica/xy/  sons/musica/oras/  sons/musica/sm/
+  sons/musica/meus/   -> o tema "Meus arquivos"
 
-  batalha.ogg   rota.ogg   cidade.ogg   caverna.ogg
+com os nomes (.ogg, .mp3 ou .m4a):
 
-O jogo escolhe pelo que está na tela: luta, rota, cidade ou caverna.
-Arquivo que faltar cai na trilha sintetizada, sem erro.
+  rota.mp3   cidade.mp3   caverna.mp3   (e batalha.mp3, só no "Meus arquivos")
+
+Arquivo que faltar cai na trilha sintetizada, sem erro. A pasta de
+música fica fora do arquivo único (jornada-do-campeao.html).

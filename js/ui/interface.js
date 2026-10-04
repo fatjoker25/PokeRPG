@@ -1069,15 +1069,15 @@ const UI = {
       <h3>Som</h3>
       <label class="som-mudo" for="som-mudo"><input type="checkbox" id="som-mudo" ${p.mudo ? 'checked' : ''}
         onchange="Som.ajustar('mudo', this.checked)"> Mudo</label>
-      ${barra('geral', 'Geral')}${barra('efeitos', 'Efeitos')}${barra('gritos', 'Gritos')}${barra('musica', 'Música')}
+      ${barra('geral', 'Geral')}${barra('musica', 'Música')}${barra('efeitos', 'Sons da interface')}${barra('gritos', 'Sons dos Pokémon')}
       <label class="som-linha" for="som-tema"><span>Trilha</span>
         <select id="som-tema" onchange="Som.ajustar('tema', this.value)">
           ${TEMAS_DE_MUSICA.map(t => `<option value="${t.id}"${t.id === p.tema ? ' selected' : ''}>${this.esc(t.nome)}</option>`).join('')}
         </select></label>
-      <p class="sussurro">Os temas de arquivo tocam o que estiver em sons/musica/&lt;tema&gt;/ (batalha, rota, cidade e caverna, .ogg, .mp3 ou .m4a). Sem o arquivo, toca a sintetizada.</p>
+      <p class="sussurro">Na luta, cada tema toca as faixas de batalha dele (selvagem, treinador, rival, líder, Elite). Rota, cidade e caverna tocam o arquivo que estiver em sons/musica/&lt;tema&gt;/ (rota, cidade, caverna; .ogg, .mp3 ou .m4a), ou a sintetizada.</p>
       <div class="som-testes">
-        <button class="btn mini" onclick="Som.efeito('pokedex')">Testar efeito</button>
-        <button class="btn mini" onclick="tocarGrito(25)">Testar grito</button>
+        <button class="btn mini" data-sem-toque onclick="Som.efeito('pokedex')">Testar interface</button>
+        <button class="btn mini" data-sem-toque onclick="tocarGrito(25)">Testar Pokémon</button>
       </div>
     </div>`;
   },

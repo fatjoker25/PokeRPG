@@ -3,27 +3,44 @@
    Preferência do aparelho, não da partida: vale pra todo save e mora
    no localStorage ('jc-audio').
 
-   Quatro canais: geral (multiplica os outros), efeitos, gritos e
-   música, e um mudo que cala tudo. Os efeitos (abrir a Pokédex, a
-   varredura, o arremesso, usar item, comprar) são sintetizados na
-   hora com WebAudio: não tem arquivo, então funcionam em file:// e no
-   arquivo único.
+   Canais, cada um com o seu controle: geral (multiplica os outros),
+   música, sons da interface (`efeitos`: o toque de cada botão, abrir a
+   Pokédex, a varredura, o arremesso, usar item, comprar) e sons dos
+   Pokémon (`gritos`); e um mudo que cala tudo. Os sons da interface
+   são sintetizados na hora com WebAudio: não tem arquivo.
 
-   Trilha por tema. A música dos jogos não é nossa pra distribuir, e a
-   PokeAPI não tem música — só sprite e grito. Então:
-   - 'sintetizada': uma trilha curta de chip, gerada aqui, por contexto
-     (luta, rota, cidade, caverna);
-   - os outros temas leem arquivos que quem joga põe na pasta
-     sons/musica/<tema>/ com os nomes batalha, rota, cidade e caverna
-     (.ogg, .mp3 ou .m4a). Sem o arquivo, cai na sintetizada sem erro.
+   Trilha por tema:
+   - a luta toca as faixas de batalha do Pokémon Showdown
+     (sons/musica/showdown/), uma por tipo de luta: selvagem,
+     treinador, rival, líder e Elite/torneio (`luta` no tema);
+   - rota, cidade e caverna não têm faixa no Showdown: tocam o arquivo
+     de quem joga, se houver, em sons/musica/<pasta>/rota.mp3 (e
+     cidade, caverna; .ogg, .mp3 ou .m4a), senão a trilha sintetizada;
+   - 'sintetizada' é a de chip, gerada aqui, pra tudo.
+   O build deixa a pasta de música fora do arquivo único.
    ============================================================ */
-const AUDIO_PADRAO = {geral:0.8, efeitos:0.7, gritos:0.8, musica:0.4, mudo:false, tema:'sintetizada'};
+const AUDIO_PADRAO = {v:2, geral:0.8, efeitos:0.6, gritos:0.8, musica:0.45, mudo:false, tema:'bw'};
+/* luta: selvagem, treinador, rival, líder, elite (Elite, torneio,
+   Conferência) → faixa em sons/musica/showdown/<nome>.mp3. O líder é
+   o de Kanto de Black 2/White 2 em todos: é o único tema de ginásio
+   que o Showdown tem, e é justamente o de Kanto. */
+const LIDER_KANTO = 'bw2-kanto-gym-leader';
 const TEMAS_DE_MUSICA = [
-  {id:'nenhuma',     nome:'Sem música'},
+  {id:'bw',   nome:'Black/White', pasta:'bw',
+   luta:{selvagem:'bw-subway-trainer', treinador:'bw-trainer', rival:'bw-rival', lider:LIDER_KANTO, elite:'bw2-rival'}},
+  {id:'hgss', nome:'HeartGold/SoulSilver', pasta:'hgss',
+   luta:{selvagem:'hgss-johto-trainer', treinador:'hgss-kanto-trainer', rival:'hgss-johto-trainer', lider:LIDER_KANTO, elite:'dpp-rival'}},
+  {id:'dpp',  nome:'Diamond/Pearl', pasta:'dpp',
+   luta:{selvagem:'dpp-trainer', treinador:'dpp-trainer', rival:'dpp-rival', lider:LIDER_KANTO, elite:'dpp-rival'}},
+  {id:'xy',   nome:'X/Y', pasta:'xy',
+   luta:{selvagem:'xy-trainer', treinador:'xy-trainer', rival:'xy-rival', lider:LIDER_KANTO, elite:'xy-rival'}},
+  {id:'oras', nome:'Omega Ruby/Alpha Sapphire', pasta:'oras',
+   luta:{selvagem:'oras-trainer', treinador:'oras-trainer', rival:'oras-rival', lider:LIDER_KANTO, elite:'oras-rival'}},
+  {id:'sm',   nome:'Sun/Moon', pasta:'sm',
+   luta:{selvagem:'sm-trainer', treinador:'sm-trainer', rival:'sm-rival', lider:LIDER_KANTO, elite:'sm-rival'}},
+  {id:'meus', nome:'Meus arquivos (sons/musica/meus)', pasta:'meus'},
   {id:'sintetizada', nome:'Sintetizada (chip)'},
-  {id:'bw',          nome:'Black/White (arquivos locais)', pasta:'bw'},
-  {id:'rby',         nome:'Red/Blue (arquivos locais)', pasta:'rby'},
-  {id:'gsc',         nome:'Gold/Silver (arquivos locais)', pasta:'gsc'}
+  {id:'nenhuma', nome:'Sem música'}
 ];
 const CONTEXTOS_DE_MUSICA = ['batalha', 'rota', 'cidade', 'caverna'];
 
@@ -31,7 +48,13 @@ const Som = {
   pref(){
     let p = null;
     try { p = JSON.parse(localStorage.getItem('jc-audio') || 'null'); } catch(e){}
+    const velho = p && !p.v;
     p = Object.assign({}, AUDIO_PADRAO, p || {});
+    /* preferência de antes das faixas do Showdown: quem estava no padrão
+       (sintetizada) passa pro novo padrão; tema que sumiu volta pro padrão */
+    if (velho && p.tema === 'sintetizada') p.tema = AUDIO_PADRAO.tema;
+    if (!TEMAS_DE_MUSICA.some(t => t.id === p.tema)) p.tema = AUDIO_PADRAO.tema;
+    p.v = AUDIO_PADRAO.v;
     /* quem desligou no botão antigo continua mudo */
     try { if (!localStorage.getItem('jc-audio') && localStorage.getItem('jc-som') === '0') p.mudo = true; } catch(e){}
     return p;
@@ -110,6 +133,8 @@ const Som = {
     clique: (S, t, v) => { S.nota(1200, t, .04, 'square', v * .6); S.nota(600, t + .05, .08, 'square', v * .4); },
     /* usar item: um brilho de três notas */
     item: (S, t, v) => { [988, 1319, 1976].forEach((f, i) => S.nota(f, t + i * .07, .16, 'triangle', v * .4)); },
+    /* o toque de qualquer botão: curto e baixo, pra não cansar */
+    toque: (S, t, v) => { S.nota(1046, t, .035, 'square', v * .16); S.nota(1568, t + .028, .045, 'triangle', v * .14); },
     /* comprar: moedinha */
     compra: (S, t, v) => { S.nota(988, t, .07, 'square', v * .4); S.nota(1319, t + .07, .2, 'square', v * .4); }
   },
@@ -124,8 +149,18 @@ const Som = {
   },
 
   /* ---------- trilha ---------- */
+  /* o tipo de luta escolhe a faixa */
+  tipoDeLuta(){
+    const J = (typeof Jogo !== 'undefined') ? Jogo : {};
+    if (J.eliteAtual || J.torneioAtual || J.conferenciaAtual) return 'elite';
+    if (J.ginasioAtual) return 'lider';
+    if (J.rivalAtual) return 'rival';
+    if (J.revancheAtual && J.revancheAtual.ginasio) return 'lider';
+    if (typeof Batalha !== 'undefined' && Batalha.tipo === 'selvagem') return 'selvagem';
+    return 'treinador';
+  },
   contexto(){
-    if (typeof emLuta === 'function' && emLuta()) return 'batalha';
+    if (typeof emLuta === 'function' && emLuta()) return 'batalha:' + this.tipoDeLuta();
     try {
       const L = Mundo.atual();
       if (!L) return 'rota';
@@ -143,23 +178,43 @@ const Som = {
     if (!forcar && chave === this._tocando){ this.volumeMusica(vol); return; }
     this.pararMusica();
     this._tocando = chave;
+    this.semArquivo = null;
+    /* tentativa de arquivo é assíncrona: o erro de uma trilha velha não
+       pode ligar a sintetizada por cima da trilha nova */
+    const geracao = this._geracao = (this._geracao || 0) + 1;
+    const vale = f => (...a) => { if (geracao === this._geracao) f(...a); };
     if (!vol || p.tema === 'nenhuma') return;
     const tema = TEMAS_DE_MUSICA.find(t => t.id === p.tema);
-    if (tema && tema.pasta) return this.tocarArquivo(tema.pasta, ctx, vol, () => this.tocarSintetizada(ctx, vol));
-    this.tocarSintetizada(ctx, vol);
+    const [base, sub] = ctx.split(':');
+    const sintetizada = vale(() => this.tocarSintetizada(base, vol));
+    if (!tema || p.tema === 'sintetizada') return sintetizada();
+    /* luta: a faixa do Showdown do tipo de luta; sem ela, o arquivo da pasta */
+    const daPasta = vale(() => tema.pasta ? this.tocarArquivo(tema.pasta, base, vol, sintetizada, geracao) : sintetizada());
+    if (base === 'batalha' && tema.luta && tema.luta[sub])
+      return this.tocarUrl(`sons/musica/showdown/${tema.luta[sub]}.mp3`, vol, daPasta, geracao);
+    daPasta();
+  },
+  tocarUrl(url, vol, senao, geracao){
+    const a = new Audio(url);
+    a.loop = true; a.volume = Math.min(1, vol);
+    a.onerror = () => { if (geracao !== this._geracao) return; if (this._audio === a) this._audio = null; this.semArquivo = url; senao(); };
+    this._audio = a;
+    const r = a.play(); if (r && r.catch) r.catch(() => {});
   },
   volumeMusica(vol){
     if (this._audio) this._audio.volume = Math.min(1, vol);
     if (this._ganho) this._ganho.gain.value = vol * .12;
   },
   pararMusica(){
+    this._geracao = (this._geracao || 0) + 1;
     if (this._audio){ try { this._audio.pause(); } catch(e){} this._audio = null; }
     if (this._seq){ clearInterval(this._seq); this._seq = null; }
     if (this._ganho){ try { this._ganho.disconnect(); } catch(e){} this._ganho = null; }
   },
-  tocarArquivo(pasta, ctx, vol, senao){
+  tocarArquivo(pasta, ctx, vol, senao, geracao){
     const exts = ['ogg', 'mp3', 'm4a'];
     const tenta = i => {
+      if (geracao != null && geracao !== this._geracao) return;
       if (i >= exts.length){ this.semArquivo = `${pasta}/${ctx}`; return senao(); }
       const a = new Audio(`sons/musica/${pasta}/${ctx}.${exts[i]}`);
       a.loop = true; a.volume = Math.min(1, vol);
@@ -199,6 +254,12 @@ const Som = {
 };
 
 if (typeof document !== 'undefined' && document.addEventListener){
+  /* o toque de cada opção: qualquer botão, escolha, porta e aba */
+  document.addEventListener('click', e => {
+    const el = e.target && e.target.closest && e.target.closest('button, .escolha, .porta, .aba, [role="radio"], .item-linha');
+    if (!el || el.disabled || el.dataset.semToque !== undefined) return;
+    Som.efeito('toque');
+  }, true);
   const abre = () => Som.destravar();
   document.addEventListener('pointerdown', abre, {once:true});
   document.addEventListener('keydown', abre, {once:true});

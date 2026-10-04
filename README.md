@@ -484,8 +484,10 @@ As animações dos golpes são as do cliente do Pokémon Showdown
 Os ícones dos itens que não existem nos jogos (machado, lanterna, as
 mochilas, o papel de enredo) e os dos lugares e ações são desenhados no
 próprio projeto, em SVG. Os efeitos sonoros e a trilha "sintetizada"
-são gerados na hora (WebAudio); o projeto não traz música dos jogos.
-Quem quiser um tema põe os arquivos em `sons/musica/<tema>/`
+são gerados na hora (WebAudio). As músicas de batalha são as que o
+[Pokémon Showdown](https://play.pokemonshowdown.com) toca nas lutas
+(`play.pokemonshowdown.com/audio/`), em `sons/musica/showdown/`.
+Música de rota, cidade e caverna quem quiser põe em `sons/musica/<tema>/`
 (`batalha`, `rota`, `cidade`, `caverna`, .ogg, .mp3 ou .m4a — ver
 `sons/musica/LEIA.txt`), e eles ficam fora do arquivo único.
 As regras de combate são do Pokérole (Pokérole Project), e os atributos

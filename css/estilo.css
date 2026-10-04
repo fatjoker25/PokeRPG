@@ -2962,7 +2962,7 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 /* Ajustes: som */
 .ajuste-som{display:flex;flex-direction:column;gap:8px;margin:14px 0;padding:12px;border:1px solid var(--borda);border-radius:10px}
 .ajuste-som h3{margin:0}
-.som-linha{display:grid;grid-template-columns:72px 1fr 42px;align-items:center;gap:10px;font-size:13px}
+.som-linha{display:grid;grid-template-columns:118px 1fr 42px;align-items:center;gap:10px;font-size:13px}
 .som-linha input[type=range]{width:100%;accent-color:var(--destaque)}
 .som-linha select{grid-column:2 / 4;padding:6px;border-radius:6px;background:var(--bg-2);color:var(--texto);border:1px solid var(--borda)}
 .som-pct{font-family:var(--mono);font-size:12px;text-align:right;color:var(--texto-fraco)}

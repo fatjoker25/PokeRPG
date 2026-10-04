@@ -408,16 +408,23 @@ cobria as fichas de HP.
 Gritos: `sons/gritos/{dex}.ogg`, versão legacy da PokeAPI (~6 KB cada);
 o `build.py` embute junto com os sprites.
 
-Som mora em `js/ui/som.js` (`Som`): volumes geral, efeitos, gritos e
-música, e o mudo, em `localStorage` ('jc-audio'), lidos por
-`Som.volume(canal)` — `tocarGrito` e `somLigado` passam por ali. Efeito
-sonoro é sintetizado (`Som.EFEITOS`: pokedex, scan, arremesso, abrir,
-clique, item, compra) e entra por `Som.efeito(nome)` no ponto em que a
-coisa acontece. A trilha segue a tela (`Som.contexto`: batalha, rota,
-cidade, caverna) e é trocada no `topo()`. Música dos jogos **não entra
-no repositório**: os temas de arquivo leem `sons/musica/<tema>/`, que o
-`build.py` deixa de fora do arquivo único, e sem o arquivo cai na
-sintetizada.
+Som mora em `js/ui/som.js` (`Som`). Cada coisa tem o seu controle:
+geral, música, sons da interface (canal `efeitos`) e sons dos Pokémon
+(canal `gritos`), mais o mudo, em `localStorage` ('jc-audio'), lidos por
+`Som.volume(canal)` — `tocarGrito` e `somLigado` passam por ali. Som de
+interface é sintetizado (`Som.EFEITOS`: toque, pokedex, scan, arremesso,
+abrir, clique, item, compra) e entra por `Som.efeito(nome)` no ponto em
+que a coisa acontece; o **toque** sai sozinho em todo clique de botão,
+escolha, porta e aba (botão que já tem som próprio leva
+`data-sem-toque`). A trilha segue a tela (`Som.contexto`) e é trocada no
+`topo()`: na luta, `batalha:<tipo>` (selvagem, treinador, rival, líder,
+elite — `Som.tipoDeLuta`) toca a faixa de batalha do Pokémon Showdown
+do tema (`TEMAS_DE_MUSICA[].luta`, arquivos em
+`sons/musica/showdown/`); rota, cidade e caverna não têm faixa no
+Showdown e tocam `sons/musica/<pasta>/`, se quem joga puser, ou a
+sintetizada. Tentativa de arquivo é assíncrona: toda troca muda
+`_geracao`, e erro de trilha velha não liga nada por cima da nova. O
+`build.py` deixa `sons/musica/` fora do arquivo único.
 
 ## O combate é Pokérole
 Desde a troca de mecânica o combate segue o **Pokérole 3.0**; a ficha do
