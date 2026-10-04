@@ -124,7 +124,7 @@ c30_o_rapaz_de_vinte_e_seis:{
   texto:[
     'O nome na linha dele é Nico Hart, e Nico Hart está na lista telefônica de Lavender, com endereço e tudo, porque gente viva está na lista telefônica.',
     'É uma casa geminada de fachada azul na terceira rua a partir da praça.',
-    'Quem atende é ele mesmo. Vinte e seis anos, camiseta de time, chinelo, e a cara de quem acordou faz vinte minutos.',
+    'Quem atende é ele mesmo. Vinte e seis anos, camiseta da Liga, chinelo, e a cara de quem acordou faz vinte minutos.',
     d=>fala(d.jogador.nome, 'Você subiu a Torre Pokémon no dia dezessete?'),
     fala('Nico', 'Não.'),
     d=>fala(d.jogador.nome, 'Tem o seu nome no livro da guarita.'),

@@ -207,3 +207,62 @@ function pagaPorNivel(nome){
   if (!c) return PAGA_PADRAO;
   return PAGA_POR_CLASSE[c] || PAGA_POR_CLASSE[c.split('/')[0]] || PAGA_PADRAO;
 }
+
+/* ============================================================
+   ROSTO DE BALÃO PRA QUEM NÃO É TREINADOR
+   Só pro balão de fala (não muda quanto ninguém paga): quem não tem
+   rosto próprio ganha o de alguém do mesmo tipo de gente, pelo que o
+   rótulo diz — crachá, macacão, barco, idade, e homem ou mulher.
+   Voz de rádio e de telefone continua sem rosto: não tem ninguém ali.
+   ============================================================ */
+const ROSTO_POR_NOME_SOLTO = {
+  'Dario':'trainers/roughneck', 'Sra. Vale':'trainers/madame', 'Nina':'trainers/sightseer_f',
+  'Elsa':'trainers/office_worker_f', 'Milo':'trainers/camper', 'Nico':'trainers/punk_guy',
+  'A Terceira':'trainers/veteran_f', 'a Terceira':'trainers/veteran_f', 'Thea Larkin':'trainers/worker',
+  'o Professor':'trainers/scientist'
+};
+const ROSTO_POR_PALAVRA = [
+  [/\bvoz\b|r[áa]dio|telefone|locutor/i, null],
+  [/^Sra\.?\s/i, 'trainers/madame'],
+  [/^Sr\.?\s/i, 'trainers/gentleman'],
+  [/entregador|encomenda|correio/i, 'trainers/courier'],
+  [/leiloeiro/i, 'trainers/gentleman'],
+  [/contramestre|navio/i, 'trainers/sailor'],
+  [/carregador|frentista|seguran[çc]a/i, 'trainers/worker'],
+  [/crach[áa]|escrit[óo]rio|assessor|advogad|secret[áa]ri|recepcion|guich[êe]|junta|pessoal|coluna|atendente|balconista|diretor|editor|presidente|cadastro/i, 'office'],
+  [/tripula|ferry|barco|casco|marinh|porto|cais/i, 'trainers/sailor'],
+  [/oper[áa]ri|pe[ãa]o|macac[ãa]o|setor|esta[çc][ãa]o|t[ée]cnic|mec[âa]nic|obra/i, 'trainers/worker'],
+  [/padaria/i, 'trainers/baker'],
+  [/lanchonete|cozinh|fogareiro|restaurante/i, 'trainers/cook'],
+  [/jornaleiro|banca|loja|vendedor|balc[ãa]o/i, 'trainers/clerk'],
+  [/zool[óo]gico|fazend|pasto|curral/i, 'trainers/rancher'],
+  [/bibliotec|professor|professora/i, 'trainers/teacher'],
+  [/cientista|laborat[óo]rio|pesquisador/i, 'trainers/scientist'],
+  [/oficial|policia|guarda|delegad/i, 'overworld/policial'],
+  [/menina|garota/i, 'trainers/schoolkid_f'],
+  [/menino|garoto|crian[çc]a/i, 'trainers/schoolkid'],
+  [/senhora|velha|av[óo]\b|vi[úu]va/i, 'trainers/madame'],
+  [/senhor|velho|av[ôo]\b/i, 'trainers/gentleman'],
+  [/rapaz|cara\b|jovem/i, 'trainers/punk_guy'],
+  [/mo[çc]a\b/i, 'trainers/sightseer_f'],
+  [/mulher|ela\b|dona\b/i, 'trainers/pokefan_f'],
+  [/homem|ele\b|dono\b|sujeito|vizinho|primo|colega/i, 'trainers/pokefan'],
+  [/vizinha|prima/i, 'trainers/pokefan_f'],
+  /* o resto dos rótulos ("o da aliança", "o mais novo"): pelo artigo */
+  [/^(o|um)\s/i, 'trainers/pokefan'],
+  [/^(a|uma)\s/i, 'trainers/pokefan_f']
+];
+function rostoGenerico(nome){
+  const n = String(nome || '').trim();
+  if (!n) return null;
+  if (ROSTO_POR_NOME_SOLTO[n]) return caminhoNPC(ROSTO_POR_NOME_SOLTO[n]);
+  const mulher = /\b(a|uma)\b|mulher|senhora|moça|menina|dona|ela\b|[^ ]a$/i.test(n.split(' ').slice(0, 2).join(' '));
+  for (const [re, arq] of ROSTO_POR_PALAVRA){
+    if (!re.test(n)) continue;
+    if (!arq) return null;
+    if (arq === 'office') return caminhoNPC(mulher ? 'trainers/office_worker_f' : 'trainers/office_worker');
+    if (arq === 'trainers/scientist' && mulher) return caminhoNPC('trainers/scientist_f');
+    return caminhoNPC(arq);
+  }
+  return null;
+}

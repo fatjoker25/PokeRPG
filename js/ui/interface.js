@@ -956,7 +956,8 @@ const UI = {
 
   /* rosto de quem fala, quando o jogo tem um (js/data/treinadores.js) */
   retratoFala(quem){
-    const r = (typeof retratoDe === 'function') ? retratoDe(quem) : null;
+    const r = (typeof retratoDe === 'function' ? retratoDe(quem) : null)
+           || (typeof rostoGenerico === 'function' ? rostoGenerico(quem) : null);
     return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
   },
 
