@@ -855,7 +855,9 @@ const UI = {
     this.falanteDaCena = cena.falante || null;
     this.vozesDaCena = cena.vozes || null;
     this.minhasFalasDaCena = (mapa.minhas[Estado.dados.cena]) || null;
-    const paras = this.narrar(cena.texto);
+    /* quem já te conhece te reconhece antes da primeira fala */
+    const paras = this.narrar(typeof Reencontros !== 'undefined'
+      ? Reencontros.prefaciar(cena.texto, Estado.dados.capitulo + ':' + Estado.dados.cena) : cena.texto);
     this.vozesDaCena = null;      // vale só pro texto da própria cena
 
     const html = `<div class="painel">
@@ -1961,7 +1963,7 @@ const UI = {
         <div class="tit">${this.esc(txt(ev.titulo))}</div>
         <div class="loc">acontecendo agora</div>
       </div>
-      <div class="narrativa">${this.narrar(ev.texto)}</div>
+      <div class="narrativa">${this.narrar(typeof Reencontros !== 'undefined' ? Reencontros.prefaciar(ev.texto, 'ev:' + ev.id) : ev.texto)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas">
         ${opcoes.map(({o, i}) => `<button class="escolha" onclick="Jogo.resolverEvento('${ev.id}',${i})">
@@ -1999,53 +2001,74 @@ const UI = {
     this.rolarTopo();
   },
 
+  /* Toda comunicação acontece dentro do PokéNav, por cima do que
+     estava na tela: a tela de baixo não muda, e desligar devolve pra
+     ela. `navTela` é a moldura: o aparelho aberto, a agenda do lado e
+     a conversa no lugar da ficha. */
+  navTela(contato, nome, papel, corpo, chamando, selo){
+    this.modalNav(contato && Estado.temNumero(contato.id) ? contato.id : undefined);
+    const m = document.getElementById('modal');
+    const ficha = m && m.querySelector('#nav-ficha');
+    if (!ficha) return null;
+    if (chamando) m.querySelector('.modal').classList.add('chamando');
+    ficha.innerHTML = `
+      <div class="nav-ficha-cab">
+        ${contato ? this.navRosto(contato, true) : `<span class="nav-inicial grande figura">${selo || '?'}</span>`}
+        <span>
+          <span class="nav-ficha-nome">${this.esc(nome)}</span>
+          <span class="nav-ficha-papel">${this.esc(papel)}</span>
+        </span>
+      </div>${corpo}`;
+    ficha.scrollTop = 0;
+    return ficha;
+  },
+
   /* O telefone tocando: você atende ou não, e não atender custa. */
   telaChamada(c){
     const contato = contatoPorId(c.de);
     const falas = (typeof c.falas === 'function' ? c.falas(Estado.dados) : c.falas) || [];
     const opcoes = (c.escolhas || []).map((o, i) => ({o, i}))
       .filter(({o}) => { try { return !o.cond || o.cond(Estado.dados); } catch(e){ return false; } });
-    this.limpar();
-    this.add(this.topo());
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho chamando">
-        <div class="num"><span class="nav-antena"></span> POKÉNAV · CHAMADA RECEBIDA</div>
-        <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : 'Número desconhecido')}</div>
-        <div class="loc">${this.esc(contato ? (textoContato(contato,'papel') || textoContato(contato,'cidade') || '') : '')}</div>
-      </div>
-      <div class="narrativa">${this.narrar(falas, contato ? textoContato(contato,'nome') : null)}</div>
-      <div id="avisos" class="avisos"></div>
-      <div id="escolhas" class="escolhas">
-        ${opcoes.map(({o, i}) => `<button class="escolha" onclick="Jogo.responderChamada('${c.id}',${i})">
-          ${this.esc(txt(o.texto))}</button>`).join('')}
-        <button class="escolha recusar" onclick="Jogo.recusarChamada('${c.id}')">Não atender.</button>
-      </div>
-    </div>`);
-    this.rolarTopo();
+    const nome = contato ? textoContato(contato,'nome') : 'Número desconhecido';
+    this.navTela(contato, nome, 'chamada recebida', `
+      <div class="nav-conversa narrativa">${this.narrar(falas, contato ? nome : null)}</div>
+      <div id="avisos-nav" class="avisos"></div>
+      <div class="nav-servicos nav-respostas">
+        ${opcoes.map(({o, i}) => `<button class="btn" onclick="Jogo.responderChamada('${c.id}',${i})">${this.esc(txt(o.texto))}</button>`).join('')}
+        <button class="btn recusar" onclick="Jogo.recusarChamada('${c.id}')">Não atender.</button>
+      </div>`, true);
   },
 
   telaResultadoChamada(r){
     const contato = contatoPorId(r.chamada.de);
-    this.limpar();
-    this.add(this.topo());
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">POKÉNAV · CHAMADA</div>
-        <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : '')}</div>
-        <div class="loc">${r.recusou ? 'não atendida' : this.esc(txt(r.esc.texto)).slice(0, 70)}</div>
-      </div>
-      <div class="narrativa">${r.recusou
+    const nome = contato ? textoContato(contato,'nome') : '';
+    this.navTela(contato, nome, r.recusou ? 'não atendida' : 'em linha', `
+      <div class="nav-conversa narrativa">${r.recusou
         ? this.narrar(['O aparelho toca oito vezes e para.',
             'Você olha o nome na tela o tempo inteiro e não atende, o que é diferente de não ouvir.',
-            'Ele não vai ligar de novo hoje.'])
-        : this.narrar(r.esc.resultado || [], contato ? textoContato(contato,'nome') : null)}</div>
-      <div id="avisos" class="avisos"></div>
-      <div id="escolhas" class="escolhas" style="margin-top:16px">
-        <button class="escolha" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho.</button>
-      </div>
-    </div>`);
-    if (r.avisos && r.avisos.length) this.avisos(r.avisos);
-    this.rolarTopo();
+            'Não vai ligar de novo hoje.'])
+        : this.narrar(r.esc.resultado || [], contato ? nome : null)}</div>
+      <div id="avisos-nav" class="avisos"></div>
+      <div class="nav-servicos"><button class="btn" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho</button></div>`);
+    if (r.avisos && r.avisos.length) this.avisos(r.avisos, 'avisos-nav');
+  },
+
+  /* mensagens que chegam juntas (o aniversário): uma conversa só, no aparelho */
+  navMensagens(titulo, falas, avisos){
+    if (!Estado.temPokenav()) return;
+    this.navTela(null, titulo, 'mensagens', `
+      <div class="nav-conversa narrativa">${this.narrar(falas)}</div>
+      <div id="avisos-nav" class="avisos"></div>
+      <div class="nav-servicos"><button class="btn" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho</button></div>`, true, '✉');
+    if (avisos && avisos.length) this.avisos(avisos, 'avisos-nav');
+  },
+
+  /* só o alto da tela: dinheiro, HP e relógio depois de uma ligação */
+  atualizarTopo(){
+    const t = document.querySelector('.topo');
+    if (!t) return;
+    const novo = this.el(this.topo());
+    if (novo) t.replaceWith(novo);
   },
 
   /* Ligação que você faz: a conversa acontece dentro do próprio PokéNav,
@@ -4194,6 +4217,9 @@ const UI = {
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
       <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
 
+      <h3>Quem já te conhece</h3>
+      <div class="linha"><span class="k">Reencontro</span><span class="v">quem a história registrou e tem opinião 3 ou mais sobre você (pra cima ou pra baixo), ou duas lembranças, te reconhece pelo nome quando aparece num capítulo seguinte · uma vez por capítulo · com a cara que a opinião manda</span></div>
+
       <h3>Idade e aniversário</h3>
       <div class="linha"><span class="k">Nascimento</span><span class="v">a ficha pede dia, mês e ano · a jornada começa entre 10 e 20 anos, contados no dia em que ela começa</span></div>
       <div class="linha"><span class="k">Idade</span><span class="v">sai da data de nascimento e da data do jogo (a jornada começa em março de 2010) · sobe sozinha no aniversário · aparece na Ficha e no Cartão de Treinador</span></div>
@@ -4357,6 +4383,7 @@ const UI = {
       <p class="sussurro">A cor é a única diferença, e é a diferença inteira. Um brilhante avistado fica marcado na Pokédex mesmo que escape; capturado, a marca muda. Evoluir não tira a cor.</p>
 
       <h3>PokéNav</h3>
+      <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
       <div class="linha"><span class="k">Ligação que você faz</span><span class="v">acontece dentro do PokéNav, por cima do que você estava fazendo · desligar volta pra agenda</span></div>

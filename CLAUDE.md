@@ -606,6 +606,23 @@ Sem sexo fica no masculino, que é o gênero da palavra "Pokémon". Selvagem
 que o texto chama de "o bicho" ou "o Rattata" também: concorda com o
 substantivo, não com o sexo.
 
+## Quem já te viu lembra, e o telefone é o PokéNav
+`js/story/reencontros.js` põe, antes da primeira fala de um NPC numa
+cena de capítulo ou num evento, o reconhecimento: pelo seu nome, com a
+cara da opinião. Vale pra quem está em `d.npcs` com opinião ±3 ou duas
+lembranças, num capítulo depois do que te conheceu, uma vez por
+capítulo. Não entra se a cena já trata você como conhecido (diz o seu
+nome, "de novo", "lembra"), se o NPC está se apresentando ("prazer",
+"meu nome é"), nem pra quem tem cena própria (o Célio, quem ficou em
+casa, o rival). Cena nova com NPC que volta pode escrever o reencontro à
+mão: aí o genérico sai sozinho.
+
+**Toda comunicação acontece dentro do PokéNav** (`UI.navTela`): chamada
+recebida (`telaChamada`), resultado, ligação que você faz, mensagens de
+aniversário e cena de linha que começa no aparelho ("O PokéNav apita…",
+`Linhas.ehLigacao`). Abre por cima da tela, que não muda; guardar o
+aparelho só fecha e repinta o topo. Nada de ligação em `UI.limpar()`.
+
 ## Idade de quem joga
 A ficha pede a **data de nascimento**, e a idade é calculada, nunca
 guardada: `idadeJogador()` (em `js/story/idade.js`) lê o nascimento e a

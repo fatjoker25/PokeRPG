@@ -523,7 +523,7 @@ const Exploracao = {
     Mundo.passar(1);
     const id = Mundo.id();
     Mundo.descobrir('andou_' + id);
-    if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30) && Jogo.talvezToque()) return;
+    if (typeof Jogo !== 'undefined' && Jogo.talvezToque && Dados.chance(30)) Jogo.talvezToque();
     /* Cidade não é cenário: tem gente no meio de alguma coisa. Antes de
        procurar lugar, vê se tem situação acontecendo. */
     if (typeof Eventos !== 'undefined' && Dados.chance(55)){

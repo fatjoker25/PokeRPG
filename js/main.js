@@ -865,7 +865,7 @@ const Jogo = {
     /* quem é do seu lado te acha na virada (js/story/linhas.js) */
     if (typeof Linhas !== 'undefined' && Linhas.talvez(cena, abertura)) return;
     /* telefone toca na hora errada, que é quando telefone toca */
-    if (this.talvezToque()) { this.cenaDepoisDaChamada = cena; return; }
+    this.talvezToque();
     UI.telaCena(cena, abertura);
   },
 
@@ -1006,13 +1006,15 @@ const Jogo = {
     UI.telaResultadoChamada(r);
   },
 
-  /* o telefone toca na virada de capítulo e ao chegar num lugar novo */
+  /* o telefone toca na virada de capítulo e ao andar pela cidade. A
+     chamada abre no PokéNav por cima da tela, depois que ela desenha:
+     quem chamou segue o próprio caminho, e desligar volta pra ela. */
   talvezToque(){
     if (typeof Chamadas === 'undefined' || !Estado.temPokenav()) return false;
     if (!Dados.chance(38)) return false;
     const c = Chamadas.sortear();
     if (!c) return false;
-    UI.telaChamada(c);
+    setTimeout(() => UI.telaChamada(c), 80);
     return true;
   },
 
@@ -1030,15 +1032,10 @@ const Jogo = {
     return avisos;
   },
 
+  /* desligar: fecha o aparelho e a tela de baixo continua onde estava */
   voltarDaLigacao(){
-    const d = Estado.dados;
-    if (this.cenaDepoisDaChamada){
-      const cena = this.cenaDepoisDaChamada;
-      this.cenaDepoisDaChamada = null;
-      return UI.telaCena(cena);
-    }
-    if (d.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual);
-    return Exploracao.tela();
+    UI.fecharModal();
+    UI.atualizarTopo();
   },
 
   ligarPara(id, servico){

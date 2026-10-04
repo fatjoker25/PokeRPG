@@ -1124,11 +1124,32 @@ const Linhas = {
     return true;
   },
 
+  /* cena que começa no aparelho ("O PokéNav apita…") é ligação: com
+     PokéNav, ela acontece dentro dele, por cima da cena do capítulo */
+  ehLigacao(falas){
+    const p = falas.find(x => typeof x === 'string');
+    return !!p && /^(O PokéNav|O aparelho|Uma ligação|Uma mensagem)/.test(p);
+  },
+  porTelefone: false,
+
   mostrar(c, cena, avisos){
     this.depois = {cena, avisos:avisos || []};
     this.atual = c;
     const d = Estado.dados;
     const falas = (typeof c.texto === 'function' ? c.texto(d) : c.texto) || [];
+    this.porTelefone = Estado.temPokenav() && this.ehLigacao(falas);
+    if (this.porTelefone){
+      /* a tela de baixo é a do capítulo, já desenhada */
+      if (cena) UI.telaCena(cena, avisos);
+      this.depois = null;
+      const nome = (typeof Nomes !== 'undefined' && Nomes.comoChamar) ? Nomes.comoChamar(c.quem) : c.quem;
+      const opcoes = (c.escolhas || []).map((o, i) => `<button class="btn" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
+      setTimeout(() => UI.navTela(null, nome ? nome.charAt(0).toUpperCase() + nome.slice(1) : 'Número sem nome', NOME_DA_LINHA[c.linha] || 'chamada', `
+        <div class="nav-conversa narrativa">${UI.narrar(falas, c.quem)}</div>
+        <div id="avisos-nav" class="avisos"></div>
+        <div class="nav-servicos nav-respostas">${opcoes || '<button class="btn" onclick="Linhas.seguir()">Guardar o aparelho</button>'}</div>`, true), 80);
+      return;
+    }
     UI.limpar();
     UI.add(UI.topo());
     const opcoes = (c.escolhas || []).map((o, i) => `<button class="escolha" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
@@ -1153,6 +1174,16 @@ const Linhas = {
     const avisos = Historia.aplicar(o.ef) || [];
     Estado.registrar(`${c.titulo}: ${txt(o.texto)}`);
     Estado.salvar('auto');
+    if (this.porTelefone){
+      const ficha = document.querySelector('#modal #nav-ficha');
+      const conv = ficha && ficha.querySelector('.nav-conversa');
+      if (conv){
+        conv.insertAdjacentHTML('beforeend', `<p class="nav-resposta">${UI.esc(txt(o.texto))}</p>` + UI.narrar(o.resultado || [], c.quem));
+        ficha.querySelector('.nav-respostas').innerHTML = '<button class="btn" onclick="Linhas.seguir()">Guardar o aparelho</button>';
+        if (avisos.length) UI.avisos(avisos, 'avisos-nav');
+        return;
+      }
+    }
     UI.limpar();
     UI.add(UI.topo());
     UI.add(`<div class="painel">
@@ -1171,6 +1202,11 @@ const Linhas = {
   },
 
   seguir(){
+    if (this.porTelefone){
+      this.porTelefone = false; this.atual = null;
+      UI.fecharModal(); UI.atualizarTopo();
+      return;
+    }
     const dep = this.depois;
     this.depois = null; this.atual = null;
     if (dep && dep.cena) return UI.telaCena(dep.cena, dep.avisos);

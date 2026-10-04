@@ -150,33 +150,44 @@ const Aniversario = {
           `Hoje você faz ${porExtenso(idade)} anos, longe de casa pela primeira vez num aniversário.`,
           `${cap1(porExtenso(idade))} anos. Você conta nos dedos só pra ter certeza, e ninguém está olhando.`]));
 
-    /* quem ficou em casa: pelo PokéNav, ou por carta no Centro */
+    /* Comunicação é no PokéNav: com ele, a ligação de casa e as
+       mensagens abrem no próprio aparelho, por cima desta tela. Sem
+       ele, chega tudo em papel no balcão do Centro. */
+    const temNav = Estado.temPokenav();
+    const nav = [];
+    const papel = f => (typeof f === 'object' && f && f.diz != null) ? `**"${txt(f.diz)}"**` : f;
     const deCasa = falaDaCasa('aniversario', d);
-    if (Estado.temPokenav()){
-      falas.push(atrasado
-        ? `No PokéNav tem uma chamada perdida de ${nomeCasa()}, de ${h.mes === n.mes && h.dia - n.dia === 1 ? 'ontem' : 'uns dias atrás'}, e você liga de volta.`
-        : `O PokéNav toca antes das sete. É ${nomeCasa()}.`);
-      deCasa.forEach(f => falas.push(f));
+    if (temNav){
+      falas.push('O PokéNav não para de vibrar no bolso o dia inteiro.');
+      nav.push(atrasado
+        ? `Uma chamada perdida de ${nomeCasa()}, de ${h.mes === n.mes && h.dia - n.dia === 1 ? 'ontem' : 'uns dias atrás'}. Você liga de volta.`
+        : `${nomeCasa()} liga antes das sete.`);
+      deCasa.forEach(f => nav.push(f));
+      nav.push('No fim da tarde chega um pacote no Centro mais perto, com dinheiro dobrado em quatro e duas Super Potion.');
     } else {
       falas.push(`No balcão do Centro mais próximo tem um envelope no seu nome, com a letra de ${nomeCasa()}.`);
-      deCasa.forEach(f => falas.push(typeof f === 'object' && f.diz ? `**"${txt(f.diz)}"**` : f));
+      deCasa.forEach(f => falas.push(papel(f)));
+      falas.push('Dentro do envelope tem dinheiro dobrado em quatro e duas Super Potion.');
     }
-    falas.push(`Dentro ${Estado.temPokenav() ? 'do pacote que chega no Centro, no fim da tarde,' : 'do envelope'} tem dinheiro dobrado em quatro e duas Super Potion.`);
 
     /* o Célio, que anota tudo no caderno */
-    if (typeof conheceOCelio === 'function' && conheceOCelio(d) && (Estado.temNumero('goro') || d.flags.numero_do_goro))
-      falas.push(fala('Célio', `Tá no caderno: ${n.dia === 1 ? '1º' : n.dia} de ${MESES_DO_ANO[n.mes - 1]}. Parabéns, ${d.jogador.nome}! ${(() => { const p = typeof inicialDoJogador === 'function' && inicialDoJogador(d); return p ? `Dá um abraço n${pron(p).o} ${p.apelido || p.nome} por mim.` : 'Eu lembro de todo mundo.'; })()}`, 'riso'));
+    if (temNav && typeof conheceOCelio === 'function' && conheceOCelio(d) && (Estado.temNumero('goro') || d.flags.numero_do_goro))
+      nav.push(fala('Célio', `Tá no caderno: ${n.dia === 1 ? '1º' : n.dia} de ${MESES_DO_ANO[n.mes - 1]}. Parabéns, ${d.jogador.nome}! ${(() => { const p = typeof inicialDoJogador === 'function' && inicialDoJogador(d); return p ? `Dá um abraço n${pron(p).o} ${p.apelido || p.nome} por mim.` : 'Eu lembro de todo mundo.'; })()}`, 'riso'));
 
-    /* quem te conhece bem */
+    /* quem te conhece bem: mensagem no aparelho, ou bilhete no balcão */
     const amigos = Object.values(d.npcs || {})
       .filter(x => x && x.nome && x.nome !== 'Célio' && (x.opiniao || 0) >= 4)
       .sort((a, b) => (b.opiniao || 0) - (a.opiniao || 0)).slice(0, 2);
-    amigos.forEach((x, i) => falas.push(fala(x.nome, PARABENS_DE_CONHECIDO[(h.ano + i + x.nome.length) % PARABENS_DE_CONHECIDO.length])));
+    amigos.forEach((x, i) => {
+      const msg = PARABENS_DE_CONHECIDO[(h.ano + i + x.nome.length) % PARABENS_DE_CONHECIDO.length];
+      if (temNav) nav.push(fala(x.nome, msg));
+      else { falas.push(`Junto do envelope, um bilhete dobrado de ${x.nome}:`); falas.push(`**"${msg}"**`); }
+    });
 
-    /* o rival, se já cruzou com você */
+    /* o rival, se já cruzou com você (e só tem como saber pelo aparelho) */
     const r = d.rival;
-    if (r && r.encontros > 0)
-      falas.push(fala(r.nome, r.vitorias > r.derrotas
+    if (temNav && r && r.encontros > 0)
+      nav.push(fala(r.nome, r.vitorias > r.derrotas
         ? 'Parabéns. Um ano mais velh{o|a} e ainda atrás de mim.'
         : 'Parabéns. Aproveita, que no próximo encontro eu ganho.', 'riso'));
 
@@ -206,6 +217,7 @@ const Aniversario = {
       avisos:[{tipo:'item', texto:'+1.000 ₽ e 2× Super Potion.'}, {tipo:'cura', texto:'O time inteiro fica mais perto de você.'}],
       botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]
     });
+    if (temNav && nav.length) setTimeout(() => UI.navMensagens('Feliz aniversário', nav), 80);
   }
 };
 function cap1(t){ return t.charAt(0).toUpperCase() + t.slice(1); }
