@@ -439,11 +439,13 @@ sucesso na precisão), Arriscar (rerrola um dado que falhou), Esquivar
 por turno, armado antes do golpe (`Batalha.gastarVontade`, válido em
 `vontadeDoTurno()`) — e Aguentar a dor (`Batalha.semDor`, a luta inteira).
 Quem zera numa luta desmaia no `encerrar`. `curarTotal` enche, treino
-devolve 2, vitória 1. **Adversário de peso também gasta**: batalha com
-`vontadeIA:true` (líder, Elite, rival, torneio, veterano e revanche de
-líder/veterano) chama `iaGastarVontade` no começo do turno — Esquivar na
-metade do HP, Forçar o destino com golpe impreciso ou dor, nunca o último
-ponto; o gasto vive em `vontadeInimigo` só naquele turno. Os simuladores
+devolve 2, vitória 1. **Todo adversário gasta**, selvagem também: `iaGastarVontade` roda no
+começo de todo turno — Aguentar a dor com dor 2, Esquivar na metade do
+HP, Forçar o destino com golpe impreciso ou dor, Arriscar com golpe
+forte, nunca o último ponto; o gasto vive em `vontadeInimigo` só naquele
+turno. `vontadeIA:true` na batalha (líder, Elite, rival, torneio,
+veterano, revanche) vira `vontadePeso` e gasta com a chance cheia; o
+resto, com metade. Os simuladores
 fazem o jogador gastar com o mesmo critério: medido assim, líder caiu
 4 pontos na média (80% → 76%) e veterano ficou na mesma faixa.
 **O treinador também tem Vontade** (`Estado.vontadeJogador()`, 2 +
@@ -452,6 +454,23 @@ d10; zerar custa metade do HP (adaptação: no livro desmaia). O dado é **d6 co
 trocar por d10 com sucesso em 6+ já apareceu e foi recusado, porque isso
 é Storyteller, não Pokérole. Toda parada vai pro log com as faces
 (`facesDe(r)`).
+
+## O que o olho lê e o que o time come
+Tipo e natureza de quem está do outro lado **não têm dado**: o tipo
+aparece com a espécie catalogada ou com Percepção e Intelecto 4
+(`leTipo`, `LEITURA_DO_TIPO`); a natureza, com Percepção 3
+(`leNatureza`). Líder que "fala do time" só anuncia o nome — natureza
+alheia nunca vem de graça. Postos (`POSTOS`, 3.0) dão o número de
+golpes de quem nasce no mato ou em time alheio (`golpesDoPosto`: 2, 3,
+4) e aparecem no cabeçalho da rota. O inicial aleatório sai de
+`sortearInicialDaCasa` (entrega.js): 1d6 de coluna, cidade ou jeito da
+ficha, 1d6 de linha.
+
+Fome mora em `js/engine/fome.js`: `p.comeu` em horas corridas,
+`Fome.passar()` no `Relogio.avancar`, toda cura completa alimenta.
+Treino e acampamento gastam Ração; o treino ainda pede
+`TREINO_ESPERA_MIN` minutos reais entre um e outro, porque acampar pula a
+noite do jogo e o treino era por dia do jogo.
 
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª

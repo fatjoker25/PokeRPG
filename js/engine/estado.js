@@ -165,7 +165,7 @@ const ITENS_INFO = {
                   ficha:'+16 HP no treinador · uso único',
                   desc:'Cheio. Você vai esvaziar num lugar em que não tem onde encher.'},
   'Ração':       {tipo:'moral', valor:10, cat:'Vínculo',
-                  ficha:'+10 de moral em um Pokémon (escala 0–100) · moral baixa causa desobediência',
+                  ficha:'+10 de moral e mata a fome de um Pokémon · uma só alimenta o time inteiro (+2 de moral) · moral baixa causa desobediência',
                   desc:'Comida boa de verdade. Muda o humor de quem come.'},
 
   /* ─────────── campo ─────────── */

@@ -123,24 +123,11 @@ const Jogo = {
 
     let inicial;
     if (f.inicial === 'rand'){
-      /* O que já estava na casa é bicho de primeiro estágio de uma
-         linha que tem evolução pela frente: o tipo de Pokémon que
-         circula por uma cidade pequena e acaba ficando. Espécie de
-         estágio único em Kanto — Electabuzz, Magmar, Tauros, Lapras,
-         Onix — não aparece no quintal de ninguém em Pallet. Fóssil
-         está extinto e só existe revivido em laboratório. Lendário e
-         Ditto ficam de fora por motivo óbvio. */
-      const FOSSEIS = [138,139,140,141,142];
-      /* O Eevee guarda três destinos e por isso o campo evo dele está
-         vazio: quem evolui por pedra entra pela tabela das pedras. */
-      const porPedra = new Set();
-      Object.values(PEDRAS).forEach(t => Object.keys(t).forEach(k => porPedra.add(+k)));
-      const temFuturo = p => !!p.evo || porPedra.has(p.dex);
-      const base = POOL_KANTO.filter(d => {
-        const p = DEX[d];
-        return temFuturo(p) && !p.preEvo && !FOSSEIS.includes(d) && ![132,151,150].includes(d);
-      });
-      inicial = criarPokemon(Dados.escolher(base), 5, {
+      /* O que já estava na casa sai da tabela de inicial (entrega.js):
+         a cidade natal ou o seu jeito, 1d6 cada. */
+      const sorteio = sortearInicialDaCasa(f.cidade, [f.personalidade, f.objetivo].filter(Boolean).join(' '));
+      Estado.registrar(sorteio.conta);
+      inicial = criarPokemon(sorteio.dex, 5, {
         moral:100, naturezaVista:true,
         historia:'Já morava na sua casa quando você decidiu sair. Vínculo máximo.'
       });

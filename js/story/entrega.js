@@ -35,6 +35,64 @@ function escolhasDeInicial(rotulo, vai, extra){
   }, extra || {}));
 }
 
+/* ---------- INICIAL SORTEADO ----------
+   Tabela de inicial no espírito das do Pokérole: 1d6 escolhe a
+   coluna (1–4, o que vive na sua cidade; 5–6, o que combina com o
+   jeito que você escreveu na ficha) e 1d6 escolhe a linha. Só entra
+   primeiro estágio de linha com evolução pela frente; casa que cair
+   em espécie fora disso desce pra próxima linha válida. */
+const INICIAL_DA_CIDADE = {
+  Pallet:   [16, 19, 21, 10, 13, 52],
+  Viridian: [10, 13, 16, 19, 32, 29],
+  Pewter:   [74, 27, 41, 46, 21, 104],
+  Cerulean: [60, 118, 54, 72, 43, 69],
+  Vermilion:[116, 98, 90, 100, 81, 52],
+  Lavender: [92, 104, 41, 96, 19, 23],
+  Celadon:  [43, 69, 102, 37, 58, 52],
+  Fuchsia:  [48, 109, 88, 23, 111, 129],
+  Saffron:  [63, 96, 79, 56, 66, 52],
+  Cinnabar: [58, 37, 77, 88, 109, 72],
+  Indigo:   [66, 74, 147, 56, 111, 104]
+};
+const INICIAL_DO_JEITO = {
+  coragem:  [56, 66, 58, 111, 21, 23],
+  discricao:[92, 41, 63, 48, 13, 88],
+  paciencia:[79, 60, 74, 27, 129, 90],
+  simpatia: [133, 37, 52, 77, 16, 54],
+  cuidado:  [43, 69, 102, 10, 116, 104]
+};
+const NOME_DO_JEITO = {coragem:'coragem', discricao:'discrição', paciencia:'paciência', simpatia:'simpatia', cuidado:'cuidado'};
+
+function podeSerInicialDaCasa(dex){
+  const p = DEX[dex];
+  if (!p || p.preEvo || p.lendario || [132, 138, 140, 142, 150, 151].includes(dex)) return false;
+  if (typeof POOL_KANTO !== 'undefined' && !POOL_KANTO.includes(dex)) return false;
+  const porPedra = Object.values(PEDRAS).some(t => Object.keys(t).some(k => +k === dex));
+  return !!p.evo || porPedra;
+}
+
+function sortearInicialDaCasa(cidade, textoFicha){
+  const col = Dados.entre(1, 6), lin = Dados.entre(1, 6);
+  let lista, coluna;
+  if (col <= 4){
+    lista = INICIAL_DA_CIDADE[cidade] || INICIAL_DA_CIDADE.Pallet;
+    coluna = `o que vive em ${cidade}`;
+  } else {
+    const perfil = (typeof perfilDoJogador === 'function') ? perfilDoJogador(textoFicha || '') : {};
+    const eixo = Object.keys(INICIAL_DO_JEITO).reduce((m, e) => (perfil[e] || 0) > (perfil[m] || 0) ? e : m,
+      Object.keys(INICIAL_DO_JEITO)[(lin - 1) % 5]);
+    lista = INICIAL_DO_JEITO[eixo];
+    coluna = `o que combina com ${NOME_DO_JEITO[eixo]}`;
+  }
+  let dex = null;
+  for (let i = 0; i < lista.length && !dex; i++){
+    const c = lista[(lin - 1 + i) % lista.length];
+    if (podeSerInicialDaCasa(c)) dex = c;
+  }
+  if (!dex) dex = Dados.escolher(POOL_KANTO.filter(podeSerInicialDaCasa));
+  return {dex, conta:`Tabela de inicial: 1d6 = ${col} (${coluna}), 1d6 = ${lin} → ${DEX[dex].nome}.`};
+}
+
 /* a bola sai da caixa e vira bicho */
 function entregarInicial(d){
   const dex = dexReservado(d);

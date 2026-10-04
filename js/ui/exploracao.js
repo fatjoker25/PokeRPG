@@ -1,6 +1,13 @@
 /* ============================================================
    EXPLORAÇÃO — a tela onde você decide o que fazer e pra onde ir
    ============================================================ */
+/* Treino custa comida e corpo: cada dia de treino gasta uma Ração (o
+   time come no fim), e entre um treino e outro tem que passar tempo de
+   verdade — dormir no acampamento pula a noite do jogo, não o cansaço. */
+const TREINO_RACAO = 1;
+const TREINO_ESPERA_MIN = 6;      // minutos reais entre dois treinos
+const ACAMPAR_RACAO = 1;
+
 const Exploracao = {
 
   tela(avisos){
@@ -42,7 +49,8 @@ const Exploracao = {
       <div class="cap-cabecalho">
         <div class="num">${UI.esc(Relogio.cabecalho())}</div>
         <div class="tit">${UI.esc(L.nome)}</div>
-        <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}</div>
+        <div class="loc">${UI.esc(L.tipo === 'cidade' ? (L.porte||'cidade') : (L.tipo==='rota'?'rota':'lugar'))}${
+          L.tipo !== 'cidade' && L.nivel ? ' · posto ' + UI.esc(nomePosto(L.nivel)) : ''}</div>
       </div>
       <div class="narrativa">${(L.desc||[]).map(t=>`<p>${UI.esc(txt(t))}</p>`).join('')}${
         (() => { const r = (typeof comoOlugarTeRecebe === 'function') ? comoOlugarTeRecebe() : null;
@@ -412,6 +420,12 @@ const Exploracao = {
     /* Um dia de treino por dia: o corpo precisa do resto do dia. */
     if (d.treinoDia === d.relogio.dia)
       return this.tela([{tipo:'info', texto:'O time já treinou hoje. Eles estão deitados na grama, e forçar agora é ensinar a odiar treino.'}]);
+    const faltaMin = Math.ceil(((d.treinoReal || 0) + TREINO_ESPERA_MIN * 60000 - Date.now()) / 60000);
+    if (faltaMin > 0)
+      return this.tela([{tipo:'info', texto:'O relógio diz que é outro dia, mas o corpo deles não acredita. Ainda estão moles do último treino.'},
+                        {tipo:'eco', texto:`Mais uns ${faltaMin} minuto${faltaMin > 1 ? 's' : ''} de descanso de verdade.`}]);
+    if (Estado.contaItem('Ração') < TREINO_RACAO)
+      return this.tela([{tipo:'info', texto:'Treinar o dia inteiro sem ter o que dar de comer no fim é pedir pra ser odiado. Falta Ração na mochila.'}]);
     /* E o lugar ensina até onde ele vai: numa rota de bicho de nível 4
        não se aprende a brigar como nível 30. Treino rende até 5 níveis
        acima da área, e cada nível acima rende menos. */
@@ -421,9 +435,11 @@ const Exploracao = {
       return this.tela([{tipo:'info', texto:'Não tem mais o que aprender aqui. O que vive neste mato não desafia o seu time: pra render, só lugar mais difícil.'}]);
     /* treino em rota é barulho, e barulho chama gente e bicho: se
        alguém aparece, a luta é o treino do dia */
-    if (this.surge('treinar')){ d.treinoDia = d.relogio.dia; Mundo.passar(1); return; }
-    d.treinoDia = d.relogio.dia;
+    if (this.surge('treinar')){ d.treinoDia = d.relogio.dia; d.treinoReal = Date.now(); Mundo.passar(1); return; }
+    d.treinoDia = d.relogio.dia; d.treinoReal = Date.now();
+    Estado.usarItem('Ração', TREINO_RACAO);
     Mundo.passar(2);
+    Fome.alimentarTime();
     /* Treinar é dar ordem o dia inteiro. Quem sabe mandar rende mais,
        e o time inteiro sai do dia gostando mais ou menos de você. */
     const t = Dados.teste(Estado.j.status.carisma, 6, 'Carisma');
@@ -502,6 +518,10 @@ const Exploracao = {
     const L = Mundo.atual();
     if (!ehNoite())
       return this.tela([{tipo:'info', texto:'Ainda está claro. Acampar é pra quando escurece.'}]);
+    if (Estado.contaItem('Ração') < ACAMPAR_RACAO)
+      return this.tela([{tipo:'info', texto:'Passar a noite fora sem nada pra dar de comer ao time não é acampar, é castigo. Falta Ração na mochila.'}]);
+    Estado.usarItem('Ração', ACAMPAR_RACAO);
+    Fome.alimentarTime();
     /* dorme até o sol: acorda às seis */
     const r = Estado.dados.relogio;
     Mundo.passarHoras(r.hora >= 18 ? 30 - r.hora : 6 - r.hora);

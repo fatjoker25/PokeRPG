@@ -2924,7 +2924,8 @@ const UI = {
       const faixa = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
       return `<button class="time-linha${cls}" onclick="UI.timeAcoes('${p.uid}')">
         <span class="time-icone">${imgSprite(p, 'icone')}</span>
-        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.segurando ? `<span class="time-segura" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}</span>
+        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.segurando ? `<span class="time-segura" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}${
+          (() => { const f = typeof Fome !== 'undefined' ? Fome.estado(p) : null; return f ? `<span class="time-fome ${f === 'faminto' ? 'grave' : ''}">${f}</span>` : ''; })()}</span>
         <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${p.morto ? 'morto' : `${p.hp}/${p.hpMax}`}</span></span>
       </button>`;
     };
@@ -2934,7 +2935,16 @@ const UI = {
           <span class="time-hp"><span class="hp-num">${this.esc(p.causaMorte || '')}</span></span></button>`).join('')}</div>` : '';
     this.modal('Seu time',
       (d.time.length ? `<div class="time-lista">${d.time.map(linha).join('')}</div>` : '<p class="nada">Você não tem nenhum Pokémon.</p>') +
+      (d.time.some(p => !p.morto) && !emLuta() ? `<div style="margin-top:10px"><button class="escolha" ${Estado.contaItem('Ração') > 0 ? 'onclick="UI.alimentarTime()"' : 'disabled'}>Alimentar o time — 1 Ração (tem ${Estado.contaItem('Ração')})</button></div>` : '') +
       (d.pc.length ? `<p class="sussurro" style="margin-top:10px">No PC: ${d.pc.length}.</p>` : '') + cem);
+  },
+
+  alimentarTime(){
+    if (emLuta() || !Fome.daRacaoPraTodos()) return this.modalTime();
+    Estado.salvar('auto');
+    this.modalTime();
+    const av = document.querySelector('#modal .modal-corpo');
+    if (av) av.insertAdjacentHTML('afterbegin', '<p class="sussurro">Você abre o saco e divide em partes. Ninguém espera a sua vez.</p>');
   },
 
   timeAcoes(uid){
@@ -2981,7 +2991,7 @@ const UI = {
       <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
       ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p) + this.barraExp(p)}
       <div class="sussurro" style="margin-top:7px">Natureza <b>${p.naturezaVista ? this.esc(p.natureza) : '???'}</b></div>
-      <div class="sussurro">Moral ${p.moral}/100</div>
+      <div class="sussurro">Moral ${p.moral}/100${(() => { const f = (!p.morto && typeof Fome !== 'undefined' && noTime) ? Fome.estado(p) : null; return f ? ` · <b>${f}</b>` : ''; })()}</div>
       ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
           return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
       ${p.morto ? '' : `<div class="segurado-linha">${p.segurando
@@ -3280,6 +3290,7 @@ const UI = {
       msg = `${nomeExib(p)} teve as condições curadas.`;
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome); p.moral = Math.min(100, p.moral + info.valor);
+      if (typeof Fome !== 'undefined') Fome.alimentar(p);
       msg = `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
     } else if (info.tipo === 'pp'){
       const g = p.golpes.find(x => x.pp < x.ppMax);
@@ -3873,14 +3884,14 @@ const UI = {
       ${L('Gênero', 'o texto inteiro concorda com ele — narração, tratamento, cargo e título')}
       ${L('Quem fica em casa', 'a voz que te acorda e o primeiro número do PokéNav · o parentesco decide como a história fala dessa pessoa · o que ficar em branco é sorteado combinando nome e parentesco')}
       ${L('Inicial clássico', 'nasceu em Pallet: o Professor entrega na rua, na manhã da saída · fora de Pallet: a perua do laboratório, uma vez por mês')}
-      ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia')}
+      ${L('Inicial aleatório', 'já morava na sua casa — vínculo máximo desde o primeiro dia · sai da tabela de inicial: 1d6 escolhe a coluna (1–4, o que vive na sua cidade natal; 5–6, o que combina com o jeito que você escreveu) e 1d6 a linha')}
       ${L('Ritmo do combate', 'Pokérole (o HP do livro) ou prolongado (HP base em dobro)')}`;
 
     if (k === 'ficha') return `
       <h3>Os seis status</h3>
       ${L('Força', 'escapar de quem te encurralou · testes de cena')}
-      ${L('Percepção', 'vasculhar · ler a natureza do seu time · observar')}
-      ${L('Intelecto', 'a hora de pegar a estrada · andar pela cidade · ler o tipo de um desconhecido em combate')}
+      ${L('Percepção', 'vasculhar · ler a natureza do seu time · observar · com 3, ler a natureza de quem está do outro lado')}
+      ${L('Intelecto', 'a hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido em combate (os dois em 4)')}
       ${L('Carisma', 'treinar · encarar um selvagem · ser obedecido com a moral baixa')}
       ${L('Sorte', 'o que o vasculho acha · pescaria · chance de brilhante')}
       ${L('Resistência', 'HP máximo · aguentar o golpe que sobra pra você')}
@@ -3933,7 +3944,7 @@ const UI = {
         <h3>As vinte e cinco naturezas</h3>
         <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela decide pra onde vão os pontos de atributo que ele ganha subindo de nível, e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
         <div class="tut-nats">${linhas}</div>
-        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, pelo jeito que eles se mexem (Percepção) ou se o treinador falar — a Pokédex lê espécie, tipo e atributos, não temperamento. Líder de ginásio sempre fala.</p>`;
+        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, só com Percepção 3 ou mais, pelo jeito que eles se mexem — a Pokédex lê espécie, tipo e atributos, não temperamento.</p>`;
     }
 
     if (k === 'vinculo') {
@@ -4122,7 +4133,8 @@ const UI = {
       <div class="linha"><span class="k">Aguentar a dor</span><span class="v">ignora uma penalidade de dor até o fim da luta · não ocupa o turno (Power Through the Pain)</span></div>
       <div class="linha"><span class="k">Zerou</span><span class="v">quem gasta toda a Vontade numa luta desmaia quando ela acaba</span></div>
       <div class="linha"><span class="k">Recupera</span><span class="v">toda no Centro e em casa · +2 num dia de treino · +1 por vitória, pra quem está de pé</span></div>
-      <div class="linha"><span class="k">Do outro lado</span><span class="v">líder, Elite dos Quatro, rival, torneio e veterano também têm Vontade (Instinto + 2) e gastam: Esquivar quando estão com metade do HP ou menos, Forçar o destino quando o golpe é impreciso ou a dor já pesa · nunca o último ponto · selvagem e treinador de estrada não gastam</span></div>
+      <div class="linha"><span class="k">Do outro lado</span><span class="v">todo adversário tem Vontade (Instinto + 2) e gasta, selvagem também · Aguentar a dor quando a dor tira dois sucessos · Esquivar com metade do HP ou menos · Forçar o destino quando o golpe é impreciso ou a dor já pesa · Arriscar com golpe forte, atrás do crítico · nunca o último ponto</span></div>
+      <div class="linha"><span class="k">Quem gasta mais</span><span class="v">líder, Elite dos Quatro, rival, torneio e veterano gastam sempre que o critério bate na chance cheia · selvagem e treinador de estrada, com metade dessa chance</span></div>
       <h3>Vontade do treinador</h3>
       <div class="linha"><span class="k">Quanto</span><span class="v">2 + Resistência · aparece no topo da tela, do lado do HP</span></div>
       <div class="linha"><span class="k">Gastar</span><span class="v">num teste de cena, rolar gastando 1 de Vontade: +2 no total do d10 (o Forçar o destino do livro, levado pro d10)</span></div>
@@ -4142,6 +4154,8 @@ const UI = {
       <div class="linha"><span class="k">Evoluir</span><span class="v">refaz a conta com o mínimo e o teto da forma nova</span></div>
       <div class="linha"><span class="k">Posto</span><span class="v">Iniciante até o 9 · Novato 10 · Regular 20 · Avançado 35 · Especialista 50 · Ás 65 · Mestre 80 · Campeão 90</span></div>
       <div class="linha"><span class="k">Perícias</span><span class="v">todas no teto do posto: 1 no Iniciante, até 5 do Especialista pra cima</span></div>
+      <div class="linha"><span class="k">Golpes pelo posto</span><span class="v">quem nasce no mato ou num time alheio sabe 2 golpes no Iniciante, 3 no Novato e 4 do Regular pra cima · os mais recentes da tabela, sempre com pelo menos um que bate · o seu aprende mais subindo de nível, até 4</span></div>
+      <div class="linha"><span class="k">Posto da área</span><span class="v">rota e lugar mostram o posto do que vive ali, pelo nível da área · andar pra frente é subir de posto</span></div>
       <div class="linha"><span class="k">Social e Vontade</span><span class="v">golpe de status que pede atributo social usa 1 + um ponto a cada três · Vontade é Instinto + 2</span></div>
       <p class="sussurro">A Pokédex mostra, na ficha da espécie, de onde cada atributo parte e até onde vai; na ficha de um exemplar escaneado, onde ele está agora.</p>
 
@@ -4160,6 +4174,8 @@ const UI = {
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
+      <div class="linha"><span class="k">Fome</span><span class="v">o primeiro dia sem comer não muda nada · depois, −4 de moral a cada 12 horas do relógio do jogo · 24 h: com fome · 48 h: faminto</span></div>
+      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
@@ -4253,7 +4269,8 @@ const UI = {
       <div class="linha"><span class="k">Calendário</span><span class="v">1º de março é uma segunda · a jornada começa no dia em que a perua do laboratório passa pela sua cidade (Pallet, dia 1) · os meses têm o tamanho de verdade</span></div>
       <div class="linha"><span class="k">Dia marcado</span><span class="v">algumas coisas só acontecem num dia do mês ou da semana, numa faixa de hora e num lugar · quem marca anuncia no mural do Centro · na hora certa, aparece na lista do lugar · cada uma, uma vez por data</span></div>
       <div class="linha"><span class="k">Fazer coisa</span><span class="v">vasculhar, procurar, pescar, andar, conversar e esperar levam o dia pro começo do próximo período · treinar, dois</span></div>
-      <div class="linha"><span class="k">Acampar</span><span class="v">só de noite ou de madrugada · acorda às 6h</span></div>
+      <div class="linha"><span class="k">Acampar</span><span class="v">só de noite ou de madrugada · acorda às 6h · gasta 1 Ração, e o time janta</span></div>
+      <div class="linha"><span class="k">Treinar</span><span class="v">um dia de treino por dia do jogo · gasta 1 Ração, e o time come no fim · entre um treino e outro, ${TREINO_ESPERA_MIN} minutos de verdade, mesmo que o acampamento pule a noite</span></div>
 
       <h3>Andar pela rota</h3>
       <div class="linha"><span class="k">Entrar ou sair de uma rota</span><span class="v">30% de um treinador dali te parar · se não, teste de Intelecto (dif. 5) e um selvagem sai do mato: 15% no crítico, 25% no sucesso, 35% no parcial, 45% na falha</span></div>
@@ -4367,8 +4384,8 @@ const UI = {
       <p class="sussurro">1d10 + status + o cinto, contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
       <p class="sussurro">O cinto conta porque cada perícia puxa um eixo — Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência. O melhor do time naquele eixo soma, o pior desconta metade, e a afinidade de quem vai na frente entra por cima. A linha embaixo do resultado mostra a soma e quem ajudou; por que aquele ajudou é com você.</p>
       <div class="linha"><span class="k">Força</span><span class="v">fugir de um selvagem que te encurralou · testes de cena</span></div>
-      <div class="linha"><span class="k">Percepção</span><span class="v">vasculhar · ler a natureza do seu time · observar a cena · testes</span></div>
-      <div class="linha"><span class="k">Intelecto</span><span class="v">escolher a hora de pegar a estrada · andar pela cidade · ler o tipo de um desconhecido em combate</span></div>
+      <div class="linha"><span class="k">Percepção</span><span class="v">vasculhar · ler a natureza do seu time · observar a cena · testes · com 3, ler a natureza de quem está do outro lado</span></div>
+      <div class="linha"><span class="k">Intelecto</span><span class="v">escolher a hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido em combate (os dois em 4)</span></div>
       <div class="linha"><span class="k">Carisma</span><span class="v">treinar · encarar um selvagem · o time obedecer quando a moral está baixa</span></div>
       <div class="linha"><span class="k">Sorte</span><span class="v">o que o vasculho acha · pescaria · chance de brilhante</span></div>
       <div class="linha"><span class="k">Resistência</span><span class="v">HP máximo · aguentar o golpe que sobra pra você · dormir no chão</span></div>
@@ -4390,7 +4407,8 @@ const UI = {
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
       <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">quantas vezes quiser · não gasta o turno</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
-      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, pelo jeito que eles se mexem (Percepção, dificuldade 10, uma vez quando ele entra) ou se o treinador falar — a Pokédex lê espécie, tipo e atributos, não temperamento. Líder de ginásio sempre fala. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>
+      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só com Percepção 3 ou mais: aí você lê pelo jeito que eles se mexem, sem dado, quando entram. A Pokédex lê espécie, tipo e atributos, não temperamento, e treinador nenhum entrega o temperamento do próprio time.</p>
+      <p class="sussurro">O tipo de quem está do outro lado fica escondido até a espécie estar catalogada. Sem Pokédex, só Percepção 4 e Intelecto 4 juntos leem o tipo de um desconhecido. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>
 
       <h3>Brilhantes</h3>
       <div class="linha"><span class="k">Frequência</span><span class="v">cerca de 1 em 1000</span></div>

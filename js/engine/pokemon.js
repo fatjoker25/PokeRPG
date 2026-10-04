@@ -28,6 +28,9 @@ function postoDoNivel(nv){
 function nomePosto(nv){ return POSTOS[postoDoNivel(nv)]; }
 /* perícia: o teto do posto (1 no Iniciante, 5 do Especialista pra cima) */
 function periciaDoNivel(nv){ return Math.min(5, postoDoNivel(nv) + 1); }
+/* quantos golpes um Pokémon sabe quando nasce no mato ou no time de
+   alguém: dois no Iniciante, três no Novato, quatro dali pra cima */
+function golpesDoPosto(nv){ return Math.min(4, 2 + postoDoNivel(nv)); }
 function pontosDoNivel(nv){ return Math.min(14, Math.floor(nv / 7)); }
 /* atributo social (Tough, Cool, Beauty, Clever, Cute do livro): um só
    número, que cresce devagar com o posto */
@@ -505,6 +508,8 @@ function curarTotal(p){
   p.status = null;
   p.statusTurnos = 0;
   p.golpes.forEach(g => g.pp = g.ppMax);
+  /* cura completa é Centro, casa ou alguém cuidando: come junto */
+  if (typeof Fome !== 'undefined' && typeof Estado !== 'undefined' && Estado.dados) Fome.alimentar(p);
 }
 
 function estaVivo(p){ return !p.morto && p.hp > 0; }

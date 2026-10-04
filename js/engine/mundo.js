@@ -31,6 +31,7 @@ const Relogio = {
     r.hora += h;
     while (r.hora >= 24){ r.hora -= 24; r.dia++; }
     r.periodo = periodoDaHora(r.hora);
+    if (typeof Fome !== 'undefined') Fome.passar();
   },
   /* um minuto aberto é uma hora; fora de foco e no meio da luta, para */
   iniciar(){
@@ -529,11 +530,11 @@ function afazeresDoLocal(){
         sub:'Na estrada, quem cruza o olhar luta. Quem perde paga.'});
     lista.push({id:'vasculhar', titulo:'Vasculhar a área',
       sub:'Olhar debaixo de coisa, seguir trilha que não é trilha, ver o que ninguém viu.'});
-    lista.push({id:'treinar', titulo:'Treinar o time',
+    lista.push({id:'treinar', titulo:'Treinar o time — 1 Ração',
       sub:'Ficar aqui um período inteiro, repetindo. É assim que se fica bom.'});
     if (L.ambiente === 'agua') lista.push({id:'pescar', titulo:'Pescar',
       sub:'Sentar na beira e esperar. Demora, e às vezes vem coisa grande.'});
-    lista.push({id:'acampar', titulo:'Acampar',
+    lista.push({id:'acampar', titulo:'Acampar — 1 Ração',
       sub:'Parar por um período. O time recupera um pouco e você também.'});
     /* gente de estrada também troca — quem está de passagem, esperando
        balsa, de folga, no fim do turno. */

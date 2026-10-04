@@ -330,7 +330,15 @@ function montarGolpes(dexId, nivel){
     const daTabela = golpesPorNivel(dexId, nivel);
     if (daTabela){
       const assin = assinaturaDe(dexId, nivel);
-      const nomes = assin.concat(daTabela.filter(n => !assin.includes(n))).slice(0, 4);
+      /* o posto diz quantos: ficam os mais recentes, e pelo menos um
+         que bate, senão o Pokémon nasce sem como lutar */
+      const k = golpesDoPosto(nivel);
+      const resto = daTabela.filter(n => !assin.includes(n));
+      let nomes = assin.concat(resto.slice(-Math.max(0, k - assin.length))).slice(0, k);
+      if (!nomes.some(n => GOLPES[n].c !== 'status')){
+        const bate = (golpesPorNivel(dexId, nivel, true) || daTabela).slice().reverse().find(n => GOLPES[n] && GOLPES[n].c !== 'status');
+        if (bate) nomes = nomes.slice(0, k - 1).concat(bate);
+      }
       return nomes.map(n => ({nome:n, pp:GOLPES[n].pp, ppMax:GOLPES[n].pp}));
     }
   }

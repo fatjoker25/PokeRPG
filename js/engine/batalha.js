@@ -17,6 +17,12 @@
    ============================================================ */
 
 /* o nome de cada gasto de Vontade, na tela e no log */
+/* o que o olho do treinador lê sem Pokédex: a natureza pede Percepção
+   3; o tipo de espécie não catalogada pede Percepção e Intelecto 4 */
+const PERCEPCAO_NATUREZA = 3;
+const LEITURA_DO_TIPO = 4;
+function leNatureza(){ return !!(Estado.j && Estado.j.status && Estado.j.status.percepcao >= PERCEPCAO_NATUREZA); }
+function leTipo(){ const s = Estado.j && Estado.j.status; return !!(s && s.percepcao >= LEITURA_DO_TIPO && s.intelecto >= LEITURA_DO_TIPO); }
 const USOS_DE_VONTADE = {destino:'Forçar o destino', chances:'Arriscar', esquiva:'Esquivar', dor:'Aguentar a dor'};
 /* as faces de uma parada, como o log mostra: [3, 6, 1] */
 function facesDe(r){ return r && r.faces && r.faces.length ? ` [${r.faces.join(', ')}]` : ''; }
@@ -60,7 +66,7 @@ const Batalha = {
     this.revelaNatureza = !!opts.revelarNatureza;   // líder/NPC que fala do próprio time
     /* quanto a IA erra a escolha do golpe, em %: veterano erra menos */
     this.erroIA = (opts.erroIA != null) ? opts.erroIA : 22;
-    if (this.revelaNatureza && inimigo){ inimigo.naturezaVista = true; inimigo.nomeAnunciado = true; }
+    if (this.revelaNatureza && inimigo) inimigo.nomeAnunciado = true;
     if (this.revelaNatureza && opts.timeInimigo) opts.timeInimigo.forEach(p => { p.nomeAnunciado = true; });
     if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
     this.eventos = [];
@@ -68,9 +74,10 @@ const Batalha = {
        quem gastou valem a luta inteira */
     this.vontadeArmada = null; this.vontadeTurno = -1;
     this.semDor = {}; this.gastaram = {};
-    /* adversário de peso também gasta Vontade (líder, Elite, veterano,
-       rival, torneio); o gasto dele vale só o turno em que é feito */
-    this.vontadeIA = !!opts.vontadeIA; this.vontadeInimigo = null;
+    /* todo adversário tem Vontade e gasta: selvagem e treinador comum
+       com menos critério, o de peso (líder, Elite, veterano, rival,
+       torneio) com mais; o gasto vale só o turno em que é feito */
+    this.vontadeIA = true; this.vontadePeso = !!opts.vontadeIA; this.vontadeInimigo = null;
     this.aoTerminar = opts.aoTerminar || null;
     this.contexto = opts.contexto || null;
     /* Cena pode fixar a arena quando o ambiente do capítulo não
@@ -93,7 +100,6 @@ const Batalha = {
     this.viuOParCair = {};
     /* A cena que vem depois quer saber se sobrou pra você. */
     this.hpJogadorInicio = (Estado.j && Estado.j.hp) || 0;
-    this.leituraIntelecto = false;
     if (Estado.viu(inimigo.dex)) this.ev('pokedex', 'A Pokédex vibra no bolso: espécie nova, ainda não catalogada.');
     if (inimigo.shiny){
       Estado.viuBrilhante(inimigo.dex);
@@ -102,25 +108,19 @@ const Batalha = {
         : 'A cor está errada. Você olha duas vezes e ela continua errada — e aí você entende o que está na sua frente.');
     }
     this.ev('inicio', opts.introducao || this.introPadrao());
-    /* Intelecto: você já viu um parecido, e isso vale meia Pokédex.
-       Vem depois da entrada, porque primeiro a coisa aparece. */
-    if (inimigo && !Estado.conheceu(inimigo.dex) && Estado.dados && Estado.j){
-      const t = Dados.teste(Estado.j.status.intelecto, 7, 'Intelecto');
-      if (t.grau === 'sucesso' || t.grau === 'critico'){
-        this.leituraIntelecto = true;
-        this.ev('natureza', inimigo.nomeAnunciado
-          ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
-          : `Você não sabe o nome, mas já viu desenho de um parecido e sabe o que ele é: ${inimigo.tipos.join('/')}.`);
-      }
+    /* O tipo de quem a Pokédex não catalogou se lê com Percepção e
+       Intelecto altos; o jeito, com Percepção 3. Não tem dado: quem
+       tem o olho, tem. Vem depois da entrada, porque primeiro a coisa
+       aparece. */
+    this.leituraIntelecto = leTipo();
+    if (inimigo && !Estado.conheceu(inimigo.dex) && this.leituraIntelecto){
+      this.ev('natureza', inimigo.nomeAnunciado
+        ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
+        : `Você não sabe o nome, mas já viu desenho de um parecido e sabe o que ele é: ${inimigo.tipos.join('/')}.`);
     }
-    /* o jeito do bicho se lê olhando, não com aparelho: Percepção alta
-       pega pelo modo como ele se mexe antes do primeiro golpe */
-    if (inimigo && !inimigo.naturezaVista && Estado.dados && Estado.j){
-      const t = Dados.teste(Estado.j.status.percepcao, 10, 'Percepção');
-      if (t.grau === 'sucesso' || t.grau === 'critico'){
-        inimigo.naturezaVista = true;
-        this.ev('natureza', `Pelo jeito que ${nomeVisivel(inimigo)} se mexe antes do primeiro golpe, dá pra ler: ${inimigo.natureza}.`);
-      }
+    if (inimigo && !inimigo.naturezaVista && leNatureza()){
+      inimigo.naturezaVista = true;
+      this.ev('natureza', `Pelo jeito que ${nomeVisivel(inimigo)} se mexe antes do primeiro golpe, dá pra ler: ${inimigo.natureza}.`);
     }
     return this.eventos;
   },
@@ -250,22 +250,35 @@ const Batalha = {
     else { this.vontadeArmada = uso; this.vontadeTurno = this.turno + 1; }
     return `${nomeVisivel(a)} gasta 1 de Vontade — ${USOS_DE_VONTADE[uso]}. (${a.vontade}/${vontadeMaxDe(a)})`;
   },
-  /* A IA gasta Vontade com critério e nunca o último ponto: esquiva
-     quando está na metade do HP; força o destino quando o golpe é
-     impreciso ou a dor já tira sucesso. */
+  /* A IA gasta Vontade com critério e nunca o último ponto:
+     Aguentar a dor quando a dor já tira dois sucessos (não ocupa o
+     turno); esquiva quando está na metade do HP; força o destino
+     quando o golpe é impreciso ou a dor pesa; arrisca com golpe forte,
+     atrás do crítico. Adversário comum (selvagem, treinador de rota)
+     gasta com metade da vontade de gastar. */
   iaGastarVontade(iGolpe){
     this.vontadeInimigo = null;
     const p = this.inimigo;
     if (!this.vontadeIA || !p || !estaVivo(p) || this.fase !== 'normal' || vontadeDe(p) < 2) return;
+    const fator = this.vontadePeso ? 1 : 0.5;
+    const quer = pct => Dados.chance(Math.round(pct * fator));
+    const anuncia = uso => this.ev('status', `${nomeVisivel(p)} gasta 1 de Vontade — ${USOS_DE_VONTADE[uso]}. (${p.vontade}/${vontadeMaxDe(p)})`);
+    if (this.dor(p) >= 2 && quer(60)){
+      p.vontade = vontadeDe(p) - 1;
+      this.semDor[p.uid] = (this.semDor[p.uid] || 0) + 1;
+      anuncia('dor');
+      if (vontadeDe(p) < 2) return;
+    }
     const nome = (p.golpes[iGolpe] || {}).nome;
     const g = GOLPES[nome] || {}, pr = PR_GOLPE[nome] || {};
     let uso = null;
-    if (p.hp * 2 <= p.hpMax && Dados.chance(45)) uso = 'esquiva';
-    else if (g.c !== 'status' && ((pr.r || 0) >= 1 || this.dor(p) >= 1) && Dados.chance(50)) uso = 'destino';
+    if (p.hp * 2 <= p.hpMax && quer(45)) uso = 'esquiva';
+    else if (g.c !== 'status' && ((pr.r || 0) >= 1 || this.dor(p) >= 1) && quer(50)) uso = 'destino';
+    else if (g.c !== 'status' && (pr.p || 0) >= 3 && vontadeDe(p) >= 3 && quer(25)) uso = 'chances';
     if (!uso) return;
     p.vontade = vontadeDe(p) - 1;
     this.vontadeInimigo = uso;
-    this.ev('status', `${nomeVisivel(p)} gasta 1 de Vontade — ${USOS_DE_VONTADE[uso]}. (${p.vontade}/${vontadeMaxDe(p)})`);
+    anuncia(uso);
   },
 
   /* Esquivar: Destreza + Evasão contra os sucessos da precisão do outro.
@@ -1388,6 +1401,7 @@ const Batalha = {
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome);
       alvo.moral = Math.min(100, alvo.moral + info.valor);
+      if (typeof Fome !== 'undefined') Fome.alimentar(alvo);
       this.ev('natureza', `${nomeVisivel(alvo)} come no meio da briga, o que é ridículo, e depois te olha diferente.`);
     } else if (info.tipo === 'fuga'){
       if (this.tipo === 'treinador'){ this.ev('erro', 'Não dá pra jogar um boneco de pano na cara de um treinador e sair andando.'); return; }
@@ -1491,7 +1505,8 @@ const Batalha = {
       if (this.timeInimigo && this.timeInimigo.length){
         this.parViuCair(this.inimigo, this.timeInimigo);
         const prox = this.timeInimigo.shift();
-        if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
+        if (this.revelaNatureza) prox.nomeAnunciado = true;
+        if (leNatureza()) prox.naturezaVista = true;
         this.desfazerMudancas(this.inimigo, this.estInimigo);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
@@ -1533,8 +1548,7 @@ const Batalha = {
       return this.encerrar('derrota');
     }
     const d = Dados.d20('O selvagem ataca você?');
-    this.inimigo.naturezaVista = true;   // quem avança em gente mostra o jeito que tem
-    this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: ${this.inimigo.natureza}, agressiv${pron(this.inimigo).o}. 1d20 = ${d} — ataca com 10+`);
+    this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: agressiv${pron(this.inimigo).o}. 1d20 = ${d} — ataca com 10+`);
     if (d < 10){
       this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais… e vai embora.`);
       return this.encerrar('derrota');

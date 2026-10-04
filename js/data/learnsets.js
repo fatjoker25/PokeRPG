@@ -318,7 +318,7 @@ function fontesDeGolpe(dexId){
   return (APRENDE[dexId] && APRENDE[dexId].length) ? [dexId] : linhaDe(dexId);
 }
 
-function golpesPorNivel(dexId, nivel){
+function golpesPorNivel(dexId, nivel, todos){
   const ordem = [];
   let achou = false;
   for (const d of fontesDeGolpe(dexId)){
@@ -333,7 +333,7 @@ function golpesPorNivel(dexId, nivel){
     }
   }
   if (!achou || !ordem.length) return null;
-  return ordem.slice(-4);
+  return todos ? ordem : ordem.slice(-4);
 }
 
 /* Golpe de assinatura entra sempre: é o que aquele bicho é, e só
