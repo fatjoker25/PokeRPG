@@ -58,7 +58,7 @@ const Jogo = {
   },
   cenaBatalha: null,
   ginasioAtual: null,
-  voltarDeGinasio: 'hub',
+  voltarDeGinasio: 'exploracao',
   eliteAtual: null,
   revancheAtual: null,
   torneioAtual: null,
@@ -774,7 +774,7 @@ const Jogo = {
   /* O capítulo seguinte acontece em algum lugar. Se você não está
      nele, existe estrada no meio — e a estrada é contada. */
   viajarParaCapitulo(prox){
-    /* capítulo que cobra insígnia espera: a Parada volta pro lugar onde
+    /* capítulo que cobra insígnia espera: a tela volta pro lugar onde
        você está, dizendo o que falta */
     const trava = travaDoCapitulo(prox);
     if (trava){
@@ -890,46 +890,15 @@ const Jogo = {
     Estado.dados.time.forEach(curarTotal);
     Estado.curarJogador(8);
     Estado.recuperarVontadeJogador();
-    Estado.dados.relogio.dia++;
+    Mundo.passar(2);
     Estado.salvar('auto');
-    UI.telaHub();
-    UI.avisos([{tipo:'cura', texto:'Time curado. Você dormiu em cama de verdade e recuperou 8 de HP.'}]);
+    /* volta pro lugar onde você está — a tela "Parada" não existe mais */
+    const av = [{tipo:'cura', texto:'O time sai do balcão inteiro. Você dorme numa cama de verdade e acorda melhor.'}];
+    if (Estado.dados.modo === 'cena' && Historia.cenaAtual) return UI.telaCena(Historia.cenaAtual, av);
+    Exploracao.tela(av);
   },
 
-  hubLoja(){ return Cidade.loja(); },
   comprar(nome, preco){ return Cidade.comprar(nome, preco); },
-
-  hubTreinar(){
-    const meu = Estado.primeiroApto();
-    if (!meu){ UI.modal('Treinar', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes.</p>'); return; }
-    const cap = Historia.capitulo(Estado.dados.capitulo) || Historia.capitulo(1);
-    const wild = sortearSelvagem(cap.ambiente, cap.nivelArea);
-    this.cenaBatalha = null;
-    Estado.dados.relogio.dia++;
-    UI.limparDados();
-    Batalha.iniciar(meu, wild, {tipo:'selvagem', fuga:true});
-    UI.telaBatalha();
-  },
-
-  hubSoltar(){
-    const time = Estado.dados.time;
-    if (!time.length) return UI.modal('Soltar', '<p class="nada">Você não tem ninguém.</p>');
-    UI.modal('Soltar quem?', time.map(p =>
-      `<button class="escolha" onclick="Jogo.confirmarSoltar('${p.uid}')">
-        ${UI.esc(nomeExib(p))} — Nv ${p.nivel}, moral ${p.moral}${p.lendario?' · LENDÁRIO':''}</button>`).join('') +
-      '<p class="sussurro" style="margin-top:12px">Soltar é permanente. Soltar um lendário muda o mundo.</p>');
-  },
-
-  confirmarSoltar(uid){
-    const p = Estado.dados.time.find(x => x.uid === uid);
-    if (!p) return;
-    if (!confirm('Soltar ' + nomeExib(p) + '? Isso é permanente.')) return;
-    const eventos = Captura.soltar(p);
-    UI.fecharModal();
-    Estado.salvar('auto');
-    UI.telaHub();
-    UI.avisos(eventos.map(e => ({tipo:e.tipo, texto:e.texto})));
-  },
 
   /* ---------- GINÁSIOS ---------- */
   voltarDosGinasios(){
@@ -939,7 +908,7 @@ const Jogo = {
     } else if (this.voltarDeGinasio === 'fimCapitulo'){
       UI.telaFimCapitulo();
     } else {
-      UI.telaHub();
+      Exploracao.tela();
     }
   },
 
@@ -1327,7 +1296,7 @@ const Jogo = {
 
   /* ---------- LIGA: ELITE 4, CAMPEÃO E TORNEIO ---------- */
   abrirLiga(de){
-    this.voltarDeGinasio = de || 'hub';
+    this.voltarDeGinasio = de || 'exploracao';
     UI.telaLiga();
   },
 

@@ -2333,85 +2333,6 @@ const UI = {
   },
 
   /* ========================================================
-     HUB — parada entre capítulos
-     ======================================================== */
-  telaHub(){
-    this.limpar();
-    this.add(this.topo());
-    const d = Estado.dados;
-    const L = (typeof Mundo !== 'undefined') ? Mundo.atual() : null;
-    const onde = L ? L.nome : d.jogador.cidade;
-    const per = d.relogio.periodo;
-    const nInsig = d.insignias.filter(i => i !== 'Título de Campeão').length;
-    const feridos = d.time.filter(p => !p.morto && p.hp < p.hpMax).length;
-    const caidos  = d.time.filter(p => !p.morto && p.hp <= 0).length;
-
-    /* Onde você está e por que dá pra parar aqui — em vez de um
-       aviso de menu sobre o tempo passar. */
-    const abertura = {
-      'manhã':    `Você chega em ${onde} de manhã, com o dia inteiro pela frente e nenhuma pressa que não seja sua.`,
-      'tarde':    `${onde}, meio da tarde. A cidade está no horário em que tudo está aberto e ninguém tem paciência.`,
-      'noite':    `${onde} à noite. O Centro Pokémon fica aberto — é a única coisa em Kanto que fica.`,
-      'madrugada':`${onde}, madrugada. Quase tudo fechado, e o Centro Pokémon com a luz branca de sempre.`
-    }[per] || `Você para em ${onde}.`;
-
-    const estado = caidos
-      ? `Tem ${caidos} ${caidos === 1 ? 'desmaiado' : 'desmaiados'} no seu cinto. Isso resolve num balcão.`
-      : feridos
-        ? `${feridos} do seu time ${feridos === 1 ? 'está machucado' : 'estão machucados'} e ninguém reclama disso em voz alta.`
-        : 'O time está inteiro.';
-
-    /* O time do jeito que ele está hoje: quem perdeu o par ainda
-       procura; quem tem o par por perto anda junto. A frase muda por
-       dia, não por clique. */
-    const doTime = (() => {
-      const dia = d.relogio.dia || 0;
-      const enlutado = d.time.find(p => !p.morto && p.luto && (d.capitulo - (p.luto.cap || 0)) <= 2);
-      if (enlutado){
-        const g = pron(enlutado);
-        return [
-          `${nomeExib(enlutado)} para na porta do Centro e olha pra trás, pra rua, procurando ${enlutado.luto.nome}.`,
-          `${nomeExib(enlutado)} come pouco e dorme no canto, virad${g.o} pra parede.`,
-          `${nomeExib(enlutado)} ainda se vira quando alguém abre uma Pokébola perto ${g.dele}.`
-        ][dia % 3];
-      }
-      const pares = paresDoTime(d.time.filter(p => !p.morto));
-      if (!pares.length) return '';
-      const [a, b] = pares[dia % pares.length];
-      return [
-        `${nomeExib(a)} e ${nomeExib(b)} dormem encostados no banco da recepção, e ninguém da fila reclama.`,
-        `${nomeExib(a)} não entra no Centro enquanto ${nomeExib(b)} não entra junto.`,
-        `${nomeExib(a)} divide a ração com ${nomeExib(b)} sem ninguém mandar.`,
-        `Quando ${nomeExib(b)} fica pra trás, ${nomeExib(a)} para e espera.`
-      ][dia % 4];
-    })();
-
-    /* A Liga só entra na lista quando ela já quer dizer alguma coisa */
-    const sabeDaLiga = nInsig > 0 || !!d.flags.sabe_da_elite || !!d.flags.campeao_de_kanto;
-
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">Parada</div>
-        <div class="tit">${this.esc(onde)}</div>
-        <div class="loc">${this.esc(per)} do dia ${d.relogio.dia} · ${nInsig} de 8 insígnias</div>
-      </div>
-      <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p>${doTime ? `<p>${this.esc(doTime)}</p>` : ''}</div>
-
-      <div id="escolhas" class="escolhas">
-        <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon</button>
-        <button class="escolha" onclick="UI.modalPC()">PC do Centro${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
-        <button class="escolha" onclick="Jogo.hubLoja()">Loja</button>
-        ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon</button>' : ''}
-        <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota</button>
-        ${d.time.length > 1 ? '<button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>' : ''}
-        <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
-      </div>
-      <div id="avisos" class="avisos"></div>
-    </div>`);
-    this.rolarTopo();
-  },
-
-  /* ========================================================
      VIAGEM — a estrada entre um capítulo e o outro
      ======================================================== */
   telaViagem(deId, paraId, dias, aoChegar, rota){
@@ -3932,7 +3853,7 @@ const UI = {
       <div class="linha"><span class="k">Voar</span><span class="v">Pokémon do tipo Voador de grande porte, e que voe de verdade</span></div>
       <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
       <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
-      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista o que o seu time consegue fazer agora</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a passagem fechada no mapa diz o que falta (machado, picareta, porte, luz) e quem do time já serve</span></div>
       <p class="sussurro">Metade disso é objeto e metade é o corpo do Pokémon. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
       <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
 
@@ -3949,7 +3870,7 @@ const UI = {
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
       <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
       <div class="linha"><span class="k">Se não abrir</span><span class="v">a jornada segue reto e você nunca fica sabendo que existia</span></div>
-      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista "o que não aconteceu nesta jornada"</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">"Ver a rota que você percorreu", na tela final, lista "o que não aconteceu nesta jornada"</span></div>
       <p class="sussurro">Quatro capítulos só existem pra quem passou por onde precisava passar: uma casa de portão verde em Cerulean, onze linhas num livro de guarita em Lavender, um fax que chega toda segunda em Celadon e um galpão sem placa na zona industrial de Saffron. Cada um deles nasce de uma cena de abertura específica dos capítulos 6, 7, 9 e 11 — e as aberturas são sorteadas de acordo com o seu estado. Duas jornadas seguidas podem ver capítulos diferentes.</p>
 
       <h3>Finais e epílogos</h3>
@@ -4367,7 +4288,7 @@ const UI = {
       <div class="linha"><span class="k">Voar</span><span class="v">Pokémon do tipo Voador de grande porte, e que voe de verdade</span></div>
       <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
       <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
-      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista o que o seu time consegue fazer agora</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">a passagem fechada no mapa diz o que falta (machado, picareta, porte, luz) e quem do time já serve</span></div>
       <p class="sussurro">Metade disso é objeto e metade é o corpo do Pokémon. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
       <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
 
@@ -4389,7 +4310,7 @@ const UI = {
       <div class="linha"><span class="k">Capítulo 17, Rota 23</span><span class="v">6</span></div>
       <div class="linha"><span class="k">Capítulo 22, Planalto Indigo</span><span class="v">8</span></div>
       <div class="linha"><span class="k">Rota 23 → Caminho da Vitória</span><span class="v">8 · as guaritas não deixam subir com menos</span></div>
-      <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · a Parada não segue</span></div>
+      <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · ele não começa até você ter as que faltam</span></div>
       <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
@@ -4398,7 +4319,7 @@ const UI = {
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
       <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
       <div class="linha"><span class="k">Se não abrir</span><span class="v">a jornada segue reto e você nunca fica sabendo que existia</span></div>
-      <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista "o que não aconteceu nesta jornada"</span></div>
+      <div class="linha"><span class="k">Onde conferir</span><span class="v">"Ver a rota que você percorreu", na tela final, lista "o que não aconteceu nesta jornada"</span></div>
       <p class="sussurro">Quatro capítulos só existem pra quem passou por onde precisava passar: uma casa de portão verde em Cerulean, onze linhas num livro de guarita em Lavender, um fax que chega toda segunda em Celadon e um galpão sem placa na zona industrial de Saffron. Cada um deles nasce de uma cena de abertura específica dos capítulos 6, 7, 9 e 11 — e as aberturas são sorteadas de acordo com o seu estado. Duas jornadas seguidas podem ver capítulos diferentes.</p>
 
       <h3>Finais e epílogos</h3>
