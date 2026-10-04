@@ -2707,6 +2707,13 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
 
+/* mural: de longe os papéis são títulos; clicar chega perto de um */
+button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
+button.bilhete.fechado p{font-size:12.5px;opacity:.85}
+button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outline-offset:2px}
+.mural.um{grid-template-columns:1fr;max-width:360px;margin:0 auto 12px}
+.mural.um .bilhete p{font-size:15px}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -6393,10 +6400,10 @@ pallet:{
   nome:'Pallet', tipo:'cidade', ambiente:'campo', nivel:3, porte:'vilarejo',
   conexoes:['rota1','rota21'],
   desc:[
-    'Pallet tem três ruas, um mercado que abre tarde e um cheiro de mar que vem de longe, do outro lado do morro.',
+    'Pallet tem três ruas, o laboratório do Professor no alto da subida e um cheiro de mar que vem de longe, do outro lado do morro.',
     'Todo mundo aqui conhece o seu rosto desde antes de você ter memória.'
   ],
-  lugares:['centro','loja','casa']
+  lugares:['casa']
 },
 rota1:{
   nome:'Rota 1', tipo:'rota', ambiente:'campo', nivel:4,
@@ -6836,6 +6843,14 @@ function afazeresDoLocal(){
       lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
         sub:'Enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados.'});
     }
+    /* a sua casa, na cidade em que você nasceu: cama, comida e
+       {casa:quem ficou|quem ficou} esperando */
+    if (Estado.j && L.nome === Estado.j.cidade)
+      lista.push({lugar:true, id:'casa', titulo:'Sua casa'});
+    /* quem nasceu longe de Viridian pode pegar o ônibus da Liga uma vez */
+    if (Estado.j && L.nome === Estado.j.cidade && !['Pallet','Viridian'].includes(Estado.j.cidade)
+        && !d.flags.onibus_da_liga && d.capitulo <= 3)
+      lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus da Liga pra Viridian'});
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
     /* o Relembrador não tem placa: quem acha é quem anda pela cidade */
@@ -14797,41 +14812,35 @@ const PRECO_BASE = {
    A ideia: ninguém em Pewter vende bola barata, e ninguém em Lavender
    vende repelente, porque ninguém em Lavender vai pro mato. */
 const LOJAS = {
-  pallet: {
-    nome:'Mercado do Sr. Fenwick',
-    ar:'Um mercado de bairro que vende Poké Ball atrás do balcão, junto com pilha e anzol. Ele te conhece desde pequeno e cobra o mesmo de todo mundo.',
-    mult:1.0,
-    itens:['Poké Ball','Potion','Antidote','Isca','Ração','Pilha','Cantil']
-  },
   viridian: {
     nome:'Loja de Viridian',
     ar:'Fachada sem graça, prateleira organizada, e a atendente sabe exatamente o que um treinador de três dias esqueceu de comprar.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto','Sino Calmante','Mochila Verde','Bolsa Cinza']
+    itens:['Poké Ball','Potion','Antidote','Corda','Bandagem','Isca','Ração','Pilha','Cantil','Mapa de Kanto','Mochila Verde','Bolsa Cinza']
   },
   pewter: {
     nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
+    itens:['Poké Ball','Potion','Antidote','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
     ar:'Atende pela janela, sem ninguém entrar. Tem geladeira de bebida e uma vitrine pequena com uma pedra azul que fica ali há anos.',
     mult:1.05,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água','Botina Leve']
+    itens:['Poké Ball','Potion','Antidote','Repelente','Água Fresca','Isca','Pedra da Água','Botina Leve','Sino Calmante']
   },
   vermilion: {
     nome:'Armazém do Cais',
-    ar:'Abre às cinco da manhã e vende comida, corda e Poké Ball no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
+    ar:'Abre às cinco da manhã e vende comida, corda e Pokébola no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
     mult:0.9,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil','Faixa Firme','Resto de Ração','Mochila Laranja','Bolsa Prateada']
+    itens:['Poké Ball','Potion','Super Potion','Antidote','Repelente','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil','Faixa Firme','Resto de Ração','Mochila Laranja','Bolsa Prateada']
   },
   lavender: {
     nome:'Casa Boa Memória',
     ar:'Vende incenso, vela e Potion no mesmo balcão, o que faz um sentido triste. Ninguém aqui vende repelente: ninguém daqui vai pro mato.',
     mult:1.1,
-    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração','Sino Calmante']
+    itens:['Great Ball','Potion','Super Potion','Revive','Antidote','Corda','Bandagem','Caderno de campo','Ração','Sino Calmante']
   },
   celadon: {
     nome:'Grande Loja de Celadon',
@@ -14843,11 +14852,11 @@ const LOJAS = {
        itens:['Mapa de Kanto','Caderno de campo','Pilha','Câmera descartável']},
       {n:2, nome:'2º · Artigos de treinador',
        ar:'Prateleira de Pokébola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende. No fundo, um expositor giratório de discos de TM com um cadeado que ninguém lembra a senha.',
-       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca',
+       itens:['Poké Ball','Great Ball','Repelente','Boneco','Corda','Isca',
               'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm']},
       {n:3, nome:'3º · Cuidados',
        ar:'Cheiro de farmácia. Tem uma funcionária de jaleco que explica a diferença entre Potion e Super Potion umas quarenta vezes por dia e não perdeu a paciência ainda.',
-       itens:['Potion','Super Potion','Hyper Potion','Antidote','Full Heal','Revive','Bandagem','Éter','Elixir','PP Up']},
+       itens:['Potion','Super Potion','Antidote','Revive','Bandagem','Éter','Elixir','PP Up']},
       {n:4, nome:'4º · Pedras e evolução',
        ar:'Vitrine trancada, luz de cima, e um cartaz explicando que a loja não se responsabiliza por evolução feita por impulso.',
        /* a Pedra do Sol só entra no catálogo com a Pokédex Nacional
@@ -14863,7 +14872,7 @@ const LOJAS = {
        ar:'Duas máquinas automáticas, um bebedouro quebrado e três pessoas dando comida para um bando de Pidgey que claramente mora aqui.',
        itens:['Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']}
     ],
-    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Revive','Antidote','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
            'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
            'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Lona','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada','PP Up','Exp. Share']
@@ -14872,19 +14881,19 @@ const LOJAS = {
     nome:'Posto da Zona Safári',
     ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Full Heal','Resto de Ração']
+    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Revive','Full Heal','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Resto de Ração']
   },
   saffron: {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
+    itens:['Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
   },
   cinnabar: {
     nome:'Vitrine da Sra. Juna',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
-    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
+    itens:['Great Ball','Ultra Ball','Hyper Potion','Revive','Full Heal','Repelente','Corda','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
   }
 };
 
@@ -16832,7 +16841,6 @@ cinnabar:[
 pallet:[
   {chave:'pl_troca', texto:['Um menino de sete anos te para na rua e pergunta, muito sério, se você tem um Caterpie. Ele não explica pra quê.']},
   {chave:'pl_praia', texto:['Do alto do morro dá pra ver o mar. Do outro lado dele, num dia limpo, uma mancha escura que é uma ilha.']},
-  {chave:'loja_pallet', texto:['O mercado de Pallet abre tarde e vende Poké Ball atrás do balcão, junto com pilha e anzol.'], descobre:'loja_pallet'},
   {chave:'pl_ushio', texto:['Sr. Ives varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
 ]
 };
@@ -17231,14 +17239,8 @@ const RELEMBRADOR = {
    Ninguém explica nada: é papel, e papel diz o que a pessoa quis.
    ============================================================ */
 const MURAIS = {
-  pallet:[
-    {t:'Achado: um boné vermelho na cerca da Rota 1. Tá na portaria do laboratório.', nota:'letra de fôrma, a lápis'},
-    {t:'Aula de natação pra criança, sábado de manhã, na praia do outro lado do morro. Traga toalha.', nota:'com um desenho de Poliwag'},
-    {t:'O mercado abre às dez. Não adianta bater antes.', nota:'papel de embrulho, preso com dois percevejos'}
-  ],
   viridian:[
     {t:'Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa.', nota:'com uma foto colada, tirada de longe, meio tremida'},
-    {t:'Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava.', nota:'sem foto e sem nome'},
     {t:'COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO.', nota:'letra de imprensa, sem telefone, só um horário e um lugar'},
     {t:'NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE.', nota:'escrito à mão com pressa e sublinhado três vezes'}
   ],
@@ -17288,11 +17290,23 @@ const MURAIS = {
   ]
 };
 
+/* O Centro todo dia é o mesmo Centro, mas a noite não é a mesma noite. */
+const FRASES_DO_CENTRO = [
+  'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.',
+  'O Chansey do balcão empurra o carrinho com as Pokébolas pra dentro e volta cantarolando. De manhã está todo mundo inteiro.',
+  'A enfermeira chama o seu time pelo nome, um por um, na hora de devolver. Ela leu a ficha enquanto você dormia.',
+  'O beliche de cima range a noite inteira. O time não ouve nada: dorme no tratamento e acorda novo.',
+  'Tem chá de graça no saguão às dez da noite e alguém de outra cidade quer saber de onde você é. Você conta. Dorme tarde e bem.',
+  'A máquina faz o tlin-tlin de sempre, seis vezes. A enfermeira sorri do jeito que só quem ouve esse som o dia inteiro sorri.',
+  'Você dorme no sofá do saguão porque os quartos lotaram. O time volta curado e você volta com o pescoço torto.',
+  'De manhã a enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.'
+];
+
 const Cidade = {
   /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
     const d = Estado.dados, L = Mundo.atual();
-    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Ler o mural de recados<br><span class="pd">Cortiça, percevejo e papel em três camadas.</span></button>` : '';
+    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
     const cargos = (typeof Cargos !== 'undefined') ? (() => {
       const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
       return `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais<br><span class="pd">${
@@ -17343,7 +17357,7 @@ const Cidade = {
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
     return [
-      {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
+      {tipo:'cura', texto:Dados.escolher(FRASES_DO_CENTRO)},
       {tipo:'info', texto:'Amanhece.'}, ...pac
     ];
   },
@@ -17353,12 +17367,61 @@ const Cidade = {
     return Exploracao.tela(av);
   },
 
-  /* O mural de cada Centro: o que a cidade pendura na parede. */
-  mural(){
+  /* O mural de cada Centro: o que a cidade pendura na parede. Você vê
+     os papéis de longe e escolhe qual ler; ler é chegar perto de um. */
+  mural(i){
     const m = MURAIS[Mundo.id()] || [];
-    UI.modal(`Mural do Centro de ${Mundo.atual().nome}`,
-      `<div class="mural">${m.map((x, i) => `<div class="bilhete b${i % 4}">
-        <p>${UI.esc(x.t)}</p>${x.nota ? `<span>${UI.esc(x.nota)}</span>` : ''}</div>`).join('')}</div>`, false, 'centro');
+    const titulo = `Mural do Centro de ${Mundo.atual().nome}`;
+    if (i == null || !m[i]){
+      return UI.modal(titulo, `<div class="mural">${m.map((x, k) => `<button class="bilhete b${k % 4} fechado" onclick="Cidade.mural(${k})">
+        <p>${UI.esc(x.t.split(' ').slice(0, 6).join(' ').replace(/[.,:;!?]+$/, ''))}…</p></button>`).join('')}</div>`, false, 'centro');
+    }
+    const x = m[i];
+    UI.modal(titulo, `<div class="mural um"><div class="bilhete b${i % 4}">
+        <p>${UI.esc(x.t)}</p>${x.nota ? `<span>${UI.esc(x.nota)}</span>` : ''}</div></div>
+      <button class="escolha" onclick="Cidade.mural()">Voltar ao mural</button>`, false, 'centro');
+  },
+
+  /* Em casa: cama, comida e quem ficou. Cura como o Centro, de graça. */
+  casa(){
+    const d = Estado.dados;
+    Mundo.passar(2);
+    d.time.forEach(curarTotal);
+    Estado.curarJogador(30);
+    const n = nomeCasa();
+    const frases = [
+      `${n} põe mais um prato na mesa sem perguntar se você vai ficar.`,
+      `${n} te olha da porta da cozinha, conta o time com os olhos, e só depois diz oi.`,
+      `${n} já estendeu um cobertor no sofá antes de você tirar a mochila.`,
+      `Tem comida no fogão, e ${n} finge que sobrou por acaso.`,
+      `${n} pergunta de cada um do time pelo nome, e erra um, e você corrige.`,
+      `${n} quer saber de tudo. Você conta metade, e {casa:ela|ele} percebe qual metade.`
+    ];
+    const av = [
+      {tipo:'cura', texto:Dados.escolher(frases)},
+      {tipo:'cura', texto:'O time dorme espalhado pela sala. De manhã está todo mundo inteiro.'},
+      ...this.retirarPacotes()
+    ];
+    Estado.registrar(`Passou a noite em casa, em ${d.jogador.cidade}.`);
+    Estado.salvar('auto');
+    Exploracao.tela(av);
+  },
+
+  /* O ônibus da Liga: quem nasceu longe de Viridian pode pegar, uma vez. */
+  onibus(){
+    const d = Estado.dados;
+    d.flags.onibus_da_liga = true;
+    if (!d.flags.tem_licenca) Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - 500);
+    Mundo.viajar('viridian');
+    d.relogio.dia += 1;
+    d.relogio.periodo = 'tarde';
+    Estado.salvar('auto');
+    Exploracao.tela([
+      {tipo:'info', texto: d.flags.tem_licenca
+        ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
+        : 'Sem licença não tem passagem de graça: 500 ₽ do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
+      {tipo:'info', texto:'Você desce em Viridian no fim da tarde.'}
+    ]);
   },
 
   /* O que o Célio mandou pela perua espera no balcão de qualquer Centro. */
@@ -17514,7 +17577,7 @@ const Cidade = {
        ]},
       {id:'bolsa', cidade:'*', valor:8000,
        nome:'Uma linha do caderno',
-       linha:'Pagar o pedido de quem não pôde pagar. Você não escolhe quem, e nunca fica sabendo.',
+       linha:'Pagar a inscrição de quem não pode pagar. Você não escolhe quem, e nunca fica sabendo.',
        requer:d=>!!d.flags.sabe_do_nr || !!d.flags.numero_do_goro,
        rep:3, marca:'pagou_uma_bola',
        texto:[
@@ -17522,8 +17585,8 @@ const Cidade = {
          fala('Célio', 'Você quer pagar o pedido de quem?'),
          d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
          'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
-         fala('Célio', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
-         fala('Célio', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
+         fala('Célio', 'Eu tenho onze cidades e uma lista de gente que queria muito e não tinha como pagar a inscrição.'),
+         fala('Célio', 'Eu sei exatamente pra quem eu vou ligar primeiro.', 'riso'),
          fala('Célio', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
        ]}
     ].filter(c => (c.cidade === '*' || c.cidade === id) && !Estado.dados.flags[c.marca]
@@ -18667,7 +18730,7 @@ const EVENTOS_GERAIS = [
      resultado:[
        'O menino assina, pega a Pokébola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
        'O que sai da Pokébola olha a praça inteira antes de olhar ele.',
-       'Você reconhece a cena de um jeito que dói um pouco e é bom ao mesmo tempo.',
+       'Você reconhece a cena, e sorri sem perceber.',
        fala('Célio', 'Essa parte é sempre a melhor.', 'baixo', 'Ele fala sem olhar pra você, anotando.')
      ]},
     {texto:'Perguntar se ele precisa de ajuda pra carregar.',
@@ -18680,14 +18743,14 @@ const EVENTOS_GERAIS = [
        fala('Célio', 'Livro. É sempre livro que pesa.'),
        fala('Célio', 'Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.')
      ]},
-    {texto:'Perguntar quantos não vieram buscar este mês.',
+    {texto:'Perguntar qual foi a entrega mais engraçada do mês.',
      cond:d=>!!d.flags.sabe_do_nr,
-     ef:{registrar:'Perguntou quantos NR tinham nessa cidade este mês.'},
+     ef:{registrar:'Ouviu do Célio a entrega mais engraçada do mês.'},
      resultado:[
-       fala('Célio', 'Dois.'),
-       'Ele não precisa conferir o caderno pra responder.',
-       fala('Célio', 'Um cancelou por telefone semana passada, que é o jeito certo de fazer e eu agradeci.'),
-       fala('Célio', 'O outro não. O outro só não veio.', 'baixo')
+       fala('Célio', 'Semana passada, em Pewter.', 'riso'),
+       'Ele nem precisa pensar.',
+       fala('Célio', 'Um Charmander espirrou fagulha na sobrancelha do menino na hora da foto. O menino achou o máximo. A mãe dele, menos.'),
+       fala('Célio', 'Foto saiu ótima, por sinal.', 'riso')
      ]},
     {texto:'Anotar o número dele antes de seguir.',
      cond:d=>!d.flags.numero_do_goro,
@@ -18697,7 +18760,7 @@ const EVENTOS_GERAIS = [
      resultado:[
        fala('Célio', 'Anota, vai. Todo mundo que eu entrego tem.'),
        'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
-       fala('Célio', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
+       fala('Célio', 'Liga contando como vocês estão. Eu gosto de saber.', 'riso')
      ]},
     {texto:'Seguir. Não é com você.', ef:{},
      resultado:['Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.']}
@@ -19807,12 +19870,213 @@ function vz(){
 }
 
 
+/* ===== js/story/casa-jeito.js ===== */
+/* ============================================================
+   O JEITO DE QUEM FICOU EM CASA
+   A pessoa que te criou não é sempre a mesma pessoa com medo da
+   porta. Cada partida sorteia um jeito (e guarda na ficha), e a
+   mesa do café, a despedida e as ligações saem desse jeito.
+   Nenhum deles é medroso: tem quem se orgulhe, quem brinque, quem
+   resolva tudo com lista, quem já foi treinador e quem só confia.
+   Marcas: {casa:ela|ele} pra pessoa, {o|a} pro jogador.
+   ============================================================ */
+const JEITOS_DA_CASA = {
+
+  orgulho: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta. Hoje você come primeiro.', null, 'Nesta casa quem come primeiro é visita. Hoje é você.'),
+      d => fala(nomeCasa(), `Então é hoje. ${d.jogador.nome}, de ${d.jogador.cidade}, treinador${d.jogador.genero === 'Mulher' ? 'a' : ''}.`, 'riso', 'Fala devagar, testando como soa.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Já sabe por onde começa? Me conta, que eu quero contar pros outros.'),
+    verdade: [
+      d => fala(nomeCasa(), 'Melhor ainda. Quem sai sabendo tudo não descobre nada.'),
+      d => fala(nomeCasa(), 'Descobre e me liga. Eu quero ser a primeira pessoa a saber.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Olha isso. Falou igual gente grande.', 'riso'),
+      d => fala(nomeCasa(), 'Vai lá e faz. E faz do seu jeito, que o seu jeito é bom.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Claro que sabe. Você sempre soube das coisas antes de mim.', 'riso'),
+    adeus: [
+      d => fala(nomeCasa(), 'Endireita essa mochila. Treinador desta casa sai de cabeça erguida.'),
+      d => fala(nomeCasa(), 'E quando alguém perguntar de onde você é, fala o nome da rua inteiro.', 'riso')
+    ]
+  },
+
+  brincalhao: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta, senta. Fiz o dobro, porque treinador come o dobro. Li isso numa revista.', 'riso'),
+      d => fala(nomeCasa(), 'Se sobrar eu dou pros Pidgey da calha, que eles também vão sentir a sua falta.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'E aí, qual é o plano? Campeão até o almoço ou só até o jantar?', 'riso'),
+    verdade: [
+      d => fala(nomeCasa(), 'Ótimo! Eu também não sabia nada na sua idade e olha que beleza que eu fiquei.', 'riso'),
+      d => fala(nomeCasa(), 'Vai descobrindo. E me liga contando as partes engraçadas.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Uau. Anota isso num papel, que daqui a pouco você vai querer provar que disse primeiro.', 'riso'),
+      d => fala(nomeCasa(), 'Tô brincando. É um objetivo bonito. Vai.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Sabe nada. Mas tá bonito o jeito que você falou, vou fingir que acredito.', 'riso'),
+    adeus: [
+      d => fala(nomeCasa(), 'Regra da casa: se ganhar insígnia, liga. Se perder, liga também, que eu conto piada.', 'riso'),
+      d => fala(nomeCasa(), 'Agora vai, antes que eu invente outra regra.')
+    ]
+  },
+
+  pratico: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta e come. Proteína primeiro, café depois.'),
+      d => fala(nomeCasa(), 'Separei três pares de meia. Treinador que molha o pé no primeiro dia perde o segundo.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Rota de hoje: já decidiu ou decide na saída?'),
+    verdade: [
+      d => fala(nomeCasa(), 'Então começa pelo Centro mais perto e decide lá. Mapa de parede existe pra isso.'),
+      d => fala(nomeCasa(), 'Decisão boa é decisão tomada com o pé na estrada.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Bom. Objetivo claro economiza sola de sapato.'),
+      d => fala(nomeCasa(), 'Divide em pedaço pequeno. Um por semana. É assim que se chega.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Ótimo. Então não esquece a garrafa d\'água, que plano nenhum funciona com sede.'),
+    adeus: [
+      d => fala(nomeCasa(), 'Potion no bolso de fora, dinheiro no de dentro. Nunca o contrário.'),
+      d => fala(nomeCasa(), 'Liga domingo. Pode ser curto. Curto e sempre é melhor que longo e nunca.')
+    ]
+  },
+
+  ex_treinador: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta. Eu saí desta mesma porta com a sua idade, sabia? Com um Rattata e uma mochila furada.', null, 'Os olhos vão pra prateleira, onde tem uma insígnia velha dentro de um copo.'),
+      d => fala(nomeCasa(), 'Cheguei em duas insígnias. Você vai passar disso fácil.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Primeira parada? Me diz que eu te conto o atalho que eu usava.'),
+    verdade: [
+      d => fala(nomeCasa(), 'Eu também não sabia. A estrada decide por você nas primeiras semanas, e ela decide bem.'),
+      d => fala(nomeCasa(), 'Só não foge de luta com treinador de rota. É lá que se aprende.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Isso. Eu queria a mesma coisa e não falei em voz alta. Você falou. Já tá na frente.'),
+      d => fala(nomeCasa(), 'Troca de Pokémon antes de ele cair, não depois. É o único conselho que eu tenho.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Sabe nada. Eu também dizia isso. Vai saber lá.', 'riso'),
+    adeus: [
+      d => fala(nomeCasa(), 'Vai lá e faz a parte que eu não fiz.', null, 'Bate duas vezes no seu ombro, do jeito que se faz na quadra antes de entrar.'),
+      d => fala(nomeCasa(), 'E me traz a primeira insígnia pra eu ver de perto. Só pra ver.')
+    ]
+  },
+
+  sonhador: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta. Hoje o café tem gosto de começo, você reparou?'),
+      d => fala(nomeCasa(), 'Eu fiquei acordad{casa:a|o} pensando em todos os lugares que você vai pisar e eu não. Que coisa boa.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Pra onde você vai primeiro? Me fala devagar, que eu quero imaginar.'),
+    verdade: [
+      d => fala(nomeCasa(), 'Que sorte a sua. O mapa inteiro em branco.'),
+      d => fala(nomeCasa(), 'Me manda cartão de cada cidade. Eu vou colar na geladeira em ordem.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Que bonito ouvir isso dito em voz alta nesta cozinha.'),
+      d => fala(nomeCasa(), 'Vai. E repara em tudo no caminho. O caminho é a melhor parte.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Sabe? Que bom. Então me conta depois, quando chegar lá.'),
+    adeus: [
+      d => fala(nomeCasa(), 'Olha pro céu de vez em quando. É o mesmo daqui, e eu vou estar olhando também.'),
+      d => fala(nomeCasa(), 'Agora vai. O dia tá bonito demais pra ficar em porta.')
+    ]
+  },
+
+  durao: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta. Come tudo. Ninguém sai desta casa com fome.'),
+      d => fala(nomeCasa(), 'E arruma essa gola. Treinador também é visto.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Já sabe o que vai fazer ou vai inventar na hora?'),
+    verdade: [
+      d => fala(nomeCasa(), 'Então inventa direito.'),
+      d => fala(nomeCasa(), 'E cuida deles antes de cuidar de você. Isso não é conselho, é regra.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Hm.', null, 'É o "hm" que nesta casa quer dizer que gostou.'),
+      d => fala(nomeCasa(), 'Então faz. Sem desculpa e sem pressa.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Hm. Tá bom.', null, '{casa:Ela|Ele} não acreditou, e decidiu que hoje não vai implicar.'),
+    adeus: [
+      d => fala(nomeCasa(), 'Liga quando chegar em Viridian. Não precisa falar muito. Fala que chegou.'),
+      d => fala(nomeCasa(), 'Vai.', null, 'E fica na porta até você virar a esquina, de braço cruzado, que é como esta casa abraça em público.')
+    ]
+  },
+
+  atrapalhado: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta! Cuidado, a cadeira bamba é essa. Não, a outra. Também.', 'riso'),
+      d => fala(nomeCasa(), 'Eu fiz panqueca. Ou fiz uma coisa que começou panqueca.', 'riso')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Então… você já sabe pra onde vai? Porque eu ia te dar um mapa e acho que dei pro vizinho.'),
+    verdade: [
+      d => fala(nomeCasa(), 'Ufa. Então ninguém nesta casa sabe, a gente tá empatad{casa:a|o}.', 'riso'),
+      d => fala(nomeCasa(), 'Pergunta no Centro. Lá eles sabem tudo. Eu sempre pergunto lá.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'Nossa. Isso foi muito mais organizado do que qualquer coisa que eu já disse nesta cozinha.', 'riso'),
+      d => fala(nomeCasa(), 'Vai fundo. Você puxou isso de alguém, e não foi de mim.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Que bom, porque eu não sei nem onde deixei a chave.', 'riso'),
+    adeus: [
+      d => fala(nomeCasa(), 'Tem tudo? Tem. Eu acho. Tem a Pokébola? Tem o… tem. Tem tudo.', 'riso'),
+      d => fala(nomeCasa(), 'Vai, que se eu continuar conferindo você só sai amanhã.', 'riso')
+    ]
+  },
+
+  calmo: {
+    mesa: [
+      d => fala(nomeCasa(), 'Senta. Sem pressa. A estrada não sai do lugar.'),
+      d => fala(nomeCasa(), 'Come com calma. Dia grande começa com o estômago tranquilo.')
+    ],
+    pergunta: d => fala(nomeCasa(), 'Você já sabe por onde vai? Pode não saber também.'),
+    verdade: [
+      d => fala(nomeCasa(), 'Tá certo. Saber vem andando.'),
+      d => fala(nomeCasa(), 'Quem confia no próprio passo chega em qualquer lugar.')
+    ],
+    objetivo: [
+      d => fala(nomeCasa(), 'É um bom lugar pra querer chegar.'),
+      d => fala(nomeCasa(), 'Eu confio em você. Sempre confiei.')
+    ],
+    mentira: d => fala(nomeCasa(), 'Tá bom.', null, 'Um sorriso pequeno, de quem não precisa de resposta nenhuma pra ficar tranquil{casa:a|o}.'),
+    adeus: [
+      d => fala(nomeCasa(), 'Vai com calma e volta quando quiser. A porta é sua.'),
+      d => fala(nomeCasa(), 'Eu tô aqui. Isso não muda.')
+    ]
+  }
+};
+
+/* O jeito é sorteado uma vez e fica na ficha: recarregar não troca a pessoa. */
+function jeitoDaCasa(d){
+  d = d || Estado.dados;
+  const c = d && d.jogador && d.jogador.casa;
+  if (!c) return 'calmo';
+  if (!c.jeito || !JEITOS_DA_CASA[c.jeito]) c.jeito = Dados.escolher(Object.keys(JEITOS_DA_CASA));
+  return c.jeito;
+}
+function falaDaCasa(momento, d){
+  const j = JEITOS_DA_CASA[jeitoDaCasa(d)];
+  const v = j[momento];
+  if (!v) return [];
+  return (Array.isArray(v) ? v : [v]).map(f => (typeof f === 'function' ? f(d || Estado.dados) : f));
+}
+
+
 /* ===== js/story/cap-01.js ===== */
 /* ============================================================
    CAPÍTULO 1 — A ÚLTIMA MANHÃ
    A saída de casa, sem pressa. A mochila começa vazia: licença,
    Pokédex, cartão e bolas saem do Centro Pokémon, com papel.
    ============================================================ */
+
+/* Pallet não tem Centro Pokémon: o posto de lá é o laboratório. */
+function oPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'o laboratório do Professor' : 'o Centro Pokémon'; }
+function aoPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'ao laboratório do Professor' : 'ao Centro Pokémon'; }
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
 const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado',
@@ -20167,8 +20431,8 @@ c1_foi_sem_despedir:{
         return [{tipo:'item', texto:'Ganhou um PokéNav. Estava no bolso de fora desde a noite passada.'}];
       }},
   escolhas:[
-    {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Seguir para ${oPostoDaCidade(d)}.`, vai:'c1_saida_pro_centro'},
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -20270,7 +20534,7 @@ c1_vizinha:{
       registrar:'A Sra. Perla apareceu com uma caixa e um Pokémon molhado dentro.'},
   escolhas:[
     {texto:'"Eu fico com ele."', vai:'c1_ficou_com_ele'},
-    {texto:'"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."', vai:'c1_leva_ao_centro'},
+    {texto:d=>`"Eu levo ${aoPostoDaCidade(d)}. É pra lá que eu vou de qualquer jeito."`, vai:'c1_leva_ao_centro'},
     {texto:'"Eu não posso, dona Perla. Eu saio hoje."', vai:'c1_recusou_a_caixa'},
     {texto:d=>`Chamar ${nomeCasa()} pra decidir junto.`, vai:'c1_chamou_de_dentro'}
   ]
@@ -20306,7 +20570,7 @@ c1_ficou_com_ele:{
 
 c1_leva_ao_centro:{
   texto:[
-    d=>fala(d.jogador.nome, 'Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito.'),
+    d=>fala(d.jogador.nome, `Eu levo ${aoPostoDaCidade(d)}. É pra lá que eu vou de qualquer jeito.`),
     'A Sra. Perla bate na caixa duas vezes, como quem fecha negócio, e já está descendo o degrau antes de você terminar a frase.',
     fala('Sra. Perla', 'A caixa eu quero de volta, viu! É a caixa do meu ventilador!', 'grita',
          'Ela grita isso da calçada, já de costas.'),
@@ -20328,7 +20592,7 @@ c1_recusou_a_caixa:{
     'Ela olha pra você por um tempo que passa do confortável.',
     fala('Sra. Perla', 'Eu sei que você sai hoje. A rua inteira sabe que você sai hoje.', 'frio'),
     'Ela ajeita a caixa nos braços. A caixa não mudou de peso. Alguma coisa ali mudou de peso.',
-    fala('Sra. Perla', 'Tudo bem, {filho|filha}. Eu deixo na porta do Centro antes de pegar o ônibus.'),
+    d=>fala('Sra. Perla', `Tudo bem, {filho|filha}. Eu deixo na porta ${d.jogador.cidade === 'Pallet' ? 'do laboratório' : 'do Centro'} antes de pegar o ônibus.`),
     'E vai embora. E é justamente o tudo bem que fica atravessado.'
   ],
   ef:{flag:'recusou_a_caixa', moral:-3,
@@ -20918,8 +21182,9 @@ c1_mochila:{
 c1_cozinha:{
   texto:[
     'A mesa tem comida para quatro e nesta casa mora gente que dá pra contar numa mão. É assim que se pede pra alguém ficar sem pedir.',
-    d=>fala(nomeCasa(), 'Senta.', null, 'Não é ordem. É a palavra que esta casa usa pra dizer umas dez outras coisas.'),
+    d=>falaDaCasa('mesa', d)[0],
     'Você senta. Come mais do que queria e menos do que colocaram no prato.',
+    d=>falaDaCasa('mesa', d)[1],
     d=>{
       const p = d.time[0];
       if (!p) return 'O rádio na bancada fala de chuva no norte.';
@@ -20928,7 +21193,7 @@ c1_cozinha:{
         return `${nomeExib(p)} ganha um pedaço por baixo da mesa. Faz uma hora que ${pron(p).ele} chegou, e a casa já achou um jeito de fazer isso parecer costume.`;
       return `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.`;
     },
-    d=>fala(nomeCasa(), 'E aí. Você já sabe pra onde vai?')
+    d=>falaDaCasa('pergunta', d)[0]
   ],
   escolhas:[
     {texto:'"Sei." (mesmo que não saiba)', vai:'c1_mentira_gentil'},
@@ -20942,9 +21207,8 @@ c1_mentira_gentil:{
   texto:[
     d=>fala(d.jogador.nome, 'Sei.'),
     'Dois segundos de silêncio que dizem, com todas as letras, que ninguém acreditou e que ninguém vai discutir.',
-    d=>fala(nomeCasa(), 'Tá bom. Então come.', null,
-            '{casa:Ela|Ele} mexe o café que já está mexido há um minuto.'),
-    'É uma mentira gentil e hoje todo mundo nesta mesa prefere ela.'
+    d=>falaDaCasa('mentira', d)[0],
+    'É uma mentira gentil, e hoje ninguém nesta mesa está com vontade de desmentir.'
   ],
   ef:{flag:'mentiu_no_cafe'},
   escolhas:[
@@ -20958,11 +21222,8 @@ c1_verdade:{
   texto:[
     d=>fala(d.jogador.nome, 'Não faço a menor ideia.'),
     'Dessa vez o silêncio é diferente. Mais longo e muito mais fácil.',
-    d=>fala(nomeCasa(), 'Ótimo.', null, 'A resposta te pega completamente desprevenido.'),
-    d=>fala(nomeCasa(), 'Quem sai daqui sabendo exatamente pra onde vai volta em três semanas. Eu já vi isso acontecer quatro vezes nesta rua.'),
-    d=>fala(d.jogador.nome, 'E quem não sabe?'),
-    d=>fala(nomeCasa(), 'Esse demora.', null, 'Um gole de café, sem pressa nenhuma.'),
-    d=>fala(nomeCasa(), 'Mas volta diferente. E aí a demora valeu.')
+    d=>falaDaCasa('verdade', d)[0],
+    d=>falaDaCasa('verdade', d)[1]
   ],
   ef:{flag:'foi_honesto_no_cafe', moral:5},
   escolhas:[
@@ -20977,8 +21238,8 @@ c1_objetivo:{
     d=>fala(d.jogador.nome, d.jogador.objetivo),
     'Você fala isso em voz alta, na sua cozinha, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
     'Do outro lado da mesa, a colher para no meio do café.',
-    d=>fala(nomeCasa(), 'Então vai.'),
-    d=>fala(nomeCasa(), 'E quando isso mudar — porque isso muda, sempre muda — não trata como derrota.')
+    d=>falaDaCasa('objetivo', d)[0],
+    d=>falaDaCasa('objetivo', d)[1]
   ],
   ef:{flag:'disse_o_objetivo', moral:5},
   escolhas:[
@@ -21009,10 +21270,9 @@ c1_despedida:{
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
     d=>fala(nomeCasa(), `Isso aqui é um PokéNav. Era ${/^(tio|tia)$/.test(casaQuem()) ? 'do seu avô' : 'do seu tio'} e ele não usava, e eu mandei consertar a tampa.`),
     d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
-    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui. Não precisa usar todo dia.', 'baixo'),
-    d=>fala(nomeCasa(), 'Mas usa.'),
-    d=>fala(nomeCasa(), 'Uma coisa só.', null, 'A mão fecha no batente da porta.'),
-    d=>fala(nomeCasa(), 'Volta. Não precisa voltar campeão. Só volta.')
+    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui.'),
+    d=>falaDaCasa('adeus', d)[0],
+    d=>falaDaCasa('adeus', d)[1]
   ],
   ef:{dinheiro:3000, itens:{'Ração':1},
       executar:d=>{
@@ -21089,8 +21349,8 @@ c1_varreu_no_lugar:{
       rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
       registrar:d=>`Pagou ${vz().divida} fazendo o serviço ${vz().do} ${vz().nome}.`},
   escolhas:[
-    {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Seguir para ${oPostoDaCidade(d)}.`, vai:'c1_saida_pro_centro'},
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -21206,7 +21466,7 @@ c1_divida_assume:{
       npc:d=>({nome:vz().nome, opiniao:3, memoria:`Foi honesto sobre ${vz().divida}. Ganhou a caixa de metal.`})},
   escolhas:[
     {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -21220,7 +21480,7 @@ c1_divida_nega:{
       npc:d=>({nome:vz().nome, opiniao:-3, memoria:`Mentiu sobre ${vz().divida}. ${vz().Ele} sabe.`})},
   escolhas:[
     {texto:'Seguir em frente.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -21234,7 +21494,7 @@ c1_divida_paga:{
   ef:{dinheiro:-800, npc:d=>({nome:vz().nome, opiniao:-1, memoria:`Pagou ${vz().divida} em dinheiro. Ficou estranho.`})},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -21251,7 +21511,7 @@ c1_divida_adiada:{
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -21260,7 +21520,7 @@ c1_saida_pro_centro:{
     'Você chega no fim da rua e para, porque tem uma coisa que você precisa resolver antes de qualquer outra e que ninguém nunca conta nas histórias.',
     'Não dá pra sair por aí com um Pokémon. Tecnicamente, não dá.',
     d=>d.jogador.cidade === 'Pallet'
-      ? 'O posto do Centro Pokémon de Pallet funciona numa sala dos fundos do mercado, três manhãs por semana. Hoje é uma delas.'
+      ? 'Pallet não tem Centro Pokémon. O cadastro de treinador se faz numa mesa do lado da porta do laboratório do Professor, três manhãs por semana. Hoje é uma delas.'
       : d.flags.recebeu_do_goro
         ? `No Centro Pokémon de ${d.jogador.cidade}, a fila de depois do almoço já começou. É meio-dia e meia.`
         : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,
@@ -21849,7 +22109,6 @@ c2_mural:{
     'Na parede da entrada, o mural de recados: uma placa de cortiça de dois metros por um, coberta de papel em três camadas.',
     'Você fica ali mais tempo do que pretendia.',
     '"Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa." — com uma foto colada, tirada de longe, meio tremida.',
-    '"Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava." — sem foto e sem nome.',
     '"COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO." — letra de imprensa, sem telefone, só um horário e um lugar.',
     'E, escrito à mão com pressa e sublinhado três vezes, num pedaço de papel pardo:',
     '"NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE."'
@@ -21862,7 +22121,7 @@ c2_mural:{
     {texto:'Perguntar à atendente sobre o aviso da floresta.', vai:'c2_pergunta_floresta'},
     {texto:'Ler tudo e não mexer em nada.', vai:'c2_leu_tudo'},
     {texto:'Pregar um recado seu no mural, no espaço que sobrou.', vai:'c2_pregou_recado'},
-    {texto:'Ligar pra casa antes de qualquer coisa. Aquele recado de mãe mexeu com você.',
+    {texto:'Ligar pra casa antes de qualquer coisa.',
      vai:'c2_ligou_por_causa_do_cartaz', cond:d=>Estado.temPokenav()},
     {texto:'Procurar no mural algum recado da sua cidade.', vai:'c2_recado_da_sua_cidade',
      cond:d=>!!d.flags.a_casa_estava_cheia || !!d.flags.viu_o_cartaz}
@@ -21875,7 +22134,7 @@ c2_pregou_recado:{
     'Você escreve três versões na cabeça e a quarta no papel, que é a mais curta — o que já virou um hábito seu e você nem percebeu.',
     d=>`No papel, escrito à mão: "${d.jogador.nome}, de ${d.jogador.cidade}. Saí dia desses. Se alguém daqui for pra lá, avisa que tá tudo bem."`,
     'Você prega no único espaço que sobrou, embaixo à direita, meio torto, por cima do canto de um cartaz de 1994.',
-    'Daqui a três meses vai ter mais duas camadas de papel por cima do seu. Ele vai continuar lá embaixo, do mesmo jeito.'
+    'Ele fica ali embaixo, torto, entre um cartaz de 1994 e o canto da cortiça.'
   ],
   ef:{flag:'pregou_recado_no_mural', moral:3,
       rep:{eixo:'bom',delta:1,motivo:'Pregou o próprio recado num mural cheio de recado de outros'},
@@ -21889,18 +22148,18 @@ c2_pregou_recado:{
 
 c2_ligou_por_causa_do_cartaz:{
   texto:[
-    'Você lê o cartaz sem foto e sem nome três vezes e aí sai da fila do mural e vai pro orelhão do saguão.',
+    'Um mural inteiro de gente procurando gente. Você sai da frente dele e vai pro orelhão do saguão.',
     'Dois toques.',
     d=>fala(nomeCasa(), 'Alô?', null, 'A voz está normal. É só isso — está normal, e é isso que te desmonta um pouco.'),
-    d=>fala(d.jogador.nome, 'Oi. É que eu vi um cartaz aqui e eu… nada. Oi.'),
+    d=>fala(d.jogador.nome, 'Oi. É que eu vi um mural aqui e eu… nada. Oi.'),
     'Silêncio do outro lado por dois segundos.',
     d=>fala(nomeCasa(), 'Você tá em Viridian já? Criatura, você mal saiu.', 'riso'),
     d=>fala(nomeCasa(), 'Tá comendo?'),
-    '{casa:Ela|Ele} vai perguntar isso todas as vezes, pelos próximos nove meses, em qualquer circunstância, inclusive nas piores.'
+    '{casa:Ela|Ele} pergunta do jeito de quem pergunta as horas, e você responde do jeito de quem não pensou nisso o dia inteiro.'
   ],
   ef:{flag:'ligou_por_causa_do_cartaz', moral:5,
-      rep:{eixo:'bom',delta:1,motivo:'Ligou pra casa por causa de um cartaz de outra pessoa'},
-      registrar:'Ligou pra casa depois de ler o cartaz de uma mãe no mural.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ligou pra casa do saguão do Centro de Viridian'},
+      registrar:'Ligou pra casa depois de ler o mural de Viridian.'},
   escolhas:[
     {texto:'Pregar um recado seu no mural também.', vai:'c2_pregou_recado'},
     {texto:'Ir ver o garoto na escada.', vai:'c2_teo'},
@@ -21946,7 +22205,7 @@ c2_botou_na_frente:{
 
 c2_devolveu_o_cartaz:{
   texto:[
-    'Você tira o seu cartaz do meio do mural e prega de volta lá embaixo, na terceira camada, embaixo do cartaz do Growlithe e da mãe sem nome.',
+    'Você tira o seu cartaz do meio do mural e prega de volta lá embaixo, na terceira camada, embaixo do cartaz do Growlithe.',
     'A senhora da fila do balcão vê isso também.',
     fala('a senhora da fila', 'Bom menino.', 'baixo', 'É tudo que ela diz, e ela nem olha pra você quando diz.')
   ],
@@ -21960,7 +22219,7 @@ c2_tirou_o_proprio_cartaz:{
   texto:[
     'Você tira o seu cartaz do mural, dobra em quatro e põe no bolso, e o buraquinho do percevejo fica.',
     'É a segunda vez em dois dias que você tira um cartaz seu de algum lugar.',
-    'Você vai carregar esse papel dobrado até ele amassar nas dobras, e não vai jogar fora, e não vai olhar de novo.'
+    'O papel dobrado faz volume no bolso. Você não olha de novo.'
   ],
   ef:{flag:'tirou_o_cartaz_de_viridian', moral:-2,
       itens:{'Cartaz dobrado em quatro, com a sua cara':1},
@@ -79106,25 +79365,27 @@ c1_professor:{
     d=>d.flags.dormiu_demais
       ? fala('o Professor', 'São dez pras dez. Eu fiquei aqui mesmo assim, que bandeja não tem pressa.')
       : fala('o Professor', 'São oito e quatro. Tudo bem. Eu também me atrasei no meu.'),
-    'Cada Pokébola tem uma tira de fita adesiva colada no meio, com a letra dele: BULBASAUR, CHARMANDER, SQUIRTLE. Fora a fita, as três são iguais.',
-    fala('o Professor', 'Escolhe. Aqui mesmo, na rua. No meu tempo era assim e ninguém morreu disso.')
+    fala('o Professor', 'Mas Pokébola fechada não diz nada. Olha eles.'),
+    'Ele abre as três de uma vez, com o polegar, e três luzes vermelhas descem no asfalto.',
+    'O Bulbasaur se espreguiça e vira o bulbo pro sol. O Charmander sacode a cauda e a chama sobe quando te vê. O Squirtle já está olhando a poça da calha, com planos.',
+    fala('o Professor', 'Escolhe. Aqui mesmo, na rua, como no meu tempo. Sem pressa.', 'riso')
   ],
-  escolhas: escolhasDeInicial(n => `Pegar a Pokébola do ${n}.`, 'c1_professor_entrega')
+  escolhas: escolhasDeInicial(n => `O ${n}.`, 'c1_professor_entrega')
 },
 
 c1_professor_entrega:{
   texto:[
-    d=>`Você pega a Pokébola do ${especieReservada(d)}. Ele não comenta a escolha. Tira um caderno do bolso do jaleco e escreve uma palavra só.`,
+    d=>`O ${especieReservada(d)} vem andando até o seu pé antes de você terminar de apontar. O Professor recolhe os outros dois e te entrega a Pokébola dele, e tira um caderno do bolso do jaleco pra escrever uma palavra só.`,
     d=>{ const aposta = INICIAIS_CLASSICOS[String(d.jogador.nome).length % 3];
          return aposta === dexReservado(d)
            ? fala('o Professor', `Eu tinha apostado comigo mesmo que ia ser ${especieReservada(d)}. Eu reparo nessas coisas.`)
            : fala('o Professor', `Eu tinha apostado comigo mesmo que ia ser ${DEX[aposta].nome}. Perdi. Faz quarenta anos que eu perco essa aposta.`, 'riso'); },
-    'Não tem discurso, não tem fita, não tem foto. Só a Pokébola passando de uma mão pra outra, no meio da rua, com um Pidgey olhando do fio.',
-    d=>{ const p = (d.time || []).slice(-1)[0];   // o último que entrou: quem ficou com o bicho da vizinha já tem um
-         return p ? `A Pokébola abre na sua mão antes de você decidir abrir. ${nomeExib(p)} sai, olha primeiro pra ele, depois pra você, e fica olhando pra você.`
+    'Não tem discurso, não tem foto. Só um Pokémon novo no meio da rua, com um Pidgey olhando do fio.',
+    d=>{ const p = (d.time || []).slice(-1)[0];   // o último que entrou: quem ficou com o Pokémon da vizinha já tem um
+         return p ? `${nomeExib(p)} olha primeiro pra ele, depois pra você, e fica olhando pra você.`
                   : 'A Pokébola pesa menos do que parecia.'; },
     d=>{ const p = (d.time || []).slice(-1)[0];
-         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} vai atrás de você porque você é quem está na frente ${p ? pron(p).dele : 'dele'} agora. O resto é com vocês dois.`, 'baixo'); },
+         return fala('o Professor', `${p ? pron(p).Ele : 'Ele'} gostou de você. Dá pra ver. O resto vocês descobrem juntos.`, 'riso'); },
     'Ele volta pro laboratório com a bandeja e as duas que sobraram, sem se despedir, do jeito de quem vai estar lá quando você voltar.'
   ],
   ef:{executar:d => entregarDoProfessor(d)},
@@ -79371,50 +79632,44 @@ c1e_a_volta:{
 c1e_ele_conta:{
   texto:[
     d=>fala(d.jogador.nome, 'Duzentas e vinte e oito. O senhor conta?'),
-    'Ele para de escrever.',
-    fala('Célio', 'Conto.'),
-    fala('Célio', 'Não é orgulho, não. É que eu conto quantas eu ainda vou fazer.', 'baixo'),
-    fala('Célio', 'Eu tenho cinquenta e três anos e o carro tem vinte e seis. Um de nós dois vai parar primeiro e eu já apostei em qual.'),
-    'Ele volta pro caderno como quem volta pra uma coisa que é mais confortável que a conversa.',
-    fala('Célio', 'Nome.')
+    'Ele para de escrever e sorri pro caderno.',
+    fala('Célio', 'Conto. Não as voltas: as manhãs como essa.'),
+    fala('Célio', 'Duzentas e vinte e oito vezes eu vi alguém abrir a primeira Pokébola. Tem gente que coleciona selo. Eu coleciono isso.', 'riso'),
+    fala('Célio', 'E nenhuma foi igual. Tem Bulbasaur que espirra, tem Charmander que acha a chuva uma ofensa pessoal, tem Squirtle que quer entrar no chafariz.'),
+    'Ele volta pro caderno com a caneta já pronta.',
+    fala('Célio', 'Bora fazer a sua. Nome.')
   ],
-  ef:{npc:{nome:'Célio', opiniao:4, memoria:'Contou, sem drama nenhum, que conta quantas voltas ainda vai conseguir fazer.'}},
+  ef:{npc:{nome:'Célio', opiniao:4, memoria:'Te contou que coleciona as manhãs em que alguém abre a primeira Pokébola.'}},
   escolhas:[{texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'}]
 },
 
 c1e_nao_retirado:{
   texto:[
-    d=>fala(d.jogador.nome, 'E o que não é retirado? Acontece muito?'),
-    'Ele demora um pouco pra responder, e a demora é a resposta.',
-    fala('Célio', 'Três por volta. Às vezes quatro.'),
-    fala('Célio', 'A pessoa pede em janeiro, muda de ideia em fevereiro e não avisa, porque avisar é constrangedor e não aparecer não é.'),
-    fala('Célio', 'Aí eu fico aqui até meio-dia com o nome escrito e a Pokébola lacrada, e depois eu escrevo NR do lado do nome e vou embora.'),
-    d=>fala(d.jogador.nome, 'NR?'),
-    fala('Célio', 'Não retirado.'),
-    fala('Célio', 'É a sigla mais triste que eu escrevo e eu escrevo umas quarenta por ano.', 'baixo'),
-    'Ele bate a caneta duas vezes no caderno, mudando de assunto sozinho.',
-    fala('Célio', 'Você tá aqui. Isso já resolve o seu. Nome.')
+    d=>fala(d.jogador.nome, 'E se alguém não estiver na cidade no dia?'),
+    fala('Célio', 'Aí eu deixo no balcão do Centro, com o nome na etiqueta, e a pessoa pega quando chegar.'),
+    fala('Célio', 'Já entreguei Pokébola pra quem chegou correndo de pijama, pra quem chegou de bicicleta sem freio e pra uma menina que veio no colo do avô porque tinha torcido o pé no dia.', 'riso'),
+    fala('Célio', 'Ninguém fica sem. Esse é o combinado com o Professor.'),
+    'Ele bate a caneta duas vezes no caderno.',
+    fala('Célio', 'Mas você tá aqui, que é o melhor jeito. Nome.')
   ],
-  ef:{flag:'sabe_do_nr', npc:{nome:'Célio', opiniao:3, memoria:'Te contou o que significa NR no caderno dele.'},
-      presagio:'Quarenta por ano, dezenove anos. Em algum lugar de Kanto tem setecentas e poucas pessoas que quase saíram de casa.'},
+  ef:{flag:'sabe_do_nr', npc:{nome:'Célio', opiniao:3, memoria:'Te contou das entregas mais engraçadas da volta.'}},
   escolhas:[
     {texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'},
-    {texto:'"E as Pokébolas que voltam, vão pra onde?"', vai:'c1e_as_que_voltam'}
+    {texto:'"E o laboratório, como é lá dentro?"', vai:'c1e_as_que_voltam'}
   ]
 },
 
 c1e_as_que_voltam:{
   texto:[
-    d=>fala(d.jogador.nome, 'E as que voltam? Vão pra onde?'),
-    fala('Célio', 'Voltam pro laboratório e esperam.'),
-    fala('Célio', 'Tem uma prateleira lá que o Oak chama de estoque e que todo mundo que trabalha lá chama de outra coisa.'),
-    d=>fala(d.jogador.nome, 'De quê?'),
-    'Ele olha pra você medindo se vale a pena dizer.',
-    fala('Célio', 'De "os que ninguém quis".', 'baixo'),
-    fala('Célio', 'E não é verdade, porque alguém quis. Alguém quis por escrito e desistiu depois. Mas o nome pegou e ninguém corrige mais.')
+    d=>fala(d.jogador.nome, 'E o laboratório? Como é lá dentro?'),
+    fala('Célio', 'Barulhento.', 'riso'),
+    fala('Célio', 'Tem um pátio nos fundos onde os que vão sair no mês que vem ficam juntos. O Professor diz que é pra eles aprenderem a dividir espaço antes de aprender a dividir comida com treinador.'),
+    fala('Célio', 'De manhã os Squirtle tomam conta do bebedouro, de tarde os Bulbasaur tomam sol em fila, e os Charmander dormem em cima da tampa do aquecedor.'),
+    d=>fala(d.jogador.nome, 'E eles sabem que vão sair?'),
+    fala('Célio', 'Sabem que tem alguém esperando. Eu sempre falo o nome da cidade em voz alta quando carrego a caixa.', 'baixo', 'E ri de si mesmo logo depois.')
   ],
-  ef:{flag:'sabe_da_prateleira', npc:{nome:'Célio', opiniao:4, memoria:'Te contou o apelido da prateleira dos que ninguém foi buscar.'},
-      registrar:'No laboratório de Pallet tem uma prateleira que chamam de "os que ninguém quis".'},
+  ef:{flag:'sabe_da_prateleira', npc:{nome:'Célio', opiniao:4, memoria:'Te contou do pátio do laboratório, onde os iniciais esperam a saída.'},
+      registrar:'No laboratório de Pallet, os iniciais do mês esperam juntos num pátio nos fundos.'},
   escolhas:[{texto:d=>`"${d.jogador.nome}."`, vai:'c1e_o_caderno'}]
 },
 
@@ -79526,68 +79781,68 @@ c1e_assinou_calado:{
 
 c1e_abre_a_caixa:{
   texto:[
-    'Ele corta a fita do fecho com a unha do polegar, de um jeito treinado que não estraga a fita inteira, porque a fita vai fechar a caixa de novo daqui a pouco.',
-    'Dentro tem espuma cinza recortada em três fileiras de buracos redondos, e em cima de cada fileira uma tira de fita adesiva escrita a caneta: BULBASAUR, CHARMANDER, SQUIRTLE.',
-    'As Pokébolas são iguais. Vermelhas e brancas, lacradas, sem janela. O que muda de uma fileira pra outra é a palavra na fita.',
-    fala('Célio', 'Escolhe.')
+    'Ele corta a fita do fecho com a unha do polegar e abre a tampa devagar, de propósito, como quem gosta dessa parte.',
+    'Dentro tem espuma cinza com três fileiras de Pokébolas, e em cima de cada fileira uma etiqueta escrita a caneta: BULBASAUR, CHARMANDER, SQUIRTLE.',
+    fala('Célio', 'Ninguém escolhe olhando Pokébola fechada. Espera aí.'),
+    'Ele pega uma de cada fileira e joga as três pro alto, uma atrás da outra.',
+    'Três luzes vermelhas descem na lona do portamalas e viram três Pokémon.',
+    'O Bulbasaur sai já esticando as folhas do bulbo pro sol, como quem acabou de acordar de um cochilo bom.',
+    'O Charmander sai sacudindo a cauda, e a chama da ponta fica mais alta quando ele vê você.',
+    'O Squirtle sai, olha o chafariz da praça, olha pra você, e olha pro chafariz de novo, com uma intenção muito clara.',
+    fala('Célio', 'Pronto. Agora sim. Com calma: qual deles?', 'riso')
   ],
-  escolhas: escolhasDeInicial(n => `A fileira do ${n}.`, 'c1e_escolheu')
+  escolhas: escolhasDeInicial(n => `O ${n}.`, 'c1e_escolheu')
 },
 
 c1e_escolheu:{
   texto:[
-    'Ele tira a Pokébola da fileira com as duas mãos, não porque seja pesada, mas porque é assim que se pega uma coisa que agora é de outra pessoa.',
-    d=>`Ele escreve ${especieReservada(d).toUpperCase()} na coluna vazia do caderno, em letra de forma, e amarra no fecho da Pokébola uma etiqueta de papel com o seu nome e a data de hoje.`,
-    fala('Célio', 'Olha só uma coisa antes.'),
-    fala('Célio', 'Isso aqui não é um prêmio e não é um presente. É uma inscrição que foi aprovada.'),
-    fala('Célio', 'Se em dois meses você decidir que não era isso, você devolve num Centro Pokémon e ninguém vai te chamar de nada. Eu levo de volta e escrevo o que tiver que escrever.'),
-    fala('Célio', 'Mas se você for ficar, fica de verdade.', 'baixo')
+    d=>`O ${especieReservada(d)} percebe antes de você terminar de apontar. Vem até a beira da lona e fica ali, esperando, como se fosse ele que tivesse escolhido.`,
+    'Os outros dois voltam pras Pokébolas num raio vermelho, e o Célio guarda as duas na espuma com cuidado, uma em cada fileira.',
+    d=>`Ele escreve ${especieReservada(d).toUpperCase()} na coluna vazia do caderno, em letra de forma, e amarra no fecho da Pokébola uma etiqueta com o seu nome e a data de hoje.`,
+    fala('Célio', 'Boa escolha. E eu falo isso pra todo mundo, mas hoje é verdade.', 'riso'),
+    fala('Célio', 'Ele vai crescer com você. Cuida dele que ele te leva longe.')
   ],
   ef:{flag:'aviso_do_goro'},
   escolhas:[
-    {texto:'"Eu vou ficar." Estender a mão.', vai:'c1e_recebeu',
+    {texto:'"Pode deixar." Estender a mão.', vai:'c1e_recebeu',
      ef:{flag:'prometeu_ficar', moral:8}},
-    {texto:'"E se eu não souber ainda?"', vai:'c1e_nao_sei_ainda'},
-    {texto:'Pegar a Pokébola sem responder.', vai:'c1e_recebeu'},
-    {texto:'"O senhor já devolveu alguma?"', vai:'c1e_ja_devolveu'}
+    {texto:'"E se eu não souber o que fazer?"', vai:'c1e_nao_sei_ainda'},
+    {texto:'Pegar a Pokébola sem responder, sorrindo.', vai:'c1e_recebeu'},
+    {texto:'"O senhor lembra de todos que entregou?"', vai:'c1e_ja_devolveu'}
   ]
 },
 
 c1e_nao_sei_ainda:{
   texto:[
-    d=>fala(d.jogador.nome, 'E se eu não souber ainda?'),
+    d=>fala(d.jogador.nome, 'E se eu não souber o que fazer?'),
     'Ele ri de um jeito que enruga o olho inteiro.',
-    fala('Célio', 'Aí você é igual aos outros duzentos e vinte e sete que eu entreguei esse mês e nos meses de antes.'),
-    fala('Célio', 'Ninguém sabe. Quem chega aqui dizendo que sabe é o que eu mais me preocupo.', 'baixo'),
-    fala('Célio', 'Não saber e ir mesmo assim é o normal. Pega.')
+    fala('Célio', 'Ninguém sabe no primeiro dia. Nem eu sabia, e eu já tinha quarenta anos.'),
+    fala('Célio', 'Você aprende junto com ele. É pra isso que vocês são dois.'),
+    fala('Célio', 'Pega.')
   ],
-  ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe, e que ir sem saber é o normal.'}},
+  ef:{moral:6, npc:{nome:'Célio', opiniao:3, memoria:'Te disse que ninguém sabe no primeiro dia, e que vocês aprendem juntos.'}},
   escolhas:[{texto:'Pegar a Pokébola.', vai:'c1e_recebeu'}]
 },
 
 c1e_ja_devolveu:{
   texto:[
-    d=>fala(d.jogador.nome, 'O senhor já levou alguma de volta? Depois de entregar, quero dizer.'),
-    'Ele fecha o caderno inteiro dessa vez.',
-    fala('Célio', 'Onze vezes.'),
-    fala('Célio', 'Em dezenove anos. Onze pessoas me procuraram depois pra devolver, e eu levei as onze sem discutir.'),
-    d=>fala(d.jogador.nome, 'E os Pokémon?'),
-    fala('Célio', 'Ficam no laboratório. Comem bem, correm no pátio, e não são de ninguém.'),
-    'Ele olha pra caixa térmica aberta.',
-    fala('Célio', 'Dos onze, sete foram adotados depois por gente que chegou lá procurando exatamente isso: Pokémon que já conhece o mundo e não tem dono.', 'baixo'),
-    fala('Célio', 'Os outros quatro eu não sei, e não pergunto.')
+    d=>fala(d.jogador.nome, 'O senhor lembra de todos que entregou?'),
+    fala('Célio', 'Da maioria. Pelo Pokémon, não pelo nome da pessoa.', 'riso'),
+    fala('Célio', 'Tem um Charmander de Vermilion de oito anos atrás que hoje é Charizard e passa voando por cima da perua quando eu chego. O dono acena lá de cima.'),
+    fala('Célio', 'E um Squirtle de Lavender que eu entreguei pra uma menina tímida. Ela é líder de equipe de resgate hoje.'),
+    'Ele olha pra você e pro seu Pokémon, e você entende que acabou de entrar na lista dele.',
+    fala('Célio', 'Me dá notícia de vez em quando. Eu gosto de saber no que deu.')
   ],
-  ef:{flag:'sabe_dos_onze', npc:{nome:'Célio', opiniao:4, memoria:'Contou das onze devoluções em dezenove anos, e que sete acharam alguém depois.'},
-      registrar:'Onze pessoas devolveram o inicial em dezenove anos. Sete daqueles Pokémon acharam outra pessoa.'},
+  ef:{flag:'sabe_dos_onze', npc:{nome:'Célio', opiniao:4, memoria:'Te contou de quem ele entregou e virou gente grande.'},
+      registrar:'Célio lembra de cada inicial que entregou, e pede notícia.'},
   escolhas:[{texto:'Pegar a Pokébola.', vai:'c1e_recebeu'}]
 },
 
 c1e_recebeu:{
   texto:[
     'A Pokébola é mais leve do que você imaginava a vida inteira, e essa é a primeira coisa que você aprende hoje.',
-    'Ele fecha a caixa, passa a fita por cima do corte, e escreve uma coisa curta no caderno do lado do seu nome. Você não consegue ler de cabeça pra baixo e não pergunta.',
-    d=>fala('Célio', `Abre aqui, vai. Eu gosto de ver, e depois eu tenho que anotar se tá bem.`),
-    'Você aperta o botão.'
+    'Ele fecha a caixa, passa a fita por cima do corte, e desenha uma estrelinha do lado do seu nome no caderno.',
+    fala('Célio', 'Ele já tá fora, então deixa ele te conhecer antes de guardar. Primeira impressão é dos dois lados.', 'riso')
   ],
   ef:{executar:d => entregarInicial(d)},
   escolhas:[
@@ -79606,10 +79861,10 @@ c1e_primeiro_olhar:{
                : 'A luz sai da Pokébola e vira Pokémon em cima da lona.';
     },
     'Depois ele olha pra você. E continua olhando, do jeito que Pokémon olha quando está decidindo uma coisa.',
-    'Você não sabe o que ele decidiu. Ninguém sabe nunca.',
-    fala('Célio', 'Tá bem.', null, 'Anotando.'),
+    'E aí ele vem até você e encosta a cabeça na sua mão, e fica.',
+    fala('Célio', 'Pronto. Escolheu de volta.', 'riso'),
     d=>fala(d.jogador.nome, 'Como o senhor sabe?'),
-    fala('Célio', 'Olhou a praça antes de olhar você. Pokémon que não tá bem olha o chão.', 'baixo')
+    fala('Célio', 'Olhou a praça inteira e voltou pra você. Pokémon curioso e que volta é o melhor tipo que tem.')
   ],
   ef:{moral:4, flag:'olhou_a_praca_primeiro'},
   escolhas:[
@@ -79670,7 +79925,7 @@ c1e_mais_alguma_coisa:{
     fala('Célio', 'Segunda: ele come de três em três horas nas primeiras semanas e depois estabiliza sozinho. Não force.'),
     'Uma pausa mais longa que as outras.',
     fala('Célio', 'Terceira: ele não sabe que você é novo nisso. Pra ele você já é a pessoa dele desde agorinha, com currículo e tudo.', 'baixo'),
-    fala('Célio', 'Isso é bom e é um peso, e é melhor você saber do peso hoje do que descobrir em Pewter.')
+    fala('Célio', 'Então seja. Você vai aprendendo no caminho, e ele vai junto.')
   ],
   ef:{flag:'conselho_do_goro', moral:5,
       npc:{nome:'Célio', opiniao:5, memoria:'Te deu três conselhos e nenhum deles era sobre batalha.'},
@@ -79687,10 +79942,8 @@ c1e_por_que_fala:{
     d=>fala(d.jogador.nome, 'Por que o senhor tá me falando isso? Não é o seu trabalho.'),
     'Ele arruma o banquinho dobrável, que não precisava ser arrumado.',
     fala('Célio', 'Não é.'),
-    fala('Célio', 'Mas eu entreguei Pokébola pra um menino em Cerulean em noventa e um e não falei nada, porque tinha fila e eu tava atrasado.'),
-    fala('Célio', 'Três semanas depois a mãe dele me ligou perguntando o que fazer, e eu não soube responder pelo telefone.'),
-    'Ele dá de ombros de um jeito que não é leve.',
-    fala('Célio', 'Desde noventa e um eu falo. Custa dois minutos por pessoa e eu tenho dois minutos.', 'baixo')
+    fala('Célio', 'Mas quando eu saí de casa, quem me entregou o meu Pokémon me deu dez minutos de conselho na calçada, e eu uso até hoje.'),
+    fala('Célio', 'Agora é a minha vez de dar. Custa dois minutos por pessoa e eu tenho dois minutos.', 'riso')
   ],
   ef:{moral:6, flag:'historia_de_noventa_e_um',
       npc:{nome:'Célio', opiniao:6, memoria:'Te contou por que ele fala com todo mundo desde 1991.'}},
@@ -79707,12 +79960,12 @@ c1e_despedida_goro:{
       const DIA = {Pallet:1, Viridian:2, Pewter:4, Cerulean:6, Vermilion:8,
                    Lavender:10, Celadon:12, Saffron:14, Fuchsia:15, Cinnabar:16};
       const q = DIA[d.jogador.cidade] || 4;
-      return fala('Célio', `Eu volto dia ${q} do mês que vem. Aqui é sempre dia ${q}. Se você ainda estiver na cidade, aparece. Se não estiver, melhor ainda.`, 'riso');
+      return fala('Célio', `Eu volto dia ${q} do mês que vem. Aqui é sempre dia ${q}. Se você ainda estiver na cidade, aparece. Se não estiver, é porque a estrada tá boa.`, 'riso');
     },
     'Ele abre a porta do motorista e para antes de entrar.',
     d=>fala('Célio', `Ah. Anota o meu número, vai. Todo mundo que eu entrego tem.`),
     'Ele dita um número de sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
-    d=>fala('Célio', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
+    d=>fala('Célio', 'Liga contando quando ele evoluir. Eu quero saber.', 'riso')
   ],
   ef:{executar:d => {
         Estado.marcar('numero_do_goro');
@@ -81602,7 +81855,7 @@ const UI = {
         <button data-v="classico" class="sel">Um dos três clássicos</button>
         <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
-      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três Pokébolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
+      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com os três fora da Pokébola, na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
@@ -81632,7 +81885,7 @@ const UI = {
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
         ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
-        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três Pokébolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
+        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com os três fora da Pokébola, na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
@@ -85293,15 +85546,18 @@ const UI = {
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
       <h3>De onde vem o seu primeiro</h3>
-      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com as três Pokébolas na sua frente · nenhuma vem escolhida</span></div>
+      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com os três fora da Pokébola, na sua frente · nenhuma vem escolhida</span></div>
       <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor traz a bandeja pra rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
-      <div class="linha"><span class="k">Nasceu longe de Pallet e Viridian</span><span class="v">a licença vem com a passagem do ônibus da Liga até Viridian, onde a estrada dos ginásios começa · sem licença, você paga a passagem</span></div>
-      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
+      <div class="linha"><span class="k">Onde a jornada começa</span><span class="v">na cidade em que você nasceu · quem nasceu longe de Pallet e Viridian tem, na rodoviária da cidade, o ônibus da Liga até Viridian, uma vez, se quiser · com licença a passagem é de graça, sem licença custa 500 ₽</span></div>
+      <div class="linha"><span class="k">Sua casa</span><span class="v">na sua cidade natal · cura o time inteiro e você, de graça, e a noite passa</span></div>
+      <div class="linha"><span class="k">Pallet</span><span class="v">não tem Centro Pokémon nem loja · o cadastro de treinador é no laboratório do Professor</span></div>
+      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro (em Pallet, na porta de casa). Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
-      <div class="linha"><span class="k">Onde</span><span class="v">dez cidades · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">nove cidades (Pallet não tem loja) · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Como nos jogos</span><span class="v">Poké Ball e Potion desde Viridian · Repelente a partir de Cerulean · Super Potion a partir de Vermilion · Great Ball e Revive a partir de Lavender e Celadon · Ultra Ball em Fuchsia e Cinnabar · Full Heal em Fuchsia, Saffron e Cinnabar · Hyper Potion em Saffron e Cinnabar</span></div>
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
@@ -97921,6 +98177,8 @@ const Exploracao = {
     if (acao === 'andar')      return this.andar();
     if (acao === 'conversar')  return this.conversar();
     if (acao === 'centro')     return Cidade.centro();
+    if (acao === 'casa')       return Cidade.casa();
+    if (acao === 'onibus')     return Cidade.onibus();
     if (acao === 'pc')         return UI.modalPC();
     if (acao === 'credenciais') return UI.modalCredenciais();
     if (acao === 'doar')       return Cidade.doar();
@@ -98774,7 +99032,7 @@ const Jogo = {
        (rota que não passou pela rua), a bola chega pelo balcão */
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_professor && typeof entregarDoProfessor === 'function'){
       entregarDoProfessor(Estado.dados);
-      avisos.push('O Professor mandou a Pokébola pelo balcão do Centro, com o seu nome na etiqueta.');
+      avisos.push('O Professor deixou a Pokébola na porta da sua casa, com o seu nome na etiqueta.');
     }
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_assistente && typeof entregarInicial === 'function'){
       entregarInicial(Estado.dados);
@@ -98782,7 +99040,9 @@ const Jogo = {
     }
     if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
       Estado.ganharPokenav();
-      avisos.push('Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');
+      avisos.push(Estado.j.cidade === 'Pallet'
+        ? 'Deixaram um PokéNav na porta da sua casa com o seu nome num papel. O número de casa já está gravado.'
+        : 'Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');
     }
     /* o que você fez neste capítulo pode ter rendido um rival */
     const novos = (typeof conquistarRivais === 'function') ? conquistarRivais() : [];
@@ -98802,24 +99062,10 @@ const Jogo = {
 
   voltarAoMundo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
-    /* Quem nasceu longe da estrada dos ginásios não faz Kanto de trás
-       pra frente a pé com um bicho de nível 5: a licença vem com a
-       passagem do ônibus da Liga até Viridian, como nos jogos em que
-       tudo começa entre Pallet e Viridian. */
+    /* Começa de onde nasceu: a jornada sai da sua cidade. Quem nasceu
+       longe de Viridian tem, na rodoviária da cidade, o ônibus da Liga
+       (Cidade.onibus) — pega se quiser, não é obrigado. */
     const d = Estado.dados;
-    if (d.capitulo === 1 && !d.flags.onibus_da_liga && !['Pallet','Viridian'].includes(d.jogador.cidade)){
-      d.flags.onibus_da_liga = true;
-      Mundo.viajar('viridian');
-      /* sai na manhã seguinte, desce no fim da tarde */
-      Estado.dados.relogio.dia += 1;
-      Estado.dados.relogio.periodo = 'tarde';
-      this.avisoOnibus = [
-        {tipo:'info', texto: d.flags.tem_licenca
-          ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
-          : 'Sem licença não tem passagem de graça: você paga o ônibus da rodoviária do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
-        {tipo:'info', texto:'Você desce em Viridian no fim da tarde. Daqui pra frente a estrada é sua, e é a pé.'}
-      ];
-    }
     const prox = Estado.dados.capitulo + 1;
     const enc = rivalDeveAparecer(prox);
     if (enc){

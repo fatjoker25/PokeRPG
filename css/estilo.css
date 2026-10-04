@@ -2697,3 +2697,10 @@ body.com-cenario .topo{
 .nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
 .nav-conversa .fala .fala-quem{color:#1d4f8a}
 .nav-conversa > p{color:#1f3550}
+
+/* mural: de longe os papéis são títulos; clicar chega perto de um */
+button.bilhete{font:inherit;border:0;text-align:left;cursor:pointer;width:100%}
+button.bilhete.fechado p{font-size:12.5px;opacity:.85}
+button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outline-offset:2px}
+.mural.um{grid-template-columns:1fr;max-width:360px;margin:0 auto 12px}
+.mural.um .bilhete p{font-size:15px}

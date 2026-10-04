@@ -3,6 +3,10 @@
    A saída de casa, sem pressa. A mochila começa vazia: licença,
    Pokédex, cartão e bolas saem do Centro Pokémon, com papel.
    ============================================================ */
+
+/* Pallet não tem Centro Pokémon: o posto de lá é o laboratório. */
+function oPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'o laboratório do Professor' : 'o Centro Pokémon'; }
+function aoPostoDaCidade(d){ return d.jogador.cidade === 'Pallet' ? 'ao laboratório do Professor' : 'ao Centro Pokémon'; }
 /* A mesma manhã, começando de seis jeitos. O jogo sorteia um
    por partida, então duas jornadas nunca abrem igual. */
 const ABERTURAS_C1 = ['c1_acorda','c1_chuva','c1_dormiu_demais','c1_nao_dormiu','c1_no_telhado',
@@ -357,8 +361,8 @@ c1_foi_sem_despedir:{
         return [{tipo:'item', texto:'Ganhou um PokéNav. Estava no bolso de fora desde a noite passada.'}];
       }},
   escolhas:[
-    {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Seguir para ${oPostoDaCidade(d)}.`, vai:'c1_saida_pro_centro'},
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -460,7 +464,7 @@ c1_vizinha:{
       registrar:'A Sra. Perla apareceu com uma caixa e um Pokémon molhado dentro.'},
   escolhas:[
     {texto:'"Eu fico com ele."', vai:'c1_ficou_com_ele'},
-    {texto:'"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."', vai:'c1_leva_ao_centro'},
+    {texto:d=>`"Eu levo ${aoPostoDaCidade(d)}. É pra lá que eu vou de qualquer jeito."`, vai:'c1_leva_ao_centro'},
     {texto:'"Eu não posso, dona Perla. Eu saio hoje."', vai:'c1_recusou_a_caixa'},
     {texto:d=>`Chamar ${nomeCasa()} pra decidir junto.`, vai:'c1_chamou_de_dentro'}
   ]
@@ -496,7 +500,7 @@ c1_ficou_com_ele:{
 
 c1_leva_ao_centro:{
   texto:[
-    d=>fala(d.jogador.nome, 'Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito.'),
+    d=>fala(d.jogador.nome, `Eu levo ${aoPostoDaCidade(d)}. É pra lá que eu vou de qualquer jeito.`),
     'A Sra. Perla bate na caixa duas vezes, como quem fecha negócio, e já está descendo o degrau antes de você terminar a frase.',
     fala('Sra. Perla', 'A caixa eu quero de volta, viu! É a caixa do meu ventilador!', 'grita',
          'Ela grita isso da calçada, já de costas.'),
@@ -518,7 +522,7 @@ c1_recusou_a_caixa:{
     'Ela olha pra você por um tempo que passa do confortável.',
     fala('Sra. Perla', 'Eu sei que você sai hoje. A rua inteira sabe que você sai hoje.', 'frio'),
     'Ela ajeita a caixa nos braços. A caixa não mudou de peso. Alguma coisa ali mudou de peso.',
-    fala('Sra. Perla', 'Tudo bem, {filho|filha}. Eu deixo na porta do Centro antes de pegar o ônibus.'),
+    d=>fala('Sra. Perla', `Tudo bem, {filho|filha}. Eu deixo na porta ${d.jogador.cidade === 'Pallet' ? 'do laboratório' : 'do Centro'} antes de pegar o ônibus.`),
     'E vai embora. E é justamente o tudo bem que fica atravessado.'
   ],
   ef:{flag:'recusou_a_caixa', moral:-3,
@@ -1108,8 +1112,9 @@ c1_mochila:{
 c1_cozinha:{
   texto:[
     'A mesa tem comida para quatro e nesta casa mora gente que dá pra contar numa mão. É assim que se pede pra alguém ficar sem pedir.',
-    d=>fala(nomeCasa(), 'Senta.', null, 'Não é ordem. É a palavra que esta casa usa pra dizer umas dez outras coisas.'),
+    d=>falaDaCasa('mesa', d)[0],
     'Você senta. Come mais do que queria e menos do que colocaram no prato.',
+    d=>falaDaCasa('mesa', d)[1],
     d=>{
       const p = d.time[0];
       if (!p) return 'O rádio na bancada fala de chuva no norte.';
@@ -1118,7 +1123,7 @@ c1_cozinha:{
         return `${nomeExib(p)} ganha um pedaço por baixo da mesa. Faz uma hora que ${pron(p).ele} chegou, e a casa já achou um jeito de fazer isso parecer costume.`;
       return `${nomeExib(p)} ganha um pedaço por baixo da mesa, como sempre, com o mesmo cuidado de sempre, como se ainda fosse segredo de alguém.`;
     },
-    d=>fala(nomeCasa(), 'E aí. Você já sabe pra onde vai?')
+    d=>falaDaCasa('pergunta', d)[0]
   ],
   escolhas:[
     {texto:'"Sei." (mesmo que não saiba)', vai:'c1_mentira_gentil'},
@@ -1132,9 +1137,8 @@ c1_mentira_gentil:{
   texto:[
     d=>fala(d.jogador.nome, 'Sei.'),
     'Dois segundos de silêncio que dizem, com todas as letras, que ninguém acreditou e que ninguém vai discutir.',
-    d=>fala(nomeCasa(), 'Tá bom. Então come.', null,
-            '{casa:Ela|Ele} mexe o café que já está mexido há um minuto.'),
-    'É uma mentira gentil e hoje todo mundo nesta mesa prefere ela.'
+    d=>falaDaCasa('mentira', d)[0],
+    'É uma mentira gentil, e hoje ninguém nesta mesa está com vontade de desmentir.'
   ],
   ef:{flag:'mentiu_no_cafe'},
   escolhas:[
@@ -1148,11 +1152,8 @@ c1_verdade:{
   texto:[
     d=>fala(d.jogador.nome, 'Não faço a menor ideia.'),
     'Dessa vez o silêncio é diferente. Mais longo e muito mais fácil.',
-    d=>fala(nomeCasa(), 'Ótimo.', null, 'A resposta te pega completamente desprevenido.'),
-    d=>fala(nomeCasa(), 'Quem sai daqui sabendo exatamente pra onde vai volta em três semanas. Eu já vi isso acontecer quatro vezes nesta rua.'),
-    d=>fala(d.jogador.nome, 'E quem não sabe?'),
-    d=>fala(nomeCasa(), 'Esse demora.', null, 'Um gole de café, sem pressa nenhuma.'),
-    d=>fala(nomeCasa(), 'Mas volta diferente. E aí a demora valeu.')
+    d=>falaDaCasa('verdade', d)[0],
+    d=>falaDaCasa('verdade', d)[1]
   ],
   ef:{flag:'foi_honesto_no_cafe', moral:5},
   escolhas:[
@@ -1167,8 +1168,8 @@ c1_objetivo:{
     d=>fala(d.jogador.nome, d.jogador.objetivo),
     'Você fala isso em voz alta, na sua cozinha, com a boca meio cheia — e soa muito mais sério do que soava dentro da sua cabeça.',
     'Do outro lado da mesa, a colher para no meio do café.',
-    d=>fala(nomeCasa(), 'Então vai.'),
-    d=>fala(nomeCasa(), 'E quando isso mudar — porque isso muda, sempre muda — não trata como derrota.')
+    d=>falaDaCasa('objetivo', d)[0],
+    d=>falaDaCasa('objetivo', d)[1]
   ],
   ef:{flag:'disse_o_objetivo', moral:5},
   escolhas:[
@@ -1199,10 +1200,9 @@ c1_despedida:{
     'E aí vem a terceira coisa, que não estava na mão nenhuma até agora: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
     d=>fala(nomeCasa(), `Isso aqui é um PokéNav. Era ${/^(tio|tia)$/.test(casaQuem()) ? 'do seu avô' : 'do seu tio'} e ele não usava, e eu mandei consertar a tampa.`),
     d=>fala(nomeCasa(), 'Serve pra guardar número. O número de quem te atender, de quem te dever alguma coisa, de quem quiser revanche.'),
-    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui. Não precisa usar todo dia.', 'baixo'),
-    d=>fala(nomeCasa(), 'Mas usa.'),
-    d=>fala(nomeCasa(), 'Uma coisa só.', null, 'A mão fecha no batente da porta.'),
-    d=>fala(nomeCasa(), 'Volta. Não precisa voltar campeão. Só volta.')
+    d=>fala(nomeCasa(), 'Tem um número já gravado nele. É o daqui.'),
+    d=>falaDaCasa('adeus', d)[0],
+    d=>falaDaCasa('adeus', d)[1]
   ],
   ef:{dinheiro:3000, itens:{'Ração':1},
       executar:d=>{
@@ -1279,8 +1279,8 @@ c1_varreu_no_lugar:{
       rep:{eixo:'bom',delta:2,motivo:'Pagou uma dívida de dinheiro com doze minutos de trabalho', rep:{notorio:true}},
       registrar:d=>`Pagou ${vz().divida} fazendo o serviço ${vz().do} ${vz().nome}.`},
   escolhas:[
-    {texto:'Seguir para o Centro Pokémon.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Seguir para ${oPostoDaCidade(d)}.`, vai:'c1_saida_pro_centro'},
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -1396,7 +1396,7 @@ c1_divida_assume:{
       npc:d=>({nome:vz().nome, opiniao:3, memoria:`Foi honesto sobre ${vz().divida}. Ganhou a caixa de metal.`})},
   escolhas:[
     {texto:'Agradecer e seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -1410,7 +1410,7 @@ c1_divida_nega:{
       npc:d=>({nome:vz().nome, opiniao:-3, memoria:`Mentiu sobre ${vz().divida}. ${vz().Ele} sabe.`})},
   escolhas:[
     {texto:'Seguir em frente.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -1424,7 +1424,7 @@ c1_divida_paga:{
   ef:{dinheiro:-800, npc:d=>({nome:vz().nome, opiniao:-1, memoria:`Pagou ${vz().divida} em dinheiro. Ficou estranho.`})},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -1441,7 +1441,7 @@ c1_divida_adiada:{
       rep:{eixo:'bom',delta:1,motivo:'Assumiu uma dívida sem pagar na hora'}},
   escolhas:[
     {texto:'Seguir.', vai:'c1_saida_pro_centro'},
-    {texto:'Dar uma volta na rua antes de ir ao Centro.', vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
+    {texto:d=>`Dar uma volta na rua antes de ir ${aoPostoDaCidade(d)}.`, vai:'c1_rua', cond:d=>!d.npcs[vz().nome]}
   ]
 },
 
@@ -1450,7 +1450,7 @@ c1_saida_pro_centro:{
     'Você chega no fim da rua e para, porque tem uma coisa que você precisa resolver antes de qualquer outra e que ninguém nunca conta nas histórias.',
     'Não dá pra sair por aí com um Pokémon. Tecnicamente, não dá.',
     d=>d.jogador.cidade === 'Pallet'
-      ? 'O posto do Centro Pokémon de Pallet funciona numa sala dos fundos do mercado, três manhãs por semana. Hoje é uma delas.'
+      ? 'Pallet não tem Centro Pokémon. O cadastro de treinador se faz numa mesa do lado da porta do laboratório do Professor, três manhãs por semana. Hoje é uma delas.'
       : d.flags.recebeu_do_goro
         ? `No Centro Pokémon de ${d.jogador.cidade}, a fila de depois do almoço já começou. É meio-dia e meia.`
         : `O Centro Pokémon de ${d.jogador.cidade} abre às sete. São sete e vinte.`,

@@ -13,10 +13,10 @@ pallet:{
   nome:'Pallet', tipo:'cidade', ambiente:'campo', nivel:3, porte:'vilarejo',
   conexoes:['rota1','rota21'],
   desc:[
-    'Pallet tem três ruas, um mercado que abre tarde e um cheiro de mar que vem de longe, do outro lado do morro.',
+    'Pallet tem três ruas, o laboratório do Professor no alto da subida e um cheiro de mar que vem de longe, do outro lado do morro.',
     'Todo mundo aqui conhece o seu rosto desde antes de você ter memória.'
   ],
-  lugares:['centro','loja','casa']
+  lugares:['casa']
 },
 rota1:{
   nome:'Rota 1', tipo:'rota', ambiente:'campo', nivel:4,
@@ -456,6 +456,14 @@ function afazeresDoLocal(){
       lista.push({lugar:true, id:'centro', titulo:'Centro Pokémon',
         sub:'Enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados.'});
     }
+    /* a sua casa, na cidade em que você nasceu: cama, comida e
+       {casa:quem ficou|quem ficou} esperando */
+    if (Estado.j && L.nome === Estado.j.cidade)
+      lista.push({lugar:true, id:'casa', titulo:'Sua casa'});
+    /* quem nasceu longe de Viridian pode pegar o ônibus da Liga uma vez */
+    if (Estado.j && L.nome === Estado.j.cidade && !['Pallet','Viridian'].includes(Estado.j.cidade)
+        && !d.flags.onibus_da_liga && d.capitulo <= 3)
+      lista.push({lugar:true, id:'onibus', titulo:'Rodoviária — ônibus da Liga pra Viridian'});
     if ((L.lugares||[]).includes('loja') && tem('loja_'+id)) lista.push({lugar:true, id:'loja', titulo:'Loja',
       sub:'Comprar o que der pra pagar.'});
     /* o Relembrador não tem placa: quem acha é quem anda pela cidade */

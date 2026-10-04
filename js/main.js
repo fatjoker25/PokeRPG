@@ -657,7 +657,7 @@ const Jogo = {
        (rota que não passou pela rua), a bola chega pelo balcão */
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_professor && typeof entregarDoProfessor === 'function'){
       entregarDoProfessor(Estado.dados);
-      avisos.push('O Professor mandou a Pokébola pelo balcão do Centro, com o seu nome na etiqueta.');
+      avisos.push('O Professor deixou a Pokébola na porta da sua casa, com o seu nome na etiqueta.');
     }
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_assistente && typeof entregarInicial === 'function'){
       entregarInicial(Estado.dados);
@@ -665,7 +665,9 @@ const Jogo = {
     }
     if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
       Estado.ganharPokenav();
-      avisos.push('Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');
+      avisos.push(Estado.j.cidade === 'Pallet'
+        ? 'Deixaram um PokéNav na porta da sua casa com o seu nome num papel. O número de casa já está gravado.'
+        : 'Deixaram um PokéNav no balcão do Centro com o seu nome num papel. O número de casa já está gravado.');
     }
     /* o que você fez neste capítulo pode ter rendido um rival */
     const novos = (typeof conquistarRivais === 'function') ? conquistarRivais() : [];
@@ -685,24 +687,10 @@ const Jogo = {
 
   voltarAoMundo(){
     if (Estado.j.pontos > 0 && !confirm('Você ainda tem pontos para distribuir. Seguir mesmo assim? (Eles ficam guardados.)')) return;
-    /* Quem nasceu longe da estrada dos ginásios não faz Kanto de trás
-       pra frente a pé com um bicho de nível 5: a licença vem com a
-       passagem do ônibus da Liga até Viridian, como nos jogos em que
-       tudo começa entre Pallet e Viridian. */
+    /* Começa de onde nasceu: a jornada sai da sua cidade. Quem nasceu
+       longe de Viridian tem, na rodoviária da cidade, o ônibus da Liga
+       (Cidade.onibus) — pega se quiser, não é obrigado. */
     const d = Estado.dados;
-    if (d.capitulo === 1 && !d.flags.onibus_da_liga && !['Pallet','Viridian'].includes(d.jogador.cidade)){
-      d.flags.onibus_da_liga = true;
-      Mundo.viajar('viridian');
-      /* sai na manhã seguinte, desce no fim da tarde */
-      Estado.dados.relogio.dia += 1;
-      Estado.dados.relogio.periodo = 'tarde';
-      this.avisoOnibus = [
-        {tipo:'info', texto: d.flags.tem_licenca
-          ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
-          : 'Sem licença não tem passagem de graça: você paga o ônibus da rodoviária do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
-        {tipo:'info', texto:'Você desce em Viridian no fim da tarde. Daqui pra frente a estrada é sua, e é a pé.'}
-      ];
-    }
     const prox = Estado.dados.capitulo + 1;
     const enc = rivalDeveAparecer(prox);
     if (enc){

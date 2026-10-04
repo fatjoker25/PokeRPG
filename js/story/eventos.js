@@ -1076,7 +1076,7 @@ const EVENTOS_GERAIS = [
      resultado:[
        'O menino assina, pega a Pokébola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
        'O que sai da Pokébola olha a praça inteira antes de olhar ele.',
-       'Você reconhece a cena de um jeito que dói um pouco e é bom ao mesmo tempo.',
+       'Você reconhece a cena, e sorri sem perceber.',
        fala('Célio', 'Essa parte é sempre a melhor.', 'baixo', 'Ele fala sem olhar pra você, anotando.')
      ]},
     {texto:'Perguntar se ele precisa de ajuda pra carregar.',
@@ -1089,14 +1089,14 @@ const EVENTOS_GERAIS = [
        fala('Célio', 'Livro. É sempre livro que pesa.'),
        fala('Célio', 'Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.')
      ]},
-    {texto:'Perguntar quantos não vieram buscar este mês.',
+    {texto:'Perguntar qual foi a entrega mais engraçada do mês.',
      cond:d=>!!d.flags.sabe_do_nr,
-     ef:{registrar:'Perguntou quantos NR tinham nessa cidade este mês.'},
+     ef:{registrar:'Ouviu do Célio a entrega mais engraçada do mês.'},
      resultado:[
-       fala('Célio', 'Dois.'),
-       'Ele não precisa conferir o caderno pra responder.',
-       fala('Célio', 'Um cancelou por telefone semana passada, que é o jeito certo de fazer e eu agradeci.'),
-       fala('Célio', 'O outro não. O outro só não veio.', 'baixo')
+       fala('Célio', 'Semana passada, em Pewter.', 'riso'),
+       'Ele nem precisa pensar.',
+       fala('Célio', 'Um Charmander espirrou fagulha na sobrancelha do menino na hora da foto. O menino achou o máximo. A mãe dele, menos.'),
+       fala('Célio', 'Foto saiu ótima, por sinal.', 'riso')
      ]},
     {texto:'Anotar o número dele antes de seguir.',
      cond:d=>!d.flags.numero_do_goro,
@@ -1106,7 +1106,7 @@ const EVENTOS_GERAIS = [
      resultado:[
        fala('Célio', 'Anota, vai. Todo mundo que eu entrego tem.'),
        'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
-       fala('Célio', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
+       fala('Célio', 'Liga contando como vocês estão. Eu gosto de saber.', 'riso')
      ]},
     {texto:'Seguir. Não é com você.', ef:{},
      resultado:['Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.']}

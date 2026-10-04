@@ -277,7 +277,7 @@ const UI = {
         <button data-v="classico" class="sel">Um dos três clássicos</button>
         <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
-      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três Pokébolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
+      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com os três fora da Pokébola, na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
@@ -307,7 +307,7 @@ const UI = {
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
         ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
-        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três Pokébolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
+        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com os três fora da Pokébola, na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
@@ -3968,15 +3968,18 @@ const UI = {
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
       <h3>De onde vem o seu primeiro</h3>
-      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com as três Pokébolas na sua frente · nenhuma vem escolhida</span></div>
+      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com os três fora da Pokébola, na sua frente · nenhuma vem escolhida</span></div>
       <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor traz a bandeja pra rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
-      <div class="linha"><span class="k">Nasceu longe de Pallet e Viridian</span><span class="v">a licença vem com a passagem do ônibus da Liga até Viridian, onde a estrada dos ginásios começa · sem licença, você paga a passagem</span></div>
-      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
+      <div class="linha"><span class="k">Onde a jornada começa</span><span class="v">na cidade em que você nasceu · quem nasceu longe de Pallet e Viridian tem, na rodoviária da cidade, o ônibus da Liga até Viridian, uma vez, se quiser · com licença a passagem é de graça, sem licença custa 500 ₽</span></div>
+      <div class="linha"><span class="k">Sua casa</span><span class="v">na sua cidade natal · cura o time inteiro e você, de graça, e a noite passa</span></div>
+      <div class="linha"><span class="k">Pallet</span><span class="v">não tem Centro Pokémon nem loja · o cadastro de treinador é no laboratório do Professor</span></div>
+      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro (em Pallet, na porta de casa). Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
-      <div class="linha"><span class="k">Onde</span><span class="v">dez cidades · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">nove cidades (Pallet não tem loja) · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Como nos jogos</span><span class="v">Poké Ball e Potion desde Viridian · Repelente a partir de Cerulean · Super Potion a partir de Vermilion · Great Ball e Revive a partir de Lavender e Celadon · Ultra Ball em Fuchsia e Cinnabar · Full Heal em Fuchsia, Saffron e Cinnabar · Hyper Potion em Saffron e Cinnabar</span></div>
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>

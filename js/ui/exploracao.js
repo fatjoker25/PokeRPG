@@ -342,6 +342,8 @@ const Exploracao = {
     if (acao === 'andar')      return this.andar();
     if (acao === 'conversar')  return this.conversar();
     if (acao === 'centro')     return Cidade.centro();
+    if (acao === 'casa')       return Cidade.casa();
+    if (acao === 'onibus')     return Cidade.onibus();
     if (acao === 'pc')         return UI.modalPC();
     if (acao === 'credenciais') return UI.modalCredenciais();
     if (acao === 'doar')       return Cidade.doar();

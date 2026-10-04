@@ -161,7 +161,6 @@ cinnabar:[
 pallet:[
   {chave:'pl_troca', texto:['Um menino de sete anos te para na rua e pergunta, muito sério, se você tem um Caterpie. Ele não explica pra quê.']},
   {chave:'pl_praia', texto:['Do alto do morro dá pra ver o mar. Do outro lado dele, num dia limpo, uma mancha escura que é uma ilha.']},
-  {chave:'loja_pallet', texto:['O mercado de Pallet abre tarde e vende Poké Ball atrás do balcão, junto com pilha e anzol.'], descobre:'loja_pallet'},
   {chave:'pl_ushio', texto:['Sr. Ives varre a mesma calçada há vinte anos. Ele te olha passar e não diz nada, que no caso dele é uma coisa que ele escolheu.']}
 ]
 };
@@ -560,14 +559,8 @@ const RELEMBRADOR = {
    Ninguém explica nada: é papel, e papel diz o que a pessoa quis.
    ============================================================ */
 const MURAIS = {
-  pallet:[
-    {t:'Achado: um boné vermelho na cerca da Rota 1. Tá na portaria do laboratório.', nota:'letra de fôrma, a lápis'},
-    {t:'Aula de natação pra criança, sábado de manhã, na praia do outro lado do morro. Traga toalha.', nota:'com um desenho de Poliwag'},
-    {t:'O mercado abre às dez. Não adianta bater antes.', nota:'papel de embrulho, preso com dois percevejos'}
-  ],
   viridian:[
     {t:'Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa.', nota:'com uma foto colada, tirada de longe, meio tremida'},
-    {t:'Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava.', nota:'sem foto e sem nome'},
     {t:'COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO.', nota:'letra de imprensa, sem telefone, só um horário e um lugar'},
     {t:'NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE.', nota:'escrito à mão com pressa e sublinhado três vezes'}
   ],
@@ -617,11 +610,23 @@ const MURAIS = {
   ]
 };
 
+/* O Centro todo dia é o mesmo Centro, mas a noite não é a mesma noite. */
+const FRASES_DO_CENTRO = [
+  'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.',
+  'O Chansey do balcão empurra o carrinho com as Pokébolas pra dentro e volta cantarolando. De manhã está todo mundo inteiro.',
+  'A enfermeira chama o seu time pelo nome, um por um, na hora de devolver. Ela leu a ficha enquanto você dormia.',
+  'O beliche de cima range a noite inteira. O time não ouve nada: dorme no tratamento e acorda novo.',
+  'Tem chá de graça no saguão às dez da noite e alguém de outra cidade quer saber de onde você é. Você conta. Dorme tarde e bem.',
+  'A máquina faz o tlin-tlin de sempre, seis vezes. A enfermeira sorri do jeito que só quem ouve esse som o dia inteiro sorri.',
+  'Você dorme no sofá do saguão porque os quartos lotaram. O time volta curado e você volta com o pescoço torto.',
+  'De manhã a enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.'
+];
+
 const Cidade = {
   /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
     const d = Estado.dados, L = Mundo.atual();
-    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Ler o mural de recados<br><span class="pd">Cortiça, percevejo e papel em três camadas.</span></button>` : '';
+    const mural = MURAIS[Mundo.id()] ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
     const cargos = (typeof Cargos !== 'undefined') ? (() => {
       const abertos = Cargos.quadro().filter(x => !x.tem && x.ok).length;
       return `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais<br><span class="pd">${
@@ -672,7 +677,7 @@ const Cidade = {
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
     return [
-      {tipo:'cura', texto:'A enfermeira leva o time pra dentro e devolve tudo certo em vinte minutos. Você dorme num quarto com seis camas e cinco desconhecidos.'},
+      {tipo:'cura', texto:Dados.escolher(FRASES_DO_CENTRO)},
       {tipo:'info', texto:'Amanhece.'}, ...pac
     ];
   },
@@ -682,12 +687,61 @@ const Cidade = {
     return Exploracao.tela(av);
   },
 
-  /* O mural de cada Centro: o que a cidade pendura na parede. */
-  mural(){
+  /* O mural de cada Centro: o que a cidade pendura na parede. Você vê
+     os papéis de longe e escolhe qual ler; ler é chegar perto de um. */
+  mural(i){
     const m = MURAIS[Mundo.id()] || [];
-    UI.modal(`Mural do Centro de ${Mundo.atual().nome}`,
-      `<div class="mural">${m.map((x, i) => `<div class="bilhete b${i % 4}">
-        <p>${UI.esc(x.t)}</p>${x.nota ? `<span>${UI.esc(x.nota)}</span>` : ''}</div>`).join('')}</div>`, false, 'centro');
+    const titulo = `Mural do Centro de ${Mundo.atual().nome}`;
+    if (i == null || !m[i]){
+      return UI.modal(titulo, `<div class="mural">${m.map((x, k) => `<button class="bilhete b${k % 4} fechado" onclick="Cidade.mural(${k})">
+        <p>${UI.esc(x.t.split(' ').slice(0, 6).join(' ').replace(/[.,:;!?]+$/, ''))}…</p></button>`).join('')}</div>`, false, 'centro');
+    }
+    const x = m[i];
+    UI.modal(titulo, `<div class="mural um"><div class="bilhete b${i % 4}">
+        <p>${UI.esc(x.t)}</p>${x.nota ? `<span>${UI.esc(x.nota)}</span>` : ''}</div></div>
+      <button class="escolha" onclick="Cidade.mural()">Voltar ao mural</button>`, false, 'centro');
+  },
+
+  /* Em casa: cama, comida e quem ficou. Cura como o Centro, de graça. */
+  casa(){
+    const d = Estado.dados;
+    Mundo.passar(2);
+    d.time.forEach(curarTotal);
+    Estado.curarJogador(30);
+    const n = nomeCasa();
+    const frases = [
+      `${n} põe mais um prato na mesa sem perguntar se você vai ficar.`,
+      `${n} te olha da porta da cozinha, conta o time com os olhos, e só depois diz oi.`,
+      `${n} já estendeu um cobertor no sofá antes de você tirar a mochila.`,
+      `Tem comida no fogão, e ${n} finge que sobrou por acaso.`,
+      `${n} pergunta de cada um do time pelo nome, e erra um, e você corrige.`,
+      `${n} quer saber de tudo. Você conta metade, e {casa:ela|ele} percebe qual metade.`
+    ];
+    const av = [
+      {tipo:'cura', texto:Dados.escolher(frases)},
+      {tipo:'cura', texto:'O time dorme espalhado pela sala. De manhã está todo mundo inteiro.'},
+      ...this.retirarPacotes()
+    ];
+    Estado.registrar(`Passou a noite em casa, em ${d.jogador.cidade}.`);
+    Estado.salvar('auto');
+    Exploracao.tela(av);
+  },
+
+  /* O ônibus da Liga: quem nasceu longe de Viridian pode pegar, uma vez. */
+  onibus(){
+    const d = Estado.dados;
+    d.flags.onibus_da_liga = true;
+    if (!d.flags.tem_licenca) Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - 500);
+    Mundo.viajar('viridian');
+    d.relogio.dia += 1;
+    d.relogio.periodo = 'tarde';
+    Estado.salvar('auto');
+    Exploracao.tela([
+      {tipo:'info', texto: d.flags.tem_licenca
+        ? 'A passagem veio grampeada na licença. O ônibus da Liga sai da rodoviária de manhã cedo, cheio de gente da sua idade com mochila nova, e para em cada cidade grande do caminho.'
+        : 'Sem licença não tem passagem de graça: 500 ₽ do próprio bolso, sentad{o|a} no fundo, do lado de uma senhora com uma gaiola de Pidgey no colo.'},
+      {tipo:'info', texto:'Você desce em Viridian no fim da tarde.'}
+    ]);
   },
 
   /* O que o Célio mandou pela perua espera no balcão de qualquer Centro. */
@@ -843,7 +897,7 @@ const Cidade = {
        ]},
       {id:'bolsa', cidade:'*', valor:8000,
        nome:'Uma linha do caderno',
-       linha:'Pagar o pedido de quem não pôde pagar. Você não escolhe quem, e nunca fica sabendo.',
+       linha:'Pagar a inscrição de quem não pode pagar. Você não escolhe quem, e nunca fica sabendo.',
        requer:d=>!!d.flags.sabe_do_nr || !!d.flags.numero_do_goro,
        rep:3, marca:'pagou_uma_bola',
        texto:[
@@ -851,8 +905,8 @@ const Cidade = {
          fala('Célio', 'Você quer pagar o pedido de quem?'),
          d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
          'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
-         fala('Célio', 'Eu tenho onze cidades e eu tenho uma lista de gente que cancelou e não falou por quê.'),
-         fala('Célio', 'Eu sei exatamente quem eu vou ligar primeiro.', 'baixo'),
+         fala('Célio', 'Eu tenho onze cidades e uma lista de gente que queria muito e não tinha como pagar a inscrição.'),
+         fala('Célio', 'Eu sei exatamente pra quem eu vou ligar primeiro.', 'riso'),
          fala('Célio', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
        ]}
     ].filter(c => (c.cidade === '*' || c.cidade === id) && !Estado.dados.flags[c.marca]

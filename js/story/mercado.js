@@ -29,41 +29,35 @@ const PRECO_BASE = {
    A ideia: ninguém em Pewter vende bola barata, e ninguém em Lavender
    vende repelente, porque ninguém em Lavender vai pro mato. */
 const LOJAS = {
-  pallet: {
-    nome:'Mercado do Sr. Fenwick',
-    ar:'Um mercado de bairro que vende Poké Ball atrás do balcão, junto com pilha e anzol. Ele te conhece desde pequeno e cobra o mesmo de todo mundo.',
-    mult:1.0,
-    itens:['Poké Ball','Potion','Antidote','Isca','Ração','Pilha','Cantil']
-  },
   viridian: {
     nome:'Loja de Viridian',
     ar:'Fachada sem graça, prateleira organizada, e a atendente sabe exatamente o que um treinador de três dias esqueceu de comprar.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Antidote','Full Heal','Repelente','Corda','Bandagem','Mapa de Kanto','Sino Calmante','Mochila Verde','Bolsa Cinza']
+    itens:['Poké Ball','Potion','Antidote','Corda','Bandagem','Isca','Ração','Pilha','Cantil','Mapa de Kanto','Mochila Verde','Bolsa Cinza']
   },
   pewter: {
     nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
+    itens:['Poké Ball','Potion','Antidote','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
     ar:'Atende pela janela, sem ninguém entrar. Tem geladeira de bebida e uma vitrine pequena com uma pedra azul que fica ali há anos.',
     mult:1.05,
-    itens:['Poké Ball','Great Ball','Potion','Super Potion','Água Fresca','Full Heal','Revive','Isca','Pedra da Água','Botina Leve']
+    itens:['Poké Ball','Potion','Antidote','Repelente','Água Fresca','Isca','Pedra da Água','Botina Leve','Sino Calmante']
   },
   vermilion: {
     nome:'Armazém do Cais',
-    ar:'Abre às cinco da manhã e vende comida, corda e Poké Ball no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
+    ar:'Abre às cinco da manhã e vende comida, corda e Pokébola no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
     mult:0.9,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Éter','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil','Faixa Firme','Resto de Ração','Mochila Laranja','Bolsa Prateada']
+    itens:['Poké Ball','Potion','Super Potion','Antidote','Repelente','Bota de borracha','Cobertor térmico','Câmera descartável','Corda','Cantil','Faixa Firme','Resto de Ração','Mochila Laranja','Bolsa Prateada']
   },
   lavender: {
     nome:'Casa Boa Memória',
     ar:'Vende incenso, vela e Potion no mesmo balcão, o que faz um sentido triste. Ninguém aqui vende repelente: ninguém daqui vai pro mato.',
     mult:1.1,
-    itens:['Potion','Super Potion','Hyper Potion','Full Heal','Revive','Bandagem','Caderno de campo','Ração','Sino Calmante']
+    itens:['Great Ball','Potion','Super Potion','Revive','Antidote','Corda','Bandagem','Caderno de campo','Ração','Sino Calmante']
   },
   celadon: {
     nome:'Grande Loja de Celadon',
@@ -75,11 +69,11 @@ const LOJAS = {
        itens:['Mapa de Kanto','Caderno de campo','Pilha','Câmera descartável']},
       {n:2, nome:'2º · Artigos de treinador',
        ar:'Prateleira de Pokébola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende. No fundo, um expositor giratório de discos de TM com um cadeado que ninguém lembra a senha.',
-       itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca',
+       itens:['Poké Ball','Great Ball','Repelente','Boneco','Corda','Isca',
               'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm']},
       {n:3, nome:'3º · Cuidados',
        ar:'Cheiro de farmácia. Tem uma funcionária de jaleco que explica a diferença entre Potion e Super Potion umas quarenta vezes por dia e não perdeu a paciência ainda.',
-       itens:['Potion','Super Potion','Hyper Potion','Antidote','Full Heal','Revive','Bandagem','Éter','Elixir','PP Up']},
+       itens:['Potion','Super Potion','Antidote','Revive','Bandagem','Éter','Elixir','PP Up']},
       {n:4, nome:'4º · Pedras e evolução',
        ar:'Vitrine trancada, luz de cima, e um cartaz explicando que a loja não se responsabiliza por evolução feita por impulso.',
        /* a Pedra do Sol só entra no catálogo com a Pokédex Nacional
@@ -95,7 +89,7 @@ const LOJAS = {
        ar:'Duas máquinas automáticas, um bebedouro quebrado e três pessoas dando comida para um bando de Pidgey que claramente mora aqui.',
        itens:['Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada']}
     ],
-    itens:['Poké Ball','Great Ball','Ultra Ball','Potion','Super Potion','Hyper Potion','Revive','Antidote','Full Heal','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
+    itens:['Poké Ball','Great Ball','Potion','Super Potion','Revive','Antidote','Éter','Elixir','Boneco','Repelente','Ração','Mapa de Kanto',
            'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm',
            'Pedra do Fogo','Pedra da Água','Pedra do Trovão','Pedra da Folha',
            'Resto de Ração','Faixa Firme','Punho de Ferro','Óculos Grossos','Colete de Lona','Botina Leve','Sino Calmante','Amuleto de Moeda','Mochila Preta','Mochila Vermelha','Mochila Azul','Mochila Amarela','Bolsa Roxa','Bolsa Branca','Bolsa Rosa','Bolsa Dourada','PP Up','Exp. Share']
@@ -104,19 +98,19 @@ const LOJAS = {
     nome:'Posto da Zona Safári',
     ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Full Heal','Resto de Ração']
+    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Revive','Full Heal','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Resto de Ração']
   },
   saffron: {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Hyper Potion','Full Heal','Revive','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
+    itens:['Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
   },
   cinnabar: {
     nome:'Vitrine da Sra. Juna',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
-    itens:['Poké Ball','Potion','Hyper Potion','Revive','Full Heal','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
+    itens:['Great Ball','Ultra Ball','Hyper Potion','Revive','Full Heal','Repelente','Corda','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
   }
 };
 

@@ -180,7 +180,6 @@ c2_mural:{
     'Na parede da entrada, o mural de recados: uma placa de cortiça de dois metros por um, coberta de papel em três camadas.',
     'Você fica ali mais tempo do que pretendia.',
     '"Procuro meu Growlithe. Sumiu dia 4 perto da Rota 22. Recompensa." — com uma foto colada, tirada de longe, meio tremida.',
-    '"Meu filho saiu pra jornada em março. Se alguém vir, diz que a mãe dele não tá brava." — sem foto e sem nome.',
     '"COMPRO POKÉMON. QUALQUER UM. QUALQUER ESTADO." — letra de imprensa, sem telefone, só um horário e um lugar.',
     'E, escrito à mão com pressa e sublinhado três vezes, num pedaço de papel pardo:',
     '"NÃO ENTRE NA FLORESTA DE VIRIDIAN À NOITE."'
@@ -193,7 +192,7 @@ c2_mural:{
     {texto:'Perguntar à atendente sobre o aviso da floresta.', vai:'c2_pergunta_floresta'},
     {texto:'Ler tudo e não mexer em nada.', vai:'c2_leu_tudo'},
     {texto:'Pregar um recado seu no mural, no espaço que sobrou.', vai:'c2_pregou_recado'},
-    {texto:'Ligar pra casa antes de qualquer coisa. Aquele recado de mãe mexeu com você.',
+    {texto:'Ligar pra casa antes de qualquer coisa.',
      vai:'c2_ligou_por_causa_do_cartaz', cond:d=>Estado.temPokenav()},
     {texto:'Procurar no mural algum recado da sua cidade.', vai:'c2_recado_da_sua_cidade',
      cond:d=>!!d.flags.a_casa_estava_cheia || !!d.flags.viu_o_cartaz}
@@ -206,7 +205,7 @@ c2_pregou_recado:{
     'Você escreve três versões na cabeça e a quarta no papel, que é a mais curta — o que já virou um hábito seu e você nem percebeu.',
     d=>`No papel, escrito à mão: "${d.jogador.nome}, de ${d.jogador.cidade}. Saí dia desses. Se alguém daqui for pra lá, avisa que tá tudo bem."`,
     'Você prega no único espaço que sobrou, embaixo à direita, meio torto, por cima do canto de um cartaz de 1994.',
-    'Daqui a três meses vai ter mais duas camadas de papel por cima do seu. Ele vai continuar lá embaixo, do mesmo jeito.'
+    'Ele fica ali embaixo, torto, entre um cartaz de 1994 e o canto da cortiça.'
   ],
   ef:{flag:'pregou_recado_no_mural', moral:3,
       rep:{eixo:'bom',delta:1,motivo:'Pregou o próprio recado num mural cheio de recado de outros'},
@@ -220,18 +219,18 @@ c2_pregou_recado:{
 
 c2_ligou_por_causa_do_cartaz:{
   texto:[
-    'Você lê o cartaz sem foto e sem nome três vezes e aí sai da fila do mural e vai pro orelhão do saguão.',
+    'Um mural inteiro de gente procurando gente. Você sai da frente dele e vai pro orelhão do saguão.',
     'Dois toques.',
     d=>fala(nomeCasa(), 'Alô?', null, 'A voz está normal. É só isso — está normal, e é isso que te desmonta um pouco.'),
-    d=>fala(d.jogador.nome, 'Oi. É que eu vi um cartaz aqui e eu… nada. Oi.'),
+    d=>fala(d.jogador.nome, 'Oi. É que eu vi um mural aqui e eu… nada. Oi.'),
     'Silêncio do outro lado por dois segundos.',
     d=>fala(nomeCasa(), 'Você tá em Viridian já? Criatura, você mal saiu.', 'riso'),
     d=>fala(nomeCasa(), 'Tá comendo?'),
-    '{casa:Ela|Ele} vai perguntar isso todas as vezes, pelos próximos nove meses, em qualquer circunstância, inclusive nas piores.'
+    '{casa:Ela|Ele} pergunta do jeito de quem pergunta as horas, e você responde do jeito de quem não pensou nisso o dia inteiro.'
   ],
   ef:{flag:'ligou_por_causa_do_cartaz', moral:5,
-      rep:{eixo:'bom',delta:1,motivo:'Ligou pra casa por causa de um cartaz de outra pessoa'},
-      registrar:'Ligou pra casa depois de ler o cartaz de uma mãe no mural.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ligou pra casa do saguão do Centro de Viridian'},
+      registrar:'Ligou pra casa depois de ler o mural de Viridian.'},
   escolhas:[
     {texto:'Pregar um recado seu no mural também.', vai:'c2_pregou_recado'},
     {texto:'Ir ver o garoto na escada.', vai:'c2_teo'},
@@ -277,7 +276,7 @@ c2_botou_na_frente:{
 
 c2_devolveu_o_cartaz:{
   texto:[
-    'Você tira o seu cartaz do meio do mural e prega de volta lá embaixo, na terceira camada, embaixo do cartaz do Growlithe e da mãe sem nome.',
+    'Você tira o seu cartaz do meio do mural e prega de volta lá embaixo, na terceira camada, embaixo do cartaz do Growlithe.',
     'A senhora da fila do balcão vê isso também.',
     fala('a senhora da fila', 'Bom menino.', 'baixo', 'É tudo que ela diz, e ela nem olha pra você quando diz.')
   ],
@@ -291,7 +290,7 @@ c2_tirou_o_proprio_cartaz:{
   texto:[
     'Você tira o seu cartaz do mural, dobra em quatro e põe no bolso, e o buraquinho do percevejo fica.',
     'É a segunda vez em dois dias que você tira um cartaz seu de algum lugar.',
-    'Você vai carregar esse papel dobrado até ele amassar nas dobras, e não vai jogar fora, e não vai olhar de novo.'
+    'O papel dobrado faz volume no bolso. Você não olha de novo.'
   ],
   ef:{flag:'tirou_o_cartaz_de_viridian', moral:-2,
       itens:{'Cartaz dobrado em quatro, com a sua cara':1},

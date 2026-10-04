@@ -524,6 +524,22 @@ Cuidado ao marcar "o senhor": **metade deles é o jogador falando com um
 homem**, e esses não mudam. A pergunta é sempre quem está sendo tratado.
 Vocativo neutro ("cara") fica como está.
 
+## Quem ficou em casa e onde a jornada começa
+A pessoa de casa tem um **jeito** sorteado uma vez e guardado na ficha
+(`jeitoDaCasa`, em `js/story/casa-jeito.js`): orgulho, brincalhão,
+prático, ex-treinador, sonhador, durão, atrapalhado, calmo. A mesa do
+café e a despedida do capítulo 1 saem de `falaDaCasa(momento)`. Nenhum
+jeito é medroso; fala nova de casa entra nos oito, não numa só.
+
+A jornada começa na cidade natal. Na cidade natal tem **Sua casa** (cura
+de graça, `Cidade.casa`) e, pra quem nasceu longe de Pallet e Viridian,
+a **rodoviária** com o ônibus da Liga, uma vez, opcional (`Cidade.onibus`).
+**Pallet não tem Centro nem loja**: o cadastro de treinador lá é no
+laboratório, e cena de Pallet que fala em Centro usa `oPostoDaCidade(d)`.
+
+Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
+`casaQuem()`, `{casa:ela|ele}` — nunca "sua mãe" escrito à mão.
+
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
