@@ -181,7 +181,13 @@ const Estrada = {
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
     const jaViu = r.vencidos.length > 0 || r.encontros > 1;
-    const olha = situacao === 'viagem'
+    /* quem já lutou com você te reconhece, e a narração também */
+    const olha = jaViu
+      ? Dados.escolher([
+          `${t.nome} te reconhece de longe e abre um sorriso de quem estava esperando.`,
+          `É ${t.nome}, ${emLocal(t.local)} de novo. Te vê, aponta, e já vem com a Pokébola na mão.`,
+          `${t.nome} levanta a mão de longe, do jeito de quem lembra exatamente como foi da última vez.`])
+      : situacao === 'viagem'
       ? `No meio da viagem, ${emLocal(t.local)}, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a Pokébola na mão.`
       : situacao === 'chegar'
       ? `No meio do caminho, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a Pokébola na mão.`
