@@ -30,10 +30,10 @@ const Exploracao = {
     const todos = afazeresDoLocal();
     const lugares = todos.filter(a => a.lugar).map(a =>
       `<button class="porta" onclick="Exploracao.fazer('${a.id}')">
-        <span class="porta-nome">${UI.esc(a.titulo)}</span></button>`).join('');
+        ${svgIcone(iconeDoAfazer(a), 'porta-icone')}<span class="porta-nome">${UI.esc(a.titulo)}</span></button>`).join('');
     const afazeres = todos.filter(a => !a.lugar).map(a =>
-      `<button class="escolha" onclick="Exploracao.fazer('${a.id}')">
-        ${UI.esc(a.titulo)}</button>`).join('');
+      `<button class="escolha com-icone" onclick="Exploracao.fazer('${a.id}')">
+        ${svgIcone(iconeDoAfazer(a))}<span>${UI.esc(a.titulo)}</span></button>`).join('');
 
     const vizinhos = Mundo.vizinhos().map(id => {
       const v = LOCAIS[id];

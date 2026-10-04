@@ -705,14 +705,15 @@ const Cidade = {
     /* quem saiu de Pallet tem licença e Pokédex, mas o cartão só sai
        numa máquina de Centro: a primeira é a de Viridian */
     if (Mundo.id() === 'viridian' && d.flags.tem_licenca && !d.flags.tem_cartao) return this.cartaoDeViridian();
-    const mural = muralDoCentro(Mundo.id()).length ? `<button class="escolha" onclick="UI.fecharModal(true);Cidade.mural()">Mural de recados</button>` : '';
+    const ic = k => svgIcone(k);
+    const mural = muralDoCentro(Mundo.id()).length ? `<button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.mural()">${ic('mural')}<span>Mural de recados</span></button>` : '';
     const cargos = (typeof Cargos !== 'undefined')
-      ? `<button class="escolha" onclick="UI.fecharModal(true);UI.modalCredenciais()">Balcão de credenciais</button>` : '';
+      ? `<button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalCredenciais()">${ic('credenciais')}<span>Balcão de credenciais</span></button>` : '';
     UI.modal(`Centro Pokémon de ${L.nome}`, `
-      <button class="escolha" onclick="UI.fecharModal(true);Cidade.atenderAqui()">Deixar o time com a enfermeira e dormir</button>
-      <button class="escolha" onclick="UI.fecharModal(true);UI.modalPC()">PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);Cidade.atenderAqui()">${ic('dormir')}<span>Deixar o time com a enfermeira e dormir</span></button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);UI.modalPC()">${ic('pc')}<span>PC do saguão${d.pc.length ? ` (${d.pc.length})` : ''}</span></button>
       ${cargos}
-      <button class="escolha" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">Mapa da parede</button>
+      <button class="escolha com-icone" onclick="UI.fecharModal(true);Exploracao.mapa('parede')">${ic('mapa')}<span>Mapa da parede</span></button>
       ${mural}`, false, 'centro');
   },
 
@@ -1046,8 +1047,21 @@ const Cidade = {
     UI.telaDoacao(c, avisos);
   },
 
+  /* comprar pergunta antes: um toque errado na lista não gasta dinheiro */
   comprar(nome, preco){
     if (Estado.j.dinheiro < preco) return;
+    const n = nome.replace(/'/g, "\\'");
+    UI.modal('', `<div class="confirma-compra">
+        <div class="cc-item">${imgItem(nome)}<span class="cc-nome">${UI.esc(nome)}</span></div>
+        <p>Deseja comprar <b>${UI.esc(nome)}</b> por <b>${fmtDin(preco)} ₽</b>?</p>
+        <p class="sussurro">Você tem ${fmtDin(Estado.j.dinheiro)} ₽${Estado.contaItem(nome) ? ` · já carrega ${Estado.contaItem(nome)}` : ''}.</p>
+        <div class="cc-botoes">
+          <button class="btn destaque" onclick="Cidade.confirmarCompra('${n}',${preco})">Comprar</button>
+          <button class="btn" onclick="Cidade.loja(Cidade._andar || 0, Cidade._qual || undefined)">Não</button>
+        </div></div>`, true, 'mochila');
+  },
+  confirmarCompra(nome, preco){
+    if (Estado.j.dinheiro < preco) return this.loja(this._andar || 0, this._qual || undefined);
     Estado.j.dinheiro -= preco;
     Estado.darItem(nome, 1);
     Estado.salvar('auto');

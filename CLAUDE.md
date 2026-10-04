@@ -240,8 +240,11 @@ sozinha — e é por ser silencioso que precisa de script.
 vai do nome que **o jogo** usa pro arquivo, e só entra item com equivalente
 exato nos jogos — Resto de Ração é Leftovers porque a ficha é a mesma, Faixa
 Firme é Focus Band porque sobrevive com 1 HP. Ferramenta que só existe aqui
-(Machado, Picareta, Lanterna…) e papel de enredo ficam com a casa vazia do
-mesmo tamanho, pra coluna do nome não pular.
+(Machado, Picareta, Lanterna…), as mochilas e o papel de enredo ganham
+**desenho em SVG** de `js/data/icones.js` (`desenhoDoItem`, pelo nome; o
+papel de enredo pelo tipo: bilhete, foto, mapa, caixa, chave). Lugares,
+ações e opções do Centro usam os ícones de traço do mesmo arquivo
+(`svgIcone`, `iconeDoAfazer`): afazer novo com id novo entra lá.
 
 O arremesso segue uma máquina de estados (`UI.animarArremesso`): arco de
 Bézier até o alto, sobre a cabeça → abre, um raio vermelho pega o Pokémon,

@@ -434,6 +434,7 @@ const Jogo = {
     /* até o Continuar, o resultado viaja no save junto com a luta */
     this.fimPendente = fim;
     Estado.salvar('auto');
+    UI.atualizarTopo();
     UI.mostrarContinuar(() => {
       if (fim.resultado === 'gameover') return this.finalizarBatalha(fim);
       this.resolverEvolucoes(() => this.resolverApelidos(() => this.finalizarBatalha(fim)));

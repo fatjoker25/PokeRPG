@@ -193,7 +193,8 @@ function arquivoTM(nome){
 
 function caminhoItem(nome){
   const arq = ITEM_SPRITE[nome] || arquivoTM(nome);
-  if (!arq) return null;
+  /* sem arte dos jogos: o desenho de js/data/icones.js */
+  if (!arq) return (typeof desenhoDoItem === 'function' && nome) ? desenhoDoItem(nome) : null;
   const rel = SPRITES_BASE + ITENS_PASTA + arq + '.png';
   return SPRITES_EMBUTIDOS[rel] || rel;
 }

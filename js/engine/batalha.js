@@ -85,6 +85,8 @@ const Batalha = {
     this.arena = opts.arena || null;
     this.treinador = opts.treinador || null;
     this.timeInimigo = opts.timeInimigo || null;
+    /* quantos o outro lado trouxe: as Pokébolas da ficha contam daqui */
+    this.totalInimigo = 1 + (this.timeInimigo ? this.timeInimigo.length : 0);
     this.estAliado = this.novoEstado();
     this.estInimigo = this.novoEstado();
     this.pdexUsada = false;

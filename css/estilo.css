@@ -2625,6 +2625,8 @@ h3.com-mapa{display:flex;align-items:center;justify-content:space-between;gap:8p
 /* experiência: barra fina embaixo do HP, azul como nos jogos */
 .barra-exp{height:4px;border-radius:3px;background:#090c11;border:1px solid var(--borda);overflow:hidden;margin:3px 0 2px}
 .barra-exp i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#5fb4ff);transition:width .6s var(--suave)}
+.barra-exp.vaga{visibility:hidden}
+.lutador .ficha .barra + .barra-exp{margin-top:2px}
 /* atalho que não é escolha da história: fica mais apagado */
 .escolha.utilitaria{border-style:dashed;opacity:.8;font-size:.95em}
 .escolha.utilitaria:hover{opacity:1}
@@ -2869,3 +2871,71 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .nav-respostas .btn.recusar{opacity:.8}
 .nav-conversa .nav-resposta{margin:12px 0 6px;padding:6px 10px;border-left:3px solid var(--destaque);
   color:var(--texto);font-style:italic;background:rgba(255,255,255,.04);border-radius:0 6px 6px 0}
+
+/* Pokédex e Cartão: o aparelho cabe na tela e fecha só no X */
+.modal.so-x{position:relative;max-height:calc(100dvh - 24px);overflow:hidden;display:flex;flex-direction:column;padding-top:16px}
+.modal.so-x > .modal-corpo{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.modal.cartao.so-x > .modal-corpo{overflow-y:auto}
+.modal-x{
+  position:absolute;top:8px;right:8px;z-index:5;width:34px;height:34px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.75);background:rgba(0,0,0,.35);color:#fff;
+  font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.35)
+}
+.modal-x:hover{background:rgba(0,0,0,.55)}
+.modal-x:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.modal.so-x .abas-mochila{margin-right:40px}
+.modal-fundo.fundo-pokedex,.modal-fundo.fundo-cartao{padding:12px}
+
+/* time: segurar e arrastar */
+.time-lista.arrastavel .time-linha{touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.time-lista.em-arrasto .time-linha{touch-action:none}
+.time-linha.arrastando{position:relative;z-index:5;transition:none;box-shadow:0 10px 24px -8px rgba(0,0,0,.7);outline:2px solid var(--destaque);transform-origin:center;scale:1.03}
+
+/* Pokébolas do time na ficha da luta */
+.bolas-time{display:flex;gap:4px;margin:3px 0 1px}
+.bolas-time .pb{width:11px;height:11px;border-radius:50%;display:inline-block;position:relative;
+  background:linear-gradient(180deg,#e43b3b 0 46%,#1b1b1b 46% 56%,#f4f4f4 56% 100%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.6)}
+.bolas-time .pb::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 0 1px #1b1b1b}
+.bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
+
+/* confirmação de compra */
+.confirma-compra{display:flex;flex-direction:column;gap:8px;align-items:stretch;text-align:center}
+.confirma-compra .cc-item{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px}
+.confirma-compra .cc-item img,.confirma-compra .cc-item .item-icone{width:40px;height:40px;image-rendering:pixelated}
+.confirma-compra p{margin:0}
+.confirma-compra .cc-botoes{display:flex;gap:10px;justify-content:center;margin-top:6px}
+.confirma-compra .cc-botoes .btn{min-width:110px}
+
+/* ícones desenhados (js/data/icones.js) */
+svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
+.escolha.com-icone{display:flex;align-items:center;gap:10px;text-align:left}
+.porta{flex-direction:row;align-items:center;gap:10px}
+.porta .porta-icone{width:24px;height:24px;opacity:.9}
+.abas-mochila .aba{display:inline-flex;align-items:center;gap:5px}
+.abas-mochila .aba svg.icone{width:15px;height:15px}
+
+/* Cartão no celular: tudo numa tela, sem rolar */
+@media (max-width:560px){
+  .modal.cartao .cartao-corpo{flex-direction:row;align-items:flex-start;gap:10px;padding:9px 11px 2px}
+  .modal.cartao .cartao-retrato{width:62px;height:78px}
+  .modal.cartao .cartao-nome,.modal.cartao .cartao-titulo{text-align:left}
+  .modal.cartao .cartao-nome{font-size:17px}
+  .modal.cartao .cartao-titulo{font-size:9.5px;margin:1px 0 4px}
+  .modal.cartao .cartao-linha{padding:2px 0;font-size:11.5px;gap:6px}
+  .modal.cartao .cartao-linha .k{flex:0 0 78px;font-size:9.5px}
+  .modal.cartao .cartao-linha.grana{padding:4px 8px}
+  .modal.cartao .cartao-linha.grana .v{font-size:14px}
+  .modal.cartao .cartao-rep{padding:3px 11px 6px;font-size:11.5px}
+  .modal.cartao .cartao-insignias{padding:7px 11px 9px}
+  .modal.cartao .cartao-sub{margin-bottom:5px}
+  .modal.cartao .grade-insignias{grid-template-columns:repeat(4,1fr);gap:5px}
+  .modal.cartao .insignia-slot{padding:4px 2px 3px;gap:1px}
+  .modal.cartao .insignia-slot .forma,.modal.cartao .insignia-img{width:28px;height:28px}
+  .modal.cartao .insignia-slot .rot{font-size:9.5px}
+  .modal.cartao .insignia-slot .cid{display:none}
+  .modal.cartao .cartao-pe{padding:7px 11px 9px}
+  .modal.so-x{padding:12px 10px 10px}
+  .modal.so-x .abas-mochila{margin-bottom:6px}
+}
