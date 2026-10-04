@@ -769,7 +769,7 @@ c3_luta_cacador:{
 
 c3_venceu_cacador:{
   texto:[
-    'O Arbok volta pra Pokébola e o homem não reclama, não xinga, não ameaça.',
+    'O Ekans volta pra Pokébola e o homem não reclama, não xinga, não ameaça.',
     'Ele só te olha com uma atenção nova, do jeito que se olha uma despesa inesperada que vai ter que entrar na planilha.',
     '"Anota aí", ele diz pro parceiro. E o parceiro anota. Anota o seu rosto.',
     'Eles saem pela trilha. Sem pressa nenhuma. O mais velho para uma vez e olha pra trás, não pra você — pra clareira.'

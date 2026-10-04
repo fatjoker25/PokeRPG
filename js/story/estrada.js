@@ -139,7 +139,7 @@ const Estrada = {
 
   daqui(localId){
     return (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : [])
-      .filter(t => t.local === (localId || Mundo.id()));
+      .filter(t => t.local === (localId || Mundo.id()) && !t.barreira);
   },
   /* quem ainda te para neste escalão: você não venceu ele desde que
      chegou nas insígnias de agora */

@@ -320,6 +320,7 @@ const Exploracao = {
     if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
     if (acao.startsWith('rev_'))  return Jogo.lutarRevanche(acao.slice(4));
     if (acao.startsWith('ag_'))   return Agenda.fazer(acao.slice(3));
+    if (acao.startsWith('barr_')) return Barreiras.fazer(acao.slice(5));
     if (acao.startsWith('idade_')) return PortasDaIdade.fazer(acao.slice(6));
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){

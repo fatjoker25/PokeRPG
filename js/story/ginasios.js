@@ -32,6 +32,17 @@ const GINASIOS = [
   efeito:'Pokémon que não escolheram você passam a hesitar menos.',
   premio:{dinheiro:1200, itens:{'Super Potion':2}, rep:1},
 
+  /* a conversa de quem volta com a insígnia no bolso */
+  depois:d=>[
+    'Brock está varrendo a terra da linha pintada pra dentro, que é o que se faz depois de cada luta e ninguém vê.',
+    numInsignias() >= 6
+      ? fala('Líder Brock', `${numInsignias()} insígnias. Eu ouço falar de você no rádio do Centro. Não deixa o rádio decidir quem você é.`)
+      : fala('Líder Brock', 'Voltou pra ver se o chão ainda é de terra? É. Vai continuar sendo.'),
+    d.cemiterio.length
+      ? fala('Líder Brock', 'Você continua carregando quem ficou. Dá pra ver no jeito que você entra. Isso não é fraqueza, é memória.', 'baixo')
+      : fala('Líder Brock', 'Se o seu time está comendo direito, dormindo direito e voltando inteiro, você está fazendo mais do que a maioria. Vai.')
+  ],
+
   intro:d=>[
     'O chão do ginásio é de terra batida sobre pedra. Não tem arquibancada — tem uma linha pintada e um homem parado do outro lado dela.',
     numInsignias() === 0
@@ -74,6 +85,14 @@ const GINASIOS = [
   },
   comoDestravar:'Misty ouviu o que aconteceu na Rota 25. Ela abre a piscina pra quem Kanto passar a contar de outro jeito.',
 
+  depois:d=>[
+    'Misty está na beira da piscina com os pés dentro da água, de costas pra porta.',
+    fala('Líder Misty', d.flags.salvou_vaporeon
+      ? 'A Sibyl passou aqui de novo. Ela pergunta de você toda vez, e eu nunca sei o que responder, então eu invento.'
+      : 'Se veio nadar, a piscina é pública depois das seis. Se veio lutar de novo, a insígnia já está no seu bolso.'),
+    fala('Líder Misty', 'E não deixa ninguém te dizer que água é tipo fácil. Água é paciência. Quem não tem, afoga.', 'riso')
+  ],
+
   intro:d=>[
     'O ginásio de Cerulean é uma piscina olímpica com uma passarela no meio. A acústica faz tudo ecoar duas vezes.',
     d.flags.salvou_vaporeon
@@ -109,6 +128,14 @@ const GINASIOS = [
   ],
   efeito:'Você aprende a ler uma sala antes de entrar nela. (+1 Percepção)',
   premio:{dinheiro:3500, itens:{'Hyper Potion':1,'Great Ball':3,'TM24 Thunderbolt':1}, rep:1, status:'percepcao'},
+
+  depois:d=>[
+    'O galpão está com metade das luzes acesas e Surge está trocando um fusível em cima de uma escada.',
+    fala('Líder Lt. Surge', 'Ô, você! Segura a escada.', 'grita'),
+    d.flags.provas_navio || d.flags.caderno_do_trafico
+      ? fala('Líder Lt. Surge', 'Os caminhões pararam de sair de madrugada. Eu não sei se foi você. Eu não vou perguntar. Mas pararam.', 'baixo')
+      : fala('Líder Lt. Surge', 'Porto continua igual: chega coisa, sai coisa. Mas agora eu pergunto de vez em quando. Culpa sua.')
+  ],
 
   intro:d=>[
     'O ginásio de Vermilion é um galpão de manutenção portuária adaptado. Tem gerador, tem cabo no chão, tem cheiro de ozônio.',
@@ -157,6 +184,14 @@ const GINASIOS = [
   },
   comoDestravar:'Erika não luta com quem lucra com aquilo. A estufa abre pra quem Kanto passar a contar de outro jeito.',
 
+  depois:d=>[
+    'Erika está podando uma planta que já parece perfeita. Ela não para quando você entra.',
+    fala('Líder Erika', 'Você voltou com o cheiro da estrada. Senta um pouco. Ninguém aqui vai te cobrar por sentar.'),
+    fala('Líder Erika', numInsignias() >= 6
+      ? 'Faltam poucas, eu sei. Quando acabar, lembra de voltar aqui sem motivo. É a melhor visita que existe.'
+      : 'Planta cresce no tempo dela. Time também. Quem apressa um, estraga o outro.')
+  ],
+
   intro:d=>[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. É úmido, quente e absurdamente silencioso pro andar de baixo.',
     'Erika rega as plantas enquanto fala com você, e não para de regar em nenhum momento.',
@@ -192,6 +227,13 @@ const GINASIOS = [
   ],
   efeito:'Seu corpo aprende a aguentar o que devia derrubar. (+1 Resistência)',
   premio:{dinheiro:5000, itens:{'Full Heal':3,'Antidote':3,'Ultra Ball':1,'TM06 Toxic':1}, rep:1, status:'resistencia'},
+
+  depois:d=>[
+    'O ginásio de Fuchsia está com as paredes falsas fechadas, o que quer dizer que Koga não está esperando ninguém.',
+    'Ele aparece mesmo assim, de um lugar que não era porta.',
+    fala('Líder Koga', 'Quem volta a um ginásio já vencido está procurando outra coisa. Eu também procuro. Ninguém acha nada aqui.', 'frio'),
+    fala('Líder Koga', 'Veneno ensina uma coisa só: o que mata devagar é o que ninguém vê chegando. Lembra disso quando alguém sorrir demais pra você.')
+  ],
 
   intro:d=>[
     'O ginásio de Fuchsia tem parede falsa, corredor cego e piso que range de propósito. Você leva onze minutos pra achar o líder num prédio de quarenta metros.',
@@ -235,11 +277,22 @@ const GINASIOS = [
       if (!redimido)
         return '"Eu senti onze coisas pararem de existir ao mesmo tempo." Sabrina não abre a porta do ginásio. "Você estava lá. Eu não consigo estar na mesma sala que você sem ouvir aquilo de novo."';
     }
-    if (d.capitulo < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
-      return 'O ginásio está trancado. Um papel na porta: "SUSPENSO POR TEMPO INDETERMINADO — S." A luz interna está acesa.';
+    /* Antes da terceira insígnia a Rocket ainda não pôs o pé na Silph,
+       e Sabrina recebe quem aparecer. Da terceira em diante a torre de
+       vidro está tomada, o ginásio fecha e só reabre depois da Silph. */
+    if (numInsignias() >= 3 && d.capitulo < 12 && !d.flags.entrou_no_ginasio_saffron && !d.flags.viu_os_doze && !d.flags.sabrina_aliada)
+      return 'O ginásio está trancado. Um papel na porta: "SUSPENSO POR TEMPO INDETERMINADO — S." A luz interna está acesa. Duas quadras pra cima, tem homem de terno escuro na porta da Silph, e nenhum deles é da Silph.';
     return null;
   },
   comoDestravar:'Sabrina fechou o ginásio por causa do que ela ouve embaixo da Silph. Vá até lá — ou espere o mundo seguir sem você.',
+
+  depois:d=>[
+    'A luz vem do chão de novo. Sabrina não levanta a cabeça.',
+    fala('Líder Sabrina', 'Você ia perguntar se eu estou bem. Eu ouvi antes de você entrar.', 'baixo'),
+    d.flags.sabrina_aliada || d.flags.viu_os_doze
+      ? fala('Líder Sabrina', 'Está mais quieto lá embaixo. Não é silêncio. É menos barulho. Já é alguma coisa.')
+      : fala('Líder Sabrina', 'A cidade continua pensando alto. Você pensa um pouco mais baixo agora. Volte quando pensar mais baixo ainda.')
+  ],
 
   intro:d=>[
     'A arena de Saffron não tem iluminação de teto. A luz vem do chão, e o efeito é que ninguém tem sombra.',
@@ -277,6 +330,14 @@ const GINASIOS = [
   efeito:'Você passa a improvisar quando o plano falha. (+1 Sorte)',
   premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2,'TM38 Fire Blast':1}, rep:1, status:'sorte'},
 
+  depois:d=>[
+    'Blaine está na lousa de novo, escrevendo uma conta que não termina.',
+    fala('Líder Blaine', 'Equação de calor. Eu escrevo todo dia e todo dia ela dá o mesmo resultado. É reconfortante.'),
+    fala('Líder Blaine', d.flags.leu_caderno
+      ? 'Você ainda carrega o que leu naquele caderno. Eu também. A gente podia almoçar um dia, só pra não carregar sozinho.'
+      : 'Volta quando quiser aprender física. Eu dou aula de graça pra quem já me venceu. É a única regra que eu inventei.', 'riso')
+  ],
+
   intro:d=>[
     'O ginásio de Cinnabar sobreviveu ao incêndio porque fica do outro lado da ilha. Blaine dá aula de física numa lousa quando você entra.',
     'Ele tem setenta e poucos anos, óculos escuros dentro de um prédio e uma calma de quem já perdeu o que tinha pra perder.',
@@ -311,6 +372,12 @@ const GINASIOS = [
   efeito:'A Liga passa a te tratar como alguém que terminou o que começou.',
   premio:{dinheiro:12000, itens:{'Ultra Ball':3,'Full Heal':3,'Hyper Potion':2}, rep:2},
   comoDestravar:'O ginásio de Viridian ficou fechado dois anos depois que a Equipe Rocket caiu. Blue reabriu com uma regra: sete insígnias, ou nada.',
+
+  depois:d=>[
+    'Blue está sentado na borda da arena com o celular na mão, e guarda rápido demais quando você entra.',
+    fala('Líder Blue', 'Não era nada. Era o meu avô. Ele pergunta de você, sabia? Pergunta mais de você do que de mim.'),
+    fala('Líder Blue', 'Oito insígnias. A Rota 23 está te esperando, e ela não espera ninguém por muito tempo. Vai logo.')
+  ],
 
   intro:d=>[
     'O ginásio de Viridian ficou lacrado por dois anos depois que a Equipe Rocket foi desmontada. Ninguém quis o lugar. Ele tinha cheiro do que tinha sido.',
@@ -451,7 +518,7 @@ function statusGinasio(g){
    só abre com sete: se nenhum ginásio que falta está aberto pra você,
    a porta abre com o que você tem. Ninguém fica preso no meio do jogo.
    ============================================================ */
-const INSIGNIAS_DO_CAPITULO = {6:1, 8:2, 10:3, 12:4, 14:5, 17:6, 22:8};
+const INSIGNIAS_DO_CAPITULO = {6:1, 8:2, 10:3, 11:3, 12:4, 14:5, 17:6, 22:8};
 const INSIGNIAS_DA_PASSAGEM = {'rota23>caminho_vitoria':8, 'caminho_vitoria>rota23':0};
 
 function ginasioAoAlcance(){
@@ -464,8 +531,13 @@ function faltaInsignias(pedidas){
   return {pedidas, tem};
 }
 function travaDoCapitulo(n){ return faltaInsignias(INSIGNIAS_DO_CAPITULO[n]); }
-function travaDaPassagem(de, para){ return faltaInsignias(INSIGNIAS_DA_PASSAGEM[de + '>' + para]); }
+function travaDaPassagem(de, para){
+  const b = (typeof Barreiras !== 'undefined') ? Barreiras.entre(de, para) : null;
+  if (b) return {barreira:b, texto:b.texto};
+  return faltaInsignias(INSIGNIAS_DA_PASSAGEM[de + '>' + para]);
+}
 function textoTrava(t){
+  if (t.texto) return t.texto;
   return `Isso espera quem tem ${t.pedidas} insígnia${t.pedidas === 1 ? '' : 's'}. Você tem ${t.tem}.`;
 }
 

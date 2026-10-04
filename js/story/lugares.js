@@ -280,6 +280,10 @@ const Descobertas = {
    ============================================================ */
 const CONVERSAS = {
   pallet:[
+    [fala('o carteiro', 'Pallet recebe três cartas por dia. Duas são conta. A terceira é sempre pro laboratório.', null, 'Ele fala isso como quem conta um segredo de Estado.')],
+    ['Um Pidgey pousa no fio do poste, olha você, e decide que você não é interessante.'],
+    [fala('a dona da horta', 'Tomate não cresce aqui. O vento do mar queima. Eu planto todo ano assim mesmo.', 'riso')],
+    {cond:d=>d.relogio.periodo==='noite', texto:['As janelas de Pallet apagam uma por uma, sempre na mesma ordem. A do laboratório é a última.']},
     ['Uma senhora para de varrer só pra te encarar melhor.',
      fala('a senhora do número 12', 'Você é {filho|filha} de quem mesmo?', null, 'Ela sabe a resposta. É o jeito dela de puxar assunto.')],
     ['Um pescador conserta rede na varanda e fala sem levantar a cabeça.',
@@ -298,6 +302,10 @@ const CONVERSAS = {
     {cond:d=>d.relogio.periodo==='madrugada', texto:['Pallet de madrugada é quatro postes e o mar. Um dos postes está queimado desde que você se entende por gente.']}
   ],
   viridian:[
+    [fala('o vendedor de jornal', 'Manchete de hoje: nada. Manchete de ontem: nada. Viridian é a cidade mais calma de Kanto e eu vendo jornal aqui.', 'riso')],
+    ['Um velho dorme sentado num banco da praça com um Slowpoke dormindo no colo. Ninguém sabe qual dos dois dormiu primeiro.'],
+    [fala('a menina da escola', 'A professora disse que todo treinador passa por Viridian. Eu fico contando. Você é o número quarenta e sete este mês.')],
+    {cond:d=>d.insignias.length>=3, texto:[fala('o vendedor de jornal', 'Ei, eu acho que eu li alguma coisa sobre você. Ou sobre alguém parecido. Tem muita gente parecida.')]},
     [fala('o atendente do Centro', 'Tem gente perguntando por gente. Sempre teve. Mas esse ano tá demais.')],
     ['Um treinador mais velho te para no meio da calçada.',
      fala('o treinador mais velho', 'A Floresta de Viridian tem dois caminhos: o marcado e o curto. Nenhum dos dois é bom à noite.')],
@@ -318,6 +326,10 @@ const CONVERSAS = {
           'Você responde. Ele só fala "ah" e vai embora feliz da vida.')]}
   ],
   pewter:[
+    [fala('o guia do museu', 'O fóssil mais pedido é sempre o que está emprestado pra outra cidade. Sempre.', null, 'Ele já explicou isso tantas vezes que virou piada pra ele mesmo.')],
+    ['Dois Geodude tomam sol na escada da prefeitura. O funcionário passa por cima deles com a pasta embaixo do braço, sem pedir licença, e eles também não pedem.'],
+    [fala('a quebradora de pedra', 'Pedra de Pewter tem veio. Pedra do Monte da Lua tem brilho. Quem confunde as duas não é daqui.')],
+    {cond:d=>d.insignias.includes('Insígnia Pedra'), texto:[fala('a quebradora de pedra', 'Você é quem ganhou do Brock? Ele fez cara de quem gostou. Ele quase nunca faz essa cara.')]},
     [fala('a mulher da banca', 'Aqui todo mundo trabalhou na pedreira ou é filho de quem trabalhou. Inclusive o líder do ginásio.')],
     ['Uma menina de uns dez anos te aborda com a autoridade de quem já viu isso dar errado.',
      fala('a menina de dez anos', 'Você vai lutar no ginásio? Leva alguma coisa de Água. TODO MUNDO esquece.', 'grita')],
@@ -334,6 +346,10 @@ const CONVERSAS = {
     {cond:d=>d.relogio.periodo==='manhã', texto:['Às seis e meia a sirene da pedreira toca e a cidade inteira muda de ritmo em quinze segundos, como se alguém tivesse trocado a marcha.']}
   ],
   cerulean:[
+    [fala('o pescador da ponte', 'Goldeen morde de manhã. Magikarp morde a qualquer hora. Eu queria que fosse o contrário.', 'riso')],
+    ['Uma moça de bicicleta passa tocando a campainha pra um Psyduck que não sai do meio da ciclovia. Ele não sai. Ela desvia.'],
+    [fala('a dona da pousada', 'Quarto com vista pra ponte custa o dobro. A ponte é a mesma, mas as pessoas pagam.')],
+    {cond:d=>d.relogio.periodo==='manhã', texto:['A neblina do cabo ainda não foi embora. A ponte de Cerulean começa no chão e termina em lugar nenhum.']},
     [fala('a moça do Centro', 'Cuidado com quem vende na ponte. É legal. É legalizado.', null, 'Uma pausa curta.'),
      fala('a moça do Centro', 'Não é bom.')],
     [fala('o pescador da ponte', 'O rio mudou de cor duas vezes esse mês. Ninguém explica. Ninguém pergunta.')],
@@ -354,6 +370,10 @@ const CONVERSAS = {
      'A moça do Centro atende você com toda a educação do mundo e não olha na sua cara uma vez sequer. Isso é bem pior do que se ela gritasse.']}
   ],
   vermilion:[
+    [fala('o estivador', 'Navio grande atraca de madrugada. Navio pequeno atraca quando dá. A gente trabalha pros dois.')],
+    ['Um Machop carrega duas caixas de uma vez pelo cais. O dono carrega uma. Os dois chegam juntos.'],
+    [fala('a vendedora de sorvete', 'Sabor do dia é água do mar. Brincadeira. É baunilha. Sempre é baunilha.', 'riso')],
+    {cond:d=>d.relogio.periodo==='noite', texto:['O farol de Vermilion gira devagar. Cada volta pinta o cais de branco por um segundo, e os Spearow do cais dormem com um olho aberto.']},
     [fala('o estivador', 'Porto é assim. Chega coisa, sai coisa, e ninguém pergunta.', null, 'Ele não para de trabalhar em momento nenhum.')],
     [fala('a vendedora de bolinho frito', 'Navio grande atraca quinta. Aí a cidade enche de gente que nunca dormiu no chão.')],
     ['Um garoto do cais aponta o ginásio com o queixo.',
@@ -372,6 +392,10 @@ const CONVERSAS = {
     {cond:d=>d.relogio.periodo==='noite', texto:['À noite o porto não para, só fica mais devagar. Os guindastes continuam trabalhando com luz amarela, e é bonito de um jeito que ninguém do turno reconhece.']}
   ],
   lavender:[
+    [fala('a vendedora de flores', 'Flor branca pra quem foi há pouco tempo. Flor amarela pra quem foi há muito. Ninguém compra a vermelha.', 'baixo')],
+    ['Um Gastly passa pela praça a meio metro do chão, devagar, como quem faz o mesmo caminho todo dia. Ninguém olha. É Lavender.'],
+    [fala('o menino da escada', 'Minha avó diz que a cidade é calma porque todo mundo aqui fala baixo. Eu falo alto. Ela diz que eu sou de outra cidade.')],
+    {cond:d=>d.relogio.periodo==='madrugada', texto:['De madrugada a Torre tem uma luz acesa no último andar. Sempre a mesma janela.']},
     ['A senhora de luto não fala nada por um tempo comprido.',
      fala('a senhora de luto', 'O primeiro é o pior. Depois você aprende a escrever mais rápido.', 'baixo')],
     [fala('o zelador da torre', 'Ninguém sobe na torre à noite. Não é proibido.'),
@@ -392,6 +416,10 @@ const CONVERSAS = {
     ['A cidade inteira não tem música em lugar nenhum. Você percebe isso depois de meia hora e não consegue mais desperceber.']
   ],
   celadon:[
+    [fala('o vendedor ambulante', 'Óculos escuros, guarda-chuva, ficha do cassino — eu vendo o que a cidade precisa na hora que ela precisa.')],
+    ['Uma senhora passeia com um Persian de coleira dourada. O Persian olha você de cima a baixo e não aprova.'],
+    [fala('a estudante de arte', 'Eu desenho o prédio da loja de departamentos todo dia. Ele nunca fica igual. A luz muda o andar inteiro.')],
+    {cond:d=>d.insignias.includes('Insígnia Arco-Íris'), texto:[fala('a estudante de arte', 'A Erika mandou trocar as plantas da praça. Você reparou? Ninguém repara. Eu reparei.')]},
     [fala('o segurança do shopping', 'Você tem cara de quem tá procurando alguma coisa.', null, 'Ele fala isso sem hostilidade nenhuma.'),
      fala('o segurança do shopping', 'Todo mundo aqui tem.')],
     ['Um entregador de gás encosta o botijão no chão e fala sem você ter perguntado nada.',
@@ -413,6 +441,10 @@ const CONVERSAS = {
      fala('a florista', 'Tem uns moços de camisa social perguntando de galpão nesta cidade. Não são da prefeitura.', 'baixo')]}
   ],
   fuchsia:[
+    [fala('o guarda do Safári', 'Bola do Safári não volta. Quem joga e erra, perdeu. Eu falo isso pra todo mundo e todo mundo erra.')],
+    ['Um Venonat bate na lâmpada do poste a noite inteira. De manhã ele dorme no pé do poste como se tivesse trabalhado.'],
+    [fala('o dono do quiosque', 'Água de coco gelada e mapa do Safári. Mapa errado de propósito: o certo, o guarda não deixa vender.', 'riso')],
+    {cond:d=>d.relogio.periodo==='tarde', texto:['O calor de Fuchsia à tarde tem cheiro de mato molhado. As portas das casas ficam abertas, com cortina de miçanga balançando.']},
     [fala('o dono do bar', 'Metade desta cidade trabalha na Zona. A outra metade vive de quem trabalha na Zona.')],
     ['Um guarda-parque de folga, já bem bêbado, derruba o copo na mesa.',
      fala('o guarda-parque', 'Setor 7 é onde a gente aprende que não existe emprego limpo!', 'grita',
@@ -431,6 +463,10 @@ const CONVERSAS = {
     {cond:d=>d.relogio.periodo==='tarde', texto:['Às quatro da tarde o ônibus da Zona descarrega quarenta pessoas de chapéu novo, e a cidade inteira aumenta de volume por vinte minutos.']}
   ],
   saffron:[
+    [fala('o executivo apressado', 'Desculpa, desculpa, eu tô atrasado, todo mundo aqui tá atrasado, é a cidade.', null, 'Ele já está longe quando termina a frase.')],
+    ['Um Mr. Mime faz mímica na frente da estação. Ninguém para pra ver, mas todo mundo desvia da parede invisível.'],
+    [fala('a ascensorista', 'Prédio de vinte andares e o pessoal ainda pede o terceiro. Sobe a escada, gente.', 'riso')],
+    {cond:d=>d.relogio.periodo==='noite', texto:['Saffron à noite não apaga. Os escritórios ficam acesos andar por andar, e da rua parece que a cidade está pensando.']},
     [fala('o funcionário da fila', 'Crachá branco vai até o oitavo andar. Azul vai até o décimo.')],
     [fala('a moça do Centro', 'O ginásio fechou faz três semanas.', null, 'E aí ela baixa a voz sem nenhum motivo.'),
      fala('a moça do Centro', 'A líder não explicou nada pra ninguém.', 'baixo')],
@@ -451,6 +487,10 @@ const CONVERSAS = {
           'E some antes de você conseguir perguntar onde.')]}
   ],
   cinnabar:[
+    [fala('o pescador da ilha', 'O vulcão ronca de vez em quando. A gente já nem olha. Turista olha. Turista sempre olha.')],
+    ['Um Ponyta pasta perto da praia preta. Onde ele pisa, a areia fica marcada de quente por um tempo.'],
+    [fala('a professora aposentada', 'Eu dei aula aqui trinta anos. Metade da ilha aprendeu a ler comigo. A outra metade aprendeu a pescar e não precisou.')],
+    {cond:d=>d.relogio.periodo==='manhã', texto:['A balsa da manhã chega com jornal de ontem e pão de anteontem. A ilha inteira desce pro cais pra buscar os dois.']},
     [fala('o barqueiro', 'A ilha inteira é o vulcão. As casas são o que sobrou de espaço.')],
     [fala('a moça da vitrine', 'O laboratório aceita fóssil. Aceita mesmo.'),
      fala('a moça da vitrine', 'Já vi sair Pokémon de lá que não devia estar andando.', 'baixo')],
@@ -473,6 +513,20 @@ const CONVERSAS = {
 };
 
 const CONVERSAS_ROTA = [
+  ['Um homem pinta a placa da rota com a tinta já descascando na lata. Ele pinta só as letras que sumiram.'],
+  ['Uma treinadora sentada no barranco cuida da pata de um Growlithe com bandagem e paciência. Ele deixa.'],
+  [fala('o andarilho', 'Eu ando Kanto inteira a pé. Não tenho pressa nenhuma. Pressa é coisa de quem tem insígnia pra pegar.', 'riso')],
+  [fala('a mãe com carrinho', 'Ele só dorme se o carrinho estiver andando. Então eu ando. Já passei por aqui quatro vezes hoje.')],
+  ['Dois Spearow brigam por uma casca de fruta no meio da estrada e só saem quando você chega a um passo deles.'],
+  [fala('o vendedor de fruta', 'Fruta da estrada é mais doce. Não sei por quê. Talvez porque o povo chega com fome.')],
+  ['Um caminhão de mudança parado no acostamento. O motorista dorme no banco com o pé pra fora da janela.'],
+  [fala('o observador de Pokémon', 'Vi um Pidgeotto ontem. Hoje nenhum. Anoto as duas coisas, as duas são dados.')],
+  ['Uma criança corre atrás de um Caterpie com uma caixa de sapato. O Caterpie é mais devagar, mas é mais teimoso.'],
+  [fala('o ciclista cansado', 'Sobe, desce, sobe. Quem desenhou essa estrada nunca andou de bicicleta.')],
+  ['Um grupo de escoteiros passa em fila cantando. O último da fila esqueceu a letra e só canta o refrão.'],
+  [fala('a fotógrafa', 'Fica parado aí um segundo. Não, você não. O Pokémon atrás de você.', null, 'Você vira. Não tem nada atrás de você. Quando volta, ela já tirou a foto.')],
+  {cond:d=>d.relogio.periodo==='noite' || d.relogio.periodo==='madrugada', texto:['Uma fogueira longe, do outro lado do mato. Dá pra ouvir risada e um violão desafinado.']},
+  {cond:d=>d.relogio.periodo==='manhã', texto:['O orvalho ainda está no mato, e cada passo seu deixa um risco escuro no verde.']},
   ['Um treinador acampado reclama do vento por dez minutos e depois te deseja boa sorte com uma sinceridade desproporcional.'],
   ['Uma mulher com três Pokémon no pé pergunta se você viu um Growlithe. Ela procura há dois dias.'],
   ['"Não anda de noite", diz um homem com mochila grande. "Não porque tem Pokémon. Porque tem gente."'],
@@ -983,8 +1037,13 @@ const Cidade = {
     const g = GINASIOS.find(x => x.id === id);
     if (!g) return Exploracao.tela([{tipo:'info', texto:'Não tem ginásio aqui.'}]);
     const st = statusGinasio(g);
-    if (st.estado === 'conquistado')
-      return Exploracao.tela([{tipo:'info', texto:'Você já tem a insígnia daqui. O líder acena de longe e volta ao que estava fazendo.'}]);
+    if (st.estado === 'conquistado'){
+      Mundo.passar(1);
+      if (!g.depois) return Exploracao.tela([{tipo:'info', texto:'Você já tem a insígnia daqui. O líder acena de longe e volta ao que estava fazendo.'}]);
+      return UI.telaConversa({num:(LOCAIS[id] || {}).nome, titulo:`Ginásio de ${g.cidade}`, loc:'de volta',
+        falas:g.depois(Estado.dados).filter(Boolean), quem:`Líder ${g.lider}`,
+        botoes:[{texto:'Sair do ginásio', acao:'Exploracao.tela()'}]});
+    }
     if (st.estado === 'recusado')
       return Exploracao.tela([{tipo:'dano', texto:st.fala}]);
     if (st.estado !== 'disponivel')

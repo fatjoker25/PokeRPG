@@ -243,12 +243,11 @@ c2_recado_da_sua_cidade:{
     'Você procura papel da sua cidade no mural e leva quatro minutos pra achar, porque está na terceira camada.',
     d=>`É um cartaz de ${d.jogador.cidade}, impresso em papel comum, com a foto ruim de uma licença.`,
     'É o seu.',
-    'Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado da Sra. Perla, vizinha".',
-    'Ela ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
+    d=>`Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado de ${nomeCasa()}, ${artigoDe(casaQuem())} ${casaQuem()}".`,
+    '{casa:Ela|Ele} ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
     'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
   ef:{flag:'achou_o_proprio_cartaz_em_viridian', moral:6,
-      npc:{nome:'Sra. Perla', opiniao:3, memoria:'Mandou pregar o seu cartaz no mural do Centro de Viridian, por telefone e fax.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém mandou pregar o seu nome numa cidade que não é a sua', rep:{notorio:true}},
       registrar:'Achou o próprio cartaz na terceira camada do mural de Viridian.'},
   escolhas:[

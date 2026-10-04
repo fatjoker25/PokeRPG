@@ -219,7 +219,9 @@ const ROSTO_POR_NOME_SOLTO = {
   'Dario':'trainers/roughneck', 'Sra. Vale':'trainers/madame', 'Nina':'trainers/sightseer_f',
   'Elsa':'trainers/office_worker_f', 'Milo':'trainers/camper', 'Nico':'trainers/punk_guy',
   'A Terceira':'trainers/veteran_f', 'a Terceira':'trainers/veteran_f', 'Thea Larkin':'trainers/worker',
-  'o Professor':'trainers/scientist'
+  'o Professor':'trainers/scientist',
+  'Rico':'trainers/worker', 'Maeve Corwin':'trainers/reporter', 'quem te atendeu':'trainers/league_staff',
+  'outro dos seis':'trainers/fisherman', 'os pescadores':'trainers/fisherman', 'os três':'trainers/pokefan'
 };
 const ROSTO_POR_PALAVRA = [
   [/\bvoz\b|r[áa]dio|telefone|locutor/i, null],

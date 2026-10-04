@@ -747,7 +747,7 @@ const UI = {
         const repete = (ultimaBoca === f.quem);
         ultimaBoca = f.quem;
         return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(f.quem)}>
-          <div class="fala-quem">${repete ? '' : this.retratoFala(f.quem)}${this.esc(f.quem)}</div>
+          <div class="fala-quem">${repete ? '' : this.retratoFala(f.quem, f.rotulo)}${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -829,7 +829,7 @@ const UI = {
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
         html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(quem)}>`
-              + (quem ? `<div class="fala-quem">${lado === 'voce' || repete ? '' : this.retratoFala(quem)}${this.esc(quem)}</div>` : '')
+              + (quem ? `<div class="fala-quem">${lado === 'voce' || repete ? '' : this.retratoFala(quem, rotulo)}${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
@@ -1055,9 +1055,13 @@ const UI = {
   },
 
   /* rosto de quem fala, quando o jogo tem um (js/data/treinadores.js) */
-  retratoFala(quem){
-    const r = (typeof retratoDe === 'function' ? retratoDe(quem) : null)
-           || (typeof rostoGenerico === 'function' ? rostoGenerico(quem) : null);
+  /* `rotulo` é o que a cena escreveu ("a atendente"); `quem` é o que o
+     balão mostra, que vira o nome depois de perguntado. O rosto é o
+     mesmo antes e depois: nome sorteado não tem rosto próprio, então o
+     rótulo segura o retrato. */
+  retratoFala(quem, rotulo){
+    const r = (typeof retratoDe === 'function' ? (retratoDe(quem) || (rotulo && retratoDe(rotulo))) : null)
+           || (typeof rostoGenerico === 'function' ? ((rotulo && rostoGenerico(rotulo)) || rostoGenerico(quem)) : null);
     return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
   },
 
@@ -4007,6 +4011,12 @@ const UI = {
       <div class="linha"><span class="k">Quem se apresenta</span><span class="v">crachá, placa, nome pintado na porta: o balão passa a usar o nome sem você perguntar</span></div>
       <p class="sussurro">Este jogo chama quase todo mundo de "a enfermeira", "o barqueiro", "a dona do armazém" — que é como a gente enxerga desconhecido de verdade. Perguntar o nome é a única ação do jogo que não serve pra nada mecanicamente e existe só pra desfazer isso. Uma mesma jornada sempre dá o mesmo nome pra mesma pessoa; jornadas diferentes dão nomes diferentes — menos pra quem a própria cena apresenta, que é sempre quem é.</p>
 
+      <h3>Caminho que a escolha fecha</h3>
+      <div class="linha"><span class="k">Boca do Túnel de Pedra</span><span class="v">fechada pra quem virou inimigo dos caçadores da floresta · abre vencendo o caçador que espera ali (a luta aparece na lista da Rota 9 e do túnel) · o outro caminho é por Saffron e pela Rota 8</span></div>
+      <div class="linha"><span class="k">Entrada da Ciclovia</span><span class="v">fechada pra quem foi expulso do cassino · abre vencendo o chefe da segurança (em Celadon e na Rota 16) · o outro caminho é por Lavender e pelas Rotas 12 e 13</span></div>
+      <div class="linha"><span class="k">Guarita norte de Saffron</span><span class="v">fechada com reputação Ruim 4 ou pior · abre quando a reputação sai daí · as outras três guaritas continuam abertas</span></div>
+      <p class="sussurro">Toda barreira tem outro caminho, mais comprido. A porta aparece fechada no mapa e diz quem está nela.</p>
+
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>
       <div class="linha"><span class="k">O que abre</span><span class="v">uma coisa que você descobriu antes, não uma insígnia nem um nível</span></div>
@@ -4397,6 +4407,7 @@ const UI = {
       <div class="linha"><span class="k">Teto por capítulo</span><span class="v">o que passa dele conta por 15%</span></div>
       <div class="linha"><span class="k">O mesmo feito</span><span class="v">conta uma vez por capítulo</span></div>
       <div class="linha"><span class="k">Líder que recusa</span><span class="v">Misty volta a aceitar o desafio com reputação Boa 4, Erika com Boa 5, Sabrina com Boa 6</span></div>
+      <div class="linha"><span class="k">Saffron</span><span class="v">com menos de 3 insígnias, Sabrina recebe quem aparecer · da terceira em diante, a Silph é tomada e o ginásio fecha até a Silph (capítulo 11) se resolver</span></div>
       <p class="sussurro">Consertar a calha da vizinha é uma coisa boa e não é notícia. Reputação é o que Kanto conta sobre você, então só muda de degrau o que foi grande o bastante para ser contado — ou o que aconteceu na frente de quem conta. Cada capítulo tem um teto: fazer tudo o que dá num capítulo rende mais que fazer metade, mas não rende o dobro, porque Kanto só fala de você na medida em que te viu. Ginásio e Liga passam por cima do teto — isso é notícia em qualquer altura. Os dois eixos se pagam: enquanto você deve de um lado, o que você faz do outro serve primeiro para quitar.</p>
 
       <h3>O que você sabe</h3>
@@ -4475,6 +4486,7 @@ const UI = {
       <div class="linha"><span class="k">Capítulo 6, Cerulean</span><span class="v">1 insígnia</span></div>
       <div class="linha"><span class="k">Capítulo 8, Vermilion</span><span class="v">2</span></div>
       <div class="linha"><span class="k">Capítulo 10, a Usina</span><span class="v">3</span></div>
+      <div class="linha"><span class="k">Capítulo 11, a Silph</span><span class="v">3 · antes disso a Rocket não chegou a Saffron</span></div>
       <div class="linha"><span class="k">Capítulo 12, Fuchsia</span><span class="v">4</span></div>
       <div class="linha"><span class="k">Capítulo 14, Cinnabar</span><span class="v">5</span></div>
       <div class="linha"><span class="k">Capítulo 17, Rota 23</span><span class="v">6</span></div>
@@ -4484,6 +4496,12 @@ const UI = {
       <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
+
+      <h3>Caminho que a escolha fecha</h3>
+      <div class="linha"><span class="k">Boca do Túnel de Pedra</span><span class="v">fechada pra quem virou inimigo dos caçadores da floresta · abre vencendo o caçador que espera ali (a luta aparece na lista da Rota 9 e do túnel) · o outro caminho é por Saffron e pela Rota 8</span></div>
+      <div class="linha"><span class="k">Entrada da Ciclovia</span><span class="v">fechada pra quem foi expulso do cassino · abre vencendo o chefe da segurança (em Celadon e na Rota 16) · o outro caminho é por Lavender e pelas Rotas 12 e 13</span></div>
+      <div class="linha"><span class="k">Guarita norte de Saffron</span><span class="v">fechada com reputação Ruim 4 ou pior · abre quando a reputação sai daí · as outras três guaritas continuam abertas</span></div>
+      <p class="sussurro">Toda barreira tem outro caminho, mais comprido. A porta aparece fechada no mapa e diz quem está nela.</p>
 
       <h3>Capítulos que podem não acontecer</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">4 dos 32 são condicionais</span></div>

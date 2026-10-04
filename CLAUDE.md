@@ -555,6 +555,19 @@ isso, quem deixava Misty pra depois achava ela no 17 num capítulo de
 área 30. Ginásio se desafia na porta, na cidade (`Cidade.ginasio`); a
 lista de ginásios não existe mais e não volta.
 
+## Barreiras de escolha
+`js/story/barreiras.js` fecha passagem do mapa pelo que o jogador fez
+(`BARREIRAS_DE_ESCOLHA`, `fecha(d)`), nos dois sentidos, sempre com outro caminho mais comprido.
+Quem fecha com `luta` é um treinador de estrada com `barreira:true` (não
+para ninguém na rota; a luta aparece na lista dos dois lados), e vencer
+abre de vez. `travaDaPassagem` lê as barreiras antes das insígnias, então
+mapa, lista de vizinhos e viagem já respeitam. Barreira nova tem que
+deixar o mapa conexo — confere no grafo de `LOCAIS` antes.
+
+Líder tem quatro falas: `intro` (o desafio), `vitoria` (ele perdeu),
+`derrota` (ele ganhou) e `depois` (a visita com a insígnia no bolso,
+`Cidade.ginasio`).
+
 ## Relógio e dia marcado
 Sem o item **Relógio** o jogador só vê o período (manhã, tarde…): o
 `Relogio.texto()` e o `cabecalho()` escondem hora e data. Com ele, dia

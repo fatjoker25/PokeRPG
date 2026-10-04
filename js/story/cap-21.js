@@ -171,16 +171,18 @@ c21_quem_pregou:{
   texto:[
     'Você bate em duas portas e na terceira acha, porque na terceira a pessoa fica vermelha antes de você terminar a pergunta.',
     fala('Sra. Perla', 'Foi eu. Foi eu e eu não peço desculpa.', 'grita'),
-    fala('Sra. Perla', 'Eu imprimi vinte. Tem em Viridian também. Eu fui de ônibus e pus em Viridian.'),
+    d=>fala('Sra. Perla', `Eu imprimi vinte. Aqui na rua é tudo meu. Viridian não: lá ${nomeCasa() === 'Sra. Perla' ? 'foi outra pessoa' : nomeCasa()} já tinha mandado o seu por fax, e eu não ia ficar atrás.`),
     'Vinte cartazes. Ela pagou impressão de vinte cartazes com a sua cara de licença.',
-    fala('Sra. Perla', 'Você trouxe a caixa?', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
+    d=>d.flags.a_caixa_da_odete
+      ? fala('Sra. Perla', 'Você trouxe a caixa?', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
+      : fala('Sra. Perla', 'E não me olha assim. Vai pra casa, que tem gente te esperando.', 'baixo', 'Ela muda de assunto porque não aguenta o assunto.')
   ],
   ef:{moral:6,
-      npc:{nome:'Sra. Perla', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pôs até em Viridian.'},
+      npc:{nome:'Sra. Perla', opiniao:4, memoria:'Imprimiu vinte cartazes com a sua cara e pregou na rua inteira.'},
       rep:{eixo:'bom',delta:2,motivo:'A vizinha imprimiu vinte cartazes com a sua cara', rep:{notorio:true}},
-      registrar:'A Sra. Perla imprimiu vinte cartazes. Levou alguns até Viridian.'},
+      registrar:'A Sra. Perla imprimiu vinte cartazes e pregou na rua inteira.'},
   escolhas:[
-    {texto:'"Eu trouxe a caixa." (mesmo que não tenha)', vai:'c21_a_caixa_de_volta'},
+    {texto:'"Eu trouxe a caixa." (mesmo que não tenha)', vai:'c21_a_caixa_de_volta', cond:d=>!!d.flags.a_caixa_da_odete},
     {texto:'Abraçar ela, que é o que ninguém faz com a dona Perla.', vai:'c21_abracou_odete'},
     {texto:'Ir pra casa antes que fique pior.', vai:'c21_dentro_de_casa'}
   ]

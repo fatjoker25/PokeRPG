@@ -605,6 +605,8 @@ function afazeresDoLocal(){
 
   /* veteranos: quem mora aqui e o convite que um deles te fez */
   if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
+  /* quem fecha o caminho que a sua escolha fechou */
+  if (typeof Barreiras !== 'undefined') Barreiras.afazeres(id).forEach(x => lista.push(x));
   /* porta que a idade abre (ou mostra fechada) */
   if (typeof PortasDaIdade !== 'undefined') PortasDaIdade.afazeres(id).forEach(x => lista.push(x));
   /* o que tem dia e hora marcados, se for agora */

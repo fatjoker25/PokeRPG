@@ -17,6 +17,21 @@
    ============================================================ */
 const TREINADORES_ESTRADA = [
 
+/* ── Quem fecha caminho (barreiras.js): não para ninguém na estrada,
+      espera onde está; só luta quem vai até lá ─────────────────── */
+{id:'roque_tunel', local:'rota9', classe:'Caçador', arq:'roughneck', artigo:'um', nome:'Roque', barreira:true, dif:2,
+ times:[[23,41], [24,42,20], [24,42,20,49], [24,42,20,49,110]], reserva:[48,88],
+ abre:'"Você é {o|a} da floresta." Ele não levanta da pedra. "A gente tem memória boa pra rosto. Quer passar, passa por cima."',
+ volta:'"De novo? Tá. A gente tem o dia inteiro."',
+ perde:'"Passa." Ele guarda a Pokébola sem olhar pra ela. "Mas a gente anotou de novo."',
+ vence:'"Volta por Saffron, {garoto|garota}. É mais longe e é mais seguro. Pra você."'},
+{id:'brutus_ciclovia', local:'celadon', classe:'Segurança', arq:'roughneck', artigo:'um', nome:'Brutus', barreira:true, dif:2,
+ times:[[52,58], [53,58,66], [53,59,67,110], [53,59,68,110,112]], reserva:[57,24],
+ abre:'"O cassino tem uma lista. Você está nela." Ele estala o pescoço. "Mas eu sou um homem razoável. Ganha de mim e eu perco a lista."',
+ volta:'"Voltou pra apanhar com educação. Respeito isso."',
+ perde:'"Pode passar. E não pisa mais no tapete do cassino, que eu não perco duas vezes a mesma lista."',
+ vence:'"A Ciclovia continua fechada pra você. Vai por Lavender, que lá ninguém liga."'},
+
 /* ── Rota 1 ─────────────────────────────────────────────── */
 {id:'joey', local:'rota1', classe:'Garoto', arq:'youngster', artigo:'um', nome:'Joey',
  times:[[19], [19,16], [16,21,20], [17,22,84,20]], reserva:[161,21],
