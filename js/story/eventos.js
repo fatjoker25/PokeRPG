@@ -11,6 +11,34 @@ function conheceOCelio(d){
             || (d.npcs && d.npcs['Célio']));
 }
 
+/* O seu inicial, mesmo depois de evoluir: pelo uid, e em save antigo
+   pela linha de evolução da espécie que você recebeu. */
+function inicialDoJogador(d){
+  d = d || Estado.dados;
+  const vivos = (d.time || []).concat(d.pc || []).filter(p => !p.morto);
+  const j = d.jogador || {};
+  return vivos.find(p => j.inicialUid && p.uid === j.inicialUid)
+      || vivos.find(p => j.inicialDex && typeof linhaDe === 'function' && linhaDe(p.dex).includes(j.inicialDex))
+      || null;
+}
+
+/* O que o Célio diz quando te vê: o seu nome, a cidade da entrega e
+   o Pokémon que saiu da caixa dele. Quem só pegou o número na praça
+   ele reconhece pela praça. */
+function celioTeReconhece(d){
+  const p = inicialDoJogador(d);
+  const nome = d.jogador.nome;
+  if (d.flags.recebeu_do_goro && p){
+    const cresceu = p.dex !== d.jogador.inicialDex
+      ? `Olha ${pron(p).o} ${p.apelido || p.nome}! Saiu da minha caixa ${pron(p).o === 'a' ? 'uma' : 'um'} ${DEX[d.jogador.inicialDex].nome} e olha agora.`
+      : `E ${pron(p).o} ${p.apelido || p.nome}, tá ${p.nivel >= 16 ? 'enorme' : 'crescendo'}. Eu falei que ia dar certo.`;
+    return fala('Célio', `${nome}! De ${d.jogador.cidade}! ${cresceu}`, 'riso');
+  }
+  if (d.flags.recebeu_do_goro)
+    return fala('Célio', `${nome}, de ${d.jogador.cidade}. Eu lembro da manhã. Lembro de todas.`, 'baixo');
+  return fala('Célio', `${nome}! Da praça, do número anotado. Eu não esqueço quem anota.`, 'riso');
+}
+
 const EVENTOS_CIDADE = {
 
 /* ─────────────── PALLET ─────────────── */
@@ -1070,19 +1098,46 @@ const EVENTOS_GERAIS = [
     'Tem uma perua velha estacionada de lado na praça, ocupando duas vagas, com o portamalas aberto e uma lona esticada por cima.',
     'Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
     d=>conheceOCelio(d)
-      ? 'Célio está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê antes de você chegar perto e levanta a caneta uns dois centímetros, que é o cumprimento dele.'
+      ? 'Célio está sentado no banquinho dobrável de sempre, com o caderno de capa dura no colo. Ele te vê de longe, larga a caneta e levanta do banquinho, coisa que ele não faz pra ninguém da fila.'
       : 'Um homem de uns cinquenta anos está sentado num banquinho dobrável ao lado do portamalas, com um caderno de capa dura no colo e uma caneta amarrada no caderno com barbante.',
-    d=>{
-      if (!conheceOCelio(d)) return '';
-      const p = (d.time || []).find(x => x.dex === (d.jogador.inicialDex || 0)) || (d.time || [])[0];
-      return fala('Célio', p
-        ? `${d.jogador.nome}! E ${pron(p).o} ${p.apelido || p.nome}, olha só. Tá ${p.nivel >= 16 ? 'enorme' : 'crescendo'}. Eu falei que ia dar certo.`
-        : `${d.jogador.nome}! Eu lembro de você. Lembro de todo mundo.`, 'riso');
-    },
-    'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
+    d=>conheceOCelio(d) ? celioTeReconhece(d) : '',
+    d=>conheceOCelio(d)
+      ? 'Ele aperta a sua mão com as duas mãos, do jeito de quem cumprimenta parente, e só depois volta pro banquinho. Tem duas pessoas esperando.'
+      : 'Tem duas pessoas esperando. Uma delas tem uns quinze anos e não consegue ficar parada.'
   ],
   escolhas:[
+    {texto:'Contar como está a jornada.',
+     cond:d=>conheceOCelio(d),
+     ef:{moral:2, npc:d=>({nome:'Célio', opiniao:((Estado.npc('Célio') || {}).opiniao || 0) + 1,
+                           memoria:`Ouviu você contar da jornada, na praça de ${(Mundo.atual() || {}).nome}.`}),
+         registrar:'Contou pro Célio como está a jornada.'},
+     resultado:[
+       d=>{
+         const n = d.insignias.length;
+         return fala(d.jogador.nome, n
+           ? `${n === 1 ? 'Uma insígnia' : n + ' insígnias'}. E o time tá ${d.time.filter(p => !p.morto).length === 1 ? 'só começando' : 'com ' + d.time.filter(p => !p.morto).length}.`
+           : 'Nenhuma insígnia ainda. Mas a gente tá andando.');
+       },
+       'Ele anota. No caderno de capa dura, numa página com o seu nome no alto, que já tem outras linhas embaixo.',
+       d=>{
+         const p = inicialDoJogador(d);
+         return fala('Célio', p
+           ? `Eu escrevo de todo mundo que eu entrego. ${p.apelido || p.nome} tá aqui desde ${d.jogador.cidade}. Agora tem mais uma linha.`
+           : 'Eu escrevo de todo mundo que eu conheço na volta. Agora tem mais uma linha sua.', 'riso');
+       },
+       fala('Célio', 'Vai lá. Tem gente esperando, e você tem estrada.')
+     ]},
+    {texto:'Ficar pra ver a entrega de hoje.',
+     cond:d=>conheceOCelio(d),
+     ef:{moral:2, registrar:'Viu o Célio entregar a primeira Pokébola de outra pessoa.'},
+     resultado:[
+       'Ele te chama pra ficar do lado do portamalas, como se você fosse da equipe.',
+       'O de quinze anos assina, pega a Pokébola com as duas mãos e abre ali mesmo.',
+       fala('Célio', 'Você fez essa mesma cara. Eu lembro.', 'baixo', 'Ele fala sem tirar o olho da caixa.'),
+       'Você não lembra de ter feito cara nenhuma. Ele lembra.'
+     ]},
     {texto:'Ficar olhando a entrega de longe.',
+     cond:d=>!conheceOCelio(d),
      ef:{moral:2, registrar:'Ficou olhando a perua do laboratório entregar a Pokébola de outra pessoa.'},
      resultado:[
        'O menino assina, pega a Pokébola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
@@ -1095,7 +1150,9 @@ const EVENTOS_GERAIS = [
          executar:d=>{ Estado.darItem('Potion',1); Estado.lembrarNPC('Célio',{opiniao:2,memoria:'Ajudou a carregar a perua sem pedir nada.'});
                        return [{tipo:'item', texto:'Recebeu 1× Potion da caixa de sobras.'}]; }},
      resultado:[
-       fala('Célio', 'Precisar eu não preciso. Aceitar eu aceito.', 'riso'),
+       d=>conheceOCelio(d)
+         ? fala('Célio', `${d.jogador.nome} carregando caixa do laboratório. Se o Professor visse.`, 'riso')
+         : fala('Célio', 'Precisar eu não preciso. Aceitar eu aceito.', 'riso'),
        'São quatro caixas e uma delas é pesada de um jeito desproporcional ao tamanho.',
        fala('Célio', 'Livro. É sempre livro que pesa.'),
        fala('Célio', 'Pega uma Potion ali da caixa de sobra. Não é pagamento, é que eu odeio levar de volta.')
@@ -1119,8 +1176,10 @@ const EVENTOS_GERAIS = [
        'Ele dita sete dígitos de cor, devagar, do jeito de quem já ditou esse número mil vezes.',
        fala('Célio', 'Liga contando como vocês estão. Eu gosto de saber.', 'riso')
      ]},
-    {texto:'Seguir. Não é com você.', ef:{},
-     resultado:['Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.']}
+    {texto:d=>conheceOCelio(d) ? 'Acenar e seguir.' : 'Seguir. Não é com você.', ef:{},
+     resultado:[d=>conheceOCelio(d)
+       ? 'Ele levanta a caneta de novo, mais alto que da primeira vez. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.'
+       : 'Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.']}
   ]
 },
 {
@@ -1248,6 +1307,52 @@ const EVENTOS_GERAIS = [
 const EVENTOS_ROTA = {
 
 campo:[
+{
+  /* a perua entre duas cidades da volta: só pra quem o Célio conhece */
+  id:'rot_a_perua_no_acostamento', peso:3, ambientes:['campo','floresta','montanha'],
+  cond:d=>{
+    if (typeof conheceOCelio !== 'function' || !conheceOCelio(d)) return false;
+    const w = ondeEstaAPerua();
+    sincronizarHora(d.relogio);
+    return !w.hoje && !w.parado && d.relogio.hora >= 6 && d.relogio.hora <= 17;
+  },
+  titulo:'A perua no acostamento',
+  texto:[
+    'No acostamento, com o pisca-alerta ligado, uma perua velha com o capô aberto. Na lataria, em letra que já foi verde: LABORATÓRIO DE PESQUISA — PALLET.',
+    'Debaixo do capô, de costas, um homem de camisa de manga curta xinga baixinho uma mangueira.',
+    'Ele vira quando ouve passo, pronto pra pedir desculpa pelo carro no meio do caminho, e para no meio da frase.',
+    d=>celioTeReconhece(d),
+    fala('Célio', 'Ferveu. Sempre ferve nessa subida. Vinte e seis anos de carro e ela ainda não aprendeu.', 'riso')
+  ],
+  escolhas:[
+    {texto:'Ajudar com a mangueira.',
+     teste:{status:'intelecto', dificuldade:5, nomeStatus:'Intelecto', eixo:'paciencia'},
+     bom:{ef:{rep:{eixo:'bom', delta:1, motivo:'Ajudou o Célio com a perua no acostamento'}, itens:{'Potion':2},
+              npc:d=>({nome:'Célio', opiniao:((Estado.npc('Célio') || {}).opiniao || 0) + 2, memoria:'Consertou com ele a mangueira da perua, no acostamento.'}),
+              registrar:'Ajudou o Célio a consertar a perua no acostamento.'},
+          resultado:[
+            'Você segura a lanterna e ele aperta a braçadeira, e depois você aperta e ele segura, e na terceira vez fica.',
+            fala('Célio', 'Ó. {Treinador|Treinadora} e {mecânico|mecânica}. Vou anotar no caderno.', 'riso'),
+            'Ele tira duas Potion da caixa de sobras e põe no seu bolso antes de você recusar.'
+          ]},
+     ruim:{ef:{npc:d=>({nome:'Célio', opiniao:((Estado.npc('Célio') || {}).opiniao || 0) + 1, memoria:'Tentou ajudar com a perua no acostamento.'})},
+           resultado:[
+             'A mangueira escorrega da sua mão e esguicha água quente no chão, por pouco não no seu pé.',
+             fala('Célio', 'Deixa, deixa. Ela só obedece a mim, e mal.', 'riso'),
+             'Ele termina sozinho em dez minutos e ainda te agradece pela companhia.'
+           ]}},
+    {texto:'Ficar conversando enquanto o motor esfria.',
+     ef:{moral:2, npc:d=>({nome:'Célio', opiniao:((Estado.npc('Célio') || {}).opiniao || 0) + 1, memoria:'Conversou com ele no acostamento, esperando o motor esfriar.'})},
+     resultado:[
+       d=>{ const w = ondeEstaAPerua(); const prox = w.proximo ? (LOCAIS[w.proximo.onde] || {}).nome : 'Pallet';
+            return fala('Célio', `Tô indo pra ${prox}. Tem três esperando lá, e um deles eu sei que vai chorar.`); },
+       'Vocês sentam no meio-fio. Ele pergunta do time pelo nome, um por um, e escuta a resposta inteira de cada.',
+       fala('Célio', 'Gosto quando encontro alguém da volta no meio do caminho. Parece que a estrada é menor.', 'baixo')
+     ]},
+    {texto:'Cumprimentar e seguir.', ef:{},
+     resultado:['Ele bate duas vezes na lataria quando você passa, que deve ser o jeito dele de dizer tchau, e volta pra mangueira.']}
+  ]
+},
 {
   id:'rot_cerca_caida', peso:2, ambientes:['campo'],
   titulo:'A cerca caída',

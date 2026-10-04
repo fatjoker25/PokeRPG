@@ -40,10 +40,11 @@ function entregarInicial(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
     moral: 50,
-    historia: `Saiu da caixa térmica do Célio, em ${d.jogador.cidade}, numa manhã de ${['março','abril','maio','junho'][Dados.entre(0,3)]}.`
+    historia: `Saiu da caixa térmica do Célio, em ${d.jogador.cidade}, numa manhã de ${typeof Calendario !== 'undefined' ? Calendario.hoje().mesNome : 'março'}.`
   });
   Estado.adicionar(p);
   Estado.j.inicialDex = p.dex;
+  Estado.j.inicialUid = p.uid;
   if (typeof iniciarRival === 'function') iniciarRival();
   d.flags.espera_o_assistente = false;
   Estado.marcar('recebeu_do_goro');
@@ -60,6 +61,7 @@ function entregarDoProfessor(d){
   });
   Estado.adicionar(p);
   Estado.j.inicialDex = p.dex;
+  Estado.j.inicialUid = p.uid;
   if (typeof iniciarRival === 'function') iniciarRival();
   d.flags.espera_o_professor = false;
   Estado.marcar('recebeu_do_professor');
