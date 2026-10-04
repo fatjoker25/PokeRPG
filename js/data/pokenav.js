@@ -1030,24 +1030,24 @@ const CHAMADAS = [
   peso:3,
   falas:d=>[
     d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
-    d=>fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
-    d=>fala(nomeCasa(), 'Não é nada. Não aconteceu nada aqui, tá tudo bem, eu só queria ouvir.', 'baixo'),
+    ...falaDaCasa('ligacao', d),
+    d=>fala(nomeCasa(), 'Não aconteceu nada aqui, tá tudo bem.', 'baixo'),
     d=>fala(nomeCasa(), 'Tá comendo?')
   ],
   escolhas:[
     {texto:'"Tô comendo."',
      ef:{moral:4, rep:{eixo:'bom',delta:1,motivo:'Atendeu e respondeu a pergunta da comida'}},
-     resultado:[d=>fala(nomeCasa(), 'Mentiroso.', 'riso'),
+     resultado:[d=>fala(nomeCasa(), '{Mentiroso|Mentirosa}.', 'riso'),
                 d=>fala(nomeCasa(), 'Tá bom. Vai lá. Eu desligo primeiro, que eu sempre desligo primeiro.')]},
     {texto:'Contar onde você está e o que aconteceu até agora.',
      ef:{moral:6, rep:{eixo:'bom',delta:2,motivo:'Parou o que estava fazendo pra contar a viagem por telefone'}},
-     resultado:['Você fala por onze minutos e ela não interrompe uma vez.',
+     resultado:['Você fala por onze minutos e {casa:ela|ele} não interrompe uma vez.',
                 d=>fala(nomeCasa(), 'Onze minutos. Eu cronometrei no relógio do fogão.', 'baixo'),
                 d=>fala(nomeCasa(), 'Onze minutos é mais do que a gente falava na mesma casa.')]},
     {texto:'"Agora não dá." E desligar.',
      ef:{moral:-4, rep:{eixo:'ruim',delta:1,motivo:'Desligou na cara de casa'}},
      resultado:['Você desliga.', d=>fala(nomeCasa(), 'Tá bo—', 'baixo', 'A ligação cai no meio.'),
-                'Ela não liga de novo hoje. Nem amanhã.']}
+                '{casa:Ela|Ele} não liga de novo hoje. Nem amanhã.']}
   ]
 },
 {

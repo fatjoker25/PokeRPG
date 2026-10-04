@@ -3638,9 +3638,10 @@ const UI = {
      no meio da cena.
      ======================================================== */
   modalTutorial(aba){
-    const atual = aba || this._abaTutorial || 'comeco';
+    const atual = aba || this._abaTutorial || 'passos';
     this._abaTutorial = atual;
     const ABAS = [
+      ['passos',   'Primeiros passos'],
       ['comeco',   'Começo'],
       ['ficha',    'A ficha'],
       ['combate',  'Combate'],
@@ -3659,6 +3660,23 @@ const UI = {
 
   tutorialAba(k){
     const L = (a, b) => `<div class="linha"><span class="k">${a}</span><span class="v">${b}</span></div>`;
+
+    /* passo a passo, na ordem em que as coisas acontecem na primeira hora */
+    if (k === 'passos') return `
+      <h3>A primeira hora, passo a passo</h3>
+      <ol class="tut-passos">
+        <li><b>Ficha.</b> Nome, gênero, cidade natal, objetivo e do que você gosta e não gosta. O jogo lê o que você escreveu: o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral.</li>
+        <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
+        <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
+        <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
+        <li><b>O mapa.</b> Fora das cenas você está num lugar: <i>Onde entrar</i> são portas (Centro, loja, ginásio, sua casa), <i>O que fazer</i> gasta o tempo (vasculhar, procurar, treinar, acampar à noite) e <i>Para onde ir</i> leva ao vizinho. O capítulo seguinte aparece em <i>Aqui</i>, na cidade em que ele acontece.</li>
+        <li><b>A luta.</b> Lutar escolhe o golpe; Bag usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
+        <li><b>Quando cair.</b> Pokémon desmaiado volta com Revive ou no Centro. Se o time inteiro cair diante de um selvagem bravo, quem apanha é você.</li>
+        <li><b>Ginásio.</b> Na porta do ginásio, na cidade, na ordem que você quiser. O capítulo seguinte pede um mínimo de insígnias, e a porta fechada diz quantas faltam.</li>
+        <li><b>Mochila.</b> Itens, Pokédex, PokéNav, Cartão e Mapa moram nas abas da mochila. Regras, este tutorial e o som ficam em Ajustes.</li>
+        <li><b>O tempo.</b> Um minuto jogando é uma hora em Kanto. De noite aparecem outros Pokémon e outra gente na estrada.</li>
+      </ol>
+      <p class="sussurro">O jogo salva sozinho a cada passo. As contas de tudo, com os números, estão em Regras.</p>`;
 
     if (k === 'comeco') return `
       <h3>O que é isto</h3>
@@ -3882,6 +3900,17 @@ const UI = {
 
   modalRegras(){
     this.modal('Regras do sistema', `
+      <h3>Como ler esta folha</h3>
+      <p class="sussurro">Cada linha é uma regra: à esquerda o que é, à direita a conta. Duas coisas rolam dado, e elas não se misturam: <b>gente e cena</b> rolam 1d10 + o status do treinador contra uma dificuldade; <b>Pokémon brigando</b> rola uma parada de d6 e conta os 4, 5 e 6.</p>
+      <div class="exemplo-regra">
+        <b>Exemplo de golpe.</b> Seu Charmander (Força 2) usa Scratch (poder 2) num Rattata (Vitalidade 1).
+        Precisão: Destreza 2 + Briga 1 = 3d6 → 2, 5, 6 = 2 sucessos (precisa de 1: acertou).
+        Dano: Força 2 + poder 2 − Vitalidade 1 = 3d6 → 4, 1, 6 = 2 sucessos = 2 de dano. É essa conta que aparece no registro da luta.
+      </div>
+      <div class="exemplo-regra">
+        <b>Exemplo de teste de cena.</b> Vasculhar pede Percepção contra 5. Você tem Percepção 2 e tira 4 no d10: 4 + 2 = 6, sucesso parcial. Num lugar de que você gosta seria 7, sucesso.
+      </div>
+
       <h3>Combate — Pokérole</h3>
       <p class="sussurro">O combate segue o Pokérole 3.0. Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso. A bandeja mostra cada parada com as faces, e o log mostra a conta.</p>
       <div class="linha"><span class="k">Precisão</span><span class="v">atributo + perícia do golpe · precisa de 1 sucesso</span></div>

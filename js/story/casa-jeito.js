@@ -24,6 +24,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai lá e faz. E faz do seu jeito, que o seu jeito é bom.')
     ],
     mentira: d => fala(nomeCasa(), 'Claro que sabe. Você sempre soube das coisas antes de mim.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Contei pra rua inteira que você ia ligar. Aí ninguém ligou, então liguei eu.', 'riso'),
     adeus: [
       d => fala(nomeCasa(), 'Endireita essa mochila. Treinador desta casa sai de cabeça erguida.'),
       d => fala(nomeCasa(), 'E quando alguém perguntar de onde você é, fala o nome da rua inteiro.', 'riso')
@@ -45,6 +46,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Tô brincando. É um objetivo bonito. Vai.')
     ],
     mentira: d => fala(nomeCasa(), 'Sabe nada. Mas tá bonito o jeito que você falou, vou fingir que acredito.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Aqui é da Liga Pokémon, você foi desclassificad{o|a} por saudade. Brincadeira. Sou eu.', 'riso'),
     adeus: [
       d => fala(nomeCasa(), 'Regra da casa: se ganhar insígnia, liga. Se perder, liga também, que eu conto piada.', 'riso'),
       d => fala(nomeCasa(), 'Agora vai, antes que eu invente outra regra.')
@@ -66,6 +68,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Divide em pedaço pequeno. Um por semana. É assim que se chega.')
     ],
     mentira: d => fala(nomeCasa(), 'Ótimo. Então não esquece a garrafa d\'água, que plano nenhum funciona com sede.'),
+    ligacao: d => fala(nomeCasa(), 'Liguei no horário que a tarifa é mais barata. Tenho uns minutos.'),
     adeus: [
       d => fala(nomeCasa(), 'Potion no bolso de fora, dinheiro no de dentro. Nunca o contrário.'),
       d => fala(nomeCasa(), 'Liga domingo. Pode ser curto. Curto e sempre é melhor que longo e nunca.')
@@ -87,6 +90,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Troca de Pokémon antes de ele cair, não depois. É o único conselho que eu tenho.')
     ],
     mentira: d => fala(nomeCasa(), 'Sabe nada. Eu também dizia isso. Vai saber lá.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Primeira semana fora é a mais comprida. Eu lembro da minha.'),
     adeus: [
       d => fala(nomeCasa(), 'Vai lá e faz a parte que eu não fiz.', null, 'Bate duas vezes no seu ombro, do jeito que se faz na quadra antes de entrar.'),
       d => fala(nomeCasa(), 'E me traz a primeira insígnia pra eu ver de perto. Só pra ver.')
@@ -108,6 +112,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai. E repara em tudo no caminho. O caminho é a melhor parte.')
     ],
     mentira: d => fala(nomeCasa(), 'Sabe? Que bom. Então me conta depois, quando chegar lá.'),
+    ligacao: d => fala(nomeCasa(), 'Olhei o mapa da parede hoje cedo e fiquei tentando adivinhar em qual pedacinho você estava.'),
     adeus: [
       d => fala(nomeCasa(), 'Olha pro céu de vez em quando. É o mesmo daqui, e eu vou estar olhando também.'),
       d => fala(nomeCasa(), 'Agora vai. O dia tá bonito demais pra ficar em porta.')
@@ -129,6 +134,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Então faz. Sem desculpa e sem pressa.')
     ],
     mentira: d => fala(nomeCasa(), 'Hm. Tá bom.', null, '{casa:Ela|Ele} não acreditou, e decidiu que hoje não vai implicar.'),
+    ligacao: d => fala(nomeCasa(), 'Liguei pra saber se o número funciona. Funciona.'),
     adeus: [
       d => fala(nomeCasa(), 'Liga quando chegar em Viridian. Não precisa falar muito. Fala que chegou.'),
       d => fala(nomeCasa(), 'Vai.', null, 'E fica na porta até você virar a esquina, de braço cruzado, que é como esta casa abraça em público.')
@@ -150,6 +156,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai fundo. Você puxou isso de alguém, e não foi de mim.')
     ],
     mentira: d => fala(nomeCasa(), 'Que bom, porque eu não sei nem onde deixei a chave.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
     adeus: [
       d => fala(nomeCasa(), 'Tem tudo? Tem. Eu acho. Tem a Pokébola? Tem o… tem. Tem tudo.', 'riso'),
       d => fala(nomeCasa(), 'Vai, que se eu continuar conferindo você só sai amanhã.', 'riso')
@@ -171,6 +178,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Eu confio em você. Sempre confiei.')
     ],
     mentira: d => fala(nomeCasa(), 'Tá bom.', null, 'Um sorriso pequeno, de quem não precisa de resposta nenhuma pra ficar tranquil{casa:a|o}.'),
+    ligacao: d => fala(nomeCasa(), 'Sem pressa. Só queria ouvir sua voz um pouco.', 'baixo'),
     adeus: [
       d => fala(nomeCasa(), 'Vai com calma e volta quando quiser. A porta é sua.'),
       d => fala(nomeCasa(), 'Eu tô aqui. Isso não muda.')

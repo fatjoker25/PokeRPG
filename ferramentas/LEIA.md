@@ -29,3 +29,14 @@ for f in ferramentas/*.js; do echo "== $f"; node "$f"; done
 Os conferidores que abrem o jogo de verdade num navegador (balão de fala,
 missões do PokéNav, eventos de cidade, epílogos) precisam de Playwright
 instalado e por isso não moram aqui.
+
+A exceção é `bot-jogador.js`, que precisa de Playwright: um robô que joga
+pela tela, como gente (escolhe golpe, troca, cura, captura, compra, treina
+e segue a história), e anota todo texto quebrado que aparecer — marca de
+gênero sem resolver, `undefined`, `NaN`, HTML vazando, "bicho", "bola"
+sozinha, balão sem nome — além de erro de JavaScript.
+
+```sh
+node ferramentas/bot-jogador.js 15 saida.json
+CIDADE=Cerulean GENERO=Homem node ferramentas/bot-jogador.js 20
+```

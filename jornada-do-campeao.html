@@ -2781,6 +2781,9 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .cargo-pede{list-style:none;margin:8px 0 0;padding:0;font-size:12.5px;display:flex;flex-direction:column;gap:3px}
 .cargo-pede .ok{color:var(--bom)}
 .cargo-pede .falta{color:var(--texto-fraco)}
+.tut-passos{margin:0 0 10px;padding-left:22px;display:flex;flex-direction:column;gap:8px;line-height:1.5}
+.tut-passos li::marker{color:var(--destaque);font-weight:700}
+.exemplo-regra{margin:8px 0 12px;padding:10px 12px;border-radius:8px;border:1px dashed var(--borda);background:rgba(255,255,255,.03);font-size:13.5px;line-height:1.55}
 
 </style>
 </head>
@@ -14074,24 +14077,24 @@ const CHAMADAS = [
   peso:3,
   falas:d=>[
     d=>fala(nomeCasa(), 'Oi! Oi, é você? É você mesm{o|a}?', 'grita'),
-    d=>fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
-    d=>fala(nomeCasa(), 'Não é nada. Não aconteceu nada aqui, tá tudo bem, eu só queria ouvir.', 'baixo'),
+    ...falaDaCasa('ligacao', d),
+    d=>fala(nomeCasa(), 'Não aconteceu nada aqui, tá tudo bem.', 'baixo'),
     d=>fala(nomeCasa(), 'Tá comendo?')
   ],
   escolhas:[
     {texto:'"Tô comendo."',
      ef:{moral:4, rep:{eixo:'bom',delta:1,motivo:'Atendeu e respondeu a pergunta da comida'}},
-     resultado:[d=>fala(nomeCasa(), 'Mentiroso.', 'riso'),
+     resultado:[d=>fala(nomeCasa(), '{Mentiroso|Mentirosa}.', 'riso'),
                 d=>fala(nomeCasa(), 'Tá bom. Vai lá. Eu desligo primeiro, que eu sempre desligo primeiro.')]},
     {texto:'Contar onde você está e o que aconteceu até agora.',
      ef:{moral:6, rep:{eixo:'bom',delta:2,motivo:'Parou o que estava fazendo pra contar a viagem por telefone'}},
-     resultado:['Você fala por onze minutos e ela não interrompe uma vez.',
+     resultado:['Você fala por onze minutos e {casa:ela|ele} não interrompe uma vez.',
                 d=>fala(nomeCasa(), 'Onze minutos. Eu cronometrei no relógio do fogão.', 'baixo'),
                 d=>fala(nomeCasa(), 'Onze minutos é mais do que a gente falava na mesma casa.')]},
     {texto:'"Agora não dá." E desligar.',
      ef:{moral:-4, rep:{eixo:'ruim',delta:1,motivo:'Desligou na cara de casa'}},
      resultado:['Você desliga.', d=>fala(nomeCasa(), 'Tá bo—', 'baixo', 'A ligação cai no meio.'),
-                'Ela não liga de novo hoje. Nem amanhã.']}
+                '{casa:Ela|Ele} não liga de novo hoje. Nem amanhã.']}
   ]
 },
 {
@@ -20313,6 +20316,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai lá e faz. E faz do seu jeito, que o seu jeito é bom.')
     ],
     mentira: d => fala(nomeCasa(), 'Claro que sabe. Você sempre soube das coisas antes de mim.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Contei pra rua inteira que você ia ligar. Aí ninguém ligou, então liguei eu.', 'riso'),
     adeus: [
       d => fala(nomeCasa(), 'Endireita essa mochila. Treinador desta casa sai de cabeça erguida.'),
       d => fala(nomeCasa(), 'E quando alguém perguntar de onde você é, fala o nome da rua inteiro.', 'riso')
@@ -20334,6 +20338,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Tô brincando. É um objetivo bonito. Vai.')
     ],
     mentira: d => fala(nomeCasa(), 'Sabe nada. Mas tá bonito o jeito que você falou, vou fingir que acredito.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Aqui é da Liga Pokémon, você foi desclassificad{o|a} por saudade. Brincadeira. Sou eu.', 'riso'),
     adeus: [
       d => fala(nomeCasa(), 'Regra da casa: se ganhar insígnia, liga. Se perder, liga também, que eu conto piada.', 'riso'),
       d => fala(nomeCasa(), 'Agora vai, antes que eu invente outra regra.')
@@ -20355,6 +20360,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Divide em pedaço pequeno. Um por semana. É assim que se chega.')
     ],
     mentira: d => fala(nomeCasa(), 'Ótimo. Então não esquece a garrafa d\'água, que plano nenhum funciona com sede.'),
+    ligacao: d => fala(nomeCasa(), 'Liguei no horário que a tarifa é mais barata. Tenho uns minutos.'),
     adeus: [
       d => fala(nomeCasa(), 'Potion no bolso de fora, dinheiro no de dentro. Nunca o contrário.'),
       d => fala(nomeCasa(), 'Liga domingo. Pode ser curto. Curto e sempre é melhor que longo e nunca.')
@@ -20376,6 +20382,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Troca de Pokémon antes de ele cair, não depois. É o único conselho que eu tenho.')
     ],
     mentira: d => fala(nomeCasa(), 'Sabe nada. Eu também dizia isso. Vai saber lá.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Primeira semana fora é a mais comprida. Eu lembro da minha.'),
     adeus: [
       d => fala(nomeCasa(), 'Vai lá e faz a parte que eu não fiz.', null, 'Bate duas vezes no seu ombro, do jeito que se faz na quadra antes de entrar.'),
       d => fala(nomeCasa(), 'E me traz a primeira insígnia pra eu ver de perto. Só pra ver.')
@@ -20397,6 +20404,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai. E repara em tudo no caminho. O caminho é a melhor parte.')
     ],
     mentira: d => fala(nomeCasa(), 'Sabe? Que bom. Então me conta depois, quando chegar lá.'),
+    ligacao: d => fala(nomeCasa(), 'Olhei o mapa da parede hoje cedo e fiquei tentando adivinhar em qual pedacinho você estava.'),
     adeus: [
       d => fala(nomeCasa(), 'Olha pro céu de vez em quando. É o mesmo daqui, e eu vou estar olhando também.'),
       d => fala(nomeCasa(), 'Agora vai. O dia tá bonito demais pra ficar em porta.')
@@ -20418,6 +20426,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Então faz. Sem desculpa e sem pressa.')
     ],
     mentira: d => fala(nomeCasa(), 'Hm. Tá bom.', null, '{casa:Ela|Ele} não acreditou, e decidiu que hoje não vai implicar.'),
+    ligacao: d => fala(nomeCasa(), 'Liguei pra saber se o número funciona. Funciona.'),
     adeus: [
       d => fala(nomeCasa(), 'Liga quando chegar em Viridian. Não precisa falar muito. Fala que chegou.'),
       d => fala(nomeCasa(), 'Vai.', null, 'E fica na porta até você virar a esquina, de braço cruzado, que é como esta casa abraça em público.')
@@ -20439,6 +20448,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Vai fundo. Você puxou isso de alguém, e não foi de mim.')
     ],
     mentira: d => fala(nomeCasa(), 'Que bom, porque eu não sei nem onde deixei a chave.', 'riso'),
+    ligacao: d => fala(nomeCasa(), 'Eu apertei o botão errado umas quatro vezes. A Perla que me ensinou.'),
     adeus: [
       d => fala(nomeCasa(), 'Tem tudo? Tem. Eu acho. Tem a Pokébola? Tem o… tem. Tem tudo.', 'riso'),
       d => fala(nomeCasa(), 'Vai, que se eu continuar conferindo você só sai amanhã.', 'riso')
@@ -20460,6 +20470,7 @@ const JEITOS_DA_CASA = {
       d => fala(nomeCasa(), 'Eu confio em você. Sempre confiei.')
     ],
     mentira: d => fala(nomeCasa(), 'Tá bom.', null, 'Um sorriso pequeno, de quem não precisa de resposta nenhuma pra ficar tranquil{casa:a|o}.'),
+    ligacao: d => fala(nomeCasa(), 'Sem pressa. Só queria ouvir sua voz um pouco.', 'baixo'),
     adeus: [
       d => fala(nomeCasa(), 'Vai com calma e volta quando quiser. A porta é sua.'),
       d => fala(nomeCasa(), 'Eu tô aqui. Isso não muda.')
@@ -85868,9 +85879,10 @@ const UI = {
      no meio da cena.
      ======================================================== */
   modalTutorial(aba){
-    const atual = aba || this._abaTutorial || 'comeco';
+    const atual = aba || this._abaTutorial || 'passos';
     this._abaTutorial = atual;
     const ABAS = [
+      ['passos',   'Primeiros passos'],
       ['comeco',   'Começo'],
       ['ficha',    'A ficha'],
       ['combate',  'Combate'],
@@ -85889,6 +85901,23 @@ const UI = {
 
   tutorialAba(k){
     const L = (a, b) => `<div class="linha"><span class="k">${a}</span><span class="v">${b}</span></div>`;
+
+    /* passo a passo, na ordem em que as coisas acontecem na primeira hora */
+    if (k === 'passos') return `
+      <h3>A primeira hora, passo a passo</h3>
+      <ol class="tut-passos">
+        <li><b>Ficha.</b> Nome, gênero, cidade natal, objetivo e do que você gosta e não gosta. O jogo lê o que você escreveu: o objetivo vira o rumo que abre cada capítulo, e lugar ou Pokémon de que você gosta pesa nos dados e na moral.</li>
+        <li><b>O capítulo 1.</b> Você acorda em casa. Leia a cena e toque numa opção — ou escreva o que quer fazer no campo de baixo. Não tem opção certa: tem o que você fez.</li>
+        <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
+        <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
+        <li><b>O mapa.</b> Fora das cenas você está num lugar: <i>Onde entrar</i> são portas (Centro, loja, ginásio, sua casa), <i>O que fazer</i> gasta o tempo (vasculhar, procurar, treinar, acampar à noite) e <i>Para onde ir</i> leva ao vizinho. O capítulo seguinte aparece em <i>Aqui</i>, na cidade em que ele acontece.</li>
+        <li><b>A luta.</b> Lutar escolhe o golpe; Bag usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
+        <li><b>Quando cair.</b> Pokémon desmaiado volta com Revive ou no Centro. Se o time inteiro cair diante de um selvagem bravo, quem apanha é você.</li>
+        <li><b>Ginásio.</b> Na porta do ginásio, na cidade, na ordem que você quiser. O capítulo seguinte pede um mínimo de insígnias, e a porta fechada diz quantas faltam.</li>
+        <li><b>Mochila.</b> Itens, Pokédex, PokéNav, Cartão e Mapa moram nas abas da mochila. Regras, este tutorial e o som ficam em Ajustes.</li>
+        <li><b>O tempo.</b> Um minuto jogando é uma hora em Kanto. De noite aparecem outros Pokémon e outra gente na estrada.</li>
+      </ol>
+      <p class="sussurro">O jogo salva sozinho a cada passo. As contas de tudo, com os números, estão em Regras.</p>`;
 
     if (k === 'comeco') return `
       <h3>O que é isto</h3>
@@ -86112,6 +86141,17 @@ const UI = {
 
   modalRegras(){
     this.modal('Regras do sistema', `
+      <h3>Como ler esta folha</h3>
+      <p class="sussurro">Cada linha é uma regra: à esquerda o que é, à direita a conta. Duas coisas rolam dado, e elas não se misturam: <b>gente e cena</b> rolam 1d10 + o status do treinador contra uma dificuldade; <b>Pokémon brigando</b> rola uma parada de d6 e conta os 4, 5 e 6.</p>
+      <div class="exemplo-regra">
+        <b>Exemplo de golpe.</b> Seu Charmander (Força 2) usa Scratch (poder 2) num Rattata (Vitalidade 1).
+        Precisão: Destreza 2 + Briga 1 = 3d6 → 2, 5, 6 = 2 sucessos (precisa de 1: acertou).
+        Dano: Força 2 + poder 2 − Vitalidade 1 = 3d6 → 4, 1, 6 = 2 sucessos = 2 de dano. É essa conta que aparece no registro da luta.
+      </div>
+      <div class="exemplo-regra">
+        <b>Exemplo de teste de cena.</b> Vasculhar pede Percepção contra 5. Você tem Percepção 2 e tira 4 no d10: 4 + 2 = 6, sucesso parcial. Num lugar de que você gosta seria 7, sucesso.
+      </div>
+
       <h3>Combate — Pokérole</h3>
       <p class="sussurro">O combate segue o Pokérole 3.0. Tudo é parada de d6: cada 4, 5 ou 6 é um sucesso. A bandeja mostra cada parada com as faces, e o log mostra a conta.</p>
       <div class="linha"><span class="k">Precisão</span><span class="v">atributo + perícia do golpe · precisa de 1 sucesso</span></div>
