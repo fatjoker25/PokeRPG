@@ -19,11 +19,23 @@ SPRITES_DIR = 'sprites_nds'
 # Sai daqui quando voltar a ser usada em js/data/sprites.js.
 SPRITES_FORA = ('sprites_nds/battle/back/', 'sprites_nds/battle/back_shiny/',
                 'sprites_nds/battle/front/', 'sprites_nds/battle/front_shiny/')
+# As GIFs animadas de Black/White (34 MB) entram só no arquivo único que
+# fica no repositório; o artefato publicado tem teto de 16 MB e sai sem
+# elas — lá cada <img> cai sozinha na arte parada.
+SPRITES_SO_NO_UNICO = ('sprites_nds/battle/front_ani/', 'sprites_nds/battle/back_ani/',
+                       'sprites_nds/battle/front_ani_shiny/', 'sprites_nds/battle/back_ani_shiny/')
 sprites = {}
+animadas = {}
 if os.path.isdir(SPRITES_DIR):
     for raiz, _, arqs in os.walk(SPRITES_DIR):
         pasta = raiz.replace(os.sep, '/').rstrip('/') + '/'
         if pasta.startswith(SPRITES_FORA):
+            continue
+        if pasta.startswith(SPRITES_SO_NO_UNICO):
+            for a in sorted(arqs):
+                if a.endswith('.gif'):
+                    caminho = os.path.join(raiz, a).replace(os.sep, '/')
+                    animadas[caminho] = 'data:image/gif;base64,' + base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
             continue
         for a in sorted(arqs):
             # png de sprite e efeito; jpg só nos fundos de golpe do Showdown
@@ -43,21 +55,28 @@ if os.path.isdir(SPRITES_DIR):
                 caminho = os.path.join(raiz, a).replace(os.sep, '/')
                 dados = base64.b64encode(open(caminho, 'rb').read()).decode('ascii')
                 sprites[caminho] = 'data:audio/ogg;base64,' + dados
-    scripts.insert(0, '/* ===== sprites embutidos (' + str(len(sprites)) + ') ===== */\n'
-                      'const SPRITES_DATA = ' + json.dumps(sprites, separators=(',', ':')) + ';')
-    print(f'sprites embutidos: {len(sprites)} arquivos')
+    print(f'sprites embutidos: {len(sprites)} arquivos (+ {len(animadas)} GIFs animadas só no arquivo único)')
 else:
     print('sprites_nds/ ausente — o arquivo único sai sem as artes')
 
-saida = re.sub(r'<link rel="stylesheet" href="[^"]+">', '\n'.join(estilos), html)
-saida = re.sub(r'<script src="[^"]+"></script>\s*', '', saida)
-saida = saida.replace('</body>', '<script>\n' + '\n\n'.join(scripts) + '\n</script>\n</body>')
+def montar(dados):
+    s = re.sub(r'<link rel="stylesheet" href="[^"]+">', '\n'.join(estilos), html)
+    s = re.sub(r'<script src="[^"]+"></script>\s*', '', s)
+    blocos = list(scripts)
+    if dados:
+        blocos.insert(0, '/* ===== sprites embutidos (' + str(len(dados)) + ') ===== */\n'
+                         'const SPRITES_DATA = ' + json.dumps(dados, separators=(',', ':')) + ';')
+    return s.replace('</body>', '<script>\n' + '\n\n'.join(blocos) + '\n</script>\n</body>')
+
+saida = montar(dict(sprites, **animadas))
 
 open('jornada-do-campeao.html', 'w', encoding='utf-8').write(saida)
 print(f'jornada-do-campeao.html — {os.path.getsize("jornada-do-campeao.html")/1024:.0f} KB '
       f'({len(css)} css, {len(js)} scripts)')
 
 # variante para publicação como Artifact: sem doctype/html/body (o host envolve)
+# e sem as GIFs, que não cabem no teto de 16 MB
+saida = montar(sprites)
 titulo = '<title>Jornada do Campeao</title>'.replace('Campeao', 'Campe\u00e3o')
 estilo = re.search(r'<style>.*?</style>', saida, re.S).group(0)
 corpo  = re.search(r'<body[^>]*>(.*?)</body>', saida, re.S).group(1)

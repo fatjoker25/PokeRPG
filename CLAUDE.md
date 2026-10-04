@@ -193,8 +193,10 @@ Quem mede a arte pergunta `peDoSprite(img)` (76% na parada, 100% na
 GIF) — `Efeitos.alvo`, a cena do Showdown e o desmaio já perguntam.
 Com GIF o repouso é o da própria GIF: o `AnimadorSprite` não respira
 por cima. Sem a GIF a `<img>` cai sozinha na arte parada
-(`spriteParado`). **O arquivo único não embute as GIFs** (34 MB, e ele
-vai pro git a cada build): lá a arte é a parada.
+(`spriteParado`). O `jornada-do-campeao.html` **embute as GIFs**
+(`SPRITES_SO_NO_UNICO` no `build.py`; ~52 MB, ~5 s pra carregar); o
+`artefato.html` não, porque a publicação tem teto de 16 MB — lá a arte é
+a parada.
 
 Duas consequências que mordem e já estão no CSS. Os dois números
 foram **medidos** pelo canvas nas 251 espécies, não chutados:
@@ -350,9 +352,9 @@ troca, e o evento com `estagio` que `mudarEstagio` grava) e
   Pokémon respira sempre igual, dois Pidgey não respiram em uníssono.
 - Sprite quadro a quadro (Gen 5) entra por
   `AnimadorSprite.registrarQuadros(dex, vista, {quadros|folha, fps})`;
-  o projeto não embute nenhum hoje (os GIFs de Gen 5 passariam do
-  tamanho do arquivo único), então a lista está vazia e todos respiram
-  pela escala.
+  a lista está vazia: as GIFs de Black/White já animam sozinhas, e a
+  respiração pela escala só vale pra arte parada (artefato, ou GIF que
+  não carregou).
 
 Condição, cura e clima continuam **desenhados em CSS**. Cor por cima do
 Pokémon é clone sem `.sprite`, pintado por filtro SVG que só lê o alfa

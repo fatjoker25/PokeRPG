@@ -386,7 +386,7 @@ O mundo lembra de tudo, e isso é mecânico, não decorativo:
 
 ## Jogar
 
-**Arquivo único:** baixe `jornada-do-campeao.html` e abra em qualquer navegador. Tudo está embutido — sem instalação, sem servidor, funciona offline. O progresso fica salvo no `localStorage` daquele navegador.
+**Arquivo único:** baixe `jornada-do-campeao.html` e abra em qualquer navegador. Tudo está embutido — sem instalação, sem servidor, funciona offline. O progresso fica salvo no `localStorage` daquele navegador. Ele já leva as animações de Black/White (por isso pesa uns 52 MB e leva alguns segundos pra abrir); a versão publicada como página (`artefato.html`) usa a arte parada, por limite de tamanho.
 
 **Do repositório:** abra `index.html`. Idêntico, só que com os arquivos separados, que é como o projeto é mantido.
 
