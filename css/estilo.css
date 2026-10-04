@@ -2806,3 +2806,49 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .xp-linha .nv{color:var(--texto-fraco);font-size:.75rem}
 .xp-linha.subiu .barra-exp i{background:#e8f4ff;box-shadow:0 0 8px #5fb4ff}
 .xp-linha.subiu .nv{color:#5fb4ff}
+
+/* ============================================================
+   COR DA MOLDURA (Ajustes) — vem depois dos tons de capítulo de
+   propósito: com a mesma especificidade, quem vem depois ganha.
+   ============================================================ */
+html[data-moldura="vermelho"], body[data-moldura="vermelho"]{
+  --bg:#240d11; --bg-2:#301217; --painel:#3f171e; --painel-2:#4d1d25; --borda:#743039; --borda-forte:#97404b;
+  --texto-fraco:#d0a2a8; --texto-tenue:#a6767d;
+}
+html[data-moldura="laranja"], body[data-moldura="laranja"]{
+  --bg:#24170b; --bg-2:#301f0f; --painel:#3f2913; --painel-2:#4d3218; --borda:#7a4f26; --borda-forte:#a06a35;
+  --texto-fraco:#d6b896; --texto-tenue:#a88a6a;
+}
+html[data-moldura="amarelo"], body[data-moldura="amarelo"]{
+  --bg:#211d09; --bg-2:#2b260d; --painel:#383111; --painel-2:#453c16; --borda:#6e6124; --borda-forte:#938230;
+  --texto-fraco:#d3c891; --texto-tenue:#a69c68;
+}
+html[data-moldura="verde"], body[data-moldura="verde"]{
+  --bg:#0d2015; --bg-2:#122b1c; --painel:#183824; --painel-2:#1f452d; --borda:#2f6b46; --borda-forte:#3f8a5b;
+  --texto-fraco:#9fcbb0; --texto-tenue:#73a084;
+}
+html[data-moldura="roxo"], body[data-moldura="roxo"]{
+  --bg:#180f2a; --bg-2:#201537; --painel:#2a1c47; --painel-2:#332456; --borda:#523a85; --borda-forte:#6a4ea6;
+  --texto-fraco:#b9a8db; --texto-tenue:#8e7cb3;
+}
+html[data-moldura="rosa"], body[data-moldura="rosa"]{
+  --bg:#240d1e; --bg-2:#301228; --painel:#3f1734; --painel-2:#4d1e40; --borda:#7a3066; --borda-forte:#9c4284;
+  --texto-fraco:#d6a2c4; --texto-tenue:#aa779a;
+}
+html[data-moldura="grafite"], body[data-moldura="grafite"]{
+  --bg:#121418; --bg-2:#181b21; --painel:#20242b; --painel-2:#282d35; --borda:#3e4552; --borda-forte:#535c6d;
+  --texto-fraco:#aab1bf; --texto-tenue:#7d8594;
+}
+
+/* o seletor nos Ajustes */
+.ajuste-moldura{margin:0 0 14px;padding:12px 14px;border:1px solid var(--borda);border-radius:var(--raio-sm);background:var(--painel-2)}
+.ajuste-moldura h3{margin:0 0 10px;font-size:.95rem}
+.ajuste-moldura .bolinhas{display:flex;flex-wrap:wrap;gap:10px}
+.ajuste-moldura .bolinha{width:32px;height:32px;border-radius:50%;padding:0;cursor:pointer;
+  background:var(--c);border:2px solid rgba(255,255,255,.18);box-shadow:inset 0 -3px 6px rgba(0,0,0,.35);
+  transition:transform .12s var(--suave), border-color .12s}
+.ajuste-moldura .bolinha:hover{transform:scale(1.08)}
+.ajuste-moldura .bolinha.sel{border-color:var(--texto);box-shadow:0 0 0 3px var(--destaque), inset 0 -3px 6px rgba(0,0,0,.35)}
+.ajuste-moldura .bolinha:focus-visible{outline:2px solid var(--destaque);outline-offset:3px}
+.ajuste-moldura .moldura-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.ajuste-moldura .moldura-nome{color:var(--texto-fraco);font-size:.9rem}

@@ -44,6 +44,37 @@ function varsCartao(k){
 /* cores de balão: distintas entre si e legíveis nos dois fundos */
 const CORES_DE_FALA = ['#e0a33a', '#5aa9e6', '#e36f8f', '#b18cf0', '#4cc3c3', '#d6c341', '#c9d1dc', '#e86a4a'];   // sem verde: verde é o seu balão
 
+/* ============================================================
+   COR DA MOLDURA — preferência de quem joga, fora do save
+   Azul é o padrão e não sobrepõe nada: segue o tom de cada capítulo.
+   As outras pintam painel, borda e fundo por cima do tom.
+   ============================================================ */
+const CORES_MOLDURA = [
+  {id:'azul',     nome:'Azul (padrão)', amostra:'#2f6076'},
+  {id:'vermelho', nome:'Vermelho',      amostra:'#a8404a'},
+  {id:'laranja',  nome:'Laranja',       amostra:'#b06a2c'},
+  {id:'amarelo',  nome:'Amarelo',       amostra:'#a8922a'},
+  {id:'verde',    nome:'Verde',         amostra:'#3f8a5b'},
+  {id:'roxo',     nome:'Roxo',          amostra:'#6a4ea6'},
+  {id:'rosa',     nome:'Rosa',          amostra:'#a8467f'},
+  {id:'grafite',  nome:'Grafite',       amostra:'#5a6372'}
+];
+function molduraSalva(){
+  try { const v = localStorage.getItem('jc-moldura'); return CORES_MOLDURA.some(c => c.id === v) ? v : 'azul'; }
+  catch (e) { return 'azul'; }
+}
+function aplicarMoldura(id){
+  const v = id && id !== 'azul' ? id : null;
+  [document.documentElement, document.body].forEach(el => {
+    if (!el) return;
+    if (v) el.setAttribute('data-moldura', v); else el.removeAttribute('data-moldura');
+  });
+}
+if (typeof document !== 'undefined' && document.addEventListener){
+  if (document.body) aplicarMoldura(molduraSalva());
+  else document.addEventListener('DOMContentLoaded', () => aplicarMoldura(molduraSalva()));
+}
+
 const UI = {
   app:null, dadosRecentes:[],
 
@@ -959,6 +990,26 @@ const UI = {
     this.rolarTopo();
     /* o outro lado aparece, depois a sua bola; o menu espera os dois */
     if (typeof Efeitos !== 'undefined') Efeitos.abertura();
+  },
+
+  /* Cor da moldura: tocar na bolinha mostra na hora; só fica com o
+     Salvar. Fechar sem salvar volta pra cor que estava. */
+  provarMoldura(id){
+    this._molduraProva = id;
+    aplicarMoldura(id);
+    document.querySelectorAll('.ajuste-moldura .bolinha').forEach(b => {
+      const s = b.dataset.cor === id; b.classList.toggle('sel', s); b.setAttribute('aria-checked', s);
+    });
+    const c = CORES_MOLDURA.find(x => x.id === id);
+    const n = document.getElementById('moldura-nome'); if (n) n.textContent = c ? c.nome : '';
+    const bt = document.getElementById('moldura-salvar'); if (bt){ bt.disabled = id === molduraSalva(); bt.textContent = 'Salvar'; }
+  },
+  salvarMoldura(){
+    const id = this._molduraProva || molduraSalva();
+    try { localStorage.setItem('jc-moldura', id); } catch (e) {}
+    this._molduraProva = null;
+    aplicarMoldura(id);
+    const bt = document.getElementById('moldura-salvar'); if (bt){ bt.disabled = true; bt.textContent = 'Salvo'; }
   },
 
   alternarSom(bt){
@@ -2791,6 +2842,8 @@ const UI = {
     }
   },
   fecharModal(imediato){
+    /* cor provada e não salva volta pra salva */
+    if (this._molduraProva){ this._molduraProva = null; aplicarMoldura(molduraSalva()); }
     const m = document.getElementById('modal');
     if (this._escModal){ document.removeEventListener('keydown', this._escModal); this._escModal = null; }
     if (!m) return;
@@ -2899,7 +2952,21 @@ const UI = {
 
   /* Ajustes: o que não é do jogo, e sim de quem joga. */
   modalAjustes(){
+    const salva = molduraSalva();
+    this._molduraProva = null;
     this.modal('Ajustes', `
+      <div class="ajuste-moldura">
+        <h3>Cor da moldura</h3>
+        <div class="bolinhas" role="radiogroup" aria-label="Cor da moldura">
+          ${CORES_MOLDURA.map(c => `<button class="bolinha${c.id === salva ? ' sel' : ''}" role="radio"
+              aria-checked="${c.id === salva}" aria-label="${c.nome}" title="${c.nome}" data-cor="${c.id}"
+              style="--c:${c.amostra}" onclick="UI.provarMoldura('${c.id}')"></button>`).join('')}
+        </div>
+        <div class="moldura-pe">
+          <span class="moldura-nome" id="moldura-nome">${this.esc((CORES_MOLDURA.find(c => c.id === salva) || CORES_MOLDURA[0]).nome)}</span>
+          <button class="btn mini" id="moldura-salvar" onclick="UI.salvarMoldura()" disabled>Salvar</button>
+        </div>
+      </div>
       <button class="escolha" onclick="UI.modalRegras()">Regras</button>
       <button class="escolha" onclick="UI.modalTutorial()">Tutorial</button>
       <button class="escolha som${somLigado() ? '' : ' mudo'}" onclick="UI.alternarSom(this);UI.modalAjustes()"
