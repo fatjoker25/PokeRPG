@@ -661,7 +661,12 @@ const Efeitos = {
 
     /* 1 — parábola de quem joga até a base */
     let x0, y0;
-    if (aliado){ x0 = 4; y0 = A.height - TAM - 4; }
+    if (aliado){
+      /* do canto de baixo à esquerda da moldura dele: no celular a
+         arena empilha, e o pé da arena inteira é o quadro do outro */
+      const L = lut.getBoundingClientRect();
+      x0 = L.left - A.left + 4; y0 = Math.min(A.height, L.bottom - A.top) - TAM - 4;
+    }
     else {
       const tr = arena.querySelector('.lutador.inimigo .treinador-fundo');
       const R = tr && tr.getBoundingClientRect();
