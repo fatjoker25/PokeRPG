@@ -15,7 +15,7 @@
      (luta, rota, cidade, caverna);
    - os outros temas leem arquivos que quem joga põe na pasta
      sons/musica/<tema>/ com os nomes batalha, rota, cidade e caverna
-     (.ogg ou .mp3). Sem o arquivo, cai na sintetizada sem erro.
+     (.ogg, .mp3 ou .m4a). Sem o arquivo, cai na sintetizada sem erro.
    ============================================================ */
 const AUDIO_PADRAO = {geral:0.8, efeitos:0.7, gritos:0.8, musica:0.4, mudo:false, tema:'sintetizada'};
 const TEMAS_DE_MUSICA = [
@@ -158,7 +158,7 @@ const Som = {
     if (this._ganho){ try { this._ganho.disconnect(); } catch(e){} this._ganho = null; }
   },
   tocarArquivo(pasta, ctx, vol, senao){
-    const exts = ['ogg', 'mp3'];
+    const exts = ['ogg', 'mp3', 'm4a'];
     const tenta = i => {
       if (i >= exts.length){ this.semArquivo = `${pasta}/${ctx}`; return senao(); }
       const a = new Audio(`sons/musica/${pasta}/${ctx}.${exts[i]}`);

@@ -8,7 +8,7 @@ pasta com o nome do tema, ao lado do jogo:
   sons/musica/rby/  -> Red/Blue
   sons/musica/gsc/  -> Gold/Silver
 
-Dentro de cada pasta, quatro arquivos (.ogg ou .mp3):
+Dentro de cada pasta, quatro arquivos (.ogg, .mp3 ou .m4a — o formato da loja do iTunes):
 
   batalha.ogg   rota.ogg   cidade.ogg   caverna.ogg
 
