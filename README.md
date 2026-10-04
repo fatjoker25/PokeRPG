@@ -486,7 +486,7 @@ mochilas, o papel de enredo) e os dos lugares e ações são desenhados no
 próprio projeto, em SVG. Os efeitos sonoros e a trilha "sintetizada"
 são gerados na hora (WebAudio); o projeto não traz música dos jogos.
 Quem quiser um tema põe os arquivos em `sons/musica/<tema>/`
-(`batalha`, `rota`, `cidade`, `caverna`, .ogg ou .mp3 — ver
+(`batalha`, `rota`, `cidade`, `caverna`, .ogg, .mp3 ou .m4a — ver
 `sons/musica/LEIA.txt`), e eles ficam fora do arquivo único.
 As regras de combate são do Pokérole (Pokérole Project), e os atributos
 das espécies e as fichas dos golpes vêm do Pokerole-Data, mantido pela

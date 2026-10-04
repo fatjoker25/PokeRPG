@@ -1074,7 +1074,7 @@ const UI = {
         <select id="som-tema" onchange="Som.ajustar('tema', this.value)">
           ${TEMAS_DE_MUSICA.map(t => `<option value="${t.id}"${t.id === p.tema ? ' selected' : ''}>${this.esc(t.nome)}</option>`).join('')}
         </select></label>
-      <p class="sussurro">Os temas de arquivo tocam o que estiver em sons/musica/&lt;tema&gt;/ (batalha, rota, cidade e caverna, .ogg ou .mp3). Sem o arquivo, toca a sintetizada.</p>
+      <p class="sussurro">Os temas de arquivo tocam o que estiver em sons/musica/&lt;tema&gt;/ (batalha, rota, cidade e caverna, .ogg, .mp3 ou .m4a). Sem o arquivo, toca a sintetizada.</p>
       <div class="som-testes">
         <button class="btn mini" onclick="Som.efeito('pokedex')">Testar efeito</button>
         <button class="btn mini" onclick="tocarGrito(25)">Testar grito</button>
