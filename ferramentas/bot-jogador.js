@@ -87,7 +87,7 @@ const SUSPEITO = [
     if (t.anon) anota('balão sem nome', t.txt.slice(0, 80).replace(/\s+/g, ' '));
   };
 
-  let passos = 0, parado = 0, ultima = '';
+  let passos = 0, parado = 0, ultima = '', empacou = 0, ultimoRetrato = '';
   const t0 = Date.now();
   while ((Date.now() - t0) < MIN * 60000 && passos++ < 20000){
     if (erros.length > 8) break;
@@ -96,9 +96,25 @@ const SUSPEITO = [
     if (passos % 5 === 0) await lerTela();
     if (passos % 100 === 0){
       const s = await page.evaluate(() => ({c:Estado.dados.capitulo, l:Estado.dados.local, h:Relogio.texto(),
-        t:Estado.dados.time.map(p => p.nivel).join('/'), $:Estado.j.dinheiro, ins:Estado.dados.insignias.length}));
+        t:Estado.dados.time.map(p => p.nivel).join('/'), $:Estado.j.dinheiro, ins:Estado.dados.insignias.length,
+        modo:Estado.dados.modo, luta:!!Batalha.ativo, enc:!!Jogo.encenando, bola:!!Jogo.animandoBola,
+        tela:(document.querySelector('#app') || {innerText:''}).innerText.replace(/\s+/g, ' ').slice(0, 90)}));
       console.log(`[${Math.round((Date.now() - t0) / 1000)}s] ${JSON.stringify(s)}`);
       log.push(s);
+      /* empacou: o mesmo retrato três vezes seguidas é tela que não anda */
+      const retrato = JSON.stringify([s.c, s.l, s.t, s.$, s.luta, s.tela.replace(/\d+h · \S+ do dia \d+/, '')]);
+      empacou = retrato === ultimoRetrato ? empacou + 1 : 0; ultimoRetrato = retrato;
+      if (empacou === 2){
+        const dump = await page.evaluate(() => ({
+          app:(document.querySelector('#app') || {innerText:''}).innerText.slice(0, 900),
+          modal:(document.querySelector('#modal') || {innerText:''}).innerText.slice(0, 400),
+          batalha:Batalha.ativo ? {tipo:Batalha.tipo, fase:Batalha.fase, turno:Batalha.turno, aliado:Batalha.aliado && Batalha.aliado.nome + ' ' + Batalha.aliado.hp,
+            inimigo:Batalha.inimigo && Batalha.inimigo.nome + ' ' + Batalha.inimigo.hp, botoes:[...document.querySelectorAll('#app button')].map(b => b.innerText.trim() + (b.disabled ? '(off)' : '')).slice(0, 20)} : null
+        })).catch(e => ({erro:e.message}));
+        console.log('EMPACOU', JSON.stringify(dump));
+        anota('empacou', JSON.stringify(dump).slice(0, 140));
+        log.push({empacou:dump});
+      }
     }
     if (await page.locator('.gameover').count()){ log.push({gameover:await page.locator('.gameover').innerText()}); break; }
     if (await page.locator('.final').count()) break;
@@ -110,7 +126,10 @@ const SUSPEITO = [
       continue;
     }
     if (await page.locator('.aprender-op').count()){ await page.locator('.aprender-op').first().click(); continue; }
-    if (await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click(); await page.waitForTimeout(120); continue; }
+    if (await page.locator('#modal .escolha:has-text("Nv")').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
+      await page.locator('#modal .escolha:has-text("Nv")').first().click({timeout:3000}).catch(() => {}); continue;
+    }
+    if (await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(120); continue; }
     if (await page.locator('#modal .evo').count()){
       if (await page.locator('#evo-seguir:visible').count()) await page.locator('#evo-seguir').click(); else await page.waitForTimeout(300);
       continue;
@@ -181,7 +200,7 @@ const SUSPEITO = [
         const destino = Historia.proximoDestino && Historia.proximoDestino();
         const cap = destino ? Historia.capitulo(destino.num) : null;
         const alvo = Math.max(L.nivel || 5, cap ? (cap.nivelArea || 0) - 2 : 0);
-        if (nivelDeReferencia() < alvo && L.tipo !== 'cidade' && d.treinoDia !== d.relogio.dia) return {f:'treinar'};
+        if (nivelDeReferencia() < alvo && L.tipo !== 'cidade' && d.treinoDia !== d.relogio.dia && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) return {f:'treinar'};
         if (nivelDeReferencia() < alvo && L.tipo !== 'cidade') return {f:'procurar'};
         if (Historia.arcoAqui() && !travaDoCapitulo(Historia.arcoAqui().num)) return {f:'arco'};
         const g = GINASIOS.find(x => x.id === id && statusGinasio(x).estado === 'disponivel');

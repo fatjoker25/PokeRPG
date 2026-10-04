@@ -125,6 +125,17 @@ const CenaShowdown = {
     return {cena, atacante, alvo, reg};
   },
 
+  /* O golpe do Showdown já leva o atacante até o outro? Se não, quem
+     faz a investida do golpe físico é o AnimadorSprite. */
+  mexeAtacante(nome, lado){
+    if (!this.tem(nome)) return false;
+    try {
+      const {cena, atacante, alvo} = this.montar(lado);
+      SD_GOLPES[SD_ID_DO_GOLPE[nome]].anim(cena, [atacante, alvo]);
+      return atacante.segs.some(g => g.para.x !== g.de.x || g.para.y !== g.de.y || g.para.z !== g.de.z);
+    } catch (e){ return false; }
+  },
+
   /* ---------- tocar ---------- */
   tocar(nome, lado){
     if (!this.tem(nome)) return null;
@@ -237,7 +248,10 @@ const CenaShowdown = {
         const p = this.posSD(L, s.sp), c = mapa(p.cx, p.cy);
         return {dx: c.x - mRep.x, dy: c.y - mRep.y, s: p.w / repouso.w, op: L.opacity === undefined ? 1 : L.opacity, top:p.top};
       };
-      const tr = (q) => ({transform:`translate(${q.dx.toFixed(1)}px, ${q.dy.toFixed(1)}px) scale(${q.s.toFixed(3)})`, opacity:q.op});
+      /* o sprite escala em volta do pé (transform-origin 50% 76%) e a
+         conta do Showdown é pelo centro: a diferença é 26% da altura */
+      const pe = el.offsetHeight * .26;
+      const tr = (q) => ({transform:`translate(${q.dx.toFixed(1)}px, ${(q.dy - (1 - q.s) * pe).toFixed(1)}px) scale(${q.s.toFixed(3)})`, opacity:q.op});
       const quadros = [Object.assign(tr({dx:0, dy:0, s:1, op:1}), {offset:0})];
       for (const g of s.segs){
         const A0 = estado(g.de), B0 = estado(g.para);

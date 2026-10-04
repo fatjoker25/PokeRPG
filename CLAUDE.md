@@ -301,9 +301,44 @@ animação nossa, em `Efeitos.golpe`: imagens de efeito do Showdown em
 roteiros eram **ícones de item da PokeAPI** — Fire Stone, X Attack, disco
 de TM, Potion — e isso já aconteceu três vezes: link de
 `sprites/items/` nunca é animação. Confere a imagem antes de usar.
-Essa animação nossa: físico avança 15 px e bate pelo jeito
+Essa animação nossa: físico investe e bate pelo jeito
 (`jeitoDeBater`), especial brilha 0,2 s na cor do tipo e o projétil de
 `FX_TIPO` viaja, status solta `stat_boost`/`stat_drop`.
+
+## O corpo do Pokémon na luta
+O que o **lutador** faz com o próprio corpo mora em
+`js/ui/animador-sprite.js` (`AnimadorSprite`; os nomes da especificação,
+`play_idle()` e companhia, estão em `PokemonSpriteAnimator`). Efeito de
+golpe, partícula e texto não entram ali. Um estado por lado, em
+`ESTADOS_SPRITE`: IDLE (respira em loop, ou sobe e desce quem paira —
+`PAIRA_NO_AR`), ATTACK_PHYSICAL, ATTACK_SPECIAL, TAKE_DAMAGE, FAINT,
+ENTRY, RETREAT, STAT_BOOST/DROP. Quem dispara é o turno encenado:
+`Efeitos.golpe` (conjura antes do especial; investe antes do físico só
+se a cena do Showdown não leva o atacante — `CenaShowdown.mexeAtacante`),
+`Efeitos.reagir` (dano, desmaio quando a barra zera, recolher e entrar na
+troca, e o evento com `estagio` que `mudarEstagio` grava) e
+`UI.atualizarArena`, que chama `AnimadorSprite.montar()`.
+
+- **Só `translate`, `scale` e `opacity`.** O `transform` é da cena do
+  Showdown e do tremor de golpe; as propriedades separadas somam com ele.
+  `filter` nunca — a silhueta mora em `--fx-sprite`.
+- **A escala gira em volta do pé** (`transform-origin: 50% 76%` no
+  sprite). A cena do Showdown escala pelo centro, então ela compensa na
+  conta (`pe` em `CenaShowdown.tocar`); quem escalar sprite de outro
+  jeito compensa também.
+- **Degrau (`steps`) vai em cada quadro, nunca no tempo da animação
+  inteira**: no tempo inteiro ele segura o primeiro quadro até o fim. O
+  pisca-pisca de dano e a faísca da paralisia ficaram parados assim sem
+  ninguém ver.
+- Desmaiado volta da arena como `.lutador.caido`, sem sprite; animação
+  com `fill:'forwards'` (recolher, desmaio) é cancelada no `entrar`.
+- Ritmo do IDLE sai do porte e do número da dex, fase do uid: o mesmo
+  Pokémon respira sempre igual, dois Pidgey não respiram em uníssono.
+- Sprite quadro a quadro (Gen 5) entra por
+  `AnimadorSprite.registrarQuadros(dex, vista, {quadros|folha, fps})`;
+  o projeto não embute nenhum hoje (os GIFs de Gen 5 passariam do
+  tamanho do arquivo único), então a lista está vazia e todos respiram
+  pela escala.
 
 Condição, cura e clima continuam **desenhados em CSS**. Cor por cima do
 Pokémon é clone sem `.sprite`, pintado por filtro SVG que só lê o alfa

@@ -700,7 +700,8 @@ const Batalha = {
     est[chave] = depois;
     const forte = Math.abs(delta) >= 2;
     const verbo = delta > 0 ? (forte ? 'subiu muito' : 'subiu') : (forte ? 'caiu muito' : 'caiu');
-    this.ev('status', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} ${verbo}!`);
+    this.ev('status', `${nomeStat[0].toUpperCase() + nomeStat.slice(1)} de ${nomeVisivel(p)} ${verbo}!`,
+            {estagio:{lado:this.ladoDe(p), delta}});
     return true;
   },
 

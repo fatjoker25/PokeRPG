@@ -33,6 +33,8 @@ const GOLPES_DE_CHAO = new Set(['Earthquake', 'Magnitude', 'Fissure', 'Bulldoze'
 const GOLPES_DE_RAIO = /Beam$|^Solar Beam$|^Psybeam$|^Hyper Beam$|^Swift$|^Tri Attack$/;
 /* golpe físico que é arremesso: sai como projétil do tipo */
 const PROJETEIS_FISICOS = /^(Razor Leaf|Rock Throw|Rock Slide|Pin Missile|Twineedle|Egg Bomb|Barrage|Spike Cannon|Sky Attack|Icicle Spear|Bullet Seed)$/;
+/* físico que não encosta no outro: quem usa não investe */
+const SEM_INVESTIDA = /^(Bonemerang|Pay Day|Present|Sacred Fire|Self-Destruct|Explosion)$/;
 /* golpe de status que levanta proteção */
 const BARREIRAS = new Set(['Protect','Detect','Reflect','Light Screen','Barrier','Withdraw','Harden',
   'Defense Curl','Acid Armor','Safeguard','Mist','Substitute','Iron Defense']);
@@ -162,14 +164,6 @@ const Efeitos = {
       {transform:`translateX(${a}px)`}, {transform:`translateX(-${a}px)`},
       {transform:`translateX(${a}px)`}, {transform:'translateX(0)'}], ms || 320, {easing:'linear'});
   },
-  /* reação ao impacto: 100% → 0% → 100%, três vezes */
-  piscar(lado){
-    const s = this.sprite(lado);
-    const q = [];
-    for (let i = 0; i < 3; i++) q.push({opacity:1}, {opacity:0});
-    q.push({opacity:1});
-    return this.tocar(s, q, 480, {easing:'steps(1, end)'});
-  },
 
   /* ---------- barra de experiência que enche ----------
      Sobe até onde chegou; se encheu no meio, vai até o fim, pisca,
@@ -232,7 +226,7 @@ const Efeitos = {
      sprites_nds/animations/moves/ (os endereços do roteiro eram ícones
      de item da PokeAPI: pedras evolutivas, X Attack, discos de TM).
 
-     Físico: o atacante avança 15 px, o golpe acontece no alvo pelo
+     Físico: o atacante investe (AnimadorSprite), o golpe acontece no alvo pelo
      jeito de bater (corte, soco, chute, mordida, osso, investida) e ele
      volta. Especial: o atacante brilha 0,2 s na cor do tipo, o projétil
      do tipo viaja até o alvo, e o alvo pisca em branco. Status: quem
@@ -240,8 +234,15 @@ const Efeitos = {
   async golpe(lado, nome){
     const g = GOLPES[nome] || {};
     const outro = lado === 'aliado' ? 'inimigo' : 'aliado';
+    /* o corpo de quem ataca vem antes do efeito (AnimadorSprite):
+       especial conjura no lugar; físico investe — a não ser que a
+       cena do Showdown já leve o atacante até o outro */
+    const temSD = typeof CenaShowdown !== 'undefined' && CenaShowdown.tem(nome);
+    if (g.c === 'esp') await AnimadorSprite.ataqueEspecial(lado);
+    else if (g.c === 'fis' && temSD && !PROJETEIS_FISICOS.test(nome) && !GOLPES_DE_CHAO.has(nome) && !SEM_INVESTIDA.test(nome)
+             && !CenaShowdown.mexeAtacante(nome, lado)) await AnimadorSprite.ataqueFisico(lado, outro);
     /* a animação do próprio golpe, a do Showdown; sem ela, a nossa */
-    const sd = (typeof CenaShowdown !== 'undefined') ? CenaShowdown.tocar(nome, lado) : null;
+    const sd = temSD ? CenaShowdown.tocar(nome, lado) : null;
     if (sd) return sd;
     if (g.c === 'status') return this.golpeStatus(lado, outro, nome, g);
     if (GOLPES_DE_CHAO.has(nome)) return this.terremoto(lado, outro);
@@ -294,20 +295,11 @@ const Efeitos = {
     return this.tocar(a, q, ms || 360, {easing:'linear'});
   },
 
-  /* corpo a corpo: avança 15 px na direção do alvo e volta */
-  async avancar(lado, outro){
-    const s = this.sprite(lado);
-    const t = this.alvo(lado), u = this.alvo(outro);
-    if (!t || !u) return;
-    const dx = Math.sign(u.cx - t.cx) * 15, dy = Math.sign(u.cy - t.cy) * 6;
-    await this.tocar(s, [{transform:'translate(0,0)'}, {transform:`translate(${dx}px,${dy}px)`},
-                         {transform:'translate(0,0)'}], 260, {easing:'ease-in-out'});
-  },
-
   async golpeFisico(lado, outro, nome, g){
     const u = this.alvo(outro), t = this.alvo(lado);
     if (!u || !t) return;
-    await this.avancar(lado, outro);
+    /* investida do AnimadorSprite: resolve no impacto, a volta segue sozinha */
+    if (!SEM_INVESTIDA.test(nome)) await AnimadorSprite.ataqueFisico(lado, outro);
     const jeito = jeitoDeBater(nome);
     const passos = [];
     if (jeito === 'corte'){
@@ -427,8 +419,10 @@ const Efeitos = {
     const pos = [[-20, -18], [16, -6], [-4, 14]];
     const f = pos.map(([dx, dy], i) => {
       const e = this.particula('fx-faisca', u.cx + dx, u.cy + dy);
-      return this.soltar(e, [{opacity:0}, {opacity:1}, {opacity:0}, {opacity:1}, {opacity:0}, {opacity:1}, {opacity:0}],
-                         420, {delay:i * 40, easing:'steps(1, end)'});
+      /* o degrau vai em cada quadro: no tempo da animação inteira ele
+         segura o primeiro quadro até o fim, e a faísca nunca acende */
+      return this.soltar(e, [0, 1, 0, 1, 0, 1, 0].map(o => ({opacity:o, easing:'steps(1, end)'})),
+                         420, {delay:i * 40, easing:'linear'});
     });
     await Promise.all([...f, this.tingir(outro, COR_EFEITO.paralisia, 420, 3, .55), this.tremer(outro, 420, 6)]);
   },
@@ -540,13 +534,20 @@ const Efeitos = {
     const trocouA = e.fotoA && ant.A && e.fotoA.uid !== ant.A.uid;
     const trocouI = e.fotoI && ant.I && e.fotoI.uid !== ant.I.uid;
     if (trocouA || trocouI){
+      /* quem sai de pé volta pra Pokébola; quem caiu já afundou */
+      const saem = [];
+      if (trocouA && ant.A.hp > 0) saem.push(AnimadorSprite.recolher('aliado'));
+      if (trocouI && ant.I.hp > 0) saem.push(AnimadorSprite.recolher('inimigo'));
+      await Promise.all(saem);
       UI.atualizarArena();
       this.pintarHP('aliado', e.fotoA, false);
       this.pintarHP('inimigo', e.fotoI, false);
+      if (trocouI) await AnimadorSprite.entrar('inimigo', {daBola:true});
       if (trocouA) await this.entrada(Batalha.aliado);
-      else await this.esperar(420);
       return;
     }
+    /* atributo que mexeu: o corpo sobe ou desce junto */
+    if (e.estagio){ await AnimadorSprite.atributo(e.estagio.lado, e.estagio.delta > 0); return; }
     if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }
     if (e.xp){ await this.encherXP(e.xp); return; }
     /* Transform: a arte troca na hora */
@@ -557,7 +558,7 @@ const Efeitos = {
     if (e.clima !== undefined){ this.pintarClima(e.clima); await this.esperar(e.clima ? 700 : 300); return; }
     if (e.travou && e.lado){ await this.condicao(e.lado, e.travou, true); return; }
 
-    const passos = [];
+    const passos = [], caem = [];
     for (const [lado, k] of [['aliado', 'A'], ['inimigo', 'I']]){
       const f = e['foto' + k], a = ant[k];
       if (!f || !a || f.uid !== a.uid) continue;
@@ -569,9 +570,10 @@ const Efeitos = {
       }
       if (f.hp < a.hp){
         if (e.causa) await this.condicao(lado, e.causa);
-        else passos.push(this.piscar(lado));
+        else passos.push(AnimadorSprite.dano(lado));
         this.pintarHP(lado, f, true);
         passos.push(this.esperar(560));
+        if (f.hp <= 0 && a.hp > 0) caem.push(lado);
       } else if (f.hp > a.hp){
         passos.push(this.cura(lado));
         this.pintarHP(lado, f, true);
@@ -587,6 +589,8 @@ const Efeitos = {
     }
     if (passos.length) await Promise.all(passos);
     else if (e.tipo === 'dano' || e.tipo === 'cura') await this.esperar(160);
+    /* a barra chegou a zero: afunda depois de piscar, como nos jogos */
+    if (caem.length) await Promise.all(caem.map(l => AnimadorSprite.desmaio(l)));
   },
 
   /* ========================================================
@@ -608,6 +612,7 @@ const Efeitos = {
     const lut = arena && arena.querySelector('.lutador.aliado');
     if (!arena || !s || !p){ if (lut) lut.classList.remove('por-entrar'); return; }
     if (this.reduzido()){ lut.classList.remove('por-entrar'); tocarGrito(p.dex); return; }
+    AnimadorSprite.marcar('aliado', ESTADOS_SPRITE.ENTRY);
     s.style.visibility = 'hidden';
     if (ficha) ficha.classList.add('ficha-fora');
     lut.classList.remove('por-entrar');
@@ -672,6 +677,7 @@ const Efeitos = {
     if (ficha){ ficha.classList.remove('ficha-fora'); ficha.classList.add('ficha-entra'); }
     await this.esperar(320);
     if (ficha) ficha.classList.remove('ficha-entra');
+    AnimadorSprite.repouso('aliado');
   },
 
   /* ========================================================
@@ -708,10 +714,15 @@ const Efeitos = {
         const u = this.alvo('inimigo');
         if (u){
           const cl = this.particula('fx-clarao', u.cx, u.pe - 10);
-          await this.soltar(cl, [{transform:'translate(-50%,-50%) scale(.2)', opacity:0},
+          await Promise.all([this.soltar(cl, [{transform:'translate(-50%,-50%) scale(.2)', opacity:0},
             {transform:'translate(-50%,-50%) scale(.9)', opacity:1, offset:.35},
-            {transform:'translate(-50%,-50%) scale(1.3)', opacity:0}], 380);
+            {transform:'translate(-50%,-50%) scale(1.3)', opacity:0}], 380),
+            AnimadorSprite.entrar('inimigo', {daBola:true})]);
         }
+      } else if (si){
+        /* selvagem: desliza da lateral até a base */
+        if (li) li.classList.remove('por-entrar');
+        await AnimadorSprite.entrar('inimigo');
       } else {
         await this.esperar(380);
       }

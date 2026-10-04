@@ -1034,7 +1034,8 @@ const UI = {
       /* quem te desafia fica atrás do próprio Pokémon a luta inteira */
       const fundo = (!meu && rosto) ? `<img class="treinador-fundo" src="${rosto}" alt="${this.esc(Batalha.treinador)}" onerror="this.remove()">` : '';
       const vida = (meu && Batalha.fase === 'ameaca') ? this.vidaJogadorHTML() : '';
-      return `<div class="lutador ${cls}${fixo}${entrando}">
+      const caido = p.hp <= 0 ? ' caido' : '';
+      return `<div class="lutador ${cls}${fixo}${entrando}${caido}">
         <div class="arte">${fundo}${arte}${Batalha.clima ? `<div class="clima-camada clima-${Batalha.clima.tipo}" aria-hidden="true"></div>` : ''}</div>
         <div class="ficha">
           ${vida}
@@ -1054,6 +1055,8 @@ const UI = {
     if (!el) return null;
     el.innerHTML = card(a,'aliado',true) + card(i,'inimigo',false);
     this._arenaUltima = {A:kA, I:kI};
+    /* arte nova: quem está de pé volta a respirar */
+    if (typeof AnimadorSprite !== 'undefined') AnimadorSprite.montar();
     if (typeof Efeitos !== 'undefined'){
       const foto = p => p ? {uid:p.uid, hp:Math.max(0, p.hp), hpMax:p.hpMax, status:p.status || null} : null;
       Efeitos.foto = {A:foto(a), I:foto(i), J:Estado.j ? Estado.j.hp : undefined};

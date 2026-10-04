@@ -1507,6 +1507,10 @@ h3.cat-item{
 .lutador.inimigo .arte:not(:empty)::after{width:86px;height:19px;bottom:-4px}
 .lutador .arte .sprite{
   position:relative;z-index:1;        /* por cima da base, que é o ::after */
+  /* toda escala gira em torno do pé, onde a arte de corpo inteiro
+     termina: respirar, entrar e encolher não tiram o bicho do chão.
+     A cena do Showdown compensa isso na conta dela (CenaShowdown.tocar). */
+  transform-origin:50% 76%;
   width:88px;height:88px;object-fit:contain;
   animation:surgeSprite .45s var(--mola) both
 }
@@ -2417,6 +2421,8 @@ h3.cat-item{
 .lutador.fixo .arte .sprite{animation:none}
 /* antes da abertura: ninguém à vista, a ficha do seu fora */
 .lutador.por-entrar .arte .sprite{visibility:hidden}
+/* quem desmaiou não volta a aparecer quando a arena se redesenha */
+.lutador.caido .arte .sprite{visibility:hidden}
 .lutador.aliado.por-entrar .ficha,
 .lutador .ficha.ficha-fora{opacity:0;transform:translateX(-34px)}
 .lutador .ficha.ficha-entra{animation:fichaEntra .32s var(--suave) both}
