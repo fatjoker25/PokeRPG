@@ -42,7 +42,30 @@ const TEMAS_DE_MUSICA = [
   {id:'sintetizada', nome:'Sintetizada (chip)'},
   {id:'nenhuma', nome:'Sem música'}
 ];
-const CONTEXTOS_DE_MUSICA = ['batalha', 'rota', 'cidade', 'caverna'];
+const CONTEXTOS_DE_MUSICA = ['batalha', 'rota', 'cidade', 'caverna', 'torre', 'esconderijo'];
+
+/* ---------- a equipe vilã ----------
+   Os remanescentes da Rocket: a operação dentro do Monte da Lua
+   (capítulo 5) e o depósito e os fundos do cassino de Celadon
+   (capítulo 9). Nessas cenas toca o esconderijo; nas lutas contra eles,
+   faixa radical — o punk de Black 2/White 2 na mina, o groove de vilão
+   de Colosseum no cassino. */
+const CENAS_DO_ESCONDERIJO = {
+  5: /^c5_(entrou_com_imprensa|papeis_mesa|guardou_folha|mostrou_folha|o_que_e|filmou_papel|gaiolas_imprensa|saida_secreta|filmou_tunel|a_camera|guardou_saida|camara_vazia|entrada|cortou_cabo|escondeu|saiu_correndo|desvio|escutou_passarela|passarela_frente|levou_pasta|escondeu_pasta|fuga_tunel|cabo|observou_camara|camara|de_quem_e|nome_do_terno|acabar_hoje|onde_ficam|ataque|venceu|ficou_ate_o_fim|carregou_tres|perdeu|proposta|aceitou|planilha|traicao|duplo)$/,
+  9: /^c9_(cassino_por_baixo|olhou_o_leilao|fotografou_leilao|entrou_no_leilao|achou_deposito|quem_terceira|terceira_sim|proposta_terceira|deposito|verdade_no_armazem|corrida_gaiolas|luta_deposito|venceu_deposito|perdeu_deposito|blefe_[a-z]+)$/
+};
+const FAIXA_DO_VILAO = {5:'bw2-homika-dogars', 9:'colosseum-miror-b'};
+/* lutas contra eles fora do esconderijo */
+const LUTAS_DO_VILAO = {'5:c5_luta_trio':'bw2-homika-dogars', '5:c5_ataque':'bw2-homika-dogars', '9:c9_luta_deposito':'colosseum-miror-b'};
+
+/* ---------- um rival, uma faixa ----------
+   Ezra (o de casa): o tema do rival de Black/White, o da amizade que vira
+   disputa — e o de X/Y quando ele virou parceiro. Lior, que largou a
+   pedreira: o do rival de Hoenn, o de quem treina na raça. Nolan, do
+   cais: o de Alola, o garoto do mar que ri de tudo. O garoto de Fuchsia,
+   que perdeu o que tinha e voltou com raiva: o de Hugh, que perdeu a
+   mesma coisa. Otto, o caçador: o de Sinnoh, rápido e na espreita. */
+const FAIXA_DO_RIVAL = {ezra:'bw-rival', ezra_parceiro:'xy-rival', nilo:'oras-rival', tunico:'sm-rival', fuchsia:'bw2-rival', vasco:'dpp-rival'};
 
 /* ---------- as faixas do Showdown e o que cada uma é ----------
    laco: os pontos de volta que o próprio Showdown usa (ms), pra emendar
@@ -216,6 +239,22 @@ const Som = {
      trocar de faixa de um ginásio pro outro) */
   tipoDeLuta(){
     const J = (typeof Jogo !== 'undefined') ? Jogo : {};
+    const d = (typeof Estado !== 'undefined' && Estado.dados) || {};
+    /* a equipe vilã: luta marcada ou qualquer luta dentro do esconderijo */
+    const chave = `${d.capitulo}:${d.cena}`;
+    if (J.cenaBatalha && LUTAS_DO_VILAO[chave]) return 'faixa:' + LUTAS_DO_VILAO[chave];
+    if (J.cenaBatalha && this.noEsconderijo()) return 'faixa:' + FAIXA_DO_VILAO[d.capitulo];
+    /* rival: o extra pelo id, o de casa pelo arco */
+    if (J.rivalAtual){
+      if (J.rivalAtual.extra && FAIXA_DO_RIVAL[J.rivalAtual.extra]) return 'faixa:' + FAIXA_DO_RIVAL[J.rivalAtual.extra];
+      return 'faixa:' + (J.rivalAtual.arco === 'parceiro' ? FAIXA_DO_RIVAL.ezra_parceiro : FAIXA_DO_RIVAL.ezra);
+    }
+    if (typeof Batalha !== 'undefined' && Batalha.treinador){
+      const t = String(Batalha.treinador);
+      if (/\bEzra\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.ezra;
+      if (/\bLior\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.nilo;
+      if (/\bNolan\b/.test(t)) return 'faixa:' + FAIXA_DO_RIVAL.tunico;
+    }
     if (J.eliteAtual || J.torneioAtual || J.conferenciaAtual) return 'elite';
     if (J.ginasioAtual) return 'lider:' + J.ginasioAtual.id;
     if (J.rivalAtual) return 'rival';
@@ -223,13 +262,23 @@ const Som = {
     if (typeof Batalha !== 'undefined' && Batalha.tipo === 'selvagem') return 'selvagem';
     return 'treinador';
   },
+  noEsconderijo(){
+    const d = (typeof Estado !== 'undefined' && Estado.dados) || {};
+    const re = CENAS_DO_ESCONDERIJO[d.capitulo];
+    return !!(re && d.modo === 'cena' && d.cena && re.test(d.cena));
+  },
   contexto(){
     if (typeof emLuta === 'function' && emLuta()) return 'batalha:' + this.tipoDeLuta();
+    const d = (typeof Estado !== 'undefined' && Estado.dados) || {};
+    if (this.noEsconderijo()) return 'esconderijo';
     try {
+      /* cena de capítulo vale pelo ambiente do capítulo; mapa, pelo lugar */
+      const cap = d.modo === 'cena' && typeof Historia !== 'undefined' ? Historia.capAtual : null;
       const L = Mundo.atual();
-      if (!L) return 'rota';
-      if (L.ambiente === 'caverna') return 'caverna';
-      if (L.tipo === 'cidade') return 'cidade';
+      const amb = (cap && cap.ambiente) || (L && L.ambiente);
+      if (amb === 'cemiterio') return 'torre';
+      if (amb === 'caverna') return 'caverna';
+      if (L && L.tipo === 'cidade' && !(cap && cap.ambiente && cap.ambiente !== L.ambiente)) return 'cidade';
     } catch(e){}
     return 'rota';
   },
@@ -249,14 +298,16 @@ const Som = {
     const vale = f => (...a) => { if (geracao === this._geracao) f(...a); };
     if (!vol || p.tema === 'nenhuma') return;
     const tema = TEMAS_DE_MUSICA.find(t => t.id === p.tema);
-    const [base, sub] = ctx.split(':');   /* 'batalha:lider:pewter' → sub 'lider' */
+    const [base, sub, resto] = ctx.split(':');   /* 'batalha:lider:pewter' → sub 'lider'; 'batalha:faixa:bw-rival' */
     const sintetizada = vale(() => this.tocarSintetizada(base, vol));
     if (!tema || p.tema === 'sintetizada') return sintetizada();
     /* luta: a faixa do Showdown do tipo de luta; sem ela, o arquivo da pasta */
     const daPasta = vale(() => tema.pasta ? this.tocarArquivo(tema.pasta, base, vol, sintetizada, geracao) : sintetizada());
     /* ginásio: a faixa que mais parece com ele, seja qual for o tema */
-    const gin = sub === 'lider' ? this.ginasioDaLuta() : null;
-    const faixa = gin && tema.luta ? faixasDosGinasios()[gin] : (tema.luta && tema.luta[sub]);
+    const gin = sub === 'lider' ? (resto || this.ginasioDaLuta()) : null;
+    const faixa = !tema.luta ? null
+                : sub === 'faixa' ? resto
+                : gin ? faixasDosGinasios()[gin] : tema.luta[sub];
     if (base === 'batalha' && faixa)
       return this.tocarUrl(`sons/musica/showdown/${faixa}.mp3`, vol, daPasta, geracao, FAIXAS_SHOWDOWN[faixa]);
     daPasta();
@@ -282,7 +333,7 @@ const Som = {
   },
   volumeMusica(vol){
     if (this._audio) this._audio.volume = Math.min(1, vol);
-    if (this._ganho) this._ganho.gain.value = vol * (this._seq && this._calma ? .32 : .12);
+    if (this._ganho) this._ganho.gain.value = vol * (this._calma ? (this._k || .32) : .12);
   },
   pararMusica(){
     this._geracao = (this._geracao || 0) + 1;
@@ -332,10 +383,13 @@ const Som = {
                [71,1],[69,.5],[71,.5],[74,2], [78,2],[74,2], [76,1],[74,1],[72,1],[71,1], [69,4],
                [79,1.5],[78,.5],[76,2], [76,1],[74,1],[72,2], [71,1],[74,1],[79,1],[71,1], [69,2],[66,2],
                [76,1.5],[74,.5],[72,2], [74,1],[76,1],[78,2], [79,3],[null,1], [null,4]]},
-    caverna:{bpm:66, compasso:4, gotas:true, menor:true,
-      acordes:[[45,48,52],[41,45,48],[43,47,50],[40,43,47],[45,48,52],[38,41,45],[40,44,47],[40,44,47]],
-      melodia:[[76,2],[null,2], [72,2],[69,2], [71,3],[null,1], [67,4],
-               [69,2],[72,2], [74,1.5],[72,.5],[69,2], [71,2],[68,2], [null,4]]}
+    /* a Torre: caixinha de música desafinando num salão grande — Dó
+       menor, a quarta aumentada no meio da frase, o acorde napolitano,
+       tremor no colchão e um sussurro de vez em quando */
+    torre:{bpm:56, compasso:4, menor:true, assombrado:true,
+      acordes:[[48,51,55],[44,48,51],[41,44,48],[43,47,50],[48,51,55],[49,53,56],[44,48,51],[43,47,50]],
+      melodia:[[79,1],[78,1],[75,2], [75,1],[74,1],[72,2], [77,1.5],[80,.5],[79,2], [78,3],[null,1],
+               [72,1],[73,1],[77,2], [80,1],[79,1],[75,2], [74,1],[71,1],[68,2], [67,3],[null,1]]}
   },
   tocarCalma(ctx, vol){
     const c = this.ctx(); if (!c) return;
@@ -349,7 +403,7 @@ const Som = {
     const molhado = c.createGain(); molhado.gain.value = P.menor ? .5 : .22;
     g.connect(filtro); filtro.connect(c.destination);
     filtro.connect(eco); eco.connect(volta); volta.connect(eco); eco.connect(molhado); molhado.connect(c.destination);
-    this._ganho = g; this._calma = true;
+    this._ganho = g; this._calma = true; this._k = .32;
     const envelope = (no, t, at, dur, rel, pico) => {
       const e = c.createGain(); e.gain.setValueAtTime(0.0001, t);
       e.gain.linearRampToValueAtTime(pico, t + at);
@@ -358,6 +412,14 @@ const Som = {
       no.connect(e); e.connect(g); return e;
     };
     const flauta = (m, t, dur) => {
+      if (P.assombrado){
+        /* caixinha de música: ataque seco, cai rápido, um fio desafinado */
+        [0, 1200].forEach((ct, j) => {
+          const o = c.createOscillator(); o.type = j ? 'sine' : 'triangle'; o.frequency.value = hz(m); o.detune.value = ct + (Math.random() * 14 - 7);
+          envelope(o, t, .004, .05, Math.min(2.2, dur + .8), j ? .08 : .3); o.start(t); o.stop(t + dur + 2.5);
+        });
+        return;
+      }
       const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = hz(m);
       const vib = c.createOscillator(), prof = c.createGain();
       vib.frequency.value = 5; prof.gain.setValueAtTime(0, t); prof.gain.linearRampToValueAtTime(hz(m) * .004, t + .35);
@@ -372,17 +434,27 @@ const Som = {
       envelope(o, t, .006, .02, .9, .2); o.start(t); o.stop(t + 1);
     };
     const colchao = (ac, t, dur) => ac.forEach(m => [-4, 4].forEach(cents => {
-      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(m); o.detune.value = cents;
-      envelope(o, t, .5, dur - .4, .8, .045); o.start(t); o.stop(t + dur + 1);
+      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = hz(m); o.detune.value = cents * (P.assombrado ? 4 : 1);
+      const e = envelope(o, t, .5, dur - .4, .8, P.assombrado ? .06 : .045);
+      if (P.assombrado){
+        /* tremor: o volume do colchão treme devagar */
+        const lfo = c.createOscillator(), prof = c.createGain();
+        lfo.frequency.value = 3.2; prof.gain.value = .03; lfo.connect(prof); prof.connect(e.gain);
+        lfo.start(t); lfo.stop(t + dur + 1);
+      }
+      o.start(t); o.stop(t + dur + 1);
     }));
+    const sussurro = t => {
+      const n = Math.floor(c.sampleRate * 1.6), buf = c.createBuffer(1, n, c.sampleRate), dd = buf.getChannelData(0);
+      for (let k = 0; k < n; k++) dd[k] = (Math.random() * 2 - 1) * Math.sin(Math.PI * k / n);
+      const src = c.createBufferSource(), f = c.createBiquadFilter();
+      src.buffer = buf; f.type = 'bandpass'; f.Q.value = 6;
+      f.frequency.setValueAtTime(700 + Math.random() * 500, t); f.frequency.linearRampToValueAtTime(1400 + Math.random() * 600, t + 1.6);
+      src.connect(f); envelope(f, t, .6, .5, .6, .09); src.start(t);
+    };
     const baixo = (m, t, dur) => {
       const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = hz(m - 12);
       envelope(o, t, .04, dur * .8, .4, .32); o.start(t); o.stop(t + dur + .5);
-    };
-    const gota = t => {
-      const o = c.createOscillator(); o.type = 'sine';
-      o.frequency.setValueAtTime(1800 + Math.random() * 900, t); o.frequency.exponentialRampToValueAtTime(700, t + .12);
-      envelope(o, t, .003, .01, .25, .07); o.start(t); o.stop(t + .4);
     };
     /* a partitura em segundos, uma volta inteira */
     const tempo = 60 / P.bpm, porCompasso = P.compasso * tempo;
@@ -399,7 +471,7 @@ const Som = {
     });
     let at = 0;
     P.melodia.forEach(([m, d]) => { const dur = d * tempo; if (m != null) eventos.push({t:at, f:t => flauta(m, t, dur)}); at += dur; });
-    if (P.gotas) for (let k = 0; k < 6; k++){ const tg = Math.random() * volta_s; eventos.push({t:tg, f:gota}); }
+    if (P.assombrado) for (let k = 0; k < 2; k++){ const tg = (k + .3 + Math.random() * .5) * volta_s / 2; eventos.push({t:tg, f:sussurro}); }
     eventos.sort((a, b) => a.t - b.t);
     let inicio = c.currentTime + .15, i = 0;
     const agendar = () => {
@@ -414,9 +486,123 @@ const Som = {
     agendar();
     this._seq = setInterval(agendar, 150);
   },
+  /* saída comum: volume → filtro → seco + eco; devolve o ganho */
+  saida(vol, k, corte, atraso, retorno, molhar){
+    const c = this.ctx();
+    const g = c.createGain(); g.gain.value = vol * k;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = corte;
+    const eco = c.createDelay(2); eco.delayTime.value = atraso;
+    const volta = c.createGain(); volta.gain.value = retorno;
+    const mol = c.createGain(); mol.gain.value = molhar;
+    g.connect(f); f.connect(c.destination); f.connect(eco); eco.connect(volta); volta.connect(eco); eco.connect(mol); mol.connect(c.destination);
+    this._ganho = g; this._calma = true; this._k = k;
+    return g;
+  },
+  /* ---------- caverna: quase silêncio ----------
+     Um grave que quase não se ouve, gota caindo sem hora marcada, cada
+     uma num tom, eco comprido — e de vez em quando alguma coisa lá no
+     fundo: um ronco, um tom que sobe e some. Não tem melodia: é o lugar. */
+  tocarCaverna(vol){
+    const c = this.ctx();
+    const g = this.saida(vol, .5, 1800, .62, .5, .55);
+    const env = (no, t, at, dur, rel, pico) => {
+      const e = c.createGain(); e.gain.setValueAtTime(0.0001, t);
+      e.gain.linearRampToValueAtTime(pico, t + at); e.gain.setValueAtTime(pico, t + at + dur);
+      e.gain.exponentialRampToValueAtTime(0.0001, t + at + dur + rel); no.connect(e); e.connect(g); return e;
+    };
+    const drone = t => [55, 82.4].forEach((f, j) => {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f; o.detune.value = j ? 6 : 0;
+      env(o, t, 6, 6, 6, j ? .05 : .09); o.start(t); o.stop(t + 19);
+    });
+    const gota = t => {
+      const o = c.createOscillator(); o.type = 'sine';
+      const alto = 1100 + Math.random() * 1500;
+      o.frequency.setValueAtTime(alto, t); o.frequency.exponentialRampToValueAtTime(alto * .45, t + .09);
+      env(o, t, .002, .01, .18, .05 + Math.random() * .05); o.start(t); o.stop(t + .4);
+    };
+    const coisa = t => {
+      if (Math.random() < .5){
+        /* ronco: ruído grave filtrado, longe */
+        const n = Math.floor(c.sampleRate * 3), buf = c.createBuffer(1, n, c.sampleRate), dd = buf.getChannelData(0);
+        for (let k = 0; k < n; k++) dd[k] = Math.random() * 2 - 1;
+        const src = c.createBufferSource(), f = c.createBiquadFilter(); src.buffer = buf; f.type = 'lowpass'; f.frequency.value = 120;
+        src.connect(f); env(f, t, 1.2, .6, 1.2, .35); src.start(t);
+      } else {
+        /* um tom que sobe devagar, desafinado, e some no eco */
+        const o = c.createOscillator(); o.type = 'triangle';
+        const base = 180 + Math.random() * 120;
+        o.frequency.setValueAtTime(base, t); o.frequency.linearRampToValueAtTime(base * 1.41, t + 2.5);
+        env(o, t, 1, 1, 1.5, .035); o.start(t); o.stop(t + 4);
+      }
+    };
+    let proxDrone = c.currentTime + .2, proxGota = c.currentTime + .8, proxCoisa = c.currentTime + 12 + Math.random() * 10;
+    const agendar = () => {
+      const lim = c.currentTime + .8;
+      while (proxDrone < lim){ drone(proxDrone); proxDrone += 12; }
+      while (proxGota < lim){
+        gota(proxGota);
+        /* às vezes duas seguidas, como quem pinga do mesmo lugar */
+        if (Math.random() < .25) gota(proxGota + .35 + Math.random() * .2);
+        proxGota += .9 + Math.random() * 3.2;
+      }
+      while (proxCoisa < lim){ coisa(proxCoisa); proxCoisa += 18 + Math.random() * 20; }
+    };
+    agendar();
+    this._seq = setInterval(agendar, 200);
+  },
+  /* ---------- esconderijo: radical ----------
+     Lá frígio, 132 batidas: bumbo em todo tempo, chimbal no contratempo,
+     baixo serrote em colcheias pulando de oitava, acorde sujo no 2 e no
+     4 e um riff de quatro compassos por cima. Sem eco: é sala fechada. */
+  tocarEsconderijo(vol){
+    const c = this.ctx();
+    const g = this.saida(vol, .3, 5200, .15, .12, .08);
+    const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+    const env = (no, t, at, dur, rel, pico) => {
+      const e = c.createGain(); e.gain.setValueAtTime(0.0001, t);
+      e.gain.linearRampToValueAtTime(pico, t + at); e.gain.setValueAtTime(pico, t + at + dur);
+      e.gain.exponentialRampToValueAtTime(0.0001, t + at + dur + rel); no.connect(e); e.connect(g); return e;
+    };
+    const ruido = (() => { const n = c.sampleRate, b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0); for (let k = 0; k < n; k++) d[k] = Math.random() * 2 - 1; return b; })();
+    const bumbo = t => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + .12); env(o, t, .002, .02, .16, .9); o.start(t); o.stop(t + .3); };
+    const chimbal = (t, forte) => { const s = c.createBufferSource(), f = c.createBiquadFilter(); s.buffer = ruido; f.type = 'highpass'; f.frequency.value = 7000; s.connect(f); env(f, t, .001, .005, forte ? .09 : .04, forte ? .22 : .14); s.start(t, Math.random() * .5, .2); };
+    const caixa = t => { const s = c.createBufferSource(), f = c.createBiquadFilter(); s.buffer = ruido; f.type = 'bandpass'; f.frequency.value = 1800; s.connect(f); env(f, t, .001, .01, .12, .45); s.start(t, Math.random() * .5, .25); };
+    const baixo = (m, t, d) => { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz(m); env(o, t, .004, d * .6, .05, .32); o.start(t); o.stop(t + d + .1); };
+    const acorde = (ms, t) => ms.forEach(m => { const o = c.createOscillator(); o.type = 'square'; o.frequency.value = hz(m); o.detune.value = Math.random() * 10 - 5; env(o, t, .003, .06, .12, .07); o.start(t); o.stop(t + .3); });
+    const lider = (m, t, d) => { const o = c.createOscillator(); o.type = 'square'; o.frequency.value = hz(m); env(o, t, .005, d * .8, .06, .13); o.start(t); o.stop(t + d + .1); };
+    const tempo = 60 / 132, col = tempo / 2;
+    const raizes = [45, 46, 45, 43, 45, 46, 48, 40];         /* A Bb A G A Bb C E */
+    const riff = [[81,1],[80,.5],[76,.5],[77,1],[76,1], [74,.5],[76,.5],[77,.5],[80,.5],[81,2],
+                  [84,1],[82,.5],[81,.5],[77,1],[76,1], [74,1],[73,1],[76,2]];   /* quatro compassos */
+    const eventos = [];
+    raizes.forEach((r, i) => {
+      const t0 = i * 4 * tempo;
+      for (let k = 0; k < 4; k++){ eventos.push({t:t0 + k * tempo, f:bumbo}); if (k % 2) eventos.push({t:t0 + k * tempo, f:t => { caixa(t); acorde([r + 24, r + 27, r + 31], t); }}); }
+      for (let k = 0; k < 8; k++){ eventos.push({t:t0 + k * col, f:t => baixo(r + (k % 4 === 2 ? 12 : 0), t, col)}); eventos.push({t:t0 + k * col + col / 2, f:t => chimbal(t, k % 2)}); }
+    });
+    /* o riff entra na segunda metade */
+    let at = 4 * 4 * tempo; riff.forEach(([m, d]) => { const dur = d * tempo; eventos.push({t:at, f:t => lider(m, t, dur)}); at += dur; });
+    eventos.sort((a, b) => a.t - b.t);
+    const volta_s = raizes.length * 4 * tempo;
+    let inicio = c.currentTime + .1, i = 0;
+    const agendar = () => {
+      while (true){
+        if (i >= eventos.length){ i = 0; inicio += volta_s; }
+        const t = inicio + eventos[i].t;
+        if (t > c.currentTime + .5) break;
+        if (t >= c.currentTime - .05) eventos[i].f(t);
+        i++;
+      }
+    };
+    agendar();
+    this._seq = setInterval(agendar, 100);
+  },
   tocarSintetizada(ctx, vol){
     const c = this.ctx(); if (!c) return;
-    /* fora da luta, a trilha é a calma */
+    /* fora da luta: caverna é quase silêncio, esconderijo é radical,
+       e o resto é a calma */
+    if (ctx === 'caverna') return this.tocarCaverna(vol);
+    if (ctx === 'esconderijo') return this.tocarEsconderijo(vol);
     if (ctx !== 'batalha') return this.tocarCalma(ctx, vol);
     const tr = this.TRILHAS[ctx] || this.TRILHAS.rota;
     const g = c.createGain(); g.gain.value = vol * .12; g.connect(c.destination);

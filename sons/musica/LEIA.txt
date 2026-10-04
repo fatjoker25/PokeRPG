@@ -7,8 +7,11 @@ treinador, rival, líder de ginásio, Elite e torneio).
 Ginásio: cada um toca a faixa que mais combina com ele (tipo do
 ginásio, jeito do líder, cidade e dificuldade), seja qual for o tema.
 
-Rota, cidade e caverna: o Showdown não tem essas músicas, então toca a
-trilha calma do próprio jogo. Pra ouvir,
+Rival: cada um tem a sua faixa. Equipe vilã: faixa radical.
+
+Fora da luta toca a trilha do próprio jogo: calma na cidade e na rota,
+quase silêncio com gotas na caverna, caixinha de música desafinada em
+Lavender e na Torre, e batida pesada no esconderijo da equipe vilã. Pra ouvir,
 ponha os arquivos na pasta do tema, ao lado do jogo:
 
   sons/musica/bw/     -> Black/White
@@ -19,7 +22,8 @@ ponha os arquivos na pasta do tema, ao lado do jogo:
 
 com os nomes (.ogg, .mp3 ou .m4a):
 
-  rota.mp3   cidade.mp3   caverna.mp3   (e batalha.mp3, só no "Meus arquivos")
+  rota.mp3  cidade.mp3  caverna.mp3  torre.mp3  esconderijo.mp3
+  (e batalha.mp3, só no "Meus arquivos")
 
 Arquivo que faltar cai na trilha sintetizada, sem erro. A pasta de
 música fica fora do arquivo único (jornada-do-campeao.html).

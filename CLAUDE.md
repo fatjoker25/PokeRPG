@@ -437,8 +437,23 @@ laço do próprio Showdown (`laco`, em ms), não no começo do arquivo.
 
 Fora da luta, a trilha sintetizada é **calma** (`Som.CALMAS`,
 `tocarCalma`): composição própria no clima de cidade pequena dos jogos
-(flauta com vibrato, dedilhado, colchão, eco) — cidade em 3/4, rota em
-4/4, caverna menor e espaçada. Melodia nova soma exatamente os tempos
+(flauta com vibrato, dedilhado, colchão, eco) — cidade em 3/4 e rota em
+4/4. Três lugares fogem disso, e o contexto sai do ambiente do capítulo
+na cena e do lugar no mapa (`Som.contexto`):
+- **caverna** (`tocarCaverna`): quase silêncio — grave que mal se ouve,
+  gota sem hora marcada, e de vez em quando um ronco ou um tom que sobe
+  e some. Sem melodia, sem laço fixo: é sorteado enquanto toca;
+- **torre** (ambiente `cemiterio`: Lavender e a Torre): caixinha de
+  música desafinada em Dó menor, colchão tremendo e sussurro;
+- **esconderijo** (`CENAS_DO_ESCONDERIJO`, por capítulo e id de cena: a
+  operação no Monte da Lua e o depósito/cassino de Celadon): radical,
+  bumbo, baixo serrote e riff.
+
+Luta contra a equipe vilã toca faixa radical do Showdown
+(`LUTAS_DO_VILAO` por cena, `FAIXA_DO_VILAO` dentro do esconderijo), e
+**cada rival tem a sua** (`FAIXA_DO_RIVAL`, pelo id do rival extra, e o
+Ezra pelo arco — parceiro troca de faixa). Cena nova de esconderijo
+entra no regex do capítulo; rival novo entra com faixa. Melodia nova soma exatamente os tempos
 dos compassos (`acordes.length × compasso`), senão a volta desencontra. O
 `build.py` deixa `sons/musica/` fora do arquivo único.
 
