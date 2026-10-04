@@ -205,9 +205,7 @@ function falaRival(){
   else if (arco === 'ressentido'){
     L.push('Ezra está encostado num poste e não se mexe quando você passa. Ele espera você notar.');
     L.push('"Oi." Ele não sorri. "Eu tenho treinado."');
-    const npc = d.npcs['Ezra'];
-    const mem = npc && npc.memorias && npc.memorias.length ? npc.memorias[npc.memorias.length-1].texto : null;
-    if (mem) L.push(`Ele não esqueceu. "${mem}"`);
+    if (r.derrotas >= 2) L.push(`"${r.derrotas} a ${r.vitorias}. Eu sei de cor, não precisa falar."`);
     L.push('"Não precisa ser simpático. Eu não vim pra isso."');
   }
 
@@ -238,7 +236,7 @@ function falaVitoriaRival(){   // você venceu
   const d = Estado.dados;
   if (arco === 'parceiro') return [
     'Ezra recolhe o time e vem te abraçar antes de recolher, o que é a ordem errada e é muito a cara dele.',
-    `"${r.derrotas + 1}." Ele conta em voz alta. "Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
+    `Ele conta nos dedos, em voz alta: "${r.derrotas + 1} pra você. Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
     'Ele te dá metade do dinheiro que tem no bolso e não aceita não.'
   ];
   if (arco === 'ressentido') return [

@@ -161,7 +161,7 @@ const Jogo = {
     Estado.salvar('auto');
 
     const cena = Historia.iniciarCapitulo(1);
-    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5, ${inicial.natureza}).`}]);
+    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5).`}]);
   },
 
   /* ---------- navegação ---------- */
@@ -1087,18 +1087,36 @@ const Jogo = {
     return UI.modal('PokéNav', `<p class="nada">${UI.esc(txt(m.dica) || 'Ainda não.')}</p>`);
   },
 
-  /* revanche: o mesmo adversário, com o time subido junto com você */
+  /* revanche: ninguém luta pelo telefone. A ligação marca o lugar —
+     a rota, a cidade ou o ginásio onde a pessoa está — e a luta
+     acontece quando você chega lá e procura por ela. */
   revanche(c){
-    const meu = Estado.primeiroApto();
-    if (!meu) return UI.modal('PokéNav', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de marcar revanche.</p>');
+    const d = Estado.dados;
+    d.revanches = d.revanches || {};
+    const nome = nomeDaRevanche(c);
+    const local = localDaRevanche(c);
+    d.revanches[c.id] = {local, dia:d.relogio.dia};
+    Estado.marcarLigacao(c.id, 'revanche');
+    Estado.registrar(`Marcou revanche com ${nome} ${emLocal(local)}.`);
+    Estado.salvar('auto');
+    UI.telaLigacao(c, falasDeMarcarRevanche(c, local), [
+      {tipo:'info', texto:`Revanche marcada ${emLocal(local)}.`}]);
+  },
 
-    let time = null, nome = textoContato(c, 'nome');
+  /* chegou no lugar e procurou: agora sim */
+  lutarRevanche(id){
+    const c = contatoPorId(id);
+    const d = Estado.dados;
+    if (!c || !(d.revanches || {})[id]) return Exploracao.tela();
+    const meu = Estado.primeiroApto();
+    if (!meu) return Exploracao.tela([{tipo:'dano', texto:'Nenhum Pokémon em pé. Cure o time antes.'}]);
+
+    let time = null, nome = nomeDaRevanche(c);
     if (c.ginasio){
       const g = ginasioPorId(c.ginasio);
       if (!g) return;
       /* na revanche o líder vem com o escalão de quem já tem tudo */
       time = timeGinasio(g, Math.min(8, numInsignias() + 2)).map(x => criarPokemon(x.dex, x.nivel + 2, {}));
-      nome = 'Líder ' + g.lider;
     } else if (c.rivalExtra){
       const R = defRival(c.rivalExtra);
       if (!R) return;
@@ -1111,28 +1129,26 @@ const Jogo = {
       const t = treinadorEstrada(c.estrada);
       if (!t) return;
       time = timeEstrada(t, Math.min(8, numInsignias() + 2), 2);
-      nome = nomeDeLuta(t);
     } else if (typeof c.timeRevanche === 'function'){
       time = c.timeRevanche(Estado.dados);
     }
-    if (!time || !time.length) return;
+    if (!time || !time.length) return Exploracao.tela();
     time.forEach(x => { x.nomeAnunciado = true; });
+    delete d.revanches[id];
 
     this.revancheAtual = {id:c.id, nome};
     this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
     this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null;
-    Estado.marcarLigacao(c.id, 'revanche');
-    Estado.registrar(`Marcou revanche com ${nome}.`);
+    Mundo.passar(1);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome,
       timeInimigo: time.slice(1), revelarNatureza:true,
       erroIA: c.veterano ? ERRO_IA_VETERANO : undefined,
+      arena: c.ginasio ? 'ginasio' : undefined,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
-    UI.telaBatalha([
-      `<p>Revanche marcada pelo PokéNav. ${UI.esc(nome)} veio com o time subido — quem aceita revanche não vem pra repetir o resultado.</p>`
-    ].map(h => UI.el(h).outerHTML ? h : h));
+    UI.telaBatalha([`${nome} estava onde disse que ia estar, e o time veio subido — quem marca revanche não vem pra repetir o resultado.`]);
   },
 
   resultadoRevanche(fim){
@@ -1145,7 +1161,7 @@ const Jogo = {
       const premio = premioRevanche();
       Estado.j.dinheiro += premio;
       avisos.push({tipo:'item', texto:`+${fmtDin(premio)} ₽`});
-      const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
+      const m = Estado.mudarRep('bom', 1, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:2}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
       Estado.registrar(`Venceu a revanche contra ${rev.nome}.`);
     } else {
@@ -1153,9 +1169,13 @@ const Jogo = {
       Estado.registrar(`Perdeu a revanche contra ${rev.nome}.`);
     }
     Estado.salvar('auto');
-    UI.telaLigacao(contatoPorId(rev.id), venceu
-      ? [{quem:rev.nome, diz:'Foi. Foi mesmo. Liga de novo quando estiver melhor ainda.'}]
-      : [{quem:rev.nome, diz:'Ainda não. Mas você marcou, e marcar já é alguma coisa.'}], avisos);
+    const c = contatoPorId(rev.id);
+    this.resolverPendencias(() => UI.telaConversa({
+      num:(LOCAIS[Mundo.id()] || {}).nome || '', titulo:rev.nome, loc:'revanche', quem:rev.nome, monologo:true,
+      falas: Dados.escolher(venceu ? FALAS_REVANCHE.venceu : FALAS_REVANCHE.perdeu).map(t => `"${t}"`),
+      avisos,
+      botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]
+    }));
   },
 
   /* ---------- O RIVAL ---------- */
@@ -1374,7 +1394,7 @@ const Jogo = {
     UI.telaResultadoLiga({
       titulo: `${alvo.nome} derrotado`,
       sub: acabou ? 'A porta do fundo está aberta' : `Elite 4 · ${alvo.ordem} de 4`,
-      falas: alvo.vitoria(Estado.dados),
+      falas: alvo.vitoria(Estado.dados), quem: alvo.nome,
       avisos: [{tipo:'info', texto:'Seu time NÃO é curado entre as salas. Use itens se precisar.'}],
       venceu:true, continuar:true
     });
@@ -1507,7 +1527,7 @@ const Jogo = {
     if (!time.length) return this.irPara(escolha.vai, [{tipo:'info', texto:'Você não tem nada para trocar.'}]);
     UI.modal('Quem você entrega?', time.map(p =>
       `<button class="escolha" onclick="Jogo.efetuarTroca('${p.uid}','${escolha.vai}')">
-        ${UI.esc(nomeExib(p))} — Nv ${p.nivel}, ${UI.esc(p.natureza)}, moral ${p.moral}</button>`).join('') +
+        ${UI.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + UI.esc(p.natureza) : ''}, moral ${p.moral}</button>`).join('') +
       '<p class="sussurro" style="margin-top:12px">Você não sabe o que vai receber.</p>');
   },
 
@@ -1524,7 +1544,7 @@ const Jogo = {
     UI.fecharModal();
     this.irPara(destino, [
       {tipo:'item', texto:`Você entregou ${saiu ? nomeExib(saiu) : '?'}.`},
-      {tipo:'pokemon', texto:`Recebeu ${recebido.nome} (Nv ${recebido.nivel}, ${recebido.natureza}) — moral 35. Ele não te conhece.`}
+      {tipo:'pokemon', texto:`Recebeu ${recebido.nome} (Nv ${recebido.nivel}) — moral 35. Ele não te conhece.`}
     ]);
   },
 

@@ -2689,3 +2689,11 @@ body.com-cenario .topo{
 /* porta que existe mas ainda não abre: aparece, diz o que falta, não clica */
 .escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
 .escolha:disabled:hover{transform:none}
+
+/* ligação feita: a conversa acontece dentro da ficha do PokéNav */
+.nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
+.nav-conversa .fala{margin:8px 0}
+.nav-conversa .fala{background:#ffffff;border-color:#a9c4e2;box-shadow:none}
+.nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
+.nav-conversa .fala .fala-quem{color:#1d4f8a}
+.nav-conversa > p{color:#1f3550}

@@ -132,7 +132,7 @@ const Captura = {
     alvo.capturadoEm = {cap:Estado.dados.capitulo, bola:nomeBola, dia:Estado.dados.relogio.dia};
     alvo.moral = esp.lendario ? 10 : 40;
     const destino = Estado.adicionar(alvo);
-    ev('captura', `${esp.nome} (Nv ${alvo.nivel}, ${alvo.natureza}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
+    ev('captura', `${esp.nome} (Nv ${alvo.nivel}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
     Estado.registrar(`Capturou ${esp.nome} Nv${alvo.nivel} com ${nomeBola}.`);
     if (alvo.shiny){
       Estado.pegouBrilhante(alvo.dex);

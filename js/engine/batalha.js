@@ -90,10 +90,15 @@ const Batalha = {
         this.ev('natureza', inimigo.nomeAnunciado
           ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
           : `Você não sabe o nome, mas já viu desenho de um parecido e sabe o que ele é: ${inimigo.tipos.join('/')}.`);
-        if (t.grau === 'critico'){
-          inimigo.naturezaVista = true;
-          this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
-        }
+      }
+    }
+    /* o jeito do bicho se lê olhando, não com aparelho: Percepção alta
+       pega pelo modo como ele se mexe antes do primeiro golpe */
+    if (inimigo && !inimigo.naturezaVista && Estado.dados && Estado.j){
+      const t = Dados.teste(Estado.j.status.percepcao, 10, 'Percepção');
+      if (t.grau === 'sucesso' || t.grau === 'critico'){
+        inimigo.naturezaVista = true;
+        this.ev('natureza', `Pelo jeito que ${nomeVisivel(inimigo)} se mexe antes do primeiro golpe, dá pra ler: ${inimigo.natureza}.`);
       }
     }
     return this.eventos;
@@ -466,7 +471,21 @@ const Batalha = {
   /* ---------- um golpe ---------- */
   /* nomeForcado: o golpe vem de fora do slot (Mirror Move, Sleep Talk) e
      não gasta PP nem passa pela vontade da natureza. */
+  /* Self-Destruct e Explosion: quem usa cai, acertando ou não — como
+     nos jogos. O resto do golpe (precisão, dano, boneco) é o de sempre. */
   usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado){
+    const antes = this.eventos.length;
+    this.usarGolpeBase(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado);
+    const usado = this.eventos.slice(antes).find(e => e.tipo === 'golpe' && e.golpe);
+    const G = usado && GOLPES[usado.golpe];
+    if (G && G.ef && G.ef.autodestroi && atacante.hp > 0){
+      const tinha = atacante.hp;
+      atacante.hp = 0;
+      this.ev('dano', `${nomeVisivel(atacante)} gasta tudo o que tinha no estouro.`, {alvo:souAliado ? 'aliado' : 'inimigo', dano:tinha});
+    }
+  },
+
+  usarGolpeBase(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado){
     let nome;
     if (nomeForcado){
       nome = nomeForcado;
@@ -1188,17 +1207,16 @@ const Batalha = {
     this.pdexUsada = true;
     const p = this.inimigo;
     const esp = DEX[p.dex];
+    const jaTinha = Estado.conheceu(p.dex);
     const novo = Estado.catalogou(p.dex);
-    p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
-    this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
-    this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
+    /* espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha */
+    this.ev('pokedex', jaTinha ? `A Pokédex abre a ficha de ${esp.nome}.` : `Você aponta a Pokédex. Ela leva três segundos e apita.`);
+    this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}.`);
     this.ev('pokedex', `Posto ${nomePosto(p.nivel)} · HP ${p.hpMax} · FOR ${p.stats.for} · DES ${p.stats.des} · VIT ${p.stats.vit} · ESP ${p.stats.esp} · INS ${p.stats.ins}`);
     const pr = PR_ESPECIE[p.dex];
     if (pr) this.ev('pokedex', `Teto da espécie: FOR ${pr[6]} · DES ${pr[7]} · VIT ${pr[8]} · ESP ${pr[9]} · INS ${pr[10]} — HP base ${pr[0]}.`);
     if (p.shiny)
       this.ev('brilhante', 'Anomalia cromática confirmada. A Pokédex abre um campo que você nunca tinha visto abrir.');
-    if ((NATUREZAS[p.natureza]||{}).agressiva)
-      this.ev('perigo', 'Marcação da Pokédex: temperamento agressivo. Se o seu time cair, ele não recua.');
     if (novo) this.ev('pokedex', `Registro novo: ${esp.nome} catalogado.`);
     return {eventos:this.eventos, fim:null};
   },
@@ -1366,9 +1384,11 @@ const Batalha = {
         this.estInimigo = this.novoEstado();
         this.participantes = new Set([this.aliado.uid]);
         this.entrouEmCampo(prox, this.estInimigo);
-        return {eventos:this.eventos, fim:null};
-      }
-      return this.encerrar('vitoria');
+        /* os dois caíram juntos (Explosion, recuo): o de lá já mandou o
+           próximo, e o seu ainda precisa ser trocado — senão a luta
+           ficava com um desmaiado em campo e sem pergunta nenhuma */
+        if (this.aliado.hp > 0) return {eventos:this.eventos, fim:null};
+      } else return this.encerrar('vitoria');
     }
 
     if (this.aliado.hp <= 0){
@@ -1396,7 +1416,8 @@ const Batalha = {
       return this.encerrar('derrota');
     }
     const d = Dados.d20('O selvagem ataca você?');
-    this.ev('perigo', `Natureza ${this.inimigo.natureza} (agressiva). 1d20 = ${d} — ataca com 10+`);
+    this.inimigo.naturezaVista = true;   // quem avança em gente mostra o jeito que tem
+    this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: ${this.inimigo.natureza}, agressiv${pron(this.inimigo).o}. 1d20 = ${d} — ataca com 10+`);
     if (d < 10){
       this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais... e vai embora.`);
       return this.encerrar('derrota');

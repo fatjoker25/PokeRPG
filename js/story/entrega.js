@@ -39,7 +39,7 @@ function escolhasDeInicial(rotulo, vai, extra){
 function entregarInicial(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
-    moral: 80, naturezaVista: true,
+    moral: 50,
     historia: `Saiu da caixa térmica do Célio, em ${d.jogador.cidade}, numa manhã de ${['março','abril','maio','junho'][Dados.entre(0,3)]}.`
   });
   Estado.adicionar(p);
@@ -48,14 +48,14 @@ function entregarInicial(d){
   d.flags.espera_o_assistente = false;
   Estado.marcar('recebeu_do_goro');
   Estado.registrar(`${Estado.j.nome} recebeu ${p.nome} das mãos de Célio Sampaio, em ${d.jogador.cidade}.`);
-  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
+  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5) saiu da bola.`}];
 }
 
 /* Em Pallet a bola sai da mão do Professor, na rua, na manhã da saída */
 function entregarDoProfessor(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
-    moral: 80, naturezaVista: true,
+    moral: 50,
     historia: 'Entregue pelo Professor, na rua de Pallet, na manhã em que você saiu de casa.'
   });
   Estado.adicionar(p);
@@ -64,7 +64,7 @@ function entregarDoProfessor(d){
   d.flags.espera_o_professor = false;
   Estado.marcar('recebeu_do_professor');
   Estado.registrar(`${Estado.j.nome} recebeu ${p.nome} das mãos do Professor, em Pallet.`);
-  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
+  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5) saiu da bola.`}];
 }
 
 (function(){

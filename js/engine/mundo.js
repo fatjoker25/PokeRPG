@@ -470,6 +470,13 @@ function afazeresDoLocal(){
       sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.'});
   }
 
+  /* revanche marcada pelo PokéNav: a pessoa está aqui esperando */
+  for (const [cid, r] of Object.entries(Estado.dados.revanches || {})){
+    if (r.local !== id || typeof contatoPorId !== 'function') continue;
+    const c = contatoPorId(cid);
+    if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${nomeDaRevanche(c)}`, sub:'Revanche marcada.'});
+  }
+
   /* veteranos: quem mora aqui e o convite que um deles te fez */
   if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
   return lista;

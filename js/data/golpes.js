@@ -191,8 +191,8 @@ const GOLPES = {
   'Tri Attack':    {t:'Normal',c:'esp',p:80,a:100,pp:10,nv:1},
   'Wrap':          {t:'Normal',c:'fis',p:15,a:90,pp:20,nv:1,ef:{preso:true}},
   'Bind':          {t:'Normal',c:'fis',p:15,a:75,pp:20,nv:1,ef:{preso:true}},
-  'Self-Destruct': {t:'Normal',c:'fis',p:200,a:100,pp:5,nv:1,ef:{recuo:1}},
-  'Explosion':     {t:'Normal',c:'fis',p:250,a:100,pp:5,nv:1,ef:{recuo:1}},
+  'Self-Destruct': {t:'Normal',c:'fis',p:200,a:100,pp:5,nv:1,ef:{autodestroi:true}},
+  'Explosion':     {t:'Normal',c:'fis',p:250,a:100,pp:5,nv:1,ef:{autodestroi:true}},
   /* fulminantes: aqui viram um número alto e uma precisão péssima */
   'Horn Drill':    {t:'Normal',c:'fis',p:0,a:30,pp:5,nv:1,ef:{fixo:200}},
   'Guillotine':    {t:'Normal',c:'fis',p:0,a:30,pp:5,nv:1,ef:{fixo:200}},

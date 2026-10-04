@@ -43,7 +43,13 @@ const UI = {
     const g = generoDe(p);
     return g ? `<span class="sexo-marca sexo-${g}" title="${g === 'm' ? 'Macho' : 'Fêmea'}">${g === 'm' ? '♂' : '♀'}</span>` : '';
   },
-  limpar(){ this.app.innerHTML = ''; },
+  /* Tela nova é conversa nova: o dono das falas da última cena não
+     passa pra tela seguinte (o Ezra saía com o balão do Brock). */
+  limpar(){
+    this.app.innerHTML = '';
+    this.npcDaCena = null; this.npcEhProprio = false; this.falanteDaCena = null;
+    this.vozesDaCena = null; this.minhasFalasDaCena = null;
+  },
   add(html){ const e = this.el(html); if (e) this.app.appendChild(e); return e; },
   tom(t){ document.body.setAttribute('data-tom', t || 'leve'); },
   rolarTopo(){ window.scrollTo({top:0, behavior:'smooth'}); },
@@ -764,8 +770,8 @@ const UI = {
     this.rolarTopo();
   },
 
-  avisos(lista){
-    const c = document.getElementById('avisos');
+  avisos(lista, alvo){
+    const c = document.getElementById(alvo || 'avisos');
     if (!c) return;
     lista.forEach(a => {
       /* Um aviso pode carregar uma fala com dono (conversa de cidade, por
@@ -801,7 +807,7 @@ const UI = {
       } else {
         vivos.forEach(p => {
           c.appendChild(this.el(`<button class="escolha perigo" onclick="Jogo.sacrificar('${p.uid}')">
-            ${this.esc(nomeExib(p))} — Nv ${p.nivel}, ${this.esc(p.natureza)}, moral ${p.moral}</button>`));
+            ${this.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + this.esc(p.natureza) : ''}, moral ${p.moral}</button>`));
         });
       }
       return;
@@ -1544,7 +1550,7 @@ const UI = {
 
     const dex = d.flags.tem_pokedex
       ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
-          'lê o adversário · não gasta o turno',
+          '',
           "Jogo.acaoBatalha({tipo:'pokedex'})")}</div>`
       : '';
 
@@ -1632,11 +1638,14 @@ const UI = {
      ======================================================== */
   escaneamento(){
     const alvo = Batalha.inimigo;
+    if (Jogo.encenando || Jogo.animandoBola) return;
+    const jaTinha = Estado.conheceu(alvo.dex);
     const r = Batalha.acao({tipo:'pokedex'});
     const erro = (r.eventos || []).find(e => e.tipo === 'erro');
     if (erro){ this.escreverLog(r.eventos); this.acoesCombate(); return; }
 
     const esp = DEX[alvo.dex];
+    if (jaTinha) return this.fichaEscaneada(alvo, esp, r.eventos);
     const num = String(alvo.dex).padStart(3, '0');
 
     this.modal('', `<div class="pokedex-topo">
@@ -1656,7 +1665,7 @@ const UI = {
       'travando alvo…',
       `silhueta #${num}`,
       'lendo estrutura de tipo…',
-      'amostrando temperamento…',
+      'medindo atributos…',
       alvo.shiny ? 'ANOMALIA CROMÁTICA' : 'comparando com a base da espécie…'
     ];
     const cxLinhas = document.getElementById('dex-scan-linhas');
@@ -1696,9 +1705,9 @@ const UI = {
           <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite(p, 'frente')}</div>
-        <div class="nota">Nível ${p.nivel} · ${{m:'macho · ', f:'fêmea · '}[generoDe(p)] || 'sem sexo · '}${this.esc(p.natureza)}</div>
+        <div class="nota">Nível ${p.nivel} · ${{m:'macho', f:'fêmea'}[generoDe(p)] || 'sem sexo'}${p.naturezaVista ? ' · ' + this.esc(p.natureza) : ''}</div>
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
-        ${nat.agressiva ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
+        ${nat.agressiva && p.naturezaVista ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
 
         <h3 class="cat-item">Atributos <span class="fraco">· este exemplar, posto ${nomePosto(p.nivel)}</span></h3>
         ${ATRIBUTOS.map(par).join('')}
@@ -1791,7 +1800,7 @@ const UI = {
         <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : 'Número desconhecido')}</div>
         <div class="loc">${this.esc(contato ? (textoContato(contato,'papel') || textoContato(contato,'cidade') || '') : '')}</div>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
+      <div class="narrativa">${this.narrar(falas, contato ? textoContato(contato,'nome') : null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas">
         ${opcoes.map(({o, i}) => `<button class="escolha" onclick="Jogo.responderChamada('${c.id}',${i})">
@@ -1816,7 +1825,7 @@ const UI = {
         ? this.narrar(['O aparelho toca oito vezes e para.',
             'Você olha o nome na tela o tempo inteiro e não atende, o que é diferente de não ouvir.',
             'Ele não vai ligar de novo hoje.'])
-        : this.narrar(r.esc.resultado || [])}</div>
+        : this.narrar(r.esc.resultado || [], contato ? textoContato(contato,'nome') : null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:16px">
         <button class="escolha" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho.</button>
@@ -1826,24 +1835,28 @@ const UI = {
     this.rolarTopo();
   },
 
-  /* Tela de uma ligação: a conversa acontece e você volta de onde veio. */
+  /* Ligação que você faz: a conversa acontece dentro do próprio PokéNav,
+     por cima do que estava na tela, e desligar volta pra ficha do
+     contato. Nada do texto que você estava lendo se perde. */
   telaLigacao(c, falas, avisos){
-    this.limpar();
-    this.add(this.topo());
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">PokéNav · chamada</div>
-        <div class="tit">${this.esc(c ? textoContato(c,'nome') : 'Chamada')}</div>
-        <div class="loc">${this.esc(c ? (textoContato(c,'papel') || textoContato(c,'cidade') || '') : '')}</div>
+    if (!c) return;
+    this.modalNav(c.id);
+    const m = document.getElementById('modal');
+    const ficha = m && m.querySelector('#nav-ficha');
+    if (!ficha) return;
+    ficha.innerHTML = `
+      <div class="nav-ficha-cab">
+        ${this.navRosto(c, true)}
+        <span>
+          <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-ficha-papel">em linha</span>
+        </span>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
-      <div id="avisos" class="avisos"></div>
-      <div id="escolhas" class="escolhas" style="margin-top:18px">
-        <button class="escolha" onclick="Jogo.voltarDaLigacao()">Desligar.</button>
-      </div>
-    </div>`);
-    if (avisos && avisos.length) this.avisos(avisos);
-    this.rolarTopo();
+      <div class="nav-conversa narrativa">${this.narrarMonologo(falas || [], textoContato(c,'nome'))}</div>
+      <div id="avisos-nav" class="avisos"></div>
+      <div class="nav-servicos"><button class="btn" onclick="UI.modalNav('${c.id}')">Desligar</button></div>`;
+    if (avisos && avisos.length) this.avisos(avisos, 'avisos-nav');
+    ficha.scrollTop = 0;
   },
 
   /* ========================================================
@@ -1957,7 +1970,7 @@ const UI = {
     this.modalNav(id);
   },
   navLigar(id, servico){
-    this.fecharModal();
+    this.fecharModal(true);
     Jogo.ligarPara(id, servico);
   },
 
@@ -2332,7 +2345,7 @@ const UI = {
         <div class="tit">${venceu ? this.esc(g.insignia) : 'Derrota'}</div>
         <div class="loc">Líder ${this.esc(g.lider)} · tipo ${this.esc(g.tipo)}</div>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
+      <div class="narrativa">${this.narrarMonologo(falas, g.lider)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
@@ -2424,7 +2437,7 @@ const UI = {
         <div class="tit">${this.esc(nome)}</div>
         <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ele</div>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
+      <div class="narrativa">${this.narrarMonologo(falas, nome)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.seguirDepoisDoRival()">Seguir viagem.</button>
@@ -2585,7 +2598,7 @@ const UI = {
         <div class="tit">${this.esc(o.titulo || '')}</div>
         <div class="loc">${this.esc(o.loc || '')}</div>
       </div>
-      <div class="narrativa">${this.narrar(o.falas || [])}</div>
+      <div class="narrativa">${o.quem && o.monologo ? this.narrarMonologo(o.falas || [], o.quem) : this.narrar(o.falas || [], o.quem || null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:18px">
         ${(o.botoes || []).map(b => `<button class="escolha" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('')}
@@ -2604,7 +2617,7 @@ const UI = {
         <div class="tit">${this.esc(o.titulo)}</div>
         <div class="loc">Planalto Indigo</div>
       </div>
-      <div class="narrativa">${(o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="narrativa">${o.quem ? this.narrarMonologo((o.falas||[]).filter(Boolean), o.quem) : (o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
@@ -2738,7 +2751,7 @@ const UI = {
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
         ? 'Natureza <b>' + this.esc(p.natureza) + '</b>'
         : 'Natureza <b>???</b> — você ainda não conviveu o bastante.'}</div>
-      <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
+      <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ' + pron(p).ele + ' pode desobedecer':''}</div>
       ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
           return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
       ${p.morto ? '' : `<div class="segurado-linha">
@@ -3203,7 +3216,7 @@ const UI = {
       : '';
 
     this.modal('', cabeca + faixas +
-      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.${
+      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos e atributos do indivíduo. Temperamento ela não lê.${
         nacional ? ' A carta de atualização abriu os cem registros de Johto.' : ''}</p>
        <div class="dex-grade">${celas}</div>`, false, 'pokedex');
   },
@@ -3544,7 +3557,7 @@ const UI = {
         <h3>As vinte e cinco naturezas</h3>
         <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela decide pra onde vão os pontos de atributo que ele ganha subindo de nível, e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
         <div class="tut-nats">${linhas}</div>
-        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>`;
+        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, pelo jeito que eles se mexem (Percepção) ou se o treinador falar — a Pokédex lê espécie, tipo e atributos, não temperamento. Líder de ginásio sempre fala.</p>`;
     }
 
     if (k === 'vinculo') {
@@ -3653,7 +3666,7 @@ const UI = {
     if (k === 'pokenav') return `
       <h3>A agenda</h3>
       <p class="sussurro">Só entra número que te deram. Quando alguém te dá o dele, aparece pra gravar — e número não gravado não some, fica esperando.</p>
-      ${L('Revanche', 'o mesmo adversário, com o time subido junto com você')}
+      ${L('Revanche', 'a ligação marca o lugar (a rota, a cidade ou o ginásio onde a pessoa está); chegando lá, "Procurar" começa a luta, com o time subido junto com você')}
       ${L('Favor', 'tem limite de vezes e espera de capítulos')}
       ${L('Depois do último capítulo', 'cada capítulo de espera vira 7 dias')}
       ${L('Missão', 'pedir · cumprir no mundo · ligar de volta pra entregar')}
@@ -3740,6 +3753,7 @@ const UI = {
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
+      <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
@@ -3776,6 +3790,7 @@ const UI = {
       <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
       <div class="linha"><span class="k">Fury Cutter</span><span class="v">+1 de poder a cada acerto seguido, até +4</span></div>
+      <div class="linha"><span class="k">Self-Destruct · Explosion</span><span class="v">quem usa desmaia no fim do golpe, acertando ou não · se os dois caem juntos, o adversário manda o próximo e você troca o seu</span></div>
       <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 5 com moral 100 · 5 com moral 0 (moral ÷ 20)</span></div>
       <p class="sussurro">Esses estados somem quando o Pokémon sai da luta; Reflect, Light Screen, Mist e Safeguard ficam no lado inteiro até acabar o tempo.</p>
 
@@ -3931,7 +3946,7 @@ const UI = {
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
       <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">quantas vezes quiser · não gasta o turno</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
-      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>
+      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, pelo jeito que eles se mexem (Percepção, dificuldade 10, uma vez quando ele entra) ou se o treinador falar — a Pokédex lê espécie, tipo e atributos, não temperamento. Líder de ginásio sempre fala. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>
 
       <h3>Brilhantes</h3>
       <div class="linha"><span class="k">Frequência</span><span class="v">cerca de 1 em 1000</span></div>
@@ -3941,7 +3956,8 @@ const UI = {
 
       <h3>PokéNav</h3>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
-      <div class="linha"><span class="k">Revanche</span><span class="v">o mesmo adversário, com o time subido junto com você</span></div>
+      <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
+      <div class="linha"><span class="k">Ligação que você faz</span><span class="v">acontece dentro do PokéNav, por cima do que você estava fazendo · desligar volta pra agenda</span></div>
       <div class="linha"><span class="k">Favor</span><span class="v">tem limite de vezes e espera de capítulos</span></div>
       <div class="linha"><span class="k">Depois do último capítulo</span><span class="v">cada capítulo de espera vira 7 dias</span></div>
       <div class="linha"><span class="k">Missão</span><span class="v">pedir · cumprir no mundo · ligar de volta pra entregar</span></div>

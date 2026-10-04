@@ -840,6 +840,8 @@ const Estado = {
       if (fase === 'fazendo') return {ok:false, motivo: (c.missao && c.missao.dica) || 'Ainda não. Você sabe o que falta.'};
       return {ok:true, fase};
     }
+    if (servico === 'revanche' && (this.dados.revanches || {})[id])
+      return {ok:false, motivo:`Já está marcada ${emLocal(this.dados.revanches[id].local)}.`};
     const def = c[servico] || {};
     const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
     const limite = def.limite === undefined ? 99 : def.limite;

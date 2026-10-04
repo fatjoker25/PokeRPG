@@ -230,3 +230,56 @@ const Estrada = {
     Jogo.resolverPendencias(() => Jogo.seguirDaEstrada(avisos));
   }
 };
+
+/* ============================================================
+   REVANCHE MARCADA
+   A ligação não vira luta: a pessoa diz onde está, e a luta fica
+   esperando lá. Chegando no lugar, aparece "Procurar fulano".
+   ============================================================ */
+function nomeDaRevanche(c){
+  if (c.ginasio){ const g = ginasioPorId(c.ginasio); if (g) return 'Líder ' + g.lider; }
+  if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t) return nomeDeLuta(t); }
+  return textoContato(c, 'nome');
+}
+
+function localDaRevanche(c){
+  const d = Estado.dados;
+  if (c.ginasio && LOCAIS[c.ginasio]) return c.ginasio;
+  if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t && LOCAIS[t.local]) return t.local; }
+  if (c.veterano && typeof veterano === 'function'){ const v = veterano(c.veterano); if (v && LOCAIS[v.local]) return v.local; }
+  const cid = typeof c.cidade === 'function' ? c.cidade(d) : c.cidade;
+  const porNome = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === cid);
+  if (porNome) return porNome;
+  /* quem vive na estrada (os rivais) marca numa rota do lado de onde você está */
+  const aqui = Mundo.id();
+  const rotas = [aqui].concat(Mundo.vizinhos()).filter(k => LOCAIS[k] && LOCAIS[k].tipo !== 'cidade');
+  return rotas.length ? Dados.escolher(rotas) : aqui;
+}
+
+function falasDeMarcarRevanche(c, local){
+  const onde = emLocal(local);
+  if (c.ginasio) return Dados.escolher([
+    ['"Revanche? Pode vir. A quadra é minha, a hora é sua."', `"Passa no ginásio ${onde}. Eu aviso na entrada que você vem."`],
+    ['"Eu tava esperando essa ligação."', `"Ginásio, ${onde}. Eu subo o time. Você sabe que eu subo."`],
+    ['"Liga de líder não é pra conversa, é pra marcar. Marcado."', `"${onde.charAt(0).toUpperCase() + onde.slice(1)}. Quando você chegar, eu estou lá."`]
+  ]);
+  return Dados.escolher([
+    [`"Tô ${onde}. Vem quando der, eu não saio daqui tão cedo."`, '"E vem com o time inteiro. Eu não aceito desculpa."'],
+    ['"Revanche? Agora você falou a minha língua."', `"Me procura ${onde}. Eu fico treinando até você aparecer."`],
+    [`"Eu tô ${onde}, mas não fica parad{o|a} me esperando, não. Chega e me acha."`, '"Dessa vez eu sei como você luta."'],
+    ['"Opa. Eu tava pensando em você agora mesmo, juro."', `"${onde.charAt(0).toUpperCase() + onde.slice(1)}. Marcado. Não me deixa esperando muito."`]
+  ]);
+}
+
+const FALAS_REVANCHE = {
+  venceu: [
+    ['Foi. Foi mesmo.', 'Liga de novo quando estiver melhor ainda. Eu também vou estar.'],
+    ['Eu treinei pra isso e você treinou mais.', 'Tá bom. Tá bom. Da próxima eu marco o lugar.'],
+    ['Valeu ter vindo. Muita gente marca e não aparece.']
+  ],
+  perdeu: [
+    ['Ainda não, hein.', 'Mas você veio. Vir já é alguma coisa.'],
+    ['Eu falei que tinha subido o time.', 'Me liga quando quiser tentar de novo. Eu atendo.'],
+    ['Essa foi minha.', 'Cuida deles e volta. Eu não vou a lugar nenhum.']
+  ]
+};

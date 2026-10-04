@@ -409,7 +409,7 @@ const Trocas = {
     const meus = this.candidatos(t);
     const lista = meus.length
       ? meus.map(p => `<button class="escolha" onclick="Trocas.fazer('${p.uid}','${t.id}')">
-          Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel}, ${UI.esc(p.natureza)})
+          Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel})
           <br><span class="pd">Isso não tem desfazer.</span></button>`).join('')
       : `<p class="nada">Você não tem nenhum ${UI.esc(pedido.nome)}. ${UI.esc(t.quem)} diz que espera.</p>`;
 
@@ -468,7 +468,7 @@ const Trocas = {
     Estado.salvar('auto');
 
     const avisos = [
-      {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}, ${novo.natureza}) entrou para o seu time.`},
+      {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}) entrou para o seu time.`},
       {tipo:'eco', texto:t.depois}
     ];
     if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a bola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});

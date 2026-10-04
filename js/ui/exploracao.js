@@ -308,6 +308,7 @@ const Exploracao = {
     if (acao === 'troca'){ return Trocas.tela(); }
     if (acao.startsWith('vet_'))  return Veteranos.abordar(acao.slice(4));
     if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
+    if (acao.startsWith('rev_'))  return Jogo.lutarRevanche(acao.slice(4));
 
     if (acao === 'desafiar'){
       const pend = Estrada.pendentes();

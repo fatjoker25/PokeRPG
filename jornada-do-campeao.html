@@ -2699,6 +2699,14 @@ body.com-cenario .topo{
 .escolha:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.6)}
 .escolha:disabled:hover{transform:none}
 
+/* ligação feita: a conversa acontece dentro da ficha do PokéNav */
+.nav-conversa{margin:10px 0 6px;max-height:52vh;overflow:auto;font-size:14px}
+.nav-conversa .fala{margin:8px 0}
+.nav-conversa .fala{background:#ffffff;border-color:#a9c4e2;box-shadow:none}
+.nav-conversa .fala .fala-diz,.nav-conversa .fala p{color:#14243a}
+.nav-conversa .fala .fala-quem{color:#1d4f8a}
+.nav-conversa > p{color:#1f3550}
+
 </style>
 </head>
 <body data-tom="leve">
@@ -3407,8 +3415,8 @@ const GOLPES = {
   'Tri Attack':    {t:'Normal',c:'esp',p:80,a:100,pp:10,nv:1},
   'Wrap':          {t:'Normal',c:'fis',p:15,a:90,pp:20,nv:1,ef:{preso:true}},
   'Bind':          {t:'Normal',c:'fis',p:15,a:75,pp:20,nv:1,ef:{preso:true}},
-  'Self-Destruct': {t:'Normal',c:'fis',p:200,a:100,pp:5,nv:1,ef:{recuo:1}},
-  'Explosion':     {t:'Normal',c:'fis',p:250,a:100,pp:5,nv:1,ef:{recuo:1}},
+  'Self-Destruct': {t:'Normal',c:'fis',p:200,a:100,pp:5,nv:1,ef:{autodestroi:true}},
+  'Explosion':     {t:'Normal',c:'fis',p:250,a:100,pp:5,nv:1,ef:{autodestroi:true}},
   /* fulminantes: aqui viram um número alto e uma precisão péssima */
   'Horn Drill':    {t:'Normal',c:'fis',p:0,a:30,pp:5,nv:1,ef:{fixo:200}},
   'Guillotine':    {t:'Normal',c:'fis',p:0,a:30,pp:5,nv:1,ef:{fixo:200}},
@@ -6842,6 +6850,13 @@ function afazeresDoLocal(){
       sub:'Tem chaveamento afixado na parede e inscrição no balcão. Qualquer um entra.'});
   }
 
+  /* revanche marcada pelo PokéNav: a pessoa está aqui esperando */
+  for (const [cid, r] of Object.entries(Estado.dados.revanches || {})){
+    if (r.local !== id || typeof contatoPorId !== 'function') continue;
+    const c = contatoPorId(cid);
+    if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${nomeDaRevanche(c)}`, sub:'Revanche marcada.'});
+  }
+
   /* veteranos: quem mora aqui e o convite que um deles te fez */
   if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
   return lista;
@@ -8513,6 +8528,8 @@ const Estado = {
       if (fase === 'fazendo') return {ok:false, motivo: (c.missao && c.missao.dica) || 'Ainda não. Você sabe o que falta.'};
       return {ok:true, fase};
     }
+    if (servico === 'revanche' && (this.dados.revanches || {})[id])
+      return {ok:false, motivo:`Já está marcada ${emLocal(this.dados.revanches[id].local)}.`};
     const def = c[servico] || {};
     const u = reg.usos[servico] || {vezes:0, ultimoCap:-99};
     const limite = def.limite === undefined ? 99 : def.limite;
@@ -8998,7 +9015,7 @@ const Captura = {
     alvo.capturadoEm = {cap:Estado.dados.capitulo, bola:nomeBola, dia:Estado.dados.relogio.dia};
     alvo.moral = esp.lendario ? 10 : 40;
     const destino = Estado.adicionar(alvo);
-    ev('captura', `${esp.nome} (Nv ${alvo.nivel}, ${alvo.natureza}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
+    ev('captura', `${esp.nome} (Nv ${alvo.nivel}) foi capturado!` + (destino === 'pc' ? ' Foi direto para o PC — seu time está cheio.' : ''));
     Estado.registrar(`Capturou ${esp.nome} Nv${alvo.nivel} com ${nomeBola}.`);
     if (alvo.shiny){
       Estado.pegouBrilhante(alvo.dex);
@@ -9261,10 +9278,15 @@ const Batalha = {
         this.ev('natureza', inimigo.nomeAnunciado
           ? `Você ouviu o nome, mas é a primeira vez que vê um de perto — e dá pra ver o que ele é: ${inimigo.tipos.join('/')}.`
           : `Você não sabe o nome, mas já viu desenho de um parecido e sabe o que ele é: ${inimigo.tipos.join('/')}.`);
-        if (t.grau === 'critico'){
-          inimigo.naturezaVista = true;
-          this.ev('natureza', `E dá pra ler o jeito dele daqui: ${inimigo.natureza}.`);
-        }
+      }
+    }
+    /* o jeito do bicho se lê olhando, não com aparelho: Percepção alta
+       pega pelo modo como ele se mexe antes do primeiro golpe */
+    if (inimigo && !inimigo.naturezaVista && Estado.dados && Estado.j){
+      const t = Dados.teste(Estado.j.status.percepcao, 10, 'Percepção');
+      if (t.grau === 'sucesso' || t.grau === 'critico'){
+        inimigo.naturezaVista = true;
+        this.ev('natureza', `Pelo jeito que ${nomeVisivel(inimigo)} se mexe antes do primeiro golpe, dá pra ler: ${inimigo.natureza}.`);
       }
     }
     return this.eventos;
@@ -9637,7 +9659,21 @@ const Batalha = {
   /* ---------- um golpe ---------- */
   /* nomeForcado: o golpe vem de fora do slot (Mirror Move, Sleep Talk) e
      não gasta PP nem passa pela vontade da natureza. */
+  /* Self-Destruct e Explosion: quem usa cai, acertando ou não — como
+     nos jogos. O resto do golpe (precisão, dano, boneco) é o de sempre. */
   usarGolpe(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado){
+    const antes = this.eventos.length;
+    this.usarGolpeBase(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado);
+    const usado = this.eventos.slice(antes).find(e => e.tipo === 'golpe' && e.golpe);
+    const G = usado && GOLPES[usado.golpe];
+    if (G && G.ef && G.ef.autodestroi && atacante.hp > 0){
+      const tinha = atacante.hp;
+      atacante.hp = 0;
+      this.ev('dano', `${nomeVisivel(atacante)} gasta tudo o que tinha no estouro.`, {alvo:souAliado ? 'aliado' : 'inimigo', dano:tinha});
+    }
+  },
+
+  usarGolpeBase(atacante, defensor, estAtk, estDef, indiceGolpe, souAliado, nomeForcado){
     let nome;
     if (nomeForcado){
       nome = nomeForcado;
@@ -10359,17 +10395,16 @@ const Batalha = {
     this.pdexUsada = true;
     const p = this.inimigo;
     const esp = DEX[p.dex];
+    const jaTinha = Estado.conheceu(p.dex);
     const novo = Estado.catalogou(p.dex);
-    p.naturezaVista = true;          // a leitura expõe o temperamento do indivíduo
-    this.ev('pokedex', `Você aponta a Pokédex. Ela leva três segundos e apita.`);
-    this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}. Natureza ${p.natureza}.`);
+    /* espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha */
+    this.ev('pokedex', jaTinha ? `A Pokédex abre a ficha de ${esp.nome}.` : `Você aponta a Pokédex. Ela leva três segundos e apita.`);
+    this.ev('pokedex', `${esp.nome} — tipo ${p.tipos.join('/')}.`);
     this.ev('pokedex', `Posto ${nomePosto(p.nivel)} · HP ${p.hpMax} · FOR ${p.stats.for} · DES ${p.stats.des} · VIT ${p.stats.vit} · ESP ${p.stats.esp} · INS ${p.stats.ins}`);
     const pr = PR_ESPECIE[p.dex];
     if (pr) this.ev('pokedex', `Teto da espécie: FOR ${pr[6]} · DES ${pr[7]} · VIT ${pr[8]} · ESP ${pr[9]} · INS ${pr[10]} — HP base ${pr[0]}.`);
     if (p.shiny)
       this.ev('brilhante', 'Anomalia cromática confirmada. A Pokédex abre um campo que você nunca tinha visto abrir.');
-    if ((NATUREZAS[p.natureza]||{}).agressiva)
-      this.ev('perigo', 'Marcação da Pokédex: temperamento agressivo. Se o seu time cair, ele não recua.');
     if (novo) this.ev('pokedex', `Registro novo: ${esp.nome} catalogado.`);
     return {eventos:this.eventos, fim:null};
   },
@@ -10537,9 +10572,11 @@ const Batalha = {
         this.estInimigo = this.novoEstado();
         this.participantes = new Set([this.aliado.uid]);
         this.entrouEmCampo(prox, this.estInimigo);
-        return {eventos:this.eventos, fim:null};
-      }
-      return this.encerrar('vitoria');
+        /* os dois caíram juntos (Explosion, recuo): o de lá já mandou o
+           próximo, e o seu ainda precisa ser trocado — senão a luta
+           ficava com um desmaiado em campo e sem pergunta nenhuma */
+        if (this.aliado.hp > 0) return {eventos:this.eventos, fim:null};
+      } else return this.encerrar('vitoria');
     }
 
     if (this.aliado.hp <= 0){
@@ -10567,7 +10604,8 @@ const Batalha = {
       return this.encerrar('derrota');
     }
     const d = Dados.d20('O selvagem ataca você?');
-    this.ev('perigo', `Natureza ${this.inimigo.natureza} (agressiva). 1d20 = ${d} — ataca com 10+`);
+    this.inimigo.naturezaVista = true;   // quem avança em gente mostra o jeito que tem
+    this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: ${this.inimigo.natureza}, agressiv${pron(this.inimigo).o}. 1d20 = ${d} — ataca com 10+`);
     if (d < 10){
       this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais... e vai embora.`);
       return this.encerrar('derrota');
@@ -10879,7 +10917,7 @@ const Historia = {
     if (ef.pokemon){
       const p = criarPokemon(ef.pokemon.dex, ef.pokemon.nivel, ef.pokemon.opcoes||{});
       const onde = Estado.adicionar(p);
-      avisos.push({tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) ${
+      avisos.push({tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) ${
         onde === 'pc' ? 'foi direto para o PC — o seu cinto já tem seis.' : 'entrou para o seu time.'}`});
       Estado.registrar(`Recebeu ${p.nome} Nv${p.nivel}.`);
     }
@@ -11406,9 +11444,7 @@ function falaRival(){
   else if (arco === 'ressentido'){
     L.push('Ezra está encostado num poste e não se mexe quando você passa. Ele espera você notar.');
     L.push('"Oi." Ele não sorri. "Eu tenho treinado."');
-    const npc = d.npcs['Ezra'];
-    const mem = npc && npc.memorias && npc.memorias.length ? npc.memorias[npc.memorias.length-1].texto : null;
-    if (mem) L.push(`Ele não esqueceu. "${mem}"`);
+    if (r.derrotas >= 2) L.push(`"${r.derrotas} a ${r.vitorias}. Eu sei de cor, não precisa falar."`);
     L.push('"Não precisa ser simpático. Eu não vim pra isso."');
   }
 
@@ -11439,7 +11475,7 @@ function falaVitoriaRival(){   // você venceu
   const d = Estado.dados;
   if (arco === 'parceiro') return [
     'Ezra recolhe o time e vem te abraçar antes de recolher, o que é a ordem errada e é muito a cara dele.',
-    `"${r.derrotas + 1}." Ele conta em voz alta. "Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
+    `Ele conta nos dedos, em voz alta: "${r.derrotas + 1} pra você. Eu vou chegar em você um dia. Não hoje. Mas eu vou."`,
     'Ele te dá metade do dinheiro que tem no bolso e não aceita não.'
   ];
   if (arco === 'ressentido') return [
@@ -12000,6 +12036,59 @@ const Estrada = {
     Estado.salvar('auto');
     Jogo.resolverPendencias(() => Jogo.seguirDaEstrada(avisos));
   }
+};
+
+/* ============================================================
+   REVANCHE MARCADA
+   A ligação não vira luta: a pessoa diz onde está, e a luta fica
+   esperando lá. Chegando no lugar, aparece "Procurar fulano".
+   ============================================================ */
+function nomeDaRevanche(c){
+  if (c.ginasio){ const g = ginasioPorId(c.ginasio); if (g) return 'Líder ' + g.lider; }
+  if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t) return nomeDeLuta(t); }
+  return textoContato(c, 'nome');
+}
+
+function localDaRevanche(c){
+  const d = Estado.dados;
+  if (c.ginasio && LOCAIS[c.ginasio]) return c.ginasio;
+  if (c.estrada){ const t = treinadorEstrada(c.estrada); if (t && LOCAIS[t.local]) return t.local; }
+  if (c.veterano && typeof veterano === 'function'){ const v = veterano(c.veterano); if (v && LOCAIS[v.local]) return v.local; }
+  const cid = typeof c.cidade === 'function' ? c.cidade(d) : c.cidade;
+  const porNome = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === cid);
+  if (porNome) return porNome;
+  /* quem vive na estrada (os rivais) marca numa rota do lado de onde você está */
+  const aqui = Mundo.id();
+  const rotas = [aqui].concat(Mundo.vizinhos()).filter(k => LOCAIS[k] && LOCAIS[k].tipo !== 'cidade');
+  return rotas.length ? Dados.escolher(rotas) : aqui;
+}
+
+function falasDeMarcarRevanche(c, local){
+  const onde = emLocal(local);
+  if (c.ginasio) return Dados.escolher([
+    ['"Revanche? Pode vir. A quadra é minha, a hora é sua."', `"Passa no ginásio ${onde}. Eu aviso na entrada que você vem."`],
+    ['"Eu tava esperando essa ligação."', `"Ginásio, ${onde}. Eu subo o time. Você sabe que eu subo."`],
+    ['"Liga de líder não é pra conversa, é pra marcar. Marcado."', `"${onde.charAt(0).toUpperCase() + onde.slice(1)}. Quando você chegar, eu estou lá."`]
+  ]);
+  return Dados.escolher([
+    [`"Tô ${onde}. Vem quando der, eu não saio daqui tão cedo."`, '"E vem com o time inteiro. Eu não aceito desculpa."'],
+    ['"Revanche? Agora você falou a minha língua."', `"Me procura ${onde}. Eu fico treinando até você aparecer."`],
+    [`"Eu tô ${onde}, mas não fica parad{o|a} me esperando, não. Chega e me acha."`, '"Dessa vez eu sei como você luta."'],
+    ['"Opa. Eu tava pensando em você agora mesmo, juro."', `"${onde.charAt(0).toUpperCase() + onde.slice(1)}. Marcado. Não me deixa esperando muito."`]
+  ]);
+}
+
+const FALAS_REVANCHE = {
+  venceu: [
+    ['Foi. Foi mesmo.', 'Liga de novo quando estiver melhor ainda. Eu também vou estar.'],
+    ['Eu treinei pra isso e você treinou mais.', 'Tá bom. Tá bom. Da próxima eu marco o lugar.'],
+    ['Valeu ter vindo. Muita gente marca e não aparece.']
+  ],
+  perdeu: [
+    ['Ainda não, hein.', 'Mas você veio. Vir já é alguma coisa.'],
+    ['Eu falei que tinha subido o time.', 'Me liga quando quiser tentar de novo. Eu atendo.'],
+    ['Essa foi minha.', 'Cuida deles e volta. Eu não vou a lugar nenhum.']
+  ]
 };
 
 
@@ -12985,7 +13074,7 @@ const CONTATOS = [
       });
       const onde = Estado.adicionar(p);
       Estado.marcar('ganhou_o_voltorb_do_surge');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`}];
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da bola.${notaDestino(onde)}`}];
     },
     rep:{eixo:'bom', delta:2, motivo:'Chegou a cinco insígnias sem enterrar ninguém', notorio:true},
     marca:'surge_contou_a_cabeca'
@@ -13272,7 +13361,7 @@ const CONTATOS = [
       });
       const onde = Estado.adicionar(p);
       Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`},
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da bola.${notaDestino(onde)}`},
               {tipo:'eco', texto: guarda
                 ? 'Ele não vai mudar de forma sozinho. Coisa que fica, fica como está.'
                 : 'A linha dele só se completa passando por outra mão. Você vai ter que decidir isso um dia.'}];
@@ -15093,7 +15182,7 @@ const Trocas = {
     const meus = this.candidatos(t);
     const lista = meus.length
       ? meus.map(p => `<button class="escolha" onclick="Trocas.fazer('${p.uid}','${t.id}')">
-          Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel}, ${UI.esc(p.natureza)})
+          Trocar ${UI.esc(nomeExib(p))} (Nv ${p.nivel})
           <br><span class="pd">Isso não tem desfazer.</span></button>`).join('')
       : `<p class="nada">Você não tem nenhum ${UI.esc(pedido.nome)}. ${UI.esc(t.quem)} diz que espera.</p>`;
 
@@ -15152,7 +15241,7 @@ const Trocas = {
     Estado.salvar('auto');
 
     const avisos = [
-      {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}, ${novo.natureza}) entrou para o seu time.`},
+      {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}) entrou para o seu time.`},
       {tipo:'eco', texto:t.depois}
     ];
     if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a bola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
@@ -28872,7 +28961,7 @@ c6_comprou:{
         const dex = Dados.escolher([52,58,63,66,84,96,104,109,116,118]);
         const p = criarPokemon(dex, Dados.entre(16,22), {moral:20, historia:'Comprad{o} numa banca em Cerulean. Teve outro treinador antes de você.'});
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}, ${p.natureza}) é seu agora. ${pron(p).Ele} não te escolheu.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${p.nome} (Nv ${p.nivel}) é seu agora. ${pron(p).Ele} não te escolheu.${notaDestino(onde)}`}];
       },
       rep:{eixo:'ruim',delta:1,motivo:'Pagou "taxa de transferência" por um Pokémon numa banca de rua'},
       presagio:'Ele vai levar semanas pra te obedecer, e meses pra te olhar. Isso não está escrito no papel dobrado em três.'},
@@ -79381,7 +79470,7 @@ function escolhasDeInicial(rotulo, vai, extra){
 function entregarInicial(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
-    moral: 80, naturezaVista: true,
+    moral: 50,
     historia: `Saiu da caixa térmica do Célio, em ${d.jogador.cidade}, numa manhã de ${['março','abril','maio','junho'][Dados.entre(0,3)]}.`
   });
   Estado.adicionar(p);
@@ -79390,14 +79479,14 @@ function entregarInicial(d){
   d.flags.espera_o_assistente = false;
   Estado.marcar('recebeu_do_goro');
   Estado.registrar(`${Estado.j.nome} recebeu ${p.nome} das mãos de Célio Sampaio, em ${d.jogador.cidade}.`);
-  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
+  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5) saiu da bola.`}];
 }
 
 /* Em Pallet a bola sai da mão do Professor, na rua, na manhã da saída */
 function entregarDoProfessor(d){
   const dex = dexReservado(d);
   const p = criarPokemon(dex, 5, {
-    moral: 80, naturezaVista: true,
+    moral: 50,
     historia: 'Entregue pelo Professor, na rua de Pallet, na manhã em que você saiu de casa.'
   });
   Estado.adicionar(p);
@@ -79406,7 +79495,7 @@ function entregarDoProfessor(d){
   d.flags.espera_o_professor = false;
   Estado.marcar('recebeu_do_professor');
   Estado.registrar(`${Estado.j.nome} recebeu ${p.nome} das mãos do Professor, em Pallet.`);
-  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5, ${p.natureza}) saiu da bola.`}];
+  return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv 5) saiu da bola.`}];
 }
 
 (function(){
@@ -81711,7 +81800,13 @@ const UI = {
     const g = generoDe(p);
     return g ? `<span class="sexo-marca sexo-${g}" title="${g === 'm' ? 'Macho' : 'Fêmea'}">${g === 'm' ? '♂' : '♀'}</span>` : '';
   },
-  limpar(){ this.app.innerHTML = ''; },
+  /* Tela nova é conversa nova: o dono das falas da última cena não
+     passa pra tela seguinte (o Ezra saía com o balão do Brock). */
+  limpar(){
+    this.app.innerHTML = '';
+    this.npcDaCena = null; this.npcEhProprio = false; this.falanteDaCena = null;
+    this.vozesDaCena = null; this.minhasFalasDaCena = null;
+  },
   add(html){ const e = this.el(html); if (e) this.app.appendChild(e); return e; },
   tom(t){ document.body.setAttribute('data-tom', t || 'leve'); },
   rolarTopo(){ window.scrollTo({top:0, behavior:'smooth'}); },
@@ -82432,8 +82527,8 @@ const UI = {
     this.rolarTopo();
   },
 
-  avisos(lista){
-    const c = document.getElementById('avisos');
+  avisos(lista, alvo){
+    const c = document.getElementById(alvo || 'avisos');
     if (!c) return;
     lista.forEach(a => {
       /* Um aviso pode carregar uma fala com dono (conversa de cidade, por
@@ -82469,7 +82564,7 @@ const UI = {
       } else {
         vivos.forEach(p => {
           c.appendChild(this.el(`<button class="escolha perigo" onclick="Jogo.sacrificar('${p.uid}')">
-            ${this.esc(nomeExib(p))} — Nv ${p.nivel}, ${this.esc(p.natureza)}, moral ${p.moral}</button>`));
+            ${this.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + this.esc(p.natureza) : ''}, moral ${p.moral}</button>`));
         });
       }
       return;
@@ -83212,7 +83307,7 @@ const UI = {
 
     const dex = d.flags.tem_pokedex
       ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
-          'lê o adversário · não gasta o turno',
+          '',
           "Jogo.acaoBatalha({tipo:'pokedex'})")}</div>`
       : '';
 
@@ -83300,11 +83395,14 @@ const UI = {
      ======================================================== */
   escaneamento(){
     const alvo = Batalha.inimigo;
+    if (Jogo.encenando || Jogo.animandoBola) return;
+    const jaTinha = Estado.conheceu(alvo.dex);
     const r = Batalha.acao({tipo:'pokedex'});
     const erro = (r.eventos || []).find(e => e.tipo === 'erro');
     if (erro){ this.escreverLog(r.eventos); this.acoesCombate(); return; }
 
     const esp = DEX[alvo.dex];
+    if (jaTinha) return this.fichaEscaneada(alvo, esp, r.eventos);
     const num = String(alvo.dex).padStart(3, '0');
 
     this.modal('', `<div class="pokedex-topo">
@@ -83324,7 +83422,7 @@ const UI = {
       'travando alvo…',
       `silhueta #${num}`,
       'lendo estrutura de tipo…',
-      'amostrando temperamento…',
+      'medindo atributos…',
       alvo.shiny ? 'ANOMALIA CROMÁTICA' : 'comparando com a base da espécie…'
     ];
     const cxLinhas = document.getElementById('dex-scan-linhas');
@@ -83364,9 +83462,9 @@ const UI = {
           <span class="nomeg">${this.esc(esp.nome)}${this.shi(p)}</span>
           <span style="margin-left:auto">${esp.tipos.map(t=>this.tipoTag(t)).join('')}</span></div>
         <div class="dex-arte">${imgSprite(p, 'frente')}</div>
-        <div class="nota">Nível ${p.nivel} · ${{m:'macho · ', f:'fêmea · '}[generoDe(p)] || 'sem sexo · '}${this.esc(p.natureza)}</div>
+        <div class="nota">Nível ${p.nivel} · ${{m:'macho', f:'fêmea'}[generoDe(p)] || 'sem sexo'}${p.naturezaVista ? ' · ' + this.esc(p.natureza) : ''}</div>
         ${p.shiny ? '<div class="nota brilho-v">✦ Anomalia cromática. A ficha é a mesma; a cor não.</div>' : ''}
-        ${nat.agressiva ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
+        ${nat.agressiva && p.naturezaVista ? `<div class="nota alerta">Temperamento agressivo: se o seu time cair, ${pron(p).ele} não recua.</div>` : ''}
 
         <h3 class="cat-item">Atributos <span class="fraco">· este exemplar, posto ${nomePosto(p.nivel)}</span></h3>
         ${ATRIBUTOS.map(par).join('')}
@@ -83459,7 +83557,7 @@ const UI = {
         <div class="tit">${this.esc(contato ? textoContato(contato,'nome') : 'Número desconhecido')}</div>
         <div class="loc">${this.esc(contato ? (textoContato(contato,'papel') || textoContato(contato,'cidade') || '') : '')}</div>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
+      <div class="narrativa">${this.narrar(falas, contato ? textoContato(contato,'nome') : null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas">
         ${opcoes.map(({o, i}) => `<button class="escolha" onclick="Jogo.responderChamada('${c.id}',${i})">
@@ -83484,7 +83582,7 @@ const UI = {
         ? this.narrar(['O aparelho toca oito vezes e para.',
             'Você olha o nome na tela o tempo inteiro e não atende, o que é diferente de não ouvir.',
             'Ele não vai ligar de novo hoje.'])
-        : this.narrar(r.esc.resultado || [])}</div>
+        : this.narrar(r.esc.resultado || [], contato ? textoContato(contato,'nome') : null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:16px">
         <button class="escolha" onclick="Jogo.voltarDaLigacao()">Guardar o aparelho.</button>
@@ -83494,24 +83592,28 @@ const UI = {
     this.rolarTopo();
   },
 
-  /* Tela de uma ligação: a conversa acontece e você volta de onde veio. */
+  /* Ligação que você faz: a conversa acontece dentro do próprio PokéNav,
+     por cima do que estava na tela, e desligar volta pra ficha do
+     contato. Nada do texto que você estava lendo se perde. */
   telaLigacao(c, falas, avisos){
-    this.limpar();
-    this.add(this.topo());
-    this.add(`<div class="painel">
-      <div class="cap-cabecalho">
-        <div class="num">PokéNav · chamada</div>
-        <div class="tit">${this.esc(c ? textoContato(c,'nome') : 'Chamada')}</div>
-        <div class="loc">${this.esc(c ? (textoContato(c,'papel') || textoContato(c,'cidade') || '') : '')}</div>
+    if (!c) return;
+    this.modalNav(c.id);
+    const m = document.getElementById('modal');
+    const ficha = m && m.querySelector('#nav-ficha');
+    if (!ficha) return;
+    ficha.innerHTML = `
+      <div class="nav-ficha-cab">
+        ${this.navRosto(c, true)}
+        <span>
+          <span class="nav-ficha-nome">${this.esc(textoContato(c,'nome'))}</span>
+          <span class="nav-ficha-papel">em linha</span>
+        </span>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
-      <div id="avisos" class="avisos"></div>
-      <div id="escolhas" class="escolhas" style="margin-top:18px">
-        <button class="escolha" onclick="Jogo.voltarDaLigacao()">Desligar.</button>
-      </div>
-    </div>`);
-    if (avisos && avisos.length) this.avisos(avisos);
-    this.rolarTopo();
+      <div class="nav-conversa narrativa">${this.narrarMonologo(falas || [], textoContato(c,'nome'))}</div>
+      <div id="avisos-nav" class="avisos"></div>
+      <div class="nav-servicos"><button class="btn" onclick="UI.modalNav('${c.id}')">Desligar</button></div>`;
+    if (avisos && avisos.length) this.avisos(avisos, 'avisos-nav');
+    ficha.scrollTop = 0;
   },
 
   /* ========================================================
@@ -83625,7 +83727,7 @@ const UI = {
     this.modalNav(id);
   },
   navLigar(id, servico){
-    this.fecharModal();
+    this.fecharModal(true);
     Jogo.ligarPara(id, servico);
   },
 
@@ -84000,7 +84102,7 @@ const UI = {
         <div class="tit">${venceu ? this.esc(g.insignia) : 'Derrota'}</div>
         <div class="loc">Líder ${this.esc(g.lider)} · tipo ${this.esc(g.tipo)}</div>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
+      <div class="narrativa">${this.narrarMonologo(falas, g.lider)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${!venceu ? `<button class="escolha" onclick="Jogo.hubCentro()">Curar o time e tentar de novo</button>` : ''}
@@ -84092,7 +84194,7 @@ const UI = {
         <div class="tit">${this.esc(nome)}</div>
         <div class="loc">Placar: você ${reg.derrotas} × ${reg.vitorias} ele</div>
       </div>
-      <div class="narrativa">${this.narrar(falas)}</div>
+      <div class="narrativa">${this.narrarMonologo(falas, nome)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         <button class="escolha" onclick="Jogo.seguirDepoisDoRival()">Seguir viagem.</button>
@@ -84253,7 +84355,7 @@ const UI = {
         <div class="tit">${this.esc(o.titulo || '')}</div>
         <div class="loc">${this.esc(o.loc || '')}</div>
       </div>
-      <div class="narrativa">${this.narrar(o.falas || [])}</div>
+      <div class="narrativa">${o.quem && o.monologo ? this.narrarMonologo(o.falas || [], o.quem) : this.narrar(o.falas || [], o.quem || null)}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:18px">
         ${(o.botoes || []).map(b => `<button class="escolha" onclick="${b.acao}">${this.esc(txt(b.texto))}</button>`).join('')}
@@ -84272,7 +84374,7 @@ const UI = {
         <div class="tit">${this.esc(o.titulo)}</div>
         <div class="loc">Planalto Indigo</div>
       </div>
-      <div class="narrativa">${(o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
+      <div class="narrativa">${o.quem ? this.narrarMonologo((o.falas||[]).filter(Boolean), o.quem) : (o.falas||[]).filter(Boolean).map(t=>`<p>${this.esc(txt(t))}</p>`).join('')}</div>
       <div id="avisos" class="avisos"></div>
       <div id="escolhas" class="escolhas" style="margin-top:20px">
         ${o.continuar ? `<button class="escolha" onclick="Jogo.continuarElite()">Abrir a próxima porta</button>` : ''}
@@ -84406,7 +84508,7 @@ const UI = {
       <div class="sussurro" style="margin-top:7px">${p.naturezaVista
         ? 'Natureza <b>' + this.esc(p.natureza) + '</b>'
         : 'Natureza <b>???</b> — você ainda não conviveu o bastante.'}</div>
-      <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ele pode desobedecer':''}</div>
+      <div class="sussurro">Moral ${p.moral}/100 ${p.moral<30?'· ' + pron(p).ele + ' pode desobedecer':''}</div>
       ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
           return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
       ${p.morto ? '' : `<div class="segurado-linha">
@@ -84871,7 +84973,7 @@ const UI = {
       : '';
 
     this.modal('', cabeca + faixas +
-      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos, base e temperamento do indivíduo.${
+      `<p class="sussurro" style="margin:0 0 12px">Ver um exemplar acende o número. Apontar a Pokédex nele durante um combate abre a ficha inteira — espécie, tipos e atributos do indivíduo. Temperamento ela não lê.${
         nacional ? ' A carta de atualização abriu os cem registros de Johto.' : ''}</p>
        <div class="dex-grade">${celas}</div>`, false, 'pokedex');
   },
@@ -85212,7 +85314,7 @@ const UI = {
         <h3>As vinte e cinco naturezas</h3>
         <p class="sussurro">A natureza é do indivíduo, não da espécie. Ela decide pra onde vão os pontos de atributo que ele ganha subindo de nível, e mexe no que ele faz quando você manda. As marcadas em vermelho são agressivas: se o seu time cair contra um selvagem assim, ele pode atacar VOCÊ.</p>
         <div class="tut-nats">${linhas}</div>
-        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>`;
+        <p class="sussurro">Nos seus, a natureza aparece sozinha depois de alguns combates juntos, por um teste de Percepção. Nos dos outros, pelo jeito que eles se mexem (Percepção) ou se o treinador falar — a Pokédex lê espécie, tipo e atributos, não temperamento. Líder de ginásio sempre fala.</p>`;
     }
 
     if (k === 'vinculo') {
@@ -85321,7 +85423,7 @@ const UI = {
     if (k === 'pokenav') return `
       <h3>A agenda</h3>
       <p class="sussurro">Só entra número que te deram. Quando alguém te dá o dele, aparece pra gravar — e número não gravado não some, fica esperando.</p>
-      ${L('Revanche', 'o mesmo adversário, com o time subido junto com você')}
+      ${L('Revanche', 'a ligação marca o lugar (a rota, a cidade ou o ginásio onde a pessoa está); chegando lá, "Procurar" começa a luta, com o time subido junto com você')}
       ${L('Favor', 'tem limite de vezes e espera de capítulos')}
       ${L('Depois do último capítulo', 'cada capítulo de espera vira 7 dias')}
       ${L('Missão', 'pedir · cumprir no mundo · ligar de volta pra entregar')}
@@ -85408,6 +85510,7 @@ const UI = {
       <div class="linha"><span class="k">Chance de desobedecer</span><span class="v">(60 − moral) ÷ 2 − insígnias × 3 − Carisma × 1,5</span></div>
       <div class="linha"><span class="k">Afinidade</span><span class="v">soma ou desconta dessa conta</span></div>
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
+      <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
@@ -85444,6 +85547,7 @@ const UI = {
       <div class="linha"><span class="k">Swagger</span><span class="v">Força do outro +2 e confusão</span></div>
       <div class="linha"><span class="k">Sleep Talk · Snore</span><span class="v">só dormindo · Sleep Talk sorteia outro golpe seu · Snore pode fazer encolher (30%)</span></div>
       <div class="linha"><span class="k">Fury Cutter</span><span class="v">+1 de poder a cada acerto seguido, até +4</span></div>
+      <div class="linha"><span class="k">Self-Destruct · Explosion</span><span class="v">quem usa desmaia no fim do golpe, acertando ou não · se os dois caem juntos, o adversário manda o próximo e você troca o seu</span></div>
       <div class="linha"><span class="k">Return · Frustration</span><span class="v">poder pela moral: 5 com moral 100 · 5 com moral 0 (moral ÷ 20)</span></div>
       <p class="sussurro">Esses estados somem quando o Pokémon sai da luta; Reflect, Light Screen, Mist e Safeguard ficam no lado inteiro até acabar o tempo.</p>
 
@@ -85599,7 +85703,7 @@ const UI = {
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
       <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">quantas vezes quiser · não gasta o turno</span></div>
       <div class="linha"><span class="k">O que entra pro seu time</span><span class="v">catalogado na hora</span></div>
-      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, só pela Pokédex ou se o treinador falar. Líder de ginásio sempre fala.</p>
+      <p class="sussurro">A natureza é do indivíduo, não da espécie. Nos seus, ela aparece sozinha depois de alguns combates juntos, por um teste de Percepção — quanto mais tempo com você, mais fácil. Nos dos outros, pelo jeito que eles se mexem (Percepção, dificuldade 10, uma vez quando ele entra) ou se o treinador falar — a Pokédex lê espécie, tipo e atributos, não temperamento. Líder de ginásio sempre fala. Espécie já catalogada não se cadastra de novo: a Pokédex só abre a ficha.</p>
 
       <h3>Brilhantes</h3>
       <div class="linha"><span class="k">Frequência</span><span class="v">cerca de 1 em 1000</span></div>
@@ -85609,7 +85713,8 @@ const UI = {
 
       <h3>PokéNav</h3>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
-      <div class="linha"><span class="k">Revanche</span><span class="v">o mesmo adversário, com o time subido junto com você</span></div>
+      <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
+      <div class="linha"><span class="k">Ligação que você faz</span><span class="v">acontece dentro do PokéNav, por cima do que você estava fazendo · desligar volta pra agenda</span></div>
       <div class="linha"><span class="k">Favor</span><span class="v">tem limite de vezes e espera de capítulos</span></div>
       <div class="linha"><span class="k">Depois do último capítulo</span><span class="v">cada capítulo de espera vira 7 dias</span></div>
       <div class="linha"><span class="k">Missão</span><span class="v">pedir · cumprir no mundo · ligar de volta pra entregar</span></div>
@@ -98213,6 +98318,7 @@ const Exploracao = {
     if (acao === 'troca'){ return Trocas.tela(); }
     if (acao.startsWith('vet_'))  return Veteranos.abordar(acao.slice(4));
     if (acao.startsWith('conv_')) return Veteranos.abrirConvite(acao.slice(5));
+    if (acao.startsWith('rev_'))  return Jogo.lutarRevanche(acao.slice(4));
 
     if (acao === 'desafiar'){
       const pend = Estrada.pendentes();
@@ -98605,7 +98711,7 @@ const Jogo = {
     Estado.salvar('auto');
 
     const cena = Historia.iniciarCapitulo(1);
-    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5, ${inicial.natureza}).`}]);
+    UI.telaCena(cena, [{tipo:'pokemon', texto:`${inicial.nome} (Nv 5).`}]);
   },
 
   /* ---------- navegação ---------- */
@@ -99531,18 +99637,36 @@ const Jogo = {
     return UI.modal('PokéNav', `<p class="nada">${UI.esc(txt(m.dica) || 'Ainda não.')}</p>`);
   },
 
-  /* revanche: o mesmo adversário, com o time subido junto com você */
+  /* revanche: ninguém luta pelo telefone. A ligação marca o lugar —
+     a rota, a cidade ou o ginásio onde a pessoa está — e a luta
+     acontece quando você chega lá e procura por ela. */
   revanche(c){
-    const meu = Estado.primeiroApto();
-    if (!meu) return UI.modal('PokéNav', '<p class="nada">Nenhum Pokémon em pé. Cure o time antes de marcar revanche.</p>');
+    const d = Estado.dados;
+    d.revanches = d.revanches || {};
+    const nome = nomeDaRevanche(c);
+    const local = localDaRevanche(c);
+    d.revanches[c.id] = {local, dia:d.relogio.dia};
+    Estado.marcarLigacao(c.id, 'revanche');
+    Estado.registrar(`Marcou revanche com ${nome} ${emLocal(local)}.`);
+    Estado.salvar('auto');
+    UI.telaLigacao(c, falasDeMarcarRevanche(c, local), [
+      {tipo:'info', texto:`Revanche marcada ${emLocal(local)}.`}]);
+  },
 
-    let time = null, nome = textoContato(c, 'nome');
+  /* chegou no lugar e procurou: agora sim */
+  lutarRevanche(id){
+    const c = contatoPorId(id);
+    const d = Estado.dados;
+    if (!c || !(d.revanches || {})[id]) return Exploracao.tela();
+    const meu = Estado.primeiroApto();
+    if (!meu) return Exploracao.tela([{tipo:'dano', texto:'Nenhum Pokémon em pé. Cure o time antes.'}]);
+
+    let time = null, nome = nomeDaRevanche(c);
     if (c.ginasio){
       const g = ginasioPorId(c.ginasio);
       if (!g) return;
       /* na revanche o líder vem com o escalão de quem já tem tudo */
       time = timeGinasio(g, Math.min(8, numInsignias() + 2)).map(x => criarPokemon(x.dex, x.nivel + 2, {}));
-      nome = 'Líder ' + g.lider;
     } else if (c.rivalExtra){
       const R = defRival(c.rivalExtra);
       if (!R) return;
@@ -99555,28 +99679,26 @@ const Jogo = {
       const t = treinadorEstrada(c.estrada);
       if (!t) return;
       time = timeEstrada(t, Math.min(8, numInsignias() + 2), 2);
-      nome = nomeDeLuta(t);
     } else if (typeof c.timeRevanche === 'function'){
       time = c.timeRevanche(Estado.dados);
     }
-    if (!time || !time.length) return;
+    if (!time || !time.length) return Exploracao.tela();
     time.forEach(x => { x.nomeAnunciado = true; });
+    delete d.revanches[id];
 
     this.revancheAtual = {id:c.id, nome};
     this.ginasioAtual = null; this.eliteAtual = null; this.torneioAtual = null;
     this.rivalAtual = null; this.cenaBatalha = null; this.veteranoAtual = null; this.estradaAtual = null;
-    Estado.marcarLigacao(c.id, 'revanche');
-    Estado.registrar(`Marcou revanche com ${nome}.`);
+    Mundo.passar(1);
     UI.limparDados();
     Batalha.iniciar(meu, time[0], {
       tipo:'treinador', fuga:false, treinador:nome,
       timeInimigo: time.slice(1), revelarNatureza:true,
       erroIA: c.veterano ? ERRO_IA_VETERANO : undefined,
+      arena: c.ginasio ? 'ginasio' : undefined,
       introducao:`${nome} enviou ${nomeVisivel(time[0])} (Nv ${time[0].nivel})!`
     });
-    UI.telaBatalha([
-      `<p>Revanche marcada pelo PokéNav. ${UI.esc(nome)} veio com o time subido — quem aceita revanche não vem pra repetir o resultado.</p>`
-    ].map(h => UI.el(h).outerHTML ? h : h));
+    UI.telaBatalha([`${nome} estava onde disse que ia estar, e o time veio subido — quem marca revanche não vem pra repetir o resultado.`]);
   },
 
   resultadoRevanche(fim){
@@ -99589,7 +99711,7 @@ const Jogo = {
       const premio = premioRevanche();
       Estado.j.dinheiro += premio;
       avisos.push({tipo:'item', texto:`+${fmtDin(premio)} ₽`});
-      const m = Estado.mudarRep('bom', 2, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:3}});
+      const m = Estado.mudarRep('bom', 1, `Venceu a revanche contra ${rev.nome}`, {rep:{notorio:true, peso:2}});
       if (m && m.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${m.de} → ${m.para}`});
       Estado.registrar(`Venceu a revanche contra ${rev.nome}.`);
     } else {
@@ -99597,9 +99719,13 @@ const Jogo = {
       Estado.registrar(`Perdeu a revanche contra ${rev.nome}.`);
     }
     Estado.salvar('auto');
-    UI.telaLigacao(contatoPorId(rev.id), venceu
-      ? [{quem:rev.nome, diz:'Foi. Foi mesmo. Liga de novo quando estiver melhor ainda.'}]
-      : [{quem:rev.nome, diz:'Ainda não. Mas você marcou, e marcar já é alguma coisa.'}], avisos);
+    const c = contatoPorId(rev.id);
+    this.resolverPendencias(() => UI.telaConversa({
+      num:(LOCAIS[Mundo.id()] || {}).nome || '', titulo:rev.nome, loc:'revanche', quem:rev.nome, monologo:true,
+      falas: Dados.escolher(venceu ? FALAS_REVANCHE.venceu : FALAS_REVANCHE.perdeu).map(t => `"${t}"`),
+      avisos,
+      botoes:[{texto:'Seguir', acao:'Exploracao.tela()'}]
+    }));
   },
 
   /* ---------- O RIVAL ---------- */
@@ -99818,7 +99944,7 @@ const Jogo = {
     UI.telaResultadoLiga({
       titulo: `${alvo.nome} derrotado`,
       sub: acabou ? 'A porta do fundo está aberta' : `Elite 4 · ${alvo.ordem} de 4`,
-      falas: alvo.vitoria(Estado.dados),
+      falas: alvo.vitoria(Estado.dados), quem: alvo.nome,
       avisos: [{tipo:'info', texto:'Seu time NÃO é curado entre as salas. Use itens se precisar.'}],
       venceu:true, continuar:true
     });
@@ -99951,7 +100077,7 @@ const Jogo = {
     if (!time.length) return this.irPara(escolha.vai, [{tipo:'info', texto:'Você não tem nada para trocar.'}]);
     UI.modal('Quem você entrega?', time.map(p =>
       `<button class="escolha" onclick="Jogo.efetuarTroca('${p.uid}','${escolha.vai}')">
-        ${UI.esc(nomeExib(p))} — Nv ${p.nivel}, ${UI.esc(p.natureza)}, moral ${p.moral}</button>`).join('') +
+        ${UI.esc(nomeExib(p))} — Nv ${p.nivel}${p.naturezaVista ? ', ' + UI.esc(p.natureza) : ''}, moral ${p.moral}</button>`).join('') +
       '<p class="sussurro" style="margin-top:12px">Você não sabe o que vai receber.</p>');
   },
 
@@ -99968,7 +100094,7 @@ const Jogo = {
     UI.fecharModal();
     this.irPara(destino, [
       {tipo:'item', texto:`Você entregou ${saiu ? nomeExib(saiu) : '?'}.`},
-      {tipo:'pokemon', texto:`Recebeu ${recebido.nome} (Nv ${recebido.nivel}, ${recebido.natureza}) — moral 35. Ele não te conhece.`}
+      {tipo:'pokemon', texto:`Recebeu ${recebido.nome} (Nv ${recebido.nivel}) — moral 35. Ele não te conhece.`}
     ]);
   },
 

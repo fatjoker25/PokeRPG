@@ -361,7 +361,7 @@ const CONTATOS = [
       });
       const onde = Estado.adicionar(p);
       Estado.marcar('ganhou_o_voltorb_do_surge');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`}];
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da bola.${notaDestino(onde)}`}];
     },
     rep:{eixo:'bom', delta:2, motivo:'Chegou a cinco insígnias sem enterrar ninguém', notorio:true},
     marca:'surge_contou_a_cabeca'
@@ -648,7 +648,7 @@ const CONTATOS = [
       });
       const onde = Estado.adicionar(p);
       Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}, ${p.natureza}) saiu da bola.${notaDestino(onde)}`},
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da bola.${notaDestino(onde)}`},
               {tipo:'eco', texto: guarda
                 ? 'Ele não vai mudar de forma sozinho. Coisa que fica, fica como está.'
                 : 'A linha dele só se completa passando por outra mão. Você vai ter que decidir isso um dia.'}];
