@@ -171,9 +171,9 @@ const Estrada = {
     });
     const jaViu = r.vencidos.length > 0 || r.encontros > 1;
     const olha = situacao === 'viagem'
-      ? `No meio da viagem, ${emLocal(t.local)}, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a bola na mão.`
+      ? `No meio da viagem, ${emLocal(t.local)}, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a Pokébola na mão.`
       : situacao === 'chegar'
-      ? `No meio do caminho, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a bola na mão.`
+      ? `No meio do caminho, ${t.artigo || 'um'} ${t.classe.toLowerCase()} te vê de longe e já vem com a Pokébola na mão.`
       : `${t.artigo === 'uma' ? 'Uma' : 'Um'} ${t.classe.toLowerCase()} se levanta de onde estava e vem na sua direção. Na estrada, quem cruza o olhar luta.`;
     const fala = (jaViu && t.volta) ? t.volta : t.abre;
     UI.telaBatalha([olha, `${t.nome}: ${txt(fala)}`, `${nome} quer lutar!`]);

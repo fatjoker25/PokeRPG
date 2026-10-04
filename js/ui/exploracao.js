@@ -20,11 +20,10 @@ const Exploracao = {
     const todos = afazeresDoLocal();
     const lugares = todos.filter(a => a.lugar).map(a =>
       `<button class="porta" onclick="Exploracao.fazer('${a.id}')">
-        <span class="porta-nome">${UI.esc(a.titulo)}</span>
-        <span class="porta-sub">${UI.esc(a.sub)}</span></button>`).join('');
+        <span class="porta-nome">${UI.esc(a.titulo)}</span></button>`).join('');
     const afazeres = todos.filter(a => !a.lugar).map(a =>
       `<button class="escolha" onclick="Exploracao.fazer('${a.id}')">
-        ${UI.esc(a.titulo)}<br><span class="pd">${UI.esc(a.sub)}</span></button>`).join('');
+        ${UI.esc(a.titulo)}</button>`).join('');
 
     const vizinhos = Mundo.vizinhos().map(id => {
       const v = LOCAIS[id];
@@ -32,9 +31,8 @@ const Exploracao = {
       /* passagem que cobra insígnia aparece fechada, dizendo o que falta */
       const trava = travaDaPassagem(Mundo.id(), id);
       return `<button class="escolha" ${trava ? 'disabled' : `onclick="Exploracao.viajar('${id}')"`}>
-        ${conhecido ? 'Ir para ' + UI.esc(v.nome) : 'Seguir o caminho — ' + UI.esc(v.nome)}
-        <br><span class="pd">${trava ? UI.esc(textoTrava(trava))
-          : (conhecido ? UI.esc(v.tipo === 'cidade' ? v.porte || 'cidade' : 'rota') : 'você nunca foi lá') + (v.perigosa ? ' · dizem que é perigoso' : '')}</span></button>`;
+        ${conhecido ? 'Ir para ' + UI.esc(v.nome) : 'Seguir o caminho — ' + UI.esc(v.nome)}${
+          trava ? `<br><span class="pd">${UI.esc(textoTrava(trava))}</span>` : ''}</button>`;
     }).join('');
 
     UI.add(`<div class="painel">
@@ -51,7 +49,7 @@ const Exploracao = {
       ${arco ? `<h3>Aqui</h3>
         <div id="escolhas" class="escolhas">
           <button class="escolha" style="border-color:var(--destaque)" ${travaArco ? 'disabled' : 'onclick="Exploracao.entrarNoArco()"'}>
-            ${UI.esc(arco.chamada)}<br><span class="pd">${travaArco ? UI.esc(textoTrava(travaArco)) : 'Isso vai tomar o seu tempo e provavelmente mudar alguma coisa.'}</span></button>
+            ${UI.esc(arco.chamada)}${travaArco ? `<br><span class="pd">${UI.esc(textoTrava(travaArco))}</span>` : ''}</button>
         </div>` : ''}
 
       ${lugares ? `<h3>Onde entrar</h3>
@@ -322,7 +320,7 @@ const Exploracao = {
       if (Estrada.talvez('procurar')) return;
       if (Exploracao.repelenteAtivo()){
         return this.tela([
-          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e tudo que é bicho se afasta antes de você chegar.'},
+          {tipo:'info', texto:'Você procura por um período inteiro e não acha nada. O cheiro do repelente anda com você e tudo que é Pokémon se afasta antes de você chegar.'},
           {tipo:'eco', texto:'Funciona. É esse o problema de funcionar.'}
         ]);
       }

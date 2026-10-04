@@ -146,19 +146,19 @@ const CONTATOS = [
     texto:d=>{
       const p = (d.time || []).find(x => x.dex === d.jogador.inicialDex) || d.time[0];
       if (!p) return [
-        fala('Célio', 'E o bicho?'),
+        fala('Célio', 'E o Pokémon?'),
         'Você demora pra responder e a demora responde por você.',
-        fala('Célio', '...tá. Não precisa falar. Eu já ouvi essa pausa antes.', 'baixo'),
+        fala('Célio', '…tá. Não precisa falar. Eu já ouvi essa pausa antes.', 'baixo'),
         fala('Célio', 'Liga pra mim quando quiser, viu. Não é só pra notícia boa.')
       ];
       return [
-        fala('Célio', 'E o bicho?'),
+        fala('Célio', 'E o Pokémon?'),
         d=>`Você conta: ${nomeExib(p)}, nível ${p.nivel}, e conta uma coisa específica que ele faz e que ninguém pediu pra ele fazer.`,
         fala('Célio', 'Eu anotei numa caderneta que eu tenho aqui, e não é a de trabalho.'),
         fala('Célio', 'Essa é a minha. Eu anoto o que volta.', 'baixo')
       ];
     },
-    rep:{eixo:'bom', delta:1, motivo:'Deu notícia a quem entregou a primeira bola'}
+    rep:{eixo:'bom', delta:1, motivo:'Deu notícia a quem entregou a primeira Pokébola'}
   }
 },
 {
@@ -257,7 +257,7 @@ const CONTATOS = [
   missao:{
     rotulo:'Perguntar o que ele quer ver',
     rotuloEntrega:'Dizer que já dá pra ver',
-    dica:'Ele quer ver um bicho de pedra criado, não comprado.',
+    dica:'Ele quer ver um Pokémon de pedra criado, não comprado.',
     pedido:[
       fala('Brock', 'Quer fazer uma coisa por mim? Não é favor. É uma coisa que eu quero ver.'),
       fala('Brock', 'Todo mundo que me enfrenta chega com alguma coisa de pedra pega na semana passada, já grande, já forte.'),
@@ -307,7 +307,7 @@ const CONTATOS = [
     entregue:[
       fala('Misty', 'E aí? Cinco?'),
       'Você conta o que viu na ponte.',
-      fala('Misty', '...tá. Então eu vou ter que ir uma terceira vez.'),
+      fala('Misty', '…tá. Então eu vou ter que ir uma terceira vez.'),
       fala('Misty', 'Obrigada por ter olhado. Sério. Ninguém olha.', 'baixo'),
       fala('Misty', 'Toma isso aqui e some, antes que eu te peça pra ir junto.')
     ],
@@ -361,7 +361,7 @@ const CONTATOS = [
       });
       const onde = Estado.adicionar(p);
       Estado.marcar('ganhou_o_voltorb_do_surge');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da bola.${notaDestino(onde)}`}];
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da Pokébola.${notaDestino(onde)}`}];
     },
     rep:{eixo:'bom', delta:2, motivo:'Chegou a cinco insígnias sem enterrar ninguém', notorio:true},
     marca:'surge_contou_a_cabeca'
@@ -472,7 +472,7 @@ const CONTATOS = [
     pedido:[
       fala('Sabrina', 'Você não ligou pra perguntar isso, mas eu vou responder assim mesmo.', 'frio'),
       fala('Sabrina', 'Tem um andar da torre de Lavender onde as pessoas param de falar sozinhas. O último.'),
-      fala('Sabrina', 'Sobe lá. Não leva ninguém pra fora da bola, não acende lanterna, não fala.', 'baixo'),
+      fala('Sabrina', 'Sobe lá. Não leva ninguém pra fora da Pokébola, não acende lanterna, não fala.', 'baixo'),
       fala('Sabrina', 'Fica o tempo que você aguentar. Depois me liga de lá mesmo.'),
       fala('Sabrina', 'Eu não vou te dizer o que você vai ouvir. Se eu disser, você ouve o que eu falei.')
     ],
@@ -547,7 +547,7 @@ const CONTATOS = [
       ? [fala('Blue', 'Eu soube. A cidade inteira soube.', null, 'Uma pausa longa demais pra ser casual.'),
          fala('Blue', 'Aproveita. Eu falo por experiência: aproveita, porque é curto.')]
       : [fala('Blue', 'Você ligou pra quê? Fala logo.', 'frio'),
-         fala('Blue', '...tá. Tá bom. Também é bom ouvir você.', 'baixo')],
+         fala('Blue', '…tá. Tá bom. Também é bom ouvir você.', 'baixo')],
     rep:{eixo:'bom', delta:1, motivo:'Manteve contato com quem já sentou na cadeira'}
   }
 },
@@ -627,8 +627,8 @@ const CONTATOS = [
         d=>fala('Fabre', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
         fala('Fabre', 'Eu não escolho o que dar. A resposta escolhe.'),
         guarda
-          ? 'Ele volta com uma bola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
-          : 'Ele volta com uma bola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
+          ? 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
+          : 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
         guarda
           ? fala('Fabre', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
           : fala('Fabre', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
@@ -643,12 +643,12 @@ const CONTATOS = [
       const p = criarPokemon(dex, Math.max(22, 18 + Estado.dados.insignias.length * 2), {
         moral: 55,
         historia: guarda
-          ? 'Veio do abrigo de Lavender, numa bola lacrada desde 1989. Ninguém foi buscar.'
+          ? 'Veio do abrigo de Lavender, numa Pokébola lacrada desde 1989. Ninguém foi buscar.'
           : 'Veio do abrigo de Lavender. Passou por quatro pessoas antes de você, e nenhuma delas ficou.'
       });
       const onde = Estado.adicionar(p);
       Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
-      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da bola.${notaDestino(onde)}`},
+      return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da Pokébola.${notaDestino(onde)}`},
               {tipo:'eco', texto: guarda
                 ? 'Ele não vai mudar de forma sozinho. Coisa que fica, fica como está.'
                 : 'A linha dele só se completa passando por outra mão. Você vai ter que decidir isso um dia.'}];
@@ -696,7 +696,7 @@ const CONTATOS = [
     ],
     recompensa:d=>{ Estado.darItem('Isca', 5); Estado.darItem('Super Potion', 2);
       return [{tipo:'item', texto:'Ele manda pelo Centro 5× Isca e 2× Super Potion. "Isca boa. Não funciona comigo, mas é boa."'}]; },
-    rep:{eixo:'bom', delta:2, motivo:'Contou a um pescador velho que o bicho do pai dele ainda existe'},
+    rep:{eixo:'bom', delta:2, motivo:'Contou a um pescador velho que o Pokémon do pai dele ainda existe'},
     marca:'cosmo_soube_do_goldeen'
   }
 },
@@ -870,7 +870,7 @@ const CONTATOS = [
     rotulo:'Perguntar o que passou pela cabine',
     limite:3, esperaCap:3,
     texto:[
-      fala('Xavi', 'Passou pouca gente e muito bicho. Semana boa.'),
+      fala('Xavi', 'Passou pouca gente e muito Pokémon. Semana boa.'),
       fala('Xavi', 'A Ylva achou repelente jogado no trecho 17, lacrado ainda. A gente não usa. Vai pra você.')
     ],
     efeito:d=>{ Estado.darItem('Repelente', 2);
@@ -908,7 +908,7 @@ const CONTATOS = [
     dica:'Ele quer ver o seu número passar o dele.',
     pedido:[
       fala('Ezra', 'Eu não ando estranho.'),
-      fala('Ezra', '...tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
+      fala('Ezra', '…tá. Eu tô em quarenta e uma espécies na Pokédex e eu travei.'),
       fala('Ezra', 'Eu passo o dia catalogando e não sobe. E aí eu olho e todo mundo que eu conheço tá em vinte e poucas e acha que eu sou doente.', 'baixo'),
       fala('Ezra', 'Chega em sessenta. Chega em sessenta pra eu ter com quem perder, porque perder pra ninguém não vale nada.')
     ],
@@ -1213,7 +1213,7 @@ CHAMADAS.push(
      ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Deixou o Joey falar do Rattata dele'}},
      resultado:[fala('Joey', 'Sabia que você ia entender!', 'grita'), fala('Joey', 'Vem pra Rota 1 que ele te mostra.')]},
     {texto:'"Quantos Rattata você já viu na vida, Joey?"',
-     resultado:[fala('Joey', 'Uns... quatro?'), 'Silêncio.', fala('Joey', 'Entre os quatro, ele é o melhor. Isso é fato.', 'baixo')]}
+     resultado:[fala('Joey', 'Uns… quatro?'), 'Silêncio.', fala('Joey', 'Entre os quatro, ele é o melhor. Isso é fato.', 'baixo')]}
   ]
 },
 {

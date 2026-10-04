@@ -260,8 +260,7 @@ c5_posto:{
     '"14/03 — 06:40 — 3." "14/03 — 19:10 — 3." "17/03 — 05:55 — 4." "17/03 — 20:30 — 4."',
     'Alguém conta quantas pessoas entram e quantas saem. Todo dia. Há meses.'
   ],
-  ef:{flag:'achou_o_caderno_do_posto', registrar:'Achou um caderno de vigia sobre a entrada do Monte da Lua: contagem de entradas e saídas.',
-      presagio:'Alguém está contando. Você vai descobrir de que lado.'},
+  ef:{flag:'achou_o_caderno_do_posto', registrar:'Achou um caderno de vigia sobre a entrada do Monte da Lua: contagem de entradas e saídas.'},
   escolhas:[
     {texto:'Levar o caderno.', vai:'c5_pegou_caderno', ef:{flag:'pegou_o_caderno'}},
     {texto:'Deixar exatamente como estava e entrar na caverna.', vai:'c5_entrada'},
@@ -277,7 +276,7 @@ c5_pegou_caderno:{
     '"Ontem — 16:20 — 5." E nada depois.',
     'Cinco pessoas entraram ontem à tarde. Nenhuma saiu.'
   ],
-  ef:{flag:'cinco_entraram', presagio:'Cinco entraram. Você vai ser o sexto.'},
+  ef:{flag:'cinco_entraram'},
   escolhas:[
     {texto:'Entrar.', vai:'c5_entrada'},
     {texto:'Esperar aqui em cima pra ver quem aparece.', vai:'c5_espera_posto'},
@@ -355,7 +354,7 @@ c5_poe_de_volta:{
     '"Se eu jogar de volta lá dentro no ninho errado, a mãe come." Ele levanta a caixa. "Você quer isso?"',
     'Você não quer isso. Você não quer nada disso. Não existe nenhuma escolha aqui que devolva os seis ovos aos seis lugares certos.'
   ],
-  ef:{flag:'licao_do_irreversivel', presagio:'Algumas coisas não têm desfazer. Você vai aprender isso de novo com apostas maiores.'},
+  ef:{flag:'licao_do_irreversivel'},
   escolhas:[
     {texto:'Batalhar com eles mesmo assim.', vai:'c5_luta_trio'},
     {texto:'"Então me leva junto. Eu carrego uma caixa."', vai:'c5_carregar_caixa'},
@@ -372,8 +371,7 @@ c5_anotou_trio:{
     'Olha a caixa: plástica, azul, com um número estampado em preto no canto. 0-7-4.',
     'Eles descem a trilha. Você fica na boca da caverna repetindo 074 na cabeça até virar música.'
   ],
-  ef:{flag:'numero_da_caixa', registrar:'Caixa plástica azul, número 074. Três homens, um com tatuagem no antebraço.',
-      presagio:'074. Você vai ver esse número impresso em outro lugar, e vai ser no dia em que tudo fizer sentido.'},
+  ef:{flag:'numero_da_caixa', registrar:'Caixa plástica azul, número 074. Três homens, um com tatuagem no antebraço.'},
   escolhas:[
     {texto:'Ligar pra Dra. Cordell.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
@@ -431,8 +429,7 @@ c5_cobrou:{
   ],
   ef:{dinheiro:300, flag:['carregou_a_caixa','viu_a_van'],
       rep:{eixo:'ruim',delta:2,motivo:'Carregou carga de quem tirou ovos do Monte da Lua'},
-      registrar:'Carregou uma caixa de ovos até uma van branca sem placa na estrada velha.',
-      presagio:'Você estava dentro. Por trinta e cinco minutos você foi parte do transporte, e trezentos pokedólares nunca vão pagar isso.'},
+      registrar:'Carregou uma caixa de ovos até uma van branca sem placa na estrada velha.'},
   escolhas:[
     {texto:'Memorizar tudo da van e voltar pra caverna.', vai:'c5_memorizou_van'},
     {texto:'Perguntar se tem mais trabalho.', vai:'c5_mais_trabalho'},
@@ -516,7 +513,7 @@ c5_luta_trio:{
   falante:'o da aliança',
   vozes:['N'],
   texto:[
-    'Você solta a bola antes de pensar direito.',
+    'Você solta a Pokébola antes de pensar direito.',
     'Os três param. O da aliança suspira fundo, do jeito de quem vai ter que fazer hora extra.',
     '"Ah, cara."',
     'Ele põe a caixa no chão com cuidado — com cuidado, é o detalhe que você vai lembrar — e só depois solta a dele.'
@@ -580,8 +577,7 @@ c5_ficou_barrando:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Segurou uma trilha por uma hora e salvou o que deu'},
       flag:'salvou_uma_caixa', hp:-2, causa:'Exaustão no impasse da trilha',
-      registrar:'Segurou os carregadores por uma hora. Eles deixaram uma caixa com você.',
-      presagio:'Duas caixas desceram. Uma ficou. É assim que quase toda vitória sua vai ser daqui pra frente.'},
+      registrar:'Segurou os carregadores por uma hora. Eles deixaram uma caixa com você.'},
   escolhas:[
     {texto:'Levar a caixa de volta pra dentro da caverna.', vai:'c5_devolver_ovos'},
     {texto:'Levar a caixa pra Pewter, pro museu.', vai:'c5_ovos_pro_museu'},
@@ -600,8 +596,7 @@ c5_devolver_ovos:{
     'Você não sabe se ele sabe que não são os mesmos. Você prefere não saber.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Devolveu ao ninho o que deu pra devolver'},
-      flag:'devolveu_os_ovos',
-      presagio:'Dois de seis. Você vai passar muito tempo se perguntando se isso é vitória.'},
+      flag:'devolveu_os_ovos'},
   escolhas:[
     {texto:'Ir mais fundo na caverna.', vai:'c5_entrada'}
   ]
@@ -611,7 +606,7 @@ c5_ovos_pro_museu:{
   texto:[
     'Três horas de descida com uma caixa de ovos nos braços.',
     'Varian abre a porta do museu fora do horário porque você bate insistindo, olha a caixa, e chama a Dra. Cordell pelo telefone da bilheteria sem perguntar nada.',
-    'Ela chega em vinte minutos com um termômetro e uma caixa de isopor.',
+    'Ela chega em vinte minutos com um termômetro e uma caixa térmica.',
     '"Quatro estão mortos." Ela fala isso rápido e sem drama, que é o jeito dela de ser gentil. "Dois não."',
     'Os dois ficam numa incubadora improvisada no museu de Pewter, entre uma vitrine de minerais e um balde.'
   ],
@@ -651,8 +646,7 @@ c5_roubou_caixa:{
     'A caixa na sua mão está quente.'
   ],
   ef:{flag:['roubou_a_caixa','carregando_ovos'],
-      rep:{eixo:'bom',delta:1,motivo:'Tirou uma caixa de ovos de quem ia vendê-los'},
-      presagio:'Você está fundo numa caverna escura com uma caixa que três pessoas querem de volta.'},
+      rep:{eixo:'bom',delta:1,motivo:'Tirou uma caixa de ovos de quem ia vendê-los'}},
   escolhas:[
     {texto:'Procurar um ninho e devolver os ovos.', vai:'c5_devolver_ovos'},
     {texto:'Seguir fundo com a caixa.', vai:'c5_entrada'},
@@ -665,7 +659,7 @@ c5_saiu_da_frente:{
     'Seu braço dói. Você abaixa.',
     'Eles passam. O da aliança diz "valeu" ao passar, e é a pior palavra que já disseram pra você.'
   ],
-  ef:{flag:'deixou_os_ovos_irem', presagio:'"Valeu." Você vai ouvir isso na cabeça por um tempo.'},
+  ef:{flag:'deixou_os_ovos_irem'},
   escolhas:[
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
     {texto:'Ligar pra Dra. Cordell.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone}
@@ -679,8 +673,7 @@ c5_perdeu_trio:{
     '"Treina mais." Ele pega a caixa. "Sério, {moleque|moleca}. Treina mais."',
     'Eles descem a trilha conversando sobre a Liga de novo, e você fica sentad{o|a} na terra com o time desmaiado e uma humilhação que não tem nome.'
   ],
-  ef:{flag:['perdeu_pro_trio','deixou_os_ovos_irem'], hp:-3, causa:'Derrota na trilha do Monte da Lua',
-      presagio:'"Treina mais." Você vai treinar. Vai treinar muito. E vai lembrar de onde veio a vontade.'},
+  ef:{flag:['perdeu_pro_trio','deixou_os_ovos_irem'], hp:-3, causa:'Derrota na trilha do Monte da Lua'},
   escolhas:[
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
     {texto:'Ligar pra Dra. Cordell.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
@@ -712,8 +705,7 @@ c5_seguiu_van:{
     'Você fica no acostamento, com falta de ar, olhando uma estrada vazia.',
     'Do outro lado do asfalto tem uma placa: CERULEAN 31 KM.'
   ],
-  ef:{flag:'van_foi_pra_cerulean', hp:-2, causa:'Corrida atrás da van',
-      presagio:'Trinta e um quilômetros. Você vai chegar lá, e vai chegar tarde, e vai ser útil mesmo assim.'},
+  ef:{flag:'van_foi_pra_cerulean', hp:-2, causa:'Corrida atrás da van'},
   escolhas:[
     {texto:'Ligar pra Dra. Cordell.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Voltar pra caverna.', vai:'c5_entrada'}
@@ -751,8 +743,7 @@ c5_quem_manda:{
     'Ele diz isso do jeito de quem acha graça de si mesmo por ter medo.',
     '"Gente que assina papel é pior que gente com arma, {moleque|moleca}. Arma acaba. Papel não."'
   ],
-  ef:{flag:'gente_que_assina_papel',
-      presagio:'Gente que assina papel. Guarda a frase. Você vai conhecer uma delas pessoalmente.'},
+  ef:{flag:'gente_que_assina_papel'},
   escolhas:[
     {texto:'Ir atrás e insistir.', vai:'c5_barrou'},
     {texto:'Anotar tudo de cabeça.', vai:'c5_anotou_trio'},
@@ -767,8 +758,7 @@ c5_ficou_em_cima:{
     'Ninguém sobe atrás de você. Ninguém ameaça. Ninguém se importa o suficiente pra isso.',
     'Deitad{o|a} naquela saliência, você entende uma coisa desagradável: não ser levado a sério é a forma mais eficiente de te neutralizar, e não custa nada pra eles.'
   ],
-  ef:{flag:'nao_levado_a_serio',
-      presagio:'Vai chegar um dia em que te levarem a sério vai ser exatamente o problema.'},
+  ef:{flag:'nao_levado_a_serio'},
   escolhas:[
     {texto:'Descer e seguir eles.', vai:'c5_seguiu_trio'},
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
@@ -862,8 +852,7 @@ c5_guardou_folha:{
     'Ninguém vê. A câmera está filmando as gaiolas do outro lado da câmara.',
     'Você não sabe por que guardou. Vai levar meses pra entender que foi a decisão mais importante que você tomou nessa caverna.'
   ],
-  ef:{flag:'guardou_a_folha', registrar:'Guardou uma guia de remessa com brasão do Monte da Lua.',
-      presagio:'Um papel dobrado em quatro. Vai valer mais que uma insígnia.'},
+  ef:{flag:'guardou_a_folha', registrar:'Guardou uma guia de remessa com brasão do Monte da Lua.'},
   escolhas:[
     {texto:'Ajudar com as gaiolas.', vai:'c5_gaiolas_imprensa'},
     {texto:'Mostrar pra Dra. Cordell assim mesmo.', vai:'c5_mostrou_folha'},
@@ -883,8 +872,7 @@ c5_mostrou_folha:{
   ],
   ef:{flag:['papel_com_brasao','ivone_entendeu'],
       npc:{nome:'Dra. Cordell', opiniao:5, memoria:'Você entregou a ela a guia de remessa que mudou o entendimento dela sobre tudo.'},
-      registrar:'Cordell concluiu que o Monte da Lua não era contrabando: era operação com contabilidade.',
-      presagio:'Numeração sequencial. Alguém confere isso depois, numa sala, tomando café.'},
+      registrar:'Cordell concluiu que o Monte da Lua não era contrabando: era operação com contabilidade.'},
   escolhas:[
     {texto:'"E o que é, então?"', vai:'c5_o_que_e'},
     {texto:'Ajudar com as gaiolas.', vai:'c5_gaiolas_imprensa'},
@@ -988,8 +976,7 @@ c5_a_camera:{
     'Ela repete. A segunda vez sai pior, mais ensaiada.',
     'Você entende, ali encostad{o|a} na parede fria, uma coisa que vai te acompanhar: existe a coisa que acontece, e existe a coisa que dá pra mostrar, e não são a mesma coisa, e a segunda é a que vira verdade.'
   ],
-  ef:{flag:'licao_da_camera',
-      presagio:'A coisa que acontece e a coisa que dá pra mostrar. Você vai ter que escolher entre as duas, e mais de uma vez.'},
+  ef:{flag:'licao_da_camera'},
   escolhas:[
     {texto:'Ajudar com as gaiolas.', vai:'c5_gaiolas_imprensa'},
     {texto:'Olhar os papéis nas mesas.', vai:'c5_papeis_mesa'},
@@ -1021,7 +1008,7 @@ c5_camara_vazia:{
     'E tem, na parede dos fundos, um retângulo limpo na rocha do tamanho de uma porta — o lugar de onde tiraram um fóssil com serra, e a superfície é lisa como bancada de cozinha.',
     'Trezentos milhões de anos, e uma serra circular leva quarenta minutos.'
   ],
-  ef:{flag:'viu_o_retangulo', presagio:'Um retângulo perfeito numa parede de caverna. Isso vai aparecer numa foto, num processo, numa gaveta.'},
+  ef:{flag:'viu_o_retangulo'},
   escolhas:[
     {texto:'Olhar os papéis nas mesas.', vai:'c5_papeis_mesa'},
     {texto:'Procurar a saída de serviço.', vai:'c5_saida_secreta'},
@@ -1111,8 +1098,7 @@ c5_subida_externa:{
     'Ela não é grande. É do tamanho de uma cabeça. E não está brilhando mais.',
     'Em volta dela, na areia, tem umas trinta marcas de pé pequenas, em círculo, feitas há poucas horas.'
   ],
-  ef:{flag:'achou_a_cratera', registrar:'Encontrou a cratera do topo do Monte da Lua e a pedra no centro.',
-      presagio:'Trinta marcas pequenas em círculo. Você chegou depois. Você sempre chega depois.'},
+  ef:{flag:'achou_a_cratera', registrar:'Encontrou a cratera do topo do Monte da Lua e a pedra no centro.'},
   escolhas:[
     {texto:'Pegar a pedra.', vai:'c5_pegou_pedra'},
     {texto:'Não encostar. Sentar na borda e esperar.', vai:'c5_esperou_cratera'},
@@ -1169,8 +1155,7 @@ c5_esperou_cratera:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Esperou um dia inteiro para ver e não atrapalhar'},
       flag:'viu_o_circulo', hp:-2, causa:'Um dia inteiro sem comer na cratera',
-      registrar:'Viu trinta e dois Clefairy em círculo na cratera do Monte da Lua.',
-      presagio:'Você viu uma coisa que ninguém documentou. Vai ter que decidir se conta.'},
+      registrar:'Viu trinta e dois Clefairy em círculo na cratera do Monte da Lua.'},
   escolhas:[
     {texto:'Contar pra Dra. Cordell.', vai:'c5_contou_ivone_cratera', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Não contar pra ninguém, nunca.', vai:'c5_entrada',
@@ -1194,8 +1179,7 @@ c5_contou_ivone_cratera:{
   ],
   ef:{flag:'segredo_com_ivone',
       npc:{nome:'Dra. Cordell', opiniao:6, memoria:'Você contou da cratera pra ela, e ela te pediu pra nunca escrever onde é.'},
-      rep:{eixo:'bom',delta:2,motivo:'Confiou um segredo a quem sabia guardá-lo'},
-      presagio:'Nem tudo que dá pra saber precisa ser sabido. Vai chegar o dia em que alguém vai discordar disso na sua frente, com muita elegância.'},
+      rep:{eixo:'bom',delta:2,motivo:'Confiou um segredo a quem sabia guardá-lo'}},
   escolhas:[
     {texto:'Descer pra dentro da caverna.', vai:'c5_entrada'}
   ]
@@ -1207,8 +1191,7 @@ c5_derrubou_escada:{
     'Você não sabe de quem era. Você não sabe pra quê era. Você derrubou porque parecia errada.',
     'Isso é um tipo de decisão que você vai tomar de novo, várias vezes, com coisas maiores que uma escada.'
   ],
-  ef:{flag:'derrubou_a_escada',
-      presagio:'Você destruiu uma coisa antes de saber o que era. Guarda a sensação.'},
+  ef:{flag:'derrubou_a_escada'},
   escolhas:[
     {texto:'Entrar na caverna.', vai:'c5_entrada'},
     {texto:'Dar a volta por fora.', vai:'c5_fora'}
@@ -1330,13 +1313,13 @@ c5_desvio:{
 c5_escutou_passarela:{
   texto:[
     'Você deita de bruços na grade da passarela e fica escutando.',
-    'Embaixo tem quatro vozes. Duas conversam sobre a chuva. Uma reclama do gerador. A quarta, mais longe, está contando em voz alta: "...quinze, dezesseis, dezessete."',
+    'Embaixo tem quatro vozes. Duas conversam sobre a chuva. Uma reclama do gerador. A quarta, mais longe, está contando em voz alta: "…quinze, dezesseis, dezessete."',
     'Aí uma das vozes diz, sem nenhuma emoção: "Esse aqui não vai chegar."',
-    'E outra responde: "Põe no dezoito mesmo. Eles conferem por número, não por bicho."',
+    'E outra responde: "Põe no dezoito mesmo. Eles conferem por número, não por Pokémon."',
     'Você fica com o rosto na grade de metal por mais um minuto e meio sem se mexer.'
   ],
   ef:{flag:'conferem_por_numero',
-      registrar:'"Eles conferem por número, não por bicho."',
+      registrar:'"Eles conferem por número, não por Pokémon."',
       presagio:'Conferem por número. Em algum lugar tem uma planilha, e a planilha está certa.'},
   escolhas:[
     {texto:'Olhar para baixo.', vai:'c5_camara'},
@@ -1414,8 +1397,7 @@ c5_fuga_tunel:{
   ef:{hp:-4, causa:'Fuga pelo túnel do Monte da Lua',
       flag:['levou_a_pasta','papel_com_brasao'],
       rep:{eixo:'bom',delta:2,motivo:'Tirou a contabilidade de uma operação de dentro dela'},
-      registrar:'Fugiu do Monte da Lua com a pasta de 1.184 formulários.',
-      presagio:'Você tem uma pasta. Eles sabem que alguém tem a pasta. As duas coisas vão andar juntas por muito tempo.'},
+      registrar:'Fugiu do Monte da Lua com a pasta de 1.184 formulários.'},
   escolhas:[
     {texto:'Ligar pra Dra. Cordell.', vai:'c5_pasta_pra_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Seguir pra Cerulean com a pasta.', vai:'c5_fim'},
@@ -1435,8 +1417,7 @@ c5_pasta_pra_ivone:{
     '"Isso tem que chegar em alguém com nome limpo e cargo. E eu não conheço ninguém assim."'
   ],
   ef:{flag:'pasta_recusada', npc:{nome:'Dra. Cordell', opiniao:4, memoria:'Leu a pasta em pé por quarenta minutos e devolveu, porque na mão dela a história viraria ela.'},
-      registrar:'Cordell recusou ficar com a pasta. Precisa chegar em alguém com nome limpo e cargo.',
-      presagio:'Alguém com nome limpo e cargo. Você vai conhecer um. E vai ter que decidir se ele é limpo.'},
+      registrar:'Cordell recusou ficar com a pasta. Precisa chegar em alguém com nome limpo e cargo.'},
   escolhas:[
     {texto:'Ficar com a pasta.', vai:'c5_fim'},
     {texto:'"E se eu virar esse alguém?"', vai:'c5_virar_alguem'},
@@ -1567,8 +1548,7 @@ c5_observou_camara:{
     'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
   ],
   ef:{flag:'observou_a_camara',
-      npc:{nome:'Caçador Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'},
-      presagio:'Ninguém ali está armado. Ninguém ali acha que vai precisar.'},
+      npc:{nome:'Caçador Roque', memoria:'Você o viu de novo, no Monte da Lua, trabalhando numa operação com cinco pessoas.'}},
   escolhas:[
     {texto:'Chegar mais perto.', vai:'c5_camara'},
     {texto:'Recuar e ligar pra Dra. Cordell.', vai:'c5_ligou_antes', cond:d=>!!d.flags.cartao_ivone},
@@ -1608,8 +1588,7 @@ c5_de_quem_e:{
     '"Eu já pensei nisso, sabe? Eu penso muito nisso. O sapato dele nunca suja."'
   ],
   ef:{flag:['sapato_limpo','gente_que_assina_papel'],
-      registrar:'Um homem de terno visita o Monte da Lua a cada dois meses, assina a planilha e nunca desce.',
-      presagio:'O sapato dele nunca suja. Você vai conhecer o sapato.'},
+      registrar:'Um homem de terno visita o Monte da Lua a cada dois meses, assina a planilha e nunca desce.'},
   escolhas:[
     {texto:'"E se eu acabar com isso aqui hoje?"', vai:'c5_acabar_hoje'},
     {texto:'Atacar.', vai:'c5_ataque'},
@@ -1667,11 +1646,10 @@ c5_onde_ficam:{
     '"Por que eu diria?"',
     'Você não tem resposta boa. Fica calad{o|a}.',
     'E o silêncio faz o trabalho, porque Otto continua:',
-    '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena bicho de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, {moleque|moleca}. Você não acredita, mas eu tenho."'
+    '"A Rota 25 não é ponto de coleta nosso. É de um cara que envenena Pokémon de rua e vende o que sobra." Ele faz cara de nojo genuíno. "Isso eu acho errado. Eu tenho limite, {moleque|moleca}. Você não acredita, mas eu tenho."'
   ],
   ef:{flag:'sabe_do_envenenador', registrar:'Alguém envenena Pokémon de rua na Rota 25 e vende o que sobra.',
-      npc:{nome:'Caçador Roque', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'},
-      presagio:'Todo mundo tem um limite, e o limite de todo mundo é logo depois do que essa pessoa faz.'},
+      npc:{nome:'Caçador Roque', opiniao:1, memoria:'Te contou do ponto da Rota 25 porque ele mesmo acha aquilo errado.'}},
   escolhas:[
     {texto:'Atacar. Limite ou não.', vai:'c5_ataque'},
     {texto:'Recuar e ligar pra Dra. Cordell.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},
@@ -1684,7 +1662,7 @@ c5_ataque:{
   texto:[
     '"Sério?" Otto nem parece bravo. Parece cansado. "Sério mesmo?"',
     'Os outros quatro param de trabalhar e ficam vendo, sem nenhuma intenção de ajudar, do jeito que colega de trabalho assiste a briga de colega de trabalho.',
-    'Ele solta a bola.'
+    'Ele solta a Pokébola.'
   ],
   batalha:{dex:88, nivel:22, tipo:'treinador', treinador:'Otto', fuga:false,
            timeExtra:[{dex:42, nivel:24}],
@@ -1715,7 +1693,7 @@ c5_venceu:{
 c5_ficou_ate_o_fim:{
   texto:[
     'Você fica.',
-    'Desliga os refletores um a um, porque alguém falou uma vez que bicho de caverna não gosta de luz forte e você não tem nenhuma fonte melhor.',
+    'Desliga os refletores um a um, porque alguém falou uma vez que Pokémon de caverna não gosta de luz forte e você não tem nenhuma fonte melhor.',
     'No escuro, com a sua lanterna apontada pro chão, eles começam a se mexer.',
     'Leva quatro horas. Quatro horas sentado imóvel num chão de pedra, de madrugada, ouvindo pé pequeno em rocha.',
     'No fim ficam três: dois que não conseguem andar e o Paras.',
@@ -1723,8 +1701,7 @@ c5_ficou_ate_o_fim:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou quatro horas no escuro esperando os últimos saírem'},
       hp:-4, causa:'Noite inteira na câmara do Monte da Lua',
-      flag:'ficou_ate_o_fim', moral:12,
-      presagio:'Quatro horas imóvel no escuro por causa de bicho que nunca vai saber que você existiu.'},
+      flag:'ficou_ate_o_fim', moral:12},
   escolhas:[
     {texto:'Carregar o Paras até o Centro Pokémon.', vai:'c5_paras'},
     {texto:'Carregar os três. De uma vez. Vai ser terrível.', vai:'c5_carregou_tres'},
@@ -1763,8 +1740,7 @@ c5_paras:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Carregou um Pokémon moribundo por três horas'},
       hp:-4, causa:'Exaustão no Monte da Lua',
-      flag:'carregou_paras', registrar:'Carregou o Paras por três horas. Ele morreu no caminho.',
-      presagio:'Você vai carregar outras coisas. Esse foi o primeiro.'},
+      flag:'carregou_paras', registrar:'Carregou o Paras por três horas. Ele morreu no caminho.'},
   escolhas:[
     {texto:'Seguir.', vai:'c5_fim'},
     {texto:'Voltar pra caverna quando clarear.', vai:'c5_camara_vazia'}
@@ -1839,8 +1815,7 @@ c5_aceitou:{
       rep:{eixo:'ruim',delta:3,motivo:'Trabalhou para traficantes de Pokémon'},
       npc:{nome:'Caçador Roque', opiniao:5, memoria:'Você trabalhou pra ele. Agora você é útil.'},
       flag:'trabalhou_rocket', moral:-15,
-      registrar:'Passou a trabalhar para os remanescentes da Rocket.',
-      presagio:'Você fez a conta três vezes. Ninguém faz a conta três vezes de uma coisa que vai fazer só uma.'},
+      registrar:'Passou a trabalhar para os remanescentes da Rocket.'},
   escolhas:[
     {texto:'Seguir para Cerulean com o dinheiro no bolso.', vai:'c5_fim'},
     {texto:'Voltar e abrir as gaiolas hoje à noite.', vai:'c5_traicao'},
@@ -1880,8 +1855,7 @@ c5_traicao:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Voltou de madrugada e abriu as gaiolas que tinha ajudado a carregar'},
       flag:['destruiu_operacao','traiu_vasco'],
       npc:{nome:'Caçador Roque', opiniao:-10, memoria:'Você trabalhou pra ele e voltou de madrugada pra abrir as gaiolas. Ele considera isso pior que inimizade.'},
-      registrar:'Voltou de madrugada e libertou os Pokémon depois de ter trabalhado para eles.',
-      presagio:'A pessoa da cadeira de praia te viu e não levantou. Você vai pensar nisso por anos.'},
+      registrar:'Voltou de madrugada e libertou os Pokémon depois de ter trabalhado para eles.'},
   escolhas:[
     {texto:'Seguir para Cerulean.', vai:'c5_fim'},
     {texto:'Carregar o Paras até o Centro.', vai:'c5_paras'}
@@ -1901,8 +1875,7 @@ c5_duplo:{
   ef:{dinheiro:4000, rep:{eixo:'ruim',delta:1,motivo:'Carregou carga de traficantes'},
       npc:{nome:'Dra. Cordell', opiniao:-2, memoria:'Você entregou o esquema, mas só depois de receber por ele. Ela desviou o olhar na trilha.'},
       flag:['trabalhou_rocket','delatou_rocket','expos_operacao'],
-      registrar:'Trabalhou para os traficantes e entregou a rota depois.',
-      presagio:'Ela desviou o olhar. Você vai querer consertar isso e vai levar muito tempo.'},
+      registrar:'Trabalhou para os traficantes e entregou a rota depois.'},
   escolhas:[
     {texto:'Ir atrás dela e falar.', vai:'c5_falou_com_ivone'},
     {texto:'Seguir para Cerulean.', vai:'c5_fim'}
@@ -1919,8 +1892,7 @@ c5_falou_com_ivone:{
     '"E o pior é que ela pode até ser verdade." Ela liga o carro. "Nunca dá pra saber por dentro, {moço|moça}. Só dá pra saber pelo que a gente faz depois."'
   ],
   ef:{npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Você foi atrás dela explicar. Ela disse que só dá pra saber pelo que se faz depois.'},
-      flag:'so_pelo_que_vem_depois',
-      presagio:'Só dá pra saber pelo que a gente faz depois. Essa é a regra do resto dessa história.'},
+      flag:'so_pelo_que_vem_depois'},
   escolhas:[
     {texto:'Seguir para Cerulean.', vai:'c5_fim'},
     {texto:'Voltar de madrugada e abrir as gaiolas.', vai:'c5_traicao'}
@@ -1930,7 +1902,7 @@ c5_falou_com_ivone:{
 c5_recusou_perto:{
   texto:[
     '"Não."',
-    'O silêncio na câmara dura tempo demais. Um dos outros quatro coloca a mão no cinto, não numa arma — numa bola.',
+    'O silêncio na câmara dura tempo demais. Um dos outros quatro coloca a mão no cinto, não numa arma — numa Pokébola.',
     'Otto levanta a palma. "Deixa."',
     'Pra você: "Você entrou aqui e viu tudo. Agora sobe essa passarela devagar e esquece o caminho."',
     'Você sobe. Devagar. Ele te olha o percurso inteiro, sem piscar, e continua olhando quando você some na curva — dá pra sentir.'

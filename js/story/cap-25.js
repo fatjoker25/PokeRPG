@@ -59,8 +59,7 @@ c25_ab_perguntou_a_recepcionista:{
   ],
   ef:{flag:'audiencia_de_oficio',
       npc:{nome:'a recepcionista da Liga', opiniao:2, viuVoce:'Te contou que a última audiência de ofício foi em 1989.'},
-      registrar:'A audiência foi convocada de ofício. As outras quatro da história da casa foram todas em 1989.',
-      presagio:'Quatro audiências de ofício num ano só, e depois onze anos sem nenhuma.'},
+      registrar:'A audiência foi convocada de ofício. As outras quatro da história da casa foram todas em 1989.'},
   escolhas:[
     {texto:'Perguntar o que se decidiu nas quatro de oitenta e nove.', vai:'c25_ab_as_quatro_de_oitenta_e_nove'},
     {texto:'Regar a planta e esperar.', vai:'c25_regou_a_planta'},
@@ -142,11 +141,11 @@ c25_ab_a_van_de_perto:{
     'A traseira está a quarenta centímetros da parede de serviço, que é a distância de quem descarrega direto na porta.',
     'No chão, entre a van e a parede, tem palha. Palha de embalagem, dessas de transporte.',
     'Você pega um punhado e cheira, o que é uma coisa que você aprendeu a fazer nos últimos meses e que você não fazia antes.',
-    'Cheira a bicho.',
+    'Cheira a Pokémon.',
     'E a nove minutos daqui, no terceiro andar, tem uma audiência de ofício às dez.'
   ],
   ef:{flag:['a_palha_da_van','chegou_na_audiencia'],
-      registrar:'Havia palha de transporte com cheiro de bicho entre a van e a parede de serviço.',
+      registrar:'Havia palha de transporte com cheiro de Pokémon entre a van e a parede de serviço.',
       presagio:'Descarregaram alguma coisa viva no prédio da audiência, na manhã da audiência.'},
   escolhas:[
     {texto:'Subir correndo pra antessala.', vai:'c25_a_antessala'},
@@ -178,7 +177,7 @@ c25_ab_desceu_a_rampa:{
   texto:[
     'Você desce.',
     'A rampa dá numa garagem de subsolo com pé-direito baixo e luz amarela, e na garagem, encostadas na parede do fundo, tem catorze gaiolas de transporte cobertas com lona cinza.',
-    'Catorze. Cobertas. E o som vem delas e para quando você chega, todas ao mesmo tempo, do jeito que bicho faz quando entra gente.',
+    'Catorze. Cobertas. E o som vem delas e para quando você chega, todas ao mesmo tempo, do jeito que Pokémon faz quando entra gente.',
     'Tem uma prancheta pendurada num prego, do lado das gaiolas, e você lê a prancheta antes de levantar qualquer lona.',
     '**RECEBIMENTO — 14 UN. — DESTINO: SALA DE AUDIÊNCIA 3 — HORÁRIO: 10H00**',
     'Eles vão levar as catorze pra sala da sua audiência.',
@@ -186,8 +185,7 @@ c25_ab_desceu_a_rampa:{
     'Você olha o relógio da parede da garagem e são nove e cinquenta e seis.'
   ],
   ef:{flag:['catorze_gaiolas','chegou_na_audiencia'],
-      registrar:'Catorze gaiolas de transporte esperam no subsolo, com destino à sala de audiência, às 10h00.',
-      presagio:'A audiência não é sobre papel. Eles vão levar as catorze pra dentro da sala.'},
+      registrar:'Catorze gaiolas de transporte esperam no subsolo, com destino à sala de audiência, às 10h00.'},
   escolhas:[
     {texto:'Levantar uma lona.', vai:'c25_ab_levantou_a_lona'},
     {texto:'Subir pra audiência agora, sabendo disso.', vai:'c25_a_antessala'}
@@ -199,8 +197,8 @@ c25_ab_levantou_a_lona:{
     'Você levanta a lona da primeira gaiola.',
     d=>{
       const p = d.time[0];
-      return p ? `E lá dentro tem um bicho que olha pra você do jeito que ${nomeExib(p)} olhava pra você no começo de tudo, quando ainda não sabia se você era o tipo de pessoa que abre ou o tipo que fecha.`
-               : 'E lá dentro tem um bicho que olha pra você sem nenhuma expectativa, que é a pior versão de ser olhado.';
+      return p ? `E lá dentro tem um Pokémon que olha pra você do jeito que ${nomeExib(p)} olhava pra você no começo de tudo, quando ainda não sabia se você era o tipo de pessoa que abre ou o tipo que fecha.`
+               : 'E lá dentro tem um Pokémon que olha pra você sem nenhuma expectativa, que é a pior versão de ser olhado.';
     },
     'A gaiola é limpa. Tem água. Tem uma etiqueta amarrada na grade com um número e uma letra.',
     'Está tudo em ordem. É isso que você vai ter que explicar lá em cima e é isso que não tem como explicar.',
@@ -208,8 +206,7 @@ c25_ab_levantou_a_lona:{
     'E sobe os três andares com a palha ainda na mão.'
   ],
   ef:{flag:['viu_o_que_tem_nas_gaiolas','catorze_gaiolas'], moral:-1,
-      registrar:'Viu o que há nas catorze gaiolas do subsolo. Estava tudo em ordem.',
-      presagio:'Tudo em ordem é o argumento deles. Você vai ter que atacar a ordem, não a desordem.'},
+      registrar:'Viu o que há nas catorze gaiolas do subsolo. Estava tudo em ordem.'},
   escolhas:[
     {texto:'Subir pra audiência.', vai:'c25_a_antessala'}
   ]

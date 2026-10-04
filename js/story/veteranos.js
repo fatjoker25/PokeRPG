@@ -98,7 +98,7 @@ const VETERANOS = [
   id:'morgan', local:'cerulean', insignias:2, conferencia:false,
   classe:'Treinador Ás', arq:'ace_trainer', artigo:'um', nome:'Morgan',
   porta:{titulo:'Ver quem treina sozinho debaixo da ponte velha',
-         sub:'Seis bolas enfileiradas na beira do rio, e ninguém em volta.'},
+         sub:'Seis Pokébolas enfileiradas na beira do rio, e ninguém em volta.'},
   onde:'debaixo da ponte velha',
   times:[21, 60, 43, 58, 111, 25],
   golpes:['Body Slam', 'Swift', 'Thunder Wave'],
@@ -114,8 +114,8 @@ const VETERANOS = [
   vence:'"Ainda tem distância. Menos do que tinha."',
   perde:'"Oito insígnias e você me pegou na troca. Eu vou pensar nisso a noite inteira."',
   depois:[
-    'Morgan continua debaixo da ponte, agora com cinco bolas na fila e uma no bolso.',
-    fala('Morgan', 'A sexta eu tirei da fila. Ela perdeu pra você e eu achei que ela precisava de uns dias fora do treino. Bicho sente.')
+    'Morgan continua debaixo da ponte, agora com cinco Pokébolas na fila e uma no bolso.',
+    fala('Morgan', 'A sexta eu tirei da fila. Ela perdeu pra você e eu achei que ela precisava de uns dias fora do treino. Pokémon sente.')
   ],
   torneio:'"Quarta rodada, de novo. Eu queria ver se desta vez era você do outro lado."',
   chamada:{
@@ -332,7 +332,7 @@ const VETERANOS = [
     fim:[
       'Everett fica olhando o time dele no chão do salão como quem olha um prato quebrado.',
       fala('Corinne', 'As vitrines, Everett.'),
-      'Ele abre as quarenta, uma por uma, sem falar. Corinne passa a noite ligando pro Centro, pro controle de bichos e pra três criadores que ela conhece pelo nome.',
+      'Ele abre as quarenta, uma por uma, sem falar. Corinne passa a noite ligando pro Centro, pro controle de Pokémon e pra três criadores que ela conhece pelo nome.',
       fala('Corinne', 'Eu devia ter feito isso faz tempo. Eu precisava de alguém do lado.', 'baixo')
     ],
     recompensa:()=>{
@@ -472,11 +472,11 @@ const VETERANOS = [
   golpes:['Earthquake', 'Body Slam', 'Swords Dance'],
   premio:{'TM26 Earthquake':1, 'Ultra Ball':5},
   apresenta:[
-    'A guarita é de madeira, com uma cadeira de plástico do lado de fora e uma marmita aberta em cima de um toco.',
+    'A guarita é de madeira, com uma cadeira de plástico do lado de fora e um almoço pela metade em cima de um toco.',
     'A guarda-parque tem o chapéu de aba larga caído nas costas e uma cicatriz que atravessa a sobrancelha.',
     fala('Talia', 'Talia. Eu cuido de doze quilômetros dessa cerca. Os outros dezenove são de gente que não aparece.'),
     fala('Talia', 'Os meus eu não peguei. Eles vieram. Cada um apareceu na guarita um dia e não foi mais embora.'),
-    fala('Talia', 'Eu termino a marmita e a gente vê.')
+    fala('Talia', 'Eu termino de almoçar e a gente vê.')
   ],
   volta:[fala('Talia', 'Almoçou?'), fala('Talia', 'Então vamos.')],
   vence:'"Mato não perdoa pressa. Nem eu."',

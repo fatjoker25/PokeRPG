@@ -33,7 +33,7 @@ c3_ab_de_noite:{
     'Letra de gente que se cansou de ver o mesmo erro.',
     d=>{
       const p = d.time[0];
-      return p ? `${nomeExib(p)} para na altura da placa e não passa dela. Bicho lê o mato, não a placa, e chegou na mesma conclusão.`
+      return p ? `${nomeExib(p)} para na altura da placa e não passa dela. Pokémon lê o mato, não a placa, e chegou na mesma conclusão.`
                : 'Alguma coisa dentro da floresta faz um barulho que não combina com o horário.';
     }
   ],
@@ -120,8 +120,7 @@ c3_ab_desde_quando:{
   ],
   ef:{flag:['entrou_com_teo','sabe_do_porao'], moral:6,
       npc:{nome:'Ezra', opiniao:5, memoria:'Te contou do porão da avó, coisa que ele não contava havia nove anos.'},
-      rep:{eixo:'bom',delta:1,motivo:'Ouviu até o fim uma coisa que custava contar'},
-      presagio:'Ele vai entrar em lugar fechado outras vezes nessa história, e vai entrar por você.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ouviu até o fim uma coisa que custava contar'}},
   escolhas:[{texto:'Entrar juntos.', vai:'c3_entrada'}]
 },
 
@@ -226,7 +225,7 @@ c3_gritou_teo:{
 c3_ficou_parado:{
   texto:[
     'Você fica parad{o|a}. Dois minutos, talvez três.',
-    'A coisa do outro lado também fica parada, o que prova que é gente — bicho não espera desse jeito.',
+    'A coisa do outro lado também fica parada, o que prova que é gente — Pokémon não espera desse jeito.',
     'Depois a pessoa se move. Não na sua direção: paralelo, contornando você, com bastante cuidado.',
     'Você ouve os passos passarem pelo seu lado a uns trinta metros e sumirem pra dentro.',
     'Quando você volta a respirar direito, percebe que está com a mão no cinto desde o começo, sem ter percebido que levou.'
@@ -263,7 +262,7 @@ c3_tudo_bem:{
     'Ele demora pra responder, o que já responde.',
     '"Tô." Ele não está. "Eu tô. Eu só — eu andei em círculo, e aí eu sentei, e aí eu ouvi um cara falando."',
     '"Falando o quê?"',
-    '"Sozinho. Tipo, ele tava falando sozinho, mas não era sozinho." Ezra aperta o Pidgey. "Ele tava contando. Tipo — um, dois, três. Contando bicho."'
+    '"Sozinho. Tipo, ele tava falando sozinho, mas não era sozinho." Ezra aperta o Pidgey. "Ele tava contando. Tipo — um, dois, três. Contando Pokémon."'
   ],
   ef:{npc:{nome:'Ezra', opiniao:2, memoria:'A primeira coisa que você perguntou foi se ele estava bem.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou pela pessoa antes de perguntar pelo problema'},
@@ -400,7 +399,7 @@ c3_atalho:{
   texto:[
     'O mato fecha atrás de você em cinco passos. Em quinze, você não sabe mais de que lado entrou.',
     'O chão aqui é mais fofo e o cheiro muda: fica adocicado e errado, como fruta passada.',
-    'Tem menos bicho do que devia ter. Isso demora pra você perceber e é a informação mais importante da hora.'
+    'Tem menos Pokémon do que devia ter. Isso demora pra você perceber e é a informação mais importante da hora.'
   ],
   ef:{flag:'entrou_no_fechado'},
   teste:{status:'percepcao', dificuldade:8, nomeStatus:'Percepção',
@@ -411,7 +410,7 @@ c3_emboscada:{
   texto:[
     'Você não vê chegar. Nenhum aviso — só o peso em cima de você e o chão vindo rápido demais.',
     'Alguma coisa te derruba de lado e você bate o ombro numa raiz. Dói do jeito que machucado de verdade dói: com atraso.',
-    'Quando você levanta, o bicho já está entre você e o caminho de volta.'
+    'Quando você levanta, o Pokémon já está entre você e o caminho de volta.'
   ],
   ef:{hp:-4, causa:'Emboscada na Floresta de Viridian'},
   batalha:{aleatorio:true, ambiente:'floresta', nivelBase:12, tipo:'selvagem',
@@ -421,7 +420,7 @@ c3_emboscada:{
 c3_achou_cedo:{
   texto:[
     'Você vê antes de pisar: o chão à frente está errado.',
-    'As folhas estão amassadas num rastro largo, e o rastro é fresco, e ele não é de arrasto de bicho — é de alguma coisa girando no mesmo lugar por muito tempo.',
+    'As folhas estão amassadas num rastro largo, e o rastro é fresco, e ele não é de arrasto de Pokémon — é de alguma coisa girando no mesmo lugar por muito tempo.',
     'Você contorna e chega por um ângulo de onde dá pra ver sem ser visto.',
     'Cinquenta metros depois, você entende o que era o som.'
   ],
@@ -469,7 +468,7 @@ c3_esperar:{
 
 c3_surpresa:{
   texto:[
-    'Você sai de trás do tronco com a bola já na mão.',
+    'Você sai de trás do tronco com a Pokébola já na mão.',
     'Eles levam três segundos inteiros pra entender o que está acontecendo, e três segundos é muita coisa.',
     '"Ô —" começa o mais velho, e não termina.'
   ],
@@ -481,11 +480,11 @@ c3_surpresa:{
 c3_seguir_cacadores:{
   texto:[
     'Você deixa eles pegarem o Pikachu — e isso custa uma coisa em você que não volta.',
-    'Eles enrolam o fio, colocam o bicho numa bolsa de lona com respiro e saem pela marcação de fita.',
+    'Eles enrolam o fio, colocam o Pokémon numa bolsa de lona com respiro e saem pela marcação de fita.',
     'Você segue a sessenta metros, o que é a distância certa, e descobre onde termina a fita laranja:',
     'Uma estrada de terra fora da floresta, com uma caminhonete branca e mais três bolsas de lona no chão da caçamba.',
     'Você anota a placa. Fotografa, se conseguir. E fica olhando eles irem embora.',
-    'Você trocou um bicho por um endereço. Vai levar um tempo até decidir se isso foi certo.'
+    'Você trocou um Pokémon por um endereço. Vai levar um tempo até decidir se isso foi certo.'
   ],
   ef:{flag:['seguiu_os_cacadores','provas_da_floresta','placa_da_caminhonete'],
       rep:{eixo:'ruim',delta:1,motivo:'Deixou levarem um Pokémon para descobrir para onde levavam'},
@@ -507,7 +506,7 @@ c3_foi_embora_calado:{
 
 c3_soltar:{
   texto:[
-    'Você chega agachad{o|a}, de lado, sem encarar — do jeito que se chega em bicho assustado e em gente assustada, que é o mesmo jeito.',
+    'Você chega agachad{o|a}, de lado, sem encarar — do jeito que se chega em Pokémon assustado e em gente assustada, que é o mesmo jeito.',
     'Leva quatro minutos pra chegar perto o suficiente pra tocar no fio.',
     'Ele te dá um choque. Não de ataque — de pânico. Queima a palma da mão e você não solta, porque soltar agora significa recomeçar os quatro minutos.',
     'O fio cede. O nó era bom, feito por quem sabe.',
@@ -546,7 +545,7 @@ c3_ficar:{
     'Você fica. Uma hora, talvez mais — dá pra medir porque a luz muda de ângulo entre as árvores.',
     'Divide a água. Ele aceita na terceira tentativa.',
     'Em algum momento você começa a falar, sem motivo nenhum, porque o silêncio estava pesado. Fala do seu quarto, da rachadura no teto em forma de rio, da fivela quebrada da mochila. Coisa idiota.',
-    'Ele não entende uma palavra e fica escutando mesmo assim, do jeito que bicho escuta: pela cadência.',
+    'Ele não entende uma palavra e fica escutando mesmo assim, do jeito que Pokémon escuta: pela cadência.',
     'Quando ele finalmente apoia a pata no chão e dá dois passos, olha pra você de um jeito que não é gratidão — Pokémon selvagem não faz gratidão. É reconhecimento. Ele decorou você.',
     'Depois some no mato.',
     'E volta em dez minutos. E te segue.'
@@ -585,9 +584,9 @@ c3_levou_estaca:{
 
 c3_capturar:{
   texto:[
-    'Você solta o fio e joga a bola no mesmo movimento, antes que ele consiga sair do lugar.',
+    'Você solta o fio e joga a Pokébola no mesmo movimento, antes que ele consiga sair do lugar.',
     'Ele não luta. Não tem como lutar — está há dias amarrado, sem comer, com a pata inutilizada.',
-    'A bola fecha sem resistência nenhuma. Nem uma sacudida.',
+    'A Pokébola fecha sem resistência nenhuma. Nem uma sacudida.',
     'Foi fácil demais. Isso devia significar alguma coisa e significa.'
   ],
   ef:{executar:d=>{
@@ -608,7 +607,7 @@ c3_capturar:{
 
 c3_arrependeu_captura:{
   texto:[
-    'Você abre a bola dois minutos depois.',
+    'Você abre a Pokébola dois minutos depois.',
     'Ele sai e cai de lado, porque a pata continua não funcionando, e fica ali.',
     'Você não consertou nada. Você só fez a mesma coisa duas vezes, na ordem contrária.',
     'Mas ele está do lado de fora, e isso é diferente de estar do lado de dentro, mesmo que não pareça.'
@@ -634,7 +633,7 @@ c3_mochila:{
     'O caderno tem uma lista. Data, lugar, espécie — e do lado de cada linha, um preço.',
     'A última linha é de hoje. Espécie: Pikachu. Preço: em branco.',
     d=>d.flags.pikachu_capturado_preso
-      ? 'A estaca está vazia atrás de você, com o fio solto no chão. O Pikachu da última linha está na bola presa no seu cinto.'
+      ? 'A estaca está vazia atrás de você, com o fio solto no chão. O Pikachu da última linha está na Pokébola presa no seu cinto.'
       : 'O Pikachu continua girando na estaca atrás de você enquanto você lê.'
   ],
   ef:{itens:{'Great Ball':3}, dinheiro:600, flag:['pegou_mochila_cacador','provas_da_floresta'],
@@ -646,7 +645,7 @@ c3_mochila:{
      ef:{flag:'levou_o_caderno_do_cacador'}},
     {texto:'Levar tudo e ir embora.', vai:'c3_caçadores', cond:d=>!d.flags.pikachu_capturado_preso,
      ef:{rep:{eixo:'ruim',delta:2,motivo:'Saqueou e deixou um Pokémon preso para trás'}, flag:'ignorou_pikachu'}},
-    {texto:'Abrir a bola e soltar o Pikachu de volta.', vai:'c3_arrependeu_captura', cond:d=>!!d.flags.pikachu_capturado_preso && !d.flags.soltou_o_pikachu_de_volta},
+    {texto:'Abrir a Pokébola e soltar o Pikachu de volta.', vai:'c3_arrependeu_captura', cond:d=>!!d.flags.pikachu_capturado_preso && !d.flags.soltou_o_pikachu_de_volta},
     {texto:'Levar tudo e seguir.', vai:'c3_caçadores', cond:d=>!!d.flags.pikachu_capturado_preso},
     {texto:'Ler o caderno inteiro antes de decidir.', vai:'c3_caderno_inteiro'}
   ]
@@ -665,12 +664,12 @@ c3_caderno_inteiro:{
       : 'Você fecha o caderno e o som fino continua.'
   ],
   ef:{flag:['leu_o_caderno_do_cacador','provas_da_floresta','endereco_celadon_cedo'],
-      rep:{eixo:'bom',delta:1,motivo:'Leu as trinta e uma páginas em vez de só pegar as bolas'},
+      rep:{eixo:'bom',delta:1,motivo:'Leu as trinta e uma páginas em vez de só pegar as Pokébolas'},
       registrar:'Leu o caderno do caçador: dois anos de lista, com Monte da Lua, ZS-7, SPH e um endereço em Celadon.'},
   escolhas:[
     {texto:'Soltar o Pikachu agora.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso},
     {texto:'Esperar os donos voltarem.', vai:'c3_esperar', cond:d=>!d.flags.pikachu_capturado_preso},
-    {texto:'Abrir a bola e soltar o Pikachu de volta.', vai:'c3_arrependeu_captura', cond:d=>!!d.flags.pikachu_capturado_preso && !d.flags.soltou_o_pikachu_de_volta},
+    {texto:'Abrir a Pokébola e soltar o Pikachu de volta.', vai:'c3_arrependeu_captura', cond:d=>!!d.flags.pikachu_capturado_preso && !d.flags.soltou_o_pikachu_de_volta},
     {texto:'Guardar o caderno e seguir.', vai:'c3_caçadores', cond:d=>!!d.flags.pikachu_capturado_preso}
   ]
 },
@@ -761,7 +760,7 @@ c3_correu_com_mochila:{
 c3_luta_cacador:{
   texto:[
     'O homem suspira como quem já fez isso antes e não gosta de fazer.',
-    'Ele solta a bola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
+    'Ele solta a Pokébola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
     '"Rápido", ele diz pro parceiro. "A gente tem que descer ainda hoje."'
   ],
   batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
@@ -770,7 +769,7 @@ c3_luta_cacador:{
 
 c3_venceu_cacador:{
   texto:[
-    'O Arbok volta pra bola e o homem não reclama, não xinga, não ameaça.',
+    'O Arbok volta pra Pokébola e o homem não reclama, não xinga, não ameaça.',
     'Ele só te olha com uma atenção nova, do jeito que se olha uma despesa inesperada que vai ter que entrar na planilha.',
     '"Anota aí", ele diz pro parceiro. E o parceiro anota. Anota o seu rosto.',
     'Eles saem pela trilha. Sem pressa nenhuma. O mais velho para uma vez e olha pra trás, não pra você — pra clareira.'
@@ -872,7 +871,7 @@ c3_negociou:{
 
 c3_negociou_mal:{
   texto:[
-    '"Informação." Ele repete a palavra como se fosse engraçada. "{Garoto|Garota}, eu amarrei o bicho. Eu sei onde ele tá."',
+    '"Informação." Ele repete a palavra como se fosse engraçada. "{Garoto|Garota}, eu amarrei o Pokémon. Eu sei onde ele tá."',
     'Ele te dá uma nota pequena. Menos por pena e mais por achar graça.',
     '"Toma. Compra um lanche."',
     'A nota fica na sua mão por um tempo antes de você guardar.'
@@ -907,7 +906,7 @@ c3_fim:{
     },
     'Daqui pra frente, a estrada é sua de novo: dá pra descer pra Pewter, dá pra voltar, dá pra ficar.'
   ],
-  fim:true, resumo:'A floresta te mostrou que gente é pior que bicho.'
+  fim:true, resumo:'A floresta te mostrou que gente é pior que Pokémon.'
 }
 }}
 

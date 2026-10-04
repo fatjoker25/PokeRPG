@@ -29,9 +29,9 @@ c13_ab_o_radio:{
     'Você está num bar de Fuchsia às onze da noite, numa mesa de fórmica, com um prato que já foi comida, quando o dono aumenta o rádio.',
     'Não é um gesto dramático. Ele aumenta o rádio do jeito que se aumenta o rádio: com a mão suja de louça, sem olhar.',
     'A voz do locutor é a voz de quem lê boletim marítimo há vinte anos e nunca leu nada assim.',
-    fala('o locutor do rádio', 'Atenção à navegação. Formação de gelo à deriva no setor sul, latitude aproximada...'),
+    fala('o locutor do rádio', 'Atenção à navegação. Formação de gelo à deriva no setor sul, latitude aproximada…'),
     'O bar inteiro fica quieto. Não é um bar grande: são onze pessoas, e as onze são de pesca.',
-    fala('o locutor do rádio', '...recomenda-se suspensão de toda atividade de pesca no setor até novo aviso.'),
+    fala('o locutor do rádio', '…recomenda-se suspensão de toda atividade de pesca no setor até novo aviso.'),
     'Um homem na ponta do balcão fala a frase que resume tudo:',
     fala('o homem do balcão', 'Gelo. Em outubro.'),
     'Ninguém responde. Duas pessoas pagam a conta e saem, e o jeito que elas saem é o jeito de quem vai ligar pra alguém.'
@@ -83,8 +83,7 @@ c13_ab_o_pai_dela:{
   ],
   ef:{flag:'ninguem_perguntou_por_que',
       npc:{nome:'a mulher do baralho', opiniao:2, viuVoce:'Você perguntou do pai dela e do gelo de 63.'},
-      registrar:'Em 1963 ninguém investigou a causa do gelo. O pai dela perdeu três dedos e reclamava disso.',
-      presagio:'Se aconteceu em sessenta e três e de novo agora, tem uma coisa que volta.'},
+      registrar:'Em 1963 ninguém investigou a causa do gelo. O pai dela perdeu três dedos e reclamava disso.'},
   escolhas:[
     {texto:'Ir ao cais.', vai:'c13_cais'},
     {texto:'Ir à colônia de pescadores.', vai:'c13_colonia'},
@@ -343,8 +342,7 @@ c13_quatro_de_junho:{
   ],
   ef:{flag:['sabe_do_estrela_do_sul','sabe_do_goro'],
       rep:{eixo:'bom',delta:3,motivo:'Fez a pergunta que calou o cais'},
-      registrar:'O barco Estrela do Sul pescou na quebra das Seafoam em 3 de junho e voltou com a rede rasgada.',
-      presagio:'Ele nunca mais saiu pra pescar. Guarde o nome: Tobin.'},
+      registrar:'O barco Estrela do Sul pescou na quebra das Seafoam em 3 de junho e voltou com a rede rasgada.'},
   escolhas:[
     {texto:'"Onde mora o Tobin?"', vai:'c13_goro'},
     {texto:'Ir à colônia ver os registros.', vai:'c13_colonia'},
@@ -389,8 +387,7 @@ c13_quem_disse:{
     'O da direita joga uma pedra na mesa.',
     '"Porque ele é o único que tá dizendo que vai."'
   ],
-  ef:{flag:'sabe_do_ryuzo',
-      presagio:'Ele é o único que está dizendo que vai. Ele já decidiu antes de você chegar.'},
+  ef:{flag:'sabe_do_ryuzo'},
   escolhas:[
     {texto:'Ir falar com ele.', vai:'c13_ryuzo'},
     {texto:'Ir à colônia primeiro.', vai:'c13_colonia'},
@@ -525,8 +522,7 @@ c13_outro_livro:{
   ef:{flag:['sabe_da_linha_verde_pesca','provas_espuma','sabe_da_linha_verde'],
       rep:{eixo:'bom',delta:5,motivo:'Puxou o cadastro de embarcações e achou o nome'},
       instabilidade:1,
-      registrar:'A Pesca e Armazenagem Linha Verde é dona de três barcos da quebra das Seafoam e da fábrica de gelo do cais.',
-      presagio:'Dona da fábrica de gelo. Repare no que uma frota parada faz com quem vende gelo.'},
+      registrar:'A Pesca e Armazenagem Linha Verde é dona de três barcos da quebra das Seafoam e da fábrica de gelo do cais.'},
   escolhas:[
     {texto:'"Quem vende gelo com a frota parada?"', vai:'c13_fabrica_de_gelo'},
     {texto:'Procurar o Tobin.', vai:'c13_goro', cond:d=>!!d.flags.sabe_do_goro},
@@ -619,8 +615,8 @@ c13_seguiu_a_camionete:{
     'Você espera no dia seguinte e segue a camionete a pé, o que só funciona porque Fuchsia tem quatro mil habitantes e sete semáforos.',
     'Ela para numa casa da rua de trás do posto de saúde.',
     'O homem desce, entra, e vinte minutos depois sai de novo — com outra pessoa.',
-    'A outra pessoa tem uns sessenta anos, anda devagar, e carrega uma caixa térmica de isopor.',
-    'E você entende sem ninguém apresentar: um pescador de sessenta anos que não pesca mais, carregando isopor numa terça.',
+    'A outra pessoa tem uns sessenta anos, anda devagar, e carrega uma caixa térmica.',
+    'E você entende sem ninguém apresentar: um pescador de sessenta anos que não pesca mais, carregando uma caixa térmica numa terça.',
     'É o Tobin.'
   ],
   ef:{flag:['achou_o_goro','sabe_do_goro'],
@@ -663,7 +659,7 @@ c13_camara_fria:{
     'A trava de alavanca faz um estalo que ecoa no galpão inteiro.',
     'A câmara fria é um cubo de três por três com prateleira de aço nas paredes e uma lâmpada amarela no teto.',
     'E no chão, sobre uma cama improvisada de rede de pesca dobrada muitas vezes, tem um Articuno.',
-    'Pequeno. Menor do que devia. Com a asa esquerda enfaixada com atadura de bicho grande e esparadrapo.',
+    'Pequeno. Menor do que devia. Com a asa esquerda enfaixada com atadura de Pokémon grande e esparadrapo.',
     'Ele está vivo. Ele levanta a cabeça quando a porta abre.',
     'E tem dois baldes ao lado dele, um com água e outro com ração marinha, e uma cadeira de plástico encostada na parede, virada pra ele.',
     'Uma cadeira de plástico.',
@@ -726,8 +722,7 @@ c13_goro:{
   ef:{flag:['conheceu_o_goro','sabe_da_divida'],
       npc:{nome:'Tobin', opiniao:2, memoria:'Te deixou entrar e a primeira coisa que disse foi a dívida do motor.'},
       rep:{eixo:'bom',delta:2,motivo:'Bateu na porta em vez de falar do lado de fora'},
-      registrar:'Tobin pescou na quebra das Seafoam por causa de uma dívida de motor de 42 mil.',
-      presagio:'Ele começou pela dívida. Guarde: ele já ensaiou essa conversa.'},
+      registrar:'Tobin pescou na quebra das Seafoam por causa de uma dívida de motor de 42 mil.'},
   escolhas:[
     {texto:'"Conta o que aconteceu."', vai:'c13_goro_conta'},
     {texto:'"Por que você não devolveu?"', vai:'c13_porque_nao_devolveu'},
@@ -853,8 +848,7 @@ c13_ele_sabe:{
       npc:{nome:'Tobin', opiniao:4, memoria:'Sabe exatamente qual é a origem do gelo e não conta porque teria que aguentar ser ele.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou o que ele sabia e ouviu a resposta inteira'},
       moral:-10,
-      registrar:'A colônia pagou 8 mil a um oceanógrafo por um laudo de "origem indeterminada".',
-      presagio:'"Eu vou ter que aguentar ser eu." É essa a moeda de Fuchsia.'},
+      registrar:'A colônia pagou 8 mil a um oceanógrafo por um laudo de "origem indeterminada".'},
   escolhas:[
     {texto:'"Então a gente resolve sem te entregar."', vai:'c13_eu_devolvo'},
     {texto:'"Você vai ter que aguentar. Vamos juntos."', vai:'c13_juntos'},
@@ -893,7 +887,7 @@ c13_procurar_barco:{
   vozes:['alguém no cais'],
   texto:[
     'Você pergunta pra doze pessoas e recebe doze nãos.',
-    'Não é medo de bicho. É medo de gelo: barco de madeira em água com gelo à deriva perde casco, e casco perdido é a vida inteira de uma família de pescador.',
+    'Não é medo de Pokémon. É medo de gelo: barco de madeira em água com gelo à deriva perde casco, e casco perdido é a vida inteira de uma família de pescador.',
     'O nono não te responde. O décimo primeiro diz "nem por dez mil". O décimo segundo pergunta se você tem dez mil, e quando você diz que não, ele diz "então não adianta a gente conversar" e volta pro dominó, sem grosseria nenhuma.',
     'E aí alguém, de algum lugar do cais, grita:',
     '"Fala com o Amos!"',
@@ -933,8 +927,7 @@ c13_porque_riem:{
   ef:{flag:['sabe_do_ryuzo','sabe_do_filho_do_ryuzo'],
       rep:{eixo:'bom',delta:2,motivo:'Perguntou por que estavam rindo'},
       moral:-5,
-      registrar:'Sr. Dane parou de pescar em 1997, quando o filho morreu no mar, e sai sozinho toda quarta desde então.',
-      presagio:'Toda quarta, sem rede, sem linha, sem nada. Ele vai a algum lugar.'},
+      registrar:'Sr. Dane parou de pescar em 1997, quando o filho morreu no mar, e sai sozinho toda quarta desde então.'},
   escolhas:[
     {texto:'Ir falar com o Sr. Dane.', vai:'c13_ryuzo'},
     {texto:'Ir à colônia procurar o registro de 1997.', vai:'c13_registro_97'},
@@ -1019,8 +1012,7 @@ c13_ver_o_que:{
       npc:{nome:'Sr. Dane', opiniao:5, memoria:'Disse que não vai salvar ninguém — quer entender uma coisa antes de acabar.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou ver o quê'},
       moral:8,
-      registrar:'Sr. Dane quer entender uma coisa antes de morrer.',
-      presagio:'"Essa aqui eu tenho chance." Guarde a frase inteira.'},
+      registrar:'Sr. Dane quer entender uma coisa antes de morrer.'},
   escolhas:[
     {texto:'"Por que você sai toda quarta?"', vai:'c13_toda_quarta', cond:d=>!!d.flags.sabe_do_filho_do_ryuzo},
     {texto:'Embarcar.', vai:'c13_travessia'},
@@ -1052,8 +1044,7 @@ c13_toda_quarta:{
       npc:{nome:'Sr. Dane', opiniao:7, memoria:'Contou que sai toda quarta até o ponto onde o filho não voltou. Cento e cinquenta e duas vezes.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou e ele respondeu na primeira vez em quatro anos'},
       moral:10,
-      registrar:'Sr. Dane vai ao ponto onde o filho morreu toda quarta. Cento e cinquenta e duas vezes.',
-      presagio:'Ele disse que perdeu a conta e deu o número. Guarde os dois.'},
+      registrar:'Sr. Dane vai ao ponto onde o filho morreu toda quarta. Cento e cinquenta e duas vezes.'},
   escolhas:[
     {texto:'Embarcar.', vai:'c13_travessia'},
     {texto:'"Eu acho que eu sei o que é o gelo."', vai:'c13_contou_pro_ryuzo', cond:d=>!!d.flags.achou_o_filhote || !!d.flags.sabe_do_goro},
@@ -1077,8 +1068,7 @@ c13_silencio_com_ryuzo:{
   ef:{flag:'silencio_com_ryuzo',
       npc:{nome:'Sr. Dane', opiniao:6, memoria:'Dividiu uma laranja com você em silêncio e mandou você ligar para casa.'},
       moral:12, hp:2,
-      rep:{eixo:'bom',delta:1,motivo:'Ficou em silêncio com quem precisava de companhia'},
-      presagio:'"Liga hoje." Você vai lembrar disso em outro lugar.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou em silêncio com quem precisava de companhia'}},
   escolhas:[
     {texto:'Embarcar.', vai:'c13_travessia'},
     {texto:'"Eu acho que eu sei o que é o gelo."', vai:'c13_contou_pro_ryuzo', cond:d=>!!d.flags.achou_o_filhote || !!d.flags.sabe_do_goro},
@@ -1168,8 +1158,7 @@ c13_avisou_a_colonia:{
       rep:{eixo:'bom',delta:5,motivo:'Contou para o cais inteiro e o cais respondeu com botes'},
       moral:15, instabilidade:1,
       npc:{nome:'Tobin', opiniao:-1, memoria:'Você contou no cais. Quatro pessoas disseram o nome dele antes de você terminar.'},
-      registrar:'Contou tudo no cais de Fuchsia. Onze pessoas ofereceram bote.',
-      presagio:'Ninguém foi atrás dele. Guarde isso sobre cidade pequena: ela sabe a hora.'},
+      registrar:'Contou tudo no cais de Fuchsia. Onze pessoas ofereceram bote.'},
   escolhas:[
     {texto:'Ir com os onze botes.', vai:'c13_comboio'},
     {texto:'Ir só com o Sr. Dane.', vai:'c13_travessia'},
@@ -1317,8 +1306,7 @@ c13_mandou_avisar:{
       npc:{nome:'Sr. Dane', opiniao:9, memoria:'Te deixou na borda do gelo com um cobertor e voltou para tirar a frota de Fuchsia da água.'},
       rep:{eixo:'bom',delta:6,motivo:'Mandou avisar a cidade antes de tentar qualquer coisa'},
       moral:15, instabilidade:-1,
-      registrar:'A frota de Fuchsia foi puxada para terra antes de você entrar na caverna.',
-      presagio:'"Rocha alta, não ilha." Anota. Ele não disse isso à toa.'},
+      registrar:'A frota de Fuchsia foi puxada para terra antes de você entrar na caverna.'},
   escolhas:[{texto:'Entrar na ilha.', vai:'c13_ilha'}]
 },
 
@@ -1393,7 +1381,7 @@ c13_camadas:{
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
     {texto:'Tentar tirar o Dewgong.', vai:'c13_dewgong'},
-    {texto:'Procurar mais bichos ao longo da parede lateral.', vai:'c13_o_filhote'},
+    {texto:'Procurar mais Pokémon ao longo da parede lateral.', vai:'c13_o_filhote'},
     {texto:'Voltar e contar isso pro Sr. Dane.', vai:'c13_voltou_da_caverna'}
   ]
 },
@@ -1452,12 +1440,11 @@ c13_deixou_dewgong:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Entendeu que salvar não é sempre tirar de onde está'},
       flag:'entendeu_o_torpor',
-      registrar:'Deixou o Dewgong no gelo, em torpor. O torpor era o que o mantinha vivo.',
-      presagio:'A diferença entre sabedoria e covardia só existe dentro da sua cabeça. Vai doer de novo.'},
+      registrar:'Deixou o Dewgong no gelo, em torpor. O torpor era o que o mantinha vivo.'},
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
     {texto:'Contar as camadas do gelo.', vai:'c13_camadas'},
-    {texto:'Procurar mais bichos em torpor.', vai:'c13_o_filhote'},
+    {texto:'Procurar mais Pokémon em torpor.', vai:'c13_o_filhote'},
     {texto:'Voltar pro barco.', vai:'c13_voltou_da_caverna'}
   ]
 },
@@ -1468,7 +1455,7 @@ c13_o_filhote:{
     'A trinta metros da parede lateral, numa reentrância que a lanterna só pega de raspão, tem uma coisa pequena que se mexe.',
     'É um Seel filhote. Pequeno de verdade: uns quarenta centímetros, com a pelagem ainda clara da primeira muda.',
     'Ele não está em torpor. Ele está acordado, e é isso que está errado.',
-    'Todo bicho dessa caverna baixou o metabolismo e parou. Ele não conseguiu, porque filhote não sabe, e por isso ele passou dezenove semanas acordado num lugar onde não tem o que comer.',
+    'Todo Pokémon dessa caverna baixou o metabolismo e parou. Ele não conseguiu, porque filhote não sabe, e por isso ele passou dezenove semanas acordado num lugar onde não tem o que comer.',
     'Ele está com metade do peso que devia.',
     'Quando a luz bate nele, ele não foge. Ele não tem energia pra fugir e provavelmente não teria de qualquer jeito.',
     d=>{
@@ -1520,8 +1507,7 @@ c13_deixou_o_filhote:{
     'Ele não se mexeu.'
   ],
   ef:{flag:'deixou_o_filhote', moral:-2,
-      registrar:'Deixou o Seel filhote na caverna com um cobertor de flanela.',
-      presagio:'Você vai carregar esse por um tempo, e não vai ter ninguém pra quem contar.'},
+      registrar:'Deixou o Seel filhote na caverna com um cobertor de flanela.'},
   escolhas:[
     {texto:'Ir mais fundo.', vai:'c13_fundo'},
     {texto:'Contar as camadas do gelo.', vai:'c13_camadas'},
@@ -1563,8 +1549,7 @@ c13_a_pedra_do_meio:{
     'Você olha até a pedra sumir, e em nenhum momento a pessoa se mexe, e em nenhum momento ela olha pro barco.'
   ],
   ef:{flag:'viu_o_red',
-      registrar:'Havia alguém sentado num afloramento de rocha a quatro quilômetros da costa das Seafoam. Está lá desde junho.',
-      presagio:'Sem barco amarrado, num mar a dois graus, desde junho. Guarde o rosto.'},
+      registrar:'Havia alguém sentado num afloramento de rocha a quatro quilômetros da costa das Seafoam. Está lá desde junho.'},
   escolhas:[
     {texto:'Pedir pra encostar na pedra.', vai:'c13_encostar_na_pedra'},
     {texto:'Não pedir. Seguir pra Fuchsia.', vai:'c13_voltou'}
@@ -1713,7 +1698,7 @@ c13_perto:{
     {texto:'"Eu sei onde ele está."', vai:'c13_eu_sei_onde', cond:d=>!!d.flags.achou_o_filhote || !!d.flags.sabe_do_goro},
     {texto:'"Eu não sei como."', vai:'c13_perguntou_articuno'},
     {texto:'Ir até o vazio ver o que é.', vai:'c13_o_vazio'},
-    {texto:'Jogar a bola nele agora, que está distraído.', vai:'c13_traicao_articuno'}
+    {texto:'Jogar a Pokébola nele agora, que está distraído.', vai:'c13_traicao_articuno'}
   ]
 },
 
@@ -1760,8 +1745,7 @@ c13_ele_ta_vivo:{
   ef:{flag:['disse_que_ta_vivo'],
       instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Disse a coisa que ele precisava ouvir'},
-      registrar:'Disse a Articuno que o segundo está vivo. A caverna esquentou dois graus por dois segundos.',
-      presagio:'Ele soltou por dois segundos. Guarde o que caiu do teto.'},
+      registrar:'Disse a Articuno que o segundo está vivo. A caverna esquentou dois graus por dois segundos.'},
   escolhas:[
     {texto:'Prometer trazer.', vai:'c13_prometeu'},
     {texto:'"Eu não sei onde. Mas eu vou achar."', vai:'c13_buscar_ajuda'},
@@ -1818,8 +1802,7 @@ c13_eu_sei_onde:{
         return [{tipo:'mundo', texto:'Articuno soltou o gelo por quatro segundos e voltou a segurar. Ele está esperando você.'}]; },
       rep:{eixo:'bom',delta:6,motivo:'Contou a verdade para quem tinha congelado um mar por não saber dela'},
       moral:20, instabilidade:1,
-      registrar:'Contou a Articuno onde o segundo está. Ele abaixou a cabeça.',
-      presagio:'Quatro segundos de descontrole e ele mesmo cortou. Guarde: ele tem mais controle que você.'},
+      registrar:'Contou a Articuno onde o segundo está. Ele abaixou a cabeça.'},
   escolhas:[
     {texto:'Sair e ir buscar.', vai:'c13_voltar_buscar'},
     {texto:'Buscar ajuda em Fuchsia.', vai:'c13_buscar_ajuda'},
@@ -1900,8 +1883,7 @@ c13_goro_sozinho:{
       moral:30, instabilidade:-2,
       executar:d=>{ const L=Estado.lend(144); L.disposicao='passivo'; L.aliado=true; if(Estado.dados.mundo) Estado.dados.mundo.clima='normal';
         return [{tipo:'mundo', texto:'Articuno recebeu o segundo. O gelo começou a ceder.'}]; },
-      registrar:'Tobin devolveu o Articuno com as próprias mãos, sozinho.',
-      presagio:'Ele saiu chorando e não escondeu. Guarde — foi ele que tinha que fazer isso.'},
+      registrar:'Tobin devolveu o Articuno com as próprias mãos, sozinho.'},
   escolhas:[
     {texto:'Ficar e ver o gelo ceder.', vai:'c13_depois_salvou'},
     {texto:'Entrar na caverna pra ver.', vai:'c13_depois_salvou'},
@@ -1930,8 +1912,7 @@ c13_devolveu:{
       moral:30, instabilidade:-2,
       executar:d=>{ const L=Estado.lend(144); L.disposicao='passivo'; L.aliado=true; if(Estado.dados.mundo) Estado.dados.mundo.clima='normal';
         return [{tipo:'mundo', texto:'O gelo das Seafoam começou a ceder. Dezenove semanas de mar vão voltar de uma vez.'}]; },
-      registrar:'Devolveu o Articuno pequeno. A caverna começou a ceder.',
-      presagio:'"A coisa que filhote faz quando acha que talvez não reconheçam ele." Guarde.'},
+      registrar:'Devolveu o Articuno pequeno. A caverna começou a ceder.'},
   escolhas:[
     {texto:'Correr para o barco.', vai:'c13_depois_salvou'},
     {texto:'Correr para a rocha alta, não pro barco.', vai:'c13_rocha_alta', cond:d=>!!d.flags.avisou_o_cais || !!d.flags.sabe_da_onda},
@@ -2054,8 +2035,7 @@ c13_levou_o_filhote:{
       rep:{eixo:'bom',delta:1,motivo:'Tirou o Articuno da câmara fria'},
       moral:-10,
       npc:{nome:'Tobin', opiniao:-2, memoria:'Chegou na quarta com dois baldes e a câmara fria estava vazia.'},
-      registrar:'Levou o Articuno pequeno sem avisar o Tobin.',
-      presagio:'Ele vai abrir a porta e não vai ter ninguém. Dezenove semanas.'},
+      registrar:'Levou o Articuno pequeno sem avisar o Tobin.'},
   escolhas:[
     {texto:'Voltar e avisar antes de embarcar.', vai:'c13_goro'},
     {texto:'Embarcar com o Sr. Dane.', vai:'c13_travessia'},
@@ -2236,15 +2216,15 @@ c13_buscar_ajuda:{
 c13_traicao_articuno:{
   texto:[
     'Ele está te mostrando o vazio na parede, pela terceira vez, devagar, como quem explica pra criança.',
-    'E você joga a bola.',
+    'E você joga a Pokébola.',
     'Não tem como suavizar isso e você nem vai tentar depois.'
   ],
   ef:{executar:d=>{ const L=Estado.lend(144); L.disposicao='hostil'; L.ataquesSofridos+=2; return []; },
       rep:{eixo:'ruim',delta:4,motivo:'Atacou um lendário no momento em que ele pediu ajuda'},
       moral:-25,
       flag:'traiu_articuno',
-      registrar:'Jogou a bola em Articuno enquanto ele pedia ajuda.',
-      presagio:'Ele explicou três vezes, devagar. E você jogou a bola.'},
+      registrar:'Jogou a Pokébola em Articuno enquanto ele pedia ajuda.',
+      presagio:'Ele explicou três vezes, devagar. E você jogou a Pokébola.'},
   escolhas:[{texto:'Encarar o que vem.', vai:'c13_luta_articuno'}]
 },
 
@@ -2285,7 +2265,7 @@ c13_pos_articuno:{
 
 c13_capturou_articuno:{
   texto:[
-    'A bola fecha.',
+    'A Pokébola fecha.',
     'E o gelo — o gelo que ele estava segurando, camada por camada, há dezenove semanas — começa a ceder no mesmo segundo, porque não tem mais ninguém segurando.',
     'A câmara racha inteira em menos de quatro segundos.',
     'Colunas de séculos caem. A água volta com força de maré represada por dezenove semanas, por baixo, pelos lados, por cima.',
@@ -2309,7 +2289,7 @@ c13_capturou_articuno:{
 
 c13_soltou_articuno:{
   texto:[
-    'Você abre a bola numa câmara que está caindo, com água até a canela.',
+    'Você abre a Pokébola numa câmara que está caindo, com água até a canela.',
     'Ele sai e não te ataca.',
     'Ele olha em volta — pra água que já está subindo, pras colunas caídas, pro vazio da parede que está se partindo — e faz uma coisa que você não previu:',
     'ele volta pro pilar e recomeça.',
@@ -2366,7 +2346,7 @@ c13_mergulhou:{
 c13_correu_da_agua:{
   texto:[
     'Você corre.',
-    'Cento e setenta metros de caverna desabando com uma bola no bolso e água subindo dez centímetros por minuto.',
+    'Cento e setenta metros de caverna desabando com uma Pokébola no bolso e água subindo dez centímetros por minuto.',
     'Você chega no barco. Sr. Dane arranca antes de você sentar direito.',
     'De cinquenta metros vocês veem a entrada da caverna sumir — não desabar: sumir, porque o mar sobe e tampa.',
     'E aí o mar sobe.',
@@ -2379,7 +2359,7 @@ c13_correu_da_agua:{
       hp:-4, causa:'Fuga da caverna desabando',
       npc:{nome:'Sr. Dane', opiniao:2, memoria:'Não perguntou o que você tinha no bolso.'},
       moral:-15,
-      registrar:'Saiu das Seafoam com Articuno na bola. O mar subiu três metros.',
+      registrar:'Saiu das Seafoam com Articuno na Pokébola. O mar subiu três metros.',
       presagio:'Ele decidiu não perguntar. Isso não é o mesmo que não saber.'},
   escolhas:[
     {texto:'Soltar ali mesmo, do barco.', vai:'c13_soltou_do_barco'},
@@ -2391,7 +2371,7 @@ c13_correu_da_agua:{
 
 c13_soltou_do_barco:{
   texto:[
-    'Você abre a bola apontando pro mar, de dentro de um barco de doze pés, a cinquenta metros de uma caverna que acabou de sumir.',
+    'Você abre a Pokébola apontando pro mar, de dentro de um barco de doze pés, a cinquenta metros de uma caverna que acabou de sumir.',
     'Ele sai e fica na água por uns quatro segundos, em cima da própria imagem, e olha o lugar onde a entrada da caverna estava.',
     'Depois sobe.',
     'Não voa embora: sobe reto, uns quarenta metros, e fica pairando em cima do ponto.',
@@ -2426,7 +2406,7 @@ c13_contou_pro_ryuzo_o_que_fez:{
   vozes:['N','N','N','P','N','N'],
   texto:[
     'Você conta.',
-    'Que tinha um segundo, menor, e uma cama escavada na parede, e que você jogou a bola, e que a caverna caiu por isso.',
+    'Que tinha um segundo, menor, e uma cama escavada na parede, e que você jogou a Pokébola, e que a caverna caiu por isso.',
     'Ele ouve inteiro com a mão no cabo do leme e o olho no horizonte.',
     'E no fim ele fala uma coisa que você não estava preparad{o|a} pra ouvir:',
     '"Meu filho tinha vinte e seis anos e morreu porque eu levei ele pro mar numa quarta-feira de novembro com vento de sudeste."',
@@ -2522,8 +2502,7 @@ c13_outra_coisa:{
       npc:{nome:'Sr. Dane', opiniao:10, memoria:'Topou levar você a Cinnabar depois de ver os dois Articuno saírem.'},
       rep:{eixo:'bom',delta:3,motivo:'Deu a um velho uma próxima coisa'},
       moral:20,
-      registrar:'Sr. Dane vai te levar a Cinnabar.',
-      presagio:'"A gente vê." Ele falou no plural de novo.'},
+      registrar:'Sr. Dane vai te levar a Cinnabar.'},
   escolhas:[{texto:'Voltar a Fuchsia.', vai:'c13_fim'}]
 },
 

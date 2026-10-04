@@ -49,7 +49,7 @@ const TREINADORES_ESTRADA = [
  times:[[29,43], [30,44,118], [30,44,119,77], [31,45,119,78,131]], reserva:[183,179],
  abre:'"Eu passei pelo portão. Voltei pra treinar quem ainda não passou. Quer ver o que tem do outro lado?"',
  volta:'"Você cresceu. Eu reparo nisso, é meu trabalho."',
- perde:'"Boa. Guarda esse jeito de mandar. Lá em cima ele vale mais do que qualquer bicho."',
+ perde:'"Boa. Guarda esse jeito de mandar. Lá em cima ele vale mais do que qualquer Pokémon."',
  vence:'"Do outro lado do portão é assim o tempo todo. Descansa e volta."',
  numero:{passa:'Naomi te dá o número escrito atrás de um recibo de Centro Pokémon. "Me liga quando tiver mais uma insígnia. Eu gosto de ver o placar mudar."',
    oferece:['revanche','favor'],
@@ -215,7 +215,7 @@ const TREINADORES_ESTRADA = [
  vence:'"Pedra sobre pedra, {moço|moça}."'},
 {id:'chris', local:'rota9', classe:'Campista', arq:'camper', artigo:'um', nome:'Chris',
  times:[[56,27], [56,28,66], [57,28,67,106], [57,28,68,107,237]], reserva:[236,207],
- abre:'"Eu treino luta. Luta de verdade, de soco. Mas os meus bichos lutam melhor que eu, então vai com eles."',
+ abre:'"Eu treino luta. Luta de verdade, de soco. Mas os meus Pokémon lutam melhor que eu, então vai com eles."',
  volta:'"Soco novo. Quer ver?"',
  perde:'"Bom soco. O seu, não o meu."',
  vence:'"Soco, esquiva, soco."',
@@ -239,7 +239,7 @@ const TREINADORES_ESTRADA = [
  vence:'"Os meus são raros. Isso ajuda."',
  numero:{passa:'Ashton te passa o número no escuro e você só descobre que está de cabeça pra baixo no papel quando sai do túnel.',
    oferece:['revanche','prova'],
-   prova:{rotulo:'Contar de um bicho raro que você viu',
+   prova:{rotulo:'Contar de um Pokémon raro que você viu',
      texto:[
        '"Onde? Quando? Que horas? De que lado ele estava?"',
        '"Não precisa me dizer. Mentira, precisa. Eu vou anotar tudo."'
@@ -368,9 +368,9 @@ const TREINADORES_ESTRADA = [
  volta:'"No meio de novo."',
  perde:'"Eu vou pro lado do mato pensar."',
  vence:'"Viu como o meio é seguro?"',
- numero:{passa:'Dave te dá o número e diz que liga "quando tiver um bicho raro", o que ele vai fazer muito.',
+ numero:{passa:'Dave te dá o número e diz que liga "quando tiver um Pokémon raro", o que ele vai fazer muito.',
    oferece:['revanche','prova'],
-   prova:{rotulo:'Perguntar se ele achou o bicho raro',
+   prova:{rotulo:'Perguntar se ele achou o Pokémon raro',
      texto:[
        '"Achei! Quer dizer. Achei que achei. Era um Rattata com a luz batendo."',
        '"Mas um dia eu acho. E aí eu te ligo primeiro."'
@@ -415,7 +415,7 @@ const TREINADORES_ESTRADA = [
    oferece:['revanche','favor'],
    favor:{rotulo:'Perguntar do vento', limite:3, esperaCap:3,
      texto:[
-       '"Tá virando pro sul. Quando vira pro sul os bichos ficam agitados e fogem de repelente."',
+       '"Tá virando pro sul. Quando vira pro sul os Pokémon ficam agitados e fogem de repelente."',
        '"Eu mandei uns pra você. Usa na rota comprida."'
      ],
      efeito:d=>{ Estado.darItem('Repelente', 3); return [{tipo:'item', texto:'Ele manda 3× Repelente pelo Centro.'}]; }}}},

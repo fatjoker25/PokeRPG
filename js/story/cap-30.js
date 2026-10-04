@@ -251,8 +251,7 @@ c30_subiu_procurando:{
     'Alguém marcou os oito e não tirou as marcas, porque quem marca não imagina que alguém vá procurar.'
   ],
   ef:{flag:['as_oito_tiras','sabe_do_lote_unico'],
-      registrar:'No livro de sepultamento do quinto andar há oito tiras de papel marcando exatamente os oito nomes da madrugada.',
-      presagio:'Oito marcadores deixados no lugar. Eles vão voltar pra pegar mais.'},
+      registrar:'No livro de sepultamento do quinto andar há oito tiras de papel marcando exatamente os oito nomes da madrugada.'},
   escolhas:[
     {texto:'Ficar escondid{o|a} no quinto andar e esperar.', vai:'c30_esperou_no_quinto'},
     {texto:'Levar as oito tiras.', vai:'c30_levou_as_tiras'},
@@ -323,8 +322,7 @@ c30_os_seis_novos:{
   ],
   ef:{flag:['tem_os_seis_nomes','reika_precisa_de_papel'],
       rep:{eixo:'bom', delta:2, motivo:'Anotou, com antecedência, os seis nomes que ainda vão ser usados.'},
-      registrar:'Anotou os seis nomes marcados, com data de óbito e número de registro, antes de serem usados.',
-      presagio:'Uma previsão datada é a única prova que ninguém consegue dizer que foi plantada depois.'},
+      registrar:'Anotou os seis nomes marcados, com data de óbito e número de registro, antes de serem usados.'},
   escolhas:[
     {texto:'Ir embora de Lavender com isso.', vai:'c30_fim'}
   ]
@@ -423,8 +421,7 @@ c30_pegou_o_caderninho:{
   ],
   ef:{flag:['tem_os_seis_nomes','reika_precisa_de_papel','sabe_do_lote_unico'],
       npc:{nome:'Lorca', opiniao:1, viuVoce:'Te entregou a folha dos seis nomes e ficou com o caderno.'},
-      registrar:'Está com a folha dos seis nomes, na letra e na data do Lorca.',
-      presagio:'Ele ficou com o caderno de propósito. Esse caderno vai reaparecer.'},
+      registrar:'Está com a folha dos seis nomes, na letra e na data do Lorca.'},
   escolhas:[
     {texto:'Ir embora de Lavender.', vai:'c30_fim'}
   ]
@@ -482,8 +479,7 @@ c30_perdeu:{
     'Foi só alguém te tirando do caminho por uma noite, porque uma noite era o que eles precisavam.'
   ],
   ef:{hp:-5, causa:'Briga na base da torre', flag:'perdeu_na_base_da_torre', moral:-3,
-      registrar:'Perdeu na base da torre. A pessoa foi embora andando.',
-      presagio:'Eles precisavam de uma noite. Amanhã de manhã alguma coisa em Lavender vai estar diferente.'},
+      registrar:'Perdeu na base da torre. A pessoa foi embora andando.'},
   escolhas:[
     {texto:'Ir embora de Lavender.', vai:'c30_fim'}
   ]

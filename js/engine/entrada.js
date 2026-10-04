@@ -20,7 +20,7 @@ const INTENCOES = {
   captura:{
     peso:1.0,
     palavras:['capturar','capturo','pegar','pego','bola','ball','poké','pokebola','prender','prendo',
-      'jogar a bola','arremessar','tentar pegar']
+      'jogar a Pokébola','arremessar','tentar pegar']
   },
   fuga:{
     peso:1.0,

@@ -26,7 +26,7 @@ c19_ab_o_onibus:{
     'Existe um ônibus fretado que sai da rodoviária de Fuchsia às seis e dez e não tem destino no letreiro: tem um papelão escrito ESTAÇÃO na frente, preso com fita no para-brisa.',
     'Trinta e um lugares, vinte e nove ocupados, e você é o trigésimo.',
     'Ninguém pergunta quem você é. Às seis e dez da manhã ninguém pergunta nada.',
-    'As pessoas do ônibus são: gente de macacão, gente de jaleco, duas mulheres com crachá plastificado e uma senhora com uma marmita no colo.',
+    'As pessoas do ônibus são: gente de macacão, gente de jaleco, duas mulheres com crachá plastificado e uma senhora almoçando com o prato no colo.',
     'Na quarta parada entra um rapaz que claramente é novo, porque ele cumprimenta todo mundo, e ninguém responde, e ele senta na frente.',
     'A conversa do banco de trás é sobre um colega que se demitiu.',
     fala('a mulher do banco de trás', 'Ele aguentou onze meses.'),
@@ -105,7 +105,7 @@ c19_ab_o_rapaz_novo:{
     fala('o rapaz novo', 'Eles falaram que é por causa da cláusula.'),
     d=>fala(d.jogador.nome, 'Que cláusula?'),
     'Ele desdobra o contrato e procura, e acha, e lê em voz alta, e vai ficando mais devagar conforme lê:',
-    '**"O contratado se obriga a não divulgar, por prazo indeterminado, inclusive após o término do vínculo, qualquer informação sobre espécimes, procedimentos, instalações ou pessoas..."**',
+    '**"O contratado se obriga a não divulgar, por prazo indeterminado, inclusive após o término do vínculo, qualquer informação sobre espécimes, procedimentos, instalações ou pessoas…"**',
     'Ele para de ler. Dobra o contrato. Guarda.',
     fala('o rapaz novo', 'É normal, né? Empresa grande tem isso.')
   ],
@@ -292,7 +292,7 @@ c19_perimetro:{
   texto:[
     'Você anda o perímetro inteiro, o que leva uma hora e quarenta, porque oito hectares andados rente à cerca são mais que oito hectares.',
     'A cerca é nova, de tela galvanizada, com mourão de concreto a cada três metros e arame liso no alto. Não tem arame farpado, o que te chama a atenção.',
-    'Não tem farpado porque farpado machuca bicho, e bicho machucado é prejuízo.',
+    'Não tem farpado porque farpado machuca Pokémon, e Pokémon machucado é prejuízo.',
     'Tem quatro câmeras, todas apontadas para dentro.',
     'Você leva um tempo para entender o que isso quer dizer, e quando entende, é pior: eles não têm medo de quem entra.'
   ],
@@ -445,13 +445,13 @@ c19_barranco:{
     'O trecho leste é como estava no croqui: o barranco faz o trabalho e a cerca ali tem um metro e vinte.',
     'Embaixo, sete metros de queda até a pedra, e a pedra está molhada porque a maré bateu há pouco.',
     'Não é intransponível. É só honesto: dá para subir, e se você errar, você cai sete metros.',
-    'Tem uma trilha fina de bicho passando rente à cerca, do lado de fora, que ninguém fez de propósito.'
+    'Tem uma trilha fina de Pokémon passando rente à cerca, do lado de fora, que ninguém fez de propósito.'
   ],
   ef:{flag:'achou_o_barranco',
       registrar:'Trecho leste: cerca de 1,20 m sobre um barranco de sete metros.'},
   escolhas:[
     {texto:'Subir por aqui.', vai:'c19_cerca_mar'},
-    {texto:'Seguir a trilha de bicho.', vai:'c19_trilha_de_bicho'},
+    {texto:'Seguir a trilha de Pokémon.', vai:'c19_trilha_de_bicho'},
     {texto:'Voltar ao portão.', vai:'c19_cerca'}
   ]
 },
@@ -461,7 +461,7 @@ c19_trilha_de_bicho:{
     'A trilha acompanha a cerca por uns oitenta metros e termina num ponto onde a tela foi levantada por baixo, na marra, por alguma coisa com força.',
     'O buraco tem meio metro e foi remendado com arame, e o remendo foi arrebentado de novo, e remendado de novo, três camadas.',
     'Eles não conseguem impedir. Alguma coisa entra e sai daqui toda semana.',
-    'E, do lado de dentro, o mato está pisado num círculo, do jeito que fica quando um bicho deita sempre no mesmo lugar.'
+    'E, do lado de dentro, o mato está pisado num círculo, do jeito que fica quando um Pokémon deita sempre no mesmo lugar.'
   ],
   ef:{flag:['achou_o_buraco','tem_bicho_entrando'], instabilidade:1,
       registrar:'Um buraco na cerca, remendado três vezes, com mato pisado do lado de dentro.'},
@@ -477,7 +477,7 @@ c19_esperou_o_bicho:{
     'Você espera uma hora e quarenta encostad{o|a} num tronco, e às onze e dez ele aparece.',
     'É um Persian silvestre, grande, com uma orelha rasgada de briga velha.',
     'Ele passa pelo buraco com a intimidade de quem faz isso todo dia, anda uns quinze metros para dentro do terreno e senta no círculo de mato pisado, olhando o galpão 3.',
-    'Fica ali quarenta minutos, olhando trinta e poucos bichos atrás de um vidro que nunca viram um bicho de verdade.',
+    'Fica ali quarenta minutos, olhando trinta e poucos Pokémon atrás de um vidro que nunca viram um Pokémon de verdade.',
     'Depois levanta, volta pelo buraco, e some no mato.'
   ],
   ef:{flag:['viu_o_persian'], instabilidade:1,
@@ -491,10 +491,10 @@ c19_esperou_o_bicho:{
 
 c19_seguiu_o_persian:{
   texto:[
-    'Você segue o Persian por uns duzentos metros mato adentro, com o cuidado de quem já aprendeu a seguir bicho e ainda assim sendo percebido o tempo inteiro.',
+    'Você segue o Persian por uns duzentos metros mato adentro, com o cuidado de quem já aprendeu a seguir Pokémon e ainda assim sendo percebido o tempo inteiro.',
     'Ele para numa clareira e se vira para você, e não é ameaça: é o olhar de quem está esperando que você entenda.',
     'Na clareira tem três covas rasas, cobertas de galho.',
-    'São bichos. São da mesma espécie, do mesmo tamanho, e nenhum deles tem marca de briga.',
+    'São Pokémon. São da mesma espécie, do mesmo tamanho, e nenhum deles tem marca de briga.',
     'Alguém enterrou três unidades fora da cerca, mal, com pressa.'
   ],
   ef:{flag:['achou_as_covas'], instabilidade:2, moral:-3,
@@ -548,7 +548,7 @@ c19_cobriu_direito:{
     'Você marca o lugar no caderno com referência de árvore e distância da cerca, porque um dia alguém pode precisar achar.'
   ],
   ef:{flag:['marcou_as_covas'], moral:4,
-      rep:{eixo:'bom',delta:2,motivo:'Enterrou direito três bichos que ninguém ia enterrar'},
+      rep:{eixo:'bom',delta:2,motivo:'Enterrou direito três Pokémon que ninguém ia enterrar'},
       registrar:'Cobriu as três covas direito e marcou o lugar no caderno.'},
   escolhas:[
     {texto:'Entrar pelo buraco.', vai:'c19_entrou_pelo_buraco'},
@@ -560,7 +560,7 @@ c19_entrou_pelo_buraco:{
   texto:[
     'Você levanta a tela e entra de lado, e do lado de dentro o mato é o mato estranho: todos os arbustos na mesma distância, na mesma altura.',
     'Você atravessa cento e vinte metros sem que nada aconteça, o que é estranho, porque cento e vinte metros de mato deveriam ter alguma coisa.',
-    'Não tem bicho. É isso. Não tem inseto, não tem Pidgey, não tem barulho nenhum a não ser o vento e o mar.',
+    'Não tem Pokémon. É isso. Não tem inseto, não tem Pidgey, não tem barulho nenhum a não ser o vento e o mar.',
     'Eles plantaram o mato e esqueceram de plantar o resto.'
   ],
   ef:{flag:['entrou_pelo_buraco'], instabilidade:1,
@@ -583,7 +583,7 @@ c19_subiu_limpo:{
   texto:[
     'Você sobe sem barulho nenhum e cai do outro lado agachad{o|a}, e leva quatro segundos para entender que está dentro.',
     'De dentro, o lugar é ainda mais tranquilo do que de fora.',
-    'A quinze metros, uma mulher de macacão está sentada num caixote virado, de costas para você, almoçando marmita às dez e meia da manhã, porque o turno dela começou às quatro.',
+    'A quinze metros, uma mulher de macacão está sentada num caixote virado, de costas para você, almoçando às dez e meia da manhã, porque o turno dela começou às quatro.',
     'Ela não te vê. Você tem escolha.'
   ],
   ef:{flag:'entrou_limpo',
@@ -595,14 +595,14 @@ c19_subiu_limpo:{
 },
 
 c19_mulher_da_marmita:{
-  falante:'a mulher da marmita',
+  falante:'a mulher almoçando',
   vozes:['N','N','N'],
   texto:[
     'Você diz bom dia e ela leva um susto que derruba metade do arroz.',
     'Depois olha você de cima a baixo, olha a cerca, olha você de novo, e a conclusão dela é imediata e errada.',
     '"Você é da Sanear?"',
     'Você não responde nem sim nem não.',
-    '"Eles sempre entram por aí mesmo, porque o caminhão não manobra lá atrás." Ela volta para a marmita. "A caçamba está cheia, viu? Está cheia desde segunda. Reclama com o escritório, não comigo."'
+    '"Eles sempre entram por aí mesmo, porque o caminhão não manobra lá atrás." Ela volta a almoçar. "A caçamba está cheia, viu? Está cheia desde segunda. Reclama com o escritório, não comigo."'
   ],
   ef:{flag:['passou_por_da_sanear','sabe_da_sanear'],
       registrar:'Passou por funcionário da Sanear. A caçamba está cheia desde segunda.'},
@@ -613,7 +613,7 @@ c19_mulher_da_marmita:{
 },
 
 c19_porque_cheia:{
-  falante:'a mulher da marmita',
+  falante:'a mulher almoçando',
   vozes:['N','N','P','N'],
   texto:[
     '"Porque teve lote grande." Ela fala de boca cheia, sem nenhum peso. "Quarenta e um C. Veio tudo errado."',
@@ -631,14 +631,14 @@ c19_porque_cheia:{
 },
 
 c19_ela_conta:{
-  falante:'a mulher da marmita',
+  falante:'a mulher almoçando',
   vozes:['N','P','N','N','N'],
   texto:[
-    'Ela tampa a marmita e olha para os lados sem nenhum disfarce, do jeito que gente que nunca precisou disfarçar olha para os lados.',
+    'Ela tampa o pote do almoço e olha para os lados sem nenhum disfarce, do jeito que gente que nunca precisou disfarçar olha para os lados.',
     '"O quarenta e um C foi um lote de duzentos. Deu problema de dente, de pata, deu de tudo."',
     '"E aí?"',
     '"E aí não passou. Catorze na segunda, catorze na quarta, catorze ontem." Ela conta nos dedos e a conta a incomoda. "Eles gostam de catorze porque é o que cabe na caçamba sem passar do peso."',
-    'Ela pega a marmita e levanta.',
+    'Ela junta o almoço e levanta.',
     '"Olha, eu preciso do meu emprego. Eu tenho dois filhos. Eu não vi você."'
   ],
   ef:{flag:['sabe_do_lote_41c','sabe_do_catorze'], instabilidade:2, moral:-3,
@@ -651,14 +651,14 @@ c19_ela_conta:{
 },
 
 c19_nome_dela:{
-  falante:'a mulher da marmita',
+  falante:'a mulher almoçando',
   vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Ela para.',
     '"Pra quê?"',
     '"Pra eu saber a quem agradecer."',
     'Ela pensa um tempo comprido demais para uma pergunta tão simples.',
-    d=>{ Nomes.apresentar('a mulher da marmita'); return '"Thea." Ela põe a marmita debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que {o senhor|a senhora} entenda por quê."'; },
+    d=>{ Nomes.apresentar('a mulher almoçando'); return '"Thea." Ela põe o pote do almoço debaixo do braço. "Thea Larkin, do turno da madrugada. E se aparecer o meu nome em algum lugar, eu vou dizer que é mentira, e eu quero que {o senhor|a senhora} entenda por quê."'; },
     '"Eu entendo."',
     '"Então tá." Ela vai embora. "Galpão do fundo. A porta não tranca."'
   ],
@@ -671,7 +671,7 @@ c19_nome_dela:{
 c19_mentiu_sanear:{
   texto:[
     '"Da Sanear."',
-    'Ela aceita na hora, porque não tinha motivo nenhum para não aceitar, e volta para a marmita.',
+    'Ela aceita na hora, porque não tinha motivo nenhum para não aceitar, e volta a almoçar.',
     'Você segue para os galpões com a informação que queria e com uma sensação nova e desagradável.',
     'A sensação é a de ter usado uma mulher que almoça às dez e meia da manhã porque o turno dela começou às quatro.'
   ],
@@ -702,7 +702,7 @@ c19_ivo:{
   falante:'o rapaz da enfermaria',
   vozes:['N','N','P','N','N'],
   texto:[
-    d=>{ Nomes.apresentar('o rapaz da enfermaria'); return '"Janus." Ele termina a atadura e prende com esparadrapo. "Eu sou auxiliar. Faço enfermaria de gente e enfermaria de bicho, o que dá quase o mesmo trabalho."'; },
+    d=>{ Nomes.apresentar('o rapaz da enfermaria'); return '"Janus." Ele termina a atadura e prende com esparadrapo. "Eu sou auxiliar. Faço enfermaria de gente e enfermaria de Pokémon, o que dá quase o mesmo trabalho."'; },
     '"Vocês machucam muita gente aqui?"',
     '"Vinte e quatro dias sem acidente." Ele aponta o quadro da parede, que tem o mesmo giz da guarita. "E agora eu vou ter que zerar por sua causa, e o pessoal vai me odiar."',
     'Ele diz isso rindo. É uma piada de gente que trabalha junto.',
@@ -710,9 +710,9 @@ c19_ivo:{
   ],
   ef:{flag:'conheceu_ivo',
       npc:{nome:'Janus', opiniao:1, memoria:'Auxiliar de enfermaria da Estação 4. Te enfaixou e fez piada.'},
-      registrar:'Janus, auxiliar de enfermaria. Cuida de gente e de bicho.'},
+      registrar:'Janus, auxiliar de enfermaria. Cuida de gente e de Pokémon.'},
   escolhas:[
-    {texto:'"Você faz enfermaria de bicho. Me conta do galpão do fundo."', vai:'c19_ivo_galpao'},
+    {texto:'"Você faz enfermaria de Pokémon. Me conta do galpão do fundo."', vai:'c19_ivo_galpao'},
     {texto:'"Já que estou dentro, eu posso ver?"', vai:'c19_pediu_dentro'},
     {texto:'Deixar que te levem à portaria.', vai:'c19_escoltado'}
   ]
@@ -841,7 +841,7 @@ c19_o_que_ele_ouviu:{
     'Ele demora, e quando fala, fala olhando o para-choque.',
     '"Eu estava esperando o canhoto e veio do fundo. Não é grito. É pior. É um barulho de muita coisa pequena junta, que não vai a lugar nenhum."',
     'Ele apaga o cigarro na sola da bota e guarda a guimba no bolso, porque é de uma geração que guarda.',
-    '"Eu perguntei pro rapaz da guarita o que era e ele disse: é o galpão três, os bichos são assim mesmo."',
+    '"Eu perguntei pro rapaz da guarita o que era e ele disse: é o galpão três, os Pokémon são assim mesmo."',
     '"E o senhor acreditou?"',
     '"Eu acreditei." Ele abre a porta da cabine. "Eu acreditei porque eu tenho catorze meses de contrato e um neto."'
   ],
@@ -873,7 +873,7 @@ c19_entrou_pelo_caminhao:{
   texto:[
     'Você entra a pé, encostad{o|a} na lateral do caminhão, andando no ritmo dele, e ninguém olha.',
     'Ninguém olha porque ninguém aqui está esperando invasão.',
-    'É uma estação de pesquisa numa rota litorânea. O sistema de segurança foi desenhado contra vandalismo de adolescente e contra bicho saindo, e não contra uma pessoa adulta andando devagar com cara de quem trabalha ali.'
+    'É uma estação de pesquisa numa rota litorânea. O sistema de segurança foi desenhado contra vandalismo de adolescente e contra Pokémon saindo, e não contra uma pessoa adulta andando devagar com cara de quem trabalha ali.'
   ],
   ef:{flag:'entrou_com_caminhao'},
   escolhas:[{texto:'Seguir para dentro.', vai:'c19_dentro'}]
@@ -1156,7 +1156,7 @@ c19_porque_o_rattata:{
   vozes:['N','N','P','N','N','N'],
   texto:[
     'A Kira olha por um tempo antes de responder, e quando responde é técnica e é honesta.',
-    '"Estereotipia." Ela fala a palavra e depois traduz sozinha. "É movimento repetitivo sem função, de bicho em espaço fechado. Dá em zoológico, dá em criadouro, dá aqui."',
+    '"Estereotipia." Ela fala a palavra e depois traduz sozinha. "É movimento repetitivo sem função, de Pokémon em espaço fechado. Dá em zoológico, dá em criadouro, dá aqui."',
     '"E tem solução?"',
     '"Enriquecimento ambiental. Espaço. Tempo." Ela conta nos dedos. "A gente faz os três e mesmo assim dá em doze por cento."',
     'Ela olha o Rattata bater na parede de novo.',
@@ -1435,7 +1435,7 @@ c19_porque_se_oferece:{
   texto:[
     '"Porque eu faço rápido."',
     'Ele empurra o prato dois centímetros.',
-    '"Tem gente que demora. Tem gente que fica falando com o bicho antes, que acha que está sendo bom." Ele balança a cabeça. "Falar antes é pior. Eu faço rápido e eu faço certo e depois eu lavo tudo."',
+    '"Tem gente que demora. Tem gente que fica falando com o Pokémon antes, que acha que está sendo bom." Ele balança a cabeça. "Falar antes é pior. Eu faço rápido e eu faço certo e depois eu lavo tudo."',
     '"E depois?"',
     '"Depois eu vou pra casa e eu tomo banho duas vezes." Ele finalmente olha para você. "E eu jogo baralho com a minha filha e eu durmo. Eu durmo bem, e é isso que eu queria te dizer, porque {o senhor|a senhora} veio aqui querendo que eu não durma."'
   ],
@@ -1530,7 +1530,7 @@ c19_zoologico_fechou:{
   vozes:['N','N','P','N','N','N','N'],
   texto:[
     '"Porque acabou o dinheiro." Ele dá de ombros, e o dar de ombros é mais pesado que qualquer discurso. "Município cortou, a bilheteria não pagava a ração, e no fim a gente estava comprando ração com vaquinha entre funcionário."',
-    '"E os bichos?"',
+    '"E os Pokémon?"',
     '"Distribuíram." Ele mastiga. "Alguns pra sítio particular, alguns pra outro zoológico, alguns pra lugar nenhum."',
     'Ele bebe água.',
     '"Aqui o dinheiro não falta. É a primeira vez em dezoito anos que eu não preciso fazer vaquinha pra comprar ração."',
@@ -1602,7 +1602,7 @@ c19_meia_hora:{
     'Você fica meia hora.',
     'Nos primeiros dez minutos parece um viveiro comum. Nos dez seguintes você começa a ver.',
     'Ninguém disputa nada. Ninguém marca território. Ninguém esconde comida.',
-    'Dois Nidoran passam a meio metro um do outro sem nenhum sinal, sem nenhum rosnado, sem nenhuma daquelas mil negociações pequenas que dois bichos da mesma espécie fazem quando se cruzam.',
+    'Dois Nidoran passam a meio metro um do outro sem nenhum sinal, sem nenhum rosnado, sem nenhuma daquelas mil negociações pequenas que dois Pokémon da mesma espécie fazem quando se cruzam.',
     'Às dezesseis horas a chuva programada liga e todos os trinta e quatro correm para o mesmo canto, ao mesmo tempo, como se fossem uma coisa só.',
     'Foi isso que eles quiseram dizer com comportamento previsível.'
   ],
@@ -1686,7 +1686,7 @@ c19_soltar_g3:{
 
 c19_mostrou_o_caminho:{
   texto:[
-    'Você agacha na frente das três e faz o que faria com qualquer bicho: mostra a direção com o corpo, anda dois passos, para, espera.',
+    'Você agacha na frente das três e faz o que faria com qualquer Pokémon: mostra a direção com o corpo, anda dois passos, para, espera.',
     'Elas acompanham.',
     'Você anda mais dois, para, espera. Elas acompanham.',
     'Leva quarenta minutos para atravessar cento e vinte metros assim, e no meio do caminho um técnico passa, olha, entende o que está acontecendo e não faz absolutamente nada.',
@@ -1694,7 +1694,7 @@ c19_mostrou_o_caminho:{
     'Elas param do lado de fora e olham para trás, para você, esperando o próximo passo.'
   ],
   ef:{flag:['levou_tres_ate_a_cerca'], moral:3,
-      rep:{eixo:'bom',delta:2,motivo:'Andou quarenta minutos para ensinar o caminho a três bichos'},
+      rep:{eixo:'bom',delta:2,motivo:'Andou quarenta minutos para ensinar o caminho a três Pokémon'},
       registrar:'Levou três unidades até o buraco da cerca, passo a passo.'},
   escolhas:[
     {texto:'Levar as três com você.', vai:'c19_carregou_tres'},
@@ -2096,7 +2096,7 @@ c19_sena_filho:{
     '"Por que {o senhor|a senhora} pergunta isso?"',
     '"Porque todo mundo aqui tem uma frase pronta e eu quero ouvir a que não é pronta."',
     'Ele pousa a caneta.',
-    '"Eu tenho duas filhas e elas não sabem o que eu faço." Ele diz isso olhando a bancada. "Elas sabem que eu trabalho com bicho. A mais nova acha que eu sou médico de Pokémon e eu deixo."',
+    '"Eu tenho duas filhas e elas não sabem o que eu faço." Ele diz isso olhando a bancada. "Elas sabem que eu trabalho com Pokémon. A mais nova acha que eu sou médico de Pokémon e eu deixo."',
     'Ele pega a caneta de novo.',
     '"É a resposta que {o senhor|a senhora} queria?"'
   ],
@@ -2167,7 +2167,7 @@ c19_venceu_sena:{
     'O Dr. Hollis recolhe uma por uma com o mesmo cuidado com que pousou a prancheta.',
     '"{O senhor|A senhora} sabe o que me incomoda?" Ele não parece abalado. "Que {o senhor|a senhora} acha que isso foi uma vitória moral."',
     '"{O senhor|A senhora} derrotou quatro unidades de lote. A gente produz quatro unidades de lote em dezoito dias."',
-    'Ele guarda a última bola.',
+    'Ele guarda a última Pokébola.',
     '"O galpão 4 fica no fim do corredor. A porta não está trancada. Nunca esteve."'
   ],
   ef:{flag:'venceu_sena',
@@ -2269,7 +2269,7 @@ c19_o_canto:{
     'No canto, perto do forno, tem uma coisa coberta com um pano de algodão cru, do tamanho de uma caixa de feira.',
     'Você levanta o pano.',
     'É uma caixa de transporte plástica, dessas de vinte litros, com furos laterais. Está vazia e está limpa.',
-    'Dentro, no fundo, tem um pedaço de cobertor velho dobrado em quatro, do tipo que se põe para o bicho não deslizar no plástico.',
+    'Dentro, no fundo, tem um pedaço de cobertor velho dobrado em quatro, do tipo que se põe para o Pokémon não deslizar no plástico.',
     'O cobertor está limpo. Alguém lavou.',
     'Você fica com o pano na mão, parad{o|a}, por um tempo que não consegue medir.'
   ],

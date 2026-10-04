@@ -13,7 +13,7 @@ const CARGOS = [
 {
   id:'treinador', falante:'a atendente', nome:'{Treinador licenciado|Treinadora licenciada}', orgao:'Liga Pokémon', peso:1, cap:1,
   requer:d=>!!d.flags.tem_licenca,
-  resumo:'A licença anual. Sem ela você é uma pessoa andando com um bicho.',
+  resumo:'A licença anual. Sem ela você é uma pessoa andando com um Pokémon.',
   beneficios:{centro:true},
   fala:['A licença é uma folha plastificada com a sua foto ruim e um número de oito dígitos.',
         '"Atendimento sem custo em qualquer Centro de Kanto", diz a atendente, batendo o carimbo. "É o que ela serve, e é bastante."']
@@ -132,7 +132,7 @@ const CARGOS = [
   id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
   requer:d=>Estado.contagemDex().catalogados >= 140,
   veta:['rocket'],
-  resumo:'A cadeira que entrega bola pra quem está saindo de casa.',
+  resumo:'A cadeira que entrega Pokébola pra quem está saindo de casa.',
   beneficios:{renda:4000, loja:0.8, centro:true},
   fala:['"Cento e quarenta", diz o Professor, e não completa a frase por uns bons cinco segundos.',
         '"Eu levei trinta e um anos. Você levou uma jornada."',

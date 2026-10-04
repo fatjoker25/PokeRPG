@@ -315,8 +315,7 @@ c31_o_que_tem_no_rolo:{
   ],
   ef:{flag:['leu_o_rolo','sabe_o_nome_da_comissao','sabe_do_lote_unico'],
       npc:{nome:'o revelador', opiniao:2, viuVoce:'Leu com você nove semanas de fax num rolo térmico usado.'},
-      registrar:'O rolo térmico traz nove semanas de listas, todas com o mesmo nome de aparelho: a sigla.',
-      presagio:'Nome de aparelho de fax é a coisa que ninguém lembra de esconder porque ninguém lembra que existe.'},
+      registrar:'O rolo térmico traz nove semanas de listas, todas com o mesmo nome de aparelho: a sigla.'},
   escolhas:[
     {texto:'Pedir pra ele fotografar o rolo inteiro.', vai:'c31_fotografou_o_rolo'},
     {texto:'Ir procurar a menina de treze anos.', vai:'c31_a_banca'},
@@ -355,15 +354,14 @@ c31_a_banca:{
     'Ele demora meio segundo.',
     fala('o jornaleiro da cinco', 'A Cleo.'),
     d=>fala(d.jogador.nome, 'Você conhece?'),
-    fala('o jornaleiro da cinco', 'Ela compra revista de bicho aqui desde os oito anos. Toda quinta.'),
+    fala('o jornaleiro da cinco', 'Ela compra revista de Pokémon aqui desde os oito anos. Toda quinta.'),
     'Ele aponta com o queixo pra prateleira de revista, onde tem uma publicação de capa colorida sobre criação.',
     fala('o jornaleiro da cinco', 'Ela perguntou porque viu os caminhões passando no fim da rua dela de madrugada.'),
     'E aí ele olha pros lados, o que ele não tinha feito até agora.',
     fala('o jornaleiro da cinco', 'E ela não veio essa quinta.', 'baixo')
   ],
   ef:{flag:'a_kazu',
-      registrar:'A menina da lista se chama Cleo, compra revista na banca desde os oito anos, e não apareceu esta quinta.',
-      presagio:'Uma quinta. Pode não ser nada. Você não vai conseguir tratar como nada.'},
+      registrar:'A menina da lista se chama Cleo, compra revista na banca desde os oito anos, e não apareceu esta quinta.'},
   escolhas:[
     {texto:'Perguntar onde ela mora.', vai:'c31_a_casa_da_kazu'},
     {texto:'Voltar à associação e cobrar a segurança.', vai:'c31_cobrou_a_seguranca'},
@@ -437,8 +435,7 @@ c31_falou_com_a_kazu:{
   ],
   ef:{flag:['o_caderno_da_kazu','reika_precisa_de_papel','sabe_do_lote_unico'],
       npc:{nome:'Cleo', opiniao:4, viuVoce:'Você foi a primeira pessoa a acreditar nela.'},
-      registrar:'Cleo tem onze registros de placa, data e hora dos caminhões, e um filme de 36 poses não revelado.',
-      presagio:'Ela tem treze anos e anota placa desde setembro. Ninguém acreditou nela.'},
+      registrar:'Cleo tem onze registros de placa, data e hora dos caminhões, e um filme de 36 poses não revelado.'},
   escolhas:[
     {texto:'Levar o filme pro revelador da avenida sete.', vai:'c31_revelou_o_filme'},
     {texto:'Dizer pra ela parar de sair de madrugada.', vai:'c31_mandou_parar'},
@@ -550,7 +547,7 @@ c31_o_convenio:{
         : 'E no lugar do nome da segunda parte, uma sigla de cinco caracteres, sem nome nenhum por extenso.';
     },
     'O presidente lê a sigla em voz alta, devagar, soletrando, e fica claro que é a primeira vez que ele soletra aquilo.',
-    fala('o presidente da associação', 'Isso é a... quem é isso?'),
+    fala('o presidente da associação', 'Isso é a… quem é isso?'),
     'E a sala inteira olha pra você, porque você é {o único|a única} ali que não perguntou.'
   ],
   ef:{flag:['o_convenio_da_associacao','sabe_o_nome_da_comissao','reika_precisa_de_papel'],

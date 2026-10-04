@@ -107,8 +107,7 @@ c18_ab_os_dez_anos:{
   ],
   ef:{flag:['oito_anos_de_convenio','reika_precisa_de_papel','tem_a_linha_do_convenio'],
       npc:{nome:'o gerente', opiniao:3, viuVoce:'Sentou com você no arquivo morto e abriu dez anos de pasta.'},
-      registrar:'O convênio aparece em oito dos dez anos e multiplicou por mil em sete anos.',
-      presagio:'Ele assinou o recebimento de todas. Agora ele sabe disso, e isso não tem volta pra ele.'},
+      registrar:'O convênio aparece em oito dos dez anos e multiplicou por mil em sete anos.'},
   escolhas:[
     {texto:'Pedir cópia dos oito.', vai:'c18_ab_copia_dos_oito'},
     {texto:'Ir ao cartório de pessoas jurídicas com o nome.', vai:'c18_cartorio'},
@@ -401,7 +400,7 @@ c18_cartorio:{
 
 c18_cartorio_mural:{
   texto:[
-    'O mural tem avisos de tabela de emolumentos, um cartaz sobre a obrigatoriedade de publicação de atas de associações civis, e um papel escrito à mão avisando que a máquina de xerox quebra se você insistir.',
+    'O mural tem avisos de tabela de emolumentos, um cartaz sobre a obrigatoriedade de publicação de atas de associações civis, e um papel escrito à mão avisando que a copiadora quebra se você insistir.',
     'O cartaz sobre associações civis é o que te interessa, e você o lê duas vezes.',
     'Associação civil sem fins lucrativos é obrigada a registrar estatuto, registrar alterações do estatuto, registrar a composição da diretoria e depositar ata de assembleia.',
     'Tudo público. Tudo copiável. Tudo por preço tabelado.',
@@ -707,7 +706,7 @@ c18_vigia_o_predio:{
     'Entram e saem dezenove pessoas.',
     'Nenhuma delas parece qualquer coisa. Duas carregam pastas de papelão. Uma é uma mulher de uns sessenta anos com uma sacola de feira.',
     'Às quatro e vinte sai um homem de camisa polo carregando uma caixa de papelão com furos laterais.',
-    'Furos laterais é como se transporta bicho vivo.'
+    'Furos laterais é como se transporta Pokémon vivo.'
   ],
   ef:{flag:'viu_a_caixa_com_furos', instabilidade:1,
       registrar:'Um homem saiu da sala 704 com uma caixa de papelão com furos laterais.'},
@@ -725,7 +724,7 @@ c18_seguiu_a_caixa:{
     'Você entra depois dele e olha a etiqueta no balcão antes que alguém leve.',
     'Destinatário: Estação 4 — Rota 21. Remetente: CGRB.',
     'Conteúdo declarado: material biológico vivo — transporte autorizado, licença 2.117.',
-    'Licença. Eles têm licença para mandar bicho vivo pelo correio de encomendas.'
+    'Licença. Eles têm licença para mandar Pokémon vivo pelo correio de encomendas.'
   ],
   ef:{flag:['sabe_da_rota21','sabe_da_estacao4'], instabilidade:1,
       registrar:'Estação 4, Rota 21. Material biológico vivo com licença 2.117.'},
@@ -741,7 +740,7 @@ c18_atendente_encomenda:{
   vozes:['P','N','P','N','N','N'],
   texto:[
     '"Rota 21?" O atendente nem consulta. "Terça e sexta. Sempre os mesmos."',
-    '"Sempre bicho?"',
+    '"Sempre Pokémon?"',
     '"Sempre caixa com furo." Ele encolhe os ombros. "Eu não abro. Tem licença, tem nota, tem lacre. Meu trabalho é o lacre estar inteiro."',
     'Ele olha o relógio.',
     '"Terça e sexta, {moço|moça}. Se {o senhor|a senhora} quiser ver, é só estar aqui às onze."'
@@ -1221,7 +1220,7 @@ c18_terceira_tirar:{
     '"Me tirar." Ela seca o olho com o pulso. "{Moço|Moça}, eu tenho quarenta e um anos e catorze pessoas comendo do que eu faço. Eu não quero sair. Eu quero saber antes."',
     '"Antes de quê?"',
     '"Antes de eles decidirem que eu também sou risco não gerenciado." Ela para de rir. "Está no estatuto deles. Art. 4º. Densidade, agressividade ou capacidade destrutiva não sujeita a controle institucional."',
-    '"Isso é sobre bicho."',
+    '"Isso é sobre Pokémon."',
     '"É sobre o que eles quiserem que seja. Está escrito assim de propósito."'
   ],
   ef:{flag:'art4_serve_pra_gente', instabilidade:1,
@@ -1462,7 +1461,7 @@ c18_respondeu_anuncio:{
 c18_hemero_fauna:{
   texto:[
     'Você procura por fauna, controle, ataque, manejo, e acha mais do que esperava e menos do que queria.',
-    'Vinte e dois registros de ataque de bicho a pessoa em área urbana em dezoito meses. Três mortes.',
+    'Vinte e dois registros de ataque de Pokémon a pessoa em área urbana em dezoito meses. Três mortes.',
     'Nenhum deles vira reportagem. Todos são nota de canto, três linhas, sem nome.',
     'E em nenhum lugar, em dezoito meses de jornal, existe uma linha sobre o que a Liga fez a respeito.',
     'Você começa a entender uma coisa que não queria entender: alguém contou essas notinhas antes de você.'
@@ -1712,7 +1711,7 @@ c18_regulamento:{
     'O regulamento interno é o Anexo III, seis páginas, e é o documento mais bem escrito do calhamaço.',
     'Ele define parâmetro de viabilidade em quatro critérios objetivos, exige parecer de médico de Pokémon registrado, exige dupla assinatura e exige formulário individual numerado.',
     'Exige também — e isso te faz parar — que o formulário registre a data, a hora e o método, e que seja arquivado por dez anos.',
-    'Eles guardam por dez anos o papel de cada bicho que mataram.',
+    'Eles guardam por dez anos o papel de cada Pokémon que mataram.',
     'Não por medo. Por método.'
   ],
   ef:{flag:'leu_o_regulamento', instabilidade:1,
@@ -1775,7 +1774,7 @@ c18_31a:{
     'Página 103. Ata da 31ª reunião ordinária.',
     'Deliberação 4: aprovada, por unanimidade, a Fase II do programa de substituição populacional na Rota 21, com meta de liberação de 400 unidades no primeiro semestre.',
     'Quatrocentas unidades.',
-    'Liberação em ambiente aberto de quatrocentos bichos criados para serem previsíveis, num trecho de litoral de doze quilômetros onde hoje mora outra coisa.',
+    'Liberação em ambiente aberto de quatrocentos Pokémon criados para serem previsíveis, num trecho de litoral de doze quilômetros onde hoje mora outra coisa.',
     'A ata não diz o que acontece com a outra coisa. A ata não precisa dizer: está no Art. 11.'
   ],
   ef:{flag:['sabe_da_fase2','sabe_da_rota21'], instabilidade:2,
@@ -1865,7 +1864,7 @@ c18_copiou_a_tabela:{
     'E, sem pensar direito, escreve ao lado de cada um que você reconhece o nome que você usa.',
     'Quando termina, olha para as duas colunas: a deles e a sua.',
     'A deles diz colônia insular, população estimada 1 a 3.',
-    'A sua, onde tem alguma coisa escrita, diz o nome de um bicho.'
+    'A sua, onde tem alguma coisa escrita, diz o nome de um Pokémon.'
   ],
   ef:{flag:'tem_a_lista_copiada', itens:{'Cópia da tabela de riscos':1}, instabilidade:1,
       rep:{eixo:'bom',delta:1,motivo:'Escreveu o nome deles ao lado do número deles'},
@@ -2368,7 +2367,7 @@ c18_publica_lista:{
     'Sai na quinta, no caderno de cidades, com a tabela reproduzida inteira, as duas colunas.',
     'A da esquerda diz Risco 01, Risco 02, Risco 03.',
     'A da direita, porque a Livia fez questão, diz os nomes.',
-    'É a primeira vez em toda a história de Kanto que um jornal imprime, lado a lado, o número que uma instituição deu a um bicho e o nome que as pessoas dão a ele.',
+    'É a primeira vez em toda a história de Kanto que um jornal imprime, lado a lado, o número que uma instituição deu a um Pokémon e o nome que as pessoas dão a ele.',
     'Três leitores escrevem cartas na semana seguinte. Duas são elogios. Uma é de um médico de Pokémon dizendo que a tabela está tecnicamente correta e perguntando qual é o problema.'
   ],
   ef:{flag:['publicou','publicou_a_lista'], instabilidade:2,
@@ -2486,7 +2485,7 @@ c18_ex_funcionaria:{
   ],
   ef:{flag:['depoimento_ex_funcionaria'], instabilidade:1, moral:-2,
       npc:{nome:'a ex-técnica da Estação 2', opiniao:2, memoria:'Te contou que parou de dar nome sozinha.'},
-      registrar:'A ex-técnica da Estação 2 saiu quando percebeu que tinha parado de dar nome aos bichos.'},
+      registrar:'A ex-técnica da Estação 2 saiu quando percebeu que tinha parado de dar nome aos Pokémon.'},
   escolhas:[{texto:'Ficar no ponto de ônibus mais um pouco.', vai:'c18_adnan'}]
 },
 
@@ -2681,7 +2680,7 @@ c18_luta_auditora:{
 c18_venceu_auditora:{
   texto:[
     'O Machoke cai e ela o recolhe sem pressa nenhuma.',
-    'Ela não saca outra bola. Ela senta de novo na cadeira e abre o bloco.',
+    'Ela não saca outra Pokébola. Ela senta de novo na cadeira e abre o bloco.',
     '"Agressão a auditor em exercício, com resistência." Ela escreve. "Isso não é crime, porque eu não sou autoridade pública. É só um fato que vai para o meu relatório."',
     'Ela levanta os olhos.',
     '"E o relatório vai dizer que {o senhor|a senhora} bate primeiro e pergunta depois, e no mês que vem, quando eu propuser que a gente converse com {o senhor|a senhora} em vez de te classificar, eu vou perder essa votação por causa de hoje."',
@@ -2738,7 +2737,7 @@ c18_perdeu_auditora:{
 c18_adnan:{
   texto:[
     'A lanchonete fica na esquina da Rua do Comércio e tem seis banquetas e um balcão de fórmica.',
-    'O Curador Fabre tem uns cinquenta anos, camisa polo, tênis de caminhada e mãos de quem mexe com bicho: unha curta, um arranhão velho no antebraço.',
+    'O Curador Fabre tem uns cinquenta anos, camisa polo, tênis de caminhada e mãos de quem mexe com Pokémon: unha curta, um arranhão velho no antebraço.',
     'Ele pede um misto e um café e paga os dois antes de perguntar o que você quer.',
     '"Eu vou te falar tudo o que {o senhor|a senhora} perguntar", ele diz. "Isso não é generosidade. Está no meu contrato: transparência ativa. Eu sou obrigado."',
     'Ele morde o misto.',
@@ -2839,7 +2838,7 @@ c18_adnan_fonte:{
   texto:[
     '"Você vai ser fonte com nome, e com nome eles não conseguem dizer que é boato."',
     'Ele pega a carta de novo. Olha para o campo da data.',
-    '"Com nome eu não trabalho mais com bicho nunca mais na vida." Ele fala isso sem drama. "Registro em conselho, {moço|moça}. Eu viro o técnico que denunciou o empregador. Ninguém contrata."',
+    '"Com nome eu não trabalho mais com Pokémon nunca mais na vida." Ele fala isso sem drama. "Registro em conselho, {moço|moça}. Eu viro o técnico que denunciou o empregador. Ninguém contrata."',
     '"Eu sei."',
     '"{O senhor|A senhora} sabe e está pedindo do mesmo jeito." Ele ri curto. "Tudo bem. Eu gosto mais assim do que se {o senhor|a senhora} fingisse que não custa nada."',
     'Ele preenche a data com a caneta do balcão.'
@@ -2878,7 +2877,7 @@ c18_nona_foto:{
     'Na parede do fundo tem um quadro branco, e no quadro, em três colunas, os cabeçalhos: LOTE / MOTIVO / DATA.',
     'A coluna do motivo está preenchida até embaixo, sempre com abreviação: MALF., AGR., DOEN., N/VIÁV.',
     'A última linha diz N/VIÁV e a data é de anteontem.',
-    'Não tem bicho nenhum na foto. É uma sala limpa e organizada e é a coisa mais insuportável que você viu em toda a sua vida, e você já viu coisas.'
+    'Não tem Pokémon nenhum na foto. É uma sala limpa e organizada e é a coisa mais insuportável que você viu em toda a sua vida, e você já viu coisas.'
   ],
   ef:{instabilidade:2, moral:-4,
       registrar:'A foto do galpão G: uma sala limpa, com ralo, mangueira e um quadro de lote, motivo e data.'},
@@ -2953,7 +2952,7 @@ c18_adnan_porque_entrou:{
   texto:[
     '"Eu trabalhava no zoológico de Celadon." Ele fala isso como quem fala de outra vida. "Dezoito anos. Eu era bom."',
     '"E aí?"',
-    '"E aí o zoológico fechou, porque zoológico não dá dinheiro e ninguém quer pagar. Distribuíram os bichos e eu fui junto com três deles para um sítio particular em Fuchsia, e no sítio particular eu fiquei quatro meses vendo gente rica achar graça."',
+    '"E aí o zoológico fechou, porque zoológico não dá dinheiro e ninguém quer pagar. Distribuíram os Pokémon e eu fui junto com três deles para um sítio particular em Fuchsia, e no sítio particular eu fiquei quatro meses vendo gente rica achar graça."',
     'Ele mexe o café que já acabou.',
     '"Aí me ligaram. Salário melhor, registro em carteira, e a frase que me pegou foi: aqui o senhor vai decidir, não vai só executar."',
     'Ele sorri sem alegria.',
@@ -3278,11 +3277,11 @@ c18_porque_ajuda:{
     'Ele se vira.',
     '"Eu preciso que alguém de fora olhe, porque eu já não consigo. Eu vejo lote. Eu vejo motivo. Eu vejo data."',
     'Ele põe a mão no batente da porta.',
-    '"{O senhor|A senhora} ainda vê bicho. Vai lá e olha enquanto {o senhor|a senhora} ainda vê."'
+    '"{O senhor|A senhora} ainda vê Pokémon. Vai lá e olha enquanto {o senhor|a senhora} ainda vê."'
   ],
   ef:{flag:'entende_o_adnan', moral:3, instabilidade:1,
-      npc:{nome:'Curador Fabre', opiniao:4, memoria:'Te mandou olhar enquanto você ainda vê bicho.'},
-      registrar:'Fabre já não vê bicho. Vê lote, motivo e data.'},
+      npc:{nome:'Curador Fabre', opiniao:4, memoria:'Te mandou olhar enquanto você ainda vê Pokémon.'},
+      registrar:'Fabre já não vê Pokémon. Vê lote, motivo e data.'},
   escolhas:[{texto:'Ir para a Rota 21.', vai:'c18_fim'}]
 },
 
@@ -3300,7 +3299,7 @@ c18_fim:{
     'Tem uma curva grande e, depois dela, uma cerca nova de três metros com placa de ÁREA DE PESQUISA — ACESSO RESTRITO, número de licença e um telefone de contato que é o da sala 704.',
     'Do lado de fora da cerca, o mato é normal: Tangela, Pidgey, um Rattata atravessando de um jeito que Rattata atravessa.',
     'Do lado de dentro, o mato é igual.',
-    'Exatamente igual. Todos os arbustos na mesma distância um do outro, na mesma altura, do mesmo verde, e nenhum bicho fazendo barulho.'
+    'Exatamente igual. Todos os arbustos na mesma distância um do outro, na mesma altura, do mesmo verde, e nenhum Pokémon fazendo barulho.'
   ],
   fim:true, resumo:'Capítulo 18 concluído — o que veio depois da Rocket tem estatuto, ata e café na entrada.'
 }

@@ -61,8 +61,7 @@ c28_ab_o_que_ficou_na_boca:{
   ],
   ef:{executar:d=>{ Estado.lend(150).encontros++; return []; },
       flag:'deixou_a_pilha_na_boca',
-      registrar:'Deixou parte das próprias coisas numa pilha encostada na boca da caverna.',
-      presagio:'Você montou uma pilha pra alguém achar. Alguma parte de você não está contando com a volta.'},
+      registrar:'Deixou parte das próprias coisas numa pilha encostada na boca da caverna.'},
   escolhas:[
     {texto:'Olhar as paredes com atenção.', vai:'c23_as_paredes'},
     {texto:'Olhar o chão.', vai:'c23_o_chao'},
@@ -611,7 +610,7 @@ c23_conversa:{
     {texto:'"Eu não sei. Ninguém sabe. Acho que é isso que assusta."', vai:'c23_nao_sei'},
     {texto:'"Você é o décimo segundo tanque." (contar sobre a Silph)', vai:'c23_os_doze', cond:d=>!!d.flags.viu_os_doze},
     {texto:'"Você é o Risco 01." (contar sobre a Comissão)', vai:'c23_risco01', cond:d=>!!(d.flags.sabe_do_risco01||d.flags.entendeu_a_comissao)},
-    {texto:'Não responder. Sacar a bola.', vai:'c23_bola_direto'}
+    {texto:'Não responder. Sacar a Pokébola.', vai:'c23_bola_direto'}
   ]
 },
 
@@ -696,8 +695,8 @@ c23_bola_direto:{
   falante:'Mewtwo',
   vozes:['N','N'],
   texto:[
-    'Você saca a bola no meio da frase dele.',
-    'Ele para. Olha a bola. Olha você.',
+    'Você saca a Pokébola no meio da frase dele.',
+    'Ele para. Olha a Pokébola. Olha você.',
     '"Ah." E essa única sílaba contém mais decepção do que qualquer coisa que já disseram pra você.',
     '"Tudo bem. Foi assim da última vez também."'
   ],
@@ -718,12 +717,12 @@ c23_escolha_final:{
       if (Estado.rep.eixo==='ruim'&&Estado.rep.ruim>=6) return '"Eu sei o que falam de você. Eu sei o que você fez pra merecer. Isso não me incomoda tanto quanto devia."';
       if (Estado.rep.eixo==='bom'&&Estado.rep.bom>=6) return '"Eu sei o que falam de você. Gente boa é mais perigosa, porque acha que tem direito."';
       if (d.jogador.cargo) return `"Você é ${d.jogador.cargo}. Isso significa que quando você fala, alguém anota. Eu nunca falei com alguém assim."`;
-      return '"Você tem uma bola na mão desde que entrou. Eu reparei. Todos reparam."';
+      return '"Você tem uma Pokébola na mão desde que entrou. Eu reparei. Todos reparam."';
     }
   ],
   escolhas:[
     {texto:'Tentar capturar.', vai:'c23_batalha'},
-    {texto:'"Vim te tirar daqui. Não na bola — pela porta."', vai:'c23_libertar'},
+    {texto:'"Vim te tirar daqui. Não na Pokébola — pela porta."', vai:'c23_libertar'},
     {texto:'"Vim entender. Só isso."', vai:'c23_entender'},
     {texto:'"Vim te parar, se você for perigoso."', vai:'c23_parar'},
     {texto:'"Vim te oferecer uma coisa." (a rede de Celadon)', vai:'c23_socio',
@@ -805,7 +804,7 @@ c23_entender:{
   texto:[
     '"Entender." Ele processa a palavra. "Ninguém nunca veio até aqui pra isso."',
     'Vocês conversam. Não tem outro jeito de descrever: vocês conversam, sentados, por horas, numa câmara embaixo de uma montanha.',
-    'Ele te conta o que lembra do tanque. Você conta o que viu na Torre de Lavender. Ele pergunta sobre coisas absurdamente pequenas — como é o gosto de comida quente, por que as pessoas põem nome nos bichos, se dói envelhecer.',
+    'Ele te conta o que lembra do tanque. Você conta o que viu na Torre de Lavender. Ele pergunta sobre coisas absurdamente pequenas — como é o gosto de comida quente, por que as pessoas põem nome nos Pokémon, se dói envelhecer.',
     'Em algum momento você percebe que está falando com alguém de dois anos de idade que sabe tudo e não viveu nada.',
     'Quando você levanta pra ir embora, ele diz: "Volta?"',
     'E essa é a coisa mais assustadora que aconteceu com você na jornada inteira.'
@@ -853,7 +852,7 @@ c23_socio:{
       rep:{eixo:'ruim',delta:3,motivo:'Ofereceu sociedade criminosa a Mewtwo'}},
   escolhas:[
     {texto:'"Sim."', vai:'c23_final_socio'},
-    {texto:'"...não. Esquece. Esquece o que eu falei."', vai:'c23_escolha_final',
+    {texto:'"…não. Esquece. Esquece o que eu falei."', vai:'c23_escolha_final',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ouviu a própria proposta em voz alta e recuou'}, flag:'recuou_da_sociedade'}}
   ]
 },
@@ -930,11 +929,11 @@ c23_venceu:{
   texto:[
     'Ele cai de joelhos e a câmara para de brilhar.',
     'Está consciente. Olhando pra você. Esperando.',
-    'Você tem a bola na mão e ele não vai resistir agora — e os dois sabem disso, e é justamente isso que torna o próximo movimento irreversível.'
+    'Você tem a Pokébola na mão e ele não vai resistir agora — e os dois sabem disso, e é justamente isso que torna o próximo movimento irreversível.'
   ],
   escolhas:[
-    {texto:'Jogar a bola.', vai:'c23_batalha'},
-    {texto:'Guardar a bola e estender a mão.', vai:'c23_final_compreensao',
+    {texto:'Jogar a Pokébola.', vai:'c23_batalha'},
+    {texto:'Guardar a Pokébola e estender a mão.', vai:'c23_final_compreensao',
      ef:{rep:{eixo:'bom',delta:3,motivo:'Venceu Mewtwo e não o capturou'}, flag:'poupou_mewtwo',
          executar:d=>{ const L=Estado.lend(150); L.disposicao='passivo'; L.aliado=true; return []; }}},
     {texto:'Ir embora e deixar ele aí.', vai:'c23_final_vazio', ef:{flag:'abandonou_mewtwo'}}
@@ -957,7 +956,7 @@ c23_perdeu:{
 
 c23_capturou:{
   texto:[
-    'A bola fecha e a câmara fica escura de uma vez.',
+    'A Pokébola fecha e a câmara fica escura de uma vez.',
     'Você está sozinh{o|a} embaixo de uma montanha com uma esfera na mão que pesa exatamente o mesmo que qualquer outra.',
     'Lá fora, as duas Aves abandonam o posto ao mesmo tempo — não têm mais o que guardar.',
     'Elas não vão embora. Elas viram na sua direção.'
@@ -967,7 +966,7 @@ c23_capturou:{
       registrar:'Capturou Mewtwo. As Aves abandonaram a guarda.'},
   escolhas:[
     {texto:'Soltar. Aqui, agora, antes de subir.', vai:'c23_final_arrependimento'},
-    {texto:'Subir com ele na bola.', vai:'c23_final_posse'},
+    {texto:'Subir com ele na Pokébola.', vai:'c23_final_posse'},
     {texto:'Subir com ele e entregar à Liga.', vai:'c23_final_entrega', cond:d=>!!d.flags.liga_aliada}
   ]
 },
@@ -1006,7 +1005,7 @@ c23_mostrou_unidade:{
   vozes:['N'],
   texto:[
     'Você solta a Unidade 01 na câmara.',
-    'Ela sai da bola, fica de pé, e não faz mais nada. Não olha em volta. Não reage à caverna, ao frio, à altura do teto.',
+    'Ela sai da Pokébola, fica de pé, e não faz mais nada. Não olha em volta. Não reage à caverna, ao frio, à altura do teto.',
     'Espera ordem.',
     'Mewtwo olha para ela por um tempo que você não consegue medir e que você não interrompe por nada no mundo.',
     'Depois ele faz uma coisa: pergunta alguma coisa pra ela. Você não ouve o quê — não foi pra você.',
@@ -1133,7 +1132,7 @@ c23_final_companhia:{
   ],
   final:{id:'companhia', titulo:'SEM NOME PARA ISSO', texto:[
     'Vocês andam juntos por Kanto durante quase um ano.',
-    'Ele não fica na bola. Ele não obedece ordem. Ele não luta nas suas batalhas — e quando você pergunta por quê, ele responde: "Você não me pediu, e se você pedisse, eu ia querer ser pedido, e aí já era outra coisa."',
+    'Ele não fica na Pokébola. Ele não obedece ordem. Ele não luta nas suas batalhas — e quando você pergunta por quê, ele responde: "Você não me pediu, e se você pedisse, eu ia querer ser pedido, e aí já era outra coisa."',
     'As cidades reagem de formas diferentes. Pallet fecha as janelas. Lavender oferece pousada aos dois. Fuchsia finge que não vê.',
     'A Liga passa oito meses tentando classificar a situação e desiste. Não existe formulário para "acompanhado".',
     'Num dia de outubro, sem despedida, ele não está mais lá.',
@@ -1364,7 +1363,7 @@ c23_final_inventario:{
 
 c23_final_posse:{
   texto:[
-    'Você sobe com ele na bola.',
+    'Você sobe com ele na Pokébola.',
     'No vale, as duas Aves esperam você sair da caverna.',
     'O que acontece nos próximos dez minutos vai ser notícia por seis meses.'
   ],
@@ -1373,7 +1372,7 @@ c23_final_posse:{
     'A partir daí, as coisas acontecem numa ordem previsível: a Liga emite a ordem de devolução. Você recusa. Emitem a detenção. Você foge.',
     'Kanto passa a ter um clima que os meteorologistas param de tentar prever. Incêndios em Cinnabar. Gelo na Rota 11 em pleno verão. Duas cidades evacuadas parcialmente.',
     'Você fica com ele. É a única coisa que você tem depois de um tempo — as pessoas vão saindo, uma por uma, do jeito que as pessoas saem: sem anúncio.',
-    'Ele nunca fala com você. Nem uma vez, depois da bola. Ele sabe falar. Escolhe não falar.',
+    'Ele nunca fala com você. Nem uma vez, depois da Pokébola. Ele sabe falar. Escolhe não falar.',
     'Você passa o resto da vida com a coisa mais poderosa do mundo na mão e ninguém pra contar isso.',
     'Isso não é vitória. Tem nome, mas não é esse.'
   ]}
@@ -1402,8 +1401,8 @@ c23_final_arrependimento:{
   falante:'Mewtwo',
   vozes:['N','N','N'],
   texto:[
-    'Você abre a bola antes de chegar na superfície.',
-    'Ele sai. Olha a bola no chão. Olha você.',
+    'Você abre a Pokébola antes de chegar na superfície.',
+    'Ele sai. Olha a Pokébola no chão. Olha você.',
     '"Por quê?"',
     'Você responde alguma coisa que não sai direito, e ele entende mesmo assim, porque ele entende tudo.',
     '"Isso não conserta." Uma pausa. "Mas conta."'
@@ -1427,7 +1426,7 @@ c23_final_porta:{
     'As duas Aves abandonam o vale em duas semanas — não tem mais nada pra guardar.',
     'Mewtwo não é visto de novo em Kanto. Não há incidentes, não há ataques, não há nada. Só a ausência.',
     'Você conta essa história poucas vezes, porque toda vez que conta percebe a mesma coisa: ele te venceu, curou o seu time e foi embora. Nenhuma dessas três coisas é o que uma arma faz.',
-    'Você teve a resposta na mão o tempo todo e respondeu com uma bola.'
+    'Você teve a resposta na mão o tempo todo e respondeu com uma Pokébola.'
   ]}
 },
 
@@ -1730,7 +1729,7 @@ c23_final_a_troca:{
     '"O que é, então?"',
     '"É duas pessoas concordando que uma coisa viva pode mudar de dono."',
     'Uma pausa exata.',
-    '"Eu não vou ser o segundo lado disso. Mas obrigado por perguntar em vez de sacar a bola."'
+    '"Eu não vou ser o segundo lado disso. Mas obrigado por perguntar em vez de sacar a Pokébola."'
   ],
   final:{id:'a_troca', titulo:'MUDAR DE DONO', texto:[
     'Você sobe a escada da câmara sem nada.',
@@ -1882,7 +1881,7 @@ c23_a_resposta_dobrada:{
     'A câmara fica absolutamente parada.',
     'O papel levanta do chão sozinho, para na altura dos olhos dele, e abre.',
     'Ele lê. Demora mais do que precisaria para ler uma linha.',
-    '"Eu queria que a minha filha não tivesse medo de bicho grande."',
+    '"Eu queria que a minha filha não tivesse medo de Pokémon grande."',
     'Ele lê em voz alta, na sua cabeça, e a voz dele faz uma coisa que não fez em nenhum outro momento.'
   ],
   ef:{flag:'entregou_a_resposta', instabilidade:1,
@@ -1908,8 +1907,8 @@ c23_final_resposta:{
     'Ele lê o que você trouxe, e a mensagem inteira é que não tem resposta certa, e é exatamente isso que ele precisava.',
     'Ele desce naquele mesmo dia. Leva sete horas e não para uma vez.',
     'No posto florestal, o Sr. Poplar escreve a data dele na terceira coluna e fecha a última linha em branco do livro.',
-    'Três meses depois, numa escola municipal de Fuchsia, um homem faz uma palestra para uma turma de quarta série sobre bichos grandes.',
-    'Ele não conta onde esteve. Ele conta só uma coisa: que bicho grande também tem medo, e que isso não é motivo para gostar menos deles, é motivo para ter mais cuidado.',
+    'Três meses depois, numa escola municipal de Fuchsia, um homem faz uma palestra para uma turma de quarta série sobre Pokémon grandes.',
+    'Ele não conta onde esteve. Ele conta só uma coisa: que Pokémon grande também tem medo, e que isso não é motivo para gostar menos deles, é motivo para ter mais cuidado.',
     'A filha dele está na terceira fileira.',
     'Ela não tem medo nenhum. Ela nunca teve. Ele é que tinha, e levou quatro meses numa pedra para descobrir.'
   ]}

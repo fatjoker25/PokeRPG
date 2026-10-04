@@ -277,7 +277,7 @@ const UI = {
         <button data-v="classico" class="sel">Um dos três clássicos</button>
         <button data-v="rand">Aleatório (o que já estava na casa)</button>
       </div>
-      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três bolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
+      <div class="sussurro" id="f-inicial-desc">Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três Pokébolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.</div>
 
       <h3>Ritmo do combate</h3>
       <div class="opcoes-radio" id="f-ritmo" style="margin-bottom:10px">
@@ -307,7 +307,7 @@ const UI = {
     grupo('f-inicial', v => {
       document.getElementById('f-inicial-desc').textContent = v === 'rand'
         ? 'Aleatório: um Pokémon de 1ª Geração, primeiro estágio. Ele já morava na sua casa quando você decidiu sair — não é seu de papel, é seu de convivência. Vínculo máximo.'
-        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três bolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
+        : 'Tradição: você não começa com ele. Bulbasaur, Charmander ou Squirtle — a escolha é na hora, com as três Pokébolas na sua frente. Em Pallet, quem traz é o Professor; em outra cidade, a perua do laboratório.';
     });
     grupo('f-ritmo', v => {
       document.getElementById('f-ritmo-desc').textContent = v === 'fiel'
@@ -1524,7 +1524,7 @@ const UI = {
         <span>Usar item</span><span class="pd">Potion, Revive…</span></button>`));
       if (Batalha.tipo !== 'treinador')
         c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuBolas()">
-          <span>Jogar bola</span><span class="pd">Capturar agora</span></button>`));
+          <span>Jogar Pokébola</span><span class="pd">Capturar agora</span></button>`));
       return;
     }
 
@@ -1544,9 +1544,10 @@ const UI = {
     /* O contador da Bag mostra o que serve aqui, não o que está na mochila. */
     const itens = Object.keys(d.itens).filter(n => usavelEmBatalha(n)).length + bolas;
 
+    /* botão é o nome do que ele faz, sem legenda embaixo */
     const bt = (cls, rot, nota, acao, off) =>
       `<button class="mb-btn ${cls}" ${off ? 'disabled' : ''} ${off ? '' : 'onclick="' + acao + '"'}>
-        <span class="rot">${rot}</span><span class="nota">${nota}</span></button>`;
+        <span class="rot">${rot}</span></button>`;
 
     const dex = d.flags.tem_pokedex
       ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
@@ -1557,7 +1558,7 @@ const UI = {
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
         ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + (bolas === 1 ? ' tipo de bola · ' : ' tipos de bola · ') : ''}${itens} ${itens === 1 ? 'item' : 'itens'}` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
+        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + (bolas === 1 ? ' tipo de Pokébola · ' : ' tipos de Pokébola · ') : ''}${itens} ${itens === 1 ? 'item' : 'itens'}` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
@@ -1614,7 +1615,7 @@ const UI = {
     const resto = nomes.filter(n => usavelEmBatalha(n));
     const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
     const linhasBolas = bolas.map(n =>
-      `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
+      `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'Pokébola',nome:'${n}'})">
         ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join('');
     const linhasItens = resto.map(n => {
       const info = ITENS_INFO[n] || {};
@@ -1625,8 +1626,8 @@ const UI = {
           ${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} → ${this.esc(nomeExib(p))}${this.shi(p)} (${p.hp}/${p.hpMax})</button>`).join('');
     }).join('');
     const corpo =
-      (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As bolas ficam no fundo da mochila: não se joga bola no Pokémon de outro treinador.</p>' : '') +
-      (linhasBolas ? '<h3>Bolas</h3>' + linhasBolas : '') +
+      (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As Pokébolas ficam no fundo da mochila: não se joga Pokébola no Pokémon de outro treinador.</p>' : '') +
+      (linhasBolas ? '<h3>Pokébolas</h3>' + linhasBolas : '') +
       (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') +
       (guardados > 0 ? `<p class="sussurro" style="margin:10px 0 0">${guardados} ${guardados === 1 ? 'objeto fica guardado' : 'objetos ficam guardados'} — papel, crachá e afins não servem de nada aqui.</p>` : '');
     this.modal('Mochila', (linhasBolas || linhasItens) ? corpo
@@ -2100,11 +2101,11 @@ const UI = {
 
   menuBolas(){
     if (Batalha.ativo && Batalha.tipo === 'treinador')
-      return this.modal('Bolas', '<p class="nada">Não se joga bola no Pokémon de outro treinador.</p>');
+      return this.modal('Pokébolas', '<p class="nada">Não se joga Pokébola no Pokémon de outro treinador.</p>');
     const bolas = Object.keys(Estado.dados.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
-    if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma bola.</p>');
-    this.modal('Qual bola?', bolas.map(n =>
-      `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
+    if (!bolas.length) return this.modal('Mochila', '<p class="nada">Você não tem nenhuma Pokébola.</p>');
+    this.modal('Qual Pokébola?', bolas.map(n =>
+      `<button class="escolha com-item" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'Pokébola',nome:'${n}'})">
         ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join(''));
   },
 
@@ -2235,7 +2236,7 @@ const UI = {
         return [
           `${nomeExib(enlutado)} para na porta do Centro e olha pra trás, pra rua, procurando ${enlutado.luto.nome}.`,
           `${nomeExib(enlutado)} come pouco e dorme no canto, virad${g.o} pra parede.`,
-          `${nomeExib(enlutado)} ainda se vira quando alguém abre uma bola perto ${g.dele}.`
+          `${nomeExib(enlutado)} ainda se vira quando alguém abre uma Pokébola perto ${g.dele}.`
         ][dia % 3];
       }
       const pares = paresDoTime(d.time.filter(p => !p.morto));
@@ -2261,11 +2262,11 @@ const UI = {
       <div class="narrativa"><p>${this.esc(abertura)}</p><p>${this.esc(estado)}</p>${doTime ? `<p>${this.esc(doTime)}</p>` : ''}</div>
 
       <div id="escolhas" class="escolhas">
-        <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon — curar o time inteiro</button>
-        <button class="escolha" onclick="UI.modalPC()">PC do Centro — guardar e tirar Pokémon${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
-        <button class="escolha" onclick="Jogo.hubLoja()">Loja — comprar itens</button>
-        ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon — Elite 4 e Torneio Aberto</button>' : ''}
-        <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota — encontro selvagem aleatório</button>
+        <button class="escolha" onclick="Jogo.hubCentro()">Centro Pokémon</button>
+        <button class="escolha" onclick="UI.modalPC()">PC do Centro${d.pc.length ? ' (' + d.pc.length + ' guardado' + (d.pc.length===1?'':'s') + ')' : ''}</button>
+        <button class="escolha" onclick="Jogo.hubLoja()">Loja</button>
+        ${sabeDaLiga ? '<button class="escolha" onclick="Jogo.abrirLiga(\'hub\')">Liga Pokémon</button>' : ''}
+        <button class="escolha" onclick="Jogo.hubTreinar()">Treinar na rota</button>
         ${d.time.length > 1 ? '<button class="escolha" onclick="Jogo.hubSoltar()">Soltar um Pokémon</button>' : ''}
         <button class="escolha" onclick="Jogo.avancarCapitulo()">Seguir para o próximo capítulo</button>
       </div>
@@ -3532,7 +3533,7 @@ const UI = {
       ${L('Sem PP', 'Forcejar: Força + 1, e 1 volta em você')}
       <h3>Na sua vez</h3>
       ${L('Golpe', 'gasta PP · sem PP sobra Forcejar')}
-      ${L('Bola', 'só em selvagem — não se joga bola no Pokémon de treinador')}
+      ${L('Pokébola', 'só em selvagem — não se joga Pokébola no Pokémon de treinador')}
       ${L('Mochila', 'só o que serve em combate aparece')}
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
       ${L('Trocar', 'gasta o turno')}
@@ -3608,7 +3609,7 @@ const UI = {
       <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
       <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
       <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista o que o seu time consegue fazer agora</span></div>
-      <p class="sussurro">Metade disso é objeto e metade é o corpo do bicho. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
+      <p class="sussurro">Metade disso é objeto e metade é o corpo do Pokémon. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
       <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
 
       <h3>Perguntar o nome</h3>
@@ -3799,7 +3800,7 @@ const UI = {
       <div class="linha"><span class="k">Sunny Day · sol</span><span class="v">5 turnos · Fogo +1 de poder · Água −1 de dano · Solar Beam sem carregar</span></div>
       <div class="linha"><span class="k">Sandstorm · areia</span><span class="v">5 turnos · 1 de dano no fim do turno, menos Pedra, Terrestre e Metálico · Pedra ganha +1 de Instinto</span></div>
       <h3>Captura</h3>
-      <div class="linha"><span class="k">Chance</span><span class="v">(3 × HP máx − 2 × HP) ÷ (3 × HP máx) × taxa da espécie × bola × condição ÷ 255</span></div>
+      <div class="linha"><span class="k">Chance</span><span class="v">(3 × HP máx − 2 × HP) ÷ (3 × HP máx) × taxa da espécie × Pokébola × condição ÷ 255</span></div>
       <div class="linha"><span class="k">Condição</span><span class="v">dormindo ou congelado ×2 · outra condição ×1,5</span></div>
       <div class="linha"><span class="k">Sacudidas</span><span class="v">três, cada uma passa com a raiz cúbica da chance: as três juntas dão a chance que aparece no log</span></div>
       <h3>Centro Pokémon</h3>
@@ -3901,7 +3902,7 @@ const UI = {
       <div class="linha"><span class="k">+2 a +4</span><span class="v">obedece mais fácil</span></div>
       <div class="linha"><span class="k">−2 a −4</span><span class="v">obedece pior · −1 nas perícias</span></div>
       <div class="linha"><span class="k">−5 ou menos</span><span class="v">obedece muito pior · −1 nas perícias</span></div>
-      <p class="sussurro">Quem vai na frente é quem pesa nas perícias. O jogo não diz qual natureza combina com qual traço, e não avisa antes de uma tarefa que tipo de bicho ela pede: isso é pra reparar, não pra consultar.</p>
+      <p class="sussurro">Quem vai na frente é quem pesa nas perícias. O jogo não diz qual natureza combina com qual traço, e não avisa antes de uma tarefa que tipo de Pokémon ela pede: isso é pra reparar, não pra consultar.</p>
       <h3>Sexo</h3>
       <p class="sussurro">Todo Pokémon nasce macho (♂), fêmea (♀) ou sem sexo, na proporção dos jogos, e fica assim pra sempre — evoluir não muda. A ficha da espécie na Pokédex mostra a proporção. Sexo não mexe em atributo nem em jeito: o jeito é a natureza. A história fala dele como ele é, e algumas cenas reparam nisso.</p>
       <div class="linha"><span class="k">Proporção</span><span class="v">meio a meio na maioria · 7♂ pra 1♀ nos iniciais, fósseis, Eevee, Togepi e Snorlax · 3♂ pra 1♀ em Growlithe, Abra, Machop, Elekid, Magby · 1♂ pra 3♀ em Clefairy, Vulpix, Jigglypuff, Snubbull</span></div>
@@ -3916,10 +3917,10 @@ const UI = {
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `
       <h3>Captura de lendários</h3>
-      <p class="sussurro">${Estado.dados.flags.bola_fraca_em_lendario ? 'Poké Ball e Great Ball não funcionam — você viu.' : 'Bola comum parece não bastar, mas você ainda não testou.'}
+      <p class="sussurro">${Estado.dados.flags.bola_fraca_em_lendario ? 'Poké Ball e Great Ball não funcionam — você viu.' : 'Pokébola comum parece não bastar, mas você ainda não testou.'}
       ${Estado.dados.flags.ultra_prende_lendario ? 'Ultra Ball: 1d20, só 1–2 prendem.' : ''}
       ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a bola no ar.' : ''}</p>` : ''}
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a Pokébola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">1d10 + status + o cinto, contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
@@ -3967,19 +3968,19 @@ const UI = {
       <p class="sussurro">Missão entregue não se pede de novo, e missão aberta não se entrega antes da hora. Algumas pessoas ligam pra você primeiro — atender custa tempo e não atender custa outra coisa. Quem te dá o número não explica quem é: isso está na conversa em que você conheceu a pessoa.</p>
 
       <h3>De onde vem o seu primeiro</h3>
-      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com as três bolas na sua frente · nenhuma vem escolhida</span></div>
+      <div class="linha"><span class="k">Qual dos três</span><span class="v">você escolhe na hora, com as três Pokébolas na sua frente · nenhuma vem escolhida</span></div>
       <div class="linha"><span class="k">Nasceu em Pallet</span><span class="v">o Professor traz a bandeja pra rua, na manhã em que você sai de casa</span></div>
       <div class="linha"><span class="k">Nasceu em qualquer outra</span><span class="v">a perua do laboratório passa uma vez por mês</span></div>
       <div class="linha"><span class="k">O que já morava na casa</span><span class="v">não passa por ninguém: já é seu</span></div>
       <div class="linha"><span class="k">Nasceu longe de Pallet e Viridian</span><span class="v">a licença vem com a passagem do ônibus da Liga até Viridian, onde a estrada dos ginásios começa · sem licença, você paga a passagem</span></div>
-      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a bola que o laboratório separou te espera no balcão do Centro. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
+      <p class="sussurro">Bulbasaur, Charmander e Squirtle saem de Pallet numa caixa térmica, uma fileira de cada. Quem assina a inscrição é quem é responsável por você; a espécie ninguém escolhe no papel. Se a manhã acabar sem você na frente da caixa, a Pokébola que o laboratório separou te espera no balcão do Centro. Quem não aparece vira duas letras no caderno. A volta é mensal e a perua não deixa de passar por chuva.</p>
 
       <h3>Loja</h3>
       <div class="linha"><span class="k">Onde</span><span class="v">dez cidades · cada uma vende o que a cidade é</span></div>
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>
       <div class="linha"><span class="k">Mais caro</span><span class="v">Saffron (1,3×) e Cinnabar (1,25×)</span></div>
-      <p class="sussurro">Pewter não vende bola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
+      <p class="sussurro">Pewter não vende Pokébola barata e Lavender não vende repelente, porque ninguém de Lavender vai pro mato. Pedra evolutiva só em quem tem: Celadon tem quase tudo, Cerulean tem a da Água, Cinnabar tem a do Fogo. O que a Pokédex Nacional destrava também aparece na prateleira depois.</p>
 
       <h3>Cortar, atravessar, voar, forçar, iluminar</h3>
       <div class="linha"><span class="k">Não existe HM</span><span class="v">nenhum Pokémon aprende "Corte" nem "Surf" neste jogo</span></div>
@@ -3990,7 +3991,7 @@ const UI = {
       <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
       <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
       <div class="linha"><span class="k">Onde conferir</span><span class="v">a Parada lista o que o seu time consegue fazer agora</span></div>
-      <p class="sussurro">Metade disso é objeto e metade é o corpo do bicho. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
+      <p class="sussurro">Metade disso é objeto e metade é o corpo do Pokémon. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
       <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
 
       <h3>Perguntar o nome</h3>

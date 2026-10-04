@@ -155,14 +155,14 @@ c7_ab_encomenda:{
 c7_ab_o_que_tem:{
   texto:[
     'Ela demora. Olha pra caixa como se a caixa fosse responder por ela.',
-    fala('Elsa', 'Coleira, uma bola vazia e um chinelo.'),
+    fala('Elsa', 'Coleira, uma Pokébola vazia e um chinelo.'),
     d=>fala(d.jogador.nome, 'Um chinelo?'),
     fala('Elsa', 'Ele dormia em cima do chinelo do meu pai. Todo dia. Oito anos.'),
     'Ela diz "oito anos" e a voz não quebra, porque ela já contou isso muitas vezes e treinou.',
     fala('Elsa', 'Meu pai falou que a gente não ia guardar. Falou que guardar faz mal.'),
     fala('Elsa', 'Eu concordo com ele. Só não consigo jogar fora. Na torre não é jogar fora.')
   ],
-  ef:{registrar:'A caixa tem uma coleira, uma bola vazia e um chinelo.'},
+  ef:{registrar:'A caixa tem uma coleira, uma Pokébola vazia e um chinelo.'},
   escolhas:[
     {texto:'Aceitar levar.', vai:'c7_ab_aceitou'},
     {texto:'Dizer que ela tem que subir. Você vai junto.', vai:'c7_ab_vai_junto'}
@@ -210,7 +210,7 @@ c7_ab_de_cracha:{
   texto:[
     'Tem um posto da prefeitura na entrada de Lavender que não existe em nenhuma outra cidade de Kanto: uma guarita de dois metros por dois com uma janelinha, e dentro dela uma mulher com um livro de registro.',
     'Não é fiscalização. É outra coisa.',
-    d=>{ Nomes.apresentar('a funcionária da guarita'); return 'Colada no vidro da janelinha, com durex amarelado, uma tira de papel escrita à mão: SRA. MYRTLE — PORTARIA.'; },
+    d=>{ Nomes.apresentar('a funcionária da guarita'); return 'Colada no vidro da janelinha, com fita adesiva amarelada, uma tira de papel escrita à mão: SRA. MYRTLE — PORTARIA.'; },
     fala('a funcionária da guarita', 'Bom dia. Veio visitar ou veio sepultar?'),
     'É a pergunta mais direta que alguém já te fez.',
     d=>{
@@ -319,15 +319,14 @@ c7_quando_parou:{
     '"Quando foi que parou?"',
     'Ela pensa com o regador na mão.',
     '"Eu acho que nunca teve."',
-    'Ela mexe as folhas de uma samambaia, procurando bicho.',
+    'Ela mexe as folhas de uma samambaia, procurando Pokémon.',
     '"Meu pai era daqui. O pai dele era daqui. A torre é de mil oitocentos e alguma coisa." Ela dá de ombros. "Talvez a gente nunca tenha ligado rádio nessa rua desde que rádio existe."',
     'Ela fecha a torneira.',
     '"Tem gente que muda pra cá e traz som. Dura uns dois meses."',
     '"E aí?"',
     '"E aí não dura."'
   ],
-  ef:{flag:'nunca_teve_musica',
-      presagio:'"E aí não dura." Ela não explicou por quê, e você também não vai conseguir explicar quando sair daqui.'},
+  ef:{flag:'nunca_teve_musica'},
   escolhas:[
     {texto:'Ir até a base da torre.', vai:'c7_base'},
     {texto:'Andar pela cidade.', vai:'c7_cidade'},
@@ -364,8 +363,7 @@ c7_marcenaria:{
     'Você olha a prateleira "pra guardar".',
     '"Isso não é mórbido, {moço|moça}", ele diz, lendo sua cara. "É que quem tá em rota não tem onde comprar."'
   ],
-  ef:{flag:'viu_as_urnas',
-      presagio:'Tem gente que compra antes. Você vai entender por quê, e vai ser tarde demais pra voltar aqui.'},
+  ef:{flag:'viu_as_urnas'},
   escolhas:[
     {texto:'Comprar uma pequena. (900 ₽)', vai:'c7_comprou_urna', cond:d=>d.jogador.dinheiro>=900,
      ef:{dinheiro:-900, flag:'tem_urna'}},
@@ -382,7 +380,7 @@ c7_comprou_urna:{
     'Você guarda no fundo da mochila, embaixo de tudo.',
     'Ela pesa quatrocentos gramas. Você vai carregar quatrocentos gramas por muito tempo esperando não precisar.'
   ],
-  ef:{presagio:'Quatrocentos gramas no fundo da mochila. Toda vez que você reorganizar a mochila, você vai encostar nela.'},
+  ef:{},
   escolhas:[
     {texto:'Sair.', vai:'c7_cidade2'},
     {texto:'"Já veio treinador comprar depois?"', vai:'c7_urna_depois'}
@@ -412,10 +410,10 @@ c7_quantas_urnas:{
 
 c7_urna_depois:{
   texto:[
-    '"Já veio treinador comprar depois? Com o bicho já—"',
+    '"Já veio treinador comprar depois? Com o Pokémon já—"',
     '"Vem." Ele corta antes de você terminar. "Vem toda semana."',
     'Ele apoia as duas mãos no balcão.',
-    '"E esses eu atendo primeiro. Eu paro o que eu tô fazendo." Ele olha pra oficina nos fundos. "Porque quem chega aqui com o bicho na mochila chega numa condição que não dá pra deixar esperando."',
+    '"E esses eu atendo primeiro. Eu paro o que eu tô fazendo." Ele olha pra oficina nos fundos. "Porque quem chega aqui com o Pokémon na mochila chega numa condição que não dá pra deixar esperando."',
     'Ele volta a lixar uma tampa.',
     '"Tem um banco ali. Eu boto água. Eles ficam sentado ali um tempo e eu deixo."'
   ],
@@ -524,8 +522,7 @@ c7_morro_ficou:{
     'Daqui não dá pra ouvir nada. Você assiste um enterro inteiro em silêncio absoluto, de um morro, a quinhentos metros.',
     'Dura onze minutos. Depois eles entram na torre e a rua fica vazia de novo.'
   ],
-  ef:{flag:'viu_o_enterro_de_longe',
-      presagio:'Onze minutos. É quanto dura, e depois a rua fica vazia de novo.'},
+  ef:{flag:'viu_o_enterro_de_longe'},
   escolhas:[
     {texto:'Descer e ir até a torre.', vai:'c7_base'},
     {texto:'Voltar na floricultura.', vai:'c7_voltou_flor'},
@@ -692,8 +689,7 @@ c7_dono_pousada:{
     'Ele guarda o pano.',
     '"Eu nasci nessa cidade. Todo mundo que nasce aqui acha que vai sair."'
   ],
-  ef:{npc:{nome:'Dono da pousada', opiniao:2, memoria:'Está tentando vender a pousada de Lavender há três anos.'},
-      presagio:'Todo mundo que nasce aqui acha que vai sair.'},
+  ef:{npc:{nome:'Dono da pousada', opiniao:2, memoria:'Está tentando vender a pousada de Lavender há três anos.'}},
   escolhas:[
     {texto:'Subir e dormir.', vai:'c7_dormiu'},
     {texto:'Ir à torre agora.', vai:'c7_base'}
@@ -733,8 +729,7 @@ c7_cafe_senhora:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Sentou pra tomar café com uma desconhecida de luto'},
       hp:3, npc:{nome:'Senhora do Growlithe', opiniao:4, memoria:'Tomou café com você na copa da pousada na manhã seguinte ao enterro.'},
-      flag:'cafe_com_a_senhora',
-      presagio:'Catorze anos é muito. Faz a conta com os seus, e depois tenta esquecer que fez.'},
+      flag:'cafe_com_a_senhora'},
   escolhas:[
     {texto:'"Como era o nome dele?"', vai:'c7_nome_do_growlithe'},
     {texto:'"A senhora vai subir de novo hoje?"', vai:'c7_subir_de_novo'},
@@ -748,15 +743,14 @@ c7_nome_do_growlithe:{
     '"Como era o nome dele?"',
     'Ela levanta a cabeça rápido.',
     '"Ninguém pergunta isso."',
-    'Ela diz o nome. É um nome bobo, de bicho de estimação, do tipo que se dá quando se tem vinte e poucos anos e nenhuma ideia de que vai durar catorze.',
+    'Ela diz o nome. É um nome bobo, de Pokémon de estimação, do tipo que se dá quando se tem vinte e poucos anos e nenhuma ideia de que vai durar catorze.',
     'Depois ela conta a história do nome, que leva sete minutos, e é uma história sem graça nenhuma sobre uma vizinha e um programa de televisão.',
     'Ela ri no meio. Ri de verdade.',
     'Quando acaba, ela segura a sua mão em cima da mesa por dois segundos e solta.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Perguntou o nome'},
       npc:{nome:'Senhora do Growlithe', opiniao:7, memoria:'Você perguntou o nome do Growlithe dela. Ninguém pergunta isso.'},
-      moral:10, hp:3,
-      presagio:'Ninguém pergunta o nome. Lembra disso quando for a sua vez de ouvir.'},
+      moral:10, hp:3},
   escolhas:[
     {texto:'"A senhora vai subir de novo hoje?"', vai:'c7_subir_de_novo'},
     {texto:'Ficar mais um pouco.', vai:'c7_silencio_copa'},
@@ -797,8 +791,7 @@ c7_foi_com_ela:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Andou onze minutos devagar do lado de quem precisava'},
       npc:{nome:'Senhora do Growlithe', opiniao:9, memoria:'Você a acompanhou até o mural da torre quando ela não conseguia entrar sozinha.'},
       flag:'entrou_com_a_senhora', moral:10,
-      registrar:'Acompanhou a senhora do Growlithe até o mural.',
-      presagio:'Você não empurrou, não segurou o braço, não falou nada. Guarda essa técnica.'},
+      registrar:'Acompanhou a senhora do Growlithe até o mural.'},
   escolhas:[
     {texto:'Ir até o mural você também.', vai:'c7_mural', cond:d=>d.cemiterio.length>0},
     {texto:'Procurar quem cuida daqui.', vai:'c7_zelador'},
@@ -874,8 +867,7 @@ c7_leu_o_mural:{
     'Onze nomes, uma data.',
     'Você fica olhando esse canto por um tempo longo.'
   ],
-  ef:{flag:'os_onze_nomes',
-      presagio:'Onze nomes e uma data só. Alguém escreveu isso ajoelhado no chão, e você vai descobrir o que foi.'},
+  ef:{flag:'os_onze_nomes'},
   escolhas:[
     {texto:'Perguntar ao zelador sobre os onze nomes.', vai:'c7_zelador'},
     {texto:'Escrever no mural.', vai:'c7_mural', cond:d=>d.cemiterio.length>0,
@@ -893,8 +885,7 @@ c7_deixou_flor:{
     'Duas horas depois, quando você descer, a flor ainda vai estar lá e vai ter mais duas do lado.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Deixou flor para mortos de quem não sabia o nome'},
-      flag:'deixou_a_flor', limpaFlag:'tem_a_flor', moral:8,
-      presagio:'Vai ter mais duas do lado. As pessoas seguem quem começa.'},
+      flag:'deixou_a_flor', limpaFlag:'tem_a_flor', moral:8},
   escolhas:[
     {texto:'Procurar o zelador.', vai:'c7_zelador'},
     {texto:'Entrar na torre.', vai:'c7_torre'}
@@ -912,7 +903,7 @@ c7_mural:{
     'Ela não está sendo cruel. Ela está sendo verdadeira, o que é diferente e muito pior.',
     'Ela devolve o giz na caixinha por você, porque você não está conseguindo soltar.'
   ],
-  ef:{presagio:'"Depois você aprende a escrever mais rápido." Essa é a ameaça real dessa cidade.'},
+  ef:{},
   escolhas:[
     {texto:'"E a senhora escreveu quantos?"', vai:'c7_quantos_ela'},
     {texto:'Ler o resto dos nomes.', vai:'c7_leu_o_mural'},
@@ -931,7 +922,7 @@ c7_quantos_ela:{
     '"Sinto muito."',
     '"Não sinta. Foi em quarenta anos." Ela ajeita o casaco. "Três em quarenta anos é uma vida boa, {moço|moça}. Muito boa."',
     'Ela olha pra você.',
-    '"Você tem quantos? De bicho, digo."',
+    '"Você tem quantos? De Pokémon, digo."',
     d=>`"${['Nenhum','Um','Dois','Três','Quatro','Cinco','Seis'][d.time.length] || d.time.length}."`,
     '"Então você tem muito giz pela frente."'
   ],
@@ -1010,8 +1001,7 @@ c7_admitiu:{
     '"Porque eles mostram uma vez." Ele volta pras velas. "Quem corre tem que subir de novo depois. E depois é sempre pior."'
   ],
   ef:{flag:'conselho_de_ficar',
-      npc:{nome:'Zelador da Torre', opiniao:4, memoria:'Você admitiu ter uma coisa podre. Ninguém tinha admitido em vinte e três anos.'},
-      presagio:'Fica e olha até acabar. Você vai querer correr.'},
+      npc:{nome:'Zelador da Torre', opiniao:4, memoria:'Você admitiu ter uma coisa podre. Ninguém tinha admitido em vinte e três anos.'}},
   escolhas:[
     {texto:'"Quem escreveu os onze nomes?"', vai:'c7_os_onze', cond:d=>!!d.flags.os_onze_nomes},
     {texto:'"O senhor já subiu?"', vai:'c7_ele_subiu'},
@@ -1109,8 +1099,7 @@ c7_porque_pararam:{
     'Ele abaixa a mão.',
     '"E eu não sei qual das duas é, {moço|moça}. Faz vinte e um anos que eu não sei qual das duas é."'
   ],
-  ef:{flag:'as_duas_explicacoes',
-      presagio:'Resolver e acostumar produzem exatamente o mesmo silêncio. Você não vai conseguir distinguir os dois de dentro.'},
+  ef:{flag:'as_duas_explicacoes'},
   escolhas:[
     {texto:'"O que eles mostravam?"', vai:'c7_o_que_mostravam'},
     {texto:'Subir.', vai:'c7_torre'},
@@ -1152,8 +1141,7 @@ c7_porque_nunca_abriu:{
     'Ele dá um sorriso péssimo.',
     '"Mas se eu abrir e não tiver nada, aí eu perco a porta também."'
   ],
-  ef:{flag:'se_eu_abrir_perco_a_porta', moral:5,
-      presagio:'"Se eu abrir e não tiver nada, aí eu perco a porta também." Você vai entender isso lá em cima.'},
+  ef:{flag:'se_eu_abrir_perco_a_porta', moral:5},
   escolhas:[
     {texto:'"Eu abro pro senhor."', vai:'c7_abre_por_ele',
      ef:{flag:'prometeu_abrir_a_porta'}},
@@ -1254,7 +1242,7 @@ c7_morreram:{
     'O zelador fica em silêncio por um tempo horrível.',
     '"Ela não sabia."',
     'Ele olha pra escada.',
-    '"É por isso que ela escreveu no mural, entende? Ela me perguntou se podia escrever nome de bicho que ela não sabia se tinha morrido."',
+    '"É por isso que ela escreveu no mural, entende? Ela me perguntou se podia escrever nome de Pokémon que ela não sabia se tinha morrido."',
     '"E o senhor deixou?"',
     '"Eu deixei." Ele levanta do banco com dificuldade. "Eu não sou dono do giz."',
     'Ele volta pras velas.',
@@ -1325,8 +1313,7 @@ c7_copiou_os_onze:{
   ],
   ef:{flag:'copiou_os_onze_nomes',
       rep:{eixo:'bom',delta:2,motivo:'Copiou onze nomes de um mural de giz ajoelhado no chão'},
-      registrar:'Copiou os onze nomes do mural no caderno.',
-      presagio:'Tem onze nomes no seu caderno agora. Um dia alguém vai pedir pra ouvir.'},
+      registrar:'Copiou os onze nomes do mural no caderno.'},
   escolhas:[
     {texto:'Subir a torre.', vai:'c7_torre'},
     {texto:'Deixar a flor embaixo do canto.', vai:'c7_deixou_flor', cond:d=>!!d.flags.tem_a_flor}
@@ -1383,8 +1370,7 @@ c7_escutou:{
     'Não dá pra entender uma palavra. É só o formato.',
     'E o formato é suficiente pra você ficar dois minutos parad{o|a} num corredor gelado com a respiração saindo branca.'
   ],
-  ef:{flag:'escutou_as_vozes', moral:-5,
-      presagio:'Só o formato. Você vai reconhecer esse formato de novo numa outra escada, muito pior.'},
+  ef:{flag:'escutou_as_vozes', moral:-5},
   escolhas:[
     {texto:'Subir.', vai:'c7_visao'},
     {texto:'Descer.', vai:'c7_desceu_antes'},
@@ -1436,8 +1422,7 @@ c7_desceu_antes:{
     'Você fica no saguão por uns minutos, com as mãos nos bolsos, sem saber o que fazer com o corpo.',
     'E aí, porque você não consegue não fazer, você vira e sobe de novo.'
   ],
-  ef:{flag:'desceu_e_voltou',
-      presagio:'Quem desce tem que subir de novo. E de novo é sempre pior. Ele avisou.'},
+  ef:{flag:'desceu_e_voltou'},
   escolhas:[
     {texto:'Subir de novo, até o fim.', vai:'c7_visao'},
     {texto:'Não. Ir embora de Lavender.', vai:'c7_fim'},
@@ -1451,12 +1436,12 @@ c7_visao:{
       const f = d.flags;
       if (f.entregou_o_rapaz) return 'No quinto andar tem um formulário em cima de uma cadeira. Só isso: uma folha preenchida, com uma assinatura embaixo, numa cadeira de plástico no meio de um corredor de pedra. A assinatura não é sua. O nome que está preenchido no campo do meio, sim.';
       if (f.agrediu_envenenador) return 'No quinto andar tem uma tigela de ração no meio do chão. Só isso. E o som das suas próprias mãos, que você reconhece na hora, e que não devia dar pra reconhecer de fora.';
-      if (f.usou_escudo) return 'No quinto andar tem um cinto de treinador estendido no chão, aberto, com cinco bolas e um espaço vazio. O espaço vazio é do tamanho certo.';
+      if (f.usou_escudo) return 'No quinto andar tem um cinto de treinador estendido no chão, aberto, com cinco Pokébolas e um espaço vazio. O espaço vazio é do tamanho certo.';
       if (f.ignorou_pikachu) return 'No quinto andar, no meio do corredor, tem uma estaca fincada no chão de pedra e um fio de aço amarrado nela. O fio se mexe sozinho, girando, girando, girando o mesmo círculo que você viu na terra da floresta.';
       if (f.trabalhou_rocket) return 'No quinto andar tem duas caixas plásticas azuis empilhadas, do tipo que você carregou. A de cima está aberta. Você sabe que não deve olhar dentro. Você olha dentro.';
       if (f.ignorou_marta) return 'No quinto andar tem uma mulher sentada de costas com alguma coisa no colo. Ela não vira. Você já sabe que ela não vai virar, e mesmo assim fica esperando, e o tempo passa errado.';
       if (f.deixou_os_ovos_irem) return 'No quinto andar tem uma caixa plástica aberta no chão, com palha dentro, e a palha está se mexendo. Você fica olhando a palha se mexer. Ela não para de se mexer o tempo todo em que você está lá.';
-      if (f.vendeu_um_do_time) return 'No quinto andar tem uma caixa forrada de veludo azul no chão, com seis espumas, e cinco delas estão vazias. Na sexta tem uma bola, e a plaquinha de acrílico na frente dela tem a sua letra.';
+      if (f.vendeu_um_do_time) return 'No quinto andar tem uma caixa forrada de veludo azul no chão, com seis espumas, e cinco delas estão vazias. Na sexta tem uma Pokébola, e a plaquinha de acrílico na frente dela tem a sua letra.';
       if (f.vendeu_para_cacadores) return 'No quinto andar alguém conta dinheiro. Nota por nota, devagar, olhando pra você o tempo todo. Você conhece as mãos. São as suas.';
       if (d.cemiterio.length) return `No quinto andar, ${nomeExib(d.cemiterio[0])} está esperando você no meio do corredor. Inteir${pron(d.cemiterio[0]).o}. Sem marca nenhuma. ${pron(d.cemiterio[0]).Ele} não te ataca e não foge — só senta e espera, do jeito que esperava.`;
       if (f.saiu_sem_despedir) return 'No quinto andar tem uma cortina de cozinha se mexendo, sem janela em volta, sem vento nenhum.';
@@ -1557,8 +1542,8 @@ c7_marowak:{
     'O nível dele está errado pra essa torre. Muito errado.',
     'Atrás dele, encolhido contra a parede, um Cubone. Pequeno. Uma das patas traseiras está dobrada de um jeito que pata não dobra. Ele está respirando rápido.',
     'O Marowak não é a mãe dele. A mãe dele está enterrada no terceiro andar — você passou pela lápide na subida, tem uma lápide nova no terceiro andar com data de cinco dias atrás.',
-    'Esse Marowak é de outro treinador. E tem uma bola no chão, vazia, a cinco metros.',
-    'O treinador está caído ao lado da bola. Vivo. Inconsciente. O Marowak não deixa ninguém chegar perto de nenhum dos dois.'
+    'Esse Marowak é de outro treinador. E tem uma Pokébola no chão, vazia, a cinco metros.',
+    'O treinador está caído ao lado da Pokébola. Vivo. Inconsciente. O Marowak não deixa ninguém chegar perto de nenhum dos dois.'
   ],
   ef:{registrar:'Encontrou o Marowak no sexto andar da Torre, com um Cubone ferido e um treinador inconsciente.'},
   escolhas:[
@@ -1704,8 +1689,7 @@ c7_levou_os_dois:{
   ef:{dinheiro:-2500, rep:{eixo:'bom',delta:4,motivo:'Pagou a van e levou os três até Celadon'},
       flag:['salvou_treinador_torre','conhece_o_hideo'],
       npc:{nome:'Elias', opiniao:8, memoria:'Você o tirou do sexto andar da Torre de Lavender depois de quatro dias caído. Ele não esquece.'},
-      registrar:'Levou o treinador, o Marowak e o Cubone até o hospital de Celadon.',
-      presagio:'Elias, vinte e dois anos. Guarda esse nome.'},
+      registrar:'Levou o treinador, o Marowak e o Cubone até o hospital de Celadon.'},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c7_fim'},
     {texto:'Ficar até ele ter alta.', vai:'c7_ficou_ate_alta'}
@@ -1724,8 +1708,7 @@ c7_ficou_ate_alta:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Ficou três dias esperando a alta de um desconhecido'},
       flag:'sabe_do_hideo', hp:-2, causa:'Três dias dormindo em Centro Pokémon',
-      npc:{nome:'Elias', opiniao:10, memoria:'Você ficou três dias em Celadon até ele ter alta. Ele te contou da epilepsia.'},
-      presagio:'Ele escondeu um laudo por medo de uma exigência que talvez nem existisse. Isso vai acontecer com muita gente nessa história.'},
+      npc:{nome:'Elias', opiniao:10, memoria:'Você ficou três dias em Celadon até ele ter alta. Ele te contou da epilepsia.'}},
   escolhas:[
     {texto:'Seguir viagem.', vai:'c7_fim'}
   ]
@@ -1760,8 +1743,7 @@ c7_carregou_o_treinador:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Carregou um desconhecido por seis andares'},
       hp:-5, causa:'Carregar um homem por seis andares',
       flag:'salvou_treinador_torre',
-      registrar:'Carregou o treinador do sexto andar até a base da torre.',
-      presagio:'O osso continuou batendo depois que a van saiu. Ninguém contou pra ele.'},
+      registrar:'Carregou o treinador do sexto andar até a base da torre.'},
   escolhas:[
     {texto:'Subir de novo, contar pro Marowak.', vai:'c7_contou_pro_marowak'},
     {texto:'Ir com a van até Celadon.', vai:'c7_levou_os_dois'},
@@ -1784,8 +1766,7 @@ c7_contou_pro_marowak:{
   ef:{rep:{eixo:'bom',delta:4,motivo:'Subiu seis andares de novo só pra avisar'},
       flag:['acalmou_marowak','contou_pro_marowak'], moral:15,
       hp:-3, causa:'Subir a torre duas vezes no mesmo dia',
-      registrar:'Subiu de novo só pra avisar o Marowak que o treinador dele estava vivo.',
-      presagio:'A coisa que fez parar foi alguém subir e sentar. Guarda isso: é quase sempre isso.'},
+      registrar:'Subiu de novo só pra avisar o Marowak que o treinador dele estava vivo.'},
   escolhas:[
     {texto:'Levar o Cubone pro hospital.', vai:'c7_cubone'},
     {texto:'Ficar sentad{o|a} com os dois.', vai:'c7_ficou_com_marowak'},
@@ -1818,8 +1799,7 @@ c7_pos_luta:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Salvou um treinador inconsciente na Torre Pokémon'},
       hp:-5, causa:'Esforço na Torre Pokémon',
       flag:['salvou_treinador_torre','bateu_no_marowak'],
-      registrar:'Derrotou o Marowak. Ele estava chamando ajuda há quatro dias.',
-      presagio:'Era chamado, não ameaça. Você vai ter que decidir o que fazer com essa informação.'},
+      registrar:'Derrotou o Marowak. Ele estava chamando ajuda há quatro dias.'},
   escolhas:[
     {texto:'Voltar no sexto andar buscar o Cubone.', vai:'c7_cubone'},
     {texto:'Voltar no sexto andar buscar o Marowak.', vai:'c7_voltou_pelo_marowak'},
@@ -1839,8 +1819,7 @@ c7_voltou_pelo_marowak:{
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desceu duas vezes carregando quem você derrubou'},
       hp:-7, causa:'Doze andares de escada carregando peso',
       flag:'carregou_o_marowak',
-      npc:{nome:'Zelador da Torre', opiniao:6, memoria:'Te achou chorando de exaustão no quarto andar com um Marowak em cima. Ajudou na última metade.'},
-      presagio:'Você derrubou e carregou. Isso não anula, mas é a única coisa que dá pra fazer depois.'},
+      npc:{nome:'Zelador da Torre', opiniao:6, memoria:'Te achou chorando de exaustão no quarto andar com um Marowak em cima. Ajudou na última metade.'}},
   escolhas:[
     {texto:'Contar ao treinador exatamente o que aconteceu.', vai:'c7_contou_a_verdade'},
     {texto:'Buscar o Cubone também.', vai:'c7_cubone'},
@@ -1864,8 +1843,7 @@ c7_contou_a_verdade:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Contou a verdade sem melhorar nada'},
       flag:'contou_a_verdade_ao_hideo',
-      npc:{nome:'Elias', opiniao:6, memoria:'Você contou que atacou o Marowak dele antes de entender. Ele não te absolveu e agradeceu.'},
-      presagio:'"Eu não vou te absolver." Você vai precisar disso quando alguém te absolver rápido demais.'},
+      npc:{nome:'Elias', opiniao:6, memoria:'Você contou que atacou o Marowak dele antes de entender. Ele não te absolveu e agradeceu.'}},
   escolhas:[
     {texto:'Buscar o Cubone.', vai:'c7_cubone'},
     {texto:'Buscar o Marowak.', vai:'c7_voltou_pelo_marowak'},
@@ -1876,7 +1854,7 @@ c7_contou_a_verdade:{
 
 c7_acalmar:{
   texto:[
-    'Você solta o cinto no chão, com todas as bolas, e mostra as mãos vazias.',
+    'Você solta o cinto no chão, com todas as Pokébolas, e mostra as mãos vazias.',
     'Depois anda.',
     d=>d.flags.sabe_o_que_o_marowak_faz
       ? 'E você não anda na direção dele. Você anda na direção do Cubone, devagar, pelo lado — porque você entendeu que o problema dele não é você.'
@@ -1966,12 +1944,12 @@ c7_escudo_resultado:{
     'Funciona. É importante registrar isso: funciona.',
     'Você chega no treinador, arrasta ele pelo colarinho até a escada e desce seis andares com ele.',
     'O que ficou pra trás no sexto andar ficou pra trás no sexto andar.',
-    'O zelador olha o seu cinto quando você chega embaixo. Conta as bolas com os olhos. Não diz nada.',
+    'O zelador olha o seu cinto quando você chega embaixo. Conta as Pokébolas com os olhos. Não diz nada.',
     'O não-dizer-nada dele é a coisa mais alta dessa cidade sem música.'
   ],
   ef:{rep:{eixo:'ruim',delta:4,motivo:'Sacrificou o próprio Pokémon como escudo'},
       moral:-30, flag:['usou_escudo','salvou_treinador_torre'],
-      npc:{nome:'Zelador da Torre', opiniao:-6, memoria:'Ele contou as bolas no seu cinto quando você desceu. Faltava uma.'},
+      npc:{nome:'Zelador da Torre', opiniao:-6, memoria:'Ele contou as Pokébolas no seu cinto quando você desceu. Faltava uma.'},
       registrar:'Usou um Pokémon como escudo. O time viu.',
       presagio:'O time viu. Eles não conseguem te dizer nada. Isso não quer dizer que não mudou.'},
   escolhas:[
@@ -2011,7 +1989,7 @@ c7_setimo:{
     'É uma sala vazia com o pé-direito duas vezes mais alto que os outros andares e nenhuma janela.',
     'Não está frio. É a única coisa dessa torre que não está fria.',
     'No meio do chão tem um círculo de coisas.',
-    'Não é altar, não é armadilha, não é nada organizado. É um monte de objetos deixados no chão em forma de círculo: uma coleira. Um chinelo. Uma bola quebrada. Uma fita de cabelo. Uma lanterna sem pilha. Um caderno molhado.',
+    'Não é altar, não é armadilha, não é nada organizado. É um monte de objetos deixados no chão em forma de círculo: uma coleira. Um chinelo. Uma Pokébola quebrada. Uma fita de cabelo. Uma lanterna sem pilha. Um caderno molhado.',
     'Coisas que gente deixou cair na torre nos últimos cem anos, catadas e postas em círculo por alguma coisa que mora aqui.',
     'No centro do círculo tem um espaço vazio do tamanho de uma coisa.'
   ],
@@ -2035,8 +2013,7 @@ c7_deixou_no_centro:{
     'Foi um agradecimento. Você tem certeza absoluta disso e não tem nenhuma prova.'
   ],
   ef:{limpaFlag:['tem_a_flor'], flag:'deixou_no_centro', moral:12,
-      rep:{eixo:'bom',delta:2,motivo:'Deixou uma coisa sua num círculo que ninguém entende'},
-      presagio:'Foi um agradecimento e você não tem nenhuma prova. Você vai acabar acumulando um monte dessas.'},
+      rep:{eixo:'bom',delta:2,motivo:'Deixou uma coisa sua num círculo que ninguém entende'}},
   escolhas:[
     {texto:'Descer.', vai:'c7_desceu_do_setimo'},
     {texto:'Sentar na borda e ficar.', vai:'c7_sentou_no_circulo'}
@@ -2077,8 +2054,7 @@ c7_devolveu_de_verdade:{
   ],
   ef:{limpaFlag:'mexeu_no_circulo', flag:'pediu_desculpa_no_setimo',
       rep:{eixo:'bom',delta:2,motivo:'Voltou sete andares pra pedir desculpa a ninguém'},
-      moral:10,
-      presagio:'Você subiu sete andares pra pedir desculpa a uma sala vazia. Anota isso na lista das coisas que você virou.'},
+      moral:10},
   escolhas:[
     {texto:'Descer.', vai:'c7_desceu_do_setimo'},
     {texto:'Sentar na borda e ficar.', vai:'c7_sentou_no_circulo'}
@@ -2144,7 +2120,7 @@ c7_saguao_depois:{
     'Uma delas é uma menina de uns onze anos, sozinha, com uma mochila de escola. Ela escreve um nome, fica olhando, e vai embora andando rápido.',
     'Você não fala com ela. Você não sabe se devia.'
   ],
-  ef:{hp:3, presagio:'Você não sabe se devia. Vai ficar com isso.'},
+  ef:{hp:3},
   escolhas:[
     {texto:'Ir atrás da menina.', vai:'c7_a_menina_do_mural'},
     {texto:'Sair da torre.', vai:'c7_fim'},
@@ -2208,8 +2184,7 @@ c7_ajuda:{
   ef:{rep:{eixo:'bom',delta:1,motivo:'Buscou ajuda na Torre Pokémon'},
       flag:['treinador_morreu_torre','era_chamado'], instabilidade:1,
       npc:{nome:'Zelador da Torre', opiniao:2, memoria:'Subiu com você e viu o treinador morto no sexto andar.'},
-      registrar:'O treinador do sexto andar morreu enquanto você buscava ajuda.',
-      presagio:'Quarenta minutos. Você vai refazer essa conta com resultados diferentes, e nenhum vai importar.'},
+      registrar:'O treinador do sexto andar morreu enquanto você buscava ajuda.'},
   escolhas:[
     {texto:'Ficar com o Cubone.', vai:'c7_cubone'},
     {texto:'Ficar com o Marowak.', vai:'c7_ficou_com_marowak'},
@@ -2230,8 +2205,7 @@ c7_mural_do_treinador:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Deixou registrado o que ninguém ia registrar'},
       flag:'hideo_escreveu', moral:10,
-      registrar:'Escreveu no mural: "O Marowak dele chamou por quatro dias."',
-      presagio:'Isso vai ficar nessa parede até alguém apagar. Ninguém vai apagar.'},
+      registrar:'Escreveu no mural: "O Marowak dele chamou por quatro dias."'},
   escolhas:[
     {texto:'Ficar com o Cubone.', vai:'c7_cubone'},
     {texto:'Ficar com o Marowak.', vai:'c7_ficou_com_marowak'},
@@ -2242,7 +2216,7 @@ c7_mural_do_treinador:{
 c7_cubone:{
   texto:[
     'O Cubone tem a perna quebrada e não pesa quase nada.',
-    'Ele não luta contra a bola. Não é aceitação — é uma coisa mais triste, que é não ter mais preferência nenhuma.',
+    'Ele não luta contra a Pokébola. Não é aceitação — é uma coisa mais triste, que é não ter mais preferência nenhuma.',
     d=>d.flags.acalmou_marowak
       ? 'O Marowak olha e não impede. Antes de você descer, ele encosta a testa na cabeça do Cubone por um segundo, e depois vira de costas.'
       : 'Ninguém autoriza nada. Você só leva.',

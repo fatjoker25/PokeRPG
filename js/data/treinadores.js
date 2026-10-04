@@ -101,7 +101,7 @@ const RETRATO_POR_NOME = {
   'Varian':'trainers/clerk', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/office_worker_f',
   'a mulher do fogo':'trainers/backpacker_f', 'Sr. Berto':'trainers/gentleman', 'Janus':'trainers/doctor',
   'Sr. Yves':'trainers/cabbie', 'Sr. Quint':'trainers/worker', 'a mulher da locadora':'trainers/clerk_f',
-  'Lina':'trainers/office_worker_f', 'o gerente':'trainers/clerk_boss', 'a mulher da marmita':'trainers/cook',
+  'Lina':'trainers/office_worker_f', 'o gerente':'trainers/clerk_boss', 'a mulher almoçando':'trainers/cook',
   'Rufo':'trainers/courier', 'Cleo':'trainers/schoolkid_f', 'a mãe da Cleo':'trainers/lady',
   'o rapaz da caneta':'trainers/league_staff', 'Pipoqueiro da face sul':'trainers/chef',
   'a mulher de tailleur':'trainers/office_worker_f', 'a senhora da barraca':'trainers/madame',

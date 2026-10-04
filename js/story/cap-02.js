@@ -130,8 +130,7 @@ c2_ab_contaram:{
     fala('a atendente', 'É pouca coisa pra virar fama. Mas virou, e agora é sua.', 'baixo'),
     'Você vai passar uns dias tentando decidir se isso é elogio ou aviso, e a resposta é que é os dois.'
   ],
-  ef:{moral:4, flag:'sabe_o_que_falam_de_voce',
-      presagio:'"Aquele para." Você vai lembrar dessa frase numa hora em que parar vai custar caro.'},
+  ef:{moral:4, flag:'sabe_o_que_falam_de_voce'},
   escolhas:[{texto:'Ir ver o mural.', vai:'c2_mural'}]
 },
 
@@ -224,7 +223,7 @@ c2_ligou_por_causa_do_cartaz:{
     'Você lê o cartaz sem foto e sem nome três vezes e aí sai da fila do mural e vai pro orelhão do saguão.',
     'Dois toques.',
     d=>fala(nomeCasa(), 'Alô?', null, 'A voz está normal. É só isso — está normal, e é isso que te desmonta um pouco.'),
-    d=>fala(d.jogador.nome, 'Oi. É que eu vi um cartaz aqui e eu... nada. Oi.'),
+    d=>fala(d.jogador.nome, 'Oi. É que eu vi um cartaz aqui e eu… nada. Oi.'),
     'Silêncio do outro lado por dois segundos.',
     d=>fala(nomeCasa(), 'Você tá em Viridian já? Criatura, você mal saiu.', 'riso'),
     d=>fala(nomeCasa(), 'Tá comendo?'),
@@ -398,7 +397,7 @@ c2_pergunta_floresta:{
     fala('a atendente', 'Nada que a gente possa dizer oficialmente.'),
     d=>fala(d.jogador.nome, 'E não oficialmente?'),
     'Ela olha os lados, o que é engraçado num salão vazio.',
-    fala('a atendente', 'Quatro pessoas registraram ocorrência esse ano. Duas falaram de gente. Duas falaram de bicho.'),
+    fala('a atendente', 'Quatro pessoas registraram ocorrência esse ano. Duas falaram de gente. Duas falaram de Pokémon.'),
     fala('a atendente', 'As duas que falaram de gente descreveram a mesma pessoa.', 'baixo', 'Ela baixa a voz.')
   ],
   ef:{flag:['leu_aviso_floresta','sabe_das_ocorrencias'],
@@ -483,7 +482,7 @@ c2_pergunta_pedra:{
   texto:[
     '"Por que você tava esperando numa pedra?"',
     'Ele demora pra responder e a resposta é mais honesta do que a pergunta merecia.',
-    '"Porque eu não sei ir sozinho." Ele olha o próprio tênis. "Tipo — eu sei andar. Eu não sei... ir."',
+    '"Porque eu não sei ir sozinho." Ele olha o próprio tênis. "Tipo — eu sei andar. Eu não sei… ir."',
     fala('Ezra', 'Meu pai falou que eu não duro uma semana. Não de maldade, sabe? Ele falou tipo estatística.'),
     fala('Ezra', 'E aí eu sentei na pedra e fiquei esperando aparecer alguém que fosse na mesma direção.'),
     'Ele finalmente te olha. "Achei que ia ser mais fácil."'
@@ -559,7 +558,7 @@ c2_recusa:{
 c2_batalha_teo:{
   texto:[
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
-    'Ezra joga a bola com mais força do que precisa. "VAI!"',
+    'Ezra joga a Pokébola com mais força do que precisa. "VAI!"',
     'O Pidgey sai e pousa no chão em vez de voar, o que é errado, e Ezra corrige ele em voz alta, e o Pidgey ignora.',
     'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
   ],
@@ -625,7 +624,7 @@ c2_derrota_revanche:{
     '"Foi sorte. Revanche."',
     'A cara dele muda. Não fecha — desaba um pouco, que é pior.',
     '"Foi sorte", ele repete, sem tom nenhum. "Tá."',
-    'Ele devolve o Pidgey pra bola com cuidado demais, que é como gente magoada guarda as coisas.',
+    'Ele devolve o Pidgey pra Pokébola com cuidado demais, que é como gente magoada guarda as coisas.',
     '"Em Pewter, então. Aí você vê se é sorte."'
   ],
   ef:{flag:'chamou_de_sorte'},
@@ -654,12 +653,12 @@ c2_derrota_aprendeu:{
   texto:[
     '"O que você fez que eu não fiz?"',
     'A pergunta pega ele desprevenido. Ninguém nunca perguntou nada pra ele.',
-    '"Eu... esperei." Ele pensa enquanto fala. "Você atacou toda vez que deu. Eu deixei passar uma pra ver o que você ia fazer."',
+    '"Eu… esperei." Ele pensa enquanto fala. "Você atacou toda vez que deu. Eu deixei passar uma pra ver o que você ia fazer."',
     'Ele encolhe os ombros, com vergonha de estar dando aula.',
     '"Meu pai joga carta. É a mesma coisa, ele fala. Quem tem pressa mostra a mão."',
     'Você vai lembrar disso numa floresta, num ginásio e num lugar bem pior, e nas três vezes vai ser útil.'
   ],
-  ef:{flag:'licao_da_espera', presagio:'Alguma coisa que ele disse vai voltar quando você menos quiser ouvir.'},
+  ef:{flag:'licao_da_espera'},
   escolhas:[
     {texto:'"Te encontro em Pewter."', vai:'c2_encontro_pewter'},
     {texto:'"Seu Pidgey não sabe voar direito."', vai:'c2_critica'},
@@ -669,7 +668,7 @@ c2_derrota_aprendeu:{
 
 c2_pos_batalha:{
   texto:[
-    'Ezra pega o Pidgey no colo antes mesmo de devolver pra bola. "Foi mal, foi mal, você foi bem."',
+    'Ezra pega o Pidgey no colo antes mesmo de devolver pra Pokébola. "Foi mal, foi mal, você foi bem."',
     'Ele fala isso pro Pidgey, não pra você. Leva uns bons quinze segundos até lembrar que você existe.',
     'Depois tira dinheiro do bolso e te entrega sem você pedir. É pouco. É quase tudo o que ele tem — dá pra ver porque a carteira fica visivelmente diferente.'
   ],
@@ -708,7 +707,7 @@ c2_critica:{
     'Ezra olha pro Pidgey. O Pidgey olha pro Ezra.',
     '"Eu sei." Ele coça a cabeça. "Ele nasceu numa gaiola. A gente comprou ele numa loja quando eu tinha nove anos."',
     '"Ele nunca voou?"',
-    '"Ele voa tipo... um metro." Ezra mostra com a mão. "Aí ele desce e anda."',
+    '"Ele voa tipo… um metro." Ezra mostra com a mão. "Aí ele desce e anda."',
     'Vocês dois ficam olhando o Pidgey. O Pidgey anda até a cerca e volta.'
   ],
   ef:{flag:'sabe_do_pidgey', npc:{nome:'Ezra', opiniao:1, memoria:'Te contou que o Pidgey dele nasceu numa gaiola e nunca aprendeu a voar direito.'}},

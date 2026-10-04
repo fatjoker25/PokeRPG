@@ -281,8 +281,7 @@ c17_envelope:{
       return '"Ô." Ezra enfia as mãos no bolso. "Eu preciso mostrar uma coisa pra alguém que não vai rir."';
     }
   ],
-  ef:{registrar:'Recebeu a convocação da Liga.',
-      presagio:'Sem data e sem prazo. Convocação sem prazo é convocação de quem não sabe se vai estar lá.'},
+  ef:{registrar:'Recebeu a convocação da Liga.'},
   escolhas:[
     {texto:'"Mostra."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ler o envelope inteiro primeiro.', vai:'c17_leu_o_envelope'},
@@ -304,8 +303,7 @@ c17_leu_o_envelope:{
   ],
   ef:{flag:['leu_o_anexo','sabe_dos_postos_vazios'],
       rep:{eixo:'bom',delta:2,motivo:'Leu a segunda folha'},
-      registrar:'Os postos de controle das rotas 22 e 23 estão desguarnecidos por "reestruturação administrativa".',
-      presagio:'Reestruturação administrativa. Guarde a expressão.'},
+      registrar:'Os postos de controle das rotas 22 e 23 estão desguarnecidos por "reestruturação administrativa".'},
   escolhas:[
     {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ir pra Rota 23.', vai:'c17_rota23'},
@@ -334,8 +332,7 @@ c17_perguntou_no_centro:{
   ef:{flag:['sabe_de_viridian','sabe_dos_postos_vazios'],
       npc:{nome:'a atendente do Centro', opiniao:3, memoria:'Te mostrou o comunicado de suspensão de plantão e contou que servidores foram realocados para Viridian.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou o que significava e conferiu no mural'},
-      registrar:'Servidores dos postos 22 e 23 foram realocados para Viridian, onde o ginásio vive de porta fechada.',
-      presagio:'Viridian. Um ginásio de porta fechada e gente indo trabalhar lá. Guarde os dois.'},
+      registrar:'Servidores dos postos 22 e 23 foram realocados para Viridian, onde o ginásio vive de porta fechada.'},
   escolhas:[
     {texto:'"Mostra o que você tem."', vai:'c17_teo_mostra', cond:d=>!!d.npcs['Ezra']},
     {texto:'Ir pra Rota 23.', vai:'c17_rota23'},
@@ -417,8 +414,7 @@ c17_teo_mostra:{
   ],
   ef:{flag:['viu_as_fotos','sabe_do_jardim'],
       npc:{nome:'Ezra', opiniao:3, memoria:'Te mostrou nove fotos de Mew numa clareira da Rota 23.'},
-      registrar:'Ezra fotografou Mew numa clareira da Rota 23, na terça.',
-      presagio:'Ela foi chegando. Guarde: ela chegou perto de um garoto com Pokégear.'},
+      registrar:'Ezra fotografou Mew numa clareira da Rota 23, na terça.'},
   escolhas:[
     {texto:'"Quem mais viu isso?"', vai:'c17_quem_viu'},
     {texto:'"O que você tava fazendo na Rota 23?"', vai:'c17_o_que_fazia'},
@@ -449,8 +445,7 @@ c17_o_que_fazia:{
       npc:{nome:'Ezra', opiniao:5, memoria:'Ia à Rota 23 só para olhar a entrada do Caminho da Vitória, com quatro insígnias, e se perdeu.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou o que ele estava fazendo lá'},
       moral:8,
-      registrar:'Ezra tem quatro insígnias e ia à Rota 23 só para olhar a entrada.',
-      presagio:'Ele se perdeu indo olhar uma porta que não podia atravessar. Repara.'},
+      registrar:'Ezra tem quatro insígnias e ia à Rota 23 só para olhar a entrada.'},
   escolhas:[
     {texto:'"Quem mais viu isso?"', vai:'c17_quem_viu'},
     {texto:'"Me leva lá."', vai:'c17_rota23', ef:{flag:'teo_leva'}},
@@ -506,8 +501,7 @@ c17_quem_viu:{
   ],
   ef:{flag:['foto_vazou','tem_gente_atras_do_mew'], instabilidade:1,
       npc:{nome:'Ezra', opiniao:3, memoria:'Postou uma das fotos num grupo e na manhã seguinte tinha gente perguntando onde ele morava.'},
-      registrar:'Ezra postou uma foto de Mew num grupo. Três pessoas foram procurá-lo no dia seguinte.',
-      presagio:'Onze da noite de terça e nove horas depois tinha gente na cidade dele. Nove horas.'},
+      registrar:'Ezra postou uma foto de Mew num grupo. Três pessoas foram procurá-lo no dia seguinte.'},
   escolhas:[
     {texto:'"Apaga tudo e some da sua cidade por uma semana."', vai:'c17_apagar'},
     {texto:'"Como eram as três pessoas?"', vai:'c17_as_tres_pessoas'},
@@ -707,8 +701,7 @@ c17_rodoviaria:{
   ef:{flag:'levou_o_teo_na_rodoviaria',
       npc:{nome:'Ezra', opiniao:7, memoria:'Vocês andaram seis quarteirões falando de coisa nenhuma até a rodoviária.'},
       rep:{eixo:'bom',delta:2,motivo:'Andou seis quarteirões com alguém até a rodoviária'},
-      moral:12,
-      presagio:'"Ela vai fingir que acredita, porque ela é minha mãe. E isso já é bom." Guarde.'},
+      moral:12},
   escolhas:[
     {texto:'Seguir para o Planalto.', vai:'c17_fim'},
     {texto:'Ir pra Rota 23 assim mesmo.', vai:'c17_rota23'},
@@ -730,7 +723,7 @@ c17_rota23:{
     'Isso não está vazio há semanas.',
     'Isso está vazio há dias.',
     d=>d.flags.teo_leva ? 'Ezra vai na frente. Ele fez esse caminho três vezes desde terça e ele não acha nenhum dos postos estranho, porque ele nunca viu eles ocupados.' :
-       'No meio do mato, do lado sudeste, tem um desvio que não estava lá quando você olhou da primeira vez. Não é trilha de gente e não é trilha de bicho.'
+       'No meio do mato, do lado sudeste, tem um desvio que não estava lá quando você olhou da primeira vez. Não é trilha de gente e não é trilha de Pokémon.'
   ],
   ef:{flag:['entrou_na_rota_23','postos_vazios_ha_dias'],
       registrar:'Os quatro postos de controle da Rota 23 estão vazios há dias, não semanas.',
@@ -830,8 +823,7 @@ c17_o_que_acontece:{
   ef:{flag:['sabe_da_elite','sabe_do_campeao'],
       rep:{eixo:'bom',delta:5,motivo:'Perguntou o que estava acontecendo e alguém respondeu'},
       instabilidade:2, moral:-8,
-      registrar:'Três membros da Elite dos Quatro não se apresentam desde agosto. O Campeão vai todo dia a uma sala vazia.',
-      presagio:'Ele vai todo dia. Numa sala onde não chega ninguém desde julho.'},
+      registrar:'Três membros da Elite dos Quatro não se apresentam desde agosto. O Campeão vai todo dia a uma sala vazia.'},
   escolhas:[
     {texto:'Ir pra clareira.', vai:'c17_a_clareira'},
     {texto:'Subir agora.', vai:'c17_boca_do_caminho'},
@@ -944,8 +936,7 @@ c17_pneus_na_trilha:{
   ],
   ef:{flag:['achou_os_pneus','tem_gente_atras_do_mew'],
       rep:{eixo:'bom',delta:3,motivo:'Procurou marca de pneu numa trilha onde não passa veículo'},
-      registrar:'Uma van entrou na Rota 23 pela estrada de manutenção, com o cadeado cortado, na direção da clareira.',
-      presagio:'Cadeado cortado e pendurado de volta. Eles pretendem voltar.'},
+      registrar:'Uma van entrou na Rota 23 pela estrada de manutenção, com o cadeado cortado, na direção da clareira.'},
   escolhas:[
     {texto:'Seguir as marcas até a van.', vai:'c17_pneus'},
     {texto:'Ir direto pra clareira, antes deles.', vai:'c17_a_clareira'},
@@ -960,8 +951,8 @@ c17_a_clareira:{
     'Você chega e para na borda.',
     'É redonda. Redonda de verdade — uns vinte metros de diâmetro, com a borda regular, num mato que não faz nada regular.',
     'A grama de dentro é mais alta e mais verde que a de fora.',
-    'E não tem árvore caída, não tem toca, não tem trilha de bicho, não tem formigueiro, não tem cupinzeiro, não tem osso.',
-    'Você já andou muito mato desde que saiu de casa e você sabe o que tem em vinte metros de mato: tem osso, tem casca roída, tem penugem, tem merda de bicho.',
+    'E não tem árvore caída, não tem toca, não tem trilha de Pokémon, não tem formigueiro, não tem cupinzeiro, não tem osso.',
+    'Você já andou muito mato desde que saiu de casa e você sabe o que tem em vinte metros de mato: tem osso, tem casca roída, tem penugem, tem merda de Pokémon.',
     'Aqui não tem nada.',
     'É um lugar onde nada acontece há muito tempo.',
     d=>d.flags.tem_gente_atras_do_mew || d.flags.achou_os_pneus ? 'E tem marca de pneu na entrada do mato, a uns cem metros. De ontem.' : 'E não tem marca de ninguém além da sua.'
@@ -978,7 +969,7 @@ c17_a_clareira:{
 
 c17_as_plantas:{
   texto:[
-    d=>d.flags.conheceu_nair ? 'Você entra e agacha e olha as plantas de perto, porque você passou dias andando com uma mulher que conta bicho na ciclovia há trinta e um anos e alguma coisa pegou.' : 'Você entra e agacha e olha as plantas de perto.',
+    d=>d.flags.conheceu_nair ? 'Você entra e agacha e olha as plantas de perto, porque você passou dias andando com uma mulher que conta Pokémon na ciclovia há trinta e um anos e alguma coisa pegou.' : 'Você entra e agacha e olha as plantas de perto.',
     'E a clareira fica muito pior.',
     'Tem samambaia de encosta úmida ao lado de capim de terreno seco.',
     'Tem um pé de café — café, arbusto de cultivo, que não existe em mato nativo — de um metro e vinte, carregado.',
@@ -1082,7 +1073,7 @@ c17_pneus:{
     'Não é gente de empresa. Não tem crachá, não tem caminhão, não tem ninguém de terno.',
     'Estes são diferentes: mais jovens, equipamento mais barato, e mais animados — do jeito errado.',
     'Uma rede de nylon de pesca esticada entre duas árvores. Um cooler. Duas cadeiras dobráveis. Um rádio tocando música.',
-    '"...se a gente pegar, a gente não vende pra empresa nenhuma, a gente vende pra comissão, que é quem paga mais..."',
+    '"…se a gente pegar, a gente não vende pra empresa nenhuma, a gente vende pra comissão, que é quem paga mais…"',
     '"Comissão? Que comissão?" Quem pergunta é o mais novo dos quatro.',
     '"Sei lá, cara. Foi o nome que tava no anúncio."',
     '"E tinha telefone?"',
@@ -1197,8 +1188,7 @@ c17_desmontaram:{
       npc:{nome:'Caçadores da Rota 23', opiniao:5, memoria:'Desmontaram o acampamento e foram embora. Você ajudou a enrolar a rede.'},
       rep:{eixo:'bom',delta:6,motivo:'Convenceu quatro pessoas a irem embora e ajudou a desmontar'},
       moral:15, instabilidade:-1,
-      registrar:'Os quatro caçadores desmontaram e foram embora.',
-      presagio:'"Não vai ter sido você." É a única resposta que existe pra "se eu não fizer, outro faz".'},
+      registrar:'Os quatro caçadores desmontaram e foram embora.'},
   escolhas:[
     {texto:'Voltar pra clareira.', vai:'c17_esperou_mew'},
     {texto:'"Me dá o recorte antes."', vai:'c17_pegou_o_recorte'},
@@ -1226,14 +1216,13 @@ c17_testemunhas:{
     'E aí a única mulher do grupo, que não falou nada até agora, fala:',
     '"Eu dou."',
     'Os outros três olham pra ela.',
-    '"Eu tenho quarenta e um anos e eu tô aqui porque eu perdi o emprego em agosto." Ela dobra a cadeira. "E eu não vou explicar pra minha filha que eu vim caçar bicho e nem que eu me escondi depois."'
+    '"Eu tenho quarenta e um anos e eu tô aqui porque eu perdi o emprego em agosto." Ela dobra a cadeira. "E eu não vou explicar pra minha filha que eu vim caçar Pokémon e nem que eu me escondi depois."'
   ],
   ef:{flag:['tem_testemunhas','provas_do_mew'],
       npc:{nome:'Caçadores da Rota 23', opiniao:7, memoria:'Uma delas se ofereceu para testemunhar com nome e recorte, porque não ia explicar isso à filha.'},
       rep:{eixo:'bom',delta:7,motivo:'Transformou quatro caçadores em quatro testemunhas'},
       moral:20,
-      registrar:'Ao menos uma dos quatro vai testemunhar sobre o anúncio, com nome e recorte.',
-      presagio:'Ela perdeu o emprego em agosto. Guarde o mês: é o mesmo dos postos vazios.'},
+      registrar:'Ao menos uma dos quatro vai testemunhar sobre o anúncio, com nome e recorte.'},
   escolhas:[
     {texto:'Anotar os nomes e os contatos.', vai:'c17_anotou_os_nomes'},
     {texto:'Voltar pra clareira.', vai:'c17_esperou_mew'},
@@ -1300,7 +1289,7 @@ c17_pegou_o_recorte:{
 c17_luta_cacadores_mew:{
   texto:[
     'Quatro pessoas, um de você.',
-    'Eles não lutam bem — o time deles é de rota, sem estratégia, com bicho cansado —, mas são quatro, e quatro é quatro.'
+    'Eles não lutam bem — o time deles é de rota, sem estratégia, com Pokémon cansado —, mas são quatro, e quatro é quatro.'
   ],
   ef:{moral:-5},
   batalha:{dex:34, nivel:48, tipo:'treinador', treinador:'Caçadores de recompensa', fuga:true,
@@ -1312,8 +1301,8 @@ c17_venceu_cacadores:{
   falante:'o mais velho dos quatro',
   vozes:['N','P'],
   texto:[
-    'Você derruba os três times e o quarto nem solta bola.',
-    '"A gente só queria..." É o mais velho dos quatro.',
+    'Você derruba os três times e o quarto nem solta Pokébola.',
+    '"A gente só queria…" É o mais velho dos quatro.',
     '"Eu sei o que vocês queriam."',
     'Eles recolhem os Pokémon caídos e guardam o cooler e enrolam a rede em silêncio, e a mulher de quarenta e um anos não olha pra você uma vez.',
     'Eles vão embora na van.',
@@ -1323,8 +1312,7 @@ c17_venceu_cacadores:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores de recompensa sozinh{o|a}'},
       flag:'espantou_cacadores_mew', moral:-5,
-      registrar:'Espantou os quatro caçadores. Eles vão voltar.',
-      presagio:'Da próxima eles vêm sabendo que tem alguém defendendo.'},
+      registrar:'Espantou os quatro caçadores. Eles vão voltar.'},
   escolhas:[
     {texto:'Voltar à clareira.', vai:'c17_esperou_mew'},
     {texto:'Ir atrás deles e conversar.', vai:'c17_contou_pros_quatro'},
@@ -1365,8 +1353,7 @@ c17_sabotou_van:{
   ],
   ef:{flag:'sabotou_a_van',
       rep:{eixo:'bom',delta:2,motivo:'Ganhou meio dia e deixou a chave em cima do pneu'},
-      registrar:'Sabotou a van dos caçadores e deixou a chave em cima do pneu.',
-      presagio:'Você voltou pra pegar a chave. Repara nisso sobre você.'},
+      registrar:'Sabotou a van dos caçadores e deixou a chave em cima do pneu.'},
   escolhas:[
     {texto:'Voltar à clareira.', vai:'c17_esperou_mew'},
     {texto:'Ir falar com eles depois.', vai:'c17_contou_pros_quatro'},
@@ -1389,8 +1376,7 @@ c17_denunciou_van:{
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Usou o sistema onde o sistema ainda funcionava'},
       flag:'liga_pegou_a_van',
-      registrar:'A Liga deteve os quatro por acampamento irregular. A van ficou apreendida por três semanas.',
-      presagio:'"Anota que a gente veio." Anota mesmo.'},
+      registrar:'A Liga deteve os quatro por acampamento irregular. A van ficou apreendida por três semanas.'},
   escolhas:[
     {texto:'Voltar à clareira.', vai:'c17_esperou_mew'},
     {texto:'Ir falar com os quatro antes de irem.', vai:'c17_contou_pros_quatro'},
@@ -1404,7 +1390,7 @@ c17_foi_embora_clareira:{
   vozes:['N','P','N'],
   texto:[
     'Você chega na borda da clareira, olha o meio dela, e não entra.',
-    d=>d.flags.teo_leva ? 'Ezra te olha sem entender.\n"Você não vai nem..."\n"Não."\nEle demora uns dez segundos, e acompanha você de volta, e não pergunta mais nada no caminho inteiro.\nE na metade do caminho ele fala uma coisa só: "Tá certo."' :
+    d=>d.flags.teo_leva ? 'Ezra te olha sem entender.\n"Você não vai nem…"\n"Não."\nEle demora uns dez segundos, e acompanha você de volta, e não pergunta mais nada no caminho inteiro.\nE na metade do caminho ele fala uma coisa só: "Tá certo."' :
        'Você fica na borda uns dois minutos e vira as costas.',
     'Você nunca vai saber se ela estava lá naquele dia.',
     'E é essa a parte do custo: não é que você abriu mão de ver.',
@@ -1438,12 +1424,12 @@ c17_esperou_mew:{
     'É do tamanho de um Meowth. A cauda é mais comprida que o corpo inteiro e fica parada no ar, sem enrolar, sem balançar.',
     'A grama embaixo dela não mexe.',
     'E ela não está te observando com cautela.',
-    'Ela está te observando com curiosidade — que é uma coisa completamente diferente e muito mais perigosa, porque quer dizer que ela não tem medo, e não ter medo de uma pessoa é a coisa que mata mais bicho em Kanto.'
+    'Ela está te observando com curiosidade — que é uma coisa completamente diferente e muito mais perigosa, porque quer dizer que ela não tem medo, e não ter medo de uma pessoa é a coisa que mata mais Pokémon em Kanto.'
   ],
   ef:{executar:d=>{ Estado.lend(151).encontros++; return []; },
       flag:'viu_mew',
       registrar:'Mew apareceu na clareira da Rota 23, depois de duas horas.',
-      presagio:'Ela não tem medo. Isso é o que mata mais bicho em Kanto.'},
+      presagio:'Ela não tem medo. Isso é o que mata mais Pokémon em Kanto.'},
   escolhas:[
     {texto:'Ficar parad{o|a}.', vai:'c17_mew_brinca'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
@@ -1501,8 +1487,7 @@ c17_mew_mao:{
       rep:{eixo:'bom',delta:3,motivo:'Mew encostou a testa na sua mão'},
       moral:20,
       executar:d=>{ const L=Estado.lend(151); L.disposicao='passivo'; L.aliado=true; return []; },
-      registrar:'Mew encostou a testa na sua mão por dois segundos.',
-      presagio:'Um lugar onde nada nunca precisou de nome. Guarde — é o oposto de tudo que você fez.'},
+      registrar:'Mew encostou a testa na sua mão por dois segundos.'},
   escolhas:[
     {texto:'Avisar que tem gente atrás dela.', vai:'c17_avisou_mew', cond:d=>!!d.flags.tem_gente_atras_do_mew || !!d.flags.achou_os_pneus},
     {texto:'Ficar parad{o|a} e ver o que ela faz.', vai:'c17_mew_brinca'},
@@ -1556,8 +1541,7 @@ c17_nao_te_incomoda:{
   ef:{flag:['mew_respondeu'],
       rep:{eixo:'bom',delta:4,motivo:'Fez uma pergunta e recebeu uma resposta que não cabe agora'},
       moral:15, instabilidade:-1,
-      registrar:'Mew cavou um buraco, tapou, e olhou para você. Três vezes.',
-      presagio:'Você vai entender aos vinte e poucos anos, numa conversa sobre coisa nenhuma.'},
+      registrar:'Mew cavou um buraco, tapou, e olhou para você. Três vezes.'},
   escolhas:[
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
     {texto:'Ficar parad{o|a} e ver o que mais ela faz.', vai:'c17_mew_brinca'},
@@ -1609,8 +1593,7 @@ c17_mostrou_o_caderno:{
   ef:{flag:['mostrou_o_caderno','mew_tocou_o_desenho'],
       rep:{eixo:'bom',delta:4,motivo:'Mostrou o caderno a uma coisa que não lê'},
       moral:15,
-      registrar:'Mew encostou a pata no desenho da flor branca no seu caderno.',
-      presagio:'Acaso, resposta, ou uma pata numa folha. Você nunca vai saber e vai contar mesmo assim.'},
+      registrar:'Mew encostou a pata no desenho da flor branca no seu caderno.'},
   escolhas:[
     {texto:'Deixar ela ir.', vai:'c17_deixou_mew'},
     {texto:'Estender a mão.', vai:'c17_mew_mao'},
@@ -1646,20 +1629,20 @@ c17_ate_escurecer:{
   texto:[
     'Você fica na clareira até escurecer.',
     'Ela não volta.',
-    'O que acontece, em vez disso, é que a clareira fica escura como qualquer mato fica escuro, e fria como qualquer mato fica frio, e às sete e quarenta começa a cantar um bicho qualquer no mato de fora.',
-    'Um bicho qualquer, cantando, do lado de fora da clareira.',
+    'O que acontece, em vez disso, é que a clareira fica escura como qualquer mato fica escuro, e fria como qualquer mato fica frio, e às sete e quarenta começa a cantar um Pokémon qualquer no mato de fora.',
+    'Um Pokémon qualquer, cantando, do lado de fora da clareira.',
     'De dentro dela, nada.',
     'E aí você entende uma última coisa, e ela é a pior de todas:',
     'a clareira não é um lugar onde tem coisa demais.',
-    'É um lugar de onde tudo saiu, porque ela é o jardim de alguém, e jardim é um lugar onde não deixam bicho entrar.',
-    'Quarenta e uma espécies de planta e nenhuma de bicho.',
+    'É um lugar de onde tudo saiu, porque ela é o jardim de alguém, e jardim é um lugar onde não deixam Pokémon entrar.',
+    'Quarenta e uma espécies de planta e nenhuma de Pokémon.',
     d=>d.flags.viu_as_fotos ? 'É a coisa mais solitária que você já viu, e ela foi construída de propósito, por uma coisa que esteve aqui antes de tudo, e que passa a tarde brincando com um garoto que apareceu porque se perdeu.' : 'É a coisa mais solitária que você já viu, e ela foi construída de propósito, por uma coisa que esteve aqui antes de tudo e que ainda acha graça em quem aparece.'
   ],
   ef:{flag:['ficou_ate_escurecer','entendeu_o_jardim'],
       rep:{eixo:'bom',delta:4,motivo:'Ficou até escurecer e entendeu o que era'},
       moral:-10, instabilidade:1,
-      registrar:'A clareira é um jardim: 41 espécies de planta e nenhuma de bicho. Ela é vazia de propósito.',
-      presagio:'Jardim é um lugar onde não deixam bicho entrar. Pensa em quanto tempo ela está sozinha.'},
+      registrar:'A clareira é um jardim: 41 espécies de planta e nenhuma de Pokémon. Ela é vazia de propósito.',
+      presagio:'Jardim é um lugar onde não deixam Pokémon entrar. Pensa em quanto tempo ela está sozinha.'},
   escolhas:[
     {texto:'Ir para o Planalto.', vai:'c17_fim'},
     {texto:'Voltar amanhã.', vai:'c17_esperou_mew'},
@@ -1670,9 +1653,9 @@ c17_ate_escurecer:{
 
 c17_captura_mew:{
   texto:[
-    'Você joga a bola.',
+    'Você joga a Pokébola.',
     'Mew não desvia, não se defende, não foge.',
-    'Ela olha a bola vindo com exatamente a mesma curiosidade com que olhou tudo o mais — a sua mochila, o seu boné, o seu rosto.',
+    'Ela olha a Pokébola vindo com exatamente a mesma curiosidade com que olhou tudo o mais — a sua mochila, o seu boné, o seu rosto.',
     'Com a mesma cara.'
   ],
   ef:{moral:-15},
@@ -1685,14 +1668,14 @@ c17_pos_mew:{
   texto:[
     'Ela some no meio do combate.',
     'Não foge — some, no sentido literal, e a clareira fica vazia entre dois piscares.',
-    'Você fica de pé ali por um tempo com uma bola na mão.',
+    'Você fica de pé ali por um tempo com uma Pokébola na mão.',
     d=>d.flags.brincou_com_mew||d.flags.tocou_mew ? 'E pensando nos vinte minutos anteriores, que agora significam uma coisa completamente diferente, e que vão continuar significando essa coisa diferente pro resto da sua vida, porque não tem como desfazer os vinte minutos e não tem como desfazer o que veio depois.' :
        'A grama alta volta ao normal em alguns minutos, levantando devagar onde vocês pisaram.',
     d=>d.flags.teo_leva ? 'Ezra não fala nada.\nEle não fala nada o caminho inteiro de volta, que são quarenta minutos de mato fechado.' : ''
   ],
   ef:{executar:d=>{ const L=Estado.lend(151); L.ataquesSofridos++; L.disposicao='desconfiado'; return []; },
       rep:{eixo:'ruim',delta:2,motivo:'Atacou Mew'},
-      npc:{nome:'Ezra', opiniao:-4, memoria:'Viu você jogar a bola em Mew e não falou nada nos quarenta minutos de volta.'},
+      npc:{nome:'Ezra', opiniao:-4, memoria:'Viu você jogar a Pokébola em Mew e não falou nada nos quarenta minutos de volta.'},
       moral:-15},
   escolhas:[
     {texto:'Esperar ela voltar.', vai:'c17_esperou_mew'},
@@ -1730,12 +1713,12 @@ c17_pediu_desculpa:{
 
 c17_capturou_mew:{
   texto:[
-    'A bola fecha e cai na grama alta.',
+    'A Pokébola fecha e cai na grama alta.',
     'E não acontece nada.',
     'Não tem tremor no céu, não tem clima mudando, não tem lendário nenhum vindo caçar você, não tem luz, não tem som.',
     'Isso é o assustador de Mew: capturar ela não quebra nada.',
     'O mundo não reage.',
-    d=>d.flags.teo_leva ? 'Ezra olha a bola no chão. Depois olha você.\nEle não fala nada.\nE não falar nada é a coisa mais alta que ele já fez na vida.' :
+    d=>d.flags.teo_leva ? 'Ezra olha a Pokébola no chão. Depois olha você.\nEle não fala nada.\nE não falar nada é a coisa mais alta que ele já fez na vida.' :
        'A clareira fica exatamente igual. A grama, as quarenta e uma espécies, a goiabeira com fruta caída.',
     'Mas em algum lugar, alguém vai descobrir.',
     'E a partir daí você deixa de ser uma pessoa e vira um endereço.'
@@ -1748,13 +1731,13 @@ c17_capturou_mew:{
     {texto:'Soltar. Agora.', vai:'c17_soltou_mew'},
     {texto:'Ficar com ela.', vai:'c17_ficou_com_mew'},
     {texto:'Soltar e pedir desculpa.', vai:'c17_soltou_mew'},
-    {texto:'Ficar sentad{o|a} com a bola na mão.', vai:'c17_soltou_mew'}
+    {texto:'Ficar sentad{o|a} com a Pokébola na mão.', vai:'c17_soltou_mew'}
   ]
 },
 
 c17_soltou_mew:{
   texto:[
-    'Você abre a bola na mesma clareira, menos de um minuto depois.',
+    'Você abre a Pokébola na mesma clareira, menos de um minuto depois.',
     'Ela sai e paira no mesmo lugar de antes, na mesma altura, a um metro e dez do chão.',
     'E aí faz a coisa que te derruba:',
     'ela inclina a cabeça de novo, com a mesma curiosidade de antes.',
@@ -1870,8 +1853,7 @@ c17_pergunta_de_novo:{
       npc:{nome:'Comprador de jaleco', opiniao:4, memoria:'Lembrou que a solicitação de aquisição tem campo de justificativa, nunca preenchido.'},
       rep:{eixo:'bom',delta:6,motivo:'Mandou um comprador de dezenove anos de casa perguntar por escrito'},
       moral:15,
-      registrar:'A solicitação de aquisição da empresa tem campo de justificativa, nunca preenchido.',
-      presagio:'Campo de justificativa nunca preenchido. De novo a resposta é um campo de formulário.'},
+      registrar:'A solicitação de aquisição da empresa tem campo de justificativa, nunca preenchido.'},
   escolhas:[
     {texto:'"Preenche o seu."', vai:'c17_recusou_cientistas'},
     {texto:'Voltar à clareira e soltar.', vai:'c17_soltou_mew'},
@@ -1913,7 +1895,7 @@ c17_vendeu_mew:{
     'O número tem dígitos suficientes pra comprar uma casa em Celadon, e ainda sobra pra comprar outra.',
     'A transferência acontece num estacionamento, numa terça-feira, às seis e quarenta da manhã.',
     'Tem três pessoas: ele, você, e um motorista que não desce do carro.',
-    'Ele leva a bola numa maleta com controle de temperatura, e ele confere a temperatura antes de fechar, e ele confere de novo depois.',
+    'Ele leva a Pokébola numa maleta com controle de temperatura, e ele confere a temperatura antes de fechar, e ele confere de novo depois.',
     'Antes de ir, ele diz uma coisa gentil, que é a pior parte:',
     '"Ela vai ser muito bem cuidada. Isso não é mentira. Nós precisamos dela viva e saudável por décadas."',
     'Décadas.',
@@ -1975,7 +1957,7 @@ c17_contou_pra_ivone:{
   vozes:['N','N','N','N','P','N'],
   texto:[
     'Você liga pra Dra. Cordell de um orelhão, às sete e dez da manhã, e conta.',
-    'Tudo: a clareira, os vinte minutos, a bola, o guardanapo, o estacionamento, a maleta com controle de temperatura, os duzentos mil.',
+    'Tudo: a clareira, os vinte minutos, a Pokébola, o guardanapo, o estacionamento, a maleta com controle de temperatura, os duzentos mil.',
     'Ela ouve inteiro sem interromper.',
     'E no fim ela não te repreende, e não te consola, e não fala nada sobre o que você fez.',
     'Ela faz três perguntas:',
@@ -2017,7 +1999,7 @@ c17_fim:{
       if (d.flags.vendeu_mew) return 'Você sobe com uma quantia de dinheiro que não cabe em nenhuma conta que você saiba abrir e uma coisa na garganta que não passa desde terça-feira às seis e quarenta da manhã.';
       if (d.flags.brincou_com_mew||d.flags.tocou_mew) return 'Você sobe pensando em vinte minutos numa clareira, e nenhuma das coisas que vão te dizer lá em cima vai ser maior que aqueles vinte minutos, e você já sabe disso, e isso muda como você vai ouvir tudo.';
       if (d.flags.protegeu_mew_pelo_silencio) return 'Você sobe sem ter visto nada, sabendo que essa foi a parte certa, e carregando a única prova que vai existir dela: que você não tem prova nenhuma.';
-      if (d.flags.entendeu_o_jardim) return 'Você sobe pensando num jardim de vinte metros com quarenta e uma espécies de planta e nenhuma de bicho, construído de propósito por uma coisa que está sozinha há mais tempo do que Kanto tem nome.';
+      if (d.flags.entendeu_o_jardim) return 'Você sobe pensando num jardim de vinte metros com quarenta e uma espécies de planta e nenhuma de Pokémon, construído de propósito por uma coisa que está sozinha há mais tempo do que Kanto tem nome.';
       return 'Você sobe.';
     },
     d=>d.flags.teo_vai_junto ? 'E o Ezra sobe do seu lado, com quatro insígnias e um crachá de acompanhante que ninguém conferiu, falando sem parar nos primeiros oitocentos metros e calado no resto.' :

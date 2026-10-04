@@ -134,7 +134,7 @@ c4_ab_com_cracha:{
 c4_ab_quem_atravessou:{
   texto:[
     'Você anda na direção dela sem pressa, que é o único jeito de andar atrás de alguém sem parecer que está andando atrás de alguém.',
-    'É uma mulher de uns cinquenta, de uniforme cinza de operária, com a marmita na mão.',
+    'É uma mulher de uns cinquenta, de uniforme cinza de operária, com o almoço numa sacola na mão.',
     'Ela para quando entende que você parou do lado.',
     fala('a operária', 'Eu não vi nada.'),
     d=>fala(d.jogador.nome, 'Eu não perguntei nada.'),
@@ -149,8 +149,7 @@ c4_ab_quem_atravessou:{
   ef:{flag:['sabe_do_caminhao_do_setor_quatro','sabe_do_setor_quatro'],
       rep:{eixo:'bom',delta:2,motivo:'Deixou alguém falar do próprio jeito em vez de interrogar'},
       npc:{nome:'Operária do turno', opiniao:2, memoria:'Te contou o que não viu três vezes, e você não a seguiu.'},
-      registrar:'Um caminhão sai do setor quatro à noite, de farol apagado, e já saiu três vezes.',
-      presagio:'Ela contou porque você tinha crachá. Vai chegar um dia em que ela vai precisar que você tenha.'},
+      registrar:'Um caminhão sai do setor quatro à noite, de farol apagado, e já saiu três vezes.'},
   escolhas:[{texto:'Ir ver a cidade.', vai:'c4_chegada'}]
 },
 
@@ -203,7 +202,7 @@ c4_senhora:{
     'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos. Voltou com dezesseis."',
     'Ela não continua. Você entende que não é pra perguntar, e não pergunta.'
   ],
-  ef:{presagio:'Você vai ouvir essa mesma conta — quinze, dezesseis — mais três vezes nessa jornada, e na terceira vai ser sobre alguém que você conhece.'},
+  ef:{},
   escolhas:[
     {texto:'"Ele tá bem?"', vai:'c4_senhora_filho'},
     {texto:'Agradecer o pastel e levantar.', vai:'c4_rua'},
@@ -238,7 +237,7 @@ c4_senhora_concordou:{
     '"Faz três dias."',
     '"Três dias." Ela ri um riso curto, sem deboche. "Então você ainda não fez nada de que se arrepender. Aproveita."'
   ],
-  ef:{presagio:'Ela disse isso como piada. Vai deixar de ser piada.'},
+  ef:{},
   escolhas:[
     {texto:'"Como é o nome do seu filho?"', vai:'c4_senhora_nome'},
     {texto:'"O que tem pra fazer nessa cidade?"', vai:'c4_senhora_cidade'},
@@ -284,8 +283,7 @@ c4_senhora_contou:{
     '"Pouco."',
     '"Pois é." Ela faz que sim. "Guarda isso. O dia em que você dormir bem depois de uma coisa dessas, você olha pra si mesm{o|a} com atenção."'
   ],
-  ef:{flag:'conselho_do_sono', npc:{nome:'Sra. Zelda', opiniao:4, memoria:'Você contou da floresta pra ela. Ela te disse pra reparar no dia em que você dormisse bem depois.'},
-      presagio:'Alguma noite dessa jornada você vai dormir muito bem, e vai lembrar disso e ficar acordad{o|a} de novo.'},
+  ef:{flag:'conselho_do_sono', npc:{nome:'Sra. Zelda', opiniao:4, memoria:'Você contou da floresta pra ela. Ela te disse pra reparar no dia em que você dormisse bem depois.'}},
   escolhas:[
     {texto:'"E se eu dormir bem?"', vai:'c4_senhora_dormir'},
     {texto:'Agradecer e levantar.', vai:'c4_rua'},
@@ -336,7 +334,7 @@ c4_senhora_teimosia:{
     '"Você é teimos{o|a}."',
     '"Sou."',
     '"Isso é bom e é ruim, e você vai descobrir a proporção na estrada."',
-    'Ela limpa a mão no papel e enrola tudo numa bola pequena.',
+    'Ela limpa a mão no papel e enrola tudo numa Pokébola pequena.',
     '"Meu filho é teimoso. Passou fome duas vezes por isso e não mudou nenhuma vez."',
     'Ela levanta.',
     '"Vai lá, teimoso. A cidade é pra esse lado."'
@@ -388,8 +386,7 @@ c4_senhora_museu_cai:{
     '"E a Liga responde?"',
     '"Respondeu uma vez, em noventa e oito." Ela ri sem alegria. "Pediu mais informações."'
   ],
-  ef:{flag:'sabe_da_lona_do_museu',
-      presagio:'Uma lona de seis anos ainda no telhado. Alguém vai te oferecer dinheiro por aquele museu e você vai lembrar dessa lona.'},
+  ef:{flag:'sabe_da_lona_do_museu'},
   escolhas:[
     {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
     {texto:'"E se alguém quisesse comprar o museu?"', vai:'c4_senhora_comprar'},
@@ -413,8 +410,7 @@ c4_senhora_comprar:{
   ef:{flag:'sabe_das_propostas', moral:2,
       npc:{nome:'Sra. Zelda', opiniao:3, memoria:'Te contou das três perguntas de quem quis as peças do museu.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou da coisa certa antes de qualquer um pedir'},
-      registrar:'Já tentaram comprar, emprestar e segurar as peças do museu de Pewter — em três etapas.',
-      presagio:'Você vai ouvir uma pergunta cortada em três de novo, e da próxima vez vai ser com você.'},
+      registrar:'Já tentaram comprar, emprestar e segurar as peças do museu de Pewter — em três etapas.'},
   escolhas:[
     {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
     {texto:'"Quem perguntou?"', vai:'c4_senhora_quem_perguntou'}
@@ -435,8 +431,7 @@ c4_senhora_quem_perguntou:{
   ],
   ef:{flag:'balanca_em_pewter',
       npc:{nome:'Sra. Zelda', opiniao:4, memoria:'Descreveu com as mãos o desenho de uma balança no crachá de quem perguntou pelo museu.'},
-      registrar:'O crachá de quem perguntou pelo museu tinha o desenho de uma balança.',
-      presagio:'Uma balança. Você vai ver esse desenho outras seis vezes antes de saber o que ele significa.'},
+      registrar:'O crachá de quem perguntou pelo museu tinha o desenho de uma balança.'},
   escolhas:[
     {texto:'Ir ao museu agora.', vai:'c4_museu', ef:{flag:'foi_avisado_do_museu'}},
     {texto:'Agradecer e ir andar.', vai:'c4_rua'}
@@ -567,13 +562,13 @@ c4_teo_relato:{
   texto:[
     '"Me conta como foi. Tudo."',
     'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes deitado no beliche.',
-    '"Ele tem um bicho pequeno primeiro. Parece fácil. Não é fácil, é uma armadilha, porque ele te faz gastar."',
+    '"Ele tem um Pokémon pequeno primeiro. Parece fácil. Não é fácil, é uma armadilha, porque ele te faz gastar."',
     '"E depois?"',
     '"E depois vem uma coisa do tamanho de um ônibus." Ezra mede com os braços e os braços não chegam. "Do tamanho de um ÔNIBUS, cara."',
     'Ele para. Fica sério de um jeito que não combina com o rosto dele.',
     '"E o cara nem comemora. Ele te derruba e fica esperando você levantar com a cara de quem já sabia. Isso é pior."'
   ],
-  ef:{flag:'dica_do_teo', presagio:'Um dia você vai estar do outro lado de uma linha pintada no chão, esperando alguém levantar, com a cara de quem já sabia.'},
+  ef:{flag:'dica_do_teo'},
   escolhas:[
     {texto:'"Ele fala alguma coisa depois?"', vai:'c4_teo_brock'},
     {texto:'"Treina comigo antes de você tentar de novo."', vai:'c4_teo_treino'},
@@ -591,8 +586,7 @@ c4_teo_brock:{
     'Ele olha pro Pidgey subindo o quarto degrau a pé.',
     '"O nome dele é Pico. Eu tinha nove anos quando escolhi."'
   ],
-  ef:{flag:'sabe_do_pico', npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que chorou depois de perder, e o nome do Pidgey: Pico.'},
-      presagio:'Você vai ouvir essa frase de novo, dita pra você, e vai entender por que ele chorou.'},
+  ef:{flag:'sabe_do_pico', npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que chorou depois de perder, e o nome do Pidgey: Pico.'}},
   escolhas:[
     {texto:'"Pico é um nome bom."', vai:'c4_teo_nome',
      ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você elogiou o nome que ele deu ao Pidgey aos nove anos.'}}},
@@ -618,8 +612,7 @@ c4_teo_nome:{
     '"Enfim. Ele adora. Ele é bobo."'
   ],
   ef:{hp:2, moral:4, flag:'sabe_do_pico',
-      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'},
-      presagio:'Você vai ouvir essa mesma dúvida da boca de gente muito mais velha que o Ezra, e eles não vão ter a piada pronta pra consertar.'},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'}},
   escolhas:[
     {texto:'"Pergunta pra ele, então."', vai:'c4_teo_pergunta_pro_pico'},
     {texto:'"Todo mundo faz isso. É o que é ter time."', vai:'c4_teo_todo_mundo_faz'},
@@ -690,8 +683,7 @@ c4_teo_promete_agora:{
     '"Você é insuportável e eu te odeio."'
   ],
   ef:{moral:6, flag:'teo_prometeu',
-      npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'},
-      presagio:'Guarde essa promessa. Vai chegar um dia em que ela vai ser cobrada, e não vai ser por você.'},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'}},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
@@ -752,7 +744,7 @@ c4_teo_volta:{
     'Ele chuta uma pedrinha e erra.',
     '"Eu perdi duas vezes e das duas eu saí de lá pensando na cara da minha mãe. Não na batalha. Na cara dela quando eu contar."',
     'Uma quadra inteira sem ninguém falar nada.',
-    '"Ah, e tem um museu", ele diz, apontando, mudando de assunto do jeito mais óbvio possível. "Eu entrei. Tem um bicho de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
+    '"Ah, e tem um museu", ele diz, apontando, mudando de assunto do jeito mais óbvio possível. "Eu entrei. Tem um Pokémon de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
   ],
   ef:{flag:'ouviu_do_museu', moral:2,
       npc:{nome:'Ezra', opiniao:2, memoria:'Te perguntou, andando pela rua, se você estava com medo.'}},
@@ -821,7 +813,7 @@ c4_teo_moca:{
     '"Trabalha, mas não era trabalho." Ele faz um gesto vago. "Sabe quando a pessoa tá no serviço e sabe quando a pessoa tá no serviço? Ela não tava no serviço. Ela tava visitando."',
     'Às vezes o Ezra diz uma coisa inteligente sem perceber, e depois estraga: "Ou ela é doida. Pode ser que ela seja só doida."',
     '"Você falou com ela?"',
-    '"Falei oi. Ela falou oi. Aí eu falei que o bicho de pedra era grande e ela falou que sim."',
+    '"Falei oi. Ela falou oi. Aí eu falei que o Pokémon de pedra era grande e ela falou que sim."',
     '"Conversa boa."',
     '"Eu sou tímido perto de gente que sabe das coisas, cara, me deixa em paz." Ele empurra você de leve com o ombro. "Vai você. Você faz pergunta de um jeito que não irrita."',
     '"Isso é elogio?"',
@@ -847,8 +839,7 @@ c4_teo_ferido:{
     '"Boa sorte aí", ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
     'Ele entra no Centro. Você fica na escada.'
   ],
-  ef:{registrar:'Você disse ao Ezra que talvez ele não servisse pra isso.',
-      presagio:'Isso vai voltar. Não como briga. Como uma pessoa diferente da que era.'},
+  ef:{registrar:'Você disse ao Ezra que talvez ele não servisse pra isso.'},
   escolhas:[
     {texto:'Ir atrás dele e voltar atrás.', vai:'c4_teo_desculpa'},
     {texto:'Deixar. Você não falou nenhuma mentira.', vai:'c4_rua'},
@@ -874,8 +865,7 @@ c4_teo_escada:{
     'O menino levanta e sai antes que você consiga responder qualquer coisa, do jeito que as crianças saem quando entregam uma informação pesada por engano.'
   ],
   ef:{flag:'sabe_do_choro_do_teo', moral:-2,
-      registrar:'Um menino te contou que Ezra chorou atrás da caçamba depois da segunda derrota.',
-      presagio:'Você vai carregar essa informação sem poder usar. Algumas coisas só servem pra mudar o jeito que você olha.'},
+      registrar:'Um menino te contou que Ezra chorou atrás da caçamba depois da segunda derrota.'},
   escolhas:[
     {texto:'Entrar e voltar atrás.', vai:'c4_teo_desculpa'},
     {texto:'Entrar e não falar nada sobre isso. Só ficar.', vai:'c4_teo_so_ficar'},
@@ -971,8 +961,7 @@ c4_porta_empurrou:{
     '"Quando você tiver certeza, você volta", ele diz. "E não precisa ser hoje. Aqui não fecha."',
     'Você sai. A porta se fecha sozinha pelo próprio peso.'
   ],
-  ef:{flag:'viu_brock_de_longe', npc:{nome:'Líder Brock', opiniao:1, memoria:'Você entrou no ginásio dele, olhou, e saiu sem desafiar. Ele achou isso maduro.'},
-      presagio:'Ele não perguntou seu nome. Vai perguntar depois, e você vai reparar em que momento.'},
+  ef:{flag:'viu_brock_de_longe', npc:{nome:'Líder Brock', opiniao:1, memoria:'Você entrou no ginásio dele, olhou, e saiu sem desafiar. Ele achou isso maduro.'}},
   escolhas:[
     {texto:'Ir ao museu.', vai:'c4_museu'},
     {texto:'Ir pra pedreira.', vai:'c4_pedreira_caminho'},
@@ -1044,7 +1033,7 @@ c4_menina_resultado:{
     'Pela primeira vez ela hesita. Fecha o caderno.',
     '"Eu não anoto isso."'
   ],
-  ef:{flag:'viu_o_caderno', presagio:'Oitenta e três e trinta e um. Você vai fazer essa conta de novo, com você dentro dela.'},
+  ef:{flag:'viu_o_caderno'},
   escolhas:[
     {texto:'"Anota que eu volto."', vai:'c4_menina_promessa',
      ef:{npc:{nome:'Ulla', opiniao:4, memoria:'Você prometeu voltar e ela anotou numa coluna nova só pra você.'}}},
@@ -1127,7 +1116,7 @@ c4_menina_dica:{
     '"Só isso?"',
     '"Não." Ela olha pros lados como quem vai contar segredo de estado. "E não ataca nos dois primeiros turnos. Ele conta os seus turnos. Ele sabe quanto você aguenta antes de você saber."'
   ],
-  ef:{flag:'dica_ginasio_pewter', presagio:'Você vai contar turnos daqui pra frente. Nunca mais vai conseguir não contar.'},
+  ef:{flag:'dica_ginasio_pewter'},
   escolhas:[
     {texto:'"Como você sabe disso?"', vai:'c4_menina_sabe'},
     {texto:'Agradecer e ir pra rua.', vai:'c4_rua2'},
@@ -1156,11 +1145,11 @@ c4_rua2:{
   texto:[
     'A rua continua sendo a rua. A luz baixou um pouco e a poeira ficou dourada, o que quase compensa a poeira.',
     'Ainda tem o museu de letras faltando. Ainda tem a porta de metal no fim da rua. E ainda tem, longe, a cada vinte minutos, a detonação.',
-    'Na calçada da padaria, dois homens de macacão cinza dividem uma marmita e uma conversa que você pega no meio:',
-    fala('Falk', '...e aí o cara do escritório falou que era pra parar o setor quatro.'),
+    'Na calçada da padaria, dois homens de macacão cinza estão almoçando e dividem uma conversa que você pega no meio:',
+    fala('Falk', '…e aí o cara do escritório falou que era pra parar o setor quatro.'),
     fala('o outro operário', 'Parar por quê?'),
     fala('Falk', 'Sei lá. Falou que era estudo.'),
-    'O outro raspa a marmita com o garfo.',
+    'O outro raspa o fundo do pote com o garfo.',
     fala('o outro operário', 'Estudo em pedreira é uma coisa só, Falk.'),
     fala('Falk', 'É?'),
     fala('o outro operário', 'É alguém querendo comprar.'),
@@ -1170,8 +1159,7 @@ c4_rua2:{
     'E é o fim da conversa.'
   ],
   ef:{flag:'ouviu_do_setor_quatro',
-      registrar:'Mandaram parar o setor quatro da pedreira. Os homens chamam isso de estudo; um deles não acredita.',
-      presagio:'Setor quatro. Anota esse número, porque ele volta.'},
+      registrar:'Mandaram parar o setor quatro da pedreira. Os homens chamam isso de estudo; um deles não acredita.'},
   escolhas:[
     {texto:'Perguntar do setor quatro mesmo assim.', vai:'c4_setor_quatro'},
     {texto:'Museu.', vai:'c4_museu'},
@@ -1187,7 +1175,7 @@ c4_setor_quatro:{
     'Os dois se olham. É um olhar rápido e completo, desses que decidem uma coisa inteira sem ninguém falar.',
     fala('o outro operário', 'É uma parte da pedreira. Tem seis setores. Quatro é o mais fundo.', null, 'Quem responde é o mais velho.'),
     d=>fala(d.jogador.nome, 'E pararam.'),
-    fala('o outro operário', 'Pararam. Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou.', null, 'Ele fecha a marmita.'),
+    fala('o outro operário', 'Pararam. Mandaram parar quinta passada. A gente foi realocado pro dois e pro três, mesmo salário, então ninguém reclamou.', null, 'Ele termina de almoçar.'),
     d=>fala(d.jogador.nome, 'Mas?'),
     'O mais novo — Falk — responde antes que o outro decida não responder:',
     fala('Falk', 'Mas o quatro é o que dá pedra. O dois e o três é entulho, {moço|moça}. Quem manda parar o setor que dá pedra tem motivo, e o motivo não é estudo.'),
@@ -1199,8 +1187,7 @@ c4_setor_quatro:{
   ef:{flag:'sabe_do_setor_quatro', moral:2,
       npc:{nome:'Falk', opiniao:2, memoria:'Te contou, contra o conselho do colega, que o setor parado é justamente o que dá pedra.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou de frente uma coisa que a cidade evita'},
-      registrar:'O setor quatro é o único que dá pedra boa, e é justamente o que mandaram parar.',
-      presagio:'Guarde o tom com que o mais velho respondeu.'},
+      registrar:'O setor quatro é o único que dá pedra boa, e é justamente o que mandaram parar.'},
   escolhas:[
     {texto:'"{Obrigado|Obrigada}. Não vou repetir isso pra ninguém."', vai:'c4_rua2',
      ef:{flag:'prometeu_silencio_pros_pedreiros', moral:2,
@@ -1234,7 +1221,7 @@ c4_museu:{
 c4_kabutops:{
   texto:[
     'Você fica. Mais tempo do que pretendia.',
-    'De perto dá pra ver que a reconstrução tem partes cinza e partes um pouco mais claras: o cinza é osso, o claro é gesso. O bicho é uns sessenta por cento chute.',
+    'De perto dá pra ver que a reconstrução tem partes cinza e partes um pouco mais claras: o cinza é osso, o claro é gesso. O Pokémon é uns sessenta por cento chute.',
     'E mesmo assim: as lâminas. Os olhos, que são buracos e mesmo assim são olhos. A postura, que é de uma coisa que estava indo pra frente.',
     'Uma voz do seu lado, sem cumprimento nenhum:',
     '"Extinto é uma palavra otimista. Presume que acabou."'
@@ -1249,7 +1236,7 @@ c4_kabutops:{
 
 c4_ivone_calado:{
   texto:[
-    'Você não responde. Continua olhando o bicho.',
+    'Você não responde. Continua olhando o Pokémon.',
     'Ela também não insiste. Fica do seu lado, olhando a mesma coisa que você, por quase dois minutos inteiros.',
     'Depois: "Você é a primeira pessoa em quatro dias que não perguntou se é de verdade."',
     'Ela vira. Tem olheiras de três dias e um caderno de campo debaixo do braço com elástico e tudo.',
@@ -1363,7 +1350,7 @@ c4_ivone_reportou:{
     '"E aí?"',
     '"E aí o relatório está numa gaveta em Saffron. Eu sei o número da gaveta. Eu liguei tantas vezes que a moça do arquivo me deu o número da gaveta pra eu parar de ligar."'
   ],
-  ef:{flag:'liga_engavetou', presagio:'Uma gaveta em Saffron, com um número. Você vai ter motivo pra lembrar desse detalhe.'},
+  ef:{flag:'liga_engavetou'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'"Por que a Liga não faz nada?"', vai:'c4_ivone_liga'},
@@ -1381,8 +1368,7 @@ c4_ivone_gaveta:{
     'Ela escreve num canto de página, arranca, dobra e te entrega. Está escrito: ARQUIVO CENTRAL — SAFFRON — SETOR 3 — GAV. 118 — PROC. 44.207/R.',
     '"Se algum dia você tiver motivo pra pedir vista desse processo", ela diz, "você vai precisar desse número e de um papel timbrado. Eu só tenho o número."'
   ],
-  ef:{flag:'numero_da_gaveta', registrar:'Anotou o número do processo engavetado: 44.207/R, Arquivo Central de Saffron.',
-      presagio:'Um número de processo cabe no bolso e não pesa nada. Vai pesar.'},
+  ef:{flag:'numero_da_gaveta', registrar:'Anotou o número do processo engavetado: 44.207/R, Arquivo Central de Saffron.'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'"Por que fóssil? Quem compra isso?"', vai:'c4_ivone_compradores'},
@@ -1399,7 +1385,7 @@ c4_ivone_liga:{
     '"E ela é ruim nisso."',
     '"Ela é péssima nisso." Cordell guarda a caneta no bolso do jaleco. "E o problema não é a maldade. É que não tem ninguém no organograma cujo trabalho seja se importar."'
   ],
-  ef:{flag:'entendeu_a_liga', presagio:'Você vai reencontrar essa frase escrita num documento, dita com outras palavras e com muito mais frieza.'},
+  ef:{flag:'entendeu_a_liga'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'"Me dá o número da gaveta."', vai:'c4_ivone_gaveta'},
@@ -1416,8 +1402,7 @@ c4_ivone_importar:{
     'Ela pega a bolsa.',
     '"Eu já achei isso. Uma vez. Não deu certo e eu não vou contar."'
   ],
-  ef:{flag:'ivone_tem_passado',
-      presagio:'Ela não vai contar hoje. Vai contar em outro lugar, num dia pior.'},
+  ef:{flag:'ivone_tem_passado'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'Não insistir. Mudar de assunto.', vai:'c4_ivone_compradores'},
@@ -1434,8 +1419,7 @@ c4_ivone_compradores:{
     'Uma pausa exatamente do tamanho errado.',
     '"Fechou no papel."'
   ],
-  ef:{flag:'fossil_e_material', registrar:'Cordell insinuou que alguém quer fósseis pelo material, não pelo enfeite.',
-      presagio:'Uma ilha com um laboratório fechado no papel. Você não vai chegar lá tão cedo, e vai chegar.'},
+  ef:{flag:'fossil_e_material', registrar:'Cordell insinuou que alguém quer fósseis pelo material, não pelo enfeite.'},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'"Fechou no papel como?"', vai:'c4_ivone_cinnabar'},
@@ -1489,8 +1473,7 @@ c4_ivone_pedido:{
   ],
   ef:{flag:'cartao_ivone',
       npc:{nome:'Dra. Cordell', opiniao:4, memoria:'Te deu o número dela por causa do saque no Monte da Lua.'},
-      registrar:'Dra. Cordell te deu o número dela. Ligar para ela, não para a Liga.',
-      presagio:'Um pedaço de cartolina com um número. Vai amassar no bolso até você precisar dele.'},
+      registrar:'Dra. Cordell te deu o número dela. Ligar para ela, não para a Liga.'},
   escolhas:[
     {texto:'Guardar o cartão. "Se eu vir, eu ligo."', vai:'c4_ivone_aceitou'},
     {texto:'Guardar o cartão sem prometer nada.', vai:'c4_museu_saiu'},
@@ -1522,8 +1505,7 @@ c4_ivone_e_se:{
     'Ela fecha a caneta.',
     '"Só não inventa uma justificativa boa depois. Isso é o que estraga as pessoas. Não é o não ligar — é a história que a gente conta sobre o não ligar."'
   ],
-  ef:{flag:'aviso_da_justificativa',
-      presagio:'Você vai se pegar montando uma justificativa boa, em algum lugar, e vai reconhecer o que está fazendo no meio da frase.'},
+  ef:{flag:'aviso_da_justificativa'},
   escolhas:[
     {texto:'Guardar o cartão. "Se eu vir, eu ligo."', vai:'c4_ivone_aceitou'},
     {texto:'Guardar o cartão calad{o|a}.', vai:'c4_museu_saiu'},
@@ -1540,8 +1522,7 @@ c4_ivone_recusa:{
     'Você sai do museu com uma sensação irritante de ter feito a coisa razoável.'
   ],
   ef:{flag:'recusou_ivone',
-      npc:{nome:'Dra. Cordell', opiniao:-1, memoria:'Você recusou o cartão dela no museu de Pewter.'},
-      presagio:'Você vai descer numa caverna sem o número de ninguém no bolso.'},
+      npc:{nome:'Dra. Cordell', opiniao:-1, memoria:'Você recusou o cartão dela no museu de Pewter.'}},
   escolhas:[
     {texto:'Sair do museu.', vai:'c4_museu_saiu'},
     {texto:'Voltar atrás e pegar o cartão.', vai:'c4_ivone_pedido'},
@@ -1557,7 +1538,7 @@ c4_kabutops_2:{
     '"Por quê, então?"',
     '"Porque o mundo mudou mais rápido do que ele." Ela vira a página. "É sempre isso. Nunca é o predador que mata o predador."'
   ],
-  ef:{flag:'licao_do_kabutops', presagio:'Guarda essa frase. Ela vai ser dita de novo, por alguém muito pior, com um sorriso.'},
+  ef:{flag:'licao_do_kabutops'},
   escolhas:[
     {texto:'Procurar o funcionário.', vai:'c4_funcionario'},
     {texto:'Sair do museu.', vai:'c4_museu_saiu'}
@@ -1594,7 +1575,7 @@ c4_doou:{
     'Ele preenche um recibo à mão, em duas vias, com carimbo e tudo. Faz isso com uma solenidade absurda, e no fim carimba duas vezes porque o primeiro saiu borrado.',
     'Quando você olha pra trás, saindo, ele está colando a segunda via na parede atrás da bilheteria.'
   ],
-  ef:{presagio:'Existe agora, numa parede de Pewter, um papel com o seu nome que ninguém vai tirar tão cedo.'},
+  ef:{},
   escolhas:[
     {texto:'Sair do museu.', vai:'c4_museu_saiu'},
     {texto:'Voltar e falar com a Dra. Cordell.', vai:'c4_ivone'},
@@ -1713,8 +1694,7 @@ c4_delmo_terno:{
     'Você lê o rodapé. É um nome longo e sério e completamente esquecível, e um brasão pequeno com uma balança.',
     'Você não faz ideia do que é isso. Guarda mesmo assim.'
   ],
-  ef:{flag:'folheto_comissao', registrar:'Guardou um folheto de uma "fundação" que quis levar o Kabutops.',
-      presagio:'Você vai ver esse brasão de novo. Não em folheto.'},
+  ef:{flag:'folheto_comissao', registrar:'Guardou um folheto de uma "fundação" que quis levar o Kabutops.'},
   escolhas:[
     {texto:'Voltar e mostrar pra Cordell.', vai:'c4_ivone_folheto'},
     {texto:'Guardar e sair.', vai:'c4_museu_saiu'},
@@ -1754,8 +1734,7 @@ c4_ivone_demitida:{
     'Aí ela para de escrever.',
     '"E não adiantou nada, porque eles voltam. Gente assim não desiste, entende? Gente assim só espera."'
   ],
-  ef:{npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Te contou do barraco na câmara e de que "gente assim só espera".'},
-      presagio:'Gente assim só espera. Você vai lembrar disso num prédio de escritório, numa segunda-feira, às dez da manhã.'},
+  ef:{npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Te contou do barraco na câmara e de que "gente assim só espera".'}},
   escolhas:[
     {texto:'"O que a senhora quer de mim?"', vai:'c4_ivone_pedido'},
     {texto:'"Me dá o número da gaveta."', vai:'c4_ivone_gaveta'},
@@ -1819,7 +1798,7 @@ c4_pedreira_detonacao:{
     'A poeira sobe em cúpula. E de dentro da poeira, num susto que você não esperava, sai uma revoada — dezenas de coisas voando, Zubat e Golbat e o que mais morava naquela parede, saindo em pânico do lugar onde estavam dormindo.',
     'Eles fazem isso a cada vinte minutos, o dia inteiro, todos os dias.'
   ],
-  ef:{flag:'viu_a_revoada', presagio:'Uma parede de pedra a menos por dia. Alguma coisa mora ali dentro, e a conta vai chegar.'},
+  ef:{flag:'viu_a_revoada'},
   escolhas:[
     {texto:'Descer até o portão e perguntar sobre isso.', vai:'c4_pedreira_portao'},
     {texto:'Contornar pela borda pra ver onde eles vão.', vai:'c4_pedreira_borda'},
@@ -1829,7 +1808,7 @@ c4_pedreira_detonacao:{
 
 c4_pedreira_borda:{
   texto:[
-    'Você sai da estrada e contorna a borda do buraco por fora, por uma trilha de bicho que claramente já foi usada por gente.',
+    'Você sai da estrada e contorna a borda do buraco por fora, por uma trilha de Pokémon que claramente já foi usada por gente.',
     'Depois de quinze minutos, você entende por quê: tem uma fenda na rocha, do lado de fora da cerca, e ela é funda.',
     'Do lado de dentro dela tem barulho. Muito barulho, de coisa pequena e de muitas.',
     'E tem marca de bota na terra, fresca, entrando e saindo. Alguém sabe dessa fenda.'
@@ -1884,8 +1863,7 @@ c4_destruiu_armadilhas:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Destruiu armadilhas de captura na pedreira'},
       hp:-3, causa:'Cortes de arame na fenda da pedreira',
-      flag:'destruiu_armadilhas_fenda',
-      presagio:'Alguém vai voltar aqui e entender o recado. Recado tem resposta.'},
+      flag:'destruiu_armadilhas_fenda'},
   escolhas:[
     {texto:'Esperar escondid{o|a} pra ver a resposta.', vai:'c4_fenda_espera'},
     {texto:'Sair e contar no portão da pedreira.', vai:'c4_pedreira_portao', ef:{flag:'vai_contar_da_fenda'}},
@@ -1956,8 +1934,7 @@ c4_comprador:{
     'Ele chuta uma pedrinha.',
     '"Aí eu perguntei pra quê. Ele falou: pra pesquisa. E deu risada."'
   ],
-  ef:{flag:'van_de_cerulean', registrar:'Uma van de Cerulean compra qualquer Pokémon, "pra pesquisa".',
-      presagio:'"Pra pesquisa", e uma risada. Você vai descobrir do que era a risada.'},
+  ef:{flag:'van_de_cerulean', registrar:'Uma van de Cerulean compra qualquer Pokémon, "pra pesquisa".'},
   escolhas:[
     {texto:'"Para com isso."', vai:'c4_mandou_parar'},
     {texto:'"Me leva nele na sexta."', vai:'c4_sexta',
@@ -1976,7 +1953,7 @@ c4_mandou_parar:{
     'Ele espera você responder alguma coisa.',
     'Você não tem nenhuma resposta que caiba nisso.'
   ],
-  ef:{flag:'a_mae_do_rapaz', presagio:'Não existe resposta boa pra essa frase, e você vai ouvir versões dela até o fim.'},
+  ef:{flag:'a_mae_do_rapaz'},
   escolhas:[
     {texto:'Dar dinheiro pra ele. (2.000 ₽)', vai:'c4_deu_dinheiro', cond:d=>d.jogador.dinheiro>=2000,
      ef:{dinheiro:-2000, rep:{eixo:'bom',delta:2,motivo:'Pagou a diferença de um estranho'},
@@ -1997,8 +1974,7 @@ c4_deu_dinheiro:{
     'Ele pega. Guarda no bolso da frente, não no de trás, que é onde se guarda o que importa.',
     '"Esse mês eu não ponho gaiola", ele diz. Não promete mais que isso, e é exatamente por não prometer mais que você acredita.'
   ],
-  ef:{npc:{nome:'Rapaz da fenda', opiniao:5, memoria:'Você pagou o mês dele pra ele não pôr armadilha. Ele cumpriu.'},
-      presagio:'Um mês. Você comprou um mês. O mês vai acabar.'},
+  ef:{npc:{nome:'Rapaz da fenda', opiniao:5, memoria:'Você pagou o mês dele pra ele não pôr armadilha. Ele cumpriu.'}},
   escolhas:[
     {texto:'"E no mês que vem?"', vai:'c4_mes_que_vem'},
     {texto:'Ir embora.', vai:'c4_fenda_saiu'},
@@ -2030,7 +2006,7 @@ c4_nao_da:{
     'Ele guarda o saco de estopa no bolso de trás, vazio.',
     '"Cê é boa gente. Sério. Mas boa gente sozinha é só uma pessoa, e o cara da van é uma van."'
   ],
-  ef:{flag:'boa_gente_sozinha', presagio:'Uma pessoa não é uma van. Você vai passar o resto dessa história tentando virar alguma outra coisa.'},
+  ef:{flag:'boa_gente_sozinha'},
   escolhas:[
     {texto:'Ir embora.', vai:'c4_fenda_saiu'},
     {texto:'"Me leva no cara da van na sexta."', vai:'c4_sexta', ef:{flag:'combinou_sexta'}}
@@ -2084,8 +2060,7 @@ c4_acordo_rapaz:{
     '"Ele quer vivo." O rapaz coça a nuca. "Cara. Ele quer vivo e ele não quer bonito. Isso é ruim, né? Eu penso nisso."',
     'Vocês dois ficam ali na boca da fenda pensando na mesma coisa e sem coragem de dizer.'
   ],
-  ef:{flag:'vivo_e_nao_bonito', registrar:'O comprador quer os Pokémon vivos e não se importa com o estado.',
-      presagio:'Vivo e não bonito. Guarda isso. Vai fazer sentido numa sala com azulejo.'},
+  ef:{flag:'vivo_e_nao_bonito', registrar:'O comprador quer os Pokémon vivos e não se importa com o estado.'},
   escolhas:[
     {texto:'"Me leva nele na sexta."', vai:'c4_sexta', ef:{flag:'combinou_sexta'}},
     {texto:'"Para com isso." ', vai:'c4_mandou_parar'},
@@ -2123,8 +2098,7 @@ c4_comprou_zubat:{
     'Você solta o Zubat lá mesmo. Ele sobe e some no teto.',
     'O rapaz te olha soltar trinta pokedólares no ar e não diz nada, e o que ele está pensando está escrito na testa dele: esse aqui vai voltar toda semana.'
   ],
-  ef:{dinheiro:-30, flag:'comprou_pra_soltar',
-      presagio:'Você acabou de criar um cliente. Pensa nisso antes de voltar na semana que vem.'},
+  ef:{dinheiro:-30, flag:'comprou_pra_soltar'},
   escolhas:[
     {texto:'"Quem é o cara de Cerulean?"', vai:'c4_comprador'},
     {texto:'"Para com isso."', vai:'c4_mandou_parar'},
@@ -2136,7 +2110,7 @@ c4_luta_rapaz:{
   texto:[
     '"Você mexeu nas minhas coisa."',
     '"Mexi."',
-    'Ele solta a bola antes de terminar de falar, e o Geodude cai no chão da fenda com um baque.',
+    'Ele solta a Pokébola antes de terminar de falar, e o Geodude cai no chão da fenda com um baque.',
     '"Então resolve."'
   ],
   batalha:{dex:74, nivel:13, tipo:'treinador', treinador:'Rapaz da pedreira', fuga:false,
@@ -2146,7 +2120,7 @@ c4_luta_rapaz:{
 c4_venceu_rapaz:{
   texto:[
     'O Geodude cai e ele recolhe sem reclamar.',
-    '"Pronto." Ele guarda a bola. "Você ganhou. E agora?"',
+    '"Pronto." Ele guarda a Pokébola. "Você ganhou. E agora?"',
     'É a pergunta certa. Você ganhou uma batalha numa fenda e as gaiolas continuam existindo e o cara da van vem na sexta do mesmo jeito.',
     '"Cê ganhou de mim", ele repete, sem raiva nenhuma, quase didático. "Não ganhou do problema."'
   ],
@@ -2170,8 +2144,7 @@ c4_perdeu_rapaz:{
     '"Então fica quieto que eu vou trabalhar."',
     'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, porque não tem mais nada a fazer, e isso é a pior parte do dia.'
   ],
-  ef:{hp:-4, causa:'Derrota na fenda da pedreira', flag:'perdeu_na_fenda',
-      presagio:'Você vai lembrar dessa sensação: assistir sentad{o|a}. Vai fazer de tudo pra não sentir de novo.'},
+  ef:{hp:-4, causa:'Derrota na fenda da pedreira', flag:'perdeu_na_fenda'},
   escolhas:[
     {texto:'"Quem é o cara de Cerulean?"', vai:'c4_comprador'},
     {texto:'Levantar e ir embora.', vai:'c4_fenda_saiu'}
@@ -2229,15 +2202,15 @@ c4_placa:{
     '"Zerou."',
     '"Foi grave?"',
     'Ele desliga o ventilador, o que é o gesto mais sério que um homem naquela guarita consegue fazer.',
-    '"Foi bicho." Ele olha pro buraco. "Detonou a bancada nova e saiu um monte de coisa de dentro. Um Golbat bateu na cara de um operador a sessenta por hora. Perdeu o olho."',
+    '"Foi Pokémon." Ele olha pro buraco. "Detonou a bancada nova e saiu um monte de coisa de dentro. Um Golbat bateu na cara de um operador a sessenta por hora. Perdeu o olho."',
     '"E o Golbat?"',
     'O guarda te olha como se a pergunta fosse de outro planeta.',
     '"O Golbat morreu, {moço|moça}. Bateu num capacete a sessenta por hora."'
   ],
-  ef:{flag:'sabe_do_acidente', presagio:'Ninguém aqui é o vilão. É isso que vai ficar mais difícil de aceitar.'},
+  ef:{flag:'sabe_do_acidente'},
   escolhas:[
     {texto:'Contar da fenda e das armadilhas.', vai:'c4_contou_fenda'},
-    {texto:'"Tem como avisar antes de detonar? Pros bichos, digo."', vai:'c4_sugestao'},
+    {texto:'"Tem como avisar antes de detonar? Pros Pokémon, digo."', vai:'c4_sugestao'},
     {texto:'"Eu tô procurando o Lior."', vai:'c4_nilo', cond:d=>!!d.flags.sabe_do_nilo},
     {texto:'Voltar pra cidade.', vai:'c4_rua2'}
   ]
@@ -2245,9 +2218,9 @@ c4_placa:{
 
 c4_sugestao:{
   texto:[
-    '"Tem como avisar antes de detonar? Pros bichos, digo."',
+    '"Tem como avisar antes de detonar? Pros Pokémon, digo."',
     'O guarda ri. Depois para de rir, porque percebe que você falou sério.',
-    '"Avisar bicho."',
+    '"Avisar Pokémon."',
     '"A sirene toca três vezes e todo mundo sai. Se a sirene tocasse antes, uns vinte minutos antes, e alguém batesse na parede da bancada—"',
     '"Aí eles saem antes." Ele completa devagar. "E não saem todos juntos no susto."',
     'Ele coça o queixo.',
@@ -2281,7 +2254,7 @@ c4_contou_fenda:{
       presagio:'Mais um papel, mais uma gaveta. Você está começando a mapear como Kanto perde as coisas.'},
   escolhas:[
     {texto:'"E se for funcionário de vocês?"', vai:'c4_funcionario_da_pedreira'},
-    {texto:'"Tem como avisar antes de detonar? Pros bichos."', vai:'c4_sugestao'},
+    {texto:'"Tem como avisar antes de detonar? Pros Pokémon."', vai:'c4_sugestao'},
     {texto:'Agradecer e voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar na fenda e resolver você mesm{o|a}.', vai:'c4_fenda'}
   ]
@@ -2326,7 +2299,7 @@ c4_quanto_pagam:{
       npc:{nome:'Guarda da pedreira', opiniao:5, memoria:'Você perguntou quanto eles pagam antes de entregar alguém. Ele amassou o formulário.'},
       presagio:'Você aprendeu hoje que uma pergunta bem colocada faz mais estrago que uma acusação.'},
   escolhas:[
-    {texto:'"Tem como avisar antes de detonar? Pros bichos."', vai:'c4_sugestao'},
+    {texto:'"Tem como avisar antes de detonar? Pros Pokémon."', vai:'c4_sugestao'},
     {texto:'Voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar pro Centro e encerrar o dia.', vai:'c4_fim'}
   ]
@@ -2342,7 +2315,7 @@ c4_entregou_rapaz:{
     'Duas semanas depois, se alguém contasse pra você, você ficaria sabendo que ele foi demitido por justa causa e que a carteira dele tem uma anotação que vai impedir contratação em qualquer pedreira de Kanto.',
     'Ninguém vai te contar.'
   ],
-  ef:{presagio:'Ninguém vai te contar. Isso é o que permite continuar.'},
+  ef:{},
   escolhas:[
     {texto:'Voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar pro Centro e encerrar o dia.', vai:'c4_fim'}
@@ -2358,7 +2331,7 @@ c4_mentiu_guarda:{
     'Ele sabe que você mentiu. Você sabe que ele sabe. Ele decide não fazer nada com isso, e é uma gentileza que você não pediu e não sabe se merece.'
   ],
   escolhas:[
-    {texto:'"Tem como avisar antes de detonar? Pros bichos."', vai:'c4_sugestao'},
+    {texto:'"Tem como avisar antes de detonar? Pros Pokémon."', vai:'c4_sugestao'},
     {texto:'Voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar pro Centro.', vai:'c4_fim'}
   ]
@@ -2376,7 +2349,7 @@ c4_recusou_entregar:{
   ],
   ef:{npc:{nome:'Guarda da pedreira', opiniao:2, memoria:'Você se recusou a entregar o rapaz e disse o motivo na cara dele.'}},
   escolhas:[
-    {texto:'"Tem como avisar antes de detonar? Pros bichos."', vai:'c4_sugestao'},
+    {texto:'"Tem como avisar antes de detonar? Pros Pokémon."', vai:'c4_sugestao'},
     {texto:'Voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar pro Centro.', vai:'c4_fim'}
   ]
@@ -2430,8 +2403,7 @@ c4_nilo_domingo:{
     'A sirene toca lá embaixo. Três vezes.',
     '"Tenho que voltar."'
   ],
-  ef:{flag:'historia_do_nilo', npc:{nome:'Lior', opiniao:4, memoria:'Te contou por que ele e a mãe não conversam no almoço de domingo.'},
-      presagio:'Motivo bom é a pior coisa que existe. Você ainda não entende. Vai entender num porto, e depois numa sala com mesa comprida.'},
+  ef:{flag:'historia_do_nilo', npc:{nome:'Lior', opiniao:4, memoria:'Te contou por que ele e a mãe não conversam no almoço de domingo.'}},
   escolhas:[
     {texto:'"Fala isso pra ela."', vai:'c4_nilo_conselho',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Empurrou duas pessoas de volta pra uma conversa'}}},
@@ -2453,8 +2425,7 @@ c4_nilo_conselho:{
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Fez alguém prometer uma conversa difícil'},
       flag:'nilo_vai_falar',
-      npc:{nome:'Lior', opiniao:5, memoria:'Você mandou ele falar com a mãe. Ele disse que ia falar no domingo.'},
-      presagio:'Você não vai ficar sabendo. Quase nada do que você faz de bom vai voltar como notícia.'},
+      npc:{nome:'Lior', opiniao:5, memoria:'Você mandou ele falar com a mãe. Ele disse que ia falar no domingo.'}},
   escolhas:[
     {texto:'Voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar pro Centro e encerrar o dia.', vai:'c4_fim'}
@@ -2470,8 +2441,7 @@ c4_nilo_treinador:{
     'Uma pausa.',
     '"Ele foi comigo até Celadon e voltou comigo pra cá, e eu acho que ele nunca entendeu por quê. Isso é o que me pega."'
   ],
-  ef:{flag:'sandslash_do_nilo', npc:{nome:'Lior', opiniao:3, memoria:'Te contou do Sandslash que voltou com ele e nunca entendeu por quê.'},
-      presagio:'Os seus também não vão entender. Eles vão só ir junto.'},
+  ef:{flag:'sandslash_do_nilo', npc:{nome:'Lior', opiniao:3, memoria:'Te contou do Sandslash que voltou com ele e nunca entendeu por quê.'}},
   escolhas:[
     {texto:'"Sua mãe dividiu um pastel comigo na praça."', vai:'c4_nilo_mae'},
     {texto:'"Ele entendeu." ', vai:'c4_nilo_entendeu'},

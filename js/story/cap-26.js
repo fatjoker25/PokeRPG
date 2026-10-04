@@ -1335,11 +1335,11 @@ c21_os_quatro_da_elite:{
 
 c21_o_da_terceira_equipe:{
   texto:[
-    'Ele está no vestiário da arena, sentado num banco de madeira, com as bolas alinhadas na frente dele em cima de uma toalha.',
+    'Ele está no vestiário da arena, sentado num banco de madeira, com as Pokébolas alinhadas na frente dele em cima de uma toalha.',
     'Tem uns quarenta anos e mãos grandes, e não se levanta quando você entra.',
     fala('o lutador da Elite 4', 'Eu sei quem é {o senhor|a senhora}.'),
     d=>fala(d.jogador.nome, 'E o senhor esteve lá.'),
-    'Ele pega uma das bolas e gira devagar entre os dedos.',
+    'Ele pega uma das Pokébolas e gira devagar entre os dedos.',
     fala('o lutador da Elite 4', 'Eu estive lá, eu voltei, e eu não falo sobre isso porque toda vez que eu tento, a frase não fecha.'),
     d=>fala(d.jogador.nome, 'Tenta comigo.'),
     'Ele olha para você por um tempo comprido e depois tenta.'
@@ -1356,7 +1356,7 @@ c21_a_frase_que_nao_fecha:{
     '"E aí a gente chegou no vale às onze da manhã de um dia de sol."',
     'Ele para. Repara que repetiu. Fecha os olhos.',
     '"Está vendo? É sempre aqui."',
-    'Ele põe a bola de volta na toalha.',
+    'Ele põe a Pokébola de volta na toalha.',
     '"Eu me lembro da chegada. Eu me lembro da volta. Eu me lembro de estar com fome na volta e de ter comido uma barra de cereal de morango, e eu odeio morango."',
     '"E do meio?"',
     '"Do meio eu me lembro de ter sido perguntado alguma coisa." Ele abre os olhos. "E de ter respondido. E eu daria a minha casa para saber o quê."'
@@ -1376,12 +1376,12 @@ c21_os_outros_cinco:{
   falante:'o lutador da Elite 4',
   vozes:['N','N','P','N','N','P','N','N','N'],
   texto:[
-    '"A gente comparou, na volta, no ônibus." Ele alinha a bola na toalha. "Todo mundo lembra de ter sido perguntado alguma coisa."',
+    '"A gente comparou, na volta, no ônibus." Ele alinha a Pokébola na toalha. "Todo mundo lembra de ter sido perguntado alguma coisa."',
     '"E ninguém lembra o quê."',
     '"Ninguém lembra o quê." Ele levanta os olhos. "Mas quatro dos seis mudaram de vida em três meses."',
     '"Como assim?"',
     '"Um pediu demissão e foi ser professor. Uma se separou. Um voltou a falar com o pai depois de nove anos." Ele conta nos dedos e no quarto para. "E eu entrei na Elite 4, que era uma coisa que eu tinha desistido aos trinta e três."',
-    'Ele guarda as bolas no cinto.',
+    'Ele guarda as Pokébolas no cinto.',
     '"Seja lá o que ele perguntou, {moço|moça}, a gente respondeu com sinceridade."'
   ],
   ef:{flag:['sabe_da_pergunta'], instabilidade:2, moral:2,
@@ -1609,7 +1609,7 @@ c21_ultima_pagina:{
     'A última página é diferente das outras vinte e uma.',
     'É manuscrita, não datilografada, e tem uma frase só, completa, terminada com ponto final.',
     '**Ele não quis nada de nós.**',
-    'Embaixo, a assinatura e a matrícula, e a matrícula é do homem de mãos grandes que está no vestiário dois andares abaixo alinhando bolas numa toalha.',
+    'Embaixo, a assinatura e a matrícula, e a matrícula é do homem de mãos grandes que está no vestiário dois andares abaixo alinhando Pokébolas numa toalha.',
     'A Conselheira Thistle olha a página de cabeça para baixo, do outro lado da mesa.',
     fala('Conselheira Edda Thistle', 'Essa é a única frase completa dos três relatórios.'),
     fala('Conselheira Edda Thistle', 'E foi escrita quatro dias depois, em casa, e ele trouxe e entregou no balcão.')
@@ -1746,7 +1746,7 @@ c21_escrevam_agora:{
 
 c21_devolveu:{
   texto:[
-    'Você coloca a bola — ou as bolas — na mesa e empurra.',
+    'Você coloca a Pokébola — ou as Pokébolas — na mesa e empurra.',
     'A sala fica em silêncio de um jeito que não estava previsto na pauta.',
     fala('Conselheira Edda Thistle', 'Obrigada.', null, 'Ela parece genuinamente surpresa, o que diz muito sobre quem sentou nessa cadeira antes de você.'),
     'Eles soltam na mesma tarde, na rota mais próxima, com dois biólogos e nenhuma câmera.',

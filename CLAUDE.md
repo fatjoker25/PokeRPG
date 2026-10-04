@@ -22,6 +22,10 @@ ela está contando pro jogador uma coisa que ele só vai ver no capítulo 19 —
 e pior, os capítulos condicionais (29 a 32) rodam no meio da jornada, não
 no fim. Presságio insinua; não entrega.
 
+E presságio (`ef.presagio`) **nunca diz o que vai acontecer**: nada de
+"guarde isso", "isso vai voltar", "você vai precisar disso lá embaixo".
+Ele repara no que está na cena e para ali. O jogador descobre jogando.
+
 Isso não dá pra conferir com script: nome de lugar citado antes é normal e
 fato citado antes não é detectável. Confere na leitura.
 
@@ -70,12 +74,16 @@ O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de
 cachorro, gato, peixe, gado, mula, cavalo, urubu, morcego. Onde o texto
 precisa de um, entra o Pokémon que ocupa aquele lugar (Tauros de carga,
 cardume de Magikarp, Murkrow, Zubat, Miltank no pasto), e o genérico é
-"bicho". O trio Raikou/Entei/Suicune é o **trio lendário**, nunca "cães".
+**"Pokémon"**, nunca "bicho". A bola é **Pokébola** (o item na mochila
+continua com o nome dos jogos: Poké Ball, Great Ball); "bola" sozinha só
+quando é bola de brinquedo. Nada de encurtar. O trio Raikou/Entei/Suicune é o **trio lendário**, nunca "cães".
 
 O mesmo vale pro que só existe no nosso mundo:
 - comida de bicho real: peixe, carne, sardinha, frango viram alga, queijo,
   ovo, polpa de fruta, ração marinha;
 - material de bicho real: couro vira lona ou vinil;
+- marca e objeto do nosso dia a dia: fita crepe, durex, isopor, post-it,
+  band-aid, xerox, papel A4, marmita (quem come, está almoçando);
 - profissão e órgão: médico de Pokémon (não veterinário), controle de
   bichos (não zoonoses), registro comercial (não CNPJ), número de documento
   (não CPF), imposto da casa (não IPTU), Kanto (não União); sem "Ltda.";

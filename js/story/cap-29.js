@@ -57,11 +57,11 @@ c29_o_vizinho:{
     d=>fala(d.jogador.nome, 'Não.'),
     fala('Sra. Vale', 'Pena.'),
     'Ela move o regador pro vaso seguinte.',
-    fala('Sra. Vale', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pro controle de bichos e pra delegacia.'),
+    fala('Sra. Vale', 'Eu liguei quatro vezes. Quatro. Pra prefeitura, pro controle de Pokémon e pra delegacia.'),
     d=>fala(d.jogador.nome, 'Por causa do quê?'),
     fala('Sra. Vale', 'Do barulho.'),
     'Ela para de regar.',
-    fala('Sra. Vale', 'Não é barulho de festa, {meu filho|minha filha}. É barulho de bicho. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
+    fala('Sra. Vale', 'Não é barulho de festa, {meu filho|minha filha}. É barulho de Pokémon. De madrugada, das duas às quatro, e não é sempre, é terça, quinta e sábado.'),
     fala('Sra. Vale', 'E eu moro aqui há trinta e um anos e eu sei diferenciar Growlithe de vizinho de o que quer que seja aquilo.', 'baixo')
   ],
   ef:{flag:['a_senhora_do_vaso','achou_o_portao_verde'],
@@ -79,8 +79,8 @@ c29_as_quatro_ligacoes:{
   texto:[
     fala('Sra. Vale', 'Anotei todas. Eu anoto tudo, é o meu defeito.'),
     'Ela entra em casa e volta com uma agenda de capa de plástico, dessas de banco, e abre numa página marcada com um elástico.',
-    fala('Sra. Vale', 'Prefeitura: "não é competência, é o controle de bichos".'),
-    fala('Sra. Vale', 'Controle de bichos: "a gente trata de bicho de rua, Pokémon de criação é outra pasta".'),
+    fala('Sra. Vale', 'Prefeitura: "não é competência, é o controle de Pokémon".'),
+    fala('Sra. Vale', 'Controle de Pokémon: "a gente trata de Pokémon de rua, Pokémon de criação é outra pasta".'),
     fala('Sra. Vale', 'Delegacia: "sem flagrante não tem ocorrência, a senhora pode registrar um boletim informativo".'),
     d=>fala(d.jogador.nome, 'E a quarta?'),
     'Ela vira a página.',
@@ -129,12 +129,12 @@ c29_quem_entra_ali:{
   texto:[
     fala('Sra. Vale', 'Gente nova, quase sempre. Da sua idade e pouco mais.'),
     'Ela recomeça a regar, porque as plantas não têm culpa.',
-    fala('Sra. Vale', 'Entram com bicho e saem sem.'),
+    fala('Sra. Vale', 'Entram com Pokémon e saem sem.'),
     d=>fala(d.jogador.nome, 'Todos?'),
-    fala('Sra. Vale', 'Não. Uns saem com o bicho e com a cara de quem não gostou do preço.'),
+    fala('Sra. Vale', 'Não. Uns saem com o Pokémon e com a cara de quem não gostou do preço.'),
     'Ela move o regador.',
     fala('Sra. Vale', 'Esses eu fico contente. Eu fico na janela torcendo, que é uma coisa ridícula de se fazer aos setenta anos.'),
-    fala('Sra. Vale', 'E uns saem sem o bicho e sem olhar pra trás, e andam rápido.'),
+    fala('Sra. Vale', 'E uns saem sem o Pokémon e sem olhar pra trás, e andam rápido.'),
     fala('Sra. Vale', 'Esses eu não consigo esquecer a cara, e são muitos, e eu lembro de todas.', 'baixo')
   ],
   ef:{flag:'entram_com_bicho_saem_sem',
@@ -158,7 +158,7 @@ c29_os_fundos:{
   ],
   ef:{flag:'os_fundos_do_portao_verde',
       registrar:'Nos fundos do portão verde: exaustor industrial e seis sacos de ração de 20 kg vazios por semana.',
-      presagio:'Cento e vinte quilos por semana. Isso não alimenta um bicho nem dez.'},
+      presagio:'Cento e vinte quilos por semana. Isso não alimenta um Pokémon nem dez.'},
   escolhas:[
     {texto:'Pular o muro.', vai:'c29_pulou_o_muro'},
     {texto:'Levar um saco vazio como prova.', vai:'c29_pegou_o_saco'},
@@ -195,11 +195,11 @@ c29_bateu:{
     fala('Dario', 'Traz?'),
     d=>fala(d.jogador.nome, 'Trago o quê?'),
     'Ele suspira, do jeito de quem já explicou isso hoje.',
-    fala('Dario', 'Bicho, {moço|moça}. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
+    fala('Dario', 'Pokémon, {moço|moça}. Você bateu no portão certo pelo motivo errado ou pelo motivo certo?'),
     d=>{
       const p = d.time[0];
       return p ? `${nomeExib(p)} está do seu lado e ele olha ${pron(p).pro} ${nomeExib(p)} e faz uma conta na cabeça, e dá pra ver o número na cara dele.`
-               : 'Ele olha pros seus ombros procurando uma bola no cinto e não acha.';
+               : 'Ele olha pros seus ombros procurando uma Pokébola no cinto e não acha.';
     },
     fala('Dario', 'Tabela tá na parede. Entra ou não entra, mas decide aí que tá frio.')
   ],
@@ -303,8 +303,7 @@ c29_quem_paga:{
     fala('Dario', 'Eu ganho oito por cento.', 'baixo')
   ],
   ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
-      registrar:'Os malotes do portão verde vêm da Rua do Comércio, 118, sala 704.',
-      presagio:'Um endereço de rua comercial com número de sala. Guarde: ele é o primeiro endereço desta jornada que não é de uma cidade, é de uma porta.'},
+      registrar:'Os malotes do portão verde vêm da Rua do Comércio, 118, sala 704.'},
   escolhas:[
     {texto:'Pedir o envelope.', vai:'c29_pediu_o_envelope'},
     {texto:'Copiar a tabela antes de sair.', vai:'c29_copiou_a_tabela'},
@@ -541,8 +540,7 @@ c29_perdeu:{
     'Leva quatro minutos e você fica na calçada ouvindo os quatro minutos inteiros porque ir embora antes seria pior.'
   ],
   ef:{flag:'perdeu_no_quintal', moral:-4,
-      registrar:'Perdeu no quintal do portão verde. Ele trancou as 31 de volta.',
-      presagio:'Você ouviu as trinta e uma trancas. Guarde esse som.'},
+      registrar:'Perdeu no quintal do portão verde. Ele trancou as 31 de volta.'},
   escolhas:[
     {texto:'Ir embora de Cerulean.', vai:'c29_fim'}
   ]

@@ -63,8 +63,7 @@ c10_ab_quando_volta:{
   ],
   ef:{flag:'a_luz_volta_as_quatro',
       npc:{nome:'o homem do copo', opiniao:0, viuVoce:'Te contou os quatro horários de cabeça.'},
-      registrar:'A luz volta sempre entre 3h47 e 4h11. O homem do copo anotou os quatro horários.',
-      presagio:'Alguma coisa naquela usina termina de fazer o que faz por volta das quatro da manhã.'},
+      registrar:'A luz volta sempre entre 3h47 e 4h11. O homem do copo anotou os quatro horários.'},
   escolhas:[
     {texto:'Ir pra usina agora, no escuro.', vai:'c10_rota'},
     {texto:'Dormir aqui e ir pela manhã.', vai:'c10_ab_dormiu'},
@@ -125,8 +124,7 @@ c10_ab_por_que_nao:{
     fala('Sr. Holt', 'Eu escuto esse zumbido da minha varanda faz sete anos. Não escutava nos quatro primeiros.')
   ],
   ef:{flag:'zumbido_ha_sete_anos',
-      registrar:'A usina está desligada há onze anos, mas zumbe há sete.',
-      presagio:'Quatro anos de silêncio e depois sete de zumbido. Alguma coisa começou no meio.'},
+      registrar:'A usina está desligada há onze anos, mas zumbe há sete.'},
   escolhas:[
     {texto:'Perguntar o que tem na sala de controle.', vai:'c10_ab_a_sala'},
     {texto:'Perguntar do arame inclinado pra dentro.', vai:'c10_ab_o_arame'},
@@ -323,8 +321,7 @@ c10_rota:{
       return 'Você está aqui porque estava passando e porque o zumbido é impossível de ignorar depois que você percebe que está ouvindo ele.';
     }
   ],
-  ef:{registrar:'Chegou à usina abandonada da Rota 10.',
-      presagio:'Arame farpado inclinado pra dentro. Guarde isso.'},
+  ef:{registrar:'Chegou à usina abandonada da Rota 10.'},
   escolhas:[
     {texto:'Entrar pelo portão principal.', vai:'c10_portao'},
     {texto:'Contornar a cerca inteira antes de entrar.', vai:'c10_perimetro'},
@@ -489,8 +486,7 @@ c10_porque_ele_vem:{
   ef:{npc:{nome:'Sr. Edric', opiniao:4, memoria:'Vem uma vez por mês, no primeiro sábado, para ser alguém que está olhando.'},
       flag:'eloi_confia', moral:5,
       rep:{eixo:'bom',delta:1,motivo:'Ouviu um velho dizer por que ele volta ao lugar onde alguém morreu'},
-      registrar:'Sr. Edric volta todo primeiro sábado para ser alguém que está olhando.',
-      presagio:'Ele quer ser a pessoa que estava olhando. Repare no que isso vai custar.'},
+      registrar:'Sr. Edric volta todo primeiro sábado para ser alguém que está olhando.'},
   escolhas:[
     {texto:'"Me dá a planta do lugar."', vai:'c10_planta'},
     {texto:'"Vem comigo."', vai:'c10_convidou_eloi'},
@@ -532,12 +528,11 @@ c10_esperando_o_que:{
     '"Eu trabalhei dezenove anos numa usina, então deixa eu explicar pelo lado que eu sei."',
     '"Usina não gera energia sozinha. Usina converte. Você joga uma coisa dentro — água, carvão, vapor — e ela vira outra coisa, e essa outra coisa vai pro fio."',
     '"O que eu acho, e eu posso estar completamente errado, é que aquilo ali dentro é uma coisa que também converte."',
-    '"E os bicho no chão não estão esperando ela fazer alguma coisa com eles."',
+    '"E os Pokémon no chão não estão esperando ela fazer alguma coisa com eles."',
     '"Eles estão esperando a vez de ser jogados dentro."'
   ],
   ef:{flag:'teoria_do_eloi', moral:-8, instabilidade:1,
-      registrar:'Teoria do Elói: os Voltorb esperam a vez de serem convertidos.',
-      presagio:'A teoria dele está errada. Guarde ela mesmo assim — errado de um jeito útil.'},
+      registrar:'Teoria do Elói: os Voltorb esperam a vez de serem convertidos.'},
   escolhas:[
     {texto:'"Me dá a planta do lugar."', vai:'c10_planta'},
     {texto:'"Vem comigo."', vai:'c10_convidou_eloi'},
@@ -552,7 +547,7 @@ c10_discordou_do_eloi:{
   texto:[
     '"Acho que você tá errado."',
     'Ele levanta uma sobrancelha, sem ofensa nenhuma. "Diz."',
-    '"Se fosse isso, eles fugiriam. Bicho foge de coisa que come bicho. Eles não estão fugindo — eles estão indo."',
+    '"Se fosse isso, eles fugiriam. Pokémon foge de coisa que come Pokémon. Eles não estão fugindo — eles estão indo."',
     'Silêncio de uns dez segundos.',
     '"Ah", ele diz. E depois de novo, mais baixo: "Ah."',
     '"Quer dizer que é o contrário. Quer dizer que eles querem."',
@@ -562,8 +557,7 @@ c10_discordou_do_eloi:{
   ef:{flag:'entendeu_que_eles_querem',
       npc:{nome:'Sr. Edric', opiniao:3, memoria:'Você desmontou a teoria dele em duas frases e ele agradeceu.'},
       rep:{eixo:'bom',delta:2,motivo:'Pensou melhor que o especialista e falou'},
-      registrar:'Os Voltorb não estão sendo levados. Eles estão indo por vontade própria.',
-      presagio:'Eles querem. É por isso que você não vai conseguir simplesmente salvar ninguém aqui.'},
+      registrar:'Os Voltorb não estão sendo levados. Eles estão indo por vontade própria.'},
   escolhas:[
     {texto:'"Me dá a planta do lugar."', vai:'c10_planta'},
     {texto:'"Vem comigo."', vai:'c10_convidou_eloi'},
@@ -644,8 +638,7 @@ c10_tunel:{
     '"É que nem geladeira velha, sabe? Liga, enche, desliga. A gente aqui chama de “janela”. Entre o estalo e o zumbido voltar, tem uma janela."'
   ],
   ef:{flag:['sabe_da_janela','sabe_do_estalo'],
-      registrar:'Todo dia entre 18h30 e 19h há um estalo na usina, e depois vinte minutos de zumbido baixo — a "janela".',
-      presagio:'Vinte minutos de janela. Você vai precisar desse número.'},
+      registrar:'Todo dia entre 18h30 e 19h há um estalo na usina, e depois vinte minutos de zumbido baixo — a "janela".'},
   escolhas:[
     {texto:'"Alguém já entrou?"', vai:'c10_alguem_entrou'},
     {texto:'Voltar pra usina e esperar a janela.', vai:'c10_observar'},
@@ -666,8 +659,7 @@ c10_alguem_entrou:{
     '"E sempre a mesma coisa quando a gente pergunta o que teve lá: eles ficam um tempão pensando antes de responder. Todos. Como se tivessem que lembrar."'
   ],
   ef:{flag:'sabe_dos_que_entraram',
-      registrar:'Quem entra na usina sai tendo que lembrar o que viu.',
-      presagio:'Eles têm que lembrar. Isso não é medo — é outra coisa.'},
+      registrar:'Quem entra na usina sai tendo que lembrar o que viu.'},
   escolhas:[
     {texto:'Voltar e esperar a janela.', vai:'c10_observar'},
     {texto:'Ir pro portão agora.', vai:'c10_portao'},
@@ -705,8 +697,7 @@ c10_buraco:{
     'Uma cerca de alambrado num vale de vento, às sete da noite, morna ao toque.',
     'Você tira o dedo e olha ele por um tempo idiota, como se o dedo fosse te explicar alguma coisa.'
   ],
-  ef:{flag:'entrou_pelo_buraco',
-      presagio:'Morna. Aconteceu recentemente e vai acontecer de novo.'},
+  ef:{flag:'entrou_pelo_buraco'},
   escolhas:[
     {texto:'Ir pro galpão de turbinas.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
@@ -753,8 +744,7 @@ c10_anotou_ciclo:{
       rep:{eixo:'bom',delta:3,motivo:'Mediu três noites e fez a conta que ninguém tinha feito'},
       itens:{'Caderno de medições':1},
       instabilidade:1,
-      registrar:'O ciclo da usina adianta 3 minutos por dia. Em quarenta dias vira contínuo.',
-      presagio:'Quarenta dias. Esse número vai reaparecer e você vai desejar ter agido antes.'},
+      registrar:'O ciclo da usina adianta 3 minutos por dia. Em quarenta dias vira contínuo.'},
   escolhas:[
     {texto:'Descer e entrar agora.', vai:'c10_portao'},
     {texto:'Mostrar a conta pro Sr. Edric.', vai:'c10_mostrou_a_conta'},
@@ -825,8 +815,7 @@ c10_foi_embora:{
   ],
   ef:{flag:'ignorou_usina', instabilidade:1, moral:-10,
       rep:{eixo:'ruim',delta:1,motivo:'Sabia do perigo na Rota 10 e não avisou ninguém'},
-      registrar:'Não avisou ninguém sobre a usina. A Rota 10 foi interditada três dias depois.',
-      presagio:'Você sabia antes deles. Essa frase vai voltar.'},
+      registrar:'Não avisou ninguém sobre a usina. A Rota 10 foi interditada três dias depois.'},
   escolhas:[
     {texto:'Voltar. Ainda dá tempo.', vai:'c10_portao'},
     {texto:'Seguir para Saffron.', vai:'c10_fim'},
@@ -888,15 +877,14 @@ c10_agenda:{
     '**02/03** — "zumbido na subestação à noite. avisei manutenção."',
     '**03/03** — "manutenção veio. mediu. disse que tá normal."',
     '**05/03** — "não tá normal."',
-    '**06/03** — "os bicho do pátio tão tudo parado virado pra T3. mandei o rapaz espantar. voltaram."',
+    '**06/03** — "os Pokémon do pátio tão tudo parado virado pra T3. mandei o rapaz espantar. voltaram."',
     '**07/03** — "espantei de novo. voltaram em vinte minutos. não vou espantar mais, dá dó."',
     '**08/03** — a linha está começada e não terminada. Tem três palavras e a caneta arrasta pro canto da página:',
     '"o Naoki foi"'
   ],
   ef:{flag:['leu_a_agenda','sabe_que_voltavam'], moral:-8,
       rep:{eixo:'bom',delta:1,motivo:'Leu a agenda inteira em vez de só o último dia'},
-      registrar:'A agenda da sala de controle: o zumbido começou em 02/03/89 e os Pokémon já se reuniam em 06/03.',
-      presagio:'"não vou espantar mais, dá dó." Essa frase custou uma vida.'},
+      registrar:'A agenda da sala de controle: o zumbido começou em 02/03/89 e os Pokémon já se reuniam em 06/03.'},
   escolhas:[
     {texto:'Olhar o registro de porta.', vai:'c10_registro_porta'},
     {texto:'Levar a agenda.', vai:'c10_levou_a_agenda'},
@@ -972,8 +960,7 @@ c10_consolou_eloi:{
   ef:{flag:'licao_do_eloi', moral:10,
       npc:{nome:'Sr. Edric', opiniao:8, memoria:'Te disse, com a agenda no colo, para ser o exagerado.'},
       rep:{eixo:'bom',delta:2,motivo:'Ficou para ouvir a parte difícil'},
-      registrar:'"Vai lá dentro e seja o exagerado."',
-      presagio:'Seja o exagerado. Anota. Isso vale pro resto da jornada.'},
+      registrar:'"Vai lá dentro e seja o exagerado."'},
   escolhas:[
     {texto:'Voltar pra usina.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
@@ -996,8 +983,7 @@ c10_foi_duro_com_eloi:{
   ],
   ef:{flag:'foi_duro_com_eloi', moral:-5,
       npc:{nome:'Sr. Edric', opiniao:5, memoria:'Você disse na cara dele que ele não avisou. Ele agradeceu por você não ter feito a cara.'},
-      rep:{eixo:'bom',delta:1,motivo:'Disse a verdade a um velho em vez de confortar'},
-      presagio:'A cara é pior que a frase. Guarde isso para quando for você do outro lado.'},
+      rep:{eixo:'bom',delta:1,motivo:'Disse a verdade a um velho em vez de confortar'}},
   escolhas:[
     {texto:'Voltar pra usina.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
@@ -1092,8 +1078,7 @@ c10_registro_pro_eloi:{
       npc:{nome:'Sr. Edric', opiniao:6, memoria:'Leu com você a fita do registro de porta e entendeu o que ela quer dizer.'},
       rep:{eixo:'bom',delta:2,motivo:'Levou a descoberta pra quem podia interpretar'},
       instabilidade:1,
-      registrar:'A porta externa foi aberta às 05:31 sem ninguém para abri-la.',
-      presagio:'Do tamanho de quê. Você vai reparar daqui a pouco.'},
+      registrar:'A porta externa foi aberta às 05:31 sem ninguém para abri-la.'},
   escolhas:[
     {texto:'Voltar e ir direto pro galpão.', vai:'c10_galpao'},
     {texto:'Voltar pela subestação.', vai:'c10_subestacao'},
@@ -1129,7 +1114,7 @@ c10_vestiario:{
     'Um chuveiro que pinga numa usina sem água encanada há onze anos.',
     'Vinte e nove armários estão abertos e vazios — a companhia mandou o pessoal esvaziar quando fechou, e o pessoal esvaziou.',
     'Três estão fechados com cadeado.',
-    'No 14 tem uma etiqueta de fita crepe com um nome escrito a caneta, já quase apagado: **NAOKI V.**'
+    'No 14 tem uma etiqueta de fita adesiva com um nome escrito a caneta, já quase apagado: **NAOKI V.**'
   ],
   ef:{flag:'achou_o_armario',
       registrar:'No vestiário da usina, o armário 14 ainda está trancado com o nome do Naoki.',
@@ -1157,8 +1142,7 @@ c10_armario_14:{
       itens:{'Rádio da companhia':1},
       moral:-10,
       rep:{eixo:'ruim',delta:1,motivo:'Arrombou o armário de um morto'},
-      registrar:'Abriu o armário do Naoki. O rádio da companhia ainda tem carga.',
-      presagio:'Ele chia. Guarde o rádio.'},
+      registrar:'Abriu o armário do Naoki. O rádio da companhia ainda tem carga.'},
   escolhas:[
     {texto:'Levar o rádio.', vai:'c10_almoxarifado'},
     {texto:'Levar a foto pra devolver à família.', vai:'c10_pegou_a_foto'},
@@ -1218,7 +1202,7 @@ c10_foto_pro_eloi:{
 c10_nao_abriu_armario:{
   texto:[
     'Você não abre.',
-    'Fica olhando a etiqueta de fita crepe com o nome quase apagado por um tempo que não dá pra medir, e depois vira as costas.',
+    'Fica olhando a etiqueta de fita adesiva com o nome quase apagado por um tempo que não dá pra medir, e depois vira as costas.',
     'Tem uma coisa que você não sabe explicar e que é verdadeira: aquele armário é a única coisa naquela usina inteira que ainda pertence a alguém.',
     'Tudo mais é da companhia, e a companhia foi embora.',
     'Aquilo ali é do Naoki.'
@@ -1246,8 +1230,7 @@ c10_outros_armarios:{
   ef:{flag:'tem_luva',
       itens:{'Luva de eletricista':1},
       rep:{eixo:'bom',delta:1,motivo:'Se equipou antes de mexer com o que não entende'},
-      registrar:'Achou um par de luvas de eletricista classe 2 no vestiário.',
-      presagio:'Dezessete mil volts. Lembra que os raios lá fora são de cem milhões.'},
+      registrar:'Achou um par de luvas de eletricista classe 2 no vestiário.'},
   escolhas:[
     {texto:'Ir pro almoxarifado.', vai:'c10_almoxarifado'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
@@ -1294,8 +1277,7 @@ c10_caderno_da_mochila:{
       itens:{'Caderno do Teco':1},
       rep:{eixo:'bom',delta:2,motivo:'Leu o caderno de quem chegou antes'},
       moral:-5,
-      registrar:'O caderno do Teco, de janeiro: "eles não estão presos. eu perguntei e eles não estão presos."',
-      presagio:'Ele perguntou. E depois foi embora a pé pro sul e largou a mochila. Pensa no porquê.'},
+      registrar:'O caderno do Teco, de janeiro: "eles não estão presos. eu perguntei e eles não estão presos."'},
   escolhas:[
     {texto:'Levar o caderno e a mochila.', vai:'c10_levou_a_mochila'},
     {texto:'Ir pro galpão perguntar a mesma coisa.', vai:'c10_galpao'},
@@ -1308,17 +1290,16 @@ c10_levou_a_mochila:{
   texto:[
     'Você junta as coisas do Teco na mochila de lona e amarra ela na sua.',
     'Três Poké Balls vazias e abertas. Você fica com elas na mão um tempo antes de guardar.',
-    'Bola aberta e vazia quer dizer uma de duas coisas: ou o bicho saiu, ou nunca entrou.',
+    'Pokébola aberta e vazia quer dizer uma de duas coisas: ou o Pokémon saiu, ou nunca entrou.',
     'As três estão sem arranhão de queda e sem marca de solo.',
     'Ele não jogou. Ele abriu.',
-    'Ele abriu as três bolas dele no meio de uma usina e soltou os três, e depois foi embora a pé pro sul sem falar com ninguém.'
+    'Ele abriu as três Pokébolas dele no meio de uma usina e soltou os três, e depois foi embora a pé pro sul sem falar com ninguém.'
   ],
   ef:{flag:['tem_a_mochila_do_teco','sabe_que_ele_soltou'],
       itens:{'Poké Ball':3},
       moral:-5, instabilidade:1,
-      rep:{eixo:'bom',delta:1,motivo:'Entendeu o que as três bolas vazias queriam dizer'},
-      registrar:'O Teco abriu as três bolas dele dentro da usina e soltou os três.',
-      presagio:'Ele soltou. Guarde essa possibilidade para quando chegar a sua vez.'},
+      rep:{eixo:'bom',delta:1,motivo:'Entendeu o que as três Pokébolas vazias queriam dizer'},
+      registrar:'O Teco abriu as três Pokébolas dele dentro da usina e soltou os três.'},
   escolhas:[
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
     {texto:'Ir pra subestação.', vai:'c10_subestacao'},
@@ -1479,7 +1460,7 @@ c10_imovel:{
     'Olha.',
     'E depois faz a coisa que te desmonta: ela ignora você e entra no poço, e deita na pena, encostada no seu joelho, e fecha os olhos.',
     'Você fica mais uma hora sentad{o|a} na borda de um poço de contenção com uma ave lendária dormindo encostada na sua perna.',
-    'Não tem música. Não tem clarão. Não tem nada. Só um bicho muito velho e muito cansado dormindo do lado de um estranho que não fez movimento brusco.'
+    'Não tem música. Não tem clarão. Não tem nada. Só um Pokémon muito velho e muito cansado dormindo do lado de um estranho que não fez movimento brusco.'
   ],
   ef:{flag:['zapdos_dormiu_do_lado','respeitou_zapdos'],
       executar:d=>{ const L=Estado.lend(145); if(L.disposicao!=='hostil') L.disposicao='passivo';
@@ -1498,7 +1479,7 @@ c10_imovel:{
 
 c10_saiu_de_lado:{
   texto:[
-    'Você levanta devagar, de lado, sem tirar o olho dela e sem encarar direto, que é o que se faz com bicho grande.',
+    'Você levanta devagar, de lado, sem tirar o olho dela e sem encarar direto, que é o que se faz com Pokémon grande.',
     'Ela acompanha com a cabeça. Não ataca.',
     'Você recua vinte metros de costas e só então vira, e nas costas vem um som que não é grito nem trovão: é um estalo baixo, curto, duas vezes.',
     'Você vai passar semanas tentando decidir se aquilo foi ameaça ou tchau.'
@@ -1546,7 +1527,7 @@ c10_religou:{
     'Você empurra a alavanca de volta antes de pensar.',
     'A seccionadora fecha com o mesmo estouro surdo e o zumbido volta em menos de um segundo — e volta mais alto do que estava.',
     'O grito para no meio.',
-    'Você fica parad{o|a} com as duas mãos na alavanca, ofegante, numa subestação escura, e a coisa que você acabou de fazer é pedir desculpa pra um bicho que come corrente elétrica usando a única língua que vocês dois falam.',
+    'Você fica parad{o|a} com as duas mãos na alavanca, ofegante, numa subestação escura, e a coisa que você acabou de fazer é pedir desculpa pra um Pokémon que come corrente elétrica usando a única língua que vocês dois falam.',
     'Do outro lado do pátio, silêncio.',
     'Depois de uns quarenta segundos, um estalo baixo. Duas vezes.',
     'E o zumbido assenta de volta na frequência de antes.'
@@ -1556,8 +1537,7 @@ c10_religou:{
         return [{tipo:'mundo', texto:'Zapdos aceitou. Isso não devia ter funcionado.'}]; },
       rep:{eixo:'bom',delta:3,motivo:'Desfez o próprio erro na hora, na cara de quem foi prejudicado'},
       moral:10,
-      registrar:'Desligou, entendeu o que fez e religou. Zapdos aceitou.',
-      presagio:'A única língua que vocês dois falam. Anota: energia é conversa aqui.'},
+      registrar:'Desligou, entendeu o que fez e religou. Zapdos aceitou.'},
   escolhas:[
     {texto:'Ir pro galpão.', vai:'c10_galpao'},
     {texto:'Ir até o poço do T3.', vai:'c10_base_t3'},
@@ -1621,7 +1601,7 @@ c10_galpao:{
 
 c10_viga_central:{
   texto:[
-    'Você atravessa o galpão até a viga central, andando entre bichos que não te olham.',
+    'Você atravessa o galpão até a viga central, andando entre Pokémon que não te olham.',
     'O croqui tem um X aqui. O X tem uma data ao lado.',
     'No chão de concreto, embaixo da viga, tem uma marca clara — um contorno irregular de uns dois metros por um, onde o concreto é de um cinza diferente do resto.',
     'Não é mancha de sangue. É o contrário: é uma área onde o concreto está mais limpo, porque foi lavado com alguma coisa forte, uma vez, com muita vontade, faz onze anos.',
@@ -1645,14 +1625,14 @@ c10_viga_central:{
 
 c10_falou_com_zapdos:{
   texto:[
-    'Você se sente ridícul{o|a} por quatro segundos inteiros. Depois fala, em voz alta, num galpão de trezentos metros com quarenta bichos parados:',
+    'Você se sente ridícul{o|a} por quatro segundos inteiros. Depois fala, em voz alta, num galpão de trezentos metros com quarenta Pokémon parados:',
     '"Vocês estão presos aqui?"',
     'O eco devolve a pergunta duas vezes e some.',
     'Nada acontece por uns vinte segundos.',
     'E aí um Voltorb da terceira fileira rola. Um palmo. Só um palmo, pra frente, na direção do canto.',
     'E depois outro. E depois quatro. E depois a fileira inteira, um palmo, todos ao mesmo tempo, com o barulho de quarenta coisas de borracha rolando um palmo num chão de concreto.',
     'Eles se aproximaram dela.',
-    'Você fez uma pergunta e quarenta bichos responderam andando na direção contrária da saída.',
+    'Você fez uma pergunta e quarenta Pokémon responderam andando na direção contrária da saída.',
     d=>d.flags.leu_o_caderno_do_teco ? 'O Teco escreveu: "eu perguntei e eles não estão presos." Agora você sabe exatamente que gesto ele viu.' :
        'Você fica com essa resposta na mão sem saber o que fazer com ela.'
   ],
@@ -1721,7 +1701,7 @@ c10_respondeu:{
   escolhas:[
     {texto:'Ficar. Continuar a conversa até de manhã.', vai:'c10_conversa_longa'},
     {texto:'Sair sem interromper.', vai:'c10_saiu'},
-    {texto:'Oferecer a bola. Convidar em vez de capturar.', vai:'c10_convite'},
+    {texto:'Oferecer a Pokébola. Convidar em vez de capturar.', vai:'c10_convite'},
     {texto:'Aproveitar e atacar agora.', vai:'c10_traicao_zapdos'}
   ]
 },
@@ -1757,22 +1737,22 @@ c10_conversa_longa:{
 
 c10_convite:{
   texto:[
-    'Você tira uma bola da mochila, abre ela — vazia — e coloca no chão de concreto, aberta, apontando pra viga.',
+    'Você tira uma Pokébola da mochila, abre ela — vazia — e coloca no chão de concreto, aberta, apontando pra viga.',
     'E recua vinte passos.',
-    'É o gesto mais idiota que existe e você sabe: bola não convida, bola prende.',
+    'É o gesto mais idiota que existe e você sabe: Pokébola não convida, Pokébola prende.',
     'Ela desce.',
-    'Pousa no chão a uns quatro metros da bola aberta e olha ela por muito tempo. Anda em volta. Olha você. Olha a bola.',
-    'Depois encosta o bico na bola aberta, com cuidado, do jeito que se encosta em coisa que se sabe que morde.',
-    'A bola dispara o mecanismo de captura e fecha, vazia, porque ela não entrou.',
-    'Ela olha a bola fechada no chão, olha você, e volta pra viga.',
+    'Pousa no chão a uns quatro metros da Pokébola aberta e olha ela por muito tempo. Anda em volta. Olha você. Olha a Pokébola.',
+    'Depois encosta o bico na Pokébola aberta, com cuidado, do jeito que se encosta em coisa que se sabe que morde.',
+    'A Pokébola dispara o mecanismo de captura e fecha, vazia, porque ela não entrou.',
+    'Ela olha a Pokébola fechada no chão, olha você, e volta pra viga.',
     'Não foi recusa. Foi resposta: ela experimentou, entendeu o que é, e devolveu.'
   ],
   ef:{flag:['convidou_zapdos','zapdos_te_conhece'],
       executar:d=>{ const L=Estado.lend(145); if(L.disposicao!=='hostil') L.disposicao='passivo'; return []; },
       rep:{eixo:'bom',delta:3,motivo:'Convidou em vez de prender'},
       moral:10,
-      registrar:'Ofereceu uma bola aberta a Zapdos. Ela experimentou e recusou.',
-      presagio:'Ela entendeu o que é uma bola. Pensa em como ela aprendeu isso.'},
+      registrar:'Ofereceu uma Pokébola aberta a Zapdos. Ela experimentou e recusou.',
+      presagio:'Ela entendeu o que é uma Pokébola. Pensa em como ela aprendeu isso.'},
   escolhas:[
     {texto:'Ficar até de manhã.', vai:'c10_conversa_longa'},
     {texto:'Sair.', vai:'c10_saiu'},
@@ -1784,8 +1764,8 @@ c10_convite:{
 c10_coleta:{
   texto:[
     'Eles não reagem. Você pega um. Depois outro.',
-    'É mais fácil do que catar fruta. Você nem precisa de bola nas duas primeiras — dá pra pegar no colo, porque eles não resistem, não rolam, não fazem nada.',
-    'Na terceira bola, um Magnemite do fundo do galpão vira lentamente a cabeça na sua direção.',
+    'É mais fácil do que catar fruta. Você nem precisa de Pokébola nas duas primeiras — dá pra pegar no colo, porque eles não resistem, não rolam, não fazem nada.',
+    'Na terceira Pokébola, um Magnemite do fundo do galpão vira lentamente a cabeça na sua direção.',
     'Depois todos viram. Os outros quarenta e poucos, ao mesmo tempo, com o mesmo som de servomotor arrastado.',
     'Eles não atacam. Só olham.',
     'E lá em cima, na viga, Zapdos para de carregar.'
@@ -1818,7 +1798,7 @@ c10_coleta:{
 
 c10_soltou_a_coleta:{
   texto:[
-    'Você abre as duas bolas no chão do galpão e recua.',
+    'Você abre as duas Pokébolas no chão do galpão e recua.',
     'Eles saem, ficam parados um momento, e depois rolam de volta pras fileiras. Sem pressa. Sem alívio visível.',
     'Voltam exatamente pros lugares de onde você tirou, o que quer dizer que os lugares eram lugares.',
     'Lá em cima, Zapdos volta a carregar.',
@@ -1878,29 +1858,28 @@ c10_comida_zapdos:{
   ef:{executar:d=>{ Estado.usarItem('Ração'); const L=Estado.lend(145); if(L.disposicao!=='hostil') L.disposicao='passivo'; return []; },
       rep:{eixo:'bom',delta:1,motivo:'Tentou um gesto inútil e sincero com um lendário'},
       moral:5,
-      flag:'zapdos_desceu',
-      presagio:'O gesto não significou nada e funcionou mesmo assim. Guarde a diferença.'},
+      flag:'zapdos_desceu'},
   escolhas:[
     {texto:'Ficar parad{o|a}.', vai:'c10_observar_zapdos'},
     {texto:'Falar com ela.', vai:'c10_falou_com_zapdos'},
-    {texto:'Oferecer a bola aberta.', vai:'c10_convite'},
-    {texto:'Aproveitar que ela desceu e jogar a bola.', vai:'c10_traicao_zapdos'}
+    {texto:'Oferecer a Pokébola aberta.', vai:'c10_convite'},
+    {texto:'Aproveitar que ela desceu e jogar a Pokébola.', vai:'c10_traicao_zapdos'}
   ]
 },
 
 c10_traicao_zapdos:{
   texto:[
-    'Você joga a bola no segundo em que ela baixa a guarda.',
+    'Você joga a Pokébola no segundo em que ela baixa a guarda.',
     'Não importa se prende.',
     'O gesto já aconteceu, e ela já entendeu exatamente o que foi, porque ela é velha o bastante pra ter visto isso antes.',
     d=>d.flags.respondeu_a_zapdos ? 'E você é a pessoa que bateu seis vezes no chão vinte minutos atrás. Ela respondeu. E aí você fez isso.' :
-       'E o galpão inteiro, quarenta bichos, vira a cabeça ao mesmo tempo.'
+       'E o galpão inteiro, quarenta Pokémon, vira a cabeça ao mesmo tempo.'
   ],
   ef:{executar:d=>{ const L=Estado.lend(145); L.disposicao='hostil'; L.ataquesSofridos+=2; return []; },
       rep:{eixo:'ruim',delta:2,motivo:'Traiu a confiança de um lendário'},
       moral:-20,
       flag:'traiu_zapdos',
-      registrar:'Jogou a bola em Zapdos no momento em que ela baixou a guarda.',
+      registrar:'Jogou a Pokébola em Zapdos no momento em que ela baixou a guarda.',
       presagio:'Ela já tinha visto isso antes. Pergunta-se de quem.'},
   escolhas:[{texto:'Encarar o que vem.', vai:'c10_zapdos'}]
 },
@@ -1941,7 +1920,7 @@ c10_pos_zapdos:{
 
 c10_fugiu_zapdos:{
   texto:[
-    'Você corre pelo galpão com o cabelo em pé e gosto de metal na boca, passando por cima de bichos que não saem do caminho porque não estão te vendo.',
+    'Você corre pelo galpão com o cabelo em pé e gosto de metal na boca, passando por cima de Pokémon que não saem do caminho porque não estão te vendo.',
     'Ela não persegue.',
     'Aves lendárias não perseguem — elas lembram.'
   ],
@@ -1956,17 +1935,16 @@ c10_fugiu_zapdos:{
 
 c10_capturou_zapdos:{
   texto:[
-    'A bola fecha.',
+    'A Pokébola fecha.',
     'E os quarenta e poucos Voltorb do chão apagam ao mesmo tempo.',
     'Não em sequência. Ao mesmo tempo, como interruptor.',
     'O galpão fica escuro, silencioso e — pela primeira vez em onze anos — desligado de verdade.',
-    'Você fica parad{o|a} no escuro com uma bola na mão e quarenta bichos em volta que pararam no meio de uma frase.',
+    'Você fica parad{o|a} no escuro com uma Pokébola na mão e quarenta Pokémon em volta que pararam no meio de uma frase.',
     'Lá fora, no céu limpo, uma nuvem começa a se formar exatamente sobre a usina.',
     'E outra no norte. E outra no sul.'
   ],
   ef:{instabilidade:2, moral:-10, flag:'capturou_zapdos',
-      registrar:'Capturou Zapdos na usina. O galpão inteiro apagou.',
-      presagio:'Eles pararam no meio de uma frase. Ninguém vai terminar ela.'},
+      registrar:'Capturou Zapdos na usina. O galpão inteiro apagou.'},
   escolhas:[
     {texto:'Soltar. Agora, antes de sair daqui.', vai:'c10_soltou_zapdos'},
     {texto:'Sair com ela.', vai:'c10_depois', ef:{flag:'levou_zapdos', rep:{eixo:'ruim',delta:2,motivo:'Levou embora uma conversa de onze anos'}}},
@@ -1977,7 +1955,7 @@ c10_capturou_zapdos:{
 
 c10_soltou_zapdos:{
   texto:[
-    'Você abre a bola apontando pro buraco do teto.',
+    'Você abre a Pokébola apontando pro buraco do teto.',
     'Ela sai e não vai embora. Sobe até a viga, pousa, e fica.',
     'Um por um, os Voltorb do chão voltam a brilhar. Leva quase um minuto até os quarenta estarem acesos de novo, e o primeiro a acender é o mais longe.',
     'Seis.',
@@ -2021,7 +1999,7 @@ c10_depois:{
     d=>{
       if (d.flags.eloi_no_portao) return 'O Sr. Edric está exatamente onde disse que ficaria, na cadeira de praia, com a garrafa térmica vazia e o boné da companhia no colo. Ele levanta quando te vê e a primeira coisa que ele faz é olhar as suas mãos, pra ver se estão inteiras.';
       const via = Historia.via();
-      if (via==='mercenario' || via==='foragido') return 'Dois homens com uma van. "A Terceira mandou perguntar se deu certo." Eles olham a sua mochila com muita atenção. Eles sabem contar bolas.';
+      if (via==='mercenario' || via==='foragido') return 'Dois homens com uma van. "A Terceira mandou perguntar se deu certo." Eles olham a sua mochila com muita atenção. Eles sabem contar Pokébolas.';
       if (via==='pesquisador') return 'A Dra. Cordell, encostada num carro emprestado, com uma garrafa térmica. "Eu vi o relâmpago da estrada. Sobe aí, você tá com cara de quem precisa sentar."';
       if (via==='heroi') return 'Três pessoas de Cerulean, que vieram a pé, porque alguém falou que tinha um treinador na usina. Eles não sabem o que perguntar. Só queriam saber se era verdade.';
       return 'Um técnico da companhia elétrica, aposentado, que vem aqui uma vez por mês por conta própria. "Você viu?" Ele não precisa dizer o quê.';
@@ -2048,8 +2026,7 @@ c10_contou:{
   ef:{flag:'contou_da_usina',
       rep:{eixo:'bom',delta:2,motivo:'Contou a verdade sobre o que viu na usina'},
       moral:10,
-      registrar:'Contou publicamente o que viu na usina.',
-      presagio:'"A gente só não tinha quem falasse." Repare em quantos anos essa frase custou.'},
+      registrar:'Contou publicamente o que viu na usina.'},
   escolhas:[
     {texto:'Seguir para Saffron.', vai:'c10_fim'},
     {texto:'Ficar mais um dia e ajudar a interditar a rota.', vai:'c10_interditou'},
@@ -2067,8 +2044,7 @@ c10_contou_pouco:{
   ],
   ef:{flag:['contou_da_usina','calou_a_parte_boa'],
       rep:{eixo:'bom',delta:1,motivo:'Contou o que dava pra provar'},
-      registrar:'Contou só a parte mensurável do que viu na usina.',
-      presagio:'A parte que você calou é a única que importa. Essa conta vai vencer.'},
+      registrar:'Contou só a parte mensurável do que viu na usina.'},
   escolhas:[
     {texto:'Seguir para Saffron.', vai:'c10_fim'},
     {texto:'Mudar de ideia e contar tudo.', vai:'c10_contou'},
@@ -2173,8 +2149,7 @@ c10_contou_pro_eloi_da_foto:{
       npc:{nome:'Sr. Edric', opiniao:8, memoria:'Soube que a Sra. Vesna desceu no degrau. Foi o melhor dia dele em onze anos.'},
       moral:15,
       rep:{eixo:'bom',delta:2,motivo:'Voltou seis horas de estrada só para contar uma coisa boa'},
-      registrar:'Contou ao Sr. Edric que a Sra. Vesna desceu no degrau.',
-      presagio:'"Você tá indo bem e eu não sou de dizer isso." Guarde. Vai fazer falta.'},
+      registrar:'Contou ao Sr. Edric que a Sra. Vesna desceu no degrau.'},
   escolhas:[{texto:'Seguir para Saffron.', vai:'c10_fim'}]
 },
 
@@ -2183,9 +2158,9 @@ c10_fim:{
     'A estrada pra Saffron atravessa a Rota 5 e é a única de Kanto com asfalto o caminho inteiro.',
     'Isso te dá uma sensação esquisita depois de uma semana pisando em brita e concreto queimado: os seus pés param de doer e a sua cabeça não para junto.',
     d=>{
-      if (d.flags.capturou_zapdos && d.flags.levou_zapdos) return 'Na sua mochila tem uma bola que pesa igual às outras e que você checa três vezes por hora sem perceber que está checando.';
+      if (d.flags.capturou_zapdos && d.flags.levou_zapdos) return 'Na sua mochila tem uma Pokébola que pesa igual às outras e que você checa três vezes por hora sem perceber que está checando.';
       if (d.flags.respondeu_a_zapdos) return 'Você bate o dedo na alça da mochila em intervalos regulares o caminho inteiro. Seis. Sem perceber.';
-      if (d.flags.coletou_na_usina) return 'Na sua mochila tem duas bolas que não resistiram, e elas continuam não resistindo, e isso continua sendo pior do que se resistissem.';
+      if (d.flags.coletou_na_usina) return 'Na sua mochila tem duas Pokébolas que não resistiram, e elas continuam não resistindo, e isso continua sendo pior do que se resistissem.';
       if (d.flags.traiu_zapdos) return 'Céu limpo deixou de ser uma coisa neutra pra você. Você olha pra cima a cada dois minutos e sabe exatamente por quê.';
       return 'Você fica a estrada inteira montando a frase com a qual vai contar isso pra alguém, e nenhuma versão funciona.';
     },

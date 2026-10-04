@@ -657,11 +657,11 @@ const Jogo = {
        (rota que não passou pela rua), a bola chega pelo balcão */
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_professor && typeof entregarDoProfessor === 'function'){
       entregarDoProfessor(Estado.dados);
-      avisos.push('O Professor mandou a bola pelo balcão do Centro, com o seu nome na etiqueta.');
+      avisos.push('O Professor mandou a Pokébola pelo balcão do Centro, com o seu nome na etiqueta.');
     }
     if (Estado.dados.capitulo === 1 && Estado.dados.flags.espera_o_assistente && typeof entregarInicial === 'function'){
       entregarInicial(Estado.dados);
-      avisos.push('O Célio deixou uma bola no balcão do Centro, com o seu nome na etiqueta.');
+      avisos.push('O Célio deixou uma Pokébola no balcão do Centro, com o seu nome na etiqueta.');
     }
     if (Estado.dados.capitulo === 1 && !Estado.temPokenav()){
       Estado.ganharPokenav();

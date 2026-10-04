@@ -68,10 +68,10 @@ function eficacia(tipoGolpe, tiposAlvo){
 }
 
 function textoEficacia(m){
-  if (m === 0) return 'Não afeta o alvo...';
+  if (m === 0) return 'Não afeta o alvo…';
   if (m >= 4) return 'Devastador! (4x)';
   if (m >= 2) return 'É super efetivo! (2x)';
-  if (m <= 0.25) return 'Quase não arranha... (0.25x)';
-  if (m <= 0.5) return 'Não é muito efetivo... (0.5x)';
+  if (m <= 0.25) return 'Quase não arranha… (0.25x)';
+  if (m <= 0.5) return 'Não é muito efetivo… (0.5x)';
   return '';
 }

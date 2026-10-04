@@ -67,7 +67,7 @@ c3_atras_do_bambu:{
     'Dentro: uma mesa, um banco, um armário de metal e vinte e dois anos de poeira.',
     'No armário, em três prateleiras, cadernos de capa dura, numerados, com o mesmo nome na lombada.',
     'São contagens de população. Espécie, quadrante, data, número de indivíduos, todo mês, de setenta e quatro a noventa e seis.',
-    'Vinte e dois anos de alguém contando bicho na floresta e anotando, sozinho, à mão.',
+    'Vinte e dois anos de alguém contando Pokémon na floresta e anotando, sozinho, à mão.',
     'O último caderno para no meio de uma página, no meio de uma linha, em março de noventa e seis.'
   ],
   ef:{flag:['a_casa_do_bambuzal','reika_precisa_de_papel'],
@@ -185,7 +185,7 @@ c7_ossario:{
   ef:{flag:'o_ossario', moral:2,
       rep:{eixo:'bom', delta:1, motivo:'Desceu ao ossário sob a Torre e leu a abóbada.'},
       registrar:'Sob a Torre de Lavender há um ossário com a abóbada coberta de nomes riscados a prego.',
-      presagio:'Séculos de gente escrevendo nome de bicho em pedra. Lavender não começou com a Torre.'},
+      presagio:'Séculos de gente escrevendo nome de Pokémon em pedra. Lavender não começou com a Torre.'},
   escolhas:[
     {texto:'Escrever um nome na pedra.', vai:'c7_escreveu_na_pedra', cond:d=>(d.cemiterio||[]).length > 0},
     {texto:'Subir sem escrever nada.', vai:'c7_base'}
@@ -307,15 +307,14 @@ c8_dentro_do_conteiner:{
     'A porta abre com o rangido de dobradiça que não abre há muito tempo.',
     'Lá dentro não tem carga. Tem instalação.',
     'Piso de compensado, duas fileiras de suporte de gaiola parafusadas na parede — vazias —, um exaustor pequeno ligado a uma bateria de caminhão, e um ralo improvisado furado no piso do contêiner.',
-    'É uma baia móvel. Alguém transformou um contêiner num lugar de guardar bicho vivo e depois esvaziou.',
+    'É uma baia móvel. Alguém transformou um contêiner num lugar de guardar Pokémon vivo e depois esvaziou.',
     'Na parede, presa com fita, uma folha plastificada com uma tabela de horário: alimentação, limpeza, troca de água. Três vezes ao dia.',
     'Quem fez isso não estava maltratando nada. Estava cuidando com método, que é o que assusta.',
     'E no canto, caído atrás de um suporte, um brinco amarelo de identificação de reserva, com número.'
   ],
   ef:{flag:['a_baia_movel','reika_precisa_de_papel','sabe_do_lote_unico'],
       rep:{eixo:'bom', delta:3, motivo:'Abriu o contêiner que ninguém conferia, no pátio de Vermilion.'},
-      registrar:'O contêiner virado para o muro é uma baia móvel, com tabela de alimentação três vezes ao dia e um brinco de reserva no chão.',
-      presagio:'Brinco amarelo com número. O mesmo tipo que você vai ver de novo, em outro lugar, na orelha de alguém.'},
+      registrar:'O contêiner virado para o muro é uma baia móvel, com tabela de alimentação três vezes ao dia e um brinco de reserva no chão.'},
   escolhas:[
     {texto:'Levar o brinco.', vai:'c8_cais'},
     {texto:'Levar a tabela de horário.', vai:'c8_cais'},

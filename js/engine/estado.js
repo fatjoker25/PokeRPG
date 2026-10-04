@@ -110,7 +110,7 @@ const ITENS_INFO = {
   /* ─────────── bolas ─────────── */
   'Poké Ball':   {tipo:'bola', mult:1, cat:'Captura',
                   ficha:'Modificador de captura ×1,0 · consumida no arremesso',
-                  desc:'A bola comum. É o que a Liga entrega e o que todo mundo usa.',
+                  desc:'A Pokébola comum. É o que a Liga entrega e o que todo mundo usa.',
                   sabido:{bola_fraca_em_lendario:'Você já viu uma dessas ricochetear numa coisa grande demais. Não insista.'}},
   'Great Ball':  {tipo:'bola', mult:1.5, cat:'Captura',
                   ficha:'Modificador de captura ×1,5 · consumida no arremesso',
@@ -1117,14 +1117,14 @@ const Estado = {
         this.mudarRep('ruim', 2, `Descobriram ${DEX[L.dex].nome} com você`);
         this.dados.liga.avisos++;
       } else if (L.turnosPreso % 2 === 0){
-        avisos.push(`${DEX[L.dex].nome} continua na sua bola. O mundo continua pagando por isso.`);
+        avisos.push(`${DEX[L.dex].nome} continua na sua Pokébola. O mundo continua pagando por isso.`);
         this.mudarRep('ruim', 1, `Mantém ${DEX[L.dex].nome} em cativeiro`);
         this.dados.mundo.instabilidade++;
       }
       // o próprio lendário tenta fugir
       const p = [...this.dados.time, ...this.dados.pc].find(x => x.dex === L.dex);
       if (p && p.moral < 30 && Dados.chance(15)){
-        avisos.push(`${DEX[L.dex].nome} rompeu a bola durante a noite e sumiu. Não deixou nada.`);
+        avisos.push(`${DEX[L.dex].nome} rompeu a Pokébola durante a noite e sumiu. Não deixou nada.`);
         this.removerDoTime(p.uid);
         const i = this.dados.pc.findIndex(x => x.uid === p.uid);
         if (i >= 0) this.dados.pc.splice(i,1);
@@ -1153,7 +1153,8 @@ const Estado = {
         if (p && p.stats && p.stats.vit === undefined) atualizarAtributos(p);
       /* nomes que mudaram depois que o save foi gravado: o item e a
          pessoa continuam os mesmos, só o nome na tela é outro */
-      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela'};
+      const ITEM_NOVO = {'Colete de Couro':'Colete de Lona', 'Cobertor de lã':'Cobertor de flanela',
+        'Caixa de ventilador com um bicho dentro':'Caixa de ventilador com um Pokémon dentro'};
       for (const [velho, novo] of Object.entries(ITEM_NOVO)){
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;

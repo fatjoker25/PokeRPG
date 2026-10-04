@@ -82,7 +82,7 @@ c32_a_lanchonete:{
     fala('o homem de macacão', 'Armazém com ar-condicionado central, Rico?'),
     'Os quatro riem.',
     fala('Rico', 'Armazém de remédio tem.'),
-    fala('o homem de macacão', 'Então é armazém de remédio que solta cheiro de bicho na sexta-feira.', 'baixo')
+    fala('o homem de macacão', 'Então é armazém de remédio que solta cheiro de Pokémon na sexta-feira.', 'baixo')
   ],
   ef:{flag:'a_conversa_da_lanchonete',
       registrar:'Os mecânicos da rua ao lado discutem o que é o galpão. Ele solta cheiro na sexta-feira.'},
@@ -96,7 +96,7 @@ c32_a_lanchonete:{
 c32_os_quatro_mecanicos:{
   texto:[
     'Você vira no banquinho e pergunta direto, o que numa lanchonete de rua industrial é normal, porque todo mundo pergunta tudo.',
-    d=>fala(d.jogador.nome, 'Cheiro de bicho como?'),
+    d=>fala(d.jogador.nome, 'Cheiro de Pokémon como?'),
     'Os quatro param de comer ao mesmo tempo.',
     fala('o homem de macacão', 'Você é de onde?'),
     d=>fala(d.jogador.nome, 'De passagem.'),
@@ -154,15 +154,15 @@ c32_o_dono_da_lanchonete:{
     fala('o dono da lanchonete', 'Do galpão da 3, ninguém.'),
     d=>fala(d.jogador.nome, 'E eles comem o quê?'),
     'Ele dobra o pano no ombro.',
-    fala('o dono da lanchonete', 'Chega marmita. Numa van, meio-dia, quinze marmitas de uma vez, todo dia.'),
+    fala('o dono da lanchonete', 'Chega almoço. Numa van, meio-dia, quinze almoços de uma vez, todo dia.'),
     fala('o dono da lanchonete', 'Quinze pessoas trabalhando lá dentro todo dia há quatro anos e nenhuma delas nunca atravessou a rua pra tomar um café.', 'baixo')
   ],
   ef:{flag:['quinze_marmitas','sabe_do_lote_unico'],
       npc:{nome:'o dono da lanchonete', opiniao:1, viuVoce:'Te contou que ninguém do galpão nunca almoçou ali em quatro anos.'},
-      registrar:'Quinze marmitas chegam de van ao galpão todo dia. Ninguém de lá nunca entrou na lanchonete.',
+      registrar:'Quinze almoços chegam de van ao galpão todo dia. Ninguém de lá nunca entrou na lanchonete.',
       presagio:'Quinze pessoas com contrato de sigilo almoçam dentro do prédio. É o custo de não deixar ninguém conversar na rua.'},
   escolhas:[
-    {texto:'Esperar a van das marmitas.', vai:'c32_a_van_das_marmitas'},
+    {texto:'Esperar a van do almoço.', vai:'c32_a_van_das_marmitas'},
     {texto:'Ir observar o galpão.', vai:'c32_observou'},
     {texto:'Falar com os quatro mecânicos.', vai:'c32_os_quatro_mecanicos'}
   ]
@@ -175,16 +175,16 @@ c32_a_van_das_marmitas:{
     'A porta abre quinze centímetros. Uma mão pega as duas caixas. A porta fecha.',
     'Ele volta pra van com as caixas do dia anterior.',
     'Você fala com ele antes dele arrancar.',
-    d=>fala(d.jogador.nome, 'Quinze marmitas todo dia?'),
-    fala('o entregador de marmita', 'Quinze de segunda a quinta. Vinte e duas na sexta.'),
+    d=>fala(d.jogador.nome, 'Quinze almoços todo dia?'),
+    fala('o entregador de almoço', 'Quinze de segunda a quinta. Vinte e duas na sexta.'),
     d=>fala(d.jogador.nome, 'Por que mais na sexta?'),
     'Ele dá de ombros e sobe na van.',
-    fala('o entregador de marmita', 'Sei lá. Sexta tem mais gente. Eles pedem sete a mais desde que eu peguei a rota.'),
+    fala('o entregador de almoço', 'Sei lá. Sexta tem mais gente. Eles pedem sete a mais desde que eu peguei a rota.'),
     'Ele dá a partida.',
-    fala('o entregador de marmita', 'E na sexta eles pegam na porta do portão, não na porta social. É a única coisa que muda.')
+    fala('o entregador de almoço', 'E na sexta eles pegam na porta do portão, não na porta social. É a única coisa que muda.')
   ],
   ef:{flag:['vinte_e_duas_na_sexta','carregam_na_sexta'],
-      registrar:'São 15 marmitas de segunda a quinta e 22 na sexta. Na sexta a entrega é pelo portão, não pela porta social.',
+      registrar:'São 15 almoços de segunda a quinta e 22 na sexta. Na sexta a entrega é pelo portão, não pela porta social.',
       presagio:'Sete pessoas a mais só na sexta. Sete pessoas que não trabalham ali: trabalham no carregamento.'},
   escolhas:[
     {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
@@ -195,9 +195,9 @@ c32_a_van_das_marmitas:{
 
 c32_observou:{
   texto:[
-    'Existe um jeito certo de observar um galpão em rua industrial e ele não é escondido: é sentar no meio-fio com uma marmita no colo, porque em rua de galpão, ao meio-dia, tem quarenta pessoas sentadas em meio-fio com marmita no colo.',
+    'Existe um jeito certo de observar um galpão em rua industrial e ele não é escondido: é sentar no meio-fio almoçando, porque em rua de galpão, ao meio-dia, tem quarenta pessoas almoçando sentadas no meio-fio.',
     'Você fica quatro horas.',
-    'Em quatro horas o portão rolante não abre nenhuma vez. A porta social abre três vezes: a van da marmita, um homem que sai pra fumar e volta em sete minutos, e uma entrega de material de escritório.',
+    'Em quatro horas o portão rolante não abre nenhuma vez. A porta social abre três vezes: a van do almoço, um homem que sai pra fumar e volta em sete minutos, e uma entrega de material de escritório.',
     'O homem que sai pra fumar fica virado pra parede do prédio, não pra rua, o que é uma coisa que ninguém faz.',
     'Ninguém fuma de frente pra parede.',
     'A não ser quem não quer ser visto de frente.'
@@ -258,8 +258,7 @@ c32_a_brecha:{
   ef:{flag:['trezentas_e_onze_unidades','reika_precisa_de_papel','sabe_do_lote_unico'],
       rep:{eixo:'bom', delta:2, motivo:'Achou, com um ferramenteiro, a brecha no próprio contrato de sigilo dele.'},
       npc:{nome:'o fumante', opiniao:4, viuVoce:'Você achou a brecha do contrato dele e ele usou.'},
-      registrar:'Um ferramenteiro faz manutenção de 311 unidades de equipamento no galpão. O número está na ordem de serviço dele.',
-      presagio:'Trezentas e onze unidades de um equipamento que precisa de manutenção e de climatização contínua. Guarde o número.'},
+      registrar:'Um ferramenteiro faz manutenção de 311 unidades de equipamento no galpão. O número está na ordem de serviço dele.'},
   escolhas:[
     {texto:'Perguntar se ele guarda cópia das ordens de serviço.', vai:'c32_as_ordens_de_servico'},
     {texto:'"Você quer sair de lá?"', vai:'c32_quer_sair'},
@@ -537,8 +536,7 @@ c32_pediu_os_calendarios:{
   ],
   ef:{flag:['tem_os_tres_calendarios','reika_precisa_de_papel'],
       npc:{nome:'Otto', opiniao:6, viuVoce:'Te deu três dos quatro calendários e ficou contando o do ano corrente.'},
-      registrar:'Está com três calendários de parede com a contagem semanal de caixas, de três anos.',
-      presagio:'Ele ficou com o do ano em curso pra continuar contando. Volta em janeiro.'},
+      registrar:'Está com três calendários de parede com a contagem semanal de caixas, de três anos.'},
   escolhas:[
     {texto:'Ir embora de Saffron.', vai:'c32_fim'}
   ]

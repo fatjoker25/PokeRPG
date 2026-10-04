@@ -96,7 +96,7 @@ c24_ab_o_que_ele_vai_fazer:{
 c24_ab_o_aviso:{
   texto:[
     'Na entrada da Rota 23, pregado num poste de madeira com quatro tachinhas, tem um aviso que não estava lá da última vez.',
-    'Papel A4 plastificado, impresso, com o brasão da Liga:',
+    'Folha plastificada, impresso, com o brasão da Liga:',
     '**"CONTROLE DE ACESSO REATIVADO. Desafiantes devem portar cartão de treinador válido. A Liga reserva-se o direito de indeferir o acesso a qualquer tempo, sem necessidade de motivação."**',
     'Você lê a última parte duas vezes.',
     '"Sem necessidade de motivação."',
@@ -353,7 +353,7 @@ c24_desde_quando:{
   texto:[
     d=>fala(d.jogador.nome, 'Desde quando eu tenho isso?'),
     'Ele digita. Espera. Lê.',
-    fala('o guarda da terceira', 'Data de abertura...', null, 'Ele para e confere de novo, porque o número parece errado.'),
+    fala('o guarda da terceira', 'Data de abertura…', null, 'Ele para e confere de novo, porque o número parece errado.'),
     fala('o guarda da terceira', 'Três semanas depois da sua primeira licença. {O senhor|A senhora} mal tinha saído de casa.'),
     'Três semanas. Você ainda estava aprendendo a dobrar o mapa.',
     fala('o guarda da terceira', 'Passa, {moço|moça}. Por favor.', 'baixo')

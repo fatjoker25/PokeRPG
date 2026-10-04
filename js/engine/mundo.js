@@ -361,7 +361,21 @@ const Mundo = {
    quem já resolveu três coisas aqui. Uma linha, no alto da tela,
    que muda com reputação, crachá e quantas vezes você já veio.
    ============================================================ */
+/* O jeito que o lugar te recebe aparece uma vez por lugar e por fama:
+   na primeira vez que você chega lá sendo quem você é agora. Repetir a
+   mesma frase a cada volta ao mapa virava papagaio. */
 function comoOlugarTeRecebe(){
+  const frase = recepcaoDoLugar();
+  if (!frase) return null;
+  const d = Estado.dados;
+  d.recepcoes = d.recepcoes || {};
+  const id = Mundo.id();
+  if (d.recepcoes[id] === frase) return null;
+  d.recepcoes[id] = frase;
+  return frase;
+}
+
+function recepcaoDoLugar(){
   const d = Estado.dados;
   const L = Mundo.atual();
   const id = Mundo.id();
@@ -382,7 +396,7 @@ function comoOlugarTeRecebe(){
 
   /* crachá pesado muda o tratamento antes da reputação */
   if (cargo && cargo.peso >= 5 && cidade)
-    return `Alguém te reconhece pelo cargo antes de reconhecer pelo rosto, e a frase que sai é sempre a mesma: "{o senhor|a senhora} é {o|a} de..." e aí a pessoa não sabe como terminar.`;
+    return `Alguém te reconhece pelo cargo antes de reconhecer pelo rosto, e a frase que sai é sempre a mesma: "{o senhor|a senhora} é {o|a} de…" e aí a pessoa não sabe como terminar.`;
   if (cargo && cargo.peso >= 3 && cidade && Cargos.temBeneficio('guarita'))
     return 'O guarda da esquina te vê, confere o crachá de longe e volta pro que estava fazendo. Isso é o que passagem faz: te torna sem graça.';
 
@@ -391,7 +405,7 @@ function comoOlugarTeRecebe(){
       ? 'Duas pessoas te cumprimentam pelo nome e você não conhece nenhuma das duas. Kanto é pequena e fala.'
       : 'Um casal com mochila te reconhece na trilha e pede uma foto, o que é constrangedor no melhor sentido possível.';
   if (r.eixo === 'bom' && r.bom >= 2 && cidade)
-    return 'Alguém no balcão acha que já te viu em algum lugar e não lembra onde, e isso vai acontecer cada vez mais.';
+    return 'Alguém no balcão acha que já te viu em algum lugar e não lembra onde.';
 
   if (cidade && vezes >= 3)
     return 'Você já sabe onde ficam as coisas aqui, o que muda o jeito de andar: mais devagar, menos olhando pra cima.';

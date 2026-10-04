@@ -215,7 +215,7 @@ function falaRival(){
     if (d.cemiterio.length >= 2) L.push(`"Eu contei. Você perdeu ${d.cemiterio.length}. Isso não é acidente duas vezes."`);
     if (d.flags.trabalha_para_comissao || d.flags.conselheiro_da_comissao) L.push('"Eu li as atas. Tem o teu nome numa delas, numa lista de presença, do lado de gente que assina descarte."');
     if (d.flags.assumiu_a_rede) L.push('"Eu fui em Celadon. Eu vi o portão azul. Eu perguntei de quem era agora e eles falaram o teu nome."');
-    if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=6) L.push(`"Tem gente com medo de você. Gente de verdade, não bicho."`);
+    if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=6) L.push(`"Tem gente com medo de você. Gente de verdade, não Pokémon."`);
     L.push('"A gente se conheceu numa pedra na Rota 1. Eu tava lá desde as seis da manhã e você foi a primeira pessoa que passou."');
     L.push('"Eu vou te parar. Eu não sei se eu consigo. Mas alguém tem que estar aqui, e quem te conhece sou eu."');
   }
@@ -223,7 +223,7 @@ function falaRival(){
   else { // quebrado
     L.push('Ezra está sentado no chão do Centro Pokémon, de costas para a porta, e demora pra virar.');
     L.push('"Ah. Oi."');
-    L.push(`"Eu perdi pra você ${r.derrotas} vezes." Ele diz o número sem drama. "Eu parei de contar como derrota faz um tempo. Agora eu conto como... sei lá. Estatística."`);
+    L.push(`"Eu perdi pra você ${r.derrotas} vezes." Ele diz o número sem drama. "Eu parei de contar como derrota faz um tempo. Agora eu conto como… sei lá. Estatística."`);
     L.push('"Eu vou lutar se você quiser. Eu só não vou fingir que eu acho que dá."');
   }
 
@@ -255,7 +255,7 @@ function falaVitoriaRival(){   // você venceu
   ];
   if (arco === 'quebrado') return [
     'Acaba rápido. Rápido demais.',
-    'Ele recolhe as bolas do chão e senta de novo.',
+    'Ele recolhe as Pokébolas do chão e senta de novo.',
     '"Valeu por lutar." Ele diz isso sério. "Muita gente já não luta comigo."'
   ];
   return [
@@ -285,7 +285,7 @@ function falaDerrotaRival(){   // ele venceu
   ];
   if (arco === 'quebrado') return [
     'Ezra ganha.',
-    'Ele olha as bolas na mão dele como se não entendesse o que acabou de acontecer.',
+    'Ele olha as Pokébolas na mão dele como se não entendesse o que acabou de acontecer.',
     '"Espera." Ele ri, e o riso quebra no meio. "Espera, eu —"',
     'Ele não termina a frase. Ele não precisa.'
   ];
@@ -396,7 +396,7 @@ const RIVAIS_EXTRA = [
       'O Rapidash está atrás, inteiro, com a perna traseira direita marcada de cirurgia antiga.',
       '"Nove anos." Ele fala isso sem contexto nenhum, e você demora a entender. "O médico de Pokémon disse nove anos. Ele tem nove anos agora por sua causa."',
       '"Eu não consigo te pagar. Eu fiz a conta de quanto eu ganharia por ano e não fecha até os trinta."',
-      `"Então eu vou fazer isso." Ele solta a primeira bola. "Eu vou te dar uma luta boa toda vez que eu te encontrar, pelo resto da vida. É o que eu tenho."`
+      `"Então eu vou fazer isso." Ele solta a primeira Pokébola. "Eu vou te dar uma luta boa toda vez que eu te encontrar, pelo resto da vida. É o que eu tenho."`
     ];
     if (arco === 'quase') return [
       'Ele te reconhece e demora um segundo a mais do que o normal para decidir o que fazer com a cara.',
@@ -423,7 +423,7 @@ const RIVAIS_EXTRA = [
     ];
     return [
       'O Rapidash cai e leva um tempo a mais do que devia pra se levantar de novo, por causa da perna.',
-      'Ele não diz nada. Recolhe, passa a mão no pescoço do bicho, e guarda.',
+      'Ele não diz nada. Recolhe, passa a mão no pescoço do Pokémon, e guarda.',
       arco === 'quase'
         ? '"Falta menos." Ele diz, e dessa vez não é sobre dinheiro. "Cada vez falta menos."'
         : '"Um dia." Ele já está de costas. "Um dia não vai ser você saindo com tudo."'
@@ -437,7 +437,7 @@ const RIVAIS_EXTRA = [
     ];
     return [
       'Ele ganha, e a cara dele quando ganha é a de quem esperou muito tempo por uma coisa pequena.',
-      '"Pronto." Ele guarda as bolas. "Pronto, agora tá mais perto de zero."',
+      '"Pronto." Ele guarda as Pokébolas. "Pronto, agora tá mais perto de zero."',
       'Ele não explica o que é o zero. Você entende assim mesmo.'
     ];
   }
@@ -456,7 +456,7 @@ const RIVAIS_EXTRA = [
     L.push(r.encontros === 0
       ? '"Você me custou dois." Ele não levanta a voz nenhuma vez, nesta nem nas próximas. "Dois que eu tinha pegado com a minha mão."'
       : `"${r.vitorias} a ${r.derrotas}." Ele sabe o placar de cor e você não gosta que ele saiba. "Eu tenho paciência. É o único talento que eu tenho de verdade."`);
-    if (d.cemiterio.length) L.push(`"E eu soube do seu." Ele diz isso sem prazer nenhum, o que é o mais desagradável de tudo. "${nomeExib(d.cemiterio[0])}. Então você também perde bicho. A gente é mais parecido do que você aceita."`);
+    if (d.cemiterio.length) L.push(`"E eu soube do seu." Ele diz isso sem prazer nenhum, o que é o mais desagradável de tudo. "${nomeExib(d.cemiterio[0])}. Então você também perde Pokémon. A gente é mais parecido do que você aceita."`);
     if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 5) L.push('"Todo mundo fala bem de você agora. Isso facilita a minha vida: quem é conhecido é fácil de achar."');
     L.push('"Eu não vou te machucar. Eu vou te cansar."');
     return L;

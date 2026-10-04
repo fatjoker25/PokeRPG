@@ -63,7 +63,7 @@ const ELITE4 = [
   vitoria:d=>[
     'O Gengar se dissolve no ar e a música do palco para no meio de um compasso.',
     'Mandi acende a luz normal da sala, e sem o refletor ele parece dez anos mais velho.',
-    '"Bom." Ele guarda as bolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
+    '"Bom." Ele guarda as Pokébolas. "Sabe quantas pessoas descobriram que o truque era o truque e ganharam mesmo assim? Poucas."',
     '"Última porta." Ele perde o tom de palco de vez. "Essa aí não tem substituto. Essa aí é o dono da placa."'
   ]
 },
@@ -79,7 +79,7 @@ const ELITE4 = [
     d=>d.flags.liga_aliada || d.flags.sabe_do_norte
       ? '"E eu sei o que te mandaram fazer no norte." Ele não muda de expressão. "Então vamos ser rápidos e vamos ser sérios, porque o que está lá em cima é maior que esta sala, e eu tenho consciência disso."'
       : '"Eu venho todo dia. Não é disciplina, é que eu não saberia o que fazer com um dia em que eu não viesse."',
-    '"Eu treino dragão. Não é estilo, é família — o meu avô treinava, o meu primo treina." Ele solta a primeira bola sem cerimônia. "Vem."'
+    '"Eu treino dragão. Não é estilo, é família — o meu avô treinava, o meu primo treina." Ele solta a primeira Pokébola sem cerimônia. "Vem."'
   ],
   vitoria:d=>[
     'O Dragonite cai de joelhos primeiro e só depois de lado, o que é a coisa mais parecida com respeito que um Dragonite faz.',
@@ -101,7 +101,7 @@ const CAMPEAO = {
     'A sala atrás da última porta não é uma arena. É um salão vazio, sem iluminação de arena, com uma claraboia.',
     'Tem uma pessoa em pé no centro. Boné, jaqueta, mochila. Aparenta uns dezoito anos.',
     'Ele não se apresenta. Não fala. Não estende a mão.',
-    'Ele solta a primeira bola, e é um Pikachu de nível oitenta e alguma coisa.',
+    'Ele solta a primeira Pokébola, e é um Pikachu de nível oitenta e alguma coisa.',
     d.flags.leu_caderno || d.flags.viu_os_doze
       ? 'Você quer perguntar mil coisas. Sobre Mewtwo, sobre as aves, sobre por que ele soltou as três. Ele olha pra você de um jeito que fecha todas as perguntas antes delas saírem.'
       : 'Você entende quem é antes de qualquer confirmação, porque só existe uma pessoa em Kanto que entraria num salão desses e não diria nada.',

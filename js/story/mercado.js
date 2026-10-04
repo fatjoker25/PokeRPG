@@ -74,7 +74,7 @@ const LOJAS = {
        ar:'Balcão de informações, guarda-volumes e um mapa dos andares em acrílico com uma seta que diz VOCÊ ESTÁ AQUI e está no andar errado.',
        itens:['Mapa de Kanto','Caderno de campo','Pilha','Câmera descartável']},
       {n:2, nome:'2º · Artigos de treinador',
-       ar:'Prateleira de bola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende. No fundo, um expositor giratório de discos de TM com um cadeado que ninguém lembra a senha.',
+       ar:'Prateleira de Pokébola do chão ao teto, organizada por preço e não por tipo, o que irrita quem entende e ajuda quem não entende. No fundo, um expositor giratório de discos de TM com um cadeado que ninguém lembra a senha.',
        itens:['Poké Ball','Great Ball','Ultra Ball','Repelente','Boneco','Corda','Isca',
               'TM01 Mega Punch','TM05 Mega Kick','TM07 Horn Drill','TM09 Take Down','TM17 Submission','TM18 Counter','TM32 Double Team','TM33 Reflect','TM11 Sunny Day','TM18 Rain Dance','TM37 Sandstorm']},
       {n:3, nome:'3º · Cuidados',
@@ -239,7 +239,7 @@ const TROCAS = {
     onde:'sentado no barranco da Rota 11, com um balde e uma vara curta',
     pede:98, da:{dex:90, nivel:[22,26], apelido:'Tampa', natureza:'Impish'},
     fala:'"Eu acho Shellder demais e Krabby quase nunca. Você troca? É troca de igual, eu não tô querendo levar vantagem."',
-    depois:'Ele guarda o Krabby na caixa de isopor com o pano molhado por cima, do jeito certo, e você entende que ele nunca ia vender aquele.',
+    depois:'Ele guarda o Krabby na caixa térmica com o pano molhado por cima, do jeito certo, e você entende que ele nunca ia vender aquele.',
     memoria:'Trocou um Shellder pelo seu Krabby, na pedra do quebra-mar.'
   }],
   rota12: [{
@@ -248,7 +248,7 @@ const TROCAS = {
     onde:'de folga, pescando na Rota 12, de camisa para fora da calça',
     pede:72, da:{dex:130, nivel:[36,40], apelido:'Sobra', natureza:'Rash'},
     fala:'"Eu peguei esse Gyarados de Magikarp, criei ele no navio, e ele é grande demais pro navio."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que caiba na cabine. Só isso. Eu tô velho."',
-    depois:'O Gyarados sai da bola no cais uma última vez, e o porto inteiro para de trabalhar por onze segundos, e o contramestre não olha pra ele nem uma vez.',
+    depois:'O Gyarados sai da Pokébola no cais uma última vez, e o porto inteiro para de trabalhar por onze segundos, e o contramestre não olha pra ele nem uma vez.',
     memoria:'Trocou o Gyarados do contramestre do Anne por um Tentacool seu.'
   }],
   rota7: [{
@@ -272,7 +272,7 @@ const TROCAS = {
   rota21: [{
     id:'rota21_1',
     quem:'o dono da pousada',
-    onde:'na Rota 21, esperando a balsa, com uma mala e uma bola',
+    onde:'na Rota 21, esperando a balsa, com uma mala e uma Pokébola',
     pede:77, da:{dex:126, nivel:[30,34], apelido:'Brasa', natureza:'Brave'},
     fala:'"Esse Magmar apareceu na cratera há dois anos e não foi mais embora. Ele dorme na minha lavanderia. Eu não posso mais pagar a conta de luz do ventilador."',
     depois:'Ele solta o Ponyta na encosta e o Ponyta fica parado olhando o mar por muito tempo, do jeito de quem nunca viu tanta água junta.',
@@ -284,7 +284,7 @@ const TROCAS = {
     onde:'na varanda da casa dele, na ponta da Rota 25, em cima de quatro cadernos empilhados',
     pede:25, da:{dex:133, nivel:[22,26], apelido:'Vírgula', natureza:'Timid'},
     fala:'"Eu estudo Eevee há seis anos e eu nunca vi um evoluir na minha frente. Nunca."\n"E o Pikachu?"\n"Pikachu eu já vi evoluir. Eu quero uma coisa que eu já entenda, pra poder pensar em outra."',
-    depois:'Ele anota a hora exata em que o Pikachu entra na bola, em quatro cadernos diferentes, porque ele é assim e ninguém nunca conseguiu mudar isso.',
+    depois:'Ele anota a hora exata em que o Pikachu entra na Pokébola, em quatro cadernos diferentes, porque ele é assim e ninguém nunca conseguiu mudar isso.',
     memoria:'Trocou o Eevee do pesquisador da Rota 25 pelo seu Pikachu.'
   }],
   rota19: [{
@@ -326,7 +326,7 @@ const TROCAS = {
   rota3: [{
     id:'rota3_1', requer:d=>numInsignias() >= 7,
     quem:'a moça da vitrine',
-    onde:'na Rota 3, voltando de Pewter a pé, com uma caixa de isopor debaixo do braço',
+    onde:'na Rota 3, voltando de Pewter a pé, com uma caixa térmica debaixo do braço',
     pede:139, da:{dex:141, nivel:[34,38], apelido:'Tesoura', natureza:'Brave'},
     fala:'"Chegou um Kabutops de fóssil no lote do mês passado e ninguém veio buscar."\n"E ninguém vai?"\n"O endereço do formulário é de uma casa que queimou. Eu não vou deixar ele numa gaveta por causa disso."',
     depois:'Ela põe o Omastar no aquário da vitrine, que é o melhor ponto da ilha, e o Omastar passa o resto do dia olhando gente passar na calçada.',
@@ -471,7 +471,7 @@ const Trocas = {
       {tipo:'pokemon', texto:`${nomeExib(novo)} (Nv ${novo.nivel}) entrou para o seu time.`},
       {tipo:'eco', texto:t.depois}
     ];
-    if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a bola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
+    if (virou) avisos.push({tipo:'evolucao', texto:`No segundo em que a Pokébola encostou na sua mão, ${virou} mudou de forma. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`});
     avisos.push({tipo:'info', texto:`${nomeExib(novo)} obedece pior do que os seus. ${pron(novo).Ele} não te escolheu e ainda não sabe o seu nome.`});
     Exploracao.tela(avisos);
   }

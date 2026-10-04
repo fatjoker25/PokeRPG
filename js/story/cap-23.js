@@ -196,7 +196,7 @@ c23_subiu_com_blue:{
     'A luz é de lâmpada fluorescente e demora quatro segundos pra estabilizar, e nesses quatro segundos a sala pisca e fica igual a si mesma três vezes.',
     'A mesa do meio tem uma cadeira só, virada pra parede.',
     fala('Blue', 'Corredor A é ginásio. Corredor B é Liga. Corredor C é pessoal dele.'),
-    fala('Blue', 'Corredor D...', null, 'Ele não termina. Ele aponta com o queixo.'),
+    fala('Blue', 'Corredor D…', null, 'Ele não termina. Ele aponta com o queixo.'),
     'O corredor D tem pastas com nome de pessoa nas etiquetas. Centenas.'
   ],
   ef:{flag:'subiu_no_segundo_andar',
@@ -306,7 +306,7 @@ c23_corredor_c:{
   ],
   ef:{flag:'viu_a_foto_do_blue',
       npc:{nome:'Blue', opiniao:2, memoria:'Te mostrou a foto dele aos seis anos, no arquivo do avô.'},
-      registrar:'No corredor C tem uma foto do Blue aos seis anos, segurando uma bola vazia.'},
+      registrar:'No corredor C tem uma foto do Blue aos seis anos, segurando uma Pokébola vazia.'},
   escolhas:[
     {texto:'Perguntar quem é a outra foto de gente.', vai:'c23_a_outra_foto'},
     {texto:'Devolver a caixa e ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}
@@ -500,7 +500,7 @@ c23_levou_a_pasta:{
     fala('Blue', 'Eles vão ver.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     fala('Blue', 'Você tá levando uma pasta que eles fizeram de você. Isso não é crime em lugar nenhum e eles vão tratar como crime.'),
-    fala('Blue', '...leva.', 'baixo')
+    fala('Blue', '…leva.', 'baixo')
   ],
   ef:{itens:{'Dezenove folhas com o seu nome':1}, flag:'levou_a_propria_pasta',
       rep:{eixo:'bom',delta:1,motivo:'Levou embora a pasta que fizeram sobre você'},

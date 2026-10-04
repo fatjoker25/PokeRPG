@@ -34,7 +34,7 @@ c15_ab_a_bicicleta:{
     fala('a mulher da locadora', 'Ah.'),
     'Ela escolhe a bicicleta pra você, o que é um serviço que ela claramente não presta pra todo mundo, e escolhe a de aro vinte e seis com pneu novo.',
     fala('a mulher da locadora', 'Olha, um aviso.'),
-    fala('a mulher da locadora', 'Não vai ter bicho. Se você tá indo pra ver bicho, é melhor eu te devolver os quatrocentos agora.'),
+    fala('a mulher da locadora', 'Não vai ter Pokémon. Se você tá indo pra ver Pokémon, é melhor eu te devolver os quatrocentos agora.'),
     d=>fala(d.jogador.nome, 'Desde quando?'),
     fala('a mulher da locadora', 'Umas seis semanas.'),
     'Ela volta pra cadeira de plástico.',
@@ -101,8 +101,7 @@ c15_ab_esperou_na_cabine:{
     'Anota. Guarda o caderninho. Volta a olhar.'
   ],
   ef:{flag:'o_homem_do_caderninho', hp:-1,
-      registrar:'Um homem senta na cabine e anota num caderninho cada pessoa que entra na ciclovia.',
-      presagio:'Ele não impede ninguém de entrar. Ele anota quem entra.'},
+      registrar:'Um homem senta na cabine e anota num caderninho cada pessoa que entra na ciclovia.'},
   escolhas:[
     {texto:'Aparecer e perguntar o que ele anota.', vai:'c15_ab_perguntou_o_caderninho'},
     {texto:'Esperar ele sair e seguir ele.', vai:'c15_ab_seguiu_o_homem'},
@@ -270,9 +269,9 @@ c15_rotas:{
     'É bonito de um jeito banal e é o trecho mais tranquilo de Kanto.',
     'Foi o trecho mais tranquilo de Kanto.',
     'Você entra pela cabine de pedágio às sete da manhã e a primeira coisa que te incomoda leva vinte minutos pra virar pensamento:',
-    'não tem bicho.',
+    'não tem Pokémon.',
     'Nada. Nem Spearow no poste, nem Rattata no capim, nem Doduo correndo paralelo à ciclovia, que é a coisa mais clássica que acontece nessa estrada e que vem em todo folheto turístico de Fuchsia.',
-    'Vinte e dois quilômetros de capinzal em outubro, com fruta madura, sem um bicho.'
+    'Vinte e dois quilômetros de capinzal em outubro, com fruta madura, sem um Pokémon.'
   ],
   ef:{registrar:'A ciclovia das rotas 14 a 18 está vazia de Pokémon.',
       presagio:'Capim alto, fruta madura, e nada. Isso não é caça: caça deixa sobra.'},
@@ -301,11 +300,10 @@ c15_cabine:{
   ],
   ef:{flag:'conheceu_otavio',
       npc:{nome:'Xavi', opiniao:1, memoria:'Anota tudo o que passa pela cabine de pedágio da ciclovia, com horário.'},
-      registrar:'O movimento na ciclovia caiu de 41 pessoas por dia para 3 em dezenove dias.',
-      presagio:'Ele anota com horário. Numa cabine de pedágio que não cobra pedágio há nove anos.'},
+      registrar:'O movimento na ciclovia caiu de 41 pessoas por dia para 3 em dezenove dias.'},
   escolhas:[
     {texto:'"Por que você anota?"', vai:'c15_porque_anota'},
-    {texto:'"O que aconteceu com os bichos?"', vai:'c15_o_que_aconteceu'},
+    {texto:'"O que aconteceu com os Pokémon?"', vai:'c15_o_que_aconteceu'},
     {texto:'"Quem é o terceiro?"', vai:'c15_o_terceiro'},
     {texto:'Agradecer e seguir a ciclovia.', vai:'c15_ciclovia'}
   ]
@@ -337,7 +335,7 @@ c15_porque_anota:{
       presagio:'Treze anos de dado bom que ninguém leu. Você acabou de virar a primeira pessoa a ler.'},
   escolhas:[
     {texto:'"Me mostra os últimos meses."', vai:'c15_os_ultimos_meses'},
-    {texto:'"O que aconteceu com os bichos?"', vai:'c15_o_que_aconteceu'},
+    {texto:'"O que aconteceu com os Pokémon?"', vai:'c15_o_que_aconteceu'},
     {texto:'"Onde está sua mulher?"', vai:'c15_a_nair'},
     {texto:'Seguir a ciclovia.', vai:'c15_ciclovia'}
   ]
@@ -347,14 +345,14 @@ c15_o_que_aconteceu:{
   falante:'Xavi',
   vozes:['P','N','P','N','N','N','P','N','P','N'],
   texto:[
-    '"O que aconteceu com os bichos?"',
+    '"O que aconteceu com os Pokémon?"',
     'Ele não hesita.',
     '"Foram embora."',
     '"Morreram?"',
     '"Não. Foram embora. Tem diferença e a diferença é a única coisa importante desse assunto."',
     'Ele bate no caderno.',
-    '"Se morressem, a gente achava. Bicho morto fica. Tem Murkrow, tem cheiro, tem osso."',
-    '"A gente andou os vinte e dois quilômetros da ciclovia e mais os trechos de mato em oito dias, eu e a Ylva, e a gente achou dois bichos mortos, que é o número normal, que é atropelamento."',
+    '"Se morressem, a gente achava. Pokémon morto fica. Tem Murkrow, tem cheiro, tem osso."',
+    '"A gente andou os vinte e dois quilômetros da ciclovia e mais os trechos de mato em oito dias, eu e a Ylva, e a gente achou dois Pokémon mortos, que é o número normal, que é atropelamento."',
     '"Então eles andaram."',
     '"Eles andaram. E andaram todos pro mesmo lado, que é o que me tira o sono."',
     '"Pra que lado?"',
@@ -364,7 +362,7 @@ c15_o_que_aconteceu:{
   ef:{flag:['sabe_que_foram_embora','sabe_que_foi_norte'],
       rep:{eixo:'bom',delta:3,motivo:'Perguntou e a resposta veio com método'},
       registrar:'A fauna das rotas 14–18 migrou toda para o norte em poucas semanas.',
-      presagio:'Todos pro mesmo lado. Bicho não combina direção. Bicho foge da mesma coisa.'},
+      presagio:'Todos pro mesmo lado. Pokémon não combina direção. Pokémon foge da mesma coisa.'},
   escolhas:[
     {texto:'"Me mostra os últimos meses."', vai:'c15_os_ultimos_meses'},
     {texto:'"E o que veio do sul?"', vai:'c15_o_que_veio_do_sul'},
@@ -480,8 +478,7 @@ c15_a_nair:{
       npc:{nome:'Xavi', opiniao:5, memoria:'A mulher dele, Ylva, conta o trecho 16 sozinha todas as manhãs.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou onde ela estava'},
       moral:8,
-      registrar:'Ylva conta o trecho 16 sozinha toda manhã, há 31 anos.',
-      presagio:'"É pra alguém poder ler daqui a cinquenta anos." Guarde essa definição de trabalho.'},
+      registrar:'Ylva conta o trecho 16 sozinha toda manhã, há 31 anos.'},
   escolhas:[
     {texto:'Ir andando até o trecho 16 encontrar ela.', vai:'c15_nair'},
     {texto:'"Qual é o trajeto dos três?"', vai:'c15_o_trajeto'},
@@ -512,7 +509,7 @@ c15_o_terceiro:{
       presagio:'O mirante do trecho 18 é de onde se vê Cinnabar. Ele foi olhar a mesma coisa que os três.'},
   escolhas:[
     {texto:'"O que se vê do mirante do dezoito?"', vai:'c15_o_trajeto'},
-    {texto:'"O que aconteceu com os bichos?"', vai:'c15_o_que_aconteceu'},
+    {texto:'"O que aconteceu com os Pokémon?"', vai:'c15_o_que_aconteceu'},
     {texto:'"Onde está sua mulher?"', vai:'c15_a_nair'},
     {texto:'Ir até o mirante do trecho 18.', vai:'c15_mirante'}
   ]
@@ -648,8 +645,7 @@ c15_quem_senta:{
       npc:{nome:'Xavi', opiniao:6, memoria:'Te contou que Red senta no mirante do trecho 18 há quatro anos, e nunca falou uma palavra.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou quem sentava no banco'},
       instabilidade:1,
-      registrar:'Red senta no mirante do trecho 18 há quatro anos, olhando Cinnabar.',
-      presagio:'Ele soltou as três aves e depois passou quatro anos sentado olhando uma ilha.'},
+      registrar:'Red senta no mirante do trecho 18 há quatro anos, olhando Cinnabar.'},
   escolhas:[
     {texto:'Acampar no mirante e esperar.', vai:'c15_esperou_a_madrugada'},
     {texto:'"Quando ele vem?"', vai:'c15_quando_ele_vem'},
@@ -723,14 +719,14 @@ c15_bilhete_pro_red:{
     'No dia seguinte, o bilhete não está mais lá.',
     'E no lugar dele, no mesmo banco, embaixo da mesma pedra, tem uma Poké Ball vazia e velha, com a tinta descascada e um arranhão fundo na tampa.',
     'Sem bilhete.',
-    'Só a bola.'
+    'Só a Pokébola.'
   ],
   ef:{flag:['red_respondeu','tem_a_bola_do_red'],
       itens:{'Poké Ball velha e arranhada':1},
       rep:{eixo:'bom',delta:5,motivo:'Escreveu a linha certa na terceira tentativa'},
       moral:15, instabilidade:-1,
       registrar:'Deixou um bilhete no mirante e recebeu uma Poké Ball vazia e arranhada.',
-      presagio:'Uma bola vazia. Ele soltou alguma coisa dessa bola e guardou ela mesmo assim.'},
+      presagio:'Uma Pokébola vazia. Ele soltou alguma coisa dessa Pokébola e guardou ela mesmo assim.'},
   escolhas:[
     {texto:'Acampar no mirante e esperar.', vai:'c15_esperou_a_madrugada'},
     {texto:'Escrever outro bilhete.', vai:'c15_segundo_bilhete'},
@@ -803,16 +799,15 @@ c15_andou_com_a_nair:{
     'O pé está carregado. Goiaba madura, muita, com algumas caídas e apodrecendo no chão.',
     '"Isso aí em setembro tinha quarenta Spearow de manhã. Eu contava quarenta e cinco em dois minutos e eu perdia a conta."',
     'Ela anota zero.',
-    '"E a fruta cai e apodrece e ninguém come, e ano que vem esse pé dá menos, porque bicho comendo fruta é o que espalha semente."',
+    '"E a fruta cai e apodrece e ninguém come, e ano que vem esse pé dá menos, porque Pokémon comendo fruta é o que espalha semente."',
     'Ela guarda a caneta.',
-    '"Some bicho, some pé. Some pé, some bicho. A gente tá vendo o começo de uma coisa que leva vinte anos."'
+    '"Some Pokémon, some pé. Some pé, some Pokémon. A gente tá vendo o começo de uma coisa que leva vinte anos."'
   ],
   ef:{flag:['andou_com_a_nair','entendeu_o_ciclo'],
       npc:{nome:'Ylva', opiniao:7, memoria:'Andou onze quilômetros com você e te mostrou a goiabeira carregada e vazia.'},
       rep:{eixo:'bom',delta:4,motivo:'Andou onze quilômetros só para ver alguém anotar zero'},
       moral:10, hp:-2, causa:'Onze quilômetros de caminhada',
-      registrar:'Sem os Spearow, a goiabeira não espalha semente. É o começo de uma coisa de vinte anos.',
-      presagio:'Vinte anos. Ninguém vai ligar uma coisa à outra daqui a vinte anos.'},
+      registrar:'Sem os Spearow, a goiabeira não espalha semente. É o começo de uma coisa de vinte anos.'},
   escolhas:[
     {texto:'"A senhora viu os três."', vai:'c15_nair_viu'},
     {texto:'"A senhora não tem medo?"', vai:'c15_nair_medo'},
@@ -845,8 +840,7 @@ c15_nair_viu:{
   ef:{flag:['nair_viu','nair_fez_contato'],
       npc:{nome:'Ylva', opiniao:8, memoria:'Acendeu a lanterna para os três e anotou o contato visual de dez segundos como dado.'},
       rep:{eixo:'bom',delta:4,motivo:'Ouviu a única pessoa em Kanto que fez contato visual e anotou'},
-      registrar:'Ylva fez contato visual com um dos três e registrou como dado de levantamento.',
-      presagio:'Ela acendeu a lanterna na quarta vez. Guarde a progressão.'},
+      registrar:'Ylva fez contato visual com um dos três e registrou como dado de levantamento.'},
   escolhas:[
     {texto:'"Vamos hoje à noite. Juntos."', vai:'c15_esperou_a_madrugada'},
     {texto:'"A senhora não tem medo?"', vai:'c15_nair_medo'},
@@ -882,8 +876,7 @@ c15_qual_parou:{
       rep:{eixo:'bom',delta:5,motivo:'Perguntou qual deles, e a resposta era um desenho'},
       moral:15,
       executar:d=>{ Estado.lend(245).encontros++; return []; },
-      registrar:'Foi Suicune que parou e olhou para a Ylva.',
-      presagio:'Ela chorou de felicidade no banheiro. Depois anotou direito.'},
+      registrar:'Foi Suicune que parou e olhou para a Ylva.'},
   escolhas:[
     {texto:'"Vamos hoje à noite. Juntos."', vai:'c15_esperou_a_madrugada'},
     {texto:'"A senhora não tem medo?"', vai:'c15_nair_medo'},
@@ -939,8 +932,7 @@ c15_nair_medo:{
   ef:{flag:'nair_falou_do_medo',
       npc:{nome:'Ylva', opiniao:8, memoria:'Explicou que prefere o medo que vem com uma coisa nova do outro lado.'},
       rep:{eixo:'bom',delta:3,motivo:'Perguntou do medo'},
-      moral:12,
-      presagio:'"O único medo que vem com uma coisa nova do outro lado." Guarde, você vai precisar disso na Liga.'},
+      moral:12},
   escolhas:[
     {texto:'"Vamos hoje à noite. Juntos."', vai:'c15_esperou_a_madrugada'},
     {texto:'"Qual deles parou?"', vai:'c15_qual_parou'},
@@ -990,7 +982,7 @@ c15_ajudou_o_curral:{
     '"Meu pai construiu esse curral em setenta e dois."',
     '"E ele tá aberto há dois meses, porque eu conserto e eles abrem, e eu conserto e eles abrem."',
     'Ele olha os onze Tauros no pasto.',
-    '"E os bicho não saem. Eu deixei aberto uma semana pra ver e nenhum saiu."',
+    '"E os Pokémon não saem. Eu deixei aberto uma semana pra ver e nenhum saiu."',
     '"Eles não querem soltar os seus."',
     '"Não."',
     'Ele bebe o café.',
@@ -1000,8 +992,7 @@ c15_ajudou_o_curral:{
       npc:{nome:'Dono do curral', opiniao:7, memoria:'Passou cinco horas recolocando mourão com você e disse que acha que eles estão treinando.'},
       rep:{eixo:'bom',delta:5,motivo:'Passou cinco horas cavando buraco de mourão'},
       moral:15, hp:-3, causa:'Cinco horas de trabalho pesado',
-      registrar:'Os três abrem o curral repetidamente e nada sai. O dono acha que estão treinando.',
-      presagio:'Treinando. Pra abrir uma coisa maior, mais tarde, em outro lugar.'},
+      registrar:'Os três abrem o curral repetidamente e nada sai. O dono acha que estão treinando.'},
   escolhas:[
     {texto:'"Treinando pra quê?"', vai:'c15_estao_abrindo'},
     {texto:'Acampar no curral e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
@@ -1061,8 +1052,7 @@ c15_o_que_foi:{
       rep:{eixo:'bom',delta:3,motivo:'Perguntou e deixou o homem admitir o resto'},
       moral:-5,
       executar:d=>{ Estado.lend(245).encontros++; return []; },
-      registrar:'Suicune arranca os mourões do curral com a boca, sem olhar para quem está lá.',
-      presagio:'"É pior saber." Guarde a frase. Metade da jornada é sobre ela.'},
+      registrar:'Suicune arranca os mourões do curral com a boca, sem olhar para quem está lá.'},
   escolhas:[
     {texto:'"Eles não estão roubando. Estão abrindo."', vai:'c15_estao_abrindo'},
     {texto:'"Posso ajudar a recolocar?"', vai:'c15_ajudou_o_curral'},
@@ -1194,8 +1184,7 @@ c15_sentou_no_quarto:{
   ef:{flag:['sentou_no_quarto_lugar'],
       rep:{eixo:'bom',delta:3,motivo:'Sentou uma hora e quarenta no lugar de outra pessoa'},
       moral:10,
-      registrar:'Sentou no quarto lugar da praia por uma hora e quarenta.',
-      presagio:'A única coisa que dá pra fazer quando não dá pra fazer nada. Você vai fazer isso de novo.'},
+      registrar:'Sentou no quarto lugar da praia por uma hora e quarenta.'},
   escolhas:[
     {texto:'Acampar ali e esperar a madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Voltar e contar pra Ylva.', vai:'c15_nair', cond:d=>!!d.flags.sabe_da_nair},
@@ -1235,7 +1224,7 @@ c15_acendeu_a_lanterna:{
     d=>d.flags.conheceu_nair ? 'Você acende a lanterna e aponta pro chão a três metros da sua frente, que é o que a Ylva fez, porque apontar na cara é ameaça e apontar no chão é aviso.' : 'Você acende a lanterna e aponta pro chão a três metros da sua frente, porque apontar na cara é ameaça e apontar no chão é aviso.',
     'Quarenta segundos.',
     'Trinta.',
-    'A dez segundos, o som muda: de galope pra galope mais curto, que é como bicho grande desacelera.',
+    'A dez segundos, o som muda: de galope pra galope mais curto, que é como Pokémon grande desacelera.',
     'Eles param.',
     'Os três, a uns quinze metros, na borda do cone de luz, em fila.',
     'Raikou na frente, com o pelo em pé por carga constante e o ar em volta dele estalando de leve.',
@@ -1277,7 +1266,7 @@ c15_viu_sem_ser_visto:{
     'Eles passam a quarenta metros.',
     'Três vultos, em fila, no mesmo passo, com quatro metros exatos entre um e outro.',
     'Raikou na frente. Entei no meio. Suicune atrás — e Suicune corre de um jeito que não levanta poeira, o que não deveria ser possível num solo que os outros dois estão levantando.',
-    'Eles não estão caçando bicho. Não tem bicho pra caçar.',
+    'Eles não estão caçando Pokémon. Não tem Pokémon pra caçar.',
     'Eles estão fazendo o circuito: mesmo trajeto, mesmo ritmo, com a precisão de coisa que já foi feita muitas vezes.',
     'Duzentos metros depois da sua posição, eles param.',
     'Os três ao mesmo tempo, sem desacelerar antes, com os quatro metros de distância mantidos.',
@@ -1305,8 +1294,7 @@ c15_deixou_passar:{
     'Você fez a coisa sensata: você é uma pessoa de quinze anos com uma mochila, e eles são três coisas do tamanho de um carro, e não existe nenhuma leitura em que sair do barranco melhorasse alguma coisa.',
     'Você vai pensar nisso muitas vezes, e toda vez você vai concluir que fez cert{o|a}, e toda vez isso não vai ajudar.'
   ],
-  ef:{flag:'evitou_os_caes', moral:-8,
-      presagio:'Toda vez você vai concluir que fez cert{o|a}. E toda vez não vai ajudar.'},
+  ef:{flag:'evitou_os_caes', moral:-8},
   escolhas:[
     {texto:'Voltar e esperar outra madrugada.', vai:'c15_esperou_a_madrugada'},
     {texto:'Ir contar pro Xavi e pra Ylva.', vai:'c15_avisou_os_dois'},
@@ -1330,8 +1318,7 @@ c15_seguiu:{
   ef:{flag:['seguiu_os_caes','caes_vigiam_cinnabar','achou_a_praia'],
       rep:{eixo:'bom',delta:3,motivo:'Seguiu três lendários por quatro horas e não atacou nenhum'},
       hp:-3, causa:'Quatro horas seguindo a pé',
-      registrar:'Os três deitam num ponto alto do trecho 18 e ficam olhando Cinnabar.',
-      presagio:'Eles deitam. Depois do circuito inteiro, eles deitam e olham.'},
+      registrar:'Os três deitam num ponto alto do trecho 18 e ficam olhando Cinnabar.'},
   escolhas:[
     {texto:'Acampar e vigiar junto, a distância.', vai:'c15_vigiou_junto'},
     {texto:'Chegar perto.', vai:'c15_encontro'},
@@ -1396,7 +1383,7 @@ c15_encontro:{
     d=>{
       const presos = Estado.lendariosCapturados().filter(l=>GRUPO_CAES.includes(l.dex));
       if (presos.length===2) return 'Só que não são três. É um. O terceiro, sozinho, com os outros dois no seu cinto. E "sozinho" nesse caso é uma palavra que significa uma coisa muito específica e muito perigosa.';
-      if (presos.length===1) return 'Só que não são três. São dois — porque o terceiro está numa bola no seu cinto, e os dois que sobraram vieram exatamente por causa disso, e vieram fazendo o circuito inteiro pra chegar até aqui.';
+      if (presos.length===1) return 'Só que não são três. São dois — porque o terceiro está numa Pokébola no seu cinto, e os dois que sobraram vieram exatamente por causa disso, e vieram fazendo o circuito inteiro pra chegar até aqui.';
       return 'Eles não avançam. Ficam ali, os três, a doze metros, olhando.';
     },
     d=>{
@@ -1420,9 +1407,9 @@ c15_encontro:{
 
 c15_soltou_caes:{
   texto:[
-    'Você tira a bola do cinto e abre.',
+    'Você tira a Pokébola do cinto e abre.',
     'O que sai dela não corre para os outros.',
-    'Fica parado, entre vocês, sem saber pra que lado ir — porque passou tempo demais numa bola e o instinto de matilha não é uma chave que liga na hora.',
+    'Fica parado, entre vocês, sem saber pra que lado ir — porque passou tempo demais numa Pokébola e o instinto de matilha não é uma chave que liga na hora.',
     'Os outros esperam. Não chamam, não empurram, não fazem nada.',
     'Leva quase dois minutos, e os dois minutos são insuportáveis.',
     'Depois ele anda até eles. Devagar.',
@@ -1466,8 +1453,7 @@ c15_sentou_na_estrada:{
       executar:d=>{ GRUPO_CAES.forEach(x=>{ const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo'; }); return []; },
       rep:{eixo:'bom',delta:4,motivo:'Sentou no chão na frente de três lendários'},
       moral:20,
-      registrar:'Sentou na ciclovia e dois dos três deitaram perto. O terceiro ficou de guarda.',
-      presagio:'Um deles continuou de guarda. Sempre continua.'},
+      registrar:'Sentou na ciclovia e dois dos três deitaram perto. O terceiro ficou de guarda.'},
   escolhas:[
     {texto:'Falar com eles.', vai:'c15_falou'},
     {texto:'Ficar em silêncio até amanhecer.', vai:'c15_ate_amanhecer'},
@@ -1528,8 +1514,7 @@ c15_ja_fui_la:{
         return [{tipo:'mundo', texto:'Os três souberam. Eles estavam esperando alguém que tivesse ido.'}]; },
       rep:{eixo:'bom',delta:7,motivo:'Contou a três lendários o que eles esperavam há quatro anos'},
       moral:30, instabilidade:-2,
-      registrar:'Contou aos três que o tanque está vazio há quatro anos. Suicune encostou a testa no seu ombro.',
-      presagio:'Eles andaram. Depois de quatro anos correndo o mesmo circuito, eles andaram.'},
+      registrar:'Contou aos três que o tanque está vazio há quatro anos. Suicune encostou a testa no seu ombro.'},
   escolhas:[
     {texto:'Ver eles irem.', vai:'c15_foram_embora'},
     {texto:'"Eu vou lá de novo. Se vocês quiserem."', vai:'c15_prometeu_caes'},
@@ -1592,9 +1577,9 @@ c15_falou:{
     '"Vocês estão olhando pra Cinnabar."',
     'Você diz isso em voz alta, numa estrada vazia, às quatro da manhã, para três Pokémon lendários.',
     'Raikou vira a cabeça de lado.',
-    'Um gesto tão de Growlithe de rua, tão comum, tão de bicho que não entendeu a frase mas entendeu que teve frase, que quebra alguma coisa na sua cabeça.',
+    'Um gesto tão de Growlithe de rua, tão comum, tão de Pokémon que não entendeu a frase mas entendeu que teve frase, que quebra alguma coisa na sua cabeça.',
     'Eles não entendem palavra.',
-    'Mas entenderam que você falou, e entenderam que você falou olhando pro sul, porque direção do olhar é uma língua que todo bicho fala.',
+    'Mas entenderam que você falou, e entenderam que você falou olhando pro sul, porque direção do olhar é uma língua que todo Pokémon fala.',
     'Suicune anda até você — até muito perto, até você sentir o hálito frio — e depois vira e olha pro sul também.',
     'Vocês dois ficam ali, lado a lado, olhando a mesma ilha, por um tempo que você não consegue medir e que o Xavi, se estivesse aqui, mediria.'
   ],
@@ -1603,7 +1588,7 @@ c15_falou:{
       rep:{eixo:'bom',delta:4,motivo:'Falou com três lendários como quem fala com alguém'},
       moral:10,
       registrar:'Falou com os três lendários. Suicune olhou para Cinnabar junto com você.',
-      presagio:'Direção do olhar é uma língua que todo bicho fala. É a única que vocês dois têm.'},
+      presagio:'Direção do olhar é uma língua que todo Pokémon fala. É a única que vocês dois têm.'},
   escolhas:[
     {texto:'"Eu vou lá."', vai:'c15_prometeu_caes'},
     {texto:'"Eu já fui lá."', vai:'c15_ja_fui_la', cond:d=>!!d.flags.achou_moltres || !!d.flags.viu_a_sala_do_tanque},
@@ -1660,7 +1645,7 @@ c15_prometeu_caes:{
 
 c15_luta_cao:{
   texto:[
-    'Você saca uma bola numa estrada, contra três.',
+    'Você saca uma Pokébola numa estrada, contra três.',
     'Dois deles recuam — não por medo. Por acordo.',
     'Eles decidem, em algum lugar que não é aqui e que você não tem como ver, que é um contra um.',
     'O que fica é o que você escolheu olhar primeiro.'
@@ -1709,10 +1694,10 @@ c15_fugiu_dos_caes:{
 
 c15_capturou_cao:{
   texto:[
-    'A bola fecha numa estrada aberta, na frente dos outros dois.',
+    'A Pokébola fecha numa estrada aberta, na frente dos outros dois.',
     'Eles não atacam.',
     'Isso é o mais perturbador de tudo: eles não atacam.',
-    'Raikou dá um passo à frente e cheira a bola no seu cinto, com o focinho a dez centímetros da sua cintura, e você não se mexe porque não dá.',
+    'Raikou dá um passo à frente e cheira a Pokébola no seu cinto, com o focinho a dez centímetros da sua cintura, e você não se mexe porque não dá.',
     'Depois recua.',
     'E aí os dois saem correndo — não para longe. Em volta.',
     'Um círculo de duzentos metros de raio, em velocidade máxima, em torno de você, e o chão vibra o círculo inteiro, e a única coisa que existe no mundo por noventa segundos é o som de duas coisas correndo em volta de você.',
@@ -1720,8 +1705,7 @@ c15_capturou_cao:{
     'Você acabou de ser marcad{o|a} de um jeito que não sai.'
   ],
   ef:{instabilidade:2, flag:'marcado_pelos_caes', moral:-15,
-      registrar:'Capturou um Lendário do trio. Os outros dois deram três voltas em torno de você antes de sumir.',
-      presagio:'Três voltas. Eles fizeram um perímetro em volta de você.'},
+      registrar:'Capturou um Lendário do trio. Os outros dois deram três voltas em torno de você antes de sumir.'},
   escolhas:[
     {texto:'Soltar imediatamente.', vai:'c15_soltou_caes'},
     {texto:'Ficar com ele.', vai:'c15_ficou_com_cao'},
@@ -1745,8 +1729,7 @@ c15_ficou_com_cao:{
   ef:{flag:'caes_caçam_voce', instabilidade:2, moral:-20,
       rep:{eixo:'ruim',delta:3,motivo:'Manteve um Lendário do trio e os outros começaram a destruir propriedades'},
       executar:d=>{ GRUPO_CAES.forEach(x=>{const L=Estado.lend(x); if(L.estado!=='capturado'){L.disposicao='hostil';L.caçandoVoce=true;}}); return []; },
-      registrar:'Os três lendários passaram a abrir currais no seu rastro.',
-      presagio:'Eles vão abrir coisa até você entender. Eles são bons em abrir coisa.'},
+      registrar:'Os três lendários passaram a abrir currais no seu rastro.'},
   escolhas:[
     {texto:'Voltar e soltar.', vai:'c15_soltou_caes'},
     {texto:'Ajudar o homem a recolocar o mourão.', vai:'c15_ajudou_o_curral'},
@@ -1761,7 +1744,7 @@ c15_contou_pro_dono:{
   texto:[
     '"Foi por minha causa."',
     'Ele para de cavar.',
-    'Você conta: a bola no cinto, a estrada, as três voltas.',
+    'Você conta: a Pokébola no cinto, a estrada, as três voltas.',
     'Ele ouve tudo apoiado na pá.',
     'E no fim ele não grita, não te bate, não te manda embora.',
     'Ele diz uma coisa pior:',
@@ -1795,8 +1778,7 @@ c15_disse_que_nao:{
       npc:{nome:'Dono do curral', opiniao:-3, memoria:'Perguntou se você ia soltar, ouviu não, e voltou a cavar.'},
       rep:{eixo:'ruim',delta:3,motivo:'Disse que não ia soltar, na frente de quem paga a conta'},
       moral:-20,
-      registrar:'Disse ao dono do curral que não ia soltar.',
-      presagio:'Ele vai consertar de novo na semana que vem. E na outra.'},
+      registrar:'Disse ao dono do curral que não ia soltar.'},
   escolhas:[
     {texto:'Voltar e soltar.', vai:'c15_soltou_caes'},
     {texto:'Voltar e ajudar a cavar, pelo menos.', vai:'c15_ajudou_o_curral'},
@@ -1808,7 +1790,7 @@ c15_disse_que_nao:{
 c15_foram_embora:{
   texto:[
     'Eles vão embora em fila, no mesmo passo, e o som some antes deles sumirem de vista, o que é ao contrário do que deveria.',
-    'A estrada leva quase uma hora pra voltar a ter bicho.',
+    'A estrada leva quase uma hora pra voltar a ter Pokémon.',
     'Quando volta, um Rattata sai do capim, olha pra você, e some de novo.',
     'E é a coisa mais normal que aconteceu no seu dia, e você fica absurdamente feliz de ver um Rattata.'
   ],

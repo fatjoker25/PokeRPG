@@ -30,7 +30,7 @@ const C1 = {
   /* Nome só se a Pokédex já registrou: o jogador não sabe o que era. */
   oOutro(d, maiuscula){
     const b = this.briga(d);
-    const t = b.dex && Estado.conheceu(b.dex) ? `o ${DEX[b.dex].nome}` : 'o bicho';
+    const t = b.dex && Estado.conheceu(b.dex) ? `o ${DEX[b.dex].nome}` : 'o Pokémon';
     return maiuscula ? t[0].toUpperCase() + t.slice(1) : t;
   },
   semente(d){
@@ -72,7 +72,7 @@ c1_acorda:{
     d=>{
       const p = d.time[0];
       if (!p) return d.flags.espera_o_professor
-        ? 'Você está sozinh{o|a} no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com as três bolas.'
+        ? 'Você está sozinh{o|a} no quarto, e é a última manhã em que isso vai ser verdade: o Professor disse oito horas, na frente do laboratório, com as três Pokébolas.'
         : 'Você está sozinh{o|a} no quarto, o que não era o plano.';
       return `${nomeExib(p)} está aos pés da cama, acordad${pron(p).o} antes de você, com o olho fixo na mochila como se ela pudesse sair andando sozinha.`;
     },
@@ -102,7 +102,7 @@ c1_chuva:{
     d=>{
       const p = d.time[0];
       if (!p) return 'A mochila está no chão, arrumada desde ontem, encostada na parede que dá pro lado da chuva.';
-      return `${nomeExib(p)} está sentad${pron(p).o} na janela, olhando a água escorrer no vidro, com aquela atenção de bicho que não entende chuva e nunca vai entender.`;
+      return `${nomeExib(p)} está sentad${pron(p).o} na janela, olhando a água escorrer no vidro, com aquela atenção de Pokémon que não entende chuva e nunca vai entender.`;
     },
     'Lá embaixo a porta dos fundos abre e fecha duas vezes seguidas, que é o barulho de alguém decidindo se ainda vale a pena salvar a roupa do varal.',
     d=>fala(nomeCasa(), 'Chuva de março não dura! Isso aí limpa até as dez!', 'grita',
@@ -451,13 +451,13 @@ c1_vizinha:{
     'É a Sra. Perla, do número dezoito, de camisola e casaco por cima, com uma caixa de papelão nos braços e cara de quem não vai negociar.',
     fala('Sra. Perla', 'Passou a noite inteira embaixo do meu carro. A NOITE INTEIRA.', 'grita',
          'Ela te empurra a caixa antes de qualquer bom dia.'),
-    fala('Sra. Perla', 'E eu pego o ônibus das oito pra Cerulean. Eu não levo bicho no ônibus, {menino|menina}, e nem a pau eu deixo ele aqui sozinho.'),
+    fala('Sra. Perla', 'E eu pego o ônibus das oito pra Cerulean. Eu não levo Pokémon no ônibus, {menino|menina}, e nem a pau eu deixo ele aqui sozinho.'),
     'Dentro da caixa, em cima de um pano de prato, tem um Pokémon pequeno e molhado, acordado, olhando pra cima.',
     'Ele não está ferido. Está com fome, com frio, e com a expressão exata de quem já foi devolvido antes.'
   ],
   ef:{flag:'a_caixa_da_odete',
       npc:{nome:'Sra. Perla', opiniao:1, memoria:'Bateu na sua porta às 6h50 do dia em que você ia sair de casa.'},
-      registrar:'A Sra. Perla apareceu com uma caixa e um bicho molhado dentro.'},
+      registrar:'A Sra. Perla apareceu com uma caixa e um Pokémon molhado dentro.'},
   escolhas:[
     {texto:'"Eu fico com ele."', vai:'c1_ficou_com_ele'},
     {texto:'"Eu levo ao Centro Pokémon. É pra lá que eu vou de qualquer jeito."', vai:'c1_leva_ao_centro'},
@@ -474,11 +474,11 @@ c1_ficou_com_ele:{
     d=>fala(d.jogador.nome, 'Saio.'),
     fala('Sra. Perla', 'E vai levar ele.'),
     d=>fala(d.jogador.nome, 'Vou.'),
-    fala('Sra. Perla', '...Tá.', 'baixo',
+    fala('Sra. Perla', '…Tá.', 'baixo',
          'Ela entrega o pano de prato junto, que não era pra entregar. Depois pede de volta. Depois deixa.')
   ],
   ef:{flag:'ficou_com_o_bicho', moral:4,
-      rep:{eixo:'bom',delta:2,motivo:'Assumiu um bicho encontrado no dia em que saiu de casa'},
+      rep:{eixo:'bom',delta:2,motivo:'Assumiu um Pokémon encontrado no dia em que saiu de casa'},
       executar:d=>{
         const especies = [19, 16, 10, 13, 21, 41, 52];       // os que vivem debaixo de carro
         const dex = Dados.escolher(especies);
@@ -500,12 +500,12 @@ c1_leva_ao_centro:{
     'A Sra. Perla bate na caixa duas vezes, como quem fecha negócio, e já está descendo o degrau antes de você terminar a frase.',
     fala('Sra. Perla', 'A caixa eu quero de volta, viu! É a caixa do meu ventilador!', 'grita',
          'Ela grita isso da calçada, já de costas.'),
-    'Você fica na porta de casa, de pijama, às seis e cinquenta e dois, segurando a caixa de um ventilador com um bicho dentro.',
+    'Você fica na porta de casa, de pijama, às seis e cinquenta e dois, segurando a caixa de um ventilador com um Pokémon dentro.',
     'A sua jornada começou tecnicamente agora, e não foi nada do que você imaginou nos últimos três anos.'
   ],
-  ef:{flag:'leva_a_caixa', itens:{'Caixa de ventilador com um bicho dentro':1},
-      rep:{eixo:'bom',delta:1,motivo:'Aceitou levar o bicho ao Centro Pokémon'},
-      registrar:'Vai levar o bicho da Sra. Perla ao Centro Pokémon. A caixa tem que voltar.'},
+  ef:{flag:'leva_a_caixa', itens:{'Caixa de ventilador com um Pokémon dentro':1},
+      rep:{eixo:'bom',delta:1,motivo:'Aceitou levar o Pokémon ao Centro Pokémon'},
+      registrar:'Vai levar o Pokémon da Sra. Perla ao Centro Pokémon. A caixa tem que voltar.'},
   escolhas:[
     {texto:'Entrar e tomar café antes.', vai:'c1_cozinha'},
     {texto:'Trocar de roupa e ir direto.', vai:'c1_saida_pro_centro'}
@@ -535,11 +535,11 @@ c1_chamou_de_volta:{
     'Ela para no meio da rua e se vira. Não parece nem um pouco surpresa, e é isso que pega.',
     d=>fala(d.jogador.nome, 'Eu levo.'),
     'Ela volta os oito passos e entrega a caixa sem dizer uma palavra.',
-    fala('Sra. Perla', '...eu sabia. Eu sabia, eu sabia, eu sabia.', 'baixo',
+    fala('Sra. Perla', '…eu sabia. Eu sabia, eu sabia, eu sabia.', 'baixo',
          'Ela vai falando sozinha o caminho inteiro de volta.')
   ],
   ef:{limpaFlag:'recusou_a_caixa', flag:'leva_a_caixa', moral:3,
-      itens:{'Caixa de ventilador com um bicho dentro':1},
+      itens:{'Caixa de ventilador com um Pokémon dentro':1},
       rep:{eixo:'bom',delta:1,motivo:'Chamou de volta e assumiu'},
       registrar:'Chamou a Sra. Perla de volta e ficou com a caixa.'},
   escolhas:[
@@ -560,7 +560,7 @@ c1_chamou_de_dentro:{
             '{casa:Ela|Ele} pega a caixa e olha pra você por cima dela. Não diz mais nada, porque não precisa.')
   ],
   ef:{flag:'a_caixa_ficou_em_casa', moral:2,
-      registrar:'O bicho da caixa ficou em casa. Alguém vai cuidar até achar dono.'},
+      registrar:'O Pokémon da caixa ficou em casa. Alguém vai cuidar até achar dono.'},
   escolhas:[
     {texto:'Entrar com {casa:ela|ele}.', vai:'c1_cozinha'},
     {texto:'Ficar mais um pouco na porta, olhando a rua.', vai:'c1_rua'}
@@ -861,7 +861,7 @@ c1_procura_pijama:{
     '{pk:Ele|Ela} não fugiu. {pk:Ele|Ela} foi esperar por você no lugar certo.'
   ],
   ef:{moral:8, flag:'ele_estava_na_placa',
-      npc:{nome:'Sra. Perla', opiniao:3, memoria:'Saiu de casaco por cima da camisola pra procurar um bicho que não era dela.'},
+      npc:{nome:'Sra. Perla', opiniao:3, memoria:'Saiu de casaco por cima da camisola pra procurar um Pokémon que não era dela.'},
       rep:{eixo:'bom',delta:2,motivo:'Saiu de pijama pela rua atrás de quem sumiu'},
       registrar:'{pk:Ele estava sentado|Ela estava sentada} em cima da placa da saída da cidade.'},
   escolhas:[
@@ -981,13 +981,13 @@ c1_pediu_ajuda:{
   texto:[
     'Você bate em três portas antes das sete da manhã, o que numa rua desta não é pedir ajuda: é convocar.',
     'Em oito minutos tem cinco pessoas na calçada, duas com lanterna que não precisa e uma com um Growlithe que claramente não sabe rastrear nada.',
-    d=>fala(vz().nome, 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o bicho foge mais.', null,
+    d=>fala(vz().nome, 'Cada um pega uma rua. Quem achar grita. Ninguém corre atrás, que correndo atrás o Pokémon foge mais.', null,
             `${vz().Ele} organiza a rua inteira em quarenta segundos, com ${vz().ferr} na mão, e ninguém questiona.`),
     'Quem acha é uma criança de nove anos que nem foi chamada e que estava só olhando.',
     '{pk:Estava sentado|Estava sentada} em cima da placa da saída da cidade, olhando a estrada.'
   ],
   ef:{moral:6, flag:'ele_estava_na_placa',
-      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Organizou a rua inteira pra procurar um bicho seu às sete da manhã.'}),
+      npc:d=>({nome:vz().nome, opiniao:2, memoria:'Organizou a rua inteira pra procurar um Pokémon seu às sete da manhã.'}),
       rep:{eixo:'bom',delta:2,motivo:'Pediu ajuda em vez de resolver sozinh{o|a}'},
       registrar:'A rua inteira ajudou a procurar. Uma criança de nove anos achou.'},
   escolhas:[
@@ -1248,7 +1248,7 @@ c1_rua:{
 
 c1_divida_quites:{
   texto:[
-    d=>fala(d.jogador.nome, `${vz().senhor} organizou a rua inteira hoje de manhã pra procurar um bicho que não é seu.`),
+    d=>fala(d.jogador.nome, `${vz().senhor} organizou a rua inteira hoje de manhã pra procurar um Pokémon que não é seu.`),
     d=>fala(d.jogador.nome, 'Eu acho que a gente tá quites.'),
     d=>`${vz().Ele} fica olhando pra você por um tempo que passa do confortável, e depois olha ${vz().ferr.replace(/^a /, 'pra ').replace(/^o /, 'pro ')}, e depois pro chão.`,
     d=>fala(vz().nome, 'Não é assim que funciona.'),
@@ -1313,14 +1313,14 @@ c1_mudou_de_ideia_no_balcao:{
   ef:{flag:'ficou_com_o_bicho', moral:5,
       rep:{eixo:'bom',delta:2,motivo:'Voltou ao balcão em quarenta segundos para ficar com ele'},
       executar:d=>{
-        Estado.usarItem('Caixa de ventilador com um bicho dentro');
+        Estado.usarItem('Caixa de ventilador com um Pokémon dentro');
         const dex = Dados.escolher([19, 16, 10, 13, 21, 41, 52]);
         const p = criarPokemon(dex, Dados.entre(3,5), {moral:45, genero:'m'});
         p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Você deixou {ele} no balcão e voltou em quarenta segundos.', p);
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) é seu.${notaDestino(onde)}`}];
       },
-      registrar:'Deixou o bicho no balcão e voltou em quarenta segundos.'},
+      registrar:'Deixou o Pokémon no balcão e voltou em quarenta segundos.'},
   escolhas:[
     {texto:'Entrar na fila.', vai:'c1_fila'},
     {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
@@ -1339,7 +1339,7 @@ c1_quantos_ninguem_quis:{
   ],
   ef:{flag:'sabe_do_abrigo_de_lavender',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou o que acontece com os que ninguém quer'},
-      registrar:'A maioria dos bichos entregues vai pro abrigo de Lavender, que tem onze e cabe dezoito.'},
+      registrar:'A maioria dos Pokémon entregues vai pro abrigo de Lavender, que tem onze e cabe dezoito.'},
   escolhas:[
     {texto:'Mudar de ideia. Ficar com ele.', vai:'c1_mudou_de_ideia_no_balcao'},
     {texto:'Entrar na fila.', vai:'c1_fila'}
@@ -1367,7 +1367,7 @@ c1_carregou_o_nav:{
 c1_de_quem_era_o_numero:{
   texto:[
     'Ela digita o número no terminal do balcão e espera, e o terminal responde em quatro segundos.',
-    fala('a enfermeira', 'Linha cancelada em 1989. Titular...', null, 'Ela para de ler em voz alta.'),
+    fala('a enfermeira', 'Linha cancelada em 1989. Titular…', null, 'Ela para de ler em voz alta.'),
     fala('a enfermeira', 'Titular com o mesmo sobrenome que o seu.', 'baixo'),
     'Ela vira a tela pra você e não é uma tela que explique muita coisa: é um nome, uma data de cancelamento e um campo de motivo em branco.',
     'Você fecha o aparelho e põe no bolso e entra na fila, e leva exatamente onze minutos pra conseguir prestar atenção em outra coisa.'
@@ -1463,7 +1463,7 @@ c1_saida_pro_centro:{
     {texto:'Conversar com os outros três da fila antes.', vai:'c1_fila_conversa'},
     {texto:'Perguntar na recepção o que exatamente é preciso.', vai:'c1_pergunta_recepcao'},
     {texto:'Entregar a caixa da Sra. Perla primeiro. É pra isso que você veio.',
-     vai:'c1_entregou_a_caixa', cond:d=>Estado.contaItem('Caixa de ventilador com um bicho dentro') > 0},
+     vai:'c1_entregou_a_caixa', cond:d=>Estado.contaItem('Caixa de ventilador com um Pokémon dentro') > 0},
     {texto:'Perguntar se dá pra recarregar o aparelho aqui. Ele veio sem carga.',
      vai:'c1_carregou_o_nav', cond:d=>Estado.temPokenav()}
   ]
@@ -1617,7 +1617,7 @@ c1_ela_foi:{
     d=>fala(d.jogador.nome, 'E aí?'),
     fala('a enfermeira', 'E aí o meu Rapidash morreu numa rota de madrugada, e eu não tinha Potion, porque eu tinha gastado tudo em Poké Ball.', 'baixo',
          'Ela sorri. O sorriso é completamente normal, e é essa a parte ruim.'),
-    fala('a enfermeira', 'Compra Potion. Sempre mais Potion do que bola. Ninguém nunca escuta isso.')
+    fala('a enfermeira', 'Compra Potion. Sempre mais Potion do que Pokébola. Ninguém nunca escuta isso.')
   ],
   ef:{flag:'historia_da_enfermeira', itens:{'Potion':1},
       npc:{nome:'Enfermeira do Centro', opiniao:3, memoria:'Te contou por que parou de ser treinadora. Chegou em seis insígnias.'},
@@ -1771,24 +1771,24 @@ c1_fim_venceu:{
 c1_fim_pegou:{
   texto:[
     d=>C1.qual(d, [
-      'A bola para de balançar. Você espera mais um pouco, porque não acredita, e ela continua parada.',
+      'A Pokébola para de balançar. Você espera mais um pouco, porque não acredita, e ela continua parada.',
       'O clique da trava é mais baixo do que você imaginava. Quase educado.'
     ]),
     d=>{
       const n = C1.pego(d);
       return C1.qual(d, [
-        `Você pega a bola do chão. Está morna. Dentro dela, ${n}, que dez minutos atrás estava cuidando da própria vida no capim.`,
-        `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra bola.`
+        `Você pega a Pokébola do chão. Está morna. Dentro dela, ${n}, que dez minutos atrás estava cuidando da própria vida no capim.`,
+        `${n}. Você fala o nome baixo, testando, e não sabe se é pra você ou pra Pokébola.`
       ]);
     },
-    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje diz que agora {ele} pertence a você. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} pertence a você. Por enquanto, é só a bola na sua mão.', C1.pegoP(d)),
+    d=>concordar(d.flags.tem_licenca ? 'A licença que você assinou hoje diz que agora {ele} pertence a você. {Ele} não assinou nada.' : 'Não tem papel nenhum dizendo que {ele} pertence a você. Por enquanto, é só a Pokébola na sua mão.', C1.pegoP(d)),
     d=>{
       const b = C1.briga(d), p = C1.meu(d);
-      if (!p) return 'Você guarda a bola no cinto e ela pesa mais do que as vazias.';
+      if (!p) return 'Você guarda a Pokébola no cinto e ela pesa mais do que as vazias.';
       if (p.hp <= 0 || b.hpAliado <= 0) return `E ${nomeExib(p)} viu tudo deitad${pron(p).o} no capim, desmaiad${pron(p).o} atrás de você. Foi você quem terminou a briga. Você não sabe ainda se isso é bom.`;
       return C1.qual(d, [
-        `${nomeExib(p)} chega perto da bola e cheira. Eram dois há uma hora. Agora são três, e ninguém perguntou nada pra ninguém.`,
-        `${nomeExib(p)} fica olhando pra bola no seu cinto com uma cara que você ainda não aprendeu a ler.`
+        `${nomeExib(p)} chega perto da Pokébola e cheira. Eram dois há uma hora. Agora são três, e ninguém perguntou nada pra ninguém.`,
+        `${nomeExib(p)} fica olhando pra Pokébola no seu cinto com uma cara que você ainda não aprendeu a ler.`
       ]);
     },
     d=>C1.estrada(d)

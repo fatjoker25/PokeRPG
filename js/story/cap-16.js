@@ -87,7 +87,7 @@ c16_ab_a_pena:{
   ef:{flag:'viu_a_pena',
       npc:{nome:'Nina', opiniao:1, viuVoce:'Você reparou na pena entre as conchas dela.'},
       registrar:'Nina, de Fuchsia, tem uma pena de três faixas que o irmão achou na praia do sul.',
-      presagio:'Vermelha, branca e uma cor que muda com o ângulo. Isso não é de nenhum bicho que você conhece.'},
+      presagio:'Vermelha, branca e uma cor que muda com o ângulo. Isso não é de nenhum Pokémon que você conhece.'},
   escolhas:[
     {texto:'Perguntar exatamente onde o irmão achou.', vai:'c16_ab_onde_achou'},
     {texto:'Oferecer para comprar mesmo assim.', vai:'c16_ab_ofereceu_pela_pena'},
@@ -134,8 +134,7 @@ c16_ab_ofereceu_pela_pena:{
   ],
   ef:{flag:['carrega_a_pena','a_promessa_da_menina'], moral:1,
       npc:{nome:'Nina', opiniao:3, viuVoce:'Te deu a pena de graça, com a condição de você voltar e contar de quem é.'},
-      registrar:'Está carregando a pena de três faixas. Prometeu à Nina voltar e dizer de quem ela é.',
-      presagio:'Você prometeu voltar. Guarde isso: promessa feita pra criança tem cobrança diferente.'},
+      registrar:'Está carregando a pena de três faixas. Prometeu à Nina voltar e dizer de quem ela é.'},
   escolhas:[
     {texto:'Ir até a ponta sul procurar mais.', vai:'c16_ab_a_ponta_sul'},
     {texto:'Procurar o velho que fala da ilha do sudoeste.', vai:'c16_velho'},
@@ -348,8 +347,7 @@ c16_o_padrao:{
       npc:{nome:'Sr. Tanner', opiniao:8, memoria:'Guardou 61 anos de bilhetes e nunca os pôs em ordem, até você fazer isso numa mesa de dominó.'},
       rep:{eixo:'bom',delta:5,motivo:'Ordenou sessenta e um anos de papel de pão'},
       instabilidade:1,
-      registrar:'O arco-íris aparece a cada 6 ou 7 anos; o último da série foi em 1993, e em 1996 houve um fora da conta. Pela série, o próximo é este ano.',
-      presagio:'Noventa e seis de novo. Guarde o ano — ele volta em toda cidade desde Saffron.'},
+      registrar:'O arco-íris aparece a cada 6 ou 7 anos; o último da série foi em 1993, e em 1996 houve um fora da conta. Pela série, o próximo é este ano.'},
   escolhas:[
     {texto:'"Me leva lá. Agora."', vai:'c16_travessia'},
     {texto:'"Quem mais sabe disso?"', vai:'c16_quem_sabe'},
@@ -365,13 +363,13 @@ c16_noventa_e_seis:{
     '"O que aconteceu em noventa e seis?"',
     'Ele procura o papel de noventa e seis na pilha ordenada e acha, porque agora está em ordem.',
     'É um pedaço de saco de pão com a letra dele.',
-    '**"14/11/96 — luz. Muito mais forte. A noite toda. E de manhã tinha bicho na água."**',
-    '"Bicho na água?"',
-    '"Bicho na água. Eu tava saindo pra pescar às quatro da manhã e passou perto do meu barco, nadando, indo pra terra."',
-    '"Que bicho?"',
+    '**"14/11/96 — luz. Muito mais forte. A noite toda. E de manhã tinha Pokémon na água."**',
+    '"Pokémon na água?"',
+    '"Pokémon na água. Eu tava saindo pra pescar às quatro da manhã e passou perto do meu barco, nadando, indo pra terra."',
+    '"Que Pokémon?"',
     '"Três."',
     'Ele bate no papel.',
-    '"Três bichos grandes nadando da ilha sem nome até a costa de Kanto, em fila, no dia seguinte ao arco-íris mais forte que eu vi na vida."',
+    '"Três Pokémon grandes nadando da ilha sem nome até a costa de Kanto, em fila, no dia seguinte ao arco-íris mais forte que eu vi na vida."',
     'Ele olha pra você.',
     '"E eu falei isso pra sete pessoas e as sete riram."',
     d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Você não ri.\nVocê conta o que você viu numa ciclovia, e o Sr. Tanner segura na beirada da mesa de dominó com as duas mãos.' : ''
@@ -381,7 +379,7 @@ c16_noventa_e_seis:{
       rep:{eixo:'bom',delta:6,motivo:'Ligou os três da ciclovia à ilha sem nome'},
       instabilidade:1,
       registrar:'Em 14/11/1996 os três atravessaram nadando da ilha sem nome até a costa de Kanto.',
-      presagio:d=>d.flags.sabe_que_subiram || d.flags.fuji_saiu ? 'Catorze de novembro de noventa e seis. Dois dias depois de um tanque se abrir em Cinnabar.' : 'Catorze de novembro de noventa e seis. Guarde a data.'},
+      presagio:d=>d.flags.sabe_que_subiram || d.flags.fuji_saiu ? 'Catorze de novembro de noventa e seis. Dois dias depois de um tanque se abrir em Cinnabar.' : 'Catorze de novembro de noventa e seis.'},
   escolhas:[
     {texto:'"Me leva lá."', vai:'c16_travessia'},
     {texto:'"Quem mais sabe disso?"', vai:'c16_quem_sabe'},
@@ -398,7 +396,7 @@ c16_contou_pro_ze:{
     'Doze de novembro de noventa e seis, num subsolo de Cinnabar, um homem abriu um tanque e saiu às quatro e dez da manhã com uma coisa andando do lado dele, no mesmo passo.',
     'Treze de novembro, os dois subiram um vulcão e passaram a noite na borda da cratera.',
     'Catorze de novembro, apareceu o arco-íris mais forte que o Sr. Tanner já viu, sobre uma ilha no mar do sudoeste.',
-    'E na manhã do quinze, três bichos grandes atravessaram nadando.',
+    'E na manhã do quinze, três Pokémon grandes atravessaram nadando.',
     'O Sr. Tanner ouve tudo com as duas mãos na mesa.',
     'E no fim ele não fala nada por quase um minuto.',
     'Depois:',
@@ -517,8 +515,7 @@ c16_contou_que_ele_ia:{
       npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Descobriu que o pai ia à ilha, e que morreu numa saída para lá em 13/10/1979.'},
       rep:{eixo:'bom',delta:7,motivo:'Devolveu a um velho o motivo da própria história'},
       moral:25,
-      registrar:'O pai do Sr. Tanner morreu numa saída para a ilha sem nome, em 13/10/1979.',
-      presagio:'"Eu nunca soube por que ela é minha." Agora ele sabe, e agora ele vai.'},
+      registrar:'O pai do Sr. Tanner morreu numa saída para a ilha sem nome, em 13/10/1979.'},
   escolhas:[
     {texto:'"Então vamos os dois."', vai:'c16_travessia'},
     {texto:'"O senhor não precisa ir."', vai:'c16_nao_precisa_ir'},
@@ -572,8 +569,7 @@ c16_ivone_caixa:{
       npc:{nome:'Dra. Cordell', opiniao:9, memoria:'Numerou e fotografou os 43 bilhetes da caixa de charuto e devolveu a caixa.'},
       rep:{eixo:'bom',delta:5,motivo:'Levou a caixa a quem soube o que fazer com ela'},
       moral:12,
-      registrar:'A Dra. Cordell fotografou e numerou os 43 bilhetes e devolveu a caixa ao dono.',
-      presagio:'"Eu fico com a foto." Anota como se preserva uma coisa sem tomar ela.'},
+      registrar:'A Dra. Cordell fotografou e numerou os 43 bilhetes e devolveu a caixa ao dono.'},
   escolhas:[
     {texto:'Devolver a caixa ao Sr. Tanner e ir pra ilha.', vai:'c16_travessia'},
     {texto:'"A senhora vem junto?"', vai:'c16_ivone_vem'},
@@ -601,8 +597,7 @@ c16_ivone_vem:{
   ],
   ef:{flag:'ivone_confere',
       npc:{nome:'Dra. Cordell', opiniao:9, memoria:'Explicou por que não vai: querer estar lá é vaidade, e vaidade é ruim de checar.'},
-      rep:{eixo:'bom',delta:2,motivo:'Convidou e recebeu uma aula'},
-      presagio:'"Vai você. Eu confiro." Anota a divisão de trabalho.'},
+      rep:{eixo:'bom',delta:2,motivo:'Convidou e recebeu uma aula'}},
   escolhas:[
     {texto:'Ir pra ilha.', vai:'c16_travessia'},
     {texto:'Devolver a caixa ao Sr. Tanner antes.', vai:'c16_contou_que_ele_ia'},
@@ -878,8 +873,7 @@ c16_riscou:{
   ef:{flag:'riscou_o_degrau',
       rep:{eixo:'bom',delta:4,motivo:'Entrou numa contagem de trezentos anos'},
       moral:20,
-      registrar:'Riscou a próxima marca na escada da ilha.',
-      presagio:'Vai entrar na conta. É o máximo que quase todo mundo consegue.'},
+      registrar:'Riscou a próxima marca na escada da ilha.'},
   escolhas:[
     {texto:'Subir até o alicerce.', vai:'c16_alicerce'},
     {texto:'Esperar a noite no degrau.', vai:'c16_esperou_noite'},
@@ -955,8 +949,7 @@ c16_mais_no_fundo:{
   ef:{flag:['achou_a_escada_de_baixo','alguem_morou_aqui'],
       rep:{eixo:'bom',delta:6,motivo:'Cavou uma hora no fundo de uma cisterna'},
       instabilidade:1, hp:-4, causa:'Uma hora cavando num poço de quatro metros',
-      registrar:'A cisterna é a boca de uma escada que desce, soterrada.',
-      presagio:'A diferença entre "não tem" e "não tem mais". Guarde.'},
+      registrar:'A cisterna é a boca de uma escada que desce, soterrada.'},
   escolhas:[
     {texto:'Mostrar pro Sr. Tanner.', vai:'c16_mostrou_a_placa'},
     {texto:'Subir até o alicerce.', vai:'c16_alicerce'},
@@ -1070,7 +1063,7 @@ c16_alicerce:{
   ef:{flag:['viu_o_alicerce','viu_as_tres_depressoes'],
       instabilidade:1,
       registrar:'No alicerce há um desgaste circular central e três depressões rasas em volta, a quatro metros uma da outra.',
-      presagio:d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Quatro metros entre elas. Você já viu essa distância numa ciclovia.' : 'Quatro metros entre elas. Guarde a medida.'},
+      presagio:d=>d.flags.viu_os_tres || d.flags.sabe_dos_tres ? 'Quatro metros entre elas. Você já viu essa distância numa ciclovia.' : 'Quatro metros entre elas.'},
   escolhas:[
     {texto:'Esperar no centro do círculo.', vai:'c16_esperou_no_circulo'},
     {texto:'Deitar numa das três depressões.', vai:'c16_deitou_na_depressao'},
@@ -1115,7 +1108,7 @@ c16_botas:{
     'Três barracas técnicas de lona branca, um gerador silencioso de bancada, quatro caixas plásticas empilhadas, uma antena de uns dois metros, e uma lona esticada em cima de tudo em camuflagem de cor de rocha.',
     'Quatro pessoas.',
     'Uma delas está sentada numa caixa com um caderno e uma câmera térmica apoiada no joelho, apontada pro alicerce.',
-    '"...o intervalo é de seis a sete anos, a gente perdeu duas janelas esperando o conselho aprovar a verba, e se perder essa a próxima é em dois mil e seis, sete..."',
+    '"…o intervalo é de seis a sete anos, a gente perdeu duas janelas esperando o conselho aprovar a verba, e se perder essa a próxima é em dois mil e seis, sete…"',
     'Ela para de falar quando te vê.',
     'Um silêncio muito longo, em que ninguém corre, ninguém grita e ninguém pega nada.',
     '"Você é {o|a} de Saffron."',
@@ -1157,8 +1150,7 @@ c16_quantas_janelas:{
   ef:{flag:['sabe_das_janelas_perdidas','equipe_te_respeita'],
       npc:{nome:'Chefe da expedição', opiniao:2, memoria:'Descobriu que você tem 57 anos de série temporal numa caixa de charuto e não tentou comprar.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou quantas janelas em vez de ameaçar'},
-      registrar:'A expedição perdeu as janelas de 1993 e 1996 esperando verba.',
-      presagio:'Ela não ofereceu dinheiro. Isso é pior: ela vai oferecer outra coisa.'},
+      registrar:'A expedição perdeu as janelas de 1993 e 1996 esperando verba.'},
   escolhas:[
     {texto:'"O que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
     {texto:'"O que você me oferece, então?"', vai:'c16_o_que_oferece'},
@@ -1221,8 +1213,7 @@ c16_buscou_o_ze:{
       npc:{nome:'Sr. Tanner', opiniao:10, memoria:'Passou três horas respondendo perguntas de metodologia para uma doutora que o chamou de senhor Tanner.'},
       rep:{eixo:'bom',delta:7,motivo:'Levou um pescador de oitenta e um anos até a mesa onde se decide o que é dado'},
       moral:30,
-      registrar:'Sr. Tanner passou três horas sendo entrevistado como coautor da série temporal.',
-      presagio:'Ele deixou ela chamar ele de senhor Tanner. Guarde o momento em que ele deixou.'},
+      registrar:'Sr. Tanner passou três horas sendo entrevistado como coautor da série temporal.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
     {texto:'"E o que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
@@ -1289,8 +1280,7 @@ c16_motivo_tecnico:{
       npc:{nome:'Chefe da expedição', opiniao:8, memoria:'Recebeu de você a justificativa técnica que transformou fracasso em prorrogação.'},
       rep:{eixo:'bom',delta:7,motivo:'Deu a um cientista a frase que ela precisava escrever'},
       moral:20, instabilidade:-1,
-      registrar:'A expedição não vai coletar: a amostra seria contaminada por evento não controlado.',
-      presagio:'Você ganhou dois anos com uma frase de relatório. Anota o método.'},
+      registrar:'A expedição não vai coletar: a amostra seria contaminada por evento não controlado.'},
   escolhas:[
     {texto:'Ir pro círculo esperar.', vai:'c16_esperou_no_circulo'},
     {texto:'Buscar o Sr. Tanner.', vai:'c16_buscou_o_ze', cond:d=>!d.flags.chegou_voando_na_ilha},
@@ -1498,8 +1488,7 @@ c16_equipe_saiu:{
   ef:{rep:{eixo:'bom',delta:4,motivo:'Expulsou uma expedição científica de uma ilha sem jurisdição'},
       flag:'expulsou_a_equipe', instabilidade:-1,
       npc:{nome:'Chefe da expedição', opiniao:1, memoria:'Saiu da ilha quando você mandou, e desamarrou a corda direito em vez de cortar.'},
-      registrar:'Expulsou a expedição da ilha sem nome. A próxima janela é em 2006 ou 2007.',
-      presagio:'Ela desamarrou em vez de cortar. Repare em quem corta e quem desamarra.'},
+      registrar:'Expulsou a expedição da ilha sem nome. A próxima janela é em 2006 ou 2007.'},
   escolhas:[
     {texto:'Esperar no círculo.', vai:'c16_esperou_no_circulo'},
     {texto:'Deitar numa das depressões.', vai:'c16_deitou_na_depressao'},
@@ -1518,8 +1507,7 @@ c16_equipe_ficou:{
     'E é exatamente isso que enraivece: você passou a jornada inteira aprendendo que estar certo no papel é o que decide, e agora o papel está do outro lado.'
   ],
   ef:{flag:'equipe_ficou',
-      moral:-8,
-      presagio:'O papel está do outro lado. Aprende a lidar com isso agora, porque vai acontecer de novo.'},
+      moral:-8},
   escolhas:[
     {texto:'"Quantas janelas vocês já perderam?"', vai:'c16_quantas_janelas', cond:d=>!!d.flags.viu_a_caixa_de_charuto},
     {texto:'"O que vocês querem com ele?"', vai:'c16_pergunta_equipe'},
@@ -1659,7 +1647,7 @@ c16_esperou_no_circulo:{
     {texto:'Ficar parad{o|a}. Absolutamente parad{o|a}.', vai:'c16_ficou_parado'},
     {texto:'Ajoelhar.', vai:'c16_ajoelhou'},
     {texto:'Falar com ele.', vai:'c16_falou_hooh'},
-    {texto:'Jogar a bola.', vai:'c16_captura_hooh'}
+    {texto:'Jogar a Pokébola.', vai:'c16_captura_hooh'}
   ]
 },
 
@@ -1757,7 +1745,7 @@ c16_nao_faz_nada:{
     'você acabou de pedir clemência a uma coisa lendária em nome de quatro cientistas que vieram arrancar uma pena dela.',
     'Ele olha pra você.',
     'E aí ele faz uma coisa pequena e absurda: ele encolhe um pouco o pescoço e mexe a cabeça de lado.',
-    d=>d.flags.viu_os_tres ? 'É um gesto que você já viu num Raikou numa ciclovia às quatro da manhã.' : 'É o gesto de bicho que ouviu o próprio nome e não sabe o que vem depois.',
+    d=>d.flags.viu_os_tres ? 'É um gesto que você já viu num Raikou numa ciclovia às quatro da manhã.' : 'É o gesto de Pokémon que ouviu o próprio nome e não sabe o que vem depois.',
     'Ele não entendeu a frase.',
     'Ele entendeu que você pediu, e que você pediu apontando pra eles, e que pedir apontando pra alguém é uma coisa que ele conhece.',
     'E ele não vai fazer nada com eles.',
@@ -1796,8 +1784,7 @@ c16_ajoelhou:{
       executar:d=>{ const L=Estado.lend(250); if(L && L.disposicao!=='hostil') L.disposicao='passivo'; return []; },
       rep:{eixo:'bom',delta:3,motivo:'Ajoelhou e foi corrigido'},
       moral:10,
-      registrar:'Ajoelhou diante de Ho-Oh e ele devolveu o gesto.',
-      presagio:'Ele devolveu o gesto. Ele não quer isso. Guarde.'},
+      registrar:'Ajoelhou diante de Ho-Oh e ele devolveu o gesto.'},
   escolhas:[
     {texto:'Falar com ele.', vai:'c16_falou_hooh'},
     {texto:'"Eles estão vivos."', vai:'c16_eles_estao_vivos', cond:d=>!!d.flags.viu_os_tres || !!d.flags.sabe_dos_tres},
@@ -1809,7 +1796,7 @@ c16_ajoelhou:{
 c16_pegou_pena:{
   texto:[
     'Uma pena cai.',
-    'Não é dele largando — é pena caindo, do jeito que pena cai de qualquer bicho de pena, porque bicho de pena troca pena e isso é a coisa mais banal do mundo.',
+    'Não é dele largando — é pena caindo, do jeito que pena cai de qualquer Pokémon de pena, porque Pokémon de pena troca pena e isso é a coisa mais banal do mundo.',
     'Ela desce planando por uns oito segundos e para na laje a um metro de você.',
     'Tem uns quarenta centímetros e é vermelha na base e dourada na ponta, e ela não brilha, porque ela é uma pena.',
     'Você pega.',
@@ -1819,8 +1806,7 @@ c16_pegou_pena:{
   ],
   ef:{flag:['tem_a_pena'],
       itens:{'Pena Arco-Íris':1},
-      registrar:'Pegou uma pena de Ho-Oh caída na laje.',
-      presagio:'Ele não impediu e não aprovou. A decisão é sua e vai continuar sendo.'},
+      registrar:'Pegou uma pena de Ho-Oh caída na laje.'},
   escolhas:[
     {texto:'Guardar. Ela é sua agora.', vai:'c16_guardou_a_pena'},
     {texto:'Devolver: pôr de volta no chão do círculo.', vai:'c16_deixou_pena'},
@@ -2036,9 +2022,9 @@ c16_deixou_pena:{
 
 c16_captura_hooh:{
   texto:[
-    'Você joga a bola dentro de uma coluna de luz que sai de uma laje de pedra num topo de ilha sem nome.',
+    'Você joga a Pokébola dentro de uma coluna de luz que sai de uma laje de pedra num topo de ilha sem nome.',
     'Ele não desvia.',
-    'Ele olha a bola vindo, na trajetória inteira, e não desvia.'
+    'Ele olha a Pokébola vindo, na trajetória inteira, e não desvia.'
   ],
   ef:{moral:-15,
       executar:d=>{ const L=Estado.lend(250); if(L) L.ataquesSofridos++; return []; }},
@@ -2050,7 +2036,7 @@ c16_captura_hooh:{
 c16_pos_hooh:{
   texto:[
     'Ele sobe pela luz.',
-    'A luz apaga quando ele acaba de subir, e o alicerce fica escuro e frio de uma vez, e é o silêncio mais completo que você já ouviu, porque não tem mato, não tem bicho, não tem estrada.',
+    'A luz apaga quando ele acaba de subir, e o alicerce fica escuro e frio de uma vez, e é o silêncio mais completo que você já ouviu, porque não tem mato, não tem Pokémon, não tem estrada.',
     'Só vento e mar a sessenta metros abaixo.',
     'E você fica de pé no meio de uma laje, no escuro, sozinh{o|a}.',
     'Ele não lutou de verdade.',
@@ -2058,8 +2044,7 @@ c16_pos_hooh:{
     'Uma coisa de sete metros de envergadura passou vinte minutos com você e não quebrou nada.'
   ],
   ef:{executar:d=>{ const L=Estado.lend(250); if(L && L.ataquesSofridos>=2){ L.disposicao='hostil'; return [{tipo:'perigo', texto:'Ho-Oh não vai voltar enquanto você estiver em Kanto.'}]; } return []; },
-      rep:{eixo:'ruim',delta:2,motivo:'Atacou Ho-Oh no alicerce'}, moral:-15, instabilidade:1,
-      presagio:'Ele não quebrou nada. Repara que você não sabe se isso é bondade ou desprezo.'},
+      rep:{eixo:'ruim',delta:2,motivo:'Atacou Ho-Oh no alicerce'}, moral:-15, instabilidade:1},
   escolhas:[
     {texto:'Tentar de novo na próxima janela.', vai:'c16_desceu_ilha'},
     {texto:'Deitar numa das três depressões.', vai:'c16_deitou_na_depressao'},
@@ -2070,7 +2055,7 @@ c16_pos_hooh:{
 
 c16_capturou_hooh:{
   texto:[
-    'A bola fecha.',
+    'A Pokébola fecha.',
     'E a luz não apaga.',
     'Isso é o que quebra você: a coluna de luz continua saindo da laje, subindo duzentos metros e abrindo em leque no alto, sem nada dentro dela.',
     'Ela fica assim quarenta minutos, que é o tempo de sempre, e depois some, sozinha, no horário.',
@@ -2080,19 +2065,18 @@ c16_capturou_hooh:{
     d=>d.flags.viu_as_tres_depressoes ? 'E as três depressões na laje vão continuar vazias, e agora tem uma quarta coisa que não vem.' : ''
   ],
   ef:{instabilidade:3, flag:'capturou_hooh', moral:-25,
-      registrar:'Capturou Ho-Oh. A luz continuou saindo da laje, vazia, pelos quarenta minutos de sempre.',
-      presagio:'A luz é o lugar chamando. Vai continuar chamando.'},
+      registrar:'Capturou Ho-Oh. A luz continuou saindo da laje, vazia, pelos quarenta minutos de sempre.'},
   escolhas:[
     {texto:'Soltar. Agora, aqui.', vai:'c16_soltou_hooh'},
     {texto:'Ir embora com ele.', vai:'c16_desceu_com_hooh'},
     {texto:'Ficar até a luz sumir e decidir depois.', vai:'c16_soltou_hooh'},
-    {texto:'Deitar numa das depressões com a bola na mão.', vai:'c16_deitou_com_a_bola'}
+    {texto:'Deitar numa das depressões com a Pokébola na mão.', vai:'c16_deitou_com_a_bola'}
   ]
 },
 
 c16_deitou_com_a_bola:{
   texto:[
-    'Você deita numa das três depressões da laje com a bola na mão.',
+    'Você deita numa das três depressões da laje com a Pokébola na mão.',
     'Dali só se vê o céu, e o céu tem a coluna de luz atravessando ele, e a coluna está vazia.',
     'Você fica deitad{o|a} os quarenta minutos inteiros.',
     'E na metade deles você percebe que está deitad{o|a} num lugar gasto por um corpo que morreu aqui há séculos, com o responsável por trazer esse corpo de volta fechado numa esfera de dez centímetros na sua mão.',
@@ -2113,10 +2097,10 @@ c16_deitou_com_a_bola:{
 
 c16_soltou_hooh:{
   texto:[
-    'Você abre a bola no centro do círculo.',
+    'Você abre a Pokébola no centro do círculo.',
     'Ele sai.',
     'E não vai embora na hora: ele fica na laje, no lugar dele, no desgaste que o corpo dele fez ao longo de séculos, e olha você.',
-    'E depois faz a coisa que ele tinha começado a fazer antes de você jogar a bola:',
+    'E depois faz a coisa que ele tinha começado a fazer antes de você jogar a Pokébola:',
     'ele anda pelo alicerce e para nas três depressões, uma por uma, e encosta o bico em cada uma.',
     'Uma. Duas. Três.',
     'Quarenta segundos em cada.',
@@ -2143,8 +2127,8 @@ c16_soltou_hooh:{
 
 c16_desceu_com_hooh:{
   texto:[
-    d=>d.flags.chegou_voando_na_ilha ? 'Você volta pelo ar com uma bola no cinto.\nQuatro horas de mar escuro, e a bola não pesa nada, e você sente o peso dela o caminho inteiro.\nEm Fuchsia, na mesa de dominó, o Sr. Tanner te vê atravessar o cais, olha o seu rosto e depois o seu cinto.' :
-       'Você desce os cento e quatro degraus com uma bola no cinto.\nO Sr. Tanner está no barco com a luz de posição acesa e ele te vê chegar e a primeira coisa que ele pergunta é:',
+    d=>d.flags.chegou_voando_na_ilha ? 'Você volta pelo ar com uma Pokébola no cinto.\nQuatro horas de mar escuro, e a Pokébola não pesa nada, e você sente o peso dela o caminho inteiro.\nEm Fuchsia, na mesa de dominó, o Sr. Tanner te vê atravessar o cais, olha o seu rosto e depois o seu cinto.' :
+       'Você desce os cento e quatro degraus com uma Pokébola no cinto.\nO Sr. Tanner está no barco com a luz de posição acesa e ele te vê chegar e a primeira coisa que ele pergunta é:',
     d=>d.flags.chegou_voando_na_ilha ? '' : fala('Sr. Tanner', 'Viu?'),
     d=>d.flags.chegou_voando_na_ilha ? '' : fala(d.jogador.nome, 'Vi.'),
     d=>d.flags.chegou_voando_na_ilha ? '' : 'E ele ri, e fica rindo por uns vinte segundos, e depois para de rir porque ele reparou na sua cara.',
@@ -2156,7 +2140,7 @@ c16_desceu_com_hooh:{
   ],
   ef:{flag:'desceu_com_hooh',
       rep:{eixo:'ruim',delta:3,motivo:'Desceu da ilha com Ho-Oh no cinto'},
-      npc:{nome:'Sr. Tanner', opiniao:-4, memoria:'Reparou na bola no seu cinto e não perguntou mais nada.'},
+      npc:{nome:'Sr. Tanner', opiniao:-4, memoria:'Reparou na Pokébola no seu cinto e não perguntou mais nada.'},
       moral:-25, instabilidade:2,
       registrar:'Saiu da ilha com Ho-Oh capturado.',
       presagio:'Ele não olha pra você.'},

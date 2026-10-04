@@ -153,7 +153,7 @@ c21_chegada_em_casa:{
 c21_a_rua:{
   texto:[
     'Você anda a rua inteira com a mochila no ombro, devagar, do jeito que só se anda numa rua que a gente conhece de cor.',
-    'O muro da escola continua devolvendo a bola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.',
+    'O muro da escola continua devolvendo a Pokébola reto. Tem duas crianças novas jogando, e nenhuma delas sabe quem você é.',
     'A casa do número oito pintou de azul. A do quatorze não pintou de nada há mais tempo ainda.',
     'E tem uma coisa que você não esperava: tem um cartaz seu no poste.',
     'É pequeno, é impresso em papel comum, tem uma foto ruim da sua licença e a palavra PARABÉNS escrita à mão embaixo.'
@@ -191,7 +191,7 @@ c21_a_caixa_de_volta:{
     'Você não tem a caixa. Você perdeu a caixa em algum lugar entre Pewter e Cerulean, e você sabe disso há meses.',
     'Você compra uma caixa de ventilador no armazém por quatrocentos pokedólares, tira a etiqueta, amassa um canto com a mão pra parecer usada, e entrega.',
     fala('Sra. Perla', 'Essa não é a minha caixa.', 'frio', 'Ela olha por dois segundos.'),
-    fala('Sra. Perla', '...mas é melhor que a minha. Obrigada, {menino|menina}.', 'riso')
+    fala('Sra. Perla', '…mas é melhor que a minha. Obrigada, {menino|menina}.', 'riso')
   ],
   ef:{dinheiro:-400, moral:3,
       npc:{nome:'Sra. Perla', opiniao:2, memoria:'Comprou uma caixa nova pra devolver a que perdeu, e ela percebeu.'},
@@ -282,7 +282,7 @@ c21_pagou_a_janela:{
     d=>`${vz().Ele} olha o dinheiro. Não pega.`,
     d=>fala(vz().nome, `${vz().Divida} foi ${vz().preco}, e ${vz().conserto}.`),
     d=>fala(vz().nome, 'Eu cobrei porque eu queria ver se você lembrava. Você lembrou. Acabou ali.'),
-    d=>fala(vz().nome, 'Pega o dinheiro de volta e compra Potion, {menino|menina}. Todo mundo compra bola demais.', 'riso')
+    d=>fala(vz().nome, 'Pega o dinheiro de volta e compra Potion, {menino|menina}. Todo mundo compra Pokébola demais.', 'riso')
   ],
   ef:{limpaFlag:'divida_pendente', moral:5,
       npc:d=>({nome:vz().nome, opiniao:5, memoria:`Você voltou pra pagar ${vz().divida}. ${vz().Ele} nunca quis o dinheiro.`}),

@@ -391,7 +391,7 @@ c21_fim_ficou_trabalhando:{
     'Você desfaz a mochila de manhã e sai de tarde, e na terceira porta em que você bate tem uma vaga.',
     'É no Centro Pokémon da cidade: auxiliar de atendimento, turno da noite, salário de auxiliar de atendimento de turno da noite.',
     'A enfermeira que te contrata tem uns cinquenta anos e te conhece desde criança, e ela faz uma pergunta e só uma:',
-    fala('a enfermeira do Centro', 'Você aguenta ver bicho machucado a noite inteira?'),
+    fala('a enfermeira do Centro', 'Você aguenta ver Pokémon machucado a noite inteira?'),
     d=>fala(d.jogador.nome, 'Aguento.'),
     fala('a enfermeira do Centro', 'Todo mundo fala isso.'),
     'Ela te dá um jaleco que é um número maior que o seu.',
@@ -402,7 +402,7 @@ c21_fim_ficou_trabalhando:{
     'Um Centro de cidade pequena atende umas quarenta pessoas por noite em mês bom. A maioria é bobagem: arranhão, cansaço, um garoto de treze anos que acha que o Rattata dele está morrendo e não está.',
     'Você é muito bom com os garotos de treze anos. Isso vira a sua fama, na medida em que existe fama nessa profissão.',
     'E umas quatro ou cinco vezes por ano chega uma coisa que não é bobagem.',
-    'Chega um bicho com brinco amarelo de identificação de reserva na orelha, a duzentos quilômetros de qualquer reserva. Chega alguém com a marca de gaiola no pelo. Chega, uma vez, um Seel filhote com metade do peso.',
+    'Chega um Pokémon com brinco amarelo de identificação de reserva na orelha, a duzentos quilômetros de qualquer reserva. Chega alguém com a marca de gaiola no pelo. Chega, uma vez, um Seel filhote com metade do peso.',
     'Você anota todas. Ficha, data, procedência declarada e procedência provável.',
     'Dezenove anos de fichas.',
     'A comissão parlamentar pede os arquivos de trinta e um Centros Pokémon de Kanto e recebe de trinta deles a resposta padrão: "registros descartados após cinco anos, conforme norma".',
@@ -529,8 +529,7 @@ c24_a_setima_barrou:{
     fala('o guarda da sétima', 'Desculpa, {moço|moça}. É de verdade.')
   ],
   ef:{flag:'barrado_na_setima',
-      registrar:'Passou em seis guaritas e foi barrado na sétima, pela segunda tela.',
-      presagio:'Seis pra deixar você subir quatro quilômetros. A sétima pra te mandar de volta.'},
+      registrar:'Passou em seis guaritas e foi barrado na sétima, pela segunda tela.'},
   escolhas:[
     {texto:'Voltar. E fazer disso o assunto.', vai:'c24_fim_voltou'},
     {texto:'Voltar até a curva e contornar pelo mato à noite.', vai:'c24_contornou'},
@@ -682,7 +681,7 @@ c25_fim_recusou_o_termo:{
     fala('a mulher da pasta', 'E que o processo vai durar anos e você vai ter mais de vinte quando acabar.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
     'Ela fecha a pasta de vinil e o fecho faz um estalo seco no corredor vazio.',
-    fala('a mulher da pasta', 'Então você está escolhendo o arquivo em vez dos bichos.'),
+    fala('a mulher da pasta', 'Então você está escolhendo o arquivo em vez dos Pokémon.'),
     'E essa frase é exata, e é injusta, e é exata.',
     d=>fala(d.jogador.nome, 'Eu tô escolhendo que ninguém decida isso numa antessala em nove minutos.'),
     'Ela olha pra você por dois segundos.',
@@ -733,8 +732,7 @@ c26_aceitou_o_posto:{
     fala('a conselheira da Liga', 'Acesso total e boca fechada. É a oferta. Não vai ficar mais bonita se eu repetir.')
   ],
   ef:{flag:'a_oferta_da_coordenacao',
-      registrar:'Te ofereceram uma coordenação de campo criada no mês passado: acesso total e dever de sigilo.',
-      presagio:'Criaram o cargo depois de saber de você. Isso é o elogio e é a armadilha.'},
+      registrar:'Te ofereceram uma coordenação de campo criada no mês passado: acesso total e dever de sigilo.'},
   escolhas:[
     {texto:'Aceitar.', vai:'c26_fim_aceitou'},
     {texto:'Recusar na frente dos quatro.', vai:'c26_fim_recusou'},

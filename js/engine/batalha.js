@@ -280,7 +280,7 @@ const Batalha = {
         else {
           const posto = postoDoNivel(p.nivel);
           est.penalConf = posto <= 2 ? 1 : posto <= 5 ? 2 : 3;
-          this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}...`);
+          this.ev('status', `${nomeVisivel(p)} está confus${pron(p).o}…`);
         }
       }
     }
@@ -350,7 +350,7 @@ const Batalha = {
       ? def.tipos.filter(t => t !== 'Fantasma') : def.tipos;
     res.efic = eficacia(g.t, tiposDef.length ? tiposDef : ['Normal']);
     if (res.efic === 0){
-      res.msgs.push(`Não afeta ${nomeVisivel(def)}...`);
+      res.msgs.push(`Não afeta ${nomeVisivel(def)}…`);
       return res;
     }
     /* fraqueza e resistência contam por tipo: ×2 é +1, ×4 é +2, ×½ é −1 */
@@ -1133,7 +1133,7 @@ const Batalha = {
       if (this.tipo === 'treinador'){
         this.eventos = [];
         this.turno--;
-        this.ev('erro', `${this.treinador || 'O treinador'} chama de volta antes da bola chegar perto. Pokémon dos outros não se captura — e num ginásio isso encerra a sua vez.`);
+        this.ev('erro', `${this.treinador || 'O treinador'} chama de volta antes da Pokébola chegar perto. Pokémon dos outros não se captura — e num ginásio isso encerra a sua vez.`);
         return {eventos:this.eventos, fim:null};
       }
       return this.tentarCaptura(acao.nome);
@@ -1419,7 +1419,7 @@ const Batalha = {
     this.inimigo.naturezaVista = true;   // quem avança em gente mostra o jeito que tem
     this.ev('perigo', `${nomeVisivel(this.inimigo)} não recua: ${this.inimigo.natureza}, agressiv${pron(this.inimigo).o}. 1d20 = ${d} — ataca com 10+`);
     if (d < 10){
-      this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais... e vai embora.`);
+      this.ev('info', `${nomeVisivel(this.inimigo)} te encara por um segundo longo demais… e vai embora.`);
       return this.encerrar('derrota');
     }
     this.fase = 'ameaca';
@@ -1441,7 +1441,7 @@ const Batalha = {
     }
     if (acao.tipo === 'bola'){
       if (this.tipo === 'treinador'){
-        this.ev('erro', 'Não se joga bola no Pokémon de outro treinador.');
+        this.ev('erro', 'Não se joga Pokébola no Pokémon de outro treinador.');
         return {eventos:this.eventos, fim:null};
       }
       const r = Captura.tentar(this.inimigo, acao.nome, this);
@@ -1471,7 +1471,7 @@ const Batalha = {
         this.ev('info', `Você não desvia o olhar. ${nomeVisivel(this.inimigo)} hesita — e recua para o mato.`);
         return this.encerrar('encarou');
       }
-      this.ev('erro', 'Encarar um bicho assustado nunca foi um bom plano.');
+      this.ev('erro', 'Encarar um Pokémon assustado nunca foi um bom plano.');
       return this.golpeNoJogador();
     }
     return this.golpeNoJogador();

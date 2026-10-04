@@ -120,30 +120,10 @@ const Historia = {
     return linhas;
   },
 
-  /* O que o mundo deixa escapar em vez de anunciar o que você ganhou.
-     O número exato fica no Diário; aqui fica o que vem por aí. */
-  presagio(tipo, ef){
-    const bom = [
-      'Alguém viu isso. Gente lembra desse tipo de coisa por muito mais tempo do que parece.',
-      'Isso vai voltar pra você. Do jeito bom, e provavelmente quando você não estiver esperando.',
-      'Uma pessoa que você nem reparou vai contar isso pra outra pessoa hoje à noite.',
-      'Não muda nada agora. Muda uma coisa depois, num lugar que você ainda não conhece.'
-    ];
-    const ruim = [
-      'Isso vai voltar. Coisa assim sempre volta, e nunca no mesmo formato.',
-      'Ninguém falou nada. Todo mundo viu.',
-      'Alguém vai lembrar disso numa hora em que você precisar que ninguém lembre.',
-      'Você vai reencontrar essa escolha. Ela não tem pressa.'
-    ];
-    const item = [
-      'Você guarda na mochila sem pensar muito.',
-      'Entra na mochila junto com o resto.'
-    ];
-    if (tipo === 'bom')  return {tipo:'rep', texto: Dados.escolher(bom)};
-    if (tipo === 'ruim') return {tipo:'dano', texto: Dados.escolher(ruim)};
-    if (tipo === 'item') return {tipo:'info', texto: Dados.escolher(item)};
-    return null;
-  },
+  /* O mundo não anuncia o que a escolha vai render: nada de "isso vai
+     voltar pra você". O número exato fica no Diário; o resto o jogador
+     descobre quando acontecer. */
+  presagio(){ return null; },
 
   /* ---------- EFEITOS ---------- */
   aplicar(ef){

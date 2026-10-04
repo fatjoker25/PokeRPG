@@ -20,7 +20,7 @@ pallet:[
   ],
   escolhas:[
     {texto:'Pegar ele no colo e levar pra calçada.',
-     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tirou um bicho velho do meio da rua'},
+     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Tirou um Pokémon velho do meio da rua'},
          flag:'tirou_o_growlithe_da_rua', registrar:'Tirou o Growlithe de quinze anos do meio da rua.'},
      resultado:[
        'Ele pesa muito mais do que parece e cheira a sol.',
@@ -286,7 +286,7 @@ cerulean:[
   titulo:'A fila da ponte',
   texto:[
     'A ponte norte tem seis garotos em fila, um atrás do outro, desafiando quem passa.',
-    'O sexto é visivelmente menor que os outros cinco e visivelmente mais novo, e está ali no fim da fila com uma bola só no cinto.',
+    'O sexto é visivelmente menor que os outros cinco e visivelmente mais novo, e está ali no fim da fila com uma Pokébola só no cinto.',
     fala('o primeiro da ponte', 'Quem passa enfrenta os seis. É tradição.'),
     fala('o sexto da ponte', 'Eu sou o sexto.', 'baixo', 'Ele fala isso como quem se desculpa por existir na fila.')
   ],
@@ -309,7 +309,7 @@ cerulean:[
      resultado:[
        'Os cinco protestam. A tradição é a tradição.',
        'Você não discute, só fica parad{o|a} na frente do sexto e espera.',
-       fala('o primeiro da ponte', '...tá. Uma vez.'),
+       fala('o primeiro da ponte', '…tá. Uma vez.'),
        'O sexto luta contra você com o time inteiro dele descansado, pela primeira vez na vida dele, e é um combate completamente diferente do que teria sido no fim da fila.',
        fala('o sexto da ponte', 'Assim é muito melhor.', 'baixo')
      ]},
@@ -380,7 +380,7 @@ vermilion:[
   id:'ver_caixa_de_gelo', umaVez:true, peso:3,
   titulo:'A caixa de gelo',
   texto:[
-    'Duas mulheres carregam uma caixa de isopor entre as duas, param a cada dez metros e trocam de mão.',
+    'Duas mulheres carregam uma caixa térmica entre as duas, param a cada dez metros e trocam de mão.',
     'Elas fazem isso todo dia e a cidade inteira sabe, e ninguém oferece ajuda porque elas já recusaram de todo mundo.',
     fala('a mais velha das duas', 'A gente não precisa, {moço|moça}.'),
     fala('a mais nova das duas', 'A gente precisa, mãe.', 'baixo')
@@ -416,7 +416,7 @@ vermilion:[
        fala('a mais velha das duas', 'Isso é esmola.'),
        d=>fala(d.jogador.nome, 'É o preço da cooperativa. Eu paguei o preço.'),
        'A mais velha pega o dinheiro e não agradece, que é exatamente como deve ser numa venda.',
-       'Você fica com uma caixa de isopor de quarenta quilos e nenhum plano, e acaba doando pro Centro Pokémon.'
+       'Você fica com uma caixa térmica de quarenta quilos e nenhum plano, e acaba doando pro Centro Pokémon.'
      ]},
     {texto:'Respeitar a recusa e seguir.', ef:{},
      resultado:['Você respeita a recusa e segue.','Duzentos metros adiante você olha pra trás e elas estão paradas de novo, trocando de mão.']}
@@ -487,7 +487,7 @@ lavender:[
        fala('Sr. Fuji', 'Eu não procuro ninguém com esses nomes e não mando carta pra ninguém.'),
        d=>fala(d.jogador.nome, 'Então pra que serve?'),
        fala('Sr. Fuji', 'Pra existir.', 'baixo'),
-       fala('Sr. Fuji', 'Quando alguém deixa um bicho aqui, a primeira coisa que some é o nome dele. Em duas semanas ninguém lembra. Esse caderno é onde o nome não some.')
+       fala('Sr. Fuji', 'Quando alguém deixa um Pokémon aqui, a primeira coisa que some é o nome dele. Em duas semanas ninguém lembra. Esse caderno é onde o nome não some.')
      ]},
     {texto:'Escrever um nome. Você tem um pra escrever.',
      cond:d=>d.cemiterio.length > 0,
@@ -810,19 +810,19 @@ fuchsia:[
   texto:[
     'Às quatro da tarde o ônibus da Zona Safári descarrega quarenta pessoas de chapéu novo, e a cidade aumenta de volume por vinte minutos.',
     'Todos os quarenta compraram o chapéu na entrada. Todos os quarenta estão falando ao mesmo tempo sobre o que viram.',
-    'Um deles está calado, no fim da fila, segurando uma bola vazia.'
+    'Um deles está calado, no fim da fila, segurando uma Pokébola vazia.'
   ],
   escolhas:[
     {texto:'Falar com o que está calado.',
      ef:{moral:2, rep:{eixo:'bom',delta:2,motivo:'Falou com o único calado numa multidão barulhenta'},
          flag:'o_homem_da_bola_vazia',
-         registrar:'Na Zona Safári, um homem gastou trinta bolas e não pegou nada. Era a trigésima primeira visita dele.'},
+         registrar:'Na Zona Safári, um homem gastou trinta Pokébolas e não pegou nada. Era a trigésima primeira visita dele.'},
      resultado:[
-       fala('o homem da bola vazia', 'Trinta bolas. Trinta.'),
-       fala('o homem da bola vazia', 'Eu venho aqui desde 1994. Essa foi a trigésima primeira vez.'),
+       fala('o homem da Pokébola vazia', 'Trinta Pokébolas. Trinta.'),
+       fala('o homem da Pokébola vazia', 'Eu venho aqui desde 1994. Essa foi a trigésima primeira vez.'),
        d=>fala(d.jogador.nome, 'E nunca pegou nada?'),
-       fala('o homem da bola vazia', 'Peguei doze. Todos os doze eu soltei no portão, na saída.', 'baixo'),
-       fala('o homem da bola vazia', 'Eu não venho aqui pra levar. Eu venho aqui porque lá dentro eu consigo dormir de olho aberto, se é que você me entende.'),
+       fala('o homem da Pokébola vazia', 'Peguei doze. Todos os doze eu soltei no portão, na saída.', 'baixo'),
+       fala('o homem da Pokébola vazia', 'Eu não venho aqui pra levar. Eu venho aqui porque lá dentro eu consigo dormir de olho aberto, se é que você me entende.'),
        'Você não entende. Você vai entender daqui a uns meses.'
      ]},
     {texto:'Perguntar aos quarenta o que eles viram.',
@@ -846,7 +846,7 @@ saffron:[
   id:'saf_estagiarios_da_escada', umaVez:true, peso:3,
   titulo:'A escada do prédio comercial',
   texto:[
-    'Seis estagiários almoçam sentados na escada do prédio comercial, todos com o mesmo crachá branco e a mesma marmita do mesmo lugar.',
+    'Seis estagiários almoçam sentados na escada do prédio comercial, todos com o mesmo crachá branco, almoçando a mesma comida do mesmo lugar.',
     'Eles têm quarenta minutos e usam trinta e dois, porque leva quatro pra descer e quatro pra subir.',
     fala('o estagiário do fim da escada', 'A gente cronometrou. Na primeira semana a gente cronometrou tudo.')
   ],
@@ -1072,10 +1072,10 @@ const EVENTOS_GERAIS = [
   ],
   escolhas:[
     {texto:'Ficar olhando a entrega de longe.',
-     ef:{moral:2, registrar:'Ficou olhando a perua do laboratório entregar a bola de outra pessoa.'},
+     ef:{moral:2, registrar:'Ficou olhando a perua do laboratório entregar a Pokébola de outra pessoa.'},
      resultado:[
-       'O menino assina, pega a bola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
-       'O que sai da bola olha a praça inteira antes de olhar ele.',
+       'O menino assina, pega a Pokébola com as duas mãos e abre ali mesmo, sem sair de perto do carro.',
+       'O que sai da Pokébola olha a praça inteira antes de olhar ele.',
        'Você reconhece a cena de um jeito que dói um pouco e é bom ao mesmo tempo.',
        fala('Célio', 'Essa parte é sempre a melhor.', 'baixo', 'Ele fala sem olhar pra você, anotando.')
      ]},
@@ -1109,12 +1109,12 @@ const EVENTOS_GERAIS = [
        fala('Célio', 'Serve pra pouca coisa. Mas um dia serve.', 'baixo')
      ]},
     {texto:'Seguir. Não é com você.', ef:{},
-     resultado:['Você passa. Atrás de você alguém abre uma bola e a praça inteira faz aquele barulho pequeno de quando vê.']}
+     resultado:['Você passa. Atrás de você alguém abre uma Pokébola e a praça inteira faz aquele barulho pequeno de quando vê.']}
   ]
 },
 {
   id:'ger_bicho_na_calcada', peso:2,
-  titulo:'Um bicho na calçada',
+  titulo:'Um Pokémon na calçada',
   texto:[
     d=>{
       const esp = DEX[Dados.escolher(poolSelvagem())];
@@ -1125,7 +1125,7 @@ const EVENTOS_GERAIS = [
   ],
   escolhas:[
     {texto:'Agachar e ficar na altura dele.',
-     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Agachou na calçada pra ficar na altura de um bicho'},
+     ef:{moral:2, rep:{eixo:'bom',delta:1,motivo:'Agachou na calçada pra ficar na altura de um Pokémon'},
          registrar:'Agachou na calçada pra ficar na altura de um Pokémon que ninguém estava olhando.'},
      resultado:[
        'Você agacha. Ele não foge.',
@@ -1134,7 +1134,7 @@ const EVENTOS_GERAIS = [
        'Você diz que não e continua agachad{o|a}.'
      ]},
     {texto:'Perguntar na loja mais próxima se ele é de alguém.',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou se o bicho da calçada tinha dono'},
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou se o Pokémon da calçada tinha dono'},
          registrar:'Perguntou na loja se o Pokémon da calçada era de alguém. Era, e não era.'},
      resultado:[
        fala('a moça da loja', 'É da rua.'),
@@ -1144,7 +1144,7 @@ const EVENTOS_GERAIS = [
     {texto:'Dar comida.',
      cond:d=>Estado.contaItem('Ração') > 0,
      ef:{itens:{'Ração':-1}, moral:2,
-         rep:{eixo:'bom',delta:1,motivo:'Dividiu comida com um bicho de rua'},
+         rep:{eixo:'bom',delta:1,motivo:'Dividiu comida com um Pokémon de rua'},
          registrar:'Dividiu Ração com um Pokémon de rua.'},
      resultado:[
        'Ele come sem pressa, do jeito de quem não está com fome mas não recusa por educação.',
@@ -1295,7 +1295,7 @@ campo:[
   texto:[
     'Tem uma pessoa de uns vinte anos empurrando uma bicicleta há tempo suficiente pra ter desistido de ficar brava.',
     'A corrente arrebentou e está enrolada no quadro com uma sacola plástica, do jeito que a gente faz quando não quer perder a peça.',
-    fala('a moça da bicicleta', 'Quanto falta pra próxima cidade? Fala rápido, tipo arrancar band-aid.')
+    fala('a moça da bicicleta', 'Quanto falta pra próxima cidade? Fala rápido, tipo arrancar curativo.')
   ],
   escolhas:[
     {texto:'Olhar a corrente. Talvez dê pra emendar.',
@@ -1321,12 +1321,12 @@ campo:[
        'Dá quase duas horas, e nas duas horas ela conta a vida inteira dela, incluindo partes que ninguém conta pra estranho.',
        fala('a moça da bicicleta', 'Eu falo demais quando tô com vergonha de aceitar ajuda.'),
        fala('a moça da bicicleta', 'Você reparou e não falou nada. Isso é de boa pessoa.', 'baixo'),
-       'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela, e vai lembrar disso.'
+       'Na entrada da cidade ela aperta a sua mão com as duas mãos dela e você não pega o nome dela.'
      ]},
     {texto:'"Falta bastante." E seguir.',
      ef:{},
      resultado:[
-       fala('a moça da bicicleta', 'Band-aid arrancado. Valeu.', 'riso'),
+       fala('a moça da bicicleta', 'Curativo arrancado. Valeu.', 'riso'),
        'Ela volta a empurrar. Você segue no seu ritmo, que é mais rápido que o dela, e a distância entre vocês aumenta devagar por uns dez minutos.'
      ]}
   ]
@@ -1558,8 +1558,8 @@ floresta:[
            ]}},
     {texto:'Parar completamente e deixar ela decidir.',
      teste:{status:'resistencia', dificuldade:6, nomeStatus:'Resistência', eixo:'paciencia'},
-     bom:{ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou parado até o bicho decidir'},
-              flag:'deixou_ela_decidir', registrar:'Ficou parado no mato fechado até o bicho decidir o que fazer.'},
+     bom:{ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Ficou parado até o Pokémon decidir'},
+              flag:'deixou_ela_decidir', registrar:'Ficou parado no mato fechado até o Pokémon decidir o que fazer.'},
           resultado:[
             'Você para. Completamente. Você para de um jeito que dói nas pernas depois de três minutos.',
             'Seis minutos.',
@@ -1643,7 +1643,7 @@ montanha:[
      bom:{ef:{hp:-1, moral:3, flag:'esperou_a_neblina',
               rep:{eixo:'bom',delta:1,motivo:'Parou na neblina em vez de insistir'}},
           resultado:[
-            'Você senta encostad{o|a} numa pedra, com o time todo fora da bola, e espera.',
+            'Você senta encostad{o|a} numa pedra, com o time todo fora da Pokébola, e espera.',
             'Abre em cinquenta minutos, de uma vez, como cortina.',
             'Você perde a luz e ganha a noite mais estrelada que já viu, e dorme ali mesmo sem ter planejado.'
           ]},
@@ -1711,7 +1711,7 @@ montanha:[
          rep:{eixo:'ruim',delta:1,motivo:'Desbloqueou uma trilha que alguém bloqueou de propósito'},
          registrar:'Empurrou a pedra que bloqueava a trilha de montanha.'},
      resultado:[
-       'Leva vinte minutos e a sua lombar vai lembrar disso amanhã.',
+       'Leva vinte minutos, e a lombar reclama no fim.',
        'Você anda quarenta metros e a trilha acaba. Acaba mesmo — corte limpo, oito metros de vão, queda longa.',
        'Você volta. Você empurra a pedra de volta, que leva outros vinte minutos e dói muito mais.',
        'E você fica um tempo sentad{o|a} ao lado dela pensando na pessoa que carregou calço morro acima pra impedir exatamente o que você acabou de fazer.'
@@ -1802,8 +1802,7 @@ caverna:[
      ef:{flag:'marcou_a_agua', registrar:'Marcou onde fica a água dentro do túnel.'},
      resultado:['Você risca uma seta na parede com pedra e segue.','Se você precisar de água na volta, você sabe onde tem. É pouco, e um dia é tudo.']},
     {texto:'Apagar a lanterna um minuto e só escutar.',
-     ef:{moral:3, flag:'escutou_no_escuro',
-         presagio:'Você vai repetir isso outras vezes nessa jornada, sempre sozinh{o|a}, e nunca vai contar pra ninguém que faz isso.'},
+     ef:{moral:3, flag:'escutou_no_escuro'},
      resultado:[
        'Escuro de caverna não é escuro de quarto. É um escuro que tem peso.',
        'No primeiro segundo é o pingo. No quinto é a sua própria respiração. No vigésimo é uma coisa arrastando longe, e não é perto o suficiente pra ser problema.',
@@ -1877,7 +1876,7 @@ agua:[
   escolhas:[
     {texto:'Entrar na água e soltar os dois.',
      teste:{status:'forca', dificuldade:6, nomeStatus:'Força', eixo:'cuidado'},
-     bom:{ef:{hp:-2, moral:4, rep:{eixo:'bom',delta:2,motivo:'Entrou na água pra soltar dois bichos de uma rede abandonada'},
+     bom:{ef:{hp:-2, moral:4, rep:{eixo:'bom',delta:2,motivo:'Entrou na água pra soltar dois Pokémon de uma rede abandonada'},
               flag:'soltou_da_rede', registrar:'Soltou dois Pokémon de uma rede de náilon abandonada.'},
           resultado:[
             'A água bate no peito e é mais fria do que a superfície prometia.',
@@ -1885,7 +1884,7 @@ agua:[
             'Os dois somem sem olhar pra trás, que é como tem que ser.',
             'Você puxa a rede inteira pra fora e deixa amontoada na pedra, pesando uns quinze quilos de água.'
           ]},
-     ruim:{ef:{hp:-5, registrar:'Entrou na água pra soltar bicho da rede e se enroscou também.'},
+     ruim:{ef:{hp:-5, registrar:'Entrou na água pra soltar Pokémon da rede e se enroscou também.'},
            resultado:[
              'Você enrosca o próprio pé no náilon, e por uns três segundos muito longos você entende exatamente o que os dois estão sentindo.',
              'Você se solta. Um dos dois você consegue tirar. O outro não.'

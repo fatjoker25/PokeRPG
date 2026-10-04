@@ -35,8 +35,7 @@ c12_ab_ciclovia:{
     'No fim da descida, Fuchsia aparece de uma vez, e a cerca da Zona Safári aparece junto: alambrado de três metros que sai da cidade e some na curva do horizonte.'
   ],
   ef:{flag:'os_tres_da_caixa_termica',
-      registrar:'Três ciclistas sem capacete desceram a Rota 17 com uma caixa térmica branca no bagageiro.',
-      presagio:'Caixa térmica na descida da 17 vai pra algum lugar em Fuchsia que aceita caixa térmica.'},
+      registrar:'Três ciclistas sem capacete desceram a Rota 17 com uma caixa térmica branca no bagageiro.'},
   escolhas:[
     {texto:'Tentar ver onde os três pararam.', vai:'c12_ab_onde_pararam'},
     {texto:'Ir direto à recepção da Zona Safári.', vai:'c12_fuchsia'},
@@ -200,7 +199,7 @@ c12_ab_o_que_responderam:{
   texto:[
     fala('Ivo', 'Que era depósito de ração.'),
     'Ele pega o binóculo de volta, ajusta e olha ele mesmo, sem pressa.',
-    fala('Ivo', 'Nove mil hectares de reserva com bicho selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
+    fala('Ivo', 'Nove mil hectares de reserva com Pokémon selvagem que come sozinho, e um depósito de ração de sessenta metros de comprimento.'),
     fala('Ivo', 'Eu perguntei isso também. Aí eles pararam de responder.'),
     d=>fala(d.jogador.nome, 'Por que você não desiste?'),
     'Ele abaixa o binóculo.',
@@ -296,12 +295,11 @@ c12_ab_o_que_ela_audita:{
     d=>fala(d.jogador.nome, 'Não fecha por quanto?'),
     fala('Auditora Brill', 'Por quatrocentos e doze.'),
     'Ela diz o número devagar, como quem já disse esse número pra muita gente que não reagiu.',
-    fala('Auditora Brill', 'Quatrocentos e doze bichos que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
+    fala('Auditora Brill', 'Quatrocentos e doze Pokémon que entraram na conta e não saíram por nenhuma das três portas: nem morte, nem transferência, nem soltura.'),
     fala('Auditora Brill', 'Eu escrevi isso em três relatórios. Os três foram arquivados como "divergência metodológica".')
   ],
   ef:{flag:['quatrocentos_e_doze','sabe_do_lote_unico'],
-      registrar:'A auditoria aponta 412 espécimes que entraram na Zona Safári e não saíram por nenhuma das três portas.',
-      presagio:'Quatrocentos e doze. Guarde esse número: ele vai reaparecer com outro nome.'},
+      registrar:'A auditoria aponta 412 espécimes que entraram na Zona Safári e não saíram por nenhuma das três portas.'},
   escolhas:[
     {texto:'Perguntar pelo Setor 7.', vai:'c12_ab_perguntou_o_sete'},
     {texto:'Pedir cópia de um dos relatórios.', vai:'c12_ab_a_copia_do_relatorio'},
@@ -322,8 +320,7 @@ c12_ab_perguntou_o_sete:{
     fala('Auditora Brill', 'Do outro lado do sete.')
   ],
   ef:{flag:['o_setor_sete_nao_existe_no_mapa','sabotou_o_setor7'],
-      registrar:'O mapa oficial da Zona Safári vai do setor 1 ao 6 e pula direto pro 8.',
-      presagio:'Numerar de 1 a 8 e pular o 7 é mais trabalho do que não numerar. Alguém quis que o 7 sumisse depois.'},
+      registrar:'O mapa oficial da Zona Safári vai do setor 1 ao 6 e pula direto pro 8.'},
   escolhas:[
     {texto:'Pedir cópia de um relatório da auditoria.', vai:'c12_ab_a_copia_do_relatorio'},
     {texto:'Pedir pra falar com o diretor.', vai:'c12_diretor'},
@@ -361,7 +358,7 @@ c12_fuchsia:{
     'Fuchsia é uma cidade pequena que existe por causa de uma coisa grande.',
     'Quatro mil habitantes, uma avenida principal de setecentos metros, duas pousadas, uma escola, um posto de saúde que fecha às dezoito, e do outro lado da rua: uma cerca de alambrado de três metros que continua por trinta e um quilômetros.',
     'A Zona Safári tem nove mil hectares. É a maior área protegida de Kanto e a única que gera receita própria.',
-    'A entrada custa quinhentos, dá trinta bolas especiais, meia hora de caminhada guiada e um folheto plastificado com o nome das espécies.',
+    'A entrada custa quinhentos, dá trinta Pokébolas especiais, meia hora de caminhada guiada e um folheto plastificado com o nome das espécies.',
     'É turismo. É bom turismo, inclusive: a reserva é linda, o folheto é bem-feito, o dinheiro fica na cidade.',
     'Na fachada da recepção tem um painel com uma frase em letra garrafal, dessas de placa de rodovia:',
     '**A CERCA EXISTE PARA MANTER VOCÊ FORA, NÃO ELES DENTRO.**',
@@ -374,8 +371,7 @@ c12_fuchsia:{
       return 'E na parede da recepção tem um cartaz desbotado, de uns dez anos atrás: "AJUDE-NOS — Pokémon avistados FORA da cerca devem ser reportados." Fora. Não dentro.';
     }
   ],
-  ef:{registrar:'Chegou a Fuchsia e à Zona Safári.',
-      presagio:'"A cerca existe para manter você fora, não eles dentro." Lê de novo daqui a três horas.'},
+  ef:{registrar:'Chegou a Fuchsia e à Zona Safári.'},
   escolhas:[
     {texto:'Pagar a entrada e fazer o passeio guiado.', vai:'c12_passeio', cond:d=>d.jogador.dinheiro>=500,
      ef:{dinheiro:-500}},
@@ -401,8 +397,7 @@ c12_cidade:{
   ],
   ef:{flag:['viu_fuchsia','ouviu_manejo'],
       rep:{eixo:'bom',delta:1,motivo:'Reparou no que não estava lá'},
-      registrar:'Não há um único Pokémon selvagem em Fuchsia. A cidade chama isso de "manejo".',
-      presagio:'"A gente tem manejo." Ela disse com orgulho. Guarde a palavra.'},
+      registrar:'Não há um único Pokémon selvagem em Fuchsia. A cidade chama isso de "manejo".'},
   escolhas:[
     {texto:'"O que é manejo?" — perguntar na padaria mesmo.', vai:'c12_manejo_padaria'},
     {texto:'Procurar o ginásio da cidade.', vai:'c12_ginasio'},
@@ -415,8 +410,8 @@ c12_manejo_padaria:{
   texto:[
     '"O que é manejo?"',
     'Ela para de embalar o pão de queijo com a silhueta do Kangaskhan.',
-    '"Manejo é... é o controle, né? Pra não ter bicho demais."',
-    '"E quando tem bicho demais?"',
+    '"Manejo é… é o controle, né? Pra não ter Pokémon demais."',
+    '"E quando tem Pokémon demais?"',
     '"Aí eles tiram."',
     '"Tiram pra onde?"',
     'E aí acontece a coisa que você vai ver acontecer com sete pessoas diferentes nessa cidade nas próximas quarenta e oito horas:',
@@ -444,7 +439,7 @@ c12_marido:{
     'Ele desliga a televisão sozinho quando você pergunta, o que já é resposta.',
     '"Dezesseis anos. Eu era da equipe de captura."',
     '"Captura de quê?"',
-    '"De excedente." Ele fala a palavra do jeito que se fala palavra que a gente usou tanto que não significa mais nada. "A gente saía com rede, com bola, com carrinho, e trazia."',
+    '"De excedente." Ele fala a palavra do jeito que se fala palavra que a gente usou tanto que não significa mais nada. "A gente saía com rede, com Pokébola, com carrinho, e trazia."',
     '"E a conta era feita como?"',
     'E aí ele te dá a informação mais útil da semana, e dá porque ninguém nunca perguntou:',
     '"Censo. Todo mês de março tem censo. Sobrevoo com helicóptero, contagem por setor, e uma planilha."',
@@ -479,7 +474,7 @@ c12_planilha_errada:{
     '"Então a área aumentou e a conta não mudou."',
     'Ele olha a televisão desligada.',
     '"E isso quer dizer o quê?"',
-    '"Quer dizer que a conta acha que cabe menos do que cabe." Você fala devagar, porque você mesm{o|a} está entendendo enquanto fala. "O censo conta os bichos de nove mil hectares e a planilha divide pela área de setenta e um, que é menor. A densidade dá mais alta do que é. Aí todo ano a planilha acusa excedente."',
+    '"Quer dizer que a conta acha que cabe menos do que cabe." Você fala devagar, porque você mesm{o|a} está entendendo enquanto fala. "O censo conta os Pokémon de nove mil hectares e a planilha divide pela área de setenta e um, que é menor. A densidade dá mais alta do que é. Aí todo ano a planilha acusa excedente."',
     '"Todo ano."',
     '"Todo ano."',
     'Sr. Zane fica muito quieto.',
@@ -599,8 +594,7 @@ c12_vandir_soltura:{
       npc:{nome:'Sr. Zane', opiniao:8, memoria:'Se ofereceu para dirigir o caminhão de soltura, com hérnia e sessenta e sete anos.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou a coisa certa ao homem certo'},
       moral:15,
-      registrar:'Sr. Zane dirige o caminhão de soltura se você conseguir abrir o setor 7.',
-      presagio:'Ele tem o mapa na cabeça. Guarde — isso muda como isso termina.'},
+      registrar:'Sr. Zane dirige o caminhão de soltura se você conseguir abrir o setor 7.'},
   escolhas:[
     {texto:'"Então me ajuda a abrir."', vai:'c12_vandir_setor7'},
     {texto:'Ir procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -624,8 +618,7 @@ c12_ginasio:{
   ef:{flag:'achou_ginasio_fuchsia',
       executar:d=>{ Mundo.descobrir('ginasio_fuchsia'); return []; },
       npc:{nome:'Filha do Koga', opiniao:1, memoria:'Varria o jardim de pedra do ginásio de Fuchsia numa terça.'},
-      registrar:'O ginásio de Fuchsia abre quarta e sexta, das 14h às 18h.',
-      presagio:'"Veneno avisa o que vai fazer e faz devagar." Vale pra mais coisa que o tipo.'},
+      registrar:'O ginásio de Fuchsia abre quarta e sexta, das 14h às 18h.'},
   escolhas:[
     {texto:'"Seu pai trabalha com a reserva?"', vai:'c12_koga_reserva'},
     {texto:'Ir falar com o diretor.', vai:'c12_diretor'},
@@ -683,8 +676,7 @@ c12_koga:{
       npc:{nome:'Koga', opiniao:3, memoria:'Te disse na varanda que a retirada da reserva sobe todo ano há seis anos.'},
       rep:{eixo:'bom',delta:3,motivo:'Chegou ao único conselheiro que lia o relatório'},
       instabilidade:1,
-      registrar:'A retirada anual da Zona Safári subiu de 130 para 240 em seis anos.',
-      presagio:'"Alguém está enchendo a reserva para poder esvaziar." Guarde as duas hipóteses.'},
+      registrar:'A retirada anual da Zona Safári subiu de 130 para 240 em seis anos.'},
   escolhas:[
     {texto:'"A planilha é de 1971 e a reserva cresceu em 85."', vai:'c12_koga_planilha', cond:d=>!!d.flags.entendeu_a_conta},
     {texto:'"Me dá o relatório."', vai:'c12_koga_relatorio'},
@@ -744,8 +736,7 @@ c12_derrubar_relatorio:{
       npc:{nome:'Koga', opiniao:9, memoria:'Convocou reunião extraordinária do conselho e dividiu as tarefas com você.'},
       rep:{eixo:'bom',delta:5,motivo:'Conseguiu que o caminho lento e o caminho rápido andassem juntos'},
       moral:12,
-      registrar:'Koga convocou reunião extraordinária do conselho: onze dias.',
-      presagio:'"A gente é bem complementar." Anota — é a primeira vez na viagem que alguém divide tarefa com você de igual pra igual.'},
+      registrar:'Koga convocou reunião extraordinária do conselho: onze dias.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Pia antes.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -774,8 +765,7 @@ c12_enchendo:{
   ],
   ef:{flag:['sabe_das_solturas','desconfia_do_ciclo'],
       rep:{eixo:'bom',delta:2,motivo:'Entendeu que a entrada e a saída podem ser o mesmo negócio'},
-      registrar:'A reserva recebe ~200 solturas por ano; as mesmas pessoas aprovam entrada e saída.',
-      presagio:'Ganhar por unidade nas duas pontas. Repare que ninguém precisa ser cruel pra isso funcionar.'},
+      registrar:'A reserva recebe ~200 solturas por ano; as mesmas pessoas aprovam entrada e saída.'},
   escolhas:[
     {texto:'"Quem assina as duas coisas?"', vai:'c12_quem_assina'},
     {texto:'"Me dá o relatório."', vai:'c12_koga_relatorio'},
@@ -808,8 +798,7 @@ c12_quem_assina:{
       npc:{nome:'Koga', opiniao:6, memoria:'Admitiu que assinou em 1997 o credenciamento do receptor e não lembra o nome da empresa.'},
       rep:{eixo:'bom',delta:3,motivo:'Chegou até a assinatura que começou tudo'},
       moral:-8,
-      registrar:'O conselho credenciou o receptor em 1997. Koga assinou e não lembra o nome da empresa.',
-      presagio:'Ele lembra de tudo e não lembra desse. Isso é o que o esquecimento útil faz.'},
+      registrar:'O conselho credenciou o receptor em 1997. Koga assinou e não lembra o nome da empresa.'},
   escolhas:[
     {texto:'"Procura o nome. Eu espero."', vai:'c12_procurou_o_nome'},
     {texto:'"Me dá o relatório inteiro."', vai:'c12_koga_relatorio'},
@@ -1021,8 +1010,7 @@ c12_nico:{
   ef:{flag:['sabe_do_setor7','nico_falou'],
       npc:{nome:'Guia Orin', opiniao:4, memoria:'Te contou tudo sobre o setor 7 encostado num muro, no escuro, ao lado de um contêiner de lixo.'},
       moral:-5,
-      registrar:'Orin denunciou o setor 7 ao diretor em março e nada aconteceu.',
-      presagio:'Ele marcou hora, foi de camisa e ensaiou. Guarde os três detalhes.'},
+      registrar:'Orin denunciou o setor 7 ao diretor em março e nada aconteceu.'},
   escolhas:[
     {texto:'"Eu não vou falar seu nome pra ninguém."', vai:'c12_protegeu_nico'},
     {texto:'"Você vai comigo hoje à noite."', vai:'c12_nico_vai'},
@@ -1082,8 +1070,7 @@ c12_mapa_do_nico:{
       npc:{nome:'Guia Orin', opiniao:6, memoria:'Desenhou o mapa do setor 7 no verso de um folheto e ficou em casa, com a sua permissão.'},
       rep:{eixo:'bom',delta:3,motivo:'Deixou alguém ajudar sem se destruir'},
       moral:8,
-      registrar:'Orin desenhou o mapa do setor 7 com os três pontos de plantão e os horários de ronda.',
-      presagio:'"Eu já sei que eu não vou." É a frase mais honesta que alguém te disse em Fuchsia.'},
+      registrar:'Orin desenhou o mapa do setor 7 com os três pontos de plantão e os horários de ronda.'},
   escolhas:[
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Pia.', vai:'c12_yara', cond:d=>!!d.flags.sabe_da_yara},
@@ -1124,8 +1111,7 @@ c12_nico_acusado:{
   ],
   ef:{npc:{nome:'Guia Orin', opiniao:-2, memoria:'Você o chamou de cúmplice. Ele concordou e sumiu. Depois depôs numa audiência.'},
       flag:'afastou_nico', moral:-8,
-      registrar:'Chamou o Orin de cúmplice. Ele concordou.',
-      presagio:'Você nunca vai saber se foi por causa ou apesar. Quase nunca se sabe.'},
+      registrar:'Chamou o Orin de cúmplice. Ele concordou.'},
   escolhas:[
     {texto:'Ir sozinh{o|a} à noite.', vai:'c12_noite_zona'},
     {texto:'Falar com o diretor.', vai:'c12_diretor'},
@@ -1172,12 +1158,12 @@ c12_yara:{
     'E ela responde na hora, sem hesitar, porque pra ela não é segredo:',
     '"Marcação e triagem."',
     '"Marcação?"',
-    '"Brinco. Brinco auricular numerado, de plástico, amarelo." Ela mostra um, no bolso do avental, porque ela anda com eles. "Todo bicho que entra no setor de triagem recebe um número antes de sair."',
+    '"Brinco. Brinco auricular numerado, de plástico, amarelo." Ela mostra um, no bolso do avental, porque ela anda com eles. "Todo Pokémon que entra no setor de triagem recebe um número antes de sair."',
     'Ela termina o curativo.',
     '"Eu marco entre cinquenta e oitenta por terça."'
   ],
   ef:{flag:['conheceu_yara','sabe_do_brinco'],
-      npc:{nome:'Dra. Pia', opiniao:1, memoria:'Médica de Pokémon contratada da reserva; marca de 50 a 80 bichos por terça-feira.'},
+      npc:{nome:'Dra. Pia', opiniao:1, memoria:'Médica de Pokémon contratada da reserva; marca de 50 a 80 Pokémon por terça-feira.'},
       registrar:'A Dra. Pia faz marcação e triagem no setor 7 todas as terças: 50 a 80 por dia.',
       presagio:'Ela anda com brinco no bolso do avental. Isso é rotina, não crime.'},
   escolhas:[
@@ -1240,7 +1226,7 @@ c12_triagem:{
     '"E quantos por cento são A?"',
     'Ela fecha a torneira.',
     '"Uns noventa."',
-    '"Noventa por cento dos bichos de uma reserva são saudáveis, em idade reprodutiva e de espécie com demanda?"',
+    '"Noventa por cento dos Pokémon de uma reserva são saudáveis, em idade reprodutiva e de espécie com demanda?"',
     'Ela seca as mãos no avental por muito mais tempo do que uma mão leva pra secar.',
     '"A triagem é feita por quem?", você pergunta.',
     '"Por mim."',
@@ -1338,7 +1324,7 @@ c12_formularios:{
       rep:{eixo:'bom',delta:5,motivo:'Recebeu uma prova com o nome de quem deu, autorizado'},
       moral:12,
       registrar:'Recebeu 112 vias amarelas de triagem da Dra. Pia, com autorização de citar o nome dela.',
-      presagio:'Ela contou uma por uma em voz alta. Cada uma é um bicho.'},
+      presagio:'Ela contou uma por uma em voz alta. Cada uma é um Pokémon.'},
   escolhas:[
     {texto:'Levar pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
@@ -1396,8 +1382,7 @@ c12_yara_leva:{
   ef:{flag:['vai_com_a_yara','sabe_do_setor7'],
       npc:{nome:'Dra. Pia', opiniao:6, memoria:'Te credenciou como auxiliar dela para a terça no setor 7.'},
       rep:{eixo:'bom',delta:3,motivo:'Vai entrar pela porta da frente, de dia, com crachá'},
-      registrar:'Vai entrar no setor 7 como auxiliar da médica, terça às 6h30.',
-      presagio:'"Você vai entender às nove da manhã." Ela não estava sendo dramática.'},
+      registrar:'Vai entrar no setor 7 como auxiliar da médica, terça às 6h30.'},
   escolhas:[
     {texto:'Ir na terça, como auxiliar.', vai:'c12_terca'},
     {texto:'Ir hoje à noite, antes da terça.', vai:'c12_noite_zona'},
@@ -1412,7 +1397,7 @@ c12_terca:{
     'É assim que se entra num lugar: com crachá, de manhã, de van.',
     'O setor 7 de dia é pior do que de noite, e você vai levar anos pra explicar por quê.',
     'De noite seria clandestino. De dia é um expediente.',
-    'Tem café numa garrafa térmica em cima de uma caixa. Tem rádio tocando baixinho numa estação de Fuchsia. Tem dois rapazes de luva conversando sobre o final de semana enquanto passam bicho do corredor de contenção pra baia de triagem.',
+    'Tem café numa garrafa térmica em cima de uma caixa. Tem rádio tocando baixinho numa estação de Fuchsia. Tem dois rapazes de luva conversando sobre o final de semana enquanto passam Pokémon do corredor de contenção pra baia de triagem.',
     'Tem uma balança. Tem uma prancheta. Tem uma caixa de brincos amarelos numerados.',
     'E tem fila.',
     'A Dra. Pia calça a luva, liga a lanterna de cabeça, e olha pra você.',
@@ -1420,8 +1405,7 @@ c12_terca:{
     'São seis e quarenta e dois da manhã.'
   ],
   ef:{flag:['entrou_no_setor7_de_dia','viu_o_curral'],
-      registrar:'Entrou no setor 7 de dia, como auxiliar da médica, com crachá.',
-      presagio:'De dia é um expediente. Guarde a frase, é a tese da reserva inteira.'},
+      registrar:'Entrou no setor 7 de dia, como auxiliar da médica, com crachá.'},
   escolhas:[
     {texto:'Segurar. Ficar o dia inteiro.', vai:'c12_o_dia_inteiro'},
     {texto:'Ficar até as nove e ver o que ela disse.', vai:'c12_nove_da_manha'},
@@ -1434,7 +1418,7 @@ c12_nove_da_manha:{
   texto:[
     'Às nove da manhã você entende.',
     'Não tem crueldade. Isso é o que ninguém te prepara pra ver.',
-    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os bichos — não baixinho, normal, do jeito que se conversa com bicho de estimação. A Dra. Pia é rápida e boa e o brinco leva menos de um segundo e o bicho reage mais ao susto do que à dor.',
+    'Os dois rapazes de luva são cuidadosos. Um deles conversa com os Pokémon — não baixinho, normal, do jeito que se conversa com Pokémon de estimação. A Dra. Pia é rápida e boa e o brinco leva menos de um segundo e o Pokémon reage mais ao susto do que à dor.',
     'Ninguém grita com ninguém. Ninguém chuta nada.',
     'E às nove da manhã chega o lote da baia 3, e a baia 3 é a baia dos filhotes, e a triagem de filhote é por peso, porque filhote abaixo de um peso não é “apto para transporte”.',
     'E aí você vê o que acontece com os que não são aptos.',
@@ -1460,7 +1444,7 @@ c12_nove_da_manha:{
 c12_o_dia_inteiro:{
   texto:[
     'Você fica o dia inteiro.',
-    'Doze horas. Setenta e um bichos marcados. Oito formulários assinados.',
+    'Doze horas. Setenta e um Pokémon marcados. Oito formulários assinados.',
     'Na metade da tarde você já está fazendo direito: você aprendeu a segurar sem apertar, a virar a orelha sem torcer, a falar baixo do jeito que ajuda.',
     'Você fica bom nisso.',
     'Essa é a parte que vai te acordar de noite nas próximas semanas: você ficou bom nisso em seis horas.',
@@ -1473,8 +1457,7 @@ c12_o_dia_inteiro:{
       moral:-20, hp:-5, causa:'Doze horas no setor 7',
       rep:{eixo:'bom',delta:4,motivo:'Ficou as doze horas e não desviou o olho'},
       npc:{nome:'Dra. Pia', opiniao:8, memoria:'Passou doze horas com você no setor 7 e te disse que todo mundo aguenta.'},
-      registrar:'Ficou as doze horas do turno de triagem. Setenta e um marcados.',
-      presagio:'Você ficou bom nisso em seis horas. Anota isso sobre pessoas, não sobre você.'},
+      registrar:'Ficou as doze horas do turno de triagem. Setenta e um marcados.'},
   escolhas:[
     {texto:'Voltar à noite e abrir o curral.', vai:'c12_noite_zona'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
@@ -1488,12 +1471,12 @@ c12_parou_a_triagem:{
   vozes:['P','N','N','N'],
   texto:[
     'Você para.',
-    'Larga o bicho com cuidado na baia — você tem esse cuidado, mesmo agora — e fica de pé no meio do setor 7 e fala alto o suficiente pros cinco ouvirem.',
+    'Larga o Pokémon com cuidado na baia — você tem esse cuidado, mesmo agora — e fica de pé no meio do setor 7 e fala alto o suficiente pros cinco ouvirem.',
     '"A mãe desse aqui saiu às sete e quarenta."',
     'Silêncio.',
     'O rádio continua tocando.',
     'Um dos rapazes de luva olha pro outro. A Dra. Pia não levanta a cabeça.',
-    'E o mais velho dos dois — o que conversa com os bichos — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora da semana:',
+    'E o mais velho dos dois — o que conversa com os Pokémon — responde, sem agressividade nenhuma, e a resposta dele é a coisa mais devastadora da semana:',
     '"Eu sei."',
     '"Eu sei qual é a mãe de qual há quatro anos, {moço|moça}. Eu sei todas."',
     'Ele ajeita a luva.',
@@ -1801,8 +1784,7 @@ c12_pergunta_dificil:{
   ef:{flag:'diretor_humanizado',
       npc:{nome:'Diretor Quince', opiniao:3, memoria:'Te contou dos dezenove anos pedindo ampliação da reserva.'},
       rep:{eixo:'bom',delta:2,motivo:'Perguntou a pergunta que fez o homem parar'},
-      registrar:'O diretor pede ampliação da reserva há dezenove anos.',
-      presagio:'"Vai ser útil saber como a gente é feito." Ele está te ensinando a reconhecê-lo em outras pessoas.'},
+      registrar:'O diretor pede ampliação da reserva há dezenove anos.'},
   escolhas:[
     {texto:'"Me dá os dezenove anos de papel."', vai:'c12_papelada'},
     {texto:'"Por que não ampliaram? Quem é o dono da terra ao lado?"', vai:'c12_dono_da_terra'},
@@ -1833,8 +1815,7 @@ c12_dono_da_terra:{
       npc:{nome:'Diretor Quince', opiniao:7, memoria:'Descobriu com você que a terra da ampliação foi comprada por uma só empresa entre 95 e 97.'},
       rep:{eixo:'bom',delta:6,motivo:'Perguntou quem era o dono da terra ao lado'},
       instabilidade:2,
-      registrar:'As quatro propriedades vizinhas ao setor 7 foram compradas pela Agropecuária Linha Verde entre 1995 e 1997.',
-      presagio:'Compraram a ampliação antes de a ampliação ser negada. Guarde as datas.'},
+      registrar:'As quatro propriedades vizinhas ao setor 7 foram compradas pela Agropecuária Linha Verde entre 1995 e 1997.'},
   escolhas:[
     {texto:'"Quem é a Linha Verde?"', vai:'c12_quem_e_linha_verde'},
     {texto:'"Me dá os dezenove anos de papel."', vai:'c12_papelada'},
@@ -1860,8 +1841,7 @@ c12_quem_e_linha_verde:{
       npc:{nome:'Diretor Quince', opiniao:8, memoria:'Vai tirar quinze dias de férias acumuladas para ir à junta comercial de Celadon.'},
       rep:{eixo:'bom',delta:4,motivo:'Colocou um servidor de trinta e um anos na estrada atrás da resposta'},
       moral:10,
-      registrar:'O diretor vai à junta comercial de Celadon investigar a Agropecuária Linha Verde.',
-      presagio:'Trinta e um anos e nunca tirou quinze dias. Ele vai usar as férias nisso.'},
+      registrar:'O diretor vai à junta comercial de Celadon investigar a Agropecuária Linha Verde.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Pedir os catorze ofícios antes.', vai:'c12_papelada'},
@@ -1887,8 +1867,7 @@ c12_papelada:{
       itens:{'Pasta de dezenove anos de ofícios':1},
       rep:{eixo:'bom',delta:4,motivo:'Conseguiu dezenove anos de documentação da reserva'},
       npc:{nome:'Diretor Quince', opiniao:6, memoria:'Te entregou dezenove anos de papelada sabendo o que você ia fazer com ela.'},
-      registrar:'Recebeu dezenove anos de ofícios sobre a Zona Safári.',
-      presagio:'"Isso só explica. Eu sei a diferença." Guarde: mais gente vai te dizer isso.'},
+      registrar:'Recebeu dezenove anos de ofícios sobre a Zona Safári.'},
   escolhas:[
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
@@ -1917,8 +1896,7 @@ c12_critico_do_receptor:{
       npc:{nome:'Diretor Quince', opiniao:6, memoria:'Descobriu com você que aprovou uma ficha técnica escrita pelo próprio comprador.'},
       rep:{eixo:'bom',delta:4,motivo:'Mostrou ao diretor de quem era o timbre'},
       moral:-8,
-      registrar:'O diretor aprovou em 1994 a ficha técnica escrita pelo departamento técnico do receptor.',
-      presagio:'Um armazém não tem departamento técnico. Guarde a frase.'},
+      registrar:'O diretor aprovou em 1994 a ficha técnica escrita pelo departamento técnico do receptor.'},
   escolhas:[
     {texto:'"Então suspende."', vai:'c12_suspende'},
     {texto:'"Quem é o dono da terra ao lado?"', vai:'c12_dono_da_terra'},
@@ -1939,7 +1917,7 @@ c12_confronto_diretor:{
     '"Eu acho que eu sou a pior pessoa desta cidade e a única que impede isso de ser muito pior."',
     '"As duas coisas ao mesmo tempo. É possível. Eu sou a prova viva."',
     'Ele olha o estacionamento.',
-    '"Se eu sair amanhã, entra alguém que não escreve ofício, que não guarda catorze indeferimentos numa gaveta, e que não faz questão de que o bicho chegue vivo no caminhão."',
+    '"Se eu sair amanhã, entra alguém que não escreve ofício, que não guarda catorze indeferimentos numa gaveta, e que não faz questão de que o Pokémon chegue vivo no caminhão."',
     '"E eu fico. E ficar é o que me torna a pior pessoa desta cidade."',
     'Ele volta pra mesa.',
     '"Não tem saída dessa frase. Eu procuro há dezenove anos."'
@@ -1947,8 +1925,7 @@ c12_confronto_diretor:{
   ef:{flag:'diretor_confrontado',
       npc:{nome:'Diretor Quince', opiniao:4, memoria:'Te disse que é a pior pessoa da cidade e a única que impede que seja pior.'},
       moral:-8,
-      registrar:'"Eu sou a pior pessoa desta cidade e a única que impede isso de ser muito pior."',
-      presagio:'Não tem saída dessa frase. Você vai encontrar essa pessoa de novo, com outro rosto.'},
+      registrar:'"Eu sou a pior pessoa desta cidade e a única que impede isso de ser muito pior."'},
   escolhas:[
     {texto:'"Tem saída. Suspende."', vai:'c12_suspende'},
     {texto:'"Me dá os dezenove anos de papel."', vai:'c12_papelada'},
@@ -1975,8 +1952,7 @@ c12_diretor_frio:{
     'Até a saída da cidade.'
   ],
   ef:{flag:'diretor_alerta',
-      npc:{nome:'Diretor Quince', opiniao:-3, memoria:'Você blefou mal na sala dele. Ele mandou te acompanharem até fora da cidade.'},
-      presagio:'"Quem sabe, vai lá." Ele te deu conselho enquanto te expulsava.'},
+      npc:{nome:'Diretor Quince', opiniao:-3, memoria:'Você blefou mal na sala dele. Ele mandou te acompanharem até fora da cidade.'}},
   escolhas:[
     {texto:'Voltar à noite mesmo assim.', vai:'c12_noite_zona'},
     {texto:'Procurar a Dra. Pia.', vai:'c12_yara'},
@@ -2058,7 +2034,7 @@ c12_ja_abriram:{
     'O mais velho fecha os olhos.',
     '"Ele abriu o corredor de contenção às três da manhã e soltou uns sessenta."',
     '"E?"',
-    '"E sessenta bichos saíram correndo pro mato, e trinta e poucos voltaram pro curral sozinhos em três dias, porque estavam com fome e o curral é onde tem comida."',
+    '"E sessenta Pokémon saíram correndo pro mato, e trinta e poucos voltaram pro curral sozinhos em três dias, porque estavam com fome e o curral é onde tem comida."',
     'Silêncio.',
     '"E os outros?"',
     '"Uns morreram. Uns foram recapturados na semana seguinte com a operação de rotina. Uns devem ter conseguido, sei lá."',
@@ -2200,8 +2176,7 @@ c12_copia_da_folha:{
       itens:{'Câmera descartável':0},
       rep:{eixo:'bom', delta:2, motivo:'Saiu da reserva com prova em vez de indignação'},
       npc:{nome:'Funcionária da reserva', opiniao:4, memoria:'Empurrou a pasta dois centímetros e olhou pro outro lado.'},
-      registrar:'Você tem foto da nota de doação do asfalto.',
-      presagio:'Ela arriscou o emprego por dois centímetros de pasta. Lembre disso quando precisar decidir o que publicar.'},
+      registrar:'Você tem foto da nota de doação do asfalto.'},
   escolhas:[
     {texto:'Ir falar com o diretor com a foto na mão.', vai:'c12_diretor'},
     {texto:'Guardar e ir ver o setor 7 à noite.', vai:'c12_noite_zona'}
@@ -2240,8 +2215,7 @@ c12_esperou_caminhao:{
     'É um som contínuo e baixo de muitas coisas se ajeitando num espaço pequeno.',
     'Você tem três segundos pra decidir.'
   ],
-  ef:{flag:'viu_o_caminhao', moral:-10,
-      presagio:'Não é grito. Guarde que não é grito.'},
+  ef:{flag:'viu_o_caminhao', moral:-10},
   escolhas:[
     {texto:'Entrar pelo portão aberto.', vai:'c12_setor7'},
     {texto:'Seguir o caminhão.', vai:'c12_seguiu_caminhao_zona'},
@@ -2260,8 +2234,7 @@ c12_ficou_parado:{
     'E ainda assim você vai carregar esses três segundos por muito tempo, porque "não tinha o que fazer" e "eu não fiz nada" ocupam o mesmo lugar na memória.'
   ],
   ef:{flag:'ficou_parado_no_capim', moral:-15, instabilidade:1,
-      registrar:'Viu o caminhão passar e não fez nada.',
-      presagio:'"Não tinha o que fazer" e "eu não fiz nada" ocupam o mesmo lugar. Vão ocupar de novo.'},
+      registrar:'Viu o caminhão passar e não fez nada.'},
   escolhas:[
     {texto:'Voltar e entrar pelo portão.', vai:'c12_setor7'},
     {texto:'Ir falar com o diretor de manhã.', vai:'c12_diretor'},
@@ -2279,8 +2252,7 @@ c12_anotou_o_caminhao:{
   ],
   ef:{flag:['placa_do_caminhao_zona','provas_zona'],
       rep:{eixo:'bom',delta:3,motivo:'Anotou quando não dava pra fazer mais nada'},
-      registrar:'Anotou placa, horário e a marca do pneu recauchutado do caminhão do setor 7.',
-      presagio:'Conserto tem nota. Nota tem registro comercial. Guarde o pneu.'},
+      registrar:'Anotou placa, horário e a marca do pneu recauchutado do caminhão do setor 7.'},
   escolhas:[
     {texto:'Entrar pelo portão.', vai:'c12_setor7'},
     {texto:'Seguir o caminhão a pé enquanto der.', vai:'c12_seguiu_caminhao_zona'},
@@ -2315,8 +2287,8 @@ c12_seguiu_caminhao_zona:{
 c12_noite_zona:{
   texto:[
     'A Zona Safári à noite é outra coisa.',
-    'Sem guia, sem trilha marcada, sem trinta bolas especiais, sem folheto plastificado.',
-    'Nove mil hectares no escuro, com bicho que não te conhece e que aqui, diferente de todo o resto de Kanto, não foi ensinado a ter medo de gente — o que é bonito de dia e é um problema sério de noite.',
+    'Sem guia, sem trilha marcada, sem trinta Pokébolas especiais, sem folheto plastificado.',
+    'Nove mil hectares no escuro, com Pokémon que não te conhece e que aqui, diferente de todo o resto de Kanto, não foi ensinado a ter medo de gente — o que é bonito de dia e é um problema sério de noite.',
     'Faz frio e tem orvalho e o capim molha a calça até o joelho em quarenta metros.',
     d=>d.flags.tem_a_chave_do_nico ? 'A chave do Orin abre o portão de pedestre da trilha três na primeira tentativa, e o portão não range, porque o Orin passa óleo nele.' :
        d.flags.tem_o_mapa_do_nico ? 'O mapa do Orin está no seu bolso, no verso de um folheto plastificado, e ele marcou os três plantões com X e a hora da ronda ao lado.' :
@@ -2324,8 +2296,7 @@ c12_noite_zona:{
        d.flags.guarda_junto ? 'O guarda Kell anda na sua frente, bêbado e absolutamente seguro do caminho, e para duas vezes pra mijar e uma vez pra cuspir.' :
        'Você anda sozinh{o|a}, guiad{o|a} pelo trilho de carrinho, que brilha de leve no escuro porque metal polido brilha de leve no escuro.'
   ],
-  ef:{flag:'entrou_de_noite',
-      presagio:'Aqui os bichos não foram ensinados a ter medo de gente. Repare no que isso implica.'},
+  ef:{flag:'entrou_de_noite'},
   escolhas:[{texto:'Seguir o trilho até o setor 7.', vai:'c12_setor7'}]
 },
 
@@ -2340,7 +2311,7 @@ c12_setor7:{
     'Você tenta contar e desiste na casa dos oitenta.',
     'E o som — o som é a coisa.',
     'Não é pânico. Pânico você reconheceria.',
-    'É o som de bicho que já se cansou de ter pânico, que é um som mais baixo, mais regular, e infinitamente pior.'
+    'É o som de Pokémon que já se cansou de ter pânico, que é um som mais baixo, mais regular, e infinitamente pior.'
   ],
   ef:{flag:'viu_o_curral', instabilidade:1, moral:-15,
       registrar:'Encontrou o curral do setor 7 da Zona Safári. Mais de oitenta.',
@@ -2425,14 +2396,14 @@ c12_conversa_plantao:{
     '"Fala."',
     '"Abrir sem ter pra onde levar é o mesmo que não abrir, e custa mais caro pra eles."',
     '"Eles quem?"',
-    '"Eles." Ele aponta o curral com o queixo. "Sair e voltar em três dias com fome é uma coisa que quebra bicho por dentro, {moço|moça}. Eu já vi. O bicho que saiu e voltou não é o mesmo."'
+    '"Eles." Ele aponta o curral com o queixo. "Sair e voltar em três dias com fome é uma coisa que quebra Pokémon por dentro, {moço|moça}. Eu já vi. O Pokémon que saiu e voltou não é o mesmo."'
   ],
   ef:{flag:['jorge_conversou','sabe_que_precisa_levar'],
       npc:{nome:'Sr. Ulric', opiniao:4, memoria:'Passou quarenta minutos conversando com você sobre time e preço de gás antes de falar do curral.'},
       rep:{eixo:'bom',delta:3,motivo:'Sentou e ouviu antes de agir'},
       moral:5,
-      registrar:'Sr. Ulric: abrir sem ter para onde levar quebra os bichos por dentro.',
-      presagio:'"O bicho que saiu e voltou não é o mesmo." Ele viu isso em noventa e nove.'},
+      registrar:'Sr. Ulric: abrir sem ter para onde levar quebra os Pokémon por dentro.',
+      presagio:'"O Pokémon que saiu e voltou não é o mesmo." Ele viu isso em noventa e nove.'},
   escolhas:[
     {texto:'"Então me ajuda a arrumar pra onde levar."', vai:'c12_jorge_ajuda'},
     {texto:'"Eu tenho caminhão." (se tiver)', vai:'c12_soltura_organizada', cond:d=>!!d.flags.vandir_dirige || !!d.flags.sabe_dos_caminhoes},
@@ -2489,8 +2460,7 @@ c12_amarrou:{
       npc:{nome:'Sr. Ulric', opiniao:3, memoria:'Pediu para você apertar mais a corda, para não perderem o emprego dele.'},
       rep:{eixo:'ruim',delta:1,motivo:'Amarrou um velho numa cadeira'},
       moral:-10,
-      registrar:'Amarrou o vigia — que pediu para apertar mais, para não ser demitido.',
-      presagio:'Ele agradeceu. Pensa nisso com calma depois.'},
+      registrar:'Amarrou o vigia — que pediu para apertar mais, para não ser demitido.'},
   escolhas:[
     {texto:'Abrir o curral.', vai:'c12_abriu_curral'},
     {texto:'Destruir o corredor de contenção.', vai:'c12_sabotou'},
@@ -2521,8 +2491,7 @@ c12_soltura_organizada:{
       moral:30, hp:-6, causa:'Quatro horas de operação de madrugada',
       instabilidade:1,
       umaVez:'c12_p1', pokemon:{dex:115, nivel:32, opcoes:{moral:50, historia:'Estava no curral do setor 7. Depois da soltura, seguiu o caminhão a pé por seis quilômetros e não quis descer.'}},
-      registrar:'Esvaziou o setor 7: 87 soltos a 42 km, por grupo familiar, em caminhão de soltura da própria reserva.',
-      presagio:'Ninguém volta por fome a quarenta e dois quilômetros. Foi isso que faltou em noventa e nove.'},
+      registrar:'Esvaziou o setor 7: 87 soltos a 42 km, por grupo familiar, em caminhão de soltura da própria reserva.'},
   escolhas:[
     {texto:'Voltar e devolver as chaves ao Sr. Ulric.', vai:'c12_devolveu_a_chave'},
     {texto:'Ir direto ao diretor, de manhã, sem dormir.', vai:'c12_diretor'},
@@ -2569,15 +2538,14 @@ c12_abriu_curral:{
     'Oitenta e sete atravessam três hectares de clareira iluminada por refletor de obra e somem no mato em menos de quatro minutos.',
     'E o silêncio depois é absurdo.',
     d=>d.flags.sabe_que_voltam || d.flags.jorge_conversou
-      ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o bicho que sai e volta não é o mesmo.'
+      ? 'E você fica parad{o|a} no meio do curral vazio sabendo o que o Sr. Ulric te disse: que em três dias metade volta, porque é aqui que tem comida, e que o Pokémon que sai e volta não é o mesmo.'
       : 'Você fica parad{o|a} no meio do curral vazio com a sensação de ter feito a coisa mais certa da sua vida.',
     d=>d.flags.sabe_do_beto ? 'Em noventa e nove um guarda chamado Beto fez exatamente isso, sozinho, às três da manhã. Metade voltou.' : ''
   ],
   ef:{flag:['abriu_o_curral','esvaziou_o_setor7'],
       rep:{eixo:'bom',delta:4,motivo:'Abriu o curral do setor 7'},
       moral:10, instabilidade:2,
-      registrar:'Abriu o curral do setor 7. Oitenta e sete saíram.',
-      presagio:'Sem transporte, metade volta em três dias. Você ainda tem três dias.'},
+      registrar:'Abriu o curral do setor 7. Oitenta e sete saíram.'},
   escolhas:[
     {texto:'Arrumar caminhão em três dias antes deles voltarem.', vai:'c12_tres_dias'},
     {texto:'Destruir o corredor de contenção pra não dar pra reembarcar.', vai:'c12_sabotou'},
@@ -2614,7 +2582,7 @@ c12_tres_dias:{
 c12_sabotou:{
   texto:[
     'Você destrói o corredor de contenção.',
-    'É trabalho braçal e leva uma hora e quarenta: você tira os pinos de travamento das seções de tubo com uma marreta encontrada no contêiner, e sem os pinos a estrutura não fica de pé, e sem a estrutura não existe corredor, e sem corredor ninguém embarca oitenta e sete bichos em caminhão.',
+    'É trabalho braçal e leva uma hora e quarenta: você tira os pinos de travamento das seções de tubo com uma marreta encontrada no contêiner, e sem os pinos a estrutura não fica de pé, e sem a estrutura não existe corredor, e sem corredor ninguém embarca oitenta e sete Pokémon em caminhão.',
     'Você também quebra a célula de carga da balança de passagem, que é uma peça pequena e cara, e a marreta resolve.',
     'Isso não solta ninguém.',
     'Isso compra tempo: seis a nove semanas, entre orçamento, licitação e instalação, porque a firma é de fora e a reserva compra por licitação.',
@@ -2647,8 +2615,7 @@ c12_fotografou_zona:{
   ef:{flag:['provas_zona','escolha_fria'],
       rep:{eixo:'bom',delta:3,motivo:'Documentou o setor 7 inteiro com número de nota de empenho'},
       moral:-10,
-      registrar:'Fotografou o setor 7: 21 fotos, incluindo a placa com a nota de empenho da estrutura.',
-      presagio:'Nota de empenho é dinheiro público com número. Guarde o número.'},
+      registrar:'Fotografou o setor 7: 21 fotos, incluindo a placa com a nota de empenho da estrutura.'},
   escolhas:[
     {texto:'Levar tudo pro Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Levar à Dra. Cordell.', vai:'c12_entregar', cond:d=>!!d.flags.cartao_ivone},
@@ -2666,8 +2633,7 @@ c12_saiu_zona:{
     'Você levanta a mão de volta.',
     'Cinquenta e dois por cento do orçamento desta cidade vem daquela cerca, e a mulher está sovando massa às cinco da manhã, e ela nunca perguntou pra onde levam, e as duas coisas são verdade ao mesmo tempo e nenhuma delas é culpa dela.'
   ],
-  ef:{flag:'saiu_do_setor7', moral:-5,
-      presagio:'Ela levantou a mão. Guarde o gesto pra quando você for julgar Fuchsia.'},
+  ef:{flag:'saiu_do_setor7', moral:-5},
   escolhas:[
     {texto:'Ir ao Koga.', vai:'c12_koga', cond:d=>!!d.flags.achou_ginasio_fuchsia},
     {texto:'Ir ao diretor.', vai:'c12_diretor'},
@@ -2720,8 +2686,7 @@ c12_entregou_koga:{
       npc:{nome:'Koga', opiniao:10, memoria:'Recebeu todo o material e vai ler as doze folhas de vínculos em voz alta na reunião.'},
       rep:{eixo:'bom',delta:6,motivo:'Entregou tudo a quem sabia usar o regimento'},
       moral:15,
-      registrar:'Koga vai ler as doze folhas de vínculos em voz alta na reunião extraordinária e pedir votação nominal.',
-      presagio:'Votação nominal. Cada um dos seis vai ter que dizer o próprio nome e o próprio voto.'},
+      registrar:'Koga vai ler as doze folhas de vínculos em voz alta na reunião extraordinária e pedir votação nominal.'},
   escolhas:[
     {texto:'Ficar em Fuchsia até a reunião.', vai:'c12_ficou_pra_reuniao'},
     {texto:'Ir ao setor 7 hoje à noite mesmo assim.', vai:'c12_noite_zona'},
@@ -2777,8 +2742,7 @@ c12_ivone_zona:{
       npc:{nome:'Dra. Cordell', opiniao:8, memoria:'Recebeu o material de Fuchsia e separou o que dá capa do que dá tristeza.'},
       rep:{eixo:'bom',delta:5,motivo:'Entregou a Fuchsia inteira a quem publica'},
       instabilidade:-1,
-      registrar:'A Dra. Cordell recebeu o material da Zona Safári.',
-      presagio:'"Tristeza também informa. Mas a capa é o número." Anote como se faz.'},
+      registrar:'A Dra. Cordell recebeu o material da Zona Safári.'},
   escolhas:[
     {texto:'Ficar até a reunião do conselho.', vai:'c12_ficou_pra_reuniao', cond:d=>!!d.flags.koga_convoca || !!d.flags.koga_descredencia},
     {texto:'Ir ao setor 7 hoje à noite.', vai:'c12_noite_zona'},
@@ -2830,7 +2794,7 @@ c12_barreira:{
     'O motorista liga pra alguém.',
     'Às oito e cinquenta chega um advogado de Celadon de carro.',
     'Às onze e quarenta a carga é desembarcada ali mesmo, na beira da estrada, em recinto provisório, por decisão de fiscalização.',
-    'E às catorze horas, oitenta e sete bichos que iam pra Celadon estão numa área de pastagem cercada no quilômetro quatro, com água, sob custódia da Liga, porque ninguém tem guia pra nenhum deles.',
+    'E às catorze horas, oitenta e sete Pokémon que iam pra Celadon estão numa área de pastagem cercada no quilômetro quatro, com água, sob custódia da Liga, porque ninguém tem guia pra nenhum deles.',
     'Ninguém nunca teve guia pra nenhum deles.',
     'Quinze anos.'
   ],
@@ -2896,8 +2860,7 @@ c12_saiu_a_edicao:{
   ef:{flag:['fuchsia_discutiu','provas_zona'],
       rep:{eixo:'bom',delta:6,motivo:'Fez uma cidade discutir a própria conta em voz alta'},
       moral:20, instabilidade:1,
-      registrar:'O jornal de Fuchsia publicou o erro de área. A cidade discutiu.',
-      presagio:'Ele dobrou o jornal e levou pra casa. Guarde esse homem.'},
+      registrar:'O jornal de Fuchsia publicou o erro de área. A cidade discutiu.'},
   escolhas:[
     {texto:'Ficar para a reunião do conselho.', vai:'c12_ficou_pra_reuniao', cond:d=>!!d.flags.koga_convoca || !!d.flags.koga_descredencia},
     {texto:'Ir ao setor 7 à noite.', vai:'c12_noite_zona'},
@@ -2948,8 +2911,7 @@ c12_devolveu_o_dinheiro:{
       rep:{eixo:'bom',delta:1,motivo:'Tentou desfazer o que não desfaz'},
       moral:5,
       npc:{nome:'A Terceira', opiniao:4, memoria:'Recusou receber de volta o pagamento pela rota do setor 7.'},
-      registrar:'Tentou devolver o pagamento da Terceira. Ela recusou.',
-      presagio:'"Informação entregue não volta." Anota — vale pra tudo daqui pra frente.'},
+      registrar:'Tentou devolver o pagamento da Terceira. Ela recusou.'},
   escolhas:[
     {texto:'Voltar e abrir o curral.', vai:'c12_noite_zona'},
     {texto:'Levar tudo à Dra. Cordell.', vai:'c12_ivone_zona', cond:d=>!!d.flags.cartao_ivone},

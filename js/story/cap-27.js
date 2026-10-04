@@ -25,7 +25,7 @@ c27_ab_o_posto_fechado:{
     'O posto velho da estrada de baixo, o de antes do posto florestal da Rota 10, é uma casa de madeira com um mastro sem bandeira.',
     'Está fechado.',
     'Não é "fechado hoje": tem um cadeado com ferrugem de meses e uma janela com teia de Spinarak por dentro, e na porta um aviso de papel que a chuva comeu e do qual sobra uma linha:',
-    '**"...atendimento transferido para a unidade de Cerulean."**',
+    '**"…atendimento transferido para a unidade de Cerulean."**',
     'Cerulean fica a quatro dias daqui.',
     'No degrau do posto tem um caderno de capa dura amarrado num barbante preso ao corrimão, do jeito que se prende caneta em banco.',
     'É um livro de registro de subida improvisado. Alguém pôs ali.',
@@ -66,7 +66,7 @@ c27_ab_a_mula:{
     fala('Enzo', 'Eu subo até a pedra. Da pedra pra cima o Tauros não vai e eu também não.'),
     d=>fala(d.jogador.nome, 'Por que você não vai?'),
     fala('Enzo', 'Porque eu tenho quarenta e nove anos e dois filhos.'),
-    'Ele afivela a cilha com o joelho apoiado na barriga do bicho.',
+    'Ele afivela a cilha com o joelho apoiado na barriga do Pokémon.',
     fala('Enzo', 'E porque eu já subi. Em oitenta e oito, com uma equipe da universidade.'),
     d=>fala(d.jogador.nome, 'E o que tinha lá em cima?'),
     'Ele para de afivelar.',
@@ -101,8 +101,7 @@ c27_ab_a_equipe_de_oitenta_e_oito:{
     fala('Enzo', 'E nenhum dos seis soube dizer como tinha chegado onde tinha chegado.', 'baixo')
   ],
   ef:{flag:['a_equipe_de_oitenta_e_oito','sabe_das_tres_equipes'],
-      registrar:'Em 1988 uma equipe de seis sumiu do acampamento e foi achada em três dias, viva, espalhada e sem saber como chegou lá.',
-      presagio:'Todos vivos. Todos espalhados. Nenhum lembra. Isso não é um acidente de montanha.'},
+      registrar:'Em 1988 uma equipe de seis sumiu do acampamento e foi achada em três dias, viva, espalhada e sem saber como chegou lá.'},
   escolhas:[
     {texto:'Procurar o lugar do acidente da primeira equipe.', vai:'c22_o_acidente'},
     {texto:'Subir direto.', vai:'c22_primeiro_dia'},
@@ -122,7 +121,7 @@ c27_ab_sozinho_mesmo:{
     },
     'De madrugada você acorda uma terceira vez, sem motivo.',
     'E fica deitad{o|a} escutando, e o que você escuta é: nada.',
-    'Nada mesmo. Nenhum bicho, nenhum vento, nenhuma folha.',
+    'Nada mesmo. Nenhum Pokémon, nenhum vento, nenhuma folha.',
     'Você está a mil e duzentos metros de altitude numa mata fechada e não tem um único som.'
   ],
   ef:{flag:'a_noite_sem_som', hp:-2,
@@ -244,10 +243,10 @@ c22_ele_ja_subiu:{
     'Ele abre uma gaveta e tira um binóculo velho, de correia rachada.',
     '"Eu cheguei na borda, olhei para baixo, e desci sem entrar."',
     '"Por quê?"',
-    '"Porque tinha dois bichos grandes lá embaixo virados para o mesmo lado, e eu tenho trinta anos de mato, {moço|moça}." Ele fecha a gaveta. "Bicho não fica virado para o mesmo lado. Bicho fica virado um contra o outro."'
+    '"Porque tinha dois Pokémon grandes lá embaixo virados para o mesmo lado, e eu tenho trinta anos de mato, {moço|moça}." Ele fecha a gaveta. "Pokémon não fica virado para o mesmo lado. Pokémon fica virado um contra o outro."'
   ],
   ef:{flag:['sabe_dos_dois_virados'], instabilidade:1,
-      registrar:'Ele viu dois bichos grandes no vale, virados para o mesmo lado. Bicho não faz isso.'},
+      registrar:'Ele viu dois Pokémon grandes no vale, virados para o mesmo lado. Pokémon não faz isso.'},
   escolhas:[
     {texto:'"Me empresta o binóculo."', vai:'c22_pediu_binoculo'},
     {texto:'"O que o senhor vê daqui, do posto?"', vai:'c22_o_que_ele_ve'},
@@ -274,14 +273,14 @@ c22_o_que_ele_ve:{
   texto:[
     '"Do posto? Nada do vale, que fica atrás daquela lomba."',
     'Ele aponta com o queixo.',
-    '"Mas eu vejo o céu em cima dele, e eu vejo os bichos daqui de baixo, e é isso que eu ia te contar de qualquer jeito."',
-    '"Que bichos?"',
-    '"Todos." Ele abre os braços. "Desde março que não sobe bicho nenhum acima da lomba. Nenhum. Nem Pidgey, nem Rattata, nem bicho de rio."',
+    '"Mas eu vejo o céu em cima dele, e eu vejo os Pokémon daqui de baixo, e é isso que eu ia te contar de qualquer jeito."',
+    '"Que Pokémon?"',
+    '"Todos." Ele abre os braços. "Desde março que não sobe Pokémon nenhum acima da lomba. Nenhum. Nem Pidgey, nem Rattata, nem Pokémon de rio."',
     'Ele deixa os braços caírem.',
     '"E não é medo, porque medo eles mostram. Eles chegam na lomba, param, ficam um tempo, e vão para o lado. Do jeito que a gente faz quando vê uma fita de isolamento."'
   ],
   ef:{flag:['sabe_da_lomba'], instabilidade:2,
-      registrar:'Desde março, nenhum bicho passa da lomba. Eles param, olham e contornam.'},
+      registrar:'Desde março, nenhum Pokémon passa da lomba. Eles param, olham e contornam.'},
   escolhas:[
     {texto:'Subir.', vai:'c22_primeiro_dia'},
     {texto:'"Me empresta o binóculo."', vai:'c22_pediu_binoculo'},
@@ -292,7 +291,7 @@ c22_o_que_ele_ve:{
 c22_trilha_antiga:{
   texto:[
     'Existe uma trilha antiga que sobe pelo lado leste e que não está no mapa da Liga, e que dá para achar se você souber que existe.',
-    'Ela é larga demais para trilha de bicho e tem, de dois em dois quilômetros, marcos de pedra empilhada com uma laje em cima.',
+    'Ela é larga demais para trilha de Pokémon e tem, de dois em dois quilômetros, marcos de pedra empilhada com uma laje em cima.',
     'No terceiro marco, a laje tem alguma coisa gravada.',
     'Não é escrita. São traços: um grupo de riscos verticais e, embaixo, um risco horizontal.',
     'Você conta os verticais. São onze.'
@@ -397,7 +396,7 @@ c22_primeiro_dia:{
     'O primeiro dia é só cansaço.',
     'Pedra, subida, vento, e a mesma vista virando devagar à sua esquerda.',
     d=>`Às quatro da tarde você passa ${d.flags.sabe_da_lomba ? 'a lomba que o Sr. Poplar apontou' : 'uma lomba de pedra'}, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.`,
-    'Não tem bicho.',
+    'Não tem Pokémon.',
     'Nenhum. Nem inseto, nem Pidgey, nem barulho de coisa pequena fugindo do lado da trilha.',
     d=>{
       const inst = d.mundo.instabilidade;
@@ -408,7 +407,7 @@ c22_primeiro_dia:{
     }
   ],
   ef:{flag:'passou_a_lomba', instabilidade:1,
-      registrar:'Passou a lomba. Acima dela não tem bicho nenhum.'},
+      registrar:'Passou a lomba. Acima dela não tem Pokémon nenhum.'},
   escolhas:[
     {texto:'Acampar aqui e observar a noite.', vai:'c22_acampou'},
     {texto:'Andar mais duas horas antes de parar.', vai:'c22_andou_mais'},
@@ -837,13 +836,13 @@ c22_leu_a_resposta:{
   texto:[
     'Você abre no caminho, o que provavelmente é errado.',
     'O papel tem uma linha só, escrita com muito cuidado, com a letra endireitada de quem quis que ficasse bonito.',
-    '**Eu queria que a minha filha não tivesse medo de bicho grande.**',
+    '**Eu queria que a minha filha não tivesse medo de Pokémon grande.**',
     'Você lê três vezes.',
     'Não é bonito, não é profundo e não é o que a Liga chamaria de objetivo de missão.',
     'É só verdade, e levou quatro meses e quarenta versões para chegar nessa forma.'
   ],
   ef:{flag:'leu_a_resposta_dele', moral:2, instabilidade:1,
-      registrar:'A resposta dele: eu queria que a minha filha não tivesse medo de bicho grande.'},
+      registrar:'A resposta dele: eu queria que a minha filha não tivesse medo de Pokémon grande.'},
   escolhas:[{texto:'Descer ao vale.', vai:'c22_encontro'}]
 },
 
@@ -1183,7 +1182,7 @@ c22_deixou_comida:{
 
 c22_recolocou:{
   texto:[
-    'Você abre a bola — ou as bolas — apontando para as pedras onde eles deviam estar.',
+    'Você abre a Pokébola — ou as Pokébolas — apontando para as pedras onde eles deviam estar.',
     'Eles saem e não hesitam nem um segundo: voam direto para o posto, assumem a posição e voltam a olhar a caverna.',
     'Nenhum olha para você. Nenhum agradece. Eles tinham um trabalho e voltaram para ele.',
     'O outro — o que nunca saiu do lugar — solta um som curto. Não é saudação. É conferência de efetivo.'
@@ -1205,14 +1204,14 @@ c22_recolocou:{
 },
 
 c22_luta_zapdos:{
-  texto:['Você tira a bola do cinto e o vale inteiro fica com cheiro de metal quente antes de você jogar.'],
+  texto:['Você tira a Pokébola do cinto e o vale inteiro fica com cheiro de metal quente antes de você jogar.'],
   ef:{executar:d=>{ Estado.lend(145).ataquesSofridos++; return []; }},
   batalha:{dex:145, nivel:56, tipo:'lendario', fuga:true, ambiente:'montanha',
            vitoria:'c22_pos_ave', derrota:'c22_pos_ave', fuga2:'c22_pos_ave', captura:'c22_capturou_ave', gameover:'gameover'}
 },
 
 c22_luta_articuno:{
-  texto:['O ar em volta dele é vinte graus mais frio. Você joga a bola e vê ela congelar no meio do arco.'],
+  texto:['O ar em volta dele é vinte graus mais frio. Você joga a Pokébola e vê ela congelar no meio do arco.'],
   ef:{executar:d=>{ Estado.lend(144).ataquesSofridos++; return []; }},
   batalha:{dex:144, nivel:56, tipo:'lendario', fuga:true, ambiente:'montanha',
            vitoria:'c22_pos_ave', derrota:'c22_pos_ave', fuga2:'c22_pos_ave', captura:'c22_capturou_ave', gameover:'gameover'}
@@ -1236,7 +1235,7 @@ c22_pos_ave:{
 
 c22_capturou_ave:{
   texto:[
-    'A bola fecha.',
+    'A Pokébola fecha.',
     'E o outro — o que sobrou — solta um som que não é de ataque. É de alarme.',
     'Ele abandona o posto e vem na sua direção, e você percebe tarde demais que tirou um dos dois guardas de uma porta que precisava de dois.',
     'Dentro da caverna, muito fundo, alguma coisa se mexe pela primeira vez em muito tempo.'

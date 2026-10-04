@@ -421,7 +421,7 @@ c8_olhou_o_porto:{
     'Depois de quarenta minutos você entende a coisa mais importante do porto: ninguém abre nada.',
     'Nada é aberto. Nada é conferido por dentro. Tudo é conferido por número, por lacre e por peso.',
     d=>d.flags.conferem_por_numero
-      ? 'Você já ouviu isso numa passarela de grade dentro de uma montanha. "Eles conferem por número, não por bicho."'
+      ? 'Você já ouviu isso numa passarela de grade dentro de uma montanha. "Eles conferem por número, não por Pokémon."'
       : 'Você não sabe por que isso te incomoda tanto.'
   ],
   ef:{flag:'entendeu_o_porto',
@@ -599,8 +599,7 @@ c8_entrou_galpao:{
   ],
   ef:{flag:'falou_com_surge',
       npc:{nome:'Líder Surge', opiniao:1, memoria:'Você entrou no galpão fora do horário. Ele te mandou voltar na quinta.'},
-      executar:d=>{ Mundo.descobrir('ginasio_vermilion'); Mundo.descobrir('achou_ginasio_vermilion'); return []; },
-      presagio:'Ele nem virou pra olhar. Você vai querer que ele vire, um dia.'},
+      executar:d=>{ Mundo.descobrir('ginasio_vermilion'); Mundo.descobrir('achou_ginasio_vermilion'); return []; }},
   escolhas:[
     {texto:'"Por que o senhor não pega leve?"', vai:'c8_porque_nao_pega_leve'},
     {texto:'Sair e ir pro cais.', vai:'c8_cais'},
@@ -622,8 +621,7 @@ c8_porque_nao_pega_leve:{
     'Ele não termina a frase. Não precisa.'
   ],
   ef:{flag:'a_historia_do_surge',
-      npc:{nome:'Líder Surge', opiniao:2, memoria:'Te contou por que não pega leve: pegou leve uma vez, com um garoto de dezesseis.'},
-      presagio:'Uma insígnia dada por gentileza matou alguém. É por isso que a sua vai custar caro.'},
+      npc:{nome:'Líder Surge', opiniao:2, memoria:'Te contou por que não pega leve: pegou leve uma vez, com um garoto de dezesseis.'}},
   escolhas:[
     {texto:'"Isso não foi culpa sua."', vai:'c8_nao_foi_culpa'},
     {texto:'Ficar calad{o|a} e sair.', vai:'c8_cais'},
@@ -643,8 +641,7 @@ c8_nao_foi_culpa:{
     '"Todo moleque que sai daqui apanhado vai pro Monte da Lua sabendo que existe uma coisa maior que ele. Isso salva vida. Insígnia de graça não salva ninguém."'
   ],
   ef:{flag:'entendeu_o_surge',
-      npc:{nome:'Líder Surge', opiniao:3, memoria:'Você disse que não foi culpa dele. Ele explicou que não muda por culpa, muda porque funciona.'},
-      presagio:'"Existe uma coisa maior que você." Ele está falando de um Raichu. Você vai encontrar coisas bem maiores.'},
+      npc:{nome:'Líder Surge', opiniao:3, memoria:'Você disse que não foi culpa dele. Ele explicou que não muda por culpa, muda porque funciona.'}},
   escolhas:[
     {texto:'Sair e ir pro cais.', vai:'c8_cais'},
     {texto:'Ficar olhando ele trabalhar.', vai:'c8_olhou_surge'},
@@ -663,8 +660,7 @@ c8_surge_navio:{
     '"Eu fui militar. Eu sei como é lugar onde ninguém registra nada."'
   ],
   ef:{flag:'aviso_do_surge_sobre_o_navio',
-      registrar:'Na semana em que o S.S. Anne atraca, as ocorrências policiais do porto caem a quase zero.',
-      presagio:'Ninguém registra. Você vai entrar naquele navio sabendo disso.'},
+      registrar:'Na semana em que o S.S. Anne atraca, as ocorrências policiais do porto caem a quase zero.'},
   escolhas:[
     {texto:'Ir pro cais.', vai:'c8_cais'},
     {texto:'"O senhor já entrou nele?"', vai:'c8_surge_entrou'},
@@ -681,12 +677,12 @@ c8_surge_entrou:{
     'Ele faz uma careta com a palavra gravata.',
     '"Fiquei quarenta minutos e desci."',
     '"Por quê?"',
-    '"Porque tinha um sujeito no salão explicando pra uma roda de gente, com taça na mão, que existe um jeito certo e um jeito errado de ser dono de um bicho."',
+    '"Porque tinha um sujeito no salão explicando pra uma roda de gente, com taça na mão, que existe um jeito certo e um jeito errado de ser dono de um Pokémon."',
     'Ele pendura a toalha num gancho.',
     '"E todo mundo tava concordando."'
   ],
   ef:{flag:'o_sujeito_do_salao',
-      presagio:'Um jeito certo e um jeito errado de ser dono de um bicho. E todo mundo concordando, com taça na mão.'},
+      presagio:'Um jeito certo e um jeito errado de ser dono de um Pokémon. E todo mundo concordando, com taça na mão.'},
   escolhas:[
     {texto:'Ir pro cais.', vai:'c8_cais'},
     {texto:'"Quem era o sujeito?"', vai:'c8_quem_era_o_sujeito'},
@@ -721,8 +717,7 @@ c8_olhou_surge:{
     'Depois ele coça a cabeça do Raichu, uma vez, rápido, do jeito de quem não quer que ninguém veja.'
   ],
   ef:{flag:'viu_o_surge_com_o_raichu', moral:5,
-      npc:{nome:'Líder Surge', opiniao:1, memoria:'Você ficou uma hora vendo ele consertar um aterramento.'},
-      presagio:'Uma coçada rápida na cabeça, de quem não quer que ninguém veja. Guarda isso pra quando ele te derrubar.'},
+      npc:{nome:'Líder Surge', opiniao:1, memoria:'Você ficou uma hora vendo ele consertar um aterramento.'}},
   escolhas:[
     {texto:'Ir pro cais.', vai:'c8_cais'},
     {texto:'Ir comer.', vai:'c8_fritura'},
@@ -735,7 +730,7 @@ c8_bar:{
     'O bar abre às cinco da manhã e às onze da noite está cheio de gente do turno que acabou.',
     'Ninguém está bêbado. É diferente: é gente cansada bebendo devagar, com o corpo ainda em posição de trabalho.',
     'Você pede uma coisa qualquer e fica ouvindo, porque bar de porto é onde tudo se fala e ninguém repara em adolescente.',
-    fala('um homem no balcão', '...o Anne atraca amanhã à noite.'),
+    fala('um homem no balcão', '…o Anne atraca amanhã à noite.'),
     fala('outro no balcão', 'Já atracou.'),
     fala('um homem no balcão', 'Já?'),
     fala('outro no balcão', 'Cais três, desde as quatro.'),
@@ -744,8 +739,7 @@ c8_bar:{
     fala('Estivador velho', 'Todo ano levam.', 'baixo'),
     fala('o estivador mais novo', 'Não é da nossa conta.', 'baixo')
   ],
-  ef:{flag:'ouviu_no_bar',
-      presagio:'"Todo ano levam." "Não é da nossa conta." Você vai ouvir essa dupla de frases até o fim.'},
+  ef:{flag:'ouviu_no_bar'},
   escolhas:[
     {texto:'Ir até a mesa do fundo.', vai:'c8_mesa_do_fundo'},
     {texto:'Continuar ouvindo sem se meter.', vai:'c8_continuou_ouvindo'},
@@ -807,13 +801,12 @@ c8_carga_viva:{
     'O mais velho fica.',
     '"Ele tem filho pequeno", ele explica. "Eu não tenho mais ninguém, então eu posso falar."',
     'Ele empurra o copo pro meio da mesa.',
-    '"Carga viva é carga viva, {garoto|garota}. Nem sempre é bicho."'
+    '"Carga viva é carga viva, {garoto|garota}. Nem sempre é Pokémon."'
   ],
   ef:{flag:['carga_viva','nem_sempre_e_bicho'],
-      registrar:'Um estivador insinuou que a carga viva do porto nem sempre é Pokémon.',
-      presagio:'"Nem sempre é bicho." Ele pode estar exagerando. Bar de porto exagera. Você vai querer ter certeza.'},
+      registrar:'Um estivador insinuou que a carga viva do porto nem sempre é Pokémon.'},
   escolhas:[
-    {texto:'"Como assim nem sempre é bicho?"', vai:'c8_nem_sempre'},
+    {texto:'"Como assim nem sempre é Pokémon?"', vai:'c8_nem_sempre'},
     {texto:'"Quando passa? Que horas?"', vai:'c8_que_horas'},
     {texto:'Pagar a mesa dele.', vai:'c8_pagou_a_mesa', cond:d=>d.jogador.dinheiro>=800,
      ef:{dinheiro:-800}},
@@ -823,7 +816,7 @@ c8_carga_viva:{
 
 c8_nem_sempre:{
   texto:[
-    '"Como assim nem sempre é bicho?"',
+    '"Como assim nem sempre é Pokémon?"',
     'O homem ri e balança a cabeça.',
     '"Ah, não. Não é isso que você tá pensando."',
     'Ele bebe.',
@@ -857,8 +850,7 @@ c8_que_horas:{
     '"E por que não vai?"',
     '"Porque eu trabalho às seis."'
   ],
-  ef:{flag:'portao_cinco', registrar:'3h40, portão cinco, balança dois (em manutenção desde março).',
-      presagio:'"Porque eu trabalho às seis." É essa a razão. Não é medo. É que amanhã tem trabalho.'},
+  ef:{flag:'portao_cinco', registrar:'3h40, portão cinco, balança dois (em manutenção desde março).'},
   escolhas:[
     {texto:'"Eu vou."', vai:'c8_eu_vou'},
     {texto:'Pagar a mesa dele.', vai:'c8_pagou_a_mesa', cond:d=>d.jogador.dinheiro>=800,
@@ -881,8 +873,7 @@ c8_eu_vou:{
   ],
   ef:{flag:'cracha_do_estivador',
       npc:{nome:'Estivador velho', opiniao:5, memoria:'Te deu o crachá vencido dele e o horário do contêiner do portão cinco.'},
-      registrar:'Ganhou um crachá de estivador vencido.',
-      presagio:'Quatro segundos. Ele mediu isso. Ele mediu isso um dia, em algum lugar.'},
+      registrar:'Ganhou um crachá de estivador vencido.'},
   escolhas:[
     {texto:'Ir pro portão cinco às três e quarenta.', vai:'c8_portao_cinco'},
     {texto:'Ir pro cais três primeiro.', vai:'c8_cais'},
@@ -902,8 +893,7 @@ c8_nunca_reportaram:{
     'Ele empurra o copo.',
     '"Eu não sou covarde, {garoto|garota}. Eu sou realista, que é pior."'
   ],
-  ef:{flag:'reportar_pra_quem',
-      presagio:'"Reportar pra quem?" Em algum momento você vai ter que ser a resposta dessa pergunta.'},
+  ef:{flag:'reportar_pra_quem'},
   escolhas:[
     {texto:'"Quando passa? Que horas?"', vai:'c8_que_horas'},
     {texto:'Pagar a mesa dele.', vai:'c8_pagou_a_mesa', cond:d=>d.jogador.dinheiro>=800,
@@ -1071,8 +1061,7 @@ c8_pediu_trabalho:{
     '"E, {garoto|garota}: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
   ],
   ef:{flag:'indicacao_da_neusa',
-      npc:{nome:'Cozinheira do Anne', opiniao:3, memoria:'Te indicou para o turno de cozinha do S.S. Anne.'},
-      presagio:'Ninguém repara em quem entra pelo corredor de serviço. Ela falou isso devagar.'},
+      npc:{nome:'Cozinheira do Anne', opiniao:3, memoria:'Te indicou para o turno de cozinha do S.S. Anne.'}},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Ir direto procurar o contramestre.', vai:'c8_trabalho'},
@@ -1085,7 +1074,7 @@ c8_fritura:{
     'A fritura do porto é uma janela numa parede com três banquinhos na calçada.',
     'Bolinho de alga, mandioca e um molho que a dona não explica. Custa pouco e é excelente.',
     'Você come em pé olhando o cais três, onde um navio do tamanho de um quarteirão está acendendo as luzes do salão uma fileira por vez.',
-    'Do banquinho do lado, um menino de uns dez anos come batata com a mão e tem uma caixa de isopor entre os pés.',
+    'Do banquinho do lado, um menino de uns dez anos come batata com a mão e tem uma caixa térmica entre os pés.',
     'A caixa se mexe.'
   ],
   ef:{dinheiro:-200, hp:4},
@@ -1107,7 +1096,7 @@ c8_batata:{
     '"Eu tenho dinheiro", ele diz, ofendido.',
     '"Eu sei."',
     'Ele come a batata.',
-    'Dois minutos depois ele empurra a caixa de isopor com o pé pra você ver melhor.',
+    'Dois minutos depois ele empurra a caixa térmica com o pé pra você ver melhor.',
     '"É meu", ele diz rápido. "Eu peguei. Não roubei."'
   ],
   ef:{npc:{nome:'Menino do cais', opiniao:3, memoria:'Você comprou batata pra ele na fritura do porto.'}},
@@ -1120,7 +1109,7 @@ c8_batata:{
 
 c8_a_caixa_do_menino:{
   texto:[
-    'Na caixa de isopor tem um Krabby, com um dedo de água e um pano molhado por cima, o que é mais cuidado do que a maioria dos adultos teria.',
+    'Na caixa térmica tem um Krabby, com um dedo de água e um pano molhado por cima, o que é mais cuidado do que a maioria dos adultos teria.',
     '"É meu", ele diz. "Eu peguei na pedra do quebra-mar. Não roubei."',
     '"Tá vendendo?"',
     '"Tô." Ele endireita as costas. "Quatrocentos."',
@@ -1183,7 +1172,7 @@ c8_avisou_o_menino:{
     '"O Dorian foi ano passado. Ele tinha dezesseis." Ele mastiga. "Ele mandou carta de Cinnabar. Aí parou."',
     '"Parou como?"',
     '"Parou." Ele dá de ombros com uma naturalidade que te gela. "Mas ele mandou carta. Ele chegou."',
-    'Ele fecha a caixa de isopor.',
+    'Ele fecha a caixa térmica.',
     '"Eu vou de passagem. Com nome na lista. Por isso eu tô juntando."'
   ],
   ef:{flag:'o_denis', registrar:'Dorian, 16 anos, foi de "vaga de trabalho" ano passado. Mandou uma carta de Cinnabar e parou.',
@@ -1212,14 +1201,13 @@ c8_pagou_a_passagem_dele:{
     '"Eu vou pagar de volta."',
     '"Não vai."',
     '"EU VOU PAGAR DE VOLTA." Ele grita isso na calçada e duas pessoas olham.',
-    'E aí ele pega a caixa de isopor e enfia na sua mão e sai correndo antes que você recuse.'
+    'E aí ele pega a caixa térmica e enfia na sua mão e sai correndo antes que você recuse.'
   ],
   ef:{dinheiro:-8000, rep:{eixo:'bom',delta:5,motivo:'Pagou a passagem de um menino do cais'},
       umaVez:'c08_krabby', pokemon:{dex:98, nivel:22, opcoes:{moral:70, historia:'Um menino de dez anos do cais de Vermilion enfiou essa caixa na sua mão e saiu correndo.'}},
       npc:{nome:'Menino do cais', opiniao:10, memoria:'Você pagou a passagem inteira dele. Ele jurou pagar de volta.'},
       flag:'pagou_a_passagem_do_menino',
-      registrar:'Pagou os oito mil da passagem do menino do cais.',
-      presagio:'"EU VOU PAGAR DE VOLTA." Ele tem dez anos e acabou de fazer uma promessa que vai carregar.'},
+      registrar:'Pagou os oito mil da passagem do menino do cais.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Ir atrás dele.', vai:'c8_atras_do_menino'}
@@ -1241,8 +1229,7 @@ c8_atras_do_menino:{
   ],
   ef:{flag:['o_nome_do_menino','a_mae_do_tunico'],
       registrar:'O menino se chama Nolan. A mãe dele embarcou no S.S. Anne há quatro anos e mandou uma carta.',
-      npc:{nome:'Menino do cais', opiniao:2, memoria:'Nome: Nolan. A mãe embarcou no Anne há quatro anos.'},
-      presagio:'Uma carta de Cinnabar. De novo. Sempre uma carta de Cinnabar.'},
+      npc:{nome:'Menino do cais', opiniao:2, memoria:'Nome: Nolan. A mãe embarcou no Anne há quatro anos.'}},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'"Ele vai atrás dela."', vai:'c8_vai_atras_dela'},
@@ -1283,8 +1270,7 @@ c8_pode_estar_viva:{
     'Ela serve outro cliente.',
     '"O Nolan não consegue viver com nenhuma das duas. Por isso ele junta."'
   ],
-  ef:{flag:'nao_escreveu_de_novo',
-      presagio:'Não morreu: não escreveu de novo. Você vai conhecer muita gente que vive na diferença entre essas duas coisas.'},
+  ef:{flag:'nao_escreveu_de_novo'},
   escolhas:[
     {texto:'"Então eu vou junto."', vai:'c8_vai_junto',
      ef:{flag:'prometeu_ir_junto', rep:{eixo:'bom',delta:2,motivo:'Assumiu o que acelerou'}}},
@@ -1399,7 +1385,7 @@ c8_krabby_justo:{
     'Ele conta o dinheiro três vezes e ainda acha que você errou.',
     '"Por que você fez isso?"',
     'Você explica o que é uma tabela de preço. Que existe um valor de mercado. Que loja de Cerulean vende esse Krabby por seis vezes o que ele pediu.',
-    'Ele ouve com uma seriedade de adulto, e no meio da explicação ele tira um lápis do bolso e começa a anotar na tampa de isopor.',
+    'Ele ouve com uma seriedade de adulto, e no meio da explicação ele tira um lápis do bolso e começa a anotar na tampa da caixa térmica.',
     'Semanas depois, você vai ouvir falar de um menino em Vermilion que virou o melhor avaliador de Pokémon do porto e que cobra pelo serviço.',
     'Boa sorte pra quem tentar enganá-lo.'
   ],
@@ -1413,12 +1399,12 @@ c8_krabby_justo:{
 
 c8_krabby_barato:{
   texto:[
-    'Ele te entrega a caixa de isopor e sai correndo, feliz, com quatrocentos no bolso.',
+    'Ele te entrega a caixa térmica e sai correndo, feliz, com quatrocentos no bolso.',
     'Você fica olhando ele ir embora.',
     'Não foi crime. Foi só o tipo de coisa que, depois, você não conta pra ninguém.',
     'A dona da fritura viu. Ela não diz nada. Ela vira o bolinho e não diz nada, e você paga a conta e ela não diz nada.'
   ],
-  ef:{presagio:'Ela não disse nada. Você vai lembrar do silêncio dela por muito mais tempo do que de qualquer bronca.'},
+  ef:{},
   escolhas:[
     {texto:'Ir atrás dele e pagar a diferença.', vai:'c8_pagou_diferenca',
      cond:d=>d.jogador.dinheiro>=2000},
@@ -1451,7 +1437,7 @@ c8_krabby_licao:{
   vozes:['N','N','N','P'],
   texto:[
     '"Dois mil e quatrocentos?"',
-    'Ele olha a caixa de isopor de um jeito completamente novo.',
+    'Ele olha a caixa térmica de um jeito completamente novo.',
     '"Então eu não vou vender."',
     '"Boa", você diz. E é boa mesmo.',
     'Ele fecha a caixa com as duas mãos e senta em cima, como quem guarda um cofre.',
@@ -1540,8 +1526,7 @@ c8_quem_aposta:{
     '"Conversar sobre o quê?"',
     '"Sobre você." Ela começa a subir a passarela. "Você vem ou não vem?"'
   ],
-  ef:{flag:'aviso_da_conversa',
-      presagio:'Se você ganhar, alguém vai querer conversar. Ela já viu isso três vezes.'},
+  ef:{flag:'aviso_da_conversa'},
   escolhas:[
     {texto:'Ir.', vai:'c8_bordo', ef:{flag:'entrou_pelo_torneio'}},
     {texto:'Recusar.', vai:'c8_recusou_torneio'},
@@ -1583,8 +1568,7 @@ c8_recusou_torneio:{
     'Só isso. Uma palavra.',
     'Você fica no cabeço de amarração e vê ela sumir na passarela coberta, e a música do piano continua, e você não sabe se acabou de fazer a coisa certa ou de perder a única chance.'
   ],
-  ef:{flag:'recusou_o_torneio',
-      presagio:'"Boa." Ela disse isso de costas e você não vai conseguir decidir o que significou.'},
+  ef:{flag:'recusou_o_torneio'},
   escolhas:[
     {texto:'Mudar de ideia e subir.', vai:'c8_bordo', ef:{flag:'entrou_pelo_torneio'}},
     {texto:'Comprar a passagem. (8.000 ₽)', vai:'c8_bordo', cond:d=>d.jogador.dinheiro>=8000,
@@ -1771,8 +1755,7 @@ c8_seguiu_caminhao:{
     'O conferente não abre nada. Ele confere o número, o lacre e o peso, e assina.',
     'Você viu o crime inteiro e o crime inteiro foi legal.'
   ],
-  ef:{flag:'viu_o_embarque', registrar:'O contêiner das 3h42 foi embarcado no S.S. Anne com conferência normal.',
-      presagio:'Você viu o crime inteiro e o crime inteiro foi legal. Guarda essa frase; vai servir várias vezes.'},
+  ef:{flag:'viu_o_embarque', registrar:'O contêiner das 3h42 foi embarcado no S.S. Anne com conferência normal.'},
   escolhas:[
     {texto:'Anotar o número do lacre.', vai:'c8_anotou_lacre'},
     {texto:'Embarcar nesse navio de qualquer jeito.', vai:'c8_cais'},
@@ -1904,8 +1887,7 @@ c8_entrou_bem:{
     'Você acha um uniforme de tripulante pendurado num gancho, com o nome de outra pessoa bordado no peito, e veste por cima da sua roupa.',
     'Ninguém olha duas vezes pra um uniforme. Isso é a descoberta mais útil da sua semana.'
   ],
-  ef:{flag:['clandestino','uniforme_tripulacao'], rep:{eixo:'ruim',delta:1,motivo:'Entrou clandestino no S.S. Anne'},
-      presagio:'Você está usando o nome de outra pessoa bordado no peito. Vai dar certo até não dar.'},
+  ef:{flag:['clandestino','uniforme_tripulacao'], rep:{eixo:'ruim',delta:1,motivo:'Entrou clandestino no S.S. Anne'}},
   escolhas:[
     {texto:'Subir para o salão.', vai:'c8_bordo'},
     {texto:'Explorar o porão agora, com uniforme.', vai:'c8_porao'},
@@ -2022,8 +2004,7 @@ c8_terceira_vez:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou alguém pra uma terceira pergunta'},
       flag:'a_terceira_pergunta',
-      npc:{nome:'Contramestre Varo', opiniao:4, memoria:'Você o convenceu a perguntar uma terceira vez, depois do contrato assinado.'},
-      presagio:'Ele vai perguntar depois de assinar o contrato. É covardia e é muito mais do que ontem.'},
+      npc:{nome:'Contramestre Varo', opiniao:4, memoria:'Você o convenceu a perguntar uma terceira vez, depois do contrato assinado.'}},
   escolhas:[
     {texto:'Carga.', vai:'c8_carga'},
     {texto:'Cozinha.', vai:'c8_cozinha'},
@@ -2096,8 +2077,7 @@ c8_contou_ao_contramestre:{
     '"Eu vou perguntar. Não hoje."'
   ],
   ef:{flag:'bruno_vai_perguntar',
-      npc:{nome:'Contramestre Varo', opiniao:3, memoria:'Você mostrou as caixas com furo pra ele. Ele disse que vai perguntar, não hoje.'},
-      presagio:'"Não hoje." Você vai ouvir isso de muita gente boa.'},
+      npc:{nome:'Contramestre Varo', opiniao:3, memoria:'Você mostrou as caixas com furo pra ele. Ele disse que vai perguntar, não hoje.'}},
   escolhas:[
     {texto:'Abrir uma caixa você mesm{o|a}.', vai:'c8_porao'},
     {texto:'Subir para o salão.', vai:'c8_bordo'},
@@ -2130,8 +2110,7 @@ c8_carga_ruim:{
     'Ele te dá comida e um lugar pra sentar no corredor de serviço. É o que ele pode.',
     'Você fica sentad{o|a} no chão de aço comendo arroz com a mão tremendo, olhando outros adolescentes carregarem caixa.'
   ],
-  ef:{hp:-5, causa:'Esforço no porão do S.S. Anne',
-      presagio:'Outros adolescentes carregando caixa. Você está sentad{o|a} olhando. Repara em quantos são.'},
+  ef:{hp:-5, causa:'Esforço no porão do S.S. Anne'},
   escolhas:[
     {texto:'Tentar a cozinha.', vai:'c8_cozinha'},
     {texto:'Contar quantos adolescentes estão carregando.', vai:'c8_contou_os_adolescentes'},
@@ -2171,7 +2150,7 @@ c8_cozinha:{
     'Oito horas descascando, lavando e carregando bandeja. A cozinha do S.S. Anne alimenta setecentas pessoas por noite e tem trinta e dois funcionários.',
     'É quente, é barulhento, e ninguém para.',
     'E você ouve muita coisa, porque cozinha é onde tudo se fala.',
-    '"...o do camarote 40 trouxe de novo."',
+    '"…o do camarote 40 trouxe de novo."',
     '"Não é da nossa conta."',
     '"Tinha um garoto junto, esse ano."',
     '"NÃO É DA NOSSA CONTA."'
@@ -2245,8 +2224,7 @@ c8_bandejas_vazias:{
     'A quarta está limpa do jeito que prato fica quando alguém come com a mão.'
   ],
   ef:{flag:'a_quarta_bandeja',
-      registrar:'Das quatro bandejas do camarote 40, três foram comidas com talher e uma com a mão.',
-      presagio:'Três com talher, uma com a mão. Repara em quantas informações cabem num prato sujo.'},
+      registrar:'Das quatro bandejas do camarote 40, três foram comidas com talher e uma com a mão.'},
   escolhas:[
     {texto:'Perguntar alguma coisa pro homem da cadeira.', vai:'c8_homem_da_cadeira'},
     {texto:'Voltar amanhã e conferir de novo.', vai:'c8_conferiu_de_novo'},
@@ -2379,7 +2357,7 @@ c8_salao:{
   vozes:['uma voz no salão','outra voz','uma voz no salão','N','N'],
   texto:[
     'Você anda pelo salão sem destino. Isso é uma habilidade — parecer que você está indo a algum lugar.',
-    '"...ele paga adiantado, sempre."',
+    '"…ele paga adiantado, sempre."',
     '"Eu não quero saber o que tem na caixa."',
     '"Se descarrega em Celadon, não é problema de Vermilion."',
     'Numa mesa perto da janela, um homem de cinquenta anos sozinho com três taças vazias te chama com a mão.',
@@ -2425,7 +2403,7 @@ c8_chegou_perto:{
     'Você fica ali de pé por uns três segundos constrangedores.',
     '"Você é do torneio?" ela pergunta.',
     '"Sou."',
-    'Ela olha o seu cinto, conta as bolas, e anota alguma coisa num telefone.',
+    'Ela olha o seu cinto, conta as Pokébolas, e anota alguma coisa num telefone.',
     '"Boa sorte."'
   ],
   ef:{flag:'foi_contado_no_salao',
@@ -2472,8 +2450,7 @@ c8_quanto_valho:{
     '"Porque eu precifiquei quatro de vocês hoje e três eram menores de idade." Ela bota o telefone no bolso. "E porque quem ganha é convidado a conversar depois. E a conversa não é sobre o prêmio."'
   ],
   ef:{flag:'aviso_da_cotacao',
-      npc:{nome:'Mulher da coluna', opiniao:2, memoria:'Te avisou pra não entrar na arena do S.S. Anne.'},
-      presagio:'Ela te avisou e você vai entrar assim mesmo. Todo mundo entra.'},
+      npc:{nome:'Mulher da coluna', opiniao:2, memoria:'Te avisou pra não entrar na arena do S.S. Anne.'}},
   escolhas:[
     {texto:'Entrar no torneio mesmo assim.', vai:'c8_torneio'},
     {texto:'"Que conversa?"', vai:'c8_que_conversa'},
@@ -2533,8 +2510,7 @@ c8_cinnabar_conta:{
     '"Mas eu sei quanto o tanque consumia. Isso passava pela minha mesa. E eu sei que o que estava lá dentro dobrou de tamanho em quatorze meses, porque o consumo dobrou em quatorze meses."'
   ],
   ef:{flag:['sabe_do_tanque','fossil_e_material'],
-      registrar:'Um tanque de doze centímetros de vidro em Cinnabar; o que estava dentro dobrou em quatorze meses.',
-      presagio:'Dobrou de tamanho em quatorze meses. Guarda o número. Você vai conhecer o que cresceu.'},
+      registrar:'Um tanque de doze centímetros de vidro em Cinnabar; o que estava dentro dobrou em quatorze meses.'},
   escolhas:[
     {texto:'"E aí?"', vai:'c8_e_ai_cinnabar'},
     {texto:'"Por que o senhor tá me contando isso?"', vai:'c8_porque_me_conta'},
@@ -2578,8 +2554,7 @@ c8_os_quatro_nomes:{
   ],
   ef:{flag:['sabe_de_sena','sabe_do_tanque'],
       registrar:'Dr. Hollis, da parte técnica do laboratório de Cinnabar, foi promovido e transferido para Saffron.',
-      npc:{nome:'Ex-Silph', opiniao:3, memoria:'Te deu o nome do Dr. Hollis com três taças na frente.'},
-      presagio:'"Ele era simpático. Isso é o que me tira o sono." Você vai apertar a mão dele.'},
+      npc:{nome:'Ex-Silph', opiniao:3, memoria:'Te deu o nome do Dr. Hollis com três taças na frente.'}},
   escolhas:[
     {texto:'"O senhor devia contar isso pra alguém."', vai:'c8_falou_com_alguem'},
     {texto:'Anotar o nome e agradecer.', vai:'c8_mais_salao',
@@ -2599,8 +2574,7 @@ c8_porque_me_conta:{
     '"Se eu contar pra você, não acontece nada. E eu preciso muito que isso saia da minha cabeça e vá pra cabeça de outra pessoa, porque faz um ano que eu carrego sozinho."'
   ],
   ef:{flag:'carregar_sozinho',
-      rep:{eixo:'bom',delta:1,motivo:'Serviu de lugar onde alguém pôde pôr uma coisa pesada'},
-      presagio:'"Se eu contar pra você, não acontece nada." Ele vai errar nisso.'},
+      rep:{eixo:'bom',delta:1,motivo:'Serviu de lugar onde alguém pôde pôr uma coisa pesada'}},
   escolhas:[
     {texto:'"Pode acontecer alguma coisa."', vai:'c8_pode_acontecer'},
     {texto:'"E o senhor sabe o nome de alguém?"', vai:'c8_os_quatro_nomes'},
@@ -2736,8 +2710,7 @@ c8_sobre_o_que:{
     'É exatamente por isso que é assustador.'
   ],
   ef:{flag:'a_fundacao_se_apresentou',
-      registrar:'Uma "fundação de bem-estar de espécimes" te abordou depois do torneio.',
-      presagio:'Bem-estar de espécimes. Guarda a palavra espécime.'},
+      registrar:'Uma "fundação de bem-estar de espécimes" te abordou depois do torneio.'},
   escolhas:[
     {texto:'Aceitar os dez minutos.', vai:'c8_a_conversa'},
     {texto:'"Não, {obrigado|obrigada}."', vai:'c8_recusa_venda'},
@@ -2833,7 +2806,7 @@ c8_o_que_acontece_com_o_dado:{
   ],
   ef:{flag:'entendeu_a_referencia',
       registrar:'O dado vira parâmetro, o parâmetro vira média, a média vira o que se considera cuidado adequado.',
-      presagio:'Quem está abaixo da referência está abaixo do adequado. Você acabou de ouvir como se constrói um critério para tirar bichos de gente pobre.'},
+      presagio:'Quem está abaixo da referência está abaixo do adequado. Você acabou de ouvir como se constrói um critério para tirar Pokémon de gente pobre.'},
   escolhas:[
     {texto:'"Vocês estão construindo uma régua."', vai:'c8_a_regua'},
     {texto:'Assinar mesmo assim.', vai:'c8_assinou'},
@@ -2853,7 +2826,7 @@ c8_a_regua:{
     'Ele não disfarça nem por um segundo.',
     '"E antes que você ache que isso é confissão: está no estatuto, é público, tem número de registro e sai no diário oficial. Art. 4º."',
     'Ele guarda a ficha na pasta.',
-    '"O problema não é a régua, {garoto|garota}. Régua é boa. Sem régua, qualquer um pode fazer qualquer coisa com um bicho e ninguém pode dizer nada."',
+    '"O problema não é a régua, {garoto|garota}. Régua é boa. Sem régua, qualquer um pode fazer qualquer coisa com um Pokémon e ninguém pode dizer nada."',
     'Ele fecha a pasta.',
     '"O problema é que alguém tem que segurar a régua. E ninguém nunca discute isso na hora de fazer a régua. Só depois."'
   ],
@@ -2904,8 +2877,7 @@ c8_continua_trabalhando:{
     '"Nos outros dias eu não acho. Mas nesses dias eu também vou trabalhar."'
   ],
   ef:{flag:'a_maior_parte_dos_dias',
-      npc:{nome:'Curador Fabre', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'},
-      presagio:'Nos outros dias ele também vai trabalhar. É isso que faz a máquina girar, e não é maldade.'},
+      npc:{nome:'Curador Fabre', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'}},
   escolhas:[
     {texto:'Apertar a mão.', vai:'c8_levou_a_ficha'},
     {texto:'Não apertar.', vai:'c8_recusa_venda'},
@@ -2953,8 +2925,7 @@ c8_assinou:{
       dinheiro:5000,
       rep:{eixo:'ruim',delta:2,motivo:'Assinou um acompanhamento de espécimes sem ler o estatuto'},
       npc:{nome:'Curador Fabre', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
-      registrar:'Assinou o termo de acompanhamento da Comissão.',
-      presagio:'A sexta você preenche em quatro minutos. Repara em quando parar de doer.'},
+      registrar:'Assinou o termo de acompanhamento da Comissão.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},
@@ -3042,8 +3013,7 @@ c8_rasgou:{
     '"Se você quiser rescindir, é por escrito, com trinta dias. Está na cláusula seis."',
     'Ele te devolve os pedaços na sua mão.'
   ],
-  ef:{flag:'rasgou_a_via', rep:{eixo:'bom',delta:1,motivo:'Tentou desfazer na mesma noite'},
-      presagio:'Trinta dias, por escrito. Anota o prazo e escreve a carta.'},
+  ef:{flag:'rasgou_a_via', rep:{eixo:'bom',delta:1,motivo:'Tentou desfazer na mesma noite'}},
   escolhas:[
     {texto:'"Então eu escrevo hoje."', vai:'c8_escreveu_rescisao',
      ef:{flag:'rescindiu', limpaFlag:'assinou_com_a_comissao', rep:{eixo:'bom',delta:2,motivo:'Rescindiu por escrito na mesma noite'}}},
@@ -3065,8 +3035,7 @@ c8_escreveu_rescisao:{
   ],
   ef:{flag:['rescindiu','sempre_guarda_o_recebido'],
       rep:{eixo:'bom',delta:1,motivo:'Aprendeu a guardar o comprovante'},
-      registrar:'Rescindiu o termo. Ele assinou o recebido e mandou guardar.',
-      presagio:'"Sempre guarda o recebido." Ele te ensinou a se defender dele mesmo, e não achou isso estranho.'},
+      registrar:'Rescindiu o termo. Ele assinou o recebido e mandou guardar.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},
@@ -3102,8 +3071,7 @@ c8_o_de_catorze:{
     d=>d.flags.venceu_torneio_navio ? 'Você tem vinte mil pokedólares num envelope no bolso interno da sua mochila.' : 'Você não tem vinte mil pokedólares.'
   ],
   ef:{flag:'o_garoto_de_fuchsia',
-      npc:{nome:'Garoto de Fuchsia', opiniao:1, memoria:'Perdeu o torneio do Anne. Precisava de dezoito mil para a cirurgia do Rapidash dele.'},
-      presagio:'Dezoito mil. Você vai lembrar desse número.'},
+      npc:{nome:'Garoto de Fuchsia', opiniao:1, memoria:'Perdeu o torneio do Anne. Precisava de dezoito mil para a cirurgia do Rapidash dele.'}},
   escolhas:[
     {texto:'Dar os vinte mil pra ele. (20.000 ₽)', vai:'c8_deu_o_premio', cond:d=>d.jogador.dinheiro>=20000},
     {texto:'Dar o que você puder. (5.000 ₽)', vai:'c8_deu_um_pouco', cond:d=>d.jogador.dinheiro>=5000,
@@ -3126,8 +3094,7 @@ c8_deu_o_premio:{
   ef:{dinheiro:-20000, rep:{eixo:'bom',delta:5,motivo:'Deu o prêmio inteiro do torneio a um garoto de catorze anos'},
       flag:'deu_o_premio', moral:15,
       npc:{nome:'Garoto de Fuchsia', opiniao:10, memoria:'Você deixou vinte mil pokedólares numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
-      registrar:'Deu o prêmio do torneio para o garoto de Fuchsia.',
-      presagio:'O Rapidash dele vai viver mais nove anos e você nunca vai ver isso.'},
+      registrar:'Deu o prêmio do torneio para o garoto de Fuchsia.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},
@@ -3157,15 +3124,14 @@ c8_ficou_sentado:{
   texto:[
     'Você fica. Duas cadeiras de plástico num corredor de serviço, com barulho de cozinha vindo de uma porta e música de piano vindo da outra.',
     'Vinte e cinco minutos sem falar quase nada.',
-    'Em algum momento ele solta o Rapidash — que não devia estar solto num corredor de navio — e o bicho enche o corredor inteiro e não cabe, e tem uma cicatriz cirúrgica antiga numa das patas dianteiras.',
+    'Em algum momento ele solta o Rapidash — que não devia estar solto num corredor de navio — e o Pokémon enche o corredor inteiro e não cabe, e tem uma cicatriz cirúrgica antiga numa das patas dianteiras.',
     'O garoto encosta a testa no pescoço dele.',
     '"Ele tem onze anos", ele diz. "Ele era do meu pai."',
     'E é só isso. Não tem mais história.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Ficou vinte e cinco minutos num corredor com um desconhecido'},
       flag:'ficou_com_o_de_catorze', moral:8,
-      npc:{nome:'Garoto de Fuchsia', opiniao:5, memoria:'Vocês ficaram vinte e cinco minutos calados num corredor de serviço.'},
-      presagio:'"Ele era do meu pai." Você vai encontrar esse Rapidash de novo, ou não. As duas coisas doem.'},
+      npc:{nome:'Garoto de Fuchsia', opiniao:5, memoria:'Vocês ficaram vinte e cinco minutos calados num corredor de serviço.'}},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},
@@ -3204,8 +3170,7 @@ c8_escutou_caixa:{
     'Na terceira caixa não tem som nenhum.',
     'Você fica mais tempo nessa.'
   ],
-  ef:{flag:'escutou_as_caixas',
-      presagio:'Na terceira não tem som. Você vai abrir a terceira e vai ter que ver.'},
+  ef:{flag:'escutou_as_caixas'},
   escolhas:[
     {texto:'Abrir a terceira.', vai:'c8_abriu_caixa'},
     {texto:'Abrir a primeira.', vai:'c8_abriu_caixa'},
@@ -3242,7 +3207,7 @@ c8_arrancou_etiqueta:{
     'Agora tem, no seu caderno, um código de barras, dois registros comerciais, um número de guia e um brasão.',
     'E uma caixa no porão de um navio sem etiqueta nenhuma, o que alguém vai notar.'
   ],
-  ef:{presagio:'Uma caixa sem etiqueta. Alguém vai conferir e vai faltar uma etiqueta.'},
+  ef:{},
   escolhas:[
     {texto:'Abrir a caixa que ficou sem etiqueta.', vai:'c8_abriu_caixa'},
     {texto:'Ir buscar o capitão.', vai:'c8_capitao'},
@@ -3261,8 +3226,7 @@ c8_fotografou:{
   ef:{executar:d=>{ Estado.usarItem('Câmera descartável'); return []; },
       flag:['fotografou_o_porao','papel_com_brasao'],
       rep:{eixo:'bom',delta:2,motivo:'Documentou em vez de só ver'},
-      registrar:'Fotografou as caixas com furo de ventilação no porão do S.S. Anne.',
-      presagio:'Um funcionário de laboratório fotográfico em Celadon vai ver essas imagens antes de você.'},
+      registrar:'Fotografou as caixas com furo de ventilação no porão do S.S. Anne.'},
   escolhas:[
     {texto:'Abrir uma caixa.', vai:'c8_abriu_caixa'},
     {texto:'Ir buscar o capitão.', vai:'c8_capitao'},
@@ -3435,7 +3399,7 @@ c8_deixou_pro_garoto:{
     'Ela pensa um pouco.',
     '"Eu falo que foi do prêmio de participação. Isso existe e é duzentos, e ele nunca leu o regulamento."'
   ],
-  ef:{presagio:'Ele vai achar que foi prêmio de participação. É melhor assim, e você sabe, e mesmo assim incomoda um pouco.'},
+  ef:{},
   escolhas:[
     {texto:'"Quantas vezes a senhora já fez isso?"', vai:'c8_quantas_vezes'},
     {texto:'Ficar até clarear.', vai:'c8_fim_navio'},
@@ -3457,8 +3421,7 @@ c8_esperou_acordar:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Esperou um desconhecido acordar'},
       flag:'conhece_o_wilton',
       npc:{nome:'Stellan', opiniao:5, memoria:'Desmaiou no torneio do Anne. Você esperou ele acordar. Ele é de Saffron e não vai voltar pra casa.'},
-      registrar:'Stellan, 16 anos, de Saffron. Não vai voltar pra casa porque teria que explicar.',
-      presagio:'Ele não vai voltar pra casa porque teria que explicar. Kanto está cheia de gente que não volta por isso.'},
+      registrar:'Stellan, 16 anos, de Saffron. Não vai voltar pra casa porque teria que explicar.'},
   escolhas:[
     {texto:'Deixar dinheiro com a enfermeira pra ele. (5.000 ₽)', vai:'c8_deixou_pro_garoto',
      cond:d=>d.jogador.dinheiro>=5000,
@@ -3592,8 +3555,7 @@ c8_quem_ta_no_banheiro:{
     'Ele espera você aceitar.',
     'E o silêncio dura tempo suficiente pra você entender que ele vai ficar ali, com a porta a quinze centímetros, pelo tempo que for necessário, sem levantar a voz, até você ir embora.'
   ],
-  ef:{flag:'a_explicacao_pronta',
-      presagio:'A explicação estava pronta. Guarda isso: gente que tem a explicação pronta já precisou dela antes.'},
+  ef:{flag:'a_explicacao_pronta'},
   escolhas:[
     {texto:'Empurrar a porta.', vai:'c8_entrou_no_40'},
     {texto:'"Tá bom." E ir pro corredor de serviço.', vai:'c8_corredor_servico'},
@@ -3725,8 +3687,7 @@ c8_podem_levantar:{
   ],
   ef:{flag:['achou_o_denis','abriu_o_40'],
       registrar:'Dorian está vivo. Ele levantou quando o homem de camisa social autorizou.',
-      rep:{eixo:'bom',delta:3,motivo:'Falou com quem ninguém falava'},
-      presagio:'Não tem ferro nenhum. É essa a parte que você não vai conseguir explicar depois.'},
+      rep:{eixo:'bom',delta:3,motivo:'Falou com quem ninguém falava'}},
   escolhas:[
     {texto:'"Dorian. Sua tia tem uma carta sua."', vai:'c8_a_carta_de_volta',
      cond:d=>!!(d.flags.a_carta_do_denis||d.flags.copiou_a_carta||d.flags.o_denis_esta_no_40)},
@@ -3797,8 +3758,7 @@ c8_pegou_as_pastas:{
   ],
   ef:{flag:['tem_as_pastas_do_40','papel_com_brasao','as_quatro_cartas'],
       rep:{eixo:'bom',delta:3,motivo:'Levou as pastas e as cartas do camarote 40'},
-      registrar:'Levou onze pastas do camarote 40, com quatro cartas seladas e nunca postadas.',
-      presagio:'Ele deixou você levar. Ele já fez a conta. Você vai passar meses descobrindo qual era.'},
+      registrar:'Levou onze pastas do camarote 40, com quatro cartas seladas e nunca postadas.'},
   escolhas:[
     {texto:'Pegar os dois e sair andando.', vai:'c8_saiu_andando'},
     {texto:'Chamar o capitão com tudo na mão.', vai:'c8_capitao', ef:{flag:'com_testemunha'}},
@@ -3955,8 +3915,7 @@ c8_continuou_escutando:{
     '"Lembro", diz o menino.'
   ],
   ef:{flag:'lembro_disse_o_menino',
-      registrar:'"Você assinou por vontade própria, lembra? Eu perguntei três vezes." "Lembro."',
-      presagio:'"Lembro." Vai ser essa palavra que você vai ouvir de novo num tribunal, se chegar a ter tribunal.'},
+      registrar:'"Você assinou por vontade própria, lembra? Eu perguntei três vezes." "Lembro."'},
   escolhas:[
     {texto:'Desparafusar a grade.', vai:'c8_desparafusou'},
     {texto:'Ir buscar o capitão agora.', vai:'c8_capitao'},
@@ -4003,8 +3962,7 @@ c8_amigo_do_cais:{
   ],
   ef:{flag:['achou_o_denis','o_denis_chorou'],
       rep:{eixo:'bom',delta:3,motivo:'Levou um nome conhecido através de uma parede'},
-      registrar:'Dorian está vivo, no camarote 40, e sabe o nome do Nolan.',
-      presagio:'Seis minutos com o rosto num duto de ventilação. Isso vai ficar.'},
+      registrar:'Dorian está vivo, no camarote 40, e sabe o nome do Nolan.'},
   escolhas:[
     {texto:'"Eu vou tirar vocês daí."', vai:'c8_vai_tirar'},
     {texto:'"Quantos são?"', vai:'c8_quantos_sao_no_40'},
@@ -4281,8 +4239,7 @@ c8_mudar_a_regra:{
   ef:{flag:'plano_das_insignias',
       rep:{eixo:'bom',delta:2,motivo:'Entendeu que insígnia não é troféu'},
       npc:{nome:'Capitão do Anne', opiniao:4, memoria:'Te disse que a credencial de oito insígnias vai mais longe que a autoridade dele.'},
-      registrar:'As oito insígnias servem para entrar na sala onde a regra é feita.',
-      presagio:'A sua legitimidade vai mais longe que a de um capitão. Falta ganhar as oito.'},
+      registrar:'As oito insígnias servem para entrar na sala onde a regra é feita.'},
   escolhas:[
     {texto:'"Me dá cópia do que o senhor comunicou."', vai:'c8_copia_do_capitao'},
     {texto:'"O senhor pode chamar a capitania."', vai:'c8_capitania'},
@@ -4331,8 +4288,7 @@ c8_registrou_no_diario:{
   ef:{rep:{eixo:'bom',delta:5,motivo:'Fez um capitão registrar em diário de bordo o que ninguém ia registrar'},
       flag:['diario_de_bordo_registrado','com_testemunha'],
       npc:{nome:'Capitão do Anne', opiniao:8, memoria:'Registrou tudo no diário de bordo por sua causa. Vinte anos de guarda obrigatória.'},
-      registrar:'O capitão registrou o camarote 40 e as caixas do porão no diário de bordo.',
-      presagio:'Vinte anos de guarda obrigatória. É a coisa mais lenta e mais indestrutível que você fez em Kanto.'},
+      registrar:'O capitão registrou o camarote 40 e as caixas do porão no diário de bordo.'},
   escolhas:[
     {texto:'"E a capitania?"', vai:'c8_capitania'},
     {texto:'"Me dá cópia dessa página."', vai:'c8_copia_da_pagina'},
@@ -4405,8 +4361,7 @@ c8_chamou_a_capitania:{
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez a capitania lavrar termo'},
       flag:['termo_lavrado','capitao_demitido'],
       npc:{nome:'Capitão do Anne', opiniao:4, memoria:'Chamou a capitania a seu pedido e perdeu o emprego sete meses depois.'},
-      registrar:'A capitania lavrou termo no S.S. Anne. O capitão foi desligado sete meses depois.',
-      presagio:'Você pediu e ele pagou. Vai ter que decidir o que fazer com esse tipo de conta.'},
+      registrar:'A capitania lavrou termo no S.S. Anne. O capitão foi desligado sete meses depois.'},
   escolhas:[
     {texto:'Descer em Cinnabar.', vai:'c8_fim_navio'},
     {texto:'"Me dá cópia de tudo antes de eu descer."', vai:'c8_copia_do_capitao'}
@@ -4431,8 +4386,7 @@ c8_ele_decidiu:{
   ef:{rep:{eixo:'bom',delta:4,motivo:'Não empurrou a conta para outra pessoa'},
       flag:['diario_de_bordo_registrado','o_plano_de_catorze_meses'],
       npc:{nome:'Capitão do Anne', opiniao:9, memoria:'Você deixou a decisão com ele. Ele registrou no diário e prometeu chamar a capitania em catorze meses.'},
-      registrar:'O capitão registrou no diário e vai chamar a capitania daqui a catorze meses.',
-      presagio:'Catorze meses. Anota a data. Ele vai cumprir e ninguém vai estar lá pra ver.'},
+      registrar:'O capitão registrou no diário e vai chamar a capitania daqui a catorze meses.'},
   escolhas:[
     {texto:'"Me dá cópia dessa página."', vai:'c8_copia_da_pagina'},
     {texto:'Agradecer e descer.', vai:'c8_fim_navio'},
@@ -4487,8 +4441,7 @@ c8_chantageou_o_capitao:{
       rep:{eixo:'ruim', delta:2, motivo:'Chantageou o capitão do S.S. Anne com o próprio silêncio dele.'},
       moral:-2,
       npc:{nome:'Capitão do Anne', opiniao:-2, memoria:'Você o chantageou com a omissão dele, na ponte de comando, e funcionou.'},
-      registrar:'Chantageou o capitão do S.S. Anne: ou ele entrega papel, ou o nome dele é a matéria.',
-      presagio:'Funcionou. Isso não é a mesma coisa que ter sido certo, e você vai levar tempo pra separar as duas.'},
+      registrar:'Chantageou o capitão do S.S. Anne: ou ele entrega papel, ou o nome dele é a matéria.'},
   escolhas:[
     {texto:'"Então me dá papel."', vai:'c8_copia_do_capitao'},
     {texto:'"Registra em diário de bordo. Hoje."', vai:'c8_diario_de_bordo'},

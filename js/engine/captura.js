@@ -41,8 +41,8 @@ const Captura = {
 
     // ---- QUEBRA-BOLAS: Mewtwo e Ho-Oh
     if (QUEBRA_BOLA.includes(alvo.dex)){
-      const d = Dados.d20('A bola aguenta?');
-      ev('info', `${esp.nome} é forte demais para uma bola comum suportar. 1d20 = ${d} (1-5 quebra)`);
+      const d = Dados.d20('A Pokébola aguenta?');
+      ev('info', `${esp.nome} é forte demais para uma Pokébola comum suportar. 1d20 = ${d} (1-5 quebra)`);
       if (d <= 5){
         ev('perigo', `A esfera racha no ar. Um estalo seco — e ${esp.nome} está livre, com os olhos em você.`);
         const L = Estado.lend(alvo.dex);
@@ -54,7 +54,7 @@ const Captura = {
         anima('quebrou', 0);
         return {eventos, capturou:false, enfurecido:true};
       }
-      ev('info', 'A bola aguenta. Por enquanto.');
+      ev('info', 'A Pokébola aguenta. Por enquanto.');
     }
 
     // ---- Master Ball
@@ -70,12 +70,12 @@ const Captura = {
       const d = Dados.d20('Captura de lendário');
       ev('info', `Ultra Ball em um lendário: 1d20 = ${d} — só 1 ou 2 prendem.`);
       if (d <= 2){
-        ev('captura', `Contra tudo que é provável, a bola para de tremer.`);
+        ev('captura', `Contra tudo que é provável, a Pokébola para de tremer.`);
         Estado.marcar('ultra_prende_lendario');
         anima('captura', 3);
         return this.concluir(alvo, nomeBola, eventos);
       }
-      ev('erro', `${esp.nome} rompe a bola sem esforço aparente.`);
+      ev('erro', `${esp.nome} rompe a Pokébola sem esforço aparente.`);
       Estado.marcar('ultra_prende_lendario');
       const L = Estado.lend(alvo.dex);
       L.ataquesSofridos++;
@@ -112,7 +112,7 @@ const Captura = {
       if (d <= Math.max(1, Math.round(porSacudida * 100))) sacudidas++;
       else break;
     }
-    const nomes = ['A bola balança uma vez...', 'Duas vezes...', 'Três vezes...'];
+    const nomes = ['A Pokébola balança uma vez…', 'Duas vezes…', 'Três vezes…'];
     for (let i = 0; i < sacudidas; i++) ev('info', nomes[i]);
 
     if (sacudidas >= 3){
@@ -120,7 +120,7 @@ const Captura = {
       anima('captura', 3);
       return this.concluir(alvo, nomeBola, eventos);
     }
-    ev('erro', `${alvo.nome} escapou da bola!`);
+    ev('erro', `${alvo.nome} escapou da Pokébola!`);
     anima('escapou', sacudidas);
     return {eventos, capturou:false};
   },
@@ -162,7 +162,7 @@ const Captura = {
       // como a comunidade reage depende de quem você era antes disso
       if (Estado.rep.eixo === 'bom' && Estado.rep.bom >= 4){
         Estado.mudarRep('bom', 2, `Capturou ${DEX[dex].nome} — e te chamaram de herói por isso`, {rep:{notorio:true, peso:5}});
-        ev('mundo', 'Por enquanto, chamam de feito. Enquanto ele continuar na sua bola, vão mudar de ideia.');
+        ev('mundo', 'Por enquanto, chamam de feito. Enquanto ele continuar na sua Pokébola, vão mudar de ideia.');
       } else {
         Estado.mudarRep('ruim', 2, `Capturou ${DEX[dex].nome} diante de testemunhas`, {rep:{notorio:true, peso:5}});
       }
@@ -275,7 +275,7 @@ const Captura = {
       L.estado = 'solto';
       L.disposicao = 'desconfiado';
       Estado.dados.mundo.instabilidade = Math.max(0, Estado.dados.mundo.instabilidade - 1);
-      ev('mundo', `${esp.nome} sai da bola e não ataca. Fica parado, te olhando, tempo demais. Depois vai embora.`);
+      ev('mundo', `${esp.nome} sai da Pokébola e não ataca. Fica parado, te olhando, tempo demais. Depois vai embora.`);
       ev('mundo', 'Ele não vai te ajudar. Mas também não vai te caçar.');
       // os outros do grupo param de caçar, mas não esquecem
       [...GRUPO_CAES, ...GRUPO_AVES].forEach(d => {

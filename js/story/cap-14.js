@@ -494,8 +494,7 @@ c14_fuji_morreu:{
   ef:{flag:['sabe_do_iptu','fuji_sem_enterro'],
       rep:{eixo:'bom',delta:4,motivo:'Perguntou pelo enterro'},
       npc:{nome:'Sra. Wilma', opiniao:5, memoria:'Te contou que o Dr. Fuji não teve enterro e que alguém paga o imposto da casa dele.'},
-      registrar:'O Dr. Fuji não teve enterro. Alguém paga o imposto da casa dele até hoje.',
-      presagio:'Numa ilha de setecentas pessoas todo mundo vai em todo enterro. Menos nesse.'},
+      registrar:'O Dr. Fuji não teve enterro. Alguém paga o imposto da casa dele até hoje.'},
   escolhas:[
     {texto:'"Onde é a casa dele?"', vai:'c14_casa_do_fuji'},
     {texto:'"Quem paga o imposto da casa?"', vai:'c14_quem_paga'},
@@ -662,8 +661,7 @@ c14_o_que_aconteceu_com_fuji:{
       npc:{nome:'Blaine', opiniao:7, memoria:'Te contou que o Fuji disse não no dia 241 e que não acharam corpo.'},
       rep:{eixo:'bom',delta:5,motivo:'Perguntou do enterro, que é o que ninguém pergunta'},
       instabilidade:1, moral:-10,
-      registrar:'O Dr. Fuji foi retirado do projeto no dia 241 e desapareceu no incidente. Não acharam corpo.',
-      presagio:'Não acharam corpo. Guarde as duas palavras separadas.'},
+      registrar:'O Dr. Fuji foi retirado do projeto no dia 241 e desapareceu no incidente. Não acharam corpo.'},
   escolhas:[
     {texto:'"Você acha que ele tá vivo?"', vai:'c14_esta_vivo'},
     {texto:'"Onde estão as cinco caixas?"', vai:'c14_as_cinco_caixas'},
@@ -693,8 +691,7 @@ c14_esta_vivo:{
       npc:{nome:'Blaine', opiniao:8, memoria:'Disse que enterro não é para o morto, é para a gente poder parar.'},
       rep:{eixo:'bom',delta:3,motivo:'Deixou um velho terminar o raciocínio'},
       moral:-8,
-      registrar:'"Enterro não é pro morto. Enterro é pra gente poder parar."',
-      presagio:'Ele precisa de um enterro. Guarde isso — você vai poder dar um.'},
+      registrar:'"Enterro não é pro morto. Enterro é pra gente poder parar."'},
   escolhas:[
     {texto:'"Onde estão as cinco caixas?"', vai:'c14_as_cinco_caixas'},
     {texto:'"Eu vi o andar onze da Silph."', vai:'c14_falou_do_onze', cond:d=>!!d.flags.viu_os_doze || !!d.flags.sabe_do_andar_11},
@@ -757,8 +754,7 @@ c14_nao_e_culpa:{
   ],
   ef:{flag:'blaine_te_ensinou',
       npc:{nome:'Blaine', opiniao:6, memoria:'Te ensinou que "não é culpa sua" encerra o assunto, e pediu que você perguntasse das caixas.'},
-      rep:{eixo:'bom',delta:2,motivo:'Aceitou ser corrigido'},
-      presagio:'"Essa frase encerra igual." Guarde. Você vai querer usar ela em alguém.'},
+      rep:{eixo:'bom',delta:2,motivo:'Aceitou ser corrigido'}},
   escolhas:[
     {texto:'"O que tem nas caixas?"', vai:'c14_as_cinco_caixas'},
     {texto:'"A gente pode parar isso."', vai:'c14_pode_parar'},
@@ -853,8 +849,7 @@ c14_nunca_leu:{
       npc:{nome:'Blaine', opiniao:9, memoria:'Leu os 41 cadernos em ordem, em sete meses, e nunca mostrou a ninguém.'},
       rep:{eixo:'bom',delta:4,motivo:'Perguntou por que ele nunca leu pra ninguém'},
       moral:-5,
-      registrar:'Blaine leu os 41 cadernos em 1997 e nunca mostrou a ninguém.',
-      presagio:'"Prova de amizade." Ele não sabe o que fazer com isso. Você vai ter que saber.'},
+      registrar:'Blaine leu os 41 cadernos em 1997 e nunca mostrou a ninguém.'},
   escolhas:[{texto:'Entrar.', vai:'c14_ginasio_por_dentro'}]
 },
 
@@ -943,8 +938,7 @@ c14_o_jornal:{
   ef:{flag:['viu_o_classificado'],
       rep:{eixo:'bom',delta:3,motivo:'Olhou o que os óculos estavam apontando'},
       moral:-15,
-      registrar:'No jornal aberto na casa do Fuji, de 11/11/1996, está circulada uma vaga de professor de ciências.',
-      presagio:'Ele ia dar aula. Guarde. Isso é o que Blaine precisa saber.'},
+      registrar:'No jornal aberto na casa do Fuji, de 11/11/1996, está circulada uma vaga de professor de ciências.'},
   escolhas:[
     {texto:'Chamar o Blaine pra ver.', vai:'c14_blaine_entrou'},
     {texto:'Levar o jornal.', vai:'c14_levou_o_jornal'},
@@ -1003,8 +997,7 @@ c14_arrumou_a_casa:{
       npc:{nome:'Blaine', opiniao:10, memoria:'Passou uma noite com você arrumando a casa do amigo e decidiu doar a roupa.'},
       rep:{eixo:'bom',delta:5,motivo:'Passou a noite varrendo a casa de um morto com um velho'},
       moral:25, hp:-3, causa:'Uma noite inteira sem dormir',
-      registrar:'Arrumou com Blaine a casa do Dr. Fuji.',
-      presagio:'"Amanhã eu doo a roupa." Quatro anos.'},
+      registrar:'Arrumou com Blaine a casa do Dr. Fuji.'},
   escolhas:[
     {texto:'"Agora me mostra as caixas."', vai:'c14_ginasio_por_dentro'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
@@ -1047,8 +1040,7 @@ c14_levou_o_jornal:{
   ef:{flag:['tem_o_jornal','provas_cinnabar'],
       itens:{'Jornal de 11/11/96 e um par de óculos':1},
       moral:-5,
-      registrar:'Levou o jornal de 11/11/96 com a vaga de professor circulada.',
-      presagio:'"Um momento melhor" não existe. Mostra logo.'},
+      registrar:'Levou o jornal de 11/11/96 com a vaga de professor circulada.'},
   escolhas:[
     {texto:'Mostrar agora mesmo.', vai:'c14_blaine_entrou'},
     {texto:'Ir ver as caixas.', vai:'c14_ginasio_por_dentro'},
@@ -1094,8 +1086,7 @@ c14_dentro_da_casa:{
   ef:{flag:['entrou_na_casa_do_fuji','viu_a_polaroid'],
       rep:{eixo:'bom',delta:1,motivo:'Entrou pela janela'},
       moral:-15, instabilidade:1,
-      registrar:'Entrou sozinho na casa do Fuji e achou a Polaroid do tanque.',
-      presagio:'Não tem ninguém pra dividir isso. Vai ter que ir buscar alguém.'},
+      registrar:'Entrou sozinho na casa do Fuji e achou a Polaroid do tanque.'},
   escolhas:[
     {texto:'Ler o jornal aberto na mesa.', vai:'c14_o_jornal'},
     {texto:'Pegar a Polaroid.', vai:'c14_pegou_a_polaroid'},
@@ -1195,8 +1186,7 @@ c14_caderno:{
   ],
   ef:{flag:['leu_caderno','leu_o_sete'], instabilidade:2, moral:-20,
       rep:{eixo:'bom',delta:3,motivo:'Leu o caderno sete'},
-      registrar:'Caderno 7: em 243 dias, o Dr. Fuji nunca explicou a Mewtwo que aquilo era um experimento.',
-      presagio:'Ele achava que eram conversas. Segura essa frase, ela volta.'},
+      registrar:'Caderno 7: em 243 dias, o Dr. Fuji nunca explicou a Mewtwo que aquilo era um experimento.'},
   escolhas:[
     {texto:'Continuar lendo.', vai:'c14_caderno2'},
     {texto:'"Lê você." — pedir pro Blaine ler.', vai:'c14_blaine_leu_em_voz_alta', cond:d=>!!d.flags.conheceu_blaine},
@@ -1290,8 +1280,7 @@ c14_publicar:{
       npc:{nome:'Blaine', opiniao:10, memoria:'Decidiu publicar os cadernos 1 a 6 e guardar o 7, porque carta não se publica.'},
       rep:{eixo:'bom',delta:6,motivo:'Separou o que é prova do que é carta'},
       moral:15,
-      registrar:'Blaine vai publicar os cadernos 1 a 6 do Dr. Fuji e guardar o 7.',
-      presagio:'"Carta não se publica." Anota — é uma regra e é uma boa.'},
+      registrar:'Blaine vai publicar os cadernos 1 a 6 do Dr. Fuji e guardar o 7.'},
   escolhas:[
     {texto:'Chamar a Dra. Cordell.', vai:'c14_chamou_ivone_cinnabar', cond:d=>!!d.flags.cartao_ivone},
     {texto:'"E o acervo? A cláusula de devolução."', vai:'c14_devolver_acervo'},
@@ -1322,8 +1311,7 @@ c14_devolver_acervo:{
       npc:{nome:'Blaine', opiniao:9, memoria:'Achou o artigo que incorporou o acervo à Comissão e admitiu que também está com coisa que não é dele.'},
       rep:{eixo:'bom',delta:6,motivo:'Achou para onde o patrimônio foi'},
       instabilidade:1,
-      registrar:'O acervo do Instituto de Cinnabar pertence à Comissão de Bem-Estar Pokémon desde 1996, com acesso público.',
-      presagio:'Acesso público. Repare no que isso faz com tudo o que você viu em Celadon.'},
+      registrar:'O acervo do Instituto de Cinnabar pertence à Comissão de Bem-Estar Pokémon desde 1996, com acesso público.'},
   escolhas:[
     {texto:'"Então a gente entrega à Comissão. À Auditora Brill."', vai:'c14_entregar_prado', cond:d=>!!d.flags.conheceu_prado},
     {texto:'"Então a gente entrega à Comissão."', vai:'c14_entregar_comissao'},
@@ -1381,8 +1369,7 @@ c14_entregar_comissao:{
       npc:{nome:'Blaine', opiniao:9, memoria:'Entendeu que entregar o acervo à Comissão é publicá-lo por outro caminho.'},
       rep:{eixo:'bom',delta:6,motivo:'Transformou uma entrega em publicação'},
       moral:15,
-      registrar:'Blaine vai incorporar formalmente as cinco caixas ao acervo público, com direito de vista.',
-      presagio:'"Entregar é publicar por outro caminho." Guarde a jogada.'},
+      registrar:'Blaine vai incorporar formalmente as cinco caixas ao acervo público, com direito de vista.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
@@ -1441,8 +1428,7 @@ c14_ficou_os_dois_dias:{
   ef:{flag:['entendeu_como_funciona'],
       rep:{eixo:'bom',delta:4,motivo:'Ficou os dois dias e entendeu o que estava vendo'},
       moral:15, hp:2,
-      registrar:'Passou dois dias assistindo dois velhos montarem o caso.',
-      presagio:'É péssimo de assistir e é a única coisa que funciona. Não esqueça isso quando chegar a sua vez.'},
+      registrar:'Passou dois dias assistindo dois velhos montarem o caso.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'"Me deixa desafiar o ginásio."', vai:'c14_desafio_blaine'},
@@ -1461,8 +1447,7 @@ c14_pegou_caderno:{
   ef:{flag:['pegou_caderno','tem_o_caderno_sete'],
       itens:{'Caderno 7 do Dr. Fuji':1},
       rep:{eixo:'bom',delta:2,motivo:'Ficou com o documento que explica tudo'},
-      registrar:'Levou o caderno 7 do Dr. Fuji.',
-      presagio:'Oitocentos gramas. Você vai saber a hora de tirar da mochila.'},
+      registrar:'Levou o caderno 7 do Dr. Fuji.'},
   escolhas:[
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
     {texto:'Ir ao laboratório queimado.', vai:'c14_lab'},
@@ -1481,8 +1466,7 @@ c14_nao_leu:{
   ef:{flag:'nao_leu_o_sete',
       rep:{eixo:'bom',delta:2,motivo:'Não leu a carta de um homem para outro'},
       moral:5,
-      registrar:'Não leu o caderno 7.',
-      presagio:'Você não vai saber o que tinha lá. Vai ter que viver com isso.'},
+      registrar:'Não leu o caderno 7.'},
   escolhas:[
     {texto:'"Então me conta o que tem nele."', vai:'c14_blaine_leu_em_voz_alta', cond:d=>!!d.flags.conheceu_blaine},
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
@@ -1518,7 +1502,7 @@ c14_desafio_blaine:{
   texto:[
     'Quinta, catorze horas.',
     'Ele não faz nenhuma concessão por você ter passado a semana com ele. Isso, de um jeito esquisito, é o maior elogio da semana.',
-    '"Regra da casa: se o teu bicho cair e tu quiser continuar, tu continua. Se eu vir que tu tá continuando por teimosia, eu paro a luta."',
+    '"Regra da casa: se o teu Pokémon cair e tu quiser continuar, tu continua. Se eu vir que tu tá continuando por teimosia, eu paro a luta."',
     '"E como você sabe a diferença?"',
     'Ele entra na marcação.',
     '"Setenta e dois anos, {meu filho|minha filha}."',
@@ -1573,8 +1557,7 @@ c14_perdeu_blaine:{
   ],
   ef:{hp:-6, causa:'Derrota no ginásio de Cinnabar', flag:'perdeu_pro_blaine',
       npc:{nome:'Blaine', opiniao:6, memoria:'Parou a luta na hora e comentou seu time um por um.'},
-      registrar:'Perdeu para Blaine. Ele avaliou seu time um por um.',
-      presagio:'"Esse aqui tá com medo de você." Confere isso depois.'},
+      registrar:'Perdeu para Blaine. Ele avaliou seu time um por um.'},
   escolhas:[
     {texto:'Tentar de novo na quinta seguinte.', vai:'c14_desafio_blaine'},
     {texto:'Subir o vulcão.', vai:'c14_vulcao'},
@@ -1675,8 +1658,7 @@ c14_as_maos:{
   ef:{flag:['entendeu_as_maos'],
       rep:{eixo:'bom',delta:4,motivo:'Ficou agachad{o|a} até entender'},
       moral:-18, instabilidade:1,
-      registrar:'As marcas de mão na borda do poço são do Dr. Fuji, depois de abrir o tanque.',
-      presagio:'Ele abriu, e depois olhou pra dentro. Guarde a ordem.'},
+      registrar:'As marcas de mão na borda do poço são do Dr. Fuji, depois de abrir o tanque.'},
   escolhas:[
     {texto:'Procurar a mesa da parede.', vai:'c14_mesa_do_subsolo'},
     {texto:'Levar isso pro Blaine.', vai:'c14_ginasio'},
@@ -1734,8 +1716,7 @@ c14_tokuda:{
       npc:{nome:'Sr. Berto', opiniao:5, memoria:'Anotou a saída do Dr. Fuji às 4h10 e foi chamado de velho confuso por uma mulher de terno de Saffron.'},
       rep:{eixo:'bom',delta:5,motivo:'Foi perguntar ao homem que escreveu a linha'},
       moral:-8,
-      registrar:'O Sr. Berto confirma que o Dr. Fuji saiu do laboratório às 4h10 de 13/11/1996.',
-      presagio:'Disseram que ele se confundiu porque é velho. Ele lembra a hora exata em quatro anos.'},
+      registrar:'O Sr. Berto confirma que o Dr. Fuji saiu do laboratório às 4h10 de 13/11/1996.'},
   escolhas:[
     {texto:'"Pra onde ele foi?"', vai:'c14_pra_onde_ele_foi'},
     {texto:'Levar isso pro Blaine.', vai:'c14_correu_pro_blaine'},
@@ -1900,8 +1881,7 @@ c14_garrafa:{
       itens:{'Folha da garrafa térmica':1},
       rep:{eixo:'bom',delta:7,motivo:'Abriu a garrafa térmica'},
       moral:-20, instabilidade:2,
-      registrar:'Dia 252: os dois subiram o vulcão juntos e passaram a noite ali. É a última coisa que o Dr. Fuji escreveu.',
-      presagio:'"Escola é quando o outro também pode perguntar." Guarde a definição.'},
+      registrar:'Dia 252: os dois subiram o vulcão juntos e passaram a noite ali. É a última coisa que o Dr. Fuji escreveu.'},
   escolhas:[
     {texto:'Ler em voz alta pro Blaine.', vai:'c14_leu_pro_blaine', cond:d=>!!d.flags.blaine_vai_subir},
     {texto:'Guardar e descer.', vai:'c14_desceu'},
@@ -1945,8 +1925,7 @@ c14_quarta_pedra:{
   ef:{flag:['empilhou_a_pedra'],
       rep:{eixo:'bom',delta:4,motivo:'Empilhou a quarta pedra'},
       moral:20,
-      registrar:'Empilhou uma quarta pedra no abrigo da cratera.',
-      presagio:'Daqui a trinta anos alguém vai achar que é geologia. E tudo bem.'},
+      registrar:'Empilhou uma quarta pedra no abrigo da cratera.'},
   escolhas:[
     {texto:'Ficar parad{o|a} e olhar Moltres.', vai:'c14_olhar'},
     {texto:'Descer.', vai:'c14_desceu'},
@@ -2089,14 +2068,14 @@ c14_comida:{
     {texto:'Procurar sinal de quem esteve aqui.', vai:'c14_procurou_sinal', cond:d=>!!d.flags.sabe_que_subiram || !!d.flags.fuji_saiu},
     {texto:'Ficar parad{o|a} e olhar.', vai:'c14_olhar'},
     {texto:'Descer.', vai:'c14_desceu'},
-    {texto:'Jogar a bola agora que ele desceu.', vai:'c14_luta_moltres'}
+    {texto:'Jogar a Pokébola agora que ele desceu.', vai:'c14_luta_moltres'}
   ]
 },
 
 c14_luta_moltres:{
   texto:[
-    'Você joga a primeira bola sem nem tentar enfraquecer.',
-    'A bola derrete no ar antes de chegar. Literalmente derrete: o plástico deforma a meio metro dele e cai no chão como uma gota.',
+    'Você joga a primeira Pokébola sem nem tentar enfraquecer.',
+    'A Pokébola derrete no ar antes de chegar. Literalmente derrete: o plástico deforma a meio metro dele e cai no chão como uma gota.',
     'Moltres desce da borda e a cratera inteira fica dez graus mais quente, e o ar fica com aquela densidade de forno aberto.',
     'E você entende, tarde, que a coisa não estava te ameaçando em nenhum momento antes desse.'
   ],
@@ -2130,7 +2109,7 @@ c14_pos_moltres:{
 
 c14_capturou_moltres:{
   texto:[
-    'A bola fecha.',
+    'A Pokébola fecha.',
     'E o vulcão fica em silêncio de um jeito que vulcão não fica.',
     'As fumarolas param. As três que estavam soltando vapor a trinta metros de você param ao mesmo tempo, e o chão para de fazer aquele ruído contínuo de coisa muito grande respirando devagar.',
     'Você segura na mão uma coisa que existia antes de Kanto ter nome.',
@@ -2150,7 +2129,7 @@ c14_capturou_moltres:{
 
 c14_soltou_moltres:{
   texto:[
-    'Você abre a bola na mesma pedra onde ele estava.',
+    'Você abre a Pokébola na mesma pedra onde ele estava.',
     'Ele sai e não vai embora na hora. Fica na pedra, no mesmo lugar, na mesma posição, como se nada tivesse acontecido — e as fumarolas voltam a soltar vapor em menos de um minuto, uma por uma.',
     'E depois ele vira a cabeça e olha você.',
     'E é um olhar diferente do de antes, e você vai passar um bom tempo tentando decidir se o que mudou foi pra melhor ou pra pior.'

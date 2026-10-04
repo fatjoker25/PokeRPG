@@ -84,8 +84,7 @@ c20_ab_a_mulher_da_cabeceira:{
     fala('Sr. Bram', 'Sobe. Mas sobe sabendo que ela é assim.')
   ],
   ef:{flag:'a_presidente_vem_a_pe',
-      registrar:'A presidente do conselho vem a pé, de sacola de pano, e mora a seis quadras.',
-      presagio:'Ninguém do outro lado dessa mesa vai parecer o que você precisa que ele pareça.'},
+      registrar:'A presidente do conselho vem a pé, de sacola de pano, e mora a seis quadras.'},
   escolhas:[
     {texto:'Subir.', vai:'c20_predio'},
     {texto:'Sentar na banca mais um pouco antes.', vai:'c20_ab_sentou_na_banca'}
@@ -814,7 +813,7 @@ c20_falou_do_rattata:{
     'Quando você termina, a Presidente espera cinco segundos inteiros antes de responder.'
   ],
   ef:{flag:['falou_do_rattata'], instabilidade:1,
-      rep:{eixo:'bom',delta:2,motivo:'Falou de um bicho só numa sala que só fala em lote'},
+      rep:{eixo:'bom',delta:2,motivo:'Falou de um Pokémon só numa sala que só fala em lote'},
       registrar:'Falou do Rattata que corre até a parede, no conselho.'},
   escolhas:[{texto:'Ouvir a resposta.', vai:'c20_resposta'}]
 },
@@ -825,7 +824,7 @@ c20_falou_das_pessoas:{
     'Da moça do berçário que dá nome escondido para ter a quem pedir desculpa. Do rapaz da enfermaria que pediu transferência duas vezes e foi atendido as duas. Da mulher que faz a apresentação de costas para a porta há vinte e sete visitas.',
     'Do voluntário que dorme bem e fez questão de te dizer isso.',
     'Você não acusa ninguém. Você só conta o que viu.',
-    'E é assim que a sala muda: porque ninguém aqui esperava ser acusado do que eles fazem com os bichos, e ninguém aqui tinha pensado no que fazem com a própria equipe.',
+    'E é assim que a sala muda: porque ninguém aqui esperava ser acusado do que eles fazem com os Pokémon, e ninguém aqui tinha pensado no que fazem com a própria equipe.',
     'A Presidente não responde por cinco segundos. Depois por mais cinco.'
   ],
   ef:{flag:['falou_das_pessoas'], instabilidade:1,
@@ -1127,7 +1126,7 @@ c20_quantos_levantam:{
     'Levantam quatro.',
     'A Presidente. O Curador Fabre. A advogada que redigiu o Art. 19. E o Sr. Tobias Dahl, de oitenta e um anos, que leva quarenta segundos para levantar e não aceita ajuda de ninguém.',
     'O médico fica sentado, e diz por quê, em voz alta, para a ata:',
-    '"Eu vou na quinta. Hoje eu tenho cirurgia às duas e é de um bicho de verdade, e eu não vou desmarcar por simbolismo."',
+    '"Eu vou na quinta. Hoje eu tenho cirurgia às duas e é de um Pokémon de verdade, e eu não vou desmarcar por simbolismo."',
     'Sete ficam. Quatro vão.',
     'A Sra. Hedda escreve tudo, os nomes dos quatro e os nomes dos sete, porque ata é ata.'
   ],
@@ -1329,7 +1328,7 @@ c20_materia_edital:{
 
 c20_contagem:{
   texto:[
-    'A votação leva quatro minutos e é a coisa mais tensa que já te aconteceu sem nenhuma bola envolvida.',
+    'A votação leva quatro minutos e é a coisa mais tensa que já te aconteceu sem nenhuma Pokébola envolvida.',
     'O Curador Fabre vota a favor. Primeiro, alto, sem esperar a vez.',
     d=>{
       let votos = 1; // Fabre
@@ -1346,7 +1345,7 @@ c20_contagem:{
       if (d.flags.conselheira_confrontada){ razoes.push('A conselheira da Liga não vota: assento de observadora, sem direito a voto. Ela fecha os olhos quando a contagem chega nela.'); }
       if (d.flags.observadora_pode_falar){ razoes.push('A conselheira da Liga pede a palavra pela primeira vez em dois anos e fala noventa segundos. Não muda voto nenhum, e muda a sala.'); }
       if (Historia.via()==='mercenario' || Historia.via()==='foragido'){ votos -= 2; razoes.push('Um conselheiro lembra, em voz alta e com documento, de onde vem o seu dinheiro. Dois votos mudam de lado.'); }
-      if (d.flags.atacou_o_conselho){ votos -= 3; razoes.push('Alguém lembra que você sacou uma bola dentro desta sala. Isso pesa mais que tudo o que você disse.'); }
+      if (d.flags.atacou_o_conselho){ votos -= 3; razoes.push('Alguém lembra que você sacou uma Pokébola dentro desta sala. Isso pesa mais que tudo o que você disse.'); }
       Estado.dados.votosComissao = Math.max(0, Math.min(11, votos));
       return razoes.join(' ');
     },
@@ -1616,11 +1615,11 @@ c20_luta_presidente:{
   falante:'a Presidente',
   vozes:['N','N'],
   texto:[
-    'Você saca uma bola dentro de uma reunião de conselho.',
+    'Você saca uma Pokébola dentro de uma reunião de conselho.',
     'Onze pessoas saem da sala em ordem, sem correr, porque existe um procedimento para isso e eles treinaram.',
     'A Sra. Hedda sai por último, levando a ata, porque a ata não pode ficar.',
     'A Presidente não sai. Ela tira o paletó e o dobra sobre o encosto da cadeira.',
-    '"Eu fui treinadora antes de ser diretora." Ela solta a primeira bola. "Todo mundo foi. É esse o problema deste país."',
+    '"Eu fui treinadora antes de ser diretora." Ela solta a primeira Pokébola. "Todo mundo foi. É esse o problema deste país."',
     'As unidades dela não têm nome. Têm código de lote: 1-A, 1-B, 1-C, 1-D.',
     'E a última tem só dois dígitos.'
   ],
@@ -1638,7 +1637,7 @@ c20_venceu_presidente:{
     'Você olha ela caída no carpete de uma sala comercial e entende, com um atraso de quatro segundos, o que ela é.',
     'É o décimo segundo tanque. Eles conseguiram.',
     'Não é Mewtwo. É uma coisa com o rosto dele, nível sessenta e três, código de lote e nenhuma pergunta na cabeça.',
-    'A Presidente recolhe a bola com cuidado profissional.',
+    'A Presidente recolhe a Pokébola com cuidado profissional.',
     '"Ela não fala", diz a Presidente, respondendo à pergunta que você não fez. "Nenhuma das quatro tentativas falou. Nós acertamos o corpo e nunca acertamos a outra parte."',
     '"E vocês continuam."',
     '"E nós continuamos." Ela dobra o paletó de novo. "Porque a Fase III não precisa que ela fale. Precisa que ela obedeça."'
@@ -1659,7 +1658,7 @@ c20_solta_aqui:{
   vozes:['P','N','P'],
   texto:[
     '"Solta ela aqui. Agora. Na minha frente."',
-    'A Presidente olha para a bola na mão e depois para você.',
+    'A Presidente olha para a Pokébola na mão e depois para você.',
     '"Para quê?"',
     '"Para a senhora ver ela sem estar lutando."',
     'Ela solta.',
@@ -1683,7 +1682,7 @@ c20_levou_unidade01:{
   falante:'a Presidente',
   vozes:['N','N'],
   texto:[
-    'Você tira a bola da mão dela. Ela não impede, e não impedir, aqui, é uma decisão dela.',
+    'Você tira a Pokébola da mão dela. Ela não impede, e não impedir, aqui, é uma decisão dela.',
     '"Ela vai te obedecer", diz a Presidente. "É para isso que ela existe. {O senhor|A senhora} vai descobrir que isso é a pior parte."'
   ],
   ef:{flag:'tem_a_unidade01',

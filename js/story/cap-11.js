@@ -29,7 +29,7 @@ c11_ab_o_acampamento:{
     'Você não chega na Silph. Você chega no acampamento.',
     'Sete barracas na calçada em frente ao ginásio de Saffron, alinhadas contra a parede pra deixar passagem, com um fogareiro coletivo, uma lona esticada entre dois postes e um balde que alguém enche na torneira da praça.',
     'É organizado. Isso é a parte que impressiona: é organizado de um jeito que só fica organizado depois de muito tempo.',
-    'No portão de aço abaixado, o papel A4 plastificado: **SUSPENSO POR TEMPO INDETERMINADO — S.**',
+    'No portão de aço abaixado, a folha plastificada: **SUSPENSO POR TEMPO INDETERMINADO — S.**',
     'Um rapaz de uns dezoito anos está sentado num banquinho dobrável com um caderno no colo, e o caderno tem uma lista. Na capa do caderno, a caneta: MILO — LISTA DO GINÁSIO, NÃO MEXER.',
     fala('Milo', 'Chegou agora?'),
     d=>fala(d.jogador.nome, 'Agora.'),
@@ -318,8 +318,7 @@ c11_ab_encarou:{
     fala('o policial da triagem', 'Pode ir.', 'frio')
   ],
   ef:{flag:'seu_nome_na_lista_de_quarenta',
-      registrar:'A triagem de Saffron tem uma lista de quarenta nomes com uma coluna de marcação ao lado. Você recebeu um tracinho.',
-      presagio:'Esse tracinho quer dizer "avistado em Saffron, nesta data". Alguém vai ler.'},
+      registrar:'A triagem de Saffron tem uma lista de quarenta nomes com uma coluna de marcação ao lado. Você recebeu um tracinho.'},
   escolhas:[
     {texto:'Ir à Silph.', vai:'c11_recepcao'},
     {texto:'Ir ver o ginásio fechado.', vai:'c11_ginasio'},
@@ -336,7 +335,7 @@ c11_saffron:{
     'Você entra pelo sul às onze da manhã e a primeira coisa que te desorienta é a sombra: às onze da manhã, no meio do verão, metade das calçadas está na sombra de alguma coisa.',
     'A Silph Co. ocupa um quarteirão inteiro no centro. Fachada de vidro azul-espelhado do térreo ao décimo andar, recepção com pé-direito de doze metros, catraca, crachá, câmera em cada canto, e uma mulher no balcão que atende com um sorriso impecável e cronometrado.',
     'A dois quarteirões, o ginásio de Saffron está fechado.',
-    'Não "fechado hoje". Fechado: portão de aço abaixado, corrente, e um papel A4 plastificado grudado com fita:',
+    'Não "fechado hoje". Fechado: portão de aço abaixado, corrente, e uma folha plastificada grudada com fita:',
     '**SUSPENSO POR TEMPO INDETERMINADO — S.**',
     'Tem gente acampada na calçada em frente. Seis, sete treinadores, com barraca e tudo, esperando reabrir. Um deles está lá há dezenove dias.',
     d=>{
@@ -423,8 +422,7 @@ c11_teve_porta:{
   ef:{flag:['sabe_da_porta_fechada','sabe_da_ambulancia'],
       rep:{eixo:'bom',delta:2,motivo:'Perguntou ao único que estava lá há trinta anos'},
       npc:{nome:'Pipoqueiro da face sul', opiniao:4, memoria:'Te contou da porta de ferro fechada em 1996 e das ambulâncias.'},
-      registrar:'Até 1996 a face sul da Silph tinha uma porta larga, com caminhão-baú e ambulância.',
-      presagio:'Ambulância entrando numa fábrica de aparelho eletrônico. Em noventa e seis pararam de entrar — ou pararam de precisar.'},
+      registrar:'Até 1996 a face sul da Silph tinha uma porta larga, com caminhão-baú e ambulância.'},
   escolhas:[
     {texto:'Procurar a marca da porta no reboco.', vai:'c11_marca_da_porta'},
     {texto:'Ir pra doca de carga.', vai:'c11_doca'},
@@ -552,8 +550,7 @@ c11_sabrina:{
   ],
   ef:{npc:{nome:'Sabrina', opiniao:2, memoria:'Fechou o ginásio porque o andar 11 da Silph não a deixa em paz.'},
       flag:['sabe_do_andar_11','sabrina_avisou'],
-      registrar:'Sabrina confirmou: existe um andar 11 na Silph e os pensamentos de lá estão "errados".',
-      presagio:'Primeira pessoa do plural sobre uma coisa singular. Guarde a frase inteira.'},
+      registrar:'Sabrina confirmou: existe um andar 11 na Silph e os pensamentos de lá estão "errados".'},
   escolhas:[
     {texto:'"O que tem lá?"', vai:'c11_sabrina_oque'},
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
@@ -572,7 +569,7 @@ c11_sabrina_oque:{
     '"Eles não sabem que são doze. Cada um acha que é o único, e que os outros onze são lembrança dele mesmo."',
     '"Imagina acordar e achar que todo mundo que você ouve é você lembrando de coisas que você fez. Não dá medo. Dá solidão de um tipo que não existe nome."',
     'Ela mexe na garrafa de água sem beber.',
-    '"E tem uma décima terceira coisa lá que não é mente. Que é... molde. Como uma forma de gelatina."',
+    '"E tem uma décima terceira coisa lá que não é mente. Que é… molde. Como uma forma de gelatina."',
     '"Eles estão sendo despejados nela um por um, e nenhum preenche, e aí esvaziam e tentam o próximo."',
     'Silêncio.',
     '"Eu já disse isso em voz alta pra três pessoas. Você é a primeira que não me perguntou se eu tenho dormido bem."'
@@ -661,8 +658,7 @@ c11_silencio_com_sabrina:{
   ef:{flag:'silencio_com_sabrina',
       npc:{nome:'Sabrina', opiniao:5, memoria:'Dividiu pão de forma com você em silêncio no chão da arena.'},
       moral:12, hp:3,
-      rep:{eixo:'bom',delta:1,motivo:'Ficou quiet{o|a} com quem precisava de silêncio'},
-      presagio:'Você não estava pensando em nada. Guarde a sensação — vai precisar dela lá embaixo.'},
+      rep:{eixo:'bom',delta:1,motivo:'Ficou quiet{o|a} com quem precisava de silêncio'}},
   escolhas:[
     {texto:'"Me ajuda a entrar."', vai:'c11_sabrina_ajuda'},
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
@@ -687,8 +683,7 @@ c11_sabrina_quanto_tempo:{
     '"E agora eu sei que o que aconteceu em noventa e seis foi que eles mudaram alguma coisa de lugar."'
   ],
   ef:{flag:['sabe_de_noventa_e_seis','sabrina_desde_crianca'],
-      registrar:'Em 1996 o zumbido psíquico da Silph parou por seis horas e voltou diferente.',
-      presagio:'Noventa e seis de novo. A porta da face sul foi tapada em noventa e seis.'},
+      registrar:'Em 1996 o zumbido psíquico da Silph parou por seis horas e voltou diferente.'},
   escolhas:[
     {texto:'"A porta da face sul foi tapada em noventa e seis."', vai:'c11_noventa_e_seis_bate', cond:d=>!!d.flags.sabe_da_porta_fechada},
     {texto:'"Por que você não entra você mesma?"', vai:'c11_sabrina_porque'},
@@ -763,8 +758,7 @@ c11_e_se_eu_nao_voltar:{
   ef:{flag:'sabrina_tem_medo',
       moral:-5,
       npc:{nome:'Sabrina', opiniao:4, memoria:'Admitiu que tem medo de descobrir que não desceria para te buscar.'},
-      rep:{eixo:'bom',delta:1,motivo:'Perguntou a pergunta desconfortável'},
-      presagio:'Ela tem medo de descobrir que não desce. Lembre disso no fim.'},
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou a pergunta desconfortável'}},
   escolhas:[
     {texto:'"Tudo bem. Você já fez muito."', vai:'c11_sabrina_ajuda'},
     {texto:'"Vem até a porta. Só até a porta."', vai:'c11_sabrina_ate_a_porta'},
@@ -788,8 +782,7 @@ c11_nao_desce:{
   ef:{flag:'liberou_a_sabrina',
       npc:{nome:'Sabrina', opiniao:6, memoria:'Você disse que não ia querer que ela descesse. Ela arquivou isso.'},
       moral:8,
-      rep:{eixo:'bom',delta:2,motivo:'Tirou um peso de cima de quem já carregava três semanas'},
-      presagio:'Ela arquivou. Gente psíquica arquiva o que vai precisar usar.'},
+      rep:{eixo:'bom',delta:2,motivo:'Tirou um peso de cima de quem já carregava três semanas'}},
   escolhas:[
     {texto:'"Me ajuda a entrar."', vai:'c11_sabrina_ajuda'},
     {texto:'"Vem até a porta."', vai:'c11_sabrina_ate_a_porta'},
@@ -814,8 +807,7 @@ c11_vim_desafiar:{
   ],
   ef:{flag:'sabrina_promete_insignia',
       npc:{nome:'Sabrina', opiniao:3, memoria:'Prometeu a insígnia de Saffron se você voltar inteir{o|a} do andar 11.'},
-      registrar:'Sabrina não luta enquanto não conseguir separar. Prometeu a insígnia se você voltar.',
-      presagio:'"Se você voltar inteir{o|a}." Reparou que ela disse inteir{o|a} e não viv{o|a}?'},
+      registrar:'Sabrina não luta enquanto não conseguir separar. Prometeu a insígnia se você voltar.'},
   escolhas:[
     {texto:'"Me ajuda a entrar, então."', vai:'c11_sabrina_ajuda'},
     {texto:'"Vem até a porta."', vai:'c11_sabrina_ate_a_porta'},
@@ -919,8 +911,7 @@ c11_fila:{
   ],
   ef:{flag:['sabe_dos_crachas','sabe_da_quinta','sabe_do_andar_11','sabe_do_doze_quarenta_e_um'],
       rep:{eixo:'bom',delta:2,motivo:'Ficou meia hora ouvindo em vez de perguntar'},
-      registrar:'Crachá branco vai até o 8, azul até o 10; entrega não registrada toda quinta às 19h.',
-      presagio:'Doze e quarenta e um. Três pessoas. Guarde o minuto.'},
+      registrar:'Crachá branco vai até o 8, azul até o 10; entrega não registrada toda quinta às 19h.'},
   escolhas:[
     {texto:'Falar com a mulher do crachá azul.', vai:'c11_cracha_azul'},
     {texto:'Seguir as três que saíram às 12h41.', vai:'c11_seguiu_as_tres'},
@@ -1063,8 +1054,7 @@ c11_cida_topou:{
       itens:{'Crachá verde (Limptotal)':1},
       npc:{nome:'Sra. Odile (Limptotal)', opiniao:6, memoria:'Te emprestou o crachá verde dela a quatorze meses da aposentadoria.'},
       rep:{eixo:'bom',delta:2,motivo:'Alguém arriscou a aposentadoria por você'},
-      registrar:'Sra. Odile te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.',
-      presagio:'"De alguém abrindo por dentro." Anota — essa é a saída.'},
+      registrar:'Sra. Odile te emprestou o crachá verde. Ele abre tudo menos o subsolo 4.'},
   escolhas:[
     {texto:'Entrar pela recepção com o crachá verde.', vai:'c11_recepcao'},
     {texto:'Entrar pela porta de serviço às seis da manhã.', vai:'c11_porta_de_servico'},
@@ -1123,10 +1113,10 @@ c11_bar:{
     'O bar fica na esquina de trás e se chama Ponto Certo, e às seis e meia da tarde ele recebe a primeira leva de crachás pendurados no pescoço.',
     'Você senta no balcão com um refrigerante e ouve.',
     'Na terceira rodada da mesa dos fundos, um homem de uns cinquenta anos com cara de quem trabalha ali desde sempre começa a falar mais alto do que devia.',
-    '"...porque projeto de nove meses é projeto. Projeto de seis anos é outra coisa."',
+    '"…porque projeto de nove meses é projeto. Projeto de seis anos é outra coisa."',
     'Alguém manda ele baixar a voz. Ele não baixa.',
     '"Seis anos, cara. Seis anos e a rubrica é sempre a mesma: “desenvolvimento de dispositivo de contenção”. Dispositivo de contenção."',
-    '"Eu faço orçamento. Eu não faço bicho, eu não faço tanque, eu faço planilha."',
+    '"Eu faço orçamento. Eu não faço Pokémon, eu não faço tanque, eu faço planilha."',
     '"E eu sei que dispositivo de contenção que custa quatro milhões por ano por seis anos não é dispositivo."',
     'A mesa fica em silêncio e ele mesmo entende que falou demais, e pede a conta, e vai embora.'
   ],
@@ -1160,8 +1150,7 @@ c11_seguiu_o_orcamento:{
   ef:{flag:['sabe_de_cinnabar','sabe_do_acervo'],
       rep:{eixo:'bom',delta:3,motivo:'Esperou oito minutos em silêncio e recebeu o nome anterior da rubrica'},
       npc:{nome:'Homem do orçamento', opiniao:1, memoria:'Te contou que a rubrica se chamava "Recuperação de acervo — Cinnabar" antes de 1996.'},
-      registrar:'A rubrica era "Recuperação de acervo — Cinnabar" e virou "dispositivo de contenção" em 1996, triplicando de valor.',
-      presagio:'Cinnabar. O laboratório da ilha. Guarde — a vez dele vem.'},
+      registrar:'A rubrica era "Recuperação de acervo — Cinnabar" e virou "dispositivo de contenção" em 1996, triplicando de valor.'},
   escolhas:[
     {texto:'Ir pra doca de carga.', vai:'c11_doca'},
     {texto:'Falar com a do crachá azul.', vai:'c11_cracha_azul'},
@@ -1282,8 +1271,7 @@ c11_devolveu_as_folhas:{
       npc:{nome:'Fenna (crachá azul)', opiniao:10, memoria:'Você devolveu as folhas para não queimá-la. Ela topou fazer de novo, do jeito certo.'},
       rep:{eixo:'bom',delta:5,motivo:'Devolveu a prova para proteger quem te deu'},
       moral:15,
-      registrar:'Devolveu as planilhas para não incriminar a Fenna. Ela continua disposta.',
-      presagio:'"Me arruma um jeito que preste." Ela vai cumprir. Você é que vai ter que arrumar.'},
+      registrar:'Devolveu as planilhas para não incriminar a Fenna. Ela continua disposta.'},
   escolhas:[
     {texto:'"Me leva até a porta."', vai:'c11_marina_leva'},
     {texto:'"Assina uma requisição pra mim."', vai:'c11_requisicao'},
@@ -1358,9 +1346,9 @@ c11_envelope:{
     'Uma: um crachá de visitante da Silph, em branco, desses que a recepção imprime na hora — mas com o chip já gravado.',
     'Duas: um papel com um horário e uma frase.',
     '**"Quinta 19h. A porta de baixo fica aberta 11 segundos. Conta."**',
-    'Três: um post-it amarelo colado no papel, com uma letra apressada:',
+    'Três: um papelzinho adesivo amarelo colado no papel, com uma letra apressada:',
     '"não me procura mais. eu tenho filho de 4 anos. desculpa. eu fiz o que dava."',
-    'Você lê o post-it três vezes.',
+    'Você lê o papelzinho três vezes.',
     'A pessoa que te ajudou mais nessa cidade te pediu desculpa por não ajudar mais.'
   ],
   ef:{flag:['tem_cracha_visitante','sabe_dos_onze_segundos','dentro_da_silph'],
@@ -1403,8 +1391,7 @@ c11_marina_topa:{
   ef:{flag:['entrou_com_marina','dentro_da_silph'],
       npc:{nome:'Fenna (crachá azul)', opiniao:5, memoria:'Usou a própria matrícula para te passar pela catraca da Silph.'},
       rep:{eixo:'bom',delta:2,motivo:'Convenceu alguém a arriscar o emprego pelo certo'},
-      registrar:'Fenna te passou pela catraca com a matrícula dela.',
-      presagio:'Existe um log com o número dela. Ele vai existir pra sempre.'},
+      registrar:'Fenna te passou pela catraca com a matrícula dela.'},
   escolhas:[
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
     {texto:'Subir pro sétimo ver a sala vazia primeiro.', vai:'c11_sala_vazia', cond:d=>!!d.flags.sabe_da_sala_vazia},
@@ -1510,8 +1497,7 @@ c11_credencial_no_balcao:{
   ],
   ef:{flag:['entrou_na_silph_por_cima','dentro_da_silph'],
       rep:{eixo:'bom', delta:2, motivo:'Sentou na recepção da Silph e esperou o jurídico descer', notorio:true},
-      registrar:'Entrou na Silph pela porta da frente, com número de processo e quarenta minutos de poltrona.',
-      presagio:'Quatro pessoas viram você sentad{o|a} ali. Uma delas vai te procurar depois, fora do prédio.'},
+      registrar:'Entrou na Silph pela porta da frente, com número de processo e quarenta minutos de poltrona.'},
   escolhas:[
     {texto:'Subir com quem desceu.', vai:'c11_nono_andar'},
     {texto:'Pedir o livro de visitantes antes de subir.', vai:'c11_livro_visitantes'},
@@ -1586,8 +1572,7 @@ c11_quem_escreveu:{
   ef:{flag:['fonte_da_assessoria','sabe_do_email_de_terca'],
       rep:{eixo:'bom', delta:3, motivo:'Ganhou uma fonte dentro da Silph e protegeu o nome dela', notorio:true},
       npc:{nome:'Assessora da Silph', opiniao:4, memoria:'Te contou de onde veio a frase decorada, e você nunca usou o nome dela.'},
-      registrar:'A posição oficial da Silph chegou por e-mail de um endereço sem dono, numa terça.',
-      presagio:'Ela vai te ligar. Não nessa semana.'},
+      registrar:'A posição oficial da Silph chegou por e-mail de um endereço sem dono, numa terça.'},
   escolhas:[
     {texto:'Ir pela doca de carga.', vai:'c11_doca'},
     {texto:'Sair e voltar de noite.', vai:'c11_desistiu'}
@@ -1697,14 +1682,13 @@ c11_porta_de_servico:{
   texto:[
     'Sexta-feira, seis e dez da manhã.',
     'A porta de serviço está encostada, do jeito que a Sra. Odile disse, calçada com um pedaço de papelão dobrado porque o trinco é duro e ninguém quer ficar destrancando.',
-    'Do lado de dentro é um corredor de piso sem acabamento, com carrinho de limpeza encostado, cheiro de desinfetante de pinho, e uma escala de turno colada na parede com fita crepe.',
+    'Do lado de dentro é um corredor de piso sem acabamento, com carrinho de limpeza encostado, cheiro de desinfetante de pinho, e uma escala de turno colada na parede com fita adesiva.',
     'Ninguém olha pra você. Ninguém olha pra ninguém às seis e dez da manhã.',
     'Você atravessa o corredor inteiro e sai numa área de serviço com três portas: elevador de carga, escada de incêndio e uma porta com placa de **CENTRAL TÉCNICA**.'
   ],
   ef:{flag:'dentro_da_silph',
       rep:{eixo:'bom',delta:1,motivo:'Entrou pela porta que ninguém tranca'},
-      registrar:'Entrou na Silph pela porta de serviço, às 6h10 de uma sexta.',
-      presagio:'Ninguém olha pra ninguém às seis e dez da manhã. Guarde o horário.'},
+      registrar:'Entrou na Silph pela porta de serviço, às 6h10 de uma sexta.'},
   escolhas:[
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
     {texto:'Pegar o elevador de carga.', vai:'c11_elevador_de_carga'},
@@ -1772,8 +1756,7 @@ c11_voltou_o_ar:{
     'Você fica com a mão no painel, respirando, e entende uma coisa pequena e útil: dá pra desfazer. Nem tudo, mas dá pra desfazer.'
   ],
   ef:{flag:'desfez_o_alarme', limpaFlag:'alarme_silph',
-      rep:{eixo:'bom',delta:1,motivo:'Desfez o próprio erro antes que custasse'},
-      presagio:'Dá pra desfazer. Nem tudo. Guarde a ressalva.'},
+      rep:{eixo:'bom',delta:1,motivo:'Desfez o próprio erro antes que custasse'}},
   escolhas:[
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
     {texto:'Pegar o elevador de carga.', vai:'c11_elevador_de_carga'},
@@ -2027,8 +2010,7 @@ c11_dra_reis:{
       npc:{nome:'Dra. Sorrel', opiniao:3, memoria:'Te contou na garagem que o projeto veio de Cinnabar e qual foi a lição que a empresa tirou.'},
       rep:{eixo:'bom',delta:3,motivo:'Conversou com quem podia ter chamado a segurança'},
       moral:-10,
-      registrar:'A Dra. Sorrel: a empresa aprendeu que o perigo era deixar conversar.',
-      presagio:'Duzentos e quarenta e um dias. Guarde o número; ele está escrito no quadro lá embaixo.'},
+      registrar:'A Dra. Sorrel: a empresa aprendeu que o perigo era deixar conversar.'},
   escolhas:[
     {texto:'"Me deixa descer."', vai:'c11_reis_deixa'},
     {texto:'"Por que você continua?"', vai:'c11_porque_continua'},
@@ -2053,8 +2035,7 @@ c11_porque_continua:{
   ef:{flag:'reis_e_a_parte_boa',
       npc:{nome:'Dra. Sorrel', opiniao:4, memoria:'Admitiu que é a melhor pessoa do andar 11 e que é ela quem assina o encerramento.'},
       moral:-10,
-      registrar:'"Eu sou a parte boa. E eu assino o encerramento."',
-      presagio:'A melhor pessoa do andar. Guarde — isso vai definir o que você pede a ela.'},
+      registrar:'"Eu sou a parte boa. E eu assino o encerramento."'},
   escolhas:[
     {texto:'"Me deixa descer."', vai:'c11_reis_deixa'},
     {texto:'"O que acontece no dia dezenove?"', vai:'c11_dia_dezenove'},
@@ -2292,8 +2273,7 @@ c11_levou_a_caixa:{
   ef:{flag:['tem_a_caixa_de_cinnabar','provas_do_11'],
       itens:{'Caixa carimbada de Cinnabar':1},
       rep:{eixo:'bom',delta:3,motivo:'Saiu com a prova física mais indesmentível da semana'},
-      registrar:'Levou uma caixa vazia carimbada do Instituto de Cinnabar.',
-      presagio:'Alguém segurou a porta. Guarde essa piada; você vai precisar dela mais tarde.'},
+      registrar:'Levou uma caixa vazia carimbada do Instituto de Cinnabar.'},
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
@@ -2345,8 +2325,7 @@ c11_fotografou_a_caixa:{
       executar:d=>{ Estado.usarItem('Câmera descartável'); return []; },
       rep:{eixo:'bom',delta:2,motivo:'Documentou a entrega semanal inteira'},
       moral:-10,
-      registrar:'Fotografou a caixa aberta com os sete Dittos e a nota.',
-      presagio:'As seis fotos vão durar mais do que os sete. Você fez a conta e ela está certa.'},
+      registrar:'Fotografou a caixa aberta com os sete Dittos e a nota.'},
   escolhas:[
     {texto:'Entrar junto com a caixa mesmo assim.', vai:'c11_com_a_caixa'},
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
@@ -2453,7 +2432,7 @@ c11_com_a_caixa:{
     'O elevador de carga desce. Não sobe.',
     'Subsolo 1. Subsolo 2. Subsolo 3.',
     'E continua descendo, e você olha o painel e o painel já parou de ter andar pra marcar.',
-    'O último botão do painel não tem número. Só uma etiqueta de fita crepe escrita à mão, com caneta hidrográfica, numa letra que não é de nenhum departamento oficial de nenhuma empresa:',
+    'O último botão do painel não tem número. Só uma etiqueta de fita adesiva escrita à mão, com caneta hidrográfica, numa letra que não é de nenhum departamento oficial de nenhuma empresa:',
     '**11**'
   ],
   ef:{flag:['dentro_da_silph','chegou_no_11'],
@@ -2480,8 +2459,7 @@ c11_sala_vazia:{
   ef:{flag:['viu_a_sala_vazia','sabe_de_quem_senta'],
       rep:{eixo:'bom',delta:2,motivo:'Subiu sete andares por causa de uma pista de faxineira'},
       instabilidade:1,
-      registrar:'A sala vazia do 7º andar tem a marca de alguém que senta no chão encostado na parede toda semana.',
-      presagio:'Do lado de uma tomada. Guarde a tomada.'},
+      registrar:'A sala vazia do 7º andar tem a marca de alguém que senta no chão encostado na parede toda semana.'},
   escolhas:[
     {texto:'Sentar no mesmo lugar.', vai:'c11_sentou_na_sala'},
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
@@ -2630,8 +2608,7 @@ c11_pegou_requisicao:{
   ef:{flag:['tem_a_requisicao','provas_do_11'],
       itens:{'Requisição 4471-B':1},
       rep:{eixo:'bom',delta:3,motivo:'Saiu do nono andar com o papel que liga tudo'},
-      registrar:'Uma requisição 4471-B, centro de custo 11, sete unidades a 4.200 cada.',
-      presagio:'A conta é mais fácil de segurar que o resto. Você vai fazer muita conta daqui pra frente.'},
+      registrar:'Uma requisição 4471-B, centro de custo 11, sete unidades a 4.200 cada.'},
   escolhas:[
     {texto:'Descer pela escada de incêndio.', vai:'c11_escada'},
     {texto:'Sair do prédio com o papel.', vai:'c11_saiu_com_a_foto'},
@@ -2650,7 +2627,7 @@ c11_escada:{
     'Subsolo 4 não está na placa.',
     'E a escada continua.',
     'Você desce mais um lance e a temperatura cai — não um pouco, cai de verdade, uns dez graus em um lance de escada, e o corrimão de metal fica frio na mão.',
-    'No patamar seguinte tem uma porta de aço com fechadura biométrica, batente de vedação de borracha e uma folha A4 impressa em fonte padrão, colada com fita crepe:',
+    'No patamar seguinte tem uma porta de aço com fechadura biométrica, batente de vedação de borracha e uma folha impressa em fonte padrão, colada com fita adesiva:',
     '**ANDAR 11 — ACESSO RESTRITO — NÍVEL 3**',
     'Fita crepe. Numa porta de três milhões.'
   ],
@@ -2720,7 +2697,7 @@ c11_esperou_11:{
     'Duas horas e meia.',
     'Passam duas pessoas — uma às vinte e uma e dez, outra às vinte e duas e quinze — e nenhuma das duas olha pra cima, porque ninguém olha pra cima numa escada de incêndio.',
     'Às vinte e duas e quarenta a porta abre de novo e sai uma mulher de jaleco, sozinha, falando ao telefone e segurando a porta com o pé, que é o que se faz quando se sai falando ao telefone.',
-    '"...não, o quarto ciclo também não pegou. A matriz rejeita."',
+    '"…não, o quarto ciclo também não pegou. A matriz rejeita."',
     'Pausa.',
     '"Eu sei o que custa. Eu também sei o que custa explicar sete Dittos por semana pro conselho, e o conselho já perguntou duas vezes."',
     'Pausa mais longa.',
@@ -2851,8 +2828,7 @@ c11_o_que_querem:{
   ef:{flag:['sabe_o_que_querem','seis_e_cinco'],
       rep:{eixo:'bom',delta:5,motivo:'Perguntou o que eles queriam e aguentou a resposta'},
       moral:-15, instabilidade:1,
-      registrar:'Seis dos onze querem sair. Cinco querem acabar. Eles não concordam entre si.',
-      presagio:'Seis e cinco. Não existe decisão certa daqui pra frente, e você vai ter que tomar uma.'},
+      registrar:'Seis dos onze querem sair. Cinco querem acabar. Eles não concordam entre si.'},
   escolhas:[
     {texto:'Abrir os tanques — todos.', vai:'c11_abrir_tanques'},
     {texto:'Abrir só os seis que querem sair.', vai:'c11_abriu_os_seis'},
@@ -2875,8 +2851,7 @@ c11_abriu_os_seis:{
   ],
   ef:{flag:['abriu_os_seis','abriu_os_tanques'], instabilidade:2, moral:-10,
       rep:{eixo:'bom',delta:4,motivo:'Abriu só os tanques de quem pediu'},
-      registrar:'Abriu os seis tanques de quem queria sair e deixou os cinco de quem queria acabar.',
-      presagio:'Você respeitou onze vontades diferentes. Ninguém vai entender isso depois.'},
+      registrar:'Abriu os seis tanques de quem queria sair e deixou os cinco de quem queria acabar.'},
   escolhas:[
     {texto:'Levar o que ficou de pé.', vai:'c11_levou_copia'},
     {texto:'Mostrar a saída e deixar ele escolher.', vai:'c11_deixou_escolher'},
@@ -2902,8 +2877,7 @@ c11_tirou_os_seis:{
       hp:-10, causa:'Duas horas e quarenta carregando', moral:20, instabilidade:2,
       umaVez:'c10-11_p2', pokemon:{dex:150, nivel:25, opcoes:{apelido:'Décimo Segundo', natureza:'Bashful', moral:40,
         historia:'Cópia incompleta feita no andar 11 da Silph. Ficou de pé quando você abriu o tanque e pôs a mão no chão de uma garagem.'}},
-      registrar:'Tirou os seis do andar 11 em duas horas e quarenta minutos de escada.',
-      presagio:'Ela nunca tinha tocado em nada áspero. Guarde a cena inteira.'},
+      registrar:'Tirou os seis do andar 11 em duas horas e quarenta minutos de escada.'},
   escolhas:[
     {texto:'Sumir de Saffron com eles.', vai:'c11_fim'},
     {texto:'Levar pra Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
@@ -3071,8 +3045,7 @@ c11_fotografou_11:{
   ef:{flag:['provas_do_11','escolha_fria'],
       rep:{eixo:'bom',delta:3,motivo:'Documentou o andar 11 inteiro'},
       moral:-12,
-      registrar:'Fotografou o andar 11: 23 fotos.',
-      presagio:'A facilidade de fazer a conta. Anota isso sobre você.'},
+      registrar:'Fotografou o andar 11: 23 fotos.'},
   escolhas:[
     {texto:'Levar à Dra. Cordell.', vai:'c11_entregou_ivone', cond:d=>!!d.flags.cartao_ivone},
     {texto:'Levar à Sabrina.', vai:'c11_entregou_sabrina', cond:d=>!!d.flags.sabrina_avisou},
@@ -3125,8 +3098,7 @@ c11_entregou_liga:{
   ef:{rep:{eixo:'bom',delta:2,motivo:'Entregou o andar 11 à Liga Pokémon'},
       flag:'liga_lacrou_o_11', instabilidade:1, moral:-8,
       executar:d=>{ d.liga.avisos = Math.max(0, d.liga.avisos-1); return [{tipo:'liga', texto:'A Liga passou a te dever um favor. Isso é uma moeda estranha.'}]; },
-      registrar:'A Liga lacrou o andar 11 em 36 horas. Ninguém explicou o destino dos tanques.',
-      presagio:'"Encaminhado." Você vai ouvir essa palavra de novo.'},
+      registrar:'A Liga lacrou o andar 11 em 36 horas. Ninguém explicou o destino dos tanques.'},
   escolhas:[
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Perguntar uma quarta vez.', vai:'c11_quarta_vez'},
@@ -3229,8 +3201,7 @@ c11_abriu_pra_eles:{
       rep:{eixo:'bom',delta:5,motivo:'Abriu mão da vez por sete pessoas que esperaram dezenove dias'},
       moral:20,
       npc:{nome:'Sabrina', opiniao:10, memoria:'Você mandou abrir o ginásio para os sete da calçada antes de lutar.'},
-      registrar:'Fez Sabrina abrir o ginásio para os sete acampados antes do seu desafio.',
-      presagio:'Eles ensaiaram entrar e não ensaiaram estar dentro. Guarde — vale pra você também.'},
+      registrar:'Fez Sabrina abrir o ginásio para os sete acampados antes do seu desafio.'},
   escolhas:[
     {texto:'Lutar.', vai:'c11_luta_sabrina'},
     {texto:'Não lutar. Já valeu a noite.', vai:'c11_fim'},
@@ -3334,8 +3305,7 @@ c11_destruir:{
   ef:{rep:{eixo:'ruim',delta:3,motivo:'Destruiu os onze sem perguntar a nenhum deles'},
       flag:['destruiu_o_11','tem_sangue_nas_maos'], instabilidade:2, moral:-25,
       executar:d=>{ d.liga.avisos++; return [{tipo:'liga', texto:'A Silph vai registrar isso como terrorismo industrial. E vai estar tecnicamente correta.'}]; },
-      registrar:'Destruiu o andar 11 e os onze tanques.',
-      presagio:'Cinco teriam concordado. Você não vai saber quais.'},
+      registrar:'Destruiu o andar 11 e os onze tanques.'},
   escolhas:[
     {texto:'Sair antes que cheguem.', vai:'c11_fim'},
     {texto:'Ficar e esperar chegarem.', vai:'c11_esperou_chegarem'},
@@ -3363,8 +3333,7 @@ c11_esperou_chegarem:{
       npc:{nome:'Dra. Sorrel', opiniao:-2, memoria:'Te achou sentado no meio dos onze tanques quebrados e sentou do seu lado.'},
       rep:{eixo:'bom',delta:2,motivo:'Ficou para encarar o que fez'},
       moral:-10,
-      registrar:'A Dra. Sorrel sentou no chão molhado ao seu lado, entre os tanques quebrados.',
-      presagio:'"Qual dos dois é pior." Nenhum dos dois vai ter resposta.'},
+      registrar:'A Dra. Sorrel sentou no chão molhado ao seu lado, entre os tanques quebrados.'},
   escolhas:[
     {texto:'Sair.', vai:'c11_fim'},
     {texto:'"Me denuncia."', vai:'c11_fim', ef:{flag:'pediu_denuncia', rep:{eixo:'bom',delta:2,motivo:'Pediu para responder pelo que fez'}}},
@@ -3402,8 +3371,7 @@ c11_desistiu:{
   ef:{flag:'nao_entrou_no_11',
       rep:{eixo:'ruim',delta:1,motivo:'Chegou à porta e escolheu não saber'},
       moral:-10,
-      registrar:'Chegou à porta do andar 11 e voltou.',
-      presagio:'Ela vai voltar. Sempre volta.'},
+      registrar:'Chegou à porta do andar 11 e voltou.'},
   escolhas:[
     {texto:'Sair de Saffron.', vai:'c11_fim'},
     {texto:'Mudar de ideia e descer.', vai:'c11_escada'},

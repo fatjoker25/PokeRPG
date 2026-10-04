@@ -74,7 +74,7 @@ const NOMES_FIXOS = {
   'o homem de barba':          'Curador Fabre',
   'a mulher de tailleur':      'Hester Colman',
   'a mulher de trinta':        'Tessa Rue',
-  'a mulher da marmita':       'Thea Larkin',
+  'a mulher almoçando':       'Thea Larkin',
   'o rapaz da enfermaria':     'Janus',
   'o colega da enfermaria':    'Pascal',
   'a técnica de jaleco':       'Kira',

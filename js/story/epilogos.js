@@ -143,7 +143,7 @@ const EPILOGOS = [
   requer:d=>Cargos.tem('criador'),
   texto:[
     'A avaliadora olhou pata, pelagem, peso e o jeito que eles olhavam pra você quando você não estava olhando.',
-    'Você passou. E passou a vida seguinte fazendo isso com os bichos dos outros.',
+    'Você passou. E passou a vida seguinte fazendo isso com os Pokémon dos outros.',
     'Não é treino, não é medicina e não é ginásio. É a profissão mais invisível de Kanto e é a única em que a nota é dada por quem não fala.',
     'Você atende num galpão com piso de terra batida, e a fila é de gente que já tentou tudo e chegou aqui por indicação de alguém.',
     'A sua taxa de acerto é alta e a explicação é chata: você passa os primeiros quarenta minutos sem tocar em nada, só olhando.'
@@ -281,6 +281,6 @@ function rodapeDaJornada(){
     L.push(`Você acumulou ${d.cargos.length} credenciais diferentes, o que em Kanto é quase uma acusação.`);
 
   const presos = Estado.lendariosCapturados();
-  if (presos.length) L.push('E tem uma bola no seu cinto que nunca devia ter sido lacrada, e você sabe disso desde o dia em que lacrou.');
+  if (presos.length) L.push('E tem uma Pokébola no seu cinto que nunca devia ter sido lacrada, e você sabe disso desde o dia em que lacrou.');
   return L;
 }

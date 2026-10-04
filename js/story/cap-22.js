@@ -59,8 +59,7 @@ c22_ab_os_tres_da_folha:{
   ],
   ef:{flag:['dois_inscritos_antes','inscrito_por_terceiro'],
       npc:{nome:'a mulher do lado', opiniao:2, viuVoce:'Te contou dos dois inscritos de véspera que ganharam e sumiram.'},
-      registrar:'Já houve dois inscritos de véspera este ano. Os dois venceram e não competiram mais.',
-      presagio:'Ganharam e sumiram. Vencer esse torneio leva a algum lugar de onde não se volta pra arena.'},
+      registrar:'Já houve dois inscritos de véspera este ano. Os dois venceram e não competiram mais.'},
   escolhas:[
     {texto:'Descer e exigir o nome de quem pagou.', vai:'c22_exigiu_o_nome'},
     {texto:'Recusar a vaga.', vai:'c22_recusou_a_vaga'},
@@ -153,7 +152,7 @@ c22_o_quadro:{
     'Você não preencheu ficha nenhuma. Você não pagou inscrição nenhuma. Você chegou aqui hoje.',
     fala('o funcionário da mesa', 'Inscrição paga e confirmada, {moço|moça}. Tá tudo certo aqui no meu papel.'),
     fala('o funcionário da mesa', 'Paga por terceiro. Isso é normal, acontece direto, patrocínio de loja, de família, de ginásio.'),
-    fala('o funcionário da mesa', 'Campo do pagador...', null, 'Ele corre o dedo pela coluna e para.'),
+    fala('o funcionário da mesa', 'Campo do pagador…', null, 'Ele corre o dedo pela coluna e para.'),
     fala('o funcionário da mesa', 'Em branco.', 'baixo')
   ],
   ef:{flag:'inscrito_por_terceiro',
@@ -344,7 +343,7 @@ c22_a_final:{
 
 c22_venceu_a_final:{
   texto:[
-    'Você ganha. Não é fácil e não é bonito, e o Arcanine dela fica de pé quatro turnos depois de qualquer bicho razoável ter caído.',
+    'Você ganha. Não é fácil e não é bonito, e o Arcanine dela fica de pé quatro turnos depois de qualquer Pokémon razoável ter caído.',
     'Ela atravessa a arena antes do locutor terminar de falar e aperta a sua mão com as duas dela.',
     fala('Nadia', 'Você não pegou leve. Obrigada.'),
     fala('Nadia', 'Me dá o seu número. Eu vou tirar a segunda insígnia em quatro meses e eu quero que você saiba o dia.'),
