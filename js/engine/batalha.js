@@ -1027,9 +1027,9 @@ const Batalha = {
       if (!outros.length) return this.ev('erro', 'Mas não funcionou.');
       const novo = Dados.escolher(outros);
       this.desfazerMudancas(def, this.estAliado);
-      this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${nomeVisivel(novo)} entra no lugar!`);
       this.aliado = novo;
       this.estAliado = this.novoEstado();
+      this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${nomeVisivel(novo)} entra no lugar!`);
       if (this.participantes) this.participantes.add(novo.uid);
       this.entrouEmCampo(novo, this.estAliado);
       return;
@@ -1038,9 +1038,9 @@ const Batalha = {
     const i = Dados.entre(0, this.timeInimigo.length - 1);
     const novo = this.timeInimigo.splice(i, 1, def)[0];
     this.desfazerMudancas(def, this.estInimigo);
-    this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${this.treinador || 'O treinador'} manda ${nomeVisivel(novo)}!`);
     this.inimigo = novo;
     this.estInimigo = this.novoEstado();
+    this.ev('info', `${nomeVisivel(def)} é arrancado da luta. ${this.treinador || 'O treinador'} manda ${nomeVisivel(novo)}!`);
     this.participantes = new Set([this.aliado.uid]);
     this.entrouEmCampo(novo, this.estInimigo);
   },
@@ -1487,11 +1487,13 @@ const Batalha = {
         this.parViuCair(this.inimigo, this.timeInimigo);
         const prox = this.timeInimigo.shift();
         if (this.revelaNatureza){ prox.naturezaVista = true; prox.nomeAnunciado = true; }
-        this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
-          prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.desfazerMudancas(this.inimigo, this.estInimigo);
         this.inimigo = prox;
         this.estInimigo = this.novoEstado();
+        /* o aviso vem depois da troca: a foto dele já é a do próximo,
+           e é ela que faz a tela mostrar a bola saindo do treinador */
+        this.ev('info', `${this.treinador} envia ${nomeVisivel(prox)} (Nv ${prox.nivel})${
+          prox.naturezaVista ? ', ' + prox.natureza : ''}!`);
         this.participantes = new Set([this.aliado.uid]);
         this.entrouEmCampo(prox, this.estInimigo);
         /* os dois caíram juntos (Explosion, recuo): o de lá já mandou o

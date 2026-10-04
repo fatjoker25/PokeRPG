@@ -142,7 +142,7 @@ function imgSpriteDex(dexId, vista, opcoes){
    ITENS — ícone da mochila e bola do arremesso
 
      sprites_nds/items/{arquivo}.png                ícone de item (30×30)
-     sprites_nds/animations/pokeball/ball_closed.png  Poké Ball do arremesso
+     sprites_nds/animations/pokeball/{tipo}-ball.png  a bola na arena (24×24)
 
    O mapa vai do nome que o JOGO usa pro arquivo. Só entra item com
    equivalente exato nos jogos — Resto de Ração é Leftovers porque a
@@ -250,12 +250,17 @@ function caminhoInsignia(idGinasio){
   return SPRITES_EMBUTIDOS[rel] || rel;
 }
 
+/* A bola na arena é a da mochila de Black/White (PokeAPI,
+   sprites/items/gen5): a mesma geração dos sprites de batalha, e a
+   bola ocupa 18 px de 24, que na escala da arena (1,1× a 1,3×) fica
+   do tamanho que ela tem perto de um Pokémon nos jogos. O ícone da
+   mochila continua o outro. A PokeAPI não tem arremesso nem bola
+   aberta: o movimento é desenhado (UI.animarArremesso, Efeitos). */
+const BOLA_NA_ARENA = {'Poké Ball':'poke-ball', 'Great Ball':'great-ball', 'Ultra Ball':'ultra-ball',
+                       'Master Ball':'master-ball', 'Safari Ball':'safari-ball'};
 function spriteDaBola(nome){
-  if (nome === 'Poké Ball'){
-    const rel = SPRITES_BASE + 'animations/pokeball/ball_closed.png';
-    return SPRITES_EMBUTIDOS[rel] || rel;
-  }
-  return caminhoItem(nome) || caminhoItem('Poké Ball');
+  const rel = SPRITES_BASE + 'animations/pokeball/' + (BOLA_NA_ARENA[nome] || 'poke-ball') + '.png';
+  return SPRITES_EMBUTIDOS[rel] || rel;
 }
 
 

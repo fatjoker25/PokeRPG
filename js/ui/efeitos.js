@@ -545,7 +545,11 @@ const Efeitos = {
       UI.atualizarArena();
       this.pintarHP('aliado', e.fotoA, false);
       this.pintarHP('inimigo', e.fotoI, false);
-      if (trocouI) await AnimadorSprite.entrar('inimigo', {daBola:true});
+      if (trocouI){
+        /* treinador manda o próximo pela bola; selvagem não tem bola */
+        if (Batalha.tipo === 'treinador') await this.entradaPorBola('inimigo', Batalha.inimigo, this.bolaDoAdversario());
+        else await AnimadorSprite.entrar('inimigo', {daBola:true});
+      }
       if (trocouA) await this.entrada(Batalha.aliado);
       return;
     }
@@ -612,20 +616,40 @@ const Efeitos = {
      entra de Great Ball. Sem registro, Poké Ball.
      ======================================================== */
   async entrada(p){
-    const arena = this.arena(), s = this.sprite('aliado');
-    const ficha = arena && arena.querySelector('.lutador.aliado .ficha');
-    const lut = arena && arena.querySelector('.lutador.aliado');
+    return this.entradaPorBola('aliado', p, (p && p.capturadoEm && p.capturadoEm.bola) || 'Poké Ball');
+  },
+
+  /* a bola de quem te desafia: Elite e Conferência de Ultra Ball,
+     líder e veterano de Great Ball, o resto de Poké Ball */
+  bolaDoAdversario(){
+    const J = typeof Jogo !== 'undefined' ? Jogo : {};
+    if (J.eliteAtual || J.conferenciaAtual) return 'Ultra Ball';
+    if (J.ginasioAtual || J.veteranoAtual) return 'Great Ball';
+    return 'Poké Ball';
+  },
+
+  /* A mesma sequência pros dois lados. O seu vem do canto de baixo à
+     esquerda; o de lá, da mão do treinador no fundo (ou do alto à
+     direita, sem rosto), girando pro outro lado. */
+  async entradaPorBola(lado, p, nomeBola){
+    const arena = this.arena(), s = this.sprite(lado);
+    const ficha = arena && arena.querySelector(`.lutador.${lado} .ficha`);
+    const lut = arena && arena.querySelector(`.lutador.${lado}`);
     if (!arena || !s || !p){ if (lut) lut.classList.remove('por-entrar'); return; }
-    if (this.reduzido()){ lut.classList.remove('por-entrar'); tocarGrito(p.dex); return; }
-    AnimadorSprite.marcar('aliado', ESTADOS_SPRITE.ENTRY);
+    if (this.reduzido()){ lut.classList.remove('por-entrar'); s.style.visibility = ''; tocarGrito(p.dex); return; }
+    AnimadorSprite.marcar(lado, ESTADOS_SPRITE.ENTRY);
+    /* o que ficou preso do recolher ou do desmaio sai antes */
+    s.getAnimations().forEach(x => x.cancel());
+    lut.classList.add('fixo');
     s.style.visibility = 'hidden';
-    if (ficha) ficha.classList.add('ficha-fora');
+    const aliado = lado === 'aliado';
+    if (ficha && aliado) ficha.classList.add('ficha-fora');
     lut.classList.remove('por-entrar');
     const c = this.camada();
     const A = arena.getBoundingClientRect();
-    const t = this.alvo('aliado');
+    const t = this.alvo(lado);
     const TAM = 30;
-    const bola = spriteDaBola((p.capturadoEm && p.capturadoEm.bola) || 'Poké Ball');
+    const bola = spriteDaBola(nomeBola);
     const voo = document.createElement('div');
     voo.className = 'bola-voo entrada';
     voo.style.width = voo.style.height = TAM + 'px';
@@ -635,17 +659,25 @@ const Efeitos = {
     const baixo = voo.querySelector('.meia.baixo');
     const fenda = voo.querySelector('.fenda');
 
-    /* 1 — parábola do canto de baixo à esquerda até a base */
-    const x0 = 4, y0 = A.height - TAM - 4;
+    /* 1 — parábola de quem joga até a base */
+    let x0, y0;
+    if (aliado){ x0 = 4; y0 = A.height - TAM - 4; }
+    else {
+      const tr = arena.querySelector('.lutador.inimigo .treinador-fundo');
+      const R = tr && tr.getBoundingClientRect();
+      if (R && R.width){ x0 = R.left - A.left + R.width * 0.3 - TAM / 2; y0 = R.top - A.top + R.height * 0.4 - TAM / 2; }
+      else { x0 = A.width - TAM - 4; y0 = 4; }
+    }
     const x1 = t.cx - TAM / 2, y1 = t.pe - TAM + 2;
-    const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - 80;
+    const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - (aliado ? 80 : 50);
+    const volta = aliado ? 360 : -360;
     const quadros = [];
     for (let i = 0; i <= 14; i++){
       const k = i / 14, u = 1 - k;
       const x = u*u*x0 + 2*u*k*cx + k*k*x1, y = u*u*y0 + 2*u*k*cy + k*k*y1;
-      quadros.push({transform:`translate(${x}px, ${y}px) rotate(${360 * k}deg)`});
+      quadros.push({transform:`translate(${x}px, ${y}px) rotate(${volta * k}deg)`});
     }
-    await this.tocar(voo, quadros, 540, {easing:'linear', fill:'forwards'});
+    await this.tocar(voo, quadros, aliado ? 540 : 480, {easing:'linear', fill:'forwards'});
 
     /* 2 — abre e solta o clarão */
     await abrirBola(cima, baixo, fenda, 150);
@@ -654,7 +686,8 @@ const Efeitos = {
       {transform:'translate(-50%,-50%) scale(1)', opacity:1, offset:.35},
       {transform:'translate(-50%,-50%) scale(1.5)', opacity:0}], 460);
 
-    /* 3 — nasce branco, do pé pra cima, e a cor vem por baixo */
+    /* 3 — nasce branco, do pé pra cima, e a cor vem por baixo. A
+       máscara é clone pintado pelo alfa: silhueta continua silhueta. */
     const m = document.createElement('img');
     m.className = 'fx-tinta';
     m.src = s.currentSrc || s.src; m.alt = '';
@@ -679,10 +712,10 @@ const Efeitos = {
     m.remove(); voo.remove();
 
     /* 4 — a ficha entra deslizando */
-    if (ficha){ ficha.classList.remove('ficha-fora'); ficha.classList.add('ficha-entra'); }
-    await this.esperar(320);
+    if (ficha && aliado){ ficha.classList.remove('ficha-fora'); ficha.classList.add('ficha-entra'); }
+    await this.esperar(aliado ? 320 : 120);
     if (ficha) ficha.classList.remove('ficha-entra');
-    AnimadorSprite.repouso('aliado');
+    AnimadorSprite.repouso(lado);
   },
 
   /* ========================================================
@@ -715,15 +748,8 @@ const Efeitos = {
         const k = r0.width ? r1.width / r0.width : 1;
         await this.tocar(tr, [{transformOrigin:'0 0', transform:`translate(${r1.left - r0.left}px, ${r1.top - r0.top}px) scale(${k})`},
                               {transformOrigin:'0 0', transform:'none'}], 380, {easing:'ease-in-out'});
-        si.style.visibility = '';
-        const u = this.alvo('inimigo');
-        if (u){
-          const cl = this.particula('fx-clarao', u.cx, u.pe - 10);
-          await Promise.all([this.soltar(cl, [{transform:'translate(-50%,-50%) scale(.2)', opacity:0},
-            {transform:'translate(-50%,-50%) scale(.9)', opacity:1, offset:.35},
-            {transform:'translate(-50%,-50%) scale(1.3)', opacity:0}], 380),
-            AnimadorSprite.entrar('inimigo', {daBola:true})]);
-        }
+        /* o treinador joga a bola dele, do fundo, e o Pokémon sai dela */
+        await this.entradaPorBola('inimigo', Batalha.inimigo, this.bolaDoAdversario());
       } else if (si){
         /* selvagem: desliza da lateral até a base */
         if (li) li.classList.remove('por-entrar');
@@ -733,7 +759,8 @@ const Efeitos = {
       }
     }
     if (li) li.classList.remove('por-entrar');
-    if (Batalha.inimigo) tocarGrito(Batalha.inimigo.dex);
+    /* quem saiu da bola já gritou ao sair */
+    if (Batalha.inimigo && !(tr && si)) tocarGrito(Batalha.inimigo.dex);
     await this.esperar(this.reduzido() ? 0 : 260);
     await this.entrada(Batalha.aliado);
     if (acoes){ acoes.classList.remove('esperando'); acoes.removeAttribute('aria-busy'); }

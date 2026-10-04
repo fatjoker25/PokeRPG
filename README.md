@@ -453,7 +453,7 @@ o combate continua legível.
 
 ```
 sprites_nds/items/{arquivo}.png                   ícone de item, 30×30
-sprites_nds/animations/pokeball/ball_closed.png   a Poké Ball do arremesso
+sprites_nds/animations/pokeball/*-ball.png        as Pokébolas na arena (PokeAPI, items/gen5)
 ```
 
 O nome do arquivo segue a convenção em inglês (`pokeball`,
@@ -471,7 +471,8 @@ o `build.py` embute 1.686 arquivos.
 As artes de Pokémon são de Black/White (frente e costas, paradas e as
 animadas, estas do repositório de sprites da PokeAPI) e de
 HeartGold/SoulSilver (ícones de equipe); os ícones de item vêm do
-repositório de sprites da PokeAPI, assim como os discos de TM, as oito
+repositório de sprites da PokeAPI, assim como as Pokébolas da arena (as
+da mochila de Black/White, `items/gen5`), os discos de TM, as oito
 insígnias de Kanto e o ícone do mapa; os gritos são a versão das
 primeiras gerações do repositório de gritos da PokeAPI; os cenários de
 batalha (que também fazem o fundo de cada lugar), os rostos de treinador e as

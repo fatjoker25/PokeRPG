@@ -267,6 +267,18 @@ Três armadilhas que já aconteceram aqui:
 - **Meia volta a mais e a bola pousa de cabeça pra baixo.** O giro do voo
   termina em volta inteira (`GIRO = 720`).
 
+A bola **na arena** é a da mochila de Black/White, da PokeAPI
+(`sprites/items/gen5`), em `sprites_nds/animations/pokeball/{tipo}-ball.png`,
+por `spriteDaBola(nome)` — a mesma geração dos sprites de batalha, e 24 px
+a 1,25× dá a escala da arena. O ícone da mochila continua o outro. A
+PokeAPI não tem arremesso, bola aberta nem captura animada: o movimento é
+nosso. A mesma entrada pela bola serve aos dois lados
+(`Efeitos.entradaPorBola`): o seu sai da bola em que foi pego, o do
+treinador adversário sai da mão dele no fundo (`bolaDoAdversario`: Elite
+e Conferência de Ultra Ball, líder e veterano de Great Ball). Selvagem
+não tem bola. E o aviso de troca no motor sai **depois** de trocar o
+lutador: com o `ev` antes, a foto é a do antigo e a tela não vê a troca.
+
 Bola aberta, brilho e inclinação não têm arquivo: os endereços de
 `ball_open` e `sparkle` dão 404 na origem, e `tilt_left`/`tilt_right` são
 byte a byte a bola fechada. A aberta é a fechada cortada ao meio, a

@@ -1096,7 +1096,7 @@ const UI = {
 
      Máquina de estados (a mesma dos jogos de DS):
 
-       1 ARCO      ball_closed girando numa parábola de Bézier, do
+       1 ARCO      a bola girando numa parábola de Bézier, do
                    treinador até um ponto no alto, sobre a cabeça
        2 CAPTURA   abre lá em cima; um raio vermelho liga a bola ao
                    Pokémon, ele fica vermelho com uma linha de aura
@@ -1136,7 +1136,7 @@ const UI = {
     const artAli = arena.querySelector('.lutador.aliado .arte');
     const S = artAli ? artAli.getBoundingClientRect()
                      : {left:A.left+40, top:A.bottom-150, width:120, height:120};
-    const TAM = 36;
+    const TAM = 30;               // bola de 24 px a 1,25×: a escala da arena
     const GIRO = 720;             // volta inteira: pousa de pé
     const x0 = S.left - A.left + S.width * 0.62 - TAM/2;
     const y0 = S.top  - A.top  + S.height * 0.30 - TAM/2;
