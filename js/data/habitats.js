@@ -19,6 +19,17 @@
    ============================================================ */
 const FOSSEIS = [138, 139, 140, 141, 142];
 
+/* Quem anda de noite e quem anda de dia (o resto, a qualquer hora).
+   Na tabela do lugar, o do horário errado aparece 1/5 do normal, e o
+   do horário certo, o triplo. */
+const NOTURNOS = [41, 42, 169, 43, 44, 45, 182, 48, 49, 52, 53, 92, 93, 94, 163, 164, 167, 168, 198, 200, 228, 229, 215, 35, 36, 173, 96, 97, 109, 110, 197];
+const DIURNOS  = [16, 17, 18, 10, 11, 12, 13, 14, 15, 21, 22, 161, 162, 165, 166, 187, 188, 189, 191, 192, 84, 85, 83, 123, 127, 196, 25, 26];
+function pesoDoHorario(dex, noite){
+  if (NOTURNOS.includes(dex)) return noite ? 3 : 0.2;
+  if (DIURNOS.includes(dex))  return noite ? 0.2 : 1.5;
+  return 1;
+}
+
 const ENCONTROS = {
   pallet:          [[16,45],[19,45],[129,10]],
   rota1:           [[16,50],[19,50]],
@@ -95,6 +106,11 @@ function sortearEspecie(localId, ambiente, nivel){
   const tabela = ENCONTROS[localId] || habitatPorAmbiente()[ambiente] || ENCONTROS.rota1;
   let opcoes = tabela.filter(([d]) => DEX[d] && !FOSSEIS.includes(d) && cabe(d));
   if (!opcoes.length) opcoes = tabela.map(([d, p]) => [formaAteONivel(d, nivel), p]);
+  /* dia e noite: quem é da noite some de dia e aparece muito à noite;
+     quem é do dia, ao contrário */
+  const noite = (typeof ehNoite === 'function') && ehNoite();
+  opcoes = opcoes.map(([d, p]) => [d, p * pesoDoHorario(d, noite)]).filter(([, p]) => p > 0);
+  if (!opcoes.length) opcoes = tabela.map(([d, p]) => [d, p]);
   const total = opcoes.reduce((t, [, p]) => t + p, 0);
   let r = Math.random() * total;
   for (const [d, p] of opcoes){ if ((r -= p) < 0) return d; }

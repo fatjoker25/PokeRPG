@@ -74,6 +74,7 @@ const Jogo = {
 
   /* ---------- início ---------- */
   iniciar(){
+    if (typeof Relogio !== 'undefined') Relogio.iniciar();
     UI.init();
     UI.telaInicial();
   },
@@ -422,7 +423,7 @@ const Jogo = {
     Estado.salvar('auto');
     UI.mostrarContinuar(() => {
       if (fim.resultado === 'gameover') return this.finalizarBatalha(fim);
-      this.resolverEvolucoes(() => this.finalizarBatalha(fim));
+      this.resolverEvolucoes(() => this.resolverApelidos(() => this.finalizarBatalha(fim)));
     });
   },
 
@@ -570,7 +571,35 @@ const Jogo = {
   },
 
   resolverPendencias(aoFim){
-    this.resolverGolpes('modal', () => this.resolverEvolucoes(aoFim));
+    this.resolverGolpes('modal', () => this.resolverEvolucoes(() => this.resolverApelidos(aoFim)));
+  },
+
+  /* Quem acabou de chegar ganha nome, se você quiser. Um por vez. */
+  resolverApelidos(aoFim){
+    const d = Estado.dados;
+    const todos = [...(d.time || []), ...(d.pc || [])];
+    let p = null;
+    while ((d.apelidar || []).length && !p){
+      const uid = d.apelidar.shift();
+      p = todos.find(x => x.uid === uid && !x.morto && !x.apelido) || null;
+    }
+    if (!p) return aoFim && aoFim();
+    p.apelidoPerguntado = true;
+    this._depoisDoApelido = aoFim;
+    UI.modalApelido(p);
+  },
+  darApelido(uid, nome){
+    const d = Estado.dados;
+    const p = [...(d.time || []), ...(d.pc || [])].find(x => x.uid === uid);
+    const n = String(nome || '').replace(/[<>{}|"'`]/g, '').trim().slice(0, 12);
+    if (p && n && n.toLowerCase() !== p.nome.toLowerCase()){
+      p.apelido = n;
+      Estado.registrar(`Deu o nome de ${n} pro ${p.nome}.`);
+    }
+    Estado.salvar('auto');
+    UI.fecharModal(true);
+    const f = this._depoisDoApelido; this._depoisDoApelido = null;
+    this.resolverApelidos(f);
   },
 
   finalizarBatalha(fim){
@@ -1527,6 +1556,7 @@ const Jogo = {
       moral:35,
       historia:'Recebid{o} numa troca. Teve outro treinador antes de você.'
     });
+    recebido.trocado = true;
     Estado.adicionar(recebido);
     Estado.registrar(`Trocou ${saiu ? nomeExib(saiu) : '?'} por ${recebido.nome} Nv${recebido.nivel}.`);
     UI.fecharModal();

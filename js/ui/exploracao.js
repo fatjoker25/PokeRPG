@@ -66,6 +66,7 @@ const Exploracao = {
 
     if (avisos && avisos.length) UI.avisos(avisos);
     UI.rolarTopo();
+    UI.talvezApelido();
   },
 
   /* ---------- o mapa da região ----------
@@ -293,7 +294,8 @@ const Exploracao = {
   repelenteAtivo(){
     const d = Estado.dados;
     if (!d.repelenteAte) return false;
-    const agora = d.relogio.dia * 4;
+    sincronizarHora(d.relogio);
+    const agora = d.relogio.dia * 24 + d.relogio.hora;
     if (agora >= d.repelenteAte){ d.repelenteAte = 0; return false; }
     return true;
   },
@@ -467,7 +469,11 @@ const Exploracao = {
   },
 
   acampar(){
-    Mundo.passar(1);
+    if (!ehNoite())
+      return this.tela([{tipo:'info', texto:'Ainda está claro. Acampar é pra quando escurece.'}]);
+    /* dorme até o sol: acorda às seis */
+    const r = Estado.dados.relogio;
+    Mundo.passarHoras(r.hora >= 18 ? 30 - r.hora : 6 - r.hora);
     if (this.surge('acampar')) return;
     /* Dormir no chão é um teste de corpo. Resistência decide quanto
        do dia seguinte você recupera de verdade. */

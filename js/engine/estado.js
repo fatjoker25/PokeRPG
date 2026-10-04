@@ -557,7 +557,7 @@ const Estado = {
       viaAnterior: null,
       finaisVistos: [],
       log: [],
-      relogio: {dia:1, periodo:'manhã'}
+      relogio: {dia:1, periodo:'manhã', hora:7}
     };
     return this.dados;
   },
@@ -934,6 +934,10 @@ const Estado = {
       if (typeof registrarGolpeNaDex === 'function')
         (p.golpes || []).forEach(g => registrarGolpeNaDex(p.dex, g.nome));
     }
+    /* quem chega por captura ou presente pode ganhar apelido; de troca,
+       não: o nome veio com ele */
+    if (p && !p.trocado && !p.apelido && !p.apelidoPerguntado)
+      (this.dados.apelidar = this.dados.apelidar || []).push(p.uid);
     if (this.dados.time.length < 6){ this.dados.time.push(p); return 'time'; }
     this.dados.pc.push(p); return 'pc';
   },

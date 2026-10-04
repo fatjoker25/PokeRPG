@@ -5,6 +5,45 @@
    ============================================================ */
 
 const PERIODOS = ['madrugada','manhã','tarde','noite'];
+const INICIO_PERIODO = {madrugada:0, 'manhã':6, tarde:12, noite:18};
+function periodoDaHora(h){ return PERIODOS[Math.floor(((h % 24) + 24) % 24 / 6)]; }
+/* save antigo (ou cena que mexeu no período à mão): a hora acompanha */
+function sincronizarHora(r){
+  if (!r) return;
+  if (r.hora == null || periodoDaHora(r.hora) !== r.periodo)
+    r.hora = (INICIO_PERIODO[r.periodo || 'manhã'] || 6) + 2;
+}
+function ehNoite(){
+  const r = Estado.dados && Estado.dados.relogio;
+  if (!r) return false;
+  sincronizarHora(r);
+  return r.hora >= 18 || r.hora < 6;
+}
+const Relogio = {
+  MS_POR_HORA: 60000,
+  avancar(h){
+    const r = Estado.dados.relogio;
+    sincronizarHora(r);
+    r.hora += h;
+    while (r.hora >= 24){ r.hora -= 24; r.dia++; }
+    r.periodo = periodoDaHora(r.hora);
+  },
+  /* um minuto aberto é uma hora; fora de foco e no meio da luta, para */
+  iniciar(){
+    if (this._t) return;
+    this._t = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      const d = Estado.dados;
+      if (!d || !d.relogio || d.modo === 'batalha') return;
+      this.avancar(1);
+      if (typeof UI !== 'undefined' && UI.pintarRelogio) UI.pintarRelogio();
+    }, this.MS_POR_HORA);
+  },
+  texto(){
+    const r = Estado.dados.relogio; sincronizarHora(r);
+    return `${String(r.hora).padStart(2, '0')}h · ${r.periodo} do dia ${r.dia}`;
+  }
+};
 
 const LOCAIS = {
 
@@ -309,22 +348,27 @@ const Mundo = {
     Estado.dados.visitados = {[Estado.dados.local]:true};
     Estado.dados.descobertas = {};
     Estado.dados.relogio.periodo = 'manhã';
+    Estado.dados.relogio.hora = 7;
   },
 
   visitado(id){ return !!(Estado.dados.visitados||{})[id]; },
   marcarVisitado(id){ (Estado.dados.visitados = Estado.dados.visitados || {})[id] = true; },
 
-  /* ---------- tempo ---------- */
+  /* ---------- tempo ----------
+     O relógio tem hora (0–23). Um minuto de jogo aberto é uma hora
+     (Relogio.iniciar), e fazer coisa leva o dia pro próximo período.
+     O período sai da hora: madrugada 0–5, manhã 6–11, tarde 12–17,
+     noite 18–23. */
   passar(periodos=1){
     const d = Estado.dados.relogio;
-    let i = PERIODOS.indexOf(d.periodo || 'manhã');
-    for (let k=0;k<periodos;k++){
-      i++;
-      if (i >= PERIODOS.length){ i = 0; d.dia++; }
+    sincronizarHora(d);
+    for (let k = 0; k < periodos; k++){
+      const prox = (Math.floor(d.hora / 6) + 1) * 6;   // começo do próximo período
+      Relogio.avancar(prox - d.hora);
     }
-    d.periodo = PERIODOS[i];
     return d;
   },
+  passarHoras(h){ sincronizarHora(Estado.dados.relogio); Relogio.avancar(h); return Estado.dados.relogio; },
 
   /* ---------- descobertas ---------- */
   descobriu(chave){ return !!(Estado.dados.descobertas||{})[chave]; },

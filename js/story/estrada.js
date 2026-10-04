@@ -43,6 +43,16 @@ function escalaoEstradaDe(n){
 function treinadorEstrada(id){ return (typeof TREINADORES_ESTRADA !== 'undefined' ? TREINADORES_ESTRADA : []).find(t => t.id === id) || null; }
 function nomeDeLuta(t){ return `${t.classe} ${t.nome}`; }
 
+/* Gente de dia e gente de noite: pela classe (o rosto). O resto anda
+   a qualquer hora. */
+const CLASSES_DO_DIA = ['youngster','lass','bug_catcher','camper','picnicker','swimmer','swimmer_f','scuba_diver','cyclist','bird_keeper','beauty','worker'];
+const CLASSES_DA_NOITE = ['biker','gambler','medium','guitarist','super_nerd'];
+function andaNessaHora(t, noite){
+  if (CLASSES_DO_DIA.includes(t.arq)) return !noite;
+  if (CLASSES_DA_NOITE.includes(t.arq)) return noite;
+  return true;
+}
+
 /* O time do escalão, com parte dos lugares trocada pelo que o
    treinador tem de reserva — como os líderes. `extra` sobe o nível
    (a revanche marcada pelo PokéNav vem com +2). */
@@ -135,7 +145,8 @@ const Estrada = {
      chegou nas insígnias de agora */
   pendentes(localId){
     const k = escalaoEstradaDe(numInsignias());
-    return this.daqui(localId).filter(t => !this.registro(t.id).vencidos.includes(k));
+    const noite = (typeof ehNoite === 'function') && ehNoite();
+    return this.daqui(localId).filter(t => !this.registro(t.id).vencidos.includes(k) && andaNessaHora(t, noite));
   },
   deuNumero(id){ return !!(Estado.dados.estrada && Estado.dados.estrada[id] && Estado.dados.estrada[id].numero); },
 

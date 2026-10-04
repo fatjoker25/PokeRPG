@@ -181,6 +181,11 @@ const UI = {
             <div class="hp-num">${p.hp} / ${p.hpMax} HP</div>`;
   },
 
+  /* o relógio do topo anda sem redesenhar a tela */
+  pintarRelogio(){
+    document.querySelectorAll('.topo .relogio').forEach(e => { e.textContent = Relogio.texto(); });
+  },
+
   /* ---------- barra superior ---------- */
   /* o lugar onde você está, atrás de tudo */
   pintarCenario(){
@@ -200,7 +205,7 @@ const UI = {
       <div>
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
-          ${this.esc(d.relogio.periodo || 'manhã')} do dia ${d.relogio.dia} ·
+          <span class="relogio">${this.esc(Relogio.texto())}</span> ·
           HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽</div>
       </div>
       <div class="topo-acoes">
@@ -778,6 +783,14 @@ const UI = {
     if (avisos && avisos.length) this.avisos(avisos);
     this.montarAcoes(cena);
     this.rolarTopo();
+    this.talvezApelido();
+  },
+
+  /* chegou alguém novo enquanto a tela era outra: pergunta o nome agora */
+  talvezApelido(){
+    const d = Estado.dados;
+    if (!d || !(d.apelidar || []).length || document.getElementById('modal')) return;
+    setTimeout(() => { if (!document.getElementById('modal')) Jogo.resolverApelidos(() => {}); }, 60);
   },
 
   avisos(lista, alvo){
@@ -1645,6 +1658,21 @@ const UI = {
       (guardados > 0 ? `<p class="sussurro" style="margin:10px 0 0">${guardados} ${guardados === 1 ? 'objeto fica guardado' : 'objetos ficam guardados'} — papel, crachá e afins não servem de nada aqui.</p>` : '');
     this.modal('Mochila', (linhasBolas || linhasItens) ? corpo
       : corpo + '<p class="nada">Nada que sirva agora.</p>');
+  },
+
+  /* Apelido: o campo vem vazio; deixar vazio é ficar com o nome da espécie. */
+  modalApelido(p){
+    this.modal('', `<div class="apelido">
+        <div class="apelido-arte">${imgSprite(p, 'frente')}</div>
+        <label for="campo-apelido">Quer dar um apelido a ${this.esc(p.nome)}?</label>
+        <input id="campo-apelido" maxlength="12" autocomplete="off" placeholder="${this.esc(p.nome)}"
+          onkeydown="if(event.key==='Enter')Jogo.darApelido('${p.uid}', this.value)">
+        <div class="apelido-botoes">
+          <button class="btn destaque" onclick="Jogo.darApelido('${p.uid}', document.getElementById('campo-apelido').value)">Dar o apelido</button>
+          <button class="btn" onclick="Jogo.darApelido('${p.uid}', '')">Não</button>
+        </div>
+      </div>`, true);
+    setTimeout(() => { const c = document.getElementById('campo-apelido'); if (c) c.focus(); }, 50);
   },
 
   /* Lista do time pra escolher quem recebe: ícone, nome e HP. */
@@ -3070,7 +3098,8 @@ const UI = {
     }
     if (info.tipo === 'repelente'){
       Estado.usarItem(nome);
-      d.repelenteAte = (d.relogio.dia * 4) + info.valor;
+      sincronizarHora(d.relogio);
+      d.repelenteAte = (d.relogio.dia * 24 + d.relogio.hora) + info.valor * 6;   // valor em períodos
       Estado.salvar('auto');
       this.modal('', '<p>O cheiro é horrível e funciona. Por uns períodos, o mato em volta fica mais quieto do que devia.</p>', false, 'mochila');
       return;
@@ -3926,9 +3955,17 @@ const UI = {
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
       <div class="linha"><span class="k">Nunca no mato</span><span class="v">fóssil (só renasce no laboratório), lendário e Porygon</span></div>
-      <div class="linha"><span class="k">Nível</span><span class="v">o da área, 2 pra mais ou pra menos · 4 em 100 vêm 3 a 5 acima · 1 em 100 vem 8 a 12 acima</span></div>
-      <div class="linha"><span class="k">Forma</span><span class="v">só aparece quem pode existir naquele nível</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o do lugar, nunca o do seu time · a maioria entre 3 abaixo e 3 acima · 12 em 100 vêm de 3 a 6 abaixo · 8 em 100 vêm de 4 a 9 acima · 1 em 100, a partir do capítulo 2, é um velho do mato: de 14 a 26 acima (no mínimo 20)</span></div>
+      <div class="linha"><span class="k">Forma</span><span class="v">a da tabela do lugar · quem veio acima do lugar e já passou do nível de evoluir aparece evoluído (só evolução por nível: pedra e troca não acontecem no mato)</span></div>
+      <div class="linha"><span class="k">Dia e noite</span><span class="v">quem é da noite (Zubat, Gastly, Oddish, Venonat, Meowth, Clefairy, Hoothoot, Murkrow…) aparece o triplo à noite e 1/5 de dia · quem é do dia (Pidgey, Spearow, Caterpie, Weedle, Doduo, Sentret, Ledyba…) aparece 1,5× de dia e 1/5 à noite</span></div>
+      <div class="linha"><span class="k">Gente na estrada</span><span class="v">quem treina de dia (garoto, garota, caçador de inseto, campista, nadador, ciclista) some à noite · quem anda de noite (motoqueiro, jogador, médium, guitarrista) só aparece à noite · o resto, a qualquer hora</span></div>
       <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
+
+      <h3>Relógio</h3>
+      <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto · parado durante a luta e com a janela fora de foco</span></div>
+      <div class="linha"><span class="k">Período</span><span class="v">madrugada 0h–5h · manhã 6h–11h · tarde 12h–17h · noite 18h–23h</span></div>
+      <div class="linha"><span class="k">Fazer coisa</span><span class="v">vasculhar, procurar, pescar, andar, conversar levam o dia pro começo do próximo período · treinar, dois</span></div>
+      <div class="linha"><span class="k">Acampar</span><span class="v">só de noite ou de madrugada · acorda às 6h</span></div>
 
       <h3>Andar pela rota</h3>
       <div class="linha"><span class="k">Entrar ou sair de uma rota</span><span class="v">30% de um treinador dali te parar · se não, teste de Intelecto (dif. 5) e um selvagem sai do mato: 15% no crítico, 25% no sucesso, 35% no parcial, 45% na falha</span></div>
@@ -4057,6 +4094,7 @@ const UI = {
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
+      <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
       <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">quantas vezes quiser · não gasta o turno</span></div>

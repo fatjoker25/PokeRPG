@@ -100,10 +100,7 @@ function ehShiny(p){ return !!(p && p.shiny); }
 
 /* Manhã e tarde contam como dia; noite e madrugada, como noite. */
 function ehDeDia(){
-  try {
-    const per = Estado.dados.relogio.periodo;
-    return per === 'manhã' || per === 'tarde';
-  } catch(e){ return true; }
+  try { return !ehNoite(); } catch(e){ return true; }
 }
 
 let _uidPokemon = 1;
@@ -506,13 +503,37 @@ function sortearSelvagem(ambiente='campo', nivelBase=8, localId=null){
   /* batalha de cena num canto que não é o do mapa (um porão, o mar):
      vale o ambiente da cena, não a tabela de onde você está parado */
   if (localId && typeof LOCAIS !== 'undefined' && LOCAIS[localId] && LOCAIS[localId].ambiente !== ambiente) localId = null;
+  /* O nível é do lugar, nunca do seu time, e varia de verdade: a maior
+     parte na faixa da rota, um tanto acima, e de vez em quando um
+     velho do mato — um Raticate de nível 30 na Rota 1. */
   let nivel;
   const r = Dados.entre(1, 100);
-  if (r === 100)     nivel = Dados.entre(nivelBase + 8, nivelBase + 12);    // 1 em 100
-  else if (r >= 96)  nivel = Dados.entre(nivelBase + 3, nivelBase + 5);     // 4 em 100
-  else if (r <= 5)   nivel = Math.max(2, Dados.entre(nivelBase - 5, nivelBase - 3));
-  else               nivel = Math.max(2, Dados.entre(nivelBase - 2, nivelBase + 2));
-  nivel = Math.min(70, nivel);
-  const dexId = sortearEspecie(localId, ambiente, nivel);
+  let veterano = false;
+  /* o velho do mato só no mapa, e não no primeiro dia de jornada */
+  const podeVelho = !!localId && Estado.dados && Estado.dados.capitulo >= 2;
+  if (r === 100 && podeVelho){ nivel = Dados.entre(Math.max(nivelBase + 14, 20), Math.max(nivelBase + 26, 32)); veterano = true; }  // 1 em 100
+  else if (r >= 92)  nivel = Dados.entre(nivelBase + 4, nivelBase + 9);      // 8 em 100
+  else if (r <= 12)  nivel = Math.max(2, Dados.entre(nivelBase - 6, nivelBase - 3));
+  else               nivel = Math.max(2, Dados.entre(nivelBase - 3, nivelBase + 3));
+  nivel = Math.min(80, nivel);
+  let dexId = sortearEspecie(localId, ambiente, veterano ? nivelBase : nivel);
+  /* quem viveu muito no mato evoluiu no mato */
+  if (nivel > nivelBase + 3 && typeof finalDaLinha === 'function'){
+    const forma = formaAteONivel(finalDaLinha(dexId), nivel);
+    if (forma && evoluiPorNivel(dexId, forma)) dexId = forma;
+  }
   return criarPokemon(dexId, nivel, {selvagem:true});
+}
+
+/* A forma mais nova só vale se o caminho até ela for por nível (pedra
+   e troca não acontecem sozinhas no mato). */
+function evoluiPorNivel(de, para){
+  if (de === para) return true;
+  let x = para, guarda = 0;
+  while (x && x !== de && guarda++ < 4){
+    const pre = DEX[x] && DEX[x].preEvo;
+    if (!pre || !(DEX[pre].nivelEvo > 0)) return false;
+    x = pre;
+  }
+  return x === de;
 }
