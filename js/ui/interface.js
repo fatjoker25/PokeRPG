@@ -273,6 +273,12 @@ const UI = {
         <div class="campo"><label>Objetivo</label>
           <input id="f-objetivo" maxlength="120" placeholder="O que você quer de verdade?"></div>
       </div>
+      <div class="dois">
+        <div class="campo"><label>Do que você gosta</label>
+          <input id="f-gosta" maxlength="120" placeholder="mar, pescar, Pokémon de fogo, Eevee"></div>
+        <div class="campo"><label>Do que você não gosta</label>
+          <input id="f-nao-gosta" maxlength="120" placeholder="escuro, multidão, Zubat"></div>
+      </div>
 
       <h3>Quem fica em casa</h3>
       <div class="dois">
@@ -338,6 +344,7 @@ const UI = {
       nome:v('f-nome'), genero:sel('f-genero'), aparencia:v('f-aparencia'),
       personalidade:v('f-personalidade'), vestimenta:v('f-vestimenta'),
       cidade:document.getElementById('f-cidade').value, objetivo:v('f-objetivo'),
+      gosta:v('f-gosta'), naoGosta:v('f-nao-gosta'),
       inicial:sel('f-inicial'), ritmo:sel('f-ritmo'),
       casaNome: (v('f-casa-nome') || '').trim(),
       casaQuem: (v('f-casa-quem') || '').trim()
@@ -1836,7 +1843,7 @@ const UI = {
         <span class="k">${this.esc(r.rolagem.nomeStatus || 'teste')}</span>
         <span class="v mono">1d10(${r.rolagem.dado}) + ${r.rolagem.bonus}${
           r.rolagem.temperamento ? (r.rolagem.temperamento > 0 ? ' + ' : ' − ') + Math.abs(r.rolagem.temperamento) : ''
-        } = ${r.rolagem.total} · dif ${r.rolagem.dificuldade}</span>
+        }${r.rolagem.gosto ? (r.rolagem.gosto > 0 ? ' + 1 (gosto)' : ' − 1 (desgosto)') : ''} = ${r.rolagem.total} · dif ${r.rolagem.dificuldade}</span>
         <span class="grau ${this.esc(r.rolagem.grau)}">${this.esc(r.rolagem.texto)}</span>
       </div>` : ''}
       <div class="narrativa">${this.narrar(r.resultado || r.esc.resultado || [])}</div>
@@ -3186,6 +3193,10 @@ const UI = {
       <div class="linha"><span class="k">Nome</span><span class="v">${this.esc(j.nome)} (${this.esc(j.genero)}, ${j.idade})</span></div>
       <div class="linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
       <div class="linha"><span class="k">Objetivo</span><span class="v">${this.esc(j.objetivo)}</span></div>
+      ${(() => { const r = rumoDe(); const m = METAS.find(x => x.id === r.meta);
+        return `<div class="linha"><span class="k">O que isso quer dizer</span><span class="v">${this.esc(m ? m.nome : '')}</span></div>`
+          + (r.gostos.texto ? `<div class="linha"><span class="k">Gosta de</span><span class="v">${this.esc(r.gostos.texto)}</span></div>` : '')
+          + (r.desgostos.texto ? `<div class="linha"><span class="k">Não gosta de</span><span class="v">${this.esc(r.desgostos.texto)}</span></div>` : ''); })()}
       <div class="linha"><span class="k">Personalidade</span><span class="v">${this.esc(j.personalidade)}</span></div>
       <div class="linha"><span class="k">Aparência</span><span class="v">${this.esc(j.aparencia)}</span></div>
       <div class="linha"><span class="k">Vestimenta</span><span class="v">${this.esc(j.vestimenta)}</span></div>
@@ -3965,6 +3976,12 @@ const UI = {
       <div class="linha"><span class="k">Dia e noite</span><span class="v">quem é da noite (Zubat, Gastly, Oddish, Venonat, Meowth, Clefairy, Hoothoot, Murkrow…) aparece o triplo à noite e 1/5 de dia · quem é do dia (Pidgey, Spearow, Caterpie, Weedle, Doduo, Sentret, Ledyba…) aparece 1,5× de dia e 1/5 à noite</span></div>
       <div class="linha"><span class="k">Gente na estrada</span><span class="v">quem treina de dia (garoto, garota, caçador de inseto, campista, nadador, ciclista) some à noite · quem anda de noite (motoqueiro, jogador, médium, guitarrista) só aparece à noite · o resto, a qualquer hora</span></div>
       <p class="sussurro">O que nos jogos era presente ou troca aparece raro, no lugar da história da espécie. Depois que Johto abre, um quarto dos encontros pode ser de lá, pelo tipo do lugar.</p>
+
+      <h3>Objetivo e gostos</h3>
+      <div class="linha"><span class="k">Objetivo</span><span class="v">o jogo lê o que você escreveu e guarda o que entendeu: ser campeão, completar a Pokédex, proteger quem precisa, ter poder e dinheiro, crescer com o time, conhecer Kanto ou voltar pra casa com orgulho · aparece na Ficha</span></div>
+      <div class="linha"><span class="k">Cada capítulo</span><span class="v">abre com uma linha da sua via (como Kanto te vê) e do seu objetivo · quando a via muda no meio, o capítulo diz que mudou</span></div>
+      <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
+      <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
 
       <h3>Relógio</h3>
       <div class="linha"><span class="k">Hora</span><span class="v">um minuto de jogo aberto é uma hora em Kanto · parado durante a luta e com a janela fora de foco</span></div>

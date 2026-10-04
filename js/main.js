@@ -316,7 +316,8 @@ const Jogo = {
                    : Dados.teste(Estado.j.status[t.status], t.dificuldade, t.nomeStatus);
     const destino = t[r.grau] || t.falha || t.parcial;
     const soma = `1d10(${r.dado}) + ${t.nomeStatus||t.status}(${r.bonus})`
-               + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '');
+               + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '')
+               + (r.gosto ? (r.gosto > 0 ? ' + 1 (gosto)' : ' − 1 (desgosto)') : '');
     const aviso = [{tipo: (r.grau==='falha'?'dano':r.grau==='critico'?'rep':'info'),
       texto:`${soma} = ${r.total} contra ${t.dificuldade} — ${r.texto}.`}];
     /* uma frase por bicho: se o temperamento já falou dele, a afinidade
@@ -845,7 +846,7 @@ const Jogo = {
     if (this.talvezToque()) { this.cenaDepoisDaChamada = cena; return; }
     /* Nada de repetir nome, reputação e time na abertura de cada capítulo:
        isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
-    UI.telaCena(cena, daCredencial);
+    UI.telaCena(cena, (typeof avisosDeRumo === 'function' ? avisosDeRumo() : []).concat(daCredencial));
   },
 
   /* ---------- BALCÃO DE CREDENCIAIS ---------- */

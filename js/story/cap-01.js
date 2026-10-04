@@ -1115,6 +1115,7 @@ c1_cozinha:{
     d=>falaDaCasa('mesa', d)[0],
     'Você senta. Come mais do que queria e menos do que colocaram no prato.',
     d=>falaDaCasa('mesa', d)[1],
+    d=>linhaDaCasaSobreGosto(d),
     d=>{
       const p = d.time[0];
       if (!p) return 'O rádio na bancada fala de chuva no norte.';

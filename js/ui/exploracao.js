@@ -233,7 +233,7 @@ const Exploracao = {
     Estado.dados.modo = 'cena';
     const cena = Historia.iniciarCapitulo(arco.num);
     Estado.salvar('auto');
-    UI.telaCena(cena);
+    UI.telaCena(cena, typeof avisosDeRumo === 'function' ? avisosDeRumo() : []);
   },
 
   /* ---------- viagem ---------- */

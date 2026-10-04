@@ -55,7 +55,9 @@ const Dados = {
      1-3 fracasso total | 4-6 parcial | 7-9 sucesso | 10+ crítico */
   teste(valorStatus, dificuldade, nomeStatus=''){
     const d = this.d10('Teste de ' + (nomeStatus || 'perícia'));
-    const total = d + valorStatus;
+    /* lugar de gosto dá +1, de desgosto −1 (js/story/rumo.js) */
+    const gosto = (typeof bonusDeGosto === 'function') ? bonusDeGosto() : 0;
+    const total = d + valorStatus + gosto;
     let grau, texto;
     if (total <= 3)      { grau = 'falha';    texto = 'Fracasso total'; }
     else if (total <= 6) { grau = 'parcial';  texto = 'Sucesso parcial'; }
@@ -66,7 +68,7 @@ const Dados = {
       grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
-    return {dado:d, bonus:valorStatus, nomeStatus, total, dificuldade, grau, texto};
+    return {dado:d, bonus:valorStatus, gosto, nomeStatus, total, dificuldade, grau, texto};
   },
 
   /* ============================================================
@@ -85,7 +87,8 @@ const Dados = {
     const af = (lider && typeof efeitosDeAfinidade === 'function')
       ? efeitosDeAfinidade(lider) : {teste:0, grau:'neutro'};
     const d = this.d10('Teste de ' + (nomeStatus || 'perícia'));
-    const total = d + valorStatus + t.mod + af.teste;
+    const gosto = (typeof bonusDeGosto === 'function') ? bonusDeGosto() : 0;
+    const total = d + valorStatus + t.mod + af.teste + gosto;
     let grau, texto;
     if (total <= 3)      { grau = 'falha';    texto = 'Fracasso total'; }
     else if (total <= 6) { grau = 'parcial';  texto = 'Sucesso parcial'; }
@@ -95,7 +98,7 @@ const Dados = {
       grau = (total >= dificuldade - 2) ? 'parcial' : 'falha';
       texto = (grau === 'parcial') ? 'Sucesso parcial (por pouco)' : 'Fracasso';
     }
-    return {dado:d, bonus:valorStatus, temperamento:t.mod + af.teste, linhaTime:t.linha,
+    return {dado:d, bonus:valorStatus, gosto, temperamento:t.mod + af.teste, linhaTime:t.linha,
             melhor:t.melhor, pior:t.pior, afinidade:af, eixo, nomeStatus,
             total, dificuldade, grau, texto};
   }

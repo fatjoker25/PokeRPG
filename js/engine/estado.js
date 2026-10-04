@@ -519,6 +519,8 @@ const Estado = {
         vestimenta: ficha.vestimenta,
         cidade: ficha.cidade,
         objetivo: ficha.objetivo,
+        gosta: ficha.gosta || '',
+        naoGosta: ficha.naoGosta || '',
         idade: 15,
         hp: 30, hpMax: 30,
         status: {forca:1, percepcao:1, intelecto:1, carisma:1, sorte:1, resistencia:1},
@@ -939,6 +941,12 @@ const Estado = {
        não: o nome veio com ele */
     if (p && !p.trocado && !p.apelido && !p.apelidoPerguntado)
       (this.dados.apelidar = this.dados.apelidar || []).push(p.uid);
+    /* do que você gosta chega com mais moral; do que não gosta, com menos */
+    if (p && !p.moralDeGosto && typeof moralDeGosto === 'function'){
+      p.moralDeGosto = true;
+      const m = moralDeGosto(p);
+      if (m) p.moral = Math.max(0, Math.min(100, (p.moral || 50) + m));
+    }
     if (this.dados.time.length < 6){ this.dados.time.push(p); return 'time'; }
     this.dados.pc.push(p); return 'pc';
   },
