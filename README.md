@@ -487,7 +487,9 @@ próprio projeto, em SVG. Os efeitos sonoros e a trilha "sintetizada"
 são gerados na hora (WebAudio). As músicas de batalha são as que o
 [Pokémon Showdown](https://play.pokemonshowdown.com) toca nas lutas
 (`play.pokemonshowdown.com/audio/`), em `sons/musica/showdown/`.
-Música de rota, cidade e caverna quem quiser põe em `sons/musica/<tema>/`
+Cada ginásio toca a faixa que mais combina com ele (tipo, líder, lugar e
+dificuldade). Rota, cidade e caverna tocam uma trilha calma composta no
+próprio projeto; quem quiser outra põe em `sons/musica/<tema>/`
 (`batalha`, `rota`, `cidade`, `caverna`, .ogg, .mp3 ou .m4a — ver
 `sons/musica/LEIA.txt`), e eles ficam fora do arquivo único.
 As regras de combate são do Pokérole (Pokérole Project), e os atributos

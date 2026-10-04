@@ -4,7 +4,11 @@ Luta: cada tema toca as faixas de batalha do Pokémon Showdown, que já
 estão em sons/musica/showdown/ (uma por tipo de luta: selvagem,
 treinador, rival, líder de ginásio, Elite e torneio).
 
-Rota, cidade e caverna: o Showdown não tem essas músicas. Pra ouvir,
+Ginásio: cada um toca a faixa que mais combina com ele (tipo do
+ginásio, jeito do líder, cidade e dificuldade), seja qual for o tema.
+
+Rota, cidade e caverna: o Showdown não tem essas músicas, então toca a
+trilha calma do próprio jogo. Pra ouvir,
 ponha os arquivos na pasta do tema, ao lado do jogo:
 
   sons/musica/bw/     -> Black/White

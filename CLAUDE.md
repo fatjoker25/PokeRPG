@@ -423,7 +423,23 @@ do tema (`TEMAS_DE_MUSICA[].luta`, arquivos em
 `sons/musica/showdown/`); rota, cidade e caverna não têm faixa no
 Showdown e tocam `sons/musica/<pasta>/`, se quem joga puser, ou a
 sintetizada. Tentativa de arquivo é assíncrona: toda troca muda
-`_geracao`, e erro de trilha velha não liga nada por cima da nova. O
+`_geracao`, e erro de trilha velha não liga nada por cima da nova.
+
+**Cada ginásio tem a sua faixa**, em qualquer tema do Showdown
+(`faixasDosGinasios`): cada faixa de `FAIXAS_SHOWDOWN` tem energia e
+marcas de clima, cada ginásio é lido por quatro lados — tipo
+(`MARCAS_DO_TIPO`, peso 3), jeito do líder (`MARCAS_DO_LIDER`, 2),
+lugar (`MARCAS_DO_LUGAR`, 2) e dificuldade, que vira a energia
+esperada (−1,2 por ponto de distância) — e a escolha é gulosa, sem
+faixa repetida entre ginásios. Faixa nova ou ginásio novo entra com as
+marcas, não com a faixa escrita à mão. As faixas voltam no ponto de
+laço do próprio Showdown (`laco`, em ms), não no começo do arquivo.
+
+Fora da luta, a trilha sintetizada é **calma** (`Som.CALMAS`,
+`tocarCalma`): composição própria no clima de cidade pequena dos jogos
+(flauta com vibrato, dedilhado, colchão, eco) — cidade em 3/4, rota em
+4/4, caverna menor e espaçada. Melodia nova soma exatamente os tempos
+dos compassos (`acordes.length × compasso`), senão a volta desencontra. O
 `build.py` deixa `sons/musica/` fora do arquivo único.
 
 ## O combate é Pokérole
