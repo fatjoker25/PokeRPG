@@ -549,6 +549,8 @@ const Efeitos = {
       if (trocouA) await this.entrada(Batalha.aliado);
       return;
     }
+    /* Esquivar (Vontade): sai de lado e volta */
+    if (e.esquiva){ await AnimadorSprite.esquivar(e.esquiva); return; }
     /* atributo que mexeu: o corpo sobe ou desce junto */
     if (e.estagio){ await AnimadorSprite.atributo(e.estagio.lado, e.estagio.delta > 0); return; }
     if (e.tipo === 'golpe' && e.lado){ await this.golpe(e.lado, e.golpe); return; }

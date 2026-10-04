@@ -712,6 +712,15 @@ button:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(
 .mb-btn.lutar .rot{color:var(--destaque-2)}
 .mb-btn.dex{border-color:color-mix(in srgb, var(--destaque-3) 55%, var(--borda))}
 .mb-btn.dex .rot{color:var(--destaque-3)}
+.mb-btn.vontade{border-color:color-mix(in srgb, #b18cf0 55%, var(--borda))}
+.mb-btn.vontade .rot{color:#b18cf0}
+/* Vontade na ficha do seu Pokémon: uma bolinha por ponto */
+.vontade-linha{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:.72rem;color:var(--texto-fraco)}
+.vontade-linha .k{letter-spacing:.04em}
+.vontade-linha .pips{display:inline-flex;gap:3px}
+.vontade-linha .pips i{width:8px;height:8px;border-radius:50%;border:1px solid #b18cf0;display:block}
+.vontade-linha .pips i.cheio{background:#b18cf0}
+.vontade-armada{margin-left:auto;padding:0 6px;border-radius:8px;border:1px solid #b18cf0;color:#b18cf0;font-size:.68rem}
 .mb-btn.fugir .rot{color:var(--texto-fraco)}
 .mb-btn.voltar{background:transparent}
 .golpe-btn{

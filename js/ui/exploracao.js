@@ -434,6 +434,8 @@ const Exploracao = {
       q = Math.min(q, Math.max(0, falta));
       ganharExp(p, q).forEach(e => { if (e.tipo!=='exp') eventos.push(e); });
     });
+    /* treinar devolve 2 de Vontade (é a regra do livro) */
+    vivos.forEach(p => recuperarVontade(p, 2));
     const dMoral = {critico:4, sucesso:2, parcial:0, falha:-2}[t.grau];
     if (dMoral) vivos.forEach(p => { p.moral = Math.max(0, Math.min(100, p.moral + dMoral)); });
     const abertura = {

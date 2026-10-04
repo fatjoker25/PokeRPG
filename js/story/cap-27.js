@@ -1017,7 +1017,7 @@ c22_encontro:{
   escolhas:[
     {texto:'Ficar na borda e observar uma hora antes de descer.', vai:'c22_observou_uma_hora'},
     {texto:'Procurar o círculo no chão.', vai:'c22_o_circulo', cond:d=>!!d.flags.sabe_do_circulo},
-    {texto:'Passar entre eles, devagar, sem tocar em bola nenhuma.', vai:'c22_passou'},
+    {texto:'Passar entre eles, devagar, sem tocar em Pokébola nenhuma.', vai:'c22_passou'},
     {texto:'Soltar as aves que você tem, aqui, nos postos delas.', vai:'c22_recolocou',
      cond:d=>Estado.lendariosCapturados().some(l=>GRUPO_AVES.includes(l.dex))},
     {texto:'Tentar capturar Zapdos.', vai:'c22_luta_zapdos',

@@ -1663,7 +1663,7 @@ c1_quem_sumiu:{
 c1_sem_cadastro:{
   texto:[
     'Você passa direto pelo Centro Pokémon.',
-    'Sem licença, sem cartão, sem Pokédex, sem bola nenhuma, com uma mochila de roupa e comida.',
+    'Sem licença, sem cartão, sem Pokédex, sem Pokébola nenhuma, com uma mochila de roupa e comida.',
     'Isso é legal? Não exatamente. Isso acontece? O tempo todo.',
     'O que acontece de verdade é o seguinte: você vai chegar na primeira rota, encontrar um Pokémon selvagem, não ter nada pra jogar nele, e voltar.',
     'Você sabe disso enquanto anda. Anda mais uns cem metros sabendo disso.'

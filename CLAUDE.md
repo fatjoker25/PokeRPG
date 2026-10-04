@@ -413,8 +413,22 @@ se misturam: d10/d20 é gente e cena, parada de d6 é Pokémon brigando.
 
 Duas adaptações, as duas escritas na folha de regras: o crítico pede mais
 sobra no posto alto (no livro a sobra vira ação extra na rodada, e aqui cada
-um age uma vez), e **não existe esquiva nem choque** — testado, derrubava o
-acerto pra 35%.
+um age uma vez), e **não existe choque, e esquiva só gastando Vontade** —
+esquiva de graça em todo golpe derrubava o acerto pra 35%.
+
+**Vontade** (Will, Pokérole 3.0) mora em `p.vontade`; leia por
+`vontadeDe(p)` (save antigo começa cheio), máximo `vontadeMaxDe(p)` =
+Instinto + 2. Os gastos são os do livro (GM Screen do SRD 3.0 em
+`/home/user/willowlark/pokeroleobsidiansrd`): Forçar o destino (+1
+sucesso na precisão), Arriscar (rerrola um dado que falhou), Esquivar
+(a adaptação: Destreza + Evasão contra a precisão do outro) — um deles
+por turno, armado antes do golpe (`Batalha.gastarVontade`, válido em
+`vontadeDoTurno()`) — e Aguentar a dor (`Batalha.semDor`, a luta inteira).
+Quem zera numa luta desmaia no `encerrar`. `curarTotal` enche, treino
+devolve 2, vitória 1. O dado é **d6 com sucesso em 4+**; o pedido de
+trocar por d10 com sucesso em 6+ já apareceu e foi recusado, porque isso
+é Storyteller, não Pokérole. Toda parada vai pro log com as faces
+(`facesDe(r)`).
 
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª

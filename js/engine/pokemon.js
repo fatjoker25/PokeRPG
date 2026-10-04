@@ -484,9 +484,24 @@ function formaAteONivel(dexFinal, nivel){
   return escolhido;
 }
 
+/* VONTADE (Will Points) — Pokérole 3.0: Instinto + 2. Quem ainda não
+   tem o campo (save antigo, Pokémon recém-criado) começa cheio. */
+function vontadeMaxDe(p){ return Math.max(1, ((p && p.stats && p.stats.ins) || 1) + 2); }
+function vontadeDe(p){
+  if (!p) return 0;
+  if (p.vontade == null) p.vontade = vontadeMaxDe(p);
+  return Math.max(0, Math.min(p.vontade, vontadeMaxDe(p)));
+}
+/* sem n, enche; com n, recupera n pontos */
+function recuperarVontade(p, n){
+  if (!p || p.morto) return;
+  p.vontade = Math.min(vontadeMaxDe(p), vontadeDe(p) + (n == null ? 99 : n));
+}
+
 function curarTotal(p){
   if (p.morto) return;
   p.hp = p.hpMax;
+  recuperarVontade(p);              /* descanso devolve a vontade inteira */
   p.status = null;
   p.statusTurnos = 0;
   p.golpes.forEach(g => g.pp = g.ppMax);

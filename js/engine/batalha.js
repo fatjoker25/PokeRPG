@@ -9,7 +9,17 @@
      Fraqueza +1 por tipo, resistência −1 por tipo, imune = 0.
    HP = HP base da espécie + Vitalidade.
    Ordem: prioridade, depois iniciativa (1d6 na entrada + Destreza + Alerta).
+   Vontade (Will): Instinto + 2 pontos. Um gasto por turno — Forçar o
+     destino (+1 sucesso na precisão), Arriscar (rerrola um dado que
+     falhou) ou Esquivar (Destreza + Evasão contra a precisão do outro);
+     Aguentar a dor ignora uma penalidade de dor até o fim da luta.
+     Quem zera a Vontade numa luta desmaia quando ela acaba.
    ============================================================ */
+
+/* o nome de cada gasto de Vontade, na tela e no log */
+const USOS_DE_VONTADE = {destino:'Forçar o destino', chances:'Arriscar', esquiva:'Esquivar', dor:'Aguentar a dor'};
+/* as faces de uma parada, como o log mostra: [3, 6, 1] */
+function facesDe(r){ return r && r.faces && r.faces.length ? ` [${r.faces.join(', ')}]` : ''; }
 
 /* o nome de cada atributo na frase do log */
 const NOME_ESTAGIO = {atk:'a Força', def:'a Vitalidade', spa:'o Especial', spd:'o Instinto',
@@ -50,6 +60,10 @@ const Batalha = {
     if (this.revelaNatureza && opts.timeInimigo) opts.timeInimigo.forEach(p => { p.nomeAnunciado = true; });
     if (Estado.dados) (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
     this.eventos = [];
+    /* Vontade: o gasto armado vale pro próximo turno; a dor ignorada e
+       quem gastou valem a luta inteira */
+    this.vontadeArmada = null; this.vontadeTurno = -1;
+    this.semDor = {}; this.gastaram = {};
     this.aoTerminar = opts.aoTerminar || null;
     this.contexto = opts.contexto || null;
     /* Cena pode fixar a arena quando o ambiente do capítulo não
@@ -201,8 +215,48 @@ const Batalha = {
   },
   /* dor: −1 sucesso na metade do HP, −2 com 1 de HP */
   dor(p){
-    if (p.hp <= 1 && p.hpMax > 1) return 2;
-    return p.hp * 2 <= p.hpMax ? 1 : 0;
+    const base = (p.hp <= 1 && p.hpMax > 1) ? 2 : (p.hp * 2 <= p.hpMax ? 1 : 0);
+    /* Aguentar a dor: cada ponto de Vontade gasto apaga uma penalidade */
+    return Math.max(0, base - ((this.semDor && this.semDor[p.uid]) || 0));
+  },
+
+  /* ---------- VONTADE ----------
+     Gasta-se antes de escolher o golpe. Forçar o destino, Arriscar e
+     Esquivar valem pro turno que vem, e só um deles por turno (no livro,
+     Take Your Chances e Pushing Fate não se somam na mesma rodada).
+     Aguentar a dor não ocupa o turno. */
+  vontadeDoTurno(){ return this.vontadeTurno === this.turno ? this.vontadeArmada : null; },
+  vontadeArmadaAgora(){ return this.vontadeTurno === this.turno + 1 ? this.vontadeArmada : null; },
+  podeGastarVontade(uso){
+    const a = this.aliado;
+    if (!this.ativo || this.fase !== 'normal' || !a || !estaVivo(a)) return false;
+    if (!USOS_DE_VONTADE[uso] || vontadeDe(a) <= 0) return false;
+    if (uso === 'dor') return this.dor(a) > 0;
+    return !this.vontadeArmadaAgora();
+  },
+  gastarVontade(uso){
+    const a = this.aliado;
+    if (!this.podeGastarVontade(uso)) return null;
+    a.vontade = vontadeDe(a) - 1;
+    this.gastaram[a.uid] = true;
+    if (uso === 'dor') this.semDor[a.uid] = (this.semDor[a.uid] || 0) + 1;
+    else { this.vontadeArmada = uso; this.vontadeTurno = this.turno + 1; }
+    return `${nomeVisivel(a)} gasta 1 de Vontade — ${USOS_DE_VONTADE[uso]}. (${a.vontade}/${vontadeMaxDe(a)})`;
+  },
+  /* Esquivar: Destreza + Evasão contra os sucessos da precisão do outro.
+     Empatou, saiu da frente. */
+  esquivou(p, est, contra){
+    const nD = this.attr(p, est, 'des'), nE = periciaDoNivel(p.nivel);
+    const r = Dados.pool(nD + nE, `Esquiva de ${nomeVisivel(p)}`);
+    const dor = this.dor(p);
+    const suc = Math.max(0, r.suc - dor);
+    this.ev('rolagem', `Esquiva: DES ${nD} + Evasão ${nE} = ${nD + nE}d6${facesDe(r)} → ${r.suc}${dor ? ` − ${dor} dor = ${suc}` : ''} contra precisão ${contra}`);
+    if (suc >= contra){
+      this.ev('info', `${nomeVisivel(p)} sai da frente no último instante!`, {esquiva:this.ladoDe(p)});
+      return true;
+    }
+    this.ev('erro', `${nomeVisivel(p)} tenta sair da frente, mas não dá tempo.`);
+    return false;
   },
   /* iniciativa: o d6 sai uma vez, na entrada; Destreza e Alerta somam
      na hora, então paralisia e Agility mudam a ordem no meio da luta */
@@ -302,23 +356,37 @@ const Batalha = {
     const atrib = this.valorAtrib(atk, estAtk, k);
     const per = pr.h ? periciaDoNivel(atk.nivel) : 0;
     const r = Dados.pool(atrib + per, `Precisão de ${nome}`);
-    res.rolou = true;
+    res.rolou = true; res.k = k;
+    /* Vontade armada pra este turno: Arriscar rerrola um dado que
+       falhou; Forçar o destino soma um sucesso */
+    const usoV = atk === this.aliado ? this.vontadeDoTurno() : null;
+    let arriscou = '';
+    if (usoV === 'chances' && r.suc < r.n){
+      const rr = Dados.pool(1, 'Arriscar (Vontade)');
+      arriscou = ` · Arriscar: um dado que falhou volta ${rr.faces[0]}`;
+      r.suc += rr.suc;
+    }
+    if (usoV === 'chances' || usoV === 'destino') this.vontadeArmada = null;
+    const destino = usoV === 'destino' ? 1 : 0;
     const eva = estDef ? (estDef.identificado ? Math.min(0, estDef.evasao || 0) : (estDef.evasao || 0)) : 0;
     const passo = (estAtk.precisao || 0) - eva;
     const menos = (pr.r || 0) + this.dor(atk) + (estAtk.penalConf || 0);
-    const liquido = r.suc + passo - menos;
+    const liquido = r.suc + passo - menos + destino;
     res.extra = liquido - 1;
+    res.sucessos = Math.max(0, liquido);
     const nomeA = k === 'soc' ? 'Social' : k === 'von' ? 'Vontade' : SIGLA_ATRIB[k];
     const partes = [`${nomeA} ${atrib}`];
     if (per) partes.push(`${pr.h} ${per}`);
-    let conta = `${partes.join(' + ')} = ${atrib + per}d6 → ${r.suc}`;
+    let conta = `${partes.join(' + ')} = ${atrib + per}d6${facesDe(r)}${arriscou} → ${r.suc}`;
+    if (destino) conta += ' + 1 Vontade';
     if (pr.r) conta += ` − ${pr.r} precisão baixa`;
     if (this.dor(atk)) conta += ` − ${this.dor(atk)} dor`;
     if (estAtk.penalConf) conta += ` − ${estAtk.penalConf} confusão`;
     if (passo) conta += ` ${passo > 0 ? '+' : '−'} ${Math.abs(passo)} estágio`;
     this.ev('rolagem', `Precisão: ${conta}${liquido !== r.suc ? ` = ${Math.max(0, liquido)}` : ''}`);
     /* não erra (Swift): acerta sempre, mas o dado ainda decide o crítico */
-    res.acertou = pr.nunca || g.a >= 999 ? true : liquido >= 1;
+    res.garantido = !!(pr.nunca || g.a >= 999);
+    res.acertou = res.garantido ? true : liquido >= 1;
     res.extra = liquido - 1;
     if (g.c !== 'status'){
       /* No livro, o Pokémon de posto alto gasta a sobra em ações extras
@@ -374,7 +442,7 @@ const Batalha = {
                           : DADOS_POR_POSTO[postoDoNivel(atk.nivel)];
       const r = Dados.pool(n, `Dano de ${golpeNome}`);
       res.dano = Math.max(1, r.suc);
-      res.contas.push(`Dano: ${pr.metade ? 'metade do HP' : 'posto ' + nomePosto(atk.nivel)} = ${n}d6 → ${r.suc}`);
+      res.contas.push(`Dano: ${pr.metade ? 'metade do HP' : 'posto ' + nomePosto(atk.nivel)} = ${n}d6${facesDe(r)} → ${r.suc}`);
       return res;
     }
 
@@ -433,18 +501,18 @@ const Batalha = {
     if (pr.ign) conta += ' (ignora defesa)';
     else conta += ` − ${fisico ? 'VIT' : 'INS'} ${dBase}${extraDef}`;
     let total = 0;
-    const suces = [];
+    const suces = [], faces = [];
     for (let i = 0; i < golpes; i++){
       if (i > 0 && def.hp - total <= 0) { golpes = i; break; }
       const r = Dados.pool(n, `Dano de ${golpeNome}${golpes > 1 ? ` (${i + 1})` : ''}`);
-      suces.push(r.suc);
+      suces.push(r.suc); faces.push(facesDe(r).trim());
       let d;
       if (r.suc === 0) d = 1;                       // zero sucesso: 1 de dano, e só
       else d = Math.max(1, r.suc + passos + climaDano);
       if (metade) d = Math.max(1, Math.floor(d / 2));
       total += d;
     }
-    res.contas.push(`Dano: ${conta} = ${n}d6 → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}${suces.some(x => x === 0) ? ' (zero sucesso vale 1)' : ''} = ${total}`);
+    res.contas.push(`Dano: ${conta} = ${n}d6 ${faces.join(' ')} → ${suces.join(' + ')}${passos ? ` ${passos > 0 ? '+' : '−'} ${Math.abs(passos) * suces.filter(x => x > 0).length} ${passos > 0 ? 'fraqueza' : 'resistência'}` : ''}${suces.some(x => x === 0) ? ' (zero sucesso vale 1)' : ''} = ${total}`);
     if (golpes > 1) res.msgs.push(`Acertou ${golpes} vezes!`);
     if (res.critico) res.msgs.push('ACERTO CRÍTICO!');
     const txt = textoEficacia(res.efic);
@@ -564,6 +632,14 @@ const Batalha = {
         this.ev('dano', `${nomeVisivel(atacante)} tropeça na própria confusão e se machuca. (${atacante.hp}/${atacante.hpMax})`, {alvo:souAliado?'aliado':'inimigo', dano:1});
       }
       return;
+    }
+
+    /* Esquivar (Vontade): o seu sai da frente do golpe do outro. Golpe
+       social e golpe que não erra não se esquivam (no livro, também). */
+    if (!souAliado && defensor === this.aliado && this.vontadeDoTurno() === 'esquiva'
+        && prec.rolou && prec.k !== 'soc' && !prec.garantido && this.miraNoOutro(g)){
+      this.vontadeArmada = null;
+      if (this.esquivou(defensor, estDef, prec.sucessos)){ estAtk.cortes = 0; return; }
     }
 
     if (g.c === 'status'){
@@ -1530,6 +1606,17 @@ const Batalha = {
       if (Estado.tickNatureza) Estado.tickNatureza().forEach(a => this.ev('natureza', a.texto));
     } else if (Estado.dados){
       (Estado.dados.time || []).forEach(p => { p.faixaUsada = false; });
+    }
+    /* Vontade: quem gastou tudo nesta luta desaba quando ela acaba (é a
+       regra do livro pra cena); vencer devolve um ponto a quem está de pé */
+    if (Estado.dados){
+      (Estado.dados.time || []).forEach(p => {
+        if (this.gastaram && this.gastaram[p.uid] && vontadeDe(p) === 0 && p.hp > 0){
+          p.hp = 0;
+          this.ev('derrota', `${nomeVisivel(p)} gastou toda a vontade que tinha e desaba quando a luta acaba.`);
+        }
+      });
+      if (resultado === 'vitoria') (Estado.dados.time || []).forEach(p => { if (p.hp > 0) recuperarVontade(p, 1); });
     }
     this.fim = Object.assign({resultado, bonusDinheiro:this.bonusDinheiro || 1}, extra||{});
     this.bonusDinheiro = 1;

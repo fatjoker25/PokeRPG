@@ -29,7 +29,7 @@
 const ESTADOS_SPRITE = {
   IDLE:'IDLE', ATTACK_PHYSICAL:'ATTACK_PHYSICAL', ATTACK_SPECIAL:'ATTACK_SPECIAL',
   TAKE_DAMAGE:'TAKE_DAMAGE', FAINT:'FAINT', ENTRY:'ENTRY', RETREAT:'RETREAT',
-  STAT_BOOST:'STAT_BOOST', STAT_DROP:'STAT_DROP'
+  STAT_BOOST:'STAT_BOOST', STAT_DROP:'STAT_DROP', EVADE:'EVADE'
 };
 
 /* Quem paira no ar não respira de pé: sobe e desce. */
@@ -311,6 +311,21 @@ const AnimadorSprite = {
       .then(() => { s.style.visibility = 'hidden'; });
   },
 
+  /* ======================== EVADE ========================
+     Esquivar com Vontade: um salto curto pro lado, rápido na ida e
+     devagar na volta, como quem sai da frente e se recompõe. */
+  esquivar(lado){
+    const s = this.sprite(lado);
+    if (!s || this.reduzido()) return Promise.resolve();
+    this.marcar(lado, ESTADOS_SPRITE.EVADE);
+    const dx = (lado === 'aliado' ? -1 : 1) * Math.max(16, s.offsetWidth * .3);
+    return this.sequencia(s, [
+      {de:{x:0, y:0}, para:{x:dx, y:-4}, ms:140, curva:'easeOut'},
+      {de:{x:dx, y:-4}, para:{x:dx, y:0}, ms:160, curva:'linear', passos:2},
+      {de:{x:dx, y:0}, para:{x:0, y:0}, ms:280, curva:'easeInOut'}
+    ], {composite:'add'}).then(() => { if (this.estado[lado] === ESTADOS_SPRITE.EVADE) this.marcar(lado, ESTADOS_SPRITE.IDLE); });
+  },
+
   /* ======================== STAT_BOOST / STAT_DROP ========================
      Sobe (ou desce) uns pixels e volta. A partícula do atributo é de
      Efeitos; aqui é só o corpo acompanhando. */
@@ -383,6 +398,7 @@ const PokemonSpriteAnimator = {
   play_retreat:         lado => AnimadorSprite.recolher(lado),
   play_stat_boost:      lado => AnimadorSprite.atributo(lado, true),
   play_stat_drop:       lado => AnimadorSprite.atributo(lado, false),
+  play_evade:           lado => AnimadorSprite.esquivar(lado),
   slide_in:             (lado, op) => AnimadorSprite.entrar(lado, op),
   slide_out:            lado => AnimadorSprite.recolher(lado),
   dash_attack:          (lado, alvo) => AnimadorSprite.ataqueFisico(lado, alvo)

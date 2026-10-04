@@ -160,6 +160,8 @@ const SUSPEITO = [
         const pot = ['Hyper Potion', 'Super Potion', 'Potion'].find(n => Estado.contaItem(n) > 0);
         if (pot && p.hp <= p.hpMax * 0.25 && p.hp > 0) return {tipo:'item', nome:pot, alvoUid:p.uid};
         /* recua: se o golpe dele é ruim e tem alguém melhor no banco */
+        /* Vontade: com pouco HP, esquiva o próximo golpe */
+        if (p.hp <= p.hpMax * 0.5 && vontadeDe(p) >= 2 && B.podeGastarVontade('esquiva')) B.gastarVontade('esquiva');
         const meu = golpeBom(p);
         const banco = d.time.filter(x => x.uid !== p.uid && x.hp > x.hpMax * 0.4 && !x.morto);
         const melhorBanco = banco.map(x => ({x, s:golpeBom(x).melhor})).sort((u, v) => v.s - u.s)[0];
@@ -194,6 +196,10 @@ const SUSPEITO = [
           if (afz.includes('casa')) return {f:'casa'};
           if (afz.includes('centro')) return {f:'centro'};
           if (ehNoite()) return {f:'acampar'};
+          /* sem cura aqui e de dia: anda até o Centro mais perto */
+          const centros = Object.keys(LOCAIS).filter(k => Exploracao.temCentro(LOCAIS[k]) && !travaDaPassagem(id, k))
+            .map(k => caminhoEntre(id, k)).filter(c => c && c[1] && !travaDaPassagem(id, c[1])).sort((x, y) => x.length - y.length);
+          if (centros.length) return {f:'viajar', id:centros[0][1]};
         }
         /* compra o básico */
         if (afz.includes('loja') && d.jogador.dinheiro > 1500 && (Estado.contaItem('Potion') < 3 || Estado.contaItem('Poké Ball') < 5)) return {f:'loja'};

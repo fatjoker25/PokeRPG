@@ -177,6 +177,16 @@ const UI = {
     const pct = Math.max(0, Math.min(100, Math.round(p.exp / p.expProx * 100)));
     return `<div class="barra-exp" title="${p.exp} / ${p.expProx} de experiência"><i style="width:${pct}%"></i></div>`;
   },
+  /* Vontade do seu Pokémon na luta: um ponto por bolinha, e o gasto
+     que está armado pro turno que vem */
+  linhaVontade(p){
+    const v = vontadeDe(p), max = vontadeMaxDe(p);
+    const pips = Array.from({length:max}, (_, i) => `<i class="${i < v ? 'cheio' : ''}"></i>`).join('');
+    const armada = (Batalha.ativo && Batalha.aliado === p && Batalha.vontadeArmadaAgora) ? Batalha.vontadeArmadaAgora() : null;
+    return `<div class="vontade-linha" title="Vontade ${v}/${max}"><span class="k">Vontade</span><span class="pips">${pips}</span>
+      <span class="mono">${v}/${max}</span>${armada ? `<span class="vontade-armada">${this.esc(USOS_DE_VONTADE[armada])}</span>` : ''}</div>`;
+  },
+
   barraHP(p){
     const pct = Math.max(0, (p.hp / p.hpMax) * 100);
     const cls = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
@@ -1043,6 +1053,7 @@ const UI = {
           <div class="linha-tipos" style="margin-top:5px">${tipos}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
           <div class="marcas-luta">${this.marcasHTML(Batalha.marcas ? Batalha.marcas(meu ? 'aliado' : 'inimigo') : [])}</div>
           ${this.barraHP(p)}
+          ${meu ? this.linhaVontade(p) : ''}
           ${meu ? this.barraExp(p) : ''}
           <div class="meta">${nat}</div>
           <div class="meta">${ficha}</div>
@@ -1604,11 +1615,12 @@ const UI = {
       `<button class="mb-btn ${cls}" ${off ? 'disabled' : ''} ${off ? '' : 'onclick="' + acao + '"'}>
         <span class="rot">${rot}</span></button>`;
 
+    const vontade = bt('vontade', 'Vontade', '', 'UI.menuVontade()', vontadeDe(a) <= 0);
     const dex = d.flags.tem_pokedex
-      ? `<div class="mb-linha centro">${bt('dex', 'Pokédex',
+      ? `<div class="mb-linha">${vontade}${bt('dex', 'Pokédex',
           '',
           "Jogo.acaoBatalha({tipo:'pokedex'})")}</div>`
-      : '';
+      : `<div class="mb-linha centro">${vontade}</div>`;
 
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
@@ -1622,6 +1634,29 @@ const UI = {
       </div>
       ${dex}
     </div>`));
+  },
+
+  /* Os gastos de Vontade do livro. O nome é o botão; o que cada um faz
+     está na folha de regras. */
+  menuVontade(){
+    const a = Batalha.aliado;
+    if (!a) return;
+    const op = uso => `<button class="escolha" ${Batalha.podeGastarVontade(uso) ? '' : 'disabled'}
+      onclick="UI.gastarVontade('${uso}')">${this.esc(USOS_DE_VONTADE[uso])} <span class="pd">1 ponto</span></button>`;
+    this.modal(`Vontade de ${nomeExib(a)}`, `${this.linhaVontade(a)}
+      <div class="escolhas" style="margin-top:10px">${['destino', 'chances', 'esquiva', 'dor'].map(op).join('')}</div>`);
+  },
+  gastarVontade(uso){
+    const txt = Batalha.gastarVontade(uso);
+    this.fecharModal(true);
+    if (!txt) return;
+    const log = document.getElementById('log');
+    if (log){ log.appendChild(this.el(`<div class="l status">${this.esc(txt)}</div>`)); log.scrollTop = log.scrollHeight; }
+    /* a ficha mostra os pontos e o gasto armado */
+    const v = document.querySelector('#arena .lutador.aliado .vontade-linha');
+    if (v) v.outerHTML = this.linhaVontade(Batalha.aliado);
+    this.acoesCombate();
+    Estado.salvar('auto');
   },
 
   painelGolpes(c){
@@ -3931,7 +3966,17 @@ const UI = {
       <div class="linha"><span class="k">Ordem</span><span class="v">prioridade primeiro · depois iniciativa: 1d6 na entrada + Destreza + Alerta</span></div>
       <div class="linha"><span class="k">Fuga</span><span class="v">Destreza + Atletismo do seu contra os do selvagem · empate é seu</span></div>
       <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: Força + 1 − Vitalidade · você leva 1 de volta</span></div>
-      <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe esquiva nem choque como reação: quem apanha não gasta a vez desviando.</p>
+      <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe choque, e a esquiva não sai de graça: no livro ela é uma reação que gasta uma das ações da rodada; aqui, onde cada um age uma vez, ela custa 1 de Vontade.</p>
+
+      <h3>Vontade</h3>
+      <p class="sussurro">Os pontos de Vontade (Will) do Pokérole 3.0. Ficam no Pokémon de uma luta pra outra e aparecem como bolinhas na ficha dele; o botão Vontade, no menu da luta, gasta. Os três primeiros valem pro turno que vem e só um deles por turno.</p>
+      <div class="linha"><span class="k">Quanto</span><span class="v">Instinto + 2 pontos</span></div>
+      <div class="linha"><span class="k">Forçar o destino</span><span class="v">+1 sucesso na precisão do golpe (no livro, Pushing Fate · não vale em dano nem em chance)</span></div>
+      <div class="linha"><span class="k">Arriscar</span><span class="v">um dado da precisão que falhou rola de novo (Take Your Chances)</span></div>
+      <div class="linha"><span class="k">Esquivar</span><span class="v">quando o golpe do outro acerta: Destreza + Evasão (a perícia do posto) contra os sucessos da precisão dele · empate é seu · golpe social e golpe que não erra não se esquivam</span></div>
+      <div class="linha"><span class="k">Aguentar a dor</span><span class="v">ignora uma penalidade de dor até o fim da luta · não ocupa o turno (Power Through the Pain)</span></div>
+      <div class="linha"><span class="k">Zerou</span><span class="v">quem gasta toda a Vontade numa luta desmaia quando ela acaba</span></div>
+      <div class="linha"><span class="k">Recupera</span><span class="v">toda no Centro e em casa · +2 num dia de treino · +1 por vitória, pra quem está de pé</span></div>
 
       <h3>Atributos do Pokémon</h3>
       <div class="linha"><span class="k">Força · FOR</span><span class="v">dano físico · precisão de golpe de impacto</span></div>
