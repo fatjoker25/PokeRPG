@@ -1773,8 +1773,11 @@ const UI = {
     if (erro){ this.escreverLog(r.eventos); this.acoesCombate(); return; }
 
     const esp = DEX[alvo.dex];
-    if (jaTinha) return this.fichaEscaneada(alvo, esp, r.eventos);
     const num = String(alvo.dex).padStart(3, '0');
+    /* Espécie já catalogada não se cadastra de novo — mas a Pokédex
+       ainda é apontada e ainda lê: lente acesa, a arte já em cor, duas
+       linhas e a ficha. Sem isso, contra treinador (onde quase tudo já
+       foi visto) o botão parecia travado. */
 
     this.modal('', `<div class="pokedex-topo">
         <span class="pokedex-lente lendo"></span>
@@ -1782,14 +1785,17 @@ const UI = {
       </div>
       <div class="dex-scan" id="dex-scan">
         <div class="alvo">
-          <span class="silhueta${alvo.shiny ? ' brilho' : ''}">${imgSprite(alvo, 'frente', {oculto:true, classe:'scan-arte'})}</span>
+          <span class="${jaTinha ? 'conhecido' : 'silhueta'}${alvo.shiny ? ' brilho' : ''}">${imgSprite(alvo, 'frente', {oculto:!jaTinha, classe:'scan-arte'})}</span>
           <span class="varredura"></span>
         </div>
         <div class="linhas mono" id="dex-scan-linhas"></div>
         <div class="dex-barra lendo"><i id="dex-scan-barra" style="width:0%"></i></div>
       </div>`, true, 'pokedex');
 
-    const passos = [
+    const passos = jaTinha ? [
+      `registro #${num} encontrado`,
+      'lendo este exemplar…'
+    ] : [
       'travando alvo…',
       `silhueta #${num}`,
       'lendo estrutura de tipo…',
@@ -3205,6 +3211,7 @@ const UI = {
     const info = ITENS_INFO[nome] || {};
     const p = Estado.dados.time.find(x => x.uid === uid);
     if (!p) return;
+    const hpAntes = Math.max(0, p.hp);
     let msg = '';
     if (info.tipo === 'cura'){
       if (p.hp <= 0) msg = `${nomeExib(p)} está desmaiad${pron(p).o}. Potion não resolve isso.`;
@@ -3230,7 +3237,41 @@ const UI = {
       msg = `Todos os golpes de ${nomeExib(p)} recuperaram um pouco.`;
     }
     Estado.salvar('auto');
-    this.modal('', `<p>${this.esc(msg)}</p>`, false, 'mochila');
+    /* a barra sai de onde estava e anda até onde ficou, como na luta */
+    const mudou = p.hp !== hpAntes;
+    const linha = mudou ? `<div class="time-lista">${this.escolherDoTime(() => '', x => x.uid === p.uid)}</div>` : '';
+    this.modal('', `${linha}<p>${this.esc(msg)}</p>`, false, 'mochila');
+    if (mudou) this.animarBarraDoTime(p, hpAntes);
+  },
+  /* barra de HP de uma linha do time indo de `de` até o HP atual */
+  animarBarraDoTime(p, de){
+    const caixa = document.querySelector('#modal .time-lista .time-linha');
+    if (!caixa) return;
+    caixa.removeAttribute('onclick');
+    const barra = caixa.querySelector('.barra'), i = barra && barra.querySelector('i'), num = caixa.querySelector('.hp-num');
+    const pct = v => Math.max(0, Math.min(100, v / p.hpMax * 100));
+    const faixa = v => pct(v) > 50 ? '' : (pct(v) > 22 ? 'medio' : 'baixo');
+    if (!i) return;
+    const para = Math.max(0, p.hp), ms = 650;
+    barra.className = 'barra ' + faixa(de);
+    i.style.width = pct(de) + '%';
+    if (num) num.textContent = `${de}/${p.hpMax}`;
+    caixa.classList.toggle('caido', de <= 0);
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){
+      i.style.width = pct(para) + '%'; barra.className = 'barra ' + faixa(para);
+      if (num) num.textContent = `${para}/${p.hpMax}`; caixa.classList.toggle('caido', para <= 0); return;
+    }
+    const t0 = performance.now();
+    const passo = t => {
+      const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+      const v = de + (para - de) * e;
+      i.style.width = pct(v) + '%';
+      barra.className = 'barra ' + faixa(v);
+      if (num) num.textContent = `${Math.round(v)}/${p.hpMax}`;
+      if (k < 1) requestAnimationFrame(passo);
+      else caixa.classList.toggle('caido', para <= 0);
+    };
+    setTimeout(() => requestAnimationFrame(passo), 220);
   },
 
   modalFicha(){
@@ -4075,6 +4116,9 @@ const UI = {
       <h3>Objetivo e gostos</h3>
       <div class="linha"><span class="k">Objetivo</span><span class="v">o jogo lê o que você escreveu e guarda o que entendeu: ser campeão, completar a Pokédex, proteger quem precisa, ter poder e dinheiro, crescer com o time, conhecer Kanto ou voltar pra casa com orgulho · aparece na Ficha</span></div>
       <div class="linha"><span class="k">Cada capítulo</span><span class="v">abre com uma linha da sua via (como Kanto te vê) e do seu objetivo · quando a via muda no meio, o capítulo diz que mudou</span></div>
+      <div class="linha"><span class="k">A sua linha</span><span class="v">o lado em que você está: o posto de maior peso (Patrulha e Polícia são a Lei, o envelope sem timbre é a Rocket, o Laboratório é a Ciência, o Jornal, a Associação de Criadores, a Liga) ou, sem posto, a via (herói, mercenário, foragido)</span></div>
+      <div class="linha"><span class="k">Cenas da linha</span><span class="v">na virada de capítulo, quem é do seu lado te acha: no máximo uma cena por capítulo, em ordem, e cada uma lembra o que você escolheu na anterior · mexem em reputação, dinheiro e moral como qualquer escolha</span></div>
+      <div class="linha"><span class="k">Trocar de linha</span><span class="v">a linha que você deixou reage uma vez · a nova começa do começo</span></div>
       <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
       <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
 

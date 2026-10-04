@@ -587,6 +587,18 @@ Cuidado ao marcar "o senhor": **metade deles é o jogador falando com um
 homem**, e esses não mudam. A pergunta é sempre quem está sendo tratado.
 Vocativo neutro ("cara") fica como está.
 
+## A história anda em cima da sua linha
+`js/story/linhas.js`. A **linha** é o lado do jogador: o posto de maior
+peso (`LINHA_DO_CARGO`) ou, sem posto, a via (`LINHA_DA_VIA`). Na virada
+de capítulo (`entrarNoCapitulo`), `Linhas.talvez` mostra a próxima cena
+da linha (`CENAS_DE_LINHA`, em ordem, `cap` mínimo, uma por capítulo),
+e cada cena lê as flags `ln_*` da anterior. Trocou de linha: a antiga
+reage uma vez (`VIRADAS_DE_LINHA`) e a nova começa do começo. Linha nova
+ou cena nova entra ali; quem acompanha a linha inteira tem nome em
+`NOMES_FIXOS` (Holt, Hazel Moss, Sra. Linden, Coordenadora Maple, Dona
+Briar), apresentado na primeira cena, e quem não diz está em
+`RECUSAM_O_NOME`. Cena de linha não sabe do futuro como capítulo nenhum.
+
 ## Quem ficou em casa e onde a jornada começa
 A pessoa de casa tem um **jeito** sorteado uma vez e guardado na ficha
 (`jeitoDaCasa`, em `js/story/casa-jeito.js`): orgulho, brincalhão,

@@ -490,6 +490,19 @@ const CONVERSAS_ROTA = [
 /* Uma conversa pode vir condicionada ao estado: {cond, texto}.
    E a última não se repete — nada mata mais uma cidade do que
    falar com três pessoas e ouvir a mesma frase duas vezes. */
+/* Quem já conversou com você na cidade lembra de você: na segunda vez
+   não reconta a história, reconhece e fala pouco. */
+const FALAS_DE_QUEM_JA_TE_VIU = [
+  'Ei, eu lembro de você! Já te contei a minha, né? Por aqui tá tudo do mesmo jeito.',
+  'Você de novo. Eu lembro do seu time, passou por aqui não faz muito.',
+  'Ah, {o treinador|a treinadora} de outro dia! E a jornada, como é que tá?',
+  'Opa, de volta? Não tenho novidade nenhuma, desculpa. Mas é bom te ver.',
+  'Lembro de você. Você ouviu tudo até o fim da outra vez, quase ninguém ouve.',
+  'De novo por aqui? Então a cidade te agradou. Eu falei que agradava.',
+  'Você! Contei pra metade da rua que você parou pra conversar comigo.',
+  'Eu reconheço essa mochila. Ainda tá inteira, que bom.'
+];
+
 const Conversas = {
   ultima: {},
 
@@ -514,15 +527,26 @@ const Conversas = {
       if (l && typeof l === 'object' && l.diz) return String(l.quem) + '|' + String(l.diz);
       return JSON.stringify(l);
     };
-    let pool = fonte;
-    if (fonte.length > 1){
+    /* quem você já ouviu fica guardado, por cidade */
+    const d = Estado.dados;
+    d.conversasOuvidas = d.conversasOuvidas || {};
+    const ouvidas = d.conversasOuvidas[id] = d.conversasOuvidas[id] || [];
+    const marca = c => chave(c).slice(0, 80);
+    let pool = fonte.filter(c => !ouvidas.includes(marca(c)));
+    const reencontro = !pool.length;
+    if (reencontro) pool = fonte;
+    if (pool.length > 1){
       const antes = this.ultima[id];
-      const semRepetir = fonte.filter(c => chave(c) !== antes);
+      const semRepetir = pool.filter(c => chave(c) !== antes);
       if (semRepetir.length) pool = semRepetir;
     }
     const escolhida = Dados.escolher(pool);
     this.ultima[id] = chave(escolhida);
-    return texto(escolhida);
+    if (!reencontro){ ouvidas.push(marca(escolhida)); return texto(escolhida); }
+    /* todo mundo daqui já falou com você: quem aparece te reconhece */
+    const quem = texto(escolhida).find(l => l && typeof l === 'object' && l.quem);
+    if (!quem) return ['Alguém com quem você já conversou por aqui te reconhece do outro lado da rua, acena e volta pro que estava fazendo.'];
+    return [fala(quem.quem, Dados.escolher(FALAS_DE_QUEM_JA_TE_VIU))];
   }
 };
 

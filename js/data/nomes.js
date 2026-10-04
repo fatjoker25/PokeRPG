@@ -51,6 +51,14 @@ const RECUSAM_O_NOME = {
     'Ela não responde e não se mexe, e o silêncio dura tempo demais pra ser hesitação.',
     'É recusa, e é treinada.'
   ],
+  'a voz do outro lado': () => [
+    'Do outro lado, um silêncio curto, de quem cobre o bocal com a mão.',
+    fala('a voz do outro lado', 'Nome é o que vocês têm. A gente tem número.', 'frio')
+  ],
+  'o intermediário': () => [
+    'Ele tira o chapéu, coça a cabeça e põe o chapéu de volta.',
+    fala('o intermediário', 'Nome atrapalha negócio. Me chama de quem paga.')
+  ],
   'o perseguidor': () => [
     'Ele continua andando no mesmo passo, a quinze metros, sem virar a cabeça.'
   ]
@@ -79,7 +87,13 @@ const NOMES_FIXOS = {
   'o colega da enfermaria':    'Pascal',
   'a técnica de jaleco':       'Kira',
   'a Presidente':              'Hester Colman',
-  'a recepcionista do Planalto': 'Sra. Ada'
+  'a recepcionista do Planalto': 'Sra. Ada',
+  /* as linhas (js/story/linhas.js): quem acompanha você no seu lado */
+  'o sargento de Viridian':    'Sargento Holt',
+  'a editora do Jornal':       'Hazel Moss',
+  'a avaliadora da Associação': 'Sra. Linden',
+  'a coordenadora da quadra':  'Coordenadora Maple',
+  'a dona da pensão':          'Dona Briar'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

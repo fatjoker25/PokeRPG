@@ -842,11 +842,14 @@ const Jogo = {
     /* o que os seus postos pagam (ou cobram) na virada do capítulo */
     const daCredencial = (typeof Cargos !== 'undefined') ? Cargos.pagarCapitulo() : [];
     Estado.salvar('auto');
-    /* telefone toca na hora errada, que é quando telefone toca */
-    if (this.talvezToque()) { this.cenaDepoisDaChamada = cena; return; }
     /* Nada de repetir nome, reputação e time na abertura de cada capítulo:
        isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
-    UI.telaCena(cena, (typeof avisosDeRumo === 'function' ? avisosDeRumo() : []).concat(daCredencial));
+    const abertura = (typeof avisosDeRumo === 'function' ? avisosDeRumo() : []).concat(daCredencial);
+    /* quem é do seu lado te acha na virada (js/story/linhas.js) */
+    if (typeof Linhas !== 'undefined' && Linhas.talvez(cena, abertura)) return;
+    /* telefone toca na hora errada, que é quando telefone toca */
+    if (this.talvezToque()) { this.cenaDepoisDaChamada = cena; return; }
+    UI.telaCena(cena, abertura);
   },
 
   /* ---------- BALCÃO DE CREDENCIAIS ---------- */
