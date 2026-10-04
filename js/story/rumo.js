@@ -226,7 +226,7 @@ const ACHADOS_VASCULHAR = {
     {t:'Marcas de garra na parede de pedra, na altura do seu joelho. Muitas.', rastro:[27, 28, 56]}
   ],
   caverna:[
-    {t:'Um morcego de pedra — não, um Zubat dormindo de cabeça pra baixo — e mais trinta em volta. Você sai devagar.', rastro:[41, 42]},
+    {t:'Uma pedra pendurada no teto — não, um Zubat dormindo de cabeça pra baixo — e mais trinta em volta. Você sai devagar.', rastro:[41, 42]},
     {t:'Uma pedra lisa e redonda que brilha pouquinho quando você cobre com a mão. Fica com você.', item:['Moon Stone', 1], raro:true},
     {t:'Restos de fogueira e uma Pokébola rachada. Alguém acampou aqui e saiu sem ela.', item:['Poké Ball', 1]},
     {t:'Uma trilha de cogumelos na parede úmida, comidos pela metade.', rastro:[46, 47]},

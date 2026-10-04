@@ -2437,7 +2437,7 @@ c11_com_a_caixa:{
   ],
   ef:{flag:['dentro_da_silph','chegou_no_11'],
       registrar:'Desceu com a caixa até o botão sem número.',
-      presagio:'Fita crepe e caneta hidrográfica. O andar mais caro da empresa é identificado à mão.'},
+      presagio:'Fita adesiva e caneta hidrográfica. O andar mais caro da empresa é identificado à mão.'},
   escolhas:[{texto:'Sair do elevador.', vai:'c11_onze'}]
 },
 
@@ -2629,10 +2629,10 @@ c11_escada:{
     'Você desce mais um lance e a temperatura cai — não um pouco, cai de verdade, uns dez graus em um lance de escada, e o corrimão de metal fica frio na mão.',
     'No patamar seguinte tem uma porta de aço com fechadura biométrica, batente de vedação de borracha e uma folha impressa em fonte padrão, colada com fita adesiva:',
     '**ANDAR 11 — ACESSO RESTRITO — NÍVEL 3**',
-    'Fita crepe. Numa porta de três milhões.'
+    'Fita adesiva. Numa porta de três milhões.'
   ],
   ef:{flag:'chegou_no_11', registrar:'Chegou à porta do andar 11 da Silph.',
-      presagio:'Fita crepe. Ninguém nunca imaginou que alguém chegaria até aqui.'},
+      presagio:'Fita adesiva. Ninguém nunca imaginou que alguém chegaria até aqui.'},
   escolhas:[
     {texto:'Esperar alguém sair.', vai:'c11_esperou_11'},
     {texto:'Bater na porta.', vai:'c11_bateu_na_porta'},

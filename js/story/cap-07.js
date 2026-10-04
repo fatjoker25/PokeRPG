@@ -1548,7 +1548,7 @@ c7_marowak:{
   ef:{registrar:'Encontrou o Marowak no sexto andar da Torre, com um Cubone ferido e um treinador inconsciente.'},
   escolhas:[
     {texto:'Batalhar. Derrubar o Marowak e tirar os dois de lá.', vai:'c7_luta_marowak'},
-    {texto:'Tentar acalmar. Chegar devagar, sem bola na mão.', vai:'c7_acalmar'},
+    {texto:'Tentar acalmar. Chegar devagar, sem Pokébola na mão.', vai:'c7_acalmar'},
     {texto:'Usar um dos seus como escudo pra chegar até o treinador caído.', vai:'c7_escudo'},
     {texto:'Olhar a cena inteira antes de fazer qualquer coisa.', vai:'c7_olhou_a_cena'}
   ]
@@ -1568,7 +1568,7 @@ c7_olhou_a_cena:{
       rep:{eixo:'bom',delta:2,motivo:'Olhou antes de agir'},
       presagio:'O Marowak sabe de alguma coisa sobre aquele corpo. Ele está poupando o filhote.'},
   escolhas:[
-    {texto:'Chegar devagar, sem bola na mão.', vai:'c7_acalmar', ef:{flag:'sabe_o_que_o_marowak_faz'}},
+    {texto:'Chegar devagar, sem Pokébola na mão.', vai:'c7_acalmar', ef:{flag:'sabe_o_que_o_marowak_faz'}},
     {texto:'Ir direto no treinador caído.', vai:'c7_foi_no_treinador'},
     {texto:'Batalhar.', vai:'c7_luta_marowak'},
     {texto:'Descer e chamar ajuda. Leva quarenta minutos.', vai:'c7_ajuda'}

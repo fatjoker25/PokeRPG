@@ -946,7 +946,7 @@ c23_perdeu:{
     'Seu time está do seu lado, todos curados. Todos. Curados por alguém que não é você.',
     'A caverna atrás de você está fechada — não bloqueada: fechada, a pedra derretida e esfriada num tampão liso.',
     'Na pedra, com a mesma letra queimada do caderno do Dr. Fuji, uma linha:',
-    '**VOCÊ RESPONDEU COM UMA BOLA. EU RESPONDI COM UMA PORTA.**'
+    '**VOCÊ RESPONDEU COM UMA POKÉBOLA. EU RESPONDI COM UMA PORTA.**'
   ],
   ef:{executar:d=>{ d.time.forEach(curarTotal); const L=Estado.lend(150); L.disposicao='hostil'; L.estado='livre'; return []; },
       flag:'mewtwo_fechou_a_porta', instabilidade:2,

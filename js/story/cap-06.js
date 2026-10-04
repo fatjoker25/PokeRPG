@@ -2489,7 +2489,7 @@ c6_tentou_tirar:{
     'Quatro horas e quarenta minutos.',
     'Você pega sete. Sete Rattata e um Zubat, com as Pokébolas que você tinha, gastando quase tudo.',
     'Tem mais. Tem muito mais — você vê pelo menos vinte só nesse trecho, e a rota tem seis quilômetros.',
-    'No fim, sentad{o|a} na trilha, sem bola, com o time cansado, você olha o homem das tigelas do outro lado da curva.',
+    'No fim, sentad{o|a} na trilha, sem Pokébola, com o time cansado, você olha o homem das tigelas do outro lado da curva.',
     'Ele não riu. Em nenhum momento das quatro horas e quarenta ele riu de você.',
     'Ele senta na trilha a uns dez metros e diz: "Eu vou parar de encher."',
     '"Por quê?"',

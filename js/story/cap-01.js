@@ -486,10 +486,11 @@ c1_ficou_com_ele:{
       executar:d=>{
         const especies = [19, 16, 10, 13, 21, 41, 52];       // os que vivem debaixo de carro
         const dex = Dados.escolher(especies);
-        const p = criarPokemon(dex, Dados.entre(3,5), {moral:40, genero:'m'})  // a cena da caixa chama ele de "ele";
+        /* primeiro Pokémon da jornada: moral 50, como todo inicial */
+        const p = criarPokemon(dex, Dados.entre(3,5), {moral:50, genero:'m'})  // a cena da caixa chama ele de "ele";
         p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Já tinha sido devolvid{o} antes.', p);
         const onde = Estado.adicionar(p);
-        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. Moral 40 — ${pron(p).ele} ainda não confia em ninguém.${notaDestino(onde)}`}];
+        return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) entrou no seu time. ${pron(p).Ele} ainda está decidindo se confia em você.${notaDestino(onde)}`}];
       },
       registrar:'Ficou com o Pokémon da caixa.'},
   escolhas:[
@@ -1316,7 +1317,7 @@ c1_mudou_de_ideia_no_balcao:{
       executar:d=>{
         Estado.usarItem('Caixa de ventilador com um Pokémon dentro');
         const dex = Dados.escolher([19, 16, 10, 13, 21, 41, 52]);
-        const p = criarPokemon(dex, Dados.entre(3,5), {moral:45, genero:'m'});
+        const p = criarPokemon(dex, Dados.entre(3,5), {moral:50, genero:'m'});
         p.historia = concordar('Passou a noite embaixo do carro da Sra. Perla. Você deixou {ele} no balcão e voltou em quarenta segundos.', p);
         const onde = Estado.adicionar(p);
         return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) é seu.${notaDestino(onde)}`}];

@@ -526,8 +526,8 @@ function sortearSelvagem(ambiente='campo', nivelBase=8, localId=null){
   let veterano = false;
   /* o velho do mato só no mapa, e não no primeiro dia de jornada */
   const podeVelho = !!localId && Estado.dados && Estado.dados.capitulo >= 2;
-  if (r === 100 && podeVelho){ nivel = Dados.entre(Math.max(nivelBase + 14, 20), Math.max(nivelBase + 26, 32)); veterano = true; }  // 1 em 100
-  else if (r >= 92)  nivel = Dados.entre(nivelBase + 4, nivelBase + 9);      // 8 em 100
+  if (r >= 98 && podeVelho){ nivel = Dados.entre(Math.max(nivelBase + 14, 20), Math.max(nivelBase + 26, 32)); veterano = true; }  // 3 em 100
+  else if (r >= 90)  nivel = Dados.entre(nivelBase + 4, nivelBase + 9);      // 8 em 100
   else if (r <= 12)  nivel = Math.max(2, Dados.entre(nivelBase - 6, nivelBase - 3));
   else               nivel = Math.max(2, Dados.entre(nivelBase - 3, nivelBase + 3));
   nivel = Math.min(80, nivel);

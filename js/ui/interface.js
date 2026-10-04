@@ -3268,9 +3268,6 @@ const UI = {
           + (r.gostos.texto ? `<div class="linha"><span class="k">Gosta de</span><span class="v">${this.esc(r.gostos.texto)}</span></div>` : '')
           + (r.desgostos.texto ? `<div class="linha"><span class="k">Não gosta de</span><span class="v">${this.esc(r.desgostos.texto)}</span></div>` : ''); })()}
       <div class="linha"><span class="k">Personalidade</span><span class="v">${this.esc(j.personalidade)}</span></div>
-      <div class="linha"><span class="k">Aparência</span><span class="v">${this.esc(j.aparencia)}</span></div>
-      <div class="linha"><span class="k">Vestimenta</span><span class="v">${this.esc(j.vestimenta)}</span></div>
-      <p class="sussurro" style="margin:4px 0 12px">${this.esc(Estado.comoTeVeem())}</p>
       <div style="margin:0 0 14px"><button class="btn mini" onclick="UI.modalCredenciais()">Credenciais${
         (typeof Cargos !== 'undefined' && Cargos.lista().length) ? ' (' + Cargos.lista().length + ')' : ''}</button></div>
       <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
@@ -4086,7 +4083,7 @@ const UI = {
       <div class="linha"><span class="k">Espécie</span><span class="v">cada lugar do mapa tem a sua lista, com o comum e o raro · a de FireRed/LeafGreen, em quase tudo</span></div>
       <div class="linha"><span class="k">Cidade</span><span class="v">o que vem das rotas em volta e da água do porto</span></div>
       <div class="linha"><span class="k">Nunca no mato</span><span class="v">fóssil (só renasce no laboratório), lendário e Porygon</span></div>
-      <div class="linha"><span class="k">Nível</span><span class="v">o do lugar, nunca o do seu time · a maioria entre 3 abaixo e 3 acima · 12 em 100 vêm de 3 a 6 abaixo · 8 em 100 vêm de 4 a 9 acima · 1 em 100, a partir do capítulo 2, é um velho do mato: de 14 a 26 acima (no mínimo 20)</span></div>
+      <div class="linha"><span class="k">Nível</span><span class="v">o do lugar, nunca o do seu time · a maioria entre 3 abaixo e 3 acima · 12 em 100 vêm de 3 a 6 abaixo · 8 em 100 vêm de 4 a 9 acima · 3 em 100, a partir do capítulo 2, são um velho do mato: de 14 a 26 acima (no mínimo 20), já evoluído quando a linha evolui por nível — um Raticate de nível 30 na Rota 1</span></div>
       <div class="linha"><span class="k">Forma</span><span class="v">a da tabela do lugar · quem veio acima do lugar e já passou do nível de evoluir aparece evoluído (só evolução por nível: pedra e troca não acontecem no mato)</span></div>
       <div class="linha"><span class="k">Dia e noite</span><span class="v">quem é da noite (Zubat, Gastly, Oddish, Venonat, Meowth, Clefairy, Hoothoot, Murkrow…) aparece o triplo à noite e 1/5 de dia · quem é do dia (Pidgey, Spearow, Caterpie, Weedle, Doduo, Sentret, Ledyba…) aparece 1,5× de dia e 1/5 à noite</span></div>
       <div class="linha"><span class="k">Gente na estrada</span><span class="v">quem treina de dia (garoto, garota, caçador de inseto, campista, nadador, ciclista) some à noite · quem anda de noite (motoqueiro, jogador, médium, guitarrista) só aparece à noite · o resto, a qualquer hora</span></div>

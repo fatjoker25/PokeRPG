@@ -51,7 +51,7 @@ const CONTATOS = [
       fala(nomeCasa(), 'Quanto é que você precisa?', null, 'Sem "oi". Sem "como você está". Direto na pergunta que importa.'),
       d.jogador.dinheiro < 500
         ? fala(nomeCasa(), 'Não me responde. Eu já sei. Eu deposito hoje.', 'baixo')
-        : fala(nomeCasa(), 'Tá. Eu mando. E não é pra gastar em bola, que bola você compra com o que ganha.')
+        : fala(nomeCasa(), 'Tá. Eu mando. E não é pra gastar em Pokébola, que Pokébola você compra com o que ganha.')
     ],
     efeito:d=>{ Estado.j.dinheiro += 2500; return [{tipo:'item', texto:'+2500 ₽ — veio de um lugar que não sobrava.'}]; }
   },
