@@ -192,7 +192,7 @@ bolas se recebem no Centro Pokémon, e todo o resto se compra, se acha ou algué
 
 | Cidade | O que vende | Preço |
 |---|---|---|
-| Pallet | mercado de bairro: bola, Potion, anzol, pilha | tabela |
+| Pallet | mercado de bairro: bola, Potion, anzol, pilha, ração | tabela |
 | Viridian | o kit que um treinador de três dias esqueceu | tabela |
 | Pewter | ferragem de pedreira: corda, lanterna, máscara de pó | +15% |
 | Cerulean | bebida, isca e uma Pedra da Água na vitrine há anos | +5% |

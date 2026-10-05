@@ -7,7 +7,7 @@ const PRECO_BASE = {
   'Poké Ball':200, 'Great Ball':600, 'Ultra Ball':1200,
   'Potion':300, 'Super Potion':700, 'Hyper Potion':1500,
   'Revive':1500, 'Antidote':250, 'Full Heal':600,
-  'Bandagem':400, 'Ração':350, 'Água Fresca':250, 'Cantil':500,
+  'Bandagem':400, 'Ração':200, 'Água Fresca':250, 'Cantil':500,
   'Éter':900, 'Elixir':2000, 'Boneco':700, 'Repelente':400,
   'Corda':450, 'Lanterna':600, 'Pilha':180, 'Isca':150, 'Machado':900, 'Picareta':1100,
   'Máscara de pó':300, 'Bota de borracha':900, 'Cobertor térmico':1100,
@@ -39,19 +39,19 @@ const LOJAS = {
     nome:'Casa de Ferragens Hawthorn',
     ar:'Vende mais equipamento de escalada que item de treinador. A dona explica que é questão de demanda: aqui todo mundo trabalha em pedra.',
     mult:1.15,
-    itens:['Poké Ball','Potion','Antidote','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
+    itens:['Ração','Poké Ball','Potion','Antidote','Corda','Lanterna','Pilha','Machado','Picareta','Máscara de pó','Bandagem','Caderno de campo','Punho de Ferro','Colete de Lona','Mochila Marrom']
   },
   cerulean: {
     nome:'Balcão da Ponte Sul',
     ar:'Atende pela janela, sem ninguém entrar. Tem geladeira de bebida e uma vitrine pequena com uma pedra azul que fica ali há anos.',
     mult:1.05,
-    itens:['Poké Ball','Potion','Antidote','Repelente','Água Fresca','Isca','Pedra da Água','Botina Leve','Sino Calmante']
+    itens:['Ração','Poké Ball','Potion','Antidote','Repelente','Água Fresca','Isca','Pedra da Água','Botina Leve','Sino Calmante']
   },
   vermilion: {
     nome:'Armazém do Cais',
     ar:'Abre às cinco da manhã e vende comida, corda e Pokébola no mesmo balcão. Metade do estoque é importado e entra sem imposto por um caminho que ninguém comenta.',
     mult:0.9,
-    itens:['Poké Ball','Potion','Super Potion','Antidote','Repelente','Bota de borracha','Cobertor térmico','Câmera descartável','Relógio','Corda','Cantil','Faixa Firme','Resto de Ração','Mochila Laranja','Bolsa Prateada']
+    itens:['Ração','Poké Ball','Potion','Super Potion','Antidote','Repelente','Bota de borracha','Cobertor térmico','Câmera descartável','Relógio','Corda','Cantil','Faixa Firme','Resto de Ração','Mochila Laranja','Bolsa Prateada']
   },
   lavender: {
     nome:'Casa Boa Memória',
@@ -98,19 +98,19 @@ const LOJAS = {
     nome:'Posto da Zona Safári',
     ar:'Vende mais repelente que Poké Ball, e tem um cartaz explicando por quê. A fila é de gente de bermuda com chapéu novo.',
     mult:1.0,
-    itens:['Poké Ball','Great Ball','Ultra Ball','Super Potion','Revive','Full Heal','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Resto de Ração']
+    itens:['Ração','Poké Ball','Great Ball','Ultra Ball','Super Potion','Revive','Full Heal','Repelente','Isca','Máscara de pó','Corda','Machado','Água Fresca','Mapa de Kanto','Antidote','Resto de Ração']
   },
   saffron: {
     nome:'Conveniência Silph — térreo',
     ar:'Fica no térreo de um prédio comercial e tem fila de gente de crachá na hora do almoço. Tudo é caro e tudo tem nota fiscal.',
     mult:1.3,
-    itens:['Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
+    itens:['Ração','Great Ball','Super Potion','Hyper Potion','Full Heal','Revive','Repelente','Corda','Elixir','Éter','Caderno de campo','Câmera descartável','Relógio','Óculos Grossos','Amuleto de Moeda','Mochila Preta','Bolsa Cinza']
   },
   cinnabar: {
     nome:'Vitrine da Sra. Juna',
     ar:'É uma casa com uma vitrine. A dona atende de chinelo e leva tudo o que chega de barco, o que quer dizer que às vezes falta tudo.',
     mult:1.25,
-    itens:['Great Ball','Ultra Ball','Hyper Potion','Revive','Full Heal','Repelente','Corda','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
+    itens:['Ração','Great Ball','Ultra Ball','Hyper Potion','Revive','Full Heal','Repelente','Corda','Cobertor térmico','Bandagem','Pedra do Fogo','Punho de Ferro']
   }
 };
 
@@ -119,7 +119,7 @@ LOJAS.bazar_celadon = {
   nome:'Bazar de domingo',
   ar:'Doze barracas de lona no terraço da Grande Loja, com coisa que chegou de barco, coisa de herança e coisa que ninguém sabe de onde veio. Ninguém dá nota.',
   mult:1.1,
-  itens:['Moon Stone','PP Up','Elixir','Ultra Ball','Hyper Potion','Amuleto de Moeda','Exp. Share','Relógio','Cobertor térmico']
+  itens:['Ração','Moon Stone','PP Up','Elixir','Ultra Ball','Hyper Potion','Amuleto de Moeda','Exp. Share','Relógio','Cobertor térmico']
 };
 
 function precoNaCidade(nome, idCidade){

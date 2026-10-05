@@ -4263,7 +4263,7 @@ const UI = {
       <div class="linha"><span class="k">Par no time</span><span class="v">a chance que sobrar cai pela metade</span></div>
       <div class="linha"><span class="k">Moral do inicial</span><span class="v">chega com 50 de 100 · quem já morava na sua casa chega com 100 · o resto vocês constroem juntos</span></div>
       <div class="linha"><span class="k">Fome</span><span class="v">o primeiro dia sem comer não muda nada · depois, −4 de moral a cada 12 horas do relógio do jogo · 24 h: com fome · 48 h: faminto</span></div>
-      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada</span></div>
+      <div class="linha"><span class="k">Comer</span><span class="v">Centro, casa e toda cura completa alimentam · Ração em toda loja de Kanto, 200 ₽ de base (a cidade mexe no preço) · Ração na mão: um Pokémon, +10 de moral · Alimentar o time (no Seu time): uma Ração pra todos, +2 de moral cada · acampar e treinar gastam uma Ração cada</span></div>
       <p class="sussurro">Moral alta zera a conta sozinha. Além disso, cada natureza tem a sua própria teimosia em combate — tem quem recuse golpe especial, quem hesite em chegar perto, quem ataque antes da ordem e quem use o golpe errado de propósito. O jogo diz na hora qual natureza fez o quê; a lista inteira você monta jogando.</p>
       <h3>Condições</h3>
       <div class="linha"><span class="k">PAR · paralisado</span><span class="v">−2 de Destreza (precisão e iniciativa)</span></div>
