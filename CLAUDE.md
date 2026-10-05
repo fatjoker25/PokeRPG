@@ -1012,6 +1012,24 @@ Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 - `js/ui/interface.js` — todas as telas e modais; `js/ui/efeitos.js` — o
   turno encenado, a abertura e a entrada do seu Pokémon.
 
+## A caixa de diálogo e o menu
+Tela de história (capítulo, linha, cidade: todo painel com
+`.cap-cabecalho`) lê numa **coluna só** de 48rem, cabeçalho, texto,
+opções e campo livre com as mesmas bordas. O balão é a caixa de diálogo
+dos jogos: o rosto fica **fora** do `.fala-quem`, à esquerda, numa
+moldura na cor da pessoa (`.fala.com-rosto`, grade de duas colunas), e
+quem repete a vez guarda o lugar com `.fala-retrato.vazio` pro texto
+alinhar. O balão tem o tamanho da fala (`fit-content`). Quem confere
+rosto (`chk-baloes`) procura a `img.fala-retrato` no balão inteiro.
+
+Opção é menu: o número no botão é a **tecla** que escolhe (`Teclas`, no
+fim de `interface.js`), contado na tela inteira por um `MutationObserver`
+em `#app` (`data-tecla`, de 1 a 9; quem passa do nono fica com o
+marcador). A cidade conta "O que fazer" e "Para onde ir" juntos. Tecla
+não age com modal aberto nem dentro de campo de texto. Opção que é fala
+sua (começa com aspas) ganha `.diz` e sai em itálico; opção de linha
+pode ter `cond` (`Linhas.mostrar` pula a que não vale).
+
 ## Convenções de texto
 - Fala de NPC: `fala(quem, diz, tom, nota)`. Tons válidos: `grita`, `baixo`, `riso`,
   `frio`. Frase inteira entre aspas numa linha de narração também vira balão sozinha.

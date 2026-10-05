@@ -33,7 +33,7 @@ const r=await p.evaluate(()=>{
       if(!n){ return; } // repetição do mesmo falante: o balão não repete nome nem rosto
       if (n===meu || /^você$/i.test(n)) return;
       if (/^\?+$/.test(n)) { out.anonimos.push(onde+': ??? '+e.innerText.slice(0,60)); return; }
-      const img=q.querySelector('img.fala-retrato');
+      const img=e.querySelector('img.fala-retrato');
       const o=out.nomes[n]=out.nomes[n]||{n:0,rosto:0,onde:[]}; o.n++; if(img){ o.rosto++; out.srcs[img.getAttribute('src')]=1; }
       if(!img && o.onde.length<4 && !o.onde.includes(onde)) o.onde.push(onde);
     });

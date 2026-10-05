@@ -752,8 +752,13 @@ const UI = {
            nome, mesmo a segunda seguida da mesma boca (só o retrato some) */
         const repete = (ultimaBoca === f.quem);
         ultimaBoca = f.quem;
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(f.quem)}>
-          <div class="fala-quem">${repete ? '' : this.retratoFala(f.quem, f.rotulo)}${this.esc(f.quem)}</div>
+        /* o rosto mora à esquerda do balão, como na caixa de diálogo dos
+           jogos; quem repete a vez guarda o lugar dele vazio, pro texto
+           alinhar com o balão de cima */
+        const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo);
+        const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}"${meu ? '' : estiloCor(f.quem)}>
+          ${lugar}<div class="fala-quem">${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
@@ -834,8 +839,10 @@ const UI = {
         const meu = lado === 'voce' ? ' voce' : '';
         const repete = quem && ultimaBoca === quem;
         ultimaBoca = quem || null;
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}"${meu ? '' : estiloCor(quem)}>`
-              + (quem ? `<div class="fala-quem">${lado === 'voce' || repete ? '' : this.retratoFala(quem, rotulo)}${this.esc(quem)}</div>` : '')
+        const rosto = quem && lado !== 'voce' ? this.retratoFala(quem, rotulo) : '';
+        const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}"${meu ? '' : estiloCor(quem)}>`
+              + lugar + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
               + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
       }
       return html;
@@ -949,7 +956,9 @@ const UI = {
     if (!visiveis.length)
       visiveis = (cena.escolhas||[]).map((e,i)=>({e,i})).filter(x => Historia.disponivel(x.e));
     visiveis.forEach(({e, i}) => {
-      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.escolher(${i})">${this.esc(txt(e.texto))}</button>`));
+      const t = txt(e.texto);
+      /* opção que é uma fala sua ("Treina comigo. Agora.") lê como fala */
+      c.appendChild(this.el(`<button class="escolha${/^["“]/.test(t) ? ' diz' : ''}" onclick="Jogo.escolher(${i})">${this.esc(t)}</button>`));
     });
     /* O capítulo acontece numa cidade com Centro: dá pra passar lá sem
        largar a história — cura, PC, mapa — e voltar pro mesmo ponto. */
@@ -4728,3 +4737,43 @@ const UI = {
       <p class="sussurro">Toda rolagem do combate aparece na tela como dado de verdade, com o motivo embaixo. Dá pra clicar em qualquer um pra ver ele girar de novo — o resultado não muda, já está registrado. A bandeja embaixo é só pra girar por girar: não afeta nada.</p>`);
   }
 };
+
+/* Teclas 1 a 9 escolhem a opção com o mesmo número, como o menu dos
+   jogos. A tela inteira conta junto (na cidade, "O que fazer" e "Para
+   onde ir" seguem a mesma numeração), e o número que aparece no botão
+   é o da tecla: quem passa do nono fica com o marcador sem número.
+   Não age com modal aberto nem enquanto se escreve. */
+const Teclas = {
+  opcoes(){
+    const app = document.getElementById('app');
+    return app ? [...app.querySelectorAll('.escolhas > .escolha')].filter(b => !b.disabled) : [];
+  },
+  numerar(){
+    this.opcoes().forEach((b, i) => {
+      const t = i < 9 ? String(i + 1) : '';
+      if ((b.dataset.tecla || '') !== t){ if (t) b.dataset.tecla = t; else delete b.dataset.tecla; }
+    });
+  },
+  ligar(){
+    const app = document.getElementById('app');
+    if (!app || this._obs || typeof MutationObserver === 'undefined') return;
+    let pendente = false;
+    this._obs = new MutationObserver(() => {
+      if (pendente) return;
+      pendente = true;
+      requestAnimationFrame(() => { pendente = false; this.numerar(); });
+    });
+    this._obs.observe(app, {childList:true, subtree:true});
+    this.numerar();
+  }
+};
+if (typeof document !== 'undefined' && document.readyState && document.readyState !== 'loading') Teclas.ligar();
+else document.addEventListener('DOMContentLoaded', () => Teclas.ligar());
+document.addEventListener('keydown', ev => {
+  if (ev.ctrlKey || ev.metaKey || ev.altKey || !/^[1-9]$/.test(ev.key)) return;
+  const alvo = ev.target;
+  if (alvo && (/^(INPUT|TEXTAREA|SELECT)$/.test(alvo.tagName) || alvo.isContentEditable)) return;
+  if (document.getElementById('modal')) return;
+  const b = Teclas.opcoes().find(x => x.dataset.tecla === ev.key);
+  if (b && b.offsetParent){ ev.preventDefault(); b.focus({preventScroll:true}); b.click(); }
+});

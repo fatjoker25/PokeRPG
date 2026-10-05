@@ -2484,13 +2484,6 @@ h3.cat-item{
 .vida-jogador .vj-nome{display:flex;justify-content:space-between;font-weight:700;font-size:13px}
 .vida-jogador .vj-nome .nv{font-weight:500;color:var(--texto-fraco);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
 
-/* rosto de quem fala, ao lado do nome no balão */
-.narrativa .fala-quem:has(.fala-retrato){display:flex;align-items:flex-end;gap:8px}
-.narrativa .fala-retrato{
-  width:60px;height:60px;flex:0 0 auto;margin:-12px 0 -6px -8px;object-fit:contain;
-  image-rendering:pixelated;image-rendering:crisp-edges;
-  filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));
-}
 
 /* insígnia conquistada: a arte dos jogos no lugar do recorte */
 .insignia-slot .insignia-img{
@@ -3026,3 +3019,159 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
 .som-pct{font-family:var(--mono);font-size:12px;text-align:right;color:var(--texto-fraco)}
 .som-mudo{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
 .som-testes{display:flex;gap:8px;flex-wrap:wrap}
+
+
+/* ============================================================
+   CAIXA DE DIÁLOGO, OPÇÕES E COLUNA DE LEITURA
+   Tudo que é história (capítulo, linha, cidade) lê numa coluna só:
+   cabeçalho, texto, opções e campo livre com as mesmas bordas, em
+   vez do texto num canto e as opções esticadas até o fim do painel.
+   ============================================================ */
+.painel:has(> .cap-cabecalho) > *{max-width:48rem;margin-inline:auto}
+.painel:has(> .cap-cabecalho){padding:18px 22px 20px}
+.painel:has(> .cap-cabecalho) .narrativa p{max-width:none}
+
+/* texto corrido: um pouco maior e com ar, que é onde o jogo passa o tempo */
+.narrativa{font-size:15.5px;line-height:1.68;color:color-mix(in srgb, var(--texto) 92%, var(--texto-fraco))}
+.narrativa p{margin-bottom:12px}
+.narrativa strong{color:var(--texto);font-weight:650}
+
+/* cabeçalho: número em etiqueta, título maior, lugar com marcador, e um
+   fio embaixo que separa o cabeçalho da cena */
+.cap-cabecalho{padding:0 0 12px 30px;margin-bottom:16px}
+.cap-cabecalho::before{top:4px;width:19px;height:19px}
+.cap-cabecalho::after{left:6.5px;top:10.5px}
+.cap-cabecalho .num{
+  display:inline-block;font-size:10.5px;letter-spacing:.16em;font-weight:700;
+  color:var(--destaque);padding:2px 8px;border-radius:999px;
+  background:color-mix(in srgb, var(--destaque) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--destaque) 32%, transparent);
+}
+.cap-cabecalho .tit{font-size:22px;font-weight:700;letter-spacing:.005em;margin:6px 0 2px;line-height:1.2}
+.cap-cabecalho .loc{font-style:normal;font-size:12.5px;letter-spacing:.04em}
+.cap-cabecalho .loc::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+  margin-right:7px;vertical-align:1px;background:var(--destaque-2);box-shadow:0 0 0 2px color-mix(in srgb, var(--destaque-2) 30%, transparent)}
+.cap-cabecalho .loc:empty{display:none}
+.cap-cabecalho::selection{background:none}
+.painel > .cap-cabecalho{border-bottom:1px solid transparent;
+  border-image:linear-gradient(90deg, var(--borda-forte), color-mix(in srgb, var(--borda) 40%, transparent) 70%, transparent) 1}
+
+/* ---------- balão de fala ---------- */
+/* Caixa de diálogo dos jogos: o rosto numa moldura à esquerda, o nome
+   em etiqueta e a fala do lado. A cor da pessoa fica na borda, no
+   nome e no fundo da moldura. */
+.narrativa .fala{
+  border-radius:12px;border-left-width:1px;
+  padding:10px 14px 11px;margin:0 0 12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 6px 16px -12px rgba(0,0,0,.8);
+  /* o balão tem o tamanho da fala: "Parou como?" não ocupa a linha inteira */
+  width:fit-content;min-width:min(240px, 100%);max-width:min(64ch, 100%);
+}
+.narrativa .fala::before{display:none}
+.narrativa .fala.com-rosto{
+  display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:13px;align-items:start;
+  padding:9px 14px 10px 9px;
+}
+.narrativa .fala.com-rosto > :not(.fala-retrato){grid-column:2}
+.narrativa .fala-retrato{
+  grid-column:1;grid-row:1 / span 3;align-self:start;
+  width:64px;height:64px;object-fit:contain;object-position:50% 100%;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+  border-radius:10px;
+  background:
+    radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--cor-balao) 32%, transparent), transparent 70%),
+    color-mix(in srgb, var(--cor-balao) 8%, var(--bg));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--cor-balao) 45%, transparent), inset 0 -10px 18px -12px rgba(0,0,0,.6);
+}
+.narrativa .fala-retrato.vazio{background:none;box-shadow:none;height:1px}
+.narrativa .fala-quem{
+  display:inline-flex;align-items:center;justify-self:start;
+  font-size:10.5px;letter-spacing:.12em;margin:1px 0 4px;line-height:1.35;
+  padding:2px 8px;border-radius:6px;
+  background:color-mix(in srgb, var(--cor-balao) 16%, transparent);
+}
+.narrativa .fala.segue .fala-quem{opacity:.75}
+.narrativa .fala-diz{font-size:15.5px;line-height:1.55;color:var(--texto)}
+.narrativa .fala.segue{margin-top:-6px}
+/* a sua fala: do outro lado, sem moldura, com o nome na sua cor */
+.narrativa .fala.voce{border-right-width:1px;border-radius:12px;max-width:min(70ch, 88%)}
+.narrativa .fala.voce .fala-quem{background:color-mix(in srgb, var(--bom, #6ac26a) 16%, transparent)}
+/* sem nome: a gente sabe que é fala, não de quem */
+.narrativa .fala.anonima{border-style:dashed}
+
+/* narração curta entre falas fica presa à conversa, não solta */
+.narrativa p.entre-falas{margin:-2px 0 10px 77px;font-size:13.5px}
+
+/* ---------- opções ---------- */
+/* Menu dos jogos: cada opção numerada pela tecla que a escolhe (1 a 9),
+   e o cursor ▶ aparece em quem está na mira do mouse ou do teclado. */
+.escolhas{gap:7px;margin-top:18px}
+.escolha{
+  padding:11px 16px 11px 54px;border-radius:10px;font-size:15px;line-height:1.45;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--painel-2) 70%, var(--bg-2)), var(--bg-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.escolha::before{
+  content:'•';
+  left:18px;width:24px;height:24px;border-radius:7px;
+  display:grid;place-items:center;
+  font:700 12px/1 var(--mono);color:var(--texto-fraco);
+  background:var(--bg);box-shadow:inset 0 0 0 1px var(--borda-forte);
+}
+.escolha[data-tecla]::before{content:attr(data-tecla)}
+.escolha::after{width:auto;right:auto;left:0;background:none;transform:none;
+  content:'▶';top:50%;bottom:auto;left:4px;translate:-4px -50%;
+  font-size:10px;color:var(--destaque);opacity:0;
+  transition:opacity .18s var(--suave), translate .25s var(--mola);
+}
+.escolha:hover, .escolha:focus-visible{
+  border-color:color-mix(in srgb, var(--destaque) 55%, var(--borda-forte));
+  background:linear-gradient(180deg, color-mix(in srgb, var(--destaque) 8%, var(--painel-2)), var(--painel));
+  transform:translateX(4px);
+}
+.escolha:hover::before, .escolha:focus-visible::before{
+  background:var(--destaque);color:#1b1500;box-shadow:0 0 12px -3px var(--destaque-sombra);
+  transform:translateY(-50%);
+}
+.escolha:hover::after, .escolha:focus-visible::after{opacity:1;translate:2px -50%;transform:none}
+/* fala escolhida entre aspas lê como fala */
+.escolha.diz{font-style:italic}
+/* as opções de serviço (balcão, perguntar o nome) ficam um tom abaixo */
+.escolha.utilitaria, .escolha.discreta{
+  font-size:13.5px;color:var(--texto-fraco);
+  background:transparent;border-style:dashed;
+}
+.escolha.utilitaria:hover, .escolha.discreta:hover{color:var(--texto)}
+.escolha.perigo{border-color:color-mix(in srgb, var(--perigo) 45%, var(--borda))}
+.escolha.perigo:hover{border-color:var(--perigo);background:color-mix(in srgb, var(--perigo) 10%, var(--bg-2))}
+.escolha.perigo:hover::before{background:var(--perigo);color:#fff}
+
+/* ---------- campo livre ---------- */
+.acao-livre{
+  margin-top:20px;border-style:solid;border-color:var(--borda);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 70%, transparent), var(--bg-2));
+}
+.acao-livre label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.12em}
+.acao-livre label::before{
+  content:'';width:14px;height:14px;flex:0 0 auto;background:var(--texto-fraco);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16z'/%3E%3Cpath d='M14 6l4 4'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.linha-acao input{border-radius:9px;padding:11px 14px}
+.linha-acao input::placeholder{color:var(--texto-tenue)}
+
+/* ---------- avisos: o que a escolha mudou ---------- */
+.avisos:not(:empty){margin-top:16px}
+.aviso{border-radius:9px;padding:8px 12px;font-size:13.5px;
+  background:linear-gradient(90deg, color-mix(in srgb, currentColor 9%, var(--bg-2)), transparent 85%)}
+
+@media (max-width:520px){
+  .painel:has(> .cap-cabecalho){padding:14px 14px 16px}
+  .narrativa{font-size:15px}
+  .cap-cabecalho .tit{font-size:19.5px}
+  .narrativa .fala.com-rosto{grid-template-columns:48px minmax(0,1fr);column-gap:10px}
+  .narrativa .fala-retrato{width:48px;height:48px;border-radius:8px}
+  .narrativa p.entre-falas{margin-left:14px}
+  .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
+  .escolha::before{left:15px;width:22px;height:22px}
+}

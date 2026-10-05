@@ -212,7 +212,7 @@ ciencia:[
 {
   cap:8, titulo:'A amostra', quem:'Professor Oak',
   texto:d => [
-    `Uma caixinha de vidro chega pela perua do laboratório, com etiqueta: MUDA DE PELE — ARBOK — SE ACHAR.`,
+    `Uma caixinha de vidro chega pela perua do laboratório, com etiqueta: MUDA DE PELE — EKANS OU ARBOK — SE ACHAR.`,
     `Na beira da trilha você acha: uma pele inteira de Ekans, recém-largada, ainda com o desenho do rosto.`,
     `Na mesma pedra, um Ekans enrolado no sol, de olho em você.`
   ],
@@ -768,7 +768,7 @@ ciencia:[
 
 imprensa:[
 {
-  cap:19, titulo:'A carta do advogado', quem:'a editora do Jornal',
+  cap:19, titulo:'O envelope', quem:'a editora do Jornal',
   texto:d => [
     d.flags.ln_imprensa_publicou
       ? `Chega um envelope com timbre de escritório: o criador da matéria processa o Jornal pela ${d.flags.ln_imprensa_publicou_cru ? 'segunda parte' : 'matéria'}.`
@@ -778,15 +778,23 @@ imprensa:[
       : `A gente tem um bilhete sem nome e a sua assinatura. Você nunca foi lá, foi?`)
   ],
   escolhas:[
-    {texto:d => !d.flags.ln_imprensa_publicou ? `Pendurar a foto na parede da redação.`
-      : d.flags.ln_imprensa_foi ? `Depor a favor do Jornal, com o que você viu.` : `Depor a favor do Jornal, com o que você tem.`,
-     ef:{flag:'ln_imprensa_depos', rep:{eixo:'bom', delta:1, motivo:'Sustentou o que escreveu'}},
-     resultado:[d => !d.flags.ln_imprensa_publicou ? `Fica do lado da janela. A editora endireita o quadro toda vez que passa.`
-       : d.flags.ln_imprensa_foi ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.`
-       : `O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.`]},
-    {texto:`Escrever uma nota sobre o que mudou desde a matéria.`,
+    /* segurou a matéria no 16: a foto da filha */
+    {cond:d => !d.flags.ln_imprensa_publicou, texto:`Pendurar a foto na parede da redação.`,
+     ef:{flag:'ln_imprensa_foto', moral:1},
+     resultado:[`Fica do lado da janela. A editora endireita o quadro toda vez que passa.`]},
+    {cond:d => !d.flags.ln_imprensa_publicou, texto:`Escrever quatro linhas sobre o que mudou desde aquela visita.`,
      ef:{flag:'ln_imprensa_nota', rep:{eixo:'bom', delta:1, motivo:'Voltou à história pra contar o que mudou'}},
-     resultado:[`Quatro linhas na página seis. A filha do criador recorta e cola na porta da criação.`]}
+     resultado:[`Quatro linhas na página seis, sem o nome do pai. A filha do criador recorta e cola na porta da criação.`]},
+    /* publicou no 16: o processo */
+    {cond:d => !!d.flags.ln_imprensa_publicou,
+     texto:d => d.flags.ln_imprensa_foi ? `Depor a favor do Jornal, com o que você viu.` : `Depor a favor do Jornal, com o que você tem.`,
+     ef:{flag:'ln_imprensa_depos', rep:{eixo:'bom', delta:1, motivo:'Sustentou o que escreveu'}},
+     resultado:[d => d.flags.ln_imprensa_foi ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.`
+       : `O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.`]},
+    {cond:d => !!d.flags.ln_imprensa_publicou, texto:`Deixar o Jornal fechar acordo sem você.`,
+     ef:{flag:'ln_imprensa_acordo', rep:{eixo:'ruim', delta:1, motivo:'Não sustentou o que assinou'}},
+     resultado:[`A correção sai na página dois, assinada só pela editora.`,
+       fala('a editora do Jornal', `Correção eu assino sozinha. É pra isso que serve editora.`, 'frio')]}
   ]
 },
 {
@@ -930,7 +938,7 @@ heroi:[
   cap:26, titulo:'Quem ajuda quem', quem:'o menino do Caterpie',
   texto:d => [
     `O seu Pokémon cai num barranco na beira da rota, e você não alcança.`,
-    `Alguém alcança: um rapaz com um Butterfree, que desce pela raiz como quem já fez isso muitas vezes.`,
+    `Alguém alcança: o menino da fila, uns dedos mais alto, com um Butterfree no ombro. Ele desce pela raiz como quem já fez isso muitas vezes.`,
     fala('o menino do Caterpie', d.flags.ln_heroi_conselho ? `Faz o que tiver na sua frente. Depois o próximo. Você que falou.` : `Seja melhor. Você que falou. Tô tentando.`)
   ],
   escolhas:[
@@ -990,7 +998,7 @@ mercenario:[
      resultado:[`É mais pesado do que parece. Tem nome de gente que você cumprimenta na rua.`]},
     {texto:`Queimar o caderninho na frente dele.`,
      ef:{flag:'ln_merc_queimou', rep:{eixo:'bom', delta:2, motivo:'Queimou o caderninho preto'}},
-     resultado:[`Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.`, fala('o intermediário', `Fica melhor em você.`, 'riso')]}
+     resultado:[d => d.flags.ln_merc_recusou ? `Ele olha o fogo até o fim. Tira o chapéu, igual ao que esqueceu no banco aquela vez, e põe na sua cabeça.` : `Ele olha o fogo até o fim, tira o chapéu e põe na sua cabeça.`, fala('o intermediário', `Fica melhor em você.`, 'riso')]}
   ]
 }
 ],
@@ -1069,7 +1077,7 @@ function rodapeDaLinha(d){
   }
   if (viveu('imprensa')){
     if (f.ln_imprensa_coluna_ninguem) L.push('A sua coluna de sexta continua saindo. Ainda dá trabalho.');
-    else if (f.ln_imprensa_segurou) L.push('Uma criação perto de Fuchsia tem uma matéria de quatro linhas colada na porta.');
+    else if (f.ln_imprensa_nota) L.push('Uma criação perto de Saffron tem uma nota de quatro linhas colada na porta.');
     else L.push('Hazel Moss guarda o seu crachá numa gaveta da redação, com bilhete ou sem.');
   }
   if (viveu('criacao')){
@@ -1081,7 +1089,7 @@ function rodapeDaLinha(d){
     if (f.ln_liga_regra) L.push('O torneio de Kanto confere item na pata desde o dia em que você mandou tirar um.');
     else L.push('A cadeira da quadra de treino ainda tem o seu agasalho pendurado.');
   }
-  if (viveu('heroi')) L.push(f.ln_heroi_ajudado ? 'Um rapaz com um Butterfree ajuda gente na estrada. Ele diz que aprendeu com alguém.' : 'Na entrada de uma cidade pequena, de vez em quando, alguém ainda espera por você.');
+  if (viveu('heroi')) L.push(f.ln_heroi_ajudado ? 'O menino do Butterfree ajuda gente na estrada. Ele diz que aprendeu com alguém.' : 'Na entrada de uma cidade pequena, de vez em quando, alguém ainda espera por você.');
   if (viveu('mercenario')) L.push(f.ln_merc_queimou ? 'Um chapéu velho fica pendurado no prego da porta. Às vezes você usa.' : 'O caderninho preto continua aberto em alguma mesa, numa página com o seu nome.');
   if (viveu('foragido')) L.push(f.ln_foragido_depos ? 'O poste da esquina da pensão está sem papel faz tempo. Dona Briar ainda não pergunta nome.' : 'Você ainda escolhe a rua de trás sem pensar, mesmo quando não precisa mais.');
   return L;
@@ -1173,7 +1181,7 @@ const Linhas = {
       if (cena) UI.telaCena(cena, avisos);
       this.depois = null;
       const nome = (typeof Nomes !== 'undefined' && Nomes.comoChamar) ? Nomes.comoChamar(c.quem) : c.quem;
-      const opcoes = (c.escolhas || []).map((o, i) => `<button class="btn" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
+      const opcoes = (c.escolhas || []).map((o, i) => o.cond && !o.cond(d) ? '' : `<button class="btn" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
       setTimeout(() => UI.navTela(null, nome ? nome.charAt(0).toUpperCase() + nome.slice(1) : 'Número sem nome', NOME_DA_LINHA[c.linha] || 'chamada', `
         <div class="nav-conversa narrativa">${UI.narrar(falas, c.quem)}</div>
         <div id="avisos-nav" class="avisos"></div>
@@ -1182,7 +1190,7 @@ const Linhas = {
     }
     UI.limpar();
     UI.add(UI.topo());
-    const opcoes = (c.escolhas || []).map((o, i) => `<button class="escolha" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
+    const opcoes = (c.escolhas || []).map((o, i) => o.cond && !o.cond(d) ? '' : `<button class="escolha${/^["“]/.test(txt(o.texto)) ? ' diz' : ''}" onclick="Linhas.escolher(${i})">${UI.esc(txt(o.texto))}</button>`).join('');
     UI.add(`<div class="painel">
       <div class="cap-cabecalho">
         <div class="num">${UI.esc(NOME_DA_LINHA[c.linha] || '')}</div>
