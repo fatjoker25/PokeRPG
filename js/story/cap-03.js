@@ -50,8 +50,8 @@ c3_ab_de_noite:{
 c3_ab_a_placa:{
   texto:[
     'O primeiro aviso é padrão: espécies de inseto, risco de picada, procure o Centro em caso de reação.',
-    'O segundo é mais específico e por isso mais desconfortável: "A sinalização da trilha foi refeita em 1994. Marcações anteriores a essa data não são confiáveis."',
-    'Dois mil e dezenove. Você olha a placa de novo e a placa é claramente mais velha que isso.',
+    'O segundo é mais específico e por isso mais desconfortável. Diz que a sinalização da trilha foi refeita em 1994 e que marcação anterior a essa data não é confiável.',
+    'Dezesseis anos atrás. E a placa que avisa tem cara de ser da mesma reforma: ninguém trocou nada desde então.',
     'Quer dizer que em algum lugar aí dentro tem marcação antiga que continua parecendo marcação, e ninguém tirou.',
     'O terceiro aviso é o escrito à mão.'
   ],
@@ -679,6 +679,7 @@ c3_caçadores:{
     'Dois homens vêm pela trilha em sentido contrário.',
     'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
+    'O mais novo, atrás, diz um nome baixinho, Roque, do jeito de quem avisa. O da frente nem vira a cabeça.',
     d=>d.flags.pegou_mochila_cacador ? fala('Caçador Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.') :
        (d.flags.pikachu_aliado || d.flags.pikachu_capturado_preso ? '"Cadê o amarelo." Não é pergunta.' :
         '"Viu alguma coisa aí atrás?" Ele sorri. O sorriso não sobe até os olhos.')
@@ -696,7 +697,7 @@ c3_caçadores:{
 c3_blefe_caderno:{
   texto:[
     '"Eu sei o seu nome."',
-    'Você não sabe o nome dele. O caderno não tem nome em lugar nenhum — você conferiu.',
+    'Você sabe metade, e só porque o outro deixou escapar. O caderno não tem nome em lugar nenhum — você conferiu.',
     'Mas ele não sabe que você conferiu.',
     'Os dois se olham por meio segundo, e meio segundo entre duas pessoas que trabalham juntas há anos é uma conversa inteira.',
     '"Tá com a mochila", diz o mais novo.',

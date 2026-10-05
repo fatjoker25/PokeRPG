@@ -188,7 +188,8 @@ ch2_o_nome:{
 ch2_a_estacao:{
   texto:[
     'O alojamento da Estação 4 fica atrás do berçário: dois blocos de concreto com janela pequena e um portão com catraca.',
-    'Na catraca, um aviso plastificado: "PROIBIDO APARELHO TELEFÔNICO NAS DEPENDÊNCIAS. CONTRATO, CLÁUSULA 9."',
+    'Na catraca, um aviso plastificado:',
+    '**PROIBIDO APARELHO TELEFÔNICO NAS DEPENDÊNCIAS. CONTRATO, CLÁUSULA 9.**',
     'Às seis da tarde, a troca de turno: vinte homens e mulheres de macacão azul atravessam o pátio sem falar, de cabeça baixa, como quem está muito cansado ou muito vigiado.',
     'Um deles, de boné, olha pra você um segundo a mais.'
   ],

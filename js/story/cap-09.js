@@ -1996,7 +1996,11 @@ c9_vim_desafiar:{
   texto:[
     '"Vim desafiar."',
     'Ela olha o relógio de parede da estufa.',
-    d=>`"São ${['seis','sete','oito','nove','dez','onze','doze','uma','duas','três','quatro','cinco'][(d.relogio.dia*3)%12]} e pouco."`,
+    d=>{ const h = (d.relogio && d.relogio.hora) || 0;
+         if (h === 0) return '"É meia-noite e pouco."';
+         if (h === 12) return '"É meio-dia e pouco."';
+         if (h % 12 === 1) return '"É uma e pouco."';
+         return `"São ${['','','duas','três','quatro','cinco','seis','sete','oito','nove','dez','onze'][h % 12]} e pouco."`; },
     'Ela guarda a tesoura.',
     '"Desafio é de terça a sábado, das nove às dezesseis, e você vem pela porta da frente do shopping, pega o elevador social e sobe até o sete."',
     'Ela pega o regador.',

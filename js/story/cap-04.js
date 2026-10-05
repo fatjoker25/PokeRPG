@@ -1223,13 +1223,11 @@ c4_kabutops:{
     'Você fica. Mais tempo do que pretendia.',
     'De perto dá pra ver que a reconstrução tem partes cinza e partes um pouco mais claras: o cinza é osso, o claro é gesso. O Pokémon é uns sessenta por cento chute.',
     'E mesmo assim: as lâminas. Os olhos, que são buracos e mesmo assim são olhos. A postura, que é de uma coisa que estava indo pra frente.',
-    'Uma voz do seu lado, sem cumprimento nenhum:',
-    '"Extinto é uma palavra otimista. Presume que acabou."'
+    'Uma mulher de jaleco para do seu lado, sem cumprimento nenhum, e fica olhando a mesma coisa que você.'
   ],
   escolhas:[
-    {texto:'"Como assim, presume que acabou?"', vai:'c4_ivone'},
-    {texto:'"A senhora trabalha aqui?"', vai:'c4_ivone'},
-    {texto:'Não responder e continuar olhando.', vai:'c4_ivone_calado'},
+    {texto:'Esperar ela falar.', vai:'c4_ivone'},
+    {texto:'Não dizer nada e continuar olhando.', vai:'c4_ivone_calado'},
     {texto:'Sair da sala.', vai:'c4_museu_saiu'}
   ]
 },
@@ -1239,10 +1237,10 @@ c4_ivone_calado:{
     'Você não responde. Continua olhando o Pokémon.',
     'Ela também não insiste. Fica do seu lado, olhando a mesma coisa que você, por quase dois minutos inteiros.',
     'Depois: "Você é a primeira pessoa em quatro dias que não perguntou se é de verdade."',
-    'Ela vira. Tem olheiras de três dias e um caderno de campo debaixo do braço com elástico e tudo.',
+    'Ela vira. Tem olheiras de três dias e um caderno de campo debaixo do braço com elástico e tudo. Estende a mão, curta: Ivy Cordell, paleontóloga.',
     '"Você vai pro Monte da Lua?"'
   ],
-  ef:{npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Ficou dois minutos em silêncio com você na frente do Kabutops. Gostou disso.'}},
+  ef:{flag:'cordell_disse_nome', npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Ficou dois minutos em silêncio com você na frente do Kabutops. Gostou disso.'}},
   escolhas:[
     {texto:'"Vou. Por quê?"', vai:'c4_ivone_monte'},
     {texto:'"Ainda não decidi."', vai:'c4_ivone_monte'},
@@ -1257,10 +1255,10 @@ c4_ivone:{
     '"Extinto é uma palavra otimista", ela diz, sem olhar pra você. "Presume que acabou."',
     '"E não acabou?"',
     '"Ah, acabou." Ela vira uma página. "Eles morreram. Todos. Isso acabou."',
-    'Aí ela fecha o caderno e te olha de verdade pela primeira vez.',
+    'Aí ela fecha o caderno e te olha de verdade pela primeira vez, e diz o nome do jeito de quem cumpre uma formalidade: Ivy Cordell, paleontóloga.',
     '"O que não acabou é o que a gente faz com eles depois. Você vai pro Monte da Lua?"'
   ],
-  ef:{npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Te abordou no museu de Pewter falando de fósseis.'}},
+  ef:{flag:'cordell_disse_nome', npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Te abordou no museu de Pewter falando de fósseis.'}},
   escolhas:[
     {texto:'"Vou. Por quê?"', vai:'c4_ivone_monte'},
     {texto:'"Por que a senhora quer saber?"', vai:'c4_ivone_desconfiado'},
@@ -1274,7 +1272,9 @@ c4_ivone_desconfiado:{
   texto:[
     '"Por que a senhora quer saber?"',
     'Ela gosta da pergunta. Dá pra ver.',
-    '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Meu nome é Ivy Cordell. Eu sou paleontóloga e eu trabalhava aqui até três meses atrás."',
+    d=>d.flags.cordell_disse_nome
+      ? '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Eu trabalhava aqui até três meses atrás."'
+      : '"Boa. Guarda essa pergunta, ela vale mais que insígnia." Ela apoia o caderno na vitrine. "Meu nome é Ivy Cordell. Eu sou paleontóloga e eu trabalhava aqui até três meses atrás."',
     '"Trabalhava?"',
     '"O museu não tem verba pra dois funcionários. Sobrou o que abre a porta." Ela dá de ombros, e o dar de ombros é a parte mais triste. "Eu continuo vindo. Não tenho pra onde mais ir com isso na cabeça."'
   ],
@@ -1294,7 +1294,7 @@ c4_ivone_seco:{
     'É um tipo específico de silêncio — o de quem já decidiu e não quer discutir a decisão com ninguém — e ela reconhece na hora, porque é o silêncio dela também.',
     '"Você é de poucas palavras ou tá com pressa?"',
     '"As duas."',
-    '"Respeito as duas." Ela cruza os braços. "Mas eu trabalho num museu vazio há onze anos, {menino|menina}. Eu aprendi a falar com quem não pergunta."',
+    '"Respeito as duas." Ela cruza os braços. "Mas eu passei onze anos num museu vazio, {menino|menina}. Eu aprendi a falar com quem não pergunta."',
     '"Tá bom", ela cede, e não tem cedência nenhuma nisso. "Eu falo mesmo assim."'
   ],
   ef:{npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Falou com você mesmo você não tendo perguntado nada.'}},
@@ -1307,19 +1307,19 @@ c4_ivone_seco:{
 c4_ivone_onze_anos:{
   texto:[
     '"Onze anos?"',
-    '"Ah, ele fala."',
+    '"Ah, {ele|ela} fala."',
     'Ela abre um sorriso pequeno e rápido, do tipo que some antes de virar sorriso de verdade.',
-    '"Onze anos em abril. Entrei como estagiária de conservação, que é um cargo que não existe mais porque cortaram."',
+    '"Ia fazer onze em abril. Entrei como estagiária de conservação, que é um cargo que não existe mais porque cortaram."',
     '"E quem sobrou?"',
-    '"Eu." Ela abre os braços devagar, indicando o salão inteiro, as vitrines, a lona no telhado dos fundos. "Eu sou a conservação, a bilheteria, a limpeza e a segurança. Na quarta de manhã eu também sou a guia."',
+    '"Até três meses atrás, eu." Ela abre os braços devagar, indicando o salão inteiro, as vitrines, a lona no telhado dos fundos. "Eu era a conservação, o acervo e a pesquisa. Na quarta de manhã eu também era a guia. Agora sobrou o Varian, que abre a porta, e eu, que continuo vindo sem receber."',
     '"E o diretor?"',
     '"O diretor é um cargo que uma pessoa ocupa três horas por semana e assina papel."',
     'Ela diz isso sem veneno, o que de novo é pior do que com veneno.',
     '"Agora deixa eu falar do monte, que é pra isso que você tá aqui e é a única coisa que eu tenho de verdade pra te dar."'
   ],
   ef:{flag:'sabe_da_ivone_sozinha', moral:2,
-      npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Te contou que é sozinha no museu há onze anos e faz tudo.'},
-      registrar:'Cordell é a única funcionária do museu de Pewter. Há onze anos.'},
+      npc:{nome:'Dra. Cordell', opiniao:3, memoria:'Te contou dos onze anos que segurou o museu quase sozinha, até ser cortada.'},
+      registrar:'Cordell segurou o museu de Pewter por quase onze anos. Foi cortada há três meses e continua indo.'},
   escolhas:[{texto:'Escutar.', vai:'c4_ivone_monte'}]
 },
 

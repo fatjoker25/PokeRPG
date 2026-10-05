@@ -399,6 +399,8 @@ c5_carregar_caixa:{
 },
 
 c5_de_graca:{
+  falante:'o da aliança',
+  vozes:['P','N','N','N'],
   texto:[
     '"De graça. Eu só quero ver onde vai."',
     'O riso morre.',
@@ -479,6 +481,8 @@ c5_mais_trabalho:{
 },
 
 c5_rasgou_numero:{
+  falante:'o da aliança',
+  vozes:['N'],
   texto:[
     'Você rasga o maço em quatro na frente dele e deixa cair.',
     'Ele olha os pedaços no chão. Depois olha você.',
@@ -493,6 +497,8 @@ c5_rasgou_numero:{
 },
 
 c5_devolveu_trezentos:{
+  falante:'o da aliança',
+  vozes:['N','P','N','N'],
   texto:[
     'Você tira as duas notas e estende.',
     'O da aliança não pega.',
@@ -544,6 +550,8 @@ c5_venceu_trio:{
 },
 
 c5_barrou:{
+  falante:'o da aliança',
+  vozes:['N','N'],
   texto:[
     'Você atravessa na frente deles na trilha, de braços abertos, que é a coisa mais estúpida e mais humana que dá pra fazer.',
     'Os três param.',
@@ -562,6 +570,8 @@ c5_barrou:{
 },
 
 c5_ficou_barrando:{
+  falante:'o da aliança',
+  vozes:['N','N','P','N','P','N'],
   texto:[
     'Você fica.',
     'Uma hora e dez minutos numa trilha de terra, de pé, na frente de três homens sentados em pedras.',
@@ -667,6 +677,8 @@ c5_saiu_da_frente:{
 },
 
 c5_perdeu_trio:{
+  falante:'o da aliança',
+  vozes:['N','N'],
   texto:[
     'Você perde.',
     'Eles não te machucam. Isso é importante e é pior do que se machucassem: o da aliança dá um tapinha no seu ombro, do jeito de quem consola um sobrinho.',
@@ -1544,7 +1556,7 @@ c5_observou_camara:{
     'Aprende quatro coisas:',
     'Primeira: são cinco pessoas, não três. Duas estão sentadas fora do círculo de luz, fazendo pausa.',
     'Segunda: eles têm rotina. Alguém confere etiqueta, alguém empilha, alguém escreve numa prancheta.',
-    'Terceira: um deles é o Otto. O da floresta.',
+    'Terceira: um deles é o Roque. O caçador da floresta.',
     'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
   ],
   ef:{flag:'observou_a_camara',
@@ -1563,11 +1575,12 @@ c5_camara:{
     'Clefairy em quase todas — cinco, seis por gaiola, em gaiolas de dois palmos. Um Paras numa sozinha, que não se mexe. Dois Zubat.',
     'Nas mesas de cavalete, fósseis. Meio expostos ainda na rocha, com etiqueta numerada e preço a lápis no canto. Kabuto. Omanyte. Coisas de trezentos milhões de anos com adesivo de leilão.',
     'Cinco pessoas trabalhando. Nenhuma de uniforme, nenhuma escondendo o rosto. O uniforme acabou junto com a organização; o trabalho não.',
-    'Um deles é o Otto. O da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
-    '"Ah, não."'
+    'Um deles é o Roque. O caçador da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
+    '"Ah, não."',
+    'Alguém na mesa do fundo chama por ele, Otto, e ele responde levantando a mão sem tirar os olhos de você. O Roque tem primeiro nome.'
   ],
   ef:{npc:{nome:'Caçador Roque', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
-      registrar:'Encontrou a operação do Monte da Lua. Otto está lá.'},
+      registrar:'Encontrou a operação do Monte da Lua. Otto Roque, o caçador da floresta, está lá.'},
   escolhas:[
     {texto:'Atacar. Agora, antes que se organizem.', vai:'c5_ataque'},
     {texto:'Recuar e ligar para a Dra. Cordell.', vai:'c5_ligar', cond:d=>!!d.flags.cartao_ivone},

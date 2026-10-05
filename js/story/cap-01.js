@@ -825,7 +825,7 @@ c1_saiu_da_festa:{
 c1_voltou_pra_festa:{
   texto:[
     'Você volta o meio quarteirão e entra pela porta da frente, o que é diferente de nunca ter saído, e todo mundo percebe.',
-    d=>fala('Sra. Perla', 'ELE VOLTOU! EU FALEI QUE ELE VOLTAVA!', 'grita'),
+    d=>fala('Sra. Perla', '{ELE|ELA} VOLTOU! EU FALEI QUE {ELE|ELA} VOLTAVA!', 'grita'),
     d=>fala(nomeCasa(), 'Você não falou nada disso, Perla.', 'riso'),
     'E aí a cozinha volta a ser barulhenta, e ninguém cobra nada de você, e é assim que se perdoa em casa de rua pequena: fingindo que não houve o que houve.'
   ],
