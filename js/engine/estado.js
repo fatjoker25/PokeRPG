@@ -1221,6 +1221,14 @@ const Estado = {
           d.npcs['Sr. Juniper'] = {nome:'Sr. Juniper', opiniao:2, memorias:dele};
         }
       }
+      /* o homem das perguntas virou a figura de capuz: quem já sabia o
+         nome dele continua sabendo */
+      if (d.npcs && d.npcs['Sr. Juniper'] && !d.npcs['a figura de capuz']){
+        d.npcs['a figura de capuz'] = Object.assign(d.npcs['Sr. Juniper'], {nome:'a figura de capuz'});
+        delete d.npcs['Sr. Juniper'];
+        (d.nomesSabidos = d.nomesSabidos || {})['a figura de capuz'] = 'Sr. Juniper';
+        d.flags.juniper_sem_capuz = true;
+      }
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */
       if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;

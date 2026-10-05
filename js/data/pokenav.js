@@ -608,7 +608,7 @@ const CONTATOS = [
      A resposta decide o que ele te manda meses depois. Ele nunca
      fala em Pokémon, nem na pergunta, nem na entrega.
      ============================================================ */
-  id:'curador', tipo:'figura', nome:'Sr. Juniper', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
+  id:'curador', tipo:'figura', nome:'Figura de capuz', falaComo:'a figura de capuz', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
   requer:d=>!!d.flags.a_pergunta_do_curador,
   oferece:['missao'],
   missao:{
@@ -616,12 +616,12 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
     dica:'Ele espera você em Lavender.',
     pedido:[
-      fala('Sr. Juniper', 'Eu não anotei pra nada. Eu anoto tudo.'),
-      fala('Sr. Juniper', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
-      fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
+      fala('a figura de capuz', 'Eu não anotei pra nada. Eu anoto tudo.'),
+      fala('a figura de capuz', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
+      fala('a figura de capuz', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
       d=>fala(d.jogador.nome, 'Pra quê?'),
-      fala('Sr. Juniper', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
-      fala('Sr. Juniper', 'Não pergunta o que é. Se eu falar, estraga.')
+      fala('a figura de capuz', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
+      fala('a figura de capuz', 'Não pergunta o que é. Se eu falar, estraga.')
     ],
     objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
     entregue:d=>{
@@ -629,17 +629,18 @@ const CONTATOS = [
       const guarda = indoleDoJuniper(d) === 'guarda';
       return [
         'O abrigo do Sr. Fuji tem uma sala nos fundos que você nunca tinha visto, com oitenta e três cadernos de capa dura numa estante feita à mão.',
-        fala('Sr. Juniper', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
-        fala('Sr. Juniper', 'Eu te fiz três perguntas. Eu não li as respostas uma por uma: eu li pra que lado elas caíam.'),
-        d=>fala('Sr. Juniper', guarda ? 'Você fica com as coisas. Com o que chega, com o que dói, com o que te pedem.' : 'Você deixa as coisas irem. O que chega, o que dói, o que te pedem.'),
-        fala('Sr. Juniper', 'Eu não escolho o que dar. As respostas escolhem.'),
+        'Ele está lá, de capuz, de costas pra porta. Não tira o capuz pra te receber, e você entende que não vai tirar.',
+        fala('a figura de capuz', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
+        fala('a figura de capuz', 'Eu te fiz três perguntas. Eu não li as respostas uma por uma: eu li pra que lado elas caíam.'),
+        d=>fala('a figura de capuz', guarda ? 'Você fica com as coisas. Com o que chega, com o que dói, com o que te pedem.' : 'Você deixa as coisas irem. O que chega, o que dói, o que te pedem.'),
+        fala('a figura de capuz', 'Eu não escolho o que dar. As respostas escolhem.'),
         guarda
           ? 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
           : 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
         guarda
-          ? fala('Sr. Juniper', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
-          : fala('Sr. Juniper', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
-        fala('Sr. Juniper', 'Não abre aqui. Abre na estrada.')
+          ? fala('a figura de capuz', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
+          : fala('a figura de capuz', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
+        fala('a figura de capuz', 'Não abre aqui. Abre na estrada.')
       ];
     },
     recompensa:d=>{
@@ -653,6 +654,7 @@ const CONTATOS = [
           ? 'Veio do abrigo de Lavender, numa Pokébola lacrada desde 1989. Ninguém foi buscar.'
           : 'Veio do abrigo de Lavender. Passou por quatro pessoas antes de você, e nenhuma delas ficou.'
       });
+      p.doJuniper = true;
       const onde = Estado.adicionar(p);
       Estado.marcar(guarda ? 'ganhou_do_curador_guardando' : 'ganhou_do_curador_passando');
       return [{tipo:'pokemon', texto:`${nomeExib(p)} (Nv ${p.nivel}) saiu da Pokébola.${notaDestino(onde)}`},
@@ -1002,6 +1004,13 @@ function todosContatos(){
     typeof contatosDasTrocas === 'function' ? contatosDasTrocas() : []);
 }
 function contatoPorId(id){ return todosContatos().find(c => c.id === id) || null; }
+function pokemonDoJuniper(d){
+  const todos = [...(d.time || []), ...(d.pc || [])].filter(p => p && !p.morto);
+  return todos.find(p => p.doJuniper)
+      || todos.find(p => [93, 94, 64, 65].includes(p.dex) && /abrigo de Lavender/.test(p.historia || ''))
+      || null;
+}
+
 function textoContato(c, campo){
   /* A agenda não descreve ninguém: quem é quem está na conversa em que
      você conheceu a pessoa. Só a casa diz o parentesco, porque é assim
@@ -1155,24 +1164,69 @@ const CHAMADAS = [
           && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   peso:2,
   falas:d=>[
-    fala('Sr. Juniper', 'Não desliga, é rápido.'),
-    fala('Sr. Juniper', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
-    fala('Sr. Juniper', 'As suas respostas continuam lá e continuam as mesmas, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
-    fala('Sr. Juniper', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
+    fala('a figura de capuz', 'Não desliga, é rápido.'),
+    fala('a figura de capuz', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
+    fala('a figura de capuz', 'As suas respostas continuam lá e continuam as mesmas, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
+    fala('a figura de capuz', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
   ],
   escolhas:[
     {texto:'Perguntar se alguém já mudou de resposta.',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou ao Sr. Juniper se alguém já tinha mudado de resposta'},
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou à figura de capuz se alguém já tinha mudado de resposta'},
          flag:'sabe_dos_que_mudaram'},
      resultado:[
-       fala('Sr. Juniper', 'Onze pessoas voltaram pra mudar.'),
-       fala('Sr. Juniper', 'Em dezenove anos, onze. Todas as onze mudaram a primeira, de "guardar" pra "passar adiante".'),
-       fala('Sr. Juniper', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
-       fala('Sr. Juniper', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
+       fala('a figura de capuz', 'Onze pessoas voltaram pra mudar.'),
+       fala('a figura de capuz', 'Em dezenove anos, onze. Todas as onze mudaram a primeira, de "guardar" pra "passar adiante".'),
+       fala('a figura de capuz', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
+       fala('a figura de capuz', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
      ]},
     {texto:'"Eu vou aparecer."',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou ao Sr. Juniper que ia aparecer'}},
-     resultado:[fala('Sr. Juniper', 'Todo mundo fala isso.'), fala('Sr. Juniper', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou à figura de capuz que ia aparecer'}},
+     resultado:[fala('a figura de capuz', 'Todo mundo fala isso.'), fala('a figura de capuz', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
+  ]
+},
+{
+  id:'cha_juniper_capuz',
+  de:'curador',
+  /* alguns dias depois da entrega, o capuz cai — e ele sabe o que te deu */
+  cond:d=>Estado.temNumero('curador') && d.flags.o_curador_entregou && !d.flags.juniper_sem_capuz
+          && !!pokemonDoJuniper(d),
+  peso:4,
+  falas:d=>{
+    const p = pokemonDoJuniper(d), n = nomeExib(p);
+    return [
+      'O número que liga é o do abrigo. A voz é a do capuz, mas sem o pano no meio.',
+      d=>{ Nomes.apresentar('a figura de capuz'); Estado.marcar('juniper_sem_capuz');
+           return fala('Sr. Juniper', 'Juniper. É o meu nome. Eu fiquei devendo ele pra você.'); },
+      fala('Sr. Juniper', 'Eu cuidava deste abrigo antes do Sr. Fuji. Em oitenta e nove a Liga mandou recolher o que estava aqui dentro, e o que ninguém veio buscar era pra voltar pro sistema.'),
+      fala('Sr. Juniper', 'Eu não devolvi. Quem fica com coisa recolhida não pode ter rosto. Por isso o capuz.', 'baixo'),
+      fala('Sr. Juniper', p.dex === 93 || p.dex === 94
+        ? `E o ${n}? Ele é dos que ficam. Eu sabia pelas suas respostas, e ele sabia antes de mim.`
+        : `E o ${n}? Ele é dos que passam. Eu sabia pelas suas respostas, e ele sabia antes de mim.`),
+      ...(evoluiPorTroca(p.dex)
+        ? [fala('Sr. Juniper', `Se um dia você quiser que o ${n} complete, manda ele pelo PC do Centro pro abrigo. Ele passa pela minha mão e volta no mesmo dia, outro.`)]
+        : [fala('Sr. Juniper', `Ele já completou. Eu vi no registro do PC, eu ainda tenho acesso. ${p.nome}. Combina com você.`)])
+    ];
+  },
+  escolhas:[
+    {texto:'Mandar ele pelo PC do Centro agora.',
+     ef:{executar:d=>{
+           const p = pokemonDoJuniper(d);
+           if (!p || !evoluiPorTroca(p.dex)) return [{tipo:'info', texto:'Não tem o que mandar.'}];
+           const antes = nomeExib(p), novo = evoluiPorTroca(p.dex);
+           evoluir(p, novo);
+           Estado.registrar(`Mandou ${antes} pelo PC até o abrigo de Lavender. Voltou ${p.nome}.`);
+           return [{tipo:'evolucao', texto:`${antes} passou pela mão do Sr. Juniper e voltou ${p.nome}. Ninguém sabe explicar por que a troca faz isso. Todo mundo já viu acontecer.`}];
+         },
+         npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você mandou pela mão dele o Pokémon que ele te deu, pra completar.'},
+         rep:{eixo:'bom', delta:1, motivo:'Confiou de volta em quem confiou em você'}},
+     resultado:[fala('Sr. Juniper', 'Chegou. Volta já. Não abre a Pokébola em lugar fechado.', 'baixo')]},
+    {texto:'Deixar ele como está.',
+     ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você preferiu deixar o Pokémon que ele te deu como estava.'}},
+     resultado:[fala('Sr. Juniper', 'Também é uma resposta. Eu anoto.')]},
+    {texto:'"Por que eu?"',
+     ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você perguntou por que ele escolheu você.'}},
+     resultado:[fala('Sr. Juniper', 'Porque você respondeu as três. Em dezenove anos, menos de cem responderam as três.'),
+                fala('Sr. Juniper', 'E porque você voltou.', 'baixo')]}
   ]
 },
 {

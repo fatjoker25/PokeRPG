@@ -543,29 +543,34 @@ Treino e acampamento gastam Ração; o treino ainda pede
 noite do jogo e o treino era por dia do jogo.
 
 ## Trocas
-A primeira troca de cada pessoa (`TROCAS`, em `mercado.js`) é a da
-história, fixa. Depois ela vira gente que troca: `Trocas.oferta` sorteia
-até `TROCAS_POR_DIA` (3) propostas por dia, e fechar uma some com as
-outras. Leia as propostas por `Trocas.opcoesDe(o)` — save velho tem uma
-só, sem lista.
+**Cada pessoa troca uma vez só** (`TROCAS`, em `mercado.js`;
+`Trocas.repete` é sempre falso). Quem tem `alt` (duas versões além da
+original, cada uma com `da`, `fala`, `memoria` e, se precisar, `depois`)
+decide **no primeiro contato** qual Pokémon vai oferecer
+(`Trocas.versao`, guardada em `d.trocaVersao`) e fica com ela. O jogador
+não escolhe, e nada no jogo — nem a tela, nem a folha — conta que havia
+outras. Leia sempre por `Trocas.efetiva(t)`, nunca `t.da` direto. Troca
+nova comum entra com `alt`; troca que gira em volta de um Pokémon só
+(fóssil, o Marowak da senhora, o Golbat da Torre, o Hypno da praça, o
+Machoke de `trocaEvolui`) fica sem `alt`.
 
-Depois da primeira, a proposta do dia é **uma só, e a pessoa é quem
-escolhe**: `oferta` sorteia três e fica com uma. O jogador não escolhe,
-e o jogo não conta que houve sorteio — nem na tela, nem na folha.
+Depois da troca a pessoa vira contato do PokéNav e **sabe as duas
+pontas**: pergunta do que foi com ela (`trocasFeitas[id].deu`) e do que
+foi com você (`.recebeu`, a espécie que chegou, já evoluída se for o caso).
 
-Exceção: quem troca um Pokémon que só existe uma vez — evolução por troca
-(`trocaEvolui`: o Machoke da pedreira) ou troca marcada `unica:true` (o
-Golbat da Torre, o Hypno da praça, o Marowak da senhora, os fósseis) —
-troca só a da história (`Trocas.repete`). Troca nova desse tipo entra com
-`unica:true`.
-
-**Haunter e Kadabra só vêm do Sr. Juniper**, o homem das perguntas de
-Lavender (`lav_a_pergunta_do_curador` e as duas `encadeado` que seguem
-por `segue:`; contato `curador` no PokéNav). São três perguntas sobre a
-índole — guardar ou passar adiante — e `indoleDoJuniper` soma (`ef.juniper`;
-empate fica com a primeira). Ele nunca fala em Pokémon, e nenhuma troca
-dá um deles, nem um da linha (por isso o zelador troca Golbat, não
-Gastly). E ele não é o Curador Fabre da Comissão — são duas pessoas.
+**Haunter e Kadabra só vêm do Sr. Juniper.** Ele aparece primeiro como
+**a figura de capuz** (rótulo `'a figura de capuz'`, que recusa o nome em
+`RECUSAM_O_NOME`; contato `curador` com `falaComo`), faz as três perguntas
+de índole em Lavender (`lav_a_pergunta_do_curador` e as duas `encadeado`
+que seguem por `segue:`; `indoleDoJuniper` soma `ef.juniper`, empate fica
+com a primeira) e entrega o Pokémon com quatro insígnias, ainda de capuz.
+Só depois, na ligação `cha_juniper_capuz`, ele diz o nome
+(`Nomes.apresentar`) e por que se esconde — e essa e qualquer fala dele
+depois sabem qual Pokémon você recebeu (`pokemonDoJuniper`, pela marca
+`p.doJuniper`). É ele também quem completa a evolução por troca: mandar
+pelo PC do Centro pra mão dele. Nenhuma troca dá Haunter, Kadabra ou
+alguém da linha deles, e a troca não oferece Abra nem Gastly. Ele não é o
+Curador Fabre da Comissão — são duas pessoas.
 
 Evento com `encadeado:true` não entra no sorteio do lugar: só chega por
 `segue:` de outra escolha.

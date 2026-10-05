@@ -27,6 +27,11 @@ const RECUSAM_O_NOME = {
     fala('a técnica fugida', 'Não.', 'baixo'),
     fala('a técnica fugida', 'Três anos eu fui um número de crachá. Deixa eu ficar uns dias sem nome nenhum, antes de escolher qual.', 'baixo')
   ],
+  'a figura de capuz': () => [
+    'O capuz não se mexe.',
+    fala('a figura de capuz', 'Nome é pra quem precisa ser achado.'),
+    fala('a figura de capuz', 'Responde a pergunta. O resto vem depois.', 'baixo')
+  ],
   'a voz da lavanderia': () => [
     'Ela vira o crachá mais um pouco pro lado do peito, como quem fecha uma porta.',
     fala('a voz da lavanderia', 'O meu nome está trinta vezes nesse envelope, de caneta azul.', 'baixo'),
@@ -108,6 +113,7 @@ const NOMES_FIXOS = {
   'o fotógrafo do Jornal':     'Bastian Fern',
   'a tratadora da Associação': 'Mina Bray',
   'a brigadista de Fuchsia':   'Tess Calder',
+  'a figura de capuz':         'Sr. Juniper',
   'o atravessador':            'Corwin',
   'a mulher do mapa':          'Tamsin Reed'
 };
