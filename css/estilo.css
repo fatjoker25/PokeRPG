@@ -2880,14 +2880,15 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .modal.so-x{position:relative;max-height:calc(100dvh - 24px);overflow:hidden;display:flex;flex-direction:column;padding-top:16px}
 .modal.so-x > .modal-corpo{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
 .modal.cartao.so-x > .modal-corpo{overflow-y:auto}
+/* só o ×, sem bolinha em volta */
 .modal-x{
-  position:absolute;top:8px;right:8px;z-index:5;width:34px;height:34px;border-radius:50%;
-  border:2px solid rgba(255,255,255,.75);background:rgba(0,0,0,.35);color:#fff;
-  font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0;
-  box-shadow:0 2px 8px rgba(0,0,0,.35)
+  position:absolute;top:8px;right:8px;z-index:5;width:34px;height:34px;border-radius:4px;
+  border:0;background:none;color:#fff;opacity:.8;
+  font-size:26px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0;
+  text-shadow:0 1px 3px rgba(0,0,0,.6)
 }
-.modal-x:hover{background:rgba(0,0,0,.55)}
-.modal-x:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.modal-x:hover{opacity:1}
+.modal-x:focus-visible{outline:2px solid #fff;outline-offset:0}
 .modal.so-x .abas-mochila{margin-right:40px}
 .modal-fundo.fundo-pokedex,.modal-fundo.fundo-cartao{padding:12px}
 

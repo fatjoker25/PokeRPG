@@ -1194,9 +1194,11 @@ const Estado = {
       }
       const NPC_NOVO = {'a mulher da pasta de couro':'a mulher da pasta de vinil', 'Mulher da pasta de couro':'Mulher da pasta de vinil',
                         'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
-                        'Sr. Roland Poplar':'Sr. Emory Poplar'};
+                        'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory'};
       for (const [velho, novo] of Object.entries(NPC_NOVO))
-        if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; delete d.npcs[velho]; }
+        if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
+      /* o rival guardou o nome de quando ainda não tinha um */
+      if (d.rivais && d.rivais.fuchsia) d.rivais.fuchsia.nome = 'Rory';
       return true;
     } catch(e){ return false; }
   },

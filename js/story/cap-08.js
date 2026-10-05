@@ -2638,6 +2638,7 @@ c8_torneio:{
     'São oito participantes. Você olha os outros sete.',
     'Dois são adultos com equipamento caro. Um é uma mulher de uns vinte e cinco anos que claramente sabe o que está fazendo.',
     'Os outros quatro têm menos de dezoito anos, e dois deles têm menos que você.',
+    'Um desses quatro, de uns catorze anos, abre a noite com um Rapidash que já não é novo, luta direito e perde por pouco. Ele recolhe o Rapidash e fica olhando a Pokébola fechada.',
     'O locutor é um funcionário do navio com microfone e uma alegria profissional insuportável.',
     d=>d.flags.o_garoto_da_enfermaria ? 'Tem uma cadeira vazia na fila dos participantes com um número de inscrição colado no encosto.' : '',
     '"PRIMEIRA LUTA!"'
@@ -2656,6 +2657,7 @@ c8_ganhou_torneio:{
     'A terceira é contra a mulher de vinte e cinco anos, e ela aperta a sua mão no fim e diz "bom, hein" de um jeito que vale mais que o prêmio.',
     'O locutor fala o seu nome no microfone, errado, e o salão bate palma por uns oito segundos e volta a conversar.',
     'Vinte mil pokedólares. Em dinheiro, num envelope, numa bandeja.',
+    'Por cima das cabeças, você vê o garoto do Rapidash, que caiu na primeira rodada, sair do salão pela porta de serviço sem olhar pra trás.',
     'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem {idade} anos e nunca viu vinte mil pokedólares —, um homem de terno para do seu lado e espera você terminar de contar.',
     '"Parabéns", ele diz. "Sério. Foi bonito de assistir."',
     'Ele espera.',
@@ -2669,7 +2671,8 @@ c8_ganhou_torneio:{
     {texto:'"Tenho."', vai:'c8_a_conversa'},
     {texto:'"Não tenho." E ir pro camarote 40.', vai:'c8_camarote', ef:{flag:'recusou_a_conversa'}},
     {texto:'"Sobre o quê?"', vai:'c8_sobre_o_que'},
-    {texto:'Olhar o sapato dele.', vai:'c8_o_sapato'}
+    {texto:'Olhar o sapato dele.', vai:'c8_o_sapato'},
+    {texto:'Ir atrás do garoto que saiu pela porta de serviço.', vai:'c8_o_de_catorze', ef:{flag:'recusou_a_conversa'}}
   ]
 },
 
@@ -3049,7 +3052,7 @@ c8_perdeu_torneio:{
     'Não é humilhante e não é bonito: é uma derrota normal, de alguém que treinou menos que a outra pessoa.',
     'O locutor fala o nome do adversário e o salão bate palma e volta a conversar, e você desce do emborrachado e ninguém olha.',
     'Nos vestiários improvisados — que são um corredor de serviço com duas cadeiras —, um dos participantes que perdeu antes de você está sentado com a cabeça entre as mãos.',
-    'Ele tem uns catorze anos.'
+    'É o garoto do Rapidash, o de uns catorze anos. Ele caiu na primeira rodada.'
   ],
   ef:{flag:'perdeu_torneio_navio', hp:-2, causa:'Torneio do S.S. Anne'},
   escolhas:[
@@ -3061,9 +3064,17 @@ c8_perdeu_torneio:{
 },
 
 c8_o_de_catorze:{
+  falante:'Rory',
+  vozes:['N','N','P','N','N','N'],
   texto:[
-    'Você senta na outra cadeira e não fala nada por um tempo.',
+    d=>d.flags.venceu_torneio_navio
+      ? 'A porta de serviço dá num corredor com duas cadeiras de plástico, que é o vestiário improvisado. Ele está numa delas, com a cabeça entre as mãos. Você senta na outra e não fala nada por um tempo.'
+      : 'Você senta na outra cadeira e não fala nada por um tempo.',
+    'O número de inscrição do torneio ainda está preso na camiseta dele com alfinete, e embaixo do número alguém escreveu o nome à caneta: RORY.',
     '"Eu vim de Fuchsia", ele diz sem levantar a cabeça. "Meu tio pagou a passagem."',
+    d=>d.flags.venceu_torneio_navio
+      ? 'Ele levanta o olho, vê quem é, e abaixa de novo. Ele sabe quem levou o envelope. O salão inteiro sabe.'
+      : '',
     '"Foi mal."',
     '"Não é isso." Ele levanta a cabeça e está com os olhos vermelhos e com raiva de estar. "Eu tinha que ganhar. Eu tinha que ganhar porque o prêmio é vinte mil e a cirurgia do meu Rapidash é dezoito."',
     'Ele passa a mão na cara.',
@@ -3071,9 +3082,9 @@ c8_o_de_catorze:{
     d=>d.flags.venceu_torneio_navio ? 'Você tem vinte mil pokedólares num envelope no bolso interno da sua mochila.' : 'Você não tem vinte mil pokedólares.'
   ],
   ef:{flag:'o_garoto_de_fuchsia',
-      npc:{nome:'Garoto de Fuchsia', opiniao:1, memoria:'Perdeu o torneio do Anne. Precisava de dezoito mil para a cirurgia do Rapidash dele.'}},
+      npc:{nome:'Rory', opiniao:1, memoria:'Perdeu o torneio do Anne. Precisava de dezoito mil para a cirurgia do Rapidash dele.'}},
   escolhas:[
-    {texto:'Dar os vinte mil pra ele. (20.000 ₽)', vai:'c8_deu_o_premio', cond:d=>d.jogador.dinheiro>=20000},
+    {texto:'Dar os vinte mil pra ele. (20.000 ₽)', vai:'c8_deu_o_premio', cond:d=>!!d.flags.venceu_torneio_navio && d.jogador.dinheiro>=20000},
     {texto:'Dar o que você puder. (5.000 ₽)', vai:'c8_deu_um_pouco', cond:d=>d.jogador.dinheiro>=5000,
      ef:{dinheiro:-5000, rep:{eixo:'bom',delta:2,motivo:'Deu o que dava a um desconhecido de catorze anos'}}},
     {texto:'Ficar sentad{o|a} com ele sem dizer nada.', vai:'c8_ficou_sentado'},
@@ -3093,8 +3104,8 @@ c8_deu_o_premio:{
   ],
   ef:{dinheiro:-20000, rep:{eixo:'bom',delta:5,motivo:'Deu o prêmio inteiro do torneio a um garoto de catorze anos'},
       flag:'deu_o_premio', moral:15,
-      npc:{nome:'Garoto de Fuchsia', opiniao:10, memoria:'Você deixou vinte mil pokedólares numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
-      registrar:'Deu o prêmio do torneio para o garoto de Fuchsia.'},
+      npc:{nome:'Rory', opiniao:10, memoria:'Você deixou vinte mil pokedólares numa cadeira de plástico e foi embora enquanto ele gritava o seu nome.'},
+      registrar:'Deu o prêmio do torneio para Rory, o garoto de Fuchsia.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},
@@ -3104,14 +3115,16 @@ c8_deu_o_premio:{
 
 c8_deu_um_pouco:{
   texto:[
-    'Você dá o que dá. Não é dezoito mil e não resolve.',
+    d=>d.flags.venceu_torneio_navio
+      ? 'Você tira cinco mil do envelope. Não é dezoito mil e não resolve.'
+      : 'Você dá o que dá. Não é dezoito mil e não resolve.',
     'Ele conta, e você vê ele fazendo a conta na cabeça de quanto ainda falta, e vê o rosto dele quando a conta não fecha.',
     'E aí ele faz uma coisa que te desmonta: ele agradece de verdade, com as duas mãos na sua, e diz que agora falta menos.',
     '"Agora falta menos", ele repete, pra ele mesmo, umas três vezes.',
     'Isso é o que gente faz com a esperança que sobra.'
   ],
   ef:{flag:'agora_falta_menos', moral:8,
-      npc:{nome:'Garoto de Fuchsia', opiniao:6, memoria:'Você deu cinco mil dos dezoito que ele precisava. Ele ficou repetindo que agora faltava menos.'},
+      npc:{nome:'Rory', opiniao:6, memoria:'Você deu cinco mil dos dezoito que ele precisava. Ele ficou repetindo que agora faltava menos.'},
       presagio:'"Agora falta menos." Não fecha a conta. Muda o dia dele.'},
   escolhas:[
     {texto:'Ficar sentad{o|a} com ele.', vai:'c8_ficou_sentado'},
@@ -3131,7 +3144,7 @@ c8_ficou_sentado:{
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Ficou vinte e cinco minutos num corredor com um desconhecido'},
       flag:'ficou_com_o_de_catorze', moral:8,
-      npc:{nome:'Garoto de Fuchsia', opiniao:5, memoria:'Vocês ficaram vinte e cinco minutos calados num corredor de serviço.'}},
+      npc:{nome:'Rory', opiniao:5, memoria:'Vocês ficaram vinte e cinco minutos calados num corredor de serviço.'}},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
     {texto:'Descer ao porão.', vai:'c8_porao'},

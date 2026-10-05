@@ -379,22 +379,27 @@ const RIVAIS_EXTRA = [
   ]
 },
 {
-  id:'fuchsia', nome:'o garoto de Fuchsia', npc:'Garoto de Fuchsia', desde:'S.S. Anne', caps:[12, 18, 23],
-  origem:'O garoto que perdeu a final do Anne. O Rapidash dele precisava de dezoito mil.',
+  id:'fuchsia', nome:'Rory', npc:'Rory', desde:'S.S. Anne', caps:[12, 18, 23],
+  origem:'O garoto de Fuchsia que caiu na primeira rodada do torneio do Anne. O Rapidash dele precisava de dezoito mil.',
   gatilho:d => !!d.flags.o_garoto_de_fuchsia,
-  nascimento:'O garoto de Fuchsia voltou a treinar. Ninguém pediu pra ele voltar a treinar.',
+  nascimento:'Rory voltou a treinar. Ninguém pediu pra ele voltar a treinar.',
   pool:[59, 38, 89, 110, 126, 136],          // Arcanine, Ninetales, Muk, Weezing, Magmar, Flareon
   ace:78, nivelExtra:2, moral:60,           // o Rapidash é o motivo de tudo
   cor:'var(--perigo)',
 
-  /* três versões do mesmo garoto, conforme o corredor do navio */
-  arco:d => d.flags.deu_o_premio ? 'devedor' : (d.flags.agora_falta_menos ? 'quase' : 'ressentido'),
+  /* quatro versões do mesmo garoto, conforme o corredor do navio: deu o
+     prêmio, deu cinco mil, ficou sentado sem ter o que dar (perdeu
+     também), ou passou — com o envelope ou sem ele */
+  arco:d => d.flags.deu_o_premio ? 'devedor'
+          : d.flags.agora_falta_menos ? 'quase'
+          : (d.flags.ficou_com_o_de_catorze && !d.flags.venceu_torneio_navio) ? 'companhia'
+          : 'ressentido',
 
   fala:(d, r, arco) => {
     if (arco === 'devedor') return [
       'Ele está te esperando, e dá pra ver pelo chão em volta dos pés dele que está há um tempo.',
-      'O Rapidash está atrás, inteiro, com a perna traseira direita marcada de cirurgia antiga.',
-      '"Nove anos." Ele fala isso sem contexto nenhum, e você demora a entender. "O médico de Pokémon disse nove anos. Ele tem nove anos agora por sua causa."',
+      'O Rapidash está atrás, inteiro. A pata dianteira que tinha uma cicatriz agora tem duas.',
+      '"Nove anos." Ele fala isso sem contexto nenhum, e você demora a entender. "O médico de Pokémon disse que ele ganhou mais nove anos. Nove anos por sua causa."',
       '"Eu não consigo te pagar. Eu fiz a conta de quanto eu ganharia por ano e não fecha até os trinta."',
       `"Então eu vou fazer isso." Ele solta a primeira Pokébola. "Eu vou te dar uma luta boa toda vez que eu te encontrar, pelo resto da vida. É o que eu tenho."`
     ];
@@ -405,9 +410,29 @@ const RIVAIS_EXTRA = [
       `"Eu não sei o que eu te devo." Ele fala isso honesto, sem acusar. "Você me deu cinco. Faltavam treze. Eu passei cinco meses juntando treze."`,
       '"Então luta comigo e a gente descobre junto."'
     ];
+    if (arco === 'companhia') return [
+      'Ele te vê e levanta a mão antes de você levantar a sua.',
+      'O Rapidash está do lado dele, firme em três patas, com a dianteira da cicatriz encolhida.',
+      r.encontros === 0
+        ? '"Não deu." Ele fala antes de você perguntar. "Não fiz a cirurgia. O médico de Pokémon disse que dá pra viver assim, e ele vive."'
+        : '"Continua em três." Ele passa a mão no pescoço do Rapidash. "Continua querendo."',
+      '"Eu lembro do corredor." Ele não olha pra você quando diz isso. "Todo mundo passou. Você sentou."',
+      '"Então eu vou te dar a melhor luta que eu tiver. É o que eu sei fazer com o que eu lembro."'
+    ];
+    if (!d.flags.venceu_torneio_navio) return [
+      'Ele está encostado num muro e não finge que não te viu.',
+      '"Foi mal." Ele repete o que você disse no corredor do Anne, do jeito que você disse. "Todo mundo que passou por aquele corredor disse foi mal."',
+      r.encontros === 0
+        ? '"Eu não tô te culpando. Você perdeu também, eu sei." Ele empurra o muro com o ombro e fica de pé. "Eu só não esqueci."'
+        : '"E eu continuo não esquecendo, se você ia perguntar."',
+      '"Ele vive. Manca e vive. Bora."'
+    ];
     return [
       'Ele está encostado num muro e não finge que não te viu.',
       '"Vinte mil." Ele diz o número primeiro. "Você saiu do navio com vinte mil e eu saí com um Rapidash que não anda direito."',
+      d.flags.ficou_com_o_de_catorze
+        ? '"Você ficou vinte e cinco minutos sentad{o|a} do meu lado com o envelope na mochila. Eu contei os minutos depois."'
+        : '',
       r.encontros === 0
         ? '"Eu não tô te culpando. Eu treinei seis meses e você foi melhor e é isso." Ele empurra o muro com o ombro e fica de pé. "Eu só não esqueci."'
         : '"E eu continuo não esquecendo, se você ia perguntar."',
@@ -426,7 +451,9 @@ const RIVAIS_EXTRA = [
       'Ele não diz nada. Recolhe, passa a mão no pescoço do Pokémon, e guarda.',
       arco === 'quase'
         ? '"Falta menos." Ele diz, e dessa vez não é sobre dinheiro. "Cada vez falta menos."'
-        : '"Um dia." Ele já está de costas. "Um dia não vai ser você saindo com tudo."'
+        : arco === 'companhia'
+          ? '"Foi boa." Ele fala com o Rapidash, que se apoia nele pra levantar. "Foi boa, né?"'
+          : '"Um dia." Ele já está de costas. "Um dia não vai ser você saindo com tudo."'
     ];
   },
   derrota:(d, r, arco) => {
@@ -542,7 +569,7 @@ function timeRivalExtra(R){
 
 function falaRivalExtra(R){
   const reg = registroRival(R.id) || {encontros:0, vitorias:0, derrotas:0};
-  return R.fala(Estado.dados, reg, arcoRivalExtra(R));
+  return R.fala(Estado.dados, reg, arcoRivalExtra(R)).filter(Boolean);
 }
 function falaVitoriaRivalExtra(R){
   const reg = registroRival(R.id) || {encontros:0, vitorias:0, derrotas:0};

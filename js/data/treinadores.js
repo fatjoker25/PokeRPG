@@ -26,8 +26,8 @@ const RETRATO_POR_NOME = {
   'Giselle':'trainers/ace_trainer_f', 'A.J.':'trainers/ace_trainer', 'Mandi':'trainers/psychic_f',
   /* rival e rivais de estrada */
   'Ezra':'trainers/rival', 'Otto':'trainers/roughneck', 'Caçador Roque':'trainers/roughneck',
-  'Lior':'trainers/camper', 'Nolan':'trainers/sailor', 'o garoto de Fuchsia':'trainers/youngster',
-  'Garoto de Fuchsia':'trainers/youngster', 'Menino do cais':'trainers/sailor',
+  'Lior':'trainers/camper', 'Nolan':'trainers/sailor', 'Rory':'trainers/ninjaboy', 'o garoto de Fuchsia':'trainers/ninjaboy',
+  'Garoto de Fuchsia':'trainers/ninjaboy', 'Menino do cais':'trainers/sailor',
   'Nadia':'trainers/veteran_f', 'Nadia Arden':'trainers/veteran_f',
   /* torneio */
   'Fenna, da Silph':'trainers/scientist_f', 'Guia Orin':'trainers/pokemon_ranger',
@@ -193,7 +193,7 @@ const PAGA_POR_CLASSE = {
   'trainers/bird_keeper':25, 'trainers/black_belt':25, 'trainers/battle_girl':25, 'trainers/beauty':70,
   'trainers/burglar':90, 'trainers/gambler':70, 'trainers/juggler':35, 'trainers/pokemaniac':50,
   'trainers/super_nerd':25, 'trainers/medium':30, 'trainers/psychic':10, 'trainers/sage':25,
-  'trainers/firebreather':50, 'trainers/guitarist':30, 'trainers/cyclist':20, 'trainers/cyclist_f':20,
+  'trainers/firebreather':50, 'trainers/ninjaboy':15, 'trainers/guitarist':30, 'trainers/cyclist':20, 'trainers/cyclist_f':20,
   'trainers/tuber':4, 'trainers/tuber_f':4, 'trainers/twins':20, 'trainers/lady':80, 'trainers/rich_boy':80,
   'trainers/pokefan':50, 'trainers/pokefan_f':50, 'trainers/ruin_maniac':50, 'trainers/veteran':70,
   'trainers/pokemon_breeder_f':40, 'trainers/pokemon_ranger_f':35, 'trainers/backpacker_f':25,

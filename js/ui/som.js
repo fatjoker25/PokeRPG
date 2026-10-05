@@ -62,9 +62,9 @@ const LUTAS_DO_VILAO = {'5:c5_luta_trio':'bw2-homika-dogars', '5:c5_ataque':'bw2
    Ezra (o de casa): o tema do rival de Black/White, o da amizade que vira
    disputa — e o de X/Y quando ele virou parceiro. Lior, que largou a
    pedreira: o do rival de Hoenn, o de quem treina na raça. Nolan, do
-   cais: o de Alola, o garoto do mar que ri de tudo. O garoto de Fuchsia,
-   que perdeu o que tinha e voltou com raiva: o de Hugh, que perdeu a
-   mesma coisa. Otto, o caçador: o de Sinnoh, rápido e na espreita. */
+   cais: o de Alola, o garoto do mar que ri de tudo. Rory, de Fuchsia, que
+   voltou a treinar por causa de um Rapidash: o de Hugh, que também luta
+   por um Pokémon que não é só dele. Otto, o caçador: o de Sinnoh, rápido e na espreita. */
 const FAIXA_DO_RIVAL = {ezra:'bw-rival', ezra_parceiro:'xy-rival', nilo:'oras-rival', tunico:'sm-rival', fuchsia:'bw2-rival', vasco:'dpp-rival'};
 
 /* ---------- as faixas do Showdown e o que cada uma é ----------

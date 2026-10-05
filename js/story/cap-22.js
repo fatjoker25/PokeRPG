@@ -264,7 +264,7 @@ c22_aceitou:{
   texto:[
     'A arena aberta não tem teto. É um círculo de terra batida de vinte metros com arquibancada de concreto dos quatro lados e uma torre de som que chia.',
     'Você luta três vezes em quatro horas.',
-    'A primeira é contra um garoto de Fuchsia que decorou o seu time pelo boletim da Liga e montou tudo pra te vencer, e quase consegue, e perde por uma escolha errada no quinto turno.',
+    'A primeira é contra um garoto de Lavender que decorou o seu time pelo boletim da Liga e montou tudo pra te vencer, e quase consegue, e perde por uma escolha errada no quinto turno.',
     'A segunda é contra uma mulher de Cinnabar que não decorou nada e luta pelo instinto, o que é muito pior de enfrentar.',
     'A terceira você não lembra direito depois, porque foi rápida demais.',
     fala('o locutor da arena', 'CHAVE QUATRO NA FINAL!', 'grita', 'A torre de som chia na palavra FINAL e a arquibancada acha graça.')
