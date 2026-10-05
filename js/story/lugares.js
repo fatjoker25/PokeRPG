@@ -741,6 +741,13 @@ const Cidade = {
   atender(){
     Mundo.passar(1);
     const d = Estado.dados;
+    /* a cura do balcão, com a musiquinha do Centro */
+    const curar = () => {
+      d.time.forEach(curarTotal);
+      Estado.curarJogador(10);
+      Estado.recuperarVontadeJogador();
+      if (typeof Som !== 'undefined') Som.efeito('cura');
+    };
     const credenciado = !!d.flags.tem_licenca
       || (typeof Cargos !== 'undefined' && Cargos.centroGratis());
     if (!credenciado){
@@ -754,9 +761,7 @@ const Cidade = {
       if (Estado.j.dinheiro < preco && ninguemDePe){
         const tinha = Estado.j.dinheiro;
         Estado.j.dinheiro = 0;
-        d.time.forEach(curarTotal);
-        Estado.curarJogador(10);
-        Estado.recuperarVontadeJogador();
+        curar();
         const pac = this.retirarPacotes();
         Estado.salvar('auto');
         return [
@@ -773,9 +778,7 @@ const Cidade = {
         ];
       }
       Estado.j.dinheiro -= preco;
-      d.time.forEach(curarTotal);
-      Estado.curarJogador(10);
-      Estado.recuperarVontadeJogador();
+      curar();
       const pac = this.retirarPacotes();
       Estado.salvar('auto');
       return [
@@ -785,9 +788,7 @@ const Cidade = {
         {tipo:'info', texto:'Amanhece.'}, ...pac
       ];
     }
-    d.time.forEach(curarTotal);
-    Estado.curarJogador(10);
-    Estado.recuperarVontadeJogador();
+    curar();
     const pac = this.retirarPacotes();
     Estado.salvar('auto');
     return [

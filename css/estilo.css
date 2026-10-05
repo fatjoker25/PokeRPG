@@ -91,11 +91,16 @@ html[data-tom="final"], body[data-tom="final"]{
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+html{background:#090d26}
+/* O fundo do site é um só, o azul da tela de título, em todo tom de
+   capítulo: o tom muda painel, borda e destaque, não o céu atrás. */
+:root{ --fundo-site:#0b1030; }
 body{
   background:
-    radial-gradient(1200px 620px at 50% -10%, var(--destaque-sombra), transparent 70%),
-    radial-gradient(900px 500px at 88% 110%, rgba(224,71,58,.07), transparent 72%),
-    var(--bg);
+    radial-gradient(120% 70% at 50% 0%, rgba(42,117,187,.32), transparent 60%),
+    radial-gradient(90% 60% at 50% 110%, rgba(255,203,5,.08), transparent 70%),
+    linear-gradient(180deg, #121a44, var(--fundo-site) 70%, #090d26);
+  background-color:var(--fundo-site);
   background-attachment:fixed;
   color:var(--texto); font-family:var(--fonte);
   line-height:1.52; font-size:15px; min-height:100vh;
@@ -2711,9 +2716,9 @@ body.com-cenario::after{
   content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
     linear-gradient(180deg,
-      color-mix(in srgb, var(--bg) 42%, transparent) 0%,
-      color-mix(in srgb, var(--bg) 62%, transparent) 55%,
-      color-mix(in srgb, var(--bg) 82%, transparent) 100%);
+      color-mix(in srgb, var(--fundo-site) 46%, transparent) 0%,
+      color-mix(in srgb, var(--fundo-site) 66%, transparent) 55%,
+      color-mix(in srgb, var(--fundo-site) 86%, transparent) 100%);
 }
 body.com-cenario .painel,
 body.com-cenario .topo{

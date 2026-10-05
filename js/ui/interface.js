@@ -97,6 +97,7 @@ const UI = {
      passa pra tela seguinte (o Ezra saía com o balão do Brock). */
   limpar(){
     this.app.innerHTML = '';
+    document.body.classList.remove('na-abertura');
     this.npcDaCena = null; this.npcEhProprio = false; this.falanteDaCena = null;
     this.vozesDaCena = null; this.minhasFalasDaCena = null;
   },
@@ -277,6 +278,8 @@ const UI = {
      ======================================================== */
   telaInicial(){
     this.tom('leve'); this.limpar();
+    /* a abertura fica no meio da tela, na vertical também */
+    document.body.classList.add('na-abertura');
     const temSave = Estado.existeSave('auto');
     /* estrelas do fundo: posição e ritmo sorteados a cada abertura */
     const estrelas = Array.from({length:26}, () =>
@@ -2260,6 +2263,8 @@ const UI = {
   pcSel: null,
 
   modalPC(sel){
+    /* ligar o PC: o bipe só na entrada, não a cada clique dentro dele */
+    if (sel === undefined && typeof Som !== 'undefined') Som.efeito('pc');
     const d = Estado.dados;
     if (sel !== undefined) this.pcSel = sel;
     /* o selecionado pode ter mudado de lado ou saído do jogo */

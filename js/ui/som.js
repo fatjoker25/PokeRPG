@@ -222,16 +222,52 @@ const Som = {
     /* o toque de qualquer botão: curto e baixo, pra não cansar */
     toque: (S, t, v) => { S.nota(1046, t, .035, 'square', v * .16); S.nota(1568, t + .028, .045, 'triangle', v * .14); },
     /* comprar: moedinha */
-    compra: (S, t, v) => { S.nota(988, t, .07, 'square', v * .4); S.nota(1319, t + .07, .2, 'square', v * .4); }
+    compra: (S, t, v) => { S.nota(988, t, .07, 'square', v * .4); S.nota(1319, t + .07, .2, 'square', v * .4); },
+    /* ligar o PC: três bipes de máquina subindo e o zumbido do monitor */
+    pc: (S, t, v) => {
+      const a = v * .34;
+      S.nota(1568, t, .05, 'square', a); S.nota(1175, t + .07, .05, 'square', a);
+      S.nota(1568, t + .14, .05, 'square', a); S.nota(2093, t + .22, .18, 'square', a * .9);
+      S.nota(131, t, .45, 'triangle', a * .55);
+    },
+    /* a cura do Centro: musiquinha curta de 8 bits, que sobe e fecha num
+       brilho (composição nossa, no clima dos jogos) */
+    cura: (S, t, v) => {
+      const a = v * .32;
+      [[784, 0, .11], [784, .14, .11], [784, .28, .11], [659, .42, .16], [1047, .62, .46],
+       [988, 1.12, .11], [1047, 1.26, .11], [1319, 1.40, .5]]
+        .forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'square', a));
+      [[196, 0, .4], [262, .42, .6], [330, 1.12, .7]].forEach(([f, d, dur]) => S.nota(f, t + d, dur, 'triangle', a * .7));
+      [2093, 2637, 3136].forEach((f, i) => S.nota(f, t + 1.9 + i * .06, .14, 'triangle', a * .45));
+    }
   },
+  /* Efeito que aceita arquivo de verdade: se existir sons/efeitos/<nome>.ogg
+     (o build embute), toca ele; senão, a versão sintetizada. */
+  EFEITOS_COM_ARQUIVO: ['pc', 'cura'],
+  _semArquivo: {},
   efeito(nome){
     try {
       const v = this.volume('efeitos');
       if (!v || !this.EFEITOS[nome]) return;
+      if (this.EFEITOS_COM_ARQUIVO.includes(nome) && !this._semArquivo[nome] && this.tocarArquivoDeEfeito(nome, v)) return;
       const c = this.ctx(); if (!c) return;
       if (c.state === 'suspended') c.resume().catch(() => {});
       this.EFEITOS[nome](this, c.currentTime + 0.01, v);
     } catch(e){ /* sem áudio: segue calado */ }
+  },
+
+  /* tenta o arquivo; se ele não existir, marca e cai no sintetizado */
+  tocarArquivoDeEfeito(nome, v){
+    if (typeof Audio === 'undefined') return false;
+    const rel = `sons/efeitos/${nome}.ogg`;
+    const src = (typeof SPRITES_EMBUTIDOS !== 'undefined' && SPRITES_EMBUTIDOS[rel]) || rel;
+    const au = new Audio(src);
+    au.volume = Math.max(0, Math.min(1, v));
+    const cai = () => { if (this._semArquivo[nome]) return; this._semArquivo[nome] = true; this.efeito(nome); };
+    au.addEventListener('error', cai, {once:true});
+    const p = au.play();
+    if (p && p.catch) p.catch(cai);
+    return true;
   },
 
   /* ---------- trilha ---------- */

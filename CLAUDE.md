@@ -170,6 +170,10 @@ com o sprite** (sombra descolada do pé é bicho flutuando), e **no celular
 o recuo não se aplica** — empilhado não existe chão compartilhado, cada
 lutador tem a sua moldura e os dois pousam no pé dela.
 
+O **fundo do site** é um só, o azul da tela de título (`--fundo-site`, em
+`estilo.css`), em todo tom de capítulo: o tom muda painel, borda e destaque,
+não o céu atrás. A abertura fica no meio da tela (`body.na-abertura`).
+
 Fora da batalha, o **fundo da página** também é o lugar: `CENARIO_POR_LOCAL`
 (em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha,
 mais `prado.png` (Pallet, Rota 1, Fuchsia) e `gelo.png` (Seafoam). Em cena
@@ -424,8 +428,11 @@ geral, música, sons da interface (canal `efeitos`) e sons dos Pokémon
 (canal `gritos`), mais o mudo, em `localStorage` ('jc-audio'), lidos por
 `Som.volume(canal)` — `tocarGrito` e `somLigado` passam por ali. Som de
 interface é sintetizado (`Som.EFEITOS`: toque, pokedex, scan, arremesso,
-abrir, clique, item, compra) e entra por `Som.efeito(nome)` no ponto em
-que a coisa acontece; o **toque** sai sozinho em todo clique de botão,
+abrir, clique, item, compra, pc, cura) e entra por `Som.efeito(nome)` no ponto em
+que a coisa acontece — `pc` na primeira abertura do PC (`UI.modalPC()` sem
+argumento), `cura` nas três curas do balcão (`Cidade.atender`). Quem está em
+`EFEITOS_COM_ARQUIVO` toca `sons/efeitos/<nome>.ogg` se ele existir (o build
+embute) e cai no sintetizado se não; o **toque** sai sozinho em todo clique de botão,
 escolha, porta e aba (botão que já tem som próprio leva
 `data-sem-toque`). A trilha segue a tela (`Som.contexto`) e é trocada no
 `topo()`: na luta, `batalha:<tipo>` (selvagem, treinador, rival, líder,

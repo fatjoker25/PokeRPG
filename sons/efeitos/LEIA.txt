@@ -1,0 +1,10 @@
+Sons de efeito por arquivo (opcional)
+
+Se esta pasta tiver um destes arquivos, o jogo toca ele no lugar do som
+sintetizado:
+
+  pc.ogg     ao abrir o PC
+  cura.ogg   quando a enfermeira do Centro Pokémon cura o time
+
+Formato .ogg. O build.py embute o que estiver aqui no pokerpg.html.
+Sem o arquivo, o jogo usa a versão sintetizada (js/ui/som.js).

@@ -15,8 +15,14 @@
   --tt-pixel:'Press Start 2P', ui-monospace, 'Courier New', monospace;
 }
 
+/* a abertura no meio da tela, nas duas direções */
+body.na-abertura #app{
+  min-height:100vh;min-height:100dvh;max-width:860px;
+  display:flex;flex-direction:column;justify-content:center;
+  padding-block:24px;
+}
 .tela-titulo{
-  position:relative;overflow:hidden;isolation:isolate;
+  position:relative;overflow:hidden;isolation:isolate;width:100%;
   min-height:min(560px, calc(100vh - 80px));
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:56px 18px 40px;text-align:center;
