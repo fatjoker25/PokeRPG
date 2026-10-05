@@ -324,7 +324,46 @@ const RIVAIS_EXTRA = [
   ace:95, nivelExtra:0, moral:75,           // o Onix é o dele desde a pedreira
   cor:'var(--destaque-2)',
 
-  fala:(d, r) => {
+  /* quem perdeu tudo pra você volta pra pedreira; quem te admira foi
+     cavar fóssil na pedreira velha; quem ouviu falar mal de você não
+     senta mais no meio-fio */
+  arco:(d, r) => {
+    if (r.derrotas >= 3 && r.vitorias === 0) return 'cansado';
+    if (ladoEscuro(d) || repRuim(3)) return 'desconfiado';
+    if (opiniaoRival(defRival('nilo'), d) >= 6 || repBoa(3)) return 'inspirado';
+    return 'teimoso';
+  },
+  arcos:{
+    teimoso:{nome:'Teimoso', resumo:'Anota o placar num caderno e volta sempre.'},
+    inspirado:{nome:'Inspirado', resumo:'Foi cavar fóssil na pedreira velha por sua causa.',
+      pool:[141, 139, 76, 142, 112, 105], ace:95, nivelExtra:1, moral:90},   // Kabutops e Omastar da parede do fundo
+    desconfiado:{nome:'Desconfiado', resumo:'Ouviu falar de você e não gostou do que ouviu.',
+      pool:[112, 105, 51, 28, 76], ace:95, nivelExtra:2, moral:55},
+    cansado:{nome:'Cansado', resumo:'Voltou pra pedreira em meio período e treina quando dá.',
+      pool:[74, 27, 104, 50], ace:95, nivelExtra:-2, moral:40}
+  },
+
+  fala:(d, r, arco) => {
+    if (arco === 'inspirado') return [
+      'Lior está te esperando na saída da cidade com um caderno novo, de capa dura, e um Kabuto no ombro que não estava lá da outra vez.',
+      r.encontros === 0
+        ? '"Eu larguei a pedreira." Ele ri sozinho. "E depois eu voltei nela. Na velha, a que fechou."'
+        : `"${r.derrotas} a ${r.vitorias}." Ele vira o caderno pra você. "Agora tem uma coluna de coisa que eu aprendi. Tá mais cheia que a outra."`,
+      '"Tem fóssil na parede do fundo que ninguém tirava porque não dava lucro." Ele coça a cabeça do Kabuto. "Dava outra coisa."',
+      '"Eu quero ganhar de você do jeito que você ganha. Bora."'
+    ];
+    if (arco === 'desconfiado') return [
+      'Lior não está sentado dessa vez. Ele está de pé, de braço cruzado, e o Geodude não está do lado dele.',
+      '"Eu ouvi coisa de você." Ele não diz o quê. "Na pedreira tinha gente que pagava por fora e sorria por dentro. Eu reconheço o jeito."',
+      r.encontros === 0 ? '"Mas eu disse que ia lutar com você, e eu cumpro o que eu digo. Alguém tem que cumprir."'
+                        : '"Essa eu não vou anotar no caderno. Essa é só pra mim."',
+      '"Bora."'
+    ];
+    if (arco === 'cansado') return [
+      'Lior está de uniforme laranja da pedreira, com o nome bordado no peito.',
+      '"Voltei. Meio período." Ele não te olha direito. "Treino de noite, quando dá. Quase nunca dá."',
+      '"Luta assim mesmo? Eu trouxe o que eu tenho."'
+    ];
     const L = ['Lior está sentado no meio-fio com um Geodude do lado, e o Geodude está sentado exatamente do mesmo jeito que ele.'];
     L.push(r.encontros === 0
       ? '"Eu larguei." Ele diz isso antes de dizer oi. "Eu larguei a pedreira e a minha mãe ficou três semanas sem falar comigo, e eu larguei do mesmo jeito."'
@@ -333,13 +372,31 @@ const RIVAIS_EXTRA = [
     L.push('"Eu não tenho jeito bonito. Eu tenho pedra." Ele se levanta e o Geodude se levanta junto. "Bora."');
     return L;
   },
-  vitoria:(d, r) => [
+  vitoria:(d, r, arco) => arco === 'inspirado' ? [
+    'O Onix dele deita no chão devagar, do jeito que pedra deita.',
+    `"${r.derrotas + 1}." Ele anota e mostra: do lado do número tem uma pedrinha desenhada. "É assim que eu marco as boas. Essa foi boa."`
+  ] : arco === 'desconfiado' ? [
+    'Ele recolhe o time sem olhar o que caiu.',
+    '"Você ganha." Ele já está indo embora. "Ganhar nunca foi o problema das pessoas que eu conheço."'
+  ] : arco === 'cansado' ? [
+    'O Onix dele cai e ele demora a recolher, como quem está cansado demais pra se levantar também.',
+    '"Tá certo." Ele fecha o caderno sem anotar. "Amanhã é às seis."'
+  ] : [
     'O último dele cai e faz barulho de coisa pesada caindo, porque é exatamente isso.',
     'Lior anota no caderno antes de recolher o time, o que é uma ordem esquisita de fazer as coisas.',
     `"${r.derrotas + 1}." Ele fecha o caderno. "Tá certo. Eu volto."`,
     'Ele não parece abalado. Ele parece um cara que calculou quantas vezes ia perder antes de começar.'
   ],
-  derrota:(d, r) => [
+  derrota:(d, r, arco) => arco === 'inspirado' ? [
+    'Lior ganha e não comemora. Ele fica sério, como quem confere uma conta.',
+    '"Eu ganhei de quem eu queria ganhar." Ele mostra o caderno. "Agora eu sei que dá."'
+  ] : arco === 'desconfiado' ? [
+    '"Pronto." Ele guarda as Pokébolas sem pressa.',
+    '"Essa eu anoto."'
+  ] : arco === 'cansado' ? [
+    '"Opa." Ele olha a própria mão como se ela tivesse feito aquilo sozinha. "Opa. Peraí."',
+    'Ele anota no caderno, e a mão treme um pouco, e não é de cansaço.'
+  ] : [
     'Lior ganha, e a primeira coisa que ele faz é olhar em volta pra ver se alguém viu.',
     'Ninguém viu. Tem só vocês dois numa rua de cidade pequena.',
     `"Uma." Ele mostra o caderno pra você, aberto, com a coluna certa. "Uma de ${r.vitorias + 1}. Eu queria que a minha mãe tivesse visto essa."`
@@ -354,7 +411,34 @@ const RIVAIS_EXTRA = [
   ace:121, nivelExtra:1, moral:85,          // o Starmie veio depois e é o orgulho dele
   cor:'var(--destaque-3)',
 
-  fala:(d, r) => {
+  /* ele copia quem ele admira: se você ajudou com a carta, ele foi
+     responder; se você faz negócio com Pokémon, ele também faz */
+  arco:(d, r) => {
+    if (ladoEscuro(d) || repRuim(3)) return 'vendedor';
+    if (d.flags.a_carta_do_denis || d.flags.copiou_a_carta || opiniaoRival(defRival('tunico'), d) >= 8) return 'esperanca';
+    return 'orgulhoso';
+  },
+  arcos:{
+    orgulhoso:{nome:'Orgulhoso', resumo:'Saiu do cais e conta isso pra todo mundo.'},
+    esperanca:{nome:'Esperança', resumo:'Respondeu a carta da mãe, e luta mais calmo por isso.',
+      pool:[131, 119, 55, 117, 91], ace:121, nivelExtra:1, moral:95},
+    vendedor:{nome:'Vendedor', resumo:'Aprendeu com você que Pokémon também é negócio.',
+      pool:[73, 91, 99, 130, 117], ace:121, nivelExtra:2, moral:50}
+  },
+
+  fala:(d, r, arco) => {
+    if (arco === 'esperanca') return [
+      'Nolan está sentado na mureta, quieto, o que é a coisa mais estranha que você já viu ele fazer.',
+      '"Eu respondi a carta." Ele fala devagar, como quem ensaiou. "Da minha mãe. Eu escrevi três folhas e mandei."',
+      '"Ela não respondeu ainda. Mas eu respondi, e isso é meu."',
+      '"Luta comigo? Eu tô lutando melhor. Eu tô dormindo melhor, aí eu luto melhor."'
+    ];
+    if (arco === 'vendedor') return [
+      'Nolan tem uma banca agora. Uma lona no chão, três Pokébolas em cima, preço escrito em papelão.',
+      '"Me falaram que você faz negócio." Ele não está acusando. Está orgulhoso, e é isso que dói. "Eu também faço agora. Eu aprendi."',
+      r.encontros === 0 ? '"O Krabby eu não vendo. Esse não."' : '"O Starmie eu não vendo. Me ofereceram e eu não vendi."',
+      '"Mas luta comigo primeiro. Se eu ganhar, você compra um."'
+    ];
     const L = ['Nolan te vê primeiro e grita o seu nome inteiro de longe, do jeito que só criança de cais grita.'];
     L.push(r.encontros === 0
       ? '"EU SAÍ!" Ele chega correndo. "Eu saí do cais! Eu peguei o Krabby e eu saí e eu não avisei ninguém e agora eu tô aqui!"'
@@ -365,13 +449,23 @@ const RIVAIS_EXTRA = [
     L.push('"Luta comigo. Luta de verdade, hein. Não faz aquela coisa de adulto de deixar ganhar."');
     return L;
   },
-  vitoria:(d, r) => [
+  vitoria:(d, r, arco) => arco === 'esperanca' ? [
+    'O Starmie dele gira uma última vez e para.',
+    'Nolan recolhe e fica olhando a Pokébola na mão um tempo.',
+    '"Quando ela responder, eu vou contar que perdi pra você." Ele sorri. "Ela vai achar que é coisa boa. E é."'
+  ] : arco === 'vendedor' ? [
+    'O Starmie dele para de girar.',
+    'Nolan recolhe e volta pra banca sem dizer nada, e arruma as três Pokébolas em fila, mais retas do que precisava.'
+  ] : [
     'O Starmie dele gira uma última vez e para.',
     'Nolan senta no chão onde estava de pé, sem drama nenhum, e fica olhando o núcleo apagar.',
     '"Tá." Ele levanta antes de você dizer qualquer coisa. "Tá, eu vi o que você fez no terceiro. Eu vou copiar."',
     'Ele te aperta a mão com as duas mãos, que é como ele aprendeu a fechar negócio no cais.'
   ],
-  derrota:(d, r) => [
+  derrota:(d, r, arco) => arco === 'vendedor' ? [
+    'Nolan ganha e aponta pra banca.',
+    '"Combinado é combinado." Ele espera. Depois ri, sem graça. "Brincadeira. Eu não vendo pra você. Pra você não."'
+  ] : [
     'Nolan ganha e não comemora na hora — ele leva uns três segundos pra acreditar.',
     'Aí ele comemora. Muito. Alto. Sozinho, no meio da rua.',
     '"EU GANHEI DE VOCÊ." Ele aponta pra você e depois pra ele. "EU. DE VOCÊ."',
@@ -385,6 +479,7 @@ const RIVAIS_EXTRA = [
   nascimento:'Rory voltou a treinar. Ninguém pediu pra ele voltar a treinar.',
   pool:[59, 38, 89, 110, 126, 136],          // Arcanine, Ninetales, Muk, Weezing, Magmar, Flareon
   ace:78, nivelExtra:2, moral:60,           // o Rapidash é o motivo de tudo
+  aceFixo:true,                             // tem onze anos: é Rapidash em qualquer nível, nunca Ponyta
   cor:'var(--perigo)',
 
   /* quatro versões do mesmo garoto, conforme o corredor do navio: deu o
@@ -394,6 +489,16 @@ const RIVAIS_EXTRA = [
           : d.flags.agora_falta_menos ? 'quase'
           : (d.flags.ficou_com_o_de_catorze && !d.flags.venceu_torneio_navio) ? 'companhia'
           : 'ressentido',
+  arcos:{
+    devedor:{nome:'Devedor', resumo:'O Rapidash operou com o seu dinheiro, e ele luta pra pagar do único jeito que sabe.',
+      pool:[59, 38, 126, 136], ace:78, nivelExtra:2, moral:90},
+    quase:{nome:'Quase', resumo:'A cirurgia saiu com atraso, e cada luta é uma conta que diminui.',
+      pool:[38, 126, 110, 59], ace:78, nivelExtra:2, moral:65},
+    companhia:{nome:'Companhia', resumo:'O Rapidash anda em três patas, e ele lembra de quem sentou do lado.',
+      pool:[59, 38, 136, 89], ace:78, nivelExtra:1, moral:75},
+    ressentido:{nome:'Ressentido', resumo:'Ele não esqueceu o corredor, e o time dele ficou venenoso.',
+      pool:[89, 110, 24, 126], ace:78, nivelExtra:3, moral:45}
+  },
 
   fala:(d, r, arco) => {
     if (arco === 'devedor') return [
@@ -478,7 +583,33 @@ const RIVAIS_EXTRA = [
   ace:24, nivelExtra:3, moral:35,           // o Arbok é o que ele usa para prender
   cor:'var(--ruim)',
 
-  fala:(d, r) => {
+  /* quem trabalha pros mesmos que ele vira colega, o que é pior; quem
+     ficou famoso pelo bem cansa ele, e a opinião dele pode sair do fundo */
+  arco:(d, r) => {
+    if (ladoEscuro(d)) return 'colega';
+    if (opiniaoRival(defRival('vasco'), d) > -3 || repBoa(6)) return 'cansado';
+    return 'cacador';
+  },
+  arcos:{
+    cacador:{nome:'Caçador', resumo:'Tem paciência e anota o seu rosto.'},
+    colega:{nome:'Colega', resumo:'Acha que vocês trabalham pros mesmos, e trata você como igual.',
+      pool:[94, 89, 42, 110, 49], ace:24, nivelExtra:4, moral:40},
+    cansado:{nome:'Cansado', resumo:'Largou a rede, e ainda não sabe o que fazer com as mãos.',
+      pool:[49, 71, 42], ace:24, nivelExtra:1, moral:55}
+  },
+
+  fala:(d, r, arco) => {
+    if (arco === 'colega') return [
+      'Otto está encostado numa caminhonete com a caçamba coberta por uma lona, e acena pra você como se vocês tivessem marcado.',
+      '"A gente trabalha pros mesmos agora." Ele fala baixo, cúmplice. "Eu soube. Todo mundo que paga sabe de todo mundo que recebe."',
+      '"Isso não muda nada entre nós. Eu só quero ver se você é bom de verdade, ou só tem sorte com quem te contrata."'
+    ];
+    if (arco === 'cansado') return [
+      'Otto está sem a rede. As mãos dele estão vazias de um jeito diferente: não de ameaça, de falta.',
+      '"Eu larguei." Ele diz isso sem você perguntar. "A floresta. A rede. Os dois que eu tinha pegado com a mão, eu não pego mais."',
+      '"Não foi por você. Foi por mim." Ele pensa. "Foi um pouco por você."',
+      '"Uma luta. Sem prender ninguém no fim."'
+    ];
     const L = ['Otto não está escondido. Ele está parado no meio do caminho com as mãos vazias, o que é pior do que se estivessem cheias.'];
     L.push(r.encontros === 0
       ? '"Você me custou dois." Ele não levanta a voz nenhuma vez, nesta nem nas próximas. "Dois que eu tinha pegado com a minha mão."'
@@ -488,13 +619,26 @@ const RIVAIS_EXTRA = [
     L.push('"Eu não vou te machucar. Eu vou te cansar."');
     return L;
   },
-  vitoria:(d, r) => [
+  vitoria:(d, r, arco) => arco === 'colega' ? [
+    'O Arbok dele desenrola no chão e para.',
+    '"Bom de verdade." Otto bate duas vezes na lona da caçamba, e alguma coisa lá dentro se mexe. "Vou falar bem de você pra quem paga."'
+  ] : arco === 'cansado' ? [
+    'O Arbok dele desenrola no chão e para.',
+    'Otto se agacha do lado do Pokémon e fica ali, sem recolher, um tempo comprido.',
+    '"Ele nunca tinha perdido sem eu estar segurando a rede." Ele recolhe. "Acho que nem ele sabia lutar sem ela."'
+  ] : [
     'O Arbok dele desenrola no chão e para.',
     'Otto recolhe sem pressa, e a falta de pressa é a mensagem.',
     '"Anotado." Ele passa por você no caminho, ombro a ombro, sem empurrar. "Eu tenho mais floresta do que você tem estrada."',
     'Você fica com a sensação de que ele conseguiu o que veio buscar, e você não sabe o que era.'
   ],
-  derrota:(d, r) => [
+  derrota:(d, r, arco) => arco === 'cansado' ? [
+    'Ele ganha e fica surpreso, de verdade.',
+    '"Eu ganhei sem prender ninguém." Ele olha as próprias mãos. "Dá."'
+  ] : arco === 'colega' ? [
+    'Ele ganha e passa a mão no seu ombro, como colega de trabalho.',
+    '"Sorte com quem te contrata, então." Ele sobe na caminhonete. "Melhora, que eu quero te indicar."'
+  ] : [
     'Ele ganha e não comemora, porque comemorar seria admitir que era uma competição.',
     'Otto se agacha na sua frente, na altura dos seus olhos, e fala baixo.',
     '"A floresta não é sua." Ele se levanta. "Nunca foi."',
@@ -537,17 +681,34 @@ function rivaisConquistados(){
 }
 
 /* ---------- time e arco de um rival extra ---------- */
+/* O arco é recalculado a cada encontro, como o do Ezra: muda com a
+   opinião dele, a sua reputação, o lado em que você está e o placar. */
 function arcoRivalExtra(R){
-  return typeof R.arco === 'function' ? R.arco(Estado.dados) : (R.arco || 'padrao');
+  const reg = registroRival(R.id) || {encontros:0, vitorias:0, derrotas:0};
+  try { return typeof R.arco === 'function' ? R.arco(Estado.dados, reg) : (R.arco || 'padrao'); }
+  catch(e){ return 'padrao'; }
 }
+/* o que o arco muda no time: lista, ace, nível e moral */
+function defArcoExtra(R, arco){
+  const A = (R.arcos && R.arcos[arco || arcoRivalExtra(R)]) || {};
+  return {nome:A.nome || 'Rival', resumo:A.resumo || '', pool:A.pool || R.pool, ace:A.ace || R.ace,
+          nivelExtra:A.nivelExtra != null ? A.nivelExtra : (R.nivelExtra || 0), moral:A.moral || R.moral || 70};
+}
+/* ajudantes dos gatilhos */
+function opiniaoRival(R, d){ const n = (d || Estado.dados).npcs[R.npc]; return n ? (n.opiniao || 0) : 0; }
+function repRuim(n){ const r = Estado.rep; return r.eixo === 'ruim' && r.ruim >= n; }
+function repBoa(n){ const r = Estado.rep; return r.eixo === 'bom' && r.bom >= n; }
+function ladoEscuro(d){ return ['rocket', 'mercenario', 'foragido'].includes(typeof linhaAtual === 'function' ? linhaAtual(d) : null); }
 
 function nivelRivalExtra(R){
   const t = Estado.dados.time.filter(p => !p.morto);
   const base = t.length ? Math.round(t.reduce((s,p)=>s+p.nivel,0)/t.length) : 8;
-  return Math.max(6, base + (R.nivelExtra || 0));
+  return Math.max(6, base + defArcoExtra(R).nivelExtra);
 }
 
 function timeRivalExtra(R){
+  const A = defArcoExtra(R);
+  R = Object.assign({}, R, {pool:A.pool, ace:A.ace, moral:A.moral});
   const nivel = nivelRivalExtra(R);
   const qtd = Math.max(2, Math.min(6, 2 + Math.round(numInsignias() * 0.5)));
   const time = [];
@@ -555,7 +716,7 @@ function timeRivalExtra(R){
      num rival cujo time inteiro está no Nv9. E ninguém leva dois
      do mesmo bicho só porque duas formas colapsaram no mesmo estágio. */
   const nvAce = nivel + 2;
-  const usados = new Set([formaAteONivel(R.ace, nvAce)]);
+  const usados = new Set([R.aceFixo ? R.ace : formaAteONivel(R.ace, nvAce)]);
   for (let i = 0; i < R.pool.length && time.length < qtd - 1; i++){
     const nv = Math.max(5, nivel - 2 + time.length);
     const dex = formaAteONivel(R.pool[i], nv);
@@ -563,7 +724,7 @@ function timeRivalExtra(R){
     usados.add(dex);
     time.push(criarPokemon(dex, nv, {moral:R.moral || 70}));
   }
-  time.push(criarPokemon(formaAteONivel(R.ace, nvAce), nvAce, {moral:R.moral || 70}));
+  time.push(criarPokemon(R.aceFixo ? R.ace : formaAteONivel(R.ace, nvAce), nvAce, {moral:R.moral || 70}));
   return time;
 }
 
@@ -587,6 +748,7 @@ function registrarResultadoRivalExtra(id, venceuJogador){
   reg.ultimoCap = Estado.dados.capitulo;
   if (venceuJogador) reg.derrotas++; else reg.vitorias++;
   const R = defRival(id);
+  if (R) reg.arco = arcoRivalExtra(R);
   Estado.registrar(`Encontro com ${R ? R.nome : id}: ${venceuJogador ? 'você venceu' : 'ele venceu'}. Placar ${reg.derrotas}×${reg.vitorias}.`);
   return reg;
 }

@@ -3539,7 +3539,7 @@ const UI = {
         <div class="linha"><span class="k">Inicial dele</span><span class="v">${this.esc(DEX[d.rival.inicialDex].nome)}</span></div>` : ''}
       ${(typeof rivaisConquistados === 'function' && rivaisConquistados().length)
         ? '<h3>Rivais que você arrumou</h3>' + rivaisConquistados().map(({def, reg}) =>
-            `<div class="linha"><span class="k">${this.esc(def.nome)} <span class="sussurro">${this.esc(def.desde)} · ${this.esc(def.origem)}</span></span>
+            `<div class="linha"><span class="k">${this.esc(def.nome)} — ${this.esc(defArcoExtra(def).nome)} <span class="sussurro">${this.esc(def.desde)} · ${this.esc(defArcoExtra(def).resumo || def.origem)}</span></span>
              <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>`).join('')
         : ''}
       ${(typeof Campo !== 'undefined') ? '<h3>O que dá pra fazer no mundo</h3>' + Campo.resumo().map(([nome, r]) =>
@@ -4368,6 +4368,14 @@ const UI = {
 
       <h3>Quem já te conhece</h3>
       <div class="linha"><span class="k">Reencontro</span><span class="v">quem a história registrou e tem opinião 3 ou mais sobre você (pra cima ou pra baixo), ou duas lembranças, te reconhece pelo nome quando aparece num capítulo seguinte · uma vez por capítulo · com a cara que a opinião manda</span></div>
+
+      <h3>Rivais</h3>
+      <div class="linha"><span class="k">Arco</span><span class="v">recalculado a cada encontro, pelo que você fez: a opinião dele, a sua reputação, o lado em que você está e o placar · o arco muda as falas, o time, o nível e a moral</span></div>
+      <div class="linha"><span class="k">Ezra</span><span class="v">Parceiro (opinião 5+) · Rival · Ressentido (opinião −2 ou menos) · Perseguidor (reputação ruim 5, duas mortes, rede de Celadon ou Comissão; time contra o seu, +5 níveis) · Quebrado (perdeu 4+ e foi maltratado, −3 níveis)</span></div>
+      <div class="linha"><span class="k">Lior</span><span class="v">Teimoso · Inspirado (opinião 6+ ou reputação boa 3+; fósseis no time, +1 nível) · Desconfiado (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2) · Cansado (perdeu 3 sem ganhar nenhuma; −2)</span></div>
+      <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2)</span></div>
+      <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou sentad{o|a}) · Ressentido (o resto; time venenoso, +3)</span></div>
+      <div class="linha"><span class="k">Otto</span><span class="v">Caçador · Colega (lado Rocket, Mercenário ou Foragido; +4) · Cansado (opinião acima de −3, ou reputação boa 6+; larga a rede, +1)</span></div>
 
       <h3>Idade e aniversário</h3>
       <div class="linha"><span class="k">Idade</span><span class="v">todo mundo sai de casa com 15 anos · a ficha pede só o dia e o mês do aniversário · se ele cai durante a jornada, você faz 16 na estrada · aparece na Ficha e no Cartão de Treinador</span></div>
