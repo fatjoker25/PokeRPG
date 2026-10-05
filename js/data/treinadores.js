@@ -163,7 +163,10 @@ const RETRATO_POR_NOME = {
   'Caçador de filhote':'trainers/roughneck', 'Técnico do berçário':'trainers/scientist',
   'Representante da Comissão':'trainers/veteran',
   /* caminho da Liga */
-  'o pai do patrocínio':'trainers/gentleman'
+  'o pai do patrocínio':'trainers/gentleman',
+  /* caminho do Herói */
+  'a brigadista de Fuchsia':'trainers/pokemon_ranger_f', 'Ivy Calder':'trainers/pokemon_ranger_f',
+  'a mãe do píer':'trainers/pokefan_f', 'Dale':'trainers/fisherman', 'a mãe do menino':'trainers/lady'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */
