@@ -1,6 +1,6 @@
 # Jornada do Campeão
 
-RPG narrativo de Pokémon ambientado em Kanto, feito para jogar no navegador. Projeto de fã, em português do Brasil.
+RPG de Pokémon feito para jogar no navegador. Projeto de fã, em português do Brasil.
 
 ## Como abrir
 
