@@ -4369,6 +4369,12 @@ const UI = {
       <h3>Quem já te conhece</h3>
       <div class="linha"><span class="k">Reencontro</span><span class="v">quem a história registrou e tem opinião 3 ou mais sobre você (pra cima ou pra baixo), ou duas lembranças, te reconhece pelo nome quando aparece num capítulo seguinte · uma vez por capítulo · com a cara que a opinião manda</span></div>
 
+      <h3>Caminhos</h3>
+      <div class="linha"><span class="k">Desvio</span><span class="v">depois do capítulo 12, do 19 e do 25, a jornada passa por um capítulo do seu caminho e volta · três capítulos por caminho, dez caminhos</span></div>
+      <div class="linha"><span class="k">Qual caminho</span><span class="v">o seu lado na hora do desvio: Lei, Rocket, Ciência, Imprensa, Criação, Liga (pelo posto de maior peso), ou Herói, Mercenário, Foragido, Ciência (pela via) · sem lado, Liga com 4 insígnias ou mais, Andarilho com menos</span></div>
+      <div class="linha"><span class="k">Trocou de lado</span><span class="v">o próximo capítulo é o do lado novo, e ele funciona sozinho</span></div>
+      <div class="linha"><span class="k">Final</span><span class="v">o terceiro capítulo de cada caminho pode acabar a jornada ali, com finais que só existem nele · ou você segue pro Planalto</span></div>
+
       <h3>Rivais</h3>
       <div class="linha"><span class="k">Arco</span><span class="v">recalculado a cada encontro, pelo que você fez: a opinião dele, a sua reputação, o lado em que você está e o placar · o arco muda as falas, o time, o nível e a moral</span></div>
       <div class="linha"><span class="k">Ezra</span><span class="v">Parceiro (opinião 5+) · Rival · Ressentido (opinião −2 ou menos) · Perseguidor (reputação ruim 5, duas mortes, rede de Celadon ou Comissão; time contra o seu, +5 níveis) · Quebrado (perdeu 4+ e foi maltratado, −3 níveis)</span></div>

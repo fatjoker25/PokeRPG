@@ -161,7 +161,9 @@ const RETRATO_POR_NOME = {
   /* caminho da Criação */
   'a tratadora da Associação':'trainers/pokemon_breeder_f', 'Mina Bray':'trainers/pokemon_breeder_f',
   'Caçador de filhote':'trainers/roughneck', 'Técnico do berçário':'trainers/scientist',
-  'Representante da Comissão':'trainers/veteran'
+  'Representante da Comissão':'trainers/veteran',
+  /* caminho da Liga */
+  'o pai do patrocínio':'trainers/gentleman'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

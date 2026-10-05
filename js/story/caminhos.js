@@ -40,10 +40,17 @@ CAMINHOS.forEach((cm, i) => {
   cm.caps = PONTOS_DE_DESVIO.map(p => +(p.de + (i + 1) / 100).toFixed(2));
 });
 
+/* Sem lado nenhum, quem vive de ginásio (4 insígnias ou mais) anda
+   no caminho da Liga, e quem não tem nem isso é o Andarilho. Os postos
+   da Liga só abrem no capítulo 20; sem essa regra, a Liga só teria o
+   terceiro capítulo. */
+const INSIGNIAS_PRA_LIGA = 4;
 function caminhoAtual(d){
   d = d || Estado.dados;
   const l = (typeof linhaAtual === 'function') ? linhaAtual(d) : null;
-  return CAMINHOS.some(c => c.id === l) ? l : 'andarilho';
+  if (CAMINHOS.some(c => c.id === l)) return l;
+  const ins = (d.insignias || []).filter(i => i !== 'Título de Campeão').length;
+  return ins >= INSIGNIAS_PRA_LIGA ? 'liga' : 'andarilho';
 }
 function defCaminho(id){ return CAMINHOS.find(c => c.id === id) || null; }
 

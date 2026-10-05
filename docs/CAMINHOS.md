@@ -6,7 +6,10 @@ jornada, e o terceiro de cada um pode **acabar a jornada ali**, com finais
 que só existem naquele caminho.
 
 O caminho é o lado do jogador **na hora do desvio**: a linha
-(`linhaAtual`, em `linhas.js`) ou, sem linha, o **Andarilho**. Quem trocou
+(`linhaAtual`, em `linhas.js`) ou, sem linha, a **Liga** pra quem vive
+de ginásio (4 insígnias ou mais) e o **Andarilho** pra quem não tem nem
+isso. Os postos da Liga só abrem no capítulo 20, então sem essa regra a
+Liga só teria o terceiro capítulo. Quem trocou
 de lado no meio entra no capítulo do lado novo, que funciona sozinho e
 lembra do que o lado antigo deixou (flags `cm_*`).
 
