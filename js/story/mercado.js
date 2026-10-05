@@ -187,7 +187,7 @@ const TROCAS = {
     depois:'O zelador leva o Cubone pra dentro do terceiro andar e volta sem ele, e não explica, e você decide não perguntar.',
     memoria:'Trocou um Cubone pelo Haunter do sétimo andar da Torre.'
   }, {
-    id:'lavender_2', requer:d=>numInsignias() >= 5,
+    id:'lavender_2', requer:d=>numInsignias() >= 5, unica:true,
     quem:'a senhora de luto do primeiro andar',
     onde:'no banco de pedra da entrada da Torre, sempre no mesmo horário',
     pede:35, da:{dex:105, nivel:[30,34], apelido:'Dezenove', natureza:'Sassy'},
@@ -227,7 +227,7 @@ const TROCAS = {
     memoria:'Trocou um Machoke pelo seu Graveler no portão da pedreira.'
   }],
   monte_lua: [{
-    id:'monte_1', requer:d=>numInsignias() >= 4,
+    id:'monte_1', unica:true, requer:d=>numInsignias() >= 4,
     quem:'a restauradora do museu',
     onde:'numa dobra do Monte da Lua, de luva de algodão, raspando uma parede com pincel',
     pede:140, da:{dex:142, nivel:[34,38], apelido:'Quinze', natureza:'Jolly'},
@@ -326,7 +326,7 @@ const TROCAS = {
     memoria:'Trocou o Ditto do vendedor de Celadon pelo seu Porygon.'
   }],
   rota3: [{
-    id:'rota3_1', requer:d=>numInsignias() >= 7,
+    id:'rota3_1', unica:true, requer:d=>numInsignias() >= 7,
     quem:'a moça da vitrine',
     onde:'na Rota 3, voltando de Pewter a pé, com uma caixa térmica debaixo do braço',
     pede:139, da:{dex:141, nivel:[34,38], apelido:'Tesoura', natureza:'Brave'},
@@ -395,6 +395,11 @@ const Trocas = {
     });
   },
   disponiveis(id){ return this.lista(id).filter(t => !this.jaFez(t.id) || this.oferta(t)); },
+  /* Troca de história com um Pokémon que só existe uma vez (o Haunter da
+     Torre, o Kadabra da praça, o Machoke da pedreira, o Marowak da
+     senhora, os fósseis) acontece uma vez só: depois dela a pessoa não
+     vira gente que troca. O resto troca de novo todo dia. */
+  repete(t){ return !!t && !t.unica && !t.trocaEvolui; },
 
   /* A primeira troca de cada pessoa é a da história, fixa. Depois dela
      a pessoa vira gente comum que troca: até três pedidos por dia,
@@ -402,7 +407,7 @@ const Trocas = {
      aqui, o que ela oferece é comum noutro canto de Kanto. Fechou uma,
      as outras do dia somem. */
   oferta(t){
-    if (!this.jaFez(t.id)) return null;
+    if (!this.jaFez(t.id) || !this.repete(t)) return null;
     const d = Estado.dados;
     d.trocasExtra = d.trocasExtra || {};
     let o = d.trocasExtra[t.id];
@@ -452,12 +457,14 @@ const Trocas = {
   tela(tid){
     const id = Mundo.id();
     const abertas = this.disponiveis(id);
-    const feitas = this.lista(id).filter(t => this.jaFez(t.id));
+    const feitas = this.lista(id).filter(t => this.jaFez(t.id) && !abertas.includes(t));
+    const semTroca = t => this.repete(t)
+      ? `${t.quem} te vê de longe e levanta a mão. Hoje não tem troca; amanhã, quem sabe.`
+      : `${t.quem} te vê de longe e levanta a mão. O que tinha pra trocar já foi com você.`;
 
     if (!abertas.length){
       if (feitas.length)
-        return Exploracao.tela(feitas.map(t => ({tipo:'info',
-          texto:`${t.quem} te vê de longe e levanta a mão. Hoje não tem troca; amanhã, quem sabe.`})));
+        return Exploracao.tela(feitas.map(t => ({tipo:'info', texto:semTroca(t)})));
       return Exploracao.tela([{tipo:'info', texto:'Ninguém aqui está querendo trocar nada hoje.'}]);
     }
 
@@ -482,7 +489,7 @@ const Trocas = {
               ${UI.esc(x.quem)} — ${resumo}</button>`;
           }).join('')}
           ${feitas.map(x => `<button class="escolha" disabled>
-            ${UI.esc(x.quem)} — já trocado<br><span class="pd">${UI.esc(x.memoria)}</span></button>`).join('')}
+            ${UI.esc(x.quem)} — ${this.repete(x) ? 'hoje não' : 'já trocado'}<br><span class="pd">${UI.esc(x.memoria)}</span></button>`).join('')}
           <button class="escolha" onclick="Exploracao.tela()">Deixar pra depois.</button>
         </div>
       </div>`);
@@ -491,7 +498,7 @@ const Trocas = {
 
     const extra = this.jaFez(t.id) ? this.oferta(t) : null;
     if (this.jaFez(t.id) && !extra)
-      return Exploracao.tela([{tipo:'info', texto:`${t.quem} te vê de longe e levanta a mão. Hoje não tem troca; amanhã, quem sabe.`}]);
+      return Exploracao.tela([{tipo:'info', texto:semTroca(t)}]);
 
     const of = extra || t;
     const esp = DEX[of.da.dex], pedido = DEX[of.pede];

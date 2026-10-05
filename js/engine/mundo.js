@@ -647,7 +647,8 @@ function afazeresDoLocal(){
     if (tem('troca_'+id) && typeof Trocas !== 'undefined' && Trocas.lista(id).length){
       const abertas = Trocas.disponiveis(id);
       lista.push({id:'troca',
-        titulo: abertas.length > 1 ? `Quem está querendo trocar (${abertas.length})` : 'Quem estava querendo trocar',
+        titulo: abertas.length > 1 ? `Quem está querendo trocar (${abertas.length})`
+              : abertas.length ? 'Tem alguém aqui querendo trocar' : 'Quem estava querendo trocar',
         sub: abertas.length ? abertas[0].onde : 'Já está feito. Dá pra passar e cumprimentar.'});
     }
   }

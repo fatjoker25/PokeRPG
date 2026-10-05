@@ -549,6 +549,12 @@ até `TROCAS_POR_DIA` (3) propostas por dia, e fechar uma some com as
 outras. Leia as propostas por `Trocas.opcoesDe(o)` — save velho tem uma
 só, sem lista.
 
+Exceção: quem troca um Pokémon que só existe uma vez — evolução por troca
+(`trocaEvolui`: o Haunter da Torre, o Kadabra da praça, o Machoke da
+pedreira) ou troca marcada `unica:true` (o Marowak da senhora, os
+fósseis) — troca só a da história (`Trocas.repete`). Troca nova desse
+tipo entra com `unica:true`.
+
 A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
 de Johto entram por `idsKanto()` só depois de vistos ou catalogados.
 

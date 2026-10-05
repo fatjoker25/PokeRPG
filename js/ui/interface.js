@@ -4510,7 +4510,7 @@ const UI = {
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
-      <div class="linha"><span class="k">Troca de novo</span><span class="v">a primeira troca de cada pessoa é a da história, sempre a mesma · depois ela troca de novo: até 3 propostas sorteadas por dia, cada uma pedindo um Pokémon comum daquele lugar e oferecendo um comum de outro canto de Kanto, no nível do lugar ± 3 · fechou uma, as outras do dia somem · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
+      <div class="linha"><span class="k">Troca de novo</span><span class="v">a primeira troca de cada pessoa é a da história, sempre a mesma · quem troca um Pokémon que só existe uma vez (o Haunter da Torre, o Kadabra da praça, o Machoke da pedreira, o Marowak da senhora de luto, os fósseis do museu e da vitrine) troca só essa · o resto troca de novo: até 3 propostas sorteadas por dia, cada uma pedindo um Pokémon comum daquele lugar e oferecendo um comum de outro canto de Kanto, no nível do lugar ± 3 · fechou uma, as outras do dia somem · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
       <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
