@@ -126,8 +126,8 @@ const SUSPEITO = [
       continue;
     }
     if (await page.locator('.aprender-op').count()){ await page.locator('.aprender-op').first().click(); continue; }
-    if (await page.locator('#modal .escolha:has-text("Nv")').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
-      await page.locator('#modal .escolha:has-text("Nv")').first().click({timeout:3000}).catch(() => {}); continue;
+    if (await page.locator('#modal .time-linha:not([disabled])').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
+      await page.locator('#modal .time-linha:not([disabled])').first().click({timeout:3000}).catch(() => {}); continue;
     }
     if (await page.locator('.continuar-batalha').count()){ await page.locator('.continuar-batalha').first().click({timeout:3000}).catch(() => {}); await page.waitForTimeout(120); continue; }
     if (await page.locator('#modal .evo').count()){
@@ -172,8 +172,8 @@ const SUSPEITO = [
       if (a){ await page.evaluate(x => { UI.modoBatalha = 'menu'; Jogo.acaoBatalha(x); }, a).catch(e => erros.push('acao: ' + e.message)); await page.waitForTimeout(150); continue; }
     }
     /* troca obrigatória depois de desmaio */
-    if (await page.locator('#modal .escolha:has-text("Nv")').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
-      await page.locator('#modal .escolha:has-text("Nv")').first().click(); continue;
+    if (await page.locator('#modal .time-linha:not([disabled])').count() && await page.evaluate(() => Batalha.ativo).catch(() => false)){
+      await page.locator('#modal .time-linha:not([disabled])').first().click(); continue;
     }
 
     /* fim de capítulo: distribui pontos e segue */

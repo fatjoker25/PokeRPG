@@ -1868,7 +1868,7 @@ const UI = {
   },
 
   /* Na luta, a mochila é a mesma de fora (cor, cabeçalho, categorias),
-     só com a aba de itens. O que não serve aqui continua lá, apagado:
+     com os bolsos que servem na luta. O que não serve aqui continua lá, apagado:
      ferramenta, papel, TM — e a Pokébola contra Pokémon de treinador. */
   menuBag(){
     this.modalItens('luta');
@@ -2926,22 +2926,44 @@ const UI = {
     this.rolarTopo();
   },
 
+  /* O fim da jornada: no meio da tela, como a abertura, e no mesmo
+     idioma visual dela — mas com a Pokébola apagada e rachada. O motivo
+     vem numa caixa de diálogo; embaixo, o que a jornada deixou: os
+     números, quem ficou no time e quem não voltou antes. */
   telaGameOver(motivo){
     this.tom('final'); this.limpar();
+    document.body.classList.add('na-abertura');
     const d = Estado.dados;
-    this.add(`<div class="painel gameover">
-      <div class="tit">FIM</div>
-      <p style="max-width:540px;margin:0 auto 20px">${this.esc(motivo || 'Seu HP chegou a zero.')}</p>
-      <p class="sussurro" style="max-width:540px;margin:0 auto 26px">
-        Morte de treinador é permanente. Não tem Centro Pokémon para isso.
-      </p>
-      <div style="text-align:left;max-width:520px;margin:0 auto 30px">
-        <div class="linha"><span class="k">Capítulo</span><span class="v">${this.esc(typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(Historia.capitulo(d.capitulo)) : String(d.capitulo))}</span></div>
-        <div class="linha"><span class="k">Reputação</span><span class="v">${this.esc(Estado.nomeRep())}</span></div>
-        <div class="linha"><span class="k">Dias</span><span class="v">${d.relogio.dia}</span></div>
-        <div class="linha"><span class="k">Pokémon deixados para trás</span><span class="v">${d.time.length}</span></div>
+    const cap = typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(Historia.capitulo(d.capitulo)) : 'Capítulo ' + d.capitulo;
+    const nIns = (d.insignias || []).filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length;
+    const dias = (d.relogio || {}).dia || 1;
+    const quadro = (k, v) => `<div class="tf-quadro"><span class="tf-v">${this.esc(String(v))}</span><span class="tf-k">${this.esc(k)}</span></div>`;
+    const pk = (p, nota) => `<div class="tf-pk${p.morto ? ' morto' : ''}">
+        <span class="tf-pk-icone">${imgSprite(p, 'icone')}</span>
+        <span class="tf-pk-nome">${this.esc(nomeExib(p))}</span>
+        <span class="tf-pk-nota">${this.esc(nota)}</span>
+      </div>`;
+    const time = (d.time || []).map(p => pk(p, `Nv ${p.nivel}`)).join('');
+    const foram = (d.cemiterio || []).map(p => pk(p, p.causaMorte || `Nv ${p.nivel}`)).join('');
+    this.add(`<div class="tela-fim">
+      <svg class="tf-pokebola" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/>
+        <path d="M4 50h30M66 50h30" stroke="currentColor" stroke-width="5"/>
+        <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="5"/>
+        <path class="tf-racha" d="M58 6 L50 22 L60 30 L52 42" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="bevel"/>
+      </svg>
+      <h1 class="tf-titulo">FIM DA JORNADA</h1>
+      <div class="tf-caixa"><p>${this.esc(motivo || 'Seu HP chegou a zero.')}</p></div>
+      <p class="tf-nota">Morte de treinador é permanente. Não tem Centro Pokémon para isso.</p>
+      <div class="tf-quadros">
+        ${quadro('Até onde chegou', cap)}
+        ${quadro(dias === 1 ? 'Dia na estrada' : 'Dias na estrada', dias)}
+        ${quadro(nIns === 1 ? 'Insígnia' : 'Insígnias', `${nIns} de 8`)}
+        ${quadro('Reputação', Estado.nomeRep())}
       </div>
-      <button class="btn destaque" onclick="Jogo.novo()">Começar de novo</button>
+      ${time ? `<h3 class="tf-sub">${d.time.length === 1 ? 'Quem ficou sem você' : 'Os que ficaram sem você'}</h3><div class="tf-time">${time}</div>` : ''}
+      ${foram ? `<h3 class="tf-sub">Os que não voltaram antes</h3><div class="tf-time">${foram}</div>` : ''}
+      <div class="tf-botoes"><button class="tt-btn tt-principal" onclick="Jogo.novo()">Começar de novo</button></div>
     </div>`);
     Estado.apagarSave('auto');
     this.rolarTopo();
@@ -4054,7 +4076,7 @@ const UI = {
         <li><b>A luta.</b> Lutar escolhe o golpe; Mochila usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
         <li><b>Quando cair.</b> Pokémon desmaiado volta com Revive ou no Centro. Se o time inteiro cair diante de um selvagem bravo, quem apanha é você.</li>
         <li><b>Ginásio.</b> Na porta do ginásio, na cidade, na ordem que você quiser. O capítulo seguinte pede um mínimo de insígnias, e a porta fechada diz quantas faltam.</li>
-        <li><b>Mochila.</b> Itens, Pokédex, PokéNav, Cartão e Mapa moram nas abas da mochila. Regras, este tutorial e o som ficam em Ajustes.</li>
+        <li><b>Mochila.</b> Os itens ficam em bolsos, como nos jogos: Itens, Remédios, Pokébolas, TMs e Itens-chave. A Pokédex, o PokéNav, o Cartão e o Mapa moram em Itens-chave: toque pra abrir. Regras, este tutorial e o som ficam em Ajustes.</li>
         <li><b>O tempo.</b> Um minuto jogando é uma hora em Kanto. De noite aparecem outros Pokémon e outra gente na estrada.</li>
       </ol>
       <p class="sussurro">O jogo salva sozinho a cada passo. As contas de tudo, com os números, estão em Regras.</p>`;
@@ -4109,7 +4131,7 @@ const UI = {
       <h3>Na sua vez</h3>
       ${L('Golpe', 'qualquer um dos quatro, quantas vezes quiser')}
       ${L('Pokébola', 'só em selvagem — não se joga Pokébola no Pokémon de treinador')}
-      ${L('Mochila', 'a mesma de fora, só com a aba de itens · o que não serve na luta fica apagado (ferramenta, papel, TM, e Pokébola contra treinador)')}
+      ${L('Mochila', 'a mesma de fora, com os bolsos de Itens, Remédios e Pokébolas · TMs e Itens-chave não abrem na luta · o que não serve fica apagado (e Pokébola contra treinador)')}
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
       ${L('Trocar', 'gasta o turno · o time aparece como fora da luta, na mesma ordem, com quem está brigando marcado')}
       ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
@@ -4547,7 +4569,8 @@ const UI = {
       <div class="linha"><span class="k">Quais</span><span class="v">44 das 50 de Red/Blue e as 37 de Gold/Silver que não repetem golpe, cada uma com o número dos jogos dela</span></div>
       <div class="linha"><span class="k">Quem aprende</span><span class="v">a tabela de TM da espécie nos jogos de Game Boy</span></div>
       <div class="linha"><span class="k">Uso</span><span class="v">fora de batalha, pela mochila · some ao ensinar · desistiu, ela fica</span></div>
-      <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio de seis líderes de ginásio e dos doze veteranos</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">Grande Loja de Celadon, 2º andar · prêmio dos oito líderes de ginásio e dos doze veteranos · e largadas pela estrada: vasculhando, uma vez por disco (Sorte crítica acha sempre, Sorte comum uma vez em cinco)</span></div>
+      <div class="linha"><span class="k">Venda</span><span class="v">toda TM tem preço de tabela, e o balcão paga metade</span></div>
       <div class="linha"><span class="k">Gold/Silver</span><span class="v">Sunny Day, Rain Dance e Sandstorm desde o começo · as outras com a Pokédex Nacional</span></div>
 
       <h3>Fim da batalha</h3>
@@ -4757,7 +4780,7 @@ const UI = {
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
       <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela fica com o que você tem</span></div>
-      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto, na aba Mapa da mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
+      <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto, no bolso de Itens-chave da mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
       <div class="linha"><span class="k">Tocar num lugar</span><span class="v">mostra o que ele é, com o que liga, se tem Centro e se você já foi · loja e ginásio só aparecem depois que você acha andando · vizinho: botão de ir · cidade longe onde você já pisou: botão de voar, se der</span></div>
       <div class="linha"><span class="k">Voar pelo mapa</span><span class="v">com um Voador de grande porte que voe de verdade · até qualquer cidade onde você já pisou · um período do dia</span></div>
       <p class="sussurro">Entre um capítulo e outro não existe teleporte: você atravessa cada rota e cada cidade entre onde estava e onde vai, e o relógio corre por isso. Voar pelo mapa só vale andando pelo mundo, entre cidades que você já conhece. Cidades e rotas têm situações acontecendo por conta própria, independentes do capítulo — quem passa sem olhar não vê.</p>
@@ -4770,7 +4793,7 @@ const UI = {
 
       <h3>Item segurado</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>
-      <div class="linha"><span class="k">Onde</span><span class="v">aba Time → equipar · ou Mochila → equipar</span></div>
+      <div class="linha"><span class="k">Onde</span><span class="v">Time → o Pokémon → equipar · ou Mochila, bolso de Itens → equipar</span></div>
       <p class="sussurro">Trocar devolve o anterior à mochila. O efeito de cada um está escrito na ficha técnica do item, em letra de máquina.</p>
 
       <h3>Dados</h3>

@@ -251,9 +251,49 @@ function _lugarTemRastro(rastro, localId){
 }
 
 /* devolve os avisos do achado (e já aplica item e Pokédex) */
+/* ============================================================
+   TM NO CHÃO — como nos jogos, tem disco largado pela estrada
+   Uma por lugar (duas na Rota 24/25), achada uma vez só: com Sorte
+   crítica sempre, com Sorte comum uma vez em cinco. O texto repara
+   no lugar; quem diz qual é a TM é o aviso do item.
+   ============================================================ */
+const TM_NO_CAMPO = {
+  rota22:[{tm:'TM36 Self-Destruct', t:'Entre duas pedras da encosta, uma caixinha de disco rachada, com a tampa presa por um elástico velho. O disco dentro está inteiro.'}],
+  rota3:[{tm:'TM50 Substitute', t:'Na beira da trilha, meio enterrado no cascalho, um disco de TM com o canto lascado. Alguém perdeu e não voltou pra procurar.'}],
+  monte_lua:[{tm:'TM12 Water Gun', t:'Numa poça parada no fundo de uma galeria, um disco de TM brilhando debaixo da água rasa. Você molha a manga até o cotovelo.'}],
+  rota4:[{tm:'TM04 Whirlwind', t:'No capim alto, preso num arbusto de espinho, um disco de TM que o vento deve ter carregado de algum lugar.'}],
+  rota24:[{tm:'TM45 Thunder Wave', t:'Na margem, entre a areia e a água, um disco de TM com a etiqueta molhada mas legível.'},
+          {tm:'TM19 Seismic Toss', t:'Debaixo do banco de madeira do píer, colado com resina numa das ripas, um disco de TM. Parece escondido de propósito, e faz tempo.'}],
+  rota9:[{tm:'TM30 Teleport', t:'Numa reentrância da rocha, protegido do vento, um disco de TM dentro de um envelope de papel pardo endurecido de chuva.'}],
+  usina:[{tm:'TM25 Thunder', t:'Atrás de um painel solto da sala de controle, entre fios cortados, um disco de TM que ainda dá choque fraco quando você encosta.'}],
+  tunel_rocha:[{tm:'TM28 Dig', t:'No fim de um buraco escavado à mão na parede do túnel, alguém deixou um disco de TM. O buraco tem o tamanho exato do disco.'}],
+  rota5:[{tm:'TM42 Dream Eater', t:'Embaixo de uma árvore, num ninho abandonado de Pidgey, um disco de TM no meio dos gravetos, como se fosse um ovo.'}],
+  rota7:[{tm:'TM03 Swords Dance', t:'No pé de um poste de cerca, enrolado num pano de chão, um disco de TM. O pano cheira a óleo de máquina.'}],
+  rota8:[{tm:'TM35 Metronome', t:'Debaixo de um banco de praça largado na beira da rota, um disco de TM grudado com chiclete velho.'}],
+  rota11:[{tm:'TM44 Rest', t:'Atrás de uma pedra grande, numa cama de capim amassado onde alguém dormiu mais de uma noite, um disco de TM esquecido.'}],
+  rota12:[{tm:'TM16 Pay Day', t:'Preso entre as tábuas da passarela sobre a água, um disco de TM com a capinha amarela de propaganda de cassino.'}],
+  rota13:[{tm:'TM40 Skull Bash', t:'No labirinto de cerca viva, num canto sem saída, um disco de TM pendurado num galho como enfeite.'}],
+  rota16:[{tm:'TM39 Swift', t:'Embaixo da ciclovia, na sombra de um pilar, um disco de TM caído de alguma mochila que passou rápido demais.'}],
+  rota19:[{tm:'TM23 Dragon Rage', t:'Na areia da praia, quando a onda volta, aparece a borda de um disco de TM. Você cava com a mão antes da próxima onda.'}],
+  rota21:[{tm:'TM22 Solar Beam', t:'Num rochedo no meio do mar, secando ao sol, um disco de TM numa caixa de vidro de pesca. O vidro esquenta a mão.'}],
+  rota23:[{tm:'TM10 Double-Edge', t:'Atrás da terceira guarita, na vala da estrada, um disco de TM com o nome de alguém riscado na etiqueta.'}],
+  caminho_vitoria:[{tm:'TM47 Explosion', t:'Numa galeria lateral, ao lado de um aviso de desabamento, um disco de TM na beira de um degrau. Você pega devagar.'}]
+};
+function tmDoChao(localId, sortudo){
+  const d = Estado.dados;
+  const falta = (TM_NO_CAMPO[localId] || []).filter(x => !d.flags['achou_' + x.tm]);
+  if (!falta.length || (!sortudo && !Dados.chance(20))) return null;
+  const a = falta[0];
+  d.flags['achou_' + a.tm] = true;
+  Estado.darItem(a.tm, 1);
+  Estado.registrar(`Achou ${a.tm} vasculhando.`);
+  return [{tipo:'info', texto:a.t}, {tipo:'item', texto:`Achou 1× ${a.tm}.`}];
+}
+
 function achadoDeVasculhar(ambiente, sortudo, soRastro, localId){
   localId = localId || (typeof Mundo !== 'undefined' ? Mundo.id() : null);
   const d = Estado.dados;
+  if (!soRastro){ const tm = tmDoChao(localId, sortudo); if (tm) return tm; }
   const noite = typeof ehNoite === 'function' && ehNoite();
   const base = (ACHADOS_DO_LUGAR[localId] || []).concat(ACHADOS_VASCULHAR[ambiente] || ACHADOS_VASCULHAR.campo);
   let lista = base.filter(a => (!a.raro || sortudo) && (!soRastro || !a.item)

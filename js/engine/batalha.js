@@ -1265,6 +1265,14 @@ const Batalha = {
       return this.turnoInimigoSozinho();
     }
 
+    /* quem está na frente caiu: só sai daqui trocando. Golpe ou item
+       nessa hora era turno vazio, com o contador subindo à toa. */
+    if (!estaVivo(this.aliado)){
+      this.turno--;
+      const reservas = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== this.aliado.uid);
+      return {eventos:this.eventos, fim:null, precisaTrocar:reservas.length > 0, reservas:reservas.map(p => p.uid)};
+    }
+
     // ordem por velocidade (prioridade primeiro)
     const gJog = GOLPES[this.aliado.golpes[acao.indice]?.nome || 'Tackle'];
     const iIA  = this.iaEscolher(this.inimigo, this.aliado, this.estInimigo, this.estAliado);

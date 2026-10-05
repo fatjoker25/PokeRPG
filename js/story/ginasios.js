@@ -30,7 +30,7 @@ const GINASIOS = [
     {min:6, especies:[76, 112, 95, 141, 142], variacoes:[28,105,76,112]}    // Golem, Rhydon, Onix, Kabutops, Aerodactyl
   ],
   efeito:'Pokémon que não escolheram você passam a hesitar menos.',
-  premio:{dinheiro:1200, itens:{'Super Potion':2}, rep:1},
+  premio:{dinheiro:1200, itens:{'Super Potion':2,'TM20 Rage':1}, rep:1},
 
   /* a conversa de quem volta com a insígnia no bolso */
   depois:d=>[
@@ -370,7 +370,7 @@ const GINASIOS = [
   ],
   aceContraInicial:true,
   efeito:'A Liga passa a te tratar como alguém que terminou o que começou.',
-  premio:{dinheiro:12000, itens:{'Ultra Ball':3,'Full Heal':3,'Hyper Potion':2}, rep:2},
+  premio:{dinheiro:12000, itens:{'Ultra Ball':3,'Full Heal':3,'Hyper Potion':2,'TM43 Sky Attack':1}, rep:2},
   comoDestravar:'O ginásio de Viridian ficou fechado dois anos depois que a Equipe Rocket caiu. Blue reabriu com uma regra: sete insígnias, ou nada.',
 
   depois:d=>[

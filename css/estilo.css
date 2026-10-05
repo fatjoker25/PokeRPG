@@ -3355,3 +3355,41 @@ button.item-linha.aparelho{
   .loja-placa{flex-wrap:wrap}
   .modal.loja{padding-left:14px;padding-right:14px}
 }
+
+
+/* ============================================================
+   MAPA DE KANTO — o Town Map de FireRed/LeafGreen, desenhado
+   Mar com onda, praia, terra em degradê, baía de Vermilion, lago de
+   Cerulean, serras com neve, mata, ilhas e rosa dos ventos. Estrada
+   de terra com borda; trecho de mar é tracejado. Cidade é o quadrado
+   vermelho dos jogos; onde você está pulsa num anel amarelo.
+   ============================================================ */
+.mapa-kanto svg{border-radius:12px;background:#2e64a8;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25), 0 8px 22px -12px rgba(0,0,0,.8)}
+.mapa-kanto .mp-praia{fill:none;stroke:#efe1a6;stroke-width:5;stroke-linejoin:round}
+.mapa-kanto .mp-terra{fill:url(#mp-chao);stroke:#4f8a43;stroke-width:1.2;stroke-linejoin:round}
+.mapa-kanto .mp-ilha{fill:#9bd27a;stroke:#efe1a6;stroke-width:2.2}
+.mapa-kanto .mp-agua{fill:#4b8fd0;stroke:#efe1a6;stroke-width:1.6}
+.mapa-kanto .mp-rio{fill:none;stroke:#4b8fd0;stroke-width:3;stroke-linecap:round}
+.mapa-kanto .mp-pico{fill:#8f8a7e;stroke:#5c5850;stroke-width:.6;stroke-linejoin:round}
+.mapa-kanto .mp-pico.vulcao{fill:#a0705a}
+.mapa-kanto .mp-neve{fill:#f4f2ea}
+.mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
+.mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
+.mapa-kanto .mp-rosa path{fill:#f4f2ea}
+.mapa-kanto .mp-rosa text{font:700 6px system-ui,sans-serif;fill:#f4f2ea;text-anchor:middle}
+.mapa-kanto .mp-via-borda{fill:none;stroke:#9b7d45;stroke-width:5.4;stroke-linejoin:round;stroke-linecap:round;opacity:.55}
+.mapa-kanto .mp-via{fill:none;stroke:#f3e6b8;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;opacity:.6}
+.mapa-kanto .mp-via.andada{opacity:1}
+.mapa-kanto .mp-mar-via{fill:none;stroke:#e9f3ff;stroke-width:1.6;stroke-dasharray:3 3;stroke-linecap:round;opacity:.6}
+.mapa-kanto .mp-mar-via.andada{opacity:1}
+.mapa-kanto .mp-no text{font:700 6.4px system-ui,sans-serif;fill:#122233;paint-order:stroke;stroke:#f6f8ee;stroke-width:2px;stroke-linejoin:round}
+.mapa-kanto .mp-no text.mp-rota{font:700 5px system-ui,sans-serif}
+.mapa-kanto .mp-no.cidade rect{fill:#e2463a;stroke:#fff;stroke-width:1.4}
+.mapa-kanto .mp-no.rota circle{fill:#f6f1df;stroke:#7a6236;stroke-width:1.1}
+.mapa-kanto .mp-no.especial rect{fill:#f2c94c;stroke:#6b5420;stroke-width:1}
+.mapa-kanto .mp-no.nao-pisado rect, .mapa-kanto .mp-no.nao-pisado circle{opacity:.6}
+.mapa-kanto .mp-no.nao-pisado.cidade rect{fill:#b4645c}
+.mapa-kanto .mp-anel{fill:none;stroke:#ffe066;stroke-width:1.8;animation:mpAnel 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes mpAnel{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.25)}}
+@media(prefers-reduced-motion:reduce){.mapa-kanto .mp-anel{animation:none}}
+.mapa-legenda .lg.cidade{border-color:#fff;box-shadow:0 0 0 1px #7a2a22}

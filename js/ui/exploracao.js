@@ -83,18 +83,78 @@ const Exploracao = {
   /* ---------- o mapa da região ----------
      Desenhado, não fotografado: o town-map.png do roteiro é o ícone
      30×30 do item, não um mapa. As posições seguem o Town Map de
-     FireRed/LeafGreen. O mapa só mostra o que você já sabe: lugar
-     visitado tem nome; o vizinho de um lugar visitado aparece como
-     estrada que existe, sem nome; o resto não aparece. */
-  POS_MAPA: {
-    pallet:[40,126], rota1:[40,108], viridian:[40,90], rota22:[25,90], rota23:[12,72],
-    caminho_vitoria:[12,54], planalto:[12,36], rota2:[40,75], floresta:[40,62], pewter:[40,46],
-    rota3:[60,46], monte_lua:[80,40], rota4:[100,46], cerulean:[120,46], rota24:[120,30],
-    norte:[146,28], rota9:[146,46], usina:[172,38], tunel_rocha:[172,56], lavender:[172,74],
-    rota5:[120,60], saffron:[120,74], rota6:[120,90], vermilion:[120,104], rota7:[100,74],
-    celadon:[80,74], rota8:[146,74], rota11:[146,104], rota12:[172,96], rota13:[160,120],
-    fuchsia:[104,128], rota16:[80,100], rota19:[92,146], seafoam:[70,148], cinnabar:[40,150],
-    rota21:[40,138], ilha_sem_nome:[16,150]
+     FireRed/LeafGreen, numa grade de quadras (MAPA_GRADE): Pallet no
+     sudoeste, a Rota 22/23 subindo pro Planalto no extremo oeste, o
+     Monte da Lua entre Pewter e Cerulean, a Rota 10 descendo pelo leste
+     até Lavender, Fuchsia na costa sul e as ilhas no mar de baixo. A
+     estrada anda reta e dobra em ângulo, como no mapa dos jogos. */
+  MAPA_GRADE: {
+    planalto:[1.5,1.4], caminho_vitoria:[1.5,4], rota23:[1.5,6.8], rota22:[2.8,9],
+    viridian:[4.5,9], rota1:[4.5,11], pallet:[4.5,13], rota21:[4.5,14.6], cinnabar:[4.5,16.1],
+    rota2:[4.5,7.4], floresta:[4.5,5.8], pewter:[4.5,4],
+    rota3:[6.8,4], monte_lua:[9,3], rota4:[11.4,3], cerulean:[14,3], rota24:[14,1.2],
+    rota9:[17,3], norte:[19.6,1.2], usina:[20.9,4.6], tunel_rocha:[19.6,6], lavender:[19.6,7.6],
+    rota5:[14,5.3], saffron:[14,7.6], rota6:[14,9.1], vermilion:[14,10.6],
+    rota7:[11.4,7.6], celadon:[8.8,7.6], rota8:[16.8,7.6],
+    rota11:[16.8,10.6], rota12:[19.6,10.6], rota13:[17.4,13.3], fuchsia:[12,13.3],
+    rota16:[7,10.6], rota19:[12,16.1], seafoam:[8.4,16.1], ilha_sem_nome:[1.4,15.6]
+  },
+  /* uma quadra = 12 unidades do desenho */
+  _q(g){ return [g[0] * 12 + 10, g[1] * 12 + 10]; },
+  get POS_MAPA(){
+    if (!this._pos){ this._pos = {}; for (const [id, g] of Object.entries(this.MAPA_GRADE)) this._pos[id] = this._q(g); }
+    return this._pos;
+  },
+  /* a estrada dobra: por padrão anda na horizontal e depois na
+     vertical, saindo do primeiro da dupla; estas descem primeiro */
+  DESCE_PRIMEIRO: new Set(['rota12|rota13', 'norte|rota9']),
+  /* trecho de mar: tracejado, sem estrada */
+  NO_MAR: new Set(['rota19', 'rota21', 'seafoam', 'cinnabar', 'ilha_sem_nome']),
+  /* onde vai o nome, pra nenhum cair em cima de outro: [dx, dy, âncora]
+     (padrão: cidade em cima, rota à direita) */
+  ROTULO_MAPA: {
+    planalto:[-6, -8, 'start'], caminho_vitoria:[-6, 10.5, 'start'], monte_lua:[0, -6, 'middle'], rota23:[5, 2, 'start'], rota22:[0, 9.5, 'middle'],
+    pallet:[-8, 2.4, 'end'], rota21:[5, 2, 'start'], cinnabar:[0, 13, 'middle'], seafoam:[0, 12, 'middle'],
+    floresta:[-6, 2, 'end'], rota3:[0, 9, 'middle'], rota4:[0, 9, 'middle'], rota24:[5, 2, 'start'],
+    rota9:[0, -5, 'middle'], norte:[6, 2, 'start'], usina:[7, -7, 'end'], tunel_rocha:[-6, 2, 'end'],
+    rota5:[-5, 2, 'end'], rota6:[-5, 2, 'end'], vermilion:[-8, 2.4, 'end'], fuchsia:[-8, 11.5, 'end'], rota7:[0, -5, 'middle'],
+    rota8:[0, -5, 'middle'], rota11:[0, -5, 'middle'], rota12:[5, 2, 'start'], rota13:[0, 9, 'middle'],
+    rota16:[-5, 2, 'end'], rota19:[5, 2, 'start'], ilha_sem_nome:[-7, -7, 'start']
+  },
+
+  /* o chão de Kanto: costa, baía, lago, serras, mata e as ilhas */
+  terrenoKanto(){
+    const q = (x, y) => this._q([x, y]).join(' ');
+    const terra = [[0.3,0.2],[21.8,0.2],[21.8,12.3],[21,14.2],[16.2,14.5],[13.4,14.4],[12.7,14.9],[11.2,14.9],[10.5,14.3],
+                   [7.8,14.3],[6.2,13.9],[3.4,14],[0.3,13.6]];
+    const d = 'M' + terra.map(([x, y]) => q(x, y)).join(' L') + ' Z';
+    const pico = (x, y, s) => { const [px, py] = this._q([x, y]); return `<path class="mp-pico" d="M${px - 5 * s} ${py + 3 * s} L${px} ${py - 4.5 * s} L${px + 5 * s} ${py + 3 * s} Z"/><path class="mp-neve" d="M${px - 1.6 * s} ${py - 2.2 * s} L${px} ${py - 4.5 * s} L${px + 1.6 * s} ${py - 2.2 * s} Z"/>`; };
+    const arvore = (x, y) => { const [px, py] = this._q([x, y]); return `<circle class="mp-arvore" cx="${px}" cy="${py}" r="2.6"/>`; };
+    const serras = [[8,1.9,1],[9.4,1.6,1.2],[10.7,2,.8],[0.7,3.2,1],[2.4,3.1,.9],[3.2,1.2,.8],
+                    [20.7,5.4,.8],[18.4,5,.7]].map(([x, y, s]) => pico(x, y, s)).join('');
+    const mata = [[3.6,5.2],[5.4,5.2],[3.4,6.2],[5.6,6.3],[3.8,6.9],[5.2,6.9],[11,12.4],[10.4,11.6],
+                  [8.2,9.3],[10.4,9.5],[3.2,11.6],[6,12.4]].map(([x, y]) => arvore(x, y)).join('');
+    const [bx, by] = this._q([14.6, 11.45]), [lx, ly] = this._q([11.6, 1.5]);
+    const [cx, cy] = this._q([4.5, 16.1]), [sx, sy] = this._q([8.4, 16.1]);
+    const ilhaSem = this.mapaVisivel('ilha_sem_nome') ? (() => { const [ix, iy] = this._q([1.4, 15.6]); return `<ellipse class="mp-ilha" cx="${ix}" cy="${iy}" rx="6" ry="4"/>`; })() : '';
+    return `<defs>
+        <pattern id="mp-ondas" width="16" height="10" patternUnits="userSpaceOnUse">
+          <path d="M1 6 q3 -3 6 0 t6 0" fill="none" stroke="rgba(255,255,255,.13)" stroke-width=".8"/>
+        </pattern>
+        <linearGradient id="mp-mar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b8fd0"/><stop offset="1" stop-color="#2e64a8"/></linearGradient>
+        <linearGradient id="mp-chao" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9bd27a"/><stop offset="1" stop-color="#7cbb5e"/></linearGradient>
+      </defs>
+      <rect width="284" height="226" fill="url(#mp-mar)"/><rect width="284" height="226" fill="url(#mp-ondas)"/>
+      <path class="mp-praia" d="${d}"/><path class="mp-terra" d="${d}"/>
+      <ellipse class="mp-agua" cx="${bx}" cy="${by}" rx="17" ry="7"/>
+      <ellipse class="mp-agua" cx="${lx}" cy="${ly}" rx="12" ry="6"/>
+      <path class="mp-rio" d="M${q(14, 3)} C${q(13.2, 2.3)} ${q(12.6, 1.8)} ${q(11.6, 1.5)}"/>
+      ${serras}${mata}
+      <ellipse class="mp-ilha" cx="${cx}" cy="${cy}" rx="15" ry="9"/>
+      <path class="mp-pico vulcao" d="M${cx - 4} ${cy - 2} L${cx - 1} ${cy - 9} L${cx + 2} ${cy - 9} L${cx + 6} ${cy - 2} Z"/>
+      <ellipse class="mp-ilha" cx="${sx - 5}" cy="${sy}" rx="6" ry="4"/><ellipse class="mp-ilha" cx="${sx + 6}" cy="${sy + 1}" rx="5" ry="3.5"/>
+      ${ilhaSem}
+      <g class="mp-rosa" transform="translate(262 204)"><circle r="9"/><path d="M0 -8 L2.6 0 L0 8 L-2.6 0 Z"/><text y="-11">N</text></g>`;
   },
   /* Todo Centro Pokémon tem um mapa da região na parede do saguão: quem
      não comprou o dele olha o de lá. */
@@ -118,9 +178,6 @@ const Exploracao = {
     return n ? n[1] : L.nome.replace(/^Monte da /, 'Mt. ').replace(/^Túnel da Rocha$/, 'Túnel')
       .replace(/^Caminho da Vitória$/, 'C. Vitória').replace(/^Floresta de Viridian$/, 'Floresta');
   },
-  /* rota cujo número à direita cairia em cima do nome de uma cidade */
-  ROTULO_A_ESQUERDA: new Set(['rota5','rota6','floresta','tunel_rocha','rota12','rota13']),
-
   mapa(origem){
     const aqui = Estado.dados.local;
     /* Voar, sem HM: um Voador de porte grande que voe de verdade te leva
@@ -137,9 +194,17 @@ const Exploracao = {
         const k = [id, v].sort().join('|');
         if (feitas.has(k) || !mostra(v)) continue;
         feitas.add(k);
-        const [x1, y1] = pos[id], [x2, y2] = pos[v];
+        const [a, b] = k.split('|');
+        const [x1, y1] = pos[a], [x2, y2] = pos[b];
         const andada = Mundo.visitado(id) && Mundo.visitado(v);
-        linhas.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="mp-via${andada ? ' andada' : ''}"/>`);
+        const mar = this.NO_MAR.has(a) || this.NO_MAR.has(b);
+        /* a ilha sem nome fica longe: a linha contorna pelo mar */
+        const dd = (a === 'fuchsia' && b === 'ilha_sem_nome')
+          ? `M${x1} ${y1} C${x1 + 2} ${y1 + 56} ${x2 + 14} ${y2 + 30} ${x2} ${y2}`
+          : (x1 === x2 || y1 === y2) ? `M${x1} ${y1} L${x2} ${y2}`
+          : this.DESCE_PRIMEIRO.has(k) ? `M${x1} ${y1} V${y2} H${x2}` : `M${x1} ${y1} H${x2} V${y2}`;
+        linhas.push(mar ? `<path d="${dd}" class="mp-mar-via${andada ? ' andada' : ''}"/>`
+          : `<path d="${dd}" class="mp-via-borda"/><path d="${dd}" class="mp-via${andada ? ' andada' : ''}"/>`);
       }
     }
     const viz = new Set(Mundo.vizinhos());
@@ -149,28 +214,23 @@ const Exploracao = {
       const ir = viz.has(id);
       const voa = !ir && voo.pode && pisou && L.tipo === 'cidade' && id !== aqui;
       const cls = `mp-no ${L.tipo}${pisou ? '' : ' nao-pisado'}${id === aqui ? ' aqui' : ''}${ir ? ' vizinho' : ''}${voa ? ' voo' : ''}`;
-      const forma = L.tipo === 'cidade' ? `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="1.5"/>`
+      const forma = L.tipo === 'cidade' ? `<rect x="${x - 5.5}" y="${y - 4.5}" width="11" height="9" rx="1.5"/>`
                   : L.tipo === 'especial' ? `<rect x="${x - 4}" y="${y - 4}" width="8" height="8" transform="rotate(45 ${x} ${y})"/>`
-                  : `<circle cx="${x}" cy="${y}" r="3.2"/>`;
+                  : `<circle cx="${x}" cy="${y}" r="3"/>`;
       const rot = this.rotuloMapa(L);
-      const esq = this.ROTULO_A_ESQUERDA.has(id);
-      /* perto da borda o nome não centraliza, senão sai do quadro */
-      const ancora = x < 30 ? 'start' : x > 170 ? 'end' : 'middle';
-      const rotulo = L.tipo === 'rota'
-        ? `<text class="mp-rota" x="${esq ? x - 5 : x + 5}" y="${y + 2.2}" text-anchor="${esq ? 'end' : 'start'}">${UI.esc(rot)}</text>`
-        : `<text x="${ancora === 'start' ? x - 6 : ancora === 'end' ? x + 6 : x}" y="${y - 8}" text-anchor="${ancora}">${UI.esc(rot)}</text>`;
+      const [dx, dy, ancora] = this.ROTULO_MAPA[id] || (L.tipo === 'rota' ? [5, 2, 'start'] : [0, -7.5, 'middle']);
+      const rotulo = `<text class="${L.tipo === 'rota' ? 'mp-rota' : 'mp-nome'}" x="${x + dx}" y="${y + dy}" text-anchor="${ancora}">${UI.esc(rot)}</text>`;
+      const anel = id === aqui ? `<circle class="mp-anel" cx="${x}" cy="${y}" r="9"/>` : '';
       return `<g class="${cls}" data-id="${id}" onclick="Exploracao.mapaInfo('${id}')"
         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Exploracao.mapaInfo('${id}')}"
-        role="button" tabindex="0" aria-label="${UI.esc(L.nome)}"><title>${UI.esc(L.nome)}</title>${forma}${rotulo}</g>`;
+        role="button" tabindex="0" aria-label="${UI.esc(L.nome)}"><title>${UI.esc(L.nome)}</title>${anel}${forma}${rotulo}</g>`;
     });
     const L = Mundo.atual();
     UI.modal('', (origem === 'mochila' ? UI.abasMochila('mapa') : '') + `<div class="mapa-kanto">
       <div class="mapa-topo">${imgItem('Mapa de Kanto')}<b>Kanto</b><span>${origem === 'parede'
         ? `na parede do Centro Pokémon de ${UI.esc(L.nome)}` : `você está ${UI.esc(emLocal(aqui))}`}</span></div>
-      <svg viewBox="0 0 200 162" role="img" aria-label="Mapa de Kanto">
-        <path class="mp-terra" d="M4 24 Q4 14 14 14 L184 14 Q194 14 194 24 L194 112 Q194 124 182 128 L130 134 Q112 138 96 136 L60 132 Q48 130 34 132 L10 130 Q4 128 4 118 Z"/>
-        <path class="mp-ilha" d="M30 144 Q40 140 50 144 Q52 154 40 157 Q28 156 30 144 Z"/>
-        <path class="mp-ilha" d="M62 142 Q72 140 78 146 Q76 154 68 154 Q60 152 62 142 Z"/>
+      <svg viewBox="0 0 284 226" role="img" aria-label="Mapa de Kanto">
+        ${this.terrenoKanto()}
         ${linhas.join('')}${pontos.join('')}
       </svg>
       <div class="mapa-legenda">

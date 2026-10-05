@@ -699,6 +699,16 @@ Golpe novo que entrar em `GOLPES` e for TM de Gen 1 tem que voltar pra
 `TM_LISTA` no número dele. O ícone do disco sai do tipo do golpe
 (`arquivoTM`), então item TM novo não precisa de entrada em `ITEM_SPRITE`.
 
+**Toda TM tem de onde sair** (`ferramentas/chk-tms.js` confere, junto com o preço e a cor do disco): a Grande
+Loja de Celadon (2º andar), o prêmio dos oito líderes (Brock dá Rage, o
+mais perto do Bide que ele dá em Red/Blue e que não existe aqui; Blue dá
+Sky Attack), os doze veteranos e o chão: `TM_NO_CAMPO`, em
+`vasculhar.js`, põe as que sobravam uma por lugar (duas na Rota 24/25),
+achadas uma vez só no vasculhar (`tmDoChao`: Sorte crítica sempre, comum
+uma vez em cinco; a flag `achou_<TM>` segura). Toda TM tem `PRECO_BASE`
+(2.000 a que não está à venda), então o balcão compra. TM nova entra numa
+dessas fontes, senão fica impossível de ter.
+
 Loja de vários andares só mostra, em cada andar, o que está na lista
 **daquele andar**. Item que entra no catálogo depois (`ESTOQUE_NACIONAL`)
 tem que estar também num andar, senão nunca aparece — a Pedra do Sol ficou
@@ -709,7 +719,18 @@ o prêmio; sem isso, paga `pagaPorNivel(classe) × nível do último Pokémon`
 (`premioCena`, em `main.js`), com a classe saindo do rosto em
 `treinadores.js`.
 
-O mapa desenhado (`Exploracao.mapa`) abre com o item **Mapa de Kanto**
+O mapa desenhado (`Exploracao.mapa`) é o **Town Map de FireRed/LeafGreen**
+redesenhado em SVG: `MAPA_GRADE` põe cada lugar na quadra dele (Pallet no
+sudoeste, a Rota 22/23 subindo pro Planalto no oeste, a Rota 10 descendo
+pelo leste, Fuchsia na costa sul, as ilhas embaixo), a estrada anda reta e
+dobra em ângulo (`DESCE_PRIMEIRO` diz qual desce antes), trecho de mar é
+tracejado (`NO_MAR`) e o chão (`terrenoKanto`: costa, praia, baía de
+Vermilion, lago de Cerulean, serras, mata, ilhas, rosa dos ventos) é
+desenhado por baixo. O nome de cada lugar tem posição própria em
+`ROTULO_MAPA`, pra nenhum cair em cima de outro: lugar novo entra com
+quadra e, se precisar, rótulo.
+
+O mapa desenhado abre com o item **Mapa de Kanto**
 na mochila, como o Town Map dos jogos — ou, sem ele, pela parede do Centro
 Pokémon de qualquer cidade que tenha um (`Exploracao.temCentro`). O `town-map.png` do roteiro é o
 ícone do item, não um mapa.
@@ -1007,6 +1028,14 @@ cartão não sai — ele vem na primeira ida ao Centro de Viridian
 
 Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 `casaQuem()`, `{casa:ela|ele}` — nunca "sua mãe" escrito à mão.
+
+## A tela de morte
+`UI.telaGameOver(motivo)` fala o idioma da abertura (`css/titulo.css`,
+`.tela-fim`): no meio da tela (`body.na-abertura`), Pokébola do fundo
+apagada e rachada, título em fonte de pixel, o motivo numa caixa de
+diálogo, o resumo em quadros (capítulo, dias, insígnias, reputação), os
+ícones de quem ficou no time e de quem morreu antes (com a causa), e o
+botão da abertura. O save automático é apagado ali.
 
 ## Como o projeto é montado
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`

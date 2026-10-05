@@ -16,6 +16,7 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `chk-finais.js` | todo final do jogo, onde mora, id repetido e final que nenhuma escolha alcança |
 | `chk-nomes.js` | personagem que carrega cena (12+ falas) e continua sendo chamado por descrição em vez de nome |
 | `chk-campo.js` | o sistema de cortar/atravessar/voar/forçar/iluminar: quantas espécies servem pra cada coisa e se as portas apontam pra cena que existe |
+| `chk-tms.js` | TM que ninguém dá, vende ou acha; TM sem preço; disco que não é o do tipo do golpe |
 | `chk-caminho.js` | menor caminho da entrada até o fim de cada capítulo, e quanto do capítulo dá pra alcançar de uma entrada só |
 | `sim-estrada.js` | força dos treinadores de estrada, lugar por lugar, com o motor de batalha do jogo |
 | `sim-veteranos.js` | força dos veteranos, dos convites e das três rodadas da Conferência do Planalto Indigo |

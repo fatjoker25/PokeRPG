@@ -167,6 +167,8 @@ for (const t of TM_LISTA){
   const k = t[0] + '.' + t[1];
   if (TM_A_VENDA[k]) PRECO_BASE[nomeDaTM(t)] = TM_A_VENDA[k];
   else if (t[0] === 2) PRECO_BASE[nomeDaTM(t)] = 3000;
+  /* a que não está à venda ainda tem preço de tabela: o balcão compra */
+  else PRECO_BASE[nomeDaTM(t)] = 2000;
 }
 ESTOQUE_NACIONAL.celadon = (ESTOQUE_NACIONAL.celadon || []).concat(TM_JOHTO.map(nomeDaTM));
 /* e ganham lugar no 2º andar: andar só mostra o que está na lista dele */
