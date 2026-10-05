@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera jornada-do-campeao.html: um arquivo único com tudo embutido."""
+"""Gera pokerpg.html: um arquivo único com tudo embutido."""
 import re, os
 
 html = open('index.html', encoding='utf-8').read()
@@ -10,7 +10,7 @@ estilos  = ['<style>\n' + open(c, encoding='utf-8').read() + '\n</style>' for c 
 scripts  = ['/* ===== ' + j + ' ===== */\n' + open(j, encoding='utf-8').read() for j in js]
 
 # ---- sprites: o arquivo único carrega as artes dentro dele ----
-# Sem isso, jornada-do-campeao.html deixaria de funcionar sozinho:
+# Sem isso, pokerpg.html deixaria de funcionar sozinho:
 # a promessa é abrir em qualquer lugar, sem pasta do lado.
 import base64, json
 SPRITES_DIR = 'sprites_nds'
@@ -73,15 +73,15 @@ def montar(dados):
 
 saida = montar(dict(sprites, **animadas))
 
-open('jornada-do-campeao.html', 'w', encoding='utf-8').write(saida)
-print(f'jornada-do-campeao.html — {os.path.getsize("jornada-do-campeao.html")/1024:.0f} KB '
+open('pokerpg.html', 'w', encoding='utf-8').write(saida)
+print(f'pokerpg.html — {os.path.getsize("pokerpg.html")/1024:.0f} KB '
       f'({len(css)} css, {len(js)} scripts)')
 
 # variante para publicação como Artifact: sem doctype/html/body (o host envolve)
 # e sem as GIFs, que não cabem no teto de 16 MB
 saida = montar(sprites)
-titulo = '<title>Jornada do Campeao</title>'.replace('Campeao', 'Campe\u00e3o')
-estilo = re.search(r'<style>.*?</style>', saida, re.S).group(0)
+titulo = '<title>Pok\u00e9RPG</title>'
+estilo = '\n'.join(re.findall(r'<style>.*?</style>', saida, re.S))
 corpo  = re.search(r'<body[^>]*>(.*?)</body>', saida, re.S).group(1)
 estilo = estilo.replace('html,body{margin:0;padding:0}', 'body{margin:0}')
 estilo = estilo.replace('body[data-tom=', 'html[data-tom=')

@@ -1,4 +1,4 @@
-# Jornada do Campeão — como mexer neste projeto
+# PokéRPG — como mexer neste projeto
 
 ## Regra permanente
 **Toda mudança de mecânica tem que aparecer na folha de regras** (`UI.modalRegras`,
@@ -193,7 +193,7 @@ Quem mede a arte pergunta `peDoSprite(img)` (76% na parada, 100% na
 GIF) — `Efeitos.alvo`, a cena do Showdown e o desmaio já perguntam.
 Com GIF o repouso é o da própria GIF: o `AnimadorSprite` não respira
 por cima. Sem a GIF a `<img>` cai sozinha na arte parada
-(`spriteParado`). O `jornada-do-campeao.html` **embute as GIFs**
+(`spriteParado`). O `pokerpg.html` **embute as GIFs**
 (`SPRITES_SO_NO_UNICO` no `build.py`; ~52 MB, ~5 s pra carregar); o
 `artefato.html` não, porque a publicação tem teto de 16 MB — lá a arte é
 a parada.
@@ -954,7 +954,7 @@ Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 - HTML/CSS/JS puro, `<script>` comum, sem módulo ES: tem que abrir em `file://`
   offline. Nada de `import`/`export`.
 - A ordem dos scripts está em `index.html`. Script novo entra lá.
-- `python3 build.py` gera `jornada-do-campeao.html` e `artefato.html` (arquivo único
+- `python3 build.py` gera `pokerpg.html` e `artefato.html` (arquivo único
   com sprites, cenários, ícones, rostos, insígnias e gritos embutidos). Rodar depois de qualquer mudança em js/ ou css/.
 - Texto do jogo em português do Brasil. Comentário de código também.
 

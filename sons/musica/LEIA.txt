@@ -26,4 +26,4 @@ com os nomes (.ogg, .mp3 ou .m4a):
   (e batalha.mp3, só no "Meus arquivos")
 
 Arquivo que faltar cai na trilha sintetizada, sem erro. A pasta de
-música fica fora do arquivo único (jornada-do-campeao.html).
+música fica fora do arquivo único (pokerpg.html).

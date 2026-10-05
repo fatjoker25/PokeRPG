@@ -278,24 +278,31 @@ const UI = {
   telaInicial(){
     this.tom('leve'); this.limpar();
     const temSave = Estado.existeSave('auto');
-    this.add(`<div class="painel" style="text-align:center;padding:46px 26px">
-      <div style="font-size:11.5px;letter-spacing:.24em;color:var(--texto-fraco);text-transform:uppercase">RPG de Mesa · Kanto</div>
-      <h2 style="font-size:30px;margin:12px 0 6px;color:var(--destaque);font-weight:300;letter-spacing:.06em">JORNADA DO CAMPEÃO</h2>
-      <p style="color:var(--texto-fraco);max-width:520px;margin:0 auto 8px">
-        A cadeira de Campeão está vazia há dois anos e a Liga não explica direito por quê.
-        E hoje você sai de casa.
-      </p>
-      <p class="sussurro" style="max-width:520px;margin:0 auto 30px">
-        Escolhas são permanentes. O mundo lembra. Se o seu HP chegar a zero, acabou de verdade.
-      </p>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        ${temSave ? '<button class="btn destaque" onclick="Jogo.continuar()">Continuar</button>' : ''}
-        <button class="btn ${temSave?'':'destaque'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>
-        <button class="btn" onclick="UI.modalTutorial()">Tutorial</button>
-        <button class="btn" onclick="UI.modalRegras()">Regras do sistema</button>
-        <button class="btn" onclick="UI.modalFinais()">Códice de finais</button>
-      </div>
-      ${temSave ? '<div class="sussurro" style="margin-top:18px">Começar uma nova jornada apaga a atual.</div>' : ''}
+    /* estrelas do fundo: posição e ritmo sorteados a cada abertura */
+    const estrelas = Array.from({length:26}, () =>
+      `<i class="tt-estrela" style="--x:${(Math.random()*100).toFixed(1)}%;--y:${(Math.random()*100).toFixed(1)}%;--t:${(1.6+Math.random()*2.8).toFixed(2)}s;--a:${(Math.random()*3).toFixed(2)}s;--s:${Math.random() < .25 ? 3 : 2}px"></i>`).join('');
+    const botoes = [
+      temSave ? '<button class="tt-btn tt-principal" onclick="Jogo.continuar()">Continuar</button>' : '',
+      `<button class="tt-btn ${temSave ? '' : 'tt-principal'}" onclick="Jogo.novo()">${temSave ? 'Nova jornada' : 'Começar'}</button>`,
+      '<button class="tt-btn" onclick="UI.modalTutorial()">Tutorial</button>',
+      '<button class="tt-btn" onclick="UI.modalRegras()">Regras</button>',
+      '<button class="tt-btn" onclick="UI.modalFinais()">Códice de finais</button>'
+    ].filter(Boolean).map((h, i) => h.replace('<button ', `<button style="--i:${i}" `)).join('');
+    this.add(`<div class="tela-titulo">
+      <div class="tt-ceu" aria-hidden="true">${estrelas}</div>
+      <svg class="tt-pokebola" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/>
+        <path d="M4 50h30M66 50h30" stroke="currentColor" stroke-width="5"/>
+        <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="5"/>
+        <circle cx="50" cy="50" r="6" fill="currentColor"/>
+      </svg>
+      <h1 class="tt-logo" aria-label="PokéRPG">
+        <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
+      </h1>
+      <div class="tt-sub">RPG de mesa · Kanto</div>
+      <p class="tt-aviso">Escolhas são permanentes. O mundo lembra.<br>Se o seu HP chegar a zero, acabou de verdade.</p>
+      <div class="tt-botoes">${botoes}</div>
+      ${temSave ? '<div class="tt-nota">Começar uma nova jornada apaga a atual.</div>' : ''}
     </div>`);
   },
 
