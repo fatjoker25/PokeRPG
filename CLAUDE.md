@@ -839,6 +839,22 @@ acompanha, os finais).
   entra no `index.html` antes do `condicionais.js`, e o `caminhos.js`
   depois dele.
 
+## Tudo pesa na reputação
+Escolha que muda em 2 ou mais a opinião de alguém e não tem `rep` escrita
+na cena mexe na reputação sozinha (`repDaOpiniao`, em `motor.js`): gente
+comum que sai melhor conta pro bom, a que sai pior pro ruim. Quem vive do
+crime está em `NPC_DO_CRIME` (o sinal inverte) e quem fica no meio — a
+Comissão, o comércio cinzento — em `NPC_NO_MEIO` (não conta sozinho).
+NPC novo de um desses dois lados entra na lista; cena que precisa de outro
+peso escreve `rep` própria, e aí a regra não soma por cima.
+
+## O Pico do Ezra
+O parceiro do Ezra é sorteado pela tabela do inicial aleatório da casa
+(`sortearPicoDoEzra`, em `rival.js`) e é o ás do time dele. Texto que fala
+do bicho usa a marca `{pico}` (a espécie de agora, resolvida em
+`concordaJogador`), nunca "Pidgey" escrito à mão, e o jeito dele (criado
+em casa, olha pro Ezra antes de cada golpe) serve a qualquer espécie.
+
 ## Quem ficou em casa e onde a jornada começa
 A pessoa de casa tem um **jeito** sorteado uma vez e guardado na ficha
 (`jeitoDaCasa`, em `js/story/casa-jeito.js`): orgulho, brincalhão,

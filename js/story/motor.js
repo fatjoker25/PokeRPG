@@ -142,6 +142,9 @@ const Historia = {
       /* o efeito inteiro vai junto: quem estava na cena pesa na conta */
       const r = Estado.mudarRep(ef.rep.eixo, ef.rep.delta, ef.rep.motivo, ef);
       if (r && r.mudou) { const p = this.presagio(ef.rep.eixo, ef); if (p) avisos.push(p); }
+    } else if (ef.npc){
+      /* tudo pesa: quem mudou de opinião sobre você conta pra alguém */
+      for (const r of repDaOpiniao(ef)) Estado.mudarRep(r.eixo, 1, r.motivo, {});
     }
     if (ef.itens){
       let algum = false;
@@ -328,6 +331,42 @@ const Historia = {
 
   via(){ return Estado.dados.via || 'neutro'; }
 };
+
+/* ============================================================
+   TUDO PESA NA REPUTAÇÃO
+   Escolha que muda em 2 ou mais a opinião de alguém e que a cena não
+   escreveu com rep própria mexe na reputação pelo lado da pessoa:
+   gente comum que sai melhor da conversa conta bem de você, e a que
+   sai pior conta mal. Com quem vive do crime é o contrário: ganhar a
+   confiança dela é má fama, virar inimigo dela é boa. Quem trabalha
+   pra Comissão, ou fica no meio, não entra na conta sozinho — a cena
+   é que diz. Uma vez por pessoa, por lado, por capítulo.
+   ============================================================ */
+const NPC_DO_CRIME = new Set(['Caçador Roque', 'Otto', 'A Terceira', 'Rook', 'o da aliança',
+  'Encarregado do Armazém 7', 'Comprador de jaleco', 'Caçadores da Rota 23']);
+const NPC_NO_MEIO = new Set(['Curador Fabre', 'Auditora Brill', 'Hester Colman', 'Dr. Hollis', 'Dra. Sorrel',
+  'Kira', 'Dr. Bramble', 'Diretor Quince', 'Fenna (crachá azul)', 'Mulher de crachá azul', 'a mulher de crachá azul',
+  'Conselheira do broche', 'o intermediário', 'Homem da banca', 'Rapaz da fenda', 'o fumante', 'Assessora da Silph',
+  'a advogada do conselho', 'Dra. Pia', 'Sr. Cosmo', 'Contramestre Varo', 'o pai do patrocínio']);
+function repDaOpiniao(ef){
+  const n = ef && ef.npc;
+  if (!n || typeof n === 'function') return [];
+  const out = [];
+  for (const x of [].concat(n)){
+    if (!x || !x.nome || typeof x.opiniao !== 'number' || Math.abs(x.opiniao) < 2) continue;
+    if (NPC_NO_MEIO.has(x.nome)) continue;
+    const quem = (typeof Nomes !== 'undefined' && Nomes.comoChamar) ? Nomes.comoChamar(x.nome) : x.nome;
+    const Quem = quem.charAt(0).toUpperCase() + quem.slice(1);
+    const subiu = x.opiniao > 0;
+    if (NPC_DO_CRIME.has(x.nome))
+      out.push(subiu ? {eixo:'ruim', motivo:`${Quem} passou a confiar em você`}
+                     : {eixo:'bom',  motivo:`${Quem} passou a te ver como problema`});
+    else
+      out.push(subiu ? {eixo:'bom',  motivo:`${Quem} saiu da conversa falando bem de você`}
+                     : {eixo:'ruim', motivo:`${Quem} saiu da conversa falando mal de você`});
+  }
+  return out;
+}
 
 /* Resolve texto que pode ser função do estado */
 /* ============================================================
