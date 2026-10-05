@@ -107,10 +107,7 @@ const Jogo = {
     /* dia que não existe no mês (31 de abril) vira o último dia dele */
     const ult = [31,28,31,30,31,30,31,31,30,31,30,31][f.nascimento.mes - 1];
     if (f.nascimento.dia > ult) f.nascimento.dia = ult;
-    f.idade = idadeNaSaidaDaFicha(f);
-    if (f.idade < IDADE_SAIDA_MIN || f.idade > IDADE_SAIDA_MAX){
-      erro.textContent = `A jornada começa entre ${IDADE_SAIDA_MIN} e ${IDADE_SAIDA_MAX} anos. Ajuste a data de nascimento.`; return;
-    }
+    f.idade = IDADE_SAIDA;
     if (!f.personalidade) f.personalidade = 'reservado';
     if (!f.aparencia) f.aparencia = 'nada que chame atenção';
     if (!f.vestimenta) f.vestimenta = 'roupa comum e um casaco';

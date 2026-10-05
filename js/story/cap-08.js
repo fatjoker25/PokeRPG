@@ -76,7 +76,7 @@ c8_ab_trabalho:{
     'O homem da prancheta te mede de cima a baixo sem nenhuma grosseria, do jeito que se mede um saco pra saber se cabe.',
     fala('o conferente', 'Idade?'),
     d=>fala(d.jogador.nome, '{Idade}.'),
-    fala('o conferente', '{menor:Então não é limpeza de casco. Pendurado só com dezoito.|Dezoito feitos, então podia ir pro casco. Mas o casco hoje tá completo.}'),
+    fala('o conferente', 'Então não é limpeza de casco. Pendurado só com dezoito.'),
     'Ele escreve o seu nome numa lista de doze e a lista de doze é o turno das duas.'
   ],
   ef:{flag:'pegou_turno_no_cais', registrar:'Se inscreveu para um turno de trabalho no cais de Vermilion.'},
@@ -3786,7 +3786,7 @@ c8_porque_nao_postou:{
   texto:[
     '"Por que você não postou as cartas?"',
     'Pela primeira vez na conversa inteira, ele demora.',
-    '"Porque correspondência de {menor:menor|treinador} sob acompanhamento passa por triagem."',
+    '"Porque correspondência de menor sob acompanhamento passa por triagem."',
     '"Isso é regra de quê?"',
     '"Do protocolo interno."',
     '"Quem escreveu o protocolo interno?"',

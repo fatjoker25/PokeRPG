@@ -32,7 +32,7 @@ const CARGOS = [
         'Tem um desconto de convênio que funciona em qualquer loja de Kanto e que ninguém nunca explicou direito.']
 },
 {
-  id:'guarda_rota', idadeMin:16, falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
+  id:'guarda_rota', falante:'o sargento', nome:'Guarda de rota', orgao:'Patrulha de Kanto', peso:2, cap:5,
   onde:'viridian', lugar:'Posto da Patrulha de Kanto',
   pede:[{t:'2 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 2}, {t:'reputação boa: Familiar ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 2
@@ -45,7 +45,7 @@ const CARGOS = [
         'Quinhentos por capítulo, pago em dinheiro, sem recibo.']
 },
 {
-  id:'policial', idadeMin:18, falante:'a delegada', nome:'Policial de Kanto', orgao:'Polícia de Kanto', peso:3, cap:6,
+  id:'policial', falante:'a delegada', nome:'Policial de Kanto', orgao:'Polícia de Kanto', peso:3, cap:6,
   onde:'saffron', lugar:'Delegacia de Saffron',
   pede:[{t:'3 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 3},
         {t:'reputação boa: Reconhecido ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 3},
@@ -70,7 +70,7 @@ const CARGOS = [
         '"Passou. E não é todo mundo que passa, então não faz essa cara de quem já sabia."']
 },
 {
-  id:'reporter', idadeMin:16, falante:'a editora', nome:'Repórter {credenciado|credenciada}', orgao:'Jornal de Fuchsia', peso:2, cap:7,
+  id:'reporter', falante:'a editora', nome:'Repórter {credenciado|credenciada}', orgao:'Jornal de Fuchsia', peso:2, cap:7,
   onde:'fuchsia', lugar:'Redação do Jornal de Fuchsia',
   pede:[{t:'40 descobertas pelo mapa', ok:d=>Object.keys(d.descobertas || {}).length >= 40}],
   requer:d=>Object.keys(d.descobertas || {}).length >= 40,
@@ -94,7 +94,7 @@ const CARGOS = [
   aviso:'Enquanto você carregar isso, a sua reputação piora sozinha todo capítulo.'
 },
 {
-  id:'investigador', idadeMin:18, falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
+  id:'investigador', falante:'a auditora', nome:'{Investigador|Investigadora} de campo', orgao:'Auditoria da Liga', peso:3, cap:10,
   onde:'saffron', lugar:'Auditoria da Liga',
   pede:[{t:'4 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4}, {t:'reputação boa: Respeitado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 4
@@ -118,7 +118,7 @@ const CARGOS = [
         '"Então eu vou pedir uma bolsa pra você e ela vai ser pequena, porque bolsa é sempre pequena."']
 },
 {
-  id:'comissao', idadeMin:18, falante:'a secretária', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
+  id:'comissao', falante:'a secretária', nome:'{Perito|Perita} da Comissão', orgao:'Comissão de Gestão de Risco', peso:4, cap:16,
   onde:'saffron', lugar:'Comissão de Gestão de Risco',
   pede:[{t:'6 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6}, {t:'ser conhecid{o|a} como herói ou como pesquisador', ok:d=>['heroi','pesquisador'].includes(d.via || 'neutro')}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 6
@@ -131,7 +131,7 @@ const CARGOS = [
         'A pasta tem trinta e uma páginas e a primeira é um termo de sigilo.']
 },
 {
-  id:'instrutor', idadeMin:18, falante:'o coordenador', nome:'{Instrutor|Instrutora} do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
+  id:'instrutor', falante:'o coordenador', nome:'{Instrutor|Instrutora} do Planalto', orgao:'Liga Pokémon', peso:4, cap:20,
   onde:'planalto', lugar:'Sala dos instrutores',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8,
@@ -143,7 +143,7 @@ const CARGOS = [
         '"Quase nunca é o time."']
 },
 {
-  id:'lider', idadeMin:18, falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
+  id:'lider', falante:'a conselheira', nome:'Líder de ginásio', orgao:'Liga Pokémon', peso:5, cap:24,
   onde:'planalto', lugar:'Secretaria da Liga',
   pede:[{t:'8 insígnias', ok:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8}, {t:'reputação boa: Famoso ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 5}],
   requer:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 8
@@ -156,7 +156,7 @@ const CARGOS = [
         '"Pensa bem. E depois assina, porque a gente precisa."']
 },
 {
-  id:'elite', idadeMin:18, falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
+  id:'elite', falante:'quem estava na porta antes de você', nome:'Elite dos Quatro', orgao:'Planalto Indigo', peso:5, cap:27,
   onde:'planalto', lugar:'Secretaria da Liga',
   pede:[{t:'ter vencido a Elite dos Quatro', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite}],
   requer:d=>!!d.flags.campeao_de_kanto || !!d.flags.venceu_a_elite,
@@ -167,7 +167,7 @@ const CARGOS = [
         '"A parte difícil não é ganhar", diz quem estava na porta antes de você. "É ganhar de gente que treinou um ano pra te enfrentar e ver a cara delas depois."']
 },
 {
-  id:'professor', idadeMin:18, falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
+  id:'professor', falante:'Professor Oak', nome:'{Professor|Professora} de Kanto', orgao:'rede de laboratórios', peso:5, cap:27,
   onde:'pallet', lugar:'Laboratório do Professor',
   pede:[{t:'140 espécies catalogadas', ok:d=>Estado.contagemDex().catalogados >= 140}],
   requer:d=>Estado.contagemDex().catalogados >= 140,
@@ -179,7 +179,7 @@ const CARGOS = [
         '"Tem uma cadeira aqui que não é minha, é do cargo, e o cargo precisa de gente que ainda ande."']
 },
 {
-  id:'conselheiro', idadeMin:18, falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
+  id:'conselheiro', falante:'a conselheira mais velha', nome:'{Conselheiro|Conselheira} de Kanto', orgao:'Conselho Regional', peso:5, cap:28,
   onde:'celadon', lugar:'Prefeitura de Celadon',
   pede:[{t:'Campeão de Kanto ou oito insígnias', ok:d=>!!d.flags.campeao_de_kanto || !!d.flags.oito_insignias}, {t:'reputação boa: Admirado ou mais', ok:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6}],
   requer:d=>d.reputacao.eixo === 'bom' && d.reputacao.bom >= 6
@@ -313,8 +313,6 @@ const Cargos = {
   pedidos(c){
     const d = Estado.dados;
     const lista = (c.pede || []).map(x => { let ok = false; try { ok = !!x.ok(d); } catch(e){} return {t:x.t, ok}; });
-    /* a idade mínima entra na lista como qualquer outro pedido: a porta mostra o que falta */
-    if (c.idadeMin) lista.unshift({t:`${c.idadeMin} anos ou mais`, ok:(typeof idadeJogador === 'function' ? idadeJogador(d) : 15) >= c.idadeMin});
     return lista;
   },
   /* os lugares de credencial de uma cidade (o Centro fica de fora: é o balcão) */

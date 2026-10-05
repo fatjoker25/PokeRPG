@@ -2622,7 +2622,7 @@ c6_ficou_depois:{
     'Os três pescadores chegam em quatro minutos. Um deles ajuda ele a sentar. Outro olha pra você com uma cara que você nunca tinha recebido de um adulto.',
     'Ninguém grita. É pior: eles te tratam com uma educação cuidadosa, do jeito que se trata alguém de quem se tem um pouco de medo.',
     'Os oficiais chegam em quarenta minutos. Você conta tudo, sem inventar nada.',
-    'Um deles escreve o seu nome no formulário e pergunta a idade, e quando você diz {idade} {menor:ele para de escrever por um segundo e depois continua.|ele anota sem levantar os olhos.}'
+    'Um deles escreve o seu nome no formulário e pergunta a idade, e quando você diz {idade} ele para de escrever por um segundo e depois continua.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Ficou e assumiu'},
       flag:'assumiu_a_agressao'},

@@ -110,7 +110,7 @@ c18_fim_com_nome:{
   final:{id:'publicou_com_nome', titulo:'FONTE IDENTIFICADA, {IDADE} ANOS', texto:[
     'A matéria sai numa terça e o seu nome está no terceiro parágrafo.',
     'Rhea tinha razão sobre tudo. Em quatro dias a história deixa de ser sobre o lote e passa a ser sobre você: a idade, a cidade onde você nasceu, a foto do cartão de treinador, a opinião de gente que nunca te viu sobre o que você devia ou não devia ter feito.',
-    'Três programas de rádio discutem se {menor:um menor de idade|alguém de {idade} anos sem cargo nenhum} pode ser fonte. Nenhum deles discute o convênio.',
+    'Três programas de rádio discutem se um menor de idade pode ser fonte. Nenhum deles discute o convênio.',
     'E aí, na segunda semana, acontece a coisa que Rhea não tinha previsto.',
     'Uma auditora de manejo em Fuchsia dá entrevista com o nome dela. Depois um gerente de agência bancária em Saffron. Depois um conferente do porto de Vermilion, um capitão de porto em Cinnabar, uma funcionária de guarita em Lavender e o superintendente de uma concessão rodoviária, que pede demissão no mesmo dia.',
     'Seis pessoas adultas, com emprego e família, dizem o próprio nome em voz alta porque {um garoto|uma garota} de {idade} anos disse primeiro.',
@@ -794,7 +794,7 @@ c26_fim_recusou:{
     fala('a conselheira da Liga', 'Não é uma oferta que se repete.'),
     d=>fala(d.jogador.nome, 'Eu sei.'),
     'Ela fecha a pasta fina.',
-    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por {menor:um menor de idade|alguém sem cargo nenhum}.'),
+    fala('a conselheira da Liga', '{O senhor|A senhora} entende que, recusando, continua sem acesso a nada, e que tudo que {o senhor|a senhora} tem é papel juntado de forma irregular por um menor de idade.'),
     d=>fala(d.jogador.nome, 'Entendo.'),
     fala('a conselheira da Liga', 'E que {o senhor|a senhora} está escolhendo a versão mais difícil de todas.'),
     d=>fala(d.jogador.nome, 'Tô.'),

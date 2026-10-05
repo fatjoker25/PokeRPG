@@ -231,7 +231,7 @@ c19_ab_o_anuncio:{
   ],
   ef:{flag:'respondeu_o_anuncio',
       registrar:'A Estação 4 contrata auxiliar de campo sem experiência, aos {idade} anos, sem hesitar.',
-      presagio:'Ela não pestanejou com {idade} anos{menor:| e nenhuma experiência}. Um emprego que aceita qualquer idade não é um emprego difícil de preencher — é um emprego difícil de manter preenchido.'},
+      presagio:'Ela não pestanejou com {idade} anos. Um emprego que aceita qualquer idade não é um emprego difícil de preencher — é um emprego difícil de manter preenchido.'},
   escolhas:[
     {texto:'Ir amanhã, no ônibus das seis e dez.', vai:'c19_ab_o_onibus'},
     {texto:'Perguntar o que faz um auxiliar de campo.', vai:'c19_ab_o_que_faz'},

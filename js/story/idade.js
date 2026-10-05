@@ -1,13 +1,13 @@
 /* ============================================================
    IDADE E ANIVERSÁRIO
-   A ficha pede a data de nascimento. A idade sai dela e da data do
-   jogo (o calendário começa em março de 2010, numa segunda), então
-   ela sobe sozinha no dia do aniversário. Quem te conhece manda
-   parabéns; quem ficou em casa, sempre.
+   Todo mundo sai de casa com quinze anos. A ficha pede só o dia e o
+   mês do aniversário: o ano sai sozinho, o que dá quinze no dia da
+   perua (o calendário começa em março de 2010, numa segunda). Se o
+   aniversário cai durante a jornada, você faz dezesseis na estrada, e
+   quem te conhece manda parabéns; quem ficou em casa, sempre.
 
-   A idade abre porta: a estiva de Vermilion e a guarda de rota pedem
-   16, a polícia, a auditoria, o cassino e quase todo cargo grande
-   pedem 18. Abaixo disso a porta aparece fechada, dizendo o que falta.
+   A idade não abre nem fecha porta nenhuma: a história foi escrita pra
+   alguém de quinze.
 
    No texto, {idade} é a idade de hoje por extenso, {Idade} com
    maiúscula, {IDADE} toda em maiúscula, {idade+N} daqui a N anos e
@@ -15,7 +15,7 @@
    pra menor de 18 e B pra maior (dentro de A e B só cabem as marcas de número).
    ============================================================ */
 const ANO_DO_JOGO = 2010;
-const IDADE_SAIDA_MIN = 10, IDADE_SAIDA_MAX = 20;
+const IDADE_SAIDA = 15;
 const MAIORIDADE = 18;
 const MESES_DO_ANO = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
@@ -35,19 +35,34 @@ function dataDoJogo(){
   return {dia:c.diaMes, mes:((c.mes + 2) % 12) + 1, ano:c.ano};
 }
 
-/* save sem data de nascimento: sorteia uma que dê a idade que a ficha tinha */
+/* O dia em que a jornada começa: o primeiro dia do calendário, ou, na
+   ficha, o dia da perua na cidade escolhida. */
+function diaDaSaida(cidadeNome){
+  if (!cidadeNome && typeof Calendario !== 'undefined' && typeof Estado !== 'undefined' && Estado.dados && Estado.dados.relogio){
+    const c = Calendario.de(1);
+    return {dia:c.diaMes, mes:((c.mes + 2) % 12) + 1, ano:c.ano};
+  }
+  const id = cidadeNome && Object.keys(LOCAIS).find(k => LOCAIS[k].nome === cidadeNome);
+  const dia = (id && typeof DIA_DA_PERUA !== 'undefined' && DIA_DA_PERUA[id]) || 1;
+  return {dia, mes:3, ano:ANO_DO_JOGO};
+}
+
+/* O ano que dá quinze no dia da saída: quem faz aniversário depois
+   dela ainda vai fazer dezesseis nesse ano. */
+function anoQueDaQuinze(nasc, saida){
+  const depois = nasc.mes > saida.mes || (nasc.mes === saida.mes && nasc.dia > saida.dia);
+  return saida.ano - IDADE_SAIDA - (depois ? 1 : 0);
+}
+
+/* A data de nascimento é dia e mês; o ano é sempre o calculado (save
+   antigo com ano escolhido volta pros quinze). Save sem data sorteia. */
 function nascimentoDe(d){
   d = d || Estado.dados;
   const j = d && d.jogador;
   if (!j) return null;
-  if (!j.nascimento){
-    const mes = Dados.entre(1, 12);
-    const dia = Dados.entre(1, 28);
-    const idade = j.idade || 15;
-    /* quem faz aniversário antes de março já fez esse ano */
-    const ano = ANO_DO_JOGO - idade - ((mes > 3 || (mes === 3 && dia > 1)) ? 1 : 0);
-    j.nascimento = {dia, mes, ano};
-  }
+  if (!j.nascimento) j.nascimento = {dia:Dados.entre(1, 28), mes:Dados.entre(1, 12)};
+  j.nascimento.ano = anoQueDaQuinze(j.nascimento, diaDaSaida());
+  j.idade = IDADE_SAIDA;
   return j.nascimento;
 }
 
@@ -67,22 +82,10 @@ function idadeJogador(d){
 function ehMenor(d){ return idadeJogador(d) < MAIORIDADE; }
 
 /* a idade no dia em que a jornada começou */
-function idadeDeSaida(d){
-  d = d || Estado.dados;
-  const n = nascimentoDe(d);
-  const c = Calendario.de(1);
-  return idadeNaData(n, {dia:c.diaMes, mes:((c.mes + 2) % 12) + 1, ano:c.ano});
-}
-
-/* na ficha, antes de existir jogo: o dia da saída é o da perua na cidade */
-function idadeNaSaidaDaFicha(f){
-  const id = Object.keys(LOCAIS).find(k => LOCAIS[k].nome === f.cidade);
-  const dia = (typeof DIA_DA_PERUA !== 'undefined' && DIA_DA_PERUA[id]) || 1;
-  return idadeNaData(f.nascimento, {dia, mes:3, ano:ANO_DO_JOGO});
-}
+function idadeDeSaida(){ return IDADE_SAIDA; }
 
 function textoNascimento(n){
-  return n ? `${n.dia === 1 ? '1º' : n.dia} de ${MESES_DO_ANO[n.mes - 1]} de ${n.ano}` : '';
+  return n ? `${n.dia === 1 ? '1º' : n.dia} de ${MESES_DO_ANO[n.mes - 1]}` : '';
 }
 
 /* as marcas de idade, resolvidas antes das de gênero */
@@ -202,10 +205,6 @@ const Aniversario = {
       falas.push(`O time não sabe o que é aniversário. Mas ${nomeExib(p)} passa o dia inteiro mais perto de você que o normal, e ninguém explicou nada pra ${pron(p).ele}.`);
     }
 
-    if (idade === MAIORIDADE)
-      falas.push('Dezoito. A partir de hoje nenhum balcão te pede assinatura de responsável, e tem porta em Kanto que abre pra você pela primeira vez.');
-    else if (idade === 16)
-      falas.push('Dezesseis. Tem trabalho e tem posto que só aceitam a partir de hoje.');
 
     const efeitos = () => {
       Estado.j.dinheiro += 1000;
@@ -227,15 +226,17 @@ const Aniversario = {
 function cap1(t){ return t.charAt(0).toUpperCase() + t.slice(1); }
 
 /* ============================================================
-   PORTAS QUE A IDADE ABRE
+   BICO NA CIDADE
+   A estiva de Vermilion e o cassino de Celadon. Ninguém pergunta a
+   idade: o capataz pergunta se você aguenta, e o cassino, se você tem
+   ficha. (O id 'idade_' das ações ficou do tempo em que a idade abria
+   porta, e não foi trocado pra não quebrar save.)
    ============================================================ */
 const PORTAS_DA_IDADE = [
-  {id:'estiva', local:'vermilion', idade:16, titulo:'A estiva do cais',
-   fechada:'O capataz olha a sua cara e balança a cabeça: a estiva só contrata a partir dos dezesseis.',
+  {id:'estiva', local:'vermilion', titulo:'A estiva do cais',
    quando:() => { const h = Estado.dados.relogio; sincronizarHora(h); return h.hora >= 5 && h.hora <= 11; },
    foraDeHora:'A estiva contrata às cinco da manhã. Depois disso o cais já está cheio.'},
-  {id:'cassino', local:'celadon', idade:18, titulo:'O cassino da avenida',
-   fechada:'O segurança da porta pede documento, olha a data duas vezes e devolve: só a partir dos dezoito.',
+  {id:'cassino', local:'celadon', titulo:'O cassino da avenida',
    quando:() => true}
 ];
 
@@ -246,7 +247,6 @@ const PortasDaIdade = {
   fazer(id){
     const p = PORTAS_DA_IDADE.find(x => x.id === id);
     if (!p) return Exploracao.tela();
-    if (idadeJogador() < p.idade) return Exploracao.tela([{tipo:'info', texto:p.fechada}]);
     if (!p.quando()) return Exploracao.tela([{tipo:'info', texto:p.foraDeHora}]);
     return this[id]();
   },
@@ -261,6 +261,7 @@ const PortasDaIdade = {
     Estado.registrar('Trabalhou um turno na estiva do cais de Vermilion.');
     Estado.salvar('auto');
     Exploracao.tela([
+      {tipo:'info', texto:'O capataz te põe de ajudante, que é como ele chama quem tem {idade} anos e pede serviço às cinco da manhã.'},
       {tipo:'info', texto:{
         critico:'Você carrega no ritmo dos mais velhos desde a primeira hora. No fim do turno o capataz paga e pergunta se você volta amanhã.',
         sucesso:'Seis horas de saco, caixa e corda. O Machamp do cais carrega quatro de cada vez e você carrega uma, e todo mundo acha isso justo.',
@@ -282,7 +283,7 @@ const PortasDaIdade = {
     Estado.registrar(ganho > 0 ? 'Saiu do cassino de Celadon com mais do que entrou.' : 'Deixou dinheiro no cassino de Celadon.');
     Estado.salvar('auto');
     Exploracao.tela([
-      {tipo:'info', texto:`Você troca ${fmtDin(aposta)} ₽ em fichas. A sala não tem janela nem relógio, de propósito, e o barulho das máquinas não para nunca.`},
+      {tipo:'info', texto:`O segurança da porta não pergunta a sua idade. Ninguém aqui pergunta nada a quem tem dinheiro na mão. Você troca ${fmtDin(aposta)} ₽ em fichas. A sala não tem janela nem relógio, de propósito, e o barulho das máquinas não para nunca.`},
       {tipo:'info', texto:ganho > 0
         ? 'A máquina do canto acende inteira e cospe ficha no chão. Duas pessoas olham pra você com raiva.'
         : 'As fichas vão embora numa velocidade que você não acreditaria se contassem.'},

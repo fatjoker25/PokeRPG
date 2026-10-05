@@ -410,7 +410,7 @@ c9_proximo_leilao:{
     '"E onde é?"',
     '"Isso eu não digo." Ele fecha a agenda. "Não por sigilo. Porque endereço de leilão muda toda vez e chega no terminal do Centro dois dias antes."',
     'Ele apoia as duas mãos no balcão de vidro.',
-    '"Olha, eu vou ser honesto com você porque você tem {idade} anos e eu tenho um filho {menor:dessa idade|pouco mais novo}."',
+    '"Olha, eu vou ser honesto com você porque você tem {idade} anos e eu tenho um filho dessa idade."',
     '"Se você acha que tem alguma coisa errada nisso, o lugar de reclamar não é aqui. Eu sou lojista. Eu compro com nota."'
   ],
   ef:{flag:['leilao_quinta','sabe_do_leilao'],
@@ -2569,7 +2569,7 @@ c9_nao_tenho_credencial:{
   texto:[
     '"Não tenho."',
     'A mulher da prancheta — o crachá diz **AUDITORA M. BRILL · COMISSÃO DE BEM-ESTAR** — não se altera nem meio grau.',
-    '"Então {o senhor|a senhora} não pode dar lance." {menor:Ela olha a sua idade. "E também não poderia, de qualquer forma."|Ela olha o seu crachá, que não existe. "Sem credenciamento, não."}',
+    '"Então {o senhor|a senhora} não pode dar lance." Ela olha a sua idade. "E também não poderia, de qualquer forma."',
     'Mas ela não te tira. Ela dá um passo de lado e abre espaço na parede dos fundos.',
     '"Assistir é público. Sessão pública é pública."',
     'E é isso: você fica encostad{o|a} na parede dos fundos de um leilão que você levou dias pra achar, e ele é aberto, e a servidora que preside faz questão de te informar do seu direito de assistir.',
@@ -2682,7 +2682,7 @@ c9_prado_te_da_o_processo:{
 c9_arrematou_o_41:{
   texto:[
     '"Eu quero dar lance no 41."',
-    'A Auditora Brill explica, sem ironia nenhuma, que {menor:menor não arremata|quem não é credenciado não arremata}. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você {menor:porque você tem {idade} anos|no meio de uma sessão aberta, porque o edital fecha o credenciamento na véspera}.',
+    'A Auditora Brill explica, sem ironia nenhuma, que menor não arremata. Mas que qualquer credenciado pode arrematar em nome de terceiro, e que credenciamento custa taxa e leva dez minutos, e que ela não vai credenciar você porque você tem {idade} anos.',
     'E aí ela diz a coisa que resolve: "Mas {o senhor|a senhora} pode consignar o valor em depósito judicial e o lote fica indisponível até decisão."',
     '"Quanto?"',
     '"Avaliação do 41: doze mil."',

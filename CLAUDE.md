@@ -742,30 +742,34 @@ Contra treinador a saída é o **Forfeit** (`Batalha.desistir`): derrota,
 multa e moral (`MULTA_FORFEIT_POR_NIVEL`, `MORAL_FORFEIT`).
 
 ## Idade de quem joga
-A ficha pede a **data de nascimento**, e a idade é calculada, nunca
-guardada: `idadeJogador()` (em `js/story/idade.js`) lê o nascimento e a
-data do jogo (o calendário tem ano: começa em março de 2010, que caiu
-numa segunda). A jornada começa entre 10 e 20 anos. Save antigo sem
-data ganha uma sorteada que dá a idade que ele tinha.
+**Todo mundo sai de casa com quinze anos.** A ficha pede só o
+**aniversário** (dia e mês); o ano é calculado pra dar quinze no dia da
+perua (`anoQueDaQuinze`, em `js/story/idade.js`), e save antigo com ano
+escolhido volta pros quinze na carga. Se o aniversário cai durante a
+jornada, a pessoa faz dezesseis na estrada. A idade é calculada, nunca
+guardada: `idadeJogador()`.
+
+A idade **não abre nem fecha nada**: nem porta (a estiva e o cassino,
+em `PORTAS_DA_IDADE`, não perguntam), nem posto (cargo não tem idade
+mínima). O pedido foi de uma história sem escolha de idade, e a história
+foi escrita pra alguém de quinze. Cena que trata você como adulto não
+existe; `{menor:A|B}` ainda funciona no motor, mas texto novo não usa —
+escreve só a versão de quinze.
 
 **Texto nunca escreve a idade do jogador à mão.** "Você tem quinze
-anos" virou `{idade}`; com maiúscula `{Idade}`, em título `{IDADE}`,
-daqui a N anos `{idade+N}`, a idade com que saiu de casa `{saida}`. Lembrança da
-infância conta pra trás a partir da idade − 3 (`{idade-3}`, a primeira
-coisa de que se lembra): "o mapa de {idade-3} anos atrás", nunca "nove
-anos atrás" escrito à mão. Cena
-que só faz sentido com menor de idade escreve as duas versões em
-`{menor:se menor|se maior}` (dentro só cabem as marcas de número) ou
-pergunta `ehMenor()`. `Estado.registrar` congela a idade do dia, pra o
-diário não mudar depois do aniversário. Personagem que **não é** o
-jogador e tem quinze anos (o rival, a filha da Sibyl) continua escrito.
+anos" é `{idade}` (vira dezesseis depois do aniversário); com maiúscula
+`{Idade}`, em título `{IDADE}`, daqui a N anos `{idade+N}`, a idade com
+que saiu de casa `{saida}`. Lembrança da infância conta pra trás a partir
+da idade − 3 (`{idade-3}`, a primeira coisa de que se lembra): "o mapa
+de {idade-3} anos atrás", nunca "nove anos atrás" escrito à mão.
+`Estado.registrar` congela a idade do dia, pra o diário não mudar depois
+do aniversário. Personagem que **não é** o jogador e tem quinze anos (o
+rival, a filha da Sibyl) continua escrito.
 
-A idade abre porta (`PORTAS_DA_IDADE`, a estiva de Vermilion aos 16 e o
-cassino de Celadon aos 18) e posto (`idadeMin` em `cargos.js`, que entra
-sozinho na lista de pedidos). Aniversário é `Aniversario`, na primeira
-tela de mapa do dia, uma vez por ano: quem ficou em casa (`aniversario`
-nos oito jeitos de `casa-jeito.js`), o Célio, quem tem opinião 4+ e o
-rival. Tudo isso está na folha de regras.
+Aniversário é `Aniversario`, na primeira tela de mapa do dia, uma vez
+por ano: quem ficou em casa (`aniversario` nos oito jeitos de
+`casa-jeito.js`), o Célio, quem tem opinião 4+ e o rival. Tudo isso está
+na folha de regras.
 
 ## Gênero de quem joga
 A ficha pergunta Homem ou Mulher, e **o texto inteiro concorda**. Frase

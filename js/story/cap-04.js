@@ -400,7 +400,7 @@ c4_senhora_comprar:{
     'Ela para de mexer na bolsa.',
     '"Por que você pergunta isso?"',
     '"Não sei. Perguntei."',
-    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só {alguém de {idade} anos fazendo pergunta de menino|alguém de {idade} anos fazendo pergunta de menina} de quinze anos.',
+    'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só {um menino|uma menina} de {idade} anos fazendo pergunta de {menino|menina}.',
     '"Já quiseram", ela diz. "Duas vezes que eu saiba."',
     '"E?"',
     '"E o museu é municipal, então não vende. Aí eles perguntaram se dava pra emprestar as peças. Aí perguntaram se dava pra emprestar só duas. Aí perguntaram quanto custava o seguro."',
