@@ -360,7 +360,7 @@ c14_cidade:{
 },
 
 c14_barco_fretado:{
-  falante:'o homem do bar',
+  falante:'o homem do bar do cais',
   vozes:['N','N','P','N'],
   texto:[
     'O homem do bar te leva até a rampa e aponta uma marca na madeira da defensa.',
@@ -391,7 +391,7 @@ c14_barco_fretado:{
 
 c14_quantas_ficaram:{
   falante:'Sr. Nolan',
-  vozes:['P','o homem do bar','N','N','P','N','N'],
+  vozes:['P','o homem do bar do cais','N','N','P','N','N'],
   texto:[
     '"O que eles vieram buscar?"',
     'O homem do bar franze a testa.',

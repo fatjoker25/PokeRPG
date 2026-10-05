@@ -3424,7 +3424,7 @@ c9_ivone_44207:{
 },
 
 c9_liga_celadon:{
-  falante:'o oficial da Liga',
+  falante:'o oficial da Liga de Celadon',
   vozes:['N','N','N','P','N','N'],
   texto:[
     'O posto da Liga em Celadon fica no terceiro andar de um prédio comercial, entre um consultório de fisioterapia e uma escola de informática, e fecha às dezoito horas.',

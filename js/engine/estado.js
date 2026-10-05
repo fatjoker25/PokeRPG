@@ -1192,12 +1192,14 @@ const Estado = {
         if (d.itens && d.itens[velho]){ d.itens[novo] = (d.itens[novo] || 0) + d.itens[velho]; delete d.itens[velho]; }
         for (const p of [].concat(d.time || [], d.pc || [])) if (p && p.segurando === velho) p.segurando = novo;
       }
-      const NPC_NOVO = {'a mulher da pasta de couro':'a mulher da pasta de vinil', 'Mulher da pasta de couro':'Mulher da pasta de vinil',
+      const NPC_NOVO = {'a mulher da pasta de couro':'a mulher da pasta', 'Mulher da pasta de couro':'a mulher da pasta',
+                        'a recepcionista':'a moça da recepção', 'a balconista':'a balconista da farmácia',
                         'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
-                        'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory'};
+                        'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory', 'Ivy Calder':'Tess Calder'};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
-      const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta de vinil'};
+      const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
+                            'a mulher da pasta de vinil':'a mulher da pasta'};
       for (const [errado, certo] of Object.entries(MESMA_PESSOA)){
         if (!d.npcs || !d.npcs[errado]) continue;
         const a = d.npcs[errado], b = d.npcs[certo] || {nome:certo, opiniao:0, memorias:[]};

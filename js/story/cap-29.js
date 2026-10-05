@@ -630,13 +630,13 @@ c29_seguiu_quem_saiu:{
 c29_o_frentista:{
   texto:[
     'A conversa é sobre a Liga por sete minutos e sobre o preço do diesel por dois, e no último minuto é sobre outra coisa.',
-    fala('o motorista', 'Semana que vem eu não venho terça.'),
+    fala('o motorista da caminhonete', 'Semana que vem eu não venho terça.'),
     fala('o frentista', 'Férias?'),
-    fala('o motorista', 'Que férias. Mudou a rota.'),
+    fala('o motorista da caminhonete', 'Que férias. Mudou a rota.'),
     'Ele mexe o café com o palito.',
-    fala('o motorista', 'Agora é direto pra Saffron. Corta Cerulean.'),
+    fala('o motorista da caminhonete', 'Agora é direto pra Saffron. Corta Cerulean.'),
     fala('o frentista', 'E o cara daqui?'),
-    fala('o motorista', 'Sei lá. Fecharam.'),
+    fala('o motorista da caminhonete', 'Sei lá. Fecharam.'),
     'Ele joga o copo no lixo e sai, e o sino da porta toca, e o frentista fica com a expressão de quem perdeu um cliente de terça.',
     'E você fica com a informação de que a casa do portão verde tem os dias contados e de que o que está lá dentro vai pra algum lugar antes de fechar.'
   ],

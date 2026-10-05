@@ -1,7 +1,7 @@
 /* ============================================================
    CAMINHO DO HERÓI — quem precisa de ajuda te acha
    Pra quem Kanto passou a ver como herói (a via do capítulo 9) na hora
-   do desvio. Quem acompanha: a brigadista Ivy Calder, o menino do
+   do desvio. Quem acompanha: a brigadista Tess Calder, o menino do
    Caterpie e quem mais pedir.
    ============================================================ */
 
@@ -131,7 +131,7 @@ ch1_a_causa:{
          npc:{nome:'Koga', opiniao:2, memoria:'Você trouxe a lata de querosene da origem do incêndio da Rota 15.'}}},
     {texto:'Deixar a lata com a brigadista, pro laudo dela.', vai:'ch1_fim',
      ef:{flag:'cm_heroi_lata_brigada', rep:{eixo:'bom', delta:1, motivo:'Deixou a prova do incêndio com a brigada'},
-         npc:{nome:'Ivy Calder', opiniao:3, memoria:'Você deixou a lata de querosene com ela, pro laudo.'}}},
+         npc:{nome:'Tess Calder', opiniao:3, memoria:'Você deixou a lata de querosene com ela, pro laudo.'}}},
     {texto:'Contar pra família da menina o que causou o fogo.', vai:'ch1_fim',
      ef:{flag:'cm_heroi_contou_familia', rep:{eixo:'bom', delta:1, motivo:'Contou às famílias dos sítios o que causou o incêndio'}}}
   ]

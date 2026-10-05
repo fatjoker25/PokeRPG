@@ -128,7 +128,7 @@ c26_ab_quem_limpa:{
     fala('a moça da recepção', 'Eu nunca tinha reparado nisso.', 'baixo')
   ],
   ef:{flag:['a_moldura_limpa','sabe_do_campeao_sumido'],
-      npc:{nome:'a recepcionista', opiniao:1, viuVoce:'Você a fez reparar, depois de seis anos, que uma moldura é limpa e as outras não.'},
+      npc:{nome:'a moça da recepção', opiniao:1, viuVoce:'Você a fez reparar, depois de seis anos, que uma moldura é limpa e as outras não.'},
       registrar:'Nem a recepcionista de seis anos de casa sabe quem limpa aquela moldura.'},
   escolhas:[
     {texto:'Andar pelo saguão.', vai:'c21_saguao'},

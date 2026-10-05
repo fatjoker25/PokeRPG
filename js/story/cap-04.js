@@ -105,7 +105,7 @@ c4_ab_por_que_param:{
     fala('o homem da banca', 'Nunca tinha reparado que a gente para. Obrigado, viu. Agora eu vou reparar todo dia.', 'riso')
   ],
   ef:{flag:'sabe_da_pedra_na_rua_nova', moral:3,
-      npc:{nome:'Homem da banca', opiniao:2, memoria:'Descobriu, por causa da sua pergunta, que a cidade dele para ao meio-dia.'},
+      npc:{nome:'o homem da banca', opiniao:2, memoria:'Descobriu, por causa da sua pergunta, que a cidade dele para ao meio-dia.'},
       rep:{eixo:'bom',delta:1,motivo:'Fez a pergunta que a cidade tinha parado de fazer'},
       registrar:'Caiu pedra na Rua Nova de Pewter há doze anos. Desde então a cidade para ao meio-dia sem saber que para.'},
   escolhas:[{texto:'Ir ver a cidade.', vai:'c4_chegada'}]

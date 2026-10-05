@@ -42,11 +42,6 @@ const RECUSAM_O_NOME = {
     fala('a mulher da pasta', 'Meu nome está na procuração, que é pública.'),
     fala('a mulher da pasta', 'Se {o senhor|a senhora} quiser, protocola um pedido de vista.', 'frio')
   ],
-  'a mulher da pasta de vinil': () => [
-    'Ela ajeita a pasta debaixo do braço.',
-    fala('a mulher da pasta de vinil', 'Eu não vim aqui como pessoa.'),
-    fala('a mulher da pasta de vinil', 'Vim como parte.', 'frio')
-  ],
   'a mulher de crachá azul': () => [
     'Ela vira o crachá com dois dedos, e o crachá tem foto, número e nenhum nome.',
     fala('a mulher de crachá azul', 'A empresa emite por matrícula.'),
@@ -112,7 +107,7 @@ const NOMES_FIXOS = {
   'a pesquisadora de bota':    'Dra. Quill',
   'o fotógrafo do Jornal':     'Bastian Fern',
   'a tratadora da Associação': 'Mina Bray',
-  'a brigadista de Fuchsia':   'Ivy Calder',
+  'a brigadista de Fuchsia':   'Tess Calder',
   'o atravessador':            'Corwin',
   'a mulher do mapa':          'Tamsin Reed'
 };

@@ -319,7 +319,7 @@ const CONVERSAS = {
     [fala('o velho do banco da praça', 'O menino de Pallet passou por aqui faz dois anos. Não falou com ninguém. Nem naquela época.')],
     {cond:d=>d.flags.leu_aviso_floresta, texto:[
      'Você pergunta do bilhete do mural. A atendente não sorri.',
-     fala('a atendente do Centro', 'Fui eu que escrevi. E eu escreveria de novo.', 'frio')]},
+     fala('a atendente', 'Fui eu que escrevi. E eu escreveria de novo.', 'frio')]},
     {cond:d=>d.insignias.length>=4, texto:[
      'Um garoto de uns doze anos te segue meio quarteirão antes de criar coragem.',
      fala('o garoto de doze anos', 'Quantas… quantas insígnias você tem?', 'baixo',

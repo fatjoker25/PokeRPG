@@ -166,7 +166,7 @@ c20_ab_nao_sei_ainda:{
     'Ela não diz qual é a terceira coisa. A porta abre no sétimo.'
   ],
   ef:{flag:'a_terceira_coisa',
-      npc:{nome:'a mulher da pasta de vinil', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
+      npc:{nome:'a mulher da pasta', opiniao:-1, viuVoce:'Te classificou no elevador e não disse como.'},
       registrar:'A mulher da pasta de vinil te classificou como "a terceira coisa".',
       presagio:'Ela tem uma lista de três tipos de gente que sobe nesse elevador. Duas ela sabe lidar.'},
   escolhas:[
@@ -214,7 +214,7 @@ c20_ab_devem:{
     fala('a balconista da farmácia', 'Sobe.', 'baixo')
   ],
   ef:{flag:'a_balconista_mandou_subir', moral:1,
-      npc:{nome:'a balconista', opiniao:2, viuVoce:'Fechou a sua mão em volta do troco e mandou você subir.'},
+      npc:{nome:'a balconista da farmácia', opiniao:2, viuVoce:'Fechou a sua mão em volta do troco e mandou você subir.'},
       registrar:'A balconista da farmácia do térreo mandou você subir e cobrar.'},
   escolhas:[
     {texto:'Subir.', vai:'c20_predio'}

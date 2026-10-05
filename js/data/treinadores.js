@@ -84,7 +84,8 @@ const RETRATO_POR_NOME = {
   'a recepcionista da Liga':'trainers/league_staff_f', 'a recepcionista do Planalto':'trainers/league_staff_f',
   'o funcionário da mesa':'trainers/league_staff',
   'Sra. Greta Nettle':'trainers/veteran_f', 'o lutador da Elite 4':'trainers/black_belt',
-  'a mulher de jaleco':'trainers/scientist_f',
+  'a mulher de jaleco':'trainers/scientist_f', 'a mulher de jaleco do galpão':'trainers/scientist_f', 'o homem do bar do cais':'trainers/sailor',
+  'a atendente do Centro de Fuchsia':'trainers/nurse', 'o homem da banca':'trainers/clerk',
 
   /* segunda leva: o resto de quem carrega cena, pela classe que os jogos
      dariam. Quem o texto deixa sem rosto de propósito continua sem: a
@@ -165,7 +166,7 @@ const RETRATO_POR_NOME = {
   /* caminho da Liga */
   'o pai do patrocínio':'trainers/gentleman',
   /* caminho do Herói */
-  'a brigadista de Fuchsia':'trainers/pokemon_ranger_f', 'Ivy Calder':'trainers/pokemon_ranger_f',
+  'a brigadista de Fuchsia':'trainers/pokemon_ranger_f', 'Tess Calder':'trainers/pokemon_ranger_f',
   'a mãe do píer':'trainers/pokefan_f', 'Dale':'trainers/fisherman', 'a mãe do menino':'trainers/lady',
   /* caminho do Mercenário */
   'o intermediário':'trainers/gambler', 'o chefe do manejo':'trainers/worker',

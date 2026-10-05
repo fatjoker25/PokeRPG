@@ -102,7 +102,7 @@ cf1_entregou:{
     'Na guarita da ponte tem uma cadeira de plástico e uma garrafa térmica de café. O guarda te serve uma xícara enquanto liga pro Centro mais próximo.',
     'A ficha da Liga, quando chega, é de três folhas. "Esclarecimentos sobre atividade em Celadon." Não é mandado. É conversa.',
     'Você esclarece por quatro horas, numa sala do Centro de Fuchsia, com uma atendente que digita devagar. No fim, ela carimba "aguardando".',
-    fala('a atendente do Centro', 'Pode ir. Não sai de Kanto. E tira esse desenho do poste, que tá assustando as crianças.', 'riso')
+    fala('a atendente do Centro de Fuchsia', 'Pode ir. Não sai de Kanto. E tira esse desenho do poste, que tá assustando as crianças.', 'riso')
   ],
   ef:{flag:'cm_foragido_ficha_aguardando'},
   escolhas:[
