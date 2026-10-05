@@ -97,7 +97,7 @@ const Exploracao = {
     rota5:[14,5.3], saffron:[14,7.6], rota6:[14,9.1], vermilion:[14,10.6],
     rota7:[11.4,7.6], celadon:[8.8,7.6], rota8:[16.8,7.6],
     rota11:[16.8,10.6], rota12:[19.6,10.6], rota13:[17.4,13.3], fuchsia:[12,13.3],
-    rota16:[7,10.6], rota19:[12,16.1], seafoam:[8.4,16.1], ilha_sem_nome:[1.4,15.6]
+    rota16:[7,10.6], rota19:[12,16.1], seafoam:[8.4,16.1], ilha_sem_nome:[1.3,15]
   },
   /* uma quadra = 12 unidades do desenho */
   _q(g){ return [g[0] * 12 + 10, g[1] * 12 + 10]; },
@@ -118,14 +118,14 @@ const Exploracao = {
     floresta:[-6, 2, 'end'], rota3:[0, 9, 'middle'], rota4:[0, 9, 'middle'], rota24:[5, 2, 'start'],
     rota9:[0, -5, 'middle'], norte:[6, 2, 'start'], usina:[7, -7, 'end'], tunel_rocha:[-6, 2, 'end'],
     rota5:[-5, 2, 'end'], rota6:[-5, 2, 'end'], vermilion:[-8, 2.4, 'end'], fuchsia:[-8, 11.5, 'end'], rota7:[0, -5, 'middle'],
-    rota8:[0, -5, 'middle'], rota11:[0, -5, 'middle'], rota12:[5, 2, 'start'], rota13:[0, 9, 'middle'],
-    rota16:[-5, 2, 'end'], rota19:[5, 2, 'start'], ilha_sem_nome:[-7, -7, 'start']
+    rota8:[0, -5, 'middle'], rota11:[0, -5, 'middle'], rota12:[-5, -4.5, 'end'], rota13:[0, 9, 'middle'],
+    rota16:[-5, 2, 'end'], rota19:[5, 2, 'start'], ilha_sem_nome:[-6, -7, 'start']
   },
 
   /* o chão de Kanto: costa, baía, lago, serras, mata e as ilhas */
   terrenoKanto(){
     const q = (x, y) => this._q([x, y]).join(' ');
-    const terra = [[0.3,0.2],[21.8,0.2],[21.8,12.3],[21,14.2],[16.2,14.5],[13.4,14.4],[12.7,14.9],[11.2,14.9],[10.5,14.3],
+    const terra = [[0.3,0.2],[21.8,0.2],[21.8,8.1],[21,8.6],[20.35,9.2],[20.3,12.3],[20.7,13.4],[21,14.2],[16.2,14.5],[13.4,14.4],[12.7,14.9],[11.2,14.9],[10.5,14.3],
                    [7.8,14.3],[6.2,13.9],[3.4,14],[0.3,13.6]];
     const d = 'M' + terra.map(([x, y]) => q(x, y)).join(' L') + ' Z';
     const pico = (x, y, s) => { const [px, py] = this._q([x, y]); return `<path class="mp-pico" d="M${px - 5 * s} ${py + 3 * s} L${px} ${py - 4.5 * s} L${px + 5 * s} ${py + 3 * s} Z"/><path class="mp-neve" d="M${px - 1.6 * s} ${py - 2.2 * s} L${px} ${py - 4.5 * s} L${px + 1.6 * s} ${py - 2.2 * s} Z"/>`; };
@@ -136,7 +136,7 @@ const Exploracao = {
                   [8.2,9.3],[10.4,9.5],[3.2,11.6],[6,12.4]].map(([x, y]) => arvore(x, y)).join('');
     const [bx, by] = this._q([14.6, 11.45]), [lx, ly] = this._q([11.6, 1.5]);
     const [cx, cy] = this._q([4.5, 16.1]), [sx, sy] = this._q([8.4, 16.1]);
-    const ilhaSem = this.mapaVisivel('ilha_sem_nome') ? (() => { const [ix, iy] = this._q([1.4, 15.6]); return `<ellipse class="mp-ilha" cx="${ix}" cy="${iy}" rx="6" ry="4"/>`; })() : '';
+    const ilhaSem = this.mapaVisivel('ilha_sem_nome') ? (() => { const [ix, iy] = this._q([1.3, 15]); return `<ellipse class="mp-ilha" cx="${ix}" cy="${iy}" rx="6" ry="4"/>`; })() : '';
     return `<defs>
         <pattern id="mp-ondas" width="16" height="10" patternUnits="userSpaceOnUse">
           <path d="M1 6 q3 -3 6 0 t6 0" fill="none" stroke="rgba(255,255,255,.13)" stroke-width=".8"/>
@@ -150,6 +150,7 @@ const Exploracao = {
       <ellipse class="mp-agua" cx="${lx}" cy="${ly}" rx="12" ry="6"/>
       <path class="mp-rio" d="M${q(14, 3)} C${q(13.2, 2.3)} ${q(12.6, 1.8)} ${q(11.6, 1.5)}"/>
       ${serras}${mata}
+      ${(() => { const [px, py] = this._q([20.3, 10.6]); return `<rect class="mp-pier" x="${px}" y="${py - 1.4}" width="12" height="2.8" rx=".6"/><rect class="mp-pier" x="${px + 9}" y="${py - 4}" width="2.8" height="8" rx=".6"/>`; })()}
       <ellipse class="mp-ilha" cx="${cx}" cy="${cy}" rx="15" ry="9"/>
       <path class="mp-pico vulcao" d="M${cx - 4} ${cy - 2} L${cx - 1} ${cy - 9} L${cx + 2} ${cy - 9} L${cx + 6} ${cy - 2} Z"/>
       <ellipse class="mp-ilha" cx="${sx - 5}" cy="${sy}" rx="6" ry="4"/><ellipse class="mp-ilha" cx="${sx + 6}" cy="${sy + 1}" rx="5" ry="3.5"/>
@@ -173,7 +174,7 @@ const Exploracao = {
   /* o nome inteiro está na ficha; no desenho vai o que cabe */
   rotuloMapa(L){
     if (L.tipo !== 'rota') return L.nome.replace(/^Ilhas? /, '').replace(/^Planalto Indigo$/, 'Planalto')
-      .replace(/^Usina Abandonada$/, 'Usina').replace(/^A ilha sem nome$/, 'ilha sem nome').replace(/^Norte da Rota 10$/, 'Norte');
+      .replace(/^Usina Abandonada$/, 'Usina').replace(/^A ilha sem nome$/, 'Ilha').replace(/^Norte da Rota 10$/, 'Norte');
     const n = /^Rota (\d+)/.exec(L.nome);
     return n ? n[1] : L.nome.replace(/^Monte da /, 'Mt. ').replace(/^Túnel da Rocha$/, 'Túnel')
       .replace(/^Caminho da Vitória$/, 'C. Vitória').replace(/^Floresta de Viridian$/, 'Floresta');

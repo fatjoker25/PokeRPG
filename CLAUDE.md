@@ -725,7 +725,7 @@ sudoeste, a Rota 22/23 subindo pro Planalto no oeste, a Rota 10 descendo
 pelo leste, Fuchsia na costa sul, as ilhas embaixo), a estrada anda reta e
 dobra em ângulo (`DESCE_PRIMEIRO` diz qual desce antes), trecho de mar é
 tracejado (`NO_MAR`) e o chão (`terrenoKanto`: costa, praia, baía de
-Vermilion, lago de Cerulean, serras, mata, ilhas, rosa dos ventos) é
+Vermilion, o mar encostado na Rota 12 com o píer, lago de Cerulean, serras, mata, ilhas, rosa dos ventos) é
 desenhado por baixo. O nome de cada lugar tem posição própria em
 `ROTULO_MAPA`, pra nenhum cair em cima de outro: lugar novo entra com
 quadra e, se precisar, rótulo.

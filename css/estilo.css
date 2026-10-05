@@ -3373,6 +3373,7 @@ button.item-linha.aparelho{
 .mapa-kanto .mp-pico{fill:#8f8a7e;stroke:#5c5850;stroke-width:.6;stroke-linejoin:round}
 .mapa-kanto .mp-pico.vulcao{fill:#a0705a}
 .mapa-kanto .mp-neve{fill:#f4f2ea}
+.mapa-kanto .mp-pier{fill:#b88a52;stroke:#6e4f2a;stroke-width:.5}
 .mapa-kanto .mp-arvore{fill:#4e9a45;stroke:#35702f;stroke-width:.6}
 .mapa-kanto .mp-rosa circle{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.5);stroke-width:.8}
 .mapa-kanto .mp-rosa path{fill:#f4f2ea}
