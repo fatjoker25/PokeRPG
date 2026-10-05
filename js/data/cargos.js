@@ -55,6 +55,7 @@ const CARGOS = [
   resumo:'Distintivo, apito e uma ronda por semana. Quem chama a polícia agora pode estar chamando você.',
   beneficios:{renda:800, centro:true, guarita:true, status:'forca'},
   fala:['A delegacia de Saffron tem um balcão comprido e um Growlithe dormindo atrás dele, em cima de um tapete com o brasão da polícia.',
+        d => { Nomes.apresentar('a delegada'); return 'Na mesa do fundo, uma placa virada pra quem entra: DELEGADA MARA THORNE.'; },
         '"O sargento de Viridian falou de você", diz a delegada, já carimbando. "Ele não fala bem de ninguém. Falou de você."',
         '"Distintivo não é licença pra brigar. É licença pra chegar primeiro."']
 },

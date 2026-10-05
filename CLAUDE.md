@@ -69,6 +69,17 @@ recepcionista") ganha rótulo próprio antes ("a recepcionista da Liga"),
 senão o nome de uma vira o de todas. Cargo que é função de cidade em
 cidade fica em `CARGO_DE_PROPOSITO`. `chk-nomes.js` lê as três listas.
 
+Duas ferramentas conferem tudo isso junto. `ferramentas/chk-rostos.js` lê o
+código: toda pessoa que fala (fala, falante, vozes, npc, contatos, trocas,
+rivais, líderes, Elite, veteranos) tem rosto pela regra do balão
+(`UI.retratoFala`), o arquivo existe em `sprites_nds/`, quem carrega cena
+tem nome, recusa ou cargo, quem diz o próprio nome tem o balão sabendo, e
+nome fixo é apresentado em alguma cena. `ferramentas/chk-baloes.js`
+renderiza no navegador toda cena (capítulos, eventos, linhas, PokéNav) e
+confere cada balão de verdade: nome em cima, rosto e arquivo no disco.
+Pessoa nova que fala entra com rosto em `treinadores.js` — pelo rótulo,
+ou pela palavra do cargo em `ROSTO_POR_PALAVRA`.
+
 ## Nada do mundo real
 O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de
 cachorro, gato, peixe, gado, mula, cavalo, urubu, morcego. Onde o texto

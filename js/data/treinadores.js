@@ -138,7 +138,11 @@ const RETRATO_POR_NOME = {
   'o locutor da arena':'trainers/league_staff', 'Supervisora da arena':'trainers/league_staff_f',
   'Conselheira do broche':'trainers/office_worker_f', 'Nico Hart':'trainers/punk_guy',
   'Nilo, o do posto':'trainers/worker', 'a voz do outro lado':'trainers/office_worker',
-  'Maren de Pewter':'trainers/lass', 'Museu de Pewter':'trainers/gentleman',
+  'Maren de Pewter':'trainers/lass', 'a menina do formulário':'trainers/lass', 'Maren':'trainers/lass',
+  'Museu de Pewter':'trainers/gentleman',
+  /* quem troca na estrada e tem nome no rótulo */
+  'Arlo da pedreira':'trainers/hiker', 'Dara da pedreira':'trainers/backpacker_f',
+  'Beatrix, da escola de natação':'trainers/swimmer_f',
   'As duas da caixa de gelo':'trainers/twins', 'quem estava na porta antes de você':'trainers/ace_trainer',
 
   /* caminho da Lei */

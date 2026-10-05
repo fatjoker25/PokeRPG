@@ -145,13 +145,14 @@ viridian:[
     {texto:'Contar a ela do formulário alternativo. Tem sempre um formulário.',
      ef:{moral:3, rep:{eixo:'bom',delta:2,motivo:'Passou adiante uma informação que salvou a licença de alguém'},
          flag:'ajudou_a_menina_da_licenca',
-         npc:{nome:'Maren de Pewter', opiniao:4, memoria:'Você contou pra ela do formulário alternativo quando ela ia desistir da licença.'},
+         npc:{nome:'a menina do formulário', opiniao:4, memoria:'Você contou pra ela do formulário alternativo quando ela ia desistir da licença.'},
          registrar:'Contou à menina do formulário que existe formulário para quem não tem responsável.'},
      resultado:[
        'Você conta. Ela não acredita. Você insiste. Ela volta pro balcão.',
        'A enfermeira puxa a gaveta, tira o formulário, e a menina chora de novo — de um jeito completamente diferente do de antes.',
        fala('a menina do formulário', 'Eu ia voltar pra Pewter hoje. Eu ia voltar hoje e não tentar de novo.'),
-       fala('a menina do formulário', 'Maren. Eu me chamo Maren. Eu vou lembrar da sua cara.')
+       d=>{ Nomes.apresentar('a menina do formulário');
+            return fala('a menina do formulário', 'Maren. Eu me chamo Maren. Eu vou lembrar da sua cara.'); }
      ]},
     {texto:'Pagar a passagem de volta dela, pelo menos.',
      ef:{dinheiro:-800, moral:2, rep:{eixo:'bom',delta:1,motivo:'Pagou a passagem de quem não conseguiu'},
@@ -164,7 +165,7 @@ viridian:[
      cond:d=>!!d.flags.tem_licenca,
      ef:{rep:{eixo:'ruim',delta:1,motivo:'Assinou como responsável de uma pessoa que você não conhece'},
          flag:'assinou_por_bruna',
-         npc:{nome:'Maren de Pewter', opiniao:5, memoria:'Você assinou como responsável dela, o que não podia.'},
+         npc:{nome:'a menina do formulário', opiniao:5, memoria:'Você assinou como responsável dela, o que não podia.'},
          registrar:'Assinou como responsável de uma desconhecida no balcão de Viridian.'},
      resultado:[
        'A enfermeira olha a sua licença. Olha a sua idade. Olha a idade dela.',

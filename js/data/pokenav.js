@@ -1137,7 +1137,7 @@ const CHAMADAS = [
     fala('a enfermeira', 'A gente fica sabendo. Centro Pokémon fala com Centro Pokémon.', 'baixo'),
     d=>{
       const m = d.cemiterio[d.cemiterio.length-1];
-      return fala('a enfermeira', `Eu não vou falar que eu sinto muito, porque todo mundo já falou. Eu vou perguntar o nome dele.`);
+      return fala('a enfermeira', `Eu não vou falar que eu sinto muito, porque todo mundo já falou. Eu vou perguntar o nome ${pron(m).dele}.`);
     }
   ],
   escolhas:[
@@ -1188,27 +1188,39 @@ const CHAMADAS = [
   id:'cha_juniper_capuz',
   de:'curador',
   /* alguns dias depois da entrega, o capuz cai — e ele sabe o que te deu */
-  cond:d=>Estado.temNumero('curador') && d.flags.o_curador_entregou && !d.flags.juniper_sem_capuz
-          && !!pokemonDoJuniper(d),
+  /* vale mesmo se o presente morreu ou saiu do time: o nome ele deve igual */
+  cond:d=>Estado.temNumero('curador') && d.flags.o_curador_entregou && !d.flags.juniper_sem_capuz,
   peso:4,
   falas:d=>{
-    const p = pokemonDoJuniper(d), n = nomeExib(p);
-    return [
+    const p = pokemonDoJuniper(d);
+    /* o presente morreu: ele vê no registro do PC, como vê o resto */
+    const morto = !p && (d.cemiterio || []).slice().reverse().find(x => x.doJuniper
+      || ([93, 94, 64, 65].includes(x.dex) && /abrigo de Lavender/.test(x.historia || '')));
+    const abre = [
       'O número que liga é o do abrigo. A voz é a do capuz, mas sem o pano no meio.',
       d=>{ Nomes.apresentar('a figura de capuz'); Estado.marcar('juniper_sem_capuz');
            return fala('Sr. Juniper', 'Juniper. É o meu nome. Eu fiquei devendo ele pra você.'); },
       fala('Sr. Juniper', 'Eu cuidava deste abrigo antes do Sr. Fuji. Em oitenta e nove a Liga mandou recolher o que estava aqui dentro, e o que ninguém veio buscar era pra voltar pro sistema.'),
-      fala('Sr. Juniper', 'Eu não devolvi. Quem fica com coisa recolhida não pode ter rosto. Por isso o capuz.', 'baixo'),
-      fala('Sr. Juniper', p.dex === 93 || p.dex === 94
-        ? `E o ${n}? Ele é dos que ficam. Eu sabia pelas suas respostas, e ele sabia antes de mim.`
-        : `E o ${n}? Ele é dos que passam. Eu sabia pelas suas respostas, e ele sabia antes de mim.`),
-      ...(evoluiPorTroca(p.dex)
-        ? [fala('Sr. Juniper', `Se um dia você quiser que o ${n} complete, manda ele pelo PC do Centro pro abrigo. Ele passa pela minha mão e volta no mesmo dia, outro.`)]
-        : [fala('Sr. Juniper', `Ele já completou. Eu vi no registro do PC, eu ainda tenho acesso. ${p.nome}. Combina com você.`)])
+      fala('Sr. Juniper', 'Eu não devolvi. Quem fica com coisa recolhida não pode ter rosto. Por isso o capuz.', 'baixo')
     ];
+    if (!p) return abre.concat(morto
+      ? [fala('Sr. Juniper', `E ${pron(morto).o} ${nomeExib(morto)}… eu vi no registro. Eu sinto.`, 'baixo'),
+         fala('Sr. Juniper', `${pron(morto).Ele} foi com você até onde deu. É mais do que a maioria aqui dentro teve.`, 'baixo')]
+      : [fala('Sr. Juniper', 'O que eu te dei não está mais com você. Eu vi no registro do PC.'),
+         fala('Sr. Juniper', 'Não vou perguntar. Cada um passa do jeito que dá.', 'baixo')]);
+    const n = nomeExib(p), e = pron(p);
+    return abre.concat([
+      fala('Sr. Juniper', p.dex === 93 || p.dex === 94
+        ? `E ${e.o} ${n}? ${e.Ele} é dos que ficam. Eu sabia pelas suas respostas, e ${e.ele} sabia antes de mim.`
+        : `E ${e.o} ${n}? ${e.Ele} é dos que passam. Eu sabia pelas suas respostas, e ${e.ele} sabia antes de mim.`),
+      ...(evoluiPorTroca(p.dex)
+        ? [fala('Sr. Juniper', `Se um dia você quiser que ${e.o} ${n} complete, manda ${e.ele} pelo PC do Centro pro abrigo. ${e.Ele} passa pela minha mão e volta no mesmo dia, outr${e.o}.`)]
+        : [fala('Sr. Juniper', `${e.Ele} já completou. Eu vi no registro do PC, eu ainda tenho acesso. ${p.nome}. Combina com você.`)])
+    ]);
   },
   escolhas:[
-    {texto:'Mandar ele pelo PC do Centro agora.',
+    {texto:'Mandar pelo PC do Centro agora.',
+     cond:d=>{ const p = pokemonDoJuniper(d); return !!(p && evoluiPorTroca(p.dex)); },
      ef:{executar:d=>{
            const p = pokemonDoJuniper(d);
            if (!p || !evoluiPorTroca(p.dex)) return [{tipo:'info', texto:'Não tem o que mandar.'}];
@@ -1220,7 +1232,8 @@ const CHAMADAS = [
          npc:{nome:'a figura de capuz', opiniao:2, memoria:'Você mandou pela mão dele o Pokémon que ele te deu, pra completar.'},
          rep:{eixo:'bom', delta:1, motivo:'Confiou de volta em quem confiou em você'}},
      resultado:[fala('Sr. Juniper', 'Chegou. Volta já. Não abre a Pokébola em lugar fechado.', 'baixo')]},
-    {texto:'Deixar ele como está.',
+    {texto:'Deixar como está.',
+     cond:d=>!!pokemonDoJuniper(d),
      ef:{npc:{nome:'a figura de capuz', opiniao:1, memoria:'Você preferiu deixar o Pokémon que ele te deu como estava.'}},
      resultado:[fala('Sr. Juniper', 'Também é uma resposta. Eu anoto.')]},
     {texto:'"Por que eu?"',

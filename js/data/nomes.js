@@ -23,6 +23,13 @@ const NAO_E_GENTE = /^(a|o)\s+(folha|p[áa]gina|placa|carta[zZ]?|aviso|bilhete|m
 
 /* quem não diz o nome, e por quê. A recusa é o personagem. */
 const RECUSAM_O_NOME = {
+  /* o que sobrou da Rocket no capítulo 5: quem cobra pedágio na
+     estrada não deixa nome com quem foi parado */
+  'o da aliança': () => [
+    'Ele gira a aliança no dedo, devagar, e sorri sem mostrar dente.',
+    fala('o da aliança', 'Nome? Você quer o meu nome pra contar pra quem?'),
+    fala('o da aliança', 'Me chama de quem te deixou passar. É o que eu vou ser, se você colaborar.', 'baixo')
+  ],
   'a técnica fugida': () => [
     fala('a técnica fugida', 'Não.', 'baixo'),
     fala('a técnica fugida', 'Três anos eu fui um número de crachá. Deixa eu ficar uns dias sem nome nenhum, antes de escolher qual.', 'baixo')
@@ -78,6 +85,8 @@ const RECUSAM_O_NOME = {
    perguntar antes disso dá o mesmo nome — nunca um sorteado que a cena
    depois desmentiria. */
 const NOMES_FIXOS = {
+  /* a menina da fila da licença, em Viridian: diz o nome quando é ajudada */
+  'a menina do formulário':    'Maren',
   'o capitão do porto':        'Capitão Marlow',
   'a funcionária da guarita':  'Sra. Myrtle',
   'o rapaz do protocolo':      'Tito',

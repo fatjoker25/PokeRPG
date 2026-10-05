@@ -1210,7 +1210,9 @@ const Estado = {
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
-                            'a mulher da pasta de vinil':'a mulher da pasta'};
+                            'a mulher da pasta de vinil':'a mulher da pasta',
+                            /* a menina da licença era gravada assim antes de ter nome fixo */
+                            'Maren de Pewter':'Maren'};
       for (const [errado, certo] of Object.entries(MESMA_PESSOA)){
         if (!d.npcs || !d.npcs[errado]) continue;
         const a = d.npcs[errado], b = d.npcs[certo] || {nome:certo, opiniao:0, memorias:[]};
