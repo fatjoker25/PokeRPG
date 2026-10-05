@@ -619,6 +619,14 @@ não ronda: a história nunca põe ele na sua frente. O texto da entrada
 repara no sinal (frio, estalo, calor) e na disposição dele; não conta onde
 mais ele anda.
 
+**Captura de lendário é a do Pokérole 3.0** (`captura.js`): só Ultra Ball
+e Master Ball (`BOLAS_DE_LENDARIO`; qualquer outra recusa e gasta). A
+Ultra rola o selo (`SELO_DA_BOLA`, 8d6) + os bônus da condição
+(`bonusDaCondicao`: metade do HP 1, 1 HP 2, 1 por condição) contra os
+sucessos do posto (`SUCESSOS_DO_POSTO`), e lendário conta no mínimo como
+Ás (10). Com HP cheio é impossível de propósito: o pedido foi "bem
+difícil". A Master fecha sem rolagem. A rolagem vai pro log inteira.
+
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
 não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). São todas as

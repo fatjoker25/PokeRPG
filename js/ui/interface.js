@@ -4483,12 +4483,14 @@ const UI = {
       <div class="linha"><span class="k">Par morre</span><span class="v">quem fica perde 20 de moral</span></div>
       <h3>Morte</h3>
       <p class="sussurro">Em combate normal é desmaio — ele volta. Morte permanente só acontece por escolha narrativa: escudo, abandono, sacrifício, treino forçado, não intervir. Treinador com 0 HP = fim de jogo permanente.</p>
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros) ? `
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.encontros || l.visto) ? `
       <h3>Captura de lendários</h3>
-      <p class="sussurro">${Estado.dados.flags.bola_fraca_em_lendario ? 'Poké Ball e Great Ball não funcionam — você viu.' : 'Pokébola comum parece não bastar, mas você ainda não testou.'}
-      ${Estado.dados.flags.ultra_prende_lendario ? 'Ultra Ball: 1d20, só 1–2 prendem.' : ''}
-      ${Estado.dados.flags.master_quase_sempre ? 'Master Ball normalmente captura.' : ''}
-      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a Pokébola no ar.' : ''}</p>` : ''}
+      <div class="linha"><span class="k">Bola</span><span class="v">só Ultra Ball e Master Ball · qualquer outra bate e cai aberta, e gasta${Estado.dados.flags.bola_fraca_em_lendario ? ' — você viu' : ''}</span></div>
+      <div class="linha"><span class="k">Ultra Ball</span><span class="v">a regra de captura do Pokérole: o selo da bola (8d6, sucesso em 4+) mais os sucessos de bônus, contra os sucessos que o posto pede · lendário conta no mínimo como Ás: pede 10 · com o HP cheio, não tem como</span></div>
+      <div class="linha"><span class="k">Bônus</span><span class="v">com metade do HP ou menos +1 · com 1 HP +2 (no lugar do +1) · +1 por condição (a de status e a confusão)</span></div>
+      <div class="linha"><span class="k">Master Ball</span><span class="v">fecha sem rolagem</span></div>
+      <div class="linha"><span class="k">Insistir</span><span class="v">cada bola que ele rompe conta · na terceira, quem estava neutro fica hostil</span></div>
+      ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? '<p class="sussurro">E existem coisas que simplesmente quebram a Pokébola no ar.</p>' : ''}` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
       <p class="sussurro">Parada de d6: status + 2 de perícia + o cinto, sucesso em 4+, contra os sucessos que a cena pede. Um a mais é crítico, na conta é sucesso, faltou um é parcial, faltaram dois é fracasso. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
