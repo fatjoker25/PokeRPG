@@ -542,48 +542,42 @@ lavender:[
   ]
 },
 {
-  /* Aqui nasce a escolha que decide Haunter ou Kadabra, meses depois.
-     O curador não fala em Pokémon uma vez sequer, nem aqui nem na
-     entrega — se ele falasse, o jogador escolheria o prêmio e não a
-     resposta, e a coisa inteira perderia a graça. */
+  /* Aqui nasce o que decide Haunter ou Kadabra, meses depois. O Sr.
+     Juniper faz três perguntas sobre quem você é — guardar ou passar
+     adiante, de três jeitos — e a soma é a índole que ele anota
+     (indoleDoJuniper). Ele não fala em Pokémon uma vez sequer, nem
+     aqui nem na entrega: se falasse, o jogador escolheria o prêmio e
+     não a resposta, e a coisa inteira perderia a graça. */
   id:'lav_a_pergunta_do_curador', umaVez:true, peso:4,
   titulo:'A pergunta',
   texto:[
     'Tem um homem sentado num banco de pedra na entrada do abrigo, com um caderno de capa dura aberto no colo e uma caneta atravessada na página.',
     'Ele não está escrevendo. Ele está esperando.',
-    fala('Sr. Juniper', 'Desculpa. Posso te fazer uma pergunta? Uma só, e não é sobre nada.'),
-    fala('Sr. Juniper', 'Eu faço essa pergunta pra quem passa aqui desde 1991. Tenho oitenta e três cadernos.'),
-    fala('Sr. Juniper', 'A pergunta é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
+    fala('Sr. Juniper', 'Desculpa. Posso te fazer umas perguntas? Três, e nenhuma é sobre nada.'),
+    fala('Sr. Juniper', 'Eu faço essas perguntas pra quem passa aqui desde 1991. Tenho oitenta e três cadernos.'),
+    fala('Sr. Juniper', 'A primeira é: quando uma coisa chega na sua mão e não é sua — você guarda, ou você passa adiante?'),
     'Ele não explica que coisa. Ele não explica por quê. Ele espera, com a caneta atravessada na página, do jeito de quem já esperou muito.'
   ],
   escolhas:[
-    {texto:'"Eu guardo."',
-     ef:{flag:['a_pergunta_do_curador','respondeu_guardar'],
-         npc:{nome:'Sr. Juniper', opiniao:2, memoria:'Você respondeu "guardar" à pergunta dele, no caderno setenta e um, página quatro.'},
+    {texto:'"Eu guardo."', segue:'lav_juniper_segunda',
+     ef:{flag:['a_pergunta_do_curador','respondeu_guardar'], juniper:'guarda',
+         npc:{nome:'Sr. Juniper', opiniao:2, memoria:'Você respondeu "guardar" à primeira pergunta dele, no caderno setenta e um, página quatro.'},
          rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
-         registrar:'Respondeu "guardar" à pergunta do Sr. Juniper, em Lavender.'},
+         registrar:'Respondeu "guardar" à primeira pergunta do Sr. Juniper, em Lavender.'},
      resultado:[
        'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
        fala('Sr. Juniper', 'Caderno setenta e um, página quatro.'),
-       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
-       fala('Sr. Juniper', 'Pra nada. Eu anoto.'),
-       'Ele fecha o caderno e prende a caneta na espiral, e você entende que a conversa acabou.',
-       fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
-       'Ele te dá o número antes de você perguntar se ele tem número.'
+       fala('Sr. Juniper', 'A segunda.', null, 'Ele não levanta os olhos do caderno.')
      ]},
-    {texto:'"Eu passo adiante."',
-     ef:{flag:'a_pergunta_do_curador', limpaFlag:'respondeu_guardar',
-         npc:{nome:'Sr. Juniper', opiniao:2, memoria:'Você respondeu "passar adiante" à pergunta dele, no caderno setenta e um, página quatro.'},
+    {texto:'"Eu passo adiante."', segue:'lav_juniper_segunda',
+     ef:{flag:'a_pergunta_do_curador', limpaFlag:'respondeu_guardar', juniper:'passa',
+         npc:{nome:'Sr. Juniper', opiniao:2, memoria:'Você respondeu "passar adiante" à primeira pergunta dele, no caderno setenta e um, página quatro.'},
          rep:{eixo:'bom',delta:1,motivo:'Respondeu a uma pergunta que não tinha resposta certa'},
-         registrar:'Respondeu "passar adiante" à pergunta do Sr. Juniper, em Lavender.'},
+         registrar:'Respondeu "passar adiante" à primeira pergunta do Sr. Juniper, em Lavender.'},
      resultado:[
        'Ele escreve a palavra e a data e o seu nome, nessa ordem, em letra pequena.',
        fala('Sr. Juniper', 'Caderno setenta e um, página quatro.'),
-       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
-       fala('Sr. Juniper', 'Pra nada. Eu anoto.'),
-       'Ele fecha o caderno e prende a caneta na espiral, e você entende que a conversa acabou.',
-       fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
-       'Ele te dá o número antes de você perguntar se ele tem número.'
+       fala('Sr. Juniper', 'A segunda.', null, 'Ele não levanta os olhos do caderno.')
      ]},
     {texto:'Perguntar o que as outras pessoas responderam antes de responder.',
      ef:{flag:'perguntou_as_respostas_antes',
@@ -598,12 +592,73 @@ lavender:[
      ],
      continua:true},
     {texto:'Não responder e ir embora.',
-     ef:{registrar:'Não respondeu à pergunta do Sr. Juniper, em Lavender.'},
+     ef:{registrar:'Não respondeu às perguntas do Sr. Juniper, em Lavender.'},
      resultado:[
        'Você não responde. Ele não insiste — ele claramente não insiste desde 1991.',
        fala('Sr. Juniper', 'Tudo bem. Eu anoto isso também.'),
        'Ele escreve alguma coisa curta e fecha o caderno.',
        'Você vai lembrar dessa pergunta em lugares onde ela não tem nada a ver, pelos próximos meses.'
+     ]}
+  ]
+},
+{
+  id:'lav_juniper_segunda', encadeado:true,
+  titulo:'A segunda pergunta',
+  texto:[
+    'Ele vira a página. A letra da página nova é a mesma da anterior, e a da anterior é a mesma de 1991.',
+    fala('Sr. Juniper', 'Você tem uma lembrança ruim. Uma que volta sem ser chamada.'),
+    fala('Sr. Juniper', 'Se desse pra tirar ela de você, inteira, sem sobrar nada — você deixava tirar?')
+  ],
+  escolhas:[
+    {texto:'"Não. Ela é minha."', segue:'lav_juniper_terceira',
+     ef:{juniper:'guarda', registrar:'Disse ao Sr. Juniper que não deixava tirar uma lembrança ruim.'},
+     resultado:['Ele anota. Uma palavra só, você vê de cabeça pra baixo: "fica".', fala('Sr. Juniper', 'A última.')]},
+    {texto:'"Deixava. Pra poder seguir."', segue:'lav_juniper_terceira',
+     ef:{juniper:'passa', registrar:'Disse ao Sr. Juniper que deixava tirar uma lembrança ruim.'},
+     resultado:['Ele anota. Uma palavra só, você vê de cabeça pra baixo: "vai".', fala('Sr. Juniper', 'A última.')]},
+    {texto:'"Eu não sei."', segue:'lav_juniper_terceira',
+     ef:{registrar:'Disse ao Sr. Juniper que não sabia se deixava tirar uma lembrança ruim.'},
+     resultado:['Ele anota mais do que você disse. Bem mais.', fala('Sr. Juniper', 'Essa é a resposta mais comum e a mais honesta. A última.')]}
+  ]
+},
+{
+  id:'lav_juniper_terceira', encadeado:true,
+  titulo:'A terceira pergunta',
+  texto:[
+    fala('Sr. Juniper', 'Alguém que você gosta te pede emprestada a coisa de que você mais gosta.'),
+    fala('Sr. Juniper', 'Diz que devolve. Você acredita. Só que vai demorar anos, e quando voltar não vai ser do mesmo jeito.'),
+    fala('Sr. Juniper', 'Você empresta?')
+  ],
+  escolhas:[
+    {texto:'"Não empresto."',
+     ef:{juniper:'guarda', registrar:'Disse ao Sr. Juniper que não emprestava.'},
+     resultado:[
+       'Ele escreve, sublinha uma vez e fecha o caderno, e prende a caneta na espiral.',
+       fala('Sr. Juniper', 'Pronto. É só isso.'),
+       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
+       fala('Sr. Juniper', 'Pra nada. Eu anoto.'),
+       fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       'Ele te dá o número antes de você perguntar se ele tem número.'
+     ]},
+    {texto:'"Empresto."',
+     ef:{juniper:'passa', registrar:'Disse ao Sr. Juniper que emprestava.'},
+     resultado:[
+       'Ele escreve, sublinha uma vez e fecha o caderno, e prende a caneta na espiral.',
+       fala('Sr. Juniper', 'Pronto. É só isso.'),
+       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
+       fala('Sr. Juniper', 'Pra nada. Eu anoto.'),
+       fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       'Ele te dá o número antes de você perguntar se ele tem número.'
+     ]},
+    {texto:'"Depende de quem pede."',
+     ef:{registrar:'Disse ao Sr. Juniper que dependia de quem pedia.'},
+     resultado:[
+       'Ele escreve "depende" e fica olhando a palavra um tempo, como se ela fosse de outra pessoa.',
+       fala('Sr. Juniper', 'Pronto. É só isso.'),
+       d=>fala(d.jogador.nome, 'Isso serve pra quê?'),
+       fala('Sr. Juniper', 'Pra nada. Eu anoto.'),
+       fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece aqui. É só isso.', 'baixo'),
+       'Ele te dá o número antes de você perguntar se ele tem número.'
      ]}
   ]
 },
@@ -2142,6 +2197,8 @@ const Eventos = {
     const d = Estado.dados;
     const banco = this.banco(id);
     return banco.filter(ev => {
+      /* pergunta que só vem depois de outra (a entrevista do Sr. Juniper) */
+      if (ev.encadeado) return false;
       if (ev.umaVez && this.jaViu(ev.id)) return false;
       /* mesmo os repetíveis não voltam no mesmo capítulo */
       const q = this.vistos()['cap_' + ev.id];
@@ -2205,7 +2262,7 @@ const Eventos = {
     if (esc.ef)        avisos = avisos.concat(Historia.aplicar(esc.ef) || []);
     if (ramo && ramo.ef) avisos = avisos.concat(Historia.aplicar(ramo.ef) || []);
     Estado.salvar('auto');
-    return {ev, esc, avisos, rolagem, ramo, continua: !!esc.continua,
+    return {ev, esc, avisos, rolagem, ramo, continua: !!esc.continua, segue: esc.segue || null,
             resultado: (ramo && ramo.resultado) || esc.resultado || []};
   }
 };

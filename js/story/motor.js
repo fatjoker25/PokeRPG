@@ -137,6 +137,12 @@ const Historia = {
     }
     const avisos = [];
     if (ef.flag) { (Array.isArray(ef.flag)?ef.flag:[ef.flag]).forEach(f => Estado.marcar(f)); }
+    /* a entrevista do Sr. Juniper: cada resposta pesa pra um lado */
+    if (ef.juniper){
+      const d = Estado.dados, j = d.juniper = d.juniper || {guarda:0, passa:0};
+      j[ef.juniper] = (j[ef.juniper] || 0) + 1;
+      if (!j.primeira) j.primeira = ef.juniper;
+    }
     if (ef.limpaFlag){ (Array.isArray(ef.limpaFlag)?ef.limpaFlag:[ef.limpaFlag]).forEach(f => Estado.marcar(f,false)); }
     if (ef.rep){
       /* o efeito inteiro vai junto: quem estava na cena pesa na conta */
@@ -366,6 +372,16 @@ function repDaOpiniao(ef){
                      : {eixo:'ruim', motivo:`${Quem} saiu da conversa falando mal de você`});
   }
   return out;
+}
+
+/* A índole que o Sr. Juniper anotou: guarda (fica com o que chega, não
+   larga a lembrança, não empresta) ou passa (o contrário). Empate fica
+   com a primeira resposta; save de antes das três perguntas, com a flag. */
+function indoleDoJuniper(d){
+  const j = d.juniper;
+  if (!j) return d.flags.respondeu_guardar ? 'guarda' : 'passa';
+  if (j.guarda !== j.passa) return j.guarda > j.passa ? 'guarda' : 'passa';
+  return j.primeira || (d.flags.respondeu_guardar ? 'guarda' : 'passa');
 }
 
 /* Resolve texto que pode ser função do estado */

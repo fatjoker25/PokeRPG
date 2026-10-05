@@ -181,10 +181,10 @@ const TROCAS = {
     id:'lavender_1', unica:true,
     quem:'o zelador da torre',
     onde:'no primeiro andar, entre as velas',
-    pede:104, da:{dex:92, nivel:[22,24], apelido:'Sete', natureza:'Quiet'},
-    fala:'"Tem um Gastly que mora no sétimo andar e que quer ir embora daqui. Eu não sei explicar como eu sei. Eu sei."\n"E ele quer o quê?"\n"Ele quer um Cubone. Não me pergunta por quê."',
+    pede:104, da:{dex:42, nivel:[24,28], apelido:'Sete', natureza:'Quiet'},
+    fala:'"Tem um Golbat que mora no sétimo andar e que quer ir embora daqui. Eu não sei explicar como eu sei. Eu sei."\n"E ele quer o quê?"\n"Ele quer um Cubone. Não me pergunta por quê."',
     depois:'O zelador leva o Cubone pra dentro do terceiro andar e volta sem ele, e não explica, e você decide não perguntar.',
-    memoria:'Trocou um Cubone pelo Gastly do sétimo andar da Torre.'
+    memoria:'Trocou um Cubone pelo Golbat do sétimo andar da Torre.'
   }, {
     id:'lavender_2', requer:d=>numInsignias() >= 5, unica:true,
     quem:'a senhora de luto do primeiro andar',
@@ -393,7 +393,7 @@ const Trocas = {
     });
   },
   disponiveis(id){ return this.lista(id).filter(t => !this.jaFez(t.id) || this.oferta(t)); },
-  /* Troca de história com um Pokémon que só existe uma vez (o Gastly da
+  /* Troca de história com um Pokémon que só existe uma vez (o Golbat da
      Torre, o Hypno da praça, o Machoke da pedreira, o Marowak da
      senhora, os fósseis) acontece uma vez só: depois dela a pessoa não
      vira gente que troca. O resto troca de novo todo dia. */
@@ -420,7 +420,10 @@ const Trocas = {
     const comuns = id => (ENCONTROS[id] || []).filter(([x, peso]) => peso >= 10 && DEX[x] && !DEX[x].lendario
       && !FOSSEIS.includes(x) && !DEX[x].preEvo).map(([x]) => x);
     const aqui = comuns(cidade);
-    const outros = Object.keys(ENCONTROS).filter(k => k !== cidade).flatMap(comuns).filter(x => !aqui.includes(x));
+    /* Haunter e Kadabra só vêm do Sr. Juniper: troca nenhuma dá alguém da linha deles */
+    const SO_DO_JUNIPER = [63, 64, 65, 92, 93, 94];
+    const outros = Object.keys(ENCONTROS).filter(k => k !== cidade).flatMap(comuns)
+      .filter(x => !aqui.includes(x) && !SO_DO_JUNIPER.includes(x));
     if (!aqui.length || !outros.length) return null;
     const nv = (LOCAIS[cidade] || {nivel:10}).nivel;
     const opcoes = [], usados = new Set();

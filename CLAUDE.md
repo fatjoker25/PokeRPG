@@ -555,14 +555,20 @@ e o jogo não conta que houve sorteio — nem na tela, nem na folha.
 
 Exceção: quem troca um Pokémon que só existe uma vez — evolução por troca
 (`trocaEvolui`: o Machoke da pedreira) ou troca marcada `unica:true` (o
-Gastly da Torre, o Hypno da praça, o Marowak da senhora, os fósseis) —
+Golbat da Torre, o Hypno da praça, o Marowak da senhora, os fósseis) —
 troca só a da história (`Trocas.repete`). Troca nova desse tipo entra com
 `unica:true`.
 
-**Haunter e Kadabra só vêm do Sr. Juniper**, o homem da pergunta de
-Lavender (`lav_a_pergunta_do_curador`, contato `curador` no PokéNav): a
-resposta decide qual dos dois. Nenhuma troca dá um deles. E ele não é o
-Curador Fabre da Comissão — são duas pessoas.
+**Haunter e Kadabra só vêm do Sr. Juniper**, o homem das perguntas de
+Lavender (`lav_a_pergunta_do_curador` e as duas `encadeado` que seguem
+por `segue:`; contato `curador` no PokéNav). São três perguntas sobre a
+índole — guardar ou passar adiante — e `indoleDoJuniper` soma (`ef.juniper`;
+empate fica com a primeira). Ele nunca fala em Pokémon, e nenhuma troca
+dá um deles, nem um da linha (por isso o zelador troca Golbat, não
+Gastly). E ele não é o Curador Fabre da Comissão — são duas pessoas.
+
+Evento com `encadeado:true` não entra no sorteio do lugar: só chega por
+`segue:` de outra escolha.
 
 A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
 de Johto entram por `idsKanto()` só depois de vistos ou catalogados.

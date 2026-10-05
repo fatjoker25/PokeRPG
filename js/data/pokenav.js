@@ -625,13 +625,14 @@ const CONTATOS = [
     ],
     objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
     entregue:d=>{
-      /* a resposta que você deu meses atrás decide o que chega */
-      const guarda = d.flags.respondeu_guardar;
+      /* as três respostas de meses atrás decidem o que chega */
+      const guarda = indoleDoJuniper(d) === 'guarda';
       return [
         'O abrigo do Sr. Fuji tem uma sala nos fundos que você nunca tinha visto, com oitenta e três cadernos de capa dura numa estante feita à mão.',
         fala('Sr. Juniper', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
-        d=>fala('Sr. Juniper', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
-        fala('Sr. Juniper', 'Eu não escolho o que dar. A resposta escolhe.'),
+        fala('Sr. Juniper', 'Eu te fiz três perguntas. Eu não li as respostas uma por uma: eu li pra que lado elas caíam.'),
+        d=>fala('Sr. Juniper', guarda ? 'Você fica com as coisas. Com o que chega, com o que dói, com o que te pedem.' : 'Você deixa as coisas irem. O que chega, o que dói, o que te pedem.'),
+        fala('Sr. Juniper', 'Eu não escolho o que dar. As respostas escolhem.'),
         guarda
           ? 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
           : 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
@@ -642,7 +643,7 @@ const CONTATOS = [
       ];
     },
     recompensa:d=>{
-      const guarda = !!d.flags.respondeu_guardar;
+      const guarda = indoleDoJuniper(d) === 'guarda';
       /* guardar → Haunter (fica com você, e não vira Gengar sem troca)
          passar adiante → Kadabra (a linha dele só se completa passando por outra mão) */
       const dex = guarda ? 93 : 64;
@@ -1156,7 +1157,7 @@ const CHAMADAS = [
   falas:d=>[
     fala('Sr. Juniper', 'Não desliga, é rápido.'),
     fala('Sr. Juniper', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
-    fala('Sr. Juniper', 'A sua resposta continua lá e continua a mesma, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
+    fala('Sr. Juniper', 'As suas respostas continuam lá e continuam as mesmas, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
     fala('Sr. Juniper', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
   ],
   escolhas:[
@@ -1165,7 +1166,7 @@ const CHAMADAS = [
          flag:'sabe_dos_que_mudaram'},
      resultado:[
        fala('Sr. Juniper', 'Onze pessoas voltaram pra mudar.'),
-       fala('Sr. Juniper', 'Em dezenove anos, onze. Todas as onze mudaram de "guardar" pra "passar adiante".'),
+       fala('Sr. Juniper', 'Em dezenove anos, onze. Todas as onze mudaram a primeira, de "guardar" pra "passar adiante".'),
        fala('Sr. Juniper', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
        fala('Sr. Juniper', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
      ]},
