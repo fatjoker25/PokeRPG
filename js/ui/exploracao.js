@@ -322,6 +322,7 @@ const Exploracao = {
     if (acao.startsWith('ag_'))   return Agenda.fazer(acao.slice(3));
     if (acao.startsWith('barr_')) return Barreiras.fazer(acao.slice(5));
     if (acao.startsWith('idade_')) return PortasDaIdade.fazer(acao.slice(6));
+    if (acao.startsWith('lab_'))  return Laboratorio.fazer(acao.slice(4));
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){
       const x = Cargos.lugaresEm(Mundo.id())[+acao.slice(6)];

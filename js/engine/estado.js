@@ -203,6 +203,17 @@ const ITENS_INFO = {
                       desc:'Laranja e morna por dentro, como seixo que passou o dia inteiro no sol. Não esfria.',
                       sabido:{usou_pedra:'Você já viu uma dessas mudar um corpo inteiro em quatro segundos.'}},
 
+  /* ─────────── fósseis ─────────── */
+  'Fóssil de Hélice':{tipo:'fossil', cat:'Fóssil', dex:138,
+                      ficha:'Fóssil · o laboratório de Cinnabar revive o que tem dentro',
+                      desc:'Uma pedra do tamanho da mão com uma espiral perfeita por dentro. A espiral tem sulco, como concha.'},
+  'Fóssil de Domo':  {tipo:'fossil', cat:'Fóssil', dex:140,
+                      ficha:'Fóssil · o laboratório de Cinnabar revive o que tem dentro',
+                      desc:'Uma casca abaulada e lisa, presa na rocha pela borda, com dois pontos mais escuros na frente.'},
+  'Âmbar Antigo':    {tipo:'fossil', cat:'Fóssil', dex:142,
+                      ficha:'Fóssil · o laboratório de Cinnabar revive o que tem dentro',
+                      desc:'Uma pedra cor de mel, morna na mão, com uma sombra pequena presa lá dentro.'},
+
   /* ─────────── segurados ─────────── */
   'Resto de Ração':  {tipo:'equipar', cat:'Segurado', efeito:{regen:1},
                       ficha:'SEGURADO · recupera 1 de HP no fim de cada turno',

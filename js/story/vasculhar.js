@@ -156,7 +156,9 @@ const ACHADOS_DO_LUGAR = {
     {t:'Pegadas pequenas, redondas, em fila, indo pro fundo da caverna. E uma melodia baixinha vindo de lá.', rastro:[35], so:'noite'},
     {t:'Pedaços de rocha clara com cheiro de chuva, quebrados com cuidado, como se alguém procurasse alguma coisa dentro.', rastro:[35, 46]},
     {t:'Uma pedra pequena, lisa, que parece ter uma lua desenhada por dentro.', item:['Moon Stone', 1], raro:true},
-    {t:'Um capacete de mineração abandonado, com a lanterna ainda funcionando.', item:['Lanterna', 1]}
+    {t:'Um capacete de mineração abandonado, com a lanterna ainda funcionando.', item:['Lanterna', 1]},
+    {t:'No pé de uma parede raspada às pressas, uma lasca que caiu e ninguém juntou. Dentro dela, uma espiral perfeita.', item:['Fóssil de Hélice', 1], raro:true},
+    {t:'Atrás de uma pedra que alguém já tinha rolado e desistido, uma casca abaulada e lisa, solta da rocha pela metade.', item:['Fóssil de Domo', 1], raro:true}
   ],
   rota24:[
     {t:'Na ponte, sete degraus pintados de cores diferentes, e em cada um alguém escreveu o nome de quem perdeu ali.'},
@@ -164,7 +166,8 @@ const ACHADOS_DO_LUGAR = {
   ],
   tunel_rocha:[
     {t:'No escuro total, um barulho de asa bem perto da orelha. Depois mais nada.', rastro:[41, 42]},
-    {t:'Marcas de giz numa parede: setas, e uma delas riscada com raiva.'}
+    {t:'Marcas de giz numa parede: setas, e uma delas riscada com raiva.'},
+    {t:'Numa fresta da parede, na altura do joelho, uma pedra cor de mel, morna, com uma sombra pequena presa dentro.', item:['Âmbar Antigo', 1], raro:true}
   ],
   usina:[
     {t:'Um quadro de luz aberto com um bilhete colado: "NÃO MEXA. ELE GOSTA DAQUI." Ninguém assinou.', rastro:[125, 100]}

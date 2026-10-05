@@ -582,6 +582,32 @@ Evento com `encadeado:true` não entra no sorteio do lugar: só chega por
 A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
 de Johto entram por `idsKanto()` só depois de vistos ou catalogados.
 
+## Todo Pokémon de Kanto tem caminho
+Os 151 têm que dar pra ter, e `node ferramentas/chk-obtencao.js` confere:
+junta mato e vara (`ENCONTROS`), inicial, presente e luta capturável
+escritos nas cenas, troca (só conta se o que a pessoa pede também dá pra
+ter) e fóssil, e fecha pelas evoluções — nível, pedra que se compra ou
+acha, e troca só onde alguém faz. Quem só sai num sorteio de uma vez (a
+compra do depósito, uma das três versões de uma troca) aparece como "só
+na sorte" e reprova: precisa de outro caminho.
+
+Os que não vêm do mato:
+- **fóssil** é item (`tipo:'fossil'`, com `dex`), achado vasculhando
+  caverna com Sorte crítica (Monte da Lua: Hélice e Domo; Túnel da
+  Rocha: Âmbar). Quem revive é o laboratório de Cinnabar
+  (`js/story/laboratorio.js`, `d.labFossil`), um de cada vez,
+  `HORAS_DO_FOSSIL` depois, no `NIVEL_DO_FOSSIL`;
+- **Porygon** está no balcão de prêmios do cassino de Celadon
+  (`PRECO_PORYGON`), que aparece em toda cidade com `'cassino'` em
+  `lugares`;
+- **evolução por troca** só acontece com quem troca com você: o Arlo
+  (Túnel da Rocha) entrega Machamp, a Dara (Rota 9) entrega Golem, os
+  dois com `trocaEvolui`; o Sr. Juniper completa pelo PC só o que ele
+  mesmo deu. Diglett e Dugtrio saem nas duas pontas da caverna deles
+  (Rotas 2 e 11), que não é lugar do mapa.
+
+Espécie nova numa tabela, troca nova ou fonte nova: roda o verificador.
+
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
 não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). São todas as

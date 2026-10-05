@@ -3144,7 +3144,7 @@ const UI = {
         '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
         false, 'mochila');
 
-    const ORDEM = ['Captura','Recuperação','Máquina','Segurado','Evolução','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
+    const ORDEM = ['Captura','Recuperação','Máquina','Segurado','Evolução','Fóssil','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
     const grupos = {};
     itens.forEach(([n,q]) => {
       const c = categoriaItem(n);
@@ -4513,6 +4513,9 @@ const UI = {
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
       <div class="linha"><span class="k">Troca</span><span class="v">cada pessoa troca uma vez só, e o que ela oferece é dela · depois passa o número, pra você ligar e perguntar do que foi com ela</span></div>
+      <div class="linha"><span class="k">Troca que completa</span><span class="v">Kadabra, Machoke, Graveler e Haunter só evoluem numa troca · quem te entrega um deles numa troca entrega já evoluído</span></div>
+      <div class="linha"><span class="k">Fóssil</span><span class="v">Fóssil de Hélice, Fóssil de Domo e Âmbar Antigo se acham vasculhando caverna, com Sorte crítica · o laboratório de Cinnabar revive um de cada vez, pronto em 24 horas do jogo, no nível 30</span></div>
+      <div class="linha"><span class="k">Porygon</span><span class="v">não vive no mato · fica na vitrine do balcão de prêmios do cassino de Celadon, 9.800 ₽</span></div>
       <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>

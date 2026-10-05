@@ -674,6 +674,8 @@ function afazeresDoLocal(){
   if (typeof Barreiras !== 'undefined') Barreiras.afazeres(id).forEach(x => lista.push(x));
   /* porta que a idade abre (ou mostra fechada) */
   if (typeof PortasDaIdade !== 'undefined') PortasDaIdade.afazeres(id).forEach(x => lista.push(x));
+  /* o laboratório de Cinnabar e o balcão de prêmios do cassino */
+  if (typeof Laboratorio !== 'undefined') Laboratorio.afazeres(id).forEach(x => lista.push(x));
   /* o que tem dia e hora marcados, se for agora */
   if (typeof Agenda !== 'undefined') Agenda.afazeres(id).forEach(x => lista.push(x));
   /* deixar o tempo passar: é assim que se chega na hora marcada */

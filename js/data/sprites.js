@@ -168,6 +168,8 @@ const ITEM_SPRITE = {
   /* evolução */
   'Moon Stone':'moon_stone', 'Pedra do Fogo':'fire_stone', 'Pedra da Água':'water_stone',
   'Pedra do Trovão':'thunder_stone', 'Pedra da Folha':'leaf_stone', 'Pedra do Sol':'sun_stone',
+  /* fósseis */
+  'Fóssil de Hélice':'helix_fossil', 'Fóssil de Domo':'dome_fossil', 'Âmbar Antigo':'old_amber',
   /* segurados — mesma ficha do item dos jogos */
   'Resto de Ração':'leftovers', 'Faixa Firme':'focus_band', 'Sino Calmante':'soothe_bell',
   'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses',

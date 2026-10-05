@@ -246,6 +246,18 @@ const TROCAS = {
     depois:'Duas semanas depois chega um bilhete pelo Centro Pokémon: "O seu virou Golem no dia seguinte. Eu chorei um pouco. Arlo."',
     memoria:'Trocou um Machoke pelo seu Graveler no portão da pedreira.'
   }],
+  /* o contrário do Arlo: quem tem Graveler e quer Machoke. A troca
+     completa o Graveler na sua mão, e é o único jeito de ter Golem */
+  rota9: [{
+    id:'rota9_1', requer:d=>numInsignias() >= 4,
+    quem:'Dara da pedreira',
+    onde:'na descida da Rota 10, sentada num caixote de ferramenta, com um Graveler parado do lado feito pedra de enfeite',
+    pede:67, da:{dex:75, nivel:[30,34], apelido:'Pedregulho', natureza:'Relaxed'},
+    trocaEvolui:true,
+    fala:'"Esse Graveler rola ladeira abaixo toda vez que eu viro as costas. Eu preciso de braço, não de pedra."\nEla olha o seu cinto antes de olhar a sua cara.\n"Você tem Machoke?"',
+    depois:'Ela põe o Machoke pra carregar o primeiro caixote antes de você guardar a Pokébola. Ele carrega dois, e ela ri pela primeira vez na conversa.',
+    memoria:'Trocou um Graveler pelo seu Machoke na descida da Rota 10.'
+  }],
   monte_lua: [{
     id:'monte_1', unica:true, requer:d=>numInsignias() >= 4,
     quem:'a restauradora do museu',

@@ -129,6 +129,8 @@ function iconeDoAfazer(a){
   if (/^rev_/.test(id)) return 'revanche';
   if (/^ag_/.test(id)) return 'agenda';
   if (/^barr_/.test(id)) return 'lutar';
+  if (id === 'lab_fossil') return 'laboratorio';
+  if (id === 'lab_premios') return 'loja';
   if (/^idade_/.test(id)) return 'porta';
   const t = String(a.titulo || '').toLowerCase();
   if (/laborat/.test(t)) return 'laboratorio';
