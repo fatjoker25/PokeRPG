@@ -409,11 +409,13 @@ c2_pergunta_floresta:{
 },
 
 c2_descricao:{
+  falante:'a atendente',
+  vozes:['N','P','N'],
   texto:[
     '"Homem, quarenta e poucos, roupa boa demais pra mato." Ela recita de memória. "Carregando rolo de fio de aço no ombro, sem disfarçar."',
     '"Fio de aço."',
     '"Fio de aço." Ela volta ao computador. "Eu anotei a ocorrência duas vezes com essa mesma frase e mandei as duas pra Liga."',
-    'Você vai lembrar dessa conversa daqui a uns dois dias, dentro de uma clareira, olhando um fio de aço amarrado numa estaca.'
+    'Você guarda a frase sem saber onde ela vai caber. Fio de aço não é coisa que se leva pra mato à toa.'
   ],
   ef:{flag:'sabe_do_fio_de_aco',
       rep:{eixo:'bom',delta:1,motivo:'Perguntou o suficiente para receber a resposta inteira'}},
@@ -421,6 +423,8 @@ c2_descricao:{
 },
 
 c2_vou_de_dia:{
+  falante:'a atendente',
+  vozes:['P','N'],
   texto:[
     '"Então eu vou de dia."',
     '"É o que todo mundo fala." Ela dá de ombros sem maldade. "E a floresta tem quatro horas de travessia, e ninguém sai de manhã cedo, e todo mundo entra depois do almoço."',
@@ -703,12 +707,12 @@ c2_critica:{
   texto:[
     '"Seu Pidgey não sabe voar direito."',
     'Ezra olha pro Pidgey. O Pidgey olha pro Ezra.',
-    '"Eu sei." Ele coça a cabeça. "Ele nasceu numa gaiola. A gente comprou ele numa loja quando eu tinha nove anos."',
+    '"Eu sei." Ele coça a cabeça. "Ele caiu do ninho em cima da caixa d\'água da minha rua quando eu tinha nove anos. Eu criei ele em casa, e ninguém lá sabe voar."',
     '"Ele nunca voou?"',
     '"Ele voa tipo… um metro." Ezra mostra com a mão. "Aí ele desce e anda."',
     'Vocês dois ficam olhando o Pidgey. O Pidgey anda até a cerca e volta.'
   ],
-  ef:{flag:'sabe_do_pidgey', npc:{nome:'Ezra', opiniao:1, memoria:'Te contou que o Pidgey dele nasceu numa gaiola e nunca aprendeu a voar direito.'}},
+  ef:{flag:'sabe_do_pidgey', npc:{nome:'Ezra', opiniao:1, memoria:'Te contou que o Pidgey dele caiu do ninho, foi criado em casa e nunca aprendeu a voar direito.'}},
   escolhas:[
     {texto:'"Dá pra ensinar."', vai:'c2_ensinar',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ofereceu esperança em vez de diagnóstico'}}},

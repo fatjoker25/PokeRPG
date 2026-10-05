@@ -725,7 +725,7 @@ c25_saiu_da_sala:{
 c25_a_rua:{
   texto:[
     'A rua de Saffron às treze e meia de uma segunda-feira é a coisa mais normal do mundo.',
-    'Tem fila na lanchonete. Tem gente de crachá branco almoçando na escada. Tem uma mulher de terno dizendo "não" no Pokégear com catorze entonações diferentes.',
+    'Tem fila na lanchonete. Tem gente de crachá branco almoçando na escada. Tem uma mulher de terno dizendo "não" no PokéNav com catorze entonações diferentes.',
     'Nada disso sabe que existe uma sala com nove cadeiras e um convênio de 1995 três andares acima.',
     d=>d.flags.combinou_de_subir_com_blue
       ? 'E tem uma montanha no norte que você prometeu subir, e uma pessoa que já subiu duas vezes e vai subir a terceira com você.'

@@ -475,7 +475,7 @@ const CONVERSAS = {
     [fala('o rapaz da banca de jornal', 'Saffron é a cidade onde o Kanto decide as coisas.'),
      fala('o rapaz da banca de jornal', 'E é a cidade onde ninguém vota em nada.')],
     ['Um grupo de estagiários almoça na escada do prédio comercial, todos com o mesmo crachá branco, todos almoçando a mesma comida do mesmo lugar.'],
-    ['Uma mulher de terno atende o Pokégear na calçada e diz "não" catorze vezes seguidas com entonações completamente diferentes.'],
+    ['Uma mulher de terno atende o PokéNav na calçada e diz "não" catorze vezes seguidas com entonações completamente diferentes.'],
     [fala('o segurança do prédio', 'Tem um dojo do outro lado da cidade. Eles brigaram com o ginásio faz uns anos e perderam.'),
      fala('o segurança do prédio', 'Continuam lá. Continuam brigados.')],
     {cond:d=>d.flags.sabe_da_silph, texto:[

@@ -928,7 +928,7 @@ saffron:[
   id:'saf_a_mulher_do_nao', peso:2,
   titulo:'Catorze vezes não',
   texto:[
-    'Tem uma mulher de terno parada na calçada falando no Pokégear, e em quatro minutos ela diz "não" catorze vezes.',
+    'Tem uma mulher de terno parada na calçada falando no PokéNav, e em quatro minutos ela diz "não" catorze vezes.',
     'Cada "não" tem uma entonação diferente. Nenhum deles é igual ao anterior.',
     'No décimo quinto ela desliga sem se despedir e fica parada olhando o aparelho.'
   ],
@@ -941,7 +941,7 @@ saffron:[
        'Ela demora quatro segundos pra entender que a pergunta é pra ela.',
        fala('a mulher de terno', 'O quê?'),
        d=>fala(d.jogador.nome, 'Se a senhora está bem.'),
-       'Ela olha pra você. Olha o crachá dela. Olha o Pokégear.',
+       'Ela olha pra você. Olha o crachá dela. Olha o PokéNav.',
        fala('a mulher de terno', 'Ninguém me pergunta isso nessa cidade há uns quatro anos.', 'baixo'),
        fala('a mulher de terno', 'Eu não tô. Obrigada.'),
        'E ela vai embora andando rápido, e você acha que fez uma coisa boa e não tem certeza.'

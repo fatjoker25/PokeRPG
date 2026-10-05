@@ -297,7 +297,7 @@ c9_cidade:{
     'Aprende três coisas.',
     'A primeira: Celadon tem dinheiro. Dá pra ver na calçada — é cimento nivelado, com rampa de acessibilidade, e a rampa está inteira.',
     'A segunda: Celadon tem gente sem nada. Eles ficam nos mesmos quarteirões todo dia e ninguém os expulsa, o que é gentileza, e ninguém faz mais nada, o que não é.',
-    'A terceira: tem uma quantidade absurda de lugar que compra. Compra ouro, compra Pokégear, compra bicicleta, compra carta, compra garrafa.',
+    'A terceira: tem uma quantidade absurda de lugar que compra. Compra ouro, compra PokéNav, compra bicicleta, compra carta, compra garrafa.',
     'E, em duas vitrines diferentes, na mesma avenida, com plaquinha impressa e tudo: COMPRA-SE POKÉMON — AVALIAÇÃO GRÁTIS.'
   ],
   ef:{flag:'viu_as_vitrines',
@@ -988,12 +988,12 @@ c9_liga_pra_ela:{
     '"Tenho."',
     '"Então você não sabe como é sair de casa e não conseguir voltar."',
     'E você não diz nada, porque essa é a única frase dessa conversa em que ela está completamente errada e você não vai provar isso discutindo.',
-    'Ela pega o Pokégear. Não liga.',
+    'Ela pega o PokéNav. Não liga.',
     'Mas guarda no bolso da frente, e não no de trás.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Empurrou uma ligação sem forçar'},
       flag:'a_filha_pensou_em_ligar',
-      npc:{nome:'Filha da Sibyl', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o Pokégear no bolso da frente.'},
+      npc:{nome:'Filha da Sibyl', opiniao:4, memoria:'Você mandou ela ligar pra mãe. Ela guardou o PokéNav no bolso da frente.'},
       presagio:'Bolso da frente, não o de trás. É pouco e é um movimento.'},
   escolhas:[
     {texto:'Se despedir.', vai:'c9_saiu_do_cafe'},
@@ -1283,11 +1283,11 @@ c9_pergunta_pra_ela:{
     '"Perguntar o quê?"',
     '"Se ela ia querer saber."',
     'Ele abre a boca pra responder e fecha.',
-    'Depois de um tempo ele pega o Pokégear da mesinha e fica olhando a tela apagada.',
+    'Depois de um tempo ele pega o PokéNav da mesinha e fica olhando a tela apagada.',
     '"Se eu perguntar, eu já contei."',
     '"Já."',
-    '"É." Ele gira o Pokégear na mão. "É, esse é o truque, né."',
-    'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o Pokégear no ouvido.'
+    '"É." Ele gira o PokéNav na mão. "É, esse é o truque, né."',
+    'Ele não liga na sua frente. Mas quando você sai da ala D e olha pra trás pela janelinha da porta, ele está com o PokéNav no ouvido.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Desmontou uma desculpa de cinco anos com uma pergunta'},
       flag:'hideo_ligou',
@@ -1949,8 +1949,8 @@ c9_responde_erika:{
     '"E aí?"',
     '"E aí alguém responde de volta."',
     'Ela abaixa a tesoura.',
-    'E pega o Pokégear do bolso do avental, e digita por uns dois minutos, e manda.',
-    'O Pokégear apita em quarenta segundos. E de novo. E de novo.',
+    'E pega o PokéNav do bolso do avental, e digita por uns dois minutos, e manda.',
+    'O PokéNav apita em quarenta segundos. E de novo. E de novo.',
     'Ela olha a tela com uma cara que você não sabe ler.',
     '"Quatro", ela diz. "Quatro responderam em um minuto."'
   ],
