@@ -3068,7 +3068,7 @@ c9_comprador_ok:{
   ef:{flag:['dentro_do_deposito','andou_entre_as_gaiolas'], moral:-10,
       presagio:'Você pediu pra andar entre as gaiolas com uma prancheta. Foi ideia sua.'},
   escolhas:[
-    {texto:'Comprar um. Tirar pelo menos um dali. (10.000 ₽)', vai:'c9_comprou_um'},
+    {texto:'Comprar um. Tirar pelo menos um dali. (10.000 ₽)', vai:'c9_comprou_um', cond:d=>d.jogador.dinheiro>=10000},
     {texto:'Fingir que desistiu, sair, e voltar pela lateral.', vai:'c9_lateral'},
     {texto:'Largar o dinheiro no chão e abrir todas as gaiolas.', vai:'c9_abriu_tudo',
      ef:{dinheiro:-10000, rep:{eixo:'bom',delta:2,motivo:'Trocou todo o dinheiro por um instante de caos'}}},

@@ -1783,7 +1783,7 @@ c15_disse_que_nao:{
     {texto:'Voltar e soltar.', vai:'c15_soltou_caes'},
     {texto:'Voltar e ajudar a cavar, pelo menos.', vai:'c15_ajudou_o_curral'},
     {texto:'Seguir.', vai:'c15_fim'},
-    {texto:'Mandar dinheiro pro vilarejo depois.', vai:'c15_fim', ef:{dinheiro:-8000, rep:{eixo:'bom',delta:1,motivo:'Pagou o mourão que ele mesmo custou'}}}
+    {texto:'Mandar dinheiro pro vilarejo depois.', vai:'c15_fim', cond:d=>d.jogador.dinheiro>=8000, ef:{dinheiro:-8000, rep:{eixo:'bom',delta:1,motivo:'Pagou o mourão que ele mesmo custou'}}}
   ]
 },
 

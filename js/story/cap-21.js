@@ -291,7 +291,7 @@ c21_pagou_a_janela:{
       rep:{eixo:'bom',delta:2,motivo:'Voltou anos depois para pagar uma dívida de criança', rep:{notorio:true}},
       registrar:d=>`Voltou para pagar ${vz().divida}. ${vz().Ele} não aceitou o dinheiro.`},
   escolhas:[
-    {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio'},
+    {texto:'Insistir. Deixar o dinheiro mesmo assim.', vai:'c21_insistiu_ushio', cond:d=>d.jogador.dinheiro>=2000},
     {texto:'Pegar de volta e ficar sentad{o|a} ali.', vai:'c21_silencio_no_degrau'}
   ]
 },

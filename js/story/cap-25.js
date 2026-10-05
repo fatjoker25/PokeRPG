@@ -246,7 +246,7 @@ c25_regou_a_planta:{
     fala('a mulher da pasta', 'Onze meses. Onze meses que eu venho nessa sala e ninguém nunca regou essa planta.')
   ],
   ef:{moral:3, flag:'regou_a_planta',
-      npc:{nome:'Mulher da pasta de vinil', opiniao:2, memoria:'Te viu regar a planta da antessala com quatro copos.'},
+      npc:{nome:'a mulher da pasta de vinil', opiniao:2, memoria:'Te viu regar a planta da antessala com quatro copos.'},
       rep:{eixo:'bom',delta:1,motivo:'Regou a planta da antessala antes da própria audiência'},
       registrar:'Regou a planta da antessala. Ninguém tinha regado em onze meses.'},
   escolhas:[
