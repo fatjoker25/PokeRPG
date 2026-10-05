@@ -20,7 +20,8 @@ cf1_o_papel:{
     'O papel no poste é novo, com cola ainda brilhando. O desenho é melhor que o do último: acertaram o nariz.',
     '**"PROCURA-SE PARA ESCLARECIMENTOS. FICHA DA LIGA. QUALQUER INFORMAÇÃO, CENTRO POKÉMON MAIS PRÓXIMO."**',
     'A ponte da Rota 15 é o único caminho pra fora de Fuchsia sem passar pela estação. Hoje tem uma guarita da Patrulha no meio dela, com farol.',
-    d => { Nomes.apresentar('a dona da pensão'); return 'O PokéNav vibra com uma mensagem curta da Dona Briar: "Não atravessa a ponte. Espera o Corwin no ponto de ônibus velho. Ele cobra caro e não erra."'; }
+    d => { Nomes.apresentar('a dona da pensão'); return 'O PokéNav vibra com uma mensagem curta da Dona Briar:'; },
+    '**"Não atravessa a ponte. Espera o Corwin no ponto de ônibus velho. Ele cobra caro e não erra."**'
   ],
   ef:{flag:'cm_foragido_1', registrar:'A Patrulha pôs uma guarita na ponte da Rota 15. O seu desenho está nos postes.'},
   escolhas:[

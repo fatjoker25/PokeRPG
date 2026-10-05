@@ -172,7 +172,11 @@ const RETRATO_POR_NOME = {
   'o velho do caminhão':'trainers/gentleman', 'Edith':'trainers/office_worker_f',
   /* caminho do Foragido */
   'o atravessador':'trainers/backpacker', 'Corwin':'trainers/backpacker',
-  'Guarda da ponte':'overworld/policial', 'a técnica fugida':'trainers/scientist_f'
+  'Guarda da ponte':'overworld/policial', 'a técnica fugida':'trainers/scientist_f',
+  /* caminho do Andarilho */
+  'a mulher do mapa':'trainers/backpacker_f', 'Tamsin Reed':'trainers/backpacker_f',
+  'o velho da primeira fogueira':'trainers/veteran', 'a moça de macacão':'trainers/pokefan_f',
+  'o menino do balde':'trainers/youngster', 'o treinador de capa de chuva':'trainers/veteran'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

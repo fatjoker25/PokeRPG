@@ -14,9 +14,28 @@ A campanha começa leve e vai escurecendo capítulo a capítulo — a própria p
 
 ## A campanha
 
-**32 capítulos · 2.820 cenas · 8.442 escolhas · 49 finais e 20 epílogos · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos · 65 treinadores de estrada · 12 veteranos e a Conferência do Planalto Indigo · 60 contatos no PokéNav · 10 lojas e 19 trocas.**
+**62 capítulos · 3.174 cenas · 8.876 escolhas · 79 finais e 20 epílogos · dez caminhos · 8 ginásios · Elite 4 · Torneio Aberto · um rival com cinco arcos e quatro rivais que mudam com você · 65 treinadores de estrada · 12 veteranos e a Conferência do Planalto Indigo · 60 contatos no PokéNav · 10 lojas e 19 trocas.**
 
-São 28 capítulos na linha principal e 4 **condicionais**, que só acontecem se você fez (ou deixou de fazer) uma coisa específica antes — e que entram no meio da jornada, logo depois do capítulo que os dispara.
+São 28 capítulos na linha principal, 4 **condicionais**, que só acontecem se você fez (ou deixou de fazer) uma coisa específica antes, e **30 capítulos de caminho**: três pra cada um dos dez lados que a jornada pode tomar.
+
+### Os dez caminhos
+
+Depois do capítulo 12, do 19 e do 25, a jornada desvia por um capítulo que só existe no **seu caminho** naquela hora, e volta. O terceiro capítulo de cada caminho pode acabar a jornada ali, com três finais que só existem nele.
+
+| Caminho | Quem anda nele | Os três capítulos | Os três finais |
+|---|---|---|---|
+| **Lei** | Guarda de rota, Policial, Investigador, Perito | A Blitz da Rota 18 · O Inquérito · O Mandado | A Farda · O Distintivo na Mesa · Lei Dura |
+| **Rocket** | quem carrega o envelope sem timbre | A Cerca de Trás · A Nota Fiscal · A Cadeira do Primeiro | O Quarto · Até o Fim do Duplo · A Porta dos Fundos |
+| **Ciência** | Auxiliar, Pesquisador, Professor; via pesquisador | A Contagem · A Amostra 4 · A Terceira Edição | A Tabela · O Laboratório Lacrado · Campo |
+| **Imprensa** | Repórter | A Cerca · A Fonte · Edição Extra | Primeira Página · Processada · A Matéria que Não Saiu |
+| **Criação** | Criador | Os Órfãos do Manejo · O Laudo · O Selo | O Criadouro Aberto · O Laudo Assinado · De Volta ao Mato |
+| **Liga** | Instrutor, Líder, Elite, Conselheiro; ou, sem lado, quem tem 4 insígnias ou mais | A Copa Júnior de Fuchsia · A Regra Nova · A Votação | O Plenário · A Liga Comprada · A Quadra de Terra |
+| **Herói** | via herói | O Fogo no Capim · Os Que Sumiram · Quem Ajuda Quem | O Símbolo · Ninguém · O Próximo |
+| **Mercenário** | via mercenário | A Escolta da Cerca · O Contrato da Estação · O Último Preço | O Preço · Calote · De Graça |
+| **Foragido** | via foragido | A Rota 15 à Noite · O Porão da Pensão · Rendição ou Estrada | Rendição · A Estrada · A Pensão |
+| **Andarilho** | sem lado e com menos de 4 insígnias | O Mapa Errado · As Três Fogueiras · A Última Página do Mapa | Mais Um Mapa · Casa · Quem Anda Junto |
+
+Trocou de lado no meio? O próximo capítulo é o do lado novo, e ele funciona sozinho. O desenho inteiro está em `docs/CAMINHOS.md`.
 
 | # | Capítulo | Tom |
 |---|---|---|
@@ -162,7 +181,7 @@ A rota altera texto, escolhas disponíveis e cenas inteiras em oito capítulos d
 
 A maior parte se alcança no capítulo 28 — alguns chegam antes, em capítulos onde a jornada pode acabar —, e o que abre cada um é o que você fez até ali: o que leu, o que soltou, o que destruiu, a quem prometeu alguma coisa, e o que você responde quando ele pergunta o que ele é.
 
-O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 49 você já encontrou pela tela inicial. Depois do final, um dos 20 epílogos conta o que aconteceu com quem ficou.
+O jogo mantém um **códice de finais** no navegador, que sobrevive entre partidas — dá para ver quantos dos 79 você já encontrou pela tela inicial. Depois do final, um dos 20 epílogos conta o que aconteceu com quem ficou.
 
 ## Mercado, itens e trocas
 
@@ -341,7 +360,9 @@ js/engine/batalha.js     combate completo
 js/engine/captura.js     captura e consequências em cascata dos lendários
 js/story/motor.js        cenas, efeitos, rotas divergentes e progressão
 js/story/capitulos.js    registro da campanha
-js/story/cap-*.js        os 32 capítulos (29 a 32 são condicionais)
+js/story/cap-*.js        os 32 capítulos da espinha (29 a 32 são condicionais)
+js/story/caminhos/       os 30 capítulos de caminho (três por caminho)
+js/story/caminhos.js     o desvio: qual caminho, em que ponto, e a volta
 js/story/estrada.js      treinadores de estrada: escalões, times e brigas
 js/story/estrada-dados.js os 65 treinadores, rota por rota
 js/story/ginasios.js     os 8 líderes, escala de time, falas e travas

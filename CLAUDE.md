@@ -807,6 +807,27 @@ ou cena nova entra ali; quem acompanha a linha inteira tem nome em
 Briar), apresentado na primeira cena, e quem não diz está em
 `RECUSAM_O_NOME`. Cena de linha não sabe do futuro como capítulo nenhum.
 
+## Os caminhos dividem a história
+`js/story/caminhos.js` desvia a jornada depois do 12, do 19 e do 25 por
+um capítulo do **caminho** do jogador naquela hora (`caminhoAtual`: a
+linha; sem linha, Liga com 4 insígnias ou mais, senão Andarilho). Os
+capítulos moram em `js/story/caminhos/<caminho>.js`, três por arquivo,
+e o desenho está em `docs/CAMINHOS.md` (o que cada ponto já sabe, quem
+acompanha, os finais).
+
+- **O número é a posição**: 12.01 a 12.10, 19.01…, 25.01…. Nada de 33
+  em diante: código que compara `d.capitulo >= 14` destravaria coisa do
+  fim do jogo. Na tela, `numeroDoCapitulo(cap)` desenha "Lei · II".
+- Capítulo de caminho entra **só pelo desvio** (`proximoCapitulo` pula
+  em sequência) e não aparece em `capitulosPulados`.
+- O terceiro de cada caminho pode acabar a jornada (`final:`) ou voltar
+  pro 26 (`fim:true`). Final novo conta no códice sozinho.
+- Toda escolha que muda alguma coisa leva `rep`, com motivo. Luta usa
+  `nivelDoCaminho(d, extra)`, que acompanha o time, não só a área.
+- Os verificadores leem `js/story/caminhos/`; arquivo novo de caminho
+  entra no `index.html` antes do `condicionais.js`, e o `caminhos.js`
+  depois dele.
+
 ## Quem ficou em casa e onde a jornada começa
 A pessoa de casa tem um **jeito** sorteado uma vez e guardado na ficha
 (`jeitoDaCasa`, em `js/story/casa-jeito.js`): orgulho, brincalhão,
@@ -839,7 +860,7 @@ Texto que não pode depender de "mãe": quem ficou em casa é `nomeCasa()`,
 - `js/data/` — pokédex, golpes, learnsets, naturezas, afinidade, pokénav,
   nomes, porte, arenas, treinadores, tms, pokerole (gerado).
 - `js/engine/` — estado, batalha, dados, mundo, captura, pokémon.
-- `js/story/` — capítulos (`cap-01` a `cap-32`), lugares, mercado, eventos, motor,
+- `js/story/` — capítulos (`cap-01` a `cap-32`; os de caminho em `caminhos/`), lugares, mercado, eventos, motor,
   estrada (treinadores de rota e o que surge nela), vasculhar (achado,
   falha e acampamento por ambiente e por lugar — texto novo de rota entra
   com o ambiente dele, senão aparece cerca no mar e tronco na caverna).

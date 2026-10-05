@@ -113,7 +113,8 @@ const NOMES_FIXOS = {
   'o fotógrafo do Jornal':     'Bastian Fern',
   'a tratadora da Associação': 'Mina Bray',
   'a brigadista de Fuchsia':   'Ivy Calder',
-  'o atravessador':            'Corwin'
+  'o atravessador':            'Corwin',
+  'a mulher do mapa':          'Tamsin Reed'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
