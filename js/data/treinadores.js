@@ -148,7 +148,11 @@ const RETRATO_POR_NOME = {
   'o técnico da prancheta':'trainers/worker',
   /* caminho da Rocket */
   'o contato da Terceira':'trainers/team_rocket_grunt_m', 'Rook':'trainers/team_rocket_grunt_m',
-  'Guarda da reserva':'trainers/pokemon_ranger_f'
+  'Guarda da reserva':'trainers/pokemon_ranger_f',
+  /* caminho da Ciência; o Professor é o Oak de verdade */
+  'Professor Oak':'trainers/oak', 'Oak':'trainers/oak',
+  'a pesquisadora de bota':'trainers/scientist_f', 'Dra. Quill':'trainers/scientist_f',
+  'a mulher do envelope':'trainers/office_worker_f', 'Recolhedor da Comissão':'trainers/veteran'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */
@@ -256,7 +260,7 @@ const ROSTO_POR_NOME_SOLTO = {
   'Dario':'trainers/roughneck', 'Sra. Vale':'trainers/madame', 'Nina':'trainers/sightseer_f',
   'Elsa':'trainers/office_worker_f', 'Milo':'trainers/camper', 'Nico':'trainers/punk_guy',
   'A Terceira':'trainers/veteran_f', 'a Terceira':'trainers/veteran_f', 'Thea Larkin':'trainers/worker',
-  'o Professor':'trainers/scientist',
+  'o Professor':'trainers/oak',
   'Rico':'trainers/worker', 'Maeve Corwin':'trainers/reporter', 'quem te atendeu':'trainers/league_staff',
   'a assistente do Professor':'trainers/scientist_f', 'a enfermeira de Viridian':'overworld/nurse_joy',
   'outro dos seis':'trainers/fisherman', 'os pescadores':'trainers/fisherman', 'os três':'trainers/pokefan'

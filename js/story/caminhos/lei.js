@@ -303,7 +303,7 @@ cl1_o_relatorio:{
   texto:[
     'O formulário da Patrulha tem três folhas e um campo chamado OBSERVAÇÕES com quatro linhas.',
     d => {
-      if (d.flags.cm_lei_abriu) return 'Quatro linhas pra quarenta e um bichos sem nome numa grade. Você escreve pequeno.';
+      if (d.flags.cm_lei_abriu) return 'Quatro linhas pra quarenta e um Pokémon sem nome numa grade. Você escreve pequeno.';
       if (d.flags.cm_lei_balsa) return 'Quatro linhas pra um píer que não existe e uma balsa sem luz.';
       return 'Quatro linhas pra uma madrugada em que, no papel, não aconteceu nada.';
     },

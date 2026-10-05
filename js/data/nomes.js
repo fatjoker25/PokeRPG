@@ -99,7 +99,8 @@ const NOMES_FIXOS = {
   'a delegada de Saffron':     'Delegada Thorne',
   'a delegada':                'Delegada Thorne',
   'o advogado da Comissão':    'Dr. Bramble',
-  'o contato da Terceira':     'Rook'
+  'o contato da Terceira':     'Rook',
+  'a pesquisadora de bota':    'Dra. Quill'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

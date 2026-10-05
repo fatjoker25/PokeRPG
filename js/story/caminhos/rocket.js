@@ -82,7 +82,7 @@ cr1_o_rook:{
     d => { Nomes.apresentar('o contato da Terceira'); return 'Por baixo da jaqueta dele, preso do avesso, tem um broche velho com uma letra que ninguém usa mais em Kanto. No bordado do bolso: ROOK.'; },
     '"Você conta. Eu carrego. Ninguém fala."',
     '"Conta o quê?"',
-    '"O que passar pelo buraco." Ele ri sem barulho. "O manejo daqui chama de excedente. A gente chama de mercadoria. O bicho não chama de nada."'
+    '"O que passar pelo buraco." Ele ri sem barulho. "O manejo daqui chama de excedente. A gente chama de mercadoria. O Pokémon não chama de nada."'
   ],
   ef:{npc:{nome:'Rook', opiniao:0, memoria:'Carregou com você a carga da cerca de trás do setor 7.'}},
   escolhas:[
