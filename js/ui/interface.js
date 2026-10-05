@@ -4063,7 +4063,7 @@ const UI = {
 
     if (k === 'mundo') return `
       <h3>Cidade</h3>
-      ${L('Centro Pokémon', 'com licença é de graça · sem licença, 300 ₽ + 250 por ferido')}
+      ${L('Centro Pokémon', 'com licença é de graça · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem')}
       ${L('PC', 'no saguão do Centro — guarda e retira do cinto de seis')}
       ${L('Loja', 'dez cidades · cada uma vende o que a cidade é')}
       ${L('Ginásio', 'a insígnia é permanente e muda quem te obedece')}
@@ -4321,7 +4321,7 @@ const UI = {
       <div class="linha"><span class="k">Sacudidas</span><span class="v">três, cada uma passa com a raiz cúbica da chance: as três juntas dão a chance que aparece no log</span></div>
       <h3>Centro Pokémon</h3>
       <div class="linha"><span class="k">Lá dentro</span><span class="v">enfermeira, PC, balcão de credenciais, mapa na parede e mural de recados</span></div>
-      <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça</span></div>
+      <div class="linha"><span class="k">Sem licença</span><span class="v">a enfermeira cobra 300 ₽ + 250 por Pokémon ferido · com licença, de graça · sem o dinheiro e com o time todo caído, ela atende e fica com o que você tem</span></div>
       <div class="linha"><span class="k">No meio de um capítulo</span><span class="v">se ele acontece numa cidade com Centro, dá pra passar lá e voltar pro mesmo ponto da história</span></div>
       <div class="linha"><span class="k">Achado andando</span><span class="v">loja, ginásio, quem quer trocar e o Relembrador de Golpes: nada disso tem placa, você acha andando pela cidade</span></div>
       <h3>Quem aparece onde</h3>
@@ -4645,7 +4645,7 @@ const UI = {
       <h3>Estrada e tempo</h3>
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
-      <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido</span></div>
+      <div class="linha"><span class="k">Centro Pokémon</span><span class="v">de graça com licença · sem licença, 300 ₽ + 250 por ferido · sem o dinheiro e com o time todo caído, ela fica com o que você tem</span></div>
       <div class="linha"><span class="k">Mapa</span><span class="v">com o Mapa de Kanto, na aba Mapa da mochila, ou na parede de qualquer Centro Pokémon · Kanto inteira, toda cidade e toda rota com nome · lugar que não está em mapa nenhum só aparece depois que você descobre</span></div>
       <div class="linha"><span class="k">Tocar num lugar</span><span class="v">mostra o que ele é, com o que liga, se tem Centro e se você já foi · loja e ginásio só aparecem depois que você acha andando · vizinho: botão de ir · cidade longe onde você já pisou: botão de voar, se der</span></div>
       <div class="linha"><span class="k">Voar pelo mapa</span><span class="v">com um Voador de grande porte que voe de verdade · até qualquer cidade onde você já pisou · um período do dia</span></div>

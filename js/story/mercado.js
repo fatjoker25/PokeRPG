@@ -225,10 +225,10 @@ const TROCAS = {
     id:'rota1_1', requer:d=>numInsignias() >= 2,
     quem:'a mulher do varal',
     onde:'sentada na mureta da Rota 1, com a sacola de compras no colo, esperando a carona das quatro',
-    pede:16, da:{dex:20, nivel:[16,20], apelido:'Senhor', natureza:'Jolly'},
+    pede:16, da:{dex:19, nivel:[14,18], apelido:'Senhor', natureza:'Jolly'},
     fala:'"O Senhor mora embaixo da minha casa há seis anos e nunca foi de ninguém."\n"E a senhora quer um Pidgey?"\n"Eu quero uma coisa que voe. A vizinha tem um. Eu quero um também. Eu tenho sessenta e dois anos e eu posso querer o que eu quiser."',
     depois:'Ela chama o Pidgey de Senhor também, no mesmo dia, sem transição nenhuma, e ninguém na rua acha isso estranho.',
-    memoria:'Trocou o Raticate que morava embaixo da casa dela por um Pidgey seu. Ela chama os dois de Senhor.',
+    memoria:'Trocou o Rattata que morava embaixo da casa dela por um Pidgey seu. Ela chama os dois de Senhor.',
     alt:[
       {da:{dex:27, nivel:[16,20], apelido:'Senhor', natureza:'Jolly'},
        memoria:'Trocou o Sandshrew que morava embaixo da casa dela por um Pidgey seu. Ela chama os dois de Senhor.'},
@@ -276,33 +276,34 @@ const TROCAS = {
     id:'rota12_1', requer:d=>numInsignias() >= 4,
     quem:'o contramestre do Anne',
     onde:'de folga, pescando na Rota 12, de camisa para fora da calça',
-    pede:72, da:{dex:130, nivel:[36,40], apelido:'Sobra', natureza:'Rash'},
-    fala:'"Eu peguei esse Gyarados de Magikarp, criei ele no navio, e ele é grande demais pro navio."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que caiba na cabine. Só isso. Eu tô velho."',
-    depois:'O Gyarados sai da Pokébola no cais uma última vez, e o porto inteiro para de trabalhar por onze segundos, e o contramestre não olha pra ele nem uma vez.',
-    memoria:'Trocou o Gyarados do contramestre do Anne por um Tentacool seu.',
+    pede:72, da:{dex:129, nivel:[15,19], apelido:'Sobra', natureza:'Rash'},
+    fala:'"Eu peguei esse Magikarp no cais e criei ele num balde na cabine. Um dia ele vira Gyarados, e Gyarados não cabe no navio."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que caiba na cabine pra sempre. Só isso. Eu tô velho."',
+    depois:'O Magikarp sai da Pokébola no cais uma última vez e pula duas vezes no lugar, e o contramestre não olha pra ele nem uma vez.',
+    memoria:'Trocou o Magikarp do contramestre do Anne por um Tentacool seu.',
     alt:[
-      {da:{dex:119, nivel:[36,40], apelido:'Sobra', natureza:'Rash'},
-       fala:'"Eu pesquei esse Seaking de Goldeen, criei ele no aquário da cabine, e ele é grande demais pro aquário."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que caiba no aquário. Só isso. Eu tô velho."',
-       depois:'O Seaking sai da Pokébola no cais uma última vez e bate o rabo na água uma vez só, e o contramestre não olha pra ele nem uma vez.',
-       memoria:'Trocou o Seaking do contramestre do Anne por um Tentacool seu.'},
-      {da:{dex:99, nivel:[36,40], apelido:'Sobra', natureza:'Rash'},
-       fala:'"Esse Kingler subiu a bordo em Vermilion e não desceu mais. Ele corta as amarras de noite."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que não corte nada. Só isso. Eu tô velho."',
-       depois:'O Kingler sai da Pokébola no cais uma última vez e corta, por despedida, a última amarra do píer, e o contramestre não olha pra ele nem uma vez.',
-       memoria:'Trocou o Kingler do contramestre do Anne por um Tentacool seu.'}
+      {da:{dex:118, nivel:[28,32], apelido:'Sobra', natureza:'Rash'},
+       fala:'"Eu pesquei esse Goldeen e criei ele no aquário da cabine, e ele bate o chifre no vidro a noite inteira."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que durma. Só isso. Eu tô velho."',
+       depois:'O Goldeen sai da Pokébola no cais uma última vez e bate o rabo na água uma vez só, e o contramestre não olha pra ele nem uma vez.',
+       memoria:'Trocou o Goldeen do contramestre do Anne por um Tentacool seu.'},
+      {da:{dex:98, nivel:[22,27], apelido:'Sobra', natureza:'Rash'},
+       fala:'"Esse Krabby subiu a bordo em Vermilion e não desceu mais. Ele corta as amarras de noite."\n"E o senhor quer um Tentacool."\n"Eu quero uma coisa que não corte nada. Só isso. Eu tô velho."',
+       depois:'O Krabby sai da Pokébola no cais uma última vez e belisca, por despedida, a última amarra do píer, e o contramestre não olha pra ele nem uma vez.',
+       memoria:'Trocou o Krabby do contramestre do Anne por um Tentacool seu.'}
     ]
   }],
   rota7: [{
     id:'rota7_1',
     quem:'a florista do térreo',
     onde:'na Rota 7, colhendo alguma coisa na beira da estrada com um balde',
-    pede:29, da:{dex:32, nivel:[20,24], apelido:'Espeto', natureza:'Naughty'},
+    pede:29, da:{dex:32, nivel:[12,15], apelido:'Espeto', natureza:'Naughty'},
     fala:'"Eu tenho macho, você tem fêmea. Eu não vou explicar melhor que isso, {moço|moça}, eu tenho quarenta e três anos e eu trabalho com planta."',
     depois:'Ela põe o Nidoran♀ numa caixa de papelão com furo e um pratinho de água e sai carregando pelo corredor de serviço, falando com ela o caminho inteiro.',
     memoria:'Trocou o Nidoran♂ dela pelo seu Nidoran♀, na banca de flor.',
     alt:[
-      {da:{dex:33, nivel:[20,24], apelido:'Espeto', natureza:'Naughty'},
-       memoria:'Trocou o Nidorino dela pelo seu Nidoran♀, na banca de flor.'},
-      {da:{dex:69, nivel:[20,24], apelido:'Espeto', natureza:'Naughty'},
+      {da:{dex:43, nivel:[16,20], apelido:'Espeto', natureza:'Naughty'},
+       fala:'"Eu tenho um Oddish que acha que é muda e fica plantado no meio da banca. Você tem uma Nidoran fêmea. Eu não vou explicar melhor que isso, {moço|moça}, eu trabalho com planta."',
+       memoria:'Trocou o Oddish que se plantava na banca dela pelo seu Nidoran♀.'},
+      {da:{dex:69, nivel:[16,20], apelido:'Espeto', natureza:'Naughty'},
        fala:'"Eu tenho um Bellsprout que come as minhas mudas antes de eu vender. Você tem uma Nidoran fêmea. Eu não vou explicar melhor que isso, {moço|moça}, eu trabalho com planta."',
        memoria:'Trocou o Bellsprout que comia as mudas dela pelo seu Nidoran♀, na banca de flor.'}
     ]
@@ -311,10 +312,10 @@ const TROCAS = {
     id:'rota16_1',
     quem:'um guarda-parque de folga',
     onde:'na cerca leste da Rota 16, do lado de fora, de roupa comum',
-    pede:102, da:{dex:113, nivel:[26,30], apelido:'Dona Chansey', natureza:'Gentle'},
-    fala:'"Você acha que eu tô bêbado e eu tô, mas escuta: eu troco essa Chansey por um Exeggcute e eu não tô te enganando. Ela é boa demais pra mim. Eu durmo em alojamento."',
-    depois:'No dia seguinte, sóbrio, ele te procura no Centro Pokémon. Você acha que ele vai voltar atrás. Ele só quer saber se ela comeu.',
-    memoria:'Trocou a Chansey dele pelo seu Exeggcute. No dia seguinte ele foi perguntar se ela tinha comido.',
+    pede:102, da:{dex:84, nivel:[24,28], apelido:'Seu Doduo', natureza:'Gentle'},
+    fala:'"Você acha que eu tô bêbado e eu tô, mas escuta: eu troco esse Doduo por um Exeggcute e eu não tô te enganando. Ele é bom demais pra mim. Eu durmo em alojamento."',
+    depois:'No dia seguinte, sóbrio, ele te procura no Centro Pokémon. Você acha que ele vai voltar atrás. Ele só quer saber se o Doduo comeu.',
+    memoria:'Trocou o Doduo dele pelo seu Exeggcute. No dia seguinte ele foi perguntar se ele tinha comido.',
     alt:[
       {da:{dex:128, nivel:[26,30], apelido:'Seu Tauros', natureza:'Gentle'},
        fala:'"Você acha que eu tô bêbado e eu tô, mas escuta: eu troco esse Tauros por um Exeggcute e eu não tô te enganando. Ele é bom demais pra mim. Eu durmo em alojamento."',
@@ -330,10 +331,10 @@ const TROCAS = {
     id:'rota21_1',
     quem:'o dono da pousada',
     onde:'na Rota 21, esperando a balsa, com uma mala e uma Pokébola',
-    pede:77, da:{dex:126, nivel:[30,34], apelido:'Brasa', natureza:'Brave'},
-    fala:'"Esse Magmar apareceu na cratera há dois anos e não foi mais embora. Ele dorme na minha lavanderia. Eu não posso mais pagar a conta de luz do ventilador."',
+    pede:77, da:{dex:109, nivel:[28,32], apelido:'Brasa', natureza:'Brave'},
+    fala:'"Esse Koffing apareceu na cratera há dois anos e não foi mais embora. Ele dorme na minha lavanderia e a roupa dos hóspedes sai com cheiro de vulcão."',
     depois:'Ele solta o Ponyta na encosta e o Ponyta fica parado olhando o mar por muito tempo, do jeito de quem nunca viu tanta água junta.',
-    memoria:'Trocou o Magmar da lavanderia dele pelo seu Ponyta.',
+    memoria:'Trocou o Koffing da lavanderia dele pelo seu Ponyta.',
     alt:[
       {da:{dex:58, nivel:[30,34], apelido:'Brasa', natureza:'Brave'},
        fala:'"Esse Growlithe apareceu na cratera há dois anos e não foi mais embora. Ele dorme na minha lavanderia. Eu não posso mais pagar a conta de luz do ventilador."',
@@ -347,10 +348,10 @@ const TROCAS = {
     id:'rota24_1', requer:d=>numInsignias() >= 5,
     quem:'o rapaz da Rota 25',
     onde:'na varanda da casa dele, na ponta da Rota 25, em cima de quatro cadernos empilhados',
-    pede:25, da:{dex:133, nivel:[22,26], apelido:'Vírgula', natureza:'Timid'},
-    fala:'"Eu estudo Eevee há seis anos e eu nunca vi um evoluir na minha frente. Nunca."\n"E o Pikachu?"\n"Pikachu eu já vi evoluir. Eu quero uma coisa que eu já entenda, pra poder pensar em outra."',
+    pede:25, da:{dex:120, nivel:[22,26], apelido:'Vírgula', natureza:'Timid'},
+    fala:'"Eu estudo Staryu há seis anos e eu nunca vi um evoluir na minha frente. Nunca."\n"E o Pikachu?"\n"Pikachu eu já vi evoluir. Eu quero uma coisa que eu já entenda, pra poder pensar em outra."',
     depois:'Ele anota a hora exata em que o Pikachu entra na Pokébola, em quatro cadernos diferentes, porque ele é assim e ninguém nunca conseguiu mudar isso.',
-    memoria:'Trocou o Eevee do pesquisador da Rota 25 pelo seu Pikachu.',
+    memoria:'Trocou o Staryu do pesquisador da Rota 25 pelo seu Pikachu.',
     alt:[
       {da:{dex:35, nivel:[22,26], apelido:'Vírgula', natureza:'Timid'},
        fala:'"Eu estudo Clefairy há seis anos e eu nunca vi um evoluir na minha frente. Nunca."\n"E o Pikachu?"\n"Pikachu eu já vi evoluir. Eu quero uma coisa que eu já entenda, pra poder pensar em outra."',
@@ -369,12 +370,12 @@ const TROCAS = {
     depois:'A Kangaskhan atravessa o pátio do setor 3 e três brigas param sozinhas antes de ela chegar perto, e a médica fica olhando aquilo com uma cara de quem acabou de ganhar na loteria.',
     memoria:'Trocou o Pinsir da reserva pela sua Kangaskhan. Kangaskhan separa briga.',
     alt:[
-      {da:{dex:57, nivel:[32,36], apelido:'Alicate', natureza:'Adamant'},
-       fala:'"Esse Primeape entra em qualquer briga que acontecer num raio de cinquenta metros. Qualquer uma. Inclusive as minhas."\n"E a Kangaskhan?"\n"Kangaskhan separa briga. Você não imagina o que isso vale aqui dentro."',
-       memoria:'Trocou o Primeape da reserva pela sua Kangaskhan. Kangaskhan separa briga.'},
-      {da:{dex:34, nivel:[32,36], apelido:'Alicate', natureza:'Adamant'},
-       fala:'"Esse Nidoking entra em qualquer briga que acontecer num raio de cinquenta metros. Qualquer uma. Inclusive as minhas."\n"E a Kangaskhan?"\n"Kangaskhan separa briga. Você não imagina o que isso vale aqui dentro."',
-       memoria:'Trocou o Nidoking da reserva pela sua Kangaskhan. Kangaskhan separa briga.'}
+      {da:{dex:111, nivel:[32,36], apelido:'Alicate', natureza:'Adamant'},
+       fala:'"Esse Rhyhorn entra em qualquer briga que acontecer num raio de cinquenta metros. Qualquer uma. Inclusive as minhas."\n"E a Kangaskhan?"\n"Kangaskhan separa briga. Você não imagina o que isso vale aqui dentro."',
+       memoria:'Trocou o Rhyhorn da reserva pela sua Kangaskhan. Kangaskhan separa briga.'},
+      {da:{dex:128, nivel:[32,36], apelido:'Alicate', natureza:'Adamant'},
+       fala:'"Esse Tauros entra em qualquer briga que acontecer num raio de cinquenta metros. Qualquer uma. Inclusive as minhas."\n"E a Kangaskhan?"\n"Kangaskhan separa briga. Você não imagina o que isso vale aqui dentro."',
+       memoria:'Trocou o Tauros da reserva pela sua Kangaskhan. Kangaskhan separa briga.'}
     ]
   }],
   caminho_vitoria: [{
@@ -389,9 +390,9 @@ const TROCAS = {
       {da:{dex:106, nivel:[34,38], apelido:'Terceiro', natureza:'Careful'},
        fala:'"Meu Hitmonlee perdeu três vezes seguidas pro mesmo garoto e decidiu que o problema é ele."\n"E não é?"\n"O problema sou eu. Mas ele não acredita, e eu não consigo mais ensinar quem não acredita em mim."',
        memoria:'Trocou o Hitmonlee do dojo de Saffron pelo seu Machamp.'},
-      {da:{dex:62, nivel:[34,38], apelido:'Terceiro', natureza:'Careful'},
-       fala:'"Meu Poliwrath perdeu três vezes seguidas pro mesmo garoto e decidiu que o problema é ele."\n"E não é?"\n"O problema sou eu. Mas ele não acredita, e eu não consigo mais ensinar quem não acredita em mim."',
-       memoria:'Trocou o Poliwrath do dojo de Saffron pelo seu Machamp.'}
+      {da:{dex:66, nivel:[24,27], apelido:'Terceiro', natureza:'Careful'},
+       fala:'"Meu Machop perdeu três vezes seguidas pro mesmo garoto e decidiu que o problema é ele."\n"E não é?"\n"O problema sou eu. Mas ele não acredita, e eu não consigo mais ensinar quem não acredita em mim."',
+       memoria:'Trocou o Machop do dojo de Saffron pelo seu Machamp.'}
     ]
   }],
   rota23: [{
@@ -595,7 +596,12 @@ const Trocas = {
     const id = Mundo.id();
     const abertas = this.disponiveis(id);
     const feitas = this.lista(id).filter(t => this.jaFez(t.id) && !abertas.includes(t));
-    const semTroca = t => `${t.quem} te vê de longe e levanta a mão. O que tinha pra trocar já foi com você.`;
+    /* já trocou: lembra o que deu, pelo nome da espécie que chegou na sua mão */
+    const semTroca = t => {
+      const f = (Estado.dados.trocasFeitas || {})[t.id] || {};
+      const rec = DEX[f.recebeu || this.efetiva(t).da.dex];
+      return `${t.quem} te vê de longe e levanta a mão. "E o ${rec ? rec.nome : 'meu'}? Cuida bem dele." O que tinha pra trocar já foi com você.`;
+    };
 
     if (!abertas.length){
       if (feitas.length)
@@ -624,7 +630,7 @@ const Trocas = {
               ${UI.esc(x.quem)} — ${resumo}</button>`;
           }).join('')}
           ${feitas.map(x => `<button class="escolha" disabled>
-            ${UI.esc(x.quem)} — já trocado<br><span class="pd">${UI.esc(x.memoria)}</span></button>`).join('')}
+            ${UI.esc(x.quem)} — já trocado<br><span class="pd">${UI.esc(this.efetiva(x).memoria)}</span></button>`).join('')}
           <button class="escolha" onclick="Exploracao.tela()">Deixar pra depois.</button>
         </div>
       </div>`);

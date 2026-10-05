@@ -549,14 +549,18 @@ original, cada uma com `da`, `fala`, `memoria` e, se precisar, `depois`)
 decide **no primeiro contato** qual Pokémon vai oferecer
 (`Trocas.versao`, guardada em `d.trocaVersao`) e fica com ela. O jogador
 não escolhe, e nada no jogo — nem a tela, nem a folha — conta que havia
-outras. Leia sempre por `Trocas.efetiva(t)`, nunca `t.da` direto. Troca
-nova comum entra com `alt`; troca que gira em volta de um Pokémon só
+outras. Leia sempre por `Trocas.efetiva(t)`, nunca `t.da` direto. As três
+opções de cada troca comum são **forma base, comuns no mato** (peso 5+ em
+`ENCONTROS`) e chegam **abaixo do nível de evolução** (`nivelEvo`) —
+`ferramentas/chk-trocas.js` confere isso, e também que fala e memória
+nomeiam o Pokémon certo. Troca nova comum entra com `alt`; troca que gira em volta de um Pokémon só
 (fóssil, o Marowak da senhora, o Golbat da Torre, o Hypno da praça, o
 Machoke de `trocaEvolui`) fica sem `alt`.
 
 Depois da troca a pessoa vira contato do PokéNav e **sabe as duas
 pontas**: pergunta do que foi com ela (`trocasFeitas[id].deu`) e do que
 foi com você (`.recebeu`, a espécie que chegou, já evoluída se for o caso).
+Passar por ela de novo também: ela pergunta pelo que te deu.
 
 **Haunter e Kadabra só vêm do Sr. Juniper.** Ele aparece primeiro como
 **a figura de capuz** (rótulo `'a figura de capuz'`, que recusa o nome em

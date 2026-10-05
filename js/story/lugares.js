@@ -748,6 +748,24 @@ const Cidade = {
          O que ela não faz é atender de graça — nem te mandar embora à toa. */
       const feridos = d.time.filter(p => p.hp < p.hpMax || p.status).length;
       const preco = 300 + 250 * feridos;
+      /* ninguém fica preso: sem dinheiro e sem ninguém de pé, não tem
+         como lutar pra juntar o que falta — ela atende e fica com o que tem */
+      const ninguemDePe = !d.time.some(p => estaVivo(p) && p.hp > 0);
+      if (Estado.j.dinheiro < preco && ninguemDePe){
+        const tinha = Estado.j.dinheiro;
+        Estado.j.dinheiro = 0;
+        d.time.forEach(curarTotal);
+        Estado.curarJogador(10);
+        Estado.recuperarVontadeJogador();
+        const pac = this.retirarPacotes();
+        Estado.salvar('auto');
+        return [
+          {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
+          {tipo:'dano', texto:`Você não tem número nenhum, nem os ${fmtDin(preco)} ₽. Ela olha o cinto de novo, com ninguém de pé, e pega o que você tem: ${fmtDin(tinha)} ₽.`},
+          {tipo:'cura', texto:'O time volta inteiro. Ela não te olha na saída.'},
+          {tipo:'info', texto:'Amanhece.'}, ...pac
+        ];
+      }
       if (Estado.j.dinheiro < preco){
         return [
           {tipo:'info', texto:'A enfermeira olha o seu cinto, depois a sua cara, e pergunta o número da sua licença.'},
