@@ -302,21 +302,18 @@ const Jogo = {
   rolarTeste(comVontade){
     const t = Historia.cenaAtual.teste;
     UI.limparDados();
-    /* Vontade do treinador: 1 ponto, +2 no total (Forçar o destino) */
-    const vont = comVontade && Estado.vontadeJogador() > 0 ? 2 : 0;
+    /* Vontade do treinador: 1 ponto, um sucesso a mais (Forçar o destino) */
+    const vont = comVontade && Estado.vontadeJogador() > 0 ? 1 : 0;
     if (vont) Estado.j.vontade = Estado.vontadeJogador() - 1;
-    const valor = Estado.j.status[t.status] + vont;
+    const valor = Estado.j.status[t.status];
     /* o cinto conta: quem está com você pesa no teste, e quem te
        entende pesa mais ainda */
     const eixo = t.eixo || (typeof EIXO_DO_STATUS !== 'undefined' ? EIXO_DO_STATUS[t.status] : null);
-    const r = eixo ? Dados.testeComTime(valor, t.dificuldade, t.nomeStatus, eixo)
-                   : Dados.teste(valor, t.dificuldade, t.nomeStatus);
+    const r = eixo ? Dados.testeComTime(valor, t.dificuldade, t.nomeStatus, eixo, vont)
+                   : Dados.teste(valor, t.dificuldade, t.nomeStatus, vont);
     const destino = t[r.grau] || t.falha || t.parcial;
-    const soma = `1d10(${r.dado}) + ${t.nomeStatus||t.status}(${r.bonus - vont})` + (vont ? ' + 2 (Vontade)' : '')
-               + (r.temperamento ? ` ${r.temperamento > 0 ? '+' : '−'} ${Math.abs(r.temperamento)}` : '')
-               + (r.gosto ? (r.gosto > 0 ? ' + 1 (gosto)' : ' − 1 (desgosto)') : '');
     const aviso = [{tipo: (r.grau==='falha'?'dano':r.grau==='critico'?'rep':'info'),
-      texto:`${soma} = ${r.total} contra ${t.dificuldade} — ${r.texto}.`}];
+      texto:`${Dados.contaDoTeste(r)} — ${r.texto}.`}];
     /* uma frase por bicho: se o temperamento já falou dele, a afinidade
        não fala de novo (e não desdiz) */
     const jaFalou = r.linhaTime && r.afinidade && r.afinidade.nome && r.linhaTime.includes(r.afinidade.nome);

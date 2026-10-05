@@ -604,29 +604,18 @@ const Batalha = {
         this.ev('erro', `${nomeVisivel(atacante)} não consegue usar ${slot.nome}: está desabilitado.`);
         return;
       }
-      if (slot.pp <= 0){
-        /* Forcejar (Struggle): Força + 1 de poder, sem tipo, e 1 de volta */
-        this.ev('info', `${nomeVisivel(atacante)} está sem PP em ${slot.nome} — usa Forcejar!`);
-        const n = Math.max(0, this.attr(atacante, estAtk, 'for') + 1 - this.attr(defensor, estDef, 'vit'));
-        const r = Dados.pool(n, 'Forcejar');
-        const d = Math.max(1, r.suc);
-        this.ev('rolagem', `Dano: FOR ${this.attr(atacante, estAtk, 'for')} + poder 1 − VIT ${this.attr(defensor, estDef, 'vit')} = ${n}d6 → ${r.suc}`);
-        defensor.hp = Math.max(0, defensor.hp - d);
-        atacante.hp = Math.max(0, atacante.hp - 1);
-        this.ev('dano', `${nomeVisivel(defensor)} sofreu ${d}. ${nomeVisivel(atacante)} se machucou no contragolpe.`, {alvo:souAliado?'inimigo':'aliado', dano:d});
-        return;
-      }
+      /* Pokérole não tem PP: golpe não acaba. O que limita é a Vontade,
+         o turno e o que o Pokémon aceita fazer. */
       nome = slot.nome;
       const v = this.vontade(atacante, nome, souAliado);
       if (v){
         this.ev('natureza', v.texto);
         if (v.recusa) return;
         if (v.outroGolpe){
-          const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe && g.pp > 0);
-          if (outros.length){ const alt = Dados.escolher(outros); nome = alt.nome; alt.pp--; }
-          else slot.pp--;
-        } else slot.pp--;
-      } else slot.pp--;
+          const outros = atacante.golpes.filter((g,i) => i !== indiceGolpe);
+          if (outros.length) nome = Dados.escolher(outros).nome;
+        }
+      }
     }
 
     const g = GOLPES[nome];
@@ -1186,7 +1175,7 @@ const Batalha = {
   /* ---------- IA ---------- */
   iaEscolher(p, alvo, estP, estAlvo){
     const disponiveis = p.golpes.map((g,i) => ({i, g}))
-      .filter(x => x.g.pp > 0 && !(estP.desabilitado && estP.desabilitado.nome === x.g.nome));
+      .filter(x => !(estP.desabilitado && estP.desabilitado.nome === x.g.nome));
     if (!disponiveis.length) return 0;
     const nat = NATUREZAS[p.natureza] || {};
     const pontuar = (x) => {
@@ -1390,16 +1379,11 @@ const Batalha = {
       Estado.usarItem(nome);
       Estado.curarJogador(info.valor);
       this.ev('cura', `Você se enfaixou. HP: ${Estado.j.hp}/${Estado.hpMaxJogador()}`);
-    } else if (info.tipo === 'pp'){
-      const g = alvo.golpes.find(x => x.pp < x.ppMax);
-      if (!g){ this.ev('erro', `Os golpes de ${nomeVisivel(alvo)} estão cheios.`); return; }
+    } else if (info.tipo === 'vontade'){
+      if (vontadeDe(alvo) >= vontadeMaxDe(alvo)){ this.ev('erro', `${nomeVisivel(alvo)} já está com a Vontade cheia.`); return; }
       Estado.usarItem(nome);
-      g.pp = Math.min(g.ppMax, g.pp + info.valor);
-      this.ev('cura', `${g.nome} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`);
-    } else if (info.tipo === 'ppTodos'){
-      Estado.usarItem(nome);
-      alvo.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
-      this.ev('cura', `Todos os golpes de ${nomeVisivel(alvo)} recuperaram um pouco.`);
+      alvo.vontade = Math.min(vontadeMaxDe(alvo), vontadeDe(alvo) + info.valor);
+      this.ev('cura', `${nomeVisivel(alvo)} recuperou Vontade: ${alvo.vontade}/${vontadeMaxDe(alvo)}.`);
     } else if (info.tipo === 'moral'){
       Estado.usarItem(nome);
       alvo.moral = Math.min(100, alvo.moral + info.valor);
@@ -1562,10 +1546,9 @@ const Batalha = {
 
   acaoAmeaca(acao){
     if (acao.tipo === 'fugirAmeaca'){
-      const d = Dados.d10('Fuga do selvagem');
-      const total = d + Estado.j.status.forca;
-      this.ev('info', `Fuga: 1d10(${d}) + Força(${Estado.j.status.forca}) = ${total} — precisa ≥ 7`);
-      if (total >= 7){
+      const t = Dados.teste(Estado.j.status.forca, 7, 'Força');
+      this.ev('rolagem', `Fuga: ${Dados.contaDoTeste(t)}`);
+      if (t.grau === 'sucesso' || t.grau === 'critico'){
         this.ev('fuga', this.terreno().fuga);
         return this.encerrar('escapou');
       }
@@ -1599,7 +1582,7 @@ const Batalha = {
     }
     if (acao.tipo === 'encarar'){
       const t = Dados.teste(Estado.j.status.carisma, 8, 'Carisma');
-      this.ev('info', `Encarar: 1d10(${t.dado}) + Carisma(${t.bonus}) = ${t.total} — ${t.texto}`);
+      this.ev('rolagem', `Encarar: ${Dados.contaDoTeste(t)} — ${t.texto}`);
       if (t.grau === 'sucesso' || t.grau === 'critico'){
         this.ev('info', `Você não desvia o olhar. ${nomeVisivel(this.inimigo)} hesita — e recua para o mato.`);
         return this.encerrar('encarou');
@@ -1621,7 +1604,7 @@ const Batalha = {
     const t = Dados.teste(Estado.j.status.resistencia, 6, 'Resistência');
     const corte = {critico:0.45, sucesso:0.7, parcial:0.9, falha:1.15}[t.grau];
     dano = Math.max(1, Math.round(dano * corte));
-    this.ev('info', `Aguentar: 1d10(${t.dado}) + Resistência(${t.bonus}) = ${t.total} — ${t.texto}`);
+    this.ev('rolagem', `Aguentar: ${Dados.contaDoTeste(t)} — ${t.texto}`);
     if (t.grau === 'critico') this.ev('info', 'Você vira o corpo na hora certa e o pior passa de raspão.');
     if (t.grau === 'falha')   this.ev('perigo', 'Você recebe inteiro, do jeito errado.');
     const morreu = Estado.ferir(dano, `Ataque de ${nomeVisivel(this.inimigo)} selvagem`);

@@ -906,10 +906,11 @@ const UI = {
     if (cena.batalha){ c.appendChild(this.el(`<button class="escolha" onclick="Jogo.iniciarBatalhaDaCena()">Encarar.</button>`)); return; }
     if (cena.teste){
       const t = cena.teste;
-      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste()">Rolar ${this.esc(t.nomeStatus||t.status)} — 1d10 + ${Estado.j.status[t.status]} (dificuldade ${t.dificuldade})</button>`));
-      /* Forçar o destino, do lado do treinador: 1 de Vontade, +2 no d10 */
+      const nDados = Estado.j.status[t.status] + Dados.PERICIA_BASE, pede = Dados.sucessosPedidos(t.dificuldade);
+      c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste()">Rolar ${this.esc(t.nomeStatus||t.status)} — ${nDados}d6, pede ${pede} sucesso${pede === 1 ? '' : 's'} (4+)</button>`));
+      /* Forçar o destino, do lado do treinador: 1 de Vontade, um sucesso a mais */
       if (Estado.vontadeJogador() > 0)
-        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste(true)">Rolar gastando 1 de Vontade — 1d10 + ${Estado.j.status[t.status]} + 2</button>`));
+        c.appendChild(this.el(`<button class="escolha" onclick="Jogo.rolarTeste(true)">Rolar gastando 1 de Vontade — ${nDados}d6 e um sucesso garantido</button>`));
       return;
     }
     if (cena.sacrificio){
@@ -1534,12 +1535,12 @@ const UI = {
     return partes.join(' · ');
   },
 
-  cartaoGolpe(nome, pp){
+  cartaoGolpe(nome){
     const g = GOLPES[nome] || {};
     const cat = {fis:'Físico', esp:'Especial', status:'Status'}[g.c] || '—';
     return `<span class="golpe-cartao">
       <span class="gc-topo"><span class="gc-nome">${this.esc(nome)}</span>${g.t ? this.tipoTag(g.t) : ''}</span>
-      <span class="gc-num">${cat} · ${this.esc(this.resumoGolpe(nome))} · PP ${pp || g.pp || '—'}</span>
+      <span class="gc-num">${cat} · ${this.esc(this.resumoGolpe(nome))}</span>
     </span>`;
   },
 
@@ -1552,7 +1553,7 @@ const UI = {
       <div class="aprender-novo"><span class="aprender-rot">novo</span>${this.cartaoGolpe(nome)}</div>
       <div class="aprender-lista">${p.golpes.map((g, i) =>
         `<button class="aprender-op" onclick="UI.responderGolpe(${i})">
-           ${this.cartaoGolpe(g.nome, `${g.pp}/${g.ppMax}`)}
+           ${this.cartaoGolpe(g.nome)}
            <span class="aprender-acao">esquecer</span></button>`).join('')}</div>
       <button class="btn aprender-nao" onclick="UI.responderGolpe(-1)">Não aprender ${this.esc(nome)}</button>
     </div>`;
@@ -1734,9 +1735,9 @@ const UI = {
     if (Batalha.fase === 'ameaca'){
       c.classList.add('livre');
       c.appendChild(this.el(`<button class="golpe-btn perigo" onclick="Jogo.acaoBatalha({tipo:'fugirAmeaca'})">
-        <span>Correr</span><span class="pd">1d10 + Força ≥ 7</span></button>`));
+        <span>Correr</span><span class="pd">Força + 2 dados, 2 sucessos</span></button>`));
       c.appendChild(this.el(`<button class="golpe-btn" onclick="Jogo.acaoBatalha({tipo:'encarar'})">
-        <span>Encarar</span><span class="pd">1d10 + Carisma</span></button>`));
+        <span>Encarar</span><span class="pd">Carisma + 2 dados</span></button>`));
       c.appendChild(this.el(`<button class="golpe-btn" onclick="UI.menuItens()">
         <span>Usar item</span><span class="pd">Potion, Revive…</span></button>`));
       if (Batalha.tipo !== 'treinador')
@@ -1816,28 +1817,14 @@ const UI = {
     const a = Batalha.aliado;
     const conhecido = Estado.conheceu(Batalha.inimigo.dex) || !!Batalha.leituraIntelecto;
     const grade = this.el('<div class="grade-golpes"></div>');
-    /* Sem PP em nada, o que sobra é Forcejar — e ele tem que caber num botão,
-       senão o jogador fica sem ação nenhuma numa luta de onde não se foge. */
-    const semPP = a.golpes.every(g => g.pp <= 0);
-    if (semPP){
-      c.appendChild(this.el(`<div class="mb-linha centro">
-        <button class="mb-btn lutar" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:0})">
-          <span class="rot">Forcejar</span>
-          <span class="nota">Força + 1 em d6 · ${this.esc(nomeExib(a))} perde 1 no contragolpe</span></button></div>`));
-      c.appendChild(this.el(`<div class="mb-linha centro">
-        <button class="mb-btn voltar" onclick="UI.voltarAoMenu()">
-          <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
-      return;
-    }
     a.golpes.forEach((g, i) => {
       const G = GOLPES[g.nome];
       // a dica de eficácia só existe se você souber contra o que está lutando
       const ef = conhecido ? eficacia(G.t, Batalha.inimigo.tipos) : 1;
       const marca = !conhecido ? '' : ef === 0 ? ' (imune)' : ef >= 2 ? ' ✦' : ef <= 0.5 ? ' ·' : '';
       const travado = Batalha.estAliado && Batalha.estAliado.desabilitado && Batalha.estAliado.desabilitado.nome === g.nome;
-      grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${g.pp<=0 || travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
-        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status · ':''}${this.esc(this.resumoGolpe(g.nome))}</span></span>
-        <span class="pp">${g.pp}/${g.ppMax}</span></button>`));
+      grade.appendChild(this.el(`<button class="golpe-btn${travado ? ' travado' : ''}" ${travado ?'disabled':''} title="${travado ? 'Desabilitado' : ''}" onclick="UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'golpe',indice:${i}})">
+        <span>${this.esc(g.nome)}${marca}<br><span class="pd">${G.t} · ${G.c==='status'?'status · ':''}${this.esc(this.resumoGolpe(g.nome))}</span></span></button>`));
     });
     c.appendChild(grade);
     c.appendChild(this.el(`<div class="mb-linha centro">
@@ -2057,9 +2044,7 @@ const UI = {
       </div>
       ${r.rolagem ? `<div class="teste-linha">
         <span class="k">${this.esc(r.rolagem.nomeStatus || 'teste')}</span>
-        <span class="v mono">1d10(${r.rolagem.dado}) + ${r.rolagem.bonus}${
-          r.rolagem.temperamento ? (r.rolagem.temperamento > 0 ? ' + ' : ' − ') + Math.abs(r.rolagem.temperamento) : ''
-        }${r.rolagem.gosto ? (r.rolagem.gosto > 0 ? ' + 1 (gosto)' : ' − 1 (desgosto)') : ''} = ${r.rolagem.total} · dif ${r.rolagem.dificuldade}</span>
+        <span class="v mono">${this.esc(Dados.contaDoTeste(r.rolagem))}</span>
         <span class="grau ${this.esc(r.rolagem.grau)}">${this.esc(r.rolagem.texto)}</span>
       </div>` : ''}
       <div class="narrativa">${this.narrar(r.resultado || r.esc.resultado || [])}</div>
@@ -2379,7 +2364,7 @@ const UI = {
           <span class="pc-barra grossa moral"><i style="width:${moral}%"></i></span>
           <span class="num mono">${moral}</span></div>
         <div class="pc-golpes">${(p.golpes||[]).map(g =>
-          `<span class="pc-golpe">${this.esc(g.nome)} <b>${g.pp}/${g.ppMax}</b></span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
+          `<span class="pc-golpe">${this.esc(g.nome)}</span>`).join('') || '<span class="pc-golpe">—</span>'}</div>
         ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
             return l ? `<div class="pc-afinidade">${this.esc(l)}</div>` : ''; })()}
         ${p.historia ? `<div class="pc-historia">${this.esc(p.historia)}</div>` : ''}
@@ -3109,7 +3094,7 @@ const UI = {
              <span class="fraco">${this.esc(fichaItem(p.segurando))}</span>`
           : '<span class="fraco">mão livre</span>'}</div>`}
       <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
-        ${p.golpes.map(g=>`${this.esc(g.nome)} <span class="mono">${g.pp}/${g.ppMax}</span>`).join(' · ')}</div>
+        ${p.golpes.map(g=>this.esc(g.nome)).join(' · ')}</div>
       <div class="sussurro" style="margin-top:6px">${nomePosto(p.nivel)} · ${this.linhaAtrib(p)}</div>
       ${p.historia ? `<div class="sussurro" style="margin-top:7px;font-style:italic">${this.esc(p.historia)}</div>` : ''}
     </div>
@@ -3180,8 +3165,8 @@ const UI = {
     const corpo = ORDEM.filter(c => grupos[c]).map(c => {
       const linhas = grupos[c].map(([n,q]) => {
         const info = ITENS_INFO[n] || {};
-        const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','pp','ppTodos','tm'].includes(info.tipo)
-                        || info.tipo === 'ppUp'
+        const usavel = (['pedra','curaJogador','cura','revive','status','moral','repelente','vontade','tm'].includes(info.tipo)
+                        || info.tipo === 'vontadeMais'
                         || (info.tipo === 'mapa' && Estado.dados.modo === 'mundo'))
                        && !emLuta();
         const equipavel = info.tipo === 'equipar' && !emLuta();
@@ -3258,34 +3243,25 @@ const UI = {
     });
   },
 
-  /* ---------- PP Up: +1/5 do PP base, até três vezes por golpe ---------- */
+  /* ---------- PP Up: +1 de Vontade máxima num Pokémon, até três vezes ---------- */
   escolherPPUp(nome, uid){
     const d = Estado.dados;
     const esc = s => s.replace(/'/g, "\\'");
     if (!uid){
       const alvos = d.time.filter(p => !p.morto);
-      return this.modal('Em quem?', alvos.map(p =>
-        `<button class="escolha com-item" onclick="UI.escolherPPUp('${esc(nome)}','${p.uid}')">
-          ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))} <span class="pd">Nv ${p.nivel}</span></button>`).join(''), false, 'mochila');
+      return this.modal('Em quem?', alvos.map(p => {
+        const cheio = (p.vontadeExtra || 0) >= 3;
+        return `<button class="escolha com-item" ${cheio ? 'disabled' : ''} onclick="UI.escolherPPUp('${esc(nome)}','${p.uid}')">
+          ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))} <span class="pd">Vontade ${vontadeMaxDe(p)}${cheio ? ' · no máximo' : ''}</span></button>`;
+      }).join(''), false, 'mochila');
     }
     const p = d.time.find(x => x.uid === uid);
-    if (!p) return;
-    this.modal('Em qual golpe?', p.golpes.map((g, i) => {
-      const cheio = (g.ups || 0) >= 3;
-      return `<button class="escolha" ${cheio ? 'disabled' : ''} onclick="UI.aplicarPPUp('${esc(nome)}','${p.uid}',${i})">
-        ${this.esc(g.nome)} <span class="pd">PP ${g.pp}/${g.ppMax}${cheio ? ' · no máximo' : ''}</span></button>`;
-    }).join(''), false, 'mochila');
-  },
-  aplicarPPUp(nome, uid, i){
-    const p = Estado.dados.time.find(x => x.uid === uid);
-    const g = p && p.golpes[i];
-    if (!g || !GOLPES[g.nome] || (g.ups || 0) >= 3 || !Estado.contaItem(nome)) return;
-    const mais = Math.max(1, Math.floor(GOLPES[g.nome].pp / 5));
+    if (!p || (p.vontadeExtra || 0) >= 3 || !Estado.contaItem(nome)) return;
     Estado.usarItem(nome);
-    g.ups = (g.ups || 0) + 1;
-    g.ppMax += mais; g.pp += mais;
+    p.vontadeExtra = (p.vontadeExtra || 0) + 1;
+    p.vontade = vontadeDe(p) + 1;
     Estado.salvar('auto');
-    this.modal('', `<p>O PP de ${this.esc(g.nome)} subiu: agora ${g.ppMax}.</p>`, false, 'mochila');
+    this.modal('', `<p>A Vontade de ${this.esc(nomeExib(p))} subiu: agora vai até ${vontadeMaxDe(p)}.</p>`, false, 'mochila');
   },
 
   /* ---------- EQUIPAR ---------- */
@@ -3330,7 +3306,7 @@ const UI = {
     /* na luta, item se usa pelo Bag, gastando o turno; a mochila do topo só mostra */
     if (emLuta()) return this.modal('', '<p>No meio da luta, item se usa pelo Bag.</p>', false, 'mochila');
     if (info.tipo === 'tm') return this.ensinarTM(nome);
-    if (info.tipo === 'ppUp') return this.escolherPPUp(nome);
+    if (info.tipo === 'vontadeMais') return this.escolherPPUp(nome);
     if (info.tipo === 'mapa') return Exploracao.mapa('mochila');
 
     if (info.tipo === 'curaJogador'){
@@ -3358,7 +3334,7 @@ const UI = {
           ${this.esc(nomeExib(p))} <span class="pd">vira ${this.esc(DEX[tabela[p.dex]].nome)} — e não volta</span></button>`).join(''),
         false, 'mochila');
     }
-    /* cura, revive, status, moral, pp: abre o time e você toca em quem */
+    /* cura, revive, status, moral, vontade: abre o time e você toca em quem */
     const lista = this.escolherDoTime(p => `UI.aplicarItemFora('${nome.replace(/'/g,"\\'")}','${p.uid}')`);
     if (!lista) return this.modal('', '<p class="nada">Não tem em quem usar.</p>', false, 'mochila');
     this.modal(nome, `<div class="time-lista">${lista}</div>
@@ -3401,15 +3377,10 @@ const UI = {
       Estado.usarItem(nome); p.moral = Math.min(100, p.moral + info.valor);
       if (typeof Fome !== 'undefined') Fome.alimentar(p);
       msg = `${nomeExib(p)} come devagar e depois encosta em você. É pouco e é alguma coisa.`;
-    } else if (info.tipo === 'pp'){
-      const g = p.golpes.find(x => x.pp < x.ppMax);
-      if (!g) msg = `Os golpes de ${nomeExib(p)} estão cheios.`;
-      else { Estado.usarItem(nome); g.pp = Math.min(g.ppMax, g.pp + info.valor);
-             msg = `${this.esc(g.nome)} voltou a ter fôlego: ${g.pp}/${g.ppMax}.`; }
-    } else if (info.tipo === 'ppTodos'){
-      Estado.usarItem(nome);
-      p.golpes.forEach(g => { g.pp = Math.min(g.ppMax, g.pp + info.valor); });
-      msg = `Todos os golpes de ${nomeExib(p)} recuperaram um pouco.`;
+    } else if (info.tipo === 'vontade'){
+      if (vontadeDe(p) >= vontadeMaxDe(p)) msg = `${nomeExib(p)} já está com a Vontade cheia.`;
+      else { Estado.usarItem(nome); p.vontade = Math.min(vontadeMaxDe(p), vontadeDe(p) + info.valor);
+             msg = `${nomeExib(p)} recuperou Vontade: ${p.vontade}/${vontadeMaxDe(p)}.`; }
     }
     Estado.salvar('auto');
     if (typeof Som !== 'undefined') Som.efeito('item');
@@ -4009,8 +3980,8 @@ const UI = {
       ${L('Resistência', 'HP máximo · aguentar o golpe que sobra pra você')}
       <p class="sussurro">Sobem por ponto: 1 no fim de cada capítulo, no máximo +1 por status por capítulo. Alguns cargos e algumas cenas dão um ponto fora disso.</p>
       <h3>Perícia</h3>
-      ${L('A rolagem', '1d10 + status + o cinto, contra a dificuldade')}
-      ${L('1 a 3', 'fracasso')} ${L('4 a 6', 'parcial')} ${L('7 a 9', 'sucesso')} ${L('10+', 'crítico')}
+      ${L('A rolagem', 'parada de d6 do Pokérole: status + 2 de perícia + o cinto · cada 4, 5 ou 6 é um sucesso · a cena pede de 1 a 5 sucessos')}
+      ${L('Um a mais', 'crítico')} ${L('Na conta', 'sucesso')} ${L('Faltou um', 'parcial')} ${L('Faltaram dois', 'fracasso')}
       <p class="sussurro">Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho. O que o cinto soma está na aba Vínculo.</p>
       <h3>Reputação</h3>
       ${L('Como sobe', 'por pontos, não por ato · degraus em 36, 114, 257, 458, 715, 1.030 e 1.430 pontos · um ato vale 1, 3, 6, 10… conforme o tamanho')}
@@ -4028,9 +3999,9 @@ const UI = {
       ${L('Crítico', 'sobra de 3 sucessos na precisão (mais no posto alto) → +2 dados')}
       ${L('Ordem', 'prioridade · depois 1d6 + Destreza + Alerta')}
       ${L('Fuga', 'Destreza + Atletismo contra os do selvagem')}
-      ${L('Sem PP', 'Forcejar: Força + 1, e 1 volta em você')}
+      ${L('Sem PP', 'golpe não acaba, como no livro · o que limita é a Vontade e o turno')}
       <h3>Na sua vez</h3>
-      ${L('Golpe', 'gasta PP · sem PP sobra Forcejar')}
+      ${L('Golpe', 'qualquer um dos quatro, quantas vezes quiser')}
       ${L('Pokébola', 'só em selvagem — não se joga Pokébola no Pokémon de treinador')}
       ${L('Mochila', 'só o que serve em combate aparece')}
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
@@ -4212,14 +4183,14 @@ const UI = {
   modalRegras(){
     this.modal('Regras do sistema', `
       <h3>Como ler esta folha</h3>
-      <p class="sussurro">Cada linha é uma regra: à esquerda o que é, à direita a conta. Duas coisas rolam dado, e elas não se misturam: <b>gente e cena</b> rolam 1d10 + o status do treinador contra uma dificuldade; <b>Pokémon brigando</b> rola uma parada de d6 e conta os 4, 5 e 6.</p>
+      <p class="sussurro">Cada linha é uma regra: à esquerda o que é, à direita a conta. Tudo rola a parada de d6 do Pokérole e conta os 4, 5 e 6: <b>gente e cena</b> com o status do treinador mais 2 dados de perícia, contra os sucessos que a cena pede; <b>Pokémon brigando</b> com os atributos do Pokémon, como no livro.</p>
       <div class="exemplo-regra">
         <b>Exemplo de golpe.</b> Seu Charmander (Força 2) usa Scratch (poder 2) num Rattata (Vitalidade 1).
         Precisão: Destreza 2 + Briga 1 = 3d6 → 2, 5, 6 = 2 sucessos (precisa de 1: acertou).
         Dano: Força 2 + poder 2 − Vitalidade 1 = 3d6 → 4, 1, 6 = 2 sucessos = 2 de dano. É essa conta que aparece no registro da luta.
       </div>
       <div class="exemplo-regra">
-        <b>Exemplo de teste de cena.</b> Vasculhar pede Percepção contra 5. Você tem Percepção 2 e tira 4 no d10: 4 + 2 = 6, sucesso parcial. Num lugar de que você gosta seria 7, sucesso.
+        <b>Exemplo de teste de cena.</b> Vasculhar pede 2 sucessos de Percepção. Você tem Percepção 2: 2 + 2 de perícia = 4d6 → 1, 5, 3, 2 = 1 sucesso, sucesso parcial. Num lugar de que você gosta seria 5d6, com um dado a mais pra achar o segundo.
       </div>
 
       <h3>Combate — Pokérole</h3>
@@ -4238,7 +4209,7 @@ const UI = {
       <div class="linha"><span class="k">Efeito secundário</span><span class="v">dados de chance do livro: pega se algum d6 der 6 (Ember 1 dado, Body Slam 3)</span></div>
       <div class="linha"><span class="k">Ordem</span><span class="v">prioridade primeiro · depois iniciativa: 1d6 na entrada + Destreza + Alerta</span></div>
       <div class="linha"><span class="k">Fuga</span><span class="v">Destreza + Atletismo do seu contra os do selvagem · empate é seu</span></div>
-      <div class="linha"><span class="k">Sem PP</span><span class="v">Forcejar: Força + 1 − Vitalidade · você leva 1 de volta</span></div>
+      <div class="linha"><span class="k">Sem PP</span><span class="v">o Pokérole não tem PP: golpe não acaba · Éter (+1) e Elixir (+2) repõem Vontade, e o PP Up dá +1 de Vontade máxima</span></div>
       <p class="sussurro">Duas adaptações pro jogo de um golpe por turno. No livro, o Pokémon de posto alto gasta a sobra da precisão em mais ações na mesma rodada; aqui ele age uma vez, então a sobra que vira crítico sobe com o posto. E não existe choque, e a esquiva não sai de graça: no livro ela é uma reação que gasta uma das ações da rodada; aqui, onde cada um age uma vez, ela custa 1 de Vontade.</p>
 
       <h3>Vontade</h3>
@@ -4254,7 +4225,7 @@ const UI = {
       <div class="linha"><span class="k">Quem gasta mais</span><span class="v">líder, Elite dos Quatro, rival, torneio e veterano gastam sempre que o critério bate na chance cheia · selvagem e treinador de estrada, com metade dessa chance</span></div>
       <h3>Vontade do treinador</h3>
       <div class="linha"><span class="k">Quanto</span><span class="v">2 + Resistência · aparece no topo da tela, do lado do HP</span></div>
-      <div class="linha"><span class="k">Gastar</span><span class="v">num teste de cena, rolar gastando 1 de Vontade: +2 no total do d10 (o Forçar o destino do livro, levado pro d10)</span></div>
+      <div class="linha"><span class="k">Gastar</span><span class="v">num teste de cena, rolar gastando 1 de Vontade: um sucesso a mais, garantido (o Forçar o destino do livro)</span></div>
       <div class="linha"><span class="k">Zerou</span><span class="v">quando a cena acaba você desaba e perde metade do HP que tinha (no livro, desmaia; aqui isso não vira fim de jogo)</span></div>
       <div class="linha"><span class="k">Recupera</span><span class="v">toda no Centro e em casa · +2 num dia de treino</span></div>
 
@@ -4363,7 +4334,7 @@ const UI = {
       <div class="linha"><span class="k">Cenas da linha</span><span class="v">na virada de capítulo, quem é do seu lado te acha: no máximo uma cena por capítulo, em ordem, e cada uma lembra o que você escolheu na anterior · mexem em reputação, dinheiro e moral como qualquer escolha</span></div>
       <div class="linha"><span class="k">Trocar de linha</span><span class="v">a linha que você deixou reage uma vez · a nova começa do começo</span></div>
       <div class="linha"><span class="k">No fim</span><span class="v">o epílogo fecha cada linha em que você viveu alguma coisa, pelo que você escolheu nela</span></div>
-      <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">+1 nos testes de d10 lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, −1</span></div>
+      <div class="linha"><span class="k">Lugar de que você gosta</span><span class="v">um dado a mais nos testes lá dentro (mar, caverna, montanha, floresta, cidade, torre, calor, campo) · de que não gosta, um a menos</span></div>
       <div class="linha"><span class="k">Pokémon de que você gosta</span><span class="v">pelo tipo ou pelo nome: chega com +10 de moral · o de que você não gosta, −10</span></div>
 
       <h3>Quem já te conhece</h3>
@@ -4453,7 +4424,7 @@ const UI = {
       <div class="linha"><span class="k">Treinar</span><span class="v">uma vez por dia · rende até 5 níveis acima da área e menos a cada nível acima dela · Carisma decide quanto</span></div>
       <div class="linha"><span class="k">Divisão</span><span class="v">por igual entre quem entrou contra aquele adversário e ainda está de pé</span></div>
       <div class="linha"><span class="k">Exp. Share</span><span class="v">quem segura fica com metade, mesmo sem entrar · quem lutou divide a outra metade</span></div>
-      <div class="linha"><span class="k">PP Up</span><span class="v">+1/5 do PP base de um golpe, pra sempre · até 3 vezes no mesmo golpe</span></div>
+      <div class="linha"><span class="k">PP Up</span><span class="v">+1 de Vontade máxima num Pokémon, pra sempre · até 3 vezes no mesmo</span></div>
       <div class="linha"><span class="k">Próximo nível</span><span class="v">nível³ × 0,08 + nível × 12 + 20</span></div>
       <div class="linha"><span class="k">Golpe de nível</span><span class="v">aprende todos os que a espécie aprende naquele nível, pela tabela dela</span></div>
       <div class="linha"><span class="k">Selvagem e de treinador</span><span class="v">os quatro últimos golpes da tabela da espécie até o nível dele</span></div>
@@ -4511,8 +4482,8 @@ const UI = {
       ${Object.values(Estado.dados.lendarios||{}).some(l=>l.quebrouBola) ? 'E existem coisas que simplesmente quebram a Pokébola no ar.' : ''}</p>` : ''}
       <h3>Perícias</h3>
       <p class="sussurro">Parar e olhar vale uma vez por cena: a segunda olhada nunca mostrou nada.</p>
-      <p class="sussurro">1d10 + status + o cinto, contra a dificuldade. 1–3 fracasso · 4–6 parcial · 7–9 sucesso · 10+ crítico. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
-      <p class="sussurro">O cinto conta porque cada perícia puxa um eixo — Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência. O melhor do time naquele eixo soma, o pior desconta metade, e a afinidade de quem vai na frente entra por cima. A linha embaixo do resultado mostra a soma e quem ajudou; por que aquele ajudou é com você.</p>
+      <p class="sussurro">Parada de d6: status + 2 de perícia + o cinto, sucesso em 4+, contra os sucessos que a cena pede. Um a mais é crítico, na conta é sucesso, faltou um é parcial, faltaram dois é fracasso. Toda rolagem aparece na bandeja de dados, inclusive as que o jogo faz sozinho.</p>
+      <p class="sussurro">O cinto conta porque cada perícia puxa um eixo — Percepção pede cuidado, Carisma pede simpatia, Força pede coragem, Intelecto pede paciência. O melhor do time naquele eixo dá dados a mais, o pior tira metade, e a afinidade de quem vai na frente entra por cima. A linha embaixo do resultado mostra os dados e quem ajudou; por que aquele ajudou é com você.</p>
       <div class="linha"><span class="k">Força</span><span class="v">fugir de um selvagem que te encurralou · testes de cena</span></div>
       <div class="linha"><span class="k">Percepção</span><span class="v">vasculhar · ler a natureza do seu time · observar a cena · testes · com 3, ler a natureza de quem está do outro lado</span></div>
       <div class="linha"><span class="k">Intelecto</span><span class="v">escolher a hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido em combate (os dois em 4)</span></div>

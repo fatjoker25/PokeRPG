@@ -6,7 +6,7 @@
    (j.meta, j.gostos, j.desgostos) e pesa na história:
    - cada capítulo abre com uma linha que sai da sua via e do seu
      objetivo (e muda quando a via muda no meio do caminho);
-   - lugar de que você gosta dá +1 nos testes de d10 lá dentro; lugar
+   - lugar de que você gosta dá um dado a mais nos testes lá dentro; lugar
      de que você não gosta, −1;
    - Pokémon de tipo ou espécie de que você gosta chega com +10 de
      moral; o de que você não gosta, −10.
@@ -76,7 +76,7 @@ function rumoDe(d){
   return {meta:j.meta, gostos:j.gostos, desgostos:j.desgostos};
 }
 
-/* ±1 no d10 quando o lugar é de gosto ou de desgosto */
+/* ±1 dado no teste quando o lugar é de gosto ou de desgosto */
 function bonusDeGosto(){
   try {
     const d = Estado.dados; if (!d || !d.jogador) return 0;

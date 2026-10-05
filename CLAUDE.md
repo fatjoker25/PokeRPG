@@ -458,9 +458,15 @@ dos compassos (`acordes.length × compasso`), senão a volta desencontra. O
 `build.py` deixa `sons/musica/` fora do arquivo único.
 
 ## O combate é Pokérole
-Desde a troca de mecânica o combate segue o **Pokérole 3.0**; a ficha do
-treinador e os testes de história continuam no d10. Os dois sistemas não
-se misturam: d10/d20 é gente e cena, parada de d6 é Pokémon brigando.
+**Tudo é Pokérole 3.0**, combate e cena. O Pokémon briga com os atributos
+do livro; o treinador testa com o status (o atributo) + `PERICIA_BASE` (2
+dados de perícia) + o cinto, numa parada de d6 com sucesso em 4+
+(`Dados.teste`, `Dados.testeComTime`). A `dificuldade` que as cenas
+escrevem continua na escala antiga (4 a 11) e vira sucessos pedidos em
+`Dados.sucessosPedidos` (1 a 5); os graus saem da sobra (um a mais é
+crítico, na conta é sucesso, faltou um é parcial, faltaram dois é
+fracasso), então as cenas não precisaram mudar. A conta escrita sai de
+`Dados.contaDoTeste(r)`. d10 não existe mais pra ninguém.
 
 - **Atributos** moram em `p.stats` com as chaves do livro: `for`, `des`,
   `vit`, `esp`, `ins` e `hp`. As chaves dos jogos (`atk`, `def`, `spa`,
@@ -483,6 +489,11 @@ se misturam: d10/d20 é gente e cena, parada de d6 é Pokémon brigando.
 - Dano de condição e de item é número fixo do livro (veneno 2, queimadura
   1, Potion 2), não fração do HP: o HP vai de 4 a uns 20. O que continua
   fração (Substitute, Curse, Recover) tem `Math.max(1, …)`.
+
+**Não existe PP**, como no livro: golpe não acaba (o campo `pp` ainda
+mora no slot, de save antigo, e ninguém lê). Éter e Elixir repõem
+Vontade (1 e 2), e o PP Up dá +1 de Vontade máxima (`p.vontadeExtra`,
+até 3, somado em `vontadeMaxDe`).
 
 Duas adaptações, as duas escritas na folha de regras: o crítico pede mais
 sobra no posto alto (no livro a sobra vira ação extra na rodada, e aqui cada
@@ -508,8 +519,8 @@ resto, com metade. Os simuladores
 fazem o jogador gastar com o mesmo critério: medido assim, líder caiu
 4 pontos na média (80% → 76%) e veterano ficou na mesma faixa.
 **O treinador também tem Vontade** (`Estado.vontadeJogador()`, 2 +
-Resistência): nos testes de cena, "rolar gastando 1 de Vontade" dá +2 no
-d10; zerar custa metade do HP (adaptação: no livro desmaia). O dado é **d6 com sucesso em 4+**; o pedido de
+Resistência): nos testes de cena, "rolar gastando 1 de Vontade" dá um
+sucesso a mais, garantido; zerar custa metade do HP (adaptação: no livro desmaia). O dado é **d6 com sucesso em 4+**; o pedido de
 trocar por d10 com sucesso em 6+ já apareceu e foi recusado, porque isso
 é Storyteller, não Pokérole. Toda parada vai pro log com as faces
 (`facesDe(r)`).

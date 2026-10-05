@@ -149,15 +149,15 @@ const ITENS_INFO = {
   'Full Heal':   {tipo:'status', cura:'todos', cat:'Recuperação',
                   ficha:'Remove qualquer condição (veneno, queimadura, paralisia, sono, confusão) · 1 alvo',
                   desc:'Resolve o que o Antidote não resolve, e o resto junto.'},
-  'PP Up':       {tipo:'ppUp', cat:'Recuperação',
-                  ficha:'+1/5 do PP de um golpe, pra sempre · até 3 vezes no mesmo golpe',
+  'PP Up':       {tipo:'vontadeMais', cat:'Recuperação',
+                  ficha:'+1 de Vontade máxima num Pokémon, pra sempre · até 3 vezes no mesmo',
                   desc:'Um pó num frasquinho que ninguém sabe explicar direito e que funciona.'},
-  'Éter':        {tipo:'pp', valor:10, cat:'Recuperação',
-                  ficha:'+10 PP no primeiro golpe incompleto do alvo',
-                  desc:'Frasco pequeno. Repõe o que um golpe gastou.'},
-  'Elixir':      {tipo:'ppTodos', valor:10, cat:'Recuperação',
-                  ficha:'+10 PP em todos os golpes do alvo',
-                  desc:'Repõe um pouco de tudo. Caro pelo que é.'},
+  'Éter':        {tipo:'vontade', valor:1, cat:'Recuperação',
+                  ficha:'+1 de Vontade num Pokémon',
+                  desc:'Frasco pequeno. Devolve um pouco da teimosia que a luta gastou.'},
+  'Elixir':      {tipo:'vontade', valor:2, cat:'Recuperação',
+                  ficha:'+2 de Vontade num Pokémon',
+                  desc:'Repõe mais. Caro pelo que é.'},
   'Bandagem':    {tipo:'curaJogador', valor:10, cat:'Treinador',
                   ficha:'+10 HP no treinador · o HP do treinador não regenera sozinho',
                   desc:'Pra você, não pra eles. Você também se machuca.'},
@@ -340,7 +340,7 @@ function fichaItem(nome){
 /* O que a mochila deixa usar no meio de uma briga. Papel, crachá e prova
    de processo continuam na mochila — só não servem de nada com um Onix
    na sua frente. */
-const TIPOS_USAVEIS_EM_BATALHA = ['cura','revive','status','curaJogador','pp','ppTodos','moral','fuga'];
+const TIPOS_USAVEIS_EM_BATALHA = ['cura','revive','status','curaJogador','vontade','moral','fuga'];
 function usavelEmBatalha(nome){
   const i = ITENS_INFO[nome];
   return !!i && TIPOS_USAVEIS_EM_BATALHA.includes(i.tipo);
@@ -1045,7 +1045,7 @@ const Estado = {
   /* ---------- JOGADOR ---------- */
   hpMaxJogador(){ return 30 + (this.j.status.resistencia - 1) * 2; },
   /* Vontade do treinador (Will): 2 + Resistência. Gasta-se nos testes de
-     d10 das cenas; save antigo começa cheio. */
+     cena (um sucesso a mais); save antigo começa cheio. */
   vontadeMaxJogador(){ return 2 + ((this.j && this.j.status && this.j.status.resistencia) || 1); },
   vontadeJogador(){
     if (!this.j) return 0;
