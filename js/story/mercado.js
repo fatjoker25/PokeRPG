@@ -178,14 +178,13 @@ const TROCAS = {
     memoria:'Trocou o Seel dela pelo seu Poliwhirl, na escola de natação.'
   }],
   lavender: [{
-    id:'lavender_1',
+    id:'lavender_1', unica:true,
     quem:'o zelador da torre',
     onde:'no primeiro andar, entre as velas',
-    pede:104, da:{dex:93, nivel:[30,34], apelido:'Sete', natureza:'Quiet'},
-    trocaEvolui:true,
-    fala:'"Tem um Haunter que mora no sétimo andar e que quer ir embora daqui. Eu não sei explicar como eu sei. Eu sei."\n"E ele quer o quê?"\n"Ele quer um Cubone. Não me pergunta por quê."',
+    pede:104, da:{dex:92, nivel:[22,24], apelido:'Sete', natureza:'Quiet'},
+    fala:'"Tem um Gastly que mora no sétimo andar e que quer ir embora daqui. Eu não sei explicar como eu sei. Eu sei."\n"E ele quer o quê?"\n"Ele quer um Cubone. Não me pergunta por quê."',
     depois:'O zelador leva o Cubone pra dentro do terceiro andar e volta sem ele, e não explica, e você decide não perguntar.',
-    memoria:'Trocou um Cubone pelo Haunter do sétimo andar da Torre.'
+    memoria:'Trocou um Cubone pelo Gastly do sétimo andar da Torre.'
   }, {
     id:'lavender_2', requer:d=>numInsignias() >= 5, unica:true,
     quem:'a senhora de luto do primeiro andar',
@@ -196,14 +195,13 @@ const TROCAS = {
     memoria:'Trocou o Marowak da Torre pelo seu Clefairy. Ela queria uma companhia que descesse junto.'
   }],
   saffron:  [{
-    id:'saffron_1',
+    id:'saffron_1', unica:true,
     quem:'uma mulher de crachá azul',
     onde:'na praça de alimentação, na hora do almoço, sozinha',
-    pede:122, da:{dex:64, nivel:[30,34], apelido:'Sete e meia', natureza:'Modest'},
-    trocaEvolui:true,
-    fala:'"Eu tenho um Kadabra e eu não consigo mais ficar com ele."\n"Por quê?"\n"Porque ele sabe o que eu penso e eu trabalho onde eu trabalho."',
+    pede:122, da:{dex:97, nivel:[30,34], apelido:'Sete e meia', natureza:'Modest'},
+    fala:'"Eu tenho um Hypno e eu não consigo mais dormir do lado dele."\n"Por quê?"\n"Porque ele sabe o que eu sonho e eu trabalho onde eu trabalho."',
     depois:'Ela pega o Mr. Mime e vai embora sem terminar o almoço, e você repara que a bandeja dela estava intacta desde o começo.',
-    memoria:'Trocou o Kadabra dela pelo seu Mr. Mime, na praça de alimentação. Ela não queria mais alguém lendo o que ela pensa.'
+    memoria:'Trocou o Hypno dela pelo seu Mr. Mime, na praça de alimentação. Ela não queria mais alguém lendo o que ela sonha.'
   }],
 
 /* ─── na estrada: quem troca por estar de passagem ─── */
@@ -395,22 +393,26 @@ const Trocas = {
     });
   },
   disponiveis(id){ return this.lista(id).filter(t => !this.jaFez(t.id) || this.oferta(t)); },
-  /* Troca de história com um Pokémon que só existe uma vez (o Haunter da
-     Torre, o Kadabra da praça, o Machoke da pedreira, o Marowak da
+  /* Troca de história com um Pokémon que só existe uma vez (o Gastly da
+     Torre, o Hypno da praça, o Machoke da pedreira, o Marowak da
      senhora, os fósseis) acontece uma vez só: depois dela a pessoa não
      vira gente que troca. O resto troca de novo todo dia. */
   repete(t){ return !!t && !t.unica && !t.trocaEvolui; },
 
   /* A primeira troca de cada pessoa é a da história, fixa. Depois dela
-     a pessoa vira gente comum que troca: até três pedidos por dia,
-     sorteados entre os Pokémon comuns — o que ela quer é comum por
-     aqui, o que ela oferece é comum noutro canto de Kanto. Fechou uma,
-     as outras do dia somem. */
+     a pessoa vira gente comum que troca: uma proposta por dia, que ela
+     escolhe entre três sorteadas dos Pokémon comuns — o que ela quer é
+     comum por aqui, o que ela oferece é comum noutro canto de Kanto. O
+     jogador não escolhe qual, e a tela não conta que houve sorteio. */
   oferta(t){
     if (!this.jaFez(t.id) || !this.repete(t)) return null;
     const d = Estado.dados;
     d.trocasExtra = d.trocasExtra || {};
     let o = d.trocasExtra[t.id];
+    /* save de quando o jogador escolhia entre três: fica uma, a dela */
+    if (o && o.pronta && o.opcoes && o.opcoes.length > 1){
+      const e = Dados.escolher(o.opcoes); o.opcoes = [e]; o.pede = e.pede; o.da = e.da;
+    }
     if (o && o.pronta) return o;
     const ultimo = o ? o.dia : (d.trocasFeitas[t.id] || {}).dia;
     if (ultimo != null && d.relogio.dia <= ultimo) return null;
@@ -430,7 +432,9 @@ const Trocas = {
       opcoes.push({pede, da:{dex:da, nivel:[Math.max(3, nv - 3), nv + 3]}});
     }
     if (!opcoes.length) return null;
-    o = Object.assign({pronta:true, n:(o ? o.n : 0) + 1, dia:d.relogio.dia, opcoes}, opcoes[0]);
+    /* das propostas que ela tinha, quem decide qual vai ser é ela */
+    const escolhida = Dados.escolher(opcoes);
+    o = Object.assign({pronta:true, n:(o ? o.n : 0) + 1, dia:d.relogio.dia, opcoes:[escolhida]}, escolhida);
     d.trocasExtra[t.id] = o;
     return o;
   },

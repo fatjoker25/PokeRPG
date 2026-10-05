@@ -1210,6 +1210,17 @@ const Estado = {
         if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
       /* o rival guardou o nome de quando ainda não tinha um */
       if (d.rivais && d.rivais.fuchsia) d.rivais.fuchsia.nome = 'Rory';
+      /* o homem da pergunta de Lavender era gravado como o Fabre da
+         Comissão: o que é dele (o caderno setenta e um) vai pro Sr. Juniper */
+      const fab = d.npcs && d.npcs['Curador Fabre'];
+      if (fab && !d.npcs['Sr. Juniper']){
+        const dele = (fab.memorias || []).filter(m => /caderno setenta e um/.test(String(m && m.texto || m)));
+        if (dele.length){
+          fab.memorias = fab.memorias.filter(m => !dele.includes(m));
+          fab.opiniao = (fab.opiniao || 0) - 2;
+          d.npcs['Sr. Juniper'] = {nome:'Sr. Juniper', opiniao:2, memorias:dele};
+        }
+      }
       /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
          Pidgey dele continua com o Pidgey */
       if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;

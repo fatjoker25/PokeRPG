@@ -53,7 +53,7 @@ const RETRATO_POR_NOME = {
   'Dra. Cordell':'trainers/scientist_f', 'Dra. Sallow':'trainers/scientist_f', 'Chefe da expedição':'trainers/scientist_f',
   'Dra. Sorrel':'trainers/scientist_f', 'Kira':'trainers/scientist_f', 'Dra. Isolde Yarrow':'trainers/scientist_f',
   'Técnica da Liga':'trainers/scientist_f', 'Comprador de jaleco':'trainers/scientist',
-  'Curador Fabre':'trainers/gentleman', 'Fabre':'trainers/gentleman', 'Diretor Quince':'trainers/gentleman',
+  'Curador Fabre':'trainers/gentleman', 'Fabre':'trainers/gentleman', 'Sr. Juniper':'trainers/gentleman', 'Diretor Quince':'trainers/gentleman',
   'Sr. Tobias Dahl':'trainers/gentleman',
   'Hester Colman':'trainers/office_worker_f', 'a presidente':'trainers/office_worker_f',
   'Conselheira Edda Thistle':'trainers/office_worker_f', 'Sra. Cybil':'trainers/office_worker_f',

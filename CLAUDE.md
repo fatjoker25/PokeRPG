@@ -549,11 +549,20 @@ até `TROCAS_POR_DIA` (3) propostas por dia, e fechar uma some com as
 outras. Leia as propostas por `Trocas.opcoesDe(o)` — save velho tem uma
 só, sem lista.
 
+Depois da primeira, a proposta do dia é **uma só, e a pessoa é quem
+escolhe**: `oferta` sorteia três e fica com uma. O jogador não escolhe,
+e o jogo não conta que houve sorteio — nem na tela, nem na folha.
+
 Exceção: quem troca um Pokémon que só existe uma vez — evolução por troca
-(`trocaEvolui`: o Haunter da Torre, o Kadabra da praça, o Machoke da
-pedreira) ou troca marcada `unica:true` (o Marowak da senhora, os
-fósseis) — troca só a da história (`Trocas.repete`). Troca nova desse
-tipo entra com `unica:true`.
+(`trocaEvolui`: o Machoke da pedreira) ou troca marcada `unica:true` (o
+Gastly da Torre, o Hypno da praça, o Marowak da senhora, os fósseis) —
+troca só a da história (`Trocas.repete`). Troca nova desse tipo entra com
+`unica:true`.
+
+**Haunter e Kadabra só vêm do Sr. Juniper**, o homem da pergunta de
+Lavender (`lav_a_pergunta_do_curador`, contato `curador` no PokéNav): a
+resposta decide qual dos dois. Nenhuma troca dá um deles. E ele não é o
+Curador Fabre da Comissão — são duas pessoas.
 
 A Pokédex de Kanto tem 150 casas (`DEX_KANTO_IDS`); Mew e os lendários
 de Johto entram por `idsKanto()` só depois de vistos ou catalogados.

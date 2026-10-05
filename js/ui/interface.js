@@ -522,7 +522,7 @@ const UI = {
     if (typeof CAMPEAO !== 'undefined' && CAMPEAO && CAMPEAO.nome) n.add(CAMPEAO.nome);
     if (typeof RIVAIS_EXTRA !== 'undefined') por(RIVAIS_EXTRA);
     ['Ezra','Oak','Professor Oak','Bill','Dr. Fuji','Lance','Agatha','Bruno','Lorelei',
-     'Blue','Red','Fabre','Nadia','Vernon','Aldous'].forEach(x => n.add(x));
+     'Blue','Red','Fabre','Sr. Juniper','Nadia','Vernon','Aldous'].forEach(x => n.add(x));
     /* e todo nome que a história registra como gente que você conheceu */
     if (typeof CAPITULOS !== 'undefined')
       for (const cap of CAPITULOS)
@@ -4510,7 +4510,7 @@ const UI = {
 
       <h3>O que você sabe</h3>
       <div class="linha"><span class="k">Espécie não catalogada</span><span class="v">aparece como ???</span></div>
-      <div class="linha"><span class="k">Troca de novo</span><span class="v">a primeira troca de cada pessoa é a da história, sempre a mesma · quem troca um Pokémon que só existe uma vez (o Haunter da Torre, o Kadabra da praça, o Machoke da pedreira, o Marowak da senhora de luto, os fósseis do museu e da vitrine) troca só essa · o resto troca de novo: até 3 propostas sorteadas por dia, cada uma pedindo um Pokémon comum daquele lugar e oferecendo um comum de outro canto de Kanto, no nível do lugar ± 3 · fechou uma, as outras do dia somem · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
+      <div class="linha"><span class="k">Troca de novo</span><span class="v">a primeira troca de cada pessoa é a da história, sempre a mesma · quem troca um Pokémon que só existe uma vez (o Gastly da Torre, o Hypno da praça, o Machoke da pedreira, o Marowak da senhora de luto, os fósseis do museu e da vitrine) troca só essa · o resto troca de novo: uma proposta por dia, a que a pessoa quiser, pedindo um Pokémon comum daquele lugar e oferecendo um comum de outro canto de Kanto, no nível do lugar ± 3 · fechou, a próxima é no dia seguinte · e passa o número, pra você ligar e perguntar do que foi com ela</span></div>
       <div class="linha"><span class="k">Apelido do seu</span><span class="v">quem chega por captura ou presente pode ganhar um, na hora (até 12 letras) · quem chega por troca fica com o nome que veio</span></div>
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
@@ -4653,7 +4653,7 @@ const UI = {
       <div class="linha"><span class="k">Onde</span><span class="v">algumas cidades e algumas rotas · nunca em todas</span></div>
       <div class="linha"><span class="k">O que vale</span><span class="v">o que o outro pede · troca feita não desfaz</span></div>
       <div class="linha"><span class="k">Evolução por troca</span><span class="v">chega já evoluído na sua mão</span></div>
-      <p class="sussurro">Quem só evolui trocando evolui no ato da troca: o Haunter que sai da mão do outro chega como Gengar na sua. O que chega entra na Pokédex na hora.</p>
+      <p class="sussurro">Quem só evolui trocando evolui no ato da troca: o Machoke que sai da mão do outro chega como Machamp na sua. O que chega entra na Pokédex na hora.</p>
 
       <h3>Item segurado</h3>
       <div class="linha"><span class="k">Quantos</span><span class="v">1 por Pokémon</span></div>

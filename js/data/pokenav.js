@@ -608,7 +608,7 @@ const CONTATOS = [
      A resposta decide o que ele te manda meses depois. Ele nunca
      fala em Pokémon, nem na pergunta, nem na entrega.
      ============================================================ */
-  id:'curador', tipo:'figura', nome:'Fabre', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
+  id:'curador', tipo:'figura', nome:'Sr. Juniper', papel:'curador de coisa que ninguém guarda', cidade:'Lavender',
   requer:d=>!!d.flags.a_pergunta_do_curador,
   oferece:['missao'],
   missao:{
@@ -616,12 +616,12 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e dizer que você chegou em Lavender',
     dica:'Ele espera você em Lavender.',
     pedido:[
-      fala('Fabre', 'Eu não anotei pra nada. Eu anoto tudo.'),
-      fala('Fabre', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
-      fala('Fabre', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
+      fala('Sr. Juniper', 'Eu não anotei pra nada. Eu anoto tudo.'),
+      fala('Sr. Juniper', 'Eu tenho oitenta e três cadernos de capa dura com resposta de gente que passou por aqui em dezenove anos.'),
+      fala('Sr. Juniper', 'Quando você tiver quatro insígnias, aparece. Lavender, o abrigo, qualquer hora.'),
       d=>fala(d.jogador.nome, 'Pra quê?'),
-      fala('Fabre', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
-      fala('Fabre', 'Não pergunta o que é. Se eu falar, estraga.')
+      fala('Sr. Juniper', 'Pra eu te devolver uma coisa que não é minha.', 'baixo'),
+      fala('Sr. Juniper', 'Não pergunta o que é. Se eu falar, estraga.')
     ],
     objetivo:d=>d.insignias.filter(i=>i!=='Título de Campeão').length >= 4,
     entregue:d=>{
@@ -629,16 +629,16 @@ const CONTATOS = [
       const guarda = d.flags.respondeu_guardar;
       return [
         'O abrigo do Sr. Fuji tem uma sala nos fundos que você nunca tinha visto, com oitenta e três cadernos de capa dura numa estante feita à mão.',
-        fala('Fabre', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
-        d=>fala('Fabre', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
-        fala('Fabre', 'Eu não escolho o que dar. A resposta escolhe.'),
+        fala('Sr. Juniper', 'Caderno setenta e um, página quatro.', null, 'Ele acha em onze segundos.'),
+        d=>fala('Sr. Juniper', `Eu te perguntei uma coisa e você respondeu: "${guarda ? 'guardar' : 'passar adiante'}".`),
+        fala('Sr. Juniper', 'Eu não escolho o que dar. A resposta escolhe.'),
         guarda
           ? 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre da Liga de 1989 ainda intacto.'
           : 'Ele volta com uma Pokébola velha, dessas de antes do padrão atual, com o lacre já rompido e um pedaço de fita no lugar.',
         guarda
-          ? fala('Fabre', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
-          : fala('Fabre', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
-        fala('Fabre', 'Não abre aqui. Abre na estrada.')
+          ? fala('Sr. Juniper', 'Esse aqui ficou. Ficou porque ninguém veio buscar e porque eu não devolvi pro sistema.', 'baixo')
+          : fala('Sr. Juniper', 'Esse aqui passou por quatro pessoas antes de você. Nenhuma delas ficou com ele, e todas as quatro fizeram certo.', 'baixo'),
+        fala('Sr. Juniper', 'Não abre aqui. Abre na estrada.')
       ];
     },
     recompensa:d=>{
@@ -1154,24 +1154,24 @@ const CHAMADAS = [
           && d.insignias.filter(i=>i!=='Título de Campeão').length >= 2,
   peso:2,
   falas:d=>[
-    fala('Fabre', 'Não desliga, é rápido.'),
-    fala('Fabre', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
-    fala('Fabre', 'A sua resposta continua lá e continua a mesma, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
-    fala('Fabre', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
+    fala('Sr. Juniper', 'Não desliga, é rápido.'),
+    fala('Sr. Juniper', 'Eu reli o caderno setenta e um ontem. Eu releio todos, por ordem, um por mês.'),
+    fala('Sr. Juniper', 'A sua resposta continua lá e continua a mesma, e isso é a coisa mais óbvia do mundo e mesmo assim me surpreende toda vez.', 'baixo'),
+    fala('Sr. Juniper', 'Quatro insígnias. Lavender. Eu tô sempre aqui.')
   ],
   escolhas:[
     {texto:'Perguntar se alguém já mudou de resposta.',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou ao curador se alguém já tinha mudado de resposta'},
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Perguntou ao Sr. Juniper se alguém já tinha mudado de resposta'},
          flag:'sabe_dos_que_mudaram'},
      resultado:[
-       fala('Fabre', 'Onze pessoas voltaram pra mudar.'),
-       fala('Fabre', 'Em dezenove anos, onze. Todas as onze mudaram de "guardar" pra "passar adiante".'),
-       fala('Fabre', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
-       fala('Fabre', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
+       fala('Sr. Juniper', 'Onze pessoas voltaram pra mudar.'),
+       fala('Sr. Juniper', 'Em dezenove anos, onze. Todas as onze mudaram de "guardar" pra "passar adiante".'),
+       fala('Sr. Juniper', 'Nenhuma foi no sentido contrário. Nenhuma, nunca.', 'frio'),
+       fala('Sr. Juniper', 'Eu não sei o que fazer com essa informação e eu penso nela todo dia.')
      ]},
     {texto:'"Eu vou aparecer."',
-     ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou ao curador que ia aparecer'}},
-     resultado:[fala('Fabre', 'Todo mundo fala isso.'), fala('Fabre', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
+     ef:{rep:{eixo:'bom',delta:1,motivo:'Confirmou ao Sr. Juniper que ia aparecer'}},
+     resultado:[fala('Sr. Juniper', 'Todo mundo fala isso.'), fala('Sr. Juniper', 'Umas trezentas aparecem. De mil e setecentas.', 'baixo')]}
   ]
 },
 {
