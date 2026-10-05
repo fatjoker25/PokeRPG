@@ -98,7 +98,8 @@ const NOMES_FIXOS = {
   'o delegado de Fuchsia':     'Delegado Crane',
   'a delegada de Saffron':     'Delegada Thorne',
   'a delegada':                'Delegada Thorne',
-  'o advogado da Comissão':    'Dr. Bramble'
+  'o advogado da Comissão':    'Dr. Bramble',
+  'o contato da Terceira':     'Rook'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

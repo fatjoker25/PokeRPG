@@ -145,7 +145,10 @@ const RETRATO_POR_NOME = {
   'a delegada de Saffron':'trainers/veteran_f', 'a delegada':'trainers/veteran_f', 'Delegada Thorne':'trainers/veteran_f',
   'o advogado da Comissão':'trainers/office_worker', 'Dr. Bramble':'trainers/office_worker',
   'Motoqueiro da escolta':'trainers/biker', 'Segurança da Estação 4':'trainers/veteran',
-  'o técnico da prancheta':'trainers/worker'
+  'o técnico da prancheta':'trainers/worker',
+  /* caminho da Rocket */
+  'o contato da Terceira':'trainers/team_rocket_grunt_m', 'Rook':'trainers/team_rocket_grunt_m',
+  'Guarda da reserva':'trainers/pokemon_ranger_f'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

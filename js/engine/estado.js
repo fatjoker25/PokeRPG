@@ -1195,6 +1195,12 @@ const Estado = {
       const NPC_NOVO = {'a mulher da pasta de couro':'a mulher da pasta de vinil', 'Mulher da pasta de couro':'Mulher da pasta de vinil',
                         'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
                         'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory'};
+      /* a Terceira do capítulo 18 era gravada com minúscula, e virava outra pessoa */
+      if (d.npcs && d.npcs['a Terceira']){
+        const a = d.npcs['a Terceira'], b = d.npcs['A Terceira'] || {nome:'A Terceira', opiniao:0, memorias:[]};
+        b.opiniao = (b.opiniao || 0) + (a.opiniao || 0); b.memorias = (b.memorias || []).concat(a.memorias || []);
+        d.npcs['A Terceira'] = b; delete d.npcs['a Terceira'];
+      }
       for (const [velho, novo] of Object.entries(NPC_NOVO))
         if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
       /* o rival guardou o nome de quando ainda não tinha um */

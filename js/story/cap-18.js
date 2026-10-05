@@ -1187,7 +1187,7 @@ c18_terceira:{
     '"Pagam ótimo, no prazo, com nota." Ela cospe no chão de terra. "Com nota. Você entende o que é um cliente que exige nota fiscal de mim?"'
   ],
   ef:{flag:'sabe_da_comissao',
-      npc:{nome:'a Terceira', opiniao:0, memoria:'Falou da Comissão como quem fala de um cliente insuportável.'},
+      npc:{nome:'A Terceira', opiniao:0, memoria:'Falou da Comissão como quem fala de um cliente insuportável.'},
       registrar:'A Terceira vende para a CGRB e eles exigem nota fiscal.'},
   escolhas:[
     {texto:'"O que eles compram de você?"', vai:'c18_terceira_compra'},
@@ -1224,7 +1224,7 @@ c18_terceira_tirar:{
     '"É sobre o que eles quiserem que seja. Está escrito assim de propósito."'
   ],
   ef:{flag:'art4_serve_pra_gente', instabilidade:1,
-      npc:{nome:'a Terceira', opiniao:2, memoria:'Te contou do que ela tem medo.'},
+      npc:{nome:'A Terceira', opiniao:2, memoria:'Te contou do que ela tem medo.'},
       registrar:'A Terceira acha que o Art. 4º foi escrito largo o bastante para servir para gente.'},
   escolhas:[
     {texto:'"Me vende o que você tem."', vai:'c18_terceira_preco'},
@@ -1292,7 +1292,7 @@ c18_terceira_segunda_via:{
     '"Eles não usam mais esse caminho", ela diz. "Então essa aqui não me mata."'
   ],
   ef:{flag:['tem_segunda_via','liga_cinnabar_comissao'], itens:{'Segunda via de ordem de compra':1},
-      npc:{nome:'a Terceira', opiniao:2, memoria:'Te deu uma segunda via antiga, calculando exatamente o risco.'},
+      npc:{nome:'A Terceira', opiniao:2, memoria:'Te deu uma segunda via antiga, calculando exatamente o risco.'},
       registrar:'Segunda via: Estação 4 via Instituto de Cinnabar, de 19 meses atrás.'},
   escolhas:[
     {texto:'"Me vende o resto do que você tem."', vai:'c18_terceira_preco'},
