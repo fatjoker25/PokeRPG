@@ -857,7 +857,7 @@ const UI = {
 
     const html = `<div class="painel">
       <div class="cap-cabecalho">
-        <div class="num">Capítulo ${cap.num}</div>
+        <div class="num">${this.esc(typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(cap) : 'Capítulo ' + cap.num)}</div>
         <div class="tit">${this.esc(cap.titulo)}</div>
         <div class="loc">${this.esc(txt(cap.local))}</div>
       </div>
@@ -2928,7 +2928,7 @@ const UI = {
         Morte de treinador é permanente. Não tem Centro Pokémon para isso.
       </p>
       <div style="text-align:left;max-width:520px;margin:0 auto 30px">
-        <div class="linha"><span class="k">Capítulo</span><span class="v">${d.capitulo}</span></div>
+        <div class="linha"><span class="k">Capítulo</span><span class="v">${this.esc(typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(Historia.capitulo(d.capitulo)) : String(d.capitulo))}</span></div>
         <div class="linha"><span class="k">Reputação</span><span class="v">${this.esc(Estado.nomeRep())}</span></div>
         <div class="linha"><span class="k">Dias</span><span class="v">${d.relogio.dia}</span></div>
         <div class="linha"><span class="k">Pokémon deixados para trás</span><span class="v">${d.time.length}</span></div>

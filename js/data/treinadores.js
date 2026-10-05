@@ -138,7 +138,14 @@ const RETRATO_POR_NOME = {
   'Conselheira do broche':'trainers/office_worker_f', 'Nico Hart':'trainers/punk_guy',
   'Nilo, o do posto':'trainers/worker', 'a voz do outro lado':'trainers/office_worker',
   'Maren de Pewter':'trainers/lass', 'Museu de Pewter':'trainers/gentleman',
-  'As duas da caixa de gelo':'trainers/twins', 'quem estava na porta antes de você':'trainers/ace_trainer'
+  'As duas da caixa de gelo':'trainers/twins', 'quem estava na porta antes de você':'trainers/ace_trainer',
+
+  /* caminho da Lei */
+  'o delegado de Fuchsia':'overworld/policial', 'Delegado Crane':'overworld/policial',
+  'a delegada de Saffron':'trainers/veteran_f', 'a delegada':'trainers/veteran_f', 'Delegada Thorne':'trainers/veteran_f',
+  'o advogado da Comissão':'trainers/office_worker', 'Dr. Bramble':'trainers/office_worker',
+  'Motoqueiro da escolta':'trainers/biker', 'Segurança da Estação 4':'trainers/veteran',
+  'o técnico da prancheta':'trainers/worker'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

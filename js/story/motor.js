@@ -24,7 +24,7 @@ const Historia = {
     const entrada = (typeof cap.inicio === 'function') ? cap.inicio(Estado.dados) : cap.inicio;
     Estado.dados.cena = entrada;
     this.capAtual = cap;
-    Estado.registrar(`=== Capítulo ${n}: ${cap.titulo} ===`);
+    Estado.registrar(`=== ${typeof numeroDoCapitulo === 'function' ? numeroDoCapitulo(cap) : 'Capítulo ' + n}: ${cap.titulo} ===`);
     return this.ir(entrada, true);
   },
 
@@ -298,6 +298,8 @@ const Historia = {
     let n = Estado.dados.capitulo + 1;
     while (this.capitulo(n)){
       const c = this.capitulo(n);
+      /* capítulo de caminho só entra pelo desvio (caminhos.js), nunca em sequência */
+      if (c.caminho){ n++; continue; }
       if (!c.requer || this.testaRequisito(c)) return n;
       /* a bússola consulta isto a cada tela: só o avanço de verdade escreve no diário */
       if (registrando) Estado.registrar(`(Capítulo ${n} — "${c.titulo}" — não aconteceu nesta jornada.)`);
@@ -312,7 +314,7 @@ const Historia = {
 
   /* Quais capítulos ficaram de fora — usado no epílogo */
   capitulosPulados(){
-    return CAPITULOS.filter(c => c.requer && !this.testaRequisito(c)).map(c => c.titulo);
+    return CAPITULOS.filter(c => c.requer && !c.caminho && !this.testaRequisito(c)).map(c => c.titulo);
   },
 
   /* A "via" é o jeito que o mundo passou a te enxergar. Ela abre e fecha caminhos. */

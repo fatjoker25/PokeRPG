@@ -93,7 +93,12 @@ const NOMES_FIXOS = {
   'a editora do Jornal':       'Hazel Moss',
   'a avaliadora da Associação': 'Sra. Linden',
   'a coordenadora da quadra':  'Coordenadora Maple',
-  'a dona da pensão':          'Dona Briar'
+  'a dona da pensão':          'Dona Briar',
+  /* os caminhos (js/story/caminhos/) */
+  'o delegado de Fuchsia':     'Delegado Crane',
+  'a delegada de Saffron':     'Delegada Thorne',
+  'a delegada':                'Delegada Thorne',
+  'o advogado da Comissão':    'Dr. Bramble'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

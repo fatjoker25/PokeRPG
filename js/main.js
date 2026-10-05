@@ -354,9 +354,12 @@ const Jogo = {
     let inimigo, timeInimigo;
     if (b.comissao){
       // time de unidades fabricadas da Comissão
-      const unidades = timeComissao(b.comissao, b.nivel || Historia.capAtual.nivelArea);
+      const nvC = txt(b.nivel) || Historia.capAtual.nivelArea;
+      const unidades = timeComissao(b.comissao, nvC);
       inimigo = unidades[0];
-      timeInimigo = unidades.slice(1);
+      /* quem traz Pokémon próprio além das unidades (timeExtra) põe no fim da fila */
+      timeInimigo = unidades.slice(1).concat((b.timeExtra || []).map(x => criarPokemon(x.dex,
+        x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvC + (x.mais || 0)), {})));
     } else {
       /* nível pode ser função: capítulo alcançável com progresso diferente
          não pode ter adversário de nível fixo. */
@@ -733,7 +736,9 @@ const Jogo = {
        longe de Viridian tem, na rodoviária da cidade, o ônibus da Liga
        (Cidade.onibus) — pega se quiser, não é obrigado. */
     const d = Estado.dados;
-    const prox = Estado.dados.capitulo + 1;
+    /* o rival espera no caminho do próximo capítulo de verdade: depois de
+       um desvio (12.03), o próximo é o 13, não 13.03 */
+    const prox = Historia.proximoCapitulo(false) || Estado.dados.capitulo + 1;
     const enc = rivalDeveAparecer(prox);
     if (enc){
       this.encontroRival = enc;
@@ -858,7 +863,8 @@ const Jogo = {
        isso já está no topo da tela, na Ficha e no Time. A cena abre na cena. */
     const abertura = (typeof avisosDeRumo === 'function' ? avisosDeRumo() : []).concat(daCredencial);
     /* quem é do seu lado te acha na virada (js/story/linhas.js) */
-    if (typeof Linhas !== 'undefined' && Linhas.talvez(cena, abertura)) return;
+    /* o capítulo de caminho já é a cena da sua linha: não chama outra por cima */
+    if (typeof Linhas !== 'undefined' && !(Historia.capAtual && Historia.capAtual.caminho) && Linhas.talvez(cena, abertura)) return;
     /* telefone toca na hora errada, que é quando telefone toca */
     this.talvezToque();
     UI.telaCena(cena, abertura);
