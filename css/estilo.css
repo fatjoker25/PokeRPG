@@ -2741,20 +2741,6 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .mural.um{grid-template-columns:1fr;max-width:360px;margin:0 auto 12px}
 .mural.um .bilhete p{font-size:15px}
 
-/* ---------- a mochila em abas ---------- */
-.abas-mochila{
-  display:flex;flex-wrap:wrap;gap:4px;margin:0 0 12px;padding:4px;border-radius:10px;
-  background:rgba(10,16,24,.55);border:1px solid rgba(255,255,255,.12)
-}
-.abas-mochila .aba{
-  flex:1 1 auto;min-width:0;padding:7px 10px;border-radius:7px;border:0;cursor:pointer;
-  font:inherit;font-size:13px;font-weight:600;color:#d7e2ee;background:transparent
-}
-.abas-mochila .aba:hover{background:rgba(255,255,255,.08)}
-.abas-mochila .aba:focus-visible{outline:2px solid #8ec5ff;outline-offset:1px}
-.abas-mochila .aba.sel{background:#f2f5f9;color:#14202e;cursor:default}
-.abas-mochila .aba b{display:inline-block;min-width:16px;padding:0 4px;margin-left:4px;border-radius:8px;background:#d9534f;color:#fff;font-size:11px}
-.modal.cartao .abas-mochila{margin:10px 10px 0}
 
 /* cartão: a cor é sua; insígnia que falta aparece apagada */
 .cartao-pe{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -2914,7 +2900,6 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 }
 .modal-x:hover{opacity:1}
 .modal-x:focus-visible{outline:2px solid #fff;outline-offset:0}
-.modal.so-x .abas-mochila{margin-right:40px}
 .modal-fundo.fundo-pokedex,.modal-fundo.fundo-cartao{padding:12px}
 
 /* time: segurar e arrastar */
@@ -3174,4 +3159,199 @@ svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}
   .narrativa p.entre-falas{margin-left:14px}
   .escolha{padding:10px 12px 10px 46px;font-size:14.5px}
   .escolha::before{left:15px;width:22px;height:22px}
+}
+
+/* ============================================================
+   MOCHILA DE LONA
+   A cor ainda é a da bolsa que você carrega (paletaMochila). Por
+   cima dela: trama de lona, costura por dentro da borda, o zíper
+   no topo e os bolsos dos jogos, cada um com o ícone de Platinum e
+   a sua cor, encostados no forro do bolso aberto.
+   ============================================================ */
+.modal.mochila{
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,.035) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.04) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, var(--moch-claro) 0, var(--moch) 86px, var(--moch) calc(100% - 70px), var(--moch-esc) 100%);
+  background-attachment:local;
+  outline:2px dashed color-mix(in srgb, var(--moch-claro) 75%, #fff 10%);
+  outline-offset:-8px;
+  border-radius:20px;
+}
+.modal.mochila h2{display:flex;align-items:center;gap:10px}
+.modal.mochila h2::before{
+  /* a alça, costurada no alto */
+  content:'';width:46px;height:12px;border-radius:12px 12px 4px 4px;
+  border:3px solid var(--moch-esc);border-bottom:0;opacity:.75;
+}
+.modal.mochila .modal-corpo{border-radius:14px;padding:12px}
+
+/* o zíper: o puxador e os dentes correndo embaixo do nome da bolsa */
+.modal.mochila .mochila-topo{position:relative;margin:0 0 12px;padding:10px 14px 16px;overflow:hidden}
+.modal.mochila .mochila-topo::after{
+  content:'';position:absolute;left:10px;right:10px;bottom:5px;height:5px;border-radius:3px;
+  background:repeating-linear-gradient(90deg, #ece6d6 0 3px, #8d8676 3px 6px);
+  box-shadow:0 1px 0 rgba(255,255,255,.25), inset 0 1px 1px rgba(0,0,0,.3);
+  opacity:.9;
+}
+.modal.mochila .mochila-topo .fecho{
+  width:14px;height:22px;border-radius:4px 4px 7px 7px;
+  background:linear-gradient(90deg,#a9aeb6,#eceff3 45%,#9aa0a8);
+  box-shadow:inset 0 -6px 0 -3px rgba(0,0,0,.25), 0 2px 3px rgba(0,0,0,.45);
+}
+
+/* ---------- os bolsos ---------- */
+.bolsos{display:grid;grid-template-columns:repeat(auto-fit, minmax(0, 1fr));gap:6px;margin:0 0 -1px;position:relative;z-index:1}
+.bolso{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px 7px;border:1px solid rgba(0,0,0,.28);border-bottom:0;border-radius:12px 12px 0 0;
+  background:linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.26));
+  color:var(--moch-txt-2);font:inherit;cursor:pointer;min-width:0;
+  transition:transform .18s var(--mola), background .18s var(--suave), color .18s;
+}
+.bolso:hover{transform:translateY(-2px);color:var(--moch-txt)}
+.bolso:focus-visible{outline:2px solid var(--bolso);outline-offset:2px}
+.bolso .bolso-icone{width:32px;height:32px;image-rendering:pixelated;filter:saturate(.55) brightness(.85);transition:filter .18s, transform .25s var(--mola)}
+.bolso .bolso-nome{font-size:11px;font-weight:700;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bolso .bolso-n{
+  position:absolute;top:4px;right:6px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;
+  font:700 10.5px/17px var(--mono);text-align:center;color:#fff;background:rgba(0,0,0,.4);
+}
+.bolso.sel{
+  color:var(--moch-txt);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bolso) 30%, var(--moch-forro-2)), var(--moch-forro-2));
+  border-color:color-mix(in srgb, var(--bolso) 60%, var(--moch-linha));
+  box-shadow:inset 0 3px 0 var(--bolso);
+}
+.bolso.sel .bolso-icone{filter:none;transform:translateY(-1px) scale(1.08)}
+.bolso.sel .bolso-n{background:var(--bolso)}
+/* o forro do bolso aberto: a borda de cima é a cor do bolso */
+.bolso-forro{
+  border:1px solid color-mix(in srgb, var(--bolso) 55%, var(--moch-linha));
+  border-top:3px solid var(--bolso);border-radius:0 0 12px 12px;
+  padding:6px 8px 8px;min-height:120px;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.04));
+  animation:aparece .3s var(--suave) both;
+}
+.bolso-forro .nada{padding:22px 8px;text-align:center}
+.modal.mochila .bolso-forro h3.cat-item:first-child{margin-top:4px}
+
+/* ---------- aparelhos no bolso de Itens-chave ---------- */
+button.item-linha.aparelho{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;align-items:center;
+  background:rgba(255,255,255,.04);border:1px solid var(--moch-linha);margin-bottom:6px;
+}
+.item-linha.aparelho .item-icone{width:36px;height:36px;image-rendering:pixelated;align-self:center;margin:0}
+.item-linha.aparelho .abrir{
+  flex:0 0 auto;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;
+  background:rgba(0,0,0,.24);border:1px solid var(--moch-linha);color:var(--moch-txt);
+}
+.modal.mochila .item-linha.aparelho:hover{border-color:var(--bolso, #e0b030);background:rgba(255,255,255,.09)}
+.item-linha.aparelho:hover .abrir{background:var(--bolso, #e0b030);border-color:var(--bolso, #e0b030);color:#1b1500}
+.aparelho-novos{display:inline-block;margin-left:8px;min-width:18px;padding:0 5px;border-radius:9px;
+  background:#d9534f;color:#fff;font-size:11px;line-height:18px;text-align:center;vertical-align:1px}
+
+/* ---------- aparelho aberto: o caminho de volta pra mochila ---------- */
+.volta-mochila{
+  display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:5px;border-radius:12px;
+  background:rgba(10,16,24,.55);border:1px solid rgba(255,255,255,.12);
+}
+.volta-mochila .aba-volta{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px 5px 6px;border-radius:9px;border:0;cursor:pointer;
+  font:inherit;font-size:13px;font-weight:700;color:#f3ead0;background:rgba(255,255,255,.08);
+}
+.volta-mochila .aba-volta::before{content:'‹';font-size:18px;line-height:1;margin-right:-2px}
+.volta-mochila .aba-volta:hover{background:rgba(255,255,255,.16)}
+.volta-mochila .aba-volta:focus-visible{outline:2px solid #8ec5ff;outline-offset:1px}
+.volta-mochila .bolso-icone{width:22px;height:22px;image-rendering:pixelated}
+.volta-mochila .aparelho-aberto{display:inline-flex;align-items:center;gap:7px;margin-left:auto;margin-right:6px;
+  font-size:13px;font-weight:700;color:#e6eef8}
+.volta-mochila .aparelho-aberto .item-icone{width:26px;height:26px;image-rendering:pixelated;margin:0}
+.modal.cartao .volta-mochila{margin:10px 10px 0}
+.modal.so-x .volta-mochila{margin-right:40px}
+
+/* ============================================================
+   LOJA — o balcão do Poké Mart
+   Cor própria, a dos Marts dos jogos: toldo listrado azul e branco,
+   placa azul com o nome do balcão, o visor da caixa com o seu
+   dinheiro e etiqueta amarela de preço em cada item.
+   ============================================================ */
+.modal.loja{
+  --lj-azul:#2b6fd6; --lj-azul-esc:#18489c; --lj-azul-claro:#5c97ef;
+  --lj-papel:#f5f8fd; --lj-papel-2:#e5ecf8; --lj-txt:#15203d; --lj-txt-2:#46557a; --lj-txt-3:#7180a1;
+  --lj-linha:#d2dbec; --lj-etiqueta:#ffd84a;
+  color:var(--lj-txt);border:2px solid var(--lj-azul-esc);border-radius:18px;padding-top:44px;
+  background:
+    radial-gradient(circle at 13px 0, var(--lj-azul) 12px, transparent 12.5px) 0 22px / 52px 13px repeat-x,
+    radial-gradient(circle at 39px 0, #fff 12px, transparent 12.5px) 0 22px / 52px 13px repeat-x,
+    repeating-linear-gradient(90deg, var(--lj-azul) 0 26px, #fff 26px 52px) 0 0 / 100% 22px no-repeat,
+    linear-gradient(180deg, var(--lj-papel), var(--lj-papel-2));
+  background-attachment:local;
+  box-shadow:var(--sombra-alta), inset 0 0 0 1px rgba(255,255,255,.6);
+}
+.modal.loja h2{color:var(--lj-azul-esc)}
+.modal.loja .modal-corpo{color:var(--lj-txt)}
+.loja-placa{
+  display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:10px 12px 10px 16px;border-radius:12px;
+  background:linear-gradient(180deg, var(--lj-azul-claro), var(--lj-azul));
+  border:2px solid var(--lj-azul-esc);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 6px 14px -8px rgba(24,72,156,.8);
+}
+.loja-nome{font-weight:800;font-size:15.5px;letter-spacing:.02em;text-shadow:0 1px 0 rgba(0,0,0,.25);line-height:1.25}
+.loja-nome small{display:block;font-weight:600;font-size:11.5px;opacity:.85;letter-spacing:.04em}
+.loja-caixa{
+  margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;
+  font:700 15px/1.1 var(--mono);color:#86ffb0;background:#0d2a1c;padding:5px 10px 6px;border-radius:7px;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.6), 0 0 0 2px var(--lj-azul-esc);
+  text-shadow:0 0 6px rgba(80,255,150,.45);
+}
+.loja-caixa small{font:600 9px/1.3 var(--fonte);letter-spacing:.12em;text-transform:uppercase;color:#7fc79c;text-shadow:none}
+.modal.loja .tut-abas{border-bottom-color:var(--lj-linha)}
+.modal.loja .tut-aba{background:#fff;border-color:var(--lj-linha);color:var(--lj-txt-2)}
+.modal.loja .tut-aba:hover{border-color:var(--lj-azul);color:var(--lj-azul-esc)}
+.modal.loja .tut-aba.sel{background:var(--lj-azul);border-color:var(--lj-azul);color:#fff}
+.modal.loja .sussurro,.modal.loja .nada{color:var(--lj-txt-2)}
+.modal.loja .fraco{color:var(--lj-txt-3)}
+.modal.loja .item-linha{background:#fff;border:1px solid var(--lj-linha);margin-bottom:6px;box-shadow:0 1px 0 rgba(21,32,61,.05)}
+.modal.loja .item-linha .nome{color:var(--lj-txt)}
+.modal.loja .item-linha .desc,.modal.loja .item-linha .ficha{color:var(--lj-txt-2)}
+.modal.loja .item-linha.compravel:hover:not(:disabled){background:#fff;border-color:var(--lj-azul);box-shadow:0 6px 16px -10px rgba(24,72,156,.6)}
+/* a etiqueta de preço: amarela, com o furo do barbante */
+.modal.loja .item-linha .qtd{
+  position:relative;min-width:62px;padding:4px 9px 4px 16px;border:0;border-radius:3px 6px 6px 3px;
+  font-weight:800;color:#3a2c00;
+  background:radial-gradient(circle at 7px 50%, #fff 2.6px, transparent 3.2px), var(--lj-etiqueta);
+  clip-path:polygon(7px 0, 100% 0, 100% 100%, 7px 100%, 0 50%);
+}
+.modal.loja .item-linha.compravel:hover:not(:disabled) .qtd{color:#3a2c00;background:radial-gradient(circle at 7px 50%, #fff 2.6px, transparent 3.2px), #ffcb05}
+.modal.loja .item-linha.caro .qtd{color:#9b1c1c}
+.modal.loja .modal-pe .btn{background:var(--lj-azul);border-color:var(--lj-azul-esc);color:#fff}
+.modal.loja .modal-pe .btn:hover:not(:disabled){background:var(--lj-azul-esc);color:#fff;border-color:var(--lj-azul-esc)}
+.modal.loja .btn:not(.destaque):not(.perigo){background:#fff;border-color:var(--lj-linha);color:var(--lj-txt)}
+.modal.loja .btn:not(.destaque):not(.perigo):hover:not(:disabled){border-color:var(--lj-azul);color:var(--lj-azul-esc)}
+.modal.loja .confirma-compra .cc-qtd input{background:#fff;color:var(--lj-txt);border-color:var(--lj-linha)}
+
+@media (max-width:520px){
+  /* no celular: menos moldura em volta, e o nome só no bolso aberto,
+     como na tela pequena do jogo */
+  .modal.mochila{padding:16px 12px 14px;outline-offset:-6px}
+  .modal.mochila .modal-corpo{padding:8px}
+  .bolso{padding:7px 2px 6px}
+  .bolso .bolso-icone{width:30px;height:30px}
+  .bolso .bolso-nome{display:none}
+  .bolso.sel .bolso-nome{display:block;font-size:10px;letter-spacing:0;overflow:visible}
+  .bolso .bolso-n{top:2px;right:3px}
+  .bolso-forro{padding:4px 4px 6px}
+  /* a linha do item quebra: ícone e quantidade, o texto do lado, e o
+     botão desce pra baixo do texto em vez de espremer a coluna */
+  .modal.mochila .item-linha{flex-wrap:wrap;gap:4px 10px;padding:10px 8px}
+  .modal.mochila .item-linha .corpo{flex:1 1 calc(100% - 96px)}
+  .modal.mochila .item-linha > .btn.mini,
+  .modal.mochila .item-linha > .qtd + .corpo + .btn.mini{margin-left:auto}
+  .item-linha.aparelho .abrir{display:none}
+  .volta-mochila .aparelho-aberto > span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:9.5em;font-size:12px}
+  .loja-placa{flex-wrap:wrap}
+  .modal.loja{padding-left:14px;padding-right:14px}
 }

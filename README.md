@@ -22,6 +22,7 @@ HTML, CSS e JavaScript puro, sem dependências nem servidor.
 ## Créditos
 
 - Sprites de Pokémon, ícones de item, insígnias e gritos: repositórios de sprites e gritos da [PokeAPI](https://github.com/PokeAPI) (artes de Black/White e HeartGold/SoulSilver).
+- Ícones dos bolsos da mochila e dos aparelhos (Pokédex, PokéNav e Cartão de Treinador): acervo da [Bulbapedia](https://archives.bulbagarden.net) (artes de Platinum e Ruby/Sapphire/Emerald).
 - Cenários de batalha, rostos de treinador, efeitos e animações de golpe e músicas de batalha: [Pokémon Showdown](https://play.pokemonshowdown.com) (animações do cliente sob CC0 e MIT).
 - Regras de jogo: Pokérole (Pokérole Project), com dados do Pokerole-Data, mantido pela comunidade.
 - Fonte do título: Press Start 2P, de CodeMan38 (SIL Open Font License 1.1, em `fontes/`).

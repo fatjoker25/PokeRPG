@@ -78,6 +78,24 @@ if (typeof document !== 'undefined' && document.addEventListener){
   else document.addEventListener('DOMContentLoaded', () => aplicarMoldura(molduraSalva()));
 }
 
+/* Os aparelhos moram no bolso de Itens-chave: tocar abre. `item` é o
+   nome do ícone (ITEM_SPRITE) e, pro Mapa, o item da mochila. */
+const APARELHOS = [
+  {id:'pokedex', nome:'Pokédex', item:'Pokédex', abrir:'UI.modalPokedex()',
+   tem:() => !!Estado.dados.flags.tem_pokedex,
+   ficha:() => { const c = Estado.contagemDex(); return `${c.catalogados} catalogados · ${c.vistos} vistos`; }},
+  {id:'nav', nome:'PokéNav', item:'PokéNav', abrir:'UI.modalNav()',
+   tem:() => Estado.temPokenav(),
+   ficha:() => { const n = Estado.contatosNaAgenda().length; return `${n} ${n === 1 ? 'contato' : 'contatos'} na agenda`; },
+   novos:() => Estado.numerosDisponiveis().length || ''},
+  {id:'cartao', nome:'Cartão de Treinador', item:'Cartão de Treinador', abrir:'UI.modalCartao()',
+   tem:() => !!(Estado.dados.flags.tem_cartao && Estado.dados.flags.tem_pokedex),
+   ficha:() => { const n = Estado.dados.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto').length; return `${Estado.j.nome} · ${n} de 8 insígnias`; }},
+  {id:'mapa', nome:'Mapa de Kanto', item:'Mapa de Kanto', abrir:"Exploracao.mapa('mochila')",
+   tem:() => Estado.contaItem('Mapa de Kanto') > 0,
+   ficha:() => 'As cidades que você já pisou e o caminho entre elas'}
+];
+
 const UI = {
   app:null, dadosRecentes:[],
 
@@ -3109,20 +3127,15 @@ const UI = {
     <div style="margin-top:12px"><button class="btn" onclick="${noTime ? `UI.timeAcoes('${uid}')` : 'UI.modalTime()'}">Voltar</button></div>`, true);
   },
 
-  /* A mochila em abas: os aparelhos moram dentro dela. */
+  /* Pokédex, PokéNav, Cartão e Mapa moram no bolso de Itens-chave:
+     aberto um deles, o topo é o caminho de volta pra mochila. */
   abasMochila(atual){
-    const d = Estado.dados;
-    const novos = Estado.temPokenav() ? Estado.numerosDisponiveis().length : 0;
-    const abas = [
-      ['itens', 'Itens', 'UI.modalItens()', true],
-      ['pokedex', 'Pokédex', 'UI.modalPokedex()', !!d.flags.tem_pokedex],
-      ['nav', 'PokéNav' + (novos ? ` <b>${novos}</b>` : ''), 'UI.modalNav()', Estado.temPokenav()],
-      ['cartao', 'Cartão', 'UI.modalCartao()', !!(d.flags.tem_cartao && d.flags.tem_pokedex)],
-      ['mapa', 'Mapa', "Exploracao.mapa('mochila')", Estado.contaItem('Mapa de Kanto') > 0]
-    ].filter(a => a[3]);
-    if (abas.length < 2) return '';
-    return `<nav class="abas-mochila" aria-label="Mochila">${abas.map(([id, rot, acao]) =>
-      `<button class="aba${id === atual ? ' sel' : ''}" ${id === atual ? 'aria-current="page"' : `onclick="${acao}"`}>${svgIcone(id === 'nav' ? 'pokenav' : id)}${rot}</button>`).join('')}</nav>`;
+    const ap = APARELHOS.find(a => a.id === atual);
+    if (!ap) return '';
+    return `<nav class="volta-mochila" aria-label="Mochila">
+      <button class="aba-volta" onclick="UI.modalItens(null, 'chave')">${imgBolso('chave')}<span>Mochila</span></button>
+      <span class="aparelho-aberto">${imgItem(ap.item)}<span>${this.esc(ap.nome)}</span></span>
+    </nav>`;
   },
 
   /* Ajustes: o que não é do jogo, e sim de quem joga. */
@@ -3147,32 +3160,59 @@ const UI = {
       ${this.ajustesDeSom()}`);
   },
 
-  modalItens(modo){
+  modalItens(modo, bolsoPedido){
     const luta = modo === 'luta' && emLuta();
     const d = Estado.dados;
     const itens = Object.entries(d.itens).filter(([,q]) => q > 0);
     const total = itens.reduce((a,[,q]) => a + q, 0);
     const bolsa = mochilaAtual();
-    const abas = luta
-      ? `<nav class="abas-mochila" aria-label="Mochila"><button class="aba sel" aria-current="page">${svgIcone('itens')}Itens</button></nav>`
-      : this.abasMochila('itens');
-    const topo = abas + `<div class="mochila-topo">
+    /* os bolsos, como na mochila dos jogos; na luta, o de Itens-chave e
+       o de TMs não abrem */
+    const bolsos = BOLSOS.filter(b => !luta || !b.foraDaLuta);
+    const quer = bolsoPedido || (bolsos.some(b => b.id === this._bolso) ? this._bolso : (luta ? 'remedios' : 'itens'));
+    const atual = (bolsos.find(b => b.id === quer) || bolsos[0]).id;
+    this._bolso = atual;
+    const aparelhos = luta ? [] : APARELHOS.filter(a => a.tem());
+    const doBolso = itens.filter(([n]) => bolsoDoItem(n) === atual
+      && !(atual === 'chave' && aparelhos.some(a => a.item === n)));
+    const conta = id => itens.filter(([n]) => bolsoDoItem(n) === id).length
+      + (id === 'chave' ? aparelhos.filter(a => !Estado.contaItem(a.item)).length : 0);
+    const nav = `<nav class="bolsos" role="tablist" aria-label="Bolsos da mochila">${bolsos.map(b =>
+      `<button class="bolso${b.id === atual ? ' sel' : ''}" role="tab" aria-selected="${b.id === atual}"
+        style="--bolso:${b.cor}" onclick="UI.modalItens(${luta ? "'luta'" : 'null'}, '${b.id}')">
+        ${imgBolso(b.id)}<span class="bolso-nome">${b.nome}</span>${conta(b.id) ? `<span class="bolso-n">${conta(b.id)}</span>` : ''}
+      </button>`).join('')}</nav>`;
+    const B = BOLSOS.find(b => b.id === atual);
+    const topo = `<div class="mochila-topo">
       <span class="fecho"></span>
       <span class="bolsa-nome">${this.esc(bolsa.rotulo)}</span>
       <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
-    </div>`;
+    </div>${nav}`;
 
-    if (!itens.length)
-      return this.modal('Mochila', topo +
-        '<p class="nada">A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.</p>',
+    /* Itens-chave: os aparelhos primeiro, e tocar abre */
+    const linhasAparelho = aparelhos.map(a => `<button class="item-linha aparelho" onclick="${a.abrir}">
+        ${imgItem(a.item)}
+        <span class="corpo">
+          <span class="nome">${this.esc(a.nome)}${a.novos && a.novos() ? `<b class="aparelho-novos">${a.novos()}</b>` : ''}</span>
+          <span class="ficha">${this.esc(a.ficha())}</span>
+        </span>
+        <span class="abrir" aria-hidden="true">abrir ›</span>
+      </button>`).join('');
+    const aparelhosHTML = atual === 'chave' && linhasAparelho
+      ? `<h3 class="cat-item">Aparelhos</h3>${linhasAparelho}` : '';
+
+    if (!doBolso.length && !aparelhosHTML)
+      return this.modal('Mochila', topo + `<div class="bolso-forro" style="--bolso:${B.cor}">
+        <p class="nada">${itens.length ? 'Nada neste bolso.' : 'A mochila está vazia. Tudo o que você tiver vai ter vindo de alguém ou de algum balcão.'}</p></div>`,
         false, 'mochila');
 
-    const ORDEM = ['Captura','Recuperação','Máquina','Segurado','Evolução','Fóssil','Campo','Treinador','Vínculo','Ferramenta','Vestuário','Outro'];
+    const ORDEM = ['Captura','Recuperação','Treinador','Máquina','Campo','Evolução','Segurado','Vínculo','Fóssil','Ferramenta','Vestuário','Outro'];
     const grupos = {};
-    itens.forEach(([n,q]) => {
-      const c = categoriaItem(n);
+    doBolso.forEach(([n,q]) => {
+      const c = CONSUMIVEL_DE_CAMPO.has(n) ? 'Campo' : categoriaItem(n);
       (grupos[c] = grupos[c] || []).push([n,q]);
     });
+    const variasCats = Object.keys(grupos).length > 1 || !!aparelhosHTML;
 
     const corpo = ORDEM.filter(c => grupos[c]).map(c => {
       const linhas = grupos[c].map(([n,q]) => {
@@ -3238,10 +3278,10 @@ const UI = {
           ${emUso ? '<span class="qtd" style="align-self:center">em uso</span>' : ''}
         </div>` + linhaQuebrada;
       }).join('');
-      return `<h3 class="cat-item">${this.esc(c)}</h3>${linhas}`;
+      return `${variasCats ? `<h3 class="cat-item">${this.esc(NOME_DA_CATEGORIA[c] || c)}</h3>` : ''}${linhas}`;
     }).join('');
 
-    this.modal('Mochila', topo + corpo, false, 'mochila');
+    this.modal('Mochila', topo + `<div class="bolso-forro" style="--bolso:${B.cor}">${aparelhosHTML}${corpo}</div>`, false, 'mochila');
   },
 
   descartarFerramenta(nome){

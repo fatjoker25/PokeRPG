@@ -273,6 +273,21 @@ papel de enredo pelo tipo: bilhete, foto, mapa, caixa, chave). Lugares,
 ações e opções do Centro usam os ícones de traço do mesmo arquivo
 (`svgIcone`, `iconeDoAfazer`): afazer novo com id novo entra lá.
 
+A **mochila tem os bolsos dos jogos** (`BOLSOS`, em `sprites.js`): Itens,
+Remédios, Pokébolas, TMs e Itens-chave, com os ícones de bolso de
+Platinum em `sprites_nds/items/bolsos/`. O bolso sai da categoria do
+item (`bolsoDoItem`); ferramenta que acaba (`CONSUMIVEL_DE_CAMPO`: Pilha,
+Isca) é item comum, a que fica é item-chave. Categoria nova entra num
+bolso, senão cai em Itens-chave. Na luta, TMs e Itens-chave não abrem.
+**Pokédex, PokéNav, Cartão de Treinador e Mapa moram em Itens-chave**
+(`APARELHOS`, em `interface.js`): tocar abre, e o aparelho aberto tem no
+topo o caminho de volta (`abasMochila`, que agora devolve a barra
+"‹ Mochila"). Os ícones são os de menu dos jogos — Pokédex e Cartão de
+Platinum, PokéNav de Ruby/Sapphire/Emerald — do acervo da Bulbapedia.
+A **loja tem cor própria**, a do Poké Mart (`.modal.loja`): toldo
+listrado, placa azul, visor da caixa e etiqueta de preço; a mochila
+continua na cor da bolsa que você carrega.
+
 O arremesso segue uma máquina de estados (`UI.animarArremesso`): arco de
 Bézier até o alto, sobre a cabeça → abre, um raio vermelho pega o Pokémon,
 ele fica vermelho com linha de aura (o recolher do anime) e encolhe pra

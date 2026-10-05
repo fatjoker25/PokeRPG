@@ -940,7 +940,7 @@ const Cidade = {
     const L = LOJAS[id];
     const catalogo = catalogoDaCidade(id);
     if (!catalogo.length)
-      return UI.modal('Loja', '<p class="nada">Não tem loja aqui. Tem quem venda, mas não tem loja.</p>', false, 'mochila');
+      return UI.modal('Loja', '<p class="nada">Não tem loja aqui. Tem quem venda, mas não tem loja.</p>', false, 'loja');
     const vendendo = this._modoLoja === 'vender';
 
     /* Comprar e Vender: as duas pontas do balcão */
@@ -966,9 +966,11 @@ const Cidade = {
       lista = catalogo.filter(([nome]) => so.has(nome));
     }
 
-    const topo = `<div class="mochila-topo">
-      <span class="grana">${fmtDin(Estado.j.dinheiro)} ₽</span>
-      <span class="peso">${UI.esc(L.nome)}${sub ? ' · ' + sub : ''}</span>
+    /* a placa do balcão: o nome da loja na faixa azul, o seu dinheiro
+       no canto, como o visor da caixa registradora */
+    const topo = `<div class="loja-placa">
+      <span class="loja-nome">${UI.esc(L.nome)}${sub ? `<small>${sub}</small>` : ''}</span>
+      <span class="loja-caixa"><small>Você tem</small>${fmtDin(Estado.j.dinheiro)} ₽</span>
     </div>
     ${modos}${abas}
     <p class="sussurro" style="margin:0 0 12px">${vendendo ? 'O balcão paga metade do que cobra. Ferramenta gasta vale menos, e quebrada não vale nada.' : UI.esc(ar)}</p>`;
@@ -983,7 +985,7 @@ const Cidade = {
           <span class="desc">${UI.esc(fichaItem(v.nome) || descricaoItem(v.nome))}</span>
         </span>
       </button>`).join('');
-      return UI.modal('', topo + (linhas || '<p class="nada">Nada na mochila que este balcão compre.</p>'), false, 'mochila');
+      return UI.modal('', topo + (linhas || '<p class="nada">Nada na mochila que este balcão compre.</p>'), false, 'loja');
     }
 
     const linhas = lista.map(([n,p]) => {
@@ -1003,7 +1005,7 @@ const Cidade = {
       </button>`;
     }).join('');
 
-    UI.modal('', topo + linhas, false, 'mochila');
+    UI.modal('', topo + linhas, false, 'loja');
   },
 
   /* o que o balcão compra: item com preço de tabela, inteiro, e que
@@ -1045,7 +1047,7 @@ const Cidade = {
         <div class="cc-botoes">
           <button class="btn destaque" onclick="Cidade.confirmarVenda('${n}')">Vender</button>
           <button class="btn" onclick="Cidade.loja(Cidade._andar || 0, Cidade._qual || undefined, 'vender')">Não</button>
-        </div></div>`, true, 'mochila');
+        </div></div>`, true, 'loja');
   },
   confirmarVenda(nome){
     const c = this._compra && this._compra.venda && this._compra.nome === nome ? this._compra : null;
@@ -1093,7 +1095,7 @@ const Cidade = {
         </div>` : `
         <p>Você já tem ${UI.esc(nome)}. Um basta.</p>
         <div class="cc-botoes"><button class="btn" onclick="Cidade.loja(Cidade._andar || 0, Cidade._qual || undefined)">Voltar</button></div>`}
-      </div>`, true, 'mochila');
+      </div>`, true, 'loja');
   },
   mudarQtd(delta, valor){
     const c = this._compra; if (!c || !c.max) return;

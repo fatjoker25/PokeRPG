@@ -46,6 +46,11 @@ for (const a of insArq) if (!fs.existsSync(path.join(raiz, base, 'badges', a + '
 const tms = src.match(/const TM_ARQ_TIPO = \{([\s\S]*?)\};/);
 const tmArq = tms ? [...tms[1].matchAll(/:'([a-z]+)'/g)].map(m => m[1]) : [];
 for (const a of tmArq) if (!fs.existsSync(path.join(raiz, base, 'items/tms', 'tm_' + a + '.png'))) falhas.push(`disco tm_${a}.png não existe`);
+/* ícones de item com arte dos jogos e os bolsos da mochila */
+const itemArq = [...new Set([...(src.match(/const ITEM_SPRITE = \{([\s\S]*?)\};/) || [0, ''])[1].matchAll(/:'([a-z_]+)'/g)].map(m => m[1]))];
+for (const a of itemArq) if (!fs.existsSync(path.join(raiz, base, 'items', a + '.png'))) falhas.push(`ícone ${a}.png não existe em items/`);
+const bolsos = [...((src.match(/const BOLSOS = \[([\s\S]*?)\];/) || [0, ''])[1]).matchAll(/id:'([a-z]+)'/g)].map(m => m[1]);
+for (const a of bolsos) if (!fs.existsSync(path.join(raiz, base, 'items/bolsos', a + '.png'))) falhas.push(`bolso ${a}.png não existe em items/bolsos/`);
 let gritos = 0;
 for (let i = 1; i <= 251; i++) if (fs.existsSync(path.join(raiz, 'sons/gritos', i + '.ogg'))) gritos++;
 if (gritos < 251) falhas.push(`sons/gritos: ${gritos} de 251`);
@@ -58,7 +63,7 @@ for (const a of sdArq) if (!fs.existsSync(path.join(raiz, base, 'animations/show
 const fxSrc = fs.readFileSync(path.join(raiz, 'js/ui/efeitos.js'), 'utf8');
 const fxArq = [...new Set([...fxSrc.matchAll(/'((?:physical|special|stat|status)_[a-z_0-9]+)'/g)].map(m => m[1]))];
 for (const a of fxArq) if (!fs.existsSync(path.join(raiz, base, 'animations/moves', a + '.png'))) falhas.push(`efeito ${a}.png não existe em animations/moves/`);
-linhas.push(`  rostos ${rostos.size} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length} · animação do Showdown ${sdArq.length}`);
+linhas.push(`  ícones de item ${itemArq.length} · bolsos ${bolsos.length} · rostos ${rostos.size} · insígnias ${insArq.length} · discos de TM ${tmArq.length} · gritos ${gritos} · efeitos de golpe ${fxArq.length} · animação do Showdown ${sdArq.length}`);
 
 if (falhas.length){
   console.log('FALHAS:'); falhas.forEach(f => console.log(' - ' + f));

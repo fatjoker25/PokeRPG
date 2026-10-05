@@ -175,7 +175,10 @@ const ITEM_SPRITE = {
   'Amuleto de Moeda':'amulet_coin', 'Punho de Ferro':'muscle_band', 'Óculos Grossos':'wise_glasses',
   /* o mapa da região: o ícone do Town Map abre o mapa desenhado */
   'Mapa de Kanto':'town_map',
-  'PP Up':'pp_up', 'Exp. Share':'exp_share'
+  'PP Up':'pp_up', 'Exp. Share':'exp_share',
+  /* aparelhos: os ícones de menu dos jogos (Pokédex e Cartão de
+     Treinador de Platinum, PokéNav de Ruby/Sapphire/Emerald) */
+  'Pokédex':'pokedex', 'PokéNav':'pokenav', 'Cartão de Treinador':'trainer_card'
 };
 
 /* Disco de TM: o ícone é o do tipo do golpe que ele ensina. O nome do
@@ -191,6 +194,35 @@ function arquivoTM(nome){
   const m = /^(?:TM|MT)\s*\d+\s+(.+)$/i.exec(nome || '');
   const g = m && typeof GOLPES !== 'undefined' ? GOLPES[m[1].trim()] : null;
   return g && TM_ARQ_TIPO[g.t] ? 'tms/tm_' + TM_ARQ_TIPO[g.t] : null;
+}
+
+/* ============================================================
+   BOLSOS DA MOCHILA — como na mochila dos jogos
+   Os ícones são os dos bolsos de Platinum (sprites_nds/items/bolsos/).
+   O bolso sai da categoria do item; ferramenta que acaba (Pilha,
+   Isca) é item comum, e a que fica é item-chave, como nos jogos.
+   ============================================================ */
+const BOLSOS = [
+  {id:'itens',     nome:'Itens',       cor:'#e8823a', cats:['Campo','Evolução','Segurado','Vínculo','Fóssil']},
+  {id:'remedios',  nome:'Remédios',    cor:'#4fb36b', cats:['Recuperação','Treinador']},
+  {id:'pokebolas', nome:'Pokébolas',   cor:'#e04848', cats:['Captura']},
+  {id:'tms',       nome:'TMs',         cor:'#4a8fe0', cats:['Máquina'], foraDaLuta:true},
+  {id:'chave',     nome:'Itens-chave', cor:'#e0b030', cats:['Ferramenta','Vestuário','Outro'], foraDaLuta:true}
+];
+const CONSUMIVEL_DE_CAMPO = new Set(['Pilha', 'Isca']);
+const NOME_DA_CATEGORIA = {
+  'Recuperação':'Pro time', 'Treinador':'Pra você', 'Campo':'Pra estrada', 'Segurado':'Pra segurar',
+  'Vínculo':'Pra comer', 'Ferramenta':'Ferramentas', 'Vestuário':'Mochilas e bolsas', 'Outro':'Da história'
+};
+function bolsoDoItem(nome){
+  if (CONSUMIVEL_DE_CAMPO.has(nome)) return 'itens';
+  const c = categoriaItem(nome);
+  const b = BOLSOS.find(x => x.cats.includes(c));
+  return b ? b.id : 'chave';
+}
+function imgBolso(id){
+  const rel = SPRITES_BASE + ITENS_PASTA + 'bolsos/' + id + '.png';
+  return `<img class="bolso-icone" src="${SPRITES_EMBUTIDOS[rel] || rel}" alt="" onerror="this.remove()">`;
 }
 
 function caminhoItem(nome){
