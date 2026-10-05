@@ -368,6 +368,8 @@ const Jogo = {
         x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {}));
     }
     const permiteFuga = (typeof b.fuga === 'boolean') ? b.fuga : true;
+    /* lendário visto em cena passa a rondar o mapa (lendarios-errantes.js) */
+    if (b.tipo === 'lendario' && inimigo && DEX[inimigo.dex] && DEX[inimigo.dex].lendario) Estado.lend(inimigo.dex).visto = true;
 
     UI.limparDados();
     Batalha.iniciar(meu, inimigo, {

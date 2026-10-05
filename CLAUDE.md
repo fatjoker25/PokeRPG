@@ -608,6 +608,17 @@ Os que não vêm do mato:
 
 Espécie nova numa tabela, troca nova ou fonte nova: roda o verificador.
 
+**Lendário ronda depois de aparecer na história** (`js/story/lendarios-errantes.js`).
+Quem tem `encontros > 0` ou `visto` (a luta de cena com `tipo:'lendario'`
+marca, em `main.js`) e está solto passa a andar pelos lugares de
+`LENDARIOS_ERRANTES`, e `Exploracao.encontro` rola `CHANCE_ERRANTE` (1%)
+em todo encontro selvagem do mapa; se sair, a luta é `tipo:'lendario'`,
+com a captura de sempre. Evento de agenda que já escolheu o Pokémon passa
+`{fixo:true}` pro `encontro`, senão o lendário toma o lugar dele. O Lugia
+não ronda: a história nunca põe ele na sua frente. O texto da entrada
+repara no sinal (frio, estalo, calor) e na disposição dele; não conta onde
+mais ele anda.
+
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª
 não ensina, cada uma com o número dos jogos dela (`js/data/tms.js`). São todas as

@@ -574,11 +574,16 @@ const Exploracao = {
   },
 
   /* ---------- encontro selvagem ---------- */
-  encontro(selvagem, intro){
+  encontro(selvagem, intro, opts){
     const meu = Estado.primeiroApto();
     if (!meu){
       return this.tela([{tipo:'dano', texto:'Um Pokémon se mexe no mato e você não tem ninguém em pé. Você recua devagar até o barulho ficar para trás.'}]);
     }
+    /* lendário que a história já mostrou ronda alguns lugares: de vez
+       em quando é ele que sai do mato (lendarios-errantes.js) */
+    let tipo = 'selvagem';
+    const errante = !(opts && opts.fixo) && typeof Errantes !== 'undefined' ? Errantes.talvez(Mundo.id()) : null;
+    if (errante){ selvagem = errante.p; intro = errante.intro; tipo = 'lendario'; }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null;
     Jogo.batalhaLivre = true;
@@ -586,7 +591,7 @@ const Exploracao = {
     /* Um brilhante muda a entrada da cena antes de mudar a batalha. */
     const linhas = (intro || []).slice();
     if (selvagem.shiny) linhas.push('E aí você para, porque tem alguma coisa errada com a cor.');
-    Batalha.iniciar(meu, selvagem, {tipo:'selvagem', fuga:true});
+    Batalha.iniciar(meu, selvagem, {tipo, fuga:true});
     UI.telaBatalha(linhas);
   }
 };

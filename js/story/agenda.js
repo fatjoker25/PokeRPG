@@ -73,7 +73,7 @@ const AGENDA = [
      Mundo.passar(1);
      if (como === 'perto'){
        const p = criarPokemon(35, L.nivel, {selvagem:true});
-       return Exploracao.encontro(p, ['A roda desfaz no mesmo instante. Os outros somem no escuro, e um deles fica, olhando pra você com a cabeça torta.']);
+       return Exploracao.encontro(p, ['A roda desfaz no mesmo instante. Os outros somem no escuro, e um deles fica, olhando pra você com a cabeça torta.'], {fixo:true});
      }
      const av = [{tipo:'info', texto:'A roda desfaz sozinha lá pela meia-noite. Um a um, os Clefairy entram nas frestas da parede, e as lanternas vermelhas vão embora atrás.'}];
      Estado.dados.time.forEach(p => { if (!p.morto) p.moral = Math.min(100, p.moral + 3); });
@@ -140,7 +140,7 @@ const AGENDA = [
      Mundo.passar(1);
      if (como === 'perto'){
        const p = criarPokemon(131, Math.max(L.nivel - 2, 25), {selvagem:true});
-       return Exploracao.encontro(p, ['A água bate no seu peito quando ela vira a cabeça pra você. O canto para.']);
+       return Exploracao.encontro(p, ['A água bate no seu peito quando ela vira a cabeça pra você. O canto para.'], {fixo:true});
      }
      Estado.dados.time.forEach(p => { if (!p.morto) p.moral = Math.min(100, p.moral + 3); });
      Estado.registrar('Ouviu o canto na pedra grande da Rota 19, numa sexta à noite.');
