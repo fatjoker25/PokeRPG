@@ -2530,7 +2530,7 @@ c18_nao_sei:{
 c18_prado_porque:{
   texto:[
     'Ela solta a maçaneta e pensa antes de responder, o que ninguém faz.',
-    '"Eu fui auditora de uma rede de farmácia por nove anos. Eu achava desvio de estoque e escrevia relatório e ninguém lia."',
+    '"Antes da seguradora, eu fui auditora de uma rede de farmácia por nove anos. Eu achava desvio de estoque e escrevia relatório e ninguém lia."',
     '"E aqui leem?"',
     '"Aqui leem." Ela diz isso com um orgulho que te dá nojo e que você entende ao mesmo tempo. "Aqui, quando eu escrevo que um procedimento foi feito errado, alguém é advertido na reunião seguinte, e consta em ata."',
     'Ela abre a porta.',
@@ -3087,7 +3087,7 @@ c18_adnan_vem_ver:{
   texto:[
     '"Vem ver comigo."',
     'Ele ri sem querer, uma risada curta de susto.',
-    '"Eu tenho cinquenta e três anos e uma hérnia de disco."',
+    '"Eu tenho quarenta e sete anos e uma hérnia de disco."',
     '"Eu não perguntei a sua idade."',
     'Ele fica quieto.',
     '"Se eu for, eu não consigo mais assinar." Ele diz isso como constatação técnica. "É por isso que ninguém lá dentro vai a campo. Não é preguiça. É desenho."',

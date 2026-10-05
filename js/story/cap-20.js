@@ -721,11 +721,11 @@ c20_pediu_voto_dela:{
     'A Presidente, da cabeceira, diz uma coisa que muda o dia inteiro:',
     '"Observador pode falar. Art. 27, §2º. Só não pode votar."',
     'As duas se olham por cima da mesa oval por um tempo longo demais.',
-    '"Eu sei", diz a conselheira da Liga. "Eu sei há três anos."'
+    '"Eu sei", diz a conselheira da Liga. "Eu sei há dois anos."'
   ],
   ef:{flag:['observadora_pode_falar'], instabilidade:1,
-      npc:{nome:'Conselheira da Liga', opiniao:2, memoria:'Foi lembrada, na sua frente, de que pode falar há três anos.'},
-      registrar:'A observadora da Liga pode falar nas reuniões. Nunca falou em três anos.'},
+      npc:{nome:'Conselheira da Liga', opiniao:2, memoria:'Foi lembrada, na sua frente, de que pode falar há dois anos.'},
+      registrar:'A observadora da Liga pode falar nas reuniões. Nunca falou em dois anos.'},
   escolhas:[{texto:'Pedir a palavra.', vai:'c20_palavra'}]
 },
 
@@ -876,9 +876,10 @@ c20_resposta:{
   texto:[
     '"Obrigada." Ela diz isso sem ironia nenhuma. "É a primeira manifestação presencial de interessado em um ano e oito meses. Vai constar na ata com o seu nome."',
     '"Agora eu vou responder, e eu peço que {o senhor|a senhora} me ouça com a mesma atenção, porque eu ouvi."',
-    COMISSAO.doutrina[0],
-    COMISSAO.doutrina[1],
-    COMISSAO.doutrina[2],
+    /* quem ouviu a doutrina do Fabre no 18 não ouve de novo, palavra por palavra */
+    d=>d.flags.ouviu_a_doutrina ? '"O curador já te recitou a nossa razão, eu sei. Kanto quase acabou duas vezes, e quem salvou foi uma criança, por acaso."' : COMISSAO.doutrina[0],
+    d=>d.flags.ouviu_a_doutrina ? '"Ele diz isso melhor do que eu. E acredita menos, o que é o motivo de ele dizer melhor."' : COMISSAO.doutrina[1],
+    d=>d.flags.ouviu_a_doutrina ? '"Eu vou dizer a parte que ele não diz."' : COMISSAO.doutrina[2],
     '"Eu fui diretora de fiscalização da Liga por nove anos. Eu assinei setenta e um relatórios sobre risco populacional. Nenhum virou política pública. Nenhum."',
     '"No septuagésimo segundo, eu pedi demissão e fundei isto aqui."',
     'Ela junta as mãos.',

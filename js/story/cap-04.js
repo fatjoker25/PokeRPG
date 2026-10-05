@@ -1549,7 +1549,7 @@ c4_funcionario:{
   texto:[
     'O funcionário do museu é também o bilheteiro, o segurança e o faxineiro. Ele se chama Varian e tem cinquenta e poucos anos.',
     'Você pergunta do balde.',
-    '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde a chuva de abril."',
+    '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde uma chuva de abril, doze anos atrás."',
     '"E ninguém conserta?"',
     '"O orçamento do museu é municipal e o município tem uma pedreira que emprega quatrocentas pessoas." Ele fala isso sem amargura, como quem explica aritmética. "Quando é escolher entre telhado de museu e asfalto de rua de pedreira, o museu perde. E deve perder mesmo."',
     'Ele olha pra segunda sala.',

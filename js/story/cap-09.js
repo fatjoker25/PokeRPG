@@ -2113,7 +2113,7 @@ c9_olhou_o_leilao:{
     'Você fica na janelinha redonda por quarenta minutos.',
     'É chato. É absurdamente chato — é um leiloeiro com microfone lendo número de lote, e trinta pessoas levantando plaquinha, e uma mulher com prancheta anotando.',
     'Os lotes não são mostrados. Só o número e a descrição, projetada numa parede.',
-    '"Lote 41. Espécime canino, macho, nível estimado 28, condição regular, procedência: recolhimento administrativo, processo 44.207."',
+    '"Lote 41. Growlithe, macho, nível estimado 28, condição regular, procedência: recolhimento administrativo, processo 44.207."',
     d=>d.flags.numero_da_gaveta ? 'Processo 44.207. É o número que a Dra. Cordell te deu num canto de página no museu de Pewter.' : 'Você anota o número do processo sem saber por quê.',
     'Alguém arremata em quatro segundos.',
     'Aplauso educado. Próximo lote.'
@@ -2533,7 +2533,7 @@ c9_ataque_cedo:{
     'Sem violência — o que é assustador de um jeito próprio.'
   ],
   ef:{hp:-3, causa:'Expulso do cassino de Celadon', flag:'atacou_no_cassino',
-      npc:{nome:'A Terceira', opiniao:-3, memoria:'Você sacou uma Pokébola no salão dela. Ela te achou desorganizado.'},
+      npc:{nome:'A Terceira', opiniao:-3, memoria:'Você sacou uma Pokébola no salão dela. Ela te achou desorganizad{o|a}.'},
       presagio:'Sem tirar nada da sua mochila. Nem a câmera. Ninguém ali tem medo do que você tem.'},
   escolhas:[
     {texto:'Procurar o armazém.', vai:'c9_procurar'},
@@ -2598,7 +2598,7 @@ c9_o_lote_41:{
   texto:[
     '"O que é o lote 41?"',
     'A Auditora Brill consulta a prancheta sem pressa, e responde como se você fosse {um adulto|uma adulta}.',
-    '"Lote 41. Espécime canino, macho, nível estimado vinte e oito. Procedência: recolhimento administrativo, processo quarenta e quatro mil duzentos e sete."',
+    '"Lote 41. Growlithe, macho, nível estimado vinte e oito. Procedência: recolhimento administrativo, processo quarenta e quatro mil duzentos e sete."',
     '"Recolhido em Lavender, dezembro. Tutor: Elias, vinte e dois anos, residente em Lavender. Notificado por edital em janeiro. Prazo de manifestação: sessenta dias. Não houve manifestação."',
     '"Portanto: alienação."',
     'Ela vira a folha e você vê, de relance, que atrás tem mais quarenta linhas iguais.',
@@ -2902,11 +2902,11 @@ c9_gaiola_41:{
     'Duas vezes. Como quem já fez isso muitas vezes por muita gente que passou e não era quem ele esperava.',
     d=>d.flags.lote_41_suspenso ? 'Na plaqueta, colado por cima, tem um adesivo amarelo novo: SUSPENSO — AUDITORIA.' :
        d.flags.conhece_o_hideo ? 'O tutor dele se chama Elias. Você sabe disso, e ele não sabe que você sabe.' :
-       'A data de entrada é doze de dezembro. Faz nove meses.'
+       'A data de entrada é doze de dezembro. Faz quase quatro meses.'
   ],
   ef:{flag:['achou_o_growlithe','viu_o_44207'],
       moral:-5,
-      registrar:'Achou a gaiola do processo 44.207: um Growlithe, fileira C, nível 3.',
+      registrar:'Achou a gaiola do processo 44.207: um Growlithe, fileira C, terceira prateleira.',
       presagio:'Duas vezes e parou. Ele aprendeu a não esperar muito.'},
   escolhas:[
     {texto:'Abrir a gaiola dele e só a dele.', vai:'c9_so_o_41'},
@@ -2922,7 +2922,7 @@ c9_so_o_41:{
     'Você abre a trava, que é uma trava de ferrolho comum, dessas de portão de casa.',
     'Ele não sai correndo. Ele sai andando, devagar, e senta no corredor de concreto entre as fileiras, e olha as outras gaiolas.',
     'Você tem que carregar ele nos últimos vinte metros porque ele não quer andar mais.',
-    'Lá fora, na rua de serviço, às onze e quarenta da noite, você senta no meio-fio com um Growlithe de nove meses de gaiola no colo e quarenta gaiolas ainda cheias atrás daquela parede.',
+    'Lá fora, na rua de serviço, às onze e quarenta da noite, você senta no meio-fio com um Growlithe de quatro meses de gaiola no colo e quarenta gaiolas ainda cheias atrás daquela parede.',
     'Você salvou um. Isso é verdade e é tudo o que é.'
   ],
   ef:{flag:['tirou_o_41','salvou_o_41'],

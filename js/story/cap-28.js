@@ -1881,7 +1881,7 @@ c23_a_resposta_dobrada:{
     'A câmara fica absolutamente parada.',
     'O papel levanta do chão sozinho, para na altura dos olhos dele, e abre.',
     'Ele lê. Demora mais do que precisaria para ler uma linha.',
-    '"Eu queria que a minha filha não tivesse medo de Pokémon grande."',
+    '**Eu queria que a minha filha não tivesse medo de Pokémon grande.**',
     'Ele lê em voz alta, na sua cabeça, e a voz dele faz uma coisa que não fez em nenhum outro momento.'
   ],
   ef:{flag:'entregou_a_resposta', instabilidade:1,

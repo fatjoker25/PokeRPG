@@ -801,7 +801,7 @@ c3_seguir_depois:{
 c3_perdeu_cacador:{
   texto:[
     'Quando acaba, ele se agacha na sua frente pra ficar na sua altura, o que é pior que qualquer coisa que ele podia fazer de pé.',
-    '"Você é novo. Então eu vou te explicar uma vez."',
+    '"Você é {novo|nova}. Então eu vou te explicar uma vez."',
     'Ele fala baixo, quase gentil.',
     '"Essa floresta é grande e ninguém vem procurar ninguém aqui. Da próxima vez que você me ver, você olha pro chão e passa."',
     'Ele pega o que quer da sua mochila. Não pega tudo — deixa o suficiente pra você chegar em Pewter, porque um morto na floresta dá trabalho e você viv{o|a} e calad{o|a} não dá nenhum.',

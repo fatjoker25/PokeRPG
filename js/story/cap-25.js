@@ -410,7 +410,7 @@ c25_sozinho_na_sala:{
     'Cinco do lado de lá, ocupadas. Quatro do lado de cá, e você ocupa uma.',
     'Sem advogada, o lado de cá fica com três cadeiras vazias, e três cadeiras vazias numa mesa comprida são uma coisa que se sente no corpo.',
     fala('a mulher de crachá azul', 'Nós três desta mesa assinamos o convênio de 1995. Eu, ele, e a cadeira vazia.'),
-    fala('a mulher de crachá azul', 'Nós convocamos vocês porque vocês dois juntaram, em alguns meses, mais papel sobre isso do que a Liga juntou em quatro anos.', 'frio')
+    fala('a mulher de crachá azul', 'Nós convocamos vocês porque vocês dois juntaram, em alguns meses, mais papel sobre isso do que a Liga juntou em quinze anos.', 'frio')
   ],
   ef:{flag:'a_audiencia_comecou',
       registrar:'Entrou sozinh{o|a} na sala. Três cadeiras vazias do seu lado.'},
@@ -471,7 +471,7 @@ c25_por_que_nos:{
     d=>fala(d.jogador.nome, 'Por que a gente? Por que não a imprensa, a polícia, um juiz?'),
     fala('a mulher de crachá azul', 'Porque imprensa publica, polícia indicia e juiz condena.'),
     fala('a mulher de crachá azul', 'E as três coisas transformam isso num caso, e um caso tem um réu, e um réu é uma pessoa só.'),
-    fala('a mulher de crachá azul', 'Não tem uma pessoa só. Tem um convênio de quatro anos com onze órgãos envolvidos e trezentas assinaturas.'),
+    fala('a mulher de crachá azul', 'Não tem uma pessoa só. Tem um convênio de quinze anos com onze órgãos envolvidos e trezentas assinaturas.'),
     fala('a mulher de crachá azul', 'Vocês dois são as únicas pessoas vivas que juntaram isso sem serem pagas pra juntar.', 'frio'),
     fala('a mulher de crachá azul', 'Eu não convoquei vocês pra depor. Eu convoquei vocês pra decidir o que fazer com o que vocês têm.')
   ],

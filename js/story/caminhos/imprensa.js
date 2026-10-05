@@ -208,7 +208,7 @@ ci2_por_que_agora:{
   vozes:['N','N'],
   texto:[
     '"Porque na semana passada eu assinei a destinação de uma ninhada inteira. Eu assino desde que entrei. Na semana passada eu li o que eu assinei."',
-    '"Eu tenho uma filha de seis anos. Ela pediu um Pokémon de aniversário. E eu falei que ia pensar."'
+    '"Eu tenho uma filha de nove anos. Ela pediu um Pokémon de aniversário. E eu falei que ia pensar."'
   ],
   escolhas:[
     {texto:'Abrir o envelope.', vai:'ci2_o_envelope'}

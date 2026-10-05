@@ -1284,7 +1284,7 @@ c21_pediu_a_bruna:{
     'Ela fecha o caderno antes de qualquer um responder.',
     '"Não."',
     'É ela quem responde, e é definitivo, e ela olha para você quando diz.',
-    '"Eu voltei em março e eu ainda acordo às quatro e vinte todo dia, que é a hora em que eu percebi que a gente era cinco." Ela abre o caderno de novo. "Se eu subir de novo, eu não volto. Eu sei isso do jeito que se sabe o próprio nome."',
+    '"Eu voltei em abril e eu ainda acordo às quatro e vinte todo dia, que é a hora em que eu percebi que a gente era cinco." Ela abre o caderno de novo. "Se eu subir de novo, eu não volto. Eu sei isso do jeito que se sabe o próprio nome."',
     'Uma pausa.',
     '"Mas eu vou te contar tudo. Cada passo. E isso vale mais do que eu ir."'
   ],

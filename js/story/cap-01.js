@@ -764,7 +764,7 @@ c1_todo_mundo_falou:{
     fala('o primo que você vê uma vez por ano', 'Não empresta dinheiro pra treinador. Nunca. Nem pra você mesm{o|a}.'),
     fala('o vizinho do quatorze', 'Leva meia mais grossa do que você acha que precisa.'),
     fala('Sra. Perla', 'ESCREVE. Escreve, {menino|menina}, que ninguém escreve e todo mundo devia escrever.', 'grita'),
-    d=>fala(nomeCasa(), 'Come sentado. Pelo menos uma vez por dia, come sentado.', 'baixo'),
+    d=>fala(nomeCasa(), 'Come sentad{o|a}. Pelo menos uma vez por dia, come sentad{o|a}.', 'baixo'),
     'A criança que ninguém sabe de quem é fala por último e fala a melhor de todas:',
     fala('a criança', 'Se você achar um shiny você TEM que voltar aqui pra mostrar.')
   ],

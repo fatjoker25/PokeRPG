@@ -427,7 +427,7 @@ cn3_final_laudo:{
   ],
   final:{id:'criacao_laudo', titulo:'O LAUDO ASSINADO', texto:[
     'Em dois anos, um em cada três treinadores iniciantes de Kanto começa a jornada com uma unidade de lote, e o laudo de cada uma tem a sua assinatura.',
-    'Você fica rico. Você compra uma casa com quintal e não cria nada nele.',
+    'Você fica {rico|rica}. Você compra uma casa com quintal e não cria nada nele.',
     'Às vezes, numa rota, você vê uma criança com um Eevee caído no chão, esperando ordem pra levantar, e a criança não sabe que tem que mandar.',
     'Você passa direto. Você aprendeu a passar direto. É a única coisa que você aprendeu a fazer melhor do que a Sra. Linden.'
   ]}

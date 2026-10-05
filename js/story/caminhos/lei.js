@@ -527,7 +527,7 @@ cl2_a_decisao:{
   escolhas:[
     {texto:'Pedir o mandado.', vai:'cl2_fim',
      ef:{flag:'cm_lei_mandado', rep:{eixo:'bom', delta:2, motivo:'Pediu o mandado contra a Estação 4'},
-         npc:{nome:'Delegada Thorne', opiniao:3, memoria:'Vocês pediram o mandado da Estação 4 juntas, sabendo o risco.'}}},
+         npc:{nome:'Delegada Thorne', opiniao:3, memoria:'Vocês pediram o mandado da Estação 4 junt{os|as}, sabendo o risco.'}}},
     {texto:'Fazer a terceira coisa: entregar a cópia à imprensa.', vai:'cl2_fim',
      ef:{flag:'cm_lei_vazou', rep:{eixo:'bom', delta:1, motivo:'Vazou o inquérito da Estação 4 pra imprensa'},
          npc:{nome:'Delegada Thorne', opiniao:1, memoria:'Você fez a terceira coisa. Ela não viu e vai negar que viu.'}}},

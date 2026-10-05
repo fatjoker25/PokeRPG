@@ -312,7 +312,7 @@ c32_quer_sair:{
     fala('o fumante', 'Eu ganho o dobro do mercado.'),
     d=>fala(d.jogador.nome, 'Não foi isso que eu perguntei.'),
     'Ele fica quieto.',
-    fala('o fumante', 'Eu tenho uma filha de seis anos e uma prestação de nove anos.'),
+    fala('o fumante', 'Eu tenho dois filhos pequenos e uma prestação de nove anos.'),
     fala('o fumante', 'Todo mundo que trabalha ali dentro tem uma dessas duas coisas. Não é coincidência: eles perguntam na entrevista.'),
     d=>fala(d.jogador.nome, 'Perguntam?'),
     fala('o fumante', 'Perguntam se você tem dependente e se você tem financiamento. Tá no formulário, é normal, todo lugar pergunta.'),

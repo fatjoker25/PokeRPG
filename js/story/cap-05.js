@@ -423,7 +423,7 @@ c5_cobrou:{
   texto:[
     '"Quinhentos."',
     'O da aliança assobia.',
-    '"Quinhentos pra carregar caixa vazia meia hora ladeira abaixo. Você é ladrão."',
+    '"Quinhentos pra carregar caixa vazia meia hora ladeira abaixo. Você é {ladrão|ladra}."',
     '"Sou caro."',
     'Ele ri de verdade dessa vez, e tira duas notas do bolso, e são trezentos e não quinhentos, e ele te entrega do jeito que se entrega quando se sabe que a outra pessoa vai aceitar.',
     'Você carrega a caixa por trinta e cinco minutos, ladeira abaixo, sentindo o calor dos ovos através do plástico na altura da barriga.',
