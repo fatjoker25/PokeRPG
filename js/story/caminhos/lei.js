@@ -587,9 +587,8 @@ cl3_o_forum:{
 cl3_o_holt:{
   texto:[
     'Holt atende no segundo toque, como sempre, com barulho de rádio de guarita atrás.',
-    d => d.flags.ln_lei_apito || d.flags.ln_lei_cafe
-      ? fala('o sargento de Viridian', 'Aposentado não cumpre mandado. Mas aposentado pode estar na calçada, olhando, de casaco. Pra testemunhar.')
-      : fala('o sargento de Viridian', 'Eu tô de plantão até as seis. Depois das seis eu tô onde você precisar, de colete.'),
+    /* a aposentadoria dele é a cena de linha do 26, que vem depois deste */
+    fala('o sargento de Viridian', 'Eu tô de plantão até as seis. Depois das seis eu tô onde você precisar, de colete.'),
     fala('o sargento de Viridian', 'E outra coisa: leva o livro. O de verdade. Mandado bem cumprido é o que tem registro de cada passo.', 'baixo')
   ],
   ef:{flag:'cm_lei_holt_junto', moral:3,

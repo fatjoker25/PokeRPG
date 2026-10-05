@@ -56,7 +56,11 @@ lei:[
   cap:5, titulo:'A primeira ronda', quem:'o sargento de Viridian',
   texto:d => [
     `Na saída da cidade tem um Tauros parado no meio da estrada, de lado, bufando, e uma fila de carroça esperando.`,
-    d2 => { Nomes.apresentar('o sargento de Viridian'); return `O sargento que te deu o colete está lá, de braço cruzado. No bolso do uniforme, bordado torto: HOLT.`; },
+    /* quem chegou à linha pela Auditoria ou pela Comissão não ganhou colete dele */
+    d2 => { Nomes.apresentar('o sargento de Viridian');
+      return Cargos.tem('guarda_rota')
+        ? `O sargento que te deu o colete está lá, de braço cruzado. No bolso do uniforme, bordado torto: HOLT.`
+        : `Um sargento da patrulha está lá, de braço cruzado, olhando o seu crachá como quem ainda não decidiu se gosta dele. No bolso do uniforme, bordado torto: HOLT.`; },
     fala('o sargento de Viridian', `Sem dono, sem marca, sem pressa. O regulamento manda chamar o controle de Pokémon e esperar.`),
     fala('o sargento de Viridian', `O controle leva quatro horas pra chegar. O regulamento não fala nada sobre as quatro horas.`, 'baixo')
   ],
@@ -71,7 +75,7 @@ lei:[
        fala('o sargento de Viridian', `Eu não vi nada disso. Vou escrever que resolveu sozinho.`, 'riso')]},
     {texto:`Dizer que hoje não dá e seguir viagem.`,
      ef:{flag:'ln_lei_seguiu'},
-     resultado:[fala('o sargento de Viridian', `Vai. O colete não é corrente.`), `Ele não olha pra você de novo enquanto você passa pela fila.`]}
+     resultado:[d => fala('o sargento de Viridian', d.flags.cargo_guarda_rota ? `Vai. O colete não é corrente.` : `Vai. Crachá não é corrente.`), `Ele não olha pra você de novo enquanto você passa pela fila.`]}
   ]
 },
 {
@@ -99,7 +103,9 @@ lei:[
 {
   cap:14, titulo:'O posto da rota', quem:'o sargento de Viridian',
   texto:d => [
-    `Você está de plantão na guarita quando chega um menino de uns doze anos, sem licença, carregando um Nidoran no colo enrolado numa toalha.`,
+    d2 => Cargos.tem('guarda_rota')
+      ? `Você está de plantão na guarita quando chega um menino de uns doze anos, sem licença, carregando um Nidoran no colo enrolado numa toalha.`
+      : `O sargento te pediu pra segurar a guarita meia hora enquanto ele resolve uma papelada. Na segunda metade da meia hora chega um menino de uns doze anos, sem licença, carregando um Nidoran no colo enrolado numa toalha.`,
     `O Nidoran respira rápido e curto. O Centro mais perto fica depois do posto.`,
     d.flags.ln_lei_corrigiu
       ? fala('o sargento de Viridian', `Desde o relatório da ponte me mandam pros postos que ninguém quer. Te mandaram junto. Faz o que você acha.`)
@@ -284,17 +290,27 @@ imprensa:[
 },
 {
   cap:16, titulo:'O pedido', quem:'a filha do criador',
-  texto:d => [
+  /* o que ela pede depende do que você fez com o bilhete (cap. 11):
+     publicou cru, foi ver com os próprios olhos, ou levou à polícia */
+  texto:d => d.flags.ln_imprensa_publicou_cru ? [
     `Uma moça te espera na porta do Centro. É filha do criador da matéria.`,
     fala('a filha do criador', `Meu pai errou. Eu sei. Mas se sair a segunda parte, ele perde a casa, e os Pokémon que sobraram vão junto.`),
     fala('a filha do criador', `Eu tô cuidando deles agora. Pode ir lá ver.`, 'baixo')
+  ] : d.flags.ln_imprensa_policia ? [
+    `Uma moça te espera na porta do Centro. É filha do criador do bilhete que você levou à polícia.`,
+    fala('a filha do criador', `A polícia foi lá e multou. Tá certo. Agora o jornal quer a história, e se sair no jornal ele perde a casa, e os Pokémon que sobraram vão junto.`),
+    fala('a filha do criador', `Eu tô cuidando deles agora. Pode ir lá ver.`, 'baixo')
+  ] : [
+    `Uma moça te espera na porta do Centro. É filha do criador que você foi ver, o do rodo na mão.`,
+    fala('a filha do criador', `Você viu como estava. Eu sei o que você viu. Se sair no jornal, ele perde a casa, e os Pokémon que sobraram vão junto.`),
+    fala('a filha do criador', `Eu tô cuidando deles agora. Pode ir lá ver de novo.`, 'baixo')
   ],
   escolhas:[
-    {texto:`Ir ver. Se estiver como ela diz, segurar a segunda parte.`,
+    {texto:d => d.flags.ln_imprensa_publicou_cru ? `Ir ver. Se estiver como ela diz, segurar a segunda parte.` : `Ir ver. Se estiver como ela diz, segurar a matéria.`,
      ef:{flag:'ln_imprensa_segurou', moral:2, rep:{eixo:'bom', delta:1, motivo:'Segurou uma matéria pra ver o que tinha mudado'}},
      resultado:[`Os Pokémon estão comendo. A ração é nova. Ela pintou o cercado sozinha, dá pra ver pelos pingos.`,
-       fala('a editora do Jornal', `Você segurou a segunda parte. Tá. Eu também teria. Não conta pra ninguém.`)]},
-    {texto:`Publicar a segunda parte. O que aconteceu, aconteceu.`,
+       d => fala('a editora do Jornal', d.flags.ln_imprensa_publicou_cru ? `Você segurou a segunda parte. Tá. Eu também teria. Não conta pra ninguém.` : `Você segurou a matéria. Tá. Eu também teria. Não conta pra ninguém.`)]},
+    {texto:d => d.flags.ln_imprensa_publicou_cru ? `Publicar a segunda parte. O que aconteceu, aconteceu.` : `Publicar o que você viu. O que aconteceu, aconteceu.`,
      ef:{flag:'ln_imprensa_publicou', dinheiro:600, rep:{eixo:'ruim', delta:1, motivo:'Publicou mesmo com o pedido'}},
      resultado:[`Ela lê no Centro, na sua frente, e dobra o jornal em quatro com muito cuidado antes de ir embora.`]}
   ]
@@ -308,7 +324,7 @@ criacao:[
   texto:d => [
     d2 => { Nomes.apresentar('a avaliadora da Associação'); return `A avaliadora chega sem avisar, que é como ela avisa. Na prancheta, presa com elástico: SRA. LINDEN.`; },
     fala('a avaliadora da Associação', `Vim ver o time. Não as batalhas, o time: pata, pelo, dente, sono.`),
-    d2 => { const p = (d2.time || [])[0]; return p ? `Ela se agacha na frente de ${nomeExib(p)} e espera ${pron(p).o} se aproximar, em vez de se aproximar.` : 'Ela se agacha e espera.'; }
+    d2 => { const p = (d2.time || [])[0]; return p ? `Ela se agacha na frente de ${nomeExib(p)} e espera. Não estende a mão: deixa ${nomeExib(p)} vir.` : 'Ela se agacha e espera.'; }
   ],
   escolhas:[
     {texto:`Mostrar tudo, inclusive o que você ainda não resolveu.`,
@@ -361,13 +377,13 @@ liga:[
   cap:20, titulo:'A turma da manhã', quem:'a coordenadora da quadra',
   texto:d => [
     d2 => { Nomes.apresentar('a coordenadora da quadra'); return `A coordenadora te espera na quadra de treino, de agasalho da Liga. Na pasta, em letra de máquina: COORDENADORA MAPLE.`; },
-    fala('a coordenadora da quadra', `Doze crianças, sete anos cada, nenhuma com licença. Os pais pagaram a aula. Você dá.`),
+    fala('a coordenadora da quadra', `Doze crianças, dez anos cada, nenhuma com licença ainda. Os pais pagaram a aula. Você dá.`),
     `Na primeira fila, um menino segura um Caterpie como quem segura um troféu.`
   ],
   escolhas:[
     {texto:`Ensinar a cuidar antes de ensinar a lutar.`,
      ef:{flag:'ln_liga_cuidar', moral:2, rep:{eixo:'bom', delta:1, motivo:'Ensinou a cuidar antes de ensinar a lutar'}},
-     resultado:[`A aula é sobre água, sombra e sono. Ninguém luta. O menino do Caterpie aprende a ver se a folha está fresca.`]},
+     resultado:[`A aula é sobre água, sombra e sono. Ninguém luta. O menino da primeira fila aprende a ver se a folha do Caterpie está fresca.`]},
     {texto:`Dar a aula que os pais pagaram: tática.`,
      ef:{flag:'ln_liga_tatica', dinheiro:500},
      resultado:[`As crianças decoram três combinações de tipo e saem gritando "superefetivo" no estacionamento.`]}
@@ -392,7 +408,7 @@ liga:[
   cap:27, titulo:'A votação', quem:'a coordenadora da quadra',
   texto:d => [
     `A Liga vota se treinador de dez anos pode sair sozinho em jornada ou só a partir dos doze.`,
-    fala('a coordenadora da quadra', d.flags.ln_liga_cuidar ? `Você deu aula pra criança de sete. Você sabe o que é uma criança de dez. Seu voto vale.` : `Seu voto vale um. Igual ao meu. Igual ao de todo mundo aqui.`),
+    fala('a coordenadora da quadra', d.flags.ln_liga_cuidar ? `Você deu aula pra doze crianças de dez anos. Você sabe o que elas aguentam e o que não aguentam. Seu voto vale.` : `Seu voto vale um. Igual ao meu. Igual ao de todo mundo aqui.`),
     `Lá fora tem fila de criança com Pokémon no colo, esperando pra ver o resultado.`
   ],
   escolhas:[
@@ -542,18 +558,18 @@ foragido:[
   ]
 },
 {
-  cap:14, titulo:'Quem te reconhece', quem:'o rapaz da estação',
+  cap:14, titulo:'Quem te reconhece', quem:'o rapaz do cais',
   texto:d => [
-    `Na estação, um rapaz te olha, olha o PokéNav dele, olha você de novo.`,
-    fala('o rapaz da estação', `Eu sei quem você é. Eu não falo nada. Mas eu tô sem dinheiro, sabe.`, 'baixo')
+    `No cais, um rapaz te olha, olha o PokéNav dele, olha você de novo.`,
+    fala('o rapaz do cais', `Eu sei quem você é. Eu não falo nada. Mas eu tô sem dinheiro, sabe.`, 'baixo')
   ],
   escolhas:[
     {texto:`Pagar.`,
      ef:{flag:'ln_foragido_pagou_silencio', dinheiro:-600},
-     resultado:[`Ele conta o dinheiro e some no meio da gente. Você vai olhar pra trás em toda estação daqui pra frente.`]},
+     resultado:[`Ele conta o dinheiro e some no meio da gente. Você vai olhar pra trás em todo cais daqui pra frente.`]},
     {texto:`Encarar e dizer que ele pode falar o que quiser.`,
      ef:{flag:'ln_foragido_encarou', rep:{eixo:'bom', delta:1, motivo:'Não pagou pra ninguém ficar quieto'}},
-     resultado:[`Ele hesita. Você entra no trem. Quando o trem sai, ele ainda está na plataforma, com o PokéNav na mão e sem ligar pra ninguém.`]}
+     resultado:[`Ele hesita. Você sobe no barco. Quando o barco solta a corda, ele ainda está no cais, com o PokéNav na mão e sem ligar pra ninguém.`]}
   ]
 }
 ]
@@ -602,7 +618,7 @@ lei:[
      resultado:[`Leva até as quatro da tarde. O meio-dia passou e ninguém reclamou, porque todo mundo estava carregando alguma coisa.`]},
     {texto:`Avisar o acampamento na véspera, e chegar no horário com o lugar já vazio.`,
      ef:{flag:'ln_lei_avisou', rep:{eixo:'bom', delta:2, motivo:'Avisou antes de cumprir a ordem'}},
-     resultado:[`De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, COLETE".`]},
+     resultado:[d => `De manhã só sobrou o Snorlax. Alguém amarrou um bilhete na pata dele: "OBRIGADO, ${d.flags.cargo_guarda_rota ? 'COLETE' : 'CRACHÁ'}".`]},
     {texto:`Devolver a ordem sem cumprir.`,
      ef:{flag:'ln_lei_recusou_ordem', rep:{eixo:'ruim', delta:1, motivo:'Recusou uma ordem com carimbo azul'}},
      resultado:[fala('o sargento de Viridian', `Isso vai pra sua ficha.`), fala('o sargento de Viridian', `Vai pra minha também. Eu assino embaixo de você.`, 'baixo')]}
@@ -668,7 +684,10 @@ rocket:[
      resultado:[`Quarenta nomes de rua de Celadon e números que não existem. A voz demora dois dias pra ligar de novo.`]},
     {texto:`Recusar.`,
      ef:{flag:'ln_rocket_recusou_lista', rep:{eixo:'bom', delta:1, motivo:'Recusou entregar quem confia em você'}},
-     resultado:[fala('a voz do outro lado', `Anotado.`), `É a terceira vez que você ouve essa palavra dela, e é a primeira que ela soa cansada.`]}
+     /* "Anotado" ela só disse antes se você mentiu ou se calou no primeiro pedido */
+     resultado:[fala('a voz do outro lado', `Anotado.`), d => (d.flags.ln_rocket_mentiu || d.flags.ln_rocket_calou)
+       ? `Não é a primeira vez que você ouve essa palavra dela. É a primeira que ela soa cansada.`
+       : `Você nunca tinha ouvido essa palavra dela. Ela soa cansada.`]}
   ]
 },
 {
@@ -752,14 +771,19 @@ imprensa:[
   cap:19, titulo:'A carta do advogado', quem:'a editora do Jornal',
   texto:d => [
     d.flags.ln_imprensa_publicou
-      ? `Chega um envelope com timbre de escritório: o criador da matéria processa o Jornal pela segunda parte.`
+      ? `Chega um envelope com timbre de escritório: o criador da matéria processa o Jornal pela ${d.flags.ln_imprensa_publicou_cru ? 'segunda parte' : 'matéria'}.`
       : `Chega um envelope sem timbre: a filha do criador manda uma foto dos Pokémon gordos e do cercado pintado de novo.`,
-    fala('a editora do Jornal', d.flags.ln_imprensa_publicou ? `A gente tem tudo documentado. Você foi lá ver, não foi?` : `Você segurou a matéria e ganhou uma foto. Às vezes é isso que se ganha.`)
+    fala('a editora do Jornal', !d.flags.ln_imprensa_publicou ? `Você segurou a matéria e ganhou uma foto. Às vezes é isso que se ganha.`
+      : (d.flags.ln_imprensa_foi || d.flags.ln_imprensa_segurou) ? `A gente tem tudo documentado. Você foi lá ver, não foi?`
+      : `A gente tem um bilhete sem nome e a sua assinatura. Você nunca foi lá, foi?`)
   ],
   escolhas:[
-    {texto:d => d.flags.ln_imprensa_publicou ? `Depor a favor do Jornal, com o que você viu.` : `Pendurar a foto na parede da redação.`,
+    {texto:d => !d.flags.ln_imprensa_publicou ? `Pendurar a foto na parede da redação.`
+      : d.flags.ln_imprensa_foi ? `Depor a favor do Jornal, com o que você viu.` : `Depor a favor do Jornal, com o que você tem.`,
      ef:{flag:'ln_imprensa_depos', rep:{eixo:'bom', delta:1, motivo:'Sustentou o que escreveu'}},
-     resultado:[d => d.flags.ln_imprensa_publicou ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.` : `Fica do lado da janela. A editora endireita o quadro toda vez que passa.`]},
+     resultado:[d => !d.flags.ln_imprensa_publicou ? `Fica do lado da janela. A editora endireita o quadro toda vez que passa.`
+       : d.flags.ln_imprensa_foi ? `O juiz arquiva em vinte minutos. O criador não olha pra você na saída.`
+       : `O juiz pede prova que você não tem. O Jornal fecha acordo e publica a correção na página dois, do tamanho da matéria.`]},
     {texto:`Escrever uma nota sobre o que mudou desde a matéria.`,
      ef:{flag:'ln_imprensa_nota', rep:{eixo:'bom', delta:1, motivo:'Voltou à história pra contar o que mudou'}},
      resultado:[`Quatro linhas na página seis. A filha do criador recorta e cola na porta da criação.`]}
@@ -853,10 +877,11 @@ liga:[
 {
   cap:28, titulo:'O último dia de aula', quem:'a coordenadora da quadra',
   texto:d => [
-    `Na quadra de treino, um rapaz de licença nova na mão te espera com um Butterfree no ombro.`,
+    `Na quadra de treino, um menino de licença nova na mão te espera com um Butterfree no ombro.`,
     d.flags.ln_liga_cuidar
-      ? `É o menino do Caterpie, da turma da manhã. Ele ainda vê se a folha está fresca antes de deixar o Butterfree comer.`
-      : `É o menino do Caterpie, da turma da manhã. Ele ainda grita "superefetivo" quando acerta.`,
+      ? `É o menino da primeira fila, da turma da manhã. Ele ainda vê se a folha está fresca antes de deixar o Butterfree comer.`
+      : `É o menino da primeira fila, da turma da manhã. Ele ainda grita "superefetivo" quando acerta.`,
+    d.flags.ln_liga_doze ? `A licença dele saiu na semana antes da votação. Por pouco.` : null,
     fala('a coordenadora da quadra', `Ele pediu pra lutar com você antes de sair em jornada. Só isso.`)
   ],
   escolhas:[
@@ -1029,7 +1054,8 @@ function rodapeDaLinha(d){
     if (f.ln_lei_apito) L.push('O apito de Holt fica numa gaveta. Você nunca soprou. Uma vez quase soprou.');
     else if (f.ln_lei_cafe) L.push('Holt aparece na guarita de Viridian toda terça, reclama do café e fica duas horas.');
     else if (f.ln_lei_corrigiu) L.push('Em algum arquivo de Viridian tem um relatório com uma frase riscada à mão, e a letra é a sua.');
-    else L.push('O colete da Patrulha ficou dobrado num armário, e você sabe exatamente qual.');
+    else if (f.cargo_guarda_rota) L.push('O colete da Patrulha ficou dobrado num armário, e você sabe exatamente qual.');
+    else L.push('O crachá ficou numa gaveta, virado pra baixo, e você sabe exatamente qual.');
   }
   if (viveu('rocket')){
     if (f.ln_rocket_denunciou || f.ln_rocket_foto) L.push('Tem um armazém no porto de Vermilion com o portão soldado. Quem soldou sabe quem mandou as fotos.');
@@ -1065,8 +1091,12 @@ function rodapeDaLinha(d){
 const VIRADAS_DE_LINHA = {
   lei:{quem:'o sargento de Viridian', texto:d => [
     `O PokéNav toca com o número da guarita.`,
-    fala('o sargento de Viridian', `Vi que você devolveu o colete.`),
-    fala('o sargento de Viridian', `Colete é colete. Quem vestiu sabe onde fica a guarita. Se precisar, sabe.`, 'baixo')]},
+    d.flags.cargo_guarda_rota
+      ? fala('o sargento de Viridian', `Vi que você devolveu o colete.`)
+      : fala('o sargento de Viridian', `Vi que você devolveu o crachá.`),
+    d.flags.cargo_guarda_rota
+      ? fala('o sargento de Viridian', `Colete é colete. Quem vestiu sabe onde fica a guarita. Se precisar, sabe.`, 'baixo')
+      : fala('o sargento de Viridian', `Você sabe onde fica a guarita. Se precisar, sabe.`, 'baixo')]},
   rocket:{quem:'a voz do outro lado', texto:d => [
     `O aparelho do envelope acende uma última vez, sem tocar.`,
     `Na tela, uma frase: "O NÚMERO CONTINUA O MESMO."`]},
@@ -1136,7 +1166,7 @@ const Linhas = {
     this.depois = {cena, avisos:avisos || []};
     this.atual = c;
     const d = Estado.dados;
-    const falas = (typeof c.texto === 'function' ? c.texto(d) : c.texto) || [];
+    const falas = ((typeof c.texto === 'function' ? c.texto(d) : c.texto) || []).filter(x => x != null);
     this.porTelefone = Estado.temPokenav() && this.ehLigacao(falas);
     if (this.porTelefone){
       /* a tela de baixo é a do capítulo, já desenhada */
