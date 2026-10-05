@@ -362,7 +362,8 @@ const Jogo = {
          não pode ter adversário de nível fixo. */
       const nvBase = txt(b.nivel) || Historia.capAtual.nivelArea;
       if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Historia.capAtual.ambiente, b.nivelBase || Historia.capAtual.nivelArea);
-      else inimigo = criarPokemon(b.dex, nvBase, {selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'});
+      else inimigo = criarPokemon(txt(b.dex), nvBase, Object.assign({selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'},
+        b.genero !== undefined ? {genero: txt(b.genero)} : {}));
       timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex,
         x.nivel !== undefined ? txt(x.nivel) : Math.max(2, nvBase + (x.mais || 0)), {}));
     }

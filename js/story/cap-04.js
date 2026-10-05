@@ -521,8 +521,8 @@ c4_teo:{
       return '"Ah. Você." Ele continua mexendo na mochila. "Chegou."';
     },
     d=>d.flags.ensinou_o_pidgey
-      ? 'O Pidgey dele está no ombro, não no braço. Ele repara que você reparou e tenta não sorrir e falha completamente.'
-      : 'O Pidgey dele está no chão, andando em volta da escada, subindo os degraus a pé, um por um.',
+      ? 'O {pico} dele está solto, uns metros pra lá, cheirando a rua sozinho, e só olha pro Ezra quando quer. Ele repara que você reparou e tenta não sorrir e falha completamente.'
+      : 'O {pico} dele está colado na perna dele, e cada vez que passa alguém olha pro Ezra antes de olhar pra pessoa.',
     '"Eu perdi", ele diz, antes de você perguntar qualquer coisa. "No ginásio. Duas vezes."',
     'Ele ri. É um riso ruim — o riso de quem está com medo de descobrir que não serve pra isso e está testando a piada antes que outra pessoa faça.'
   ],
@@ -580,16 +580,16 @@ c4_teo_relato:{
 c4_teo_brock:{
   texto:[
     '"Ele fala alguma coisa depois?"',
-    '"Fala." Ezra faz uma cara esquisita. "Ele falou o nome do meu Pidgey. Eu não falei o nome pra ele. Ele ouviu eu gritando durante a luta e guardou."',
+    '"Fala." Ezra faz uma cara esquisita. "Ele falou o nome do meu {pico}. Eu não falei o nome pra ele. Ele ouviu eu gritando durante a luta e guardou."',
     '"E falou o quê?"',
     '"Falou: cuida do Pico melhor do que você cuida de você." Ezra encolhe os ombros. "Aí eu chorei um pouco lá fora. Não conta isso pra ninguém."',
-    'Ele olha pro Pidgey subindo o quarto degrau a pé.',
+    'Ele olha pro {pico}, que olha pra ele de volta, esperando.',
     '"O nome dele é Pico. Eu tinha nove anos quando escolhi."'
   ],
-  ef:{flag:'sabe_do_pico', npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que chorou depois de perder, e o nome do Pidgey: Pico.'}},
+  ef:{flag:'sabe_do_pico', npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que chorou depois de perder, e o nome do {pico}: Pico.'}},
   escolhas:[
     {texto:'"Pico é um nome bom."', vai:'c4_teo_nome',
-     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você elogiou o nome que ele deu ao Pidgey aos nove anos.'}}},
+     ef:{npc:{nome:'Ezra', opiniao:2, memoria:'Você elogiou o nome que ele deu ao {pico} aos nove anos.'}}},
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta comigo pela cidade."', vai:'c4_teo_volta'},
     {texto:'Não comentar. Mudar de assunto.', vai:'c4_teo_volta'}
@@ -601,18 +601,18 @@ c4_teo_nome:{
     '"Pico é um nome bom."',
     '"É horrível", ele diz, radiante. "É um nome horrível. Eu tinha NOVE ANOS."',
     '"Por que Pico?"',
-    '"Porque bicava tudo." Ele abre as mãos. "Tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
-    'O Pidgey, ao ouvir o nome duas vezes, para no meio do degrau e olha pra cima, esperando.',
+    '"Porque era um pico de nada quando eu achei. Cabia numa camiseta." Ele mostra o tamanho com as mãos. "E mexia em tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
+    'O {pico}, ao ouvir o nome duas vezes, para onde está e olha pra cima, esperando.',
     '"Ó ele." A voz do Ezra muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
-    'Ezra desce e pega ele no colo sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
+    'Ezra desce e abraça ele sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
     '"Ele tá comigo desde antes de tudo isso", ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
     '"E aí você virou treinador e ele virou time."',
-    '"É." Ezra olha pro Pidgey e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
+    '"É." Ezra olha pro {pico} e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
     'Ele percebe que falou sério e conserta imediatamente, porque é o Ezra:',
     '"Enfim. Ele adora. Ele é bobo."'
   ],
   ef:{hp:2, moral:4, flag:'sabe_do_pico',
-      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou por que o Pidgey se chama Pico, e disse sem querer uma coisa séria sobre isso.'}},
+      npc:{nome:'Ezra', opiniao:3, memoria:'Te contou por que o {pico} se chama Pico, e disse sem querer uma coisa séria sobre isso.'}},
   escolhas:[
     {texto:'"Pergunta pra ele, então."', vai:'c4_teo_pergunta_pro_pico'},
     {texto:'"Todo mundo faz isso. É o que é ter time."', vai:'c4_teo_todo_mundo_faz'},
@@ -627,17 +627,17 @@ c4_teo_pergunta_pro_pico:{
     '"Pergunta pra ele, então."',
     '"Como é que eu—" Ele para. "Você tá falando sério."',
     '"Tô."',
-    'Ezra olha pro Pidgey no colo dele com a cara de quem foi pego numa coisa.',
+    'Ezra olha pro {pico} encostado nele com a cara de quem foi pego numa coisa.',
     '"Pico." Ele fala baixo, meio sem graça de estar fazendo isso na frente de outra pessoa. "Você quer isso? Isso aqui. Ginásio, estrada, apanhar de Onix."',
-    'O Pidgey vira a cabeça de lado.',
-    'E aí, sem nenhum motivo aparente, sobe do colo pro ombro dele — que é onde ele não estava antes — e fica lá.',
+    'O {pico} vira a cabeça de lado.',
+    'E aí, sem nenhum motivo aparente e sem olhar pra ele antes, encosta a cabeça no peito do Ezra — que é coisa que ele não fazia — e fica lá.',
     'Os dois ficam parados uns três segundos.',
-    '"Isso não quer dizer nada", diz o Ezra, com a voz esquisita. "Isso não quer dizer nada, cara, ele sobe no ombro de qualquer um."',
-    '"Ele nunca subiu no meu."',
+    '"Isso não quer dizer nada", diz o Ezra, com a voz esquisita. "Isso não quer dizer nada, cara, ele faz isso com qualquer um."',
+    '"Ele nunca fez comigo."',
     '"CALA A BOCA."'
   ],
   ef:{moral:8,
-      npc:{nome:'Ezra', opiniao:5, memoria:'Perguntou pro próprio Pidgey se ele queria aquilo, e o Pidgey subiu no ombro dele.'},
+      npc:{nome:'Ezra', opiniao:5, memoria:'Perguntou pro próprio {pico} se ele queria aquilo, e o {pico} encostou nele sem olhar pra trás.'},
       rep:{eixo:'bom',delta:1,motivo:'Fez um amigo perguntar ao próprio Pokémon o que ninguém pergunta'},
       flag:'pico_no_ombro'},
   escolhas:[
@@ -651,17 +651,17 @@ c4_teo_todo_mundo_faz:{
   texto:[
     '"Todo mundo faz isso. É o que é ter time."',
     '"É, né." Ele aceita rápido demais, do jeito de quem queria ser convencido.',
-    'Mas continua com o Pidgey no colo e não muda de assunto.',
+    'Mas continua com a mão no {pico} e não muda de assunto.',
     '"Só que tem uma diferença, cara. O seu veio de um lugar certo. Alguém assinou papel, alguém pesou, alguém anotou numa lista."',
     d=>`"O Pico veio de baixo de uma caixa d'água. Eu levei ele pra casa numa camiseta e ninguém nunca perguntou nada pra ninguém."`,
     '"E isso é pior?"',
     '"Não sei." Ele coça o pescoço. "É mais solto. Papel é chato mas papel é uma promessa de alguém pra alguém."',
-    'Ele olha pro Pidgey.',
+    'Ele olha pro {pico}.',
     '"A gente nunca prometeu nada. A gente só foi."'
   ],
   ef:{moral:3, flag:'teo_sem_papel',
-      npc:{nome:'Ezra', opiniao:2, memoria:'Te contou que achou o Pidgey embaixo de uma caixa d\'água e levou pra casa numa camiseta.'},
-      registrar:'O Pidgey do Ezra não veio de lista nenhuma.'},
+      npc:{nome:'Ezra', opiniao:2, memoria:'Te contou que achou o {pico} embaixo de uma caixa d\'água e levou pra casa numa camiseta.'},
+      registrar:'O {pico} do Ezra não veio de lista nenhuma.'},
   escolhas:[
     {texto:'"Então promete agora."', vai:'c4_teo_promete_agora'},
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
@@ -672,10 +672,10 @@ c4_teo_todo_mundo_faz:{
 c4_teo_promete_agora:{
   texto:[
     '"Então promete agora."',
-    '"Prometer o quê? Pra um Pidgey?"',
+    '"Prometer o quê? Pra um {pico}?"',
     '"Você fala com ele o dia inteiro."',
     '"Isso é diferente, isso é—" Ele para no meio e desiste de explicar por que seria diferente.',
-    'Ele endireita o Pidgey no colo.',
+    'Ele ajeita o {pico} do lado dele.',
     '"Tá." Uma pausa longa. "Eu não vou te deixar em lugar nenhum. É isso. É essa a promessa e é a única que eu consigo fazer hoje."',
     'Ele olha pra você meio bravo.',
     '"Satisfeito?"',
@@ -683,7 +683,7 @@ c4_teo_promete_agora:{
     '"Você é insuportável e eu te odeio."'
   ],
   ef:{moral:6, flag:'teo_prometeu',
-      npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o Pidgey em lugar nenhum.'}},
+      npc:{nome:'Ezra', opiniao:4, memoria:'Prometeu em voz alta, na sua frente, que não largaria o {pico} em lugar nenhum.'}},
   escolhas:[
     {texto:'"Treina comigo."', vai:'c4_teo_treino'},
     {texto:'"Vem dar uma volta."', vai:'c4_teo_volta'},
@@ -835,7 +835,7 @@ c4_teo_ferido:{
     '"Talvez isso não seja pra todo mundo."',
     'Ezra não responde na hora. Fecha o zíper da mochila devagar, com muito mais cuidado do que um zíper precisa.',
     '"É." Ele faz que sim várias vezes, pro chão. "É, pode ser."',
-    'Ele chama o Pidgey, que sobe no braço dele na terceira tentativa.',
+    'Ele chama o {pico}, que vem na terceira vez, olhando pra ele o caminho inteiro.',
     '"Boa sorte aí", ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
     'Ele entra no Centro. Você fica na escada.'
   ],
@@ -852,8 +852,8 @@ c4_teo_escada:{
   texto:[
     'Você senta na escada onde ele estava sentado.',
     'A pedra ainda está morna do corpo dele. Isso é um detalhe desnecessário e é o único em que você consegue pensar por uns bons dois minutos.',
-    'Pela porta de vidro dá pra ver ele na fila da enfermeira, de costas, falando com o Pidgey.',
-    'Ele fala muito. Fala com as mãos, inclusive, o que é absurdo de se fazer com um Pidgey que não responde.',
+    'Pela porta de vidro dá pra ver ele na fila da enfermeira, de costas, falando com o {pico}.',
+    'Ele fala muito. Fala com as mãos, inclusive, o que é absurdo de se fazer com um {pico} que não responde.',
     'Um menino de uns dez anos senta dois degraus abaixo de você, com a mochila no colo e sem nenhum Pokémon à vista.',
     '"Ele é seu amigo?", o menino pergunta, sem olhar pra você.',
     '"É."',

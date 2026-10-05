@@ -1757,10 +1757,6 @@ const UI = {
     const d = Estado.dados;
     const a = Batalha.aliado;
     const vivos = d.time.filter(p => estaVivo(p) && p.uid !== a.uid).length;
-    const contraTreinador = Batalha.tipo === 'treinador';
-    const bolas = contraTreinador ? 0 : Object.keys(d.itens).filter(n => (ITENS_INFO[n]||{}).tipo === 'bola').length;
-    /* O contador da Bag mostra o que serve aqui, não o que está na mochila. */
-    const itens = Object.keys(d.itens).filter(n => usavelEmBatalha(n)).length + bolas;
 
     /* botão é o nome do que ele faz, sem legenda embaixo */
     const bt = (cls, rot, nota, acao, off) =>
@@ -1777,7 +1773,7 @@ const UI = {
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
         ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Bag', itens ? `${bolas ? bolas + (bolas === 1 ? ' tipo de Pokébola · ' : ' tipos de Pokébola · ') : ''}${itens} ${itens === 1 ? 'item' : 'itens'}` : 'nada que sirva aqui', 'UI.menuBag()', !itens)}
+        ${bt('bag', 'Bag', '', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
@@ -1832,35 +1828,11 @@ const UI = {
         <span class="rot">Voltar</span><span class="nota">sem gastar o turno</span></button></div>`));
   },
 
-  /* Uma bolsa só: bolas em cima, o resto embaixo — como na mochila de verdade */
+  /* Na luta, a mochila é a mesma de fora (cor, cabeçalho, categorias),
+     só com a aba de itens. O que não serve aqui continua lá, apagado:
+     ferramenta, papel, TM — e a Pokébola contra Pokémon de treinador. */
   menuBag(){
-    const d = Estado.dados;
-    const nomes = Object.keys(d.itens);
-    if (!nomes.length) return this.modal('Mochila', '<p class="nada">Mochila vazia.</p>');
-    /* Pokémon de treinador não se captura: a bola nem aparece na bolsa. */
-    const contraTreinador = Batalha.ativo && Batalha.tipo === 'treinador';
-    const bolas = contraTreinador ? [] : nomes.filter(n => (ITENS_INFO[n]||{}).tipo === 'bola');
-    /* Prova de processo, crachá e caderno continuam na mochila — mas não se
-       usa papel em cima de um Onix, e clicar neles custava o turno. */
-    const resto = nomes.filter(n => usavelEmBatalha(n));
-    const guardados = nomes.filter(n => !usavelEmBatalha(n) && (ITENS_INFO[n]||{}).tipo !== 'bola').length;
-    const linhasBolas = bolas.map(n =>
-      `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${n}'})">
-        ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`).join('');
-    const linhasItens = resto.map(n => {
-      const info = ITENS_INFO[n] || {};
-      if (info.tipo === 'curaJogador')
-        return `<button class="escolha com-item" onclick="UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n}'})">${imgItem(n)}${this.esc(n)} ×${Estado.contaItem(n)} — em você</button>`;
-      return `<button class="escolha com-item" onclick="UI.bagEmQuem('${n.replace(/'/g, "\\'")}')">
-          ${imgItem(n)}${this.esc(n)} <span class="pd">×${Estado.contaItem(n)}</span></button>`;
-    }).join('');
-    const corpo =
-      (contraTreinador ? '<p class="sussurro" style="margin:0 0 10px">As Pokébolas ficam no fundo da mochila: não se joga Pokébola no Pokémon de outro treinador.</p>' : '') +
-      (linhasBolas ? '<h3>Pokébolas</h3>' + linhasBolas : '') +
-      (linhasItens ? '<h3>Itens</h3>' + linhasItens : '') +
-      (guardados > 0 ? `<p class="sussurro" style="margin:10px 0 0">${guardados} ${guardados === 1 ? 'objeto fica guardado' : 'objetos ficam guardados'} — papel, crachá e afins não servem de nada aqui.</p>` : '');
-    this.modal('Mochila', (linhasBolas || linhasItens) ? corpo
-      : corpo + '<p class="nada">Nada que sirva agora.</p>');
+    this.modalItens('luta');
   },
 
   /* Apelido: o campo vem vazio; deixar vazio é ficar com o nome da espécie. */
@@ -2418,19 +2390,27 @@ const UI = {
     }).join(''));
   },
 
+  /* Na luta, o time é o mesmo da tela do time, na mesma ordem: quem está
+     brigando aparece marcado, quem caiu aparece caído, e tocar em quem
+     está em pé é trocar. */
+  listaDeTroca(podem){
+    const d = Estado.dados;
+    const atual = Batalha.aliado ? Batalha.aliado.uid : null;
+    return `<div class="time-lista">${d.time.map(p => {
+      const naLuta = p.uid === atual && estaVivo(p);
+      const pode = podem.includes(p.uid);
+      return this.linhaTime(p, `UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})`,
+        naLuta ? 'na luta' : '', !pode);
+    }).join('')}</div>`;
+  },
   menuTroca(){
     const outros = Estado.dados.time.filter(p => estaVivo(p) && p.uid !== Batalha.aliado.uid);
-    if (!outros.length) return this.modal('Trocar', '<p class="nada">Não tem mais ninguém em pé.</p>');
-    this.modal('Trocar por quem?', outros.map(p =>
-      `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})">
-        ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''));
+    this.modal('Seu time', this.listaDeTroca(outros.map(p => p.uid)) +
+      (outros.length ? '' : '<p class="nada">Não tem mais ninguém em pé.</p>'));
   },
 
   trocaObrigatoria(uids){
-    const ps = uids.map(u => Estado.dados.time.find(p => p.uid === u)).filter(Boolean);
-    this.modal('Quem entra agora?', ps.map(p =>
-      `<button class="escolha" onclick="UI.fecharModal();Jogo.acaoBatalha({tipo:'trocar',uid:'${p.uid}'})">
-        ${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)} — Nv ${p.nivel} · ${p.hp}/${p.hpMax} HP</button>`).join(''), true);
+    this.modal('Quem entra agora?', this.listaDeTroca(uids), true);
   },
 
   /* ========================================================
@@ -2967,19 +2947,22 @@ const UI = {
   },
 
   /* O time: só nome e HP. Tocar num abre o que dá pra fazer com ele. */
+  /* Uma linha do time, a mesma na tela do time e na troca da luta. */
+  linhaTime(p, onclick, marca, travada){
+    const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
+    const cls = p.morto ? ' morto' : (p.hp <= 0 ? ' caido' : '');
+    const faixa = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
+    return `<button class="time-linha${cls}${marca ? ' ativo' : ''}" data-uid="${p.uid}" ${travada ? 'disabled' : `onclick="${onclick}"`}>
+      <span class="time-icone">${imgSprite(p, 'icone')}</span>
+      <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.segurando ? `<span class="time-segura" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}${
+        (() => { const f = typeof Fome !== 'undefined' ? Fome.estado(p) : null; return f ? `<span class="time-fome ${f === 'faminto' ? 'grave' : ''}">${f}</span>` : ''; })()}</span>
+      <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${marca ? this.esc(marca) + ' · ' : ''}${p.morto ? 'morto' : `${p.hp}/${p.hpMax}`}</span></span>
+    </button>`;
+  },
+
   modalTime(){
     const d = Estado.dados;
-    const linha = (p, i) => {
-      const pct = p.hpMax ? Math.max(0, Math.round(p.hp / p.hpMax * 100)) : 0;
-      const cls = p.morto ? ' morto' : (p.hp <= 0 ? ' caido' : '');
-      const faixa = pct > 50 ? '' : (pct > 22 ? 'medio' : 'baixo');
-      return `<button class="time-linha${cls}" data-uid="${p.uid}" onclick="UI.timeAcoes('${p.uid}')">
-        <span class="time-icone">${imgSprite(p, 'icone')}</span>
-        <span class="time-nome">${this.esc(nomeExib(p))}${this.shi(p)}${p.segurando ? `<span class="time-segura" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}${
-          (() => { const f = typeof Fome !== 'undefined' ? Fome.estado(p) : null; return f ? `<span class="time-fome ${f === 'faminto' ? 'grave' : ''}">${f}</span>` : ''; })()}</span>
-        <span class="time-hp"><span class="barra ${faixa}"><i style="width:${pct}%"></i></span><span class="hp-num">${p.morto ? 'morto' : `${p.hp}/${p.hpMax}`}</span></span>
-      </button>`;
-    };
+    const linha = p => this.linhaTime(p, `UI.timeAcoes('${p.uid}')`);
     const cem = d.cemiterio.length
       ? `<h3>Não voltaram</h3><div class="time-lista">${d.cemiterio.map(p => `<button class="time-linha morto" onclick="UI.sumario('${p.uid}')">
           <span class="time-icone">${imgSprite(p, 'icone')}</span><span class="time-nome">${this.esc(nomeExib(p))}</span>
@@ -3139,12 +3122,16 @@ const UI = {
       ${this.ajustesDeSom()}`);
   },
 
-  modalItens(){
+  modalItens(modo){
+    const luta = modo === 'luta' && emLuta();
     const d = Estado.dados;
     const itens = Object.entries(d.itens).filter(([,q]) => q > 0);
     const total = itens.reduce((a,[,q]) => a + q, 0);
     const bolsa = mochilaAtual();
-    const topo = this.abasMochila('itens') + `<div class="mochila-topo">
+    const abas = luta
+      ? `<nav class="abas-mochila" aria-label="Mochila"><button class="aba sel" aria-current="page">${svgIcone('itens')}Itens</button></nav>`
+      : this.abasMochila('itens');
+    const topo = abas + `<div class="mochila-topo">
       <span class="fecho"></span>
       <span class="bolsa-nome">${this.esc(bolsa.rotulo)}</span>
       <span class="peso">${total} ${total === 1 ? 'unidade' : 'unidades'} · ${itens.length} tipos</span>
@@ -3172,6 +3159,24 @@ const UI = {
         const equipavel = info.tipo === 'equipar' && !emLuta();
         const ebolsa = info.tipo === 'bolsa';
         const emUso = ebolsa && bolsa.nome === n;
+        if (luta){
+          const serve = info.tipo === 'bola' ? Batalha.tipo !== 'treinador' : usavelEmBatalha(n);
+          const esc = n.replace(/'/g, "\\'");
+          const acao = info.tipo === 'bola'
+            ? `UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'bola',nome:'${esc}'})`
+            : info.tipo === 'curaJogador'
+              ? `UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${esc}'})`
+              : `UI.bagEmQuem('${esc}')`;
+          return `<div class="item-linha${serve ? '' : ' apagado'}"${serve ? '' : ' aria-disabled="true"'}>
+            ${imgItem(n)}
+            <span class="qtd">×${q}</span>
+            <span class="corpo">
+              <span class="nome">${this.esc(n)}</span>
+              <span class="ficha">${this.esc(fichaItem(n))}</span>
+            </span>
+            ${serve ? `<button class="btn mini" style="flex:0 0 auto;align-self:center" onclick="${acao}">usar</button>` : ''}
+          </div>`;
+        }
         return `<div class="item-linha">
           ${imgItem(n)}
           <span class="qtd">×${q}</span>
@@ -3507,7 +3512,7 @@ const UI = {
       ${d.rival && d.npcs['Ezra'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
         <p class="sussurro">${this.esc(ARCOS_RIVAL[arcoRival()].resumo)}</p>
         <div class="linha"><span class="k">${this.esc(d.rival.nome)}</span><span class="v">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span></div>
-        <div class="linha"><span class="k">Inicial dele</span><span class="v">${this.esc(DEX[d.rival.inicialDex].nome)}</span></div>` : ''}
+        <div class="linha"><span class="k">Parceiro dele</span><span class="v">${d.flags.sabe_do_pico ? 'Pico · ' : ''}${this.esc(especieDoPico())}</span></div>` : ''}
       ${(typeof rivaisConquistados === 'function' && rivaisConquistados().length)
         ? '<h3>Rivais que você arrumou</h3>' + rivaisConquistados().map(({def, reg}) =>
             `<div class="linha"><span class="k">${this.esc(def.nome)} — ${this.esc(defArcoExtra(def).nome)} <span class="sussurro">${this.esc(def.desde)} · ${this.esc(defArcoExtra(def).resumo || def.origem)}</span></span>
@@ -4003,9 +4008,9 @@ const UI = {
       <h3>Na sua vez</h3>
       ${L('Golpe', 'qualquer um dos quatro, quantas vezes quiser')}
       ${L('Pokébola', 'só em selvagem — não se joga Pokébola no Pokémon de treinador')}
-      ${L('Mochila', 'só o que serve em combate aparece')}
+      ${L('Mochila', 'a mesma de fora, só com a aba de itens · o que não serve na luta fica apagado (ferramenta, papel, TM, e Pokébola contra treinador)')}
       ${L('Pokédex', 'quantas vezes quiser · não gasta o turno')}
-      ${L('Trocar', 'gasta o turno')}
+      ${L('Trocar', 'gasta o turno · o time aparece como fora da luta, na mesma ordem, com quem está brigando marcado')}
       ${L('Substituir quem desmaiou', 'não gasta · o novo entra sem apanhar')}
       <h3>Status</h3>
       ${L('Sono', '5 sucessos de Instinto somados pra acordar')} ${L('Paralisia', '−2 de Destreza')}
@@ -4349,6 +4354,7 @@ const UI = {
       <h3>Rivais</h3>
       <div class="linha"><span class="k">Arco</span><span class="v">recalculado a cada encontro, pelo que você fez: a opinião dele, a sua reputação, o lado em que você está e o placar · o arco muda as falas, o time, o nível e a moral</span></div>
       <div class="linha"><span class="k">Ezra</span><span class="v">Parceiro (opinião 5+) · Rival · Ressentido (opinião −2 ou menos) · Perseguidor (reputação ruim 5, duas mortes, rede de Celadon ou Comissão; time contra o seu, +5 níveis) · Quebrado (perdeu 4+ e foi maltratado, −3 níveis)</span></div>
+      <div class="linha"><span class="k">Pico</span><span class="v">o parceiro do Ezra é sorteado no começo, pela mesma tabela do inicial aleatório (1d6 de coluna, 1d6 de linha, da sua cidade), nunca da sua espécie · é o último e o mais forte do time dele, e evolui com o nível</span></div>
       <div class="linha"><span class="k">Lior</span><span class="v">Teimoso · Inspirado (opinião 6+ ou reputação boa 3+; fósseis no time, +1 nível) · Desconfiado (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2) · Cansado (perdeu 3 sem ganhar nenhuma; −2)</span></div>
       <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2)</span></div>
       <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou sentad{o|a}) · Ressentido (o resto; time venenoso, +3)</span></div>

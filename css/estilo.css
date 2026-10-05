@@ -2778,6 +2778,15 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .time-linha:focus-visible{outline:2px solid var(--destaque);outline-offset:1px}
 .time-linha.caido{opacity:.7}
 .time-linha.morto{opacity:.5}
+/* na luta: quem está brigando fica marcado, e quem não pode entrar não reage */
+.time-linha.ativo{border-color:var(--destaque)}
+.time-linha[disabled]{cursor:default}
+.time-linha[disabled]:hover{border-color:var(--borda)}
+.time-linha.ativo[disabled]:hover{border-color:var(--destaque)}
+/* na luta, o que não serve fica na mochila, apagado */
+.item-linha.apagado > *{opacity:.42}
+.item-linha.apagado img{filter:grayscale(1)}
+.item-linha.apagado:hover{background:none;border-color:transparent;transform:none}
 .time-icone{display:flex;align-items:center;justify-content:center;width:40px;height:32px;overflow:hidden}
 .time-nome{font-weight:600;display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .time-segura{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--texto-fraco)}

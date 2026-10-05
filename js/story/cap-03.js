@@ -243,7 +243,7 @@ c3_correu_atras:{
     'Você corre pelo mato fechado, o que numa floresta significa correr uns oito metros e depois andar rápido, repetidamente.',
     'Galho na cara. Raiz no pé. Você cai uma vez e levanta antes de sentir.',
     'E aí, numa clareira pequena, você acha o Ezra.',
-    'Ele está sentado no chão, de costas pra uma árvore, com o Pidgey no colo, e está bem — fisicamente ele está bem.',
+    'Ele está sentado no chão, de costas pra uma árvore, abraçado no {pico}, e está bem — fisicamente ele está bem.',
     '"Cara." A voz dele sai errada. "Cara, tem um cara aqui."'
   ],
   ef:{hp:-2, causa:'Corrida pelo mato fechado', flag:'achou_o_teo',
@@ -262,7 +262,7 @@ c3_tudo_bem:{
     'Ele demora pra responder, o que já responde.',
     '"Tô." Ele não está. "Eu tô. Eu só — eu andei em círculo, e aí eu sentei, e aí eu ouvi um cara falando."',
     '"Falando o quê?"',
-    '"Sozinho. Tipo, ele tava falando sozinho, mas não era sozinho." Ezra aperta o Pidgey. "Ele tava contando. Tipo — um, dois, três. Contando Pokémon."'
+    '"Sozinho. Tipo, ele tava falando sozinho, mas não era sozinho." Ezra aperta o {pico}. "Ele tava contando. Tipo — um, dois, três. Contando Pokémon."'
   ],
   ef:{npc:{nome:'Ezra', opiniao:2, memoria:'A primeira coisa que você perguntou foi se ele estava bem.'},
       rep:{eixo:'bom',delta:1,motivo:'Perguntou pela pessoa antes de perguntar pelo problema'},
@@ -277,7 +277,7 @@ c3_tudo_bem:{
 c3_que_cara:{
   texto:[
     '"Que cara?"',
-    '"Um cara." Ezra aponta com a cabeça, sem soltar o Pidgey. "Adulto. Roupa boa. Com um rolo de fio no ombro."',
+    '"Um cara." Ezra aponta com a cabeça, sem soltar o {pico}. "Adulto. Roupa boa. Com um rolo de fio no ombro."',
     d=>d.flags.sabe_do_fio_de_aco
       ? 'Fio de aço. A atendente do Centro descreveu a mesma pessoa duas vezes no mesmo relatório.'
       : 'Fio. Rolo de fio, no ombro, numa floresta.',

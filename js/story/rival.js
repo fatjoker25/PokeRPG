@@ -36,13 +36,10 @@ const ARCOS_RIVAL = {
 /* Inicializa o rival quando o jogador cria o personagem */
 function iniciarRival(){
   const d = Estado.dados;
-  // o inicial dele é o que vence o seu — como sempre foi
-  const contra = {1:4, 4:7, 7:1};     // Bulbasaur->Charmander, Charmander->Squirtle, Squirtle->Bulbasaur
-  const meu = d.jogador.inicialDex;
-  const dele = contra[meu] || Dados.escolher([1,4,7]);
+  // o Ezra não tem inicial de laboratório: tem o Pico, sorteado
   d.rival = {
     nome:'Ezra',
-    inicialDex: dele,
+    picoDex: sortearPicoDoEzra(d),
     vitorias:0,      // vitórias DELE sobre você
     derrotas:0,      // derrotas dele
     encontros:0,
@@ -50,6 +47,36 @@ function iniciarRival(){
     arco:'rival'
   };
   return d.rival;
+}
+
+/* O Pico, parceiro do Ezra, é sorteado como o inicial aleatório da
+   casa: a mesma tabela (1d6 de coluna, 1d6 de linha), da mesma cidade.
+   Ele achou o bicho embaixo da caixa d'água da rua e criou em casa, então
+   fica de fora quem não sai da água, quem não cabe numa camiseta, quem
+   só nasce fêmea (o texto chama o Pico de "ele") e a mesma espécie do seu. */
+const PICO_NAO_SERVE = [129, 118, 116, 72, 90, 147, 111, 77];
+function sortearPicoDoEzra(d){
+  const seu = d.jogador && (d.jogador.inicialDex || (typeof dexReservado === 'function' ? dexReservado(d) : 0));
+  for (let i = 0; i < 20; i++){
+    const dex = sortearInicialDaCasa((d.jogador && d.jogador.cidade) || 'Pallet', '').dex;
+    if (dex === seu || PICO_NAO_SERVE.includes(dex) || chanceDeMacho(dex) === 0) continue;
+    return dex;
+  }
+  return 16;
+}
+function picoDex(){
+  const r = rival();
+  if (!r.picoDex) r.picoDex = sortearPicoDoEzra(Estado.dados);
+  return r.picoDex;
+}
+/* o sexo do Pico: "ele", a não ser que a espécie não tenha sexo */
+function picoGenero(){ return chanceDeMacho(picoDex()) === null ? null : 'm'; }
+/* o nome da espécie como ele está agora, pra marca {pico} do texto */
+function especieDoPico(){
+  const base = picoDex();
+  let nv = 6;
+  try { nv = nivelRival(); } catch(e){}
+  return DEX[formaAteONivel(finalDaLinha(base), nv)].nome;
 }
 
 function rival(){
@@ -94,12 +121,9 @@ function nivelRival(){
   return Math.max(6, base + (ARCOS_RIVAL[arcoRival()].nivelExtra || 0));
 }
 
-/* linha evolutiva do inicial dele, conforme o nível */
+/* o Pico, na forma que o nível deixa */
 function inicialDoRival(nivel){
-  const linha = {1:[1,2,3], 4:[4,5,6], 7:[7,8,9]}[rival().inicialDex] || [1,2,3];
-  if (nivel >= 36) return linha[2];
-  if (nivel >= 16) return linha[1];
-  return linha[0];
+  return formaAteONivel(finalDaLinha(picoDex()), nivel);
 }
 
 /* Contra o Perseguidor: ele treinou olhando o SEU time */
@@ -139,7 +163,9 @@ function timeRival(){
   const nivel = nivelRival();
   const qtd = Math.max(2, Math.min(6, 2 + Math.round(numInsignias() * 0.6)));
 
-  let pool = POOL_ARCO[arco].slice();
+  /* nada da linha do Pico no resto do time: ele é um só */
+  const linhaPico = finalDaLinha(picoDex());
+  let pool = POOL_ARCO[arco].filter(x => finalDaLinha(x) !== linhaPico);
   if (arco === 'perseguidor'){
     const contras = contraSeuTime();
     pool = contras.concat(pool.filter(x => !contras.includes(x)));
@@ -150,8 +176,9 @@ function timeRival(){
     const nv = Math.max(5, nivel - 2 + i);
     time.push(criarPokemon(formaAteONivel(pool[i], nv), nv, {moral: ARCOS_RIVAL[arco].moral}));
   }
-  // o inicial dele entra por último e é sempre o ace
-  const ini = criarPokemon(inicialDoRival(nivel), nivel + 2, {moral: ARCOS_RIVAL[arco].moral});
+  // o Pico entra por último e é sempre o ás
+  const ini = criarPokemon(inicialDoRival(nivel + 2), nivel + 2, {moral: ARCOS_RIVAL[arco].moral, genero: picoGenero()});
+  if (d.flags.sabe_do_pico) ini.apelido = 'Pico';
   if (arco === 'quebrado') ini.nivel = Math.max(5, nivel);
   time.push(ini);
   return time;

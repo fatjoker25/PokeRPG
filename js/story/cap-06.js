@@ -753,7 +753,7 @@ c6_pidgey_barato:{
     '"É o quê?"',
     '"É não precisar pegar." Ele abre as mãos. "Tem gente que quer um Pokémon e não quer a parte de ir no mato. Eu vendo a parte do mato."',
     d=>d.flags.sabe_do_pico
-      ? 'Você olha a Pokébola do Pidgey na espuma e pensa num Pidgey que caiu de um ninho, foi criado numa casa sem ninguém que voasse, e até hoje voa um metro e desce.'
+      ? 'Você olha a Pokébola do Pidgey na espuma e pensa num {pico} achado embaixo de uma caixa d\'água, criado numa casa, que até hoje olha pro dono antes de cada golpe.'
       : 'Você olha a Pokébola do Pidgey na espuma por tempo demais.'
   ],
   ef:{flag:'entendeu_a_banca'},

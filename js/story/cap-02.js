@@ -534,7 +534,7 @@ c2_desculpa:{
 c2_conversa:{
   texto:[
     'Vocês sentam na escada do Centro Pokémon de Viridian e conversam por quarenta minutos.',
-    'Ele te conta que trouxe comida pra dois "por precaução" e não sabe explicar precaução de quê. Que decorou o mapa inteiro e já se perdeu duas vezes. Que o Pidgey dele se chama Pidgey porque ele não conseguiu decidir um nome e agora é tarde.',
+    'Ele te conta que trouxe comida pra dois "por precaução" e não sabe explicar precaução de quê. Que decorou o mapa inteiro e já se perdeu duas vezes. Que o {pico} dele tem nome, mas que o nome ele só conta pra quem conhece direito.',
     'Você conta alguma coisa também. Não tudo. Mas alguma coisa.',
     'Em algum momento a atendente traz dois copos de água sem ninguém pedir.',
     fala('Ezra', 'Agora a gente luta?', null, 'Ele pergunta, e é impossível dizer não.')
@@ -561,12 +561,12 @@ c2_batalha_teo:{
   texto:[
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
     'Ezra joga a Pokébola com mais força do que precisa. "VAI!"',
-    'O Pidgey sai e pousa no chão em vez de voar, o que é errado, e Ezra corrige ele em voz alta, e o Pidgey ignora.',
+    'O {pico} sai e, em vez de encarar o seu, vira pra trás e olha pro Ezra, esperando, como quem espera comida. Ezra manda ele virar em voz alta, e o {pico} continua olhando pro Ezra.',
     'Nenhum dos dois faz ideia do que está fazendo. É a coisa mais honesta dessa cidade.'
   ],
-  /* o Pidgey dele saiu de casa na mesma semana que o seu: um nível na
+  /* o parceiro dele saiu de casa na mesma semana que o seu: um nível na
      frente do seu melhor, nunca mais que nove */
-  batalha:{dex:16, nivel:d => Math.min(9, Math.max(6, Math.max(5, ...(d.time || []).map(p => p.nivel)) + 1)), tipo:'treinador', treinador:'Ezra', fuga:false,
+  batalha:{dex:d => picoDex(), genero:d => picoGenero(), nivel:d => Math.min(9, Math.max(6, Math.max(5, ...(d.time || []).map(p => p.nivel)) + 1)), tipo:'treinador', treinador:'Ezra', fuga:false,
            vitoria:'c2_pos_batalha', derrota:'c2_pos_derrota', gameover:'gameover'}
 },
 
@@ -614,7 +614,7 @@ c2_derrota_silencio:{
   ],
   ef:{flag:'perdeu_a_primeira'},
   escolhas:[
-    {texto:'"Não foi a primeira dele." Falar do Pidgey.', vai:'c2_critica'},
+    {texto:'"Não foi a primeira dele." Falar do {pico}.', vai:'c2_critica'},
     {texto:'Perguntar o que ele fez que você não fez.', vai:'c2_derrota_aprendeu'},
     {texto:'Levantar e ir embora.', vai:'c2_saida_centro'},
     {texto:'"Te encontro em Pewter."', vai:'c2_encontro_pewter'}
@@ -626,7 +626,7 @@ c2_derrota_revanche:{
     '"Foi sorte. Revanche."',
     'A cara dele muda. Não fecha — desaba um pouco, que é pior.',
     '"Foi sorte", ele repete, sem tom nenhum. "Tá."',
-    'Ele devolve o Pidgey pra Pokébola com cuidado demais, que é como gente magoada guarda as coisas.',
+    'Ele devolve o {pico} pra Pokébola com cuidado demais, que é como gente magoada guarda as coisas.',
     '"Em Pewter, então. Aí você vê se é sorte."'
   ],
   ef:{flag:'chamou_de_sorte'},
@@ -663,15 +663,15 @@ c2_derrota_aprendeu:{
   ef:{flag:'licao_da_espera'},
   escolhas:[
     {texto:'"Te encontro em Pewter."', vai:'c2_encontro_pewter'},
-    {texto:'"Seu Pidgey não sabe voar direito."', vai:'c2_critica'},
+    {texto:'"Seu {pico} não briga sem olhar pra você."', vai:'c2_critica'},
     {texto:'Agradecer e sair.', vai:'c2_saida_centro'}
   ]
 },
 
 c2_pos_batalha:{
   texto:[
-    'Ezra pega o Pidgey no colo antes mesmo de devolver pra Pokébola. "Foi mal, foi mal, você foi bem."',
-    'Ele fala isso pro Pidgey, não pra você. Leva uns bons quinze segundos até lembrar que você existe.',
+    'Ezra se agacha e abraça o {pico} antes mesmo de devolver pra Pokébola. "Foi mal, foi mal, você foi bem."',
+    'Ele fala isso pro {pico}, não pra você. Leva uns bons quinze segundos até lembrar que você existe.',
     'Depois tira dinheiro do bolso e te entrega sem você pedir. É pouco. É quase tudo o que ele tem — dá pra ver porque a carteira fica visivelmente diferente.'
   ],
   ef:{dinheiro:400, npc:{nome:'Ezra', opiniao:2, memoria:'Perdeu para você em Viridian e pagou com quase tudo que tinha.'}},
@@ -684,7 +684,7 @@ c2_pos_batalha:{
          npc:{nome:'Ezra', opiniao:2, memoria:'Vocês combinaram de se encontrar em Pewter.'}}},
     {texto:'Pegar o dinheiro e ir embora sem responder.', vai:'c2_saida_centro',
      ef:{npc:{nome:'Ezra', opiniao:-2, memoria:'Você pegou o dinheiro dele e não disse nada.'}}},
-    {texto:'"Seu Pidgey não sabe voar direito."', vai:'c2_critica'}
+    {texto:'"Seu {pico} não briga sem olhar pra você."', vai:'c2_critica'}
   ]
 },
 
@@ -705,19 +705,19 @@ c2_devolveu:{
 
 c2_critica:{
   texto:[
-    '"Seu Pidgey não sabe voar direito."',
-    'Ezra olha pro Pidgey. O Pidgey olha pro Ezra.',
-    '"Eu sei." Ele coça a cabeça. "Ele caiu do ninho em cima da caixa d\'água da minha rua quando eu tinha nove anos. Eu criei ele em casa, e ninguém lá sabe voar."',
-    '"Ele nunca voou?"',
-    '"Ele voa tipo… um metro." Ezra mostra com a mão. "Aí ele desce e anda."',
-    'Vocês dois ficam olhando o Pidgey. O Pidgey anda até a cerca e volta.'
+    '"Seu {pico} não briga sem olhar pra você."',
+    'Ezra olha pro {pico}. O {pico} olha pro Ezra.',
+    '"Eu sei." Ele coça a cabeça. "Eu achei ele embaixo da caixa d\'água da minha rua quando eu tinha nove anos. Criei em casa. Lá ele só fazia as coisas quando alguém mandava, porque era assim que vinha a comida."',
+    '"Ele nunca brigou sozinho?"',
+    '"Ele briga. Ele só confere comigo antes." Ezra vira a cabeça pra trás, imitando. "Toda vez. Até em selvagem."',
+    'Vocês dois ficam olhando o {pico}. O {pico} anda até a cerca, olha pro Ezra, e volta.'
   ],
-  ef:{flag:'sabe_do_pidgey', npc:{nome:'Ezra', opiniao:1, memoria:'Te contou que o Pidgey dele caiu do ninho, foi criado em casa e nunca aprendeu a voar direito.'}},
+  ef:{flag:'sabe_do_pidgey', npc:{nome:'Ezra', opiniao:1, memoria:'Te contou que achou o {pico} embaixo de uma caixa d\'água, criou em casa, e que ele não briga sem olhar pra trás.'}},
   escolhas:[
     {texto:'"Dá pra ensinar."', vai:'c2_ensinar',
      ef:{rep:{eixo:'bom',delta:1,motivo:'Ofereceu esperança em vez de diagnóstico'}}},
     {texto:'"Então ele não serve pra rota."', vai:'c2_nao_serve',
-     ef:{npc:{nome:'Ezra', opiniao:-2, memoria:'Você disse que o Pidgey dele não servia.'}}},
+     ef:{npc:{nome:'Ezra', opiniao:-2, memoria:'Você disse que o {pico} dele não servia.'}}},
     {texto:'"Te encontro em Pewter."', vai:'c2_encontro_pewter'}
   ]
 },
@@ -727,20 +727,20 @@ c2_ensinar:{
     '"Dá pra ensinar."',
     '"Você acha?"',
     '"Sei lá. Acho." Você não faz a menor ideia. "Deve dar."',
-    'Ezra passa o resto da tarde no pátio jogando comida em cima de um muro baixo pro Pidgey ter que subir.',
-    'Na quinta tentativa o Pidgey sobe voando em vez de pular.',
+    'Ezra passa o resto da tarde no pátio jogando bolinha de papel no muro, pro {pico} ir buscar sem ninguém mandar.',
+    'Na quinta tentativa o {pico} vai sozinho e não olha pra trás.',
     'Ezra grita tão alto que a atendente sai pra ver se aconteceu alguma coisa.'
   ],
   ef:{flag:'ensinou_o_pidgey',
-      npc:{nome:'Ezra', opiniao:5, memoria:'Você ficou uma tarde inteira ajudando o Pidgey dele a voar. Ele conta essa história até hoje.'},
-      rep:{eixo:'bom',delta:2,motivo:'Passou uma tarde ensinando um Pidgey alheio a voar'}},
+      npc:{nome:'Ezra', opiniao:5, memoria:'Você ficou uma tarde inteira ajudando o {pico} dele a ir sozinho. Ele conta essa história até hoje.'},
+      rep:{eixo:'bom',delta:2,motivo:'Passou uma tarde ensinando o Pokémon de outro a ir sozinho'}},
   escolhas:[{texto:'Ir embora quando escurecer.', vai:'c2_encontro_pewter'}]
 },
 
 c2_nao_serve:{
   texto:[
     '"Então ele não serve pra rota."',
-    'Ezra não responde na hora. Guarda o Pidgey.',
+    'Ezra não responde na hora. Guarda o {pico}.',
     '"Ele é o que eu tenho", ele diz, e é a frase mais adulta que sai da boca dele nesse dia.'
   ],
   escolhas:[{texto:'Ir embora.', vai:'c2_saida_centro'}]

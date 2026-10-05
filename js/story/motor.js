@@ -342,6 +342,9 @@ function concordaJogador(s){
   if (typeof s !== 'string' || s.indexOf('{') < 0) return s;
   /* idade antes de tudo: {menor:A|B} senão seria lido como forma de Homem */
   if (typeof marcasDeIdade === 'function') s = marcasDeIdade(s);
+  /* {pico}: a espécie do parceiro do Ezra, que é sorteada */
+  if (s.indexOf('{pico}') >= 0)
+    s = s.replace(/\{pico\}/g, () => { try { return especieDoPico(); } catch(e){ return 'Pokémon'; } });
   if (s.indexOf('|') < 0) return s;
   let fem = false;
   try { fem = !!(Estado.dados && Estado.j && /^mulher/i.test(Estado.j.genero || '')); } catch(e){}

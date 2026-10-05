@@ -1210,6 +1210,9 @@ const Estado = {
         if (d.npcs && d.npcs[velho] && !d.npcs[novo]){ d.npcs[novo] = d.npcs[velho]; d.npcs[novo].nome = novo; delete d.npcs[velho]; }
       /* o rival guardou o nome de quando ainda não tinha um */
       if (d.rivais && d.rivais.fuchsia) d.rivais.fuchsia.nome = 'Rory';
+      /* o parceiro do Ezra passou a ser sorteado: quem já conhecia o
+         Pidgey dele continua com o Pidgey */
+      if (d.rival && !d.rival.picoDex) d.rival.picoDex = (d.npcs && d.npcs['Ezra']) ? 16 : 0;
       return true;
     } catch(e){ return false; }
   },
