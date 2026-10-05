@@ -75,6 +75,9 @@ const ICONE = {
   ginasio:'<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/><circle cx="12" cy="10" r="1.6"/>',
   centro:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><circle cx="12" cy="12" r="2.6"/><path d="M17 5.5h3M18.5 4v3"/>',
   loja:'<path d="M4 8h16l-1.5 12h-13z"/><path d="M8.5 8a3.5 3.5 0 0 1 7 0"/>',
+  /* as duas abas do balcão: sacola com +, moeda saindo da mão */
+  comprar:'<path d="M4 8h16l-1.5 12h-13z"/><path d="M8.5 8a3.5 3.5 0 0 1 7 0"/><path d="M12 11.5v5M9.5 14h5"/>',
+  vender:'<circle cx="15.5" cy="7.5" r="3.5"/><path d="M15.5 6v3"/><path d="M3 15h3l3.5-1.5c1-.4 2 .1 2.3 1l.2.5h-4M6 15v5H3M6 19.5h7.5l6-3.5a1.6 1.6 0 0 0-1.7-2.7L13 15.8"/>',
   casa:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
   laboratorio:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M7.5 15h9"/>',
   mural:'<rect x="3" y="4" width="18" height="15" rx="1.5"/><path d="M7 8h5M7 12h8M14 8h3"/><circle cx="12" cy="4" r="1.2"/>',

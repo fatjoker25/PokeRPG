@@ -152,6 +152,11 @@ const Historia = {
       /* tudo pesa: quem mudou de opinião sobre você conta pra alguém */
       for (const r of repDaOpiniao(ef)) Estado.mudarRep(r.eixo, 1, r.motivo, {});
     }
+    /* ferramenta usada na cena: gasta um uso (e a pilha, se for lanterna) */
+    if (ef.desgaste && typeof Desgaste !== 'undefined'){
+      const nome = typeof ef.desgaste === 'function' ? ef.desgaste(Estado.dados) : ef.desgaste;
+      if (nome) avisos.push(...Desgaste.usarNoVasculhar(nome));
+    }
     if (ef.itens){
       let algum = false;
       for (const [nome,q] of Object.entries(ef.itens)){ Estado.darItem(nome,q); algum = true; }

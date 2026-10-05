@@ -177,9 +177,14 @@ com o sprite** (sombra descolada do pé é bicho flutuando), e **no celular
 o recuo não se aplica** — empilhado não existe chão compartilhado, cada
 lutador tem a sua moldura e os dois pousam no pé dela.
 
-O **fundo do site** é um só, o azul da tela de título (`--fundo-site`, em
-`estilo.css`), em todo tom de capítulo: o tom muda painel, borda e destaque,
-não o céu atrás. A abertura fica no meio da tela (`body.na-abertura`).
+O **fundo do site** sai da **cor do jogo** que quem joga escolhe nos Ajustes
+(`CORES_MOLDURA` em `interface.js`, `data-moldura` em `estilo.css`): cada
+cor é um conjunto inteiro no jeito do azul da abertura — degradê de fundo
+(`--fundo-topo`, `--fundo-site`, `--fundo-pe`, brilho em `--fundo-brilho`),
+painel, borda e texto secundário. O padrão é o azul-noite; "Do capítulo"
+deixa o tom de cada capítulo mandar no painel. A abertura e a película do
+cenário leem as mesmas variáveis. Cor nova entra com as quatro do fundo.
+A abertura fica no meio da tela (`body.na-abertura`).
 
 Fora da batalha, o **fundo da página** também é o lugar: `CENARIO_POR_LOCAL`
 (em `arenas.js`) dá um cenário a cada ponto do mapa — os nove da batalha,
@@ -651,6 +656,19 @@ Ultra rola o selo (`SELO_DA_BOLA`, 8d6) + os bônus da condição
 sucessos do posto (`SUCESSOS_DO_POSTO`), e lendário conta no mínimo como
 Ás (10). Com HP cheio é impossível de propósito: o pedido foi "bem
 difícil". A Master fecha sem rolagem. A rolagem vai pro log inteira.
+
+## Ferramenta gasta, e o balcão compra
+`js/engine/desgaste.js`: Machado, Picareta e Lanterna têm `DURABILIDADE` em
+usos; o estado (nova, meio desgastada, desgastada, quebrando, quebrada) sai
+da fração gasta e aparece na mochila. Quebrada fica na mochila
+(`d.quebrados`) até descartar, e não serve: `Campo._tem` conta só as
+inteiras. Gasta em dois lugares: vasculhar no ambiente dela
+(`AMBIENTE_DA_FERRAMENTA`, +1 dado de Percepção) e `ef.desgaste` na escolha
+de cena que usa a ferramenta — nunca em `cond` nem em texto, que rodam toda
+vez que a tela redesenha. A lanterna também gasta 1 Pilha por uso, e sem
+pilha não acende. A loja tem Comprar e Vender: venda paga metade de
+`PRECO_BASE`, ferramenta gasta vale ¾, ½ ou ¼, quebrada e a mochila em uso
+não vendem. Tudo na folha de regras.
 
 ## TM e mapa
 As TMs são as de Red/Blue e as de Gold/Silver que ensinam golpe que a 1ª

@@ -81,7 +81,9 @@ const Campo = {
   },
   _tem(item){
     const d = (typeof Estado !== 'undefined' && Estado.dados) || null;
-    return !!(d && d.itens && d.itens[item] > 0);
+    if (!(d && d.itens && d.itens[item] > 0)) return false;
+    /* ferramenta quebrada está na mochila e não serve (desgaste.js) */
+    return typeof Desgaste === 'undefined' || !Desgaste.dura(item) || Desgaste.inteiros(item) > 0;
   },
   _tipo(p, t){
     const e = DEX[p.dex];
@@ -130,8 +132,11 @@ const Campo = {
   iluminar(){
     const q = this._time().find(p => emiteLuz(p.dex));
     if (q) return {pode:true, quem:q, como:`com a luz de ${nomeExib(q)}`, semPilha:true};
-    if (this._tem('Lanterna')) return {pode:true, como:'com a lanterna', semPilha:false};
-    return {pode:false, falta:'uma lanterna, ou um Pokémon que dê luz'};
+    if (this._tem('Lanterna')){
+      if (this._tem('Pilha')) return {pode:true, como:'com a lanterna', semPilha:false};
+      return {pode:false, falta:'pilha pra lanterna, ou um Pokémon que dê luz'};
+    }
+    return {pode:false, falta:'uma lanterna com pilha, ou um Pokémon que dê luz'};
   },
 
   /* usado pela folha de regras e pela ficha do time */

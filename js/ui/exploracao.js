@@ -386,7 +386,11 @@ const Exploracao = {
       const ev = Eventos.sortear(Mundo.id());
       if (ev){ Estado.salvar('auto'); return UI.telaEvento(ev); }
     }
-    const t = Dados.teste(Estado.j.status.percepcao, 5, 'Percepção');
+    /* a ferramenta certa pro lugar: +1 dado de Percepção, e gasta (desgaste.js) */
+    const ferr = typeof Desgaste !== 'undefined' ? Desgaste.doAmbiente(L.ambiente) : null;
+    const t = Dados.teste(Estado.j.status.percepcao + (ferr ? 1 : 0), 5,
+      ferr ? `Percepção + ${ferr.toLowerCase()}` : 'Percepção');
+    const gasto = ferr ? Desgaste.usarNoVasculhar(ferr) : [];
     const avisos = [];
     let texto;
 
@@ -400,18 +404,18 @@ const Exploracao = {
         if (achado.descobre) Mundo.descobrir(achado.descobre);
       } else {
         Estado.salvar('auto');
-        return this.tela(achadoDeVasculhar(L.ambiente, sorte.grau === 'critico', false, Mundo.id()));
+        return this.tela(achadoDeVasculhar(L.ambiente, sorte.grau === 'critico', false, Mundo.id()).concat(gasto));
       }
     } else if (t.grau === 'parcial'){
       /* parcial: só o rastro, sem achado */
       const av = achadoDeVasculhar(L.ambiente, false, true, Mundo.id());
       Estado.salvar('auto');
-      return this.tela(av.length ? av : [{tipo:'info', texto:'Você acha rastro e pegada, e nada disso vira coisa nenhuma hoje.'}]);
+      return this.tela((av.length ? av : [{tipo:'info', texto:'Você acha rastro e pegada, e nada disso vira coisa nenhuma hoje.'}]).concat(gasto));
     } else {
       texto = [falhaDeVasculhar(L.ambiente)];
     }
     Estado.salvar('auto');
-    this.tela(texto.map(x => ({tipo:'info', texto:x})));
+    this.tela(texto.map(x => ({tipo:'info', texto:x})).concat(gasto));
   },
 
   treinar(){

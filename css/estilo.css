@@ -91,15 +91,15 @@ html[data-tom="final"], body[data-tom="final"]{
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:#090d26}
+html{background:var(--fundo-pe, #090d26)}
 /* O fundo do site é um só, o azul da tela de título, em todo tom de
    capítulo: o tom muda painel, borda e destaque, não o céu atrás. */
-:root{ --fundo-site:#0b1030; }
+:root{ --fundo-topo:#121a44; --fundo-site:#0b1030; --fundo-pe:#090d26; --fundo-brilho:42,117,187; }
 body{
   background:
-    radial-gradient(120% 70% at 50% 0%, rgba(42,117,187,.32), transparent 60%),
-    radial-gradient(90% 60% at 50% 110%, rgba(255,203,5,.08), transparent 70%),
-    linear-gradient(180deg, #121a44, var(--fundo-site) 70%, #090d26);
+    radial-gradient(120% 70% at 50% 0%, rgba(var(--fundo-brilho),.32), transparent 60%),
+    radial-gradient(90% 60% at 50% 110%, rgba(255,203,5,.06), transparent 70%),
+    linear-gradient(180deg, var(--fundo-topo), var(--fundo-site) 70%, var(--fundo-pe));
   background-color:var(--fundo-site);
   background-attachment:fixed;
   color:var(--texto); font-family:var(--fonte);
@@ -2830,36 +2830,53 @@ button.bilhete:hover,button.bilhete:focus-visible{outline:2px solid #b08a4a;outl
 .xp-linha.subiu .nv{color:#5fb4ff}
 
 /* ============================================================
-   COR DA MOLDURA (Ajustes) — vem depois dos tons de capítulo de
+   COR DO JOGO (Ajustes) — vem depois dos tons de capítulo de
    propósito: com a mesma especificidade, quem vem depois ganha.
+   Cada cor é um conjunto inteiro no jeito do azul da abertura:
+   fundo em degradê (topo, meio, pé) com um brilho no alto, e painel,
+   borda e texto secundário no mesmo tom. O destaque continua do tom
+   do capítulo. "Do capítulo" (data-moldura ausente) deixa o tom mandar
+   no painel, com o fundo azul.
    ============================================================ */
+html[data-moldura="azul"], body[data-moldura="azul"]{
+  --fundo-topo:#121a44; --fundo-site:#0b1030; --fundo-pe:#090d26; --fundo-brilho:42,117,187;
+  --bg:#0f1534; --bg-2:#141c42; --painel:#18214d; --painel-2:#1e295c; --borda:#2c3a78; --borda-forte:#3d4f9a;
+  --texto-fraco:#a3b0dd; --texto-tenue:#6f7cab;
+}
 html[data-moldura="vermelho"], body[data-moldura="vermelho"]{
-  --bg:#240d11; --bg-2:#301217; --painel:#3f171e; --painel-2:#4d1d25; --borda:#743039; --borda-forte:#97404b;
-  --texto-fraco:#d0a2a8; --texto-tenue:#a6767d;
+  --fundo-topo:#3d1222; --fundo-site:#1f0a12; --fundo-pe:#15060c; --fundo-brilho:205,64,82;
+  --bg:#210b14; --bg-2:#2b0f1a; --painel:#371421; --painel-2:#441a29; --borda:#71293c; --borda-forte:#94374f;
+  --texto-fraco:#d6a3ad; --texto-tenue:#a5737e;
 }
 html[data-moldura="laranja"], body[data-moldura="laranja"]{
-  --bg:#24170b; --bg-2:#301f0f; --painel:#3f2913; --painel-2:#4d3218; --borda:#7a4f26; --borda-forte:#a06a35;
-  --texto-fraco:#d6b896; --texto-tenue:#a88a6a;
+  --fundo-topo:#3d2410; --fundo-site:#1f1309; --fundo-pe:#150c05; --fundo-brilho:222,132,52;
+  --bg:#22140a; --bg-2:#2c1a0d; --painel:#3a2211; --painel-2:#472a16; --borda:#764621; --borda-forte:#9c5e2d;
+  --texto-fraco:#dbbb98; --texto-tenue:#a98b6a;
 }
 html[data-moldura="amarelo"], body[data-moldura="amarelo"]{
-  --bg:#211d09; --bg-2:#2b260d; --painel:#383111; --painel-2:#453c16; --borda:#6e6124; --borda-forte:#938230;
-  --texto-fraco:#d3c891; --texto-tenue:#a69c68;
+  --fundo-topo:#37310f; --fundo-site:#1c1907; --fundo-pe:#131104; --fundo-brilho:218,186,48;
+  --bg:#1f1b08; --bg-2:#29240b; --painel:#36300f; --painel-2:#423b13; --borda:#6b5f22; --borda-forte:#8f7f2e;
+  --texto-fraco:#d6cb94; --texto-tenue:#a69c68;
 }
 html[data-moldura="verde"], body[data-moldura="verde"]{
-  --bg:#0d2015; --bg-2:#122b1c; --painel:#183824; --painel-2:#1f452d; --borda:#2f6b46; --borda-forte:#3f8a5b;
-  --texto-fraco:#9fcbb0; --texto-tenue:#73a084;
+  --fundo-topo:#10381f; --fundo-site:#081d11; --fundo-pe:#05140b; --fundo-brilho:62,176,104;
+  --bg:#0a2013; --bg-2:#0e2a19; --painel:#133621; --painel-2:#184328; --borda:#286a40; --borda-forte:#368c55;
+  --texto-fraco:#a2cfb2; --texto-tenue:#73a084;
 }
 html[data-moldura="roxo"], body[data-moldura="roxo"]{
-  --bg:#180f2a; --bg-2:#201537; --painel:#2a1c47; --painel-2:#332456; --borda:#523a85; --borda-forte:#6a4ea6;
-  --texto-fraco:#b9a8db; --texto-tenue:#8e7cb3;
+  --fundo-topo:#28164b; --fundo-site:#140b28; --fundo-pe:#0d071c; --fundo-brilho:144,96,226;
+  --bg:#160c2c; --bg-2:#1d1139; --painel:#271747; --painel-2:#301d56; --borda:#4c3586; --borda-forte:#6447a8;
+  --texto-fraco:#bcabde; --texto-tenue:#8e7cb3;
 }
 html[data-moldura="rosa"], body[data-moldura="rosa"]{
-  --bg:#240d1e; --bg-2:#301228; --painel:#3f1734; --painel-2:#4d1e40; --borda:#7a3066; --borda-forte:#9c4284;
-  --texto-fraco:#d6a2c4; --texto-tenue:#aa779a;
+  --fundo-topo:#3d1335; --fundo-site:#200a1c; --fundo-pe:#160613; --fundo-brilho:224,84,166;
+  --bg:#230b1f; --bg-2:#2e0f29; --painel:#3b1435; --painel-2:#481a41; --borda:#762d67; --borda-forte:#984088;
+  --texto-fraco:#dba6c9; --texto-tenue:#aa779a;
 }
 html[data-moldura="grafite"], body[data-moldura="grafite"]{
-  --bg:#121418; --bg-2:#181b21; --painel:#20242b; --painel-2:#282d35; --borda:#3e4552; --borda-forte:#535c6d;
-  --texto-fraco:#aab1bf; --texto-tenue:#7d8594;
+  --fundo-topo:#272c36; --fundo-site:#13161c; --fundo-pe:#0d0f13; --fundo-brilho:150,160,182;
+  --bg:#15181e; --bg-2:#1b1f26; --painel:#232831; --painel-2:#2b313b; --borda:#414958; --borda-forte:#566072;
+  --texto-fraco:#aeb5c2; --texto-tenue:#7d8594;
 }
 
 /* o seletor nos Ajustes */
@@ -2867,7 +2884,8 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .ajuste-moldura h3{margin:0 0 10px;font-size:.95rem}
 .ajuste-moldura .bolinhas{display:flex;flex-wrap:wrap;gap:10px}
 .ajuste-moldura .bolinha{width:32px;height:32px;border-radius:50%;padding:0;cursor:pointer;
-  background:var(--c);border:2px solid rgba(255,255,255,.18);box-shadow:inset 0 -3px 6px rgba(0,0,0,.35);
+  background:radial-gradient(circle at 50% 18%, var(--c-brilho, transparent), transparent 62%), linear-gradient(180deg, var(--c1, var(--c)), var(--c2, var(--c)));
+  border:2px solid rgba(255,255,255,.18);box-shadow:inset 0 -3px 6px rgba(0,0,0,.35);
   transition:transform .12s var(--suave), border-color .12s}
 .ajuste-moldura .bolinha:hover{transform:scale(1.08)}
 .ajuste-moldura .bolinha.sel{border-color:var(--texto);box-shadow:0 0 0 3px var(--destaque), inset 0 -3px 6px rgba(0,0,0,.35)}
@@ -2920,6 +2938,23 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .bolas-time .pb.caido{filter:grayscale(1) brightness(.55);opacity:.7}
 
 /* confirmação de compra */
+.loja-modos{margin-bottom:10px}
+.loja-modos .tut-aba{display:inline-flex;align-items:center;gap:6px}
+.loja-modos .tut-aba .icone{width:16px;height:16px}
+.item-linha .uso-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:600;
+  letter-spacing:.02em;vertical-align:middle;background:rgba(76,185,107,.18);color:#8fe0a8;border:1px solid rgba(76,185,107,.35)}
+.item-linha .uso-meio-desgastado{background:rgba(245,197,24,.14);color:#f2d66a;border-color:rgba(245,197,24,.32)}
+.item-linha .uso-desgastado{background:rgba(255,150,60,.16);color:#ffb37a;border-color:rgba(255,150,60,.34)}
+.item-linha .uso-quebrando{background:rgba(238,21,21,.16);color:#ff8a7a;border-color:rgba(238,21,21,.38)}
+.item-linha .uso-quebrado{background:rgba(120,120,130,.22);color:#c3c7cf;border-color:rgba(160,160,170,.35)}
+.item-linha .uso-barra{display:inline-block;width:46px;height:5px;margin-left:6px;vertical-align:middle;border-radius:3px;
+  background:rgba(255,255,255,.12);overflow:hidden}
+.item-linha .uso-barra i{display:block;height:100%;background:#4cb96b}
+.item-linha .uso-barra.uso-meio-desgastado i{background:#f5c518}
+.item-linha .uso-barra.uso-desgastado i{background:#ff963c}
+.item-linha .uso-barra.uso-quebrando i{background:#e8402f}
+.item-linha.quebrado > img, .item-linha.quebrado > .item-icone{filter:grayscale(1) brightness(.75);transform:rotate(-12deg)}
+.item-linha.quebrado .nome{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.35)}
 .confirma-compra{display:flex;flex-direction:column;gap:8px;align-items:stretch;text-align:center}
 .confirma-compra .cc-item{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px}
 .confirma-compra .cc-item img,.confirma-compra .cc-item .item-icone{width:40px;height:40px;image-rendering:pixelated}

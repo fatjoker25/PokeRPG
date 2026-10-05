@@ -1227,7 +1227,9 @@ c5_entrada:{
     'A Equipe Rocket acabou há dois anos. Red desmontou a organização, prenderam quem dava pra prender, e o resto virou notícia velha e piada de bar.',
     'Mas organização que acaba deixa gente. E gente precisa comer.'
   ],
-  ef:{registrar:'Entrou no Monte da Lua e encontrou instalação elétrica recente.'},
+  ef:{registrar:'Entrou no Monte da Lua e encontrou instalação elétrica recente.',
+      /* acendeu a lanterna: gasta pilha e uso (desgaste.js) */
+      desgaste:d=>{ const l = Campo.iluminar(); return l.pode && !l.semPilha ? 'Lanterna' : null; }},
   escolhas:[
     {texto:'Seguir o cabo.', vai:'c5_cabo'},
     {texto:'Ir pelo túnel lateral, evitando o cabo.', vai:'c5_desvio'},

@@ -930,21 +930,30 @@ const Cidade = {
     });
   },
 
-  loja(andar, qual){
+  loja(andar, qual, modo){
     /* sem argumento é a loja da cidade; com `qual`, outro balcão
        (o bazar de domingo) que segue aberto entre uma compra e outra */
-    if (andar === undefined && qual === undefined) this._qual = null;
+    if (andar === undefined && qual === undefined && modo === undefined){ this._qual = null; this._modoLoja = 'comprar'; }
     if (qual) this._qual = qual;
+    if (modo) this._modoLoja = modo;
     const id = this._qual || Mundo.id();
     const L = LOJAS[id];
     const catalogo = catalogoDaCidade(id);
     if (!catalogo.length)
       return UI.modal('Loja', '<p class="nada">Não tem loja aqui. Tem quem venda, mas não tem loja.</p>', false, 'mochila');
+    const vendendo = this._modoLoja === 'vender';
+
+    /* Comprar e Vender: as duas pontas do balcão */
+    const q = this._qual ? `'${this._qual}'` : 'undefined';
+    const modos = `<div class="tut-abas loja-modos">
+      <button class="tut-aba${vendendo ? '' : ' sel'}" onclick="Cidade.loja(Cidade._andar || 0, ${q}, 'comprar')">${svgIcone('comprar')}<span>Comprar</span></button>
+      <button class="tut-aba${vendendo ? ' sel' : ''}" onclick="Cidade.loja(Cidade._andar || 0, ${q}, 'vender')">${svgIcone('vender')}<span>Vender</span></button>
+    </div>`;
 
     /* Loja de vários andares: a escada rolante é uma aba. */
     let abas = '', ar = L.ar, sub = '';
     let lista = catalogo;
-    if (L.andares && L.andares.length){
+    if (!vendendo && L.andares && L.andares.length){
       const n = andar || this._andar || L.andares[0].n;
       this._andar = n;
       const A = L.andares.find(x => x.n === n) || L.andares[0];
@@ -961,20 +970,34 @@ const Cidade = {
       <span class="grana">${fmtDin(Estado.j.dinheiro)} ₽</span>
       <span class="peso">${UI.esc(L.nome)}${sub ? ' · ' + sub : ''}</span>
     </div>
-    ${abas}
-    <p class="sussurro" style="margin:0 0 12px">${UI.esc(ar)}</p>`;
+    ${modos}${abas}
+    <p class="sussurro" style="margin:0 0 12px">${vendendo ? 'O balcão paga metade do que cobra. Ferramenta gasta vale menos, e quebrada não vale nada.' : UI.esc(ar)}</p>`;
+
+    if (vendendo){
+      const venda = this.vendaveis();
+      const linhas = venda.map(v => `<button class="item-linha compravel" onclick="Cidade.vender('${v.nome.replace(/'/g,"\\'")}')">
+        ${imgItem(v.nome)}
+        <span class="qtd">${fmtDin(v.preco)}</span>
+        <span class="corpo">
+          <span class="nome">${UI.esc(v.nome)} <span class="fraco">(você tem ${v.qtd})</span>${v.estado ? ` <span class="fraco">· ${UI.esc(v.estado)}</span>` : ''}</span>
+          <span class="desc">${UI.esc(fichaItem(v.nome) || descricaoItem(v.nome))}</span>
+        </span>
+      </button>`).join('');
+      return UI.modal('', topo + (linhas || '<p class="nada">Nada na mochila que este balcão compre.</p>'), false, 'mochila');
+    }
 
     const linhas = lista.map(([n,p]) => {
       const caro = Estado.j.dinheiro < p;
       /* Bola mostra só o número: a prosa em cima dela saiu a pedido. */
       const desc = (ITENS_INFO[n] || {}).tipo === 'bola' ? fichaItem(n) : descricaoItem(n);
       const tenho = Estado.contaItem(n);
+      const quebradas = typeof Desgaste !== 'undefined' ? Desgaste.quebrados(n) : 0;
       return `<button class="item-linha compravel${caro ? ' caro' : ''}" ${caro ? 'disabled' : ''}
         onclick="Cidade.comprar('${n.replace(/'/g,"\\'")}',${p})">
         ${imgItem(n)}
         <span class="qtd">${p}</span>
         <span class="corpo">
-          <span class="nome">${UI.esc(n)}${tenho ? ` <span class="fraco">(você tem ${tenho})</span>` : ''}</span>
+          <span class="nome">${UI.esc(n)}${tenho ? ` <span class="fraco">(você tem ${tenho}${quebradas ? `, ${quebradas} quebrad${FERRAMENTA_FEMININA.has(n) ? 'a' : 'o'}` : ''})</span>` : ''}</span>
           ${desc ? `<span class="desc">${UI.esc(desc)}</span>` : ''}
         </span>
       </button>`;
@@ -982,93 +1005,62 @@ const Cidade = {
 
     UI.modal('', topo + linhas, false, 'mochila');
   },
-  /* ------------------------------------------------------------
-     DOAÇÃO — o único lugar em que dinheiro vira outra coisa.
-     Cada causa é uma ponta solta que a história já deixou: a lona
-     no telhado do museu de Pewter, o abrigo de Lavender, e a linha
-     do caderno do Célio que ninguém foi buscar.
-     ------------------------------------------------------------ */
-  causas(){
+
+  /* o que o balcão compra: item com preço de tabela, inteiro, e que
+     não seja a mochila que você está usando */
+  vendaveis(){
     const d = Estado.dados;
-    const id = Mundo.id();
-    return [
-      {id:'museu', cidade:'pewter', valor:12000,
-       nome:'O telhado do museu de Pewter',
-       linha:'Lona de 1994, relatório numa gaveta, e uma pessoa passando pano sozinha há onze anos.',
-       requer:d=>!!d.flags.sabe_da_lona_do_museu || !!d.visitados.pewter,
-       rep:3, marca:'pagou_o_telhado',
-       texto:[
-         'Você entrega o dinheiro no balcão do museu e a moça atrás do balcão não entende a primeira vez que você fala.',
-         fala('Dra. Cordell', 'Doação pra quê?'),
-         d=>fala(d.jogador.nome, 'Pro telhado.'),
-         'Ela olha o valor escrito no recibo e senta, que é uma coisa que ela faz sem perceber.',
-         fala('Dra. Cordell', 'Eu escrevi vinte e duas cartas.'),
-         d=>fala(d.jogador.nome, 'Vinte e duas?'),
-         fala('Dra. Cordell', 'Vinte e duas. E a coisa se resolve porque {um moleque|uma moleca} de {idade} anos passou aqui e tinha dinheiro no bolso.', 'baixo'),
-         fala('Dra. Cordell', 'Não é crítica a você. É que eu vou ter que pensar nisso por uns dois anos.'),
-         'A lona sai numa quinta-feira do mês seguinte. Você não vai estar lá pra ver.'
-       ]},
-      {id:'abrigo', cidade:'lavender', valor:6000,
-       nome:'O abrigo de Lavender',
-       linha:'Pokébola lacrada de 1989 numa prateleira, e quarenta e uma na frente dela.',
-       requer:d=>!!d.visitados.lavender,
-       rep:2, marca:'pagou_o_abrigo',
-       texto:[
-         'Não tem placa, não tem recibo e não tem ninguém pra agradecer: você deixa o envelope com quem abre a porta.',
-         fala('Curador Fabre', 'Você sabe que isso não devolve ninguém, né.'),
-         d=>fala(d.jogador.nome, 'Sei.'),
-         fala('Curador Fabre', 'Tá bom. Só queria ter certeza de que você sabia.', 'baixo'),
-         'Ele guarda o envelope no bolso de dentro do casaco, sem contar, e volta pro que estava fazendo.'
-       ]},
-      {id:'bolsa', cidade:'*', valor:8000,
-       nome:'Uma linha do caderno',
-       linha:'Pagar a inscrição de quem não pode pagar. Você não escolhe quem, e nunca fica sabendo.',
-       requer:d=>!!d.flags.sabe_do_nr || !!d.flags.numero_do_goro,
-       rep:3, marca:'pagou_uma_bola',
-       texto:[
-         'Você liga pro laboratório e leva três minutos pra explicar o que quer fazer, porque não existe um nome pra isso.',
-         fala('Célio', 'Você quer pagar o pedido de quem?'),
-         d=>fala(d.jogador.nome, 'De quem não puder pagar. Qualquer um.'),
-         'Do outro lado tem um silêncio longo e um barulho de caneta batendo em caderno.',
-         fala('Célio', 'Eu tenho onze cidades e uma lista de gente que queria muito e não tinha como pagar a inscrição.'),
-         fala('Célio', 'Eu sei exatamente pra quem eu vou ligar primeiro.', 'riso'),
-         fala('Célio', 'E não, eu não vou te dizer o nome. Você não vai ficar sabendo, e é melhor assim.')
-       ]}
-    ].filter(c => (c.cidade === '*' || c.cidade === id) && !Estado.dados.flags[c.marca]
-                  && (!c.requer || c.requer(d)));
+    return Object.entries(d.itens || {}).filter(([, q]) => q > 0).map(([nome, q]) => {
+      const base = PRECO_BASE[nome];
+      if (!base) return null;
+      let qtd = q, fator = 1, estado = null;
+      if (typeof Desgaste !== 'undefined' && Desgaste.dura(nome)){
+        qtd = Desgaste.inteiros(nome);
+        estado = Desgaste.rotulo(nome);
+        fator = {novo:1, 'meio desgastado':.75, desgastado:.5, quebrando:.25}[Desgaste.estado(nome)] || 0;
+      }
+      if (d.jogador && d.jogador.bolsa === nome) qtd--;
+      const preco = Math.floor(base / 2 * fator);
+      if (qtd <= 0 || preco <= 0) return null;
+      return {nome, qtd, preco, estado};
+    }).filter(Boolean);
   },
 
-  doar(){
-    const causas = this.causas();
-    if (!causas.length)
-      return UI.modal('Doação', '<p class="nada">Nada aqui precisa do seu dinheiro hoje.</p>', false, 'credencial');
-    const linhas = causas.map(c => {
-      const caro = Estado.j.dinheiro < c.valor;
-      return `<div class="cargo ${caro ? 'fechado' : 'aberto'}">
-        <div class="cargo-topo"><span class="cargo-nome">${UI.esc(c.nome)}</span>
-          <span class="cargo-peso mono">${fmtDin(c.valor)} ₽</span></div>
-        <div class="cargo-resumo">${UI.esc(c.linha)}</div>
-        ${caro ? `<div class="cargo-motivo">Você tem ${Number(Estado.j.dinheiro).toLocaleString('pt-BR')} ₽.</div>`
-               : `<button class="btn destaque" onclick="Cidade.doarPara('${c.id}')">Pagar</button>`}
-      </div>`;
-    }).join('');
-    UI.modal('Doação', linhas, false, 'credencial');
+  vender(nome){
+    const v = this.vendaveis().find(x => x.nome === nome);
+    if (!v) return this.loja(this._andar || 0, this._qual || undefined, 'vender');
+    this._compra = {nome, preco:v.preco, max:v.qtd, qtd:1, venda:true};
+    const n = nome.replace(/'/g, "\\'");
+    UI.modal('', `<div class="confirma-compra">
+        <div class="cc-item">${imgItem(nome)}<span class="cc-nome">${UI.esc(nome)}</span></div>
+        <p class="sussurro">${fmtDin(v.preco)} ₽ cada · você tem ${v.qtd}${v.estado ? ` · ${UI.esc(v.estado)}` : ''}</p>
+        <div class="cc-qtd" role="group" aria-label="Quantidade">
+          <button class="btn" id="cc-menos" onclick="Cidade.mudarQtd(-1)" aria-label="Menos um" disabled>−</button>
+          <input id="cc-num" type="number" inputmode="numeric" min="1" max="${v.qtd}" value="1"
+            oninput="Cidade.mudarQtd(0, this.value)" aria-label="Quantidade">
+          <button class="btn" id="cc-mais" onclick="Cidade.mudarQtd(1)" aria-label="Mais um" ${v.qtd <= 1 ? 'disabled' : ''}>+</button>
+          ${v.qtd > 1 ? `<button class="btn mini" onclick="Cidade.mudarQtd(0, ${v.qtd})">Máx</button>` : ''}
+        </div>
+        <p id="cc-pergunta">Vender <b>1× ${UI.esc(nome)}</b> por <b>${fmtDin(v.preco)} ₽</b>?</p>
+        <div class="cc-botoes">
+          <button class="btn destaque" onclick="Cidade.confirmarVenda('${n}')">Vender</button>
+          <button class="btn" onclick="Cidade.loja(Cidade._andar || 0, Cidade._qual || undefined, 'vender')">Não</button>
+        </div></div>`, true, 'mochila');
   },
-
-  doarPara(idCausa){
-    const c = this.causas().find(x => x.id === idCausa);
-    if (!c || Estado.j.dinheiro < c.valor) return;
-    Estado.j.dinheiro -= c.valor;
-    Estado.marcar(c.marca);
-    /* doação é notícia: passa por cima do teto do capítulo, e por isso
-       vai em ef.rep.notorio, que é onde mudarRep procura */
-    const r = Estado.mudarRep('bom', c.rep, 'Pagou do próprio bolso ' + c.nome.toLowerCase(),
-                              {rep:{notorio:true}});
-    Estado.registrar(`Pagou ${fmtDin(c.valor)} ₽ por: ${c.nome}.`);
+  confirmarVenda(nome){
+    const c = this._compra && this._compra.venda && this._compra.nome === nome ? this._compra : null;
+    const v = this.vendaveis().find(x => x.nome === nome);
+    if (!c || !v) return this.loja(this._andar || 0, this._qual || undefined, 'vender');
+    const qtd = Math.max(1, Math.min(v.qtd, c.qtd || 1));
+    for (let i = 0; i < qtd; i++) Estado.usarItem(nome);
+    /* vendeu a ferramenta em uso: a próxima entra nova */
+    if (typeof Desgaste !== 'undefined' && Desgaste.dura(nome)) Desgaste._d().desgaste[nome] = 0;
+    Estado.j.dinheiro += v.preco * qtd;
+    if (typeof Som !== 'undefined') Som.efeito('compra');
+    Estado.registrar(`Vendeu ${qtd}× ${nome} por ${fmtDin(v.preco * qtd)} ₽.`);
+    this._compra = null;
     Estado.salvar('auto');
-    const avisos = [{tipo:'item', texto:`−${fmtDin(c.valor)} ₽.`}];
-    if (r && r.mudou) avisos.push({tipo:'rep', texto:`Reputação: ${r.de} → ${r.para}`});
-    UI.telaDoacao(c, avisos);
+    this.loja(this._andar || 0, this._qual || undefined, 'vender');
   },
 
   /* comprar pergunta antes, e pergunta quantos: um toque errado na lista
@@ -1078,7 +1070,9 @@ const Cidade = {
     if (Estado.j.dinheiro < preco) return;
     const unico = ITENS_UNICOS.includes(nome) || (ITENS_INFO[nome] || {}).tipo === 'bolsa';
     const tem = Estado.contaItem(nome);
-    const max = unico ? (tem ? 0 : 1) : Math.max(0, Math.min(99, Math.floor(Estado.j.dinheiro / preco)));
+    /* ferramenta quebrada não conta: dá pra comprar outra */
+    const inteiras = typeof Desgaste !== 'undefined' && Desgaste.dura(nome) ? Desgaste.inteiros(nome) : tem;
+    const max = unico ? (inteiras ? 0 : 1) : Math.max(0, Math.min(99, Math.floor(Estado.j.dinheiro / preco)));
     this._compra = {nome, preco, max, qtd: max ? 1 : 0};
     const n = nome.replace(/'/g, "\\'");
     UI.modal('', `<div class="confirma-compra">
@@ -1109,7 +1103,7 @@ const Cidade = {
     const num = document.getElementById('cc-num');
     if (num && String(num.value) !== String(c.qtd) && !(valor != null && num.value === '')) num.value = c.qtd;
     const pg = document.getElementById('cc-pergunta');
-    if (pg) pg.innerHTML = `Deseja comprar <b>${c.qtd}× ${UI.esc(c.nome)}</b> por <b>${fmtDin(c.qtd * c.preco)} ₽</b>?`;
+    if (pg) pg.innerHTML = `${c.venda ? 'Vender' : 'Deseja comprar'} <b>${c.qtd}× ${UI.esc(c.nome)}</b> por <b>${fmtDin(c.qtd * c.preco)} ₽</b>?`;
     const menos = document.getElementById('cc-menos'), mais = document.getElementById('cc-mais');
     if (menos) menos.disabled = c.qtd <= 1;
     if (mais) mais.disabled = c.qtd >= c.max;

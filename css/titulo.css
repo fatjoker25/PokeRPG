@@ -28,9 +28,9 @@ body.na-abertura #app{
   padding:56px 18px 40px;text-align:center;
   border-radius:var(--raio);border:1px solid var(--borda);
   background:
-    radial-gradient(120% 70% at 50% 0%, rgba(42,117,187,.38), transparent 60%),
+    radial-gradient(120% 70% at 50% 0%, rgba(var(--fundo-brilho, 42,117,187),.38), transparent 60%),
     radial-gradient(90% 60% at 50% 110%, rgba(255,203,5,.12), transparent 70%),
-    linear-gradient(180deg, #121a44, #0b1030 70%, #090d26);
+    linear-gradient(180deg, var(--fundo-topo, #121a44), var(--fundo-site, #0b1030) 70%, var(--fundo-pe, #090d26));
   box-shadow:var(--sombra-alta);
 }
 

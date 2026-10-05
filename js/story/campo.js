@@ -55,7 +55,7 @@ c3_o_corte:{
   ef:{flag:'achou_o_bambu',
       registrar:'Há um bambuzal plantado na Floresta de Viridian, com uma construção atrás.'},
   escolhas:[
-    {texto:'Atravessar o bambuzal.', vai:'c3_atras_do_bambu', cond:d=>Campo.cortar().pode},
+    {texto:'Atravessar o bambuzal.', vai:'c3_atras_do_bambu', cond:d=>Campo.cortar().pode, ef:{desgaste:'Machado'}},
     {texto:'Marcar o lugar e voltar quando tiver como abrir.', vai:'c3_entrada'},
     {texto:'Dar a volta e procurar outra entrada.', vai:'c3_entrada'}
   ]
@@ -108,7 +108,7 @@ c5_a_pedra:{
       registrar:'No Monte da Lua há uma parede de alvenaria desabada, com reboco de repartição dos anos setenta.',
       presagio:'Tinta verde-água de repartição, dentro de uma caverna. Isso foi obra oficial.'},
   escolhas:[
-    {texto:'Abrir a passagem.', vai:'c5_atras_da_parede', cond:d=>Campo.quebrar().pode},
+    {texto:'Abrir a passagem.', vai:'c5_atras_da_parede', cond:d=>Campo.quebrar().pode, ef:{desgaste:'Picareta'}},
     {texto:'Anotar onde é e voltar depois.', vai:'c5_entrada'},
     {texto:'Deixar pra lá.', vai:'c5_entrada'}
   ]
@@ -161,7 +161,8 @@ c7_o_subsolo:{
   ef:{flag:'achou_o_subsolo_da_torre',
       registrar:'A Torre Pokémon tem um subsolo. Ninguém menciona ele.'},
   escolhas:[
-    {texto:'Descer.', vai:'c7_ossario', cond:d=>Campo.iluminar().pode},
+    {texto:'Descer.', vai:'c7_ossario', cond:d=>Campo.iluminar().pode,
+     ef:{desgaste:d=>Campo.iluminar().semPilha ? null : 'Lanterna'}},
     {texto:'Voltar quando tiver luz.', vai:'c7_base'},
     {texto:'Fechar a porta e esquecer.', vai:'c7_base'}
   ]

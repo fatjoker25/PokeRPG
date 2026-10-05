@@ -45,26 +45,29 @@ function varsCartao(k){
 const CORES_DE_FALA = ['#e0a33a', '#5aa9e6', '#e36f8f', '#b18cf0', '#4cc3c3', '#d6c341', '#c9d1dc', '#e86a4a'];   // sem verde: verde é o seu balão
 
 /* ============================================================
-   COR DA MOLDURA — preferência de quem joga, fora do save
-   Azul é o padrão e não sobrepõe nada: segue o tom de cada capítulo.
-   As outras pintam painel, borda e fundo por cima do tom.
+   COR DO JOGO — preferência de quem joga, fora do save
+   Cada cor pinta o fundo em degradê (no jeito do azul da abertura),
+   o painel, a borda e o texto secundário. O padrão é o azul-noite.
+   "Do capítulo" deixa o tom de cada capítulo mandar no painel.
    ============================================================ */
 const CORES_MOLDURA = [
-  {id:'azul',     nome:'Azul (padrão)', amostra:'#2f6076'},
-  {id:'vermelho', nome:'Vermelho',      amostra:'#a8404a'},
-  {id:'laranja',  nome:'Laranja',       amostra:'#b06a2c'},
-  {id:'amarelo',  nome:'Amarelo',       amostra:'#a8922a'},
-  {id:'verde',    nome:'Verde',         amostra:'#3f8a5b'},
-  {id:'roxo',     nome:'Roxo',          amostra:'#6a4ea6'},
-  {id:'rosa',     nome:'Rosa',          amostra:'#a8467f'},
-  {id:'grafite',  nome:'Grafite',       amostra:'#5a6372'}
+  {id:'azul', nome:'Azul noite (padrão)', c1:'#3d4f9a', c2:'#0b1030', brilho:'rgba(42,117,187,.9)'},
+  {id:'vermelho', nome:'Vermelho', c1:'#94374f', c2:'#1f0a12', brilho:'rgba(205,64,82,.9)'},
+  {id:'laranja', nome:'Laranja', c1:'#9c5e2d', c2:'#1f1309', brilho:'rgba(222,132,52,.9)'},
+  {id:'amarelo', nome:'Amarelo', c1:'#8f7f2e', c2:'#1c1907', brilho:'rgba(218,186,48,.9)'},
+  {id:'verde', nome:'Verde', c1:'#368c55', c2:'#081d11', brilho:'rgba(62,176,104,.9)'},
+  {id:'roxo', nome:'Roxo', c1:'#6447a8', c2:'#140b28', brilho:'rgba(144,96,226,.9)'},
+  {id:'rosa', nome:'Rosa', c1:'#984088', c2:'#200a1c', brilho:'rgba(224,84,166,.9)'},
+  {id:'grafite', nome:'Grafite', c1:'#566072', c2:'#13161c', brilho:'rgba(150,160,182,.9)'},
+  {id:'capitulo', nome:'Do capítulo', c1:'#3f7b93', c2:'#122a3a', brilho:'rgba(255,212,41,.7)'}
 ];
 function molduraSalva(){
   try { const v = localStorage.getItem('jc-moldura'); return CORES_MOLDURA.some(c => c.id === v) ? v : 'azul'; }
   catch (e) { return 'azul'; }
 }
 function aplicarMoldura(id){
-  const v = id && id !== 'azul' ? id : null;
+  /* "Do capítulo" é a ausência de cor própria: o tom do capítulo manda */
+  const v = id && id !== 'capitulo' ? id : null;
   [document.documentElement, document.body].forEach(el => {
     if (!el || typeof el.setAttribute !== 'function') return;
     if (v) el.setAttribute('data-moldura', v); else el.removeAttribute('data-moldura');
@@ -3119,11 +3122,11 @@ const UI = {
     this._molduraProva = null;
     this.modal('Ajustes', `
       <div class="ajuste-moldura">
-        <h3>Cor da moldura</h3>
-        <div class="bolinhas" role="radiogroup" aria-label="Cor da moldura">
+        <h3>Cor do jogo</h3>
+        <div class="bolinhas" role="radiogroup" aria-label="Cor do jogo">
           ${CORES_MOLDURA.map(c => `<button class="bolinha${c.id === salva ? ' sel' : ''}" role="radio"
               aria-checked="${c.id === salva}" aria-label="${c.nome}" title="${c.nome}" data-cor="${c.id}"
-              style="--c:${c.amostra}" onclick="UI.provarMoldura('${c.id}')"></button>`).join('')}
+              style="--c1:${c.c1};--c2:${c.c2};--c-brilho:${c.brilho}" onclick="UI.provarMoldura('${c.id}')"></button>`).join('')}
         </div>
         <div class="moldura-pe">
           <span class="moldura-nome" id="moldura-nome">${this.esc((CORES_MOLDURA.find(c => c.id === salva) || CORES_MOLDURA[0]).nome)}</span>
@@ -3190,11 +3193,30 @@ const UI = {
             ${serve ? `<button class="btn mini" style="flex:0 0 auto;align-self:center" onclick="${acao}">usar</button>` : ''}
           </div>`;
         }
+        /* ferramenta que gasta: a que funciona mostra como está, e a
+           quebrada vem numa linha própria, com descartar (desgaste.js) */
+        const dura = typeof Desgaste !== 'undefined' && Desgaste.dura(n);
+        const quebradas = dura ? Desgaste.quebrados(n) : 0;
+        const inteiras = q - quebradas;
+        const esc = n.replace(/'/g, "\\'");
+        const linhaQuebrada = quebradas ? `<div class="item-linha quebrado">
+          ${imgItem(n)}
+          <span class="qtd">×${quebradas}</span>
+          <span class="corpo">
+            <span class="nome">${this.esc(n)} <span class="uso-tag uso-quebrado">${this.esc(Desgaste.rotulo(n, 'quebrado'))}</span></span>
+            <span class="ficha">Não serve pra nada assim. Dá pra descartar e comprar outr${FERRAMENTA_FEMININA.has(n) ? 'a' : 'o'}.</span>
+          </span>
+          <button class="btn mini perigo" style="flex:0 0 auto;align-self:center" onclick="UI.descartarFerramenta('${esc}')">descartar</button>
+        </div>` : '';
+        if (dura && inteiras <= 0) return linhaQuebrada;
+        const est = dura ? Desgaste.estado(n) : null;
+        const usoTag = est ? `<span class="uso-tag uso-${est.replace(/ /g, '-')}">${this.esc(Desgaste.rotulo(n, est))}</span>
+            <span class="uso-barra uso-${est.replace(/ /g, '-')}" aria-hidden="true"><i style="width:${Math.round((1 - Desgaste.fracao(n)) * 100)}%"></i></span>` : '';
         return `<div class="item-linha">
           ${imgItem(n)}
-          <span class="qtd">×${q}</span>
+          <span class="qtd">×${dura ? inteiras : q}</span>
           <span class="corpo">
-            <span class="nome">${this.esc(n)}</span>
+            <span class="nome">${this.esc(n)} ${usoTag}</span>
             <span class="ficha">${this.esc(fichaItem(n))}</span>
             ${info.desc && info.tipo !== 'bola' ? `<span class="desc">${this.esc(descricaoItem(n))}</span>` : ''}
           </span>
@@ -3205,12 +3227,29 @@ const UI = {
           ${ebolsa && !emUso ? `<button class="btn mini" style="flex:0 0 auto;align-self:center"
             onclick="UI.usarBolsa('${n.replace(/'/g,"\\'")}')">usar</button>` : ''}
           ${emUso ? '<span class="qtd" style="align-self:center">em uso</span>' : ''}
-        </div>`;
+        </div>` + linhaQuebrada;
       }).join('');
       return `<h3 class="cat-item">${this.esc(c)}</h3>${linhas}`;
     }).join('');
 
     this.modal('Mochila', topo + corpo, false, 'mochila');
+  },
+
+  descartarFerramenta(nome){
+    if (typeof Desgaste === 'undefined' || !Desgaste.quebrados(nome)) return;
+    const f = FERRAMENTA_FEMININA.has(nome);
+    this.modal('', `<div class="confirma-compra">
+        <div class="cc-item">${imgItem(nome)}<span class="cc-nome">${this.esc(nome)} quebrad${f ? 'a' : 'o'}</span></div>
+        <p>Descartar ${f ? 'a' : 'o'} ${this.esc(nome.toLowerCase())} quebrad${f ? 'a' : 'o'}? Não tem volta.</p>
+        <div class="cc-botoes">
+          <button class="btn perigo" onclick="UI.confirmarDescarte('${nome.replace(/'/g, "\\'")}')">Descartar</button>
+          <button class="btn" onclick="UI.modalItens()">Não</button>
+        </div></div>`, true, 'mochila');
+  },
+  confirmarDescarte(nome){
+    if (typeof Desgaste === 'undefined' || !Desgaste.descartar(nome)) return this.modalItens();
+    Estado.salvar('auto');
+    this.modalItens();
   },
 
   usarBolsa(nome){
@@ -4094,7 +4133,9 @@ const UI = {
       <div class="linha"><span class="k">Atravessar água</span><span class="v">Pokémon do tipo Água de porte médio ou grande</span></div>
       <div class="linha"><span class="k">Voar</span><span class="v">Pokémon do tipo Voador de grande porte, e que voe de verdade</span></div>
       <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
-      <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
+      <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna com pilha: cada uso gasta 1 Pilha · ou um Pokémon que emita luz, que não gasta</span></div>
+      <div class="linha"><span class="k">Ferramenta que gasta</span><span class="v">machado e picareta aguentam 15 usos, a lanterna 20 · a mochila mostra nova, meio desgastada (¼), desgastada (½) e quebrando (¾) · no último uso quebra e fica na mochila até você descartar · quebrada não abre passagem, não dá dado e não vende · com a sua quebrada, a loja vende outra</span></div>
+      <div class="linha"><span class="k">Ferramenta no vasculhar</span><span class="v">a do lugar dá +1 dado de Percepção e gasta um uso: machado em floresta e campo · picareta em caverna, montanha e vulcão · lanterna em caverna, gastando 1 Pilha</span></div>
       <div class="linha"><span class="k">Onde conferir</span><span class="v">a passagem fechada no mapa diz o que falta (machado, picareta, porte, luz) e quem do time já serve</span></div>
       <p class="sussurro">Metade disso é objeto e metade é o corpo do Pokémon. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
       <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
@@ -4576,6 +4617,7 @@ const UI = {
 
       <h3>Loja</h3>
       <div class="linha"><span class="k">Onde</span><span class="v">nove cidades (Pallet não tem loja) · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Venda</span><span class="v">todo balcão compra pela metade do preço de tabela · ferramenta gasta vale ¾, ½ ou ¼ disso · quebrada, coisa da história sem preço e a mochila que você está usando não se vendem</span></div>
       <div class="linha"><span class="k">Compra</span><span class="v">a loja pergunta quantos antes de cobrar, até o que o dinheiro paga (99 no máximo) · ferramenta que não gasta, mapa e mochila se compram uma vez só</span></div>
       <div class="linha"><span class="k">Como nos jogos</span><span class="v">Poké Ball e Potion desde Viridian · Repelente a partir de Cerulean · Super Potion a partir de Vermilion · Great Ball e Revive a partir de Lavender e Celadon · Ultra Ball em Fuchsia e Cinnabar · Full Heal em Fuchsia, Saffron e Cinnabar · Hyper Potion em Saffron e Cinnabar</span></div>
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
@@ -4590,7 +4632,9 @@ const UI = {
       <div class="linha"><span class="k">Atravessar água</span><span class="v">Pokémon do tipo Água de porte médio ou grande</span></div>
       <div class="linha"><span class="k">Voar</span><span class="v">Pokémon do tipo Voador de grande porte, e que voe de verdade</span></div>
       <div class="linha"><span class="k">Forçar o que é pesado</span><span class="v">qualquer Pokémon de grande porte</span></div>
-      <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna, que gasta pilha · ou um Pokémon que emita luz, que não gasta</span></div>
+      <div class="linha"><span class="k">Enxergar no escuro</span><span class="v">lanterna com pilha: cada uso gasta 1 Pilha · ou um Pokémon que emita luz, que não gasta</span></div>
+      <div class="linha"><span class="k">Ferramenta que gasta</span><span class="v">machado e picareta aguentam 15 usos, a lanterna 20 · a mochila mostra nova, meio desgastada (¼), desgastada (½) e quebrando (¾) · no último uso quebra e fica na mochila até você descartar · quebrada não abre passagem, não dá dado e não vende · com a sua quebrada, a loja vende outra</span></div>
+      <div class="linha"><span class="k">Ferramenta no vasculhar</span><span class="v">a do lugar dá +1 dado de Percepção e gasta um uso: machado em floresta e campo · picareta em caverna, montanha e vulcão · lanterna em caverna, gastando 1 Pilha</span></div>
       <div class="linha"><span class="k">Onde conferir</span><span class="v">a passagem fechada no mapa diz o que falta (machado, picareta, porte, luz) e quem do time já serve</span></div>
       <p class="sussurro">Metade disso é objeto e metade é o corpo do Pokémon. Machado e picareta são ferramenta de gente: qualquer um compra, ninguém precisa ensinar nada a ninguém. Atravessar, voar e forçar dependem do tamanho de quem está com você — um Pidgey não te levanta por mais nível que tenha, e um Lapras te atravessa no primeiro dia. Luz é a única que tem os dois caminhos: a lanterna resolve e acaba; Lanturn e Ampharos resolvem e não acabam.</p>
       <p class="sussurro">Tem seis lugares no mapa que só abrem assim — um bambuzal plantado na Floresta de Viridian, uma parede de alvenaria dentro do Monte da Lua, o subsolo da Torre de Lavender, a ilhota no meio do rio de Cerulean, um contêiner virado pro muro no pátio de Vermilion e a ilha do sudoeste vista de cima. Nenhum é obrigatório pra terminar a jornada. Todos aparecem na tela mesmo quando você não pode entrar, dizendo o que falta, porque ver a porta fechada é o que faz querer a chave.</p>
