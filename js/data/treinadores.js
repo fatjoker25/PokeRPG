@@ -22,6 +22,8 @@ const RETRATO_POR_NOME = {
   'Erika':'gym_leaders/erika', 'Koga':'gym_leaders/koga', 'Sabrina':'gym_leaders/sabrina',
   'Blaine':'gym_leaders/blaine', 'Blue':'gym_leaders/blue', 'Giovanni':'gym_leaders/giovanni',
   'Lance':'elite/lance', 'Red':'elite/red',
+  /* a Elite inteira no poço do capítulo 26: quem puxa a fila é o Lance */
+  'Elite 4':'elite/lance',
   /* substitutos da Elite: a classe de treinador que os jogos dariam */
   'Giselle':'trainers/ace_trainer_f', 'A.J.':'trainers/ace_trainer', 'Mandi':'trainers/psychic_f',
   /* rival e rivais de estrada */

@@ -2926,6 +2926,14 @@ html[data-moldura="grafite"], body[data-moldura="grafite"]{
 .confirma-compra p{margin:0}
 .confirma-compra .cc-botoes{display:flex;gap:10px;justify-content:center;margin-top:6px}
 .confirma-compra .cc-botoes .btn{min-width:110px}
+.confirma-compra .cc-qtd{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 2px}
+.confirma-compra .cc-qtd .btn:not(.mini){width:42px;height:40px;padding:0;font-size:20px;line-height:1}
+.confirma-compra .cc-qtd input{width:72px;height:40px;text-align:center;font-size:18px;font-weight:700;
+  background:var(--bg-2);color:var(--texto);border:1px solid var(--borda-forte);border-radius:var(--raio-sm);
+  font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.confirma-compra .cc-qtd input::-webkit-outer-spin-button,
+.confirma-compra .cc-qtd input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.confirma-compra .cc-qtd input:focus-visible{outline:2px solid var(--destaque);outline-offset:2px}
 
 /* ícones desenhados (js/data/icones.js) */
 svg.icone{flex:0 0 auto;width:18px;height:18px;vertical-align:-3px}

@@ -698,6 +698,11 @@ const FRASES_DO_CENTRO = [
   'De manhã a enfermeira entrega o cinto com as Pokébolas polidas. Ela poliu. Ninguém pediu.'
 ];
 
+/* o que se compra uma vez só: ferramenta que não gasta, mapa (mochila
+   entra pelo tipo 'bolsa') */
+const ITENS_UNICOS = ['Machado', 'Picareta', 'Lanterna', 'Máscara de pó', 'Bota de borracha',
+  'Cobertor térmico', 'Caderno de campo', 'Relógio', 'Mapa de Kanto'];
+
 const Cidade = {
   /* A porta do Centro: tudo o que tem lá dentro, num lugar só. */
   centro(){
@@ -1066,24 +1071,57 @@ const Cidade = {
     UI.telaDoacao(c, avisos);
   },
 
-  /* comprar pergunta antes: um toque errado na lista não gasta dinheiro */
+  /* comprar pergunta antes, e pergunta quantos: um toque errado na lista
+     não gasta dinheiro. O teto é o que o dinheiro paga (até 99); o que
+     se usa pra sempre (ferramenta que não gasta, mapa, mochila) é um só. */
   comprar(nome, preco){
     if (Estado.j.dinheiro < preco) return;
+    const unico = ITENS_UNICOS.includes(nome) || (ITENS_INFO[nome] || {}).tipo === 'bolsa';
+    const tem = Estado.contaItem(nome);
+    const max = unico ? (tem ? 0 : 1) : Math.max(0, Math.min(99, Math.floor(Estado.j.dinheiro / preco)));
+    this._compra = {nome, preco, max, qtd: max ? 1 : 0};
     const n = nome.replace(/'/g, "\\'");
     UI.modal('', `<div class="confirma-compra">
         <div class="cc-item">${imgItem(nome)}<span class="cc-nome">${UI.esc(nome)}</span></div>
-        <p>Deseja comprar <b>${UI.esc(nome)}</b> por <b>${fmtDin(preco)} ₽</b>?</p>
-        <p class="sussurro">Você tem ${fmtDin(Estado.j.dinheiro)} ₽${Estado.contaItem(nome) ? ` · já carrega ${Estado.contaItem(nome)}` : ''}.</p>
+        <p class="sussurro">${fmtDin(preco)} ₽ cada · você tem ${fmtDin(Estado.j.dinheiro)} ₽${tem ? ` · já carrega ${tem}` : ''}</p>
+        ${max ? `
+        <div class="cc-qtd" role="group" aria-label="Quantidade">
+          <button class="btn" id="cc-menos" onclick="Cidade.mudarQtd(-1)" aria-label="Menos um">−</button>
+          <input id="cc-num" type="number" inputmode="numeric" min="1" max="${max}" value="1"
+            oninput="Cidade.mudarQtd(0, this.value)" aria-label="Quantidade">
+          <button class="btn" id="cc-mais" onclick="Cidade.mudarQtd(1)" aria-label="Mais um">+</button>
+          ${max > 1 ? `<button class="btn mini" onclick="Cidade.mudarQtd(0, ${max})">Máx</button>` : ''}
+        </div>
+        <p id="cc-pergunta">Deseja comprar <b>1× ${UI.esc(nome)}</b> por <b>${fmtDin(preco)} ₽</b>?</p>
         <div class="cc-botoes">
           <button class="btn destaque" onclick="Cidade.confirmarCompra('${n}',${preco})">Comprar</button>
           <button class="btn" onclick="Cidade.loja(Cidade._andar || 0, Cidade._qual || undefined)">Não</button>
-        </div></div>`, true, 'mochila');
+        </div>` : `
+        <p>Você já tem ${UI.esc(nome)}. Um basta.</p>
+        <div class="cc-botoes"><button class="btn" onclick="Cidade.loja(Cidade._andar || 0, Cidade._qual || undefined)">Voltar</button></div>`}
+      </div>`, true, 'mochila');
+  },
+  mudarQtd(delta, valor){
+    const c = this._compra; if (!c || !c.max) return;
+    let q = valor != null ? parseInt(valor, 10) : c.qtd + delta;
+    if (!Number.isFinite(q)) q = 1;
+    c.qtd = Math.max(1, Math.min(c.max, q));
+    const num = document.getElementById('cc-num');
+    if (num && String(num.value) !== String(c.qtd) && !(valor != null && num.value === '')) num.value = c.qtd;
+    const pg = document.getElementById('cc-pergunta');
+    if (pg) pg.innerHTML = `Deseja comprar <b>${c.qtd}× ${UI.esc(c.nome)}</b> por <b>${fmtDin(c.qtd * c.preco)} ₽</b>?`;
+    const menos = document.getElementById('cc-menos'), mais = document.getElementById('cc-mais');
+    if (menos) menos.disabled = c.qtd <= 1;
+    if (mais) mais.disabled = c.qtd >= c.max;
   },
   confirmarCompra(nome, preco){
-    if (Estado.j.dinheiro < preco) return this.loja(this._andar || 0, this._qual || undefined);
+    const c = this._compra && this._compra.nome === nome ? this._compra : {qtd:1};
+    const qtd = Math.max(1, c.qtd || 1);
+    if (Estado.j.dinheiro < preco * qtd) return this.loja(this._andar || 0, this._qual || undefined);
     if (typeof Som !== 'undefined') Som.efeito('compra');
-    Estado.j.dinheiro -= preco;
-    Estado.darItem(nome, 1);
+    Estado.j.dinheiro -= preco * qtd;
+    Estado.darItem(nome, qtd);
+    this._compra = null;
     Estado.salvar('auto');
     this.loja(this._andar || 0, this._qual || undefined);
   },

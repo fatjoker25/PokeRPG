@@ -96,8 +96,9 @@ body.na-abertura #app{
 @keyframes ttFlutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 
 .tt-sub{
-  margin-top:26px;font-family:var(--tt-pixel);font-size:10px;letter-spacing:.18em;
-  color:#9fb4ec;text-transform:uppercase;
+  margin-top:28px;font-family:var(--tt-pixel);font-size:12px;letter-spacing:.06em;line-height:1.7;
+  color:#dbe6ff;text-shadow:0 2px 0 var(--tt-tinta);
+  text-wrap:balance;max-width:30ch;
   animation:ttSobe .6s var(--suave) 1s both;
 }
 .tt-aviso{
@@ -144,6 +145,7 @@ body.na-abertura #app{
 @media (max-width:480px){
   .tela-titulo{padding:44px 14px 32px;min-height:calc(100vh - 60px)}
   .tt-btn{font-size:9.5px;padding:12px 12px 11px}
+  .tt-sub{font-size:10.5px;max-width:24ch}
   .tt-principal{font-size:11px;width:100%}
   .tt-logo span{--d:2px;
     text-shadow:

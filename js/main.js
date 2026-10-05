@@ -1270,7 +1270,8 @@ const Jogo = {
         avisos.push({tipo:'dano', texto:'Ele vai voltar. Ele disse isso de um jeito que não é ameaça e é pior.'});
       }
     } else {
-      Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${registroRival(id).derrotas}×${registroRival(id).vitorias}.`});
+      const reg = registroRival(id) || {derrotas:0, vitorias:0};
+      Estado.lembrarNPC(R.npc, {opiniao: op + 1, memoria:`Te venceu. Placar ${reg.derrotas}×${reg.vitorias}.`});
       const perda = perdaRivalExtra(id);
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro - perda);
       avisos.push({tipo:'item', texto:`−${fmtDin(perda)} ₽`});

@@ -302,8 +302,7 @@ const UI = {
       <h1 class="tt-logo" aria-label="PokéRPG">
         <span class="tt-poke" data-t="Poké">Poké</span><span class="tt-rpg" data-t="RPG">RPG</span>
       </h1>
-      <div class="tt-sub">RPG de mesa · Kanto</div>
-      <p class="tt-aviso">Escolhas são permanentes. O mundo lembra.<br>Se o seu HP chegar a zero, acabou de verdade.</p>
+      <div class="tt-sub">Sua jornada Pokémon começa agora!</div>
       <div class="tt-botoes">${botoes}</div>
       ${temSave ? '<div class="tt-nota">Começar uma nova jornada apaga a atual.</div>' : ''}
     </div>`);
@@ -1730,7 +1729,7 @@ const UI = {
     if (dd){ dd.innerHTML = this.htmlDados(); this.girarNovos(); }
   },
 
-  /* O menu de combate tem dois andares: o principal (Lutar, Bag,
+  /* O menu de combate tem dois andares: o principal (Lutar, Mochila,
      Time, Fugir, com a Pokédex sozinha embaixo) e a lista de golpes,
      que só abre quando você escolhe Lutar. */
   modoBatalha: 'menu',
@@ -1783,7 +1782,7 @@ const UI = {
     c.appendChild(this.el(`<div class="menu-batalha">
       <div class="mb-linha">
         ${bt('lutar', 'Lutar', `golpes de ${this.esc(nomeExib(a))}`, 'UI.abrirGolpes()')}
-        ${bt('bag', 'Bag', '', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
+        ${bt('bag', 'Mochila', '', 'UI.menuBag()', !Object.values(d.itens).some(q => q > 0))}
       </div>
       <div class="mb-linha">
         ${bt('time', 'Time', vivos ? `${vivos} em pé no banco` : 'ninguém mais em pé', 'UI.menuTroca()', !vivos)}
@@ -1875,7 +1874,7 @@ const UI = {
     }).join('');
   },
 
-  /* Bag na batalha: escolhe o item, depois quem recebe */
+  /* Mochila na batalha: escolhe o item, depois quem recebe */
   bagEmQuem(n){
     const lista = this.escolherDoTime(p =>
       `UI.fecharModal();UI.modoBatalha='menu';Jogo.acaoBatalha({tipo:'item',nome:'${n.replace(/'/g, "\\'")}',alvoUid:'${p.uid}'})`);
@@ -3322,8 +3321,8 @@ const UI = {
     const info = ITENS_INFO[nome] || {};
     const d = Estado.dados;
     if (!Estado.contaItem(nome)) return;
-    /* na luta, item se usa pelo Bag, gastando o turno; a mochila do topo só mostra */
-    if (emLuta()) return this.modal('', '<p>No meio da luta, item se usa pelo Bag.</p>', false, 'mochila');
+    /* na luta, item se usa pela Mochila da barra de ações, gastando o turno; a do topo só mostra */
+    if (emLuta()) return this.modal('', '<p>No meio da luta, item se usa pela Mochila da barra de ações.</p>', false, 'mochila');
     if (info.tipo === 'tm') return this.ensinarTM(nome);
     if (info.tipo === 'vontadeMais') return this.escolherPPUp(nome);
     if (info.tipo === 'mapa') return Exploracao.mapa('mochila');
@@ -3964,7 +3963,7 @@ const UI = {
         <li><b>O primeiro Pokémon.</b> Os três iniciais saem da Pokébola na sua frente; escolha um e, se quiser, dê um apelido.</li>
         <li><b>A licença.</b> No Centro Pokémon (em Pallet, no laboratório). Com ela, o Centro cura de graça.</li>
         <li><b>O mapa.</b> Fora das cenas você está num lugar: <i>Onde entrar</i> são portas (Centro, loja, ginásio, sua casa), <i>O que fazer</i> gasta o tempo (vasculhar, procurar, treinar, acampar à noite) e <i>Para onde ir</i> leva ao vizinho. O capítulo seguinte aparece em <i>Aqui</i>, na cidade em que ele acontece.</li>
-        <li><b>A luta.</b> Lutar escolhe o golpe; Bag usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
+        <li><b>A luta.</b> Lutar escolhe o golpe; Mochila usa item (o item primeiro, depois quem recebe); Time troca quem está na frente; Pokédex lê o adversário. Cada golpe rola dados de seis lados: cada 4, 5 ou 6 é um acerto, e a conta aparece no registro da luta.</li>
         <li><b>Quando cair.</b> Pokémon desmaiado volta com Revive ou no Centro. Se o time inteiro cair diante de um selvagem bravo, quem apanha é você.</li>
         <li><b>Ginásio.</b> Na porta do ginásio, na cidade, na ordem que você quiser. O capítulo seguinte pede um mínimo de insígnias, e a porta fechada diz quantas faltam.</li>
         <li><b>Mochila.</b> Itens, Pokédex, PokéNav, Cartão e Mapa moram nas abas da mochila. Regras, este tutorial e o som ficam em Ajustes.</li>
@@ -4553,7 +4552,7 @@ const UI = {
       <div class="linha"><span class="k">No aparelho</span><span class="v">chamada recebida, ligação que você faz, mensagem e recado de quem é do seu lado acontecem dentro do PokéNav, por cima da tela · guardar o aparelho volta pra onde você estava</span></div>
       <div class="linha"><span class="k">Forfeit</span><span class="v">contra treinador não se foge: desiste · conta como derrota (com o que a derrota já custa ali) · multa de arena de 60 ₽ por nível de quem está em campo do lado de lá · −5 de moral no time inteiro</span></div>
       <div class="linha"><span class="k">Recarregar</span><span class="v">a luta continua de onde parou, no mesmo turno · recarregar na tela do Continuar mostra o mesmo resultado de novo</span></div>
-      <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pelo Bag, gastando o turno</span></div>
+      <div class="linha"><span class="k">Na luta</span><span class="v">não dá pra ligar · chamada que toca no meio da luta espera ela acabar e toca depois · item só pela Mochila da barra de ações, gastando o turno</span></div>
       <div class="linha"><span class="k">Agenda</span><span class="v">só entra número que te deram · você grava na hora ou depois</span></div>
       <div class="linha"><span class="k">Revanche</span><span class="v">ninguém luta pelo telefone: a ligação marca o lugar (a rota de quem é de rota, o ginásio do líder, a cidade de quem mora nela, uma rota do lado de onde você está pra quem vive na estrada) · chegando lá, aparece "Procurar" · o time vem subido junto com você · vencer dá +1 de reputação</span></div>
       <div class="linha"><span class="k">Ligação que você faz</span><span class="v">acontece dentro do PokéNav, por cima do que você estava fazendo · desligar volta pra agenda</span></div>
@@ -4577,6 +4576,7 @@ const UI = {
 
       <h3>Loja</h3>
       <div class="linha"><span class="k">Onde</span><span class="v">nove cidades (Pallet não tem loja) · cada uma vende o que a cidade é</span></div>
+      <div class="linha"><span class="k">Compra</span><span class="v">a loja pergunta quantos antes de cobrar, até o que o dinheiro paga (99 no máximo) · ferramenta que não gasta, mapa e mochila se compram uma vez só</span></div>
       <div class="linha"><span class="k">Como nos jogos</span><span class="v">Poké Ball e Potion desde Viridian · Repelente a partir de Cerulean · Super Potion a partir de Vermilion · Great Ball e Revive a partir de Lavender e Celadon · Ultra Ball em Fuchsia e Cinnabar · Full Heal em Fuchsia, Saffron e Cinnabar · Hyper Potion em Saffron e Cinnabar</span></div>
       <div class="linha"><span class="k">Preço</span><span class="v">base × o multiplicador da cidade</span></div>
       <div class="linha"><span class="k">Mais barato</span><span class="v">Celadon (0,85×) e o cais de Vermilion (0,9×)</span></div>

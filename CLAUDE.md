@@ -80,6 +80,13 @@ confere cada balão de verdade: nome em cima, rosto e arquivo no disco.
 Pessoa nova que fala entra com rosto em `treinadores.js` — pelo rótulo,
 ou pela palavra do cargo em `ROSTO_POR_PALAVRA`.
 
+`ferramentas/chk-lutas.js` faz o mesmo pras lutas: começa cada uma pela
+função de verdade (ginásios, Elite, Campeão, torneio, o Ezra nos cinco
+arcos, os rivais extras em cada arco, estrada nos quatro escalões,
+veteranos, Conferência, barreiras, revanches e toda luta de cena), nas
+duas fichas, vence e perde, e confere fala, rosto, time e a cena pra onde
+a luta manda. Luta nova roda ali antes do commit.
+
 ## Nada do mundo real
 O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de
 cachorro, gato, peixe, gado, mula, cavalo, urubu, morcego. Onde o texto
