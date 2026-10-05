@@ -169,7 +169,10 @@ const RETRATO_POR_NOME = {
   'a mãe do píer':'trainers/pokefan_f', 'Dale':'trainers/fisherman', 'a mãe do menino':'trainers/lady',
   /* caminho do Mercenário */
   'o intermediário':'trainers/gambler', 'o chefe do manejo':'trainers/worker',
-  'o velho do caminhão':'trainers/gentleman', 'Edith':'trainers/office_worker_f'
+  'o velho do caminhão':'trainers/gentleman', 'Edith':'trainers/office_worker_f',
+  /* caminho do Foragido */
+  'o atravessador':'trainers/backpacker', 'Corwin':'trainers/backpacker',
+  'Guarda da ponte':'overworld/policial', 'a técnica fugida':'trainers/scientist_f'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

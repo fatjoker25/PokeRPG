@@ -23,6 +23,10 @@ const NAO_E_GENTE = /^(a|o)\s+(folha|p[áa]gina|placa|carta[zZ]?|aviso|bilhete|m
 
 /* quem não diz o nome, e por quê. A recusa é o personagem. */
 const RECUSAM_O_NOME = {
+  'a técnica fugida': () => [
+    fala('a técnica fugida', 'Não.', 'baixo'),
+    fala('a técnica fugida', 'Três anos eu fui um número de crachá. Deixa eu ficar uns dias sem nome nenhum, antes de escolher qual.', 'baixo')
+  ],
   'a voz da lavanderia': () => [
     'Ela vira o crachá mais um pouco pro lado do peito, como quem fecha uma porta.',
     fala('a voz da lavanderia', 'O meu nome está trinta vezes nesse envelope, de caneta azul.', 'baixo'),
@@ -108,7 +112,8 @@ const NOMES_FIXOS = {
   'a pesquisadora de bota':    'Dra. Quill',
   'o fotógrafo do Jornal':     'Bastian Fern',
   'a tratadora da Associação': 'Mina Bray',
-  'a brigadista de Fuchsia':   'Ivy Calder'
+  'a brigadista de Fuchsia':   'Ivy Calder',
+  'o atravessador':            'Corwin'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
