@@ -101,7 +101,7 @@ const RETRATO_POR_NOME = {
   'Varian':'trainers/clerk', 'o homem do bar':'trainers/waiter', 'Sra. Myrtle':'trainers/office_worker_f',
   'a mulher do fogo':'trainers/backpacker_f', 'Sr. Berto':'trainers/gentleman', 'Janus':'trainers/doctor',
   'Sr. Yves':'trainers/cabbie', 'Sr. Quint':'trainers/worker', 'a mulher da locadora':'trainers/clerk_f',
-  'Lina':'trainers/office_worker_f', 'o gerente':'trainers/clerk_boss', 'a mulher almoçando':'trainers/cook',
+  'Lina':'trainers/office_worker_f', 'o gerente':'trainers/clerk_boss', 'a mulher almoçando':'trainers/worker',
   'Rufo':'trainers/courier', 'Cleo':'trainers/schoolkid_f', 'a mãe da Cleo':'trainers/lady',
   'o rapaz da caneta':'trainers/league_staff', 'Pipoqueiro da face sul':'trainers/chef',
   'a mulher de tailleur':'trainers/office_worker_f', 'a senhora da barraca':'trainers/madame',
@@ -112,7 +112,33 @@ const RETRATO_POR_NOME = {
   'a moça do berçário':'trainers/pokemon_breeder_f', 'Livia Gale':'trainers/office_worker_f',
   'a editora do jornal':'trainers/reporter', 'Falk':'trainers/worker', 'Sr. Delmar':'overworld/policial',
   'Sr. Nolan':'trainers/worker', 'o cozinheiro':'trainers/chef', 'a supervisora':'trainers/league_staff_f',
-  'o conselheiro mais velho':'trainers/gentleman', 'Leo':'trainers/ace_trainer', 'Tessa Rue':'trainers/pokemon_ranger_f', 'a mulher de trinta':'trainers/pokemon_ranger_f'
+  'o conselheiro mais velho':'trainers/gentleman', 'Leo':'trainers/ace_trainer', 'Tessa Rue':'trainers/pokemon_ranger_f', 'a mulher de trinta':'trainers/pokemon_ranger_f',
+
+  /* quem tem nome fixo (NOMES_FIXOS) usa o MESMO rosto antes e depois
+     de dizer o nome: o rótulo e o nome apontam pro mesmo arquivo */
+  'a funcionária da guarita':'trainers/office_worker_f', 'o rapaz do protocolo':'trainers/clerk',
+  'a balconista da farmácia':'trainers/clerk_f', 'o homem de barba':'trainers/gentleman',
+  'Thea Larkin':'trainers/worker', 'o rapaz da enfermaria':'trainers/doctor',
+  'o colega da enfermaria':'trainers/worker', 'Pascal':'trainers/worker',
+  'a técnica de jaleco':'trainers/scientist_f',
+  'o sargento de Viridian':'overworld/policial', 'Sargento Holt':'overworld/policial',
+  'a editora do Jornal':'trainers/reporter', 'Hazel Moss':'trainers/reporter',
+  'a avaliadora da Associação':'trainers/madame',
+  'a coordenadora da quadra':'trainers/league_staff_f', 'Coordenadora Maple':'trainers/league_staff_f',
+
+  /* quem só falava e ficava sem rosto: agora todo mundo que fala tem.
+     Voz de rádio e de telefone ganha o rosto de quem está do outro lado */
+  'o locutor':'trainers/waiter', 'uma voz no salão':'trainers/gentleman', 'outra voz':'trainers/lady',
+  'Stellan':'trainers/psychic', 'Funcionário da doca':'trainers/worker', 'outra acampada':'trainers/picnicker',
+  'Funcionária da reserva':'trainers/pokemon_ranger_f', 'o locutor do rádio':'trainers/office_worker',
+  'a voz no telefone':'trainers/pokemon_ranger_f', 'a voz do rádio':'trainers/league_staff',
+  'Roland':'trainers/league_staff', 'Roland (central do Planalto)':'trainers/league_staff',
+  'Caçadores da Rota 23':'trainers/roughneck', 'a voz do telefone':'trainers/office_worker_f',
+  'o locutor da arena':'trainers/league_staff', 'Supervisora da arena':'trainers/league_staff_f',
+  'Conselheira do broche':'trainers/office_worker_f', 'Nico Hart':'trainers/punk_guy',
+  'Nilo, o do posto':'trainers/worker', 'a voz do outro lado':'trainers/office_worker',
+  'Maren de Pewter':'trainers/lass', 'Museu de Pewter':'trainers/gentleman',
+  'As duas da caixa de gelo':'trainers/twins', 'quem estava na porta antes de você':'trainers/ace_trainer'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */
@@ -213,7 +239,8 @@ function pagaPorNivel(nome){
    Só pro balão de fala (não muda quanto ninguém paga): quem não tem
    rosto próprio ganha o de alguém do mesmo tipo de gente, pelo que o
    rótulo diz — crachá, macacão, barco, idade, e homem ou mulher.
-   Voz de rádio e de telefone continua sem rosto: não tem ninguém ali.
+   Toda voz de rádio e de telefone que fala tem rosto por nome, em
+   RETRATO_POR_NOME; o null abaixo só segura voz nova sem dono.
    ============================================================ */
 const ROSTO_POR_NOME_SOLTO = {
   'Dario':'trainers/roughneck', 'Sra. Vale':'trainers/madame', 'Nina':'trainers/sightseer_f',

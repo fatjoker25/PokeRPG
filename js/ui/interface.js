@@ -1094,8 +1094,13 @@ const UI = {
      mesmo antes e depois: nome sorteado não tem rosto próprio, então o
      rótulo segura o retrato. */
   retratoFala(quem, rotulo){
-    const r = (typeof retratoDe === 'function' ? (retratoDe(quem) || (rotulo && retratoDe(rotulo))) : null)
-           || (typeof rostoGenerico === 'function' ? ((rotulo && rostoGenerico(rotulo)) || rostoGenerico(quem)) : null);
+    /* Com rótulo, o rosto sai dele. O nome só manda quando é o nome fixo
+       daquela pessoa (NOMES_FIXOS): nome sorteado que coincide com o de
+       outra pessoa ("Gina", "Tito") trazia o rosto dela pro balão. */
+    const fixo = rotulo && typeof NOMES_FIXOS !== 'undefined' && NOMES_FIXOS[rotulo] === quem;
+    const r = rotulo && rotulo !== quem
+      ? (retratoDe(rotulo) || (fixo ? retratoDe(quem) : null) || rostoGenerico(rotulo))
+      : (retratoDe(quem) || rostoGenerico(quem));
     return r ? `<img class="fala-retrato" src="${r}" alt="" onerror="this.remove()">` : '';
   },
 
