@@ -7,7 +7,9 @@ for (const m of src.matchAll(/ef\.([A-Za-zÀ-ÿ_][A-Za-z0-9_]*)/g)) validas.add(
 ['causa','uidAlvo','npc','rep'].forEach(k=>validas.add(k));
 const dir=''+path.resolve(__dirname,'..')+'/js/story';
 let achou=0;
-for (const f of fs.readdirSync(dir).filter(x=>x.endsWith('.js'))){
+const todos = fs.readdirSync(dir).filter(x=>x.endsWith('.js'))
+  .concat(fs.readdirSync(path.join(dir,'caminhos')).filter(x=>x.endsWith('.js')).map(x=>'caminhos/'+x));
+for (const f of todos){
   const t=fs.readFileSync(path.join(dir,f),'utf8');
   const linhas=t.split('\n');
   linhas.forEach((l,i)=>{

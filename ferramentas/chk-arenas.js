@@ -24,9 +24,10 @@ function varre(rel){
   }
 }
 varre('js/engine/mundo.js');
-fs.readdirSync(path.join(raiz, 'js/story'))
-  .filter(f => f.endsWith('.js'))
-  .forEach(f => varre('js/story/' + f));
+for (const d of ['js/story', 'js/story/caminhos'])
+  fs.readdirSync(path.join(raiz, d))
+    .filter(f => f.endsWith('.js'))
+    .forEach(f => varre(d + '/' + f));
 
 const falhas = [];
 for (const [amb, onde] of usados){

@@ -8,7 +8,7 @@ const fs = require('fs'), path = require('path');
 const raiz = path.join(__dirname, '..');
 const ler = r => fs.readFileSync(path.join(raiz, r), 'utf8');
 const arquivos = [];
-for (const d of ['js/data', 'js/engine', 'js/story', 'js/ui', 'js']){
+for (const d of ['js/data', 'js/engine', 'js/story', 'js/story/caminhos', 'js/ui', 'js']){
   const dir = path.join(raiz, d);
   if (!fs.existsSync(dir)) continue;
   for (const f of fs.readdirSync(dir)) if (f.endsWith('.js')) arquivos.push(d + '/' + f);

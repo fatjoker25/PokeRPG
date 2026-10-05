@@ -5,7 +5,9 @@ const fs=require('fs'), path=require('path');
 const dir=path.resolve(__dirname,'..','js','story');
 const LIMITE = 12;                       // a partir daqui é personagem, não função
 const conta = {};
-for (const f of fs.readdirSync(dir).filter(x=>x.endsWith('.js'))){
+const arquivosDaHistoria = fs.readdirSync(dir).filter(x=>x.endsWith('.js'))
+  .concat(fs.readdirSync(path.join(dir,'caminhos')).filter(x=>x.endsWith('.js')).map(x=>'caminhos/'+x));
+for (const f of arquivosDaHistoria){
   const t = fs.readFileSync(path.join(dir,f),'utf8');
   for (const m of t.matchAll(/fala\(\s*'([^']+)'/g)){
     const quem = m[1];

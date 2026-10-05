@@ -32,7 +32,7 @@ const COMPRA_DE_ENREDO = new Set([
 ]);
 
 const arqs = [];
-for (const d of ['js/story', 'js/data'])
+for (const d of ['js/story', 'js/story/caminhos', 'js/data'])
   for (const f of fs.readdirSync(path.join(raiz, d)))
     if (f.endsWith('.js')) arqs.push(d + '/' + f);
 

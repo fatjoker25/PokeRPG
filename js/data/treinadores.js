@@ -157,7 +157,11 @@ const RETRATO_POR_NOME = {
   'o fotógrafo do Jornal':'trainers/cameraman', 'Bastian Fern':'trainers/cameraman',
   'a assessora da reserva':'trainers/office_worker_f', 'Vigia do portão':'trainers/veteran',
   'a voz da lavanderia':'trainers/pokemon_breeder_f', 'o homem do carro cinza':'trainers/office_worker',
-  'o oficial de justiça':'trainers/office_worker'
+  'o oficial de justiça':'trainers/office_worker',
+  /* caminho da Criação */
+  'a tratadora da Associação':'trainers/pokemon_breeder_f', 'Mina Bray':'trainers/pokemon_breeder_f',
+  'Caçador de filhote':'trainers/roughneck', 'Técnico do berçário':'trainers/scientist',
+  'Representante da Comissão':'trainers/veteran'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */

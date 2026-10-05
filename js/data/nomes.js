@@ -106,7 +106,8 @@ const NOMES_FIXOS = {
   'o advogado da Comissão':    'Dr. Bramble',
   'o contato da Terceira':     'Rook',
   'a pesquisadora de bota':    'Dra. Quill',
-  'o fotógrafo do Jornal':     'Bastian Fern'
+  'o fotógrafo do Jornal':     'Bastian Fern',
+  'a tratadora da Associação': 'Mina Bray'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

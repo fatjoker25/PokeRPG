@@ -3,7 +3,7 @@
    condicional nunca aparece. A segunda é decisão sem consequência. */
 const fs=require('fs'), path=require('path');
 const raiz=path.resolve(__dirname,'..');
-const dirs=['js/story','js/engine','js/ui','js/data'];
+const dirs=['js/story','js/story/caminhos','js/engine','js/ui','js/data'];
 const escritas=new Map(), lidas=new Map();
 function poe(m,f,onde){ if(!m.has(f)) m.set(f,new Set()); m.get(f).add(onde); }
 for(const d of dirs){
