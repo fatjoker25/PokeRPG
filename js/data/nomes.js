@@ -23,6 +23,11 @@ const NAO_E_GENTE = /^(a|o)\s+(folha|p[áa]gina|placa|carta[zZ]?|aviso|bilhete|m
 
 /* quem não diz o nome, e por quê. A recusa é o personagem. */
 const RECUSAM_O_NOME = {
+  'a voz da lavanderia': () => [
+    'Ela vira o crachá mais um pouco pro lado do peito, como quem fecha uma porta.',
+    fala('a voz da lavanderia', 'O meu nome está trinta vezes nesse envelope, de caneta azul.', 'baixo'),
+    fala('a voz da lavanderia', 'Uma vez a mais e ele vira de todo mundo. Deixa ele ser só meu mais um pouco.', 'baixo')
+  ],
   'o fumante': () => [
     'Ele leva a mão até o crachá e para no meio do caminho.',
     fala('o fumante', 'O sigilo é sobre espécimes, procedimentos, instalações e pessoas.'),
@@ -100,7 +105,8 @@ const NOMES_FIXOS = {
   'a delegada':                'Delegada Thorne',
   'o advogado da Comissão':    'Dr. Bramble',
   'o contato da Terceira':     'Rook',
-  'a pesquisadora de bota':    'Dra. Quill'
+  'a pesquisadora de bota':    'Dra. Quill',
+  'o fotógrafo do Jornal':     'Bastian Fern'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

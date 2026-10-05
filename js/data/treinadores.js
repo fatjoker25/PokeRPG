@@ -152,7 +152,12 @@ const RETRATO_POR_NOME = {
   /* caminho da Ciência; o Professor é o Oak de verdade */
   'Professor Oak':'trainers/oak', 'Oak':'trainers/oak',
   'a pesquisadora de bota':'trainers/scientist_f', 'Dra. Quill':'trainers/scientist_f',
-  'a mulher do envelope':'trainers/office_worker_f', 'Recolhedor da Comissão':'trainers/veteran'
+  'a mulher do envelope':'trainers/office_worker_f', 'Recolhedor da Comissão':'trainers/veteran',
+  /* caminho da Imprensa */
+  'o fotógrafo do Jornal':'trainers/cameraman', 'Bastian Fern':'trainers/cameraman',
+  'a assessora da reserva':'trainers/office_worker_f', 'Vigia do portão':'trainers/veteran',
+  'a voz da lavanderia':'trainers/pokemon_breeder_f', 'o homem do carro cinza':'trainers/office_worker',
+  'o oficial de justiça':'trainers/office_worker'
 };
 
 /* quem ficou em casa: o rosto sai do parentesco da ficha */
