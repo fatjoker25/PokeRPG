@@ -129,6 +129,11 @@ const NOMES_FIXOS = {
   /* a usina, no 10: diz o nome quando senta com você, quando você volta
      ao açude ou quando espera no portão */
   'o homem do boné':           'Sr. Edric',
+  /* Saffron, no 11: o Milo assina o caderno da fila; a Dra. Sorrel diz o
+     nome quando conversa com você, ou ele está no crachá quando ela abre
+     a porta do andar 11 */
+  'o rapaz das sete insígnias': 'Milo',
+  'a mulher de jaleco':        'Dra. Sorrel',
   'o atravessador':            'Corwin',
   'a mulher do mapa':          'Tamsin Reed'
 };
@@ -226,7 +231,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
-  'Larch','Silas','Toby',
+  'Larch','Silas','Toby','Bertram',
   /* os nomes fixos daqui de cima */
   'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

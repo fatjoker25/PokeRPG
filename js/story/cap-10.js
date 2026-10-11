@@ -37,12 +37,7 @@ function c10_quemEspera(d){
   return 'edric';
 }
 /* pula o relógio até a próxima vez que der essa hora */
-function c10_ate(h){
-  const r = Estado.dados.relogio;
-  sincronizarHora(r);
-  const falta = (h - r.hora + 24) % 24;
-  if (falta) Relogio.avancar(falta);
-}
+function c10_ate(h){ Relogio.ate(h); }
 /* a lanterna de cabeça que o acampamento do túnel dá */
 function c10_lanterna(){ return Estado.contaItem('Lanterna de cabeça') > 0; }
 /* O caminho de volta pro homem do boné: quem já viu ele vai direto; quem

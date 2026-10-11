@@ -36,6 +36,39 @@ const Relogio = {
     if (h !== 1 || !this._t) this._marca = Date.now();
     if (typeof Luz !== 'undefined') Luz.aplicar();
   },
+  /* Cena que diz a hora pula o relógio até ela (sempre no
+     ef.executar, que roda uma vez). `ate(h)`: a próxima vez que der h
+     horas, hoje se ainda não deu. */
+  ate(h){
+    const r = Estado.dados.relogio; sincronizarHora(r);
+    const falta = (h - r.hora + 24) % 24;
+    if (falta) this.avancar(falta);
+  },
+  /* Dias que a cena conta como vividos ("no dia seguinte", "na sexta"):
+     na cidade o time come, então o relógio anda de meio em meio dia com
+     ele alimentado, e a fome não cobra o tempo que a história pulou. */
+  viver(horas){
+    while (horas > 0){
+      const passo = Math.min(12, horas);
+      if (typeof Fome !== 'undefined') Fome.alimentarTime();
+      this.avancar(passo);
+      horas -= passo;
+    }
+  },
+  /* o dia seguinte, às h */
+  amanhaAs(h){
+    const r = Estado.dados.relogio; sincronizarHora(r);
+    this.viver(24 - r.hora + h);
+  },
+  /* o próximo dia da semana `s` (0 = segunda, como Calendario.SEMANA)
+     às h: hoje, se ainda dá; com `depoisDeHoje`, nunca hoje */
+  ateODia(s, h, depoisDeHoje){
+    const r = Estado.dados.relogio; sincronizarHora(r);
+    let dias = (s - Calendario.hoje().semanaIdx + 7) % 7;
+    if (dias === 0 && (depoisDeHoje || r.hora > h)) dias = 7;
+    const horas = dias * 24 + h - r.hora;
+    if (horas > 0) this.viver(horas);
+  },
   /* um minuto aberto é uma hora; fora de foco e no meio da luta, para.
      Entre uma hora e outra o relógio conta os minutos de verdade (um
      segundo real, um minuto de Kanto), e a luz anda junto com ele. */

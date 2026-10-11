@@ -294,7 +294,7 @@ function pagaPorNivel(nome){
    ============================================================ */
 const ROSTO_POR_NOME_SOLTO = {
   'Dario':'trainers/roughneck', 'Sra. Vale':'trainers/madame', 'Nina':'trainers/sightseer_f',
-  'Elsa':'trainers/office_worker_f', 'Milo':'trainers/camper', 'Nico':'trainers/punk_guy',
+  'Elsa':'trainers/office_worker_f', 'Milo':'trainers/camper', 'o rapaz das sete insígnias':'trainers/camper', 'Nico':'trainers/punk_guy',
   'A Terceira':'trainers/veteran_f', 'a Terceira':'trainers/veteran_f', 'Thea Larkin':'trainers/worker',
   'o Professor':'trainers/oak',
   'Rico':'trainers/worker', 'Hal':'trainers/worker', 'Maeve Corwin':'trainers/reporter', 'quem te atendeu':'trainers/league_staff',

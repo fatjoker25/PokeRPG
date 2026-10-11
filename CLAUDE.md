@@ -840,10 +840,25 @@ conta errada; o ano não aparece na tela, e o calendário do jogo começa
 numa segunda de propósito.
 
 Cena que pula horas (dormir, esperar a noite, viajar) passa o relógio
-no `ef.executar` (`Relogio.avancar(h)`); o `c10_ate(h)` do capítulo 10
-pula até a próxima vez que der aquela hora. Hora escrita no texto ("são
-dez e cinquenta") é hora que o relógio desmente: ou o relógio vai até
-ela, ou o texto não diz.
+no `ef.executar`, que roda uma vez: `Relogio.avancar(h)`, `.ate(h)` (a
+próxima vez que der h horas), `.amanhaAs(h)` e `.ateODia(s, h)` (o
+próximo dia da semana `s`, 0 = segunda). Os dois últimos contam dias
+vividos e passam por `Relogio.viver`, que alimenta o time a cada meio
+dia: a fome não cobra a semana que a história pulou. Hora escrita no
+texto ("são dez e cinquenta") é hora que o relógio desmente: ou o
+relógio vai até ela, ou o texto não diz. E o que o texto conta em dias
+("está lá há dezenove dias") conta a partir do dia em que a cena
+começou, não pra sempre: no capítulo 11 a conta anda com o relógio
+(`c11_passados`). Como o `executar` roda depois de `flag`, `registrar` e
+`presagio`, texto que depende do que era verdade antes da cena guarda
+isso numa flag dentro do `executar`, antes de marcar o que a cena marca.
+
+Voltar a uma cena de primeiro encontro (a líder que abre a porta, a
+fonte que conta tudo na fila do almoço) repete o primeiro encontro. Onde
+a cidade inteira tem opção que leva à mesma pessoa, `desvios` no
+capítulo manda a volta pra uma cena de reencontro depois que a primeira
+aconteceu (`Historia.jaAconteceu`), com a condição `d.cena !== id` pra
+não desviar o redesenho da própria cena.
 
 Coisa com dia e hora marcados mora em `js/story/agenda.js` (`AGENDA`):
 `local`, `quando()`, `anuncio` (vai pro mural da cidade em `mural`, por
