@@ -195,7 +195,7 @@ const GINASIOS = [
   intro:d=>[
     'O ginásio de Celadon é uma estufa de vidro em cima do shopping. É úmido, quente e absurdamente silencioso pro andar de baixo.',
     'Erika rega as plantas enquanto fala com você, e não para de regar em nenhum momento.',
-    d.flags.esvaziou_deposito || d.flags.sabotou_o_setor7
+    d.flags.esvaziou_deposito
       ? '"Vinte e nove chegaram na rua." Ela não explica como sabe. "Seis ficaram lá dentro e seis não conseguiam andar. Eu sei os números. Eu sempre sei os números."'
       : d.flags.provas_deposito
       ? '"Você tem fotos." A mangueira continua. "Eu tenho um jardim em cima de um shopping que é dono de metade dessa cidade. A gente tem funções diferentes."'
@@ -238,17 +238,23 @@ const GINASIOS = [
   intro:d=>[
     'O ginásio de Fuchsia tem parede falsa, corredor cego e piso que range de propósito. Você leva onze minutos pra achar o líder num prédio de quarenta metros.',
     'Koga está sentado no chão no centro da última sala, de costas, e fala antes de você chegar.',
-    d.flags.provas_zona || d.flags.abriu_o_curral
-      ? '"Dezenove anos." Ele se levanta devagar. "Eu documento o setor 7 há dezenove anos e entrego relatório a cada seis meses. Você resolveu em uma noite. Eu quero te odiar por isso e não estou conseguindo."'
-      : d.flags.vendeu_a_zona
-      ? '"Você vendeu a rotina do plantão." Ele se levanta. "Eu sei porque o plantão mudou na terça. Eu vou lutar com você mesmo assim, porque recusar seria fingir que essa cidade é melhor do que é."'
+    d.flags.vendeu_a_zona
+      ? '"Você vendeu a rotina do plantão." Ele se levanta. "Numa cidade de quatro mil pessoas, todo mundo sabe quem andou perguntando e quem saiu com dinheiro. Eu vou lutar com você mesmo assim, porque recusar seria fingir que essa cidade é melhor do que é."'
+      : d.flags.provou_o_erro && d.flags.conheceu_koga
+      ? '"Vinte e três leituras." Ele se levanta devagar. "Eu li aquele relatório vinte e três vezes e nunca conferi a área. Você conferiu. Eu quero te odiar por isso e não estou conseguindo."'
+      : d.flags.esvaziou_o_setor7
+      ? '"O curral do setor 7 está vazio." Ele se levanta devagar. "Eu faço a parte que leva dias. Alguém fez a parte da noite. Não precisa me dizer quem."'
+      : d.flags.provas_zona
+      ? '"Você andou juntando papel sobre a reserva." Ele se levanta devagar. "Eu passei anos assinando sem ler. Eu quero te odiar por isso e não estou conseguindo."'
       : '"Veneno é o único tipo honesto." Ele se levanta. "Ele avisa o que vai fazer e faz devagar, na sua frente, e você não consegue impedir."'
   ],
   vitoria:d=>[
     'O último se desfaz no ar em duas nuvens que descem e ficam rentes ao chão.',
     'Koga te entrega a insígnia com as duas mãos e uma reverência curta que te deixa sem reação.',
-    d.flags.provas_zona || d.flags.abriu_o_curral
-      ? '"Eu tenho uma pasta." Ele diz isso baixo. "Dezenove anos de relatório que ninguém leu. Ela é sua se você quiser. Eu já não sirvo pra isso."'
+    d.flags.koga_convoca || d.flags.koga_descredencia || d.flags.koga_tem_tudo
+      ? '"Eu tenho um assento num conselho de sete." Ele diz isso baixo. "Você tem a estrada e uma insígnia a mais. Cada um usa o que tem."'
+      : d.flags.provas_zona || d.flags.esvaziou_o_setor7
+      ? '"Você aguentou envenenado até o fim." Ele diz isso baixo. "Lá fora, na cerca, você também aguentou. Não desperdiça isso com coisa pequena."'
       : '"Você aguentou envenenado até o fim. A maioria troca de Pokémon e perde o ritmo." Ele senta de novo. "Aguentar é um talento. Não desperdiça ele com coisa pequena."'
   ],
   derrota:d=>[

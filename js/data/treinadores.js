@@ -75,7 +75,7 @@ const RETRATO_POR_NOME = {
   'Rhea Ashford':'trainers/reporter', 'Dra. Pia':'trainers/nurse', 'o médico do conselho':'trainers/doctor',
   'Sr. Emory Poplar':'trainers/pokemon_ranger', 'o guia do colete verde':'trainers/pokemon_ranger',
   'Xavi':'trainers/backpacker', 'Ylva':'trainers/backpacker_f', 'Enzo':'trainers/hiker',
-  'Elias':'trainers/ace_trainer', 'Ulla':'trainers/schoolkid_f', 'Filha do Koga':'trainers/janine',
+  'Elias':'trainers/ace_trainer', 'Ulla':'trainers/schoolkid_f', 'Filha do Koga':'trainers/janine', 'a filha do Koga':'trainers/janine',
   'Sr. Zane':'trainers/baker', 'Cozinheira do Anne':'trainers/cook', 'a dona da fritura':'trainers/cook',
   'a moça do bolinho frito':'trainers/cook', 'Dono da pousada':'trainers/owner',
   'Dono do curral':'trainers/rancher', 'Gus':'trainers/cabbie', 'o motorista da van':'trainers/cabbie', 'o homem da van':'trainers/roughneck',

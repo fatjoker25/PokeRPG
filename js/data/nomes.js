@@ -135,7 +135,11 @@ const NOMES_FIXOS = {
   'o rapaz das sete insígnias': 'Milo',
   'a mulher de jaleco':        'Dra. Sorrel',
   'o atravessador':            'Corwin',
-  'a mulher do mapa':          'Tamsin Reed'
+  'a mulher do mapa':          'Tamsin Reed',
+  /* Fuchsia, no 12: o Koga chama a filha pelo nome na varanda; o guarda
+     mais novo chama o mais velho na porta do bar */
+  'a filha do Koga':           'Janine',
+  'o guarda-parque mais velho': 'Kell'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
@@ -231,13 +235,13 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
-  'Larch','Silas','Toby','Bertram',
+  'Larch','Silas','Toby','Bertram','Edwin','Garth',
   /* os nomes fixos daqui de cima */
   'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
-  'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle'
+  'Fuji','Agatha','Bruno','Lorelei','Bill','Daisy','Oak','Célio','Kurt','Mandi','Giselle','Janine'
 ]);
 
 /* anda na lista a partir do ponto sorteado até achar um nome que a
