@@ -532,7 +532,7 @@ lavender:[
      resultado:[
        d=>{
          const m = d.cemiterio[d.cemiterio.length-1];
-         return `Você escreve ${nomeExib(m)} na página oitenta e três, embaixo da letra de criança.`;
+         return m ? `Você escreve ${nomeExib(m)} na página oitenta e três, embaixo da letra de criança.` : 'Você escreve um nome na página oitenta e três, embaixo da letra de criança.';
        },
        'Só o nome. Você quase escreve mais e não escreve.',
        'A regra é essa e a regra é boa.',

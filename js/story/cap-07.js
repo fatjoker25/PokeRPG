@@ -1932,7 +1932,7 @@ c7_contou_a_verdade:{
     '"Eu não vou te absolver, cara. Eu não tenho energia pra isso agora. Mas eu ia morrer lá em cima."'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Contou a verdade sem melhorar nada'},
-      flag:'contou_a_verdade_ao_hideo',
+      flag:['contou_a_verdade_ao_hideo','conhece_o_hideo'],
       npc:{nome:'Elias', opiniao:6, memoria:'Você contou que atacou o Marowak dele antes de entender. Ele não te absolveu e agradeceu.'}},
   escolhas:[
     {texto:'Buscar o Cubone.', vai:'c7_cubone'},
@@ -2301,7 +2301,7 @@ c7_mural_do_treinador:{
     'Isso não conserta nada. É o único registro que vai existir dessa parte.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Deixou registrado o que ninguém ia registrar'},
-      flag:'hideo_escreveu', moral:10,
+      flag:['escreveu_no_mural','conhece_o_hideo'], moral:10,
       registrar:'Escreveu no mural: "O Marowak dele chamou por quatro dias."'},
   escolhas:[
     {texto:'Ficar com o Cubone.', vai:'c7_cubone'},

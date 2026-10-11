@@ -16,6 +16,12 @@ function c8_abertura(d){
   const cand = C8_ABERTURAS.filter(id => c8_cabe(id, d));
   return Dados.escolher(cand);
 }
+/* o jogador já ouviu o nome do Dorian: do menino, da carta, do bilhete
+   ou pela grade */
+function c8_conheceDorian(d){
+  const f = d.flags;
+  return !!(f.o_denis || f.a_carta_do_denis || f.copiou_a_carta || f.somos_2 || f.lembro_disse_o_menino);
+}
 
 /* ============================================================
    CAPÍTULO 8 — TODO MUNDO PAGA PASSAGEM  (Vermilion / S.S. Anne)
@@ -37,7 +43,7 @@ c8_ab_sem_passagem:{
     'Um rapaz mais ou menos da sua idade cospe no chão sem mirar em nada.',
     fala('o rapaz do gradil', 'Dois mil pra subir num barco que não vai a lugar nenhum.'),
     d=>fala(d.jogador.nome, 'Ele não navega?'),
-    fala('o rapaz do gradil', 'Navega quatro vezes por ano. O resto do tempo ele é um hotel que flutua.'),
+    fala('o rapaz do gradil', 'Navega. Mas aqui ele fica parado a temporada inteira, e parado ele é um hotel que flutua.'),
     fala('o rapaz do gradil', 'E quem tá lá dentro não pagou dois mil, ó. Quem tá lá dentro foi convidado.')
   ],
   ef:{flag:'ficou_do_lado_de_fora', registrar:'A visitação ao S.S. Anne custa 2.000 ₽. Você ficou no gradil.'},
@@ -53,14 +59,14 @@ c8_ab_como_se_consegue:{
   texto:[
     'Ele ri e o riso não é simpático nem antipático, é só cansado.',
     fala('o rapaz do gradil', 'Três jeitos. Ser rico, ser famoso, ou trabalhar lá dentro.'),
-    fala('o rapaz do gradil', 'Meu tio trabalha. Cozinha. Entra pelo portão de carga às quatro da manhã e sai às onze da noite, e ele já subiu nesse navio mais vezes que qualquer milionário de Kanto.'),
+    fala('o rapaz do gradil', 'Meu tio trabalha. Cozinha, na temporada. Entra pelo portão de carga às quatro da manhã e sai às onze da noite, e ele já subiu nesse navio mais vezes que qualquer milionário de Kanto.'),
     d=>fala(d.jogador.nome, 'E ele conta o que tem lá dentro?'),
     'O rapaz para de olhar o navio e olha pra você pela primeira vez.',
-    fala('o rapaz do gradil', 'Ele contava. Faz umas três semanas que ele parou de contar.', 'baixo'),
-    fala('o rapaz do gradil', 'Continua indo todo dia. Só parou de contar.')
+    fala('o rapaz do gradil', 'Ele contava. Ano passado ele parou de contar.', 'baixo'),
+    fala('o rapaz do gradil', 'Hoje ele entrou de novo, às quatro, junto com o navio. Só parou de contar.')
   ],
   ef:{flag:'o_tio_parou_de_contar',
-      registrar:'Um cozinheiro do S.S. Anne parou de contar o que vê a bordo, mas continua indo todo dia.',
+      registrar:'Um cozinheiro do S.S. Anne parou de contar o que vê a bordo, mas continua embarcando toda temporada.',
       presagio:'Quem para de contar viu alguma coisa que dá medo de repetir.'},
   escolhas:[
     {texto:'Perguntar onde fica o portão de carga.', vai:'c8_ab_a_volta'},
@@ -152,7 +158,7 @@ c8_ab_insistiu:{
 c8_ab_a_volta:{
   texto:[
     'O cais três tem um portão de visitação e tem um portão de carga, e o de carga fica oitocentos metros mais pro norte, depois do galpão sete.',
-    'Não tem roleta. Tem uma cancela de ferro, um guarita com um homem dentro e um fluxo de caminhão que não para.',
+    'Não tem roleta. Tem uma cancela de ferro, uma guarita com um homem dentro e um fluxo de caminhão que não para.',
     'Você fica vinte minutos olhando e aprende três coisas.',
     'Uma: ninguém apresenta documento. Duas: todo mundo que entra a pé está de colete laranja. Três: tem uma pilha de coletes laranja num carrinho do lado de fora da guarita, e o carrinho está ali porque os coletes são de todo mundo e de ninguém.',
     'O homem da guarita está de costas, resolvendo alguma coisa num telefone de fio.'
@@ -401,7 +407,7 @@ c8_chegada:{
     d=>{
       if (Estado.rep.eixo==='bom' && Estado.rep.bom>=5) return 'Um funcionário do cais te reconhece, cutuca o colega, e os dois discutem baixo se devem te chamar. Não chamam. Mas discutem, e você vê.';
       if (Estado.rep.eixo==='ruim' && Estado.rep.ruim>=5) return 'Dois seguranças mudam de posição quando você passa. Não é coincidência: eles se posicionam entre você e a passarela do cais três.';
-      return 'Ninguém olha pra você duas vezes. Num porto, isso é um privilégio e você ainda não sabe disso.';
+      return 'Ninguém olha pra você duas vezes. Num porto, isso é um privilégio.';
     }
   ],
   ef:{registrar:'Chegou ao porto de Vermilion.'},
@@ -420,6 +426,7 @@ c8_olhou_o_porto:{
     'Um contêiner sai do navio, pousa num caminhão, o caminhão anda quarenta metros, para numa balança, e segue. Repete. Repete.',
     'Depois de quarenta minutos você entende a coisa mais importante do porto: ninguém abre nada.',
     'Nada é aberto. Nada é conferido por dentro. Tudo é conferido por número, por lacre e por peso.',
+    'Só um não entra na conta: um contêiner de vinte pés sozinho no canto do pátio, encostado no muro, que em quarenta minutos ninguém tocou.',
     d=>d.flags.conferem_por_numero
       ? 'Você já ouviu isso numa passarela de grade dentro de uma montanha. "Eles conferem por número, não por Pokémon."'
       : 'Você não sabe por que isso te incomoda tanto.'
@@ -435,6 +442,8 @@ c8_olhou_o_porto:{
 },
 
 c8_prancheta:{
+  falante:'Conferente do porto',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'O homem da prancheta tem uns quarenta anos e uma caneta amarrada com barbante na prancheta, porque caneta some.',
     '"Pois não."',
@@ -472,7 +481,7 @@ c8_peso:{
     '"Papel." Ele dá de ombros. "Eu leio número, {moço|moça}. Eu não leio papel."'
   ],
   ef:{flag:'papel_libera_carga', registrar:'No porto, um homem de terno já liberou carga retida com um papel em quarenta minutos.',
-      presagio:'Um papel que libera quarenta quilos de diferença em quarenta minutos. Você conhece o cabeçalho.'},
+      presagio:'Um papel que libera quarenta quilos de diferença em quarenta minutos. Não é um papel qualquer.'},
   escolhas:[
     {texto:'"Que cara de terno? Você lembra?"', vai:'c8_lembra_do_terno'},
     {texto:'Descer até o cais três.', vai:'c8_cais'},
@@ -488,12 +497,12 @@ c8_lembra_do_terno:{
     '"Lembro do sapato."',
     'Ele ri de si mesmo.',
     '"Sério. Eu trabalho num porto há vinte e dois ano e eu reparo em sapato. Sapato limpo aqui é notícia."',
-    d=>d.flags.sapato_limpo
+    d=>d.flags.sapato_da_caverna
       ? 'Você já ouviu isso, num chão de caverna, de um homem que limpava a mão no jeans.'
       : 'Você guarda isso sem saber por quê.',
     '"E o crachá dele não era do porto e não era de Liga." Ele volta pra prancheta. "Tinha um desenho de balança."'
   ],
-  ef:{flag:['sapato_limpo','brasao_no_porto'],
+  ef:{flag:['sapato_limpo','sapato_do_porto','brasao_no_porto'],
       registrar:'O homem de terno que libera carga retida no porto usa crachá com uma balança.',
       presagio:'A balança tem acesso ao porto de Vermilion. Isso é outro patamar.'},
   escolhas:[
@@ -511,7 +520,7 @@ c8_cidade:{
     'De fora dá pra sentir cheiro de ozônio — aquele cheiro de depois de raio.',
     'Não tem placa. Tem uma marca de queimado no batente da porta, na altura do ombro.'
   ],
-  ef:{executar:d=>{ Mundo.descobrir('ginasio_vermilion'); Mundo.descobrir('achou_ginasio_vermilion'); return [{tipo:'eco', texto:'Você vai lembrar desse galpão.'}]; }},
+  ef:{executar:d=>{ Mundo.descobrir('ginasio_vermilion'); Mundo.descobrir('achou_ginasio_vermilion'); return [{tipo:'eco', texto:'Um galpão sem placa, com cheiro de raio.'}]; }},
   escolhas:[
     {texto:'Chegar perto da porta do galpão.', vai:'c8_galpao'},
     {texto:'Entrar num dos bares que abrem às cinco.', vai:'c8_bar'},
@@ -528,12 +537,12 @@ c8_galpao:{
     'Lá dentro tem um zumbido constante, e de uns quarenta em quarenta segundos um estalo.',
     'A porta abre sozinha — não sozinha: alguém abre, de dentro, e sai um rapaz de uns dezoito anos com o cabelo em pé de um jeito que não é penteado.',
     'Ele te vê.',
-    '"Tá aberto", ele diz. "Mas se você tá aqui por acaso, não entra."',
+    '"Tá aberto," ele diz. "Mas se você tá aqui por acaso, não entra."',
     '"Por quê?"',
     '"Porque quem entra por acaso apanha." Ele acende um cigarro com a mão tremendo um pouco. "Quem entra de propósito apanha também. Mas aí é escolha."'
   ],
   ef:{flag:'aviso_do_galpao',
-      presagio:'Ele estava tremendo. Não era medo — era outra coisa, e passa em uns vinte minutos.'},
+      presagio:'Ele estava tremendo. Não era medo — era o que sobra no corpo depois de uma luta.'},
   escolhas:[
     {texto:'"Quem tá lá dentro?"', vai:'c8_quem_ta_dentro'},
     {texto:'Entrar de propósito.', vai:'c8_entrou_galpao'},
@@ -588,17 +597,19 @@ c8_o_cabo:{
 },
 
 c8_entrou_galpao:{
+  falante:'Líder Surge',
+  vozes:['N','P','N','N'],
   texto:[
     'Você empurra a porta.',
     'O chão do galpão é de concreto com pintura de quadra descascada e tem cheiro de ozônio de um jeito que dá gosto metálico na boca.',
     'No fundo, um homem enorme está prendendo um cabo num poste de aterramento com uma chave de fenda, agachado, de costas pra porta.',
     'Ele não vira.',
-    '"Desafio é quinta e sexta, das duas às seis. Hoje não é nem um nem outro."',
+    '"Hoje não. O aterramento tá aberto, e eu não luto com o chão desligado."',
     '"Como o senhor sabe que eu—"',
-    '"Porque ninguém entra aqui por outro motivo." Ele aperta o parafuso. "Volta quinta. E vem com o time descansado, porque eu não pego leve e eu não vou pegar leve com você."'
+    '"Porque ninguém entra aqui por outro motivo." Ele aperta o parafuso. "Volta outro dia. E vem com o time descansado, porque eu não pego leve e eu não vou pegar leve com você."'
   ],
   ef:{flag:'falou_com_surge',
-      npc:{nome:'Líder Surge', opiniao:1, memoria:'Você entrou no galpão fora do horário. Ele te mandou voltar na quinta.'},
+      npc:{nome:'Líder Surge', opiniao:1, memoria:'Você entrou no galpão com o aterramento aberto. Ele te mandou voltar outro dia.'},
       executar:d=>{ Mundo.descobrir('ginasio_vermilion'); Mundo.descobrir('achou_ginasio_vermilion'); return []; }},
   escolhas:[
     {texto:'"Por que o senhor não pega leve?"', vai:'c8_porque_nao_pega_leve'},
@@ -609,6 +620,8 @@ c8_entrou_galpao:{
 },
 
 c8_porque_nao_pega_leve:{
+  falante:'Líder Surge',
+  vozes:['P','N','N','N'],
   texto:[
     '"Por que o senhor não pega leve?"',
     'Aí ele vira.',
@@ -626,11 +639,13 @@ c8_porque_nao_pega_leve:{
     {texto:'"Isso não foi culpa sua."', vai:'c8_nao_foi_culpa'},
     {texto:'Ficar calad{o|a} e sair.', vai:'c8_cais'},
     {texto:'Ficar olhando ele trabalhar.', vai:'c8_olhou_surge'},
-    {texto:'"Eu volto na quinta."', vai:'c8_cais'}
+    {texto:'"Eu volto outro dia."', vai:'c8_cais'}
   ]
 },
 
 c8_nao_foi_culpa:{
+  falante:'Líder Surge',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Isso não foi culpa sua."',
     'Surge ri. É uma risada sem nada dentro.',
@@ -638,7 +653,7 @@ c8_nao_foi_culpa:{
     'Ele levanta. É muito maior de pé.',
     '"Isso é o tipo de coisa que todo mundo me fala e que é verdade e que não muda nada." Ele guarda a chave de fenda no bolso do macacão. "Eu não mudei porque me sinto culpado, {garoto|garota}. Eu mudei porque funciona melhor."',
     'Ele pega uma toalha.',
-    '"Todo moleque que sai daqui apanhado vai pro Monte da Lua sabendo que existe uma coisa maior que ele. Isso salva vida. Insígnia de graça não salva ninguém."'
+    '"Todo moleque que sai daqui apanhado vai pra estrada sabendo que existe uma coisa maior que ele. Isso salva vida. Insígnia de graça não salva ninguém."'
   ],
   ef:{flag:'entendeu_o_surge',
       npc:{nome:'Líder Surge', opiniao:3, memoria:'Você disse que não foi culpa dele. Ele explicou que não muda por culpa, muda porque funciona.'}},
@@ -650,10 +665,12 @@ c8_nao_foi_culpa:{
 },
 
 c8_surge_navio:{
+  falante:'Líder Surge',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"O senhor sabe do S.S. Anne?"',
     'Surge para de enxugar a nuca.',
-    '"Sei que ele atraca quatro vezes por ano e que a cidade fatura o ano inteiro nessas quatro semanas."',
+    '"Sei que ele atraca aqui uma vez por ano e que a cidade fatura o ano inteiro nessas três semanas."',
     '"E?"',
     '"E que na semana que ele atraca, o número de ocorrência policial no porto cai quase a zero." Ele joga a toalha no ombro. "Isso não é porque melhora, {garoto|garota}. É porque ninguém registra."',
     'Ele olha pra porta do galpão, pra rua em declive, pro mar no fim.',
@@ -691,6 +708,8 @@ c8_surge_entrou:{
 },
 
 c8_quem_era_o_sujeito:{
+  falante:'Líder Surge',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Quem era o sujeito?"',
     '"Não sei o nome." Surge dá de ombros. "Sei que ele volta todo ano. Camarote de cima."',
@@ -795,11 +814,13 @@ c8_deixou_falarem:{
 },
 
 c8_carga_viva:{
+  falante:'Estivador velho',
+  vozes:['P','N','N','N'],
   texto:[
     '"Carga viva de quê?"',
     'O mais novo levanta e vai embora da mesa sem terminar o copo, o que é a coisa mais eloquente da noite.',
     'O mais velho fica.',
-    '"Ele tem filho pequeno", ele explica. "Eu não tenho mais ninguém, então eu posso falar."',
+    '"Ele tem filho pequeno," ele explica. "Eu não tenho mais ninguém, então eu posso falar."',
     'Ele empurra o copo pro meio da mesa.',
     '"Carga viva é carga viva, {garoto|garota}. Nem sempre é Pokémon."'
   ],
@@ -815,6 +836,8 @@ c8_carga_viva:{
 },
 
 c8_nem_sempre:{
+  falante:'Estivador velho',
+  vozes:['P','N','N','N','N','P','N','N'],
   texto:[
     '"Como assim nem sempre é Pokémon?"',
     'O homem ri e balança a cabeça.',
@@ -839,18 +862,20 @@ c8_nem_sempre:{
 },
 
 c8_que_horas:{
+  falante:'Estivador velho',
+  vozes:['P','N','P','N','N','N','P','N'],
   texto:[
     '"Quando passa? Que horas?"',
     'Ele ri.',
     '"Você quer ver."',
     '"Quero."',
-    '"Três e quarenta da manhã." Ele fala sem hesitar, o que quer dizer que ele já pensou muito nisso. "Portão cinco, o de serviço. Não passa pela balança principal — passa pela balança dois, a que tá em manutenção desde março."',
+    '"Três e quarenta da manhã." Ele fala sem hesitar, o que quer dizer que ele já pensou muito nisso. "Portão cinco, o de serviço. Não passa pela balança principal — passa pela balança dois, a que tá em manutenção desde o ano passado."',
     'Ele termina o copo.',
     '"E antes que você pergunte: sim, eu já pensei em ir ver. Todo ano eu penso."',
     '"E por que não vai?"',
     '"Porque eu trabalho às seis."'
   ],
-  ef:{flag:'portao_cinco', registrar:'3h40, portão cinco, balança dois (em manutenção desde março).'},
+  ef:{flag:'portao_cinco', registrar:'3h40, portão cinco, balança dois (em manutenção desde o ano passado).'},
   escolhas:[
     {texto:'"Eu vou."', vai:'c8_eu_vou'},
     {texto:'Pagar a mesa dele.', vai:'c8_pagou_a_mesa', cond:d=>d.jogador.dinheiro>=800,
@@ -861,6 +886,8 @@ c8_que_horas:{
 },
 
 c8_eu_vou:{
+  falante:'Estivador velho',
+  vozes:['P','N','N','N'],
   texto:[
     '"Eu vou."',
     'Ele te olha por um tempo comprido.',
@@ -883,10 +910,12 @@ c8_eu_vou:{
 },
 
 c8_nunca_reportaram:{
+  falante:'Estivador velho',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Vocês nunca reportaram?"',
     '"Reportar pra quem?"',
-    'Não é retórica. Ele está genuinamente perguntando.',
+    'Não é retórica. Ele espera você responder, e como você não responde, ele mesmo conta.',
     '"Pra polícia do porto, que é contratada pela administração do porto. Pra administração do porto, que fatura com o Anne. Pra Liga, que credencia o torneio que acontece a bordo."',
     'Ele conta nos dedos e fica sem dedos.',
     '"Ou pro sindicato, que é o único que ia escutar, e que tem trinta e dois filiado e um advogado que atende de terça."',
@@ -903,20 +932,22 @@ c8_nunca_reportaram:{
 },
 
 c8_pagou_a_mesa:{
+  falante:'Estivador velho',
+  vozes:['N','P','N'],
   texto:[
     'Você paga a mesa. Não é muito dinheiro e é muito mais do que eles esperavam de {um garoto|uma garota} de {idade} anos.',
     'O estivador velho fica genuinamente sem graça, o que num homem daquele tamanho é engraçado.',
     '"Não precisava."',
     '"Precisava."',
     'Ele faz que sim.',
-    '"Então senta direito e escuta uma coisa que eu não ia falar."'
+    '"Então senta direito e pergunta o que você veio perguntar."'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Pagou a mesa de quem trabalhou a noite toda'},
       npc:{nome:'Estivador velho', opiniao:4, memoria:'Você pagou a mesa dele no bar do porto.'}},
   escolhas:[
-    {texto:'Escutar.', vai:'c8_eu_vou'},
     {texto:'"Quando passa o contêiner?"', vai:'c8_que_horas'},
-    {texto:'"Carga viva de quê?"', vai:'c8_carga_viva'}
+    {texto:'"Carga viva de quê?"', vai:'c8_carga_viva'},
+    {texto:'"Vocês nunca reportaram?"', vai:'c8_nunca_reportaram'}
   ]
 },
 
@@ -966,6 +997,8 @@ c8_a_mulher_do_balcao:{
 },
 
 c8_quantas_bandejas:{
+  falante:'Cozinheira do Anne',
+  vozes:['P','N','N','N'],
   texto:[
     '"Quantas bandejas?"',
     'Ela para de mexer o gelo.',
@@ -990,6 +1023,8 @@ c8_quantas_bandejas:{
 },
 
 c8_quer_que_alguem_veja:{
+  falante:'Cozinheira do Anne',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"A senhora quer que alguém veja?"',
     'Ela demora muito.',
@@ -997,7 +1032,7 @@ c8_quer_que_alguem_veja:{
     'Ela olha o copo.',
     '"E eu conto quatro bandeja todo dia."',
     'Ela abre a bolsa, tira uma chave de latão pequena e velha, e põe no balcão sem empurrar na sua direção.',
-    '"Isso aqui abre o corredor de serviço do convés três. Eu perdi ela em duas mil e dezenove." Ela olha pra frente, não pra você. "Eu não sei onde ela tá."'
+    '"Isso aqui abre o corredor de serviço do convés três. Eu perdi ela faz duas temporadas." Ela olha pra frente, não pra você. "Eu não sei onde ela tá."'
   ],
   ef:{flag:'chave_do_corredor',
       npc:{nome:'Cozinheira do Anne', opiniao:6, memoria:'Te deu a chave do corredor de serviço do convés três, fingindo que a tinha perdido.'},
@@ -1035,7 +1070,7 @@ c8_nao_pegou_chave:{
     'E aí ela faz uma coisa: guarda a chave, pega um guardanapo, e escreve uma coisa nele com o lápis de conta do bar.',
     'Empurra o guardanapo.',
     'Está escrito à mão: "CONVÉS 3 — PORTA DE SERVIÇO FICA DESTRANCADA DAS 23H ÀS 23H20 (TROCA DE TURNO DA COPA)."',
-    '"Guardanapo some", ela diz. "Chave não some."'
+    '"Guardanapo some," ela diz. "Chave não some."'
   ],
   ef:{flag:'janela_das_23h',
       npc:{nome:'Cozinheira do Anne', opiniao:8, memoria:'Você recusou a chave pra proteger ela, e ela te deu o horário da troca de turno num guardanapo.'},
@@ -1050,13 +1085,16 @@ c8_nao_pegou_chave:{
 },
 
 c8_pediu_trabalho:{
+  falante:'Cozinheira do Anne',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"A senhora pode me arrumar um trabalho lá?"',
     'Ela ri pela primeira vez.',
     '"Você quer lavar louça pra oitocentas pessoa?"',
     '"Quero."',
     'Ela para de rir.',
-    '"Tá." Ela escreve um nome num guardanapo. "Fala pro contramestre que a Rina mandou. Turno começa às seis. Oito hora."',
+    d=>{ Nomes.apresentar('Cozinheira do Anne');
+         return '"Tá." Ela escreve um nome num guardanapo. "Fala pro contramestre que a Rina mandou. Turno começa às seis. Oito hora."'; },
     'Ela devolve o lápis pro balcão.',
     '"E, {garoto|garota}: quem trabalha na cozinha entra pelo corredor de serviço. Ninguém repara em quem entra pelo corredor de serviço."'
   ],
@@ -1089,15 +1127,15 @@ c8_fritura:{
 
 c8_batata:{
   falante:'Menino do cais',
-  vozes:['P','N','N'],
+  vozes:['N','P','N','N'],
   texto:[
     'Você pede outra porção e põe no banquinho do lado sem falar nada.',
     'O menino olha a batata. Olha você. Olha a batata.',
-    '"Eu tenho dinheiro", ele diz, ofendido.',
+    '"Eu tenho dinheiro," ele diz, ofendido.',
     '"Eu sei."',
     'Ele come a batata.',
     'Dois minutos depois ele empurra a caixa térmica com o pé pra você ver melhor.',
-    '"É meu", ele diz rápido. "Eu peguei. Não roubei."'
+    '"É meu," ele diz rápido. "Eu peguei. Não roubei."'
   ],
   ef:{npc:{nome:'Menino do cais', opiniao:3, memoria:'Você comprou batata pra ele na fritura do porto.'}},
   escolhas:[
@@ -1108,9 +1146,11 @@ c8_batata:{
 },
 
 c8_a_caixa_do_menino:{
+  falante:'Menino do cais',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Na caixa térmica tem um Krabby, com um dedo de água e um pano molhado por cima, o que é mais cuidado do que a maioria dos adultos teria.',
-    '"É meu", ele diz. "Eu peguei na pedra do quebra-mar. Não roubei."',
+    '"É meu," ele diz. "Eu peguei na pedra do quebra-mar. Não roubei."',
     '"Tá vendendo?"',
     '"Tô." Ele endireita as costas. "Quatrocentos."',
     'Quatrocentos.',
@@ -1134,6 +1174,8 @@ c8_a_caixa_do_menino:{
 },
 
 c8_porque_vender:{
+  falante:'Menino do cais',
+  vozes:['P','N','N','N','P','N','P','N'],
   texto:[
     '"Por que você tá vendendo?"',
     'Ele encolhe os ombros.',
@@ -1164,6 +1206,8 @@ c8_porque_vender:{
 },
 
 c8_avisou_o_menino:{
+  falante:'Menino do cais',
+  vozes:['N','N','N','P','N','N','N'],
   texto:[
     'Você conta. As vagas de trabalho, o porão, a ausência de nome em lista de passageiro.',
     'O menino escuta com a batata parada no meio do caminho.',
@@ -1185,12 +1229,14 @@ c8_avisou_o_menino:{
          npc:{nome:'Menino do cais', opiniao:6, memoria:'Você pagou seis vezes o que ele pediu.'}}},
     {texto:'Dar oito mil pra ele comprar a passagem. (8.000 ₽)', vai:'c8_pagou_a_passagem_dele',
      cond:d=>d.jogador.dinheiro>=8000},
-    {texto:'"Guarda a carta do Dorian." Perguntar dela.', vai:'c8_a_carta_do_denis'},
+    {texto:'"Você tem a carta do Dorian?"', vai:'c8_a_carta_do_denis'},
     {texto:'Ir pro cais.', vai:'c8_cais'}
   ]
 },
 
 c8_pagou_a_passagem_dele:{
+  falante:'Menino do cais',
+  vozes:['N','P','N','P','N'],
   texto:[
     'Você conta oito mil na frente dele, em cima de um banquinho de fritura de porto.',
     'Ele não pega.',
@@ -1312,7 +1358,7 @@ c8_a_carta_do_denis:{
     'Letra ruim. Caneta esferográfica. Sete linhas.',
     '"Cheguei. Tá tudo certo. O trabalho é de descarregar e eles pagam no fim. Fala pra minha tia que eu ligo quando der. Não conta pra ninguém que eu fui assim. Eu tô bem. Dorian."',
     'No verso, escrito de cabeça pra baixo, quase apagado, como quem escreveu com a folha em cima do joelho e depois desistiu de mandar:',
-    '"eles contaram a gente duas vezes"'
+    '**eles contaram a gente duas vezes**'
   ],
   ef:{flag:'a_carta_do_denis', registrar:'No verso da carta do Dorian: "eles contaram a gente duas vezes".',
       presagio:'Contaram duas vezes. Conferência. Ele viu conferência e não soube o nome do que viu.'},
@@ -1343,7 +1389,7 @@ c8_pegou_a_carta:{
       rep:{eixo:'bom',delta:1,motivo:'Copiou em vez de tomar'},
       npc:{nome:'Menino do cais', opiniao:4, memoria:'Você copiou a carta do Dorian em vez de levar a dele.'},
       registrar:'Copiou a carta do Dorian, com a frase do verso.',
-      presagio:'Você tem uma cópia. Ele ficou com o original. Alguém em Cerulean te ensinou a diferença.'},
+      presagio:'Você tem uma cópia. Ele ficou com o original. É a diferença entre levar e guardar.'},
   escolhas:[
     {texto:'Ir pro cais três.', vai:'c8_cais'},
     {texto:'Ir pro portão cinco às três e quarenta.', vai:'c8_portao_cinco', cond:d=>!!d.flags.portao_cinco},
@@ -1355,6 +1401,8 @@ c8_pegou_a_carta:{
 },
 
 c8_mostra_pra_tia:{
+  falante:'Menino do cais',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Mostra isso pra sua tia."',
     '"A tia é do Dorian, não minha."',
@@ -1386,8 +1434,8 @@ c8_krabby_justo:{
     '"Por que você fez isso?"',
     'Você explica o que é uma tabela de preço. Que existe um valor de mercado. Que loja de Cerulean vende esse Krabby por seis vezes o que ele pediu.',
     'Ele ouve com uma seriedade de adulto, e no meio da explicação ele tira um lápis do bolso e começa a anotar na tampa da caixa térmica.',
-    'Semanas depois, você vai ouvir falar de um menino em Vermilion que virou o melhor avaliador de Pokémon do porto e que cobra pelo serviço.',
-    'Boa sorte pra quem tentar enganá-lo.'
+    'Quando você termina, a tampa já tem três colunas: espécie, nível e preço.',
+    'Ele não levanta a cabeça pra se despedir. Está somando.'
   ],
   ef:{presagio:'Você ensinou uma criança a pôr preço nas coisas. Isso pode ser a melhor ou a pior coisa que você fez hoje.'},
   escolhas:[
@@ -1401,7 +1449,7 @@ c8_krabby_barato:{
   texto:[
     'Ele te entrega a caixa térmica e sai correndo, feliz, com quatrocentos no bolso.',
     'Você fica olhando ele ir embora.',
-    'Não foi crime. Foi só o tipo de coisa que, depois, você não conta pra ninguém.',
+    'Não foi crime. Foi só o tipo de coisa que não se conta pra ninguém.',
     'A dona da fritura viu. Ela não diz nada. Ela vira o bolinho e não diz nada, e você paga a conta e ela não diz nada.'
   ],
   ef:{},
@@ -1414,6 +1462,8 @@ c8_krabby_barato:{
 },
 
 c8_pagou_diferenca:{
+  falante:'Menino do cais',
+  vozes:['P','N','P'],
   texto:[
     'Você acha ele duas quadras adiante, contando as notas sentado num meio-fio.',
     'Você entrega o resto.',
@@ -1459,7 +1509,13 @@ c8_cais:{
     'Na entrada da passarela tem uma mesa com duas moças de uniforme, uma fila de gente bem vestida, e um preço numa placa de acrílico.',
     'PASSAGEM — VERMILION / CINNABAR — ₽ 8.000.',
     'Tem gente pagando isso sem piscar. Um casal na sua frente paga quatro passagens e a mulher reclama do preço do jeito que se reclama de uma coisa que não dói.',
-    'E, do lado, uma porta de serviço sem placa, com um cabo de energia entrando por baixo.'
+    'E, do lado, uma porta de serviço sem placa, com um cabo de energia entrando por baixo.',
+    'Mais pra trás, no canto do pátio, um contêiner de vinte pés está sozinho, fora de pilha, encostado no muro.',
+    d=>d.flags.aceitou_o_convite
+      ? 'O homem das listras douradas aperta a sua mão do lado da passarela, fala o seu nome sem errar e repete o que o motorista disse: jantar às oito. Depois volta pra dentro sem esperar resposta.'
+      : d.flags.recusou_o_convite
+      ? 'O carro está parado no fim do cais, com a porta de trás aberta. O motorista não diz nada. Já disse: jantar às oito.'
+      : ''
   ],
   ef:{registrar:'Chegou ao cais três, onde o S.S. Anne está atracado.'},
   escolhas:[
@@ -1467,7 +1523,9 @@ c8_cais:{
      ef:{dinheiro:-8000, flag:'pagou_passagem'}},
     {texto:'Procurar um jeito de entrar sem pagar.', vai:'c8_clandestino'},
     {texto:'Perguntar se precisam de mão de obra a bordo.', vai:'c8_trabalho'},
-    {texto:'Ficar no cais e esperar escurecer.', vai:'c8_noite_porto'}
+    {texto:'Ficar no cais e esperar escurecer.', vai:'c8_noite_porto'},
+    {texto:'Subir pro jantar das oito.', vai:'c8_bordo', cond:d=>!!(d.flags.aceitou_o_convite || d.flags.recusou_o_convite),
+     ef:{flag:'jantou_com_o_comandante'}}
   ]
 },
 
@@ -1673,7 +1731,7 @@ c8_balanca_dois:{
     'A balança dois não está em manutenção.',
     'Você olha o painel: está ligado, com o display aceso, mostrando zero.',
     'A faixa de manutenção está amarrada no poste com nó de quem amarra faixa todo dia, e o nó está desgastado de ser amarrado e desamarrado muitas vezes.',
-    'Embaixo do painel tem uma etiqueta de aferição do Inmetro.',
+    'Embaixo do painel tem uma etiqueta de aferição, com o selo de pesos e medidas de Kanto.',
     'Válida. Deste ano.',
     'Uma balança funcionando, aferida e válida, com uma faixa de manutenção amarrada por cima, num portão de serviço que abre às três e quarenta da manhã.'
   ],
@@ -1702,7 +1760,7 @@ c8_esperou_a_faixa:{
       rep:{eixo:'bom',delta:2,motivo:'Esperou quarenta minutos por noventa segundos de informação'},
       presagio:'Três letras na coluna RESP. Em oito meses, sempre as mesmas.'},
   escolhas:[
-    {texto:'Fotografar / copiar a folha.', vai:'c8_copiou_a_folha'},
+    {texto:'Copiar a folha no caderno.', vai:'c8_copiou_a_folha'},
     {texto:'Levar a folha.', vai:'c8_levou_a_folha'},
     {texto:'Deixar tudo como está e ir embarcar.', vai:'c8_cais'},
     {texto:'Seguir o caminhão.', vai:'c8_seguiu_caminhao'}
@@ -1719,7 +1777,7 @@ c8_copiou_a_folha:{
   ef:{flag:['copiou_o_controle','papel_com_brasao'],
       rep:{eixo:'bom',delta:2,motivo:'Copiou sem levar'},
       registrar:'Copiou quinze linhas da folha de controle do portão cinco.',
-      presagio:'Quinze linhas. Cópia. Guardada em outro lugar. Alguém em Cerulean ficaria orgulhosa.'},
+      presagio:'Quinze linhas. Cópia. O original continua no gancho, e ninguém sabe que existe outra.'},
   escolhas:[
     {texto:'Ir embarcar no navio.', vai:'c8_cais'},
     {texto:'Seguir o caminhão.', vai:'c8_seguiu_caminhao'},
@@ -1730,13 +1788,11 @@ c8_copiou_a_folha:{
 c8_levou_a_folha:{
   texto:[
     'Você arranca a folha e guarda.',
-    'Às sete da manhã, um homem de colete refletivo vai chegar na guarita, procurar a folha, não achar, e ligar pra alguém.',
-    'E às oito, alguém vai amarrar a faixa de manutenção na balança dois de manhã, o que nunca aconteceu antes, e o portão cinco vai ficar fechado por três semanas.',
-    'Você tem a folha. Eles têm três semanas pra mudar tudo.',
-    'Você só vai entender o tamanho desse erro muito depois.'
+    'Fica o gancho vazio na guarita, e um gancho vazio é a primeira coisa que quem pendura a prancheta vai ver.',
+    'Você tem a folha. Quem anota nela vai saber que ela sumiu.'
   ],
   ef:{flag:['levou_o_controle','papel_com_brasao','queimou_o_portao'],
-      registrar:'Levou a folha de controle. O portão cinco fechou por três semanas.',
+      registrar:'Levou a folha de controle do portão cinco.',
       presagio:'Você tem a prova e eles têm o aviso. Quase sempre o aviso vale mais.'},
   escolhas:[
     {texto:'Ir embarcar.', vai:'c8_cais'},
@@ -1765,6 +1821,8 @@ c8_seguiu_caminhao:{
 },
 
 c8_falou_com_conferente:{
+  falante:'Conferente do porto',
+  vozes:['N','P','N','P','N','N','N'],
   texto:[
     'Você anda até o conferente no meio do pátio às quatro da manhã, o que é uma das coisas mais estúpidas que você já fez.',
     'Ele leva um susto de verdade.',
@@ -1790,10 +1848,12 @@ c8_falou_com_conferente:{
 },
 
 c8_e_se_eu_abrir:{
+  falante:'Conferente do porto',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se eu abrir?"',
     'Pela primeira vez ele te olha de verdade.',
-    '"Se você romper lacre de contêiner embarcado, você comete crime federal, {garoto|garota}. Com pena."',
+    '"Se você romper lacre de contêiner embarcado, você comete crime, {garoto|garota}. Com pena."',
     'Ele guarda a caneta amarrada com barbante.',
     '"E o que tiver dentro passa a ser prova de um processo em que você é réu."',
     'Ele começa a andar e depois para.',
@@ -1809,6 +1869,8 @@ c8_e_se_eu_abrir:{
 },
 
 c8_voltou_no_conferente:{
+  falante:'Conferente do porto',
+  vozes:['N','N','N','P','N','N'],
   texto:[
     'De manhã você procura o conferente da prancheta e mostra o que anotou.',
     'Ele lê o número do contêiner. Lê o número do lacre.',
@@ -1832,9 +1894,11 @@ c8_voltou_no_conferente:{
 },
 
 c8_como_descubro:{
+  falante:'Conferente do porto',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Como eu descubro de quem é esse registro comercial?"',
-    '"Cartório." Ele fala sem pensar. "Ou junta comercial. Contrato social é público."',
+    '"Cartório." Ele fala sem pensar. "Ou o registro comercial. Contrato de empresa é público."',
     'Ele guarda o barbante da caneta.',
     '"Você vai em cartório, pede certidão simplificada, paga uns oito pokedólares a página e sai com o nome dos sócio."',
     '"É legal?"',
@@ -1859,7 +1923,7 @@ c8_gritou_no_portao:{
     'Isso é o que acontece quando se grita: nada.'
   ],
   ef:{flag:'gritou_no_portao', hp:-2, causa:'Corrida no pátio do porto',
-      presagio:'Nada aconteceu. Guardar isso é mais útil do que parece.'},
+      presagio:'Nada aconteceu. Um pátio inteiro de porto ouviu, e nada aconteceu.'},
   escolhas:[
     {texto:'Ir até a balança dois.', vai:'c8_balanca_dois'},
     {texto:'Seguir o caminhão até o cais.', vai:'c8_seguiu_caminhao'},
@@ -1930,11 +1994,11 @@ c8_pego:{
   falante:'o segurança do navio',
   vozes:['N','N'],
   texto:[
-    'Você é pego antes de passar da escotilha. Dois seguranças, sem conversa.',
+    'Você é peg{o|a} antes de passar da escotilha. Dois seguranças, sem conversa.',
     'Eles não chamam a polícia. Levam você pra uma sala do convés inferior com uma mesa e duas cadeiras, revistam sua mochila item por item, e tiram o que acharem que compensa o incômodo.',
     'Um deles anota o seu nome numa folha.',
-    '"Some do porto", diz o outro. "Hoje."',
-    'Na saída você repara na folha: é uma lista. Tem umas trinta linhas preenchidas. Você é a trinta e uma.'
+    '"Some do porto," diz o outro. "Hoje."',
+    'Na saída você repara na folha: é uma lista. Tem umas trinta linhas preenchidas. Você é {o trinta e um|a trinta e uma}.'
   ],
   ef:{dinheiro:-800, hp:-4, causa:'Segurança do S.S. Anne', flag:['expulso_do_navio','a_lista_dos_trinta'],
       rep:{eixo:'ruim',delta:1,motivo:'Pego entrando clandestino no S.S. Anne'},
@@ -1952,7 +2016,7 @@ c8_trabalho:{
   falante:'Contramestre Varo',
   vozes:['N','N','N'],
   texto:[
-    'O contramestre é um homem de sessenta anos com antebraços de trinta e um bigode que já foi moda.',
+    'O contramestre é um homem de sessenta anos com antebraços de trinta e um bigode que já foi moda. O crachá no bolso da camisa diz VARO.',
     d=>d.flags.indicacao_da_neusa ? '"A Rina mandou?" Ele lê o guardanapo. "Então tá."' : '"Mão de obra." Ele te mede de cima a baixo. "Cozinha ou carga?"',
     'Nenhuma das duas tem a ver com Pokémon. As duas pagam a passagem.',
     '"Carga é seis hora e é pesado. Cozinha é oito hora e é chato."',
@@ -1968,6 +2032,8 @@ c8_trabalho:{
 },
 
 c8_quantos_como_eu:{
+  falante:'Contramestre Varo',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Quantos como eu vocês contratam por temporada?"',
     'O contramestre para de olhar a fila.',
@@ -1990,6 +2056,8 @@ c8_quantos_como_eu:{
 },
 
 c8_terceira_vez:{
+  falante:'Contramestre Varo',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Pergunta uma terceira vez."',
     'Ele ri.',
@@ -2013,6 +2081,8 @@ c8_terceira_vez:{
 },
 
 c8_dois_conveses:{
+  falante:'Contramestre Varo',
+  vozes:['P','N','N','N'],
   texto:[
     '"O que tem dois conveses abaixo?"',
     '"Porão de carga."',
@@ -2022,7 +2092,7 @@ c8_dois_conveses:{
     'Ele volta pra fila.',
     '"Cozinha ou carga, {garoto|garota}?"'
   ],
-  ef:{flag:'corredor_fora_da_planta', registrar:'Existe um corredor de acomodação fora da planta, dois conveses abaixo do porão de carga do S.S. Anne.',
+  ef:{flag:'corredor_fora_da_planta', registrar:'Existe um corredor de acomodação fora da planta, dois conveses abaixo, junto do porão de carga do S.S. Anne.',
       presagio:'Fora da planta. Alguém desenhou uma planta e alguém construiu outra coisa.'},
   escolhas:[
     {texto:'Carga.', vai:'c8_carga'},
@@ -2102,11 +2172,12 @@ c8_carga_meio:{
 },
 
 c8_carga_ruim:{
-  falante:'o contramestre',
+  falante:'Contramestre Varo',
+  vozes:['N','N'],
   texto:[
     'Você não aguenta.',
     'Na quarta hora, o contramestre te manda parar antes que você se machuque de verdade. Não tem deboche nenhum no jeito dele.',
-    '"Sem julgamento", ele diz. "Você tem quinze ano e sessenta quilo. Mas sem passagem também."',
+    '"Sem julgamento," ele diz. "Você tem {idade} ano e sessenta quilo. Mas sem passagem também."',
     'Ele te dá comida e um lugar pra sentar no corredor de serviço. É o que ele pode.',
     'Você fica sentad{o|a} no chão de aço comendo arroz com a mão tremendo, olhando outros adolescentes carregarem caixa.'
   ],
@@ -2191,7 +2262,7 @@ c8_bandejas_do_40:{
 },
 
 c8_levou_a_bandeja:{
-  falante:'o homem da cadeira dobrável',
+  falante:'Homem do corredor',
   vozes:['P','N'],
   texto:[
     '"Eu levo a do quarenta."',
@@ -2227,21 +2298,22 @@ c8_bandejas_vazias:{
       registrar:'Das quatro bandejas do camarote 40, três foram comidas com talher e uma com a mão.'},
   escolhas:[
     {texto:'Perguntar alguma coisa pro homem da cadeira.', vai:'c8_homem_da_cadeira'},
-    {texto:'Voltar amanhã e conferir de novo.', vai:'c8_conferiu_de_novo'},
+    {texto:'Pegar o serviço do 40 de novo e conferir.', vai:'c8_conferiu_de_novo'},
     {texto:'Subir pro salão.', vai:'c8_bordo'},
     {texto:'Procurar o corredor de serviço.', vai:'c8_corredor_servico'}
   ]
 },
 
 c8_conferiu_de_novo:{
+  vozes:['E'],
   texto:[
-    'Você faz o serviço do camarote 40 por três dias.',
-    'Todo dia: quatro bandejas. Três com talher, uma sem.',
-    'No segundo dia você põe, sem falar com ninguém, um bilhete embaixo da quarta bandeja.',
+    'Você pega o serviço do 40 de novo na ceia da meia-noite, e de novo no café das quatro.',
+    'As duas vezes: quatro bandejas. Três com talher, uma sem.',
+    'Na ceia você põe, sem falar com ninguém, um bilhete embaixo da quarta bandeja.',
     'Está escrito à mão: "VOCÊ TÁ BEM?"',
-    'No terceiro dia, quando você recolhe, o bilhete voltou.',
+    'No café, quando você recolhe, o bilhete voltou.',
     'Do outro lado, escrito com o dedo molhado em molho, quase ilegível, uma palavra:',
-    '"NAO"'
+    '**NAO**'
   ],
   ef:{flag:['contato_no_40','o_bilhete'],
       rep:{eixo:'bom',delta:3,motivo:'Mandou um bilhete pra dentro de uma porta que não abre'},
@@ -2256,16 +2328,17 @@ c8_conferiu_de_novo:{
 },
 
 c8_segundo_bilhete:{
-  vozes:['E','E','E'],
+  vozes:['E'],
   texto:[
-    'Você manda outro. "QUAL SEU NOME?"',
-    'Volta no dia seguinte, com o mesmo molho, num guardanapo em vez do bilhete, porque o bilhete não voltou.',
-    'Está escrito à mão: "DORIAN"',
-    d=>d.flags.a_carta_do_denis || d.flags.copiou_a_carta
+    'Você manda outro com a bandeja do café. "QUAL SEU NOME?"',
+    'Volta meia hora depois, com o mesmo molho, num guardanapo em vez do bilhete, porque o bilhete não voltou.',
+    'Está escrito à mão:',
+    '**DORIAN**',
+    d=>d.flags.a_carta_do_denis || d.flags.copiou_a_carta || d.flags.o_denis
       ? 'Você senta no chão do corredor de serviço com um guardanapo na mão e fica um tempo sem conseguir respirar direito.'
       : 'Você não conhece nenhum Dorian. Mas agora tem um nome, e nome é tudo.',
     'Embaixo, menor, quase sem molho porque estava acabando:',
-    '"SOMOS 2"'
+    '**SOMOS 2**'
   ],
   ef:{flag:['o_denis_esta_no_40','somos_2'],
       rep:{eixo:'bom',delta:2,motivo:'Insistiu até ter um nome'},
@@ -2280,6 +2353,8 @@ c8_segundo_bilhete:{
 },
 
 c8_homem_da_cadeira:{
+  falante:'Homem do corredor',
+  vozes:['P','N'],
   texto:[
     'Você pergunta a coisa mais inofensiva que consegue pensar.',
     '"O senhor quer água?"',
@@ -2288,7 +2363,7 @@ c8_homem_da_cadeira:{
     '"Quero."',
     'Você traz. Ele agradece e volta pro livro.',
     'O livro é um romance policial de banca. Ele está na página duzentos e poucos.',
-    'No terceiro dia ele vai estar com outro livro.'
+    'O marcador é uma passagem de navio usada, de outra temporada.'
   ],
   ef:{flag:'o_homem_do_corredor',
       npc:{nome:'Homem do corredor', opiniao:1, memoria:'Você levou água pra ele no corredor do camarote 40.'},
@@ -2302,6 +2377,8 @@ c8_homem_da_cadeira:{
 },
 
 c8_perguntou_o_que_tem:{
+  falante:'Homem do corredor',
+  vozes:['P','N','P','N','P','N','N','N'],
   texto:[
     '"O que tem aí dentro?"',
     'Ele marca a página com o dedo.',
@@ -2333,6 +2410,7 @@ c8_bordo:{
     'Lustre. Num navio. Você fica parad{o|a} na porta olhando um lustre balançar de leve com o marulho e entende, de uma vez, que existem dois Kantos e você passou {idade} anos num deles.',
     'Tem gente de trinta cidades diferentes aqui, e a maioria delas nunca dormiu no chão de uma rota. Tem piano ao vivo. Tem gente de gravata às onze da noite por vontade própria.',
     d=>{
+      if (d.flags.jantou_com_o_comandante) return 'Você entra pela porta da frente, de terno emprestado que sobra nos ombros, e jantar com o comandante é sentar na ponta da mesa dele enquanto ele te apresenta pras pessoas como quem mostra uma peça nova. Ninguém te pergunta nada. Todo mundo te olha.';
       if (d.flags.uniforme_tripulacao) return 'De uniforme, você é invisível. Ninguém olha para tripulação — não por desprezo, é mais simples que desprezo: tripulação não é gente que se olha. Dá pra andar por quase tudo.';
       if (d.flags.clandestino) return 'Você está com roupa de rota num salão de smoking. Todo mundo sabe que você não pertence aqui, e ninguém diz nada, que é pior do que se dissessem.';
       if (d.flags.trabalhou_no_navio) return 'Você entra pelo corredor de serviço e ninguém repara. Cansaço nos braços, passagem no bolso, e o direito de estar aqui que você pagou com o corpo.';
@@ -2340,8 +2418,8 @@ c8_bordo:{
       return 'Você pagou para estar aqui, então você pertence aqui. É assim que funciona, aparentemente, e você acabou de descobrir por oito mil pokedólares.';
     },
     'Num canto do salão, uma arena montada com corda e piso emborrachado. O torneio começa em vinte minutos e tem gente já apostando no balcão.',
-    'No corredor dos camarotes do convés três, o número 40 tem um homem sentado numa cadeira dobrável lendo um romance de banca.',
-    'Camarote não tem alguém sentado na porta.'
+    'Do alto da escada do salão dá pra ver o corredor dos camarotes do convés três, e lá no fundo, na porta do 40, um homem sentado numa cadeira dobrável lendo um romance de banca.',
+    'Porta de camarote não costuma ter ninguém sentado na frente.'
   ],
   ef:{registrar:'Entrou no S.S. Anne.'},
   escolhas:[
@@ -2359,7 +2437,7 @@ c8_salao:{
     'Você anda pelo salão sem destino. Isso é uma habilidade — parecer que você está indo a algum lugar.',
     '"…ele paga adiantado, sempre."',
     '"Eu não quero saber o que tem na caixa."',
-    '"Se descarrega em Celadon, não é problema de Vermilion."',
+    '"Se vai pra Celadon, não é problema de Vermilion."',
     'Numa mesa perto da janela, um homem de cinquenta anos sozinho com três taças vazias te chama com a mão.',
     '"Você é {novo|nova}." Não é pergunta. "Senta. Eu pago a sua bebida e você me ouve reclamar. É um bom negócio pra você."'
   ],
@@ -2418,12 +2496,14 @@ c8_chegou_perto:{
 },
 
 c8_o_que_anotou:{
+  falante:'a mulher da coluna',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"O que a senhora anotou?"',
     'Ela guarda o telefone.',
-    '"Seis."',
-    '"Seis o quê?"',
-    '"Você tem seis participantes registrados e a média é quatro." Ela fala com uma paciência profissional. "Isso muda a cotação."',
+    d=>`"${cap1(porExtenso(Math.max(1, d.time.length)))}."`,
+    d=>`"${cap1(porExtenso(Math.max(1, d.time.length)))} o quê?"`,
+    d=>`"Você tem ${porExtenso(Math.max(1, d.time.length))} no cinto, e a média aqui é quatro." Ela fala com uma paciência profissional. "${d.time.length === 4 ? 'Isso não muda a cotação. Mas eu anoto.' : 'Isso muda a cotação.'}"`,
     '"Vocês apostam."',
     '"Eu não aposto. Eu precifico."',
     'Ela olha a porta de novo.',
@@ -2439,6 +2519,8 @@ c8_o_que_anotou:{
 },
 
 c8_quanto_valho:{
+  falante:'a mulher da coluna',
+  vozes:['P','N','P','N','P','N','N'],
   texto:[
     '"E quanto eu valho?"',
     'Pela primeira vez ela olha pra você como pessoa.',
@@ -2450,7 +2532,7 @@ c8_quanto_valho:{
     '"Porque eu precifiquei quatro de vocês hoje e três eram menores de idade." Ela bota o telefone no bolso. "E porque quem ganha é convidado a conversar depois. E a conversa não é sobre o prêmio."'
   ],
   ef:{flag:'aviso_da_cotacao',
-      npc:{nome:'Mulher da coluna', opiniao:2, memoria:'Te avisou pra não entrar na arena do S.S. Anne.'}},
+      npc:{nome:'a mulher da coluna', opiniao:2, memoria:'Te avisou pra não entrar na arena do S.S. Anne.'}},
   escolhas:[
     {texto:'Entrar no torneio mesmo assim.', vai:'c8_torneio'},
     {texto:'"Que conversa?"', vai:'c8_que_conversa'},
@@ -2460,6 +2542,8 @@ c8_quanto_valho:{
 },
 
 c8_que_conversa:{
+  falante:'a mulher da coluna',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Que conversa?"',
     'Ela suspira.',
@@ -2480,9 +2564,11 @@ c8_que_conversa:{
 },
 
 c8_homem_mesa:{
+  falante:'Ex-Silph',
+  vozes:['N','N'],
   texto:[
     'Você senta. Ele empurra uma taça cheia na sua direção e você não bebe, e ele não insiste, e isso já diz que ele não é mau sujeito.',
-    'Ele trabalhou dezoito anos na Silph. Saiu ano passado.',
+    'Ele trabalhou vinte e cinco anos na Silph. Saiu ano passado.',
     '"Eu não vou dizer por quê. Mas vou dizer uma coisa: quando uma empresa começa a chamar o setor de pesquisa de “setor de recursos”, você atualiza o currículo."',
     'Ele bebe.',
     '"Você já ouviu falar do que tinha em Cinnabar?"'
@@ -2498,6 +2584,8 @@ c8_homem_mesa:{
 },
 
 c8_cinnabar_conta:{
+  falante:'Ex-Silph',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Tinha um tanque."',
     'Ele mede com as duas mãos e as mãos não chegam.',
@@ -2520,6 +2608,8 @@ c8_cinnabar_conta:{
 },
 
 c8_e_ai_cinnabar:{
+  falante:'Ex-Silph',
+  vozes:['N','N','P','N','N'],
   texto:[
     '"E aí em oitenta e nove teve o incidente."',
     'Ele fala a palavra "incidente" com um desprezo profundo.',
@@ -2541,6 +2631,8 @@ c8_e_ai_cinnabar:{
 },
 
 c8_os_quatro_nomes:{
+  falante:'Ex-Silph',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O senhor sabe o nome dos quatro?"',
     'Ele para com a taça na metade do caminho.',
@@ -2564,6 +2656,8 @@ c8_os_quatro_nomes:{
 },
 
 c8_porque_me_conta:{
+  falante:'Ex-Silph',
+  vozes:['P','N','N','N'],
   texto:[
     '"Por que o senhor tá me contando isso?"',
     'Ele olha em volta do salão inteiro, devagar, de um jeito que não é paranoia — é hábito.',
@@ -2584,23 +2678,25 @@ c8_porque_me_conta:{
 },
 
 c8_pode_acontecer:{
+  falante:'Ex-Silph',
+  vozes:['P','N','P','N','N','P','N'],
   texto:[
     '"Pode acontecer alguma coisa."',
     'Ele ri, e é a risada de alguém que quer muito acreditar.',
     '"Pode?"',
     '"Eu tenho isso." Você mostra o que você tem — o caderno, a folha, a cópia, o que for.',
     d=>d.flags.papel_com_brasao || d.flags.leu_o_estatuto
-      ? 'Ele lê. E o rosto dele muda de um jeito que você vai lembrar por muito tempo: ele fica com medo e aliviado ao mesmo tempo, e as duas coisas na mesma cara não deviam caber.'
+      ? 'Ele lê. E o rosto dele muda: ele fica com medo e aliviado ao mesmo tempo, e as duas coisas na mesma cara não deviam caber.'
       : 'Ele olha. Não tem nada demais ali ainda, e ele é educado demais pra dizer isso.',
-    '"Anota o meu telefone", ele diz. "Não me liga. Anota."',
+    '"Anota o meu telefone," ele diz. "Não me liga. Anota."',
     '"Pra quê, então?"',
-    '"Pra você ter, no dia em que precisar de alguém que trabalhou dezoito ano lá dentro e que aceite assinar."'
+    '"Pra você ter, no dia em que precisar de alguém que trabalhou vinte e cinco ano lá dentro e que aceite assinar."'
   ],
   ef:{flag:'telefone_do_ex_silph',
       npc:{nome:'Ex-Silph', opiniao:5, memoria:'Te deu o telefone dele para o dia em que você precisar de alguém de dentro que assine.'},
       rep:{eixo:'bom',delta:2,motivo:'Deu a alguém um motivo pra acreditar que ia acontecer alguma coisa'},
       registrar:'Tem um ex-funcionário da Silph disposto a assinar, se um dia você precisar.',
-      presagio:'Alguém de dentro, disposto a assinar. Isso vale mais que qualquer insígnia e você ainda não sabe.'},
+      presagio:'Alguém de dentro, disposto a assinar. Isso é mais raro que qualquer insígnia.'},
   escolhas:[
     {texto:'Anotar e agradecer.', vai:'c8_mais_salao'},
     {texto:'"O senhor sabe o nome de alguém de lá?"', vai:'c8_os_quatro_nomes'},
@@ -2609,6 +2705,8 @@ c8_pode_acontecer:{
 },
 
 c8_falou_com_alguem:{
+  falante:'Ex-Silph',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"O senhor falou com alguém sobre isso?"',
     '"Falei com a minha mulher."',
@@ -2641,7 +2739,7 @@ c8_torneio:{
     'Um desses quatro, de uns catorze anos, abre a noite com um Rapidash que já não é novo, luta direito e perde por pouco. Ele recolhe o Rapidash e fica olhando a Pokébola fechada.',
     'O locutor é um funcionário do navio com microfone e uma alegria profissional insuportável.',
     d=>d.flags.o_garoto_da_enfermaria ? 'Tem uma cadeira vazia na fila dos participantes com um número de inscrição colado no encosto.' : '',
-    '"PRIMEIRA LUTA!"'
+    '"PRÓXIMA LUTA!"'
   ],
   ef:{registrar:'Entrou no torneio do S.S. Anne.'},
   batalha:{dex:26, nivel:32, tipo:'treinador', treinador:'Adversário do torneio', fuga:false,
@@ -2651,7 +2749,7 @@ c8_torneio:{
 
 c8_ganhou_torneio:{
   falante:'o homem de sapato limpo',
-  vozes:['N','N'],
+  vozes:['N','N','N'],
   texto:[
     'Três lutas. Você ganha as três.',
     'A terceira é contra a mulher de vinte e cinco anos, e ela aperta a sua mão no fim e diz "bom, hein" de um jeito que vale mais que o prêmio.',
@@ -2659,7 +2757,7 @@ c8_ganhou_torneio:{
     'Vinte mil pokedólares. Em dinheiro, num envelope, numa bandeja.',
     'Por cima das cabeças, você vê o garoto do Rapidash, que caiu na primeira rodada, sair do salão pela porta de serviço sem olhar pra trás.',
     'E enquanto você conta — porque você conta, na frente de todo mundo, porque você tem {idade} anos e nunca viu vinte mil pokedólares —, um homem de terno para do seu lado e espera você terminar de contar.',
-    '"Parabéns", ele diz. "Sério. Foi bonito de assistir."',
+    '"Parabéns," ele diz. "Sério. Foi bonito de assistir."',
     'Ele espera.',
     '"Você tem dez minutos? Eu queria conversar."'
   ],
@@ -2682,16 +2780,19 @@ c8_o_sapato:{
   texto:[
     'Você olha pra baixo antes de responder qualquer coisa.',
     'Sapato social preto. Solado de borracha. Limpo de um jeito que não existe num navio de porto.',
-    d=>d.flags.sapato_limpo
-      ? 'Você já ouviu sobre esse sapato duas vezes. De um caçador numa caverna e de um conferente num pátio.'
-      : 'Você não sabe por que reparou nisso.',
+    d=>{
+      const viu = [d.flags.sapato_da_caverna && 'de um homem numa caverna', d.flags.sapato_do_porto && 'de um conferente num pátio'].filter(Boolean);
+      if (viu.length === 2) return 'Você já ouviu sobre esse sapato duas vezes. De um homem numa caverna e de um conferente num pátio.';
+      if (viu.length === 1) return `Você já ouviu sobre esse sapato uma vez, ${viu[0]}.`;
+      return 'Você não sabe por que reparou nisso.';
+    },
     'Ele percebe que você olhou pro sapato dele e acha graça — graça de verdade, sem nenhuma ameaça.',
-    '"Ninguém nunca olha pro sapato", ele diz. "Isso é muito bom."',
+    '"Ninguém nunca olha pro sapato," ele diz. "Isso é muito bom."',
     'Ele estende a mão.',
     '"Dez minutos."'
   ],
-  ef:{flag:['sapato_limpo','ele_reparou_que_voce_reparou'],
-      presagio:'"Isso é muito bom." Você acabou de ser promovido de irrelevante a interessante, e as duas coisas eram mais seguras antes.'},
+  ef:{flag:['sapato_limpo','sapato_do_salao','ele_reparou_que_voce_reparou'],
+      presagio:'"Isso é muito bom." Você acabou de ser promovid{o|a} de irrelevante a interessante, e irrelevante era mais seguro.'},
   escolhas:[
     {texto:'Apertar a mão. "Dez minutos."', vai:'c8_a_conversa'},
     {texto:'Não apertar. "Sobre o quê?"', vai:'c8_sobre_o_que'},
@@ -2724,7 +2825,7 @@ c8_sobre_o_que:{
 
 c8_que_fundacao:{
   falante:'o homem de sapato limpo',
-  vozes:['P','N'],
+  vozes:['P'],
   texto:[
     '"Que fundação?"',
     'Ele diz o nome. É comprido, sério e completamente esquecível — três substantivos abstratos e uma preposição.',
@@ -2732,8 +2833,9 @@ c8_que_fundacao:{
       ? 'Você já viu esse nome. Num folheto de papel bom, debaixo do balcão do museu de Pewter, com um brasão pequeno de balança no rodapé.'
       : 'Você nunca ouviu falar. Ninguém nunca ouviu falar.',
     'Ele repara na sua cara.',
-    '"Você conhece."',
-    'Não é pergunta.'
+    d=>d.flags.folheto_comissao
+      ? fala('o homem de sapato limpo', 'Você conhece.', null, 'Não é pergunta.')
+      : fala('o homem de sapato limpo', 'Ninguém conhece. É de propósito.')
   ],
   ef:{flag:'nomeou_a_fundacao'},
   escolhas:[
@@ -2775,9 +2877,9 @@ c8_a_conversa:{
   falante:'o homem de sapato limpo',
   vozes:['P','N','N'],
   texto:[
-    'A mesa fica no canto do salão, com vista pro mar preto, e o salão inteiro consegue ver vocês dois — o que, você entende depois, é o ponto.',
+    'A mesa fica no canto do salão, com vista pro mar preto, e o salão inteiro consegue ver vocês dois — e é esse o ponto.',
     'Ele fala por nove minutos.',
-    'Bolsa mensal. Equipamento. cobertura médica pro time inteiro. Acesso a instalações de recuperação em quatro cidades. Nada de exclusividade, nada de contrato de imagem, nada de obrigação de resultado.',
+    'Bolsa mensal. Equipamento. Cobertura médica pro time inteiro. Acesso a instalações de recuperação em quatro cidades. Nada de exclusividade, nada de contrato de imagem, nada de obrigação de resultado.',
     'É uma proposta boa. É uma proposta absurdamente boa e você fica com vergonha de quanto ela é boa.',
     '"E o que vocês ganham?"',
     '"Dado."',
@@ -2796,6 +2898,8 @@ c8_a_conversa:{
 },
 
 c8_o_que_acontece_com_o_dado:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"O que acontece com o dado depois?"',
     'Ele sorri, e é a primeira vez que o sorriso chega nos olhos.',
@@ -2846,6 +2950,8 @@ c8_a_regua:{
 },
 
 c8_quem_segura:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"E quem segura?"',
     '"Onze pessoas."',
@@ -2869,6 +2975,8 @@ c8_quem_segura:{
 },
 
 c8_continua_trabalhando:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"E o senhor continua trabalhando lá."',
     '"Continuo."',
@@ -2880,7 +2988,7 @@ c8_continua_trabalhando:{
     '"Nos outros dias eu não acho. Mas nesses dias eu também vou trabalhar."'
   ],
   ef:{flag:'a_maior_parte_dos_dias',
-      npc:{nome:'Curador Fabre', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'}},
+      npc:{nome:'o homem de sapato limpo', opiniao:2, memoria:'Conversou com você por dez minutos num salão de navio e admitiu que em alguns dias não acha que faz mais bem que mal.'}},
   escolhas:[
     {texto:'Apertar a mão.', vai:'c8_levou_a_ficha'},
     {texto:'Não apertar.', vai:'c8_recusa_venda'},
@@ -2890,9 +2998,11 @@ c8_continua_trabalhando:{
 },
 
 c8_o_nome_dele:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','P','N','N','P','N'],
   texto:[
     '"Como é o seu nome?"',
-    'Ele para de ajeitar o paletó.',
+    d=>{ Nomes.apresentar('o homem de sapato limpo'); return 'Ele para de ajeitar o paletó.'; },
     '"Fabre."',
     '"Fabre de quê?"',
     'Uma pausa mínima.',
@@ -2904,7 +3014,7 @@ c8_o_nome_dele:{
   ],
   ef:{flag:['sabe_do_adnan','sabe_da_comissao'],
       registrar:'Curador Fabre, de acervo.',
-      npc:{nome:'Curador Fabre', opiniao:1, memoria:'Você perguntou o nome dele. Ele deu o primeiro e o cargo.'},
+      npc:{nome:'o homem de sapato limpo', opiniao:1, memoria:'Você perguntou o nome dele. Ele deu o primeiro e o cargo.'},
       presagio:'Curador de acervo. Acervo é onde as coisas ficam quando param de ser de alguém.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
@@ -2919,15 +3029,13 @@ c8_assinou:{
     'Você assina.',
     'Leva quatro segundos e é a coisa mais fácil que você fez em Kanto.',
     'Ele guarda a via dele na pasta, te entrega a sua dobrada em três, e aperta a sua mão com as duas mãos.',
-    'A primeira bolsa cai na sua conta em nove dias. É mais dinheiro do que entra na sua casa num mês.',
-    'A primeira ficha você preenche em Celadon, sentad{o|a} num banco de praça, e demora quarenta minutos porque você tenta ser honest{o|a}.',
-    'A segunda você preenche em vinte.',
-    'A sexta você preenche em quatro.'
+    'Ele te entrega um adiantamento num envelope, ali mesmo, e diz que a bolsa cai todo mês. O adiantamento sozinho é mais do que entra na sua casa num mês.',
+    'A ficha tem campo pra peso, nível e incidentes. No fim tem uma linha em branco escrita "observações", e é a única parte da folha que ninguém te explica.'
   ],
   ef:{flag:['assinou_com_a_comissao','sabe_da_comissao'],
       dinheiro:5000,
       rep:{eixo:'ruim',delta:2,motivo:'Assinou um acompanhamento de espécimes sem ler o estatuto'},
-      npc:{nome:'Curador Fabre', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
+      npc:{nome:'o homem de sapato limpo', opiniao:5, memoria:'Você assinou o termo de acompanhamento numa mesa do S.S. Anne.'},
       registrar:'Assinou o termo de acompanhamento da Comissão.'},
   escolhas:[
     {texto:'Ir pro camarote 40.', vai:'c8_camarote'},
@@ -2938,6 +3046,8 @@ c8_assinou:{
 },
 
 c8_levou_a_ficha:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','N'],
   texto:[
     '"Posso levar a ficha e pensar?"',
     '"Pode." Ele empurra. "Leva duas, aliás. Uma pra você e uma pra dar pra alguém que você ache que devia ter."',
@@ -2959,20 +3069,22 @@ c8_levou_a_ficha:{
 },
 
 c8_recusa_venda:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Não."',
     'Ele aceita na hora. Sem insistência, sem segunda tentativa, sem cara feia.',
     '"Certo."',
     'Ele guarda a ficha na pasta e levanta e ajeita o paletó.',
     '"Obrigado pelos dez minutos."',
-    'E aí ele diz a coisa que vai te acompanhar:',
+    'E aí ele diz, sem mudar o tom:',
     '"A gente não precisa de você, sabe? Isso não é ameaça, é o contrário. É pra você ficar tranquil{o|a}."',
     'Ele sorri.',
     '"A gente tem quatro mil e duzentas fichas."'
   ],
   ef:{flag:['recusou_a_comissao','sabe_da_comissao'],
       rep:{eixo:'bom',delta:2,motivo:'Recusou a bolsa e a ficha'},
-      npc:{nome:'Curador Fabre', opiniao:1, memoria:'Você recusou a proposta dele no S.S. Anne. Ele não insistiu.'},
+      npc:{nome:'o homem de sapato limpo', opiniao:1, memoria:'Você recusou a proposta dele no S.S. Anne. Ele não insistiu.'},
       registrar:'A Comissão tem quatro mil e duzentas fichas.',
       presagio:'Quatro mil e duzentas. Você recusar não muda nada, e é exatamente por isso que ele te contou.'},
   escolhas:[
@@ -2984,6 +3096,8 @@ c8_recusa_venda:{
 },
 
 c8_quatro_mil:{
+  falante:'o homem de sapato limpo',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Quatro mil e duzentas de quê?"',
     '"De treinadores acompanhados."',
@@ -3006,6 +3120,8 @@ c8_quatro_mil:{
 },
 
 c8_rasgou:{
+  falante:'o homem de sapato limpo',
+  vozes:['N','N','N'],
   texto:[
     'Você acha ele no corredor do convés dois e rasga a sua via na frente dele, em quatro, e deixa cair no chão carpetado.',
     'Ele olha os pedaços.',
@@ -3027,13 +3143,13 @@ c8_rasgou:{
 
 c8_escreveu_rescisao:{
   falante:'o homem de sapato limpo',
-  vozes:['N'],
+  vozes:['N','N'],
   texto:[
     'Você escreve à mão, num papel de carta do camarote de outra pessoa, às duas da manhã, com uma caneta emprestada da recepção.',
     'Sete linhas. Você refaz três vezes porque erra o nome comprido da fundação.',
     'De manhã você entrega na mão dele no café.',
     'Ele lê, faz que sim, tira uma caneta do bolso e escreve "RECEBIDO" com a data e a hora e assina embaixo, e devolve pra você ficar com o comprovante.',
-    '"Guarda", ele diz. "Sempre guarda o recebido."',
+    '"Guarda," ele diz. "Sempre guarda o recebido."',
     'E é, provavelmente, o melhor conselho jurídico que alguém já te deu.'
   ],
   ef:{flag:['rescindiu','sempre_guarda_o_recebido'],
@@ -3048,7 +3164,7 @@ c8_escreveu_rescisao:{
 
 c8_perdeu_torneio:{
   texto:[
-    'Você perde na segunda luta.',
+    'Você perde.',
     'Não é humilhante e não é bonito: é uma derrota normal, de alguém que treinou menos que a outra pessoa.',
     'O locutor fala o nome do adversário e o salão bate palma e volta a conversar, e você desce do emborrachado e ninguém olha.',
     'Nos vestiários improvisados — que são um corredor de serviço com duas cadeiras —, um dos participantes que perdeu antes de você está sentado com a cabeça entre as mãos.',
@@ -3071,7 +3187,7 @@ c8_o_de_catorze:{
       ? 'A porta de serviço dá num corredor com duas cadeiras de plástico, que é o vestiário improvisado. Ele está numa delas, com a cabeça entre as mãos. Você senta na outra e não fala nada por um tempo.'
       : 'Você senta na outra cadeira e não fala nada por um tempo.',
     'O número de inscrição do torneio ainda está preso na camiseta dele com alfinete, e embaixo do número alguém escreveu o nome à caneta: RORY.',
-    '"Eu vim de Fuchsia", ele diz sem levantar a cabeça. "Meu tio pagou a passagem."',
+    '"Eu vim de Fuchsia," ele diz sem levantar a cabeça. "Meu tio pagou a passagem."',
     d=>d.flags.venceu_torneio_navio
       ? 'Ele levanta o olho, vê quem é, e abaixa de novo. Ele sabe quem levou o envelope. O salão inteiro sabe.'
       : '',
@@ -3093,6 +3209,8 @@ c8_o_de_catorze:{
 },
 
 c8_deu_o_premio:{
+  falante:'Rory',
+  vozes:['N','P','N'],
   texto:[
     'Você tira o envelope da mochila e põe no colo dele.',
     'Ele não entende. Leva uns bons cinco segundos pra ele entender, e quando entende ele empurra de volta com as duas mãos, com força.',
@@ -3134,12 +3252,14 @@ c8_deu_um_pouco:{
 },
 
 c8_ficou_sentado:{
+  falante:'Rory',
+  vozes:['N','N'],
   texto:[
     'Você fica. Duas cadeiras de plástico num corredor de serviço, com barulho de cozinha vindo de uma porta e música de piano vindo da outra.',
     'Vinte e cinco minutos sem falar quase nada.',
     'Em algum momento ele solta o Rapidash — que não devia estar solto num corredor de navio — e o Pokémon enche o corredor inteiro e não cabe, e tem uma cicatriz cirúrgica antiga numa das patas dianteiras.',
     'O garoto encosta a testa no pescoço dele.',
-    '"Ele tem onze anos", ele diz. "Ele era do meu pai."',
+    '"Ele tem onze anos," ele diz. "Ele era do meu pai."',
     'E é só isso. Não tem mais história.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Ficou vinte e cinco minutos num corredor com um desconhecido'},
@@ -3161,7 +3281,7 @@ c8_porao:{
     'O porão de carga do S.S. Anne é um corredor de aço de sessenta metros com caixa empilhada dos dois lados até o teto.',
     'É quente. Muito mais quente do que devia ser, porque a casa de máquinas é do outro lado da antepara.',
     'A luz é de emergência: amarela, a cada oito metros.',
-    d=>d.flags.uniforme_tripulacao ? 'De uniforme, você é só mais alguém conferindo carga. Ninguém pergunta nada.' : 'Se alguém te ver aqui, não tem explicação que funcione.',
+    d=>d.flags.uniforme_tripulacao ? 'De uniforme, você é só mais alguém conferindo carga. Ninguém pergunta nada.' : 'Se alguém te vir aqui, não tem explicação que funcione.',
     'No fundo do corredor, as três caixas.',
     'Furo de ventilação. Doze furos em cada uma, feitos com broca, em fileira, na altura certa pra uma coisa do tamanho de um Growlithe respirar.'
   ],
@@ -3256,7 +3376,7 @@ c8_abriu_caixa:{
     'Ele não se mexe quando a luz entra. Fica encolhido no canto, com o focinho enfiado na palha, e só os olhos acompanham você.',
     'Tem uma etiqueta amarrada no pescoço dele com barbante e um número escrito a caneta.',
     'Nas outras duas: um Sandshrew, que sibila e recua, e — na terceira, a silenciosa — um Growlithe menor que não recua nem sibila nem se mexe.',
-    'Esse você não vai conseguir esquecer.'
+    'É nesse que você fica olhando.'
   ],
   ef:{flag:'abriu_as_caixas_do_navio',
       registrar:'Nas caixas do porão: dois Growlithe e um Sandshrew, etiquetados e sedados.',
@@ -3296,10 +3416,12 @@ c8_soltou_caixas:{
 },
 
 c8_o_marinheiro:{
+  falante:'Marinheiro do turno',
+  vozes:['N','N','N','N','N'],
   texto:[
     'Você conta tudo. As caixas, os furos, a etiqueta, o número da guia.',
     'Ele escuta agachado ao lado do Growlithe menor, com a mão nas costas dele.',
-    '"Eu trabalho nesse navio faz nove anos", ele diz. "Eu carreguei caixa com furo nove vezes. Uma por ano."',
+    '"Eu trabalho nesse navio faz nove anos," ele diz. "Eu carreguei caixa com furo nove vezes. Uma por ano."',
     'Ele levanta.',
     '"E eu nunca abri nenhuma, porque abrir lacre é crime e eu tenho filho."',
     'Ele olha os três Pokémon soltos no convés.',
@@ -3345,12 +3467,15 @@ c8_porque_nunca_abriu_nav:{
 /* ─────────────── ENFERMARIA ─────────────── */
 
 c8_enfermaria:{
+  falante:'Enfermeira do Anne',
+  vozes:['N','P','N','N'],
   texto:[
     'A enfermaria do convés dois tem duas macas, um armário trancado e uma enfermeira de uns sessenta anos que está acordada às quatro da manhã porque sempre está.',
     'Ela olha o que você trouxe e não faz uma única pergunta.',
     'Trabalha por quarenta minutos em silêncio.',
+    d=>d.flags.levou_o_da_terceira || d.flags.soltou_do_porao ? 'Por fim ela fala, sem levantar a cabeça:' : '',
     d=>d.flags.levou_o_da_terceira || d.flags.soltou_do_porao
-      ? '"Sedativo de uso em Pokémon", ela diz por fim, sem levantar a cabeça. "Dose de contenção prolongada. Não é ilegal. É o que se usa em transporte de longa distância autorizado."' : '',
+      ? fala('Enfermeira do Anne', 'Sedativo de uso em Pokémon. Dose de contenção prolongada. Não é ilegal. É o que se usa em transporte de longa distância autorizado.', 'baixo') : '',
     d=>d.flags.o_garoto_da_enfermaria
       ? 'Na segunda maca tem um garoto de dezesseis anos dormindo, com soro no braço. É o que faltou no torneio.' : '',
     'Ela lava as mãos.',
@@ -3421,6 +3546,8 @@ c8_deixou_pro_garoto:{
 },
 
 c8_esperou_acordar:{
+  falante:'o garoto da maca',
+  vozes:['N','P','N'],
   texto:[
     'Você fica na cadeira de plástico da enfermaria até as sete e quarenta, quando ele acorda.',
     'Ele leva um susto de ver alguém.',
@@ -3447,6 +3574,8 @@ c8_esperou_acordar:{
 },
 
 c8_quantas_vezes:{
+  falante:'Enfermeira do Anne',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Quantas vezes a senhora já fez isso? Registrar como achado no convés."',
     'Ela não responde na hora. Termina de guardar uma coisa no armário e tranca.',
@@ -3461,7 +3590,7 @@ c8_quantas_vezes:{
   ef:{flag:'as_quatorze_vezes',
       npc:{nome:'Enfermeira do Anne', opiniao:5, memoria:'Já registrou quatorze "achados no convés" em onze temporadas. Duas foram trazidas por garotos.'},
       registrar:'Quatorze "achados no convés" em onze temporadas do S.S. Anne.',
-      presagio:'Duas em quatorze. Você é a terceira.'},
+      presagio:'Duas em quatorze. Essa é a terceira.'},
   escolhas:[
     {texto:'"E os doze da tripulação?"', vai:'c8_os_doze_da_tripulacao'},
     {texto:'Ficar até clarear.', vai:'c8_fim_navio'},
@@ -3471,6 +3600,8 @@ c8_quantas_vezes:{
 },
 
 c8_os_doze_da_tripulacao:{
+  falante:'Enfermeira do Anne',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"E os doze da tripulação?"',
     '"Doze pessoas diferentes."',
@@ -3586,7 +3717,7 @@ c8_gritou_no_corredor:{
     'Três portas abrem. Gente de roupão. Um casal. Um homem com uma revista na mão.',
     'E aí acontece a coisa que você não previu: todo mundo olha pra VOCÊ.',
     'O homem do 40 não fecha a porta. Ele abre mais, para que todos vejam que ele está calmo, de camisa social, com as mãos à mostra.',
-    '"Está tudo bem", ele diz pros vizinhos, com um sorriso de desculpas. "{O garoto|A garota} se perdeu."',
+    '"Está tudo bem," ele diz pros vizinhos, com um sorriso de desculpas. "{O garoto|A garota} se perdeu."',
     'E as três portas fecham.'
   ],
   ef:{flag:'gritou_no_corredor', rep:{eixo:'ruim',delta:1,motivo:'Gritou num corredor e ninguém acreditou'},
@@ -3644,6 +3775,8 @@ c8_levou_testemunha:{
 },
 
 c8_o_senhor_conduziu:{
+  falante:'Vizinho do 38',
+  vozes:['N','N'],
   texto:[
     'Você fica calad{o|a} e deixa o senhor de pijama conduzir.',
     'E ele conduz. Com uma competência assustadora de quem trabalhou a vida inteira em alguma coisa.',
@@ -3696,14 +3829,16 @@ c8_podem_levantar:{
     '"Está tudo bem. Pode levantar."',
     'E aí eles levantam.',
     'E é nesse segundo que você entende o tamanho exato da coisa, e o tamanho é pior do que gaiola: gaiola é ferro, e isso aqui não tem ferro nenhum.',
-    'Um deles se chama Dorian e ele não te reconhece porque vocês nunca se viram.'
+    d=>c8_conheceDorian(d)
+      ? 'O mais velho tem uns dezessete anos. Se tem um Dorian nesse navio, é ele.'
+      : 'O mais velho tem uns dezessete anos. O outro, menos que você.'
   ],
   ef:{flag:['achou_o_denis','abriu_o_40'],
-      registrar:'Dorian está vivo. Ele levantou quando o homem de camisa social autorizou.',
+      registrar:'No camarote 40, dois adolescentes só levantaram quando o homem de camisa social autorizou.',
       rep:{eixo:'bom',delta:3,motivo:'Falou com quem ninguém falava'}},
   escolhas:[
     {texto:'"Dorian. Sua tia tem uma carta sua."', vai:'c8_a_carta_de_volta',
-     cond:d=>!!(d.flags.a_carta_do_denis||d.flags.copiou_a_carta||d.flags.o_denis_esta_no_40)},
+     cond:d=>!!(d.flags.a_carta_do_denis||d.flags.copiou_a_carta)},
     {texto:'Pegar os dois pela mão e sair andando.', vai:'c8_saiu_andando'},
     {texto:'Gritar por socorro com a porta aberta.', vai:'c8_socorro_com_porta_aberta'},
     {texto:'Pegar as onze pastas.', vai:'c8_pegou_as_pastas'}
@@ -3711,6 +3846,8 @@ c8_podem_levantar:{
 },
 
 c8_a_carta_de_volta:{
+  falante:'Dorian',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Dorian. Sua tia tem uma carta sua."',
     'Ele para no meio do movimento de levantar.',
@@ -3718,7 +3855,7 @@ c8_a_carta_de_volta:{
     '"Um menino do cais de Vermilion tem a sua carta dobrada em oito no bolso de trás. Faz um ano."',
     'E aí ele chora.',
     'De uma vez, sem aviso, do jeito que chora quem segurou muito tempo, sentado de novo no chão do box do banheiro de um camarote.',
-    '"Eu escrevi de novo", ele diz. "Eu escrevi de novo quatro vezes."',
+    '"Eu escrevi de novo," ele diz. "Eu escrevi de novo quatro vezes."',
     'Ele olha pro homem de camisa social.',
     '"Ele disse que ia postar."'
   ],
@@ -3739,7 +3876,7 @@ c8_encarou_o_do_40:{
   texto:[
     'Você vira pro homem de camisa social.',
     'Ele está parado no meio do camarote com as mãos à mostra, calmo, sem nenhuma intenção de correr ou de reagir.',
-    '"Eles embarcaram por vontade própria", ele diz. "Os dois assinaram termo de vaga de trabalho. Está na pasta três."',
+    '"Eles embarcaram por vontade própria," ele diz. "Os dois assinaram termo de vaga de trabalho. Está na pasta três."',
     '"Eles estavam trancados num banheiro."',
     '"A porta estava encostada com uma cadeira porque a maçaneta está quebrada."',
     'Ele olha você nos olhos sem piscar.',
@@ -3873,7 +4010,7 @@ c8_socorro_com_porta_aberta:{
 c8_corredor_servico:{
   texto:[
     'O corredor de serviço do convés três corre paralelo ao dos camarotes, do outro lado da antepara, e serve pra copa, rouparia e manutenção.',
-    d=>d.flags.tem_a_chave ? 'A chave de latão que a Rina perdeu dois verões atrás abre a porta no primeiro giro.'
+    d=>d.flags.tem_a_chave ? 'A chave de latão da cozinheira do bar abre a porta no primeiro giro.'
        : d.flags.janela_das_23h ? 'A porta está destrancada, porque são 23h07 e a troca de turno da copa vai até 23h20.'
        : 'A porta está trancada. Você espera dezoito minutos encostad{o|a} na parede e uma copeira sai empurrando um carrinho e você segura a porta pra ela, e ela agradece, e você entra.',
     'Lá dentro é estreito, quente e cheio de cano.',
@@ -3915,7 +4052,7 @@ c8_escutou_pela_grade:{
 
 c8_continuou_escutando:{
   falante:'o homem de camisa social',
-  vozes:['N','N','N','o menino'],
+  vozes:['N','N','N','Dorian'],
   texto:[
     'Você fica mais quarenta minutos.',
     'Ele desliga o telefone e fala com os dois do banheiro — e a voz muda completamente. Fica mais macia, mais lenta, de professor.',
@@ -3925,7 +4062,7 @@ c8_continuou_escutando:{
     'Silêncio.',
     '"Dorian, vira pra cá. Olha. Você assinou por vontade própria, lembra? Eu perguntei três vezes."',
     'E a coisa mais horrível da noite inteira:',
-    '"Lembro", diz o menino.'
+    '"Lembro," diz o menino.'
   ],
   ef:{flag:'lembro_disse_o_menino',
       registrar:'"Você assinou por vontade própria, lembra? Eu perguntei três vezes." "Lembro."'},
@@ -3938,23 +4075,28 @@ c8_continuou_escutando:{
 },
 
 c8_desparafusou:{
-  falante:'Dorian',
-  vozes:['P','N'],
   texto:[
     'Você desparafusa os quatro com a chave da sua mochila. Leva onze minutos e os parafusos são de fenda e velhos e o último quase não sai.',
     'A grade sai.',
     'Do outro lado tem um duto de trinta centímetros que dá na parte de cima do box do banheiro do camarote 40, e você não cabe.',
     'Mas dá pra ver.',
     'E dá pra falar.',
-    'Você põe a boca no duto e fala, muito baixo: "Dorian."',
-    'E do outro lado, depois de uns quatro segundos, uma voz de menino responde, muito baixa: "Quem é?"'
+    'Você põe a boca no duto e fala, muito baixo:',
+    d=>fala(d.jogador.nome, c8_conheceDorian(d) ? 'Dorian.' : 'Ei. Tá me ouvindo?', 'baixo'),
+    d=>c8_conheceDorian(d)
+      ? 'E do outro lado, depois de uns quatro segundos, uma voz de menino responde, muito baixa:'
+      : 'Do outro lado, depois de uns quatro segundos, uma voz de menino:',
+    d=>c8_conheceDorian(d) ? fala('Dorian', 'Quem é?', 'baixo') : fala('a voz do duto', 'Tô.', 'baixo'),
+    d=>c8_conheceDorian(d) ? '' : 'Uma pausa. Depois, mais baixo ainda:',
+    d=>c8_conheceDorian(d) ? '' : fala('Dorian', 'Eu sou o Dorian. Quem é?', 'baixo')
   ],
   ef:{flag:'falou_com_o_denis',
       rep:{eixo:'bom',delta:3,motivo:'Falou com quem estava do outro lado da parede'},
       registrar:'Falou com Dorian por um duto de ventilação do camarote 40.',
       presagio:'"Quem é?" Ninguém perguntou isso pra ele há muito tempo.'},
   escolhas:[
-    {texto:'"Um amigo do menino do cais."', vai:'c8_amigo_do_cais'},
+    {texto:'"Um amigo do menino do cais."', vai:'c8_amigo_do_cais',
+     cond:d=>!!(d.flags.o_denis || d.flags.a_carta_do_denis || d.flags.copiou_a_carta)},
     {texto:'"Alguém que vai tirar vocês daí."', vai:'c8_vai_tirar'},
     {texto:'"Quantos são?"', vai:'c8_quantos_sao_no_40'},
     {texto:'Fechar tudo e ir buscar o capitão.', vai:'c8_capitao', ef:{flag:'com_testemunha'}}
@@ -3994,7 +4136,7 @@ c8_quantos_sao_no_40:{
     '"Nesse camarote."',
     'Você demora a entender a correção.',
     '"E nos outros?"',
-    '"Tem mais três no convés um, no alojamento de tripulação." A voz dele está firme agora, e é pior do que quando estava chorando. "E tem gente que embarcou em Celadon."',
+    '"Tem mais três no convés um, no alojamento de tripulação." A voz dele está firme agora, e é pior do que quando estava chorando. "E tem gente que veio de Celadon, de caminhão."',
     '"Quantos ao todo?"',
     '"Nove."'
   ],
@@ -4005,7 +4147,7 @@ c8_quantos_sao_no_40:{
     {texto:'"Eu vou tirar vocês daí."', vai:'c8_vai_tirar'},
     {texto:'Ir buscar o capitão agora, com o número.', vai:'c8_capitao', ef:{flag:['com_testemunha','sabe_do_numero']}},
     {texto:'Ir bater na porta do 40.', vai:'c8_bateu_no_40'},
-    {texto:'Ir ao alojamento do convés um.', vai:'c8_porao'}
+    {texto:'Descer pro porão.', vai:'c8_porao'}
   ]
 },
 
@@ -4021,7 +4163,7 @@ c8_vai_tirar:{
     '"Porque se você abrir essa porta hoje, amanhã eu não tenho nada." A voz dele é de alguém que já pensou muito nisso. "Eu não tenho casa, eu não tenho dinheiro de passagem de volta e eu devo três meses de alojamento."',
     'Pausa.',
     '"Eu tenho um contrato. É ruim. É o que eu tenho."',
-    'E aí a frase que vai ficar:',
+    'E aí, mais baixo:',
     '"Tira eu daqui e me põe aonde?"'
   ],
   ef:{flag:'me_poe_aonde',
@@ -4088,7 +4230,7 @@ c8_arranjou_a_cama:{
     'Você passa a madrugada inteira nisso.',
     'Acorda a enfermeira. Acorda o contramestre. Acorda a Rina da cozinha, que dorme no alojamento de temporada e que te xinga por quatro minutos antes de escutar.',
     'E às cinco e quarenta da manhã existe, escrito num papel de carta de camarote, assinado por três funcionários do S.S. Anne:',
-    'uma vaga de auxiliar de cozinha, com registro, com carteira, com alojamento, começando na próxima temporada — e um lugar pra dormir em Cinnabar até lá, na casa da irmã da Rina, que aluga quarto.',
+    'Uma vaga de auxiliar de cozinha, com registro, com carteira, com alojamento, começando na próxima temporada — e um lugar pra dormir em Cinnabar até lá, na casa da irmã da Rina, que aluga quarto.',
     'Não é resgate. É muito mais chato que resgate e leva sete horas e envolve três pessoas assinando coisa.',
     'Você bate na porta do 40 às seis da manhã com o papel na mão.'
   ],
@@ -4115,6 +4257,7 @@ c8_capitao:{
     'Ele te escuta por seis minutos sem interromper uma vez.',
     d=>d.flags.com_testemunha ? 'Você não está sozinh{o|a}, e isso muda o jeito que ele escuta: ele olha pra outra pessoa três vezes durante o seu relato, conferindo.' : 'Você está sozinh{o|a}, e ele te escuta do jeito que adulto escuta adolescente sozinh{o|a}.',
     'Quando você acaba, ele põe a caneca na bancada.',
+    d=>d.flags.jantou_com_o_comandante ? 'Ele te reconhece do jantar e não finge que não.' : '',
     '"Eu sei do camarote quarenta."'
   ],
   ef:{flag:'falou_com_o_capitao', registrar:'O capitão do S.S. Anne sabe do camarote 40.'},
@@ -4167,7 +4310,7 @@ c8_nao_faz_nada:{
     'São cópias de comunicações internas, de dois anos atrás e de um ano atrás, dirigidas à administração da companhia, relatando "transporte de pessoal não registrado" e solicitando orientação.',
     'As duas têm carimbo de recebido.',
     'As duas têm, grampeada, uma resposta de duas linhas: "Acusamos recebimento. A questão está sendo tratada no âmbito competente."',
-    '"Eu guardei", ele diz. "Eu guardo tudo."'
+    '"Eu guardei," ele diz. "Eu guardo tudo."'
   ],
   ef:{flag:['o_capitao_comunicou','sempre_guarda_o_recebido'],
       npc:{nome:'Capitão do Anne', opiniao:3, memoria:'Comunicou duas vezes à companhia e guardou as duas respostas de duas linhas.'},
@@ -4191,7 +4334,7 @@ c8_copia_do_capitao:{
     '"Pra ter."',
     'Ele olha as folhas. Olha você. Olha o radar.',
     'E aí vai até a copiadora da sala de rádio, que é uma máquina velha e barulhenta, e tira duas cópias, e carimba as duas com o carimbo do navio, e assina embaixo com data.',
-    '"Isso aqui não é prova de crime nenhum", ele avisa. "Isso é prova de que eu avisei."',
+    '"Isso aqui não é prova de crime nenhum," ele avisa. "Isso é prova de que eu avisei."',
     'Ele te entrega.',
     '"O que é uma coisa completamente diferente, e que um dia vai ser importante pra alguém, e provavelmente não pra mim."'
   ],
@@ -4316,11 +4459,11 @@ c8_copia_da_pagina:{
   texto:[
     '"Me dá cópia dessa página."',
     'Ele abre o livro de novo, tira a cópia na máquina barulhenta da sala de rádio, carimba e assina.',
-    '"Guarda em dois lugares", ele diz, entregando. "Nunca no mesmo lugar do original."',
+    '"Guarda em dois lugares," ele diz, entregando. "Nunca no mesmo lugar do original."',
     d=>d.flags.conselho_da_copia ? 'É exatamente o que a Misty te falou, com outras palavras, na borda de uma piscina em Cerulean.' : 'É a segunda vez em pouco tempo que um adulto te diz isso.',
     'Você guarda uma cópia no bolso interno da mochila e dobra a outra dentro do caderno.'
   ],
-  ef:{flag:['tem_copia_do_diario','papel_com_brasao','conselho_da_copia'],
+  ef:{flag:['tem_copia_do_diario','papel_com_brasao'],
       rep:{eixo:'bom',delta:2,motivo:'Guardou cópia em dois lugares'},
       registrar:'Tem cópia carimbada da página do diário de bordo.',
       presagio:'Duas cópias em dois lugares. Você está virando uma pessoa que faz isso.'},
@@ -4343,7 +4486,7 @@ c8_capitania:{
     'Ele pensa.',
     '"Mas."',
     'Ele pega a caneca vazia e não bebe.',
-    '"Se eu chamar a capitania por suspeita de irregularidade em transporte de carga viva não declarada, eles são obrigados a lavrar termo. E termo lavrado por capitania vai pro Ministério Público por obrigação legal, não por escolha de ninguém."',
+    '"Se eu chamar a capitania por suspeita de irregularidade em transporte de carga viva não declarada, eles são obrigados a lavrar termo. E termo lavrado por capitania vai pra promotoria por obrigação legal, não por escolha de ninguém."',
     'Ele olha pra você.',
     '"Isso eu posso. E isso me custa o emprego em uns seis meses, por outro motivo que vão inventar."'
   ],
@@ -4365,18 +4508,15 @@ c8_chamou_a_capitania:{
     'Ele olha pra você por um tempo muito longo.',
     'E chama.',
     'Pelo rádio, na frequência da capitania, às onze e cinquenta da noite, com a voz absolutamente normal de quem faz comunicação de rotina.',
-    'A capitania sobe às seis da manhã, no cais de Cinnabar, com quatro agentes e uma prancheta.',
-    'Eles lavram termo. Leva três horas. Abrem as três caixas do porão e fotografam.',
-    'O camarote 40 está vazio quando eles chegam, e as onze pastas também, e os nove adolescentes desembarcaram na madrugada por uma prancha de serviço que ninguém registrou.',
-    'Mas o termo foi lavrado, e termo lavrado vai pro Ministério Público por obrigação legal.',
-    'E, sete meses depois, o capitão do S.S. Anne é desligado por reestruturação de quadro.'
+    'Do outro lado, uma voz confirma: a capitania sobe a bordo assim que o navio encostar em Cinnabar.',
+    'Ele desliga o rádio e fica um tempo com a mão em cima dele, do jeito de quem acabou de assinar uma coisa.'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Fez a capitania lavrar termo'},
-      flag:['termo_lavrado','capitao_demitido'],
-      npc:{nome:'Capitão do Anne', opiniao:4, memoria:'Chamou a capitania a seu pedido e perdeu o emprego sete meses depois.'},
-      registrar:'A capitania lavrou termo no S.S. Anne. O capitão foi desligado sete meses depois.'},
+      flag:'termo_lavrado',
+      npc:{nome:'Capitão do Anne', opiniao:4, memoria:'Chamou a capitania a seu pedido, sabendo o que isso podia custar a ele.'},
+      registrar:'O capitão chamou a capitania pelo rádio. Ela sobe a bordo em Cinnabar.'},
   escolhas:[
-    {texto:'Descer em Cinnabar.', vai:'c8_fim_navio'},
+    {texto:'Esperar o navio chegar.', vai:'c8_fim_navio'},
     {texto:'"Me dá cópia de tudo antes de eu descer."', vai:'c8_copia_do_capitao'}
   ]
 },
@@ -4435,11 +4575,11 @@ c8_mostrou_ao_capitao:{
 
 c8_chantageou_o_capitao:{
   falante:'Capitão do Anne',
-  vozes:['P','N','P','P','N','P','N','N'],
+  vozes:['N','N','N','N'],
   texto:[
     d=>fala(d.jogador.nome, 'O senhor sabe há quatro anos.'),
     '"Sei."',
-    d=>fala(d.jogador.nome, 'Então não é uma nota de quarenta linhas sobre modernização de frota.'),
+    d=>fala(d.jogador.nome, d.flags.o_capitao_mandou_pedir_papel ? 'Então não é uma nota de quarenta linhas sobre modernização de frota.' : 'Então a matéria não é sobre a companhia.'),
     'Ele para com a caneca na metade do caminho.',
     d=>fala(d.jogador.nome, 'É uma matéria sobre o capitão do S.S. Anne, com nome, com patente e com tempo de casa, que sabia de nove garotos embarcados sem nome em lista e escolheu não ser autoridade policial.'),
     'A ponte de comando fica muito quieta. O radar gira.',
@@ -4464,7 +4604,7 @@ c8_chantageou_o_capitao:{
 
 c8_recuou_da_chantagem:{
   falante:'Capitão do Anne',
-  vozes:['P','N','N','N','P','N','N'],
+  vozes:['N','N','N','N','N'],
   texto:[
     d=>fala(d.jogador.nome, 'Eu não ia fazer isso.'),
     '"Ia sim."',
@@ -4475,7 +4615,7 @@ c8_recuou_da_chantagem:{
     d=>fala(d.jogador.nome, 'Por quê?'),
     '"Porque eu ia ceder."',
     'Ele olha o radar, que continua não mostrando nada.',
-    '"Quatro anos eu esperei alguém subir aqui e me obrigar. Eu só não sabia que ia ser alguém de quinze."'
+    '"Quatro anos eu esperei alguém subir aqui e me obrigar. Eu só não sabia que ia ser alguém de {idade}."'
   ],
   ef:{flag:'recuou_da_chantagem', moral:2,
       rep:{eixo:'bom', delta:1, motivo:'Recuou de uma chantagem que já tinha funcionado.'},
@@ -4521,10 +4661,13 @@ c8_fim_navio:{
     d=>{
       if (d.flags.tirou_os_dois_do_40 || d.flags.abriu_o_40) return 'Dois adolescentes descem atrás de você, sem mala, com a roupa do corpo, e param no fim da passarela sem saber pra onde ir.';
       if (d.flags.arranjou_a_cama) return 'Dorian desce com um papel de carta dobrado no bolso e um endereço em Cinnabar escrito atrás, e uma vaga com registro pra próxima temporada.';
-      if (d.flags.o_denis_topou) return 'Você procura o Dorian no desembarque e não acha. O camarote 40 desembarcou antes, por uma prancha de serviço, às cinco da manhã.';
-      if (d.flags.respeitou_o_denis) return 'Em algum lugar dessa passarela tem um menino de dezessete anos que te pediu pra não abrir a porta, e você não abriu, e você vai carregar isso.';
+      if (d.flags.o_denis_topou) return 'Você procura o Dorian no desembarque e não acha. O camarote 40 desceu antes, por uma prancha de serviço, enquanto a passarela de passageiros ainda estava sendo encostada.';
+      if (d.flags.respeitou_o_denis) return 'Em algum lugar dessa passarela tem um menino de dezessete anos que te pediu pra não abrir a porta, e você não abriu, e isso pesa.';
       return 'Em algum lugar desse navio ficou uma coisa que você viu e não resolveu, e o navio vai zarpar de novo em três dias.';
     },
+    d=>d.flags.termo_lavrado
+      ? 'Antes do primeiro passageiro descer, quatro agentes da capitania sobem pela passarela de serviço com uma prancheta.'
+      : '',
     d=>d.flags.diario_de_bordo_registrado
       ? 'E numa gaveta da ponte de comando tem um livro de capa dura com uma página escrita à mão, carimbada e assinada, com guarda obrigatória por vinte anos.'
       : 'E nada do que aconteceu a bordo foi escrito em lugar nenhum.',
@@ -4536,12 +4679,12 @@ c8_fim_navio:{
 c8_fim_porto:{
   texto:[
     'Você não entra no navio.',
-    'Fica em Vermilion e vê o S.S. Anne zarpar às seis da manhã do dia seguinte, e ele é enorme e lento e leva onze minutos pra sair do enquadramento do cais.',
-    'Metade da cidade vai ver. É um evento.',
+    'Fica em Vermilion e vê o S.S. Anne zarpar, todo aceso, e ele é enorme e lento e leva onze minutos pra sair do enquadramento do cais.',
+    'Metade da cidade desce pra ver. É um evento.',
     d=>d.flags.viu_o_conteiner ? 'Você fica pensando no contêiner que passou reto pela balança dois às três e quarenta e dois.' : 'Você fica com a sensação clara de que perdeu alguma coisa e não sabe o quê.',
     d=>d.flags.nome_na_parede_da_fritura ? 'Na fritura do porto, o seu nome continua pregado na parede entre as contas a pagar.' : '',
-    'Depois você vai embora de Vermilion por terra, pela Rota 11, e leva quatro dias a mais do que levaria de navio.',
-    'Nesses quatro dias você pensa no navio todo dia.'
+    'Depois você vai embora de Vermilion por terra, pela Rota 6, com o porto ficando pequeno atrás de você.',
+    'Na estrada você pensa no navio mais vezes do que queria.'
   ],
   fim:true, resumo:'Vermilion: um navio zarpou com uma coisa dentro, e você ficou no cais.'
 }

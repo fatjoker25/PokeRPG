@@ -1655,7 +1655,7 @@ c5_de_quem_e:{
     'Ele cospe no chão.',
     '"Eu já pensei nisso, sabe? Eu penso muito nisso. O sapato dele nunca suja."'
   ],
-  ef:{flag:['sapato_limpo','gente_que_assina_papel'],
+  ef:{flag:['sapato_limpo','sapato_da_caverna','gente_que_assina_papel'],
       registrar:'Um homem de terno visita o Monte da Lua a cada dois meses, assina a planilha e nunca desce.'},
   escolhas:[
     {texto:'"E se eu acabar com isso aqui hoje?"', vai:'c5_acabar_hoje'},

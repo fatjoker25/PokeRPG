@@ -84,10 +84,10 @@ c3_ab_acampou:{
 
 c3_ab_com_companhia:{
   texto:[
-    d=>d.flags.entrou_com_teo
+    d=>d.flags.veio_com_o_ezra
       ? 'Na boca da floresta, Ezra para. Senta numa pedra com a mochila entre os pés e fica olhando o verde, sem pressa nenhuma de levantar.'
       : 'Ezra está sentado na boca da floresta com a mochila entre os pés, e pela cara dele está ali há um tempo decidindo não entrar sozinho.',
-    d=>d.flags.entrou_com_teo
+    d=>d.flags.veio_com_o_ezra
       ? fala('Ezra', 'Se você não tivesse vindo, eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.')
       : fala('Ezra', 'Eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.'),
     d=>fala(d.jogador.nome, 'Ia dizer pra quem?'),
@@ -294,7 +294,7 @@ c3_que_cara:{
     '"Ele te viu?"',
     '"Acho que não." Ezra não parece convencido do que ele mesmo está falando. "Ele parou perto e ficou contando."'
   ],
-  ef:{flag:['sabe_do_fio_de_aco','sabe_da_contagem']},
+  ef:{flag:'sabe_da_contagem'},
   escolhas:[
     {texto:'"Me leva onde ele tava."', vai:'c3_som'},
     {texto:'Tirar o Ezra da floresta antes de qualquer coisa.', vai:'c3_tirou_o_teo'},

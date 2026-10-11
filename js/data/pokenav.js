@@ -1144,7 +1144,7 @@ const CHAMADAS = [
     {texto:'Dizer o nome.',
      ef:{moral:4, rep:{eixo:'bom',delta:2,motivo:'Disse em voz alta o nome de quem morreu'}},
      resultado:[
-       d=>{ const m = d.cemiterio[d.cemiterio.length-1]; return fala(d.jogador.nome, nomeExib(m) + '.'); },
+       d=>{ const m = d.cemiterio[d.cemiterio.length-1]; return m ? fala(d.jogador.nome, nomeExib(m) + '.') : ''; },
        'Você ouve ela escrevendo.',
        fala('a enfermeira', 'Anotado. Eu tenho um caderno.'),
        fala('a enfermeira', 'Não é o caderno de Lavender, é o meu. Eu tenho quarenta e um nomes nele desde 1989 e agora tenho quarenta e dois.', 'baixo')

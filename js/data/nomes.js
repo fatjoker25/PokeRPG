@@ -98,6 +98,9 @@ const NOMES_FIXOS = {
   'a voz do rádio':            'Roland',
   'a escrevente':              'Sra. Cybil',
   'o homem de barba':          'Curador Fabre',
+  /* o S.S. Anne, no 8: ele diz o nome quando você pergunta, ela assina o guardanapo */
+  'o homem de sapato limpo':   'Curador Fabre',
+  'Cozinheira do Anne':        'Rina',
   'a mulher de tailleur':      'Hester Colman',
   'a mulher de trinta':        'Tessa Rue',
   'a mulher almoçando':       'Thea Larkin',

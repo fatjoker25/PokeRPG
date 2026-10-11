@@ -844,7 +844,7 @@ c2_atras_do_teo:{
     'Ezra aceita a resposta ruim sem discutir, que é uma coisa que amigo faz.',
     'Vocês entram na Rota 2 juntos às quatro e dez da tarde.'
   ],
-  ef:{flag:'entrou_com_teo',
+  ef:{flag:['entrou_com_teo','veio_com_o_ezra'],
       npc:{nome:'Ezra', opiniao:3, memoria:'Você saiu atrás dele e entrou na Rota 2 junto.'}},
   escolhas:[{texto:'Seguir.', vai:'c2_fim'}]
 },
