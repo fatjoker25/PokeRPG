@@ -456,10 +456,10 @@ c16_levou_a_caixa:{
 },
 
 c16_colonia_caixa:{
-  falante:'Secretária da Colônia Z-14',
+  falante:'a secretária da colônia',
   vozes:['N','P','N','N','N','N','P','N','N'],
   texto:[
-    'Você leva a caixa à Colônia Z-14 e a secretária de sessenta e dois anos abre o elástico com um cuidado que você não esperava.',
+    d=>{ Nomes.apresentar('a secretária da colônia'); return 'Você leva a caixa à colônia de pescadores, e a secretária de sessenta e dois anos, que tem EDITH escrito à mão no crachá, abre o elástico com um cuidado que você não esperava.'; },
     'Ela lê três bilhetes e para.',
     '"O. Tanner."',
     '"A senhora conhece?"',
@@ -478,7 +478,7 @@ c16_colonia_caixa:{
     '"Ele ia."'
   ],
   ef:{flag:['descobriu_que_ele_ia','provas_da_ilha'],
-      npc:{nome:'Secretária da Colônia Z-14', opiniao:8, memoria:'Cruzou a caixa de charuto com o livro de 1939 e descobriu que o velho Tanner ia à ilha.'},
+      npc:{nome:'a secretária da colônia', opiniao:8, memoria:'Cruzou a caixa de charuto com o livro de 1939 e descobriu que o velho Tanner ia à ilha.'},
       rep:{eixo:'bom',delta:6,motivo:'Cruzou a caixa com o livro de 1939'},
       instabilidade:1,
       registrar:'H. Tanner, o pai, declarou saída para a ilha em todas as datas do arco-íris de 1939 a 1979: dezenove saídas.',

@@ -59,7 +59,7 @@ const RETRATO_POR_NOME = {
   'Sr. Tobias Dahl':'trainers/gentleman',
   'Hester Colman':'trainers/office_worker_f', 'a presidente':'trainers/office_worker_f',
   'Conselheira Edda Thistle':'trainers/office_worker_f', 'Sra. Cybil':'trainers/office_worker_f',
-  'Secretária da Colônia Z-14':'trainers/office_worker_f', 'a mulher da pasta':'trainers/office_worker_f',
+  'a secretária da colônia':'trainers/office_worker_f', 'a mulher da pasta':'trainers/office_worker_f',
   'a mulher da pasta de vinil':'trainers/office_worker_f', 'Conselheira da Liga':'trainers/office_worker_f',
   'a conselheira da Liga':'trainers/office_worker_f', 'a mulher do broche da Liga':'trainers/office_worker_f',
   'Sr. Waldo':'trainers/office_worker', 'o homem de camisa social':'trainers/office_worker',
@@ -134,7 +134,7 @@ const RETRATO_POR_NOME = {
   'o locutor':'trainers/waiter', 'uma voz no salão':'trainers/gentleman', 'outra voz':'trainers/lady',
   'Stellan':'trainers/psychic', 'Funcionário da doca':'trainers/worker', 'outra acampada':'trainers/picnicker',
   'Funcionária da reserva':'trainers/pokemon_ranger_f', 'o locutor do rádio':'trainers/office_worker',
-  'a voz no telefone':'trainers/pokemon_ranger_f', 'a voz do rádio':'trainers/league_staff',
+  'o homem da Defesa Civil':'trainers/pokemon_ranger', 'o homem da caixa térmica':'trainers/fisherman', 'a voz do rádio':'trainers/league_staff',
   'Roland':'trainers/league_staff', 'Roland (central do Planalto)':'trainers/league_staff',
   'Caçadores da Rota 23':'trainers/roughneck', 'a voz do telefone':'trainers/office_worker_f',
   /* os operários da câmara do Monte da Lua, ouvidos de cima da passarela */

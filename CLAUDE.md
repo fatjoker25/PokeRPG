@@ -849,7 +849,11 @@ texto ("são dez e cinquenta") é hora que o relógio desmente: ou o
 relógio vai até ela, ou o texto não diz. E o que o texto conta em dias
 ("está lá há dezenove dias") conta a partir do dia em que a cena
 começou, não pra sempre: no capítulo 11 a conta anda com o relógio
-(`c11_passados`). Como o `executar` roda depois de `flag`, `registrar` e
+(`c11_passados`). Mês escrito à mão mente do mesmo jeito: a jornada
+começa em março e cada um chega ao capítulo num mês. No 13 a água
+baixou dezenove semanas antes do dia da chegada (`c13_queda`), e o
+"julho" e o "agosto" da história são meses contados de trás pra frente
+a partir do mês de agora (`c13_mes`). Como o `executar` roda depois de `flag`, `registrar` e
 `presagio`, texto que depende do que era verdade antes da cena guarda
 isso numa flag dentro do `executar`, antes de marcar o que a cena marca.
 

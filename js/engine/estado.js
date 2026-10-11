@@ -1207,7 +1207,7 @@ const Estado = {
                         'a recepcionista':'a moça da recepção', 'a balconista':'a balconista da farmácia',
                         'o veterinário do conselho':'o médico do conselho', 'a veterinária de Cerulean':'a médica de Cerulean',
                         'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory', 'Ivy Calder':'Tess Calder',
-                        'Sr. Holt':'Sr. Larch'};
+                        'Sr. Holt':'Sr. Larch', 'Secretária da Colônia Z-14':'a secretária da colônia'};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',

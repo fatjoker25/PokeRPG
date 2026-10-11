@@ -139,7 +139,9 @@ const NOMES_FIXOS = {
   /* Fuchsia, no 12: o Koga chama a filha pelo nome na varanda; o guarda
      mais novo chama o mais velho na porta do bar */
   'a filha do Koga':           'Janine',
-  'o guarda-parque mais velho': 'Kell'
+  'o guarda-parque mais velho': 'Kell',
+  /* Fuchsia, no 13 e no 16: o crachá escrito à mão no balcão da colônia */
+  'a secretária da colônia':   'Edith'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
@@ -235,7 +237,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
-  'Larch','Silas','Toby','Bertram','Edwin','Garth',
+  'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith',
   /* os nomes fixos daqui de cima */
   'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

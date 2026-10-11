@@ -3476,13 +3476,13 @@ c12_fim:{
        d.flags.diretor_suspende ? 'E a retirada anual de duzentos e quarenta perdeu base legal, por uma revisão técnica que um servidor de trinta e um anos assinou na mesa dele.' :
        d.flags.entendeu_a_conta || d.flags.provou_o_erro ? 'E ninguém refez a planilha de setenta e um.' :
        'E a planilha que diz quanto a reserva suporta continua numa gaveta, sem ninguém conferir.',
-    'Você sai de Fuchsia pela estrada do sul, que corta a reserva por cinco quilômetros antes de sair dela.',
+    'Você desce pro cais de Fuchsia pela estrada que contorna a reserva, cinco quilômetros de cerca até o mar.',
     'Nos cinco quilômetros, de dentro do ônibus, você vê mais Pokémon do que viu em todo o resto de Kanto somado.',
     'Um bando de Nidorino na borda do capinzal. Um Kangaskhan com filhote, a uns quarenta metros da pista, que levanta a cabeça quando o ônibus passa e não sai do lugar.',
     'É lindo.',
     'Isso é o que ninguém te prepara pra sentir: é lindo, é bem cuidado, é a maior área protegida de Kanto, e nada disso é mentira.',
     'A próxima coisa no seu mapa é o mar.',
-    'Ao sul de Fuchsia tem um arquipélago de quatro ilhas de rocha vulcânica que os pescadores chamam de Ilhas Seafoam, e onde, segundo eles, a água de dentro da caverna está três graus mais fria do que deveria — e está ficando mais fria todo ano.'
+    'Ao sul de Fuchsia ficam as Ilhas Seafoam, duas ilhas de rocha branca furadas por dentro, e os pescadores dizem que a água em volta delas está esfriando há meses.'
   ],
   fim:true, resumo:'Capítulo 12 concluído — a Zona Safári te ensinou que a conta errada mata mais que o crime.'
 
