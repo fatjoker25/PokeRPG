@@ -3394,3 +3394,55 @@ button.item-linha.aparelho{
 @keyframes mpAnel{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.25)}}
 @media(prefers-reduced-motion:reduce){.mapa-kanto .mp-anel{animation:none}}
 .mapa-legenda .lg.cidade{border-color:#fff;box-shadow:0 0 0 1px #7a2a22}
+
+/* ---------- A REDE: o ponto, a ficha e a escada ----------
+   Papel sem timbre: preto de porão, o vermelho da letra que ninguém
+   usa mais só no degrau em que você está. */
+.rede-ficha{
+  display:grid;grid-template-columns:110px 1fr;gap:14px 16px;align-items:start;
+  margin:14px 0 8px;padding:14px;border-radius:var(--raio);
+  background:linear-gradient(160deg,#1b1a20,#0f0f13 70%);
+  border:1px solid #3d2a2f;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 26px -18px #000;
+  color:#e8e4e6;
+}
+.rede-retrato{
+  position:relative;width:110px;height:130px;border-radius:8px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 18%,#3c3b45 0%,#1a1a1f 72%);
+  border:1px solid #3d2a2f;
+}
+.rede-retrato img{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);width:124px;height:124px;image-rendering:pixelated}
+.rede-retrato .silhueta{
+  position:absolute;left:50%;top:26px;transform:translateX(-50%);
+  width:40px;height:40px;border-radius:50%;background:#2d2c34;
+  box-shadow:0 36px 0 -4px #2d2c34, 0 32px 0 7px #2d2c34;
+}
+.rede-dados{min-width:0}
+.rede-sub{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a8919a}
+.rede-titulo{font-size:22px;font-weight:700;line-height:1.15;color:#fff;text-wrap:balance}
+.rede-insignia{font-size:13px;color:#b9adb2;font-style:italic;margin-top:2px}
+.rede-conf{margin-top:12px}
+.rede-conf-rot{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#cfc5c9}
+.rede-conf-rot .mono{font-variant-numeric:tabular-nums}
+.rede-barra{height:8px;border-radius:4px;background:#2a2930;overflow:hidden;margin-top:4px}
+.rede-barra i{display:block;height:100%;background:linear-gradient(90deg,#8e1b22,#d8343d);transition:width .5s ease}
+.rede-barra.baixa i{background:#55525c}
+.rede-prox{margin-top:8px;font-size:13px;line-height:1.45;color:#ddd3d6}
+.rede-escada{
+  grid-column:1 / -1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
+  list-style:none;margin:0;padding:12px 0 0;border-top:1px dashed #3d2a2f;
+}
+.rede-degrau{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;font-size:11px;line-height:1.25;color:#6f6469}
+.rede-pino{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px solid #3d2a2f;background:#17161b;color:#5e5459}
+.rede-pino svg{width:20px;height:20px}
+.rede-degrau.feito{color:#b9adb2}
+.rede-degrau.feito .rede-pino{color:#ddd3d6;border-color:#6d4b53}
+.rede-degrau.atual{color:#fff;font-weight:650}
+.rede-degrau.atual .rede-pino{color:#fff;background:#b3232c;border-color:#e2545c;box-shadow:0 0 0 3px rgba(179,35,44,.28)}
+@media (max-width:520px){
+  .rede-ficha{grid-template-columns:86px 1fr;gap:12px}
+  .rede-retrato{width:86px;height:106px}
+  .rede-retrato img{width:100px;height:100px}
+  .rede-titulo{font-size:19px}
+  .rede-degrau{font-size:10px}
+  .rede-pino{width:28px;height:28px}
+}

@@ -173,15 +173,20 @@ rocket:[
     d.flags.ln_rocket_soltou
       ? fala('a voz do outro lado', `A caixa chegou vazia. A gente achou isso interessante, não ruim. Quem pensa é útil.`)
       : fala('a voz do outro lado', `Você entrega o que pedem e não pergunta. Isso está ficando raro.`),
-    fala('a voz do outro lado', `Tem um lugar. Uniforme, número, gente que responde a você. Você deixa de ser informante e passa a ser alguém.`),
+    /* quem já venceu a prova do Brant veste o preto: o lugar agora é à mesa */
+    typeof Rede !== 'undefined' && Rede.escalao(d) >= 2
+      ? fala('a voz do outro lado', `O preto você já veste. O que eu tenho agora é um lugar à mesa: número, gente que responde a você, e eu no seu ouvido toda semana.`)
+      : fala('a voz do outro lado', `Tem um lugar. Uniforme, número, gente que responde a você. Você deixa de ser informante e passa a ser alguém.`),
     `Pela janela do Centro você vê dois policiais tomando café. Um deles você já viu de colete numa guarita.`
   ],
   escolhas:[
     {texto:`Aceitar o lugar.`,
-     ef:{flag:'ln_rocket_dentro', dinheiro:1500, rep:{eixo:'ruim', delta:3, motivo:'Aceitou um lugar dentro'}},
+     ef:{flag:'ln_rocket_dentro', dinheiro:1500, rep:{eixo:'ruim', delta:3, motivo:'Aceitou um lugar dentro'},
+         executar:d => typeof Rede !== 'undefined' ? Rede.promoverPelaVoz() : []},
      resultado:[fala('a voz do outro lado', `Bem-vind{o|a}. Amanhã alguém te entrega o resto.`), `Você desliga e o café dos policiais ainda está fumegando.`]},
     {texto:`Aceitar, e atravessar a rua pra falar com os policiais.`,
-     ef:{flag:['ln_rocket_dentro', 'ln_rocket_duplo'], rep:{eixo:'bom', delta:2, motivo:'Começou a passar informação pra polícia de dentro'}},
+     ef:{flag:['ln_rocket_dentro', 'ln_rocket_duplo'], rep:{eixo:'bom', delta:2, motivo:'Começou a passar informação pra polícia de dentro'},
+         executar:d => typeof Rede !== 'undefined' ? Rede.promoverPelaVoz() : []},
      resultado:[`O policial ouve sem levantar os olhos do copo.`, `"Continua lá dentro", ele diz. "Liga desse número. Só desse."`]},
     {texto:`Pedir pra sair.`,
      ef:{flag:'ln_rocket_pediu_saida', executar:d => { if (typeof Cargos !== 'undefined' && Cargos.tem('rocket')) Cargos.largar('rocket'); return [{tipo:'info', texto:'O aparelho do envelope para de funcionar no dia seguinte.'}]; }},
@@ -649,7 +654,9 @@ rocket:[
 {
   cap:20, titulo:'O armazém', quem:'a voz do outro lado',
   texto:d => [
-    `Te entregam um uniforme preto sem letra nenhuma e uma chave de armazém, perto do porto.`,
+    typeof Rede !== 'undefined' && Rede.escalao(d) >= 2
+      ? `Te entregam a chave de um armazém perto do porto. O uniforme preto sem letra nenhuma você já tem.`
+      : `Te entregam um uniforme preto sem letra nenhuma e uma chave de armazém, perto do porto.`,
     `Dentro, gaiola em cima de gaiola. Growlithe, Ponyta, um Lapras filhote numa caixa d'água rasa demais.`,
     d.flags.ln_rocket_duplo
       ? `O PokéNav vibra no bolso com o número do policial do café. Uma mensagem só: "Foto."`

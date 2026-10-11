@@ -384,6 +384,7 @@ const Exploracao = {
     if (acao.startsWith('barr_')) return Barreiras.fazer(acao.slice(5));
     if (acao.startsWith('idade_')) return PortasDaIdade.fazer(acao.slice(6));
     if (acao.startsWith('lab_'))  return Laboratorio.fazer(acao.slice(4));
+    if (acao === 'rede')          return Rede.tela();
     if (acao === 'esperar')       return this.esperar();
     if (acao.startsWith('posto_')){
       const x = Cargos.lugaresEm(Mundo.id())[+acao.slice(6)];
@@ -650,7 +651,7 @@ const Exploracao = {
     const errante = !(opts && opts.fixo) && typeof Errantes !== 'undefined' ? Errantes.talvez(Mundo.id()) : null;
     if (errante){ selvagem = errante.p; intro = errante.intro; tipo = 'lendario'; }
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
-    Jogo.torneioAtual = null; Jogo.rivalAtual = null;
+    Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.redeAtual = null;
     Jogo.batalhaLivre = true;
     UI.limparDados();
     /* Um brilhante muda a entrada da cena antes de mudar a batalha. */

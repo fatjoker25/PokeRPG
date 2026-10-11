@@ -1,5 +1,5 @@
 /* ============================================================
-   SIMULADOR DE FORÇA DOS VETERANOS
+   SIMULADOR DE FORÇA DOS VETERANOS (E DA REDE)
    Luta cada veterano (e o convite dele, e as rodadas da Conferência) com o
    motor de batalha do jogo, contra times do tamanho e do nível que o
    jogador teria ali: no nível do lugar +2 (de passagem), +6 (treinado)
@@ -134,3 +134,39 @@ for (const nv of [60, 66, 72]){
   });
   console.log(`jogador nv ${nv}: ${linha.join(' · ')}`);
 }
+
+/* ── a rede (js/story/rede.js): as quatro provas e as brigas de serviço,
+   com o jogador no nível da área do capítulo do degrau (+0, +4, +8) e o
+   time do tamanho das insígnias que ele teria ali ── */
+console.log('\n--- a rede: provas (área do capítulo do degrau +0 · +4 · +8) ---');
+d.flags.campeao_de_kanto = false;
+const areaDoCap = cap => { const c = Historia.capitulo(cap); return (c && c.nivelArea) || 20 + cap * 2; };
+for (const [id, pv] of Object.entries(PROVAS_DA_REDE)){
+  const e = ESCALOES[pv.escalao - 1];
+  const n = Math.min(8, Math.floor(e.cap / 3));
+  d.insignias = INS.slice(0, n);
+  const tam = Math.min(6, 3 + Math.floor(n / 2));
+  const area = areaDoCap(e.cap);
+  const faz = () => {
+    const nv = Math.min(85, Math.max(((LOCAIS[pv.local] || {}).nivel || 20) + 2, nivelDeReferencia()) + (pv.acima || 0));
+    return timeDeLinhas(pv.times, nv, Math.min(pv.tam, pv.times.length), pv.golpes, 90);
+  };
+  const res = [0, 4, 8].map(dn => medir(area + dn, pv.local, tam, faz));
+  console.log(`${pv.nome.padEnd(7)} → ${e.nome.replace(/\{([^|}]*)\|[^}]*\}/, '$1').padEnd(15)} cap ${String(e.cap).padStart(2)} área ${area}  | ` +
+    res.map(r => `${String(r.vit).padStart(3)}% ${r.cai}`).join(' · ') + `   ${res[0].amostra.join('/')}`);
+}
+console.log('\n--- a rede: brigas de serviço (área do capítulo do degrau +2) ---');
+for (const s of SERVICOS_DA_REDE) s.escolhas.forEach((esc, i) => [null, 'bom', 'ruim'].forEach(ramo => {
+  const L = ramo ? esc[ramo] && esc[ramo].luta : esc.luta;
+  if (!L) return;
+  const e = ESCALOES[s.escalao - 1];
+  const n = Math.min(8, Math.floor(e.cap / 3));
+  d.insignias = INS.slice(0, n);
+  const tam = Math.min(6, 3 + Math.floor(n / 2));
+  const faz = () => {
+    const nv = Math.min(85, Math.max(((LOCAIS[s.local] || {}).nivel || 20) + 2, nivelDeReferencia()) + (L.acima || 0));
+    return timeDeLinhas(L.times, nv, Math.min(L.tam, L.times.length), L.golpes, 70);
+  };
+  const r = medir(areaDoCap(e.cap) + 2, s.local, tam, faz);
+  if (!ramo || ramo === 'bom') console.log(`${(s.id + ' ' + L.nome).padEnd(22)} vitória ${String(r.vit).padStart(3)}% · caídos ${r.cai} · níveis ${r.amostra.join('/')}`);
+}));

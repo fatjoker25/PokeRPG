@@ -280,6 +280,8 @@ const Som = {
     const chave = `${d.capitulo}:${d.cena}`;
     if (J.cenaBatalha && LUTAS_DO_VILAO[chave]) return 'faixa:' + LUTAS_DO_VILAO[chave];
     if (J.cenaBatalha && this.noEsconderijo()) return 'faixa:' + FAIXA_DO_VILAO[d.capitulo];
+    /* a rede: prova e briga com gente dela tocam a faixa radical */
+    if (J.redeAtual && J.redeAtual.vilao) return 'faixa:' + (J.redeAtual.tipo === 'prova' ? FAIXA_DO_VILAO[9] : FAIXA_DO_VILAO[5]);
     /* rival: o extra pelo id, o de casa pelo arco */
     if (J.rivalAtual){
       if (J.rivalAtual.extra && FAIXA_DO_RIVAL[J.rivalAtual.extra]) return 'faixa:' + FAIXA_DO_RIVAL[J.rivalAtual.extra];

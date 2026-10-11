@@ -632,12 +632,14 @@ const Efeitos = {
     return this.entradaPorBola('aliado', p, (p && p.capturadoEm && p.capturadoEm.bola) || 'Poké Ball');
   },
 
-  /* a bola de quem te desafia: Elite e Conferência de Ultra Ball,
-     líder e veterano de Great Ball, o resto de Poké Ball */
+  /* a bola de quem te desafia: Elite, Conferência e o executivo da rede
+     de Ultra Ball, líder, veterano e quem te prova na rede de Great Ball,
+     o resto de Poké Ball */
   bolaDoAdversario(){
     const J = typeof Jogo !== 'undefined' ? Jogo : {};
-    if (J.eliteAtual || J.conferenciaAtual) return 'Ultra Ball';
-    if (J.ginasioAtual || J.veteranoAtual) return 'Great Ball';
+    const prova = J.redeAtual && J.redeAtual.tipo === 'prova';
+    if (J.eliteAtual || J.conferenciaAtual || (prova && J.redeAtual.id === 'corbin')) return 'Ultra Ball';
+    if (J.ginasioAtual || J.veteranoAtual || prova) return 'Great Ball';
     return 'Poké Ball';
   },
 

@@ -33,7 +33,7 @@ Playwright (com o Chromium do ambiente, `/opt/pw-browsers/chromium`):
 | arquivo | o que ele acusa |
 |---|---|
 | `chk-baloes.js` | balão sem nome, sem rosto ou com rosto que não existe no disco, em toda cena (capítulos, eventos, linhas, PokéNav) |
-| `chk-lutas.js` | luta que não começa, não termina, sai sem fala, sem rosto ou com o time errado, ou que manda pra cena que não existe — ginásios, Elite, rivais, estrada, veteranos, barreiras, revanches e toda luta de cena |
+| `chk-lutas.js` | luta que não começa, não termina, sai sem fala, sem rosto ou com o time errado, ou que manda pra cena que não existe — ginásios, Elite, rivais, estrada, veteranos, a rede, barreiras, revanches e toda luta de cena |
 | `chk-telas.js` | erro de JavaScript ou texto quebrado (marca sem resolver, `undefined`, `NaN`, `null`, HTML vazando) em toda janela (os cinco bolsos da mochila, time, sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha, diário, rota, finais, credenciais, PC, ajustes, regras, tutorial, mapa), em toda loja comprando e vendendo, e em todo lugar do mapa com cada afazer da lista dele — num save cheio do meio do jogo e num save do começo, com a mochila quase vazia |
 | `bot-jogador.js` | o robô que joga pela tela, como gente |
 

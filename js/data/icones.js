@@ -41,6 +41,11 @@ const ITEM_DESENHADO = {
   'Caderno de campo': `<rect x="7" y="4" width="17" height="22" rx="2" fill="#3fa55a" ${_CONT}/><path d="M7 4v22" stroke="#20242c" stroke-width="3"/><rect x="12" y="9" width="9" height="4" fill="#eef0f2" ${_CONT}/>`,
   'Isca': `<path d="M15 3v13a5 5 0 1 1-6-5" fill="none" stroke="#9aa1aa" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="20" r="4" fill="#d8433b" ${_CONT}/><path d="M19 16l1-3" stroke="#3fa55a" stroke-width="1.6"/>`,
   'Relógio': `<rect x="11" y="2" width="8" height="26" rx="3" fill="#4c5563" ${_CONT}/><circle cx="15" cy="15" r="7" fill="#eef0f2" ${_CONT}/><path d="M15 15V11M15 15l3 2" stroke="#20242c" stroke-width="1.6" stroke-linecap="round"/>`,
+  /* os itens dos degraus da rede (js/story/rede.js) */
+  'Uniforme preto da rede': `<path d="M10 4l5 3 5-3 6 4-2 6-3-1v13H9V13l-3 1-2-6z" fill="#26262c" ${_CONT}/><path d="M15 7v19" stroke="#4a4a54" stroke-width="1.2"/><path d="M12 11h6" stroke="#4a4a54" stroke-width="1.2" stroke-dasharray="1.5 1.5"/>`,
+  'Caderno de lote': `<rect x="7" y="4" width="17" height="22" rx="2" fill="#3a3d44" ${_CONT}/><path d="M7 4v22" stroke="#20242c" stroke-width="3"/><rect x="11" y="9" width="10" height="5" fill="#f4efe2" ${_CONT}/><path d="M12.5 11.5h7" stroke="#9aa1aa" stroke-width="1"/>`,
+  'Chave do subsolo': `<rect x="4" y="11" width="9" height="9" rx="1.5" fill="#9aa1aa" ${_CONT}/><rect x="6.5" y="13.5" width="4" height="4" fill="#3a3d44"/><path d="M13 15.5h13M22 15.5v4M25 15.5v3" stroke="#9aa1aa" stroke-width="3" stroke-linecap="round"/><path d="M13 15.5h13" stroke="#20242c" stroke-width=".7"/>`,
+  'Broche da letra antiga': `<circle cx="15" cy="15" r="10" fill="#2b2a31" ${_CONT}/><circle cx="15" cy="15" r="7.5" fill="none" stroke="#7d6a4a" stroke-width="1"/><path d="M12 20.5v-11h3.8a2.8 2.8 0 010 5.6H12m3.6 0l3 5.4" fill="none" stroke="#c23038" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`,
   /* papel de enredo, pelo nome */
   _papel: `<path d="M8 4h11l4 4v18H8z" fill="#f4efe2" ${_CONT}/><path d="M19 4v4h4" fill="none" ${_CONT}/><path d="M11 12h9M11 15h9M11 18h6" stroke="#9aa1aa" stroke-width="1.3"/>`,
   _foto: `<rect x="5" y="7" width="20" height="17" rx="1.5" fill="#f4efe2" ${_CONT}/><rect x="8" y="10" width="14" height="10" fill="#9fd0ff"/><path d="M8 20l5-5 4 3 5-5v7z" fill="#3fa55a"/>`,
@@ -91,6 +96,8 @@ const ICONE = {
   doar:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
   relembrar:'<path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3z"/><path d="M18 8h2v12h-2M8 9h6M8 12h6"/>',
   vasculhar:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/>',
+  /* o ponto da rede: o envelope sem timbre */
+  rede:'<rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="M3.5 7l8.5 6 8.5-6"/>',
   procurar:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M10.5 7.5v6M7.5 10.5h6"/>',
   andar:'<path d="M8 21l2-6-2-3 2-5 3 2 3 1M10 15l4 2 1 4M12 4.5a1.5 1.5 0 1 0 0-.1"/>',
   conversar:'<path d="M4 5h11v8H8l-4 3z"/><path d="M15 9h5v8l-3-2h-6v-2"/>',
@@ -124,7 +131,8 @@ function iconeDoAfazer(a){
   const id = String(a.id || '');
   const direto = {centro:'centro', loja:'loja', ginasio:'ginasio', casa:'casa', liga:'liga', torneio:'torneio',
     onibus:'onibus', doar:'doar', relembrar:'relembrar', vasculhar:'vasculhar', procurar:'procurar', andar:'andar',
-    conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca'};
+    conversar:'conversar', treinar:'treinar', pescar:'pescar', acampar:'acampar', esperar:'esperar', desafiar:'lutar', troca:'troca',
+    rede:'rede'};
   if (direto[id]) return direto[id];
   if (/^posto_/.test(id)) return 'credenciais';
   if (/^vet_/.test(id)) return 'lutar';

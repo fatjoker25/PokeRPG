@@ -1006,6 +1006,66 @@ acompanha, os finais).
   entra no `index.html` antes do `condicionais.js`, e o `caminhos.js`
   depois dele.
 
+## A rede tem degrau
+O posto de Informante (o envelope sem timbre, `id:'rocket'` em
+`cargos.js`) é o primeiro degrau da **rede**, o que sobrou da Rocket
+(`js/story/rede.js`, dados e motor juntos): Informante, Recruta,
+Contador, Chefe de turno, Executivo (`ESCALOES`). O posto lê o degrau
+por getter — `nome`, `peso`, `beneficios` —, então o cartão, a renda,
+o desconto e o peso da linha sobem junto; quem promove atualiza
+`Estado.j.cargo`.
+
+- **Subir** pede confiança, o capítulo do degrau e vencer a **prova**
+  (`PROVAS_DA_REDE`: Brant, Juno, Mercer, Corbin, cada um no ponto
+  dele). O preto também vem da voz, sem prova, no "lugar à mesa" da
+  linha (`Rede.promoverPelaVoz`, chamado pelo `executar` da cena do 17);
+  por isso texto de prova que cita o Brant pergunta `provaVencida`.
+- **Confiança** = `CONFIANCA_DAS_MARCAS` (flags da história, lidas
+  toda vez, nunca guardadas) + `d.rede.pontos` (serviços). Marca que a
+  rede não viu não entra: a delação do Monte da Lua, o número errado,
+  a foto pro policial, a lista inventada. A caixa do Vulpix aberta
+  também não pesa: a própria voz achou "útil".
+- **Serviços** (`SERVICOS_DA_REDE`) aparecem no ponto da cidade
+  (`PONTOS_DA_REDE`: Vermilion; Celadon desde Recruta; Fuchsia desde
+  Contador), um a cada `SERVICO_ESPERA_DIAS`, cada um uma vez, do
+  degrau dele até o seguinte. Escolha com `teste` rola e cai em
+  `bom`/`ruim`; com `luta`, a escolha vira `d.rede.pendente` e a cena
+  de antes (`telaPendente`) espera o "Lutar" — recarregar não desfaz.
+- **Sair**: terminar um serviço com a confiança em `CONFIANCA_EXPULSA`
+  ou menos, ou largar o posto por qualquer porta (`Cargos.largar`
+  marca `largou_rocket`, e o `requer` do posto não deixa voltar).
+  Escolha antiga da linha baixa a confiança mas **não expulsa
+  sozinha**: a cena do capítulo 27 foi escrita pra quem sabotou.
+- Luta da rede é `Jogo.redeAtual` (`{tipo:'prova'|'servico', id, i,
+  ramo}`), olhado antes de tudo no `finalizarBatalha` e salvo pela
+  `LutaSalva`. Prova joga de Great Ball (o Corbin de Ultra), erra como
+  veterano e gasta Vontade; briga com gente da própria rede
+  (`vilao:true`) toca a faixa radical.
+- O jogador veste o degrau: `Rede.retrato()` dá o rosto do uniforme
+  (silhueta no envelope, recruta de preto, executivo de branco, pelo
+  gênero da ficha), e cada degrau tem pino (`pinoDaRede`) e item na
+  mochila com desenho próprio em `icones.js`.
+- Os rostos da rede são `trainers/rede_*`: os de recruta e executivo de
+  HG/SS com a **letra do peito apagada**, porque a rede veste "preto
+  sem letra nenhuma" (a linha do 20, o uniforme do Brant). O
+  `team_rocket_grunt_*` com o R continua pra quem é da Rocket de antes
+  (o Rook guarda o broche do avesso).
+
+A força foi medida no `sim-veteranos.js` (seção da rede), com o jogador
+no nível da área do capítulo do degrau: Brant vence-se ~95% das vezes
+(a porta de entrada), Juno ~75%, Mercer ~87% mas custando 4 dos 6, e o
+Corbin ~60%, que é prova final. A prova acompanha os seus três mais
+fortes, como o veterano, então treinar não a esvazia. `times` lista
+**linhas**, uma por entrada: base e evolução da mesma linha viram um
+Pokémon só, e o Brant já lutou com 2 em vez de 3 assim — o `chk-lutas`
+confere o tamanho.
+
+Serviço novo entra com rosto pra quem fala (`RETRATO_POR_NOME` no fim
+do arquivo, ou classe na luta), nome pra quem se arrisca e `rep` em
+toda escolha que muda alguma coisa. `chk-lutas` roda toda prova e toda
+briga de serviço em cada ramo; `chk-telas` abre cada degrau em cada
+ponto, cada serviço e cada escolha.
+
 ## Tudo pesa na reputação
 Escolha que muda em 2 ou mais a opinião de alguém e não tem `rep` escrita
 na cena mexe na reputação sozinha (`repDaOpiniao`, em `motor.js`): gente

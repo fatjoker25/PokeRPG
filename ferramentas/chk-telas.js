@@ -12,10 +12,14 @@
        ficha, diário, rota, códice de finais, credenciais, PC, ajustes,
        as abas do tutorial, a folha de regras, o mapa e a ficha de cada
        lugar nele;
-     - toda loja, comprando e vendendo.
+     - toda loja, comprando e vendendo;
+     - a rede: cada degrau em cada ponto, cada serviço e cada escolha
+       dele, e a chegada de cada prova.
 
    Texto quebrado é o mesmo que o bot-jogador procura: marca de gênero
-   sem resolver, "undefined", "NaN", "[object", HTML vazando.
+   sem resolver, "undefined", "NaN", "[object", HTML vazando. E todo
+   balão de fala que aparecer tem que ter nome em cima e rosto com
+   arquivo no disco, como o chk-baloes confere nas cenas.
    Precisa de Playwright (como o chk-baloes). */
 const { chromium } = require('playwright');
 const path = require('path');
@@ -82,9 +86,31 @@ const SUSPEITO = [
     Estado.dados = JSON.parse(s);
   }, snap);
 
+  /* balão de fala: nome em cima e rosto, como o chk-baloes confere nas cenas */
+  const rostos = new Set();
   const olhar = async (rotulo) => {
     onde = rotulo;
     await page.waitForTimeout(120);
+    const baloes = await page.evaluate(() => {
+      const meu = Estado.j ? Estado.j.nome : null, out = [];
+      document.querySelectorAll('#app .fala, #modal .fala').forEach(e => {
+        if (e.classList.contains('voce') || e.classList.contains('minha') || e.classList.contains('jogador')) return;
+        /* a mesma pessoa de novo, logo em seguida: o rosto fica guardado (.fala-retrato.vazio) de propósito */
+        if (e.classList.contains('segue')) return;
+        const q = e.querySelector('.fala-quem');
+        if (!q){ out.push({sem:'dono', t:e.innerText.slice(0, 60)}); return; }
+        const n = q.innerText.trim();
+        if (!n || n === meu || /^você$/i.test(n)) return;
+        if (/^\?+$/.test(n)){ out.push({sem:'dono', t:e.innerText.slice(0, 60)}); return; }
+        const img = e.querySelector('img.fala-retrato');
+        out.push(img ? {src:img.getAttribute('src')} : {sem:'rosto', t:n});
+      });
+      return out;
+    });
+    for (const x of baloes){
+      if (x.src){ rostos.add(x.src); continue; }
+      anota(x.sem === 'dono' ? 'balão sem dono' : 'balão sem rosto', x.t);
+    }
     const txt = await page.evaluate(() =>
       ((document.querySelector('#app') || {}).innerText || '') + '\n' + ((document.querySelector('#modal') || {}).innerText || ''));
     for (const [re, nome] of SUSPEITO){
@@ -149,6 +175,41 @@ const SUSPEITO = [
     await tentar('loja/' + id + '/vender', x => Cidade.loja(0, undefined, 'vender'), id);
   }
 
+  /* ---------- a rede: cada degrau, cada ponto, cada serviço e escolha ---------- */
+  const naRede = async (n, local) => page.evaluate(([n, local, s]) => {
+    if (typeof Batalha !== 'undefined') Batalha.ativo = false;
+    UI.fecharModal && UI.fecharModal(true);
+    Estado.dados = JSON.parse(s);
+    const d = Estado.dados;
+    d.reputacao.eixo = 'ruim'; d.reputacao.ruim = 4; d.capitulo = 24;
+    d.cargos = ['rocket'];
+    d.rede = {escalao:n, pontos:30, servicos:{}, provas:{brant:{venceu:true}}, ultimoServico:null, fora:false};
+    d.local = local;
+  }, [n, local, snap]);
+  const pontos = await page.evaluate(() => Object.entries(PONTOS_DA_REDE).map(([k, v]) => [k, v.desde]));
+  for (let n = 1; n <= 5; n++) for (const [local, desde] of pontos){
+    if (n < desde) continue;
+    await naRede(n, local);
+    await tentar(`rede/${n}/${local}`, () => { Exploracao.tela(); Exploracao.fazer('rede'); });
+    const servs = await page.evaluate(() => Rede.servicosAqui(Mundo.id()).map(s => [s.id, s.escolhas.length]));
+    for (const [sid, k] of servs){
+      await naRede(n, local);
+      await tentar(`rede/${n}/${local}/${sid}`, x => Rede.servico(x), sid);
+      for (let i = 0; i < k; i++){
+        await naRede(n, local);
+        await tentar(`rede/${n}/${local}/${sid}/${i}`, ([x, j]) => { Rede.servico(x); Rede.escolher(x, j); }, [sid, i]);
+      }
+    }
+  }
+  for (const id of await page.evaluate(() => Object.keys(PROVAS_DA_REDE))){
+    const [n, local] = await page.evaluate(x => [PROVAS_DA_REDE[x].escalao - 1, PROVAS_DA_REDE[x].local], id);
+    await naRede(n, local);
+    await tentar(`rede/prova/${id}`, x => { Rede.tela(); Rede.abordarProva(x); }, id);
+  }
+  /* o cartão e a folha de regras com o nome do degrau */
+  await naRede(3, 'celadon');
+  await tentar('rede/cartão', () => UI.modalCartao());
+
   /* ---------- lugares e afazeres ---------- */
   for (const id of await page.evaluate(() => Object.keys(LOCAIS))){
     await restaurar();
@@ -163,6 +224,11 @@ const SUSPEITO = [
   }
 
   await b.close();
+  const fs = require('fs');
+  for (const src of rostos){
+    if (src.startsWith('data:')) continue;
+    if (!fs.existsSync(path.resolve(__dirname, '..', decodeURI(src)))){ onde = 'rostos'; anota('rosto que não existe no disco', src); }
+  }
   const lista = [...achados].sort((x, y) => y[1].n - x[1].n);
   if (!lista.length){ console.log('telas: nenhuma janela nem lugar com erro ou texto quebrado.'); process.exit(0); }
   console.log(`ACHADOS (${lista.length}):`);

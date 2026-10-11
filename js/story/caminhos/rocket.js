@@ -477,12 +477,17 @@ cr3_o_subsolo:{
 
 cr3_quem:{
   falante:'A Terceira',
-  vozes:['P','N','N','N'],
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Quem?"',
     '"O Rook acha que é ele. Ele carregou tudo por quatro anos e nunca pediu nada, e isso é o que faz gente achar que merece."',
     d => d.flags.cm_rocket_quer_subir ? '"E você pediu o lugar dele na frente dele. Ele não esqueceu. Ele não esquece nada que dá pra anotar."' : '"E ele gosta de você. Isso complica, porque ele vai querer você do lado dele, e lado é uma coisa que acaba."',
-    '"Eu vou embora às dez. Até lá, é com vocês."'
+    '"Eu vou embora às dez. Até lá, é com vocês."',
+    /* quem subiu na rede até a sala sem janela conheceu o Corbin (js/story/rede.js) */
+    d => !(d.rede && d.rede.provas && d.rede.provas.corbin && d.rede.provas.corbin.conheceu) ? ''
+      : typeof Rede !== 'undefined' && Rede.escalao(d) >= 5
+        ? '"O Corbin não vai disputar. Ele senta do seu lado desde que você subiu e nunca quis a cadeira do meio. Ele só não quer ficar sozinho de novo."'
+        : '"O Corbin não conta. Executivo de antes não quer cadeira. Quer alguém pra conversar."'
   ],
   escolhas:[
     {texto:'"Eu."', vai:'cr3_eu',

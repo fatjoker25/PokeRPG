@@ -82,13 +82,19 @@ const CARGOS = [
         'O crachá é de papel laminado e vence em um ano.']
 },
 {
-  id:'rocket', falante:'a voz do outro lado', nome:'Informante', orgao:'sem timbre', peso:3, cap:8,
+  /* o posto sobe de degrau na rede (js/story/rede.js): o nome que vai
+     pro cartão, o peso, a renda e o desconto saem do escalão */
+  id:'rocket', falante:'a voz do outro lado', orgao:'sem timbre', cap:8,
+  get nome(){ return typeof Rede !== 'undefined' ? Rede.nomeDoPosto() : 'Informante'; },
+  get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
   onde:'vermilion', lugar:'Armários do porto',
-  pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3}],
-  requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3,
+  pede:[{t:'reputação ruim: Indesejado ou pior', ok:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3},
+        {t:'a rede nunca ter parado de te ligar', ok:d=>!d.flags.largou_rocket}],
+  /* ninguém sai: quem largou o envelope não recebe outro */
+  requer:d=>d.reputacao.eixo === 'ruim' && d.reputacao.ruim >= 3 && !d.flags.largou_rocket,
   veta:['guarda_rota','policial','investigador','comissao','instrutor','lider','elite','professor','conselheiro'],
   resumo:'Ninguém assina nada. O dinheiro chega e as perguntas não.',
-  beneficios:{renda:1200, loja:0.75, repRuim:1},
+  get beneficios(){ return typeof Rede !== 'undefined' ? Rede.beneficios() : {renda:1200, loja:0.75, repRuim:1}; },
   fala:['Não tem crachá, não tem contrato e não tem aperto de mão.',
         'Tem um envelope no armário 14 do Centro de Vermilion toda vez que vira o mês, e tem uma lista de coisas que você não pergunta.',
         '"Você já fez de graça", diz a voz do outro lado. "A gente só está formalizando o que já era."'],
@@ -264,6 +270,11 @@ const Cargos = {
     const i = this.lista().indexOf(id);
     if (i < 0) return false;
     this.lista().splice(i, 1);
+    /* a rede não recebe de volta quem saiu ("ninguém sai, a gente só para de ligar") */
+    if (id === 'rocket'){
+      Estado.marcar('largou_rocket');
+      if (Estado.dados.rede) Estado.dados.rede.fora = true;
+    }
     const p = this.principal();
     Estado.j.cargo = p ? p.nome : null;
     Estado.registrar(`Largou o posto: ${(this.porId(id)||{}).nome || id}.`);

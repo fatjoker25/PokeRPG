@@ -668,6 +668,8 @@ function afazeresDoLocal(){
     if (c) lista.push({id:'rev_' + cid, titulo:`Procurar ${nomeDaRevanche(c)}`, sub:'Revanche marcada.'});
   }
 
+  /* a rede: o ponto dela nesta cidade, pra quem carrega o envelope */
+  if (typeof Rede !== 'undefined') Rede.afazeres(id).forEach(x => lista.push(x));
   /* veteranos: quem mora aqui e o convite que um deles te fez */
   if (typeof Veteranos !== 'undefined') Veteranos.afazeres(id).forEach(x => lista.push(x));
   /* quem fecha o caminho que a sua escolha fechou */

@@ -9,7 +9,7 @@
    ============================================================ */
 const LutaSalva = {
   CONTEXTOS: ['cenaBatalha','ginasioAtual','eliteAtual','torneioAtual','rivalAtual','revancheAtual',
-              'veteranoAtual','conferenciaAtual','estradaAtual','batalhaLivre'],
+              'veteranoAtual','conferenciaAtual','estradaAtual','redeAtual','batalhaLivre'],
 
   foto(){
     const B = Batalha, d = Estado.dados;

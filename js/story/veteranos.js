@@ -902,6 +902,7 @@ const Veteranos = {
     Jogo.cenaBatalha = null; Jogo.ginasioAtual = null; Jogo.eliteAtual = null;
     Jogo.torneioAtual = null; Jogo.rivalAtual = null; Jogo.revancheAtual = null; Jogo.estradaAtual = null;
     Jogo.conferenciaAtual = atual.conferencia ? Jogo.conferenciaAtual : null;
+    Jogo.redeAtual = null;
     Jogo.veteranoAtual = atual;
     Jogo.batalhaLivre = true;
     UI.limparDados();

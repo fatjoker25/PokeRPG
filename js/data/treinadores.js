@@ -270,7 +270,10 @@ const PAGA_POR_CLASSE = {
   'trainers/pokemon_breeder_f':40, 'trainers/pokemon_ranger_f':35, 'trainers/backpacker_f':25,
   'trainers/schoolkid_f':25, 'trainers/scuba_diver':30, 'trainers/golfer':40, 'trainers/dancer':30,
   'trainers/punk_guy':30, 'trainers/punk_girl':30, 'trainers/sightseer':30, 'trainers/sightseer_f':30,
-  'trainers/artist':30, 'trainers/rancher':40, 'trainers/cook':30
+  'trainers/artist':30, 'trainers/rancher':40, 'trainers/cook':30,
+  /* a rede (js/story/rede.js): os rostos de HG/SS sem a letra no peito */
+  'trainers/rede_recruta_m':30, 'trainers/rede_recruta_f':30, 'trainers/rede_chefe':70,
+  'trainers/rede_executivo_velho':80
 };
 const PAGA_PADRAO = 20;
 function pagaPorNivel(nome){

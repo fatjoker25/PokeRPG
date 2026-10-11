@@ -4,8 +4,9 @@
    (Homem e Mulher):
      ginásios, Elite e Campeão, torneio, o Ezra e os rivais extras, os
      treinadores de estrada nos quatro escalões, os veteranos, a
-     Conferência, as barreiras, as revanches do PokéNav e toda luta
-     marcada nas cenas dos capítulos;
+     Conferência, as provas e as brigas de serviço da rede, as
+     barreiras, as revanches do PokéNav e toda luta marcada nas cenas
+     dos capítulos;
    começa a luta pela função de verdade e confere:
      - a luta começou, o adversário tem rosto (arquivo no disco) e o
        time existe (espécie no DEX, golpes que existem em GOLPES);
@@ -55,7 +56,7 @@ const raiz = path.resolve(__dirname, '..');
       d.relogio.hora = 12;
       Mundo.viajar('viridian');
       Jogo.cenaBatalha = Jogo.ginasioAtual = Jogo.eliteAtual = Jogo.torneioAtual = Jogo.rivalAtual = null;
-      Jogo.revancheAtual = Jogo.veteranoAtual = Jogo.estradaAtual = null; Jogo.batalhaLivre = false;
+      Jogo.revancheAtual = Jogo.veteranoAtual = Jogo.estradaAtual = Jogo.redeAtual = null; Jogo.batalhaLivre = false;
       return d;
     };
 
@@ -139,6 +140,26 @@ const raiz = path.resolve(__dirname, '..');
     /* barreiras */
     (typeof BARREIRAS_DE_ESCOLHA !== 'undefined' ? BARREIRAS_DE_ESCOLHA : []).filter(x => x.luta)
       .forEach(x => add(`barreira ${x.id}`, 4, 14, () => Barreiras.fazer(x.id)));
+    /* a rede: as quatro provas e toda briga de serviço, em cada ramo do teste */
+    const naRede = (d, escalao, local) => {
+      d.reputacao.eixo = 'ruim'; d.reputacao.ruim = 4;
+      d.cargos = ['rocket'];
+      d.rede = {escalao, pontos:30, servicos:{}, provas:{}, ultimoServico:null, fora:false};
+      Mundo.viajar(local);
+    };
+    /* a lista é de linhas: base e evolução da mesma linha viram um só, e o time sai menor que o prometido */
+    const tamanhoCerto = L => {
+      const n = 1 + (Batalha.timeInimigo || []).length, quer = Math.min(L.tam, L.times.length);
+      if (n !== quer) throw new Error(`time de ${n}, devia ter ${quer} (linha repetida em times?)`);
+    };
+    Object.entries(PROVAS_DA_REDE).forEach(([id, pv]) => add(`rede prova ${pv.nome}`, 4, ESCALOES[pv.escalao - 1].cap, d => {
+      naRede(d, pv.escalao - 1, pv.local); Rede.lutar({tipo:'prova', id}); tamanhoCerto(pv); }));
+    SERVICOS_DA_REDE.forEach(s => s.escolhas.forEach((e, i) => [null, 'bom', 'ruim'].forEach(ramo => {
+      const L = ramo ? e[ramo] && e[ramo].luta : e.luta;
+      if (!L) return;
+      add(`rede ${s.id} ${i}${ramo ? ' ' + ramo : ''}`, 4, ESCALOES[s.escalao - 1].cap, d => {
+        naRede(d, s.escalao, s.local); Rede.lutar({tipo:'servico', id:s.id, i, ramo}); tamanhoCerto(L); });
+    })));
     /* revanches */
     CONTATOS.filter(c => c.ginasio || c.rivalExtra || c.revanche).forEach(c => add(`revanche ${c.id}`, 6, 16, d => {
       d.revanches = {[c.id]: {local: Mundo.id()}}; Jogo.lutarRevanche(c.id); }));

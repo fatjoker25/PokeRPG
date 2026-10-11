@@ -4776,6 +4776,19 @@ const UI = {
       <div class="linha"><span class="k">Policial de Kanto</span><span class="v">3 insígnias · reputação boa Reconhecido ou mais · ter sido Guarda de rota · 800 ₽ por capítulo, Centro sem custo, passagem e Força +1</span></div>
       <p class="sussurro">Quinze postos, de licença de treinador a conselheiro regional. Cada um pede uma coisa diferente — espécies catalogadas, insígnias, reputação, o time que você leva — e alguns só existem depois de muita estrada. Quem carrega o envelope sem timbre não recebe crachá da Liga, e vice-versa; e esse envelope piora a sua reputação sozinho, todo capítulo.</p>
 
+      <h3>A rede</h3>
+      <div class="linha"><span class="k">O que é</span><span class="v">o que sobrou da Rocket; quem entra é quem carrega o envelope sem timbre</span></div>
+      <div class="linha"><span class="k">Escalões</span><span class="v">${ESCALOES.map(e => this.esc(concordaJogador(e.nome))).join(' · ')}</span></div>
+      ${ESCALOES.slice(1).map(e => `<div class="linha"><span class="k">${this.esc(concordaJogador(e.nome))}</span><span class="v">confiança ${e.conf} · capítulo ${e.cap} · vencer a prova · ${fmtDin(e.renda)} ₽ por capítulo · ${Math.round((1 - e.loja) * 100)}% de desconto</span></div>`).join('')}
+      <div class="linha"><span class="k">Confiança</span><span class="v">o que a rede viu você fazer na história, mais o que os serviços somam · sabotagem que ela percebe tira; a que ela não percebe não conta</span></div>
+      <div class="linha"><span class="k">Serviço</span><span class="v">no ponto da rede da cidade: Vermilion; Celadon desde ${this.esc(concordaJogador(ESCALOES[1].nome))}; Fuchsia desde ${this.esc(concordaJogador(ESCALOES[2].nome))} · um a cada ${SERVICO_ESPERA_DIAS} dias · cada um uma vez, do degrau dele até o seguinte · feito direito, +1 a +3 de confiança · luta perdida no serviço, −1 e não paga</span></div>
+      <div class="linha"><span class="k">Esconder o que fez</span><span class="v">teste da cena; falhou, a rede percebe</span></div>
+      <div class="linha"><span class="k">Prova</span><span class="v">luta contra quem já está no degrau, no ponto dele · time de ${Object.values(PROVAS_DA_REDE).map(x => x.tam).join(', ').replace(/, (\d+)$/, ' e $1')} · nível: o maior entre o lugar + 2 e a média dos seus três mais fortes, mais ${Object.values(PROVAS_DA_REDE).map(x => x.acima).join(', ').replace(/, (\d+)$/, ' e $1')} — o mais forte nesse nível, o resto até 3 abaixo · erra ${ERRO_IA_VETERANO}% e gasta Vontade · paga classe × nível × ${PAGA_PROVA} · perdeu, volta a valer em ${PROVA_ESPERA_DIAS} dia</span></div>
+      <div class="linha"><span class="k">Subir</span><span class="v">reputação ruim +1 · um item do degrau na mochila · o nome do degrau no cartão e o salário dele no lugar do anterior</span></div>
+      <div class="linha"><span class="k">Luta de serviço</span><span class="v">time de 2 a 4 · nível da mesma conta, de −5 a +2</span></div>
+      <div class="linha"><span class="k">Sair</span><span class="v">terminar um serviço com a confiança em ${CONFIANCA_EXPULSA} ou menos e a rede para de ligar · quem larga o envelope, por qualquer porta, não recebe outro</span></div>
+      <p class="sussurro">O uniforme também pode chegar sem prova, quando quem oferece é a própria voz. Acima do último degrau não tem escalão: tem a mesa de cima, e ela não se ganha em luta marcada.</p>
+
       <h3>Estrada e tempo</h3>
       <div class="linha"><span class="k">Viagem entre capítulos</span><span class="v">um dia por trecho do caminho real</span></div>
       <div class="linha"><span class="k">O que passa</span><span class="v">quatro horas por trecho · cada lugar do trajeto fica visitado</span></div>
