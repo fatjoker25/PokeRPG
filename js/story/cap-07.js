@@ -11,6 +11,16 @@ function c7_cabe(id, d){
   if (id === 'c7_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
   return true;
 }
+/* o dia da semana de n dias atrás, com o artigo certo ("na terça",
+   "no sábado"): o zelador conta os dias pelo calendário de verdade */
+function c7_diaAtras(n){
+  const s = Calendario.SEMANA, i = Calendario.hoje().semanaIdx;
+  return s[((i - n) % 7 + 7) % 7];
+}
+function c7_naDia(n){
+  const dia = c7_diaAtras(n);
+  return (dia === 'sábado' || dia === 'domingo' ? 'no ' : 'na ') + dia;
+}
 function c7_abertura(d){
   const cand = C7_ABERTURAS.filter(id => c7_cabe(id, d));
   return Dados.escolher(cand);
@@ -74,7 +84,7 @@ c7_ab_foi_junto:{
     'Ninguém olha pra você com estranheza. Duas pessoas acenam com a cabeça.',
     'Na base da torre tem um homem de camisa cinza com uma prancheta, e ele não pergunta nome de ninguém: ele conta.',
     fala('o homem da prancheta', 'Dez.'),
-    'Ele escreve dez. Você virou o décimo de um luto que não é seu, e de alguma forma isso não é uma mentira.',
+    'Ele escreve dez. Você virou {o décimo|a décima} de um luto que não é seu, e de alguma forma isso não é uma mentira.',
     'Lá dentro é fresco e cheira a incenso queimado há muito tempo, não agora. O grupo sobe. Você fica no térreo.',
     'Do térreo dá pra ouvir nove pares de pé subindo, e depois, quatro andares acima, um homem de sessenta anos chorando de um jeito que é melhor não ouvir de perto.'
   ],
@@ -110,7 +120,7 @@ c7_ab_de_noite:{
   texto:[
     'Você chega em Lavender com o sol já baixo, e Lavender ao entardecer faz uma coisa que nenhuma outra cidade de Kanto faz: ela acende as janelas antes de acender a rua.',
     'Primeiro as casas. Depois, com uns vinte minutos de atraso, os postes.',
-    'Nesses vinte minutos a cidade inteira é só quadradinhos amarelos de janela com gente dentro, e a torre no fim da rua principal sem nenhuma luz nenhuma, porque a Torre Pokémon não tem luz externa.',
+    'Nesses vinte minutos a cidade inteira é só quadradinhos amarelos de janela com gente dentro, e a torre no fim da rua principal sem luz nenhuma, porque a Torre Pokémon não tem luz externa.',
     'Sete andares de concreto cinza que somem no escuro de baixo pra cima.',
     'Um homem passa de bicicleta com um saco de pão no guidão e freia do seu lado sem você pedir.',
     fala('o homem da bicicleta', 'Não sobe hoje.'),
@@ -294,6 +304,7 @@ c7_chegada:{
 
 c7_a_musica:{
   falante:'a mulher da varanda',
+  vozes:['N','N','N','N','N'],
   texto:[
     'Você pergunta pra primeira pessoa, uma mulher regando vaso numa varanda baixa.',
     'Ela para de regar.',
@@ -315,11 +326,12 @@ c7_a_musica:{
 
 c7_quando_parou:{
   falante:'a mulher da varanda',
+  vozes:['P','N','N','N','N','P','N'],
   texto:[
     '"Quando foi que parou?"',
     'Ela pensa com o regador na mão.',
     '"Eu acho que nunca teve."',
-    'Ela mexe as folhas de uma samambaia, procurando Pokémon.',
+    'Ela mexe as folhas de uma samambaia, procurando folha seca.',
     '"Meu pai era daqui. O pai dele era daqui. A torre é de mil oitocentos e alguma coisa." Ela dá de ombros. "Talvez a gente nunca tenha ligado rádio nessa rua desde que rádio existe."',
     'Ela fecha a torneira.',
     '"Tem gente que muda pra cá e traz som. Dura uns dois meses."',
@@ -353,6 +365,8 @@ c7_cidade:{
 },
 
 c7_marcenaria:{
+  falante:'Marceneiro de Lavender',
+  vozes:['N','P','N','N','N','N'],
   texto:[
     'O marceneiro tem uns sessenta anos e serragem no braço até o cotovelo.',
     'Ele te vê entrar e não pergunta o que você quer, porque ele já sabe as duas possibilidades.',
@@ -361,7 +375,7 @@ c7_marcenaria:{
     'Ele aponta duas prateleiras diferentes.',
     '"Essas aqui é pra hoje. Essas de cá é pra guardar." Ele limpa as mãos num pano. "Tem gente que compra antes. Treinador, principalmente. Compra do tamanho e leva na mochila."',
     'Você olha a prateleira "pra guardar".',
-    '"Isso não é mórbido, {moço|moça}", ele diz, lendo sua cara. "É que quem tá em rota não tem onde comprar."'
+    '"Isso não é mórbido, {moço|moça}," ele diz, lendo sua cara. "É que quem tá em rota não tem onde comprar."'
   ],
   ef:{flag:'viu_as_urnas'},
   escolhas:[
@@ -388,13 +402,15 @@ c7_comprou_urna:{
 },
 
 c7_quantas_urnas:{
+  falante:'Marceneiro de Lavender',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Quanto o senhor vende por mês?"',
     '"Depende do mês."',
     'Ele ajeita as urnas pequenas na prateleira, alinhando as bordas.',
     '"Novembro e dezembro é forte. Sabe por quê?"',
     'Você não sabe.',
-    '"Porque em janeiro tem a leva nova." Ele continua alinhando. "Sai todo mundo de casa em janeiro. Aí em novembro tem dez, onze meses de estrada nas costa de gente que saiu com quinze anos."',
+    '"Porque em março tem a leva nova." Ele continua alinhando. "Sai todo mundo de casa em março. Aí em novembro tem oito, nove meses de estrada nas costa de gente que saiu com quinze anos."',
     'Ele para de alinhar.',
     'Você faz a conta de quando você saiu de casa e de que mês é hoje.'
   ],
@@ -409,13 +425,15 @@ c7_quantas_urnas:{
 },
 
 c7_urna_depois:{
+  falante:'Marceneiro de Lavender',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Já veio treinador comprar depois? Com o Pokémon já—"',
     '"Vem." Ele corta antes de você terminar. "Vem toda semana."',
     'Ele apoia as duas mãos no balcão.',
     '"E esses eu atendo primeiro. Eu paro o que eu tô fazendo." Ele olha pra oficina nos fundos. "Porque quem chega aqui com o Pokémon na mochila chega numa condição que não dá pra deixar esperando."',
     'Ele volta a lixar uma tampa.',
-    '"Tem um banco ali. Eu boto água. Eles ficam sentado ali um tempo e eu deixo."'
+    '"Tem um banco ali. Eu boto água. Eles ficam sentados ali um tempo e eu deixo."'
   ],
   ef:{flag:'o_banco_da_marcenaria',
       npc:{nome:'Marceneiro de Lavender', opiniao:2, memoria:'Te explicou que atende primeiro quem chega com o Pokémon na mochila.'},
@@ -454,6 +472,7 @@ c7_flores:{
 
 c7_a_amarela:{
   falante:'Moça da floricultura',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Por que a amarela?"',
     '"Porque ela é a única que cresce aqui." Ela corta um caule. "As outras vêm de caminhão de Celadon. A amarela nasce sozinha no morro atrás da torre."',
@@ -476,6 +495,7 @@ c7_a_amarela:{
 
 c7_morro:{
   falante:'Moça da floricultura',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Onde é o morro atrás da torre?"',
     'Ela te olha como se você tivesse dito uma bobagem, e depois entende, e depois acha graça.',
@@ -553,9 +573,11 @@ c7_voltou_flor:{
 },
 
 c7_comprou_flor:{
+  falante:'Moça da floricultura',
+  vozes:['N','N'],
   texto:[
     'Ela amarra com barbante e te entrega, e é uma flor feia e amarela e você não sabe muito bem o que vai fazer com ela.',
-    '"Leva na mão", ela diz. "Não põe na mochila. Fica feio chegar lá em cima com flor amassada."'
+    '"Leva na mão," ela diz. "Não põe na mochila. Fica feio chegar lá em cima com flor amassada."'
   ],
   escolhas:[
     {texto:'Ir até a base da torre.', vai:'c7_base'},
@@ -565,6 +587,8 @@ c7_comprou_flor:{
 },
 
 c7_o_que_tem:{
+  falante:'Moça da floricultura',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"Subir por quê? O que tem lá em cima?"',
     'A moça da floricultura para o que está fazendo.',
@@ -589,6 +613,7 @@ c7_o_que_tem:{
 
 c7_ela_subiu:{
   falante:'Moça da floricultura',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"E a senhora subiu?"',
     '"Uma vez. Com dezesseis anos, com dois amigos, de brincadeira."',
@@ -610,6 +635,8 @@ c7_ela_subiu:{
 },
 
 c7_voltou_depois:{
+  falante:'Moça da floricultura',
+  vozes:['P','N','N','N'],
   texto:[
     '"E a senhora voltou lá depois?"',
     '"Nunca mais."',
@@ -680,6 +707,8 @@ c7_quarto_cinco:{
 },
 
 c7_dono_pousada:{
+  falante:'Dono da pousada',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Como o senhor aguenta isso?"',
     'Ele demora pra responder e você acha que ofendeu.',
@@ -716,16 +745,18 @@ c7_dormiu:{
 },
 
 c7_cafe_senhora:{
+  falante:'Senhora do Growlithe',
+  vozes:['N','N','P','N','N','N','P','N','N'],
   texto:[
     'Você senta. Ela empurra a garrafa de café na sua direção sem você pedir.',
-    'Vocês dois tomam café por uns três minutos sem falar nada.',
-    '"Era um Growlithe", ela diz do nada. "Catorze anos."',
+    'Vocês {dois|duas} tomam café por uns três minutos sem falar nada.',
+    '"Era um Growlithe," ela diz do nada. "Catorze anos."',
     '"Sinto muito."',
     '"Obrigada." Ela mexe o café. "Catorze anos é muito, sabia? A gente teve sorte."',
     'Ela fala isso e o rosto dela desmonta por dois segundos e depois volta, do jeito que rosto de gente adulta faz.',
     '"Desculpa."',
     '"Não precisa."',
-    '"Precisa sim", ela diz, e sorri. "Você tem {idade} anos e tá tomando café com uma velha chorando. Isso não é coisa de férias."'
+    '"Precisa sim," ela diz, e sorri. "Você tem {idade} anos e tá tomando café com uma velha chorando. Isso não é coisa de férias."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Sentou pra tomar café com uma desconhecida de luto'},
       hp:3, npc:{nome:'Senhora do Growlithe', opiniao:4, memoria:'Tomou café com você na copa da pousada na manhã seguinte ao enterro.'},
@@ -739,6 +770,8 @@ c7_cafe_senhora:{
 },
 
 c7_nome_do_growlithe:{
+  falante:'Senhora do Growlithe',
+  vozes:['P','N'],
   texto:[
     '"Como era o nome dele?"',
     'Ela levanta a cabeça rápido.',
@@ -759,6 +792,8 @@ c7_nome_do_growlithe:{
 },
 
 c7_subir_de_novo:{
+  falante:'Senhora do Growlithe',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"A senhora vai subir de novo hoje?"',
     '"Vou. Pra escrever no mural."',
@@ -780,7 +815,7 @@ c7_foi_com_ela:{
   falante:'Senhora do Growlithe',
   vozes:['N','N'],
   texto:[
-    'Vocês dois andam da pousada até a base da torre. São quatrocentos metros e levam onze minutos porque ela anda devagar.',
+    'Vocês {dois|duas} andam da pousada até a base da torre. São quatrocentos metros e levam onze minutos porque ela anda devagar.',
     'Na porta ela para.',
     'Fica parada uns quarenta segundos. Você não fala nada, não empurra, não segura o braço dela.',
     'Aí ela entra.',
@@ -801,6 +836,8 @@ c7_foi_com_ela:{
 },
 
 c7_escreveu_por_ela:{
+  falante:'Senhora do Growlithe',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Eu escrevo pra senhora."',
     'Ela pensa nisso seriamente, o que já é doloroso.',
@@ -821,9 +858,9 @@ c7_escreveu_por_ela:{
 
 c7_silencio_copa:{
   texto:[
-    'Vocês dois ficam na copa da pousada tomando café sem falar nada por vinte minutos.',
+    'Vocês {dois|duas} ficam na copa da pousada tomando café sem falar nada por vinte minutos.',
     'O dono passa duas vezes e não interrompe.',
-    'Em algum momento entra outro hóspede, um homem de uns cinquenta, e ele olha vocês dois e entende tudo na hora e senta na outra mesa e não fala nada também.',
+    'Em algum momento entra outro hóspede, um homem de uns cinquenta, e ele olha vocês {dois|duas} e entende tudo na hora e senta na outra mesa e não fala nada também.',
     'Três pessoas em silêncio numa copa de pousada às seis e meia da manhã.',
     'É a coisa mais parecida com um ritual que essa cidade tem, e ninguém organizou.'
   ],
@@ -845,7 +882,7 @@ c7_base:{
     'Alguns têm duas datas na mesma linha: a de um Pokémon e a de um treinador.',
     'Tem uma caixinha de madeira pregada na parede com giz branco dentro. Ninguém vigia a caixinha.',
     d=>d.cemiterio.length
-      ? `Você encontra espaço em branco. ${d.cemiterio.map(p=>nomeExib(p)).join(', ')} não está escrito em lugar nenhum de Kanto.`
+      ? `Você encontra espaço em branco. ${d.cemiterio.map(p=>nomeExib(p)).join(', ')} ${d.cemiterio.length > 1 ? 'não estão escritos' : 'não está escrito'} em lugar nenhum de Kanto.`
       : 'Você não tem nenhum nome pra escrever aí. Ainda.'
   ],
   ef:{registrar:'Chegou à base da Torre Pokémon de Lavender.'},
@@ -881,8 +918,7 @@ c7_deixou_flor:{
   texto:[
     'Você põe o maço de flor amarela no chão, embaixo do canto onde estão os onze nomes.',
     'Não tem vaso, não tem nada. É só uma flor no chão de concreto encostada numa parede preta.',
-    'Você fica ali agachad{o|a} por uns segundos e depois levanta e não olha pra trás.',
-    'Duas horas depois, quando você descer, a flor ainda vai estar lá e vai ter mais duas do lado.'
+    'Você fica ali agachad{o|a} por uns segundos e depois levanta e não olha pra trás.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Deixou flor para mortos de quem não sabia o nome'},
       flag:'deixou_a_flor', limpaFlag:'tem_a_flor', moral:8},
@@ -936,6 +972,8 @@ c7_quantos_ela:{
 },
 
 c7_zelador:{
+  falante:'Zelador da Torre',
+  vozes:['N','N','N'],
   texto:[
     'O zelador da torre é um homem magro de uns sessenta anos com as mãos manchadas de incenso e um molho de chaves que ele não usa, porque a torre não tranca.',
     'Ele está repondo vela num nicho do primeiro andar quando você chega.',
@@ -953,6 +991,8 @@ c7_zelador:{
 },
 
 c7_aviso:{
+  falante:'Zelador da Torre',
+  vozes:['N','N','N','N'],
   texto:[
     '"Do quarto andar pra cima, os Gastly te mostram coisa."',
     'Ele apaga o toco velho entre dois dedos molhados.',
@@ -973,6 +1013,8 @@ c7_aviso:{
 },
 
 c7_negou:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N'],
   texto:[
     '"Não."',
     'O zelador não discute. Faz que sim com a cabeça e volta pras velas.',
@@ -992,6 +1034,8 @@ c7_negou:{
 },
 
 c7_admitiu:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Tenho."',
     'O zelador para de mexer nas velas.',
@@ -1011,6 +1055,8 @@ c7_admitiu:{
 },
 
 c7_todo_mundo_tem:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Todo mundo tem."',
     'O zelador ri. É uma risada curta e real, a primeira coisa espontânea dessa cidade inteira.',
@@ -1032,6 +1078,8 @@ c7_todo_mundo_tem:{
 },
 
 c7_nao_respondeu:{
+  falante:'Zelador da Torre',
+  vozes:['N','N'],
   texto:[
     'Você não responde.',
     'O zelador espera. Espera tempo demais — uns oito segundos — e o silêncio fica insuportável antes de ele desistir.',
@@ -1049,6 +1097,8 @@ c7_nao_respondeu:{
 },
 
 c7_ja_sei:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Não precisa. Eu já sei."',
     '"Sabe o quê?"',
@@ -1068,6 +1118,8 @@ c7_ja_sei:{
 },
 
 c7_ele_subiu:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','P','N','N','P','N','N'],
   texto:[
     '"O senhor já subiu?"',
     '"Todo dia."',
@@ -1090,6 +1142,8 @@ c7_ele_subiu:{
 },
 
 c7_porque_pararam:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Por que pararam?"',
     'O zelador demora.',
@@ -1108,6 +1162,8 @@ c7_porque_pararam:{
 },
 
 c7_o_que_mostravam:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"O que eles mostravam?"',
     'O zelador olha pra escada do segundo andar por um tempo.',
@@ -1132,6 +1188,8 @@ c7_o_que_mostravam:{
 },
 
 c7_porque_nunca_abriu:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Por que o senhor nunca abriu? Lá em cima, digo."',
     'Ele fica quieto tanto tempo que você acha que ele não vai responder.',
@@ -1152,7 +1210,7 @@ c7_porque_nunca_abriu:{
 
 c7_abre_por_ele:{
   falante:'Zelador da Torre',
-  vozes:['P','N','P','N','N'],
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Eu abro pro senhor."',
     'Ele te olha com um susto de verdade.',
@@ -1172,6 +1230,8 @@ c7_abre_por_ele:{
 },
 
 c7_historia_zelador:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N','N'],
   texto:[
     '"Como o senhor foi parar aqui?"',
     '"Vaga."',
@@ -1217,6 +1277,8 @@ c7_os_onze:{
 },
 
 c7_o_que_e_recolhimento:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"O que é recolhimento?"',
     '"Foi a palavra que ela usou." O zelador dá de ombros. "Ela chegou aqui com um papel na mão e escreveu os onze nomes ajoelhada no chão."',
@@ -1237,6 +1299,8 @@ c7_o_que_e_recolhimento:{
 },
 
 c7_morreram:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Eles morreram?"',
     'O zelador fica em silêncio por um tempo horrível.',
@@ -1259,6 +1323,8 @@ c7_morreram:{
 },
 
 c7_nome_dela:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Qual era o nome dela?"',
     '"Eu não perguntei."',
@@ -1280,8 +1346,18 @@ c7_nome_dela:{
 },
 
 c7_mostrou_ao_zelador:{
+  falante:'Zelador da Torre',
+  vozes:['N','N','P','N','N','N'],
   texto:[
-    'Você mostra o que tem: a folha, ou a pasta, ou o documento grampeado com capa dura.',
+    d=>{
+      const f = d.flags, coisas = [];
+      if (f.guardou_a_folha) coisas.push('a guia de remessa dobrada em quatro');
+      if (f.levou_a_pasta) coisas.push('a pasta de formulários');
+      if (f.tem_o_estatuto || f.leu_o_estatuto) coisas.push('o Estatuto grampeado, de capa dura');
+      return coisas.length
+        ? `Você mostra o que tem: ${coisas.join(', ').replace(/, ([^,]*)$/, ' e $1')}.`
+        : 'Você não tem papel nenhum com você. Desenha o brasão de memória, com o dedo, na poeira do banco: os dois pratos e o fiel no meio.';
+    },
     'O zelador não pega. Põe as mãos pra trás, como quem não quer encostar.',
     '"É esse desenho."',
     'Ele olha por muito tempo sem tocar.',
@@ -1321,13 +1397,15 @@ c7_copiou_os_onze:{
 },
 
 c7_nao_sei_achar:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','P','N'],
   texto:[
     '"Eu não sei se eu vou achar ela."',
     '"Eu também não."',
     'Ele continua repondo velas.',
     '"Mas se eu não pedir pra ninguém, aí a chance é zero." Ele sopra o fósforo. "Eu já pedi pra sete pessoas em dois anos."',
     '"E?"',
-    '"E você é a primeira que perguntou o nome dela."'
+    '"E você é {o primeiro|a primeira} que perguntou o nome dela."'
   ],
   ef:{flag:'setimo_pedido'},
   escolhas:[
@@ -1342,7 +1420,7 @@ c7_torre:{
   texto:[
     'Os três primeiros andares são só andares.',
     'Lápides pequenas em fileira, no chão, cada uma com um nome e uma data. Velas nos nichos das paredes. Incenso — muito incenso, o ar é denso.',
-    'Tem gente rezando baixo em dois lugares. Uma família inteira sentada no chão do segundo andar em volta de uma lápide nova, comendo alguma coisa que trouxeram de casa.',
+    'Tem gente falando baixo com as lápides em dois lugares. Uma família inteira sentada no chão do segundo andar em volta de uma lápide nova, comendo alguma coisa que trouxeram de casa.',
     'Ninguém olha pra você. Aqui ninguém olha pra ninguém, e isso é gentileza.',
     'No quarto andar, a temperatura cai de verdade. Não é impressão: dá pra ver a sua respiração.',
     'E começam as vozes. Não palavras. Só o formato de uma voz conhecida, sem o conteúdo, como quando se ouve alguém falando através de uma parede.'
@@ -1464,7 +1542,7 @@ c7_pos_visao:{
     'A coisa que estava ali não está mais. Não foi embora — parou de estar, que é diferente e você não sabe explicar a diferença.',
     d=>d.flags.conselho_de_ficar && !d.flags.fugiu_da_visao
       ? 'Você ficou e olhou até acabar, como ele disse. Alguma coisa em você fica mais leve de um jeito que não faz sentido nenhum.'
-      : 'Você não sabe se ficou tempo suficiente. Vai ficar com essa dúvida.',
+      : 'Você não sabe se ficou tempo suficiente, e a dúvida desce a escada com você.',
     'O sexto andar começa na escada seguinte.',
     'E da escada seguinte vem um som que não é fantasma nenhum: é osso batendo em pedra, ritmado, três vezes, pausa, três vezes.'
   ],
@@ -1478,6 +1556,8 @@ c7_pos_visao:{
 },
 
 c7_chamou_zelador:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','P','N','N'],
   texto:[
     'Você desce os cinco andares correndo e acha o zelador no saguão.',
     '"Tem alguma coisa no sexto."',
@@ -1486,7 +1566,7 @@ c7_chamou_zelador:{
     '"É."',
     '"Faz quatro dias."' ,
     'Ele fala isso e o rosto dele fica com uma culpa muito antiga.',
-    '"Eu não subo desde terça. Eu tenho sessenta e um anos, {moço|moça}, e aquilo lá em cima não é Gastly."'
+    d=>`"Eu não subo desde ${c7_diaAtras(4)}. Eu tenho sessenta e um anos, {moço|moça}, e aquilo lá em cima não é Gastly."`
   ],
   ef:{flag:'zelador_sabe_do_sexto',
       presagio:'Quatro dias. Alguma coisa está batendo osso em pedra há quatro dias e a cidade toda ouve e ninguém sobe.'},
@@ -1499,13 +1579,15 @@ c7_chamou_zelador:{
 },
 
 c7_ninguem_chamou:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Ninguém chamou ninguém em quatro dias?"',
     '"Chamou."',
     'Ele senta no banco de concreto.',
-    '"Eu liguei pra Liga na quarta. Eles anotaram." Ele esfrega o joelho. "Disseram que ia ser designado um oficial."',
+    d=>`"Eu liguei pra Liga ${c7_naDia(3)}. Eles anotaram." Ele esfrega o joelho. "Disseram que ia ser designado um oficial."`,
     'Ele olha pra escada.',
-    '"Isso foi quarta. Hoje é sábado."'
+    d=>`"Isso foi ${c7_diaAtras(3)}. Hoje é ${c7_diaAtras(0)}."`
   ],
   ef:{flag:'a_liga_nao_veio',
       presagio:'Quarta. Hoje é sábado. Você já conhece esse ritmo.'},
@@ -1517,6 +1599,8 @@ c7_ninguem_chamou:{
 },
 
 c7_subiu_com_zelador:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','N','N'],
   texto:[
     '"Sobe comigo."',
     'Ele olha pra escada por uns bons dez segundos.',
@@ -1599,7 +1683,7 @@ c7_foi_no_treinador:{
 c7_curou_o_treinador:{
   texto:[
     'Você usa o que tem. Não é remédio de gente, mas é o que existe a seis andares de escada de qualquer coisa.',
-    'Não acorda ele. Mas a respiração muda de ritmo — fica mais funda — e você vai ficar o resto da vida sem saber se foi o que você fez ou se teria acontecido de qualquer jeito.',
+    'Não acorda ele. Mas a respiração muda de ritmo — fica mais funda — e não tem como saber se foi o que você fez ou se teria acontecido de qualquer jeito.',
     'O Marowak dá um passo pra trás.',
     'Um passo. Depois de quatro dias, ele dá um passo pra trás.'
   ],
@@ -1614,6 +1698,8 @@ c7_curou_o_treinador:{
 },
 
 c7_gritou_zelador:{
+  falante:'Zelador da Torre',
+  vozes:['N','N'],
   texto:[
     'Você grita da escada do sexto andar e a sua voz desce os seis andares e volta.',
     d=>d.flags.zelador_subiu_junto
@@ -1621,7 +1707,7 @@ c7_gritou_zelador:{
       : 'Leva sete minutos até o zelador chegar. Ele sobe seis andares em sete minutos aos sessenta e um anos, e chega sem conseguir falar.',
     'Ele olha a cena e entende em dois segundos o que você levou dois minutos pra entender.',
     '"Ah, não." Ele se ajoelha. "Ah, não, ele tava chamando."',
-    'Ele desce de novo pra ligar. A ambulância de Lavender leva onze minutos porque a cidade é pequena e o hospital é o de Celadon, mas tem uma van.'
+    'Ele desce de novo pra ligar. Lavender não tem hospital, o mais perto é o de Celadon, mas a cidade tem uma van, e a van leva onze minutos pra chegar na porta da torre.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Chamou ajuda em vez de resolver sozinho'},
       flag:'chamou_a_van', registrar:'A van de Lavender veio buscar o treinador do sexto andar.'},
@@ -1640,7 +1726,7 @@ c7_ficou_com_marowak:{
     'Dez minutos. Quinze.',
     'Aí o Marowak senta também. Não deita: senta, com o osso atravessado no colo, do jeito que alguém pousa uma ferramenta.',
     'E o Cubone se arrasta até ele e encosta, e ele deixa.',
-    'Vocês três ficam ali no escuro do sexto andar por quase uma hora sem nada acontecer, e é uma das coisas mais importantes que você faz nessa jornada inteira.'
+    'Vocês três ficam ali no escuro do sexto andar por quase uma hora sem nada acontecer, e nada precisa acontecer.'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Sentou no chão e esperou uma hora sem fazer nada'},
       flag:['acalmou_marowak','ficou_com_marowak'], moral:15,
@@ -1656,6 +1742,7 @@ c7_ficou_com_marowak:{
 },
 
 c7_perguntou_ao_marowak:{
+  vozes:['P'],
   texto:[
     'Você pergunta em voz alta, num corredor vazio, pra um Pokémon que não fala:',
     '"Você quer descer?"',
@@ -1697,11 +1784,13 @@ c7_levou_os_dois:{
 },
 
 c7_ficou_ate_alta:{
+  falante:'Elias',
+  vozes:['P','N','N','N'],
   texto:[
     'Você fica três dias em Celadon esperando a alta de um desconhecido.',
     'Dorme no Centro Pokémon. Visita todo dia. Traz café ruim de máquina.',
     'No terceiro dia ele conta: epilepsia. Diagnosticada aos dezessete. Ele não contou pra ninguém porque a Liga pede laudo médico pra licença e ele achou que iam recusar.',
-    '"Eles não iam recusar", você diz, sem ter a menor ideia.',
+    '"Eles não iam recusar," você diz, sem ter a menor ideia.',
     '"Eu sei que não." Ele olha o soro. "Mas eu achei. E aí eu subi seis andares sozinho numa torre."',
     'Ele passa a mão na cara.',
     '"Quatro dias, cara. Ele bateu osso por quatro dias."'
@@ -1753,10 +1842,11 @@ c7_carregou_o_treinador:{
 },
 
 c7_contou_pro_marowak:{
+  vozes:['P'],
   texto:[
     'Você sobe os seis andares de novo, com as pernas tremendo, uma hora depois.',
     'O Marowak está no mesmo lugar. Batendo.',
-    'Você senta a três metros e fala em voz alta, num corredor vazio, pra um Pokémon que não entende português:',
+    'Você senta a três metros e fala em voz alta, num corredor vazio, pra um Pokémon que não entende uma palavra:',
     '"Ele tá vivo. Levaram pro hospital. Ele tá vivo."',
     'Você fala isso umas quatro vezes, de jeitos diferentes, porque não sabe o que mais fazer.',
     'O Marowak para de bater.',
@@ -1779,7 +1869,7 @@ c7_luta_marowak:{
   texto:[
     'O Marowak grita quando você dá o primeiro passo.',
     'É um som que não devia sair de um corpo daquele tamanho, e ele para no meio, e recomeça.',
-    d=>d.flags.entendeu_a_cena ? 'E você já sabe que ele não está defendendo território. Você faz isso sabendo.' : 'Você não sabe o que ele está defendendo. Você vai descobrir depois.'
+    d=>d.flags.entendeu_a_cena ? 'E você já sabe que ele não está defendendo território. Você faz isso sabendo.' : 'Você não sabe o que ele está defendendo.'
   ],
   batalha:{dex:105, nivel:34, tipo:'selvagem', fuga:false, ambiente:'cemiterio',
            vitoria:'c7_pos_luta', derrota:'c7_pos_luta', captura:'c7_pos_luta', gameover:'gameover'}
@@ -1962,6 +2052,8 @@ c7_escudo_resultado:{
 },
 
 c7_buscou_o_escudo:{
+  falante:'Zelador da Torre',
+  vozes:['N','P','N'],
   texto:[
     'Você sobe de novo.',
     'O sexto andar está vazio. O Marowak não está lá. O Cubone não está lá.',
@@ -2028,7 +2120,7 @@ c7_pegou_do_circulo:{
     'A temperatura da sala cai e não volta.',
     'Você põe o caderno de volta. A temperatura não volta.',
     'Você põe o caderno exatamente na posição em que estava, ajeitando o ângulo, e a temperatura não volta.',
-    'Você desce os sete andares com a sensação exata e inconfundível de estar sendo acompanhado, e não é sensação, e você não olha pra trás nenhuma vez.',
+    'Você desce os sete andares com a sensação exata e inconfundível de estar sendo acompanhad{o|a}, e não é sensação, e você não olha pra trás nenhuma vez.',
     'No saguão, o zelador olha pra você e depois olha pra escada atrás de você, e a cara dele muda.',
     '"Você mexeu no círculo."'
   ],
@@ -2044,6 +2136,7 @@ c7_pegou_do_circulo:{
 },
 
 c7_devolveu_de_verdade:{
+  vozes:['P'],
   texto:[
     'Você sobe de novo, e é a subida mais difícil das três, e não é por cansaço.',
     'No sétimo, você não devolve só o caderno.',
@@ -2062,6 +2155,8 @@ c7_devolveu_de_verdade:{
 },
 
 c7_e_agora_circulo:{
+  falante:'Zelador da Torre',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"Mexi. E agora?"',
     'O zelador não parece bravo. Parece preocupado de um jeito muito prático.',
@@ -2096,11 +2191,13 @@ c7_sentou_no_circulo:{
 },
 
 c7_desceu_do_setimo:{
+  falante:'Zelador da Torre',
+  vozes:['N'],
   texto:[
     'Você desce os sete andares.',
     'No quinto, o corredor está vazio — não tem nada ali, nem o que tinha antes.',
     'No quarto, não tem vozes.',
-    'Nos três primeiros, tem gente rezando baixo, vela e incenso, e uma família comendo no chão em volta de uma lápide nova.',
+    'Nos três primeiros, tem gente falando baixo com as lápides, vela e incenso, e uma família comendo no chão em volta de uma lápide nova.',
     'No saguão, o zelador está repondo velas, do jeito que estava quando você chegou.',
     'Ele não pergunta nada. Você não conta nada.',
     'Ele repõe mais uma vela e diz, sem virar: "Boa viagem."'
@@ -2236,14 +2333,16 @@ c7_cubone:{
 
 c7_fim:{
   texto:[
-    'Você sai da torre e a rua de Lavender está do jeito que estava: sem música.',
+    d=>d.flags.sabe_do_hideo
+      ? 'Três dias depois, você volta de Celadon só pra pegar a estrada, e a rua de Lavender está do jeito que estava: sem música.'
+      : 'Você sai da torre e a rua de Lavender está do jeito que estava: sem música.',
     'Agora você entende o porquê. Não é superstição, não é respeito, não é regra.',
     'É que numa cidade onde todo dia alguém sobe uma escada carregando uma caixa pequena, som alto é uma coisa que ninguém consegue querer.',
     d=>{
-      if (d.flags.usou_escudo) return 'Você olha pro cinto. Tem um espaço. Você vai olhar pra esse espaço todo dia pelo resto da jornada.';
+      if (d.flags.usou_escudo) return 'Você olha pro cinto. Tem um espaço. Você olha pra ele de novo, e de novo, e não para de olhar.';
       if (d.flags.acalmou_marowak) return 'Alguma coisa mudou em você lá em cima, e pela primeira vez em muito tempo é uma mudança pra melhor.';
-      if (d.flags.treinador_morreu_torre) return 'Quarenta minutos. Você vai fazer essa conta muitas vezes, com resultados diferentes, e nenhum deles vai importar.';
-      if (d.flags.bateu_no_marowak) return 'Três vezes, pausa, três vezes. Você vai ouvir esse ritmo em coisas que não têm nada a ver: numa torneira, num motor, numa porta batendo.';
+      if (d.flags.treinador_morreu_torre) return 'Quarenta minutos. Você refaz a conta, e refaz, com resultados diferentes, e nenhum deles importa.';
+      if (d.flags.bateu_no_marowak) return 'Três vezes, pausa, três vezes. O ritmo ficou na sua cabeça, e já aparece em coisas que não têm nada a ver: na torneira da pousada, no motor de um carro, numa porta batendo.';
       return 'Você não é a mesma pessoa que entrou. Não tem uma cena específica pra apontar. É só verdade.';
     },
     d=>d.flags.copiou_os_onze_nomes
