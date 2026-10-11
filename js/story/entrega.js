@@ -194,7 +194,7 @@ c1e_de_madrugada:{
     d=>`A perua chega em ${d.jogador.cidade} hoje. Chega uma vez por mês, fica até o meio-dia e vai embora, e se ela for embora com a sua Pokébola dentro você espera mais trinta dias.`,
     'Você se veste no escuro pra não acordar ninguém e falha na terceira gaveta.',
     d=>fala(nomeCasa(), 'Ainda não amanheceu.', 'baixo', 'A voz vem do corredor, e não estava dormindo.'),
-    d=>fala(d.jogador.nome, 'Eu quero ser o primeiro.'),
+    d=>fala(d.jogador.nome, 'Eu quero ser {o primeiro|a primeira}.'),
     d=>fala(nomeCasa(), 'Você vai ser {o primeiro|a primeira}. Ninguém mais nessa rua pediu.'),
     'Silêncio dos dois lados da porta.',
     d=>fala(nomeCasa(), 'Come alguma coisa antes. Eu não vou deixar você sair daqui em jejum pra pegar Pokémon.', 'baixo')
@@ -527,8 +527,8 @@ c1e_a_assinatura:{
     'Você chega mais perto do caderno pra ver a assinatura de quem assinou junto.',
     d=>`É a letra de ${casaCompleto()}, e é uma letra que você conhece de bilhete de geladeira e de caderno de escola assinado às pressas na porta da sala.`,
     'Só que aqui ela está diferente. Está devagar. Cada letra separada, com força na caneta, como quem escreve sabendo que aquilo vai ficar guardado.',
-    'A data do lado é de fevereiro. Faz três meses.',
-    'Três meses que essa assinatura existe e você nunca viu.',
+    'A data do lado é de fevereiro. Faz poucas semanas.',
+    'Semanas que essa assinatura existe e você nunca viu.',
     fala('Célio', 'Muita gente para nessa parte.', 'baixo'),
     d=>fala(d.jogador.nome, 'Todo mundo?'),
     fala('Célio', 'Os que têm quem assine.')
@@ -634,12 +634,12 @@ c1e_recebeu:{
   texto:[
     'A Pokébola é mais leve do que você imaginava a vida inteira, e essa é a primeira coisa que você aprende hoje.',
     'Ele fecha a caixa, passa a fita por cima do corte, e desenha uma estrelinha do lado do seu nome no caderno.',
-    fala('Célio', 'Ele já tá fora, então deixa ele te conhecer antes de guardar. Primeira impressão é dos dois lados.', 'riso')
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p) : {Ele:'Ele', ele:'ele'}; return fala('Célio', `${e.Ele} já tá fora, então deixa ${e.ele} te conhecer antes de guardar. Primeira impressão é dos dois lados.`, 'riso'); }
   ],
   ef:{executar:d => entregarInicial(d)},
   escolhas:[
     {texto:'Olhar o Pokémon antes de falar qualquer coisa.', vai:'c1e_primeiro_olhar'},
-    {texto:'Agachar na altura dele.', vai:'c1e_agachou'},
+    {texto:d => { const p = d.time[d.time.length-1] || d.time[0]; return `Agachar na altura ${p ? pron(p).dele : 'dele'}.`; }, vai:'c1e_agachou'},
     {texto:'Chamar pelo nome da espécie, alto, só pra ouvir como soa.',
      vai:'c1e_chamou_alto'}
   ]
@@ -649,11 +649,11 @@ c1e_primeiro_olhar:{
   texto:[
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
-      return p ? `${nomeExib(p)} aparece em cima da lona do portamalas e fica parado, olhando a praça inteira antes de olhar pra você. Isso demora uns bons oito segundos.`
+      return p ? `${nomeExib(p)} aparece em cima da lona do portamalas e fica parad${pron(p).o}, olhando a praça inteira antes de olhar pra você. Isso demora uns bons oito segundos.`
                : 'A luz sai da Pokébola e vira Pokémon em cima da lona.';
     },
-    'Depois ele olha pra você. E continua olhando, do jeito que Pokémon olha quando está decidindo uma coisa.',
-    'E aí ele vem até você e encosta a cabeça na sua mão, e fica.',
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p).ele : 'ele'; return `Depois ${e} olha pra você. E continua olhando, do jeito que Pokémon olha quando está decidindo uma coisa.`; },
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p).ele : 'ele'; return `E aí ${e} vem até você e encosta a cabeça na sua mão, e fica.`; },
     fala('Célio', 'Pronto. Escolheu de volta.', 'riso'),
     d=>fala(d.jogador.nome, 'Como o senhor sabe?'),
     fala('Célio', 'Olhou a praça inteira e voltou pra você. Pokémon curioso e que volta é o melhor tipo que tem.')
@@ -668,7 +668,7 @@ c1e_primeiro_olhar:{
 
 c1e_agachou:{
   texto:[
-    'Você agacha na altura dele antes de qualquer outra coisa, porque foi o que o seu corpo fez sem consultar você.',
+    d=>`Você agacha na altura ${(d.time[d.time.length-1] || d.time[0]) ? pron(d.time[d.time.length-1] || d.time[0]).dele : 'dele'} antes de qualquer outra coisa, porque foi o que o seu corpo fez sem consultar você.`,
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
       return p ? `${nomeExib(p)} chega perto do seu joelho, encosta, e sai de novo. Depois volta e encosta mais tempo.`
@@ -716,7 +716,7 @@ c1e_mais_alguma_coisa:{
     fala('Célio', 'Primeira: licença. Sem licença você não é treinador, você é uma pessoa andando com um Pokémon. Centro Pokémon, balcão, formulário, fila. Faz isso hoje.'),
     fala('Célio', 'Segunda: ele come de três em três horas nas primeiras semanas e depois estabiliza sozinho. Não force.'),
     'Uma pausa mais longa que as outras.',
-    fala('Célio', 'Terceira: ele não sabe que você é novo nisso. Pra ele você já é a pessoa dele desde agorinha, com currículo e tudo.', 'baixo'),
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p) : {ele:'ele', dele:'dele'}; return fala('Célio', `Terceira: ${e.ele} não sabe que você é nov{o|a} nisso. Pra ${e.ele} você já é a pessoa ${e.dele} desde agorinha, com currículo e tudo.`, 'baixo'); },
     fala('Célio', 'Então seja. Você vai aprendendo no caminho, e ele vai junto.')
   ],
   ef:{flag:'conselho_do_goro', moral:5,
@@ -774,7 +774,7 @@ c1e_despedida_goro:{
 
 c1e_voltou_a_pe:{
   texto:[
-    'Você não guarda na Pokébola. Você volta andando, e ele vem do lado, e a diferença entre as duas coisas é a jornada inteira.',
+    d=>{ const p = d.time[d.time.length-1] || d.time[0]; return `Você não guarda na Pokébola. Você volta andando, e ${p ? pron(p).ele : 'ele'} vem do lado, e a diferença entre as duas coisas é a jornada inteira.`; },
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
       return p ? `${nomeExib(p)} para duas vezes no caminho: uma pra cheirar um portão e uma sem motivo nenhum aparente.`

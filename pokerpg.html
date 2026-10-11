@@ -34880,11 +34880,11 @@ c1_dormiu_demais:{
 c1_o_papel:{
   texto:[
     'É meia folha de caderno, escrita com a letra que você conhece desde que aprendeu a ler.',
-    d=>fala(nomeCasa(), 'Eu não te acordei de propósito. Dormir era a única coisa que eu ainda podia te dar hoje.'),
-    d=>fala(nomeCasa(), 'O café está embaixo do pano. Tem mais no armário de cima — o de cima mesmo, não o que você sempre abre.'),
-    d=>fala(nomeCasa(), 'E não volta por obrigação. Volta quando der vontade. É diferente, e é melhor.'),
+    '**Eu não te acordei de propósito. Dormir era a única coisa que eu ainda podia te dar hoje.**',
+    '**O café está embaixo do pano. Tem mais no armário de cima — o de cima mesmo, não o que você sempre abre.**',
+    '**E não volta por obrigação. Volta quando der vontade. É diferente, e é melhor.**',
     'Embaixo, sem assinatura, numa letra menor e mais apertada, como se tivesse sido escrita depois de dobrar o papel uma vez:',
-    d=>fala(nomeCasa(), 'Eu fui trabalhar porque eu não ia aguentar a porta.', 'baixo')
+    '**Eu fui trabalhar porque eu não ia aguentar a porta.**'
   ],
   ef:{moral:4, flag:'leu_o_bilhete',
       rep:{eixo:'bom',delta:1,motivo:'Leu o bilhete antes de sair'},
@@ -34900,7 +34900,7 @@ c1_resposta_bilhete:{
   texto:[
     'Você vira a folha e escreve no verso, e leva muito mais tempo do que uma linha deveria levar.',
     'Você escreve três versões na cabeça e escreve a quarta no papel, que é a mais curta.',
-    'Eu vou voltar. Não por obrigação.',
+    '**Eu vou voltar. Não por obrigação.**',
     'Depois você encosta o papel embaixo do açucareiro, que é onde esta casa deixa recado desde sempre, e olha uma última vez para ter certeza de que está bem visível.',
     'Está.'
   ],
@@ -34986,7 +34986,7 @@ c1_fez_o_cafe:{
   texto:[
     'Você desce às seis e vinte e faz o café, o que é uma coisa que nesta casa você nunca fez.',
     'Você erra a medida, faz forte demais, e não tem como consertar.',
-    d=>`Quando ${casaCompleto()} desce, vinte minutos depois, {casa:ela|ele} para na porta da cozinha e não diz nada por uns bons cinco segundos.`,
+    d=>`Quando ${casaCompleto()}, desce, vinte minutos depois, {casa:ela|ele} para na porta da cozinha e não diz nada por uns bons cinco segundos.`,
     'Depois senta. Toma o café forte demais até o fim, sem fazer careta, sem pôr água, sem falar da medida.',
     d=>fala(nomeCasa(), 'Tá bom.'),
     'Não estava. Estava horrível. Mas estava.'
@@ -35017,7 +35017,7 @@ c1_saiu_no_escuro:{
 
 c1_voltou_pra_dentro:{
   texto:[
-    d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()} está em pé na cozinha, de costas, colocando água no fogo.`,
+    d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()}, está em pé na cozinha, de costas, colocando água no fogo.`,
     '{casa:Ela|Ele} não se vira.',
     d=>fala(nomeCasa(), 'Eu ouvi a porta.', 'frio'),
     'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama como se aquilo fosse a coisa mais importante da manhã.',
@@ -35048,8 +35048,8 @@ c1_foi_sem_despedir:{
     'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
     'No bolso de fora da mochila, onde você não põe nada, tem uma coisa que você não pôs ali: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
     'Um PokéNav. Foi guardado aí em algum momento da noite, por alguém que não te acordou pra dizer que tinha guardado.',
-    d=>fala(nomeCasa(), 'o número daqui já tá gravado', 'baixo',
-            'Escrito a lápis numa tira de papel enrolada na tampa, em letra apressada.')
+    'Enrolada na tampa, uma tira de papel escrita a lápis, em letra apressada:',
+    '**o número daqui já tá gravado**'
   ],
   ef:{flag:'foi_sem_despedir', moral:-6,
       rep:{eixo:'ruim',delta:1,motivo:'Saiu de casa sem se despedir de ninguém'},
@@ -35234,7 +35234,7 @@ c1_recusou_a_caixa:{
 
 c1_chamou_de_volta:{
   texto:[
-    d=>fala(d.jogador.nome, 'DONA ODETE!', 'grita'),
+    d=>fala(d.jogador.nome, 'DONA PERLA!', 'grita'),
     'Ela para no meio da rua e se vira. Não parece nem um pouco surpresa, e é isso que pega.',
     d=>fala(d.jogador.nome, 'Eu levo.'),
     'Ela volta os oito passos e entrega a caixa sem dizer uma palavra.',
@@ -35254,7 +35254,7 @@ c1_chamou_de_volta:{
 
 c1_chamou_de_dentro:{
   texto:[
-    d=>`Você chama pra dentro e ${casaCompleto()} vem até a porta secando a mão no pano.`,
+    d=>`Você chama pra dentro e ${casaCompleto()}, vem até a porta secando a mão no pano.`,
     'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
     fala('Sra. Perla', 'E {o menino|a menina} sai hoje.'),
     d=>fala(nomeCasa(), 'Sai.'),
@@ -35412,7 +35412,7 @@ c1_bolso_de_dentro:{
 /* ── abertura 9: a casa cheia ─────────────────────────────── */
 c1_festa:{
   texto:[
-    'Tem gente demais na sua casa às sete da manhã e você não foi consultado sobre isso.',
+    'Tem gente demais na sua casa às sete da manhã e você não foi consultad{o|a} sobre isso.',
     'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Perla e alguém que você tem quase certeza de que mora na outra rua.',
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
     d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
@@ -36051,7 +36051,8 @@ c1_carregou_o_nav:{
     d=>`Você pergunta se dá pra carregar e ${cadastra(d)} aponta uma tomada atrás do balcão com quatro aparelhos já ligados nela.`,
     d=>fala(cadastra(d), 'Todo Centro tem. É serviço obrigatório e ninguém sabe.'),
     'Enquanto carrega, você mexe no aparelho pela primeira vez com calma.',
-    d=>fala(nomeCasa(), 'CASA', 'baixo', 'É o único número gravado. Está escrito em maiúsculo, o que quer dizer que foi {casa:ela|ele} que digitou.'),
+    '**CASA**',
+    'É o único número gravado. Está escrito em maiúsculo, o que quer dizer que foi {casa:ela|ele} que digitou.',
     'Tem também, na memória, três chamadas não atendidas de {idade-3} anos atrás, para um número que não existe mais.',
     'Você não apaga.'
   ],
@@ -36372,7 +36373,7 @@ c1_quem_sumiu:{
 
 c1_sem_cadastro:{
   texto:[
-    'Você passa direto pelo Centro Pokémon.',
+    d=>d.jogador.cidade === 'Pallet' ? 'Você passa direto pela mesa do cadastro, do lado da porta do laboratório.' : 'Você passa direto pelo Centro Pokémon.',
     'Sem licença, sem cartão, sem Pokédex, sem Pokébola nenhuma, com uma mochila de roupa e comida.',
     'Isso é legal? Não exatamente. Isso acontece? O tempo todo.',
     'O que acontece de verdade é o seguinte: você vai chegar na primeira rota, encontrar um Pokémon selvagem, não ter nada pra jogar nele, e voltar.',
@@ -36468,11 +36469,11 @@ c1_fim_venceu:{
       ]);
     },
     d=>{
-      const b = C1.briga(d);
+      const b = C1.briga(d), p = C1.meu(d), ele = p ? pron(p).ele : 'ele';
       if (b.turnos && b.turnos <= 2) return 'Você repassa na cabeça o que mandou fazer e não lembra de ter decidido nada. Saiu.';
-      if (b.hpAliado >= 0.7) return 'Metade do que deu certo foi ordem sua. A outra metade foi ele, que não esperou a ordem.';
+      if (b.hpAliado >= 0.7) return `Metade do que deu certo foi ordem sua. A outra metade foi ${ele}, que não esperou a ordem.`;
       if (b.hpAliado < 0.3) return 'Você fica agachad{o|a} até a respiração dos dois acertar o mesmo ritmo.';
-      return 'Você conta o que mandou e o que ele levou, e a conta não fecha tão a seu favor quanto parecia enquanto acontecia.';
+      return `Você conta o que mandou e o que ${ele} levou, e a conta não fecha tão a seu favor quanto parecia enquanto acontecia.`;
     },
     d=>C1.estrada(d)
   ],
@@ -36522,7 +36523,7 @@ c1_fim_perdeu:{
       if (!p) return 'Você fica ali parad{o|a}, sozinh{o|a} no mato, com as mãos vazias.';
       return C1.qual(d, [
         `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que devia, do jeito que um corpo pesa quando não ajuda.`,
-        `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhad{o|a}. Está respirando. É a primeira coisa que você confere e a única que importa.`
+        `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhado. Está respirando. É a primeira coisa que você confere e a única que importa.`
       ]);
     },
     'Ninguém viu. Você repara que isso não ajuda em nada.',
@@ -36813,7 +36814,10 @@ c2_recado_da_sua_cidade:{
     'Você procura papel da sua cidade no mural e leva quatro minutos pra achar, porque está na terceira camada.',
     d=>`É um cartaz de ${d.jogador.cidade}, impresso em papel comum, com a foto ruim de uma licença.`,
     'É o seu.',
-    d=>`Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado de ${nomeCasa()}, ${artigoDe(casaQuem())} ${casaQuem()}".`,
+    'Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone:',
+    '**PARABÉNS.**',
+    'E, menor:',
+    d=>`**recado de ${nomeCasa()}, ${artigoDe(casaQuem())} ${casaQuem()}**`,
     '{casa:Ela|Ele} ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
     'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
@@ -36847,7 +36851,7 @@ c2_devolveu_o_cartaz:{
   texto:[
     'Você tira o seu cartaz do meio do mural e prega de volta lá embaixo, na terceira camada, embaixo do cartaz do Growlithe.',
     'A senhora da fila do balcão vê isso também.',
-    fala('a senhora da fila', 'Bom menino.', 'baixo', 'É tudo que ela diz, e ela nem olha pra você quando diz.')
+    fala('a senhora da fila', '{Bom menino|Boa menina}.', 'baixo', 'É tudo que ela diz, e ela nem olha pra você quando diz.')
   ],
   ef:{moral:4, limpaFlag:'botou_o_proprio_cartaz_na_frente',
       rep:{eixo:'bom',delta:1,motivo:'Devolveu o próprio cartaz pra terceira camada'},
@@ -36901,6 +36905,8 @@ c2_arrancou:{
 },
 
 c2_quem_cola:{
+  falante:'a atendente',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Quem cola isso aqui?"',
     'A atendente demora pra responder e escolhe as palavras.',
@@ -36921,6 +36927,7 @@ c2_quem_cola:{
 },
 
 c2_nunca:{
+  vozes:['P','N','P','N','N'],
   falante:'a atendente',
   texto:[
     '"Nunca."',
@@ -36934,6 +36941,7 @@ c2_nunca:{
 },
 
 c2_nao_sei_cartaz:{
+  vozes:['N','N'],
   falante:'a atendente',
   texto:[
     'Ela assente devagar, como quem recebeu a resposta que esperava.',
@@ -36944,6 +36952,8 @@ c2_nao_sei_cartaz:{
 },
 
 c2_arrancou_dnv:{
+  falante:'a atendente',
+  vozes:['E','N','N','P','N'],
   texto:[
     'Você arranca de novo. E de novo, quando aparece o terceiro.',
     'No quarto, a atendente vem com uma fita adesiva e cola no lugar um papel seu, escrito à mão, que diz: "ESTE MURAL É FISCALIZADO."',
@@ -36979,8 +36989,8 @@ c2_pergunta_floresta:{
 },
 
 c2_descricao:{
+  vozes:['N','N','P','N','N'],
   falante:'a atendente',
-  vozes:['N','P','N'],
   texto:[
     '"Homem, quarenta e poucos, roupa boa demais pra mato." Ela recita de memória. "Carregando rolo de fio de aço no ombro, sem disfarçar."',
     '"Fio de aço."',
@@ -36993,8 +37003,8 @@ c2_descricao:{
 },
 
 c2_vou_de_dia:{
+  vozes:['P','N','N'],
   falante:'a atendente',
-  vozes:['P','N'],
   texto:[
     '"Então eu vou de dia."',
     '"É o que todo mundo fala." Ela dá de ombros sem maldade. "E a floresta tem quatro horas de travessia, e ninguém sai de manhã cedo, e todo mundo entra depois do almoço."',
@@ -37020,6 +37030,8 @@ c2_leu_tudo:{
 },
 
 c2_provocou:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Você continua lendo. Sabendo que ele está olhando.',
     'Dura quase dois minutos. Depois ele desiste, levanta da escada, e vem até você.',
@@ -37031,6 +37043,8 @@ c2_provocou:{
 },
 
 c2_teo:{
+  falante:'Ezra',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Ele tem mais ou menos a sua idade e a roupa dele é nova demais, do jeito de quem comprou tudo de uma vez pra viagem.',
     '"Ezra." Ele estende a mão antes de você oferecer. "Eu tava numa pedra na Rota 1 desde as seis da manhã esperando alguém passar."',
@@ -37051,6 +37065,8 @@ c2_teo:{
 },
 
 c2_pergunta_pedra:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Por que você tava esperando numa pedra?"',
     'Ele demora pra responder e a resposta é mais honesta do que a pergunta merecia.',
@@ -37076,11 +37092,13 @@ c2_pergunta_pedra:{
 },
 
 c2_mandou_voltar:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Então volta pra casa."',
     'Silêncio.',
     '"É." Ele assente muito devagar. "É, talvez."',
-    'Ele não vai voltar pra casa. Ele vai continuar, e vai continuar sozinho, e vai lembrar dessa frase todas as vezes em que der errado.',
+    'Ele não vai voltar pra casa. Dá pra ver na cara dele: vai continuar, e sozinho, com essa sua frase no bolso.',
     '"Boa sorte aí." Ele estende a mão de novo, o que é pior do que se ele não estendesse.'
   ],
   escolhas:[
@@ -37090,6 +37108,8 @@ c2_mandou_voltar:{
 },
 
 c2_desculpa:{
+  falante:'Ezra',
+  vozes:['P','N','N'],
   texto:[
     '"Espera. Desculpa. Eu falei merda."',
     'Ele para no meio do movimento de guardar o cinto.',
@@ -37116,6 +37136,8 @@ c2_conversa:{
 },
 
 c2_recusa:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     '"Ah." Ele senta de novo na escada. "Tá."',
     'Você anda até a porta e ainda consegue sentir ele olhando.',
@@ -37128,6 +37150,8 @@ c2_recusa:{
 },
 
 c2_batalha_teo:{
+  falante:'Ezra',
+  vozes:['N'],
   texto:[
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
     'Ezra joga a Pokébola com mais força do que precisa. "VAI!"',
@@ -37141,6 +37165,8 @@ c2_batalha_teo:{
 },
 
 c2_pos_derrota:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     'O seu último Pokémon senta no chão de tinta descascada e não levanta.',
     'Ezra demora a entender que ganhou. Quando entende, não comemora — olha em volta primeiro, pra ver se teve gente vendo, e não teve.',
@@ -37161,6 +37187,8 @@ c2_pos_derrota:{
 },
 
 c2_derrota_insistiu:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Você põe as notas na mão dele. Ele olha o dinheiro como se fosse uma prova de alguma coisa.',
     '"Cara, eu não—"',
@@ -37176,10 +37204,12 @@ c2_derrota_insistiu:{
 },
 
 c2_derrota_silencio:{
+  falante:'Ezra',
+  vozes:['N'],
   texto:[
     'Você não diz nada. Pega seu time, agradece a atendente com a cabeça e senta no banco de concreto do pátio.',
     'Ezra fica de pé perto, mudando o peso de um pé pro outro, esperando uma deixa que você não dá.',
-    '"Todo mundo perde a primeira", ele fala, pro muro.',
+    '"Todo mundo perde a primeira," ele fala, pro muro.',
     'É mentira. Ele não sabe se é mentira. Ele acabou de inventar isso e vai acreditar nisso pelo resto da vida, porque é o tipo de mentira que serve.'
   ],
   ef:{flag:'perdeu_a_primeira'},
@@ -37192,6 +37222,8 @@ c2_derrota_silencio:{
 },
 
 c2_derrota_revanche:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Foi sorte. Revanche."',
     'A cara dele muda. Não fecha — desaba um pouco, que é pior.',
@@ -37209,6 +37241,8 @@ c2_derrota_revanche:{
 },
 
 c2_derrota_desculpa:{
+  falante:'Ezra',
+  vozes:['P','P','P','N','N'],
   texto:[
     '"Não foi sorte. Desculpa."',
     'Ezra levanta a cabeça devagar.',
@@ -37222,13 +37256,15 @@ c2_derrota_desculpa:{
 },
 
 c2_derrota_aprendeu:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"O que você fez que eu não fiz?"',
     'A pergunta pega ele desprevenido. Ninguém nunca perguntou nada pra ele.',
     '"Eu… esperei." Ele pensa enquanto fala. "Você atacou toda vez que deu. Eu deixei passar uma pra ver o que você ia fazer."',
     'Ele encolhe os ombros, com vergonha de estar dando aula.',
     '"Meu pai joga carta. É a mesma coisa, ele fala. Quem tem pressa mostra a mão."',
-    'Você vai lembrar disso numa floresta, num ginásio e num lugar bem pior, e nas três vezes vai ser útil.'
+    'Você guarda a frase do pai dele sem saber muito bem pra quê.'
   ],
   ef:{flag:'licao_da_espera'},
   escolhas:[
@@ -37239,6 +37275,8 @@ c2_derrota_aprendeu:{
 },
 
 c2_pos_batalha:{
+  falante:'Ezra',
+  vozes:['N'],
   texto:[
     'Ezra se agacha e abraça o {pico} antes mesmo de devolver pra Pokébola. "Foi mal, foi mal, você foi bem."',
     'Ele fala isso pro {pico}, não pra você. Leva uns bons quinze segundos até lembrar que você existe.',
@@ -37259,10 +37297,12 @@ c2_pos_batalha:{
 },
 
 c2_devolveu:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Você devolve o dinheiro.',
     'Ele não aceita. Você insiste. Ele não aceita de novo. Você põe na mão dele e fecha os dedos dele em volta, que é o único jeito que funciona com gente assim.',
-    '"Regra é regra", ele reclama.',
+    '"Regra é regra," ele reclama.',
     '"A regra é entre profissional. A gente é dois moleques num pátio."',
     'Ele guarda. Fica quieto um tempo.',
     '"Valeu." Muito baixo. E depois, alto demais, pra compensar: "MAS EU VOU GANHAR A PRÓXIMA!"'
@@ -37274,6 +37314,8 @@ c2_devolveu:{
 },
 
 c2_critica:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Seu {pico} não briga sem olhar pra você."',
     'Ezra olha pro {pico}. O {pico} olha pro Ezra.',
@@ -37293,6 +37335,8 @@ c2_critica:{
 },
 
 c2_ensinar:{
+  falante:'Ezra',
+  vozes:['P','N','P','P'],
   texto:[
     '"Dá pra ensinar."',
     '"Você acha?"',
@@ -37308,15 +37352,19 @@ c2_ensinar:{
 },
 
 c2_nao_serve:{
+  falante:'Ezra',
+  vozes:['P','N'],
   texto:[
     '"Então ele não serve pra rota."',
     'Ezra não responde na hora. Guarda o {pico}.',
-    '"Ele é o que eu tenho", ele diz, e é a frase mais adulta que sai da boca dele nesse dia.'
+    '"Ele é o que eu tenho," ele diz, e é a frase mais adulta que sai da boca dele nesse dia.'
   ],
   escolhas:[{texto:'Ir embora.', vai:'c2_saida_centro'}]
 },
 
 c2_encontro_pewter:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Te encontro em Pewter."',
     '"Combinado." Ele bate na sua mão com uma solenidade ridícula. "Não chega antes de mim."',
@@ -37337,6 +37385,8 @@ c2_encontro_pewter:{
 },
 
 c2_gritou:{
+  falante:'Ezra',
+  vozes:['P'],
   texto:[
     'Você grita da porta. Ele já está a uns trinta metros.',
     '"QUATRO HORAS! A FLORESTA LEVA QUATRO HORAS!"',
@@ -37353,6 +37403,8 @@ c2_gritou:{
 },
 
 c2_atras_do_teo:{
+  falante:'Ezra',
+  vozes:['N','P','N'],
   texto:[
     'Você pega a mochila e sai atrás dele.',
     'Alcança na saída norte da cidade, onde a Rota 2 começa a estreitar.',
@@ -83804,7 +83856,7 @@ c21_dentro_de_casa:{
   texto:[
     'A casa é menor. Não do jeito triste — do jeito real. Você cresceu quatro centímetros e viu prédio de onze andares, e a sua casa continuou a mesma, e a sua cabeça refez a escala.',
     'O seu quarto está exatamente como você deixou, o que quer dizer que alguém tem entrado ali pra deixar exatamente como você deixou.',
-    d=>`${casaCompleto()} está na porta do quarto, com o pano na mão, e não entra.`,
+    d=>`${casaCompleto()}, está na porta do quarto, com o pano na mão, e não entra.`,
     d=>fala(nomeCasa(), 'Eu não mexi em nada.'),
     d=>fala(nomeCasa(), 'Eu tirei o pó. Mas eu não mexi.', 'baixo')
   ],
@@ -94142,7 +94194,7 @@ c1e_de_madrugada:{
     d=>`A perua chega em ${d.jogador.cidade} hoje. Chega uma vez por mês, fica até o meio-dia e vai embora, e se ela for embora com a sua Pokébola dentro você espera mais trinta dias.`,
     'Você se veste no escuro pra não acordar ninguém e falha na terceira gaveta.',
     d=>fala(nomeCasa(), 'Ainda não amanheceu.', 'baixo', 'A voz vem do corredor, e não estava dormindo.'),
-    d=>fala(d.jogador.nome, 'Eu quero ser o primeiro.'),
+    d=>fala(d.jogador.nome, 'Eu quero ser {o primeiro|a primeira}.'),
     d=>fala(nomeCasa(), 'Você vai ser {o primeiro|a primeira}. Ninguém mais nessa rua pediu.'),
     'Silêncio dos dois lados da porta.',
     d=>fala(nomeCasa(), 'Come alguma coisa antes. Eu não vou deixar você sair daqui em jejum pra pegar Pokémon.', 'baixo')
@@ -94475,8 +94527,8 @@ c1e_a_assinatura:{
     'Você chega mais perto do caderno pra ver a assinatura de quem assinou junto.',
     d=>`É a letra de ${casaCompleto()}, e é uma letra que você conhece de bilhete de geladeira e de caderno de escola assinado às pressas na porta da sala.`,
     'Só que aqui ela está diferente. Está devagar. Cada letra separada, com força na caneta, como quem escreve sabendo que aquilo vai ficar guardado.',
-    'A data do lado é de fevereiro. Faz três meses.',
-    'Três meses que essa assinatura existe e você nunca viu.',
+    'A data do lado é de fevereiro. Faz poucas semanas.',
+    'Semanas que essa assinatura existe e você nunca viu.',
     fala('Célio', 'Muita gente para nessa parte.', 'baixo'),
     d=>fala(d.jogador.nome, 'Todo mundo?'),
     fala('Célio', 'Os que têm quem assine.')
@@ -94582,12 +94634,12 @@ c1e_recebeu:{
   texto:[
     'A Pokébola é mais leve do que você imaginava a vida inteira, e essa é a primeira coisa que você aprende hoje.',
     'Ele fecha a caixa, passa a fita por cima do corte, e desenha uma estrelinha do lado do seu nome no caderno.',
-    fala('Célio', 'Ele já tá fora, então deixa ele te conhecer antes de guardar. Primeira impressão é dos dois lados.', 'riso')
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p) : {Ele:'Ele', ele:'ele'}; return fala('Célio', `${e.Ele} já tá fora, então deixa ${e.ele} te conhecer antes de guardar. Primeira impressão é dos dois lados.`, 'riso'); }
   ],
   ef:{executar:d => entregarInicial(d)},
   escolhas:[
     {texto:'Olhar o Pokémon antes de falar qualquer coisa.', vai:'c1e_primeiro_olhar'},
-    {texto:'Agachar na altura dele.', vai:'c1e_agachou'},
+    {texto:d => { const p = d.time[d.time.length-1] || d.time[0]; return `Agachar na altura ${p ? pron(p).dele : 'dele'}.`; }, vai:'c1e_agachou'},
     {texto:'Chamar pelo nome da espécie, alto, só pra ouvir como soa.',
      vai:'c1e_chamou_alto'}
   ]
@@ -94597,11 +94649,11 @@ c1e_primeiro_olhar:{
   texto:[
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
-      return p ? `${nomeExib(p)} aparece em cima da lona do portamalas e fica parado, olhando a praça inteira antes de olhar pra você. Isso demora uns bons oito segundos.`
+      return p ? `${nomeExib(p)} aparece em cima da lona do portamalas e fica parad${pron(p).o}, olhando a praça inteira antes de olhar pra você. Isso demora uns bons oito segundos.`
                : 'A luz sai da Pokébola e vira Pokémon em cima da lona.';
     },
-    'Depois ele olha pra você. E continua olhando, do jeito que Pokémon olha quando está decidindo uma coisa.',
-    'E aí ele vem até você e encosta a cabeça na sua mão, e fica.',
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p).ele : 'ele'; return `Depois ${e} olha pra você. E continua olhando, do jeito que Pokémon olha quando está decidindo uma coisa.`; },
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p).ele : 'ele'; return `E aí ${e} vem até você e encosta a cabeça na sua mão, e fica.`; },
     fala('Célio', 'Pronto. Escolheu de volta.', 'riso'),
     d=>fala(d.jogador.nome, 'Como o senhor sabe?'),
     fala('Célio', 'Olhou a praça inteira e voltou pra você. Pokémon curioso e que volta é o melhor tipo que tem.')
@@ -94616,7 +94668,7 @@ c1e_primeiro_olhar:{
 
 c1e_agachou:{
   texto:[
-    'Você agacha na altura dele antes de qualquer outra coisa, porque foi o que o seu corpo fez sem consultar você.',
+    d=>`Você agacha na altura ${(d.time[d.time.length-1] || d.time[0]) ? pron(d.time[d.time.length-1] || d.time[0]).dele : 'dele'} antes de qualquer outra coisa, porque foi o que o seu corpo fez sem consultar você.`,
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
       return p ? `${nomeExib(p)} chega perto do seu joelho, encosta, e sai de novo. Depois volta e encosta mais tempo.`
@@ -94664,7 +94716,7 @@ c1e_mais_alguma_coisa:{
     fala('Célio', 'Primeira: licença. Sem licença você não é treinador, você é uma pessoa andando com um Pokémon. Centro Pokémon, balcão, formulário, fila. Faz isso hoje.'),
     fala('Célio', 'Segunda: ele come de três em três horas nas primeiras semanas e depois estabiliza sozinho. Não force.'),
     'Uma pausa mais longa que as outras.',
-    fala('Célio', 'Terceira: ele não sabe que você é novo nisso. Pra ele você já é a pessoa dele desde agorinha, com currículo e tudo.', 'baixo'),
+    d=>{ const p = d.time[d.time.length-1] || d.time[0], e = p ? pron(p) : {ele:'ele', dele:'dele'}; return fala('Célio', `Terceira: ${e.ele} não sabe que você é nov{o|a} nisso. Pra ${e.ele} você já é a pessoa ${e.dele} desde agorinha, com currículo e tudo.`, 'baixo'); },
     fala('Célio', 'Então seja. Você vai aprendendo no caminho, e ele vai junto.')
   ],
   ef:{flag:'conselho_do_goro', moral:5,
@@ -94722,7 +94774,7 @@ c1e_despedida_goro:{
 
 c1e_voltou_a_pe:{
   texto:[
-    'Você não guarda na Pokébola. Você volta andando, e ele vem do lado, e a diferença entre as duas coisas é a jornada inteira.',
+    d=>{ const p = d.time[d.time.length-1] || d.time[0]; return `Você não guarda na Pokébola. Você volta andando, e ${p ? pron(p).ele : 'ele'} vem do lado, e a diferença entre as duas coisas é a jornada inteira.`; },
     d=>{
       const p = d.time[d.time.length-1] || d.time[0];
       return p ? `${nomeExib(p)} para duas vezes no caminho: uma pra cheirar um portão e uma sem motivo nenhum aparente.`
@@ -103003,14 +103055,15 @@ const UI = {
            alinhar com o balão de cima */
         const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo);
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}"${meu ? '' : estiloCor(f.quem)}>
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala"${meu ? '' : estiloCor(f.quem)}>
           ${lugar}<div class="fala-quem">${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
       }
       const t = txt(bruto);
-      if (!t) return '';
+      /* fala sem texto (objetivo em branco, ramo que não devolveu nada) não vira balão nem derruba a cena */
+      if (!t || typeof t !== 'string') return '';
 
       /* **PLACA, BILHETE, CABEÇALHO**: linha inteira em negrito é coisa
          escrita. Aspas dentro dela são do papel, não de alguém falando. */
@@ -103051,29 +103104,36 @@ const UI = {
         if (vozAqui === 'E' || (!vozAqui && (this._ESCRITO.test(pendente || '') || mesmoPapel || this.pareceEscrito(pe.texto, depois)))){
           if (vozAqui === 'E') voz++;
           papelNaLinha = true;
-          html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
+          html += `<p class="escrito" data-voz="${vozAqui === 'E' ? 'vozes' : 'papel'}">${this.esc('“' + pe.texto + '”')}</p>`;
           continue;
         }
         let outro = null;
+        /* de onde saiu o dono desta aspa (vai no data-voz do balão, pras
+           ferramentas que leem o roteiro: 'adivinhada' é a que o autor
+           não escreveu e o motor deduziu) */
+        let fonte = 'adivinhada';
         /* a frase que você acabou de escolher é sua, sem discussão */
         if (vozes && voz < vozes.length){
           const v = vozes[voz++];
           lado = v === 'P' ? 'voce' : 'npc';
           if (v !== 'P' && v !== 'N') outro = v;
+          fonte = 'vozes';
         }
-        else if (this.monologoDe) lado = 'npc';
-        else if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
-        else if (primeira)
-          lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
-               : this.ladoDaFala(pendente, null, npc);
+        else if (this.monologoDe){ lado = 'npc'; fonte = 'monologo'; }
+        else if (this.falaDoJogador && pe.texto === this.falaDoJogador){ lado = 'voce'; fonte = 'escolhida'; }
+        else if (primeira){
+          const sua = this.primeiraEhSua(pe.texto, suas, pendente === null);
+          lado = sua ? 'voce' : this.ladoDaFala(pendente, null, npc);
+          if (sua) fonte = 'escolhida';
+        }
         else if (pendente !== null) lado = this.ladoDaFala(pendente, lado, npc);
         else lado = (lado === 'voce') ? 'npc' : 'voce';
         /* '"Eu sei", ele diz.' — a atribuição vem depois da aspa e manda
            mais que a alternância: "ele diz" nunca é você falando */
         if (!outro && !(vozes && voz <= vozes.length && voz > 0) && !this.monologoDe && !(this.falaDoJogador && pe.texto === this.falaDoJogador)){
           const verbo = '(diz|disse|repete|concorda|pergunta|responde|fala|completa|continua|murmura|insiste|corrige|acrescenta|emenda)';
-          if (new RegExp('^[,;]?\\s*(ele|ela)\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'npc';
-          else if (new RegExp('^[,;]?\\s*você\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'voce';
+          if (new RegExp('^[,;]?\\s*(ele|ela)\\s+' + verbo + '\\b', 'i').test(depois)){ lado = 'npc'; fonte = 'atribuida'; }
+          else if (new RegExp('^[,;]?\\s*você\\s+' + verbo + '\\b', 'i').test(depois)){ lado = 'voce'; fonte = 'atribuida'; }
         }
         primeira = false; pendente = null;
 
@@ -103087,9 +103147,12 @@ const UI = {
         ultimaBoca = quem || null;
         const rosto = quem && lado !== 'voce' ? this.retratoFala(quem, rotulo) : '';
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}"${meu ? '' : estiloCor(quem)}>`
+        /* '"Regra é regra," ele reclama.' — no balão a fala fecha com ponto;
+           a vírgula era da frase de fora, que continua embaixo, miúda */
+        const diz = (/,$/.test(pe.texto) && /^[,;]?\s*[a-zà-ú]/.test(depois)) ? pe.texto.replace(/,$/, '.') : pe.texto;
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${meu ? '' : estiloCor(quem)}>`
               + lugar + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
-              + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
+              + `<p class="fala-diz">${this.esc(diz)}</p></div>`;
       }
       return html;
     }).filter(Boolean).join('')

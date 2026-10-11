@@ -775,14 +775,15 @@ const UI = {
            alinhar com o balão de cima */
         const rosto = meu ? '' : this.retratoFala(f.quem, f.rotulo);
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
-        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}"${meu ? '' : estiloCor(f.quem)}>
+        return `<div class="fala${tom}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="fala"${meu ? '' : estiloCor(f.quem)}>
           ${lugar}<div class="fala-quem">${this.esc(f.quem)}</div>
           <p class="fala-diz">${this.esc(f.diz)}</p>
           ${f.nota ? `<div class="fala-nota">${this.esc(f.nota)}</div>` : ''}
         </div>`;
       }
       const t = txt(bruto);
-      if (!t) return '';
+      /* fala sem texto (objetivo em branco, ramo que não devolveu nada) não vira balão nem derruba a cena */
+      if (!t || typeof t !== 'string') return '';
 
       /* **PLACA, BILHETE, CABEÇALHO**: linha inteira em negrito é coisa
          escrita. Aspas dentro dela são do papel, não de alguém falando. */
@@ -823,29 +824,36 @@ const UI = {
         if (vozAqui === 'E' || (!vozAqui && (this._ESCRITO.test(pendente || '') || mesmoPapel || this.pareceEscrito(pe.texto, depois)))){
           if (vozAqui === 'E') voz++;
           papelNaLinha = true;
-          html += `<p class="escrito">${this.esc('“' + pe.texto + '”')}</p>`;
+          html += `<p class="escrito" data-voz="${vozAqui === 'E' ? 'vozes' : 'papel'}">${this.esc('“' + pe.texto + '”')}</p>`;
           continue;
         }
         let outro = null;
+        /* de onde saiu o dono desta aspa (vai no data-voz do balão, pras
+           ferramentas que leem o roteiro: 'adivinhada' é a que o autor
+           não escreveu e o motor deduziu) */
+        let fonte = 'adivinhada';
         /* a frase que você acabou de escolher é sua, sem discussão */
         if (vozes && voz < vozes.length){
           const v = vozes[voz++];
           lado = v === 'P' ? 'voce' : 'npc';
           if (v !== 'P' && v !== 'N') outro = v;
+          fonte = 'vozes';
         }
-        else if (this.monologoDe) lado = 'npc';
-        else if (this.falaDoJogador && pe.texto === this.falaDoJogador) lado = 'voce';
-        else if (primeira)
-          lado = this.primeiraEhSua(pe.texto, suas, pendente === null) ? 'voce'
-               : this.ladoDaFala(pendente, null, npc);
+        else if (this.monologoDe){ lado = 'npc'; fonte = 'monologo'; }
+        else if (this.falaDoJogador && pe.texto === this.falaDoJogador){ lado = 'voce'; fonte = 'escolhida'; }
+        else if (primeira){
+          const sua = this.primeiraEhSua(pe.texto, suas, pendente === null);
+          lado = sua ? 'voce' : this.ladoDaFala(pendente, null, npc);
+          if (sua) fonte = 'escolhida';
+        }
         else if (pendente !== null) lado = this.ladoDaFala(pendente, lado, npc);
         else lado = (lado === 'voce') ? 'npc' : 'voce';
         /* '"Eu sei", ele diz.' — a atribuição vem depois da aspa e manda
            mais que a alternância: "ele diz" nunca é você falando */
         if (!outro && !(vozes && voz <= vozes.length && voz > 0) && !this.monologoDe && !(this.falaDoJogador && pe.texto === this.falaDoJogador)){
           const verbo = '(diz|disse|repete|concorda|pergunta|responde|fala|completa|continua|murmura|insiste|corrige|acrescenta|emenda)';
-          if (new RegExp('^[,;]?\\s*(ele|ela)\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'npc';
-          else if (new RegExp('^[,;]?\\s*você\\s+' + verbo + '\\b', 'i').test(depois)) lado = 'voce';
+          if (new RegExp('^[,;]?\\s*(ele|ela)\\s+' + verbo + '\\b', 'i').test(depois)){ lado = 'npc'; fonte = 'atribuida'; }
+          else if (new RegExp('^[,;]?\\s*você\\s+' + verbo + '\\b', 'i').test(depois)){ lado = 'voce'; fonte = 'atribuida'; }
         }
         primeira = false; pendente = null;
 
@@ -859,9 +867,12 @@ const UI = {
         ultimaBoca = quem || null;
         const rosto = quem && lado !== 'voce' ? this.retratoFala(quem, rotulo) : '';
         const lugar = rosto ? (repete ? '<span class="fala-retrato vazio" aria-hidden="true"></span>' : rosto) : '';
-        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}"${meu ? '' : estiloCor(quem)}>`
+        /* '"Regra é regra," ele reclama.' — no balão a fala fecha com ponto;
+           a vírgula era da frase de fora, que continua embaixo, miúda */
+        const diz = (/,$/.test(pe.texto) && /^[,;]?\s*[a-zà-ú]/.test(depois)) ? pe.texto.replace(/,$/, '.') : pe.texto;
+        html += `<div class="fala${quem ? '' : ' anonima'}${meu}${repete ? ' segue' : ''}${lugar ? ' com-rosto' : ''}" data-voz="${fonte}"${meu ? '' : estiloCor(quem)}>`
               + lugar + (quem ? `<div class="fala-quem">${this.esc(quem)}</div>` : '')
-              + `<p class="fala-diz">${this.esc(pe.texto)}</p></div>`;
+              + `<p class="fala-diz">${this.esc(diz)}</p></div>`;
       }
       return html;
     }).filter(Boolean).join('')

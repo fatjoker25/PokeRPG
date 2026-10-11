@@ -501,7 +501,7 @@ c21_dentro_de_casa:{
   texto:[
     'A casa é menor. Não do jeito triste — do jeito real. Você cresceu quatro centímetros e viu prédio de onze andares, e a sua casa continuou a mesma, e a sua cabeça refez a escala.',
     'O seu quarto está exatamente como você deixou, o que quer dizer que alguém tem entrado ali pra deixar exatamente como você deixou.',
-    d=>`${casaCompleto()} está na porta do quarto, com o pano na mão, e não entra.`,
+    d=>`${casaCompleto()}, está na porta do quarto, com o pano na mão, e não entra.`,
     d=>fala(nomeCasa(), 'Eu não mexi em nada.'),
     d=>fala(nomeCasa(), 'Eu tirei o pó. Mas eu não mexi.', 'baixo')
   ],

@@ -243,7 +243,10 @@ c2_recado_da_sua_cidade:{
     'Você procura papel da sua cidade no mural e leva quatro minutos pra achar, porque está na terceira camada.',
     d=>`É um cartaz de ${d.jogador.cidade}, impresso em papel comum, com a foto ruim de uma licença.`,
     'É o seu.',
-    d=>`Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone: "PARABÉNS." E, menor: "recado de ${nomeCasa()}, ${artigoDe(casaQuem())} ${casaQuem()}".`,
+    'Embaixo da foto, escrito à mão com a letra redonda de quem anotou pelo telefone:',
+    '**PARABÉNS.**',
+    'E, menor:',
+    d=>`**recado de ${nomeCasa()}, ${artigoDe(casaQuem())} ${casaQuem()}**`,
     '{casa:Ela|Ele} ligou pro Centro de Viridian. Ditou o recado pra recepção, mandou a foto por fax e ainda pediu pra pregarem na altura dos olhos.',
     'Você mal começou a estrada e já tem cartaz numa cidade que não é a sua.'
   ],
@@ -277,7 +280,7 @@ c2_devolveu_o_cartaz:{
   texto:[
     'Você tira o seu cartaz do meio do mural e prega de volta lá embaixo, na terceira camada, embaixo do cartaz do Growlithe.',
     'A senhora da fila do balcão vê isso também.',
-    fala('a senhora da fila', 'Bom menino.', 'baixo', 'É tudo que ela diz, e ela nem olha pra você quando diz.')
+    fala('a senhora da fila', '{Bom menino|Boa menina}.', 'baixo', 'É tudo que ela diz, e ela nem olha pra você quando diz.')
   ],
   ef:{moral:4, limpaFlag:'botou_o_proprio_cartaz_na_frente',
       rep:{eixo:'bom',delta:1,motivo:'Devolveu o próprio cartaz pra terceira camada'},
@@ -331,6 +334,8 @@ c2_arrancou:{
 },
 
 c2_quem_cola:{
+  falante:'a atendente',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Quem cola isso aqui?"',
     'A atendente demora pra responder e escolhe as palavras.',
@@ -351,6 +356,7 @@ c2_quem_cola:{
 },
 
 c2_nunca:{
+  vozes:['P','N','P','N','N'],
   falante:'a atendente',
   texto:[
     '"Nunca."',
@@ -364,6 +370,7 @@ c2_nunca:{
 },
 
 c2_nao_sei_cartaz:{
+  vozes:['N','N'],
   falante:'a atendente',
   texto:[
     'Ela assente devagar, como quem recebeu a resposta que esperava.',
@@ -374,6 +381,8 @@ c2_nao_sei_cartaz:{
 },
 
 c2_arrancou_dnv:{
+  falante:'a atendente',
+  vozes:['E','N','N','P','N'],
   texto:[
     'Você arranca de novo. E de novo, quando aparece o terceiro.',
     'No quarto, a atendente vem com uma fita adesiva e cola no lugar um papel seu, escrito à mão, que diz: "ESTE MURAL É FISCALIZADO."',
@@ -409,8 +418,8 @@ c2_pergunta_floresta:{
 },
 
 c2_descricao:{
+  vozes:['N','N','P','N','N'],
   falante:'a atendente',
-  vozes:['N','P','N'],
   texto:[
     '"Homem, quarenta e poucos, roupa boa demais pra mato." Ela recita de memória. "Carregando rolo de fio de aço no ombro, sem disfarçar."',
     '"Fio de aço."',
@@ -423,8 +432,8 @@ c2_descricao:{
 },
 
 c2_vou_de_dia:{
+  vozes:['P','N','N'],
   falante:'a atendente',
-  vozes:['P','N'],
   texto:[
     '"Então eu vou de dia."',
     '"É o que todo mundo fala." Ela dá de ombros sem maldade. "E a floresta tem quatro horas de travessia, e ninguém sai de manhã cedo, e todo mundo entra depois do almoço."',
@@ -450,6 +459,8 @@ c2_leu_tudo:{
 },
 
 c2_provocou:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Você continua lendo. Sabendo que ele está olhando.',
     'Dura quase dois minutos. Depois ele desiste, levanta da escada, e vem até você.',
@@ -461,6 +472,8 @@ c2_provocou:{
 },
 
 c2_teo:{
+  falante:'Ezra',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Ele tem mais ou menos a sua idade e a roupa dele é nova demais, do jeito de quem comprou tudo de uma vez pra viagem.',
     '"Ezra." Ele estende a mão antes de você oferecer. "Eu tava numa pedra na Rota 1 desde as seis da manhã esperando alguém passar."',
@@ -481,6 +494,8 @@ c2_teo:{
 },
 
 c2_pergunta_pedra:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Por que você tava esperando numa pedra?"',
     'Ele demora pra responder e a resposta é mais honesta do que a pergunta merecia.',
@@ -506,11 +521,13 @@ c2_pergunta_pedra:{
 },
 
 c2_mandou_voltar:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Então volta pra casa."',
     'Silêncio.',
     '"É." Ele assente muito devagar. "É, talvez."',
-    'Ele não vai voltar pra casa. Ele vai continuar, e vai continuar sozinho, e vai lembrar dessa frase todas as vezes em que der errado.',
+    'Ele não vai voltar pra casa. Dá pra ver na cara dele: vai continuar, e sozinho, com essa sua frase no bolso.',
     '"Boa sorte aí." Ele estende a mão de novo, o que é pior do que se ele não estendesse.'
   ],
   escolhas:[
@@ -520,6 +537,8 @@ c2_mandou_voltar:{
 },
 
 c2_desculpa:{
+  falante:'Ezra',
+  vozes:['P','N','N'],
   texto:[
     '"Espera. Desculpa. Eu falei merda."',
     'Ele para no meio do movimento de guardar o cinto.',
@@ -546,6 +565,8 @@ c2_conversa:{
 },
 
 c2_recusa:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     '"Ah." Ele senta de novo na escada. "Tá."',
     'Você anda até a porta e ainda consegue sentir ele olhando.',
@@ -558,6 +579,8 @@ c2_recusa:{
 },
 
 c2_batalha_teo:{
+  falante:'Ezra',
+  vozes:['N'],
   texto:[
     'Vocês saem pro pátio dos fundos do Centro, que existe exatamente pra isso e tem o chão marcado com tinta descascada.',
     'Ezra joga a Pokébola com mais força do que precisa. "VAI!"',
@@ -571,6 +594,8 @@ c2_batalha_teo:{
 },
 
 c2_pos_derrota:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     'O seu último Pokémon senta no chão de tinta descascada e não levanta.',
     'Ezra demora a entender que ganhou. Quando entende, não comemora — olha em volta primeiro, pra ver se teve gente vendo, e não teve.',
@@ -591,6 +616,8 @@ c2_pos_derrota:{
 },
 
 c2_derrota_insistiu:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Você põe as notas na mão dele. Ele olha o dinheiro como se fosse uma prova de alguma coisa.',
     '"Cara, eu não—"',
@@ -606,10 +633,12 @@ c2_derrota_insistiu:{
 },
 
 c2_derrota_silencio:{
+  falante:'Ezra',
+  vozes:['N'],
   texto:[
     'Você não diz nada. Pega seu time, agradece a atendente com a cabeça e senta no banco de concreto do pátio.',
     'Ezra fica de pé perto, mudando o peso de um pé pro outro, esperando uma deixa que você não dá.',
-    '"Todo mundo perde a primeira", ele fala, pro muro.',
+    '"Todo mundo perde a primeira," ele fala, pro muro.',
     'É mentira. Ele não sabe se é mentira. Ele acabou de inventar isso e vai acreditar nisso pelo resto da vida, porque é o tipo de mentira que serve.'
   ],
   ef:{flag:'perdeu_a_primeira'},
@@ -622,6 +651,8 @@ c2_derrota_silencio:{
 },
 
 c2_derrota_revanche:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Foi sorte. Revanche."',
     'A cara dele muda. Não fecha — desaba um pouco, que é pior.',
@@ -639,6 +670,8 @@ c2_derrota_revanche:{
 },
 
 c2_derrota_desculpa:{
+  falante:'Ezra',
+  vozes:['P','P','P','N','N'],
   texto:[
     '"Não foi sorte. Desculpa."',
     'Ezra levanta a cabeça devagar.',
@@ -652,13 +685,15 @@ c2_derrota_desculpa:{
 },
 
 c2_derrota_aprendeu:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"O que você fez que eu não fiz?"',
     'A pergunta pega ele desprevenido. Ninguém nunca perguntou nada pra ele.',
     '"Eu… esperei." Ele pensa enquanto fala. "Você atacou toda vez que deu. Eu deixei passar uma pra ver o que você ia fazer."',
     'Ele encolhe os ombros, com vergonha de estar dando aula.',
     '"Meu pai joga carta. É a mesma coisa, ele fala. Quem tem pressa mostra a mão."',
-    'Você vai lembrar disso numa floresta, num ginásio e num lugar bem pior, e nas três vezes vai ser útil.'
+    'Você guarda a frase do pai dele sem saber muito bem pra quê.'
   ],
   ef:{flag:'licao_da_espera'},
   escolhas:[
@@ -669,6 +704,8 @@ c2_derrota_aprendeu:{
 },
 
 c2_pos_batalha:{
+  falante:'Ezra',
+  vozes:['N'],
   texto:[
     'Ezra se agacha e abraça o {pico} antes mesmo de devolver pra Pokébola. "Foi mal, foi mal, você foi bem."',
     'Ele fala isso pro {pico}, não pra você. Leva uns bons quinze segundos até lembrar que você existe.',
@@ -689,10 +726,12 @@ c2_pos_batalha:{
 },
 
 c2_devolveu:{
+  falante:'Ezra',
+  vozes:['N','P','N','N'],
   texto:[
     'Você devolve o dinheiro.',
     'Ele não aceita. Você insiste. Ele não aceita de novo. Você põe na mão dele e fecha os dedos dele em volta, que é o único jeito que funciona com gente assim.',
-    '"Regra é regra", ele reclama.',
+    '"Regra é regra," ele reclama.',
     '"A regra é entre profissional. A gente é dois moleques num pátio."',
     'Ele guarda. Fica quieto um tempo.',
     '"Valeu." Muito baixo. E depois, alto demais, pra compensar: "MAS EU VOU GANHAR A PRÓXIMA!"'
@@ -704,6 +743,8 @@ c2_devolveu:{
 },
 
 c2_critica:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Seu {pico} não briga sem olhar pra você."',
     'Ezra olha pro {pico}. O {pico} olha pro Ezra.',
@@ -723,6 +764,8 @@ c2_critica:{
 },
 
 c2_ensinar:{
+  falante:'Ezra',
+  vozes:['P','N','P','P'],
   texto:[
     '"Dá pra ensinar."',
     '"Você acha?"',
@@ -738,15 +781,19 @@ c2_ensinar:{
 },
 
 c2_nao_serve:{
+  falante:'Ezra',
+  vozes:['P','N'],
   texto:[
     '"Então ele não serve pra rota."',
     'Ezra não responde na hora. Guarda o {pico}.',
-    '"Ele é o que eu tenho", ele diz, e é a frase mais adulta que sai da boca dele nesse dia.'
+    '"Ele é o que eu tenho," ele diz, e é a frase mais adulta que sai da boca dele nesse dia.'
   ],
   escolhas:[{texto:'Ir embora.', vai:'c2_saida_centro'}]
 },
 
 c2_encontro_pewter:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Te encontro em Pewter."',
     '"Combinado." Ele bate na sua mão com uma solenidade ridícula. "Não chega antes de mim."',
@@ -767,6 +814,8 @@ c2_encontro_pewter:{
 },
 
 c2_gritou:{
+  falante:'Ezra',
+  vozes:['P'],
   texto:[
     'Você grita da porta. Ele já está a uns trinta metros.',
     '"QUATRO HORAS! A FLORESTA LEVA QUATRO HORAS!"',
@@ -783,6 +832,8 @@ c2_gritou:{
 },
 
 c2_atras_do_teo:{
+  falante:'Ezra',
+  vozes:['N','P','N'],
   texto:[
     'Você pega a mochila e sai atrás dele.',
     'Alcança na saída norte da cidade, onde a Rota 2 começa a estreitar.',

@@ -186,11 +186,11 @@ c1_dormiu_demais:{
 c1_o_papel:{
   texto:[
     'É meia folha de caderno, escrita com a letra que você conhece desde que aprendeu a ler.',
-    d=>fala(nomeCasa(), 'Eu não te acordei de propósito. Dormir era a única coisa que eu ainda podia te dar hoje.'),
-    d=>fala(nomeCasa(), 'O café está embaixo do pano. Tem mais no armário de cima — o de cima mesmo, não o que você sempre abre.'),
-    d=>fala(nomeCasa(), 'E não volta por obrigação. Volta quando der vontade. É diferente, e é melhor.'),
+    '**Eu não te acordei de propósito. Dormir era a única coisa que eu ainda podia te dar hoje.**',
+    '**O café está embaixo do pano. Tem mais no armário de cima — o de cima mesmo, não o que você sempre abre.**',
+    '**E não volta por obrigação. Volta quando der vontade. É diferente, e é melhor.**',
     'Embaixo, sem assinatura, numa letra menor e mais apertada, como se tivesse sido escrita depois de dobrar o papel uma vez:',
-    d=>fala(nomeCasa(), 'Eu fui trabalhar porque eu não ia aguentar a porta.', 'baixo')
+    '**Eu fui trabalhar porque eu não ia aguentar a porta.**'
   ],
   ef:{moral:4, flag:'leu_o_bilhete',
       rep:{eixo:'bom',delta:1,motivo:'Leu o bilhete antes de sair'},
@@ -206,7 +206,7 @@ c1_resposta_bilhete:{
   texto:[
     'Você vira a folha e escreve no verso, e leva muito mais tempo do que uma linha deveria levar.',
     'Você escreve três versões na cabeça e escreve a quarta no papel, que é a mais curta.',
-    'Eu vou voltar. Não por obrigação.',
+    '**Eu vou voltar. Não por obrigação.**',
     'Depois você encosta o papel embaixo do açucareiro, que é onde esta casa deixa recado desde sempre, e olha uma última vez para ter certeza de que está bem visível.',
     'Está.'
   ],
@@ -292,7 +292,7 @@ c1_fez_o_cafe:{
   texto:[
     'Você desce às seis e vinte e faz o café, o que é uma coisa que nesta casa você nunca fez.',
     'Você erra a medida, faz forte demais, e não tem como consertar.',
-    d=>`Quando ${casaCompleto()} desce, vinte minutos depois, {casa:ela|ele} para na porta da cozinha e não diz nada por uns bons cinco segundos.`,
+    d=>`Quando ${casaCompleto()}, desce, vinte minutos depois, {casa:ela|ele} para na porta da cozinha e não diz nada por uns bons cinco segundos.`,
     'Depois senta. Toma o café forte demais até o fim, sem fazer careta, sem pôr água, sem falar da medida.',
     d=>fala(nomeCasa(), 'Tá bom.'),
     'Não estava. Estava horrível. Mas estava.'
@@ -323,7 +323,7 @@ c1_saiu_no_escuro:{
 
 c1_voltou_pra_dentro:{
   texto:[
-    d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()} está em pé na cozinha, de costas, colocando água no fogo.`,
+    d=>`Você volta as quatro casas, abre a porta, e ${casaCompleto()}, está em pé na cozinha, de costas, colocando água no fogo.`,
     '{casa:Ela|Ele} não se vira.',
     d=>fala(nomeCasa(), 'Eu ouvi a porta.', 'frio'),
     'O fósforo risca. O fogo pega. {casa:Ela|Ele} ajusta a chama como se aquilo fosse a coisa mais importante da manhã.',
@@ -354,8 +354,8 @@ c1_foi_sem_despedir:{
     'Você vai carregar essa manhã por muito tempo, e não do jeito bonito.',
     'No bolso de fora da mochila, onde você não põe nada, tem uma coisa que você não pôs ali: um aparelho azul de tampa, do tamanho da sua palma, com a tinta gasta nos cantos.',
     'Um PokéNav. Foi guardado aí em algum momento da noite, por alguém que não te acordou pra dizer que tinha guardado.',
-    d=>fala(nomeCasa(), 'o número daqui já tá gravado', 'baixo',
-            'Escrito a lápis numa tira de papel enrolada na tampa, em letra apressada.')
+    'Enrolada na tampa, uma tira de papel escrita a lápis, em letra apressada:',
+    '**o número daqui já tá gravado**'
   ],
   ef:{flag:'foi_sem_despedir', moral:-6,
       rep:{eixo:'ruim',delta:1,motivo:'Saiu de casa sem se despedir de ninguém'},
@@ -540,7 +540,7 @@ c1_recusou_a_caixa:{
 
 c1_chamou_de_volta:{
   texto:[
-    d=>fala(d.jogador.nome, 'DONA ODETE!', 'grita'),
+    d=>fala(d.jogador.nome, 'DONA PERLA!', 'grita'),
     'Ela para no meio da rua e se vira. Não parece nem um pouco surpresa, e é isso que pega.',
     d=>fala(d.jogador.nome, 'Eu levo.'),
     'Ela volta os oito passos e entrega a caixa sem dizer uma palavra.',
@@ -560,7 +560,7 @@ c1_chamou_de_volta:{
 
 c1_chamou_de_dentro:{
   texto:[
-    d=>`Você chama pra dentro e ${casaCompleto()} vem até a porta secando a mão no pano.`,
+    d=>`Você chama pra dentro e ${casaCompleto()}, vem até a porta secando a mão no pano.`,
     'As duas conversam por cima de você, do jeito que adulto de rua pequena conversa: sem cumprimento, direto no assunto, duas frases cada uma.',
     fala('Sra. Perla', 'E {o menino|a menina} sai hoje.'),
     d=>fala(nomeCasa(), 'Sai.'),
@@ -718,7 +718,7 @@ c1_bolso_de_dentro:{
 /* ── abertura 9: a casa cheia ─────────────────────────────── */
 c1_festa:{
   texto:[
-    'Tem gente demais na sua casa às sete da manhã e você não foi consultado sobre isso.',
+    'Tem gente demais na sua casa às sete da manhã e você não foi consultad{o|a} sobre isso.',
     'São sete pessoas na cozinha de quatro lugares: três vizinhos, dois primos que você vê uma vez por ano, a Sra. Perla e alguém que você tem quase certeza de que mora na outra rua.',
     'Tem bolo. Tem bolo às sete da manhã, e o bolo tem o seu nome escrito errado de glacê.',
     d=>fala(nomeCasa(), 'Eu falei pra não fazer nada. Eu falei. Quatro vezes.', 'baixo',
@@ -1357,7 +1357,8 @@ c1_carregou_o_nav:{
     d=>`Você pergunta se dá pra carregar e ${cadastra(d)} aponta uma tomada atrás do balcão com quatro aparelhos já ligados nela.`,
     d=>fala(cadastra(d), 'Todo Centro tem. É serviço obrigatório e ninguém sabe.'),
     'Enquanto carrega, você mexe no aparelho pela primeira vez com calma.',
-    d=>fala(nomeCasa(), 'CASA', 'baixo', 'É o único número gravado. Está escrito em maiúsculo, o que quer dizer que foi {casa:ela|ele} que digitou.'),
+    '**CASA**',
+    'É o único número gravado. Está escrito em maiúsculo, o que quer dizer que foi {casa:ela|ele} que digitou.',
     'Tem também, na memória, três chamadas não atendidas de {idade-3} anos atrás, para um número que não existe mais.',
     'Você não apaga.'
   ],
@@ -1678,7 +1679,7 @@ c1_quem_sumiu:{
 
 c1_sem_cadastro:{
   texto:[
-    'Você passa direto pelo Centro Pokémon.',
+    d=>d.jogador.cidade === 'Pallet' ? 'Você passa direto pela mesa do cadastro, do lado da porta do laboratório.' : 'Você passa direto pelo Centro Pokémon.',
     'Sem licença, sem cartão, sem Pokédex, sem Pokébola nenhuma, com uma mochila de roupa e comida.',
     'Isso é legal? Não exatamente. Isso acontece? O tempo todo.',
     'O que acontece de verdade é o seguinte: você vai chegar na primeira rota, encontrar um Pokémon selvagem, não ter nada pra jogar nele, e voltar.',
@@ -1774,11 +1775,11 @@ c1_fim_venceu:{
       ]);
     },
     d=>{
-      const b = C1.briga(d);
+      const b = C1.briga(d), p = C1.meu(d), ele = p ? pron(p).ele : 'ele';
       if (b.turnos && b.turnos <= 2) return 'Você repassa na cabeça o que mandou fazer e não lembra de ter decidido nada. Saiu.';
-      if (b.hpAliado >= 0.7) return 'Metade do que deu certo foi ordem sua. A outra metade foi ele, que não esperou a ordem.';
+      if (b.hpAliado >= 0.7) return `Metade do que deu certo foi ordem sua. A outra metade foi ${ele}, que não esperou a ordem.`;
       if (b.hpAliado < 0.3) return 'Você fica agachad{o|a} até a respiração dos dois acertar o mesmo ritmo.';
-      return 'Você conta o que mandou e o que ele levou, e a conta não fecha tão a seu favor quanto parecia enquanto acontecia.';
+      return `Você conta o que mandou e o que ${ele} levou, e a conta não fecha tão a seu favor quanto parecia enquanto acontecia.`;
     },
     d=>C1.estrada(d)
   ],
@@ -1828,7 +1829,7 @@ c1_fim_perdeu:{
       if (!p) return 'Você fica ali parad{o|a}, sozinh{o|a} no mato, com as mãos vazias.';
       return C1.qual(d, [
         `${nomeExib(p)} está caíd${pron(p).o} de lado. Você pega no colo, e pesa mais do que devia, do jeito que um corpo pesa quando não ajuda.`,
-        `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhad{o|a}. Está respirando. É a primeira coisa que você confere e a única que importa.`
+        `Você chega até ${nomeExib(p)} de joelhos, sem lembrar de ter se ajoelhado. Está respirando. É a primeira coisa que você confere e a única que importa.`
       ]);
     },
     'Ninguém viu. Você repara que isso não ajuda em nada.',
