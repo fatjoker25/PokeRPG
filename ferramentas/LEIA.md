@@ -21,23 +21,30 @@ eles acham o `index.html` sozinhos e carregam os scripts na ordem de lá.
 | `sim-estrada.js` | força dos treinadores de estrada, lugar por lugar, com o motor de batalha do jogo |
 | `sim-veteranos.js` | força dos veteranos, dos convites e das três rodadas da Conferência do Planalto Indigo |
 
-Rodar todos:
+Rodar todos os de Node:
 
 ```sh
-for f in ferramentas/*.js; do echo "== $f"; node "$f"; done
+for f in ferramentas/*.js; do case "$f" in *baloes*|*lutas*|*telas*|*bot-*) continue;; esac; echo "== $f"; node "$f"; done
 ```
 
-Os conferidores que abrem o jogo de verdade num navegador (balão de fala,
-missões do PokéNav, eventos de cidade, epílogos) precisam de Playwright
-instalado e por isso não moram aqui.
+Quatro deles abrem o jogo de verdade num navegador e precisam de
+Playwright (com o Chromium do ambiente, `/opt/pw-browsers/chromium`):
 
-A exceção é `bot-jogador.js`, que precisa de Playwright: um robô que joga
-pela tela, como gente (escolhe golpe, troca, cura, captura, compra, treina
-e segue a história), e anota todo texto quebrado que aparecer — marca de
-gênero sem resolver, `undefined`, `NaN`, HTML vazando, "bicho", "bola"
-sozinha, balão sem nome — além de erro de JavaScript.
+| arquivo | o que ele acusa |
+|---|---|
+| `chk-baloes.js` | balão sem nome, sem rosto ou com rosto que não existe no disco, em toda cena (capítulos, eventos, linhas, PokéNav) |
+| `chk-lutas.js` | luta que não começa, não termina, sai sem fala, sem rosto ou com o time errado, ou que manda pra cena que não existe — ginásios, Elite, rivais, estrada, veteranos, barreiras, revanches e toda luta de cena |
+| `chk-telas.js` | erro de JavaScript ou texto quebrado (marca sem resolver, `undefined`, `NaN`, `null`, HTML vazando) em toda janela (os cinco bolsos da mochila, time, sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha, diário, rota, finais, credenciais, PC, ajustes, regras, tutorial, mapa), em toda loja comprando e vendendo, e em todo lugar do mapa com cada afazer da lista dele — num save cheio do meio do jogo e num save do começo, com a mochila quase vazia |
+| `bot-jogador.js` | o robô que joga pela tela, como gente |
+
+O `bot-jogador.js` escolhe golpe, troca, cura, captura, compra, treina, pega
+o ônibus da Liga quando nasceu longe e segue a história, e anota todo texto
+quebrado que aparecer — marca de gênero sem resolver, `undefined`, `NaN`,
+HTML vazando, "bicho", "bola" sozinha, balão sem nome — além de erro de
+JavaScript. "Travou no mapa" com `treinar` é a espera do treino, não erro.
 
 ```sh
+node ferramentas/chk-telas.js
 node ferramentas/bot-jogador.js 15 saida.json
 CIDADE=Cerulean GENERO=Homem node ferramentas/bot-jogador.js 20
 ```

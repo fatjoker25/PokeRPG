@@ -103,7 +103,7 @@ const Historia = {
   resumo(){
     const d = Estado.dados, j = d.jogador;
     const linhas = [];
-    linhas.push(`${j.nome}, ${typeof idadeJogador === 'function' ? idadeJogador() : j.idade} anos, de ${j.cidade}. ${j.personalidade}.`);
+    linhas.push(`${j.nome}, ${typeof idadeJogador === 'function' ? idadeJogador() : j.idade} anos, de ${j.cidade}.${j.personalidade ? ' ' + j.personalidade.charAt(0).toUpperCase() + j.personalidade.slice(1).replace(/[.\s]+$/, '') + '.' : ''}`);
     linhas.push(`Reputação: ${Estado.nomeRep()} (eixo ${d.reputacao.eixo}). HP ${j.hp}/${Estado.hpMaxJogador()}.`);
     if (d.time.length) linhas.push(`Time: ${d.time.map(p => `${nomeExib(p)} Nv${p.nivel}${p.hp<=0?' (desmaiado)':''}`).join(', ')}.`);
     if (d.cemiterio.length) linhas.push(`Mortos: ${d.cemiterio.map(p => `${nomeExib(p)} (${p.causaMorte})`).join(', ')}. Isso não some.`);

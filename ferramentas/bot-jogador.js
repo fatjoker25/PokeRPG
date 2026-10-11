@@ -203,9 +203,14 @@ const SUSPEITO = [
         }
         /* compra o básico */
         if (afz.includes('loja') && d.jogador.dinheiro > 1500 && (Estado.contaItem('Potion') < 3 || Estado.contaItem('Poké Ball') < 5)) return {f:'loja'};
+        /* quem nasceu longe pega o ônibus da Liga, como a cidade oferece */
+        if (afz.includes('onibus')) return {f:'onibus'};
         const destino = Historia.proximoDestino && Historia.proximoDestino();
         const cap = destino ? Historia.capitulo(destino.num) : null;
-        const alvo = Math.max(L.nivel || 5, cap ? (cap.nivelArea || 0) - 2 : 0);
+        /* o alvo é o capítulo que vem, não a rota onde ele está de passagem:
+           com o nível da rota, quem nasce em Lavender treinava na Rota 12
+           pra sempre */
+        const alvo = cap ? (cap.nivelArea || 0) - 2 : (L.nivel || 5);
         if (nivelDeReferencia() < alvo && L.tipo !== 'cidade' && d.treinoDia !== d.relogio.dia && vivos.some(p => p.nivel < (L.nivel || 5) + 5)) return {f:'treinar'};
         if (nivelDeReferencia() < alvo && L.tipo !== 'cidade') return {f:'procurar'};
         if (Historia.arcoAqui() && !travaDoCapitulo(Historia.arcoAqui().num)) return {f:'arco'};

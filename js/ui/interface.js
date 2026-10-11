@@ -4483,7 +4483,7 @@ const UI = {
       <div class="linha"><span class="k">Pico</span><span class="v">o parceiro do Ezra é sorteado no começo, pela mesma tabela do inicial aleatório (1d6 de coluna, 1d6 de linha, da sua cidade), nunca da sua espécie · é o último e o mais forte do time dele, e evolui com o nível</span></div>
       <div class="linha"><span class="k">Lior</span><span class="v">Teimoso · Inspirado (opinião 6+ ou reputação boa 3+; fósseis no time, +1 nível) · Desconfiado (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2) · Cansado (perdeu 3 sem ganhar nenhuma; −2)</span></div>
       <div class="linha"><span class="k">Nolan</span><span class="v">Orgulhoso · Esperança (ajudou com a carta da mãe, ou opinião 8+) · Vendedor (lado Rocket, Mercenário ou Foragido, ou reputação ruim 3+; +2)</span></div>
-      <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou sentad{o|a}) · Ressentido (o resto; time venenoso, +3)</span></div>
+      <div class="linha"><span class="k">Rory</span><span class="v">pelo que você fez no corredor do Anne: Devedor (deu o prêmio) · Quase (deu cinco mil) · Companhia (perdeu e ficou com ele) · Ressentido (o resto; time venenoso, +3)</span></div>
       <div class="linha"><span class="k">Otto</span><span class="v">Caçador · Colega (lado Rocket, Mercenário ou Foragido; +4) · Cansado (opinião acima de −3, ou reputação boa 6+; larga a rede, +1)</span></div>
 
       <h3>Idade e aniversário</h3>

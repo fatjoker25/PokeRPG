@@ -87,6 +87,19 @@ veteranos, Conferência, barreiras, revanches e toda luta de cena), nas
 duas fichas, vence e perde, e confere fala, rosto, time e a cena pra onde
 a luta manda. Luta nova roda ali antes do commit.
 
+`ferramentas/chk-telas.js` faz o mesmo pras **janelas e lugares**: monta
+um save cheio do meio do jogo (time de seis com shiny, PC, cemitério,
+mochila com TM e ferramenta quebrada, todo lugar visitado) e um do começo
+(um Pokémon, mochila vazia), abre toda janela — os cinco bolsos, time,
+sumário, Pokédex e as 251 fichas, PokéNav e cada contato, cartão, ficha,
+diário, rota, finais, credenciais, PC, ajustes, regras, tutorial e mapa —,
+toda loja comprando e vendendo, e todo lugar do mapa com cada afazer da
+lista dele, e acusa erro de JavaScript e texto quebrado (`undefined`,
+`NaN`, `null`, marca sem resolver, HTML vazando). Janela nova ou afazer
+novo passa por ali. Texto que entra numa janela montada à mão, sem
+`UI.esc`, não resolve a marca de gênero: a folha de regras já mostrou
+`sentad{o|a}` assim.
+
 ## Nada do mundo real
 O mundo é o de Pokémon, e nele **não existe bicho de verdade**: nada de
 cachorro, gato, peixe, gado, mula, cavalo, urubu, morcego. Onde o texto
