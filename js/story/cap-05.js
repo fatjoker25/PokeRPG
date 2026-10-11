@@ -28,7 +28,8 @@ cenas:{
 
 c5_ab_carona:{
   texto:[
-    'Você não subiu a pé. Um caminhão de ração parou sozinho na subida da Rota 3, o motorista abriu a porta sem você pedir e disse "vai pro Monte?" como quem já sabe que não tem outro destino nessa estrada.',
+    'Você não subiu a pé. Um caminhão de ração parou sozinho na subida da Rota 3, e o motorista abriu a porta sem você pedir.',
+    fala('Gus', 'Vai pro Monte?', null, 'Ele pergunta como quem já sabe que não tem outro destino nessa estrada.'),
     'O nome dele é Gus, ele tem cinquenta e poucos anos, e ele fala o caminho inteiro sem exigir resposta nenhuma.',
     fala('Gus', 'Eu faço essa subida três vezes por semana faz dezenove anos. Sabe o que mudou?'),
     d=>fala(d.jogador.nome, 'O quê?'),
@@ -257,7 +258,7 @@ c5_posto:{
     'Você sobe. A saliência é do tamanho de uma cama de solteiro e dá pra deitar.',
     'Deitad{o|a}, você vê exatamente uma coisa: a boca da caverna, de cima, com um ângulo que cobre quem entra e quem sai e não cobre nada mais.',
     'Embaixo da lona tem um caderninho. Não é diário — é planilha. Datas, horas, e uma coluna com números pequenos.',
-    '"14/03 — 06:40 — 3." "14/03 — 19:10 — 3." "17/03 — 05:55 — 4." "17/03 — 20:30 — 4."',
+    '**TER — 06:40 — 3. TER — 19:10 — 3. QUI — 05:55 — 4. QUI — 20:30 — 4.**',
     'Alguém conta quantas pessoas entram e quantas saem. Todo dia. Há meses.'
   ],
   ef:{flag:'achou_o_caderno_do_posto', registrar:'Achou um caderno de vigia sobre a entrada do Monte da Lua: contagem de entradas e saídas.'},
@@ -273,7 +274,8 @@ c5_pegou_caderno:{
   texto:[
     'Você guarda o caderno na mochila.',
     'Na última página preenchida, a data é de ontem, e a última linha não tem hora de saída.',
-    '"Ontem — 16:20 — 5." E nada depois.',
+    '**ONTEM — 16:20 — 5.**',
+    'E nada depois.',
     'Cinco pessoas entraram ontem à tarde. Nenhuma saiu.'
   ],
   ef:{flag:'cinco_entraram'},
@@ -287,7 +289,7 @@ c5_pegou_caderno:{
 
 c5_espera_posto:{
   texto:[
-    'Você fica. Deitado de bruços numa saliência de rocha, com o queixo nas mãos, olhando um buraco.',
+    'Você fica. Deitad{o|a} de bruços numa saliência de rocha, com o queixo nas mãos, olhando um buraco.',
     'Uma hora e quarenta.',
     'E então sai gente.',
     'Três pessoas. Roupa de trabalho comum, botina, luva. Uma carrega uma caixa plástica com tampa. Outra carrega duas.',
@@ -465,7 +467,7 @@ c5_mais_trabalho:{
   texto:[
     '"Tem mais trabalho?"',
     'O da aliança bate a porta lateral da van.',
-    '"Sempre tem." Ele te olha de um jeito novo, avaliando de verdade. "Você anda em rota, né? Passa em cidade, ninguém te para, ninguém te revista, porque você é moleque de mochila."',
+    '"Sempre tem." Ele te olha de um jeito novo, avaliando de verdade. "Você anda em rota, né? Passa em cidade, ninguém te para, ninguém te revista, porque você é {moleque|moleca} de mochila."',
     '"É."',
     '"Então tem." Ele escreve um número num maço de cigarro amassado e te dá. "Liga quando passar em Cerulean."'
   ],
@@ -613,6 +615,8 @@ c5_devolver_ovos:{
 },
 
 c5_ovos_pro_museu:{
+  falante:'Dra. Cordell',
+  vozes:['N','N'],
   texto:[
     'Três horas de descida com uma caixa de ovos nos braços.',
     'Varian abre a porta do museu fora do horário porque você bate insistindo, olha a caixa, e chama a Dra. Cordell pelo telefone da bilheteria sem perguntar nada.',
@@ -631,6 +635,8 @@ c5_ovos_pro_museu:{
 },
 
 c5_ligou_com_caixa:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Você anda até pegar sinal com a caixa debaixo do braço.',
     'A Dra. Cordell atende no segundo toque.',
@@ -726,15 +732,17 @@ c5_seguiu_van:{
 
 c5_comprar_ovos:{
   falante:'o da aliança',
-  vozes:['P','P','P','N'],
+  vozes:['P','N','P','P','N'],
   texto:[
     '"Quanto vocês querem pelos seis?"',
     'Silêncio. Os três se olham.',
-    '"Quarenta e oito mil", diz o da aliança, sem piscar.',
-    'Você não tem quarenta e oito mil. Você não tem cinco por cento de quarenta e oito mil.',
+    '"Quarenta e oito mil," diz o da aliança, sem piscar.',
+    d=>d.jogador.dinheiro < 2400
+      ? 'Você não tem quarenta e oito mil. Você não tem cinco por cento de quarenta e oito mil.'
+      : 'Você não tem quarenta e oito mil. Não tem nem perto.',
     '"Isso é o preço de Celadon", você diz. "O preço de vocês é outro."',
     'Ele sorri sem nenhuma alegria.',
-    '"O preço nosso é o que a gente recebe de quem manda. E quem manda não negocia com moleque numa trilha."'
+    '"O preço nosso é o que a gente recebe de quem manda. E quem manda não negocia com {moleque|moleca} numa trilha."'
   ],
   ef:{flag:'quem_manda', presagio:'"Quem manda." A frase tem dono, e o dono não estava naquela trilha.'},
   escolhas:[
@@ -750,7 +758,7 @@ c5_quem_manda:{
   vozes:['P','N','N'],
   texto:[
     '"Quem manda?"',
-    'O da aliança levanta a caixa e não responde na hora. Responde na quarta passada, já de costas, já descendo:',
+    'O da aliança levanta a caixa e não responde na hora. Responde quatro passos depois, já de costas, já descendo:',
     '"Gente que assina papel."',
     'Ele diz isso do jeito de quem acha graça de si mesmo por ter medo.',
     '"Gente que assina papel é pior que gente com arma, {moleque|moleca}. Arma acaba. Papel não."'
@@ -779,6 +787,8 @@ c5_ficou_em_cima:{
 },
 
 c5_ligou_antes:{
+  falante:'Dra. Cordell',
+  vozes:['N','P','N','N'],
   texto:[
     'Você anda até pegar sinal — uns quatrocentos metros de subida, num lugar onde o vale abre.',
     'A Dra. Cordell atende no segundo toque, como quem dorme com o telefone na mão.',
@@ -823,7 +833,7 @@ c5_esperou_ivone:{
 
 c5_entrou_com_imprensa:{
   texto:[
-    'Entrar numa caverna com quatro adultos e uma câmera com luz é uma experiência completamente diferente de entrar sozinho.',
+    'Entrar numa caverna com quatro adultos e uma câmera com luz é uma experiência completamente diferente de entrar sozinh{o|a}.',
     'A luz da câmera transforma a caverna num lugar comum: é só pedra, é só chão, é só gente andando.',
     'Vocês seguem o cabo elétrico por vinte minutos. Ninguém fala.',
     'A câmara está lá. As mesas estão lá. As gaiolas estão lá.',
@@ -844,7 +854,8 @@ c5_papeis_mesa:{
     'Não tem bilhete de criminoso, não tem mapa com X. Tem formulário.',
     'Guia de remessa. Termo de recolhimento. Laudo de espécime. Tudo impresso, tudo com campo e linha e numeração sequencial.',
     'No cabeçalho de cada folha, um brasão pequeno: uma balança.',
-    'Você pega uma folha e lê o campo do meio. Diz: "FUNDAMENTO LEGAL: Art. 4º, III."',
+    'Você pega uma folha e lê o campo do meio:',
+    '**FUNDAMENTO LEGAL: Art. 4º, III.**',
     'Alguém está fazendo isso com formulário. Alguém acha que tem direito.'
   ],
   ef:{flag:['papel_com_brasao','gente_que_assina_papel'],
@@ -862,7 +873,7 @@ c5_guardou_folha:{
   texto:[
     'Você dobra a folha em quatro e põe no bolso interno da mochila, junto com o que importa.',
     'Ninguém vê. A câmera está filmando as gaiolas do outro lado da câmara.',
-    'Você não sabe por que guardou. Vai levar meses pra entender que foi a decisão mais importante que você tomou nessa caverna.'
+    'Você não sabe por que guardou. Guarda mesmo assim, do jeito que se guarda coisa que ainda não tem nome.'
   ],
   ef:{flag:'guardou_a_folha', registrar:'Guardou uma guia de remessa com brasão do Monte da Lua.'},
   escolhas:[
@@ -873,10 +884,12 @@ c5_guardou_folha:{
 },
 
 c5_mostrou_folha:{
+  falante:'Dra. Cordell',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você chama a Dra. Cordell e entrega a folha.',
     'Ela lê. Lê de novo. Vira pro verso, que está em branco, e volta pra frente.',
-    '"Isso não é contrabando", ela diz baixo, pra você e pra mais ninguém.',
+    '"Isso não é contrabando," ela diz baixo, pra você e pra mais ninguém.',
     '"Como não? Tem gaiola ali."',
     '"Contrabando esconde." Ela balança a folha. "Isso aqui tem numeração sequencial, {moço|moça}. Numeração sequencial é pra auditoria. Isso é feito pra ser conferido depois."',
     'Ela dobra a folha e põe no bolso interno do jaleco.',
@@ -893,6 +906,8 @@ c5_mostrou_folha:{
 },
 
 c5_o_que_e:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"E o que é, então?"',
     'Ela demora.',
@@ -910,13 +925,14 @@ c5_o_que_e:{
 },
 
 c5_filmou_papel:{
+  falante:'o rapaz da câmera',
+  vozes:['N','P','N','N'],
   texto:[
     'Você chama o rapaz da câmera e aponta o cabeçalho.',
     'Ele faz um close de oito segundos no brasão da balança e mais um close no campo "FUNDAMENTO LEGAL".',
     'Depois abaixa a câmera e fala, meio pra ele mesmo: "Isso aqui não vai passar."',
     '"Como assim não vai passar?"',
-    '"Vai passar a gaiola." Ele aponta com o queixo. "Gaiola é imagem. Papel é chato. A pauta vai ser a gaiola."',
-    'E foi exatamente isso que aconteceu.'
+    '"Vai passar a gaiola." Ele aponta com o queixo. "Gaiola é imagem. Papel é chato. A pauta vai ser a gaiola."'
   ],
   ef:{flag:['papel_filmado','papel_com_brasao'],
       presagio:'A gaiola é imagem. O papel é chato. É por isso que o papel ganha.'},
@@ -967,6 +983,7 @@ c5_saida_secreta:{
 
 c5_filmou_tunel:{
   falante:'o rapaz da câmera',
+  vozes:['N','P','N','N'],
   texto:[
     'O rapaz da câmera filma o túnel inteiro, andando de costas, com a luz batendo no trilho improvisado.',
     'No fim, do lado de fora, ele filma a marca de pneu e fala baixo:',
@@ -1031,12 +1048,13 @@ c5_camara_vazia:{
 
 c5_imprensa:{
   texto:[
-    'Sai no jornal de Pewter e no de Cerulean, e um trecho de quarenta segundos na TV regional.',
+    'Na manhã seguinte sai no jornal de Pewter e no de Cerulean, e um trecho de quarenta segundos na TV regional.',
     'Seu nome aparece — pequeno, errado, com uma letra trocada. Você lê umas dez vezes.',
-    'Dezessete Clefairy foram para um centro de recuperação em Cerulean. Onze voltaram para o Monte da Lua três semanas depois. Os outros seis não.',
-    'Prenderam duas pessoas: um motorista e um rapaz de vinte e dois anos que trabalhava lá havia cinco meses. As duas foram soltas em dois dias.',
+    'Dezessete Clefairy vão para um centro de recuperação em Cerulean. A matéria diz que eles voltam pro Monte da Lua quando estiverem prontos, e não diz quantos.',
+    'Prenderam duas pessoas: um motorista e um rapaz de vinte e dois anos que trabalhava lá havia cinco meses. O advogado dos dois chega antes do almoço.',
     'Ninguém foi indiciado por nada com numeração sequencial.',
-    'A Dra. Cordell te manda uma mensagem três dias depois: "Foi o que deu pra fazer. Quase nunca é o que a gente queria."'
+    'De tarde, a Dra. Cordell te manda uma mensagem:',
+    '**Foi o que deu pra fazer. Quase nunca é o que a gente queria.**'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Seu nome saiu no jornal pela primeira vez'},
       flag:['expos_operacao','vasco_solto'],
@@ -1071,7 +1089,7 @@ c5_latas:{
     'Vinte e duas latas. Você conta porque não tem mais nada pra fazer com essa informação.',
     'Feijão, milho, ervilha. Todas abertas com faca, não com abridor. Todas empilhadas — empilhadas, não jogadas —, o que quer dizer que a pessoa ficou tempo o bastante pra criar um sistema.',
     'Embaixo de uma pedra tem um pedaço de papelão com escrita a caneta, quase apagada pelo sereno.',
-    '"DIA 31. ELES TROCAM O TURNO ÀS 6 E ÀS 18. O DA MANHÃ É O QUE CONTA AS CAIXAS."',
+    '**DIA 31. ELES TROCAM O TURNO ÀS 6 E ÀS 18. O DA MANHÃ É O QUE CONTA AS CAIXAS.**',
     'Não tem assinatura. O papelão é velho de meses.'
   ],
   ef:{flag:'papelao_do_acampamento', registrar:'Alguém acampou meses vigiando a troca de turno do Monte da Lua.',
@@ -1178,16 +1196,18 @@ c5_esperou_cratera:{
 },
 
 c5_contou_ivone_cratera:{
+  falante:'Dra. Cordell',
+  vozes:['N','P','N','N','N','N','P','N','N'],
   texto:[
     'Você liga e conta.',
     'A Dra. Cordell fica calada tanto tempo que você acha que a ligação caiu.',
     '"Trinta e dois."',
     '"Trinta e dois."',
-    '"Eu subi lá quatro vezes", ela diz. "Quatro. Nunca vi nada."',
+    '"Eu subi lá quatro vezes," ela diz. "Quatro. Nunca vi nada."',
     'Uma pausa longa.',
     '"Não me conta onde é." Ela fala firme. "Não escreve, não marca em mapa, não fala em telefone de Centro Pokémon. Se isso vira publicação, em dois meses tem gente com lanterna lá em cima."',
     '"Mas a senhora é cientista."',
-    '"Eu sou cientista há vinte e dois anos", ela diz. "Isso é tempo suficiente pra aprender que nem tudo que dá pra saber precisa ser sabido."'
+    '"Eu sou cientista há vinte e dois anos," ela diz. "Isso é tempo suficiente pra aprender que nem tudo que dá pra saber precisa ser sabido."'
   ],
   ef:{flag:'segredo_com_ivone',
       npc:{nome:'Dra. Cordell', opiniao:6, memoria:'Você contou da cratera pra ela, e ela te pediu pra nunca escrever onde é.'},
@@ -1201,7 +1221,7 @@ c5_derrubou_escada:{
   texto:[
     'Você derruba a escada. Ela cai com um estrondo desproporcional e fica caída no chão de pedra, e a saliência lá em cima fica inalcançável.',
     'Você não sabe de quem era. Você não sabe pra quê era. Você derrubou porque parecia errada.',
-    'Isso é um tipo de decisão que você vai tomar de novo, várias vezes, com coisas maiores que uma escada.'
+    'É o tipo de decisão que não pede licença: parecia errada, e agora está no chão.'
   ],
   ef:{flag:'derrubou_a_escada'},
   escolhas:[
@@ -1263,7 +1283,7 @@ c5_escondeu:{
     fala('o homem da lanterna', 'É o disjuntor. É sempre o disjuntor.'),
     fala('a mulher da lanterna', 'Não é o disjuntor, tá cortado. Olha aqui, ó. Cortado.'),
     'Silêncio. Uma das lanternas varre a caverna e passa a meio metro de você.',
-    fala('a mulher da lanterna', 'Tem moleque aqui dentro.', 'baixo'),
+    fala('a mulher da lanterna', 'Tem {moleque|moleca} aqui dentro.', 'baixo'),
     'E é isso: eles sabem, e não estão com medo, e agora você está numa caverna escura com duas pessoas que sabem.'
   ],
   ef:{flag:'sabem_que_voce_esta_aqui',
@@ -1311,7 +1331,14 @@ c5_desvio:{
   texto:[
     'Você pega o túnel lateral, sem cabo, sem instalação, sem sinal de ninguém.',
     'É mais estreito. Em dois pontos você tem que passar de lado, com a mochila na mão.',
-    'Leva uma hora e dez. Sua lanterna começa a amarelar no fim e você percebe que não trouxe pilha sobressalente, o que é o tipo de descoberta que só acontece dentro de uma montanha.',
+    d=>{
+      const l = (typeof Campo !== 'undefined') ? Campo.iluminar() : {pode:false};
+      if (!l.pode) return 'Leva uma hora e meia no escuro, com a mão na parede, contando os passos. Duas vezes a parede some debaixo da mão e você espera o coração voltar pro lugar.';
+      if (l.semPilha) return `Leva uma hora e dez. A luz ${pron(l.quem).do} ${nomeExib(l.quem)} é a única coisa acesa no mundo, e ela vai ficando mais fraca conforme o cansaço aperta.`;
+      return Estado.contaItem('Pilha') > 0
+        ? 'Leva uma hora e dez. A lanterna amarela no fim, e trocar a pilha de lado, com a mochila na mão, num túnel onde não cabe cotovelo, leva mais tempo do que devia.'
+        : 'Leva uma hora e dez. Sua lanterna começa a amarelar no fim e você percebe que não trouxe pilha sobressalente, o que é o tipo de descoberta que só acontece dentro de uma montanha.';
+    },
     'E o túnel te devolve exatamente onde você não queria estar: numa passarela de metal, de grade, montada com parafuso na rocha, a seis metros acima de uma câmara iluminada.',
     'Não dava pra evitar. Só dava pra chegar por cima.'
   ],
@@ -1325,11 +1352,16 @@ c5_desvio:{
 },
 
 c5_escutou_passarela:{
+  falante:'a voz que conta',
+  vozes:['N','a voz de baixo','outra voz de baixo'],
   texto:[
     'Você deita de bruços na grade da passarela e fica escutando.',
-    'Embaixo tem quatro vozes. Duas conversam sobre a chuva. Uma reclama do gerador. A quarta, mais longe, está contando em voz alta: "…quinze, dezesseis, dezessete."',
-    'Aí uma das vozes diz, sem nenhuma emoção: "Esse aqui não vai chegar."',
-    'E outra responde: "Põe no dezoito mesmo. Eles conferem por número, não por Pokémon."',
+    'Embaixo tem quatro vozes. Duas conversam sobre a chuva. Uma reclama do gerador. A quarta, mais longe, está contando em voz alta:',
+    '"…quinze, dezesseis, dezessete."',
+    'Aí uma das vozes diz, sem nenhuma emoção:',
+    '"Esse aqui não vai chegar."',
+    'E outra responde:',
+    '"Põe no dezoito mesmo. Eles conferem por número, não por Pokémon."',
     'Você fica com o rosto na grade de metal por mais um minuto e meio sem se mexer.'
   ],
   ef:{flag:'conferem_por_numero',
@@ -1364,11 +1396,16 @@ c5_passarela_frente:{
 },
 
 c5_levou_pasta:{
+  falante:'a voz de baixo',
+  vozes:['N','outra voz de baixo','N'],
   texto:[
     'Você enfia a pasta inteira na mochila. Ela não cabe direito e você tem que tirar a jaqueta pra fechar.',
-    'Dois minutos depois, embaixo, uma voz: "Cadê a pasta?"',
-    'E outra: "Tava aí."',
-    'E a primeira, com uma mudança de tom que congela você onde está: "Cadê a pasta?"',
+    'Dois minutos depois, embaixo, uma voz:',
+    '"Cadê a pasta?"',
+    'E outra:',
+    '"Tava aí."',
+    'E a primeira, com uma mudança de tom que congela você onde está:',
+    '"Cadê a pasta?"',
     'A caverna inteira fica em silêncio. E aí começam a subir.'
   ],
   ef:{flag:'perseguido_na_caverna',
@@ -1420,6 +1457,8 @@ c5_fuga_tunel:{
 },
 
 c5_pasta_pra_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['N','P','N','N','N'],
   texto:[
     'A Dra. Cordell abre a pasta na mesa da bilheteria do museu e fica em pé, lendo, por quarenta minutos sem sentar.',
     'Varian traz café. Ela não toca.',
@@ -1440,6 +1479,8 @@ c5_pasta_pra_ivone:{
 },
 
 c5_virar_alguem:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"E se eu virar esse alguém?"',
     'A Dra. Cordell te olha por um tempo desconfortável.',
@@ -1463,6 +1504,8 @@ c5_virar_alguem:{
 },
 
 c5_ivone_guarda:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','Varian','N','Varian','Varian'],
   texto:[
     '"Então guarda a pasta até lá."',
     'Ela pensa. Olha pro Varian, que está fingindo arrumar panfleto a quatro metros e escutando tudo.',
@@ -1487,7 +1530,7 @@ c5_deixou_pasta:{
     'Você deixa a pasta em cima do balcão e sai antes que ela termine de discordar.',
     'Ela grita seu nome na porta do museu, na rua, o que é uma coisa que ela claramente nunca faz.',
     'Você não volta.',
-    'Três dias depois, a pasta está numa caixa de papelão na reserva técnica do museu, porque a Dra. Cordell é do tipo que reclama e resolve.'
+    'Pela vitrine, antes da esquina, ainda dá pra ver ela chamando o Varian e apontando pra porta da reserva técnica. A Dra. Cordell é do tipo que reclama e resolve.'
   ],
   ef:{flag:'pasta_na_reserva', limpaFlag:'levou_a_pasta',
       registrar:'Deixou a pasta com a Dra. Cordell à força.'},
@@ -1517,7 +1560,7 @@ c5_levou_folhas:{
 c5_memorizou_pasta:{
   texto:[
     'Você não leva nada. Você lê.',
-    'Vinte minutos deitado numa passarela de grade com uma lanterna amarelando, lendo formulário e repetindo na cabeça.',
+    'Vinte minutos deitad{o|a} numa passarela de grade com uma lanterna amarelando, lendo formulário e repetindo na cabeça.',
     'O que fica: o brasão da balança. O número final, 1.184. A expressão "Art. 4º, III". E um campo que aparece em todas as folhas e que você não entende: "DESTINAÇÃO: CENTRAL — SAFFRON".',
     'Você põe a pasta de volta exatamente no ângulo em que estava.'
   ],
@@ -1558,7 +1601,9 @@ c5_observou_camara:{
     'Aprende quatro coisas:',
     'Primeira: são cinco pessoas, não três. Duas estão sentadas fora do círculo de luz, fazendo pausa.',
     'Segunda: eles têm rotina. Alguém confere etiqueta, alguém empilha, alguém escreve numa prancheta.',
-    'Terceira: um deles é o Roque. O caçador da floresta.',
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+      ? 'Terceira: um deles é o Roque. O caçador da floresta.'
+      : 'Terceira: um deles é mais velho que os outros, e tem um rolo de fio de aço pendurado num prego da parede.',
     'Quarta: não tem arma nenhuma à vista, e isso é a coisa mais assustadora, porque quer dizer que eles não acham que precisam.'
   ],
   ef:{flag:'observou_a_camara',
@@ -1572,14 +1617,20 @@ c5_observou_camara:{
 },
 
 c5_camara:{
+  falante:'Otto',
+  vozes:['N'],
   texto:[
     'As gaiolas são pequenas demais. Isso é a primeira coisa e é a coisa que não sai.',
     'Clefairy em quase todas — cinco, seis por gaiola, em gaiolas de dois palmos. Um Paras numa sozinha, que não se mexe. Dois Zubat.',
     'Nas mesas de cavalete, fósseis. Meio expostos ainda na rocha, com etiqueta numerada e preço a lápis no canto. Kabuto. Omanyte. Coisas de trezentos milhões de anos com adesivo de leilão.',
     'Cinco pessoas trabalhando. Nenhuma de uniforme, nenhuma escondendo o rosto. O uniforme acabou junto com a organização; o trabalho não.',
-    'Um deles é o Roque. O caçador da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+      ? 'Um deles é o Roque. O caçador da floresta. Ele levanta a cabeça e te reconhece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.'
+      : 'Um deles é mais velho que os outros, com um rolo de fio de aço pendurado num prego atrás dele. Ele levanta a cabeça quando você aparece, e o rosto dele faz uma coisa complicada que não é raiva nem medo.',
     '"Ah, não."',
-    'Alguém na mesa do fundo chama por ele, Otto, e ele responde levantando a mão sem tirar os olhos de você. O Roque tem primeiro nome.'
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+      ? 'Alguém na mesa do fundo chama por ele, Otto, e ele responde levantando a mão sem tirar os olhos de você. O Roque tem primeiro nome.'
+      : 'Alguém na mesa do fundo chama por ele, Otto, e ele responde levantando a mão sem tirar os olhos de você.'
   ],
   ef:{npc:{nome:'Caçador Roque', memoria:'Você o encontrou de novo no Monte da Lua, trabalhando com fósseis e gaiolas.'},
       registrar:'Encontrou a operação do Monte da Lua. Otto Roque, o caçador da floresta, está lá.'},
@@ -1592,6 +1643,8 @@ c5_camara:{
 },
 
 c5_de_quem_e:{
+  falante:'Otto',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"De quem é isso aqui?"',
     'É a pergunta que ninguém nunca faz, e dá pra ver na cara dele.',
@@ -1613,6 +1666,8 @@ c5_de_quem_e:{
 },
 
 c5_nome_do_terno:{
+  falante:'Otto',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Me dá o nome do cara de terno."',
     'Otto ri sem nenhum humor.',
@@ -1634,6 +1689,8 @@ c5_nome_do_terno:{
 },
 
 c5_acabar_hoje:{
+  falante:'Otto',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se eu acabar com isso aqui hoje?"',
     'Otto olha pra você com uma paciência de professor cansado.',
@@ -1655,6 +1712,8 @@ c5_acabar_hoje:{
 },
 
 c5_onde_ficam:{
+  falante:'Otto',
+  vozes:['P','N','N','N'],
   texto:[
     '"Então me diz onde ficam os outros."',
     'Otto olha pros colegas. Os colegas estão trabalhando e não estão prestando atenção, o que já diz muito sobre o quanto você os assusta.',
@@ -1674,6 +1733,8 @@ c5_onde_ficam:{
 },
 
 c5_ataque:{
+  falante:'Otto',
+  vozes:['N','N'],
   texto:[
     '"Sério?" Otto nem parece bravo. Parece cansado. "Sério mesmo?"',
     'Os outros quatro param de trabalhar e ficam vendo, sem nenhuma intenção de ajudar, do jeito que colega de trabalho assiste a briga de colega de trabalho.',
@@ -1685,10 +1746,12 @@ c5_ataque:{
 },
 
 c5_venceu:{
+  falante:'Otto',
+  vozes:['N','N'],
   texto:[
     'Os outros quatro pegam as mochilas e saem pelo túnel de serviço, sem correr, sem falar com você, do jeito de quem bate ponto.',
     'Otto fica, porque sair na frente de alguém que te venceu é pior do que apanhar.',
-    '"Você acha que salvou eles." Ele aponta as gaiolas com o queixo, sentado no chão, com o Weezing recolhido. "Abre. Vai, abre. Metade não sai. Tão aqui há semanas."',
+    '"Você acha que salvou eles." Ele aponta as gaiolas com o queixo, sentado no chão, com o time recolhido. "Abre. Vai, abre. Metade não sai. Tão aqui há semanas."',
     'Você abre. Ele tem razão sobre a metade.',
     'Onze gaiolas. Onze fechaduras baratas. Quinze minutos de trabalho e algumas mordidas.',
     'Os que saem não vão longe: ficam na câmara, na beira do círculo de luz, sem saber pra onde.'
@@ -1710,7 +1773,7 @@ c5_ficou_ate_o_fim:{
     'Você fica.',
     'Desliga os refletores um a um, porque alguém falou uma vez que Pokémon de caverna não gosta de luz forte e você não tem nenhuma fonte melhor.',
     'No escuro, com a sua lanterna apontada pro chão, eles começam a se mexer.',
-    'Leva quatro horas. Quatro horas sentado imóvel num chão de pedra, de madrugada, ouvindo pé pequeno em rocha.',
+    'Leva quatro horas. Quatro horas sentad{o|a} imóvel num chão de pedra, de madrugada, ouvindo pé pequeno em rocha.',
     'No fim ficam três: dois que não conseguem andar e o Paras.',
     'Otto foi embora em algum momento dessas quatro horas e você não percebeu quando.'
   ],
@@ -1728,11 +1791,11 @@ c5_ficou_ate_o_fim:{
 c5_carregou_tres:{
   texto:[
     'Você improvisa uma rede com a jaqueta e as alças da mochila e carrega os três.',
-    'Não dá certo nos primeiros vinte minutos. Dá certo do trigésimo em diante, quando você para de tentar ser rápido.',
+    'Não dá certo nos primeiros vinte minutos. Dá certo do trigésimo em diante, quando você para de tentar ser rápid{o|a}.',
     'Quatro horas e dez até o Centro Pokémon de Pewter, descendo no escuro, com paradas.',
     'A enfermeira do plantão noturno abre a porta, olha a trouxa de jaqueta nos seus braços, e chama alguém sem dizer uma palavra.',
     'Dois sobrevivem. O Paras não.',
-    'Ela te serve um chá e senta na cadeira de plástico do seu lado, e vocês dois ficam ali às cinco da manhã sem falar nada.'
+    'Ela te serve um chá e senta na cadeira de plástico do seu lado, e vocês {dois|duas} ficam ali às cinco da manhã sem falar nada.'
   ],
   ef:{rep:{eixo:'bom',delta:4,motivo:'Carregou três Pokémon por quatro horas no escuro'},
       hp:-6, causa:'Exaustão na descida do Monte da Lua',
@@ -1748,7 +1811,7 @@ c5_carregou_tres:{
 c5_paras:{
   texto:[
     'Três horas e vinte. O Paras pesa mais do que parece e a caverna é toda subida até a boca.',
-    'Ele não se mexe. Não reage. Você fala com ele o caminho inteiro, coisas idiotas, sobre a estrada, sobre o tempo, sobre Pallet.',
+    d=>`Ele não se mexe. Não reage. Você fala com ele o caminho inteiro, coisas idiotas, sobre a estrada, sobre o tempo, sobre ${d.jogador.cidade}.`,
     'Ele morre na segunda hora. Você percebe — dá pra perceber, o peso muda — e continua carregando mesmo assim, porque largar ele no meio do caminho é pior do que qualquer coisa.',
     'A enfermeira do Centro pega ele das suas mãos com cuidado, mesmo sabendo. Depois te serve um chá e não pergunta nada.',
     'Você fica sentad{o|a} na cadeira de plástico do Centro Pokémon de Pewter até o dia clarear.'
@@ -1785,12 +1848,14 @@ c5_perdeu:{
 },
 
 c5_ligar:{
+  falante:'Dra. Cordell',
+  vozes:['N','N'],
   texto:[
     'Você recua. Devagar, de costas, até a curva, e depois rápido.',
     'Quatrocentos metros de caverna e mais quatrocentos de subida até o vale abrir e o telefone pegar.',
     'A Dra. Cordell atende no segundo toque, como quem dorme com o telefone na mão.',
     'Você fala. Ela não interrompe uma vez.',
-    '"Fica longe", ela diz. "Eu levo gente de imprensa. Com a Liga eles somem antes; com câmera eles não somem."',
+    '"Fica longe," ela diz. "Eu levo gente de imprensa. Com a Liga eles somem antes; com câmera eles não somem."',
     'Ela chega em seis horas com quatro pessoas, dois carros e uma câmera de ombro. Você fica na entrada da caverna esse tempo todo, porque alguém tem que ficar olhando a boca do buraco.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Expôs o tráfico do Monte da Lua à imprensa'},
@@ -1805,10 +1870,14 @@ c5_ligar:{
 },
 
 c5_proposta:{
+  falante:'Otto',
+  vozes:['N','N'],
   texto:[
     'Você desce fazendo barulho de propósito, com as mãos à mostra.',
-    'Otto te reconhece e leva três segundos pra decidir o que você é. Depois ri.',
-    '"Olha só quem cresceu." Ele limpa a mão no jeans e estende. "Eu preciso de gente que anda em rota e não chama atenção. Paga bem. Você nem precisa pegar em gaiola — só carrega e cala a boca."',
+    d=>(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque'])
+      ? 'Otto te reconhece e leva três segundos pra decidir o que você é. Depois ri.'
+      : 'Otto leva três segundos pra decidir o que você é. Depois ri.',
+    d=>`${(d.flags.cruzou_os_cacadores || d.npcs['Caçador Roque']) ? '"Olha só quem cresceu."' : '"Olha só."'} Ele limpa a mão no jeans e estende. "Eu preciso de gente que anda em rota e não chama atenção. Paga bem. Você nem precisa pegar em gaiola — só carrega e cala a boca."`,
     'Os outros quatro voltaram a trabalhar. Isso é o mais perturbador: sua presença aqui já é normal.'
   ],
   escolhas:[
@@ -1839,9 +1908,11 @@ c5_aceitou:{
 },
 
 c5_planilha:{
+  falante:'Otto',
+  vozes:['P'],
   texto:[
     '"Deixa eu ver a planilha."',
-    'Otto hesita meio segundo e decide que você é funcionário.',
+    'Otto hesita meio segundo e decide que você é funcionári{o|a}.',
     'A prancheta tem quatro folhas. Colunas: DATA, ESPÉCIE, QTD, DESTINO, GUIA Nº.',
     'A coluna DESTINO tem a mesma palavra em quase todas as linhas: CENTRAL.',
     'A coluna GUIA Nº chega a 1.184.',
@@ -1865,7 +1936,7 @@ c5_traicao:{
     'Você abre as onze gaiolas em silêncio, uma por uma, com as mãos tremendo de um jeito que te irrita.',
     'Metade não sai. Você já sabia que metade não ia sair e mesmo assim doeu.',
     'Na saída, você olha pra trás uma vez, e a pessoa da cadeira de praia está acordada, olhando você, sem levantar.',
-    'Ela não levanta. Ela não grita. Ela só olha, e você vai embora, e nunca vai saber o que aquilo significou.'
+    'Ela não levanta. Ela não grita. Ela só olha, e você vai embora sem saber o que aquilo significa.'
   ],
   ef:{rep:{eixo:'bom',delta:3,motivo:'Voltou de madrugada e abriu as gaiolas que tinha ajudado a carregar'},
       flag:['destruiu_operacao','traiu_vasco'],
@@ -1878,6 +1949,8 @@ c5_traicao:{
 },
 
 c5_duplo:{
+  falante:'Dra. Cordell',
+  vozes:['N','P','N'],
   texto:[
     'Você aperta a mão. Carrega as caixas. Pega o dinheiro.',
     'E liga para a Dra. Cordell da beira da estrada, com o caminhão ainda visível na curva.',
@@ -1885,7 +1958,7 @@ c5_duplo:{
     '"Carreguei."',
     '"Tá." Ela desliga.',
     'Ela usa a informação. Chega em cinco horas com a imprensa e monta tudo do jeito certo.',
-    'Ela não te agradece. Não te cumprimenta. Quando os dois se cruzam na trilha, ela desvia o olhar, e isso custa mais caro do que uma bronca.'
+    'Ela não te agradece. Não te cumprimenta. Quando vocês {dois|duas} se cruzam na trilha, ela desvia o olhar, e isso custa mais caro do que uma bronca.'
   ],
   ef:{dinheiro:4000, rep:{eixo:'ruim',delta:1,motivo:'Carregou carga de traficantes'},
       npc:{nome:'Dra. Cordell', opiniao:-2, memoria:'Você entregou o esquema, mas só depois de receber por ele. Ela desviou o olhar na trilha.'},
@@ -1898,6 +1971,8 @@ c5_duplo:{
 },
 
 c5_falou_com_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N','N'],
   texto:[
     'Você alcança ela no carro.',
     '"Eu peguei o dinheiro porque eu precisava entrar."',
@@ -1915,11 +1990,14 @@ c5_falou_com_ivone:{
 },
 
 c5_recusou_perto:{
+  falante:'Otto',
+  vozes:['P','N','N'],
   texto:[
     '"Não."',
     'O silêncio na câmara dura tempo demais. Um dos outros quatro coloca a mão no cinto, não numa arma — numa Pokébola.',
     'Otto levanta a palma. "Deixa."',
-    'Pra você: "Você entrou aqui e viu tudo. Agora sobe essa passarela devagar e esquece o caminho."',
+    'Pra você:',
+    '"Você entrou aqui e viu tudo. Agora sobe essa passarela devagar e esquece o caminho."',
     'Você sobe. Devagar. Ele te olha o percurso inteiro, sem piscar, e continua olhando quando você some na curva — dá pra sentir.'
   ],
   ef:{flag:'recusou_rocket', npc:{nome:'Caçador Roque', opiniao:-3, memoria:'Você recusou a proposta dele na cara dele.'},

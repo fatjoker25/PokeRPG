@@ -137,6 +137,8 @@ const RETRATO_POR_NOME = {
   'a voz no telefone':'trainers/pokemon_ranger_f', 'a voz do rádio':'trainers/league_staff',
   'Roland':'trainers/league_staff', 'Roland (central do Planalto)':'trainers/league_staff',
   'Caçadores da Rota 23':'trainers/roughneck', 'a voz do telefone':'trainers/office_worker_f',
+  /* os operários da câmara do Monte da Lua, ouvidos de cima da passarela */
+  'a voz que conta':'trainers/worker', 'a voz de baixo':'trainers/worker', 'outra voz de baixo':'trainers/worker',
   'o locutor da arena':'trainers/league_staff', 'Supervisora da arena':'trainers/league_staff_f',
   'Conselheira do broche':'trainers/office_worker_f', 'Nico Hart':'trainers/punk_guy',
   'Nilo, o do posto':'trainers/worker', 'a voz do outro lado':'trainers/office_worker',

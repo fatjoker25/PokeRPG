@@ -213,7 +213,7 @@ c4_senhora:{
     'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos. Voltou com dezesseis."',
     'Ela não continua. Você entende que não é pra perguntar, e não pergunta.'
   ],
-  ef:{},
+  ef:{flag:'ouviu_quinze_dezesseis'},
   escolhas:[
     {texto:'"Ele tá bem?"', vai:'c4_senhora_filho'},
     {texto:'Agradecer o pastel e levantar.', vai:'c4_rua'},

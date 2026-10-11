@@ -128,7 +128,7 @@ const SAIDA = path.resolve(process.argv[2] || path.join(raiz, 'roteiro'));
 
     const bloco = (arq, titulo, linhas, cfg, extra) => {
       const rr = roteiro(linhas, cfg);
-      const meta = [cfg.falante ? 'falante: ' + cfg.falante : '', cfg.vozes ? 'vozes: ' + cfg.vozes.join(' ') : '',
+      const meta = [cfg.falante ? 'falante: ' + cfg.falante : '', cfg.vozes ? 'vozes: ' + cfg.vozes.map(v => /^[PNE]$/.test(v) ? v : `'${v}'`).join(' ') : '',
                     cfg.dono ? 'dono: ' + cfg.dono + (cfg.proprio ? ' (da cena)' : '') : '', cfg.monologo ? 'monólogo: ' + cfg.monologo : '']
                    .filter(Boolean).join(' · ');
       escreve(arq, `\n### ${titulo}${meta ? '   [' + meta + ']' : ''}${rr.alertas.length ? '   ⚠ ' + rr.alertas.join(' · ') : ''}`);

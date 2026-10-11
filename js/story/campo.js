@@ -122,12 +122,12 @@ c5_atras_da_parede:{
     'Na parede, em tinta estêncil desbotada, um número de patrimônio e três letras.',
     'E, no chão, sob a bancada, uma placa de identificação caída de frente pra baixo. Você vira.',
     '**ESTAÇÃO DE CAMPO 2 — ACESSO RESTRITO — 1977**',
-    'Estação 2. Você já ouviu esse número, dito por alguém, em outro lugar, sobre outra coisa.'
+    'Estação 2. Um número de porta, num lugar onde ninguém devia achar porta.'
   ],
   ef:{flag:['a_estacao_dois','sabe_do_lote_unico'],
       rep:{eixo:'bom', delta:2, motivo:'Achou a Estação de Campo 2 atrás de uma parede no Monte da Lua.'},
       registrar:'Atrás da parede do Monte da Lua há a Estação de Campo 2, de 1977, com um suporte vazio na bancada.',
-      presagio:'Se existe uma Estação 2, existe uma Estação 1. E você já ouviu falar de uma Estação 4.'},
+      presagio:'Se existe uma Estação 2, existe uma Estação 1.'},
   escolhas:[
     {texto:'Levar a placa.', vai:'c5_entrada'},
     {texto:'Copiar o número de patrimônio e as três letras.', vai:'c5_entrada'},
@@ -233,7 +233,7 @@ c6_a_ilhota:{
     d=>{
       const s = Campo.surfar();
       return s.pode
-        ? `Ele olha pro seu cinto, depois pra você, e muda de assunto sozinho: "A não ser que você tenha um grande, né."`
+        ? fala('o senhor da mureta', 'A não ser que você tenha um grande, né.', null, 'Ele olha pro seu cinto, depois pra você, e muda de assunto sozinho.')
         : 'Setenta metros de água funda com correnteza no meio. Sem alguma coisa grande embaixo de você, não dá.';
     }
   ],
@@ -250,7 +250,7 @@ c6_na_ilhota:{
   texto:[
     d=>{
       const s = Campo.surfar();
-      return `Setenta metros ${s.como}. A correnteza do meio existe e puxa e não chega perto de ser um problema pra quem tem esse tamanho embaixo.`;
+      return `Setenta metros ${s.como || 'de travessia'}. A correnteza do meio existe e puxa e não chega perto de ser um problema pra quem tem esse tamanho embaixo.`;
     },
     'A ilhota tem uns quarenta metros de comprimento e é mais alta do que parecia da margem.',
     'No meio do mato tem uma laje de concreto de dois por dois com quatro parafusos e nada em cima, e do lado da laje uma caixa de passagem de energia com a tampa arrancada.',
