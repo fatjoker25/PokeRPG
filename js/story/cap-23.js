@@ -4,7 +4,7 @@
    ------------------------------------------------------------ */
 const C23_ABERTURAS = ['c23_a_escada', 'c23_ab_o_biombo', 'c23_ab_chegou_antes', 'c23_ab_de_cracha'];
 function c23_cabe(id, d){
-  if (id === 'c23_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c23_ab_de_cracha') return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   return true;
 }
 function c23_abertura(d){ return Dados.escolher(C23_ABERTURAS.filter(id => c23_cabe(id, d))); }
@@ -71,7 +71,7 @@ c23_ab_chegou_antes:{
 c23_ab_de_cracha:{
   texto:[
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `Você chega no ginásio de Viridian com o crachá de ${c ? c.nome : 'serviço'} e Blue vê o crachá antes de ver você.`;
     },
     'Ele olha o crachá por uns três segundos. Aí ri, uma vez, sem alegria.',

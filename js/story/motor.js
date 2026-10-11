@@ -172,16 +172,18 @@ const Historia = {
       Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro + ef.dinheiro);
       Estado.registrar(`${ef.dinheiro>0?'+':''}${fmtDin(ef.dinheiro)} ₽ (total: ${fmtDin(Estado.j.dinheiro)} ₽)`);
     }
-    if (ef.hp){
-      if (ef.hp < 0){
-        const morreu = Estado.ferir(-ef.hp, ef.causa || 'ferimento');
+    /* hp pode vir de função: com a luva, a seccionadora não morde */
+    const hpEf = typeof ef.hp === 'function' ? ef.hp(Estado.dados) : ef.hp;
+    if (hpEf){
+      if (hpEf < 0){
+        const morreu = Estado.ferir(-hpEf, ef.causa || 'ferimento');
         const prop = Estado.j.hp / Estado.hpMaxJogador();
         avisos.push({tipo:'dano', texto: prop > 0.66 ? 'Dói, e vai doer mais amanhã.'
           : prop > 0.33 ? 'Você sente isso de um jeito que não passa rápido. Precisa parar em algum lugar.'
           : 'Você está mal. Mal de precisar de ajuda, não de precisar descansar.'});
         if (morreu) avisos.push({tipo:'gameover', texto:'Você não aguentou.'});
       } else {
-        Estado.curarJogador(ef.hp);
+        Estado.curarJogador(hpEf);
         avisos.push({tipo:'cura', texto:'Alguma coisa em você assenta de volta no lugar.'});
       }
     }

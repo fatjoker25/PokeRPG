@@ -5,7 +5,7 @@
 const C14_ABERTURAS = ['c14_ilha', 'c14_ab_a_travessia', 'c14_ab_a_cinza', 'c14_ab_sem_passagem', 'c14_ab_de_cracha'];
 function c14_cabe(id, d){
   if (id === 'c14_ab_sem_passagem') return d.jogador.dinheiro < 600 && !d.flags.ryuzo_vai_a_cinnabar;
-  if (id === 'c14_ab_de_cracha')    return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c14_ab_de_cracha')    return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   if (id === 'c14_ab_a_travessia')  return !d.flags.ryuzo_vai_a_cinnabar;
   return true;
 }
@@ -238,7 +238,7 @@ c14_ab_de_cracha:{
     'Ele registra quem entra e quem sai da ilha desde que existe capitania, que é desde mil novecentos e cinquenta e um.',
     d=>{ Nomes.apresentar('o capitão do porto'); return 'Na porta do posto, embaixo de CAPITANIA, alguém pintou à mão um nome só: MARLOW.'; },
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `Você mostra o crachá de ${c ? c.nome : 'serviço'} porque parece a coisa certa a fazer, e ele vira o livro na sua direção sem você pedir.`;
     },
     fala('o capitão do porto', 'Já que {o senhor|a senhora} é do serviço: olha a página de doze dias atrás.'),

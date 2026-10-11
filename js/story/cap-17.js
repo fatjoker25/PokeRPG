@@ -5,7 +5,7 @@
 const C17_ABERTURAS = ['c17_envelope', 'c17_ab_no_quadro', 'c17_ab_sem_insignias', 'c17_ab_de_cracha', 'c17_ab_o_oficial'];
 function c17_cabe(id, d){
   if (id === 'c17_ab_sem_insignias') return (d.insignias || []).length < 8;
-  if (id === 'c17_ab_de_cracha')     return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c17_ab_de_cracha')     return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   if (id === 'c17_ab_o_oficial')     return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3 || d.liga.avisos >= 2;
   return true;
 }
@@ -146,7 +146,7 @@ c17_ab_o_carimbo:{
 c17_ab_de_cracha:{
   texto:[
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `O envelope não chega pelo Centro Pokémon. Chega pelo serviço: vem junto com a correspondência de ${c ? c.nome : 'praxe'}, num malote lacrado, com protocolo de recebimento pra você assinar.`;
     },
     'Dentro do malote tem duas coisas.',

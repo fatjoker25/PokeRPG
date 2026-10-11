@@ -2568,7 +2568,7 @@ c8_homem_mesa:{
   vozes:['N','N'],
   texto:[
     'Você senta. Ele empurra uma taça cheia na sua direção e você não bebe, e ele não insiste, e isso já diz que ele não é mau sujeito.',
-    'Ele trabalhou vinte e cinco anos na Silph. Saiu ano passado.',
+    'Ele trabalhou dezoito anos na Silph. Saiu ano passado.',
     '"Eu não vou dizer por quê. Mas vou dizer uma coisa: quando uma empresa começa a chamar o setor de pesquisa de “setor de recursos”, você atualiza o currículo."',
     'Ele bebe.',
     '"Você já ouviu falar do que tinha em Cinnabar?"'

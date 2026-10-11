@@ -2,7 +2,7 @@
    IDADE E ANIVERSÁRIO
    Todo mundo sai de casa com quinze anos. A ficha pede só o dia e o
    mês do aniversário: o ano sai sozinho, o que dá quinze no dia da
-   perua (o calendário começa em março de 2010, numa segunda). Se o
+   perua. Se o
    aniversário cai durante a jornada, você faz dezesseis na estrada, e
    quem te conhece manda parabéns; quem ficou em casa, sempre.
 
@@ -14,7 +14,12 @@
    {saida} a idade com que você saiu de casa. {menor:A|B} escolhe A
    pra menor de 18 e B pra maior (dentro de A e B só cabem as marcas de número).
    ============================================================ */
-const ANO_DO_JOGO = 2010;
+/* O presente da história é 2000: é nele que as contas dos textos fecham
+   (a usina fechou em 89 e "faz onze anos", a porta da Silph foi tapada
+   em 96 e "faz quatro", a próxima janela da ilha é "em dois mil e seis").
+   O ano não aparece na tela; o calendário do jogo começa numa segunda,
+   1º de março, de propósito. */
+const ANO_DO_JOGO = 2000;
 const IDADE_SAIDA = 15;
 const MAIORIDADE = 18;
 const MESES_DO_ANO = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];

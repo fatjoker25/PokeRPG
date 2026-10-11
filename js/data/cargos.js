@@ -85,6 +85,8 @@ const CARGOS = [
   /* o posto sobe de degrau na rede (js/story/rede.js): o nome que vai
      pro cartão, o peso, a renda e o desconto saem do escalão */
   id:'rocket', falante:'a voz do outro lado', orgao:'sem timbre', cap:8,
+  /* "Não tem crachá": não abre portão nem balcão (Cargos.doCracha) */
+  semCracha:true,
   get nome(){ return typeof Rede !== 'undefined' ? Rede.nomeDoPosto() : 'Informante'; },
   get peso(){ return typeof Rede !== 'undefined' ? Rede.atual().peso : 3; },
   onde:'vermilion', lugar:'Armários do porto',
@@ -218,6 +220,18 @@ const Cargos = {
     for (const id of this.lista()){
       const c = this.porId(id);
       if (c && (!melhor || c.peso > melhor.peso)) melhor = c;
+    }
+    return melhor;
+  },
+
+  /* o crachá que se mostra no portão e no balcão: o de maior peso entre
+     os postos que têm crachá. O envelope sem timbre não tem, e a cena
+     que pede crachá não pode mostrar "o crachá de Informante" */
+  doCracha(){
+    let melhor = null;
+    for (const id of this.lista()){
+      const c = this.porId(id);
+      if (c && !c.semCracha && (!melhor || c.peso > melhor.peso)) melhor = c;
     }
     return melhor;
   },

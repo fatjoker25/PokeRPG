@@ -6,7 +6,7 @@
 const C18_ABERTURAS = ['c18_fio', 'c18_ab_a_fila_do_banco', 'c18_ab_o_diario_oficial', 'c18_ab_a_reporter', 'c18_ab_de_cracha'];
 function c18_cabe(id, d){
   if (id === 'c18_ab_a_reporter') return !!(d.flags.falou_com_a_imprensa || d.flags.reika_precisa_de_papel || d.flags.reika_te_abordou);
-  if (id === 'c18_ab_de_cracha')  return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c18_ab_de_cracha')  return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   return true;
 }
 function c18_abertura(d){
@@ -275,7 +275,7 @@ c18_ab_recusou_a_reika:{
 c18_ab_de_cracha:{
   texto:[
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `Ser ${c ? c.nome : 'do serviço'} dá acesso a uma coisa que você descobriu tarde demais e que muda tudo: o sistema de consulta.`;
     },
     'É um terminal de tela verde numa sala sem janela, com um teclado de membrana e uma etiqueta colada no monitor com a senha escrita à caneta, o que é ilegal e é universal.',

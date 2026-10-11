@@ -6,7 +6,7 @@
 const C12_ABERTURAS = ['c12_fuchsia', 'c12_ab_ciclovia', 'c12_ab_excursao', 'c12_ab_sem_os_quinhentos', 'c12_ab_de_cracha'];
 function c12_cabe(id, d){
   if (id === 'c12_ab_sem_os_quinhentos') return d.jogador.dinheiro < 500;
-  if (id === 'c12_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c12_ab_de_cracha') return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   return true;
 }
 function c12_abertura(d){
@@ -263,7 +263,7 @@ c12_ab_a_caderneta:{
 c12_ab_de_cracha:{
   texto:[
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `A recepção da Zona Safári tem uma catraca pra visitante e uma porta lateral com interfone pra quem não é visitante, e o seu crachá de ${c ? c.nome : 'serviço'} te põe na porta lateral.`;
     },
     'Do lado de dentro não é a reserva. É um escritório: quatro mesas, dois computadores, um mapa mural de nove mil hectares com alfinete colorido.',

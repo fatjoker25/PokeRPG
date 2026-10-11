@@ -1695,7 +1695,7 @@ c4_funcionario:{
   texto:[
     'O funcionário do museu é também o bilheteiro, o segurança e o faxineiro. Ele se chama Varian e tem cinquenta e poucos anos.',
     'Você pergunta do balde.',
-    '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde uma chuva de abril, dezesseis anos atrás."',
+    '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde uma chuva de abril, seis anos atrás."',
     '"E ninguém conserta?"',
     '"O orçamento do museu é municipal e o município tem uma pedreira que emprega quatrocentas pessoas." Ele fala isso sem amargura, como quem explica aritmética. "Quando é escolher entre telhado de museu e asfalto de rua de pedreira, o museu perde. E deve perder mesmo."',
     'Ele olha pra segunda sala.',
@@ -1750,7 +1750,7 @@ c4_telhado:{
 c4_limpou_calha:{
   texto:[
     'Uma hora e dez. A terra da calha sai em placas, como torrão, e embaixo tem uma camada preta de folha apodrecida que cheira a coisa morta.',
-    'Na metade, Varian aparece no pé da escada e fica lá embaixo segurando o ferro, sem falar nada, enquanto você arranca dezesseis anos de abandono de uma calha na luz do fim da tarde.',
+    'Na metade, Varian aparece no pé da escada e fica lá embaixo segurando o ferro, sem falar nada, enquanto você arranca seis anos de abandono de uma calha na luz do fim da tarde.',
     'No fim, ele te passa um balde de água pra testar. A água corre. Corre inteira, até o cano, e desce.',
     'Varian olha a água saindo no pé do cano por muito mais tempo do que o necessário.'
   ],
@@ -1808,7 +1808,7 @@ c4_balde:{
     '"O balde pode sair?"',
     'Varian olha o balde. Pensa. Pega o balde, esvazia numa pia e leva pro almoxarifado.',
     'Lá dentro, não sabe onde colocar. Põe no chão, fecha a porta e fica olhando a porta fechada.',
-    '"Dezesseis anos," ele diz. "Dezesseis anos que esse balde tava naquele canto."'
+    '"Seis anos," ele diz. "Seis anos que esse balde tava naquele canto."'
   ],
   ef:{npc:{nome:'Varian', opiniao:3, memoria:'Guardou o balde do museu depois que você limpou a calha.'}},
   escolhas:[

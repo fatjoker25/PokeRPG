@@ -6,7 +6,7 @@
 const C15_ABERTURAS = ['c15_rotas', 'c15_ab_a_bicicleta', 'c15_ab_a_cabine', 'c15_ab_a_caminhonete', 'c15_ab_de_cracha'];
 function c15_cabe(id, d){
   if (id === 'c15_ab_a_bicicleta') return d.jogador.dinheiro >= 400;
-  if (id === 'c15_ab_de_cracha')   return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c15_ab_de_cracha')   return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   return true;
 }
 function c15_abertura(d){
@@ -199,7 +199,7 @@ c15_ab_de_cracha:{
   texto:[
     'A ciclovia das rotas 14 a 18 é área de concessão pública, e área de concessão pública tem um livro de ocorrências, e o livro de ocorrências fica numa gaveta da administração em Fuchsia.',
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `Com o crachá de ${c ? c.nome : 'serviço'}, a moça da administração — crachá de plástico no cordão, Lina, sete anos de casa — te entrega o livro sem pedir ofício, o que provavelmente é irregular e é a coisa mais útil que te aconteceu no mês.`;
     },
     'O livro tem uma ocorrência por página e as páginas são quase todas de coisas pequenas: guarda-corpo amassado, buraco no asfalto, ciclista com torção de tornozelo.',

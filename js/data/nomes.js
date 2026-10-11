@@ -126,6 +126,9 @@ const NOMES_FIXOS = {
   'a tratadora da Associação': 'Mina Bray',
   'a brigadista de Fuchsia':   'Tess Calder',
   'a figura de capuz':         'Sr. Juniper',
+  /* a usina, no 10: diz o nome quando senta com você, quando você volta
+     ao açude ou quando espera no portão */
+  'o homem do boné':           'Sr. Edric',
   'o atravessador':            'Corwin',
   'a mulher do mapa':          'Tamsin Reed'
 };
@@ -223,6 +226,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Odile','Orin','Pascal','Pia','Poplar','Quince','Quint','Ridge','Rina','Roland','Roque',
   'Sibyl','Sorrel','Stellan','Thea','Thistle','Tobias','Ulla','Ulric','Varian','Vernon',
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
+  'Larch','Silas','Toby',
   /* os nomes fixos daqui de cima */
   'Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',

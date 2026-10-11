@@ -8,7 +8,7 @@ const C9_ABERTURAS = ['c9_chegada', 'c9_ab_de_onibus', 'c9_ab_sem_nada', 'c9_ab_
 function c9_cabe(id, d){
   if (id === 'c9_ab_sem_nada')  return d.jogador.dinheiro < 1500;
   if (id === 'c9_ab_seguido')   return Estado.rep.eixo === 'ruim' && Estado.rep.ruim >= 3;
-  if (id === 'c9_ab_de_cracha') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c9_ab_de_cracha') return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   return true;
 }
 function c9_abertura(d){
@@ -217,7 +217,7 @@ c9_ab_perdeu:{
 c9_ab_de_cracha:{
   texto:[
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `A Prefeitura de Celadon tem um balcão de protocolo na entrada da cidade, e o rapaz do balcão vê o seu crachá de ${c ? c.nome : 'serviço'} e faz uma coisa que ninguém nunca fez com você: ele levanta.`;
     },
     d=>{ Nomes.apresentar('o rapaz do protocolo'); return 'No crachá de plástico preso na camisa dele: TITO — PROTOCOLO.'; },

@@ -830,6 +830,21 @@ conta a partir de segunda, 1º de março, com mês de tamanho de verdade,
 e a jornada começa no dia da perua na cidade natal (`Calendario.inicio`),
 que é o dia da entrega no capítulo 1.
 
+**O presente da história é o ano 2000** (`ANO_DO_JOGO`, em `idade.js`).
+É nele que as contas dos textos fecham: a usina fechou em 89 e "faz
+onze anos", a porta da Silph foi tapada em 96 e "faz quatro", a próxima
+janela da ilha do 16 é "em dois mil e seis". Texto que diz "faz N anos"
+a partir de um ano escrito conta de 2000. O ano já esteve em 2010 (pra
+1º de março cair numa segunda de verdade) e meia história ficou com a
+conta errada; o ano não aparece na tela, e o calendário do jogo começa
+numa segunda de propósito.
+
+Cena que pula horas (dormir, esperar a noite, viajar) passa o relógio
+no `ef.executar` (`Relogio.avancar(h)`); o `c10_ate(h)` do capítulo 10
+pula até a próxima vez que der aquela hora. Hora escrita no texto ("são
+dez e cinquenta") é hora que o relógio desmente: ou o relógio vai até
+ela, ou o texto não diz.
+
 Coisa com dia e hora marcados mora em `js/story/agenda.js` (`AGENDA`):
 `local`, `quando()`, `anuncio` (vai pro mural da cidade em `mural`, por
 `muralDoCentro`), `titulo` e `fazer()`. Aparece na lista do lugar só na

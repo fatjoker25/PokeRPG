@@ -5,7 +5,7 @@
    ------------------------------------------------------------ */
 const C13_ABERTURAS = ['c13_cais', 'c13_ab_o_radio', 'c13_ab_o_frio', 'c13_ab_convocado', 'c13_ab_o_leilao'];
 function c13_cabe(id, d){
-  if (id === 'c13_ab_convocado') return typeof Cargos !== 'undefined' && Cargos.lista().length >= 1;
+  if (id === 'c13_ab_convocado') return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   if (id === 'c13_ab_o_leilao')  return d.jogador.dinheiro >= 4000;
   return true;
 }
@@ -135,7 +135,7 @@ c13_ab_comprou_agasalho:{
 c13_ab_convocado:{
   texto:[
     d=>{
-      const c = Cargos.principal();
+      const c = Cargos.doCracha();
       return `O telefone do Centro Pokémon de Fuchsia toca às cinco e dez da manhã e a atendente atende, ouve, e vem te acordar pelo nome e pelo cargo de ${c ? c.nome : 'serviço'}.`;
     },
     'Isso nunca aconteceu antes. Você é acordad{o|a} porque é você, não apesar de ser você.',

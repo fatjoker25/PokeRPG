@@ -42,6 +42,12 @@ const SAIDA = path.resolve(process.argv[2] || path.join(raiz, 'roteiro'));
   /* ROTEIRO_SO=<regex do nome do arquivo> escreve só o que casar (ex.: '^cap-2$', 'eventos') */
   const so = process.env.ROTEIRO_SO || '';
   await p.addInitScript(s => { window.__roteiroSo = s; }, so);
+  /* o outro ramo das linhas que são função: ROTEIRO_FLAGS='a,b,c10_onde=subestacao'
+     liga flags, ROTEIRO_ITENS='Lanterna de cabeça' põe na mochila, ROTEIRO_VIA='heroi'
+     troca a via e ROTEIRO_NOMES='o homem do boné' dá o nome como já dito */
+  await p.addInitScript(o => { window.__roteiroRamo = o; }, {
+    flags: process.env.ROTEIRO_FLAGS || '', itens: process.env.ROTEIRO_ITENS || '',
+    via: process.env.ROTEIRO_VIA || '', nomes: process.env.ROTEIRO_NOMES || ''});
   await p.goto('file://' + path.join(raiz, 'index.html'));
   await p.waitForTimeout(800);
 
@@ -57,6 +63,12 @@ const SAIDA = path.resolve(process.argv[2] || path.join(raiz, 'roteiro'));
     const d = Estado.dados;
     const ini = criarPokemon(7, 30); ini.genero = homem ? 'm' : 'f';
     d.time = [ini]; d.flags.tem_pokedex = true; d.capitulo = 10;
+    const ramo = window.__roteiroRamo || {};
+    const itens = t => String(t || '').split(',').map(x => x.trim()).filter(Boolean);
+    itens(ramo.flags).forEach(f => { const [k, v] = f.split('='); d.flags[k.trim()] = v === undefined ? true : v.trim(); });
+    itens(ramo.itens).forEach(n => Estado.darItem(n, 1));
+    if (ramo.via) d.via = ramo.via;
+    itens(ramo.nomes).forEach(r => Nomes.apresentar(r));
     const arquivos = {}, alertas = [];
     const filtro = window.__roteiroSo ? new RegExp(window.__roteiroSo) : null;
     const escreve = (arq, s) => { if (filtro && !filtro.test(arq)) return; (arquivos[arq] = arquivos[arq] || []).push(s); };
