@@ -10,6 +10,11 @@ function c4_cabe(id, d){
     return typeof Cargos !== 'undefined' && Cargos.lista().length >= 2;
   return true;
 }
+/* o Ezra que atravessou a floresta do seu lado chegou junto: não passou
+   dois dias na escada te esperando, foi direto pro ginásio */
+function c4_veioJunto(d){
+  return !!(d.flags.salvou_o_teo || (d.flags.entrou_com_teo && !d.flags.teo_ficou_de_fora));
+}
 function c4_abertura(d){
   const cand = C4_ABERTURAS.filter(id => c4_cabe(id, d));
   return Dados.escolher(cand);
@@ -161,6 +166,7 @@ c4_chegada:{
     'A cada vinte minutos, longe, um som baixo que você sente no peito antes de ouvir. Detonação na pedreira. Ninguém na rua levanta a cabeça.',
     d=>{
       const t = d.npcs['Ezra'];
+      if (t && c4_veioJunto(d)) return 'Ezra se separa de você na entrada da cidade e vai direto pro ginásio, "só pra ver". Uma hora depois está sentado na escada do Centro Pokémon, com a mochila entre os pés e a cara de quem viu.';
       if (t && t.opiniao >= 4) return 'Ezra está sentado na escada do Centro Pokémon com a mochila entre os pés. Ele te vê de longe e levanta os dois braços como se você tivesse ganhado alguma coisa.';
       if (t && t.opiniao >= 1) return 'Ezra está sentado na escada do Centro Pokémon. Ele te vê e faz um aceno curto, e depois finge que estava mexendo na mochila.';
       if (t) return 'Ezra está sentado na escada do Centro Pokémon. Ele te vê. Não levanta a cabeça de novo.';
@@ -180,11 +186,14 @@ c4_chegada:{
 },
 
 c4_praca:{
+  falante:'Sra. Zelda',
+  vozes:['N'],
   texto:[
     'A praça de Pewter tem quatro bancos e uma árvore que claramente não escolheu nascer ali.',
     'Você senta. O corpo entende antes da cabeça: os ombros descem uns dois dedos e você percebe que estava carregando eles assim desde a floresta.',
     'Uma senhora do outro banco desembrulha um pastel e parte no meio sem perguntar. Estende a metade.',
-    '"Come. Você tá com cara de quem andou."'
+    '"Come. Você tá com cara de quem andou."',
+    'Ela diz o nome, Zelda, do jeito de quem não espera o seu em troca.'
   ],
   ef:{hp:3},
   escolhas:[
@@ -196,9 +205,11 @@ c4_praca:{
 },
 
 c4_senhora:{
+  falante:'Sra. Zelda',
+  vozes:['N'],
   texto:[
     'O pastel é de queijo e está frio e é a melhor coisa que você comeu em dois dias.',
-    'Vocês dois comem sem falar nada. Passa um caminhão. Passa um casal discutindo baixo. Passa o tempo.',
+    'Vocês {dois|duas} comem sem falar nada. Passa um caminhão. Passa um casal discutindo baixo. Passa o tempo.',
     'Quando acaba, ela amassa o papel e diz, como quem comenta o tempo: "Meu filho saiu daqui com quinze anos. Voltou com dezesseis."',
     'Ela não continua. Você entende que não é pra perguntar, e não pergunta.'
   ],
@@ -212,6 +223,8 @@ c4_senhora:{
 },
 
 c4_senhora_filho:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Ele tá bem?"',
     'Ela amassa o papel um pouco mais.',
@@ -230,6 +243,8 @@ c4_senhora_filho:{
 },
 
 c4_senhora_concordou:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Não é a mesma coisa mesmo."',
     'Ela olha pra você pela primeira vez direito. Avalia. Decide alguma coisa.',
@@ -246,6 +261,8 @@ c4_senhora_concordou:{
 },
 
 c4_senhora_nome:{
+  falante:'Sra. Zelda',
+  vozes:['N','N','P','N','N'],
   texto:[
     '"Lior." Ela fala o nome do jeito que se fala o nome de quem se ama e com quem não se conversa mais. "Turno da tarde. Ele é o que fica no rádio."',
     '"Se eu vir ele, falo que a senhora mandou—"',
@@ -275,8 +292,10 @@ c4_senhora_silencio:{
 },
 
 c4_senhora_contou:{
+  falante:'Sra. Zelda',
+  vozes:['N','P','N','N'],
   texto:[
-    'Você conta. Pallet, a manhã da saída, a floresta, o que teve na floresta.',
+    d=>`Você conta. ${d.jogador.cidade}, a manhã da saída, a floresta, o que teve na floresta.`,
     'Ela escuta inteiro sem interromper, que é uma coisa que quase ninguém faz, e no fim só pergunta uma coisa:',
     '"E você dormiu depois?"',
     'Você pensa na resposta por mais tempo do que a pergunta parecia pedir.',
@@ -292,6 +311,8 @@ c4_senhora_contou:{
 },
 
 c4_senhora_dormir:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se eu dormir bem?"',
     '"Aí não quer dizer que você virou ruim." Ela pensa. "Quer dizer que você acostumou. E acostumar é o caminho, entende? Ninguém vira ruim de uma vez. Vira de acostumar."',
@@ -305,17 +326,19 @@ c4_senhora_dormir:{
 },
 
 c4_recusou_pastel:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Não, {obrigado|obrigada}."',
     'Ela dá de ombros e come as duas metades, sem nenhum ressentimento, porque velha de cidade pequena oferece por educação e não por necessidade de que aceitem.',
     '"Você é de onde?", ela pergunta de boca cheia, sem olhar pra você.',
-    d=>`"${d.jogador.cidade}."`,
+    d=>fala(d.jogador.nome, `${d.jogador.cidade}.`),
     '"Longe."',
     '"Uns dias."',
     '"Uns dias", ela repete, e no jeito que ela repete cabe uma cidade inteira que ela nunca vai ver.',
     'Vocês ficam quietos. Passa um caminhão de caçamba. Passa um casal discutindo baixo.',
     'Você fica sentad{o|a} um tempo ouvindo a detonação distante, e depois a fome te lembra que você tomou uma decisão estúpida.',
-    '"Tem mais", ela diz, sem olhar. "Eu comprei três."'
+    '"Tem mais," ela diz, sem olhar. "Eu comprei três."'
   ],
   ef:{npc:{nome:'Sra. Zelda', opiniao:1, memoria:'Ofereceu pastel, você recusou, e ela comprou três de qualquer jeito.'}},
   escolhas:[
@@ -328,19 +351,21 @@ c4_recusou_pastel:{
 },
 
 c4_senhora_teimosia:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Tudo bem, sério."',
     'Ela come o terceiro pastel devagar, na sua frente, sem nenhuma piedade.',
     '"Você é teimos{o|a}."',
     '"Sou."',
     '"Isso é bom e é ruim, e você vai descobrir a proporção na estrada."',
-    'Ela limpa a mão no papel e enrola tudo numa Pokébola pequena.',
+    'Ela limpa a mão no papel e amassa tudo até caber no punho.',
     '"Meu filho é teimoso. Passou fome duas vezes por isso e não mudou nenhuma vez."',
     'Ela levanta.',
-    '"Vai lá, teimoso. A cidade é pra esse lado."'
+    '"Vai lá, teimos{o|a}. A cidade é pra esse lado."'
   ],
   ef:{flag:'teimou_com_a_ercilia', moral:2,
-      npc:{nome:'Sra. Zelda', opiniao:2, memoria:'Te chamou de teimoso e disse que o filho dela também é.'}},
+      npc:{nome:'Sra. Zelda', opiniao:2, memoria:'Te chamou de teimos{o|a} e disse que o filho dela também é.'}},
   escolhas:[
     {texto:'"Ele tá bem? O seu filho."', vai:'c4_senhora_filho'},
     {texto:'Ir andar pela cidade.', vai:'c4_rua'},
@@ -349,6 +374,8 @@ c4_senhora_teimosia:{
 },
 
 c4_senhora_cidade:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','P','N','N','P','N','N','P','N','N','P','N','N'],
   texto:[
     '"O que tem pra fazer aqui?"',
     '"Aqui?" Ela acha graça, e a graça é genuína. "Pedra. Tem pedra. Tem o museu, que é pedra velha. Tem a pedreira, que é pedra nova. E tem o resto, que é gente."',
@@ -376,6 +403,8 @@ c4_senhora_cidade:{
 },
 
 c4_senhora_museu_cai:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','P','N','N','P','N','N'],
   texto:[
     '"Caindo aos pedaços como assim?"',
     '"Como assim literal." Ela levanta dois dedos. "Goteira na sala dois. Vitrine trincada na sala um. E o telhado dos fundos, que eles cobriram com lona em noventa e quatro e a lona tá lá até hoje."',
@@ -395,13 +424,15 @@ c4_senhora_museu_cai:{
 },
 
 c4_senhora_comprar:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','P','N','N','P','N','N'],
   texto:[
     '"E se alguém quisesse comprar? O museu."',
     'Ela para de mexer na bolsa.',
     '"Por que você pergunta isso?"',
     '"Não sei. Perguntei."',
     'Ela olha pra você um tempo desconfortável e depois decide, visivelmente, que você é só {um menino|uma menina} de {idade} anos fazendo pergunta de {menino|menina}.',
-    '"Já quiseram", ela diz. "Duas vezes que eu saiba."',
+    '"Já quiseram," ela diz. "Duas vezes que eu saiba."',
     '"E?"',
     '"E o museu é municipal, então não vende. Aí eles perguntaram se dava pra emprestar as peças. Aí perguntaram se dava pra emprestar só duas. Aí perguntaram quanto custava o seguro."',
     'Ela fecha a bolsa.',
@@ -418,6 +449,8 @@ c4_senhora_comprar:{
 },
 
 c4_senhora_quem_perguntou:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Quem perguntou?"',
     '"Gente de carro bom."',
@@ -439,9 +472,11 @@ c4_senhora_quem_perguntou:{
 },
 
 c4_senhora_orgulho:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','P','N','N','N','P','N','N'],
   texto:[
     '"A senhora tem orgulho daqui?"',
-    'Ela ri alto, uma vez, e algumas pombas saem do chão.',
+    'Ela ri alto, uma vez, e uns Pidgey saem do chão.',
     '"Que pergunta é essa, {menino|menina}."',
     '"É uma pergunta."',
     '"Orgulho é palavra de gente que foi embora e voltou." Ela alisa a saia. "Quem nunca saiu não tem orgulho, tem costume."',
@@ -460,9 +495,11 @@ c4_senhora_orgulho:{
 },
 
 c4_senhora_vai_embora:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Eu vou embora hoje. Ou amanhã."',
-    '"Eu sei", ela diz. "Dá pra ver pela mochila."',
+    '"Eu sei," ela diz. "Dá pra ver pela mochila."',
     'Ela olha a sua mochila com atenção profissional, do jeito de quem já viu muita mochila passar por essa praça.',
     '"Fivela quebrada."',
     '"É."',
@@ -480,6 +517,8 @@ c4_senhora_vai_embora:{
 },
 
 c4_senhora_gente:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','N'],
   texto:[
     '"E gente? Que gente?"',
     '"Gente que mora." Ela dá de ombros como se isso explicasse. "Mil e duzentas pessoas. Todo mundo sabe o nome de todo mundo e a maioria não gosta da maioria, mas ninguém deixa ninguém passar fome."',
@@ -496,6 +535,8 @@ c4_senhora_gente:{
 },
 
 c4_senhora_carros:{
+  falante:'Sra. Zelda',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Que tipo de gente?"',
     '"Educada." Ela fala a palavra como acusação. "Educada demais. Do tipo que chama todo mundo de senhor."',
@@ -513,9 +554,12 @@ c4_senhora_carros:{
 /* ─────────────── TÉO ─────────────── */
 
 c4_teo:{
+  falante:'Ezra',
+  vozes:['N','N','N','N'],
   texto:[
     d=>{
       const t = d.npcs['Ezra'];
+      if (c4_veioJunto(d)) return '"Fui lá." Ele não levanta a cabeça quando você chega. "Só pra ver."';
       if (t && t.opiniao >= 4) return '"CARA." Ele levanta antes de você chegar. "Eu cheguei ontem. Eu dormi aqui. Eu tô nessa escada desde as sete da manhã esperando você aparecer, isso é patético, eu sei."';
       if (t && t.opiniao >= 1) return '"Ô." Ele levanta meio devagar. "Achei que você tinha ficado na floresta."';
       return '"Ah. Você." Ele continua mexendo na mochila. "Chegou."';
@@ -523,7 +567,9 @@ c4_teo:{
     d=>d.flags.ensinou_o_pidgey
       ? 'O {pico} dele está solto, uns metros pra lá, cheirando a rua sozinho, e só olha pro Ezra quando quer. Ele repara que você reparou e tenta não sorrir e falha completamente.'
       : 'O {pico} dele está colado na perna dele, e cada vez que passa alguém olha pro Ezra antes de olhar pra pessoa.',
-    '"Eu perdi", ele diz, antes de você perguntar qualquer coisa. "No ginásio. Duas vezes."',
+    d=>c4_veioJunto(d)
+      ? '"Eu perdi," ele diz, antes de você perguntar qualquer coisa. "Duas vezes seguidas. Ele deixa tentar de novo na hora, sabia? Eu não sabia."'
+      : '"Eu perdi," ele diz, antes de você perguntar qualquer coisa. "No ginásio. Duas vezes."',
     'Ele ri. É um riso ruim — o riso de quem está com medo de descobrir que não serve pra isso e está testando a piada antes que outra pessoa faça.'
   ],
   ef:{flag:'teo_em_pewter', npc:{nome:'Ezra', memoria:'Te encontrou em Pewter depois de perder duas vezes no ginásio.'}},
@@ -542,13 +588,14 @@ c4_teo:{
 
 c4_teo_piada:{
   falante:'Ezra',
+  vozes:['P','N','P','N'],
   texto:[
     '"Duas vezes é pouco. Eu pretendo perder mais."',
     'Ele olha pra você com uma desconfiança genuína, procurando o deboche, e não acha.',
     '"Você tá falando sério?"',
     '"Eu mal saí de casa, Ezra. Eu perdi pra um Rattata logo no começo."',
     'Isso é mentira. Ele não precisa saber que é mentira. Ele endireita as costas uns três centímetros e fica evidente que os três centímetros vieram daí.',
-    '"Então a gente é dois lixos", ele conclui, feliz.'
+    '"Então a gente é dois lixos," ele conclui, feliz.'
   ],
   escolhas:[
     {texto:'"Me conta como foi lá dentro."', vai:'c4_teo_relato'},
@@ -559,9 +606,13 @@ c4_teo_piada:{
 },
 
 c4_teo_relato:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Me conta como foi. Tudo."',
-    'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes deitado no beliche.',
+    d=>c4_veioJunto(d)
+      ? 'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes no caminho do ginásio até a escada.'
+      : 'Ele conta. Conta demais, com detalhe de tempo e de posição, do jeito de quem reviveu isso umas quarenta vezes deitado no beliche.',
     '"Ele tem um Pokémon pequeno primeiro. Parece fácil. Não é fácil, é uma armadilha, porque ele te faz gastar."',
     '"E depois?"',
     '"E depois vem uma coisa do tamanho de um ônibus." Ezra mede com os braços e os braços não chegam. "Do tamanho de um ÔNIBUS, cara."',
@@ -578,6 +629,8 @@ c4_teo_relato:{
 },
 
 c4_teo_brock:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Ele fala alguma coisa depois?"',
     '"Fala." Ezra faz uma cara esquisita. "Ele falou o nome do meu {pico}. Eu não falei o nome pra ele. Ele ouviu eu gritando durante a luta e guardou."',
@@ -597,15 +650,17 @@ c4_teo_brock:{
 },
 
 c4_teo_nome:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N','N','N','N','N','P','N','N','N'],
   texto:[
     '"Pico é um nome bom."',
-    '"É horrível", ele diz, radiante. "É um nome horrível. Eu tinha NOVE ANOS."',
+    '"É horrível," ele diz, radiante. "É um nome horrível. Eu tinha NOVE ANOS."',
     '"Por que Pico?"',
     '"Porque era um pico de nada quando eu achei. Cabia numa camiseta." Ele mostra o tamanho com as mãos. "E mexia em tudo, cara. Sapato, canela, tomada. Minha mãe chamava ele de Praga e eu achei que Pico era mais bonito."',
     'O {pico}, ao ouvir o nome duas vezes, para onde está e olha pra cima, esperando.',
     '"Ó ele." A voz do Ezra muda de registro sem ele perceber. "Ele acha que toda vez que eu falo o nome dele é porque eu preciso de alguma coisa."',
     'Ezra desce e abraça ele sem nenhum constrangimento, que é a coisa mais bonita que essa cidade de pedra vai te mostrar hoje.',
-    '"Ele tá comigo desde antes de tudo isso", ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
+    '"Ele tá comigo desde antes de tudo isso," ele diz, mais baixo. "Antes de licença, antes de Pokédex, antes de eu saber que dava pra ser treinador de verdade."',
     '"E aí você virou treinador e ele virou time."',
     '"É." Ezra olha pro {pico} e depois pra você, e por um segundo não tem piada nenhuma na cara dele. "Às vezes eu acho que eu transformei o meu amigo em ferramenta e não perguntei pra ele."',
     'Ele percebe que falou sério e conserta imediatamente, porque é o Ezra:',
@@ -623,6 +678,8 @@ c4_teo_nome:{
 },
 
 c4_teo_pergunta_pro_pico:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N','N','N','P','N'],
   texto:[
     '"Pergunta pra ele, então."',
     '"Como é que eu—" Ele para. "Você tá falando sério."',
@@ -632,7 +689,7 @@ c4_teo_pergunta_pro_pico:{
     'O {pico} vira a cabeça de lado.',
     'E aí, sem nenhum motivo aparente e sem olhar pra ele antes, encosta a cabeça no peito do Ezra — que é coisa que ele não fazia — e fica lá.',
     'Os dois ficam parados uns três segundos.',
-    '"Isso não quer dizer nada", diz o Ezra, com a voz esquisita. "Isso não quer dizer nada, cara, ele faz isso com qualquer um."',
+    '"Isso não quer dizer nada," diz o Ezra, com a voz esquisita. "Isso não quer dizer nada, cara, ele faz isso com qualquer um."',
     '"Ele nunca fez comigo."',
     '"CALA A BOCA."'
   ],
@@ -648,12 +705,14 @@ c4_teo_pergunta_pro_pico:{
 },
 
 c4_teo_todo_mundo_faz:{
+  falante:'Ezra',
+  vozes:['P','N','N','N','P','N','N','N'],
   texto:[
     '"Todo mundo faz isso. É o que é ter time."',
     '"É, né." Ele aceita rápido demais, do jeito de quem queria ser convencido.',
     'Mas continua com a mão no {pico} e não muda de assunto.',
     '"Só que tem uma diferença, cara. O seu veio de um lugar certo. Alguém assinou papel, alguém pesou, alguém anotou numa lista."',
-    d=>`"O Pico veio de baixo de uma caixa d'água. Eu levei ele pra casa numa camiseta e ninguém nunca perguntou nada pra ninguém."`,
+    '"O Pico veio de baixo de uma caixa d\'água. Eu levei ele pra casa numa camiseta e ninguém nunca perguntou nada pra ninguém."',
     '"E isso é pior?"',
     '"Não sei." Ele coça o pescoço. "É mais solto. Papel é chato mas papel é uma promessa de alguém pra alguém."',
     'Ele olha pro {pico}.',
@@ -670,6 +729,8 @@ c4_teo_todo_mundo_faz:{
 },
 
 c4_teo_promete_agora:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','N','N','N','P','N'],
   texto:[
     '"Então promete agora."',
     '"Prometer o quê? Pra um {pico}?"',
@@ -678,7 +739,7 @@ c4_teo_promete_agora:{
     'Ele ajeita o {pico} do lado dele.',
     '"Tá." Uma pausa longa. "Eu não vou te deixar em lugar nenhum. É isso. É essa a promessa e é a única que eu consigo fazer hoje."',
     'Ele olha pra você meio bravo.',
-    '"Satisfeito?"',
+    '"Satisfeit{o|a}?"',
     '"Muito."',
     '"Você é insuportável e eu te odeio."'
   ],
@@ -692,6 +753,8 @@ c4_teo_promete_agora:{
 },
 
 c4_teo_treino:{
+  falante:'Ezra',
+  vozes:['P'],
   texto:[
     '"Treina comigo. Agora."',
     'O pátio de terra atrás do Centro de Pewter é maior que o de Viridian e tem uma parede de pedra no fundo onde gente treina mira.',
@@ -715,9 +778,11 @@ c4_teo_treino:{
 },
 
 c4_teo_combinado:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Amanhã a gente entra lá. Os dois."',
-    '"Você primeiro", ele diz na hora.',
+    '"Você primeiro," ele diz na hora.',
     '"Por quê?"',
     '"Porque se você perder eu sei que não é só comigo." Ele fala isso sem nenhuma vergonha, o que é uma forma esquisita de coragem. "E se você ganhar eu vejo como."',
     'Combinado. Ele bate na sua mão com a mesma solenidade ridícula de Viridian.'
@@ -731,9 +796,13 @@ c4_teo_combinado:{
 },
 
 c4_teo_volta:{
+  falante:'Ezra',
+  vozes:['N','P','N','N','N','P','N','N','N','N'],
   texto:[
     'Vocês andam. Ezra fala o tempo todo e quase nada do que ele fala tem função, e isso é exatamente o ponto.',
-    'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
+    d=>c4_veioJunto(d)
+      ? 'Ele já mapeou a cidade numa tarde, perguntando pra todo mundo: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.'
+      : 'Ele já mapeou a cidade em dois dias: onde o pão sai às cinco, qual banco não balança, qual rua pega vento.',
     '"Aquela casa ali tem um Growlithe que late em pedra. Em PEDRA, cara. Ele late pra pedra."',
     '"Isso não é mapear a cidade."',
     '"É o melhor tipo de mapear a cidade."',
@@ -744,7 +813,7 @@ c4_teo_volta:{
     'Ele chuta uma pedrinha e erra.',
     '"Eu perdi duas vezes e das duas eu saí de lá pensando na cara da minha mãe. Não na batalha. Na cara dela quando eu contar."',
     'Uma quadra inteira sem ninguém falar nada.',
-    '"Ah, e tem um museu", ele diz, apontando, mudando de assunto do jeito mais óbvio possível. "Eu entrei. Tem um Pokémon de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
+    '"Ah, e tem um museu," ele diz, apontando, mudando de assunto do jeito mais óbvio possível. "Eu entrei. Tem um Pokémon de pedra do tamanho de uma pessoa. Tem uma moça lá dentro que fica olhando ele igual gente olha parente no caixão."'
   ],
   ef:{flag:'ouviu_do_museu', moral:2,
       npc:{nome:'Ezra', opiniao:2, memoria:'Te perguntou, andando pela rua, se você estava com medo.'}},
@@ -760,6 +829,8 @@ c4_teo_volta:{
 },
 
 c4_teo_medo:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','N','P','N','N','N'],
   texto:[
     '"Tô com medo, sim."',
     'Ezra para de andar. Você anda mais dois passos antes de perceber e voltar.',
@@ -783,6 +854,8 @@ c4_teo_medo:{
 },
 
 c4_teo_mae:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','N','P','N','N','N','N'],
   texto:[
     '"Ela vai fazer a cara de sempre. É a sua mãe."',
     '"Você não conhece a cara de sempre."',
@@ -792,7 +865,7 @@ c4_teo_mae:{
     '"E isso é ruim?"',
     '"É insuportável, cara." Ele passa a mão no cabelo. "Porque aí eu não tenho nem com quem brigar. Fica só eu e o fato."',
     'Vocês andam mais um pouco.',
-    '"Enfim", ele diz. "Museu."'
+    '"Enfim," ele diz. "Museu."'
   ],
   ef:{moral:3, flag:'sabe_da_mae_do_teo',
       npc:{nome:'Ezra', opiniao:3, memoria:'Te contou que o pior da mãe dele é ela não ficar brava.'}},
@@ -805,12 +878,14 @@ c4_teo_mae:{
 },
 
 c4_teo_moca:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N','N','P','N','P','N','N','P','N'],
   texto:[
     '"Por que você reparou nela?"',
     'Ezra demora a responder, o que nele é raro.',
-    '"Porque ela tava sozinha num museu vazio numa terça de manhã", ele diz. "Isso não é normal, cara. Ninguém faz isso por hobby."',
+    '"Porque ela tava sozinha num museu vazio," ele diz. "Isso não é normal, cara. Ninguém faz isso por hobby."',
     '"Ela trabalha lá."',
-    '"Trabalha, mas não era trabalho." Ele faz um gesto vago. "Sabe quando a pessoa tá no serviço e sabe quando a pessoa tá no serviço? Ela não tava no serviço. Ela tava visitando."',
+    '"Trabalha, mas não era trabalho." Ele faz um gesto vago. "Tem gente que tá no serviço e tem gente que tá só no lugar do serviço, sabe? Ela não tava no serviço. Ela tava visitando."',
     'Às vezes o Ezra diz uma coisa inteligente sem perceber, e depois estraga: "Ou ela é doida. Pode ser que ela seja só doida."',
     '"Você falou com ela?"',
     '"Falei oi. Ela falou oi. Aí eu falei que o Pokémon de pedra era grande e ela falou que sim."',
@@ -831,12 +906,14 @@ c4_teo_moca:{
 },
 
 c4_teo_ferido:{
+  falante:'Ezra',
+  vozes:['P','N','N','N'],
   texto:[
     '"Talvez isso não seja pra todo mundo."',
     'Ezra não responde na hora. Fecha o zíper da mochila devagar, com muito mais cuidado do que um zíper precisa.',
     '"É." Ele faz que sim várias vezes, pro chão. "É, pode ser."',
     'Ele chama o {pico}, que vem na terceira vez, olhando pra ele o caminho inteiro.',
-    '"Boa sorte aí", ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
+    '"Boa sorte aí," ele diz, e é a voz mais educada que você já ouviu dele, e educado é a coisa mais longe que ele consegue ficar de você agora.',
     'Ele entra no Centro. Você fica na escada.'
   ],
   ef:{registrar:'Você disse ao Ezra que talvez ele não servisse pra isso.'},
@@ -849,6 +926,8 @@ c4_teo_ferido:{
 },
 
 c4_teo_escada:{
+  falante:'o menino da escada',
+  vozes:['N','P','N','N','N','P','N'],
   texto:[
     'Você senta na escada onde ele estava sentado.',
     'A pedra ainda está morna do corpo dele. Isso é um detalhe desnecessário e é o único em que você consegue pensar por uns bons dois minutos.',
@@ -861,7 +940,7 @@ c4_teo_escada:{
     'Você não responde. O menino continua, porque menino de dez anos continua.',
     '"Na segunda ele chorou lá fora. Atrás da caçamba." Ele aperta a alça da mochila. "Eu não contei pra ninguém."',
     '"E tá contando pra mim."',
-    '"Você não é ninguém, você é o amigo dele."',
+    '"Você não é ninguém, você é {o amigo|a amiga} dele."',
     'O menino levanta e sai antes que você consiga responder qualquer coisa, do jeito que as crianças saem quando entregam uma informação pesada por engano.'
   ],
   ef:{flag:'sabe_do_choro_do_teo', moral:-2,
@@ -875,6 +954,8 @@ c4_teo_escada:{
 },
 
 c4_teo_so_ficar:{
+  falante:'Ezra',
+  vozes:['N','P','N','P','N'],
   texto:[
     'Você entra e senta numa das cadeiras de plástico da fila, duas atrás dele, sem falar nada.',
     'Ele demora uns bons quarenta segundos pra reparar que você está lá.',
@@ -897,6 +978,8 @@ c4_teo_so_ficar:{
 },
 
 c4_teo_desculpa:{
+  falante:'Ezra',
+  vozes:['P','N','P','N','P'],
   texto:[
     'Você entra e fala antes de perder a coragem.',
     '"Eu falei merda."',
@@ -906,7 +989,7 @@ c4_teo_desculpa:{
     'Aí ele vira. Olha a sua cara procurando a mentira, do mesmo jeito que olhou na escada.',
     '"Isso é verdade ou você tá sendo legal?"',
     '"Os dois."',
-    'Ele aceita. Não desfaz o que aconteceu — ele vai lembrar dessa frase pelo resto da vida —, mas aceita.'
+    'Ele aceita. Não desfaz o que aconteceu — a frase fica com ele —, mas aceita.'
   ],
   ef:{limpaFlag:'teo_ferido', flag:'teo_perdoou',
       npc:{nome:'Ezra', opiniao:4, memoria:'Você voltou atrás e admitiu que a frase era sobre você, não sobre ele. Ele lembra das duas coisas.'},
@@ -953,12 +1036,14 @@ c4_porta_metal:{
 },
 
 c4_porta_empurrou:{
+  falante:'Líder Brock',
+  vozes:['N','N'],
   texto:[
     'Você empurra. Ela é mais pesada do que parece e você tem que usar o ombro.',
     'Dentro: terra batida sobre pedra, sem arquibancada, sem faixa, sem música. Uma linha pintada no chão, gasta no meio de tanto ser pisada.',
     'Um homem no fundo levanta uma coisa do tamanho de um motor de carro e solta. A coisa cai. É o som que você estava ouvindo da rua.',
     'Ele te vê. Não para o que está fazendo.',
-    '"Quando você tiver certeza, você volta", ele diz. "E não precisa ser hoje. Aqui não fecha."',
+    '"Quando você tiver certeza, você volta," ele diz. "E não precisa ser hoje. Aqui não fecha."',
     'Você sai. A porta se fecha sozinha pelo próprio peso.'
   ],
   ef:{flag:'viu_brock_de_longe', npc:{nome:'Líder Brock', opiniao:1, memoria:'Você entrou no ginásio dele, olhou, e saiu sem desafiar. Ele achou isso maduro.'}},
@@ -971,6 +1056,8 @@ c4_porta_empurrou:{
 },
 
 c4_perguntou_porta:{
+  falante:'o senhor do cimento',
+  vozes:['N','N','N'],
   texto:[
     'Você pergunta pro primeiro que passa, um senhor com um saco de cimento no ombro.',
     'Ele olha a porta. Olha você. Olha a porta de novo.',
@@ -988,6 +1075,8 @@ c4_perguntou_porta:{
 },
 
 c4_irmaos:{
+  falante:'o senhor do cimento',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Cinco irmãos?"',
     '"Cinco, seis, eu perco a conta." O senhor troca o cimento de ombro. "O pai foi embora. A mãe foi atrás do pai. Ele tinha dezesseis anos e uma casa cheia."',
@@ -1006,13 +1095,15 @@ c4_irmaos:{
 },
 
 c4_menina:{
+  falante:'Ulla',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
-    'A menina do caderno tem uns dez anos e uma organização assustadora. O caderno tem colunas.',
-    '"Treinador?" ela pergunta, já escrevendo.',
+    'A menina do caderno tem uns dez anos e uma organização assustadora. O caderno tem colunas, e na capa, em letra caprichada: ULLA, PESQUISA.',
+    '"{Treinador|Treinadora}?" ela pergunta, já escrevendo.',
     '"Sou."',
     '"De onde?" Você fala. Ela anota. "Quantas insígnias?"',
     d=>d.insignias.length ? `"${d.insignias.length}." Ela anota sem reagir, o que é decepcionante.` : '"Nenhuma." Ela anota sem reagir, o que de alguma forma é pior do que se ela tivesse rido.',
-    '"Eu tô fazendo pesquisa", ela explica. "Sobre quantos passam e quantos voltam."'
+    '"Eu tô fazendo pesquisa," ela explica. "Sobre quantos passam e quantos voltam."'
   ],
   ef:{npc:{nome:'Ulla', opiniao:1, memoria:'A menina do caderno de Pewter. Anotou você na pesquisa dela.'}},
   escolhas:[
@@ -1024,11 +1115,13 @@ c4_menina:{
 },
 
 c4_menina_resultado:{
+  falante:'Ulla',
+  vozes:['P','N','N','P','N'],
   texto:[
     '"E qual é o resultado?"',
     'Ela vira o caderno pra você com o orgulho de quem mostra uma casa que construiu.',
     'Duas colunas. PASSOU e VOLTOU. A primeira tem oitenta e três riscos. A segunda tem trinta e um.',
-    '"Ah, mas nem todo mundo que não voltou morreu", ela esclarece, prestativa. "Tem gente que vai pro outro lado. Sai por Cerulean e não passa mais aqui."',
+    '"Ah, mas nem todo mundo que não voltou morreu," ela esclarece, prestativa. "Tem gente que vai pro outro lado. Sai por Cerulean e não passa mais aqui."',
     '"E quantos você acha que é cada coisa?"',
     'Pela primeira vez ela hesita. Fecha o caderno.',
     '"Eu não anoto isso."'
@@ -1044,11 +1137,13 @@ c4_menina_resultado:{
 },
 
 c4_menina_promessa:{
+  falante:'Ulla',
+  vozes:['P','N','N'],
   texto:[
     '"Anota que eu volto."',
     'Ela pensa. Abre o caderno numa página nova. Escreve no topo, com régua: PROMETEU.',
     'Depois escreve seu nome embaixo, e é o primeiro da lista.',
-    '"Se você não voltar eu risco", ela avisa, sem nenhuma emoção. "Eu risco com caneta vermelha."'
+    '"Se você não voltar eu risco," ela avisa, sem nenhuma emoção. "Eu risco com caneta vermelha."'
   ],
   ef:{flag:'prometeu_voltar_pewter',
       presagio:'Existe agora uma página com o seu nome no topo, numa cidade de pedra, esperando uma caneta vermelha.'},
@@ -1060,6 +1155,8 @@ c4_menina_promessa:{
 },
 
 c4_menina_dado:{
+  falante:'Ulla',
+  vozes:['P','N','N'],
   texto:[
     '"Você devia anotar. É o dado mais importante."',
     '"Eu sei que é o mais importante." Ela fecha o caderno com as duas mãos. "Por isso eu não anoto."',
@@ -1075,13 +1172,15 @@ c4_menina_dado:{
 },
 
 c4_menina_desculpa:{
+  falante:'Ulla',
+  vozes:['P','N','P','N','N'],
   texto:[
     'Você alcança ela na esquina.',
     '"Desculpa."',
     '"Tá." Ela não para de andar.',
     '"Eu não devia ter falado isso."',
     'Aí ela para.',
-    '"Meu irmão tá na primeira coluna faz dois anos", ela diz, muito rápido e muito baixo. "Se eu fizer a outra coluna eu vou ter que escolher onde botar ele."',
+    '"Meu irmão tá na primeira coluna faz dois anos," ela diz, muito rápido e muito baixo. "Se eu fizer a outra coluna eu vou ter que escolher onde botar ele."',
     'Ela vai embora de verdade agora, e dessa vez você deixa.'
   ],
   ef:{flag:'irmao_da_zuleica',
@@ -1095,6 +1194,8 @@ c4_menina_desculpa:{
 },
 
 c4_menina_idade:{
+  falante:'Ulla',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Quantos anos você tem pra estar fazendo isso?"',
     '"Dez." Ela nem levanta a cabeça. "E antes que você fale: não, eu não vou ser treinadora."',
@@ -1109,6 +1210,8 @@ c4_menina_idade:{
 },
 
 c4_menina_dica:{
+  falante:'Ulla',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Me dá uma dica do ginásio."',
     'Ela suspira do jeito de quem já deu essa dica cem vezes e cem vezes não adiantou.',
@@ -1126,6 +1229,8 @@ c4_menina_dica:{
 },
 
 c4_menina_sabe:{
+  falante:'Ulla',
+  vozes:['P','N','N'],
   texto:[
     '"Como você sabe disso?"',
     '"Eu fico sentada nessa rua o dia inteiro há dois anos." Ela dá de ombros. "Eu vejo entrar e vejo sair. Quem sai feliz eu pergunto o que fez."',
@@ -1204,10 +1309,12 @@ c4_museu:{
   texto:[
     'A entrada custa duzentos e a moça da bilheteria parece genuinamente surpresa de ter que dar um ingresso.',
     'O museu tem duas salas. Na primeira, minerais em vitrines com etiqueta datilografada e um mapa geológico de Kanto desbotado até o azul virar cinza.',
-    'Tem um balde no canto, embaixo de uma mancha no teto. O balde tem água.',
     'Na segunda sala, atrás de um vidro que precisa de limpeza, um Kabutops reconstruído em pedra. Do tamanho de uma pessoa. As lâminas dos braços ainda são lâminas depois de trezentos milhões de anos.',
-    'A placa diz: "Extinto há aproximadamente 300 milhões de anos."',
-    d=>d.flags.teo_no_museu ? 'Ezra para na porta da segunda sala e não entra. "Eu já vi. Vai você."' : ''
+    'Tem um balde no canto dela, embaixo de uma mancha no teto. O balde tem água.',
+    'A placa diz:',
+    '**Extinto há aproximadamente 300 milhões de anos.**',
+    d=>d.flags.teo_no_museu ? 'Ezra para na porta da segunda sala e não entra.' : '',
+    d=>d.flags.teo_no_museu ? fala('Ezra', 'Eu já vi. Vai você.') : ''
   ],
   ef:{flag:'viu_o_museu', dinheiro:-200, registrar:'Visitou o museu de Pewter.'},
   escolhas:[
@@ -1233,6 +1340,8 @@ c4_kabutops:{
 },
 
 c4_ivone_calado:{
+  falante:'Dra. Cordell',
+  vozes:['N','N'],
   texto:[
     'Você não responde. Continua olhando o Pokémon.',
     'Ela também não insiste. Fica do seu lado, olhando a mesma coisa que você, por quase dois minutos inteiros.',
@@ -1250,9 +1359,11 @@ c4_ivone_calado:{
 },
 
 c4_ivone:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'Ela está parada na frente do vidro anotando alguma coisa num caderno de campo com elástico. Tem olheiras de três dias.',
-    '"Extinto é uma palavra otimista", ela diz, sem olhar pra você. "Presume que acabou."',
+    '"Extinto é uma palavra otimista," ela diz, sem olhar pra você. "Presume que acabou."',
     '"E não acabou?"',
     '"Ah, acabou." Ela vira uma página. "Eles morreram. Todos. Isso acabou."',
     'Aí ela fecha o caderno e te olha de verdade pela primeira vez, e diz o nome do jeito de quem cumpre uma formalidade: Ivy Cordell, paleontóloga.',
@@ -1269,6 +1380,8 @@ c4_ivone:{
 },
 
 c4_ivone_desconfiado:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Por que a senhora quer saber?"',
     'Ela gosta da pergunta. Dá pra ver.',
@@ -1288,6 +1401,8 @@ c4_ivone_desconfiado:{
 },
 
 c4_ivone_seco:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Vou."',
     'Você não pergunta mais nada. Ela espera. Você continua não perguntando.',
@@ -1295,7 +1410,7 @@ c4_ivone_seco:{
     '"Você é de poucas palavras ou tá com pressa?"',
     '"As duas."',
     '"Respeito as duas." Ela cruza os braços. "Mas eu passei onze anos num museu vazio, {menino|menina}. Eu aprendi a falar com quem não pergunta."',
-    '"Tá bom", ela cede, e não tem cedência nenhuma nisso. "Eu falo mesmo assim."'
+    '"Tá bom," ela cede, e não tem cedência nenhuma nisso. "Eu falo mesmo assim."'
   ],
   ef:{npc:{nome:'Dra. Cordell', opiniao:1, memoria:'Falou com você mesmo você não tendo perguntado nada.'}},
   escolhas:[
@@ -1305,6 +1420,8 @@ c4_ivone_seco:{
 },
 
 c4_ivone_onze_anos:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N','P','N','N'],
   texto:[
     '"Onze anos?"',
     '"Ah, {ele|ela} fala."',
@@ -1324,6 +1441,8 @@ c4_ivone_onze_anos:{
 },
 
 c4_ivone_monte:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     '"Alguém está tirando coisa de lá."',
     'Ela abre o caderno numa página com fotografia colada. Uma parede de caverna com um fóssil meio exposto na rocha. Do lado, a mesma parede, com um buraco retangular limpo.',
@@ -1343,6 +1462,8 @@ c4_ivone_monte:{
 },
 
 c4_ivone_reportou:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','P','N'],
   texto:[
     '"A senhora reportou isso?"',
     'Ela ri uma risada de uma sílaba só.',
@@ -1360,13 +1481,16 @@ c4_ivone_reportou:{
 },
 
 c4_ivone_gaveta:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','P','N'],
   texto:[
     '"Me dá o número da gaveta."',
     'Ela para. Te olha de um jeito completamente novo.',
     '"Pra quê?"',
     '"Sei lá. Pra saber."',
-    'Ela escreve num canto de página, arranca, dobra e te entrega. Está escrito: ARQUIVO CENTRAL — SAFFRON — SETOR 3 — GAV. 118 — PROC. 44.207/R.',
-    '"Se algum dia você tiver motivo pra pedir vista desse processo", ela diz, "você vai precisar desse número e de um papel timbrado. Eu só tenho o número."'
+    'Ela escreve num canto de página, arranca, dobra e te entrega.',
+    '**ARQUIVO CENTRAL — SAFFRON — SETOR 3 — GAV. 118 — PROC. 44.207/R**',
+    '"Se algum dia você tiver motivo pra pedir vista desse processo, vai precisar desse número e de um papel timbrado. Eu só tenho o número."'
   ],
   ef:{flag:'numero_da_gaveta', registrar:'Anotou o número do processo engavetado: 44.207/R, Arquivo Central de Saffron.'},
   escolhas:[
@@ -1377,6 +1501,8 @@ c4_ivone_gaveta:{
 },
 
 c4_ivone_liga:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Por que a Liga não faz nada?"',
     '"Porque a Liga é uma federação esportiva."',
@@ -1395,6 +1521,8 @@ c4_ivone_liga:{
 },
 
 c4_ivone_importar:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se alguém se importasse?"',
     'Ela te olha com um cansaço que não é com você.',
@@ -1411,6 +1539,8 @@ c4_ivone_importar:{
 },
 
 c4_ivone_compradores:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Por que fóssil? Quem compra isso?"',
     '"Quem tem sala de estar grande." Ela diz isso sem nenhum humor. "E, ultimamente, gente que não quer pendurar na parede."',
@@ -1428,6 +1558,8 @@ c4_ivone_compradores:{
 },
 
 c4_ivone_cinnabar:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Fechou no papel como?"',
     '"Como fecham as coisas." Ela dá de ombros. "Encerra o registro comercial, demite o quadro, publica no diário oficial. E o prédio continua com luz acesa."',
@@ -1445,13 +1577,15 @@ c4_ivone_cinnabar:{
 },
 
 c4_ivone_porque_eu:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"Por que a senhora tá me contando isso? Eu tenho {idade} anos."',
     '"Porque você vai passar por lá." Simples assim. "E eu não vou."',
     'Ela fecha o caderno pela última vez.',
     '"Eu já contei isso pra onze treinadores nesse museu. Nenhum voltou pra me falar nada. Você provavelmente também não vai."',
     '"Então por que continuar contando?"',
-    '"Porque o custo de contar é dois minutos", ela diz. "E o custo de não contar é não saber o que teria acontecido."'
+    '"Porque o custo de contar é dois minutos," ela diz. "E o custo de não contar é não saber o que teria acontecido."'
   ],
   ef:{npc:{nome:'Dra. Cordell', opiniao:2, memoria:'Explicou por que conta isso a adolescentes: o custo de contar é dois minutos.'}},
   escolhas:[
@@ -1463,6 +1597,8 @@ c4_ivone_porque_eu:{
 },
 
 c4_ivone_pedido:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N','P','N','N'],
   texto:[
     '"O que a senhora quer de mim?"',
     '"Nada perigoso." Ela levanta as duas mãos. "Eu não sou doida de mandar {um garoto|uma garota} de {idade} anos enfrentar gente com serra."',
@@ -1483,6 +1619,8 @@ c4_ivone_pedido:{
 },
 
 c4_ivone_aceitou:{
+  falante:'Dra. Cordell',
+  vozes:['P','N'],
   texto:[
     '"Se eu vir, eu ligo."',
     'Ela não agradece. Faz que sim uma vez e volta pro caderno, e demora um segundo pra você entender que ela está te dando privacidade pra ir embora.',
@@ -1498,6 +1636,8 @@ c4_ivone_aceitou:{
 },
 
 c4_ivone_e_se:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se eu vir e não ligar?"',
     'Ela não se ofende. Pelo contrário: relaxa um pouco, como se a pergunta fosse um alívio.',
@@ -1514,6 +1654,8 @@ c4_ivone_e_se:{
 },
 
 c4_ivone_recusa:{
+  falante:'Dra. Cordell',
+  vozes:['N'],
   texto:[
     'Você devolve o cartão. Ou nem chega a pegar.',
     'Ela guarda no bolso do jaleco sem nenhum drama, do jeito de quem já guardou esse cartão de volta várias vezes.',
@@ -1531,6 +1673,8 @@ c4_ivone_recusa:{
 },
 
 c4_kabutops_2:{
+  falante:'Dra. Cordell',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Você fica mais um pouco.',
     'Cordell volta a anotar. Em algum momento ela fala, sem olhar pra você, no tom de quem não está conversando:',
@@ -1546,10 +1690,12 @@ c4_kabutops_2:{
 },
 
 c4_funcionario:{
+  falante:'Varian',
+  vozes:['N','N','P','N','N','N'],
   texto:[
     'O funcionário do museu é também o bilheteiro, o segurança e o faxineiro. Ele se chama Varian e tem cinquenta e poucos anos.',
     'Você pergunta do balde.',
-    '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde uma chuva de abril, doze anos atrás."',
+    '"Ah, o balde." Ele nem parece constrangido. "Telhado. Desde uma chuva de abril, dezesseis anos atrás."',
     '"E ninguém conserta?"',
     '"O orçamento do museu é municipal e o município tem uma pedreira que emprega quatrocentas pessoas." Ele fala isso sem amargura, como quem explica aritmética. "Quando é escolher entre telhado de museu e asfalto de rua de pedreira, o museu perde. E deve perder mesmo."',
     'Ele olha pra segunda sala.',
@@ -1567,6 +1713,8 @@ c4_funcionario:{
 },
 
 c4_doou:{
+  falante:'Varian',
+  vozes:['N','P'],
   texto:[
     'Você tira o dinheiro da mochila e conta na frente dele, e a contagem demora porque você para no meio pra repensar e depois continua.',
     'Varian olha o maço como se fosse uma pegadinha.',
@@ -1586,7 +1734,7 @@ c4_doou:{
 c4_telhado:{
   texto:[
     '"Posso subir e olhar o telhado?"',
-    'Varian pensa por dois segundos e decide que sim, porque num museu com uma sala e um balde, por que não.',
+    'Varian pensa por dois segundos e decide que sim, porque num museu com duas salas e um balde, por que não.',
     'A escada dos fundos é de ferro e balança. Lá em cima, o telhado é de telha francesa velha, e o problema é óbvio até pra você: uma calha entupida de folha há tanto tempo que virou terra, e a terra virou planta.',
     'Tem uma plantinha de uns vinte centímetros crescendo na calha do museu de Pewter.',
     'Dá pra limpar. Vai sujar sua roupa inteira e vai levar uma hora.'
@@ -1602,9 +1750,9 @@ c4_telhado:{
 c4_limpou_calha:{
   texto:[
     'Uma hora e dez. A terra da calha sai em placas, como torrão, e embaixo tem uma camada preta de folha apodrecida que cheira a coisa morta.',
-    'Varian sobe na metade e ajuda sem falar nada, e vocês dois ficam ali em cima na luz do fim da tarde arrancando dez anos de abandono de uma calha de ferro.',
-    'No fim, ele joga um balde de água pra testar. A água corre. Corre inteira, até o cano, e desce.',
-    'Varian olha a água correndo por muito mais tempo do que o necessário.'
+    'Na metade, Varian aparece no pé da escada e fica lá embaixo segurando o ferro, sem falar nada, enquanto você arranca dezesseis anos de abandono de uma calha na luz do fim da tarde.',
+    'No fim, ele te passa um balde de água pra testar. A água corre. Corre inteira, até o cano, e desce.',
+    'Varian olha a água saindo no pé do cano por muito mais tempo do que o necessário.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Passou a tarde limpando a calha de um museu falido'},
       hp:-2, causa:'Trabalho no telhado do museu',
@@ -1636,6 +1784,8 @@ c4_limpou_calado:{
 },
 
 c4_avisou_calha:{
+  falante:'Varian',
+  vozes:['N','N'],
   texto:[
     'Você desce e explica: não é telha quebrada, é calha entupida, tem planta nascendo lá em cima.',
     'Varian escuta com atenção total e no fim diz:',
@@ -1652,11 +1802,13 @@ c4_avisou_calha:{
 },
 
 c4_balde:{
+  falante:'Varian',
+  vozes:['P','N','N'],
   texto:[
     '"O balde pode sair?"',
-    'Varian olha o balde. Pensa. Pega o balde, esvazia numa pia, e leva pro almoxarifado.',
-    'Volta com o balde na mão vazia e não sabe onde colocar, então põe no chão do almoxarifado, e fecha a porta, e fica olhando a porta fechada.',
-    '"Doze anos", ele diz. "Doze anos que esse balde tava naquele canto."'
+    'Varian olha o balde. Pensa. Pega o balde, esvazia numa pia e leva pro almoxarifado.',
+    'Lá dentro, não sabe onde colocar. Põe no chão, fecha a porta e fica olhando a porta fechada.',
+    '"Dezesseis anos," ele diz. "Dezesseis anos que esse balde tava naquele canto."'
   ],
   ef:{npc:{nome:'Varian', opiniao:3, memoria:'Guardou o balde do museu depois que você limpou a calha.'}},
   escolhas:[
@@ -1666,6 +1818,8 @@ c4_balde:{
 },
 
 c4_delmo_oferta:{
+  falante:'Varian',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"E se alguém oferecesse dinheiro pelo Kabutops?"',
     'Varian para de arrumar os panfletos.',
@@ -1687,6 +1841,8 @@ c4_delmo_oferta:{
 },
 
 c4_delmo_terno:{
+  falante:'Varian',
+  vozes:['P','N','N'],
   texto:[
     '"Quem era a gente de terno?"',
     '"Fundação alguma coisa." Varian faz um gesto vago. "Tinha um nome comprido. Preservação de não sei o quê, patrimônio de não sei o quê."',
@@ -1704,6 +1860,8 @@ c4_delmo_terno:{
 },
 
 c4_ivone_folheto:{
+  falante:'Dra. Cordell',
+  vozes:['N','P','N','N','P','N','N'],
   texto:[
     'Você mostra o folheto pra ela.',
     'A cara dela muda. Não muito — ela é de não mudar muito — mas muda.',
@@ -1724,13 +1882,15 @@ c4_ivone_folheto:{
 },
 
 c4_ivone_demitida:{
+  falante:'Dra. Cordell',
+  vozes:['P','N','P','N','N','N'],
   texto:[
-    'Você volta na segunda sala.',
+    'Você volta pra segunda sala.',
     '"O senhor Varian me contou por que a senhora foi demitida."',
     'Ela não para de escrever.',
     '"Ele fala demais."',
     '"A senhora fez barraco na câmara municipal."',
-    '"Eu fiz um barraco esplêndido", ela corrige, com um certo orgulho. "Eu levei um calhamaço de cento e dez páginas e li em voz alta até o presidente da mesa pedir pra polícia me tirar. Foi o melhor dia dos últimos dois anos."',
+    '"Eu fiz um barraco esplêndido," ela corrige, com um certo orgulho. "Eu levei um calhamaço de cento e dez páginas e li em voz alta até o presidente da mesa pedir pra polícia me tirar. Foi o melhor dia dos últimos dois anos."',
     'Aí ela para de escrever.',
     '"E não adiantou nada, porque eles voltam. Gente assim não desiste, entende? Gente assim só espera."'
   ],
@@ -1889,6 +2049,8 @@ c4_fenda_espera:{
 },
 
 c4_gritou_pedra:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N'],
   texto:[
     '"EU VI AS GAIOLAS."',
     'A voz ecoa no buraco inteiro de um jeito ridículo e você se arrepende no meio da frase.',
@@ -1905,13 +2067,15 @@ c4_gritou_pedra:{
 },
 
 c4_encarou:{
+  falante:'Rapaz da fenda',
+  vozes:['N','P','N','N'],
   texto:[
     'Você desce. Ele te vê chegando e não corre, o que diz alguma coisa sobre ele.',
     'De perto ele é mais novo do que parecia. Uniforme grande demais, cara de quem dorme pouco.',
     '"Você mexeu nas minhas coisa."',
     '"Mexi."',
     'Ele olha as gaiolas amassadas, ou a gaiola aberta, ou o que você tiver deixado. Depois olha o próprio pé.',
-    '"É trinta paus por Zubat", ele diz. "Trinta paus. Vem um cara de Cerulean toda sexta."'
+    '"É trinta paus por Zubat," ele diz. "Trinta paus. Vem um cara de Cerulean toda sexta."'
   ],
   ef:{npc:{nome:'Rapaz da fenda', opiniao:0, memoria:'Você o pegou pegando Zubat na fenda da pedreira. Ele vende a trinta por cabeça.'},
       flag:'sabe_do_comprador_sexta', registrar:'Alguém compra Zubat da fenda de Pewter toda sexta, a 30 por cabeça.'},
@@ -1925,6 +2089,8 @@ c4_encarou:{
 },
 
 c4_comprador:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Quem é o cara de Cerulean?"',
     'O rapaz dá de ombros com a sinceridade de quem realmente não sabe e realmente não quis saber.',
@@ -1945,6 +2111,8 @@ c4_comprador:{
 },
 
 c4_mandou_parar:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','N','N'],
   texto:[
     '"Para com isso."',
     '"Tá." Na hora. Sem discutir.',
@@ -1965,6 +2133,8 @@ c4_mandou_parar:{
 },
 
 c4_deu_dinheiro:{
+  falante:'Rapaz da fenda',
+  vozes:['N','P','N','N'],
   texto:[
     'Você tira o dinheiro e entrega. Ele não pega na hora.',
     '"Isso é mais do que dez Zubat."',
@@ -1972,7 +2142,7 @@ c4_deu_dinheiro:{
     '"Você tá comprando o quê?"',
     'É uma pergunta muito melhor do que você esperava dele, e você não tem resposta.',
     'Ele pega. Guarda no bolso da frente, não no de trás, que é onde se guarda o que importa.',
-    '"Esse mês eu não ponho gaiola", ele diz. Não promete mais que isso, e é exatamente por não prometer mais que você acredita.'
+    '"Esse mês eu não ponho gaiola," ele diz. Não promete mais que isso, e é exatamente por não prometer mais que você acredita.'
   ],
   ef:{npc:{nome:'Rapaz da fenda', opiniao:5, memoria:'Você pagou o mês dele pra ele não pôr armadilha. Ele cumpriu.'}},
   escolhas:[
@@ -1983,6 +2153,8 @@ c4_deu_dinheiro:{
 },
 
 c4_mes_que_vem:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','N'],
   texto:[
     '"E no mês que vem?"',
     'Ele ri. É a primeira vez que ele ri.',
@@ -2000,6 +2172,8 @@ c4_mes_que_vem:{
 },
 
 c4_nao_da:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','N','N'],
   texto:[
     '"Não dá pra fazer isso a vida inteira."',
     '"Não dá mesmo." Ele concorda com uma facilidade desanimadora. "Por isso é que não adianta."',
@@ -2014,15 +2188,17 @@ c4_nao_da:{
 },
 
 c4_nao_justifica:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','N','N','P','N'],
   texto:[
     '"Isso não justifica."',
     'Ele encara você por uns três segundos.',
-    '"Não justifica mesmo", ele concorda. "Justificar é outra coisa. Isso aqui é só o que acontece."',
+    '"Não justifica mesmo," ele concorda. "Justificar é outra coisa. Isso aqui é só o que acontece."',
     'Ele pega o saco de estopa vazio e sobe pela fenda, passando do seu lado sem encostar.',
     'Na boca da fenda ele para.',
     '"Cê tem quantos anos?"',
-    '"Quinze."',
-    '"Pois é", ele diz, e vai embora, e essa é a coisa mais perto de um insulto que ele consegue.'
+    '"{Idade}."',
+    '"Pois é," ele diz, e vai embora, e essa é a coisa mais perto de um insulto que ele consegue.'
   ],
   ef:{flag:'discussao_com_o_rapaz'},
   escolhas:[
@@ -2033,6 +2209,8 @@ c4_nao_justifica:{
 },
 
 c4_atras_do_rapaz:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     'Você sobe atrás dele e alcança na estrada.',
     '"Pois é o quê?"',
@@ -2052,6 +2230,8 @@ c4_atras_do_rapaz:{
 },
 
 c4_acordo_rapaz:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Então vende o que já morreu e não põe mais armadilha."',
     'Ele pensa nisso com uma seriedade que te pega de surpresa.',
@@ -2069,6 +2249,8 @@ c4_acordo_rapaz:{
 },
 
 c4_sexta:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N','P','N','N','N'],
   texto:[
     '"Me leva nele na sexta."',
     'O rapaz te olha com um pavor sincero.',
@@ -2090,6 +2272,8 @@ c4_sexta:{
 },
 
 c4_comprou_zubat:{
+  falante:'Rapaz da fenda',
+  vozes:['P','N'],
   texto:[
     '"Eu compro. Quanto tem?"',
     'O rapaz abre um sorriso de alívio tão grande que fica claro o quanto ele não queria discutir.',
@@ -2107,6 +2291,8 @@ c4_comprou_zubat:{
 },
 
 c4_luta_rapaz:{
+  falante:'Rapaz da fenda',
+  vozes:['N','P','N'],
   texto:[
     '"Você mexeu nas minhas coisa."',
     '"Mexi."',
@@ -2118,11 +2304,13 @@ c4_luta_rapaz:{
 },
 
 c4_venceu_rapaz:{
+  falante:'Rapaz da fenda',
+  vozes:['N','N','N','N'],
   texto:[
     'O Geodude cai e ele recolhe sem reclamar.',
     '"Pronto." Ele guarda a Pokébola. "Você ganhou. E agora?"',
     'É a pergunta certa. Você ganhou uma batalha numa fenda e as gaiolas continuam existindo e o cara da van vem na sexta do mesmo jeito.',
-    '"Cê ganhou de mim", ele repete, sem raiva nenhuma, quase didático. "Não ganhou do problema."'
+    '"Cê ganhou de mim," ele repete, sem raiva nenhuma, quase didático. "Não ganhou do problema."'
   ],
   ef:{flag:'venceu_o_rapaz', dinheiro:200,
       npc:{nome:'Rapaz da fenda', opiniao:-1, memoria:'Você ganhou dele numa batalha na fenda e ele te perguntou de que adiantou.'}},
@@ -2136,12 +2324,14 @@ c4_venceu_rapaz:{
 },
 
 c4_perdeu_rapaz:{
+  falante:'Rapaz da fenda',
+  vozes:['N','N'],
   texto:[
     'Você perde. Numa fenda, pra um rapaz de dezenove anos com um Geodude e nenhum treino.',
     'Ele não comemora. Recolhe o Geodude, pega o saco de estopa e olha pra você sentad{o|a} na pedra.',
     '"Cê tá bem?"',
     'Você faz que sim.',
-    '"Então fica quieto que eu vou trabalhar."',
+    '"Então fica quiet{o|a} que eu vou trabalhar."',
     'E ele trabalha. Na sua frente. Você fica ali sentad{o|a} até acabar, porque não tem mais nada a fazer, e isso é a pior parte do dia.'
   ],
   ef:{hp:-4, causa:'Derrota na fenda da pedreira', flag:'perdeu_na_fenda'},
@@ -2181,6 +2371,8 @@ c4_fenda_saiu:{
 },
 
 c4_pedreira_portao:{
+  falante:'Guarda da pedreira',
+  vozes:['N'],
   texto:[
     'O portão da pedreira tem guarita, cancela e uma placa com o número de dias sem acidente. O número é 12.',
     'Alguém repintou o 12 por cima de um número maior. Dá pra ver o fantasma do número antigo embaixo.',
@@ -2191,11 +2383,13 @@ c4_pedreira_portao:{
     {texto:'Contar da fenda e das armadilhas.', vai:'c4_contou_fenda'},
     {texto:'"Eu tô procurando o Lior."', vai:'c4_nilo', cond:d=>!!d.flags.sabe_do_nilo},
     {texto:'"O que aconteceu com o número antigo na placa?"', vai:'c4_placa'},
-    {texto:'"Nada, obrigado." Voltar pra cidade.', vai:'c4_rua2'}
+    {texto:'"Nada, {obrigado|obrigada}." Voltar pra cidade.', vai:'c4_rua2'}
   ]
 },
 
 c4_placa:{
+  falante:'Guarda da pedreira',
+  vozes:['P','N','P','N','N','P','N'],
   texto:[
     '"O que aconteceu com o número antigo?"',
     'O guarda olha a placa como se nunca tivesse olhado.',
@@ -2217,6 +2411,8 @@ c4_placa:{
 },
 
 c4_sugestao:{
+  falante:'Guarda da pedreira',
+  vozes:['P','N','P','N','N','N','N','P'],
   texto:[
     '"Tem como avisar antes de detonar? Pros Pokémon, digo."',
     'O guarda ri. Depois para de rir, porque percebe que você falou sério.',
@@ -2241,8 +2437,12 @@ c4_sugestao:{
 },
 
 c4_contou_fenda:{
+  falante:'Guarda da pedreira',
+  vozes:['N','P','N','N'],
   texto:[
-    'Você conta. A fenda por fora da cerca, as quatro gaiolas, o comprador de sexta.',
+    d=>d.flags.sabe_do_comprador_sexta
+      ? 'Você conta. A fenda por fora da cerca, as quatro gaiolas, o comprador de sexta.'
+      : 'Você conta. A fenda por fora da cerca, as quatro gaiolas, a marca de bota fresca entrando e saindo.',
     'O guarda escuta tudo e a cara dele vai fechando, e no fim ele diz uma coisa que você não esperava:',
     '"Fora da cerca não é nosso."',
     '"Como assim?"',
@@ -2253,7 +2453,7 @@ c4_contou_fenda:{
       flag:'reportou_a_fenda',
       presagio:'Mais um papel, mais uma gaveta. Você está começando a mapear como Kanto perde as coisas.'},
   escolhas:[
-    {texto:'"E se for funcionário de vocês?"', vai:'c4_funcionario_da_pedreira'},
+    {texto:'"E se for funcionário de vocês?"', vai:'c4_funcionario_da_pedreira', cond:d=>!!d.flags.viu_o_armadilheiro},
     {texto:'"Tem como avisar antes de detonar? Pros Pokémon."', vai:'c4_sugestao'},
     {texto:'Agradecer e voltar pra cidade.', vai:'c4_rua2'},
     {texto:'Voltar na fenda e resolver você mesm{o|a}.', vai:'c4_fenda'}
@@ -2261,11 +2461,15 @@ c4_contou_fenda:{
 },
 
 c4_funcionario_da_pedreira:{
+  falante:'Guarda da pedreira',
+  vozes:['P','N','N','N'],
   texto:[
     '"E se for funcionário de vocês?"',
     'A caneta para.',
     '"Aí é outra conversa." Ele olha pra você com atenção nova. "Aí é justa causa."',
-    'Justa causa. Você entende o que isso quer dizer: o rapaz, os mil e cem por mês, a mãe, o remédio pela metade.',
+    d=>d.flags.a_mae_do_rapaz
+      ? 'Justa causa. Você entende o que isso quer dizer: o rapaz, os mil e cem por mês, a mãe, o remédio pela metade.'
+      : 'Justa causa. Você entende o que isso quer dizer pra um rapaz de uniforme grande demais.',
     'O guarda espera. A caneta está parada em cima de um campo em branco do formulário.',
     '"Você viu quem era?"'
   ],
@@ -2284,15 +2488,17 @@ c4_funcionario_da_pedreira:{
 },
 
 c4_quanto_pagam:{
+  falante:'Guarda da pedreira',
+  vozes:['P','N','P','N','N','N','N'],
   texto:[
     '"Vi. Mas antes: quanto vocês pagam?"',
     'O guarda franze a testa.',
     '"Como assim quanto a gente paga?"',
     '"Salário. De quem trabalha aí embaixo."',
     'Ele olha pro buraco. Volta pra você. Larga a caneta.',
-    '"Mil e cem", ele diz. "Mais insalubridade, que dá mais cento e oitenta."',
+    '"Mil e cem," ele diz. "Mais insalubridade, que dá mais cento e oitenta."',
     'Ele entende exatamente o que você está fazendo e entende também que não tem como discordar.',
-    '"Some esse formulário", ele diz, amassando. "Eu não vi você aqui hoje."'
+    '"Esse formulário sumiu," ele diz, amassando. "Eu não vi você aqui hoje."'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Fez a pergunta certa em vez de dar o nome certo'},
       flag:'protegeu_o_rapaz',
@@ -2306,14 +2512,14 @@ c4_quanto_pagam:{
 },
 
 c4_entregou_rapaz:{
-  falante:'o guarda',
+  falante:'Guarda da pedreira',
+  vozes:['N','N'],
   texto:[
     'Você descreve: dezenove anos mais ou menos, uniforme grande demais, turno da tarde, saco de estopa no bolso de trás.',
     'O guarda escreve tudo. Sabe de quem é antes de você terminar — dá pra ver no rosto dele, no jeito que ele para de escrever por meio segundo e continua.',
     '"Certo." Ele assina embaixo. "A gente resolve."',
-    'Você sai. Na descida você pensa em vinte coisas e nenhuma delas melhora nada.',
-    'Duas semanas depois, se alguém contasse pra você, você ficaria sabendo que ele foi demitido por justa causa e que a carteira dele tem uma anotação que vai impedir contratação em qualquer pedreira de Kanto.',
-    'Ninguém vai te contar.'
+    'Antes de você chegar na estrada, ele já pôs o formulário numa pasta separada das outras. Na lombada, à caneta: JUSTA CAUSA.',
+    'Na descida você pensa em vinte coisas e nenhuma delas melhora nada.'
   ],
   ef:{},
   escolhas:[
@@ -2323,6 +2529,8 @@ c4_entregou_rapaz:{
 },
 
 c4_mentiu_guarda:{
+  falante:'Guarda da pedreira',
+  vozes:['P','N'],
   texto:[
     '"Não vi."',
     'O guarda te olha por um tempo que é longo demais pra ser confortável.',
@@ -2338,13 +2546,15 @@ c4_mentiu_guarda:{
 },
 
 c4_recusou_entregar:{
+  falante:'Guarda da pedreira',
+  vozes:['P','N','P','N'],
   texto:[
     '"Vi. E eu não vou falar."',
     'O guarda pousa a caneta.',
     '"Por quê?"',
-    '"Porque vocês pagam mil e cem."',
+    d=>d.flags.a_mae_do_rapaz ? '"Porque vocês pagam mil e cem."' : '"Porque o problema não é ele."',
     'Silêncio na guarita. O ventilador continua.',
-    '"Isso não é problema meu", ele diz, e é verdade, e ele não gosta que seja verdade.',
+    '"Isso não é problema meu," ele diz, e é verdade, e ele não gosta que seja verdade.',
     'Ele escreve "autor não identificado" e carimba com mais força do que precisava.'
   ],
   ef:{npc:{nome:'Guarda da pedreira', opiniao:2, memoria:'Você se recusou a entregar o rapaz e disse o motivo na cara dele.'}},
@@ -2356,12 +2566,14 @@ c4_recusou_entregar:{
 },
 
 c4_nilo:{
+  falante:'Lior',
+  vozes:['P','Guarda da pedreira','P','Guarda da pedreira','N'],
   texto:[
     '"Eu tô procurando o Lior."',
     '"Qual Lior? Tem três."',
     '"O do rádio."',
     '"Ah, o Lior do rádio." O guarda fala no rádio dele mesmo, duas frases em código, e espera.',
-    'Cinco minutos depois aparece um homem de uns vinte e cinco anos com um capacete debaixo do braço e uma cara que é a cara da Sra. Zelda com vinte anos a menos e muito mais cansaço.',
+    'Cinco minutos depois aparece um rapaz de uns vinte anos com um capacete debaixo do braço e uma cara que é a cara da Sra. Zelda, só que muito mais cansada.',
     '"Pois não?"'
   ],
   ef:{npc:{nome:'Lior', opiniao:0, memoria:'Você o chamou no portão da pedreira de Pewter.'}},
@@ -2374,6 +2586,8 @@ c4_nilo:{
 },
 
 c4_nilo_mae:{
+  falante:'Lior',
+  vozes:['P','N','P','N','P','N','N'],
   texto:[
     '"Sua mãe dividiu um pastel comigo na praça."',
     'O rosto dele muda de uma vez só e de um jeito que não dá pra descrever direito.',
@@ -2382,7 +2596,7 @@ c4_nilo_mae:{
     '"E você falou."',
     '"Falei."',
     'Lior olha pro chão, pro capacete, pro portão. Depois ri uma risada curta e sem alegria nenhuma.',
-    '"A gente se vê no domingo", ele diz. "A gente se vê todo domingo. Faz quatro anos que a gente almoça todo domingo e não fala nada."'
+    '"A gente se vê no domingo," ele diz. "A gente se vê todo domingo. Faz quatro anos que a gente almoça todo domingo e não fala nada."'
   ],
   ef:{flag:'falou_com_nilo', npc:{nome:'Lior', opiniao:2, memoria:'Você contou que a mãe dele dividiu um pastel com você.'}},
   escolhas:[
@@ -2394,6 +2608,8 @@ c4_nilo_mae:{
 },
 
 c4_nilo_domingo:{
+  falante:'Lior',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Por que vocês não falam nada?"',
     'Ele demora.',
@@ -2413,15 +2629,17 @@ c4_nilo_domingo:{
 },
 
 c4_nilo_conselho:{
+  falante:'Lior',
+  vozes:['P','N','P','N','P','N','N'],
   texto:[
     '"Fala isso pra ela."',
     '"Falar o quê? Que eu não sei?"',
     '"Que você não sabe. É melhor que quatro anos de arroz com silêncio."',
     'Lior põe o capacete. Aperta a jugular.',
     '"Você tem quantos anos?"',
-    '"Quinze."',
+    '"{Idade}."',
     '"Caramba." Ele ri, dessa vez de verdade. "Tá certo. Domingo eu falo."',
-    'Ele volta pro buraco. Você não vai ficar sabendo se ele falou.'
+    'Ele volta pro buraco. Domingo, você já vai estar longe daqui.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Fez alguém prometer uma conversa difícil'},
       flag:'nilo_vai_falar',
@@ -2433,6 +2651,8 @@ c4_nilo_conselho:{
 },
 
 c4_nilo_treinador:{
+  falante:'Lior',
+  vozes:['P','N','N','P','N','N','N'],
   texto:[
     '"Você era treinador?"',
     '"Fui." Ele diz isso sem nostalgia, o que é pior que nostalgia. "Cheguei em Celadon. Quatro insígnias."',
@@ -2451,13 +2671,15 @@ c4_nilo_treinador:{
 },
 
 c4_nilo_entendeu:{
+  falante:'Lior',
+  vozes:['P','N','P','N','N'],
   texto:[
     '"Ele entendeu."',
     'Lior te olha.',
     '"Você não conhece meu Sandslash."',
     '"Não conheço. Mas ele voltou com você e ficou. Ele podia ter ido embora em qualquer um desses quatro anos."',
     'Lior fica um tempo sem dizer nada.',
-    '"É", ele fala por fim. "Ele podia."',
+    '"É," ele fala por fim. "Ele podia."',
     'A sirene toca. Ele vai. Na metade do caminho ele levanta a mão sem virar, que é o jeito de agradecer de quem não agradece.'
   ],
   ef:{rep:{eixo:'bom',delta:1,motivo:'Disse a coisa certa pra um homem cansado'},
@@ -2470,6 +2692,8 @@ c4_nilo_entendeu:{
 },
 
 c4_nilo_fenda:{
+  falante:'Lior',
+  vozes:['N','P','N','N','N'],
   texto:[
     'Você conta da fenda. Lior escuta com o capacete debaixo do braço e o queixo cada vez mais tenso.',
     '"Eu sei da fenda."',

@@ -27,7 +27,7 @@ const RETRATO_POR_NOME = {
   /* substitutos da Elite: a classe de treinador que os jogos dariam */
   'Giselle':'trainers/ace_trainer_f', 'A.J.':'trainers/ace_trainer', 'Mandi':'trainers/psychic_f',
   /* rival e rivais de estrada */
-  'Ezra':'trainers/lucas', 'Otto':'trainers/roughneck', 'Caçador Roque':'trainers/roughneck',
+  'Ezra':'trainers/lucas', 'Otto':'trainers/roughneck', 'Caçador Roque':'trainers/roughneck', 'o caçador mais novo':'trainers/roughneck',
   'Lior':'trainers/camper', 'Nolan':'trainers/sailor', 'Rory':'trainers/ninjaboy', 'o garoto de Fuchsia':'trainers/ninjaboy',
   'Garoto de Fuchsia':'trainers/ninjaboy', 'Menino do cais':'trainers/sailor',
   'Nadia':'trainers/veteran_f', 'Nadia Arden':'trainers/veteran_f',
@@ -309,7 +309,7 @@ const ROSTO_POR_PALAVRA = [
   [/carregador|frentista|seguran[çc]a/i, 'trainers/worker'],
   [/crach[áa]|escrit[óo]rio|assessor|advogad|secret[áa]ri|recepcion|guich[êe]|junta|pessoal|coluna|atendente|balconista|diretor|editor|presidente|cadastro/i, 'office'],
   [/tripula|ferry|barco|casco|marinh|porto|cais/i, 'trainers/sailor'],
-  [/oper[áa]ri|pe[ãa]o|macac[ãa]o|setor|esta[çc][ãa]o|t[ée]cnic|mec[âa]nic|obra/i, 'trainers/worker'],
+  [/oper[áa]ri|pe[ãa]o|macac[ãa]o|setor|esta[çc][ãa]o|t[ée]cnic|mec[âa]nic|obra|cimento/i, 'trainers/worker'],
   [/padaria/i, 'trainers/baker'],
   [/lanchonete|cozinh|fogareiro|restaurante/i, 'trainers/cook'],
   [/jornaleiro|banca|loja|vendedor|balc[ãa]o/i, 'trainers/clerk'],

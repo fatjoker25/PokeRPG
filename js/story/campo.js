@@ -64,7 +64,7 @@ c3_o_corte:{
 c3_atras_do_bambu:{
   texto:[
     'Atrás do bambu tem uma casa de pesquisa de campo do tamanho de um quarto, com telhado de duas águas, parede de tábua e uma porta que não tranca.',
-    'Dentro: uma mesa, um banco, um armário de metal e vinte e dois anos de poeira.',
+    'Dentro: uma mesa, um banco, um armário de metal e catorze anos de poeira.',
     'No armário, em três prateleiras, cadernos de capa dura, numerados, com o mesmo nome na lombada.',
     'São contagens de população. Espécie, quadrante, data, número de indivíduos, todo mês, de setenta e quatro a noventa e seis.',
     'Vinte e dois anos de alguém contando Pokémon na floresta e anotando, sozinho, à mão.',

@@ -84,8 +84,12 @@ c3_ab_acampou:{
 
 c3_ab_com_companhia:{
   texto:[
-    'Ezra está sentado na boca da floresta com a mochila entre os pés, e pela cara dele está ali há um tempo decidindo não entrar sozinho.',
-    fala('Ezra', 'Eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.'),
+    d=>d.flags.entrou_com_teo
+      ? 'Na boca da floresta, Ezra para. Senta numa pedra com a mochila entre os pés e fica olhando o verde, sem pressa nenhuma de levantar.'
+      : 'Ezra está sentado na boca da floresta com a mochila entre os pés, e pela cara dele está ali há um tempo decidindo não entrar sozinho.',
+    d=>d.flags.entrou_com_teo
+      ? fala('Ezra', 'Se você não tivesse vindo, eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.')
+      : fala('Ezra', 'Eu ia esperar mais uns dez minutos e aí eu ia embora e ia dizer pra todo mundo que eu atravessei.'),
     d=>fala(d.jogador.nome, 'Ia dizer pra quem?'),
     fala('Ezra', 'Pra mim, cara. Principalmente pra mim.'),
     'Ele levanta, sacode a calça e olha pro verde.',
@@ -155,7 +159,7 @@ c3_entrada:{
     d=>d.flags.teo_foi_pra_floresta && !d.flags.entrou_com_teo
       ? 'E, no barro da entrada, pegada de tênis novo. Uma pessoa só, andando rápido, entrando pelo mato fechado em vez da trilha.'
       : '',
-    d=>d.flags.entrou_com_teo
+    d=>d.flags.entrou_com_teo && !d.flags.teo_ficou_de_fora
       ? 'Ezra anda atrás de você e fala sem parar, e você entende, depois de um tempo, que ele fala sem parar porque está com medo.'
       : ''
   ],
@@ -239,6 +243,8 @@ c3_ficou_parado:{
 },
 
 c3_correu_atras:{
+  falante:'Ezra',
+  vozes:['N','N'],
   texto:[
     'Você corre pelo mato fechado, o que numa floresta significa correr uns oito metros e depois andar rápido, repetidamente.',
     'Galho na cara. Raiz no pé. Você cai uma vez e levanta antes de sentir.',
@@ -257,6 +263,8 @@ c3_correu_atras:{
 },
 
 c3_tudo_bem:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Você tá bem?"',
     'Ele demora pra responder, o que já responde.',
@@ -275,11 +283,13 @@ c3_tudo_bem:{
 },
 
 c3_que_cara:{
+  falante:'Ezra',
+  vozes:['P','N','N','P','N','N'],
   texto:[
     '"Que cara?"',
     '"Um cara." Ezra aponta com a cabeça, sem soltar o {pico}. "Adulto. Roupa boa. Com um rolo de fio no ombro."',
     d=>d.flags.sabe_do_fio_de_aco
-      ? 'Fio de aço. A atendente do Centro descreveu a mesma pessoa duas vezes no mesmo relatório.'
+      ? 'Fio de aço. A atendente do Centro anotou essa mesma frase em duas ocorrências.'
       : 'Fio. Rolo de fio, no ombro, numa floresta.',
     '"Ele te viu?"',
     '"Acho que não." Ezra não parece convencido do que ele mesmo está falando. "Ele parou perto e ficou contando."'
@@ -332,7 +342,7 @@ c3_fotografou_fitas:{
   texto:[
     'Você fotografa: a fita no galho, a bota no barro, a lata, a sequência de marcações indo pra dentro.',
     'Não é prova de crime nenhum. Fita plástica não é crime.',
-    'Mas é a primeira vez nessa jornada que você guarda alguma coisa achando que vai precisar depois — e essa vai virar uma mania.'
+    'Mas é a primeira vez nessa jornada que você guarda alguma coisa achando que vai precisar depois.'
   ],
   ef:{flag:'provas_da_floresta',
       rep:{eixo:'bom',delta:1,motivo:'Começou a guardar prova'}},
@@ -343,6 +353,8 @@ c3_fotografou_fitas:{
 },
 
 c3_tirou_o_teo:{
+  falante:'Ezra',
+  vozes:['N','N','P','N','N'],
   texto:[
     'Você levanta o Ezra pelo braço e leva ele pra fora, e leva mais de uma hora porque ele andou em círculo e você não sabia disso.',
     'Na saída norte, já perto de Pewter, ele senta no chão de pedra e fica quieto por um tempo.',
@@ -365,7 +377,7 @@ c3_perdido:{
   texto:[
     'Você tenta refazer o caminho e não refaz.',
     'Quarenta minutos depois você passa pela mesma árvore caída pela segunda vez e entende o que aconteceu com o Ezra.',
-    'É humilhante de um jeito muito específico: a floresta não é grande. Você é que é pequeno dentro dela.',
+    'É humilhante de um jeito muito específico: a floresta não é grande. Você é que é pequen{o|a} dentro dela.',
     'Quando você finalmente acha uma referência, o som fino está mais perto do que estava.'
   ],
   ef:{hp:-3, causa:'Perdido na Floresta de Viridian'},
@@ -385,7 +397,7 @@ c3_contornou:{
 
 c3_trilha:{
   texto:[
-    'A trilha marcada tem cicatriz de facão nos troncos, velhas, algumas já engolidas pela casca.',
+    'A trilha marcada tem cicatrizes de facão nos troncos, velhas, algumas já engolidas pela casca.',
     'Alguém passou por aqui há muito tempo e quis que outros conseguissem passar depois. É um gesto que ninguém assina.',
     'Você anda quase duas horas sem incidente. A trilha é boa.',
     'Na segunda hora, o som fino aparece à sua direita, fora da trilha.'
@@ -435,7 +447,10 @@ c3_som:{
     'Amarrado por gente. Com nó. Com ferramenta.',
     'Ele está aqui há dias — dá pra ver pelo chão em volta, girado até virar terra batida num círculo perfeito de um metro e meio.',
     'A três metros, uma mochila jogada. De alguém que voltou pra buscar depois. Ou que não voltou.',
-    'E em volta da clareira, em três árvores diferentes, fita plástica laranja.'
+    'E em volta da clareira, em três árvores diferentes, fita plástica laranja.',
+    d=>d.flags.entrou_com_teo && !d.flags.teo_ficou_de_fora
+      ? 'Ezra para atrás de você e, pela primeira vez desde a entrada, fica quieto.'
+      : ''
   ],
   ef:{flag:'achou_pikachu', registrar:'Encontrou um Pikachu preso por gente na Floresta de Viridian.'},
   escolhas:[
@@ -450,7 +465,7 @@ c3_esperar:{
   texto:[
     'Você sai da clareira, se encosta atrás de um tronco a uns vinte metros, e espera.',
     'O som fino continua o tempo todo. Você fica ouvindo o som fino por quarenta minutos.',
-    'Essa é uma das coisas mais difíceis que você vai fazer em toda a jornada, e você faz de propósito, e por um motivo que você mesm{o|a} ainda não sabe explicar.',
+    'É a coisa mais difícil que você já fez, e você faz de propósito, por um motivo que você mesm{o|a} ainda não sabe explicar.',
     'Aos quarenta e três minutos, eles chegam.',
     'Dois. Roupa boa demais pra mato. Um com rolo de fio de aço no ombro, sem disfarçar. Eles entram na clareira sem olhar em volta, porque não esperam ninguém aqui.',
     'E você vê o que eles fazem quando acham que não tem testemunha.'
@@ -470,9 +485,9 @@ c3_surpresa:{
   texto:[
     'Você sai de trás do tronco com a Pokébola já na mão.',
     'Eles levam três segundos inteiros pra entender o que está acontecendo, e três segundos é muita coisa.',
-    '"Ô —" começa o mais velho, e não termina.'
+    fala('Caçador Roque', 'Ô —', null, 'O mais velho começa, e não termina.')
   ],
-  ef:{flag:'atacou_de_surpresa'},
+  ef:{flag:['atacou_de_surpresa','cruzou_os_cacadores']},
   batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
@@ -512,7 +527,7 @@ c3_soltar:{
     'O fio cede. O nó era bom, feito por quem sabe.',
     'O Pikachu não corre. Fica ali, tremendo, olhando a pata que não sabe mais como usar.'
   ],
-  ef:{hp:-3, causa:'Choque ao soltar o Pikachu',
+  ef:{hp:-3, causa:'Choque ao soltar o Pikachu', flag:'soltou_o_pikachu',
       rep:{eixo:'bom',delta:2,motivo:'Libertou um Pokémon preso por caçadores'},
       registrar:'Libertou o Pikachu da armadilha.'},
   escolhas:[
@@ -553,17 +568,23 @@ c3_ficar:{
   ef:{umaVez:'c03_p1', pokemon:{dex:25, nivel:12, opcoes:{natureza:'Jolly', moral:85, historia:'Você {o} soltou de uma armadilha na Floresta de Viridian e ficou uma hora esperando {ele} conseguir andar.'}},
       rep:{eixo:'bom',delta:2,motivo:'Esperou o Pokémon ferido se recuperar'},
       flag:'pikachu_aliado', registrar:'O Pikachu libertado passou a te seguir.'},
-  escolhas:[{texto:'Seguir com ele.', vai:'c3_caçadores'}]
+  escolhas:[
+    {texto:'Seguir com ele.', vai:'c3_caçadores', cond:d=>!d.flags.cruzou_os_cacadores},
+    {texto:'Seguir com ele.', vai:'c3_fim', cond:d=>!!d.flags.cruzou_os_cacadores}
+  ]
 },
 
 c3_ir_embora:{
   texto:[
     'Você vira as costas.',
-    'Atrás de você, o som fino continua por mais um tempo, mais baixo agora, e depois muda de qualidade — ele para de ser dor e vira outra coisa que você não vai conseguir nomear nunca.',
+    'Atrás de você, o som fino continua por mais um tempo, mais baixo agora, e depois muda de qualidade — ele para de ser dor e vira outra coisa, que você não sabe nomear.',
     'Não é culpa. É só que você vai lembrar disso.'
   ],
   ef:{registrar:'Soltou o Pikachu e foi embora sem olhar para trás.'},
-  escolhas:[{texto:'Continuar.', vai:'c3_caçadores'}]
+  escolhas:[
+    {texto:'Continuar.', vai:'c3_caçadores', cond:d=>!d.flags.cruzou_os_cacadores},
+    {texto:'Continuar.', vai:'c3_fim', cond:d=>!!d.flags.cruzou_os_cacadores}
+  ]
 },
 
 c3_levou_estaca:{
@@ -608,9 +629,9 @@ c3_capturar:{
 c3_arrependeu_captura:{
   texto:[
     'Você abre a Pokébola dois minutos depois.',
-    'Ele sai e cai de lado, porque a pata continua não funcionando, e fica ali.',
+    'O Pikachu sai e cai de lado, porque a pata continua não funcionando, e fica ali.',
     'Você não consertou nada. Você só fez a mesma coisa duas vezes, na ordem contrária.',
-    'Mas ele está do lado de fora, e isso é diferente de estar do lado de dentro, mesmo que não pareça.'
+    'Mas agora está do lado de fora, e isso é diferente de estar do lado de dentro, mesmo que não pareça.'
   ],
   ef:{executar:d=>{
         /* o time cheio mandou ele pro PC: é de lá que ele sai */
@@ -639,7 +660,7 @@ c3_mochila:{
   ef:{itens:{'Great Ball':3}, dinheiro:600, flag:['pegou_mochila_cacador','provas_da_floresta'],
       registrar:'Pegou a mochila do caçador, com o caderno de preços dentro.'},
   escolhas:[
-    {texto:'Largar tudo e soltar o Pikachu.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso,
+    {texto:'Deixar a mochila de lado e soltar o Pikachu.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso,
      ef:{rep:{eixo:'bom',delta:1,motivo:'Largou o que achou para soltar o que estava preso'}}},
     {texto:'Levar o caderno e soltar o Pikachu.', vai:'c3_soltar', cond:d=>!d.flags.pikachu_capturado_preso,
      ef:{flag:'levou_o_caderno_do_cacador'}},
@@ -676,31 +697,42 @@ c3_caderno_inteiro:{
 
 c3_caçadores:{
   texto:[
-    'Dois homens vêm pela trilha em sentido contrário.',
-    'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
+    d=>d.flags.esperou_os_cacadores
+      ? 'Você sai de trás do tronco e entra na clareira.'
+      : 'Dois homens vêm pela trilha em sentido contrário.',
+    d=>d.flags.esperou_os_cacadores
+      ? 'De perto, a roupa é ainda mais cara do que parecia. O rolo de fio de aço continua no ombro do mais velho, do jeito de quem carrega ferramenta de trabalho.'
+      : 'Roupa boa demais pra floresta. Um deles carrega um rolo de fio de aço no ombro, sem disfarçar, do jeito de quem carrega ferramenta de trabalho.',
     'Eles param quando te veem. O da frente olha pras suas mãos, depois pro seu cinto, depois pros seus olhos. Nessa ordem exata, que é a ordem de quem já fez isso muitas vezes.',
     'O mais novo, atrás, diz um nome baixinho, Roque, do jeito de quem avisa. O da frente nem vira a cabeça.',
-    d=>d.flags.pegou_mochila_cacador ? fala('Caçador Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.') :
-       (d.flags.pikachu_aliado || d.flags.pikachu_capturado_preso ? '"Cadê o amarelo." Não é pergunta.' :
-        '"Viu alguma coisa aí atrás?" Ele sorri. O sorriso não sobe até os olhos.')
+    d=>{
+      if (d.flags.pegou_mochila_cacador) return fala('Caçador Roque', 'Essa mochila é minha.', null, 'Sem levantar a voz nenhum tom.');
+      if (d.flags.pikachu_aliado) return fala('Caçador Roque', 'Esse amarelo aí atrás de você é meu.', 'frio', 'Ele olha o Pikachu, não você.');
+      if (d.flags.esperou_os_cacadores) return fala('Caçador Roque', 'Tava aí faz tempo?', null, 'Ele sorri. O sorriso não sobe até os olhos.');
+      return fala('Caçador Roque', 'Viu alguma coisa aí atrás?', null, 'Ele sorri. O sorriso não sobe até os olhos.');
+    }
   ],
-  ef:{npc:{nome:'Caçador Roque', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
+  ef:{flag:'cruzou_os_cacadores',
+      npc:{nome:'Caçador Roque', opiniao:0, memoria:'Te encontrou na trilha da Floresta de Viridian.'}},
   escolhas:[
     {texto:'Enfrentar. Alguém tem que enfrentar.', vai:'c3_luta_cacador'},
     {texto:'Mentir. Dizer que não viu nada.', vai:'c3_mentir'},
-    {texto:'Negociar — eles têm dinheiro, você tem informação.', vai:'c3_negociar'},
+    {texto:'Negociar — eles têm dinheiro, você tem informação.', vai:'c3_negociar',
+     cond:d=>!d.flags.esperou_os_cacadores && !d.flags.soltou_o_pikachu && !d.flags.pikachu_capturado_preso},
     {texto:'"Eu sei o seu nome." Blefar com o caderno.', vai:'c3_blefe_caderno',
      cond:d=>!!(d.flags.pegou_mochila_cacador||d.flags.leu_o_caderno_do_cacador)}
   ]
 },
 
 c3_blefe_caderno:{
+  falante:'Caçador Roque',
+  vozes:['P','o caçador mais novo','N','N'],
   texto:[
     '"Eu sei o seu nome."',
     'Você sabe metade, e só porque o outro deixou escapar. O caderno não tem nome em lugar nenhum — você conferiu.',
     'Mas ele não sabe que você conferiu.',
     'Os dois se olham por meio segundo, e meio segundo entre duas pessoas que trabalham juntas há anos é uma conversa inteira.',
-    '"Tá com a mochila", diz o mais novo.',
+    '"Tá com a mochila," diz o mais novo.',
     '"Tô vendo." O mais velho não tira os olhos de você. "{Garoto|Garota}, devolve e vai embora e a gente esquece a manhã inteira."'
   ],
   ef:{flag:'blefou_com_o_caderno'},
@@ -713,15 +745,18 @@ c3_blefe_caderno:{
 },
 
 c3_negociou_alto:{
+  falante:'Caçador Roque',
+  vozes:['P','N','N','N','N'],
   texto:[
     '"Devolvo se vocês soltarem tudo que tiver na caminhonete."',
     'O mais velho ri — curto, genuíno, surpreso.',
     '"Como é que você sabe da caminhonete?"',
     'Você não sabia da caminhonete. Você chutou a palavra e ela acertou.',
     'Ele para de rir. Olha o parceiro. Olha você de novo, com uma atenção completamente diferente.',
-    '"Anota aí", ele diz pro outro. E o outro anota. Anota o seu rosto.',
-    'Eles soltam dois. Só dois, das quatro bolsas — e fazem questão de você ver que são só dois.',
-    '"Isso é o máximo que a manhã de hoje vale", diz o mais velho. "A gente se vê."'
+    '"Anota aí," ele diz pro outro. E o outro anota. Anota o seu rosto.',
+    'Eles te levam pela marcação de fita até uma estrada de terra fora da floresta, onde tem uma caminhonete branca com três bolsas de lona na caçamba.',
+    'Soltam o que tem em duas. Só duas — e fazem questão de você ver que a terceira fica fechada.',
+    '"Isso é o máximo que a manhã de hoje vale," diz o mais velho. "A gente se vê."'
   ],
   ef:{flag:['inimigo_cacadores','soltou_dois_da_caminhonete'],
       rep:{eixo:'bom',delta:2,motivo:'Negociou a soltura de dois Pokémon com quem os capturou'},
@@ -731,22 +766,24 @@ c3_negociou_alto:{
 },
 
 c3_devolveu_mochila:{
+  falante:'Caçador Roque',
+  vozes:['N','N'],
   texto:[
     'Você devolve a mochila. Ele confere o conteúdo na sua frente, sem pressa, item por item.',
     'Quando chega no caderno, ele para.',
     '"Você leu?"',
-    d=>d.flags.leu_o_caderno_do_cacador ? 'Você não responde nada, e o não responder responde.' : '"Não."',
+    d=>d.flags.leu_o_caderno_do_cacador ? 'Você não responde nada, e o não responder responde.' : fala(d.jogador.nome, 'Não.'),
     'Ele guarda o caderno no bolso interno, não na mochila.',
     '"Vai embora, {garoto|garota}."'
   ],
-  ef:{perdeItens:{'Great Ball':3},
+  ef:{perdeItens:{'Great Ball':3}, dinheiro:-600,
       npc:{nome:'Caçador Roque', opiniao:-1, memoria:'Você devolveu a mochila dele na trilha.'}},
   escolhas:[{texto:'Ir embora.', vai:'c3_fim'}]
 },
 
 c3_correu_com_mochila:{
   texto:[
-    'Você corre com a mochila deles pelo mato fechado de uma floresta que você não conhece, perseguido por dois adultos que conhecem.',
+    'Você corre com a mochila deles pelo mato fechado de uma floresta que você não conhece, perseguid{o|a} por dois adultos que conhecem.',
     'Dura oito minutos. Você ganha oito minutos porque eles não esperavam que você fosse doid{o|a} o suficiente pra correr pra dentro em vez de pra fora.',
     'No nono minuto você acha a trilha marcada por acidente e corre nela por mais quinze.',
     'Quando para, não tem ninguém atrás de você. Tem uma mochila cara, três Great Balls, um caderno de trinta e uma páginas e um ponto na barriga que não passa.'
@@ -759,20 +796,24 @@ c3_correu_com_mochila:{
 },
 
 c3_luta_cacador:{
+  falante:'Caçador Roque',
+  vozes:['N','N'],
   texto:[
     'O homem suspira como quem já fez isso antes e não gosta de fazer.',
     'Ele solta a Pokébola no chão em vez de jogar. Nem olha o próprio Pokémon sair.',
-    '"Rápido", ele diz pro parceiro. "A gente tem que descer ainda hoje."'
+    '"Rápido," ele diz pro parceiro. "A gente tem que descer ainda hoje."'
   ],
   batalha:{dex:23, nivel:16, tipo:'treinador', treinador:'Caçador Roque', fuga:false,
            vitoria:'c3_venceu_cacador', derrota:'c3_perdeu_cacador', gameover:'gameover'}
 },
 
 c3_venceu_cacador:{
+  falante:'Caçador Roque',
+  vozes:['N'],
   texto:[
     'O Ekans volta pra Pokébola e o homem não reclama, não xinga, não ameaça.',
     'Ele só te olha com uma atenção nova, do jeito que se olha uma despesa inesperada que vai ter que entrar na planilha.',
-    '"Anota aí", ele diz pro parceiro. E o parceiro anota. Anota o seu rosto.',
+    '"Anota aí," ele diz pro parceiro. E o parceiro anota. Anota o seu rosto.',
     'Eles saem pela trilha. Sem pressa nenhuma. O mais velho para uma vez e olha pra trás, não pra você — pra clareira.'
   ],
   ef:{rep:{eixo:'bom',delta:2,motivo:'Enfrentou caçadores na Floresta de Viridian'},
@@ -780,7 +821,7 @@ c3_venceu_cacador:{
       flag:'inimigo_cacadores', registrar:'Fez inimigos: os caçadores da floresta anotaram seu rosto.'},
   escolhas:[
     {texto:'Seguir eles.', vai:'c3_seguir_depois'},
-    {texto:'Voltar pra clareira.', vai:'c3_som'},
+    {texto:d=>d.flags.esperou_os_cacadores ? 'Ir até a estaca.' : 'Voltar pra clareira.', vai:'c3_de_volta'},
     {texto:'Sair da floresta.', vai:'c3_fim'}
   ]
 },
@@ -799,6 +840,8 @@ c3_seguir_depois:{
 },
 
 c3_perdeu_cacador:{
+  falante:'Caçador Roque',
+  vozes:['N','N'],
   texto:[
     'Quando acaba, ele se agacha na sua frente pra ficar na sua altura, o que é pior que qualquer coisa que ele podia fazer de pé.',
     '"Você é {novo|nova}. Então eu vou te explicar uma vez."',
@@ -809,9 +852,9 @@ c3_perdeu_cacador:{
   ],
   ef:{dinheiro:-500, hp:-5, causa:'Espancamento na Floresta de Viridian',
       npc:{nome:'Caçador Roque', opiniao:-3, memoria:'Te derrubou na floresta e te deixou ir. Como aviso.'},
-      flag:'humilhado_cacadores', registrar:'Perdeu para os caçadores e foi deixado como aviso.'},
+      flag:['humilhado_cacadores','cacadores_seguiram'], registrar:'Perdeu para os caçadores e foi deixado como aviso.'},
   escolhas:[
-    {texto:'Levantar e voltar pra clareira.', vai:'c3_som'},
+    {texto:d=>d.flags.esperou_os_cacadores ? 'Levantar e ir até a estaca.' : 'Levantar e voltar pra clareira.', vai:'c3_de_volta'},
     {texto:'Levantar e sair da floresta.', vai:'c3_fim'}
   ]
 },
@@ -828,40 +871,46 @@ c3_mentiu_bem:{
     'Ele acredita, ou finge acreditar, o que dá no mesmo pelos próximos cinco minutos. Eles passam por você e seguem trilha adentro.',
     'Quando somem na curva, você percebe que estava segurando a respiração.'
   ],
-  ef:{flag:'mentiu_cacadores'},
+  ef:{flag:['mentiu_cacadores','cacadores_seguiram']},
   escolhas:[
-    {texto:'Voltar pra clareira correndo.', vai:'c3_som'},
+    {texto:'Voltar pra clareira correndo.', vai:'c3_de_volta'},
     {texto:'Sair da floresta.', vai:'c3_fim'}
   ]
 },
 
 c3_mentiu_mal:{
+  falante:'Caçador Roque',
+  vozes:['N','N'],
   texto:[
     'Você mente, mas o rosto entrega. Ele olha pra você mais um segundo do que seria confortável.',
-    '"Certo", ele diz. Não acreditou. Deixou passar mesmo assim — porque não vale o trabalho hoje.',
+    '"Certo," ele diz. Não acreditou. Deixou passar mesmo assim — porque não vale o trabalho hoje.',
     '"A gente se vê."',
-    'Vocês vão se ver.'
+    'Ele diz isso do jeito de quem anota um compromisso, e segue trilha adentro com o outro.'
   ],
-  ef:{npc:{nome:'Caçador Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
+  ef:{flag:'cacadores_seguiram',
+      npc:{nome:'Caçador Roque', opiniao:-2, memoria:'Você mentiu mal para ele na floresta.'}},
   escolhas:[
-    {texto:'Voltar pra clareira.', vai:'c3_som'},
+    {texto:'Voltar pra clareira.', vai:'c3_de_volta'},
     {texto:'Sair da floresta.', vai:'c3_fim'}
   ]
 },
 
 c3_negociar:{
+  vozes:['P'],
   texto:['"Tem um Pikachu preso lá atrás. Quanto vale a informação?"'],
   teste:{status:'carisma', dificuldade:8, nomeStatus:'Carisma',
          critico:'c3_negociou', sucesso:'c3_negociou', parcial:'c3_negociou_mal', falha:'c3_negociou_mal'}
 },
 
 c3_negociou:{
+  falante:'Caçador Roque',
+  vozes:['N','N'],
   texto:[
     'O homem ri pela primeira vez de verdade.',
     'Conta as notas na sua mão, uma por uma, olhando pra você o tempo todo em vez de olhar o dinheiro.',
     '"Olha só. Você aprende rápido."',
     'Ele guarda a carteira. "Se cansar de brincar de treinador, pergunta por mim em Celadon. Tem um lugar lá que abre depois das onze."',
-    'O dinheiro pesa no bolso de um jeito estranho, e você vai reparar nesse peso várias vezes nos próximos dias.'
+    'O dinheiro pesa no bolso de um jeito estranho, mais do que papel devia pesar.'
   ],
   ef:{dinheiro:1500, rep:{eixo:'ruim',delta:2,motivo:'Vendeu a localização de um Pokémon preso a caçadores'},
       npc:{nome:'Caçador Roque', opiniao:2, memoria:'Você vendeu informação pra ele. Ele te acha promissor.'},
@@ -871,6 +920,8 @@ c3_negociou:{
 },
 
 c3_negociou_mal:{
+  falante:'Caçador Roque',
+  vozes:['N','N','N'],
   texto:[
     '"Informação." Ele repete a palavra como se fosse engraçada. "{Garoto|Garota}, eu amarrei o Pokémon. Eu sei onde ele tá."',
     'Ele te dá uma nota pequena. Menos por pena e mais por achar graça.',
@@ -880,6 +931,25 @@ c3_negociou_mal:{
   ef:{dinheiro:300, rep:{eixo:'ruim',delta:1,motivo:'Tentou vender informação a caçadores'},
       flag:'vendeu_para_cacadores'},
   escolhas:[{texto:'Sair da floresta.', vai:'c3_fim'}]
+},
+
+c3_de_volta:{
+  texto:[
+    d=>d.flags.esperou_os_cacadores
+      ? 'A clareira fica quieta depois que eles somem entre as árvores.'
+      : 'Você volta pela trilha até a clareira, mais rápido do que veio.',
+    d=>{
+      const preso = !d.flags.soltou_o_pikachu && !d.flags.pikachu_capturado_preso;
+      if (!preso) return 'A estaca continua no chão, com o fio solto e o círculo de terra batida em volta. Sem o Pikachu, é só uma clareira.';
+      if (d.flags.cacadores_seguiram) return 'Chega tarde. A estaca foi arrancada, o fio sumiu, e no círculo de terra batida tem marca de bota por cima de marca de pata. Eles passaram aqui antes de você.';
+      return 'O Pikachu continua na estaca. Quando te vê, para de girar, e o som fino para junto.';
+    }
+  ],
+  escolhas:[
+    {texto:'Soltar o Pikachu. Devagar, com as mãos.', vai:'c3_soltar',
+     cond:d=>!d.flags.soltou_o_pikachu && !d.flags.pikachu_capturado_preso && !d.flags.cacadores_seguiram},
+    {texto:'Sair da floresta.', vai:'c3_fim'}
+  ]
 },
 
 c3_fim_sem_ver:{
@@ -897,7 +967,7 @@ c3_fim:{
     'A saída norte da floresta dá numa descida de pedra, e Pewter aparece lá embaixo — cinza, sólida, com fumaça de chaminé subindo reta.',
     'Você senta na pedra por um tempo antes de descer. As pernas pedem.',
     d=>{
-      if (d.flags.ignorou_pikachu || d.flags.vendeu_para_cacadores)
+      if ((d.flags.ignorou_pikachu && !d.flags.pikachu_aliado) || d.flags.vendeu_para_cacadores)
         return 'Alguma coisa ficou naquela floresta que era sua. Você não vai conseguir explicar o que foi, nem pra você mesm{o|a}, e vai tentar algumas vezes.';
       if (d.flags.pikachu_aliado)
         return 'O Pikachu senta na pedra do seu lado, ainda mancando um pouco, e olha Pewter lá embaixo com uma curiosidade que não combina com o que aconteceu com ele esta semana.';
@@ -905,6 +975,9 @@ c3_fim:{
         return 'Ezra desce na frente e para no meio da descida pra esperar você, duas vezes, como se não confiasse que você vem atrás.';
       return 'Você entrou numa floresta achando que o perigo era o mato. O mato era a parte fácil.';
     },
+    d=>d.flags.entrou_com_teo && !d.flags.teo_ficou_de_fora && !d.flags.salvou_o_teo
+      ? 'Ezra desce na frente, falando do que viu, sem parar, e você entende que é o jeito dele de deixar a floresta pra trás.'
+      : '',
     'Daqui pra frente, a estrada é sua de novo: dá pra descer pra Pewter, dá pra voltar, dá pra ficar.'
   ],
   fim:true, resumo:'A floresta te mostrou que gente é pior que Pokémon.'
