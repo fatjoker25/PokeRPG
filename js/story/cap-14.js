@@ -2721,7 +2721,10 @@ c14_olhar:{
       : `E aí ele faz uma coisa: ele vira a cabeça, devagar, na direção do abrigo de rocha do lado leste, ${d.flags.tem_a_mochila_do_fuji ? 'de onde você tirou a mochila' : 'onde está a mochila'}.\nE volta a olhar você.`,
     'Depois ele abre as asas, e o calor que sai disso te derruba de joelhos, e quando você levanta a cratera está vazia.'
   ],
-  ef:{executar:d=>{ const L = Estado.lend(146); L.disposicao = 'neutro'; Estado.marcar('c14_moltres_foi'); return []; },
+  ef:{executar:d=>{ const L = Estado.lend(146); L.disposicao = 'neutro'; Estado.marcar('c14_moltres_foi');
+        /* o gesto pro abrigo só acontece com a mochila achada: o 15 lembra dele */
+        if (d.flags.achou_a_mochila_do_fuji) Estado.marcar('c14_moltres_virou');
+        return []; },
       rep:{eixo:'bom',delta:2,motivo:'Encontrou um lendário e não tentou pegá-lo'},
       moral:8,
       flag:'respeitou_moltres',
@@ -2898,6 +2901,7 @@ c14_fim:{
   ],
   /* o ferry sai às onze, terça ou sábado, e chega em Fuchsia três horas depois */
   ef:{executar:()=>{ c14_irAoFerry(11); Relogio.avancar(3); return []; }},
+  sai:'fuchsia',
   fim:true, resumo:'Capítulo 14 concluído — você leu o que ninguém devia ter escrito, e devolveu o que ninguém devia ter levado.'
 
 },

@@ -305,7 +305,7 @@ rota24:{
 },
 rota9:{
   nome:'Rota 9 / 10', tipo:'rota', ambiente:'montanha', nivel:24,
-  conexoes:['cerulean','usina','tunel_rocha'],
+  conexoes:['cerulean','usina','tunel_rocha','norte'],
   desc:[
     'A Rota 9 corre para o leste por pedra solta e mato baixo, e vira Rota 10 no alto.',
     'O ar aqui tem cheiro de tomada queimada e ninguém sabe explicar por quê.'
@@ -410,7 +410,7 @@ rota16:{
 },
 fuchsia:{
   nome:'Fuchsia', tipo:'cidade', ambiente:'campo', nivel:33, porte:'cidade',
-  conexoes:['rota16','rota13','rota19'],
+  conexoes:['rota16','rota13','rota19','ilha_sem_nome'],
   desc:[
     'Fuchsia é uma cidade pequena que existe por causa de uma coisa grande: a Zona Safári tem nove mil hectares e trinta e um quilômetros de cerca.',
     'A cerca existe pra manter gente fora. Foi isso que te disseram.'
@@ -531,12 +531,19 @@ const Mundo = {
   /* ---------- vizinhos ---------- */
   vizinhos(){
     const L = this.atual();
-    return (L.conexoes||[]).filter(id => {
-      const v = LOCAIS[id];
-      if (!v) return false;
-      if (v.oculto && !this.descobriu('local_'+id)) return false;
-      return true;
-    });
+    return (L.conexoes||[]).filter(id => this.conhecido(id));
+  },
+  /* Lugar escondido (a ilha sem nome, o norte da Rota 10, a travessia
+     da Rota 21) aparece quando você descobre que ele existe, quando já
+     pisou lá, ou quando a história te manda pra lá: o próximo arco
+     espera nele. Sem a última, o arco esperava num lugar que o mapa
+     nunca mostrava, e a jornada parava ali. */
+  conhecido(id){
+    const v = LOCAIS[id];
+    if (!v) return false;
+    if (!v.oculto || this.descobriu('local_' + id) || this.visitado(id)) return true;
+    const prox = typeof Historia !== 'undefined' && Historia.proximoDestino ? Historia.proximoDestino() : null;
+    return !!(prox && prox.local === id);
   },
 
   viajar(id){
@@ -732,11 +739,11 @@ const LOCAL_DO_CAPITULO = {
   1:null,              /* onde você mora */
   2:'viridian',   3:'floresta',  4:'pewter',    5:'monte_lua',
   6:'cerulean',   7:'lavender',  8:'vermilion', 9:'celadon',
-  10:'usina',    11:'saffron',  12:'fuchsia',  13:'cinnabar',
-  14:'rota21',   15:'rota16',   16:'seafoam',  17:'celadon',
-  18:'saffron',  19:'fuchsia',  20:'saffron',
+  10:'usina',    11:'saffron',  12:'fuchsia',  13:'seafoam',
+  14:'cinnabar', 15:'rota16',   16:'fuchsia',  17:'rota23',
+  18:'saffron',  19:'rota21',   20:'saffron',
   21:null,       22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
-  26:'planalto', 27:'norte',    28:'pallet'
+  26:'planalto', 27:'norte',    28:'norte'
 };
 
 function localDoCapitulo(n){

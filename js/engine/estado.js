@@ -1215,7 +1215,9 @@ const Estado = {
                             /* a menina da licença era gravada assim antes de ter nome fixo */
                             'Maren de Pewter':'Maren',
                             /* o velho do Staryu: Amos pro cais, Sr. Dane no balão (13 e 14) */
-                            'Amos':'Sr. Dane'};
+                            'Amos':'Sr. Dane',
+                            /* o dono do curral da Rota 17 ganhou nome no 15 */
+                            'Dono do curral':'Sr. Hale'};
       for (const [errado, certo] of Object.entries(MESMA_PESSOA)){
         if (!d.npcs || !d.npcs[errado]) continue;
         const a = d.npcs[errado], b = d.npcs[certo] || {nome:certo, opiniao:0, memorias:[]};

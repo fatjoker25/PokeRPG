@@ -283,6 +283,8 @@ c16_velho:{
     'Não é pergunta. É constatação, e ele parece cansado de a resposta ser sempre não.'
   ],
   ef:{npc:{nome:'Sr. Tanner', opiniao:2, memoria:'Te contou da ilha sem nome e do arco-íris noturno, e reparou que você acreditou.'},
+      /* é o velho do cais do fim do 15: dali em diante, o balão dele tem nome */
+      executar:()=>{ Nomes.apresentar('o velho pescador'); return []; },
       flag:'sabe_da_ilha', registrar:'Ouviu falar da ilha sem nome a sudoeste. Entra na carta náutica como "recife alto sem nome".',
       presagio:'Entra na carta náutica. A informação nunca esteve escondida — só estava no documento que ninguém lê.'},
   escolhas:[

@@ -164,11 +164,12 @@ const Exploracao = {
   /* O mapa é completo, como o Town Map dos jogos e o da parede do
      Centro: toda cidade e toda rota de Kanto, com nome. O que não está
      em mapa nenhum (a ilha sem nome, o norte da Rota 10, a travessia
-     da Rota 21) só aparece depois que você descobre. Tocar num lugar
+     da Rota 21) só aparece depois que você descobre, ou quando a
+     história te manda pra lá (Mundo.conhecido). Tocar num lugar
      abre a ficha dele embaixo; ir e voar são botões da ficha. */
   mapaVisivel(id){
     const L = LOCAIS[id];
-    return !!(L && this.POS_MAPA[id] && (!L.oculto || Mundo.descobriu('local_' + id) || Mundo.visitado(id)));
+    return !!(L && this.POS_MAPA[id] && Mundo.conhecido(id));
   },
 
   /* o nome inteiro está na ficha; no desenho vai o que cabe */

@@ -49,6 +49,15 @@ const RECUSAM_O_NOME = {
     fala('o fumante', 'O sigilo é sobre espécimes, procedimentos, instalações e pessoas.'),
     fala('o fumante', 'Eu sou uma pessoa. Pessoa tá na cláusula.', 'baixo')
   ],
+  /* os dois da caminhonete branca da ciclovia, no 15 */
+  'o homem da cabine': () => [
+    'Ele ri pelo nariz.',
+    fala('o homem da cabine', 'Concessionária. Tá no crachá que eu não tô usando.', 'frio')
+  ],
+  'o homem da caminhonete': () => [
+    fala('o homem da caminhonete', 'Eu não tô aqui, {garoto|garota}.', 'frio'),
+    'Ele sobe o vidro até a metade.'
+  ],
   /* o homem de terno do porto de Cinnabar: o quarto passageiro do livro
      do capitão, que entrou e não consta na saída */
   'o homem de terno escuro': () => [
@@ -148,7 +157,11 @@ const NOMES_FIXOS = {
   'a filha do Koga':           'Janine',
   'o guarda-parque mais velho': 'Kell',
   /* Fuchsia, no 13 e no 16: o crachá escrito à mão no balcão da colônia */
-  'a secretária da colônia':   'Edith'
+  'a secretária da colônia':   'Edith',
+  /* a ciclovia, no 15: o vizinho grita o nome dele no curral; o velho do
+     cais conta a história do arco-íris no fim do 15 e é o Sr. Tanner do 16 */
+  'o dono do curral':          'Sr. Hale',
+  'o velho pescador':          'Sr. Tanner'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a

@@ -19,7 +19,7 @@ const ANCORAS = {
   13: {local:'seafoam',   chamada:'O mar congelou em volta das ilhas faz meses, e ninguém de Fuchsia vem mais aqui.'},
   14: {local:'cinnabar',  chamada:'O laboratório queimou semana passada. A fita de isolamento é nova; o buraco na cerca, também.'},
   15: {local:'rota16',    chamada:'O chão avisa antes do som: batida de pata em solo duro, muito rápida, vindo.'},
-  16: {local:'ilha_sem_nome', chamada:'Um alicerce de torre no topo da ilha. Só o alicerce.'},
+  16: {local:'fuchsia',   chamada:'No cais, na mesa de dominó, um velho conta pra quem passa de uma ilha que não entra em mapa nenhum.'},
   17: {local:'rota23',    chamada:'Uma clareira redonda, fora da trilha, com grama mais alta e mais verde que a de fora.'},
   18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},

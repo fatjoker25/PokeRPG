@@ -743,6 +743,16 @@ desenhado por baixo. O nome de cada lugar tem posição própria em
 `ROTULO_MAPA`, pra nenhum cair em cima de outro: lugar novo entra com
 quadra e, se precisar, rótulo.
 
+Lugar `oculto` (a ilha sem nome, o norte da Rota 10, a travessia da
+Rota 21) só entra no mapa e na lista de vizinhos por `Mundo.conhecido`:
+descoberto (`local_<id>`), já pisado, ou onde o próximo arco espera
+(`Historia.proximoDestino`). Sem a última regra a jornada parava: o 16,
+o 19 e o 27 esperavam em lugar que o mapa nunca mostrava. Conexão de
+lugar escondido vai nos dois sentidos, senão ele só tem saída. E
+capítulo que acaba longe de onde começou diz onde (`sai:` na cena
+final, lido no `Jogo.fecharCapitulo`): o ferry do 14 desce em Fuchsia,
+e o mapa tem que estar lá quando o texto diz que você está.
+
 O mapa desenhado abre com o item **Mapa de Kanto**
 na mochila, como o Town Map dos jogos — ou, sem ele, pela parede do Centro
 Pokémon de qualquer cidade que tenha um (`Exploracao.temCentro`). O `town-map.png` do roteiro é o

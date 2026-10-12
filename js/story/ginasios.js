@@ -132,7 +132,7 @@ const GINASIOS = [
   depois:d=>[
     'O galpão está com metade das luzes acesas e Surge está trocando um fusível em cima de uma escada.',
     fala('Líder Lt. Surge', 'Ô, você! Segura a escada.', 'grita'),
-    d.flags.provas_navio || d.flags.caderno_do_trafico
+    d.flags.provas_navio
       ? fala('Líder Lt. Surge', 'Os caminhões pararam de sair de madrugada. Eu não sei se foi você. Eu não vou perguntar. Mas pararam.', 'baixo')
       : fala('Líder Lt. Surge', 'Porto continua igual: chega coisa, sai coisa. Mas agora eu pergunto de vez em quando. Culpa sua.')
   ],
@@ -140,7 +140,7 @@ const GINASIOS = [
   intro:d=>[
     'O ginásio de Vermilion é um galpão de manutenção portuária adaptado. Tem gerador, tem cabo no chão, tem cheiro de ozônio.',
     'Lt. Surge tem quarenta e poucos anos e a postura de quem já foi coisa pior que líder de ginásio.',
-    d.flags.provas_navio || d.flags.caderno_do_trafico
+    d.flags.provas_navio
       ? '"Você andou no navio." Ele não pergunta. "Eu vi sair três caminhões hoje de manhã e eu vi você olhando eles. A gente tem uma coisa em comum e não é boa."'
       : d.flags.chantageou_capitao
       ? '"O capitão me ligou." Ele acende o painel com o pé. "Ele não pediu nada. Só queria que alguém soubesse. Agora eu sei."'
@@ -150,7 +150,7 @@ const GINASIOS = [
     'O último cai e o galpão inteiro apaga — disjuntor geral, escuro total por quatro segundos.',
     'Quando a luz de emergência liga, Surge está rindo alto.',
     '"HA! Faz uns dois anos que ninguém queima meu disjuntor."',
-    d.flags.provas_navio || d.flags.caderno_do_trafico
+    d.flags.provas_navio
       ? 'Ele te entrega a insígnia e segura a sua mão mais tempo do que o normal. "Ô. O que você tiver no bolso do navio — usa. Eu não usei o meu e olha onde eu tô."'
       : 'Ele te entrega a insígnia como quem entrega uma ferramenta. "Guarda no bolso, não no pescoço. Quem usa no pescoço apanha."'
   ],

@@ -701,6 +701,13 @@ const Jogo = {
   /* ---------- fim de capítulo ---------- */
   fecharCapitulo(){
     const avisos = Historia.fecharCapitulo();
+    /* o capítulo pode acabar longe de onde começou (o ferry de Cinnabar
+       desce em Fuchsia, a ciclovia termina no cais): a cena final diz
+       onde você fica (`sai`), e o mapa acompanha o texto */
+    const d0 = Estado.dados, capFim = Historia.capitulo(d0.capitulo);
+    const cenaFim = capFim && capFim.cenas && capFim.cenas[d0.cena];
+    const sai = cenaFim && (typeof cenaFim.sai === 'function' ? cenaFim.sai(d0) : cenaFim.sai);
+    if (sai && LOCAIS[sai]){ d0.local = sai; Mundo.marcarVisitado(sai); }
     /* Rede: nenhuma rota do primeiro capítulo termina sem o aparelho.
        Quem saiu por uma porta que não passa por casa recebe do balcão. */
     const pend = [];

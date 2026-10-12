@@ -969,7 +969,7 @@ c17_a_clareira:{
 
 c17_as_plantas:{
   texto:[
-    d=>d.flags.conheceu_nair ? 'Você entra e agacha e olha as plantas de perto, porque você passou dias andando com uma mulher que conta Pokémon na ciclovia há trinta e um anos e alguma coisa pegou.' : 'Você entra e agacha e olha as plantas de perto.',
+    d=>d.flags.andou_com_a_nair ? 'Você entra e agacha e olha as plantas de perto, porque você andou uma manhã com uma mulher que conta Pokémon naquela ciclovia há trinta e um anos, e alguma coisa pegou.' : 'Você entra e agacha e olha as plantas de perto.',
     'E a clareira fica muito pior.',
     'Tem samambaia de encosta úmida ao lado de capim de terreno seco.',
     'Tem um pé de café — café, arbusto de cultivo, que não existe em mato nativo — de um metro e vinte, carregado.',
@@ -978,7 +978,7 @@ c17_as_plantas:{
     'Nenhuma dessas plantas deveria estar a menos de duzentos quilômetros das outras.',
     'Todas estão saudáveis.',
     'E o pé de goiaba tem fruta caída apodrecendo embaixo dele, o que quer dizer que ninguém come.',
-    d=>d.flags.conheceu_nair ? 'Você já viu esse pé de goiaba antes.\nNão esse. Um igual, numa ciclovia vazia, com a Ylva anotando zero na prancheta.' : ''
+    d=>d.flags.andou_com_a_nair ? 'Você já viu esse pé de goiaba antes.\nNão esse. Um igual, numa ciclovia vazia, com a Ylva anotando zero na prancheta.' : ''
   ],
   ef:{flag:['viu_as_plantas','entendeu_a_clareira'],
       rep:{eixo:'bom',delta:5,motivo:'Agachou e olhou as plantas'},
