@@ -366,20 +366,24 @@ c16_chegou_voando:{
     'Mar aberto visto de cima não tem escala: é a mesma superfície igual em todas as direções, e depois de uma hora você para de tentar medir distância porque não existe nada pra medir contra.',
     'A ilha aparece como uma mancha e vira pedra.',
     'E de cima você vê, antes de pousar, a coisa que quem chega de barco nunca vai ver:',
-    'no platô do alto da ilha, o alicerce da torre não é um retângulo. É um octógono. E em volta dele, na rocha, queimadas no chão, tem oito marcas circulares de uns setenta centímetros, uma pra cada face, igualmente espaçadas.',
+    'no platô do alto da ilha, o alicerce da torre é um octógono de faces iguais. E em volta dele, na rocha, queimadas no chão, tem oito marcas circulares de uns setenta centímetros, uma pra cada face, igualmente espaçadas.',
     'Do chão isso é mato e pedra solta. Do ar é um desenho.'
   ],
-  ef:{flag:['chegou_voando_na_ilha','sabe_da_ilha','a_marca_na_pedra'],
+  ef:{flag:['chegou_voando_na_ilha','chegou_na_ilha','sabe_da_ilha','a_marca_na_pedra'], limpaFlag:'nao_foi_a_ilha',
       rep:{eixo:'bom', delta:3, motivo:'Chegou à ilha sem nome por cima, e viu de cima o que ninguém viu de baixo.'},
+      /* quatro horas de voo; a ilha passa a existir no mapa */
+      executar:()=>{ Relogio.avancar(C16_VOO); Mundo.descobrir('local_ilha_sem_nome'); return []; },
       registrar:'O alicerce da ilha é octogonal, com oito marcas circulares queimadas na rocha, uma por face.',
       presagio:d=>d.flags.viu_a_marca_da_ponta_sul ? 'Setenta centímetros de círculo queimado. Você já viu uma dessas marcas antes, numa pedra de praia.' : 'Oito círculos queimados, um por face. Do chão ninguém vê.'},
   escolhas:[
-    {texto:'Pousar no platô, em cima do desenho.', vai:'c16_alicerce'},
+    {texto:'Pousar no platô, em cima do desenho.', vai:'c16_alicerce', ef:{flag:'c16_pousou_no_desenho'}},
     {texto:'Pousar e esperar a noite no meio do círculo.', vai:'c16_esperou_no_circulo'}
   ]
 }
 
 }, [
   {de:'c16_velho', para:'c16_por_cima',
+   texto:portaDeCampo('Pensar em chegar lá sem barco nenhum.', ()=>Campo.voar(), 'um voador de grande porte')},
+  {de:'c16_velho_de_novo', para:'c16_por_cima',
    texto:portaDeCampo('Pensar em chegar lá sem barco nenhum.', ()=>Campo.voar(), 'um voador de grande porte')}
 ]);

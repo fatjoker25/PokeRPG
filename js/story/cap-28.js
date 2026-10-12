@@ -51,7 +51,9 @@ c28_ab_o_que_ficou_na_boca:{
     'Uma pilha de coisas suas, encostada numa parede, num lugar que alguém um dia vai achar.',
     d=>{
       const partes = [];
-      if (d.flags.carrega_a_pena) partes.push('A pena de três faixas você não deixa. Você prometeu voltar e contar de quem é.');
+      if (d.flags.carrega_a_pena) partes.push(d.flags.contou_pra_nina
+        ? 'A pena de três faixas você não deixa. Foi presente de uma menina de nove anos.'
+        : 'A pena de três faixas você não deixa. Você prometeu voltar e contar de quem é.');
       if (d.flags.copia_do_hideo || d.flags.reika_precisa_de_papel) partes.push('O papel você deixa. Papel não serve pra nada lá embaixo e serve pra tudo aqui em cima.');
       partes.push('A carteira, a foto, o caderninho.');
       return partes.join(' ');
@@ -729,7 +731,7 @@ c23_escolha_final:{
      cond:d=>!!(d.flags.assumiu_a_rede||d.flags.trabalha_para_terceira)},
     {texto:'"Vim te oferecer um acordo formal." (pela Liga)', vai:'c23_tratado',
      cond:d=>!!d.jogador.cargo},
-    {texto:'Entregar a pena de Ho-Oh.', vai:'c23_pena', cond:d=>!!d.flags.carrega_a_pena},
+    {texto:'Entregar a pena de Ho-Oh.', vai:'c23_pena', cond:()=>Estado.contaItem('Pena Arco-Íris') > 0},
     {texto:'"Quanto você vale?"', vai:'c23_inventario',
      cond:d=>Historia.via()==='mercenario'||!!d.flags.vendeu_mew},
     {texto:'Mostrar a carta do Dorian.', vai:'c23_carta',
@@ -881,16 +883,17 @@ c23_tratado:{
 
 c23_pena:{
   falante:'Mewtwo',
-  vozes:['N','P','N','N','N'],
   texto:[
-    'Você tira a pena da mochila. Ela tem quase um metro e pesa como papel, e na luz da câmara ela quebra a luz em todas as cores ao mesmo tempo.',
+    'Você tira a pena da mochila. Ela tem quarenta centímetros e pesa como papel, e na luz da câmara ela quebra a luz em todas as cores ao mesmo tempo.',
     'Mewtwo olha a pena.',
     'E pela primeira vez desde que você entrou, ele demonstra uma emoção que você consegue nomear sem ajuda: espanto.',
-    '"Ele te deu isso."',
-    '"Deu."',
-    '"Ele não dá isso." Ele não tira os olhos da pena. "Ele existe desde antes das cidades e ele não dá isso."',
+    fala('Mewtwo', 'Ele te deu isso.'),
+    d=>fala(d.jogador.nome, d.flags.pena_dada ? 'Deu.' : 'Caiu. Ele viu eu pegar.'),
+    d=>fala('Mewtwo', d.flags.pena_dada ? 'Ele não dá isso.' : 'Ele não deixa cair isso perto de ninguém.'),
+    'Ele não tira os olhos da pena.',
+    fala('Mewtwo', 'Ele existe desde antes das cidades, e ele não dá isso.'),
     'Uma pausa muito longa.',
-    '"Por que você trouxe pra mim?"'
+    fala('Mewtwo', 'Por que você trouxe pra mim?')
   ],
   ef:{flag:'mostrou_a_pena'},
   escolhas:[
