@@ -796,6 +796,11 @@ nenhum ginásio que falta está `disponivel`, `faltaInsignias` libera com o
 que o jogador tem. Trava nova passa por essas funções, não por `requer` no
 capítulo — `requer` pula o capítulo em vez de esperar.
 
+Ginásio com `horario` (Cinnabar: quinta, das 14h às 18h, como diz a
+folha da porta no capítulo 14) responde `fechado` fora da hora, com o
+dia de hoje no texto. `ginasioAoAlcance` conta `fechado` como aberto:
+é só esperar, então não destrava porta nenhuma.
+
 O líder também acompanha a estrada: `pisoDoGinasio()` põe o time no
 mínimo em `nivelArea` do capítulo atual − `ABAIXO_DA_AREA` (8). Sem
 isso, quem deixava Misty pra depois achava ela no 17 num capítulo de

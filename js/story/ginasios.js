@@ -327,6 +327,8 @@ const GINASIOS = [
 {
   id:'cinnabar', cidade:'Cinnabar', lider:'Blaine', tipo:'Fogo',
   insignia:'Insígnia Vulcão', dificuldade:4,
+  /* a folha plastificada na porta: só às quintas, das duas às seis */
+  horario:{dia:3, de:14, ate:18, texto:'Na porta, a folha plastificada: desafios às quintas, das duas às seis da tarde.'},
   escaloes:[
     {min:0, especies:[37, 58], variacoes:[37,58,77]},                       // Vulpix, Growlithe
     {min:2, especies:[37, 58, 77], variacoes:[37,58,77]},                   // + Ponyta
@@ -337,33 +339,35 @@ const GINASIOS = [
   premio:{dinheiro:7000, itens:{'Hyper Potion':3,'Ultra Ball':2,'TM38 Fire Blast':1}, rep:1, status:'sorte'},
 
   depois:d=>[
-    'Blaine está na lousa de novo, escrevendo uma conta que não termina.',
-    fala('Líder Blaine', 'Equação de calor. Eu escrevo todo dia e todo dia ela dá o mesmo resultado. É reconfortante.'),
-    fala('Líder Blaine', d.flags.leu_caderno
-      ? 'Você ainda carrega o que leu naquele caderno. Eu também. A gente podia almoçar um dia, só pra não carregar sozinho.'
-      : 'Volta quando quiser aprender física. Eu dou aula de graça pra quem já me venceu. É a única regra que eu inventei.', 'riso')
+    'Blaine está na beirada da arena, com a toalha no pescoço e uma garrafa térmica do lado.',
+    fala('Líder Blaine', 'Café?'),
+    d.flags.blaine_pode_parar
+      ? fala('Líder Blaine', 'Eu durmo agora, sabia? Sete horas seguidas. Fazia quatro anos.', 'riso')
+      : d.flags.leu_caderno && d.flags.conheceu_blaine
+      ? fala('Líder Blaine', 'Você ainda carrega o que leu naquele caderno. Eu também. A gente podia almoçar um dia, só pra não carregar sozinho.', 'baixo')
+      : fala('Líder Blaine', 'Volta quando quiser. Eu tenho setenta e dois anos e pouca visita.', 'riso')
   ],
 
   intro:d=>[
-    'O ginásio de Cinnabar sobreviveu ao incêndio porque fica do outro lado da ilha. Blaine dá aula de física numa lousa quando você entra.',
-    'Ele tem setenta e poucos anos, óculos escuros dentro de um prédio e uma calma de quem já perdeu o que tinha pra perder.',
-    d.flags.leu_caderno
-      ? '"Você leu o caderno dele." Ele tira os óculos pela primeira e única vez. "O Fuji e eu almoçamos juntos por nove anos. Eu sabia do tanque e eu não fiz nada, e essa é a frase inteira, sem parte dois."'
+    'O ginásio de Cinnabar é uma porta de aço na base do vulcão, no fim de sessenta e dois degraus de cimento, e lá dentro faz trinta e oito graus.',
+    'Blaine espera na arena, de bermuda e com uma toalha no pescoço: setenta e dois anos e nenhuma pressa.',
+    d.flags.conheceu_blaine
+      ? '"Lá fora eu te sirvo café." Ele entra na marcação. "Aqui dentro, não."'
       : d.flags.pegou_caderno
-      ? '"Tem um caderno de capa dura na sua mochila." Ele não pergunta como sabe. "Guarda ele. Um dia alguém vai precisar provar que aquilo existiu."'
-      : '"Todo mundo acha que fogo é sobre raiva." Ele volta pra lousa. "Fogo é sobre o que sobra depois. Eu sou professor de física. Eu sei o que sobra."'
+      ? '"Tem um caderno de capa dura na sua mochila." Ele não pergunta como sabe. "Setecentas pessoas. Depois a gente conversa sobre ele. Agora é luta."'
+      : '"Regra da casa: se o seu Pokémon cair e você quiser continuar, você continua. Se eu vir que você tá continuando por teimosia, eu paro a luta."'
   ],
   vitoria:d=>[
-    'O último cai e o calor do ginásio inteiro cai junto, de uma vez, como se alguém tivesse fechado um forno.',
-    'Blaine te entrega a insígnia sem cerimônia nenhuma.',
-    d.flags.leu_caderno || d.flags.viu_os_doze
-      ? '"Você vai pro norte." Não é pergunta. "Quando você encontrar ele, não peça desculpa pelo Fuji. Ele não quer isso." Uma pausa longa. "Só responde o que ele perguntar. Foi só isso que a gente não fez."'
+    'O último cai e o calor da arena inteira cai junto, de uma vez, como se alguém tivesse fechado um forno.',
+    'Blaine tira do bolso da bermuda uma insígnia amassada e te entrega sem cerimônia nenhuma.',
+    d.flags.conheceu_blaine && (d.flags.leu_caderno || d.flags.blaine_sabe_do_onze)
+      ? '"Se um dia você encontrar ele, não pede desculpa pelo Ansel. Ele não quer isso." Uma pausa longa. "Só responde o que ele perguntar. Foi só isso que a gente não fez."'
       : '"Você é rápid{o|a} e eu sou velho. Não se engane achando que foi mais que isso." Ele sorri. "Mas é o suficiente, e o suficiente é o que existe."'
   ],
   derrota:d=>[
-    'Você perde numa ilha com um vulcão ativo, dentro de um prédio com ar-condicionado quebrado.',
+    'Você perde dentro de um vulcão, a trinta e oito graus, com a luz entrando por um buraco no teto.',
     'Blaine te dá água e espera você respirar.',
-    '"Você lutou contra o calor em vez de lutar contra o Pokémon. Todo mundo faz isso aqui. O calor não tem HP, {garoto|garota}."'
+    '"Você lutou contra o calor em vez de lutar contra o Pokémon. Todo mundo faz isso aqui. O calor não tem HP, {meu filho|minha filha}."'
   ]
 },
 
@@ -509,6 +513,13 @@ function statusGinasio(g){
     const r = g.recusa(d);
     if (r) return {estado:'recusado', texto:'O líder se recusa a lutar com você', fala:r};
   }
+  /* ginásio com dia e hora de desafio: fora deles a porta diz quando voltar */
+  if (g.horario && d.relogio){
+    const h = g.horario, c = Calendario.hoje();
+    sincronizarHora(d.relogio);
+    if (c.semanaIdx !== h.dia || d.relogio.hora < h.de || d.relogio.hora >= h.ate)
+      return {estado:'fechado', texto:`${h.texto} Hoje é ${c.semana}.`};
+  }
   return {estado:'disponivel', texto: deCasa && !numInsignias() ? 'O ginásio da sua cidade' : 'Disponível'};
 }
 
@@ -528,7 +539,8 @@ const INSIGNIAS_DO_CAPITULO = {6:1, 8:2, 10:3, 11:3, 12:4, 14:5, 17:6, 22:8};
 const INSIGNIAS_DA_PASSAGEM = {'rota23>caminho_vitoria':8, 'caminho_vitoria>rota23':0};
 
 function ginasioAoAlcance(){
-  return GINASIOS.some(g => statusGinasio(g).estado === 'disponivel');
+  /* fechado por hora é só esperar: conta como aberto */
+  return GINASIOS.some(g => ['disponivel', 'fechado'].includes(statusGinasio(g).estado));
 }
 /* null se pode passar; senão {pedidas, tem} */
 function faltaInsignias(pedidas){

@@ -49,6 +49,13 @@ const RECUSAM_O_NOME = {
     fala('o fumante', 'O sigilo é sobre espécimes, procedimentos, instalações e pessoas.'),
     fala('o fumante', 'Eu sou uma pessoa. Pessoa tá na cláusula.', 'baixo')
   ],
+  /* o homem de terno do porto de Cinnabar: o quarto passageiro do livro
+     do capitão, que entrou e não consta na saída */
+  'o homem de terno escuro': () => [
+    'Ele não vira a cabeça.',
+    fala('o homem de terno escuro', 'O meu nome não está em livro nenhum dessa ilha.'),
+    fala('o homem de terno escuro', 'Pode perguntar pro capitão do porto.', 'frio')
+  ],
   'a mulher da pasta': () => [
     'Ela olha o relógio de pulso antes de responder, e o relógio dela não atrasa.',
     fala('a mulher da pasta', 'Meu nome está na procuração, que é pública.'),

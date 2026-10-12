@@ -429,7 +429,7 @@ seafoam:{
   conexoes:['rota19'],
   desc:[
     'Duas formações de rocha branca furadas por dentro. A água entra por baixo e sai pelo outro lado.',
-    'Nenhum pescador de Fuchsia vem aqui desde o inverno passado.'
+    'Pescador de Fuchsia passa longe daqui, por costume ou por medo.'
   ]
 },
 cinnabar:{

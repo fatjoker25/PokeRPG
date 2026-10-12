@@ -103,7 +103,7 @@ const CAMPEAO = {
     'Ele não se apresenta. Não fala. Não estende a mão.',
     'Ele solta a primeira Pokébola, e é um Pikachu de nível oitenta e alguma coisa.',
     d.flags.leu_caderno || d.flags.viu_os_doze
-      ? 'Você quer perguntar mil coisas. Sobre Mewtwo, sobre as aves, sobre por que ele soltou as três. Ele olha pra você de um jeito que fecha todas as perguntas antes delas saírem.'
+      ? `Você quer perguntar mil coisas. Sobre Mewtwo, sobre as aves${d.flags.sabe_do_red_no_mirante ? ', sobre o banco do mirante' : ''}. Ele olha pra você de um jeito que fecha todas as perguntas antes delas saírem.`
       : 'Você entende quem é antes de qualquer confirmação, porque só existe uma pessoa em Kanto que entraria num salão desses e não diria nada.',
     'Red não fala. Red nunca falou.'
   ],

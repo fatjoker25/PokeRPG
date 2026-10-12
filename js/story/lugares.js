@@ -16,7 +16,7 @@ const ANCORAS = {
   10: {local:'usina',     chamada:'O zumbido vem da subestação, e a usina está desligada há onze anos.'},
   11: {local:'saffron',   chamada:'A Silph Co. ocupa um quarteirão inteiro. O ginásio da cidade está fechado.'},
   12: {local:'fuchsia',   chamada:'A Zona Safári vende entrada a quinhentos e tem trinta e um quilômetros de cerca.'},
-  13: {local:'seafoam',   chamada:'O mar congelou em outubro e ninguém de Fuchsia vem mais aqui.'},
+  13: {local:'seafoam',   chamada:'O mar congelou em volta das ilhas faz meses, e ninguém de Fuchsia vem mais aqui.'},
   14: {local:'cinnabar',  chamada:'O laboratório queimou semana passada. A fita de isolamento é nova; o buraco na cerca, também.'},
   15: {local:'rota16',    chamada:'O chão avisa antes do som: batida de pata em solo duro, muito rápida, vindo.'},
   16: {local:'ilha_sem_nome', chamada:'Um alicerce de torre no topo da ilha. Só o alicerce.'},
@@ -153,10 +153,11 @@ cinnabar:[
     '"Você tem Ponyta? Eu tenho um problema de conta de luz e o problema dorme na minha lavanderia."'], descobre:'troca_cinnabar'},
   {chave:'cn_conta', texto:['Alguém colou no mural do Centro Pokémon uma conta de energia impressa, com um trecho circulado a caneta. Ninguém tirou.']},
   {chave:'ginasio_cinnabar', texto:[
-    'O ginásio de Cinnabar fica do outro lado da ilha e sobreviveu ao incêndio por isso.',
-    'Pela janela dá pra ver uma lousa cheia de conta de física.'], descobre:'ginasio_cinnabar'},
+    'O ginásio de Cinnabar não é um prédio: é uma porta de aço na base do vulcão, no fim de sessenta e dois degraus de cimento.',
+    'Na porta, uma folha plastificada: desafios às quintas, das duas às seis.'], descobre:'ginasio_cinnabar'},
   {chave:'loja_cinnabar', texto:['A loja da ilha é uma casa com uma vitrine. A dona atende de chinelo.'], descobre:'loja_cinnabar'},
-  {chave:'cn_lab', texto:['O prédio do laboratório queimou parcialmente na semana passada. A fita de isolamento é nova. O buraco na cerca, também.']}
+  /* o incêndio é do capítulo 14: antes dele, o prédio está só fechado */
+  {chave:'cn_lab', cond:d=>(d.capitulo || 0) >= 13, texto:['O laboratório da ponta leste tem uma ala preta de fuligem e fita de isolamento em volta. Tem um buraco na cerca.']}
 ],
 pallet:[
   {chave:'pl_troca', texto:['Um menino de sete anos te para na rua e pergunta, muito sério, se você tem um Caterpie. Ele não explica pra quê.']},
@@ -259,7 +260,7 @@ const Descobertas = {
   sortear(id, local, soCidade){
     const d = Estado.dados;
     const lista = (DESCOBERTAS[id] || []).concat(this.deTroca(id))
-      .filter(x => !Mundo.descobriu('achou_' + x.chave));
+      .filter(x => !Mundo.descobriu('achou_' + x.chave) && (!x.cond || x.cond(d)));
     if (lista.length && Dados.chance(soCidade ? 75 : 55)){
       const a = Dados.escolher(lista);
       Mundo.descobrir('achou_' + a.chave);
@@ -490,13 +491,13 @@ const CONVERSAS = {
     [fala('o pescador da ilha', 'O vulcão ronca de vez em quando. A gente já nem olha. Turista olha. Turista sempre olha.')],
     ['Um Ponyta pasta perto da praia preta. Onde ele pisa, a areia fica marcada de quente por um tempo.'],
     [fala('a professora aposentada', 'Eu dei aula aqui trinta anos. Metade da ilha aprendeu a ler comigo. A outra metade aprendeu a pescar e não precisou.')],
-    {cond:d=>d.relogio.periodo==='manhã', texto:['A balsa da manhã chega com jornal de ontem e pão de anteontem. A ilha inteira desce pro cais pra buscar os dois.']},
+    {cond:d=>d.relogio.periodo==='manhã' && [1, 5].includes(Calendario.hoje().semanaIdx), texto:['Dia de ferry: o barco da manhã chega com jornal de ontem e pão de anteontem, e a ilha inteira desce pro cais pra buscar os dois.']},
     [fala('o barqueiro', 'A ilha inteira é o vulcão. As casas são o que sobrou de espaço.')],
     [fala('a moça da vitrine', 'O laboratório aceita fóssil. Aceita mesmo.'),
      fala('a moça da vitrine', 'Já vi sair Pokémon de lá que não devia estar andando.', 'baixo')],
     ['Um velho aponta a mansão queimada no alto do morro e não fala nada sobre ela. Ele só aponta e continua o caminho.'],
-    [fala('o rapaz do píer', 'O líder daqui faz pergunta antes de lutar. Se você não souber responder, ele luta mesmo assim.'),
-     fala('o rapaz do píer', 'Mas você sabe que ele sabe.')],
+    [fala('o rapaz do píer', 'O líder daqui só luta na quinta. Ele diz que é pra quem chega ter tempo de desistir.'),
+     fala('o rapaz do píer', 'Ninguém desiste. Mas ele dá o tempo.')],
     ['A dona da vitrine leva tudo o que vende de barco, o que quer dizer que às vezes falta tudo, e ela avisa disso com humor.'],
     ['Uma família de turistas tira foto com o vulcão ao fundo, e o guia local espera com a paciência de quem faz isso quarenta vezes por semana.'],
     [fala('o barqueiro', 'Ninguém da ilha entra naquela mansão. Gente de fora entra.'),

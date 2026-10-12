@@ -1026,10 +1026,10 @@ cinnabar:[
   id:'cin_a_janela_acesa', umaVez:true, peso:3,
   titulo:'A janela do laboratório',
   texto:[
-    'O laboratório tem uma janela no térreo onde dá pra ver uma bancada com a luz acesa.',
+    'O laboratório de fósseis tem uma janela no térreo onde dá pra ver uma bancada com a luz acesa.',
     'A luz está acesa a qualquer hora que você passe — de manhã, à tarde, às duas da madrugada.',
     'Ninguém nunca está sentado nela.',
-    fala('a moça da vitrine', 'Aquela luz tá acesa desde antes de eu nascer aqui.')
+    fala('a moça da vitrine', 'Aquela luz tá acesa desde antes de eu trabalhar aqui.')
   ],
   escolhas:[
     {texto:'Bater na janela.',
@@ -1043,14 +1043,14 @@ cinnabar:[
        'Ela olha pra você através do vidro, sem abrir, sem falar.',
        'E aí ela levanta o caderno e mostra uma página escrita, virada pra você.',
        fala('a página do caderno', 'NÃO FUNCIONA. TENTE A PORTA.', 'frio'),
-       'A porta do laboratório está trancada há três anos.'
+       'A porta fica do outro lado do prédio, e quando você chega nela, a bancada já está vazia de novo.'
      ]},
     {texto:'Perguntar na vitrine quem trabalha ali.',
      ef:{flag:'sabe_de_quem_e_a_bancada',
-         registrar:'A bancada acesa do laboratório de Cinnabar era do Dr. Fuji. A luz nunca foi apagada.'},
+         registrar:'A bancada acesa do laboratório de fósseis de Cinnabar era do Dr. Fuji. A luz nunca foi apagada.'},
      resultado:[
-       fala('a moça da vitrine', 'Aquela bancada era do Fuji.'),
-       fala('a moça da vitrine', 'Ele saiu daqui em 1996 e foi pra Lavender e nunca mais voltou.'),
+       fala('a moça da vitrine', 'Aquela bancada era do Fuji, do instituto da ponta leste.'),
+       fala('a moça da vitrine', 'Quando fecharam o instituto, em noventa e seis, o laboratório de fósseis ficou com os móveis. E com a luz.'),
        d=>fala(d.jogador.nome, 'E por que a luz continua acesa?'),
        fala('a moça da vitrine', 'Porque ninguém desligou.', 'baixo'),
        fala('a moça da vitrine', 'Não tem mistério nenhum, {moço|moça}. Ninguém desligou e agora ninguém tem coragem de ser o primeiro.')
@@ -1068,7 +1068,7 @@ cinnabar:[
        'Você consegue ler o cabeçalho do formulário e é: FORMULÁRIO DE RETIRADA — CADERNO 7.'
      ]},
     {texto:'Seguir andando.', ef:{},
-     resultado:['Você segue. A luz continua acesa atrás de você e vai continuar por bastante tempo.']}
+     resultado:['Você segue. A luz continua acesa atrás de você, e ninguém apaga.']}
   ]
 },
 {
@@ -1103,7 +1103,7 @@ cinnabar:[
        d=>fala(d.jogador.nome, 'E?'),
        fala('o barqueiro', 'A Liga respondeu.', null, 'Ele tira um papel dobrado do bolso da camisa, onde ele claramente carrega há um tempo.'),
        fala('a resposta da Liga', 'PREZADO SENHOR, SUA MANIFESTAÇÃO FOI REGISTRADA SOB O PROTOCOLO ABAIXO E ENCAMINHADA AO ÓRGÃO COMPETENTE.', 'frio'),
-       fala('o barqueiro', 'Isso aqui foi em maio.')
+       ()=>fala('o barqueiro', `Isso aqui foi em ${Calendario.MESES[(Calendario.hoje().mes + 8) % 12]}.`)
      ]},
     {texto:'Pedir a cópia do protocolo.',
      cond:d=>!!d.flags.ninguem_ouviu_o_barqueiro,

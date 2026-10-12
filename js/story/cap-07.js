@@ -1533,7 +1533,7 @@ c7_visao:{
   ],
   ef:{registrar:'A Torre mostrou o que você trouxe.'},
   batalha:{dex:92, nivel:30, tipo:'selvagem', ambiente:'cemiterio', fuga:true,
-           vitoria:'c7_pos_visao', derrota:'c7_pos_visao', fuga2:'c7_pos_visao', captura:'c7_pos_visao', gameover:'gameover'}
+           vitoria:'c7_pos_visao', derrota:'c7_pos_visao', fuga2:'c7_fugiu_da_visao', captura:'c7_pos_visao', gameover:'gameover'}
 },
 
 c7_pos_visao:{
@@ -1553,6 +1553,13 @@ c7_pos_visao:{
     {texto:'Descer e chamar o zelador.', vai:'c7_chamou_zelador'},
     {texto:'Descer e ir embora.', vai:'c7_fim'}
   ]
+},
+
+/* quem foge da visão chega ao mesmo corredor, mas sem ter ficado até acabar */
+c7_fugiu_da_visao:{
+  texto:[],
+  ef:{flag:'fugiu_da_visao', moral:5},
+  escolhas:[]
 },
 
 c7_chamou_zelador:{
@@ -2356,3 +2363,12 @@ c7_fim:{
 }}
 
 );
+
+/* c7_fugiu_da_visao é o c7_pos_visao com a fuga marcada: mesmo texto,
+   mesmas saídas (o texto já lê fugiu_da_visao) */
+(function(){
+  const cap = CAPITULOS.find(c => c.num === 7);
+  const pos = cap.cenas.c7_pos_visao, fug = cap.cenas.c7_fugiu_da_visao;
+  fug.texto = pos.texto;
+  fug.escolhas = pos.escolhas;
+})();

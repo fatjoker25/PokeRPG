@@ -4744,6 +4744,7 @@ const UI = {
       <div class="linha"><span class="k">Enquanto falta</span><span class="v">o capítulo aparece no lugar, fechado, dizendo quantas faltam · ele não começa até você ter as que faltam</span></div>
       <div class="linha"><span class="k">Nível do líder</span><span class="v">pela faixa de insígnias que você tem (base 10 com 0–1, 18 com 2–3, 28 com 4–5, 40 com 6 ou mais, + a dificuldade do ginásio, + 3 por insígnia dentro da faixa) · nunca abaixo da área do capítulo em que você está − 8 · cada Pokémon da fila um nível acima, o ás +2</span></div>
       <div class="linha"><span class="k">Ginásio que não te aceita</span><span class="v">se nenhum ginásio que falta está aberto pra você (recusou, trancado), a porta abre com o que você tem</span></div>
+      <div class="linha"><span class="k">Hora marcada</span><span class="v">o ginásio de Cinnabar só aceita desafio às quintas, das 14h às 18h · fora disso a porta diz o dia de hoje e você volta na quinta · conta como aberto, então não destrava porta nenhuma</span></div>
       <p class="sussurro">Os capítulos condicionais (29 a 32) não cobram insígnia. Ginásio se desafia na porta dele, na cidade, na ordem que você quiser.</p>
 
       <h3>Caminho que a escolha fecha</h3>
