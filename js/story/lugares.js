@@ -21,7 +21,7 @@ const ANCORAS = {
   15: {local:'rota16',    chamada:'O chão avisa antes do som: batida de pata em solo duro, muito rápida, vindo.'},
   16: {local:'fuchsia',   chamada:'No cais, na mesa de dominó, um velho conta pra quem passa de uma ilha que não entra em mapa nenhum.'},
   17: {local:'viridian',  chamada:'Daqui até o Planalto Indigo são duas rotas e uma montanha. Hoje o Planalto mandou chamar.'},
-  18: {local:'saffron',   chamada:'O cartório da rua Dez abre até as 17h e cobra oito pokedólares a cópia.'},
+  18: {local:'saffron',   chamada:'O cartório de pessoas jurídicas fica num quarto andar, entre um dentista e uma escola de datilografia, e fecha às cinco.'},
   19: {local:'rota21',    chamada:'A cerca nova de três metros, com placa de área de pesquisa.'},
   20: {local:'saffron',   chamada:'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. Segunda, 10h.'},
   21: {local:()=>localDoCapitulo(1), chamada:'Faz tempo demais que você não vê a sua rua, e alguém ligou três vezes.'},

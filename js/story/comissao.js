@@ -8,7 +8,10 @@
 const COMISSAO = {
   nome:'Comissão de Gestão de Risco Biológico de Kanto',
   sigla:'CGRB',
-  fundacao:'quatro meses depois da queda da Equipe Rocket',
+  /* a associação tem nove anos (é a da junta de Celadon, no 9); a reforma que
+     escreveu o estatuto de agora e trocou o nome pra CGRB foi um ano e oito
+     meses antes do capítulo 18, quatro meses depois da morte do Harold Colman */
+  fundacao:'nove anos antes do capítulo 18; com este nome e este estatuto desde a reforma de um ano e oito meses antes',
 
   /* Trechos do estatuto — o horror deles é que está tudo escrito */
   estatuto:[
@@ -40,7 +43,7 @@ const COMISSAO = {
 const GENTE_COMISSAO = {
   presidente:{
     nome:'a Presidente', nomeReal:'Hester Colman', cargo:'Presidente do Conselho',
-    descricao:'Cinquenta e poucos anos, tailleur cinza, fala baixo e nunca repete uma frase. Foi diretora de fiscalização da Liga por nove anos antes de pedir demissão para fundar a Comissão.'
+    descricao:'Cinquenta e poucos anos, tailleur cinza, fala baixo e nunca repete uma frase. Foi diretora de fiscalização da Liga por nove anos antes de pedir demissão para presidir a Comissão.'
   },
   curador:{
     nome:'Curador Fabre', cargo:'Curador',

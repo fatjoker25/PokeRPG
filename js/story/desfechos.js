@@ -40,13 +40,14 @@ enxertarDesfecho(18, {
 
 c18_entregar_tudo:{
   texto:[
-    'Você espalha tudo que tem na mesa do banco de praça e leva onze minutos só pra pôr em ordem.',
+    d=>Historia.jaAconteceu('c18_ab_a_reporter')
+      ? 'Você espalha tudo que tem no banco de praça, entre as duas xícaras, e leva onze minutos só pra pôr em ordem.'
+      : 'Você liga pra redação do Correio de Kanto e pede a Rhea Ashford. Ela marca num banco de praça em Saffron, e você espalha tudo ali e leva onze minutos só pra pôr em ordem.',
     d=>{
-      const n = ['copia_dos_oito_convenios','copia_das_onze_ocorrencias','tem_os_relatorios_da_nishino',
-                 'copia_do_hideo','copia_do_livro_de_bordo','tem_a_via_rosa','provas_navio',
-                 'tem_a_caderneta_do_binoculo','imprimiu_do_terminal','tem_a_lista_dos_trinta_e_um']
-                .filter(f => d.flags[f]).length;
-      return `São ${n} documentos com carimbo, assinatura ou brasão, juntados em cidades que não se falam.`;
+      const n = c18_documentos(d);
+      return n === 1
+        ? 'É um documento só com carimbo, assinatura ou brasão. Um é o que separa depoimento de matéria.'
+        : `São ${porExtenso(n)} documentos com carimbo, assinatura ou brasão, juntados em cidades que não se falam.`;
     },
     'Rhea Ashford lê tudo em silêncio por quarenta minutos e não faz uma anotação, porque anotar atrapalha a primeira leitura.',
     fala('Rhea Ashford', 'Você entende o que acontece se eu publicar isso.'),
@@ -73,11 +74,15 @@ c18_fim_publicou:{
     fala('Rhea Ashford', 'E o seu nome?'),
     d=>fala(d.jogador.nome, 'Não põe.'),
     'Ela assente uma vez e guarda a pilha na pasta de papelão e fecha o elástico, e o elástico faz um estalo pequeno.',
-    fala('Rhea Ashford', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu em três cidades.'),
+    fala('Rhea Ashford', 'Então a partir de agora eu não te conheço, e você não me conhece, e a gente nunca se viu.'),
     'Ela levanta.',
     fala('Rhea Ashford', 'Isso não é frieza. É o jeito de você continuar tendo uma vida.'),
     'Ela vai embora pela praça e você fica sentad{o|a} no banco.',
-    'E é aqui que a sua parte acaba, num banco de praça em Saffron, às quatro da tarde de uma quarta-feira, sem ninguém por perto pra ver.'
+    d=>{
+      const c = Calendario.hoje(), r = d.relogio, h = r ? r.hora : 15;
+      const quando = h < 12 ? 'de manhã' : h < 18 ? 'à tarde' : 'de noite';
+      return `E é aqui que a sua parte acaba, num banco de praça em Saffron, ${c.semana === 'sábado' || c.semana === 'domingo' ? 'num' : 'numa'} ${c.semana} ${quando}, sem ninguém por perto pra ver.`;
+    }
   ],
   final:{id:'publicou_sem_nome', titulo:'A FONTE QUE NÃO TEM NOME', texto:[
     'A matéria sai em três partes, no Correio de Kanto, começando numa terça.',
@@ -85,9 +90,9 @@ c18_fim_publicou:{
     'A segunda parte é a que quebra: ela cruza o convênio do banco com o rodapé da auditoria da Zona Safári e com a folha de manifesto do porto de Vermilion, e mostra que os três falam do mesmo lote, com o mesmo número, em três documentos de órgãos que não se comunicam.',
     'A terceira parte é só a lista de quem assinou cada papel.',
     'A CGRB emite uma nota de resposta com onze parágrafos. O nono parágrafo admite a existência do programa continuado e é o único que qualquer pessoa lê.',
-    'Abre-se uma comissão parlamentar de inquérito em quarenta dias. Ela dura dois anos e três meses e ouve cento e nove pessoas.',
+    'A Assembleia de Kanto abre um inquérito em quarenta dias. Ele dura dois anos e três meses e ouve cento e nove pessoas.',
     'Você não é uma delas, porque ninguém sabe que você existe.',
-    'Você lê a CPI pelo jornal, como todo mundo, num Centro Pokémon de uma cidade qualquer, com um time cansado e nenhuma insígnia a mais do que tinha.',
+    'Você acompanha o inquérito pelo jornal, como todo mundo, num Centro Pokémon de uma cidade qualquer, com um time cansado e nenhuma insígnia a mais do que tinha.',
     'Kanto muda devagar, do jeito que Kanto muda: por lei, por dois anos de audiência, e por um parágrafo nono que ninguém consegue retirar.',
     'E em nenhum lugar dessa história de dois anos aparece o seu nome.',
     'Foi o que você pediu.'
@@ -114,7 +119,7 @@ c18_fim_com_nome:{
     'E aí, na segunda semana, acontece a coisa que Rhea não tinha previsto.',
     'Uma auditora de manejo em Fuchsia dá entrevista com o nome dela. Depois um gerente de agência bancária em Saffron. Depois um conferente do porto de Vermilion, um capitão de porto em Cinnabar, uma funcionária de guarita em Lavender e o superintendente de uma concessão rodoviária, que pede demissão no mesmo dia.',
     'Seis pessoas adultas, com emprego e família, dizem o próprio nome em voz alta porque {um garoto|uma garota} de {idade} anos disse primeiro.',
-    'A CPI ouve os seis. A CPI não te ouve: você é menor e depõe a portas fechadas, em quarenta minutos, num sábado.',
+    'O inquérito ouve os seis em público. Você, não: você é menor e depõe a portas fechadas, em quarenta minutos, num sábado.',
     'A lei que sai dois anos depois leva o número 9.431 e não leva o nome de ninguém.',
     'Mas em Fuchsia, na parede de uma sala de auditoria de manejo, tem uma cópia da primeira página daquela terça-feira presa com fita adesiva.',
     'A Brill nunca tirou.'
@@ -123,15 +128,17 @@ c18_fim_com_nome:{
 
 }, [
   {de:'c18_ab_copia_dos_oito', para:'c18_entregar_tudo',
-   texto:'Parar de investigar e entregar tudo à imprensa agora.',
-   cond:d=>!!d.flags.reika_te_abordou || !!d.flags.reika_precisa_de_papel || !!d.flags.falou_com_a_imprensa},
+   texto:'Parar de investigar e levar tudo pra Rhea Ashford agora.',
+   cond:d=>!!d.flags.reika_te_abordou},
   {de:'c18_ab_imprimiu', para:'c18_entregar_tudo',
-   texto:'Parar de investigar e entregar tudo à imprensa agora.',
-   cond:d=>!!d.flags.reika_te_abordou || !!d.flags.reika_precisa_de_papel || !!d.flags.falou_com_a_imprensa},
-  {de:'c18_ab_as_tres_citacoes', para:'c18_entregar_tudo',
-   texto:'Entregar tudo que você tem e deixar a matéria fazer o resto.'},
+   texto:'Parar de investigar e levar tudo pra Rhea Ashford agora.',
+   cond:d=>!!d.flags.reika_te_abordou},
+  {de:'c18_ab_as_tres_vezes', para:'c18_entregar_tudo',
+   texto:'Entregar tudo que você tem e deixar a matéria fazer o resto.',
+   cond:d=>c18_documentos(d) > 0},
   {de:'c18_ab_a_reporter', para:'c18_entregar_tudo',
-   texto:'Entregar tudo que você tem agora, em vez de ir ao cartório.'}
+   texto:'Entregar tudo que você tem agora, em vez de ir ao cartório.',
+   cond:d=>c18_documentos(d) > 0}
 ]);
 
 /* ------------------------------------------------------------

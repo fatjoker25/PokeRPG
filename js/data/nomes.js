@@ -93,6 +93,17 @@ const RECUSAM_O_NOME = {
   ],
   'o perseguidor': () => [
     'Ele continua andando no mesmo passo, a quinze metros, sem virar a cabeça.'
+  ],
+  /* Celadon, no 9 e no 18: o nome dela é o posto. O Giovanni era o primeiro */
+  'A Terceira': () => [
+    'Ela ri pelo nariz.',
+    fala('A Terceira', 'Terceira. É o nome que serve.'),
+    fala('A Terceira', 'O que eu tinha antes ficou no cassino, na noite em que o segundo sumiu. Quem me chama de outra coisa não está comprando nada de mim.')
+  ],
+  /* Saffron, no 18: a carta veio assinada só com as iniciais */
+  'a ex-técnica da Estação 2': () => [
+    fala('a ex-técnica da Estação 2', 'As iniciais estão na carta. Foi de propósito.'),
+    fala('a ex-técnica da Estação 2', 'Eu passei sete meses chamando Pokémon por matrícula. Deixa eu ter um nome que é só meu.', 'baixo')
   ]
 };
 
@@ -250,7 +261,7 @@ function _formal(rotulo){ return /senhora|senhor|velh|dona d|dono d|capit[ãa]o|
    pessoas com o mesmo nome na mesma jornada confunde, e roubar o nome
    de um personagem escrito é pior ainda. */
 const NOMES_DA_HISTORIA = new Set([
-  'Amos','Aldous','Lena','Maude','Brandt','Tolliver','Aske','Ingram','Ebbs','Orme','Fenn','Emory','Poplar','Nell','Rufo','Quint','Mervin','Edda','Waldo','Maren','Maeve','Corwin','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
+  'Amos','Aldous','Lena','Maude','Brandt','Tolliver','Aske','Ingram','Ebbs','Orme','Fenn','Emory','Poplar','Nell','Rufo','Quint','Mervin','Edda','Waldo','Maren','Maeve','Bracken','Corwin','Ashford','Dunmore','Ivy','Merrick','Ned','Pell','Brill','Cleo','Colman','Harold','Hester','Célio','Cordell','Dane','Dario','Elsa','Enzo','Ezra',
   'Fabre','Gus','Hazel','Holt','Ives','Ivo','Laurel','Leo','Lina','Lorca','Milo','Nadia',
   'Nico','Nilo','Nina','Orso','Otto','Perla','Rhea','Rico','Vale','Wren','Alder','Bram',
   'Arden','Hart','Tanner','Tobin','Kieran','Ashby','Burke','Holloway','Ansel',

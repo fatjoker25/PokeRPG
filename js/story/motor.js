@@ -168,9 +168,12 @@ const Historia = {
         avisos.push({tipo:'item', texto:`Perdeu ${q}× ${nome}.`});
       }
     }
-    if (ef.dinheiro){
-      Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro + ef.dinheiro);
-      Estado.registrar(`${ef.dinheiro>0?'+':''}${fmtDin(ef.dinheiro)} ₽ (total: ${fmtDin(Estado.j.dinheiro)} ₽)`);
+    /* dinheiro pode vir de função: a segunda compra no mesmo balcão
+       não cobra de novo o que você já levou na primeira */
+    const din = typeof ef.dinheiro === 'function' ? ef.dinheiro(Estado.dados) : ef.dinheiro;
+    if (din){
+      Estado.j.dinheiro = Math.max(0, Estado.j.dinheiro + din);
+      Estado.registrar(`${din>0?'+':''}${fmtDin(din)} ₽ (total: ${fmtDin(Estado.j.dinheiro)} ₽)`);
     }
     /* hp pode vir de função: com a luva, a seccionadora não morde */
     const hpEf = typeof ef.hp === 'function' ? ef.hp(Estado.dados) : ef.hp;
