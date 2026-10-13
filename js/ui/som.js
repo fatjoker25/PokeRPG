@@ -313,10 +313,13 @@ const Som = {
       /* cena de capítulo vale pelo ambiente do capítulo; mapa, pelo lugar */
       const cap = d.modo === 'cena' && typeof Historia !== 'undefined' ? Historia.capAtual : null;
       const L = Mundo.atual();
-      const amb = (cap && cap.ambiente) || (L && L.ambiente);
+      const doCap = cap ? Arenas.doCapitulo(cap, d) : null;
+      const amb = doCap || (L && L.ambiente);
       if (amb === 'cemiterio') return 'torre';
       if (amb === 'caverna') return 'caverna';
-      if (L && L.tipo === 'cidade' && !(cap && cap.ambiente && cap.ambiente !== L.ambiente)) return 'cidade';
+      /* capítulo que muda de lugar com a cena: a cena na cidade toca a cidade */
+      if (doCap === 'cidade' && typeof cap.ambiente === 'function') return 'cidade';
+      if (L && L.tipo === 'cidade' && !(doCap && doCap !== L.ambiente)) return 'cidade';
     } catch(e){}
     return 'rota';
   },

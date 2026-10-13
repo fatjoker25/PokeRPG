@@ -109,6 +109,16 @@ const Arenas = {
     catch (e) { return rel; }
   },
 
+  /* o ambiente de um capítulo agora. Capítulo que anda por mais de um
+     lugar escreve `ambiente` como função da cena (o 17 começa no
+     Centro de Viridian e acaba numa clareira da Rota 23). */
+  doCapitulo(cap, d){
+    if (!cap) return null;
+    return typeof cap.ambiente === 'function'
+      ? cap.ambiente(d || (typeof Estado !== 'undefined' ? Estado.dados : null) || {})
+      : cap.ambiente;
+  },
+
   /* o fundo da página agora: o lugar do mapa, ou o chão do capítulo */
   cenarioDaTela(){
     const d = (typeof Estado !== 'undefined') ? Estado.dados : null;
@@ -117,7 +127,7 @@ const Arenas = {
     let arq = CENARIO_POR_LOCAL[id] || null;
     if (d.modo === 'cena' && typeof Historia !== 'undefined'){
       const cap = Historia.capAtual || Historia.capitulo(d.capitulo);
-      const amb = cap && (typeof cap.ambiente === 'function' ? cap.ambiente(d) : cap.ambiente);
+      const amb = this.doCapitulo(cap, d);
       const doLugar = (typeof LOCAIS !== 'undefined' && LOCAIS[id]) ? LOCAIS[id].ambiente : null;
       if (amb && (amb !== doLugar || !arq)) arq = FUNDO_POR_AMBIENTE[amb] || arq;
     }
@@ -142,7 +152,8 @@ const Arenas = {
     if (typeof Historia !== 'undefined'){
       const cap = Historia.capAtual ||
         (Estado.dados ? Historia.capitulo(Estado.dados.capitulo) : null);
-      if (cap && cap.ambiente) return cap.ambiente;
+      const amb = this.doCapitulo(cap);
+      if (amb) return amb;
     }
     if (typeof Mundo !== 'undefined'){
       const L = Mundo.atual();

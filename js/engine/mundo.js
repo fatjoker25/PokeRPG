@@ -455,8 +455,12 @@ rota23:{
   nome:'Rota 23', tipo:'rota', ambiente:'montanha', nivel:44, perigosa:true,
   conexoes:['rota22','caminho_vitoria'],
   desc:[
-    'A Rota 23 é a última antes do Caminho da Vitória, e é patrulhada — ou era.',
-    'Os postos de controle estão vazios há semanas.'
+    'A Rota 23 é a última antes do Caminho da Vitória: nove quilômetros de trilha entre duas paredes de rocha, com quatro postos de controle de alvenaria.',
+    /* os postos esvaziam pouco antes da convocação (capítulo 17) e
+       voltam com cancela nova no 24 */
+    d=>d.capitulo >= 24 ? 'Tem guarita nova com cancela na trilha, e gente dentro.'
+      : (d.capitulo >= 17 || d.flags.entrou_na_rota_23) ? 'Os postos estão vazios: porta aberta, luz apagada, cadeira virada pra fora.'
+      : 'Em cada posto tem alguém de plantão, que pede pra ver o estojo de insígnias de quem passa.'
   ]
 },
 caminho_vitoria:{
@@ -740,7 +744,7 @@ const LOCAL_DO_CAPITULO = {
   2:'viridian',   3:'floresta',  4:'pewter',    5:'monte_lua',
   6:'cerulean',   7:'lavender',  8:'vermilion', 9:'celadon',
   10:'usina',    11:'saffron',  12:'fuchsia',  13:'seafoam',
-  14:'cinnabar', 15:'rota16',   16:'fuchsia',  17:'rota23',
+  14:'cinnabar', 15:'rota16',   16:'fuchsia',  17:'viridian',
   18:'saffron',  19:'rota21',   20:'saffron',
   21:null,       22:'planalto', 23:'viridian', 24:'rota23', 25:'saffron',
   26:'planalto', 27:'norte',    28:'norte'

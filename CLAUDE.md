@@ -207,6 +207,11 @@ estética, fica escurecido e puxado pro tom do capítulo, e entra por
 `UI.pintarCenario()`, chamado no `topo()` de toda tela. Lugar novo em
 `LOCAIS` precisa de entrada aqui também.
 
+Capítulo que anda por mais de um lugar escreve `ambiente` como função da
+cena (o 17 começa no Centro de Viridian, sobe a trilha da Rota 23 e acaba
+numa clareira), e quem lê o ambiente do capítulo passa por
+`Arenas.doCapitulo(cap)`, nunca por `cap.ambiente` direto.
+
 Ambiente novo em capítulo ou em `LOCAIS` tem que entrar nos dois mapas junto,
 senão cai no fundo de reserva sem ninguém perceber. `ferramentas/chk-arenas.js`
 confere arena, imagem no disco, desenho no CSS e foco de enquadramento. Cena

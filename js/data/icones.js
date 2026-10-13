@@ -68,7 +68,7 @@ function desenhoDoItem(nome){
           : /mapa|croqui|planta/.test(n) ? ITEM_DESENHADO._mapa
           : /caixa|lacre|engradado/.test(n) ? ITEM_DESENHADO._caixa
           : /chave|cart[ãa]o-chave|crach/.test(n) ? ITEM_DESENHADO._chave
-          : /bilhete|carta|papel|recibo|folha|caderno|caderneta|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|envelope|di[áa]rio|livro|jornal|panfleto|cartaz/.test(n) ? ITEM_DESENHADO._papel
+          : /bilhete|carta|papel|recibo|folha|caderno|caderneta|relat|ficha|guia|documento|c[óo]pia|lista|anota|passagem|envelope|di[áa]rio|livro|jornal|panfleto|cartaz|recorte|declara|depoimento|p[áa]ginas/.test(n) ? ITEM_DESENHADO._papel
           : ITEM_DESENHADO._pacote;
   }
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(

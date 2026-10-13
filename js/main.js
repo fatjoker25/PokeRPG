@@ -364,7 +364,7 @@ const Jogo = {
       /* nível pode ser função: capítulo alcançável com progresso diferente
          não pode ter adversário de nível fixo. */
       const nvBase = txt(b.nivel) || Historia.capAtual.nivelArea;
-      if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Historia.capAtual.ambiente, b.nivelBase || Historia.capAtual.nivelArea);
+      if (b.aleatorio) inimigo = sortearSelvagem(b.ambiente || Arenas.doCapitulo(Historia.capAtual), b.nivelBase || Historia.capAtual.nivelArea);
       else inimigo = criarPokemon(txt(b.dex), nvBase, Object.assign({selvagem: b.tipo === 'selvagem' || b.tipo === 'lendario'},
         b.genero !== undefined ? {genero: txt(b.genero)} : {}));
       timeInimigo = (b.timeExtra||[]).map(x => criarPokemon(x.dex,

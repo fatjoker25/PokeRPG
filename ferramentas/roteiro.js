@@ -156,7 +156,7 @@ const SAIDA = path.resolve(process.argv[2] || path.join(raiz, 'roteiro'));
       const mapa = UI.donosDoCapitulo(cap);
       Estado.dados.capitulo = Math.floor(cap.num);
       Historia.capAtual = cap;
-      escreve(arq, `# CAPÍTULO ${cap.num} — ${cap.titulo}   (${txt(cap.local)} · ${cap.ambiente || ''})`);
+      escreve(arq, `# CAPÍTULO ${cap.num} — ${cap.titulo}   (${txt(cap.local)} · ${typeof cap.ambiente === 'function' ? 'muda com a cena' : (cap.ambiente || '')})`);
       for (const id in cap.cenas){
         const c = cap.cenas[id];
         Estado.dados.cena = id;

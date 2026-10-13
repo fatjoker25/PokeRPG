@@ -161,7 +161,11 @@ const NOMES_FIXOS = {
   /* a ciclovia, no 15: o vizinho grita o nome dele no curral; o velho do
      cais conta a história do arco-íris no fim do 15 e é o Sr. Tanner do 16 */
   'o dono do curral':          'Sr. Hale',
-  'o velho pescador':          'Sr. Tanner'
+  'o velho pescador':          'Sr. Tanner',
+  /* a Rota 23, no 17: os quatro da van. Ela diz o nome quando topa
+     testemunhar; o mais velho soletra o dele na lista */
+  'a mulher dos quatro':       'Marla Clover',
+  'o mais velho dos quatro':   'Brent Fennel'
 };
 
 /* Cargo que fica cargo de propósito, mesmo passando de doze falas: é a
