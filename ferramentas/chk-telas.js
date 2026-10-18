@@ -141,7 +141,7 @@ const SUSPEITO = [
     ['ficha', 'modalFicha'], ['diário', 'modalDiario'], ['rota', 'modalRota'], ['finais', 'modalFinais'],
     ['credenciais', 'modalCredenciais'], ['pc', 'modalPC']])
     await tentar('começo/' + r, x => UI[x](), f);
-  for (const aba of ['perfil', 'status', 'jornada', 'gente', 'mundo'])
+  for (const aba of ['perfil', 'status', 'jornada', 'pessoas', 'mundo'])
     await tentar('começo/ficha/' + aba, x => UI.modalFicha(x), aba);
   for (const a of await page.evaluate(() => afazeresDoLocal().map(a => a.id).filter(Boolean))){
     await page.evaluate(s => { Batalha.ativo = false; UI.fecharModal && UI.fecharModal(true); Estado.dados = JSON.parse(s); Exploracao.tela(); }, vazio);
@@ -164,7 +164,7 @@ const SUSPEITO = [
   for (const [r, f] of [['cartão', 'modalCartao'], ['ficha', 'modalFicha'], ['diário', 'modalDiario'], ['rota', 'modalRota'],
     ['finais', 'modalFinais'], ['credenciais', 'modalCredenciais'], ['pc', 'modalPC'], ['ajustes', 'modalAjustes'], ['regras', 'modalRegras']])
     await tentar(r, x => UI[x](), f);
-  for (const aba of ['perfil', 'status', 'jornada', 'gente', 'mundo'])
+  for (const aba of ['perfil', 'status', 'jornada', 'pessoas', 'mundo'])
     await tentar('ficha/' + aba, x => UI.modalFicha(x), aba);
   for (const t of ['passos', 'comeco', 'ficha', 'combate', 'natureza', 'vinculo', 'mundo', 'pokenav', 'risco'])
     await tentar('tutorial/' + t, x => UI.modalTutorial(x), t);

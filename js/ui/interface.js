@@ -45,13 +45,22 @@ function varsCartao(k){
    decide. A ficha e o fim de capítulo leem daqui; o tutorial conta o
    mesmo com mais detalhe. */
 const STATUS_DO_TREINADOR = [
-  ['forca',       'Força',       'escapar de quem te encurralou · os testes de cena que pedem braço'],
-  ['percepcao',   'Percepção',   'vasculhar · observar · ler a natureza do seu time e, com 3, a de quem está do outro lado'],
-  ['intelecto',   'Intelecto',   'a hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido (os dois em 4)'],
-  ['carisma',     'Carisma',     'treinar · encarar um selvagem · ser obedecido com a moral baixa'],
-  ['sorte',       'Sorte',       'o que o vasculho acha · pescaria · chance de brilhante'],
+  ['forca',       'Força',       'Escapar de quem te encurralou · os testes de cena que pedem braço'],
+  ['percepcao',   'Percepção',   'Vasculhar · observar · ler a natureza do seu time e, com 3, a de quem está do outro lado'],
+  ['intelecto',   'Intelecto',   'A hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido (os dois em 4)'],
+  ['carisma',     'Carisma',     'Treinar · encarar um selvagem · ser obedecido com a moral baixa'],
+  ['sorte',       'Sorte',       'O que o vasculho acha · pescaria · chance de brilhante'],
   ['resistencia', 'Resistência', 'HP máximo (+2 por ponto) · Vontade (2 + Resistência) · aguentar o golpe que sobra pra você']
 ];
+
+/* Valor solto na tela começa com maiúscula, como começo de frase: o que
+   o jogador escreveu na ficha ("teimosa, curiosa"), o estado de um
+   lendário, o clima. Minúscula ali parece descuido. */
+function maiuscula(s){
+  const t = String(s == null ? '' : s);
+  const i = t.search(/[A-Za-zÀ-ÿ]/);
+  return i < 0 ? t : t.slice(0, i) + t.charAt(i).toUpperCase() + t.slice(i + 1);
+}
 
 /* cores de balão: distintas entre si e legíveis nos dois fundos */
 const CORES_DE_FALA = ['#e0a33a', '#5aa9e6', '#e36f8f', '#b18cf0', '#4cc3c3', '#d6c341', '#c9d1dc', '#e86a4a'];   // sem verde: verde é o seu balão
@@ -266,7 +275,7 @@ const UI = {
 
   /* o relógio do topo anda sem redesenhar a tela */
   pintarRelogio(){
-    document.querySelectorAll('.topo .relogio').forEach(e => { e.textContent = Relogio.texto(); });
+    document.querySelectorAll('.topo .relogio').forEach(e => { e.textContent = maiuscula(Relogio.texto()); });
   },
 
   /* ---------- barra superior ---------- */
@@ -291,7 +300,7 @@ const UI = {
       <div>
         <h1>${this.esc(d.jogador.nome)} — ${this.esc(rep)}</h1>
         <div class="sub">${d.local && LOCAIS[d.local] ? this.esc(LOCAIS[d.local].nome) : 'Kanto'} ·
-          <span class="relogio">${this.esc(Relogio.texto())}</span> ·
+          <span class="relogio">${this.esc(maiuscula(Relogio.texto()))}</span> ·
           HP ${d.jogador.hp}/${Estado.hpMaxJogador()} · Vontade ${Estado.vontadeJogador()}/${Estado.vontadeMaxJogador()} · ${fmtDin(d.jogador.dinheiro)} ₽${this.racaoNoTopo()}</div>
         ${typeof Fome !== 'undefined' ? Fome.tirarAvisos().map(a => `<div class="topo-aviso">${this.esc(a)}</div>`).join('') : ''}
       </div>
@@ -312,7 +321,7 @@ const UI = {
     const n = Estado.contaItem('Ração');
     const fome = typeof Fome !== 'undefined' ? Fome.doTime() : null;
     return ` · ${n} ${n === 1 ? 'Ração' : 'Rações'}${fome
-      ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">time ${fome}</span>` : ''}`;
+      ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">Time ${fome}</span>` : ''}`;
   },
 
   /* ========================================================
@@ -3039,128 +3048,329 @@ const UI = {
     </button>`;
   },
 
-  modalTime(){
-    const d = Estado.dados;
-    const linha = p => this.linhaTime(p, `UI.timeAcoes('${p.uid}')`);
-    const cem = d.cemiterio.length
-      ? `<h3>Não voltaram</h3><div class="time-lista">${d.cemiterio.map(p => `<button class="time-linha morto" onclick="UI.sumario('${p.uid}')">
-          <span class="time-icone">${imgSprite(p, 'icone')}</span><span class="time-nome">${this.esc(nomeExib(p))}</span>
-          <span class="time-hp"><span class="hp-num">${this.esc(p.causaMorte || '')}</span></span></button>`).join('')}</div>` : '';
-    this.modal('Seu time',
-      (d.time.length ? `<div class="time-lista arrastavel" id="time-arrastavel">${d.time.map(linha).join('')}</div>` : '<p class="nada">Você não tem nenhum Pokémon.</p>') +
-      (d.time.some(p => !p.morto) && !emLuta() ? `<div style="margin-top:10px"><button class="escolha" ${Estado.contaItem('Ração') > 0 ? 'onclick="UI.alimentarTime()"' : 'disabled'}>Alimentar o time — 1 Ração (tem ${Estado.contaItem('Ração')})</button></div>` : '') +
-      (d.pc.length ? `<p class="sussurro" style="margin-top:10px">No PC: ${d.pc.length}.</p>` : '') +
-      (d.time.length > 1 ? '<p class="sussurro" style="margin-top:8px">Segure e arraste pra mudar a ordem.</p>' : '') + cem);
-    this.ativarArrastoDoTime();
+  /* ========================================================
+     SEU TIME — as seis vagas, como na tela de time dos jogos
+     O primeiro é quem entra na briga. Tocar abre o que dá pra fazer
+     com ele; "Trocar de lugar" marca um e o próximo toque troca os
+     dois de posição.
+     ======================================================== */
+  cartaoDoTime(p, i, troca){
+    const pct = p.hpMax ? Math.max(0, Math.min(100, Math.round(p.hp / p.hpMax * 100))) : 0;
+    const faixa = pct > 50 ? '' : pct > 22 ? 'medio' : 'baixo';
+    const est = p.morto ? ' morto' : p.hp <= 0 ? ' caido' : '';
+    const fome = !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
+    const acao = troca ? `UI.trocarNoTime('${troca}','${p.uid}')` : `UI.timeAcoes('${p.uid}')`;
+    return `<button class="tm-carta${est}${i === 0 ? ' frente' : ''}${troca === p.uid ? ' marcado' : ''}" data-uid="${p.uid}" onclick="${acao}">
+      ${i === 0 ? '<span class="tm-selo">Na frente</span>' : ''}
+      <span class="tm-icone">${imgSprite(p, 'icone')}</span>
+      <span class="tm-corpo">
+        <span class="tm-linha1"><span class="tm-nome">${this.esc(nomeExib(p))}</span>${this.shi(p)}<span class="tm-nv">Nv ${p.nivel}</span></span>
+        <span class="barra ${faixa}"><i style="width:${pct}%"></i></span>
+        <span class="tm-linha2">
+          <span class="tm-hp mono">${p.morto ? 'Morto' : `${Math.max(0, p.hp)}/${p.hpMax}`}</span>
+          ${p.status && !p.morto && p.hp > 0 ? this.etiquetaStatus(p.status) : ''}
+          ${p.hp <= 0 && !p.morto ? `<span class="tm-tag">Desmaiad${pron(p).o}</span>` : ''}
+          ${fome ? `<span class="time-fome${fome === 'faminto' ? ' grave' : ''}">${this.esc(maiuscula(fome))}</span>` : ''}
+          ${p.segurando ? `<span class="tm-item" title="${this.esc(p.segurando)}">${imgItem(p.segurando)}</span>` : ''}
+        </span>
+      </span>
+    </button>`;
   },
 
-  /* Segurar e arrastar: segura meio segundo numa linha do time e ela
-     solta da lista; arrasta pra cima ou pra baixo e solta onde quiser.
-     Toque curto continua abrindo o menu do Pokémon. O primeiro da
-     lista é quem entra na briga. */
-  ativarArrastoDoTime(){
-    const lista = document.getElementById('time-arrastavel');
-    if (!lista || lista.children.length < 2) return;
-    const SEGURAR = 450;
-    let timer = null, arrastando = null, inicioY = 0, ultimoY = 0, engoleClique = false;
-    const linhas = () => [...lista.querySelectorAll('.time-linha')];
-    const soltar = () => {
-      clearTimeout(timer); timer = null;
-      if (!arrastando) return;
-      const el = arrastando; arrastando = null;
-      el.classList.remove('arrastando'); el.style.transform = '';
-      lista.classList.remove('em-arrasto');
-      const ordem = linhas().map(x => x.dataset.uid);
-      const d = Estado.dados;
-      const novo = ordem.map(u => d.time.find(p => p.uid === u)).filter(Boolean);
-      if (novo.length === d.time.length && novo.some((p, i) => p !== d.time[i])){
-        d.time = novo; Estado.salvar('auto');
-      }
-      engoleClique = true; setTimeout(() => { engoleClique = false; }, 60);
-      this.modalTime();
-    };
-    lista.addEventListener('click', e => { if (engoleClique){ e.stopPropagation(); e.preventDefault(); } }, true);
-    lista.addEventListener('contextmenu', e => { if (timer || arrastando) e.preventDefault(); });
-    lista.addEventListener('pointerdown', e => {
-      const el = e.target.closest('.time-linha');
-      if (!el || el.classList.contains('morto')) return;
-      inicioY = ultimoY = e.clientY;
-      timer = setTimeout(() => {
-        timer = null; arrastando = el;
-        el.classList.add('arrastando'); lista.classList.add('em-arrasto');
-        try { el.setPointerCapture(e.pointerId); } catch(_){}
-        if (navigator.vibrate) try { navigator.vibrate(15); } catch(_){}
-      }, SEGURAR);
-    });
-    lista.addEventListener('pointermove', e => {
-      if (timer && Math.abs(e.clientY - inicioY) > 8){ clearTimeout(timer); timer = null; }
-      if (!arrastando) return;
-      e.preventDefault();
-      ultimoY = e.clientY;
-      arrastando.style.transform = `translateY(${ultimoY - inicioY}px)`;
-      /* troca de lugar quando passa do meio do vizinho */
-      const irmaos = linhas().filter(x => x !== arrastando);
-      const r = arrastando.getBoundingClientRect(), meio = r.top + r.height / 2;
-      let alvo = null;
-      for (const x of irmaos){ const q = x.getBoundingClientRect(); if (meio < q.top + q.height / 2){ alvo = x; break; } }
-      const antes = arrastando.getBoundingClientRect().top;
-      if (alvo){ if (alvo !== arrastando.nextElementSibling) lista.insertBefore(arrastando, alvo); }
-      else if (arrastando !== lista.lastElementChild) lista.appendChild(arrastando);
-      const depois = arrastando.getBoundingClientRect().top;
-      /* o elemento mudou de lugar no DOM: compensa pra ele não pular */
-      if (depois !== antes){ inicioY += depois - antes; arrastando.style.transform = `translateY(${ultimoY - inicioY}px)`; }
-    });
-    lista.addEventListener('pointerup', soltar);
-    lista.addEventListener('pointercancel', soltar);
+  modalTime(troca){
+    const d = Estado.dados;
+    if (troca && !d.time.some(p => p.uid === troca)) troca = null;
+    const vivos = d.time.filter(p => !p.morto);
+    const racao = Estado.contaItem('Ração');
+    const fome = typeof Fome !== 'undefined' ? Fome.doTime() : null;
+    const vagas = Array.from({length:Math.max(0, 6 - d.time.length)}, () =>
+      '<div class="tm-carta vaga" aria-hidden="true"><span>Vaga</span></div>').join('');
+    const grade = d.time.length
+      ? `<div class="tm-grade${troca ? ' trocando' : ''}">${d.time.map((p, i) => this.cartaoDoTime(p, i, troca)).join('')}${vagas}</div>`
+      : '<p class="nada">Você não tem nenhum Pokémon.</p>';
+    const quem = troca ? d.time.find(p => p.uid === troca) : null;
+    const aviso = quem ? `<div class="tm-aviso">
+        <span>Toque em quem vai trocar de lugar com <b>${this.esc(nomeExib(quem))}</b>.</span>
+        <button class="btn mini" onclick="UI.modalTime()">Cancelar</button></div>` : '';
+    const comida = vivos.length && !emLuta() ? `<div class="tm-comida">
+        <span class="tm-racao">${imgItem('Ração')}<b>${racao}</b> ${racao === 1 ? 'Ração' : 'Rações'}${fome
+          ? ` <span class="time-fome${fome === 'faminto' ? ' grave' : ''}">Time ${fome}</span>` : ''}</span>
+        <button class="btn mini" ${racao > 0 ? 'onclick="UI.alimentarTime()"' : 'disabled'}>Alimentar o time</button>
+      </div>` : '';
+    const cem = d.cemiterio.length ? `<details class="tm-cemiterio">
+        <summary>Não voltaram · ${d.cemiterio.length}</summary>
+        <div class="tm-cem-lista">${d.cemiterio.map(p => `<button class="tm-cem" onclick="UI.sumario('${p.uid}')">
+          ${imgSprite(p, 'icone')}<span><b>${this.esc(nomeExib(p))}</b><small>${this.esc(maiuscula(p.causaMorte || ''))}</small></span>
+        </button>`).join('')}</div>
+      </details>` : '';
+    this.modal('', `<div class="tm-topo">
+        <span class="tm-titulo">Seu time</span>
+        <span class="tm-conta">${d.time.length} de 6${d.pc.length ? ` · ${d.pc.length} no PC` : ''}</span>
+      </div>` + aviso + grade + comida + cem, false, 'time');
+  },
+
+  /* troca dois de lugar; o primeiro da lista é quem entra na briga */
+  trocarNoTime(a, b){
+    const d = Estado.dados;
+    const i = d.time.findIndex(p => p.uid === a), j = d.time.findIndex(p => p.uid === b);
+    if (i >= 0 && j >= 0 && i !== j){ [d.time[i], d.time[j]] = [d.time[j], d.time[i]]; Estado.salvar('auto'); }
+    this.modalTime();
   },
 
   alimentarTime(){
     if (emLuta() || !Fome.daRacaoPraTodos()) return this.modalTime();
     Estado.salvar('auto');
     this.modalTime();
-    const av = document.querySelector('#modal .modal-corpo');
-    if (av) av.insertAdjacentHTML('afterbegin', '<p class="sussurro">Você abre o saco e divide em partes. Ninguém espera a sua vez.</p>');
+    const c = document.querySelector('#modal .tm-comida');
+    if (c) c.insertAdjacentHTML('afterend', '<p class="sussurro tm-nota">Você abre o saco e divide em partes. Ninguém espera a sua vez.</p>');
   },
 
   timeAcoes(uid){
     const d = Estado.dados;
-    const p = d.time.find(x => x.uid === uid);
+    const i = d.time.findIndex(x => x.uid === uid);
+    const p = d.time[i];
     if (!p) return this.modalTime();
     const temEquipavel = Object.entries(d.itens).some(([n, q]) => q > 0 && (ITENS_INFO[n] || {}).tipo === 'equipar');
-    this.modal(nomeExib(p), `<div class="time-cab">${imgSprite(p, 'icone')}<span>${this.esc(nomeExib(p))}${this.shi(p)} · Nv ${p.nivel}</span>
-        ${p.segurando ? `<span class="time-segura">${imgItem(p.segurando)}${this.esc(p.segurando)}</span>` : ''}</div>
-      <button class="escolha" onclick="UI.sumario('${uid}')">Sumário</button>
-      ${p.morto ? '' : (p.segurando
-        ? `<button class="escolha" onclick="UI.tirarItem('${uid}')">Retirar item</button>`
-        : `<button class="escolha" ${temEquipavel ? `onclick="UI.menuEquipar('${uid}')"` : 'disabled'}>Dar item</button>`)}
-      <button class="escolha" onclick="UI.modalTime()">Voltar</button>`, true);
+    const pct = p.hpMax ? Math.max(0, Math.min(100, Math.round(p.hp / p.hpMax * 100))) : 0;
+    this.modal('', `<div class="tm-acoes-cab">
+        <span class="tm-icone">${imgSprite(p, 'icone')}</span>
+        <span class="tm-corpo">
+          <span class="tm-linha1"><span class="tm-nome">${this.esc(nomeExib(p))}</span>${this.shi(p)}<span class="tm-nv">Nv ${p.nivel}</span></span>
+          <span class="barra ${pct > 50 ? '' : pct > 22 ? 'medio' : 'baixo'}"><i style="width:${pct}%"></i></span>
+        </span>
+      </div>
+      <div class="tm-acoes">
+        <button class="escolha" onclick="UI.sumario('${uid}')">Sumário</button>
+        ${d.time.length > 1 ? `<button class="escolha" onclick="UI.modalTime('${uid}')">Trocar de lugar</button>` : ''}
+        ${i > 0 && !p.morto ? `<button class="escolha" onclick="UI.trocarNoTime('${uid}','${d.time[0].uid}')">Pôr na frente</button>` : ''}
+        ${p.morto ? '' : (p.segurando
+          ? `<button class="escolha" onclick="UI.tirarItem('${uid}')">Retirar ${this.esc(p.segurando)}</button>`
+          : `<button class="escolha" ${temEquipavel ? `onclick="UI.menuEquipar('${uid}')"` : 'disabled'}>Dar item pra segurar</button>`)}
+        <button class="escolha" onclick="UI.modalTime()">Voltar</button>
+      </div>`, true, 'time');
   },
 
-  /* a ficha inteira de um Pokémon */
-  sumario(uid){
+  /* ========================================================
+     SUMÁRIO — a ficha de um Pokémon, no jeito do sumário dos jogos
+     Cabeça com nome, sexo, nível e a bola em que veio; a arte num
+     palco na cor dos tipos; HP e experiência sempre à vista; quatro
+     abas: Info, Atributos, Golpes e Vínculo. As setas passam pro
+     vizinho da mesma lista (time, PC ou quem não voltou).
+     ======================================================== */
+  /* o que o golpe faz além do dano, em uma linha */
+  efeitoDoGolpe(nome){
+    const g = GOLPES[nome] || {}, ef = g.ef || {}, pr = (typeof PR_GOLPE !== 'undefined' && PR_GOLPE[nome]) || {};
+    const ESTADO = {paralisia:'paralisar', sono:'fazer dormir', confusao:'confundir', queimadura:'queimar',
+                    veneno:'envenenar', congelamento:'congelar', recuo:'fazer recuar'};
+    const ACAO = {proteger:'Protege por um turno', substituto:'Põe um substituto na frente', tela:'Barreira contra golpe especial',
+                  reflexo:'Barreira contra golpe físico', nevoa:'Ninguém baixa os atributos do seu lado', haze:'Desfaz as mudanças de atributo',
+                  soprar:'Tira o outro da luta', desabilitar:'Trava o último golpe do outro', transformar:'Vira uma cópia do outro',
+                  teleporte:'Sai da luta', espelho:'Devolve o último golpe', semente:'Planta uma semente que suga HP',
+                  identificar:'Desfaz a esquiva do outro', salvaguarda:'Protege o seu lado de condição', aguentar:'Aguenta um golpe com 1 de HP',
+                  maldicao:'Troca HP por força, ou amaldiçoa', atracao:'Deixa o outro apaixonado', pesadelo:'Pesadelo em quem dorme',
+                  copiar:'Copia um golpe do outro', sonambulo:'Usa um golpe dormindo', foco:'Prepara um crítico', conversao:'Muda o próprio tipo',
+                  fanfarra:'Encara o outro e nada mais'};
+    const est = k => NOME_ESTAGIO[k] || k;
+    const L = [];
+    if (ef.prioridade) L.push('Sai primeiro');
+    if (ef.tipo && ESTADO[ef.tipo]){
+      const ch = ef.chance || 100;
+      L.push(ch >= 100 ? maiuscula(ESTADO[ef.tipo]) + (ef.grave ? ', grave' : '') : `${ch}% de chance de ${ESTADO[ef.tipo]}`);
+    }
+    if (ef.baixa) L.push(`Baixa ${ef.forte ? 'muito ' : ''}${est(ef.baixa)} do outro`);
+    if (ef.sobe) L.push(`Sobe ${ef.forte ? 'muito ' : ''}${est(ef.sobe)}`);
+    if (ef.cura) L.push('Cura metade do HP');
+    if (ef.drena) L.push('Recupera metade do dano');
+    if (ef.dorme) L.push('Dorme e cura tudo');
+    if (pr.dupla || ef.golpes === 2) L.push('Bate duas vezes');
+    else if (pr.tripla) L.push('Bate três vezes');
+    else if (ef.golpes) L.push('Bate de duas a cinco vezes');
+    if (ef.critico || pr.crit) L.push('Crítico mais fácil');
+    if (ef.carga) L.push('Carrega um turno antes');
+    if (ef.recarga) L.push('Perde a vez seguinte');
+    if (ef.recuo) L.push('Machuca quem usa');
+    if (ef.preso) L.push('Prende o outro');
+    if (ef.confundeSe) L.push('Confunde quem usa no fim');
+    if (ef.autodestroi) L.push('Derruba quem usa');
+    if (ef.clima) L.push('Muda o clima');
+    if (ef.amizade) L.push('Poder pela moral');
+    if (ef.corte) L.push('Mais forte a cada uso seguido');
+    if (ef.soDormindo || ef.soSeDormindo) L.push('Só funciona dormindo');
+    if (ef.acao && ACAO[ef.acao]) L.push(ACAO[ef.acao]);
+    return L.join(' · ');
+  },
+
+  /* a conta do golpe pra este Pokémon, como a luta faz: precisão e dano */
+  contaDoGolpe(p, nome){
+    const g = GOLPES[nome] || {}, pr = (typeof PR_GOLPE !== 'undefined' && PR_GOLPE[nome]) || {};
+    const sig = k => k === 'soc' ? 'Social' : k === 'von' ? 'Vontade' : SIGLA_ATRIB[k];
+    const val = k => k === 'soc' ? socialDoNivel(p.nivel) : k === 'von' ? (p.stats.ins || 1) + 2 : (p.stats[k] || 1);
+    const melhor = (lista, padrao) => ((lista && lista.length) ? lista : [padrao]).reduce((m, k) => val(k) > val(m) ? k : m);
+    let precisao;
+    if (pr.nunca || g.a >= 999) precisao = g.c === 'status' && !pr.a ? 'Em si mesmo' : 'Não erra';
+    else {
+      const k = melhor(pr.a, g.c === 'esp' ? 'esp' : 'des');
+      const per = pr.h ? periciaDoNivel(p.nivel) : 0;
+      precisao = `${sig(k)} ${val(k)}${per ? ` + ${pr.h} ${per}` : ''} = ${val(k) + per}d6${pr.r ? ` · −${pr.r}` : ''}`;
+    }
+    let dano = '';
+    if (g.c !== 'status'){
+      if (pr.fixo) dano = `Fixo: ${pr.fixo}`;
+      else if (pr.ohko) dano = 'Nocaute';
+      else if (pr.posto) dano = 'Dados pelo posto';
+      else if (pr.metade) dano = 'Metade do HP do outro';
+      else {
+        const k = melhor(pr.d, g.c === 'fis' ? 'for' : 'esp');
+        const pw = pr.p || Math.max(1, Math.round((g.p || 40) / 25));
+        const stab = p.tipos.includes(g.t) ? 1 : 0;
+        dano = `${sig(k)} ${val(k)} + poder ${pw}${stab ? ' + 1 do tipo' : ''} = ${val(k) + pw + stab}d6`;
+      }
+    }
+    return {precisao, dano};
+  },
+
+  sumario(uid, aba){
     const d = Estado.dados;
-    const p = d.time.find(x => x.uid === uid) || d.pc.find(x => x.uid === uid) || d.cemiterio.find(x => x.uid === uid);
+    const lista = [d.time, d.pc, d.cemiterio].find(l => l.some(x => x.uid === uid));
+    const p = lista && lista.find(x => x.uid === uid);
     if (!p) return this.modalTime();
-    const noTime = d.time.some(x => x.uid === uid);
-    this.modal('', `<div class="carta sumario ${p.morto?'morto':''}">
-      <div class="t"><span class="com-icone">${imgSprite(p, 'icone')}${this.esc(nomeExib(p))}${this.shi(p)}</span><span class="mono">Nv ${p.nivel}</span></div>
-      <div class="sumario-arte">${imgSprite(p, 'frente')}</div>
-      <div>${p.tipos.map(t=>this.tipoTag(t)).join('')}${p.status ? this.etiquetaStatus(p.status) : ''}</div>
-      ${p.morto ? '<div class="sussurro" style="margin-top:8px">MORTO — '+this.esc(p.causaMorte)+'</div>' : this.barraHP(p, true)}
-      <div class="sussurro" style="margin-top:7px">Natureza <b>${p.naturezaVista ? this.esc(p.natureza) : '???'}</b></div>
-      <div class="sussurro">Moral ${p.moral}/100${(() => { const f = (!p.morto && typeof Fome !== 'undefined' && noTime) ? Fome.estado(p) : null; return f ? ` · <b>${f}</b>` : ''; })()}</div>
-      ${(() => { const l = (typeof linhaDeAfinidade === 'function') ? linhaDeAfinidade(p) : null;
-          return l ? `<div class="sussurro afinidade">${this.esc(l)}</div>` : ''; })()}
-      ${p.morto ? '' : `<div class="segurado-linha">${p.segurando
-          ? `${imgItem(p.segurando)}<span class="segurado-tag">segura ${this.esc(p.segurando)}</span>
-             <span class="fraco">${this.esc(fichaItem(p.segurando))}</span>`
-          : '<span class="fraco">mão livre</span>'}</div>`}
-      <div style="margin-top:8px;font-size:12.5px;color:var(--texto-fraco)">
-        ${p.golpes.map(g=>this.esc(g.nome)).join(' · ')}</div>
-      <div class="sussurro" style="margin-top:6px">${nomePosto(p.nivel)} · ${this.linhaAtrib(p)}</div>
-      ${p.historia ? `<div class="sussurro" style="margin-top:7px;font-style:italic">${this.esc(p.historia)}</div>` : ''}
-    </div>
-    <div style="margin-top:12px"><button class="btn" onclick="${noTime ? `UI.timeAcoes('${uid}')` : 'UI.modalTime()'}">Voltar</button></div>`, true);
+    const noTime = lista === d.time, noPC = lista === d.pc;
+    const ABAS = [['info', 'Info'], ['atributos', 'Atributos'], ['golpes', 'Golpes'], ['vinculo', 'Vínculo']];
+    const tem = a => ABAS.some(x => x[0] === a);
+    const atual = tem(aba) ? aba : (tem(this._abaSumario) ? this._abaSumario : 'info');
+    this._abaSumario = atual;
+    const e = s => this.esc(s), M = s => this.esc(maiuscula(s));
+    const esp = DEX[p.dex] || {};
+    const num = String(p.dex).padStart(3, '0');
+    const t1 = COR_TIPO[p.tipos[0]] || '#8a8f99', t2 = COR_TIPO[p.tipos[1] || p.tipos[0]] || t1;
+    const dl = pares => `<dl class="sm-dl">${pares.filter(x => x && x[1] != null && x[1] !== '')
+      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    const bloco = (titulo, html, nota) => html ? `<section class="sm-bloco">
+        <h4>${e(titulo)}${nota ? ` <span class="sm-h-nota">${e(nota)}</span>` : ''}</h4>${html}</section>` : '';
+
+    /* as setas: o vizinho da mesma lista */
+    const i = lista.indexOf(p);
+    const seta = (dir, alvo) => lista.length > 1
+      ? `<button class="sm-seta" aria-label="${dir < 0 ? 'Anterior' : 'Próximo'}" onclick="UI.sumario('${alvo.uid}')">${dir < 0 ? '‹' : '›'}</button>`
+      : '<span class="sm-seta vazia" aria-hidden="true"></span>';
+    const bola = (p.capturadoEm && p.capturadoEm.bola) || 'Poké Ball';
+    const pctHP = p.hpMax ? Math.max(0, Math.min(100, p.hp / p.hpMax * 100)) : 0;
+    const faixa = pctHP > 50 ? '' : pctHP > 22 ? 'medio' : 'baixo';
+    const xpPct = p.expProx ? Math.max(0, Math.min(100, Math.round(p.exp / p.expProx * 100))) : 100;
+    const falta = p.expProx ? Math.max(0, p.expProx - p.exp) : 0;
+
+    const cabeca = `<div class="sm-cabeca">
+        ${seta(-1, lista[(i - 1 + lista.length) % lista.length])}
+        <div class="sm-id">
+          <img class="sm-bola" src="${spriteDaBola(bola)}" alt="" onerror="this.remove()">
+          <span class="sm-nome">${e(p.apelido || esp.nome || p.nome)}</span>${this.shi(p)}
+          <span class="sm-nv">Nv ${p.nivel}</span>
+        </div>
+        ${seta(1, lista[(i + 1) % lista.length])}
+      </div>
+      <div class="sm-palco${p.morto ? ' morto' : ''}" style="--t1:${t1};--t2:${t2}">
+        <span class="sm-num mono">Nº ${num}${p.apelido ? ` · ${e(esp.nome || p.nome)}` : ''}</span>
+        <span class="sm-tipos">${p.tipos.map(t => this.tipoTag(t)).join('')}</span>
+        <span class="sm-chao" aria-hidden="true"></span>
+        ${imgSprite(p, 'frente')}
+        ${p.status && !p.morto ? `<span class="sm-condicao">${this.etiquetaStatus(p.status)}</span>` : ''}
+        ${p.morto ? `<span class="sm-luto">${e(maiuscula(p.causaMorte || 'Não voltou'))}</span>` : ''}
+      </div>
+      ${p.morto ? '' : `<div class="sm-vida">
+        <span class="k">HP</span><span class="barra ${faixa}"><i style="width:${pctHP}%"></i></span><span class="v mono">${Math.max(0, p.hp)}/${p.hpMax}</span>
+        <span class="k">XP</span><span class="barra-exp"><i style="width:${xpPct}%"></i></span><span class="v mono">${p.nivel >= 100 ? 'Máximo' : `Faltam ${fmtDin(falta)}`}</span>
+      </div>`}
+      <nav class="sm-abas" role="tablist" aria-label="Sumário" style="--t1:${t1}">${ABAS.map(([k, n]) =>
+        `<button class="sm-aba${k === atual ? ' sel' : ''}" role="tab" aria-selected="${k === atual}" onclick="UI.sumario('${uid}','${k}')">${n}</button>`).join('')}</nav>`;
+
+    const abas = {
+      info: () => {
+        const g = generoDe(p);
+        const origem = p.capturadoEm
+          ? `Capturad${pron(p).o} no capítulo ${p.capturadoEm.cap}, com ${e(p.capturadoEm.bola || 'Poké Ball')}`
+          : p.trocado ? 'Veio de troca' : '';
+        return bloco('Ficha', dl([
+            ['Espécie', `Nº ${num} · ${e(esp.nome || p.nome)}`],
+            ['Tipo', p.tipos.map(t => this.tipoTag(t)).join('')],
+            ['Natureza', p.naturezaVista ? e(p.natureza) : '<span class="sm-fraco">Ainda não deu pra ler</span>'],
+            ['Sexo', g === 'm' ? 'Macho' : g === 'f' ? 'Fêmea' : 'Sem sexo'],
+            ['Posto', `${e(nomePosto(p.nivel))} <span class="sm-fraco">· Perícia ${periciaDoNivel(p.nivel)}</span>`],
+            ['Origem', origem]
+          ]))
+          + bloco('Item', p.morto ? '' : (p.segurando
+              ? `<div class="sm-item">${imgItem(p.segurando)}<span><b>${e(p.segurando)}</b><small>${M(fichaItem(p.segurando))}</small></span></div>`
+              : '<p class="sm-texto sm-fraco">Mão livre.</p>'))
+          + (p.historia ? bloco('História', `<p class="sm-historia">${e(p.historia)}</p>`) : '');
+      },
+
+      atributos: () => {
+        const pr = PR_ESPECIE[p.dex] || [0, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5];
+        const v = vontadeDe(p), vMax = vontadeMaxDe(p);
+        const pips = Array.from({length:vMax}, (_, k) => `<i class="${k < v ? 'on' : ''}"></i>`).join('');
+        const linha = (k, n) => {
+          const val = p.stats[k] || 0, teto = Math.max(val, pr[6 + n] || 5);
+          const pontos = Array.from({length:teto}, (_, x) => `<i class="${x < val ? 'on' : ''}"></i>`).join('');
+          return `<div class="sm-atrib">
+            <span class="sa-nome">${NOME_ATRIB[k]}</span>
+            <span class="sa-pontos" role="img" aria-label="${NOME_ATRIB[k]} ${val} de ${teto}">${pontos}</span>
+            <span class="sa-valor mono">${val}</span>
+            <span class="sa-teto mono">de ${teto}</span>
+          </div>`;
+        };
+        return bloco('Vontade', `<div class="sm-medidor"><span class="sm-pips">${pips}</span><span class="v mono">${v}/${vMax}</span></div>`)
+          + bloco('Atributos', `<div class="sm-atribs">${ATRIBUTOS.map(linha).join('')}</div>`, 'Até onde a espécie chega')
+          + bloco('Na luta', dl([
+            ['Social', `<span class="mono">${socialDoNivel(p.nivel)}</span>`],
+            ['Perícia', `<span class="mono">${periciaDoNivel(p.nivel)}</span> <span class="sm-fraco">· ${e(nomePosto(p.nivel))}</span>`],
+            ['Contra físico', `Vitalidade <span class="mono">${p.stats.vit}</span>`],
+            ['Contra especial', `Instinto <span class="mono">${p.stats.ins}</span>`],
+            ['Fraco contra', e(this.fraquezas(p.tipos).join(', ') || '—')],
+            ['Resiste a', e(this.resistencias(p.tipos).join(', ') || '—')]
+          ]));
+      },
+
+      golpes: () => {
+        const cartas = p.golpes.map(gs => {
+          const g = GOLPES[gs.nome] || {};
+          const cor = COR_TIPO[g.t] || '#8a8f99';
+          const c = this.contaDoGolpe(p, gs.nome), efeito = this.efeitoDoGolpe(gs.nome);
+          return `<div class="sm-golpe" style="--gt:${cor}">
+            <div class="gt"><span class="gn">${e(gs.nome)}</span>${g.t ? this.tipoTag(g.t) : ''}
+              <span class="gcat">${{fis:'Físico', esp:'Especial', status:'Status'}[g.c] || '—'}</span></div>
+            <dl class="gl">
+              <dt>Precisão</dt><dd>${e(c.precisao)}</dd>
+              ${c.dano ? `<dt>Dano</dt><dd>${e(c.dano)}</dd>` : ''}
+            </dl>
+            ${efeito ? `<div class="gef">${e(efeito)}</div>` : ''}
+          </div>`;
+        });
+        while (cartas.length < 4) cartas.push('<div class="sm-golpe vago">—</div>');
+        return bloco('Golpes', `<div class="sm-golpes">${cartas.join('')}</div>`, 'O dano ainda perde a defesa de quem leva');
+      },
+
+      vinculo: () => {
+        const moral = Math.max(0, Math.min(100, p.moral || 0));
+        const palavra = moral >= 90 ? 'Inseparável' : moral >= 70 ? 'Confia em você' : moral >= 50 ? 'Pegando confiança'
+                      : moral >= 30 ? 'Desconfiado' : 'Distante';
+        const af = typeof linhaDeAfinidade === 'function' ? linhaDeAfinidade(p) : null;
+        const fome = noTime && !p.morto && typeof Fome !== 'undefined' ? Fome.estado(p) : null;
+        const par = noTime && typeof parDe === 'function' ? parDe(p) : null;
+        return bloco('Moral', `<div class="sm-moral">
+            <div class="sm-moral-cab"><b>${e(palavra)}</b><span class="mono">${moral}/100</span></div>
+            <div class="rep-barra bom"><i style="width:${moral}%"></i></div>
+          </div>`)
+          + bloco('Com você', dl([
+            ['Afinidade', af ? M(af) : '<span class="sm-fraco">Ainda não dá pra dizer</span>'],
+            ['Fome', noTime && !p.morto ? (fome ? `<span class="time-fome${fome === 'faminto' ? ' grave' : ''}">${M(fome)}</span>` : 'Alimentad' + pron(p).o) : ''],
+            ['Par no time', par ? e(nomeExib(par)) : ''],
+            ['Onde está', noTime ? 'No time' : noPC ? 'No PC' : 'Não voltou']
+          ]));
+      }
+    };
+
+    const volta = noPC ? `UI.modalPC('${uid}')` : 'UI.modalTime()';
+    this.modal('', cabeca + `<div class="sm-folha" role="tabpanel">${abas[atual]()}</div>
+      <div class="sm-pe"><button class="btn" onclick="${volta}">Voltar</button></div>`, true, 'sumario');
   },
 
   /* Pokédex, PokéNav, Cartão e Mapa moram no bolso de Itens-chave:
@@ -3639,11 +3849,11 @@ const UI = {
 
   modalFicha(aba){
     const d = Estado.dados, j = d.jogador;
-    const ABAS = [['perfil', 'Perfil'], ['status', 'Status'], ['jornada', 'Jornada'], ['gente', 'Gente'], ['mundo', 'Mundo']];
+    const ABAS = [['perfil', 'Perfil'], ['status', 'Status'], ['jornada', 'Jornada'], ['pessoas', 'Pessoas'], ['mundo', 'Mundo']];
     const tem = a => ABAS.some(x => x[0] === a);
     const atual = tem(aba) ? aba : (tem(this._abaFicha) ? this._abaFicha : 'perfil');
     this._abaFicha = atual;
-    const e = s => this.esc(s);
+    const e = s => this.esc(s), M = s => this.esc(maiuscula(s));
     const dl = pares => `<dl class="ficha-dl">${pares.filter(p => p && p[1] != null && p[1] !== '')
       .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
     const bloco = (titulo, html, nota) => html ? `<section class="fi-bloco">
@@ -3683,12 +3893,12 @@ const UI = {
         const r = rumoDe(); const m = METAS.find(x => x.id === r.meta);
         const cap = Historia.capitulo(d.capitulo);
         const linha = typeof linhaAtual === 'function' ? linhaAtual(d) : null;
-        const casa = (typeof nomeCasa === 'function' && nomeCasa()) ? `${e(nomeCasa())}${casaQuem() ? ` <span class="ficha-nota">· ${e(casaQuem())}</span>` : ''}` : '';
+        const casa = typeof casaCompleto === 'function' ? e(casaCompleto()) : '';
         return bloco('Quem você é', dl([
-            ['Personalidade', e(j.personalidade || '—')],
-            ['Objetivo', `${e(j.objetivo || '—')}${m ? `<span class="ficha-nota bloco">quer dizer: ${e(m.nome)}</span>` : ''}`],
-            ['Gosta de', r.gostos.texto ? e(r.gostos.texto) : ''],
-            ['Não gosta de', r.desgostos.texto ? e(r.desgostos.texto) : '']
+            ['Personalidade', M(j.personalidade || '—')],
+            ['Objetivo', `${M(j.objetivo || '—')}${m ? `<span class="ficha-nota bloco">Quer dizer: ${e(m.nome)}</span>` : ''}`],
+            ['Gosta de', r.gostos.texto ? M(r.gostos.texto) : ''],
+            ['Não gosta de', r.desgostos.texto ? M(r.desgostos.texto) : '']
           ]))
           + bloco('De onde você vem', dl([
             ['Aniversário', e(textoNascimento(nascimentoDe()))],
@@ -3697,8 +3907,8 @@ const UI = {
           ]))
           + bloco('Agora', dl([
             ['Capítulo', cap ? `${e(numeroDoCapitulo(cap))} <span class="ficha-nota">${e(cap.titulo)}</span>` : ''],
-            ['Kanto te vê como', d.via && d.via !== 'neutro' && NOME_VIA[d.via] ? e(NOME_VIA[d.via]) : ''],
-            ['Do lado de', linha === 'rocket' ? 'quem manda o envelope sem timbre' : linha && NOME_DA_LINHA[linha] ? e(NOME_DA_LINHA[linha]) : ''],
+            ['Kanto te vê como', d.via && d.via !== 'neutro' && NOME_VIA[d.via] ? M(NOME_VIA[d.via]) : ''],
+            ['Do lado de', linha === 'rocket' ? 'Quem manda o envelope sem timbre' : linha && NOME_DA_LINHA[linha] ? M(NOME_DA_LINHA[linha]) : ''],
             ['Dinheiro', `<span class="mono">${fmtDin(j.dinheiro)} ₽</span>`]
           ]));
       },
@@ -3720,19 +3930,19 @@ const UI = {
             <span class="fm-num mono">${v}/${vMax}</span>
           </div>`;
         const leituras = [
-          leNatureza() ? 'lê a natureza de quem está do outro lado' : '',
-          leTipo() ? 'lê o tipo de um desconhecido' : ''
+          leNatureza() ? 'Lê a natureza de quem está do outro lado' : '',
+          leTipo() ? 'Lê o tipo de um desconhecido' : ''
         ].filter(Boolean);
         const ferid = (j.ferimentos || []).slice(-4).reverse().map(f =>
-          `<li><span class="mono">−${f.qtd}</span> ${e(f.causa)}${f.cap ? ` <span class="ficha-nota">cap. ${f.cap}</span>` : ''}</li>`).join('');
+          `<li><span class="mono">−${f.qtd}</span> ${M(f.causa)}${f.cap ? ` <span class="ficha-nota">Capítulo ${f.cap}</span>` : ''}</li>`).join('');
         return bloco('Corpo', corpo)
           + bloco('Status', `<div class="fs-tabela">${STATUS_DO_TREINADOR.map(([k]) => this.statusDoTreinador(k, false)).join('')}</div>`,
-                  `teste: status + ${Dados.PERICIA_BASE} de perícia, em d6`)
+                  `Teste: status + ${Dados.PERICIA_BASE} de perícia, em d6`)
           + bloco('Pontos', `<p class="ficha-texto">${j.pontos
               ? `${j.pontos} ${j.pontos === 1 ? 'ponto guardado' : 'pontos guardados'}: entram no fim do próximo capítulo, no máximo um por status.`
               : 'Nenhum guardado. Cada capítulo fechado dá um.'}</p>`)
           + (leituras.length ? bloco('Na luta, você já', `<ul class="ficha-lista">${leituras.map(t => `<li>${e(t)}</li>`).join('')}</ul>`) : '')
-          + (ferid ? bloco('Ferimentos', `<ul class="ficha-lista">${ferid}</ul>`, 'os últimos') : '');
+          + (ferid ? bloco('Ferimentos', `<ul class="ficha-lista">${ferid}</ul>`, 'Os últimos') : '');
       },
 
       jornada: () => {
@@ -3740,9 +3950,9 @@ const UI = {
         const val = eixo === 'bom' ? d.reputacao.bom : d.reputacao.ruim;
         const prog = Estado.progressoRep();
         const rep = `<div class="ficha-rep">
-            <div class="fr-nome">${e(nivel.nome)} <span class="ficha-nota">${eixo} · ${val} de 8</span></div>
+            <div class="fr-nome">${e(nivel.nome)} <span class="ficha-nota">${eixo === 'bom' ? 'Boa' : 'Má'} · ${val} de 8</span></div>
             <div class="rep-barra ${eixo}"><i style="width:${Math.round(prog.atual * 100)}%"></i></div>
-            <div class="ficha-nota">${prog.prox ? `faltam ${prog.falta} ${prog.falta === 1 ? 'ponto' : 'pontos'} para o próximo degrau` : 'não tem degrau acima deste'}</div>
+            <div class="ficha-nota">${prog.prox ? `Faltam ${prog.falta} ${prog.falta === 1 ? 'ponto' : 'pontos'} para o próximo degrau` : 'Não tem degrau acima deste'}</div>
             ${nivel.ef ? `<p class="ficha-texto">${e(nivel.ef)}</p>` : ''}
           </div>`;
         const ins = d.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto');
@@ -3758,17 +3968,17 @@ const UI = {
         const rival = d.rival && d.npcs['Ezra'] ? (() => {
             const a = ARCOS_RIVAL[arcoRival()];
             return `<div class="ficha-rival">
-              <div class="fr-nome">${e(d.rival.nome)} <span class="ficha-nota">${e(a.nome)}</span></div>
-              <p class="ficha-texto">${e(a.resumo)}</p>
-              ${dl([['Placar', `<span class="mono">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span>`],
+              <div class="fr-nome">${e(d.rival.nome)} <span class="ficha-nota">${M(a.nome)}</span></div>
+              <p class="ficha-texto">${M(a.resumo)}</p>
+              ${dl([['Placar', `<span class="mono">Você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span>`],
                     ['Parceiro dele', `${d.flags.sabe_do_pico ? 'Pico · ' : ''}${e(especieDoPico())}`]])}
             </div>`;
           })() : '';
         const extras = (typeof rivaisConquistados === 'function' && rivaisConquistados().length)
           ? rivaisConquistados().map(({def, reg}) => `<div class="ficha-rival">
-              <div class="fr-nome">${e(def.nome)} <span class="ficha-nota">${e(defArcoExtra(def).nome)}</span></div>
-              <p class="ficha-texto">${e(def.desde)} · ${e(defArcoExtra(def).resumo || def.origem)}</p>
-              ${dl([['Placar', `<span class="mono">você ${reg.derrotas} × ${reg.vitorias} ele</span>`]])}
+              <div class="fr-nome">${e(def.nome)} <span class="ficha-nota">${M(defArcoExtra(def).nome)}</span></div>
+              <p class="ficha-texto">${M(def.desde)} · ${e(defArcoExtra(def).resumo || def.origem)}</p>
+              ${dl([['Placar', `<span class="mono">Você ${reg.derrotas} × ${reg.vitorias} ele</span>`]])}
             </div>`).join('') : '';
         return bloco('Reputação', rep)
           + bloco('Insígnias', insignias, `${ins.length} de 8${campeao ? ' · Campeão de Kanto' : ''}`)
@@ -3776,7 +3986,7 @@ const UI = {
           + bloco('Rival', rival + extras);
       },
 
-      gente: () => {
+      pessoas: () => {
         const todos = Object.values(d.npcs || {});
         if (!todos.length) return bloco('Quem lembra de você', '<p class="ficha-texto">Ninguém ainda. Kanto é grande e você acabou de chegar.</p>');
         const linhaNpc = n => {
@@ -3797,15 +4007,15 @@ const UI = {
 
       mundo: () => {
         const campo = typeof Campo !== 'undefined' ? dl(Campo.resumo().map(([nome, r]) =>
-          [nome, r.pode ? e(r.como || 'sim') : `<span class="ficha-falta">falta ${e(r.falta)}</span>`])) : '';
+          [nome, r.pode ? M(r.como || 'sim') : `<span class="ficha-falta">Falta ${e(r.falta)}</span>`])) : '';
         const lend = Object.values(d.lendarios || {});
         const lendarios = lend.length ? dl(lend.map(l => [DEX[l.dex].nome,
-          `${e(l.estado)} · ${e(l.disposicao)}${l.caçandoVoce ? ' · <b class="ficha-falta">te caçando</b>' : ''}`])) : '';
+          `${M(l.estado)} · ${e(l.disposicao)}${l.caçandoVoce ? ' · <b class="ficha-falta">te caçando</b>' : ''}`])) : '';
         const liga = `${d.liga.avisos}${d.liga.detencao ? ' · detenção ativa' : d.liga.ordemDevolucao ? ' · ordem de devolução' : ''}`;
         return bloco('O que dá pra fazer no mundo', campo)
           + (lendarios ? bloco('Lendários', lendarios) : '')
           + bloco('Kanto', dl([
-            ['Clima', e(d.mundo.clima)],
+            ['Clima', M(d.mundo.clima)],
             ['Instabilidade', `<span class="mono">${d.mundo.instabilidade}</span>`],
             ['Avisos da Liga', `<span class="mono">${e(liga)}</span>`]
           ]));
@@ -4809,7 +5019,7 @@ const UI = {
       <div class="linha"><span class="k">Pokémon de treinador com apelido</span><span class="v">só o apelido</span></div>
       <div class="linha"><span class="k">Depois de apontar a Pokédex</span><span class="v">Apelido (Espécie)</span></div>
       <div class="linha"><span class="k">Ler a Pokédex em combate</span><span class="v">quantas vezes quiser · não gasta o turno</span></div>
-      <div class="linha"><span class="k">Ordem do time</span><span class="v">em Seu time, segure meio segundo num Pokémon e arraste · o primeiro da lista é quem entra na briga</span></div>
+      <div class="linha"><span class="k">Ordem do time</span><span class="v">em Seu time, toque num Pokémon: "Pôr na frente" leva ele pro primeiro lugar, e "Trocar de lugar" troca ele com o próximo que você tocar · o primeiro do time é quem entra na briga</span></div>
       <div class="linha"><span class="k">Na luta</span><span class="v">Time e Mochila do alto da tela ficam trancados: troca e item são pela barra de ações, e gastam o turno · as Pokébolas na ficha mostram quem de cada lado ainda está de pé</span></div>
       <div class="linha"><span class="k">Comprar</span><span class="v">a loja pergunta antes de cobrar</span></div>
       <div class="linha"><span class="k">Pokédex de Kanto</span><span class="v">150 casas · o 151 e os lendários de Johto que cruzam Kanto só ganham casa depois que a Pokédex registra um deles · a Nacional mostra os 251</span></div>
