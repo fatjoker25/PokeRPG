@@ -673,7 +673,7 @@ c25_quantos_arquivos:{
 
 c25_fim_assinou_o_termo:{
   texto:[
-    'Você assina na antessala, em cima da pasta de vinil dela, com a planta que precisa de água a meio metro do seu cotovelo.',
+    d=>`Você assina na antessala, em cima da pasta de vinil dela, com a planta ${d.flags.regou_a_planta ? 'que você regou' : 'que precisa de água'} a meio metro do seu cotovelo.`,
     'Duas vias. Rubrica em cada folha. Leva três minutos.',
     'Às dez e trinta e um a audiência é aberta e a presidente da mesa registra em ata a celebração de termo de ajustamento de conduta e a extinção do feito.',
     'A sessão dura mais quatro minutos.',
@@ -689,7 +689,7 @@ c25_fim_assinou_o_termo:{
     'Você vê mil novecentas e quarenta e duas criaturas voltarem pra algum lugar por causa de uma assinatura sua.',
     'E também: quarenta e um anos de arquivo queimam num incinerador industrial em Celadon, num sábado, com laudo de destruição assinado por três pessoas.',
     'Você não sabe o que tinha lá dentro. Ninguém nunca vai saber.',
-    'Essa é a conta que você fez aos {idade} anos em cinquenta e nove minutos, em pé numa antessala, com uma planta seca do lado.',
+    d=>`Essa é a conta que você fez aos {idade} anos em cinquenta e nove minutos, em pé numa antessala, com uma planta ${d.flags.regou_a_planta ? 'regada' : 'seca'} do lado.`,
     'Você refaz essa conta a vida inteira e ela dá o mesmo resultado todas as vezes, e você continua refazendo.'
   ]}
 },

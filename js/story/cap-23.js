@@ -608,12 +608,12 @@ c23_desceu:{
     'Vocês descem os dezenove degraus e o sétimo range, e o décimo primeiro, e o décimo quarto.',
     'No ginásio vazio, Blue apaga a luz da escada e recoloca o biombo na frente dela, o que é um gesto completamente inútil e que ele faz mesmo assim.',
     fala('Blue', 'A convocação é na segunda.'),
-    fala('Blue', 'O protocolo tem quatro nomes. Um é o meu, um é o seu.'),
-    d=>fala(d.jogador.nome, 'E os outros dois?'),
+    fala('Blue', 'O protocolo tem o meu nome, o seu, e duas linhas em branco embaixo.'),
+    d=>fala(d.jogador.nome, 'Em branco pra quem?'),
     fala('Blue', 'Pois é.', 'frio'),
     fala('Blue', 'E a Rota 23 voltou a ter gente nas sete guaritas velhas de pedra. Cada uma quer ver o seu cartão.', null, 'Ele diz isso na porta, já com a chave na mão.')
   ],
-  ef:{flag:'sabe_da_convocacao', registrar:'A convocação é na segunda. O protocolo tem quatro nomes: o seu, o do Blue e dois que ninguém disse.'},
+  ef:{flag:'sabe_da_convocacao', registrar:'A convocação é na segunda. No protocolo, o seu nome, o do Blue e duas linhas em branco.'},
   fim:true
 },
 

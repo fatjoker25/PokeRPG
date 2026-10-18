@@ -478,7 +478,7 @@ c24_chegou_no_planalto:{
       ? 'No pátio não tem carro preto nenhum. O de vidro escuro desceu pra Saffron.'
       : 'Tem um carro preto estacionado no pátio, de vidro escuro, com placa de Saffron. Você não sabe há quanto tempo.',
     d=>d.flags.sabe_da_convocacao
-      ? `${c24_segunda()}, dez horas. Quatro nomes no protocolo, e dois você não sabe.`
+      ? `${c24_segunda()}, dez horas. O seu nome e o do Blue no protocolo, e duas linhas em branco.`
       : d.flags.falou_com_o_cracha_azul
       ? `${c24_segunda()}, dez horas. Uma sala e uma mesa comprida, como ela disse na arquibancada.`
       : `${c24_segunda()}, dez horas. É o que diz a convocação, e ela não diz mais nada.`
