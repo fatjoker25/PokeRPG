@@ -7,7 +7,27 @@ function c23_cabe(id, d){
   if (id === 'c23_ab_de_cracha') return typeof Cargos !== 'undefined' && !!Cargos.doCracha();
   return true;
 }
-function c23_abertura(d){ return Dados.escolher(C23_ABERTURAS.filter(id => c23_cabe(id, d))); }
+function c23_abertura(d){
+  const id = Dados.escolher(C23_ABERTURAS.filter(id => c23_cabe(id, d)));
+  if (d && d.relogio && d.flags && d.flags.c23_chegada == null){
+    /* quem espera na calçada chega às sete e vê o Blue abrir às oito;
+       o resto chega com o ginásio aberto e a escada já descoberta */
+    Relogio.ate(id === 'c23_ab_chegou_antes' ? 8 : 10);
+    d.flags.c23_chegada = d.relogio.dia;
+  }
+  return id;
+}
+/* as linhas que os líderes mandaram pro arquivo, uma por insígnia */
+const C23_OBSERVACOES = [
+  ['Insígnia Pedra',     '**Pewter — Não desiste. Devia desistir, e não desiste. Anotado como resistência, não como talento.**'],
+  ['Insígnia Cascata',   '**Cerulean — Lê o adversário. Erra a leitura e insiste no erro. Vai aprender ou vai morrer.**'],
+  ['Insígnia Trovão',    '**Vermilion — Trata o time como gente. Isso é uma vantagem tática que ninguém sabe medir.**'],
+  ['Insígnia Arco-Íris', '**Celadon — Paciente com Pokémon, impaciente com gente. Corrigível.**'],
+  ['Insígnia Alma',      '**Fuchsia — Olha o chão e esquece o teto. Desconfia de tudo, menos do que devia.**'],
+  ['Insígnia Pântano',   '**Saffron — Pensa alto. Dá pra ler de longe, e não precisa ser eu.**'],
+  ['Insígnia Vulcão',    '**Cinnabar — Gasta o primeiro turno brigando com o calor. Do segundo em diante, não.**'],
+  ['Insígnia Terra',     '**Viridian — Recomendo observação continuada. — B.**']
+];
 
 /* ============================================================
    CAPÍTULO 23 — O SEGUNDO ANDAR
@@ -289,7 +309,7 @@ c23_leu_em_voz_alta:{
     'Você vira. Atrás, a lápis, na mesma letra de todas as etiquetas: eu assinei porque eu achei que ia conseguir controlar. Não consegui.'
   ],
   ef:{flag:'leu_o_verso_da_segunda_pagina', moral:-3,
-      npc:{nome:'Blue', opiniao:3, memoria:'Ouviu você ler em voz alta o que o avô dele escreveu a lápis no verso.'},
+      npc:{nome:'Blue', opiniao:3, memoria:'Ouviu você ler em voz alta o que o titular anterior escreveu a lápis no verso.'},
       rep:{eixo:'bom',delta:2,motivo:'Leu em voz alta uma coisa que era mais fácil ler calado', rep:{notorio:true}},
       registrar:'No verso da segunda página: "eu assinei porque eu achei que ia conseguir controlar".'},
   escolhas:[{texto:'Ir pro corredor D.', vai:'c23_procurou_o_proprio_nome'}]
@@ -301,11 +321,12 @@ c23_corredor_c:{
     'Tem recibo de médico. Tem seis cadernetas de anotação de treino, uma por ano, com o nome de cada Pokémon e uma coluna de peso.',
     'Tem quarenta e uma fotos numa caixa, sem álbum, sem ordem.',
     'Trinta e nove delas são de Pokémon. Duas são de gente.',
-    'Numa delas tem um menino de uns seis anos segurando uma Poké Ball vazia e rindo com falha nos dentes da frente.',
-    d=>fala('Blue', 'Sou eu.', 'baixo', 'Ele fala isso por cima do seu ombro, e você não ouviu ele chegar.')
+    'Numa delas tem um menino de uns seis anos segurando uma Pokébola vazia e rindo com falha nos dentes da frente.',
+    fala('Blue', 'Sou eu.', 'baixo', 'Ele fala isso por cima do seu ombro, e você não ouviu ele chegar.'),
+    fala('Blue', 'Eu não sei o que essa foto tá fazendo aqui.', 'frio')
   ],
   ef:{flag:'viu_a_foto_do_blue',
-      npc:{nome:'Blue', opiniao:2, memoria:'Te mostrou a foto dele aos seis anos, no arquivo do avô.'},
+      npc:{nome:'Blue', opiniao:2, memoria:'A foto dele aos seis anos estava no arquivo do titular anterior, e ele não sabe por quê.'},
       registrar:'No corredor C tem uma foto do Blue aos seis anos, segurando uma Pokébola vazia.'},
   escolhas:[
     {texto:'Perguntar quem é a outra foto de gente.', vai:'c23_a_outra_foto'},
@@ -357,10 +378,7 @@ c23_as_observacoes:{
     d=>{ const n = c21_ins(d);
          return n > 1 ? `${c21_ext(n).replace(/^./, c => c.toUpperCase())} ginásios, ${c21_ext(n)} linhas, cada uma escrita à mão por quem te recebeu, e todas mandadas pro mesmo arquivo.`
                       : 'Um ginásio, uma linha, escrita à mão por quem te recebeu e mandada pra este arquivo.'; },
-    d=>d.insignias.includes('Insígnia Pedra')   ? '**Pewter — Não desiste. Devia desistir, e não desiste. Anotado como resistência, não como talento.**' : '',
-    d=>d.insignias.includes('Insígnia Cascata') ? '**Cerulean — Lê o adversário. Erra a leitura e insiste no erro. Vai aprender ou vai morrer.**' : '',
-    d=>d.insignias.includes('Insígnia Trovão')  ? '**Vermilion — Trata o time como gente. Isso é uma vantagem tática que ninguém sabe medir.**' : '',
-    d=>d.insignias.includes('Insígnia Terra')   ? '**Viridian — Recomendo observação continuada. — B.**' : '',
+    ...C23_OBSERVACOES.map(([ins, linha]) => d => d.insignias.includes(ins) ? linha : ''),
     d=>d.insignias.includes('Insígnia Terra')
       ? 'A última é do Blue. Ele escreveu isso sobre você e mandou pra este arquivo, e ele está em pé ao seu lado neste momento.'
       : 'Nenhuma linha é elogio e nenhuma é crítica. É tudo medida.'
@@ -399,13 +417,16 @@ c23_folha_dez:{
       if (d.flags.dentro_da_silph) L.push('a data em que você entrou na Silph');
       if (['entrou_na_estacao','entrou_pelo_buraco','entrou_limpo','entrou_acenando','entrou_com_caminhao','entrou_na_carroceria']
             .some(f => d.flags[f])) L.push('a data em que você entrou na Estação 4');
-      L.push('a sala 704, com o horário de entrada e de saída');
+      L.push(d.flags.nao_entrou_na_reuniao ? 'o prédio da sala 704, com o horário em que você chegou e o horário em que foi embora sem subir'
+                                           : 'a sala 704, com o horário de entrada e de saída');
       return (L.length > 1 ? 'Uma folha por lugar: ' : 'Uma folha só pra isso: ') + (L.length > 1 ? L.slice(0, -1).join('; ') + '; e ' + L[L.length - 1] : L[0]) + '.';
     },
     'Depois, seis folhas de nomes de pessoas com quem você falou, em ordem cronológica, com cidade e uma marca ao lado de alguns.',
     d=>{
       const n = Object.keys(d.npcs||{}).length;
-      return n ? `Você conta as marcas. São ${Math.min(n, 9)} pessoas marcadas, e você conhece todas elas pelo primeiro nome.`
+      const ext = ['nenhuma','uma','duas','três','quatro','cinco','seis','sete','oito','nove'][Math.min(n, 9)];
+      return n === 1 ? 'Você conta as marcas. É uma pessoa marcada, e você lembra da cara dela.'
+           : n ? `Você conta as marcas. São ${ext} pessoas marcadas, e você lembra da cara de cada uma.`
                : 'As marcas estão nos nomes de quem falou com você mais de uma vez.';
     },
     'A folha 19 é a última e tem uma frase só, datilografada, sem assinatura:',
@@ -426,7 +447,7 @@ c23_folha_dez:{
 c23_outros_nomes:{
   texto:[
     'Você percorre o corredor D procurando nome conhecido e acha mais rápido do que gostaria.',
-    d=>d.npcs && d.npcs['Nadia Arden'] ? 'Tem pasta da Nadia Arden, de Lavender, com duas folhas: a licença de 1979 e a de agora.' : '',
+    d=>d.npcs && d.npcs['Nadia Arden'] ? 'Tem pasta da Nadia Arden, de Lavender, com duas folhas: a licença que caiu em 1979 e a de agora.' : '',
     'Tem pasta do Dr. Fuji, com noventa e uma folhas, a mais grossa do corredor.',
     d=>!d.flags.a_enfermeira_voltou_pra_estrada ? ''
       : d.jogador.cidade === 'Pallet' ? 'Tem pasta da assistente do laboratório de Pallet, com três folhas, a última a carta de demissão dela.'
@@ -474,7 +495,7 @@ c23_terceira_vez:{
     d=>fala(d.jogador.nome, 'Não. Mas eu conheço você, e você subiu duas.'),
     'Silêncio de sala de arquivo, com a fluorescente zumbindo.',
     fala('Blue', 'Depois da convocação.', 'baixo'),
-    fala('Blue', 'A gente vai. Depois da sala com a mesa comprida, a gente vai.')
+    fala('Blue', 'A gente vai. Depois de segunda, a gente vai.')
   ],
   ef:{flag:'combinou_de_subir_com_blue', moral:6,
       npc:{nome:'Blue', opiniao:6, memoria:'Combinou de subir a montanha com você depois da convocação.'},
@@ -587,20 +608,20 @@ c23_desceu:{
     'Vocês descem os dezenove degraus e o sétimo range, e o décimo primeiro, e o décimo quarto.',
     'No ginásio vazio, Blue apaga a luz da escada e recoloca o biombo na frente dela, o que é um gesto completamente inútil e que ele faz mesmo assim.',
     fala('Blue', 'A convocação é na segunda.'),
-    fala('Blue', 'Sala com mesa comprida, quatro cadeiras. Uma é minha, uma é sua.'),
-    d=>fala(d.jogador.nome, 'E as outras duas?'),
+    fala('Blue', 'O protocolo tem quatro nomes. Um é o meu, um é o seu.'),
+    d=>fala(d.jogador.nome, 'E os outros dois?'),
     fala('Blue', 'Pois é.', 'frio'),
-    'Na Rota 23, as sete guaritas velhas de pedra voltaram a ter gente dentro, e cada uma delas quer ver o seu cartão.'
+    fala('Blue', 'E a Rota 23 voltou a ter gente nas sete guaritas velhas de pedra. Cada uma quer ver o seu cartão.', null, 'Ele diz isso na porta, já com a chave na mão.')
   ],
-  ef:{flag:'sabe_da_convocacao', registrar:'A convocação é na segunda. Mesa comprida, quatro cadeiras.'},
+  ef:{flag:'sabe_da_convocacao', registrar:'A convocação é na segunda. O protocolo tem quatro nomes: o seu, o do Blue e dois que ninguém disse.'},
   fim:true
 },
 
 c23_foi_embora_sem_ler:{
   texto:[
     'Você sai do ginásio de Viridian sem subir a escada e anda quatro quarteirões antes de parar.',
-    'Você não vai voltar hoje. Você sabe disso com a mesma clareza com que sabe que devia.',
-    'O que tem naquela sala vai continuar naquela sala, e um dia alguém vai ler, e provavelmente não vai ser você.',
+    'Você não volta hoje. Você sabe disso com a mesma clareza com que sabe que devia.',
+    'O que tem naquela sala continua naquela sala, com a escada aberta e ninguém lendo.',
     'A convocação é na segunda de qualquer jeito.'
   ],
   ef:{flag:'nao_leu_o_arquivo', moral:-3,

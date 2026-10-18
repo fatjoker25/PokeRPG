@@ -507,7 +507,7 @@ c23_fim_assumiu:{
     'E vai embora pela porta da frente, sem mochila, sem se despedir do prédio, e não olha pra trás uma vez.'
   ],
   final:{id:'assumiu_viridian', titulo:'TITULAR, GINÁSIO DE VIRIDIAN', texto:[
-    'Você é o titular mais novo da história da Liga Pokémon e isso vira notícia por três semanas e depois deixa de ser notícia, que é o melhor que podia acontecer.',
+    'Você é {o titular mais novo|a titular mais nova} da história da Liga Pokémon e isso vira notícia por três semanas e depois deixa de ser notícia, que é o melhor que podia acontecer.',
     'Um ginásio atende, em média, quatrocentos desafiantes por ano. Você atende quatrocentos desafiantes por ano.',
     'A maior parte do trabalho não é lutar: é manutenção elétrica, escala de funcionário, prestação de contas trimestral e uma quantidade de papel que ninguém menciona quando fala de líder de ginásio.',
     'O arquivo do segundo andar continua lá.',
