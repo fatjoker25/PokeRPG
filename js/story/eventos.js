@@ -768,14 +768,14 @@ celadon:[
        'Quatro são de escola, de participação, sem nome.',
        'Duas são de ginástica, do mesmo clube, do mesmo ano, e claramente da mesma pessoa.',
        'A sétima é de natação. Estadual. 1994.',
-       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Vernon.'
+       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Wells.'
      ]},
     {texto:'Comprar a de natação.',
      cond:d=>!!d.flags.viu_as_sete_medalhas && d.jogador.dinheiro >= 1200,
-     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Vernon':1},
+     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Sr. Wells':1},
          flag:'comprou_a_medalha',
          rep:{eixo:'bom',delta:2,motivo:'Comprou de volta uma medalha que tinha sido vendida junto com uma casa'},
-         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Vernon.'},
+         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Sr. Wells.'},
      resultado:[
        fala('o vendedor do quarto andar', 'Mil e duzentos. E eu tô cobrando caro de propósito.'),
        d=>fala(d.jogador.nome, 'Por quê?'),
@@ -785,12 +785,12 @@ celadon:[
      ]},
     {texto:'Perguntar de onde veio a caixa.',
      ef:{flag:'a_caixa_veio_de_pallet',
-         registrar:'A caixa de medalhas da vitrine de Celadon veio de uma desocupação em Pallet, em 1995.'},
+         registrar:d=>`A caixa de medalhas da vitrine de Celadon veio de uma desocupação em ${d.jogador.cidade}, em 1995.`},
      resultado:[
        'Ele puxa um caderno de trás do balcão, corre o dedo e acha em quinze segundos, o que quer dizer que esse caderno é bem feito.',
        fala('o vendedor do quarto andar', 'Lote 331. Desocupação residencial, 1995.'),
-       fala('o vendedor do quarto andar', 'Cidade de origem: Pallet.'),
-       'Pallet.'
+       d=>fala('o vendedor do quarto andar', `Cidade de origem: ${d.jogador.cidade}.`),
+       d=>`${d.jogador.cidade}.`
      ]},
     {texto:'Seguir pro que você veio fazer.', ef:{},
      resultado:['Você segue. A caixa de sete medalhas continua na vitrine, onde está há quatro anos.']}

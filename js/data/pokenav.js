@@ -88,13 +88,13 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e contar da medalha',
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
-      d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
-      d=>fala(vz().nome, 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
-      d=>fala(vz().nome, 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
-      d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
+      d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há anos.'),
+      d=>fala(vz().nome, 'A filha do Sr. Wells ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      d=>fala(vz().nome, 'Ela morreu em 95 e o Sr. Wells vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz cinco anos que ele procura e ele não sabe procurar.', 'baixo'),
       d=>fala(vz().nome, 'Você anda por aí. Se aparecer, você vai saber que é.')
     ],
-    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Vernon') > 0,
+    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Sr. Wells') > 0,
     entregue:[
       d=>fala(d.jogador.nome, 'Eu achei.'),
       'Silêncio do outro lado por uns quatro segundos.',
@@ -103,10 +103,10 @@ const CONTATOS = [
       d=>fala(vz().nome, 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
       d=>fala(vz().nome, 'Ele vai querer conversar. Não fica.')
     ],
-    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Vernon');
+    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Sr. Wells');
       Estado.subirStatus('carisma');
       return [{tipo:'rep', texto:'CARISMA +1 — você aprendeu a entregar uma coisa e ir embora.'}]; },
-    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Vernon', notorio:true},
+    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Sr. Wells', notorio:true},
     marca:'devolveu_a_medalha'
   },
   favor:{

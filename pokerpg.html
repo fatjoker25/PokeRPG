@@ -20335,7 +20335,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith','Tansy','Elda',
   /* os nomes fixos daqui de cima */
-  'Ida','Clary','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
+  'Ida','Clary','Wells','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',
@@ -24796,6 +24796,13 @@ const Estado = {
       }
       /* a menina da licença se chamava Maren, como a Maren Kestrel */
       if (d.nomesSabidos && d.nomesSabidos['a menina do formulário'] === 'Maren') d.nomesSabidos['a menina do formulário'] = 'Ida';
+      /* a medalha da vitrine de Celadon é da filha do Sr. Wells, o do
+         vizinho; o Vernon do vale tinha outra, e as duas tinham o mesmo nome */
+      const VELHA = 'Medalha de natação da filha do Vernon', NOVA = 'Medalha de natação da filha do Sr. Wells';
+      if (d.flags && d.flags.comprou_a_medalha && !d.flags.devolveu_a_medalha && d.itens && d.itens[VELHA] > 0 && !d.itens[NOVA]){
+        d.itens[VELHA]--; if (!d.itens[VELHA]) delete d.itens[VELHA];
+        d.itens[NOVA] = 1;
+      }
       /* o título que o 26 dava tinha outro nome, e contava como insígnia */
       if (Array.isArray(d.insignias) && d.insignias.includes('Campeão de Kanto')){
         d.insignias = d.insignias.filter(i => i !== 'Campeão de Kanto');
@@ -29478,13 +29485,13 @@ const CONTATOS = [
     rotuloEntrega:'Ligar e contar da medalha',
     dica:'A medalha. Ele não vai perguntar de novo.',
     pedido:[
-      d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há uns dois anos.'),
-      d=>fala(vz().nome, 'A filha do Vernon ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
-      d=>fala(vz().nome, 'Ela morreu em 95 e o Vernon vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
-      d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz dois anos que ele procura e ele não sabe procurar.', 'baixo'),
+      d=>fala(vz().nome, 'Precisar eu não preciso. Mas tem uma coisa que me incomoda há anos.'),
+      d=>fala(vz().nome, 'A filha do Sr. Wells ganhou uma medalha de natação em 94. Estadual. A cidade inteira foi ver.'),
+      d=>fala(vz().nome, 'Ela morreu em 95 e o Sr. Wells vendeu tudo que tinha dentro da casa, inclusive a medalha.'),
+      d=>fala(vz().nome, 'Ele se arrependeu no mesmo mês. Faz cinco anos que ele procura e ele não sabe procurar.', 'baixo'),
       d=>fala(vz().nome, 'Você anda por aí. Se aparecer, você vai saber que é.')
     ],
-    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Vernon') > 0,
+    objetivo:d=>Estado.contaItem('Medalha de natação da filha do Sr. Wells') > 0,
     entregue:[
       d=>fala(d.jogador.nome, 'Eu achei.'),
       'Silêncio do outro lado por uns quatro segundos.',
@@ -29493,10 +29500,10 @@ const CONTATOS = [
       d=>fala(vz().nome, 'Leva na casa dele. Bate na porta, entrega, e não fica pra conversa.', 'baixo'),
       d=>fala(vz().nome, 'Ele vai querer conversar. Não fica.')
     ],
-    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Vernon');
+    recompensa:d=>{ Estado.usarItem('Medalha de natação da filha do Sr. Wells');
       Estado.subirStatus('carisma');
       return [{tipo:'rep', texto:'CARISMA +1 — você aprendeu a entregar uma coisa e ir embora.'}]; },
-    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Vernon', notorio:true},
+    rep:{eixo:'bom', delta:3, motivo:'Achou e devolveu a medalha da filha do Sr. Wells', notorio:true},
     marca:'devolveu_a_medalha'
   },
   favor:{
@@ -36736,14 +36743,14 @@ celadon:[
        'Quatro são de escola, de participação, sem nome.',
        'Duas são de ginástica, do mesmo clube, do mesmo ano, e claramente da mesma pessoa.',
        'A sétima é de natação. Estadual. 1994.',
-       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Vernon.'
+       'E tem um nome gravado atrás, em letra pequena, e o sobrenome é Wells.'
      ]},
     {texto:'Comprar a de natação.',
      cond:d=>!!d.flags.viu_as_sete_medalhas && d.jogador.dinheiro >= 1200,
-     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Vernon':1},
+     ef:{dinheiro:-1200, itens:{'Medalha de natação da filha do Sr. Wells':1},
          flag:'comprou_a_medalha',
          rep:{eixo:'bom',delta:2,motivo:'Comprou de volta uma medalha que tinha sido vendida junto com uma casa'},
-         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Vernon.'},
+         registrar:'Comprou na vitrine de usados de Celadon a medalha de natação da filha do Sr. Wells.'},
      resultado:[
        fala('o vendedor do quarto andar', 'Mil e duzentos. E eu tô cobrando caro de propósito.'),
        d=>fala(d.jogador.nome, 'Por quê?'),
@@ -36753,12 +36760,12 @@ celadon:[
      ]},
     {texto:'Perguntar de onde veio a caixa.',
      ef:{flag:'a_caixa_veio_de_pallet',
-         registrar:'A caixa de medalhas da vitrine de Celadon veio de uma desocupação em Pallet, em 1995.'},
+         registrar:d=>`A caixa de medalhas da vitrine de Celadon veio de uma desocupação em ${d.jogador.cidade}, em 1995.`},
      resultado:[
        'Ele puxa um caderno de trás do balcão, corre o dedo e acha em quinze segundos, o que quer dizer que esse caderno é bem feito.',
        fala('o vendedor do quarto andar', 'Lote 331. Desocupação residencial, 1995.'),
-       fala('o vendedor do quarto andar', 'Cidade de origem: Pallet.'),
-       'Pallet.'
+       d=>fala('o vendedor do quarto andar', `Cidade de origem: ${d.jogador.cidade}.`),
+       d=>`${d.jogador.cidade}.`
      ]},
     {texto:'Seguir pro que você veio fazer.', ef:{},
      resultado:['Você segue. A caixa de sete medalhas continua na vitrine, onde está há quatro anos.']}
@@ -101217,7 +101224,35 @@ function c27_cabe(id, d){
   if (id === 'c27_ab_a_mula') return d.jogador.dinheiro >= 1200;
   return true;
 }
-function c27_abertura(d){ return Dados.escolher(C27_ABERTURAS.filter(id => c27_cabe(id, d))); }
+function c27_abertura(d){
+  const id = Dados.escolher(C27_ABERTURAS.filter(id => c27_cabe(id, d)));
+  /* a subida começa de manhã */
+  if (d && d.relogio && d.flags && d.flags.c27_chegada == null){
+    if (c27_hora(d) !== 7) c27_ate(7);
+    d.flags.c27_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c27_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* a próxima vez que der h horas, com o time comendo no caminho */
+function c27_ate(h){
+  const r = Estado.dados.relogio; sincronizarHora(r);
+  const falta = (h - r.hora + 24) % 24;
+  if (falta) Relogio.viver(falta);
+}
+/* quem ainda está no posto: ave capturada antes não monta guarda */
+function c27_aves(d){
+  const L = (d || Estado.dados).lendarios || {};
+  const art = !(L[144] && L[144].estado === 'capturado'), zap = !(L[145] && L[145].estado === 'capturado');
+  return {art, zap, n:(art ? 1 : 0) + (zap ? 1 : 0)};
+}
+/* subir de volta do posto até o vale: a noite no posto e oito horas de trilha */
+function c27_subirDeNovo(){ Relogio.amanhaAs(6); Relogio.viver(8); }
+function c27_passar(d, comDois){
+  const a = c27_aves(d);
+  if (a.n === 2) return comDois;
+  return a.n === 1 ? 'Passar pelo que ficou, devagar, sem tocar em Pokébola nenhuma.' : 'Atravessar o vale vazio até a abertura.';
+}
 
 /* ============================================================
    CAPÍTULO 27 — O VALE
@@ -101236,7 +101271,7 @@ c27_ab_o_posto_fechado:{
     'Está fechado.',
     'Não é "fechado hoje": tem um cadeado com ferrugem de meses e uma janela com teia de Spinarak por dentro, e na porta um aviso de papel que a chuva comeu e do qual sobra uma linha:',
     '**"…atendimento transferido para a unidade de Cerulean."**',
-    'Cerulean fica a quatro dias daqui.',
+    'Cerulean fica a um dia inteiro de estrada daqui.',
     'No degrau do posto tem um caderno de capa dura amarrado num barbante preso ao corrimão, do jeito que se prende caneta em banco.',
     'É um livro de registro de subida improvisado. Alguém pôs ali.',
     'A última assinatura é de dezenove dias atrás.',
@@ -101310,10 +101345,10 @@ c27_ab_a_equipe_de_oitenta_e_oito:{
     'Ele para de andar.',
     fala('Enzo', 'E nenhum dos seis soube dizer como tinha chegado onde tinha chegado.', 'baixo')
   ],
-  ef:{flag:['a_equipe_de_oitenta_e_oito','sabe_das_tres_equipes'],
+  ef:{flag:['a_equipe_de_oitenta_e_oito'],
       registrar:'Em 1988 uma equipe de seis sumiu do acampamento e foi achada em três dias, viva, espalhada e sem saber como chegou lá.'},
   escolhas:[
-    {texto:'Procurar o lugar do acidente da primeira equipe.', vai:'c22_o_acidente'},
+    {texto:'Procurar o lugar do acidente da primeira equipe.', vai:'c22_o_acidente', cond:d=>!!d.flags.sabe_das_tres_equipes},
     {texto:'Subir direto.', vai:'c22_primeiro_dia'},
     {texto:'Seguir a trilha antiga.', vai:'c22_trilha_antiga'}
   ]
@@ -101336,11 +101371,12 @@ c27_ab_sozinho_mesmo:{
   ],
   ef:{flag:'a_noite_sem_som', hp:-2,
       registrar:'Passou a primeira noite da subida sozinh{o|a}. De madrugada, silêncio absoluto.',
-      presagio:'Mata sem som é mata que se calou. E mata se cala por alguma coisa.'},
+      presagio:'Mata sem som é mata que se calou. E mata se cala por alguma coisa.',
+      executar:()=>{ c27_ate(3); }},
   escolhas:[
     {texto:'Levantar e seguir de madrugada mesmo.', vai:'c22_primeiro_dia'},
-    {texto:'Esperar clarear e procurar a trilha antiga.', vai:'c22_trilha_antiga'},
-    {texto:'Esperar clarear e descer até o posto florestal.', vai:'c22_posto'}
+    {texto:'Esperar clarear e procurar a trilha antiga.', vai:'c22_trilha_antiga', ef:{executar:()=>{ c27_ate(6); }}},
+    {texto:'Esperar clarear e descer até o posto florestal.', vai:'c22_posto', ef:{executar:()=>{ c27_ate(6); }}}
   ]
 },
 
@@ -101367,15 +101403,16 @@ c22_subida:{
 
 c22_posto:{
   texto:[
-    'O posto florestal da Rota 10 é uma casa de madeira com antena, um gerador e uma caixa d água em cima de quatro pernas.',
+    'O posto florestal da Rota 10 é uma casa de madeira com antena, um gerador e uma caixa de água em cima de quatro pernas.',
     'Quem atende é um homem de uns cinquenta anos de camisa cáqui desbotada, que se apresenta como Sr. Emory Poplar e que está sozinho aqui há dois anos e meio.',
-    '"{O senhor|A senhora} vai subir." Não é pergunta. "Assina o livro."',
+    fala('Sr. Emory Poplar', '{O senhor|A senhora} vai subir.', null, 'Não é pergunta.'),
+    fala('Sr. Emory Poplar', 'Assina o livro.'),
     'O livro fica num prego, do lado da porta. É um caderno de capa dura com uma coluna de nomes, uma de datas de subida e uma de datas de descida.',
     'Você passa o dedo pela terceira coluna e conta seis linhas em branco.'
   ],
   ef:{flag:'assinou_o_livro',
       npc:{nome:'Sr. Emory Poplar', opiniao:1, memoria:'Guarda do posto florestal da Rota 10, sozinho há dois anos e meio.'},
-      registrar:'Assinou o livro do posto florestal. Quatro linhas sem data de descida.'},
+      registrar:'Assinou o livro do posto florestal. Seis linhas sem data de descida.'},
   escolhas:[
     {texto:'Perguntar quem são as seis linhas em branco.', vai:'c22_as_quatro_linhas'},
     {texto:'Perguntar o que ele vê daqui.', vai:'c22_o_que_ele_ve'},
@@ -101388,7 +101425,7 @@ c22_as_quatro_linhas:{
   texto:[
     'Ele não precisa olhar o livro.',
     fala('Sr. Emory Poplar', 'Duas da primeira equipe, faz dezoito meses.', null, 'Ele conta com o queixo.'),
-    fala('Sr. Emory Poplar', 'Vernon, em março. E três de agora, de quatro meses atrás.'),
+    fala('Sr. Emory Poplar', 'Vernon, faz um ano. E três de agora, de quatro meses atrás.'),
     d=>fala(d.jogador.nome, 'Três? Eles voltaram. A Liga disse que a terceira equipe voltou inteira.'),
     'Ele olha para você com uma paciência de quem já explicou isso.',
     fala('Sr. Emory Poplar', 'Voltaram seis do vale e desceram três daqui.', null, 'Ele bate no livro com o dedo.'),
@@ -101407,13 +101444,15 @@ c22_as_quatro_linhas:{
 
 c22_conversa_com_eles:{
   texto:[
-    '"Converso."',
+    fala('Sr. Emory Poplar', 'Converso.'),
     'Ele enche uma caneca de café de um bule que está sempre em cima do fogão.',
-    '"Eles são educados e falam normal, de tudo. Da Liga, de comida, de chuva." Ele estende a caneca para você. "Só tem uma coisa."',
-    '"Qual?"',
-    '"Se eu pergunto quanto tempo faz que eles estão lá, eles erram sempre para menos." Ele sopra o café dele. "Já perguntei nove vezes. A resposta mais alta foi duas semanas."',
+    fala('Sr. Emory Poplar', 'Eles são educados e falam normal, de tudo. Da Liga, de comida, de chuva.', null, 'Ele estende a caneca para você.'),
+    fala('Sr. Emory Poplar', 'Só tem uma coisa.'),
+    d=>fala(d.jogador.nome, 'Qual?'),
+    fala('Sr. Emory Poplar', 'Se eu pergunto quanto tempo faz que eles estão lá, eles erram sempre para menos.', null, 'Ele sopra o café dele.'),
+    fala('Sr. Emory Poplar', 'Já perguntei nove vezes. A resposta mais alta foi duas semanas.'),
     'Ele bebe.',
-    '"E faz quatro meses, {moço|moça}. Eu marco no calendário."'
+    fala('Sr. Emory Poplar', 'E faz quatro meses, {moço|moça}. Eu marco no calendário.')
   ],
   ef:{flag:['sabe_do_tempo_errado'], instabilidade:2,
       registrar:'Os três acampados erram o tempo sempre para menos. A resposta mais alta foi duas semanas.'},
@@ -101426,13 +101465,15 @@ c22_conversa_com_eles:{
 
 c22_porque_nao_desce:{
   texto:[
-    '"Porque eu tenho cinquenta e um anos e eles são três adultos que não estão presos."',
+    fala('Sr. Emory Poplar', 'Porque eu tenho cinquenta e um anos e eles são três adultos que não estão presos.'),
     'Ele põe a caneca na pia.',
-    '"E porque eu tentei." Ele diz isso de costas. "No segundo mês eu peguei um pelo braço e trouxe até aqui embaixo, andando."',
-    '"E?"',
-    '"E ele chegou aqui, sentou nessa cadeira, tomou café e conversou comigo duas horas." Ele se vira. "E no dia seguinte de manhã ele tinha subido de novo, e ele deixou um bilhete pedindo desculpa pelo incômodo."',
+    fala('Sr. Emory Poplar', 'E porque eu tentei.', null, 'Ele diz isso de costas.'),
+    fala('Sr. Emory Poplar', 'No segundo mês eu peguei um pelo braço e trouxe até aqui embaixo, andando.'),
+    d=>fala(d.jogador.nome, 'E?'),
+    fala('Sr. Emory Poplar', 'E ele chegou aqui, sentou nessa cadeira, tomou café e conversou comigo duas horas.', null, 'Ele se vira.'),
+    fala('Sr. Emory Poplar', 'E no dia seguinte de manhã ele tinha subido de novo, e ele deixou um bilhete pedindo desculpa pelo incômodo.'),
     'Ele pega o bilhete de dentro do livro, onde ele guarda, e mostra sem entregar.',
-    'Desculpe o incômodo. Eu preciso estar lá quando ele perguntar de novo.'
+    '**Desculpe o incômodo. Eu preciso estar lá quando ele perguntar de novo.**'
   ],
   ef:{flag:['sabe_do_bilhete'], instabilidade:2, moral:-2,
       npc:{nome:'Sr. Emory Poplar', opiniao:2, memoria:'Já trouxe um deles para baixo e ele subiu de novo na manhã seguinte.'},
@@ -101446,14 +101487,15 @@ c22_porque_nao_desce:{
 
 c22_ele_ja_subiu:{
   texto:[
-    '"Até o acampamento, de quinze em quinze dias."',
-    '"E até o vale?"',
+    fala('Sr. Emory Poplar', 'Até o acampamento, de quinze em quinze dias.'),
+    d=>fala(d.jogador.nome, 'E até o vale?'),
     'Ele demora.',
-    '"Uma vez. No primeiro ano, antes de tudo isso, quando eu ainda achava que o meu trabalho era conhecer a área."',
+    fala('Sr. Emory Poplar', 'Uma vez. No primeiro ano, antes de tudo isso, quando eu ainda achava que o meu trabalho era conhecer a área.'),
     'Ele abre uma gaveta e tira um binóculo velho, de correia rachada.',
-    '"Eu cheguei na borda, olhei para baixo, e desci sem entrar."',
-    '"Por quê?"',
-    '"Porque tinha dois Pokémon grandes lá embaixo virados para o mesmo lado, e eu tenho trinta anos de mato, {moço|moça}." Ele fecha a gaveta. "Pokémon não fica virado para o mesmo lado. Pokémon fica virado um contra o outro."'
+    fala('Sr. Emory Poplar', 'Eu cheguei na borda, olhei para baixo, e desci sem entrar.'),
+    d=>fala(d.jogador.nome, 'Por quê?'),
+    fala('Sr. Emory Poplar', 'Porque tinha dois Pokémon grandes lá embaixo virados para o mesmo lado, e eu tenho trinta anos de mato, {moço|moça}.', null, 'Ele fecha a gaveta.'),
+    fala('Sr. Emory Poplar', 'Pokémon não fica virado para o mesmo lado. Pokémon fica virado um contra o outro.')
   ],
   ef:{flag:['sabe_dos_dois_virados'], instabilidade:1,
       registrar:'Ele viu dois Pokémon grandes no vale, virados para o mesmo lado. Pokémon não faz isso.'},
@@ -101467,7 +101509,7 @@ c22_ele_ja_subiu:{
 c22_pediu_binoculo:{
   texto:[
     'Ele entrega sem pensar duas vezes e depois se arrepende visivelmente, e mesmo assim não pede de volta.',
-    '"É do meu pai. Volta com ele."',
+    fala('Sr. Emory Poplar', 'É do meu pai. Volta com ele.'),
     'Você pendura a correia rachada no pescoço e promete voltar com ele, e é a primeira promessa que você faz nesta subida.'
   ],
   ef:{flag:'tem_o_binoculo', itens:{'Binóculo do pai do Sr. Poplar':1},
@@ -101481,16 +101523,16 @@ c22_pediu_binoculo:{
 
 c22_o_que_ele_ve:{
   texto:[
-    '"Do posto? Nada do vale, que fica atrás daquela lomba."',
-    'Ele aponta com o queixo.',
-    '"Mas eu vejo o céu em cima dele, e eu vejo os Pokémon daqui de baixo, e é isso que eu ia te contar de qualquer jeito."',
-    '"Que Pokémon?"',
-    '"Todos." Ele abre os braços. "Desde março que não sobe Pokémon nenhum acima da lomba. Nenhum. Nem Pidgey, nem Rattata, nem Pokémon de rio."',
+    fala('Sr. Emory Poplar', 'Do posto? Nada do vale, que fica atrás daquela lomba.', null, 'Ele aponta com o queixo.'),
+    fala('Sr. Emory Poplar', 'Mas eu vejo o céu em cima dele, e eu vejo os Pokémon daqui de baixo, e é isso que eu ia te contar de qualquer jeito.'),
+    d=>fala(d.jogador.nome, 'Que Pokémon?'),
+    fala('Sr. Emory Poplar', 'Todos.', null, 'Ele abre os braços.'),
+    fala('Sr. Emory Poplar', 'Faz um ano que não sobe Pokémon nenhum acima da lomba. Nenhum. Nem Pidgey, nem Rattata, nem Pokémon de rio.'),
     'Ele deixa os braços caírem.',
-    '"E não é medo, porque medo eles mostram. Eles chegam na lomba, param, ficam um tempo, e vão para o lado. Do jeito que a gente faz quando vê uma fita de isolamento."'
+    fala('Sr. Emory Poplar', 'E não é medo, porque medo eles mostram. Eles chegam na lomba, param, ficam um tempo, e vão para o lado. Do jeito que a gente faz quando vê uma fita de isolamento.')
   ],
   ef:{flag:['sabe_da_lomba'], instabilidade:2,
-      registrar:'Desde março, nenhum Pokémon passa da lomba. Eles param, olham e contornam.'},
+      registrar:'Faz um ano que nenhum Pokémon passa da lomba. Eles param, olham e contornam.'},
   escolhas:[
     {texto:'Subir.', vai:'c22_primeiro_dia'},
     {texto:'"Me empresta o binóculo."', vai:'c22_pediu_binoculo'},
@@ -101502,12 +101544,12 @@ c22_trilha_antiga:{
   texto:[
     'Existe uma trilha antiga que sobe pelo lado leste e que não está no mapa da Liga, e que dá para achar se você souber que existe.',
     'Ela é larga demais para trilha de Pokémon e tem, de dois em dois quilômetros, marcos de pedra empilhada com uma laje em cima.',
-    'No terceiro marco, a laje tem alguma coisa gravada.',
-    'Não é escrita. São traços: um grupo de riscos verticais e, embaixo, um risco horizontal.',
-    'Você conta os verticais. São onze.'
+    'Do quinto marco em diante, as lajes têm alguma coisa gravada.',
+    'Não é escrita. São traços: grupos de riscos verticais e, no sétimo, embaixo dos verticais, um risco horizontal.',
+    'Você conta os verticais do sétimo. São onze.'
   ],
   ef:{flag:['achou_a_trilha_antiga','achou_os_marcos'], instabilidade:1,
-      registrar:'Uma trilha antiga com marcos de pedra. No terceiro, onze riscos verticais e um horizontal.'},
+      registrar:'Uma trilha antiga com marcos de pedra. No sétimo, onze riscos verticais e um horizontal.'},
   escolhas:[
     {texto:'Seguir contando os marcos.', vai:'c22_contou_os_marcos'},
     {texto:'Cavar embaixo do marco.', vai:'c22_cavou_o_marco'},
@@ -101569,32 +101611,35 @@ c22_o_acidente:{
   texto:[
     'O acidente da primeira equipe foi na descida, na estrada de terra, na segunda curva depois do posto.',
     'Dezoito meses de chuva não apagaram o lugar, porque a árvore que o carro pegou continua ali com a casca arrancada de um lado.',
-    'Alguém pregou uma cruz de madeira, pequena, e alguém repintou a cruz recentemente, porque a tinta está viva.',
+    'Alguém fincou ali uma estaca com uma tabuleta de madeira, pequena, e alguém repinta a tabuleta, porque a tinta está viva.',
     'Você fica um tempo e depois se agacha para ver o nome.',
     'É um nome de mulher e uma data de dezoito meses atrás, e embaixo, escrito com pincel fino por outra mão: ELA VOLTOU.'
   ],
   ef:{flag:['viu_a_cruz'], instabilidade:1, moral:-2,
-      registrar:'Uma cruz na curva, com o nome da agente que morreu na descida, e a frase ELA VOLTOU.'},
+      registrar:'Uma tabuleta na curva, com o nome da agente que morreu na descida, e a frase ELA VOLTOU.'},
   escolhas:[
-    {texto:'Perguntar no posto quem repinta a cruz.', vai:'c22_quem_repinta'},
+    {texto:'Perguntar no posto quem repinta a tabuleta.', vai:'c22_quem_repinta'},
     {texto:'Subir.', vai:'c22_primeiro_dia'}
   ]
 },
 
 c22_quem_repinta:{
   texto:[
-    '"Eu."',
-    'O Sr. Poplar diz isso sem nenhum floreio, do jeito que se diz que a gente varre a própria calçada.',
-    '"De ano em ano, no aniversário. Com tinta de esmalte, que aguenta."',
-    '"E a frase?"',
-    '"A frase foi ideia minha e eu apanhei por isso." Ele enche a caneca. "A Liga mandou um ofício pedindo que eu retirasse, porque é impróprio. Eu respondi que a cruz é minha, que a tinta é minha, e que o terreno é público."',
+    d=>Historia.jaAconteceu('c22_posto') ? ''
+      : 'O posto florestal fica duas curvas acima: uma casa de madeira com antena e gerador, e um homem de uns cinquenta anos de camisa cáqui desbotada que se apresenta como Sr. Emory Poplar. Num prego do lado da porta, um livro de subida com seis linhas sem data de descida.',
+    d=>fala(d.jogador.nome, 'Quem repinta a tabuleta da curva?'),
+    fala('Sr. Emory Poplar', 'Eu.', null, 'Ele diz isso sem nenhum floreio, do jeito que se diz que a gente varre a própria calçada.'),
+    fala('Sr. Emory Poplar', 'De ano em ano, no aniversário. Com tinta de esmalte, que aguenta.'),
+    d=>fala(d.jogador.nome, 'E a frase?'),
+    fala('Sr. Emory Poplar', 'A frase foi ideia minha e eu apanhei por isso.', null, 'Ele enche a caneca.'),
+    fala('Sr. Emory Poplar', 'A Liga mandou um ofício pedindo que eu retirasse, porque é impróprio. Eu respondi que a tabuleta é minha, que a tinta é minha, e que o terreno é público.'),
     'Ele bebe.',
-    '"Eu botei porque ela voltou. Eles mandaram três equipes e falam das que não voltaram, e ninguém nunca escreveu em lugar nenhum que essa aqui voltou."'
+    fala('Sr. Emory Poplar', 'Eu botei porque ela voltou. Eles mandaram três equipes e falam das que não voltaram, e ninguém nunca escreveu em lugar nenhum que essa aqui voltou.')
   ],
   ef:{flag:['ela_voltou'], moral:3,
-      npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Repinta a cruz todo ano e brigou com a Liga pela frase.'},
-      rep:{eixo:'bom',delta:1,motivo:'Perguntou quem cuidava da cruz'},
-      registrar:'O Sr. Poplar repinta a cruz todo ano e escreveu ELA VOLTOU contra um ofício da Liga.'},
+      npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Repinta a tabuleta da curva todo ano e brigou com a Liga pela frase.'},
+      rep:{eixo:'bom',delta:1,motivo:'Perguntou quem cuidava da tabuleta'},
+      registrar:'O Sr. Poplar repinta a tabuleta todo ano e escreveu ELA VOLTOU contra um ofício da Liga.'},
   escolhas:[
     {texto:'Perguntar das seis linhas em branco.', vai:'c22_as_quatro_linhas'},
     {texto:'Subir.', vai:'c22_primeiro_dia'}
@@ -101603,7 +101648,8 @@ c22_quem_repinta:{
 
 c22_primeiro_dia:{
   texto:[
-    'O primeiro dia é só cansaço.',
+    d=>d.flags.a_noite_sem_som ? 'O segundo dia é o primeiro de novo, só que com sono.' : 'O primeiro dia é só cansaço.',
+    d=>d.flags.subiu_de_mula ? 'Na pedra, o Enzo descarrega o que é seu, vira o Tauros e desce sem olhar pra trás. Daí pra cima é você.' : '',
     'Pedra, subida, vento, e a mesma vista virando devagar à sua esquerda.',
     d=>`Às quatro da tarde você passa ${d.flags.sabe_da_lomba ? 'a lomba que o Sr. Poplar apontou' : 'uma lomba de pedra'}, e a partir dali é diferente, e a diferença leva quarenta minutos para você nomear.`,
     'Não tem Pokémon.',
@@ -101617,7 +101663,8 @@ c22_primeiro_dia:{
     }
   ],
   ef:{flag:'passou_a_lomba', instabilidade:1,
-      registrar:'Passou a lomba. Acima dela não tem Pokémon nenhum.'},
+      registrar:'Passou a lomba. Acima dela não tem Pokémon nenhum.',
+      executar:d=>{ if (c27_hora(d) < 16) c27_ate(16); }},
   escolhas:[
     {texto:'Acampar aqui e observar a noite.', vai:'c22_acampou'},
     {texto:'Andar mais duas horas antes de parar.', vai:'c22_andou_mais'},
@@ -101635,7 +101682,8 @@ c22_acampou:{
     'De manhã você desce sabendo três coisas a mais e com quatro horas a menos de sono.'
   ],
   ef:{flag:'observou_o_vale', hp:-2, causa:'Noite em claro no norte', instabilidade:1,
-      registrar:'Luz azul às 2h. Alguma coisa cruzando o céu às 4h40.'},
+      registrar:'Luz azul às 2h. Alguma coisa cruzando o céu às 4h40.',
+      executar:()=>{ c27_ate(7); }},
   escolhas:[
     {texto:'Usar o binóculo agora, de manhã.', vai:'c22_binoculo_no_vale', cond:d=>!!d.flags.tem_o_binoculo},
     {texto:'Descer para o acampamento da equipe.', vai:'c22_terceira_equipe'},
@@ -101645,14 +101693,17 @@ c22_acampou:{
 
 c22_andou_mais:{
   texto:[
-    'Você anda duas horas a mais e para às seis e vinte, quando a luz acaba de vez.',
+    'Você anda duas horas a mais e para às seis e quarenta, quando a luz acaba de vez.',
     'Monta sozinh{o|a}, come sem fome e deita.',
-    'E aí acontece uma coisa pequena e horrível: você acorda às onze e quarenta da noite achando que dormiu a noite inteira, e você dormiu quarenta minutos.',
-    'Você confere o relógio três vezes.',
+    ()=>Relogio.tem()
+      ? 'E aí acontece uma coisa pequena e horrível: você acorda às onze e quarenta da noite achando que dormiu a noite inteira, e você dormiu quarenta minutos.'
+      : 'E aí acontece uma coisa pequena e horrível: você acorda achando que dormiu a noite inteira, e a lua mal saiu do lugar. Você dormiu, no máximo, quarenta minutos.',
+    ()=>Relogio.tem() ? 'Você confere o relógio três vezes.' : 'Você confere a lua três vezes.',
     'Depois disso não dorme mais.'
   ],
   ef:{flag:'a_noite_curta', hp:-2, causa:'Noite ruim no norte', instabilidade:1,
-      registrar:'Dormiu quarenta minutos e acordou achando que tinha sido a noite inteira.'},
+      registrar:'Dormiu quarenta minutos e acordou achando que tinha sido a noite inteira.',
+      executar:()=>{ c27_ate(6); }},
   escolhas:[
     {texto:'Usar o binóculo assim que clarear.', vai:'c22_binoculo_no_vale', cond:d=>!!d.flags.tem_o_binoculo},
     {texto:'Seguir para o acampamento da equipe.', vai:'c22_terceira_equipe'},
@@ -101664,10 +101715,21 @@ c22_binoculo_no_vale:{
   texto:[
     'Você deita na pedra e aponta o binóculo do pai do Sr. Poplar para o fundo do vale.',
     'A lente é velha e tem uma mancha no canto, e mesmo assim dá para ver.',
-    'Dois vultos grandes, um em cada borda, parados.',
-    'Os dois virados para o mesmo lado, que é a parede de pedra do fundo.',
-    'E no fundo, no ponto para onde os dois olham, uma abertura escura numa parede lisa demais.',
-    'Você fica vinte minutos olhando e nenhum dos dois se mexe uma vez.'
+    d=>{
+      const a = c27_aves(d);
+      if (a.n === 2) return 'Dois vultos grandes, um em cada borda, parados. Os dois virados para o mesmo lado, que é a parede de pedra do fundo.';
+      if (a.n === 1) return 'Um vulto grande numa das bordas, parado, virado para a parede de pedra do fundo. A outra borda está vazia.';
+      return 'As duas bordas estão vazias.';
+    },
+    d=>{
+      const n = c27_aves(d).n;
+      if (n === 2) return 'E no fundo, no ponto para onde os dois olham, uma abertura escura numa parede lisa demais.';
+      if (n === 1) return 'E no fundo, no ponto para onde ele olha, uma abertura escura numa parede lisa demais.';
+      return 'E no fundo, uma abertura escura numa parede lisa demais, sem nada na frente dela.';
+    },
+    d=>c27_aves(d).n === 2 ? 'Você fica vinte minutos olhando e nenhum dos dois se mexe uma vez.'
+      : c27_aves(d).n === 1 ? 'Você fica vinte minutos olhando e ele não se mexe uma vez.'
+      : 'Você fica vinte minutos olhando a abertura e nada sai dela.'
   ],
   ef:{flag:['viu_pelo_binoculo'], instabilidade:1,
       registrar:'Do alto, os dois vultos não se mexem por vinte minutos. Os dois olham a mesma abertura.'},
@@ -101681,8 +101743,8 @@ c22_binoculo_no_vale:{
 c22_achou_pelo_binoculo:{
   texto:[
     'Você varre a encosta e acha.',
-    'O acampamento fica a uns quatrocentos metros da borda do vale, e são três barracas montadas em triângulo, com uma mesa dobrável no meio.',
-    'E, a uns duzentos metros do acampamento, numa depressão de pedra, três pontos pequenos que não se mexem.',
+    'O acampamento fica a cerca de um quilômetro da borda do vale, e são três barracas montadas em triângulo, com uma mesa dobrável no meio.',
+    'E, a uns quatrocentos metros do acampamento, numa depressão de pedra, três pontos pequenos que não se mexem.',
     'Você olha por quatro minutos e eles não se mexem.',
     'No quinto minuto, um deles levanta o braço e coça a cabeça, e você solta o ar sem perceber que estava segurando.'
   ],
@@ -101777,11 +101839,14 @@ c22_as_barracas:{
 c22_ligou_o_radio:{
   texto:[
     'O rádio liga no primeiro clique, com pilha nova, e pega uma emissora com muito chiado.',
-    'É o programa das seis da manhã de uma rádio comunitária de Fuchsia, e a locutora está lendo pedidos de emprego de ouvintes.',
+    d=>c27_hora(d) < 9
+      ? 'É o programa das seis da manhã de uma rádio comunitária de Fuchsia, e a locutora está lendo pedidos de emprego de ouvintes.'
+      : 'É uma rádio comunitária de Fuchsia, na reprise do programa das seis da manhã, e a locutora está lendo pedidos de emprego de ouvintes.',
     'Você fica ouvindo dois minutos inteiros, no meio da pedra, a duzentos quilômetros de Fuchsia, sozinh{o|a}, num acampamento vazio.',
-    d=>d.flags.contato_nadia
-      ? 'E você reconhece a voz.'
-      : 'É a voz de uma mulher que fala devagar e lê nome completo e endereço de cada um.',
+    'É a voz de uma mulher que fala devagar e lê nome completo e endereço de cada um.',
+    d=>d.flags.falou_na_radio ? 'E você reconhece a voz: é a Maeve Bracken, que te pôs no ar ao vivo.'
+      : d.flags.contato_nadia ? 'Rádio comunitária de Fuchsia, programa das seis: é o nome do papel que a Auditora Brill te deu. Maeve Bracken.'
+      : '',
     'Você desliga e a pedra fica silenciosa outra vez, e agora é pior, porque agora é uma escolha sua.'
   ],
   ef:{flag:'ligou_o_radio', moral:1,
@@ -101813,7 +101878,7 @@ c22_o_livro:{
     'É um romance policial de banca, com a lombada quebrada e o preço a lápis na primeira página.',
     'A página 140 está marcada com um bilhete de ônibus.',
     'No verso do bilhete, escrito a caneta, com a letra apertada de quem escreve em cima do joelho:',
-    'Se eu não voltar: a senha do cofre é o aniversário da Nell. Não deixem a minha mãe assinar nada sem advogado. E digam a ela que eu não estava com medo, porque eu não estou.',
+    '**Se eu não voltar: a senha do cofre é o aniversário da Nell. Não deixem a minha mãe assinar nada sem advogado. E digam a ela que eu não estava com medo, porque eu não estou.**',
     'Não tem assinatura e não tem data.',
     'Você põe o bilhete de volta na página 140 e fecha o livro com cuidado, e depois fica um tempo com a mão em cima da capa.'
   ],
@@ -101959,14 +102024,15 @@ c22_faz_quatro_meses:{
 
 c22_descem_comigo:{
   texto:[
-    '"Vocês vão descer comigo agora."',
+    d=>fala(d.jogador.nome, 'Vocês vão descer comigo agora.'),
     'O mais novo levanta na hora, e é quase um alívio ver alguém obedecer depressa.',
-    'A mulher de trinta demora, e o terceiro, que não falou nada até agora, não levanta.',
-    '"Eu fico."',
-    'Ele diz isso olhando o vale, sem desafio nenhum.',
-    '"Eu estou aqui há quatro meses e eu acabei de descobrir isso, e eu vou te dizer a única coisa que eu tenho certeza: se eu descer agora, eu volto amanhã."',
+    'A mulher de trinta demora, e o terceiro, que quase não falou até agora, não levanta.',
+    fala('o que ficou', 'Eu fico.', null, 'Ele diz isso olhando o vale, sem desafio nenhum.'),
+    d=>fala('o que ficou', d.flags.contou_o_tempo_pra_equipe
+      ? 'Eu estou aqui há quatro meses e eu acabei de descobrir isso, e eu vou te dizer a única coisa que eu tenho certeza: se eu descer agora, eu volto amanhã.'
+      : 'Eu não sei há quanto tempo eu estou aqui, e eu vou te dizer a única coisa que eu tenho certeza: se eu descer agora, eu volto amanhã.'),
     'Ele finalmente olha para você.',
-    '"Eu prefiro descer quando eu souber responder."'
+    fala('o que ficou', 'Eu prefiro descer quando eu souber responder.')
   ],
   ef:{flag:['dois_vao_descer'], instabilidade:1,
       registrar:'Dois da terceira equipe aceitaram descer. Um não.'},
@@ -101990,10 +102056,11 @@ c22_desceu_os_dois:{
   ef:{flag:['desceu_dois'], hp:-4, causa:'Sete horas de descida e a subida de volta',
       rep:{eixo:'bom',delta:3,motivo:'Desceu duas pessoas e subiu de novo'},
       npc:{nome:'Sr. Emory Poplar', opiniao:3, memoria:'Escreveu a sua data de subida duas vezes no mesmo livro.'},
-      registrar:'Desceu dois da terceira equipe até o posto e subiu de novo.'},
+      registrar:'Desceu dois da terceira equipe até o posto e subiu de novo.',
+      executar:()=>{ Relogio.viver(7); }},
   escolhas:[
-    {texto:'Subir e ir ao vale.', vai:'c22_encontro'},
-    {texto:'Subir e falar com o que ficou.', vai:'c22_o_que_ficou'}
+    {texto:'Subir e ir ao vale.', vai:'c22_encontro', ef:{executar:()=>{ c27_subirDeNovo(); }}},
+    {texto:'Subir e falar com o que ficou.', vai:'c22_o_que_ficou', ef:{executar:()=>{ c27_subirDeNovo(); }}}
   ]
 },
 
@@ -102006,7 +102073,7 @@ c22_o_que_ficou:{
     d=>fala(d.jogador.nome, 'Chegaram.'),
     'Ele assente.',
     fala('o que ficou', 'Eu sei o que {o senhor|a senhora} está pensando e está cert{o|a}.', null, 'Ele não tira os olhos do vale.'),
-    fala('o que ficou', 'Eu sei que estou esperando uma coisa que talvez não venha, e que quatro meses é muito, e que a minha filha faz aniversário em novembro.'),
+    d=>fala('o que ficou', `Eu sei que estou esperando uma coisa que talvez não venha, e que ${d.flags.contou_o_tempo_pra_equipe ? 'quatro meses é muito' : 'faz mais tempo do que eu acho'}, e que a minha filha faz aniversário daqui a dois meses.`),
     'Ele encolhe os ombros.',
     fala('o que ficou', 'E mesmo assim eu não consigo descer sem responder. É assim que é. Eu não sei explicar melhor e eu já tentei muito.')
   ],
@@ -102060,11 +102127,11 @@ c22_eles_decidem:{
   texto:[
     'Você não decide por eles.',
     'Você mostra a data, senta, e espera, e eles conversam entre si por quase uma hora, baixo, do jeito que colegas de trabalho conversam.',
-    'No fim, dois decidem descer e um decide ficar, e eles se abraçam de um jeito desengonçado antes de se separar, porque as três são pessoas que trabalham juntas e não sabem fazer isso.',
+    'No fim, dois decidem descer e um decide ficar, e eles se abraçam de um jeito desengonçado antes de se separar, porque os três são pessoas que trabalham juntas e não sabem fazer isso.',
     'Os dois descem sozinhos, sem você, porque conhecem o caminho e porque é a decisão deles.',
     'O terceiro fica sentado onde estava.'
   ],
-  ef:{flag:['eles_decidiram','dois_vao_descer'],
+  ef:{flag:['eles_decidiram','dois_vao_descer','contou_o_tempo_pra_equipe'],
       rep:{eixo:'bom',delta:3,motivo:'Deixou três adultos decidirem por si depois de dar a informação'},
       registrar:'Dois desceram por decisão própria. Um ficou.'},
   escolhas:[
@@ -102142,15 +102209,16 @@ c22_tirou_equipe:{
     fala('o mais novo', 'Espera.', null, 'A voz dele muda completamente.'),
     fala('o mais novo', 'Espera, o que —'),
     'E aí eles todos acordam, ao mesmo tempo, e o pânico chega de uma vez em três pessoas adultas.',
-    'Vocês levam quatro horas para descer até o posto da Rota 10. Nenhum dos três fala nada no caminho.',
+    'Vocês levam sete horas para descer até o posto da Rota 10. Nenhum dos três fala nada no caminho.',
     'No posto, o Sr. Poplar olha os três, olha você, e vai pôr água no fogo sem dizer uma palavra.'
   ],
   ef:{flag:'salvou_a_equipe',
       rep:{eixo:'bom',delta:3,motivo:'Tirou três pessoas do vale antes que fosse tarde'},
       hp:-3, causa:'Descida forçada carregando gente',
-      registrar:'Tirou a terceira equipe do vale. Eles acordaram a 200 metros.'},
+      registrar:'Tirou a terceira equipe do vale. Eles acordaram a 200 metros.',
+      executar:()=>{ Relogio.viver(7); }},
   escolhas:[
-    {texto:'Voltar sozinh{o|a} ao vale.', vai:'c22_encontro'},
+    {texto:'Voltar sozinh{o|a} ao vale.', vai:'c22_encontro', ef:{executar:()=>{ c27_subirDeNovo(); }}},
     {texto:'Perguntar a eles, agora acordados, o que foi perguntado.', vai:'c22_acordados'}
   ]
 },
@@ -102168,7 +102236,7 @@ c22_acordados:{
   ef:{flag:['sabe_da_pergunta','ele_acreditou'], instabilidade:1, moral:-2,
       rep:{eixo:'bom',delta:1,motivo:'Esperou eles acordarem para perguntar'},
       registrar:'Ele não ficou bravo com a resposta do formulário. Ele acreditou.'},
-  escolhas:[{texto:'Subir de volta ao vale.', vai:'c22_encontro'}]
+  escolhas:[{texto:'Subir de volta ao vale.', vai:'c22_encontro', ef:{executar:()=>{ c27_subirDeNovo(); }}}]
 },
 
 c22_achou_pegadas:{
@@ -102217,17 +102285,35 @@ c22_encontro:{
       if (zapPreso) return 'Articuno está no fundo do vale, imóvel, e o chão embaixo dele está branco de gelo. O posto alto está vazio, porque quem devia estar nele está no seu cinto.';
       return 'Zapdos, pousado numa pedra alta, com o ar em volta zumbindo. Articuno, no fundo do vale, imóvel, com o chão branco de gelo embaixo.';
     },
-    'Aves lendárias não dividem território. Nunca dividiram, em nenhum registro.',
-    'Eles não estão olhando um para o outro. Estão olhando para a mesma coisa: uma abertura na parede de pedra, no fundo do vale.',
-    'Eles não estão caçando. Estão montando guarda.'
+    d=>{
+      const n = c27_aves(d).n;
+      if (n === 2) return 'Aves lendárias não dividem território. Nunca dividiram, em nenhum registro.';
+      if (n === 1) return 'Aves lendárias não dividem território. Nunca dividiram, em nenhum registro, e mesmo assim este vale tem dois postos.';
+      return '';
+    },
+    d=>{
+      const n = c27_aves(d).n;
+      if (n === 2) return 'Eles não estão olhando um para o outro. Estão olhando para a mesma coisa: uma abertura na parede de pedra, no fundo do vale.';
+      if (n === 1) return 'O que ficou não olha para o posto vazio. Olha para uma abertura na parede de pedra, no fundo do vale.';
+      return '';
+    },
+    d=>{
+      const n = c27_aves(d).n;
+      if (n === 2) return 'Eles não estão caçando. Estão montando guarda.';
+      if (n === 1) return 'Não está caçando. Está montando guarda sozinho, numa porta que pede dois.';
+      return '';
+    }
   ],
   ef:{executar:d=>{ Estado.lend(144).encontros++; Estado.lend(145).encontros++;
-        return [{tipo:'mundo', texto:'Articuno e Zapdos, juntos, guardando a entrada de uma caverna.'}]; },
+        const n = c27_aves(d).n;
+        return [{tipo:'mundo', texto: n === 2 ? 'Articuno e Zapdos, juntos, guardando a entrada de uma caverna.'
+          : n === 1 ? 'Um posto de guarda vazio na entrada de uma caverna, e o outro com uma ave só.'
+          : 'Dois postos de guarda vazios na entrada de uma caverna.'}]; },
       flag:'viu_guarda_aves', registrar:'As duas aves guardam a entrada da caverna do norte.'},
   escolhas:[
-    {texto:'Ficar na borda e observar uma hora antes de descer.', vai:'c22_observou_uma_hora'},
+    {texto:'Ficar na borda e observar uma hora antes de descer.', vai:'c22_observou_uma_hora', cond:d=>c27_aves(d).n > 0},
     {texto:'Procurar o círculo no chão.', vai:'c22_o_circulo', cond:d=>!!d.flags.sabe_do_circulo},
-    {texto:'Passar entre eles, devagar, sem tocar em Pokébola nenhuma.', vai:'c22_passou'},
+    {texto:d=>c27_passar(d, 'Passar entre eles, devagar, sem tocar em Pokébola nenhuma.'), vai:'c22_passou'},
     {texto:'Soltar as aves que você tem, aqui, nos postos delas.', vai:'c22_recolocou',
      cond:d=>Estado.lendariosCapturados().some(l=>GRUPO_AVES.includes(l.dex))},
     {texto:'Tentar capturar Zapdos.', vai:'c22_luta_zapdos',
@@ -102240,22 +102326,25 @@ c22_encontro:{
 
 c22_observou_uma_hora:{
   texto:[
-    'Você deita na borda e observa uma hora inteira, com o relógio no pulso virado para cima.',
-    'Em uma hora, Zapdos muda de posição duas vezes, e nas duas para reajustar o ângulo do corpo em direção à mesma abertura.',
-    'Articuno não se move nenhuma vez. Nem para respirar de um jeito que dê para ver.',
-    'Aos quarenta e dois minutos, uma pedra pequena rola da encosta e faz barulho, e nenhum dos dois vira a cabeça na direção do barulho.',
-    'Eles não estão vigiando o vale. Eles estão vigiando um ponto.',
-    'E, aos cinquenta e nove minutos, você percebe a última coisa: os dois estão a exatamente a mesma distância da abertura.'
+    ()=>Relogio.tem()
+      ? 'Você deita na borda e observa uma hora inteira, com o relógio no pulso virado para cima.'
+      : 'Você deita na borda e observa uma hora inteira, contando o tempo pela sombra que desce a parede de pedra.',
+    d=>c27_aves(d).zap ? 'Em uma hora, Zapdos muda de posição duas vezes, e nas duas para reajustar o ângulo do corpo em direção à mesma abertura.' : '',
+    d=>c27_aves(d).art ? 'Articuno não se move nenhuma vez. Nem para respirar de um jeito que dê para ver.' : '',
+    d=>`${Relogio.tem() ? 'Aos quarenta e dois minutos' : 'Lá pela metade da hora'}, uma pedra pequena rola da encosta e faz barulho, e ${c27_aves(d).n === 2 ? 'nenhum dos dois vira' : 'ele não vira'} a cabeça na direção do barulho.`,
+    d=>c27_aves(d).n === 2 ? 'Eles não estão vigiando o vale. Eles estão vigiando um ponto.' : 'Ele não está vigiando o vale. Está vigiando um ponto.',
+    d=>`${Relogio.tem() ? 'E, aos cinquenta e nove minutos' : 'E, quando a hora acaba'}, você percebe a última coisa: ${c27_aves(d).n === 2 ? 'os dois estão a exatamente a mesma distância da abertura' : 'o posto vazio fica exatamente à mesma distância da abertura que o dele'}.`
   ],
   ef:{flag:['observou_a_guarda'], instabilidade:1,
       rep:{eixo:'bom',delta:2,motivo:'Passou uma hora deitado na borda antes de descer'},
-      registrar:'Uma hora de observação: eles vigiam um ponto, não o vale, e estão à mesma distância dele.'},
+      registrar:'Uma hora de observação: a guarda vigia um ponto, não o vale, e os postos ficam à mesma distância dele.',
+      executar:()=>{ Relogio.avancar(1); }},
   escolhas:[
     {texto:'Procurar o círculo no chão.', vai:'c22_o_circulo', cond:d=>!!d.flags.sabe_do_circulo},
     {texto:'Contornar pela borda até ver a abertura de frente.', vai:'c22_contornou'},
-    {texto:'Passar entre eles, devagar.', vai:'c22_passou'},
-    {texto:'Descer e tentar capturar um deles.', vai:'c22_luta_zapdos',
-     cond:d=>!(Estado.dados.lendarios[145]&&Estado.dados.lendarios[145].estado==='capturado')}
+    {texto:d=>c27_passar(d, 'Passar entre eles, devagar.'), vai:'c22_passou'},
+    {texto:'Descer e tentar capturar Zapdos.', vai:'c22_luta_zapdos', cond:d=>c27_aves(d).zap},
+    {texto:'Descer e tentar capturar Articuno.', vai:'c22_luta_articuno', cond:d=>c27_aves(d).art}
   ]
 },
 
@@ -102271,9 +102360,8 @@ c22_contornou:{
       registrar:'A parede do fundo não foi cavada: foi derretida e esfriada. Sai ar morno da abertura.'},
   escolhas:[
     {texto:'Procurar o círculo no chão.', vai:'c22_o_circulo', cond:d=>!!d.flags.sabe_do_circulo},
-    {texto:'Descer e passar entre eles.', vai:'c22_passou'},
-    {texto:'Descer e tentar capturar Articuno.', vai:'c22_luta_articuno',
-     cond:d=>!(Estado.dados.lendarios[144]&&Estado.dados.lendarios[144].estado==='capturado')}
+    {texto:d=>c27_passar(d, 'Descer e passar entre eles.'), vai:'c22_passou'},
+    {texto:'Descer e tentar capturar Articuno.', vai:'c22_luta_articuno', cond:d=>c27_aves(d).art}
   ]
 },
 
@@ -102292,7 +102380,7 @@ c22_o_circulo:{
   escolhas:[
     {texto:'Pegar um pedaço da sucata.', vai:'c22_pegou_sucata'},
     {texto:'Deitar na depressão.', vai:'c22_deitou_na_depressao'},
-    {texto:'Descer e passar entre eles.', vai:'c22_passou'},
+    {texto:d=>c27_passar(d, 'Descer e passar entre eles.'), vai:'c22_passou'},
     {texto:'Voltar para a borda.', vai:'c22_encontro'}
   ]
 },
@@ -102312,7 +102400,7 @@ c22_pegou_sucata:{
       registrar:'Uma chapa com numeração SPH, arrancada do vidro do círculo.'},
   escolhas:[
     {texto:'Deitar na depressão.', vai:'c22_deitou_na_depressao'},
-    {texto:'Descer e passar entre eles.', vai:'c22_passou'},
+    {texto:d=>c27_passar(d, 'Descer e passar entre eles.'), vai:'c22_passou'},
     {texto:'Voltar para a borda.', vai:'c22_encontro'}
   ]
 },
@@ -102328,7 +102416,7 @@ c22_deitou_na_depressao:{
   ef:{flag:'deitou_no_circulo', instabilidade:2, moral:-2,
       registrar:'Deitou na depressão do círculo. O vidro ainda é morno.'},
   escolhas:[
-    {texto:'Levantar e passar entre eles.', vai:'c22_passou'},
+    {texto:d=>c27_passar(d, 'Levantar e passar entre eles.'), vai:'c22_passou'},
     {texto:'Pegar um pedaço da sucata.', vai:'c22_pegou_sucata'},
     {texto:'Voltar para a borda.', vai:'c22_encontro'}
   ]
@@ -102337,69 +102425,96 @@ c22_deitou_na_depressao:{
 c22_passou:{
   texto:[
     'Você desce e anda pelo meio do vale.',
-    'Os dois te acompanham com a cabeça, sem sair do lugar. Você passa a doze metros de Articuno e o frio atravessa o casaco como se o casaco não existisse.',
     d=>{
-      if (d.flags.salvou_o_filhote) return 'E Articuno — que te reconhece das Seafoam — abaixa a cabeça um centímetro quando você passa. Um centímetro. É a maior honra da sua vida.';
-      if (d.flags.respeitou_zapdos||d.flags.zapdos_desceu) return 'E Zapdos, na pedra alta, para de zumbir enquanto você atravessa. Só enquanto você atravessa.';
-      return 'Nenhum dos dois te impede.';
+      const a = c27_aves(d);
+      if (a.n === 2) return 'Os dois te acompanham com a cabeça, sem sair do lugar. Você passa a doze metros de Articuno e o frio atravessa o casaco como se o casaco não existisse.';
+      if (a.art) return 'Articuno te acompanha com a cabeça, sem sair do lugar. Você passa a doze metros dele e o frio atravessa o casaco como se o casaco não existisse.';
+      if (a.zap) return 'Zapdos te acompanha com a cabeça, da pedra alta, sem sair do lugar, e o ar perto dele estala na sua nuca.';
+      return 'Ninguém te acompanha com a cabeça. Os dois postos ficam pra trás, vazios.';
     },
-    'E é aí que você entende a parte ruim: eles não estão te impedindo de entrar.',
-    'Eles estão impedindo alguma coisa de sair.'
+    d=>{
+      const a = c27_aves(d);
+      if (a.art && d.flags.salvou_o_filhote) return 'E Articuno — que te reconhece das Seafoam — abaixa a cabeça um centímetro quando você passa. Um centímetro. É a maior honra da sua vida.';
+      if (a.zap && (d.flags.respeitou_zapdos || d.flags.zapdos_desceu)) return 'E Zapdos, na pedra alta, para de zumbir enquanto você atravessa. Só enquanto você atravessa.';
+      if (a.n === 2) return 'Nenhum dos dois te impede.';
+      if (a.n === 1) return 'Ele não te impede.';
+      return '';
+    },
+    d=>c27_aves(d).n === 2 ? 'E é aí que você entende a parte ruim: eles não estão te impedindo de entrar.'
+      : c27_aves(d).n === 1 ? 'E é aí que você entende a parte ruim: ele não está te impedindo de entrar.'
+      : 'E é aí que você entende a parte ruim: o que eles guardavam não era a entrada.',
+    d=>c27_aves(d).n === 2 ? 'Eles estão impedindo alguma coisa de sair.'
+      : c27_aves(d).n === 1 ? 'Está impedindo alguma coisa de sair.'
+      : 'Era a saída.'
   ],
-  ef:{rep:{eixo:'bom',delta:2,motivo:'Passou entre dois lendários sem tentar capturá-los'},
-      flag:'passou_pelas_aves',
-      executar:d=>{ [144,145].forEach(x=>{const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo';}); return []; }},
+  ef:{flag:'passou_pelas_aves',
+      executar:d=>{
+        const n = c27_aves(d).n;
+        if (n) Estado.mudarRep('bom', 2, n === 2 ? 'Passou entre dois lendários sem tentar capturá-los' : 'Passou por um lendário sem tentar capturá-lo', {});
+        [144,145].forEach(x=>{const L=Estado.lend(x); if(L.disposicao!=='hostil') L.disposicao='passivo';}); return [];
+      }},
   escolhas:[
-    {texto:'Parar no meio e olhar os dois, um de cada vez.', vai:'c22_olhou_os_dois'},
+    {texto:d=>c27_aves(d).n === 2 ? 'Parar no meio e olhar os dois, um de cada vez.' : 'Parar no meio e olhar o que ficou.', vai:'c22_olhou_os_dois', cond:d=>c27_aves(d).n > 0},
     {texto:'Entrar na caverna.', vai:'c22_fim'}
   ]
 },
 
 c22_olhou_os_dois:{
   texto:[
-    'Você para no meio do vale, entre os dois, e olha primeiro para um e depois para o outro.',
-    'Zapdos, na pedra alta, tem as penas do peito arrepiadas de um jeito constante, sem descarga, sem trovão, só arrepiadas.',
-    'Articuno, embaixo, tem uma camada de gelo no dorso com três centímetros de espessura, formada de fora para dentro, ao longo de meses.',
-    'Nenhum dos dois caçou nesse tempo. Nenhum dos dois bebeu, que você possa ver.',
-    'Eles não estão em posição de guarda porque escolheram estar. Eles estão em posição de guarda porque não pararam.',
-    'Você olha de novo e vê: os dois estão exaustos.'
+    d=>c27_aves(d).n === 2 ? 'Você para no meio do vale, entre os dois, e olha primeiro para um e depois para o outro.' : 'Você para no meio do vale e olha o que ficou.',
+    d=>c27_aves(d).zap ? 'Zapdos, na pedra alta, tem as penas do peito arrepiadas de um jeito constante, sem descarga, sem trovão, só arrepiadas.' : '',
+    d=>c27_aves(d).art ? 'Articuno, embaixo, tem uma camada de gelo no dorso com três centímetros de espessura, formada de fora para dentro, ao longo de meses.' : '',
+    d=>c27_aves(d).n === 2 ? 'Nenhum dos dois caçou nesse tempo. Nenhum dos dois bebeu, que você possa ver.' : 'Não caçou nesse tempo. Não bebeu, que você possa ver.',
+    d=>c27_aves(d).n === 2 ? 'Eles não estão em posição de guarda porque escolheram estar. Eles estão em posição de guarda porque não pararam.' : 'Não está em posição de guarda porque escolheu estar. Está porque não parou.',
+    d=>c27_aves(d).n === 2 ? 'Você olha de novo e vê: os dois estão exaustos.' : 'Você olha de novo e vê: está exausto.'
   ],
   ef:{flag:['viu_que_estao_exaustos'], instabilidade:2, moral:-2,
       rep:{eixo:'bom',delta:2,motivo:'Reparou que os guardas estavam exaustos'},
-      registrar:'As duas aves estão exaustas. Meses de guarda sem parar.'},
+      registrar:'A guarda do vale está exausta. Meses sem parar.'},
   escolhas:[
-    {texto:'Deixar comida e água para os dois antes de entrar.', vai:'c22_deixou_comida'},
+    {texto:d=>c27_aves(d).n === 2 ? 'Deixar comida e água para os dois antes de entrar.' : 'Deixar comida e água para ele antes de entrar.', vai:'c22_deixou_comida'},
     {texto:'Entrar na caverna.', vai:'c22_fim'}
   ]
 },
 
 c22_deixou_comida:{
   texto:[
-    'Você tira o que tem da mochila e divide em dois montes, a uma distância respeitosa de cada um.',
-    'Ração, o que sobrou da comida seca, e água do cantil em duas cavidades de pedra que você enche com as mãos.',
-    'Nenhum dos dois olha para a comida.',
+    d=>c27_aves(d).n === 2 ? 'Você tira o que tem da mochila e divide em dois montes, a uma distância respeitosa de cada um.' : 'Você tira o que tem da mochila e faz um monte só, a uma distância respeitosa.',
+    d=>c27_aves(d).n === 2 ? 'Ração, o que sobrou da comida seca, e água do cantil em duas cavidades de pedra que você enche com as mãos.' : 'Ração, o que sobrou da comida seca, e água do cantil numa cavidade de pedra que você enche com as mãos.',
+    d=>c27_aves(d).n === 2 ? 'Nenhum dos dois olha para a comida.' : 'Ele não olha para a comida.',
     'Você sobe de volta pela trilha e, do alto, antes de entrar, olha uma última vez.',
-    'Articuno está bebendo.',
+    d=>c27_aves(d).art ? 'Articuno está bebendo.' : 'Zapdos está bebendo.',
     'Ele para assim que percebe que você olhou, e volta à posição, e a água continua ali.'
   ],
   ef:{flag:'deixou_comida_pras_aves', moral:4,
-      rep:{eixo:'bom',delta:3,motivo:'Deixou comida e água para dois guardas exaustos'},
+      rep:{eixo:'bom',delta:3,motivo:'Deixou comida e água para a guarda exausta do vale'},
       perdeItens:{'Ração':1},
-      executar:d=>{ [144,145].forEach(x=>{const L=Estado.lend(x); L.disposicao='amistoso';}); return [{tipo:'mundo', texto:'Os dois guardas te olham de outro jeito agora.'}]; },
-      registrar:'Deixou comida e água para as duas aves. Articuno bebeu quando achou que você não via.'},
+      executar:d=>{ [144,145].forEach(x=>{const L=Estado.lend(x); L.disposicao='amistoso';});
+        return [{tipo:'mundo', texto: c27_aves(d).n === 2 ? 'Os dois guardas te olham de outro jeito agora.' : 'O guarda que ficou te olha de outro jeito agora.'}]; },
+      registrar:'Deixou comida e água para a guarda do vale. Ela bebeu quando achou que você não via.'},
   escolhas:[{texto:'Entrar na caverna.', vai:'c22_fim'}]
 },
 
 c22_recolocou:{
   texto:[
-    'Você abre a Pokébola — ou as Pokébolas — apontando para as pedras onde eles deviam estar.',
-    'Eles saem e não hesitam nem um segundo: voam direto para o posto, assumem a posição e voltam a olhar a caverna.',
-    'Nenhum olha para você. Nenhum agradece. Eles tinham um trabalho e voltaram para ele.',
-    'O outro — o que nunca saiu do lugar — solta um som curto. Não é saudação. É conferência de efetivo.'
+    d=>d.flags.c27_soltas === 1
+      ? 'Você abre a Pokébola apontando para a pedra onde ele devia estar.'
+      : 'Você abre as Pokébolas apontando para as pedras onde eles deviam estar.',
+    d=>d.flags.c27_soltas === 1
+      ? 'Ele sai e não hesita nem um segundo: voa direto para o posto, assume a posição e volta a olhar a caverna.'
+      : 'Eles saem e não hesitam nem um segundo: voam direto para os postos, assumem a posição e voltam a olhar a caverna.',
+    d=>d.flags.c27_soltas === 1
+      ? 'Não olha para você. Não agradece. Tinha um trabalho e voltou para ele.'
+      : 'Nenhum olha para você. Nenhum agradece. Eles tinham um trabalho e voltaram para ele.',
+    d=>d.flags.c27_soltas !== 1 ? 'Os dois se olham por um segundo, de posto pra posto. Não é saudação. É conferência de efetivo.'
+      : d.flags.quebrou_a_guarda ? 'O outro, que tinha largado o posto pra vir atrás de você, volta pro dele e solta um som curto. Não é saudação. É conferência de efetivo.'
+      : 'O outro — o que nunca saiu do lugar — solta um som curto. Não é saudação. É conferência de efetivo.'
   ],
   ef:{executar:d=>{
         const avisos=[];
-        [...d.time,...d.pc].filter(p=>GRUPO_AVES.includes(p.dex)).forEach(p=>{
+        const aves = [...d.time,...d.pc].filter(p=>GRUPO_AVES.includes(p.dex));
+        d.flags.c27_soltas = aves.length;
+        aves.forEach(p=>{
           Captura.soltar(p).forEach(e=>avisos.push({tipo:e.tipo,texto:e.texto}));
         });
         Estado.dados.mundo.instabilidade = Math.max(0, Estado.dados.mundo.instabilidade-3);
@@ -102408,37 +102523,37 @@ c22_recolocou:{
       rep:{eixo:'bom',delta:3,motivo:'Recolocou os guardas no posto antes de descer'},
       flag:'recolocou_guarda'},
   escolhas:[
-    {texto:'Deixar comida e água para os dois.', vai:'c22_deixou_comida'},
+    {texto:d=>c27_aves(d).n === 2 ? 'Deixar comida e água para os dois.' : 'Deixar comida e água para ele.', vai:'c22_deixou_comida'},
     {texto:'Entrar na caverna.', vai:'c22_fim'}
   ]
 },
 
 c22_luta_zapdos:{
   texto:['Você tira a Pokébola do cinto e o vale inteiro fica com cheiro de metal quente antes de você jogar.'],
-  ef:{executar:d=>{ Estado.lend(145).ataquesSofridos++; return []; }},
+  ef:{executar:d=>{ Estado.lend(145).ataquesSofridos++; d.flags.c27_ave_da_luta = 145; return []; }},
   batalha:{dex:145, nivel:56, tipo:'lendario', fuga:true, ambiente:'montanha',
            vitoria:'c22_pos_ave', derrota:'c22_pos_ave', fuga2:'c22_pos_ave', captura:'c22_capturou_ave', gameover:'gameover'}
 },
 
 c22_luta_articuno:{
   texto:['O ar em volta dele é vinte graus mais frio. Você joga a Pokébola e vê ela congelar no meio do arco.'],
-  ef:{executar:d=>{ Estado.lend(144).ataquesSofridos++; return []; }},
+  ef:{executar:d=>{ Estado.lend(144).ataquesSofridos++; d.flags.c27_ave_da_luta = 144; return []; }},
   batalha:{dex:144, nivel:56, tipo:'lendario', fuga:true, ambiente:'montanha',
            vitoria:'c22_pos_ave', derrota:'c22_pos_ave', fuga2:'c22_pos_ave', captura:'c22_capturou_ave', gameover:'gameover'}
 },
 
 c22_pos_ave:{
   texto:[
-    'Quando acaba, os dois estão olhando para você em vez da caverna.',
-    'Pela primeira vez desde que você chegou, eles pararam de montar guarda.',
-    'Isso dura quatro segundos. Depois voltam a olhar a caverna.',
+    d=>c27_aves(d).n === 2 ? 'Quando acaba, os dois estão olhando para você em vez da caverna.' : 'Quando acaba, ele está olhando para você em vez da caverna.',
+    d=>c27_aves(d).n === 2 ? 'Pela primeira vez desde que você chegou, eles pararam de montar guarda.' : 'Pela primeira vez desde que você chegou, ele parou de montar guarda.',
+    d=>c27_aves(d).n === 2 ? 'Isso dura quatro segundos. Depois voltam a olhar a caverna.' : 'Isso dura quatro segundos. Depois volta a olhar a caverna.',
     'E os quatro segundos ficam na sua cabeça por muito tempo, porque nesses quatro segundos alguma coisa podia ter saído.'
   ],
   ef:{rep:{eixo:'ruim',delta:2,motivo:'Atacou os guardiões que protegiam a entrada'}, instabilidade:1},
   escolhas:[
-    {texto:'Tentar de novo.', vai:'c22_luta_zapdos',
-     cond:d=>!(Estado.dados.lendarios[145]&&Estado.dados.lendarios[145].estado==='capturado')},
-    {texto:'Deixar comida e água para os dois.', vai:'c22_deixou_comida'},
+    {texto:'Tentar de novo.', vai:'c22_luta_zapdos', cond:d=>d.flags.c27_ave_da_luta !== 144 && c27_aves(d).zap},
+    {texto:'Tentar de novo.', vai:'c22_luta_articuno', cond:d=>d.flags.c27_ave_da_luta === 144 && c27_aves(d).art},
+    {texto:d=>c27_aves(d).n === 2 ? 'Deixar comida e água para os dois.' : 'Deixar comida e água para ele.', vai:'c22_deixou_comida', cond:d=>c27_aves(d).n > 0},
     {texto:'Parar. Entrar na caverna.', vai:'c22_fim'}
   ]
 },
@@ -102446,8 +102561,12 @@ c22_pos_ave:{
 c22_capturou_ave:{
   texto:[
     'A Pokébola fecha.',
-    'E o outro — o que sobrou — solta um som que não é de ataque. É de alarme.',
-    'Ele abandona o posto e vem na sua direção, e você percebe tarde demais que tirou um dos dois guardas de uma porta que precisava de dois.',
+    d=>c27_aves(d).n
+      ? 'E o outro — o que sobrou — solta um som que não é de ataque. É de alarme.'
+      : 'E o vale fica sem som nenhum. Os dois postos estão vazios, e os dois guardas estão no seu cinto.',
+    d=>c27_aves(d).n
+      ? 'Ele abandona o posto e vem na sua direção, e você percebe tarde demais que tirou um dos dois guardas de uma porta que precisava de dois.'
+      : 'Você percebe tarde demais que tirou o último guarda de uma porta que precisava de dois.',
     'Dentro da caverna, muito fundo, alguma coisa se mexe pela primeira vez em muito tempo.'
   ],
   ef:{instabilidade:3, flag:'quebrou_a_guarda',
@@ -102469,8 +102588,11 @@ c22_voltou:{
     'Você vai ter que voltar lá. Todo mundo sabe disso, principalmente você.'
   ],
   ef:{instabilidade:2, flag:'adiou_o_norte',
-      rep:{eixo:'ruim',delta:1,motivo:'Recuou quando era a única pessoa no lugar certo'}},
-  escolhas:[{texto:'Voltar ao vale. Dessa vez até o fim.', vai:'c22_encontro'}]
+      rep:{eixo:'ruim',delta:1,motivo:'Recuou quando era a única pessoa no lugar certo'},
+      /* dois dias de descida, a ida a Saffron e os onze dias até o jornal */
+      executar:()=>{ Relogio.viver(24 * 14); }},
+  escolhas:[{texto:'Voltar ao vale. Dessa vez até o fim.', vai:'c22_encontro',
+             ef:{executar:()=>{ Relogio.viver(24 * 3); c27_ate(10); }}}]
 },
 
 c22_fim:{
@@ -102479,7 +102601,8 @@ c22_fim:{
     'Lá dentro, a passagem desce. Muito.',
     'As paredes são lisas demais para serem naturais: não foram cavadas, foram derretidas e esfriadas, com ondulações paradas no meio do movimento.',
     d=>{
-      if (d.flags.leu_caderno) return 'Dia 241. Ele pediu para sair. Usou a palavra por favor. Você lembra disso agora, e devia ter lembrado antes.';
+      if (d.flags.leu_o_fim_do_sete || d.flags.blaine_leu_em_voz_alta) return 'Dia 245. Pediu pra sair. Segunda vez. Usou a palavra por favor as duas vezes. Você lembra disso agora, e devia ter lembrado antes.';
+      if (d.flags.leu_caderno) return 'Ele não sabia que era um experimento. Ele achava que eram conversas. Você lembra disso agora, e devia ter lembrado antes.';
       if (d.flags.viu_os_doze) return 'Você pensa nos onze tanques do andar 11 e no décimo segundo, vazio, com a placa MATRIZ.';
       if (d.flags.sabe_da_pergunta) return 'Três adultos ficaram meses sentados numa pedra esperando uma segunda chance de responder uma pergunta. Você vai ter a primeira.';
       return 'Alguém morou aqui. Alguém mora aqui.';
@@ -102487,12 +102610,16 @@ c22_fim:{
     d=>{
       if (d.flags.leva_a_resposta_dele) return 'No bolso de dentro, você está carregando uma linha escrita quarenta vezes por um homem que não conseguia descer sem entregá-la.';
       if (d.flags.achou_a_medalha) return 'No bolso de dentro, você está carregando uma medalha de natação infantil com a fita desbotada.';
-      if (d.flags.deixou_comida_pras_aves) return 'Atrás de você, no vale, dois guardas exaustos estão bebendo água de uma cavidade de pedra que você encheu com as mãos.';
+      if (d.flags.deixou_comida_pras_aves) return c27_aves(d).n === 2
+        ? 'Atrás de você, no vale, dois guardas exaustos estão bebendo água de uma cavidade de pedra que você encheu com as mãos.'
+        : 'Atrás de você, no vale, um guarda exausto está bebendo água de uma cavidade de pedra que você encheu com as mãos.';
       return 'Você não trouxe nada que sirva aqui, e é bom que não tenha trazido.';
     },
-    'Você não precisa de mais nenhuma pista para saber o que tem no fim dessa descida.'
+    d=>(d.flags.leu_caderno || d.flags.viu_os_doze || d.flags.sabe_da_pergunta)
+      ? 'Você não precisa de mais nenhuma pista para saber o que tem no fim dessa descida.'
+      : 'O que tem no fim dessa descida, só descendo.'
   ],
-  fim:true, resumo:'Capítulo 22 concluído — você chegou onde só cabe ir sozinh{o|a}.'
+  fim:true, resumo:'Capítulo 27 concluído — você chegou onde só cabe ir sozinh{o|a}.'
 }
 }}
 

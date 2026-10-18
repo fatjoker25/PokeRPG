@@ -287,7 +287,7 @@ const NOMES_DA_HISTORIA = new Set([
   'Vesna','Waldo','Wilma','Xavi','Yarrow','Ylva','Yves','Zane','Zelda','Hawthorn',
   'Larch','Silas','Toby','Bertram','Edwin','Garth','Edith','Tansy','Elda',
   /* os nomes fixos daqui de cima */
-  'Ida','Clary','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
+  'Ida','Clary','Wells','Marlow','Myrtle','Tito','Pike','Rufo','Lena','Gina',
   'Tessa','Rue',
   /* canônicos de Kanto */
   'Brock','Misty','Surge','Erika','Koga','Sabrina','Blaine','Blue','Red','Lance','Giovanni',

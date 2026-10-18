@@ -1309,6 +1309,13 @@ const Estado = {
       }
       /* a menina da licença se chamava Maren, como a Maren Kestrel */
       if (d.nomesSabidos && d.nomesSabidos['a menina do formulário'] === 'Maren') d.nomesSabidos['a menina do formulário'] = 'Ida';
+      /* a medalha da vitrine de Celadon é da filha do Sr. Wells, o do
+         vizinho; o Vernon do vale tinha outra, e as duas tinham o mesmo nome */
+      const VELHA = 'Medalha de natação da filha do Vernon', NOVA = 'Medalha de natação da filha do Sr. Wells';
+      if (d.flags && d.flags.comprou_a_medalha && !d.flags.devolveu_a_medalha && d.itens && d.itens[VELHA] > 0 && !d.itens[NOVA]){
+        d.itens[VELHA]--; if (!d.itens[VELHA]) delete d.itens[VELHA];
+        d.itens[NOVA] = 1;
+      }
       /* o título que o 26 dava tinha outro nome, e contava como insígnia */
       if (Array.isArray(d.insignias) && d.insignias.includes('Campeão de Kanto')){
         d.insignias = d.insignias.filter(i => i !== 'Campeão de Kanto');
