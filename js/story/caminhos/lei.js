@@ -5,6 +5,16 @@
    Delegado Crane (Fuchsia) e a Delegada Thorne (Saffron).
    ============================================================ */
 
+/* Quatro postos entram aqui e só o Guarda de rota ganhou colete do
+   Holt. Texto que diz de onde você é pergunta aqui: quem vestiu o
+   colete é da guarita, mesmo com outro crachá no bolso. */
+function casaNaLei(){
+  if (Cargos.tem('guarda_rota')) return 'guarita';
+  if (Cargos.tem('policial')) return 'policia';
+  if (Cargos.tem('investigador')) return 'auditoria';
+  return 'comissao';
+}
+
 /* ── I · A BLITZ DA ROTA 18 (depois do 12) ─────────────────── */
 CAPITULOS.push(
 {
@@ -22,7 +32,8 @@ cl1_o_colete:{
     fala('o sargento de Viridian', 'Bloqueio de rotina. É o que está escrito na ordem.'),
     fala('o sargento de Viridian', 'Rotina às duas e meia da manhã, na única estrada que sai do portão de serviço da Zona Safári. Eu também sei ler.', 'baixo')
   ],
-  ef:{flag:'cm_lei_1', registrar:'A Patrulha montou um bloqueio na Rota 18, de madrugada, na saída do portão de serviço da Zona Safári.'},
+  ef:{flag:'cm_lei_1', registrar:'A Patrulha montou um bloqueio na Rota 18, de madrugada, na saída do portão de serviço da Zona Safári.',
+      executar:() => { caminhoAs(2); }},
   escolhas:[
     {texto:'"Quem pediu o bloqueio?"', vai:'cl1_quem_pediu'},
     {texto:'Ir até o portão de serviço antes do caminhão sair.', vai:'cl1_o_portao'},
@@ -33,12 +44,15 @@ cl1_o_colete:{
 cl1_o_radio:{
   texto:[
     'O rádio do colete chia uma vez e fala com a voz de quem está lendo:',
-    fala('o sargento de Viridian', 'Bloqueio na Rota 18, duas e meia. Você é o segundo nome da escala. O primeiro sou eu.'),
+    d => fala('o sargento de Viridian', casaNaLei() === 'auditoria'
+      ? 'Bloqueio na Rota 18, duas e meia. A Auditoria pediu observador e mandou você. O primeiro nome da escala sou eu.'
+      : 'Bloqueio na Rota 18, duas e meia. Você é o segundo nome da escala. O primeiro sou eu.'),
     d => { Nomes.apresentar('o sargento de Viridian'); return 'Na guarita improvisada da ciclovia, o sargento Holt já está de lanterna na mão.'; },
     'Você sabe o que sai de madrugada pelo portão de serviço da Zona Safári. A cidade chama de manejo.',
     fala('o sargento de Viridian', 'Pela sua cara, você sabe o que a gente vai parar hoje. Melhor. Assim eu não preciso fingir que não sei.', 'baixo')
   ],
-  ef:{flag:'cm_lei_1', registrar:'A Patrulha montou um bloqueio na Rota 18, de madrugada, na saída do portão de serviço da Zona Safári.'},
+  ef:{flag:'cm_lei_1', registrar:'A Patrulha montou um bloqueio na Rota 18, de madrugada, na saída do portão de serviço da Zona Safári.',
+      executar:() => { caminhoAs(2); }},
   escolhas:[
     {texto:'"Quem pediu o bloqueio?"', vai:'cl1_quem_pediu'},
     {texto:'Ir até o portão de serviço antes do caminhão sair.', vai:'cl1_o_portao'},
@@ -47,14 +61,12 @@ cl1_o_radio:{
 },
 
 cl1_quem_pediu:{
-  falante:'o sargento de Viridian',
-  vozes:['N','N','N'],
   texto:[
-    '"O delegado de Fuchsia." Holt desliga a lanterna pra falar, como se a luz atrapalhasse.',
-    '"Ele pediu o bloqueio e pediu que o bloqueio não achasse nada. Na mesma ligação. Em frases seguidas."',
+    fala('o sargento de Viridian', 'O delegado de Fuchsia.', null, 'Holt desliga a lanterna pra falar, como se a luz atrapalhasse.'),
+    fala('o sargento de Viridian', 'Ele pediu o bloqueio e pediu que o bloqueio não achasse nada. Na mesma ligação. Em frases seguidas.'),
     'Um carro escuro encosta no acostamento, sem sirene, e desce dele um homem de casaco por cima do pijama.',
     d => { Nomes.apresentar('o delegado de Fuchsia'); return 'No crachá preso no casaco, com a foto mais nova do que ele: BASIL CRANE — DELEGADO.'; },
-    '"Tudo tranquilo, sargento?"'
+    fala('Delegado Crane', 'Tudo tranquilo, sargento?')
   ],
   ef:{flag:'cm_lei_conheceu_crane',
       npc:{nome:'Delegado Crane', opiniao:0, memoria:'Apareceu no bloqueio da Rota 18 de casaco por cima do pijama.'}},
@@ -69,14 +81,12 @@ cl1_quem_pediu:{
 },
 
 cl1_perguntou_ao_crane:{
-  falante:'Delegado Crane',
-  vozes:['P','N','N','N'],
   texto:[
-    '"O que esse bloqueio tem que achar, delegado?"',
-    '"Bicicleta sem farol." Ele sorri. Os dentes são muito brancos pro resto dele.',
+    d=>fala(d.jogador.nome, 'O que esse bloqueio tem que achar, delegado?'),
+    fala('Delegado Crane', 'Bicicleta sem farol.', null, 'Ele sorri. Os dentes são muito brancos pro resto dele.'),
     'Holt olha pro chão.',
-    '"Tem muita bicicleta sem farol na ciclovia, {garoto|garota}. Você nem imagina."',
-    '"E o caminhão que sai às três?"'
+    fala('Delegado Crane', 'Tem muita bicicleta sem farol na ciclovia, {garoto|garota}. Você nem imagina.'),
+    d=>fala(d.jogador.nome, 'E o caminhão que sai às três?')
   ],
   ef:{npc:{nome:'Delegado Crane', opiniao:-2, memoria:'Você perguntou, na frente do sargento, o que o bloqueio devia achar.'}},
   escolhas:[
@@ -85,12 +95,10 @@ cl1_perguntou_ao_crane:{
 },
 
 cl1_a_resposta:{
-  falante:'Delegado Crane',
-  vozes:['N','N'],
   texto:[
     'Ele não responde do caminhão. Ele responde de você.',
-    '"Você é {o|a} da guarita de Viridian. Eu li a sua ficha no carro, vindo pra cá."',
-    '"Ficha boa. Ficha que pode ficar boa por muito tempo, se a pessoa souber o que é rotina."',
+    d => fala('Delegado Crane', `Você é {o|a} ${({guarita:'da guarita de Viridian', policia:'da Thorne, de Saffron', auditoria:'da Auditoria', comissao:'da Comissão'})[casaNaLei()]}. Eu li a sua ficha no carro, vindo pra cá.`),
+    fala('Delegado Crane', 'Ficha boa. Ficha que pode ficar boa por muito tempo, se a pessoa souber o que é rotina.'),
     'Ele volta pro carro e não liga o motor. Fica lá dentro, com o vidro meio aberto, olhando a estrada.'
   ],
   ef:{presagio:'Ele não foi embora. Ele ficou pra ver.'},
@@ -126,7 +134,8 @@ cl1_o_portao:{
   ],
   ef:{flag:'cm_lei_placa', itens:{'Placa do baú (anotada)':1},
       rep:{eixo:'bom', delta:1, motivo:'Foi conferir o portão do manejo antes de esperar no cavalete'},
-      registrar:'Anotou a placa do baú que sai do portão de serviço da Zona Safári às três e dez.'},
+      registrar:'Anotou a placa do baú que sai do portão de serviço da Zona Safári às três e dez.',
+      executar:() => { caminhoAs(3); }},
   escolhas:[
     {texto:'Voltar correndo pro cavalete antes deles.', vai:'cl1_o_cavalete'},
     {texto:'Cortar caminho pelo mato.', vai:'cl1_o_mato'}
@@ -159,6 +168,7 @@ cl1_o_cavalete:{
     'Tem carimbo, tem assinatura, tem o brasão da reserva. Atrás, dentro do baú, alguma coisa bate uma vez na parede de metal.',
     d => d.flags.cm_lei_conheceu_crane ? 'No acostamento, o vidro do carro escuro está meio aberto.' : 'Holt segura a lanterna no papel e não diz nada.'
   ],
+  ef:{executar:() => { caminhoAs(3); }},
   escolhas:[
     {texto:'Pedir pra abrir o baú.', vai:'cl1_abrir'},
     {texto:'Anotar a placa e liberar, pra seguir depois.', vai:'cl1_seguir',
@@ -220,16 +230,14 @@ cl1_carroceria:{
 },
 
 cl1_apreendeu:{
-  falante:'Delegado Crane',
-  vozes:['N','N','P','N'],
   texto:[
     'O carro escuro liga o farol.',
     d => { if (d.flags.cm_lei_conheceu_crane) return 'O delegado desce, agora sem fingir pressa.';
            Nomes.apresentar('o delegado de Fuchsia'); return 'Desce um homem de casaco por cima do pijama, com um crachá de delegado: BASIL CRANE.'; },
-    '"Apreender um transporte autorizado é abuso, {garoto|garota}. Abuso é crime."',
-    '"Então o senhor me prende junto com o baú."',
+    fala('Delegado Crane', 'Apreender um transporte autorizado é abuso, {garoto|garota}. Abuso é crime.'),
+    d=>fala(d.jogador.nome, 'Então o senhor me prende junto com o baú.'),
     'Ele olha pro Holt, que segura a lanterna firme no papel, e decide que hoje não.',
-    '"O baú vai pro pátio de Fuchsia. O pátio é meu."'
+    fala('Delegado Crane', 'O baú vai pro pátio de Fuchsia. O pátio é meu.')
   ],
   ef:{npc:{nome:'Delegado Crane', opiniao:-4, memoria:'Você apreendeu o baú do manejo na frente dele e disse pra ele te prender junto.'},
       presagio:'O pátio é dele.'},
@@ -249,7 +257,8 @@ cl1_lacrou:{
     'A perícia de Fuchsia chega às seis, com sono. Corta o lacre na frente de vocês dois e conta as gaiolas em voz alta.',
     'Quarenta e uma.'
   ],
-  ef:{flag:'cm_lei_41', registrar:'Quarenta e uma gaiolas no baú do manejo, lacradas e contadas pela perícia de Fuchsia.'},
+  ef:{flag:'cm_lei_41', registrar:'Quarenta e uma gaiolas no baú do manejo, lacradas e contadas pela perícia de Fuchsia.',
+      executar:() => { caminhoAs(6); }},
   escolhas:[
     {texto:'Escrever o relatório.', vai:'cl1_o_relatorio'}
   ]
@@ -335,6 +344,7 @@ cl1_fim:{
     },
     fala('o sargento de Viridian', 'Vai dormir. A estrada ainda vai estar aqui.', 'baixo')
   ],
+  ef:{executar:() => { caminhoAs(6); }},
   fim:true, resumo:'A blitz da Rota 18: um baú de manejo sanitário, um delegado de pijama e quatro linhas de observação.'
 }
 
@@ -360,7 +370,8 @@ cl2_a_pasta:{
   ],
   ef:{flag:'cm_lei_2',
       npc:{nome:'Delegada Thorne', opiniao:2, memoria:'Te deu o inquérito da Estação 4 porque o Conselho ligou duas vezes.'},
-      registrar:'A Delegada Thorne, de Saffron, te deu o inquérito sobre a Estação 4.'},
+      registrar:'A Delegada Thorne, de Saffron, te deu o inquérito sobre a Estação 4.',
+      executar:() => { caminhoAs(9); }},
   escolhas:[
     {texto:'Ler a pasta inteira antes de qualquer coisa.', vai:'cl2_a_leitura'},
     {texto:'"Quem do Conselho ligou?"', vai:'cl2_quem_ligou'},
@@ -400,14 +411,12 @@ cl2_a_leitura:{
 },
 
 cl2_o_advogado:{
-  falante:'Dr. Bramble',
-  vozes:['N','N','N','P','N'],
   texto:[
     d => { Nomes.apresentar('o advogado da Comissão'); return 'O advogado chega antes da hora, com um terno cinza claro e um cartão que ele deixa em cima da mesa sem você pedir: DR. OTIS BRAMBLE.'; },
-    '"A Estação 4 é área de pesquisa licenciada. A licença está anexada. O manejo é técnico."',
-    '"O inquérito, com todo o respeito, é uma confusão de competência. Pesquisa não é caso de polícia."',
-    '"E saco preto às terças?"',
-    '"Resíduo biológico, com destinação certificada." Ele não pisca. "Quer o certificado? Eu tenho cópia aqui."'
+    fala('o advogado da Comissão', 'A Estação 4 é área de pesquisa licenciada. A licença está anexada. O manejo é técnico.'),
+    fala('o advogado da Comissão', 'O inquérito, com todo o respeito, é uma confusão de competência. Pesquisa não é caso de polícia.'),
+    d => fala(d.jogador.nome, 'E saco preto às terças?'),
+    fala('o advogado da Comissão', 'Resíduo biológico, com destinação certificada. Quer o certificado? Eu tenho cópia aqui.', null, 'Ele não pisca.')
   ],
   ef:{npc:{nome:'Dr. Bramble', opiniao:0, memoria:'Depôs no inquérito da Estação 4 com o certificado de resíduo na pasta.'}},
   escolhas:[
@@ -515,13 +524,11 @@ cl2_expulso:{
 },
 
 cl2_a_decisao:{
-  falante:'a delegada de Saffron',
-  vozes:['N','N','N'],
   texto:[
     'A Delegada Thorne lê o que você trouxe com os óculos na ponta do nariz, folha por folha.',
-    '"Eu posso pedir o mandado. O juiz pode negar. Se negar, o Conselho sabe exatamente o que a gente tem e quando."',
-    '"Eu posso arquivar, e você volta pra guarita, e o Conselho esquece o seu nome em seis meses."',
-    '"E tem a terceira coisa, que eu não vou dizer em voz alta numa delegacia."',
+    fala('a delegada de Saffron', 'Eu posso pedir o mandado. O juiz pode negar. Se negar, o Conselho sabe exatamente o que a gente tem e quando.'),
+    d => fala('a delegada de Saffron', `Eu posso arquivar, e você volta pra ${({guarita:'guarita', policia:'ronda', auditoria:'Auditoria', comissao:'sua mesa na Comissão'})[casaNaLei()]}, e o Conselho esquece o seu nome em seis meses.`),
+    fala('a delegada de Saffron', 'E tem a terceira coisa, que eu não vou dizer em voz alta numa delegacia.', 'baixo'),
     d => d.flags.cm_lei_protegeu_fonte ? 'Você prometeu um nome que não sai.' : ''
   ],
   escolhas:[
@@ -546,6 +553,7 @@ cl2_fim:{
     },
     d => d.flags.cm_lei_arquivou ? 'No dia seguinte aparece um depósito na sua conta com a descrição "diária de diligência". Você não fez diligência nenhuma que pagasse diária.' : 'Na saída, a escada range no quarto degrau, e em mais nenhum.'
   ],
+  ef:{executar:d => { if (d.flags.cm_lei_mandado) caminhoAs(17); else if (d.flags.cm_lei_vazou) caminhoAs(23); }},
   fim:true, resumo:'O inquérito da Estação 4: uma denúncia sem sobrenome, uma carta que chegou antes e um galpão de dois crachás.'
 }
 
@@ -556,31 +564,32 @@ cl2_fim:{
 {
 num:25.01, titulo:'O Mandado', local:'Saffron — o fórum e a rua', ambiente:'cidade', nivelArea:58,
 tom:'muito sombrio',
-ancora:{local:'saffron', chamada:'Na porta do fórum de Saffron, a Delegada Thorne fuma um cigarro que ela parou de fumar há seis anos.'},
+ancora:{local:'saffron', chamada:'Na porta do fórum de Saffron, a delegada fuma um cigarro que ela parou de fumar há seis anos.'},
 entradas:['cl3_o_forum'],
 inicio: d => 'cl3_o_forum',
 cenas:{
 
 cl3_o_forum:{
-  falante:'a delegada de Saffron',
-  vozes:['N','N','N'],
   texto:[
     d => { Nomes.apresentar('a delegada de Saffron'); return 'A Delegada Thorne apaga o cigarro na sola do sapato e guarda a bituca no bolso, porque ninguém joga bituca na porta de fórum.'; },
-    d => d.flags.cm_lei_mandado
-      ? '"Saiu. O juiz assinou às oito da manhã, antes de alguém ligar pra ele. O nome no mandado é o da sala 704."'
+    d => fala('a delegada de Saffron', d.flags.cm_lei_mandado
+      ? 'Saiu. O juiz assinou às oito da manhã, antes de alguém ligar pra ele. O nome no mandado é o da sala 704.'
       : d.flags.cm_lei_vazou
-        ? '"A matéria saiu, a Liga se mexeu, e o juiz achou mais seguro assinar do que não assinar. O nome no mandado é o da sala 704."'
-        : '"Você arquivou e eu desarquivei. Não pergunta como. Saiu o mandado, e o nome é o da sala 704."',
-    '"Mandado de busca e apreensão, com condução. Vale até a meia-noite. Depois disso, alguém liga pra alguém."',
+        ? 'A matéria saiu, a Liga se mexeu, e o juiz achou mais seguro assinar do que não assinar. O nome no mandado é o da sala 704.'
+        : d.flags.cm_lei_arquivou
+          ? 'Você arquivou e eu desarquivei. Não pergunta como. Saiu o mandado, e o nome é o da sala 704.'
+          : 'O inquérito da Estação 4 andou sem você, devagar, e chegou. Saiu o mandado, e o nome é o da sala 704.'),
+    fala('a delegada de Saffron', 'Mandado de busca e apreensão, com condução. Vale até a meia-noite. Depois disso, alguém liga pra alguém.'),
     'Ela te estende a folha. O nome da Presidente está escrito por extenso, com o número do documento dela embaixo.'
   ],
   ef:{flag:'cm_lei_3', itens:{'Mandado da sala 704':1},
-      registrar:'O mandado de busca e condução contra a Presidente da Comissão saiu. Vale até a meia-noite.'},
+      registrar:'O mandado de busca e condução contra a Presidente da Comissão saiu. Vale até a meia-noite.',
+      executar:() => { caminhoAs(13); }},
   escolhas:[
     {texto:'Cumprir o mandado pelo regulamento, com a equipe.', vai:'cl3_a_equipe'},
     {texto:'Ir sozinh{o|a} antes, pra ninguém avisar.', vai:'cl3_sozinho',
      ef:{flag:'cm_lei_foi_sozinho', rep:{eixo:'bom', delta:1, motivo:'Foi cumprir o mandado antes que alguém avisasse'}}},
-    {texto:'Ligar pro Holt primeiro.', vai:'cl3_o_holt'}
+    {texto:'Ligar pro Holt primeiro.', vai:'cl3_o_holt', cond:d => Nomes.sabe('o sargento de Viridian')}
   ]
 },
 
@@ -588,7 +597,7 @@ cl3_o_holt:{
   texto:[
     'Holt atende no segundo toque, como sempre, com barulho de rádio de guarita atrás.',
     /* a aposentadoria dele é a cena de linha do 26, que vem depois deste */
-    fala('o sargento de Viridian', 'Eu tô de plantão até as seis. Depois das seis eu tô onde você precisar, de colete.'),
+    fala('o sargento de Viridian', 'Eu peço pro cabo segurar a guarita. Em duas horas eu tô aí, de colete.'),
     fala('o sargento de Viridian', 'E outra coisa: leva o livro. O de verdade. Mandado bem cumprido é o que tem registro de cada passo.', 'baixo')
   ],
   ef:{flag:'cm_lei_holt_junto', moral:3,
@@ -603,11 +612,15 @@ cl3_a_equipe:{
   texto:[
     'Quatro policiais, uma perita, a delegada e você, em dois carros sem sirene. Saffron às quatro da tarde não para pra ver polícia passar.',
     'Sala 704, sétimo andar, prédio comercial com farmácia no térreo. O elevador demora.',
-    'Na porta da sala, quem abre é o Dr. Bramble, de terno cinza claro, como se estivesse esperando um entregador.',
-    fala('Dr. Bramble', 'Boa tarde. A Presidente não está. A Presidente está em reunião no Planalto, numa agenda pública desde a semana passada.'),
-    fala('Dr. Bramble', 'A busca, claro, pode ser feita. Eu acompanho, com o seu perdão.')
+    d => d.flags.cm_lei_holt_junto ? 'Holt vai no segundo carro, de colete, com o livro da guarita no colo.' : '',
+    d => d.flags.cm_lei_bramble_novo
+      ? 'Na porta da sala, quem abre é um homem de terno cinza claro, como se estivesse esperando um entregador. Ele te estende um cartão antes de dizer boa tarde: DR. OTIS BRAMBLE.'
+      : 'Na porta da sala, quem abre é o Dr. Bramble, de terno cinza claro, como se estivesse esperando um entregador.',
+    fala('o advogado da Comissão', 'Boa tarde. A Presidente não está. A Presidente está em reunião no Planalto, numa agenda pública desde a semana passada.'),
+    fala('o advogado da Comissão', 'A busca, claro, pode ser feita. Eu acompanho, com o seu perdão.')
   ],
-  ef:{rep:{eixo:'bom', delta:1, motivo:'Cumpriu o mandado da sala 704 pelo regulamento'}},
+  ef:{rep:{eixo:'bom', delta:1, motivo:'Cumpriu o mandado da sala 704 pelo regulamento'},
+      executar:d => { if (!Nomes.sabe('o advogado da Comissão')) d.flags.cm_lei_bramble_novo = true; Nomes.apresentar('o advogado da Comissão'); caminhoAs(16); }},
   escolhas:[
     {texto:'Fazer a busca inteira, gaveta por gaveta, com registro.', vai:'cl3_a_busca'},
     {texto:'Ir atrás da Presidente no Planalto antes da meia-noite.', vai:'cl3_o_carro'}
@@ -618,9 +631,11 @@ cl3_sozinho:{
   texto:[
     d => d.flags.cm_lei_holt_junto ? 'Holt está na calçada da farmácia, de casaco, fingindo que lê o jornal de ontem.' : 'Na calçada da farmácia ninguém olha pra você.',
     'Sala 704. A porta está aberta e a sala está quase vazia: três caixas de papelão fechadas com fita, uma mesa sem gaveta e um homem de terno cinza.',
-    fala('Dr. Bramble', 'Você chegou antes da equipe. Isso é bonito e é inútil.'),
-    fala('Dr. Bramble', 'As caixas vão pro arquivo da Comissão às cinco. Se você abrir sem equipe, nada do que estiver dentro vale em processo nenhum.')
+    d => d.flags.cm_lei_bramble_novo ? 'Ele te estende um cartão antes de dizer boa tarde: DR. OTIS BRAMBLE.' : '',
+    fala('o advogado da Comissão', 'Você chegou antes da equipe. Isso é bonito e é inútil.'),
+    fala('o advogado da Comissão', 'As caixas vão pro arquivo da Comissão às cinco. Se você abrir sem equipe, nada do que estiver dentro vale em processo nenhum.')
   ],
+  ef:{executar:d => { if (!Nomes.sabe('o advogado da Comissão')) d.flags.cm_lei_bramble_novo = true; Nomes.apresentar('o advogado da Comissão'); caminhoAs(15); }},
   escolhas:[
     {texto:'Esperar a equipe com o pé na porta.', vai:'cl3_a_busca',
      ef:{rep:{eixo:'bom', delta:1, motivo:'Segurou as caixas da sala 704 até a equipe chegar'}}},
@@ -633,7 +648,7 @@ cl3_abriu_sozinho:{
   texto:[
     'Atas. Planilhas. Uma pasta de capa vermelha com "Art. 19" na lombada.',
     'Você lê, e é tudo o que você achava, e nada disso vale mais nada, porque foi você, sozinh{o|a}, quem abriu.',
-    fala('Dr. Bramble', 'Prova contaminada. Eu agradeço, sinceramente. Me poupou um mês de petição.', 'frio')
+    fala('o advogado da Comissão', 'Prova contaminada. Eu agradeço, sinceramente. Me poupou um mês de petição.', 'frio')
   ],
   ef:{flag:'cm_lei_prova_perdida'},
   escolhas:[
@@ -650,7 +665,8 @@ cl3_a_busca:{
   ],
   ef:{flag:'cm_lei_planilha_original', itens:{'Planilha original (lacrada)':1},
       rep:{eixo:'bom', delta:2, motivo:'Achou a planilha original na busca da sala 704, com registro'},
-      registrar:'Na busca da sala 704, a planilha original da Estação 4, com a rubrica da Presidente em cada página.'},
+      registrar:'Na busca da sala 704, a planilha original da Estação 4, com a rubrica da Presidente em cada página.',
+      executar:() => { caminhoAs(19); }},
   escolhas:[
     {texto:'Ir conduzir a Presidente no Planalto antes da meia-noite.', vai:'cl3_o_carro'}
   ]
@@ -659,10 +675,11 @@ cl3_a_busca:{
 cl3_o_carro:{
   texto:[
     'A estrada pro Planalto sobe em curva. Às onze e dez, num acostamento antes da guarita da Rota 23, um carro preto está parado de pisca alerta.',
-    'Ao lado do carro, um segurança de colete preto que você já viu numa porta de galpão.',
+    d => d.flags.cm_lei_2 ? 'Ao lado do carro, um segurança de colete preto que você já viu numa porta de galpão.' : 'Ao lado do carro, um segurança de colete preto, com o crachá da Estação 4 preso no bolso.',
     fala('Segurança da Estação 4', 'Ela não vai descer do carro. E você não vai abrir a porta.'),
     fala('Segurança da Estação 4', 'São onze e dez. Eu só preciso de cinquenta minutos.')
   ],
+  ef:{executar:() => { caminhoAs(23); }},
   batalha:{comissao:'seguranca', nivel:d => nivelDoCaminho(d, 3), tipo:'treinador', treinador:'Segurança da Estação 4', fuga:false,
            timeExtra:[{dex:94, nivel:d => nivelDoCaminho(d, 3)}],
            vitoria:'cl3_a_porta', derrota:'cl3_meia_noite', gameover:'gameover'}
@@ -675,7 +692,7 @@ cl3_meia_noite:{
     'Meia-noite. O vidro de trás desce dois dedos, e uma voz educada diz "obrigada" pro segurança, pelo nome dele, que você não ouve direito. E o carro vai embora.',
     'O mandado continua no seu bolso, inteiro, sem valer nada.'
   ],
-  ef:{flag:'cm_lei_meia_noite', hp:-3, causa:'O acostamento antes da Rota 23'},
+  ef:{flag:'cm_lei_meia_noite', hp:-3, causa:'O acostamento antes da Rota 23', executar:() => { caminhoAs(0); }},
   escolhas:[
     {texto:'Voltar pra Saffron.', vai:'cl3_a_escolha'}
   ]
@@ -706,11 +723,12 @@ cl3_a_escolha:{
     fala('a delegada de Saffron', 'Daqui pra frente, ou isso vira processo com o seu nome em cada folha, ou vira nota de esclarecimento com o meu.', 'baixo'),
     d => d.flags.cm_lei_planilha_original ? 'A planilha original está lacrada no cofre da delegacia. Por enquanto.' : 'O que você tem é o que você viu. Visto não é lacrado.'
   ],
+  ef:{executar:() => { caminhoAs(7); }},
   escolhas:[
-    {texto:'Ficar. Pôr o seu nome em cada folha e esperar o processo, por dentro da polícia.', vai:'cl3_final_farda',
-     ef:{rep:{eixo:'bom', delta:2, motivo:'Assinou o processo contra a Comissão por dentro da polícia'}}},
-    {texto:'Pôr o distintivo na mesa e contar tudo, em público, com nome e documento.', vai:'cl3_final_distintivo',
-     ef:{rep:{eixo:'bom', delta:3, motivo:'Largou a polícia pra contar a Estação 4 em público'}}},
+    {texto:d => `Ficar. Pôr o seu nome em cada folha e esperar o processo, por dentro ${({guarita:'da Patrulha', policia:'da polícia', auditoria:'da Auditoria', comissao:'da Comissão'})[casaNaLei()]}.`, vai:'cl3_final_farda',
+     ef:{rep:{eixo:'bom', delta:2, motivo:'Assinou o processo contra a Comissão por dentro'}}},
+    {texto:d => `Pôr ${({guarita:'o colete', policia:'o distintivo', auditoria:'a credencial', comissao:'o crachá'})[casaNaLei()]} na mesa e contar tudo, em público, com nome e documento.`, vai:'cl3_final_distintivo',
+     ef:{rep:{eixo:'bom', delta:3, motivo:'Largou o posto pra contar a Estação 4 em público'}}},
     {texto:'Resolver do seu jeito, sem papel, antes que o papel apodreça.', vai:'cl3_final_lei_dura',
      ef:{rep:{eixo:'ruim', delta:4, motivo:'Decidiu fazer justiça sem lei'}}},
     {texto:'Ainda não. O Planalto mandou chamar você também.', vai:'cl3_seguir',
@@ -732,36 +750,45 @@ cl3_final_farda:{
   texto:[
     'O processo tem mil e duzentas folhas. Você assina quatrocentas e onze.',
     'Leva dois anos. A Comissão muda de nome uma vez e de endereço duas. A Estação 4 fecha numa terça, sem saco preto.',
-    'Você continua na Patrulha. Volta pra guarita de Viridian quando pedem, e pede pra ir pra guarita que ninguém quer quando não pedem.'
+    d => ({
+      guarita:'Você continua na Patrulha. Volta pra guarita de Viridian quando pedem, e pede pra ir pra guarita que ninguém quer quando não pedem.',
+      policia:'Você continua na polícia. Faz a ronda que mandam, e pede a ronda que ninguém quer quando não mandam.',
+      auditoria:'Você continua na Auditoria. Entra nos lugares que mandam, e pede pra entrar nos que ninguém quer quando não mandam.',
+      comissao:'Você continua na Comissão, com o nome novo dela. Fala antes de toda votação, e pede a pasta que ninguém quer ler.'
+    })[casaNaLei()]
   ],
   final:{id:'lei_farda', titulo:'A FARDA', texto:[
     'O jornal dá a sentença na página onze, com quatro parágrafos.',
-    'Você recorta e guarda no fundo da mochila, junto com o número de um lacre de plástico de uma madrugada na ciclovia.',
-    'A polícia de Kanto continua sendo o que era. Um pouco menos. Por dentro, que é o único lugar de onde dá pra mudar uma coisa sem quebrar ela inteira.',
-    'Na guarita de Viridian, todo dia às seis, alguém faz café ruim e pergunta se você quer. Você sempre quer.'
+    d => d.flags.cm_lei_41 ? 'Você recorta e guarda no fundo da mochila, junto com o número de um lacre de plástico de uma madrugada na ciclovia.'
+      : d.flags.cm_lei_placa ? 'Você recorta e guarda no fundo da mochila, junto com a placa de um baú, anotada numa madrugada na ciclovia.'
+      : 'Você recorta e guarda no fundo da mochila, dobrado em quatro, junto com o mandado que venceu à meia-noite.',
+    d => `${({guarita:'A Patrulha de Kanto', policia:'A polícia de Kanto', auditoria:'A Auditoria da Liga', comissao:'A Comissão'})[casaNaLei()]} continua sendo o que era. Um pouco menos. Por dentro, que é o único lugar de onde dá pra mudar uma coisa sem quebrar ela inteira.`,
+    d => `${({guarita:'Na guarita de Viridian', policia:'Na delegacia de Saffron', auditoria:'Na Auditoria', comissao:'Na sala dos peritos'})[casaNaLei()]}, todo dia às seis, alguém faz café ruim e pergunta se você quer. Você sempre quer.`
   ]}
 },
 
 cl3_final_distintivo:{
   texto:[
-    'O distintivo fica na mesa da delegada, em cima da planta morta.',
-    fala('a delegada de Saffron', 'Eu vou guardar. Não vou devolver pra corregedoria. Vou guardar.', 'baixo'),
+    d => `${({guarita:'O colete fica', policia:'O distintivo fica', auditoria:'A credencial fica', comissao:'O crachá fica'})[casaNaLei()]} na mesa da delegada, em cima da planta morta.`,
+    d => fala('a delegada de Saffron', `Eu vou guardar. Não vou devolver pra ${({guarita:'Patrulha', policia:'corregedoria', auditoria:'Auditoria', comissao:'Comissão'})[casaNaLei()]}. Vou guardar.`, 'baixo'),
     'A entrevista coletiva é no saguão de um hotel de Saffron, com onze microfones e uma mesa de toalha branca.',
     'Você fala por quarenta minutos. Diz o número de cada baia. Diz o peso do caminhão nas terças.'
   ],
   final:{id:'lei_distintivo', titulo:'O DISTINTIVO NA MESA', texto:[
     'O que você disse não vira processo. Vira outra coisa: vira o que todo mundo sabe.',
     'A Comissão fecha em três meses, não por sentença, por vergonha. Ninguém é preso.',
-    'Você nunca mais usa colete. Em toda cidade, alguém te reconhece da televisão e não sabe se te agradece ou se atravessa a rua.',
-    'Holt manda um cartão-postal de uma praia com o apito desenhado à caneta. Atrás, uma frase só: "Valeu o bolo."'
+    d => `Você nunca mais usa ${['guarita', 'policia'].includes(casaNaLei()) ? 'colete' : 'crachá'}. Em toda cidade, alguém te reconhece da televisão e não sabe se te agradece ou se atravessa a rua.`,
+    d => Nomes.sabe('o sargento de Viridian')
+      ? 'Holt manda um cartão-postal de uma praia com o apito desenhado à caneta. Atrás, uma frase só: "Me aposentaram. Com bolo."'
+      : 'Chega um cartão-postal de uma praia, sem remetente, com um apito desenhado à caneta. Atrás, uma frase só: "Fez certo."'
   ]}
 },
 
 cl3_final_lei_dura:{
   texto:[
     'Não tem papel nenhum no que você faz nas três semanas seguintes.',
-    'O segurança da porta do galpão some de Saffron. O Dr. Bramble passa a andar com dois. A Estação 4 amanhece com o portão aberto e as baias vazias, e ninguém sabe dizer quem abriu.',
-    'Na delegacia, a Delegada Thorne tira a sua foto do mural da Patrulha e põe na outra parede.'
+    'O segurança do acostamento some de Saffron. O Dr. Bramble passa a andar com dois. A Estação 4 amanhece com o portão aberto e as baias vazias, e ninguém sabe dizer quem abriu.',
+    'Na delegacia, a Delegada Thorne tira a sua foto do mural da equipe e põe na outra parede.'
   ],
   final:{id:'lei_dura', titulo:'LEI DURA', texto:[
     'Você ganhou. Do único jeito que eles entendiam.',

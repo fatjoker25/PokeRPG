@@ -54,6 +54,15 @@ function caminhoAtual(d){
 }
 function defCaminho(id){ return CAMINHOS.find(c => c.id === id) || null; }
 
+/* Cena de caminho que diz a hora leva o relógio até ela: hoje, se
+   ainda não deu, senão no dia seguinte. O relógio para nas cenas de
+   capítulo, e sem isso ficava na hora em que o desvio abriu. */
+function caminhoAs(h){
+  const r = Estado.dados && Estado.dados.relogio; if (!r) return;
+  sincronizarHora(r);
+  if (r.hora !== h) Relogio.ate(h);
+}
+
 /* "Capítulo 12" ou, no desvio, o nome do caminho e a parte dele */
 function numeroDoCapitulo(cap){
   if (!cap) return '';
