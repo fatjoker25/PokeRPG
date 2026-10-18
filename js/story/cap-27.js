@@ -1191,7 +1191,7 @@ c22_pegou_sucata:{
 c22_deitou_na_depressao:{
   texto:[
     'Você deita na depressão do meio do círculo, e ela é grande demais para você, e as bordas ficam a meio metro de cada lado.',
-    'O vidro é morno. Depois de tantos anos, ainda é morno.',
+    'O vidro é morno. Depois de tanto tempo, ainda é morno.',
     'Você fica deitad{o|a} olhando o céu entre duas paredes de pedra, que daqui é uma faixa comprida e nada mais.',
     'E aí uma coisa muito simples e muito ruim ocorre a você: quem esteve deitado aqui olhou exatamente para isto.',
     'Uma faixa de céu entre duas paredes, e nada mais, por muito tempo.'

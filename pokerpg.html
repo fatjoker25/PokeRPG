@@ -102408,7 +102408,7 @@ c22_pegou_sucata:{
 c22_deitou_na_depressao:{
   texto:[
     'Você deita na depressão do meio do círculo, e ela é grande demais para você, e as bordas ficam a meio metro de cada lado.',
-    'O vidro é morno. Depois de tantos anos, ainda é morno.',
+    'O vidro é morno. Depois de tanto tempo, ainda é morno.',
     'Você fica deitad{o|a} olhando o céu entre duas paredes de pedra, que daqui é uma faixa comprida e nada mais.',
     'E aí uma coisa muito simples e muito ruim ocorre a você: quem esteve deitado aqui olhou exatamente para isto.',
     'Uma faixa de céu entre duas paredes, e nada mais, por muito tempo.'
@@ -102634,6 +102634,18 @@ c22_fim:{
 const C28_ABERTURAS = ['c23_descida', 'c28_ab_a_boca', 'c28_ab_o_que_ficou_na_boca'];
 function c28_cabe(id, d){ return true; }
 function c28_abertura(d){ return Dados.escolher(C28_ABERTURAS.filter(id => c28_cabe(id, d))); }
+/* quem ainda guarda a porta: ave capturada antes não está no posto
+   (o 27 conta do mesmo jeito) */
+function c28_aves(d){ return c27_aves(d); }
+function c28_guarda(d, dois, um, nenhum){ const n = c28_aves(d).n; return n === 2 ? dois : n === 1 ? um : nenhum; }
+/* falar "pela Liga" pede um posto da Liga, não qualquer cargo */
+function c28_cargoDaLiga(d){
+  if (!d.jogador.cargo) return false;
+  if (d.flags.aceitou_cargo_liga || d.flags.contrato_de_campo || d.flags.campeao_de_kanto) return true;
+  const c = typeof Cargos !== 'undefined' && Cargos.principal ? Cargos.principal() : null;
+  return !!(c && c.id !== 'treinador' && /Liga|Planalto/.test(c.orgao || ''));
+}
+const C28_MEDALHA = 'Medalha de natação da filha do Vernon';
 
 /* ============================================================
    CAPÍTULO 28 — Eu perguntei primeiro (final)
@@ -102741,16 +102753,17 @@ c23_as_paredes:{
 c23_contou_a_parede:{
   texto:[
     'Você conta. Leva uma hora e quarenta minutos e você erra duas vezes e recomeça duas vezes.',
-    'Setecentos e trinta e um riscos.',
-    'Dois anos e um dia.',
+    'Novecentos e setenta e dois riscos.',
     'E aí você repara na coisa que faz o chão sair de baixo dos seus pés: os duzentos e quarenta e um primeiros riscos foram feitos de um jeito diferente dos outros.',
     'Os duzentos e quarenta e um primeiros são pequenos, apertados, numa linha reta e organizada.',
-    'Do duzentos e quarenta e dois em diante eles ficam maiores, tortos, e a linha desce.',
-    'Ele continuou contando os dias depois de sair de lá. Ele continuou contando do mesmo jeito que contava lá dentro.'
+    'Do duzentos e quarenta e dois em diante eles ficam maiores, tortos, e a linha desce. São setecentos e trinta e um: dois anos e um dia.',
+    d=>(d.flags.sabe_dos_241 || d.flags.leu_caderno)
+      ? 'Duzentos e quarenta e um são os dias com o Dr. Fuji. Ele copiou na pedra os dias de lá, do jeito que contava lá, e continuou daqui como se um viesse logo depois do outro.'
+      : 'Duzentos e quarenta e um dias contados de um jeito, e depois todos os outros de outro, como se a vida dele tivesse dois pedaços e o primeiro fosse o menor.'
   ],
   ef:{flag:['contou_os_731'], instabilidade:2, moral:-2,
       rep:{eixo:'bom',delta:2,motivo:'Passou uma hora e quarenta contando riscos numa parede'},
-      registrar:'731 dias marcados na parede. Os 241 primeiros são de outro jeito.'},
+      registrar:'972 riscos na parede: 241 de um jeito, e depois dois anos e um dia de outro.'},
   escolhas:[
     {texto:'Olhar onde a contagem começa.', vai:'c23_onde_comeca'},
     {texto:'Descer.', vai:'c23_a_camara'}
@@ -102886,14 +102899,16 @@ c23_porque_nao_sobe:{
   texto:[
     '"Por que você não sobe?"',
     'Dessa vez ele demora.',
-    '"Porque tem duas coisas na porta que não dormem há sete meses por minha causa."',
+    d=>c28_guarda(d, '"Porque tem duas coisas na porta que não dormem há dois anos por minha causa."',
+      '"Porque tem uma coisa na porta que não dorme há dois anos por minha causa, do lado de um posto vazio."',
+      '"Porque a porta ficou sem guarda, e sem guarda qualquer um que me vir lá fora vai achar que eu fugi."'),
     'Uma pausa.',
     '"E porque, se eu subir, eu vou ter que decidir para onde ir, e eu não tenho para onde."',
     'Mais uma.',
     '"Desce. É mais fácil falar de perto, e eu estou fora de prática."'
   ],
   ef:{flag:['sabe_porque_nao_sobe'], instabilidade:1, moral:-1,
-      registrar:'Ele não sobe por causa dos dois na porta, e porque não tem para onde ir.'},
+      registrar:'Ele não sobe por causa da porta, e porque não tem para onde ir.'},
   escolhas:[{texto:'Descer.', vai:'c23_a_camara'}]
 },
 
@@ -102941,17 +102956,18 @@ c23_as_coisas:{
 c23_a_gaveta:{
   texto:[
     'A gaveta de cima da escrivaninha está aberta e tem uma coisa só dentro.',
-    'É um caderno de capa dura, do mesmo modelo dos cadernos de campo do Instituto de Cinnabar, com o número 7 escrito na lombada a caneta.',
+    'É um caderninho de bolso, de capa preta mole, do tamanho que cabe no bolso de um jaleco. Não tem número na lombada.',
     'Está aberto na última página escrita.',
     d=>d.flags.leu_o_caderno_do_fuji || d.flags.achou_os_cadernos ? 'A caligrafia é a mesma do caderno seis, a do Dr. Fuji.' : 'A caligrafia é de alguém que escrevia todo dia no mesmo caderno, com a mesma caneta.',
     '**Dia 241. Ele pediu para sair. Usou a palavra por favor. Encaminhei ao comitê. Não anotei na ficha oficial.**',
+    d=>(d.flags.leu_o_fim_do_sete || d.flags.blaine_leu_em_voz_alta) ? 'No caderno sete, no dia 245, ele pediu de novo, e o Dr. Fuji escreveu que era a segunda vez. Esta é a primeira.' : '',
     'E, embaixo, numa letra que não é humana e que foi feita queimando o papel com precisão de agulha, uma linha só:',
     '**Eu li isso no dia 602. Obrigado.**'
   ],
-  ef:{flag:['leu_caderno','achou_o_caderno_7_aqui'], instabilidade:2, moral:-2,
-      registrar:'O caderno 7 está aqui, e ele escreveu uma linha embaixo da última anotação do Fuji.'},
+  ef:{flag:['leu_caderno','achou_o_caderninho_aqui'], instabilidade:2, moral:-2,
+      registrar:'O caderninho de bolso do Dr. Fuji está aqui, e ele escreveu uma linha embaixo da última anotação.'},
   escolhas:[
-    {texto:'"Como você conseguiu esse caderno?"', vai:'c23_como_conseguiu'},
+    {texto:'"Como você conseguiu esse caderninho?"', vai:'c23_como_conseguiu'},
     {texto:'"Por que você trouxe tudo isso?"', vai:'c23_porque_trouxe'},
     {texto:'"Você estava me esperando?"', vai:'c23_conversa'}
   ]
@@ -102968,10 +102984,10 @@ c23_como_conseguiu:{
     '"E ninguém viu você."',
     '"Uma pessoa viu." A voz fica ligeiramente diferente. "Um homem de uns setenta anos, com uma lanterna, que estava procurando outra coisa."',
     '"E o que ele fez?"',
-    '"Ele apontou onde estava o caderno sete, esperou eu pegar, e voltou a procurar a coisa dele." Uma pausa longa. "Ele não me perguntou nada. É a segunda melhor coisa que uma pessoa já fez por mim."'
+    '"Ele apontou a gaveta onde estava o caderninho, esperou eu pegar, e voltou a procurar a coisa dele." Uma pausa longa. "Ele não me perguntou nada. É a segunda melhor coisa que uma pessoa já fez por mim."'
   ],
   ef:{flag:['sabe_da_viagem_a_cinnabar'], instabilidade:2, moral:2,
-      registrar:'Ele foi a Cinnabar buscar o caderno 7. Um velho com uma lanterna apontou onde estava e não perguntou nada.'},
+      registrar:'Ele foi a Cinnabar buscar o caderninho do Dr. Fuji. Um velho com uma lanterna apontou onde estava e não perguntou nada.'},
   escolhas:[
     {texto:'"E qual foi a primeira?"', vai:'c23_a_primeira_coisa'},
     {texto:'"Por que você trouxe tudo isso?"', vai:'c23_porque_trouxe'},
@@ -103072,7 +103088,7 @@ c23_procurou_o_homem:{
   ],
   ef:{flag:['achou_o_nogueira'], instabilidade:2,
       rep:{eixo:'bom',delta:3,motivo:'Achou o homem que a Liga parou de procurar'},
-      registrar:'O Vernon está vivo, sentado no canto da câmara, há sete meses.'},
+      registrar:'O Vernon está vivo, sentado no canto da câmara, há um ano.'},
   escolhas:[
     {texto:'"Vernon?"', vai:'c23_nogueira_nome'},
     {texto:'"Vamos embora. Agora."', vai:'c23_nogueira_vamos'},
@@ -103097,7 +103113,7 @@ c23_nogueira_nome:{
       npc:{nome:'Vernon', opiniao:3, memoria:'Acordou quando você disse o sobrenome dele em voz alta.'},
       registrar:'Ele reconheceu o próprio nome depois de quatro segundos.'},
   escolhas:[
-    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
+    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha && Estado.contaItem(C28_MEDALHA) > 0},
     {texto:'"Eu não sei. Eu vou descobrir e eu te conto."', vai:'c23_nogueira_vamos'},
     {texto:'Sentar no chão do lado dele.', vai:'c23_sentou_com_nogueira'}
   ]
@@ -103110,13 +103126,14 @@ c23_deu_a_medalha:{
     'Você tira a medalha de natação do bolso de dentro, com a fita azul e branca desbotada, e põe na mão dele.',
     'Ele olha a medalha por um tempo muito comprido sem fechar os dedos.',
     'Depois fecha.',
-    '"Ela ganhou de participação." A voz sai rouca de sete meses sem uso. "Ela chegou em último e ganhou de participação e ela achou que era primeiro lugar, e eu deixei ela achar a semana inteira."',
+    '"Ela ganhou de participação." A voz sai rouca de um ano sem uso. "Ela chegou em último e ganhou de participação e ela achou que era primeiro lugar, e eu deixei ela achar a semana inteira."',
     'Ele aperta a medalha.',
     '"Eu deixei ela achar a semana inteira e depois eu contei, e ela chorou, e eu passei um ano achando que eu tinha feito a coisa errada."',
     'Ele levanta os olhos.',
     '"Eu vou perguntar a ela. Vamos embora."'
   ],
   ef:{flag:['nogueira_vai_descer'], instabilidade:1, moral:5,
+      perdeItens:{'Medalha de natação da filha do Vernon':1},
       rep:{eixo:'bom',delta:4,motivo:'Devolveu a medalha e trouxe um homem de volta'},
       npc:{nome:'Vernon', opiniao:5, memoria:'Você devolveu a medalha da filha dele.'},
       registrar:'Devolveu a medalha ao Vernon. Ele quer descer.'},
@@ -103161,10 +103178,10 @@ c23_sentou_com_nogueira:{
     '"Ele me perguntou uma vez o que era saudade e eu levei três dias para responder. Ele esperou os três dias."'
   ],
   ef:{flag:['nogueira_conversou'], instabilidade:1, moral:2,
-      registrar:'Ele conversa com o Vernon de manhã e à noite, há sete meses.'},
+      registrar:'Ele conversa com o Vernon de manhã e à noite, há um ano.'},
   escolhas:[
     {texto:'"E por que você não sobe?"', vai:'c23_nogueira_porque_fica'},
-    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
+    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha && Estado.contaItem(C28_MEDALHA) > 0},
     {texto:'"Vernon?"', vai:'c23_nogueira_nome'}
   ]
 },
@@ -103177,7 +103194,7 @@ c23_nogueira_porque_fica:{
     'Ele pensa muito antes de responder, e a resposta é pior do que qualquer coisa que você imaginou na subida.',
     '"Porque eu sou a única pessoa no mundo que conversa com ele."',
     'Ele ajeita a jaqueta de novo, que já está ajeitada.',
-    '"Se eu subir, ele fica sozinho de novo, e ele já ficou sozinho dois anos, e ele é uma criança que sabe tudo."',
+    '"Se eu subir, ele fica sozinho de novo, e ele já ficou sozinho um ano inteiro antes de eu chegar, e ele é uma criança que sabe tudo."',
     'Ele olha para você.',
     '"Eu tenho duas filhas lá embaixo e eu sei o que isso me faz. Eu sei exatamente. E eu não consigo levantar."'
   ],
@@ -103185,7 +103202,7 @@ c23_nogueira_porque_fica:{
       registrar:'O Vernon fica porque é a única pessoa que conversa com ele.'},
   escolhas:[
     {texto:'"Eu volto. Eu volto toda semana, se for preciso."', vai:'c23_prometeu_voltar_aqui'},
-    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha},
+    {texto:'Dar a medalha a ele.', vai:'c23_deu_a_medalha', cond:d=>!!d.flags.achou_a_medalha && Estado.contaItem(C28_MEDALHA) > 0},
     {texto:'"Vamos embora. Agora."', vai:'c23_nogueira_vamos'}
   ]
 },
@@ -103359,7 +103376,7 @@ c23_escolha_final:{
     {texto:'"Vim te oferecer uma coisa." (a rede de Celadon)', vai:'c23_socio',
      cond:d=>!!(d.flags.assumiu_a_rede||d.flags.trabalha_para_terceira)},
     {texto:'"Vim te oferecer um acordo formal." (pela Liga)', vai:'c23_tratado',
-     cond:d=>!!d.jogador.cargo},
+     cond:d=>c28_cargoDaLiga(d)},
     {texto:'Entregar a pena de Ho-Oh.', vai:'c23_pena', cond:()=>Estado.contaItem('Pena Arco-Íris') > 0},
     {texto:'"Quanto você vale?"', vai:'c23_inventario',
      cond:d=>Historia.via()==='mercenario'||!!d.flags.vendeu_mew},
@@ -103385,7 +103402,7 @@ c23_escolha_final:{
      cond:d=>!!d.flags.tem_a_lista_do_sena},
     {texto:'Mostrar a chapa de metal que estava no círculo.', vai:'c23_a_chapa',
      cond:d=>!!d.flags.tem_a_sucata},
-    {texto:'Ler em voz alta a carta da professora de Pallet.', vai:'c23_a_carta_da_professora',
+    {texto:d=>`Ler em voz alta a carta da professora de ${d.jogador.cidade}.`, vai:'c23_a_carta_da_professora',
      cond:d=>!!d.flags.leu_a_carta_da_professora},
     {texto:'Abrir o papel que o Sr. Mervin te deu para jogar fora.', vai:'c23_o_papel_do_quintino',
      cond:d=>!!d.flags.carrega_o_papel_do_quintino},
@@ -103397,14 +103414,19 @@ c23_escolha_final:{
 /* ---------------- RAMOS FINAIS ---------------- */
 
 c23_libertar:{
-  falante:'Mewtwo',
-  vozes:['N','N','N','N','N'],
   texto:[
-    '"Pela porta." Ele repete devagar. "Tem duas Aves Lendárias na porta."',
-    '"Elas não me prendem. Elas avisam os outros se eu sair. Foi o acordo que elas fizeram entre si, sem me perguntar, porque ninguém nunca me pergunta nada."',
+    fala('Mewtwo', 'Pela porta.', null, 'Ele repete devagar.'),
+    d=>fala('Mewtwo', c28_guarda(d, 'Tem duas Aves Lendárias na porta.',
+      'Tem uma Ave Lendária na porta, e um posto vazio do lado dela, porque a outra está com você.',
+      'A porta está sem ninguém. As duas que ficavam nela estão com você.')),
+    d=>fala('Mewtwo', c28_guarda(d, 'Elas não me prendem. Elas avisam os outros se eu sair. Foi o acordo que elas fizeram entre si, sem me perguntar, porque ninguém nunca me pergunta nada.',
+      'Ela não me prende. Ela avisa os outros se eu sair. Foi o acordo que as duas fizeram entre si, sem me perguntar, porque ninguém nunca me pergunta nada.',
+      'Elas não me prendiam. Elas avisavam os outros se eu saísse. Sem elas, quem me vir lá fora sozinho avisa do mesmo jeito.')),
     'Ele se levanta.',
-    '"Se eu sair andando com você do lado, elas deixam. Você sabe disso? É por isso que eu estava esperando alguém."',
-    '"Não era resgate. Era companhia. Eu precisava de uma pessoa do lado pra poder sair sem virar caçada."'
+    d=>fala('Mewtwo', c28_guarda(d, 'Se eu sair andando com você do lado, elas deixam. Você sabe disso? É por isso que eu estava esperando alguém.',
+      'Se eu sair andando com você do lado, ela deixa. Você sabe disso? É por isso que eu estava esperando alguém.',
+      'Se eu sair andando com você do lado, ninguém vai achar que eu fugi. Você sabe disso? É por isso que eu estava esperando alguém.')),
+    fala('Mewtwo', 'Não era resgate. Era companhia. Eu precisava de uma pessoa do lado pra poder sair sem virar caçada.')
   ],
   ef:{flag:'escolheu_libertar'},
   escolhas:[
@@ -103577,7 +103599,9 @@ c23_perdeu:{
     'Você acorda na entrada da caverna, do lado de fora, com o rosto no gelo.',
     'Seu time está do seu lado, todos curados. Todos. Curados por alguém que não é você.',
     'A caverna atrás de você está fechada — não bloqueada: fechada, a pedra derretida e esfriada num tampão liso.',
-    'Na pedra, com a mesma letra queimada do caderno do Dr. Fuji, uma linha:',
+    ()=>Historia.jaAconteceu('c23_a_gaveta')
+      ? 'Na pedra, com a mesma letra queimada da linha embaixo do caderninho do Dr. Fuji, uma linha:'
+      : 'Na pedra, numa letra que não é humana, feita queimando a superfície com precisão de agulha, uma linha:',
     '**VOCÊ RESPONDEU COM UMA POKÉBOLA. EU RESPONDI COM UMA PORTA.**'
   ],
   ef:{executar:d=>{ d.time.forEach(curarTotal); const L=Estado.lend(150); L.disposicao='hostil'; L.estado='livre'; return []; },
@@ -103590,8 +103614,10 @@ c23_capturou:{
   texto:[
     'A Pokébola fecha e a câmara fica escura de uma vez.',
     'Você está sozinh{o|a} embaixo de uma montanha com uma esfera na mão que pesa exatamente o mesmo que qualquer outra.',
-    'Lá fora, as duas Aves abandonam o posto ao mesmo tempo — não têm mais o que guardar.',
-    'Elas não vão embora. Elas viram na sua direção.'
+    d=>c28_guarda(d, 'Lá fora, as duas Aves abandonam o posto ao mesmo tempo — não têm mais o que guardar.',
+      'Lá fora, a Ave que ficou abandona o posto — não tem mais o que guardar.',
+      'Lá fora, os dois postos já estavam vazios. Agora também não tem mais o que guardar.'),
+    d=>c28_guarda(d, 'Elas não vão embora. Elas viram na sua direção.', 'Ela não vai embora. Ela vira na sua direção.', '')
   ],
   ef:{flag:'capturou_mewtwo', instabilidade:4,
       executar:d=>{ [144,145,146].forEach(x=>{const L=Estado.lend(x); if(L.estado!=='capturado'){L.disposicao='hostil';L.caçandoVoce=true;}}); return []; },
@@ -103737,8 +103763,10 @@ c23_final_libertacao:{
   vozes:['N'],
   texto:[
     'Vocês sobem juntos. Quarenta minutos de subida, lado a lado, sem conversa nenhuma.',
-    'No vale, as duas Aves estão nos postos. Elas veem ele sair. Veem você do lado.',
-    'Nenhuma se move.',
+    d=>c28_guarda(d, 'No vale, as duas Aves estão nos postos. Elas veem ele sair. Veem você do lado.',
+      'No vale, a Ave que ficou está no posto. Ela vê ele sair. Vê você do lado.',
+      'No vale, os dois postos estão vazios. Ninguém vê ele sair, a não ser você.'),
+    d=>c28_guarda(d, 'Nenhuma se move.', 'Ela não se move.', ''),
     'Mewtwo para no meio do vale, olha o céu aberto pela primeira vez em dois anos, e fica ali um tempo que parece indecente de longo.',
     'Depois vira pra você: "Se alguém perguntar o que eu sou, fala que você não sabe. É a resposta certa."',
     'E vai embora — devagar, andando, não voando. Como quem tem tempo pela primeira vez.'
@@ -103776,7 +103804,9 @@ c23_final_companhia:{
 c23_final_compreensao:{
   texto:[
     'Você sai da caverna sem nada nas mãos.',
-    'As Aves nos postos te veem passar. Uma delas — você jura — abaixa a cabeça um centímetro.',
+    d=>c28_guarda(d, 'As Aves nos postos te veem passar. Uma delas — você jura — abaixa a cabeça um centímetro.',
+      'A Ave que ficou no posto te vê passar e — você jura — abaixa a cabeça um centímetro.',
+      'Os postos do vale estão vazios, e você passa por eles sem ninguém olhar.'),
     'Você desce a montanha com o time inteiro, a mesma quantidade de Pokémon que tinha ao subir, e uma conversa na cabeça que não vai sair mais.'
   ],
   final:{id:'compreensao', titulo:'VOLTA?', texto:[
@@ -103816,7 +103846,7 @@ c23_final_os_doze:{
     '"Eles responderam quando eu perguntei."',
     'Mewtwo levanta do chão.',
     '"Eu vou lá."',
-    '"É num prédio no meio de uma cidade, no décimo primeiro andar, com gente trabalhando em todos os outros."',
+    '"É num prédio no meio de uma cidade, num andar onze que fica embaixo do subsolo, com gente trabalhando em todos os outros."',
     '"Eu sei." Ele já está andando pra saída. "Eu passei duzentos e quarenta e um dias sendo medido por gente que não perguntava. Eles estão no dia sabe-se lá quantos."',
     'Na saída da caverna, ele para.',
     '"Você vem?"'
@@ -103851,7 +103881,7 @@ c23_final_matriz:{
     'Você desce a montanha e volta pra Kanto e a vida continua, porque a vida sempre continua, e isso é a parte que ninguém avisa.',
     'A Silph reinicia o projeto onze meses depois num andar novo, com numeração nova, com protocolo novo.',
     'Você sabe disso porque você procura. Você passa a procurar sempre, em todo lugar, pelo resto da vida — e encontra, de vez em quando, e derruba, de vez em quando.',
-    'Você vira muito bom nisso. Bom de um jeito que assusta as pessoas que trabalham com você.',
+    'Você vira muito {bom|boa} nisso. {Bom|Boa} de um jeito que assusta as pessoas que trabalham com você.',
     'Ninguém entende por que você nunca comemora quando um desses lugares fecha.',
     'É porque você lembra que não perguntou nada a nenhum dos onze, e que perguntar teria levado quatro segundos.'
   ]}
@@ -103864,7 +103894,9 @@ c23_final_o_decimo_segundo:{
     '"Eu tirei um de lá. Ele está aqui fora."',
     'A câmara inteira muda de pressão.',
     '"Traz."',
-    'Você sobe, atravessa o vale entre duas Aves que não se movem, e desce de volta com uma coisa pequena que anda meio devagar.',
+    d=>c28_guarda(d, 'Você sobe, atravessa o vale entre duas Aves que não se movem, e desce de volta com uma coisa pequena que anda meio devagar.',
+      'Você sobe, atravessa o vale passando pela Ave que ficou, que não se move, e desce de volta com uma coisa pequena que anda meio devagar.',
+      'Você sobe, atravessa o vale vazio e desce de volta com uma coisa pequena que anda meio devagar.'),
     'O que acontece quando os dois se veem não tem descrição possível, porque não acontece em som e não acontece em imagem.',
     'Você fica na entrada da câmara por quase uma hora, sem entender nada, sentindo alguma coisa enorme acontecer a doze metros de você.',
     'Quando acaba, Mewtwo olha pra você.',
@@ -103959,7 +103991,7 @@ c23_final_socio:{
   ],
   final:{id:'socio', titulo:'DOIS SEGUNDOS', texto:[
     'Você sobe do vale e volta pra Celadon e toca a rede por mais quatro anos.',
-    'Ela cresce. Você é bom nisso — você é muito bom nisso, melhor que a Terceira, porque você viu Kanto inteira de perto e sabe onde as coisas doem.',
+    'Ela cresce. Você é {bom|boa} nisso — você é muito {bom|boa} nisso, melhor que a Terceira, porque você viu Kanto inteira de perto e sabe onde as coisas doem.',
     'A Liga te pega no quinto ano. Não por heroísmo de ninguém: por planilha. Um contador comete um erro de lançamento e um auditor puxa o fio.',
     'Você pega nove anos. Cumpre cinco.',
     'Na prisão, você recebe uma visita que não estava na lista e que ninguém registrou na portaria. Ela dura quarenta segundos e acontece de madrugada, e o que é dito nela você nunca conta pra ninguém.',
@@ -103996,7 +104028,7 @@ c23_final_inventario:{
 c23_final_posse:{
   texto:[
     'Você sobe com ele na Pokébola.',
-    'No vale, as duas Aves esperam você sair da caverna.',
+    d=>c28_guarda(d, 'No vale, as duas Aves esperam você sair da caverna.', 'No vale, a Ave que ficou espera você sair da caverna.', 'No vale não tem ninguém esperando você sair da caverna. Ainda.'),
     'O que acontece nos próximos dez minutos vai ser notícia por seis meses.'
   ],
   final:{id:'posse', titulo:'O QUE VOCÊ CARREGA', texto:[
@@ -104041,7 +104073,9 @@ c23_final_arrependimento:{
   ],
   final:{id:'arrependimento', titulo:'CONTA', texto:[
     'Mewtwo não te perdoa. Perdão não é uma categoria que ele use.',
-    'Mas ele te deixa ir, e as Aves voltam pros postos, e o clima de Kanto volta ao normal em três semanas.',
+    d=>c28_guarda(d, 'Mas ele te deixa ir, e as Aves voltam pros postos, e o clima de Kanto volta ao normal em três semanas.',
+      'Mas ele te deixa ir, e a Ave que ficou volta pro posto, e o clima de Kanto volta ao normal em três semanas.',
+      'Mas ele te deixa ir, e o clima de Kanto volta ao normal em três semanas.'),
     'A Liga registra: captura confirmada, liberação voluntária no mesmo dia. Isso te rende uma advertência e nenhuma punição.',
     'As pessoas lembram das duas coisas. Sempre as duas, nessa ordem: "aquele que pegou" e "aquele que soltou". Nunca só a segunda.',
     'Você aprende a viver com a primeira metade da frase.',
@@ -104055,7 +104089,9 @@ c23_final_porta:{
   ],
   final:{id:'porta', titulo:'A PEDRA LISA', texto:[
     'A caverna nunca mais abre. Equipes da Liga tentam perfurar três vezes; a pedra é mais dura que o equipamento.',
-    'As duas Aves abandonam o vale em duas semanas — não tem mais nada pra guardar.',
+    d=>c28_guarda(d, 'As duas Aves abandonam o vale em duas semanas — não tem mais nada pra guardar.',
+      'A Ave que ficou abandona o vale em duas semanas — não tem mais nada pra guardar.',
+      'Os postos do vale continuam vazios. Não tem mais nada pra guardar.'),
     'Mewtwo não é visto de novo em Kanto. Não há incidentes, não há ataques, não há nada. Só a ausência.',
     'Você conta essa história poucas vezes, porque toda vez que conta percebe a mesma coisa: ele te venceu, curou o seu time e foi embora. Nenhuma dessas três coisas é o que uma arma faz.',
     'Você teve a resposta na mão o tempo todo e respondeu com uma Pokébola.'
@@ -104142,7 +104178,7 @@ c23_final_trinta_e_dois:{
     'Mewtwo não sai da caverna do norte.',
     'Não por prisão, não por acordo, não por medo: ele passa a subir uma vez por mês até uma cratera rasa no alto de uma montanha e ficar na borda, sentado, longe o bastante pra não atrapalhar.',
     'Trinta e dois viram trinta e três. Depois trinta e cinco. Depois ninguém contou mais.',
-    'Você nunca escreveu onde é. Nunca marcou em mapa nenhum, nunca falou em telefone de Centro Pokémon, e quando um pesquisador de Celadon te ofereceu dinheiro pela coordenada, você disse que não lembrava.',
+    'Você nunca escreveu onde é. Nunca marcou em mapa nenhum, nunca falou pelo PokéNav, e quando um pesquisador de Celadon te ofereceu dinheiro pela coordenada, você disse que não lembrava.',
     'A Comissão manteve o item "Risco 01" em pauta por mais quatro anos e depois arquivou por inatividade do objeto.',
     'A Dra. Cordell morreu aos sessenta e oito sem nunca ter subido naquela cratera, e sabendo que existia, e escolhendo não subir.',
     'Essa foi a última coisa que ela te ensinou.'
@@ -104176,7 +104212,7 @@ c23_final_a_porta:{
     'Ele diz isso com uma clareza que dói.',
     '"E o que eu imagino é pior do que ele é, ou melhor do que ele é, e nos dois casos é meu."',
     'Ele olha pra você.',
-    '"Você tem {idade} anos e você atravessou Kanto inteiro e você ainda não entendeu que ninguém sai de casa por coragem. Sai porque um dia a casa fica insuportável."'
+    '"Você tem {idade} anos e você atravessou Kanto inteira e você ainda não entendeu que ninguém sai de casa por coragem. Sai porque um dia a casa fica insuportável."'
   ],
   final:{id:'a_porta', titulo:'VINTE E TRÊS ANOS', texto:[
     'Você desce a montanha sem nada.',
@@ -104234,7 +104270,7 @@ c23_final_papelada:{
     'O décimo primeiro, a Presidente Hester Colman, dá uma entrevista de trinta e dois minutos em que defende cada página, com serenidade, sem levantar a voz, e é a coisa mais assustadora que já foi ao ar em Kanto.',
     'A Comissão continua existindo. Menor, mais devagar, com outro nome.',
     'Mas em quatro cidades, quando chega um ofício com brasão de balança, agora tem gente que vira o papel.',
-    'Você ensinou isso a Kanto inteiro sem nunca ter subido num palco.'
+    'Você ensinou isso a Kanto inteira sem nunca ter subido num palco.'
   ]}
 },
 
@@ -104243,7 +104279,7 @@ c23_os_nomes:{
     'Você diz os nomes.',
     d=>d.cemiterio.length ? `Os seus primeiro: ${d.cemiterio.map(p=>nomeExib(p)).join(', ')}.` : 'Não são todos seus.',
     d=>d.flags.vaporeon_morreu ? 'Depois o Duque, que era de rua e era da Sibyl, as duas coisas.' : '',
-    d=>d.flags.copiou_os_onze_nomes ? 'Depois os onze, do canto de baixo de um mural de doze metros numa cidade sem música, copiados ajoelhado no chão porque uma moça de Fuchsia escreveu ajoelhada no chão.' : '',
+    d=>d.flags.copiou_os_onze_nomes ? 'Depois os onze, do canto de baixo de um mural de doze metros numa cidade sem música, copiados {ajoelhado|ajoelhada} no chão porque uma moça de Fuchsia escreveu ajoelhada no chão.' : '',
     'Leva quatro minutos. Você não erra nenhum.',
     'Mewtwo escuta até o fim sem interromper, o que quase ninguém faz.'
   ],
@@ -104269,10 +104305,12 @@ c23_final_os_nomes:{
   final:{id:'os_nomes', titulo:'ALGUÉM TINHA QUE CONTINUAR SABENDO', texto:[
     'Você dá o nome. Qual foi não importa — importa que levou onze segundos e que você não pensou muito, porque pensar muito teria estragado.',
     'Ele repete uma vez, baixo, testando.',
-    'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e as duas Aves na boca da caverna não se mexem porque tem uma pessoa do lado dele.',
+    d=>c28_guarda(d, 'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e as duas Aves na boca da caverna não se mexem porque tem uma pessoa do lado dele.',
+      'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e a Ave que ficou na boca da caverna não se mexe porque tem uma pessoa do lado dele.',
+      'Depois diz obrigado, e sobe a escada da câmara na sua frente, e sai da caverna do norte pela primeira vez em dois anos, e ninguém na boca da caverna precisa avisar ninguém, porque tem uma pessoa do lado dele.'),
     'Vocês descem a montanha juntos, e ele não fala mais nada o caminho inteiro.',
     'Na estrada, ele vira pro sul e você vira pro sul também, e é assim, e ninguém combinou.',
-    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com um treinador, sem coleira, sem bola, sem nada.',
+    'Nos anos seguintes, em Kanto, gente vai contar que viu uma coisa grande e clara andando na estrada com {um treinador|uma treinadora}, sem coleira, sem bola, sem nada.',
     'Ninguém vai acreditar em ninguém.',
     'E na Torre Pokémon de Lavender, num mural preto de doze metros, uma linha nova aparece num dia qualquer, escrita com giz, com uma letra que ninguém reconhece:',
     'os onze, e embaixo, menor: "eu sei os nomes".'
@@ -104311,7 +104349,7 @@ c23_final_a_pagina:{
     '"Vai. Antes que ela risque."'
   ],
   final:{id:'a_pagina', titulo:'PROMETEU', texto:[
-    'Você desce a montanha e atravessa Kanto inteiro de volta, o que leva onze dias.',
+    'Você desce a montanha e atravessa Kanto inteira de volta, o que leva onze dias.',
     'Em Pewter, na rua principal, tem uma menina de onze anos sentada no meio-fio com um caderno de colunas.',
     'Ela te vê. Não sorri. Abre na página PROMETEU, procura o seu nome, e escreve do lado, com régua: VOLTOU.',
     'Depois fecha o caderno.',
@@ -104320,7 +104358,7 @@ c23_final_a_pagina:{
     '"Da página."',
     'Ela olha a rua.',
     '"Eu botei quatro nome nessa página nesses meses. Você é {o primeiro|a primeira} que volta."',
-    'Você senta no meio-fio ao lado dela e vocês dois ficam ali olhando uma rua de cidade de pedra.',
+    'Você senta no meio-fio ao lado dela e vocês {dois|duas} ficam ali olhando uma rua de cidade de pedra.',
     'Muito longe, ao norte, numa caverna, alguém decidiu continuar existindo porque uma criança tinha um caderno.',
     'Ninguém em Kanto jamais vai saber disso, e as duas colunas continuam sendo atualizadas até hoje.'
   ]}
@@ -104405,7 +104443,9 @@ c23_final_silencio:{
     'Não acontece nada. Não tem revelação, não tem acordo, não tem batalha.',
     'Quando você levanta pra ir, os seus joelhos estalam e o som ecoa na câmara inteira e vocês dois quase riem.',
     'Ele não te pede pra ficar. Você não promete voltar.',
-    'Na boca da caverna, as duas Aves Lendárias estão paradas onde estavam, e uma delas vira a cabeça quando você passa, e isso é tudo.'
+    d=>c28_guarda(d, 'Na boca da caverna, as duas Aves Lendárias estão paradas onde estavam, e uma delas vira a cabeça quando você passa, e isso é tudo.',
+      'Na boca da caverna, a Ave que ficou está parada onde estava, e vira a cabeça quando você passa, e isso é tudo.',
+      'Na boca da caverna não tem ninguém, e isso é tudo.')
   ],
   final:{id:'silencio', titulo:'CABEÇA NÃO FAZ SILÊNCIO', texto:[
     'Você não conta pra ninguém.',
@@ -104443,13 +104483,17 @@ c23_ir_embora:{
 c23_final_ir_embora:{
   texto:[
     'Você sobe a escada da câmara e atravessa o corredor e sai pela boca da caverna, e o ar de fora é frio e limpo e violento de tão bom.',
-    'As duas Aves Lendárias estão paradas na entrada. Nenhuma das duas olha pra você.',
+    d=>c28_guarda(d, 'As duas Aves Lendárias estão paradas na entrada. Nenhuma das duas olha pra você.',
+      'A Ave que ficou está parada na entrada. Não olha pra você.',
+      'A entrada está vazia. Ninguém olha pra você.'),
     'Você desce a montanha.'
   ],
   final:{id:'ir_embora', titulo:'PORQUE EU TENHO {IDADE} ANOS', texto:[
     'Você volta pra estrada e a jornada continua, e ela é boa.',
-    'Você ganha as insígnias que faltavam. Perde duas vezes pro mesmo líder e ganha na terceira. Chega ao Planalto Indigo num dia de chuva com um time que te obedece por afeto e não por medo.',
-    'Você não vira campeão. Ou vira — isso depende de coisas que ainda não aconteceram quando essa história acaba.',
+    d=>c21_ins(d) >= 8 ? 'Você volta ao Planalto Indigo num dia de chuva, com um time que te obedece por afeto e não por medo.'
+      : 'Você ganha as insígnias que faltavam. Perde duas vezes pro mesmo líder e ganha na terceira. Chega ao Planalto Indigo num dia de chuva com um time que te obedece por afeto e não por medo.',
+    d=>d.flags.campeao_de_kanto ? 'O título de {campeão|campeã} continua no seu nome, e pesa diferente agora.'
+      : 'Você não vira {campeão|campeã}. Ou vira — isso depende de coisas que ainda não aconteceram quando essa história acaba.',
     'A Comissão continua existindo e continua mandando ofício, e você continua sem ter poder nenhum sobre isso.',
     'E uma vez por ano, mais ou menos, você pensa numa caverna no norte e numa conversa que você interrompeu no meio pra ir embora.',
     'E toda vez você chega na mesma conclusão, que é a conclusão certa e que não conforta nada:',
@@ -104467,7 +104511,7 @@ c23_final_vazio:{
   ],
   final:{id:'vazio', titulo:'NADA A REGISTRAR', texto:[
     'Você desce a montanha, pega a estrada, e a jornada simplesmente continua.',
-    'Você derrota os ginásios que faltavam. Consegue as insígnias. Chega ao Planalto Indigo.',
+    d=>c21_ins(d) >= 8 ? 'Você volta ao Planalto Indigo.' : 'Você derrota os ginásios que faltavam. Consegue as insígnias. Chega ao Planalto Indigo.',
     'A Liga te pergunta o que houve no norte. Você diz que não achou nada.',
     'Em algum momento, anos depois, você percebe que a coisa mais importante que já te aconteceu foi uma conversa que você interrompeu no meio.',
     'Ele te fez uma pergunta. Você derrubou ele no chão e foi embora sem responder.',
@@ -104479,11 +104523,13 @@ c23_final_vazio:{
 
 c23_final_nogueira:{
   texto:[
-    'Vocês sobem a rampa juntos e ele anda devagar porque as pernas não seguram bem depois de sete meses sentado.',
+    'Vocês sobem a rampa juntos e ele anda devagar porque as pernas não seguram bem depois de um ano sentado.',
     'Na metade, ele para na frente da contagem da parede e passa a mão nos riscos de cima, os tortos.',
     '"Ele riscou todos esses sozinho", ele diz, e não fala mais nada até a superfície.',
-    'No vale, as duas aves não se mexem. Na borda, o sol é violento depois de tudo aquilo e ele leva vinte minutos com a mão nos olhos.',
-    'Vocês descem em dois dias. No posto florestal, o Sr. Poplar escreve uma data na terceira coluna do livro, ao lado de um nome que estava lá havia sete meses sem par.',
+    d=>c28_guarda(d, 'No vale, as duas aves não se mexem. Na borda, o sol é violento depois de tudo aquilo e ele leva vinte minutos com a mão nos olhos.',
+      'No vale, a ave que ficou não se mexe. Na borda, o sol é violento depois de tudo aquilo e ele leva vinte minutos com a mão nos olhos.',
+      'No vale vazio, o sol é violento depois de tudo aquilo e ele leva vinte minutos com a mão nos olhos.'),
+    'Vocês descem em dois dias. No posto florestal, o Sr. Poplar escreve uma data na terceira coluna do livro, ao lado de um nome que estava lá havia um ano sem par.',
     'Ele escreve devagar, com capricho, e depois fecha o livro e não olha para ninguém por um tempo.'
   ],
   ef:{flag:'desceu_com_o_nogueira',
@@ -104538,7 +104584,7 @@ c23_final_resposta:{
     'Você sobe com o papel no bolso e entrega na mesma pedra em que ele estava sentado.',
     'Ele lê o que você trouxe, e a mensagem inteira é que não tem resposta certa, e é exatamente isso que ele precisava.',
     'Ele desce naquele mesmo dia. Leva sete horas e não para uma vez.',
-    'No posto florestal, o Sr. Poplar escreve a data dele na terceira coluna e fecha a última linha em branco do livro.',
+    'No posto florestal, o Sr. Poplar escreve a data dele na terceira coluna e fecha mais uma linha em branco do livro.',
     'Três meses depois, numa escola municipal de Fuchsia, um homem faz uma palestra para uma turma de quarta série sobre Pokémon grandes.',
     'Ele não conta onde esteve. Ele conta só uma coisa: que Pokémon grande também tem medo, e que isso não é motivo para gostar menos deles, é motivo para ter mais cuidado.',
     'A filha dele está na terceira fileira.',
@@ -104748,9 +104794,9 @@ c23_final_nao_precisa:{
     'Você sobe sem nada.',
     'Sem bola, sem prova, sem acordo, sem criatura, sem relatório. A Liga pergunta o que houve e você diz a verdade, que é a coisa mais decepcionante possível: uma conversa.',
     'O Sr. Waldo escreve missão cumprida no campo próprio, porque a ordem era ir, observar, não intervir e voltar.',
-    'Você pega um ônibus para Pallet no mês seguinte.',
+    d=>`Você pega um ônibus para ${d.jogador.cidade} no mês seguinte.`,
     'A escola tem uma sala nova, um muro pintado e a mesma professora, que está mais velha e que te reconhece antes de você chegar no portão.',
-    'Ela não pergunta onde você esteve, nem o que você fez, nem se você virou campeão.',
+    'Ela não pergunta onde você esteve, nem o que você fez, nem se você virou {campeão|campeã}.',
     'Ela pergunta se você comeu.',
     'Você fica na sala dela até a última aula, sentad{o|a} numa carteira que é pequena demais para você agora, ouvindo ela ensinar sílaba a vinte e três crianças de sete anos.',
     'Uma delas, no fim, pergunta se você é {treinador|treinadora}.',
@@ -104813,7 +104859,7 @@ c23_final_o_papel:{
     '"Isso não vai consolar ele."',
     '"Não vai." Uma pausa muito longa. "Mas é verdade, e ele carregou dezenove anos de mentira. Uma verdade é mais leve."'
   ],
-  final:{id:'o_papel', titulo:'TRINTA E CINCO ANOS', texto:[
+  final:{id:'o_papel', titulo:'DEZENOVE ANOS', texto:[
     'Você desce a montanha com um papel de 1981 no bolso e devolve numa borda de poço de pedra, dois andares abaixo do saguão do Planalto Indigo.',
     'O Sr. Mervin ouve tudo sem interromper, com as pernas balançando dentro do poço.',
     'Quando você termina, ele fica quieto uns bons dois minutos.',
