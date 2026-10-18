@@ -41,6 +41,18 @@ function varsCartao(k){
   return {'--cart-clara':c[0], '--cart':c[1], '--cart-esc':c[2]};
 }
 
+/* Os seis status do treinador, na ordem da ficha, com o que cada um
+   decide. A ficha e o fim de capítulo leem daqui; o tutorial conta o
+   mesmo com mais detalhe. */
+const STATUS_DO_TREINADOR = [
+  ['forca',       'Força',       'escapar de quem te encurralou · os testes de cena que pedem braço'],
+  ['percepcao',   'Percepção',   'vasculhar · observar · ler a natureza do seu time e, com 3, a de quem está do outro lado'],
+  ['intelecto',   'Intelecto',   'a hora de pegar a estrada · andar pela cidade · com Percepção, ler o tipo de um desconhecido (os dois em 4)'],
+  ['carisma',     'Carisma',     'treinar · encarar um selvagem · ser obedecido com a moral baixa'],
+  ['sorte',       'Sorte',       'o que o vasculho acha · pescaria · chance de brilhante'],
+  ['resistencia', 'Resistência', 'HP máximo (+2 por ponto) · Vontade (2 + Resistência) · aguentar o golpe que sobra pra você']
+];
+
 /* cores de balão: distintas entre si e legíveis nos dois fundos */
 const CORES_DE_FALA = ['#e0a33a', '#5aa9e6', '#e36f8f', '#b18cf0', '#4cc3c3', '#d6c341', '#c9d1dc', '#e86a4a'];   // sem verde: verde é o seu balão
 
@@ -2484,25 +2496,7 @@ const UI = {
     this.add(this.topo());
     const cap = Historia.capAtual;
     const j = Estado.j;
-    const nomes = {forca:'Força',percepcao:'Percepção',intelecto:'Intelecto',carisma:'Carisma',sorte:'Sorte',resistencia:'Resistência'};
-    const desc = {
-      forca:'Golpes manuais, carregar, resistir, fugir de ataques.',
-      percepcao:'Emboscadas, esconderijos, pistas, intenções.',
-      intelecto:'Tática, rotas, mensagens, identificar tipos.',
-      carisma:'Conversa, negociação, liderança, persuasão.',
-      sorte:'Encontros, itens, eventos aleatórios, fugas.',
-      resistencia:'HP máximo (+2 por ponto), veneno, intimidação.'
-    };
-    const linhas = Object.keys(nomes).map(k => {
-      const v = j.status[k];
-      const pontos = Array.from({length:10}, (_,i) => `<i class="${i < v ? 'on':''}"></i>`).join('');
-      return `<div class="status-linha">
-        <span class="nome">${nomes[k]}</span>
-        <span class="status-pontos">${pontos}</span>
-        <span class="mono" style="width:30px;text-align:right">${v}</span>
-        <button class="btn mini" id="up-${k}" onclick="Jogo.gastarPonto('${k}')">+1</button>
-      </div><div class="sussurro" style="margin:-4px 0 8px 122px">${desc[k]}</div>`;
-    }).join('');
+    const linhas = STATUS_DO_TREINADOR.map(([k]) => this.statusDoTreinador(k, true)).join('');
 
     this.add(`<div class="painel">
       <div class="cap-cabecalho">
@@ -2513,7 +2507,7 @@ const UI = {
       <div id="avisos" class="avisos"></div>
       <h3>Pontos de progressão</h3>
       <p class="sussurro">Você tem <b id="pts">${j.pontos}</b> <span id="pts-p">${j.pontos === 1 ? 'ponto' : 'pontos'}</span>. Máximo de +1 por status neste capítulo.</p>
-      <div id="status-lista">${linhas}</div>
+      <div id="status-lista" class="fs-tabela">${linhas}</div>
       <div style="margin-top:22px">
         <button class="btn destaque" id="btn-seguir" onclick="Jogo.voltarAoMundo()">Voltar para a estrada</button>
       </div>
@@ -3618,63 +3612,208 @@ const UI = {
     setTimeout(() => requestAnimationFrame(passo), 220);
   },
 
-  modalFicha(){
+  /* ========================================================
+     FICHA DO TREINADOR — a pasta que mora atrás do cartão
+     Na cor do cartão, com cinco abas: quem você é, o corpo e os
+     status (com a parada de cada teste escrita, a mesma conta da
+     folha de regras), a jornada, quem lembra de você e o mundo.
+     ======================================================== */
+  /* uma linha de status: bolinhas de cinco em cinco, o valor e a
+     parada do teste (status + perícia), em d6, como nas cenas */
+  statusDoTreinador(k, comBotao){
+    const def = STATUS_DO_TREINADOR.find(s => s[0] === k);
+    if (!def) return '';
+    const v = (Estado.j.status && Estado.j.status[k]) || 0;
+    const total = Math.max(5, Math.ceil(v / 5) * 5);
+    const pontos = Array.from({length:total}, (_, i) =>
+      `${i && i % 5 === 0 ? '<b class="fs-vao"></b>' : ''}<i class="${i < v ? 'on' : ''}"></i>`).join('');
+    return `<div class="ficha-status">
+      <span class="fs-nome">${def[1]}</span>
+      <span class="fs-pontos" role="img" aria-label="${def[1]} ${v}">${pontos}</span>
+      <span class="fs-valor mono">${v}</span>
+      <span class="fs-parada mono" title="status ${v} + perícia ${Dados.PERICIA_BASE}">${v + Dados.PERICIA_BASE}d6</span>
+      ${comBotao ? `<button class="btn mini" id="up-${k}" onclick="Jogo.gastarPonto('${k}')">+1</button>` : ''}
+      <span class="fs-uso">${this.esc(def[2])}</span>
+    </div>`;
+  },
+
+  modalFicha(aba){
     const d = Estado.dados, j = d.jogador;
-    const nomes = {forca:'Força',percepcao:'Percepção',intelecto:'Intelecto',carisma:'Carisma',sorte:'Sorte',resistencia:'Resistência'};
-    const st = Object.entries(nomes).map(([k,n]) =>
-      `<div class="status-linha"><span class="nome">${n}</span>
-       <span class="status-pontos">${Array.from({length:10},(_,i)=>`<i class="${i<j.status[k]?'on':''}"></i>`).join('')}</span>
-       <span class="mono" style="width:26px;text-align:right">${j.status[k]}</span></div>`).join('');
-    const nivel = Estado.nivelRep();
-    const eixo = d.reputacao.eixo;
-    const val = eixo === 'bom' ? d.reputacao.bom : d.reputacao.ruim;
-    const npcs = Object.values(d.npcs);
-    const lend = Object.values(d.lendarios);
-    this.modal('Ficha do treinador', `
-      <div class="linha"><span class="k">Nome</span><span class="v">${this.esc(j.nome)} (${this.esc(j.genero)}, ${idadeJogador()} anos)</span></div>
-      <div class="linha"><span class="k">Aniversário</span><span class="v">${this.esc(textoNascimento(nascimentoDe()))}</span></div>
-      <div class="linha"><span class="k">Cidade natal</span><span class="v">${this.esc(j.cidade)}</span></div>
-      <div class="linha"><span class="k">Objetivo</span><span class="v">${this.esc(j.objetivo)}</span></div>
-      ${(() => { const r = rumoDe(); const m = METAS.find(x => x.id === r.meta);
-        return `<div class="linha"><span class="k">O que isso quer dizer</span><span class="v">${this.esc(m ? m.nome : '')}</span></div>`
-          + (r.gostos.texto ? `<div class="linha"><span class="k">Gosta de</span><span class="v">${this.esc(r.gostos.texto)}</span></div>` : '')
-          + (r.desgostos.texto ? `<div class="linha"><span class="k">Não gosta de</span><span class="v">${this.esc(r.desgostos.texto)}</span></div>` : ''); })()}
-      <div class="linha"><span class="k">Personalidade</span><span class="v">${this.esc(j.personalidade)}</span></div>
-      <div style="margin:0 0 14px"><button class="btn mini" onclick="UI.modalCredenciais()">Credenciais${
-        (typeof Cargos !== 'undefined' && Cargos.lista().length) ? ' (' + Cargos.lista().length + ')' : ''}</button></div>
-      <div class="linha"><span class="k">HP</span><span class="v">${j.hp} / ${Estado.hpMaxJogador()}</span></div>
-      <div class="linha"><span class="k">Insígnias</span><span class="v">${d.insignias.filter(i=>i!=='Título de Campeão').length}/8</span></div>
-      ${d.insignias.length ? d.insignias.map(i => {
-        const g = GINASIOS.find(x => x.insignia === i), src = g && caminhoInsignia(g.id);
-        return `<div class="linha"><span class="k com-icone" style="padding-left:12px">${src ? `<img class="insignia-mini" src="${src}" alt="" onerror="this.remove()">` : ''}${this.esc(i)}</span><span class="v">✓</span></div>`;
-      }).join('') : ''}
-      <h3>Reputação — ${this.esc(nivel.nome)} (${eixo}, nível ${val}/8)</h3>
-      <div class="rep-barra ${eixo}"><i style="width:${(val/8)*100}%"></i></div>
-      <p class="sussurro">${this.esc(nivel.ef)}</p>
-      <h3>Status</h3>${st}
-      ${d.rival && d.npcs['Ezra'] ? `<h3>Rival — ${this.esc(ARCOS_RIVAL[arcoRival()].nome)}</h3>
-        <p class="sussurro">${this.esc(ARCOS_RIVAL[arcoRival()].resumo)}</p>
-        <div class="linha"><span class="k">${this.esc(d.rival.nome)}</span><span class="v">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span></div>
-        <div class="linha"><span class="k">Parceiro dele</span><span class="v">${d.flags.sabe_do_pico ? 'Pico · ' : ''}${this.esc(especieDoPico())}</span></div>` : ''}
-      ${(typeof rivaisConquistados === 'function' && rivaisConquistados().length)
-        ? '<h3>Rivais que você arrumou</h3>' + rivaisConquistados().map(({def, reg}) =>
-            `<div class="linha"><span class="k">${this.esc(def.nome)} — ${this.esc(defArcoExtra(def).nome)} <span class="sussurro">${this.esc(def.desde)} · ${this.esc(defArcoExtra(def).resumo || def.origem)}</span></span>
-             <span class="v">você ${reg.derrotas} × ${reg.vitorias} ele</span></div>`).join('')
-        : ''}
-      ${(typeof Campo !== 'undefined') ? '<h3>O que dá pra fazer no mundo</h3>' + Campo.resumo().map(([nome, r]) =>
-        `<div class="linha"><span class="k">${this.esc(nome)}</span><span class="v ${r.pode?'':'nao'}">${
-          r.pode ? this.esc(r.como || 'sim') : this.esc('falta ' + r.falta)}</span></div>`).join('') : ''}
-      ${npcs.length ? '<h3>Quem lembra de você</h3>' + npcs.map(n =>
-        `<div class="linha"><span class="k">${this.esc(n.nome)} <span class="sussurro">${this.esc((n.memorias||[]).slice(-1)[0]?.texto||'')}</span></span>
-         <span class="v" style="color:${n.opiniao>0?'var(--bom)':n.opiniao<0?'var(--ruim)':'var(--texto-fraco)'}">${n.opiniao>0?'+':''}${n.opiniao}</span></div>`).join('') : ''}
-      ${lend.length ? '<h3>Lendários</h3>' + lend.map(l =>
-        `<div class="linha"><span class="k">${this.esc(DEX[l.dex].nome)}</span>
-         <span class="v">${this.esc(l.estado)} · ${this.esc(l.disposicao)}${l.caçandoVoce?' · TE CAÇANDO':''}</span></div>`).join('') : ''}
-      <h3>Mundo</h3>
-      <div class="linha"><span class="k">Clima de Kanto</span><span class="v">${this.esc(d.mundo.clima)}</span></div>
-      <div class="linha"><span class="k">Instabilidade</span><span class="v">${d.mundo.instabilidade}</span></div>
-      <div class="linha"><span class="k">Avisos da Liga</span><span class="v">${d.liga.avisos}${d.liga.detencao?' · DETENÇÃO ATIVA':d.liga.ordemDevolucao?' · ordem de devolução':''}</span></div>
-    `);
+    const ABAS = [['perfil', 'Perfil'], ['status', 'Status'], ['jornada', 'Jornada'], ['gente', 'Gente'], ['mundo', 'Mundo']];
+    const tem = a => ABAS.some(x => x[0] === a);
+    const atual = tem(aba) ? aba : (tem(this._abaFicha) ? this._abaFicha : 'perfil');
+    this._abaFicha = atual;
+    const e = s => this.esc(s);
+    const dl = pares => `<dl class="ficha-dl">${pares.filter(p => p && p[1] != null && p[1] !== '')
+      .map(([k, v]) => `<dt>${e(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    const bloco = (titulo, html, nota) => html ? `<section class="fi-bloco">
+        <h4>${e(titulo)}${nota ? ` <span class="ficha-h-nota">${e(nota)}</span>` : ''}</h4>${html}</section>` : '';
+
+    /* ---------- cabeça: quem é, na cor do cartão ---------- */
+    const id = String((d.criadoEm || 0) % 100000).padStart(5, '0');
+    const campeao = d.insignias.includes('Campeão de Kanto') || d.flags.campeao_de_kanto;
+    const titulo = j.cargo || (campeao ? '{Campeão|Campeã} de Kanto'
+      : d.flags.tem_licenca || d.flags.tem_cartao ? '{Treinador registrado|Treinadora registrada}' : '{Treinador|Treinadora} sem registro');
+    const rosto = (typeof Rede !== 'undefined' && Rede.dentro && Rede.dentro(d)) ? Rede.retrato() : null;
+    const dias = d.relogio ? d.relogio.dia : 0;
+    const cabeca = `<div class="ficha-capa">
+        <span class="ficha-sigla">Ficha do treinador</span>
+        <span class="ficha-id mono">Nº ${id}</span>
+      </div>
+      <div class="ficha-quem">
+        ${rosto ? `<img class="ficha-retrato" src="${rosto}" alt="" onerror="this.remove()">`
+                : `<span class="ficha-monograma" aria-hidden="true">${e((j.nome || '?').trim().charAt(0).toUpperCase())}</span>`}
+        <div class="ficha-ident">
+          <div class="ficha-nome">${e(j.nome)}</div>
+          <div class="ficha-titulo">${e(titulo)}</div>
+          <div class="ficha-chips">
+            <span>${idadeJogador()} anos</span><span>${e(j.genero)}</span><span>${e(j.cidade)}</span>
+            <span>${dias} ${dias === 1 ? 'dia' : 'dias'} na estrada</span>
+          </div>
+        </div>
+        ${d.flags.tem_cartao && d.flags.tem_pokedex
+          ? '<button class="btn mini ficha-cartao" onclick="UI.modalCartao()">Cartão</button>' : ''}
+      </div>
+      <nav class="ficha-abas" role="tablist" aria-label="Ficha">${ABAS.map(([k, n]) =>
+        `<button class="ficha-aba${k === atual ? ' sel' : ''}" role="tab" aria-selected="${k === atual}" onclick="UI.modalFicha('${k}')">${n}</button>`).join('')}</nav>`;
+
+    /* ---------- as abas ---------- */
+    const abas = {
+      perfil: () => {
+        const r = rumoDe(); const m = METAS.find(x => x.id === r.meta);
+        const cap = Historia.capitulo(d.capitulo);
+        const linha = typeof linhaAtual === 'function' ? linhaAtual(d) : null;
+        const casa = (typeof nomeCasa === 'function' && nomeCasa()) ? `${e(nomeCasa())}${casaQuem() ? ` <span class="ficha-nota">· ${e(casaQuem())}</span>` : ''}` : '';
+        return bloco('Quem você é', dl([
+            ['Personalidade', e(j.personalidade || '—')],
+            ['Objetivo', `${e(j.objetivo || '—')}${m ? `<span class="ficha-nota bloco">quer dizer: ${e(m.nome)}</span>` : ''}`],
+            ['Gosta de', r.gostos.texto ? e(r.gostos.texto) : ''],
+            ['Não gosta de', r.desgostos.texto ? e(r.desgostos.texto) : '']
+          ]))
+          + bloco('De onde você vem', dl([
+            ['Aniversário', e(textoNascimento(nascimentoDe()))],
+            ['Cidade natal', e(j.cidade)],
+            ['Em casa', casa]
+          ]))
+          + bloco('Agora', dl([
+            ['Capítulo', cap ? `${e(numeroDoCapitulo(cap))} <span class="ficha-nota">${e(cap.titulo)}</span>` : ''],
+            ['Kanto te vê como', d.via && d.via !== 'neutro' && NOME_VIA[d.via] ? e(NOME_VIA[d.via]) : ''],
+            ['Do lado de', linha === 'rocket' ? 'quem manda o envelope sem timbre' : linha && NOME_DA_LINHA[linha] ? e(NOME_DA_LINHA[linha]) : ''],
+            ['Dinheiro', `<span class="mono">${fmtDin(j.dinheiro)} ₽</span>`]
+          ]));
+      },
+
+      status: () => {
+        const hp = j.hp, hpMax = Estado.hpMaxJogador();
+        const pct = Math.max(0, Math.min(100, hp / hpMax * 100));
+        const faixa = pct > 50 ? '' : pct > 22 ? 'medio' : 'baixo';
+        const v = Estado.vontadeJogador(), vMax = Estado.vontadeMaxJogador();
+        const pips = Array.from({length:vMax}, (_, i) => `<i class="${i < v ? 'on' : ''}"></i>`).join('');
+        const corpo = `<div class="ficha-medidor">
+            <span class="fm-rot">HP</span>
+            <span class="barra ${faixa}"><i style="width:${pct}%"></i></span>
+            <span class="fm-num mono">${hp}/${hpMax}</span>
+          </div>
+          <div class="ficha-medidor">
+            <span class="fm-rot">Vontade</span>
+            <span class="fm-pips" role="img" aria-label="Vontade ${v} de ${vMax}">${pips}</span>
+            <span class="fm-num mono">${v}/${vMax}</span>
+          </div>`;
+        const leituras = [
+          leNatureza() ? 'lê a natureza de quem está do outro lado' : '',
+          leTipo() ? 'lê o tipo de um desconhecido' : ''
+        ].filter(Boolean);
+        const ferid = (j.ferimentos || []).slice(-4).reverse().map(f =>
+          `<li><span class="mono">−${f.qtd}</span> ${e(f.causa)}${f.cap ? ` <span class="ficha-nota">cap. ${f.cap}</span>` : ''}</li>`).join('');
+        return bloco('Corpo', corpo)
+          + bloco('Status', `<div class="fs-tabela">${STATUS_DO_TREINADOR.map(([k]) => this.statusDoTreinador(k, false)).join('')}</div>`,
+                  `teste: status + ${Dados.PERICIA_BASE} de perícia, em d6`)
+          + bloco('Pontos', `<p class="ficha-texto">${j.pontos
+              ? `${j.pontos} ${j.pontos === 1 ? 'ponto guardado' : 'pontos guardados'}: entram no fim do próximo capítulo, no máximo um por status.`
+              : 'Nenhum guardado. Cada capítulo fechado dá um.'}</p>`)
+          + (leituras.length ? bloco('Na luta, você já', `<ul class="ficha-lista">${leituras.map(t => `<li>${e(t)}</li>`).join('')}</ul>`) : '')
+          + (ferid ? bloco('Ferimentos', `<ul class="ficha-lista">${ferid}</ul>`, 'os últimos') : '');
+      },
+
+      jornada: () => {
+        const nivel = Estado.nivelRep(), eixo = d.reputacao.eixo;
+        const val = eixo === 'bom' ? d.reputacao.bom : d.reputacao.ruim;
+        const prog = Estado.progressoRep();
+        const rep = `<div class="ficha-rep">
+            <div class="fr-nome">${e(nivel.nome)} <span class="ficha-nota">${eixo} · ${val} de 8</span></div>
+            <div class="rep-barra ${eixo}"><i style="width:${Math.round(prog.atual * 100)}%"></i></div>
+            <div class="ficha-nota">${prog.prox ? `faltam ${prog.falta} ${prog.falta === 1 ? 'ponto' : 'pontos'} para o próximo degrau` : 'não tem degrau acima deste'}</div>
+            ${nivel.ef ? `<p class="ficha-texto">${e(nivel.ef)}</p>` : ''}
+          </div>`;
+        const ins = d.insignias.filter(i => i !== 'Título de Campeão' && i !== 'Campeão de Kanto');
+        const insignias = `<div class="ficha-insignias">${GINASIOS.map(g => {
+            const tem = ins.includes(g.insignia), src = caminhoInsignia(g.id);
+            return `<span class="fi-slot${tem ? ' tem' : ''}" title="${tem ? e(g.insignia) : 'vaga'}">${tem && src
+              ? `<img src="${src}" alt="${e(g.insignia)}" onerror="this.remove()">` : ''}</span>`;
+          }).join('')}</div>`;
+        const cargos = typeof Cargos !== 'undefined' ? Cargos.lista().map(idc => Cargos.porId(idc)).filter(Boolean) : [];
+        const postos = cargos.length
+          ? `<ul class="ficha-lista">${cargos.map(c => `<li>${e(c.nome)}${c.orgao ? ` <span class="ficha-nota">${e(c.orgao)}</span>` : ''}</li>`).join('')}</ul>`
+          : '<p class="ficha-texto">Nenhum posto assinado.</p>';
+        const rival = d.rival && d.npcs['Ezra'] ? (() => {
+            const a = ARCOS_RIVAL[arcoRival()];
+            return `<div class="ficha-rival">
+              <div class="fr-nome">${e(d.rival.nome)} <span class="ficha-nota">${e(a.nome)}</span></div>
+              <p class="ficha-texto">${e(a.resumo)}</p>
+              ${dl([['Placar', `<span class="mono">você ${d.rival.derrotas} × ${d.rival.vitorias} ele</span>`],
+                    ['Parceiro dele', `${d.flags.sabe_do_pico ? 'Pico · ' : ''}${e(especieDoPico())}`]])}
+            </div>`;
+          })() : '';
+        const extras = (typeof rivaisConquistados === 'function' && rivaisConquistados().length)
+          ? rivaisConquistados().map(({def, reg}) => `<div class="ficha-rival">
+              <div class="fr-nome">${e(def.nome)} <span class="ficha-nota">${e(defArcoExtra(def).nome)}</span></div>
+              <p class="ficha-texto">${e(def.desde)} · ${e(defArcoExtra(def).resumo || def.origem)}</p>
+              ${dl([['Placar', `<span class="mono">você ${reg.derrotas} × ${reg.vitorias} ele</span>`]])}
+            </div>`).join('') : '';
+        return bloco('Reputação', rep)
+          + bloco('Insígnias', insignias, `${ins.length} de 8${campeao ? ' · Campeão de Kanto' : ''}`)
+          + bloco('Postos', postos + `<button class="btn mini" onclick="UI.modalCredenciais()">Credenciais</button>`)
+          + bloco('Rival', rival + extras);
+      },
+
+      gente: () => {
+        const todos = Object.values(d.npcs || {});
+        if (!todos.length) return bloco('Quem lembra de você', '<p class="ficha-texto">Ninguém ainda. Kanto é grande e você acabou de chegar.</p>');
+        const linhaNpc = n => {
+          const mem = (n.memorias || []).slice(-1)[0];
+          const o = n.opiniao || 0;
+          return `<li class="ficha-npc">
+            <span class="fn-quem">${e(String(n.nome).charAt(0).toUpperCase() + String(n.nome).slice(1))}</span>
+            <span class="fn-op ${o > 0 ? 'bom' : o < 0 ? 'ruim' : ''}" title="opinião">${o > 0 ? '+' : ''}${o}</span>
+            ${mem || n.viuVoce ? `<span class="fn-mem">${e(mem ? mem.texto : n.viuVoce)}</span>` : ''}
+          </li>`;
+        };
+        const grupo = (t, lista) => lista.length ? bloco(t, `<ul class="ficha-gente">${lista
+          .sort((a, b) => Math.abs(b.opiniao || 0) - Math.abs(a.opiniao || 0)).map(linhaNpc).join('')}</ul>`, String(lista.length)) : '';
+        return grupo('Do seu lado', todos.filter(n => (n.opiniao || 0) >= 3))
+          + grupo('Conhecidos', todos.filter(n => Math.abs(n.opiniao || 0) < 3))
+          + grupo('Contra você', todos.filter(n => (n.opiniao || 0) <= -3));
+      },
+
+      mundo: () => {
+        const campo = typeof Campo !== 'undefined' ? dl(Campo.resumo().map(([nome, r]) =>
+          [nome, r.pode ? e(r.como || 'sim') : `<span class="ficha-falta">falta ${e(r.falta)}</span>`])) : '';
+        const lend = Object.values(d.lendarios || {});
+        const lendarios = lend.length ? dl(lend.map(l => [DEX[l.dex].nome,
+          `${e(l.estado)} · ${e(l.disposicao)}${l.caçandoVoce ? ' · <b class="ficha-falta">te caçando</b>' : ''}`])) : '';
+        const liga = `${d.liga.avisos}${d.liga.detencao ? ' · detenção ativa' : d.liga.ordemDevolucao ? ' · ordem de devolução' : ''}`;
+        return bloco('O que dá pra fazer no mundo', campo)
+          + (lendarios ? bloco('Lendários', lendarios) : '')
+          + bloco('Kanto', dl([
+            ['Clima', e(d.mundo.clima)],
+            ['Instabilidade', `<span class="mono">${d.mundo.instabilidade}</span>`],
+            ['Avisos da Liga', `<span class="mono">${e(liga)}</span>`]
+          ]));
+      }
+    };
+
+    this.modal('', cabeca + `<div class="ficha-folha" role="tabpanel">${abas[atual]()}</div>`,
+      false, 'ficha', varsCartao(j.corCartao));
   },
 
   /* ========================================================
