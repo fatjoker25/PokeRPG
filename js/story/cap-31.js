@@ -12,7 +12,17 @@ function c31_cabe(id, d){
   if (id === 'c31_o_papel_termico') return !!d.flags.o_fax_tem_cabecalho;
   return true;
 }
-function c31_abertura(d){ return Dados.escolher(C31_ABERTURAS.filter(id => c31_cabe(id, d))); }
+function c31_abertura(d){
+  const id = Dados.escolher(C31_ABERTURAS.filter(id => c31_cabe(id, d)));
+  /* a cesta do fax só é esvaziada na faxina de sexta: a volta à
+     Avenida Cinco é numa quinta, com o comércio aberto */
+  if (d && d.relogio && d.flags && d.flags.c31_chegada == null){
+    Relogio.ateODia(3, 10);
+    d.flags.c31_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c31_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
 
 CAPITULOS.push(
 {
@@ -431,7 +441,7 @@ c31_falou_com_a_kazu:{
     fala('Cleo', 'ESPERA.', 'grita'),
     'Ela some pra dentro de casa e volta em quarenta segundos com um filme de trinta e seis poses numa caixinha preta, e com um caderno.',
     'O caderno tem data, hora e placa. Onze entradas, nas últimas cinco semanas, todas entre uma e três da manhã.',
-    fala('Cleo', 'Eu comecei em setembro. Ninguém acreditou em mim.')
+    fala('Cleo', 'Eu comecei faz cinco semanas. Ninguém acreditou em mim.')
   ],
   ef:{flag:['o_caderno_da_kazu','reika_precisa_de_papel','sabe_do_lote_unico'],
       npc:{nome:'Cleo', opiniao:4, viuVoce:'Você foi a primeira pessoa a acreditar nela.'},
@@ -445,7 +455,7 @@ c31_falou_com_a_kazu:{
 
 c31_revelou_o_filme:{
   texto:[
-    'O revelador da avenida sete revela em uma hora e vocês esperam a uma hora inteira sentados no meio-fio da frente, porque a Cleo se recusa a ir embora e deixar o filme dela com um estranho.',
+    'O revelador da avenida sete revela em uma hora e vocês esperam uma hora inteira {sentados|sentadas} no meio-fio da frente, porque a Cleo se recusa a ir embora e deixar o filme dela com um estranho.',
     'Trinta e seis poses. Vinte e nove saem pretas, porque fotografar de madrugada com filme comum e sem tripé dá nisso.',
     'Sete prestam.',
     'Em quatro dá pra ver a traseira de um caminhão com gaiola sob lona.',
@@ -571,10 +581,11 @@ c31_fim:{
     },
     d=>d.flags.as_fotos_da_kazu
       ? 'E sete fotografias tiradas às duas da manhã por uma menina de treze anos com a máquina do pai, das quais uma mostra três fileiras de gaiola empilhadas dentro de um galpão.'
-      : (d.flags.a_kazu ? 'E o nome de uma menina de treze anos que ninguém quis acreditar desde setembro.' : ''),
-    'A Rota 10 fica a um dia de estrada e, no fim dela, tem uma usina desligada há onze anos que não para de zumbir.'
+      : (d.flags.a_kazu ? 'E o nome de uma menina de treze anos que anota placa de madrugada há cinco semanas e em quem ninguém quis acreditar.' : ''),
+    'A Rota 10 fica a um dia de estrada e, dizem, no fim dela tem uma usina desligada há onze anos que não para de zumbir.'
   ],
-  fim:true, resumo:'A lista que chega por fax toda segunda: quarenta e um nomes, um convênio que o presidente nunca leu e uma menina de treze anos que anota placa desde setembro.'
+  ef:{executar:d=>{ const h = c31_hora(d); if (h < 5 || h > 10) Relogio.ate(7); }},
+  fim:true, resumo:'A lista que chega por fax toda segunda: quarenta e um nomes, um convênio que o presidente nunca leu e uma menina de treze anos que anota placa de madrugada há cinco semanas.'
 }
 
 }

@@ -13,7 +13,19 @@ function c32_cabe(id, d){
   if (id === 'c32_o_turno_da_noite') return !!d.flags.o_som_do_galpao;
   return true;
 }
-function c32_abertura(d){ return Dados.escolher(C32_ABERTURAS.filter(id => c32_cabe(id, d))); }
+function c32_abertura(d){
+  const id = Dados.escolher(C32_ABERTURAS.filter(id => c32_cabe(id, d)));
+  /* a rua de galpão de dia, a lanchonete no almoço, o turno da noite às onze */
+  if (d && d.relogio && d.flags && d.flags.c32_chegada == null){
+    const alvo = {c32_a_rua_de_galpao:10, c32_a_lanchonete:11, c32_o_turno_da_noite:23}[id];
+    if (alvo != null && c32_hora(d) !== alvo) Relogio.ate(alvo);
+    d.flags.c32_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c32_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* "de uma quarta-feira", "de um sábado" */
+function c32_diaDaSemana(){ const s = Calendario.hoje().semana; return (/sábado|domingo/i.test(s) ? 'um ' : 'uma ') + s; }
 
 CAPITULOS.push(
 {
@@ -72,7 +84,8 @@ c32_a_conta_de_energia:{
 c32_a_lanchonete:{
   texto:[
     'Toda rua de galpão de Kanto tem uma lanchonete, porque quatro ruas de galpão dão umas quatrocentas pessoas e quatrocentas pessoas almoçam.',
-    'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.',
+    d=>c32_hora(d) <= 12 ? 'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.'
+                         : 'A da Industrial 2 tem seis mesas de fórmula e um balcão, e a fila do almoço já passou, mas as mesas continuam cheias.',
     'Você senta no balcão e pede o prato do dia, que custa oito e vem com arroz, feijão, um ovo frito e salada de repolho.',
     'Na mesa do fundo tem quatro homens de macacão azul da oficina de empilhadeira e eles falam alto porque trabalham com máquina e ficaram com o hábito.',
     'Você aprende o nome de dois deles sem precisar perguntar, do jeito que se aprende nome em mesa de lanchonete: porque eles se chamam o tempo todo. O mais velho é o Hal. O de boné é o Rico.',
@@ -85,6 +98,7 @@ c32_a_lanchonete:{
     fala('o homem de macacão', 'Então é armazém de remédio que solta cheiro de Pokémon na sexta-feira.', 'baixo')
   ],
   ef:{flag:'a_conversa_da_lanchonete',
+      executar:d=>{ if (c32_hora(d) < 11) Relogio.ate(11); },
       registrar:'Os mecânicos da rua ao lado discutem o que é o galpão. Ele solta cheiro na sexta-feira.'},
   escolhas:[
     {texto:'Puxar conversa com os quatro.', vai:'c32_os_quatro_mecanicos'},
@@ -184,6 +198,8 @@ c32_a_van_das_marmitas:{
     fala('o entregador de almoço', 'E na sexta eles pegam na porta do portão, não na porta social. É a única coisa que muda.')
   ],
   ef:{flag:['vinte_e_duas_na_sexta','carregam_na_sexta'],
+      /* a van chega às onze e cinquenta e cinco, hoje se ainda dá, senão amanhã */
+      executar:d=>{ const h = c32_hora(d); if (h < 11) Relogio.ate(11); else if (h > 11) Relogio.amanhaAs(11); },
       registrar:'São 15 almoços de segunda a quinta e 22 na sexta. Na sexta a entrega é pelo portão, não pela porta social.',
       presagio:'Sete pessoas a mais só na sexta. Sete pessoas que não trabalham ali: trabalham no carregamento.'},
   escolhas:[
@@ -203,6 +219,8 @@ c32_observou:{
     'A não ser quem não quer ser visto de frente.'
   ],
   ef:{flag:'observou_o_galpao',
+      /* do meio-dia às quatro, no meio-fio */
+      executar:d=>{ if (c32_hora(d) < 12) Relogio.ate(12); Relogio.avancar(4); },
       registrar:'Quatro horas de observação: o portão não abriu, e o único funcionário que saiu fumou virado para a parede.'},
   escolhas:[
     {texto:'Falar com o fumante na próxima vez que ele sair.', vai:'c32_o_fumante'},
@@ -331,7 +349,7 @@ c32_quer_sair:{
 
 c32_bateu_na_porta:{
   texto:[
-    'Você toca a campainha da porta social do galpão da Industrial 3 às três da tarde de uma quarta-feira.',
+    ()=>`Você toca a campainha da porta social do galpão da Industrial 3 às três da tarde de ${c32_diaDaSemana()}.`,
     'A porta abre quinze centímetros, no limite da corrente, e atrás dela tem uma mulher de uns quarenta anos de jaleco branco.',
     fala('a mulher de jaleco do galpão', 'Pois não.'),
     d=>fala(d.jogador.nome, 'O que é aqui?'),
@@ -342,14 +360,15 @@ c32_bateu_na_porta:{
     'E é tudo verdade, e é tudo suficiente, e não tem uma única palavra ali que dê pra transformar em denúncia.',
     fala('a mulher de jaleco do galpão', '{O senhor|A senhora} precisa de alguma coisa?'),
     d=>fala(d.jogador.nome, 'Preciso.'),
-    fala('a mulher de jaleco do galpão', 'Então {o senhor|a senhora} pode protocolar um pedido na sede da empresa. O endereço está na junta comercial.'),
+    fala('a mulher de jaleco do galpão', 'Então {o senhor|a senhora} pode protocolar um pedido na sede da empresa. O endereço está no registro comercial.'),
     'E fecha a porta, educadamente, sem bater.'
   ],
   ef:{flag:'bateu_no_galpao',
-      registrar:'Bateram a porta educadamente: instalação privada, sem atendimento ao público, endereço na junta comercial.',
-      presagio:'Ela te mandou pra junta comercial. Ela não precisava. Ou é treinamento, ou é outra coisa.'},
+      executar:d=>{ if (c32_hora(d) !== 15) Relogio.ate(15); },
+      registrar:'Bateram a porta educadamente: instalação privada, sem atendimento ao público, endereço no registro comercial.',
+      presagio:'Ela te mandou pro registro comercial. Ela não precisava. Ou é treinamento, ou é outra coisa.'},
   escolhas:[
-    {texto:'Ir à junta comercial procurar o endereço da sede.', vai:'c32_a_junta'},
+    {texto:'Ir ao cartório de registro comercial procurar o endereço da sede.', vai:'c32_a_junta'},
     {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
     {texto:'Observar o galpão de fora.', vai:'c32_observou'}
   ]
@@ -357,7 +376,7 @@ c32_bateu_na_porta:{
 
 c32_a_junta:{
   texto:[
-    'A junta comercial de Saffron fica no segundo andar de um prédio público, atende das nove às dezesseis, e cobra doze pokedólares por certidão simplificada.',
+    'O cartório de registro comercial de Saffron fica no segundo andar de um prédio público, atende das nove às dezesseis, e cobra doze pokedólares por certidão simplificada.',
     'Você entrega a razão social de quatro palavras da conta de energia — ou, se não tem a conta, o endereço do galpão, que também dá.',
     'A certidão sai em vinte minutos.',
     'Objeto social: "armazenagem e logística de material biológico, com climatização controlada".',
@@ -369,7 +388,7 @@ c32_a_junta:{
       : 'E o nome dela é uma sigla de cinco caracteres, sem nenhuma palavra por extenso.'
   ],
   ef:{dinheiro:-12, flag:['a_certidao_da_junta','sabe_o_nome_da_comissao','reika_precisa_de_papel','sabe_do_lote_unico'],
-      registrar:'A certidão da junta: armazenagem de material biológico com climatização, administrada pela sigla.',
+      registrar:'A certidão do registro comercial: armazenagem de material biológico com climatização, administrada pela sigla.',
       presagio:'Dois sócios que ninguém conhece e uma administradora que não tem nome, só letras.'},
   escolhas:[
     {texto:'Pedir também a ficha dos dois sócios.', vai:'c32_os_dois_socios'},
@@ -382,19 +401,19 @@ c32_os_dois_socios:{
   texto:[
     'Mais doze pokedólares e mais vinte minutos.',
     'Os dois sócios são pessoas físicas com documento válido e endereço declarado em Saffron.',
-    'E a atendente da junta, que tem uns cinquenta anos e já viu muita certidão, faz uma coisa que ninguém pediu: ela roda os dois documentos numa segunda consulta.',
-    fala('a atendente da junta', 'Esses dois são sócios de mais quarenta e uma empresas.'),
+    'E a atendente do registro, que tem uns cinquenta anos e já viu muita certidão, faz uma coisa que ninguém pediu: ela roda os dois documentos numa segunda consulta.',
+    fala('a atendente do registro', 'Esses dois são sócios de mais quarenta e uma empresas.'),
     d=>fala(d.jogador.nome, 'Quarenta e uma?'),
-    fala('a atendente da junta', 'Quarenta e uma. Todas com a mesma administradora contratada.'),
+    fala('a atendente do registro', 'Quarenta e uma. Todas com a mesma administradora contratada.'),
     'Ela vira a tela.',
-    fala('a atendente da junta', 'Isso aqui a gente chama de laranja, {moço|moça}. É um par de laranja.'),
-    fala('a atendente da junta', 'E eu sou obrigada a te falar uma coisa: ser sócio de quarenta e uma empresas não é crime.'),
+    fala('a atendente do registro', 'Isso aqui a gente chama de laranja, {moço|moça}. É um par de laranja.'),
+    fala('a atendente do registro', 'E eu sou obrigada a te falar uma coisa: ser sócio de quarenta e uma empresas não é crime.'),
     'Ela imprime a lista das quarenta e uma, que sai em três folhas.',
-    fala('a atendente da junta', 'Só que quem monta quarenta e uma empresas com dois nomes e uma administradora só não está economizando papel.', 'baixo')
+    fala('a atendente do registro', 'Só que quem monta quarenta e uma empresas com dois nomes e uma administradora só não está economizando papel.', 'baixo')
   ],
   ef:{dinheiro:-12, flag:['as_quarenta_e_uma_empresas','reika_precisa_de_papel','sabe_o_nome_da_comissao'],
-      rep:{eixo:'bom', delta:2, motivo:'Puxou na junta comercial a lista das quarenta e uma empresas do mesmo par de sócios.'},
-      npc:{nome:'a atendente da junta', opiniao:3, viuVoce:'Rodou a segunda consulta sem você pedir e imprimiu as quarenta e uma.'},
+      rep:{eixo:'bom', delta:2, motivo:'Puxou no registro comercial a lista das quarenta e uma empresas do mesmo par de sócios.'},
+      npc:{nome:'a atendente do registro', opiniao:3, viuVoce:'Rodou a segunda consulta sem você pedir e imprimiu as quarenta e uma.'},
       registrar:'Os dois sócios do galpão são sócios de 41 empresas, todas com a mesma administradora contratada.',
       presagio:'Quarenta e uma empresas. Uma delas é um galpão climatizado com trezentas e onze unidades de equipamento.'},
   escolhas:[
@@ -421,6 +440,7 @@ c32_o_turno_da_noite:{
     'É constante. É um murmúrio que não sobe e não desce, e um murmúrio que não sobe e não desce é de quem está acordado há muito tempo e não espera mais nada.'
   ],
   ef:{flag:['o_som_do_galpao','ouviu_a_noite'], hp:-1, moral:-2,
+      executar:d=>{ if (c32_hora(d) !== 23) Relogio.ate(23); },
       registrar:'À noite, sem o barulho da rua, dá para ouvir o galpão por fora.',
       presagio:'Um murmúrio que não sobe e não desce.'},
   escolhas:[
@@ -468,6 +488,8 @@ c32_a_sexta:{
     'Nenhum dos dois fala nada, porque não tem nada pra falar que já não tenha sido dito por vinte e seis minutos de corrente humana.'
   ],
   ef:{flag:['viu_o_carregamento','sabe_do_lote_unico'], moral:-2,
+      /* sexta, seis e trinta e cinco, e o carregamento às seis e quarenta */
+      executar:d=>{ if (!(Calendario.hoje().semanaIdx === 4 && c32_hora(d) === 6)) Relogio.ateODia(4, 6); },
       registrar:'Quarenta e uma caixas brancas carregadas em 26 minutos, numa manhã de sexta, na Industrial 3.',
       presagio:d=>d.flags.as_quarenta_e_uma_empresas
         ? 'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'
@@ -555,7 +577,7 @@ c32_fim:{
     d=>d.flags.trezentas_e_onze_unidades
       ? 'E um número que um ferramenteiro te deu porque o contrato de sigilo dele falava de espécime, de procedimento, de instalação e de pessoa, e não falava dele: trezentas e onze.'
       : 'E a certeza de que aquele galpão tem quatro anos, quinze funcionários que nunca atravessam a rua pra tomar café, e climatização contínua.',
-    'Fuchsia fica a dois dias, e lá tem nove mil hectares de reserva com trinta e um quilômetros de cerca e uma frase em letra garrafal na fachada da recepção.'
+    'Fuchsia fica a dois dias, e dizem que a reserva de lá é tão grande que ninguém sabe direito onde acaba a cerca.'
   ],
   fim:true, resumo:'O galpão da Industrial 3: climatização contínua, trezentas e onze unidades, quarenta e uma caixas por sexta-feira e quatro anos de contagem num calendário de parede.'
 }

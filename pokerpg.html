@@ -20248,7 +20248,7 @@ const CARGO_DE_PROPOSITO = ['a enfermeira', 'o barqueiro', 'a atendente'];
 /* como a pessoa responde, pelo que ela faz da vida. O primeiro que
    casar manda. */
 const JEITOS = [
-  {quando:/enfermeir|atendente|recepcionist|balconist|secret[áa]ri|escriv|funcion[áa]ri|moça d|rapaz do protocolo|atendente da junta/i,
+  {quando:/enfermeir|atendente|recepcionist|balconist|secret[áa]ri|escriv|funcion[áa]ri|moça d|rapaz do protocolo|atendente do registro/i,
    linhas:(r,n)=>['Ela aponta o crachá, que estava ali o tempo todo e que você não tinha lido.',
                   fala(r, `${n}. Tá escrito aqui, ó.`)],
    linhasM:(r,n)=>['Ele aponta o crachá, que estava ali o tempo todo e que você não tinha lido.',
@@ -24725,7 +24725,8 @@ const Estado = {
                         'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory', 'Ivy Calder':'Tess Calder',
                         'Sr. Holt':'Sr. Larch', 'Secretária da Colônia Z-14':'a secretária da colônia',
                         'Maeve Corwin':'Maeve Bracken', 'o bibliotecário':'Sr. Pell',
-                        'Sra. Hazel':'Sra. Tansy', 'o homem do zoológico':'o mais velho da mesa'};
+                        'Sra. Hazel':'Sra. Tansy', 'o homem do zoológico':'o mais velho da mesa',
+                        'a atendente da junta':'a atendente do registro'};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
@@ -24736,7 +24737,10 @@ const Estado = {
                             /* o velho do Staryu: Amos pro cais, Sr. Dane no balão (13 e 14) */
                             'Amos':'Sr. Dane',
                             /* o dono do curral da Rota 17 ganhou nome no 15 */
-                            'Dono do curral':'Sr. Hale'};
+                            'Dono do curral':'Sr. Hale',
+                            /* a funcionária da guarita de Lavender é a Sra. Myrtle do 7;
+                               o 30 chamava ela de Sra. Wren */
+                            'Sra. Wren':'a funcionária da guarita'};
       /* a mulher do elevador do 20 também carrega pasta de vinil, e a
          grafia dela era a da advogada do 25, que o 25 diz que você não
          conhece: o elevador fica com ela, a planta com a advogada */
@@ -51372,7 +51376,7 @@ c6_leu_tudo:{
   ef:{flag:['sabe_da_sala704','sabe_de_renno','sabe_de_sena'],
       hp:-2, causa:'Noite sem dormir lendo processo',
       registrar:'Nomes: H. Colman (Presidência), Dr. M. Hollis (Núcleo Técnico). Endereço: Saffron, sala 704.',
-      presagio:'Sala 704. Sétimo andar. Você acabou de ganhar um destino final, e faltam muitas cidades até lá.'},
+      presagio:'Sala 704. Sétimo andar. Um endereço de Saffron no canto de uma folha que ninguém ia ler.'},
   escolhas:[
     {texto:'Ir pra Cerulean, procurar a Misty.', vai:'c6_bilac_leva'},
     {texto:'Esconder tudo.', vai:'c6_escondeu_estatuto'},
@@ -104897,7 +104901,17 @@ function c29_cabe(id, d){
   if (id === 'c29_de_madrugada') return !!d.flags.caminhao_gaiola_terca_quinta_sabado;
   return true;
 }
-function c29_abertura(d){ return Dados.escolher(C29_ABERTURAS.filter(id => c29_cabe(id, d))); }
+function c29_abertura(d){
+  const id = Dados.escolher(C29_ABERTURAS.filter(id => c29_cabe(id, d)));
+  /* a vizinha rega o vaso às sete; a descarga é terça, às duas da manhã */
+  if (d && d.relogio && d.flags && d.flags.c29_chegada == null){
+    if (id === 'c29_o_vizinho' && c29_hora(d) !== 7) Relogio.ate(7);
+    if (id === 'c29_de_madrugada') Relogio.ateODia(1, 2);
+    d.flags.c29_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c29_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
 
 CAPITULOS.push(
 {
@@ -104925,7 +104939,7 @@ c29_a_rua:{
       presagio:'Ninguém bate. Todo mundo sabe bater de um jeito só.'},
   escolhas:[
     {texto:'Dar os três toques.', vai:'c29_bateu'},
-    {texto:'Esperar sair alguém e seguir.', vai:'c29_seguiu_quem_saiu'},
+    {texto:'Voltar de madrugada, numa terça, e seguir quem sair.', vai:'c29_de_madrugada'},
     {texto:'Procurar quem more nessa rua.', vai:'c29_o_vizinho'},
     {texto:'Dar a volta pelo quarteirão e ver os fundos.', vai:'c29_os_fundos'}
   ]
@@ -104933,7 +104947,9 @@ c29_a_rua:{
 
 c29_o_vizinho:{
   texto:[
-    'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.',
+    d=>c29_hora(d) >= 6 && c29_hora(d) < 10
+      ? 'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.'
+      : 'A casa do lado do portão verde tem uma senhora regando vaso na calçada, sem pressa, do jeito de quem rega vaso a sério.',
     'O portão dela tem o sobrenome em ferro fundido, do jeito que se fazia em mil novecentos e setenta: VALE.',
     'Ela te vê olhando o portão e fala primeiro, do jeito de quem estava esperando alguém pra falar disso há muito tempo.',
     fala('Sra. Vale', 'Você não é da prefeitura.'),
@@ -104973,10 +104989,10 @@ c29_as_quatro_ligacoes:{
     fala('Sra. Vale', 'Veio um moço de cinza. Ficou vinte minutos lá dentro, saiu, e me disse que estava tudo regular.'),
     'Ela fecha a agenda.',
     fala('Sra. Vale', 'Eu perguntei regular como. Ele disse que eu não precisava me preocupar.'),
-    fala('Sra. Vale', 'Isso foi em maio. Aí o barulho de madrugada aumentou.', 'frio')
+    fala('Sra. Vale', 'Isso foi faz uns dois meses. Aí o barulho de madrugada aumentou.', 'frio')
   ],
   ef:{flag:['a_agenda_da_senhora','sabe_do_lote_unico'],
-      registrar:'A Liga mandou um oficial ao portão verde em maio. Ele disse que estava tudo regular. O barulho aumentou depois.',
+      registrar:'A Liga mandou um oficial ao portão verde faz uns dois meses. Ele disse que estava tudo regular. O barulho aumentou depois.',
       presagio:'Três órgãos não vieram e um veio e disse que estava regular. Esse é o pior dos quatro.'},
   escolhas:[
     {texto:'Pedir a agenda emprestada.', vai:'c29_pediu_a_agenda'},
@@ -105179,7 +105195,7 @@ c29_quem_paga:{
     d=>fala(d.jogador.nome, 'Que escritório?'),
     'Ele abre uma gaveta do móvel da sala, tira um envelope pardo usado e vira o verso pra você, onde tem o carimbo de expedição.',
     'Rua do Comércio, 118 — sala 704.',
-    'Você lê duas vezes e a sala fica com um zumbido que não existe.',
+    d=>d.flags.sabe_da_sala704 ? 'Você lê duas vezes e a sala fica com um zumbido que não existe.' : 'Você lê duas vezes e guarda o endereço.',
     fala('Dario', 'Eu nunca fui lá. Eu recebo malote, eu pago à vista, eu entrego na terça, quinta e sábado.'),
     fala('Dario', 'Você tá me olhando como se eu fosse o dono disso.'),
     'Ele guarda o envelope.',
@@ -105460,7 +105476,8 @@ c29_de_madrugada:{
     'Às duas e trinta e seis o portão fecha e a rua volta a ser uma rua.'
   ],
   ef:{flag:['viu_a_descarga','caminhao_gaiola_terca_quinta_sabado','sabe_do_lote_unico'],
-      hp:-1, causa:'Noite inteira acordado num meio-fio',
+      executar:d=>{ if (!(Calendario.hoje().semanaIdx === 1 && c29_hora(d) === 2)) Relogio.ateODia(1, 2); },
+      hp:-1, causa:'Noite inteira acordad{o|a} num meio-fio',
       registrar:'Viu a descarga da madrugada de terça no portão verde: dezoito minutos, sem uma palavra.',
       presagio:'Dezoito minutos em silêncio absoluto não é discrição. É procedimento treinado.'},
   escolhas:[
@@ -105546,13 +105563,14 @@ c29_fim:{
     d=>{
       const papeis = ['copia_da_agenda','tem_o_saco_de_racao','copia_da_tabela',
                       'tem_o_envelope_do_malote','anotou_a_placa_de_cerulean'].filter(f=>d.flags[f]).length;
-      if (papeis >= 3) return `Na mochila tem ${papeis} coisas que, sozinhas, não provam nada, e que juntas são um endereço.`;
+      if (papeis >= 3) return `Na mochila tem ${porExtenso(papeis)} coisas que, sozinhas, não provam nada, e que juntas são um endereço.`;
       if (papeis >= 1) return `Na mochila tem ${papeis === 1 ? 'uma coisa' : papeis + ' coisas'} que não prova nada sozinha.`;
       return 'Na mochila não tem nada. Só o que você viu, e o que você viu não é documento.';
     },
     'Lavender fica a três dias a pé, e dizem que lá tem uma torre de sete andares.',
     'Dizem também que a cidade não tem música, e ninguém explica isso direito.'
   ],
+  ef:{executar:d=>{ const h = c29_hora(d); if (h < 5 || h > 9) Relogio.ate(6); }},
   fim:true, resumo:'A casa do portão verde: alvará na parede, trinta e uma gaiolas no fundo e um carimbo da Rua do Comércio, 118.'
 }
 
@@ -105575,7 +105593,17 @@ function c30_cabe(id, d){
   if (id === 'c30_a_lista_dos_onze') return !!d.flags.oito_linhas_de_madrugada;
   return true;
 }
-function c30_abertura(d){ return Dados.escolher(C30_ABERTURAS.filter(id => c30_cabe(id, d))); }
+function c30_abertura(d){
+  const id = Dados.escolher(C30_ABERTURAS.filter(id => c30_cabe(id, d)));
+  /* a guarita abre às sete; o cartório atende de manhã */
+  if (d && d.relogio && d.flags && d.flags.c30_chegada == null){
+    const h = c30_hora(d), alvo = id === 'c30_o_cartorio' ? 9 : 7;
+    if (h !== alvo) Relogio.ate(alvo);
+    d.flags.c30_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c30_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
 
 CAPITULOS.push(
 {
@@ -105591,20 +105619,21 @@ cenas:{
 c30_a_guarita:{
   texto:[
     'Você volta na guarita da entrada de Lavender às sete e dez da manhã e ela já está aberta, porque ela abre às sete.',
-    'A funcionária te vê chegar e não finge surpresa. O crachá dela está na mesa, virado pra cima, e diz E. WREN — desde 1974, como o livro.',
-    fala('Sra. Wren', 'Eu sabia que você ia voltar.'),
+    d=>{ Nomes.apresentar('a funcionária da guarita');
+         return 'A funcionária te vê chegar e não finge surpresa. A tira de papel continua colada no vidro da janelinha: SRA. MYRTLE — PORTARIA.'; },
+    fala('a funcionária da guarita', 'Eu sabia que você ia voltar.'),
     d=>fala(d.jogador.nome, 'Como?'),
-    fala('Sra. Wren', 'Porque ninguém pede pra ver o livro e vai embora.'),
+    fala('a funcionária da guarita', 'Porque ninguém pede pra ver o livro e vai embora.'),
     'Ela puxa o livro de baixo do balcão e abre nas últimas páginas sem precisar procurar.',
-    fala('Sra. Wren', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
+    fala('a funcionária da guarita', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
     'Ela vira uma folha solta, dobrada em quatro, e desdobra na bancada.',
-    fala('Sra. Wren', 'Eu copiei as onze. Nome, data, hora de subida.'),
-    fala('Sra. Wren', 'E depois eu fui na lista telefônica.'),
+    fala('a funcionária da guarita', 'Eu copiei as onze. Nome, data, hora de subida.'),
+    fala('a funcionária da guarita', 'E depois eu fui na lista telefônica.'),
     'Ela alisa a folha com a palma.',
-    fala('Sra. Wren', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
+    fala('a funcionária da guarita', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
   ],
   ef:{flag:['a_funcionaria_ligou','o_livro_da_guarita'],
-      npc:{nome:'Sra. Wren', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
+      npc:{nome:'a funcionária da guarita', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
       registrar:'A funcionária da guarita copiou as onze linhas e ligou para os sete que tinham telefone.'},
   escolhas:[
     {texto:'Perguntar o que os sete disseram.', vai:'c30_os_sete_telefones'},
@@ -105616,17 +105645,17 @@ c30_a_guarita:{
 c30_os_sete_telefones:{
   texto:[
     'Ela pega um lápis e vai apontando linha por linha enquanto fala, e ela fez isso a noite inteira e está precisa como quem fez a noite inteira.',
-    fala('Sra. Wren', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
+    fala('a funcionária da guarita', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
     d=>fala(d.jogador.nome, 'Então três são erro de registro.'),
-    fala('Sra. Wren', 'Três são erro meu. Eu registrei mal.'),
+    fala('a funcionária da guarita', 'Três são erro meu. Eu registrei mal.'),
     'Ela não se defende. Anota o erro e segue.',
-    fala('Sra. Wren', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
+    fala('a funcionária da guarita', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
     d=>fala(d.jogador.nome, 'Não lembram?'),
-    fala('Sra. Wren', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
+    fala('a funcionária da guarita', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
     'Ela move o lápis.',
-    fala('Sra. Wren', 'O outro tem vinte e seis.'),
+    fala('a funcionária da guarita', 'O outro tem vinte e seis.'),
     'Silêncio na guarita.',
-    fala('Sra. Wren', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
+    fala('a funcionária da guarita', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
   ],
   ef:{flag:['os_dois_numeros_falsos','tres_erros_de_registro'],
       registrar:'Dos sete telefones: 3 erros de registro, 2 vivos e um deles de 26 anos que não lembra, 2 números que nunca existiram.',
@@ -105664,17 +105693,17 @@ c30_o_que_ela_vai_fazer:{
   texto:[
     d=>fala(d.jogador.nome, 'O que a senhora vai fazer agora?'),
     'Ela fecha o livro e põe as duas mãos em cima dele.',
-    fala('Sra. Wren', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
+    fala('a funcionária da guarita', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
     d=>fala(d.jogador.nome, 'Isso não é resposta.'),
-    fala('Sra. Wren', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
+    fala('a funcionária da guarita', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
     'Ela olha pra rua, onde ainda não passa ninguém.',
-    fala('Sra. Wren', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
-    fala('Sra. Wren', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
+    fala('a funcionária da guarita', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
+    fala('a funcionária da guarita', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
     'Ela empurra a folha copiada na sua direção.',
-    fala('Sra. Wren', 'Você faz.', 'baixo')
+    fala('a funcionária da guarita', 'Você faz.', 'baixo')
   ],
   ef:{flag:['tem_a_lista_dos_onze','reika_precisa_de_papel'],
-      npc:{nome:'Sra. Wren', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
+      npc:{nome:'a funcionária da guarita', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
       registrar:'A funcionária te entregou a cópia das onze linhas e disse que não vai adiante.'},
   escolhas:[
     {texto:'Ler as onze linhas com atenção.', vai:'c30_a_lista_dos_onze'},
@@ -105696,12 +105725,12 @@ c30_o_rapaz_de_vinte_e_seis:{
     'Ele diz "eu tenho medo" com a naturalidade de quem já disse isso muitas vezes e parou de achar vergonhoso.',
     d=>fala(d.jogador.nome, 'Você perdeu algum documento nos últimos meses?'),
     'E aí ele para.',
-    fala('Nico', 'Perdi a carteira em agosto. No ônibus.'),
+    fala('Nico', 'Perdi a carteira faz uns três meses. No ônibus.'),
     fala('Nico', 'Apareceu depois, na rodoviária. Tava tudo lá, até o dinheiro.', 'baixo')
   ],
   ef:{flag:['a_carteira_perdida','sabe_do_lote_unico'],
       npc:{nome:'Nico Hart', opiniao:1, viuVoce:'Você descobriu que o nome dele foi usado no livro da torre.'},
-      registrar:'O nome de Nico Hart, 26 anos, foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta em agosto.',
+      registrar:'O nome de Nico Hart, 26 anos, foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta, faz uns três meses.',
       presagio:'Devolveram a carteira com o dinheiro. Ninguém devolve dinheiro. Eles só queriam o nome.'},
   escolhas:[
     {texto:'Pedir pra ele ir junto na guarita reconhecer a letra.', vai:'c30_a_letra'},
@@ -105721,10 +105750,10 @@ c30_a_letra:{
     'Ele pega uma caneta do balcão e assina numa folha em branco, do lado, e vira as duas pra vocês verem.',
     'São idênticas. Não parecidas: idênticas, inclusive na pressão do traço e no jeito que o "a" não fecha.',
     'A funcionária põe a mão na boca e não tira por um tempo.',
-    fala('Sra. Wren', 'Isso é decalque.'),
+    fala('a funcionária da guarita', 'Isso é decalque.'),
     d=>fala(d.jogador.nome, 'Como assim decalque?'),
-    fala('Sra. Wren', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
-    fala('Sra. Wren', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
+    fala('a funcionária da guarita', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
+    fala('a funcionária da guarita', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
   ],
   ef:{flag:['a_assinatura_decalcada','reika_precisa_de_papel'],
       rep:{eixo:'bom', delta:2, motivo:'Provou que uma assinatura do livro da torre foi decalcada.'},
@@ -105849,6 +105878,7 @@ c30_esperou_no_quinto:{
   ],
   ef:{hp:-3, causa:'Oito horas imóvel no escuro da torre',
       flag:'esperou_no_quinto',
+      executar:d=>{ if (c30_hora(d) !== 2) Relogio.ate(2); },
       registrar:'Esperou até as 2h41 no quinto andar. Alguém subiu.'},
   escolhas:[
     {texto:'Acender a lanterna na cara dele.', vai:'c30_acendeu'},
@@ -105950,14 +105980,15 @@ c30_quem_manda_a_lista:{
     d=>fala(d.jogador.nome, 'De onde?'),
     'Ele tira do bolso um envelope pardo, usado, dobrado ao meio, e mostra o verso na luz da sua lanterna.',
     'Carimbo de expedição: Rua do Comércio, 118 — sala 704.',
-    'Você fica olhando o carimbo mais tempo do que precisaria.',
-    fala('Lorca', 'Você já tinha visto esse carimbo.'),
-    'Não é pergunta.',
-    fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.'),
+    d=>(d.flags.c30_carimbo_de_antes || d.flags.sabe_da_sala704) ? 'Você fica olhando o carimbo mais tempo do que precisaria.' : 'Você lê o carimbo duas vezes.',
+    d=>(d.flags.c30_carimbo_de_antes || d.flags.sabe_da_sala704) ? fala('Lorca', 'Você já tinha visto esse carimbo.', null, 'Não é pergunta.') : fala('Lorca', 'Você nunca tinha visto esse carimbo.', null, 'Não é pergunta.'),
+    d=>(d.flags.c30_carimbo_de_antes || d.flags.sabe_da_sala704) ? fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.') : fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar. Você é {o primeiro|a primeira} que não.'),
     'Ele guarda o envelope.',
     fala('Lorca', 'É a coisa mais estranha desse serviço, {moço|moça}. Não tem nada escondido. Tem carimbo em tudo.')
   ],
-  ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
+  ef:{flag:['sabe_do_lote_unico'],
+      /* o fim do capítulo conta quantos envelopes você viu: o de Cerulean, se viu, e este */
+      executar:d=>{ d.flags.c30_viu_o_carimbo = true; d.flags.c30_carimbo_de_antes = !!d.flags.o_endereco_no_envelope; d.flags.o_endereco_no_envelope = true; },
       registrar:'O malote do Lorca vem da Rua do Comércio, 118, sala 704.',
       presagio:'Carimbo em tudo. O esconderijo é a papelada, não o segredo.'},
   escolhas:[
@@ -105992,7 +106023,7 @@ c30_pegou_o_caderninho:{
 
 c30_desceu_atras:{
   texto:[
-    'Descer sete andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
+    'Descer cinco andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
     'O passo dele chega até você com meio segundo de atraso e você anda no atraso dele.',
     'Na base da torre ele sai e atravessa a praça e entra num carro estacionado na rua lateral, e o carro parte, e você anota a placa na palma da mão com a caneta.',
     'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda a noite.',
@@ -106057,11 +106088,14 @@ c30_fim:{
       if (d.flags.as_oito_tiras) return 'Na cabeça ficam oito tiras de papel de caderno marcando oito páginas de um livro de sepultamento, e a certeza de que elas vão ser substituídas por seis.';
       return 'Na mochila não tem nada e na cabeça tem onze linhas com a coluna de descida vazia.';
     },
-    d=>d.flags.o_endereco_no_envelope
+    d=>(d.flags.c30_viu_o_carimbo && d.flags.c30_carimbo_de_antes)
       ? 'E um endereço que apareceu duas vezes agora, em duas cidades diferentes, carimbado no verso de dois envelopes pardos: Rua do Comércio, 118, sala 704.'
-      : 'E a sensação, que ainda não é uma ideia, de que tudo isso passa por um lugar só.',
-    'Vermilion fica a dois dias, e lá tem um porto que trabalha vinte e quatro horas e um navio atracado no cais três.'
+      : d.flags.o_endereco_no_envelope
+        ? 'E um endereço carimbado no verso de um envelope pardo: Rua do Comércio, 118, sala 704.'
+        : 'E a sensação, que ainda não é uma ideia, de que tudo isso passa por um lugar só.',
+    'Vermilion fica a dois dias, e dizem que o porto trabalha vinte e quatro horas e que tem um navio grande atracado no cais três.'
   ],
+  ef:{executar:d=>{ const h = c30_hora(d); if (h < 5 || h > 10) Relogio.ate(6); }},
   fim:true, resumo:'As onze linhas do livro da guarita: oito assinaturas de gente morta há mais de dez anos, decalcadas, e seis nomes novos já marcados.'
 }
 
@@ -106084,7 +106118,17 @@ function c31_cabe(id, d){
   if (id === 'c31_o_papel_termico') return !!d.flags.o_fax_tem_cabecalho;
   return true;
 }
-function c31_abertura(d){ return Dados.escolher(C31_ABERTURAS.filter(id => c31_cabe(id, d))); }
+function c31_abertura(d){
+  const id = Dados.escolher(C31_ABERTURAS.filter(id => c31_cabe(id, d)));
+  /* a cesta do fax só é esvaziada na faxina de sexta: a volta à
+     Avenida Cinco é numa quinta, com o comércio aberto */
+  if (d && d.relogio && d.flags && d.flags.c31_chegada == null){
+    Relogio.ateODia(3, 10);
+    d.flags.c31_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c31_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
 
 CAPITULOS.push(
 {
@@ -106503,7 +106547,7 @@ c31_falou_com_a_kazu:{
     fala('Cleo', 'ESPERA.', 'grita'),
     'Ela some pra dentro de casa e volta em quarenta segundos com um filme de trinta e seis poses numa caixinha preta, e com um caderno.',
     'O caderno tem data, hora e placa. Onze entradas, nas últimas cinco semanas, todas entre uma e três da manhã.',
-    fala('Cleo', 'Eu comecei em setembro. Ninguém acreditou em mim.')
+    fala('Cleo', 'Eu comecei faz cinco semanas. Ninguém acreditou em mim.')
   ],
   ef:{flag:['o_caderno_da_kazu','reika_precisa_de_papel','sabe_do_lote_unico'],
       npc:{nome:'Cleo', opiniao:4, viuVoce:'Você foi a primeira pessoa a acreditar nela.'},
@@ -106517,7 +106561,7 @@ c31_falou_com_a_kazu:{
 
 c31_revelou_o_filme:{
   texto:[
-    'O revelador da avenida sete revela em uma hora e vocês esperam a uma hora inteira sentados no meio-fio da frente, porque a Cleo se recusa a ir embora e deixar o filme dela com um estranho.',
+    'O revelador da avenida sete revela em uma hora e vocês esperam uma hora inteira {sentados|sentadas} no meio-fio da frente, porque a Cleo se recusa a ir embora e deixar o filme dela com um estranho.',
     'Trinta e seis poses. Vinte e nove saem pretas, porque fotografar de madrugada com filme comum e sem tripé dá nisso.',
     'Sete prestam.',
     'Em quatro dá pra ver a traseira de um caminhão com gaiola sob lona.',
@@ -106643,10 +106687,11 @@ c31_fim:{
     },
     d=>d.flags.as_fotos_da_kazu
       ? 'E sete fotografias tiradas às duas da manhã por uma menina de treze anos com a máquina do pai, das quais uma mostra três fileiras de gaiola empilhadas dentro de um galpão.'
-      : (d.flags.a_kazu ? 'E o nome de uma menina de treze anos que ninguém quis acreditar desde setembro.' : ''),
-    'A Rota 10 fica a um dia de estrada e, no fim dela, tem uma usina desligada há onze anos que não para de zumbir.'
+      : (d.flags.a_kazu ? 'E o nome de uma menina de treze anos que anota placa de madrugada há cinco semanas e em quem ninguém quis acreditar.' : ''),
+    'A Rota 10 fica a um dia de estrada e, dizem, no fim dela tem uma usina desligada há onze anos que não para de zumbir.'
   ],
-  fim:true, resumo:'A lista que chega por fax toda segunda: quarenta e um nomes, um convênio que o presidente nunca leu e uma menina de treze anos que anota placa desde setembro.'
+  ef:{executar:d=>{ const h = c31_hora(d); if (h < 5 || h > 10) Relogio.ate(7); }},
+  fim:true, resumo:'A lista que chega por fax toda segunda: quarenta e um nomes, um convênio que o presidente nunca leu e uma menina de treze anos que anota placa de madrugada há cinco semanas.'
 }
 
 }
@@ -106669,7 +106714,19 @@ function c32_cabe(id, d){
   if (id === 'c32_o_turno_da_noite') return !!d.flags.o_som_do_galpao;
   return true;
 }
-function c32_abertura(d){ return Dados.escolher(C32_ABERTURAS.filter(id => c32_cabe(id, d))); }
+function c32_abertura(d){
+  const id = Dados.escolher(C32_ABERTURAS.filter(id => c32_cabe(id, d)));
+  /* a rua de galpão de dia, a lanchonete no almoço, o turno da noite às onze */
+  if (d && d.relogio && d.flags && d.flags.c32_chegada == null){
+    const alvo = {c32_a_rua_de_galpao:10, c32_a_lanchonete:11, c32_o_turno_da_noite:23}[id];
+    if (alvo != null && c32_hora(d) !== alvo) Relogio.ate(alvo);
+    d.flags.c32_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c32_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
+/* "de uma quarta-feira", "de um sábado" */
+function c32_diaDaSemana(){ const s = Calendario.hoje().semana; return (/sábado|domingo/i.test(s) ? 'um ' : 'uma ') + s; }
 
 CAPITULOS.push(
 {
@@ -106728,7 +106785,8 @@ c32_a_conta_de_energia:{
 c32_a_lanchonete:{
   texto:[
     'Toda rua de galpão de Kanto tem uma lanchonete, porque quatro ruas de galpão dão umas quatrocentas pessoas e quatrocentas pessoas almoçam.',
-    'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.',
+    d=>c32_hora(d) <= 12 ? 'A da Industrial 2 tem seis mesas de fórmula e um balcão, e às onze e meia já tem fila.'
+                         : 'A da Industrial 2 tem seis mesas de fórmula e um balcão, e a fila do almoço já passou, mas as mesas continuam cheias.',
     'Você senta no balcão e pede o prato do dia, que custa oito e vem com arroz, feijão, um ovo frito e salada de repolho.',
     'Na mesa do fundo tem quatro homens de macacão azul da oficina de empilhadeira e eles falam alto porque trabalham com máquina e ficaram com o hábito.',
     'Você aprende o nome de dois deles sem precisar perguntar, do jeito que se aprende nome em mesa de lanchonete: porque eles se chamam o tempo todo. O mais velho é o Hal. O de boné é o Rico.',
@@ -106741,6 +106799,7 @@ c32_a_lanchonete:{
     fala('o homem de macacão', 'Então é armazém de remédio que solta cheiro de Pokémon na sexta-feira.', 'baixo')
   ],
   ef:{flag:'a_conversa_da_lanchonete',
+      executar:d=>{ if (c32_hora(d) < 11) Relogio.ate(11); },
       registrar:'Os mecânicos da rua ao lado discutem o que é o galpão. Ele solta cheiro na sexta-feira.'},
   escolhas:[
     {texto:'Puxar conversa com os quatro.', vai:'c32_os_quatro_mecanicos'},
@@ -106840,6 +106899,8 @@ c32_a_van_das_marmitas:{
     fala('o entregador de almoço', 'E na sexta eles pegam na porta do portão, não na porta social. É a única coisa que muda.')
   ],
   ef:{flag:['vinte_e_duas_na_sexta','carregam_na_sexta'],
+      /* a van chega às onze e cinquenta e cinco, hoje se ainda dá, senão amanhã */
+      executar:d=>{ const h = c32_hora(d); if (h < 11) Relogio.ate(11); else if (h > 11) Relogio.amanhaAs(11); },
       registrar:'São 15 almoços de segunda a quinta e 22 na sexta. Na sexta a entrega é pelo portão, não pela porta social.',
       presagio:'Sete pessoas a mais só na sexta. Sete pessoas que não trabalham ali: trabalham no carregamento.'},
   escolhas:[
@@ -106859,6 +106920,8 @@ c32_observou:{
     'A não ser quem não quer ser visto de frente.'
   ],
   ef:{flag:'observou_o_galpao',
+      /* do meio-dia às quatro, no meio-fio */
+      executar:d=>{ if (c32_hora(d) < 12) Relogio.ate(12); Relogio.avancar(4); },
       registrar:'Quatro horas de observação: o portão não abriu, e o único funcionário que saiu fumou virado para a parede.'},
   escolhas:[
     {texto:'Falar com o fumante na próxima vez que ele sair.', vai:'c32_o_fumante'},
@@ -106987,7 +107050,7 @@ c32_quer_sair:{
 
 c32_bateu_na_porta:{
   texto:[
-    'Você toca a campainha da porta social do galpão da Industrial 3 às três da tarde de uma quarta-feira.',
+    ()=>`Você toca a campainha da porta social do galpão da Industrial 3 às três da tarde de ${c32_diaDaSemana()}.`,
     'A porta abre quinze centímetros, no limite da corrente, e atrás dela tem uma mulher de uns quarenta anos de jaleco branco.',
     fala('a mulher de jaleco do galpão', 'Pois não.'),
     d=>fala(d.jogador.nome, 'O que é aqui?'),
@@ -106998,14 +107061,15 @@ c32_bateu_na_porta:{
     'E é tudo verdade, e é tudo suficiente, e não tem uma única palavra ali que dê pra transformar em denúncia.',
     fala('a mulher de jaleco do galpão', '{O senhor|A senhora} precisa de alguma coisa?'),
     d=>fala(d.jogador.nome, 'Preciso.'),
-    fala('a mulher de jaleco do galpão', 'Então {o senhor|a senhora} pode protocolar um pedido na sede da empresa. O endereço está na junta comercial.'),
+    fala('a mulher de jaleco do galpão', 'Então {o senhor|a senhora} pode protocolar um pedido na sede da empresa. O endereço está no registro comercial.'),
     'E fecha a porta, educadamente, sem bater.'
   ],
   ef:{flag:'bateu_no_galpao',
-      registrar:'Bateram a porta educadamente: instalação privada, sem atendimento ao público, endereço na junta comercial.',
-      presagio:'Ela te mandou pra junta comercial. Ela não precisava. Ou é treinamento, ou é outra coisa.'},
+      executar:d=>{ if (c32_hora(d) !== 15) Relogio.ate(15); },
+      registrar:'Bateram a porta educadamente: instalação privada, sem atendimento ao público, endereço no registro comercial.',
+      presagio:'Ela te mandou pro registro comercial. Ela não precisava. Ou é treinamento, ou é outra coisa.'},
   escolhas:[
-    {texto:'Ir à junta comercial procurar o endereço da sede.', vai:'c32_a_junta'},
+    {texto:'Ir ao cartório de registro comercial procurar o endereço da sede.', vai:'c32_a_junta'},
     {texto:'Voltar na sexta às seis e quarenta.', vai:'c32_a_sexta'},
     {texto:'Observar o galpão de fora.', vai:'c32_observou'}
   ]
@@ -107013,7 +107077,7 @@ c32_bateu_na_porta:{
 
 c32_a_junta:{
   texto:[
-    'A junta comercial de Saffron fica no segundo andar de um prédio público, atende das nove às dezesseis, e cobra doze pokedólares por certidão simplificada.',
+    'O cartório de registro comercial de Saffron fica no segundo andar de um prédio público, atende das nove às dezesseis, e cobra doze pokedólares por certidão simplificada.',
     'Você entrega a razão social de quatro palavras da conta de energia — ou, se não tem a conta, o endereço do galpão, que também dá.',
     'A certidão sai em vinte minutos.',
     'Objeto social: "armazenagem e logística de material biológico, com climatização controlada".',
@@ -107025,7 +107089,7 @@ c32_a_junta:{
       : 'E o nome dela é uma sigla de cinco caracteres, sem nenhuma palavra por extenso.'
   ],
   ef:{dinheiro:-12, flag:['a_certidao_da_junta','sabe_o_nome_da_comissao','reika_precisa_de_papel','sabe_do_lote_unico'],
-      registrar:'A certidão da junta: armazenagem de material biológico com climatização, administrada pela sigla.',
+      registrar:'A certidão do registro comercial: armazenagem de material biológico com climatização, administrada pela sigla.',
       presagio:'Dois sócios que ninguém conhece e uma administradora que não tem nome, só letras.'},
   escolhas:[
     {texto:'Pedir também a ficha dos dois sócios.', vai:'c32_os_dois_socios'},
@@ -107038,19 +107102,19 @@ c32_os_dois_socios:{
   texto:[
     'Mais doze pokedólares e mais vinte minutos.',
     'Os dois sócios são pessoas físicas com documento válido e endereço declarado em Saffron.',
-    'E a atendente da junta, que tem uns cinquenta anos e já viu muita certidão, faz uma coisa que ninguém pediu: ela roda os dois documentos numa segunda consulta.',
-    fala('a atendente da junta', 'Esses dois são sócios de mais quarenta e uma empresas.'),
+    'E a atendente do registro, que tem uns cinquenta anos e já viu muita certidão, faz uma coisa que ninguém pediu: ela roda os dois documentos numa segunda consulta.',
+    fala('a atendente do registro', 'Esses dois são sócios de mais quarenta e uma empresas.'),
     d=>fala(d.jogador.nome, 'Quarenta e uma?'),
-    fala('a atendente da junta', 'Quarenta e uma. Todas com a mesma administradora contratada.'),
+    fala('a atendente do registro', 'Quarenta e uma. Todas com a mesma administradora contratada.'),
     'Ela vira a tela.',
-    fala('a atendente da junta', 'Isso aqui a gente chama de laranja, {moço|moça}. É um par de laranja.'),
-    fala('a atendente da junta', 'E eu sou obrigada a te falar uma coisa: ser sócio de quarenta e uma empresas não é crime.'),
+    fala('a atendente do registro', 'Isso aqui a gente chama de laranja, {moço|moça}. É um par de laranja.'),
+    fala('a atendente do registro', 'E eu sou obrigada a te falar uma coisa: ser sócio de quarenta e uma empresas não é crime.'),
     'Ela imprime a lista das quarenta e uma, que sai em três folhas.',
-    fala('a atendente da junta', 'Só que quem monta quarenta e uma empresas com dois nomes e uma administradora só não está economizando papel.', 'baixo')
+    fala('a atendente do registro', 'Só que quem monta quarenta e uma empresas com dois nomes e uma administradora só não está economizando papel.', 'baixo')
   ],
   ef:{dinheiro:-12, flag:['as_quarenta_e_uma_empresas','reika_precisa_de_papel','sabe_o_nome_da_comissao'],
-      rep:{eixo:'bom', delta:2, motivo:'Puxou na junta comercial a lista das quarenta e uma empresas do mesmo par de sócios.'},
-      npc:{nome:'a atendente da junta', opiniao:3, viuVoce:'Rodou a segunda consulta sem você pedir e imprimiu as quarenta e uma.'},
+      rep:{eixo:'bom', delta:2, motivo:'Puxou no registro comercial a lista das quarenta e uma empresas do mesmo par de sócios.'},
+      npc:{nome:'a atendente do registro', opiniao:3, viuVoce:'Rodou a segunda consulta sem você pedir e imprimiu as quarenta e uma.'},
       registrar:'Os dois sócios do galpão são sócios de 41 empresas, todas com a mesma administradora contratada.',
       presagio:'Quarenta e uma empresas. Uma delas é um galpão climatizado com trezentas e onze unidades de equipamento.'},
   escolhas:[
@@ -107077,6 +107141,7 @@ c32_o_turno_da_noite:{
     'É constante. É um murmúrio que não sobe e não desce, e um murmúrio que não sobe e não desce é de quem está acordado há muito tempo e não espera mais nada.'
   ],
   ef:{flag:['o_som_do_galpao','ouviu_a_noite'], hp:-1, moral:-2,
+      executar:d=>{ if (c32_hora(d) !== 23) Relogio.ate(23); },
       registrar:'À noite, sem o barulho da rua, dá para ouvir o galpão por fora.',
       presagio:'Um murmúrio que não sobe e não desce.'},
   escolhas:[
@@ -107124,6 +107189,8 @@ c32_a_sexta:{
     'Nenhum dos dois fala nada, porque não tem nada pra falar que já não tenha sido dito por vinte e seis minutos de corrente humana.'
   ],
   ef:{flag:['viu_o_carregamento','sabe_do_lote_unico'], moral:-2,
+      /* sexta, seis e trinta e cinco, e o carregamento às seis e quarenta */
+      executar:d=>{ if (!(Calendario.hoje().semanaIdx === 4 && c32_hora(d) === 6)) Relogio.ateODia(4, 6); },
       registrar:'Quarenta e uma caixas brancas carregadas em 26 minutos, numa manhã de sexta, na Industrial 3.',
       presagio:d=>d.flags.as_quarenta_e_uma_empresas
         ? 'Quarenta e uma caixas. Quarenta e uma empresas. O número te persegue e não é coincidência: é o mesmo lote.'
@@ -107211,7 +107278,7 @@ c32_fim:{
     d=>d.flags.trezentas_e_onze_unidades
       ? 'E um número que um ferramenteiro te deu porque o contrato de sigilo dele falava de espécime, de procedimento, de instalação e de pessoa, e não falava dele: trezentas e onze.'
       : 'E a certeza de que aquele galpão tem quatro anos, quinze funcionários que nunca atravessam a rua pra tomar café, e climatização contínua.',
-    'Fuchsia fica a dois dias, e lá tem nove mil hectares de reserva com trinta e um quilômetros de cerca e uma frase em letra garrafal na fachada da recepção.'
+    'Fuchsia fica a dois dias, e dizem que a reserva de lá é tão grande que ninguém sabe direito onde acaba a cerca.'
   ],
   fim:true, resumo:'O galpão da Industrial 3: climatização contínua, trezentas e onze unidades, quarenta e uma caixas por sexta-feira e quatro anos de contagem num calendário de parede.'
 }

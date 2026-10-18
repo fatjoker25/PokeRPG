@@ -1479,7 +1479,7 @@ c6_leu_tudo:{
   ef:{flag:['sabe_da_sala704','sabe_de_renno','sabe_de_sena'],
       hp:-2, causa:'Noite sem dormir lendo processo',
       registrar:'Nomes: H. Colman (Presidência), Dr. M. Hollis (Núcleo Técnico). Endereço: Saffron, sala 704.',
-      presagio:'Sala 704. Sétimo andar. Você acabou de ganhar um destino final, e faltam muitas cidades até lá.'},
+      presagio:'Sala 704. Sétimo andar. Um endereço de Saffron no canto de uma folha que ninguém ia ler.'},
   escolhas:[
     {texto:'Ir pra Cerulean, procurar a Misty.', vai:'c6_bilac_leva'},
     {texto:'Esconder tudo.', vai:'c6_escondeu_estatuto'},

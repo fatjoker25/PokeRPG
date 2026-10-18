@@ -200,7 +200,7 @@ const CARGO_DE_PROPOSITO = ['a enfermeira', 'o barqueiro', 'a atendente'];
 /* como a pessoa responde, pelo que ela faz da vida. O primeiro que
    casar manda. */
 const JEITOS = [
-  {quando:/enfermeir|atendente|recepcionist|balconist|secret[áa]ri|escriv|funcion[áa]ri|moça d|rapaz do protocolo|atendente da junta/i,
+  {quando:/enfermeir|atendente|recepcionist|balconist|secret[áa]ri|escriv|funcion[áa]ri|moça d|rapaz do protocolo|atendente do registro/i,
    linhas:(r,n)=>['Ela aponta o crachá, que estava ali o tempo todo e que você não tinha lido.',
                   fala(r, `${n}. Tá escrito aqui, ó.`)],
    linhasM:(r,n)=>['Ele aponta o crachá, que estava ali o tempo todo e que você não tinha lido.',

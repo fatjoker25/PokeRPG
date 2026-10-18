@@ -1238,7 +1238,8 @@ const Estado = {
                         'Sr. Roland Poplar':'Sr. Emory Poplar', 'Garoto de Fuchsia':'Rory', 'Ivy Calder':'Tess Calder',
                         'Sr. Holt':'Sr. Larch', 'Secretária da Colônia Z-14':'a secretária da colônia',
                         'Maeve Corwin':'Maeve Bracken', 'o bibliotecário':'Sr. Pell',
-                        'Sra. Hazel':'Sra. Tansy', 'o homem do zoológico':'o mais velho da mesa'};
+                        'Sra. Hazel':'Sra. Tansy', 'o homem do zoológico':'o mais velho da mesa',
+                        'a atendente da junta':'a atendente do registro'};
       /* a mesma pessoa gravada com duas grafias virava duas pessoas, com
          opinião separada: junta na grafia certa */
       const MESMA_PESSOA = {'a Terceira':'A Terceira', 'Mulher da pasta de vinil':'a mulher da pasta',
@@ -1249,7 +1250,10 @@ const Estado = {
                             /* o velho do Staryu: Amos pro cais, Sr. Dane no balão (13 e 14) */
                             'Amos':'Sr. Dane',
                             /* o dono do curral da Rota 17 ganhou nome no 15 */
-                            'Dono do curral':'Sr. Hale'};
+                            'Dono do curral':'Sr. Hale',
+                            /* a funcionária da guarita de Lavender é a Sra. Myrtle do 7;
+                               o 30 chamava ela de Sra. Wren */
+                            'Sra. Wren':'a funcionária da guarita'};
       /* a mulher do elevador do 20 também carrega pasta de vinil, e a
          grafia dela era a da advogada do 25, que o 25 diz que você não
          conhece: o elevador fica com ela, a planta com a advogada */

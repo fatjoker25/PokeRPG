@@ -14,7 +14,17 @@ function c29_cabe(id, d){
   if (id === 'c29_de_madrugada') return !!d.flags.caminhao_gaiola_terca_quinta_sabado;
   return true;
 }
-function c29_abertura(d){ return Dados.escolher(C29_ABERTURAS.filter(id => c29_cabe(id, d))); }
+function c29_abertura(d){
+  const id = Dados.escolher(C29_ABERTURAS.filter(id => c29_cabe(id, d)));
+  /* a vizinha rega o vaso às sete; a descarga é terça, às duas da manhã */
+  if (d && d.relogio && d.flags && d.flags.c29_chegada == null){
+    if (id === 'c29_o_vizinho' && c29_hora(d) !== 7) Relogio.ate(7);
+    if (id === 'c29_de_madrugada') Relogio.ateODia(1, 2);
+    d.flags.c29_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c29_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
 
 CAPITULOS.push(
 {
@@ -42,7 +52,7 @@ c29_a_rua:{
       presagio:'Ninguém bate. Todo mundo sabe bater de um jeito só.'},
   escolhas:[
     {texto:'Dar os três toques.', vai:'c29_bateu'},
-    {texto:'Esperar sair alguém e seguir.', vai:'c29_seguiu_quem_saiu'},
+    {texto:'Voltar de madrugada, numa terça, e seguir quem sair.', vai:'c29_de_madrugada'},
     {texto:'Procurar quem more nessa rua.', vai:'c29_o_vizinho'},
     {texto:'Dar a volta pelo quarteirão e ver os fundos.', vai:'c29_os_fundos'}
   ]
@@ -50,7 +60,9 @@ c29_a_rua:{
 
 c29_o_vizinho:{
   texto:[
-    'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.',
+    d=>c29_hora(d) >= 6 && c29_hora(d) < 10
+      ? 'A casa do lado do portão verde tem uma senhora regando vaso na calçada às sete da manhã, que é o horário de quem rega vaso a sério.'
+      : 'A casa do lado do portão verde tem uma senhora regando vaso na calçada, sem pressa, do jeito de quem rega vaso a sério.',
     'O portão dela tem o sobrenome em ferro fundido, do jeito que se fazia em mil novecentos e setenta: VALE.',
     'Ela te vê olhando o portão e fala primeiro, do jeito de quem estava esperando alguém pra falar disso há muito tempo.',
     fala('Sra. Vale', 'Você não é da prefeitura.'),
@@ -90,10 +102,10 @@ c29_as_quatro_ligacoes:{
     fala('Sra. Vale', 'Veio um moço de cinza. Ficou vinte minutos lá dentro, saiu, e me disse que estava tudo regular.'),
     'Ela fecha a agenda.',
     fala('Sra. Vale', 'Eu perguntei regular como. Ele disse que eu não precisava me preocupar.'),
-    fala('Sra. Vale', 'Isso foi em maio. Aí o barulho de madrugada aumentou.', 'frio')
+    fala('Sra. Vale', 'Isso foi faz uns dois meses. Aí o barulho de madrugada aumentou.', 'frio')
   ],
   ef:{flag:['a_agenda_da_senhora','sabe_do_lote_unico'],
-      registrar:'A Liga mandou um oficial ao portão verde em maio. Ele disse que estava tudo regular. O barulho aumentou depois.',
+      registrar:'A Liga mandou um oficial ao portão verde faz uns dois meses. Ele disse que estava tudo regular. O barulho aumentou depois.',
       presagio:'Três órgãos não vieram e um veio e disse que estava regular. Esse é o pior dos quatro.'},
   escolhas:[
     {texto:'Pedir a agenda emprestada.', vai:'c29_pediu_a_agenda'},
@@ -296,7 +308,7 @@ c29_quem_paga:{
     d=>fala(d.jogador.nome, 'Que escritório?'),
     'Ele abre uma gaveta do móvel da sala, tira um envelope pardo usado e vira o verso pra você, onde tem o carimbo de expedição.',
     'Rua do Comércio, 118 — sala 704.',
-    'Você lê duas vezes e a sala fica com um zumbido que não existe.',
+    d=>d.flags.sabe_da_sala704 ? 'Você lê duas vezes e a sala fica com um zumbido que não existe.' : 'Você lê duas vezes e guarda o endereço.',
     fala('Dario', 'Eu nunca fui lá. Eu recebo malote, eu pago à vista, eu entrego na terça, quinta e sábado.'),
     fala('Dario', 'Você tá me olhando como se eu fosse o dono disso.'),
     'Ele guarda o envelope.',
@@ -577,7 +589,8 @@ c29_de_madrugada:{
     'Às duas e trinta e seis o portão fecha e a rua volta a ser uma rua.'
   ],
   ef:{flag:['viu_a_descarga','caminhao_gaiola_terca_quinta_sabado','sabe_do_lote_unico'],
-      hp:-1, causa:'Noite inteira acordado num meio-fio',
+      executar:d=>{ if (!(Calendario.hoje().semanaIdx === 1 && c29_hora(d) === 2)) Relogio.ateODia(1, 2); },
+      hp:-1, causa:'Noite inteira acordad{o|a} num meio-fio',
       registrar:'Viu a descarga da madrugada de terça no portão verde: dezoito minutos, sem uma palavra.',
       presagio:'Dezoito minutos em silêncio absoluto não é discrição. É procedimento treinado.'},
   escolhas:[
@@ -663,13 +676,14 @@ c29_fim:{
     d=>{
       const papeis = ['copia_da_agenda','tem_o_saco_de_racao','copia_da_tabela',
                       'tem_o_envelope_do_malote','anotou_a_placa_de_cerulean'].filter(f=>d.flags[f]).length;
-      if (papeis >= 3) return `Na mochila tem ${papeis} coisas que, sozinhas, não provam nada, e que juntas são um endereço.`;
+      if (papeis >= 3) return `Na mochila tem ${porExtenso(papeis)} coisas que, sozinhas, não provam nada, e que juntas são um endereço.`;
       if (papeis >= 1) return `Na mochila tem ${papeis === 1 ? 'uma coisa' : papeis + ' coisas'} que não prova nada sozinha.`;
       return 'Na mochila não tem nada. Só o que você viu, e o que você viu não é documento.';
     },
     'Lavender fica a três dias a pé, e dizem que lá tem uma torre de sete andares.',
     'Dizem também que a cidade não tem música, e ninguém explica isso direito.'
   ],
+  ef:{executar:d=>{ const h = c29_hora(d); if (h < 5 || h > 9) Relogio.ate(6); }},
   fim:true, resumo:'A casa do portão verde: alvará na parede, trinta e uma gaiolas no fundo e um carimbo da Rua do Comércio, 118.'
 }
 

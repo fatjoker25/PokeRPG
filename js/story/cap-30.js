@@ -12,7 +12,17 @@ function c30_cabe(id, d){
   if (id === 'c30_a_lista_dos_onze') return !!d.flags.oito_linhas_de_madrugada;
   return true;
 }
-function c30_abertura(d){ return Dados.escolher(C30_ABERTURAS.filter(id => c30_cabe(id, d))); }
+function c30_abertura(d){
+  const id = Dados.escolher(C30_ABERTURAS.filter(id => c30_cabe(id, d)));
+  /* a guarita abre às sete; o cartório atende de manhã */
+  if (d && d.relogio && d.flags && d.flags.c30_chegada == null){
+    const h = c30_hora(d), alvo = id === 'c30_o_cartorio' ? 9 : 7;
+    if (h !== alvo) Relogio.ate(alvo);
+    d.flags.c30_chegada = d.relogio.dia;
+  }
+  return id;
+}
+function c30_hora(d){ sincronizarHora(d.relogio); return d.relogio.hora; }
 
 CAPITULOS.push(
 {
@@ -28,20 +38,21 @@ cenas:{
 c30_a_guarita:{
   texto:[
     'Você volta na guarita da entrada de Lavender às sete e dez da manhã e ela já está aberta, porque ela abre às sete.',
-    'A funcionária te vê chegar e não finge surpresa. O crachá dela está na mesa, virado pra cima, e diz E. WREN — desde 1974, como o livro.',
-    fala('Sra. Wren', 'Eu sabia que você ia voltar.'),
+    d=>{ Nomes.apresentar('a funcionária da guarita');
+         return 'A funcionária te vê chegar e não finge surpresa. A tira de papel continua colada no vidro da janelinha: SRA. MYRTLE — PORTARIA.'; },
+    fala('a funcionária da guarita', 'Eu sabia que você ia voltar.'),
     d=>fala(d.jogador.nome, 'Como?'),
-    fala('Sra. Wren', 'Porque ninguém pede pra ver o livro e vai embora.'),
+    fala('a funcionária da guarita', 'Porque ninguém pede pra ver o livro e vai embora.'),
     'Ela puxa o livro de baixo do balcão e abre nas últimas páginas sem precisar procurar.',
-    fala('Sra. Wren', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
+    fala('a funcionária da guarita', 'Eu fiz uma coisa ontem à noite depois que você saiu.'),
     'Ela vira uma folha solta, dobrada em quatro, e desdobra na bancada.',
-    fala('Sra. Wren', 'Eu copiei as onze. Nome, data, hora de subida.'),
-    fala('Sra. Wren', 'E depois eu fui na lista telefônica.'),
+    fala('a funcionária da guarita', 'Eu copiei as onze. Nome, data, hora de subida.'),
+    fala('a funcionária da guarita', 'E depois eu fui na lista telefônica.'),
     'Ela alisa a folha com a palma.',
-    fala('Sra. Wren', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
+    fala('a funcionária da guarita', 'Sete dos onze têm telefone em Kanto. Eu liguei pros sete.', 'baixo')
   ],
   ef:{flag:['a_funcionaria_ligou','o_livro_da_guarita'],
-      npc:{nome:'Sra. Wren', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
+      npc:{nome:'a funcionária da guarita', opiniao:3, viuVoce:'Copiou as onze linhas e ligou para sete, depois que você foi embora.'},
       registrar:'A funcionária da guarita copiou as onze linhas e ligou para os sete que tinham telefone.'},
   escolhas:[
     {texto:'Perguntar o que os sete disseram.', vai:'c30_os_sete_telefones'},
@@ -53,17 +64,17 @@ c30_a_guarita:{
 c30_os_sete_telefones:{
   texto:[
     'Ela pega um lápis e vai apontando linha por linha enquanto fala, e ela fez isso a noite inteira e está precisa como quem fez a noite inteira.',
-    fala('Sra. Wren', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
+    fala('a funcionária da guarita', 'Três atenderam a própria pessoa. Os três subiram, desceram e foram embora, e a coluna de descida está vazia porque eu não estava aqui pra preencher.'),
     d=>fala(d.jogador.nome, 'Então três são erro de registro.'),
-    fala('Sra. Wren', 'Três são erro meu. Eu registrei mal.'),
+    fala('a funcionária da guarita', 'Três são erro meu. Eu registrei mal.'),
     'Ela não se defende. Anota o erro e segue.',
-    fala('Sra. Wren', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
+    fala('a funcionária da guarita', 'Dois atenderam parente. Os dois estão em casa, vivos, e os dois não lembram de ter subido nenhuma torre.'),
     d=>fala(d.jogador.nome, 'Não lembram?'),
-    fala('Sra. Wren', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
+    fala('a funcionária da guarita', 'Um deles tem sessenta e oito anos e a família falou que ele anda esquecido. Tudo bem.'),
     'Ela move o lápis.',
-    fala('Sra. Wren', 'O outro tem vinte e seis.'),
+    fala('a funcionária da guarita', 'O outro tem vinte e seis.'),
     'Silêncio na guarita.',
-    fala('Sra. Wren', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
+    fala('a funcionária da guarita', 'E os dois últimos telefones dão errado. Não é fora de área, não é desligado: é número que nunca existiu.', 'baixo')
   ],
   ef:{flag:['os_dois_numeros_falsos','tres_erros_de_registro'],
       registrar:'Dos sete telefones: 3 erros de registro, 2 vivos e um deles de 26 anos que não lembra, 2 números que nunca existiram.',
@@ -101,17 +112,17 @@ c30_o_que_ela_vai_fazer:{
   texto:[
     d=>fala(d.jogador.nome, 'O que a senhora vai fazer agora?'),
     'Ela fecha o livro e põe as duas mãos em cima dele.',
-    fala('Sra. Wren', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
+    fala('a funcionária da guarita', 'Eu tenho cinquenta e quatro anos e faltam seis pra aposentadoria.'),
     d=>fala(d.jogador.nome, 'Isso não é resposta.'),
-    fala('Sra. Wren', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
+    fala('a funcionária da guarita', 'É a resposta mais honesta que eu tenho às sete e dez da manhã.'),
     'Ela olha pra rua, onde ainda não passa ninguém.',
-    fala('Sra. Wren', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
-    fala('Sra. Wren', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
+    fala('a funcionária da guarita', 'Eu reportei três vezes e ninguém veio. Eu liguei pra sete telefones ontem à noite sozinha, na minha casa, com a minha conta.'),
+    fala('a funcionária da guarita', 'Eu não vou fazer mais nada e eu vou continuar abrindo essa guarita às sete todo dia.'),
     'Ela empurra a folha copiada na sua direção.',
-    fala('Sra. Wren', 'Você faz.', 'baixo')
+    fala('a funcionária da guarita', 'Você faz.', 'baixo')
   ],
   ef:{flag:['tem_a_lista_dos_onze','reika_precisa_de_papel'],
-      npc:{nome:'Sra. Wren', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
+      npc:{nome:'a funcionária da guarita', opiniao:4, viuVoce:'Te entregou a cópia e disse que não ia fazer mais nada.'},
       registrar:'A funcionária te entregou a cópia das onze linhas e disse que não vai adiante.'},
   escolhas:[
     {texto:'Ler as onze linhas com atenção.', vai:'c30_a_lista_dos_onze'},
@@ -133,12 +144,12 @@ c30_o_rapaz_de_vinte_e_seis:{
     'Ele diz "eu tenho medo" com a naturalidade de quem já disse isso muitas vezes e parou de achar vergonhoso.',
     d=>fala(d.jogador.nome, 'Você perdeu algum documento nos últimos meses?'),
     'E aí ele para.',
-    fala('Nico', 'Perdi a carteira em agosto. No ônibus.'),
+    fala('Nico', 'Perdi a carteira faz uns três meses. No ônibus.'),
     fala('Nico', 'Apareceu depois, na rodoviária. Tava tudo lá, até o dinheiro.', 'baixo')
   ],
   ef:{flag:['a_carteira_perdida','sabe_do_lote_unico'],
       npc:{nome:'Nico Hart', opiniao:1, viuVoce:'Você descobriu que o nome dele foi usado no livro da torre.'},
-      registrar:'O nome de Nico Hart, 26 anos, foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta em agosto.',
+      registrar:'O nome de Nico Hart, 26 anos, foi usado no livro sem ele ter subido. A carteira dele sumiu e voltou intacta, faz uns três meses.',
       presagio:'Devolveram a carteira com o dinheiro. Ninguém devolve dinheiro. Eles só queriam o nome.'},
   escolhas:[
     {texto:'Pedir pra ele ir junto na guarita reconhecer a letra.', vai:'c30_a_letra'},
@@ -158,10 +169,10 @@ c30_a_letra:{
     'Ele pega uma caneta do balcão e assina numa folha em branco, do lado, e vira as duas pra vocês verem.',
     'São idênticas. Não parecidas: idênticas, inclusive na pressão do traço e no jeito que o "a" não fecha.',
     'A funcionária põe a mão na boca e não tira por um tempo.',
-    fala('Sra. Wren', 'Isso é decalque.'),
+    fala('a funcionária da guarita', 'Isso é decalque.'),
     d=>fala(d.jogador.nome, 'Como assim decalque?'),
-    fala('Sra. Wren', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
-    fala('Sra. Wren', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
+    fala('a funcionária da guarita', 'Papel por cima, luz por baixo, mão firme. Eu trabalhei em cartório por nove anos antes daqui.'),
+    fala('a funcionária da guarita', 'Alguém teve a assinatura dele em papel e copiou por cima, aqui no meu livro.', 'frio')
   ],
   ef:{flag:['a_assinatura_decalcada','reika_precisa_de_papel'],
       rep:{eixo:'bom', delta:2, motivo:'Provou que uma assinatura do livro da torre foi decalcada.'},
@@ -286,6 +297,7 @@ c30_esperou_no_quinto:{
   ],
   ef:{hp:-3, causa:'Oito horas imóvel no escuro da torre',
       flag:'esperou_no_quinto',
+      executar:d=>{ if (c30_hora(d) !== 2) Relogio.ate(2); },
       registrar:'Esperou até as 2h41 no quinto andar. Alguém subiu.'},
   escolhas:[
     {texto:'Acender a lanterna na cara dele.', vai:'c30_acendeu'},
@@ -387,14 +399,15 @@ c30_quem_manda_a_lista:{
     d=>fala(d.jogador.nome, 'De onde?'),
     'Ele tira do bolso um envelope pardo, usado, dobrado ao meio, e mostra o verso na luz da sua lanterna.',
     'Carimbo de expedição: Rua do Comércio, 118 — sala 704.',
-    'Você fica olhando o carimbo mais tempo do que precisaria.',
-    fala('Lorca', 'Você já tinha visto esse carimbo.'),
-    'Não é pergunta.',
-    fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.'),
+    d=>(d.flags.c30_carimbo_de_antes || d.flags.sabe_da_sala704) ? 'Você fica olhando o carimbo mais tempo do que precisaria.' : 'Você lê o carimbo duas vezes.',
+    d=>(d.flags.c30_carimbo_de_antes || d.flags.sabe_da_sala704) ? fala('Lorca', 'Você já tinha visto esse carimbo.', null, 'Não é pergunta.') : fala('Lorca', 'Você nunca tinha visto esse carimbo.', null, 'Não é pergunta.'),
+    d=>(d.flags.c30_carimbo_de_antes || d.flags.sabe_da_sala704) ? fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar.') : fala('Lorca', 'Todo mundo que eu encontro já tinha visto esse carimbo em algum lugar. Você é {o primeiro|a primeira} que não.'),
     'Ele guarda o envelope.',
     fala('Lorca', 'É a coisa mais estranha desse serviço, {moço|moça}. Não tem nada escondido. Tem carimbo em tudo.')
   ],
-  ef:{flag:['o_endereco_no_envelope','sabe_do_lote_unico'],
+  ef:{flag:['sabe_do_lote_unico'],
+      /* o fim do capítulo conta quantos envelopes você viu: o de Cerulean, se viu, e este */
+      executar:d=>{ d.flags.c30_viu_o_carimbo = true; d.flags.c30_carimbo_de_antes = !!d.flags.o_endereco_no_envelope; d.flags.o_endereco_no_envelope = true; },
       registrar:'O malote do Lorca vem da Rua do Comércio, 118, sala 704.',
       presagio:'Carimbo em tudo. O esconderijo é a papelada, não o segredo.'},
   escolhas:[
@@ -429,7 +442,7 @@ c30_pegou_o_caderninho:{
 
 c30_desceu_atras:{
   texto:[
-    'Descer sete andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
+    'Descer cinco andares de escada de concreto atrás de alguém que tem lanterna, sem lanterna, é possível por um motivo só: o eco.',
     'O passo dele chega até você com meio segundo de atraso e você anda no atraso dele.',
     'Na base da torre ele sai e atravessa a praça e entra num carro estacionado na rua lateral, e o carro parte, e você anota a placa na palma da mão com a caneta.',
     'E, quando o carro vira a esquina, você olha pra base da torre e vê a coisa que muda a noite.',
@@ -494,11 +507,14 @@ c30_fim:{
       if (d.flags.as_oito_tiras) return 'Na cabeça ficam oito tiras de papel de caderno marcando oito páginas de um livro de sepultamento, e a certeza de que elas vão ser substituídas por seis.';
       return 'Na mochila não tem nada e na cabeça tem onze linhas com a coluna de descida vazia.';
     },
-    d=>d.flags.o_endereco_no_envelope
+    d=>(d.flags.c30_viu_o_carimbo && d.flags.c30_carimbo_de_antes)
       ? 'E um endereço que apareceu duas vezes agora, em duas cidades diferentes, carimbado no verso de dois envelopes pardos: Rua do Comércio, 118, sala 704.'
-      : 'E a sensação, que ainda não é uma ideia, de que tudo isso passa por um lugar só.',
-    'Vermilion fica a dois dias, e lá tem um porto que trabalha vinte e quatro horas e um navio atracado no cais três.'
+      : d.flags.o_endereco_no_envelope
+        ? 'E um endereço carimbado no verso de um envelope pardo: Rua do Comércio, 118, sala 704.'
+        : 'E a sensação, que ainda não é uma ideia, de que tudo isso passa por um lugar só.',
+    'Vermilion fica a dois dias, e dizem que o porto trabalha vinte e quatro horas e que tem um navio grande atracado no cais três.'
   ],
+  ef:{executar:d=>{ const h = c30_hora(d); if (h < 5 || h > 10) Relogio.ate(6); }},
   fim:true, resumo:'As onze linhas do livro da guarita: oito assinaturas de gente morta há mais de dez anos, decalcadas, e seis nomes novos já marcados.'
 }
 
